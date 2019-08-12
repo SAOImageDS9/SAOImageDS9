@@ -16,7 +16,6 @@
 #include "tkMacOSXPrivate.h"
 
 #include <sys/stat.h>
-#include <sys/utsname.h>
 #include <dlfcn.h>
 #include <objc/objc-auto.h>
 
@@ -29,25 +28,12 @@ static char tkLibPath[PATH_MAX + 1] = "";
 
 static char scriptPath[PATH_MAX + 1] = "";
 
-long tkMacOSXMacOSXVersion = 0;
-
 #pragma mark TKApplication(TKInit)
-
-@interface TKApplication(TKKeyboard)
-- (void) keyboardChanged: (NSNotification *) notification;
-@end
-
-#define TKApplication_NSApplicationDelegate <NSApplicationDelegate>
-@interface TKApplication(TKWindowEvent) TKApplication_NSApplicationDelegate
-- (void) _setupWindowNotifications;
-@end
-
-@interface TKApplication(TKMenus)
-- (void) _setupMenus;
-@end
 
 @implementation TKApplication
 @synthesize poolLock = _poolLock;
+@synthesize macMinorVersion = _macMinorVersion;
+@synthesize isDrawing = _isDrawing;
 @end
 
 /*
@@ -59,7 +45,7 @@ long tkMacOSXMacOSXVersion = 0;
 @implementation TKApplication(TKInit)
 - (void) _resetAutoreleasePool
 {
-    if([self poolLock] == 0) {
+    if ([self poolLock] == 0) {
 	[_mainPool drain];
 	_mainPool = [NSAutoreleasePool new];
     } else {
@@ -116,7 +102,6 @@ long tkMacOSXMacOSXVersion = 0;
     _defaultMainMenu = nil;
     [self _setupMenus];
 
-
     /*
      * Initialize event processing.
      */
@@ -131,12 +116,22 @@ long tkMacOSXMacOSXVersion = 0;
 
 -(void)applicationDidFinishLaunching:(NSNotification *)notification
 {
+
     /*
-     * It is not safe to force activation of the NSApp until this
-     * method is called.  Activating too early can cause the menu
-     * bar to be unresponsive.
+     * It is not safe to force activation of the NSApp until this method is
+     * called. Activating too early can cause the menu bar to be unresponsive.
      */
+
     [NSApp activateIgnoringOtherApps: YES];
+
+    /*
+     * Process events to ensure that the root window is fully initialized. See
+     * ticket 56a1823c73.
+     */
+
+    [NSApp _lockAutoreleasePool];
+    while (Tcl_DoOneEvent(TCL_WINDOW_EVENTS| TCL_DONT_WAIT)) {}
+    [NSApp _unlockAutoreleasePool];
 }
 
 - (void) _setup: (Tcl_Interp *) interp
@@ -153,13 +148,34 @@ long tkMacOSXMacOSXVersion = 0;
     [NSApp setPoolLock:0];
 
     /*
+     * Record the OS version we are running on.
+     */
+    int minorVersion;
+#if MAC_OS_X_VERSION_MAX_ALLOWED < 101000
+    Gestalt(gestaltSystemVersionMinor, (SInt32*)&minorVersion);
+#else
+    NSOperatingSystemVersion systemVersion;
+    systemVersion = [[NSProcessInfo processInfo] operatingSystemVersion];
+    minorVersion = systemVersion.minorVersion;
+#endif
+    [NSApp setMacMinorVersion: minorVersion];
+
+    /*
+     * We are not drawing right now.
+     */
+
+    [NSApp setIsDrawing:NO];
+
+    /*
      * Be our own delegate.
      */
+
     [self setDelegate:self];
 
     /*
      * Make sure we are allowed to open windows.
      */
+
     [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 
     /*
@@ -255,7 +271,6 @@ TkpInit(
      */
 
     if (!initialized) {
-	struct utsname name;
 	struct stat st;
 
 	initialized = 1;
@@ -267,20 +282,6 @@ TkpInit(
 #if MAC_OS_X_VERSION_MIN_REQUIRED < 1060
 #   error Mac OS X 10.6 required
 #endif
-
-	if (!uname(&name)) {
-	    tkMacOSXMacOSXVersion = (strtod(name.release, NULL) + 96) * 10;
-	}
-       /*Check for new versioning scheme on Yosemite (10.10) and later.*/
-	if (MAC_OS_X_VERSION_MIN_REQUIRED > 100000) {
-		tkMacOSXMacOSXVersion = MAC_OS_X_VERSION_MIN_REQUIRED/100;
-	    }
-	if (tkMacOSXMacOSXVersion && MAC_OS_X_VERSION_MIN_REQUIRED < 100000 &&
-		tkMacOSXMacOSXVersion/10 < MAC_OS_X_VERSION_MIN_REQUIRED/10) {
-	    Tcl_Panic("Mac OS X 10.%d or later required !",
-		    (MAC_OS_X_VERSION_MIN_REQUIRED/10)-100);
-	}
-
 
 #ifdef TK_FRAMEWORK
 	/*
@@ -309,8 +310,8 @@ TkpInit(
 	}
 
 	/*
-	 * Instantiate our NSApplication object. This needs to be
-	 * done before we check whether to open a console window.
+	 * Instantiate our NSApplication object. This needs to be done before
+	 * we check whether to open a console window.
 	 */
 
 	NSAutoreleasePool *pool = [NSAutoreleasePool new];
@@ -325,6 +326,17 @@ TkpInit(
 	[pool drain];
 	[NSApp _setup:interp];
 	[NSApp finishLaunching];
+	Tk_MacOSXSetupTkNotifier();
+
+	/*
+	 * If the root window is mapped before the App has finished launching
+	 * it will open off screen (see ticket 56a1823c73).  To avoid this we
+	 * ask Tk to process an event with no wait.  We expect Tcl_DoOneEvent
+	 * to wait until the Mac event loop has been created and then return
+	 * immediately since the queue is empty.
+	 */
+
+	Tcl_DoOneEvent(TCL_WINDOW_EVENTS | TCL_DONT_WAIT);
 
 	/*
 	 * If we don't have a TTY and stdin is a special character file of
@@ -341,8 +353,8 @@ TkpInit(
 	    Tcl_RegisterChannel(interp, Tcl_GetStdChannel(TCL_STDERR));
 
 	    /*
-	     * Only show the console if we don't have a startup script
-	     * and tcl_interactive hasn't been set already.
+	     * Only show the console if we don't have a startup script and
+	     * tcl_interactive hasn't been set already.
 	     */
 
 	    if (Tcl_GetStartupScript(NULL) == NULL) {
@@ -361,8 +373,6 @@ TkpInit(
 
     }
 
-    Tk_MacOSXSetupTkNotifier();
-
     if (tkLibPath[0] != '\0') {
 	Tcl_SetVar2(interp, "tk_library", NULL, tkLibPath, TCL_GLOBAL_ONLY);
     }
@@ -374,8 +384,19 @@ TkpInit(
 
     Tcl_CreateObjCommand(interp, "::tk::mac::standardAboutPanel",
 	    TkMacOSXStandardAboutPanelObjCmd, NULL, NULL);
+    Tcl_CreateObjCommand(interp, "::tk::mac::registerServiceWidget",
+	    TkMacOSXRegisterServiceWidgetObjCmd, NULL, NULL);
     Tcl_CreateObjCommand(interp, "::tk::mac::iconBitmap",
 	    TkMacOSXIconBitmapObjCmd, NULL, NULL);
+    Tcl_CreateObjCommand(interp, "::tk::mac::GetAppPath", TkMacOSXGetAppPath, NULL, NULL);
+
+    /*
+     * Initialize the NSServices object here. Apple's docs say to do this
+     * in applicationDidFinishLaunching, but the Tcl interpreter is not
+     * initialized until this function call.
+     */
+
+    TkMacOSXServices_Init(interp);
 
     return TCL_OK;
 }
@@ -416,7 +437,58 @@ TkpGetAppName(
     }
     Tcl_DStringAppend(namePtr, name, -1);
 }
-
+
+/*
+ *----------------------------------------------------------------------
+ *
+ * TkMacOSXGetAppPath --
+ *
+ *	Returns the path of the Wish application bundle.
+ *
+ * Results:
+ *	Returns the application path.
+ *
+ * Side effects:
+ *	None.
+ *
+ *----------------------------------------------------------------------
+ */
+int TkMacOSXGetAppPath(
+		       ClientData cd,
+		       Tcl_Interp *ip,
+		       int objc,
+		       Tcl_Obj *const objv[])
+{
+
+  CFURLRef mainBundleURL = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+
+
+  /*
+   * Convert the URL reference into a string reference.
+   */
+
+  CFStringRef appPath = CFURLCopyFileSystemPath(mainBundleURL, kCFURLPOSIXPathStyle);
+
+  /*
+   * Get the system encoding method.
+   */
+
+  CFStringEncoding encodingMethod = CFStringGetSystemEncoding();
+
+  /*
+   * Convert the string reference into a C string.
+   */
+
+  char *path = (char *) CFStringGetCStringPtr(appPath, encodingMethod);
+
+  Tcl_SetResult(ip, path, NULL);
+
+  CFRelease(mainBundleURL);
+  CFRelease(appPath);
+  return TCL_OK;
+
+}
+
 /*
  *----------------------------------------------------------------------
  *

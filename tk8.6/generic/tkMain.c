@@ -45,7 +45,7 @@ extern int TkCygwinMainEx(int, char **, Tcl_AppInitProc *, Tcl_Interp *);
  * The default prompt used when the user has not overridden it.
  */
 
-#define DEFAULT_PRIMARY_PROMPT	"% "
+static const char DEFAULT_PRIMARY_PROMPT[] = "% ";
 
 /*
  * This file can be compiled on Windows in UNICODE mode, as well as
@@ -79,22 +79,31 @@ extern const TclIntPlatStubs *tclIntPlatStubsPtr;
 #endif
 
 /*
- * Further on, in UNICODE mode, we need to use Tcl_NewUnicodeObj,
- * while otherwise NewNativeObj is needed (which provides proper
- * conversion from native encoding to UTF-8).
+ * Further on, in UNICODE mode we just use Tcl_NewUnicodeObj, otherwise
+ * NewNativeObj is needed (which provides proper conversion from native
+ * encoding to UTF-8).
  */
+
+static inline Tcl_Obj *
+NewNativeObj(
+    TCHAR *string,
+    int length)
+{
+    Tcl_Obj *obj;
+    Tcl_DString ds;
+
 #ifdef UNICODE
-#   define NewNativeObj Tcl_NewUnicodeObj
-#else /* !UNICODE */
-    static Tcl_Obj *NewNativeObj(char *string, int length) {
-	Tcl_Obj *obj;
-	Tcl_DString ds;
-	Tcl_ExternalToUtfDString(NULL, string, length, &ds);
-	obj = Tcl_NewStringObj(Tcl_DStringValue(&ds), Tcl_DStringLength(&ds));
-	Tcl_DStringFree(&ds);
-	return obj;
+    if (length > 0) {
+	length *= sizeof(WCHAR);
+    }
+    Tcl_WinTCharToUtf(string, length, &ds);
+#else
+    Tcl_ExternalToUtfDString(NULL, (char *) string, length, &ds);
+#endif
+    obj = Tcl_NewStringObj(Tcl_DStringValue(&ds), Tcl_DStringLength(&ds));
+    Tcl_DStringFree(&ds);
+    return obj;
 }
-#endif /* !UNICODE */
 
 /*
  * Declarations for various library functions and variables (don't want to
@@ -236,6 +245,10 @@ Tk_MainEx(
     Tcl_Preserve(interp);
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
+#if !defined(STATIC_BUILD)
+    /* If compiled for Win32 but running on Cygwin, don't use console */
+    if (!tclStubsPtr->reserved9)
+#endif
     Tk_InitConsoleChannels(interp);
 #endif
 
@@ -515,7 +528,7 @@ Prompt(
 	    chan = Tcl_GetStdChannel(TCL_STDOUT);
 	    if (chan != NULL) {
 		Tcl_WriteChars(chan, DEFAULT_PRIMARY_PROMPT,
-			strlen(DEFAULT_PRIMARY_PROMPT));
+			sizeof(DEFAULT_PRIMARY_PROMPT) - 1);
 	    }
 	}
     } else {

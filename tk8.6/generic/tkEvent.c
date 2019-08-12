@@ -139,7 +139,7 @@ typedef struct ExitHandler {
  * storage for the current thread.
  */
 
-typedef struct ThreadSpecificData {
+typedef struct {
     int handlersActive;		/* The following variable has a non-zero value
 				 * when a handler is active. */
     InProgress *pendingPtr;	/* Topmost search in progress, or NULL if
@@ -1368,7 +1368,7 @@ Tk_HandleEvent(
 	 * handle CreateNotify events, so we gotta pass 'em through.
 	 */
 
-	if ((ip.winPtr != None)
+	if ((ip.winPtr != NULL)
 		&& ((mask != SubstructureNotifyMask)
 		|| (eventPtr->type == CreateNotify))) {
 	    TkBindEventProc(winPtr, eventPtr);
@@ -1439,7 +1439,7 @@ TkEventDeadWindow(
 		ipPtr->nextHandler = NULL;
 	    }
 	    if (ipPtr->winPtr == winPtr) {
-		ipPtr->winPtr = None;
+		ipPtr->winPtr = NULL;
 	    }
 	}
 	ckfree(handlerPtr);

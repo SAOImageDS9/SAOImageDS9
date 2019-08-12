@@ -1121,6 +1121,8 @@ MODULE_SCOPE int	TclFixupForwardJump(CompileEnv *envPtr,
 			    int distThreshold);
 MODULE_SCOPE void	TclFreeCompileEnv(CompileEnv *envPtr);
 MODULE_SCOPE void	TclFreeJumpFixupArray(JumpFixupArray *fixupArrayPtr);
+MODULE_SCOPE int	TclGetIndexFromToken(Tcl_Token *tokenPtr,
+			    int before, int after, int *indexPtr);
 MODULE_SCOPE void	TclInitByteCodeObj(Tcl_Obj *objPtr,
 			    CompileEnv *envPtr);
 MODULE_SCOPE void	TclInitCompileEnv(Tcl_Interp *interp,
@@ -1159,6 +1161,25 @@ MODULE_SCOPE void	TclPushVarName(Tcl_Interp *interp,
 			    Tcl_Token *varTokenPtr, CompileEnv *envPtr,
 			    int flags, int *localIndexPtr,
 			    int *isScalarPtr);
+
+static inline void
+TclPreserveByteCode(
+    register ByteCode *codePtr)
+{
+    codePtr->refCount++;
+}
+
+static inline void
+TclReleaseByteCode(
+    register ByteCode *codePtr)
+{
+    if (codePtr->refCount-- > 1) {
+	return;
+    }
+    /* Just dropped to refcount==0.  Clean up. */
+    TclCleanupByteCode(codePtr);
+}
+
 MODULE_SCOPE void	TclReleaseLiteral(Tcl_Interp *interp, Tcl_Obj *objPtr);
 MODULE_SCOPE void	TclInvalidateCmdLiteral(Tcl_Interp *interp,
 			    const char *name, Namespace *nsPtr);
@@ -1492,7 +1513,7 @@ MODULE_SCOPE int	TclPushProcCallFrame(ClientData clientData,
 #endif
 
 #define TclGetInt4AtPtr(p) \
-    (((int) TclGetInt1AtPtr(p) << 24) |				\
+    (((int) (TclGetUInt1AtPtr(p) << 24)) |				\
 		     (*((p)+1) << 16) |				\
 		     (*((p)+2) <<  8) |				\
 		     (*((p)+3)))

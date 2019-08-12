@@ -452,73 +452,25 @@ void Base::cropCenterCmd(const Vector& vv,
 
 void Base::cropBeginCmd(const Vector& vv)
 {
-  cropBegin = vv;
-  cropEnd = vv;
+  doAnts = 1;
+  antsBegin = vv;
+  antsEnd = vv;
 }
 
 void Base::cropMotionCmd(const Vector& vv)
 {
-  Vector ss = mapToRef(cropBegin, Coord::CANVAS);
-
-  // erase 
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
-    Vector tt = mapToRef(cropEnd, Coord::CANVAS);
-
-    Vector ll = mapFromRef(ss, Coord::CANVAS);
-    Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::CANVAS);
-    Vector ur = mapFromRef(tt, Coord::CANVAS);
-    Vector ul = mapFromRef(Vector(ss[0],tt[1]), Coord::CANVAS);
-
-    BBox bb(ll);
-    bb.bound(lr);
-    bb.bound(ur);
-    bb.bound(ul);
-
-    redrawNow(bb.expand(2));
-  }
-
-  cropEnd = vv;
-  // and draw to window
-  {
-    Vector tt = mapToRef(cropEnd, Coord::CANVAS);
-
-    Vector ll = mapFromRef(ss, Coord::WINDOW);
-    Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::WINDOW);
-    Vector ur = mapFromRef(tt, Coord::WINDOW);
-    Vector ul = mapFromRef(Vector(ss[0],tt[1]), Coord::WINDOW);
-
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,ll[0],ll[1],lr[0],lr[1]);
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,lr[0],lr[1],ur[0],ur[1]);
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,ur[0],ur[1],ul[0],ul[1]);
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,ul[0],ul[1],ll[0],ll[1]);
-  }
+  antsEnd = vv;
+  update(PIXMAP);
 }
 
 void Base::cropEndCmd(const Vector& vv)
 {
-  Vector ss = mapToRef(cropBegin, Coord::CANVAS);
+  doAnts = 0;
+  antsEnd = vv;
 
-  // erase 
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
-    Vector tt = mapToRef(cropEnd, Coord::CANVAS);
-
-    Vector ll = mapFromRef(ss, Coord::CANVAS);
-    Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::CANVAS);
-    Vector ur = mapFromRef(tt, Coord::CANVAS);
-    Vector ul = mapFromRef(Vector(ss[0],tt[1]), Coord::CANVAS);
-
-    BBox bb(ll);
-    bb.bound(lr);
-    bb.bound(ur);
-    bb.bound(ul);
-    redrawNow(bb.expand(2));
-  }
-
-  // and crop
-  cropEnd = vv;
-
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
-    Vector tt = mapToRef(cropEnd, Coord::CANVAS);
+  if (antsBegin[0]!=antsEnd[0] || antsBegin[1]!=antsEnd[1]) {
+    Vector ss = mapToRef(antsBegin, Coord::CANVAS);
+    Vector tt = mapToRef(antsEnd, Coord::CANVAS);
 
     if (!isMosaic()) {
       currentContext->setSecMode(FrScale::CROPSEC);
@@ -532,8 +484,8 @@ void Base::cropEndCmd(const Vector& vv)
     else {
       FitsImage* ptr1 =NULL;
       FitsImage* ptr2 =NULL;
-      if ((ptr1=isInFits(cropBegin,Coord::CANVAS,NULL)) ==
-	  (ptr2=isInFits(cropEnd,Coord::CANVAS,NULL))) {
+      if ((ptr1=isInFits(antsBegin,Coord::CANVAS,NULL)) ==
+	  (ptr2=isInFits(antsEnd,Coord::CANVAS,NULL))) {
 
 	currentContext->setSecMode(FrScale::CROPSEC);
 	// clear any previous params

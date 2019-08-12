@@ -93,12 +93,7 @@ static int  ReallyKillMe(Tcl_Event *eventPtr, int flags);
 - (void) handleReopenApplicationEvent: (NSAppleEventDescriptor *)event
     withReplyEvent: (NSAppleEventDescriptor *)replyEvent
 {
-#if MAC_OS_X_VERSION_MIN_REQUIRED < 1090
-    ProcessSerialNumber thePSN = {0, kCurrentProcess};
-    SetFrontProcess(&thePSN);
-#else
-    [[NSApplication sharedApplication] activateIgnoringOtherApps: YES];
-#endif
+    [NSApp activateIgnoringOtherApps: YES];
     if (_eventInterp && Tcl_FindCommand(_eventInterp,
 	    "::tk::mac::ReopenApplication", NULL, 0)) {
 	int code = Tcl_EvalEx(_eventInterp, "::tk::mac::ReopenApplication",
@@ -131,8 +126,23 @@ static int  ReallyKillMe(Tcl_Event *eventPtr, int flags);
 - (void) handlePrintDocumentsEvent: (NSAppleEventDescriptor *)event
     withReplyEvent: (NSAppleEventDescriptor *)replyEvent
 {
-    tkMacOSXProcessFiles(event, replyEvent, _eventInterp, "::tk::mac::PrintDocument");
+
+    NSString* file = [[event paramDescriptorForKeyword:keyDirectObject]
+			 stringValue];
+    const char *printFile=[file UTF8String];
+    Tcl_DString print;
+    Tcl_DStringInit(&print);
+    if (Tcl_FindCommand(_eventInterp, "::tk::mac::PrintDocument", NULL, 0)) {
+	Tcl_DStringAppend(&print, "::tk::mac::PrintDocument", -1);
+    }
+    Tcl_DStringAppendElement(&print, printFile);
+    int  tclErr = Tcl_EvalEx(_eventInterp, Tcl_DStringValue(&print),
+			     Tcl_DStringLength(&print), TCL_EVAL_GLOBAL);
+    if (tclErr!= TCL_OK) {
+	Tcl_BackgroundException(_eventInterp, tclErr);
+    }
 }
+
 
 - (void) handleDoScriptEvent: (NSAppleEventDescriptor *)event
     withReplyEvent: (NSAppleEventDescriptor *)replyEvent
@@ -251,6 +261,26 @@ static int  ReallyKillMe(Tcl_Event *eventPtr, int flags);
     }
     return;
 }
+
+- (void)handleURLEvent:(NSAppleEventDescriptor*)event
+        withReplyEvent:(NSAppleEventDescriptor*)replyEvent
+{
+    NSString* url = [[event paramDescriptorForKeyword:keyDirectObject]
+                        stringValue];
+    const char *cURL=[url UTF8String];
+    Tcl_DString launch;
+    Tcl_DStringInit(&launch);
+    if (Tcl_FindCommand(_eventInterp, "::tk::mac::LaunchURL", NULL, 0)) {
+	Tcl_DStringAppend(&launch, "::tk::mac::LaunchURL", -1);
+    }
+    Tcl_DStringAppendElement(&launch, cURL);
+    int  tclErr = Tcl_EvalEx(_eventInterp, Tcl_DStringValue(&launch),
+			     Tcl_DStringLength(&launch), TCL_EVAL_GLOBAL);
+    if (tclErr!= TCL_OK) {
+	Tcl_BackgroundException(_eventInterp, tclErr);
+         }
+    }
+
 @end
 
 #pragma mark -
@@ -279,7 +309,7 @@ tkMacOSXProcessFiles(
     Tcl_Interp *interp,
     const char* procedure)
 {
-    Tcl_Encoding utf8 = Tcl_GetEncoding(NULL, "utf-8");
+    Tcl_Encoding utf8;
     const AEDesc *fileSpecDesc = nil;
     AEDesc contents;
     char URLString[1 + URL_MAX_LENGTH];
@@ -331,6 +361,7 @@ tkMacOSXProcessFiles(
 
     Tcl_DStringInit(&command);
     Tcl_DStringAppend(&command, procedure, -1);
+    utf8 = Tcl_GetEncoding(NULL, "utf-8");
 
     for (index = 1; index <= count; index++) {
 	if (noErr != AEGetNthPtr(fileSpecDesc, index, typeFileURL, &keyword,
@@ -349,6 +380,8 @@ tkMacOSXProcessFiles(
 	Tcl_DStringAppendElement(&command, Tcl_DStringValue(&pathName));
 	Tcl_DStringFree(&pathName);
     }
+
+    Tcl_FreeEncoding(utf8);
     AEDisposeDesc(&contents);
 
     /*
@@ -361,7 +394,6 @@ tkMacOSXProcessFiles(
 	Tcl_BackgroundException(interp, code);
     }
     Tcl_DStringFree(&command);
-    return;
 }
 
 /*
@@ -412,12 +444,17 @@ TkMacOSXInitAppleEvents(
 	    forEventClass:kCoreEventClass andEventID:kAEOpenDocuments];
 
 	[aeManager setEventHandler:NSApp
-	    andSelector:@selector(handleOpenDocumentsEvent:withReplyEvent:)
+	    andSelector:@selector(handlePrintDocumentsEvent:withReplyEvent:)
 	    forEventClass:kCoreEventClass andEventID:kAEPrintDocuments];
 
 	[aeManager setEventHandler:NSApp
 	    andSelector:@selector(handleDoScriptEvent:withReplyEvent:)
 	    forEventClass:kAEMiscStandards andEventID:kAEDoScript];
+
+	[aeManager setEventHandler:NSApp
+	    andSelector:@selector(handleURLEvent:withReplyEvent:)
+	    forEventClass:kInternetEventClass andEventID:kAEGetURL];
+
     }
 }
 

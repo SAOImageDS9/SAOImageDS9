@@ -23,7 +23,7 @@
  * the current thread.
  */
 
-typedef struct ThreadSpecificData {
+typedef struct {
     int initialized;
 } ThreadSpecificData;
 static Tcl_ThreadDataKey dataKey;
@@ -186,6 +186,12 @@ TkpOpenDisplay(
 #endif
     Tcl_CreateFileHandler(ConnectionNumber(display), TCL_READABLE,
 	    DisplayFileProc, dispPtr);
+
+    /*
+     * Key map info must be available immediately, because of "send event".
+     */
+    TkpInitKeymapInfo(dispPtr);
+
     return dispPtr;
 }
 

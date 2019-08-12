@@ -32,21 +32,22 @@ Composite::Composite(Base* p, const Vector& ctr,
 }
 
 void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
-		    int tt, RenderMode mode, HandleMode hh)
+		    int tt, HandleMode hh)
 {
-  if (hh==HANDLES)
+  if (hh==HANDLES && renderMode != Marker::XOR)
     renderXHandles(drawable);
   if (tt)
-    renderXText(drawable, sys, mode);
+    renderXText(drawable, sys, renderMode);
 
   Marker* mk=members.head();
   while (mk) {
-    Marker* m = mk->dup();
-    m->setComposite(fwdMatrix(), angle);
+    Marker* mm = mk->dup();
+    mm->setRenderMode(renderMode);
+    mm->setComposite(fwdMatrix(), angle);
     if (global)
-      m->setComposite(colorName, lineWidth, highlited);
-    m->x11(drawable, sys, tt, mode, hh);
-    delete m;
+      mm->setComposite(colorName, lineWidth, highlited);
+    mm->x11(drawable, sys, tt, hh);
+    delete mm;
     mk=mk->next();
   }
 }

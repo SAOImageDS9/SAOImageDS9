@@ -86,7 +86,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   pannerName[0] = '\0';
   usePanner = 0;
   pannerGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetLineAttributes(display, pannerGC, 1, LineSolid, CapButt, JoinMiter);
 
   magnifierPixmap = 0;
   magnifierXImage = NULL;
@@ -98,6 +97,9 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   useMagnifierGraphics = 1;
   useMagnifierCursor = 1;
   magnifierColorName = dupstr("white");
+
+  doAnts =0;
+  doAnts3d =0;
 
   wcsSystem_ = Coord::WCS;
   wcsSkyFrame_ = Coord::FK5;
@@ -118,7 +120,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   useHighlite = 0;
   highliteGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
 
   useCrosshair = 0;
 
@@ -148,7 +149,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 
   bgColorName = dupstr("white");
   bgColor = getXColor("white");
@@ -169,8 +169,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   undoMarkerType = NONE;
 
   editMarker = NULL;
-  rotateMarker = NULL;
-
   compositeMarker = NULL;
 
   inverseScale = NULL;
@@ -1378,6 +1376,7 @@ void Base::updateGCs()
   // widget clip region
   BBox bbWidget = BBox(0, 0, options->width, options->height);
   Vector sizeWidget = bbWidget.size();
+  XRectangle rectWidget[1];
 
   rectWidget[0].x = (int)bbWidget.ll[0];
   rectWidget[0].y = (int)bbWidget.ll[1];
@@ -1387,24 +1386,29 @@ void Base::updateGCs()
   // window clip region
   BBox bbWindow = bbWidget * widgetToWindow;
   Vector sizeWindow = bbWindow.size();
+  XRectangle rectWindow[1];
 
   rectWindow[0].x = (int)bbWindow.ll[0];
   rectWindow[0].y = (int)bbWindow.ll[1];
   rectWindow[0].width = (int)sizeWindow[0];
   rectWindow[0].height = (int)sizeWindow[1];
 
+  // pannerGC
+  XSetLineAttributes(display, pannerGC, 1, LineSolid, CapButt, JoinMiter);
+
   // highliteGC
   XSetClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, highliteGC, getColor("blue"));
+  XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
 
   // markerGC
   XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
-  XSetClipRectangles(display, markerGCXOR_, 0, 0, rectWindow, 1, Unsorted);
+  XSetClipRectangles(display, markerGCXOR_, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, markerGCXOR_, getColor("white"));
 
   // selectGC
   x11Dash(selectGCXOR,1);
-  XSetClipRectangles(display, selectGCXOR, 0, 0, rectWindow, 1, Unsorted);
+  XSetClipRectangles(display, selectGCXOR, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, selectGCXOR, getColor("white"));
 
   // gridGC
@@ -1412,6 +1416,7 @@ void Base::updateGCs()
 
   // contourGC
   XSetClipRectangles(display, contourGC_, 0, 0, rectWidget, 1, Unsorted);
+  XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 }
 
 void Base::updateMagnifier()
@@ -1706,6 +1711,12 @@ void Base::updatePM(const BBox& bbox)
   if (useCrosshair)
     x11Crosshair(pixmap, Coord::WIDGET, options->width, options->height);
 
+  // select/crop
+  if (doAnts)
+    x11Ants();
+  if (doAnts3d)
+    x11Ants3d();
+
   // highlite bbox/compass
   x11Graphics();
 
@@ -1721,6 +1732,24 @@ char* Base::varcat(char* buf, char* base, char id, char* mod)
   buf[ll++] = '\0';
   strcat(buf,mod);
   return buf;
+}
+
+void Base::x11Ants()
+{
+  if (antsBegin[0]!=antsEnd[0] || antsBegin[1]!=antsEnd[1]) {
+    Vector ss = mapToRef(antsBegin, Coord::CANVAS);
+    Vector tt = mapToRef(antsEnd, Coord::CANVAS);
+
+    Vector ll = mapFromRef(ss, Coord::CANVAS);
+    Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::CANVAS);
+    Vector ur = mapFromRef(tt, Coord::CANVAS);
+    Vector ul = mapFromRef(Vector(ss[0],tt[1]), Coord::CANVAS);
+
+    XDrawLine(display,pixmap,selectGCXOR,ll[0],ll[1],lr[0],lr[1]);
+    XDrawLine(display,pixmap,selectGCXOR,lr[0],lr[1],ur[0],ur[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ur[0],ur[1],ul[0],ul[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ul[0],ul[1],ll[0],ll[1]);
+  }
 }
 
 void Base::x11Crosshair(Pixmap pm, Coord::InternalSystem sys, 
@@ -1787,6 +1816,7 @@ void Base::ximageToPixmapMagnifier()
 void Base::macosx()
 {
   // clip rect
+  XRectangle rectWidget[1];
   XRectangle* rr = rectWidget;
   Vector v1 = Vector(rr->x, rr->y) * widgetToCanvas;
   Vector v2 = Vector(rr->x+rr->width, rr->y+rr->height) * widgetToCanvas;
@@ -1895,6 +1925,7 @@ void Base::macosxPrintCmd()
 void Base::win32()
 {
   // clip rect
+  XRectangle rectWidget[1];
   XRectangle* rr = rectWidget;
   Vector v1 = Vector(rr->x, rr->y) * widgetToCanvas;
   Vector v2 = Vector(rr->x+rr->width, rr->y+rr->height) * widgetToCanvas;

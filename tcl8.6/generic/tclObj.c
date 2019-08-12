@@ -2467,23 +2467,26 @@ Tcl_SetIntObj(
  *
  * Tcl_GetIntFromObj --
  *
- *	Attempt to return an int from the Tcl object "objPtr". If the object
- *	is not already an int, an attempt will be made to convert it to one.
+ *	Retrieve the integer value of 'objPtr'.
  *
- *	Integer and long integer objects share the same "integer" type
- *	implementation. We store all integers as longs and Tcl_GetIntFromObj
- *	checks whether the current value of the long can be represented by an
- *	int.
+ * Value
  *
- * Results:
- *	The return value is a standard Tcl object result. If an error occurs
- *	during conversion or if the long integer held by the object can not be
- *	represented by an int, an error message is left in the interpreter's
- *	result unless "interp" is NULL.
+ *	TCL_OK
  *
- * Side effects:
- *	If the object is not already an int, the conversion will free any old
- *	internal representation.
+ *	    Success.
+ *
+ *	TCL_ERROR
+ *
+ *	    An error occurred during conversion or the integral value can not
+ *	    be represented as an integer (it might be too large). An error
+ *	    message is left in the interpreter's result if 'interp' is not
+ *	    NULL.
+ *
+ * Effect
+ *
+ *	'objPtr' is converted to an integer if necessary if it is not one
+ *	already.  The conversion frees any previously-existing internal
+ *	representation.
  *
  *----------------------------------------------------------------------
  */
@@ -2801,8 +2804,8 @@ Tcl_GetLongFromObj(
 	    mp_int big;
 
 	    UNPACK_BIGNUM(objPtr, big);
-	    if ((size_t) big.used <= (CHAR_BIT * sizeof(long) + DIGIT_BIT - 1)
-		    / DIGIT_BIT) {
+	    if ((size_t) big.used <= (CHAR_BIT * sizeof(long) + MP_DIGIT_BIT - 1)
+		    / MP_DIGIT_BIT) {
 		unsigned long value = 0, numBytes = sizeof(long);
 		long scratch;
 		unsigned char *bytes = (unsigned char *) &scratch;
@@ -3101,7 +3104,7 @@ Tcl_GetWideIntFromObj(
 
 	    UNPACK_BIGNUM(objPtr, big);
 	    if ((size_t) big.used <= (CHAR_BIT * sizeof(Tcl_WideInt)
-		     + DIGIT_BIT - 1) / DIGIT_BIT) {
+		     + MP_DIGIT_BIT - 1) / MP_DIGIT_BIT) {
 		Tcl_WideUInt value = 0;
 		unsigned long numBytes = sizeof(Tcl_WideInt);
 		Tcl_WideInt scratch;
@@ -3520,7 +3523,7 @@ Tcl_SetBignumObj(
 	Tcl_Panic("%s called with shared object", "Tcl_SetBignumObj");
     }
     if ((size_t) bignumValue->used
-	    <= (CHAR_BIT * sizeof(long) + DIGIT_BIT - 1) / DIGIT_BIT) {
+	    <= (CHAR_BIT * sizeof(long) + MP_DIGIT_BIT - 1) / MP_DIGIT_BIT) {
 	unsigned long value = 0, numBytes = sizeof(long);
 	long scratch;
 	unsigned char *bytes = (unsigned char *) &scratch;
@@ -3545,7 +3548,7 @@ Tcl_SetBignumObj(
   tooLargeForLong:
 #ifndef TCL_WIDE_INT_IS_LONG
     if ((size_t) bignumValue->used
-	    <= (CHAR_BIT * sizeof(Tcl_WideInt) + DIGIT_BIT - 1) / DIGIT_BIT) {
+	    <= (CHAR_BIT * sizeof(Tcl_WideInt) + MP_DIGIT_BIT - 1) / MP_DIGIT_BIT) {
 	Tcl_WideUInt value = 0;
 	unsigned long numBytes = sizeof(Tcl_WideInt);
 	Tcl_WideInt scratch;

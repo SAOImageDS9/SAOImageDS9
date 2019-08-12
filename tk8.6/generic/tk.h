@@ -75,10 +75,10 @@ extern "C" {
 #define TK_MAJOR_VERSION	8
 #define TK_MINOR_VERSION	6
 #define TK_RELEASE_LEVEL	TCL_FINAL_RELEASE
-#define TK_RELEASE_SERIAL	8
+#define TK_RELEASE_SERIAL	10
 
 #define TK_VERSION		"8.6"
-#define TK_PATCH_LEVEL		"8.6.8"
+#define TK_PATCH_LEVEL		"8.6.10"
 
 /*
  * A special definition used to allow this header file to be included from
@@ -266,10 +266,10 @@ typedef struct Tk_ObjCustomOption {
  * Computes number of bytes from beginning of structure to a given field.
  */
 
-#ifdef offsetof
 #define Tk_Offset(type, field) ((int) offsetof(type, field))
-#else
-#define Tk_Offset(type, field) ((int) ((char *) &((type *) 0)->field))
+/* Workaround for platforms missing offsetof(), e.g. VC++ 6.0 */
+#ifndef offsetof
+#   define offsetof(type, field) ((size_t) ((char *) &((type *) 0)->field))
 #endif
 
 /*
@@ -676,7 +676,7 @@ typedef struct {
 				 * request. */
     Display *display;		/* Display the event was read from. */
     Window event;		/* Window on which event was requested. */
-    Window root;		/* Root window that the event occured on. */
+    Window root;		/* Root window that the event occurred on. */
     Window subwindow;		/* Child window. */
     Time time;			/* Milliseconds. */
     int x, y;			/* Pointer x, y coordinates in event
@@ -813,10 +813,11 @@ typedef struct Tk_FakeWin {
     int internalBorderBottom;
     int minReqWidth;
     int minReqHeight;
-    char *dummy20;		/* geometryMaster */
 #ifdef TK_USE_INPUT_METHODS
-    int dummy21;
+    int dummy20;
 #endif /* TK_USE_INPUT_METHODS */
+    char *dummy21;		/* geomMgrName */
+    Tk_Window dummy22;		/* maintainerPtr */
 } Tk_FakeWin;
 
 /*
@@ -1174,7 +1175,7 @@ typedef struct Tk_TSOffset {
 } Tk_TSOffset;
 
 /*
- * Bit fields in Tk_Offset->flags:
+ * Bit fields in Tk_TSOffset->flags:
  */
 
 #define TK_OFFSET_INDEX		1

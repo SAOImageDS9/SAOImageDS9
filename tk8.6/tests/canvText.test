@@ -55,8 +55,8 @@ test canvText-1.10 {configuration options: good value for "stipple"} -body {
     list [lindex [.c itemconfigure test -stipple] 4] [.c itemcget test -stipple]
 } -result {gray50 gray50}
 test canvasText-1.11 {configuration options: bad value for "stipple"} -body {
-    .c itemconfigure test -stipple xyz
-} -returnCodes error -result {bitmap "xyz" not defined}
+    .c itemconfigure test -stipple abcxyz
+} -returnCodes error -result {bitmap "abcxyz" not defined}
 test canvText-1.12 {configuration options: good value for "underline"} -body {
     .c itemconfigure test -underline 0
     list [lindex [.c itemconfigure test -underline] 4] [.c itemcget test -underline]
@@ -269,7 +269,7 @@ test canvText-6.1 {ComputeTextBbox procedure} -constraints fonts -setup {
     .c create text 0 0 -tag test
     .c itemconfig test -font $font -text 0
     expr {[.c itemconfig test -anchor n; .c bbox test] \
-	      eq "[expr -$ax/2-1] 0 [expr $ax/2+1] $ay"}
+	      eq "[expr {-$ax/2-1}] 0 [expr {$ax/2+1}] $ay"}
 } -cleanup {
     .c delete test
 } -result 1
@@ -282,7 +282,7 @@ test canvText-6.2 {ComputeTextBbox procedure} -constraints fonts -setup {
     .c create text 0 0 -tag test
     .c itemconfig test -font $font -text 0
     expr {[.c itemconfig test -anchor nw; .c bbox test] \
-	      eq "-1 0 [expr $ax+1] $ay"}
+	      eq "-1 0 [expr {$ax+1}] $ay"}
 } -cleanup {
     .c delete test
 } -result 1

@@ -38,7 +38,15 @@
 # The code below creates the default class bindings for text widgets.
 #-------------------------------------------------------------------------
 
+
+
 # Standard Motif bindings:
+
+bind Text <Map> {
+    if {[tk windowingsystem] eq "aqua"} {
+    	::tk::RegisterServiceWidget %W
+    }
+}
 
 bind Text <1> {
     tk::TextButton1 %W %x %y
@@ -83,6 +91,7 @@ bind Text <B1-Enter> {
 bind Text <ButtonRelease-1> {
     tk::CancelRepeat
 }
+
 bind Text <Control-1> {
     %W mark set insert @%x,%y
     # An operation that moves the insert mark without making it
@@ -1058,13 +1067,13 @@ proc ::tk_textCut w {
         # make <<Cut>> an atomic operation on the Undo stack,
         # i.e. separate it from other delete operations on either side
 	set oldSeparator [$w cget -autoseparators]
-	if {$oldSeparator} {
+	if {([$w cget -state] eq "normal") && $oldSeparator} {
 	    $w edit separator
 	}
 	clipboard clear -displayof $w
 	clipboard append -displayof $w $data
 	$w delete sel.first sel.last
-	if {$oldSeparator} {
+	if {([$w cget -state] eq "normal") && $oldSeparator} {
 	    $w edit separator
 	}
     }
@@ -1205,3 +1214,4 @@ proc ::tk::TextScanDrag {w x y} {
 	$w scan dragto $x $y
     }
 }
+

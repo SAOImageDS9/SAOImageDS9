@@ -530,11 +530,6 @@ void Widget::redrawNow(BBox bb)
   Tcl_DoOneEvent(TCL_IDLE_EVENTS);
 }
 
-void Widget::forceUpdate()
-{
-  Tcl_DoOneEvent(TCL_IDLE_EVENTS);
-}
-
 // Update Bounding Box. For image at (n,n) with size (m,m), 
 // bbox is defined from (n,n) to (n+m,n+m)
 

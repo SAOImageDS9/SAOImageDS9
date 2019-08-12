@@ -426,12 +426,7 @@ Tk_Grab(
     }
 
     Tk_MakeWindowExist(tkwin);
-#ifndef MAC_OSX_TK
-    if (!grabGlobal)
-#else
-    if (0)
-#endif /* MAC_OSX_TK */
-    {
+    if (!grabGlobal) {
 	Window dummy1, dummy2;
 	int dummy3, dummy4, dummy5, dummy6;
 	unsigned int state;
@@ -886,8 +881,9 @@ TkPointerEvent(
 		return 1;
 	    }
 	} else {
-	    if ((eventPtr->xbutton.state & ALL_BUTTONS)
-		    == buttonStates[eventPtr->xbutton.button - Button1]) {
+	    if (eventPtr->xbutton.button != AnyButton &&
+		    ((eventPtr->xbutton.state & ALL_BUTTONS)
+		    == buttonStates[eventPtr->xbutton.button - Button1])) {
 		ReleaseButtonGrab(dispPtr);			/* Note 4. */
 	    }
 	}
@@ -1386,7 +1382,7 @@ QueueGrabWindowChange(
 static int
 GrabWinEventProc(
     Tcl_Event *evPtr,		/* Event of type NewGrabWinEvent. */
-    int flags)			/* Flags argument to Tk_DoOneEvent: indicates
+    int flags)			/* Flags argument to Tcl_DoOneEvent: indicates
 				 * what kinds of events are being processed
 				 * right now. */
 {

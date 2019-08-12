@@ -63,7 +63,7 @@ enum {
  * widget classes.
  */
 
-typedef struct ThreadSpecificData {
+typedef struct {
     BITMAPINFOHEADER *boxesPtr;	/* Information about the bitmap. */
     DWORD *boxesPalette;	/* Pointer to color palette. */
     LPSTR boxesBits;		/* Pointer to bitmap data. */
@@ -127,7 +127,7 @@ InitBoxes(void)
     HRSRC hrsrc;
     HGLOBAL hblk;
     LPBITMAPINFOHEADER newBitmap;
-    DWORD size;
+    size_t size;
     ThreadSpecificData *tsdPtr = (ThreadSpecificData *)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
@@ -146,8 +146,9 @@ InitBoxes(void)
 
     if (tsdPtr->boxesPtr != NULL && !(tsdPtr->boxesPtr->biWidth % 4)
 	    && !(tsdPtr->boxesPtr->biHeight % 2)) {
-	size = tsdPtr->boxesPtr->biSize + (1 << tsdPtr->boxesPtr->biBitCount)
-		* sizeof(RGBQUAD) + tsdPtr->boxesPtr->biSizeImage;
+	size = tsdPtr->boxesPtr->biSize
+		+ (sizeof(RGBQUAD) << tsdPtr->boxesPtr->biBitCount)
+		+ tsdPtr->boxesPtr->biSizeImage;
 	newBitmap = ckalloc(size);
 	memcpy(newBitmap, tsdPtr->boxesPtr, size);
 	tsdPtr->boxesPtr = newBitmap;
@@ -156,7 +157,7 @@ InitBoxes(void)
 	tsdPtr->boxesPalette = (DWORD*) (((LPSTR) tsdPtr->boxesPtr)
 		+ tsdPtr->boxesPtr->biSize);
 	tsdPtr->boxesBits = ((LPSTR) tsdPtr->boxesPalette)
-	    + ((1 << tsdPtr->boxesPtr->biBitCount) * sizeof(RGBQUAD));
+		+ (sizeof(RGBQUAD) << tsdPtr->boxesPtr->biBitCount);
     } else {
 	tsdPtr->boxesPtr = NULL;
     }
@@ -404,7 +405,10 @@ TkpDisplayButton(
      * Compute width of default ring and offset for pushed buttons.
      */
 
-    if (butPtr->type == TYPE_BUTTON) {
+    if (butPtr->type == TYPE_LABEL) {
+	defaultWidth = butPtr->highlightWidth;
+        offset = 0;
+    } else if (butPtr->type == TYPE_BUTTON) {
 	defaultWidth = ((butPtr->defaultState == DEFAULT_ACTIVE)
 		? butPtr->highlightWidth : 0);
 	offset = 1;
@@ -433,7 +437,7 @@ TkpDisplayButton(
      * Display image or bitmap or text for button.
      */
 
-    if (butPtr->image != None) {
+    if (butPtr->image != NULL) {
 	Tk_SizeOfImage(butPtr->image, &width, &height);
 	haveImage = 1;
     } else if (butPtr->bitmap != None) {
@@ -758,17 +762,24 @@ TkpDisplayButton(
 		butPtr->borderWidth, relief);
     }
     if (defaultWidth != 0) {
+        int highlightColor;
+
 	dc = TkWinGetDrawableDC(butPtr->display, pixmap, &state);
+        if (butPtr->type == TYPE_LABEL) {
+            highlightColor = (int) Tk_3DBorderColor(butPtr->highlightBorder)->pixel;
+        } else {
+            highlightColor = (int) butPtr->highlightColorPtr->pixel;
+        }
 	TkWinFillRect(dc, 0, 0, Tk_Width(tkwin), defaultWidth,
-		(int) butPtr->highlightColorPtr->pixel);
+		highlightColor);
 	TkWinFillRect(dc, 0, 0, defaultWidth, Tk_Height(tkwin),
-		(int) butPtr->highlightColorPtr->pixel);
+		highlightColor);
 	TkWinFillRect(dc, 0, Tk_Height(tkwin) - defaultWidth,
 		Tk_Width(tkwin), defaultWidth,
-		(int) butPtr->highlightColorPtr->pixel);
+		highlightColor);
 	TkWinFillRect(dc, Tk_Width(tkwin) - defaultWidth, 0,
 		defaultWidth, Tk_Height(tkwin),
-		(int) butPtr->highlightColorPtr->pixel);
+		highlightColor);
 	TkWinReleaseDrawableDC(pixmap, dc, &state);
     }
 

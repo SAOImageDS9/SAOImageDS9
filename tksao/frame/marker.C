@@ -68,6 +68,7 @@ Marker::Marker(Base* p, const Vector& ctr, double ang)
   properties = INCLUDE|SOURCE;
   selected = 0;
   highlited = 0;
+  renderMode = Marker::SRC;
 
   dlist[0] = 8;
   dlist[1] = 3;
@@ -123,6 +124,7 @@ Marker::Marker(Base* p, const Vector& ctr,
   properties = prop;
   selected = 0;
   highlited = 0;
+  renderMode = Marker::SRC;
 
   dlist[0] = dsh[0];
   dlist[1] = dsh[1];
@@ -183,6 +185,7 @@ Marker::Marker(const Marker& a)
   properties = a.properties;
   selected = a.selected;
   highlited = a.highlited;
+  renderMode = a.renderMode;
 
   dlist[0] = a.dlist[0];
   dlist[1] = a.dlist[1];
@@ -243,15 +246,15 @@ Marker::~Marker()
 }
 
 void Marker::x11(Drawable drawable, Coord::InternalSystem sys, 
-		 int tt, RenderMode mode, HandleMode hh)
+		 int tt, HandleMode hh)
 {
-  if (hh==HANDLES)
+  if (hh==HANDLES && renderMode != Marker::XOR)
     renderXHandles(drawable);
   if (tt)
-    renderXText(drawable, sys, mode);
+    renderXText(drawable, sys, renderMode);
 
-  renderX(drawable, sys, mode);
-  renderXInclude(drawable, sys, mode);
+  renderX(drawable, sys, renderMode);
+  renderXInclude(drawable, sys, renderMode);
 }
 
 void Marker::renderXInclude(Drawable drawable, Coord::InternalSystem sys, 

@@ -48,7 +48,7 @@
 #endif
 #endif /* BFFM_VALIDATEFAILED */
 
-typedef struct ThreadSpecificData {
+typedef struct {
     int debugFlag;		/* Flags whether we should output debugging
 				 * information while displaying a builtin
 				 * dialog. */
@@ -1714,7 +1714,7 @@ static int GetFileNameXP(Tcl_Interp *interp, OFNOpts *optsPtr, enum OFNOper oper
     /*
      * We now allow FNERR_BUFFERTOOSMALL when multiselection is enabled. The
      * filename buffer has been dynamically allocated by the OFN dialog
-     * procedure to accomodate all selected files.
+     * procedure to accommodate all selected files.
      */
 
     if ((winCode != 0)
@@ -2716,7 +2716,7 @@ ChooseDirectoryValidateProc(
 
     case BFFM_INITIALIZED: {
 	/*
-	 * Directory browser intializing - tell it where to start from, user
+	 * Directory browser initializing - tell it where to start from, user
 	 * specified parameter.
 	 */
 
@@ -2911,13 +2911,10 @@ Tk_MessageBoxObjCmd(
 
     flags |= icon | type | MB_TASKMODAL | MB_SETFOREGROUND;
 
-    tmpObj = messageObj ? Tcl_DuplicateObj(messageObj)
-	    : Tcl_NewUnicodeObj(NULL, 0);
+    tmpObj = messageObj ? Tcl_DuplicateObj(messageObj) : Tcl_NewObj();
     Tcl_IncrRefCount(tmpObj);
     if (detailObj) {
-	const Tcl_UniChar twoNL[] = { '\n', '\n' };
-
-	Tcl_AppendUnicodeToObj(tmpObj, twoNL, 2);
+	Tcl_AppendStringsToObj(tmpObj, "\n\n", NULL);
 	Tcl_AppendObjToObj(tmpObj, detailObj);
     }
 
@@ -3351,7 +3348,7 @@ FontchooserConfigureCmd(
 	    Tk_Window parent = Tk_NameToWindow(interp,
 		    Tcl_GetString(objv[i+1]), tkwin);
 
-	    if (parent == None) {
+	    if (parent == NULL) {
 		return TCL_ERROR;
 	    }
 	    if (hdPtr->parentObj) {
@@ -3378,7 +3375,7 @@ FontchooserConfigureCmd(
 	    if (hdPtr->fontObj) {
 		Tcl_DecrRefCount(hdPtr->fontObj);
 	    }
-	    (void)Tcl_GetString(objv[i+1]);
+	    Tcl_GetString(objv[i+1]);
 	    if (objv[i+1]->length) {
 		hdPtr->fontObj = objv[i+1];
 		if (Tcl_IsShared(hdPtr->fontObj)) {
@@ -3393,7 +3390,7 @@ FontchooserConfigureCmd(
 	    if (hdPtr->cmdObj) {
 		Tcl_DecrRefCount(hdPtr->cmdObj);
 	    }
-	    (void)Tcl_GetString(objv[i+1]);
+	    Tcl_GetString(objv[i+1]);
 	    if (objv[i+1]->length) {
 		hdPtr->cmdObj = objv[i+1];
 		if (Tcl_IsShared(hdPtr->cmdObj)) {
@@ -3446,7 +3443,7 @@ FontchooserShowCmd(
     if (hdPtr->parentObj) {
 	parent = Tk_NameToWindow(interp, Tcl_GetString(hdPtr->parentObj),
 		tkwin);
-	if (parent == None) {
+	if (parent == NULL) {
 	    return TCL_ERROR;
 	}
     }

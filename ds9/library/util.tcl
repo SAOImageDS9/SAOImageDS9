@@ -898,6 +898,14 @@ proc QuitDS9 {} {
 	}
     }
 
+    # delete frames
+    # may have regions with plot windows
+    DeleteAllFrames
+
+    # make sure everybody has had a chance to shut down properly
+    update
+
+    # and we are done
     focus {}
     exit
 }

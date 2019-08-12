@@ -34,7 +34,7 @@ namespace eval ttk {
 
 ### Option database settings.
 #
-option add *TEntry.cursor [ttk::cursor text]
+option add *TEntry.cursor [ttk::cursor text] widgetDefault
 
 ### Bindings.
 #
@@ -57,6 +57,13 @@ option add *TEntry.cursor [ttk::cursor text]
 #	Another judgment call.  If anyone misses this, let me know
 #	and I'll put it back.
 #
+
+##Bindings to register with macOS Services API.
+bind T.Entry <Map> {
+    if {[tk windowingsystem] eq "aqua"} {
+    	::tk::RegisterServiceWidget %W
+    }
+}
 
 ## Clipboard events:
 #
@@ -211,7 +218,6 @@ proc ttk::entry::ClosestGap {w x} {
 ## See $index -- Make sure that the character at $index is visible.
 #
 proc ttk::entry::See {w {index insert}} {
-    update idletasks	;# ensure scroll data up-to-date
     set c [$w index $index]
     # @@@ OR: check [$w index left] / [$w index right]
     if {$c < [$w index @0] || $c >= [$w index @[winfo width $w]]} {
@@ -418,7 +424,7 @@ proc ttk::entry::DragOut {w mode} {
 # 	Suspend autoscroll.
 #
 proc ttk::entry::DragIn {w} {
-    ttk::CancelRepeat 
+    ttk::CancelRepeat
 }
 
 ## <ButtonRelease-1> binding
@@ -432,7 +438,7 @@ proc ttk::entry::Release {w} {
 ## AutoScroll
 #	Called repeatedly when the mouse is outside an entry window
 #	with Button 1 down.  Scroll the window left or right,
-#	depending on where the mouse left the window, and extend 
+#	depending on where the mouse left the window, and extend
 #	the selection according to the current selection mode.
 #
 # TODO: AutoScroll should repeat faster (50ms) than normal autorepeat.

@@ -37,7 +37,7 @@ typedef struct TkHalfdeadWindow {
     struct TkHalfdeadWindow *nextPtr;
 } TkHalfdeadWindow;
 
-typedef struct ThreadSpecificData {
+typedef struct {
     int numMainWindows;		/* Count of numver of main windows currently
 				 * open in this thread. */
     TkMainInfo *mainWindowList;
@@ -664,6 +664,8 @@ TkAllocWindow(
     winPtr->selHandlerList = NULL;
     winPtr->geomMgrPtr = NULL;
     winPtr->geomData = NULL;
+    winPtr->geomMgrName = NULL;
+    winPtr->maintainerPtr = NULL;
     winPtr->reqWidth = winPtr->reqHeight = 1;
     winPtr->internalBorderLeft = 0;
     winPtr->wmInfoPtr = NULL;
@@ -675,7 +677,6 @@ TkAllocWindow(
     winPtr->internalBorderBottom = 0;
     winPtr->minReqWidth = 0;
     winPtr->minReqHeight = 0;
-    winPtr->geometryMaster = NULL;
 
     return winPtr;
 }
@@ -851,7 +852,7 @@ TkCreateMainWindow(
      * Create the basic TkWindow structure.
      */
 
-    tkwin = CreateTopLevelWindow(interp, (Tk_Window) NULL, baseName,
+    tkwin = CreateTopLevelWindow(interp, NULL, baseName,
 	    screenName, /* flags */ 0);
     if (tkwin == NULL) {
 	return NULL;
@@ -1460,9 +1461,9 @@ Tk_DestroyWindow(
     TkOptionDeadWindow(winPtr);
     TkSelDeadWindow(winPtr);
     TkGrabDeadWindow(winPtr);
-    if (winPtr->geometryMaster != NULL) {
-	ckfree(winPtr->geometryMaster);
-	winPtr->geometryMaster = NULL;
+    if (winPtr->geomMgrName != NULL) {
+	ckfree(winPtr->geomMgrName);
+	winPtr->geomMgrName = NULL;
     }
     if (winPtr->mainPtr != NULL) {
 	if (winPtr->pathName != NULL) {
@@ -2088,7 +2089,7 @@ void
 Tk_UndefineCursor(
     Tk_Window tkwin)		/* Window to manipulate. */
 {
-    Tk_DefineCursor(tkwin, None);
+    Tk_DefineCursor(tkwin, NULL);
 }
 
 void
@@ -2783,6 +2784,18 @@ DeleteWindowsExitProc(
 	Tcl_Preserve(interp);
 	Tk_DestroyWindow((Tk_Window) tsdPtr->mainWindowList->winPtr);
 	Tcl_Release(interp);
+    }
+
+    /*
+     * Let error handlers catch up before actual close of displays.
+     * Must be done before tsdPtr->displayList is cleared, otherwise
+     * ErrorProc() in tkError.c cannot associate the pending X errors
+     * to the remaining error handlers.
+     */
+
+    for (dispPtr = tsdPtr->displayList; dispPtr != NULL;
+           dispPtr = dispPtr->nextPtr) {
+       XSync(dispPtr->display, False);
     }
 
     /*

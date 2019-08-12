@@ -154,11 +154,7 @@ public:
   UndoMarkerType undoMarkerType; // type
 
   Vector markerBegin;        // marker move begin in image coords
-  Marker* editMarker;        // pointer to marker currently being edited
-  Marker* rotateMarker;      // pointer to marker currently being rotated
-  Vector regionBegin;        // select region begin in canvas coords
-  Vector regionEnd;          // select region end in canvas coords
-
+  Marker* editMarker;        // pointer to current being edited/moved/rotated
   Composite* compositeMarker; // pointer to current composite marker
 
   Vector cursor; // current cursor position in REF coords
@@ -205,8 +201,10 @@ public:
   Vector magnifierCursor;    // we need to save the last cursor used
   char* magnifierColorName;
 
-  Vector cropBegin;
-  Vector cropEnd;
+  int doAnts;
+  int doAnts3d;
+  Vector antsBegin;
+  Vector antsEnd;
 
   Coord::CoordSystem wcsSystem_;
   Coord::SkyFrame wcsSkyFrame_;
@@ -229,9 +227,6 @@ public:
 
   int useHighlite;
   GC highliteGC;
-
-  XRectangle rectWidget[1];
-  XRectangle rectWindow[1];
 
   int useCrosshair;
 
@@ -482,13 +477,14 @@ public:
   char* varcat(char*, char*, char, char*);
   virtual int validColorScale() =0;
 
+  void x11Ants();
+  virtual void x11Ants3d() {}
   void x11Crosshair(Pixmap, Coord::InternalSystem, int, int);
   void x11Dash(GC, int);
   virtual void x11Graphics();
   virtual void x11MagnifierCursor(const Vector&) {}
   void x11MagnifierMarkers(List<Marker>*, const BBox& bb);
   void x11Markers(List<Marker>*, const BBox&);
-  void x11MarkerXOR(Marker*);
   void xmlParse(istream&);
   void xmlParseFIELD(void*, int*, char**, char**, char**, char**, int);
   void xmlParseTR(char**, int*, char**, char**, char**, char**, int);
@@ -1464,11 +1460,8 @@ public:
   void markerMoveCmd(const char*, const Vector&);
   void markerMoveCmd(int id, const Vector&);
   void markerMoveBeginCmd(const Vector&);
-  void markerMoveBeginCmd(int, const Vector&);
   void markerMoveMotionCmd(const Vector&);
-  void markerMoveMotionCmd(int, const Vector&);
   void markerMoveEndCmd();
-  void markerMoveEndCmd(int);
   void markerMoveToCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void markerMoveToCmd(const char*, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void markerMoveToCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyFrame);

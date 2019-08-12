@@ -196,6 +196,19 @@ test namespace-7.7 {Bug 1655305} -setup {
     interp delete slave
 } -result {}
 
+test namespace-7.8 {Bug ba1419303b4c} -setup {
+    namespace eval ns1 {
+	namespace ensemble create
+    }
+
+    trace add command ns1 delete {
+	namespace delete ns1
+    }
+} -body {
+    # No segmentation fault given --enable-symbols=mem. 
+    namespace delete ns1
+} -result {}
+
 test namespace-8.1 {TclTeardownNamespace, delete global namespace} {
     catch {interp delete test_interp}
     interp create test_interp
@@ -1951,7 +1964,7 @@ test namespace-44.5 {ensemble: errors} -setup {
     foobar foobarcon
 } -cleanup {
     rename foobar {}
-} -returnCodes error -result {invalid command name "::foobarconfigure"}
+} -returnCodes error -result {invalid command name "foobarconfigure"}
 test namespace-44.6 {ensemble: errors} -returnCodes error -body {
     namespace ensemble create gorp
 } -result {wrong # args: should be "namespace ensemble create ?option value ...?"}
@@ -3298,6 +3311,31 @@ test namespace-56.3 {bug f97d4ee020: mutually-entangled deletion} {
 	}
     }
 } {::testing::abc::def ::testing::abc::ghi}
+
+test namespace-56.4 {bug 16fe1b5807: names starting with ":"} knownBug {
+namespace eval : {
+    namespace ensemble create
+    namespace export *
+    proc p1 {} {
+	    return 16fe1b5807
+    }
+}
+
+: p1
+} 16fe1b5807
+
+test namespace-56.5 {Bug 8b9854c3d8} -setup {
+    namespace eval namespace-56.5 {
+	proc cmd {} {string match ::* [lindex [[string cat info] level 0] 0]}
+	namespace export *
+	namespace ensemble create
+    }
+} -body {
+    namespace-56.5 cmd
+} -cleanup {
+    namespace delete namespace-56.5
+} -result 1
+
 
 # cleanup
 catch {rename cmd1 {}}

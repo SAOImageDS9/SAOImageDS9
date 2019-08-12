@@ -760,20 +760,12 @@ void Frame3dBase::updateGCs()
     // widget clip region
   BBox bbWidget = BBox(0, 0, options->width, options->height);
   Vector sizeWidget = bbWidget.size();
+  XRectangle rectWidget[1];
 
   rectWidget[0].x = (int)bbWidget.ll[0];
   rectWidget[0].y = (int)bbWidget.ll[1];
   rectWidget[0].width = (int)sizeWidget[0];
   rectWidget[0].height = (int)sizeWidget[1];
-
-// window clip region
-  BBox bbWindow = bbWidget * widgetToWindow;
-  Vector sizeWindow = bbWindow.size();
-
-  rectWindow[0].x = (int)bbWindow.ll[0];
-  rectWindow[0].y = (int)bbWindow.ll[1];
-  rectWindow[0].width = (int)sizeWindow[0];
-  rectWindow[0].height = (int)sizeWindow[1];
 
   // 3d highlite
   if (!threedGC) {
@@ -1013,6 +1005,31 @@ void Frame3dBase::updatePanner()
       str << pannerName << " update wcs compass invalid" << ends;
 
     Tcl_Eval(interp, str.str().c_str());
+  }
+}
+
+void Frame3dBase::x11Ants3d()
+{
+  // just in case
+  if (!keyContext->fits)
+    return;
+
+  if (antsBegin[0]!=antsEnd[0] || antsBegin[1]!=antsEnd[1]) {
+    // params is a BBOX in DATA coords 0-n
+    FitsBound* params = 
+      keyContext->fits->getDataParams(keyContext->secMode());
+    Vector ss(params->xmin,params->ymin);
+    Vector tt(params->xmax,params->ymax);
+
+    Vector ll = mapFromRef3d(ss,Coord::CANVAS,cropsl_);
+    Vector lr = mapFromRef3d(Vector(tt[0],ss[1]),Coord::CANVAS,cropsl_);
+    Vector ur = mapFromRef3d(tt,Coord::CANVAS,cropsl_);
+    Vector ul = mapFromRef3d(Vector(ss[0],tt[1]),Coord::CANVAS,cropsl_);
+
+    XDrawLine(display,pixmap,selectGCXOR,ll[0],ll[1],lr[0],lr[1]);
+    XDrawLine(display,pixmap,selectGCXOR,lr[0],lr[1],ur[0],ur[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ur[0],ur[1],ul[0],ul[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ul[0],ul[1],ll[0],ll[1]);
   }
 }
 

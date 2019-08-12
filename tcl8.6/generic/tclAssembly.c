@@ -513,6 +513,7 @@ static const unsigned char NonThrowingByteCodes[] = {
     INST_PUSH1, INST_PUSH4, INST_POP, INST_DUP,			/* 1-4 */
     INST_JUMP1, INST_JUMP4,					/* 34-35 */
     INST_END_CATCH, INST_PUSH_RESULT, INST_PUSH_RETURN_CODE,	/* 70-72 */
+    INST_STR_EQ, INST_STR_NEQ, INST_STR_CMP, INST_STR_LEN,	/* 73-76 */
     INST_LIST,							/* 79 */
     INST_OVER,							/* 95 */
     INST_PUSH_RETURN_OPTIONS,					/* 108 */
@@ -2248,23 +2249,24 @@ GetListIndexOperand(
     Tcl_Token* tokenPtr = *tokenPtrPtr;
 				/* INOUT: Pointer to the next token in the
 				 * source code */
-    Tcl_Obj* intObj;		/* Integer from the source code */
-    int status;			/* Tcl status return */
+    Tcl_Obj *value;
+    int status;
 
-    /*
-     * Extract the next token as a string.
-     */
-
-    if (GetNextOperand(assemEnvPtr, tokenPtrPtr, &intObj) != TCL_OK) {
+    /* General operand validity check */
+    if (GetNextOperand(assemEnvPtr, tokenPtrPtr, &value) != TCL_OK) {
 	return TCL_ERROR;
     }
 
+    /* Convert to an integer, advance to the next token and return. */
     /*
-     * Convert to an integer, advance to the next token and return.
+     * NOTE: Indexing a list with an index before it yields the
+     * same result as indexing after it, and might be more easily portable
+     * when list size limits grow.
      */
+    status = TclIndexEncode(interp, value,
+	    TCL_INDEX_BEFORE,TCL_INDEX_BEFORE, result);
 
-    status = TclGetIntForIndex(interp, intObj, -2, result);
-    Tcl_DecrRefCount(intObj);
+    Tcl_DecrRefCount(value);
     *tokenPtrPtr = TokenAfter(tokenPtr);
     return status;
 }

@@ -678,7 +678,7 @@ Tk_CanvasObjCmd(
     canvasPtr->highlightBgColorPtr = NULL;
     canvasPtr->highlightColorPtr = NULL;
     canvasPtr->inset = 0;
-    canvasPtr->pixmapGC = None;
+    canvasPtr->pixmapGC = NULL;
     canvasPtr->width = None;
     canvasPtr->height = None;
     canvasPtr->confine = 0;
@@ -698,7 +698,7 @@ Tk_CanvasObjCmd(
     canvasPtr->textInfo.cursorOn = 0;
     canvasPtr->insertOnTime = 0;
     canvasPtr->insertOffTime = 0;
-    canvasPtr->insertBlinkHandler = (Tcl_TimerToken) NULL;
+    canvasPtr->insertBlinkHandler = NULL;
     canvasPtr->xOrigin = canvasPtr->yOrigin = 0;
     canvasPtr->drawableXOrigin = canvasPtr->drawableYOrigin = 0;
     canvasPtr->bindingTable = NULL;
@@ -724,7 +724,7 @@ Tk_CanvasObjCmd(
     canvasPtr->scanYOrigin = 0;
     canvasPtr->hotPtr = NULL;
     canvasPtr->hotPrevPtr = NULL;
-    canvasPtr->cursor = None;
+    canvasPtr->cursor = NULL;
     canvasPtr->takeFocus = NULL;
     canvasPtr->pixelsPerMM = WidthOfScreen(Tk_Screen(newWin));
     canvasPtr->pixelsPerMM /= WidthMMOfScreen(Tk_Screen(newWin));
@@ -2189,7 +2189,7 @@ DestroyCanvas(
      */
 
     Tcl_DeleteHashTable(&canvasPtr->idTable);
-    if (canvasPtr->pixmapGC != None) {
+    if (canvasPtr->pixmapGC != NULL) {
 	Tk_FreeGC(canvasPtr->display, canvasPtr->pixmapGC);
     }
 #ifndef USE_OLD_TAG_SEARCH
@@ -2265,7 +2265,7 @@ ConfigureCanvas(
     gcValues.foreground = Tk_3DBorderColor(canvasPtr->bgBorder)->pixel;
     newGC = Tk_GetGC(canvasPtr->tkwin,
 	    GCFunction|GCGraphicsExposures|GCForeground, &gcValues);
-    if (canvasPtr->pixmapGC != None) {
+    if (canvasPtr->pixmapGC != NULL) {
 	Tk_FreeGC(canvasPtr->display, canvasPtr->pixmapGC);
     }
     canvasPtr->pixmapGC = newGC;
@@ -5307,7 +5307,7 @@ CanvasFocusProc(
     } else {
 	canvasPtr->textInfo.gotFocus = 0;
 	canvasPtr->textInfo.cursorOn = 0;
-	canvasPtr->insertBlinkHandler = (Tcl_TimerToken) NULL;
+	canvasPtr->insertBlinkHandler = NULL;
     }
     EventuallyRedrawItem(canvasPtr, canvasPtr->textInfo.focusItemPtr);
     if (canvasPtr->highlightWidth > 0) {

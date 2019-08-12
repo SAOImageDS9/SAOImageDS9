@@ -1740,10 +1740,10 @@ void Base::x11Ants()
     Vector ss = mapToRef(antsBegin, Coord::CANVAS);
     Vector tt = mapToRef(antsEnd, Coord::CANVAS);
 
-    Vector ll = mapFromRef(ss, Coord::CANVAS);
-    Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::CANVAS);
-    Vector ur = mapFromRef(tt, Coord::CANVAS);
-    Vector ul = mapFromRef(Vector(ss[0],tt[1]), Coord::CANVAS);
+    Vector ll = mapFromRef(ss, Coord::WIDGET);
+    Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::WIDGET);
+    Vector ur = mapFromRef(tt, Coord::WIDGET);
+    Vector ul = mapFromRef(Vector(ss[0],tt[1]), Coord::WIDGET);
 
     XDrawLine(display,pixmap,selectGCXOR,ll[0],ll[1],lr[0],lr[1]);
     XDrawLine(display,pixmap,selectGCXOR,lr[0],lr[1],ur[0],ur[1]);

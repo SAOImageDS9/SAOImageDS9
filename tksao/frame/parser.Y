@@ -456,6 +456,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 command : DEBUG_ debug
 	| BIN_ bin
 	| BG_ COLOR_ STRING {fr->bgColorCmd($3);}
+	| BG_ COLOR_ GRAY_ {fr->bgColorCmd("gray");}
         | BLOCK_ block
 	| CENTER_ {fr->centerCmd();}
 	| CLEAR_ {fr->clearCmd();}

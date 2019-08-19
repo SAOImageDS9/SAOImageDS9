@@ -173,13 +173,10 @@ if {[catch {tk windowingsystem} ds9(wm)]} {
 # who are we?
 set ds9(app) [file tail [info nameofexecutable]]
 
-# Themes are now hardcoded
-# can't be defined in ds9def()
-set ds9(background) #d9d9d9
-#set ds9(background) white
-
 switch $ds9(wm) {
     x11 {
+	set ds9(background) #d9d9d9
+
 	# standard widgets
  	option add {*background} $ds9(background)
 
@@ -201,8 +198,14 @@ switch $ds9(wm) {
 	ttk::style configure TEntry -padding 1
 	ttk::style configure TLabel -borderwidth 2 -padding 1
     }
-    aqua {}
-    win32 {ttk::style theme use xpnative}
+    aqua {
+	# dark mode bg #222 text #ddd
+	set ds9(background) white
+    }
+    win32 {
+	set ds9(background) white
+	ttk::style theme use xpnative
+    }
 }
 
 # pre package load
@@ -388,9 +391,12 @@ switch $ds9(wm) {
     x11 -
     win32 {}
     aqua {
-	::tk::unsupported::MacWindowStyle style $ds9(top) document "closeBox fullZoom collapseBox resizable"
 	# we need to map the top window so we can get the proper truecolor masks
+	# and test for dark mode
 	update idletasks
+
+	::tk::unsupported::MacWindowStyle style $ds9(top) document "closeBox fullZoom collapseBox resizable"
+	# set rr [tk::unsupported::MacWindowStyle isdark $ds9(top)]
     }
 }
 
@@ -597,6 +603,5 @@ switch $ds9(wm) {
 	event generate $ds9(canvas) <Tab> -x 0 -y 0
     }
 }
-
 
 

@@ -4,42 +4,6 @@
 
 package provide DS9 1.0
 
-proc MacOSXOpenDocEvent {fc} {
-    global ds9
-
-    if {$ds9(event,opendoc) != {}} {
-	foreach f $ds9(event,opendoc) {
-	    MultiLoad
-	    LoadFitsFile $f {} {}
-	    FileLast fitsfbox $f
-	}
-	FinishLoad
-    }
-}
-
-proc MacOSXPrintDocEvent {bye} {
-    global ds9
-
-    if {$ds9(event,printdoc) != {}} {
-	set fc 0
-
-	foreach f $ds9(event,printdoc) {
-	    RealizeDS9
-
-	    MultiLoad
-	    LoadFitsFile $f {} {}
-	    FileLast fitsfbox $f
-
-	    FinishLoad
-	    PostScript
-	}
-
-	if {$bye} {
-	    Quit
-	}
-    }
-}
-
 proc MacOSXGetLocale {} {
     return [macosx locale]
 }

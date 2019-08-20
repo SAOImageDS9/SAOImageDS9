@@ -59,9 +59,6 @@ proc DS9Def {} {
     set ds9(next,num) 1
     set ds9(last) {}
 
-    set ds9(event,opendoc) {}
-    set ds9(event,printdoc) {}
-
     set ds9(tmpdir) {}
 
     switch $ds9(wm) {
@@ -251,6 +248,10 @@ switch $ds9(wm) {
 	    PrefsDialog
 	}
 
+	proc ::tk::mac::OpenApplication {} {
+	    Info "open application"
+	}
+
 	proc ::tk::mac::ReopenApplication {} {
 	    if {[wm state .] eq "withdrawn"} {
 		wm state . normal
@@ -262,27 +263,31 @@ switch $ds9(wm) {
 
 	proc ::tk::mac::OpenDocument {args} {
 	    global ds9
-
-	    set ds9(event,opendoc) $args
-	    if {!$ds9(init)} {
-		MacOSXOpenDocEvent 1
+	    Info "open doc $args"
+	    if {$args != {}} {
+		foreach ff $args {
+		    MultiLoad
+		    LoadFitsFile $ff {} {}
+		    FileLast fitsfbox $ff
+		}
+		FinishLoad
 	    }
 	}
 
 	proc ::tk::mac::PrintDocument {args} {
-	    global ds9
-
-	    set ds9(event,printdoc) $args
-	    if {!$ds9(init)} {
-		MacOSXPrintDocEvent 0
-	    }
 	}
 
-	proc ::tk::mac::Quit {args} {
+	proc ::tk::mac::Quit {} {
 	    QuitDS9
 	}
 
-	proc ::tk::mac::ShowHelp {args} {
+	proc ::tk::mac::onHide {} {
+	}
+
+	proc ::tk::mac::onShow {} {
+	}
+
+	proc ::tk::mac::ShowHelp {} {
 	    HelpRef
 	}
     }
@@ -556,16 +561,6 @@ ProcessCommandLine
 # after command line options to set port/fifo/unix...
 catch {IISInit}
 
-# any os events received?
-switch $ds9(wm) {
-    x11 -
-    win32 {}
-    aqua {
-	MacOSXOpenDocEvent 0
-	MacOSXPrintDocEvent 1
-    }
-}
-
 # Load any initalization tcl code
 SourceInitFileDir {.ini}
 
@@ -603,5 +598,3 @@ switch $ds9(wm) {
 	event generate $ds9(canvas) <Tab> -x 0 -y 0
     }
 }
-
-

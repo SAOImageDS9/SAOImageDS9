@@ -57,9 +57,11 @@ Smithsonian Astrophysical Observatory"</string>
 	<key>NSHighResolutionCapable</key>
 	<string>True</string>
 	<key>LSMinimumSystemVersion</key>
-	<string>10.9.0</string>
+	<string>10.11.0</string>
 	<key>LSRequiresCarbon</key>
 	<true/>
+        <key>NSAppleScriptEnabled</key>
+        <true/>
 	<key>LSEnvironment</key>
 	<dict>
 	        <key>PATH</key>

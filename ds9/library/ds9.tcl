@@ -249,7 +249,6 @@ switch $ds9(wm) {
 	}
 
 	proc ::tk::mac::OpenApplication {} {
-	    Info "open application"
 	}
 
 	proc ::tk::mac::ReopenApplication {} {
@@ -263,7 +262,7 @@ switch $ds9(wm) {
 
 	proc ::tk::mac::OpenDocument {args} {
 	    global ds9
-	    Info "open doc $args"
+
 	    if {$args != {}} {
 		foreach ff $args {
 		    MultiLoad

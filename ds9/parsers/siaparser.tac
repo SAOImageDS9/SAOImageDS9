@@ -33,6 +33,7 @@
 %token ASTROWISE_
 %token CADC_
 %token CXC_
+%token HLA_
 %token MAST_
 %token SDSS_
 %token SKYVIEW_
@@ -91,6 +92,7 @@ site : 2MASS_ {set _ 2mass}
  | ASTROWISE_ {set _ astrowise}
  | CADC_ {set _ cadc}
  | CXC_ {set _ cxc}
+ | HLA_ {set _ hla}
  | MAST_ {set _ mast}
  | SDSS_ {set _ sdss}
  | SKYVIEW_ {set _ skyview}

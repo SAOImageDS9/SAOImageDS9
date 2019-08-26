@@ -52,6 +52,11 @@ proc SIADef {} {
 			     {} \
 			     post \
 			} \
+			{{Hubble Legacy Archive (STSCI)} siahla \
+			     {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi}\
+			     {} \
+			     get \
+			} \
 			{{MAST (STSCI)} siamast \
 			     {http://archive.stsci.edu/siap/search.php}\
 			     {} \

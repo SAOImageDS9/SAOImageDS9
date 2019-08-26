@@ -29,6 +29,7 @@ akari	    {return $AKARI_}
 astrowise   {return $ASTROWISE_}
 cadc	    {return $CADC_}
 cxc	    {return $CXC_}
+hla	    {return $HLA_}
 mast	    {return $MAST_}
 sdss	    {return $SDSS_}
 skyview	    {return $SKYVIEW_}

@@ -44,6 +44,18 @@ Smithsonian Astrophysical Observatory"</string>
 	<string>com.sao.SAOImageDS9</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+	  <string>cs</string>
+	  <string>da</string>
+	  <string>de</string>
+	  <string>en</string>
+	  <string>es</string>
+	  <string>fr</string>
+	  <string>ja</string>
+	  <string>pt</string>
+	  <string>zh</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>SAOImageDS9</string>
 	<key>CFBundlePackageType</key>

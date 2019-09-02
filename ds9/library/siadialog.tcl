@@ -40,7 +40,6 @@ proc SIADialog {varname title url opts method action} {
 
     # IMG variables
     set var(proc,done) SIADone
-    set var(proc,exec) SIAVOT1
     set var(proc,error) SIAError
 
     # SIA variables
@@ -555,10 +554,9 @@ proc SIAServer {varname} {
     }
 
     if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
-
 	ARStatus $varname [msgcat::mc {Contacting Image Server}]
-	eval [list $var(proc,exec) $varname]
+	SIAVOT1 $varname
     } else {
-	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
+	SIAError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
     }
 }

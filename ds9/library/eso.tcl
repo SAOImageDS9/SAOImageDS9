@@ -46,8 +46,7 @@ proc ESODialog {} {
     set var(save) $eso(save)
 
     set w $var(top)
-    IMGSVRInit $varname "ESO-DSS [msgcat::mc {Server}]" \
-	ESOExec ESOAck ARDone ARError
+    IMGSVRInit $varname "ESO-DSS [msgcat::mc {Server}]" ESOExec ESOAck
 
     $var(mb) add cascade -label Survey -menu $var(mb).survey
     menu $var(mb).survey

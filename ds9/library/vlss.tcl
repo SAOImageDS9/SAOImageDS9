@@ -44,9 +44,7 @@ proc VLSSDialog {} {
     set var(save) $vlss(save)
 
     set w $var(top)
-    IMGSVRInit $varname "VLSS [msgcat::mc {Server}]" \
-	VLSSExec VLSSAck ARDone ARError
-
+    IMGSVRInit $varname "VLSS [msgcat::mc {Server}]" VLSSExec VLSSAck
     IMGSVRUpdate $varname
 }
 

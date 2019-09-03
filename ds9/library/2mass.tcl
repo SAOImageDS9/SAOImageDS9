@@ -45,8 +45,7 @@ proc 2MASSDialog {} {
     set var(save) $twomass(save)
     set var(survey) $twomass(survey)
 
-    IMGSVRInit $varname "IPAC-2MASS [msgcat::mc {Server}]" \
-	2MASSExec 2MASSAck ARDone ARError
+    IMGSVRInit $varname "IPAC-2MASS [msgcat::mc {Server}]" 2MASSExec 2MASSAck
 
     $var(mb) add cascade -label Survey -menu $var(mb).survey
     menu $var(mb).survey

@@ -44,9 +44,7 @@ proc NVSSDialog {} {
     set var(save) $nvss(save)
 
     set w $var(top)
-    IMGSVRInit $varname "NVSS [msgcat::mc {Server}]" \
-	NVSSExec NVSSAck ARDone ARError
-
+    IMGSVRInit $varname "NVSS [msgcat::mc {Server}]" NVSSExec NVSSAck
     IMGSVRUpdate $varname
 }
 

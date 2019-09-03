@@ -46,8 +46,7 @@ proc STSCIDialog {} {
     set var(survey) $stsci(survey)
 
     set w $var(top)
-    IMGSVRInit $varname "STSCI-DSS [msgcat::mc {Server}]" \
-	STSCIExec STSCIAck ARDone ARError
+    IMGSVRInit $varname "STSCI-DSS [msgcat::mc {Server}]" STSCIExec STSCIAck
 
     menu $var(mb).survey
     $var(mb) add cascade -label Survey -menu $var(mb).survey

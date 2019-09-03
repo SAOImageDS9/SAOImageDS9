@@ -46,8 +46,7 @@ proc VLADialog {} {
     set var(survey) $vla(survey)
 
     set w $var(top)
-    IMGSVRInit $varname "VLA [msgcat::mc {Server}]" \
-	VLAExec VLAAck ARDone ARError
+    IMGSVRInit $varname "VLA [msgcat::mc {Server}]" VLAExec VLAAck
 
     menu $var(mb).survey
     $var(mb) add cascade -label Survey -menu $var(mb).survey

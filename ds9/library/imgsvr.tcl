@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IMGSVRInit {varname title exec ack done error} {
+proc IMGSVRInit {varname title exec ack} {
     upvar #0 $varname var
     global $varname
 
@@ -17,8 +17,8 @@ proc IMGSVRInit {varname title exec ack done error} {
     # IMG variables
     set var(proc,exec) $exec
     set var(proc,ack) $ack
-    set var(proc,done) $done
-    set var(proc,error) $error
+    set var(proc,done) ARDone
+    set var(proc,error) ARError
 
     # create the window
     set w $var(top)

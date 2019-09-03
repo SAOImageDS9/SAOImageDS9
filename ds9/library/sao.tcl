@@ -44,9 +44,7 @@ proc SAODialog {} {
     set var(save) $sao(save)
 
     set w $var(top)
-    IMGSVRInit $varname "SAO-DSS [msgcat::mc {Server}]" \
-	SAOExec SAOAck ARDone ARError
-
+    IMGSVRInit $varname "SAO-DSS [msgcat::mc {Server}]" SAOExec SAOAck
     IMGSVRUpdate $varname
 }
 

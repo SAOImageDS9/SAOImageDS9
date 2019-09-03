@@ -56,7 +56,7 @@ proc SkyViewDialog {} {
 
     set w $var(top)
     IMGSVRInit $varname "HEASARC-SkyView [msgcat::mc {Server}]" \
-	SkyViewExec SkyViewAck ARDone ARError
+	SkyViewExec SkyViewAck
 
     # pixels size
     set f $w.param

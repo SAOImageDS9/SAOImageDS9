@@ -141,7 +141,6 @@ proc VODialog {} {
     # variables
     set var(top) $ivo(top)
     set var(mb) $ivo(mb)
-    set var(url) {}
 
     # create the window
     set w $var(top)
@@ -236,8 +235,7 @@ proc VOApply {varname} {
     # first try
     if {$pvo(server) != {}} {
 	set var(valid) 0
-	set var(url) $pvo(server)
-	VOLoad $varname
+	VOLoad $varname $pvo(server)
 	if {$var(valid)} {
 	    VOKeepAlive 0
 	    return
@@ -246,16 +244,14 @@ proc VOApply {varname} {
     
     # next try
     set var(valid) 0
-    set var(url) {http://cxc.harvard.edu/chandraed/list.txt}
-    VOLoad $varname
+    VOLoad $varname {http://cxc.harvard.edu/chandraed/list.txt}
     if {$var(valid)} {
 	VOKeepAlive 0
 	return
     }
 
     # last try
-    set var(url) {http://xray1.physics.rutgers.edu/vo/list.txtt}
-    VOLoad $varname
+    VOLoad $varname {http://xray1.physics.rutgers.edu/vo/list.txtt}
     if {$var(valid)} {
 	VOKeepAlive 0
 	return
@@ -271,12 +267,12 @@ rinzai.rutgers.edu:28571	Rutgers X-ray Analysis Server #2	http://rinzai.rutgers.
     VOKeepAlive 0
 }
 
-proc VOLoad {varname} {
+proc VOLoad {varname url} {
     upvar #0 $varname var
     global $varname
 
     global ihttp
-    if {![catch {set var(token) [http::geturl $var(url) \
+    if {![catch {set var(token) [http::geturl $url \
 				     -timeout $ihttp(timeout) \
 				     -headers "[ProxyHTTP]"]
     }]} {
@@ -336,8 +332,7 @@ proc VOFinish {varname token} {
 		    http::cleanup $token
 		    unset var(token)
 
-		    set var(url) $value
-		    VOLoad $varname
+		    VOLoad $varname $value
 		}
 	    }
 	}

@@ -99,26 +99,25 @@ proc SIAAnalysisMenu {mb} {
     }
 }
 
-proc SIAGetURL {varname url2} {
+proc SIAGetURL {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIAGetURL $varname $var(method) $url2?$var(query2)"
+	puts stderr "SIAGetURL $varname $var(method) $url?$query"
     }
 
+    # save just in case of redirection
+    set var(qq) $query
+    
     ARStatus $varname [msgcat::mc {Loading}]
 
     # geturl --method does not work
     switch $var(method) {
 	get {
-	    set url $url2?$var(query2)
+	    set url $url?$query
 	    set query {}
-	}
-	default {
-	    set url $url2
-	    set query $var(query2)
 	}
     }
 
@@ -138,7 +137,7 @@ proc SIAGetURL {varname url2} {
 	    set var(active) 1
 	    SIAGetURLFinish $varname $var(token)
 	} else {
-	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url2"
+	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     } else {
 	if {![catch {set var(token) [http::geturl $url \
@@ -154,7 +153,7 @@ proc SIAGetURL {varname url2} {
 
 	    set var(active) 1
 	} else {
-	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url2"
+	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     }
 }
@@ -213,7 +212,7 @@ proc SIAGetURLFinish {varname token} {
 		    http::cleanup $token
 		    unset var(token)
 
-		    SIAGetURL $varname $value
+		    SIAGetURL $varname $value $var(qq)
 		}
 	    }
 	}
@@ -224,7 +223,7 @@ proc SIAGetURLFinish {varname token} {
     }
 }
 
-proc SIALoad {varname} {
+proc SIALoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
@@ -236,10 +235,10 @@ proc SIALoad {varname} {
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIALoad $varname $var(url2)?$var(query2)"
+	puts stderr "SIALoad $varname $url?$query"
     }
 
-    SIAGetURL $varname $var(url2)
+    SIAGetURL $varname $url $query
     return
 }
 

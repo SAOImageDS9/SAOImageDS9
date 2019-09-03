@@ -55,7 +55,7 @@ proc SIADialog {varname title url opts method action} {
     set var(save) $isia(save)
     set var(mode) $isia(mode)
 
-    set var(url2) $url
+    set var(url) $url
     set var(title) $title
     set var(opts) $opts
     set var(method) $method
@@ -404,7 +404,7 @@ proc SIAImageCmd {varname} {
 		    set var(fn) [tmpnam [file extension $r(path)]]
 		}
 
-		IMGSVRGetURL $varname $url $query
+		IMGSVRGetURL $varname $url {}
 	    }
 	    default {
 		SIAError $varname "$r(scheme) [msgcat::mc {Not Supported}]"
@@ -425,13 +425,13 @@ proc SIASelectCmd {varname ss rc} {
     }
 }
 
-proc SIAVOT1 {varname} {
+proc SIAVOT {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIAVOT1 $varname"
+	puts stderr "SIAVOT $varname"
     }
 
     # coord (degrees)
@@ -460,9 +460,9 @@ proc SIAVOT1 {varname} {
     }
 
     # query
-    set var(query2) "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
+    set query "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
 
-    SIALoad $varname
+    SIALoad $varname $var(url) $query
 }
 
 proc SIAWCSMenuUpdate {varname} {
@@ -554,7 +554,7 @@ proc SIAServer {varname} {
 
     if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
 	ARStatus $varname [msgcat::mc {Contacting Image Server}]
-	SIAVOT1 $varname
+	SIAVOT $varname
     } else {
 	SIAError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
     }

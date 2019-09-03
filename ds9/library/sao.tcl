@@ -101,9 +101,9 @@ proc SAOExec {varname} {
     }
 
     # query
-    set var(query) [http::formatQuery r $xx d $yy e J2000 w $ww h $ww c $compress]
+    set query [http::formatQuery r $xx d $yy e J2000 w $ww h $ww c $compress]
     set url "http://www.cfa.harvard.edu/archive/dss"
-    IMGSVRGetURL $varname $url
+    IMGSVRGetURL $varname $url $query
 }
 
 proc SAOAck {varname} {

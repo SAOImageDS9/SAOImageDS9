@@ -13,7 +13,6 @@ proc NSVRServer {varname} {
 	puts stderr "NSVRServer $varname"
     }
 
-    global nres
     global pnres
 
     ARStatus $varname "Looking up $var(name)"
@@ -21,29 +20,31 @@ proc NSVRServer {varname} {
     set ss [split $pnres(server) {-}]
     switch -- [lindex $ss 1] {
 	eso -
-	sao {set var(url) {http://vizier.cfa.harvard.edu/viz-bin/nph-sesame}}
-	cds {set var(url) {http://cdsweb.u-strasbg.fr/cgi-bin/nph-sesame}}
+	sao {set url {http://vizier.cfa.harvard.edu/viz-bin/nph-sesame}}
+	cds {set url {http://cdsweb.u-strasbg.fr/cgi-bin/nph-sesame}}
     }
-    append ${varname}(url) {/-ox}
+    append url {/-ox}
     switch -- [lindex $ss 0] {
-	ned {append ${varname}(url) {/N}}
-	simbad {append ${varname}(url) {/S}}
-	vizier {append ${varname}(url) {/V}}
+	ned {append url {/N}}
+	simbad {append url {/S}}
+	vizier {append url {/V}}
     }
 
-    set var(query) [http::mapReply $var(name)]
-
-    NSVRGetURL $varname $var(url)
+    set query [http::mapReply $var(name)]
+    NSVRGetURL $varname $url $query
 }
 
-proc NSVRGetURL {varname url} {
+proc NSVRGetURL {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,image)} {
-	puts stderr "NSVRGetURL $varname $url $var(query)"
+	puts stderr "NSVRGetURL $varname $url $query"
     }
+
+    # save just in case of redirection
+    set var(qq) $query
 
     set var(ra) {}
     set var(dec) {}
@@ -52,7 +53,7 @@ proc NSVRGetURL {varname url} {
     global ihttp
     # -query will not work, do it manually
     if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $url?$var(query) \
+	if {![catch {set var(token) [http::geturl $url?$query \
 					 -timeout $ihttp(timeout) \
 					 -headers "[ProxyHTTP]"]
 	}]} {
@@ -66,7 +67,7 @@ proc NSVRGetURL {varname url} {
 	    ARError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     } else {
-	if {![catch {set var(token) [http::geturl $url?$var(query) \
+	if {![catch {set var(token) [http::geturl $url?$query \
 					 -timeout $ihttp(timeout) \
 					 -command \
 					 [list NSVRGetURLFinish $varname] \
@@ -135,7 +136,7 @@ proc NSVRGetURLFinish {varname token} {
 		    # strip query from url
 		    set value [lindex [split $value {?}] 0]
 
-		    NSVRGetURL $varname $value
+		    NSVRGetURL $varname $value $var(qq)
 		}
 	    }
 	}
@@ -268,7 +269,7 @@ proc NSVRServerMenu {varname} {
 }
 
 proc NSVRServerMenuItems {mm} {
-    global nres
+    global pnres
 
     $mm add radiobutton -label {NED@SAO} -variable pnres(server) \
 	-value ned-sao

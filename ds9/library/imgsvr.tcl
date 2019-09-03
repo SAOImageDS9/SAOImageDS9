@@ -227,16 +227,18 @@ proc IMGSVRServer {varname} {
     }
 }
 
-proc IMGSVRGetURL {varname url} {
+proc IMGSVRGetURL {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,image)} {
-	puts stderr "IMGSVRGetURL $varname $url $var(query)"
+	puts stderr "IMGSVRGetURL $varname $url $query"
     }
 
     set var(ch) [open "$var(fn)" w]
+    # save query just in case of redirection
+    set var(qq) $query
 
     global ihttp
     if {$var(sync)} {
@@ -247,7 +249,7 @@ proc IMGSVRGetURL {varname url} {
 					 [list IMGSVRProgress $varname] \
 					 -binary 1 \
 					 -headers "[ProxyHTTP]" \
-					 -query "$var(query)"]
+					 -query "$query"]
 	}]} {
 	    # reset errorInfo (may be set in http::geturl)
 	    global errorInfo
@@ -269,7 +271,7 @@ proc IMGSVRGetURL {varname url} {
 					 [list IMGSVRProgress $varname] \
 					 -binary 1 \
 					 -headers "[ProxyHTTP]" \
-					 -query "$var(query)"]
+					 -query "$query"]
 	}]} {
 	    # reset errorInfo (may be set in http::geturl)
 	    global errorInfo
@@ -353,7 +355,7 @@ proc IMGSVRGetURLFinish {varname token} {
 		    http::cleanup $token
 		    unset var(token)
 
-		    IMGSVRGetURL $varname $value
+		    IMGSVRGetURL $varname $value $var(qq)
 		}
 	    }
 	}

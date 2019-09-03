@@ -571,9 +571,9 @@ proc SkyViewExec {varname} {
     set rr [expr ($ww+$hh)/2.]
 
     # query
-    set var(query) [http::formatQuery Position $xx,$yy Survey $var(survey) Size $ww,$hh Pixels $var(width,pixels),$var(height,pixels) Return FITS]
+    set query [http::formatQuery Position $xx,$yy Survey $var(survey) Size $ww,$hh Pixels $var(width,pixels),$var(height,pixels) Return FITS]
     set url "https://skyview.gsfc.nasa.gov/cgi-bin/images"
-    IMGSVRGetURL $varname $url
+    IMGSVRGetURL $varname $url $query
 }
 
 proc SkyViewAck {varname} {

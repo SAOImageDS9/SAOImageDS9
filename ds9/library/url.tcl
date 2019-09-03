@@ -55,7 +55,7 @@ proc GetFileHTTP {url fn} {
     		    -timeout $ihttp(timeout) \
 		    -headers "[ProxyHTTP]"} token]} {
 	close $ch
-	Error "[msgcat::mc {Unable to locate URL}] $var(url)"
+	Error "[msgcat::mc {Unable to locate URL}] $url"
 	return
     }
 

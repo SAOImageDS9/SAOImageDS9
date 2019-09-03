@@ -404,8 +404,7 @@ proc SIAImageCmd {varname} {
 		    set var(fn) [tmpnam [file extension $r(path)]]
 		}
 
-		set var(query) {}
-		IMGSVRGetURL $varname $url
+		IMGSVRGetURL $varname $url $query
 	    }
 	    default {
 		SIAError $varname "$r(scheme) [msgcat::mc {Not Supported}]"

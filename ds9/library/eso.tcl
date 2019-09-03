@@ -106,9 +106,8 @@ proc ESOExec {varname} {
     set query [http::formatQuery ra $var(x) dec $var(y) equinox J2000 x $ww y $hh mime-type $mime Sky-Survey $var(survey)]
     # Load image
     # we can't use -query because eso needs a GET not a POST
-    set var(query) {}
     set url "http://archive.eso.org/dss/dss?$query"
-    IMGSVRGetURL $varname $url
+    IMGSVRGetURL $varname $url {}
 }
 
 proc ESOAck {varname} {

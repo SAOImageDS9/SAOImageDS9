@@ -81,7 +81,7 @@ proc MarkerAnalysisPlot2dMethod {varname} {
     if {[info exists var(plot2d)]} {
 	if {$var(plot2d)} {
 	    MarkerAnalysisPlot2dCB $var(frame) $var(id)
-	    MarkerAnalysisPlot2dYAxisTitle $vvarname
+	    MarkerAnalysisPlot2dAxisTitle $vvarname
 	}
     }
 }
@@ -102,7 +102,7 @@ proc MarkerAnalysisPlot2dSystem {varname} {
     if {[info exists var(plot2d)]} {
 	if {$var(plot2d)} {
 	    MarkerAnalysisPlot2dCB $var(frame) $var(id)
-	    MarkerAnalysisPlot2dXAxisTitle $vvarname
+	    MarkerAnalysisPlot2dAxisTitle $vvarname
 	}
     }
 }
@@ -167,10 +167,8 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	}
 	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotAddGraph $vvarname line
-	PlotTitle $vvarname {} $vvar(system) $vvar(bunit)
 
-	MarkerAnalysisPlot2dXAxisTitle $vvarname
-	MarkerAnalysisPlot2dYAxisTitle $vvarname
+	MarkerAnalysisPlot2dAxisTitle $vvarname
 
 	# setup our own formatting
 	set vvar(graph,format) 0
@@ -213,7 +211,7 @@ proc MarkerAnalysisPlot2dDeleteCB {frame id} {
     blt::vector destroy $xcdata $ycdata
 }
 
-proc MarkerAnalysisPlot2dXAxisTitle {vvarname} {
+proc MarkerAnalysisPlot2dAxisTitle {vvarname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -231,24 +229,9 @@ proc MarkerAnalysisPlot2dXAxisTitle {vvarname} {
 	}
     }
 
-    set cc 1
-    if {[info exists vvar($cc,graph)]} {
-	set vvar($cc,axis,x,title) $xtitle
-	$vvar($cc,graph) xaxis configure -title $xtitle
-    }
-}
-
-proc MarkerAnalysisPlot2dYAxisTitle {vvarname} {
-    upvar #0 $vvarname vvar
-    global $vvarname
-
     set ytitle "$vvar(bunit) [string totitle $vvar(method)]"
 
-    set cc 1
-    if {[info exists vvar($cc,graph)]} {
-	set vvar($cc,axis,y,title) $ytitle
-	$vvar($cc,graph) yaxis configure -title $ytitle
-    }
+    PlotTitle $vvarname {} $xtitle $ytitle
 }
 
 proc MarkerAnalysisPlot2dXAxis {vvarname w xx} {

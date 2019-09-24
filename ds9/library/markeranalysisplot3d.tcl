@@ -81,7 +81,7 @@ proc MarkerAnalysisPlot3dMethod {varname} {
     if {[info exists var(plot3d)]} {
 	if {$var(plot3d)} {
 	    MarkerAnalysisPlot3dCB $frame $id
-	    MarkerAnalysisPlot3dYAxisTitle $vvarname
+	    MarkerAnalysisPlot3dAxisTitle $vvarname
 	}
     }
 }
@@ -102,7 +102,7 @@ proc MarkerAnalysisPlot3dSystem {varname} {
     if {[info exists var(plot3d)]} {
 	if {$var(plot3d)} {
 	    MarkerAnalysisPlot3dCB $frame $id
-	    MarkerAnalysisPlot3dXAxisTitle $vvarname
+	    MarkerAnalysisPlot3dAxisTitle $vvarname
 	}
     }
 }
@@ -166,10 +166,8 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	}
 	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotAddGraph $vvarname line
-	PlotTitle $vvarname {} $vvar(system) $vvar(bunit)
 
-	MarkerAnalysisPlot3dXAxisTitle $vvarname
-	MarkerAnalysisPlot3dYAxisTitle $vvarname
+	MarkerAnalysisPlot3dAxisTitle $vvarname
 
 	set vvar(markerslice) [$vvar(graph) marker create line -element bar1 \
 			     -outline cyan -linewidth 2 \
@@ -265,7 +263,7 @@ proc MarkerAnalysisPlot3dMarker {vvarname} {
     }
 }
 
-proc MarkerAnalysisPlot3dXAxisTitle {vvarname} {
+proc MarkerAnalysisPlot3dAxisTitle {vvarname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -285,22 +283,7 @@ proc MarkerAnalysisPlot3dXAxisTitle {vvarname} {
 	}
     }
 
-    set cc 1
-    if {[info exists vvar($cc,graph)]} {
-	set vvar($cc,axis,x,title) $xtitle
-	$vvar($cc,graph) xaxis configure -title $xtitle
-    }
-}
-
-proc MarkerAnalysisPlot3dYAxisTitle {vvarname} {
-    upvar #0 $vvarname vvar
-    global $vvarname
-
     set ytitle "$vvar(bunit) [string totitle $vvar(method)]"
 
-    set cc 1
-    if {[info exists vvar($cc,graph)]} {
-	set vvar($cc,axis,y,title) $ytitle
-	$vvar($cc,graph) yaxis configure -title $vvar(graph,axis,y,title)
-    }
+    PlotTitle $vvarname {} $xtitle $ytitle
 }

@@ -9,6 +9,10 @@
 
 class FrameBase : public Base {
 protected:
+  XImage* colormapXM;      // colormap dest ximage
+  Pixmap colormapPM;       // colormap pixmap
+  GC colormapGCXOR;        // GC for interactive colormap
+
   Vector iisLastCursor;      // iis cursor state info
 				  
  private:

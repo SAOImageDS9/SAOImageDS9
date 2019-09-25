@@ -16,10 +16,25 @@
 FrameBase::FrameBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 : Base(i, c, item)
 {
+#ifndef MAC_OSX_TK
+  colormapXM = NULL;
+  colormapPM = 0;
+  colormapGCXOR = 0;
+#endif
 }
 
 FrameBase::~FrameBase()
 {
+#ifndef MAC_OSX_TK
+  if (colormapXM)
+    XDestroyImage(colormapXM);
+
+  if (colormapPM)
+    Tk_FreePixmap(display, colormapPM);
+
+  if (colormapGCXOR)
+    XFreeGC(display, colormapGCXOR);
+#endif
 }
 
 void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,

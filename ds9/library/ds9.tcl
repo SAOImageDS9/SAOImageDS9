@@ -59,6 +59,9 @@ proc DS9Def {} {
     set ds9(next,num) 1
     set ds9(last) {}
 
+    set ds9(event,opendoc) {}
+    set ds9(event,printdoc) {}
+
     set ds9(tmpdir) {}
 
     switch $ds9(wm) {
@@ -263,17 +266,21 @@ switch $ds9(wm) {
 	proc ::tk::mac::OpenDocument {args} {
 	    global ds9
 
-	    if {$args != {}} {
-		foreach ff $args {
-		    MultiLoad
-		    LoadFitsFile $ff {} {}
-		    FileLast fitsfbox $ff
-		}
-		FinishLoad
+	    # we can recieve this event before everything has been
+	    # initiated, so save and process later
+	    set ds9(event,opendoc) $args
+	    if {!$ds9(init)} {
+		MacOSOpenDocEvent
 	    }
 	}
 
 	proc ::tk::mac::PrintDocument {args} {
+	    global ds9
+
+	    regsub -all {file://} $args {} ds9(event,printdoc)
+	    if {!$ds9(init)} {
+		MacOSPrintDocEvent 0
+	    }
 	}
 
 	proc ::tk::mac::Quit {} {
@@ -559,6 +566,16 @@ ProcessCommandLine
 # Initialize IIS
 # after command line options to set port/fifo/unix...
 catch {IISInit}
+
+# any os events received?
+switch $ds9(wm) {
+    x11 -
+    win32 {}
+    aqua {
+	MacOSOpenDocEvent
+	MacOSPrintDocEvent 1
+    }
+}
 
 # Load any initalization tcl code
 SourceInitFileDir {.ini}

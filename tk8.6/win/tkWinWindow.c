@@ -277,7 +277,7 @@ TkpMakeWindow(
      * order.
      */
 
-    hwnd = CreateWindowEx(WS_EX_NOPARENTNOTIFY, TK_WIN_CHILD_CLASS_NAME, NULL,
+    hwnd = CreateWindowExW(WS_EX_NOPARENTNOTIFY, TK_WIN_CHILD_CLASS_NAME, NULL,
 	    (DWORD) style, Tk_X(winPtr), Tk_Y(winPtr), Tk_Width(winPtr),
 	    Tk_Height(winPtr), parentWin, NULL, Tk_GetHINSTANCE(), NULL);
     SetWindowPos(hwnd, HWND_TOP, 0, 0, 0, 0,
@@ -882,7 +882,7 @@ TkpShowBusyWindow(
      */
 
     GetCursorPos(&point);
-    SetCursorPos(point.x, point.y);
+    TkSetCursorPos(point.x, point.y);
 }
 
 /*
@@ -924,7 +924,7 @@ TkpHideBusyWindow(
      */
 
     GetCursorPos(&point);
-    SetCursorPos(point.x, point.y);
+    TkSetCursorPos(point.x, point.y);
 }
 
 /*
@@ -953,7 +953,7 @@ TkpMakeTransparentWindowExist(
     int style = WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
     DWORD exStyle = WS_EX_TRANSPARENT | WS_EX_TOPMOST;
 
-    hWnd = CreateWindowEx(exStyle, TK_WIN_CHILD_CLASS_NAME, NULL, style,
+    hWnd = CreateWindowExW(exStyle, TK_WIN_CHILD_CLASS_NAME, NULL, style,
 	    Tk_X(tkwin), Tk_Y(tkwin), Tk_Width(tkwin), Tk_Height(tkwin),
 	    hParent, NULL, Tk_GetHINSTANCE(), NULL);
     winPtr->window = Tk_AttachHWND(tkwin, hWnd);

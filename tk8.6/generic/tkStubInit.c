@@ -38,6 +38,13 @@ MODULE_SCOPE const TkStubs tkStubs;
  */
 
 #undef Tk_MainEx
+#undef XVisualIDFromVisual
+#undef XSynchronize
+#undef XUngrabServer
+#undef XNoOp
+#undef XGrabServer
+#undef XFree
+#undef XFlush
 
 #ifdef _WIN32
 
@@ -178,6 +185,7 @@ void TkSubtractRegion (TkRegion a, TkRegion b, TkRegion c)
 #	define TkAlignImageData 0
 #	define TkGenerateActivateEvents 0
 #	define TkpGetMS 0
+#	define TkpGetCapture 0
 #	define TkPointerDeadWindow 0
 #	define TkpSetCapture 0
 #	define TkpSetCursor 0
@@ -505,6 +513,8 @@ static const TkIntPlatStubs tkIntPlatStubs = {
     TkWmCleanup, /* 43 */
     TkSendCleanup, /* 44 */
     TkpTestsendCmd, /* 45 */
+    0, /* 46 */
+    TkpGetCapture, /* 47 */
 #endif /* WIN */
 #ifdef MAC_OSX_TK /* AQUA */
     TkGenerateActivateEvents, /* 0 */
@@ -818,6 +828,29 @@ static const TkIntXlibStubs tkIntXlibStubs = {
     XQueryColors, /* 89 */
     XQueryTree, /* 90 */
     XSync, /* 91 */
+    0, /* 92 */
+    0, /* 93 */
+    0, /* 94 */
+    0, /* 95 */
+    0, /* 96 */
+    0, /* 97 */
+    0, /* 98 */
+    0, /* 99 */
+    0, /* 100 */
+    0, /* 101 */
+    0, /* 102 */
+    0, /* 103 */
+    0, /* 104 */
+    0, /* 105 */
+    0, /* 106 */
+    XFlush, /* 107 */
+    XGrabServer, /* 108 */
+    XUngrabServer, /* 109 */
+    XFree, /* 110 */
+    XNoOp, /* 111 */
+    XSynchronize, /* 112 */
+    0, /* 113 */
+    XVisualIDFromVisual, /* 114 */
 #endif /* AQUA */
 };
 

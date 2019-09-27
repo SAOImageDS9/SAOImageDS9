@@ -191,7 +191,6 @@ TkMacOSXBitmapRepFromDrawableRect(
 	 * display and return NULL.
 	 */
 
-	/*** waj ***/
 	/*	if (view == [NSView focusView]) {*/
 	if (1) {
 	    bitmap_rep = [view bitmapImageRepForCachingDisplayInRect: view_rect];
@@ -224,7 +223,7 @@ TkMacOSXBitmapRepFromDrawableRect(
  *----------------------------------------------------------------------
  */
 
-void
+int
 XCopyArea(
     Display *display,		/* Display. */
     Drawable src,		/* Source drawable. */
@@ -245,17 +244,17 @@ XCopyArea(
 
     display->request++;
     if (!width || !height) {
-	return;
+	return BadDrawable;
     }
 
     if (!TkMacOSXSetupDrawingContext(dst, gc, 1, &dc)) {
 	TkMacOSXDbgMsg("Failed to setup drawing context.");
-	return;
+	return BadDrawable;
     }
 
     if (!dc.context) {
 	TkMacOSXDbgMsg("Invalid destination drawable - no context.");
-	return;
+	return BadDrawable;
     }
 
     if (srcDraw->flags & TK_IS_PIXMAP) {
@@ -282,6 +281,7 @@ XCopyArea(
     }
 
     TkMacOSXRestoreDrawingContext(&dc);
+    return Success;
 }
 
 /*
@@ -302,7 +302,7 @@ XCopyArea(
  *----------------------------------------------------------------------
  */
 
-void
+int
 XCopyPlane(
     Display *display,		/* Display. */
     Drawable src,		/* Source drawable. */
@@ -323,14 +323,14 @@ XCopyPlane(
     display->request++;
     if (!width || !height) {
 	/* TkMacOSXDbgMsg("Drawing of empty area requested"); */
-	return;
+	return BadDrawable;
     }
     if (plane != 1) {
 	Tcl_Panic("Unexpected plane specified for XCopyPlane");
     }
     if (srcDraw->flags & TK_IS_PIXMAP) {
 	if (!TkMacOSXSetupDrawingContext(dst, gc, 1, &dc)) {
-	    return;
+	    return BadDrawable;
 	}
 
 	CGContextRef context = dc.context;
@@ -403,12 +403,13 @@ XCopyPlane(
 		    "could not get a bitmap context.");
 	}
 	TkMacOSXRestoreDrawingContext(&dc);
+	return Success;
     } else {
 	/*
 	 * Source drawable is a Window, not a Pixmap.
 	 */
 
-	XCopyArea(display, src, dst, gc, src_x, src_y, width, height,
+	return XCopyArea(display, src, dst, gc, src_x, src_y, width, height,
 		dest_x, dest_y);
     }
 }
@@ -850,7 +851,7 @@ XDrawSegments(
  *----------------------------------------------------------------------
  */
 
-void
+int
 XFillPolygon(
     Display *display,		/* Display. */
     Drawable d,			/* Draw on this. */
@@ -866,7 +867,7 @@ XFillPolygon(
 
     display->request++;
     if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
-	return;
+	return BadDrawable;
     }
     if (dc.context) {
 	double prevx, prevy;
@@ -890,6 +891,7 @@ XFillPolygon(
 	CGContextEOFillPath(dc.context);
     }
     TkMacOSXRestoreDrawingContext(&dc);
+    return Success;
 }
 
 /*
@@ -908,7 +910,7 @@ XFillPolygon(
  *----------------------------------------------------------------------
  */
 
-void
+int
 XDrawRectangle(
     Display *display,		/* Display. */
     Drawable d,			/* Draw on this. */
@@ -922,12 +924,12 @@ XDrawRectangle(
     int lw = gc->line_width;
 
     if (width == 0 || height == 0) {
-	return;
+	return BadDrawable;
     }
 
     display->request++;
     if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
-	return;
+	return BadDrawable;
     }
     if (dc.context) {
 	CGRect rect;
@@ -939,6 +941,7 @@ XDrawRectangle(
 	CGContextStrokeRect(dc.context, rect);
     }
     TkMacOSXRestoreDrawingContext(&dc);
+    return Success;
 }
 
 #ifdef TK_MACOSXDRAW_UNUSED
@@ -1117,7 +1120,7 @@ TkMacOSXDrawSolidBorder(
  *----------------------------------------------------------------------
  */
 
-void
+int
 XDrawArc(
     Display *display,		/* Display. */
     Drawable d,			/* Draw on this. */
@@ -1133,12 +1136,12 @@ XDrawArc(
     int lw = gc->line_width;
 
     if (width == 0 || height == 0 || angle2 == 0) {
-	return;
+	return BadDrawable;
     }
 
     display->request++;
     if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
-	return;
+	return BadDrawable;
     }
     if (dc.context) {
 	CGRect rect;
@@ -1168,6 +1171,7 @@ XDrawArc(
 	}
     }
     TkMacOSXRestoreDrawingContext(&dc);
+    return Success;
 }
 
 #ifdef TK_MACOSXDRAW_UNUSED
@@ -1193,7 +1197,7 @@ XDrawArc(
  *----------------------------------------------------------------------
  */
 
-void
+int
 XDrawArcs(
     Display *display,
     Drawable d,
@@ -1208,7 +1212,7 @@ XDrawArcs(
 
     display->request++;
     if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
-	return;
+	return BadDrawable;
     }
     if (dc.context) {
 	CGRect rect;
@@ -1249,6 +1253,7 @@ XDrawArcs(
 	}
     }
     TkMacOSXRestoreDrawingContext(&dc);
+    return Success;
 }
 #endif
 
@@ -1268,7 +1273,7 @@ XDrawArcs(
  *----------------------------------------------------------------------
  */
 
-void
+int
 XFillArc(
     Display *display,		/* Display. */
     Drawable d,			/* Draw on this. */
@@ -1284,12 +1289,12 @@ XFillArc(
     int lw = gc->line_width;
 
     if (width == 0 || height == 0 || angle2 == 0) {
-	return;
+	return BadDrawable;
     }
 
     display->request++;
     if (!TkMacOSXSetupDrawingContext(d, gc, 1, &dc)) {
-	return;
+	return BadDrawable;
     }
     if (dc.context) {
 	CGRect rect;
@@ -1328,6 +1333,7 @@ XFillArc(
 	}
     }
     TkMacOSXRestoreDrawingContext(&dc);
+    return Success;
 }
 
 #ifdef TK_MACOSXDRAW_UNUSED

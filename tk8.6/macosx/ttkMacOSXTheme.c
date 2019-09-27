@@ -105,6 +105,10 @@ static CGFloat darkSelectedGradient[8] = {
     23.0 / 255, 111.0 / 255, 232.0 / 255, 1.0,
     20.0 / 255, 94.0 / 255,  206.0 / 255, 1.0
 };
+static CGFloat pressedPushButtonGradient[8] = {
+    35.0 / 255, 123.0 / 255, 244.0 / 255, 1.0,
+    30.0 / 255, 114.0 / 255, 235.0 / 255, 1.0
+};
 
 /*
  * When building on systems earlier than 10.8 there is no reasonable way to
@@ -121,6 +125,19 @@ static CGFloat darkSelectedGradient[8] = {
 #define CGCOLOR(nscolor) (0 ? (CGColorRef) nscolor : NULL)
 #define CGPathCreateWithRoundedRect(w, x, y, z) NULL
 #endif
+
+/*
+ * If we try to draw a rounded rectangle with too large of a radius
+ * CoreGraphics will raise a fatal exception.  This macro returns if
+ * the width or height is less than twice the radius.  Presumably this
+ * only happens when a widget has not yet been configured and has size
+ * 1x1.
+ */
+
+#define CHECK_RADIUS(radius, bounds)                                         \
+    if (radius > bounds.size.width / 2 || radius > bounds.size.height / 2) { \
+        return;                                                              \
+    }
 
 /*----------------------------------------------------------------------
  * +++ Utilities.
@@ -152,6 +169,7 @@ static inline CGRect BoxToRect(
  */
 
 static Ttk_StateTable ThemeStateTable[] = {
+    {kThemeStateActive, TTK_STATE_ALTERNATE | TTK_STATE_BACKGROUND},
     {kThemeStateUnavailable, TTK_STATE_DISABLED, 0},
     {kThemeStatePressed, TTK_STATE_PRESSED, 0},
     {kThemeStateInactive, TTK_STATE_BACKGROUND, 0},
@@ -240,13 +258,13 @@ static void GetBackgroundColor(
     TkWindow *winPtr = (TkWindow *) tkwin;
     TkWindow *masterPtr = (TkWindow *) TkGetGeomMaster(tkwin);
 
-    while (masterPtr != NULL) {
+    while (masterPtr && masterPtr->privatePtr) {
 	if (masterPtr->privatePtr->flags & TTK_HAS_CONTRASTING_BG) {
 	    break;
 	}
 	masterPtr = (TkWindow *) TkGetGeomMaster(masterPtr);
     }
-    if (masterPtr) {
+    if (masterPtr && masterPtr->privatePtr) {
 	for (int i = 0; i < 4; i++) {
 	    rgba[i] = masterPtr->privatePtr->fillRGBA[i];
 	}
@@ -274,10 +292,12 @@ static void GetBackgroundColor(
 		rgba[i] -= 8.0 / 255.0;
 	    }
 	}
-	winPtr->privatePtr->flags |= TTK_HAS_CONTRASTING_BG;
-	for (int i = 0; i < 4; i++) {
-	    winPtr->privatePtr->fillRGBA[i] = rgba[i];
-	}
+        if (winPtr->privatePtr) {
+            winPtr->privatePtr->flags |= TTK_HAS_CONTRASTING_BG;
+            for (int i = 0; i < 4; i++) {
+                winPtr->privatePtr->fillRGBA[i] = rgba[i];
+            }
+        }
     }
 }
 
@@ -374,6 +394,8 @@ static void FillButtonBackground(
     CGRect bounds,
     CGFloat radius)
 {
+    CHECK_RADIUS(radius, bounds)
+
     CGPathRef path;
     NSColorSpace *deviceRGB = [NSColorSpace deviceRGBColorSpace];
     CGGradientRef backgroundGradient = CGGradientCreateWithColorComponents(
@@ -382,7 +404,6 @@ static void FillButtonBackground(
 	bounds.origin.x,
 	bounds.origin.y + bounds.size.height
     };
-
     CGContextBeginPath(context);
     path = CGPathCreateWithRoundedRect(bounds, radius, radius, NULL);
     CGContextAddPath(context, path);
@@ -436,6 +457,8 @@ static void DrawGroupBox(
     CGContextRef context,
     Tk_Window tkwin)
 {
+    CHECK_RADIUS(4, bounds)
+
     CGPathRef path;
     NSColorSpace *deviceRGB = [NSColorSpace deviceRGBColorSpace];
     NSColor *borderColor, *bgColor;
@@ -478,6 +501,7 @@ static void SolidFillRoundedRectangle(
     NSColor *color)
 {
     CGPathRef path;
+    CHECK_RADIUS(radius, bounds)
 
     CGContextSetFillColorWithColor(context, CGCOLOR(color));
     path = CGPathCreateWithRoundedRect(bounds, radius, radius, NULL);
@@ -598,6 +622,8 @@ static void GradientFillRoundedRectangle(
 {
     NSColorSpace *deviceRGB = [NSColorSpace deviceRGBColorSpace];
     CGPathRef path;
+    CHECK_RADIUS(radius, bounds)
+
     CGPoint end = {
 	bounds.origin.x,
 	bounds.origin.y + bounds.size.height
@@ -646,6 +672,11 @@ static void DrawDarkButton(
 
     bounds = CGRectInset(bounds, 1, 1);
     if (kind == kThemePushButton && (state & TTK_STATE_PRESSED)) {
+	GradientFillRoundedRectangle(context, bounds, 4,
+	    pressedPushButtonGradient, 2);
+    } else if (kind == kThemePushButton &&
+	       (state & TTK_STATE_ALTERNATE) &&
+	       !(state & TTK_STATE_BACKGROUND)) {
 	GradientFillRoundedRectangle(context, bounds, 4,
 	    darkSelectedGradient, 2);
     } else {
@@ -1031,6 +1062,9 @@ static void DrawDarkFocusRing(
     CGRect bounds,
     CGContextRef context)
 {
+    CGRect insetBounds = CGRectInset(bounds, -3, -3);
+    CHECK_RADIUS(4, insetBounds)
+
     NSColorSpace *deviceRGB = [NSColorSpace deviceRGBColorSpace];
     NSColor *strokeColor;
     NSColor *fillColor = [NSColor colorWithColorSpace:deviceRGB
@@ -1060,8 +1094,7 @@ static void DrawDarkFocusRing(
     CGContextStrokePath(context);
     CGContextSetShouldAntialias(context, true);
     CGContextSetFillColorWithColor(context, CGCOLOR(fillColor));
-    CGPathRef path = CGPathCreateWithRoundedRect(CGRectInset(bounds, -3, -3),
-						 4, 4, NULL);
+    CGPathRef path = CGPathCreateWithRoundedRect(insetBounds, 4, 4, NULL);
     CGContextBeginPath(context);
     CGContextAddPath(context, path);
     CGContextAddRect(context, bounds);
@@ -1198,6 +1231,7 @@ static ThemeButtonParams
     ListHeaderParams =
 {kThemeListHeaderButton, kThemeMetricListHeaderHeight};
 static Ttk_StateTable ButtonValueTable[] = {
+    {kThemeButtonOff, TTK_STATE_ALTERNATE | TTK_STATE_BACKGROUND},
     {kThemeButtonMixed, TTK_STATE_ALTERNATE, 0},
     {kThemeButtonOn, TTK_STATE_SELECTED, 0},
     {kThemeButtonOff, 0, 0}
@@ -1209,11 +1243,11 @@ static Ttk_StateTable ButtonValueTable[] = {
 
 };
 static Ttk_StateTable ButtonAdornmentTable[] = {
+    {kThemeAdornmentNone, TTK_STATE_ALTERNATE | TTK_STATE_BACKGROUND, 0},
     {kThemeAdornmentDefault | kThemeAdornmentFocus,
      TTK_STATE_ALTERNATE | TTK_STATE_FOCUS, 0},
-    {kThemeAdornmentDefault, TTK_STATE_ALTERNATE, 0},
-    {kThemeAdornmentNone, TTK_STATE_ALTERNATE, 0},
     {kThemeAdornmentFocus, TTK_STATE_FOCUS, 0},
+    {kThemeAdornmentDefault, TTK_STATE_ALTERNATE, 0},
     {kThemeAdornmentNone, 0, 0}
 };
 
@@ -1372,6 +1406,11 @@ static void ButtonElementDraw(
 	    ChkErr(HIThemeDrawButton, &bounds, &info, dc.context,
 		HIOrientation, NULL);
 	}
+    } else if (info.kind == kThemePushButton &&
+	       (state & TTK_STATE_PRESSED)) {
+	bounds.size.height += 2;
+	GradientFillRoundedRectangle(dc.context, bounds, 4,
+	    pressedPushButtonGradient, 2);
     } else {
 
         /*
@@ -2354,7 +2393,7 @@ static void ThumbElementSize(
     } else {
 	*minHeight = 8;
 	*minWidth = 18;
-    }	
+    }
 }
 
 static void ThumbElementDraw(

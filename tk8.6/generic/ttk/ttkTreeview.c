@@ -923,7 +923,7 @@ static void DragColumn(Treeview *tv, int i, int delta)
 
 static TreeItem *IdentifyItem(Treeview *tv, int y); /*forward*/
 
-static const unsigned int TreeviewBindEventMask =
+static const unsigned long TreeviewBindEventMask =
       KeyPressMask|KeyReleaseMask
     | ButtonPressMask|ButtonReleaseMask
     | PointerMotionMask|ButtonMotionMask
@@ -1066,7 +1066,7 @@ static void TreeviewCleanup(void *recordPtr)
     TreeviewFreeColumns(tv);
 
     if (tv->tree.displayColumns)
-	Tcl_Free((ClientData)tv->tree.displayColumns);
+	ckfree((ClientData)tv->tree.displayColumns);
 
     foreachHashEntry(&tv->tree.items, FreeItemCB);
     Tcl_DeleteHashTable(&tv->tree.items);
@@ -1232,9 +1232,10 @@ static int ConfigureColumn(
     if (mask & GEOMETRY_CHANGED) {
 	if (!Tk_IsMapped(tv->core.tkwin)) {
 	    TtkResizeWidget(&tv->core);
-	}
-	RecomputeSlack(tv);
-        ResizeColumns(tv, TreeWidth(tv));
+        } else {
+	    RecomputeSlack(tv);
+	    ResizeColumns(tv, TreeWidth(tv));
+        }
     }
     TtkRedisplayWidget(&tv->core);
 

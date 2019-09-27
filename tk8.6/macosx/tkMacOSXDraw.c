@@ -191,7 +191,8 @@ TkMacOSXBitmapRepFromDrawableRect(
 	 * display and return NULL.
 	 */
 
-	if (view == [NSView focusView]) {
+	/*	if (view == [NSView focusView]) {*/
+	if (1) {
 	    bitmap_rep = [view bitmapImageRepForCachingDisplayInRect: view_rect];
 	    [bitmap_rep retain];
 	    [view cacheDisplayInRect:view_rect toBitmapImageRep:bitmap_rep];

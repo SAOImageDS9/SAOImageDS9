@@ -608,9 +608,13 @@ proc PlotLayoutCanvas {varname} {
 	    set xx 0
 	    set yy 0
 	    foreach cc $var(graphs) {
+		set var($cc,tx) [expr $xx*$z1]
+		set var($cc,ty) [expr $yy*$z2]
+
 		place $var($cc,graph) -in $var(top) \
 		    -relwidth $z1 -relheight $z2 \
-		    -relx [expr $xx*$z1] -rely [expr $yy*$z2] -anchor nw
+		    -relx [expr $xx*$z1] -rely [expr $yy*$z2] \
+		    -anchor nw
 
 		incr xx
 		if {$xx==$nc} {
@@ -623,9 +627,13 @@ proc PlotLayoutCanvas {varname} {
 	    set zz [expr 1./[llength $var(graphs)]]
 	    set ii 0
 	    foreach cc $var(graphs) {
+		set var($cc,tx) [expr $ii*$zz]
+		set var($cc,ty) 0
+
 		place $var($cc,graph) -in $var(top) \
 		    -relwidth $zz -relheight 1 \
-		    -relx [expr $ii*$zz] -rely .5 -anchor w
+		    -relx [expr $ii*$zz] -rely .5 \
+		    -anchor w
 		incr ii
 	    }
 	}
@@ -633,9 +641,13 @@ proc PlotLayoutCanvas {varname} {
 	    set zz [expr 1./[llength $var(graphs)]]
 	    set ii 0
 	    foreach cc $var(graphs) {
+		set var($cc,tx) 0
+		set var($cc,ty) [expr $ii*$zz]
+
 		place $var($cc,graph) -in $var(top) \
 		    -relwidth 1 -relheight $zz \
-		    -relx .5 -rely [expr $ii*$zz] -anchor n
+		    -relx .5 -rely [expr $ii*$zz] \
+		    -anchor n
 		incr ii
 	    }
 	}
@@ -653,17 +665,27 @@ proc PlotLayoutCanvas {varname} {
 	    set ii 0
 	    foreach cc $var(graphs) {
 		if {$ii == 0} {
+		    set var($cc,tx) 0
+		    set var($cc,ty) 0
+
 		    place $var($cc,graph) -in $var(top) \
-			-relwidth 1 -relheight $z1 -x 0 -y 0
+			-relwidth 1 -relheight $z1 \
+			-x 0 -y 0
 		} else {
+		    set var($cc,tx) 0
+		    set var($cc,ty) [expr ($ii-1)*$z2 + $z1]
+
 		    place $var($cc,graph) -in $var(top) \
 			-relwidth 1 -relheight $z2 \
-			-relx .5 -rely [expr $ii*$z2 + $z1] -anchor s
+			-relx .5 -rely [expr $ii*$z2 + $z1] \
+			-anchor s
 		}
 		incr ii
 	    }
 	}
     }
+
+    PlotRestoreState $varname
 
     # needed so layout can be properly realized
     update idletasks
@@ -811,8 +833,7 @@ proc PlotUpdateCanvas {varname} {
 		$var($cc,graph) configure \
 		    -topmargin 0 -bottommargin 0 \
 		    -leftmargin 0 -rightmargin 0 \
-		    -borderwidth 2 \
-		    -plotrelief flat -plotborderwidth 2
+		    -borderwidth 2
 
 		$var($cc,graph) xaxis configure -showticks 1 -linewidth 1
 		$var($cc,graph) yaxis configure -showticks 1 -linewidth 1
@@ -826,8 +847,7 @@ proc PlotUpdateCanvas {varname} {
 
 		$var($cc,graph) configure \
 		    -leftmargin $left -rightmargin $right \
-		    -borderwidth 0 \
-		    -plotrelief solid -plotborderwidth 1
+		    -borderwidth 2
 
 		if {$cc == $first} {
 		    $var($cc,graph) configure -topmargin 0 -bottommargin 1
@@ -1081,14 +1101,20 @@ proc PlotBackup {ch dir} {
 		PlotCurrentGraph $varname
 		puts $ch "PlotAddGraph $varname $var($cc,type)"
 
+		# in case of no data
+		PlotSaveConfigFile $varname "$fdir/graph${cc}.plt"
+		puts $ch "PlotLoadConfigFile $varname $fdir/graph${cc}.plt"
+
+		# for each dataset
 		foreach nn $var($cc,dss) {
 		    set var(graph,ds,current) $nn
 		    PlotCurrentDataSet $varname
 
 		    PlotSaveDataFile $varname "$fdir/graph${cc}ds${nn}.dat"
+		    puts $ch "PlotLoadDataFile $varname $fdir/graph${cc}ds${nn}.dat $var($cc,$nn,dim)"
+
 		    PlotSaveConfigFile $varname "$fdir/graph${cc}ds${nn}.plt"
 
-		    puts $ch "PlotLoadDataFile $varname $fdir/graph${cc}ds${nn}.dat $var($cc,$nn,dim)"
 		    puts $ch "PlotLoadConfigFile $varname $fdir/graph${cc}ds${nn}.plt"
 		}
 	    }

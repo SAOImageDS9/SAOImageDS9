@@ -49,8 +49,6 @@ proc AnalysisMainMenu {} {
 	-menu $ds9(mb).analysis.arch
     $ds9(mb).analysis add cascade -label [msgcat::mc {Catalogs}] \
 	-menu $ds9(mb).analysis.cat
-    $ds9(mb).analysis add cascade -label [msgcat::mc {Footprint Servers}] \
-	-menu $ds9(mb).analysis.footprint
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add command -label [msgcat::mc {Catalog Tool}] \
 	-command CATTool
@@ -151,10 +149,6 @@ proc AnalysisMainMenu {} {
 	-command CATMatchFrame
     $ds9(mb).analysis.cat add separator
     CATAnalysisMenu
-
-    menu $ds9(mb).analysis.footprint
-    $ds9(mb).analysis.footprint add command \
-	-label {Chandra (NASA/CXC)}
 
     menu $ds9(mb).analysis.plot
     $ds9(mb).analysis.plot add command -label [msgcat::mc {Line}] \

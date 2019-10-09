@@ -2801,8 +2801,7 @@ void Base::sliceCmd(int ii, int ss)
   updateMagnifier();
 }
 
-void Base::sliceCmd(int ii, double dd,
-		    Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   if (!currentContext->fits)
     return;
@@ -2815,7 +2814,7 @@ void Base::sliceCmd(int ii, double dd,
   
   // IMAGE (ranges 1-n)
   // be sure to round properly
-  setSlice(ii,int(out[2]+.5));
+  setSlice(2,int(out[2]+.5));
   updateMagnifier();
 }
 

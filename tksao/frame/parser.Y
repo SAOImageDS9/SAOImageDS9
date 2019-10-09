@@ -2806,9 +2806,7 @@ update	: /* empty */ {fr->updateFitsCmd(0);}
 updateFitsSlice : INT {fr->sliceCmd(2,$1);}
         | INT INT {fr->sliceCmd($1,$2);}
         | numeric coordSystem skyFrame
-	{fr->sliceCmd(2, $1, (Coord::CoordSystem)$2, (Coord::SkyFrame $3));}
-        | INT numeric coordSystem skyFrame
-	{fr->sliceCmd($1, $2, (Coord::CoordSystem)$3, (Coord::SkyFrame $4));}
+	{fr->sliceCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame $3));}
 	;
 
 warp	: numeric numeric {fr->warpCmd(Vector($1,$2));}

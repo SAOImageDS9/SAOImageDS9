@@ -105,6 +105,18 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector(pout[0],pout[1]);
     }
+  case 5:
+    {
+      double pin[5];
+      double pout[5];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      pin[2] = forward ? 1 : 0;
+      pin[3] = forward ? 1 : 0;
+      pin[4] = forward ? 1 : 0;
+      astTranN(ast, 1, 5, 1, pin, forward, 5, 1, pout);
+      return Vector(pout[0],pout[1]);
+    }
   }
   return Vector();
 }
@@ -232,6 +244,55 @@ void wcsTran(AstFrameSet* ast, int npoint, Vector* in, int forward, Vector* out)
 	delete [] ptr_out[3];
     }
     break;
+  case 5:
+    {
+      double* ptr_in[5];
+      ptr_in[0] = new double[npoint];
+      ptr_in[1] = new double[npoint];
+      ptr_in[2] = new double[npoint];
+      ptr_in[3] = new double[npoint];
+      ptr_in[4] = new double[npoint];
+      double* ptr_out[5];
+      ptr_out[0] = new double[npoint];
+      ptr_out[1] = new double[npoint];
+      ptr_out[2] = new double[npoint];
+      ptr_out[3] = new double[npoint];
+      ptr_out[4] = new double[npoint];
+
+      for (int kk=0; kk<npoint; kk++) {
+	ptr_in[0][kk] = in[kk][0];
+	ptr_in[1][kk] = in[kk][1];
+	ptr_in[2][kk] = forward ? 1 : 0;
+	ptr_in[3][kk] = forward ? 1 : 0;
+	ptr_in[4][kk] = forward ? 1 : 0;
+      }      
+      astTranP(ast, npoint, 5, (const double**)ptr_in, forward, 5, ptr_out);
+      for (int kk=0; kk<npoint; kk++)
+	out[kk] = Vector(ptr_out[0][kk], ptr_out[1][kk]);
+
+      if (ptr_in[0])
+	delete [] ptr_in[0];
+      if (ptr_in[1])
+	delete [] ptr_in[1];
+      if (ptr_in[2])
+	delete [] ptr_in[2];
+      if (ptr_in[3])
+	delete [] ptr_in[3];
+      if (ptr_in[4])
+	delete [] ptr_in[4];
+
+      if (ptr_out[0])
+	delete [] ptr_out[0];
+      if (ptr_out[1])
+	delete [] ptr_out[1];
+      if (ptr_out[2])
+	delete [] ptr_out[2];
+      if (ptr_out[3])
+	delete [] ptr_out[3];
+      if (ptr_out[4])
+	delete [] ptr_out[4];
+    }
+    break;
   }
 }
 
@@ -275,6 +336,18 @@ Vector3d wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       pin[2] = in[2];
       pin[3] = forward ? 1 : 0;
       astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
+      return Vector3d(pout[0],pout[1],pout[2]);
+    }
+  case 5:
+    {
+      double pin[5];
+      double pout[5];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      pin[2] = in[2];
+      pin[3] = forward ? 1 : 0;
+      pin[4] = forward ? 1 : 0;
+      astTranN(ast, 1, 5, 1, pin, forward, 5, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }
   }
@@ -321,6 +394,23 @@ double wcsDistance(AstFrameSet* ast, const Vector& vv1, const Vector& vv2)
       ptr2[1] = vv2[1];
       ptr2[2] = 0;
       ptr2[3] = 0;
+
+      return astDistance(ast, ptr1, ptr2);
+    }
+  case 5:
+    {
+      double ptr1[5];
+      ptr1[0] = vv1[0];
+      ptr1[1] = vv1[1];
+      ptr1[2] = 0;
+      ptr1[3] = 0;
+      ptr1[4] = 0;
+      double ptr2[5];
+      ptr2[0] = vv2[0];
+      ptr2[1] = vv2[1];
+      ptr2[2] = 0;
+      ptr2[3] = 0;
+      ptr2[4] = 0;
 
       return astDistance(ast, ptr1, ptr2);
     }
@@ -384,6 +474,29 @@ double wcsAngle(AstFrameSet* ast, const Vector& vv1, const Vector& vv2,
 
       return astAngle(ast, ptr1, ptr2, ptr3);
     }
+  case 5:
+    {
+      double ptr1[5];
+      ptr1[0] = vv1[0];
+      ptr1[1] = vv1[1];
+      ptr1[2] = 0;
+      ptr1[3] = 0;
+      ptr1[4] = 0;
+      double ptr2[5];
+      ptr2[0] = vv2[0];
+      ptr2[1] = vv2[1];
+      ptr2[2] = 0;
+      ptr2[3] = 0;
+      ptr2[4] = 0;
+      double ptr3[5];
+      ptr3[0] = vv3[0];
+      ptr3[1] = vv3[1];
+      ptr3[2] = 0;
+      ptr3[3] = 0;
+      ptr3[4] = 0;
+
+      return astAngle(ast, ptr1, ptr2, ptr3);
+    }
   }
 
   return 0;
@@ -429,6 +542,23 @@ double wcsAxAngle(AstFrameSet* ast, const Vector& vv1, const Vector& vv2)
       ptr2[1] = vv2[1];
       ptr2[2] = 0;
       ptr2[3] = 0;
+
+      return astAxAngle(ast, ptr1, ptr2, 2);
+    }
+  case 5:
+    {
+      double ptr1[5];
+      ptr1[0] = vv1[0];
+      ptr1[1] = vv1[1];
+      ptr1[2] = 0;
+      ptr1[3] = 0;
+      ptr1[4] = 0;
+      double ptr2[5];
+      ptr2[0] = vv2[0];
+      ptr2[1] = vv2[1];
+      ptr2[2] = 0;
+      ptr2[3] = 0;
+      ptr2[4] = 0;
 
       return astAxAngle(ast, ptr1, ptr2, 2);
     }
@@ -491,6 +621,28 @@ AstWinMap* wcsWinMap(AstFrameSet* ast, Vector& ll, Vector& ur, Vector& rr)
       vrr[3] = 1.5;
       return astWinMap(4, vll, vrr, vll, vur, "");
     }
+  case 5:
+    {
+      double vll[5];
+      vll[0] = ll[0];
+      vll[1] = ll[0];
+      vll[2] = .5;
+      vll[3] = .5;
+      vll[4] = .5;
+      double vur[5];
+      vur[0] = ur[0];
+      vur[1] = ur[0];
+      vur[2] = .5;
+      vur[3] = .5;
+      vur[4] = .5;
+      double vrr[5];
+      vrr[0] = rr[0];
+      vrr[1] = rr[1];
+      vrr[2] = 1.5;
+      vrr[3] = 1.5;
+      vrr[4] = 1.5;
+      return astWinMap(4, vll, vrr, vll, vur, "");
+    }
   }
 
   return NULL;
@@ -540,6 +692,17 @@ AstCmpMap* wcsMatrixMap(AstFrameSet* ast, Matrix& mx)
       double tt[] = {mx.matrix(2,0),mx.matrix(2,1),0,0};
       mm = astMatrixMap(4, 4, 0, ss, "");
       sm = astShiftMap(4, tt, "");
+    }
+  case 5:
+    {
+      double ss[] = {mx.matrix(0,0),mx.matrix(1,0),0,0,0,
+		     mx.matrix(0,1),mx.matrix(1,1),0,0,0,
+		     0,0,1,0,0,
+		     0,0,0,1,0,
+		     0,0,0,0,1};
+      double tt[] = {mx.matrix(2,0),mx.matrix(2,1),0,0,0};
+      mm = astMatrixMap(5, 5, 0, ss, "");
+      sm = astShiftMap(5, tt, "");
     }
     break;
   }

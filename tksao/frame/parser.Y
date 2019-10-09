@@ -1214,6 +1214,7 @@ getFitsHeader : INT {fr->getFitsHeaderCmd($1);}
 	;
 
 getFitsDepth : /* empty */ {fr->getFitsDepthCmd(2);}
+        | INT {fr->getFitsDepthCmd($1);}
 	;
 
 getFitsFileName: fileNameType 
@@ -1225,7 +1226,8 @@ getFitsFileName: fileNameType
 	{fr->getFitsFileNameCmd($2, (Base::FileNameType)$1);}
 	;
 
-getFitsSlice : /* empty */ {fr->getFitsSliceCmd();}
+getFitsSlice : /* empty */ {fr->getFitsSliceCmd(2);}
+        | INT {fr->getFitsSliceCmd($1);}
         | FROM_ IMAGE_ coordSystem skyFrame
 	{fr->getFitsSliceFromImageCmd((Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
         | FROM_ IMAGE_ INT coordSystem skyFrame
@@ -2801,13 +2803,12 @@ update	: /* empty */ {fr->updateFitsCmd(0);}
 	| FITS_ SLICE_ updateFitsSlice
 	;
 
-updateFitsSlice : INT {fr->sliceCmd($1);}
+updateFitsSlice : INT {fr->sliceCmd(2,$1);}
+        | INT INT {fr->sliceCmd($1,$2);}
         | numeric coordSystem skyFrame
-	{fr->sliceCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame $3));}
-        | INT INT {
-	  // backward compatibility with backup
-	  fr->sliceCmd($2);
-	}
+	{fr->sliceCmd(2, $1, (Coord::CoordSystem)$2, (Coord::SkyFrame $3));}
+        | INT numeric coordSystem skyFrame
+	{fr->sliceCmd($1, $2, (Coord::CoordSystem)$3, (Coord::SkyFrame $4));}
 	;
 
 warp	: numeric numeric {fr->warpCmd(Vector($1,$2));}

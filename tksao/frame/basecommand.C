@@ -1743,9 +1743,9 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     Tcl_AppendResult(interp, "0 0", NULL);
 }
 
-void Base::getFitsSliceCmd()
+void Base::getFitsSliceCmd(int ii)
 {
-  printInteger(currentContext->slice(2));
+  printInteger(currentContext->slice(ii));
 }
 
 void Base::getFitsSliceFromImageCmd(Coord::CoordSystem sys, Coord::SkyFrame sky)
@@ -2794,14 +2794,15 @@ void Base::saveENVIFileCmd(const char* hdr, const char* fn,
     saveENVI(str, str2, endian);
 }
 
-void Base::sliceCmd(int ss)
+void Base::sliceCmd(int ii, int ss)
 {
   // IMAGE (ranges 1-n)
-  setSlice(2,ss);
+  setSlice(ii,ss);
   updateMagnifier();
 }
 
-void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::sliceCmd(int ii, double dd,
+		    Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   if (!currentContext->fits)
     return;
@@ -2814,7 +2815,7 @@ void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
   
   // IMAGE (ranges 1-n)
   // be sure to round properly
-  setSlice(2,int(out[2]+.5));
+  setSlice(ii,int(out[2]+.5));
   updateMagnifier();
 }
 

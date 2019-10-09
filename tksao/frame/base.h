@@ -960,7 +960,7 @@ public:
   void saveENVIFileCmd(const char*, const char*, FitsFile::ArchType);
 
   void sliceCmd(int, int);
-  void sliceCmd(int, double, Coord::CoordSystem, Coord::SkyFrame);
+  void sliceCmd(double, Coord::CoordSystem, Coord::SkyFrame);
 
   void updateFitsCmd(int);
   void updateFitsCmd(int, BBox, int);

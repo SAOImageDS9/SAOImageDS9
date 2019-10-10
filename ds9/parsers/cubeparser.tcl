@@ -1328,15 +1328,15 @@ array set cube::rules {
   27,line 157
   24,line 154
   21,line 151
-  76,line 219
+  76,line 218
   17,line 147
-  73,line 216
+  73,line 215
   14,line 144
-  70,line 211
-  69,line 210
+  70,line 210
+  69,line 209
   11,line 141
-  66,line 205
-  63,line 200
+  66,line 204
+  63,line 199
   60,line 196
   59,line 195
   56,line 192
@@ -1356,16 +1356,16 @@ array set cube::rules {
   30,line 161
   26,line 156
   23,line 153
-  78,line 223
+  78,line 222
   19,line 149
   20,line 150
-  75,line 218
+  75,line 217
   16,line 146
-  72,line 213
+  72,line 212
   13,line 143
-  68,line 209
+  68,line 208
   10,line 140
-  65,line 204
+  65,line 203
   62,line 198
   58,line 194
   55,line 191
@@ -1382,15 +1382,15 @@ array set cube::rules {
   28,line 159
   25,line 155
   22,line 152
-  77,line 222
+  77,line 221
   45,e 1
   18,line 148
-  74,line 217
+  74,line 216
   15,line 145
-  71,line 212
+  71,line 211
   12,line 142
-  67,line 208
-  64,line 201
+  67,line 207
+  64,line 200
   61,line 197
   57,line 193
   54,line 190
@@ -1716,7 +1716,7 @@ array set cube::token_id_table {
   265,line 15
   307,t 0
   297,t 0
-  331,line 215
+  331,line 214
   328,t 1
   262,line 12
   327,line 179
@@ -1795,15 +1795,15 @@ array set cube::token_id_table {
   267,line 17
   298,t 0
   275,title WCSR
-  333,line 224
+  333,line 223
   294,title OFF
   304,title INTERVAL
   330,t 1
   329,t 1
   323,title {}
   264,line 14
-  330,line 207
-  329,line 203
+  330,line 206
+  329,line 202
   261,line 11
   274,t 0
   326,line 178
@@ -1878,7 +1878,7 @@ array set cube::token_id_table {
   270,line 20
   331,t 1
   266,line 16
-  332,line 221
+  332,line 220
   268,title WCSK
   275,t 0
   263,line 13
@@ -2099,6 +2099,7 @@ proc cube::yyparse {} {
                     61 { CubeCmd $1 }
                     62 { CubeCmdCoord $1 $2 fk5 }
                     63 { CubeCmdCoord $1 $2 $3 }
+                    64 { CubeCmdAxis $2 }
                     65 { ProcessCmdSet cube lock,axes $2 LockAxesCurrent }
                     66 { ProcessCmdSet cube axes $1 }
                     67 { set _ 123 }

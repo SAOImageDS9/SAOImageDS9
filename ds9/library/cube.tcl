@@ -35,7 +35,7 @@ proc MatchCube {which sys} {
     global ds9
     global rgb
 
-    # waj
+    # only matches on axis 2
     set ss [$which get fits slice]
     set wss [$which get fits slice from image $sys fk5]
     
@@ -303,7 +303,7 @@ proc CubeApply {ii} {
     UpdateCube
 }
 
-proc CubeApplyWCS {} {
+proc CubeApplyWCS {ii} {
     global dcube
     global cube
     global current
@@ -318,7 +318,7 @@ proc CubeApplyWCS {} {
 	return
     }
 
-    set ss [$current(frame) get fits slice to image $dcube(wcs,2) $cube(system) $cube(sky)]
+    set ss [$current(frame) get fits slice to image $dcube(wcs,$ii) $cube(system) $cube(sky)]
     if {$ss<1} {
 	set ss 1
     }
@@ -329,8 +329,8 @@ proc CubeApplyWCS {} {
     
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
-    set dcube(image,2) $ss
-    set dcube(wcs,2) \
+    set dcube(image,$ii) $ss
+    set dcube(wcs,$ii) \
 	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 
     UpdateCube
@@ -427,24 +427,19 @@ proc CubeDialog {} {
     set dcube(taxis) [ttk::label $f.taxis -text [msgcat::mc {Axis}]]
     set dcube(twcs) \
 	[ttk::label $f.twcs -textvariable dcube(vcoord) -anchor center]
-    set dcube(wcsentry,2) \
-	[ttk::entry $f.slice -textvariable dcube(wcs,2) -width 12]
-    bind $dcube(wcsentry,2) <Return> [list CubeApplyWCS]
 
-    set dcube(slider,2) \
-	[slider $f.scale 0 100 {} dcube(image,2) [list CubeApply 2] 4 10]
-    set dcube(slider,3) \
-	[slider $f.scale3 0 100 {} dcube(image,3) [list CubeApply 3] 4 10]
-    set dcube(slider,4) \
-	[slider $f.scale4 0 100 {} dcube(image,4) [list CubeApply 4] 4 10]
+    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
+	set dcube(chk,$ii) [ttk::radiobutton $f.chk$ii -text [expr $ii+1] \
+				-variable cube(axis) -value $ii]
+	set dcube(wcsentry,$ii) \
+	    [ttk::entry $f.slice$ii -textvariable dcube(wcs,$ii) -width 12]
+	bind $dcube(wcsentry,$ii) <Return> [list CubeApplyWCS $ii]
 
-    set dcube(chk,2) [ttk::radiobutton $f.chk2 -text 3 -variable cube(axis) \
-			  -value 2]
-    set dcube(chk,3) [ttk::radiobutton $f.chk3 -text 4 -variable cube(axis) \
-			  -value 3]
-    set dcube(chk,4) [ttk::radiobutton $f.chk4 -text 5 -variable cube(axis) \
-			  -value 4]
-
+	set dcube(slider,$ii) \
+	    [slider $f.scale$ii 0 100 {} dcube(image,$ii) \
+		 [list CubeApply $ii] 4 10]
+    }
+    
     # Buttons
 
     set f [ttk::frame $w.buttons]
@@ -524,9 +519,9 @@ proc UpdateCubeDialog {} {
 
     # forget everything
     grid forget $dcube(taxis) $dcube(twcs)
-    grid forget $dcube(chk,2) $dcube(slider,2) $dcube(wcsentry,2)
-    grid forget $dcube(chk,3) $dcube(slider,3)
-    grid forget $dcube(chk,4) $dcube(slider,4)
+    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
+	grid forget $dcube(chk,$ii) $dcube(slider,$ii) $dcube(wcsentry,$ii)
+    }
 
     # special case, no frame
     if {$current(frame) == {}} {
@@ -901,7 +896,7 @@ proc ProcessCubeCmd {varname iname} {
     incr i [expr $cube::yycnt-1]
 }
 
-proc CubeCmd {ii ss} {
+proc CubeCmd {ss} {
     global dcube
     global cube
     global current
@@ -916,19 +911,19 @@ proc CubeCmd {ii ss} {
 	return
     }
 
-    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
+    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $cube(axis) $ss"
 
-    set dcube(image,$ii) $ss
-    if {$ii == 2} {
-	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+    set dcube(image,$cube(axis)) $ss
+    if {$cube(axis) == 2} {
+	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
     } else {
-	set dcube(wcs,$ii) $ss
+	set dcube(wcs,$cube(axis)) $ss
     }
 
     UpdateCube
 }
 
-proc CubeCmdCoord {ii ss sys sky} {
+proc CubeCmdCoord {ss sys sky} {
     global dcube
     global cube
     global current
@@ -943,8 +938,8 @@ proc CubeCmdCoord {ii ss sys sky} {
 	return
     }
 
-    if {$ii > 2} {
-	set ss [$current(frame) get fits slice $ii]
+    if {$cube(axis) > 2} {
+	set ss [$current(frame) get fits slice $cube(axis)]
     } else {
 	set ss [$current(frame) get fits slice to image $ss $sys $sky]
     }
@@ -955,13 +950,22 @@ proc CubeCmdCoord {ii ss sys sky} {
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     set dcube(image,2) $ss
-    if {$ii == 2} {
-	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+    if {$cube(axis) == 2} {
+	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
     } else {
-	set dcube(wcs,$ii) $ss
+	set dcube(wcs,$cube(axis)) $ss
     }
 
     UpdateCube
+}
+
+proc CubeCmdAxis {ii} {
+    global cube
+
+    set cube(axis) [expr $ii-1]
+    if {$cube(axis) < 2} {
+	set cube(axis) 2
+    }
 }
 
 proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {
@@ -972,4 +976,11 @@ proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {
     cubesend::YY_FLUSH_BUFFER
     cubesend::yy_scan_string $param
     cubesend::yyparse
+}
+
+proc CubeSendCmdAxis {} {
+    global parse
+    global cube
+
+    $parse(proc) $parse(id) "[expr $cube(axis)+1]\n"
 }

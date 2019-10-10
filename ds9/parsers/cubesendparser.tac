@@ -27,8 +27,7 @@ cubesend : {ProcessSendCmdCurrent "get fits slice"}
  | INTERVAL_ {BlinkSendCmdInterval}
  | AXES_ order
  | ORDER_ order
-# backward compatibility
- | AXIS_ {ProcessSendCmdTxt "2"}
+ | AXIS_ {CubeSendCmdAxis}
  ;
 
 order : {ProcessSendCmdGet cube axes}

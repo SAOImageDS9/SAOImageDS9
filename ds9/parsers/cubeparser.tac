@@ -62,8 +62,7 @@ cube : OPEN_
  | INT_ IMAGE_ {CubeCmd $1}
  | numeric wcssys {CubeCmdCoord $1 $2 fk5}
  | numeric wcssys skyframe {CubeCmdCoord $1 $2 $3}
-# backward compatible
- | AXIS_ INT_ {}
+ | AXIS_ INT_ {CubeCmdAxis $2}
  ;
 
 order : LOCK_ yesno {ProcessCmdSet cube lock,axes $2 LockAxesCurrent}

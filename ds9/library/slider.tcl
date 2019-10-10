@@ -21,7 +21,6 @@ proc slider {w from to label varname cmd {num {5}} {width {7}}} {
 
     for {set ii 0} {$ii<$num} {incr ii} {
 	ttk::label $w.t$ii -width $width -anchor center
-	grid columnconfigure $w $ii -weight 1
     }
 
     grid rowconfigure $w 1 -weight 1

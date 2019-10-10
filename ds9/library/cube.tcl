@@ -550,9 +550,8 @@ proc UpdateCubeDialog {} {
 	return
     }
     
-    switch -- $naxes {
+    switch $naxes {
 	2 {UpdateCubeDialog2Axes}
-	3 {UpdateCubeDialog3Axes}
 	default {UpdateCubeDialogAxes $naxes}
     }
 }
@@ -650,70 +649,6 @@ proc UpdateCubeDialog2Axes {} {
     set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 }
 
-proc UpdateCubeDialog3Axes {} {
-    global icube
-    global dcube
-    global cube
-
-    global current
-
-    set w $icube(top)
-    set mb $icube(mb)
-
-    # now make sure we have the coord systems
-    AdjustCoordSystem3d cube system
-    CoordMenuEnable3d $mb.coord cube system sky {}
-
-    # enable/disable Axes Reorder
-    $mb entryconfig [msgcat::mc {Axes Order}] -state normal
-
-    # get cropped version
-    set ss [$current(frame) get crop 3d image]
-    set dcube(from,2) [lindex $ss 0]
-    set dcube(to,2) [lindex $ss 1]
-
-    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system) $cube(sky)]    
-    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system) $cube(sky)]    
-
-    # show it
-    grid columnconfigure $w.param 0 -weight 0
-    grid columnconfigure $w.param 1 -weight 1
-    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-    switch $cube(system) {
-	image {
-	    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
-	}
-	default {
-	    grid $dcube(wcsentry,2) $dcube(slider,2) -padx 2 -pady 2 -sticky ew
-	}
-    }
-    
-    # set intervals
-    set diff [expr $dcube(to,2)-$dcube(from,2)+1]
-    if {$diff>4} {
-	set diff 4
-    }
-    SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
-    SliderMinMax $dcube(slider,2) $dcube(from,wcs,2) $dcube(to,wcs,2) $diff 4
-
-    set dcube(vcoord) $cube(system)
-    switch $cube(system) {
-	image {}
-	default {
-	    set w [string range $cube(system) 3 3]
-	    set key "CTYPE3$w"
-	    set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
-	    if {$tt != {}} {
-		set dcube(vcoord) $tt
-	    }
-	}
-    }
-
-    # we must do this after the scale has been configured
-    set dcube(image,2) [$current(frame) get fits slice]
-    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
-}
-
 proc UpdateCubeDialogAxes {axes} {
     global icube
     global dcube
@@ -723,7 +658,6 @@ proc UpdateCubeDialogAxes {axes} {
 
     set w $icube(top)
     set mb $icube(mb)
-
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
@@ -749,28 +683,47 @@ proc UpdateCubeDialogAxes {axes} {
     }
 
     # show it
-    grid columnconfigure $w.param 0 -weight 0
-    grid columnconfigure $w.param 1 -weight 0
-    grid columnconfigure $w.param 2 -weight 1
-    grid x x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-    switch $cube(system) {
-	image {
-	    grid $dcube(chk,2) x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
-	    for {set ii 3} {$ii<$axes} {incr ii} {
-		grid $dcube(chk,$ii) x $dcube(slider,$ii) \
-		    -padx 2 -pady 2 -sticky ew
+    switch $axes {
+	3 {
+	    grid columnconfigure $w.param 0 -weight 0
+	    grid columnconfigure $w.param 1 -weight 1
+	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	    switch $cube(system) {
+		image {
+		    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+		}
+		default {
+		    grid $dcube(wcsentry,2) $dcube(slider,2) \
+			-padx 2 -pady 2 -sticky ew
+		}
 	    }
 	}
 	default {
-	    grid $dcube(chk,2) $dcube(wcsentry,2) $dcube(slider,2) \
-		-padx 2 -pady 2 -sticky ew
-	    for {set ii 3} {$ii<$axes} {incr ii} {
-		grid $dcube(chk,$ii) x $dcube(slider,$ii) \
-		    -padx 2 -pady 2 -sticky ew
+	    grid columnconfigure $w.param 0 -weight 0
+	    grid columnconfigure $w.param 1 -weight 0
+	    grid columnconfigure $w.param 2 -weight 1
+	    grid x x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	    switch $cube(system) {
+		image {
+		    grid $dcube(chk,2) x $dcube(slider,2) \
+			-padx 2 -pady 2 -sticky ew
+		    for {set ii 3} {$ii<$axes} {incr ii} {
+			grid $dcube(chk,$ii) x $dcube(slider,$ii) \
+			    -padx 2 -pady 2 -sticky ew
+		    }
+		}
+		default {
+		    grid $dcube(chk,2) $dcube(wcsentry,2) $dcube(slider,2) \
+			-padx 2 -pady 2 -sticky ew
+		    for {set ii 3} {$ii<$axes} {incr ii} {
+			grid $dcube(chk,$ii) x $dcube(slider,$ii) \
+			    -padx 2 -pady 2 -sticky ew
+		    }
+		}
 	    }
 	}
     }
-    
+
     # set intervals
     for {set ii 2} {$ii<$axes} {incr ii} {
 	set diff [expr $dcube(to,$ii)-$dcube(from,$ii)+1]

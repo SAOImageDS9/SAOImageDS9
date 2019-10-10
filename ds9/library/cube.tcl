@@ -63,20 +63,20 @@ proc LockCube {which} {
     }
 }
 
-proc CubeSlice {ss} {
+proc CubeSlice {ii ss} {
     global dcube
     global cube
 
     global current
     global rgb
 
-    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss $cube(axis)"
+    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
 
-    set dcube(image,$cube(axis)) $ss
-    if {$cube(axis) == 2} {
-	set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+    set dcube(image,$ii) $ss
+    if {$ii == 2} {
+	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
     } else {
-	set dcube(wcs,$cube(axis) $ss
+	set dcube(wcs,$ii) $ss
     }
 	
     UpdateCube
@@ -127,7 +127,7 @@ proc CubeTimer {} {
 		set slice [expr $slice+1]
 	    }
 
-	    CubeSlice $slice
+	    CubeSlice $cube(axis) $slice
 	} else {
 	    set dcube(image,$cube(axis)) 1
 	    set dcube(wcs,$cube(axis)) 1
@@ -156,7 +156,7 @@ proc CubeFirst {} {
 	    } else {
 		set first 1
 	    }
-	    CubeSlice $first
+	    CubeSlice $cube(axis) $first
 	} else {
 	    set dcube(image,$cube(axis)) 1
 	    set dcube(wcs,$cube(axis)) 1
@@ -193,7 +193,7 @@ proc CubePrev {} {
 		set slice [expr $slice-1]
 	    }
 
-	    CubeSlice $slice
+	    CubeSlice $cube(axis) $slice
 	} else {
 	    set dcube(image,$cube(axis)) 1
 	    set dcube(wcs,$cube(axis)) 1
@@ -230,7 +230,7 @@ proc CubeNext {} {
 		set slice [expr $slice+1]
 	    }
 
-	    CubeSlice $slice
+	    CubeSlice $cube(axis) $slice
 	} else {
 	    set dcube(image,$cube(axis)) 1
 	    set dcube(wcs,$cube(axis)) 1
@@ -257,7 +257,7 @@ proc CubeLast {} {
 	    } else {
 		set last [$current(frame) get fits depth $cube(axis)]
 	    }
-	    CubeSlice $last
+	    CubeSlice $cube(axis) $last
 	} else {
 	    set dcube(image,$cube(axis)) 1
 	    set dcube(wcs,$cube(axis)) 1
@@ -553,9 +553,7 @@ proc UpdateCubeDialog {} {
     switch -- $naxes {
 	2 {UpdateCubeDialog2Axes}
 	3 {UpdateCubeDialog3Axes}
-	4 {UpdateCubeDialog4Axes}
-	5 -
-	default {UpdateCubeDialog5Axes}
+	default {UpdateCubeDialogAxes $naxes}
     }
 }
 
@@ -579,10 +577,9 @@ proc UpdateCubeDialogNoImage {} {
     set dcube(to,wcs,2) 1
 
     # no frame, no checkbox
-    grid columnconfigure $w.param 1 -weight 1
-    grid columnconfigure $w.param 2 -weight 0
-    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $w.param 0 -weight 1
+    grid $dcube(twcs) -padx 2 -pady 2 -sticky ew
+    grid $dcube(slider,2) -padx 2 -pady 2 -sticky ew
 
     # set intervals
     SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
@@ -599,6 +596,8 @@ proc UpdateCubeDialog2Axes {} {
     global dcube
     global cube
 
+    global current
+
     set w $icube(top)
     set mb $icube(mb)
 
@@ -612,12 +611,13 @@ proc UpdateCubeDialog2Axes {} {
     # set from/to
     set dcube(from,2) 1
     set dcube(to,2) 1
-    set dcube(from,wcs,2) 1
-    set dcube(to,wcs,2) 1
+
+    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system) $cube(sky)]    
+    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system) $cube(sky)]    
 
     # show it
+    grid columnconfigure $w.param 0 -weight 0
     grid columnconfigure $w.param 1 -weight 1
-    grid columnconfigure $w.param 2 -weight 0
     grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
     switch $cube(system) {
 	image {
@@ -630,12 +630,24 @@ proc UpdateCubeDialog2Axes {} {
 
     # set intervals
     SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
-    SliderMinMax $dcube(slider,2) $dcube(from,wcs,2) $dcube(to,wcs,2) 1 4
+    SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 1 4
+
     set dcube(vcoord) image
+    switch $cube(system) {
+	image {}
+	default {
+	    set w [string range $cube(system) 3 3]
+	    set key "CTYPE3$w"
+	    set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
+	    if {$tt != {}} {
+		set dcube(vcoord) $tt
+	    }
+	}
+    }
 
     # we must do this after the scale has been configured
     set dcube(image,2) 1
-    set dcube(wcs,2) 1
+    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 }
 
 proc UpdateCubeDialog3Axes {} {
@@ -664,20 +676,15 @@ proc UpdateCubeDialog3Axes {} {
     set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system) $cube(sky)]    
 
     # show it
+    grid columnconfigure $w.param 0 -weight 0
+    grid columnconfigure $w.param 1 -weight 1
+    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
     switch $cube(system) {
 	image {
-	    grid columnconfigure $w.param 1 -weight 1
-	    grid columnconfigure $w.param 2 -weight 0
-	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
 	    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
 	}
 	default {
-	    grid columnconfigure $w.param 1 -weight 1
-	    grid columnconfigure $w.param 2 -weight 0
-	    grid columnconfigure $w.param 3 -weight 0
-	    grid x x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	    grid x $dcube(wcsentry,2) $dcube(slider,2) \
-		-padx 2 -pady 2 -sticky ew
+	    grid $dcube(wcsentry,2) $dcube(slider,2) -padx 2 -pady 2 -sticky ew
 	}
     }
     
@@ -707,7 +714,7 @@ proc UpdateCubeDialog3Axes {} {
     set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 }
 
-proc UpdateCubeDialog4Axes {} {
+proc UpdateCubeDialogAxes {axes} {
     global icube
     global dcube
     global cube
@@ -730,48 +737,50 @@ proc UpdateCubeDialog4Axes {} {
     set dcube(from,2) [lindex $ss 0]
     set dcube(to,2) [lindex $ss 1]
 
-    set tt [$current(frame) get fits slice 3]
-    set dcube(from,3) [lindex $tt 0]
-    set dcube(to,3) [lindex $tt 1]
-
     set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system) $cube(sky)]    
     set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system) $cube(sky)]    
 
+    for {set ii 3} {$ii<$axes} {incr ii} {
+	set dcube(from,$ii) 1
+	set dcube(to,$ii) [$current(frame) get fits depth $ii]
+
+	set dcube(from,wcs,$ii) $dcube(from,$ii)
+	set dcube(to,wcs,$ii) $dcube(to,$ii)
+    }
+
     # show it
+    grid columnconfigure $w.param 0 -weight 0
+    grid columnconfigure $w.param 1 -weight 0
+    grid columnconfigure $w.param 2 -weight 1
+    grid x x $dcube(twcs) -padx 2 -pady 2 -sticky ew
     switch $cube(system) {
 	image {
-	    grid columnconfigure $w.param 1 -weight 1
-	    grid columnconfigure $w.param 2 -weight 0
-	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	    grid $dcube(chk,2) $dcube(slider,2) -padx 2 -pady 2 -sticky ew
-	    grid $dcube(chk,3) $dcube(slider,3) -padx 2 -pady 2 -sticky ew
+	    grid $dcube(chk,2) x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+	    for {set ii 3} {$ii<$axes} {incr ii} {
+		grid $dcube(chk,$ii) x $dcube(slider,$ii) \
+		    -padx 2 -pady 2 -sticky ew
+	    }
 	}
 	default {
-	    grid columnconfigure $w.param 1 -weight 1
-	    grid columnconfigure $w.param 2 -weight 0
-	    grid columnconfigure $w.param 3 -weight 0
-	    grid x x $dcube(twcs) -padx 2 -pady 2 -sticky ew
 	    grid $dcube(chk,2) $dcube(wcsentry,2) $dcube(slider,2) \
 		-padx 2 -pady 2 -sticky ew
-	    grid $dcube(chk,3) x $dcube(slider,3) -padx 2 -pady 2 -sticky ew
+	    for {set ii 3} {$ii<$axes} {incr ii} {
+		grid $dcube(chk,$ii) x $dcube(slider,$ii) \
+		    -padx 2 -pady 2 -sticky ew
+	    }
 	}
     }
     
     # set intervals
-    # 3
-    set diff [expr $dcube(to,2)-$dcube(from,2)+1]
-    if {$diff>4} {
-	set diff 4
+    for {set ii 2} {$ii<$axes} {incr ii} {
+	set diff [expr $dcube(to,$ii)-$dcube(from,$ii)+1]
+	if {$diff>4} {
+	    set diff 4
+	}
+	SliderFromTo $dcube(slider,$ii) $dcube(from,$ii) $dcube(to,$ii)
+	SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) $dcube(to,wcs,$ii)\
+	    $diff 4
     }
-    SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
-    SliderMinMax $dcube(slider,2) $dcube(from,wcs,2) $dcube(to,wcs,2) $diff 4
-
-    set diff [expr $dcube(to,3)-$dcube(from,3)+1]
-    if {$diff>4} {
-	set diff 4
-    }
-    SliderFromTo $dcube(slider,3) $dcube(from,3) $dcube(to,2)
-
 
     set dcube(vcoord) $cube(system)
     switch $cube(system) {
@@ -790,20 +799,11 @@ proc UpdateCubeDialog4Axes {} {
     set dcube(image,2) [$current(frame) get fits slice 2]
     set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 
-    set dcube(image,3) [$current(frame) get fits slice 3]
+    for {set ii 3} {$ii<$axes} {incr ii} {
+	set dcube(image,$ii) [$current(frame) get fits slice $ii]
+	set dcube(wcs,$ii) $dcube(image,$ii)
+    }
 }
-
-proc UpdateCubeDialog5Axes {} {
-    global icube
-    global dcube
-    global cube
-
-    global current
-
-    set w $icube(top)
-    set mb $icube(mb)
-}
-
 proc UpdateCubeMotionDialog {} {
     global icube
     global dcube

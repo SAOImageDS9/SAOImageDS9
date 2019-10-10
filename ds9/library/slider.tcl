@@ -53,18 +53,19 @@ proc SliderMinMax {w from to {num 5} {max 5}} {
 	}
     }
 
-    if {$from != $to} {
-	for {set ii 0} {$ii<$num} {incr ii} {
+    for {set ii 0} {$ii<$num} {incr ii} {
+	if {$from != $to} {
 	    set vv [expr ($to*1.-$from)/($num-1)*$ii + $from]
-
 	    if {[string is integer $from] && [string is integer $to]} {
 		set vv [expr int($vv)]
 	    } else {
 		set vv [format {%.5g} $vv]
 	    }
 	    $w.t$ii configure -text $vv
-	    grid $w.t$ii -row 2 -column $ii
+	} else {
+	    $w.t$ii configure -text {}
 	}
+	grid $w.t$ii -row 2 -column $ii
     }
 }
 

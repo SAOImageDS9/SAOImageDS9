@@ -6,8 +6,8 @@
 <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>SAMP</title>
 </head>
-<body link="#0000FF" alink="#FF0000" vlink="#551A8B">
-<h3><img alt="" src="../sun.gif" height="98" align="middle" width="100"> SAMP</h3>
+<body link="#0000FF" vlink="#551A8B" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" height="98" width="100" align="middle"> SAMP</h3>
 <blockquote>
 <p>SAMP is a messaging protocol that enables astronomy software tools to interoperate and communicate. Broadly speaking, SAMP is an abstract framework for loosely-coupled, asynchronous, RPC-like and/or event-based communication, based on a central service providing multi-directional publish/subscribe message brokering. The message semantics are extensible and use structured but weakly-typed data. For more information on SAMP, please click <a href="http://www.ivoa.net/Documents/latest/SAMP.html">here</a>.</p>
 <p>The samp implementation for DS9 is based on the <a href="xpa.html">XPA</a> model with 2 private calls:</p>
@@ -773,6 +773,7 @@ cube []<br>
 &nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]<br>
 &nbsp;&nbsp;&nbsp; [order 123|132|213|231|312|321]<br>
 &nbsp;&nbsp;&nbsp; [axes lock [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [axis &lt;axis&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -783,6 +784,7 @@ cube interval<br>
 cube lock<br>
 cube order<br>
 cube axes lock<br>
+cube axis<br>
 <br>
 ds9.set(string cmd)<br>
 cube<br>
@@ -795,6 +797,7 @@ cube match wcs<br>
 cube lock wcs<br>
 cube order 123<br>
 cube axes lock yes<br>
+cube axis 3<br>
 cube open<br>
 cube close</tt><br>
 <p><b><a name="cursor" id="cursor"></a>cursor</b></p>

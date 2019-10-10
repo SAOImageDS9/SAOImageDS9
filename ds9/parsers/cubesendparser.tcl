@@ -741,7 +741,7 @@ array set cubesend::rules {
   17,line 107
   14,line 104
   11,line 101
-  43,line 137
+  43,line 136
   9,line 99
   40,line 133
   39,line 132
@@ -758,8 +758,8 @@ array set cubesend::rules {
   16,line 106
   13,line 103
   10,line 100
-  45,line 141
-  42,line 136
+  45,line 140
+  42,line 135
   8,line 98
   38,line 131
   5,line 95
@@ -772,7 +772,7 @@ array set cubesend::rules {
   18,line 108
   15,line 105
   12,line 102
-  44,line 140
+  44,line 139
 }
 
 array set cubesend::lr1_table {
@@ -943,7 +943,7 @@ array set cubesend::token_id_table {
   287,title J2000
   258,t 0
   263,line 13
-  301,line 142
+  301,line 141
   error,title {}
   291,line 45
   296,t 0
@@ -1000,7 +1000,7 @@ array set cubesend::token_id_table {
   295,title LOCK
   262,line 12
   266 WCSI_
-  300,line 139
+  300,line 138
   290,line 41
   289,line 40
   285,t 0
@@ -1195,7 +1195,7 @@ proc cubesend::yyparse {} {
                     38 { ProcessSendCmdCurrent "get fits slice from image $1 $2" }
                     39 { ProcessSendCmdGet cube lock }
                     40 { BlinkSendCmdInterval }
-                    43 { ProcessSendCmdTxt "2" }
+                    43 { CubeSendCmdAxis }
                     44 { ProcessSendCmdGet cube axes }
                     45 { ProcessSendCmdYesNo cube lock,axes }
                 }

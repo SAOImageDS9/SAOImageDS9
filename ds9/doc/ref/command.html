@@ -6,8 +6,8 @@
 <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>Command Line Options</title>
 </head>
-<body link="#0000FF" alink="#FF0000" vlink="#551A8B">
-<h3><img alt="" src="../sun.gif" height="98" align="middle" width="100"> Command Line Options</h3>
+<body link="#0000FF" vlink="#551A8B" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" height="98" width="100" align="middle"> Command Line Options</h3>
 <blockquote>
 <p>DS9 will process each command line option, one at a time, as the last step in the initialization process. Therefore, it is possible to use command line options as a little script. For example, the following command line option is used:</p>
 <tt>$ds9 -tile foo.fits -cmap Heat -zscale bar.fits -cmap I8</tt>
@@ -654,6 +654,7 @@ $ds9 -crosshair lock wcs<br></tt>
 &nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]<br>
 &nbsp;&nbsp;&nbsp; [order 123|132|213|231|312|321]<br>
 &nbsp;&nbsp;&nbsp; [axes lock [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [axis &lt;axis&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -667,6 +668,7 @@ $ds9 -cube match wcs<br>
 $ds9 -cube lock wcs<br>
 $ds9 -cube order 123<br>
 $ds9 -cube axes lock yes<br>
+$ds9 -cube axis 3<br>
 $ds9 -cube open<br>
 $ds9 -cube close</tt><br>
 <p><b><a name="cursor" id="cursor"></a>cursor</b></p>

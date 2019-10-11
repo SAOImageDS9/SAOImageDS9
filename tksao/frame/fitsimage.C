@@ -1424,7 +1424,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
     if (cvt != AST__NULL) {
       ptr1 = new Vector[nxx1];
-      wcsTran(cvt, nxx1, in1, 1, ptr1);
+      wcsTran(context_, cvt, nxx1, in1, 1, ptr1);
     }
   }
   else
@@ -2684,7 +2684,7 @@ double FitsImage::calcWCSSize(Coord::CoordSystem sys)
   Vector out[3];
   in[0] = center();
   in[1] = center()+Vector(0,1);
-  wcsTran(ast_, 2, in, 1, out);
+  wcsTran(context_, ast_, 2, in, 1, out);
 
   double dd = wcsDistance(ast_, out[0], out[1]);
   return hasWCSCel(sys) ? radToDeg(dd) : dd;
@@ -2710,7 +2710,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   in[0] = center();
   in[1] = center()+Vector(0,1);
   in[2] = center()+Vector(1,0);
-  wcsTran(ast_, 3, in, 1, out);
+  wcsTran(context_, ast_, 3, in, 1, out);
   double ang = wcsAngle(ast_,out[1],out[0],out[2]);
 
   astEnd;
@@ -2745,7 +2745,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
     in[0] = center();
     in[1] = center()+Vector(0,1);
     in[2] = center()+Vector(1,0);
-    wcsTran(ast_, 3, in, 1, out);
+    wcsTran(context_, ast_, 3, in, 1, out);
     double ang = wcsAxAngle(ast_,out[0], out[1]);
     double ang3 = wcsAngle(ast_,out[1],out[0],out[2]);
 
@@ -2763,9 +2763,9 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   }
   else { // special case for HPX
     Vector cc = center();
-    Vector wcc = wcsTran(ast_, cc, 1);
+    Vector wcc = wcsTran(context_, ast_, cc, 1);
     Vector wnorth = wcc + Vector(0,.001);
-    Vector north = wcsTran(ast_, wnorth,0);
+    Vector north = wcsTran(context_, ast_, wnorth,0);
 
     int current = astGetI(ast_,"Current");
     int base = astGetI(ast_,"Base");
@@ -2859,7 +2859,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
   setWCSSysSkyFrame(sys,sky);
 
-  Vector out = wcsTran(ast_, in, 1);
+  Vector out = wcsTran(context_, ast_, in, 1);
   if (!astOK || !checkWCS(out))
     return Vector();
 
@@ -2880,7 +2880,7 @@ VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
   setWCSSysSkyFrame(sys,sky);
   
-  Vector out = wcsTran(ast_, in, 1);
+  Vector out = wcsTran(context_, ast_, in, 1);
   if (!astOK || !checkWCS(out))
     return VectorStr();
 
@@ -2916,7 +2916,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 
   setWCSSysSkyFrame(sys,sky);
 
-  Vector3d out = wcsTran(ast_, in, 1);
+  Vector3d out = wcsTran(context_, ast_, in, 1);
   if (!astOK || !checkWCS(out))
     return Vector3d();
   astNorm(ast_, out.v);
@@ -2936,7 +2936,7 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 
   setWCSSysSkyFrame(sys,sky);
   
-  Vector3d out = wcsTran(ast_, in, 1);
+  Vector3d out = wcsTran(context_, ast_, in, 1);
   if (!astOK || !checkWCS(out))
     return VectorStr3d();
 
@@ -2989,7 +2989,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
 
   Vector in = vDegToRad(vv,sys);
-  Vector out = wcsTran(ast_, in, 0);
+  Vector out = wcsTran(context_, ast_, in, 0);
   astEnd;
   if (!astOK || !checkWCS(out)) {
     maperr =1;
@@ -3012,7 +3012,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
 
   Vector3d in = vDegToRad(vv,sys);
-  Vector3d out = wcsTran(ast_, in, 0);
+  Vector3d out = wcsTran(context_, ast_, in, 0);
   astEnd;
   if (!astOK || !checkWCS(out))
     return Vector3d();

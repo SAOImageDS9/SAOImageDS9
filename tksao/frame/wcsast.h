@@ -5,6 +5,7 @@
 #include "vector.h"
 #include "vector3d.h"
 #include "coord.h"
+#include "context.h"
 
 extern "C" {
 #include "ast.h"
@@ -14,9 +15,9 @@ int wcsSystem(AstFrameSet*, Coord::CoordSystem);
 void wcsSkyFrame(AstFrameSet*, Coord::SkyFrame);
 void wcsFormat(AstFrameSet*, int id, const char* format);
 
-Vector wcsTran(AstFrameSet*, const Vector&, int);
-void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
-Vector3d wcsTran(AstFrameSet*, const Vector3d&, int);
+Vector wcsTran(Context*, AstFrameSet*, const Vector&, int);
+void wcsTran(Context*, AstFrameSet*, int, Vector*, int, Vector*);
+Vector3d wcsTran(Context*, AstFrameSet*, const Vector3d&, int);
 
 double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
 double wcsAngle(AstFrameSet*, const Vector&, const Vector&, const Vector&);

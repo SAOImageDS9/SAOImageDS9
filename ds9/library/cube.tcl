@@ -553,7 +553,7 @@ proc UpdateCubeDialogNoImage {} {
     set mb $icube(mb)
 
     # reset coord menu
-    CoordMenuReset3d $mb.coord cube system
+    CoordMenuReset $mb.coord cube system {} {}
 
     # disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state disabled
@@ -591,7 +591,7 @@ proc UpdateCubeDialog2Axes {} {
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
-    CoordMenuEnable3d $mb.coord cube system
+    CoordMenuEnable $mb.coord cube system {} {}
 
     # enable/disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state disabled
@@ -651,7 +651,7 @@ proc UpdateCubeDialogAxes {axes} {
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
-    CoordMenuEnable3d $mb.coord cube system
+    CoordMenuEnable $mb.coord cube system {} {}
 
     # enable/disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state normal

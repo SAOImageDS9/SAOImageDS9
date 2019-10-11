@@ -234,9 +234,9 @@ proc UpdateRGBDialog {} {
 	if {[$current(frame) has fits]} {
 	    # now make sure we have the coord systems
 	    AdjustCoordSystem rgb system
-	    CoordMenuEnable $irgb(mb).align rgb system 1 {} {}
+	    CoordMenuEnable $irgb(mb).align rgb system {} {}
 	} else {
-	    CoordMenuReset $irgb(mb).align rgb system 1 {} {}
+	    CoordMenuReset $irgb(mb).align rgb system {} {}
 	}
     }
 

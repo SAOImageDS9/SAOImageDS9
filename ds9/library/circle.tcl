@@ -57,7 +57,7 @@ proc CircleDialog {varname} {
     ttk::entry $f.radius -textvariable ${varname}(radius) -width 13 
     DistMenuButton $f.uradius $varname dcoord 1 dformat \
 	[list CircleEditCB $varname]
-    DistMenuEnable $f.uradius.menu $varname dcoord 1 dformat
+    DistMenuEnable $f.uradius.menu $varname dcoord dformat
 
     grid $f.tradius $f.radius $f.uradius -padx 2 -pady 2 -sticky w
 }

@@ -66,7 +66,7 @@ proc VectorDialog {varname} {
     ttk::entry $f.dist -textvariable ${varname}(dist) -width 13
     DistMenuButton $f.udist $varname dcoord 1 dformat \
 	[list VectorDistCB $varname]
-    DistMenuEnable $f.udist.menu $varname dcoord 1 dformat
+    DistMenuEnable $f.udist.menu $varname dcoord dformat
 
     # Angle
     ttk::label $f.tangle -text [msgcat::mc {Angle}]

@@ -537,10 +537,10 @@ proc UpdatePanZoomDialog {} {
 	if {[$current(frame) has fits]} {
 	    # now make sure we have the coord systems
 	    AdjustCoordSystem panzoom system
-	    CoordMenuEnable $dpanzoom(cb).menu panzoom system 1 sky skyformat
+	    CoordMenuEnable $dpanzoom(cb).menu panzoom system sky skyformat
 	    CoordMenuButtonCmd panzoom system sky {}
 	} else {
-	    CoordMenuReset $dpanzoom(cb).menu panzoom system 1 sky skyformat
+	    CoordMenuReset $dpanzoom(cb).menu panzoom system sky skyformat
 	}
     }
 

@@ -98,7 +98,7 @@ proc UpdateMarkerLoadDialog {} {
 
     set mm $ed(cb).menu
     set ed(frame) $current(frame)
-    CoordMenuEnable $mm ed system 1 sky skyformat
+    CoordMenuEnable $mm ed system sky skyformat
 
     switch -- $ed(format) {
 	xy {$ed(cb) configure -state normal}
@@ -196,7 +196,7 @@ proc UpdateMarkerSaveDialog {} {
 
     set mm $ed(cb).menu
     set ed(frame) $current(frame)
-    CoordMenuEnable $mm ed system 1 sky skyformat
+    CoordMenuEnable $mm ed system sky skyformat
 
     switch -- $ed(format) {
 	ds9 -

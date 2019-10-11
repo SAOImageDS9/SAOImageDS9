@@ -55,7 +55,7 @@ proc MarkerBaseAnnulusRectDialog {varname unit major minor} {
     ttk::entry $f.radius2 -textvariable ${varname}(radius2) -width 13 
     DistMenuButton $f.uradius $varname dcoord 1 dformat \
 	[list $var(proc,distCB) $varname]
-    DistMenuEnable $f.uradius.menu $varname dcoord 1 dformat
+    DistMenuEnable $f.uradius.menu $varname dcoord dformat
     ttk::label $f.innerTitle -text [msgcat::mc "Inner"]
     ttk::entry $f.radius3 -textvariable ${varname}(radius3) -width 13 
 

@@ -458,7 +458,7 @@ proc ContourCPasteDialog {} {
     ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
 
     CoordMenuButton $f.coordbutton ed system 1 {} {} {}
-    CoordMenuEnable $f.coordbutton.menu ed system 1 {} {}
+    CoordMenuEnable $f.coordbutton.menu ed system {} {}
 
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
     ColorMenuButton $f.colorbutton ed color {}
@@ -614,7 +614,7 @@ proc ContourSaveDialog {} {
     ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
 
     CoordMenuButton $f.coordbutton ed system 1 sky skyformat {}
-    CoordMenuEnable $f.coordbutton.menu ed system 1 sky skyformat
+    CoordMenuEnable $f.coordbutton.menu ed system sky skyformat
     grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
 
     # Buttons
@@ -712,7 +712,7 @@ proc ContourLoadOldDialog {fn} {
     ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
 
     CoordMenuButton $f.coordbutton ed system 1 {} {} {}
-    CoordMenuEnable $f.coordbutton.menu ed system 1 {} {}
+    CoordMenuEnable $f.coordbutton.menu ed system {} {}
 
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
     ColorMenuButton $f.colorbutton ed color {}

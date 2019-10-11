@@ -47,7 +47,7 @@ proc ProjectionDialog {varname} {
     ttk::entry $f.thick -textvariable ${varname}(thick) -width 13
     DistMenuButton $f.uthick $varname tcoord 1 tformat \
 	[list ProjectionThickCB $varname]
-    DistMenuEnable $f.uthick.menu $varname tcoord 1 tformat
+    DistMenuEnable $f.uthick.menu $varname tcoord tformat
 
     grid $f.tthick $f.thick $f.uthick -padx 2 -pady 2 -sticky w
 }

@@ -238,10 +238,10 @@ proc UpdateCrosshairDialog {} {
 	if {[$current(frame) has fits]} {
 	    # now make sure we have the coord systems
 	    AdjustCoordSystem crosshair system
-	    CoordMenuEnable $dcrosshair(cb).menu crosshair system 1 sky skyformat
+	    CoordMenuEnable $dcrosshair(cb).menu crosshair system sky skyformat
 	    CoordMenuButtonCmd crosshair system sky {}
 	} else {
-	    CoordMenuReset $dcrosshair(cb).menu crosshair system 1 sky skyformat
+	    CoordMenuReset $dcrosshair(cb).menu crosshair system sky skyformat
 	}
     }
 

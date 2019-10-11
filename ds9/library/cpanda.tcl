@@ -36,7 +36,7 @@ proc PandaDialog {varname} {
     ttk::entry $f.outer -textvariable ${varname}(outer) -width 13
     DistMenuButton $f.uradius $varname dcoord 1 dformat \
 	[list $var(proc,distCB) $varname]
-    DistMenuEnable $f.uradius.menu $varname dcoord 1 dformat
+    DistMenuEnable $f.uradius.menu $varname dcoord dformat
 
     # Annuli
     ttk::label $f.tannuli -text [msgcat::mc {Annuli}]

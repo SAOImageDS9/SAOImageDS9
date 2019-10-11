@@ -72,6 +72,7 @@ proc CoordMenu {w varname system other sky skyformat cmd} {
     }
 
     switch -- $other {
+	0 {}
 	1 {
 	    $w add separator
 	    $w add radiobutton -label [msgcat::mc {Image}] \
@@ -152,7 +153,7 @@ proc CoordMenuButtonCmd {varname system sky cmd} {
     }
 }
 
-proc CoordMenuEnable {w varname system image sky skyformat} {
+proc CoordMenuEnable {w varname system sky skyformat} {
     upvar #0 $varname var
     global $varname
     
@@ -178,13 +179,6 @@ proc CoordMenuEnable {w varname system image sky skyformat} {
 	} else {
 	    $w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state disabled
 	}
-    }
-
-    if {$image != {}} {
-	$w entryconfig [msgcat::mc {Image}] -state normal
-	$w entryconfig [msgcat::mc {Physical}] -state normal
-	$w entryconfig [msgcat::mc {Amplifier}] -state normal
-	$w entryconfig [msgcat::mc {Detector}] -state normal
     }
 
     if {$sky != {}} {
@@ -214,7 +208,7 @@ proc CoordMenuEnable {w varname system image sky skyformat} {
     }
 }
 
-proc CoordMenuReset {w varname system image sky skyformat} {
+proc CoordMenuReset {w varname system sky skyformat} {
     upvar #0 $varname var
     global $varname
 
@@ -223,13 +217,6 @@ proc CoordMenuReset {w varname system image sky skyformat} {
 
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$w.wcs entryconfig "[msgcat::mc {WCS}] $l" -state normal
-    }
-
-    if {$image != {}} {
-	$w entryconfig [msgcat::mc {Image}] -state normal
-	$w entryconfig [msgcat::mc {Physical}] -state normal
-	$w entryconfig [msgcat::mc {Amplifier}] -state normal
-	$w entryconfig [msgcat::mc {Detector}] -state normal
     }
 
     if {$sky != {}} {
@@ -244,51 +231,6 @@ proc CoordMenuReset {w varname system image sky skyformat} {
 	$w entryconfig [msgcat::mc {Degrees}] -state normal
 	$w entryconfig {Sexagesimal} -state normal
     }
-}
-
-proc CoordMenuEnable3d {w varname system} {
-    upvar #0 $varname var
-    global $varname
-
-    if {![info exists var(frame)]} {
-	return
-    }
-
-    if {$var(frame) == {}} {
-	return
-    }
-
-    if {[$var(frame) has wcs 3d wcs]} {
-	$w entryconfig [msgcat::mc {WCS}] -state normal
-    } else {
-	$w entryconfig [msgcat::mc {WCS}] -state disabled
-    }
-
-    $w entryconfig [msgcat::mc {Multiple WCS}] -state normal
-
-    foreach ll {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
-	if {[$var(frame) has wcs 3d "wcs${ll}"]} {
-	    $w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state normal
-	} else {
-	    $w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state disabled
-	}
-    }
-
-    $w entryconfig [msgcat::mc {Image}] -state normal
-}
-
-proc CoordMenuReset3d {w varname system} {
-    upvar #0 $varname var
-    global $varname
-
-    $w entryconfig [msgcat::mc {WCS}] -state normal
-    $w entryconfig [msgcat::mc {Multiple WCS}] -state normal
-
-    foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
-	$w.wcs entryconfig "[msgcat::mc {WCS}] $l" -state normal
-    }
-
-    $w entryconfig [msgcat::mc {Image}] -state normal
 }
 
 # DistMenu
@@ -369,7 +311,7 @@ proc DistMenuButtonCmd {varname system format cmd} {
     }
 }
 
-proc DistMenuEnable {w varname system other format} {
+proc DistMenuEnable {w varname system format} {
     upvar #0 $varname var
     global $varname
     
@@ -397,13 +339,6 @@ proc DistMenuEnable {w varname system other format} {
 	}
     }
 
-    if {$other} {
-	$w entryconfig [msgcat::mc {Image}] -state normal
-	$w entryconfig [msgcat::mc {Physical}] -state normal
-	$w entryconfig [msgcat::mc {Amplifier}] -state normal
-	$w entryconfig [msgcat::mc {Detector}] -state normal
-    }
-
     if {$format != {}} {
 	if {[$var(frame) has wcs celestial $var($system)]} {
 	    $w entryconfig [msgcat::mc {Degrees}] -state normal
@@ -417,7 +352,7 @@ proc DistMenuEnable {w varname system other format} {
     }
 }
 
-proc DistMenuReset {w varname system other format} {
+proc DistMenuReset {w varname system format} {
     upvar #0 $varname var
     global $varname
     
@@ -426,13 +361,6 @@ proc DistMenuReset {w varname system other format} {
 
     foreach ll {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state normal
-    }
-
-    if {$other} {
-	$w entryconfig [msgcat::mc {Image}] -state normal
-	$w entryconfig [msgcat::mc {Physical}] -state normal
-	$w entryconfig [msgcat::mc {Amplifier}] -state normal
-	$w entryconfig [msgcat::mc {Detector}] -state normal
     }
 
     if {$format != {}} {

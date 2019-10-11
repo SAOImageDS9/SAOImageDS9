@@ -214,15 +214,15 @@ proc UpdateCropDialog {} {
 	if {[$current(frame) has fits]} {
 	    # now make sure we have the coord systems
 	    AdjustCoordSystem crop system
-	    CoordMenuEnable $dcrop(cb).menu crop system 1 sky skyformat
+	    CoordMenuEnable $dcrop(cb).menu crop system sky skyformat
 	    CoordMenuButtonCmd crop system sky {}
 
 	    AdjustCoordSystem crop dcoord
-	    DistMenuEnable $dcrop(db).menu crop dcoord 1 dformat
+	    DistMenuEnable $dcrop(db).menu crop dcoord dformat
 	    DistMenuButtonCmd crop dcoord dformat {}
 
 	    AdjustCoordSystem3d crop rcoord
-	    CoordMenuEnable3d $dcrop(rb).menu crop rcoord
+	    CoordMenuEnable $dcrop(rb).menu crop rcoord {} {}
 	    CoordMenuButtonCmd crop rcoord {} {}
 
 	    set rr [$current(frame) get crop center \
@@ -253,9 +253,9 @@ proc UpdateCropDialog {} {
 
     grid forget $w.param.rtitle $w.param.from $w.param.to $dcrop(rb)
 
-    CoordMenuReset $dcrop(cb).menu crop system 1 sky skyformat
-    DistMenuReset $dcrop(db).menu crop dcoord 1 dformat
-    CoordMenuReset3d $dcrop(rb).menu crop rcoord
+    CoordMenuReset $dcrop(cb).menu crop system sky skyformat
+    DistMenuReset $dcrop(db).menu crop dcoord dformat
+    CoordMenuReset $dcrop(rb).menu crop rcoord {} {}
 
     set dcrop(x) {}
     set dcrop(y) {}

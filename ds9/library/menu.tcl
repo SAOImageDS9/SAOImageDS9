@@ -214,63 +214,6 @@ proc CoordMenuEnable {w varname system image sky skyformat} {
     }
 }
 
-proc CoordMenuEnable3d {w varname system sky skyformat} {
-    upvar #0 $varname var
-    global $varname
-
-    if {![info exists var(frame)]} {
-	return
-    }
-
-    if {$var(frame) == {}} {
-	return
-    }
-
-    if {[$var(frame) has wcs 3d wcs]} {
-	$w entryconfig [msgcat::mc {WCS}] -state normal
-    } else {
-	$w entryconfig [msgcat::mc {WCS}] -state disabled
-    }
-
-    $w entryconfig [msgcat::mc {Multiple WCS}] -state normal
-
-    foreach ll {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
-	if {[$var(frame) has wcs 3d "wcs${ll}"]} {
-	    $w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state normal
-	} else {
-	    $w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state disabled
-	}
-    }
-
-    $w entryconfig [msgcat::mc {Image}] -state normal
-
-    if {$sky != {}} {
-	if {[$var(frame) has wcs equatorial $var($system)]} {
-	    $w entryconfig [msgcat::mc {FK4}] -state normal
-	    $w entryconfig [msgcat::mc {FK5}] -state normal
-	    $w entryconfig [msgcat::mc {ICRS}] -state normal
-	    $w entryconfig [msgcat::mc {Galactic}] -state normal
-	    $w entryconfig [msgcat::mc {Ecliptic}] -state normal
-	} else {
-	    $w entryconfig [msgcat::mc {FK4}] -state disabled
-	    $w entryconfig [msgcat::mc {FK5}] -state disabled
-	    $w entryconfig [msgcat::mc {ICRS}] -state disabled
-	    $w entryconfig [msgcat::mc {Galactic}] -state disabled
-	    $w entryconfig [msgcat::mc {Ecliptic}] -state disabled
-	}
-    }
-
-    if {$skyformat != {}} {
-	if {[$var(frame) has wcs celestial $var($system)]} {
-	    $w entryconfig [msgcat::mc {Degrees}] -state normal
-	    $w entryconfig {Sexagesimal} -state normal
-	} else {
-	    $w entryconfig [msgcat::mc {Degrees}] -state disabled
-	    $w entryconfig {Sexagesimal} -state disabled
-	}
-    }
-}
-
 proc CoordMenuReset {w varname system image sky skyformat} {
     upvar #0 $varname var
     global $varname
@@ -303,7 +246,38 @@ proc CoordMenuReset {w varname system image sky skyformat} {
     }
 }
 
-proc CoordMenuReset3d {w varname system sky skyformat} {
+proc CoordMenuEnable3d {w varname system} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists var(frame)]} {
+	return
+    }
+
+    if {$var(frame) == {}} {
+	return
+    }
+
+    if {[$var(frame) has wcs 3d wcs]} {
+	$w entryconfig [msgcat::mc {WCS}] -state normal
+    } else {
+	$w entryconfig [msgcat::mc {WCS}] -state disabled
+    }
+
+    $w entryconfig [msgcat::mc {Multiple WCS}] -state normal
+
+    foreach ll {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+	if {[$var(frame) has wcs 3d "wcs${ll}"]} {
+	    $w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state normal
+	} else {
+	    $w.wcs entryconfig "[msgcat::mc {WCS}] $ll" -state disabled
+	}
+    }
+
+    $w entryconfig [msgcat::mc {Image}] -state normal
+}
+
+proc CoordMenuReset3d {w varname system} {
     upvar #0 $varname var
     global $varname
 
@@ -315,19 +289,6 @@ proc CoordMenuReset3d {w varname system sky skyformat} {
     }
 
     $w entryconfig [msgcat::mc {Image}] -state normal
-
-    if {$sky != {}} {
-	$w entryconfig [msgcat::mc {FK4}] -state normal
-	$w entryconfig [msgcat::mc {FK5}] -state normal
-	$w entryconfig [msgcat::mc {ICRS}] -state normal
-	$w entryconfig [msgcat::mc {Galactic}] -state normal
-	$w entryconfig [msgcat::mc {Ecliptic}] -state normal
-    }
-
-    if {$skyformat != {}} {
-	$w entryconfig [msgcat::mc {Degrees}] -state normal
-	$w entryconfig {Sexagesimal} -state normal
-    }
 }
 
 # DistMenu

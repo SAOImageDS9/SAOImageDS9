@@ -36,11 +36,11 @@ proc MatchCube {which sys} {
 
     # only matches on axis 2
     set ss [$which get fits slice]
-    set wss [$which get fits slice from image $sys fk5]
+    set wss [$which get fits slice from image $sys]
     
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,slice) $ff "$ff update fits slice $wss $sys fk5"
+	    RGBEvalLock rgb(lock,slice) $ff "$ff update fits slice $wss $sys"
 	}
     }
 }
@@ -72,11 +72,7 @@ proc CubeSlice {ii ss} {
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
 
     set dcube(image,$ii) $ss
-    if {$ii == 2} {
-	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
-    } else {
-	set dcube(wcs,$ii) $ss
-    }
+    set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 	
     UpdateCube
 }
@@ -293,11 +289,7 @@ proc CubeApply {ii} {
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
 
     set dcube(image,$ii) $ss
-    if {$ii == 2} {
-	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
-    } else {
-	set dcube(wcs,$ii) $ss
-    }
+    set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }
@@ -522,6 +514,9 @@ proc UpdateCubeDialog {} {
 	grid forget $dcube(chk,$ii) $dcube(slider,$ii) $dcube(wcsentry,$ii)
     }
 
+    # for menus
+    set cube(frame) $current(frame)
+
     # special case, no frame
     if {$current(frame) == {}} {
 	UpdateCubeDialogNoImage
@@ -558,7 +553,7 @@ proc UpdateCubeDialogNoImage {} {
     set mb $icube(mb)
 
     # reset coord menu
-    CoordMenuReset3d $mb.coord cube system {} {}
+    CoordMenuReset3d $mb.coord cube system
 
     # disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state disabled
@@ -596,7 +591,7 @@ proc UpdateCubeDialog2Axes {} {
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
-    CoordMenuEnable3d $mb.coord cube system sky {}
+    CoordMenuEnable3d $mb.coord cube system
 
     # enable/disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state disabled
@@ -629,8 +624,9 @@ proc UpdateCubeDialog2Axes {} {
     switch $cube(system) {
 	image {}
 	default {
-	    set w [string range $cube(system) 3 3]
-	    set key "CTYPE3$w"
+	    set ww [string range $cube(system) 3 3]
+	    set ii [expr $cube(axis)+1]
+	    set key "CTYPE$ii$ww"
 	    set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
 	    if {$tt != {}} {
 		set dcube(vcoord) $tt
@@ -655,7 +651,7 @@ proc UpdateCubeDialogAxes {axes} {
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
-    CoordMenuEnable3d $mb.coord cube system sky {}
+    CoordMenuEnable3d $mb.coord cube system
 
     # enable/disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state normal
@@ -733,8 +729,9 @@ proc UpdateCubeDialogAxes {axes} {
     switch $cube(system) {
 	image {}
 	default {
-	    set w [string range $cube(system) 3 3]
-	    set key "CTYPE3$w"
+	    set ww [string range $cube(system) 3 3]
+	    set ii [expr $cube(axis)+1]
+	    set key "CTYPE$ii$ww"
 	    set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
 	    if {$tt != {}} {
 		set dcube(vcoord) $tt
@@ -913,16 +910,12 @@ proc CubeCmd {ss} {
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $cube(axis) $ss"
 
     set dcube(image,$cube(axis)) $ss
-    if {$cube(axis) == 2} {
-	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
-    } else {
-	set dcube(wcs,$cube(axis)) $ss
-    }
+    set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }
 
-proc CubeCmdCoord {ss sys sky} {
+proc CubeCmdCoord {ss sys} {
     global dcube
     global cube
     global current
@@ -940,7 +933,7 @@ proc CubeCmdCoord {ss sys sky} {
     if {$cube(axis) > 2} {
 	set ss [$current(frame) get fits slice $cube(axis)]
     } else {
-	set ss [$current(frame) get fits slice to image $ss $sys $sky]
+	set ss [$current(frame) get fits slice to image $ss $sys]
     }
     if {$ss<1} {
 	set ss 1
@@ -949,11 +942,7 @@ proc CubeCmdCoord {ss sys sky} {
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     set dcube(image,2) $ss
-    if {$cube(axis) == 2} {
-	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
-    } else {
-	set dcube(wcs,$cube(axis)) $ss
-    }
+    set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }

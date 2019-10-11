@@ -2799,15 +2799,15 @@ void Base::sliceCmd(int ii, int ss)
   updateMagnifier();
 }
 
-void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::sliceCmd(double dd, Coord::CoordSystem sys)
 {
   if (!currentContext->fits)
     return;
   
   FitsImage* ptr = currentContext->fits;
   Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5, -.5, -.5);
-  Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
-  Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky);
+  Vector3d wcc = ptr->mapFromRef(cc,sys,Coord::FK5);
+  Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,Coord::FK5);
   Vector3d out = oo * Translate3d(.5, .5, .5);
   
   // IMAGE (ranges 1-n)

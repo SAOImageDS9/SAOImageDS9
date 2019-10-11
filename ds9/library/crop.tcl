@@ -222,7 +222,7 @@ proc UpdateCropDialog {} {
 	    DistMenuButtonCmd crop dcoord dformat {}
 
 	    AdjustCoordSystem3d crop rcoord
-	    CoordMenuEnable3d $dcrop(rb).menu crop rcoord {} {}
+	    CoordMenuEnable3d $dcrop(rb).menu crop rcoord
 	    CoordMenuButtonCmd crop rcoord {} {}
 
 	    set rr [$current(frame) get crop center \
@@ -255,7 +255,7 @@ proc UpdateCropDialog {} {
 
     CoordMenuReset $dcrop(cb).menu crop system 1 sky skyformat
     DistMenuReset $dcrop(db).menu crop dcoord 1 dformat
-    CoordMenuReset3d $dcrop(rb).menu crop rcoord {} {}
+    CoordMenuReset3d $dcrop(rb).menu crop rcoord
 
     set dcrop(x) {}
     set dcrop(y) {}

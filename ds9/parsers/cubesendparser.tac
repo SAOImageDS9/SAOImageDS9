@@ -3,7 +3,6 @@
 #include def.tin
 
 #include wcssys.tin
-#include skyframe.tin
 
 %start cubesend
 
@@ -17,12 +16,10 @@
 %%
 
 #include wcssys.trl
-#include skyframe.trl
 
 cubesend : {ProcessSendCmdCurrent "get fits slice"}
  | IMAGE_ {ProcessSendCmdCurrent "get fits slice"}
- | wcssys {ProcessSendCmdCurrent "get fits slice from image $1 FK5"}
- | wcssys skyframe {ProcessSendCmdCurrent "get fits slice from image $1 $2"}
+ | wcssys {ProcessSendCmdCurrent "get fits slice from image $1"}
  | LOCK_ {ProcessSendCmdGet cube lock}
  | INTERVAL_ {BlinkSendCmdInterval}
  | AXES_ order

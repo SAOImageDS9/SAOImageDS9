@@ -18,7 +18,6 @@ proc CubeDef {} {
     set cube(axis) 2
 
     set cube(system) wcs
-    set cube(sky) fk5
     set cube(axes) 123
 }
 
@@ -74,7 +73,7 @@ proc CubeSlice {ii ss} {
 
     set dcube(image,$ii) $ss
     if {$ii == 2} {
-	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
     } else {
 	set dcube(wcs,$ii) $ss
     }
@@ -295,7 +294,7 @@ proc CubeApply {ii} {
 
     set dcube(image,$ii) $ss
     if {$ii == 2} {
-	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+	set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
     } else {
 	set dcube(wcs,$ii) $ss
     }
@@ -318,7 +317,7 @@ proc CubeApplyWCS {ii} {
 	return
     }
 
-    set ss [$current(frame) get fits slice to image $dcube(wcs,$ii) $cube(system) $cube(sky)]
+    set ss [$current(frame) get fits slice to image $dcube(wcs,$ii) $cube(system)]
     if {$ss<1} {
 	set ss 1
     }
@@ -331,7 +330,7 @@ proc CubeApplyWCS {ii} {
 
     set dcube(image,$ii) $ss
     set dcube(wcs,$ii) \
-	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }
@@ -606,8 +605,8 @@ proc UpdateCubeDialog2Axes {} {
     set dcube(from,2) 1
     set dcube(to,2) 1
 
-    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system) $cube(sky)]    
-    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system) $cube(sky)]    
+    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system)]    
+    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system)]    
 
     # show it
     grid columnconfigure $w.param 0 -weight 0
@@ -641,7 +640,7 @@ proc UpdateCubeDialog2Axes {} {
 
     # we must do this after the scale has been configured
     set dcube(image,2) 1
-    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 }
 
 proc UpdateCubeDialogAxes {axes} {
@@ -666,8 +665,8 @@ proc UpdateCubeDialogAxes {axes} {
     set dcube(from,2) [lindex $ss 0]
     set dcube(to,2) [lindex $ss 1]
 
-    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system) $cube(sky)]    
-    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system) $cube(sky)]    
+    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system)]    
+    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system)]    
 
     for {set ii 3} {$ii<$axes} {incr ii} {
 	set dcube(from,$ii) 1
@@ -745,7 +744,7 @@ proc UpdateCubeDialogAxes {axes} {
 
     # we must do this after the scale has been configured
     set dcube(image,2) [$current(frame) get fits slice 2]
-    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 
     for {set ii 3} {$ii<$axes} {incr ii} {
 	set dcube(image,$ii) [$current(frame) get fits slice $ii]
@@ -776,7 +775,7 @@ proc UpdateCubeMotionDialog {} {
     # we must do this after the scale has been configured
     set dcube(image,2) [$current(frame) get fits slice]
     set dcube(wcs,2) \
-	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 }
 
 proc CubeBackup {ch which} {
@@ -915,7 +914,7 @@ proc CubeCmd {ss} {
 
     set dcube(image,$cube(axis)) $ss
     if {$cube(axis) == 2} {
-	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
     } else {
 	set dcube(wcs,$cube(axis)) $ss
     }
@@ -951,7 +950,7 @@ proc CubeCmdCoord {ss sys sky} {
 
     set dcube(image,2) $ss
     if {$cube(axis) == 2} {
-	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
+	set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
     } else {
 	set dcube(wcs,$cube(axis)) $ss
     }

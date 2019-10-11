@@ -1228,12 +1228,12 @@ getFitsFileName: fileNameType
 
 getFitsSlice : /* empty */ {fr->getFitsSliceCmd(2);}
         | INT {fr->getFitsSliceCmd($1);}
-        | FROM_ IMAGE_ coordSystem skyFrame
-	{fr->getFitsSliceFromImageCmd((Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
-        | FROM_ IMAGE_ INT coordSystem skyFrame
-	{fr->getFitsSliceFromImageCmd($3, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
-        | TO_ IMAGE_ numeric coordSystem skyFrame
-	{fr->getFitsSliceToImageCmd($3, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
+        | FROM_ IMAGE_ coordSystem
+	{fr->getFitsSliceFromImageCmd((Coord::CoordSystem)$3);}
+        | FROM_ IMAGE_ INT coordSystem
+	{fr->getFitsSliceFromImageCmd($3, (Coord::CoordSystem)$4);}
+        | TO_ IMAGE_ numeric coordSystem
+	{fr->getFitsSliceToImageCmd($3, (Coord::CoordSystem)$4);}
 	;
 
 getGrid : /* empty */ {fr->getGridCmd();}

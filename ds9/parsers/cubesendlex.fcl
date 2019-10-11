@@ -15,7 +15,6 @@ lock	    {return $LOCK_}
 order	    {return $ORDER_}
 
 #include wcssys.fin
-#include skyframe.fin
 #include ws.fin
 
 %%

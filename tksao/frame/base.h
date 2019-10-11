@@ -765,9 +765,9 @@ public:
   void getFitsSizeCmd();
   void getFitsSizeCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::DistFormat);
   void getFitsSliceCmd(int);
-  void getFitsSliceFromImageCmd(Coord::CoordSystem, Coord::SkyFrame);
-  void getFitsSliceFromImageCmd(int, Coord::CoordSystem, Coord::SkyFrame);
-  void getFitsSliceToImageCmd(double, Coord::CoordSystem, Coord::SkyFrame);
+  void getFitsSliceFromImageCmd(Coord::CoordSystem);
+  void getFitsSliceFromImageCmd(int, Coord::CoordSystem);
+  void getFitsSliceToImageCmd(double, Coord::CoordSystem);
   void hasFitsCmd();
   void hasFitsHPXCmd();
   void hasFitsBinCmd();
@@ -960,7 +960,7 @@ public:
   void saveENVIFileCmd(const char*, const char*, FitsFile::ArchType);
 
   void sliceCmd(int, int);
-  void sliceCmd(double, Coord::CoordSystem, Coord::SkyFrame);
+  void sliceCmd(double, Coord::CoordSystem);
 
   void updateFitsCmd(int);
   void updateFitsCmd(int, BBox, int);

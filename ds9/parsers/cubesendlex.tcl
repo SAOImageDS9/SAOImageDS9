@@ -206,19 +206,12 @@ set WCSW_ 280
 set WCSX_ 281
 set WCSY_ 282
 set WCSZ_ 283
-set FK4_ 284
-set B1950_ 285
-set FK5_ 286
-set J2000_ 287
-set ICRS_ 288
-set GALACTIC_ 289
-set ECLIPTIC_ 290
-set AXIS_ 291
-set AXES_ 292
-set INTERVAL_ 293
-set IMAGE_ 294
-set LOCK_ 295
-set ORDER_ 296
+set AXIS_ 284
+set AXES_ 285
+set INTERVAL_ 286
+set IMAGE_ 287
+set LOCK_ 288
+set ORDER_ 289
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -471,68 +464,19 @@ set ORDER_ 296
             set yyleng [string length $yytext]
             set matched_rule 32
         }
-        # rule 33: fk4
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fk4)} $yy_current_buffer match] > 0 && \
+        # rule 33: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 33
         }
-        # rule 34: b1950
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(b1950)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 34
-        }
-        # rule 35: fk5
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fk5)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 35
-        }
-        # rule 36: j2000
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(j2000)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 36
-        }
-        # rule 37: icrs
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(icrs)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 37
-        }
-        # rule 38: galactic
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(galactic)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 38
-        }
-        # rule 39: ecliptic
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(ecliptic)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 39
-        }
-        # rule 40: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 40
-        }
-        # rule 41: .
+        # rule 34: .
         if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 41
+            set matched_rule 34
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -646,30 +590,9 @@ return $WCSY_
 return $WCSZ_
             }
             33 {
-return $FK4_
-            }
-            34 {
-return $FK4_
-            }
-            35 {
-return $FK5_
-            }
-            36 {
-return $FK5_
-            }
-            37 {
-return $ICRS_
-            }
-            38 {
-return $GALACTIC_
-            }
-            39 {
-return $ECLIPTIC_
-            }
-            40 {
 # ignore whitespace
             }
-            41 {
+            34 {
 set yylval $yytext; return $yylval
             }
             default

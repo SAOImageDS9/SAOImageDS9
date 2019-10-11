@@ -37,7 +37,6 @@
 %%
 
 #include wcssys.trl
-#include skyframe.trl
 #include yesno.trl
 #include numeric.trl
 
@@ -60,8 +59,7 @@ cube : OPEN_
  | ORDER_ order
  | INT_ {CubeCmd $1}
  | INT_ IMAGE_ {CubeCmd $1}
- | numeric wcssys {CubeCmdCoord $1 $2 fk5}
- | numeric wcssys skyframe {CubeCmdCoord $1 $2 $3}
+ | numeric wcssys {CubeCmdCoord $1 $2}
  | AXIS_ INT_ {CubeCmdAxis $2}
  ;
 

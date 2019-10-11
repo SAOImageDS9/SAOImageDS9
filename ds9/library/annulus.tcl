@@ -60,7 +60,7 @@ proc AnnulusDialog {varname} {
     ttk::entry $f.outer -textvariable ${varname}(outer) -width 13
     DistMenuButton $f.uradius $varname dcoord 1 dformat \
 	[list AnnulusDistCB $varname]
-    DistMenuEnable $f.uradius.menu $varname dcoord 1 dformat
+    DistMenuEnable $f.uradius.menu $varname dcoord dformat
     ttk::label $f.tannuli -text [msgcat::mc {Annuli}]
     ttk::entry $f.annuli -textvariable ${varname}(annuli) -width 13
 

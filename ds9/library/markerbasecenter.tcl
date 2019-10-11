@@ -30,7 +30,7 @@ proc MarkerBaseCenterDialog {varname} {
 
     CoordMenuButton $f.ucenter $varname system 1 sky skyformat \
 	[list $var(proc,coordCB) $varname]
-    CoordMenuEnable $f.ucenter.menu $varname system 1 sky skyformat
+    CoordMenuEnable $f.ucenter.menu $varname system sky skyformat
 
     grid $f.tcenter $f.centerx $f.centery $f.ucenter -padx 2 -pady 2 -sticky w
 }

@@ -143,7 +143,7 @@ proc SIADialog {varname title url opts method action} {
 
     CoordMenuButton $f.coord $varname system 0 sky skyformat \
 	[list SIAWCSMenuUpdate $varname]
-    CoordMenuEnable $f.coord.menu $varname system {} sky skyformat
+    CoordMenuEnable $f.coord.menu $varname system sky skyformat
 
     ttk::label $f.rtitle -text [msgcat::mc {Radius}]
     ttk::entry $f.r -textvariable ${varname}(radius) -width 14

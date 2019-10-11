@@ -972,9 +972,9 @@ proc UpdateGridDialog {} {
 	    }
 
 	    if {[$current(frame) has fits]} {
-		CoordMenuEnable $igrid(mb).coord grid system 1 sky skyformat
+		CoordMenuEnable $igrid(mb).coord grid system sky skyformat
 	    } else {
-		CoordMenuReset $igrid(mb).coord grid system 1 sky skyformat
+		CoordMenuReset $igrid(mb).coord grid system sky skyformat
 	    }
 	}
     }

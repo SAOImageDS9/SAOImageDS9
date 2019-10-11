@@ -39,7 +39,7 @@ proc MarkerBaseLineDialog {varname width height} {
     ttk::entry $f.y -textvariable ${varname}(y) -width 13
     CoordMenuButton $f.coord $varname system 1 sky skyformat \
 	[list $var(proc,coordCB) $varname]
-    CoordMenuEnable $f.coord.menu $varname system 1 sky skyformat
+    CoordMenuEnable $f.coord.menu $varname system sky skyformat
     ttk::entry $f.x2 -textvariable ${varname}(x2) -width 13
     ttk::entry $f.y2 -textvariable ${varname}(y2) -width 13
 
@@ -49,7 +49,7 @@ proc MarkerBaseLineDialog {varname width height} {
 	-relief groove -width 12 
     DistMenuButton $f.udist $varname dcoord 1 dformat \
 	[list $var(proc,distCB) $varname]
-    DistMenuEnable $f.udist.menu $varname dcoord 1 dformat
+    DistMenuEnable $f.udist.menu $varname dcoord dformat
 
     # Angle
     ttk::label $f.tangle -text [msgcat::mc {Angle}]

@@ -61,7 +61,7 @@ proc EllipseDialog {varname} {
     ttk::entry $f.radius2 -textvariable ${varname}(radius2) -width 13 
     DistMenuButton $f.uradius $varname dcoord 1 dformat \
 	[list EllipseEditCB $varname]
-    DistMenuEnable $f.uradius.menu $varname dcoord 1 dformat
+    DistMenuEnable $f.uradius.menu $varname dcoord dformat
 
     # Angle
     ttk::label $f.tangle -text [msgcat::mc {Angle}]

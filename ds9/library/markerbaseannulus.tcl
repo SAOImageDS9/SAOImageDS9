@@ -74,7 +74,7 @@ proc MarkerBaseAnnulusDialog {varname} {
     ttk::entry $f.centery -textvariable ${varname}(y) -width 13
     CoordMenuButton $f.ucenter $varname system 1 sky skyformat \
 	[list $var(proc,coordCB) $varname]
-    CoordMenuEnable $f.ucenter.menu $varname system 1 sky skyformat
+    CoordMenuEnable $f.ucenter.menu $varname system sky skyformat
 
     grid $f.tid $f.id -padx 2 -pady 2 -sticky w
     grid $f.ttext $f.text - - - -padx 2 -pady 2 -sticky w

@@ -50,27 +50,18 @@ proc AdjustCoordSystem {varname system} {
     global $varname
 
     global current
+    if {$current(frame) == {}} {
+	return
+    }
+
     switch -- $var($system) {
 	image -
 	physical -
 	amplifier -
 	detector {}
-	wcs {
-	    if {$current(frame) != {}} {
-		if {![$current(frame) has wcs $var($system)]} {
-		    set ${varname}($system) physical
-		}
-	    }
-	}
 	default {
-	    if {$current(frame) != {}} {
-		if {![$current(frame) has wcs $var($system)]} {
-		    if {[$current(frame) has wcs wcs]} {
-			set ${varname}($system) wcs
-		    } else {
-			set ${varname}($system) physical
-		    }
-		}
+	    if {![$current(frame) has wcs $var($system)]} {
+		set ${varname}($system) physical
 	    }
 	}
     }
@@ -87,18 +78,9 @@ proc AdjustCoordSystem3d {varname system} {
     
     switch -- $var($system) {
 	image {}
-	wcs {
-	    if {![$current(frame) has wcs 3d $var($system)]} {
-		set ${varname}($system) image
-	    }
-	}
 	default {
 	    if {![$current(frame) has wcs 3d $var($system)]} {
-		if {[$current(frame) has wcs wcs]} {
-		    set ${varname}($system) wcs
-		} else {
-		    set ${varname}($system) image
-		}
+		set ${varname}($system) image
 	    }
 	}
     }

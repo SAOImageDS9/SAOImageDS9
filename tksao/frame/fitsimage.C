@@ -2908,7 +2908,7 @@ VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
-  if (!(hasWCS(sys) && hasWCS3D(sys)))
+  if (!hasWCS(sys))
     return Vector();
 
   astClearStatus; // just to make sure
@@ -3003,7 +3003,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
-  if (!hasWCS(sys) || !hasWCS3D(sys) || !wcsInv_)
+  if (!hasWCS(sys) || !wcsInv_)
     return Vector3d();
     
   astClearStatus; // just to make sure

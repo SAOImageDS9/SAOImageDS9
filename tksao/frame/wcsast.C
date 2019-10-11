@@ -66,7 +66,8 @@ void wcsFormat(AstFrameSet* ast, int id, const char* format)
   astSet(ast, str.str().c_str());
 }
 
-Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
+Vector wcsTran(Context* context, AstFrameSet* ast,
+	       const Vector& in, int forward)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -90,7 +91,7 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       double pout[3];
       pin[0] = in[0];
       pin[1] = in[1];
-      pin[2] = forward ? 1 : 0;
+      pin[2] = forward ? context->slice(2) : 0;
       astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
       return Vector(pout[0],pout[1]);
     }
@@ -100,8 +101,8 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       double pout[4];
       pin[0] = in[0];
       pin[1] = in[1];
-      pin[2] = forward ? 1 : 0;
-      pin[3] = forward ? 1 : 0;
+      pin[2] = forward ? context->slice(2) : 0;
+      pin[3] = forward ? context->slice(3) : 0;
       astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector(pout[0],pout[1]);
     }
@@ -111,9 +112,9 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       double pout[5];
       pin[0] = in[0];
       pin[1] = in[1];
-      pin[2] = forward ? 1 : 0;
-      pin[3] = forward ? 1 : 0;
-      pin[4] = forward ? 1 : 0;
+      pin[2] = forward ? context->slice(2) : 0;
+      pin[3] = forward ? context->slice(3) : 0;
+      pin[4] = forward ? context->slice(4) : 0;
       astTranN(ast, 1, 5, 1, pin, forward, 5, 1, pout);
       return Vector(pout[0],pout[1]);
     }
@@ -121,7 +122,8 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
   return Vector();
 }
 
-void wcsTran(AstFrameSet* ast, int npoint, Vector* in, int forward, Vector* out)
+void wcsTran(Context* context, AstFrameSet* ast,
+	     int npoint, Vector* in, int forward, Vector* out)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -181,7 +183,7 @@ void wcsTran(AstFrameSet* ast, int npoint, Vector* in, int forward, Vector* out)
       for (int kk=0; kk<npoint; kk++) {
 	ptr_in[0][kk] = in[kk][0];
 	ptr_in[1][kk] = in[kk][1];
-	ptr_in[2][kk] = forward ? 1 : 0;
+	ptr_in[2][kk] = forward ? context->slice(2) : 0;
       }      
       astTranP(ast, npoint, 3, (const double**)ptr_in, forward, 3, ptr_out);
       for (int kk=0; kk<npoint; kk++)
@@ -218,8 +220,8 @@ void wcsTran(AstFrameSet* ast, int npoint, Vector* in, int forward, Vector* out)
       for (int kk=0; kk<npoint; kk++) {
 	ptr_in[0][kk] = in[kk][0];
 	ptr_in[1][kk] = in[kk][1];
-	ptr_in[2][kk] = forward ? 1 : 0;
-	ptr_in[3][kk] = forward ? 1 : 0;
+	ptr_in[2][kk] = forward ? context->slice(2) : 0;
+	ptr_in[3][kk] = forward ? context->slice(3) : 0;
       }      
       astTranP(ast, npoint, 4, (const double**)ptr_in, forward, 4, ptr_out);
       for (int kk=0; kk<npoint; kk++)
@@ -262,9 +264,9 @@ void wcsTran(AstFrameSet* ast, int npoint, Vector* in, int forward, Vector* out)
       for (int kk=0; kk<npoint; kk++) {
 	ptr_in[0][kk] = in[kk][0];
 	ptr_in[1][kk] = in[kk][1];
-	ptr_in[2][kk] = forward ? 1 : 0;
-	ptr_in[3][kk] = forward ? 1 : 0;
-	ptr_in[4][kk] = forward ? 1 : 0;
+	ptr_in[2][kk] = forward ? context->slice(2) : 0;
+	ptr_in[3][kk] = forward ? context->slice(3) : 0;
+	ptr_in[4][kk] = forward ? context->slice(4) : 0;
       }      
       astTranP(ast, npoint, 5, (const double**)ptr_in, forward, 5, ptr_out);
       for (int kk=0; kk<npoint; kk++)
@@ -296,7 +298,8 @@ void wcsTran(AstFrameSet* ast, int npoint, Vector* in, int forward, Vector* out)
   }
 }
 
-Vector3d wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
+Vector3d wcsTran(Context* context, AstFrameSet* ast,
+		 const Vector3d& in, int forward)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -334,7 +337,7 @@ Vector3d wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       pin[0] = in[0];
       pin[1] = in[1];
       pin[2] = in[2];
-      pin[3] = forward ? 1 : 0;
+      pin[3] = forward ? context->slice(3) : 0;
       astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }
@@ -345,8 +348,8 @@ Vector3d wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       pin[0] = in[0];
       pin[1] = in[1];
       pin[2] = in[2];
-      pin[3] = forward ? 1 : 0;
-      pin[4] = forward ? 1 : 0;
+      pin[3] = forward ? context->slice(3) : 0;
+      pin[4] = forward ? context->slice(4) : 0;
       astTranN(ast, 1, 5, 1, pin, forward, 5, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }

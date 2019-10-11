@@ -523,22 +523,22 @@ proc UpdateCubeDialog {} {
 	return
     }
     
-    set naxes [$current(frame) get fits naxes]
-
-    # reset cube(axis) if needed
-    if {$cube(axis) > [expr $naxes-1]} {
-	set cube(axis) [expr $naxes-1]
-	if {$cube(axis) < 2} {
-	    set cube(axis) 2
-	}
-    }
-
     # special case, no image
     if {![$current(frame) has fits]} {
 	UpdateCubeDialogNoImage
 	return
     }
     
+    set naxes [$current(frame) get fits naxes]
+
+    # reset cube(axis) if needed
+    if {$cube(axis) > [expr $naxes-1]} {
+	set cube(axis) [expr $naxes-1]
+    }
+    if {$cube(axis) < 2} {
+	set cube(axis) 2
+    }
+
     switch $naxes {
 	2 {UpdateCubeDialog2Axes}
 	default {UpdateCubeDialogAxes $naxes}
@@ -930,18 +930,14 @@ proc CubeCmdCoord {ss sys} {
 	return
     }
 
-    if {$cube(axis) > 2} {
-	set ss [$current(frame) get fits slice $cube(axis)]
-    } else {
-	set ss [$current(frame) get fits slice to image $ss $sys]
-    }
+    set ss [$current(frame) get fits slice to image $ss $sys]
     if {$ss<1} {
 	set ss 1
     }
     
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
-    set dcube(image,2) $ss
+    set dcube(image,$cube(axis)) $ss
     set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
@@ -949,8 +945,15 @@ proc CubeCmdCoord {ss sys} {
 
 proc CubeCmdAxis {ii} {
     global cube
+    global current
 
     set cube(axis) [expr $ii-1]
+    set naxes [$current(frame) get fits naxes]
+
+    # reset cube(axis) if needed
+    if {$cube(axis) > [expr $naxes-1]} {
+	set cube(axis) [expr $naxes-1]
+    }
     if {$cube(axis) < 2} {
 	set cube(axis) 2
     }

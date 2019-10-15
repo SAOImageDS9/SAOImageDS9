@@ -648,7 +648,6 @@ TCL_THREADS
 XMKMF
 TK_INCLUDES
 TCL_INCLUDES
-SSLLIBS
 EGREP
 GREP
 RANLIB
@@ -9751,8 +9750,8 @@ $as_echo "#define AC_APPLE_UNIVERSAL_BUILD 1" >>confdefs.h
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
 
-SSLLIBS="/opt/local/lib/libssl.a /opt/local/lib/libcrypto.a"
-
+#SSLLIBS="/opt/local/lib/libssl.a /opt/local/lib/libcrypto.a"
+#AC_SUBST(SSLLIBS)
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for xmlInitParser in -lxml2" >&5
 $as_echo_n "checking for xmlInitParser in -lxml2... " >&6; }
 if ${ac_cv_lib_xml2_xmlInitParser+:} false; then :

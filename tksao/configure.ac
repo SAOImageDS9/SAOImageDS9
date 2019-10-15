@@ -298,20 +298,31 @@ esac
 # TEA_ADD_* any platform specific compiler/build info here.
 #--------------------------------------------------------------------
 
+TEA_CONFIG_SYSTEM
+
+case $system in
+    Darwin* )
+	devdir=`xcrun --show-sdk-path`
+	TEA_ADD_INCLUDES([-I${devdir}/usr/include/libxml2])
+#	TEA_ADD_INCLUDES([-I/opt/local/include/libxml2])
+	;;
+    CYGWIN* )
+	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
+	;;
+    Linux* )
+	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
+	;;
+    windows)
+	TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
+	;;
+esac
+
 #CLEANFILES="$CLEANFILES pkgIndex.tcl"
-if test "${TEA_PLATFORM}" = "windows" ; then
-    # Ensure no empty if clauses
-    :
-    #TEA_ADD_SOURCES([win/winFile.c])
-    #TEA_ADD_INCLUDES([-I\"$(${CYGPATH} ${srcdir}/win)\"])
-    TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
-else
-    # Ensure no empty else clauses
-    :
-    #TEA_ADD_SOURCES([unix/unixFile.c])
-    #TEA_ADD_LIBS([-lsuperfly])
-    TEA_ADD_INCLUDES([-I/usr/include/libxml2])
-fi
+#if test "${TEA_PLATFORM}" = "windows" ; then
+#    TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
+#else
+#    TEA_ADD_INCLUDES([-I/usr/include/libxml2])
+#fi
 
 #--------------------------------------------------------------------
 # __CHANGE__

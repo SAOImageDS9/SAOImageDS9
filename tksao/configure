@@ -5502,24 +5502,48 @@ esac
 # TEA_ADD_* any platform specific compiler/build info here.
 #--------------------------------------------------------------------
 
-#CLEANFILES="$CLEANFILES pkgIndex.tcl"
-if test "${TEA_PLATFORM}" = "windows" ; then
-    # Ensure no empty if clauses
-    :
-    #TEA_ADD_SOURCES([win/winFile.c])
-    #TEA_ADD_INCLUDES([-I\"$(${CYGPATH} ${srcdir}/win)\"])
 
-    vars="-I${prefix}/include/libxml2"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking system version" >&5
+$as_echo_n "checking system version... " >&6; }
+if ${tcl_cv_sys_version+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+	# TEA specific:
+	if test "${TEA_PLATFORM}" = "windows" ; then
+	    tcl_cv_sys_version=windows
+	else
+	    tcl_cv_sys_version=`uname -s`-`uname -r`
+	    if test "$?" -ne 0 ; then
+		{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: can't find uname command" >&5
+$as_echo "$as_me: WARNING: can't find uname command" >&2;}
+		tcl_cv_sys_version=unknown
+	    else
+		if test "`uname -s`" = "AIX" ; then
+		    tcl_cv_sys_version=AIX-`uname -v`.`uname -r`
+		fi
+	    fi
+	fi
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $tcl_cv_sys_version" >&5
+$as_echo "$tcl_cv_sys_version" >&6; }
+    system=$tcl_cv_sys_version
+
+
+case $system in
+    Darwin* )
+	devdir=`xcrun --show-sdk-path`
+
+    vars="-I${devdir}/usr/include/libxml2"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done
 
 
-else
-    # Ensure no empty else clauses
-    :
-    #TEA_ADD_SOURCES([unix/unixFile.c])
-    #TEA_ADD_LIBS([-lsuperfly])
+#	TEA_ADD_INCLUDES([-I/opt/local/include/libxml2])
+	;;
+    CYGWIN* )
 
     vars="-I/usr/include/libxml2"
     for i in $vars; do
@@ -5527,7 +5551,33 @@ else
     done
 
 
-fi
+	;;
+    Linux* )
+
+    vars="-I/usr/include/libxml2"
+    for i in $vars; do
+	PKG_INCLUDES="$PKG_INCLUDES $i"
+    done
+
+
+	;;
+    windows)
+
+    vars="-I${prefix}/include/libxml2"
+    for i in $vars; do
+	PKG_INCLUDES="$PKG_INCLUDES $i"
+    done
+
+
+	;;
+esac
+
+#CLEANFILES="$CLEANFILES pkgIndex.tcl"
+#if test "${TEA_PLATFORM}" = "windows" ; then
+#    TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
+#else
+#    TEA_ADD_INCLUDES([-I/usr/include/libxml2])
+#fi
 
 #--------------------------------------------------------------------
 # __CHANGE__

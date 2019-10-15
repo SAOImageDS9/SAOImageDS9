@@ -52,7 +52,6 @@ PKG_CFLAGS	= @PKG_CFLAGS@
 DEFS		= @DEFS@ $(PKG_CFLAGS)
 
 CPPFLAGS	= @CPPFLAGS@
-#LIBS		= @PKG_LIBS@ @LIBS@ @SSLLIBS@
 LIBS		= @PKG_LIBS@ @LIBS@
 CFLAGS		= @CFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
@@ -110,7 +109,8 @@ LLIBS	= \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libxpa.a \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS)))) \
+	-L $(prefix)/openssl -lssl -lcrypto
 
 PREQS	= \
 	$(APPDIR) \
@@ -179,7 +179,6 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(TK_LIB_SPEC) \
 	$(TCL_LIB_SPEC) \
 	$(TK_LIBS) \
-	-L $(prefix)/openssl -lssl -lcrypto \
 	$(LIBS)
 
 # update date/time so we know when the build was done

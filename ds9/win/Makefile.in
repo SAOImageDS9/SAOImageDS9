@@ -106,7 +106,8 @@ LLIBS	= \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libxpa.a \
 	$(libdir)/libxml2.a \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS)))) \
+	-L $(prefix)/openssl -lssl -lcrypto
 
 PREQS	= \
 	$(APPDIR) \
@@ -151,7 +152,6 @@ ds9Base.exe: $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	$(TK_LIBS) \
-	-L $(prefix)/openssl -lssl -lcrypto \
 	$(LIBS) \
 	-lgdi32 \
 	-mwindows

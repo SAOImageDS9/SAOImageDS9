@@ -109,7 +109,8 @@ LLIBS	= \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libxpa.a \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS)))) \
+	-L $(prefix)/openssl -lssl -lcrypto
 
 PREQS	= \
 	$(APPDIR) \
@@ -177,7 +178,6 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	$(TK_LIBS) \
-	-L $(prefix)/openssl -lssl -lcrypto \
 	$(LIBS)
 
 ds9.zip	: $(PREQS)

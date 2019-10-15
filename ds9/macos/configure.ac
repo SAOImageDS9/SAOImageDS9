@@ -137,8 +137,6 @@ TEA_ADD_LIBS([-lstdc++])
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
 
-#SSLLIBS="/opt/local/lib/libssl.a /opt/local/lib/libcrypto.a"
-#AC_SUBST(SSLLIBS)
 AC_CHECK_LIB([xml2],[xmlInitParser])
 
 #--------------------------------------------------------------------

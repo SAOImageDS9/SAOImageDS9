@@ -5561,7 +5561,7 @@ case $system in
 
 
 	;;
-    windows)
+    windows*)
 
     vars="-I${prefix}/include/libxml2"
     for i in $vars; do

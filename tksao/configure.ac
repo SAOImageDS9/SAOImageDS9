@@ -312,7 +312,7 @@ case $system in
     Linux* )
 	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
 	;;
-    windows)
+    windows*)
 	TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
 	;;
 esac

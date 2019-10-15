@@ -5541,7 +5541,6 @@ case $system in
     done
 
 
-#	TEA_ADD_INCLUDES([-I/opt/local/include/libxml2])
 	;;
     CYGWIN* )
 

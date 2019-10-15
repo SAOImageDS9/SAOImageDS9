@@ -304,7 +304,6 @@ case $system in
     Darwin* )
 	devdir=`xcrun --show-sdk-path`
 	TEA_ADD_INCLUDES([-I${devdir}/usr/include/libxml2])
-#	TEA_ADD_INCLUDES([-I/opt/local/include/libxml2])
 	;;
     CYGWIN* )
 	TEA_ADD_INCLUDES([-I/usr/include/libxml2])

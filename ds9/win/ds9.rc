@@ -1,6 +1,6 @@
 #include <windows.h>
 
-#define VV "8.1b2"
+#define VV "8.1rc"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION    8,1,0,0

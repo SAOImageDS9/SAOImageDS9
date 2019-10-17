@@ -305,8 +305,8 @@ proc ScaleDialog {} {
 
     # Graph
     set dscale(hist) [blt::graph $f.chart \
-			  -background $ds9(background) \
-			  -plotbackground $ds9(background) \
+			  -background $ds9(plot,bg) \
+			  -plotbackground $ds9(plot,bg) \
 			  -width 500 \
 			  -height 200 \
 			  -title [msgcat::mc {Pixel Distribution}] \

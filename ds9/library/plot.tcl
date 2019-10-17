@@ -807,23 +807,29 @@ proc PlotUpdateCanvas {varname} {
     
     foreach cc $var(graphs) {
 	$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
-	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \
-	    -bg $var(background) -plotbackground $var(background)
+	    -bg $var(background) -plotbackground $var(background) \
+	    -fg $var(foreground) \
+	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
 	$var($cc,graph) xaxis configure \
-	    -bg $var(background) \
+	    -bg $var(background) -color $var(foreground) \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)" \
+	    -titlecolor $var(foreground) \
+	    -gridcolor $var(grid,color) -gridminorcolor $var(grid,color)
 
 	$var($cc,graph) yaxis configure \
-	    -bg $var(background) \
+	    -bg $var(background) -color $var(foreground) \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)" \
+	    -titlecolor $var(foreground) \
+	    -gridcolor $var(grid,color) -gridminorcolor $var(grid,color)
 
 	$var($cc,graph) legend configure \
-	    -bg $var(background) \
+	    -bg $var(background) -fg $var(foreground) \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
-	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
+	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)" \
+	    -titlecolor $var(foreground)
 
 	switch $var(layout) {
 	    grid -
@@ -1123,7 +1129,9 @@ proc PlotBackup {ch dir} {
 	    puts $ch "set ${varname}(layout,strip,scale) $var(layout,strip,scale)"
 	    puts $ch "PlotChangeLayout $varname"
 
+	    puts $ch "set ${varname}(foreground) $var(foreground)"
 	    puts $ch "set ${varname}(background) $var(background)"
+	    puts $ch "set ${varname}(grid,color) $var(grid,color)"
 	    puts $ch "set ${varname}(bar,mode) $var(bar,mode)"
 	    puts $ch "PlotUpdateCanvas $varname"
 

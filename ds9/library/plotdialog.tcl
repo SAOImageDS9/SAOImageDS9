@@ -120,10 +120,24 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas add cascade -label [msgcat::mc {Layout}] \
 	-menu $var(mb).canvas.layout
     $var(mb).canvas add separator
-    $var(mb).canvas add cascade -label [msgcat::mc {Font}] \
-	-menu $var(mb).canvas.font
+    $var(mb).canvas add cascade -label [msgcat::mc {Title}] \
+	-menu $var(mb).canvas.title
+    $var(mb).canvas add cascade -label [msgcat::mc {Axes Title}] \
+	-menu $var(mb).canvas.textlab
+    $var(mb).canvas add cascade -label [msgcat::mc {Axes Number}] \
+	-menu $var(mb).canvas.numlab
+    $var(mb).canvas add cascade -label [msgcat::mc {Legend Title}] \
+	-menu $var(mb).canvas.legendtitle
+    $var(mb).canvas add cascade -label [msgcat::mc {Legend}] \
+	-menu $var(mb).canvas.legend
+
+    $var(mb).canvas add separator
+    $var(mb).canvas add cascade -label [msgcat::mc {Forground}] \
+	-menu $var(mb).canvas.fg
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).canvas.bg
+    $var(mb).canvas add cascade -label [msgcat::mc {Grid}] \
+	-menu $var(mb).canvas.grid
 
     menu $var(mb).canvas.select
 
@@ -154,35 +168,29 @@ proc PlotDialog {varname wtt} {
 	-label "[msgcat::mc {Strip Parameters}]..." \
 	-command [list PlotStripDialog $varname]
 
-    menu $var(mb).canvas.font
-    $var(mb).canvas.font add cascade -label [msgcat::mc {Title}] \
-	-menu $var(mb).canvas.font.title
-    $var(mb).canvas.font add cascade -label [msgcat::mc {Axes Title}] \
-	-menu $var(mb).canvas.font.textlab
-    $var(mb).canvas.font add cascade -label [msgcat::mc {Axes Number}] \
-	-menu $var(mb).canvas.font.numlab
-    $var(mb).canvas.font add cascade -label [msgcat::mc {Legend Title}] \
-	-menu $var(mb).canvas.font.legendtitle
-    $var(mb).canvas.font add cascade -label [msgcat::mc {Legend}] \
-	-menu $var(mb).canvas.font.legend
-
-    FontMenu $var(mb).canvas.font.title \
+    FontMenu $var(mb).canvas.title \
 	$varname graph,title,family graph,title,size graph,title,weight \
 	graph,title,slant [list PlotUpdateCanvas $varname]
-    FontMenu $var(mb).canvas.font.textlab \
+    FontMenu $var(mb).canvas.textlab \
 	$varname axis,title,family axis,title,size axis,title,weight \
 	axis,title,slant [list PlotUpdateCanvas $varname]
-    FontMenu $var(mb).canvas.font.numlab \
+    FontMenu $var(mb).canvas.numlab \
 	$varname axis,font,family axis,font,size axis,font,weight \
 	axis,font,slant [list PlotUpdateCanvas $varname]
-    FontMenu $var(mb).canvas.font.legendtitle \
+    FontMenu $var(mb).canvas.legendtitle \
 	$varname legend,title,family legend,title,size legend,title,weight \
 	legend,title,slant [list PlotUpdateCanvas $varname]
-    FontMenu $var(mb).canvas.font.legend \
+    FontMenu $var(mb).canvas.legend \
 	$varname legend,font,family legend,font,size legend,font,weight \
 	legend,font,slant [list PlotUpdateCanvas $varname]
 
+    PlotColorMenu $var(mb).canvas.fg $varname foreground \
+	[list PlotUpdateCanvas $varname]
+
     PlotColorMenu $var(mb).canvas.bg $varname background \
+	[list PlotUpdateCanvas $varname]
+
+    PlotColorMenu $var(mb).canvas.grid $varname grid,color \
 	[list PlotUpdateCanvas $varname]
 
     # Graph

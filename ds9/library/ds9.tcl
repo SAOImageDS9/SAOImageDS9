@@ -75,6 +75,12 @@ proc DS9Def {} {
     set ds9(menu,size,wrap) 20
 
     set ds9(display) single
+
+    # ds9(foreground) color of GUI text
+    # ds9(background) color of GUI bg
+    # ds9(plot,fg) color of Plot fg
+    # ds9(plot,bg) color of Plot bg
+    # ds9(bg) color of canvas,frame bg
     set ds9(bg) white
 
     set ds9(array,x) 512
@@ -175,7 +181,10 @@ set ds9(app) [file tail [info nameofexecutable]]
 
 switch $ds9(wm) {
     x11 {
+	set ds9(foreground) black
 	set ds9(background) #d9d9d9
+	set ds9(plot,fg) black
+	set ds9(plot,bg) white
 
 	# standard widgets
  	option add {*background} $ds9(background)
@@ -199,11 +208,17 @@ switch $ds9(wm) {
 	ttk::style configure TLabel -borderwidth 2 -padding 1
     }
     aqua {
-	# dark mode bg #222 text #ddd
+	set ds9(foreground) black
 	set ds9(background) white
+	set ds9(plot,fg) black
+	set ds9(plot,bg) white
     }
     win32 {
+	set ds9(foreground) black
 	set ds9(background) white
+	set ds9(plot,fg) black
+	set ds9(plot,bg) white
+
 	ttk::style theme use xpnative
     }
 }
@@ -287,14 +302,17 @@ switch $ds9(wm) {
 	    QuitDS9
 	}
 
-	proc ::tk::mac::onHide {} {
-	}
-
-	proc ::tk::mac::onShow {} {
-	}
-
 	proc ::tk::mac::ShowHelp {} {
 	    HelpRef
+	}
+
+	proc ::tk::mac::DoScriptFile {args} {
+	}
+
+	proc ::tk::mac::DoScriptText {args} {
+	}
+
+	proc ::tk::mac::LaunchURL {} {
 	}
     }
     win32 {}
@@ -406,8 +424,28 @@ switch $ds9(wm) {
 	# and test for dark mode
 	update idletasks
 
-	::tk::unsupported::MacWindowStyle style $ds9(top) document "closeBox fullZoom collapseBox resizable"
-	# set rr [tk::unsupported::MacWindowStyle isdark $ds9(top)]
+	::tk::unsupported::MacWindowStyle style $ds9(top) document \
+	    "closeBox fullZoom collapseBox resizable"
+
+	# check for darkmode
+	if {[tk::unsupported::MacWindowStyle isdark $ds9(top)]} {
+	    # dark mode bg #222 text #ddd
+	    set ds9(foreground) #ddd
+	    set ds9(background) #222
+	    set ds9(plot,fg) $ds9(foreground)
+	    set ds9(plot,bg) $ds9(background)
+	} else {
+	    set ds9(foreground) black
+	    set ds9(background) white
+	    set ds9(plot,fg) black
+	    set ds9(plot,bg) white
+	}
+	global pds9
+	set ds9(bg) $ds9(background)
+	set pds9(bg) $ds9(background)
+	global pap
+	set pap(foreground) $ds9(plot,fg)
+	set pap(background) $ds9(plot,bg)
     }
 }
 

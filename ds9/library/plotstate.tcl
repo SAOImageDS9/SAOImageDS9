@@ -7,6 +7,7 @@ package provide DS9 1.0
 # Plot State
 proc PlotDefState {} {
     global pap
+    global ds9
 
     # per Canvas
     set pap(layout) grid
@@ -18,7 +19,9 @@ proc PlotDefState {} {
     set pap(layout,axis,x,log) 0
     set pap(layout,axis,x,flip) 0
 
-    set pap(background) white
+    set pap(foreground) $ds9(plot,fg)
+    set pap(background) $ds9(plot,bg)
+    set pap(grid,color) gray64
     set pap(bar,mode) normal
 
     set pap(graph,format) 1

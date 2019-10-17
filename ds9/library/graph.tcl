@@ -58,10 +58,9 @@ proc CreateGraphs {} {
 			     -plotbackground $ds9(plot,bg) \
 			     -foreground $ds9(plot,fg) \
 			     -highlightthickness 0 \
-			     -borderwidth 0 \
 			     -font [font actual TkDefaultFont] \
-			     -rm $igraph(gap,x) \
-			     -plotpadx -2 \
+			     -plotpadx 0 -plotpady 0 \
+ 			     -borderwidth 0
 			    ]
 
     $ds9(graph,horz) legend configure -hide yes
@@ -103,9 +102,8 @@ proc CreateGraphs {} {
 			     -highlightthickness 0 \
 			     -borderwidth 0 \
 			     -font [font actual TkDefaultFont] \
-			     -bm $igraph(gap,y) \
-			     -plotpady -2 \
 			    ]
+
     $ds9(graph,vert) legend configure -hide yes
     $ds9(graph,vert) crosshairs configure -color green
 

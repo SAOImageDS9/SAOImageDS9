@@ -154,10 +154,12 @@ proc PostScript {} {
 
     # reset graphs
     if {$view(graph,vert)} {
-	$ds9(graph,vert) configure -plotbackground $ds9(bg) -bg $ds9(bg)
+	$ds9(graph,vert) configure \
+	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
     }
     if {$view(graph,horz)} {
-	$ds9(graph,horz) configure -plotbackground $ds9(bg) -bg $ds9(bg)
+	$ds9(graph,horz) configure \
+	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
     }
 }
 
@@ -224,10 +226,12 @@ proc EPS {fn} {
 
     # reset graphs
     if {$view(graph,vert)} {
-	$ds9(graph,vert) configure -plotbackground $ds9(bg) -bg $ds9(bg)
+	$ds9(graph,vert) configure \
+	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
     }
     if {$view(graph,horz)} {
-	$ds9(graph,horz) configure -plotbackground $ds9(bg) -bg $ds9(bg)
+	$ds9(graph,horz) configure \
+	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
     }
 }
 

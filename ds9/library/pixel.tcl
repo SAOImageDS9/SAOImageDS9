@@ -82,11 +82,12 @@ proc PixelTableDialog {} {
 			 -variable dpixel \
 			 -usecommand 0 \
 			 -maxwidth 1200 \
+			 -fg $ds9(foreground) -bg $ds9(background) \
 			]
     
     $dpixel(tbl) tag col coord 0
     $dpixel(tbl) tag row coord 0
-    $dpixel(tbl) tag configure coord -foreground blue
+    $dpixel(tbl) tag configure coord -foreground green
     $dpixel(tbl) tag configure center -foreground red
 
     grid $f.t -sticky news

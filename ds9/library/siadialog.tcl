@@ -186,6 +186,7 @@ proc SIADialog {varname title url opts method action} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list SIASelectCmd $varname %s %S] \
+		      -fg $ds9(foreground) -bg $ds9(background) \
 		     ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

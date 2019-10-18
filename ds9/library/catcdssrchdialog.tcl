@@ -195,7 +195,8 @@ proc CATCDSSrchDialog {varname} {
 		      -selecttype row \
 		      -selectmode extended \
 		      -anchor w \
-		      -font [font actual TkDefaultFont]
+		      -font [font actual TkDefaultFont] \
+		      -fg $ds9(foreground) -bg $ds9(background) \
 		     ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] \

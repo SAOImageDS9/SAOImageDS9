@@ -206,7 +206,8 @@ proc CATSymDialog {parent} {
 		      -selectmode single \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list CATSymSelectCB $varname]
+		      -browsecommand [list CATSymSelectCB $varname] \
+		      -fg $ds9(foreground) -bg $ds9(background) \
 		 ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

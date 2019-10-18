@@ -305,6 +305,7 @@ proc ScaleDialog {} {
 
     # Graph
     set dscale(hist) [blt::graph $f.chart \
+			  -foreground $ds9(plot,fg) \
 			  -background $ds9(plot,bg) \
 			  -plotbackground $ds9(plot,bg) \
 			  -width 500 \
@@ -316,15 +317,21 @@ proc ScaleDialog {} {
 			 ]
 
     $dscale(hist) legend configure -hide yes
+
     $dscale(hist) xaxis configure -hide yes -grid no -ticklength 3 \
-	-tickfont [font actual TkDefaultFont]
+	-tickfont [font actual TkDefaultFont] \
+	-bg $ds9(plot,bg) -color $ds9(plot,fg) -titlecolor $ds9(plot,fg)
+
     $dscale(hist) yaxis configure -hide yes -grid yes -ticklength 3 \
-	-tickfont [font actual TkDefaultFont]
+	-tickfont [font actual TkDefaultFont] \
+	-bg $ds9(plot,bg) -color $ds9(plot,fg) -titlecolor $ds9(plot,fg)
+
     set dscale(xdata) histX
     set dscale(ydata) histY
     blt::vector create $dscale(xdata) $dscale(ydata)
-    $dscale(hist) element create bar1 -smooth step -areabackground black \
-	-xdata $dscale(xdata) -ydata $dscale(ydata)
+    $dscale(hist) element create bar1 -smooth step  \
+	-xdata $dscale(xdata) -ydata $dscale(ydata) \
+	-areabackground $ds9(plot,fg) -color $ds9(plot,fg)
 
     # Cut Lines
     $dscale(hist) marker bind min <B1-Motion> \

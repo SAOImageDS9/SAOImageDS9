@@ -53,10 +53,9 @@ struct ColorbarBaseOptions {
   int ticks;
 
   int colors;
-  int minColors;
-  int maxColors;
-  int privateCmap;
-  int privateColors;
+
+  XColor* bgColor;
+  XColor* fgColor;
 };
 
 class ColorbarBase : public Widget {

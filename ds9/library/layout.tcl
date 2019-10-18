@@ -119,7 +119,8 @@ proc CreateCanvas {} {
 
     set ds9(image) [ttk::frame $ds9(main).f]
     set ds9(canvas) [canvas $ds9(image).c -width $ww -height $hh \
-			 -highlightthickness 0 -insertofftime 0 -bg $ds9(bg)]
+			 -highlightthickness 0 -insertofftime 0 \
+			 -bg $ds9(background)]
     grid rowconfigure $ds9(image) 0 -weight 1
     grid columnconfigure $ds9(image) 0 -weight 1
     grid $ds9(canvas) -row 0 -column 0 -sticky news
@@ -127,7 +128,7 @@ proc CreateCanvas {} {
     # extra space for window tab
     if {$canvas(gap,bottom)>0} {
 	set f [frame $ds9(image).b -width 1 -height $canvas(gap,bottom) \
-		   -bg $ds9(bg)]
+		   -bg $ds9(background)]
 	grid $f -row 1 -column 0 -sticky ew
     }
 	

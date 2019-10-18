@@ -46,6 +46,9 @@ ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   ((ColorbarBaseOptions*)options)->fontWeight = NULL;
   ((ColorbarBaseOptions*)options)->fontSlant = NULL;
 
+  ((ColorbarBaseOptions*)options)->fgColor = NULL;
+  ((ColorbarBaseOptions*)options)->bgColor = NULL;
+
   xmap = NULL;
   colorCells = NULL;
   colorCount = 0;
@@ -312,7 +315,7 @@ int ColorbarBase::updatePixmap(const BBox& bb)
     updateGCs();
   }
       
-  XSetForeground(display, widgetGC, getColor("white"));
+  XSetForeground(display, widgetGC, opts->bgColor->pixel);
   XFillRectangle(display, pixmap, widgetGC, 0, 0, 
 		 options->width,options->height);
 
@@ -385,7 +388,7 @@ void ColorbarBase::renderGrid()
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   // box
-  XSetForeground(display, widgetGC, getColor("black"));
+  XSetForeground(display, widgetGC, opts->fgColor->pixel);
   if (!opts->orientation)
     XDrawRectangle(display, pixmap, widgetGC, 0, 0, 
 		   options->width-1, opts->size-1);
@@ -865,7 +868,7 @@ void ColorbarBase::macosxGrid()
 
   Matrix mm = Translate(originX, originY);
 
-  macosxColor(getXColor("black"));
+  macosxColor(opts->fgColor);
   macosxDash(NULL,0);
   macosxWidth(.5);
 
@@ -1032,7 +1035,7 @@ void ColorbarBase::win32Grid()
 
   Matrix mm = Translate(originX, originY);
 
-  win32Color(getXColor("black"));
+  win32Color(opts->fgColor);
   win32Dash(NULL,0);
   win32Width(.5);
 

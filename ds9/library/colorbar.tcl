@@ -70,7 +70,8 @@ proc CreateColorbar {} {
 	-anchor nw \
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
-	-times $ds9(times)
+	-times $ds9(times) \
+	-fg $ds9(foreground) -bg $ds9(background)
 
     $ds9(canvas) bind colorbar <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind colorbar <Enter> [list ColorbarEnter %x %y]

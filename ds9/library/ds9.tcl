@@ -76,11 +76,13 @@ proc DS9Def {} {
 
     set ds9(display) single
 
-    # ds9(foreground) color of GUI text
-    # ds9(background) color of GUI bg
-    # ds9(plot,fg) color of Plot fg
-    # ds9(plot,bg) color of Plot bg
-    # ds9(bg) color of canvas,frame bg
+    # ds9(foreground) color of fg text
+    # ds9(background) color of bg, canvas
+    # ds9(gui,fg) color of gui fg
+    # ds9(gui,bg) color of gui bg
+    # ds9(plot,fg) color of plot fg
+    # ds9(plot,bg) color of plot bg
+    # ds9(bg) color of frame bg
     set ds9(bg) white
 
     set ds9(array,x) 512
@@ -182,27 +184,29 @@ set ds9(app) [file tail [info nameofexecutable]]
 switch $ds9(wm) {
     x11 {
 	set ds9(foreground) black
-	set ds9(background) #d9d9d9
+	set ds9(background) white
+	set ds9(gui,fg) black
+	set ds9(gui,bg) #d9d9d9
 	set ds9(plot,fg) black
 	set ds9(plot,bg) white
 
 	# standard widgets
- 	option add {*background} $ds9(background)
+ 	option add {*background} $ds9(gui,bg)
 
 	# ttk widgets
-	ttk::style configure TFrame -background $ds9(background)
-	ttk::style configure TLabelframe -background $ds9(background)
-	ttk::style configure TLabelframe.Label -background $ds9(background)
-	ttk::style configure TLabel -background $ds9(background)
-	ttk::style configure TEntry -fieldbackground $ds9(background)
-	ttk::style configure TButton -background $ds9(background)
-	ttk::style configure TCheckbutton -background $ds9(background)
-	ttk::style configure TRadiobutton -background $ds9(background)
-	ttk::style configure TMenubutton -background $ds9(background)
-	ttk::style configure TScale -background $ds9(background)
-	ttk::style configure TScrollbar -background $ds9(background) \
-	    -troughcolor $ds9(background)
-	ttk::style configure TProgressbar -troughcolor $ds9(background)
+	ttk::style configure TFrame -background $ds9(gui,bg)
+	ttk::style configure TLabelframe -background $ds9(gui,bg)
+	ttk::style configure TLabelframe.Label -background $ds9(gui,bg)
+	ttk::style configure TLabel -background $ds9(gui,bg)
+	ttk::style configure TEntry -fieldbackground $ds9(gui,bg)
+	ttk::style configure TButton -background $ds9(gui,bg)
+	ttk::style configure TCheckbutton -background $ds9(gui,bg)
+	ttk::style configure TRadiobutton -background $ds9(gui,bg)
+	ttk::style configure TMenubutton -background $ds9(gui,bg)
+	ttk::style configure TScale -background $ds9(gui,bg)
+	ttk::style configure TScrollbar -background $ds9(gui,bg) \
+	    -troughcolor $ds9(gui,bg)
+	ttk::style configure TProgressbar -troughcolor $ds9(gui,bg)
 
 	ttk::style configure TEntry -padding 1
 	ttk::style configure TLabel -borderwidth 2 -padding 1
@@ -210,12 +214,16 @@ switch $ds9(wm) {
     aqua {
 	set ds9(foreground) black
 	set ds9(background) white
+	set ds9(gui,fg) black
+	set ds9(gui,bg) white
 	set ds9(plot,fg) black
 	set ds9(plot,bg) white
     }
     win32 {
 	set ds9(foreground) black
 	set ds9(background) white
+	set ds9(gui,fg) black
+	set ds9(gui,bg) white
 	set ds9(plot,fg) black
 	set ds9(plot,bg) white
 
@@ -432,11 +440,15 @@ switch $ds9(wm) {
 	    # dark mode bg #222 text #ddd
 	    set ds9(foreground) #ddd
 	    set ds9(background) #222
+	    set ds9(gui,fg) $ds9(foreground)
+	    set ds9(gui,bg) $ds9(background)
 	    set ds9(plot,fg) $ds9(foreground)
 	    set ds9(plot,bg) $ds9(background)
 	} else {
 	    set ds9(foreground) black
 	    set ds9(background) white
+	    set ds9(gui,fg) black
+	    set ds9(gui,bg) white
 	    set ds9(plot,fg) black
 	    set ds9(plot,bg) white
 	}

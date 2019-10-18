@@ -21,26 +21,30 @@ static Tk_CustomOption tagsOption = {
 static Tk_ConfigSpec magnifierTrueColorSpecs[] = {
 
   {TK_CONFIG_STRING, (char*)"-command", NULL, NULL, "magnifier",
-   Tk_Offset(WidgetOptions, cmdName), TK_CONFIG_OPTION_SPECIFIED, NULL},
+   Tk_Offset(MagnifierTrueOptions, cmdName), TK_CONFIG_OPTION_SPECIFIED, NULL},
   {TK_CONFIG_INT, (char*)"-x", NULL, NULL, "1",
-   Tk_Offset(WidgetOptions, x), TK_CONFIG_OPTION_SPECIFIED, NULL},
+   Tk_Offset(MagnifierTrueOptions, x), TK_CONFIG_OPTION_SPECIFIED, NULL},
   {TK_CONFIG_INT, (char*)"-y", NULL, NULL, "1",
-   Tk_Offset(WidgetOptions, y), TK_CONFIG_OPTION_SPECIFIED, NULL},
+   Tk_Offset(MagnifierTrueOptions, y), TK_CONFIG_OPTION_SPECIFIED, NULL},
   {TK_CONFIG_INT, (char*)"-width", NULL, NULL, "256",
-   Tk_Offset(WidgetOptions, width), TK_CONFIG_OPTION_SPECIFIED, NULL},
+   Tk_Offset(MagnifierTrueOptions, width), TK_CONFIG_OPTION_SPECIFIED, NULL},
   {TK_CONFIG_INT, (char*)"-height", NULL, NULL, "256",
-   Tk_Offset(WidgetOptions, height), TK_CONFIG_OPTION_SPECIFIED, NULL},
+   Tk_Offset(MagnifierTrueOptions, height), TK_CONFIG_OPTION_SPECIFIED, NULL},
   {TK_CONFIG_ANCHOR, (char*)"-anchor", NULL, NULL, "nw",
-   Tk_Offset(WidgetOptions, anchor), 0, NULL},
+   Tk_Offset(MagnifierTrueOptions, anchor), 0, NULL},
   {TK_CONFIG_CUSTOM, (char*)"-tags", NULL, NULL, NULL,
    0, TK_CONFIG_NULL_OK, &tagsOption},
 
   {TK_CONFIG_STRING, (char*)"-helvetica", NULL, NULL, "helvetica",
-   Tk_Offset(WidgetOptions, helvetica), 0, NULL},
+   Tk_Offset(MagnifierTrueOptions, helvetica), 0, NULL},
   {TK_CONFIG_STRING, (char*)"-courier", NULL, NULL, "courier",
-   Tk_Offset(WidgetOptions, courier), 0, NULL},
+   Tk_Offset(MagnifierTrueOptions, courier), 0, NULL},
   {TK_CONFIG_STRING, (char*)"-times", NULL, NULL, "times",
-   Tk_Offset(WidgetOptions, times), 0, NULL},
+   Tk_Offset(MagnifierTrueOptions, times), 0, NULL},
+
+  {TK_CONFIG_SYNONYM, "-bg", "background", NULL, NULL, 0, 0, NULL},
+  {TK_CONFIG_COLOR, "-background", "background", "Background", "white",
+   Tk_Offset(MagnifierTrueOptions, bgColor), 0, NULL},
 
   {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, NULL},
 };
@@ -49,7 +53,7 @@ static Tk_ConfigSpec magnifierTrueColorSpecs[] = {
 
 static Tk_ItemType magnifierTrueColorType = {
   (char*)"magnifiertruecolor",         // name
-  sizeof(WidgetOptions),        // size
+  sizeof(MagnifierTrueOptions),        // size
   MagnifierTrueColorCreateProc, // configProc
   magnifierTrueColorSpecs,      // configSpecs
   WidgetConfigProc,             // configProc
@@ -105,16 +109,22 @@ MagnifierTrueColor::MagnifierTrueColor(Tcl_Interp* i, Tk_Canvas c,
 
 void MagnifierTrueColor::clearPixmap()
 {
+  if (0) {
   XImage* xmap = XGetImage(display, pixmap, 0, 0, options->width, 
 			   options->height, AllPlanes, ZPixmap);
   if (!xmap) {
     internalError("MagnifierTrueColor: Unable to Create XImage");
     return;
   }
-
   memset(xmap->data, 255, xmap->bytes_per_line * xmap->height);
-
   TkPutImage(NULL, 0, display, pixmap, widgetGC, xmap, 
-	     0, 0, 0, 0, options->width, options->height);
+  	     0, 0, 0, 0, options->width, options->height);
   XDestroyImage(xmap);
+  }
+
+  MagnifierTrueOptions* opts = (MagnifierTrueOptions*)options;
+
+  XSetForeground(display, widgetGC, opts->bgColor->pixel);
+  XFillRectangle(display, pixmap, widgetGC, 0, 0, \
+		 options->width,options->height);
 }

@@ -22,7 +22,8 @@ proc CreateMagnifier {} {
 	-tag magnifier \
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
-	-times $ds9(times)
+	-times $ds9(times) \
+	-bg $ds9(background)
 }
 
 proc MagnifierDef {} {

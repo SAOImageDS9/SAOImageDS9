@@ -38,6 +38,8 @@ Magnifier::Magnifier(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 {
   thumbnail = 0;
   needsUpdate = 0;
+
+  ((MagnifierTrueOptions*)options)->bgColor = NULL;
 }
 
 int Magnifier::parse(istringstream& istr)

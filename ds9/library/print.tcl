@@ -130,14 +130,6 @@ proc PostScript {} {
 	$ff postscript resolution $res
     }
 
-    # graphs
-    if {$view(graph,vert)} {
-	$ds9(graph,vert) configure -plotbackground white -bg white
-    }
-    if {$view(graph,horz)} {
-	$ds9(graph,horz) configure -plotbackground white -bg white
-    }
-
     # now invoke canvas postscript command
     if {[catch {eval $ds9(canvas) postscript $options} rr]} {
 	Error "[msgcat::mc {A postscript generation error has occurred}] $rr"
@@ -150,16 +142,6 @@ proc PostScript {} {
 		close $channel
 	    }
 	}
-    }
-
-    # reset graphs
-    if {$view(graph,vert)} {
-	$ds9(graph,vert) configure \
-	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
-    }
-    if {$view(graph,horz)} {
-	$ds9(graph,horz) configure \
-	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
     }
 }
 
@@ -211,27 +193,9 @@ proc EPS {fn} {
 	$ff postscript resolution $resolution
     }
 
-    # graphs
-    if {$view(graph,vert)} {
-	$ds9(graph,vert) configure -plotbackground white -bg white
-    }
-    if {$view(graph,horz)} {
-	$ds9(graph,horz) configure -plotbackground white -bg white
-    }
-
     # now invoke canvas postscript command
     if {[catch {eval $ds9(canvas) postscript $options} rr]} {
 	Error "[msgcat::mc {A postscript generation error has occurred}] $rr"
-    }
-
-    # reset graphs
-    if {$view(graph,vert)} {
-	$ds9(graph,vert) configure \
-	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
-    }
-    if {$view(graph,horz)} {
-	$ds9(graph,horz) configure \
-	    -plotbackground $ds9(plot,bg) -bg $ds9(plot,bg)
     }
 }
 

@@ -210,25 +210,10 @@ void Contour::ps(PSColorSpace mode)
   if (!lvertex_.head())
     return;
 
+  base_->renderPSColor(mode, base_->getXColor(parent_->colorName_));
+
   ostringstream str;
 
-  switch (mode) {
-  case BW:
-  case GRAY:
-    psColorGray(base_->getXColor(parent_->colorName_), str);
-    str << " setgray";
-    break;
-  case RGB:
-    psColorRGB(base_->getXColor(parent_->colorName_), str);
-    str << " setrgbcolor";
-    break;
-  case CMYK:
-    psColorCMYK(base_->getXColor(parent_->colorName_), str);
-    str << " setcmykcolor";
-    break;
-  }
-  str << endl;
-  
   if (!parent_->dash_)
     str << parent_->lineWidth_ << " setlinewidth" << endl << "[] 0 setdash";
   else {

@@ -780,16 +780,16 @@ void Widget::renderPSColor(PSColorSpace mode, XColor* clr)
   ostringstream str;
 
   switch (mode) {
-  case Widget::BW:
-  case Widget::GRAY:
+  case BW:
+  case GRAY:
     psColorGray(clr, str);
     str << " setgray";
     break;
-  case Widget::RGB:
+  case RGB:
     psColorRGB(clr, str);
     str << " setrgbcolor";
     break;
-  case Widget::CMYK:
+  case CMYK:
     psColorCMYK(clr, str);
     str << " setcmykcolor";
     break;

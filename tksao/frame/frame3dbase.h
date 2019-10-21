@@ -104,7 +104,6 @@ class Frame3dBase : public Base {
   Vector3d imageCenter3d(FrScale::SecMode);
   Vector3d imageSize3d(FrScale::SecMode);
 
-  void psColor(PSColorSpace, const char*);
   void psLine(Vector&, Vector&, int);
   void psWidth(int);
   void psGraphics(PSColorSpace mode);

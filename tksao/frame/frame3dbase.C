@@ -571,28 +571,6 @@ Vector3d Frame3dBase::imageSize3d(FrScale::SecMode mode )
 		   zparams->zmax-zparams->zmin);
 }
 
-void Frame3dBase::psColor(PSColorSpace mode, const char* color)
-{
-  ostringstream str;
-  switch (mode) {
-  case BW:
-  case GRAY:
-    psColorGray(getXColor(color), str);
-    str << " setgray";
-    break;
-  case RGB:
-    psColorRGB(getXColor(color), str);
-    str << " setrgbcolor";
-    break;
-  case CMYK:
-    psColorCMYK(getXColor(color), str);
-    str << " setcmykcolor";
-    break;
-  }
-  str << endl << ends;
-  Tcl_AppendResult(interp, str.str().c_str(), NULL);
-}  
-
 void Frame3dBase::psLine(Vector& ss, Vector& tt, int dd)
 {
   ostringstream str;
@@ -638,7 +616,7 @@ void Frame3dBase::psBorder(PSColorSpace mode)
   for (int ii=0; ii<8; ii++)
     uu[ii] = Vector(vv[ii])*widgetToCanvas;
 
-  psColor(mode, borderColorName_);
+  renderPSColor(mode, getXColor(borderColorName_));
   psWidth(1);
 
   // front
@@ -676,7 +654,7 @@ void Frame3dBase::psCompass(PSColorSpace mode)
   Vector y = Vector(yy)*widgetToCanvas;
   Vector z = Vector(zz)*widgetToCanvas;
 
-  psColor(mode, compassColorName_);
+  renderPSColor(mode, getXColor(compassColorName_));
   psWidth(1);
 
   psLine(o,x,0);
@@ -690,7 +668,7 @@ void Frame3dBase::psHighlite(PSColorSpace mode)
   int rr[4];
   calcHighlite(Coord::CANVAS,vv,rr);
 
-  psColor(mode, highliteColorName_);
+  renderPSColor(mode, getXColor(highliteColorName_));
   psWidth(1);
   psLine(vv[0],vv[1],rr[0]);
   psLine(vv[1],vv[2],rr[1]);

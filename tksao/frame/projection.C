@@ -122,7 +122,7 @@ void Projection::renderPS(PSColorSpace mode)
 
 void Projection::renderPSGC(PSColorSpace mode)
 {
-  parent->renderPSColor(mode, parent->getXColor(colorName));
+  parent->psColor(mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

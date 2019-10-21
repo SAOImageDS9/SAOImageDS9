@@ -210,7 +210,7 @@ void Contour::ps(PSColorSpace mode)
   if (!lvertex_.head())
     return;
 
-  base_->renderPSColor(mode, base_->getXColor(parent_->colorName_));
+  base_->psColor(mode, base_->getXColor(parent_->colorName_));
 
   ostringstream str;
 

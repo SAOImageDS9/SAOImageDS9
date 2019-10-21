@@ -176,7 +176,7 @@ void Ruler::renderPS(PSColorSpace mode)
 
 void Ruler::renderPSGC(PSColorSpace mode)
 {
-  parent->renderPSColor(mode, parent->getXColor(colorName));
+  parent->psColor(mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

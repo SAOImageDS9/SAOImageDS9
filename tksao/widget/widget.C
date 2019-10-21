@@ -775,7 +775,7 @@ Vector Widget::psOrigin()
   return Vector(xx,yy);
 }
 
-void Widget::renderPSColor(PSColorSpace mode, XColor* clr)
+void Widget::psColor(PSColorSpace mode, XColor* clr)
 {
   ostringstream str;
 

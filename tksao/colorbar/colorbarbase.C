@@ -486,7 +486,7 @@ int ColorbarBase::postscriptProc(int prepass)
 
   // bg
   //options->width,options->height);
-  //  renderPSColor(mode,opts->bgColor)
+  //  psColor(mode,opts->bgColor)
   //  Tcl_AppendResult(interp, " setrgbcolor\n", NULL);
   //  Tcl_AppendResult(interp, "newpath\n", NULL);
   //  Tcl_AppendResult(interp, " moveto\n", NULL);

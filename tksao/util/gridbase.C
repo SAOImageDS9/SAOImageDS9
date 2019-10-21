@@ -261,7 +261,7 @@ int GridBase::psText(const char* txt, float x, float y,
 
 void GridBase::psColor(Attribute* attr)
 {
-  parent_->renderPSColor(mode_, parent_->getXColor(attr->colorName()));
+  parent_->psColor(mode_, parent_->getXColor(attr->colorName()));
 }
 
 #ifdef MAC_OSX_TK

@@ -616,7 +616,7 @@ void Frame3dBase::psBorder(PSColorSpace mode)
   for (int ii=0; ii<8; ii++)
     uu[ii] = Vector(vv[ii])*widgetToCanvas;
 
-  renderPSColor(mode, getXColor(borderColorName_));
+  psColor(mode, getXColor(borderColorName_));
   psWidth(1);
 
   // front
@@ -654,7 +654,7 @@ void Frame3dBase::psCompass(PSColorSpace mode)
   Vector y = Vector(yy)*widgetToCanvas;
   Vector z = Vector(zz)*widgetToCanvas;
 
-  renderPSColor(mode, getXColor(compassColorName_));
+  psColor(mode, getXColor(compassColorName_));
   psWidth(1);
 
   psLine(o,x,0);
@@ -668,7 +668,7 @@ void Frame3dBase::psHighlite(PSColorSpace mode)
   int rr[4];
   calcHighlite(Coord::CANVAS,vv,rr);
 
-  renderPSColor(mode, getXColor(highliteColorName_));
+  psColor(mode, getXColor(highliteColorName_));
   psWidth(1);
   psLine(vv[0],vv[1],rr[0]);
   psLine(vv[1],vv[2],rr[1]);

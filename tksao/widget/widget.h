@@ -164,7 +164,7 @@ class Widget {
   void warp(Vector&);
   void warpTo(Vector&);
 
-  void renderPSColor(PSColorSpace mode, XColor* clr);
+  void psColor(PSColorSpace mode, XColor* clr);
 
   // Required Canvas Functions
   int coordProc(int, char**);

@@ -250,7 +250,7 @@ void Compass::renderPS(PSColorSpace mode)
 
 void Compass::renderPSGC(PSColorSpace mode)
 {
-  parent->renderPSColor(mode, parent->getXColor(colorName));
+  parent->psColor(mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

@@ -558,7 +558,7 @@ void BaseEllipse::renderPSInclude(PSColorSpace mode)
 					-annuli_[numAnnuli_-1][1]*sin(theta)),
 				 Coord::CANVAS);
 
-    parent->renderPSColor(mode, parent->getXColor("red"));
+    parent->psColor(mode, parent->getXColor("red"));
 
     ostringstream str;
     str << "newpath " 

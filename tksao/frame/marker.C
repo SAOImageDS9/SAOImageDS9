@@ -386,7 +386,7 @@ void Marker::ps(PSColorSpace mode, int tt)
 void Marker::renderPSInclude(PSColorSpace mode)
 {
   if (!(properties & INCLUDE)) {
-    parent->renderPSColor(mode, parent->getXColor("red"));
+    parent->psColor(mode, parent->getXColor("red"));
 
     Vector ll = handle[0];
     Vector ur = handle[2];
@@ -404,7 +404,7 @@ void Marker::renderPSInclude(PSColorSpace mode)
 void Marker::renderPSText(PSColorSpace mode)
 {
   if (text && *text && psfont_) {
-    parent->renderPSColor(mode, parent->getXColor(colorName));
+    parent->psColor(mode, parent->getXColor(colorName));
 
     ostringstream str;
 
@@ -448,7 +448,7 @@ void Marker::renderPSArrow(const Vector& p1, const Vector& p2,
 void Marker::renderPSGC(PSColorSpace mode)
 {
   // set width, color, dash
-  parent->renderPSColor(mode, parent->getXColor(colorName));
+  parent->psColor(mode, parent->getXColor(colorName));
   if ((properties & SOURCE) && !(properties & DASH))
     renderPSLineNoDash();
   else

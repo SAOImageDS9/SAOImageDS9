@@ -125,7 +125,6 @@ protected:
   virtual void renderPSGC(PSColorSpace);
   virtual void renderPSLineDash();
   void renderPSLineNoDash();
-  void renderPSColor(int, XColor*);
 
 #ifdef MAC_OSX_TK
   virtual void renderMACOSX() =0;

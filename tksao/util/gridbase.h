@@ -7,6 +7,7 @@
 
 #include <tk.h>
 
+#include "widget.h"
 #include "vector.h"
 
 class Widget;
@@ -28,7 +29,7 @@ class GridBase {
   Pixmap pixmap_;
 
   Matrix matrix_;
-  int mode_;
+  Widget::PSColorSpace mode_;
 
  protected:
   int x11Line(int n, float* x, float* y);

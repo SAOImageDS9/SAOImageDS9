@@ -4,7 +4,6 @@
 
 #include "gridbase.h"
 #include "attribute.h"
-#include "widget.h"
 #include "util.h"
 
 EXTERN void TkDrawAngledChars(Display *display,
@@ -262,24 +261,7 @@ int GridBase::psText(const char* txt, float x, float y,
 
 void GridBase::psColor(Attribute* attr)
 {
-  ostringstream str;
-  switch ((Widget::PSColorSpace)mode_) {
-  case Widget::BW:
-  case Widget::GRAY:
-    psColorGray(parent_->getXColor(attr->colorName()), str);
-    str << " setgray";
-    break;
-  case Widget::RGB:
-    psColorRGB(parent_->getXColor(attr->colorName()), str);
-    str << " setrgbcolor";
-    break;
-  case Widget::CMYK:
-    psColorCMYK(parent_->getXColor(attr->colorName()), str);
-    str << " setcmykcolor";
-    break;
-  }
-  str << endl << ends;
-  Tcl_AppendResult(parent_->getInterp(), str.str().c_str(), NULL);
+  parent_->renderPSColor(mode_, parent_->getXColor(attr->colorName()));
 }
 
 #ifdef MAC_OSX_TK

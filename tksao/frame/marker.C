@@ -386,7 +386,7 @@ void Marker::ps(int mode, int tt)
 void Marker::renderPSInclude(int mode)
 {
   if (!(properties & INCLUDE)) {
-    renderPSColor(mode, parent->getXColor("red"));
+    parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor("red"));
 
     Vector ll = handle[0];
     Vector ur = handle[2];
@@ -404,7 +404,7 @@ void Marker::renderPSInclude(int mode)
 void Marker::renderPSText(int mode)
 {
   if (text && *text && psfont_) {
-    renderPSColor(mode, parent->getXColor(colorName));
+    parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
 
     ostringstream str;
 
@@ -448,7 +448,7 @@ void Marker::renderPSArrow(const Vector& p1, const Vector& p2,
 void Marker::renderPSGC(int mode)
 {
   // set width, color, dash
-  renderPSColor(mode, parent->getXColor(colorName));
+  parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
   if ((properties & SOURCE) && !(properties & DASH))
     renderPSLineNoDash();
   else
@@ -473,6 +473,7 @@ void Marker::renderPSLineNoDash()
   Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
 }
 
+/*
 void Marker::renderPSColor(int mode, XColor* clr)
 {
   ostringstream str;
@@ -496,6 +497,7 @@ void Marker::renderPSColor(int mode, XColor* clr)
 
   Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
 }
+*/
 
 #ifdef MAC_OSX_TK
 void Marker::macosx(int tt)

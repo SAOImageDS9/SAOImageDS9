@@ -250,7 +250,7 @@ void Compass::renderPS(int mode)
 
 void Compass::renderPSGC(int mode)
 {
-  renderPSColor(mode, parent->getXColor(colorName));
+  parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

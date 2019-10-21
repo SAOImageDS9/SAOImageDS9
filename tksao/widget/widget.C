@@ -775,37 +775,26 @@ Vector Widget::psOrigin()
   return Vector(xx,yy);
 }
 
-// this routine attemps a work around for a problems with level 2 postscript
-// and other software such as dvips and assemble
-
-/*
-void Widget::psFix(ostringstream& ostr)
+void Widget::renderPSColor(PSColorSpace mode, XColor* clr)
 {
-  string str = ostr.str();
-  const char* buf = str.c_str();
-  int size = str.length();
-  char* a = (char*)buf;
+  ostringstream str;
 
-  while (*a && a<buf+size) {
-    // dvips version 5.55. Basically, we can't have %% at the start of a line
-    if (*a=='\n' && *(a+1)=='%' && *(a+2)=='%') {
-      // reverse the order so that we don't have a %% at the begining of a line
-      *a++ = '%';
-      *a++ = '%';
-      *a++ = '\n';
-    }
-
-    // no one uses this anymore
-    // assemble. Basically, we can't have % at the start of a line
-    else if (*a=='\n' && *(a+1)=='%') {
-      // reverse the order so that we don't have a % at the begining of a line
-      *a++ = '%';
-      *a++ = '\n';
-    }
-
-    a++;
+  switch (mode) {
+  case Widget::BW:
+  case Widget::GRAY:
+    psColorGray(clr, str);
+    str << " setgray";
+    break;
+  case Widget::RGB:
+    psColorRGB(clr, str);
+    str << " setrgbcolor";
+    break;
+  case Widget::CMYK:
+    psColorCMYK(clr, str);
+    str << " setcmykcolor";
+    break;
   }
+  str << endl << ends;
 
-  ostr.str(str);
+  Tcl_AppendResult(interp, (char*)str.str().c_str(), NULL);
 }
-*/

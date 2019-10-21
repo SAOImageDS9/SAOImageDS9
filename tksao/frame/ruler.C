@@ -176,7 +176,7 @@ void Ruler::renderPS(int mode)
 
 void Ruler::renderPSGC(int mode)
 {
-  renderPSColor(mode, parent->getXColor(colorName));
+  parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

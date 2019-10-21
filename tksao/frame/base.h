@@ -426,7 +426,7 @@ public:
   void psCrosshair(PSColorSpace);
   virtual void psGraphics(PSColorSpace) {}
   void psImage(ostream&, Filter&, int, int, float);
-  void psMarkers(List<Marker>*, int);
+  void psMarkers(List<Marker>*, Widget::PSColorSpace);
   Matrix psMatrix(float scale, int width, int height);
   void pushMatrices(FitsImage*, Matrix&);
   void pushMagnifierMatrices(FitsImage*);

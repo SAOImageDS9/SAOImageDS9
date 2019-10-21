@@ -9,6 +9,7 @@
 #include "vector3d.h"
 #include "list.h"
 #include "coord.h"
+#include "widget.h"
 
 class FitsImage;
 class Base;
@@ -42,7 +43,7 @@ class ContourLevel {
 
   void list(ostream& str, FitsImage*, Coord::CoordSystem, Coord::SkyFrame);
   void render(Pixmap, Coord::InternalSystem, const BBox&);
-  void ps(int);
+  void ps(Widget::PSColorSpace);
   void updateCoords(const Matrix&);
 #ifdef MAC_OSX_TK
   void macosx();
@@ -83,7 +84,7 @@ class Contour {
 
   void list(ostream& str, FitsImage*, Coord::CoordSystem, Coord::SkyFrame);
   void render(Pixmap, Coord::InternalSystem, const BBox&);
-  void ps(int);
+  void ps(Widget::PSColorSpace);
   void updateCoords(const Matrix&);
 #ifdef MAC_OSX_TK
   void macosx();

@@ -52,10 +52,10 @@ void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void Composite::ps(int mode, int tt)
+void Composite::ps(Widget::PSColorSpace mode, int tt)
 {
   if (tt)
-    renderPSText((Widget::PSColorSpace)mode);
+    renderPSText(mode);
 
   Marker* mk=members.head();
   while (mk) {

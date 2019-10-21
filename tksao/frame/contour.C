@@ -90,7 +90,7 @@ void ContourLevel::render(Pixmap pmap, Coord::InternalSystem sys,
   }
 }
 
-void ContourLevel::ps(int mode)
+void ContourLevel::ps(Widget::PSColorSpace mode)
 {
   if (lcontour_.head()) {
     do
@@ -205,14 +205,14 @@ void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)
   }
 }
 
-void Contour::ps(int mode)
+void Contour::ps(Widget::PSColorSpace mode)
 {
   if (!lvertex_.head())
     return;
 
   ostringstream str;
 
-  switch ((Widget::PSColorSpace)mode) {
+  switch (mode) {
   case Widget::BW:
   case Widget::GRAY:
     psColorGray(base_->getXColor(parent_->colorName_), str);

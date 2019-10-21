@@ -374,13 +374,13 @@ void Marker::renderXLineNoDash(GC lgc)
   XSetLineAttributes(display, lgc, ww, LineSolid, CapButt, JoinMiter);
 }
 
-void Marker::ps(int mode, int tt)
+void Marker::ps(Widget::PSColorSpace mode, int tt)
 {
   if (tt)
-    renderPSText((Widget::PSColorSpace)mode);
+    renderPSText(mode);
 
-  renderPS((Widget::PSColorSpace)mode);
-  renderPSInclude((Widget::PSColorSpace)mode);
+  renderPS(mode);
+  renderPSInclude(mode);
 }
 
 void Marker::renderPSInclude(Widget::PSColorSpace mode)

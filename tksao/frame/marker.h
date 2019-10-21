@@ -212,7 +212,7 @@ protected:
   virtual Vector bckMap(const Vector&, Coord::InternalSystem);
 
   virtual void x11(Drawable, Coord::InternalSystem, int, HandleMode);
-  virtual void ps(int,int);
+  virtual void ps(Widget::PSColorSpace,int);
 #ifdef MAC_OSX_TK
   virtual void macosx(int);
 #endif

@@ -95,7 +95,7 @@ void Bpanda::renderX(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void Bpanda::renderPS(int mode)
+void Bpanda::renderPS(Widget::PSColorSpace mode)
 {
   BaseBox::renderPS(mode);
 

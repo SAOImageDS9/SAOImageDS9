@@ -28,9 +28,9 @@ private:
   void renderXInclude(Drawable, Coord::InternalSystem, RenderMode) {}
   GC renderXGC(RenderMode);
 
-  void renderPS(int);
-  void renderPSInclude(int) {}
-  void renderPSGC(int);
+  void renderPS(Widget::PSColorSpace);
+  void renderPSInclude(Widget::PSColorSpace) {}
+  void renderPSGC(Widget::PSColorSpace);
 
 #ifdef MAC_OSX_TK
   void renderMACOSX();

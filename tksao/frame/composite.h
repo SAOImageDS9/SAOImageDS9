@@ -14,7 +14,7 @@ class Composite : public Marker {
   int global;
 
   void renderX(Drawable, Coord::InternalSystem, RenderMode) {}
-  void renderPS(int mode) {}
+  void renderPS(Widget::PSColorSpace mode) {}
 #ifdef MAC_OSX_TK
   void renderMACOSX() {}
 #endif

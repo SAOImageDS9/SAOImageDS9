@@ -130,7 +130,7 @@ GC Compass::renderXGC(RenderMode mode)
   return gc;
 }
 
-void Compass::renderPS(int mode)
+void Compass::renderPS(Widget::PSColorSpace mode)
 {
   renderPSGC(mode);
 
@@ -248,9 +248,9 @@ void Compass::renderPS(int mode)
   }
 }
 
-void Compass::renderPSGC(int mode)
+void Compass::renderPSGC(Widget::PSColorSpace mode)
 {
-  parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
+  parent->renderPSColor(mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

@@ -21,8 +21,8 @@ private:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   GC renderXGC(RenderMode);
 
-  void renderPS(int);
-  void renderPSGC(int);
+  void renderPS(Widget::PSColorSpace);
+  void renderPSGC(Widget::PSColorSpace);
 
 #ifdef MAC_OSX_TK
   void renderMACOSX();

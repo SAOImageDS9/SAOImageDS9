@@ -14,6 +14,7 @@
 #include "tag.h"
 #include "coord.h"
 #include "xml.h"
+#include "widget.h"
 
 #define POINTSIZE 11
 
@@ -117,11 +118,11 @@ protected:
   virtual void renderXLineDash(GC);
   void renderXLineNoDash(GC);
 
-  virtual void renderPS(int mode) =0;
-  virtual void renderPSInclude(int);
-  virtual void renderPSText(int);
+  virtual void renderPS(Widget::PSColorSpace mode) =0;
+  virtual void renderPSInclude(Widget::PSColorSpace);
+  virtual void renderPSText(Widget::PSColorSpace);
   void renderPSArrow(const Vector&, const Vector&, Coord::InternalSystem);
-  virtual void renderPSGC(int);
+  virtual void renderPSGC(Widget::PSColorSpace);
   virtual void renderPSLineDash();
   void renderPSLineNoDash();
   void renderPSColor(int, XColor*);

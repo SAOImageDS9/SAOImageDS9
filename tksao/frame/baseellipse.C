@@ -384,7 +384,7 @@ void BaseEllipse::renderXInclude(Drawable drawable,
 
 // renderPS
 
-void BaseEllipse::renderPS(int mode) {
+void BaseEllipse::renderPS(Widget::PSColorSpace mode) {
   Vector r = annuli_[numAnnuli_-1];
   Vector z = parent->zoom();
 
@@ -413,7 +413,7 @@ void BaseEllipse::renderPSFill()
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-void BaseEllipse::renderPSCircle(int mode)
+void BaseEllipse::renderPSCircle(Widget::PSColorSpace mode)
 {
   renderPSGC(mode);
 
@@ -457,7 +457,7 @@ void BaseEllipse::renderPSCircle(int mode)
   }
 }
 
-void BaseEllipse::renderPSEllipse(int mode)
+void BaseEllipse::renderPSEllipse(Widget::PSColorSpace mode)
 {
   renderPSGC(mode);
 
@@ -547,7 +547,7 @@ void BaseEllipse::renderPSEllipseArc(double a1, double a2, Vector& rr)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-void BaseEllipse::renderPSInclude(int mode)
+void BaseEllipse::renderPSInclude(Widget::PSColorSpace mode)
 {
   if (!(properties & INCLUDE)) {
     double theta = degToRad(45);
@@ -558,7 +558,7 @@ void BaseEllipse::renderPSInclude(int mode)
 					-annuli_[numAnnuli_-1][1]*sin(theta)),
 				 Coord::CANVAS);
 
-    parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor("red"));
+    parent->renderPSColor(mode, parent->getXColor("red"));
 
     ostringstream str;
     str << "newpath " 

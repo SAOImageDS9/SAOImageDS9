@@ -16,7 +16,7 @@ class Polygon : public BasePolygon {
  protected:
   int isInRef(const Vector& v);
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
-  void renderPS(int);
+  void renderPS(Widget::PSColorSpace);
 #ifdef MAC_OSX_TK
   void renderMACOSX();
 #endif

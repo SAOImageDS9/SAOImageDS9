@@ -64,7 +64,7 @@ void Line::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode mode
   XDrawLine(display, drawable, lgc, aa[0], aa[1], bb[0], bb[1]);
 }
 
-void Line::renderPS(int mode)
+void Line::renderPS(Widget::PSColorSpace mode)
 {
   renderPSGC(mode);
 

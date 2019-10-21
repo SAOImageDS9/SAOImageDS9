@@ -77,7 +77,7 @@ GC Projection::renderXGC(RenderMode mode)
   }
 }
 
-void Projection::renderPS(int mode)
+void Projection::renderPS(Widget::PSColorSpace mode)
 {
   renderPSGC(mode);
 
@@ -120,9 +120,9 @@ void Projection::renderPS(int mode)
   }
 }
 
-void Projection::renderPSGC(int mode)
+void Projection::renderPSGC(Widget::PSColorSpace mode)
 {
-  parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
+  parent->renderPSColor(mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

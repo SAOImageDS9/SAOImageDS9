@@ -28,11 +28,11 @@ class BaseEllipse : public BaseMarker {
 			 double, double, Vector&);
   void renderXInclude(Drawable, Coord::InternalSystem, RenderMode);
 
-  void renderPSCircle(int);
-  void renderPSEllipse(int);
+  void renderPSCircle(Widget::PSColorSpace);
+  void renderPSEllipse(Widget::PSColorSpace);
   void renderPSEllipsePrep(double, double, double, double, Vector&);
   void renderPSEllipseArc(double, double, Vector&);
-  void renderPSInclude(int);
+  void renderPSInclude(Widget::PSColorSpace);
 
 #ifdef MAC_OSX_TK
   void renderMACOSXCircle();
@@ -57,7 +57,7 @@ class BaseEllipse : public BaseMarker {
   virtual void renderXBezierDraw(Drawable, GC, RenderMode);
   void renderXBezierDashDraw(Drawable, GC);
 
-  void renderPS(int);
+  void renderPS(Widget::PSColorSpace);
   virtual void renderPSDraw();
   void renderPSFill();
 

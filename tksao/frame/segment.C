@@ -54,7 +54,7 @@ void Segment::renderX(Drawable drawable, Coord::InternalSystem sys,
   } while (vertex.next());
 }
 
-void Segment::renderPS(int mode)
+void Segment::renderPS(Widget::PSColorSpace mode)
 {
   renderPSGC(mode);
 

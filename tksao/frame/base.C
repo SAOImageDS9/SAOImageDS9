@@ -1008,7 +1008,7 @@ void Base::psCrosshair(PSColorSpace mode)
 
   {
     ostringstream str;
-    switch ((PSColorSpace)mode) {
+    switch (mode) {
     case BW:
     case GRAY:
       psColorGray(getXColor("green"), str);

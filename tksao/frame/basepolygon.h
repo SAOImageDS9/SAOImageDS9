@@ -14,7 +14,7 @@ class BasePolygon : public Marker {
 
  protected:
   virtual void renderX(Drawable, Coord::InternalSystem, RenderMode) =0;
-  virtual void renderPS(int) =0;
+  virtual void renderPS(Widget::PSColorSpace) =0;
 #ifdef MAC_OSX_TK
   virtual void renderMACOSX() =0;
 #endif

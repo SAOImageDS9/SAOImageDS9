@@ -16,9 +16,9 @@ class Text : public Marker {
   void renderXText(Drawable, Coord::InternalSystem, RenderMode) {}
   void renderXInclude(Drawable, Coord::InternalSystem, RenderMode) {}
 
-  void renderPS(int);
-  void renderPSText(int) {}
-  void renderPSInclude(int) {}
+  void renderPS(Widget::PSColorSpace);
+  void renderPSText(Widget::PSColorSpace) {}
+  void renderPSInclude(Widget::PSColorSpace) {}
 
 #ifdef MAC_OSX_TK
   void renderMACOSX();

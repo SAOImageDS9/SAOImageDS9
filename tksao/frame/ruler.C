@@ -101,7 +101,7 @@ GC Ruler::renderXGC(RenderMode mode)
   return gc;
 }
 
-void Ruler::renderPS(int mode)
+void Ruler::renderPS(Widget::PSColorSpace mode)
 {
   renderPSGC(mode);
 
@@ -174,9 +174,9 @@ void Ruler::renderPS(int mode)
   }
 }
 
-void Ruler::renderPSGC(int mode)
+void Ruler::renderPSGC(Widget::PSColorSpace mode)
 {
-  parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
+  parent->renderPSColor(mode, parent->getXColor(colorName));
   renderPSLineNoDash();
 }
 

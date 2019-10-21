@@ -55,7 +55,7 @@ void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
 void Composite::ps(int mode, int tt)
 {
   if (tt)
-    renderPSText(mode);
+    renderPSText((Widget::PSColorSpace)mode);
 
   Marker* mk=members.head();
   while (mk) {

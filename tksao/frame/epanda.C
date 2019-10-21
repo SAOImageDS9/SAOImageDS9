@@ -95,7 +95,7 @@ void Epanda::renderX(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void Epanda::renderPS(int mode)
+void Epanda::renderPS(Widget::PSColorSpace mode)
 {
   BaseEllipse::renderPS(mode);
 

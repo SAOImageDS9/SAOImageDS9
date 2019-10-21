@@ -207,15 +207,15 @@ map	: STRING {cb->mapCmd($1);}
 	;
 
 postscript : COLORSPACE_ pscolorspace 
-	  {cb->psColorSpaceCmd((Widget::PSColorSpace)$2);}
+        {cb->psColorSpaceCmd((PSColorSpace)$2);}
 	| LEVEL_ INT {cb->psLevelCmd($2);}
 	| RESOLUTION_ INT {cb->psResolutionCmd($2);}
 	;
 
-pscolorspace : BW_ {$$ = Widget::BW;}
-	| GRAY_ {$$ = Widget::GRAY;}
-	| RGB_ {$$ = Widget::RGB;}
-	| CMYK_ {$$ = Widget::CMYK;}
+pscolorspace : BW_ {$$ = BW;}
+	| GRAY_ {$$ = GRAY;}
+	| RGB_ {$$ = RGB;}
+	| CMYK_ {$$ = CMYK;}
 	;
 
 tag	: DELETE_ tagdelete

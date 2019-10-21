@@ -59,7 +59,7 @@ void Text::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode mode
   }
 }
 
-void Text::renderPS(Widget::PSColorSpace mode)
+void Text::renderPS(PSColorSpace mode)
 {
   renderPSGC(mode);
 

@@ -374,7 +374,7 @@ void Marker::renderXLineNoDash(GC lgc)
   XSetLineAttributes(display, lgc, ww, LineSolid, CapButt, JoinMiter);
 }
 
-void Marker::ps(Widget::PSColorSpace mode, int tt)
+void Marker::ps(PSColorSpace mode, int tt)
 {
   if (tt)
     renderPSText(mode);
@@ -383,7 +383,7 @@ void Marker::ps(Widget::PSColorSpace mode, int tt)
   renderPSInclude(mode);
 }
 
-void Marker::renderPSInclude(Widget::PSColorSpace mode)
+void Marker::renderPSInclude(PSColorSpace mode)
 {
   if (!(properties & INCLUDE)) {
     parent->renderPSColor(mode, parent->getXColor("red"));
@@ -401,10 +401,10 @@ void Marker::renderPSInclude(Widget::PSColorSpace mode)
   }
 }
 
-void Marker::renderPSText(Widget::PSColorSpace mode)
+void Marker::renderPSText(PSColorSpace mode)
 {
   if (text && *text && psfont_) {
-    parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
+    parent->renderPSColor(mode, parent->getXColor(colorName));
 
     ostringstream str;
 
@@ -445,10 +445,10 @@ void Marker::renderPSArrow(const Vector& p1, const Vector& p2,
   delete [] vv;
 }
 
-void Marker::renderPSGC(Widget::PSColorSpace mode)
+void Marker::renderPSGC(PSColorSpace mode)
 {
   // set width, color, dash
-  parent->renderPSColor((Widget::PSColorSpace)mode, parent->getXColor(colorName));
+  parent->renderPSColor(mode, parent->getXColor(colorName));
   if ((properties & SOURCE) && !(properties & DASH))
     renderPSLineNoDash();
   else

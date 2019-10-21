@@ -26,7 +26,7 @@ GridBase::GridBase(Widget* pp) : parent_(pp)
   gridGC_ = NULL;
   pixmap_ = 0;
 
-  mode_ = Widget::RGB;
+  mode_ = RGB;
 }
 
 GridBase::GridBase(Widget* pp, const char* op) : parent_(pp)
@@ -40,7 +40,7 @@ GridBase::GridBase(Widget* pp, const char* op) : parent_(pp)
   gridGC_ = NULL;
   pixmap_ = 0;
 
-  mode_ = Widget::RGB;
+  mode_ = RGB;
 }
 
 GridBase::~GridBase()

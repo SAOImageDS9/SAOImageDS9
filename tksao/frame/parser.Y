@@ -19,6 +19,7 @@
 #include "fitsimage.h"
 #include "fitsmask.h"
 #include "marker.h"
+#include "util.h"
 
 #undef yyFlexLexer
 #define yyFlexLexer frFlexLexer
@@ -2619,7 +2620,7 @@ panner	: yesno {fr->pannerCmd($1);}
 	;
 
 postscript : COLORSPACE_ pscolorspace 
-	{fr->psColorSpaceCmd((Widget::PSColorSpace)$2);}
+	{fr->psColorSpaceCmd((PSColorSpace)$2);}
 	| LEVEL_ INT {fr->psLevelCmd($2);}
 	| RESOLUTION_ INT {fr->psResolutionCmd($2);}
 	| SCALE_ numeric {
@@ -2635,10 +2636,10 @@ precision : INT INT INT INT INT INT INT INT INT
 	}
         ;
 
-pscolorspace : BW_ {$$ = Widget::BW;}
-	| GRAY_ {$$ = Widget::GRAY;}
-	| RGB_ {$$ = Widget::RGB;}
-	| CMYK_ {$$ = Widget::CMYK;}
+pscolorspace : BW_ {$$ = BW;}
+	| GRAY_ {$$ = GRAY;}
+	| RGB_ {$$ = RGB;}
+	| CMYK_ {$$ = CMYK;}
 	;
 
 region	: HIGHLITE_ regionHighlite

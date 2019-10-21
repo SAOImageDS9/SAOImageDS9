@@ -155,7 +155,7 @@ void Point::renderXLineDash(GC lgc)
 
 // PS
 
-void Point::renderPS(Widget::PSColorSpace mode) 
+void Point::renderPS(PSColorSpace mode) 
 {
   renderPSGC(mode);
   Vector* vv =NULL;

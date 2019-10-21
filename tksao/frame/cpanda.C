@@ -97,7 +97,7 @@ void Cpanda::renderX(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void Cpanda::renderPS(Widget::PSColorSpace mode)
+void Cpanda::renderPS(PSColorSpace mode)
 {
   BaseEllipse::renderPS(mode);
 

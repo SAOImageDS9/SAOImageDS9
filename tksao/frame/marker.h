@@ -14,7 +14,7 @@
 #include "tag.h"
 #include "coord.h"
 #include "xml.h"
-#include "widget.h"
+#include "util.h"
 
 #define POINTSIZE 11
 
@@ -118,11 +118,11 @@ protected:
   virtual void renderXLineDash(GC);
   void renderXLineNoDash(GC);
 
-  virtual void renderPS(Widget::PSColorSpace mode) =0;
-  virtual void renderPSInclude(Widget::PSColorSpace);
-  virtual void renderPSText(Widget::PSColorSpace);
+  virtual void renderPS(PSColorSpace mode) =0;
+  virtual void renderPSInclude(PSColorSpace);
+  virtual void renderPSText(PSColorSpace);
   void renderPSArrow(const Vector&, const Vector&, Coord::InternalSystem);
-  virtual void renderPSGC(Widget::PSColorSpace);
+  virtual void renderPSGC(PSColorSpace);
   virtual void renderPSLineDash();
   void renderPSLineNoDash();
   void renderPSColor(int, XColor*);
@@ -212,7 +212,7 @@ protected:
   virtual Vector bckMap(const Vector&, Coord::InternalSystem);
 
   virtual void x11(Drawable, Coord::InternalSystem, int, HandleMode);
-  virtual void ps(Widget::PSColorSpace,int);
+  virtual void ps(PSColorSpace,int);
 #ifdef MAC_OSX_TK
   virtual void macosx(int);
 #endif

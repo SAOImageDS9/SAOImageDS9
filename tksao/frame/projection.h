@@ -17,8 +17,8 @@ class Projection : public BaseLine {
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   GC renderXGC(RenderMode);
 
-  void renderPS(Widget::PSColorSpace);
-  void renderPSGC(Widget::PSColorSpace);
+  void renderPS(PSColorSpace);
+  void renderPSGC(PSColorSpace);
 
 #ifdef MAC_OSX_TK
   void renderMACOSX();

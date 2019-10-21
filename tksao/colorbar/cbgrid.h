@@ -9,7 +9,7 @@
 
 #include "grid2dbase.h"
 #include "vector.h"
-#include "widget.h"
+#include "util.h"
 
 class CBGrid : public Grid2dBase {
  private:
@@ -22,7 +22,7 @@ class CBGrid : public Grid2dBase {
   CBGrid(Widget*, int, double*);
 
   int render();
-  int ps(Widget::PSColorSpace, int, int);
+  int ps(PSColorSpace, int, int);
 #ifdef MAC_OSX_TK
   int macosx(int, int);
 #endif

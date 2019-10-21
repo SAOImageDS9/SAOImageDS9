@@ -14,7 +14,7 @@ protected:
 
   void renderXInclude(Drawable, Coord::InternalSystem, RenderMode) {}
 
-  void renderPSInclude(Widget::PSColorSpace) {}
+  void renderPSInclude(PSColorSpace) {}
 
 #ifdef MAC_OSX_TK
   void renderMACOSXInclude() {}

@@ -738,7 +738,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 52 "frame/parser.Y"
+#line 53 "frame/parser.Y"
 {
 #define FRBUFSIZE 4096
   char chr;

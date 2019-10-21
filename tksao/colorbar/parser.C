@@ -1897,7 +1897,7 @@ yyreduce:
 
   case 76:
 #line 210 "colorbar/parser.Y"
-    {cb->psColorSpaceCmd((Widget::PSColorSpace)(yyvsp[(2) - (2)].integer));;}
+    {cb->psColorSpaceCmd((PSColorSpace)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 77:
@@ -1912,22 +1912,22 @@ yyreduce:
 
   case 79:
 #line 215 "colorbar/parser.Y"
-    {(yyval.integer) = Widget::BW;;}
+    {(yyval.integer) = BW;;}
     break;
 
   case 80:
 #line 216 "colorbar/parser.Y"
-    {(yyval.integer) = Widget::GRAY;;}
+    {(yyval.integer) = GRAY;;}
     break;
 
   case 81:
 #line 217 "colorbar/parser.Y"
-    {(yyval.integer) = Widget::RGB;;}
+    {(yyval.integer) = RGB;;}
     break;
 
   case 82:
 #line 218 "colorbar/parser.Y"
-    {(yyval.integer) = Widget::CMYK;;}
+    {(yyval.integer) = CMYK;;}
     break;
 
   case 85:

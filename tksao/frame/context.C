@@ -607,7 +607,7 @@ void Context::contourLoadAux(istream& str,
   }
 }
 
-void Context::contourPS(Widget::PSColorSpace cs)
+void Context::contourPS(PSColorSpace cs)
 {
   if (!cfits)
     return;

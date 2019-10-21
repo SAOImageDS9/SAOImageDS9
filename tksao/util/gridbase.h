@@ -29,7 +29,7 @@ class GridBase {
   Pixmap pixmap_;
 
   Matrix matrix_;
-  Widget::PSColorSpace mode_;
+  PSColorSpace mode_;
 
  protected:
   int x11Line(int n, float* x, float* y);

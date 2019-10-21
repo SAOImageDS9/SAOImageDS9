@@ -62,7 +62,7 @@ void BaseBox::renderXDraw(Drawable drawable, GC lgc, XPoint* pp,
   XDrawLines(display, drawable, lgc, pp, numPoints_, CoordModeOrigin);
 }
 
-void BaseBox::renderPS(Widget::PSColorSpace mode)
+void BaseBox::renderPS(PSColorSpace mode)
 {
   renderPSGC(mode);
 

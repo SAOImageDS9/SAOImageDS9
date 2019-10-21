@@ -14,7 +14,7 @@ protected:
 
 protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
-  void renderPS(Widget::PSColorSpace);
+  void renderPS(PSColorSpace);
 #ifdef MAC_OSX_TK
   void renderMACOSX();
 #endif

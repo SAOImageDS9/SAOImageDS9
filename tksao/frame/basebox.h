@@ -29,7 +29,7 @@ protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   virtual void renderXDraw(Drawable, GC, XPoint*, RenderMode);
 
-  void renderPS(Widget::PSColorSpace);
+  void renderPS(PSColorSpace);
   virtual void renderPSDraw(int);
   void renderPSFillDraw(int);
 

@@ -78,7 +78,7 @@ int CBGrid::render()
   return doit(X11);
 }
 
-int CBGrid::ps(Widget::PSColorSpace mode, int x, int y)
+int CBGrid::ps(PSColorSpace mode, int x, int y)
 {
   matrix_ =  Translate(x,y);
   mode_ = mode;

@@ -74,7 +74,7 @@ void Polygon::renderX(Drawable drawable, Coord::InternalSystem sys,
     delete [] pp;
 }
 
-void Polygon::renderPS(Widget::PSColorSpace mode)
+void Polygon::renderPS(PSColorSpace mode)
 {
   renderPSGC(mode);
 

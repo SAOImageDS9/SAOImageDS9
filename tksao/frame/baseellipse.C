@@ -384,7 +384,7 @@ void BaseEllipse::renderXInclude(Drawable drawable,
 
 // renderPS
 
-void BaseEllipse::renderPS(Widget::PSColorSpace mode) {
+void BaseEllipse::renderPS(PSColorSpace mode) {
   Vector r = annuli_[numAnnuli_-1];
   Vector z = parent->zoom();
 
@@ -413,7 +413,7 @@ void BaseEllipse::renderPSFill()
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-void BaseEllipse::renderPSCircle(Widget::PSColorSpace mode)
+void BaseEllipse::renderPSCircle(PSColorSpace mode)
 {
   renderPSGC(mode);
 
@@ -457,7 +457,7 @@ void BaseEllipse::renderPSCircle(Widget::PSColorSpace mode)
   }
 }
 
-void BaseEllipse::renderPSEllipse(Widget::PSColorSpace mode)
+void BaseEllipse::renderPSEllipse(PSColorSpace mode)
 {
   renderPSGC(mode);
 
@@ -547,7 +547,7 @@ void BaseEllipse::renderPSEllipseArc(double a1, double a2, Vector& rr)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-void BaseEllipse::renderPSInclude(Widget::PSColorSpace mode)
+void BaseEllipse::renderPSInclude(PSColorSpace mode)
 {
   if (!(properties & INCLUDE)) {
     double theta = degToRad(45);

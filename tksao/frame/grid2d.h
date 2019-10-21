@@ -23,7 +23,7 @@ class Grid2d : public Grid, public Grid2dBase {
   const char* option() {return GridBase::option();}
 
   void x11() {doit(X11);}
-  void ps(Widget::PSColorSpace mode) {mode_=mode; doit(PS);}
+  void ps(PSColorSpace mode) {mode_=mode; doit(PS);}
 #ifdef MAC_OSX_TK
   void macosx() {doit(MACOSX);}
 #endif

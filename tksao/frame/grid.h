@@ -6,7 +6,7 @@
 #define __grid_h__
 
 #include "coord.h"
-#include "widget.h"
+#include "util.h"
 
 class Grid {
  public:
@@ -27,7 +27,7 @@ class Grid {
   virtual const char* option() =0;
 
   virtual void x11() =0;
-  virtual void ps(Widget::PSColorSpace) =0;
+  virtual void ps(PSColorSpace) =0;
 #ifdef MAC_OSX_TK
   virtual void macosx() =0;
 #endif

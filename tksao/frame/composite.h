@@ -14,7 +14,7 @@ class Composite : public Marker {
   int global;
 
   void renderX(Drawable, Coord::InternalSystem, RenderMode) {}
-  void renderPS(Widget::PSColorSpace mode) {}
+  void renderPS(PSColorSpace mode) {}
 #ifdef MAC_OSX_TK
   void renderMACOSX() {}
 #endif
@@ -37,7 +37,7 @@ public:
   Marker* dup() {return new Composite(*this);}
 
   void x11(Drawable, Coord::InternalSystem, int, HandleMode);
-  void ps(Widget::PSColorSpace,int);
+  void ps(PSColorSpace,int);
 #ifdef MAC_OSX_TK
   void macosx(int);
 #endif

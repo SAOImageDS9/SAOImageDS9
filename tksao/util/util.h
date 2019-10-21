@@ -46,6 +46,8 @@ int XSetClipRectangles(Display *d, GC gc, int clip_x_origin, int clip_y_origin,
 
 #define STRCMP(which,str,cnt) (!strncmp(toConstLower(which), str, cnt) && strlen(which)==cnt)
 
+enum PSColorSpace {BW, GRAY, RGB, CMYK};
+
 static const char psFonts[12][32] = {
   {"Helvetica"},
   {"Helvetica-Oblique"},

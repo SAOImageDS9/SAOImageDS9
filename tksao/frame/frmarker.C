@@ -6122,7 +6122,7 @@ void Base::parseMarker(MarkerFormat fm, istream& str)
   }
 }
 
-void Base::psMarkers(List<Marker>* ml, Widget::PSColorSpace mode)
+void Base::psMarkers(List<Marker>* ml, PSColorSpace mode)
 {
   // render from back to front
   // bbox is in canvas coords

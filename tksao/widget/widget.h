@@ -20,6 +20,7 @@ using namespace std;
 #include <tk.h>
 
 #include "vector.h"
+#include "util.h"
 
 class Attribute;
 
@@ -88,7 +89,6 @@ class Widget {
   friend class Attribute;
 
  public:
-  enum PSColorSpace {BW, GRAY, RGB, CMYK};
   Tcl_Interp* interp;         // Tcl interp
 
  protected:

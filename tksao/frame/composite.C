@@ -52,7 +52,7 @@ void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void Composite::ps(Widget::PSColorSpace mode, int tt)
+void Composite::ps(PSColorSpace mode, int tt)
 {
   if (tt)
     renderPSText(mode);

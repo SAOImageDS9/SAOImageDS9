@@ -82,7 +82,7 @@ proc PixelTableDialog {} {
 			 -variable dpixel \
 			 -usecommand 0 \
 			 -maxwidth 1200 \
-			 -fg $ds9(foreground) -bg $ds9(background) \
+			 -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
 			]
     
     $dpixel(tbl) tag col coord 0

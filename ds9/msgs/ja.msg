@@ -1,4 +1,3 @@
-::msgcat::mcset ja {%} 
 ::msgcat::mcset ja {2D} 
 ::msgcat::mcset ja {3D View} 
 ::msgcat::mcset ja {3D} [encoding convertfrom euc-jp "\x33\xbc\xa1\xb8\xb5"]
@@ -302,6 +301,7 @@
 ::msgcat::mcset ja {Flat} 
 ::msgcat::mcset ja {Font} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa9\xa5\xf3\xa5\xc8"]
 ::msgcat::mcset ja {For more information, use --help} [encoding convertfrom euc-jp "\xbe\xdc\xa4\xb7\xa4\xaf\xa4\xcf\x20\x2d\x2d\x68\x65\x6c\x70\x20\xa5\xaa\xa5\xd7\xa5\xb7\xa5\xe7\xa5\xf3\xa4\xc7\xa1\xa3"]
+::msgcat::mcset ja {Forground} 
 ::msgcat::mcset ja {Format} [encoding convertfrom euc-jp "\xb7\xc1\xbc\xb0"]
 ::msgcat::mcset ja {Forward} [encoding convertfrom euc-jp "\xbc\xa1"]
 ::msgcat::mcset ja {Found} 
@@ -621,8 +621,6 @@
 ::msgcat::mcset ja {Polygon} [encoding convertfrom euc-jp "\xc2\xbf\xb3\xd1\xb7\xc1"]
 ::msgcat::mcset ja {Portrait} [encoding convertfrom euc-jp "\xbd\xc4\xc4\xb9"]
 ::msgcat::mcset ja {Poster} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xbf\xa1\xbc"]
-::msgcat::mcset ja {Postscript Page Setup} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8\xa5\xda\xa1\xbc\xa5\xb8\xc0\xdf\xc4\xea"]
-::msgcat::mcset ja {Postscript Print} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8\xb0\xf5\xba\xfe"]
 ::msgcat::mcset ja {Postscript} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8"]
 ::msgcat::mcset ja {Power} [encoding convertfrom euc-jp "\xd1\xd1\xbe\xe8"]
 ::msgcat::mcset ja {Precision} 

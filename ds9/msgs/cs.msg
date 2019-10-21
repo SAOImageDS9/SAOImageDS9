@@ -1,4 +1,3 @@
-::msgcat::mcset cs {%} 
 ::msgcat::mcset cs {2D} 
 ::msgcat::mcset cs {3D View} 
 ::msgcat::mcset cs {3D} 
@@ -302,6 +301,7 @@
 ::msgcat::mcset cs {Flat} 
 ::msgcat::mcset cs {Font} [encoding convertfrom iso8859-2 {Znak}]
 ::msgcat::mcset cs {For more information, use --help} [encoding convertfrom iso8859-2 {Pro více informací, pou¾ijte --help}]
+::msgcat::mcset cs {Forground} 
 ::msgcat::mcset cs {Format} [encoding convertfrom iso8859-2 {Formát}]
 ::msgcat::mcset cs {Forward} [encoding convertfrom iso8859-2 {Vpøed}]
 ::msgcat::mcset cs {Found} [encoding convertfrom iso8859-2 {Nalezeno}]
@@ -621,8 +621,6 @@
 ::msgcat::mcset cs {Polygon} 
 ::msgcat::mcset cs {Portrait} 
 ::msgcat::mcset cs {Poster} 
-::msgcat::mcset cs {Postscript Page Setup} 
-::msgcat::mcset cs {Postscript Print} 
 ::msgcat::mcset cs {Postscript} 
 ::msgcat::mcset cs {Power} [encoding convertfrom iso8859-2 {Mocninové}]
 ::msgcat::mcset cs {Precision} 

@@ -19,8 +19,8 @@ proc PlotDefState {} {
     set pap(layout,axis,x,log) 0
     set pap(layout,axis,x,flip) 0
 
-    set pap(foreground) $ds9(plot,fg)
-    set pap(background) $ds9(plot,bg)
+    set pap(foreground) $ds9(foreground)
+    set pap(background) $ds9(background)
     set pap(grid,color) gray64
     set pap(bar,mode) normal
 

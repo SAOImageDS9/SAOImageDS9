@@ -57,24 +57,11 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add command -label "[msgcat::mc {Save Configuration}]..." \
 	-command [list PlotSaveConfig $varname]
     $var(mb).file add separator
-    switch $ds9(wm) {
-	x11 -
-	win32 {
-	    $var(mb).file add command \
-		-label "[msgcat::mc {Page Setup}]..." \
-		-command PSPageSetup
-	    $var(mb).file add command -label "[msgcat::mc {Print}]..." \
-		-command [list PlotPSPrint $varname]
-	}
-	aqua {
-	    $var(mb).file add command \
-		-label "[msgcat::mc {Postscript Page Setup}]..." \
-		-command PSPageSetup
-	    $var(mb).file add command \
-		-label "[msgcat::mc {Postscript Print}]..." \
-		-command [list PlotPSPrint $varname]
-	}
-    }
+    $var(mb).file add command \
+	-label "[msgcat::mc {Page Setup}]..." \
+	-command PSPageSetup
+    $var(mb).file add command -label "[msgcat::mc {Print}]..." \
+	-command [list PlotPSPrint $varname]
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
 	-command [list PlotDestroy $varname]
@@ -359,7 +346,7 @@ proc PlotStripDialog {varname} {
     set f [ttk::frame $w.param]
     ttk::label $f.t -text [msgcat::mc {Scale}]
     ttk::entry $f.ww -textvariable ed(layout,strip,scale) -width 6
-    ttk::label $f.tt -text [msgcat::mc {%}]
+    ttk::label $f.tt -text {%}
 
     grid $f.t $f.ww $f.tt -padx 2 -pady 2 -sticky w
 

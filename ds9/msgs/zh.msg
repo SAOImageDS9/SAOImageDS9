@@ -1,4 +1,3 @@
-::msgcat::mcset zh {%} 
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D View} 
 ::msgcat::mcset zh {3D} 
@@ -302,6 +301,7 @@
 ::msgcat::mcset zh {Flat} 
 ::msgcat::mcset zh {Font} 
 ::msgcat::mcset zh {For more information, use --help} 
+::msgcat::mcset zh {Forground} 
 ::msgcat::mcset zh {Format} 
 ::msgcat::mcset zh {Forward} 
 ::msgcat::mcset zh {Found} 
@@ -621,8 +621,6 @@
 ::msgcat::mcset zh {Polygon} [encoding convertfrom big5 "\xA6\x68 \xA8\xA4 \xA7\xCE"]
 ::msgcat::mcset zh {Portrait} 
 ::msgcat::mcset zh {Poster} 
-::msgcat::mcset zh {Postscript Page Setup} 
-::msgcat::mcset zh {Postscript Print} 
 ::msgcat::mcset zh {Postscript} 
 ::msgcat::mcset zh {Power} [encoding convertfrom big5 "\xAB\xFC \xBC\xC6"]
 ::msgcat::mcset zh {Precision} 

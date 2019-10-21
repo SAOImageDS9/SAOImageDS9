@@ -50,32 +50,11 @@ proc FileMainMenu {} {
     $ds9(mb).file add command -label "[msgcat::mc {Source TCL}]..." \
 	-command OpenSource
     $ds9(mb).file add separator
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {
-	    $ds9(mb).file add command -label "[msgcat::mc {Page Setup}]..." \
-		-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
-	    $ds9(mb).file add command -label "[msgcat::mc {Print}]..." \
-		-command PSPrint -accelerator "${ds9(ctrl)}P"
-	}
-	foo {
-	    # accelerators don't work with dialog box
-	    $ds9(mb).file add command \
-		-label "[msgcat::mc {Postscript Page Setup}]..." \
-		-command PSPageSetup
-	    $ds9(mb).file add command \
-		-label "[msgcat::mc {Postscript Print}]..." \
-		-command PSPrint
-	    $ds9(mb).file add separator
-	    $ds9(mb).file add command \
-		-label "[msgcat::mc {Page Setup}]..." \
-		-command MacOSXPageSetup
-	    $ds9(mb).file add command \
-		-label "[msgcat::mc {Print}]..." \
-		-command MacOSXPrint
-	}
-    }
+    $ds9(mb).file add command -label "[msgcat::mc {Page Setup}]..." \
+	-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
+    $ds9(mb).file add command -label "[msgcat::mc {Print}]..." \
+	-command PSPrint -accelerator "${ds9(ctrl)}P"
+
     switch $ds9(wm) {
 	x11 -
 	win32 {
@@ -435,41 +414,14 @@ proc PrefsDialogButtonbarFile {f} {
     $m add checkbutton -label "[msgcat::mc {Source TCL}]..." \
 	-variable pbuttons(file,tcl) -command {UpdateButtons buttons(file)}
     $m add separator
-
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {
-	    $m add checkbutton \
-		-label "[msgcat::mc {Page Setup}]..." \
-		-variable pbuttons(file,page) \
-		-command {UpdateButtons buttons(file)}
-	    $m add checkbutton \
-		-label "[msgcat::mc {Print}]..." \
-		-variable pbuttons(file,print) \
-		-command {UpdateButtons buttons(file)}
-	}
-	foo {
-	    $m add checkbutton \
-		-label "[msgcat::mc {Postscript Page Setup}]..." \
-		-variable pbuttons(file,pspage) \
-		-command {UpdateButtons buttons(file)}
-	    $m add checkbutton \
-		-label "[msgcat::mc {Postscript Print}]..." \
-		-variable pbuttons(file,psprint) \
-		-command {UpdateButtons buttons(file)}
-	    $m add separator
-	    $m add checkbutton \
-		-label "[msgcat::mc {Page Setup}]..." \
-		-variable pbuttons(file,page) \
-		-command {UpdateButtons buttons(file)}
-	    $m add checkbutton \
-		-label "[msgcat::mc {Print}]..." \
-		-variable pbuttons(file,print) \
-		-command {UpdateButtons buttons(file)}
-	}
-    }
-
+    $m add checkbutton \
+	-label "[msgcat::mc {Page Setup}]..." \
+	-variable pbuttons(file,page) \
+	-command {UpdateButtons buttons(file)}
+    $m add checkbutton \
+	-label "[msgcat::mc {Print}]..." \
+	-variable pbuttons(file,print) \
+	-command {UpdateButtons buttons(file)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Exit}] \
 	-variable pbuttons(file,exit) -command {UpdateButtons buttons(filew)}

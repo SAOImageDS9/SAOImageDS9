@@ -1,4 +1,3 @@
-::msgcat::mcset fr {%} 
 ::msgcat::mcset fr {2D} 
 ::msgcat::mcset fr {3D View} 
 ::msgcat::mcset fr {3D} 
@@ -302,6 +301,7 @@
 ::msgcat::mcset fr {Flat} 
 ::msgcat::mcset fr {Font} {Police}
 ::msgcat::mcset fr {For more information, use --help} 
+::msgcat::mcset fr {Forground} 
 ::msgcat::mcset fr {Format} 
 ::msgcat::mcset fr {Forward} {En avant} 
 ::msgcat::mcset fr {Found} {Trouvé} 
@@ -621,8 +621,6 @@
 ::msgcat::mcset fr {Polygon} {Polygone}
 ::msgcat::mcset fr {Portrait} 
 ::msgcat::mcset fr {Poster} 
-::msgcat::mcset fr {Postscript Page Setup} 
-::msgcat::mcset fr {Postscript Print} 
 ::msgcat::mcset fr {Postscript} 
 ::msgcat::mcset fr {Power} {Puissance}
 ::msgcat::mcset fr {Precision} 

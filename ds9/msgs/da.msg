@@ -1,4 +1,3 @@
-::msgcat::mcset da {%} 
 ::msgcat::mcset da {2D} 
 ::msgcat::mcset da {3D View} 
 ::msgcat::mcset da {3D} 
@@ -302,6 +301,7 @@
 ::msgcat::mcset da {Flat} 
 ::msgcat::mcset da {Font} {Skrifttype}
 ::msgcat::mcset da {For more information, use --help} 
+::msgcat::mcset da {Forground} 
 ::msgcat::mcset da {Format} {Format}
 ::msgcat::mcset da {Forward} {Videre}
 ::msgcat::mcset da {Found} {Fundet}
@@ -621,8 +621,6 @@
 ::msgcat::mcset da {Polygon} {Polygon}
 ::msgcat::mcset da {Portrait} [encoding convertfrom iso8859-1 {Portræt}]
 ::msgcat::mcset da {Poster} {Plakat}
-::msgcat::mcset da {Postscript Page Setup} [encoding convertfrom iso8859-1 {Postscript side opsætning}]
-::msgcat::mcset da {Postscript Print} {Postscript udskriv}
 ::msgcat::mcset da {Postscript} 
 ::msgcat::mcset da {Power} {Potenslov}
 ::msgcat::mcset da {Precision} 

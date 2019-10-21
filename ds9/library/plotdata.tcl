@@ -247,8 +247,8 @@ proc PlotExternal {varname dim} {
 
     set var(graph,ds,dim) $dim
 
-    set var(graph,ds,color) $ds9(plot,fg)
-    set var(graph,ds,fill,color) $ds9(plot,fg)
+    set var(graph,ds,color) $ds9(foreground)
+    set var(graph,ds,fill,color) $ds9(foreground)
 
     PlotAddElement $varname
 }

@@ -152,6 +152,7 @@ proc PostScript {} {
 	}
     }
 
+    # delete bg
     $ds9(canvas) delete $bg
 }
 
@@ -172,11 +173,18 @@ proc EPS {fn} {
     set level 2
     set resolution 72
 
-    set options {}
-
     # Page size
     set width [winfo width $ds9(canvas)]
     set height [winfo height $ds9(canvas)]
+
+    # create a bg
+    set cc [$ds9(canvas) cget -background]
+    set bg [$ds9(canvas) create rectangle 0 0 $width $height \
+		-fill $cc -outline $cc]
+    $ds9(canvas) lower $bg 1
+
+    set options { -colormode color}
+
     append options " -pagex 0 -pagey 0 -pageanchor sw"
     if ($width>$height) {
 	append options " -pagewidth $width"
@@ -207,6 +215,9 @@ proc EPS {fn} {
     if {[catch {eval $ds9(canvas) postscript $options} rr]} {
 	Error "[msgcat::mc {A postscript generation error has occurred}] $rr"
     }
+
+    # delete bg
+    $ds9(canvas) delete $bg
 }
 
 proc PostScriptPageSize {xx yy ww hh unit optname} {

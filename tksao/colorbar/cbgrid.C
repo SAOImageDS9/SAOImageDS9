@@ -24,8 +24,6 @@ CBGrid::CBGrid(Widget* p, int cc, double* ll)
   str << "Grid=0, DrawAxes=0, MinTickLen(1)=0, MinTickLen(2)=0, Width(ticks)=.5, Style(ticks)=0, Border=1, Width(border)=.5, Style(border)=0, Labelling=exterior, Colour(numlab)=0, TextLab=0, DrawTitle=0";
 
   str << ", Colour(ticks)=0, Colour(border)=0";
-  //  str << ", Colour(ticks)=" << opts->fgColor->pixel
-  //      << ", Colour(border)=" << opts->fgColor->pixel;
 
   if (!opts->orientation) {
     // horizontal

@@ -918,11 +918,25 @@ proc OpenSource {} {
 }
 
 proc OpenConsole {} {
+    global ds9
+    
     if {[winfo exists ".tkcon"]} {
 	tkcon show
     } else {
 	set ::tkcon::OPT(exec) {}
 	set ::tkcon::OPT(font) [font actual TkFixedFont]
+	
+	set ::tkcon::COLOR(bg) $ds9(gui,bg)
+	set ::tkcon::COLOR(blink) $ds9(gui,fg)
+	set ::tkcon::COLOR(cursor) $ds9(gui,fg)
+	set ::tkcon::COLOR(disabled) $ds9(gui,fg)
+	set ::tkcon::COLOR(proc) $ds9(gui,fg)
+	set ::tkcon::COLOR(var) $ds9(gui,fg)
+	set ::tkcon::COLOR(prompt) $ds9(gui,fg)
+	set ::tkcon::COLOR(stdin) $ds9(gui,fg)
+	set ::tkcon::COLOR(stdout) $ds9(gui,fg)
+	set ::tkcon::COLOR(stderr) $ds9(gui,fg)
+
 	tkcon::Init
     }
 }

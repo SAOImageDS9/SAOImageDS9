@@ -43,7 +43,7 @@ proc PlotPostScriptSingle {varname} {
 
     $var(graph) legend configure -font "$var(legend,font,family) $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" -titlefont "$var(legend,title,family) $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 
-    set options "-decorations false"
+    set options {}
 
     # Color
     switch -- $ps(color) {
@@ -130,10 +130,7 @@ proc PlotPostScriptMulti {varname} {
     global ps
     global ds9
 
-    #
-    # Options
-    #
-    set options "-decorations false"
+    set options {}
 
     # Color
     switch -- $ps(color) {

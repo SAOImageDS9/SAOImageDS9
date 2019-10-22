@@ -927,7 +927,7 @@ proc OpenConsole {} {
 	set ::tkcon::OPT(font) [font actual TkFixedFont]
 	
 	set ::tkcon::COLOR(bg) $ds9(gui,bg)
-	set ::tkcon::COLOR(blink) $ds9(gui,fg)
+#	set ::tkcon::COLOR(blink) $ds9(gui,fg)
 	set ::tkcon::COLOR(cursor) $ds9(gui,fg)
 #	set ::tkcon::COLOR(disabled) $ds9(gui,bg)
 #	set ::tkcon::COLOR(proc) $ds9(gui,bg)

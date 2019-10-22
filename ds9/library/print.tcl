@@ -49,7 +49,17 @@ proc PostScript {} {
     # need the colorbar levels updated
     UpdateColormapLevel
 
-    set options {}
+    set width [winfo width $ds9(canvas)]
+    set height [winfo height $ds9(canvas)]
+
+    # create a bg
+    set cc [$ds9(canvas) cget -background]
+    set bg [$ds9(canvas) create rectangle -10 -10 \
+		[expr $width+10] [expr $height+10] \
+		-fill $cc -outline $cc]
+    $ds9(canvas) lower $bg 1
+
+    set options { -colormode color}
 
     # Orientation
     switch -- $ps(orient) {
@@ -59,8 +69,6 @@ proc PostScript {} {
 
     # Page size
     # reduce size to .95 for backward compatibility
-    set width [winfo width $ds9(canvas)]
-    set height [winfo height $ds9(canvas)]
     set xx [expr $width*(1- (100./$ps(scale)/.95))/2.]
     set yy [expr $height*(1- (100./$ps(scale)/.95))/2.]
     set ww [expr $width*100./$ps(scale)/.95]
@@ -143,6 +151,8 @@ proc PostScript {} {
 	    }
 	}
     }
+
+    $ds9(canvas) delete $bg
 }
 
 proc EPS {fn} {

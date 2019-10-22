@@ -484,15 +484,6 @@ int ColorbarBase::postscriptProc(int prepass)
   if (prepass)
     return TCL_OK;
 
-  // bg
-  //options->width,options->height);
-  //  psColor(mode,opts->bgColor)
-  //  Tcl_AppendResult(interp, " setrgbcolor\n", NULL);
-  //  Tcl_AppendResult(interp, "newpath\n", NULL);
-  //  Tcl_AppendResult(interp, " moveto\n", NULL);
-  //  Tcl_AppendResult(interp, " lineto\n", NULL);
-  //  Tcl_AppendResult(interp, " fill\n", NULL);
-
   // bar
   Tcl_AppendResult(interp, "gsave\n", NULL);
   ps();
@@ -501,14 +492,11 @@ int ColorbarBase::postscriptProc(int prepass)
   // numerics
   Tcl_AppendResult(interp, "gsave\n", NULL);
   
-  if (opts->numerics && opts->space && grid) {
+  if (opts->numerics && opts->space && grid)
     psGridAST();
-    Tcl_AppendResult(interp, "grestore\n", NULL);
-    return TCL_OK;
-  }
+  else
+    psGrid();
 
-  // we want a border, even if no numerics
-  psGrid();
   Tcl_AppendResult(interp, "grestore\n", NULL);
   return TCL_OK;
 }
@@ -522,41 +510,64 @@ void ColorbarBase::ps()
   int& size = opts->size;
 
   // image
-  int ww = !opts->orientation ? width : size;
-  int hh = !opts->orientation ? size : height;
   Vector org = psOrigin();
   if (!opts->orientation)
     org += Vector(0,height-size);
   
-  ostringstream str;
-  str << org << " translate " << 1 << ' ' << 1 << " scale" << endl;
-
-  switch (psLevel) {
-  case 1:
-    {
-      psHead1(str, ww, hh);
-      NoCompressAsciiHex filter(psLevel);
-      psHV(str, filter, ww, hh);
-    }
-    break;
-  case 2:
-    {
-      psHead2(str, ww, hh, "RunLength", "ASCII85");
-      RLEAscii85 filter(psLevel);
-      psHV(str, filter, ww, hh);
-    }
-    break;
-  case 3:
-    {
-      psHead2(str, ww, hh, "Flate", "ASCII85");
-      GZIPAscii85 filter(psLevel);
-      psHV(str, filter, ww, hh);
-    }
-    break;
+  {
+    ostringstream str;
+    str << org << " translate " << 1 << ' ' << 1 << " scale" << endl
+	<< ends;
+    Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }
 
-  str << ends;
-  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+  if (0) {
+    //  psColor(psColorSpace,opts->bgColor);
+    psColor(psColorSpace,getXColor("pink"));
+
+    ostringstream str;
+    str << "newpath" << endl
+	<< 0 << ' ' << 0 << " moveto" << endl
+	<< 0 << ' '  << height << " lineto" << endl
+	<< width << ' ' << height << " lineto" << endl
+	<< width << ' ' << 0 << " lineto" << endl
+	<< 0 << ' ' << 0 << " moveto" << endl
+	<< " fill" << endl
+	<< ends;
+    Tcl_AppendResult(interp, str.str().c_str(), NULL);
+  }
+
+  {
+    ostringstream str;
+    int ww = !opts->orientation ? width : size;
+    int hh = !opts->orientation ? size : height;
+    switch (psLevel) {
+    case 1:
+      {
+	psHead1(str, ww, hh);
+	NoCompressAsciiHex filter(psLevel);
+	psHV(str, filter, ww, hh);
+      }
+      break;
+    case 2:
+      {
+	psHead2(str, ww, hh, "RunLength", "ASCII85");
+	RLEAscii85 filter(psLevel);
+	psHV(str, filter, ww, hh);
+      }
+      break;
+    case 3:
+      {
+	psHead2(str, ww, hh, "Flate", "ASCII85");
+	GZIPAscii85 filter(psLevel);
+	psHV(str, filter, ww, hh);
+      }
+      break;
+    }
+
+    str << ends;
+    Tcl_AppendResult(interp, str.str().c_str(), NULL);
+  }
 }
 
 void ColorbarBase::psHV(ostream& str, Filter& filter, int width, int height)
@@ -594,6 +605,9 @@ void ColorbarBase::psGrid()
   Vector lr = Vector(ww,0);
   Vector ur = Vector(ww,hh);
   Vector ul = Vector(0,hh);
+
+  // set the color
+  psColor(psColorSpace,opts->fgColor);
 
   ostringstream str;
   str << org << " translate " << endl
@@ -640,6 +654,9 @@ void ColorbarBase::psGridNumerics()
 
   // generate text
   lutToText(font);
+
+  // set the color
+  psColor(psColorSpace,opts->fgColor);
 
   // tick marks
   int incrcnt=0;
@@ -735,6 +752,9 @@ void ColorbarBase::psGridAST()
   Vector lr = Vector(uu[0],oo[1])*mm;
   Vector ur = uu*mm;
   Vector ul = Vector(oo[0],uu[1])*mm;
+
+  // set the color
+  psColor(psColorSpace,opts->fgColor);
 
   ostringstream str;
   str << "newpath " << endl

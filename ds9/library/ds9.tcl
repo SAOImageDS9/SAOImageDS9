@@ -183,7 +183,8 @@ set ds9(app) [file tail [info nameofexecutable]]
 switch $ds9(wm) {
     x11 {
 	set ds9(foreground) black
-	set ds9(background) white
+#	set ds9(background) white
+	set ds9(background) cyan
 	set ds9(gui,fg) black
 	set ds9(gui,bg) #d9d9d9
 	set ds9(gui,bold) blue

@@ -377,21 +377,19 @@ proc UpdateGraphLayout {which} {
 	     [string equal $colorbar(orientation) {horizontal}]]
     set cbv [expr $view(colorbar) && \
 	     [string equal $colorbar(orientation) {vertical}]]
-    set grh [expr $view(graph,horz)]
-    set grv [expr $view(graph,vert)]
 
-    if {$grh} {
+    if {$view(graph,horz)} {
 	set xx $frxx
 	set yy [expr $canvas(height) + $canvas(gap)]
 
 	if {$cbh} {
 	    incr yy $icolorbar(horizontal,height)
 	}
-	if {$grv && !$cbh} {
+	if {$view(graph,vert) && !$cbh} {
 	    incr yy $igraph(gap,y)
 	}
 
-	if {$igraph(horz,id) == 0} {
+	if {!$igraph(horz,id)} {
 	    set igraph(horz,id) [$ds9(canvas) create window $xx $yy \
 				    -window $ds9(graph,horz) -anchor nw]
 	} else {
@@ -401,24 +399,24 @@ proc UpdateGraphLayout {which} {
 	set ww [expr $frww+$igraph(gap,x)]
 	$ds9(graph,horz) configure -width $ww
     } else {
-	if {$igraph(horz,id)>0} {
+	if {$igraph(horz,id)} {
 	    $ds9(canvas) delete $igraph(horz,id)
 	    set igraph(horz,id) 0
 	}
     }
 
-    if {$grv} {
+    if {$view(graph,vert)} {
 	set yy $fryy
 	set xx [expr $canvas(width) + $canvas(gap)]
 
 	if {$cbv} {
 	    incr xx $icolorbar(vertical,width)
 	}
-	if {$grh && !$cbv} {
+	if {$view(graph,horz) && !$cbv} {
 	    incr xx $igraph(gap,x)
 	}
 
-	if {$igraph(vert,id) == 0} {
+	if {!$igraph(vert,id)} {
 	    set igraph(vert,id) [$ds9(canvas) create window $xx $yy \
 				    -window $ds9(graph,vert) -anchor nw]
 	} else {
@@ -429,11 +427,14 @@ proc UpdateGraphLayout {which} {
 	$ds9(graph,vert) configure -height $hh
 
     } else {
-	if {$igraph(vert,id)>0} {
+	if {$igraph(vert,id)} {
 	    $ds9(canvas) delete $igraph(vert,id)
 	    set igraph(vert,id) 0
 	}
     }
+
+    # need so graphs are realized
+    update idletasks
 }
 
 proc GraphDialog {} {

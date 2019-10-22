@@ -491,13 +491,12 @@ int ColorbarBase::postscriptProc(int prepass)
 
   // numerics
   Tcl_AppendResult(interp, "gsave\n", NULL);
-  
   if (opts->numerics && opts->space && grid)
     psGridAST();
   else
     psGrid();
-
   Tcl_AppendResult(interp, "grestore\n", NULL);
+
   return TCL_OK;
 }
 

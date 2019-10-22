@@ -100,7 +100,7 @@ int ColorbarBase::configure(int argc, const char* argv[], int flags)
   if (flags != TK_CONFIG_ARGV_ONLY)
     return initColormap();
   else {
-    if ((configSpecs[CONFIGORIENTATION].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
+    if ((configSpecs[CONFIGORIENTATION].specFlags&TK_CONFIG_OPTION_SPECIFIED) ||
 	(configSpecs[CONFIGNUMERICS].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
 	(configSpecs[CONFIGSIZE].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
 	(configSpecs[CONFIGFONT].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
@@ -513,60 +513,37 @@ void ColorbarBase::ps()
   if (!opts->orientation)
     org += Vector(0,height-size);
   
-  {
-    ostringstream str;
-    str << org << " translate " << 1 << ' ' << 1 << " scale" << endl
-	<< ends;
-    Tcl_AppendResult(interp, str.str().c_str(), NULL);
-  }
+  ostringstream str;
+  str << org << " translate " << 1 << ' ' << 1 << " scale" << endl;
 
-  if (0) {
-    //  psColor(psColorSpace,opts->bgColor);
-    psColor(psColorSpace,getXColor("pink"));
-
-    ostringstream str;
-    str << "newpath" << endl
-	<< 0 << ' ' << 0 << " moveto" << endl
-	<< 0 << ' '  << height << " lineto" << endl
-	<< width << ' ' << height << " lineto" << endl
-	<< width << ' ' << 0 << " lineto" << endl
-	<< 0 << ' ' << 0 << " moveto" << endl
-	<< " fill" << endl
-	<< ends;
-    Tcl_AppendResult(interp, str.str().c_str(), NULL);
-  }
-
-  {
-    ostringstream str;
-    int ww = !opts->orientation ? width : size;
-    int hh = !opts->orientation ? size : height;
-    switch (psLevel) {
-    case 1:
-      {
-	psHead1(str, ww, hh);
-	NoCompressAsciiHex filter(psLevel);
-	psHV(str, filter, ww, hh);
-      }
-      break;
-    case 2:
-      {
-	psHead2(str, ww, hh, "RunLength", "ASCII85");
-	RLEAscii85 filter(psLevel);
-	psHV(str, filter, ww, hh);
-      }
-      break;
-    case 3:
-      {
-	psHead2(str, ww, hh, "Flate", "ASCII85");
-	GZIPAscii85 filter(psLevel);
-	psHV(str, filter, ww, hh);
-      }
-      break;
+  int ww = !opts->orientation ? width : size;
+  int hh = !opts->orientation ? size : height;
+  switch (psLevel) {
+  case 1:
+    {
+      psHead1(str, ww, hh);
+      NoCompressAsciiHex filter(psLevel);
+      psHV(str, filter, ww, hh);
     }
-
-    str << ends;
-    Tcl_AppendResult(interp, str.str().c_str(), NULL);
+    break;
+  case 2:
+    {
+      psHead2(str, ww, hh, "RunLength", "ASCII85");
+      RLEAscii85 filter(psLevel);
+      psHV(str, filter, ww, hh);
+    }
+    break;
+  case 3:
+    {
+      psHead2(str, ww, hh, "Flate", "ASCII85");
+      GZIPAscii85 filter(psLevel);
+      psHV(str, filter, ww, hh);
+    }
+    break;
   }
+
+  str << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void ColorbarBase::psHV(ostream& str, Filter& filter, int width, int height)
@@ -751,9 +728,6 @@ void ColorbarBase::psGridAST()
   Vector lr = Vector(uu[0],oo[1])*mm;
   Vector ur = uu*mm;
   Vector ul = Vector(oo[0],uu[1])*mm;
-
-  // set the color
-  psColor(psColorSpace,opts->fgColor);
 
   ostringstream str;
   str << "newpath " << endl

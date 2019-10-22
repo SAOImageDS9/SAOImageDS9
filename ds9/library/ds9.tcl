@@ -76,10 +76,11 @@ proc DS9Def {} {
 
     set ds9(display) single
 
-    # ds9(foreground) color of fg text
-    # ds9(background) color of bg, canvas
-    # ds9(gui,fg) color of gui fg
-    # ds9(gui,bg) color of gui bg
+    # ds9(foreground) color of fg
+    # ds9(background) color of bg
+    # ds9(gui,fg) color of gui fg text
+    # ds9(gui,bg) color of gui bg features
+    # ds9(gui,bold) color for gui fg bold text
     # ds9(bg) color of frame bg
     set ds9(bg) white
 
@@ -185,6 +186,7 @@ switch $ds9(wm) {
 	set ds9(background) white
 	set ds9(gui,fg) black
 	set ds9(gui,bg) #d9d9d9
+	set ds9(gui,bold) blue
 
 	# standard widgets
  	option add {*background} $ds9(gui,bg)
@@ -212,12 +214,14 @@ switch $ds9(wm) {
 	set ds9(background) white
 	set ds9(gui,fg) black
 	set ds9(gui,bg) white
+	set ds9(gui,bold) blue
     }
     win32 {
 	set ds9(foreground) black
 	set ds9(background) white
 	set ds9(gui,fg) black
 	set ds9(gui,bg) white
+	set ds9(gui,bold) blue
 
 	ttk::style theme use xpnative
     }
@@ -434,11 +438,13 @@ switch $ds9(wm) {
 	    set ds9(background) #222
 	    set ds9(gui,fg) $ds9(foreground)
 	    set ds9(gui,bg) $ds9(background)
+	    set ds9(gui,bold) green
 	} else {
 	    set ds9(foreground) black
 	    set ds9(background) white
 	    set ds9(gui,fg) black
 	    set ds9(gui,bg) white
+	    set ds9(gui,bold) blue
 	}
 	global pds9
 	set ds9(bg) $ds9(background)

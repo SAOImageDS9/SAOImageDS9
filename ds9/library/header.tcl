@@ -75,6 +75,7 @@ proc DisplayHeaderMenu {} {
 
 proc DisplayHeader {id title} {
     global current
+    global ds9
 
     set frame $current(frame)
     set varname "hd-$current(frame)-$id"
@@ -88,7 +89,7 @@ proc DisplayHeader {id title} {
 
     # create a special text tag for keywords
     upvar #0 $varname var
-    $var(text) tag configure keyword -foreground blue
+    $var(text) tag configure keyword -foreground $ds9(gui,bold)
     
     # color tag keywords
     set stop [$var(text) index end]

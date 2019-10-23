@@ -372,7 +372,7 @@ switch $ds9(wm) {
     }
     aqua {
 	set ds9(foreground) systemTextColor
-	set ds9(background) systemTextBackgroundColor
+	set ds9(background) systemWindowBackgroundColor
 	set ds9(gui,fg) $ds9(foreground)
 	set ds9(gui,bg) $ds9(background)
 	set ds9(gui,bold) systemControlAccentColor

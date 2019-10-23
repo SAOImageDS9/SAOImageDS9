@@ -1662,7 +1662,13 @@ int Base::updatePixmap(const BBox& bb)
     break;
   }
 
+#ifdef MAC_OSX_TK
+  // always need to redraw as MacOS can have EXPOSE event (dark mode)
+  needsUpdate = BASE;
+#else
   needsUpdate = NOUPDATE;
+#endif
+  
   return TCL_OK;
 }
 

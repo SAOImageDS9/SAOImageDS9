@@ -289,6 +289,18 @@ void ColorbarBase::updateColors()
 
 int ColorbarBase::updatePixmap(const BBox& bb)
 {
+  // create a valid pixmap
+  // assume if no pixmap, no xmap
+  // bb is in canvas coords
+
+  // MacOS will generate an Expose event (dark mode), so need to update
+  //#ifndef MAC_OSX_TK
+  if (pixmap)
+    return TCL_OK;
+  //#endif
+
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
   updateMatrices();
 
   if (!widgetGC)
@@ -297,22 +309,16 @@ int ColorbarBase::updatePixmap(const BBox& bb)
   if (!gridGC_)
     gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+  cerr << "updatePixmap" << endl;
+  if (!pixmap) {
+    if (!(pixmap = Tk_GetPixmap(display, Tk_WindowId(tkwin), options->width, 
+				options->height, depth))) {
+      internalError("Colorbar: Unable to Create Pixmap"); 
+      return TCL_OK;
 
-  if (pixmap)
-    return TCL_OK;
-
-  // create a valid pixmap
-  // assume if no pixmap, no xmap
-  // bb is in canvas coords
-
-  if (!(pixmap = Tk_GetPixmap(display, Tk_WindowId(tkwin), options->width, 
-			      options->height, depth))) {
-    internalError("Colorbar: Unable to Create Pixmap"); 
-    return TCL_OK;
-
-    // Geometry has changed, redefine our marker GCs including clip regions
-    updateGCs();
+      // Geometry has changed, redefine our marker GCs including clip regions
+      updateGCs();
+    }
   }
       
   XSetForeground(display, widgetGC, opts->bgColor->pixel);
@@ -347,6 +353,7 @@ int ColorbarBase::updatePixmap(const BBox& bb)
       
   // we want a border, even with no numerics
   renderGrid();
+  
   return TCL_OK;
 }
 

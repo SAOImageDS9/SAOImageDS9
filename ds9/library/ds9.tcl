@@ -76,14 +76,6 @@ proc DS9Def {} {
 
     set ds9(display) single
 
-    # ds9(foreground) color of fg
-    # ds9(background) color of bg
-    # ds9(gui,fg) color of gui fg text
-    # ds9(gui,bg) color of gui bg features
-    # ds9(gui,bold) color for gui fg bold text
-    # ds9(bg) color of frame bg
-    set ds9(bg) white
-
     set ds9(array,x) 512
     set ds9(array,y) 512
     set ds9(array,bitpix) -32
@@ -179,53 +171,6 @@ if {[catch {tk windowingsystem} ds9(wm)]} {
 
 # who are we?
 set ds9(app) [file tail [info nameofexecutable]]
-
-switch $ds9(wm) {
-    x11 {
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) black
-	set ds9(gui,bg) #d9d9d9
-	set ds9(gui,bold) blue
-
-	# standard widgets
- 	option add {*background} $ds9(gui,bg)
-
-	# ttk widgets
-	ttk::style configure TFrame -background $ds9(gui,bg)
-	ttk::style configure TLabelframe -background $ds9(gui,bg)
-	ttk::style configure TLabelframe.Label -background $ds9(gui,bg)
-	ttk::style configure TLabel -background $ds9(gui,bg)
-	ttk::style configure TEntry -fieldbackground $ds9(gui,bg)
-	ttk::style configure TButton -background $ds9(gui,bg)
-	ttk::style configure TCheckbutton -background $ds9(gui,bg)
-	ttk::style configure TRadiobutton -background $ds9(gui,bg)
-	ttk::style configure TMenubutton -background $ds9(gui,bg)
-	ttk::style configure TScale -background $ds9(gui,bg)
-	ttk::style configure TScrollbar -background $ds9(gui,bg) \
-	    -troughcolor $ds9(gui,bg)
-	ttk::style configure TProgressbar -troughcolor $ds9(gui,bg)
-
-	ttk::style configure TEntry -padding 1
-	ttk::style configure TLabel -borderwidth 2 -padding 1
-    }
-    aqua {
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) black
-	set ds9(gui,bg) white
-	set ds9(gui,bold) blue
-    }
-    win32 {
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) black
-	set ds9(gui,bg) white
-	set ds9(gui,bold) blue
-
-	ttk::style theme use xpnative
-    }
-}
 
 # pre package load
 switch $ds9(wm) {
@@ -389,6 +334,64 @@ VODef
 WCSDef
 ZScaleDef
 
+# colors
+# ds9(foreground) color of fg
+# ds9(background) color of bg
+# ds9(gui,fg) color of gui fg text
+# ds9(gui,bg) color of gui bg features
+# ds9(gui,bold) color for gui fg bold text
+
+switch $ds9(wm) {
+    x11 {
+	set ds9(foreground) black
+	set ds9(background) white
+	set ds9(gui,fg) $ds9(foreground)
+	set ds9(gui,bg) #d9d9d9
+	set ds9(gui,bold) blue
+
+	# standard widgets
+ 	option add {*background} $ds9(gui,bg)
+
+	# ttk widgets
+	ttk::style configure TFrame -background $ds9(gui,bg)
+	ttk::style configure TLabelframe -background $ds9(gui,bg)
+	ttk::style configure TLabelframe.Label -background $ds9(gui,bg)
+	ttk::style configure TLabel -background $ds9(gui,bg)
+	ttk::style configure TEntry -fieldbackground $ds9(gui,bg)
+	ttk::style configure TButton -background $ds9(gui,bg)
+	ttk::style configure TCheckbutton -background $ds9(gui,bg)
+	ttk::style configure TRadiobutton -background $ds9(gui,bg)
+	ttk::style configure TMenubutton -background $ds9(gui,bg)
+	ttk::style configure TScale -background $ds9(gui,bg)
+	ttk::style configure TScrollbar -background $ds9(gui,bg) \
+	    -troughcolor $ds9(gui,bg)
+	ttk::style configure TProgressbar -troughcolor $ds9(gui,bg)
+
+	ttk::style configure TEntry -padding 1
+	ttk::style configure TLabel -borderwidth 2 -padding 1
+    }
+    aqua {
+	set ds9(foreground) systemTextColor
+	set ds9(background) systemTextBackgroundColor
+	set ds9(gui,fg) $ds9(foreground)
+	set ds9(gui,bg) $ds9(background)
+	set ds9(gui,bold) systemControlAccentColor
+
+	set pds9(bg) $ds9(background)
+	set pap(foreground) $ds9(foreground)
+	set pap(background) $ds9(background)
+    }
+    win32 {
+	set ds9(foreground) black
+	set ds9(background) white
+	set ds9(gui,fg) $ds9(foreground)
+	set ds9(gui,bg) $ds9(background)
+	set ds9(gui,bold) blue
+
+	ttk::style theme use xpnative
+    }
+}
+
 # let's start
 set ds9(init) 1
 
@@ -425,33 +428,9 @@ switch $ds9(wm) {
     win32 {}
     aqua {
 	# we need to map the top window so we can get the proper truecolor masks
-	# and test for dark mode
 	update idletasks
-
 	::tk::unsupported::MacWindowStyle style $ds9(top) document \
 	    "closeBox fullZoom collapseBox resizable"
-
-	# check for darkmode
-	if {[tk::unsupported::MacWindowStyle isdark $ds9(top)]} {
-	    # dark mode bg #222 text #ddd
-	    set ds9(foreground) #ddd
-	    set ds9(background) #222
-	    set ds9(gui,fg) $ds9(foreground)
-	    set ds9(gui,bg) $ds9(background)
-	    set ds9(gui,bold) green
-	} else {
-	    set ds9(foreground) black
-	    set ds9(background) white
-	    set ds9(gui,fg) black
-	    set ds9(gui,bg) white
-	    set ds9(gui,bold) blue
-	}
-	global pds9
-	set ds9(bg) $ds9(background)
-	set pds9(bg) $ds9(background)
-	global pap
-	set pap(foreground) $ds9(foreground)
-	set pap(background) $ds9(background)
     }
 }
 

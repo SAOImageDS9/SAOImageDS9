@@ -847,10 +847,8 @@ proc FixPrefs6.0to6.1 {} {
     # which will set following ds9(var), so delete
     FixVarRm ds9(samp)
     FixVarRm ds9(backup)
+    FixVarRm ds9(bg)
     FixVarRm ds9(nan)
-    # which will overwrite the following ds9(var), so reset
-    global ds9
-    set ds9(bg) white
 
     # analysis
     FixVar panalysis(user)  ds9(analysis,user)

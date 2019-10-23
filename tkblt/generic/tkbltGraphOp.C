@@ -420,8 +420,10 @@ void GraphEventProc(ClientData clientData, XEvent* eventPtr)
   Graph* graphPtr = (Graph*)clientData;
 
   if (eventPtr->type == Expose) {
-    if (eventPtr->xexpose.count == 0)
+    if (eventPtr->xexpose.count == 0) {
+      graphPtr->flags |= RESET;
       graphPtr->eventuallyRedraw();
+    }
   }
   else if (eventPtr->type == FocusIn || eventPtr->type == FocusOut) {
     if (eventPtr->xfocus.detail != NotifyInferior) {

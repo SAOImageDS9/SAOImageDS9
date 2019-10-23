@@ -361,6 +361,11 @@ proc UpdateGraphLayout {which} {
     global colorbar
     global icolorbar
 
+    global debug
+    if {$debug(tcl,layout)} {
+	puts stderr "UpdateGraphLayout $which"
+    }
+
     if {$which != {}} {
 	set frww [$ds9(canvas) itemcget $which -width]
 	set frhh [$ds9(canvas) itemcget $which -height]
@@ -432,9 +437,6 @@ proc UpdateGraphLayout {which} {
 	    set igraph(vert,id) 0
 	}
     }
-
-    # need so graphs are realized
-    update idletasks
 }
 
 proc GraphDialog {} {

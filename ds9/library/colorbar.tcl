@@ -94,7 +94,8 @@ proc CreateColorbar {} {
 	-anchor nw \
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
-	-times $ds9(times)
+	-times $ds9(times) \
+	-fg $ds9(foreground) -bg $ds9(background)
 
     $ds9(canvas) bind colorbarrgb <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind colorbarrgb <Enter> [list ColorbarEnter %x %y]
@@ -1095,7 +1096,7 @@ proc LayoutColorbar {} {
 
     global ds9
     global canvas
-
+    puts "LayoutColorbar"
     colorbar configure \
 	-size $colorbar(size) \
 	-ticks $colorbar(ticks) \
@@ -1104,7 +1105,7 @@ proc LayoutColorbar {} {
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
 	-fontweight $colorbar(font,weight) \
-	-fontslant $colorbar(font,slant) \
+	-fontslant $colorbar(font,slant)
 
     colorbarrgb configure \
 	-size $colorbar(size) \
@@ -1114,7 +1115,7 @@ proc LayoutColorbar {} {
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
 	-fontweight $colorbar(font,weight) \
-	-fontslant $colorbar(font,slant) \
+	-fontslant $colorbar(font,slant)
 
     switch -- $colorbar(orientation) {
 	horizontal {

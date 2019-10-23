@@ -380,6 +380,9 @@ switch $ds9(wm) {
 	set pds9(bg) $ds9(background)
 	set pap(foreground) $ds9(foreground)
 	set pap(background) $ds9(background)
+
+	::tk::unsupported::MacWindowStyle style $ds9(top) document \
+	    "closeBox fullZoom collapseBox resizable"
     }
     win32 {
 	set ds9(foreground) black
@@ -422,17 +425,6 @@ event add <<Print>> <${ds9(ctrl)}p>
 event add <<SelectAll>> <${ds9(ctrl)}a>
 event add <<Find>> <${ds9(ctrl)}f>
 event add <<FindNext>> <${ds9(ctrl)}g>
-
-switch $ds9(wm) {
-    x11 -
-    win32 {}
-    aqua {
-	# we need to map the top window so we can get the proper truecolor masks
-	update idletasks
-	::tk::unsupported::MacWindowStyle style $ds9(top) document \
-	    "closeBox fullZoom collapseBox resizable"
-    }
-}
 
 # We want to withdraw the window til everything is ready to go
 wm withdraw $ds9(top)

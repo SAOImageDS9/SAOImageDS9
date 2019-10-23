@@ -437,16 +437,6 @@ proc UpdateGraphLayout {which} {
 	    set igraph(vert,id) 0
 	}
     }
-    
-    switch $ds9(wm) {
-	x11 -
-	win32 {
-	    update idletasks
-	}
-	aqua {
-	    # aqua really does not like this, messes up inital colorbar sizing
-	}
-    }
 }
 
 proc GraphDialog {} {

@@ -1096,7 +1096,7 @@ proc LayoutColorbar {} {
 
     global ds9
     global canvas
-    puts "LayoutColorbar"
+
     colorbar configure \
 	-size $colorbar(size) \
 	-ticks $colorbar(ticks) \

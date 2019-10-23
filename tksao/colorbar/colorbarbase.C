@@ -293,11 +293,11 @@ int ColorbarBase::updatePixmap(const BBox& bb)
   // assume if no pixmap, no xmap
   // bb is in canvas coords
 
-  // MacOS will generate an Expose event (dark mode), so need to update
-  //#ifndef MAC_OSX_TK
+  // MacOS will generate an Expose event (dark mode), so need to update anyways
+  #ifndef MAC_OSX_TK
   if (pixmap)
     return TCL_OK;
-  //#endif
+  #endif
 
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
@@ -309,7 +309,6 @@ int ColorbarBase::updatePixmap(const BBox& bb)
   if (!gridGC_)
     gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  cerr << "updatePixmap" << endl;
   if (!pixmap) {
     if (!(pixmap = Tk_GetPixmap(display, Tk_WindowId(tkwin), options->width, 
 				options->height, depth))) {
@@ -325,22 +324,24 @@ int ColorbarBase::updatePixmap(const BBox& bb)
   XFillRectangle(display, pixmap, widgetGC, 0, 0, 
 		 options->width,options->height);
 
-  if (!opts->orientation) {
-    if (!(xmap = XGetImage(display, pixmap, 1, 1, 
-			   options->width-2, 
-			   opts->size-2,
-			   AllPlanes, ZPixmap))){
-      internalError("Colorbar: Unable to Create XImage");
-      return TCL_OK;
+  if (!xmap) {
+    if (!opts->orientation) {
+      if (!(xmap = XGetImage(display, pixmap, 1, 1,
+			     options->width-2,
+			     opts->size-2,
+			     AllPlanes, ZPixmap))){
+	internalError("Colorbar: Unable to Create XImage");
+	return TCL_OK;
+      }
     }
-  }
-  else {
-    if (!(xmap = XGetImage(display, pixmap, 1, 1, 
-			   opts->size-2,
-			   options->height-2, 
-			   AllPlanes, ZPixmap))){
-      internalError("Colorbar: Unable to Create XImage");
-      return TCL_OK;
+    else {
+      if (!(xmap = XGetImage(display, pixmap, 1, 1,
+			     opts->size-2,
+			     options->height-2,
+			     AllPlanes, ZPixmap))){
+	internalError("Colorbar: Unable to Create XImage");
+	return TCL_OK;
+      }
     }
   }
     

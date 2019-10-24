@@ -38,6 +38,9 @@ struct ColorbarBaseOptions {
   char* courier;             // name of X11 font
   char* times;               // name of X11 font
 
+  XColor* fgColor;
+  XColor* bgColor;
+
   Widget* widget;            // pointer to widget class
 
   int orientation;           // 0-horizontal, 1-vertical
@@ -53,9 +56,6 @@ struct ColorbarBaseOptions {
   int ticks;
 
   int colors;
-
-  XColor* bgColor;
-  XColor* fgColor;
 };
 
 class ColorbarBase : public Widget {

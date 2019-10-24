@@ -36,9 +36,6 @@ class Panner : public Widget {
   void update();             // use existing pixmap, just update
   void invalidPixmap();      // new pixmap, then update
 
- protected:
-  virtual void clearPixmap() =0;  // clear pixmap
-
  private:
   int updatePixmap(const BBox&); // renders image/graphics into pixmap
   void renderBBox();

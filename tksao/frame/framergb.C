@@ -226,14 +226,14 @@ unsigned char* FrameRGB::fillImage(int width, int height,
 	if (*mkptr == 2) // good value
 	  ;
 	else if (*mkptr == 1) { // nan
-	  *dest = (unsigned char)nanColor->red;
-	  *(dest+1) = (unsigned char)nanColor->green;
-	  *(dest+2) = (unsigned char)nanColor->blue;
+	  *dest = (unsigned char)nanColour->red;
+	  *(dest+1) = (unsigned char)nanColour->green;
+	  *(dest+2) = (unsigned char)nanColour->blue;
 	}
 	else { // bg
-	  *dest = (unsigned char)bgColor->red;
-	  *(dest+1) = (unsigned char)bgColor->green;
-	  *(dest+2) = (unsigned char)bgColor->blue;
+	  *dest = (unsigned char)bgColour->red;
+	  *(dest+1) = (unsigned char)bgColour->green;
+	  *(dest+2) = (unsigned char)bgColour->blue;
 	}
       }	
   }
@@ -699,14 +699,14 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
 	if (*mptr == 2) // good value
 	  ;
 	else if (*mptr == 1) { // nan
-	  *(dest  ) = (unsigned char)nanColor->red;
-	  *(dest+1) = (unsigned char)nanColor->green;
-	  *(dest+2) = (unsigned char)nanColor->blue;
+	  *(dest  ) = (unsigned char)nanColour->red;
+	  *(dest+1) = (unsigned char)nanColour->green;
+	  *(dest+2) = (unsigned char)nanColour->blue;
 	} 
 	else { // bg
-	  *(dest  ) = (unsigned char)bgColor->red;
-	  *(dest+1) = (unsigned char)bgColor->green;
-	  *(dest+2) = (unsigned char)bgColor->blue;
+	  *(dest  ) = (unsigned char)bgColour->red;
+	  *(dest+1) = (unsigned char)bgColour->green;
+	  *(dest+2) = (unsigned char)bgColour->blue;
 	}
   }
 

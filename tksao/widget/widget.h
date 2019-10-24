@@ -80,6 +80,9 @@ struct WidgetOptions {
   char* courier;             // name of X11 font
   char* times;               // name of X11 font
 
+  XColor* fgColor;
+  XColor* bgColor;
+
   Widget* widget;            // pointer to widget class
 };
 
@@ -121,6 +124,8 @@ class Widget {
   virtual void invalidPixmap();  // pixmap is invalid
   virtual void reset() {};       // reset widget
 
+  void clearPixmap();
+
   void createCommand();          // create tcl command
   void updateBBox();             // update item bounding box
 
@@ -129,7 +134,6 @@ class Widget {
   void psHead1(ostream&, int, int);
   void psHead2(ostream&, int, int, const char*, const char*);
   Vector psOrigin();
-  //  void psFix(ostringstream& ostr);
 
  public:
   Widget(Tcl_Interp*, Tk_Canvas, Tk_Item*);

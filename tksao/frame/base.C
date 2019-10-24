@@ -150,12 +150,12 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  bgColorName = dupstr("white");
-  bgColor = getXColor("white");
+  bgColourName = dupstr("white");
+  bgColour = getXColor("white");
   memset(bgTrueColor_,255,4);
 
-  nanColorName = dupstr("white");
-  nanColor = getXColor("white");
+  nanColourName = dupstr("white");
+  nanColour = getXColor("white");
   memset(nanTrueColor_,255,4);
 
   dlist[0] = 8;
@@ -218,11 +218,11 @@ Base::~Base()
   if (contourGC_)
     XFreeGC(display, contourGC_);
 
-  if (bgColorName)
-    delete [] bgColorName;
+  if (bgColourName)
+    delete [] bgColourName;
 
-  if (nanColorName)
-    delete [] nanColorName;
+  if (nanColourName)
+    delete [] nanColourName;
 
   if (colorbartag)
     delete [] colorbartag;
@@ -1300,8 +1300,8 @@ void Base::updateBase()
 
     // we have to wait until now, since the encodings depend on baseXImage
     encodeTrueColor(baseXImage->byte_order, baseXImage->bits_per_pixel);
-    encodeTrueColor(bgColor, bgTrueColor_);
-    encodeTrueColor(nanColor, nanTrueColor_);
+    encodeTrueColor(bgColour, bgTrueColor_);
+    encodeTrueColor(nanColour, nanTrueColor_);
 
     // we have a race condition. Some Truecolor ColorScales need to know the 
     // bytes per pixel, RGB masks, and byte order, from XImage struct.
@@ -1316,8 +1316,9 @@ void Base::updateBase()
   if (doRender())
     ximageToPixmap(basePixmap, baseXImage, Coord::WIDGET);
   else {
-    XSetForeground(display, widgetGC, getColor(bgColorName));
-    XFillRectangle(display, basePixmap, widgetGC, 0,0,options->width,options->height);
+    XSetForeground(display, widgetGC, getColor(bgColourName));
+    XFillRectangle(display, basePixmap, widgetGC, 0, 0,
+		   options->width,options->height);
   }
   
   if (DebugPerf)
@@ -1476,7 +1477,7 @@ void Base::updateMagnifier(const Vector& vv)
 	x11MagnifierCursor(vv);
     }
     else {
-      XSetForeground(display, widgetGC, getColor(bgColorName));
+      XSetForeground(display, widgetGC, getColor(bgColourName));
       XFillRectangle(display, magnifierPixmap, widgetGC, 0, 0, 
 		     magnifierXImage->width, magnifierXImage->height);
     }
@@ -1628,7 +1629,7 @@ void Base::updatePanner()
     if (doRender())
       ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
     else {
-      XSetForeground(display, pannerGC, getColor(bgColorName));
+      XSetForeground(display, pannerGC, getColor(bgColourName));
       XFillRectangle(display, pannerPixmap, pannerGC, 0, 0,
 		     pannerWidth, pannerHeight);
     }  

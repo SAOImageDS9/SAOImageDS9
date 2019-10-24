@@ -8,9 +8,6 @@
 #include "magnifier.h"
 
 class MagnifierTrueColor : public Magnifier {
-private:
-  void clearPixmap();
-
 public:
   MagnifierTrueColor(Tcl_Interp*, Tk_Canvas, Tk_Item*);
 };

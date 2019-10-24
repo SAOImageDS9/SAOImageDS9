@@ -46,10 +46,11 @@ void Base::axesOrderCmd(int order)
 
 void Base::bgColorCmd(const char* color)
 {
-  if (bgColorName)
-    delete [] bgColorName;
-  bgColorName = dupstr(color);
-  bgColor = getXColor(bgColorName);
+  if (bgColourName)
+    delete [] bgColourName;
+  bgColourName = dupstr(color);
+  bgColour = getXColor(bgColourName);
+
   update(BASE);
 }
 
@@ -795,7 +796,7 @@ void Base::getAxesOrderCmd()
 
 void Base::getBgColorCmd()
 {
-  Tcl_AppendResult(interp, bgColorName, NULL);
+  Tcl_AppendResult(interp, bgColourName, NULL);
 }
 
 void Base::getBinCursorCmd()
@@ -1919,7 +1920,7 @@ void Base::getMinMaxCmd()
 
 void Base::getNANColorCmd()
 {
-  Tcl_AppendResult(interp, nanColorName, NULL);
+  Tcl_AppendResult(interp, nanColourName, NULL);
 }
 
 void Base::getOrientCmd()
@@ -2485,10 +2486,10 @@ void Base::matchCmd(const char* xxname1, const char* yyname1,
 
 void Base::nanColorCmd(const char* color)
 {
-  if (nanColorName)
-    delete [] nanColorName;
-  nanColorName = dupstr(color);
-  nanColor = getXColor(nanColorName);
+  if (nanColourName)
+    delete [] nanColourName;
+  nanColourName = dupstr(color);
+  nanColour = getXColor(nanColourName);
   update(BASE);
 }
 

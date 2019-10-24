@@ -99,9 +99,9 @@ unsigned char* Frame::fillImage(int width, int height,
     unsigned char* ptr = img;
     for (int jj=0; jj<height; jj++)
       for (int ii=0; ii<width; ii++) {
-	*ptr++ = (unsigned char)bgColor->red;
-	*ptr++ = (unsigned char)bgColor->green;
-	*ptr++ = (unsigned char)bgColor->blue;
+	*ptr++ = (unsigned char)bgColour->red;
+	*ptr++ = (unsigned char)bgColour->green;
+	*ptr++ = (unsigned char)bgColour->blue;
       }	
   }
 
@@ -169,9 +169,9 @@ unsigned char* Frame::fillImage(int width, int height,
 	    }
 	  }
 	  else {
-	    *(dest+2) = nanColor->blue;
-	    *(dest+1) = nanColor->green;
-	    *dest = nanColor->red;
+	    *(dest+2) = nanColour->blue;
+	    *(dest+1) = nanColour->green;
+	    *dest = nanColour->red;
 	  }
 
 	  break;
@@ -944,9 +944,9 @@ void Frame::savePhotoCmd(const char* ph)
 	}
       }
       else {
-	*(dest+block.offset[0]) = nanColor->red;
-	*(dest+block.offset[1]) = nanColor->green;
-	*(dest+block.offset[2]) = nanColor->blue;
+	*(dest+block.offset[0]) = nanColour->red;
+	*(dest+block.offset[1]) = nanColour->green;
+	*(dest+block.offset[2]) = nanColour->blue;
 	*(dest+block.offset[3]) = 255;
       }
     }

@@ -824,9 +824,9 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
   double hh = keyContext->fits->high();
   double diff = hh - ll;
 
-  register unsigned char red = (unsigned char)bgColor->red;
-  register unsigned char green = (unsigned char)bgColor->green;
-  register unsigned char blue = (unsigned char)bgColor->blue; 
+  register unsigned char red = (unsigned char)bgColour->red;
+  register unsigned char green = (unsigned char)bgColour->green;
+  register unsigned char blue = (unsigned char)bgColour->blue; 
 
   unsigned char* dest = img;
   float* src = zbuf;
@@ -1182,9 +1182,9 @@ void Frame3d::savePhotoCmd(const char* ph)
 	}
       }
       else {
-	*(dest+block.offset[0]) = nanColor->red;
-	*(dest+block.offset[1]) = nanColor->green;
-	*(dest+block.offset[2]) = nanColor->blue;
+	*(dest+block.offset[0]) = nanColour->red;
+	*(dest+block.offset[1]) = nanColour->green;
+	*(dest+block.offset[2]) = nanColour->blue;
 	*(dest+block.offset[3]) = 255;
       }
     }

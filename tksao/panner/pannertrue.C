@@ -42,6 +42,13 @@ static Tk_ConfigSpec pannerTrueColorSpecs[] = {
   {TK_CONFIG_STRING, (char*)"-times", NULL, NULL, "times",
    Tk_Offset(WidgetOptions, times), 0, NULL},
 
+  {TK_CONFIG_SYNONYM, "-bg", "background", NULL, NULL, 0, 0, NULL},
+  {TK_CONFIG_COLOR, "-background", "background", "Background", "white",
+   Tk_Offset(WidgetOptions, bgColor), 0, NULL},
+  {TK_CONFIG_SYNONYM, "-fg", "foreground", NULL, NULL, 0, 0, NULL},
+  {TK_CONFIG_COLOR, "-foreground", "foreground", "Foreground", "black",
+   Tk_Offset(WidgetOptions, fgColor), 0, NULL},
+
   {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, NULL},
 };
 
@@ -102,21 +109,4 @@ PannerTrueColor::PannerTrueColor(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   : Panner(i, c, item)
 {
   configSpecs = pannerTrueColorSpecs;  // panner configure options
-}
-
-void PannerTrueColor::clearPixmap()
-{
-  XImage* xmap = XGetImage(display, pixmap, 0, 0,
-			   options->width, options->height, 
-			   AllPlanes, ZPixmap);
-  if (!xmap) {
-    internalError("Panner: Unable to Create XImage");
-    return;
-  }
-
-  memset(xmap->data, 255, xmap->bytes_per_line * xmap->height);
-
-  TkPutImage(NULL, 0, display, pixmap, widgetGC, xmap, 
-	     0, 0, 0, 0, options->width, options->height);
-  XDestroyImage(xmap);
 }

@@ -139,9 +139,13 @@ Widget::Widget(Tcl_Interp* interp_, Tk_Canvas canvas_, Tk_Item* item) :
 
   // this is needed because of a problem with Tk_ConfigureWidget
   options->cmdName = NULL;
+
   options->helvetica = NULL;
   options->courier = NULL;
   options->times = NULL;
+
+  options->fgColor = NULL;
+  options->bgColor = NULL;
 
   cmd = NULL;
   result = TCL_OK;
@@ -498,6 +502,13 @@ void Widget::invalidPixmap()
   if (pixmap)
     Tk_FreePixmap(display, pixmap);
   pixmap = 0;
+}
+
+void Widget::clearPixmap()
+{
+  XSetForeground(display, widgetGC, options->bgColor->pixel);
+  XFillRectangle(display, pixmap, widgetGC, 0, 0,
+		 options->width, options->height);
 }
 
 void Widget::redraw()

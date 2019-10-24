@@ -45,6 +45,13 @@ static Tk_ConfigSpec colorbarTrueColor8Specs[] = {
   {TK_CONFIG_STRING, (char*)"-times", NULL, NULL, "times",
    Tk_Offset(ColorbarBaseOptions, times), 0, NULL},
 
+  {TK_CONFIG_SYNONYM, "-bg", "background", NULL, NULL, 0, 0, NULL},
+  {TK_CONFIG_COLOR, "-background", "background", "Background", "white",
+   Tk_Offset(ColorbarBaseOptions, bgColor), 0, NULL},
+  {TK_CONFIG_SYNONYM, "-fg", "foreground", NULL, NULL, 0, 0, NULL},
+  {TK_CONFIG_COLOR, "-foreground", "foreground", "Foreground", "black",
+   Tk_Offset(ColorbarBaseOptions, fgColor), 0, NULL},
+
   {TK_CONFIG_BOOLEAN, (char*)"-orientation", NULL, NULL, "0",
    Tk_Offset(ColorbarBaseOptions, orientation), 0, NULL},
   {TK_CONFIG_INT, (char*)"-size", NULL, NULL, "20",
@@ -69,13 +76,6 @@ static Tk_ConfigSpec colorbarTrueColor8Specs[] = {
 
   {TK_CONFIG_INT, (char*)"-colors", NULL, NULL, "1024",
    Tk_Offset(ColorbarBaseOptions, colors), 0, NULL},
-
-  {TK_CONFIG_SYNONYM, "-bg", "background", NULL, NULL, 0, 0, NULL},
-  {TK_CONFIG_COLOR, "-background", "background", "Background", "white",
-   Tk_Offset(ColorbarBaseOptions, bgColor), 0, NULL},
-  {TK_CONFIG_SYNONYM, "-fg", "foreground", NULL, NULL, 0, 0, NULL},
-  {TK_CONFIG_COLOR, "-foreground", "foreground", "Foreground", "black",
-   Tk_Offset(ColorbarBaseOptions, fgColor), 0, NULL},
 
   {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, NULL},
 };

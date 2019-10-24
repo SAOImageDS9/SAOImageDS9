@@ -46,9 +46,6 @@ ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   ((ColorbarBaseOptions*)options)->fontWeight = NULL;
   ((ColorbarBaseOptions*)options)->fontSlant = NULL;
 
-  ((ColorbarBaseOptions*)options)->fgColor = NULL;
-  ((ColorbarBaseOptions*)options)->bgColor = NULL;
-
   xmap = NULL;
   colorCells = NULL;
   colorCount = 0;

@@ -8,9 +8,6 @@
 #include "panner.h"
 
 class PannerTrueColor : public Panner {
-private:
-  void clearPixmap();
-
 public:
   PannerTrueColor(Tcl_Interp*, Tk_Canvas, Tk_Item*);
 };

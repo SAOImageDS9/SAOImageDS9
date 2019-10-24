@@ -17,7 +17,6 @@ static Tk_CustomOption tagsOption = {
 };
 
 static Tk_ConfigSpec frameRGBTrueColor24Specs[] = {
-
   {TK_CONFIG_STRING, (char*)"-command", NULL, NULL, "framergb",
    Tk_Offset(WidgetOptions, cmdName), TK_CONFIG_OPTION_SPECIFIED, NULL},
   {TK_CONFIG_INT, (char*)"-x", NULL, NULL, "1",
@@ -39,6 +38,13 @@ static Tk_ConfigSpec frameRGBTrueColor24Specs[] = {
    Tk_Offset(WidgetOptions, courier), 0, NULL},
   {TK_CONFIG_STRING, (char*)"-times", NULL, NULL, "times",
    Tk_Offset(WidgetOptions, times), 0, NULL},
+
+  {TK_CONFIG_SYNONYM, "-bg", "background", NULL, NULL, 0, 0, NULL},
+  {TK_CONFIG_COLOR, "-background", "background", "Background", "white",
+   Tk_Offset(WidgetOptions, bgColor), 0, NULL},
+  {TK_CONFIG_SYNONYM, "-fg", "foreground", NULL, NULL, 0, 0, NULL},
+  {TK_CONFIG_COLOR, "-foreground", "foreground", "Foreground", "black",
+   Tk_Offset(WidgetOptions, fgColor), 0, NULL},
 
   {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0, NULL},
 };

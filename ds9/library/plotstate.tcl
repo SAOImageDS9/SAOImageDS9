@@ -21,6 +21,8 @@ proc PlotDefState {} {
 
     set pap(foreground) black
     set pap(background) white
+    set pap(fg) black
+    set pap(bg) white
     set pap(grid,color) gray64
     set pap(bar,mode) normal
 

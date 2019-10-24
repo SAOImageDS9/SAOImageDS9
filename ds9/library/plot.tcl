@@ -528,6 +528,40 @@ proc PlotPing {varname} {
     return 0
 }
 
+proc PlotBGColor {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    switch $ds9(wm) {
+	x11 -
+	win {return $var(background)}
+	aqua {
+	    switch $var(background) {
+		white {return $var(bg)}
+		default {return $var(background)}
+	    }
+	}
+    }
+}
+
+proc PlotFGColor {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    switch $ds9(wm) {
+	x11 -
+	win {return $var(foreground)}
+	aqua {
+	    switch $var(foreground) {
+		black {return $var(fg)}
+		default {return $var(foreground)}
+	    }
+	}
+    }
+}
+
 proc PlotRaise {varname} {
     upvar #0 $varname var
     global $varname
@@ -810,29 +844,35 @@ proc PlotUpdateCanvas {varname} {
     
     foreach cc $var(graphs) {
 	$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
-	    -bg $var(background) -plotbackground $var(background) \
-	    -fg $var(foreground) \
+	    -bg [PlotBGColor $varname] \
+	    -plotbackground [PlotBGColor $varname] \
+	    -fg [PlotFGColor $varname] \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
 	$var($cc,graph) xaxis configure \
-	    -bg $var(background) -color $var(foreground) \
+	    -bg [PlotBGColor $varname] \
+	    -color [PlotFGColor $varname] \
+	    -titlecolor [PlotFGColor $varname] \
+	    -gridcolor $var(grid,color) \
+	    -gridminorcolor $var(grid,color) \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)" \
-	    -titlecolor $var(foreground) \
-	    -gridcolor $var(grid,color) -gridminorcolor $var(grid,color)
+	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
 	$var($cc,graph) yaxis configure \
-	    -bg $var(background) -color $var(foreground) \
+	    -bg [PlotBGColor $varname] \
+	    -color [PlotFGColor $varname] \
+	    -titlecolor [PlotFGColor $varname] \
+	    -gridcolor $var(grid,color) \
+	    -gridminorcolor $var(grid,color) \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)" \
-	    -titlecolor $var(foreground) \
-	    -gridcolor $var(grid,color) -gridminorcolor $var(grid,color)
+	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
 	$var($cc,graph) legend configure \
-	    -bg $var(background) -fg $var(foreground) \
+	    -bg [PlotBGColor $varname] \
+	    -fg [PlotFGColor $varname] \
+	    -titlecolor [PlotFGColor $varname] \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
-	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)" \
-	    -titlecolor $var(foreground)
+	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 
 	switch $var(layout) {
 	    grid -
@@ -1155,3 +1195,5 @@ proc PlotBackup {ch dir} {
 	}
     }
 }
+
+

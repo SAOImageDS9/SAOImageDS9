@@ -377,8 +377,8 @@ switch $ds9(wm) {
 	set ds9(gui,bg) $ds9(background)
 	set ds9(gui,bold) systemControlAccentColor
 
-	set pap(foreground) $ds9(foreground)
-	set pap(background) $ds9(background)
+	set pap(fg) $ds9(foreground)
+	set pap(bg) $ds9(background)
 
 	::tk::unsupported::MacWindowStyle style $ds9(top) document \
 	    "closeBox fullZoom collapseBox resizable"

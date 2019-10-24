@@ -85,7 +85,11 @@ int Magnifier::updatePixmap(const BBox& bb)
     else
       clearPixmap();
 
+    // MacOS will generate an Expose event (dark mode)
+    // so need to update
+#ifndef MAC_OSX_TK
     needsUpdate = 0;
+#endif
   }
 
   return TCL_OK;
@@ -106,9 +110,9 @@ void Magnifier::getBBoxCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);  
 }
 
-void Magnifier::updateCmd(void* p)
+void Magnifier::updateCmd(void* pp)
 {
-  thumbnail = (Pixmap)p;
+  thumbnail = (Pixmap)pp;
   update();
 }
 

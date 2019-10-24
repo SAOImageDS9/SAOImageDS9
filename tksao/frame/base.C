@@ -1475,17 +1475,19 @@ void Base::updateMagnifier(const Vector& vv)
       // render cursor
       if (useMagnifierCursor)
 	x11MagnifierCursor(vv);
+
+      // notify the magnifier widget
+      ostringstream str;
+      str << magnifierName << " update " << (void*)magnifierPixmap << ends;
+      Tcl_Eval(interp, str.str().c_str());
+
     }
     else {
-      XSetForeground(display, widgetGC, getColor(bgColourName));
-      XFillRectangle(display, magnifierPixmap, widgetGC, 0, 0, 
-		     magnifierXImage->width, magnifierXImage->height);
+      // clear the magnifier widget
+      ostringstream str;
+      str << magnifierName << " clear " << (void*)magnifierPixmap << ends;
+      Tcl_Eval(interp, str.str().c_str());
     }
-
-    // notify the magnifier widget
-    ostringstream str;
-    str << magnifierName << " update " << (void*)magnifierPixmap << ends;
-    Tcl_Eval(interp, str.str().c_str());
   }
 }
 

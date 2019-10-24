@@ -151,12 +151,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   bgColourName = dupstr("white");
-  bgColour = getXColor("white");
-  memset(bgTrueColor_,255,4);
-
   nanColourName = dupstr("white");
-  nanColour = getXColor("white");
-  memset(nanTrueColor_,255,4);
 
   dlist[0] = 8;
   dlist[1] = 3;
@@ -1300,8 +1295,6 @@ void Base::updateBase()
 
     // we have to wait until now, since the encodings depend on baseXImage
     encodeTrueColor(baseXImage->byte_order, baseXImage->bits_per_pixel);
-    encodeTrueColor(bgColour, bgTrueColor_);
-    encodeTrueColor(nanColour, nanTrueColor_);
 
     // we have a race condition. Some Truecolor ColorScales need to know the 
     // bytes per pixel, RGB masks, and byte order, from XImage struct.

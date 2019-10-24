@@ -49,7 +49,6 @@ void Base::bgColorCmd(const char* color)
   if (bgColourName)
     delete [] bgColourName;
   bgColourName = dupstr(color);
-  bgColour = getXColor(bgColourName);
 
   update(BASE);
 }
@@ -2489,7 +2488,7 @@ void Base::nanColorCmd(const char* color)
   if (nanColourName)
     delete [] nanColourName;
   nanColourName = dupstr(color);
-  nanColour = getXColor(nanColourName);
+
   update(BASE);
 }
 

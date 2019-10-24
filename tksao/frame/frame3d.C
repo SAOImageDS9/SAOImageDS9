@@ -824,6 +824,8 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
   double hh = keyContext->fits->high();
   double diff = hh - ll;
 
+  XColor* bgColour = getXColor(bgColourName);
+
   register unsigned char red = (unsigned char)bgColour->red;
   register unsigned char green = (unsigned char)bgColour->green;
   register unsigned char blue = (unsigned char)bgColour->blue; 
@@ -1152,6 +1154,8 @@ void Frame3d::savePhotoCmd(const char* ph)
     Tcl_AppendResult(interp, "bad pixel size ", NULL);
     return;
   }
+
+  XColor* nanColour = getXColor(nanColourName);
 
   // main loop
   SETSIGBUS

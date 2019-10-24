@@ -93,6 +93,9 @@ unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
 unsigned char* Frame::fillImage(int width, int height, 
 				Coord::InternalSystem sys)
 {
+  XColor* bgColour = getXColor(bgColourName);
+  XColor* nanColour = getXColor(nanColourName);
+
   // img
   unsigned char* img = new unsigned char[width*height*3];
   {
@@ -706,6 +709,14 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
   if (!context->cfits)
     return;
 
+  XColor* bgColour = getXColor(bgColourName);
+  char bgTrueColor_[4];   // color encoded
+  encodeTrueColor(bgColour, bgTrueColor_);
+
+  XColor* nanColour = getXColor(nanColourName);
+  char nanTrueColor_[4];  // color encoded
+  encodeTrueColor(nanColour, nanTrueColor_);
+
   // clear ximage
   int& width = colormapXM->width;
   int& height = colormapXM->height;
@@ -888,6 +899,8 @@ void Frame::savePhotoCmd(const char* ph)
 
   int width = params->xmax - params->xmin;
   int height = params->ymax - params->ymin;
+
+  XColor* nanColour = getXColor(nanColourName);
 
   // photo
   if (*ph == '\0') {

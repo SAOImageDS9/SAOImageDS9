@@ -258,12 +258,7 @@ public:
   GC contourGC_;
 
   char* bgColourName;
-  XColor* bgColour;
-  char bgTrueColor_[4];   // color encoded
-
   char* nanColourName;
-  XColor* nanColour;
-  char nanTrueColor_[4];  // color encoded
 
   float dlist[2];
 

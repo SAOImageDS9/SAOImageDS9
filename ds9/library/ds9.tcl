@@ -377,7 +377,6 @@ switch $ds9(wm) {
 	set ds9(gui,bg) $ds9(background)
 	set ds9(gui,bold) systemControlAccentColor
 
-	set pds9(bg) $ds9(background)
 	set pap(foreground) $ds9(foreground)
 	set pap(background) $ds9(background)
 

@@ -132,7 +132,7 @@ unsigned char* FrameRGB::fillImage(int width, int height,
   char* mk = new char[width*height];
   memset(mk,0,width*height);
 
-  XColor* bgColour = getXColor(bgColourName);
+  XColor* bgColour = bgColor();
   XColor* nanColour = getXColor(nanColourName);
 
   SETSIGBUS
@@ -669,7 +669,7 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
   int& width = colormapXM->width;
   int& height = colormapXM->height;
 
-  XColor* bgColour = getXColor(bgColourName);
+  XColor* bgColour = bgColor();
   XColor* nanColour = getXColor(nanColourName);
 
   // create img

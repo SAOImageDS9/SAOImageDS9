@@ -270,63 +270,71 @@ void FrameBase::updateBin(const Matrix& mx)
 
 void FrameBase::updatePanner()
 {
-  Base::updatePanner();
-
-  if (usePanner) {
+  if (!usePanner)
+    return;
+  
+  if (!doRender()) {
     ostringstream str;
-
-    str << pannerName << " update " << (void*)pannerPixmap << ';';
-
-    // calculate bbox
-    Vector ll = Vector(0,0) * widgetToPanner;
-    Vector lr = Vector(options->width,0) * widgetToPanner;
-    Vector ur = Vector(options->width,options->height) * widgetToPanner;
-    Vector ul = Vector(0,options->height) * widgetToPanner;
-
-    str << pannerName << " update bbox " 
-	<< ll << ' ' << lr << ' ' << ur << ' ' << ul << ';';
-
-    // calculate image compass vectors
-    Matrix mm = 
-      FlipY() *
-      irafMatrix_ *
-      wcsOrientationMatrix * 
-      Rotate(wcsRotation) *
-      orientationMatrix *
-      Rotate(rotation);
-
-    Vector xx = (Vector(1,0)*mm).normalize();
-    Vector yy = (Vector(0,1)*mm).normalize();
-
-    str << pannerName << " update image compass " 
-	<< xx << ' ' << yy << ';';
-
-    if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
-      Matrix mx;
-      Coord::Orientation oo = 
-	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSkyFrame_);
-      if (hasWCSCel(wcsSystem_)) {
-	if (oo==Coord::XX)
-	  mx *= FlipX();
-      }
-      else {
-	if (oo==Coord::NORMAL)
-	  mx *= FlipX();
-      }
-
-      double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSkyFrame_);
-      mx *= Rotate(rr)*mm;
-      Vector north = (Vector(0,1)*mx).normalize();
-      Vector east = (Vector(-1,0)*mx).normalize();
-
-      str << pannerName << " update wcs compass " 
-	  << north << ' ' << east << ends;
-    }
-    else
-      str << pannerName << " update wcs compass invalid" << ends;
-
+    str << pannerName << " clear";
     Tcl_Eval(interp, str.str().c_str());
+    return;
   }
+
+  // do this first
+  ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
+
+  ostringstream str;
+  str << pannerName << " update " << (void*)pannerPixmap << ';';
+
+  // calculate bbox
+  Vector ll = Vector(0,0) * widgetToPanner;
+  Vector lr = Vector(options->width,0) * widgetToPanner;
+  Vector ur = Vector(options->width,options->height) * widgetToPanner;
+  Vector ul = Vector(0,options->height) * widgetToPanner;
+
+  str << pannerName << " update bbox " 
+      << ll << ' ' << lr << ' ' << ur << ' ' << ul << ';';
+
+  // calculate image compass vectors
+  Matrix mm = 
+    FlipY() *
+    irafMatrix_ *
+    wcsOrientationMatrix * 
+    Rotate(wcsRotation) *
+    orientationMatrix *
+    Rotate(rotation);
+
+  Vector xx = (Vector(1,0)*mm).normalize();
+  Vector yy = (Vector(0,1)*mm).normalize();
+
+  str << pannerName << " update image compass " 
+      << xx << ' ' << yy << ';';
+
+  if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
+    Matrix mx;
+    Coord::Orientation oo = 
+      keyContext->fits->getWCSOrientation(wcsSystem_, wcsSkyFrame_);
+    if (hasWCSCel(wcsSystem_)) {
+      if (oo==Coord::XX)
+	mx *= FlipX();
+    }
+    else {
+      if (oo==Coord::NORMAL)
+	mx *= FlipX();
+    }
+
+    double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSkyFrame_);
+    mx *= Rotate(rr)*mm;
+    Vector north = (Vector(0,1)*mx).normalize();
+    Vector east = (Vector(-1,0)*mx).normalize();
+
+    str << pannerName << " update wcs compass " 
+	<< north << ' ' << east << ends;
+  }
+  else
+    str << pannerName << " update wcs compass invalid" << ends;
+
+  Tcl_Eval(interp, str.str().c_str());
 }
 
 void FrameBase::x11MagnifierCursor(const Vector& vv)

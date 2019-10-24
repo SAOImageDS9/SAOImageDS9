@@ -1625,19 +1625,6 @@ void Base::updateNow(UpdateType flag, BBox bb)
   redrawNow(bb);
 }
 
-void Base::updatePanner()
-{
-  if (usePanner) {
-    if (doRender())
-      ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
-    else {
-      XSetForeground(display, pannerGC, getColor(bgColourName));
-      XFillRectangle(display, pannerPixmap, pannerGC, 0, 0,
-		     pannerWidth, pannerHeight);
-    }  
-  }
-}
-
 int Base::updatePixmap(const BBox& bb)
 {
   // bbox is in canvas coords

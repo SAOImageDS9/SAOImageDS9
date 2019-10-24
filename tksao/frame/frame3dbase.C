@@ -919,71 +919,78 @@ void Frame3dBase::updatePannerMatrices()
 
 void Frame3dBase::updatePanner()
 {
-  // do this first
-  Base::updatePanner();
-
-  // always render (to update panner background color)
-  if (usePanner) {
-    if (keyContext->fits) {
-      XSetForeground(display, pannerGC, getColor("black"));
-      x11Border(Coord::PANNER,FrScale::IMGSEC,pannerGC,pannerPixmap);
-    }
-
+  if (!usePanner)
+    return;
+  
+  if (!doRender()) {
     ostringstream str;
-    str << pannerName << " update " << (void*)pannerPixmap << ';';
-
-    // calculate bbox
-    Vector ll = Vector(0,0) * widgetToPanner3d;
-    Vector lr = Vector(options->width,0) * widgetToPanner3d;
-    Vector ur = Vector(options->width,options->height) * widgetToPanner3d;
-    Vector ul = Vector(0,options->height) * widgetToPanner3d;
-
-    str << pannerName << " update bbox " 
-	<< ll << ' ' << lr << ' ' << ur << ' ' << ul << ';';
-
-    // calculate image compass vectors
-    Matrix3d mm = 
-      Matrix3d(wcsOrientationMatrix) *
-      Matrix3d(orientationMatrix) *
-      RotateZ3d(wcsRotation) *
-      RotateZ3d(rotation) *
-      RotateY3d(az_) * 
-      RotateX3d(-el_) * 
-      FlipY3d();
-
-    Vector xx = (Vector3d(1,0,0)*mm).normalize();
-    Vector yy = (Vector3d(0,1,0)*mm).normalize();
-    Vector zz = (Vector3d(0,0,1)*mm).normalize();
-
-    str << pannerName << " update image compass " 
-	<< xx << ' ' << yy << ' ' << zz << ';';
-
-    if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
-      Matrix3d mx;
-      Coord::Orientation oo = 
-	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSkyFrame_);
-      if (hasWCSCel(wcsSystem_)) {
-	if (oo==Coord::XX)
-	  mx *= FlipX3d();
-      }
-      else {
-	if (oo==Coord::NORMAL)
-	  mx *= FlipX3d();
-      }
-
-      mx *= mm;
-      Vector north = (Vector3d(0,1)*mx).normalize();
-      Vector east = (Vector3d(-1,0)*mx).normalize();
-
-      // and update the panner
-      str << pannerName << " update wcs compass " 
-	  << north << ' ' << east << ends;
-    }
-    else
-      str << pannerName << " update wcs compass invalid" << ends;
-
+    str << pannerName << " clear";
     Tcl_Eval(interp, str.str().c_str());
   }
+
+  // do this first
+  ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
+
+  // always render (to update panner background color)
+  if (keyContext->fits) {
+    XSetForeground(display, pannerGC, getColor("black"));
+    x11Border(Coord::PANNER,FrScale::IMGSEC,pannerGC,pannerPixmap);
+  }
+
+  ostringstream str;
+  str << pannerName << " update " << (void*)pannerPixmap << ';';
+
+  // calculate bbox
+  Vector ll = Vector(0,0) * widgetToPanner3d;
+  Vector lr = Vector(options->width,0) * widgetToPanner3d;
+  Vector ur = Vector(options->width,options->height) * widgetToPanner3d;
+  Vector ul = Vector(0,options->height) * widgetToPanner3d;
+
+  str << pannerName << " update bbox " 
+      << ll << ' ' << lr << ' ' << ur << ' ' << ul << ';';
+
+  // calculate image compass vectors
+  Matrix3d mm = 
+    Matrix3d(wcsOrientationMatrix) *
+    Matrix3d(orientationMatrix) *
+    RotateZ3d(wcsRotation) *
+    RotateZ3d(rotation) *
+    RotateY3d(az_) * 
+    RotateX3d(-el_) * 
+    FlipY3d();
+
+  Vector xx = (Vector3d(1,0,0)*mm).normalize();
+  Vector yy = (Vector3d(0,1,0)*mm).normalize();
+  Vector zz = (Vector3d(0,0,1)*mm).normalize();
+
+  str << pannerName << " update image compass " 
+      << xx << ' ' << yy << ' ' << zz << ';';
+
+  if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
+    Matrix3d mx;
+    Coord::Orientation oo = 
+      keyContext->fits->getWCSOrientation(wcsSystem_, wcsSkyFrame_);
+    if (hasWCSCel(wcsSystem_)) {
+      if (oo==Coord::XX)
+	mx *= FlipX3d();
+    }
+    else {
+      if (oo==Coord::NORMAL)
+	mx *= FlipX3d();
+    }
+
+    mx *= mm;
+    Vector north = (Vector3d(0,1)*mx).normalize();
+    Vector east = (Vector3d(-1,0)*mx).normalize();
+
+    // and update the panner
+    str << pannerName << " update wcs compass " 
+	<< north << ' ' << east << ends;
+  }
+  else
+    str << pannerName << " update wcs compass invalid" << ends;
+
+  Tcl_Eval(interp, str.str().c_str());
 }
 
 void Frame3dBase::x11Ants3d()

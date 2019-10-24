@@ -22,7 +22,8 @@ proc CreatePanner {} {
 	-tag panner \
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
-	-times $ds9(times)
+	-times $ds9(times) \
+	-fg $ds9(foreground) -bg $ds9(background)
 }
 
 proc PannerDef {} {

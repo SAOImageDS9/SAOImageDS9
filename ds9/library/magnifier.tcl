@@ -8,7 +8,8 @@ proc CreateMagnifier {} {
     global imagnifier
     global ds9
 
-    set ds9(magnifier) [canvas $ds9(panel).mag -width $imagnifier(size) \
+    set ds9(magnifier) [canvas $ds9(panel).mag \
+			    -width $imagnifier(size) \
 			    -height $imagnifier(size) \
 			    -relief groove \
 			    -borderwidth 2 \
@@ -23,7 +24,7 @@ proc CreateMagnifier {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-bg $ds9(background)
+	-fg $ds9(foreground) -bg $ds9(background)
 }
 
 proc MagnifierDef {} {

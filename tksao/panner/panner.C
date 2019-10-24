@@ -224,9 +224,9 @@ void Panner::setBBoxCmd(int w)
   update();
 }
 
-void Panner::updateCmd(void* p)
+void Panner::updateCmd(void* pp)
 {
-  thumbnail = (Pixmap)p;
+  thumbnail = (Pixmap)pp;
   update();
 }
 

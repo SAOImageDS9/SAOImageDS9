@@ -471,7 +471,7 @@ public:
 
   void updateNow(UpdateType); 
   void updateNow(UpdateType,BBox);
-  virtual void updatePanner();
+  virtual void updatePanner() =0;
   void updatePM(const BBox&);
 
   char* varcat(char*, char*, char, char*);

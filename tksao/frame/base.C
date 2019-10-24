@@ -1427,10 +1427,21 @@ void Base::updateMagnifier()
 
 void Base::updateMagnifier(const Vector& vv)
 {
+  if (!useMagnifier)
+    return;
+  
+  if (!doRender()) {
+    ostringstream str;
+    str << magnifierName << " clear";
+    Tcl_Eval(interp, str.str().c_str());
+    return;
+  }
+
   // vv is in CANVAS coords
   // save it, we may need it later
   magnifierCursor = vv;
 
+  // just in case
   if (!(magnifierXImage && magnifierPixmap))
     return;
 
@@ -1438,57 +1449,46 @@ void Base::updateMagnifier(const Vector& vv)
   if (!widgetGC)
     widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  if (useMagnifier) {
-    updateMagnifierMatrices();
+  // do this first
+  updateMagnifierMatrices();
+  ximageToPixmapMagnifier();
 
-    if (doRender()) {
-      ximageToPixmapMagnifier();
+  if (useMagnifierGraphics) {
+    // render markers
+    // markers bounding box is in canvas coords
+    // map the magnifier to a bounding box in canvas coords
+    Matrix mm = magnifierToRef * refToCanvas;
 
-      if (useMagnifierGraphics) {
-	// render markers
-	// markers bounding box is in canvas coords
-	// map the magnifier to a bounding box in canvas coords
-	Matrix mm = magnifierToRef * refToCanvas;
+    Vector ll = Vector(0,0) * mm;
+    Vector ur = Vector(magnifierWidth,magnifierHeight) * mm;
+    BBox bb = BBox(vv,vv);
+    bb.bound(ll);
+    bb.bound(ur);
 
-	Vector ll = Vector(0,0) * mm;
-	Vector ur = Vector(magnifierWidth,magnifierHeight) * mm;
-	BBox bb = BBox(vv,vv);
-	bb.bound(ll);
-	bb.bound(ur);
+    // render contours
+    // needs to before markers if marker is filled
+    currentContext->contourX11(magnifierPixmap, Coord::MAGNIFIER,
+			       BBox(0,0,magnifierWidth,magnifierHeight));
 
-	// render contours
-	// needs to before markers if marker is filled
-	currentContext->contourX11(magnifierPixmap, Coord::MAGNIFIER,
-				   BBox(0,0,magnifierWidth,magnifierHeight));
-
-	if (showMarkers) {
-	  x11MagnifierMarkers(&userMarkers, bb);
-	  x11MagnifierMarkers(&catalogMarkers, bb);
-	}
-
-	// render crosshair
-	if (useCrosshair)
-	  x11Crosshair(magnifierPixmap, Coord::MAGNIFIER, 
-			  magnifierWidth, magnifierHeight);
-      }
-
-      // render cursor
-      if (useMagnifierCursor)
-	x11MagnifierCursor(vv);
-
-      // notify the magnifier widget
-      ostringstream str;
-      str << magnifierName << " update " << (void*)magnifierPixmap << ends;
-      Tcl_Eval(interp, str.str().c_str());
-
+    if (showMarkers) {
+      x11MagnifierMarkers(&userMarkers, bb);
+      x11MagnifierMarkers(&catalogMarkers, bb);
     }
-    else {
-      // clear the magnifier widget
-      ostringstream str;
-      str << magnifierName << " clear " << (void*)magnifierPixmap << ends;
-      Tcl_Eval(interp, str.str().c_str());
-    }
+
+    // render crosshair
+    if (useCrosshair)
+      x11Crosshair(magnifierPixmap, Coord::MAGNIFIER, 
+		   magnifierWidth, magnifierHeight);
   }
+
+  // render cursor
+  if (useMagnifierCursor)
+    x11MagnifierCursor(vv);
+
+  // notify the magnifier widget
+  ostringstream str;
+  str << magnifierName << " update " << (void*)magnifierPixmap << ends;
+  Tcl_Eval(interp, str.str().c_str());
 }
 
 void Base::updateMatrices()

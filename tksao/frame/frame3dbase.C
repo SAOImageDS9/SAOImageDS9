@@ -1176,8 +1176,8 @@ void Frame3dBase::ximageToPixmapMagnifier()
     return;
 
   XColor* bgColour = bgColor();
-  char bgTrueColor_[4];   // color encoded
-  encodeTrueColor(bgColour, bgTrueColor_);
+  char bgTrueColor[4];   // color encoded
+  encodeTrueColor(bgColour, bgTrueColor);
 
   // magnifier
   int& ww = magnifierXImage->width;
@@ -1227,7 +1227,7 @@ void Frame3dBase::ximageToPixmapMagnifier()
 	memcpy(dest, src + ((int)vv[1])*srcBytesPerLine + 
 	       ((int)vv[0])*bytesPerPixel, bytesPerPixel);
       else
-	memcpy(dest, bgTrueColor_, bytesPerPixel);
+	memcpy(dest, bgTrueColor, bytesPerPixel);
     }
   }
 

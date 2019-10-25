@@ -711,12 +711,12 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
     return;
 
   XColor* bgColour = bgColor();
-  char bgTrueColor_[4];   // color encoded
-  encodeTrueColor(bgColour, bgTrueColor_);
+  char bgTrueColor[4];   // color encoded
+  encodeTrueColor(bgColour, bgTrueColor);
 
   XColor* nanColour = getXColor(nanColourName);
-  char nanTrueColor_[4];  // color encoded
-  encodeTrueColor(nanColour, nanTrueColor_);
+  char nanTrueColor[4];  // color encoded
+  encodeTrueColor(nanColour, nanTrueColor);
 
   // clear ximage
   int& width = colormapXM->width;
@@ -735,10 +735,10 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
     for (long ii=0; ii<width; ii++, src++, dest+=bytesPerPixel)
       switch (*src) {
       case -1:
-	memcpy(dest, nanTrueColor_, bytesPerPixel);
+	memcpy(dest, nanTrueColor, bytesPerPixel);
 	break;
       case -2:
-	memcpy(dest, bgTrueColor_, bytesPerPixel);
+	memcpy(dest, bgTrueColor, bytesPerPixel);
 	break;
       default:
 	memcpy(dest, table+(*src), bytesPerPixel);

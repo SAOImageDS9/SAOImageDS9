@@ -826,19 +826,15 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
 
   XColor* bgColour = bgColor();
 
-  register unsigned char red = (unsigned char)bgColour->red;
-  register unsigned char green = (unsigned char)bgColour->green;
-  register unsigned char blue = (unsigned char)bgColour->blue; 
-
   unsigned char* dest = img;
   float* src = zbuf;
   unsigned char* mksrc = mkzbuf;
 
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++, dest+=3, src++, mksrc++) {
-      *dest = red;
-      *(dest+1) = green;
-      *(dest+2) = blue;
+      *dest = (unsigned char)bgColour->red;
+      *(dest+1) = (unsigned char)bgColour->green;
+      *(dest+2) = (unsigned char)bgColour->blue;
 
       // will not see nan
       if (isfinite(diff)) {

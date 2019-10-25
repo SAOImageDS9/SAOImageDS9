@@ -222,10 +222,11 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
   Context* cc = msk->context();
   FitsImage* currentMsk = cc->fits;
-  XColor* maskColor = msk->color();
   FitsMask::MaskType mark = msk->mark();
   double low = msk->low();
   double high = msk->high();
+
+  XColor* maskColor = getXColor(msk->colorName());
 
   if (!currentMsk)
     return img;

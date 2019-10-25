@@ -15,8 +15,6 @@ FitsMask::FitsMask(Base* pp, char* clr, MaskType mm, double ll, double hh)
   context_->parent(pp);
 
   colorName_ = dupstr(clr);
-  color_ = pp->getXColor(colorName_);
-  pp->encodeTrueColor(color_, trueColor_);
 
   next_ = NULL;
   previous_ = NULL;

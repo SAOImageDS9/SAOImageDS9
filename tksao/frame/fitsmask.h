@@ -19,8 +19,6 @@ class FitsMask {
   Matrix mm_;
 
   char* colorName_;
-  XColor* color_;
-  char trueColor_[4];
 
   MaskType mark_;
   double low_;
@@ -36,8 +34,7 @@ class FitsMask {
 
   Context* context() {return context_;}
   Matrix& mm() {return mm_;}
-  XColor* color() {return color_;}
-  char* trueColor() {return trueColor_;}
+  char* colorName() {return colorName_;}
   MaskType mark() {return mark_;}
   double low() {return low_;}
   double high() {return high_;}

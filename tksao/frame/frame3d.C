@@ -824,7 +824,7 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
   double hh = keyContext->fits->high();
   double diff = hh - ll;
 
-  XColor* bgColour = bgColor();
+  XColor* bgColor = getBGColor();
 
   unsigned char* dest = img;
   float* src = zbuf;
@@ -832,9 +832,9 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
 
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++, dest+=3, src++, mksrc++) {
-      *dest = (unsigned char)bgColour->red;
-      *(dest+1) = (unsigned char)bgColour->green;
-      *(dest+2) = (unsigned char)bgColour->blue;
+      *dest = (unsigned char)bgColor->red;
+      *(dest+1) = (unsigned char)bgColor->green;
+      *(dest+2) = (unsigned char)bgColor->blue;
 
       // will not see nan
       if (isfinite(diff)) {
@@ -1151,7 +1151,7 @@ void Frame3d::savePhotoCmd(const char* ph)
     return;
   }
 
-  XColor* nanColour = getXColor(nanColourName);
+  XColor* nanColor = getXColor(nanColourName);
 
   // main loop
   SETSIGBUS
@@ -1182,9 +1182,9 @@ void Frame3d::savePhotoCmd(const char* ph)
 	}
       }
       else {
-	*(dest+block.offset[0]) = nanColour->red;
-	*(dest+block.offset[1]) = nanColour->green;
-	*(dest+block.offset[2]) = nanColour->blue;
+	*(dest+block.offset[0]) = nanColor->red;
+	*(dest+block.offset[1]) = nanColor->green;
+	*(dest+block.offset[2]) = nanColor->blue;
 	*(dest+block.offset[3]) = 255;
       }
     }

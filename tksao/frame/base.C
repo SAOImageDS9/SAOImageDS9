@@ -300,13 +300,17 @@ void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 	      Vector(mm[0][1],mm[1][1]).length())/2.;
 }
 
-XColor* Base::bgColor()
+XColor* Base::getBGColor()
 {
 #ifndef MAC_OSX_TK
   return getXColor(bgColourName);
 #else
-  return !strncmp(bgColourName,"white",5) ?
-    options->bgColor : getXColor(bgColourName);
+  //  return !strncmp(bgColourName,"white",5) ?
+  //    options->bgColor : getXColor(bgColourName);
+  if (!strncmp(bgColourName,"white",5))
+    return getXColor("systemTextBackgroundColor");
+  else
+    return getXColor(bgColourName);
 #endif
 }
 
@@ -1319,7 +1323,7 @@ void Base::updateBase()
   if (doRender())
     ximageToPixmap(basePixmap, baseXImage, Coord::WIDGET);
   else {
-    XSetForeground(display, widgetGC, bgColor()->pixel);
+    XSetForeground(display, widgetGC, getBGColor()->pixel);
     XFillRectangle(display, basePixmap, widgetGC, 0, 0,
 		   options->width,options->height);
   }

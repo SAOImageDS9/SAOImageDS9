@@ -93,18 +93,17 @@ unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
 unsigned char* Frame::fillImage(int width, int height, 
 				Coord::InternalSystem sys)
 {
-  XColor* bgColour = bgColor();
-  XColor* nanColour = getXColor(nanColourName);
-
   // img
+  XColor* bgColor = getBGColor();
+  XColor* nanColor = getXColor(nanColourName);
   unsigned char* img = new unsigned char[width*height*3];
   {
     unsigned char* ptr = img;
     for (int jj=0; jj<height; jj++)
       for (int ii=0; ii<width; ii++) {
-	*ptr++ = (unsigned char)bgColour->red;
-	*ptr++ = (unsigned char)bgColour->green;
-	*ptr++ = (unsigned char)bgColour->blue;
+	*ptr++ = (unsigned char)bgColor->red;
+	*ptr++ = (unsigned char)bgColor->green;
+	*ptr++ = (unsigned char)bgColor->blue;
       }	
   }
 
@@ -172,9 +171,9 @@ unsigned char* Frame::fillImage(int width, int height,
 	    }
 	  }
 	  else {
-	    *(dest+2) = nanColour->blue;
-	    *(dest+1) = nanColour->green;
-	    *dest = nanColour->red;
+	    *(dest+2) = nanColor->blue;
+	    *(dest+1) = nanColor->green;
+	    *dest = nanColor->red;
 	  }
 
 	  break;
@@ -710,13 +709,13 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
   if (!context->cfits)
     return;
 
-  XColor* bgColour = bgColor();
+  XColor* bgColor = getBGColor();
   char bgTrueColor[4];   // color encoded
-  encodeTrueColor(bgColour, bgTrueColor);
+  encodeTrueColor(bgColor, bgTrueColor);
 
-  XColor* nanColour = getXColor(nanColourName);
+  XColor* nanColor = getXColor(nanColourName);
   char nanTrueColor[4];  // color encoded
-  encodeTrueColor(nanColour, nanTrueColor);
+  encodeTrueColor(nanColor, nanTrueColor);
 
   // clear ximage
   int& width = colormapXM->width;
@@ -901,7 +900,7 @@ void Frame::savePhotoCmd(const char* ph)
   int width = params->xmax - params->xmin;
   int height = params->ymax - params->ymin;
 
-  XColor* nanColour = getXColor(nanColourName);
+  XColor* nanColor = getXColor(nanColourName);
 
   // photo
   if (*ph == '\0') {
@@ -958,9 +957,9 @@ void Frame::savePhotoCmd(const char* ph)
 	}
       }
       else {
-	*(dest+block.offset[0]) = nanColour->red;
-	*(dest+block.offset[1]) = nanColour->green;
-	*(dest+block.offset[2]) = nanColour->blue;
+	*(dest+block.offset[0]) = nanColor->red;
+	*(dest+block.offset[1]) = nanColor->green;
+	*(dest+block.offset[2]) = nanColor->blue;
 	*(dest+block.offset[3]) = 255;
       }
     }

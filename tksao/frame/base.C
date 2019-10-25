@@ -18,6 +18,8 @@
 #include "point.h"
 #include "vect.h"
 
+#include "tkColor.h"
+
 // Debug
 int DebugBin= 0;
 int DebugBlock= 0;
@@ -305,12 +307,8 @@ XColor* Base::getBGColor()
 #ifndef MAC_OSX_TK
   return getXColor(bgColourName);
 #else
-  //  return !strncmp(bgColourName,"white",5) ?
-  //    options->bgColor : getXColor(bgColourName);
-  if (!strncmp(bgColourName,"white",5))
-    return getXColor("systemTextBackgroundColor");
-  else
-    return getXColor(bgColourName);
+  return !strncmp(bgColourName,"white",5) ?
+    options->bgColor : getXColor(bgColourName);
 #endif
 }
 

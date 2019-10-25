@@ -593,7 +593,7 @@ void Widget::updateBBox()
   options->item.y2 = originY + options->height;
 }
 
-int Widget::getColor(const char* str)
+XColor* Widget::getXColor(const char* str)
 {
   XColor* cc= NULL;
   // starting with tk8.6, colors are W3C based, not X11
@@ -601,38 +601,9 @@ int Widget::getColor(const char* str)
     cc = Tk_GetColor(interp, tkwin, "lime");
   else
     cc = Tk_GetColor(interp, tkwin, str);
-
-  return cc ? cc->pixel : 0;
-}
-
-XColor* Widget::getXColor(const char* str)
-{
-  // note: Tk_GetColor can return an XColor without valid red,green,blue
-  //  if common colorname is used. (uses XAllocNamedColor).
-  //  force an hash string instead (uses XAllocColor).
-
-  XColor* cc=NULL;
-  if (!strncmp(str,"white",5))
-    cc = Tk_GetColor(interp, tkwin, "#ffffff");
-  else if (!strncmp(str,"black",5))
-    cc = Tk_GetColor(interp, tkwin, "#000000");
-  else if (!strncmp(str,"red",3))
-    cc = Tk_GetColor(interp, tkwin, "#ff0000");
-  else if (!strncmp(str,"green",5))
-    cc = Tk_GetColor(interp, tkwin, "#00ff00");
-  else if (!strncmp(str,"blue",4))
-    cc = Tk_GetColor(interp, tkwin, "#0000ff");
-  else if (!strncmp(str,"cyan",4))
-    cc = Tk_GetColor(interp, tkwin, "#00ffff");
-  else if (!strncmp(str,"magenta",7))
-    cc = Tk_GetColor(interp, tkwin, "#ff00ff");
-  else if (!strncmp(str,"yellow",6))
-    cc = Tk_GetColor(interp, tkwin, "#ffff00");
-  else 
-    cc = Tk_GetColor(interp, tkwin, str);
-
-  return cc ? cc : Tk_GetColor(interp, tkwin, "white");
-}
+  
+  return cc;
+};
 
 void Widget::warp(Vector& vv)
 {

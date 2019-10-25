@@ -6,6 +6,10 @@ package provide DS9 1.0
 
 # capture general errors
 # this only captures gui errors, not xpa errors
+proc tkerror {err} {
+    bgerror $err
+}
+
 proc bgerror {err} {
     tk_messageBox -type ok -icon error \
 	-message "[msgcat::mc {An internal error has been detected}] $err"

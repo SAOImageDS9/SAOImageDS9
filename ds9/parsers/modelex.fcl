@@ -16,6 +16,7 @@ pan	    {return $PAN_}
 zoom	    {return $ZOOM_}
 rotate	    {return $ROTATE_}
 crop	    {return $CROP_}
+cat	    {return $CATALOG_}
 catalog	    {return $CATALOG_}
 examine	    {return $EXAMINE_}
 3d	    {return $3D_}

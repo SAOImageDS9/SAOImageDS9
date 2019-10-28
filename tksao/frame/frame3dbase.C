@@ -1175,7 +1175,7 @@ void Frame3dBase::ximageToPixmapMagnifier()
   if (!basePixmap || !baseXImage || !magnifierPixmap || !magnifierXImage)
     return;
 
-  XColor* bgColor = getBGColor();
+  XColor* bgColor = getXColor(bgColourName);
   char bgTrueColor[4];   // color encoded
   encodeTrueColor(bgColor, bgTrueColor);
 

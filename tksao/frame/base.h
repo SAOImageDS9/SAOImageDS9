@@ -313,8 +313,6 @@ public:
   virtual void alignWCS(Coord::CoordSystem, Coord::SkyFrame);
   virtual void alignWCS(FitsImage*, Coord::CoordSystem);
 
-  XColor* getBGColor();
-
   void bltCut(char*, char*, Coord::Orientation, const Vector&, 
 	      int, Base::CutMethod);
   void bltCutFits(double*, double*, int, Coord::Orientation, const Vector&,

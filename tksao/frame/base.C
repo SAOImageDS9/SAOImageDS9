@@ -302,16 +302,6 @@ void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 	      Vector(mm[0][1],mm[1][1]).length())/2.;
 }
 
-XColor* Base::getBGColor()
-{
-#ifndef MAC_OSX_TK
-  return getXColor(bgColourName);
-#else
-  return !strncmp(bgColourName,"white",5) ?
-    options->bgColor : getXColor(bgColourName);
-#endif
-}
-
 void Base::calcAlignWCS(FitsImage* fits1, 
 			Coord::CoordSystem sys1, Coord::SkyFrame sky,
 			Coord::Orientation* orientation, Matrix* oo,
@@ -1321,7 +1311,7 @@ void Base::updateBase()
   if (doRender())
     ximageToPixmap(basePixmap, baseXImage, Coord::WIDGET);
   else {
-    XSetForeground(display, widgetGC, getBGColor()->pixel);
+    XSetForeground(display, widgetGC, getColor(bgColourName));
     XFillRectangle(display, basePixmap, widgetGC, 0, 0,
 		   options->width,options->height);
   }

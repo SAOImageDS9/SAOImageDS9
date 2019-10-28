@@ -94,7 +94,7 @@ unsigned char* Frame::fillImage(int width, int height,
 				Coord::InternalSystem sys)
 {
   // img
-  XColor* bgColor = getBGColor();
+  XColor* bgColor = getXColor(bgColourName);
   XColor* nanColor = getXColor(nanColourName);
   unsigned char* img = new unsigned char[width*height*3];
   {
@@ -709,7 +709,7 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
   if (!context->cfits)
     return;
 
-  XColor* bgColor = getBGColor();
+  XColor* bgColor = getXColor(bgColourName);
   char bgTrueColor[4];   // color encoded
   encodeTrueColor(bgColor, bgTrueColor);
 

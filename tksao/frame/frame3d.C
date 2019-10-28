@@ -824,7 +824,7 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
   double hh = keyContext->fits->high();
   double diff = hh - ll;
 
-  XColor* bgColor = getBGColor();
+  XColor* bgColor = getXColor(bgColourName);
 
   unsigned char* dest = img;
   float* src = zbuf;

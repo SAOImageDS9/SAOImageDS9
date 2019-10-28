@@ -26,7 +26,7 @@ int Tkmacosx_Init(Tcl_Interp* interp) {
   if (Tk_InitStubs(interp, TK_PATCH_LEVEL, 0) == NULL)
     return TCL_ERROR;
 
-  Tcl_CreateCommand(interp, "macosx", TkmacosxCmd,
+  Tcl_CreateCommand(interp, "macos", TkmacosxCmd,
 		    (ClientData)NULL, (Tcl_CmdDeleteProc *)NULL);
 
   if (Tcl_PkgProvide(interp, PACKAGE_NAME, PACKAGE_VERSION))
@@ -42,6 +42,8 @@ int TkmacosxCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
   if (argc>=2) {
     if (!strncmp(argv[1], "pm", 2))
       return tkmacosx->pm(argc, argv);
+    else if (!strncmp(argv[1], "sc", 2))
+      return tkmacosx->sc(argc, argv);
     else if (!strncmp(argv[1], "locale", 2))
       return tkmacosx->locale(argc, argv);
     else {
@@ -130,6 +132,28 @@ int TkMacosx::pm(int argc, const char* argv[])
   return TCL_OK;
 }
 
+// major kludge, located in hacked tk8.6/macosx/tkMacOSXDraw.c
+extern int enableScreenCapture;
+int TkMacosx::sc(int argc, const char* argv[])
+{
+  if (argc >= 1) {
+    if (!strncmp(argv[2], "yes", 3)) {
+      enableScreenCapture =1;
+      return TCL_OK;
+    }
+    else if (!strncmp(argv[2], "no", 2)) {
+      enableScreenCapture =0;
+      return TCL_OK;
+    }
+    else {
+      Tcl_AppendResult(interp, "tkmacosx sc: unknown command: ", argv[2], NULL);
+      return TCL_ERROR;
+    }
+  }
+  Tcl_AppendResult(interp, "usage: tkmacosx sc yes|no", NULL);
+  return TCL_ERROR;
+}
+
 int TkMacosx::pmPrint(int argc, const char* argv[])
 {
   if (argc >= 4) {
@@ -180,7 +204,7 @@ int TkMacosx::pmPrintBegin(int argc, const char* argv[])
   NSPrintOperation* printOp = \
     [NSPrintOperation printOperationWithView:pmView printInfo:printInfo];
   //  [printOp setCanSpawnSeparateThread:YES];
-  NSGraphicsContext* context = [printOp createContext];
+  //  NSGraphicsContext* context = [printOp createContext];
 
   [printOp runOperation];
   return TCL_OK;

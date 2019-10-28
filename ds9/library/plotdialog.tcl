@@ -645,7 +645,7 @@ proc PlotExport {varname fn format} {
     update
 
     # for darwin only
-    set geom [DarwinPhotoFix $var(top) 0 0]
+    set geom [MacOSPhotoFix $var(top) 0 0]
 
     set rr [catch {image create photo -format window -data $var(top)} ph]
     if {$rr} {

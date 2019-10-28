@@ -1259,7 +1259,7 @@ proc MouseWheelFrame {X Y dd} {
 	puts stderr "MouseWheel $X $Y $dd"
     }
 
-    # macosx returns main window coords in X,Y
+    # macos returns main window coords in X,Y
     switch $ds9(wm) {
 	x11 -
 	win32 {}

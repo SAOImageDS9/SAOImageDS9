@@ -39,7 +39,7 @@ proc MacOSPrintDocEvent {bye} {
 }
 
 proc MacOSXGetLocale {} {
-    return [macosx locale]
+    return [macos locale]
 }
 
 proc MacOSXPrint {} {
@@ -50,7 +50,7 @@ proc MacOSXPrint {} {
 # need the colorbar levels updated
     UpdateColormapLevel
 
-    if {[catch {macosx pm print begin [winfo width $ds9(canvas)] [winfo height $ds9(canvas)] yes}]} {
+    if {[catch {macos pm print begin [winfo width $ds9(canvas)] [winfo height $ds9(canvas)] yes}]} {
 	Error "bad"
     } else {
 	Info "good"
@@ -58,27 +58,27 @@ proc MacOSXPrint {} {
 
     if {0} {
 	foreach f $ds9(frames) {
-	    $f macosx print
+	    $f macos print
 	}
-	colorbar macosx print
-	colorbarrgb macosx print
-	macosx pm print end
+	colorbar macos print
+	colorbarrgb macos print
+	macos pm print end
     }
 }
 
 proc MacOSXPrintPre {} {
     global ds9
 
-    if {[macosx pm print begin [winfo width $ds9(canvas)] [winfo height $ds9(canvas)] no]} {
+    if {[macos pm print begin [winfo width $ds9(canvas)] [winfo height $ds9(canvas)] no]} {
 	foreach f $ds9(frames) {
-	    $f macosx print
+	    $f macos print
 	}
-	colorbar macosx print
-	colorbarrgb macosx print
-	macosx pm print end
+	colorbar macos print
+	colorbarrgb macos print
+	macos pm print end
     }
 }
 
 proc MacOSXPageSetup {} {
-    macosx pm pagesetup
+    macos pm pagesetup
 }

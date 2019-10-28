@@ -46,6 +46,7 @@ class TkMacosx {
   ~TkMacosx();
 
   int pm(int, const char**);
+  int sc(int, const char**);
   int locale(int, const char**);
 
   const Matrix& getCanvasToPage() {return canvasToPage;}

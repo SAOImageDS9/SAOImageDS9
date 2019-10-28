@@ -234,7 +234,7 @@ proc PlotExternal {varname dim} {
     upvar #0 $varname var
     global $varname
 
-    global ds9
+    global pap
     
     # incr count
     incr ${varname}(graph,seq) 
@@ -247,8 +247,8 @@ proc PlotExternal {varname dim} {
 
     set var(graph,ds,dim) $dim
 
-    set var(graph,ds,color) $ds9(fg)
-    set var(graph,ds,fill,color) $ds9(fg)
+    set var(graph,ds,color) $pap(fg)
+    set var(graph,ds,fill,color) $pap(fg)
 
     PlotAddElement $varname
 }

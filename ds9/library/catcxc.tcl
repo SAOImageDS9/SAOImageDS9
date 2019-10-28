@@ -67,227 +67,14 @@ proc CATCXCVOT {varname} {
     CATLoad $varname
 }
 
-proc CATCXCReader {t sock token} {
-    upvar #0 $t T
-    global $t
-
-    set result 0
-
-    if { ![info exists ${t}(state)]  } {
-	set T(state) 0
-    }
-
-    switch -- $T(state) {
-	0 {
-	    # init db
-	    fconfigure $sock -blocking 1
-	    set T(Nrows) 0
-	    set T(Ncols) 0
-	    set T(Header) {}
-	    set T(HLines) 0
-
-	    set T(state) 1
-	}
-
-	1 {
-	    # process header
-	    if {[gets $sock line] == -1} {
-		set T(Nrows) 0
-		set T(Ncols) 0
-		set T(Header) {}
-		set T(HLines) 0
-
-		set T(state) -1
-		return $result
-	    }
-
-	    set result [string length "$line"]
-
-	    incr ${t}(HLines)
-	    set n $T(HLines)
-	    set T(H_$n) $line
-
-	    if {[regexp -- {^ *(-)+ *(\t *(-)+ *)*} $line]} {
-		# clean up header column name
-		set hh $T(H_[expr $n-1])
-		regsub -all {\[} $hh {} hh
-		regsub -all {\]} $hh {} hh
-		set T(H_[expr $n-1]) $hh
-
-		# cols
-		set T(Header) [split $T(H_[expr $n-1]) "\t"]
-		set T(Dashes) [split $T(H_$n) "\t"]
-		set T(Ndshs) [llength $T(Dashes)]
-		starbase_colmap $t
-		set T(state) 2
-
-		# these are hard coded
-		set T(Id) $T(Header)
-		set T(DataType) {}
-		set T(ArraySize) {}
-		set T(Unit) {}
-		set T(Ucd) {}
-		# name
-		lappend T(DataType) {char}
-		lappend T(ArraySize) {*}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# ra
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {deg}
-		lappend T(Ucd) {pos.eq.ra;meta.main}
-		# dec
-		lappend T(DataType) {float} 
-		lappend T(ArraySize) {}
-		lappend T(Unit) {deg}
-		lappend T(Ucd) {pos.eq.dec;meta.main}
-		# err_ellipse_r0
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# err_ellipse_r1		
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# err_ellipse_ang
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {deg}
-		lappend T(Ucd) {}
-		# conf_flag
-		lappend T(DataType) {boolean}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# extent_flag
-		lappend T(DataType) {boolean}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# sat_src_flag
-		lappend T(DataType) {boolean}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# flux_aper90_b
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# flux_aper90_hilim_b
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# flux_aper90_lolim_b
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# significance
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# hard_hm
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# hard_ms
-		lappend T(DataType) {float}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-		# var_intra_index_b
-		lappend T(DataType) {int}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		# var_inter_index_b
-		lappend T(DataType) {int}
-		lappend T(ArraySize) {}
-		lappend T(Unit) {}
-		lappend T(Ucd) {}
-
-		if {[llength $T(Header)] > 17} {
-		    # obsid
-		    lappend T(DataType) {int}
-		    lappend T(ArraySize) {}
-		    lappend T(Unit) {}
-		    lappend T(Ucd) {}
-		    # ra_aper
-		    lappend T(DataType) {float}
-		    lappend T(ArraySize) {}
-		    lappend T(Unit) {deg}
-		    lappend T(Ucd) {}
-		    # dec_aper
-		    lappend T(DataType) {float}
-		    lappend T(ArraySize) {}
-		    lappend T(Unit) {deg}
-		    lappend T(Ucd) {}
-		    # mjr_axis_aper
-		    lappend T(DataType) {float}
-		    lappend T(ArraySize) {}
-		    lappend T(Unit) {}
-		    lappend T(Ucd) {}
-		    # mnr_axis_aper
-		    lappend T(DataType) {float}
-		    lappend T(ArraySize) {}
-		    lappend T(Unit) {}
-		    lappend T(Ucd) {}
-		    # pos_angle_aper
-		    lappend T(DataType) {float}
-		    lappend T(ArraySize) {}
-		    lappend T(Unit) {deg}
-		    lappend T(Ucd) {}
-		}
-	    }
-	}
-
-	2 { 
-	    # process table
-	    if {[gets $sock line] == -1} {
-		set T(state) 0
-	    } else {
-		set result [string length "$line"]
-		set line [string trim $line]
-
-		if {$line != {}} {
-		    # ok, save it
-		    incr ${t}(Nrows)
-		    set r $T(Nrows)
-
-		    set NCols [starbase_ncols $t]
-		    set c 1
-		    foreach val [split $line "\t"] {
-			set T($r,$c) $val
-			incr c
-		    }
-		    for {} {$c <= $NCols} {incr c} {
-			set T($r,$c) {}
-		    }
-		}
-	    }
-	}
-    }
-
-    return $result
-}
-
 proc CATCXCAck {varname} {
     upvar #0 $varname var
     global $varname
 
     set msg {Acknowledgments for CXC
 
-Request for Acknowledgment of Use of the Chandra Source Catalog
-
-Users are kindly requested to acknowledge in the acknowledgment
-section of any resulting publications their use of the Chandra Source
-Catalog.
+Users are kindly requested to acknowledge their use of the Chandra
+Source Catalog in any resulting publications.
 
 This will help us greatly to keep track of catalog usage, information
 that is essential for providing full accountability of our work and
@@ -299,11 +86,14 @@ This research has made use of data obtained from the Chandra Source
 Catalog, provided by the Chandra X-ray Center (CXC) as part of the
 Chandra Data Archive.
 
-We would like to remind you that it is also very helpful for us if you
-could include Dataset Identifiers in the manuscript. The Dataset
-Identifier for the Chandra Source Catalog is:
+Citing the Chandra Source Catalog in a Publication
 
-ADS/Sa.CXO#CSC
+Users who wish to reference the Chandra Source Catalog in a
+publication should cite
+
+Evans, I. N., et al. 2010, ApJS, 189, 37
+or
+Evans, I. N., et al. 2010, arXiv:1005.4665
     }
 
     SimpleTextDialog ${varname}ack [msgcat::mc {Acknowledgment}] \

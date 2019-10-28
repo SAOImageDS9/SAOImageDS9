@@ -156,25 +156,13 @@ proc ProcessPageSetupCmd {varname iname} {
     upvar $iname i
     global ds9
 
-    switch $ds9(wm) {
- 	x11 -
-	win32 {ProcessPSPageSetupCmd var i}
- 	aqua {
-	    ProcessPSPageSetupCmd var i
-#	    MacOSXPageSetup
-	}
- 	wwin32 {Win32PageSetup}
-    }
+    ProcessPSPageSetupCmd var i
 }
 
 proc ProcessSendPageSetupCmd {proc id param {sock {}} {fn {}}} {
     global ds9
 
-    switch $ds9(wm) {
- 	x11 {ProcessSendPSPageSetupCmd $proc $id $param}
- 	aqua -
- 	win32 {}
-    }
+    ProcessSendPSPageSetupCmd $proc $id $param
 }
 
 proc ProcessPSPageSetupCmd {varname iname} {

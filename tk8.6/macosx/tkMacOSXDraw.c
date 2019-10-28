@@ -13,6 +13,9 @@
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  */
 
+/* waj */
+int enableScreenCapture =0;
+
 #include "tkMacOSXPrivate.h"
 #include "tkMacOSXDebug.h"
 #include "tkButton.h"
@@ -191,8 +194,9 @@ TkMacOSXBitmapRepFromDrawableRect(
 	 * display and return NULL.
 	 */
 
+	/* waj */
 	/*	if (view == [NSView focusView]) {*/
-	if (1) {
+	if (view == [NSView focusView] || enableScreenCapture) {
 	    bitmap_rep = [view bitmapImageRepForCachingDisplayInRect: view_rect];
 	    [bitmap_rep retain];
 	    [view cacheDisplayInRect:view_rect toBitmapImageRep:bitmap_rep];

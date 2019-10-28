@@ -391,6 +391,12 @@ proc CATDialog {varname format catalog title action} {
     # Table
     set f [ttk::frame $w.tbl]
 
+    # set the col width
+    switch $var(format) {
+	cxc {set cw 18}
+	default {set cw 14}
+    }
+
     set var(tbl) [table $f.t \
 		      -state disabled \
 		      -usecommand 0 \
@@ -401,6 +407,7 @@ proc CATDialog {varname format catalog title action} {
 		      -rows $icat(minrows) \
 		      -width -1 \
 		      -height -1 \
+		      -colwidth $cw \
 		      -maxwidth 300 \
 		      -maxheight 300 \
 		      -titlerows 1 \

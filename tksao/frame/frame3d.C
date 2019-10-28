@@ -89,6 +89,10 @@ Frame3d::~Frame3d()
 unsigned char* Frame3d::fillImage(int width, int height, 
 				  Coord::InternalSystem sys)
 {
+  // just in case
+  if (!context->fits)
+    return NULL;
+
   unsigned char* img =NULL;
   Matrix3d mm = context->fits->matrixToData3d(sys);
 

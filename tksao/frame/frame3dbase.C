@@ -926,6 +926,7 @@ void Frame3dBase::updatePanner()
     ostringstream str;
     str << pannerName << " clear";
     Tcl_Eval(interp, str.str().c_str());
+    return;
   }
 
   // do this first

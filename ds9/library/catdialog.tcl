@@ -22,7 +22,7 @@ proc CATDialog {varname format catalog title action} {
 
     upvar #0 $varname var
     global $varname
-    puts $varname
+
     global debug
     if {$debug(tcl,cat)} {
 	puts stderr "CATDialog $varname:$format:$catalog:$title:$action"
@@ -584,7 +584,6 @@ proc CATAck {varname} {
 	cxc {CATCXCAck $varname}
 	ned {CATNEDAck $varname}
 	skybot {CATSkyBotAck $varname}
-	sdss {CATSDSSAck $varname}
 	simbad {CATSIMBADAck $varname}
     }
 }
@@ -963,7 +962,6 @@ proc CATServer {varname} {
 	    cxc {CATCXC $varname}
 	    ned {CATNED $varname}
 	    skybot {CATSkyBot $varname}
-	    sdss {CATSDSS $varname}
 	    simbad {CATSIMBAD $varname}
 	}
     } else {

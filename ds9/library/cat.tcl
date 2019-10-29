@@ -108,7 +108,6 @@ proc CATDef {} {
     set pcat(sym,font,size) 10
     set pcat(sym,font,weight) normal
     set pcat(sym,font,slant) roman
-    set pcat(vot) 1
 }
 
 # Load via HTTP
@@ -144,56 +143,6 @@ proc CATGetURL {varname} {
 	if {![catch {set var(token) [http::geturl $var(url) \
 					 -query $var(query) \
 					 -timeout $ihttp(timeout) \
-					 -command \
-					 [list CATGetURLFinish $varname] \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
-	}
-    }
-}
-
-proc CATGetURLIncr {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATGetURLIncr $varname $var(url)?$var(query)"
-    }
-
-    ARStatus $varname [msgcat::mc {Loading}]
-
-    global ihttp
-    if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -query $var(query) \
-					 -timeout $ihttp(timeout) \
-					 -handler \
-					 [list $var(proc,reader) $var(catdb)] \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	    CATGetURLFinish $varname $var(token)
-	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
-	}
-    } else {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -query $var(query) \
-					 -timeout $ihttp(timeout) \
-					 -handler \
-					 [list $var(proc,reader) $var(catdb)] \
 					 -command \
 					 [list CATGetURLFinish $varname] \
 					 -headers "[ProxyHTTP]"]
@@ -294,27 +243,6 @@ proc CATLoad {varname} {
     set var(proc,done) CATLoadDone
     set var(proc,load) CATLoad
     CATGetURL $varname
-    return
-}
-
-proc CATLoadIncr {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    # clear previous db
-    global $var(catdb)
-    if {[info exists $var(catdb)]} {
-	unset $var(catdb)
-    }
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATLoadIncr $varname $var(url)?$var(query)"
-    }
-
-    set var(proc,done) CATLoadDone
-    set var(proc,load) CATLoadIncr
-    CATGetURLIncr $varname
     return
 }
 
@@ -1164,8 +1092,6 @@ proc PrefsDialogCatalog {} {
     ttk::menubutton $f.svr -textvariable pcat(server) -menu $f.svr.menu
     ttk::label $f.shtitle -text [msgcat::mc {Shape}]
     ttk::menubutton $f.shape -textvariable pcat(sym,shape) -menu $f.shape.menu
-    ttk::checkbutton $f.vot -variable pcat(vot) \
-	-text [msgcat::mc {Download VOTABLE format if available}]
     ttk::label $f.loctitle -text [msgcat::mc {IAU Location Code}]
     ttk::entry $f.loc -textvariable pcat(loc) -width 7
 
@@ -1224,7 +1150,6 @@ proc PrefsDialogCatalog {} {
     grid $f.cwidth $f.width -padx 2 -pady 2 -sticky w
     grid $f.ftitle $f.font -padx 2 -pady 2 -sticky w
     grid $f.loctitle - - $f.loc -padx 2 -pady 2 -sticky w
-    grid $f.vot - - - -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
 }

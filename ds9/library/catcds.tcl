@@ -15,20 +15,12 @@ proc CATCDS {varname} {
     }
 
     # go for votable or tsv
-    if {$pcat(vot)} {
-	set var(proc,parser) VOTParse
-    } else {
-	set var(proc,reader) CATCDSReader
-    }
+    set var(proc,parser) VOTParse
 
     # url
     set site [CATCDSURL $var(server)]
     set cgidir {viz-bin}
-    if {$pcat(vot)} {
-	set script {votable}
-    } else {
-	set script {asu-tsv}
-    }
+    set script {votable}
     set var(url) "http://$site/$cgidir/$script"
     
     # query
@@ -71,12 +63,7 @@ proc CATCDS {varname} {
 
     set query [http::formatQuery -source $var(catalog) -c $xx$yy -c.eq $eq $cr $rr -oc.form dec]
 
-    if {$pcat(vot)} {
-	append query "&[http::formatQuery -out.form VOTable]"
-    } else {
-	append query "&[http::formatQuery -out.form Tab-Separated-Values]"
-    }
-
+    append query "&[http::formatQuery -out.form VOTable]"
     switch -- $var(psky) {
 	fk4 {append query "&[http::formatQuery -out.add _RAB,_DEB]"}
 	fk5 -
@@ -96,121 +83,7 @@ proc CATCDS {varname} {
     # url?query
     set var(query) $query
 
-    if {$pcat(vot)} {
-	CATLoad $varname
-    } else {
-	CATLoadIncr $varname
-    }
-}
-
-proc CATCDSReader {t sock token} {
-    upvar #0 $t T
-    global $t
-
-    set result 0
-
-    if { ![info exists ${t}(state)]  } {
-	set T(state) 0
-    }
-
-    switch -- $T(state) {
-	0 {
-	    # init db
-	    fconfigure $sock -blocking 1
-	    set T(Nrows) 0
-	    set T(Ncols) 0
-	    set T(Header) {}
-	    set T(HLines) 0
-
-	    set T(state) 1
-	}
-
-	1 {
-	    # process header
-	    incr ${t}(HLines)
-	    set n $T(HLines)
-	    if {[gets $sock line] == -1} {
-		set T(state) -1
-		set T(HLines) [expr $T(HLines) - 1]
-		set T(Nrows) 0
-		set T(Ncols) 0
-		return 0
-	    }
-
-	    set result [string length "$line"]
-	    set T(H_$n) $line
-	    if {[regexp -- {^ *(-)+ *(\t *(-)+ *)*} $line]} {
-		# remove units line, but save first
-		unset T(H_$n)
-		incr ${t}(HLines) -1
-		incr n -1
-		set units $T(H_$n)
-		set T(H_$n) $line
-		
-		# clean up header column name
-		set hh $T(H_[expr $n-1])
-		regsub -all {\[} $hh {} hh
-		regsub -all {\]} $hh {} hh
-		set T(H_[expr $n-1]) $hh
-
-		# cols
-		set T(Header) [split $T(H_[expr $n-1]) "\t"]
-		set T(Unit) [split $units "\t"]
-		set T(Dashes) [split $T(H_$n) "\t"]
-		set T(Ndshs) [llength $T(Dashes)]
-
-		starbase_colmap $t
-		set T(state) 2
-	    }
-	}
-
-	2 { 
-	    # process table
-	    if {[gets $sock line] == -1} {
-		set T(state) 0
-	    } else {
-		set result [string length "$line"]
-		set line [string trim $line]
-
-		if {$line != {}} {
-		    # check for beginning of another table
-		    if {[string range $line 0 0] == "#"} {
-			set T(state) 3
-			return $result
-		    }
-
-		    # check for garbage at start of line
-		    if {![string is double [lindex $line 0]]} {
-			set T(state) 3
-			return $result
-		    }
-
-		    # ok, save it
-		    incr ${t}(Nrows)
-		    set r $T(Nrows)
-
-		    set NCols [starbase_ncols $t]
-		    set c 1
-		    foreach val [split $line "\t"] {
-			set T($r,$c) $val
-			incr c
-		    }
-		    for {} {$c <= $NCols} {incr c} {
-			set T($r,$c) {}
-		    }
-		}
-	    }
-	}
-
-	3 {
-	    # finished, eat everything else
-	    if {[gets $sock line] == -1} {
-		set T(state) 0
-	    }
-	}
-    }
-
-    return $result
+    CATLoad $varname
 }
 
 proc CATCDSURL {server} {

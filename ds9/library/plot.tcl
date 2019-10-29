@@ -25,8 +25,6 @@ proc PlotDestroy {varname} {
     
     global iap
 
-    puts $varname
-    
     # see if it still is around
     if {![PlotPing $varname]} {
  	return

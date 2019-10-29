@@ -27,7 +27,7 @@ proc CATCDSSrchDialog {varname} {
     }
 
     # defaults
-    # maybe modified if pcat(vot)
+    # maybe modified
     set var(list,wave,param) $icatcdssrch(list,wave,param)
     set var(list,wave) $icatcdssrch(list,wave)
     set var(list,mission,param) $icatcdssrch(list,mission,param)

@@ -101,32 +101,18 @@ proc CATCDSSrch {varname} {
 	puts stderr "CATCDSSrch $varname"
     }
 
-    # go for votable or tsv
-    if {$pcat(vot)} {
-	set var(proc,parser) CATCDSSrchVOTParse
-    } else {
-	set var(proc,reader) CATCDSSrchReader
-    }
+    set var(proc,parser) CATCDSSrchVOTParse
 
     #url
     set site [CATCDSURL $var(server)]
     set cgidir {viz-bin}
-    if {$pcat(vot)} {
-	set script {votable}
-    } else {
-	set script {asu-tsv}
-    }
+    set script {votable}
     set var(url) "http://$site/$cgidir/$script"
     
     # defaults
     set query {-meta}
     append query "&[http::formatQuery -out.max 1000]"
-
-    if {$pcat(vot)} {
-	append query "&[http::formatQuery -out.form VOTable]"
-    } else {
-	append query "&[http::formatQuery -out.form Tab-Separated-Values]"
-    }
+    append query "&[http::formatQuery -out.form VOTable]"
 
     if {$var(source) != {}} {
 	append query "&[http::formatQuery -source $var(source)]"
@@ -146,11 +132,7 @@ proc CATCDSSrch {varname} {
 
     set var(query) $query
 
-    if {$pcat(vot)} {
-	CATCDSSrchLoad $varname
-    } else {
-	CATCDSSrchLoadIncr $varname
-    }
+    CATCDSSrchLoad $varname
 }
 
 proc CATCDSSrchLoad {varname} {
@@ -173,141 +155,11 @@ proc CATCDSSrchLoad {varname} {
     return 
 }
 
-proc CATCDSSrchLoadIncr {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(catdb)
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchLoadIncr $varname"
-    }
-
-    if {[info exists $var(catdb)]} {
-	unset $var(catdb)
-    }
-
-    set var(proc,done) CATCDSSrchDone
-    set var(proc,load) CATCDSSrchLoadIncr
-    CATGetURLIncr $varname
-    return
-}
-
 proc CATCDSSrchDone {varname} {
     upvar #0 $varname var
     global $varname
 
     CATCDSSrchTable $varname
-}
-
-proc CATCDSSrchReader {t sock token} {
-    upvar #0 $t T
-    global $t
-
-    set result 0
-
-    if { ![info exists ${t}(state)]  } {
-	set T(state) 0
-    }
-
-    switch -- $T(state) {
-	0 {
-	    # init db
-	    fconfigure $sock -blocking 1
-	    set T(Nrows) 0
-	    set T(Ncols) 0
-	    set T(Header) {}
-	    set T(HLines) 0
-
-	    # create header
-	    incr ${t}(HLines)
-	    set n $T(HLines)
-	    set T(H_$n) "Resource\tDescription"
-	    set T(Header) [split $T(H_$n) "\t"]
-
-	    incr ${t}(HLines)
-	    set n $T(HLines)
-	    set T(H_$n) "--------\t-----------"
-
-	    set T(Dashes) [split $T(H_$n) "\t"]
-	    set T(Ndshs) [llength $T(Dashes)]
-		
-	    starbase_colmap $t
-
-	    set T(state) 1
-	}
-
-	1 {
-	    # process RESOURCE
-	    if {[gets $sock line] == -1} {
-		set T(state) 0
-		return $result
-	    }
-
-	    set result [string length "$line"]
-	    set line [string trim $line]
-	    if {$line != {}} {
-		switch -- [string range $line 0 4] {
-		    "#RESO" {
-			incr ${t}(Nrows)
-			set r $T(Nrows)
-			set T($r,1) {}
-			set T($r,2) {}
-
-			set T(state) 2
-		    }
-		}
-	    }
-	}
-
-	2 {
-	    # process Description
-	    if {[gets $sock line] == -1} {
-		set T(state) 0
-		return $result
-	    }
-
-	    set result [string length "$line"]
-	    set line [string trim $line]
-	    set r $T(Nrows)
-	    if {$line != {}} {
-		switch -- [string range $line 0 4] {
-		    "#Name" {
-			set T($r,1) [string trim [lindex [split $line {:}] 1]]
-			set T(state) 3
-		    }
-		}
-	    }
-	}
-
-	3 {
-	    # new style process description
-	    if {[gets $sock line] == -1} {
-		set T(state) 0
-		return $result
-	    }
-
-	    set result [string length "$line"]
-	    set line [string trim $line]
-	    if {$line != {}} {
-		switch -- [string range $line 0 4] {
-		    "#Titl" {
-			# eat it
-		    }
-		    default {
-			set r $T(Nrows)
-			if {$r>0} {
-			    set val [string trim [string range $line 5 end]]
-			    catch {set T($r,2) "$val"}
-			    set T(state) 1
-			}
-		    }
-		}
-	    }
-	}
-    }
-
-    return $result
 }
 
 proc CATCDSSrchVOTParse {t token} {

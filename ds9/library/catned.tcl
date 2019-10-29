@@ -15,11 +15,7 @@ proc CATNED {varname} {
     }
 
     # parser
-    if {$pcat(vot)} {
-	set var(proc,parser) VOTParse
-    } else {
-	set var(proc,reader) CATNEDReader
-    }
+    set var(proc,parser) VOTParse
 
     # query
     switch $var(skyformat) {
@@ -51,11 +47,7 @@ proc CATNED {varname} {
 	}
     }
 
-    if {$pcat(vot)} {
-	set out "xml_main"
-    } else {
-	set out "ascii_tab"
-    }
+    set out "xml_main"
 
     switch -- $var(sky) {
 	fk4 {
@@ -101,94 +93,7 @@ proc CATNED {varname} {
     set query [http::formatQuery search_type "Near Position Search" RA $xx DEC $yy SR $rr of $out in_csys $sky in_equinox $eq out_csys $psky out_equinox $peq]
     set var(url) "http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?$query"
 
-    if {$pcat(vot)} {
-	CATLoad $varname
-    } else {
-	CATLoadIncr $varname
-    }
-}
-
-proc CATNEDReader {t sock token} {
-    upvar #0 $t T
-    global $t
-
-    set result 0
-
-    if { ![info exists ${t}(state)]  } {
-	set T(state) 0
-    }
-
-    switch -- $T(state) {
-	0 {
-	    # init db
-	    fconfigure $sock -blocking 1
-	    set T(Nrows) 0
-	    set T(Ncols) 0
-	    set T(Header) {}
-	    set T(HLines) 0
-
-	    set T(state) 1
-	}
-
-	1 {
-	    # process header
-	    if {[gets $sock line] == -1} {
-		set T(Nrows) 0
-		set T(Ncols) 0
-		set T(Header) {}
-		set T(HLines) 0
-
-		set T(state) -1
-		return $result
-	    }
-
-	    set result [string length "$line"]
-
-	    # start of data?
-	    if {[string range $line 0 2] == {No.}} {
-		# cols
-		incr ${t}(HLines)
-		set n $T(HLines)
-		set T(H_$n) $line
-		set T(Header) [split $T(H_$n) "\t"]
-
-		# dashes
-		set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(H_$n) {-}]
-		set T(Ndshs) [llength $T(Dashes)]
-		starbase_colmap $t
-
-		set T(state) 2
-	    }
-	}
-
-	2 { 
-	    # process table
-	    if {[gets $sock line] == -1} {
-		set T(state) 0
-	    } else {
-		set result [string length "$line"]
-		set line [string trim $line]
-
-		if {$line != {}} {
-		    # ok, save it
-		    incr ${t}(Nrows)
-		    set r $T(Nrows)
-
-		    set NCols [starbase_ncols $t]
-		    set c 1
-		    foreach val [split $line "\t"] {
-			set T($r,$c) $val
-			incr c
-		    }
-		    for {} {$c <= $NCols} {incr c} {
-			set T($r,$c) {}
-		    }
-		}
-	    }
-	}
-    }
-
-    return $result
+    CATLoad $varname
 }
 
 proc CATNEDAck {varname} {

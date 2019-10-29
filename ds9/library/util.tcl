@@ -1383,7 +1383,7 @@ proc MacOSPhotoFix {top xx yy} {
 	    }
 	}
 	aqua {macos sc yes}
-	win {}
+	win32 {}
     }
     
     return {}
@@ -1401,7 +1401,7 @@ proc DarwinPhotoRestore {top geom} {
 	    }
 	}
 	aqua {macos sc no}
-	win {}
+	win32 {}
     }
 }
 

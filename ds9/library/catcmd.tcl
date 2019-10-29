@@ -784,10 +784,14 @@ proc CATRelease {which x y} {
 
 		    # status
 		    CATStatusRows $varname $rowlist
+
 		    # plot
-		    if {$var(plot)} {
-			CATPlotHighliteElement $varname $rowlist
+		    if {[info exists var(plot)]} {
+			if {$var(plot)} {
+			    CATPlotHighliteElement $varname $rowlist
+			}
 		    }
+
 		    # samp
 		    if {[info exists samp]} {
 			if {$samp(apps,votable) != {}} {
@@ -809,10 +813,14 @@ proc CATRelease {which x y} {
 
 	    # status
 	    CATStatusRows $varname $rowlist
+
 	    #plot
-	    if {$var(plot)} {
-		CATPlotHighliteElement $varname $rowlist
+	    if {[info exists var(plot)]} {
+		if {$var(plot)} {
+		    CATPlotHighliteElement $varname $rowlist
+		}
 	    }
+
 	    # samp
 	    if {[info exists samp]} {
 		if {$samp(apps,votable) != {}} {

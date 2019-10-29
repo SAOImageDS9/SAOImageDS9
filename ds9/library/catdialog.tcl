@@ -22,7 +22,7 @@ proc CATDialog {varname format catalog title action} {
 
     upvar #0 $varname var
     global $varname
-
+    puts $varname
     global debug
     if {$debug(tcl,cat)} {
 	puts stderr "CATDialog $varname:$format:$catalog:$title:$action"

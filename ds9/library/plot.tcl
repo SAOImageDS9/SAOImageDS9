@@ -535,7 +535,7 @@ proc PlotBGColor {varname} {
     global ds9
     switch $ds9(wm) {
 	x11 -
-	win {return $var(background)}
+	win32 {return $var(background)}
 	aqua {
 	    switch $var(background) {
 		white {return $var(bg)}
@@ -552,7 +552,7 @@ proc PlotFGColor {varname} {
     global ds9
     switch $ds9(wm) {
 	x11 -
-	win {return $var(foreground)}
+	win32 {return $var(foreground)}
 	aqua {
 	    switch $var(foreground) {
 		black {return $var(fg)}

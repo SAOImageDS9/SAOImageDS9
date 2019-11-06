@@ -771,19 +771,21 @@ proc ConfigWCSDialogExtMenu {} {
     set dwcs(ext) 1
 
     set nn 0
-    set last {}
-    set cnt [$current(frame) get fits count]
+    if {$current(frame)!={}} {
+	set last {}
+	set cnt [$current(frame) get fits count]
 
-    for {set ii 1} {$ii <= $cnt} {incr ii} {
-	set fn [$current(frame) get fits file name $ii]
-	if {$fn != $last} {
-	    incr nn
-	    set item($nn) $fn
-	    set val($nn) $ii
-	    set last $fn
+	for {set ii 1} {$ii <= $cnt} {incr ii} {
+	    set fn [$current(frame) get fits file name $ii]
+	    if {$fn != $last} {
+		incr nn
+		set item($nn) $fn
+		set val($nn) $ii
+		set last $fn
+	    }
 	}
     }
-
+    
     if {$nn > 1} {
 	$iwcs(mb) entryconfig [msgcat::mc {Extention}] -state normal
 

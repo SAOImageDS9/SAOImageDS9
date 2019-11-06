@@ -156,7 +156,7 @@ class FitsImage {
 
   void initWCS(FitsHead*);
   void scanWCS(FitsHead*);
-  void wcsPhyInit();
+  void wcsPhyInit(FitsHead*);
 
   void initWCS0(const Vector&);
   void resetWCS0() {resetWCS();}

@@ -1129,7 +1129,7 @@ void FitsImage::initWCS(FitsHead* hd)
 
 	  wcsState_ = ptr->wcsState_;
 
-	  wcsPhyInit();
+	  wcsPhyInit(hd);
 	  manageWCS_ =0;
 	  return;
 	}
@@ -1179,7 +1179,7 @@ void FitsImage::initWCS(FitsHead* hd)
   for (int ii=0; ii<MULTWCS; ii++)
     wcsSize_[ii] = calcWCSSize((Coord::CoordSystem)(ii+Coord::WCS));
 
-  wcsPhyInit();
+  wcsPhyInit(hd);
 
   if (DebugWCS && ast_)
     astShow(ast_);
@@ -3171,12 +3171,12 @@ void FitsImage::scanWCS(FitsHead* hd)
   astEnd;
 }
 
-void FitsImage::wcsPhyInit()
+void FitsImage::wcsPhyInit(FitsHead* hd)
 {
   // now see if we have a 'physical' in WCSP, if so, set LTMV keywords
   keyLTMV =0;
 
-  char* wcsname = image_->getString("WCSNAMEP");
+  char* wcsname = hd->getString("WCSNAMEP");
   if (wcsname && *wcsname && !strncmp(wcsname, "PHYSICAL", 8)) {
     Vector ll2 = center() - Vector(10,10);
     Vector ur2 = center() + Vector(10,10);

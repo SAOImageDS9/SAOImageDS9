@@ -184,7 +184,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	PlotExternal $vvarname xy
     }
 
-    set vvar(slice) [$frame get fits slice from image $vvar(system) $vvar(sky)]
+    set vvar(slice) [$frame get fits slice from image $vvar(system)]
     MarkerAnalysisPlot3dMarker $vvarname
 
     PlotStats $vvarname
@@ -222,7 +222,7 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
 
     if {[info exists ${vvarname}(system)]} {
 	set vvar(slice) \
-	    [$frame get fits slice from image $vvar(system) $vvar(sky)]
+	    [$frame get fits slice from image $vvar(system)]
 	MarkerAnalysisPlot3dMarker $vvarname
     }
 }
@@ -238,7 +238,7 @@ proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
     set cc 1
     if {[info exists vvar($cc,graph)]} {
 	set vvar(slice) [lindex [$vvar($cc,graph) invtransform $xx $yy] 0]
-	$vvar(frame) update fits slice $vvar(slice) $vvar(system) $vvar(sky)
+	$vvar(frame) update fits slice $vvar(slice) $vvar(system)
 	MarkerAnalysisPlot3dMarker $vvarname
     }
 

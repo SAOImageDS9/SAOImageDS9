@@ -115,12 +115,15 @@ void Circle::analysis(AnalysisTask mm, int which)
 		  parent->options->cmdName);
       addCallBack(CallBack::EDITCB, analysisHistogramCB_[0], 
 		  parent->options->cmdName);
+      addCallBack(CallBack::UPDATE3DCB, analysisHistogramCB_[0], 
+		  parent->options->cmdName);
       addCallBack(CallBack::DELETECB, analysisHistogramCB_[1], 
 		  parent->options->cmdName);
     }
     if (analysisHistogram_ && !which) {
       deleteCallBack(CallBack::MOVECB, analysisHistogramCB_[0]);
       deleteCallBack(CallBack::EDITCB, analysisHistogramCB_[0]);
+      deleteCallBack(CallBack::UPDATE3DCB, analysisHistogramCB_[0]);
       deleteCallBack(CallBack::DELETECB, analysisHistogramCB_[1]);
     }
 

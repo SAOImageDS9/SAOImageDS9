@@ -2280,8 +2280,8 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerAnalysisHistogramCmd($1,$4,$5,$6);}
 	| INT ANALYSIS_ PLOT2D_ STRING STRING STRING STRING coordSystem skyFrame analysisParam
 	{fr->getMarkerAnalysisPlot2dCmd($1,$4,$5,$6,$7,(Coord::CoordSystem)$8, (Coord::SkyFrame)$9, (Marker::AnalysisMethod)$10);}
-	| INT ANALYSIS_ PLOT3D_ STRING STRING coordSystem skyFrame analysisParam
-	{fr->getMarkerAnalysisPlot3dCmd($1,$4,$5,(Coord::CoordSystem)$6,(Coord::SkyFrame)$7, (Marker::AnalysisMethod)$8);}
+	| INT ANALYSIS_ PLOT3D_ STRING STRING coordSystem analysisParam
+	{fr->getMarkerAnalysisPlot3dCmd($1,$4,$5,(Coord::CoordSystem)$6, (Marker::AnalysisMethod)$7);}
 	| INT ANALYSIS_ RADIAL_ STRING STRING STRING coordSystem
 	{fr->getMarkerAnalysisRadialCmd($1,$4,$5,$6,(Coord::CoordSystem)$7);}
 	| INT ANALYSIS_ STATS_ coordSystem skyFrame

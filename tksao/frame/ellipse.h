@@ -43,7 +43,7 @@ public:
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);
-  void analysisPlot3d(char*, char*, Coord::CoordSystem, Coord::SkyFrame,
+  void analysisPlot3d(char*, char*, Coord::CoordSystem,
 		      Marker::AnalysisMethod);
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
 

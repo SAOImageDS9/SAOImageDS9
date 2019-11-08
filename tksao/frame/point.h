@@ -88,7 +88,7 @@ class Point : public Marker {
   void rotateEnd() {}
 
   void analysis(AnalysisTask, int);
-  void analysisPlot3d(char*, char*, Coord::CoordSystem sys, Coord::SkyFrame sky,
+  void analysisPlot3d(char*, char*, Coord::CoordSystem sys,
 		      Marker::AnalysisMethod);
 
   int isIn(const Vector& vv, Coord::InternalSystem sys)

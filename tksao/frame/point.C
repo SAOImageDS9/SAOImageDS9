@@ -724,7 +724,7 @@ void Point::analysis(AnalysisTask mm, int which)
 }
 
 void Point::analysisPlot3d(char* xname, char* yname,
-			   Coord::CoordSystem sys, Coord::SkyFrame sky,
+			   Coord::CoordSystem sys,
 			   Marker::AnalysisMethod method)
 {
   double* x;
@@ -732,7 +732,7 @@ void Point::analysisPlot3d(char* xname, char* yname,
   Vector ll = -Vector(.5,.5) * Translate(center);
   Vector ur =  Vector(.5,.5) * Translate(center);
   BBox bb(ll,ur);
-  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, sky, method);
+  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, method);
   analysisXYResult(xname, yname, x, y, num);
 }
 

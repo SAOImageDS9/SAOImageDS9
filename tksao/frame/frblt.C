@@ -203,7 +203,7 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
 
 int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
 			       const BBox& bb, 
-			       Coord::CoordSystem sys, Coord::SkyFrame sky,
+			       Coord::CoordSystem sys,
 			       Marker::AnalysisMethod method)
 {
   // does not extend across mosaic boundries
@@ -294,7 +294,7 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
     for (int kk=0; kk<srcd; kk++) {
       double tt = kk+.5+.5+zparams->zmin;
       Vector3d dd = Vector3d(ptr->center(),tt) * Translate3d(-.5,-.5,-.5);
-      Vector3d out = ptr->mapFromRef(dd,sys,sky);
+      Vector3d out = ptr->mapFromRef(dd,sys,Coord::FK5);
       (*x)[kk] = out[2];
 
       bool* mptr=msk;

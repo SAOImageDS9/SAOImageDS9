@@ -374,8 +374,7 @@ public:
 			   Coord::CoordSystem, Coord::SkyFrame, 
 			   Marker::AnalysisMethod);
   int markerAnalysisPlot3d(Marker*, double**, double**, const BBox&,
-			   Coord::CoordSystem, Coord::SkyFrame,
-			   Marker::AnalysisMethod);
+			   Coord::CoordSystem, Marker::AnalysisMethod);
   int markerAnalysisRadial(Marker*, double**, double**, double**, 
 			   int, Vector*, BBox*, Coord::CoordSystem);
   int markerAnalysisPanda(Marker*, double**, double**, double**, 
@@ -1218,7 +1217,7 @@ public:
 				  Coord::CoordSystem, Coord::SkyFrame, 
 				  Marker::AnalysisMethod);
   void getMarkerAnalysisPlot3dCmd(int, char*, char*,
-				  Coord::CoordSystem, Coord::SkyFrame,
+				  Coord::CoordSystem,
 				  Marker::AnalysisMethod);
   void getMarkerAnalysisPandaCmd(int, char*, char*, char*, Coord::CoordSystem,
 				 int);

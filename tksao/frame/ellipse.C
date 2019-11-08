@@ -195,7 +195,7 @@ void Ellipse::analysisHistogram(char* xname, char* yname, int num)
 }
 
 void Ellipse::analysisPlot3d(char* xname, char* yname,
-			     Coord::CoordSystem sys, Coord::SkyFrame sky,
+			     Coord::CoordSystem sys,
 			     Marker::AnalysisMethod method)
 {
   double* x;
@@ -208,7 +208,7 @@ void Ellipse::analysisPlot3d(char* xname, char* yname,
   bb.bound(Vector( vv[0],-vv[1]) * mm);
   bb.bound(Vector(-vv[0], vv[1]) * mm);
 
-  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, sky, method);
+  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, method);
   analysisXYResult(xname, yname, x, y, num);
 }
 

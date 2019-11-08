@@ -353,7 +353,7 @@ protected:
 			      Coord::CoordSystem, Coord::SkyFrame, 
 			      Marker::AnalysisMethod) {}
   virtual void analysisPlot3d(char*, char*, Coord::CoordSystem,
-			      Coord::SkyFrame, Marker::AnalysisMethod) {}
+			      Marker::AnalysisMethod) {}
 
   // special composite funtionality
   virtual void setComposite(const Matrix&, double);

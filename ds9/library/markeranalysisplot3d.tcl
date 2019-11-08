@@ -130,13 +130,6 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(system) $wcs(system)
     }
 
-    if {[info exists var(sky)]} {
-	set vvar(sky) $var(sky)
-    } elseif {[info exists vvar(sky)]} {
-    } else {
-	set vvar(sky) $wcs(sky)
-    }
-
     if {[info exists var(method)]} {
 	set vvar(method) $var(method)
     } elseif {[info exists vvar(method)]} {
@@ -157,7 +150,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	blt::vector create $xdata $ydata
     }
     $frame get marker $id analysis plot3d $xdata $ydata \
-	$vvar(system) $vvar(sky) $vvar(method)
+	$vvar(system) $vvar(method)
     
     if {![PlotPing $vvarname]} {
 	set vvar(bunit) [string trim [$frame get fits header keyword BUNIT]]

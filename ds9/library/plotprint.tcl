@@ -53,16 +53,7 @@ proc PlotPostScriptSingle {varname} {
     }
 
     # can't trust 'tk scaling'
-    switch $ds9(wm) {
-	x11 -
-	win32 {
-	    set scaling [tk scaling]
-	    if {$scaling == Inf} {
-		set scaling 1.334
-	    }
-	}
-	aqua {set scaling 1.4}
-    }
+    set scaling 1.475
 
     # Size
     set ww [expr [winfo width $var(graph)]*$ps(scale)/100./$scaling]

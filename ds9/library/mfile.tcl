@@ -60,7 +60,8 @@ proc FileMainMenu {} {
 	win32 {
 	    $ds9(mb).file add separator
 	    $ds9(mb).file add command \
-		-label [msgcat::mc {Exit}] -command QuitDS9
+		-label [msgcat::mc {Exit}] -command QuitDS9 \
+		-accelerator "${ds9(ctrl)}Q"
 	}
 	aqua {}
     }
@@ -238,15 +239,12 @@ proc FileMainMenu {} {
     # Bindings
     bind $ds9(top) <<Open>> [list OpenDialog fits]
     bind $ds9(top) <<Save>> [list SaveDialog fits]
+    bind $ds9(top) <<PageSetup>> PSPageSetup
+    bind $ds9(top) <<Print>> PSPrint
     switch $ds9(wm) {
- 	x11 -
-	win32 {
-	    bind $ds9(top) <<PageSetup>> PSPageSetup
-	    bind $ds9(top) <<Print>> PSPrint
-	}
- 	aqua {
-	    # Known bug in Tk, can't have dialogs invoked by accelerator
-	}
+	x11 -
+	win32 {bind $ds9(top) <<Quit>> QuitDS9}
+	aqua {}
     }
 }
 

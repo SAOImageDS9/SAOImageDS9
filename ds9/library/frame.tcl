@@ -1309,6 +1309,7 @@ proc KeyFrame {which K A xx yy} {
 	puts stderr "KeyFrame $which $K $A $xx $yy"
     }
 
+    # MacOS can sometime gerate a ?? modifier keyevent
     if {$K == {Control_R} ||
 	$K == {Control_L} ||
 	$K == {Meta_R} ||
@@ -1322,15 +1323,15 @@ proc KeyFrame {which K A xx yy} {
 	return
     }
 
+    if {$ds9(modifier)} {
+	return
+    }
+
     # modal bindings
     switch -- $current(mode) {
 	none {
 	    switch -- $K {
-		c {
-		    if {!$ds9(modifier)} {
-			DisplayCoordDialog $which $xx $yy
-		    }
-		}
+		c {DisplayCoordDialog $which $xx $yy}
 
 		plus {CubeNext}
 		minus {CubePrev}
@@ -1351,11 +1352,7 @@ proc KeyFrame {which K A xx yy} {
 	pointer -
 	region {
 	    switch -- $K {
-		c {
-		    if {!$ds9(modifier)} {
-			DisplayCoordDialog $which $xx $yy
-		    }
-		}
+		c {DisplayCoordDialog $which $xx $yy}
 
 		plus {CubeNext}
 		minus {CubePrev}
@@ -1385,11 +1382,7 @@ proc KeyFrame {which K A xx yy} {
 	}
 	crosshair {
 	    switch -- $K {
-		c {
-		    if {!$ds9(modifier)} {
-			DisplayCoordDialog $which $xx $yy
-		    }
-		}
+		c {DisplayCoordDialog $which $xx $yy}
 
 		plus {CubeNext}
 		minus {CubePrev}
@@ -1482,6 +1475,7 @@ proc KeyReleaseFrame {which K A xx yy} {
 	puts stderr "KeyReleaseFrame $which $K $A $xx $yy"
     }
 
+    # MacOS can sometime gerate a ?? modifier keyevent
     if {$K == {Control_R} ||
 	$K == {Control_L} ||
 	$K == {Meta_R} ||
@@ -1489,7 +1483,8 @@ proc KeyReleaseFrame {which K A xx yy} {
 	$K == {Alt_R} ||
 	$K == {Alt_L} ||
 	$K == {Super_R} ||
-	$K == {Super_L}} {
+	$K == {Super_L} ||
+	$K == {??}} {
 	set ds9(modifier) 0
     }
 }

@@ -419,11 +419,21 @@ set env(GERROR) 0
 # Events
 event add <<Open>> <${ds9(ctrl)}o>
 event add <<Save>> <${ds9(ctrl)}s>
-event add <<PageSetup>> <${ds9(ctrl)}P>
 event add <<Print>> <${ds9(ctrl)}p>
 event add <<SelectAll>> <${ds9(ctrl)}a>
 event add <<Find>> <${ds9(ctrl)}f>
 event add <<FindNext>> <${ds9(ctrl)}g>
+switch $ds9(wm) {
+    x11 -
+    win32 {
+	event add <<PageSetup>> <${ds9(shiftctrl)}P>
+	event add <<Quit>> <${ds9(ctrl)}q>
+	event add <<Pref>> <${ds9(ctrl)}comma>
+    }
+    aqua {
+	event add <<PageSetup>> <${ds9(shiftctrl)}p>
+    }
+}
 
 # We want to withdraw the window til everything is ready to go
 wm withdraw $ds9(top)

@@ -346,16 +346,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	grid rowconfigure $var(top) 0 -weight 1
 	grid columnconfigure $var(top) 0 -weight 1
 
-	# Bindings
-	switch $ds9(wm) {
-	    x11 -
-	    win32 {
-		bind $var(top) <<Find>> [list SimpleTextFind $varname]
-	    }
-	    aqua {
-		# Known bug in Tk, can't have dialogs invoked by accelerator
-	    }
-	}
+	bind $var(top) <<Find>> [list SimpleTextFind $varname]
 	bind $var(top) <<FindNext>> [list SimpleTextFindNext $varname]
 
 	# some window managers need a hint

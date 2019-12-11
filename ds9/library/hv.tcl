@@ -206,22 +206,20 @@ proc HV {varname title url {init {}} {sync 0}} {
 	bind $w <Right> "$f.html xview scroll 1 units"
 	bind $w <Left> "$f.html xview scroll -1 units"
 	bind $w <<Copy>> "HVCopyCmd $varname"
+
+	bind $w <<Find>> [list HVFindCmd $varname]
+	bind $w <<FindNext>> [list HVFindNextCmd $varname]
+
 	switch $ds9(wm) {
 	    x11 {
 		bind $w <Button-4> "HVMouseWheel $varname 1"
 		bind $w <Button-5> "HVMouseWheel $varname -1"
-		bind $w <<Find>> [list HVFindCmd $varname]
 	    }
-	    aqua {
-		bind $w <MouseWheel> "HVMouseWheel $varname %D"
-		# Known bug in Tk, can't have dialogs invoked by accelerator
-	    }
+	    aqua -
 	    win32 {
 		bind $w <MouseWheel> "HVMouseWheel $varname %D"
-		bind $w <<Find>> [list HVFindCmd $varname]
 	    }
 	}
-	bind $w <<FindNext>> [list HVFindNextCmd $varname]
 
 	# Status
 	set f [ttk::frame $w.status]

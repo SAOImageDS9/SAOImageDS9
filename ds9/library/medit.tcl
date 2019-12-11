@@ -49,7 +49,8 @@ proc EditMainMenu {} {
 	win32 {
 	    $ds9(mb).edit add separator
 	    $ds9(mb).edit add command -label "[msgcat::mc {Preferences}]..." \
-		-command PrefsDialog
+		-command PrefsDialog -accelerator "${ds9(ctrl)},"
+
 	}
 	aqua {}
     }
@@ -59,6 +60,11 @@ proc EditMainMenu {} {
     bind $ds9(top) <<Cut>> CutFrame
     bind $ds9(top) <<Copy>> CopyFrame
     bind $ds9(top) <<Paste>> PasteFrame
+    switch $ds9(wm) {
+	x11 -
+	win32 {bind $ds9(top) <<Pref>> PrefsDialog}
+	aqua {}
+    }
 }
 
 proc PrefsDialogEditMenu {w} {

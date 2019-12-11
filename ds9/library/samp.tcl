@@ -988,7 +988,7 @@ proc samp.client.receiveCall {args} {
 	    SAMPReplySimple $msgid "http://ds9.si.edu"
 	}
 	x-samp.releasenotes.url {
-	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/release/r8.0.html"
+	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/release/r8.1.html"
 	}
 	x-samp.faq.url {
 	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/faq.html"

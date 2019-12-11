@@ -429,9 +429,11 @@ switch $ds9(wm) {
 	event add <<PageSetup>> <${ds9(shiftctrl)}P>
 	event add <<Quit>> <${ds9(ctrl)}q>
 	event add <<Pref>> <${ds9(ctrl)}comma>
+	event add <<SelectNone>> <${ds9(shiftctrl)}A>
     }
     aqua {
 	event add <<PageSetup>> <${ds9(shiftctrl)}p>
+	event add <<SelectNone>> <${ds9(shiftctrl)}a>
     }
 }
 

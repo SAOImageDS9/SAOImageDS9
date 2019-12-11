@@ -47,7 +47,7 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Select All}] \
 	-command MarkerSelectAll -accelerator "${ds9(ctrl)}A"
     $ds9(mb).region add command -label [msgcat::mc {Select None}] \
-	-command MarkerUnselectAll
+	-command MarkerUnselectAll -accelerator "${ds9(shiftctrl)}A"
     $ds9(mb).region add command -label [msgcat::mc {Invert Selection}] \
 	-command MarkerSelectInvert
     $ds9(mb).region add separator
@@ -208,6 +208,7 @@ proc RegionMainMenu {} {
 
     # Bindings
     bind $ds9(top) <<SelectAll>> MarkerSelectAll
+    bind $ds9(top) <<SelectNone>> MarkerUnselectAll
 }
 
 proc PrefsDialogRegionMenu {w} {

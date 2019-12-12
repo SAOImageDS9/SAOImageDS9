@@ -245,7 +245,6 @@
 ::msgcat::mcset ja {Distance} 
 ::msgcat::mcset ja {Done} 
 ::msgcat::mcset ja {Download Colormap} 
-::msgcat::mcset ja {Download VOTABLE format if available} [encoding convertfrom euc-jp "\x56\x4f\x54\x41\x42\x4c\x45\x20\xb7\xc1\xbc\xb0\xa4\xac\xa4\xa2\xa4\xec\xa4\xd0\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9"]
 ::msgcat::mcset ja {Drag to Center} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4\xa4\xcb\xa5\xc9\xa5\xe9\xa5\xc3\xa5\xb0"]
 ::msgcat::mcset ja {Duplicate Dataset} 
 ::msgcat::mcset ja {East} [encoding convertfrom euc-jp "\xc5\xec"]
@@ -409,7 +408,6 @@
 ::msgcat::mcset ja {List} [encoding convertfrom euc-jp "\xce\xf3\xb5\xf3"]
 ::msgcat::mcset ja {Load Analysis Commands} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Color Tags} 
-::msgcat::mcset ja {Load Colormap} [encoding convertfrom euc-jp "\xbf\xa7\xc4\xb4\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Configuration} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Contour Levels} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa5\xec\xa5\xd9\xa5\xeb\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
@@ -684,7 +682,6 @@
 ::msgcat::mcset ja {Sample} 
 ::msgcat::mcset ja {Save 3D Movie} 
 ::msgcat::mcset ja {Save Color Tags} 
-::msgcat::mcset ja {Save Colormap} [encoding convertfrom euc-jp "\xbf\xa7\xc4\xb4\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Configuration} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Contour Levels} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa5\xec\xa5\xd9\xa5\xeb\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xf2\xca\xdd\xc2\xb8"]

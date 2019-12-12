@@ -245,7 +245,6 @@
 ::msgcat::mcset de {Distance} 
 ::msgcat::mcset de {Done} 
 ::msgcat::mcset de {Download Colormap} 
-::msgcat::mcset de {Download VOTABLE format if available} 
 ::msgcat::mcset de {Drag to Center} {Ziehen zum zentrieren}
 ::msgcat::mcset de {Duplicate Dataset} 
 ::msgcat::mcset de {East} {Osten}
@@ -409,7 +408,6 @@
 ::msgcat::mcset de {List} {Auflisten}
 ::msgcat::mcset de {Load Analysis Commands} {Analysebefehle laden}
 ::msgcat::mcset de {Load Color Tags} 
-::msgcat::mcset de {Load Colormap} {Farbpalette laden}
 ::msgcat::mcset de {Load Configuration} {Konfiguration laden}
 ::msgcat::mcset de {Load Contour Levels} {Kontourniveaus laden}
 ::msgcat::mcset de {Load Contours} {Konturen laden}
@@ -684,7 +682,6 @@
 ::msgcat::mcset de {Sample} 
 ::msgcat::mcset de {Save 3D Movie} 
 ::msgcat::mcset de {Save Color Tags} 
-::msgcat::mcset de {Save Colormap} {Farbpalette speichern}
 ::msgcat::mcset de {Save Configuration} {Konfiguration speichern}
 ::msgcat::mcset de {Save Contour Levels} {Konturniveaus speichern}
 ::msgcat::mcset de {Save Contours} {Konturen speichern}

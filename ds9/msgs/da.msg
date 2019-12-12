@@ -245,7 +245,6 @@
 ::msgcat::mcset da {Distance} 
 ::msgcat::mcset da {Done} 
 ::msgcat::mcset da {Download Colormap} 
-::msgcat::mcset da {Download VOTABLE format if available} 
 ::msgcat::mcset da {Drag to Center} [encoding convertfrom iso8859-1 {Træk til center}]
 ::msgcat::mcset da {Duplicate Dataset} 
 ::msgcat::mcset da {East} [encoding convertfrom iso8859-1 {Øst}]
@@ -409,7 +408,6 @@
 ::msgcat::mcset da {List} {Liste}
 ::msgcat::mcset da {Load Analysis Commands} [encoding convertfrom iso8859-1 {Indlæs analyse funktioner}]
 ::msgcat::mcset da {Load Color Tags} 
-::msgcat::mcset da {Load Colormap} [encoding convertfrom iso8859-1 {Indlæs farvekort}]
 ::msgcat::mcset da {Load Configuration} [encoding convertfrom iso8859-1 {Indlæs konfiguration}]
 ::msgcat::mcset da {Load Contour Levels} [encoding convertfrom iso8859-1 {Indlæs konturniveauer}]
 ::msgcat::mcset da {Load Contours} [encoding convertfrom iso8859-1 {indlæs konturer}]
@@ -684,7 +682,6 @@
 ::msgcat::mcset da {Sample} 
 ::msgcat::mcset da {Save 3D Movie} 
 ::msgcat::mcset da {Save Color Tags} 
-::msgcat::mcset da {Save Colormap} {gem farvekort}
 ::msgcat::mcset da {Save Configuration} {Gem konfiguration}
 ::msgcat::mcset da {Save Contour Levels} {Gem konturniveauer}
 ::msgcat::mcset da {Save Contours} {Gem konturer}

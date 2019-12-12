@@ -245,7 +245,6 @@
 ::msgcat::mcset fr {Distance} 
 ::msgcat::mcset fr {Done} 
 ::msgcat::mcset fr {Download Colormap} 
-::msgcat::mcset fr {Download VOTABLE format if available} 
 ::msgcat::mcset fr {Drag to Center} {Glisser au centre} 
 ::msgcat::mcset fr {Duplicate Dataset} 
 ::msgcat::mcset fr {East} {Est} 
@@ -409,7 +408,6 @@
 ::msgcat::mcset fr {List} [encoding convertfrom iso8859-1 {Énumérer}]
 ::msgcat::mcset fr {Load Analysis Commands} {Charger le commandes d'analyse}
 ::msgcat::mcset fr {Load Color Tags} 
-::msgcat::mcset fr {Load Colormap} {Charger le plan de couleur}
 ::msgcat::mcset fr {Load Configuration} {Charger la configuration}
 ::msgcat::mcset fr {Load Contour Levels} {Charger les niveaux de contour}
 ::msgcat::mcset fr {Load Contours} {Charger les contours}
@@ -684,7 +682,6 @@
 ::msgcat::mcset fr {Sample} 
 ::msgcat::mcset fr {Save 3D Movie} 
 ::msgcat::mcset fr {Save Color Tags} 
-::msgcat::mcset fr {Save Colormap} 
 ::msgcat::mcset fr {Save Configuration} 
 ::msgcat::mcset fr {Save Contour Levels} 
 ::msgcat::mcset fr {Save Contours} 

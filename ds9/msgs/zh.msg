@@ -245,7 +245,6 @@
 ::msgcat::mcset zh {Distance} 
 ::msgcat::mcset zh {Done} 
 ::msgcat::mcset zh {Download Colormap} 
-::msgcat::mcset zh {Download VOTABLE format if available} 
 ::msgcat::mcset zh {Drag to Center} 
 ::msgcat::mcset zh {Duplicate Dataset} 
 ::msgcat::mcset zh {East} 
@@ -409,7 +408,6 @@
 ::msgcat::mcset zh {List} 
 ::msgcat::mcset zh {Load Analysis Commands} 
 ::msgcat::mcset zh {Load Color Tags} 
-::msgcat::mcset zh {Load Colormap} 
 ::msgcat::mcset zh {Load Configuration} 
 ::msgcat::mcset zh {Load Contour Levels} 
 ::msgcat::mcset zh {Load Contours} 
@@ -684,7 +682,6 @@
 ::msgcat::mcset zh {Sample} 
 ::msgcat::mcset zh {Save 3D Movie} 
 ::msgcat::mcset zh {Save Color Tags} 
-::msgcat::mcset zh {Save Colormap} 
 ::msgcat::mcset zh {Save Configuration} 
 ::msgcat::mcset zh {Save Contour Levels} 
 ::msgcat::mcset zh {Save Contours} 

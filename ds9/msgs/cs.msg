@@ -245,7 +245,6 @@
 ::msgcat::mcset cs {Distance} [encoding convertfrom iso8859-2 {Vzdálenost}]
 ::msgcat::mcset cs {Done} 
 ::msgcat::mcset cs {Download Colormap} 
-::msgcat::mcset cs {Download VOTABLE format if available} 
 ::msgcat::mcset cs {Drag to Center} 
 ::msgcat::mcset cs {Duplicate Dataset} 
 ::msgcat::mcset cs {East} [encoding convertfrom iso8859-2 {Východ}]
@@ -409,7 +408,6 @@
 ::msgcat::mcset cs {List} [encoding convertfrom iso8859-2 {Seznam}]
 ::msgcat::mcset cs {Load Analysis Commands} [encoding convertfrom iso8859-2 {Nahrát analytické pøíkazy}]
 ::msgcat::mcset cs {Load Color Tags} 
-::msgcat::mcset cs {Load Colormap} 
 ::msgcat::mcset cs {Load Configuration} [encoding convertfrom iso8859-2 {Nahraj konfiguraci}]
 ::msgcat::mcset cs {Load Contour Levels} 
 ::msgcat::mcset cs {Load Contours} 
@@ -684,7 +682,6 @@
 ::msgcat::mcset cs {Sample} 
 ::msgcat::mcset cs {Save 3D Movie} 
 ::msgcat::mcset cs {Save Color Tags} 
-::msgcat::mcset cs {Save Colormap} 
 ::msgcat::mcset cs {Save Configuration} 
 ::msgcat::mcset cs {Save Contour Levels} 
 ::msgcat::mcset cs {Save Contours} 

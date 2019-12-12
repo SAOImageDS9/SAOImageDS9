@@ -22,7 +22,7 @@ proc MarkerLoadDialog {} {
     set ed(skyformat) $wcs(skyformat)
     AdjustCoordSystem ed system
 
-    DialogCreate $w [msgcat::mc {Load Regions}] ed(ok)
+    DialogCreate $w [msgcat::mc {Open Regions}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]

@@ -391,8 +391,10 @@ proc PanZoomDialog {} {
 	-variable current(align) -command AlignWCSFrame
 
     menu $mb.zoom
-    $mb.zoom add command -label [msgcat::mc {Zoom In}] -command {Zoom 2 2}
-    $mb.zoom add command -label [msgcat::mc {Zoom Out}] -command {Zoom .5 .5}
+    $mb.zoom add command -label [msgcat::mc {Zoom In}] \
+	-command {Zoom 2 2} -accelerator "${ds9(ctrl)}+"
+    $mb.zoom add command -label [msgcat::mc {Zoom Out}] \
+	-command {Zoom .5 .5} -accelerator "${ds9(ctrl)}-"
     $mb.zoom add command -label [msgcat::mc {Zoom Fit}] -command ZoomToFit
     $mb.zoom add separator
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/32" \
@@ -474,6 +476,8 @@ proc PanZoomDialog {} {
 
     $w.param.zoomx select range 0 end
 
+    bind $w <<ZoomIn>> [list Zoom 2 2]
+    bind $w <<ZoomOut>> [list Zoom .5 .5]
     bind $w <<Close>> PanZoomDestroyDialog
 
     UpdatePanZoomDialog

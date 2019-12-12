@@ -16,9 +16,9 @@ proc ZoomMainMenu {} {
 	-variable current(align) -command AlignWCSFrame
     $ds9(mb).zoom add separator
     $ds9(mb).zoom add command -label [msgcat::mc {Zoom In}] \
-	-command {Zoom 2 2}
+	-command {Zoom 2 2} -accelerator "${ds9(ctrl)}+"
     $ds9(mb).zoom add command -label [msgcat::mc {Zoom Out}] \
-	-command {Zoom .5 .5}
+	-command {Zoom .5 .5} -accelerator "${ds9(ctrl)}-"
     $ds9(mb).zoom add command -label [msgcat::mc {Zoom Fit}] \
 	-command ZoomToFit
     $ds9(mb).zoom add separator
@@ -69,6 +69,9 @@ proc ZoomMainMenu {} {
     $ds9(mb).zoom add command \
 	-label "[msgcat::mc {Pan Zoom Rotate Parameters}]..." \
 	-command PanZoomDialog
+
+    bind $ds9(top) <<ZoomIn>> [list Zoom 2 2]
+    bind $ds9(top) <<ZoomOut>> [list Zoom .5 .5]
 }
 
 proc PrefsDialogZoomMenu {w} {

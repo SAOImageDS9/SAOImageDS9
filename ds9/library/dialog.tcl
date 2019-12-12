@@ -290,7 +290,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	}
 	$var(mb).file add separator
 	$var(mb).file add command -label [msgcat::mc {Close}] \
-	    -command "SimpleTextDestroy $varname"
+	    -command "SimpleTextDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
 	$var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
 	menu $var(mb).edit
@@ -348,6 +348,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 
 	bind $var(top) <<Find>> [list SimpleTextFind $varname]
 	bind $var(top) <<FindNext>> [list SimpleTextFindNext $varname]
+	bind $var(top) <<Close>> [list SimpleTextDestroy $varname]
 
 	# some window managers need a hint
 	raise $var(top)

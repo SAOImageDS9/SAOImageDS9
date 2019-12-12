@@ -423,6 +423,7 @@ event add <<Print>> <${ds9(ctrl)}p>
 event add <<SelectAll>> <${ds9(ctrl)}a>
 event add <<Find>> <${ds9(ctrl)}f>
 event add <<FindNext>> <${ds9(ctrl)}g>
+event add <<Close>> <${ds9(ctrl)}w>
 switch $ds9(wm) {
     x11 -
     win32 {

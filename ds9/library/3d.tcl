@@ -59,7 +59,8 @@ proc 3DDialog {} {
     $mb.file add command -label [msgcat::mc {Apply}] -command 3DApplyDialog
     $mb.file add command -label [msgcat::mc {Reset}] -command 3DResetDialog
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Close}] -command 3DDestroyDialog
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command 3DDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb ithreed
 
@@ -136,6 +137,8 @@ proc 3DDialog {} {
     ttk::separator $w.sep3 -orient horizontal
     pack $w.buttons $w.sep $w.status $w.sep2 -side bottom -fill x
     pack $w.param $w.sep3 $w.scale -side top -fill x
+
+    bind $w <<Close>> 3DDestroyDialog
 
     Update3DDialog
 }

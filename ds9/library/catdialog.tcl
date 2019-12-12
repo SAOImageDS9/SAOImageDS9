@@ -154,7 +154,7 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATPrint $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command [list CATDestroy $varname]
+	-command [list CATDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     # Import
     menu $mb.file.import
@@ -470,6 +470,8 @@ proc CATDialog {varname format catalog title action} {
     pack $w.buttons $w.sstatus $w.status $w.stbl -side bottom -fill x
     pack $w.cat $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
+
+    bind $w <<Close>> [list CATDestroy $varname]
 
     # needs to go after sort menu button is defined
     CATSortMenu $varname

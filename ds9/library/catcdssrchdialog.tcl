@@ -74,7 +74,7 @@ proc CATCDSSrchDialog {varname} {
 	-command "CATCDSSrchSaveFile $varname"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command "CATCDSSrchDestroy $varname"
+	-command "CATCDSSrchDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
     # edit
     AREditMenu $varname
@@ -249,6 +249,8 @@ proc CATCDSSrchDialog {varname} {
     $var(listbox,mission) selection set 0
     $var(listbox,astro) selection set 0
     $w.param.name.source select range 0 end
+
+    bind $w <<Close>> [list CATCDSSrchDestroy $varname]
 }
 
 proc CATCDSSrchApply {varname} {

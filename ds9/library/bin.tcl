@@ -228,7 +228,7 @@ proc BinDialog {} {
 	-command BinClearFilterDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command BinDestroyDialog
+	-command BinDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb ibin
 
@@ -357,6 +357,8 @@ proc BinDialog {} {
 
     set dbin(auto) 0
     set dbin(minmax) 1
+
+    bind $w <<Close>> BinDestroyDialog
 
     UpdateBinDialog
 }

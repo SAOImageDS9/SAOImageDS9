@@ -107,7 +107,7 @@ proc BlockDialog {} {
 	-command BlockApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command BlockDestroyDialog
+	-command BlockDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb iblock
 
@@ -141,8 +141,7 @@ proc BlockDialog {} {
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] -command BlockApplyDialog
-    ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command BlockDestroyDialog
+    ttk::button $f.close -text [msgcat::mc {Close}] -command BlockDestroyDialog
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
@@ -151,6 +150,8 @@ proc BlockDialog {} {
     pack $w.param -side top -fill both -expand true
 
     $w.param.blockx select range 0 end
+
+    bind $w <<Close>> BlockDestroyDialog
 
     UpdateBlockDialog
 }

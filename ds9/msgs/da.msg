@@ -229,7 +229,7 @@
 ::msgcat::mcset da {Delete Group} {Slet gruppe}
 ::msgcat::mcset da {Delete Load} 
 ::msgcat::mcset da {Delete Selected Regions} [encoding convertfrom iso8859-1 {Slet valgte områder}]
-::msgcat::mcset da {Delete and Load Regions} 
+::msgcat::mcset da {Delete and Open Regions} 
 ::msgcat::mcset da {Delete} {Slet} 
 ::msgcat::mcset da {Depth} {Dybde}
 ::msgcat::mcset da {Detector} {Detektor}
@@ -414,7 +414,6 @@
 ::msgcat::mcset da {Load Contrast/Bias} [encoding convertfrom iso8859-1 {Indlæs kontrast/bias}]
 ::msgcat::mcset da {Load Data} [encoding convertfrom iso8859-1 {Indlæs data}]
 ::msgcat::mcset da {Load Mosaic} [encoding convertfrom iso8859-1 {Indlæs mosaik}]
-::msgcat::mcset da {Load Regions} [encoding convertfrom iso8859-1 {Indlæs områder}]
 ::msgcat::mcset da {Load Template} [encoding convertfrom iso8859-1 {Indlæs skabelon}]
 ::msgcat::mcset da {Load into All Frames} 
 ::msgcat::mcset da {Load into Current Frame} 
@@ -566,6 +565,7 @@
 ::msgcat::mcset da {OK} 
 ::msgcat::mcset da {Object} {Objekt}
 ::msgcat::mcset da {Open File} {Åben fil}
+::msgcat::mcset da {Open Regions} 
 ::msgcat::mcset da {Open TCL Console} [encoding convertfrom iso8859-1 {Åben TCL konsol}]
 ::msgcat::mcset da {Open URL} [encoding convertfrom iso8859-1 {Åben URL}]
 ::msgcat::mcset da {Open as} 

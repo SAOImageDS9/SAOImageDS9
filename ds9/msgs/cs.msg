@@ -229,7 +229,7 @@
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
 ::msgcat::mcset cs {Delete Load} 
 ::msgcat::mcset cs {Delete Selected Regions} [encoding convertfrom iso8859-2 {Smazat vybrané oblasti}]
-::msgcat::mcset cs {Delete and Load Regions} 
+::msgcat::mcset cs {Delete and Open Regions} 
 ::msgcat::mcset cs {Delete} [encoding convertfrom iso8859-2 {Smazat}]
 ::msgcat::mcset cs {Depth} [encoding convertfrom iso8859-2 {Hloubka}]
 ::msgcat::mcset cs {Detector} [encoding convertfrom iso8859-2 {Detektor}]
@@ -414,7 +414,6 @@
 ::msgcat::mcset cs {Load Contrast/Bias} 
 ::msgcat::mcset cs {Load Data} 
 ::msgcat::mcset cs {Load Mosaic} 
-::msgcat::mcset cs {Load Regions} [encoding convertfrom iso8859-2 {Nahrát oblasti}]
 ::msgcat::mcset cs {Load Template} 
 ::msgcat::mcset cs {Load into All Frames} 
 ::msgcat::mcset cs {Load into Current Frame} 
@@ -566,6 +565,7 @@
 ::msgcat::mcset cs {OK} [encoding convertfrom iso8859-2 {Budi¾}] 
 ::msgcat::mcset cs {Object} [encoding convertfrom iso8859-2 {Objekt}]
 ::msgcat::mcset cs {Open File} [encoding convertfrom iso8859-2 {Otevøít soubor}]
+::msgcat::mcset cs {Open Regions} 
 ::msgcat::mcset cs {Open TCL Console} [encoding convertfrom iso8859-2 {Otevøít konzoly TCL}]
 ::msgcat::mcset cs {Open URL} [encoding convertfrom iso8859-2 {Otevøít URL}]
 ::msgcat::mcset cs {Open as} 

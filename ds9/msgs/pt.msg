@@ -229,7 +229,7 @@
 ::msgcat::mcset pt {Delete Group} {Apague o Grupo}
 ::msgcat::mcset pt {Delete Load} 
 ::msgcat::mcset pt {Delete Selected Regions} [encoding convertfrom iso8859-1 {Apagar Regiões Selecionadas}]
-::msgcat::mcset pt {Delete and Load Regions} 
+::msgcat::mcset pt {Delete and Open Regions} 
 ::msgcat::mcset pt {Delete} {Apagar}
 ::msgcat::mcset pt {Depth} {Profundidade}
 ::msgcat::mcset pt {Detector} 
@@ -414,7 +414,6 @@
 ::msgcat::mcset pt {Load Contrast/Bias} {Carregar Contraste/Bias}
 ::msgcat::mcset pt {Load Data} {Carregar Dados}
 ::msgcat::mcset pt {Load Mosaic} {Carregar Mosaico}
-::msgcat::mcset pt {Load Regions} [encoding convertfrom iso8859-1 {Carregar Regiões}]
 ::msgcat::mcset pt {Load Template} {Carregar Template}
 ::msgcat::mcset pt {Load into All Frames} 
 ::msgcat::mcset pt {Load into Current Frame} 
@@ -566,6 +565,7 @@
 ::msgcat::mcset pt {OK} 
 ::msgcat::mcset pt {Object} {Objeto}
 ::msgcat::mcset pt {Open File} {Abrir Arquivo}
+::msgcat::mcset pt {Open Regions} 
 ::msgcat::mcset pt {Open TCL Console} 
 ::msgcat::mcset pt {Open URL} {Abrir URL}
 ::msgcat::mcset pt {Open as} 

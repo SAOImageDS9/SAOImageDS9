@@ -229,7 +229,7 @@
 ::msgcat::mcset zh {Delete Group} 
 ::msgcat::mcset zh {Delete Load} 
 ::msgcat::mcset zh {Delete Selected Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBF\xEF \xA8\xFA \xB0\xCF \xB0\xEC"]
-::msgcat::mcset zh {Delete and Load Regions} 
+::msgcat::mcset zh {Delete and Open Regions} 
 ::msgcat::mcset zh {Delete} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3"]
 ::msgcat::mcset zh {Depth} 
 ::msgcat::mcset zh {Detector} 
@@ -414,7 +414,6 @@
 ::msgcat::mcset zh {Load Contrast/Bias} 
 ::msgcat::mcset zh {Load Data} 
 ::msgcat::mcset zh {Load Mosaic} 
-::msgcat::mcset zh {Load Regions} [encoding convertfrom big5 "\xB8\xFC \xA4\x4A \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Load Template} 
 ::msgcat::mcset zh {Load into All Frames} 
 ::msgcat::mcset zh {Load into Current Frame} 
@@ -566,6 +565,7 @@
 ::msgcat::mcset zh {OK} 
 ::msgcat::mcset zh {Object} [encoding convertfrom big5 "\xA4\xD1 \xC5\xE9 \xA6\x57 \xBA\xD9"]
 ::msgcat::mcset zh {Open File} 
+::msgcat::mcset zh {Open Regions} 
 ::msgcat::mcset zh {Open TCL Console} 
 ::msgcat::mcset zh {Open URL} 
 ::msgcat::mcset zh {Open as} 

@@ -229,7 +229,7 @@
 ::msgcat::mcset es {Delete Group} {Borrar grupo}
 ::msgcat::mcset es {Delete Load} 
 ::msgcat::mcset es {Delete Selected Regions} {Borrar regiones seleccionadas}
-::msgcat::mcset es {Delete and Load Regions} 
+::msgcat::mcset es {Delete and Open Regions} 
 ::msgcat::mcset es {Delete} {Borrar}
 ::msgcat::mcset es {Depth} {Profundidad}
 ::msgcat::mcset es {Detector} 
@@ -414,7 +414,6 @@
 ::msgcat::mcset es {Load Contrast/Bias} {Cargar contraste/Bias}
 ::msgcat::mcset es {Load Data} {Cargar datos}
 ::msgcat::mcset es {Load Mosaic} {Cargar mosaico}
-::msgcat::mcset es {Load Regions} {Cargar regiones}
 ::msgcat::mcset es {Load Template} {Cargar modelo}
 ::msgcat::mcset es {Load into All Frames} 
 ::msgcat::mcset es {Load into Current Frame} 
@@ -566,6 +565,7 @@
 ::msgcat::mcset es {OK} {Vale} 
 ::msgcat::mcset es {Object} {Objeto}
 ::msgcat::mcset es {Open File} {Abrir fichero}
+::msgcat::mcset es {Open Regions} 
 ::msgcat::mcset es {Open TCL Console} {Abrir consola TCL}
 ::msgcat::mcset es {Open URL} {Abrir URL}
 ::msgcat::mcset es {Open as} 

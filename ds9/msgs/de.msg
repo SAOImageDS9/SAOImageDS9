@@ -229,7 +229,7 @@
 ::msgcat::mcset de {Delete Group} [encoding convertfrom iso8859-1 {Gruppe löschen}]
 ::msgcat::mcset de {Delete Load} 
 ::msgcat::mcset de {Delete Selected Regions} [encoding convertfrom iso8859-1 {Ausgewählte Regionen löschen}]
-::msgcat::mcset de {Delete and Load Regions} 
+::msgcat::mcset de {Delete and Open Regions} 
 ::msgcat::mcset de {Delete} [encoding convertfrom iso8859-1 {Löschen}]
 ::msgcat::mcset de {Depth} {Tiefe}
 ::msgcat::mcset de {Detector} {Detektor}
@@ -414,7 +414,6 @@
 ::msgcat::mcset de {Load Contrast/Bias} {Kontrast/Bias laden}
 ::msgcat::mcset de {Load Data} {Daten laden}
 ::msgcat::mcset de {Load Mosaic} {Mosaic laden}
-::msgcat::mcset de {Load Regions} {Regionen laden}
 ::msgcat::mcset de {Load Template} {Vorlage laden}
 ::msgcat::mcset de {Load into All Frames} 
 ::msgcat::mcset de {Load into Current Frame} 
@@ -566,6 +565,7 @@
 ::msgcat::mcset de {OK} 
 ::msgcat::mcset de {Object} {Objekt}
 ::msgcat::mcset de {Open File} [encoding convertfrom iso8859-1 {Datei öffnen}]
+::msgcat::mcset de {Open Regions} 
 ::msgcat::mcset de {Open TCL Console} 
 ::msgcat::mcset de {Open URL} [encoding convertfrom iso8859-1 {URL Öffnen}]
 ::msgcat::mcset de {Open as} 

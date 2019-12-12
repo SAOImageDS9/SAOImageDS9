@@ -84,10 +84,10 @@ proc CATSymDialog {parent} {
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command "CATSymApply $varname"
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command "CATSymSave $varname" -accelerator "${ds9(ctrl)}S"
     $mb.file add command -label "[msgcat::mc {Load}]..." \
 	-command "CATSymLoad $varname"
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command "CATSymSave $varname" -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Add}] \
 	-command "CATSymAdd $varname"

@@ -569,7 +569,9 @@ proc ContourLoadLevelsNew {ch} {
 
 proc ContourSaveLevels {} {
     set fn [SaveFileDialog contourlevsfbox]
-    ContourSaveLevelsNow $fn
+    if {$fn != {}} {
+	ContourSaveLevelsNow $fn
+    }
 }
 
 proc ContourSaveLevelsNow {fn} {

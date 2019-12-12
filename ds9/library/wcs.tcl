@@ -404,7 +404,9 @@ proc WCSSaveDialog {} {
     global dwcs
 
     set fn [SaveFileDialog wcsfbox]
-    WCSSaveFile $fn
+    if {$fn != {}} {
+	WCSSaveFile $fn
+    }
 }
 
 # used by backup

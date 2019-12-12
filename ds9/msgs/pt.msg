@@ -416,7 +416,6 @@
 ::msgcat::mcset pt {Load Mosaic} {Carregar Mosaico}
 ::msgcat::mcset pt {Load Regions} [encoding convertfrom iso8859-1 {Carregar Regiões}]
 ::msgcat::mcset pt {Load Template} {Carregar Template}
-::msgcat::mcset pt {Load as} 
 ::msgcat::mcset pt {Load into All Frames} 
 ::msgcat::mcset pt {Load into Current Frame} 
 ::msgcat::mcset pt {Loading Catalog} 

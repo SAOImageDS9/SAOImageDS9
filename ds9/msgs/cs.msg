@@ -416,7 +416,6 @@
 ::msgcat::mcset cs {Load Mosaic} 
 ::msgcat::mcset cs {Load Regions} [encoding convertfrom iso8859-2 {Nahrát oblasti}]
 ::msgcat::mcset cs {Load Template} 
-::msgcat::mcset cs {Load as} 
 ::msgcat::mcset cs {Load into All Frames} 
 ::msgcat::mcset cs {Load into Current Frame} 
 ::msgcat::mcset cs {Loading Catalog} 

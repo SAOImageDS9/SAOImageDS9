@@ -59,19 +59,20 @@ proc CATCDSSrchDialog {varname} {
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     menu $mb.file
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
+	-command "CATCDSSrchLoadFile $varname"
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command "CATCDSSrchSaveFile $varname" -accelerator "${ds9(ctrl)}S"
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Retrieve}] \
 	-command "CATCDSSrchApply $varname"
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command "ARCancel $varname"
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Load}] \
 	-command "CATCDSSrchCatalog $varname"
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command "CATCDSSrchClear $varname"
-    $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load}]..." \
-	-command "CATCDSSrchLoadFile $varname"
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command "CATCDSSrchSaveFile $varname" -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command "CATCDSSrchDestroy $varname" -accelerator "${ds9(ctrl)}W"

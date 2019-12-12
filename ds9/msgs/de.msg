@@ -416,7 +416,6 @@
 ::msgcat::mcset de {Load Mosaic} {Mosaic laden}
 ::msgcat::mcset de {Load Regions} {Regionen laden}
 ::msgcat::mcset de {Load Template} {Vorlage laden}
-::msgcat::mcset de {Load as} 
 ::msgcat::mcset de {Load into All Frames} 
 ::msgcat::mcset de {Load into Current Frame} 
 ::msgcat::mcset de {Loading Catalog} 

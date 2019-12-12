@@ -817,13 +817,13 @@ proc ColormapDialog {} {
     $mb add cascade -label [msgcat::mc {Color}] -menu $mb.color
 
     menu $mb.file
-    $mb.file add command -label [msgcat::mc {Apply}] \
-	-command ApplyColormap
-    $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load}]..." \
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command LoadColormap
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command SaveColormap -accelerator "${ds9(ctrl)}S"
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Apply}] \
+	-command ApplyColormap
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Download Colormap}]..." \
 	-command {HV cpt CPT-CITY http://soliton.vm.bytemark.co.uk/pub/cpt-city}
@@ -1028,7 +1028,7 @@ proc UpdateColorDialog {} {
 		base -
 		3d {
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Load}]..." -state normal
+			"[msgcat::mc {Open}]..." -state normal
 		    $icolorbar(mb).file entryconfig \
 			"[msgcat::mc {Save}]..." -state normal
 		    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
@@ -1049,7 +1049,7 @@ proc UpdateColorDialog {} {
 		}
 		rgb {
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Load}]..." -state disabled
+			"[msgcat::mc {Open}]..." -state disabled
 		    $icolorbar(mb).file entryconfig \
 			"[msgcat::mc {Save}]..." -state disabled
 		    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
@@ -1071,7 +1071,7 @@ proc UpdateColorDialog {} {
 	    }
 	} else {
 	    $icolorbar(mb).file entryconfig \
-		"[msgcat::mc {Load}]..." -state normal
+		"[msgcat::mc {Open}]..." -state normal
 	    $icolorbar(mb).file entryconfig \
 		"[msgcat::mc {Save}]..." -state normal
 	    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {

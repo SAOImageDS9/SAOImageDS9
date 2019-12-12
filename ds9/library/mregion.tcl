@@ -140,7 +140,7 @@ proc RegionMainMenu {} {
     CreateFOVMenu
 
     menu $ds9(mb).region.template
-    $ds9(mb).region.template add command -label "[msgcat::mc {Load}]..." \
+    $ds9(mb).region.template add command -label "[msgcat::mc {Open}]..." \
 	-command OpenTemplateMarker
     $ds9(mb).region.template add command -label "[msgcat::mc {Save}]..." \
 	-command SaveAsTemplateMarker
@@ -826,7 +826,7 @@ proc CreateButtonsRegion {} {
     ButtonButton $ds9(buttons).region.list \
 	[string tolower [msgcat::mc {List}]] MarkerList
     ButtonButton $ds9(buttons).region.load \
-	[string tolower [msgcat::mc {Load}]] MarkerLoad
+	[string tolower [msgcat::mc {Open}]] MarkerLoad
     ButtonButton $ds9(buttons).region.deleteload \
 	[string tolower [msgcat::mc {Delete Load}]] MarkerDeleteLoad
 
@@ -1026,7 +1026,7 @@ proc PrefsDialogButtonbarRegion {f} {
 	-command {UpdateButtons buttons(region)}
 
     menu $m.template
-    $m.template add checkbutton -label "[msgcat::mc {Load}]..." \
+    $m.template add checkbutton -label "[msgcat::mc {Open}]..." \
 	-variable pbuttons(region,loadtemplate) \
 	-command {UpdateButtons buttons(region)}
     $m.template add checkbutton -label "[msgcat::mc {Save}]..." \

@@ -416,7 +416,6 @@
 ::msgcat::mcset zh {Load Mosaic} 
 ::msgcat::mcset zh {Load Regions} [encoding convertfrom big5 "\xB8\xFC \xA4\x4A \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Load Template} 
-::msgcat::mcset zh {Load as} 
 ::msgcat::mcset zh {Load into All Frames} 
 ::msgcat::mcset zh {Load into Current Frame} 
 ::msgcat::mcset zh {Loading Catalog} 

@@ -168,13 +168,13 @@ proc WCSDialog {} {
     $mb add cascade -label [msgcat::mc {Extention}] -menu $mb.ext
 
     menu $mb.file
-    $mb.file add command -label [msgcat::mc {Apply}] -command WCSApplyDialog
-    $mb.file add command -label [msgcat::mc {Reset}] -command WCSResetDialog
-    $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load}]..." \
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command WCSLoadDialog
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command WCSSaveDialog -accelerator "${ds9(ctrl)}S"
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Apply}] -command WCSApplyDialog
+    $mb.file add command -label [msgcat::mc {Reset}] -command WCSResetDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command WCSDestroyDialog -accelerator "${ds9(ctrl)}W"

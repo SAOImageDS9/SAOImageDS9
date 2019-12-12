@@ -102,9 +102,9 @@ proc MaskDialog {} {
     $mb add cascade -label [msgcat::mc {Align}] -menu $mb.align
 
     menu $mb.file
-    $mb.file add command -label "[msgcat::mc {Load}]..." \
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command [list OpenDialog fits mask]
-    $mb.file add cascade -label [msgcat::mc {Load as}] \
+    $mb.file add cascade -label [msgcat::mc {Open as}] \
 	-menu $mb.file.open
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] \

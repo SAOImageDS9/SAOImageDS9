@@ -416,7 +416,6 @@
 ::msgcat::mcset da {Load Mosaic} [encoding convertfrom iso8859-1 {Indlæs mosaik}]
 ::msgcat::mcset da {Load Regions} [encoding convertfrom iso8859-1 {Indlæs områder}]
 ::msgcat::mcset da {Load Template} [encoding convertfrom iso8859-1 {Indlæs skabelon}]
-::msgcat::mcset da {Load as} 
 ::msgcat::mcset da {Load into All Frames} 
 ::msgcat::mcset da {Load into Current Frame} 
 ::msgcat::mcset da {Loading Catalog} 

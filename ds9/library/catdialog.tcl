@@ -109,7 +109,7 @@ proc CATDialog {varname format catalog title action} {
 
     # file
     menu $mb.file
-    $mb.file add command -label "[msgcat::mc {Load}]..." \
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command [list CATLoadVOTFile $varname]
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command [list CATSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
@@ -440,7 +440,7 @@ proc CATDialog {varname format catalog title action} {
     # Buttons
     set f [ttk::frame $w.buttons]
 
-    ButtonButton $f.load [msgcat::mc {Load}] [list CATLoadVOTFile $varname]
+    ButtonButton $f.load [msgcat::mc {Open}] [list CATLoadVOTFile $varname]
     ButtonButton $f.save [msgcat::mc {Save}] [list CATSaveVOTFile $varname]
 
     set var(apply) [ttk::button $f.apply \
@@ -1090,15 +1090,15 @@ proc CATEditDialog {varname which db} {
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     menu $mb.file
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
+	-command CATEditLoad
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command CATEditSave
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command {set ed(ok) 1}
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command CATEditClear
-    $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load}]..." \
-	-command CATEditLoad
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command CATEditSave
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command {set ed(ok) 0}

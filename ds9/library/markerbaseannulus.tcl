@@ -96,9 +96,6 @@ proc MarkerBaseAnnulusDialog {varname} {
     # Fini
     grid $var(top).param -sticky news
     grid $var(top).buttons - - -sticky ew
-
-    # some window managers need a hint
-    raise $var(top)
 }
 
 proc MarkerBaseAnnulusFileMenu {varname} {

@@ -349,9 +349,6 @@ proc SimpleTextDialog {varname title width height action pos txt
 	bind $var(top) <<Find>> [list SimpleTextFind $varname]
 	bind $var(top) <<FindNext>> [list SimpleTextFindNext $varname]
 	bind $var(top) <<Close>> [list SimpleTextDestroy $varname]
-
-	# some window managers need a hint
-	raise $var(top)
     }
 
     $var(text) configure -state normal

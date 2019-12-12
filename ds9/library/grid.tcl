@@ -596,7 +596,8 @@ proc GridDialog {} {
     $mb.file add command -label "[msgcat::mc {Save Configuration}]..." \
 	-command GridSaveDialog
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Close}] -command GridDestroyDialog
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command GridDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     # Edit
     EditMenu $mb igrid
@@ -814,8 +815,7 @@ proc GridDialog {} {
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
 
-    # some window managers need a hint
-    raise $w
+    bind $w <<Close>> GridDestroyDialog
 
     UpdateGridDialog
 }

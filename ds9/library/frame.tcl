@@ -1983,7 +1983,8 @@ proc TileDialog {} {
     menu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command TileApplyDialog
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Close}] -command TileDestroyDialog
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command TileDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb itile
 
@@ -2036,6 +2037,8 @@ proc TileDialog {} {
     grid rowconfigure $w 2 -weight 1
     grid rowconfigure $w 3 -weight 1
     grid columnconfigure $w 0 -weight 1
+
+    bind $w <<Close>> TileDestroyDialog
 }
 
 proc TileDestroyDialog {} {

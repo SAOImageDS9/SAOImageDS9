@@ -376,7 +376,7 @@ proc CubeDialog {} {
     $mb.file add command -label [msgcat::mc {Last}] -command CubeLast
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command CubeDestroyDialog
+	-command CubeDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb icube
 
@@ -450,6 +450,8 @@ proc CubeDialog {} {
     pack $w.param -side top -fill both -expand true
 
     set dcube(format) {%g}
+
+    bind $w <<Close>> CubeDestroyDialog
 
     UpdateCubeDialog
 }

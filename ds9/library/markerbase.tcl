@@ -78,9 +78,6 @@ proc MarkerBaseDialog {varname} {
     ttk::separator $var(top).sep -orient horizontal
     pack $var(top).buttons $var(top).sep -side bottom -fill x
     pack $var(top).param -side top -fill both -expand true
-
-    # some window managers need a hint
-    raise $var(top)
 }
 
 # actions
@@ -259,7 +256,8 @@ proc MarkerBaseMenu {varname} {
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
     $var(mb) add cascade -label [msgcat::mc {Color}] -menu $var(mb).color
     $var(mb) add cascade -label [msgcat::mc {Width}] -menu $var(mb).width
-    $var(mb) add cascade -label [msgcat::mc {Property}] -menu $var(mb).properties
+    $var(mb) add cascade -label [msgcat::mc {Property}] \
+	-menu $var(mb).properties
     $var(mb) add cascade -label [msgcat::mc {Font}] -menu $var(mb).font
 }
 
@@ -267,12 +265,16 @@ proc MarkerBaseFileMenu {varname} {
     upvar #0 $varname var
     global $varname
 
+    global ds9
+    
     menu $var(mb).file
     $var(mb).file add command -label [msgcat::mc {Apply}] \
 	-command "$var(proc,apply) $varname"
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
-	-command "$var(proc,close) $varname"
+	-command "$var(proc,close) $varname" -accelerator "${ds9(ctrl)}W"
+
+    bind $var(top) <<Close>> [list $var(proc,close) $varname]
 }
 
 proc MarkerBasePropertyMenu {varname} {

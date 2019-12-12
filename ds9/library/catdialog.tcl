@@ -458,7 +458,7 @@ proc CATDialog {varname format catalog title action} {
 		       -command "SAMPSendTableLoadVotable {} $varname"]
     ttk::button $f.plot -text [msgcat::mc {Plot}] \
 	-command [list CATPlot $varname]
-    ttk::button $f.close -text [msgcat::mc {Close}] \
+    1ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list CATDestroy $varname]
 
     pack $f.apply $f.cancel $f.filter $f.clear $f.samp $f.plot $f.close \

@@ -113,7 +113,8 @@ proc MaskDialog {} {
     $mb.file add command -label [msgcat::mc {Apply}] -command MaskApplyDialog
     $mb.file add command -label [msgcat::mc {Clear}] -command MaskClear
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Close}] -command MaskDestroyDialog
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command MaskDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     menu $mb.file.open
     $mb.file.open add command -label "[msgcat::mc {Mosaic WCS}]..." \
@@ -157,6 +158,8 @@ proc MaskDialog {} {
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    bind $w <<Close>> MaskDestroyDialog
 }
 
 proc MaskApplyDialog {} {

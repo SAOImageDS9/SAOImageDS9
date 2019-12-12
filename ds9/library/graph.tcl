@@ -443,6 +443,7 @@ proc GraphDialog {} {
     global igraph
     global graph
     global current
+    global ds9
 
     # see if we already have a window visible
     if {[winfo exists $igraph(top)]} {
@@ -463,7 +464,7 @@ proc GraphDialog {} {
 	-command GraphApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command GraphDestroyDialog
+	-command GraphDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb igraph
 
@@ -535,6 +536,8 @@ proc GraphDialog {} {
     grid $w.buttons - -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid columnconfigure $w 1 -weight 1
+
+    bind $w <<Close>> GraphDestroyDialog
 }
 
 proc GraphApplyDialog {} {

@@ -166,7 +166,7 @@ proc CrosshairDialog {} {
 	-command CrosshairApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command CrosshairDestroyDialog
+	-command CrosshairDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb icrosshair
 
@@ -196,6 +196,8 @@ proc CrosshairDialog {} {
     pack $w.param -side top -fill both -expand true
 
     $w.param.x select range 0 end
+
+    bind $w <<Close>> CrosshairDestroyDialog
 
     UpdateCrosshairDialog
 }

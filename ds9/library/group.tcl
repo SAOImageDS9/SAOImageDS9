@@ -69,7 +69,7 @@ proc GroupDialog {} {
 	-command GroupDeleteAllDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command GroupDestroyDialog
+	-command GroupDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     # List
     set f [ttk::frame $w.param]
@@ -88,16 +88,16 @@ proc GroupDialog {} {
 
     # Buttons
     set f [ttk::frame $w.buttons]
-    ttk::button $f.update -text [msgcat::mc {Update}] \
-	-command GroupUpdateDialog
-    ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command GroupDestroyDialog
+    ttk::button $f.update -text [msgcat::mc {Update}] -command GroupUpdateDialog
+    ttk::button $f.close -text [msgcat::mc {Close}] -command GroupDestroyDialog
     pack $f.update $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -fill both -expand true
+
+    bind $w <<Close>> GroupDestroyDialog
 
     UpdateGroupDialog
 }

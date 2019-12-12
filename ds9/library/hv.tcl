@@ -89,7 +89,7 @@ proc HV {varname title url {init {}} {sync 0}} {
 	    -command "HVClearCmd $varname"
 	$mb.file add separator
 	$mb.file add command -label [msgcat::mc {Close}] \
-	    -command "HVDestroy $varname"
+	    -command "HVDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
 	menu $mb.edit
 	$mb.edit add command -label [msgcat::mc {Cut}] \
@@ -209,6 +209,8 @@ proc HV {varname title url {init {}} {sync 0}} {
 
 	bind $w <<Find>> [list HVFindCmd $varname]
 	bind $w <<FindNext>> [list HVFindNextCmd $varname]
+
+	bind $w <<Close>> [list HVDestroy $varname]
 
 	switch $ds9(wm) {
 	    x11 {

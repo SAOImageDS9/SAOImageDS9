@@ -43,7 +43,7 @@ proc IMGSVRInit {varname title exec ack} {
 	-command "IMGSVRAck $varname"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command "ARDestroy $varname"
+	-command "ARDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
     AREditMenu $varname
     NSVRServerMenu $varname
@@ -101,6 +101,8 @@ proc IMGSVRInit {varname title exec ack} {
     ttk::separator $w.sep2 -orient horizontal
     pack $w.buttons $w.sep $w.status $w.sep2 -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    bind $w <<Close>> [list ARDestroy $varname]
 
     ARCoord $varname
     ARStatus $varname {}

@@ -37,7 +37,7 @@ proc CentroidDialog {} {
 	-command CentroidApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command CentroidDestroyDialog
+	-command CentroidDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb icentroid
 
@@ -67,6 +67,8 @@ proc CentroidDialog {} {
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    bind $w <<Close>> CentroidDestroyDialog
 }
 
 proc CentroidDestroyDialog {} {

@@ -95,7 +95,7 @@ proc CATSymDialog {parent} {
 	-command "CATSymRemove $varname"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command "CATSymDestroy $varname"
+	-command "CATSymDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
@@ -241,6 +241,8 @@ proc CATSymDialog {parent} {
     CATSymTable $varname
 
     $var(tbl) selection set $var(row),1
+
+    bind $w <<Close>> [list CATSymDestroy $varname]
 }
 
 proc CATSymDestroy {varname} {

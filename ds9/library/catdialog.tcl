@@ -112,7 +112,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.file add command -label "[msgcat::mc {Load}]..." \
 	-command [list CATLoadVOTFile $varname]
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command [list CATSaveVOTFile $varname]
+	-command [list CATSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] -menu $mb.file.import
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
@@ -471,6 +471,7 @@ proc CATDialog {varname format catalog title action} {
     pack $w.cat $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
+    bind $w <<Save>> [list CATSaveVOTFile $varname]
     bind $w <<Print>> PSPrint
     bind $w <<Close>> [list CATDestroy $varname]
 

@@ -75,7 +75,7 @@ proc SIADialog {varname title url opts method action} {
     # file
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command [list CATSaveVOTFile $varname]
+	-command [list CATSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
@@ -233,6 +233,7 @@ proc SIADialog {varname title url opts method action} {
     pack $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
+    bind $w <<Save>> [list CATSaveVOTFile $varname]
     bind $w <<Close>> [list SIADestroy $varname]
     bind $w <<Print>> [list CATPrint $varname]
 

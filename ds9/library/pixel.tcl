@@ -55,7 +55,7 @@ proc PixelTableDialog {} {
 
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command PixelTableSaveDialog
+	-command PixelTableSaveDialog -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command PixelTableDestroyDialog -accelerator "${ds9(ctrl)}W"
@@ -106,6 +106,7 @@ proc PixelTableDialog {} {
 
     selection handle $w PixelTableExportSelection
 
+    bind $w <<Save>> PixelTableSaveDialog
     bind $w <<Close>> PixelTableDestroyDialog
 
     PixelTableConfigure

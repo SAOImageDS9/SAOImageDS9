@@ -85,7 +85,7 @@ proc CATSymDialog {parent} {
 	-command "CATSymApply $varname"
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command "CATSymSave $varname"
+	-command "CATSymSave $varname" -accelerator "${ds9(ctrl)}S"
     $mb.file add command -label "[msgcat::mc {Load}]..." \
 	-command "CATSymLoad $varname"
     $mb.file add separator
@@ -242,6 +242,7 @@ proc CATSymDialog {parent} {
 
     $var(tbl) selection set $var(row),1
 
+    bind $w <<Save>> [list CATSymSave $varname]
     bind $w <<Close>> [list CATSymDestroy $varname]
 }
 

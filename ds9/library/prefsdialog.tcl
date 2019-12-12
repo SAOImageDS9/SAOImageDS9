@@ -28,7 +28,8 @@ proc PrefsDialog {{which {}}} {
     $mb.file add command -label [msgcat::mc {Clear Preferences}] \
 	-command PrefsDialogClear
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Save}] -command PrefsDialogSave
+    $mb.file add command -label [msgcat::mc {Save}] \
+	-command PrefsDialogSave -accelerator "${ds9(ctrl)}S"
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command PrefsDialogClose -accelerator "${ds9(ctrl)}W"
 
@@ -104,6 +105,7 @@ proc PrefsDialog {{which {}}} {
 	default {$dprefs(list) selection set 0}
     }
 
+    bind $w <<Save>> PrefsDialogSave
     bind $w <<Close>> PrefsDialogClose
 
     PrefsDialogListUpdate

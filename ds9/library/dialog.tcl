@@ -278,7 +278,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	$var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
 	menu $var(mb).file
 	$var(mb).file add command -label "[msgcat::mc {Save}]..." \
-	    -command "SimpleTextSave $varname"
+	    -command "SimpleTextSave $varname" -accelerator "${ds9(ctrl)}S"
 	switch $ds9(wm) {
 	    x11 -
 	    aqua -
@@ -349,6 +349,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 
 	bind $var(top) <<Find>> [list SimpleTextFind $varname]
 	bind $var(top) <<FindNext>> [list SimpleTextFindNext $varname]
+	bind $var(top) <<Save>> [list SimpleTextSave $varname]
 	bind $var(top) <<Close>> [list SimpleTextDestroy $varname]
 	bind $var(top) <<Print>> [list SimpleTextPrint $varname]
     }

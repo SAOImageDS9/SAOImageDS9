@@ -820,10 +820,10 @@ proc ColormapDialog {} {
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command ApplyColormap
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load Colormap}]..." \
+    $mb.file add command -label "[msgcat::mc {Load}]..." \
 	-command LoadColormap
-    $mb.file add command -label "[msgcat::mc {Save Colormap}]..." \
-	-command SaveColormap
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command SaveColormap -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Download Colormap}]..." \
 	-command {HV cpt CPT-CITY http://soliton.vm.bytemark.co.uk/pub/cpt-city}
@@ -924,6 +924,7 @@ proc ColormapDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
+    bind $w <<Save>> SaveColormap
     bind $w <<Close>> ColormapDestroyDialog
 }
 
@@ -1027,9 +1028,9 @@ proc UpdateColorDialog {} {
 		base -
 		3d {
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Load Colormap}]..." -state normal
+			"[msgcat::mc {Load}]..." -state normal
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Save Colormap}]..." -state normal
+			"[msgcat::mc {Save}]..." -state normal
 		    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
 			$icolorbar(mb).colormap entryconfig $ii -state normal
 		    }
@@ -1048,9 +1049,9 @@ proc UpdateColorDialog {} {
 		}
 		rgb {
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Load Colormap}]..." -state disabled
+			"[msgcat::mc {Load}]..." -state disabled
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Save Colormap}]..." -state disabled
+			"[msgcat::mc {Save}]..." -state disabled
 		    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
 			$icolorbar(mb).colormap entryconfig $ii -state disabled
 		    }
@@ -1070,9 +1071,9 @@ proc UpdateColorDialog {} {
 	    }
 	} else {
 	    $icolorbar(mb).file entryconfig \
-		"[msgcat::mc {Load Colormap}]..." -state normal
+		"[msgcat::mc {Load}]..." -state normal
 	    $icolorbar(mb).file entryconfig \
-		"[msgcat::mc {Save Colormap}]..." -state normal
+		"[msgcat::mc {Save}]..." -state normal
 	    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
 		$icolorbar(mb).colormap entryconfig $ii -state normal
 	    }

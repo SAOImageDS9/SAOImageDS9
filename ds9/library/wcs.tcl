@@ -171,8 +171,10 @@ proc WCSDialog {} {
     $mb.file add command -label [msgcat::mc {Apply}] -command WCSApplyDialog
     $mb.file add command -label [msgcat::mc {Reset}] -command WCSResetDialog
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load}]..." -command WCSLoadDialog
-    $mb.file add command -label "[msgcat::mc {Save}]..." -command WCSSaveDialog
+    $mb.file add command -label "[msgcat::mc {Load}]..." \
+	-command WCSLoadDialog
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command WCSSaveDialog -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command WCSDestroyDialog -accelerator "${ds9(ctrl)}W"
@@ -355,6 +357,7 @@ proc WCSDialog {} {
     pack $w.buttons -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
+    bind $w <<Save>> WCSSaveDialog
     bind $w <<Close>> WCSDestroyDialog
 
     ConfigWCSDialog

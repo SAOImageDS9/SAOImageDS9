@@ -73,7 +73,7 @@ proc SmoothDialog {} {
     $mb.file add command -label [msgcat::mc {Clear}] -command SmoothOffDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command SmoothDestroyDialog
+	-command SmoothDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb ismooth
 
@@ -156,6 +156,8 @@ proc SmoothDialog {} {
     grid rowconfigure $w 0 -weight 1
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
+
+    bind $w <<Close>> SmoothDestroyDialog
 
     SmoothUpdateDialog
 }

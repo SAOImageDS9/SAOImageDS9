@@ -99,7 +99,7 @@ proc SIADialog {varname title url opts method action} {
 	-command [list CATPrint $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command [list SIADestroy $varname]
+	-command [list SIADestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     # Export
     menu $mb.file.export
@@ -232,6 +232,8 @@ proc SIADialog {varname title url opts method action} {
     pack $w.buttons $w.sstatus $w.status $w.stbl -side bottom -fill x
     pack $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
+
+    bind <<Close>> [list SIADestroy $varname]
 
     ARCoord $varname
     SIAUpdate $varname

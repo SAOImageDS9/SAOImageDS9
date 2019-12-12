@@ -380,7 +380,7 @@ proc PanZoomDialog {} {
 	-command PanZoomApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command PanZoomDestroyDialog
+	-command PanZoomDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb ipanzoom
 
@@ -473,6 +473,8 @@ proc PanZoomDialog {} {
     pack $w.param -side top -fill both -expand true
 
     $w.param.zoomx select range 0 end
+
+    bind $w <<Close>> PanZoomDestroyDialog
 
     UpdatePanZoomDialog
 }

@@ -211,7 +211,8 @@ proc ScaleDialog {} {
     menu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command ScaleApplyDialog
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Close}] -command ScaleDestroyDialog
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command ScaleDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb iscale
 
@@ -368,6 +369,8 @@ proc ScaleDialog {} {
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    bind $w <<Close>> ScaleDestroyDialog
 
     UpdateScaleDialog
 }

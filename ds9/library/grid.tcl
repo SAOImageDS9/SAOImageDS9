@@ -805,8 +805,6 @@ proc GridDialog {} {
     pack $f.apply $f.reset $f.clear $f.close -side left -expand true \
 	-padx 2 -pady 4
 
-    bind $w <Return> "GridApplyDialog"
-
     # Fini
     grid $w.label -sticky news
     grid $w.param -sticky news
@@ -815,6 +813,7 @@ proc GridDialog {} {
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
 
+    bind $w <Return> GridApplyDialog
     bind $w <<Close>> GridDestroyDialog
 
     UpdateGridDialog

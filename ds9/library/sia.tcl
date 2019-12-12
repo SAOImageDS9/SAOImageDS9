@@ -42,7 +42,7 @@ proc SIADef {} {
 			} \
 			{{CADC} \
 			     siacadc \
-			     {http://www1.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query}\
+			     {http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query}\
 			     {} \
 			     post \
 			} \

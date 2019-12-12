@@ -139,7 +139,8 @@ proc RGBDialog {} {
     $mb add cascade -label [msgcat::mc {Lock}] -menu $mb.lock
 
     menu $mb.file
-    $mb.file add command -label [msgcat::mc {Close}] -command RGBDestroyDialog
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command RGBDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     CoordMenu $mb.align rgb system 1 {} {} RGBSystem
 
@@ -191,14 +192,15 @@ proc RGBDialog {} {
 
     # Buttons
     set f [ttk::frame $w.buttons]
-    ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command RGBDestroyDialog
+    ttk::button $f.close -text [msgcat::mc {Close}] -command RGBDestroyDialog
     pack $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    bind $w <<Close>> RGBDestroyDialog
 }
 
 proc RGBDestroyDialog {} {

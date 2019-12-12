@@ -29,7 +29,8 @@ proc PrefsDialog {{which {}}} {
 	-command PrefsDialogClear
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Save}] -command PrefsDialogSave
-    $mb.file add command -label [msgcat::mc {Close}] -command PrefsDialogClose
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command PrefsDialogClose -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb iprefs
 
@@ -102,6 +103,8 @@ proc PrefsDialog {{which {}}} {
 	http {$dprefs(list) selection set end}
 	default {$dprefs(list) selection set 0}
     }
+
+    bind $w <<Close>> PrefsDialogClose
 
     PrefsDialogListUpdate
 }

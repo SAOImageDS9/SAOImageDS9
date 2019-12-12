@@ -174,7 +174,8 @@ proc WCSDialog {} {
     $mb.file add command -label "[msgcat::mc {Load}]..." -command WCSLoadDialog
     $mb.file add command -label "[msgcat::mc {Save}]..." -command WCSSaveDialog
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Close}] -command WCSDestroyDialog
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command WCSDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb iwcs
 
@@ -353,6 +354,8 @@ proc WCSDialog {} {
     # Fini
     pack $w.buttons -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    bind $w <<Close>> WCSDestroyDialog
 
     ConfigWCSDialog
     UpdateWCSDialog

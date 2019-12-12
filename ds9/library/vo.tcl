@@ -162,7 +162,7 @@ proc VODialog {} {
 	-command [list PrefsDialog http]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command "VODestroy $varname"
+	-command "VODestroy $varname" -accelerator "${ds9(ctrl)}W"
 
     # Sites
     ttk::labelframe $w.param -text [msgcat::mc {Sites}] -padding 2
@@ -198,6 +198,8 @@ proc VODialog {} {
     grid rowconfigure $w 0 -weight 1
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
+
+    bind $w <<Close>> [list VODestroy $varname]
 
     if {[string length $ivo(server,host)] == 0} {
 	VOApply $varname

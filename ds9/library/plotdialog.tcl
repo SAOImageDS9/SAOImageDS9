@@ -64,7 +64,7 @@ proc PlotDialog {varname wtt} {
 	-command [list PlotPSPrint $varname]
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
-	-command [list PlotDestroy $varname]
+	-command [list PlotDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     menu $var(mb).file.export
     $var(mb).file.export add command -label {GIF...} \
@@ -272,6 +272,8 @@ proc PlotDialog {varname wtt} {
     PlotLineMenus $varname
     PlotBarMenus $varname
     PlotScatterMenus $varname
+
+    bind $var(top) <<Close>> [list PlotDestroy $varname]
 }
 
 proc PlotDataFormatDialog {xarname} {

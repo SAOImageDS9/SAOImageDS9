@@ -58,7 +58,7 @@ proc PixelTableDialog {} {
 	-command PixelTableSaveDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command PixelTableDestroyDialog
+	-command PixelTableDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
@@ -105,6 +105,8 @@ proc PixelTableDialog {} {
     pack $w.tbl -side top -fill both -expand true
 
     selection handle $w PixelTableExportSelection
+
+    bind $w <<Close>> PixelTableDestroyDialog
 
     PixelTableConfigure
 

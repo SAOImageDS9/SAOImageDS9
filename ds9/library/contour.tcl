@@ -196,7 +196,7 @@ proc ContourDialog {} {
 	-command Contour2Polygons
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command ContourDestroyDialog
+	-command ContourDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
@@ -316,6 +316,8 @@ proc ContourDialog {} {
     grid $w.buttons - -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid columnconfigure $w 1 -weight 1
+
+    bind $w <<Close>> ContourDestroyDialog
 
     UpdateContourDialog
 }

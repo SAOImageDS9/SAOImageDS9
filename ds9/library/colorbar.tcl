@@ -841,7 +841,7 @@ proc ColormapDialog {} {
 	-command DeleteColorTag
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command ColormapDestroyDialog
+	-command ColormapDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb icolorbar
 
@@ -923,6 +923,8 @@ proc ColormapDialog {} {
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    bind $w <<Close>> ColormapDestroyDialog
 }
 
 proc ColormapCreateMenu {varname which start stop} {

@@ -151,7 +151,7 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATGenerateRegions $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
-	-command [list CATPrint $varname]
+	-command [list CATPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list CATDestroy $varname] -accelerator "${ds9(ctrl)}W"
@@ -458,7 +458,7 @@ proc CATDialog {varname format catalog title action} {
 		       -command "SAMPSendTableLoadVotable {} $varname"]
     ttk::button $f.plot -text [msgcat::mc {Plot}] \
 	-command [list CATPlot $varname]
-    1ttk::button $f.close -text [msgcat::mc {Close}] \
+    ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list CATDestroy $varname]
 
     pack $f.apply $f.cancel $f.filter $f.clear $f.samp $f.plot $f.close \
@@ -471,6 +471,7 @@ proc CATDialog {varname format catalog title action} {
     pack $w.cat $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
+    bind $w <<Print>> PSPrint
     bind $w <<Close>> [list CATDestroy $varname]
 
     # needs to go after sort menu button is defined

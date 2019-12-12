@@ -285,7 +285,8 @@ proc SimpleTextDialog {varname title width height action pos txt
 	    win32 {
 		$var(mb).file add separator
 		$var(mb).file add command -label "[msgcat::mc {Print}]..." \
-		    -command "SimpleTextPrint $varname"
+		    -command "SimpleTextPrint $varname" \
+		    -accelerator "${ds9(ctrl)}P"
 	    }
 	}
 	$var(mb).file add separator
@@ -349,6 +350,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	bind $var(top) <<Find>> [list SimpleTextFind $varname]
 	bind $var(top) <<FindNext>> [list SimpleTextFindNext $varname]
 	bind $var(top) <<Close>> [list SimpleTextDestroy $varname]
+	bind $var(top) <<Print>> [list SimpleTextPrint $varname]
     }
 
     $var(text) configure -state normal

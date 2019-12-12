@@ -59,9 +59,10 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add separator
     $var(mb).file add command \
 	-label "[msgcat::mc {Page Setup}]..." \
-	-command PSPageSetup
+	-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
     $var(mb).file add command -label "[msgcat::mc {Print}]..." \
-	-command [list PlotPSPrint $varname]
+	-command [list PlotPSPrint $varname] -accelerator "${ds9(ctrl)}P"
+
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
 	-command [list PlotDestroy $varname] -accelerator "${ds9(ctrl)}W"
@@ -274,6 +275,8 @@ proc PlotDialog {varname wtt} {
     PlotScatterMenus $varname
 
     bind $var(top) <<Close>> [list PlotDestroy $varname]
+    bind $var(top) <<PageSetup>> PSPageSetup
+    bind $var(top) <<Print>> [list PlotPSPrint $varname]
 }
 
 proc PlotDataFormatDialog {xarname} {

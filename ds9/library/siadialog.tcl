@@ -96,7 +96,7 @@ proc SIADialog {varname title url opts method action} {
 	-command [list SIACrosshair $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
-	-command [list CATPrint $varname]
+	-command [list CATPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list SIADestroy $varname] -accelerator "${ds9(ctrl)}W"
@@ -233,7 +233,8 @@ proc SIADialog {varname title url opts method action} {
     pack $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
-    bind <<Close>> [list SIADestroy $varname]
+    bind $w <<Close>> [list SIADestroy $varname]
+    bind $w <<Print>> [list CATPrint $varname]
 
     ARCoord $varname
     SIAUpdate $varname

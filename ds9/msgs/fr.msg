@@ -410,7 +410,6 @@
 ::msgcat::mcset fr {Load Color Tags} 
 ::msgcat::mcset fr {Load Configuration} {Charger la configuration}
 ::msgcat::mcset fr {Load Contour Levels} {Charger les niveaux de contour}
-::msgcat::mcset fr {Load Contours} {Charger les contours}
 ::msgcat::mcset fr {Load Contrast/Bias} {Charger le contraste/inclination}
 ::msgcat::mcset fr {Load Data} [encoding convertfrom iso8859-1 {Charger les données}]
 ::msgcat::mcset fr {Load Mosaic} [encoding convertfrom iso8859-1 {Charger le mosaïque}]
@@ -683,7 +682,6 @@
 ::msgcat::mcset fr {Save Color Tags} 
 ::msgcat::mcset fr {Save Configuration} 
 ::msgcat::mcset fr {Save Contour Levels} 
-::msgcat::mcset fr {Save Contours} 
 ::msgcat::mcset fr {Save Contrast/Bias} 
 ::msgcat::mcset fr {Save Data} 
 ::msgcat::mcset fr {Save Image on Download} 

@@ -410,7 +410,6 @@
 ::msgcat::mcset es {Load Color Tags} 
 ::msgcat::mcset es {Load Configuration} [encoding convertfrom iso8859-1 {Cargar configuración}]
 ::msgcat::mcset es {Load Contour Levels} {Cargar niveles de contorno}
-::msgcat::mcset es {Load Contours} {Cargar contornos}
 ::msgcat::mcset es {Load Contrast/Bias} {Cargar contraste/Bias}
 ::msgcat::mcset es {Load Data} {Cargar datos}
 ::msgcat::mcset es {Load Mosaic} {Cargar mosaico}
@@ -683,7 +682,6 @@
 ::msgcat::mcset es {Save Color Tags} 
 ::msgcat::mcset es {Save Configuration} [encoding convertfrom iso8859-1 {Guardar configuración}]
 ::msgcat::mcset es {Save Contour Levels} {Guardar niveles de contorno}
-::msgcat::mcset es {Save Contours} {Guardar contornos}
 ::msgcat::mcset es {Save Contrast/Bias} {Guardar contraste/Bias}
 ::msgcat::mcset es {Save Data} {Guardar datos}
 ::msgcat::mcset es {Save Image on Download} 

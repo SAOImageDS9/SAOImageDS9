@@ -587,14 +587,14 @@ proc GridDialog {} {
 
     # File
     menu $mb.file
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
+	-command GridLoadDialog -accelerator "${ds9(ctrl)}O"
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command GridSaveDialog -accelerator "${ds9(ctrl)}S"
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] -command GridApplyDialog
     $mb.file add command -label [msgcat::mc {Reset}] -command GridResetDialog
     $mb.file add command -label [msgcat::mc {Clear}] -command GridClearDialog
-    $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load Configuration}]..." \
-	-command GridLoadDialog
-    $mb.file add command -label "[msgcat::mc {Save Configuration}]..." \
-	-command GridSaveDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command GridDestroyDialog -accelerator "${ds9(ctrl)}W"
@@ -814,6 +814,9 @@ proc GridDialog {} {
     grid columnconfigure $w 0 -weight 1
 
     bind $w <Return> GridApplyDialog
+
+    bind $w <<Open>> GridLoadDialog
+    bind $w <<Save>> GridSaveDialog
     bind $w <<Close>> GridDestroyDialog
 
     UpdateGridDialog
@@ -987,34 +990,28 @@ proc GridCreateLineMenu {which width dash} {
 }
 
 proc GridLoadDialog {} {
-    GridLoad [OpenFileDialog gridfbox]
-}
-
-proc GridLoad {filename} {
     global grid
 
-    if {$filename != {}} {
-	source $filename
+    set fn [OpenFileDialog gridfbox]
+    if {$fn != {}} {
+	source $fn
+
+	# backward compatibility
+	FixFontVar grid(numlab,weight) grid(numlab,slant) grid(numlab,style)
+	FixFontVar grid(textlab,weight) grid(textlab,slant) grid(textlab,style)
+	FixFontVar grid(title,weight) grid(title,slant) grid(title,style)
+
+	set grid(view) 1
+	GridUpdateCurrent
     }
-
-    # backward compatibility
-    FixFontVar grid(numlab,weight) grid(numlab,slant) grid(numlab,style)
-    FixFontVar grid(textlab,weight) grid(textlab,slant) grid(textlab,style)
-    FixFontVar grid(title,weight) grid(title,slant) grid(title,style)
-
-    set grid(view) 1
-    GridUpdateCurrent
 }
 
 proc GridSaveDialog {} {
-    GridSave [SaveFileDialog gridfbox]
-}
-
-proc GridSave {filename} {
     global grid
 
-    if {$filename != {}} {
-	set file [open $filename w]
+    set fn [SaveFileDialog gridfbox]
+    if {$fn != {}} {
+	set file [open $fn w]
 	puts $file "global grid"
 	puts $file "array set grid \{ [array get grid] \}"
 	close $file

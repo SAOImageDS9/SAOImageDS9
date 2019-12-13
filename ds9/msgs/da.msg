@@ -410,7 +410,6 @@
 ::msgcat::mcset da {Load Color Tags} 
 ::msgcat::mcset da {Load Configuration} [encoding convertfrom iso8859-1 {Indlæs konfiguration}]
 ::msgcat::mcset da {Load Contour Levels} [encoding convertfrom iso8859-1 {Indlæs konturniveauer}]
-::msgcat::mcset da {Load Contours} [encoding convertfrom iso8859-1 {indlæs konturer}]
 ::msgcat::mcset da {Load Contrast/Bias} [encoding convertfrom iso8859-1 {Indlæs kontrast/bias}]
 ::msgcat::mcset da {Load Data} [encoding convertfrom iso8859-1 {Indlæs data}]
 ::msgcat::mcset da {Load Mosaic} [encoding convertfrom iso8859-1 {Indlæs mosaik}]
@@ -683,7 +682,6 @@
 ::msgcat::mcset da {Save Color Tags} 
 ::msgcat::mcset da {Save Configuration} {Gem konfiguration}
 ::msgcat::mcset da {Save Contour Levels} {Gem konturniveauer}
-::msgcat::mcset da {Save Contours} {Gem konturer}
 ::msgcat::mcset da {Save Contrast/Bias} {Gem kontrast/bias}
 ::msgcat::mcset da {Save Data} {Gem data}
 ::msgcat::mcset da {Save Image on Download} 

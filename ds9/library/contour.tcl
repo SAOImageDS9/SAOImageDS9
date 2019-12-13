@@ -170,6 +170,11 @@ proc ContourDialog {} {
     $mb add cascade -label [msgcat::mc {Method}] -menu $mb.method
 
     menu $mb.file
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
+	-command ContourLoadDialog -accelerator "${ds9(ctrl)}O"
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command ContourSaveDialog -accelerator "${ds9(ctrl)}S"
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command ContourApplyDialog
     $mb.file add command -label [msgcat::mc {Generate}] \
@@ -181,11 +186,6 @@ proc ContourDialog {} {
 	-command ContourCCopyDialog
     $mb.file add command -label "[msgcat::mc {Paste Contours}]..." \
 	-command ContourCPasteDialog
-    $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load Contours}]..." \
-	-command ContourLoadDialog
-    $mb.file add command -label "[msgcat::mc {Save Contours}]..." \
-	-command ContourSaveDialog
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Load Contour Levels}]..." \
 	-command ContourLoadLevels
@@ -317,6 +317,8 @@ proc ContourDialog {} {
     grid rowconfigure $w 0 -weight 1
     grid columnconfigure $w 1 -weight 1
 
+    bind $w <<Open>> ContourLoadDialog
+    bind $w <<Save>> ContourSaveDialog
     bind $w <<Close>> ContourDestroyDialog
 
     UpdateContourDialog

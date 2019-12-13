@@ -410,7 +410,6 @@
 ::msgcat::mcset cs {Load Color Tags} 
 ::msgcat::mcset cs {Load Configuration} [encoding convertfrom iso8859-2 {Nahraj konfiguraci}]
 ::msgcat::mcset cs {Load Contour Levels} 
-::msgcat::mcset cs {Load Contours} 
 ::msgcat::mcset cs {Load Contrast/Bias} 
 ::msgcat::mcset cs {Load Data} 
 ::msgcat::mcset cs {Load Mosaic} 
@@ -683,7 +682,6 @@
 ::msgcat::mcset cs {Save Color Tags} 
 ::msgcat::mcset cs {Save Configuration} 
 ::msgcat::mcset cs {Save Contour Levels} 
-::msgcat::mcset cs {Save Contours} 
 ::msgcat::mcset cs {Save Contrast/Bias} 
 ::msgcat::mcset cs {Save Data} 
 ::msgcat::mcset cs {Save Image on Download} 

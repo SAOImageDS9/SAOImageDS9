@@ -410,7 +410,6 @@
 ::msgcat::mcset pt {Load Color Tags} 
 ::msgcat::mcset pt {Load Configuration} [encoding convertfrom iso8859-1 {Carregar Configuração}]
 ::msgcat::mcset pt {Load Contour Levels} [encoding convertfrom iso8859-1 {Carregar Níveis de Contorno}]
-::msgcat::mcset pt {Load Contours} {Carregar Contornos}
 ::msgcat::mcset pt {Load Contrast/Bias} {Carregar Contraste/Bias}
 ::msgcat::mcset pt {Load Data} {Carregar Dados}
 ::msgcat::mcset pt {Load Mosaic} {Carregar Mosaico}
@@ -683,7 +682,6 @@
 ::msgcat::mcset pt {Save Color Tags} 
 ::msgcat::mcset pt {Save Configuration} [encoding convertfrom iso8859-1 {Salvar Configuração}]
 ::msgcat::mcset pt {Save Contour Levels} {Salvar Níveis de Contorno}
-::msgcat::mcset pt {Save Contours} {Salvar Contornos}
 ::msgcat::mcset pt {Save Contrast/Bias} {Salvar Contraste/Bias}
 ::msgcat::mcset pt {Save Data} {Salvar Dados}
 ::msgcat::mcset pt {Save Image on Download} 

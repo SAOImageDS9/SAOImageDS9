@@ -410,7 +410,6 @@
 ::msgcat::mcset zh {Load Color Tags} 
 ::msgcat::mcset zh {Load Configuration} 
 ::msgcat::mcset zh {Load Contour Levels} 
-::msgcat::mcset zh {Load Contours} 
 ::msgcat::mcset zh {Load Contrast/Bias} 
 ::msgcat::mcset zh {Load Data} 
 ::msgcat::mcset zh {Load Mosaic} 
@@ -683,7 +682,6 @@
 ::msgcat::mcset zh {Save Color Tags} 
 ::msgcat::mcset zh {Save Configuration} 
 ::msgcat::mcset zh {Save Contour Levels} 
-::msgcat::mcset zh {Save Contours} 
 ::msgcat::mcset zh {Save Contrast/Bias} 
 ::msgcat::mcset zh {Save Data} 
 ::msgcat::mcset zh {Save Image on Download} 

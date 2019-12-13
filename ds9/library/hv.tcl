@@ -99,18 +99,8 @@ proc HV {varname title url {init {}} {sync 0}} {
 	$mb.edit add command -label [msgcat::mc {Paste}] \
 	    -state disabled -accelerator "${ds9(ctrl)}V"
 	$mb.edit add separator
-	switch $ds9(wm) {
-	    x11 -
-	    win32 {
-		$mb.edit add command -label "[msgcat::mc {Find}]..." \
-		    -command "HVFindCmd $varname" -accelerator "${ds9(ctrl)}F"
-	    }
-	    aqua {
-		# Known bug in Tk, can't have dialogs invoked by accelerator
-		$mb.edit add command -label "[msgcat::mc {Find}]..." \
-		    -command "HVFindCmd $varname"
-	    }
-	}
+	$mb.edit add command -label "[msgcat::mc {Find}]..." \
+	    -command "HVFindCmd $varname" -accelerator "${ds9(ctrl)}F"
 	$mb.edit add command -label [msgcat::mc {Find Next}] \
 	    -command "HVFindNextCmd $varname" -accelerator "${ds9(ctrl)}G"
 	$mb.edit add separator

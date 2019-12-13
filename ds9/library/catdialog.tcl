@@ -1108,9 +1108,9 @@ proc CATEditDialog {varname which db} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Undo}] \
-	-command "$ed(text) edit undo" -accelerator "${ds9(ctrl)}Z"
+	-command "$ed(text) edit undo"
     $mb.edit add command -label [msgcat::mc {Redo}] \
-	-command "$ed(text) edit redo" -accelerator "${ds9(shiftctrl)}Z"
+	-command "$ed(text) edit redo"
     $mb.edit add separator
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command "tk_textCut $ed(text)" -accelerator "${ds9(ctrl)}X"

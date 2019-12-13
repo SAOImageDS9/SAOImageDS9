@@ -309,19 +309,8 @@ proc SimpleTextDialog {varname title width height action pos txt
 	$var(mb).edit add command -label [msgcat::mc {Select None}] \
 	    -command "SimpleTextSelectNone $varname"
 	$var(mb).edit add separator
-	switch $ds9(wm) {
-	    x11 -
-	    win32 {
-		$var(mb).edit add command -label "[msgcat::mc {Find}]..." \
-		    -command "SimpleTextFind $varname" \
-		    -accelerator "${ds9(ctrl)}F"
-	    }
-	    aqua {
-		# Known bug in Tk, can't have dialogs invoked by accelerator
-		$var(mb).edit add command -label "[msgcat::mc {Find}]..." \
-		    -command "SimpleTextFind $varname"
-	    }
-	}
+	$var(mb).edit add command -label "[msgcat::mc {Find}]..." \
+	    -command "SimpleTextFind $varname" -accelerator "${ds9(ctrl)}F"
 	$var(mb).edit add command -label [msgcat::mc {Find Next}] \
 	    -command "SimpleTextFindNext $varname" -accelerator "${ds9(ctrl)}G"
 

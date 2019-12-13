@@ -280,7 +280,6 @@ proc ButtonsFileDef {} {
 
     array set pbuttons {
 	file,open 1
-	file,save 1
 	file,open,slice 0
 	file,open,rgb,image 0
 	file,open,rgb,cube 0
@@ -292,6 +291,13 @@ proc ButtonsFileDef {} {
 	file,open,mosaic,iraf,seg 0
 	file,open,mosaic,wfpc2 0
 	file,open,url 0
+	file,save 1
+	file,save,slice 0
+	file,save,rgb,image 0
+	file,save,rgb,cube 0
+	file,save,me,cube 0
+	file,save,mosaic,wcs 0
+	file,save,mosaic,wcs,seg 0
 	file,movie 0
 	file,backup 0
 	file,restore 0
@@ -357,6 +363,25 @@ proc CreateButtonsFile {} {
 	[string tolower [msgcat::mc {Save}]] \
 	[list SaveDialog fits]
 
+    ButtonButton $ds9(buttons).file.saveslice \
+	[string tolower [msgcat::mc {Save Slice}]] \
+	[list SaveDialog slice]
+    ButtonButton $ds9(buttons).file.savergbimage \
+	[string tolower [msgcat::mc {Save RGB Image}]] \
+	[list SaveDialog rgbimage]
+    ButtonButton $ds9(buttons).file.savergbcube \
+	[string tolower [msgcat::mc {Save RGB Cube}]] \
+	[list SaveDialog rgbcube]
+    ButtonButton $ds9(buttons).file.savemecube \
+	[string tolower [msgcat::mc {Save ME Cube}]] \
+	[list SaveDialog mecube]
+    ButtonButton $ds9(buttons).file.savemosaicwcs \
+	[string tolower [msgcat::mc {Save Mosaic WCS}]] \
+	[list SaveDialog mosaicimagewcs]
+    ButtonButton $ds9(buttons).file.savemosaicwcsseg \
+	[string tolower [msgcat::mc {Save Mosaic WCS Seg}]] \
+	[list SaveDialog mosaicwcs]
+
     ButtonButton $ds9(buttons).file.movie \
 	[string tolower [msgcat::mc {Create Movie}]] MovieDialog
 
@@ -407,6 +432,12 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.openmosaicwfpc2 pbuttons(file,open,mosaic,wfpc2)
         $ds9(buttons).file.openurl pbuttons(file,open,url)
         $ds9(buttons).file.save pbuttons(file,save)
+        $ds9(buttons).file.saveslice pbuttons(file,save,slice)
+        $ds9(buttons).file.savergbimage pbuttons(file,save,rgb,image)
+        $ds9(buttons).file.savergbcube pbuttons(file,save,rgb,cube)
+        $ds9(buttons).file.savemecube pbuttons(file,save,me,cube)
+        $ds9(buttons).file.savemosaicwcs pbuttons(file,save,mosaic,wcs)
+        $ds9(buttons).file.savemosaicwcsseg pbuttons(file,save,mosaic,wcs,seg)
         $ds9(buttons).file.movie pbuttons(file,movie)
         $ds9(buttons).file.backup pbuttons(file,backup)
         $ds9(buttons).file.restore pbuttons(file,restore)
@@ -439,6 +470,7 @@ proc PrefsDialogButtonbarFile {f} {
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Save}]..." \
 	-variable pbuttons(file,save) -command {UpdateButtons buttons(file)}
+    $m add cascade -label [msgcat::mc {Save as}] -menu $m.save
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Create Movie}]..." \
 	-variable pbuttons(file,movie) -command {UpdateButtons buttons(file)}
@@ -478,6 +510,15 @@ proc PrefsDialogButtonbarFile {f} {
 	-command {UpdateButtons buttons(file)}
     $m.open add separator
     $m.open add checkbutton \
+	-label "[msgcat::mc {RGB Image}]..." \
+	-variable pbuttons(file,open,rgb,image) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label "[msgcat::mc {RGB Cube}]..." \
+	-variable pbuttons(file,open,rgb,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add separator
+    $m.open add checkbutton \
 	-label "[msgcat::mc {Muliple Extension Cube}]..." \
 	-variable pbuttons(file,open,me,cube) \
 	-command {UpdateButtons buttons(file)}
@@ -512,6 +553,35 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,open,url) \
 	-command {UpdateButtons buttons(file)}
 
+    menu $m.save
+    $m.save add checkbutton \
+	-label "[msgcat::mc {Slice}]..." \
+	-variable pbuttons(file,save,slice) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add separator
+    $m.save add checkbutton \
+	-label "[msgcat::mc {RGB Image}]..." \
+	-variable pbuttons(file,save,rgb,image) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add checkbutton \
+	-label "[msgcat::mc {RGB Cube}]..." \
+	-variable pbuttons(file,save,rgb,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add separator
+    $m.save add checkbutton \
+	-label "[msgcat::mc {Muliple Extension Cube}]..." \
+	-variable pbuttons(file,save,me,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add separator
+    $m.save add checkbutton \
+	-label "[msgcat::mc {Mosaic WCS}]..." \
+	-variable pbuttons(file,save,mosaic,wcs) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add checkbutton \
+	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+	-variable pbuttons(file,save,mosaic,wcs,seg) \
+	-command {UpdateButtons buttons(file)}
+
     menu $m.xpa
     $m.xpa add checkbutton -label "[msgcat::mc {Information}]..." \
 	-variable pbuttons(file,xpa,info) \
@@ -529,207 +599,269 @@ proc PrefsDialogButtonbarFile {f} {
 # Support
 
 proc UpdateFileMenu {} {
-    global ds9
-    global current
-    global samp
-    global xpa
- 
     global debug
     if {$debug(tcl,update)} {
 	puts stderr "UpdateFileMenu"
     }
 
+    UpdateFileMenuOpen
+    UpdateFileMenuSave
+    UpdateFileMenuImport
+    UpdateFileMenuExport
+    UpdateFileMenuSaveImage
+    UpdateFileMenuMovie
+    UpdateFileMenuHeader
+    UpdateFileMenuXPA
+    UpdateFileMenuSAMP
+}
+
+proc UpdateFileMenuOpen {} {
+    global ds9
+    global current
+ 
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
-    if {$ds9(active,num) > 0} {
-	$mm entryconfig "[msgcat::mc {Open}]..." \
-	    -state normal
-	$mm entryconfig [msgcat::mc {Open as}] \
-	    -state normal
-	$mm entryconfig [msgcat::mc {Import}] \
-	    -state normal
+    $mm entryconfig "[msgcat::mc {Open}]..." -state disabled
+    $mm entryconfig [msgcat::mc {Open as}] -state disabled
 
-	$bb.open configure -state normal
+    $bb.open configure -state disabled
+    $bb.openslice configure -state disabled
+    $bb.openrgbimage configure -state disabled
+    $bb.openrgbcube configure -state disabled
+    $bb.openmecube configure -state disabled
+    $bb.openmeframes configure -state disabled
+    $bb.openmosaicwcs configure -state disabled
+    $bb.openmosaicwcsseg configure -state disabled
+    $bb.openmosaiciraf configure -state disabled
+    $bb.openmosaicirafseg configure -state disabled
+    $bb.openmosaicwfpc2 configure -state disabled
+    $bb.openurl configure -state disabled
 
-	$bb.openslice configure -state normal
-	$bb.openrgbimage configure -state normal
-	$bb.openrgbcube configure -state normal
-	$bb.openmecube configure -state normal
-	$bb.openmeframes configure -state normal
-	$bb.openmosaicwcs configure -state normal
-	$bb.openmosaicwcsseg configure -state normal
-	$bb.openmosaiciraf configure -state normal
-	$bb.openmosaicirafseg configure -state normal
-	$bb.openmosaicwfpc2 configure -state normal
-	$bb.openurl configure -state normal
-    } else {
-	$mm entryconfig "[msgcat::mc {Open}]..." \
-	    -state disabled
-	$mm entryconfig [msgcat::mc {Open as}] \
-	    -state disabled
-	$mm entryconfig [msgcat::mc {Import}] \
-	    -state disabled
-
-	$bb.open configure -state disabled
-
-	$bb.openslice configure -state disabled
-	$bb.openrgbimage configure -state disabled
-	$bb.openrgbcube configure -state disabled
-	$bb.openmecube configure -state disabled
-	$bb.openmeframes configure -state disabled
-	$bb.openmosaicwcs configure -state disabled
-	$bb.openmosaicwcsseg configure -state disabled
-	$bb.openmosaiciraf configure -state disabled
-	$bb.openmosaicirafseg configure -state disabled
-	$bb.openmosaicwfpc2 configure -state disabled
-	$bb.openurl configure -state disabled
+    if {$current(frame) == {}} {
+	return
     }
 
-    if {$current(frame) != {}} {
-	if {[$current(frame) has fits]} {
-	    $mm entryconfig "[msgcat::mc {Save}]..." -state normal
-	    $mm entryconfig [msgcat::mc {Save as}] -state normal
-	    $mm entryconfig [msgcat::mc {Export}] -state normal
-	    $mm entryconfig [msgcat::mc {Save Image}] -state normal
-	    $mm entryconfig "[msgcat::mc {Create Movie}]..." -state normal
-	    $mm entryconfig "[msgcat::mc {Display Header}]..." -state normal
+    $mm entryconfig "[msgcat::mc {Open}]..." -state normal
+    $mm entryconfig [msgcat::mc {Open as}] -state normal
 
-	    if {[$current(frame) has fits mosaic]} {
-		$mm.save entryconfig "[msgcat::mc {Mosaic WCS}]..." -state normal
-		$mm.save entryconfig "[msgcat::mc {Mosaic WCS Segment}]..." -state normal
-	    } else {
-		$mm.save entryconfig "[msgcat::mc {Mosaic WCS}]..." -state disabled
-		$mm.save entryconfig "[msgcat::mc {Mosaic WCS Segment}]..." -state disabled
-	    }
+    $bb.open configure -state normal
+    $bb.openslice configure -state normal
+    $bb.openmecube configure -state normal
+    $bb.openmeframes configure -state normal
+    $bb.openmosaicwcs configure -state normal
+    $bb.openmosaicwcsseg configure -state normal
+    $bb.openmosaiciraf configure -state normal
+    $bb.openmosaicirafseg configure -state normal
+    $bb.openmosaicwfpc2 configure -state normal
+    $bb.openurl configure -state normal
 
-	    $bb.save configure -state normal
-	    $bb.movie configure -state normal
-	    $bb.header configure -state normal
-	} else {
-	    $mm entryconfig "[msgcat::mc {Save}]..." -state disabled
-	    $mm entryconfig [msgcat::mc {Save as}] -state disabled
-	    $mm entryconfig [msgcat::mc {Export}] -state disabled
-	    $mm entryconfig [msgcat::mc {Save Image}] -state disabled
-	    $mm entryconfig "[msgcat::mc {Create Movie}]..." -state disabled
-	    $mm entryconfig "[msgcat::mc {Display Header}]..." -state disabled
-
-	    $bb.save configure -state disabled
-	    $bb.movie configure -state disabled
-	    $bb.header configure -state disabled
+    switch -- [$current(frame) get type] {
+	base {
+	    $mm.open entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
+	    $mm.open entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $bb.openrgbimage configure -state disabled
+	    $bb.openrgbcube configure -state disabled
 	}
+	rgb {
+	    $mm.open entryconfig "[msgcat::mc {RGB Image}]..." -state normal
+	    $mm.open entryconfig "[msgcat::mc {RGB Cube}]..." -state normal
+	    $bb.openrgbimage configure -state normal
+	    $bb.openrgbcube configure -state normal
+	}
+	3d {
+	    $mm.open entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
+	    $mm.open entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $bb.openrgbimage configure -state disabled
+	    $bb.openrgbcube configure -state disabled
+	}
+    }
 
+}
+
+proc UpdateFileMenuSave {} {
+    global ds9
+    global current
+ 
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
+    $mm entryconfig "[msgcat::mc {Save}]..." -state disabled
+    $mm entryconfig [msgcat::mc {Save as}] -state disabled
+
+    $bb.save configure -state disabled
+    $bb.saveslice configure -state disabled
+    $bb.savergbimage configure -state disabled
+    $bb.savergbcube configure -state disabled
+    $bb.savemecube configure -state disabled
+    $bb.savemosaicwcs configure -state disabled
+    $bb.savemosaicwcsseg configure -state disabled
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    $mm entryconfig "[msgcat::mc {Save}]..." -state normal
+    $mm entryconfig [msgcat::mc {Save as}] -state normal
+
+    $bb.save configure -state normal
+    $bb.saveslice configure -state normal
+    $bb.savemecube configure -state normal
+
+    if {[$current(frame) has fits mosaic]} {
+	$mm.save entryconfig "[msgcat::mc {Mosaic WCS}]..." -state normal
+	$mm.save entryconfig "[msgcat::mc {Mosaic WCS Segment}]..." \
+	    -state normal
+	$bb.savemosaicwcs configure -state normal
+	$bb.savemosaicwcsseg configure -state normal
+    } else {
+	$mm.save entryconfig "[msgcat::mc {Mosaic WCS}]..." -state disabled
+	$mm.save entryconfig "[msgcat::mc {Mosaic WCS Segment}]..." \
+	    -state disabled
+	$bb.savemosaicwcs configure -state disabled
+	$bb.savemosaicwcsseg configure -state disabled
+    }
+
+    switch -- [$current(frame) get type] {
+	base {
+	    $mm.save entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
+	    $mm.save entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $bb.savergbimage configure -state disabled
+	    $bb.savergbcube configure -state disabled
+	}
+	rgb {
+	    $mm.save entryconfig "[msgcat::mc {RGB Image}]..." -state normal
+	    $mm.save entryconfig "[msgcat::mc {RGB Cube}]..." -state normal
+	    $bb.savergbimage configure -state normal
+	    $bb.savergbcube configure -state normal
+	}
+	3d {
+	    $mm.save entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
+	    $mm.save entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $bb.savergbimage configure -state disabled
+	    $bb.savergbcube configure -state disabled
+	}
+    }
+}
+
+proc UpdateFileMenuImport {} {
+    global ds9
+    global current
+
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
+    $mm entryconfig [msgcat::mc {Import}] -state disabled
+    if {$current(frame) != {}} {
+	$mm entryconfig [msgcat::mc {Import}] -state normal
 	switch -- [$current(frame) get type] {
 	    base {
-		$mm.open entryconfig \
-		    "[msgcat::mc {RGB Image}]..." -state disabled
-		$mm.open entryconfig \
-		    "[msgcat::mc {RGB Cube}]..." -state disabled
-		$mm.save entryconfig \
-		    "[msgcat::mc {RGB Image}]..." -state disabled
-		$mm.save entryconfig \
-		    "[msgcat::mc {RGB Cube}]..." -state disabled
 		$mm.import entryconfig \
-		    "[msgcat::mc {RGB Array}]..." -state disabled
-		$mm.export entryconfig \
 		    "[msgcat::mc {RGB Array}]..." -state disabled
 	    }
 	    rgb {
-		$mm.open entryconfig \
-		    "[msgcat::mc {RGB Image}]..." -state normal
-		$mm.open entryconfig \
-		    "[msgcat::mc {RGB Cube}]..." -state normal
-		$mm.save entryconfig \
-		    "[msgcat::mc {RGB Image}]..." -state normal
-		$mm.save entryconfig \
-		    "[msgcat::mc {RGB Cube}]..." -state normal
 		$mm.import entryconfig \
-		    "[msgcat::mc {RGB Array}]..." -state normal
-		$mm.export entryconfig \
 		    "[msgcat::mc {RGB Array}]..." -state normal
 	    }
 	    3d {
-		$mm.open entryconfig \
-		    "[msgcat::mc {RGB Image}]..." -state disabled
-		$mm.open entryconfig \
-		    "[msgcat::mc {RGB Cube}]..." -state disabled
-		$mm.save entryconfig \
-		    "[msgcat::mc {RGB Image}]..." -state disabled
-		$mm.save entryconfig \
-		    "[msgcat::mc {RGB Cube}]..." -state disabled
 		$mm.import entryconfig \
 		    "[msgcat::mc {RGB Array}]..." -state disabled
-		$mm.export entryconfig \
-		    "[msgcat::mc {RGB Array}]..." -state disabled
 	    }
 	}
-
-	if {[info exists samp]} {
-	    set ss [expr $ds9(menu,start)+2]
-
-	    if {[$current(frame) has fits]} {
-
-		$mm.samp entryconfig [msgcat::mc {Image}] \
-		    -state normal
-		if {[$mm.samp.image index end] >= $ss} {
-		    $mm.samp.image delete $ss end
-		}
-		foreach args $samp(apps,image) {
-		    foreach {id name} $args {
-			$mm.samp.image add command -label $name \
-			    -command "SAMPSendImageLoadFits $id"
-		    }
-		}
-		$bb.sampimage configure -state normal
-
-		if {[$current(frame) has fits bin]} {
-		    $mm.samp entryconfig [msgcat::mc {Table}] -state normal
-		    if {[$mm.samp.table index end] >= $ss} {
-			$mm.samp.table delete $ss end
-		    }
-		    foreach args $samp(apps,table) {
-			foreach {id name} $args {
-			    $mm.samp.table add command -label $name \
-				-command "SAMPSendTableLoadFits $id"
-			}
-		    }
-		    $bb.samptable configure -state normal
-
-		} else {
-		    $mm.samp entryconfig [msgcat::mc {Table}] -state disabled
-		    $bb.samptable configure -state disabled
-		}
-	    } else {
-		$mm.samp entryconfig [msgcat::mc {Image}] -state disabled
-		$mm.samp entryconfig [msgcat::mc {Table}] -state disabled
-		$bb.sampimage configure -state disabled
-		$bb.samptable configure -state disabled
-	    }
-	} else {
-	    $mm.samp entryconfig [msgcat::mc {Image}] -state disabled
-	    $mm.samp entryconfig [msgcat::mc {Table}] -state disabled
-	    $bb.sampimage configure -state disabled
-	    $bb.samptable configure -state disabled
-	}
-    } else {
-	$mm entryconfig "[msgcat::mc {Save}]..." -state disabled
-	$mm entryconfig [msgcat::mc {Save as}] -state disabled
-	$mm entryconfig [msgcat::mc {Export}] -state disabled
-	$mm entryconfig [msgcat::mc {Save Image}] -state disabled
-	$mm entryconfig "[msgcat::mc {Create Movie}]..." -state disabled
-	$mm entryconfig "[msgcat::mc {Display Header}]..." -state disabled
-
-	$bb.save configure -state disabled
-	$bb.movie configure -state disabled
-	$bb.header configure -state disabled
-
-	$mm.samp entryconfig [msgcat::mc {Image}] -state disabled
-	$mm.samp entryconfig [msgcat::mc {Table}] -state disabled
-	$bb.sampimage configure -state disabled
-	$bb.samptable configure -state disabled
     }
+}
 
-    # XPA
+proc UpdateFileMenuExport {} {
+    global ds9
+    global current
+
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
+    $mm entryconfig [msgcat::mc {Export}] -state disabled
+    if {$current(frame) != {}} {
+	if {[$current(frame) has fits]} {
+	    $mm entryconfig [msgcat::mc {Export}] -state normal
+	    switch -- [$current(frame) get type] {
+		base {
+		    $mm.export entryconfig \
+			"[msgcat::mc {RGB Array}]..." -state disabled
+		}
+		rgb {
+		    $mm.export entryconfig \
+			"[msgcat::mc {RGB Array}]..." -state normal
+		}
+		3d {
+		    $mm.export entryconfig \
+			"[msgcat::mc {RGB Array}]..." -state disabled
+		}
+	    }
+	}
+    }
+}
+
+proc UpdateFileMenuSaveImage {} {
+    global ds9
+    global current
+
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
+    $mm entryconfig [msgcat::mc {Save Image}] -state disabled
+    if {$current(frame) != {}} {
+	if {[$current(frame) has fits]} {
+	    $mm entryconfig [msgcat::mc {Save Image}] -state normal
+	}
+    }
+}
+
+proc UpdateFileMenuMovie {} {
+    global ds9
+    global current
+
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
+    $mm entryconfig "[msgcat::mc {Create Movie}]..." -state disabled
+    $bb.movie configure -state disabled
+    if {$current(frame) != {}} {
+	if {[$current(frame) has fits]} {
+	    $mm entryconfig "[msgcat::mc {Create Movie}]..." -state normal
+	    $bb.movie configure -state normal
+	}
+    }
+}
+
+proc UpdateFileMenuHeader {} {
+    global ds9
+    global current
+
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
+    $mm entryconfig "[msgcat::mc {Display Header}]..." -state disabled
+    $bb.header configure -state disabled
+    if {$current(frame) != {}} {
+	if {[$current(frame) has fits]} {
+	    $mm entryconfig "[msgcat::mc {Display Header}]..." -state normal
+	    $bb.header configure -state normal
+	}
+    }
+}
+
+    
+proc UpdateFileMenuXPA {} {
+    global ds9
+    global current
+    global xpa
+
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
     if {[info exists xpa]} {
 	$mm.xpa entryconfig "[msgcat::mc {Information}]..." -state normal
 	$mm.xpa entryconfig [msgcat::mc {Disconnect}] -state normal
@@ -737,8 +869,16 @@ proc UpdateFileMenu {} {
 	$mm.xpa entryconfig "[msgcat::mc {Information}]..." -state disabled
 	$mm.xpa entryconfig [msgcat::mc {Disconnect}] -state disabled
     }
+}
 
-    # SAMP
+proc UpdateFileMenuSAMP {} {
+    global ds9
+    global current
+    global samp
+ 
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
     if {[info exists samp]} {
 	$mm.samp entryconfig [msgcat::mc {Connect}] -state disabled
 	$mm.samp entryconfig [msgcat::mc {Disconnect}] -state normal
@@ -746,5 +886,45 @@ proc UpdateFileMenu {} {
 	$mm.samp entryconfig [msgcat::mc {Connect}] -state normal
 	$mm.samp entryconfig [msgcat::mc {Disconnect}] -state disabled
     }
-}
 
+    $mm.samp entryconfig [msgcat::mc {Image}] -state disabled
+    $mm.samp entryconfig [msgcat::mc {Table}] -state disabled
+    $bb.sampimage configure -state disabled
+    $bb.samptable configure -state disabled
+
+    if {$current(frame) == {}} {
+	return
+    }
+    
+    if {[info exists samp]} {
+	if {[$current(frame) has fits]} {
+	    set ss [expr $ds9(menu,start)+2]
+
+	    $mm.samp entryconfig [msgcat::mc {Image}] -state normal
+	    if {[$mm.samp.image index end] >= $ss} {
+		$mm.samp.image delete $ss end
+	    }
+	    foreach args $samp(apps,image) {
+		foreach {id name} $args {
+		    $mm.samp.image add command -label $name \
+			-command "SAMPSendImageLoadFits $id"
+		}
+	    }
+	    $bb.sampimage configure -state normal
+	}
+
+	if {[$current(frame) has fits bin]} {
+	    $mm.samp entryconfig [msgcat::mc {Table}] -state normal
+	    if {[$mm.samp.table index end] >= $ss} {
+		$mm.samp.table delete $ss end
+	    }
+	    foreach args $samp(apps,table) {
+		foreach {id name} $args {
+		    $mm.samp.table add command -label $name \
+			-command "SAMPSendTableLoadFits $id"
+		}
+	    }
+	    $bb.samptable configure -state normal
+	}
+    }
+}

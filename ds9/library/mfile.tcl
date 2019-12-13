@@ -281,6 +281,17 @@ proc ButtonsFileDef {} {
     array set pbuttons {
 	file,open 1
 	file,save 1
+	file,open,slice 0
+	file,open,rgb,image 0
+	file,open,rgb,cube 0
+	file,open,me,cube 0
+	file,open,me,frames 0
+	file,open,mosaic,wcs 0
+	file,open,mosaic,wcs,seg 0
+	file,open,mosaic,iraf 0
+	file,open,mosaic,iraf,seg 0
+	file,open,mosaic,wfpc2 0
+	file,open,url 0
 	file,movie 0
 	file,backup 0
 	file,restore 0
@@ -307,6 +318,41 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.open \
 	[string tolower [msgcat::mc {Open}]] \
 	[list OpenDialog fits]
+
+    ButtonButton $ds9(buttons).file.openslice \
+	[string tolower [msgcat::mc {Open Slice}]] \
+	[list OpenDialog fits {} slice]
+    ButtonButton $ds9(buttons).file.openrgbimage \
+	[string tolower [msgcat::mc {Open RGB Image}]] \
+	[list OpenDialog rgbimage]
+    ButtonButton $ds9(buttons).file.openrgbcube \
+	[string tolower [msgcat::mc {Open RGB Cube}]] \
+	[list OpenDialog rgbcube]
+    ButtonButton $ds9(buttons).file.openmecube \
+	[string tolower [msgcat::mc {Open ME Cube}]] \
+	[list OpenDialog mecube]
+    ButtonButton $ds9(buttons).file.openmeframes \
+	[string tolower [msgcat::mc {Open ME Frames}]] \
+	[list OpenDialog multiframe]
+    ButtonButton $ds9(buttons).file.openmosaicwcs \
+	[string tolower [msgcat::mc {Open Mosaic WCS}]] \
+	[list OpenDialog mosaicimagewcs]
+    ButtonButton $ds9(buttons).file.openmosaicwcsseg \
+	[string tolower [msgcat::mc {Open Mosaic WCS Seg}]] \
+	[list OpenDialog mosaicwcs]
+    ButtonButton $ds9(buttons).file.openmosaiciraf \
+	[string tolower [msgcat::mc {Open Mosaic IRAF}]] \
+	[list OpenDialog mosaicimageiraf]
+    ButtonButton $ds9(buttons).file.openmosaicirafseg \
+	[string tolower [msgcat::mc {Open Mosaic IRAF Seg}]] \
+	[list OpenDialog mosaiciraf]
+    ButtonButton $ds9(buttons).file.openmosaicwfpc2 \
+	[string tolower [msgcat::mc {Open Mosaic WFPC2}]] \
+	[list OpenDialog mosaicimagewfpc2]
+    ButtonButton $ds9(buttons).file.openurl \
+	[string tolower [msgcat::mc {Open URL}]] \
+	[list OpenURLFits]
+
     ButtonButton $ds9(buttons).file.save \
 	[string tolower [msgcat::mc {Save}]] \
 	[list SaveDialog fits]
@@ -339,28 +385,27 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.psprint \
 	[string tolower [msgcat::mc {PS Print}]] PSPrint
 
-    switch $ds9(wm) {
- 	x11 -
-	aqua -
-	win32 {
-	    ButtonButton $ds9(buttons).file.page \
-		[string tolower [msgcat::mc {Page Setup}]] PSPageSetup
-	    ButtonButton $ds9(buttons).file.print \
-		[string tolower [msgcat::mc {Print}]] PSPrint
-	}
- 	foo {
-	    ButtonButton $ds9(buttons).file.page \
-		[string tolower [msgcat::mc {Page Setup}]] MacOSXPageSetup
-	    ButtonButton $ds9(buttons).file.print \
-		[string tolower [msgcat::mc {Print}]] MacOSXPrint
-	}
-    }
+    ButtonButton $ds9(buttons).file.page \
+	[string tolower [msgcat::mc {Page Setup}]] PSPageSetup
+    ButtonButton $ds9(buttons).file.print \
+	[string tolower [msgcat::mc {Print}]] PSPrint
 
     ButtonButton $ds9(buttons).file.exit \
 	[string tolower [msgcat::mc {Exit}]] QuitDS9
 
     set buttons(file) "
         $ds9(buttons).file.open pbuttons(file,open)
+        $ds9(buttons).file.openslice pbuttons(file,open,slice)
+        $ds9(buttons).file.openrgbimage pbuttons(file,open,rgb,image)
+        $ds9(buttons).file.openrgbcube pbuttons(file,open,rgb,cube)
+        $ds9(buttons).file.openmecube pbuttons(file,open,me,cube)
+        $ds9(buttons).file.openmeframes pbuttons(file,open,me,frames)
+        $ds9(buttons).file.openmosaicwcs pbuttons(file,open,mosaic,wcs)
+        $ds9(buttons).file.openmosaicwcsseg pbuttons(file,open,mosaic,wcs,seg)
+        $ds9(buttons).file.openmosaiciraf pbuttons(file,open,mosaic,iraf)
+        $ds9(buttons).file.openmosaicirafseg pbuttons(file,open,mosaic,iraf,seg)
+        $ds9(buttons).file.openmosaicwfpc2 pbuttons(file,open,mosaic,wfpc2)
+        $ds9(buttons).file.openurl pbuttons(file,open,url)
         $ds9(buttons).file.save pbuttons(file,save)
         $ds9(buttons).file.movie pbuttons(file,movie)
         $ds9(buttons).file.backup pbuttons(file,backup)
@@ -390,6 +435,8 @@ proc PrefsDialogButtonbarFile {f} {
     menu $m
     $m add checkbutton -label "[msgcat::mc {Open}]..." \
 	-variable pbuttons(file,open) -command {UpdateButtons buttons(file)}
+    $m add cascade -label [msgcat::mc {Open as}] -menu $m.open
+    $m add separator
     $m add checkbutton -label "[msgcat::mc {Save}]..." \
 	-variable pbuttons(file,save) -command {UpdateButtons buttons(file)}
     $m add separator
@@ -423,6 +470,47 @@ proc PrefsDialogButtonbarFile {f} {
     $m add separator
     $m add checkbutton -label [msgcat::mc {Exit}] \
 	-variable pbuttons(file,exit) -command {UpdateButtons buttons(filew)}
+
+    menu $m.open
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Slice}]..." \
+	-variable pbuttons(file,open,slice) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add separator
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Muliple Extension Cube}]..." \
+	-variable pbuttons(file,open,me,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Muliple Extension Frames}]..." \
+	-variable pbuttons(file,open,me,frames) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add separator
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Mosaic WCS}]..." \
+	-variable pbuttons(file,open,mosaic,wcs) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+	-variable pbuttons(file,open,mosaic,wcs,seg) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Mosaic IRAF}]..." \
+	-variable pbuttons(file,open,mosaic,iraf) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Mosaic IRAF Segment}]..." \
+	-variable pbuttons(file,open,mosaic,iraf,seg) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label "[msgcat::mc {Mosaic WFPC2}]..." \
+	-variable pbuttons(file,open,mosaic,wfpc2) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add separator
+    $m.open add checkbutton \
+	-label "[msgcat::mc {URL}]..." \
+	-variable pbuttons(file,open,url) \
+	-command {UpdateButtons buttons(file)}
 
     menu $m.xpa
     $m.xpa add checkbutton -label "[msgcat::mc {Information}]..." \
@@ -463,6 +551,18 @@ proc UpdateFileMenu {} {
 	    -state normal
 
 	$bb.open configure -state normal
+
+	$bb.openslice configure -state normal
+	$bb.openrgbimage configure -state normal
+	$bb.openrgbcube configure -state normal
+	$bb.openmecube configure -state normal
+	$bb.openmeframes configure -state normal
+	$bb.openmosaicwcs configure -state normal
+	$bb.openmosaicwcsseg configure -state normal
+	$bb.openmosaiciraf configure -state normal
+	$bb.openmosaicirafseg configure -state normal
+	$bb.openmosaicwfpc2 configure -state normal
+	$bb.openurl configure -state normal
     } else {
 	$mm entryconfig "[msgcat::mc {Open}]..." \
 	    -state disabled
@@ -472,6 +572,18 @@ proc UpdateFileMenu {} {
 	    -state disabled
 
 	$bb.open configure -state disabled
+
+	$bb.openslice configure -state disabled
+	$bb.openrgbimage configure -state disabled
+	$bb.openrgbcube configure -state disabled
+	$bb.openmecube configure -state disabled
+	$bb.openmeframes configure -state disabled
+	$bb.openmosaicwcs configure -state disabled
+	$bb.openmosaicwcsseg configure -state disabled
+	$bb.openmosaiciraf configure -state disabled
+	$bb.openmosaicirafseg configure -state disabled
+	$bb.openmosaicwfpc2 configure -state disabled
+	$bb.openurl configure -state disabled
     }
 
     if {$current(frame) != {}} {

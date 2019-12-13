@@ -818,7 +818,7 @@ proc ColormapDialog {} {
 
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
-	-command LoadColormap
+	-command LoadColormap -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command SaveColormap -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
@@ -924,6 +924,7 @@ proc ColormapDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
+    bind $w <<Open>> LoadColormap
     bind $w <<Save>> SaveColormap
     bind $w <<Close>> ColormapDestroyDialog
 }

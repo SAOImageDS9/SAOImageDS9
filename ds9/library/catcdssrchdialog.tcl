@@ -60,7 +60,7 @@ proc CATCDSSrchDialog {varname} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
-	-command "CATCDSSrchLoadFile $varname"
+	-command "CATCDSSrchLoadFile $varname" -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command "CATCDSSrchSaveFile $varname" -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
@@ -251,6 +251,7 @@ proc CATCDSSrchDialog {varname} {
     $var(listbox,astro) selection set 0
     $w.param.name.source select range 0 end
 
+    bind $w <<Open>> [list CATCDSSrchLoadFile $varname]
     bind $w <<Save>> [list CATCDSSrchSaveFile $varname]
     bind $w <<Close>> [list CATCDSSrchDestroy $varname]
 }

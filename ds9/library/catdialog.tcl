@@ -110,7 +110,7 @@ proc CATDialog {varname format catalog title action} {
     # file
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
-	-command [list CATLoadVOTFile $varname]
+	-command [list CATLoadVOTFile $varname] -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command [list CATSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
@@ -471,6 +471,7 @@ proc CATDialog {varname format catalog title action} {
     pack $w.cat $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
+    bind $w <<Open>> [list CATLoadVOTFile $varname]
     bind $w <<Save>> [list CATSaveVOTFile $varname]
     bind $w <<Print>> PSPrint
     bind $w <<Close>> [list CATDestroy $varname]

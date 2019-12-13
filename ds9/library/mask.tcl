@@ -103,7 +103,7 @@ proc MaskDialog {} {
 
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
-	-command [list OpenDialog fits mask]
+	-command [list OpenDialog fits mask] -accelerator "${ds9(ctrl)}O"
     $mb.file add cascade -label [msgcat::mc {Open as}] \
 	-menu $mb.file.open
     $mb.file add separator
@@ -159,6 +159,7 @@ proc MaskDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
+    bind $w <<Open>> [list OpenDialog fits mask]
     bind $w <<Close>> MaskDestroyDialog
 }
 

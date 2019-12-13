@@ -169,7 +169,7 @@ proc WCSDialog {} {
 
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
-	-command WCSLoadDialog
+	-command WCSLoadDialog -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command WCSSaveDialog -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
@@ -357,6 +357,7 @@ proc WCSDialog {} {
     pack $w.buttons -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
+    bind $w <<Open>> WCSLoadDialog
     bind $w <<Save>> WCSSaveDialog
     bind $w <<Close>> WCSDestroyDialog
 

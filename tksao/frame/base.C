@@ -810,14 +810,14 @@ int Base::postscriptProc(int prepass)
       // needs to before markers if marker is filled
       currentContext->contourPS(GRAY);
 
+      if (grid)
+	grid->ps(GRAY);
+
+      // markers over grid
       if (showMarkers) {
 	psMarkers(&catalogMarkers, GRAY);
 	psMarkers(&userMarkers, GRAY);
       }
-
-      // needs to be after markers if marker is filled
-      if (grid)
-	grid->ps(GRAY);
 
       psCrosshair(GRAY);
       psGraphics(GRAY);
@@ -828,14 +828,14 @@ int Base::postscriptProc(int prepass)
       // needs to before markers if marker is filled
       currentContext->contourPS(RGB);
 
+      if (grid)
+	grid->ps(RGB);
+
+      // markers over grid
       if (showMarkers) {
 	psMarkers(&catalogMarkers, RGB);
 	psMarkers(&userMarkers, RGB);
       }
-
-      // needs to be after markers if marker is filled
-      if (grid)
-	grid->ps(RGB);
 
       psCrosshair(RGB);
       psGraphics(RGB);
@@ -848,14 +848,14 @@ int Base::postscriptProc(int prepass)
     // needs to before markers if marker is filled
     currentContext->contourPS(psColorSpace);
 
+    if (grid)
+      grid->ps(psColorSpace);
+
+    // markers over grid
     if (showMarkers) {
       psMarkers(&catalogMarkers, psColorSpace);
       psMarkers(&userMarkers, psColorSpace);
     }
-
-    // needs to be after markers if marker is filled
-    if (grid)
-      grid->ps(psColorSpace);
 
     psCrosshair(psColorSpace);
     psGraphics(psColorSpace);
@@ -1686,17 +1686,16 @@ void Base::updatePM(const BBox& bbox)
   // needs to before markers if marker is filled
   currentContext->contourX11(pixmap, Coord::WIDGET, BBox(0,0,width,height));
 
-  // markers
+  // grid
+  if (grid)
+    grid->x11();
+
+  // markers over grid
   BBox bb = BBox(0,0,width,height) * widgetToCanvas;
   if (showMarkers) {
     x11Markers(&catalogMarkers, bb);
     x11Markers(&userMarkers, bb);
   }
-
-  // grid
-  // needs to be after markers if marker is filled
-  if (grid)
-    grid->x11();
 
   // crosshair
   if (useCrosshair)
@@ -1893,16 +1892,15 @@ void Base::macosxPrintCmd()
   // needs to before markers if marker is filled
   currentContext->contourMacOSX();
 
-  // markers
+  // grid
+  if (grid)
+    grid->macosx();
+
+  // markers over grid
   if (showMarkers) {
     macosxMarkers(&catalogMarkers);
     macosxMarkers(&userMarkers);
   }
-
-  // grid
-  // needs to be after markers if marker is filled
-  if (grid)
-    grid->macosx();
 
   macosxCrosshair();
   macosxGraphics();
@@ -2015,16 +2013,15 @@ void Base::win32PrintCmd()
   // needs to before markers if marker is filled
   currentContext->contourWin32();
 
-  // markers
+  // grid
+  if (grid)
+    grid->win32();
+
+  // markers over grid
   if (showMarkers) {
     win32Markers(&userMarkers);
     win32Markers(&catalogMarkers);
   }
-
-  // grid
-  // needs to be after markers if marker is filled
-  if (grid)
-    grid->win32();
 
   win32Crosshair();
   win32Graphics();

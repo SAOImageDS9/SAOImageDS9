@@ -743,7 +743,6 @@ threed	: VIEW_ threedView
 	| METHOD_ renderMethod {fr->set3dRenderMethodCmd($2);}
 	| BACKGROUND_ renderBackground {fr->set3dRenderBackgroundCmd($2);}
 	| SCALE_ numeric {fr->set3dScaleCmd($2);}
-        | PRESERVE_ {fr->set3dPreserveCmd();}
 	| THRESHOLD_ numeric 
 	  {/* needed for compatibility with old version of backup */}
 	;

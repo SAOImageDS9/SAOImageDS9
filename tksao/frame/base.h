@@ -1684,7 +1684,6 @@ public:
   virtual void set3dViewPointCmd(const Vector3d&, const Vector&) {}
   virtual void set3dRenderMethodCmd(int) {}
   virtual void set3dRenderBackgroundCmd(int) {}
-  virtual void set3dPreserveCmd() {}
 };
 
 #endif

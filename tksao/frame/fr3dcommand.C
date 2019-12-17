@@ -471,11 +471,6 @@ void Frame3dBase::set3dRenderBackgroundCmd(int which)
   }
 }
 
-void Frame3dBase::set3dPreserveCmd()
-{
-  preservecache_ =1;
-}
-
 void Frame3dBase::zoomAboutCmd(const Vector& zz, const Vector& vv)
 {
   Vector dd = Vector(options->width,options->height)/2. - vv*canvasToWidget;

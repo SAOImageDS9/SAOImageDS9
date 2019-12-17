@@ -209,7 +209,6 @@ class Frame3dBase : public Base {
   void set3dHighliteColorCmd(const char*);
   void set3dRenderMethodCmd(int);
   void set3dRenderBackgroundCmd(int);
-  void set3dPreserveCmd();
   void set3dScaleCmd(double);
   void set3dViewCmd(float, float);
   void set3dViewPointCmd(const Vector3d&, const Vector&);

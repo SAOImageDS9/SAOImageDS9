@@ -383,7 +383,7 @@ proc MoviePhotoMPEG {} {
 
     # yes, we need this
     UpdateDS9
-    RealizeDS9 1
+    RealizeDS9
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
@@ -412,7 +412,7 @@ proc MoviePhotoGIF {} {
 
     # yes, we need this
     UpdateDS9
-    RealizeDS9 1
+    RealizeDS9
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {

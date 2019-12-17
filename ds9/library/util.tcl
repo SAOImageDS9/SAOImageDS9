@@ -700,7 +700,7 @@ proc ProcessRealizeDS9 {} {
     }
 }
 
-proc RealizeDS9 {{preserve 0}} {
+proc RealizeDS9 {} {
     # this has to come first, to realize the canvas
     global debug
     if {$debug(tcl,idletasks)} {
@@ -710,9 +710,6 @@ proc RealizeDS9 {{preserve 0}} {
     # update all frames
     global ds9
     foreach ff $ds9(frames) {
-	if {$preserve} {
-	    $ff 3d preserve
-	}
 	$ff update now
     }
 

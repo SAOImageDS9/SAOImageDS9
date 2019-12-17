@@ -1449,10 +1449,10 @@ proc KeyFrame {which K A xx yy} {
 		h {3DArrowKey $which -1 0}
 		Right -
 		l {3DArrowKey $which 1 0}
-	    }
 
-	    z {Zoom 2 2}
-	    Z {Zoom .5 .5}
+		z {Zoom 2 2}
+		Z {Zoom .5 .5}
+	    }
 	}
     }
 

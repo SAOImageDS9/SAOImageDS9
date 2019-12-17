@@ -576,6 +576,10 @@ proc BackupGUI {ch} {
 
     # File
 
+    global movie
+    puts $ch "global movie"
+    puts $ch "array set movie \{ [array get movie] \}"
+
     global ps
     puts $ch "global ps"
     puts $ch "array set ps \{ [array get ps] \}"

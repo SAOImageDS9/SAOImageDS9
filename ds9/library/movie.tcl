@@ -27,6 +27,7 @@ proc MovieDef {} {
 
     set movie(status) 0
     set movie(abort) 0
+    set movie(first) 0
 
     set movie(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.}]
 }
@@ -134,19 +135,12 @@ proc MovieCreate {fn} {
     global current
     global saveimage
 
-    if {$fn == {} || ![$current(frame) has fits]} {
+    if {$fn == {}} {
 	return
     }
 
     # besure we are on top
     raise $ds9(top)
-
-    # we need single mode
-    if {$ds9(display) != {single}} {
-	set modesav $ds9(display)
-	set current(display) single
-	DisplayMode
-    }
 
     # for darwin only
     set geom [MacOSPhotoFix $ds9(top) 0 1]
@@ -164,11 +158,6 @@ proc MovieCreate {fn} {
 	gif {agif close}
     }
 
-    if {[info exists modesav]} {
-	set current(display) $modesav
-	DisplayMode
-    }
-
     # reset if needed
     DarwinPhotoRestore $ds9(top) $geom
 }
@@ -177,6 +166,13 @@ proc MovieFrame {} {
     global ds9
     global current
     global movie
+
+    # we need single mode
+    if {$ds9(display) != {single}} {
+	set modesav $ds9(display)
+	set current(display) single
+	DisplayMode
+    }
 
     # loop thru all active frames
     set movie(first) 1
@@ -192,11 +188,24 @@ proc MovieFrame {} {
 
     set ds9(next) $framesav
     GotoFrame
+
+    if {[info exists modesav]} {
+	set current(display) $modesav
+	DisplayMode
+    }
 }
 
 proc MovieSlice {} {
+    global ds9
     global current
     global movie
+
+    # we need single mode
+    if {$ds9(display) != {single}} {
+	set modesav $ds9(display)
+	set current(display) single
+	DisplayMode
+    }
 
     set depth [$current(frame) get fits depth]
     set slice [$current(frame) get fits slice]
@@ -216,14 +225,41 @@ proc MovieSlice {} {
 
     # reset current slice
     $current(frame) update fits slice $slice
+
+    if {[info exists modesav]} {
+	set current(display) $modesav
+	DisplayMode
+    }
 }
 
 proc Movie3d {} {
+    global ds9
     global movie
     global current
 
-    set slice [$current(frame) get fits slice]
-    set vp [$current(frame) get 3d view]
+    # we need single or tile mode
+    if {$ds9(display) == {blink}} {
+	set modesav $ds9(display)
+	set current(display) single
+	DisplayMode
+    }
+
+    switch $ds9(display) {
+	single {
+	    set slice [$current(frame) get fits slice]
+	    set vp [$current(frame) get 3d view]
+	}
+	tile {
+	    $current(frame) highlite off
+	    foreach ff $ds9(active) {
+		set slice($ff) [$ff get fits slice]
+		set vp($ff) [$ff get 3d view]
+	    }
+	}
+	blink {
+	    # should not be here
+	}
+    }
 
     set azincr [expr 1.*($movie(az,to)-$movie(az,from))/$movie(num)]
     set elincr [expr 1.*($movie(el,to)-$movie(el,from))/$movie(num)]
@@ -248,11 +284,26 @@ proc Movie3d {} {
 	    set movie(status) [expr 1.*$nn/$movie(num)*100]
 	    update idletasks
 
-	    $current(frame) 3d view $az $el
-	    $current(frame) update fits slice [expr int($sl)]
+	    switch $ds9(display) {
+		single {
+		    $current(frame) 3d view $az $el
+		    $current(frame) update fits slice [expr int($sl)]
+		}
+		tile {
+		    foreach ff $ds9(active) {
+			$ff 3d view $az $el
+			$ff update fits slice [expr int($sl)]
+		    }
+		}
+		blink {
+		    # should not be here
+		}
+	    }
+
 	    if {[MoviePhoto]} {
 		break
 	    }
+
 	    set az [expr $az+$azincr]
 	    set el [expr $el+$elincr]
 	    set sl [expr $sl+$slincr]
@@ -274,10 +325,30 @@ proc Movie3d {} {
     MovieStatusDestroyDialog
 
     # reset
-    $current(frame) 3d view $vp
-    $current(frame) update fits slice $slice
+    switch $ds9(display) {
+	single {
+	    $current(frame) 3d view $vp
+	    $current(frame) update fits slice $slice
+	}
+	tile {
+	    $current(frame) highlite on
+	    foreach ff $ds9(active) {
+		$ff 3d view $vp($ff)
+		$ff update fits slice $slice($ff)
+	    }
+	}
+	blink {
+	    # should not be here
+	}
+    }
+
     Update3DDialog
     UpdateCubeDialog
+
+    if {[info exists modesav]} {
+	set current(display) $modesav
+	DisplayMode
+    }
 }
 
 # Support

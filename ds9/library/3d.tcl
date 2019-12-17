@@ -208,6 +208,8 @@ proc Update3DDialog {} {
 }
 
 proc 3DBackup {ch which} {
+    # zoom needs to be set before 3d view
+    puts $ch "$which zoom to [$which get zoom]"
     puts $ch "$which 3d view [$which get 3d view]"
     puts $ch "$which 3d scale [$which get 3d scale]"
     puts $ch "$which 3d method [$which get 3d method]"
@@ -371,11 +373,19 @@ proc Lock3DView {which} {
 }
 
 proc 3DMotion {which x y} {
-    global canvas
+    global ds9
     global threed
 
-    set threed(az) [expr -(double($x)/$canvas(width)  - .5) *2*90]
-    set threed(el) [expr  (double($y)/$canvas(height) - .5) *2*90]
+    set ixx [$ds9(canvas) itemcget $which -x]
+    set iyy [$ds9(canvas) itemcget $which -y]
+    set ww [$ds9(canvas) itemcget $which -width]
+    set hh [$ds9(canvas) itemcget $which -height]
+
+    set xx [expr $x-$ixx]
+    set yy [expr $y-$iyy]
+
+    set threed(az) [expr -(double($xx)/$ww  - .5) *2*90]
+    set threed(el) [expr  (double($yy)/$hh - .5) *2*90]
     if {$threed(az) < -90} {
 	set threed(az) -90
     }

@@ -22,6 +22,8 @@ proc MovieDef {} {
     set movie(el,to) 30
     set movie(sl,from) 1
     set movie(sl,to) 1
+    set movie(zm,from) 1
+    set movie(zm,to) 1
     set movie(repeat) oscillate
     set movie(repeat,num) 0
 
@@ -138,6 +140,7 @@ proc MovieCreate {fn} {
     if {$fn == {}} {
 	return
     }
+    set movie(fn) $fn
 
     # besure we are on top
     raise $ds9(top)
@@ -145,7 +148,6 @@ proc MovieCreate {fn} {
     # for darwin only
     set geom [MacOSPhotoFix $ds9(top) 0 1]
 
-    set movie(fn) $fn
     switch $movie(action) {
 	frame {MovieFrame}
 	slice {MovieSlice}
@@ -246,12 +248,14 @@ proc Movie3d {} {
 
     switch $ds9(display) {
 	single {
+	    set zoom [$current(frame) get zoom]
 	    set slice [$current(frame) get fits slice]
 	    set vp [$current(frame) get 3d view]
 	}
 	tile {
 	    $current(frame) highlite off
 	    foreach ff $ds9(active) {
+		set zoom($ff) [$ff get zoom]
 		set slice($ff) [$ff get fits slice]
 		set vp($ff) [$ff get 3d view]
 	    }
@@ -264,6 +268,7 @@ proc Movie3d {} {
     set azincr [expr 1.*($movie(az,to)-$movie(az,from))/$movie(num)]
     set elincr [expr 1.*($movie(el,to)-$movie(el,from))/$movie(num)]
     set slincr [expr 1.*($movie(sl,to)-$movie(sl,from))/$movie(num)]
+    set zmincr [expr 1.*($movie(zm,to)-$movie(zm,from))/$movie(num)]
 
     # loop over az/el/slice
     set movie(status) 0
@@ -273,6 +278,7 @@ proc Movie3d {} {
     set az $movie(az,from)
     set el $movie(el,from)
     set sl $movie(sl,from)
+    set zm $movie(zm,from)
 
     for {set rr 0} {$rr<=$movie(repeat,num)} {incr rr} {
 	for {set nn 0} {$nn<=$movie(num)} {incr nn} {
@@ -286,11 +292,13 @@ proc Movie3d {} {
 
 	    switch $ds9(display) {
 		single {
+		    $current(frame) zoom to $zm $zm
 		    $current(frame) 3d view $az $el
 		    $current(frame) update fits slice [expr int($sl)]
 		}
 		tile {
 		    foreach ff $ds9(active) {
+			$ff zoom to $zm $zm
 			$ff 3d view $az $el
 			$ff update fits slice [expr int($sl)]
 		    }
@@ -307,17 +315,20 @@ proc Movie3d {} {
 	    set az [expr $az+$azincr]
 	    set el [expr $el+$elincr]
 	    set sl [expr $sl+$slincr]
+	    set zm [expr $zm+$zmincr]
 	}
 	switch $movie(repeat) {
 	    repeat {
 		set az $movie(az,from)
 		set el $movie(el,from)
 		set sl $movie(sl,from)
+		set zm $movie(zm,from)
 	    }
 	    oscillate {
 		set azincr [expr -$azincr]
 		set elincr [expr -$elincr]
 		set slincr [expr -$slincr]
+		set zmincr [expr -$zmincr]
 	    }
 	}
     }
@@ -327,12 +338,14 @@ proc Movie3d {} {
     # reset
     switch $ds9(display) {
 	single {
+	    $current(frame) zoom to $zoom
 	    $current(frame) 3d view $vp
 	    $current(frame) update fits slice $slice
 	}
 	tile {
 	    $current(frame) highlite on
 	    foreach ff $ds9(active) {
+		$ff zoom to $zoom($ff)
 		$ff 3d view $vp($ff)
 		$ff update fits slice $slice($ff)
 	    }
@@ -432,6 +445,8 @@ proc Movie3dDialog {} {
     set ed2(el,to) $movie(el,to)
     set ed2(sl,from) [$current(frame) get fits slice]
     set ed2(sl,to) $ed2(sl,from)
+    set ed2(zm,from) [lindex [$current(frame) get zoom] 0]
+    set ed2(zm,to) $ed2(zm,from)
     set ed2(repeat) $movie(repeat)
     set ed2(repeat,num) $movie(repeat,num)
 
@@ -461,6 +476,12 @@ proc Movie3dDialog {} {
     ttk::label $f.tslto -text [msgcat::mc {To}]
     ttk::entry $f.slto -textvariable ed2(sl,to) -width 7
 
+    ttk::label $f.tzm -text [msgcat::mc {Zoom}]
+    ttk::label $f.tzmfrom -text [msgcat::mc {From}]
+    ttk::entry $f.zmfrom -textvariable ed2(zm,from) -width 7
+    ttk::label $f.tzmto -text [msgcat::mc {To}]
+    ttk::entry $f.zmto -textvariable ed2(zm,to) -width 7
+
     ttk::radiobutton $f.repeat -text [msgcat::mc {Repeat}] \
 	-variable ed2(repeat) -value repeat
     ttk::radiobutton $f.oscillate -text [msgcat::mc {Oscillate}] \
@@ -472,6 +493,7 @@ proc Movie3dDialog {} {
     grid $f.taz $f.tazfrom $f.azfrom $f.tazto $f.azto -padx 2 -pady 2 -sticky w
     grid $f.tel $f.telfrom $f.elfrom $f.telto $f.elto -padx 2 -pady 2 -sticky w
     grid $f.tsl $f.tslfrom $f.slfrom $f.tslto $f.slto -padx 2 -pady 2 -sticky w
+    grid $f.tzm $f.tzmfrom $f.zmfrom $f.tzmto $f.zmto -padx 2 -pady 2 -sticky w
     grid $f.oscillate x $f.repeatnum $f.ttimes -padx 2 -pady 2 -sticky w
     grid $f.repeat -padx 2 -pady 2 -sticky w
 
@@ -501,6 +523,8 @@ proc Movie3dDialog {} {
 	set movie(el,to) $ed2(el,to)
 	set movie(sl,from) $ed2(sl,from)
 	set movie(sl,to) $ed2(sl,to)
+	set movie(zm,from) $ed2(zm,from)
+	set movie(zm,to) $ed2(zm,to)
 	set movie(repeat) $ed2(repeat)
 	set movie(repeat,num) $ed2(repeat,num)
     }

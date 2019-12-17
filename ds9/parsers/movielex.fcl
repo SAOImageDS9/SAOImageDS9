@@ -8,11 +8,14 @@
 %%
 
 3d	    {return $3D_}
+az	    {return $AZ_}
 azfrom	    {return $AZFROM_}
 azto	    {return $AZTO_}
+el	    {return $EL_}
 elfrom	    {return $ELFROM_}
 elto	    {return $ELTO_}
 frame	    {return $FRAME_}
+from	    {return $FROM_}
 gif	    {return $GIF_}
 mpeg	    {return $MPEG_}
 number	    {return $NUMBER_}
@@ -21,6 +24,10 @@ repeat	    {return $REPEAT_}
 slice	    {return $SLICE_}
 slfrom	    {return $SLFROM_}
 slto	    {return $SLTO_}
+to	    {return $TO_}
+zoom	    {return $ZOOM_}
+zmfrom	    {return $ZMFROM_}
+zmto	    {return $ZMTO_}
 
 #include numeric.fin
 #include string.fin

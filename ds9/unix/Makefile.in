@@ -41,6 +41,7 @@ tksao_LIB_SPEC	= @tksao_LIB_SPEC@
 tktable_LIB_SPEC= @tktable_LIB_SPEC@
 
 CC		= @CC@
+CXX		= @CXX@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
 CFLAGS_WARNING	= @CFLAGS_WARNING@
 EXEEXT		= @EXEEXT@
@@ -54,7 +55,9 @@ DEFS		= @DEFS@ $(PKG_CFLAGS)
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= @PKG_LIBS@ @LIBS@
 CFLAGS		= @CFLAGS@
+CXXFLAGS	= @CXXFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+COMPILE_CXX	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 system		= @system@
 
@@ -64,7 +67,7 @@ system		= @system@
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
 .C.@OBJEXT@:
-	$(COMPILE) -c `@CYGPATH@ $<` -o $@
+	$(COMPILE_CXX) -c `@CYGPATH@ $<` -o $@
 
 #--------------------------defines
 

@@ -39,6 +39,7 @@ tktable_LIB_SPEC= @tktable_LIB_SPEC@
 tkwin_LIB_SPEC	= @tkwin_LIB_SPEC@
 
 CC		= @CC@
+CXX		= @CXX@
 AR		= @AR@
 RC		= @RC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
@@ -55,7 +56,9 @@ DEFS		= @DEFS@ $(PKG_CFLAGS)
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= @PKG_LIBS@ @LIBS@
 CFLAGS		= @CFLAGS@
+CXXFLAGS	= @CXXFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+COMPILE_CXX	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 .SUFFIXES: .c .C .$(OBJEXT)
 
@@ -63,7 +66,7 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 	$(COMPILE) -DSTATIC_BUILD -c $< -o $@
 
 .C.@OBJEXT@:
-	$(COMPILE) -DSTATIC_BUILD -c $< -o $@
+	$(COMPILE_CXX) -DSTATIC_BUILD -c $< -o $@
 
 #--------------------------defines
 

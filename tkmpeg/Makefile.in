@@ -312,7 +312,7 @@ VPATH = $(srcdir):$(srcdir)/generic:$(srcdir)/unix:$(srcdir)/win:$(srcdir)/macos
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
 .C.@OBJEXT@:
-	$(COMPILE_CSS) -c `@CYGPATH@ $<` -o $@
+	$(COMPILE_CXX) -c `@CYGPATH@ $<` -o $@
 
 #========================================================================
 # Distribution creation

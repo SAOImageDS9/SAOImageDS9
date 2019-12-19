@@ -59,8 +59,11 @@ TEA_PREFIX
 # necessary to compile executables.
 #-----------------------------------------------------------------------
 
-AC_PROG_CXX
 TEA_SETUP_COMPILER
+
+if test "${TEA_PLATFORM}" != "windows" ; then
+    AC_PROG_CXX
+fi
 
 #-----------------------------------------------------------------------
 # __CHANGE__
@@ -145,6 +148,11 @@ TEA_ENABLE_SHARED
 #--------------------------------------------------------------------
 
 TEA_CONFIG_CFLAGS
+
+if test "${TEA_PLATFORM}" = "windows" ; then
+    CXX="$CC"
+    CXXFLAGS="$CFLAGS"
+fi
 
 #--------------------------------------------------------------------
 # Set the default compiler switches based on the --enable-symbols option.

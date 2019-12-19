@@ -59,7 +59,6 @@ TEA_PREFIX
 # necessary to compile executables.
 #-----------------------------------------------------------------------
 
-AC_PROG_CXX
 TEA_SETUP_COMPILER
 
 #-----------------------------------------------------------------------
@@ -147,6 +146,9 @@ TEA_ENABLE_SHARED
 #--------------------------------------------------------------------
 
 TEA_CONFIG_CFLAGS
+
+CXX="$CC"
+CXXFLAGS="$CFLAGS"
 
 #--------------------------------------------------------------------
 # Set the default compiler switches based on the --enable-symbols option.

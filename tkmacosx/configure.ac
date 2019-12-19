@@ -59,8 +59,8 @@ TEA_PREFIX
 # necessary to compile executables.
 #-----------------------------------------------------------------------
 
-AC_PROG_CXX
 TEA_SETUP_COMPILER
+AC_PROG_CXX
 
 #-----------------------------------------------------------------------
 # __CHANGE__

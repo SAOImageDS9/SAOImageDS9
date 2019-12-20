@@ -57,6 +57,7 @@
 %token MAXROWS_
 %token NAME_
 %token NEW_
+%token OPEN_
 %token PANTO_
 %token PLOT_
 %token POINT_
@@ -118,8 +119,11 @@ command : catalog
 catalog : NEW_ {CATTool}
 # backward compatibility
  | {CATTool}
- | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
+ | OPEN_ STRING_ {CatalogCmdLoad $2 VOTRead}
+# backward compatibility
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
+# backward compatibility
+ | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
 
  | {if {![CatalogCmdCheck]} {cat::YYABORT}} catCmd

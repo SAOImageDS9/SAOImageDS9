@@ -104,8 +104,10 @@ grid : yesno {ProcessCmdSet grid view $1 GridUpdateCurrent}
  | LABELS_ labels {GridUpdateCurrent}
  | VIEW_ view {GridUpdateCurrent}
  | RESET_ {GridResetDialog}
- | LOAD_ STRING_ {FileLast gridfbox $2; GridLoad $2}
+ | OPEN_ STRING_ {FileLast gridfbox $2; GridLoad $2}
  | SAVE_ STRING_ {FileLast gridfbox $2; GridSave $2}
+ # backward compatible
+ | LOAD_ STRING_ {FileLast gridfbox $2; GridLoad $2}
  ;
 
 type : typegrid {ProcessCmdSet grid type $1}

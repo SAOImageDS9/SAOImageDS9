@@ -990,9 +990,13 @@ proc GridCreateLineMenu {which width dash} {
 }
 
 proc GridLoadDialog {} {
+    set fn [OpenFileDialog gridfbox]
+    GridLoad $fn
+}
+
+proc GridLoad {fn} {
     global grid
 
-    set fn [OpenFileDialog gridfbox]
     if {$fn != {}} {
 	source $fn
 
@@ -1007,9 +1011,13 @@ proc GridLoadDialog {} {
 }
 
 proc GridSaveDialog {} {
+    set fn [SaveFileDialog gridfbox]
+    GridSave $fn
+}
+
+proc GridSave {fn} {
     global grid
 
-    set fn [SaveFileDialog gridfbox]
     if {$fn != {}} {
 	set file [open $fn w]
 	puts $file "global grid"

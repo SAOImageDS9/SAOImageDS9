@@ -149,6 +149,8 @@ TEA_CONFIG_CFLAGS
 
 CXX="$CC"
 CXXFLAGS="$CFLAGS"
+AC_SUBST(CXX)
+AC_SUBST(CXXFLAGS)
 
 #--------------------------------------------------------------------
 # Set the default compiler switches based on the --enable-symbols option.

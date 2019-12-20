@@ -176,7 +176,7 @@ endif
 
 ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@
-	$(CC) $(CFLAGS) -o $@ \
+	$(CXX) $(CFLAGS) -o $@ \
 	$(OBJS) \
 	$(LLIBS) \
 	-L $(prefix)/openssl -lssl -lcrypto \

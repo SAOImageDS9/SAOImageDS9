@@ -5434,7 +5434,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-    vars="-lstdc++"
+    vars=""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
 	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib

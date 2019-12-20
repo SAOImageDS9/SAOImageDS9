@@ -10038,17 +10038,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 #TEA_ADD_SOURCES([sample.c tclsample.c])
 #TEA_ADD_HEADERS([])
 #TEA_ADD_INCLUDES([])
-
-    vars="-lstdc++"
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
+#TEA_ADD_LIBS()
 #TEA_ADD_CFLAGS([])
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])

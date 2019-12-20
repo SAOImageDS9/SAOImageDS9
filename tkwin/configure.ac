@@ -79,7 +79,7 @@ TEA_ADD_HEADERS([
 	win32lib.h
 	])
 TEA_ADD_INCLUDES([-I../tksao/vector])
-TEA_ADD_LIBS([-lstdc++])
+TEA_ADD_LIBS()
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])

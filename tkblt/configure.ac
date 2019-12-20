@@ -131,7 +131,7 @@ generic/tkbltVector.h
 generic/tkbltDecls.h
 ])
 TEA_ADD_INCLUDES([])
-TEA_ADD_LIBS([-lstdc++])
+TEA_ADD_LIBS([])
 if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes"; then
 TEA_ADD_CFLAGS([-TP -EHsc -D_CRT_SECURE_NO_WARNINGS -D_USE_MATH_DEFINES])
 fi

@@ -175,7 +175,7 @@ tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 
 ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@
-	$(CC) $(CFLAGS) -o $@ \
+	$(CXX) $(CFLAGS) -o $@ \
 	$(OBJS) \
 	$(LLIBS) \
 	-L $(prefix)/openssl -lssl -lcrypto \

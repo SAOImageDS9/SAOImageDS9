@@ -247,8 +247,10 @@ sortDir : INCR_ {set _ "-increasing"}
 
 symbol : ADD_ {CatalogCmdSymbolAdd}
  | REMOVE_ {CatalogCmdSymbolRemove}
- | LOAD_ STRING_ {CatalogCmdSymbolLoad $2}
+ | OPEN_ STRING_ {CatalogCmdSymbolLoad $2}
  | SAVE_ STRING_ {CatalogCmdSymbolSave $2}
+# backward compatibility
+ | LOAD_ STRING_ {CatalogCmdSymbolLoad $2}
 
  | ANGLE_ symbolCol {CatalogCmdSymbol angle $2}
  | COLOR_ STRING_ {CatalogCmdSymbol color $2}

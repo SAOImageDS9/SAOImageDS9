@@ -419,7 +419,7 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape circle|ellipse|box|text|point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shapecircle point|box point|diamond point|cross point|x point|arrow point|boxcircle point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol add| [#] remove]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|open &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x &lt;col&gt;]<br>
@@ -431,7 +431,7 @@ $ds9 -catalog 2mass<br>
 $ds9 -catalog cds 2mass<br>
 $ds9 -catalog cds "I/252"<br>
 <br>
-$ds9 -catalog load foo.xml<br>
+$ds9 -catalog open foo.xml<br>
 $ds9 -catalog import tsv foo.tsv<br>
 <br>
 $ds9 -catalog 202.48 47.21 fk5<br>
@@ -479,7 +479,7 @@ $ds9 -catalog symbol fontweight bold<br>
 $ds9 -catalog symbol fontslant italic<br>
 $ds9 -catalog symbol add<br>
 $ds9 -catalog symbol 2 remove<br>
-$ds9 -catalog symbol load foo.sym<br>
+$ds9 -catalog symbol open foo.sym<br>
 $ds9 -catalog symbol save bar.sym<br>
 $ds9 -catalog sky fk5<br>
 $ds9 -catalog skyformat degrees<br>

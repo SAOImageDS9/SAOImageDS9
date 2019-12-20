@@ -1,0 +1,34 @@
+# $Id: verbs.fcl,v 1.1.1.1 2004/07/23 19:22:41 tang Exp $
+
+# Recognizes various English verbs in sentences.
+
+# This is based upon example 'ch1-02.l' from "lex & yacc" by John
+# R. Levine, Tony Mason, and Doug Brown (by O'Reilly & Associates, ISBN
+# 1-56592-000-7).  For more information on using lex and yacc, see
+# http://www.oreilly.com/catalog/lex/.
+
+%{
+#!/usr/bin/tclsh
+%}
+
+%%
+[\t ]+        # ignore whitespace
+is |
+am |
+are |
+were |
+was |
+be |
+being |
+been |
+do |
+does |
+did |
+will          puts "$yytext: is a verb"
+[a-zA-Z]+     puts "$yytext: is not a verb"
+
+.|\n          ECHO  ;# normal default anyway
+
+%%
+
+yylex

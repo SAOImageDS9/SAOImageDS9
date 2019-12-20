@@ -1,0 +1,65 @@
+# $Id: csa.fcl,v 1.1.1.1 2004/07/23 19:22:41 tang Exp $
+
+# Counts the lines of comments, code, and whitespace within a C
+# program.
+
+# This is based upon example 'ch2-09.l' from "lex & yacc" by John
+# R. Levine, Tony Mason, and Doug Brown (by O'Reilly & Associates, ISBN
+# 1-56592-000-7).  For more information on using lex and yacc, see
+# http://www.oreilly.com/catalog/lex/.
+
+%{
+#!/usr/bin/tclsh
+
+set comments 0
+set code 0
+set whitespace 0
+
+proc update_count { a b c } {
+    incr ::comments $a
+    incr ::code $b
+    incr ::whitespace $c
+    puts -nonewline "code: $::code, comments: $::comments, whitespace: $::whitespace\r"
+    flush stdout
+}
+
+%}
+
+%option noheaders stack nodefault
+%x COMMENT
+
+%%
+
+^[ \t]*"/*"                 { BEGIN COMMENT }
+^[ \t]*"/*".*"*/"[ \t]*\n   { update_count 1 0 0 }
+<COMMENT>"*/"[ \t]*\n       { BEGIN INITIAL; update_count 1 0 0 }
+<COMMENT>"*/"               { BEGIN INITIAL }
+<COMMENT>\n                 { update_count 1 0 0 }
+<COMMENT>.\n                { update_count 1 0 0 }
+
+^[ \t]*\n                   { update_count 0 0 1 }
+
+.+"/*".*"*/".*\n            { update_count 0 1 0 }
+.*"/*".*"*/".+\n            { update_count 0 1 0 }
+.+"/*".*\n                  { BEGIN COMMENT; update_count 0 1 0 }
+.\n                         { update_count 0 1 0 }
+
+<*>.                        # do nothing
+
+%%
+
+if {[llength $argv] == 0} {
+    puts stderr "C source analyzer needs a filename."
+    exit 0
+}
+
+if {[catch {open [lindex $argv 0] r} yyin]} {
+    puts stderr "Could not open [lindex $argv 0]"
+    exit 0
+}
+
+yylex
+
+close $yyin
+
+puts ""

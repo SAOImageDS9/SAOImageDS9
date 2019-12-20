@@ -1,0 +1,102 @@
+%{
+#!/usr/bin/tclsh
+
+# Counts characters, words, and lines, with support for multiple
+# filenames.
+
+# This is based upon example 'ch2-03.l' from "lex & yacc" by John
+# R. Levine, Tony Mason, and Doug Brown (by O'Reilly & Associates, ISBN
+# 1-56592-000-7).  For more information on using lex and yacc, see
+# http://www.oreilly.com/catalog/lex/.
+
+set charCount 0
+set wordCount 0
+set lineCount 0
+
+%}
+
+%option noheaders
+
+word  [^ \t\n]+
+eol   \n
+
+%%
+
+{word}   { incr ::wordCount; incr ::charCount $yyleng }
+{eol}    { incr ::charCount; incr ::lineCount }
+.        { incr ::charCount }
+
+%%
+
+# lexer calls yywrap to handle EOF conditions (e.g., to
+# connect to a new file, as we do in this case.)
+proc yywrap {} {
+    set file ""
+    if {$::currentFile != 0 && $::nFiles > 1 && $::currentFile < $::nFiles} {
+        # print out statstics for previous file
+        puts [format "%8u %8u %8u %s" $::lineCount $::wordCount $::charCount \
+                [lindex $::fileList [expr {$::currentFile - 1}]]]
+        incr ::totalCC $::charCount
+        incr ::totalWC $::wordCount
+        incr ::totalLC $::lineCount
+        set ::charCount 0
+        set ::wordCount 0
+        set ::lineCount 0
+        close $::yyin
+    }
+    while {$::currentFile < $::nFiles} {
+        if {[catch {open [lindex $::fileList $::currentFile] r} file]} {
+            puts stderr "could not open [lindex $::fileList $::currentFile]"
+            incr ::currentFile
+        } else {
+            set ::yyin $file
+            incr ::currentFile
+            break
+        }
+    }
+    if {$file != ""} {
+        return 0                ;# 0 means there's more input
+    } else {
+        return 1
+    }
+}
+
+set fileList ""
+set currentFile 0
+set nFiles 0
+set totalCC 0
+set totalWC 0
+set totalLC 0
+
+set fileList $argv
+set nFiles [llength $argv]
+
+if {[llength $argv] == 1} {
+    # handle single file case differenly since we don't need to print a
+    # summary line
+    set currentFile 1
+    if {[catch {open [lindex $argv 0] r} file]} {
+        puts stderr "could not open file [lindex $argv 0]"
+        exit 1
+    }
+    set yyin $file
+}
+if {[llength $argv] > 1} {
+    yywrap
+}
+
+yylex
+
+# handle zero or one file differently from multiple files
+if {[llength $argv] > 1} {
+    puts [format "%8u %8u %8u %s" $lineCount $wordCount $charCount \
+            [lindex $argv [expr {$currentFile - 1}]]]
+    incr totalCC $charCount
+    incr totalWC $wordCount
+    incr totalLC $lineCount
+    puts [format "%8u %8u %8u total" $totalLC $totalWC $totalCC]
+} else {
+    puts [format "%8u %8u %8u" $lineCount $wordCount $charCount]
+}
+
+return 0

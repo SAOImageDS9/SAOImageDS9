@@ -1,0 +1,40 @@
+%{
+#!/usr/bin/tclsh
+
+# Counts characters, words, and lines within its input.
+
+# This is based upon example 'ch2-02.l' from "lex & yacc" by John
+# R. Levine, Tony Mason, and Doug Brown (by O'Reilly & Associates, ISBN
+# 1-56592-000-7).  For more information on using lex and yacc, see
+# http://www.oreilly.com/catalog/lex/.
+
+set charCount 0
+set wordCount 0
+set lineCount 0
+
+%}
+
+word  [^ \t\n]+
+eol   \n
+
+%%
+
+{word}   { incr ::wordCount; incr ::charCount $yyleng }
+{eol}    { incr ::charCount; incr ::lineCount }
+.        { incr ::charCount }
+
+%%
+
+if {[llength $argv] > 0} {
+    if {[catch {open [lindex $argv 0]} f]} {
+        puts stderr "could not open file [lindex $argv 0]"
+        exit 1
+    }
+    set yyin $f
+}
+
+yylex
+
+puts "$charCount $wordCount $lineCount"
+
+return 0

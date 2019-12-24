@@ -371,7 +371,7 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogname&gt;]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogid&gt;]<br>
 <br>
-&nbsp;&nbsp;&nbsp; [open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [import sb|tsv &lt;filename&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
@@ -419,7 +419,7 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape circle|ellipse|box|text|point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shapecircle point|box point|diamond point|cross point|x point|arrow point|boxcircle point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol add| [#] remove]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x &lt;col&gt;]<br>
@@ -431,7 +431,7 @@ $ds9 -catalog 2mass<br>
 $ds9 -catalog cds 2mass<br>
 $ds9 -catalog cds "I/252"<br>
 <br>
-$ds9 -catalog open foo.xml<br>
+$ds9 -catalog load foo.xml<br>
 $ds9 -catalog import tsv foo.tsv<br>
 <br>
 $ds9 -catalog 202.48 47.21 fk5<br>
@@ -479,7 +479,7 @@ $ds9 -catalog symbol fontweight bold<br>
 $ds9 -catalog symbol fontslant italic<br>
 $ds9 -catalog symbol add<br>
 $ds9 -catalog symbol 2 remove<br>
-$ds9 -catalog symbol open foo.sym<br>
+$ds9 -catalog symbol load foo.sym<br>
 $ds9 -catalog symbol save bar.sym<br>
 $ds9 -catalog sky fk5<br>
 $ds9 -catalog skyformat degrees<br>
@@ -953,7 +953,7 @@ $ds9 -green foo.fits</tt>
 &nbsp;&nbsp;&nbsp; [labels fontslant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [labels color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [reset]<br>
-&nbsp;&nbsp;&nbsp; [open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
@@ -1020,7 +1020,7 @@ $ds9 -grid labels fontweight bold<br>
 $ds9 -grid labels fontslant italic<br>
 $ds9 -grid labels color red<br>
 $ds9 -grid reset<br>
-$ds9 -grid open foo.grd<br>
+$ds9 -grid load foo.grd<br>
 $ds9 -grid save foo.grd<br>
 $ds9 -grid open<br>
 $ds9 -grid close<br></tt>
@@ -1173,6 +1173,7 @@ nomask<br></b></p>
 &nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 -nomask<br>
 &nbsp;<br>
@@ -1183,6 +1184,7 @@ $ds9 -mask range 10 100<br>
 $ds9 -mask transparency 50<br>
 $ds9 -mask system wcs<br>
 $ds9 -mask clear<br>
+$ds9 -mask load foo.fits<br>
 $ds9 -mask open<br>
 $ds9 -mask close<br>
 $ds9 -nomask<br></tt>
@@ -2278,9 +2280,9 @@ $ds9 -vo close<br></tt>
 &nbsp;&nbsp;&nbsp; [[sky] fk4|fk5|icrs|galactic|ecliptic]<br>
 &nbsp;&nbsp;&nbsp; [[skyformat] degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [align yes|no]<br>
-&nbsp;&nbsp;&nbsp; [reset [#]]<br>
-&nbsp;&nbsp;&nbsp; [replace [#] &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [append [#] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [reset]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -2292,11 +2294,8 @@ $ds9 -wcs sexagesimal<br>
 $ds9 -wcs skyformat sexagesimal<br>
 $ds9 -wcs align yes<br>
 $ds9 -wcs reset<br>
-$ds9 -wcs reset 3<br>
-$ds9 -wcs replace foo.wcs<br>
-$ds9 -wcs replace 3 foo.wcs<br>
-$ds9 -wcs append foo.wcs<br>
-$ds9 -wcs append 3 foo.wcs<br>
+$ds9 -wcs load foo.wcs<br>
+$ds9 -wcs save foo.wcs<br>
 $ds9 -wcs open<br>
 $ds9 -wcs close<br></tt>
 <p><b><a name="web" id="web"></a>web</b></p>

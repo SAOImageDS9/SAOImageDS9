@@ -1151,6 +1151,8 @@ proc WCSCmdReset {ext} {
     RGBEvalLock rgb(lock,wcs) $current(frame) \
 	[list $current(frame) wcs reset $ext]
     UpdateWCS
+    CATUpdateWCS
+    UpdateWCSDialog
 }
 
 proc WCSCmdLoad {cmd ext} {
@@ -1166,8 +1168,11 @@ proc WCSCmdLoad {cmd ext} {
 	RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs $cmd $ext $parse(sock)]
     } elseif {$parse(fn) != {}} {
 	RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$parse(fn)\}\}"
-	UpdateWCS
     }
+
+    UpdateWCS
+    CATUpdateWCS
+    UpdateWCSDialog
 }
 
 proc WCSCmdLoadFn {cmd ext fn} {
@@ -1180,6 +1185,8 @@ proc WCSCmdLoadFn {cmd ext fn} {
 
     RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$fn\}\}"
     UpdateWCS
+    CATUpdateWCS
+    UpdateWCSDialog
 }
 
 proc ProcessSendWCSCmd {proc id param {sock {}} {fn {}}} {

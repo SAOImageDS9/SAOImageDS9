@@ -427,7 +427,7 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogname&gt;]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogid&gt;]<br>
 <br>
-&nbsp;&nbsp;&nbsp; [open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [import sb|tsv &lt;filename&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
@@ -475,7 +475,7 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape circle|ellipse|box|text|point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shapecircle point|box point|diamond point|cross point|x point|arrow point|boxcircle point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol add| [#] remove]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x &lt;col&gt;]<br>
@@ -492,7 +492,7 @@ catalog 2mass<br>
 catalog cds 2mass<br>
 catalog cds{I/252}<br>
 <br>
-catalog open foo.xml<br>
+catalog load foo.xml<br>
 catalog import tsv foo.tsv<br>
 <br>
 catalog coordinate 202.48 47.21 fk5<br>
@@ -540,7 +540,7 @@ catalog symbol fontweight bold<br>
 catalog symbol fontslant italic<br>
 catalog symbol add<br>
 catalog symbol 2 remove<br>
-catalog symbol open foo.sym<br>
+catalog symbol load foo.sym<br>
 catalog symbol save bar.sym<br>
 catalog sky fk5<br>
 catalog skyformat degrees<br>
@@ -1167,7 +1167,7 @@ grid&nbsp; []<br>
 &nbsp;&nbsp;&nbsp; [labels fontslant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [labels color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [reset]<br>
-&nbsp;&nbsp;&nbsp; [open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 <br>
@@ -1297,7 +1297,7 @@ grid labels fontweight bold<br>
 grid labels fontslant italic<br>
 grid labels color red<br>
 grid reset<br>
-grid open foo.grd<br>
+grid load foo.grd<br>
 grid save foo.grd<br>
 grid open<br>
 grid close<br></tt>
@@ -1464,6 +1464,7 @@ mask [color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -1481,6 +1482,7 @@ mask range 10 100<br>
 mask transparency 50<br>
 mask system wcs<br>
 mask clear<br>
+mask load foo.fits<br>
 mask open<br>
 mask close<br></tt>
 <p><b><a name="match" id="match"></a>match</b></p>
@@ -2852,9 +2854,9 @@ wcs [[system] wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [[sky] fk4|fk5|icrs|galactic|ecliptic]<br>
 &nbsp;&nbsp;&nbsp; [[skyformat] degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [align yes|no]<br>
-&nbsp;&nbsp;&nbsp; [reset [#]]<br>
-&nbsp;&nbsp;&nbsp; [replace [#] &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [append [#] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [reset]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -2874,11 +2876,8 @@ wcs sexagesimal<br>
 wcs skyformat sexagesimal<br>
 wcs align yes<br>
 wcs reset<br>
-wcs reset 3<br>
-wcs replace foo.wcs<br>
-wcs replace 3 foo.wcs<br>
-wcs append foo.wcs<br>
-wcs append 3 foo.wcs<br>
+wcs load foo.wcs<br>
+wcs save foo.wcs<br>
 wcs open<br>
 wcs close<br></tt>
 <p><b><a name="web" id="web"></a>web</b></p>

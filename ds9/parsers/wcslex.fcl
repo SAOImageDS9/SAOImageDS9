@@ -10,9 +10,11 @@
 align	    {return $ALIGN_}
 append	    {return $APPEND_}
 close	    {return $CLOSE_}
+load	    {return $LOAD_}
 open	    {return $OPEN_}
 replace	    {return $REPLACE_}
 reset	    {return $RESET_}
+save	    {return $SAVE_}
 sky	    {return $SKY_}
 skyformat   {return $SKYFORMAT_}
 system	    {return $SYSTEM_}

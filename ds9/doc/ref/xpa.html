@@ -388,7 +388,7 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogname&gt;]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogid&gt;]<br>
 <br>
-&nbsp;&nbsp;&nbsp; [open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [import sb|tsv &lt;filename&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
@@ -436,7 +436,7 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape circle|ellipse|box|text|point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shapecircle point|box point|diamond point|cross point|x point|arrow point|boxcircle point]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol add| [#] remove]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol save|load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x &lt;col&gt;]<br>
@@ -451,7 +451,7 @@ $xpaset -p ds9 catalog 2mass<br>
 $xpaset -p ds9 catalog cds 2mass<br>
 $xpaset -p ds9 catalog cds {I/252}<br>
 <br>
-$xpaset -p ds9 catalog open foo.xml<br>
+$xpaset -p ds9 catalog load foo.xml<br>
 $xpaset -p ds9 catalog import tsv foo.tsv<br>
 <br>
 $xpaset -p ds9 catalog 202.48 47.21 fk5<br>
@@ -499,7 +499,7 @@ $xpaset -p ds9 catalog symbol fontweight bold<br>
 $xpaset -p ds9 catalog symbol fontslant italic<br>
 $xpaset -p ds9 catalog symbol add<br>
 $xpaset -p ds9 catalog symbol 2 remove<br>
-$xpaset -p ds9 catalog symbol open foo.sym<br>
+$xpaset -p ds9 catalog symbol load foo.sym<br>
 $xpaset -p ds9 catalog symbol save bar.sym<br>
 $xpaset -p ds9 catalog sky fk5<br>
 $xpaset -p ds9 catalog skyformat degrees<br>
@@ -1103,7 +1103,7 @@ grid&nbsp; []<br>
 &nbsp;&nbsp;&nbsp; [labels fontslant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [labels color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [reset]<br>
-&nbsp;&nbsp;&nbsp; [open &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
@@ -1231,7 +1231,7 @@ $xpaset -p ds9 grid labels fontweight boldj<br>
 $xpaset -p ds9 grid labels fontslant italic<br>
 $xpaset -p ds9 grid labels color red<br>
 $xpaset -p ds9 grid reset<br>
-$xpaset -p ds9 grid open foo.grd<br>
+$xpaset -p ds9 grid load foo.grd<br>
 $xpaset -p ds9 grid save foo.grd<br>
 $xpaset -p ds9 grid open<br>
 $xpaset -p ds9 grid close</tt><br>
@@ -1389,6 +1389,7 @@ mask [color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -1404,6 +1405,7 @@ $xpaset -p ds9 mask range 10 100<br>
 $xpaset -p ds9 mask transparency 50<br>
 $xpaset -p ds9 mask system wcs<br>
 $xpaset -p ds9 mask clear<br>
+$xpaset -p ds9 mask load foo.fits<br>
 $xpaset -p ds9 mask open<br>
 $xpaset -p ds9 mask close</tt><br>
 <p><b><a name="match" id="match"></a>match</b></p>
@@ -2734,9 +2736,9 @@ wcs [[system] wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [[sky] fk4|fk5|icrs|galactic|ecliptic]<br>
 &nbsp;&nbsp;&nbsp; [[skyformat] degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [align yes|no]<br>
-&nbsp;&nbsp;&nbsp; [reset [#]]<br>
-&nbsp;&nbsp;&nbsp; [replace [#] &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [append [#] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [reset]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 <br>
 Example:<br>
@@ -2754,16 +2756,10 @@ $xpaset -p ds9 wcs sexagesimal<br>
 $xpaset -p ds9 wcs skyformat sexagesimal<br>
 $xpaset -p ds9 wcs align yes<br>
 $xpaset -p ds9 wcs reset<br>
-$xpaset -p ds9 wcs reset 3<br>
-$xpaset -p ds9 wcs replace foo.wcs<br>
-$xpaset -p ds9 wcs replace 3 foo.wcs<br>
-$xpaset -p ds9 wcs append foo.wcs<br>
-$xpaset -p ds9 wcs append 3 foo.wcs<br>
+$xpaset -p ds9 wcs load foo.wcs<br>
+$xpaset -p ds9 wcs save foo.wcs<br>
 $xpaset -p ds9 open<br>
 $xpaset -p ds9 close<br></tt><br>
-<tt>$cat foo.wcs | xpaset ds9 wcs replace<br>
-$cat foo.wcs | xpaset ds9 wcs append<br>
-$echo "OBJECT = 'foobar'" | xpaset ds9 wcs append<br></tt>
 <p><b><a name="web" id="web"></a>web</b></p>
 <p>Display specified URL in the web display.</p>
 <tt>Syntax:<br>

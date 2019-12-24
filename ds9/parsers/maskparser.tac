@@ -12,6 +12,7 @@
 %token CLEAR_
 %token CLOSE_
 %token COLOR_
+%token LOAD_
 %token MARK_
 %token NAN_
 %token NONNAN_
@@ -34,6 +35,7 @@ command : mask
 
 mask : {global parse; set parse(result) mask}
  | OPEN_
+ | LOAD_ STRING_ {Open $2 fits mask {} wcs}
  | CLOSE_ {MaskDestroyDialog}
  | CLEAR_ {MaskClear}
  | COLOR_ STRING_ {ProcessCmdSet mask color $2 MaskColor}

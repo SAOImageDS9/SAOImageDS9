@@ -14,9 +14,11 @@
 %token ALIGN_
 %token APPEND_
 %token CLOSE_
+%token LOAD_
 %token OPEN_
 %token REPLACE_
 %token RESET_
+%token SAVE_
 %token SKY_
 %token SKYFORMAT_
 %token SYSTEM_
@@ -41,9 +43,14 @@ wcs : OPEN_ {WCSDialog}
  | skyformat {ProcessCmdSet wcs skyformat $1 UpdateWCS}
  | SKYFORMAT_ skyformat {ProcessCmdSet wcs skyformat $2 UpdateWCS}
  | ALIGN_ yesno {ProcessCmdSet current align $2 AlignWCSFrame}
+ | LOAD_ STRING_ {WCSCmdLoadFn replace 1 $2}
+ | SAVE_ STRING_ {WCSSaveFile $2}
  | RESET_ {WCSCmdReset 1}
+ # backward compatible
  | RESET_ INT_ {WCSCmdReset $2}
+ # backward compatible
  | REPLACE_ replace
+ # backward compatible
  | APPEND_ append
  ;
 

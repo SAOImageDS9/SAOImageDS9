@@ -57,7 +57,6 @@
 %token MAXROWS_
 %token NAME_
 %token NEW_
-%token OPEN_
 %token PANTO_
 %token PLOT_
 %token POINT_
@@ -119,8 +118,6 @@ command : catalog
 catalog : NEW_ {CATTool}
 # backward compatibility
  | {CATTool}
- | OPEN_ STRING_ {CatalogCmdLoad $2 VOTRead}
-# backward compatibility
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
 # backward compatibility
  | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
@@ -247,10 +244,8 @@ sortDir : INCR_ {set _ "-increasing"}
 
 symbol : ADD_ {CatalogCmdSymbolAdd}
  | REMOVE_ {CatalogCmdSymbolRemove}
- | OPEN_ STRING_ {CatalogCmdSymbolLoad $2}
- | SAVE_ STRING_ {CatalogCmdSymbolSave $2}
-# backward compatibility
  | LOAD_ STRING_ {CatalogCmdSymbolLoad $2}
+ | SAVE_ STRING_ {CatalogCmdSymbolSave $2}
 
  | ANGLE_ symbolCol {CatalogCmdSymbol angle $2}
  | COLOR_ STRING_ {CatalogCmdSymbol color $2}

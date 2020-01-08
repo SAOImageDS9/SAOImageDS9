@@ -150,11 +150,18 @@ $depth</b></p>
 <p><b>$message</b></p>
 <p>Display a message dialog box, with option buttons.&nbsp; After displaying the message, the macro is removed from the command line before execution. If <tt>cancel</tt> or <tt>no</tt> is selected, the command line is not executed.</p>
 <tt>Syntax:<br>
-&nbsp;&nbsp;&nbsp; $message(&lt;message&gt;)</tt><br>
+&nbsp;&nbsp;&nbsp; $messagebutton(&lt;message&gt;)</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $message([ok|okcancel|yesno],&lt;message&gt;)</tt><br>
 <br>
 <tt>Example:<br>
 &nbsp;&nbsp;&nbsp; $message(okcancel,This is a Message)| doit | $text</tt>
+<p><b>$messagebutton</b></p>
+<p>Display a message dialog box, with option buttons.&nbsp; After displaying the message, the macro is removed from the command line before execution and replaced with button clicked.</p>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $message([ok|okcancel|yesno|abortretrycancel|retrycancel],&lt;message&gt;)</tt><br>
+<br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; $message(okcancel,This is a Message)| $text</tt>
 <p><b>$null</b></p>
 <p>Expect no output or results from analysis task. Note: no error message will be returned if the analysis task fails to execute correctly.</p>
 <tt>Syntax:<br>

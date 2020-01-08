@@ -611,6 +611,9 @@ proc AnalysisTaskDoit {i which frame x y sync} {
 	return
     }
 
+    # $messagebutton
+    ParseMessageButtonMacro cmd
+
     # $entry
     if {![ParseEntryMacro cmd]} {
 	AnalysisTaskEnd $which $i
@@ -1603,6 +1606,19 @@ while {[regexp $exp $cmd foo message]} {
 return 1
 }
 
+proc ParseMessageButtonMacro {cmdname} {
+    upvar $cmdname cmd
+
+    # two args
+    set exp {\|?.?\$messagebutton\((ok|okcancel|yesno|abortretryignore|retrycancel),([^)]*)\).?\|?}
+while {[regexp $exp $cmd foo type message]} {
+    set result [AnalysisMessageButton $type $message]
+    regsub $exp $cmd "echo $result |" cmd
+}
+
+return 1
+}
+
 proc ParseEntryMacro {cmdname} {
     upvar $cmdname cmd
     
@@ -1754,6 +1770,14 @@ proc AnalysisMessage {type message} {
 	cancel -
 	default {return 0}
     }
+}
+
+proc AnalysisMessageButton {type message} {
+    if {$type == {}} {
+	set type ok
+    }
+
+    return [tk_messageBox -message $message -type $type]
 }
 
 proc AnalysisEntry {message resultvar} {

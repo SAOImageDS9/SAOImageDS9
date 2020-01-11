@@ -34,6 +34,7 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   maskColorName = dupstr("red");
   maskAlpha = 1;
+  maskBlend = FitsMask::TRANSPARENT;
   maskMark = FitsMask::NONZERO;
   maskLow = 0;
   maskHigh = 0;
@@ -90,6 +91,33 @@ unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
   }
 
   return src;
+}
+
+unsigned char* Frame::blendmask(unsigned char* dest, unsigned char* msk,
+				int width, int height)
+{
+  unsigned char* dptr = dest; // 4 component
+  unsigned char* mptr = msk; // 4 component
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      if (*(mptr+3)) {
+	*dptr = max(*mptr++,*dptr);
+	dptr++;
+	*dptr = max(*mptr++,*dptr);
+	dptr++;
+	*dptr = max(*mptr++,*dptr);
+	dptr++;
+	*dptr++ = *mptr++;
+      }
+      else {
+	dptr+=4;
+	mptr+=4;
+      }
+    }
+  }
+
+  return dest;
 }
 
 unsigned char* Frame::stackmask(unsigned char* dest, unsigned char* msk,
@@ -245,7 +273,14 @@ unsigned char* Frame::fillImage(int width, int height,
 	FitsMask* mptr = mask.head();
 	while (mptr) {
 	  unsigned char* mm = fillMask(mptr, width, height, sys);
-	  stackmask(msk,mm,width,height);
+	  switch (maskBlend) {
+	  case FitsMask::OPAQUE:
+	    stackmask(msk,mm,width,height);
+	    break;
+	  case FitsMask::TRANSPARENT:
+	    blendmask(msk,mm,width,height);
+	    break;
+	  }
 	  delete [] mm;
 	  mptr = mptr->next();
 	}
@@ -561,6 +596,18 @@ void Frame::getMaskTransparencyCmd()
   printDouble((1-maskAlpha)*100.);
 }
 
+void Frame::getMaskBlendCmd()
+{
+  switch (maskBlend) {
+  case FitsMask::OPAQUE:
+    Tcl_AppendResult(interp, "opaque", NULL);
+    break;
+  case FitsMask::TRANSPARENT:
+    Tcl_AppendResult(interp, "transparent", NULL);
+    break;
+  }
+}
+
 void Frame::maskClearCmd()
 {
   mask.deleteAll();
@@ -590,6 +637,12 @@ void Frame::maskSystemCmd(Coord::CoordSystem sys)
 void Frame::maskTransparencyCmd(float tt)
 {
   maskAlpha = 1-(tt/100.);
+  update(BASE);
+}
+
+void Frame::maskBlendCmd(FitsMask::MaskBlend bl)
+{
+  maskBlend =bl;
   update(BASE);
 }
 

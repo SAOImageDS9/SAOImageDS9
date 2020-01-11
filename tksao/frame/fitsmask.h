@@ -13,6 +13,7 @@ class Context;
 class FitsMask {
  public:
   enum MaskType {ZERO, NONZERO, NaN, NONNaN, RANGE};
+  enum MaskBlend {OPAQUE, TRANSPARENT};
 
  private:
   Context* context_;

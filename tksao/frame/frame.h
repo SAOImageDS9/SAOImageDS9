@@ -28,6 +28,7 @@ class Frame : public FrameBase {
 
   char* maskColorName;
   float maskAlpha;
+  FitsMask::MaskBlend maskBlend;
   FitsMask::MaskType maskMark;
   double maskLow;
   double maskHigh;
@@ -35,6 +36,7 @@ class Frame : public FrameBase {
 
  private:
   unsigned char* blend(unsigned char*, unsigned char*, int, int);
+  unsigned char* blendmask(unsigned char*, unsigned char*, int, int);
   unsigned char* stackmask(unsigned char*, unsigned char*, int, int);
   int isIIS();
   void pushMatrices();
@@ -70,12 +72,14 @@ class Frame : public FrameBase {
   void getMaskRangeCmd();
   void getMaskSystemCmd();
   void getMaskTransparencyCmd();
+  void getMaskBlendCmd();
 
   void maskColorCmd(const char*);
   void maskMarkCmd(FitsMask::MaskType mm) {maskMark=mm;}
   void maskRangeCmd(double ll, double hh) {maskLow=ll; maskHigh=hh;}
   void maskSystemCmd(Coord::CoordSystem);
   void maskTransparencyCmd(float);
+  void maskBlendCmd(FitsMask::MaskBlend bb);
 
   void colormapCmd(int, float, float, int, unsigned char*, int);
   void colormapBeginCmd();

@@ -1905,6 +1905,11 @@ void Base::getMaskTransparencyCmd()
   printDouble(0);
 }
 
+void Base::getMaskBlendCmd()
+{
+  Tcl_AppendResult(interp, "transparent", NULL);
+}
+
 void Base::getMaskSystemCmd()
 {
   Tcl_AppendResult(interp, "physical", NULL);

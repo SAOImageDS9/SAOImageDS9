@@ -61,6 +61,7 @@ big	        {return BIGENDIAN_;}
 bigendian	{return BIGENDIAN_;}
 bin		{return BIN_;}
 bitpix		{return BITPIX_;}
+blend           {return BLEND_;}
 block		{return BLOCK_;}
 border		{return BORDER_;}
 box		{return BOX_;}
@@ -232,6 +233,7 @@ object		{return OBJECT_;}
 off		{return OFF_;}
 on		{return ON_;}
 only		{return ONLY_;}
+opaque          {return OPAQUE_;}
 option		{return OPTION_;}
 orient		{return ORIENT_;}
 pan		{return PAN_;}
@@ -311,6 +313,7 @@ threads		{return THREADS_;}
 3d		{return THREED_;}
 threshold	{return THRESHOLD_;}
 thick		{return THICK_;}
+transparent	{return TRANSPARENT_;}
 transparency	{return TRANSPARENCY_;}
 to		{return TO_;}
 toggle		{return TOGGLE_;}

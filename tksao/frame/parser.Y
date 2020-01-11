@@ -83,6 +83,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> markerLayer
 %type <dash> markerDash
 %type <integer> maskType
+%type <integer> maskBlend
 %type <integer> pscolorspace
 %type <integer> scaleType
 %type <integer> minmaxMode
@@ -149,6 +150,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token BIGENDIAN_
 %token BIN_
 %token BITPIX_
+%token BLEND_
 %token BLOCK_
 %token BORDER_
 %token BOX_
@@ -315,6 +317,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token OFF_
 %token ON_
 %token ONLY_
+%token OPAQUE_
 %token OPTION_
 %token ORIENT_
 %token PAN_
@@ -393,6 +396,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token THREED_
 %token THRESHOLD_
 %token THICK_
+%token TRANSPARENT_
 %token TRANSPARENCY_
 %token TO_
 %token TOGGLE_
@@ -647,6 +651,11 @@ maskType : /* empty */ {$$ = FitsMask::NONZERO;}
 	| NONNAN_ {$$ = FitsMask::NONNaN;}
 	| RANGE_ {$$ = FitsMask::RANGE;}
 	;
+
+maskBlend : /* empty */ {$$ = FitsMask::OPAQUE;}
+        | OPAQUE_ {$$ = FitsMask::OPAQUE;}
+        | TRANSPARENT_ {$$ = FitsMask::TRANSPARENT;}
+        ;
 
 scaleType: LINEAR_ {$$ = FrScale::LINEARSCALE;}
 	| LOG_ {$$ = FrScale::LOGSCALE;}
@@ -1247,6 +1256,7 @@ getMask	: COLOR_ {fr->getMaskColorCmd();}
         | SYSTEM_ {fr->getMaskSystemCmd();}
 	| TRANSPARENCY_ {fr->getMaskTransparencyCmd();}
 	| COUNT_ {fr->getMaskCountCmd();}
+        | BLEND_ {fr->getMaskBlendCmd();}
 	;
 
 getPan : PRESERVE_ {fr->getPanPreserveCmd();}
@@ -2565,6 +2575,7 @@ mask	: CLEAR_ {fr->maskClearCmd();}
 	| RANGE_ numeric numeric {fr->maskRangeCmd($2,$3);}
         | SYSTEM_ coordSystem {fr->maskSystemCmd((Coord::CoordSystem)$2);}
 	| TRANSPARENCY_ numeric {fr->maskTransparencyCmd($2);}
+	| BLEND_ maskBlend {fr->maskBlendCmd((FitsMask::MaskBlend)$2);}
         | MARK_ INT {
 	  // backward compatibility
 	  fr->maskMarkCmd((FitsMask::MaskType)$2);

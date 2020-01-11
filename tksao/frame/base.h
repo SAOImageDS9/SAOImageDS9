@@ -1542,12 +1542,14 @@ public:
   virtual void getMaskRangeCmd();
   virtual void getMaskSystemCmd();
   virtual void getMaskTransparencyCmd();
+  virtual void getMaskBlendCmd();
 
   virtual void maskClearCmd() {};
   virtual void maskColorCmd(const char*) {};
   virtual void maskMarkCmd(FitsMask::MaskType) {};
   virtual void maskRangeCmd(double,double) {};
   virtual void maskTransparencyCmd(float) {};
+  virtual void maskBlendCmd(FitsMask::MaskBlend) {};
   virtual void maskSystemCmd(Coord::CoordSystem) {};
 
   // NaN Commands

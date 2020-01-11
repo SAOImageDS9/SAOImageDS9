@@ -19,6 +19,7 @@ proc MaskDef {} {
     set mask(mark) nonzero
     set mask(low) 0
     set mask(high) 0
+    set mask(blend) transparent
 
     array set pmask [array get mask]
 }
@@ -31,6 +32,15 @@ proc MaskMark {} {
 	$current(frame) mask mark $mask(mark)
 	# for backward compatibility
 	set mask(mark) [$current(frame) get mask mark]
+    }
+}
+
+proc MaskBlend {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask blend $mask(blend)
     }
 }
 
@@ -100,6 +110,7 @@ proc MaskDialog {} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {Align}] -menu $mb.align
+    $mb add cascade -label [msgcat::mc {Blend}] -menu $mb.blend
 
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
@@ -137,6 +148,12 @@ proc MaskDialog {} {
     EditMenu $mb imask
 
     CoordMenu $mb.align mask system 1 {} {} MaskSystem
+
+    menu $mb.blend
+    $mb.blend add radiobutton -label [msgcat::mc {Transparent}] \
+	-variable mask(blend) -value transparent -command MaskBlend
+    $mb.blend add radiobutton -label [msgcat::mc {Opaque}] \
+	-variable mask(blend) -value opaque -command MaskBlend
 
     # Param
     set f [ttk::frame $w.param]
@@ -197,6 +214,7 @@ proc UpdateMaskMenu {} {
 
     set mask(color) [$current(frame) get mask color]
     set mask(mark) [$current(frame) get mask mark]
+    set mask(blend) [$current(frame) get mask blend]
     set range [$current(frame) get mask range]
     set mask(low) [lindex $range 0]
     set mask(high) [lindex $range 1]

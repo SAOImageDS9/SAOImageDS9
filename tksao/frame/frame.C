@@ -67,18 +67,19 @@ unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
 			    int width, int height)
 {
   unsigned char* sptr = src; // 3 component
-  unsigned char* mptr = msk; // 4 component, premultiplied
+  unsigned char* mptr = msk; // 4 component
+  float aa = 1-maskAlpha;
 
-  for (int jj=0; jj<height; jj++)
+  for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
       if (*(mptr+3)) {
-	float aa = 1-maskAlpha;
-	*sptr = *mptr++ + *sptr * aa;
+	*sptr = (*sptr*aa) + (*mptr++ *maskAlpha);
 	sptr++;
-	*sptr = *mptr++ + *sptr * aa;
+	*sptr = (*sptr*aa) + (*mptr++ *maskAlpha);
 	sptr++;
-	*sptr = *mptr++ + *sptr * aa;
+	*sptr = (*sptr*aa) + (*mptr++ *maskAlpha);
 	sptr++;
+
 	mptr++;
       }
       else {
@@ -86,8 +87,33 @@ unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
 	sptr+=3;
       }
     }
+  }
 
   return src;
+}
+
+unsigned char* Frame::stackmask(unsigned char* dest, unsigned char* msk,
+				int width, int height)
+{
+  unsigned char* dptr = dest; // 4 component
+  unsigned char* mptr = msk; // 4 component
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      if (*(mptr+3)) {
+	*dptr++ = *mptr++;
+	*dptr++ = *mptr++;
+	*dptr++ = *mptr++;
+	*dptr++ = *mptr++;
+      }
+      else {
+	dptr+=4;
+	mptr+=4;
+      }
+    }
+  }
+
+  return dest;
 }
 
 unsigned char* Frame::fillImage(int width, int height, 
@@ -200,12 +226,34 @@ unsigned char* Frame::fillImage(int width, int height,
   CLEARSIGBUS
 
   if (img) {
-    FitsMask* mptr = mask.tail();
-    while (mptr) {
-      unsigned char* msk = fillMask(mptr, width, height, sys);
-      blend(img,msk,width,height);
-      delete [] msk;
-      mptr = mptr->previous();
+    switch (mask.count()) {
+    case 0:
+      break;
+    case 1:
+      {
+	FitsMask* mptr = mask.tail();
+	unsigned char* msk = fillMask(mptr, width, height, sys);
+	blend(img,msk,width,height);
+	delete [] msk;
+      }
+      break;
+    default:
+      {
+	unsigned char* msk = new unsigned char[width*height*4];
+	memset(msk,0,width*height*4);
+
+	FitsMask* mptr = mask.head();
+	while (mptr) {
+	  unsigned char* mm = fillMask(mptr, width, height, sys);
+	  stackmask(msk,mm,width,height);
+	  delete [] mm;
+	  mptr = mptr->next();
+	}
+
+	blend(img,msk,width,height);
+	delete [] msk;
+      }
+      break;
     }
   }
 
@@ -265,41 +313,41 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 	  switch (mark) {
 	  case FitsMask::ZERO:
 	    if (value==0) {
-	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
-	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
-	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *dest = ((unsigned char)maskColor->red);
+	      *(dest+1) = ((unsigned char)maskColor->green);
+	      *(dest+2) = ((unsigned char)maskColor->blue);
 	      *(dest+3) = 1;
 	    }
 	    break;
 	  case FitsMask::NONZERO:
 	    if (value!=0) {
-	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
-	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
-	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *dest = ((unsigned char)maskColor->red);
+	      *(dest+1) = ((unsigned char)maskColor->green);
+	      *(dest+2) = ((unsigned char)maskColor->blue);
 	      *(dest+3) = 1;
 	    }
 	    break;
 	  case FitsMask::NaN:
 	    if (isnan(value) || isinf(value)) {
-	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
-	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
-	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *dest = ((unsigned char)maskColor->red);
+	      *(dest+1) = ((unsigned char)maskColor->green);
+	      *(dest+2) = ((unsigned char)maskColor->blue);
 	      *(dest+3) = 1;
 	    }
 	    break;
 	  case FitsMask::NONNaN:
 	    if (!isnan(value) && !isinf(value)) {
-	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
-	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
-	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *dest = ((unsigned char)maskColor->red);
+	      *(dest+1) = ((unsigned char)maskColor->green);
+	      *(dest+2) = ((unsigned char)maskColor->blue);
 	      *(dest+3) = 1;
 	    }
 	    break;
 	  case FitsMask::RANGE:
 	    if (value>=low && value<=high) {
-	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
-	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
-	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *dest = ((unsigned char)maskColor->red);
+	      *(dest+1) = ((unsigned char)maskColor->green);
+	      *(dest+2) = ((unsigned char)maskColor->blue);
 	      *(dest+3) = 1;
 	    }
 	    break;

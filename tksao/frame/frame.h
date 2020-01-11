@@ -35,6 +35,7 @@ class Frame : public FrameBase {
 
  private:
   unsigned char* blend(unsigned char*, unsigned char*, int, int);
+  unsigned char* stackmask(unsigned char*, unsigned char*, int, int);
   int isIIS();
   void pushMatrices();
   void pushMagnifierMatrices();

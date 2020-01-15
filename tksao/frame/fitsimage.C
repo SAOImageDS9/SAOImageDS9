@@ -94,12 +94,11 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsCelLat_ =NULL;
 
   wcsSize_ =NULL;
+  wcsState_ =NULL;
 
   wcsInv_ =1;
   wcsHPX_ =0;
   wcsXPH_ =0;
-
-  wcsState_ =NULL;
 
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
@@ -157,32 +156,8 @@ FitsImage::~FitsImage()
       delete analysisdata_;
   }
 
-  if (manageWCS_) {
-    if (ast_)
-      astAnnul(ast_);
-    if (encoding_)
-      delete [] encoding_;
-
-    if (wcs_)
-      delete [] wcs_;
-    if (wcsNaxes_)
-      delete [] wcsNaxes_;
-
-    if (wcsCel_)
-      delete [] wcsCel_;
-    if (wcsEqu_)
-      delete [] wcsEqu_;
-    if (wcsCelLon_)
-      delete [] wcsCelLon_;
-    if (wcsCelLat_)
-      delete [] wcsCelLat_;
-
-    if (wcsSize_)
-      delete [] wcsSize_;
-
-    if (wcsState_)
-      delete wcsState_;
-  }
+  if (manageWCS_)
+    clearWCS();
 
   if (wcsAltHeader_)
     delete wcsAltHeader_;
@@ -961,6 +936,52 @@ void FitsImage::appendWCS(istream& str)
   initWCS(wcsAltHeader_);
 }
 
+void FitsImage::clearWCS()
+{
+  if (ast_)
+    astAnnul(ast_);
+  ast_ =NULL;
+
+  if (encoding_)
+    delete [] encoding_;
+  encoding_ =NULL;
+
+  if (wcs_)
+    delete [] wcs_;
+  wcs_ =NULL;
+  if (wcsNaxes_)
+    delete [] wcsNaxes_;
+  wcsNaxes_ =NULL;
+
+  if (wcsCel_)
+    delete [] wcsCel_;
+  wcsCel_ =NULL;
+  if (wcsEqu_)
+    delete [] wcsEqu_;
+  wcsEqu_ =NULL;
+  if (wcsCelLon_)
+    delete [] wcsCelLon_;
+  wcsCelLon_ =NULL;
+  if (wcsCelLat_)
+    delete [] wcsCelLat_;
+  wcsCelLat_ =NULL;
+
+  if (wcsSize_)
+    delete [] wcsSize_;
+  wcsSize_ =NULL;
+
+  if (wcsState_)
+    delete wcsState_;
+  wcsState_ =NULL;
+
+  wcsInv_ = 1;
+  wcsHPX_ = 0;
+  wcsXPH_ = 0;
+
+  // reset to process LTMV keywords
+  keyLTMV =0;
+}
+
 char* FitsImage::display(FitsHead* hd)
 {
   int size = hd->ncard() * (FTY_CARDLEN+1);
@@ -1061,43 +1082,8 @@ void FitsImage::iisSetFileName(const char* fn)
 
 void FitsImage::initWCS(FitsHead* hd)
 {
-  if (manageWCS_) {
-    if (ast_)
-      astAnnul(ast_);
-    ast_ =NULL;
-
-   if (encoding_)
-      delete [] encoding_;
-    encoding_ =NULL;
-
-    if (wcs_)
-      delete [] wcs_;
-    wcs_ =NULL;
-    if (wcsNaxes_)
-      delete [] wcsNaxes_;
-    wcsNaxes_ =NULL;
-
-    if (wcsCel_)
-      delete [] wcsCel_;
-    wcsCel_ =NULL;
-    if (wcsEqu_)
-      delete [] wcsEqu_;
-    wcsEqu_ =NULL;
-    if (wcsCelLon_)
-      delete [] wcsCelLon_;
-    wcsCelLon_ =NULL;
-    if (wcsCelLat_)
-      delete [] wcsCelLat_;
-    wcsCelLat_ =NULL;
-
-    if (wcsSize_)
-      delete [] wcsSize_;
-    wcsSize_ =NULL;
-
-    wcsInv_ = 1;
-    wcsHPX_ = 0;
-    wcsXPH_ = 0;
-  }
+  if (manageWCS_)
+    clearWCS();
 
   // shareWCS?
   manageWCS_ =1;
@@ -1122,12 +1108,11 @@ void FitsImage::initWCS(FitsHead* hd)
 	  wcsCelLat_ = ptr->wcsCelLat_;
 
 	  wcsSize_ = ptr->wcsSize_;
+	  wcsState_ = ptr->wcsState_;
 
 	  wcsInv_ = ptr->wcsInv_;
 	  wcsHPX_ = ptr->wcsHPX_;
 	  wcsXPH_ = ptr->wcsXPH_;
-
-	  wcsState_ = ptr->wcsState_;
 
 	  wcsPhyInit(hd);
 	  manageWCS_ =0;
@@ -1139,17 +1124,14 @@ void FitsImage::initWCS(FitsHead* hd)
     }
   }
 
-  if (ast_)
-    astAnnul(ast_);
-  ast_ =NULL;
-  if (encoding_)
-    delete [] encoding_;
-  encoding_ =NULL;
+  // clear WCS vars
+  // not sure if this is needed
+  clearWCS();
   
   ast_ = fits2ast(hd);
-  if (!ast_) {
-    // reset to process LTMV keywords
-    keyLTMV =0;
+  // check to see if header processed successfully
+  if (!astOK || !ast_) {
+    clearWCS();
     return;
   }
   
@@ -1164,8 +1146,6 @@ void FitsImage::initWCS(FitsHead* hd)
   scanWCS(hd);
 
   // init wcsState
-  if (wcsState_)
-    delete wcsState_;
   wcsState_ = new WCSState();
 
   astBegin;
@@ -1179,9 +1159,16 @@ void FitsImage::initWCS(FitsHead* hd)
   for (int ii=0; ii<MULTWCS; ii++)
     wcsSize_[ii] = calcWCSSize((Coord::CoordSystem)(ii+Coord::WCS));
 
+  // ok, this is the final chance to verify a good WCS
+  // if it makes it here, we're golden
+  if (!astOK) {
+    clearWCS();
+    return;
+  }
+
   wcsPhyInit(hd);
 
-  if (DebugWCS && ast_)
+  if (DebugWCS)
     astShow(ast_);
 }
 

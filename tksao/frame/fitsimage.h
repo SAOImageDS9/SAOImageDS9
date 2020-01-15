@@ -154,6 +154,7 @@ class FitsImage {
   void initBin();
   void initHPX();
 
+  void clearWCS();
   void initWCS(FitsHead*);
   void scanWCS(FitsHead*);
   void wcsPhyInit(FitsHead*);

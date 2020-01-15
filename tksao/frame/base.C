@@ -815,6 +815,7 @@ int Base::postscriptProc(int prepass)
 
       // markers over grid
       if (showMarkers) {
+	psMarkers(&footprintMarkers, GRAY);
 	psMarkers(&catalogMarkers, GRAY);
 	psMarkers(&userMarkers, GRAY);
       }
@@ -833,6 +834,7 @@ int Base::postscriptProc(int prepass)
 
       // markers over grid
       if (showMarkers) {
+	psMarkers(&footprintMarkers, RGB);
 	psMarkers(&catalogMarkers, RGB);
 	psMarkers(&userMarkers, RGB);
       }
@@ -853,6 +855,7 @@ int Base::postscriptProc(int prepass)
 
     // markers over grid
     if (showMarkers) {
+      psMarkers(&footprintMarkers, psColorSpace);
       psMarkers(&catalogMarkers, psColorSpace);
       psMarkers(&userMarkers, psColorSpace);
     }
@@ -1180,6 +1183,7 @@ void Base::reset()
   
   unselectMarkers(&userMarkers);
   unselectMarkers(&catalogMarkers);
+  unselectMarkers(&footprintMarkers);
 
   update(MATRIX);
 }
@@ -1204,10 +1208,12 @@ void Base::setSlice(int id, int ss)
   // real work done in derived classes
   updateMarkers(&userMarkers);
   updateMarkers(&catalogMarkers);
+  updateMarkers(&footprintMarkers);
 
   // execute any update callbacks
   updateCBMarkers(&userMarkers);
   updateCBMarkers(&catalogMarkers);
+  updateCBMarkers(&footprintMarkers);
 }
 
 void Base::unloadAllFits()
@@ -1230,6 +1236,10 @@ void Base::unloadFits()
   catalogMarkers.deleteAll();
   undoCatalogMarkers.deleteAll();
   pasteCatalogMarkers.deleteAll();
+
+  footprintMarkers.deleteAll();
+  undoFootprintMarkers.deleteAll();
+  pasteFootprintMarkers.deleteAll();
 
   if (grid)
     delete grid;
@@ -1327,6 +1337,7 @@ void Base::updateBin(const Matrix& mx)
     currentContext->updateContours(mx);
     updateMarkerCoords(&userMarkers, mx);
     updateMarkerCoords(&catalogMarkers, mx);
+    updateMarkerCoords(&footprintMarkers, mx);
   }
 
   alignWCS();
@@ -1340,6 +1351,7 @@ void Base::updateBin(const Matrix& mx)
   // the correct coords
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 void Base::updateBlock(const Vector& vv)
@@ -1352,6 +1364,7 @@ void Base::updateBlock(const Vector& vv)
     currentContext->updateContours(mx);
     updateMarkerCoords(&userMarkers, mx);
     updateMarkerCoords(&catalogMarkers, mx);
+    updateMarkerCoords(&footprintMarkers, mx);
   }
 
   alignWCS();
@@ -1365,6 +1378,7 @@ void Base::updateBlock(const Vector& vv)
   // the correct coords
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 void Base::updateGCs()
@@ -1468,6 +1482,7 @@ void Base::updateMagnifier(const Vector& vv)
     if (showMarkers) {
       x11MagnifierMarkers(&userMarkers, bb);
       x11MagnifierMarkers(&catalogMarkers, bb);
+      x11MagnifierMarkers(&footprintMarkers, bb);
     }
 
     // render crosshair
@@ -1534,6 +1549,7 @@ void Base::updateMatrices()
     // Markers
   updateMarkers(&userMarkers);
   updateMarkers(&catalogMarkers);
+  updateMarkers(&footprintMarkers);
 
   pushMatrices();
 }
@@ -1693,6 +1709,7 @@ void Base::updatePM(const BBox& bbox)
   // markers over grid
   BBox bb = BBox(0,0,width,height) * widgetToCanvas;
   if (showMarkers) {
+    x11Markers(&footprintMarkers, bb);
     x11Markers(&catalogMarkers, bb);
     x11Markers(&userMarkers, bb);
   }
@@ -1898,6 +1915,7 @@ void Base::macosxPrintCmd()
 
   // markers over grid
   if (showMarkers) {
+    macosxMarkers(&footprintMarkers);
     macosxMarkers(&catalogMarkers);
     macosxMarkers(&userMarkers);
   }
@@ -2021,6 +2039,7 @@ void Base::win32PrintCmd()
   if (showMarkers) {
     win32Markers(&userMarkers);
     win32Markers(&catalogMarkers);
+    win32Markers(&footprintMarkers);
   }
 
   win32Crosshair();

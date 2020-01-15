@@ -32,6 +32,10 @@ void Base::axesOrderCmd(int order)
     undoCatalogMarkers.deleteAll();
     pasteCatalogMarkers.deleteAll();
 
+    footprintMarkers.deleteAll();
+    undoFootprintMarkers.deleteAll();
+    pasteFootprintMarkers.deleteAll();
+
     currentContext->contourDeleteFV();
     currentContext->contourDeleteAux();
 
@@ -390,6 +394,7 @@ void Base::cropCmd()
 
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 // used for Backup
@@ -418,6 +423,7 @@ void Base::cropCmd(const Vector& aa, const Vector& bb,
 
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 void Base::cropCenterCmd(const Vector& vv, 
@@ -448,6 +454,7 @@ void Base::cropCenterCmd(const Vector& vv,
 
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 void Base::cropBeginCmd(const Vector& vv)
@@ -524,6 +531,7 @@ void Base::cropEndCmd(const Vector& vv)
 
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 void Base::crop3dCmd()
@@ -537,6 +545,7 @@ void Base::crop3dCmd()
 
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys,
@@ -574,6 +583,7 @@ void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys,
 
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
+  updateMarkerCBs(&footprintMarkers);
 }
 
 void Base::crosshairCmd(int which)

@@ -654,11 +654,10 @@ proc CATValidDB {varname} {
     }
 }
 
-proc CATAnalysisMenu {} {
+proc CATAnalysisMenu {mb} {
     global icat
     global ds9
 
-    set mm "$ds9(mb).analysis.cat"
     set nn {}
 
     foreach ff $icat(def) {
@@ -668,12 +667,12 @@ proc CATAnalysisMenu {} {
 	set cc [lindex $ff 3]
 
 	if {$ll != {-}} {
-	    $mm.$nn add command -label $ll \
+	    $mb.$nn add command -label $ll \
 		-command [list CATDialog $ww $ss $cc $ll apply]
 	} else {
 	    set nn "$ss"
-	    menu $mm.$nn
-	    $mm add cascade -label $ww -menu $mm.$nn
+	    menu $mb.$nn
+	    $mb add cascade -label $ww -menu $mb.$nn
 	}
     }
 }

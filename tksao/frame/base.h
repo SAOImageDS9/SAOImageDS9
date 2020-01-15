@@ -118,7 +118,7 @@ public:
   enum CompressType {NOCOMPRESS, GZ};
   enum FileNameType {ROOTBASE, FULLBASE, ROOT, FULL};
   enum MarkerFormat {DS9, XML, CIAO, SAOTNG, SAOIMAGE, PROS, RAWXY};
-  enum MarkerLayer {USER, TEMPLATE, CATALOG, ANALYSIS};
+  enum MarkerLayer {USER, CATALOG, FOOTPRINT};
   enum ShmType {SHMID,KEY};
   enum UndoMarkerType {NONE, MOVE, EDIT, DELETE};
   enum UpdateType {MATRIX, BASE, BASEONLY, PIXMAP, NOUPDATE};
@@ -150,6 +150,10 @@ public:
   List<Marker> catalogMarkers;      // background marker stack
   List<Marker> undoCatalogMarkers;  // remember marker to undo
   List<Marker> pasteCatalogMarkers; // cut/copy/paste
+
+  List<Marker> footprintMarkers;      // background marker stack
+  List<Marker> undoFootprintMarkers;  // remember marker to undo
+  List<Marker> pasteFootprintMarkers; // cut/copy/paste
 
   UndoMarkerType undoMarkerType; // type
 

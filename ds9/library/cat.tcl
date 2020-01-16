@@ -968,17 +968,6 @@ proc CATUpdateWCS {} {
     }
 }
 
-proc CATUpdateFont {} {
-    global icat
-
-    foreach varname $icat(cats) {
-	upvar #0 $varname var
-	global $varname
-
-	$var(tbl) configure -font [font actual TkDefaultFont]
-    }
-}
-
 proc CATBackup {ch which fdir rdir} {
     global icat
 

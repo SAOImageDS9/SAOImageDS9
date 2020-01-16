@@ -126,6 +126,15 @@ proc TBLWCSMenuUpdate {varname} {
     CoordMenuButtonCmd $varname psystem psky {}
 }
 
+proc TBLUpdateFont {ll} {
+    foreach varname $ll {
+	upvar #0 $varname var
+	global $varname
+
+	$var(tbl) configure -font [font actual TkDefaultFont]
+    }
+}
+
 # Cut/Copy
 
 proc TBLCopy {varname} {

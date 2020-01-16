@@ -360,17 +360,6 @@ proc FPUpdateWCS {} {
     }
 }
 
-proc FPUpdateFont {} {
-    global ifp
-
-    foreach varname $ifp(fps) {
-	upvar #0 $varname var
-	global $varname
-
-	$var(tbl) configure -font [font actual TkDefaultFont]
-    }
-}
-
 # Process Cmds
 
 proc ProcessFPCmd {varname iname} {

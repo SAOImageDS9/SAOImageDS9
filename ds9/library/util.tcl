@@ -1061,11 +1061,15 @@ proc SetDefaultFont {which} {
     }
 
     if {$which} {
+	global icat
+	global isia
+	global ifp
+
 	UpdateScaleDialogFont
 	UpdateGraphFont
-	CATUpdateFont
-	SIAUpdateFont
-	FPUpdateFont
+	TBLUpdateFont $icat(cats)
+	TBLUpdateFont $isia(sias)
+	TBLUpdateFont $ifp(fps)
     }
 }
 

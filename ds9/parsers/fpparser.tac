@@ -58,8 +58,8 @@ fpCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 FPOff}
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 IMGSVRCrosshair}
- | EXPORT_ writer STRING_ {FPCmdSave $3 $2}
- | SAVE_ STRING_ {FPCmdSave $2 VOTWrite}
+ | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
+ | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {ProcessCmdCVAR0 CATPrint}
  | RETRIEVE_ {global cvarname; FPApply $cvarname 1}

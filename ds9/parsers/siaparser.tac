@@ -67,8 +67,8 @@ siaCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 SIAOff}
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 IMGSVRCrosshair}
- | EXPORT_ writer STRING_ {SIACmdSave $3 $2}
- | SAVE_ STRING_ {SIACmdSave $2 VOTWrite}
+ | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
+ | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {ProcessCmdCVAR0 CATPrint}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}

@@ -79,7 +79,7 @@ proc FPDialog {varname title url opts colreg action} {
     # file
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command [list FPSaveVOTFile $varname]
+	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
@@ -103,15 +103,15 @@ proc FPDialog {varname title url opts colreg action} {
 	-command [list FPGenerateRegions $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
-	-command [list TBLPrint $varname]
+	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command [list FPDestroy $varname]
+	-command [list FPDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     # Export
     menu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list TBLSaveSBFile $varname]
+	-command [list TBLSaveRDBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list TBLSaveTSVFile $varname]
 

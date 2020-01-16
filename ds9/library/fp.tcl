@@ -436,15 +436,6 @@ proc FPCmdCoord {xx yy sky} {
     set cvar(sky) $sky
 }
 
-proc FPCmdSave {fn writer} {
-    global cvarname
-
-    if {$fn != {}} {
-	FPSaveFn $cvarname $fn $writer
-	FileLast fpfbox $fn
-    }
-}
-
 proc FPCmdSize {radius rformat} {
     global cvarname
     upvar #0 $cvarname cvar

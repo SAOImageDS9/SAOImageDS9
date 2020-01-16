@@ -265,23 +265,23 @@ proc CATLoadDone {varname} {
 
 # Load via File
 
-proc CATLoadSBFile {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set fn [OpenFileDialog catfbox]
-    if {$fn != {}} {
-	CATLoadFn $varname $fn starbase_read
-    }
-}
-
 proc CATLoadVOTFile {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog catvotfbox]
+    set fn [OpenFileDialog votfbox]
     if {$fn != {}} {
 	CATLoadFn $varname $fn VOTRead
+    }
+}
+
+proc CATLoadRDBFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog rdbfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn starbase_read
     }
 }
 
@@ -289,7 +289,7 @@ proc CATLoadTSVFile {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog cattsvfbox]
+    set fn [OpenFileDialog tsvfbox]
     if {$fn != {}} {
 	CATLoadFn $varname $fn TSVRead
     }
@@ -1192,7 +1192,7 @@ proc CatalogCmdLoad {fn reader} {
     if {$fn != {}} {
 	CATDialog cattool {} {} {} none
 	CATLoadFn [lindex $icat(cats) end] $fn $reader
-	FileLast catfbox $fn
+	FileLast rdbfbox $fn
     }
 }
 
@@ -1245,15 +1245,6 @@ proc CatalogCmdSAMPSend {name} {
 	}
     } else {
 	Error [msgcat::mc {SAMP: not connected}]
-    }
-}
-
-proc CatalogCmdSave {fn writer} {
-    global cvarname
-
-    if {$fn != {}} {
-	TBLSaveFn $cvarname $fn $writer
-    	FileLast catfbox $fn
     }
 }
 

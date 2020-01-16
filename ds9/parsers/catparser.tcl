@@ -4430,7 +4430,7 @@ proc cat::yyparse {} {
                     83 { ProcessCmdCVAR0 CATDestroy }
                     85 { ProcessCmdCVAR0 CATCrosshair }
                     86 { ProcessCmdCVAR edit $2 CATEdit }
-                    87 { CatalogCmdSave $3 $2 }
+                    87 { TBLCmdSave $3 $2 }
                     89 { ProcessCmdCVAR0 CATHeader }
                     90 { ProcessCmdCVAR show 0 CATGenerate }
                     91 { ProcessCmdCVAR loc $2 CATGenerate }
@@ -4443,7 +4443,7 @@ proc cat::yyparse {} {
                     99 { ProcessCmdCVAR psystem $2 CATGenerate }
                     100 { ProcessCmdCVAR0 CATGenerateRegions }
                     101 { global cvarname; CATApply $cvarname 1 }
-                    103 { CatalogCmdSave $2 VOTWrite }
+                    103 { TBLCmdSave $2 VOTWrite }
                     104 { ProcessCmdCVAR server $2 }
                     105 { ProcessCmdCVAR show $2 CATGenerate }
                     106 { ProcessCmdCVAR3 radius $2 rformat $3 rformat,msg $3 }

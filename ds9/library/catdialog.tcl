@@ -159,14 +159,14 @@ proc CATDialog {varname format catalog title action} {
     # Import
     menu $mb.file.import
     $mb.file.import add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list CATLoadSBFile $varname]
+	-command [list CATLoadRDBFile $varname]
     $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list CATLoadTSVFile $varname]
 
     # Export
     menu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list TBLSaveSBFile $varname]
+	-command [list TBLSaveRDBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list TBLSaveTSVFile $varname]
 

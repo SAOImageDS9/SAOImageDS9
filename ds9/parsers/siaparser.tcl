@@ -2087,8 +2087,8 @@ proc sia::yyparse {} {
                     51 { ProcessCmdCVAR0 SIADestroy }
                     52 { ProcessCmdCVAR0 SIAOff }
                     54 { ProcessCmdCVAR0 IMGSVRCrosshair }
-                    55 { SIACmdSave $3 $2 }
-                    56 { SIACmdSave $2 VOTWrite }
+                    55 { TBLCmdSave $3 $2 }
+                    56 { TBLCmdSave $2 VOTWrite }
                     57 { ProcessCmdCVAR name $2 }
                     58 { ProcessCmdCVAR0 CATPrint }
                     59 { global cvarname; SIAApply $cvarname 1 }

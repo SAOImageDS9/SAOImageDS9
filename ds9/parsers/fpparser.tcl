@@ -1671,8 +1671,8 @@ proc fp::yyparse {} {
                     51 { ProcessCmdCVAR0 FPDestroy }
                     52 { ProcessCmdCVAR0 FPOff }
                     54 { ProcessCmdCVAR0 IMGSVRCrosshair }
-                    55 { FPCmdSave $3 $2 }
-                    56 { FPCmdSave $2 VOTWrite }
+                    55 { TBLCmdSave $3 $2 }
+                    56 { TBLCmdSave $2 VOTWrite }
                     57 { ProcessCmdCVAR name $2 }
                     58 { ProcessCmdCVAR0 CATPrint }
                     59 { global cvarname; FPApply $cvarname 1 }

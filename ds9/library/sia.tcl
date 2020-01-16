@@ -316,24 +316,6 @@ proc SIATable {varname} {
     }
 }
 
-proc SIASaveFn {varname fn writer} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    if {$fn == {}} {
-	return
-    }
-
-    # do we have a db?
-    if {![TBLValidDB $var(tbldb)]} {
-	return
-    }
-
-    $writer $var(tbldb) $fn
-    ARDone $varname
-}
-
 # Process Cmds
 
 proc ProcessSIACmd {varname iname} {
@@ -398,15 +380,6 @@ proc SIACmdCoord {xx yy sky} {
     set cvar(x) $xx
     set cvar(y) $yy
     set cvar(sky) $sky
-}
-
-proc SIACmdSave {fn writer} {
-    global cvarname
-
-    if {$fn != {}} {
-	SIASaveFn $cvarname $fn $writer
-	FileLast siafbox $fn
-    }
 }
 
 proc SIACmdSize {radius rformat} {

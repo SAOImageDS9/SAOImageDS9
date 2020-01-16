@@ -104,7 +104,7 @@ proc SIADialog {varname title url opts method action} {
     # Export
     menu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list TBLSaveSBFile $varname]
+	-command [list TBLSaveRDBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list TBLSaveTSVFile $varname]
 

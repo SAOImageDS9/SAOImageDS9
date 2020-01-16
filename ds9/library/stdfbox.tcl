@@ -235,29 +235,29 @@ proc InitDialogBox {} {
 			     [list {GRD} {*.grd}] \
 			    ]
 
-    global catfbox
-    set catfbox(file) {ds9.cat}
-    set catfbox(dir) {}
-    set catfbox(types) [list \
+    global votfbox
+    set votfbox(file) {ds9.xml}
+    set votfbox(dir) {}
+    set votfbox(types) [list \
+			       [list [::msgcat::mc {Catalog}] {*.xml}] \
+			       [list [::msgcat::mc {Catalog}] {*.vot}] \
+			       [list [::msgcat::mc {Catalog}] {*.votable}] \
+			      ]
+
+    global rdbfbox
+    set rdbfbox(file) {ds9.rdb}
+    set rdbfbox(dir) {}
+    set rdbfbox(types) [list \
 			    [list [::msgcat::mc {Catalog}] {*.cat}] \
 			    [list [::msgcat::mc {Catalog}] {*.rdb}] \
 			   ]
 
-    global cattsvfbox
-    set cattsvfbox(file) {ds9.tsv}
-    set cattsvfbox(dir) {}
-    set cattsvfbox(types) [list \
+    global tsvfbox
+    set tsvfbox(file) {ds9.tsv}
+    set tsvfbox(dir) {}
+    set tsvfbox(types) [list \
 			       [list [::msgcat::mc {Catalog}] {*.tsv}] \
 			       [list [::msgcat::mc {Catalog}] {*.csv}] \
-			      ]
-
-    global catvotfbox
-    set catvotfbox(file) {ds9.xml}
-    set catvotfbox(dir) {}
-    set catvotfbox(types) [list \
-			       [list [::msgcat::mc {Catalog}] {*.xml}] \
-			       [list [::msgcat::mc {Catalog}] {*.vot}] \
-			       [list [::msgcat::mc {Catalog}] {*.votable}] \
 			      ]
 
     global catfltfbox

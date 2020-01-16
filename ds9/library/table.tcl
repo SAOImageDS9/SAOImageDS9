@@ -161,22 +161,22 @@ proc TBLCopyTable {varname} {
 
 # Save via File
 
-proc CATSaveSBFile {varname} {
-    set fn [SaveFileDialog catfbox]
-    CATSaveFn $varname $fn starbase_write
+proc TBLSaveVOTFile {varname} {
+    set fn [SaveFileDialog votfbox]
+    TBLSaveFn $varname $fn VOTWrite
 }
 
-proc CATSaveVOTFile {varname} {
-    set fn [SaveFileDialog catvotfbox]
-    CATSaveFn $varname $fn VOTWrite
+proc TBLSaveRDBFile {varname} {
+    set fn [SaveFileDialog rdbfbox]
+    TBLSaveFn $varname $fn starbase_write
 }
 
-proc CATSaveTSVFile {varname} {
-    set fn [SaveFileDialog cattsvfbox]
-    CATSaveFn $varname $fn TSVWrite
+proc TBLSaveTSVFile {varname} {
+    set fn [SaveFileDialog tsvfbox]
+    TBLSaveFn $varname $fn TSVWrite
 }
 
-proc CATSaveFn {varname fn writer} {
+proc TBLSaveFn {varname fn writer} {
     upvar #0 $varname var
     global $varname
     global $var(tbldb)
@@ -192,6 +192,15 @@ proc CATSaveFn {varname fn writer} {
 
     $writer $var(tbldb) $fn
     ARDone $varname
+}
+
+proc TBLCmdSave {fn writer} {
+    global cvarname
+
+    if {$fn != {}} {
+	TBLSaveFn $cvarname $fn $writer
+	FileLast votbox $fn
+    }
 }
 
 # print

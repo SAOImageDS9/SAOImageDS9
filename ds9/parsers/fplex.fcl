@@ -1,0 +1,44 @@
+#tab fpparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+cancel	    {return $CANCEL_}
+clear	    {return $CLEAR_}
+close	    {return $CLOSE_}
+coordinate  {return $COORDINATE_}
+crosshair   {return $CROSSHAIR_}
+export	    {return $EXPORT_}
+name	    {return $NAME_}
+print	    {return $PRINT_}
+radius	    {return $RADIUS_}
+retrieve    {return $RETRIEVE_}
+save	    {return $SAVE_}
+size	    {return $SIZE_}
+sky	    {return $SKY_}
+skyformat   {return $SKYFORMAT_}
+system	    {return $SYSTEM_}
+update	    {return $UPDATE_}
+
+cxc	    {return $CXC_}
+
+xml	    {return $XML_}
+vot	    {return $VOT_}
+sb	    {return $SB_}
+starbase    {return $STARBASE_}
+csv	    {return $CSV_}
+tsv	    {return $TSV_}
+
+#include wcssys.fin
+#include skyframe.fin
+#include wcsformat.fin
+#include numeric.fin
+#include sexstr.fin
+#include string.fin
+#include ws.fin
+
+%%

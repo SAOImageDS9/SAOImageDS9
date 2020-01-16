@@ -183,6 +183,8 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -file -
 	    -fits {set file(type) fits; CommandFitsCmd argv i}
+	    -fp -
+	    -footprint {incr i; ProcessFPCmd argv i}
 	    -geometry {
 		# already processed
 	    }

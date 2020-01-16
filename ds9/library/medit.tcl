@@ -39,6 +39,8 @@ proc EditMainMenu {} {
 	-variable current(mode) -value crop -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Catalog}] \
 	-variable current(mode) -value catalog -command ChangeMode
+    $ds9(mb).edit add radiobutton -label [msgcat::mc {Footprint}] \
+	-variable current(mode) -value footprint -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Examine}] \
 	-variable current(mode) -value examine -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {3D}] \
@@ -97,6 +99,8 @@ proc PrefsDialogEditMenu {w} {
 	-variable pcurrent(mode) -value crop
     $m add radiobutton -label [msgcat::mc {Catalog}] \
 	-variable pcurrent(mode) -value catalog
+    $m add radiobutton -label [msgcat::mc {Footprint}] \
+	-variable pcurrent(mode) -value footprint
     $m add radiobutton -label [msgcat::mc {Examine}] \
 	-variable pcurrent(mode) -value examine
     $m add radiobutton -label [msgcat::mc {3D}] \
@@ -124,6 +128,7 @@ proc ButtonsEditDef {} {
 	edit,rotate 1
 	edit,crop 1
 	edit,catalog 1
+	edit,footprint 1
 	edit,examine 1
 	edit,3d 1
 	edit,prefs 0
@@ -173,6 +178,9 @@ proc CreateButtonsEdit {} {
     RadioButton $ds9(buttons).edit.catalog \
 	[string tolower [msgcat::mc {Cat}]] \
 	current(mode) catalog ChangeMode
+    RadioButton $ds9(buttons).edit.footprint \
+        [string tolower [msgcat::mc {FP}]] \
+        current(mode) footprint ChangeMode
     RadioButton $ds9(buttons).edit.examine \
 	[string tolower [msgcat::mc {Exam}]] \
 	current(mode) examine ChangeMode
@@ -197,6 +205,7 @@ proc CreateButtonsEdit {} {
         $ds9(buttons).edit.rotate pbuttons(edit,rotate)
         $ds9(buttons).edit.crop pbuttons(edit,crop)
         $ds9(buttons).edit.catalog pbuttons(edit,catalog)
+        $ds9(buttons).edit.footprint pbuttons(edit,footprint)                   
         $ds9(buttons).edit.examine pbuttons(edit,examine)
         $ds9(buttons).edit.3d pbuttons(edit,3d)
         $ds9(buttons).edit.prefs pbuttons(edit,prefs)
@@ -240,6 +249,8 @@ proc PrefsDialogButtonbarEdit {f} {
 	-variable pbuttons(edit,crop) -command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Catalog}] \
 	-variable pbuttons(edit,catalog) -command {UpdateButtons buttons(edit)}
+    $m add checkbutton -label [msgcat::mc {Footprint}] \
+	-variable pbuttons(edit,footprint) -command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Examine}] \
 	-variable pbuttons(edit,examine) -command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {3D}] \
@@ -313,6 +324,7 @@ proc UpdateEditMenu {} {
 	rotate -
 	crop -
 	catalog -
+	footprint -
 	examine -
 	iexam -
 	3d {$ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled}

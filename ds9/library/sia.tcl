@@ -315,6 +315,17 @@ proc SIATable {varname} {
     }
 }
 
+proc SIAUpdateFont {} {
+    global isia
+
+    foreach varname $isia(sias) {
+	upvar #0 $varname var
+	global $varname
+
+	$var(tbl) configure -font [font actual TkDefaultFont]
+    }
+}
+
 # Process Cmds
 
 proc ProcessSIACmd {varname iname} {

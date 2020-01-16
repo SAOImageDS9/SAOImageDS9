@@ -103,7 +103,7 @@ proc FPDialog {varname title url opts colreg action} {
 	-command [list FPGenerateRegions $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
-	-command [list CATPrint $varname]
+	-command [list TBLPrint $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list FPDestroy $varname]
@@ -111,16 +111,16 @@ proc FPDialog {varname title url opts colreg action} {
     # Export
     menu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list CATSaveSBFile $varname]
+	-command [list TBLSaveSBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
-	-command [list CATSaveTSVFile $varname]
+	-command [list TBLSaveTSVFile $varname]
 
     # edit
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
-	-command "CATCut $varname" -accelerator "${ds9(ctrl)}X"
+	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
-	-command "CATCopy $varname" -accelerator "${ds9(ctrl)}C"
+	-command "TBLCopy $varname" -accelerator "${ds9(ctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command "EntryPaste $var(top)" -accelerator "${ds9(ctrl)}V"
     $mb.edit add separator

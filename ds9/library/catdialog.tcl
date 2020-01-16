@@ -112,7 +112,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command [list CATLoadVOTFile $varname] -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command [list CATSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
+	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] -menu $mb.file.import
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
@@ -151,7 +151,7 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATGenerateRegions $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
-	-command [list CATPrint $varname] -accelerator "${ds9(ctrl)}P"
+	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list CATDestroy $varname] -accelerator "${ds9(ctrl)}W"
@@ -166,9 +166,9 @@ proc CATDialog {varname format catalog title action} {
     # Export
     menu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list CATSaveSBFile $varname]
+	-command [list TBLSaveSBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
-	-command [list CATSaveTSVFile $varname]
+	-command [list TBLSaveTSVFile $varname]
 
     # SAMP
     menu $mb.file.samp
@@ -188,9 +188,9 @@ proc CATDialog {varname format catalog title action} {
     # edit
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
-	-command "CATCut $varname" -accelerator "${ds9(ctrl)}X"
+	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
-	-command "CATCopy $varname" -accelerator "${ds9(ctrl)}C"
+	-command "TBLCopy $varname" -accelerator "${ds9(ctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command "EntryPaste $var(top)" -accelerator "${ds9(ctrl)}V"
     $mb.edit add separator
@@ -441,7 +441,7 @@ proc CATDialog {varname format catalog title action} {
     set f [ttk::frame $w.buttons]
 
     ButtonButton $f.load [msgcat::mc {Open}] [list CATLoadVOTFile $varname]
-    ButtonButton $f.save [msgcat::mc {Save}] [list CATSaveVOTFile $varname]
+    ButtonButton $f.save [msgcat::mc {Save}] [list TBLSaveVOTFile $varname]
 
     set var(apply) [ttk::button $f.apply \
 			-text [msgcat::mc {Retrieve}] \
@@ -472,7 +472,7 @@ proc CATDialog {varname format catalog title action} {
     pack $w.tbl -side top -fill both -expand true
 
     bind $w <<Open>> [list CATLoadVOTFile $varname]
-    bind $w <<Save>> [list CATSaveVOTFile $varname]
+    bind $w <<Save>> [list TBLSaveVOTFile $varname]
     bind $w <<Print>> PSPrint
     bind $w <<Close>> [list CATDestroy $varname]
 
@@ -620,56 +620,6 @@ proc CATApply {varname sync} {
     }
 }
 
-proc CATCopy {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set w [focus -displayof $var(top)]
-    if {$w == $var(tbl)} {
-	CATCopyTable $varname
-    } else {
-	EntryCopy $var(top)
-    }
-}
-
-proc CATCut {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set w [focus -displayof $var(top)]
-    if {$w == $var(tbl)} {
-	CATCopyTable $varname
-    } else {
-	EntryCut $var(top)
-    }
-}
-
-proc CATCopyTable {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set w [focus -displayof $var(top)]
-
-    set sel [$var(tbl) curselection]
-    set data {}
-    set row [lindex [split [lindex $sel 0] ,] 0]
-    foreach ss $sel {
-	set rr [lindex [split $ss ,] 0]
-	if {$rr != $row} {
-	    append data "\n"
-	    set row $rr
-	} else {
-	    if {$data != {}} {
-		append data "\t"
-	    }
-	}
-	append data "[$var(tbl) get $ss]"
-    }
-    append data "\n"
-    clipboard clear -displayof $w
-    clipboard append -displayof $w $data
-}
-
 proc CATCrosshair {varname} {
     upvar #0 $varname var
     global $varname
@@ -709,7 +659,7 @@ proc CATDestroy {varname} {
     # stop timer if needed
     if {$var(blink)} {
 	set var(blink) 0
-	after cancel [list TBLSelectTimer $varname $layer]
+	after cancel [list TBLSelectTimer $varname catalog]
     }
 
     # frame may have been deleted
@@ -907,47 +857,6 @@ proc CATPageSetup {varname} {
 	aqua {}
 	win32 {win32 pm pagesetup}
     }
-}
-
-proc CATPrint {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    global ds9
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {CATPSPrint $varname}
-    }	
-}
-
-proc CATPSPrint {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[PRPrintDialog]} { 
-	if {[catch {CATPostScript $varname} printError]} {
-	    Error "[msgcat::mc {An error has occurred while printing}] $printError"
-	}
-    }
-}
-
-proc CATPostScript {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    global ps
-
-    if {$ps(dest) == "file"} {
-	set ch [open "| cat > $ps(filename,txt)" w]
-    } else {
-	set ch [open "| $ps(cmd)" w]
-    }
-
-    starbase_writefp $var(tbldb) $ch
-    close $ch
 }
 
 proc CATServer {varname} {

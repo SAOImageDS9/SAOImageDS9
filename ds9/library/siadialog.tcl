@@ -75,7 +75,7 @@ proc SIADialog {varname title url opts method action} {
     # file
     menu $mb.file
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command [list CATSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
+	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
@@ -96,7 +96,7 @@ proc SIADialog {varname title url opts method action} {
 	-command [list SIACrosshair $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
-	-command [list CATPrint $varname] -accelerator "${ds9(ctrl)}P"
+	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list SIADestroy $varname] -accelerator "${ds9(ctrl)}W"
@@ -104,16 +104,16 @@ proc SIADialog {varname title url opts method action} {
     # Export
     menu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list CATSaveSBFile $varname]
+	-command [list TBLSaveSBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
-	-command [list CATSaveTSVFile $varname]
+	-command [list TBLSaveTSVFile $varname]
 
     # edit
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
-	-command "CATCut $varname" -accelerator "${ds9(ctrl)}X"
+	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
-	-command "CATCopy $varname" -accelerator "${ds9(ctrl)}C"
+	-command "TBLCopy $varname" -accelerator "${ds9(ctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command "EntryPaste $var(top)" -accelerator "${ds9(ctrl)}V"
     $mb.edit add separator
@@ -233,9 +233,9 @@ proc SIADialog {varname title url opts method action} {
     pack $w.obj $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
-    bind $w <<Save>> [list CATSaveVOTFile $varname]
+    bind $w <<Save>> [list TBLSaveVOTFile $varname]
     bind $w <<Close>> [list SIADestroy $varname]
-    bind $w <<Print>> [list CATPrint $varname]
+    bind $w <<Print>> [list TBLPrint $varname]
 
     ARCoord $varname
     SIAUpdate $varname

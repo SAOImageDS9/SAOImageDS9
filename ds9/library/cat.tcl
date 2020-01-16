@@ -327,41 +327,6 @@ proc CATLoadFn {varname fn reader} {
     CATLoadDone $varname
 }
 
-# Save via File
-
-proc CATSaveSBFile {varname} {
-    set fn [SaveFileDialog catfbox]
-    CATSaveFn $varname $fn starbase_write
-}
-
-proc CATSaveVOTFile {varname} {
-    set fn [SaveFileDialog catvotfbox]
-    CATSaveFn $varname $fn VOTWrite
-}
-
-proc CATSaveTSVFile {varname} {
-    set fn [SaveFileDialog cattsvfbox]
-    CATSaveFn $varname $fn TSVWrite
-}
-
-proc CATSaveFn {varname fn writer} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    if {$fn == {}} {
-	return
-    }
-
-    # do we have a db?
-    if {![TBLValidDB $var(tbldb)]} {
-	return
-    }
-
-    $writer $var(tbldb) $fn
-    ARDone $varname
-}
-
 # Other procedures
 
 proc CATStatusRows {varname rowlist} {
@@ -1040,7 +1005,7 @@ proc CATBackup {ch which fdir rdir} {
 		set rfn $rdir/${varname}.cat
 
 		catch {file delete -force $fn}
-		CATSaveFn $varname $fn VOTWrite
+		TBLSaveFn $varname $fn VOTWrite
 		puts $ch "CATLoadFn $varname \"$rfn\" VOTRead"
 	    } else {
 		# internal var
@@ -1287,7 +1252,7 @@ proc CatalogCmdSave {fn writer} {
     global cvarname
 
     if {$fn != {}} {
-	CATSaveFn $cvarname $fn $writer
+	TBLSaveFn $cvarname $fn $writer
     	FileLast catfbox $fn
     }
 }

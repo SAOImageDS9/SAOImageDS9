@@ -283,7 +283,7 @@ proc SIATable {varname} {
 	puts stderr "SIATable $varname"
     }
 
-    if {![SIAValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -316,20 +316,6 @@ proc SIATable {varname} {
     }
 }
 
-proc SIAValidDB {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info exists var(Nrows)] && 
-	[info exists var(Ncols)] &&
-	[info exists var(HLines)] &&
-	[info exists var(Header)]} {
-	return 1
-    } else {
-	return 0
-    }
-}
-
 proc SIASaveFn {varname fn writer} {
     upvar #0 $varname var
     global $varname
@@ -340,7 +326,7 @@ proc SIASaveFn {varname fn writer} {
     }
 
     # do we have a db?
-    if {![SIAValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 

@@ -41,7 +41,7 @@ proc FPSelectBrowseCmd {varname ss rc} {
     }
 
     global $var(tbldb)
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -53,12 +53,8 @@ proc FPSelectBrowseCmd {varname ss rc} {
 	return
     }
 
-    $var(frame) marker catalog $varname unhighlite
-
-    # init timer vars
-    set var(blink,count) 0
-    set var(blink,marker) {}
-    set var(blink,marker,color) {}
+    # are we still blinking?
+    TBLSelectTimerCancel $varname footprint
 
     # now see the current selection
     set last [lindex [split $ss ,] 0]
@@ -87,7 +83,7 @@ proc FPSelectBrowseCmd {varname ss rc} {
 	set tag "\{${varname}.${rr}\}"
 	lappend ${varname}(blink,marker) $tag
 	lappend ${varname}(blink,marker,color) \
-	    [$var(frame) get marker catalog $tag color]
+	    [$var(frame) get marker footprint $tag color]
     }
 
     # status
@@ -99,7 +95,7 @@ proc FPSelectBrowseCmd {varname ss rc} {
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
-	FPSelectTimer $varname
+	TBLSelectTimer $varname footprint
     }
 }
 
@@ -125,8 +121,11 @@ proc FPSelectRows {varname src rowlist cc} {
 	return
     }
 
+    # are we still blinking?
+    TBLSelectTimerCancel $varname footprint
+
     global $var(tbldb)
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -135,7 +134,7 @@ proc FPSelectRows {varname src rowlist cc} {
 	if {[info exists ${varname}(tbl)]} {
 	    $var(tbl) selection clear all
 	}
-	$var(frame) marker catalog $varname unhighlite
+	$var(frame) marker footprint $varname unhighlite
 	return
     }
 
@@ -147,7 +146,7 @@ proc FPSelectRows {varname src rowlist cc} {
 	$var(tbl) see [lindex $rowlist 0],1
     }
 
-    $var(frame) marker catalog $varname unhighlite
+    $var(frame) marker footprint $varname unhighlite
 
     # init timer vars
     set var(blink,count) 0
@@ -158,7 +157,7 @@ proc FPSelectRows {varname src rowlist cc} {
 	set tag "\{${varname}.${rr}\}"
 	lappend ${varname}(blink,marker) $tag
 	lappend ${varname}(blink,marker,color) \
-	    [$var(frame) get marker catalog $tag color]
+	    [$var(frame) get marker footprint $tag color]
     }
 
     # status
@@ -170,7 +169,7 @@ proc FPSelectRows {varname src rowlist cc} {
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
-	FPSelectTimer $varname
+	TBLSelectTimer $varname footprint
     }
 }
 
@@ -188,69 +187,12 @@ proc FPPanTo {varname mk} {
 
     # pan to first region
     if {$var(panto) && $mk != {}} {
-	set tt [$var(frame) get marker catalog $mk tag]
+	set tt [$var(frame) get marker footprint $mk tag]
 	if {$tt!={}} {
-	    set cc [$var(frame) get marker catalog $tt center \
+	    set cc [$var(frame) get marker footprint $tt center \
 			$var(psystem) $var(psky)]
 	    PanToFrame $var(frame) [lindex $cc 0] [lindex $cc 1] \
 		$var(psystem) $var(psky)
-	}
-    }
-}
-
-proc FPSelectTimer {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    switch -- $var(blink) {
-	0 {
-	    set var(blink) 0
-	    set var(blink,count) 0
-	    set var(blink,marker) {}
-	    set var(blink,marker,color) {}
-	}
-	1 {
-	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-		set mm [lindex $var(blink,marker) $ii]
-		set clr [lindex $var(blink,marker,color) $ii]
-
-		if {[info commands $var(frame)] != {}} {
-		    if {[$var(frame) has fits]} {
-			if {$var(blink,count) < 4} {
-			    switch $clr {
-				red {$var(frame) marker catalog $mm color green}
-				default {$var(frame) marker catalog $mm color red}
-			    }
-			}
-			$var(frame) marker catalog $mm highlite
-		    }
-		}
-	    }
-	    
-	    incr ${varname}(blink,count)
-	    if {$var(blink,count) < 5} {
-		set var(blink) 2
-	    } else {
-		set var(blink) 0
-	    }
-
-	    after 250 [list FPSelectTimer $varname]
-	}
-	2 {
-	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-		set mm [lindex $var(blink,marker) $ii]
-		set clr [lindex $var(blink,marker,color) $ii]
-
-		if {[info commands $var(frame)] != {}} {
-		    if {[$var(frame) has fits]} {
-			$var(frame) marker catalog $mm color $clr
-			$var(frame) marker catalog $mm unhighlite
-		    }
-		}
-	    }
-	    set var(blink) 1
-
-	    after 250 [list FPSelectTimer $varname]
 	}
     }
 }
@@ -329,57 +271,57 @@ proc FPButton {which x y} {
     }
 
     # see if we are on a handle
-    set h [$which get marker catalog handle $x $y]
+    set h [$which get marker footprint handle $x $y]
     set id [lindex $h 0]
     set imarker(handle) [lindex $h 1]
 
     if {$imarker(handle)} {
-	$which marker catalog $id edit begin $imarker(handle)
+	$which marker footprint $id edit begin $imarker(handle)
 	set imarker(motion) beginEdit
 	return
     }
 
     # else, see if we are on a segment of a polygon
-    set h [$which get marker catalog polygon segment $x $y]
+    set h [$which get marker footprint polygon segment $x $y]
     set id [lindex $h 0]
     set segment [lindex $h 1]
     if {$segment} {
-	$which marker catalog $id create polygon vertex $segment $x $y
-	$which marker catalog $id edit begin $imarker(handle)
+	$which marker footprint $id create polygon vertex $segment $x $y
+	$which marker footprint $id edit begin $imarker(handle)
 	set imarker(handle) [expr 4+$segment+1]
 	set imarker(motion) beginEdit
 	return
     }
 
     # else, see if we are on a marker
-    set id [$which get marker catalog id $x $y]
+    set id [$which get marker footprint id $x $y]
     if {$id != 0} {
 	# select
-	if {[$which get marker catalog $id property select]} {
-	    $which marker catalog select only $x $y
-	    $which marker catalog move begin $x $y
+	if {[$which get marker footprint $id property select]} {
+	    $which marker footprint select only $x $y
+	    $which marker footprint move begin $x $y
 	    set imarker(motion) beginMove
 	    return
 	}
 	# highlite
-	if {[$which get marker catalog $id property highlite]} {
-	    $which marker catalog $id highlite only
-	    $which marker catalog $id move back
+	if {[$which get marker footprint $id property highlite]} {
+	    $which marker footprint $id highlite only
+	    $which marker footprint $id move back
 	    set imarker(motion) none
 	    return
 	}
     }
 
     # see if any markers are selected
-    if {[$which get marker catalog select number]>0} {
-	$which marker catalog unselect all
+    if {[$which get marker footprint select number]>0} {
+	$which marker footprint unselect all
 	set imarker(motion) none
 	return
     }
 
     # see if any markers are selected
-    if {[$which get marker catalog highlite number]>0} {
-	$which marker catalog unhighlite all
+    if {[$which get marker footprint highlite number]>0} {
+	$which marker footprint unhighlite all
 	set imarker(motion) none
 	return
     }
@@ -402,31 +344,31 @@ proc FPShift {which x y} {
     }
 
     # see if we are on a handle
-    set h [$which get marker catalog handle $x $y]
+    set h [$which get marker footprint handle $x $y]
     set id [lindex $h 0]
     set imarker(handle) [lindex $h 1]
 
     if {$imarker(handle)} {
-	$which marker catalog $id rotate begin
+	$which marker footprint $id rotate begin
 	set imarker(motion) beginRotate
 	return
     }
 
     # else, see if we are on a marker
-    if {[$which marker catalog select toggle $x $y]} {
-	$which marker catalog move begin $x $y
+    if {[$which marker footprint select toggle $x $y]} {
+	$which marker footprint move begin $x $y
 	set imarker(motion) beginMove
 	return
     }
 
-    if {[$which marker catalog highlite toggle $x $y]} {
+    if {[$which marker footprint highlite toggle $x $y]} {
 	set imarker(motion) none
 	return
     }
 
     # else, start a region select
-    $which region catalog select begin $x $y
-    # $which region catalog highlite begin $x $y
+    $which region footprint select begin $x $y
+    # $which region footprint highlite begin $x $y
     set imarker(motion) shiftregion
 }
 
@@ -448,26 +390,26 @@ proc FPMotion {which x y} {
 
 	beginMove -
 	move {
-	    $which marker catalog move motion $x $y
+	    $which marker footprint move motion $x $y
 	    set imarker(motion) move
 	}
 
 	beginEdit -
 	edit {
-	    $which marker catalog edit motion $x $y $imarker(handle)
+	    $which marker footprint edit motion $x $y $imarker(handle)
 	    set imarker(motion) edit
 	}
 
 	beginRotate -
 	rotate {
-	    $which marker catalog rotate motion $x $y $imarker(handle)
+	    $which marker footprint rotate motion $x $y $imarker(handle)
 	    set imarker(motion) rotate
 	}
 
 	region -
 	shiftregion {
-	    $which region catalog select motion $x $y
-	    # $which region catalog highlite motion $x $y
+	    $which region footprint select motion $x $y
+	    # $which region footprint highlite motion $x $y
 	}
     }
 }
@@ -490,16 +432,16 @@ proc FPRelease {which x y} {
 	beginMove -
 	beginRotate {}
 	beginEdit {}
-	move {$which marker catalog move end}
-	edit {$which marker catalog edit end}
-	rotate {$which marker catalog rotate end}
+	move {$which marker footprint move end}
+	edit {$which marker footprint edit end}
+	rotate {$which marker footprint rotate end}
 	region {
-	    $which region catalog select end
-	    $which region catalog catalog highlite end
+	    $which region footprint select end
+	    $which region footprint catalog highlite end
 	}
 	shiftregion {
-	    $which region catalog select shift end
-	    $which region catalog highlite shift end
+	    $which region footprint select shift end
+	    $which region footprint highlite shift end
 	}
     }
 
@@ -508,8 +450,8 @@ proc FPRelease {which x y} {
 
     # stats
     set rr {}
-    foreach mm [$which get marker catalog highlite] {
-	lappend rr [string trim [lindex [$which get marker catalog $mm tag] 1]]
+    foreach mm [$which get marker footprint highlite] {
+	lappend rr [string trim [lindex [$which get marker footprint $mm tag] 1]]
     }
 
     if {$rr != {}} {

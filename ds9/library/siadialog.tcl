@@ -350,7 +350,7 @@ proc SIADialogUpdate {varname} {
     }
 
     # do we have a db?
-    if {[CATValidDB $var(tbldb)]} {
+    if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state normal
 
@@ -375,7 +375,7 @@ proc SIAImageCmd {varname} {
     }
 
     global $var(tbldb)
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 

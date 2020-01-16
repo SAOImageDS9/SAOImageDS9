@@ -40,7 +40,7 @@ proc CATSelectEditCmd {varname ss rc} {
     }
 
     # are we still blinking?
-    CATSelectTimerCancel $varname
+    TBLSelectTimerCancel $varname catalog
 
     set last [lindex [split $ss ,] 0]
     set next [lindex [split $rc ,] 0]
@@ -67,7 +67,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 
     global $var(catdb)
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -80,7 +80,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 
     # are we still blinking?
-    CATSelectTimerCancel $varname
+    TBLSelectTimerCancel $varname catalog
 
     # now see the current selection
     set last [lindex [split $ss ,] 0]
@@ -129,7 +129,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
-	CATSelectTimer $varname
+	TBLSelectTimer $varname catalog
     }
 }
 
@@ -156,10 +156,10 @@ proc CATSelectRows {varname src rowlist cc} {
     }
 
     # are we still blinking?
-    CATSelectTimerCancel $varname
+    TBLSelectTimerCancel $varname catalog
 
     global $var(catdb)
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -215,7 +215,7 @@ proc CATSelectRows {varname src rowlist cc} {
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
-	CATSelectTimer $varname
+	TBLSelectTimer $varname catalog
     }
 }
 
@@ -241,96 +241,6 @@ proc CATPanTo {varname mk} {
 		$var(psystem) $var(psky)
 	}
     }
-}
-
-proc CATSelectTimer {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    switch -- $var(blink) {
-	0 {
-	    set var(blink) 0
-	    set var(blink,count) 0
-	    set var(blink,marker) {}
-	    set var(blink,marker,color) {}
-	}
-	1 {
-	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-		set mm [lindex $var(blink,marker) $ii]
-		set clr [lindex $var(blink,marker,color) $ii]
-
-		if {[info commands $var(frame)] != {}} {
-		    if {[$var(frame) has fits]} {
-			if {$var(blink,count) < 4} {
-			    switch $clr {
-				red {$var(frame) marker catalog $mm color green}
-				default {$var(frame) marker catalog $mm color red}
-			    }
-			}
-			$var(frame) marker catalog $mm highlite
-		    }
-		}
-	    }
-	    
-	    incr ${varname}(blink,count)
-	    if {$var(blink,count) < 5} {
-		set var(blink) 2
-	    } else {
-		set var(blink) 0
-	    }
-
-	    after 250 [list CATSelectTimer $varname]
-	}
-	2 {
-	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-		set mm [lindex $var(blink,marker) $ii]
-		set clr [lindex $var(blink,marker,color) $ii]
-
-		if {[info commands $var(frame)] != {}} {
-		    if {[$var(frame) has fits]} {
-			$var(frame) marker catalog $mm color $clr
-			$var(frame) marker catalog $mm unhighlite
-		    }
-		}
-	    }
-	    set var(blink) 1
-
-	    after 250 [list CATSelectTimer $varname]
-	}
-    }
-}
-
-proc CATSelectTimerCancel {varname} {
-    upvar #0 $varname var
-    global $varname
-    
-    if {$var(blink)} {
-	# cancel all pending
-	foreach aa [after info] {
-	    set id [string range $aa 6 end]
-	    after cancel $aa
-	}
-
-	for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-	    set mm [lindex $var(blink,marker) $ii]
-	    set clr [lindex $var(blink,marker,color) $ii]
-
-	    if {[info commands $var(frame)] != {}} {
-		if {[$var(frame) has fits]} {
-		    $var(frame) marker catalog $mm color $clr
-#		    $var(frame) marker catalog $mm unhighlite
-		}
-	    }
-	}
-    }
-
-    $var(frame) marker catalog $varname unhighlite
-
-    # init timer vars
-    set var(blink) 0
-    set var(blink,count) 0
-    set var(blink,marker) {}
-    set var(blink,marker,color) {}
 }
 
 # Marker Callbacks

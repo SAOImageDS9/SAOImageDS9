@@ -227,7 +227,7 @@ proc FPTable {varname} {
 	puts stderr "FPTable $varname"
     }
 
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -280,7 +280,7 @@ proc FPGenerate {varname} {
     }
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -322,7 +322,7 @@ proc FPGenerateRegions {varname} {
     }
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 

@@ -287,7 +287,7 @@ proc FPDestroy {varname} {
     # stop timer if needed
     if {$var(blink)} {
 	set var(blink) 0
-	after cancel [list FPSelectTimer $varname]
+	after cancel [list TBLSelectTimer $varname footprint]
     }
 
     # frame may have been deleted
@@ -322,7 +322,7 @@ proc FPDialogUpdate {varname} {
     }
 
     # do we have a db?
-    if {[CATValidDB $var(tbldb)]} {
+    if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state normal
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state normal

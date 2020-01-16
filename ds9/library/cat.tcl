@@ -354,7 +354,7 @@ proc CATSaveFn {varname fn writer} {
     }
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -434,7 +434,7 @@ proc CATTable {varname} {
 	puts stderr "CATTable $varname"
     }
 
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -520,7 +520,7 @@ proc CATGenerate {varname} {
     }
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -561,7 +561,7 @@ proc CATGenerateRegions {varname} {
     }
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -640,20 +640,6 @@ proc CATSet {varname format catalog title} {
     set var(sort,dir) "-increasing"
 }
 
-proc CATValidDB {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info exists var(Nrows)] && 
-	[info exists var(Ncols)] &&
-	[info exists var(HLines)] &&
-	[info exists var(Header)]} {
-	return 1
-    } else {
-	return 0
-    }
-}
-
 proc CATAnalysisMenu {mb} {
     global icat
     global ds9
@@ -707,7 +693,7 @@ proc CATSortMenu {varname} {
 
     menu $m -tearoff 0
     $m add command -label {} -command "CATSortCmd $varname {}"
-    if {[CATValidDB $var(catdb)]} {
+    if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
 	    $m add command -label $col -command "CATSortCmd $varname \{$col\}"
@@ -747,7 +733,7 @@ proc CATColsMenu {varname} {
     catch {destroy $m}
 
     menu $m -tearoff 0
-    if {[CATValidDB $var(catdb)]} {
+    if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
 	    $m add command -label $col -command "CATColXCmd $varname \{$col\}"
@@ -765,7 +751,7 @@ proc CATColsMenu {varname} {
     catch {destroy $m}
 
     menu $m -tearoff 0
-    if {[CATValidDB $var(catdb)]} {
+    if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
 	    $m add command -label $col -command "CATColYCmd $varname \{$col\}"
@@ -812,7 +798,7 @@ proc CATConfigCols {varname} {
     set var(colx) {}
     set var(coly) {}
 
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 

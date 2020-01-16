@@ -520,7 +520,7 @@ proc CATDialogUpdate {varname} {
     }
 
     # do we have a db?
-    if {[CATValidDB $var(tbldb)]} {
+    if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Filter}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
@@ -709,7 +709,7 @@ proc CATDestroy {varname} {
     # stop timer if needed
     if {$var(blink)} {
 	set var(blink) 0
-	after cancel [list CATSelectTimer $varname]
+	after cancel [list TBLSelectTimer $varname $layer]
     }
 
     # frame may have been deleted
@@ -799,7 +799,7 @@ proc CATGetHeader {varname} {
     set t $var(tbldb)
     upvar #0 $t T
 
-    if {[CATValidDB $var(tbldb)]} {
+    if {[TBLValidDB $var(tbldb)]} {
 	set hdr {}
 
 	# header
@@ -1126,7 +1126,7 @@ proc CATEditDialog {varname which db} {
 	destroy $mb.col
     }
     menu $mb.col
-    if {[CATValidDB $db]} {
+    if {[TBLValidDB $db]} {
 	set cnt -1
 	foreach col [starbase_columns $db] {
 	    $mb.col add command -label "$col" \

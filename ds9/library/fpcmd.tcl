@@ -437,7 +437,7 @@ proc FPRelease {which x y} {
 	rotate {$which marker footprint rotate end}
 	region {
 	    $which region footprint select end
-	    $which region footprint catalog highlite end
+	    $which region footprint highlite end
 	}
 	shiftregion {
 	    $which region footprint select shift end

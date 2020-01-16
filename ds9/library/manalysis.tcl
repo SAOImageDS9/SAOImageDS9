@@ -99,7 +99,7 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.image add command \
 	-label {DSS (SAO)} -command SAODialog
     $ds9(mb).analysis.image add command \
-	-label {DSS (ESO} -command ESODialog
+	-label {DSS (ESO)} -command ESODialog
     $ds9(mb).analysis.image add command \
 	-label {DSS (STSCI)} -command STSCIDialog
     $ds9(mb).analysis.image add separator
@@ -146,13 +146,16 @@ proc AnalysisMainMenu {} {
 	-label [msgcat::mc {Search for Catalogs}] \
 	-command "CATCDSSrchDialog catcdssrch1"
     $ds9(mb).analysis.cat add command -label [msgcat::mc {Clear All}] \
-	-command CATClearFrame
+	-command [list TBLClearFrame catalog]
     $ds9(mb).analysis.cat add command -label [msgcat::mc {Match}] \
 	-command CATMatchFrame
     $ds9(mb).analysis.cat add separator
     CATAnalysisMenu $ds9(mb).analysis.cat
 
     menu $ds9(mb).analysis.footprint
+    $ds9(mb).analysis.footprint add command -label [msgcat::mc {Clear All}] \
+	-command [list TBLClearFrame footprint]
+    $ds9(mb).analysis.footprint add separator
     FPAnalysisMenu $ds9(mb).analysis.footprint
 
     menu $ds9(mb).analysis.plot
@@ -259,8 +262,8 @@ proc CreateButtonsAnalysis {} {
 	"[string tolower [msgcat::mc {Block}]] 16" \
 	block(factor) {16 16} ChangeBlock
     RadioButton $ds9(buttons).analysis.b32 \
- 	"[string tolower [msgcat::mc {Block}]] 32" \
- 	block(factor) {32 32} ChangeBlock
+	"[string tolower [msgcat::mc {Block}]] 32" \
+	block(factor) {32 32} ChangeBlock
 
     CheckButton $ds9(buttons).analysis.smooth \
 	[string tolower [msgcat::mc {Smooth}]] \
@@ -325,7 +328,7 @@ proc PrefsDialogButtonbarAnalysis {f} {
 	-variable pbuttons(analysis,b16) \
 	-command {UpdateButtons buttons(analysis)}
     $m add checkbutton -label "[msgcat::mc {Block}] 32" \
- 	-variable pbuttons(analysis,b32) \
+	-variable pbuttons(analysis,b32) \
 	-command {UpdateButtons buttons(analysis)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Smooth}] \

@@ -143,7 +143,7 @@ proc FPDialog {varname title url opts colreg action} {
     ttk::entry $f.y -textvariable ${varname}(y) -width 14
 
     CoordMenuButton $f.coord $varname system 0 sky skyformat \
-	[list FPWCSMenuUpdate $varname]
+	[list TBLWCSMenuUpdate $varname]
     CoordMenuEnable $f.coord.menu $varname system sky skyformat
 
     ttk::button $f.update -text [msgcat::mc {Update}] \
@@ -265,7 +265,7 @@ proc FPApply {varname sync} {
     if {$var(name) != {}} {
 	set var(sky) fk5
 	CoordMenuButtonCmd $varname system sky {}
-	FPWCSMenuUpdate $varname
+	TBLWCSMenuUpdate $varname
 
 	NSVRServer $varname
     } else {
@@ -294,7 +294,7 @@ proc FPDestroy {varname} {
     if {[info commands $var(frame)] != {}} {
 	# unhighlite any makers
 	if {[$var(frame) has fits]} {
-	    $var(frame) marker catalog $varname unhighlite
+	    $var(frame) marker footprint $varname unhighlite
 	}
     }
 
@@ -374,17 +374,6 @@ proc FPVOT {varname} {
     # query
     set query "$var(opts)[http::formatQuery pos "$xx,$yy" size $rr]"
     FPLoad $varname $var(url) $query
-}
-
-proc FPWCSMenuUpdate {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    ARCoord $varname
-
-    set var(psystem) $var(system)
-    set var(psky) $var(sky)
-    CoordMenuButtonCmd $varname psystem psky {}
 }
 
 proc FPUpdate {varname} {

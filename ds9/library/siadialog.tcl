@@ -142,7 +142,7 @@ proc SIADialog {varname title url opts method action} {
     ttk::entry $f.y -textvariable ${varname}(y) -width 14
 
     CoordMenuButton $f.coord $varname system 0 sky skyformat \
-	[list SIAWCSMenuUpdate $varname]
+	[list TBLWCSMenuUpdate $varname]
     CoordMenuEnable $f.coord.menu $varname system sky skyformat
 
     ttk::label $f.rtitle -text [msgcat::mc {Radius}]
@@ -270,7 +270,7 @@ proc SIAApply {varname sync} {
     if {$var(name) != {}} {
 	set var(sky) fk5
 	CoordMenuButtonCmd $varname system sky {}
-	SIAWCSMenuUpdate $varname
+	TBLWCSMenuUpdate $varname
 
 	NSVRServer $varname
     } else {
@@ -468,17 +468,6 @@ proc SIAVOT {varname} {
     set query "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
 
     SIALoad $varname $var(url) $query
-}
-
-proc SIAWCSMenuUpdate {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    ARCoord $varname
-
-    set var(psystem) $var(system)
-    set var(psky) $var(sky)
-    CoordMenuButtonCmd $varname psystem psky {}
 }
 
 proc SIAUpdate {varname} {

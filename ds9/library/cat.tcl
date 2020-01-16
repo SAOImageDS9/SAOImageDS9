@@ -947,14 +947,6 @@ proc CATTool {} {
     CATDialog cattool {} {} [msgcat::mc {Catalog Tool}] none
 }
 
-proc CATClearFrame {} {
-    global current
-
-    if {$current(frame) != {}} {
-	$current(frame) marker catalog delete all
-    }
-}
-
 proc CATUpdateWCS {} {
     global icat
     global current

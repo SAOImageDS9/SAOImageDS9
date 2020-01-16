@@ -136,6 +136,31 @@ proc InitDialogBox {} {
 			     [list {MPEG} {*.mpg}] \
 			    ]
 
+    global votfbox
+    set votfbox(file) {ds9.xml}
+    set votfbox(dir) {}
+    set votfbox(types) [list \
+			       [list [::msgcat::mc {VOT}] {*.xml}] \
+			       [list [::msgcat::mc {VOT}] {*.vot}] \
+			       [list [::msgcat::mc {VOT}] {*.votable}] \
+			      ]
+
+    global rdbfbox
+    set rdbfbox(file) {ds9.rdb}
+    set rdbfbox(dir) {}
+    set rdbfbox(types) [list \
+			    [list [::msgcat::mc {RDB}] {*.cat}] \
+			    [list [::msgcat::mc {RDB}] {*.rdb}] \
+			   ]
+
+    global tsvfbox
+    set tsvfbox(file) {ds9.tsv}
+    set tsvfbox(dir) {}
+    set tsvfbox(types) [list \
+			       [list [::msgcat::mc {TSV}] {*.tsv}] \
+			       [list [::msgcat::mc {TSV}] {*.csv}] \
+			      ]
+
     global pixelfbox
     set pixelfbox(file) {ds9.pix}
     set pixelfbox(dir) {}
@@ -234,31 +259,6 @@ proc InitDialogBox {} {
     set gridfbox(types) [list \
 			     [list {GRD} {*.grd}] \
 			    ]
-
-    global votfbox
-    set votfbox(file) {ds9.xml}
-    set votfbox(dir) {}
-    set votfbox(types) [list \
-			       [list [::msgcat::mc {Catalog}] {*.xml}] \
-			       [list [::msgcat::mc {Catalog}] {*.vot}] \
-			       [list [::msgcat::mc {Catalog}] {*.votable}] \
-			      ]
-
-    global rdbfbox
-    set rdbfbox(file) {ds9.rdb}
-    set rdbfbox(dir) {}
-    set rdbfbox(types) [list \
-			    [list [::msgcat::mc {Catalog}] {*.cat}] \
-			    [list [::msgcat::mc {Catalog}] {*.rdb}] \
-			   ]
-
-    global tsvfbox
-    set tsvfbox(file) {ds9.tsv}
-    set tsvfbox(dir) {}
-    set tsvfbox(types) [list \
-			       [list [::msgcat::mc {Catalog}] {*.tsv}] \
-			       [list [::msgcat::mc {Catalog}] {*.csv}] \
-			      ]
 
     global catfltfbox
     set catfltfbox(file) {ds9.flt}

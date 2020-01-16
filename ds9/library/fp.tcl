@@ -207,7 +207,7 @@ proc FPOff {varname} {
 
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
-	    $var(frame) marker catalog $varname delete
+	    $var(frame) marker footprint $varname delete
 	}
     }
 
@@ -216,6 +216,7 @@ proc FPOff {varname} {
     FPDialogUpdate $varname
 }
 
+# used by backup
 proc FPTable {varname} {
     upvar #0 $varname var
     global $varname
@@ -237,7 +238,7 @@ proc FPTable {varname} {
     # clear regions
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
-	    $var(frame) marker catalog $varname delete
+	    $var(frame) marker footprint $varname delete
 	}
     }
 
@@ -289,7 +290,7 @@ proc FPGenerate {varname} {
     # delete any previous 
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
-	    $var(frame) marker catalog $varname delete
+	    $var(frame) marker footprint $varname delete
 	}
     }
 
@@ -299,7 +300,7 @@ proc FPGenerate {varname} {
 	FPReg $varname 1 reg
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
-		if {[catch {$var(frame) marker catalog command ds9 var reg}]} {
+		if {[catch {$var(frame) marker footprint command ds9 var reg}]} {
 		    puts $reg
 		    ARError $varname "[msgcat::mc {Internal Parse Error}]"
 		    return
@@ -348,7 +349,7 @@ proc FPUpdateWCS {} {
     global current
 
     if {$current(frame) != {}} {
-	$current(frame) marker catalog delete all
+	$current(frame) marker footprint delete all
 
 	foreach varname $ifp(fps) {
 	    upvar #0 $varname var
@@ -425,40 +426,6 @@ proc FPCmdRef {ref} {
 	    }
 	}
     }
-}
-
-proc FPCmdCoord {xx yy sky} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(x) $xx
-    set cvar(y) $yy
-    set cvar(sky) $sky
-}
-
-proc FPCmdSize {radius rformat} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(radius) $radius
-    set cvar(rformat) $rformat
-    set cvar(rformat,msg) $rformat
-}
-
-proc FPCmdSkyframe {skyframe} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(sky) $skyframe
-    CoordMenuButtonCmd $cvarname system sky [list FPWCSMenuUpdate $cvarname]
-}
-
-proc FPCmdSystem {sys} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(system) $sys
-    CoordMenuButtonCmd $cvarname system sky [list FPWCSMenuUpdate $cvarname]
 }
 
 proc ProcessSendFPCmd {proc id param sock fn} {

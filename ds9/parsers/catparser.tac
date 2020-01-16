@@ -157,7 +157,7 @@ catCmd : coordinate
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PANTO_ yesno {ProcessCmdCVAR panto $2}
  | PLOT_ STRING_ STRING_ STRING_ STRING_ {ProcessCmdCVAR4 plot,x $2 plot,y $3 plot,xerr $4 plot,yerr $5 CATPlotGenerate}
- | PRINT_ {ProcessCmdCVAR0 CATPrint}
+ | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | PSKY_ skyframe {ProcessCmdCVAR psky $2 CATGenerate}
  | PSYSTEM_ wcssys {ProcessCmdCVAR psystem $2 CATGenerate}
  | REGIONS_ {ProcessCmdCVAR0 CATGenerateRegions}

@@ -4438,7 +4438,7 @@ proc cat::yyparse {} {
                     94 { ProcessCmdCVAR name $2 }
                     95 { ProcessCmdCVAR panto $2 }
                     96 { ProcessCmdCVAR4 plot,x $2 plot,y $3 plot,xerr $4 plot,yerr $5 CATPlotGenerate }
-                    97 { ProcessCmdCVAR0 CATPrint }
+                    97 { ProcessCmdCVAR0 TBLCmdPrint }
                     98 { ProcessCmdCVAR psky $2 CATGenerate }
                     99 { ProcessCmdCVAR psystem $2 CATGenerate }
                     100 { ProcessCmdCVAR0 CATGenerateRegions }

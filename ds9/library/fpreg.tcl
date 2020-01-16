@@ -4,7 +4,6 @@
 
 package provide DS9 1.0
 
-# catreg -- convert catalog table into region string
 proc FPReg {varname interactive resultname} {
     upvar $resultname result
 

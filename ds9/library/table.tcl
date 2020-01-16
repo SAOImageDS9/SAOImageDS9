@@ -4,6 +4,14 @@
 
 package provide DS9 1.0
 
+proc TBLClearFrame {layer} {
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) marker $layer delete all
+    }
+}
+
 proc TBLValidDB {varname} {
     upvar #0 $varname var
     global $varname
@@ -107,6 +115,17 @@ proc TBLSelectTimerCancel {varname layer} {
     set var(blink,marker,color) {}
 }
 
+proc TBLWCSMenuUpdate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    ARCoord $varname
+
+    set var(psystem) $var(system)
+    set var(psky) $var(sky)
+    CoordMenuButtonCmd $varname psystem psky {}
+}
+
 # Cut/Copy
 
 proc TBLCopy {varname} {
@@ -203,6 +222,40 @@ proc TBLCmdSave {fn writer} {
     }
 }
 
+proc TBLCmdCoord {xx yy sky} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(x) $xx
+    set cvar(y) $yy
+    set cvar(sky) $sky
+}
+
+proc TBLCmdSize {radius rformat} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(radius) $radius
+    set cvar(rformat) $rformat
+    set cvar(rformat,msg) $rformat
+}
+
+proc TBLCmdSkyframe {skyframe} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(sky) $skyframe
+    CoordMenuButtonCmd $cvarname system sky [list TBLWCSMenuUpdate $cvarname]
+}
+
+proc TBLCmdSystem {sys} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(system) $sys
+    CoordMenuButtonCmd $cvarname system sky [list TBLWCSMenuUpdate $cvarname]
+}
+
 # print
 
 proc TBLPrint {varname} {
@@ -242,6 +295,18 @@ proc TBLPostScript {varname} {
 	set ch [open "| $ps(cmd)" w]
     }
 
+    starbase_writefp $var(tbldb) $ch
+    close $ch
+}
+
+proc TBLCmdPrint {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(tbldb)
+
+    global ps
+
+    set ch [open "| $ps(cmd)" w]
     starbase_writefp $var(tbldb) $ch
     close $ch
 }

@@ -1674,18 +1674,18 @@ proc fp::yyparse {} {
                     55 { TBLCmdSave $3 $2 }
                     56 { TBLCmdSave $2 VOTWrite }
                     57 { ProcessCmdCVAR name $2 }
-                    58 { ProcessCmdCVAR0 CATPrint }
+                    58 { ProcessCmdCVAR0 TBLCmdPrint }
                     59 { global cvarname; FPApply $cvarname 1 }
-                    60 { FPCmdSize $2 $3 }
-                    61 { FPCmdSize [expr ($2+$3)/2.] $4 }
-                    62 { FPCmdSkyframe $2 }
+                    60 { TBLCmdSize $2 $3 }
+                    61 { TBLCmdSize [expr ($2+$3)/2.] $4 }
+                    62 { TBLCmdSkyframe $2 }
                     63 { ProcessCmdCVAR skyformat $2 }
-                    64 { FPCmdSystem $2 }
+                    64 { TBLCmdSystem $2 }
                     65 { ProcessCVAR0 IMGSVRUpdate }
-                    66 { FPCmdCoord $1 $2 fk5 }
-                    67 { FPCmdCoord $1 $2 $3 }
-                    68 { FPCmdCoord $1 $2 fk5 }
-                    69 { FPCmdCoord $1 $2 $3 }
+                    66 { TBLCmdCoord $1 $2 fk5 }
+                    67 { TBLCmdCoord $1 $2 $3 }
+                    68 { TBLCmdCoord $1 $2 fk5 }
+                    69 { TBLCmdCoord $1 $2 $3 }
                     70 { set _ cxc }
                     71 { set _ cxc }
                     72 { set _ VOTWrite }

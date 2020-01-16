@@ -420,7 +420,7 @@ proc PlotPrintBrowse {varname} {
     set var [SaveFileDialog apsavfbox]
 }
 
-# Used for SimpleText and Catalog,SIA,Footprint
+# Used for SimpleText,Catalog,SIA,Footprint
 proc PRPrintDialog {} {
     global ps
     global ed

@@ -252,7 +252,6 @@ proc SIALoadDone {varname} {
     }
 
     SIATable $varname
-
     SIADialogUpdate $varname
 }
 
@@ -371,40 +370,6 @@ proc SIACmdRef {ref} {
 	    }
 	}
     }
-}
-
-proc SIACmdCoord {xx yy sky} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(x) $xx
-    set cvar(y) $yy
-    set cvar(sky) $sky
-}
-
-proc SIACmdSize {radius rformat} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(radius) $radius
-    set cvar(rformat) $rformat
-    set cvar(rformat,msg) $rformat
-}
-
-proc SIACmdSkyframe {skyframe} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(sky) $skyframe
-    CoordMenuButtonCmd $cvarname system sky [list SIAWCSMenuUpdate $cvarname]
-}
-
-proc SIACmdSystem {sys} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(system) $sys
-    CoordMenuButtonCmd $cvarname system sky [list SIAWCSMenuUpdate $cvarname]
 }
 
 proc ProcessSendSIACmd {proc id param sock fn} {

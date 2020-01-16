@@ -70,21 +70,21 @@ siaCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
- | PRINT_ {ProcessCmdCVAR0 CATPrint}
+ | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
- | RADIUS_ numeric rformat {SIACmdSize $2 $3}
+ | RADIUS_ numeric rformat {TBLCmdSize $2 $3}
 # backward compatibily
- | SIZE_ numeric numeric rformat {SIACmdSize [expr ($2+$3)/2.] $4}
- | SKY_ skyframe {SIACmdSkyframe $2}
+ | SIZE_ numeric numeric rformat {TBLCmdSize [expr ($2+$3)/2.] $4}
+ | SKY_ skyframe {TBLCmdSkyframe $2}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
- | SYSTEM_ wcssys {SIACmdSystem $2}
+ | SYSTEM_ wcssys {TBLCmdSystem $2}
  | UPDATE_ {ProcessCVAR0 IMGSVRUpdate}
  ;
 
-coordinate : numeric numeric {SIACmdCoord $1 $2 fk5}
- | numeric numeric skyframe {SIACmdCoord $1 $2 $3}
- | SEXSTR_ SEXSTR_ {SIACmdCoord $1 $2 fk5}
- | SEXSTR_ SEXSTR_ skyframe {SIACmdCoord $1 $2 $3}
+coordinate : numeric numeric {TBLCmdCoord $1 $2 fk5}
+ | numeric numeric skyframe {TBLCmdCoord $1 $2 $3}
+ | SEXSTR_ SEXSTR_ {TBLCmdCoord $1 $2 fk5}
+ | SEXSTR_ SEXSTR_ skyframe {TBLCmdCoord $1 $2 $3}
  ;
 
 site : 2MASS_ {set _ 2mass}

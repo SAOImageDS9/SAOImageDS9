@@ -45,7 +45,7 @@ proc FPReg {varname interactive resultname} {
 	set dash 0
 
 	if {$interactive} {
-	    set template "\${sys};$rr # color=\${color} width=\${width} dash=\${dash} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=delete FPDeleteCB {${varname}.\${ii}} callback=highlite TBLHighliteCB {${varname}.\${ii}} callback=unhighlite TBLUnhighliteCB {${varname}.\${ii}}\n"
+	    set template "\${sys};$rr # color=\${color} width=\${width} dash=\${dash} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=delete TBLDeleteCB {${varname}.\${ii}} callback=highlite TBLHighliteCB {${varname}.\${ii}} callback=unhighlite TBLUnhighliteCB {${varname}.\${ii}}\n"
 	} else {
 	    set template "\${sys};$rr # color=\${color} width=\${width} dash=\${dash} tag=$varname\n"
 	}

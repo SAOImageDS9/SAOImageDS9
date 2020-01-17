@@ -212,6 +212,9 @@ proc TBLUnhighliteCB {tag id} {
     }
 }
 
+proc TBLDeleteCB {tag id} {
+}
+
 # Cut/Copy
 
 proc TBLCopy {varname} {

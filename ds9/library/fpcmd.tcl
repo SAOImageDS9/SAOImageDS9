@@ -161,13 +161,6 @@ proc FPSelectRows {varname src rowlist cc} {
     }
 }
 
-proc FPDeleteCB {tag id} {
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPDeleteCB $tag $id"
-    }
-}
-
 # Tcl Commands
 
 proc FPButton {which x y} {
@@ -189,8 +182,6 @@ proc FPButton {which x y} {
     set imarker(handle) [lindex $h 1]
 
     if {$imarker(handle)} {
-	$which marker footprint $id edit begin $imarker(handle)
-	set imarker(motion) beginEdit
 	return
     }
 
@@ -199,10 +190,6 @@ proc FPButton {which x y} {
     set id [lindex $h 0]
     set segment [lindex $h 1]
     if {$segment} {
-	$which marker footprint $id create polygon vertex $segment $x $y
-	$which marker footprint $id edit begin $imarker(handle)
-	set imarker(handle) [expr 4+$segment+1]
-	set imarker(motion) beginEdit
 	return
     }
 
@@ -211,9 +198,6 @@ proc FPButton {which x y} {
     if {$id != 0} {
 	# select
 	if {[$which get marker footprint $id property select]} {
-	    $which marker footprint select only $x $y
-	    $which marker footprint move begin $x $y
-	    set imarker(motion) beginMove
 	    return
 	}
 	# highlite
@@ -262,15 +246,11 @@ proc FPShift {which x y} {
     set imarker(handle) [lindex $h 1]
 
     if {$imarker(handle)} {
-	$which marker footprint $id rotate begin
-	set imarker(motion) beginRotate
 	return
     }
 
     # else, see if we are on a marker
     if {[$which marker footprint select toggle $x $y]} {
-	$which marker footprint move begin $x $y
-	set imarker(motion) beginMove
 	return
     }
 
@@ -300,25 +280,6 @@ proc FPMotion {which x y} {
 
     switch -- $imarker(motion) {
 	none {}
-
-	beginMove -
-	move {
-	    $which marker footprint move motion $x $y
-	    set imarker(motion) move
-	}
-
-	beginEdit -
-	edit {
-	    $which marker footprint edit motion $x $y $imarker(handle)
-	    set imarker(motion) edit
-	}
-
-	beginRotate -
-	rotate {
-	    $which marker footprint rotate motion $x $y $imarker(handle)
-	    set imarker(motion) rotate
-	}
-
 	region -
 	shiftregion {
 	    $which region footprint select motion $x $y
@@ -342,12 +303,6 @@ proc FPRelease {which x y} {
 
     switch -- $imarker(motion) {
 	none {}
-	beginMove -
-	beginRotate {}
-	beginEdit {}
-	move {$which marker footprint move end}
-	edit {$which marker footprint edit end}
-	rotate {$which marker footprint rotate end}
 	region {
 	    $which region footprint select end
 	    $which region footprint highlite end
@@ -398,6 +353,11 @@ proc FPRelease {which x y} {
 
 	    # status
 	    TBLStatusRows $varname $rowlist
+	}
+    } else {
+	global ifp
+	foreach varname $ifp(fps) {
+	    TBLStatusRows $varname {}
 	}
     }
 }

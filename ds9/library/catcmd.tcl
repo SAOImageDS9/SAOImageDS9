@@ -396,13 +396,6 @@ proc CATRotateCB {tag id} {
     }
 }
 
-proc CATDeleteCB {tag id} {
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATDeleteCB $tag $id"
-    }
-}
-
 # Tcl Commands
 
 proc CATButton {which x y} {
@@ -662,6 +655,11 @@ proc CATRelease {which x y} {
 		    SAMPSendTableRowListCmd $varname $rowlist
 		}
 	    }
+	}
+    } else {
+	global icat
+	foreach varname $icat(cats) {
+	    TBLStatusRows $varname {}
 	}
     }
 }

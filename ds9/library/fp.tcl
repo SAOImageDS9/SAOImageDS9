@@ -55,7 +55,7 @@ proc FPGetURLFinish {varname token} {
     }
 
     if {!($var(active))} {
-	FPCancelled $varname
+	ARCancelled $varname
 	return
     }
 

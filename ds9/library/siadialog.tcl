@@ -38,6 +38,9 @@ proc SIADialog {varname title url opts method action} {
     # AR variables
     ARInit $varname SIAServer
 
+    # procs
+    set var(proc,server) SIAServer
+
     # IMG variables
     set var(proc,done) SIADone
     set var(proc,error) SIAError
@@ -80,7 +83,7 @@ proc SIADialog {varname title url opts method action} {
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Retrieve}] \
-	-command [list SIAApply $varname 0]
+	-command [list TBLApply $varname 0]
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command [list ARCancel $varname]
     $mb.file add separator
@@ -210,7 +213,7 @@ proc SIADialog {varname title url opts method action} {
 
     set var(apply) [ttk::button $f.apply \
 			-text [msgcat::mc {Retrieve}] \
-			-command [list SIAApply $varname 0]]
+			-command [list TBLApply $varname 0]]
     set var(cancel) [ttk::button $f.cancel -text \
 			 [msgcat::mc {Cancel}] \
 			 -command [list ARCancel $varname] \
@@ -244,38 +247,13 @@ proc SIADialog {varname title url opts method action} {
     ARStatus $varname {}
 
     switch -- $action {
-	apply {SIAApply $varname 0}
-	sync {SIAApply $varname 1}
+	apply {TBLApply $varname 0}
+	sync {TBLApply $varname 1}
 	none {}
     }
 
     # return the actual varname
     return $varname
-}
-
-proc SIAApply {varname sync} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIAApply $varname $sync"
-    }
-
-    set var(sync) $sync
-    ARApply $varname
-    $var(mb).file entryconfig [msgcat::mc {Load}] -state disabled
-    $var(load) configure -state disabled
-
-    if {$var(name) != {}} {
-	set var(sky) fk5
-	CoordMenuButtonCmd $varname system sky {}
-	TBLWCSMenuUpdate $varname
-
-	NSVRServer $varname
-    } else {
-	SIAServer $varname
-    }
 }
 
 proc SIADestroy {varname} {

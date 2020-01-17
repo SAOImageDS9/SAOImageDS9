@@ -45,6 +45,9 @@ proc CATDialog {varname format catalog title action} {
     # AR variables
     ARInit $varname CATServer
 
+    # procs
+    set var(proc,server) CATServer
+
     # CAT variables
     lappend icat(cats) $varname
 
@@ -616,7 +619,7 @@ proc CATApply {varname sync} {
 
 	NSVRServer $varname
     } else {
-	CATServer $varname
+	eval $var(proc,server) $varname
     }
 }
 

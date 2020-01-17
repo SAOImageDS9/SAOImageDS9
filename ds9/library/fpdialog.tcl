@@ -38,6 +38,9 @@ proc FPDialog {varname title url opts colreg action} {
     # AR variables
     ARInit $varname FPServer
 
+    # procs
+    set var(proc,server) FPServer
+
     # FP variables
     lappend ifp(fps) $varname
 
@@ -84,7 +87,7 @@ proc FPDialog {varname title url opts colreg action} {
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Retrieve}] \
-	-command [list FPApply $varname 0]
+	-command [list TBLApply $varname 0]
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command [list ARCancel $varname]
     $mb.file add command -label [msgcat::mc {Clear}] \
@@ -214,7 +217,7 @@ proc FPDialog {varname title url opts colreg action} {
 
     set var(apply) [ttk::button $f.apply \
 			-text [msgcat::mc {Retrieve}] \
-			-command [list FPApply $varname 0]]
+			-command [list TBLApply $varname 0]]
     set var(cancel) [ttk::button $f.cancel -text \
 			 [msgcat::mc {Cancel}] \
 			 -command [list ARCancel $varname] \
@@ -241,36 +244,13 @@ proc FPDialog {varname title url opts colreg action} {
     ARStatus $varname {}
 
     switch -- $action {
-	apply {FPApply $varname 0}
-	sync {FPApply $varname 1}
+	apply {TBLApply $varname 0}
+	sync {TBLApply $varname 1}
 	none {}
     }
 
     # return the actual varname
     return $varname
-}
-
-proc FPApply {varname sync} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPApply $varname $sync"
-    }
-
-    set var(sync) $sync
-    ARApply $varname
-
-    if {$var(name) != {}} {
-	set var(sky) fk5
-	CoordMenuButtonCmd $varname system sky {}
-	TBLWCSMenuUpdate $varname
-
-	NSVRServer $varname
-    } else {
-	FPServer $varname
-    }
 }
 
 proc FPDestroy {varname} {

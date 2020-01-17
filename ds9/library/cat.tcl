@@ -242,6 +242,7 @@ proc CATLoad {varname} {
 
     set var(proc,done) CATLoadDone
     set var(proc,load) CATLoad
+
     CATGetURL $varname
     return
 }

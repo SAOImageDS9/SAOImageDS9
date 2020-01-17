@@ -151,6 +151,7 @@ proc CATCDSSrchLoad {varname} {
 
     set var(proc,done) CATCDSSrchDone
     set var(proc,load) CATCDSSrchLoad
+
     CATGetURL $varname
     return 
 }

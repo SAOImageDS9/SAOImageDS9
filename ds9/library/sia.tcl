@@ -94,11 +94,6 @@ proc SIAGetURL {varname url query} {
     upvar #0 $varname var
     global $varname
 
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIAGetURL $varname $url?$query"
-    }
-
     # save just in case of redirection
     set var(qq) $query
     
@@ -120,7 +115,7 @@ proc SIAGetURL {varname url query} {
 	    set var(active) 1
 	    SIAGetURLFinish $varname $var(token)
 	} else {
-	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
 	}
     } else {
 	if {![catch {set var(token) [http::geturl $url \
@@ -136,7 +131,7 @@ proc SIAGetURL {varname url query} {
 
 	    set var(active) 1
 	} else {
-	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
 	}
     }
 }
@@ -201,7 +196,7 @@ proc SIAGetURLFinish {varname token} {
 	}
 
 	default {
-	    SIAError $varname "[msgcat::mc {Error code was returned}] $code"
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"]
 	}
     }
 }

@@ -39,8 +39,6 @@ proc SIADialog {varname title url opts action} {
     ARInit $varname SIAServer
 
     # procs
-
-    # IMG variables
     set var(proc,done) SIADone
     set var(proc,error) SIAError
 
@@ -408,7 +406,7 @@ proc SIAImageCmd {varname} {
 		IMGSVRGetURL $varname $url {}
 	    }
 	    default {
-		SIAError $varname "$r(scheme) [msgcat::mc {Not Supported}]"
+		eval [list $var(proc,error) $varname "$r(scheme) [msgcat::mc {Not Supported}]"]
 		return
 	    }
 	}
@@ -546,6 +544,6 @@ proc SIAServer {varname} {
 	ARStatus $varname [msgcat::mc {Contacting Image Server}]
 	SIAVOT $varname
     } else {
-	SIAError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
+	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
     }
 }

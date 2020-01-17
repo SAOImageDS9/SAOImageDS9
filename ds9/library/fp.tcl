@@ -49,11 +49,6 @@ proc FPGetURL {varname url query} {
     upvar #0 $varname var
     global $varname
 
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPGetURL $varname $url?$query"
-    }
-
     # save just in case of redirection
     set var(qq) $query
     
@@ -75,7 +70,7 @@ proc FPGetURL {varname url query} {
 	    set var(active) 1
 	    FPGetURLFinish $varname $var(token)
 	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $url"
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
 	}
     } else {
 	if {![catch {set var(token) [http::geturl $url \
@@ -91,7 +86,7 @@ proc FPGetURL {varname url query} {
 
 	    set var(active) 1
 	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $url"
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
 	}
     }
 }
@@ -156,7 +151,7 @@ proc FPGetURLFinish {varname token} {
 	}
 
 	default {
-	    ARError $varname "[msgcat::mc {Error code was returned}] $code"
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"]
 	}
     }
 }
@@ -301,7 +296,7 @@ proc FPGenerate {varname} {
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
 		if {[catch {$var(frame) marker footprint command ds9 var reg}]} {
-		    ARError $varname "[msgcat::mc {Internal Parse Error}]"
+		    eval [list $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"]
 		    return
 		}
 	    }
@@ -334,7 +329,7 @@ proc FPGenerateRegions {varname} {
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    if {[catch {$var(frame) marker command ds9 var reg}]} {
-		ARError $varname "[msgcat::mc {Internal Parse Error}]"
+		eval [list $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"]
 		return
 	    }
 	}

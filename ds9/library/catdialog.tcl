@@ -45,6 +45,9 @@ proc CATDialog {varname format catalog title action} {
     # AR variables
     ARInit $varname CATServer
 
+    # procs
+    set var(proc,error) ARError
+
     # CAT variables
     lappend icat(cats) $varname
 
@@ -879,7 +882,7 @@ proc CATServer {varname} {
 	    simbad {CATSIMBAD $varname}
 	}
     } else {
-	ARError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
+	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
     }
 }
 

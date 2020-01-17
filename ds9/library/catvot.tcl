@@ -53,11 +53,9 @@ proc CATVOTHTTP {url catalog title} {
     upvar #0 $varname var
     global $varname
 
-    set ${varname}(query) {}
-    set ${varname}(url) $url
     set ${varname}(proc,parser) VOTParse
 
-    CATLoad $varname
+    CATLoad $varname $url {}
 }
 
 proc CATVOTFile {fn} {

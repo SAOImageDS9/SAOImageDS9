@@ -107,7 +107,7 @@ proc CATCDSSrch {varname} {
     set site [CATCDSURL $var(server)]
     set cgidir {viz-bin}
     set script {votable}
-    set var(url) "http://$site/$cgidir/$script"
+    set url "http://$site/$cgidir/$script"
     
     # defaults
     set query {-meta}
@@ -127,15 +127,13 @@ proc CATCDSSrch {varname} {
 	append query "&[http::formatQuery $var(list,mission,param) $var(mission)]"
     }
     if {$var(astro) !={}} {
-	append query "&[http::formatQuery $var(list,astro,param) $var(astro)]"
+pppp	append query "&[http::formatQuery $var(list,astro,param) $var(astro)]"
     }
 
-    set var(query) $query
-
-    CATCDSSrchLoad $varname
+    CATCDSSrchLoad $varname $url $query
 }
 
-proc CATCDSSrchLoad {varname} {
+proc CATCDSSrchLoad {varname url query} {
     upvar #0 $varname var
     global $varname
     global $var(catdb)
@@ -152,7 +150,7 @@ proc CATCDSSrchLoad {varname} {
     set var(proc,done) CATCDSSrchDone
     set var(proc,load) CATCDSSrchLoad
 
-    CATGetURL $varname
+    CATGetURL $varname $url $query
     return 
 }
 

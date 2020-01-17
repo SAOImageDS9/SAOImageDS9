@@ -132,9 +132,9 @@ proc CATSkyBotVOT {varname} {
     }
 
     # query
-    set var(query) [http::formatQuery EPOCH $epoch RA $xx DEC $yy SR $rr VERB $type -mime votable -loc $var(loc) -filter 0 -objFilter $var(asteroids)$var(planets)$var(comets)]
-    set var(url) "http://vo.imcce.fr/webservices/skybot/skybotconesearch_query.php"
-    CATLoad $varname
+    set query [http::formatQuery EPOCH $epoch RA $xx DEC $yy SR $rr VERB $type -mime votable -loc $var(loc) -filter 0 -objFilter $var(asteroids)$var(planets)$var(comets)]
+    set url "http://vo.imcce.fr/webservices/skybot/skybotconesearch_query.php"
+    CATLoad $varname $url $query
 }
 
 proc CATSkyBotAck {varname} {

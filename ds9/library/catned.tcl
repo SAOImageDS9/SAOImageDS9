@@ -89,11 +89,10 @@ proc CATNED {varname} {
     }
 
     # url
-    set var(query) {}
     set query [http::formatQuery search_type "Near Position Search" RA $xx DEC $yy SR $rr of $out in_csys $sky in_equinox $eq out_csys $psky out_equinox $peq]
-    set var(url) "http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch?$query"
+    set url "http://ned.ipac.caltech.edu/cgi-bin/nph-objsearch"
 
-    CATLoad $varname
+    CATLoad $varname "$url?$query" {}
 }
 
 proc CATNEDAck {varname} {

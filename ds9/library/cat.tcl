@@ -112,21 +112,24 @@ proc CATDef {} {
 
 # Load via HTTP
 
-proc CATGetURL {varname} {
+proc CATGetURL {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATGetURL $varname $var(url)?$var(query)"
+	puts stderr "CATGetURL $varname $url?$query"
     }
+
+    # save just in case of redirection
+    set var(qq) $query
 
     ARStatus $varname [msgcat::mc {Loading}]
 
     global ihttp
     if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -query $var(query) \
+	if {![catch {set var(token) [http::geturl $url \
+					 -query $query \
 					 -timeout $ihttp(timeout) \
 					 -headers "[ProxyHTTP]"]
 	}]} {
@@ -137,11 +140,11 @@ proc CATGetURL {varname} {
 	    set var(active) 1
 	    CATGetURLFinish $varname $var(token)
 	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
+	    ARError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     } else {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -query $var(query) \
+	if {![catch {set var(token) [http::geturl $url \
+					 -query $query \
 					 -timeout $ihttp(timeout) \
 					 -command \
 					 [list CATGetURLFinish $varname] \
@@ -153,7 +156,7 @@ proc CATGetURL {varname} {
 
 	    set var(active) 1
 	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
+	    ARError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     }
 }
@@ -215,8 +218,7 @@ proc CATGetURLFinish {varname token} {
 		    http::cleanup $token
 		    unset var(token)
 
-		    set var(url) $value
-		    eval $var(proc,load) $varname
+		    eval $var(proc,load) $varname $value $var(qq)
 		}
 	    }
 	}
@@ -225,7 +227,7 @@ proc CATGetURLFinish {varname token} {
     }
 }
 
-proc CATLoad {varname} {
+proc CATLoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
@@ -237,13 +239,13 @@ proc CATLoad {varname} {
 
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATLoad $varname $var(url)?$var(query)"
+	puts stderr "CATLoad $varname $url?$query"
     }
 
     set var(proc,done) CATLoadDone
     set var(proc,load) CATLoad
 
-    CATGetURL $varname
+    CATGetURL $varname $url $query
     return
 }
 

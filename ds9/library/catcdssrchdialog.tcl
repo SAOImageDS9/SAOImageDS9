@@ -322,14 +322,14 @@ proc CATCDSSrchConfig {varname} {
     set cgidir {viz-bin}
     set script {votable}
 
-    set var(url) "http://$site/$cgidir/$script"
-    set var(query) [http::formatQuery -meta.aladin all]
+    set url "http://$site/$cgidir/$script"
+    set query [http::formatQuery -meta.aladin all]
 
-    CATCDSSrchConfigLoad $varname
+    CATCDSSrchConfigLoad $varname $url $query
     return
 }
 
-proc CATCDSSrchConfigLoad {varname} {
+proc CATCDSSrchConfigLoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
@@ -341,7 +341,8 @@ proc CATCDSSrchConfigLoad {varname} {
     set var(proc,parser) CATCDSSrchConfigParse
     set var(proc,done) CATCDSSrchConfigDone
     set var(proc,load) CATCDSSrchConfigLoad
-    CATGetURL $varname
+
+    CATGetURL $varname $url $query
     return 
 }
 

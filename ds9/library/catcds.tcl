@@ -21,7 +21,7 @@ proc CATCDS {varname} {
     set site [CATCDSURL $var(server)]
     set cgidir {viz-bin}
     set script {votable}
-    set var(url) "http://$site/$cgidir/$script"
+    set url "http://$site/$cgidir/$script"
     
     # query
     switch $var(skyformat) {
@@ -80,10 +80,7 @@ proc CATCDS {varname} {
 	append query "&-out.all"
     }
 
-    # url?query
-    set var(query) $query
-
-    CATLoad $varname
+    CATLoad $varname $url $query
 }
 
 proc CATCDSURL {server} {

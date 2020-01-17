@@ -4,26 +4,6 @@
 
 package provide DS9 1.0
 
-proc TBLApply {varname sync} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(sync) $sync
-    ARApply $varname
-    $var(mb).file entryconfig [msgcat::mc {Load}] -state disabled
-    $var(load) configure -state disabled
-
-    if {$var(name) != {}} {
-	set var(sky) fk5
-	CoordMenuButtonCmd $varname system sky {}
-	TBLWCSMenuUpdate $varname
-
-	NSVRServer $varname
-    } else {
-	eval $var(proc,server) $varname
-    }
-}
-
 proc TBLClearFrame {layer} {
     global current
 

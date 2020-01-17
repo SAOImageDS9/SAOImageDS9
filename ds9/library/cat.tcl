@@ -137,7 +137,7 @@ proc CATGetURL {varname} {
 	    set var(active) 1
 	    CATGetURLFinish $varname $var(token)
 	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
+	    eval $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
 	}
     } else {
 	if {![catch {set var(token) [http::geturl $var(url) \
@@ -153,7 +153,7 @@ proc CATGetURL {varname} {
 
 	    set var(active) 1
 	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
+	    eval $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
 	}
     }
 }
@@ -221,7 +221,7 @@ proc CATGetURLFinish {varname token} {
 	    }
 	}
 
-	default {ARError $varname "[msgcat::mc {Error code was returned}] $code"}
+	default {eval $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"}
     }
 }
 
@@ -494,7 +494,7 @@ proc CATGenerate {varname} {
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
 		if {[catch {$var(frame) marker catalog command ds9 var reg}]} {
-		    ARError $varname "[msgcat::mc {Internal Parse Error}]"
+		    eval $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		    return
 		}
 	    }
@@ -527,7 +527,7 @@ proc CATGenerateRegions {varname} {
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    if {[catch {$var(frame) marker command ds9 var reg}]} {
-		ARError $varname "[msgcat::mc {Internal Parse Error}]"
+		eval $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		return
 	    }
 	}

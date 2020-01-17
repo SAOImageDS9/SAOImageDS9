@@ -39,7 +39,6 @@ proc SIADialog {varname title url opts method action} {
     ARInit $varname SIAServer
 
     # procs
-    set var(proc,server) SIAServer
 
     # IMG variables
     set var(proc,done) SIADone
@@ -83,7 +82,7 @@ proc SIADialog {varname title url opts method action} {
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Retrieve}] \
-	-command [list TBLApply $varname 0]
+	-command [list SIAApply $varname 0]
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command [list ARCancel $varname]
     $mb.file add separator
@@ -213,7 +212,7 @@ proc SIADialog {varname title url opts method action} {
 
     set var(apply) [ttk::button $f.apply \
 			-text [msgcat::mc {Retrieve}] \
-			-command [list TBLApply $varname 0]]
+			-command [list SIAApply $varname 0]]
     set var(cancel) [ttk::button $f.cancel -text \
 			 [msgcat::mc {Cancel}] \
 			 -command [list ARCancel $varname] \
@@ -247,13 +246,33 @@ proc SIADialog {varname title url opts method action} {
     ARStatus $varname {}
 
     switch -- $action {
-	apply {TBLApply $varname 0}
-	sync {TBLApply $varname 1}
+	apply {SIAApply $varname 0}
+	sync {SIAApply $varname 1}
 	none {}
     }
 
     # return the actual varname
     return $varname
+}
+
+proc SIAApply {varname sync} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(sync) $sync
+    ARApply $varname
+    $var(mb).file entryconfig [msgcat::mc {Load}] -state disabled
+    $var(load) configure -state disabled
+
+    if {$var(name) != {}} {
+	set var(sky) fk5
+	CoordMenuButtonCmd $varname system sky {}
+	TBLWCSMenuUpdate $varname
+
+	NSVRServer $varname
+    } else {
+	SIAServer $varname
+    }
 }
 
 proc SIADestroy {varname} {
@@ -390,7 +409,7 @@ proc SIAImageCmd {varname} {
 		IMGSVRGetURL $varname $url {}
 	    }
 	    default {
-		SIAError $varname "$r(scheme) [msgcat::mc {Not Supported}]"
+		eval $var(proc,error) $varname "$r(scheme) [msgcat::mc {Not Supported}]"
 		return
 	    }
 	}
@@ -528,6 +547,6 @@ proc SIAServer {varname} {
 	ARStatus $varname [msgcat::mc {Contacting Image Server}]
 	SIAVOT $varname
     } else {
-	SIAError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
+	eval $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
     }
 }

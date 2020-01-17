@@ -51,7 +51,7 @@ proc CATSelectEditCmd {varname ss rc} {
     
     if {[string is integer -strict $next]} {
 	set mk "\{${varname}.${next}\}"
-	CATPanTo $varname $mk
+	TBLPanTo $varname $mk catalog
 	$var(frame) marker catalog $mk select
     }
 }
@@ -113,7 +113,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 
     # status
-    CATStatusRows $varname $rowlist
+    TBLStatusRows $varname $rowlist
 
     # plot
     if {$var(plot)} {
@@ -124,7 +124,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     SAMPSendTableRowListCmd $varname $rowlist
 
     # panto
-    CATPanTo $varname [lindex $var(blink,marker) 0]
+    TBLPanTo $varname [lindex $var(blink,marker) 0] catalog
 
     # start timer, if needed
     if {!$var(blink)} {
@@ -195,7 +195,7 @@ proc CATSelectRows {varname src rowlist cc} {
     }
 
     # status
-    CATStatusRows $varname $rowlist
+    TBLStatusRows $varname $rowlist
 
     # source of call
     switch $src {
@@ -210,36 +210,12 @@ proc CATSelectRows {varname src rowlist cc} {
     }
 
     # panto
-    CATPanTo $varname [lindex $var(blink,marker) 0]
+    TBLPanTo $varname [lindex $var(blink,marker) 0] catalog
 
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
 	TBLSelectTimer $varname catalog
-    }
-}
-
-proc CATPanTo {varname mk} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    # pan to first region
-    if {$var(panto) && $mk != {}} {
-	set tt [$var(frame) get marker catalog $mk tag]
-	if {$tt!={}} {
-	    set cc [$var(frame) get marker catalog $tt center \
-			$var(psystem) $var(psky)]
-	    PanToFrame $var(frame) [lindex $cc 0] [lindex $cc 1] \
-		$var(psystem) $var(psky)
-	}
     }
 }
 
@@ -693,7 +669,7 @@ proc CATRelease {which x y} {
 		    global $varname
 
 		    # status
-		    CATStatusRows $varname $rowlist
+		    TBLStatusRows $varname $rowlist
 
 		    # plot
 		    if {[info exists var(plot)]} {
@@ -722,7 +698,7 @@ proc CATRelease {which x y} {
 	    global $varname
 
 	    # status
-	    CATStatusRows $varname $rowlist
+	    TBLStatusRows $varname $rowlist
 
 	    #plot
 	    if {[info exists var(plot)]} {

@@ -26,6 +26,18 @@ proc TBLValidDB {varname} {
     }
 }
 
+proc TBLStatusRows {varname rowlist} {
+    upvar #0 $varname var
+    global $varname
+
+    # rowlist start at 1
+    if {[llength $rowlist]>0} {
+	ARStatus $varname "[msgcat::mc {Row}] [join $rowlist {,}]"
+    } else {
+	ARStatus $varname {}
+    }
+}
+
 proc TBLSelectTimer {varname layer} {
     upvar #0 $varname var
     global $varname
@@ -113,6 +125,30 @@ proc TBLSelectTimerCancel {varname layer} {
     set var(blink,count) 0
     set var(blink,marker) {}
     set var(blink,marker,color) {}
+}
+
+proc TBLPanTo {varname mk layer} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[info commands $var(frame)] == {}} {
+	return
+    }
+
+    if {![$var(frame) has fits]} {
+	return
+    }
+
+    # pan to first region
+    if {$var(panto) && $mk != {}} {
+	set tt [$var(frame) get marker $layer $mk tag]
+	if {$tt!={}} {
+	    set cc [$var(frame) get marker $layer $tt center \
+			$var(psystem) $var(psky)]
+	    PanToFrame $var(frame) [lindex $cc 0] [lindex $cc 1] \
+		$var(psystem) $var(psky)
+	}
+    }
 }
 
 proc TBLWCSMenuUpdate {varname} {

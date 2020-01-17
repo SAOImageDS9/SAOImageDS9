@@ -329,18 +329,6 @@ proc CATLoadFn {varname fn reader} {
 
 # Other procedures
 
-proc CATStatusRows {varname rowlist} {
-    upvar #0 $varname var
-    global $varname
-
-    # rowlist start at 1
-    if {[llength $rowlist]>0} {
-	ARStatus $varname "[msgcat::mc {Row}] [join $rowlist {,}]"
-    } else {
-	ARStatus $varname {}
-    }
-}
-
 proc CATOff {varname} {
     upvar #0 $varname var
     global $varname

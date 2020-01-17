@@ -939,10 +939,8 @@ proc CATColsUpdate {varname} {
 	physical -
 	detector -
 	amplifier {
-	    $var(raname) configure -text {X} \
-		-font [font actual TkDefaultFont]
-	    $var(decname) configure -text {Y} \
-		-font [font actual TkDefaultFont]
+	    $var(raname) configure -text {X} -font [font actual TkDefaultFont]
+	    $var(decname) configure -text {Y} -font [font actual TkDefaultFont]
 	}
 	default {
 	    if {[$var(frame) has wcs celestial $var(psystem)]} {

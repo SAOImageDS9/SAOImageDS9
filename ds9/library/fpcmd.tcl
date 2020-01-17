@@ -6,18 +6,6 @@ package provide DS9 1.0
 
 # Table Commands
 
-proc FPStatusRows {varname rowlist} {
-    upvar #0 $varname var
-    global $varname
-
-    # rowlist start at 1
-    if {[llength $rowlist]>0} {
-	ARStatus $varname "[msgcat::mc {Row}] [join $rowlist {,}]"
-    } else {
-	ARStatus $varname {}
-    }
-}
-
 proc FPSelectCmd {varname ss rc} {
     upvar #0 $varname var
     global $varname
@@ -87,10 +75,10 @@ proc FPSelectBrowseCmd {varname ss rc} {
     }
 
     # status
-    FPStatusRows $varname $rowlist
+    TBLStatusRows $varname $rowlist
 
     # panto
-    FPPanTo $varname [lindex $var(blink,marker) 0]
+    TBLPanTo $varname [lindex $var(blink,marker) 0] footprint
 
     # start timer, if needed
     if {!$var(blink)} {
@@ -161,39 +149,15 @@ proc FPSelectRows {varname src rowlist cc} {
     }
 
     # status
-    FPStatusRows $varname $rowlist
+    TBLStatusRows $varname $rowlist
 
     # panto
-    FPPanTo $varname [lindex $var(blink,marker) 0]
+    TBLPanTo $varname [lindex $var(blink,marker) 0] footprint
 
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
 	TBLSelectTimer $varname footprint
-    }
-}
-
-proc FPPanTo {varname mk} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    # pan to first region
-    if {$var(panto) && $mk != {}} {
-	set tt [$var(frame) get marker footprint $mk tag]
-	if {$tt!={}} {
-	    set cc [$var(frame) get marker footprint $tt center \
-			$var(psystem) $var(psky)]
-	    PanToFrame $var(frame) [lindex $cc 0] [lindex $cc 1] \
-		$var(psystem) $var(psky)
-	}
     }
 }
 
@@ -469,7 +433,7 @@ proc FPRelease {which x y} {
 		    global $varname
 
 		    # status
-		    FPStatusRows $varname $rowlist
+		    TBLStatusRows $varname $rowlist
 		}
 
 		# now a new list
@@ -484,7 +448,7 @@ proc FPRelease {which x y} {
 	    global $varname
 
 	    # status
-	    FPStatusRows $varname $rowlist
+	    TBLStatusRows $varname $rowlist
 	}
     }
 }

@@ -452,4 +452,3 @@ proc FPServer {varname} {
 	ARError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
     }
 }
-

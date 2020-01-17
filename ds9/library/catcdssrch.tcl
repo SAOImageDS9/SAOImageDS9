@@ -150,7 +150,7 @@ proc CATCDSSrchLoad {varname url query} {
     set var(proc,done) CATCDSSrchDone
     set var(proc,load) CATCDSSrchLoad
 
-    CATGetURL $varname $url $query
+    TBLGetURL $varname $url $query
     return 
 }
 

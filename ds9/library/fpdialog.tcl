@@ -40,6 +40,7 @@ proc FPDialog {varname title url opts colreg action} {
 
     # procs
     set var(proc,error) ARError
+    set var(proc,geturlfinish) FPGetURLFinish
 
     # FP variables
     lappend ifp(fps) $varname

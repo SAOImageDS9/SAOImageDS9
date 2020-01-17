@@ -4,6 +4,50 @@
 
 package provide DS9 1.0
 
+proc TBLGetURL {varname url query} {
+    upvar #0 $varname var
+    global $varname
+
+    # save just in case of redirection
+    set var(qq) $query
+
+    ARStatus $varname [msgcat::mc {Loading}]
+
+    global ihttp
+    if {$var(sync)} {
+	if {![catch {set var(token) [http::geturl $url \
+					 -query $query \
+					 -timeout $ihttp(timeout) \
+					 -headers "[ProxyHTTP]"]
+	}]} {
+	    # reset errorInfo (may be set in http::geturl)
+	    global errorInfo
+	    set errorInfo {}
+
+	    set var(active) 1
+	    eval [list $var(proc,geturlfinish) $varname $var(token)]
+	} else {
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
+	}
+    } else {
+	if {![catch {set var(token) [http::geturl $url \
+					 -query $query \
+					 -timeout $ihttp(timeout) \
+					 -command \
+					 [list $var(proc,geturlfinish) $varname] \
+					 -headers "[ProxyHTTP]"]
+	}]} {
+	    # reset errorInfo (may be set in http::geturl)
+	    global errorInfo
+	    set errorInfo {}
+
+	    set var(active) 1
+	} else {
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
+	}
+    }
+}
+
 proc TBLClearFrame {layer} {
     global current
 

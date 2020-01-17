@@ -35,6 +35,10 @@ proc CATCDSSrchDialog {varname} {
     set var(list,astro,param) $icatcdssrch(list,astro,param)
     set var(list,astro) $icatcdssrch(list,astro)
 
+    # procs
+    set var(proc,error) ARError
+    set var(proc,geturlfinish) CATGetURLFinish
+
     # AR variables
     set var(status) {}
     set var(sync) 0
@@ -342,7 +346,7 @@ proc CATCDSSrchConfigLoad {varname url query} {
     set var(proc,done) CATCDSSrchConfigDone
     set var(proc,load) CATCDSSrchConfigLoad
 
-    CATGetURL $varname $url $query
+    TBLGetURL $varname $url $query
     return 
 }
 

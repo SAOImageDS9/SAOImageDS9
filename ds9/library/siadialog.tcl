@@ -41,6 +41,7 @@ proc SIADialog {varname title url opts action} {
     # procs
     set var(proc,done) SIADone
     set var(proc,error) SIAError
+    set var(proc,geturlfinish) SIAGetURLFinish
 
     # SIA variables
     lappend isia(sias) $varname

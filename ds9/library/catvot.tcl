@@ -66,4 +66,3 @@ proc CATVOTFile {fn} {
  	CATLoadFn [lindex $icat(cats) end] $fn VOTRead
     }
 }
-

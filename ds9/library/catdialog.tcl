@@ -47,6 +47,7 @@ proc CATDialog {varname format catalog title action} {
 
     # procs
     set var(proc,error) ARError
+    set var(proc,geturlfinish) CATGetURLFinish
 
     # CAT variables
     lappend icat(cats) $varname

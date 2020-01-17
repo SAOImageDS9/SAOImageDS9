@@ -90,52 +90,6 @@ proc SIAAnalysisMenu {mb} {
     }
 }
 
-proc SIAGetURL {varname url query} {
-    upvar #0 $varname var
-    global $varname
-
-    # save just in case of redirection
-    set var(qq) $query
-    
-    ARStatus $varname [msgcat::mc {Loading}]
-
-    global ihttp
-    if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $url \
-					 -query $query \
-					 -timeout $ihttp(timeout) \
-					 -headers "[ProxyHTTP]"]
-
-
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	    SIAGetURLFinish $varname $var(token)
-	} else {
-	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
-	}
-    } else {
-	if {![catch {set var(token) [http::geturl $url \
-					 -query $query \
-					 -timeout $ihttp(timeout) \
-					 -command \
-					 [list SIAGetURLFinish $varname] \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	} else {
-	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
-	}
-    }
-}
-
 proc SIAGetURLFinish {varname token} {
     upvar #0 $varname var
     global $varname
@@ -190,7 +144,7 @@ proc SIAGetURLFinish {varname token} {
 		    http::cleanup $token
 		    unset var(token)
 
-		    SIAGetURL $varname $value $var(qq)
+		    SIALoad $varname $value $var(qq)
 		}
 	    }
 	}
@@ -216,7 +170,7 @@ proc SIALoad {varname url query} {
 	puts stderr "SIALoad $varname $url?$query"
     }
 
-    SIAGetURL $varname $url $query
+    TBLGetURL $varname $url $query
     return
 }
 

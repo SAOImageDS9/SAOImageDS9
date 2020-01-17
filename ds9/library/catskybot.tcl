@@ -75,7 +75,7 @@ proc CATSkyBotVOT {varname} {
 	set epoch [string trim [$current(frame) get fits header keyword DATE]]
     }
     if {$epoch == {}} {
-	eval $var(proc,error) $varname [msgcat::mc {Unable to determine date of observation}]
+	ARError $varname [msgcat::mc {Unable to determine date of observation}]
 	return
     }
 

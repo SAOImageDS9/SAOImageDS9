@@ -5,7 +5,7 @@
 package provide DS9 1.0
 
 # used by backup
-proc SIADialog {varname title url opts method action} {
+proc SIADialog {varname title url opts action} {
     global sia
     global isia
     global psia
@@ -18,7 +18,7 @@ proc SIADialog {varname title url opts method action} {
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIADialog $varname:$title:$url:$opts:$action:$method"
+	puts stderr "SIADialog $varname:$title:$url:$opts:$action:"
     }
 
     # main dialog
@@ -60,7 +60,6 @@ proc SIADialog {varname title url opts method action} {
     set var(url) $url
     set var(title) $title
     set var(opts) $opts
-    set var(method) $method
 
     # create the window
     set w $var(top)
@@ -409,7 +408,7 @@ proc SIAImageCmd {varname} {
 		IMGSVRGetURL $varname $url {}
 	    }
 	    default {
-		eval $var(proc,error) $varname "$r(scheme) [msgcat::mc {Not Supported}]"
+		SIAError $varname "$r(scheme) [msgcat::mc {Not Supported}]"
 		return
 	    }
 	}
@@ -547,6 +546,6 @@ proc SIAServer {varname} {
 	ARStatus $varname [msgcat::mc {Contacting Image Server}]
 	SIAVOT $varname
     } else {
-	eval $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
+	SIAError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
     }
 }

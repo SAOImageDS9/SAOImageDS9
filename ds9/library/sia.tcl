@@ -26,59 +26,51 @@ proc SIADef {} {
 			     sia2mass \
 			     {http://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia}\
 			     {} \
-			     post \
 			} \
 			{{AKARI (ISAS/JAXA)} \
 			     siaakari \
 			     {http://jvo.nao.ac.jp/skynode/do/siap/akari/fis_image_v1/1.0}\
 			     {} \
-			     post \
 			} \
 			{{Astro-Wise} \
 			     siaastrowise \
 			     {http://vo.astro-wise.org/SIAP}\
 			     {VERB=2&FORM=VOTable&PROJECT=ALL&INSTRUMENT=ALL&} \
-			     post \
 			} \
 			{{CADC} \
 			     siacadc \
 			     {http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query}\
 			     {} \
-			     post \
 			} \
 			{{Chandra (NASA/CXC)} \
 			     siacxc \
 			     {http://cda.harvard.edu/cxcsiap/queryImages}\
 			     {} \
-			     post \
 			} \
-			{{Hubble Legacy Archive (STSCI)} siahla \
+			{{Hubble Legacy Archive (STSCI)} \
+			     siahla \
 			     {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi}\
 			     {} \
-			     get \
 			} \
-			{{MAST (STSCI)} siamast \
+			{{MAST (STSCI)} \
+			     siamast \
 			     {http://archive.stsci.edu/siap/search.php}\
 			     {} \
-			     post \
 			} \
 			{{SDSS DR12} \
 			     siasdss \
 			     {http://skyserver.sdss.org/SkyserverWS/dr12/SIAP/getSIAP}\
 			     {} \
-			     get \
 			} \
 			{{SkyView (NASA/HEASARC)} \
 			     siaskyview \
 			     {http://skyview.gsfc.nasa.gov/cgi-bin/vo/sia.pl}\
 			     {} \
-			     post \
 			} \
 			{{TGSSADR (GMRT)} \
 			     siatgssadr \
 			     {http://vo.astron.nl/tgssadr/q_fits/imgs/siap.xml}\
 			     {} \
-			     post \
 			 } \
 		    }
 }
@@ -92,10 +84,9 @@ proc SIAAnalysisMenu {mb} {
 	set vars [lindex $ff 1]
 	set url [lindex $ff 2]
 	set opts [lindex $ff 3]
-	set method [lindex $ff 4]
 
 	$mb add command -label $title \
-	    -command [list SIADialog $vars $title $url $opts $method apply]
+	    -command [list SIADialog $vars $title $url $opts apply]
     }
 }
 
@@ -105,21 +96,13 @@ proc SIAGetURL {varname url query} {
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIAGetURL $varname $var(method) $url?$query"
+	puts stderr "SIAGetURL $varname $url?$query"
     }
 
     # save just in case of redirection
     set var(qq) $query
     
     ARStatus $varname [msgcat::mc {Loading}]
-
-    # geturl --method does not work
-    switch $var(method) {
-	get {
-	    set url $url?$query
-	    set query {}
-	}
-    }
 
     global ihttp
     if {$var(sync)} {
@@ -137,7 +120,7 @@ proc SIAGetURL {varname url query} {
 	    set var(active) 1
 	    SIAGetURLFinish $varname $var(token)
 	} else {
-	    eval $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"
+	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     } else {
 	if {![catch {set var(token) [http::geturl $url \
@@ -153,7 +136,7 @@ proc SIAGetURL {varname url query} {
 
 	    set var(active) 1
 	} else {
-	    eval $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"
+	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     }
 }
@@ -218,7 +201,7 @@ proc SIAGetURLFinish {varname token} {
 	}
 
 	default {
-	    eval $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"
+	    SIAError $varname "[msgcat::mc {Error code was returned}] $code"
 	}
     }
 }
@@ -362,10 +345,9 @@ proc SIACmdRef {ref} {
 	    set vars [lindex $mm 1]
 	    set url [lindex $mm 2]
 	    set opts [lindex $mm 3]
-	    set method [lindex $mm 4]
 
 	    if {$title != {-} && "sia${ref}" == $vars} {
-		SIADialog $vars $title $url $opts $method sync
+		SIADialog $vars $title $url $opts sync
 		set cvarname sia${ref}
 	    }
 	}

@@ -38,9 +38,6 @@ proc FPDialog {varname title url opts colreg action} {
     # AR variables
     ARInit $varname FPServer
 
-    # procs
-    set var(proc,error) ARError
-
     # FP variables
     lappend ifp(fps) $varname
 
@@ -447,6 +444,6 @@ proc FPServer {varname} {
 	ARStatus $varname [msgcat::mc {Contacting Image Server}]
 	FPVOT $varname
     } else {
-	eval $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
+	ARError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
     }
 }

@@ -163,7 +163,7 @@ proc CATCDSSrchCatalog {varname} {
     }
 }
 
-# parser
+# Parser
 
 proc CATCDSSrchVOTParse {t token} {
     upvar #0 $t T

@@ -138,7 +138,7 @@ proc CATProcess {varname} {
 	puts stderr "CATProcess $varname"
     }
 
-    $var(proc,parser) $var(catdb) $var(token)
+    VOTParse $var(catdb) $var(token)
     ARDone $varname
 
     CATLoadDone $varname

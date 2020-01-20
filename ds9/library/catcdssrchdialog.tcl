@@ -404,6 +404,8 @@ proc CATCDSSrchConfigDone {varname} {
     CATCDSSrchConfigParse
 }
 
+# Parser
+
 proc CATCDSSrchConfigParse {t token} {
     upvar #0 $t T
     global $t

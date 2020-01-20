@@ -46,7 +46,6 @@ proc CATDialog {varname format catalog title action} {
     ARInit $varname CATServer
 
     # procs
-    set var(proc,parser) VOTParse
     set var(proc,process) CATProcess
     set var(proc,load) CATLoad
     set var(proc,error) ARError
@@ -491,7 +490,6 @@ proc CATDialog {varname format catalog title action} {
 	cxc -
 	ned -
 	skybot -
-	sdss -
 	simbad {
 	    $mb entryconfig [msgcat::mc {Catalog Server}] -state disabled
 	}

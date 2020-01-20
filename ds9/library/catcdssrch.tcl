@@ -46,7 +46,7 @@ proc CATCDSSrchProcess {varname} {
 	puts stderr "CATCDSSrchProcess $varname"
     }
 
-    $var(proc,parser) $var(catdb) $var(token)
+    CATCDSSrchVOTParse $var(catdb) $var(token)
     ARDone $varname
 
     CATCDSSrchTable $varname

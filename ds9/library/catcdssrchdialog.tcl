@@ -32,17 +32,12 @@ proc CATCDSSrchDialog {varname} {
     set var(proc,error) ARError
 
     # defaults
-    # maybe modified
     set var(list,wave,param) $icatcdssrch(list,wave,param)
     set var(list,wave) $icatcdssrch(list,wave)
     set var(list,mission,param) $icatcdssrch(list,mission,param)
     set var(list,mission) $icatcdssrch(list,mission)
     set var(list,astro,param) $icatcdssrch(list,astro,param)
     set var(list,astro) $icatcdssrch(list,astro)
-
-    # procs
-    set var(proc,error) ARError
-    set var(proc,geturlfinish) CATGetURLFinish
 
     # AR variables
     set var(status) {}

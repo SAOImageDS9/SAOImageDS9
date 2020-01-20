@@ -86,6 +86,7 @@
 ::msgcat::mcset zh {Bin} 
 ::msgcat::mcset zh {Black} [encoding convertfrom big5 "\xB6\xC2 \xA6\xE2"]
 ::msgcat::mcset zh {Blank/Inf/NaN Color} 
+::msgcat::mcset zh {Blend} 
 ::msgcat::mcset zh {Blink Frames} 
 ::msgcat::mcset zh {Blink Interval} 
 ::msgcat::mcset zh {Blink} 
@@ -163,7 +164,7 @@
 ::msgcat::mcset zh {Connect Using Web Proxy} 
 ::msgcat::mcset zh {Connect} 
 ::msgcat::mcset zh {Console} 
-::msgcat::mcset zh {Contacting Image Server} 
+::msgcat::mcset zh {Contacting Server} 
 ::msgcat::mcset zh {Contour Parameters} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Contour Paste} 
 ::msgcat::mcset zh {Contour Save} 
@@ -285,6 +286,7 @@
 ::msgcat::mcset zh {FAQ} 
 ::msgcat::mcset zh {FK4} 
 ::msgcat::mcset zh {FK5} 
+::msgcat::mcset zh {FP} 
 ::msgcat::mcset zh {Factor} 
 ::msgcat::mcset zh {File not Found or Unable to load FITS data MIME type} 
 ::msgcat::mcset zh {Filename} [encoding convertfrom big5 "\xC0\xC9 \xAE\xD7 \xA6\x57 \xBA\xD9"]
@@ -299,6 +301,8 @@
 ::msgcat::mcset zh {Fixed in Size} [encoding convertfrom big5 "\xA9\x54 \xA9\x77 \xA4\x6A \xA4\x70"]
 ::msgcat::mcset zh {Flat} 
 ::msgcat::mcset zh {Font} 
+::msgcat::mcset zh {Footprint Servers} 
+::msgcat::mcset zh {Footprint} 
 ::msgcat::mcset zh {For more information, use --help} 
 ::msgcat::mcset zh {Forground} 
 ::msgcat::mcset zh {Format} 
@@ -527,6 +531,8 @@
 ::msgcat::mcset zh {Move to Back} 
 ::msgcat::mcset zh {Move to Front} 
 ::msgcat::mcset zh {Movie} 
+::msgcat::mcset zh {Muliple Extension Cube} 
+::msgcat::mcset zh {Muliple Extension Frames} 
 ::msgcat::mcset zh {Multiple Extension Cube} 
 ::msgcat::mcset zh {Multiple Extension Frames} 
 ::msgcat::mcset zh {Multiple WCS} 
@@ -563,8 +569,19 @@
 ::msgcat::mcset zh {Numerics} [encoding convertfrom big5 "\xBC\xC6 \xAD\xC8"]
 ::msgcat::mcset zh {OK} 
 ::msgcat::mcset zh {Object} [encoding convertfrom big5 "\xA4\xD1 \xC5\xE9 \xA6\x57 \xBA\xD9"]
+::msgcat::mcset zh {Opaque} 
 ::msgcat::mcset zh {Open File} 
+::msgcat::mcset zh {Open ME Cube} 
+::msgcat::mcset zh {Open ME Frames} 
+::msgcat::mcset zh {Open Mosaic IRAF Seg} 
+::msgcat::mcset zh {Open Mosaic IRAF} 
+::msgcat::mcset zh {Open Mosaic WCS Seg} 
+::msgcat::mcset zh {Open Mosaic WCS} 
+::msgcat::mcset zh {Open Mosaic WFPC2} 
+::msgcat::mcset zh {Open RGB Cube} 
+::msgcat::mcset zh {Open RGB Image} 
 ::msgcat::mcset zh {Open Regions} 
+::msgcat::mcset zh {Open Slice} 
 ::msgcat::mcset zh {Open TCL Console} 
 ::msgcat::mcset zh {Open URL} 
 ::msgcat::mcset zh {Open as} 
@@ -636,6 +653,7 @@
 ::msgcat::mcset zh {Proxy Port} 
 ::msgcat::mcset zh {Publication} 
 ::msgcat::mcset zh {Quadratic} 
+::msgcat::mcset zh {RDB} 
 ::msgcat::mcset zh {RGB Array} 
 ::msgcat::mcset zh {RGB Cube} 
 ::msgcat::mcset zh {RGB Image} 
@@ -686,7 +704,13 @@
 ::msgcat::mcset zh {Save Data} 
 ::msgcat::mcset zh {Save Image on Download} 
 ::msgcat::mcset zh {Save Image} [encoding convertfrom big5 "\xC0\x78 \xA6\x73 \xBC\x76 \xB9\xB3"]
+::msgcat::mcset zh {Save ME Cube} 
+::msgcat::mcset zh {Save Mosaic WCS Seg} 
+::msgcat::mcset zh {Save Mosaic WCS} 
+::msgcat::mcset zh {Save RGB Cube} 
+::msgcat::mcset zh {Save RGB Image} 
 ::msgcat::mcset zh {Save Regions} [encoding convertfrom big5 "\xC0\x78 \xA6\x73 \xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {Save Slice} 
 ::msgcat::mcset zh {Save Template} 
 ::msgcat::mcset zh {Save as} 
 ::msgcat::mcset zh {Save} [encoding convertfrom big5 "\xC0\x78 \xA6\x73"]
@@ -698,7 +722,6 @@
 ::msgcat::mcset zh {Scatter} 
 ::msgcat::mcset zh {Scope} 
 ::msgcat::mcset zh {Search for Catalogs} 
-::msgcat::mcset zh {Searching for catalogs} 
 ::msgcat::mcset zh {Seconds} 
 ::msgcat::mcset zh {Segment} 
 ::msgcat::mcset zh {Select All} [encoding convertfrom big5 "\xBF\xEF \xA8\xFA \xA5\xFE \xB3\xA1"]
@@ -759,6 +782,7 @@
 ::msgcat::mcset zh {Sunken} 
 ::msgcat::mcset zh {Symbol Editor} 
 ::msgcat::mcset zh {Symbol} 
+::msgcat::mcset zh {TSV} 
 ::msgcat::mcset zh {Tab-Separated-Value} 
 ::msgcat::mcset zh {Table} 
 ::msgcat::mcset zh {Tabloid} 
@@ -783,6 +807,7 @@
 ::msgcat::mcset zh {Top} 
 ::msgcat::mcset zh {To} 
 ::msgcat::mcset zh {Transparency} 
+::msgcat::mcset zh {Transparent} 
 ::msgcat::mcset zh {Triangle} 
 ::msgcat::mcset zh {Type} 
 ::msgcat::mcset zh {URL} 
@@ -790,6 +815,7 @@
 ::msgcat::mcset zh {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset zh {Unable to determine date of observation} 
 ::msgcat::mcset zh {Unable to evaluate filter} 
+::msgcat::mcset zh {Unable to find Footprint window} 
 ::msgcat::mcset zh {Unable to find SIAP window} 
 ::msgcat::mcset zh {Unable to find URL column} 
 ::msgcat::mcset zh {Unable to find catalog window} 
@@ -831,6 +857,7 @@
 ::msgcat::mcset zh {User} 
 ::msgcat::mcset zh {Use} 
 ::msgcat::mcset zh {VO Server} 
+::msgcat::mcset zh {VOT} 
 ::msgcat::mcset zh {VO} 
 ::msgcat::mcset zh {Value} 
 ::msgcat::mcset zh {Vector} [encoding convertfrom big5 "\xA6\x56 \xB6\x71"]

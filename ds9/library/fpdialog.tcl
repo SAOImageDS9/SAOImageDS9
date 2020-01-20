@@ -39,8 +39,9 @@ proc FPDialog {varname title url opts colreg action} {
     ARInit $varname FPServer
 
     # procs
+    set var(proc,process) FPProcess
+    set var(proc,load) FPLoad
     set var(proc,error) ARError
-    set var(proc,geturlfinish) FPGetURLFinish
 
     # FP variables
     lappend ifp(fps) $varname
@@ -272,6 +273,62 @@ proc FPApply {varname sync} {
     }
 }
 
+proc FPServer {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,fp)} {
+	puts stderr "FPServer $varname"
+    }
+
+    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
+	ARStatus $varname [msgcat::mc {Contacting Server}]
+	FPVOT $varname
+    } else {
+	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
+    }
+}
+
+proc FPVOT {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,fp)} {
+	puts stderr "FPVOT $varname"
+    }
+
+    # coord (degrees)
+    switch $var(skyformat) {
+	degrees {
+	    set xx $var(x)
+	    set yy $var(y)
+	}
+	sexagesimal {
+	    set xx [h2d [Sex2H $var(x)]]
+	    set yy [Sex2D $var(y)]
+	}
+    }
+
+    # radius (degrees)
+    switch $var(rformat) {
+	degrees {
+	    set rr $var(radius)
+	}
+	arcmin {
+	    set rr [expr $var(radius)/60.]
+	}
+	arcsec {
+	    set rr [expr $var(radius)/60./60.]
+	}
+    }
+
+    # query
+    set query "$var(opts)[http::formatQuery pos "$xx,$yy" size $rr]"
+    FPLoad $varname $var(url) $query
+}
+
 proc FPDestroy {varname} {
     upvar #0 $varname var
     global $varname
@@ -336,45 +393,6 @@ proc FPDialogUpdate {varname} {
     }
 }
 
-proc FPVOT {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPVOT $varname"
-    }
-
-    # coord (degrees)
-    switch $var(skyformat) {
-	degrees {
-	    set xx $var(x)
-	    set yy $var(y)
-	}
-	sexagesimal {
-	    set xx [h2d [Sex2H $var(x)]]
-	    set yy [Sex2D $var(y)]
-	}
-    }
-
-    # radius (degrees)
-    switch $var(rformat) {
-	degrees {
-	    set rr $var(radius)
-	}
-	arcmin {
-	    set rr [expr $var(radius)/60.]
-	}
-	arcsec {
-	    set rr [expr $var(radius)/60./60.]
-	}
-    }
-
-    # query
-    set query "$var(opts)[http::formatQuery pos "$xx,$yy" size $rr]"
-    FPLoad $varname $var(url) $query
-}
-
 proc FPUpdate {varname} {
     upvar #0 $varname var
     global $varname
@@ -432,22 +450,5 @@ proc FPCrosshair {varname} {
 		       $var(system) $var(sky) $var(skyformat)]
 	set var(x) [lindex $coord 0]
 	set var(y) [lindex $coord 1]
-    }
-}
-
-proc FPServer {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPServer $varname"
-    }
-
-    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
-	ARStatus $varname [msgcat::mc {Contacting Image Server}]
-	FPVOT $varname
-    } else {
-	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
     }
 }

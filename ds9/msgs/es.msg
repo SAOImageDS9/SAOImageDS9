@@ -86,6 +86,7 @@
 ::msgcat::mcset es {Bin} 
 ::msgcat::mcset es {Black} {Negro}
 ::msgcat::mcset es {Blank/Inf/NaN Color} {Color en blanco/Inf/NaN}
+::msgcat::mcset es {Blend} 
 ::msgcat::mcset es {Blink Frames} {Parpadear Marcos}
 ::msgcat::mcset es {Blink Interval} {Intervalo de parpadeo}
 ::msgcat::mcset es {Blink} {Parpadear}
@@ -163,7 +164,7 @@
 ::msgcat::mcset es {Connect Using Web Proxy} {Conecta, usa Web Proxy}  
 ::msgcat::mcset es {Connect} 
 ::msgcat::mcset es {Console} 
-::msgcat::mcset es {Contacting Image Server} 
+::msgcat::mcset es {Contacting Server} 
 ::msgcat::mcset es {Contour Parameters} [encoding convertfrom iso8859-1 {Parámetros de contorno}]
 ::msgcat::mcset es {Contour Paste} 
 ::msgcat::mcset es {Contour Save} 
@@ -285,6 +286,7 @@
 ::msgcat::mcset es {FAQ} 
 ::msgcat::mcset es {FK4} 
 ::msgcat::mcset es {FK5} 
+::msgcat::mcset es {FP} 
 ::msgcat::mcset es {Factor} 
 ::msgcat::mcset es {File not Found or Unable to load FITS data MIME type} {Fichero no hallado o incapaz de cargar datos FITS de tipo MIME}
 ::msgcat::mcset es {Filename} {Nombre del fichero}
@@ -299,6 +301,8 @@
 ::msgcat::mcset es {Fixed in Size} [encoding convertfrom iso8859-1 {Fijado en tamaño}]
 ::msgcat::mcset es {Flat} 
 ::msgcat::mcset es {Font} {Fuente}
+::msgcat::mcset es {Footprint Servers} 
+::msgcat::mcset es {Footprint} 
 ::msgcat::mcset es {For more information, use --help} 
 ::msgcat::mcset es {Forground} 
 ::msgcat::mcset es {Format} {Formato}
@@ -527,6 +531,8 @@
 ::msgcat::mcset es {Move to Back} [encoding convertfrom iso8859-1 {Poner detrás}]
 ::msgcat::mcset es {Move to Front} {Poner delante}
 ::msgcat::mcset es {Movie} 
+::msgcat::mcset es {Muliple Extension Cube} 
+::msgcat::mcset es {Muliple Extension Frames} 
 ::msgcat::mcset es {Multiple Extension Cube} 
 ::msgcat::mcset es {Multiple Extension Frames} 
 ::msgcat::mcset es {Multiple WCS} [encoding convertfrom iso8859-1 {Múltiple WCS}]
@@ -563,8 +569,19 @@
 ::msgcat::mcset es {Numerics} [encoding convertfrom iso8859-1 {Numeración}]
 ::msgcat::mcset es {OK} {Vale} 
 ::msgcat::mcset es {Object} {Objeto}
+::msgcat::mcset es {Opaque} 
 ::msgcat::mcset es {Open File} {Abrir fichero}
+::msgcat::mcset es {Open ME Cube} 
+::msgcat::mcset es {Open ME Frames} 
+::msgcat::mcset es {Open Mosaic IRAF Seg} 
+::msgcat::mcset es {Open Mosaic IRAF} 
+::msgcat::mcset es {Open Mosaic WCS Seg} 
+::msgcat::mcset es {Open Mosaic WCS} 
+::msgcat::mcset es {Open Mosaic WFPC2} 
+::msgcat::mcset es {Open RGB Cube} 
+::msgcat::mcset es {Open RGB Image} 
 ::msgcat::mcset es {Open Regions} 
+::msgcat::mcset es {Open Slice} 
 ::msgcat::mcset es {Open TCL Console} {Abrir consola TCL}
 ::msgcat::mcset es {Open URL} {Abrir URL}
 ::msgcat::mcset es {Open as} 
@@ -636,6 +653,7 @@
 ::msgcat::mcset es {Proxy Port} 
 ::msgcat::mcset es {Publication} [encoding convertfrom iso8859-1 {Publicación}]
 ::msgcat::mcset es {Quadratic} [encoding convertfrom iso8859-1 {Cuadrático}]
+::msgcat::mcset es {RDB} 
 ::msgcat::mcset es {RGB Array} 
 ::msgcat::mcset es {RGB Cube} 
 ::msgcat::mcset es {RGB Image} 
@@ -686,7 +704,13 @@
 ::msgcat::mcset es {Save Data} {Guardar datos}
 ::msgcat::mcset es {Save Image on Download} 
 ::msgcat::mcset es {Save Image} {Guardar imagen}
+::msgcat::mcset es {Save ME Cube} 
+::msgcat::mcset es {Save Mosaic WCS Seg} 
+::msgcat::mcset es {Save Mosaic WCS} 
+::msgcat::mcset es {Save RGB Cube} 
+::msgcat::mcset es {Save RGB Image} 
 ::msgcat::mcset es {Save Regions} {Guardar regiones}
+::msgcat::mcset es {Save Slice} 
 ::msgcat::mcset es {Save Template} {Guardar modelo}
 ::msgcat::mcset es {Save as} 
 ::msgcat::mcset es {Save} {Guardar}
@@ -698,7 +722,6 @@
 ::msgcat::mcset es {Scatter} 
 ::msgcat::mcset es {Scope} {Alcance}
 ::msgcat::mcset es {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar por catálogos}]
-::msgcat::mcset es {Searching for catalogs} [encoding convertfrom iso8859-1 {Buscando por catálogos}]
 ::msgcat::mcset es {Seconds} {Segundos}
 ::msgcat::mcset es {Segment} 
 ::msgcat::mcset es {Select All} {Seleccionar todos}
@@ -759,6 +782,7 @@
 ::msgcat::mcset es {Sunken} 
 ::msgcat::mcset es {Symbol Editor} [encoding convertfrom iso8859-1 {Editor de símbolos}]
 ::msgcat::mcset es {Symbol} [encoding convertfrom iso8859-1 {Símbolo}]
+::msgcat::mcset es {TSV} 
 ::msgcat::mcset es {Tab-Separated-Value} 
 ::msgcat::mcset es {Table} 
 ::msgcat::mcset es {Tabloid} 
@@ -783,6 +807,7 @@
 ::msgcat::mcset es {Top} 
 ::msgcat::mcset es {To} {A} 
 ::msgcat::mcset es {Transparency} 
+::msgcat::mcset es {Transparent} 
 ::msgcat::mcset es {Triangle} 
 ::msgcat::mcset es {Type} {Clase} 
 ::msgcat::mcset es {URL} 
@@ -790,6 +815,7 @@
 ::msgcat::mcset es {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset es {Unable to determine date of observation} 
 ::msgcat::mcset es {Unable to evaluate filter} {Incapaz de evaluar el filtro}
+::msgcat::mcset es {Unable to find Footprint window} 
 ::msgcat::mcset es {Unable to find SIAP window} 
 ::msgcat::mcset es {Unable to find URL column} 
 ::msgcat::mcset es {Unable to find catalog window} [encoding convertfrom iso8859-1 {Incapaz de hallar la ventana de catálogo}]
@@ -831,6 +857,7 @@
 ::msgcat::mcset es {User} {Usuario}
 ::msgcat::mcset es {Use} {Usa} 
 ::msgcat::mcset es {VO Server} 
+::msgcat::mcset es {VOT} 
 ::msgcat::mcset es {VO} 
 ::msgcat::mcset es {Value} {Valor}
 ::msgcat::mcset es {Vector} 

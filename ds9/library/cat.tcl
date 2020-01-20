@@ -110,79 +110,14 @@ proc CATDef {} {
     set pcat(sym,font,slant) roman
 }
 
-# Load via HTTP
-
-proc CATGetURLFinish {varname token} {
+proc CATLoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATGetURLFinish $varname"
+	puts stderr "CATLoad $varname $url?$query"
     }
-
-    if {!($var(active))} {
-	ARCancelled $varname
-	return
-    }
-
-    upvar #0 $token t
-
-    # Code
-    set code [http::ncode $token]
-
-    # Meta
-    set meta $t(meta)
-
-    # Log it
-    HTTPLog $token
-
-    # Result?
-    switch -- $code {
-	{} -
-	200 -
-	203 -
-	404 -
-	503 {
-	    if {[info exist ${varname}(proc,parser)]} {
-		eval [list $var(proc,parser) $var(catdb) $token]
-	    }
-
-	    ARDone $varname
-	    eval $var(proc,done) $varname
-	}
-
-	201 -
-	300 -
-	301 -
-	302 -
-	303 -
-	305 -
-	307 {
-	    foreach {name value} $meta {
-		if {[regexp -nocase ^location$ $name]} {
-		    global debug
-		    if {$debug(tcl,cat)} {
-			puts stderr "CATGetURLFinish redirect $code to $value"
-		    }
-		    # clean up and resubmit
-		    http::cleanup $token
-		    unset var(token)
-
-		    eval $var(proc,load) $varname $value $var(qq)
-		}
-	    }
-	}
-
-	default {
-	    eval [list $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"]
-	}
-    }
-}
-
-proc CATLoad {varname url query} {
-    upvar #0 $varname var
-    global $varname
 
     # clear previous db
     global $var(catdb)
@@ -190,16 +125,23 @@ proc CATLoad {varname url query} {
 	unset $var(catdb)
     }
 
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATLoad $varname $url?$query"
-    }
-
-    set var(proc,done) CATLoadDone
-    set var(proc,load) CATLoad
-
     TBLGetURL $varname $url $query
     return
+}
+
+proc CATProcess {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATProcess $varname"
+    }
+
+    $var(proc,parser) $var(catdb) $var(token)
+    ARDone $varname
+
+    CATLoadDone $varname
 }
 
 proc CATLoadDone {varname} {
@@ -215,118 +157,6 @@ proc CATLoadDone {varname} {
     CATConfigCols $varname
     CATColsMenu $varname
     CATTable $varname
-
-    CATDialogUpdate $varname
-}
-
-# Load via File
-
-proc CATLoadVOTFile {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set fn [OpenFileDialog votfbox]
-    if {$fn != {}} {
-	CATLoadFn $varname $fn VOTRead
-    }
-}
-
-proc CATLoadRDBFile {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set fn [OpenFileDialog rdbfbox]
-    if {$fn != {}} {
-	CATLoadFn $varname $fn starbase_read
-    }
-}
-
-proc CATLoadTSVFile {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set fn [OpenFileDialog tsvfbox]
-    if {$fn != {}} {
-	CATLoadFn $varname $fn TSVRead
-    }
-}
-
-# used by backup
-proc CATLoadFn {varname fn reader} {
-    upvar #0 $varname var
-    global $varname
-    global $var(catdb)
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATLoadFn $varname $fn $reader"
-    }
-
-    ARStatus $varname [msgcat::mc {Loading Catalog}]
-
-    CATOff $varname
-    CATSet $varname {} {} $fn
-
-    set var(name) {}
-    set var(x) {}
-    set var(y) {}
-    set var(radius) {}
-
-    if {[file exists $fn]} {
-	$reader $var(catdb) $fn
-    } else {
-	Error "[msgcat::mc {Unable to open file}] $fn"
-	return
-    }
-
-    ARDone $varname
-    CATLoadDone $varname
-}
-
-# Other procedures
-
-proc CATOff {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global $var(catdb)
-    if {[info exists $var(catdb)]} {
-	unset $var(catdb)
-    }
-    global $var(tbldb)
-    if {[info exists $var(tbldb)]} {
-	unset $var(tbldb)
-    }
-    set db $var(tbldb)
-    set ${db}(Nrows) {}
-
-    $var(tbl) selection clear all
-
-    if {[info commands $var(frame)] != {}} {
-	if {[$var(frame) has fits]} {
-	    $var(frame) marker catalog $varname delete
-	}
-    }
-
-    CATSortMenu $varname
-    CATColsMenu $varname
-    set var(filter) {}
-    set var(sort) {}
-    set var(colx) {}
-    set var(coly) {}
-
-    set var(blink) 0
-
-    # plot window?
-    if {$var(plot)} {
-	PlotDestroy $var(plot,var)
-	set var(plot) 0
-	set var(plot,var) {}
-	set var(plot,x) {}
-	set var(plot,xerr) {}
-	set var(plot,y) {}
-	set var(plot,yerr) {}
-    }
 
     CATDialogUpdate $varname
 }
@@ -449,7 +279,7 @@ proc CATGenerate {varname} {
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
 		if {[catch {$var(frame) marker catalog command ds9 var reg}]} {
-		    eval [list $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"]
+		    $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		    return
 		}
 	    }
@@ -482,13 +312,125 @@ proc CATGenerateRegions {varname} {
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    if {[catch {$var(frame) marker command ds9 var reg}]} {
-		eval [list $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"]
+		$var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		return
 	    }
 	}
     }
 
     ARStatus $varname [msgcat::mc Done]
+}
+
+# Load via File
+
+proc CATLoadVOTFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog votfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn VOTRead
+    }
+}
+
+proc CATLoadRDBFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog rdbfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn starbase_read
+    }
+}
+
+proc CATLoadTSVFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog tsvfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn TSVRead
+    }
+}
+
+# used by backup
+proc CATLoadFn {varname fn reader} {
+    upvar #0 $varname var
+    global $varname
+    global $var(catdb)
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATLoadFn $varname $fn $reader"
+    }
+
+    ARStatus $varname [msgcat::mc {Loading Catalog}]
+
+    CATOff $varname
+    CATSet $varname {} {} $fn
+
+    set var(name) {}
+    set var(x) {}
+    set var(y) {}
+    set var(radius) {}
+
+    if {[file exists $fn]} {
+	$reader $var(catdb) $fn
+    } else {
+	Error "[msgcat::mc {Unable to open file}] $fn"
+	return
+    }
+
+    ARDone $varname
+    CATLoadDone $varname
+}
+
+# Other procedures
+
+proc CATOff {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global $var(catdb)
+    if {[info exists $var(catdb)]} {
+	unset $var(catdb)
+    }
+    global $var(tbldb)
+    if {[info exists $var(tbldb)]} {
+	unset $var(tbldb)
+    }
+    set db $var(tbldb)
+    set ${db}(Nrows) {}
+
+    $var(tbl) selection clear all
+
+    if {[info commands $var(frame)] != {}} {
+	if {[$var(frame) has fits]} {
+	    $var(frame) marker catalog $varname delete
+	}
+    }
+
+    CATSortMenu $varname
+    CATColsMenu $varname
+    set var(filter) {}
+    set var(sort) {}
+    set var(colx) {}
+    set var(coly) {}
+
+    set var(blink) 0
+
+    # plot window?
+    if {$var(plot)} {
+	PlotDestroy $var(plot,var)
+	set var(plot) 0
+	set var(plot,var) {}
+	set var(plot,x) {}
+	set var(plot,xerr) {}
+	set var(plot,y) {}
+	set var(plot,yerr) {}
+    }
+
+    CATDialogUpdate $varname
 }
 
 proc CATGenerateUpdate {varname row} {

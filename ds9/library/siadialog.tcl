@@ -39,9 +39,10 @@ proc SIADialog {varname title url opts action} {
     ARInit $varname SIAServer
 
     # procs
-    set var(proc,done) SIADone
+    set var(proc,process) SIAProcess
+    set var(proc,load) SIALoad
     set var(proc,error) SIAError
-    set var(proc,geturlfinish) SIAGetURLFinish
+    set var(proc,done) SIADone
 
     # SIA variables
     lappend isia(sias) $varname
@@ -273,6 +274,64 @@ proc SIAApply {varname sync} {
     }
 }
 
+proc SIAServer {varname} {
+    upvar #0 $varname var
+    global $varname
+    global current
+
+    global debug
+    if {$debug(tcl,image)} {
+	puts stderr "SIAServer $varname"
+    }
+
+    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
+	ARStatus $varname [msgcat::mc {Contacting Server}]
+	SIAVOT $varname
+    } else {
+	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
+    }
+}
+
+proc SIAVOT {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,sia)} {
+	puts stderr "SIAVOT $varname"
+    }
+
+    # coord (degrees)
+    switch $var(skyformat) {
+	degrees {
+	    set xx $var(x)
+	    set yy $var(y)
+	}
+	sexagesimal {
+	    set xx [h2d [Sex2H $var(x)]]
+	    set yy [Sex2D $var(y)]
+	}
+    }
+
+    # radius (degrees)
+    switch $var(rformat) {
+	degrees {
+	    set rr $var(radius)
+	}
+	arcmin {
+	    set rr [expr $var(radius)/60.]
+	}
+	arcsec {
+	    set rr [expr $var(radius)/60./60.]
+	}
+    }
+
+    # query
+    set query "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
+
+    SIALoad $varname $var(url) $query
+}
+
 proc SIADestroy {varname} {
     upvar #0 $varname var
     global $varname
@@ -425,46 +484,6 @@ proc SIASelectCmd {varname ss rc} {
     }
 }
 
-proc SIAVOT {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIAVOT $varname"
-    }
-
-    # coord (degrees)
-    switch $var(skyformat) {
-	degrees {
-	    set xx $var(x)
-	    set yy $var(y)
-	}
-	sexagesimal {
-	    set xx [h2d [Sex2H $var(x)]]
-	    set yy [Sex2D $var(y)]
-	}
-    }
-
-    # radius (degrees)
-    switch $var(rformat) {
-	degrees {
-	    set rr $var(radius)
-	}
-	arcmin {
-	    set rr [expr $var(radius)/60.]
-	}
-	arcsec {
-	    set rr [expr $var(radius)/60./60.]
-	}
-    }
-
-    # query
-    set query "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
-
-    SIALoad $varname $var(url) $query
-}
-
 proc SIAUpdate {varname} {
     upvar #0 $varname var
     global $varname
@@ -531,20 +550,3 @@ proc SIACrosshair {varname} {
     }
 }
 
-proc SIAServer {varname} {
-    upvar #0 $varname var
-    global $varname
-    global current
-
-    global debug
-    if {$debug(tcl,image)} {
-	puts stderr "SIAServer $varname"
-    }
-
-    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
-	ARStatus $varname [msgcat::mc {Contacting Image Server}]
-	SIAVOT $varname
-    } else {
-	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
-    }
-}

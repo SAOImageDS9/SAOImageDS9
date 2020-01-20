@@ -26,8 +26,6 @@ proc CATCXCVOT {varname} {
 	puts stderr "CATCXCVOT $varname"
     }
 
-    set var(proc,parser) VOTParse
-    
     # coord (degrees)
     switch $var(skyformat) {
 	degrees {

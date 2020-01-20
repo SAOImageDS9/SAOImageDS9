@@ -90,74 +90,14 @@ proc SIAAnalysisMenu {mb} {
     }
 }
 
-proc SIAGetURLFinish {varname token} {
+proc SIALoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIAGetURLFinish $varname"
+	puts stderr "SIALoad $varname $url?$query"
     }
-
-    if {!($var(active))} {
-	SIACancelled $varname
-	return
-    }
-
-    upvar #0 $token t
-
-    # Code
-    set code [http::ncode $token]
-
-    # Meta
-    set meta $t(meta)
-
-    # Log it
-    HTTPLog $token
-
-    # Result?
-    switch -- $code {
-	{} -
-	200 -
-	203 -
-	404 -
-	503 {
-	    VOTParse $var(tbldb) $token
-	    SIADone $varname
- 	    SIALoadDone $varname
-	}
-
-	201 -
-	300 -
-	301 -
-	302 -
-	303 -
-	305 -
-	307 {
-	    foreach {name value} $meta {
-		if {[regexp -nocase ^location$ $name]} {
-		    global debug
-		    if {$debug(tcl,sia)} {
-			puts stderr "SIAGetURLFinish redirect $code to $value"
-		    }
-		    # clean up and resubmit
-		    http::cleanup $token
-		    unset var(token)
-
-		    SIALoad $varname $value $var(qq)
-		}
-	    }
-	}
-
-	default {
-	    eval [list $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"]
-	}
-    }
-}
-
-proc SIALoad {varname url query} {
-    upvar #0 $varname var
-    global $varname
 
     # clear previous db
     global $var(tbldb)
@@ -165,41 +105,23 @@ proc SIALoad {varname url query} {
 	unset $var(tbldb)
     }
 
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIALoad $varname $url?$query"
-    }
-
     TBLGetURL $varname $url $query
     return
 }
 
-proc SIALoadDone {varname} {
+proc SIAProcess {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIALoadDone $varname"
+	puts stderr "SIAProcess $varname"
     }
+
+    VOTParse $var(tbldb) $var(token)
+    SIADone $varname
 
     SIATable $varname
-    SIADialogUpdate $varname
-}
-
-proc SIAOff {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global $var(tbldb)
-    if {[info exists $var(tbldb)]} {
-	unset $var(tbldb)
-    }
-    set db $var(tbldb)
-    set ${db}(Nrows) {}
-
-    $var(tbl) selection clear all
-
     SIADialogUpdate $varname
 }
 
@@ -245,6 +167,27 @@ proc SIATable {varname} {
     } else {
 	$var(tbl) configure -rows $isia(minrows)
     }
+}
+
+proc SIAOff {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,sia)} {
+	puts stderr "SIAOff $varname"
+    }
+
+    global $var(tbldb)
+    if {[info exists $var(tbldb)]} {
+	unset $var(tbldb)
+    }
+    set db $var(tbldb)
+    set ${db}(Nrows) {}
+
+    $var(tbl) selection clear all
+
+    SIADialogUpdate $varname
 }
 
 # Process Cmds

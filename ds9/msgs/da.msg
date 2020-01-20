@@ -86,6 +86,7 @@
 ::msgcat::mcset da {Bin} {Bin}
 ::msgcat::mcset da {Black} {Sort}
 ::msgcat::mcset da {Blank/Inf/NaN Color} {Blank/Inf/NaN farve}
+::msgcat::mcset da {Blend} 
 ::msgcat::mcset da {Blink Frames} {Blink rammer}
 ::msgcat::mcset da {Blink Interval} {Blinke interval}
 ::msgcat::mcset da {Blink} {Blink}
@@ -163,7 +164,7 @@
 ::msgcat::mcset da {Connect Using Web Proxy} {Tilslut via web proxy} 
 ::msgcat::mcset da {Connect} 
 ::msgcat::mcset da {Console} {konsol}
-::msgcat::mcset da {Contacting Image Server} 
+::msgcat::mcset da {Contacting Server} 
 ::msgcat::mcset da {Contour Parameters} {Kontur parametre}
 ::msgcat::mcset da {Contour Paste} 
 ::msgcat::mcset da {Contour Save} 
@@ -285,6 +286,7 @@
 ::msgcat::mcset da {FAQ} [encoding convertfrom iso8859-1 {Ofte Stillede Spørgsmål}]
 ::msgcat::mcset da {FK4} 
 ::msgcat::mcset da {FK5} 
+::msgcat::mcset da {FP} 
 ::msgcat::mcset da {Factor} 
 ::msgcat::mcset da {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-1 {Filen blev ikke fundet, eller det var ikke muligt at åbne FITS data MIME filtype}]
 ::msgcat::mcset da {Filename} {Filnavn}
@@ -299,6 +301,8 @@
 ::msgcat::mcset da {Fixed in Size} [encoding convertfrom iso8859-1 {Fastlåst størrelse}]
 ::msgcat::mcset da {Flat} 
 ::msgcat::mcset da {Font} {Skrifttype}
+::msgcat::mcset da {Footprint Servers} 
+::msgcat::mcset da {Footprint} 
 ::msgcat::mcset da {For more information, use --help} 
 ::msgcat::mcset da {Forground} 
 ::msgcat::mcset da {Format} {Format}
@@ -527,6 +531,8 @@
 ::msgcat::mcset da {Move to Back} {Bag}
 ::msgcat::mcset da {Move to Front} {Foran}
 ::msgcat::mcset da {Movie} 
+::msgcat::mcset da {Muliple Extension Cube} 
+::msgcat::mcset da {Muliple Extension Frames} 
 ::msgcat::mcset da {Multiple Extension Cube} 
 ::msgcat::mcset da {Multiple Extension Frames} 
 ::msgcat::mcset da {Multiple WCS} {Multipel WCS}
@@ -563,8 +569,19 @@
 ::msgcat::mcset da {Numerics} {Talværdier}
 ::msgcat::mcset da {OK} 
 ::msgcat::mcset da {Object} {Objekt}
+::msgcat::mcset da {Opaque} 
 ::msgcat::mcset da {Open File} {Åben fil}
+::msgcat::mcset da {Open ME Cube} 
+::msgcat::mcset da {Open ME Frames} 
+::msgcat::mcset da {Open Mosaic IRAF Seg} 
+::msgcat::mcset da {Open Mosaic IRAF} 
+::msgcat::mcset da {Open Mosaic WCS Seg} 
+::msgcat::mcset da {Open Mosaic WCS} 
+::msgcat::mcset da {Open Mosaic WFPC2} 
+::msgcat::mcset da {Open RGB Cube} 
+::msgcat::mcset da {Open RGB Image} 
 ::msgcat::mcset da {Open Regions} 
+::msgcat::mcset da {Open Slice} 
 ::msgcat::mcset da {Open TCL Console} [encoding convertfrom iso8859-1 {Åben TCL konsol}]
 ::msgcat::mcset da {Open URL} [encoding convertfrom iso8859-1 {Åben URL}]
 ::msgcat::mcset da {Open as} 
@@ -636,6 +653,7 @@
 ::msgcat::mcset da {Proxy Port} 
 ::msgcat::mcset da {Publication} {Publikation} 
 ::msgcat::mcset da {Quadratic} {Kvadratisk}
+::msgcat::mcset da {RDB} 
 ::msgcat::mcset da {RGB Array} 
 ::msgcat::mcset da {RGB Cube} 
 ::msgcat::mcset da {RGB Image} 
@@ -686,7 +704,13 @@
 ::msgcat::mcset da {Save Data} {Gem data}
 ::msgcat::mcset da {Save Image on Download} 
 ::msgcat::mcset da {Save Image} {Gem billede}
+::msgcat::mcset da {Save ME Cube} 
+::msgcat::mcset da {Save Mosaic WCS Seg} 
+::msgcat::mcset da {Save Mosaic WCS} 
+::msgcat::mcset da {Save RGB Cube} 
+::msgcat::mcset da {Save RGB Image} 
 ::msgcat::mcset da {Save Regions} [encoding convertfrom iso8859-1 {Gem områder}]
+::msgcat::mcset da {Save Slice} 
 ::msgcat::mcset da {Save Template} {Gem skabelon}
 ::msgcat::mcset da {Save as} 
 ::msgcat::mcset da {Save} {Gem}
@@ -698,7 +722,6 @@
 ::msgcat::mcset da {Scatter} 
 ::msgcat::mcset da {Scope} [encoding convertfrom iso8859-1 {Gældende}]
 ::msgcat::mcset da {Search for Catalogs} [encoding convertfrom iso8859-1 {søg efter kataloger}]
-::msgcat::mcset da {Searching for catalogs} [encoding convertfrom iso8859-1 {søger efter kataloger}]
 ::msgcat::mcset da {Seconds} {Sekunder}
 ::msgcat::mcset da {Segment} 
 ::msgcat::mcset da {Select All} [encoding convertfrom iso8859-1 {Vælg alle}]
@@ -759,6 +782,7 @@
 ::msgcat::mcset da {Sunken} 
 ::msgcat::mcset da {Symbol Editor} 
 ::msgcat::mcset da {Symbol} 
+::msgcat::mcset da {TSV} 
 ::msgcat::mcset da {Tab-Separated-Value} 
 ::msgcat::mcset da {Table} 
 ::msgcat::mcset da {Tabloid} 
@@ -783,6 +807,7 @@
 ::msgcat::mcset da {Top} 
 ::msgcat::mcset da {To} {Til}
 ::msgcat::mcset da {Transparency} 
+::msgcat::mcset da {Transparent} 
 ::msgcat::mcset da {Triangle} 
 ::msgcat::mcset da {Type} 
 ::msgcat::mcset da {URL} 
@@ -790,6 +815,7 @@
 ::msgcat::mcset da {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset da {Unable to determine date of observation} 
 ::msgcat::mcset da {Unable to evaluate filter} {kan ikke bestemme filter}
+::msgcat::mcset da {Unable to find Footprint window} 
 ::msgcat::mcset da {Unable to find SIAP window} 
 ::msgcat::mcset da {Unable to find URL column} 
 ::msgcat::mcset da {Unable to find catalog window} {Kan ikke finde katalog vinduet}
@@ -831,6 +857,7 @@
 ::msgcat::mcset da {User} {Brugerdefineret}
 ::msgcat::mcset da {Use} {Anvend}
 ::msgcat::mcset da {VO Server} 
+::msgcat::mcset da {VOT} 
 ::msgcat::mcset da {VO} 
 ::msgcat::mcset da {Value} [encoding convertfrom iso8859-1 {Værdi}]
 ::msgcat::mcset da {Vector} {Vektor}

@@ -14,9 +14,6 @@ proc CATNED {varname} {
 	puts stderr "CATNED $varname"
     }
 
-    # parser
-    set var(proc,parser) VOTParse
-
     # query
     switch $var(skyformat) {
 	degrees {

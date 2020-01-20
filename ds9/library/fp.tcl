@@ -45,74 +45,14 @@ proc FPAnalysisMenu {mb} {
     }
 }
 
-proc FPGetURLFinish {varname token} {
+proc FPLoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,fp)} {
-	puts stderr "FPGetURLFinish $varname"
+	puts stderr "FPLoad $varname $url?$query"
     }
-
-    if {!($var(active))} {
-	ARCancelled $varname
-	return
-    }
-
-    upvar #0 $token t
-
-    # Code
-    set code [http::ncode $token]
-
-    # Meta
-    set meta $t(meta)
-
-    # Log it
-    HTTPLog $token
-
-    # Result?
-    switch -- $code {
-	{} -
-	200 -
-	203 -
-	404 -
-	503 {
-	    VOTParse $var(tbldb) $token
-	    ARDone $varname
- 	    FPLoadDone $varname
-	}
-
-	201 -
-	300 -
-	301 -
-	302 -
-	303 -
-	305 -
-	307 {
-	    foreach {name value} $meta {
-		if {[regexp -nocase ^location$ $name]} {
-		    global debug
-		    if {$debug(tcl,fp)} {
-			puts stderr "FPGetURLFinish redirect $code to $value"
-		    }
-		    # clean up and resubmit
-		    http::cleanup $token
-		    unset var(token)
-
-		    FPLoad $varname $value $var(qq)
-		}
-	    }
-	}
-
-	default {
-	    eval [list $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"]
-	}
-    }
-}
-
-proc FPLoad {varname url query} {
-    upvar #0 $varname var
-    global $varname
 
     # clear previous db
     global $var(tbldb)
@@ -120,52 +60,25 @@ proc FPLoad {varname url query} {
 	unset $var(tbldb)
     }
 
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPLoad $varname $url?$query"
-    }
-
     TBLGetURL $varname $url $query
 }
 
-proc FPLoadDone {varname} {
+proc FPProcess {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,fp)} {
-	puts stderr "FPLoadDone $varname"
+	puts stderr "FPProcess $varname"
     }
+
+    VOTParse $var(tbldb) $var(token)
+    ARDone $varname
 
     FPTable $varname
     FPDialogUpdate $varname
 }
 
-proc FPOff {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global $var(tbldb)
-    if {[info exists $var(tbldb)]} {
-	unset $var(tbldb)
-    }
-    set db $var(tbldb)
-    set ${db}(Nrows) {}
-
-    $var(tbl) selection clear all
-
-    if {[info commands $var(frame)] != {}} {
-	if {[$var(frame) has fits]} {
-	    $var(frame) marker footprint $varname delete
-	}
-    }
-
-    set var(blink) 0
-
-    FPDialogUpdate $varname
-}
-
-# used by backup
 proc FPTable {varname} {
     upvar #0 $varname var
     global $varname
@@ -250,7 +163,7 @@ proc FPGenerate {varname} {
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
 		if {[catch {$var(frame) marker footprint command ds9 var reg}]} {
-		    eval [list $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"]
+		    $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		    return
 		}
 	    }
@@ -283,13 +196,42 @@ proc FPGenerateRegions {varname} {
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    if {[catch {$var(frame) marker command ds9 var reg}]} {
-		eval [list $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"]
+		$var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		return
 	    }
 	}
     }
 
     ARStatus $varname [msgcat::mc Done]
+}
+
+proc FPOff {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,fp)} {
+	puts stderr "FPOff $varname"
+    }
+
+    global $var(tbldb)
+    if {[info exists $var(tbldb)]} {
+	unset $var(tbldb)
+    }
+    set db $var(tbldb)
+    set ${db}(Nrows) {}
+
+    $var(tbl) selection clear all
+
+    if {[info commands $var(frame)] != {}} {
+	if {[$var(frame) has fits]} {
+	    $var(frame) marker footprint $varname delete
+	}
+    }
+
+    set var(blink) 0
+
+    FPDialogUpdate $varname
 }
 
 proc FPUpdateWCS {} {

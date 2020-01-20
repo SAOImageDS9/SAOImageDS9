@@ -14,9 +14,6 @@ proc CATCDS {varname} {
 	puts stderr "CATCDS $varname"
     }
 
-    # go for votable or tsv
-    set var(proc,parser) VOTParse
-
     # url
     set site [CATCDSURL $var(server)]
     set cgidir {viz-bin}

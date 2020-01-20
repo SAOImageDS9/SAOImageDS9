@@ -46,8 +46,10 @@ proc CATDialog {varname format catalog title action} {
     ARInit $varname CATServer
 
     # procs
+    set var(proc,parser) VOTParse
+    set var(proc,process) CATProcess
+    set var(proc,load) CATLoad
     set var(proc,error) ARError
-    set var(proc,geturlfinish) CATGetURLFinish
 
     # CAT variables
     lappend icat(cats) $varname
@@ -624,24 +626,27 @@ proc CATApply {varname sync} {
     }
 }
 
-proc CATCrosshair {varname} {
+proc CATServer {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {[info commands $var(frame)] == {}} {
-	return
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATServer $varname"
     }
 
-    if {![$var(frame) has fits]} {
-	return
-    }
+    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
+	ARStatus $varname [msgcat::mc {Contacting Server}]
 
-    if {[$var(frame) has wcs celestial $var(system)]} {
-	set coord [$var(frame) get crosshair \
-		       $var(system) $var(sky) $var(skyformat)]
-	set var(x) [lindex $coord 0]
-	set var(y) [lindex $coord 1]
-	set var(name) {}
+	switch $var(format) {
+	    cds {CATCDS $varname}
+	    cxc {CATCXC $varname}
+	    ned {CATNED $varname}
+	    skybot {CATSkyBot $varname}
+	    simbad {CATSIMBAD $varname}
+	}
+    } else {
+	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
     }
 }
 
@@ -709,6 +714,27 @@ proc CATDestroy {varname} {
     }
 
     ARDestroy $varname
+}
+
+proc CATCrosshair {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[info commands $var(frame)] == {}} {
+	return
+    }
+
+    if {![$var(frame) has fits]} {
+	return
+    }
+
+    if {[$var(frame) has wcs celestial $var(system)]} {
+	set coord [$var(frame) get crosshair \
+		       $var(system) $var(sky) $var(skyformat)]
+	set var(x) [lindex $coord 0]
+	set var(y) [lindex $coord 1]
+	set var(name) {}
+    }
 }
 
 proc CATEdit {varname} {
@@ -860,30 +886,6 @@ proc CATPageSetup {varname} {
 	x11 -
 	aqua {}
 	win32 {win32 pm pagesetup}
-    }
-}
-
-proc CATServer {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATServer $varname"
-    }
-
-    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
-	ARStatus $varname "Searching [string range $var(title) 0 50]"
-
-	switch $var(format) {
-	    cds {CATCDS $varname}
-	    cxc {CATCXC $varname}
-	    ned {CATNED $varname}
-	    skybot {CATSkyBot $varname}
-	    simbad {CATSIMBAD $varname}
-	}
-    } else {
-	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
     }
 }
 

@@ -18,6 +18,78 @@ proc CATCDSSrchDef {} {
     set icatcdssrch(list,astro) [list none Abundances Ages AGN Associations Atomic_Data Binaries:cataclysmic Binaries:eclipsing Binaries:spectroscopic BL_Lac_objects Blue_objects Clusters_of_galaxies Constellations Diameters Earth Ephemerides Equivalent_widths Extinction Galaxies Galaxies:Markarian Galaxies:spectra Globular_Clusters Gravitational_lensing HII_regions Interstellar_Medium Magnetic_fields Masers Masses _META_ Models Multiple_Stars Nebulae Nonstellar Novae Obs_Log Open_Clusters Orbits Parallaxes Photometry Photometry:intermediate-band Photometry:narrow-band Photometry:surface Photometry:wide-band Planetary_Nebulae Planets+Asteroids Polarization Positional_Data Proper_Motions Pulsars QSOs Redshifts Rotational_Velocities Seyfert_Galaxies Spectral_Classification Spectrophotometry Spectroscopy Stars Stars:early-typeStars:Emission Stars:late-type Stars:peculiar Stars:variable Stars:white_dwarf Stars:WR Sun SuperNovae SuperNovae_Remnants Velocities YSOs]
 }
 
+proc CATCDSSrchLoad {varname url query} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATCDSSrchLoad $varname"
+    }
+
+    # clear previous db
+    global $var(catdb)
+    if {[info exists $var(catdb)]} {
+	unset $var(catdb)
+    }
+
+    TBLGetURL $varname $url $query
+    return 
+}
+
+proc CATCDSSrchProcess {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATCDSSrchProcess $varname"
+    }
+
+    $var(proc,parser) $var(catdb) $var(token)
+    ARDone $varname
+
+    CATCDSSrchTable $varname
+}
+
+proc CATCDSSrchTable {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(catdb)
+
+    global icatcdssrch
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATCDSSrchTable $varname"
+    }
+
+#    starbase_writefp $var(catdb) stdout
+
+    global $var(catdb)
+    $var(tbl) configure -variable $var(catdb)
+
+    if {[starbase_nrows $var(catdb)] == 0} {
+	ARStatus $varname [msgcat::mc {No Items Found}]
+	return
+    }
+
+    set nc [starbase_ncols $var(catdb)]
+    $var(tbl) configure -cols $nc
+
+    # add header row
+    set nr [expr [starbase_nrows $var(catdb)]+1]
+    if {$nr > $icatcdssrch(minrows)} {
+	$var(tbl) configure -rows $nr
+    } else {
+	$var(tbl) configure -rows $icatcdssrch(minrows)
+    }
+
+    ARStatus $varname "[starbase_nrows $var(catdb)] [msgcat::mc {Items Found}]"
+}
+
+# Other
+
 proc CATCDSSrchLoadFile {varname} {
     upvar #0 $varname var
     global $varname
@@ -91,75 +163,7 @@ proc CATCDSSrchCatalog {varname} {
     }
 }
 
-proc CATCDSSrch {varname} {
-    upvar #0 $varname var
-    global $varname
-    global pcat
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrch $varname"
-    }
-
-    set var(proc,parser) CATCDSSrchVOTParse
-
-    #url
-    set site [CATCDSURL $var(server)]
-    set cgidir {viz-bin}
-    set script {votable}
-    set url "http://$site/$cgidir/$script"
-    
-    # defaults
-    set query {-meta}
-    append query "&[http::formatQuery -out.max 1000]"
-    append query "&[http::formatQuery -out.form VOTable]"
-
-    if {$var(source) != {}} {
-	append query "&[http::formatQuery -source $var(source)]"
-    }
-    if {$var(words) !={}} {
-	append query "&[http::formatQuery -words $var(words)]"
-    }
-    if {$var(wave) !={}} {
-	append query "&[http::formatQuery $var(list,wave,param) $var(wave)]"
-    }
-    if {$var(mission) !={}} {
-	append query "&[http::formatQuery $var(list,mission,param) $var(mission)]"
-    }
-    if {$var(astro) !={}} {
-pppp	append query "&[http::formatQuery $var(list,astro,param) $var(astro)]"
-    }
-
-    CATCDSSrchLoad $varname $url $query
-}
-
-proc CATCDSSrchLoad {varname url query} {
-    upvar #0 $varname var
-    global $varname
-    global $var(catdb)
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchLoad $varname"
-    }
-
-    if {[info exists $var(catdb)]} {
-	unset $var(catdb)
-    }
-
-    set var(proc,done) CATCDSSrchDone
-    set var(proc,load) CATCDSSrchLoad
-
-    TBLGetURL $varname $url $query
-    return 
-}
-
-proc CATCDSSrchDone {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    CATCDSSrchTable $varname
-}
+# parser
 
 proc CATCDSSrchVOTParse {t token} {
     upvar #0 $t T
@@ -285,38 +289,3 @@ proc CATCDSSrchVOTElemEndCB {t name args} {
     return {}
 }
 
-proc CATCDSSrchTable {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(catdb)
-
-    global icatcdssrch
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchTable $varname"
-    }
-
-#    starbase_writefp $var(catdb) stdout
-
-    global $var(catdb)
-    $var(tbl) configure -variable $var(catdb)
-
-    if {[starbase_nrows $var(catdb)] == 0} {
-	ARStatus $varname [msgcat::mc {No Items Found}]
-	return
-    }
-
-    set nc [starbase_ncols $var(catdb)]
-    $var(tbl) configure -cols $nc
-
-    # add header row
-    set nr [expr [starbase_nrows $var(catdb)]+1]
-    if {$nr > $icatcdssrch(minrows)} {
-	$var(tbl) configure -rows $nr
-    } else {
-	$var(tbl) configure -rows $icatcdssrch(minrows)
-    }
-
-    ARStatus $varname "[starbase_nrows $var(catdb)] [msgcat::mc {Items Found}]"
-}

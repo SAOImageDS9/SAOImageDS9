@@ -25,8 +25,6 @@ proc CATSkyBotVOT {varname} {
 	puts stderr "CATSkyBotVOT $varname"
     }
 
-    set var(proc,parser) VOTParse
-    
     # coord (degrees)
     switch $var(skyformat) {
 	degrees {

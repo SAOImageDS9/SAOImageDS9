@@ -26,6 +26,11 @@ proc CATCDSSrchDialog {varname} {
 	return
     }
 
+    # procs
+    set var(proc,parser) CATCDSSrchVOTParse
+    set var(proc,process) CATCDSSrchProcess
+    set var(proc,load) CATCDSSrchLoad
+
     # defaults
     # maybe modified
     set var(list,wave,param) $icatcdssrch(list,wave,param)
@@ -291,9 +296,48 @@ proc CATCDSSrchApply {varname} {
     }
 
     ARApply $varname
-    ARStatus $varname [msgcat::mc {Searching for catalogs}]
-
+    ARStatus $varname [msgcat::mc {Contacting Server}]
     CATCDSSrch $varname
+}
+
+proc CATCDSSrch {varname} {
+    upvar #0 $varname var
+    global $varname
+    global pcat
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATCDSSrch $varname"
+    }
+
+    #url
+    set site [CATCDSURL $var(server)]
+    set cgidir {viz-bin}
+    set script {votable}
+    set url "http://$site/$cgidir/$script"
+    
+    # defaults
+    set query {-meta}
+    append query "&[http::formatQuery -out.max 1000]"
+    append query "&[http::formatQuery -out.form VOTable]"
+
+    if {$var(source) != {}} {
+	append query "&[http::formatQuery -source $var(source)]"
+    }
+    if {$var(words) !={}} {
+	append query "&[http::formatQuery -words $var(words)]"
+    }
+    if {$var(wave) !={}} {
+	append query "&[http::formatQuery $var(list,wave,param) $var(wave)]"
+    }
+    if {$var(mission) !={}} {
+	append query "&[http::formatQuery $var(list,mission,param) $var(mission)]"
+    }
+    if {$var(astro) !={}} {
+	append query "&[http::formatQuery $var(list,astro,param) $var(astro)]"
+    }
+
+    CATCDSSrchLoad $varname $url $query
 }
 
 proc CATCDSSrchDestroy {varname} {
@@ -312,6 +356,8 @@ proc CATCDSSrchDestroy {varname} {
 
     ARDestroy $varname
 }
+
+# CATCDSSrchConfig
 
 proc CATCDSSrchConfig {varname} {
     upvar #0 $varname var
@@ -341,10 +387,6 @@ proc CATCDSSrchConfigLoad {varname url query} {
     if {$debug(tcl,cat)} {
 	puts stderr "CATCDSSrchConfigLoad $varname"
     }
-
-    set var(proc,parser) CATCDSSrchConfigParse
-    set var(proc,done) CATCDSSrchConfigDone
-    set var(proc,load) CATCDSSrchConfigLoad
 
     TBLGetURL $varname $url $query
     return 

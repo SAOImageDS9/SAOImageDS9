@@ -25,7 +25,7 @@ proc TBLGetURL {varname url query} {
 	    set errorInfo {}
 
 	    set var(active) 1
-	    eval [list $var(proc,geturlfinish) $varname $var(token)]
+	    TBLGetURLFinish $varname $var(token)
 	} else {
 	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
 	}
@@ -34,7 +34,7 @@ proc TBLGetURL {varname url query} {
 					 -query $query \
 					 -timeout $ihttp(timeout) \
 					 -command \
-					 [list $var(proc,geturlfinish) $varname] \
+					 [list TBLGetURLFinish $varname] \
 					 -headers "[ProxyHTTP]"]
 	}]} {
 	    # reset errorInfo (may be set in http::geturl)
@@ -44,6 +44,57 @@ proc TBLGetURL {varname url query} {
 	    set var(active) 1
 	} else {
 	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
+	}
+    }
+}
+
+proc TBLGetURLFinish {varname token} {
+    upvar #0 $varname var
+    global $varname
+
+    if {!($var(active))} {
+	ARCancelled $varname
+	return
+    }
+
+    upvar #0 $token t
+
+    # Code
+    set code [http::ncode $token]
+
+    # Log it
+    HTTPLog $token
+
+    # Result?
+    switch -- $code {
+	{} -
+	200 -
+	203 -
+	404 -
+	503 {
+	    eval [list $var(proc,process) $varname]
+	}
+
+	201 -
+	300 -
+	301 -
+	302 -
+	303 -
+	305 -
+	307 {
+	    foreach {name value} $t(meta) {
+		if {[regexp -nocase ^location$ $name]} {
+		    # clean up and resubmit
+		    http::cleanup $token
+		    unset var(token)
+
+		    eval [list $var(proc,load) $varname $value $var(qq)]
+		}
+	    }
+	}
+
+	default {
+	    eval [list $var(proc,error) $varname "[msgcat::mc {Error code was returned}] $code"]
 	}
     }
 }

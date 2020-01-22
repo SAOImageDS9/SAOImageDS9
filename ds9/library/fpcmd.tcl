@@ -208,7 +208,8 @@ proc FPButton {which x y} {
 	# highlite
 	if {[$which get marker footprint $id property highlite]} {
 	    $which marker footprint $id highlite only
-	    $which marker footprint $id move back
+	    $which marker footprint $id move front
+	    $which marker footprint $id color red
 	    set imarker(motion) none
 	    return
 	}

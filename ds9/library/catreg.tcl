@@ -380,9 +380,9 @@ proc CATReg {varname row interactive resultname} {
 	    # init result for substitutions
 	    if {$interactive} {
 		if {$var(edit)} {
-		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=1 edit=1 move=1 rotate=1 delete=1 highlite=0 callback=select TBLHighliteCB {${varname}.\${ii}} callback=unselect TBLUnhighliteCB {${varname}.\${ii}} callback=edit CATEditCB {${varname}.\${ii}.\${szcol}.\${sz2col}.\${units}.\${angcol}} callback=move CATMoveCB {${varname}.\${ii}} callback=rotate CATRotateCB {${varname}.\${ii}.\${angcol}} callback=delete TBLDeleteCB {${varname}.\${ii}}\n"
+		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=1 edit=1 move=1 rotate=1 delete=1 highlite=0 callback=select TBLHighliteCB {${varname}.\${ii}} callback=unselect TBLUnhighliteCB {${varname}.\${ii}} callback=edit CATEditCB {${varname}.\${ii}.\${szcol}.\${sz2col}.\${units}.\${angcol}} callback=move CATMoveCB {${varname}.\${ii}} callback=rotate CATRotateCB {${varname}.\${ii}.\${angcol}}\n"
 		} else {
-		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=delete TBLDeleteCB {${varname}.\${ii}} callback=highlite TBLHighliteCB {${varname}.\${ii}} callback=unhighlite TBLUnhighliteCB {${varname}.\${ii}}\n"
+		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite TBLHighliteCB {${varname}.\${ii}} callback=unhighlite TBLUnhighliteCB {${varname}.\${ii} catalog}\n"
 		}
 	    } else {
 		set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} text=\{\${text}\} tag=$varname\n"

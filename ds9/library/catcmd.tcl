@@ -447,7 +447,8 @@ proc CATButton {which x y} {
 	# highlite
 	if {[$which get marker catalog $id property highlite]} {
 	    $which marker catalog $id highlite only
-	    $which marker catalog $id move back
+	    $which marker catalog $id move front
+	    $which marker catalog $id color red
 	    set imarker(motion) none
 	    return
 	}
@@ -579,7 +580,7 @@ proc CATRelease {which x y} {
 	rotate {$which marker catalog rotate end}
 	region {
 	    $which region catalog select end
-	    $which region catalog catalog highlite end
+	    $which region catalog highlite end
 	}
 	shiftregion {
 	    $which region catalog select shift end

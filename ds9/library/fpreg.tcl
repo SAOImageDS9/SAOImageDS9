@@ -24,31 +24,51 @@ proc FPReg {varname interactive resultname} {
     set cols [starbase_columns $var(tbldb)]
 
     # system
-    switch $var(psystem) {
-	image -
-	physical -
-	detector -
-	amplifier {set sys $var(psystem)}
-	default {set sys "$var(psystem); $var(psky)"}
-    }
+    append result "wcs; fk5\n"
 
     # for each row in the catalog table ...
     for {set ii 1} {$ii <= $nrows} {incr ii} {
 
 	# col
 	set rr [starbase_get $var(tbldb) $ii $colreg]
-	regsub -all {Polygon J2000} $rr {; fk5; Polygon} rr
+	set ra 0
+	set dec 0
+	FPFindCenter $rr ra dec
 	
 	# props
 	set color green
-	set width 1
-	set dash 0
 
 	if {$interactive} {
-	    set template "\${sys};$rr # color=\${color} width=\${width} dash=\${dash} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=delete TBLDeleteCB {${varname}.\${ii}} callback=highlite TBLHighliteCB {${varname}.\${ii}} callback=unhighlite TBLUnhighliteCB {${varname}.\${ii}}\n"
+	    set template "# composite($ra,$dec,0) || composite=1 color=\${color} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=delete TBLDeleteCB {${varname}.\${ii}} callback=highlite TBLHighliteCB {${varname}.\${ii}} callback=unhighlite TBLUnhighliteCB {${varname}.\${ii}}\n$rr\n"
 	} else {
-	    set template "\${sys};$rr # color=\${color} width=\${width} dash=\${dash} tag=$varname\n"
+	    set template "# composite($ra,$dec,0) || composite=1 color=\${color} tag=$varname\n$rr\n"
 	}
 	append result [subst $template]
+    }
+}
+
+proc FPFindCenter {str raname decname} {
+    upvar $raname ra
+    upvar $decname dec
+    
+    regsub -all {Polygon} $str {} str
+    regsub -all {\|} $str {} str
+    regsub -all {;} $str {} str
+
+    set cnt 0
+    set ra 0
+    set dec 0
+    foreach {rr dd} $str {
+	set ra [expr $ra+$rr]
+	set dec [expr $dec+$dd]
+	incr cnt
+    }
+    if {$cnt>0} {
+	set ra [expr $ra/$cnt]
+	set dec [expr $dec/$cnt]
+    } else {
+	# should not need this
+	set ra [lindex $str 1]
+	set dec [lindex $str 2]
     }
 }

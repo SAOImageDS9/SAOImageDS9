@@ -28,8 +28,8 @@ proc FPSelectBrowseCmd {varname ss rc} {
 	puts stderr "FPSelectBrowseCmd $varname ss=$ss rc=$rc"
     }
 
-    global $var(tbldb)
-    if {![TBLValidDB $var(tbldb)]} {
+    global $var(catdb)
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -43,6 +43,11 @@ proc FPSelectBrowseCmd {varname ss rc} {
 
     # are we still blinking?
     TBLSelectTimerCancel $varname footprint
+
+    global $var(catdb)
+    if {![TBLValidDB $var(catdb)]} {
+	return
+    }
 
     # now see the current selection
     set last [lindex [split $ss ,] 0]

@@ -55,9 +55,9 @@ proc FPLoad {varname url query} {
     }
 
     # clear previous db
-    global $var(tbldb)
-    if {[info exists $var(tbldb)]} {
-	unset $var(tbldb)
+    global $var(catdb)
+    if {[info exists $var(catdb)]} {
+	unset $var(catdb)
     }
 
     TBLGetURL $varname $url $query
@@ -72,7 +72,7 @@ proc FPProcess {varname} {
 	puts stderr "FPProcess $varname"
     }
 
-    VOTParse $var(tbldb) $var(token)
+    VOTParse $var(catdb) $var(token)
     ARDone $varname
 
     FPTable $varname
@@ -82,7 +82,7 @@ proc FPProcess {varname} {
 proc FPTable {varname} {
     upvar #0 $varname var
     global $varname
-    global $var(tbldb)
+    global $var(catdb)
     global ifp
 
     global debug
@@ -90,8 +90,15 @@ proc FPTable {varname} {
 	puts stderr "FPTable $varname"
     }
 
-    if {![TBLValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
+    }
+
+    # delete any previous tbldb
+    set db ${varname}tbldb
+    global $db
+    if {[info exists $db]} {
+	unset $db
     }
 
     # clear the selection
@@ -104,9 +111,26 @@ proc FPTable {varname} {
 	}
     }
 
+    # concat rows
+    if {0} {
+	set var(tbldb) $var(catdb)
+    } else {
+	set var(tbldb) ${varname}tbldb
+	global $var(tbldb)
+	if {![FPFlt $varname]} {
+	    Error [msgcat::mc {Internal Parse Error}]
+	    if {[info exists $var(tbldb)]} {
+		unset $var(tbldb)
+	    }
+	    set var(tbldb) $var(catdb)
+	}
+    }
+
     global $var(tbldb)
+    $var(tbl) configure -variable $var(tbldb)
     $var(found) configure -textvariable ${var(tbldb)}(Nrows)
 
+#    starbase_writefp $var(catdb) stdout
 #    starbase_writefp $var(tbldb) stdout
 
     if {[starbase_nrows $var(tbldb)] == 0} {
@@ -130,6 +154,91 @@ proc FPTable {varname} {
     }
 
     FPGenerate $varname
+}
+
+proc FPFlt {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(catdb)
+    global $var(tbldb)
+
+    upvar #0 $var(catdb) catsrc
+    upvar #0 $var(tbldb) catdest
+    # create header
+    set catdest(Header) $catsrc(Header)
+    starbase_colmap catdest
+
+    set catdest(Ndshs) [llength $catdest(Header)]
+    set catdest(Nrows) 0
+    set catdest(HLines) $catsrc(HLines)
+    set catdest(Dashes) $catsrc(Dashes)
+
+    # optional
+    if {[info exists catsrc(DataType)]} {
+	set catdest(DataType) $catsrc(DataType)
+    }
+    if {[info exists catsrc(Id)]} {
+	set catdest(Id) $catsrc(Id)
+    }
+    if {[info exists catsrc(ArraySize)]} {
+	set catdest(ArraySize) $catsrc(ArraySize)
+    }
+    if {[info exists catsrc(Width)]} {
+	set catdest(Width) $catsrc(Width)
+    }
+    if {[info exists catsrc(Precision)]} {
+	set catdest(Precision) $catsrc(Precision)
+    }
+    if {[info exists catsrc(Unit)]} {
+	set catdest(Unit) $catsrc(Unit)
+    }
+    if {[info exists catsrc(Ref)]} {
+	set catdest(Ref) $catsrc(Ref)
+    }
+    if {[info exists catsrc(Ucd)]} {
+	set catdest(Ucd) $catsrc(Ucd)
+    }
+    if {[info exists catsrc(Description)]} {
+	set catdest(Description) $catsrc(Description)
+    }
+
+    for {set ii 1} {$ii<=$catsrc(HLines)} {incr ii} {
+	set catdest(H_$ii) $catsrc(H_$ii)
+    }
+    for {set jj 1} {$jj<=$catsrc(Ncols)} {incr jj} {
+	set catdest(0,$jj) $catsrc(0,$jj)
+    }
+
+    # data
+    set kk 0
+    set obsIdCol $catsrc(ObsId)
+    set stcsCol $catsrc(stcs)
+    set obsId 0
+    set stcs {}
+    for {set ii 1} {$ii<=$catsrc(Nrows)} {incr ii} {
+	if {$obsId != $catsrc($ii,$obsIdCol)} {
+	    set obsId $catsrc($ii,$obsIdCol)
+	    set stcs $catsrc($ii,$stcsCol)
+
+	    # write the first one
+	    incr kk
+	    for {set jj 1} {$jj<=$catsrc(Ncols)} {incr jj} {
+		set catdest($kk,$jj) $catsrc($ii,$jj)
+	    }
+	} else {
+	    append stcs " || ; $catsrc($ii,$stcsCol)"
+	}
+	
+	regsub -all {Polygon J2000} $stcs {Polygon} stcs
+	set catdest($kk,$stcsCol) $stcs
+    }
+
+    # cleanup
+    regsub -all {Polygon J2000} $stcs {Polygon} stcs
+    set catdest($kk,$stcsCol) $stcs
+
+    set catdest(Nrows) $kk
+    return 1
 }
 
 proc FPGenerate {varname} {
@@ -214,6 +323,10 @@ proc FPOff {varname} {
 	puts stderr "FPOff $varname"
     }
 
+    global $var(catdb)
+    if {[info exists $var(catdb)]} {
+	unset $var(catdb)
+    }
     global $var(tbldb)
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)

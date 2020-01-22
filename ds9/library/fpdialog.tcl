@@ -46,6 +46,7 @@ proc FPDialog {varname title url opts colreg action} {
     # FP variables
     lappend ifp(fps) $varname
 
+    set var(catdb) ${varname}catdb
     set var(tbldb) ${varname}tbldb
     set var(frame) $current(frame)
 
@@ -332,6 +333,7 @@ proc FPVOT {varname} {
 proc FPDestroy {varname} {
     upvar #0 $varname var
     global $varname
+    global $var(catdb)
     global $var(tbldb)
     global ifp
 
@@ -356,6 +358,9 @@ proc FPDestroy {varname} {
 
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
+    }
+    if {[info exists $var(catdb)]} {
+	unset $var(catdb)
     }
     
     set ii [lsearch $ifp(fps) $varname]

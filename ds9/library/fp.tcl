@@ -26,6 +26,12 @@ proc FPDef {} {
 			    {inst=ACIS-S,ACIS-I,HRC-S,HRC-I&} \
 			    stcs \
 			} \
+		       {{Hubble Legacy Archive (STSCI)} \
+			    fphla \
+			    {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi} \
+			    {} \
+			    regionSTCS \
+			} \
 		   }
 }
 
@@ -111,19 +117,15 @@ proc FPTable {varname} {
 	}
     }
 
-    # concat rows
-    if {0} {
-	set var(tbldb) $var(catdb)
-    } else {
-	set var(tbldb) ${varname}tbldb
-	global $var(tbldb)
-	if {![FPFlt $varname]} {
-	    Error [msgcat::mc {Internal Parse Error}]
-	    if {[info exists $var(tbldb)]} {
-		unset $var(tbldb)
-	    }
-	    set var(tbldb) $var(catdb)
+    # filter regions
+    set var(tbldb) ${varname}tbldb
+    global $var(tbldb)
+    if {![FPFlt $varname]} {
+	Error [msgcat::mc {Internal Parse Error}]
+	if {[info exists $var(tbldb)]} {
+	    unset $var(tbldb)
 	}
+	set var(tbldb) $var(catdb)
     }
 
     global $var(tbldb)
@@ -212,13 +214,13 @@ proc FPFlt {varname} {
     # data
     set kk 0
     set obsIdCol $catsrc(ObsId)
-    set stcsCol $catsrc(stcs)
+    set regCol $catsrc($var(colreg))
     set obsId 0
-    set stcs {}
+    set regs {}
     for {set ii 1} {$ii<=$catsrc(Nrows)} {incr ii} {
 	if {$obsId != $catsrc($ii,$obsIdCol)} {
 	    set obsId $catsrc($ii,$obsIdCol)
-	    set stcs $catsrc($ii,$stcsCol)
+	    set regs $catsrc($ii,$regCol)
 
 	    # write the first one
 	    incr kk
@@ -226,16 +228,16 @@ proc FPFlt {varname} {
 		set catdest($kk,$jj) $catsrc($ii,$jj)
 	    }
 	} else {
-	    append stcs " || ; $catsrc($ii,$stcsCol)"
+	    append regs " || ; $catsrc($ii,$regCol)"
 	}
 	
-	regsub -all {Polygon J2000} $stcs {Polygon} stcs
-	set catdest($kk,$stcsCol) $stcs
+	regsub -all {Polygon J2000} $regs {Polygon} regs
+	set catdest($kk,$regCol) $regs
     }
 
     # cleanup
-    regsub -all {Polygon J2000} $stcs {Polygon} stcs
-    set catdest($kk,$stcsCol) $stcs
+    regsub -all {Polygon J2000} $regs {Polygon} regs
+    set catdest($kk,$regCol) $regs
 
     set catdest(Nrows) $kk
     return 1

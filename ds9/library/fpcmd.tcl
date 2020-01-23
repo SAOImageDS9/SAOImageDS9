@@ -41,8 +41,9 @@ proc FPSelectBrowseCmd {varname ss rc} {
 	return
     }
 
-    # are we still blinking?
-    TBLSelectTimerCancel $varname footprint
+    # clear all highlited
+    $var(frame) marker footprint $varname color green
+    $var(frame) marker footprint $varname unhighlite
 
     global $var(catdb)
     if {![TBLValidDB $var(catdb)]} {
@@ -74,96 +75,14 @@ proc FPSelectBrowseCmd {varname ss rc} {
 
     foreach rr $rowlist {
 	set tag "\{${varname}.${rr}\}"
-	lappend ${varname}(blink,marker) $tag
-	lappend ${varname}(blink,marker,color) \
-	    [$var(frame) get marker footprint $tag color]
+	$var(frame) marker footprint $tag highlite
+	$var(frame) marker footprint $tag color red
+	$var(frame) marker footprint $tag move back
+	TBLPanTo $varname $tag footprint
     }
 
     # status
     TBLStatusRows $varname $rowlist
-
-    # panto
-    TBLPanTo $varname [lindex $var(blink,marker) 0] footprint
-
-    # start timer, if needed
-    if {!$var(blink)} {
-	set var(blink) 1
-	TBLSelectTimer $varname footprint
-    }
-}
-
-proc FPSelectRows {varname src rowlist cc} {
-    upvar #0 $varname var
-    global $varname
-
-    # only process from first graph
-    if {$cc != 1} {
-	return
-    }
-
-    # just in case?
-    set rowlist [lsort -unique $rowlist]
-
-    # rows start at 1
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPSelectRows $varname $src $rowlist $cc"
-    }
-
-    if {![info exists ${varname}(top)]} {
-	return
-    }
-
-    # are we still blinking?
-    TBLSelectTimerCancel $varname footprint
-
-    global $var(tbldb)
-    if {![TBLValidDB $var(tbldb)]} {
-	return
-    }
-
-    # rowlist can be empty
-    if {$rowlist == {}} {
-	if {[info exists ${varname}(tbl)]} {
-	    $var(tbl) selection clear all
-	}
-	$var(frame) marker footprint $varname unhighlite
-	return
-    }
-
-    if {[info exists ${varname}(tbl)]} {
-	$var(tbl) selection clear all
-	foreach rr $rowlist {
-	    $var(tbl) selection set $rr,1
-	}
-	$var(tbl) see [lindex $rowlist 0],1
-    }
-
-    $var(frame) marker footprint $varname unhighlite
-
-    # init timer vars
-    set var(blink,count) 0
-    set var(blink,marker) {}
-    set var(blink,marker,color) {}
-
-    foreach rr $rowlist {
-	set tag "\{${varname}.${rr}\}"
-	lappend ${varname}(blink,marker) $tag
-	lappend ${varname}(blink,marker,color) \
-	    [$var(frame) get marker footprint $tag color]
-    }
-
-    # status
-    TBLStatusRows $varname $rowlist
-
-    # panto
-    TBLPanTo $varname [lindex $var(blink,marker) 0] footprint
-
-    # start timer, if needed
-    if {!$var(blink)} {
-	set var(blink) 1
-	TBLSelectTimer $varname footprint
-    }
 }
 
 # Tcl Commands
@@ -311,3 +230,50 @@ proc FPRelease {which x y} {
 	}
     }
 }
+
+
+# Marker Callbacks
+#   call backs can't call other procs
+proc FPHighliteCB {tag id} {
+    set t [split $tag .]
+    set varname [lindex $t 0]
+    set row [lindex $t 1]
+
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(top)]} {
+	return
+    }
+
+    $var(frame) marker footprint $tag color red
+    
+    if {!$var(blink)} {
+	if {[info exists ${varname}(tbl)]} {
+	    $var(tbl) selection set $row,1
+	    $var(tbl) see $row,1
+	}
+    }
+}
+
+proc FPUnhighliteCB {tag id} {
+    set t [split $tag .]
+    set varname [lindex $t 0]
+    set row [lindex $t 1]
+
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(top)]} {
+	return
+    }
+
+    $var(frame) marker footprint $tag color green
+
+    if {!$var(blink)} {
+	if {[info exists ${varname}(tbl)]} {
+	    $var(tbl) selection clear $row,1
+	}
+    }
+}
+

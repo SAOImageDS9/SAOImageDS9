@@ -26,7 +26,7 @@ proc FPReg {varname interactive resultname} {
     # system
     append result "wcs; fk5\n"
 
-    # for each row in the catalog table ...
+    # for each row in the table ...
     for {set ii 1} {$ii <= $nrows} {incr ii} {
 
 	# col
@@ -39,7 +39,7 @@ proc FPReg {varname interactive resultname} {
 	set color green
 
 	if {$interactive} {
-	    set template "# composite($ra,$dec,0) || composite=1 color=\${color} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite TBLHighliteCB {${varname}.\${ii}} callback=unhighlite TBLUnhighliteCB {${varname}.\${ii}}\n$rr\n"
+	    set template "# composite($ra,$dec,0) || composite=1 color=\${color} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite FPHighliteCB {${varname}.\${ii}} callback=unhighlite FPUnhighliteCB {${varname}.\${ii}}\n$rr\n"
 	} else {
 	    set template "# composite($ra,$dec,0) || composite=1 color=\${color} tag=$varname\n$rr\n"
 	}

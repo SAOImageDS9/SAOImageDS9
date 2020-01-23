@@ -266,47 +266,6 @@ proc TBLUpdateFont {ll} {
     }
 }
 
-# Marker Callbacks
-#   call backs can't call other procs
-proc TBLHighliteCB {tag id} {
-    set t [split $tag .]
-    set varname [lindex $t 0]
-    set row [lindex $t 1]
-
-    upvar #0 $varname var
-    global $varname
-
-    if {![info exists ${varname}(top)]} {
-	return
-    }
-
-    if {!$var(blink)} {
-	if {[info exists ${varname}(tbl)]} {
-	    $var(tbl) selection set $row,1
-	    $var(tbl) see $row,1
-	}
-    }
-}
-
-proc TBLUnhighliteCB {tag id} {
-    set t [split $tag .]
-    set varname [lindex $t 0]
-    set row [lindex $t 1]
-
-    upvar #0 $varname var
-    global $varname
-
-    if {![info exists ${varname}(top)]} {
-	return
-    }
-
-    if {!$var(blink)} {
-	if {[info exists ${varname}(tbl)]} {
-	    $var(tbl) selection clear $row,1
-	}
-    }
-}
-
 # Cut/Copy
 
 proc TBLCopy {varname} {

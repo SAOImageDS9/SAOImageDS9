@@ -15,7 +15,7 @@ proc FPDef {} {
     set ifp(rformat) arcmin
     set ifp(radius) 15
     set ifp(show) 1
-    set ifp(panto) 1
+    set ifp(panto) 0
     set ifp(minrows) 20
     set ifp(mincols) 10
 

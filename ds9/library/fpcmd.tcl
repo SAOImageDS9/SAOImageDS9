@@ -181,56 +181,23 @@ proc FPButton {which x y} {
 	return
     }
 
-    # see if we are on a handle
-    set h [$which get marker footprint handle $x $y]
-    set id [lindex $h 0]
-    set imarker(handle) [lindex $h 1]
+    set imarker(motion) none
 
-    if {$imarker(handle)} {
-	return
-    }
-
-    # else, see if we are on a segment of a polygon
-    set h [$which get marker footprint polygon segment $x $y]
-    set id [lindex $h 0]
-    set segment [lindex $h 1]
-    if {$segment} {
-	return
-    }
-
-    # else, see if we are on a marker
+    # else, see if we are on a marker, then highlite
     set id [$which get marker footprint id $x $y]
     if {$id != 0} {
-	# select
-	if {[$which get marker footprint $id property select]} {
-	    return
-	}
-	# highlite
 	if {[$which get marker footprint $id property highlite]} {
 	    $which marker footprint $id highlite only
-	    $which marker footprint $id move front
-	    $which marker footprint $id color red
-	    set imarker(motion) none
+	    $which marker footprint $id move back
 	    return
 	}
     }
 
-    # see if any markers are selected
-    if {[$which get marker footprint select number]>0} {
-	$which marker footprint unselect all
-	set imarker(motion) none
-	return
-    }
-
-    # see if any markers are selected
+    # nope, unhighlite all
     if {[$which get marker footprint highlite number]>0} {
 	$which marker footprint unhighlite all
-	set imarker(motion) none
 	return
     }
-
-    set imarker(motion) none
-    set imarker(handle) -1
 }
 
 proc FPShift {which x y} {
@@ -246,28 +213,13 @@ proc FPShift {which x y} {
 	return
     }
 
-    # see if we are on a handle
-    set h [$which get marker footprint handle $x $y]
-    set id [lindex $h 0]
-    set imarker(handle) [lindex $h 1]
-
-    if {$imarker(handle)} {
-	return
-    }
-
-    # else, see if we are on a marker
-    if {[$which marker footprint select toggle $x $y]} {
-	return
-    }
-
     if {[$which marker footprint highlite toggle $x $y]} {
 	set imarker(motion) none
 	return
     }
 
     # else, start a region select
-    $which region footprint select begin $x $y
-    # $which region footprint highlite begin $x $y
+    $which region footprint highlite begin $x $y
     set imarker(motion) shiftregion
 }
 
@@ -286,10 +238,8 @@ proc FPMotion {which x y} {
 
     switch -- $imarker(motion) {
 	none {}
-	region -
 	shiftregion {
-	    $which region footprint select motion $x $y
-	    # $which region footprint highlite motion $x $y
+	    $which region footprint highlite motion $x $y
 	}
     }
 }
@@ -309,18 +259,12 @@ proc FPRelease {which x y} {
 
     switch -- $imarker(motion) {
 	none {}
-	region {
-	    $which region footprint select end
-	    $which region footprint highlite end
-	}
 	shiftregion {
-	    $which region footprint select shift end
 	    $which region footprint highlite shift end
 	}
     }
 
     set imarker(motion) none
-    set imarker(handle) -1
 
     # stats
     set rr {}

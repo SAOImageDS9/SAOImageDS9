@@ -437,18 +437,17 @@ proc CATButton {which x y} {
     # else, see if we are on a marker
     set id [$which get marker catalog id $x $y]
     if {$id != 0} {
-	# select
+	# else, see if we are on a marker, then select
 	if {[$which get marker catalog $id property select]} {
 	    $which marker catalog select only $x $y
 	    $which marker catalog move begin $x $y
 	    set imarker(motion) beginMove
 	    return
 	}
-	# highlite
+	# else, see if we are on a marker, then highlite
 	if {[$which get marker catalog $id property highlite]} {
 	    $which marker catalog $id highlite only
-	    $which marker catalog $id move front
-	    $which marker catalog $id color red
+	    $which marker catalog $id move back
 	    set imarker(motion) none
 	    return
 	}
@@ -461,7 +460,7 @@ proc CATButton {which x y} {
 	return
     }
 
-    # see if any markers are selected
+    # nope, unhighlite all
     if {[$which get marker catalog highlite number]>0} {
 	$which marker catalog unhighlite all
 	set imarker(motion) none
@@ -510,7 +509,6 @@ proc CATShift {which x y} {
 
     # else, start a region select
     $which region catalog select begin $x $y
-    # $which region catalog highlite begin $x $y
     set imarker(motion) shiftregion
 }
 
@@ -551,7 +549,6 @@ proc CATMotion {which x y} {
 	region -
 	shiftregion {
 	    $which region catalog select motion $x $y
-	    # $which region catalog highlite motion $x $y
 	}
     }
 }

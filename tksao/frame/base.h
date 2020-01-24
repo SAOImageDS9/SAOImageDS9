@@ -119,6 +119,7 @@ public:
   enum FileNameType {ROOTBASE, FULLBASE, ROOT, FULL};
   enum MarkerFormat {DS9, XML, CIAO, SAOTNG, SAOIMAGE, PROS, RAWXY};
   enum MarkerLayer {USER, CATALOG, FOOTPRINT};
+  enum MarkerRenderOrder {HEAD,TAIL};
   enum ShmType {SHMID,KEY};
   enum UndoMarkerType {NONE, MOVE, EDIT, DELETE};
   enum UpdateType {MATRIX, BASE, BASEONLY, PIXMAP, NOUPDATE};
@@ -424,7 +425,7 @@ public:
   void psCrosshair(PSColorSpace);
   virtual void psGraphics(PSColorSpace) {}
   void psImage(ostream&, Filter&, int, int, float);
-  void psMarkers(List<Marker>*, PSColorSpace);
+  void psMarkers(List<Marker>*, PSColorSpace, MarkerRenderOrder);
   Matrix psMatrix(float scale, int width, int height);
   void pushMatrices(FitsImage*, Matrix&);
   void pushMagnifierMatrices(FitsImage*);
@@ -482,7 +483,7 @@ public:
   virtual void x11Graphics();
   virtual void x11MagnifierCursor(const Vector&) {}
   void x11MagnifierMarkers(List<Marker>*, const BBox& bb);
-  void x11Markers(List<Marker>*, const BBox&);
+  void x11Markers(List<Marker>*, const BBox&, MarkerRenderOrder);
   void xmlParse(istream&);
   void xmlParseFIELD(void*, int*, char**, char**, char**, char**, int);
   void xmlParseTR(char**, int*, char**, char**, char**, char**, int);

@@ -815,9 +815,9 @@ int Base::postscriptProc(int prepass)
 
       // markers over grid
       if (showMarkers) {
-	psMarkers(&footprintMarkers, GRAY);
-	psMarkers(&catalogMarkers, GRAY);
-	psMarkers(&userMarkers, GRAY);
+	psMarkers(&footprintMarkers, GRAY, HEAD);
+	psMarkers(&catalogMarkers, GRAY, HEAD);
+	psMarkers(&userMarkers, GRAY, TAIL);
       }
 
       psCrosshair(GRAY);
@@ -834,9 +834,9 @@ int Base::postscriptProc(int prepass)
 
       // markers over grid
       if (showMarkers) {
-	psMarkers(&footprintMarkers, RGB);
-	psMarkers(&catalogMarkers, RGB);
-	psMarkers(&userMarkers, RGB);
+	psMarkers(&footprintMarkers, psColorSpace, HEAD);
+	psMarkers(&catalogMarkers, psColorSpace, HEAD);
+	psMarkers(&userMarkers, psColorSpace, TAIL);
       }
 
       psCrosshair(RGB);
@@ -855,9 +855,9 @@ int Base::postscriptProc(int prepass)
 
     // markers over grid
     if (showMarkers) {
-      psMarkers(&footprintMarkers, psColorSpace);
-      psMarkers(&catalogMarkers, psColorSpace);
-      psMarkers(&userMarkers, psColorSpace);
+      psMarkers(&footprintMarkers, psColorSpace, HEAD);
+      psMarkers(&catalogMarkers, psColorSpace, HEAD);
+      psMarkers(&userMarkers, psColorSpace, TAIL);
     }
 
     psCrosshair(psColorSpace);
@@ -1709,9 +1709,9 @@ void Base::updatePM(const BBox& bbox)
   // markers over grid
   BBox bb = BBox(0,0,width,height) * widgetToCanvas;
   if (showMarkers) {
-    x11Markers(&footprintMarkers, bb);
-    x11Markers(&catalogMarkers, bb);
-    x11Markers(&userMarkers, bb);
+    x11Markers(&footprintMarkers, bb, HEAD);
+    x11Markers(&catalogMarkers, bb, HEAD);
+    x11Markers(&userMarkers, bb, TAIL);
   }
 
   // crosshair

@@ -233,6 +233,7 @@ proc FPFltCXC {varname} {
 	}
 	
 	regsub -all -nocase {j2000} $regs {} regs
+	regsub -all -nocase {icrs} $regs {} regs
 	set catdest($kk,$regCol) $regs
     }
 
@@ -311,6 +312,7 @@ proc FPFltHLA {varname} {
 	}
 	set regs $catsrc($ii,$regCol)
 	regsub -all -nocase {j2000} $regs {} regs
+	regsub -all -nocase {icrs} $regs {} regs
 	regsub -all -nocase {polygon} $regs {||; polygon} regs
 	regsub -all -nocase {circle} $regs {||; circle} regs
 	regsub -all -nocase {ellipse} $regs {||; ellipse} regs

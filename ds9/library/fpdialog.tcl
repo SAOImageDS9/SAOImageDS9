@@ -83,7 +83,13 @@ proc FPDialog {varname title url instr format action} {
 
     set var(url) $url
     set var(title) $title
+
+    # instruments
     set var(instr) $instr
+    foreach ss $var(instr) {
+	set ll [string tolower $ss]
+	set ${varname}(instr,$ll) 1
+    }
 
     # create the window
     set w $var(top)
@@ -180,6 +186,17 @@ proc FPDialog {varname title url instr format action} {
 	-padx 2 -pady 2 -sticky w
     grid $f.rtitle $f.r $f.rformat -padx 2 -pady 2 -sticky w
 
+    # Instruments
+    set f [ttk::labelframe $w.instr -text [msgcat::mc {Instrument}] -padding 2]
+    set ii 0
+    foreach ss $var(instr) {
+	set ll [string tolower $ss]
+	set ${varname}(instr,$ll) 1
+	ttk::checkbutton $f.$ll -text $ss -variable ${varname}(instr,$ll)
+	grid $f.$ll -row 0 -column $ii -padx 2
+	incr ii
+    }
+
     # Param
     set f [ttk::labelframe $w.param -text [msgcat::mc {Table}] -padding 2]
 
@@ -252,7 +269,7 @@ proc FPDialog {varname title url instr format action} {
     ttk::separator $w.stbl -orient horizontal
     ttk::separator $w.sstatus -orient horizontal
     pack $w.buttons $w.sstatus $w.status $w.stbl -side bottom -fill x
-    pack $w.obj $w.param -side top -fill x
+    pack $w.obj $w.instr $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
     ARCoord $varname
@@ -341,7 +358,29 @@ proc FPVOT {varname} {
     }
 
     # query
-    set query "[http::formatQuery pos "$xx,$yy" size $rr]"
+    set instr {}
+    set first 1
+    foreach ss $var(instr) {
+	set ll [string tolower $ss]
+	if {$var(instr,$ll)} {
+	    if {!$first} {
+		append instr ",$ss"
+	    } else {
+		append instr "$ss"
+		set first 0
+	    }
+	}
+    }
+
+    if {$instr != {}} {
+	set query [http::formatQuery pos "$xx,$yy" size $rr inst "$instr"]
+    } elseif {$var(instr) != {}} {
+	$var(proc,error) $varname [msgcat::mc {Please specify instruments}]
+	return
+    } else {
+	set query [http::formatQuery pos "$xx,$yy" size $rr]
+    }
+
     FPLoad $varname $var(url) $query
 }
 

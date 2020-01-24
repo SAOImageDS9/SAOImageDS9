@@ -385,7 +385,7 @@ proc CATReg {varname row interactive resultname} {
 		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite CATHighliteCB {${varname}.\${ii}} callback=unhighlite CATUnhighliteCB {${varname}.\${ii}}\n"
 		}
 	    } else {
-		set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} text=\{\${text}\} tag=$varname\n"
+		set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} text=\{\${text}\}\n"
 	    }
 	    append result [subst $template]
 

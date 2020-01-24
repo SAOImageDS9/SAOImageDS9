@@ -29,6 +29,7 @@
 %token UPDATE_
 
 %token CXC_
+%token HLA_
 
 %token XML_
 %token VOT_
@@ -78,8 +79,8 @@ coordinate : numeric numeric {TBLCmdCoord $1 $2 fk5}
  | SEXSTR_ SEXSTR_ skyframe {TBLCmdCoord $1 $2 $3}
  ;
 
-site : {} {set _ cxc}
- | CXC_ {set _ cxc}
+site : CXC_ {set _ cxc}
+ | HLA_ {set _ hla}
  ;
 
 writer : XML_ {set _ VOTWrite}

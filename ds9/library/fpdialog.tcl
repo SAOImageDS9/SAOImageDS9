@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc FPDialog {varname title url opts colreg action} {
+proc FPDialog {varname title url instr format action} {
     global fp
     global ifp
     global pfp
@@ -15,7 +15,7 @@ proc FPDialog {varname title url opts colreg action} {
    
     global debug
     if {$debug(tcl,fp)} {
-	puts stderr "FPDialog $varname:$title:$url:$opts:$action:$colreg"
+	puts stderr "FPDialog $varname:$title:$url:$instr:$format:$action"
     }
 
     if {$current(frame) == {}} {
@@ -43,6 +43,22 @@ proc FPDialog {varname title url opts colreg action} {
     set var(proc,load) FPLoad
     set var(proc,error) ARError
 
+    # format
+    switch $format {
+	cxc {
+	    set var(colid) ObsId
+	    set var(colreg) stcs
+	    set var(proc,flt) FPFltCXC
+	    set var(proc,reg) FPRegCXC
+	}
+	hla {
+	    set var(colid) PropID
+	    set var(colreg) regionSTCS
+	    set var(proc,flt) FPFltHLA
+	    set var(proc,reg) FPRegHLA
+	}
+    }
+
     # FP variables
     lappend ifp(fps) $varname
 
@@ -67,8 +83,7 @@ proc FPDialog {varname title url opts colreg action} {
 
     set var(url) $url
     set var(title) $title
-    set var(opts) $opts
-    set var(colreg) $colreg
+    set var(instr) $instr
 
     # create the window
     set w $var(top)
@@ -326,7 +341,7 @@ proc FPVOT {varname} {
     }
 
     # query
-    set query "$var(opts)[http::formatQuery pos "$xx,$yy" size $rr]"
+    set query "[http::formatQuery pos "$xx,$yy" size $rr]"
     FPLoad $varname $var(url) $query
 }
 

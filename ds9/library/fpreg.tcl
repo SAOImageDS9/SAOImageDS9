@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc FPReg {varname interactive resultname} {
+proc FPRegCXC {varname interactive resultname} {
     upvar $resultname result
 
     upvar #0 $varname var
@@ -33,7 +33,7 @@ proc FPReg {varname interactive resultname} {
 	set rr [starbase_get $var(tbldb) $ii $colreg]
 	set ra 0
 	set dec 0
-	FPFindCenter $rr ra dec
+	FPFindCenterCXC $rr ra dec
 	
 	# props
 	set color green
@@ -47,7 +47,7 @@ proc FPReg {varname interactive resultname} {
     }
 }
 
-proc FPFindCenter {str raname decname} {
+proc FPFindCenterCXC {str raname decname} {
     upvar $raname ra
     upvar $decname dec
     
@@ -70,5 +70,45 @@ proc FPFindCenter {str raname decname} {
 	# should not need this
 	set ra [lindex $str 1]
 	set dec [lindex $str 2]
+    }
+}
+
+proc FPRegHLA {varname interactive resultname} {
+    upvar $resultname result
+
+    upvar #0 $varname var
+    global $varname
+    global $var(tbldb)
+
+    # init result
+    set result {}
+
+    set colreg [starbase_colnum $var(tbldb) $var(colreg)]
+
+    # process prologue
+    append result "# Region file format: DS9 version 4.0\n"
+
+    # tbldb
+    set nrows [starbase_nrows $var(tbldb)]
+    set cols [starbase_columns $var(tbldb)]
+
+    # system
+    append result "wcs; fk5\n"
+
+    # for each row in the table ...
+    for {set ii 1} {$ii <= $nrows} {incr ii} {
+
+	# col
+	set rr [starbase_get $var(tbldb) $ii $colreg]
+	
+	# props
+	set color green
+
+	if {$interactive} {
+	    set template "$rr # color=\${color} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite FPHighliteCB {${varname}.\${ii}} callback=unhighlite FPUnhighliteCB {${varname}.\${ii}}\n"
+	} else {
+	    set template "$rr # color=\${color} tag=$varname\n"
+	}
+	append result [subst $template]
     }
 }

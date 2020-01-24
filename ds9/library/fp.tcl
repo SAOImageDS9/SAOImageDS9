@@ -23,14 +23,14 @@ proc FPDef {} {
 		       {{Chandra (NASA/CXC)} \
 			    fpcxc \
 			    {https://cxcfps.cfa.harvard.edu/cgi-bin/cda/footprint/get_vo_table.pl} \
-			    {inst=ACIS-S,ACIS-I,HRC-S,HRC-I&} \
-			    stcs \
+			    {ACIS-S ACIS-I HRC-S HRC-I} \
+			    cxc \
 			} \
 		       {{Hubble Legacy Archive (STSCI)} \
 			    fphla \
-			    {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi} \
-			    {} \
-			    regionSTCS \
+			    {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi/footprint/get_vo_table.pl} \
+			    {WFPC2} \
+			    hla \
 			} \
 		   }
 }
@@ -43,11 +43,10 @@ proc FPAnalysisMenu {mb} {
 	set title [lindex $ff 0]
 	set vars [lindex $ff 1]
 	set url [lindex $ff 2]
-	set opts [lindex $ff 3]
-	set colreg [lindex $ff 4]
+	set instr [lindex $ff 3]
+	set format [lindex $ff 4]
 
-	$mb add command -label $title \
-	    -command [list FPDialog $vars $title $url $opts $colreg apply]
+	$mb add command -label $title -command [list FPDialog $vars $title $url $instr $format apply]
     }
 }
 
@@ -120,7 +119,7 @@ proc FPTable {varname} {
     # filter regions
     set var(tbldb) ${varname}tbldb
     global $var(tbldb)
-    if {![FPFlt $varname]} {
+    if {![eval $var(proc,flt) $varname]} {
 	Error [msgcat::mc {Internal Parse Error}]
 	if {[info exists $var(tbldb)]} {
 	    unset $var(tbldb)
@@ -158,7 +157,7 @@ proc FPTable {varname} {
     FPGenerate $varname
 }
 
-proc FPFlt {varname} {
+proc FPFltCXC {varname} {
     upvar #0 $varname var
     global $varname
     global $var(catdb)
@@ -166,6 +165,7 @@ proc FPFlt {varname} {
 
     upvar #0 $var(catdb) catsrc
     upvar #0 $var(tbldb) catdest
+
     # create header
     set catdest(Header) $catsrc(Header)
     starbase_colmap catdest
@@ -213,13 +213,14 @@ proc FPFlt {varname} {
 
     # data
     set kk 0
-    set obsIdCol $catsrc(ObsId)
+    set idCol $catsrc($var(colid))
     set regCol $catsrc($var(colreg))
     set obsId 0
     set regs {}
+
     for {set ii 1} {$ii<=$catsrc(Nrows)} {incr ii} {
-	if {$obsId != $catsrc($ii,$obsIdCol)} {
-	    set obsId $catsrc($ii,$obsIdCol)
+	if {$obsId != $catsrc($ii,$idCol)} {
+	    set obsId $catsrc($ii,$idCol)
 	    set regs $catsrc($ii,$regCol)
 
 	    # write the first one
@@ -231,15 +232,89 @@ proc FPFlt {varname} {
 	    append regs " || ; $catsrc($ii,$regCol)"
 	}
 	
-	regsub -all {Polygon J2000} $regs {Polygon} regs
+	regsub -all {J2000} $regs {} regs
 	set catdest($kk,$regCol) $regs
     }
 
     # cleanup
-    regsub -all {Polygon J2000} $regs {Polygon} regs
+    regsub -all {J2000} $regs {} regs
     set catdest($kk,$regCol) $regs
 
     set catdest(Nrows) $kk
+    return 1
+}
+
+proc FPFltHLA {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(catdb)
+    global $var(tbldb)
+
+    upvar #0 $var(catdb) catsrc
+    upvar #0 $var(tbldb) catdest
+
+    # create header
+    set catdest(Header) $catsrc(Header)
+    starbase_colmap catdest
+
+    set catdest(Ndshs) [llength $catdest(Header)]
+    set catdest(Nrows) 0
+    set catdest(HLines) $catsrc(HLines)
+    set catdest(Dashes) $catsrc(Dashes)
+
+    # optional
+    if {[info exists catsrc(DataType)]} {
+	set catdest(DataType) $catsrc(DataType)
+    }
+    if {[info exists catsrc(Id)]} {
+	set catdest(Id) $catsrc(Id)
+    }
+    if {[info exists catsrc(ArraySize)]} {
+	set catdest(ArraySize) $catsrc(ArraySize)
+    }
+    if {[info exists catsrc(Width)]} {
+	set catdest(Width) $catsrc(Width)
+    }
+    if {[info exists catsrc(Precision)]} {
+	set catdest(Precision) $catsrc(Precision)
+    }
+    if {[info exists catsrc(Unit)]} {
+	set catdest(Unit) $catsrc(Unit)
+    }
+    if {[info exists catsrc(Ref)]} {
+	set catdest(Ref) $catsrc(Ref)
+    }
+    if {[info exists catsrc(Ucd)]} {
+	set catdest(Ucd) $catsrc(Ucd)
+    }
+    if {[info exists catsrc(Description)]} {
+	set catdest(Description) $catsrc(Description)
+    }
+
+    for {set ii 1} {$ii<=$catsrc(HLines)} {incr ii} {
+	set catdest(H_$ii) $catsrc(H_$ii)
+    }
+    for {set jj 1} {$jj<=$catsrc(Ncols)} {incr jj} {
+	set catdest(0,$jj) $catsrc(0,$jj)
+    }
+
+    # data
+    set kk 0
+    set idCol $catsrc($var(colid))
+    set regCol $catsrc($var(colreg))
+    set obsId 0
+    set regs {}
+
+    for {set ii 1} {$ii<=$catsrc(Nrows)} {incr ii} {
+	for {set jj 1} {$jj<=$catsrc(Ncols)} {incr jj} {
+	    set catdest($ii,$jj) $catsrc($ii,$jj)
+	}
+	set regs $catsrc($ii,$regCol)
+	regsub -all {J2000} $regs {} regs
+	set catdest($ii,$regCol) $regs
+    }
+    set catdest(Nrows) $catsrc(Nrows) 
+
     return 1
 }
 
@@ -270,7 +345,7 @@ proc FPGenerate {varname} {
     if {$var(show)} {
 	global reg
 	set reg {}
-	FPReg $varname 1 reg
+	eval [list $var(proc,reg) $varname 1 reg]
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
 		if {[catch {$var(frame) marker footprint command ds9 var reg}]} {
@@ -303,7 +378,7 @@ proc FPGenerateRegions {varname} {
 
     global reg
     set reg {}
-    FPReg $varname 0 reg
+    eval [list $var(proc,reg) $varname 0 reg]
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    if {[catch {$var(frame) marker command ds9 var reg}]} {
@@ -411,11 +486,11 @@ proc FPCmdRef {ref} {
 	    set title [lindex $mm 0]
 	    set vars [lindex $mm 1]
 	    set url [lindex $mm 2]
-	    set opts [lindex $mm 3]
-	    set colreg [lindex $mm 4]
+	    set instr [lindex $mm 3]
+	    set format [lindex $mm 4]
 
 	    if {$title != {-} && "fp${ref}" == $vars} {
-		FPDialog $vars $title $url $opts $colreg sync
+		FPDialog $vars $title $url $instr $format sync
 		set cvarname fp${ref}
 	    }
 	}

@@ -57,9 +57,10 @@ set SKYFORMAT_ 312
 set SYSTEM_ 313
 set UPDATE_ 314
 set CXC_ 315
-set XML_ 316
-set VOT_ 317
-set SB_ 318
-set STARBASE_ 319
-set CSV_ 320
-set TSV_ 321
+set HLA_ 316
+set XML_ 317
+set VOT_ 318
+set SB_ 319
+set STARBASE_ 320
+set CSV_ 321
+set TSV_ 322

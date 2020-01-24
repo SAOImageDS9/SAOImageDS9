@@ -25,6 +25,7 @@ system	    {return $SYSTEM_}
 update	    {return $UPDATE_}
 
 cxc	    {return $CXC_}
+hla	    {return $HLA_}
 
 xml	    {return $XML_}
 vot	    {return $VOT_}

@@ -232,7 +232,7 @@ proc FPFltCXC {varname} {
 	    append regs " || ; $catsrc($ii,$regCol)"
 	}
 	
-	regsub -all {J2000} $regs {} regs
+	regsub -all -nocase {j2000} $regs {} regs
 	set catdest($kk,$regCol) $regs
     }
 
@@ -310,7 +310,12 @@ proc FPFltHLA {varname} {
 	    set catdest($ii,$jj) $catsrc($ii,$jj)
 	}
 	set regs $catsrc($ii,$regCol)
-	regsub -all {J2000} $regs {} regs
+	regsub -all -nocase {j2000} $regs {} regs
+	regsub -all -nocase {polygon} $regs {||; polygon} regs
+	regsub -all -nocase {circle} $regs {||; circle} regs
+	regsub -all -nocase {ellipse} $regs {||; ellipse} regs
+	regsub -all -nocase {box} $regs {||; box} regs
+	set regs [string trim $regs {|;}]
 	set catdest($ii,$regCol) $regs
     }
     set catdest(Nrows) $catsrc(Nrows) 
@@ -345,7 +350,7 @@ proc FPGenerate {varname} {
     if {$var(show)} {
 	global reg
 	set reg {}
-	eval [list $var(proc,reg) $varname 1 reg]
+	FPReg $varname 1 reg
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
 		if {[catch {$var(frame) marker footprint command ds9 var reg}]} {
@@ -378,7 +383,7 @@ proc FPGenerateRegions {varname} {
 
     global reg
     set reg {}
-    eval [list $var(proc,reg) $varname 0 reg]
+    FPReg $varname 0 reg
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    if {[catch {$var(frame) marker command ds9 var reg}]} {

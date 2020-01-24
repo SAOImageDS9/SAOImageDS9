@@ -49,13 +49,11 @@ proc FPDialog {varname title url instr format action} {
 	    set var(colid) ObsId
 	    set var(colreg) stcs
 	    set var(proc,flt) FPFltCXC
-	    set var(proc,reg) FPRegCXC
 	}
 	hla {
 	    set var(colid) PropID
 	    set var(colreg) regionSTCS
 	    set var(proc,flt) FPFltHLA
-	    set var(proc,reg) FPRegHLA
 	}
     }
 

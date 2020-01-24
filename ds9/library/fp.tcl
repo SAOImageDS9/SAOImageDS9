@@ -29,7 +29,7 @@ proc FPDef {} {
 		       {{Hubble Legacy Archive (STSCI)} \
 			    fphla \
 			    {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi/footprint/get_vo_table.pl} \
-			    {WFPC2} \
+			    {ACS ACSGrism WFPC2 WFPC2-PC NICMOS NICGrism WFC3 COS STIS FOS GHRS} \
 			    hla \
 			} \
 		   }

@@ -148,7 +148,7 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.cat add command -label [msgcat::mc {Match}] \
 	-command CATMatchFrame
     $ds9(mb).analysis.cat add separator
-    CATAnalysisMenu
+    CATAnalysisMenu $ds9(mb).analysis.cat
 
     menu $ds9(mb).analysis.plot
     $ds9(mb).analysis.plot add command -label [msgcat::mc {Line}] \

@@ -58,8 +58,8 @@ proc CATDef {} {
 		       {{AC 2000.2} catac cds {I/275/ac2002}} \
 		       {{ASCC-2.5} catascss cds {I/280A/ascc01}} \
 		       {{Carlsberg Meridian 14} catcmc cds {I/304}}\
-		       {{GAIA DR1} catgaia1 cds {I/337}} \
-		       {{GAIA DR2} catgaia cds {I/345}} \
+		       {{GAIA DR1} catgaia1 cds {I/337/gaia}} \
+		       {{GAIA DR2} catgaia cds {I/345/gaia2}} \
 		       {{GSC 2.2} catgsc2 cds {I/271/out}} \
 		       {{GSC 2.3} catgsc cds {I/305/out}} \
 		       {{NOMAD} catnomad cds {I/297/out}} \
@@ -77,9 +77,11 @@ proc CATDef {} {
 		       {{USNO URAT1} caturat1 cds {I/329}} \
 		       {- {Infrared} ir} \
 		       {{2MASS Point Sources} cat2mass cds {II/246/out}}\
-		       {{IRAS Point Sources} catiras cds {II/125}}\
+		       {{IRAS Point Sources} catiras cds {II/125/main}}\
 		       {- {High Energy} hea} \
-		       {{Chandra Source} catcsc cxc {Current Release}}
+		       {{Chandra Source 1.1} catcsc11 cds {IX/45/csc11}}
+		       {{Chandra Source 2.0} catcsc20 cds {IX/57/csc2master}}
+		       {{Chandra Source Current} catcsc cxc {Current Release}}
 		       {{2XMMi Source} catxmm cds {IX/40/xmm2is}} \
 		       {{Second ROSAT PSPC} catrosat cds {IX/30}} \
 		       {- {Radio} radio} \
@@ -110,124 +112,14 @@ proc CATDef {} {
     set pcat(sym,font,slant) roman
 }
 
-# Load via HTTP
-
-proc CATGetURL {varname} {
+proc CATLoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATGetURL $varname $var(url)?$var(query)"
+	puts stderr "CATLoad $varname $url?$query"
     }
-
-    ARStatus $varname [msgcat::mc {Loading}]
-
-    global ihttp
-    if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -query $var(query) \
-					 -timeout $ihttp(timeout) \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	    CATGetURLFinish $varname $var(token)
-	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
-	}
-    } else {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -query $var(query) \
-					 -timeout $ihttp(timeout) \
-					 -command \
-					 [list CATGetURLFinish $varname] \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	} else {
-	    ARError $varname "[msgcat::mc {Unable to locate URL}] $var(url)"
-	}
-    }
-}
-
-proc CATGetURLFinish {varname token} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATGetURLFinish $varname"
-    }
-
-    if {!($var(active))} {
-	ARCancelled $varname
-	return
-    }
-
-    upvar #0 $token t
-
-    # Code
-    set code [http::ncode $token]
-
-    # Meta
-    set meta $t(meta)
-
-    # Log it
-    HTTPLog $token
-
-    # Result?
-    switch -- $code {
-	{} -
-	200 -
-	203 -
-	404 -
-	503 {
-	    if {[info exist ${varname}(proc,parser)]} {
-		eval [list $var(proc,parser) $var(catdb) $token]
-	    }
-
-	    ARDone $varname
-	    eval $var(proc,done) $varname
-	}
-
-	201 -
-	300 -
-	301 -
-	302 -
-	303 -
-	305 -
-	307 {
-	    foreach {name value} $meta {
-		if {[regexp -nocase ^location$ $name]} {
-		    global debug
-		    if {$debug(tcl,cat)} {
-			puts stderr "CATGetURLFinish redirect $code to $value"
-		    }
-		    # clean up and resubmit
-		    http::cleanup $token
-		    unset var(token)
-
-		    set var(url) $value
-		    eval $var(proc,load) $varname
-		}
-	    }
-	}
-
-	default {ARError $varname "[msgcat::mc {Error code was returned}] $code"}
-    }
-}
-
-proc CATLoad {varname} {
-    upvar #0 $varname var
-    global $varname
 
     # clear previous db
     global $var(catdb)
@@ -235,15 +127,23 @@ proc CATLoad {varname} {
 	unset $var(catdb)
     }
 
+    TBLGetURL $varname $url $query
+    return
+}
+
+proc CATProcess {varname} {
+    upvar #0 $varname var
+    global $varname
+
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATLoad $varname $var(url)?$var(query)"
+	puts stderr "CATProcess $varname"
     }
 
-    set var(proc,done) CATLoadDone
-    set var(proc,load) CATLoad
-    CATGetURL $varname
-    return
+    VOTParse $var(catdb) $var(token)
+    ARDone $varname
+
+    CATLoadDone $varname
 }
 
 proc CATLoadDone {varname} {
@@ -263,165 +163,6 @@ proc CATLoadDone {varname} {
     CATDialogUpdate $varname
 }
 
-# Load via File
-
-proc CATLoadSBFile {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set fn [OpenFileDialog catfbox]
-    if {$fn != {}} {
-	CATLoadFn $varname $fn starbase_read
-    }
-}
-
-proc CATLoadVOTFile {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set fn [OpenFileDialog catvotfbox]
-    if {$fn != {}} {
-	CATLoadFn $varname $fn VOTRead
-    }
-}
-
-proc CATLoadTSVFile {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set fn [OpenFileDialog cattsvfbox]
-    if {$fn != {}} {
-	CATLoadFn $varname $fn TSVRead
-    }
-}
-
-# used by backup
-proc CATLoadFn {varname fn reader} {
-    upvar #0 $varname var
-    global $varname
-    global $var(catdb)
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATLoadFn $varname $fn $reader"
-    }
-
-    ARStatus $varname [msgcat::mc {Loading Catalog}]
-
-    CATOff $varname
-    CATSet $varname {} {} $fn
-
-    set var(name) {}
-    set var(x) {}
-    set var(y) {}
-    set var(radius) {}
-
-    if {[file exists $fn]} {
-	$reader $var(catdb) $fn
-    } else {
-	Error "[msgcat::mc {Unable to open file}] $fn"
-	return
-    }
-
-    ARDone $varname
-    CATLoadDone $varname
-}
-
-# Save via File
-
-proc CATSaveSBFile {varname} {
-    set fn [SaveFileDialog catfbox]
-    CATSaveFn $varname $fn starbase_write
-}
-
-proc CATSaveVOTFile {varname} {
-    set fn [SaveFileDialog catvotfbox]
-    CATSaveFn $varname $fn VOTWrite
-}
-
-proc CATSaveTSVFile {varname} {
-    set fn [SaveFileDialog cattsvfbox]
-    CATSaveFn $varname $fn TSVWrite
-}
-
-proc CATSaveFn {varname fn writer} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    if {$fn == {}} {
-	return
-    }
-
-    # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
-	return
-    }
-
-    $writer $var(tbldb) $fn
-    ARDone $varname
-}
-
-# Other procedures
-
-proc CATStatusRows {varname rowlist} {
-    upvar #0 $varname var
-    global $varname
-
-    # rowlist start at 1
-    if {[llength $rowlist]>0} {
-	ARStatus $varname "[msgcat::mc {Row}] [join $rowlist {,}]"
-    } else {
-	ARStatus $varname {}
-    }
-}
-
-proc CATOff {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global $var(catdb)
-    if {[info exists $var(catdb)]} {
-	unset $var(catdb)
-    }
-    global $var(tbldb)
-    if {[info exists $var(tbldb)]} {
-	unset $var(tbldb)
-    }
-    set db $var(tbldb)
-    set ${db}(Nrows) {}
-
-    $var(tbl) selection clear all
-
-    if {[info commands $var(frame)] != {}} {
-	if {[$var(frame) has fits]} {
-	    $var(frame) marker catalog $varname delete
-	}
-    }
-
-    CATSortMenu $varname
-    CATColsMenu $varname
-    set var(filter) {}
-    set var(sort) {}
-    set var(colx) {}
-    set var(coly) {}
-
-    set var(blink) 0
-
-    # plot window?
-    if {$var(plot)} {
-	PlotDestroy $var(plot,var)
-	set var(plot) 0
-	set var(plot,var) {}
-	set var(plot,x) {}
-	set var(plot,xerr) {}
-	set var(plot,y) {}
-	set var(plot,yerr) {}
-    }
-
-    CATDialogUpdate $varname
-}
-
 # used by backup
 proc CATTable {varname} {
     upvar #0 $varname var
@@ -434,7 +175,7 @@ proc CATTable {varname} {
 	puts stderr "CATTable $varname"
     }
 
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -520,7 +261,7 @@ proc CATGenerate {varname} {
     }
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -540,7 +281,7 @@ proc CATGenerate {varname} {
 	if {[info commands $var(frame)] != {}} {
 	    if {[$var(frame) has fits]} {
 		if {[catch {$var(frame) marker catalog command ds9 var reg}]} {
-		    ARError $varname "[msgcat::mc {Internal Parse Error}]"
+		    $var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		    return
 		}
 	    }
@@ -561,7 +302,7 @@ proc CATGenerateRegions {varname} {
     }
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -573,13 +314,125 @@ proc CATGenerateRegions {varname} {
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    if {[catch {$var(frame) marker command ds9 var reg}]} {
-		ARError $varname "[msgcat::mc {Internal Parse Error}]"
+		$var(proc,error) $varname "[msgcat::mc {Internal Parse Error}]"
 		return
 	    }
 	}
     }
 
     ARStatus $varname [msgcat::mc Done]
+}
+
+# Load via File
+
+proc CATLoadVOTFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog votfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn VOTRead
+    }
+}
+
+proc CATLoadRDBFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog rdbfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn starbase_read
+    }
+}
+
+proc CATLoadTSVFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog tsvfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn TSVRead
+    }
+}
+
+# used by backup
+proc CATLoadFn {varname fn reader} {
+    upvar #0 $varname var
+    global $varname
+    global $var(catdb)
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATLoadFn $varname $fn $reader"
+    }
+
+    ARStatus $varname [msgcat::mc {Loading Catalog}]
+
+    CATOff $varname
+    CATSet $varname {} {} $fn
+
+    set var(name) {}
+    set var(x) {}
+    set var(y) {}
+    set var(radius) {}
+
+    if {[file exists $fn]} {
+	$reader $var(catdb) $fn
+    } else {
+	Error "[msgcat::mc {Unable to open file}] $fn"
+	return
+    }
+
+    ARDone $varname
+    CATLoadDone $varname
+}
+
+# Other procedures
+
+proc CATOff {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global $var(catdb)
+    if {[info exists $var(catdb)]} {
+	unset $var(catdb)
+    }
+    global $var(tbldb)
+    if {[info exists $var(tbldb)]} {
+	unset $var(tbldb)
+    }
+    set db $var(tbldb)
+    set ${db}(Nrows) {}
+
+    $var(tbl) selection clear all
+
+    if {[info commands $var(frame)] != {}} {
+	if {[$var(frame) has fits]} {
+	    $var(frame) marker catalog $varname delete
+	}
+    }
+
+    CATSortMenu $varname
+    CATColsMenu $varname
+    set var(filter) {}
+    set var(sort) {}
+    set var(colx) {}
+    set var(coly) {}
+
+    set var(blink) 0
+
+    # plot window?
+    if {$var(plot)} {
+	PlotDestroy $var(plot,var)
+	set var(plot) 0
+	set var(plot,var) {}
+	set var(plot,x) {}
+	set var(plot,xerr) {}
+	set var(plot,y) {}
+	set var(plot,yerr) {}
+    }
+
+    CATDialogUpdate $varname
 }
 
 proc CATGenerateUpdate {varname row} {
@@ -640,25 +493,10 @@ proc CATSet {varname format catalog title} {
     set var(sort,dir) "-increasing"
 }
 
-proc CATValidDB {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info exists var(Nrows)] && 
-	[info exists var(Ncols)] &&
-	[info exists var(HLines)] &&
-	[info exists var(Header)]} {
-	return 1
-    } else {
-	return 0
-    }
-}
-
-proc CATAnalysisMenu {} {
+proc CATAnalysisMenu {mb} {
     global icat
     global ds9
 
-    set mm "$ds9(mb).analysis.cat"
     set nn {}
 
     foreach ff $icat(def) {
@@ -668,12 +506,12 @@ proc CATAnalysisMenu {} {
 	set cc [lindex $ff 3]
 
 	if {$ll != {-}} {
-	    $mm.$nn add command -label $ll \
+	    $mb.$nn add command -label $ll \
 		-command [list CATDialog $ww $ss $cc $ll apply]
 	} else {
 	    set nn "$ss"
-	    menu $mm.$nn
-	    $mm add cascade -label $ww -menu $mm.$nn
+	    menu $mb.$nn
+	    $mb add cascade -label $ww -menu $mb.$nn
 	}
     }
 }
@@ -708,7 +546,7 @@ proc CATSortMenu {varname} {
 
     menu $m -tearoff 0
     $m add command -label {} -command "CATSortCmd $varname {}"
-    if {[CATValidDB $var(catdb)]} {
+    if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
 	    $m add command -label $col -command "CATSortCmd $varname \{$col\}"
@@ -748,7 +586,7 @@ proc CATColsMenu {varname} {
     catch {destroy $m}
 
     menu $m -tearoff 0
-    if {[CATValidDB $var(catdb)]} {
+    if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
 	    $m add command -label $col -command "CATColXCmd $varname \{$col\}"
@@ -766,7 +604,7 @@ proc CATColsMenu {varname} {
     catch {destroy $m}
 
     menu $m -tearoff 0
-    if {[CATValidDB $var(catdb)]} {
+    if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
 	    $m add command -label $col -command "CATColYCmd $varname \{$col\}"
@@ -813,7 +651,7 @@ proc CATConfigCols {varname} {
     set var(colx) {}
     set var(coly) {}
 
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -997,14 +835,6 @@ proc CATTool {} {
     CATDialog cattool {} {} [msgcat::mc {Catalog Tool}] none
 }
 
-proc CATClearFrame {} {
-    global current
-
-    if {$current(frame) != {}} {
-	$current(frame) marker catalog delete all
-    }
-}
-
 proc CATUpdateWCS {} {
     global icat
     global current
@@ -1026,17 +856,6 @@ proc CATUpdateWCS {} {
     }
 }
 
-proc CATUpdateFont {} {
-    global icat
-
-    foreach varname $icat(cats) {
-	upvar #0 $varname var
-	global $varname
-
-	$var(tbl) configure -font [font actual TkDefaultFont]
-    }
-}
-
 proc CATBackup {ch which fdir rdir} {
     global icat
 
@@ -1055,7 +874,7 @@ proc CATBackup {ch which fdir rdir} {
 		set rfn $rdir/${varname}.cat
 
 		catch {file delete -force $fn}
-		CATSaveFn $varname $fn VOTWrite
+		TBLSaveFn $varname $fn VOTWrite
 		puts $ch "CATLoadFn $varname \"$rfn\" VOTRead"
 	    } else {
 		# internal var
@@ -1242,7 +1061,7 @@ proc CatalogCmdLoad {fn reader} {
     if {$fn != {}} {
 	CATDialog cattool {} {} {} none
 	CATLoadFn [lindex $icat(cats) end] $fn $reader
-	FileLast catfbox $fn
+	FileLast rdbfbox $fn
     }
 }
 
@@ -1295,15 +1114,6 @@ proc CatalogCmdSAMPSend {name} {
 	}
     } else {
 	Error [msgcat::mc {SAMP: not connected}]
-    }
-}
-
-proc CatalogCmdSave {fn writer} {
-    global cvarname
-
-    if {$fn != {}} {
-	CATSaveFn $cvarname $fn $writer
-    	FileLast catfbox $fn
     }
 }
 

@@ -58,8 +58,8 @@ proc CATDef {} {
 		       {{AC 2000.2} catac cds {I/275/ac2002}} \
 		       {{ASCC-2.5} catascss cds {I/280A/ascc01}} \
 		       {{Carlsberg Meridian 14} catcmc cds {I/304}}\
-		       {{GAIA DR1} catgaia1 cds {I/337}} \
-		       {{GAIA DR2} catgaia cds {I/345}} \
+		       {{GAIA DR1} catgaia1 cds {I/337/gaia}} \
+		       {{GAIA DR2} catgaia cds {I/345/gaia2}} \
 		       {{GSC 2.2} catgsc2 cds {I/271/out}} \
 		       {{GSC 2.3} catgsc cds {I/305/out}} \
 		       {{NOMAD} catnomad cds {I/297/out}} \
@@ -77,9 +77,11 @@ proc CATDef {} {
 		       {{USNO URAT1} caturat1 cds {I/329}} \
 		       {- {Infrared} ir} \
 		       {{2MASS Point Sources} cat2mass cds {II/246/out}}\
-		       {{IRAS Point Sources} catiras cds {II/125}}\
+		       {{IRAS Point Sources} catiras cds {II/125/main}}\
 		       {- {High Energy} hea} \
-		       {{Chandra Source} catcsc cxc {Current Release}}
+		       {{Chandra Source 1.1} catcsc11 cds {IX/45/csc11}}
+		       {{Chandra Source 2.0} catcsc20 cds {IX/57/csc2master}}
+		       {{Chandra Source Current} catcsc cxc {Current Release}}
 		       {{2XMMi Source} catxmm cds {IX/40/xmm2is}} \
 		       {{Second ROSAT PSPC} catrosat cds {IX/30}} \
 		       {- {Radio} radio} \

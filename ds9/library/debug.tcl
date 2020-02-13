@@ -16,6 +16,7 @@ proc DebugDef {} {
     set debug(tcl,hv) 0
     set debug(tcl,cat) 0
     set debug(tcl,sia) 0
+    set debug(tcl,fp) 0
     set debug(tcl,samp) 0
     set debug(tcl,grid) 0
     set debug(tcl,restore) 0
@@ -81,6 +82,8 @@ proc DebugMenu {} {
 	-variable debug(tcl,cat)
     $ds9(mb).debug.tcl add checkbutton -label {SIA} \
 	-variable debug(tcl,sia)
+    $ds9(mb).debug.tcl add checkbutton -label {Footprint} \
+	-variable debug(tcl,fp)
     $ds9(mb).debug.tcl add checkbutton -label {SAMP} \
 	-variable debug(tcl,samp)
     $ds9(mb).debug.tcl add checkbutton -label {Grid} \

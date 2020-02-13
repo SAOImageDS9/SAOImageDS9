@@ -2087,21 +2087,21 @@ proc sia::yyparse {} {
                     51 { ProcessCmdCVAR0 SIADestroy }
                     52 { ProcessCmdCVAR0 SIAOff }
                     54 { ProcessCmdCVAR0 IMGSVRCrosshair }
-                    55 { SIACmdSave $3 $2 }
-                    56 { SIACmdSave $2 VOTWrite }
+                    55 { TBLCmdSave $3 $2 }
+                    56 { TBLCmdSave $2 VOTWrite }
                     57 { ProcessCmdCVAR name $2 }
-                    58 { ProcessCmdCVAR0 CATPrint }
+                    58 { ProcessCmdCVAR0 TBLCmdPrint }
                     59 { global cvarname; SIAApply $cvarname 1 }
-                    60 { SIACmdSize $2 $3 }
-                    61 { SIACmdSize [expr ($2+$3)/2.] $4 }
-                    62 { SIACmdSkyframe $2 }
+                    60 { TBLCmdSize $2 $3 }
+                    61 { TBLCmdSize [expr ($2+$3)/2.] $4 }
+                    62 { TBLCmdSkyframe $2 }
                     63 { ProcessCmdCVAR skyformat $2 }
-                    64 { SIACmdSystem $2 }
+                    64 { TBLCmdSystem $2 }
                     65 { ProcessCVAR0 IMGSVRUpdate }
-                    66 { SIACmdCoord $1 $2 fk5 }
-                    67 { SIACmdCoord $1 $2 $3 }
-                    68 { SIACmdCoord $1 $2 fk5 }
-                    69 { SIACmdCoord $1 $2 $3 }
+                    66 { TBLCmdCoord $1 $2 fk5 }
+                    67 { TBLCmdCoord $1 $2 $3 }
+                    68 { TBLCmdCoord $1 $2 fk5 }
+                    69 { TBLCmdCoord $1 $2 $3 }
                     70 { set _ 2mass }
                     71 { set _ akari }
                     72 { set _ astrowise }

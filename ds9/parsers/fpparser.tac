@@ -28,16 +28,8 @@
 %token SYSTEM_
 %token UPDATE_
 
-%token 2MASS_
-%token AKARI_
-%token ASTROWISE_
-%token CADC_
 %token CXC_
 %token HLA_
-%token MAST_
-%token SDSS_
-%token SKYVIEW_
-%token TGSSADR_
 
 %token XML_
 %token VOT_
@@ -53,25 +45,25 @@
 #include wcsformat.trl
 #include numeric.trl
 
-command : sia 
- | sia {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
+command : fp 
+ | fp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-sia : {if {![SIACmdCheck]} {sia::YYABORT}} siaCmd
- | site {SIACmdRef $1}
- | site {SIACmdRef $1} siaCmd
+fp : {if {![FPCmdCheck]} {fp::YYABORT}} fpCmd
+ | site {FPCmdRef $1}
+ | site {FPCmdRef $1} fpCmd
  ;
 
-siaCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
- | CLOSE_ {ProcessCmdCVAR0 SIADestroy}
- | CLEAR_ {ProcessCmdCVAR0 SIAOff}
+fpCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
+ | CLOSE_ {ProcessCmdCVAR0 FPDestroy}
+ | CLEAR_ {ProcessCmdCVAR0 FPOff}
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 IMGSVRCrosshair}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
- | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
+ | RETRIEVE_ {global cvarname; FPApply $cvarname 1}
  | RADIUS_ numeric rformat {TBLCmdSize $2 $3}
 # backward compatibily
  | SIZE_ numeric numeric rformat {TBLCmdSize [expr ($2+$3)/2.] $4}
@@ -87,16 +79,8 @@ coordinate : numeric numeric {TBLCmdCoord $1 $2 fk5}
  | SEXSTR_ SEXSTR_ skyframe {TBLCmdCoord $1 $2 $3}
  ;
 
-site : 2MASS_ {set _ 2mass}
- | AKARI_ {set _ akari}
- | ASTROWISE_ {set _ astrowise}
- | CADC_ {set _ cadc}
- | CXC_ {set _ cxc}
+site : CXC_ {set _ cxc}
  | HLA_ {set _ hla}
- | MAST_ {set _ mast}
- | SDSS_ {set _ sdss}
- | SKYVIEW_ {set _ skyview}
- | TGSSADR_ {set _ tgssadr}
  ;
 
 writer : XML_ {set _ VOTWrite}
@@ -109,7 +93,7 @@ writer : XML_ {set _ VOTWrite}
 
 %%
 
-proc sia::yyerror {msg} {
+proc fp::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
      variable index_

@@ -252,7 +252,7 @@ proc CATMatch {frame varname1 varname2}  {
     set t2 $var2(tbldb)
     upvar #0 $t2 T2
 
-    if {![CATValidDB $var1(tbldb)] || ![CATValidDB $var2(tbldb)]} {
+    if {![TBLValidDB $var1(tbldb)] || ![TBLValidDB $var2(tbldb)]} {
 	return
     }
 

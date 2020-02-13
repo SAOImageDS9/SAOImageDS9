@@ -2431,6 +2431,11 @@ void Base::markerLayerCmd(MarkerLayer layer) {
     undoMarkers = &undoCatalogMarkers;
     pasteMarkers = &pasteCatalogMarkers;
     break;
+  case FOOTPRINT:
+    markers = &footprintMarkers;
+    undoMarkers = &undoFootprintMarkers;
+    pasteMarkers = &pasteFootprintMarkers;
+    break;
   default:
     // na
     break;
@@ -6121,18 +6126,34 @@ void Base::parseMarker(MarkerFormat fm, istream& str)
   }
 }
 
-void Base::psMarkers(List<Marker>* ml, PSColorSpace mode)
+void Base::psMarkers(List<Marker>* ml, PSColorSpace mode,
+		     MarkerRenderOrder order)
 {
-  // render from back to front
   // bbox is in canvas coords
   const BBox bb = BBox(0, 0, options->width-1, options->height-1) * 
     widgetToCanvas;
 
-  Marker* mm=ml->tail();
-  while (mm) {
-    if (mm->isVisible(bb))
-      mm->ps(mode, showMarkersText);
-    mm=mm->previous();
+  switch (order) {
+  case HEAD:
+    {
+      Marker* mm=ml->head();
+      while (mm) {
+	if (mm->isVisible(bb))
+	  mm->ps(mode, showMarkersText);
+	mm=mm->next();
+      }
+    }
+    return;
+  case TAIL:
+    {
+      Marker* mm=ml->tail();
+      while (mm) {
+	if (mm->isVisible(bb))
+	  mm->ps(mode, showMarkersText);
+	mm=mm->previous();
+      }
+    }
+    return;
   }
 }
 
@@ -6149,15 +6170,30 @@ void Base::x11MagnifierMarkers(List<Marker>* ml, const BBox& bb)
   }
 }
 
-void Base::x11Markers(List<Marker>* ml, const BBox& bb)
+void Base::x11Markers(List<Marker>* ml, const BBox& bb, MarkerRenderOrder order)
 {
-  // render from back to front
   // bbox is in canvas coords
-  Marker* mm=ml->tail();
-  while (mm) {
-    if (mm->isVisible(bb))
-      mm->x11(pixmap, Coord::WIDGET, showMarkersText, Marker::HANDLES);
-    mm=mm->previous();
+  switch (order) {
+  case HEAD:
+    {
+      Marker* mm=ml->head();
+      while (mm) {
+	if (mm->isVisible(bb))
+	  mm->x11(pixmap, Coord::WIDGET, showMarkersText, Marker::HANDLES);
+	mm=mm->next();
+      }
+    }
+    return;
+  case TAIL:
+    {
+      Marker* mm=ml->tail();
+      while (mm) {
+	if (mm->isVisible(bb))
+	  mm->x11(pixmap, Coord::WIDGET, showMarkersText, Marker::HANDLES);
+	mm=mm->previous();
+      }
+    }
+    return;
   }
 }
 

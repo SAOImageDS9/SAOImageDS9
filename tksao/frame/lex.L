@@ -152,6 +152,7 @@ fk4		{return FK4_;}
 fk5		{return FK5_;}
 font		{return FONT_;}
 format          {return FORMAT_;}
+footprint       {return FOOTPRINT_;}
 from		{return FROM_;}
 front		{return FRONT_;}
 full		{return FULL_;}

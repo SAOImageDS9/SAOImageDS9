@@ -16,6 +16,7 @@
 %token ROTATE_
 %token CROP_
 %token CATALOG_
+%token FOOTPRINT_
 %token EXAMINE_
 %token 3D_
 
@@ -37,6 +38,7 @@ item : NONE_ {set _ none}
  | ROTATE_ {set _ rotate}
  | CROP_ {set _ crop}
  | CATALOG_ {set _ catalog}
+ | FOOTPRINT_ {set _ footprint}
  | EXAMINE_ {set _ examine}
  | 3D_ {set _ 3d}
 # backward compatibilty

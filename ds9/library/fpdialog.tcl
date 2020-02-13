@@ -4,70 +4,98 @@
 
 package provide DS9 1.0
 
-# used by backup
-proc SIADialog {varname title url opts action} {
-    global sia
-    global isia
-    global psia
-    global ds9
+proc FPDialog {varname title url instr format action} {
+    global fp
+    global ifp
+    global pfp
 
+    global ds9
     global wcs
+    global current
+   
+    global debug
+    if {$debug(tcl,fp)} {
+	puts stderr "FPDialog $varname:$title:$url:$instr:$format:$action"
+    }
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    # first determine if aready in use, then increment
+    if {[lsearch $ifp(fps) $varname] >= 0} {
+	incr fp(id)
+	append varname $fp(id)
+    }
 
     upvar #0 $varname var
     global $varname
-
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIADialog $varname:$title:$url:$opts:$action:"
-    }
 
     # main dialog
     set var(top) ".${varname}"
     set var(mb) ".${varname}mb"
 
-    if {[winfo exists $var(top)]} {
-	raise $var(top)
-	return
-    }
-
-    global current
-    if {$current(frame) == {}} {
-	return
-    }
-
     # AR variables
-    ARInit $varname SIAServer
+    ARInit $varname FPServer
 
     # procs
-    set var(proc,process) SIAProcess
-    set var(proc,load) SIALoad
-    set var(proc,error) SIAError
-    set var(proc,done) SIADone
+    set var(proc,process) FPProcess
+    set var(proc,load) FPLoad
+    set var(proc,error) ARError
 
-    # SIA variables
-    lappend isia(sias) $varname
+    # format
+    switch $format {
+	cxc {
+	    set var(colid) ObsId
+	    set var(colreg) stcs
+	    set var(proc,flt) FPFltCXC
+	}
+	hla {
+	    set var(colid) PropID
+	    set var(colreg) regionSTCS
+	    set var(proc,flt) FPFltHLA
+	}
+    }
 
-    set var(tbldb) ${varname}db
+    # FP variables
+    lappend ifp(fps) $varname
+
+    set var(catdb) ${varname}catdb
+    set var(tbldb) ${varname}tbldb
+    set var(frame) $current(frame)
 
     set var(system) $wcs(system)
     set var(sky) $wcs(sky)
     set var(skyformat) $wcs(skyformat)
-    set var(rformat) $isia(rformat)
-    set var(radius) $isia(radius)
-    set var(save) $isia(save)
-    set var(mode) $isia(mode)
+    set var(rformat) $ifp(rformat)
+    set var(radius) $ifp(radius)
+    set var(show) $ifp(show)
+    set var(panto) $ifp(panto)
+
+    set var(psystem) $var(system)
+    set var(psky) $var(sky)
+
+    set var(blink) 0
+    set var(blink,count) 0
+    set var(blink,marker) {}
 
     set var(url) $url
     set var(title) $title
-    set var(opts) $opts
+
+    # instruments
+    set var(instr) $instr
+    foreach ss $var(instr) {
+	set ll [string tolower $ss]
+	set ${varname}(instr,$ll) 1
+    }
 
     # create the window
     set w $var(top)
     set mb $var(mb)
 
     set tt $title
-
-    Toplevel $w $mb 7 $tt "SIADestroy $varname"
+    
+    Toplevel $w $mb 7 $tt "FPDestroy $varname"
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     NSVRServerMenu $varname
@@ -81,26 +109,29 @@ proc SIADialog {varname title url opts action} {
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Retrieve}] \
-	-command [list SIAApply $varname 0]
+	-command [list FPApply $varname 0]
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command [list ARCancel $varname]
-    $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Load}] \
-	-command [list SIAImageCmd $varname]
     $mb.file add command -label [msgcat::mc {Clear}] \
-	-command [list SIAOff $varname]
+	-command [list FPOff $varname]
+    $mb.file add separator
+    $mb.file add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(show) -command [list FPGenerate $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Update from Current Frame}] \
-	-command [list SIAUpdate $varname]
+	-command [list FPUpdate $varname]
     $mb.file add command \
 	-label [msgcat::mc {Update from Current Crosshair}] \
-	-command [list SIACrosshair $varname]
+	-command [list FPCrosshair $varname]
+    $mb.file add separator
+	$mb.file add command -label [msgcat::mc {Copy to Regions}] \
+	-command [list FPGenerateRegions $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
 	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
-	-command [list SIADestroy $varname] -accelerator "${ds9(ctrl)}W"
+	-command [list FPDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     # Export
     menu $mb.file.export
@@ -121,15 +152,9 @@ proc SIADialog {varname title url opts action} {
     $mb.edit add command -label [msgcat::mc {Clear}] \
 	-command [list ARClear $varname]
 
-    # prefs
     menu $mb.prefs
-    $mb.prefs add checkbutton -label [msgcat::mc {Save Image on Download}] \
-	-variable ${varname}(save)
-    $mb.prefs add separator
-    $mb.prefs add radiobutton -label [msgcat::mc {New Frame}] \
-	-variable ${varname}(mode) -value new
-    $mb.prefs add radiobutton -label [msgcat::mc {Current Frame}] \
-	-variable ${varname}(mode) -value current
+    $mb.prefs add checkbutton -label [msgcat::mc {Pan To}] \
+	-variable ${varname}(panto)
 
     # Object
     set f [ttk::labelframe $w.obj -text [msgcat::mc {Object}] -padding 2]
@@ -146,14 +171,29 @@ proc SIADialog {varname title url opts action} {
 	[list TBLWCSMenuUpdate $varname]
     CoordMenuEnable $f.coord.menu $varname system sky skyformat
 
+    ttk::button $f.update -text [msgcat::mc {Update}] \
+	-command [list FPUpdate $varname]
+
     ttk::label $f.rtitle -text [msgcat::mc {Radius}]
     ttk::entry $f.r -textvariable ${varname}(radius) -width 14
 
     ARRFormat $f.rformat $varname
 
     grid $f.nametitle $f.name - - - - -padx 2 -pady 2 -sticky w
-    grid $f.xtitle $f.x $f.ytitle $f.y $f.coord -padx 2 -pady 2 -sticky w
+    grid $f.xtitle $f.x $f.ytitle $f.y $f.coord $f.update \
+	-padx 2 -pady 2 -sticky w
     grid $f.rtitle $f.r $f.rformat -padx 2 -pady 2 -sticky w
+
+    # Instruments
+    set f [ttk::labelframe $w.instr -text [msgcat::mc {Instrument}] -padding 2]
+    set ii 0
+    foreach ss $var(instr) {
+	set ll [string tolower $ss]
+	set ${varname}(instr,$ll) 1
+	ttk::checkbutton $f.$ll -text $ss -variable ${varname}(instr,$ll)
+	grid $f.$ll -row 0 -column $ii -padx 2
+	incr ii
+    }
 
     # Param
     set f [ttk::labelframe $w.param -text [msgcat::mc {Table}] -padding 2]
@@ -173,8 +213,8 @@ proc SIADialog {varname title url opts action} {
 		      -variable $var(tbldb) \
 		      -colorigin 1 \
 		      -roworigin 0 \
-		      -cols $isia(mincols) \
-		      -rows $isia(minrows) \
+		      -cols $ifp(mincols) \
+		      -rows $ifp(minrows) \
 		      -width -1 \
 		      -height -1 \
 		      -maxwidth 300 \
@@ -183,11 +223,10 @@ proc SIADialog {varname title url opts action} {
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \
-		      -selectmode single \
+		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list SIASelectCmd $varname %s %S] \
-		      -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
+		      -browsecommand [list FPSelectCmd $varname %s %S] \
 		     ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
@@ -211,42 +250,35 @@ proc SIADialog {varname title url opts action} {
 
     set var(apply) [ttk::button $f.apply \
 			-text [msgcat::mc {Retrieve}] \
-			-command [list SIAApply $varname 0]]
+			-command [list FPApply $varname 0]]
     set var(cancel) [ttk::button $f.cancel -text \
 			 [msgcat::mc {Cancel}] \
 			 -command [list ARCancel $varname] \
 			 -state disabled]
-    set var(load) [ttk::button $f.load \
-		       -text [msgcat::mc {Load}] \
-		       -command [list SIAImageCmd $varname]]
     ttk::button $f.clear -text [msgcat::mc {Clear}] \
-	-command [list SIAOff $varname]
+	-command [list FPOff $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command [list SIADestroy $varname]
+	-command [list FPDestroy $varname]
 
-    pack $f.apply $f.cancel $f.load $f.clear $f.close \
-	-side left -expand true -padx 2 -pady 4
+		    pack $f.apply $f.cancel $f.clear $f.close \
+			-side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.stbl -orient horizontal
     ttk::separator $w.sstatus -orient horizontal
     pack $w.buttons $w.sstatus $w.status $w.stbl -side bottom -fill x
-    pack $w.obj $w.param -side top -fill x
+    pack $w.obj $w.instr $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
-    bind $w <<Save>> [list TBLSaveVOTFile $varname]
-    bind $w <<Close>> [list SIADestroy $varname]
-    bind $w <<Print>> [list TBLPrint $varname]
-
     ARCoord $varname
-    SIAUpdate $varname
-    SIADialogUpdate $varname
+    FPUpdate $varname
+    FPDialogUpdate $varname
 
     ARStatus $varname {}
 
     switch -- $action {
-	apply {SIAApply $varname 0}
-	sync {SIAApply $varname 1}
+	apply {FPApply $varname 0}
+	sync {FPApply $varname 1}
 	none {}
     }
 
@@ -254,14 +286,12 @@ proc SIADialog {varname title url opts action} {
     return $varname
 }
 
-proc SIAApply {varname sync} {
+proc FPApply {varname sync} {
     upvar #0 $varname var
     global $varname
 
     set var(sync) $sync
     ARApply $varname
-    $var(mb).file entryconfig [msgcat::mc {Load}] -state disabled
-    $var(load) configure -state disabled
 
     if {$var(name) != {}} {
 	set var(sky) fk5
@@ -270,35 +300,34 @@ proc SIAApply {varname sync} {
 
 	NSVRServer $varname
     } else {
-	SIAServer $varname
+	FPServer $varname
     }
 }
 
-proc SIAServer {varname} {
+proc FPServer {varname} {
     upvar #0 $varname var
     global $varname
-    global current
 
     global debug
-    if {$debug(tcl,image)} {
-	puts stderr "SIAServer $varname"
+    if {$debug(tcl,fp)} {
+	puts stderr "FPServer $varname"
     }
 
     if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
 	ARStatus $varname [msgcat::mc {Contacting Server}]
-	SIAVOT $varname
+	FPVOT $varname
     } else {
 	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
     }
 }
 
-proc SIAVOT {varname} {
+proc FPVOT {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIAVOT $varname"
+    if {$debug(tcl,fp)} {
+	puts stderr "FPVOT $varname"
     }
 
     # coord (degrees)
@@ -327,226 +356,156 @@ proc SIAVOT {varname} {
     }
 
     # query
-    set query "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
+    set instr {}
+    set first 1
+    foreach ss $var(instr) {
+	set ll [string tolower $ss]
+	if {$var(instr,$ll)} {
+	    if {!$first} {
+		append instr ",$ss"
+	    } else {
+		append instr "$ss"
+		set first 0
+	    }
+	}
+    }
 
-    SIALoad $varname $var(url) $query
+    if {$instr != {}} {
+	set query [http::formatQuery pos "$xx,$yy" size $rr inst "$instr"]
+    } elseif {$var(instr) != {}} {
+	$var(proc,error) $varname [msgcat::mc {Please specify instruments}]
+	return
+    } else {
+	set query [http::formatQuery pos "$xx,$yy" size $rr]
+    }
+
+    FPLoad $varname $var(url) $query
 }
 
-proc SIADestroy {varname} {
+proc FPDestroy {varname} {
     upvar #0 $varname var
     global $varname
+    global $var(catdb)
     global $var(tbldb)
-    global isia
+    global ifp
 
     global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIADestroy $varname"
+    if {$debug(tcl,fp)} {
+	puts stderr "FPDestroy $varname"
+    }
+
+    # stop timer if needed
+    if {$var(blink)} {
+	set var(blink) 0
+	after cancel [list TBLSelectTimer $varname footprint]
+    }
+
+    # frame may have been deleted
+    if {[info commands $var(frame)] != {}} {
+	# unhighlite any makers
+	if {[$var(frame) has fits]} {
+	    $var(frame) marker footprint $varname unhighlite
+	}
     }
 
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
     }
-
-    set ii [lsearch $isia(sias) $varname]
+    if {[info exists $var(catdb)]} {
+	unset $var(catdb)
+    }
+    
+    set ii [lsearch $ifp(fps) $varname]
     if {$ii>=0} {
-	set isia(sias) [lreplace $isia(sias) $ii $ii]
+	set ifp(fps) [lreplace $ifp(fps) $ii $ii]
     }
 
     ARDestroy $varname
 }
 
-proc SIAApplyLoad {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    ARApply $varname
-    $var(mb).file entryconfig [msgcat::mc {Load}] -state disabled
-    $var(load) configure -state disabled
-}
-
-proc SIADone {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    ARDone $varname
-    $var(mb).file entryconfig [msgcat::mc {Load}] -state normal
-    $var(load) configure -state normal
-}
-
-proc SIACancelled {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    ARCancelled $varname
-    $var(mb).file entryconfig [msgcat::mc {Load}] -state normal
-    $var(load) configure -state normal
-}
-
-proc SIAError {varname message} {
-    upvar #0 $varname var
-    global $varname
-
-    ARError $varname $message
-    $var(mb).file entryconfig [msgcat::mc {Load}] -state normal
-    $var(load) configure -state normal
-}
-
-proc SIADialogUpdate {varname} {
+proc FPDialogUpdate {varname} {
     upvar #0 $varname var
     global $varname
 
     global ds9
-    global samp
 
     global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIADialogUpdate $varname"
+    if {$debug(tcl,fp)} {
+	puts stderr "FPDialogUpdate $varname"
     }
 
     # do we have a db?
     if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
+	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state normal
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state normal
 
 	$var(top).buttons.clear configure -state normal
     } else {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state disabled
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state disabled
 
 	$var(top).buttons.clear configure -state disabled
     }
 }
 
-proc SIAImageCmd {varname} {
+proc FPUpdate {varname} {
     upvar #0 $varname var
     global $varname
 
-    global ds9
-
     global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIAImage $varname"
+    if {$debug(tcl,fp)} {
+	puts stderr "FPUpdate $varname"
     }
 
-    global $var(tbldb)
-    if {![TBLValidDB $var(tbldb)]} {
+    if {[info commands $var(frame)] == {}} {
 	return
     }
 
-    set rowlist {}
-    foreach sel [$var(tbl) curselection] {
-	set rr [lindex [split $sel ,] 0]
-	lappend rowlist $rr
-    }
-    set rowlist [lsort -unique $rowlist]
-
-    set col [expr [lsearch [subst $${varname}db(Ucd)] {VOX:Image_AccessReference}] +1]
-    if {$col == 0} {
-	ARError $varname [msgcat::mc {Unable to find URL column}]
+    if {![$var(frame) has fits]} {
 	return
     }
 
-    if {$rowlist != {}} {
-	set url [starbase_get $var(tbldb) $rowlist $col]
-	SIAApplyLoad $varname
-	ParseURL $url r
-	switch -- $r(scheme) {
-	    http -
-	    https {
-		if {$var(save)} {
-		    set var(fn) [SaveFileDialog savefitsfbox]
-		    if {$var(fn) == {}} {
-			SIADone $varname
-			return
-		    }
-		} else {
-		    set var(fn) [tmpnam [file extension $r(path)]]
-		}
+    set var(name) {}
+    set var(x) {}
+    set var(y) {}
+    set var(radius) {}
 
-		IMGSVRGetURL $varname $url {}
-	    }
-	    default {
-		eval [list $var(proc,error) $varname "$r(scheme) [msgcat::mc {Not Supported}]"]
-		return
-	    }
-	}
+    if {[$var(frame) has wcs celestial $var(system)]} {
+	set coord [$var(frame) get fits center \
+		       $var(system) $var(sky) $var(skyformat)]
+	set var(x) [lindex $coord 0]
+	set var(y) [lindex $coord 1]
+
+	set size [$var(frame) get fits size \
+		      $var(system) $var(sky) $var(rformat)]
+	set ww [lindex $size 0]
+	set hh [lindex $size 1]
+	set var(radius) [expr ($ww+$hh)/4]
     }
 }
 
-proc SIASelectCmd {varname ss rc} {
+proc FPCrosshair {varname} {
     upvar #0 $varname var
     global $varname
 
-    # starts at 1
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIASelectCmd $varname ss=$ss rc=$rc"
+    if {[info commands $var(frame)] == {}} {
+	return
+    }
+
+    if {![$var(frame) has fits]} {
+	return
+    }
+
+    set var(name) {}
+    set var(x) {}
+    set var(y) {}
+
+    if {[$var(frame) has wcs celestial $var(system)]} {
+	set coord [$var(frame) get crosshair \
+		       $var(system) $var(sky) $var(skyformat)]
+	set var(x) [lindex $coord 0]
+	set var(y) [lindex $coord 1]
     }
 }
-
-proc SIAUpdate {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global current
-    global wcs
-
-    global debug
-    if {$debug(tcl,image)} {
-	puts stderr "SIAUpdate $varname"
-    }
-
-    if {[winfo exists $var(top)]} {
-	set var(name) {}
-	if {$current(frame) != {} } {
-	    if {[$current(frame) has wcs celestial $wcs(system)]} {
-		set coord [$current(frame) get fits center \
-			       $wcs(system) $var(sky) $var(skyformat)]
-		set var(x) [lindex $coord 0]
-		set var(y) [lindex $coord 1]
-
-		set size [$current(frame) get fits size \
-			      $wcs(system) $var(sky) $var(rformat)]
-		set ww [lindex $size 0]
-		set hh [lindex $size 1]
-		set var(radius) [expr ($ww+$hh)/4]
-
-		return
-	    }
-	} else {
-	    set var(x) {}
-	    set var(y) {}
-	    set var(radius) {}
-	}
-    }
-}
-
-proc SIACrosshair {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,image)} {
-	puts stderr "SIACrosshair $varname"
-    }
-
-    global current
-    global wcs
-
-    if {[winfo exists $var(top)]} {
-	set var(name) {}
-	if {$current(frame) != {} } {
-	    if {[$current(frame) has wcs celestial $wcs(system)]} {
-		set coord [$current(frame) get crosshair \
-			       $wcs(system) $var(sky) $var(skyformat)]
-		set var(x) [lindex $coord 0]
-		set var(y) [lindex $coord 1]
-
-		return
-	    }
-	}
-	set var(x) {}
-	set var(y) {}
-    }
-}
-

@@ -26,8 +26,6 @@ proc CATCXCVOT {varname} {
 	puts stderr "CATCXCVOT $varname"
     }
 
-    set var(proc,parser) VOTParse
-    
     # coord (degrees)
     switch $var(skyformat) {
 	degrees {
@@ -61,10 +59,10 @@ proc CATCXCVOT {varname} {
     }
 
     # query
-    set var(query) [http::formatQuery RA $xx DEC $yy SR $rr VERB $type]
-    set var(url) "http://cda.cfa.harvard.edu/cscvo/coneSearch"
+    set query [http::formatQuery RA $xx DEC $yy SR $rr VERB $type]
+    set url "http://cda.cfa.harvard.edu/cscvo/coneSearch"
 
-    CATLoad $varname
+    CATLoad $varname $url $query
 }
 
 proc CATCXCAck {varname} {

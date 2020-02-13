@@ -40,7 +40,7 @@ proc CATSelectEditCmd {varname ss rc} {
     }
 
     # are we still blinking?
-    CATSelectTimerCancel $varname
+    TBLSelectTimerCancel $varname catalog
 
     set last [lindex [split $ss ,] 0]
     set next [lindex [split $rc ,] 0]
@@ -51,7 +51,7 @@ proc CATSelectEditCmd {varname ss rc} {
     
     if {[string is integer -strict $next]} {
 	set mk "\{${varname}.${next}\}"
-	CATPanTo $varname $mk
+	TBLPanTo $varname $mk catalog
 	$var(frame) marker catalog $mk select
     }
 }
@@ -67,7 +67,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 
     global $var(catdb)
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -80,7 +80,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 
     # are we still blinking?
-    CATSelectTimerCancel $varname
+    TBLSelectTimerCancel $varname catalog
 
     # now see the current selection
     set last [lindex [split $ss ,] 0]
@@ -113,7 +113,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 
     # status
-    CATStatusRows $varname $rowlist
+    TBLStatusRows $varname $rowlist
 
     # plot
     if {$var(plot)} {
@@ -124,12 +124,12 @@ proc CATSelectBrowseCmd {varname ss rc} {
     SAMPSendTableRowListCmd $varname $rowlist
 
     # panto
-    CATPanTo $varname [lindex $var(blink,marker) 0]
+    TBLPanTo $varname [lindex $var(blink,marker) 0] catalog
 
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
-	CATSelectTimer $varname
+	TBLSelectTimer $varname catalog
     }
 }
 
@@ -156,10 +156,10 @@ proc CATSelectRows {varname src rowlist cc} {
     }
 
     # are we still blinking?
-    CATSelectTimerCancel $varname
+    TBLSelectTimerCancel $varname catalog
 
     global $var(catdb)
-    if {![CATValidDB $var(catdb)]} {
+    if {![TBLValidDB $var(catdb)]} {
 	return
     }
 
@@ -195,7 +195,7 @@ proc CATSelectRows {varname src rowlist cc} {
     }
 
     # status
-    CATStatusRows $varname $rowlist
+    TBLStatusRows $varname $rowlist
 
     # source of call
     switch $src {
@@ -210,137 +210,19 @@ proc CATSelectRows {varname src rowlist cc} {
     }
 
     # panto
-    CATPanTo $varname [lindex $var(blink,marker) 0]
+    TBLPanTo $varname [lindex $var(blink,marker) 0] catalog
 
     # start timer, if needed
     if {!$var(blink)} {
 	set var(blink) 1
-	CATSelectTimer $varname
+	TBLSelectTimer $varname catalog
     }
 }
 
-proc CATPanTo {varname mk} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    # pan to first region
-    if {$var(panto) && $mk != {}} {
-	set tt [$var(frame) get marker catalog $mk tag]
-	if {$tt!={}} {
-	    set cc [$var(frame) get marker catalog $tt center \
-			$var(psystem) $var(psky)]
-	    PanToFrame $var(frame) [lindex $cc 0] [lindex $cc 1] \
-		$var(psystem) $var(psky)
-	}
-    }
-}
-
-proc CATSelectTimer {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    switch -- $var(blink) {
-	0 {
-	    set var(blink) 0
-	    set var(blink,count) 0
-	    set var(blink,marker) {}
-	    set var(blink,marker,color) {}
-	}
-	1 {
-	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-		set mm [lindex $var(blink,marker) $ii]
-		set clr [lindex $var(blink,marker,color) $ii]
-
-		if {[info commands $var(frame)] != {}} {
-		    if {[$var(frame) has fits]} {
-			if {$var(blink,count) < 4} {
-			    switch $clr {
-				red {$var(frame) marker catalog $mm color green}
-				default {$var(frame) marker catalog $mm color red}
-			    }
-			}
-			$var(frame) marker catalog $mm highlite
-		    }
-		}
-	    }
-	    
-	    incr ${varname}(blink,count)
-	    if {$var(blink,count) < 5} {
-		set var(blink) 2
-	    } else {
-		set var(blink) 0
-	    }
-
-	    after 250 [list CATSelectTimer $varname]
-	}
-	2 {
-	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-		set mm [lindex $var(blink,marker) $ii]
-		set clr [lindex $var(blink,marker,color) $ii]
-
-		if {[info commands $var(frame)] != {}} {
-		    if {[$var(frame) has fits]} {
-			$var(frame) marker catalog $mm color $clr
-			$var(frame) marker catalog $mm unhighlite
-		    }
-		}
-	    }
-	    set var(blink) 1
-
-	    after 250 [list CATSelectTimer $varname]
-	}
-    }
-}
-
-proc CATSelectTimerCancel {varname} {
-    upvar #0 $varname var
-    global $varname
-    
-    if {$var(blink)} {
-	# cancel all pending
-	foreach aa [after info] {
-	    set id [string range $aa 6 end]
-	    after cancel $aa
-	}
-
-	for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
-	    set mm [lindex $var(blink,marker) $ii]
-	    set clr [lindex $var(blink,marker,color) $ii]
-
-	    if {[info commands $var(frame)] != {}} {
-		if {[$var(frame) has fits]} {
-		    $var(frame) marker catalog $mm color $clr
-#		    $var(frame) marker catalog $mm unhighlite
-		}
-	    }
-	}
-    }
-
-    $var(frame) marker catalog $varname unhighlite
-
-    # init timer vars
-    set var(blink) 0
-    set var(blink,count) 0
-    set var(blink,marker) {}
-    set var(blink,marker,color) {}
-}
 
 # Marker Callbacks
 #   call backs can't call other procs
 proc CATHighliteCB {tag id} {
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATHighliteCB $tag $id"
-    }
-
     set t [split $tag .]
     set varname [lindex $t 0]
     set row [lindex $t 1]
@@ -361,11 +243,6 @@ proc CATHighliteCB {tag id} {
 }
 
 proc CATUnhighliteCB {tag id} {
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATUnhighliteCB $tag $id"
-    }
-
     set t [split $tag .]
     set varname [lindex $t 0]
     set row [lindex $t 1]
@@ -561,13 +438,6 @@ proc CATRotateCB {tag id} {
     }
 }
 
-proc CATDeleteCB {tag id} {
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATDeleteCB $tag $id"
-    }
-}
-
 # Tcl Commands
 
 proc CATButton {which x y} {
@@ -609,14 +479,14 @@ proc CATButton {which x y} {
     # else, see if we are on a marker
     set id [$which get marker catalog id $x $y]
     if {$id != 0} {
-	# select
+	# else, see if we are on a marker, then select
 	if {[$which get marker catalog $id property select]} {
 	    $which marker catalog select only $x $y
 	    $which marker catalog move begin $x $y
 	    set imarker(motion) beginMove
 	    return
 	}
-	# highlite
+	# else, see if we are on a marker, then highlite
 	if {[$which get marker catalog $id property highlite]} {
 	    $which marker catalog $id highlite only
 	    $which marker catalog $id move back
@@ -632,7 +502,7 @@ proc CATButton {which x y} {
 	return
     }
 
-    # see if any markers are selected
+    # nope, unhighlite all
     if {[$which get marker catalog highlite number]>0} {
 	$which marker catalog unhighlite all
 	set imarker(motion) none
@@ -681,7 +551,6 @@ proc CATShift {which x y} {
 
     # else, start a region select
     $which region catalog select begin $x $y
-    # $which region catalog highlite begin $x $y
     set imarker(motion) shiftregion
 }
 
@@ -722,7 +591,6 @@ proc CATMotion {which x y} {
 	region -
 	shiftregion {
 	    $which region catalog select motion $x $y
-	    # $which region catalog highlite motion $x $y
 	}
     }
 }
@@ -751,7 +619,7 @@ proc CATRelease {which x y} {
 	rotate {$which marker catalog rotate end}
 	region {
 	    $which region catalog select end
-	    $which region catalog catalog highlite end
+	    $which region catalog highlite end
 	}
 	shiftregion {
 	    $which region catalog select shift end
@@ -783,7 +651,7 @@ proc CATRelease {which x y} {
 		    global $varname
 
 		    # status
-		    CATStatusRows $varname $rowlist
+		    TBLStatusRows $varname $rowlist
 
 		    # plot
 		    if {[info exists var(plot)]} {
@@ -812,7 +680,7 @@ proc CATRelease {which x y} {
 	    global $varname
 
 	    # status
-	    CATStatusRows $varname $rowlist
+	    TBLStatusRows $varname $rowlist
 
 	    #plot
 	    if {[info exists var(plot)]} {
@@ -827,6 +695,11 @@ proc CATRelease {which x y} {
 		    SAMPSendTableRowListCmd $varname $rowlist
 		}
 	    }
+	}
+    } else {
+	global icat
+	foreach varname $icat(cats) {
+	    TBLStatusRows $varname {}
 	}
     }
 }

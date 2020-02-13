@@ -45,6 +45,11 @@ proc CATDialog {varname format catalog title action} {
     # AR variables
     ARInit $varname CATServer
 
+    # procs
+    set var(proc,process) CATProcess
+    set var(proc,load) CATLoad
+    set var(proc,error) ARError
+
     # CAT variables
     lappend icat(cats) $varname
 
@@ -112,7 +117,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command [list CATLoadVOTFile $varname] -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command [list CATSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
+	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] -menu $mb.file.import
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
@@ -151,7 +156,7 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATGenerateRegions $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
-	-command [list CATPrint $varname] -accelerator "${ds9(ctrl)}P"
+	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list CATDestroy $varname] -accelerator "${ds9(ctrl)}W"
@@ -159,16 +164,16 @@ proc CATDialog {varname format catalog title action} {
     # Import
     menu $mb.file.import
     $mb.file.import add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list CATLoadSBFile $varname]
+	-command [list CATLoadRDBFile $varname]
     $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list CATLoadTSVFile $varname]
 
     # Export
     menu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
-	-command [list CATSaveSBFile $varname]
+	-command [list TBLSaveRDBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
-	-command [list CATSaveTSVFile $varname]
+	-command [list TBLSaveTSVFile $varname]
 
     # SAMP
     menu $mb.file.samp
@@ -188,9 +193,9 @@ proc CATDialog {varname format catalog title action} {
     # edit
     menu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
-	-command "CATCut $varname" -accelerator "${ds9(ctrl)}X"
+	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
-	-command "CATCopy $varname" -accelerator "${ds9(ctrl)}C"
+	-command "TBLCopy $varname" -accelerator "${ds9(ctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command "EntryPaste $var(top)" -accelerator "${ds9(ctrl)}V"
     $mb.edit add separator
@@ -441,7 +446,7 @@ proc CATDialog {varname format catalog title action} {
     set f [ttk::frame $w.buttons]
 
     ButtonButton $f.load [msgcat::mc {Open}] [list CATLoadVOTFile $varname]
-    ButtonButton $f.save [msgcat::mc {Save}] [list CATSaveVOTFile $varname]
+    ButtonButton $f.save [msgcat::mc {Save}] [list TBLSaveVOTFile $varname]
 
     set var(apply) [ttk::button $f.apply \
 			-text [msgcat::mc {Retrieve}] \
@@ -472,7 +477,7 @@ proc CATDialog {varname format catalog title action} {
     pack $w.tbl -side top -fill both -expand true
 
     bind $w <<Open>> [list CATLoadVOTFile $varname]
-    bind $w <<Save>> [list CATSaveVOTFile $varname]
+    bind $w <<Save>> [list TBLSaveVOTFile $varname]
     bind $w <<Print>> PSPrint
     bind $w <<Close>> [list CATDestroy $varname]
 
@@ -485,7 +490,6 @@ proc CATDialog {varname format catalog title action} {
 	cxc -
 	ned -
 	skybot -
-	sdss -
 	simbad {
 	    $mb entryconfig [msgcat::mc {Catalog Server}] -state disabled
 	}
@@ -520,7 +524,7 @@ proc CATDialogUpdate {varname} {
     }
 
     # do we have a db?
-    if {[CATValidDB $var(tbldb)]} {
+    if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Filter}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
@@ -620,74 +624,27 @@ proc CATApply {varname sync} {
     }
 }
 
-proc CATCopy {varname} {
+proc CATServer {varname} {
     upvar #0 $varname var
     global $varname
 
-    set w [focus -displayof $var(top)]
-    if {$w == $var(tbl)} {
-	CATCopyTable $varname
-    } else {
-	EntryCopy $var(top)
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATServer $varname"
     }
-}
 
-proc CATCut {varname} {
-    upvar #0 $varname var
-    global $varname
+    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
+	ARStatus $varname [msgcat::mc {Contacting Server}]
 
-    set w [focus -displayof $var(top)]
-    if {$w == $var(tbl)} {
-	CATCopyTable $varname
-    } else {
-	EntryCut $var(top)
-    }
-}
-
-proc CATCopyTable {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set w [focus -displayof $var(top)]
-
-    set sel [$var(tbl) curselection]
-    set data {}
-    set row [lindex [split [lindex $sel 0] ,] 0]
-    foreach ss $sel {
-	set rr [lindex [split $ss ,] 0]
-	if {$rr != $row} {
-	    append data "\n"
-	    set row $rr
-	} else {
-	    if {$data != {}} {
-		append data "\t"
-	    }
+	switch $var(format) {
+	    cds {CATCDS $varname}
+	    cxc {CATCXC $varname}
+	    ned {CATNED $varname}
+	    skybot {CATSkyBot $varname}
+	    simbad {CATSIMBAD $varname}
 	}
-	append data "[$var(tbl) get $ss]"
-    }
-    append data "\n"
-    clipboard clear -displayof $w
-    clipboard append -displayof $w $data
-}
-
-proc CATCrosshair {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    if {[$var(frame) has wcs celestial $var(system)]} {
-	set coord [$var(frame) get crosshair \
-		       $var(system) $var(sky) $var(skyformat)]
-	set var(x) [lindex $coord 0]
-	set var(y) [lindex $coord 1]
-	set var(name) {}
+    } else {
+	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
     }
 }
 
@@ -709,7 +666,7 @@ proc CATDestroy {varname} {
     # stop timer if needed
     if {$var(blink)} {
 	set var(blink) 0
-	after cancel [list CATSelectTimer $varname]
+	after cancel [list TBLSelectTimer $varname catalog]
     }
 
     # frame may have been deleted
@@ -757,6 +714,27 @@ proc CATDestroy {varname} {
     ARDestroy $varname
 }
 
+proc CATCrosshair {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[info commands $var(frame)] == {}} {
+	return
+    }
+
+    if {![$var(frame) has fits]} {
+	return
+    }
+
+    if {[$var(frame) has wcs celestial $var(system)]} {
+	set coord [$var(frame) get crosshair \
+		       $var(system) $var(sky) $var(skyformat)]
+	set var(x) [lindex $coord 0]
+	set var(y) [lindex $coord 1]
+	set var(name) {}
+    }
+}
+
 proc CATEdit {varname} {
     upvar #0 $varname var
     global $varname
@@ -799,7 +777,7 @@ proc CATGetHeader {varname} {
     set t $var(tbldb)
     upvar #0 $t T
 
-    if {[CATValidDB $var(tbldb)]} {
+    if {[TBLValidDB $var(tbldb)]} {
 	set hdr {}
 
 	# header
@@ -909,71 +887,6 @@ proc CATPageSetup {varname} {
     }
 }
 
-proc CATPrint {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    global ds9
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {CATPSPrint $varname}
-    }	
-}
-
-proc CATPSPrint {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[PRPrintDialog]} { 
-	if {[catch {CATPostScript $varname} printError]} {
-	    Error "[msgcat::mc {An error has occurred while printing}] $printError"
-	}
-    }
-}
-
-proc CATPostScript {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    global ps
-
-    if {$ps(dest) == "file"} {
-	set ch [open "| cat > $ps(filename,txt)" w]
-    } else {
-	set ch [open "| $ps(cmd)" w]
-    }
-
-    starbase_writefp $var(tbldb) $ch
-    close $ch
-}
-
-proc CATServer {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATServer $varname"
-    }
-
-    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
-	ARStatus $varname "Searching [string range $var(title) 0 50]"
-
-	switch $var(format) {
-	    cds {CATCDS $varname}
-	    cxc {CATCXC $varname}
-	    ned {CATNED $varname}
-	    skybot {CATSkyBot $varname}
-	    simbad {CATSIMBAD $varname}
-	}
-    } else {
-	ARError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
-    }
-}
-
 proc CATUpdate {varname} {
     upvar #0 $varname var
     global $varname
@@ -1030,10 +943,8 @@ proc CATColsUpdate {varname} {
 	physical -
 	detector -
 	amplifier {
-	    $var(raname) configure -text {X} \
-		-font [font actual TkDefaultFont]
-	    $var(decname) configure -text {Y} \
-		-font [font actual TkDefaultFont]
+	    $var(raname) configure -text {X} -font [font actual TkDefaultFont]
+	    $var(decname) configure -text {Y} -font [font actual TkDefaultFont]
 	}
 	default {
 	    if {[$var(frame) has wcs celestial $var(psystem)]} {
@@ -1126,7 +1037,7 @@ proc CATEditDialog {varname which db} {
 	destroy $mb.col
     }
     menu $mb.col
-    if {[CATValidDB $db]} {
+    if {[TBLValidDB $db]} {
 	set cnt -1
 	foreach col [starbase_columns $db] {
 	    $mb.col add command -label "$col" \

@@ -504,7 +504,6 @@ proc SimpleTextPrint {varname} {
 	x11 -
 	aqua -
 	win32 {SimpleTextPSPrint $varname}
-	wwin32 {win32 pm print text [$var(text) get 1.0 end]}
     }
 }
 

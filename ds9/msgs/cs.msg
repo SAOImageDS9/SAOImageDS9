@@ -86,6 +86,7 @@
 ::msgcat::mcset cs {Bin} 
 ::msgcat::mcset cs {Black} [encoding convertfrom iso8859-2 {Èerná}]
 ::msgcat::mcset cs {Blank/Inf/NaN Color} [encoding convertfrom iso8859-2 {Barva nedefinovaných pixelù}]
+::msgcat::mcset cs {Blend} 
 ::msgcat::mcset cs {Blink Frames} [encoding convertfrom iso8859-2 {Problikávej snímky}]
 ::msgcat::mcset cs {Blink Interval} [encoding convertfrom iso8859-2 {Interval problikávání snímkù}]
 ::msgcat::mcset cs {Blink} [encoding convertfrom iso8859-2 {Problikávat}]
@@ -163,7 +164,7 @@
 ::msgcat::mcset cs {Connect Using Web Proxy} 
 ::msgcat::mcset cs {Connect} [encoding convertfrom iso8859-2 {Pøipoji}]
 ::msgcat::mcset cs {Console} 
-::msgcat::mcset cs {Contacting Image Server} 
+::msgcat::mcset cs {Contacting Server} 
 ::msgcat::mcset cs {Contour Parameters} [encoding convertfrom iso8859-2 {Parametry obrysu}]
 ::msgcat::mcset cs {Contour Paste} 
 ::msgcat::mcset cs {Contour Save} 
@@ -285,6 +286,7 @@
 ::msgcat::mcset cs {FAQ} 
 ::msgcat::mcset cs {FK4} 
 ::msgcat::mcset cs {FK5} 
+::msgcat::mcset cs {FP} 
 ::msgcat::mcset cs {Factor} [encoding convertfrom iso8859-2 {Faktor}]
 ::msgcat::mcset cs {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-2 {Soubor nenalezen nebo není mo¾né nahrát daný FITS MIME typ}]
 ::msgcat::mcset cs {Filename} [encoding convertfrom iso8859-2 {Název souboru}]
@@ -299,6 +301,8 @@
 ::msgcat::mcset cs {Fixed in Size} 
 ::msgcat::mcset cs {Flat} 
 ::msgcat::mcset cs {Font} [encoding convertfrom iso8859-2 {Znak}]
+::msgcat::mcset cs {Footprint Servers} 
+::msgcat::mcset cs {Footprint} 
 ::msgcat::mcset cs {For more information, use --help} [encoding convertfrom iso8859-2 {Pro více informací, pou¾ijte --help}]
 ::msgcat::mcset cs {Forground} 
 ::msgcat::mcset cs {Format} [encoding convertfrom iso8859-2 {Formát}]
@@ -527,6 +531,8 @@
 ::msgcat::mcset cs {Move to Back} [encoding convertfrom iso8859-2 {Pøesunout vzad}]
 ::msgcat::mcset cs {Move to Front} [encoding convertfrom iso8859-2 {Pøesunout vpøed}]
 ::msgcat::mcset cs {Movie} 
+::msgcat::mcset cs {Muliple Extension Cube} 
+::msgcat::mcset cs {Muliple Extension Frames} 
 ::msgcat::mcset cs {Multiple Extension Cube} 
 ::msgcat::mcset cs {Multiple Extension Frames} 
 ::msgcat::mcset cs {Multiple WCS} [encoding convertfrom iso8859-2 {Multi WCS}]
@@ -563,8 +569,19 @@
 ::msgcat::mcset cs {Numerics} 
 ::msgcat::mcset cs {OK} [encoding convertfrom iso8859-2 {Budi¾}] 
 ::msgcat::mcset cs {Object} [encoding convertfrom iso8859-2 {Objekt}]
+::msgcat::mcset cs {Opaque} 
 ::msgcat::mcset cs {Open File} [encoding convertfrom iso8859-2 {Otevøít soubor}]
+::msgcat::mcset cs {Open ME Cube} 
+::msgcat::mcset cs {Open ME Frames} 
+::msgcat::mcset cs {Open Mosaic IRAF Seg} 
+::msgcat::mcset cs {Open Mosaic IRAF} 
+::msgcat::mcset cs {Open Mosaic WCS Seg} 
+::msgcat::mcset cs {Open Mosaic WCS} 
+::msgcat::mcset cs {Open Mosaic WFPC2} 
+::msgcat::mcset cs {Open RGB Cube} 
+::msgcat::mcset cs {Open RGB Image} 
 ::msgcat::mcset cs {Open Regions} 
+::msgcat::mcset cs {Open Slice} 
 ::msgcat::mcset cs {Open TCL Console} [encoding convertfrom iso8859-2 {Otevøít konzoly TCL}]
 ::msgcat::mcset cs {Open URL} [encoding convertfrom iso8859-2 {Otevøít URL}]
 ::msgcat::mcset cs {Open as} 
@@ -636,6 +653,7 @@
 ::msgcat::mcset cs {Proxy Port} 
 ::msgcat::mcset cs {Publication} 
 ::msgcat::mcset cs {Quadratic} 
+::msgcat::mcset cs {RDB} 
 ::msgcat::mcset cs {RGB Array} 
 ::msgcat::mcset cs {RGB Cube} 
 ::msgcat::mcset cs {RGB Image} 
@@ -686,7 +704,13 @@
 ::msgcat::mcset cs {Save Data} 
 ::msgcat::mcset cs {Save Image on Download} 
 ::msgcat::mcset cs {Save Image} [encoding convertfrom iso8859-2 {Ulo¾it snímek}]
+::msgcat::mcset cs {Save ME Cube} 
+::msgcat::mcset cs {Save Mosaic WCS Seg} 
+::msgcat::mcset cs {Save Mosaic WCS} 
+::msgcat::mcset cs {Save RGB Cube} 
+::msgcat::mcset cs {Save RGB Image} 
 ::msgcat::mcset cs {Save Regions} [encoding convertfrom iso8859-2 {Ulo¾it oblasti}]
+::msgcat::mcset cs {Save Slice} 
 ::msgcat::mcset cs {Save Template} [encoding convertfrom iso8859-2 {Ulo¾it ¹ablony}]
 ::msgcat::mcset cs {Save as} 
 ::msgcat::mcset cs {Save} [encoding convertfrom iso8859-2 {Ulo¾it}]
@@ -698,7 +722,6 @@
 ::msgcat::mcset cs {Scatter} 
 ::msgcat::mcset cs {Scope} 
 ::msgcat::mcset cs {Search for Catalogs} 
-::msgcat::mcset cs {Searching for catalogs} 
 ::msgcat::mcset cs {Seconds} 
 ::msgcat::mcset cs {Segment} 
 ::msgcat::mcset cs {Select All} [encoding convertfrom iso8859-2 {Vybrat v¹echny}]
@@ -759,6 +782,7 @@
 ::msgcat::mcset cs {Sunken} 
 ::msgcat::mcset cs {Symbol Editor} 
 ::msgcat::mcset cs {Symbol} 
+::msgcat::mcset cs {TSV} 
 ::msgcat::mcset cs {Tab-Separated-Value} 
 ::msgcat::mcset cs {Table} 
 ::msgcat::mcset cs {Tabloid} 
@@ -783,6 +807,7 @@
 ::msgcat::mcset cs {Top} 
 ::msgcat::mcset cs {To} 
 ::msgcat::mcset cs {Transparency} 
+::msgcat::mcset cs {Transparent} 
 ::msgcat::mcset cs {Triangle} 
 ::msgcat::mcset cs {Type} 
 ::msgcat::mcset cs {URL} 
@@ -790,6 +815,7 @@
 ::msgcat::mcset cs {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset cs {Unable to determine date of observation} 
 ::msgcat::mcset cs {Unable to evaluate filter} 
+::msgcat::mcset cs {Unable to find Footprint window} 
 ::msgcat::mcset cs {Unable to find SIAP window} 
 ::msgcat::mcset cs {Unable to find URL column} 
 ::msgcat::mcset cs {Unable to find catalog window} 
@@ -831,6 +857,7 @@
 ::msgcat::mcset cs {User} [encoding convertfrom iso8859-2 {U¾ivatelské}]
 ::msgcat::mcset cs {Use} [encoding convertfrom iso8859-2 {Pou¾ívat}]
 ::msgcat::mcset cs {VO Server} 
+::msgcat::mcset cs {VOT} 
 ::msgcat::mcset cs {VO} 
 ::msgcat::mcset cs {Value} [encoding convertfrom iso8859-2 {Hodnota}]
 ::msgcat::mcset cs {Vector} 

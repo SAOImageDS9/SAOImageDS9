@@ -460,6 +460,7 @@ proc RefreshInfoBox {which} {
 	    rotate -
 	    crop -
 	    catalog -
+	    footprint -
 	    examine -
 	    iexam -
 	    3d {

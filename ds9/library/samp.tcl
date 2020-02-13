@@ -392,7 +392,7 @@ proc SAMPSendTableLoadVotable {id varname} {
 
     # save votable
     set fn [tmpnam {.samp}]
-    CATSaveFn $varname $fn VOTWrite
+    TBLSaveFn $varname $fn VOTWrite
 
     # cmd
     catch {unset sampmap}

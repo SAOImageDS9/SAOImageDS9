@@ -61,12 +61,13 @@ proc mode::unsetupvalues {numsyms} {
 }
 
 array set mode::table {
+  17:257 shift
   0:258 shift
   5:0,target 8
   0:260 shift
   0:259 shift
   2:257 reduce
-  15:0,target 4
+  15:0,target 1
   9:0 reduce
   8:257,target 11
   0:261 shift
@@ -82,75 +83,80 @@ array set mode::table {
   15:0 reduce
   8:257 reduce
   0:266 shift
-  15:257,target 4
+  15:257,target 2
   0:267 shift
   0:265,target 8
   0:268 shift
+  15:272 goto
   6:0,target 9
-  0:270 goto
   0:269 shift
+  0:270 shift
+  16:0,target 4
   10:257,target 13
+  0:271 goto
   2:0 reduce
-  0:272 goto
   0:273 goto
+  0:274 goto
   6:0 reduce
   6:257,target 9
   0:264,target 7
+  0:274,target 16
   7:0,target 10
   1:257,target 5
-  17:0,target 3
   12:0 reduce
   10:0,target 13
+  13:257,target 16
   0:263,target 6
+  16:0 reduce
   10:257 reduce
   0:273,target 15
   12:257 reduce
-  14:271,target 16
   9:257,target 12
-  14:257 reduce
   8:0,target 11
   3:0 reduce
+  18:0,target 3
   1:0,target 5
-  16:257 shift
+  16:257 reduce
   11:0,target 14
-  0:262,target 5
   4:257,target 7
-  0:272,target 14
+  0:262,target 5
   7:0 reduce
   1:257 reduce
-  16:257,target 17
+  16:257,target 4
   3:257 reduce
   11:257,target 14
   5:257 reduce
-  13:0 accept
+  13:0 reduce
   9:0,target 12
   0:261,target 4
   7:257 reduce
-  2:0,target 16
+  0:271,target 14
+  2:0,target 17
   12:0,target 15
-  14:271 goto
   9:257 reduce
-  17:0 reduce
   7:257,target 10
   0:260,target 3
   0:259,target 2
-  2:257,target 16
-  0:270,target 13
+  2:257,target 17
+  15:272,target 17
   0:269,target 12
+  0:270,target 13
   4:0 reduce
-  14:257,target 2
   3:0,target 6
-  13:0,target 0
+  13:0,target 16
   8:0 reduce
   10:0 reduce
   0:258,target 1
   0:268,target 11
-  14:0 reduce
+  14:0 accept
   5:257,target 8
   4:0,target 7
-  14:0,target 1
+  14:0,target 0
   11:257 reduce
+  18:0 reduce
+  17:257,target 18
   1:0 reduce
+  13:257 reduce
   0:267,target 10
   15:257 reduce
   12:257,target 15
@@ -158,28 +164,30 @@ array set mode::table {
 }
 
 array set mode::rules {
-  9,l 273
-  11,l 273
-  15,l 273
-  2,l 271
-  6,l 273
-  12,l 273
-  16,l 273
-  3,l 270
-  7,l 273
-  13,l 273
-  0,l 274
-  4,l 272
-  8,l 273
-  10,l 273
-  14,l 273
-  1,l 270
-  5,l 273
+  9,l 274
+  11,l 274
+  15,l 274
+  2,l 272
+  6,l 274
+  12,l 274
+  16,l 274
+  3,l 271
+  7,l 274
+  13,l 274
+  0,l 275
+  17,l 274
+  4,l 273
+  8,l 274
+  10,l 274
+  14,l 274
+  1,l 271
+  5,l 274
 }
 
 array set mode::rules {
   5,dc 1
   0,dc 1
+  17,dc 1
   12,dc 1
   8,dc 1
   3,dc 3
@@ -198,38 +206,41 @@ array set mode::rules {
 }
 
 array set mode::rules {
-  13,line 42
+  13,line 43
   2,e 1
-  7,line 36
-  10,line 39
-  4,line 31
-  1,line 27
+  7,line 37
+  10,line 40
+  4,line 32
+  1,line 28
   15,line 45
-  9,line 38
-  12,line 41
-  6,line 35
-  3,line 28
-  14,line 43
-  8,line 37
-  11,line 40
-  5,line 34
-  2,line 27
-  16,line 46
+  9,line 39
+  12,line 42
+  6,line 36
+  3,line 29
+  17,line 48
+  14,line 44
+  8,line 38
+  11,line 41
+  5,line 35
+  2,line 28
+  16,line 47
 }
 
 array set mode::lr1_table {
-  17 {{3 0 3}}
+  17 {{3 0 2}}
   13,trans {}
-  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 257} 0} {5 {0 257} 0} {6 {0 257} 0} {7 {0 257} 0} {8 {0 257} 0} {9 {0 257} 0} {10 {0 257} 0} {11 {0 257} 0} {12 {0 257} 0} {13 {0 257} 0} {14 {0 257} 0} {15 {0 257} 0} {16 {0 257} 0}}
-  14,trans {{271 16}}
+  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 257} 0} {5 {0 257} 0} {6 {0 257} 0} {7 {0 257} 0} {8 {0 257} 0} {9 {0 257} 0} {10 {0 257} 0} {11 {0 257} 0} {12 {0 257} 0} {13 {0 257} 0} {14 {0 257} 0} {15 {0 257} 0} {16 {0 257} 0} {17 {0 257} 0}}
+  18 {{3 0 3}}
+  14,trans {}
   1 {{5 {0 257} 1}}
-  15,trans {}
-  2 {{16 {0 257} 1}}
-  16,trans {{257 17}}
+  15,trans {{272 17}}
+  2 {{17 {0 257} 1}}
+  16,trans {}
   3 {{6 {0 257} 1}}
-  17,trans {}
-  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11} {269 12} {270 13} {272 14} {273 15}}
+  17,trans {{257 18}}
+  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11} {269 12} {270 13} {271 14} {273 15} {274 16}}
   4 {{7 {0 257} 1}}
+  18,trans {}
   1,trans {}
   5 {{8 {0 257} 1}}
   2,trans {}
@@ -246,31 +257,31 @@ array set mode::lr1_table {
   7,trans {}
   12 {{15 {0 257} 1}}
   8,trans {}
-  13 {{0 0 1}}
+  13 {{16 {0 257} 1}}
   10,trans {}
   9,trans {}
-  14 {{1 0 1} {3 0 1} {2 257 0}}
+  14 {{0 0 1}}
   11,trans {}
-  15 {{4 {0 257} 1}}
-  16 {{3 0 2}}
+  15 {{1 0 1} {3 0 1} {2 257 0}}
   12,trans {}
+  16 {{4 {0 257} 1}}
 }
 
 array set mode::token_id_table {
   264,line 17
-  270,t 1
+  270,t 0
   269,t 0
   265,title ROTATE
   274,t 1
   261,line 14
   257,t 0
-  270,title {}
-  269,title 3D
-  273,line 33
+  270,title 3D
+  269,title EXAMINE
+  273,line 31
   257,line 7
   262,t 0
   274,title {}
-  270,line 26
+  270,line 23
   269,line 22
   259,title POINTER
   260,title REGION
@@ -279,17 +290,19 @@ array set mode::token_id_table {
   error error
   264,title ZOOM
   266,line 19
-  error,line 25
-  268,title EXAMINE
+  275,t 1
+  error,line 26
+  268,title FOOTPRINT
   258,t 0
   263,line 16
   error,title {}
+  275,line 49
   273,title {}
   263,t 0
   259,line 12
   260,line 13
   258,title NONE
-  272,line 30
+  272,line 28
   267,t 0
   263,title PAN
   272,t 1
@@ -316,23 +329,25 @@ array set mode::token_id_table {
   0,t 0
   0 {$}
   262,title COLORBAR
-  268 EXAMINE_
+  268 FOOTPRINT_
   268,t 0
-  274,line 47
-  270 command
-  269 3D_
-  271 @PSEUDO1
+  274,line 34
+  270 3D_
+  269 EXAMINE_
+  271 command
   error,t 0
-  272 mode
+  272 @PSEUDO1
   258,line 11
   273,t 1
-  273 item
+  273 mode
   266,title CROP
-  274 start'
+  274 item
+  275 start'
   271,line 27
   271,title {}
   261,t 0
   267,line 20
+  275,title {}
   265,t 0
   261,title CROSSHAIR
 }
@@ -442,9 +457,10 @@ proc mode::yyparse {} {
                     11 { set _ rotate }
                     12 { set _ crop }
                     13 { set _ catalog }
-                    14 { set _ examine }
-                    15 { set _ 3d }
-                    16 { set _ region }
+                    14 { set _ footprint }
+                    15 { set _ examine }
+                    16 { set _ 3d }
+                    17 { set _ region }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

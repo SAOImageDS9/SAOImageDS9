@@ -222,7 +222,7 @@ proc IMGSVRServer {varname} {
 	($var(width) != {}) && 
 	($var(height) != {})} {
 
-	ARStatus $varname [msgcat::mc {Contacting Image Server}]
+	ARStatus $varname [msgcat::mc {Contacting Server}]
 	eval [list $var(proc,exec) $varname]
     } else {
 	eval [list $var(proc,error) $varname [msgcat::mc {Please specify width, height, and either name or (ra,dec)}]]

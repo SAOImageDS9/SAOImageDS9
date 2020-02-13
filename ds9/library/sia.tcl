@@ -26,59 +26,51 @@ proc SIADef {} {
 			     sia2mass \
 			     {http://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia}\
 			     {} \
-			     post \
 			} \
 			{{AKARI (ISAS/JAXA)} \
 			     siaakari \
 			     {http://jvo.nao.ac.jp/skynode/do/siap/akari/fis_image_v1/1.0}\
 			     {} \
-			     post \
 			} \
 			{{Astro-Wise} \
 			     siaastrowise \
 			     {http://vo.astro-wise.org/SIAP}\
 			     {VERB=2&FORM=VOTable&PROJECT=ALL&INSTRUMENT=ALL&} \
-			     post \
 			} \
 			{{CADC} \
 			     siacadc \
 			     {http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query}\
 			     {} \
-			     post \
 			} \
 			{{Chandra (NASA/CXC)} \
 			     siacxc \
 			     {http://cda.harvard.edu/cxcsiap/queryImages}\
 			     {} \
-			     post \
 			} \
-			{{Hubble Legacy Archive (STSCI)} siahla \
+			{{Hubble Legacy Archive (STSCI)} \
+			     siahla \
 			     {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi}\
 			     {} \
-			     get \
 			} \
-			{{MAST (STSCI)} siamast \
+			{{MAST (STSCI)} \
+			     siamast \
 			     {http://archive.stsci.edu/siap/search.php}\
 			     {} \
-			     post \
 			} \
 			{{SDSS DR12} \
 			     siasdss \
 			     {http://skyserver.sdss.org/SkyserverWS/dr12/SIAP/getSIAP}\
 			     {} \
-			     get \
 			} \
 			{{SkyView (NASA/HEASARC)} \
 			     siaskyview \
 			     {http://skyview.gsfc.nasa.gov/cgi-bin/vo/sia.pl}\
 			     {} \
-			     post \
 			} \
 			{{TGSSADR (GMRT)} \
 			     siatgssadr \
 			     {http://vo.astron.nl/tgssadr/q_fits/imgs/siap.xml}\
 			     {} \
-			     post \
 			 } \
 		    }
 }
@@ -92,134 +84,9 @@ proc SIAAnalysisMenu {mb} {
 	set vars [lindex $ff 1]
 	set url [lindex $ff 2]
 	set opts [lindex $ff 3]
-	set method [lindex $ff 4]
 
 	$mb add command -label $title \
-	    -command [list SIADialog $vars $title $url $opts $method apply]
-    }
-}
-
-proc SIAGetURL {varname url query} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIAGetURL $varname $var(method) $url?$query"
-    }
-
-    # save just in case of redirection
-    set var(qq) $query
-    
-    ARStatus $varname [msgcat::mc {Loading}]
-
-    # geturl --method does not work
-    switch $var(method) {
-	get {
-	    set url $url?$query
-	    set query {}
-	}
-    }
-
-    global ihttp
-    if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $url \
-					 -query $query \
-					 -timeout $ihttp(timeout) \
-					 -headers "[ProxyHTTP]"]
-
-
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	    SIAGetURLFinish $varname $var(token)
-	} else {
-	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
-	}
-    } else {
-	if {![catch {set var(token) [http::geturl $url \
-					 -query $query \
-					 -timeout $ihttp(timeout) \
-					 -command \
-					 [list SIAGetURLFinish $varname] \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	} else {
-	    SIAError $varname "[msgcat::mc {Unable to locate URL}] $url"
-	}
-    }
-}
-
-proc SIAGetURLFinish {varname token} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIAGetURLFinish $varname"
-    }
-
-    if {!($var(active))} {
-	SIACancelled $varname
-	return
-    }
-
-    upvar #0 $token t
-
-    # Code
-    set code [http::ncode $token]
-
-    # Meta
-    set meta $t(meta)
-
-    # Log it
-    HTTPLog $token
-
-    # Result?
-    switch -- $code {
-	{} -
-	200 -
-	203 -
-	404 -
-	503 {
-	    VOTParse $var(tbldb) $token
-	    SIADone $varname
- 	    SIALoadDone $varname
-	}
-
-	201 -
-	300 -
-	301 -
-	302 -
-	303 -
-	305 -
-	307 {
-	    foreach {name value} $meta {
-		if {[regexp -nocase ^location$ $name]} {
-		    global debug
-		    if {$debug(tcl,sia)} {
-			puts stderr "SIAGetURLFinish redirect $code to $value"
-		    }
-		    # clean up and resubmit
-		    http::cleanup $token
-		    unset var(token)
-
-		    SIAGetURL $varname $value $var(qq)
-		}
-	    }
-	}
-
-	default {
-	    SIAError $varname "[msgcat::mc {Error code was returned}] $code"
-	}
+	    -command [list SIADialog $vars $title $url $opts apply]
     }
 }
 
@@ -227,48 +94,34 @@ proc SIALoad {varname url query} {
     upvar #0 $varname var
     global $varname
 
+    global debug
+    if {$debug(tcl,sia)} {
+	puts stderr "SIALoad $varname $url?$query"
+    }
+
     # clear previous db
     global $var(tbldb)
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
     }
 
-    global debug
-    if {$debug(tcl,sia)} {
-	puts stderr "SIALoad $varname $url?$query"
-    }
-
-    SIAGetURL $varname $url $query
+    TBLGetURL $varname $url $query
     return
 }
 
-proc SIALoadDone {varname} {
+proc SIAProcess {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIALoadDone $varname"
+	puts stderr "SIAProcess $varname"
     }
+
+    VOTParse $var(tbldb) $var(token)
+    SIADone $varname
 
     SIATable $varname
-
-    SIADialogUpdate $varname
-}
-
-proc SIAOff {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global $var(tbldb)
-    if {[info exists $var(tbldb)]} {
-	unset $var(tbldb)
-    }
-    set db $var(tbldb)
-    set ${db}(Nrows) {}
-
-    $var(tbl) selection clear all
-
     SIADialogUpdate $varname
 }
 
@@ -283,7 +136,7 @@ proc SIATable {varname} {
 	puts stderr "SIATable $varname"
     }
 
-    if {![SIAValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -316,36 +169,25 @@ proc SIATable {varname} {
     }
 }
 
-proc SIAValidDB {varname} {
+proc SIAOff {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {[info exists var(Nrows)] && 
-	[info exists var(Ncols)] &&
-	[info exists var(HLines)] &&
-	[info exists var(Header)]} {
-	return 1
-    } else {
-	return 0
+    global debug
+    if {$debug(tcl,sia)} {
+	puts stderr "SIAOff $varname"
     }
-}
 
-proc SIASaveFn {varname fn writer} {
-    upvar #0 $varname var
-    global $varname
     global $var(tbldb)
-
-    if {$fn == {}} {
-	return
+    if {[info exists $var(tbldb)]} {
+	unset $var(tbldb)
     }
+    set db $var(tbldb)
+    set ${db}(Nrows) {}
 
-    # do we have a db?
-    if {![SIAValidDB $var(tbldb)]} {
-	return
-    }
+    $var(tbl) selection clear all
 
-    $writer $var(tbldb) $fn
-    ARDone $varname
+    SIADialogUpdate $varname
 }
 
 # Process Cmds
@@ -395,57 +237,13 @@ proc SIACmdRef {ref} {
 	    set vars [lindex $mm 1]
 	    set url [lindex $mm 2]
 	    set opts [lindex $mm 3]
-	    set method [lindex $mm 4]
 
 	    if {$title != {-} && "sia${ref}" == $vars} {
-		SIADialog $vars $title $url $opts $method sync
+		SIADialog $vars $title $url $opts sync
 		set cvarname sia${ref}
 	    }
 	}
     }
-}
-
-proc SIACmdCoord {xx yy sky} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(x) $xx
-    set cvar(y) $yy
-    set cvar(sky) $sky
-}
-
-proc SIACmdSave {fn writer} {
-    global cvarname
-
-    if {$fn != {}} {
-	SIASaveFn $cvarname $fn $writer
-	FileLast siafbox $fn
-    }
-}
-
-proc SIACmdSize {radius rformat} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(radius) $radius
-    set cvar(rformat) $rformat
-    set cvar(rformat,msg) $rformat
-}
-
-proc SIACmdSkyframe {skyframe} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(sky) $skyframe
-    CoordMenuButtonCmd $cvarname system sky [list SIAWCSMenuUpdate $cvarname]
-}
-
-proc SIACmdSystem {sys} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(system) $sys
-    CoordMenuButtonCmd $cvarname system sky [list SIAWCSMenuUpdate $cvarname]
 }
 
 proc ProcessSendSIACmd {proc id param sock fn} {

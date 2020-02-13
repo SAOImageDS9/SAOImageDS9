@@ -146,7 +146,7 @@ catCmd : coordinate
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 CATCrosshair}
  | EDIT_ yesno {ProcessCmdCVAR edit $2 CATEdit}
- | EXPORT_ writer STRING_ {CatalogCmdSave $3 $2}
+ | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | FILTER_ filter
  | HEADER_ {ProcessCmdCVAR0 CATHeader}
 # backward compatibilty
@@ -157,13 +157,13 @@ catCmd : coordinate
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PANTO_ yesno {ProcessCmdCVAR panto $2}
  | PLOT_ STRING_ STRING_ STRING_ STRING_ {ProcessCmdCVAR4 plot,x $2 plot,y $3 plot,xerr $4 plot,yerr $5 CATPlotGenerate}
- | PRINT_ {ProcessCmdCVAR0 CATPrint}
+ | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | PSKY_ skyframe {ProcessCmdCVAR psky $2 CATGenerate}
  | PSYSTEM_ wcssys {ProcessCmdCVAR psystem $2 CATGenerate}
  | REGIONS_ {ProcessCmdCVAR0 CATGenerateRegions}
  | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
  | SAMP_ samp
- | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
+ | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | SERVER_ server {ProcessCmdCVAR server $2}
  | SHOW_ yesno {ProcessCmdCVAR show $2 CATGenerate}
  | RADIUS_ numeric rformat {ProcessCmdCVAR3 radius $2 rformat $3 rformat,msg $3}

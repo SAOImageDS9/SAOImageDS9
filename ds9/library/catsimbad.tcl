@@ -14,9 +14,6 @@ proc CATSIMBAD {varname} {
 	puts stderr "CATSIMBAD $varname"
     }
 
-    # parser
-    set var(proc,parser) CATSIMBADParse
-
     # query
     set qq {}
 
@@ -78,25 +75,10 @@ proc CATSIMBAD {varname} {
     append qq "\nvotable close\n"
 
     # url
-    set var(url) "http://simbad.u-strasbg.fr/simbad/sim-script"
-    set var(query) [http::formatQuery script $qq]
+    set url "http://simbad.u-strasbg.fr/simbad/sim-script"
+    set query [http::formatQuery script $qq]
 
-    CATLoad $varname
-}
-
-proc CATSIMBADParse {t token} {
-    upvar #0 $t T
-    global $t
-    global debug
-
-    # we can't trust simbad to turn off any error messages
-    variable $token
-    upvar 0 $token state
-
-    set id [string first {<?xml} $state(body)]
-    set ${token}(body) [string range $state(body) $id end]
-
-    VOTParse $t $token
+    CATLoad $varname $url $query
 }
 
 proc CATSIMBADAck {varname} {

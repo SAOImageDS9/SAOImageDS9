@@ -9,5 +9,6 @@ set ZOOM_ 264
 set ROTATE_ 265
 set CROP_ 266
 set CATALOG_ 267
-set EXAMINE_ 268
-set 3D_ 269
+set FOOTPRINT_ 268
+set EXAMINE_ 269
+set 3D_ 270

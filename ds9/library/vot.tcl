@@ -10,7 +10,7 @@ proc VOTParse {t token} {
     global debug
 
     global debug
-    if {$debug(tcl,cat) || $debug(tcl,sia)} {
+    if {$debug(tcl,cat) || $debug(tcl,sia) || $debug(tcl,fp)} {
 	puts stderr "VOTParse"
     }
 
@@ -28,7 +28,7 @@ proc VOTParse {t token} {
     set T(tree,state) {}
     set T(tree,prev) {}
     if {[catch {$xml parse [http::data $token]} err]} {
-	if {$debug(tcl,cat) || $debug(tcl,sia)} {
+	if {$debug(tcl,cat) || $debug(tcl,sia) || $debug(tcl,fp)} {
 	    puts stderr "VOTParse: $err"
 	}
     }
@@ -41,7 +41,7 @@ proc VOTRead {t fn} {
     global $t
 
     global debug
-    if {$debug(tcl,cat) || $debug(tcl,sia)} {
+    if {$debug(tcl,cat) || $debug(tcl,sia) || $debug(tcl,fp)} {
 	puts stderr "VOTRead"
     }
 
@@ -62,7 +62,7 @@ proc VOTRead {t fn} {
 	set T(tree,state) {}
 	set T(tree,prev) {}
 	if {[catch {$xml parse [read $fp]} err]} {
-	    if {$debug(tcl,cat) || $debug(tcl,sia)} {
+	    if {$debug(tcl,cat) || $debug(tcl,sia) || $debug(tcl,fp)} {
 		puts stderr "VOTRead: $err"
 	    }
 	}
@@ -78,7 +78,7 @@ proc VOTWrite {t fn} {
     global $t
 
     global debug
-    if {$debug(tcl,cat) || $debug(tcl,sia)} {
+    if {$debug(tcl,cat) || $debug(tcl,sia) || $debug(tcl,fp)} {
 	puts stderr "VOTWrite"
     }
 

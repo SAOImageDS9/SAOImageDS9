@@ -154,6 +154,7 @@ proc UpdateMain {} {
 	pointer -
 	region -
 	catalog -
+	footprint -
 	colorbar -
 	pan -
 	zoom -
@@ -978,7 +979,8 @@ proc ChangeMode {} {
 	none -
 	pointer -
 	region -
-	catalog {SetCursor {}}
+	catalog -
+	footprint {SetCursor {}}
 	crosshair {
 	    foreach ff $ds9(frames) {
 		$ff crosshair on
@@ -1059,9 +1061,15 @@ proc SetDefaultFont {which} {
     }
 
     if {$which} {
+	global icat
+	global isia
+	global ifp
+
 	UpdateScaleDialogFont
 	UpdateGraphFont
-	CATUpdateFont
+	TBLUpdateFont $icat(cats)
+	TBLUpdateFont $isia(sias)
+	TBLUpdateFont $ifp(fps)
     }
 }
 
@@ -1550,8 +1558,9 @@ proc CursorCmd {x y} {
     switch -- $current(mode) {
 	none {$current(frame) warp $x $y}
 	pointer -
-	region {MarkerArrowKey $current(frame) $x $y}
-	catalog {MarkerArrowKey $current(frame) $x $y}
+	region -
+	catalog -
+	footprint {MarkerArrowKey $current(frame) $x $y}
 	crosshair {CrosshairArrowKey $current(frame) $x $y}
 	colorbar {}
 	pan {PanCanvas $x $y}

@@ -9,7 +9,7 @@ proc CATPlot {varname} {
     global $varname
 
     # do we have a db?
-    if {![CATValidDB $var(tbldb)]} {
+    if {![TBLValidDB $var(tbldb)]} {
 	return
     }
 
@@ -246,7 +246,7 @@ proc CATPlotDialogColsMenu {varname f ww} {
     set m $f.menu
 
     menu $m -tearoff 0
-    if {[CATValidDB $var(catdb)]} {
+    if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
 	    $m add command -label $col -command "set ed2($ww) \\$$col"

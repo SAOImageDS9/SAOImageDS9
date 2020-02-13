@@ -26,8 +26,12 @@ proc CATCDSSrchDialog {varname} {
 	return
     }
 
+    # procs
+    set var(proc,process) CATCDSSrchProcess
+    set var(proc,load) CATCDSSrchLoad
+    set var(proc,error) ARError
+
     # defaults
-    # maybe modified
     set var(list,wave,param) $icatcdssrch(list,wave,param)
     set var(list,wave) $icatcdssrch(list,wave)
     set var(list,mission,param) $icatcdssrch(list,mission,param)
@@ -287,9 +291,48 @@ proc CATCDSSrchApply {varname} {
     }
 
     ARApply $varname
-    ARStatus $varname [msgcat::mc {Searching for catalogs}]
-
+    ARStatus $varname [msgcat::mc {Contacting Server}]
     CATCDSSrch $varname
+}
+
+proc CATCDSSrch {varname} {
+    upvar #0 $varname var
+    global $varname
+    global pcat
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATCDSSrch $varname"
+    }
+
+    #url
+    set site [CATCDSURL $var(server)]
+    set cgidir {viz-bin}
+    set script {votable}
+    set url "http://$site/$cgidir/$script"
+    
+    # defaults
+    set query {-meta}
+    append query "&[http::formatQuery -out.max 1000]"
+    append query "&[http::formatQuery -out.form VOTable]"
+
+    if {$var(source) != {}} {
+	append query "&[http::formatQuery -source $var(source)]"
+    }
+    if {$var(words) !={}} {
+	append query "&[http::formatQuery -words $var(words)]"
+    }
+    if {$var(wave) !={}} {
+	append query "&[http::formatQuery $var(list,wave,param) $var(wave)]"
+    }
+    if {$var(mission) !={}} {
+	append query "&[http::formatQuery $var(list,mission,param) $var(mission)]"
+    }
+    if {$var(astro) !={}} {
+	append query "&[http::formatQuery $var(list,astro,param) $var(astro)]"
+    }
+
+    CATCDSSrchLoad $varname $url $query
 }
 
 proc CATCDSSrchDestroy {varname} {
@@ -307,174 +350,4 @@ proc CATCDSSrchDestroy {varname} {
     }
 
     ARDestroy $varname
-}
-
-proc CATCDSSrchConfig {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchConfig $varname"
-    }
-
-    set site [CATCDSURL $var(server)]
-    set cgidir {viz-bin}
-    set script {votable}
-
-    set var(url) "http://$site/$cgidir/$script"
-    set var(query) [http::formatQuery -meta.aladin all]
-
-    CATCDSSrchConfigLoad $varname
-    return
-}
-
-proc CATCDSSrchConfigLoad {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchConfigLoad $varname"
-    }
-
-    set var(proc,parser) CATCDSSrchConfigParse
-    set var(proc,done) CATCDSSrchConfigDone
-    set var(proc,load) CATCDSSrchConfigLoad
-    CATGetURL $varname
-    return 
-}
-
-proc CATCDSSrchConfigDone {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchConfigDone $varname"
-    }
-
-    CATCDSSrchConfigParse
-}
-
-proc CATCDSSrchConfigParse {t token} {
-    upvar #0 $t T
-    global $t
-    global debug
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchConfigParse"
-    }
-    if {$debug(tcl,cat)} {
-	set fp [open debug.xml w]
-	puts $fp [http::data $token]
-	close $fp
-    }
-
-    set xml [xml::parser \
-		 -elementstartcommand [list CATCDSSrchConfigElemStartCB $t] \
-		 -elementendcommand [list CATCDSSrchConfigElemEndCB $t] \
-		 -ignorewhitespace 1 \
-		]
-
-    set T(tree,enable) 0
-    set T(tree,state) {}
-    if {[catch {$xml parse [http::data $token]} err]} {
-	if {$debug(tcl,cat)} {
-	    puts stderr "CATCDSSrchConfigParse: $err"
-	}
-    }
-    unset ${t}(tree,enable)
-    unset ${t}(tree,state)
-
-    $xml free
-}
-
-proc CATCDSSrchConfigElemStartCB {t name attlist args} {
-    upvar #0 $t T
-    global $t
-    global debug
-
-    # hardcoded
-    set varname catcdssrch1
-    upvar #0 $varname var
-    global $varname
-
-    switch -- $name {
-	RESOURCE {
-	    set id {}
-	    set type {}
-	    foreach {key value} $attlist {
-		switch -- [string tolower $key] {
-		    type {set type "$value"}
-		    id {set id "$value"}
-		}
-	    }
-	    if {[string tolower $id] == "vizier"} {
-		set T(tree,enable) 1
-
-		set ${varname}(list,wave) [list none]
-		set ${varname}(list,mission) [list none]
-		set ${varname}(list,astro) [list none]
-	    }
-	}
-	PARAM {
-	    if {$T(tree,enable)} {
-		set id {}
-		set fname {}
-		foreach {key value} $attlist {
-		    switch -- [string tolower $key] {
-			name {set fname "$value"}
-			id {set id "$value"}
-		    }
-		}
-		set T(tree,state) [string trim [string tolower $id]]
-		switch -- $T(tree,state) {
-		    wavelength {set ${varname}(list,wave,param) $fname}
-		    mission {set ${varname}(list,mission,param) $fname}
-		    astronomy {set ${varname}(list,astro,param) $fname}
-		}
-		
-	    }
-	}
-	VALUES {}
-	OPTION {
-	    if {$T(tree,enable)} {
-		set item {}
-		foreach {key value} $attlist {
-		    switch -- [string tolower $key] {
-			value {set item "$value"}
-		    }
-		}
-		if {$item != {}} {
-		    global icatcdssrch
-		    switch -- $T(tree,state) {
-			wavelength {lappend ${varname}(list,wave) $item}
-			mission {lappend ${varname}(list,mission) $item}
-			astronomy {lappend ${varname}(list,astro) $item}
-		    }
-		}
-	    }
-	}
-    }
-
-    return {}
-}
-
-proc CATCDSSrchConfigElemEndCB {t name args} {
-    upvar #0 $t T
-    global $t
-    global debug
-
-    # we can't count on this being called for all end-tags
-    switch -- $name {
-	RESOURCE {
-	    # ok, we're done
-	    set T(tree,enable) 0
-	    return -code break
-	}
-    }
-
-    return {}
 }

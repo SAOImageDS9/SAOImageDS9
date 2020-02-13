@@ -29,7 +29,7 @@ proc VOTParse {t token} {
     set T(tree,prev) {}
     if {[catch {$xml parse [http::data $token]} err]} {
 	if {$debug(tcl,cat) || $debug(tcl,sia) || $debug(tcl,fp)} {
-	    puts stderr "VOTParse: $err"
+	    puts stderr "VOTParse Error: $err"
 	}
     }
 
@@ -63,7 +63,7 @@ proc VOTRead {t fn} {
 	set T(tree,prev) {}
 	if {[catch {$xml parse [read $fp]} err]} {
 	    if {$debug(tcl,cat) || $debug(tcl,sia) || $debug(tcl,fp)} {
-		puts stderr "VOTRead: $err"
+		puts stderr "VOTRead Error: $err"
 	    }
 	}
 	
@@ -319,25 +319,7 @@ proc VOTElemStartCB {t name attlist args} {
 	    set T(tree,prev) $name
 	}
 
-	FIELDref -
-	DESCRIPTION -
-	COOSYS -
-	PARAM -
-	PARAMref -
-	INFO -
-	LINK -
-	GROUP -
-	DATA -
-	BINARY -
-	STREAM -
-	FITS -
-	VALUES -
-	MIN -
-	MAX -
-	OPTION -
-	DEFINITIONS {}
-
-	default {return -code error}
+	default {}
     }
 
     set ${t}(tree,state) $name
@@ -355,31 +337,7 @@ proc VOTElemEndCB {t name args} {
 	    # ok, we're done
 	    return -code break
 	}
-	VOTABLE -
-	FIELD -
-	FIELDref -
-	TR -
-	TD -
-	RESOURCE -
-	TABLE -
-	DESCRIPTION -
-	COOSYS -
-	PARAM -
-	PARAMref -
-	INFO -
-	LINK -
-	GROUP -
-	DATA -
-	BINARY -
-	STREAM -
-	FITS -
-	VALUES -
-	MIN -
-	MAX -
-	OPTION -
-	DEFINITIONS {}
-
-	default {return -code error}
+	default {}
     }
     return {}
 }

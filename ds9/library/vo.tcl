@@ -21,6 +21,7 @@ proc VODef {} {
     # prefs only
     set pvo(server) {http://cxc.harvard.edu/chandraed/list.txt}
     set pvo(hv) 1
+    # only support mime now (not xpa)
     set pvo(method) mime
     set pvo(delay) 15
 }
@@ -173,14 +174,7 @@ proc VODialog {} {
 			    -text [msgcat::mc {Use Internal Web Browser}] \
 			    -variable pvo(hv) \
 			    -command SavePrefs]
-    ttk::radiobutton $w.opt.xpa \
-	-text [msgcat::mc {Connect Directly}] \
-	-variable pvo(method) -value xpa -command PrefsVOMethod
-    ttk::radiobutton $w.opt.http \
-	-text [msgcat::mc {Connect Using Web Proxy}] \
-	-variable pvo(method) -value mime -command PrefsVOMethod
     grid $w.opt.hv -padx 2 -pady 2 -sticky w
-    grid $w.opt.xpa $w.opt.http -padx 2 -pady 2 -sticky w
 
     set f [ttk::frame $w.buttons]
     ttk::button $f.help -text [msgcat::mc {Help Me Choose}] \
@@ -432,13 +426,8 @@ proc PrefsDialogVO {} {
 
     ttk::checkbutton $f.web -text [msgcat::mc {Use Internal Web Browser}] \
 	-variable pvo(hv)
-    ttk::radiobutton $f.xpa -text [msgcat::mc {Connect Directly}] \
-	-variable pvo(method) -value xpa -command PrefsVOMethod
-    ttk::radiobutton $f.mime -text [msgcat::mc {Connect Using Web Proxy}] \
-	-variable pvo(method) -value mime -command PrefsVOMethod
 
     grid $f.web -padx 2 -pady 2 -sticky w
-    grid $f.xpa $f.mime -padx 2 -pady 2 -sticky w
 
     # Server
     set f [ttk::labelframe $w.vo.server -text [msgcat::mc {VO Server}]]

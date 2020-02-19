@@ -249,42 +249,42 @@ proc MaskLoad {} {
 
 proc MaskParamsDialog {} {
     global mask
-    global ed
+    global ed2
 
     set w {.mskd}
 
-    set ed(ok) 0
-    set ed(color) $mask(color)
-    set ed(mark) $mask(mark)
-    set ed(low) $mask(low)
-    set ed(high) $mask(high)
+    set ed2(ok) 0
+    set ed2(color) $mask(color)
+    set ed2(mark) $mask(mark)
+    set ed2(low) $mask(low)
+    set ed2(high) $mask(high)
 
-    DialogCreate $w [msgcat::mc {Mask Parameters}] ed(ok)
+    DialogCreate $w [msgcat::mc {Mask Parameters}] ed2(ok)
 
     # Param
     set f [ttk::frame $w.param]
 
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
-    ColorMenuButton $f.colorbutton ed color {}
+    ColorMenuButton $f.colorbutton ed2 color {}
 
     ttk::label $f.marktitle -text [msgcat::mc {Block Pixel}]
     set mb $f.markbutton.menu
-    ttk::menubutton $f.markbutton -textvariable ed(mark) -menu $mb
+    ttk::menubutton $f.markbutton -textvariable ed2(mark) -menu $mb
     menu $mb
     $mb add radiobutton -label [msgcat::mc {Zero}] \
-	-variable ed(mark) -value zero
+	-variable ed2(mark) -value zero
     $mb add radiobutton -label [msgcat::mc {Non-Zero}] \
-	-variable ed(mark) -value nonzero
+	-variable ed2(mark) -value nonzero
     $mb add radiobutton -label [msgcat::mc {NAN}] \
-	-variable ed(mark) -value nan
+	-variable ed2(mark) -value nan
     $mb add radiobutton -label [msgcat::mc {Non-NAN}] \
-	-variable ed(mark) -value nonnan
+	-variable ed2(mark) -value nonnan
     $mb add radiobutton -label [msgcat::mc {Range}] \
-	-variable ed(mark) -value range
+	-variable ed2(mark) -value range
 
     ttk::label $f.rangetitle -text [msgcat::mc {Range}]
-    ttk::entry $f.low -textvariable ed(low) -width 13
-    ttk::entry $f.high -textvariable ed(high) -width 13
+    ttk::entry $f.low -textvariable ed2(low) -width 13
+    ttk::entry $f.high -textvariable ed2(high) -width 13
 
     grid $f.colortitle $f.colorbutton -padx 2 -pady 2 -sticky w
     grid $f.marktitle $f.markbutton -padx 2 -pady 2 -sticky w
@@ -292,12 +292,12 @@ proc MaskParamsDialog {} {
 
     # Buttons
     set f [ttk::frame $w.buttons]
-    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed2(ok) 1} \
 	-default active 
-    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed2(ok) 0}
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 
-    bind $w <Return> {set ed(ok) 1}
+    bind $w <Return> {set ed2(ok) 1}
 
     # Fini
     ttk::separator $w.sep -orient horizontal
@@ -305,18 +305,18 @@ proc MaskParamsDialog {} {
     pack $w.param -side top -fill both -expand true
 
     DialogCenter $w 
-    DialogWait $w ed(ok)
+    DialogWait $w ed2(ok)
     DialogDismiss $w
 
-    if {$ed(ok)} {
-	set mask(color) [string tolower $ed(color)]
-	set mask(mark) $ed(mark)
-	set mask(low) $ed(low)
-	set mask(high) $ed(high)
+    if {$ed2(ok)} {
+	set mask(color) [string tolower $ed2(color)]
+	set mask(mark) $ed2(mark)
+	set mask(low) $ed2(low)
+	set mask(high) $ed2(high)
     }
 
-    set rr $ed(ok)
-    unset ed
+    set rr $ed2(ok)
+    unset ed2
     return $rr
 }
 

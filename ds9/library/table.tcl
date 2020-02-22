@@ -353,6 +353,264 @@ proc TBLSaveFn {varname fn writer} {
     ARDone $varname
 }
 
+# Edit Dialog
+
+proc TBLEditDialog {varname which db} {
+    upvar #0 $varname var
+    global $varname
+    global ds9
+    global ed
+
+    set w ".${varname}edit"
+    set mb ".${varname}editmb"
+
+    set ed(ok) 0
+    set ed(text) $w.param.txt
+
+    DialogCreate $w [msgcat::mc {Edit}] ed(ok)
+
+    $w configure -menu $mb
+    menu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    menu $mb.file
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
+	-command TBLEditDialogLoad
+    $mb.file add command -label "[msgcat::mc {Save}]..." \
+	-command TBLEditDialogSave
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Apply}] \
+	-command {set ed(ok) 1}
+    $mb.file add command -label [msgcat::mc {Clear}] \
+	-command TBLEditDialogClear
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Cancel}] \
+	-command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    menu $mb.edit
+    $mb.edit add command -label [msgcat::mc {Undo}] \
+	-command "$ed(text) edit undo"
+    $mb.edit add command -label [msgcat::mc {Redo}] \
+	-command "$ed(text) edit redo"
+    $mb.edit add separator
+    $mb.edit add command -label [msgcat::mc {Cut}] \
+	-command "tk_textCut $ed(text)" -accelerator "${ds9(ctrl)}X"
+    $mb.edit add command -label [msgcat::mc {Copy}] \
+	-command "tk_textCopy $ed(text)" -accelerator "${ds9(ctrl)}C"
+    $mb.edit add command -label [msgcat::mc {Paste}] \
+	-command "tk_textPaste $ed(text)" -accelerator "${ds9(ctrl)}V"
+
+    global $db
+    # column
+    $mb add cascade -label [msgcat::mc {Column}] -menu $mb.col
+    if {[info exists $mb.col]} {
+	destroy $mb.col
+    }
+    menu $mb.col
+    if {[TBLValidDB $db]} {
+	set cnt -1
+	foreach col [starbase_columns $db] {
+	    $mb.col add command -label "$col" \
+		-command "$ed(text) insert insert \{\$$col\}"
+
+	    # wrap if needed
+	    incr cnt
+	    if {$cnt>=$ds9(menu,size,wrap)} {
+		set cnt 0
+		$mb.col entryconfig $col -columnbreak 1
+	    }
+	}
+    }
+
+    # operator
+    $mb add cascade -label [msgcat::mc {Operator}] -menu $mb.op
+    menu $mb.op
+    $mb.op add command -label {-} \
+	-command "$ed(text) insert insert {-}"
+    $mb.op add command -label {!} \
+	-command "$ed(text) insert insert {!}"
+    $mb.op add command -label {(} \
+				   -command "$ed(text) insert insert {(}"
+	$mb.op add command -label {)} \
+	-command "$ed(text) insert insert {)}"
+    $mb.op add separator
+    $mb.op add command -label {*} \
+	-command "$ed(text) insert insert {*}"
+    $mb.op add command -label {/} \
+	-command "$ed(text) insert insert {/}"
+    $mb.op add command -label {%} \
+	-command "$ed(text) insert insert {%}"
+    $mb.op add command -label {+} \
+	-command "$ed(text) insert insert {+}"
+    $mb.op add command -label {-} \
+	-command "$ed(text) insert insert {-}"
+    $mb.op add separator
+    $mb.op add command -label {<} \
+	-command "$ed(text) insert insert {<}"
+    $mb.op add command -label {>} \
+	-command "$ed(text) insert insert {>}"
+    $mb.op add command -label {<=} \
+	-command "$ed(text) insert insert {<=}"
+    $mb.op add command -label {>=} \
+	-command "$ed(text) insert insert {>=}"
+    $mb.op add command -label {==} \
+	-command "$ed(text) insert insert {==}"
+    $mb.op add command -label {!=} \
+	-command "$ed(text) insert insert {!=}"
+    $mb.op add separator
+    $mb.op add command -label {&&} \
+	-command "$ed(text) insert insert {&&}"
+    $mb.op add command -label {||} \
+	-command "$ed(text) insert insert {||}"
+
+    # operator
+    $mb add cascade -label [msgcat::mc {Math Function}] -menu $mb.math
+    menu $mb.math
+    $mb.math add command -label {acos} \
+	-command "$ed(text) insert insert {acos()}"
+    $mb.math add command -label {asin} \
+	-command "$ed(text) insert insert {asin()}"
+    $mb.math add command -label {atan} \
+	-command "$ed(text) insert insert {atan()}"
+    $mb.math add command -label {atan2} \
+	-command "$ed(text) insert insert {atan2(,)}"
+    $mb.math add command -label {ceil} \
+	-command "$ed(text) insert insert {ceil()}"
+    $mb.math add command -label {cos} \
+	-command "$ed(text) insert insert {cos()}"
+    $mb.math add command -label {cosh} \
+	-command "$ed(text) insert insert {cosh()}"
+    $mb.math add command -label {exp} \
+	-command "$ed(text) insert insert {exp()}"
+    $mb.math add command -label {floor} \
+	-command "$ed(text) insert insert {floor()}"
+    $mb.math add command -label {fmod} \
+	-command "$ed(text) insert insert {fmod(,)}"
+    $mb.math add command -label {hypot} \
+	-command "$ed(text) insert insert {hypot(,)}"
+    $mb.math add command -label {log} \
+	-command "$ed(text) insert insert {log()}"
+    $mb.math add command -label {log10} \
+	-command "$ed(text) insert insert {log10()}"
+    $mb.math add command -label {pow} \
+        -command "$ed(text) insert insert {pow(,)}"
+    $mb.math add command -label {sin} \
+	-command "$ed(text) insert insert {sin()}"
+    $mb.math add command -label {sinh} \
+	-command "$ed(text) insert insert {sinh()}"
+    $mb.math add command -label {sqrt} \
+	-command "$ed(text) insert insert {sqrt()}"
+    $mb.math add command -label {tan} \
+	-command "$ed(text) insert insert {tan()}"
+    $mb.math add command -label {tanh} \
+	-command "$ed(text) insert insert {tanh()}"
+    $mb.math add command -label {abs} \
+	-command "$ed(text) insert insert {abs()}"
+    $mb.math add command -label {double} \
+	-command "$ed(text) insert insert {double()}"
+    $mb.math add command -label {int} \
+	-command "$ed(text) insert insert {int()}"
+    $mb.math add command -label {round} \
+	-command "$ed(text) insert insert {round()}"
+
+    # Text  
+    set f [ttk::frame $w.param]
+
+    text $f.txt \
+	-height 10 \
+	-width 60 \
+	-yscrollcommand "$f.yscroll set" \
+	-xscrollcommand "$f.xscroll set" \
+	-undo true \
+	-wrap none 
+    ttk::scrollbar $f.yscroll -command [list $ed(text) yview] \
+	-orient vertical
+    ttk::scrollbar $f.xscroll -command [list $ed(text) xview] \
+	-orient horizontal
+
+    grid $ed(text) $f.yscroll -sticky news
+    grid $f.xscroll -stick news
+    grid rowconfigure $f 0 -weight 1
+    grid columnconfigure $f 0 -weight 1
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+        -default active 
+    ttk::button $f.clear -text [msgcat::mc {Clear}] -command TBLEditDialogClear
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.clear $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.param -side top -fill both -expand true
+    pack $w.buttons $w.sep -side bottom -fill x
+
+    $ed(text) insert end $var($which)
+    $ed(text) see end
+
+    DialogCenter $w
+    DialogWait $w ed(ok) $w.buttons.ok
+
+    if {$ed(ok)} {
+	set flt [$ed(text) get 1.0 end]
+	catch {regsub {\n} $flt " " flt}
+	set var($which) [string trim $flt]
+    }
+
+    DialogDismiss $w
+    destroy $mb
+
+    set rr $ed(ok)
+    unset ed
+    return $rr
+}
+
+proc TBLEditDialogClear {} {
+    global ed
+
+    $ed(text) delete 1.0 end
+}
+
+proc TBLEditDialogSave {} {
+    global ed
+
+    set fn [SaveFileDialog catfltfbox]
+    if {$fn != {}} {
+	if {[catch {open $fn w} fp]} {
+	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"
+	    return
+	}
+	set flt [$ed(text) get 1.0 end]
+	catch {regsub {\n} $flt " " flt}
+	puts $fp [string trim $flt]
+	catch {close $fp}
+    }
+}
+
+proc TBLEditDialogLoad {} {
+    global ed
+
+    set fn [OpenFileDialog catfltfbox]
+    if {$fn != {}} {
+	if {[catch {open $fn r} fp]} {
+	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"
+	    return
+	}
+	$ed(text) delete 1.0 end
+	$ed(text) insert end [read -nonewline $fp]
+	$ed(text) see end
+	catch {close $fp}
+    }
+}
+
+# Cmd
+
 proc TBLCmdSave {fn writer} {
     global cvarname
 

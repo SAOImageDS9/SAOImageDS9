@@ -175,10 +175,10 @@ proc CATPlotDialog {varname} {
     ttk::label $f.tx -text {X}
     ttk::entry $f.x -textvariable ed2(x) -width 21
     ttk::button $f.bx -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog ed2 x $var(catdb)"
+	-command "TBLEditDialog ed2 x $var(catdb)"
     ttk::entry $f.xerr -textvariable ed2(xerr) -width 21
     ttk::button $f.bxerr -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog ed2 xerr $var(catdb)"
+	-command "TBLEditDialog ed2 xerr $var(catdb)"
     ttk::menubutton $f.mx -text {Cols} -menu $f.mx.menu
     ttk::menubutton $f.mxerr -text {Cols} -menu $f.mxerr.menu
 
@@ -188,10 +188,10 @@ proc CATPlotDialog {varname} {
     ttk::label $f.ty -text {Y}
     ttk::entry $f.y -textvariable ed2(y) -width 21
     ttk::button $f.by -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog ed2 y $var(catdb)"
+	-command "TBLEditDialog ed2 y $var(catdb)"
     ttk::entry $f.yerr -textvariable ed2(yerr) -width 21
     ttk::button $f.byerr -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog ed2 yerr $var(catdb)"
+	-command "TBLEditDialog ed2 yerr $var(catdb)"
     ttk::menubutton $f.my -text {Cols} -menu $f.my.menu
     ttk::menubutton $f.myerr -text {Cols} -menu $f.myerr.menu
 

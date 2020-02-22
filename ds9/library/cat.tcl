@@ -201,7 +201,7 @@ proc CATTable {varname} {
     } else {
 	set var(tbldb) ${varname}tbldb
 	global $var(tbldb)
-	if {![CATFltSort $varname]} {
+	if {![TBLFltSort $varname $var(catdb) $var(tbldb)]} {
 	    Error "[msgcat::mc {Unable to evaluate filter}] $var(filter)"
 	    if {[info exists $var(tbldb)]} {
 		unset $var(tbldb)

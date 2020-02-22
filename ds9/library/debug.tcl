@@ -182,6 +182,7 @@ proc ProcessDebugTclCmd {varname iname} {
 	hv {set debug(tcl,hv) 1}
 	cat {set debug(tcl,cat) 1}
 	sia {set debug(tcl,sia) 1}
+	fp {set debug(tcl,fp) 1}
 	samp {set debug(tcl,samp) 1}
 	grid {set debug(tcl,grid) 1}
 	restore {set debug(tcl,restore) 1}
@@ -260,6 +261,7 @@ proc ProcessDebugCmd {varname iname} {
 	hv -
 	cat -
 	sia -
+	fp -
 	samp -
 	grid -
 	restore -

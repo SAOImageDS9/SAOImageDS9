@@ -116,15 +116,29 @@ proc FPTable {varname} {
 	}
     }
 
-    # filter regions
+    # concat regions
     set var(tbldb) ${varname}tbldb
     global $var(tbldb)
-    if {![eval $var(proc,flt) $varname]} {
+    if {![eval $var(proc,reg) $varname $var(catdb) $var(tbldb)]} {
 	Error [msgcat::mc {Internal Parse Error}]
 	if {[info exists $var(tbldb)]} {
 	    unset $var(tbldb)
 	}
 	set var(tbldb) $var(catdb)
+    }
+
+    if {$var(filter) == {} && $var(sort) == {}} {
+	;
+    } else {
+	set var(tbldb) ${varname}tbldb
+	global $var(tbldb)
+	if {![TBLFltSort $varname $var(catdb) $var(tbldb)]} {
+	    Error "[msgcat::mc {Unable to evaluate filter}] $var(filter)"
+	    if {[info exists $var(tbldb)]} {
+		unset $var(tbldb)
+	    }
+	    set var(tbldb) $var(catdb)
+	}
     }
 
     global $var(tbldb)
@@ -157,14 +171,15 @@ proc FPTable {varname} {
     FPGenerate $varname
 }
 
-proc FPFltCXC {varname} {
+proc FPRegCXC {varname src dest} {
     upvar #0 $varname var
     global $varname
-    global $var(catdb)
-    global $var(tbldb)
 
-    upvar #0 $var(catdb) catsrc
-    upvar #0 $var(tbldb) catdest
+    upvar #0 $src catsrc
+    global $src
+
+    upvar #0 $dest catdest
+    global $dest
 
     # create header
     set catdest(Header) $catsrc(Header)
@@ -245,14 +260,15 @@ proc FPFltCXC {varname} {
     return 1
 }
 
-proc FPFltHLA {varname} {
+proc FPRegHLA {varname src dest} {
     upvar #0 $varname var
     global $varname
-    global $var(catdb)
-    global $var(tbldb)
 
-    upvar #0 $var(catdb) catsrc
-    upvar #0 $var(tbldb) catdest
+    upvar #0 $src catsrc
+    global $src
+
+    upvar #0 $dest catdest
+    global $dest
 
     # create header
     set catdest(Header) $catsrc(Header)
@@ -426,6 +442,8 @@ proc FPOff {varname} {
 	}
     }
 
+    set var(filter) {}
+    set var(sort) {}
     set var(blink) 0
 
     FPDialogUpdate $varname

@@ -4,14 +4,15 @@
 
 package provide DS9 1.0
 
-proc CATFltSort {varname} {
+proc TBLFltSort {varname src dest} {
     upvar #0 $varname var
     global $varname
-    global $var(catdb)
-    global $var(tbldb)
 
-    upvar #0 $var(catdb) catsrc
-    upvar #0 $var(tbldb) catdest
+    upvar #0 $src catsrc
+    global $src
+
+    upvar #0 $dest catdest
+    global $dest
 
     # create header
     set catdest(Header) $catsrc(Header)

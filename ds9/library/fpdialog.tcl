@@ -48,12 +48,12 @@ proc FPDialog {varname title url instr format action} {
 	cxc {
 	    set var(colid) ObsId
 	    set var(colreg) stcs
-	    set var(proc,flt) FPFltCXC
+	    set var(proc,reg) FPRegCXC
 	}
 	hla {
 	    set var(colid) PropID
 	    set var(colreg) regionSTCS
-	    set var(proc,flt) FPFltHLA
+	    set var(proc,reg) FPRegHLA
 	}
     }
 
@@ -89,6 +89,10 @@ proc FPDialog {varname title url instr format action} {
 	set ${varname}(instr,$ll) 1
     }
 
+    set var(filter) {}
+    set var(sort) {}
+    set var(sort,dir) "-increasing"
+
     # create the window
     set w $var(top)
     set mb $var(mb)
@@ -112,6 +116,11 @@ proc FPDialog {varname title url instr format action} {
 	-command [list FPApply $varname 0]
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command [list ARCancel $varname]
+    $mb.file add command -label [msgcat::mc {Clear}] \
+	-command [list FPOff $varname]
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Filter}] \
+	-command [list FPTable $varname]
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command [list FPOff $varname]
     $mb.file add separator
@@ -198,10 +207,30 @@ proc FPDialog {varname title url instr format action} {
     # Param
     set f [ttk::labelframe $w.param -text [msgcat::mc {Table}] -padding 2]
 
+    ttk::label $f.mfilter -text [msgcat::mc {Filter}]
+    ttk::entry $f.filter -textvariable ${varname}(filter) -width 50
+    ttk::button $f.bfilter -text [msgcat::mc {Edit}] \
+	-command [list TBLEditDialog $varname filter $var(catdb)]
+
+    ttk::label $f.msort -text [msgcat::mc {Sort}]
+    set var(sortmenu) [ttk::menubutton $f.sort \
+			   -textvariable ${varname}(sort) \
+			   -menu $f.sort.menu -width 14]
+    ttk::radiobutton $f.isort -text [msgcat::mc {Increase}] \
+	-variable ${varname}(sort,dir) -value "-increasing" \
+	-command [list FPTable $varname]
+    ttk::radiobutton $f.dsort -text [msgcat::mc {Decrease}] \
+	-variable ${varname}(sort,dir) -value "-decreasing" \
+	-command [list FPTable $varname]
+
     ttk::label $f.ftitle -text [msgcat::mc {Found}] 
     set var(found) [ttk::label $f.found \
 			-width 14 -relief groove -anchor w]
 
+    grid $f.mfilter $f.filter - - $f.bfilter \
+	-padx 2 -pady 2 -sticky w
+    grid $f.msort $f.sort $f.isort $f.dsort \
+	-padx 2 -pady 2 -sticky w
     grid $f.ftitle $f.found -padx 2 -pady 2 -sticky w
 
     # Table
@@ -255,13 +284,15 @@ proc FPDialog {varname title url instr format action} {
 			 [msgcat::mc {Cancel}] \
 			 -command [list ARCancel $varname] \
 			 -state disabled]
+    ttk::button $f.filter -text [msgcat::mc {Filter}] \
+	-command [list FPTable $varname]
     ttk::button $f.clear -text [msgcat::mc {Clear}] \
 	-command [list FPOff $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list FPDestroy $varname]
 
-		    pack $f.apply $f.cancel $f.clear $f.close \
-			-side left -expand true -padx 2 -pady 4
+    pack $f.apply $f.cancel $f.filter $f.clear $f.close \
+	-side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.stbl -orient horizontal

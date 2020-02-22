@@ -111,7 +111,7 @@ proc CATSymDialog {parent} {
     ttk::label $f.tcondition -text [msgcat::mc {If}] 
     ttk::entry $f.condition -textvariable ${varname}(condition) -width 40
     ttk::button $f.bcondition -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog $varname condition $pvar(catdb)"
+	-command "TBLEditDialog $varname condition $pvar(catdb)"
     ttk::label $f.tthen -text [msgcat::mc {Then}] 
     ttk::label $f.tshape -text [msgcat::mc {Shape}] 
     ttk::menubutton $f.shape -textvariable ${varname}(shape) -menu $f.shape.menu
@@ -124,15 +124,15 @@ proc CATSymDialog {parent} {
     ttk::label $f.ttext -text [msgcat::mc {Text}] 
     ttk::entry $f.text -textvariable ${varname}(text) -width 40
     ttk::button $f.btext -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog $varname text  $pvar(catdb)"
+	-command "TBLEditDialog $varname text  $pvar(catdb)"
     ttk::label $f.tsize -text [msgcat::mc {Size/Radius}] 
     ttk::entry $f.size -textvariable ${varname}(size) -width 40
     ttk::button $f.bsize -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog $varname size $pvar(catdb)"
+	-command "TBLEditDialog $varname size $pvar(catdb)"
     ttk::label $f.tsize2 -text "[msgcat::mc {Size/Radius}] 2" 
     ttk::entry $f.size2 -textvariable ${varname}(size2) -width 40
     ttk::button $f.bsize2 -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog $varname size2 $pvar(catdb)"
+	-command "TBLEditDialog $varname size2 $pvar(catdb)"
     ttk::label $f.tunits -text [msgcat::mc {Units}] 
     tk_optionMenu $f.units ${varname}(units) \
 	image physical degrees arcmin arcsec
@@ -140,7 +140,7 @@ proc CATSymDialog {parent} {
     ttk::label $f.tangle -text [msgcat::mc {Angle}] 
     ttk::entry $f.angle -textvariable ${varname}(angle) -width 40
     ttk::button $f.bangle -text [msgcat::mc {Edit}] \
-	-command "CATEditDialog $varname angle $pvar(catdb)"
+	-command "TBLEditDialog $varname angle $pvar(catdb)"
 
     menu $f.shape.menu
     $f.shape.menu add radiobutton  -label [msgcat::mc {Circle}] \

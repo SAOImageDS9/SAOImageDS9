@@ -80,6 +80,7 @@ proc FPProcess {varname} {
     VOTParse $var(catdb) $var(token)
     ARDone $varname
 
+    TBLSortMenu $varname
     FPTable $varname
     FPDialogUpdate $varname
 }
@@ -130,15 +131,15 @@ proc FPTable {varname} {
     if {$var(filter) == {} && $var(sort) == {}} {
 	;
     } else {
-	set var(tbldb) ${varname}tbldb
-	global $var(tbldb)
-	if {![TBLFltSort $varname $var(catdb) $var(tbldb)]} {
+	set var(tmpdb) ${varname}tmpdb
+	global $var(tmpdb)
+	if {![TBLFltSort $varname $var(tbldb) $var(tmpdb)]} {
 	    Error "[msgcat::mc {Unable to evaluate filter}] $var(filter)"
-	    if {[info exists $var(tbldb)]} {
-		unset $var(tbldb)
-	    }
-	    set var(tbldb) $var(catdb)
+	} else {
+	    unset $var(tbldb)
+	    array set $var(tbldb) [array get $var(tmpdb)]
 	}
+	unset $var(tmpdb)
     }
 
     global $var(tbldb)
@@ -442,6 +443,7 @@ proc FPOff {varname} {
 	}
     }
 
+    TBLSortMenu $varname
     set var(filter) {}
     set var(sort) {}
     set var(blink) 0

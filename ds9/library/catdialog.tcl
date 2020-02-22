@@ -49,6 +49,7 @@ proc CATDialog {varname format catalog title action} {
     set var(proc,process) CATProcess
     set var(proc,load) CATLoad
     set var(proc,error) ARError
+    set var(proc,table) CATTable
 
     # CAT variables
     lappend icat(cats) $varname
@@ -482,7 +483,7 @@ proc CATDialog {varname format catalog title action} {
     bind $w <<Close>> [list CATDestroy $varname]
 
     # needs to go after sort menu button is defined
-    CATSortMenu $varname
+    TBLSortMenu $varname
     CATColsMenu $varname
     CATColsUpdate $varname
     switch $var(format) {

@@ -42,6 +42,7 @@ proc FPDialog {varname title url instr format action} {
     set var(proc,process) FPProcess
     set var(proc,load) FPLoad
     set var(proc,error) ARError
+    set var(proc,table) FPTable
 
     # format
     switch $format {
@@ -300,6 +301,12 @@ proc FPDialog {varname title url instr format action} {
     pack $w.buttons $w.sstatus $w.status $w.stbl -side bottom -fill x
     pack $w.obj $w.instr $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
+
+    bind $w <<Print>> PSPrint
+    bind $w <<Close>> [list FPDestroy $varname]
+
+    # needs to go after sort menu button is defined
+    TBLSortMenu $varname
 
     ARCoord $varname
     FPUpdate $varname

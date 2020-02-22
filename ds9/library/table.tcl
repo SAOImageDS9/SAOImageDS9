@@ -353,6 +353,43 @@ proc TBLSaveFn {varname fn writer} {
     ARDone $varname
 }
 
+# Sort
+
+proc TBLSortMenu {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(catdb)
+
+    global ds9
+
+    set m $var(sortmenu).menu
+    catch {destroy $m}
+
+    menu $m -tearoff 0
+    $m add command -label {} -command "TBLSortCmd $varname {}"
+    if {[TBLValidDB $var(catdb)]} {
+	set cnt -1
+	foreach col [starbase_columns $var(catdb)] {
+	    $m add command -label $col -command "TBLSortCmd $varname \{$col\}"
+
+	    # wrap if needed
+	    incr cnt
+	    if {$cnt>=$ds9(menu,size,wrap)} {
+		set cnt 0
+		$m entryconfig $col -columnbreak 1
+	    }
+	}
+    }
+}
+
+proc TBLSortCmd {varname val} {
+    upvar #0 $varname var
+    global $varname
+
+    set ${varname}(sort) $val
+    $var(proc,table) $varname
+}
+
 # Edit Dialog
 
 proc TBLEditDialog {varname which db} {

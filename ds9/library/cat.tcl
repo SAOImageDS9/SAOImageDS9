@@ -155,7 +155,7 @@ proc CATLoadDone {varname} {
 	puts stderr "CATLoadDone $varname"
     }
 
-    CATSortMenu $varname
+    TBLSortMenu $varname
     CATConfigCols $varname
     CATColsMenu $varname
     CATTable $varname
@@ -412,7 +412,7 @@ proc CATOff {varname} {
 	}
     }
 
-    CATSortMenu $varname
+    TBLSortMenu $varname
     CATColsMenu $varname
     set var(filter) {}
     set var(sort) {}
@@ -532,41 +532,6 @@ proc CATServerMenu {varname} {
 	$var(mb).server add radiobutton -label [lindex $item 0] \
 	    -variable ${varname}(server) -value [lindex $item 1]
     }
-}
-
-proc CATSortMenu {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(catdb)
-
-    global ds9
-
-    set m $var(sortmenu).menu
-    catch {destroy $m}
-
-    menu $m -tearoff 0
-    $m add command -label {} -command "CATSortCmd $varname {}"
-    if {[TBLValidDB $var(catdb)]} {
-	set cnt -1
-	foreach col [starbase_columns $var(catdb)] {
-	    $m add command -label $col -command "CATSortCmd $varname \{$col\}"
-
-	    # wrap if needed
-	    incr cnt
-	    if {$cnt>=$ds9(menu,size,wrap)} {
-		set cnt 0
-		$m entryconfig $col -columnbreak 1
-	    }
-	}
-    }
-}
-
-proc CATSortCmd {varname val} {
-    upvar #0 $varname var
-    global $varname
-
-    set ${varname}(sort) $val
-    CATTable $varname
 }
 
 # backward backup compatibility version 6.1

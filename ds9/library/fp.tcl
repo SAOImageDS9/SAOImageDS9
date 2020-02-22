@@ -77,8 +77,21 @@ proc FPProcess {varname} {
 	puts stderr "FPProcess $varname"
     }
 
-    VOTParse $var(catdb) $var(token)
+    global tmpdb
+    set tmpdb ${varname}tmpdb
+
+    VOTParse $tmpdb $var(token)
     ARDone $varname
+
+    # concat regions
+    if {![TBLValidDB $tmpdb]} {
+	return
+    }
+    global $var(catdb)
+    if {![eval $var(proc,reg) $varname $tmpdb $var(catdb)]} {
+	Error [msgcat::mc {Internal Parse Error}]
+	return
+    }
 
     TBLSortMenu $varname
     FPTable $varname
@@ -117,29 +130,18 @@ proc FPTable {varname} {
 	}
     }
 
-    # concat regions
-    set var(tbldb) ${varname}tbldb
-    global $var(tbldb)
-    if {![eval $var(proc,reg) $varname $var(catdb) $var(tbldb)]} {
-	Error [msgcat::mc {Internal Parse Error}]
-	if {[info exists $var(tbldb)]} {
-	    unset $var(tbldb)
-	}
-	set var(tbldb) $var(catdb)
-    }
-
     if {$var(filter) == {} && $var(sort) == {}} {
-	;
+	set var(tbldb) $var(catdb)
     } else {
-	set var(tmpdb) ${varname}tmpdb
-	global $var(tmpdb)
-	if {![TBLFltSort $varname $var(tbldb) $var(tmpdb)]} {
+	set var(tbldb) ${varname}tbldb
+	global $var(tbldb)
+	if {![TBLFltSort $varname $var(catdb) $var(tbldb)]} {
 	    Error "[msgcat::mc {Unable to evaluate filter}] $var(filter)"
-	} else {
-	    unset $var(tbldb)
-	    array set $var(tbldb) [array get $var(tmpdb)]
+	    if {[info exists $var(tbldb)]} {
+		unset $var(tbldb)
+	    }
+	    set var(tbldb) $var(catdb)
 	}
-	unset $var(tmpdb)
     }
 
     global $var(tbldb)

@@ -61,414 +61,444 @@ proc mask::unsetupvalues {numsyms} {
 }
 
 array set mask::table {
-  21:289 reduce
+  9:283 shift
   21:290 reduce
+  9:284 shift
+  1:304 shift
+  9:285 shift
   60:290 reduce
-  59:290 shift
-  30:290,target 7
-  29:290,target 6
+  59:290 reduce
+  30:290,target 2
+  29:290,target 1
   27:0 reduce
-  9:288 shift
+  1:295 shift
+  9:286 shift
+  12:312 goto
+  1:296 shift
+  9:287 shift
   48:0 reduce
-  8:287,target 54
-  9:289 shift
+  0:306,target 10
+  6:299,target 20
   30:290 reduce
   29:290 reduce
-  18:290,target 52
-  6:0,target 38
-  8:266,target 33
+  9:271,target 43
+  18:290,target 39
+  64:290,target 66
   2:0 reduce
-  9:306 goto
-  56:0,target 54
-  53:290,target 30
+  1:315 goto
+  9:308 goto
+  9:309 goto
+  56:0,target 28
+  53:290,target 25
   38:290 reduce
   24:0 reduce
-  48:0,target 25
-  9:289,target 22
-  41:0,target 18
+  48:0,target 20
+  41:0,target 13
   45:0 reduce
-  33:0,target 10
-  25:0,target 2
+  33:0,target 5
+  25:0,target 43
   0:294,target 4
-  8:285,target 52
-  17:0,target 49
-  42:290,target 19
-  10:0,target 0
+  6:307,target 24
+  9:316 goto
+  17:0,target 42
+  66:0 reduce
+  42:290,target 14
+  9:268,target 40
   47:290 reduce
-  5:303,target 19
-  8:264,target 31
-  31:290,target 8
+  31:290,target 3
   17:290 reduce
   21:0 reduce
+  1:296,target 14
+  9:287,target 59
   56:290 reduce
   42:0 reduce
-  0:302,target 9
   0:292,target 2
-  8:283,target 50
-  11:308,target 59
-  19:290,target 48
-  20:290,target 43
-  6:290 reduce
+  0:302,target 7
+  6:288 shift
+  19:290,target 47
+  20:290,target 51
+  65:290,target 44
+  63:0 reduce
+  6:300 shift
+  26:288 reduce
+  6:301 shift
+  9:266,target 38
   26:290 reduce
-  8:262,target 29
-  54:290,target 31
+  26:289 reduce
+  6:303 shift
+  65:290 reduce
+  9:316,target 62
+  54:290,target 26
+  6:307 shift
   17:0 reduce
+  28:310,target 65
+  6:299 shift
   38:0 reduce
   35:290 reduce
-  43:290,target 20
+  1:304,target 15
+  9:285,target 57
+  43:290,target 15
   60:0 reduce
-  0:300,target 7
+  59:0 reduce
+  3:0,target 40
   0:290,target 37
-  8:281,target 48
-  61:0,target 36
-  5:288,target 14
-  53:0,target 30
+  6:314 goto
+  6:303,target 23
+  9:264,target 36
+  61:0,target 58
+  53:0,target 25
   44:290 reduce
-  32:290,target 9
-  8:259,target 26
-  8:260,target 27
-  45:0,target 22
-  37:0,target 14
+  32:290,target 4
+  45:0,target 17
+  37:0,target 9
   14:0 reduce
-  30:0,target 7
-  29:0,target 6
-  22:0,target 33
+  30:0,target 2
+  29:0,target 1
+  22:0,target 50
+  8:310,target 28
   35:0 reduce
-  14:0,target 47
+  14:0,target 56
   14:290 reduce
-  21:289,target 32
-  21:290,target 32
+  9:283,target 55
+  21:290,target 52
   56:0 reduce
   53:290 reduce
-  8:278,target 45
-  3:290 shift
-  23:288 shift
-  55:290,target 53
-  23:289 shift
-  23:306,target 60
-  8:257,target 24
-  11:0 reduce
+  26:288,target 32
+  6:301,target 22
+  3:290 reduce
+  9:262,target 34
+  10:289,target 27
+  55:290,target 27
+  23:290 reduce
+  11:0 accept
+  62:290 reduce
   32:0 reduce
-  44:290,target 21
-  23:306 goto
-  8:257 shift
-  1:290,target 41
-  8:258 shift
+  44:290,target 16
+  9:281,target 53
   53:0 reduce
   32:290 reduce
-  8:259 shift
-  8:260 shift
-  8:261 shift
-  8:262 shift
-  8:276,target 43
-  8:263 shift
-  33:290,target 10
-  8:264 shift
-  8:265 shift
-  6:0 reduce
-  8:266 shift
-  8:267 shift
+  6:288,target 19
+  33:290,target 5
+  9:259,target 31
+  9:260,target 32
   41:290 reduce
-  8:268 shift
-  8:269 shift
-  8:270 shift
-  28:0 reduce
-  22:290,target 33
-  22:289,target 33
-  8:271 shift
+  9:309,target 61
+  22:290,target 50
+  7:0,target 38
   0:0,target 37
-  8:305,target 56
-  8:272 shift
-  8:273 shift
   50:0 reduce
   49:0 reduce
-  8:274 shift
-  11:290 reduce
-  8:275 shift
-  57:0,target 45
-  8:276 shift
+  9:278,target 50
+  65:0,target 44
+  27:288,target 33
+  57:0,target 29
   50:290 reduce
-  50:0,target 27
+  50:0,target 22
   49:290 reduce
-  49:0,target 26
-  8:274,target 41
-  8:277 shift
-  11:290,target 35
-  56:290,target 54
-  42:0,target 19
-  8:278 shift
-  34:0,target 11
-  8:279 shift
-  8:280 shift
-  26:0,target 3
-  0:300 shift
+  49:0,target 21
+  56:290,target 28
+  42:0,target 14
+  34:0,target 6
+  9:257,target 29
+  26:0,target 32
+  3:0 reduce
   0:290 reduce
-  8:281 shift
-  0:301 shift
   0:291 shift
-  8:282 shift
-  18:0,target 52
-  0:302 shift
+  18:0,target 39
   0:292 shift
-  8:283 shift
-  11:0,target 34
-  11:308 goto
+  0:302 shift
+  11:0,target 0
   19:290 reduce
   20:290 reduce
+  0:303 shift
   0:293 shift
-  8:284 shift
-  45:290,target 22
+  45:290,target 17
   25:0 reduce
   0:294 shift
-  8:285 shift
   58:290 reduce
-  2:290,target 40
-  0:295 shift
-  8:286 shift
-  8:287 shift
+  2:290,target 41
+  0:305 shift
+  0:306 shift
   46:0 reduce
-  0:307 goto
-  0:309 goto
-  0:299 shift
-  7:288,target 21
-  34:290,target 11
-  28:290 reduce
-  8:272,target 39
-  8:304 goto
+  0:297 shift
+  8:288 shift
+  0:298 shift
+  8:289 shift
+  9:276,target 48
+  28:288 shift
+  34:290,target 6
+  28:289 shift
+  0:311 goto
+  0:313 goto
   0:0 reduce
-  8:305 goto
-  23:289,target 22
+  23:290,target 53
+  8:310 goto
   22:0 reduce
   37:290 reduce
-  8:311 goto
+  28:310 goto
   43:0 reduce
-  0:309,target 11
-  0:299,target 6
-  12:290,target 42
-  57:290,target 45
-  5:298,target 17
-  8:269,target 36
-  8:270,target 37
+  28:288,target 26
+  9:274,target 46
+  12:290,target 35
+  57:290,target 29
   46:290 reduce
-  46:290,target 23
-  3:290,target 12
+  46:290,target 18
+  3:290,target 40
   18:0 reduce
   16:290 reduce
-  54:0,target 31
+  62:0,target 45
+  54:0,target 26
   40:0 reduce
   39:0 reduce
   55:290 reduce
-  46:0,target 23
-  0:307,target 10
-  38:0,target 15
-  35:290,target 12
+  46:0,target 18
+  0:297,target 5
+  8:288,target 26
+  38:0,target 10
+  35:290,target 7
   61:0 reduce
-  31:0,target 8
-  5:288 shift
-  5:300 shift
-  5:296,target 15
-  15:0,target 50
+  31:0,target 3
+  9:272,target 44
+  23:0,target 53
+  5:290 shift
+  10:310,target 63
+  15:0,target 54
   25:290 reduce
-  8:267,target 34
-  5:303 shift
-  24:290,target 1
-  5:296 shift
+  24:290,target 49
+  64:290 shift
   15:0 reduce
-  5:297 shift
-  5:298 shift
   36:0 reduce
-  5:310 goto
   34:290 reduce
-  13:290,target 39
-  58:290,target 46
-  0:295,target 5
-  8:286,target 53
+  13:290,target 55
+  58:290,target 30
+  0:305,target 9
   57:0 reduce
-  8:265,target 32
-  47:290,target 24
+  9:269,target 41
+  9:270,target 42
+  47:290,target 19
   43:290 reduce
-  4:290,target 13
+  4:290,target 17
   12:0 reduce
   33:0 reduce
-  9:288,target 21
-  36:290,target 13
+  36:290,target 8
   13:290 reduce
   54:0 reduce
+  0:303,target 8
   0:293,target 3
-  8:284,target 51
   52:290 reduce
-  1:0,target 41
-  25:290,target 2
+  9:267,target 39
+  25:290,target 43
   2:290 reduce
-  8:263,target 30
-  22:288 reduce
+  66:0,target 36
   22:290 reduce
-  22:289 reduce
-  58:0,target 46
-  51:0,target 28
-  43:0,target 20
-  35:0,target 12
+  7:0 reduce
+  58:0,target 30
+  51:0,target 23
+  61:290 reduce
+  43:0,target 15
+  35:0,target 7
   30:0 reduce
   29:0 reduce
-  14:290,target 47
-  60:290,target 44
-  59:290,target 61
-  27:0,target 4
-  19:0,target 48
-  20:0,target 43
+  14:290,target 56
+  60:290,target 57
+  59:290,target 31
+  27:0,target 33
+  1:295,target 13
+  9:286,target 58
+  12:312,target 64
+  19:0,target 47
+  20:0,target 51
   51:0 reduce
-  12:0,target 42
+  12:0,target 34
   31:290 reduce
-  0:301,target 8
   0:291,target 1
-  8:282,target 49
-  48:290,target 25
-  5:300,target 18
-  8:261,target 28
+  9:265,target 37
+  48:290,target 20
+  5:290,target 18
   40:290 reduce
   39:290 reduce
-  37:290,target 14
+  37:290,target 9
   26:0 reduce
-  8:311,target 57
+  9:284,target 56
   47:0 reduce
-  7:306,target 23
-  8:279,target 46
-  8:280,target 47
-  26:290,target 3
+  10:288 shift
+  10:289 shift
+  26:290,target 32
+  26:289,target 32
   48:290 reduce
-  1:0 reduce
-  8:258,target 25
-  15:290,target 50
+  9:263,target 35
+  15:290,target 54
   18:290 reduce
+  61:290,target 58
+  23:0 reduce
+  10:310 goto
   57:290 reduce
   44:0 reduce
-  21:288,target 32
-  7:288 shift
-  7:289 shift
-  50:290,target 27
-  49:290,target 26
-  8:277,target 44
+  9:282,target 54
+  7:290 reduce
+  65:0 reduce
+  50:290,target 22
+  49:290,target 21
+  27:288 reduce
+  63:0,target 46
   27:290 reduce
-  6:290,target 38
-  55:0,target 53
-  47:0,target 24
-  40:0,target 17
-  39:0,target 16
-  32:0,target 9
-  7:306 goto
-  38:290,target 15
-  24:0,target 1
-  16:0,target 51
+  27:289 reduce
+  6:300,target 21
+  55:0,target 27
+  9:261,target 33
+  47:0,target 19
+  10:288,target 26
+  40:0,target 12
+  39:0,target 11
+  32:0,target 4
+  38:290,target 10
+  24:0,target 49
+  16:0,target 48
   19:0 reduce
   20:0 reduce
   36:290 reduce
   41:0 reduce
-  27:290,target 4
-  8:275,target 42
+  9:279,target 51
+  9:280,target 52
+  27:290,target 33
+  27:289,target 33
+  62:0 reduce
+  9:258,target 30
   45:290 reduce
-  16:290,target 51
+  16:290,target 48
+  62:290,target 45
+  9:308,target 60
   16:0 reduce
-  22:288,target 33
   15:290 reduce
   37:0 reduce
-  8:304,target 55
+  0:313,target 12
   54:290 reduce
-  51:290,target 28
+  51:290,target 23
+  9:277,target 49
   58:0 reduce
-  7:289,target 22
+  7:290,target 38
   4:290 shift
-  8:273,target 40
   24:290 reduce
-  40:290,target 17
-  39:290,target 16
+  40:290,target 12
+  39:290,target 11
+  63:290 reduce
   13:0 reduce
-  2:0,target 40
-  9:306,target 58
+  2:0,target 41
+  1:315,target 16
   34:0 reduce
-  28:290,target 5
-  60:0,target 44
+  9:257 shift
+  28:289,target 27
+  0:311,target 11
+  9:258 shift
+  60:0,target 57
+  59:0,target 31
   33:290 reduce
+  6:314,target 25
+  9:259 shift
+  9:260 shift
   55:0 reduce
-  52:0,target 29
-  44:0,target 21
-  36:0,target 13
-  5:310,target 20
-  28:0,target 5
-  8:271,target 38
-  17:290,target 49
-  21:0,target 32
-  13:0,target 39
+  52:0,target 24
+  9:261 shift
+  9:275,target 47
+  44:0,target 16
+  9:262 shift
+  36:0,target 8
+  9:263 shift
+  9:264 shift
+  9:265 shift
+  17:290,target 42
+  21:0,target 52
+  63:290,target 46
+  9:266 shift
+  13:0,target 55
+  9:267 shift
   42:290 reduce
-  10:0 accept
-  23:288,target 21
+  9:268 shift
+  9:269 shift
+  9:270 shift
+  9:271 shift
   31:0 reduce
-  52:290,target 29
+  9:272 shift
+  52:290,target 24
+  9:273 shift
+  0:298,target 6
+  8:289,target 27
+  9:274 shift
   12:290 reduce
   52:0 reduce
+  9:275 shift
+  9:273,target 45
+  9:276 shift
   51:290 reduce
-  5:297,target 16
-  41:290,target 18
-  8:268,target 35
-  1:290 reduce
-  21:288 reduce
+  9:277 shift
+  9:278 shift
+  41:290,target 13
+  9:279 shift
+  9:280 shift
+  9:281 shift
+  9:282 shift
 }
 
 array set mask::rules {
-  9,l 305
-  11,l 305
-  32,l 306
-  53,l 311
-  6,l 305
-  28,l 305
-  50,l 310
-  49,l 310
-  3,l 304
-  25,l 305
-  46,l 309
-  0,l 312
-  22,l 305
-  43,l 309
-  18,l 305
-  40,l 309
-  39,l 309
-  15,l 305
-  36,l 307
-  12,l 305
-  33,l 306
-  54,l 311
-  7,l 305
-  29,l 305
-  30,l 305
-  51,l 310
-  4,l 304
-  26,l 305
-  47,l 309
-  1,l 304
-  23,l 305
-  44,l 309
-  19,l 305
-  20,l 305
-  41,l 309
-  16,l 305
-  37,l 309
-  13,l 305
-  34,l 307
-  8,l 305
-  10,l 305
-  31,l 305
-  52,l 310
-  5,l 305
-  27,l 305
-  48,l 310
-  2,l 304
-  24,l 305
-  45,l 309
-  21,l 305
-  42,l 309
-  17,l 305
-  38,l 309
-  14,l 305
-  35,l 308
+  9,l 309
+  11,l 309
+  32,l 310
+  53,l 314
+  6,l 309
+  28,l 309
+  50,l 314
+  49,l 314
+  3,l 308
+  25,l 309
+  46,l 313
+  0,l 317
+  22,l 309
+  43,l 313
+  18,l 309
+  40,l 313
+  39,l 313
+  15,l 309
+  36,l 311
+  57,l 316
+  12,l 309
+  33,l 310
+  54,l 315
+  7,l 309
+  29,l 309
+  30,l 309
+  51,l 314
+  4,l 308
+  26,l 309
+  47,l 313
+  1,l 308
+  23,l 309
+  44,l 313
+  19,l 309
+  20,l 309
+  41,l 313
+  16,l 309
+  37,l 313
+  58,l 316
+  13,l 309
+  34,l 311
+  55,l 315
+  8,l 309
+  10,l 309
+  31,l 309
+  52,l 314
+  5,l 309
+  27,l 309
+  48,l 313
+  2,l 308
+  24,l 309
+  45,l 313
+  21,l 309
+  42,l 313
+  17,l 309
+  38,l 313
+  14,l 309
+  35,l 312
+  56,l 315
 }
 
 array set mask::rules {
@@ -476,6 +506,7 @@ array set mask::rules {
   26,dc 1
   3,dc 1
   41,dc 1
+  55,dc 1
   18,dc 1
   33,dc 1
   9,dc 1
@@ -508,6 +539,7 @@ array set mask::rules {
   30,dc 1
   6,dc 1
   44,dc 3
+  58,dc 1
   22,dc 1
   36,dc 3
   51,dc 1
@@ -515,6 +547,7 @@ array set mask::rules {
   28,dc 1
   5,dc 1
   43,dc 2
+  57,dc 1
   21,dc 1
   35,dc 0
   50,dc 1
@@ -523,199 +556,214 @@ array set mask::rules {
   27,dc 1
   4,dc 1
   42,dc 2
+  56,dc 1
   19,dc 1
   20,dc 1
   34,dc 1
-  48,dc 1
+  48,dc 2
 }
 
 array set mask::rules {
-  41,line 145
-  7,line 107
-  37,line 141
-  4,line 103
-  34,line 137
-  1,line 100
-  31,line 131
-  27,line 127
-  24,line 124
-  21,line 121
-  17,line 117
-  14,line 114
-  11,line 111
-  53,line 162
-  50,line 157
-  49,line 156
-  46,line 151
-  43,line 147
-  9,line 109
-  40,line 144
-  39,line 143
-  6,line 106
-  36,line 138
-  3,line 102
-  33,line 134
-  29,line 129
-  30,line 130
-  26,line 126
-  23,line 123
-  19,line 119
-  20,line 120
-  16,line 116
-  13,line 113
-  10,line 110
-  52,line 159
-  48,line 155
-  45,line 149
-  42,line 146
-  8,line 108
-  38,line 142
-  5,line 105
-  35,line 137
-  2,line 101
-  32,line 133
-  28,line 128
-  25,line 125
-  22,line 122
-  18,line 118
-  15,line 115
-  12,line 112
-  54,line 163
+  41,line 149
+  7,line 111
+  37,line 145
+  4,line 107
+  34,line 141
+  1,line 104
+  31,line 135
+  27,line 131
+  24,line 128
+  21,line 125
+  17,line 121
+  14,line 118
+  11,line 115
+  56,line 169
+  53,line 164
+  50,line 161
+  49,line 160
+  46,line 155
+  43,line 151
+  9,line 113
+  40,line 148
+  39,line 147
+  6,line 110
+  36,line 142
+  3,line 106
+  33,line 138
+  29,line 133
+  30,line 134
+  26,line 130
+  23,line 127
+  19,line 123
+  20,line 124
+  16,line 120
+  13,line 117
+  10,line 114
+  58,line 173
+  55,line 168
+  52,line 163
+  48,line 157
+  45,line 153
+  42,line 150
+  8,line 112
+  38,line 146
+  5,line 109
+  35,line 141
+  2,line 105
+  32,line 137
+  28,line 132
+  25,line 129
+  22,line 126
+  18,line 122
+  15,line 119
+  12,line 116
+  57,line 172
+  54,line 167
   35,e 1
-  51,line 158
-  47,line 152
-  44,line 148
+  51,line 162
+  47,line 156
+  44,line 152
 }
 
 array set mask::lr1_table {
-  35 {{12 {0 290} 1}}
+  66,trans {{290 68}}
+  35 {{7 {0 290} 1}}
   14,trans {}
-  36 {{13 {0 290} 1}}
+  36 {{8 {0 290} 1}}
   33,trans {}
-  37 {{14 {0 290} 1}}
+  37 {{9 {0 290} 1}}
   52,trans {}
-  38 {{15 {0 290} 1}}
-  40 {{17 {0 290} 1}}
-  39 {{16 {0 290} 1}}
+  38 {{10 {0 290} 1}}
+  40 {{12 {0 290} 1}}
+  39 {{11 {0 290} 1}}
   18,trans {}
-  41 {{18 {0 290} 1}}
-  1,trans {}
+  41 {{13 {0 290} 1}}
+  1,trans {{295 13} {296 14} {304 15} {315 16}}
   37,trans {}
-  42 {{19 {0 290} 1}}
+  42 {{14 {0 290} 1}}
   56,trans {}
-  43 {{20 {0 290} 1}}
-  44 {{21 {0 290} 1}}
-  23,trans {{288 58} {289 59} {306 62}}
-  45 {{22 {0 290} 1}}
-  5,trans {{288 14} {296 15} {297 16} {298 17} {300 18} {303 19} {310 20}}
+  43 {{15 {0 290} 1}}
+  44 {{16 {0 290} 1}}
+  23,trans {}
+  45 {{17 {0 290} 1}}
+  5,trans {{290 18}}
   42,trans {}
-  46 {{23 {0 290} 1}}
-  61,trans {{290 63}}
-  47 {{24 {0 290} 1}}
-  48 {{25 {0 290} 1}}
+  46 {{18 {0 290} 1}}
+  61,trans {}
+  47 {{19 {0 290} 1}}
+  48 {{20 {0 290} 1}}
   27,trans {}
-  9,trans {{288 58} {289 59} {306 60}}
-  50 {{27 {0 290} 1}}
-  49 {{26 {0 290} 1}}
+  9,trans {{257 29} {258 30} {259 31} {260 32} {261 33} {262 34} {263 35} {264 36} {265 37} {266 38} {267 39} {268 40} {269 41} {270 42} {271 43} {272 44} {273 45} {274 46} {275 47} {276 48} {277 49} {278 50} {279 51} {280 52} {281 53} {282 54} {283 55} {284 56} {285 57} {286 58} {287 59} {308 60} {309 61} {316 62}}
+  50 {{22 {0 290} 1}}
+  49 {{21 {0 290} 1}}
   46,trans {}
-  51 {{28 {0 290} 1}}
-  52 {{29 {0 290} 1}}
+  51 {{23 {0 290} 1}}
+  65,trans {}
+  52 {{24 {0 290} 1}}
   13,trans {}
-  53 {{30 {0 290} 1}}
+  53 {{25 {0 290} 1}}
   32,trans {}
-  54 {{31 {0 290} 1}}
+  54 {{26 {0 290} 1}}
   51,trans {}
-  55 {{53 {0 290} 1}}
-  56 {{54 {0 290} 1}}
+  55 {{27 {0 290} 1}}
+  56 {{28 {0 290} 1}}
   17,trans {}
-  57 {{45 {0 290} 2}}
-  0,trans {{291 1} {292 2} {293 3} {294 4} {295 5} {299 6} {300 7} {301 8} {302 9} {307 10} {309 11}}
+  57 {{29 {0 290} 1}}
+  0,trans {{291 1} {292 2} {293 3} {294 4} {297 5} {298 6} {302 7} {303 8} {305 9} {306 10} {311 11} {313 12}}
   36,trans {}
-  58 {{32 {0 290} 1}}
+  58 {{30 {0 290} 1}}
   55,trans {}
-  60 {{46 {0 290} 2}}
-  59 {{33 {0 290} 1}}
-  61 {{36 0 2}}
-  62 {{44 {0 290} 3}}
+  60 {{57 {0 290} 1}}
+  59 {{31 {0 290} 1}}
+  61 {{58 {0 290} 1}}
   22,trans {}
-  4,trans {{290 13}}
-  63 {{36 0 3}}
+  62 {{45 {0 290} 2}}
+  4,trans {{290 17}}
   41,trans {}
+  63 {{32 {0 290} 1}}
   60,trans {}
   59,trans {}
+  64 {{33 {0 290} 1}}
+  65 {{46 {0 290} 2}}
   26,trans {}
-  8,trans {{257 24} {258 25} {259 26} {260 27} {261 28} {262 29} {263 30} {264 31} {265 32} {266 33} {267 34} {268 35} {269 36} {270 37} {271 38} {272 39} {273 40} {274 41} {275 42} {276 43} {277 44} {278 45} {279 46} {280 47} {281 48} {282 49} {283 50} {284 51} {285 52} {286 53} {287 54} {304 55} {305 56} {311 57}}
+  66 {{36 0 2}}
+  8,trans {{288 26} {289 27} {310 28}}
   45,trans {}
-  12,trans {}
+  67 {{44 {0 290} 3}}
+  68 {{36 0 3}}
+  64,trans {}
+  12,trans {{312 66}}
   31,trans {}
   50,trans {}
   49,trans {}
+  68,trans {}
   16,trans {}
   35,trans {}
   54,trans {}
   21,trans {}
-  3,trans {{290 12}}
+  3,trans {}
   40,trans {}
   39,trans {}
   58,trans {}
-  10 {{0 0 1}}
-  11 {{34 0 1} {36 0 1} {35 290 0}}
+  10 {{46 {0 290} 1} {32 {0 290} 0} {33 {0 290} 0}}
+  11 {{0 0 1}}
   25,trans {}
-  12 {{42 {0 290} 2}}
-  7,trans {{288 21} {289 22} {306 23}}
+  12 {{34 0 1} {36 0 1} {35 290 0}}
+  7,trans {}
   44,trans {}
-  13 {{39 {0 290} 2}}
+  13 {{55 {0 290} 1}}
   63,trans {}
-  14 {{47 {0 290} 2}}
-  11,trans {{308 61}}
-  15 {{50 {0 290} 1}}
+  14 {{56 {0 290} 1}}
+  11,trans {}
+  15 {{54 {0 290} 1}}
   30,trans {}
   29,trans {}
-  16 {{51 {0 290} 1}}
+  16 {{48 {0 290} 2}}
   48,trans {}
-  0 {{0 0 0} {34 0 0} {36 0 0} {37 {0 290} 0} {38 {0 290} 0} {39 {0 290} 0} {40 {0 290} 0} {41 {0 290} 0} {42 {0 290} 0} {43 {0 290} 0} {44 {0 290} 0} {45 {0 290} 0} {46 {0 290} 0} {47 {0 290} 0}}
-  17 {{49 {0 290} 1}}
-  1 {{41 {0 290} 1}}
-  18 {{52 {0 290} 1}}
+  0 {{0 0 0} {34 0 0} {36 0 0} {37 {0 290} 0} {38 {0 290} 0} {39 {0 290} 0} {40 {0 290} 0} {41 {0 290} 0} {42 {0 290} 0} {43 {0 290} 0} {44 {0 290} 0} {45 {0 290} 0} {46 {0 290} 0} {47 {0 290} 0} {48 {0 290} 0}}
+  17 {{42 {0 290} 2}}
+  67,trans {}
+  1 {{48 {0 290} 1} {54 {0 290} 0} {55 {0 290} 0} {56 {0 290} 0}}
+  18 {{39 {0 290} 2}}
   15,trans {}
-  2 {{40 {0 290} 1}}
-  19 {{48 {0 290} 1}}
-  20 {{43 {0 290} 2}}
+  2 {{41 {0 290} 1}}
+  19 {{47 {0 290} 2}}
+  20 {{51 {0 290} 1}}
   34,trans {}
-  3 {{42 {0 290} 1}}
-  21 {{32 {288 289} 1}}
+  3 {{40 {0 290} 1}}
+  21 {{52 {0 290} 1}}
   53,trans {}
-  4 {{39 {0 290} 1}}
-  22 {{33 {288 289} 1}}
-  5 {{43 {0 290} 1} {47 {0 290} 1} {48 {0 290} 0} {49 {0 290} 0} {50 {0 290} 0} {51 {0 290} 0} {52 {0 290} 0}}
-  23 {{44 {0 290} 2} {32 {0 290} 0} {33 {0 290} 0}}
+  4 {{42 {0 290} 1}}
+  22 {{50 {0 290} 1}}
+  5 {{39 {0 290} 1}}
+  23 {{53 {0 290} 1}}
   20,trans {}
   19,trans {}
-  6 {{38 {0 290} 1}}
+  6 {{43 {0 290} 1} {47 {0 290} 1} {49 {0 290} 0} {50 {0 290} 0} {51 {0 290} 0} {52 {0 290} 0} {53 {0 290} 0}}
   2,trans {}
-  24 {{1 {0 290} 1}}
+  24 {{49 {0 290} 1}}
   38,trans {}
-  7 {{44 {0 290} 1} {32 {288 289} 0} {33 {288 289} 0}}
-  25 {{2 {0 290} 1}}
+  7 {{38 {0 290} 1}}
+  25 {{43 {0 290} 2}}
   57,trans {}
-  8 {{45 {0 290} 1} {53 {0 290} 0} {54 {0 290} 0} {1 {0 290} 0} {2 {0 290} 0} {3 {0 290} 0} {4 {0 290} 0} {5 {0 290} 0} {6 {0 290} 0} {7 {0 290} 0} {8 {0 290} 0} {9 {0 290} 0} {10 {0 290} 0} {11 {0 290} 0} {12 {0 290} 0} {13 {0 290} 0} {14 {0 290} 0} {15 {0 290} 0} {16 {0 290} 0} {17 {0 290} 0} {18 {0 290} 0} {19 {0 290} 0} {20 {0 290} 0} {21 {0 290} 0} {22 {0 290} 0} {23 {0 290} 0} {24 {0 290} 0} {25 {0 290} 0} {26 {0 290} 0} {27 {0 290} 0} {28 {0 290} 0} {29 {0 290} 0} {30 {0 290} 0} {31 {0 290} 0}}
-  26 {{3 {0 290} 1}}
-  9 {{46 {0 290} 1} {32 {0 290} 0} {33 {0 290} 0}}
-  27 {{4 {0 290} 1}}
+  8 {{44 {0 290} 1} {32 {288 289} 0} {33 {288 289} 0}}
+  26 {{32 {288 289} 1}}
+  9 {{45 {0 290} 1} {57 {0 290} 0} {58 {0 290} 0} {1 {0 290} 0} {2 {0 290} 0} {3 {0 290} 0} {4 {0 290} 0} {5 {0 290} 0} {6 {0 290} 0} {7 {0 290} 0} {8 {0 290} 0} {9 {0 290} 0} {10 {0 290} 0} {11 {0 290} 0} {12 {0 290} 0} {13 {0 290} 0} {14 {0 290} 0} {15 {0 290} 0} {16 {0 290} 0} {17 {0 290} 0} {18 {0 290} 0} {19 {0 290} 0} {20 {0 290} 0} {21 {0 290} 0} {22 {0 290} 0} {23 {0 290} 0} {24 {0 290} 0} {25 {0 290} 0} {26 {0 290} 0} {27 {0 290} 0} {28 {0 290} 0} {29 {0 290} 0} {30 {0 290} 0} {31 {0 290} 0}}
+  27 {{33 {288 289} 1}}
   24,trans {}
-  6,trans {}
-  28 {{5 {0 290} 1}}
+  6,trans {{288 19} {299 20} {300 21} {301 22} {303 23} {307 24} {314 25}}
+  28 {{44 {0 290} 2} {32 {0 290} 0} {33 {0 290} 0}}
   43,trans {}
-  29 {{6 {0 290} 1}}
-  30 {{7 {0 290} 1}}
+  29 {{1 {0 290} 1}}
+  30 {{2 {0 290} 1}}
   62,trans {}
-  31 {{8 {0 290} 1}}
-  10,trans {}
-  32 {{9 {0 290} 1}}
-  28,trans {}
-  33 {{10 {0 290} 1}}
+  31 {{3 {0 290} 1}}
+  10,trans {{288 63} {289 64} {310 65}}
+  32 {{4 {0 290} 1}}
+  28,trans {{288 63} {289 64} {310 67}}
+  33 {{5 {0 290} 1}}
   47,trans {}
-  34 {{11 {0 290} 1}}
+  34 {{6 {0 290} 1}}
 }
 
 array set mask::token_id_table {
@@ -725,42 +773,50 @@ array set mask::token_id_table {
   292,line 48
   302,line 58
   288 INT_
+  317,t 1
   265,title WCSD
   289 REAL_
   290 STRING_
-  300 RANGE_
+  300 NONNAN_
   284,title WCSW
-  291 CLEAR_
-  301 SYSTEM_
-  292 CLOSE_
-  302 TRANSPARENCY_
+  291 BLEND_
+  301 NONZERO_
+  313,title {}
+  292 CLEAR_
+  302 OPEN_
   288,line 40
-  293 COLOR_
-  303 ZERO_
-  304 coordsys
-  294 LOAD_
-  305 wcssys
-  295 MARK_
-  306 numeric
-  296 NAN_
-  307 command
+  293 CLOSE_
+  303 RANGE_
+  294 COLOR_
+  304 SOURCE_
+  305 SYSTEM_
+  295 DARKEN_
+  306 TRANSPARENCY_
+  296 LIGHTEN_
+  307 ZERO_
   262,t 0
-  297 NONNAN_
-  308 @PSEUDO1
+  297 LOAD_
+  308 coordsys
   285,line 36
-  298 NONZERO_
-  310 mark
-  309 mask
-  299 OPEN_
-  311 system
+  298 MARK_
+  310 numeric
+  309 wcssys
+  299 NAN_
+  311 command
   283,t 0
-  312 start'
+  312 @PSEUDO1
+  313 mask
+  314,t 1
+  314 mark
   282,line 33
+  315 blend
+  316 system
   264,title WCSC
+  317 start'
   283,title WCSV
   312,title {}
   278,line 29
-  error,line 98
+  error,line 102
   258,t 0
   275,line 26
   279,t 0
@@ -773,52 +829,55 @@ array set mask::token_id_table {
   268,line 19
   276,t 0
   265,line 16
-  307,t 1
+  307,t 0
   297,t 0
   262,line 13
-  262,title WCSA
-  0 {$}
   0,t 0
+  0 {$}
+  262,title WCSA
   281,title WCST
   310,title {}
   309,title {}
   error,t 0
-  299,title OPEN
+  299,title NAN
   258,line 8
   273,t 0
-  304,t 1
   294,t 0
+  304,t 0
+  317,line 174
   261,title WCS
   279,title WCSR
   280,title WCSS
   308,title {}
   269,t 0
   270,t 0
-  298,title NONZERO
+  298,title MARK
+  314,line 159
   291,t 0
   301,t 0
-  311,line 161
-  307,line 136
+  311,line 140
+  307,line 63
   266,t 0
   260,title DETECTOR
   259,title AMPLIFIER
   297,line 53
   278,title WCSQ
-  307,title {}
-  297,title NONNAN
+  307,title ZERO
+  297,title LOAD
   287,t 0
-  304,line 99
   294,line 50
+  304,line 60
+  error,title {}
   291,line 47
   301,line 57
-  error,title {}
   263,t 0
   258,title PHYSICAL
   287,line 38
   277,title WCSP
   284,t 0
-  306,title {}
-  296,title NAN
+  306,title TRANSPARENCY
+  296,title LIGHTEN
+  315,t 1
   284,line 35
   281,line 32
   260,t 0
@@ -828,8 +887,8 @@ array set mask::token_id_table {
   277,line 28
   276,title WCSO
   312,t 1
-  305,title {}
-  295,title MARK
+  305,title SYSTEM
+  295,title DARKEN
   274,line 25
   271,line 22
   277,t 0
@@ -837,57 +896,62 @@ array set mask::token_id_table {
   267,line 18
   298,t 0
   275,title WCSN
-  304,title {}
-  294,title LOAD
+  294,title COLOR
+  304,title SOURCE
   264,line 15
   261,line 12
   274,t 0
-  305,t 1
+  305,t 0
   295,t 0
   257,line 7
   274,title WCSM
-  293,title COLOR
-  303,title ZERO
-  271,t 0
+  293,title CLOSE
+  303,title RANGE
   error error
+  271,t 0
   292,t 0
   302,t 0
+  316,line 171
   273,title WCSL
-  292,title CLOSE
-  302,title TRANSPARENCY
+  313,line 144
+  292,title CLEAR
+  302,title OPEN
   267,t 0
-  310,line 154
-  309,line 140
+  310,line 136
+  309,line 108
   299,line 55
   288,t 0
-  306,line 132
+  306,line 62
   296,line 52
   272,title WCSK
-  291,title CLEAR
+  291,title BLEND
   293,line 49
-  301,title SYSTEM
+  301,title NONZERO
   303,line 59
   264,t 0
   285,t 0
   289,line 41
   290,line 43
   300,line 56
+  316,t 1
   286,line 37
   271,title WCSJ
   261,t 0
   283,line 34
   289,title float
   290,title string
-  300,title RANGE
+  300,title NONNAN
   282,t 0
   279,line 30
   280,line 31
+  313,t 1
   276,line 27
   257,t 0
   269,title WCSH
   270,title WCSI
   273,line 24
   288,title integer
+  317,title {}
   278,t 0
   310,t 1
   309,t 1
@@ -899,7 +963,8 @@ array set mask::token_id_table {
   275,t 0
   263,line 14
   287,title WCSZ
-  306,t 1
+  316,title {}
+  306,t 0
   296,t 0
   260,line 10
   259,line 9
@@ -909,6 +974,7 @@ array set mask::token_id_table {
   286,title WCSY
   293,t 0
   303,t 0
+  315,title {}
   258 PHYSICAL_
   260 DETECTOR_
   259 AMPLIFIER_
@@ -916,6 +982,7 @@ array set mask::token_id_table {
   262 WCSA_
   263 WCSB_
   264 WCSC_
+  315,line 166
   265 WCSD_
   266 WCSE_
   267 WCSF_
@@ -923,7 +990,7 @@ array set mask::token_id_table {
   268 WCSG_
   269 WCSH_
   270 WCSI_
-  312,line 164
+  312,line 141
   271 WCSJ_
   272 WCSK_
   289,t 0
@@ -933,8 +1000,9 @@ array set mask::token_id_table {
   273 WCSL_
   274 WCSM_
   285,title WCSX
+  314,title {}
   275 WCSN_
-  308,line 137
+  308,line 103
   276 WCSO_
   298,line 54
   277 WCSP_
@@ -942,7 +1010,7 @@ array set mask::token_id_table {
   279 WCSR_
   280 WCSS_
   281 WCST_
-  305,line 104
+  305,line 61
   282 WCSU_
   295,line 51
   265,t 0
@@ -1088,13 +1156,17 @@ proc mask::yyparse {} {
                     44 { ProcessCmdSet2 mask low $2 high $3 MaskRange }
                     46 { ProcessCmdSet mask transparency $2 MaskTransparency }
                     47 { ProcessCmdSet mask mark $2 MaskMark }
-                    48 { set _ zero }
-                    49 { set _ nonzero }
-                    50 { set _ nan }
-                    51 { set _ nonnan }
-                    52 { set _ range }
-                    53 { ProcessCmdSet mask system $1 MaskSystem }
-                    54 { ProcessCmdSet mask system $1 MaskSystem }
+                    48 { ProcessCmdSet mask blend $2 MaskBlend }
+                    49 { set _ zero }
+                    50 { set _ nonzero }
+                    51 { set _ nan }
+                    52 { set _ nonnan }
+                    53 { set _ range }
+                    54 { set _ source }
+                    55 { set _ darken }
+                    56 { set _ lighten }
+                    57 { ProcessCmdSet mask system $1 MaskSystem }
+                    58 { ProcessCmdSet mask system $1 MaskSystem }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

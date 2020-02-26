@@ -35,9 +35,13 @@ class Frame : public FrameBase {
   Coord::CoordSystem maskSystem;
 
  private:
-  unsigned char* blend(unsigned char*, unsigned char*, int, int);
-  unsigned char* blendmask(unsigned char*, unsigned char*, int, int);
-  unsigned char* stackmask(unsigned char*, unsigned char*, int, int);
+  unsigned char* alphaComposite(unsigned char*, unsigned char*, int, int);
+  unsigned char* blendSourceMask(unsigned char*, unsigned char*,
+				 unsigned char*, int, int);
+  unsigned char* blendDarkenMask(unsigned char*, unsigned char*,
+				 unsigned char*, int, int);
+  unsigned char* blendLightenMask(unsigned char*, unsigned char*,
+				  unsigned char*, int, int);
   int isIIS();
   void pushMatrices();
   void pushMagnifierMatrices();

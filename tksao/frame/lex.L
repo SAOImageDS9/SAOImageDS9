@@ -112,6 +112,7 @@ cube		{return CUBE_;}
 cursor		{return CURSOR_;}
 cut		{return CUT_;}
 cmyk		{return CMYK_;}
+darken          {return DARKEN_;}
 dash		{return DASH_;}
 dashlist	{return DASHLIST_;}
 data		{return DATA_;}
@@ -191,6 +192,7 @@ keyword		{return KEYWORD_;}
 label		{return LABEL_;}
 length		{return LENGTH_;}
 level		{return LEVEL_;}
+lighten         {return LIGHTEN_;}
 little	        {return LITTLEENDIAN_;}
 littleendian	{return LITTLEENDIAN_;}
 line		{return LINE_;}
@@ -234,7 +236,6 @@ object		{return OBJECT_;}
 off		{return OFF_;}
 on		{return ON_;}
 only		{return ONLY_;}
-opaque          {return OPAQUE_;}
 option		{return OPTION_;}
 orient		{return ORIENT_;}
 pan		{return PAN_;}
@@ -314,7 +315,6 @@ threads		{return THREADS_;}
 3d		{return THREED_;}
 threshold	{return THRESHOLD_;}
 thick		{return THICK_;}
-transparent	{return TRANSPARENT_;}
 transparency	{return TRANSPARENCY_;}
 to		{return TO_;}
 toggle		{return TOGGLE_;}

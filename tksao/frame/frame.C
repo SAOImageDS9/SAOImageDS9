@@ -34,7 +34,7 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   maskColorName = dupstr("red");
   maskAlpha = 1;
-  maskBlend = FitsMask::TRANSPARENT;
+  maskBlend = FitsMask::LIGHTEN;
   maskMark = FitsMask::NONZERO;
   maskLow = 0;
   maskHigh = 0;
@@ -64,8 +64,8 @@ void Frame::alignWCS() {
   updateMaskMatrices();
 }
 
-unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
-			    int width, int height)
+unsigned char* Frame::alphaComposite(unsigned char* src, unsigned char* msk,
+				     int width, int height)
 {
   unsigned char* sptr = src; // 3 component
   unsigned char* mptr = msk; // 4 component
@@ -93,26 +93,29 @@ unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
   return src;
 }
 
-unsigned char* Frame::blendmask(unsigned char* dest, unsigned char* msk,
-				int width, int height)
+unsigned char* Frame::blendSourceMask(unsigned char* dest,
+				      unsigned char* src, unsigned char* bg,
+				      int width, int height)
 {
   unsigned char* dptr = dest; // 4 component
-  unsigned char* mptr = msk; // 4 component
+  unsigned char* sptr = src; // 4 component
+  unsigned char* bptr = bg; // 4 component
 
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
-      if (*(mptr+3)) {
-	*dptr = max(*mptr++,*dptr);
-	dptr++;
-	*dptr = max(*mptr++,*dptr);
-	dptr++;
-	*dptr = max(*mptr++,*dptr);
-	dptr++;
-	*dptr++ = *mptr++;
+      if (*(sptr+3)) {
+	*dptr++ = *sptr++;
+	*dptr++ = *sptr++;
+	*dptr++ = *sptr++;
+	*dptr++ = *sptr++;
+	bptr+=4;
       }
       else {
-	dptr+=4;
-	mptr+=4;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	sptr+=4;
       }
     }
   }
@@ -120,23 +123,59 @@ unsigned char* Frame::blendmask(unsigned char* dest, unsigned char* msk,
   return dest;
 }
 
-unsigned char* Frame::stackmask(unsigned char* dest, unsigned char* msk,
-				int width, int height)
+unsigned char* Frame::blendDarkenMask(unsigned char* dest,
+				      unsigned char* src, unsigned char* bg,
+				      int width, int height)
 {
   unsigned char* dptr = dest; // 4 component
-  unsigned char* mptr = msk; // 4 component
+  unsigned char* sptr = src; // 4 component
+  unsigned char* bptr = bg; // 4 component
 
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
-      if (*(mptr+3)) {
-	*dptr++ = *mptr++;
-	*dptr++ = *mptr++;
-	*dptr++ = *mptr++;
-	*dptr++ = *mptr++;
+      if (*(sptr+3)) {
+	*dptr++ = min(*sptr++,*bptr++);
+	*dptr++ = min(*sptr++,*bptr++);
+	*dptr++ = min(*sptr++,*bptr++);
+	*dptr++ = *sptr++;
+	bptr++;
       }
       else {
-	dptr+=4;
-	mptr+=4;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	sptr+=4;
+      }
+    }
+  }
+
+  return dest;
+}
+
+unsigned char* Frame::blendLightenMask(unsigned char* dest,
+				       unsigned char* src, unsigned char* bg,
+				       int width, int height)
+{
+  unsigned char* dptr = dest; // 4 component
+  unsigned char* sptr = src; // 4 component
+  unsigned char* bptr = bg; // 4 component
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      if (*(sptr+3)) {
+	*dptr++ = max(*sptr++,*bptr++);
+	*dptr++ = max(*sptr++,*bptr++);
+	*dptr++ = max(*sptr++,*bptr++);
+	*dptr++ = *sptr++;
+	bptr++;
+      }
+      else {
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	sptr+=4;
       }
     }
   }
@@ -259,33 +298,45 @@ unsigned char* Frame::fillImage(int width, int height,
       break;
     case 1:
       {
-	FitsMask* mptr = mask.tail();
+	FitsMask* mptr = mask.head();
 	unsigned char* msk = fillMask(mptr, width, height, sys);
-	blend(img,msk,width,height);
+	alphaComposite(img,msk,width,height);
 	delete [] msk;
       }
       break;
     default:
       {
-	unsigned char* msk = new unsigned char[width*height*4];
-	memset(msk,0,width*height*4);
-
 	FitsMask* mptr = mask.head();
+	unsigned char* src =NULL;
+	unsigned char* bg = fillMask(mptr, width, height, sys);
+	unsigned char* msk =NULL;
+
+	mptr = mptr->next();
 	while (mptr) {
-	  unsigned char* mm = fillMask(mptr, width, height, sys);
+	  msk = new unsigned char[width*height*4];
+	  memset(msk,0,width*height*4);
+	  src = fillMask(mptr, width, height, sys);
+	
 	  switch (maskBlend) {
-	  case FitsMask::OPAQUE:
-	    stackmask(msk,mm,width,height);
+	  case FitsMask::SOURCE:
+	    blendSourceMask(msk,src,bg,width,height);
 	    break;
-	  case FitsMask::TRANSPARENT:
-	    blendmask(msk,mm,width,height);
+	  case FitsMask::DARKEN:
+	    blendDarkenMask(msk,src,bg,width,height);
+	    break;
+	  case FitsMask::LIGHTEN:
+	    blendLightenMask(msk,src,bg,width,height);
 	    break;
 	  }
-	  delete [] mm;
+
+	  delete [] bg;
+	  delete [] src;
+
+	  bg = msk;
 	  mptr = mptr->next();
 	}
 
-	blend(img,msk,width,height);
+	alphaComposite(img,msk,width,height);
 	delete [] msk;
       }
       break;
@@ -599,11 +650,14 @@ void Frame::getMaskTransparencyCmd()
 void Frame::getMaskBlendCmd()
 {
   switch (maskBlend) {
-  case FitsMask::OPAQUE:
-    Tcl_AppendResult(interp, "opaque", NULL);
+  case FitsMask::SOURCE:
+    Tcl_AppendResult(interp, "source", NULL);
     break;
-  case FitsMask::TRANSPARENT:
-    Tcl_AppendResult(interp, "transparent", NULL);
+  case FitsMask::DARKEN:
+    Tcl_AppendResult(interp, "darken", NULL);
+    break;
+  case FitsMask::LIGHTEN:
+    Tcl_AppendResult(interp, "lighten", NULL);
     break;
   }
 }

@@ -9,9 +9,12 @@
 
 %start command
 
+%token BLEND_
 %token CLEAR_
 %token CLOSE_
 %token COLOR_
+%token DARKEN_
+%token LIGHTEN_
 %token LOAD_
 %token MARK_
 %token NAN_
@@ -19,6 +22,7 @@
 %token NONZERO_
 %token OPEN_
 %token RANGE_
+%token SOURCE_
 %token SYSTEM_
 %token TRANSPARENCY_
 %token ZERO_
@@ -45,6 +49,7 @@ mask : {global parse; set parse(result) mask}
  | TRANSPARENCY_ numeric {ProcessCmdSet mask transparency $2 MaskTransparency}
 # backward compatibility
  | MARK_ INT_ {ProcessCmdSet mask mark $2 MaskMark}
+ | BLEND_ blend {ProcessCmdSet mask blend $2 MaskBlend}
  ;
 
 mark : ZERO_ {set _ zero}
@@ -52,6 +57,11 @@ mark : ZERO_ {set _ zero}
  | NAN_ {set _ nan}
  | NONNAN_ {set _ nonnan}
  | RANGE_ {set _ range}
+ ;
+
+blend : SOURCE_ {set _ source}
+ | DARKEN_ {set _ darken}
+ | LIGHTEN_ {set _ lighten}
  ;
 
 system : coordsys {ProcessCmdSet mask system $1 MaskSystem}

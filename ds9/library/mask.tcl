@@ -19,7 +19,7 @@ proc MaskDef {} {
     set mask(mark) nonzero
     set mask(low) 0
     set mask(high) 0
-    set mask(blend) transparent
+    set mask(blend) lighten
 
     array set pmask [array get mask]
 }
@@ -150,10 +150,12 @@ proc MaskDialog {} {
     CoordMenu $mb.align mask system 1 {} {} MaskSystem
 
     menu $mb.blend
-    $mb.blend add radiobutton -label [msgcat::mc {Transparent}] \
-	-variable mask(blend) -value transparent -command MaskBlend
-    $mb.blend add radiobutton -label [msgcat::mc {Opaque}] \
-	-variable mask(blend) -value opaque -command MaskBlend
+    $mb.blend add radiobutton -label [msgcat::mc {Source}] \
+	-variable mask(blend) -value source -command MaskBlend
+    $mb.blend add radiobutton -label [msgcat::mc {darken}] \
+	-variable mask(blend) -value darken -command MaskBlend
+    $mb.blend add radiobutton -label [msgcat::mc {lighten}] \
+	-variable mask(blend) -value lighten -command MaskBlend
 
     # Param
     set f [ttk::frame $w.param]

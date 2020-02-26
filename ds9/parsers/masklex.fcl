@@ -7,10 +7,13 @@
 
 %%
 
+blend       {return $BLEND_}
 close	    {return $CLOSE_}
 clear	    {return $CLEAR_}
 color	    {return $COLOR_}
 colour	    {return $COLOR_}
+darken      {return $DARKEN_}
+lighten     {return $LIGHTEN_}
 load	    {return $LOAD_}
 mark	    {return $MARK_}
 nan	    {return $NAN_}
@@ -18,6 +21,7 @@ nonnan	    {return $NONNAN_}
 nonzero	    {return $NONZERO_}
 open	    {return $OPEN_}
 range	    {return $RANGE_}
+source      {return $SOURCE_}
 system	    {return $SYSTEM_}
 transparency {return $TRANSPARENCY_}
 zero	    {return $ZERO_}

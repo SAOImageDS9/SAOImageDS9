@@ -196,6 +196,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token CURSOR_
 %token CUT_
 %token CMYK_
+%token DARKEN_
 %token DASH_
 %token DASHLIST_
 %token DATA_
@@ -275,6 +276,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token LABEL_
 %token LENGTH_
 %token LEVEL_
+%token LIGHTEN_
 %token LITTLE_
 %token LITTLEENDIAN_
 %token LINE_
@@ -318,7 +320,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token OFF_
 %token ON_
 %token ONLY_
-%token OPAQUE_
 %token OPTION_
 %token ORIENT_
 %token PAN_
@@ -397,7 +398,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token THREED_
 %token THRESHOLD_
 %token THICK_
-%token TRANSPARENT_
 %token TRANSPARENCY_
 %token TO_
 %token TOGGLE_
@@ -653,9 +653,10 @@ maskType : /* empty */ {$$ = FitsMask::NONZERO;}
 	| RANGE_ {$$ = FitsMask::RANGE;}
 	;
 
-maskBlend : /* empty */ {$$ = FitsMask::OPAQUE;}
-        | OPAQUE_ {$$ = FitsMask::OPAQUE;}
-        | TRANSPARENT_ {$$ = FitsMask::TRANSPARENT;}
+maskBlend : /* empty */ {$$ = FitsMask::SOURCE;}
+        | SOURCE_ {$$ = FitsMask::SOURCE;}
+        | DARKEN_ {$$ = FitsMask::DARKEN;}
+        | LIGHTEN_ {$$ = FitsMask::LIGHTEN;}
         ;
 
 scaleType: LINEAR_ {$$ = FrScale::LINEARSCALE;}

@@ -1462,6 +1462,7 @@ mask [color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mark zero|nonzero|nan|nonnan|range]<br>
 &nbsp;&nbsp;&nbsp; [range &lt;low&gt; &lt;high&gt;]<br>
 &nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [blend source|darken|lighten]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
@@ -1472,14 +1473,16 @@ string value = ds9.get(string cmd)<br>
 mask color<br>
 mask mark<br>
 mask range<br>
-mask system<br>
 mask transparency<br>
+mask blend<br>
+mask system<br>
 <br>
 ds9.set(string cmd)<br>
 mask color red<br>
 mask mark zero<br>
 mask range 10 100<br>
 mask transparency 50<br>
+mask blend source<br>
 mask system wcs<br>
 mask clear<br>
 mask load foo.fits<br>

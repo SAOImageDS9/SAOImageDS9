@@ -159,9 +159,7 @@
 ::msgcat::mcset de {Composite} 
 ::msgcat::mcset de {Compression} {Kompression} 
 ::msgcat::mcset de {Configure} {Konfigurieren}
-::msgcat::mcset de {Connect Directly} {Direkt verbinden}
 ::msgcat::mcset de {Connect SAMP} 
-::msgcat::mcset de {Connect Using Web Proxy} [encoding convertfrom iso8859-1 {Für Verbindung Webproxy verwenden}] 
 ::msgcat::mcset de {Connect} 
 ::msgcat::mcset de {Console} 
 ::msgcat::mcset de {Contacting Server} 
@@ -205,6 +203,7 @@
 ::msgcat::mcset de {DS9 has detected an older backup file, do you wish to continue?} 
 ::msgcat::mcset de {DS9 has detected an older preferences file, do you wish to update?} [encoding convertfrom iso8859-1 {DS9 hat ein ältere Einstellungsdatei erkannt, möchten Sie aktualisieren?}]
 ::msgcat::mcset de {DS9 will complete the initialization process} [encoding convertfrom iso8859-1 {DS9 wird den Initialisierungsprozeß vervollständigen}]
+::msgcat::mcset de {Darken} 
 ::msgcat::mcset de {Dash} {Gestrichelt}
 ::msgcat::mcset de {Data Format} {Datenformat}
 ::msgcat::mcset de {Dataset Name} 
@@ -370,6 +369,7 @@
 ::msgcat::mcset de {Initialize XPA} {XPA initialisieren}
 ::msgcat::mcset de {Inner} {Innerer}
 ::msgcat::mcset de {Instrument FOV} {Instrumentensichtfeld}
+::msgcat::mcset de {Instrument} 
 ::msgcat::mcset de {Interior Axes} {Innere Achsen}
 ::msgcat::mcset de {Interior Numerics} {Innere Ziffern}
 ::msgcat::mcset de {Internal Parse Error} 
@@ -403,6 +403,7 @@
 ::msgcat::mcset de {Letter} 
 ::msgcat::mcset de {Levels} {Niveaus}
 ::msgcat::mcset de {Level} {Niveau}
+::msgcat::mcset de {Lighten} 
 ::msgcat::mcset de {Limits} {Grenzen}
 ::msgcat::mcset de {Line Plot Tool} 
 ::msgcat::mcset de {Linear} 
@@ -569,7 +570,6 @@
 ::msgcat::mcset de {Numerics} 
 ::msgcat::mcset de {OK} 
 ::msgcat::mcset de {Object} {Objekt}
-::msgcat::mcset de {Opaque} 
 ::msgcat::mcset de {Open File} [encoding convertfrom iso8859-1 {Datei öffnen}]
 ::msgcat::mcset de {Open ME Cube} 
 ::msgcat::mcset de {Open ME Frames} 
@@ -619,6 +619,7 @@
 ::msgcat::mcset de {Play} {Abspielen}
 ::msgcat::mcset de {Please Select a Region} 
 ::msgcat::mcset de {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset de {Please specify instruments} 
 ::msgcat::mcset de {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset de {Please specify width, height, and either name or (ra,dec)} [encoding convertfrom iso8859-1 {Bitte Weite, Höhe und entweder Namen oder (RA,Dec) angeben}]
 ::msgcat::mcset de {Plot 2D} 
@@ -721,6 +722,7 @@
 ::msgcat::mcset de {Scatter Plot Tool} 
 ::msgcat::mcset de {Scatter} 
 ::msgcat::mcset de {Scope} {Anwendungsbereich}
+::msgcat::mcset de {Screen} 
 ::msgcat::mcset de {Search for Catalogs} {Nach Katalogen suchen}
 ::msgcat::mcset de {Seconds} {Sekunden}
 ::msgcat::mcset de {Segment} 
@@ -807,7 +809,6 @@
 ::msgcat::mcset de {Top} 
 ::msgcat::mcset de {To} {Nach}
 ::msgcat::mcset de {Transparency} 
-::msgcat::mcset de {Transparent} 
 ::msgcat::mcset de {Triangle} 
 ::msgcat::mcset de {Type} {Typ}
 ::msgcat::mcset de {URL} 

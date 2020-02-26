@@ -38,10 +38,13 @@ class Frame : public FrameBase {
   unsigned char* alphaComposite(unsigned char*, unsigned char*, int, int);
   unsigned char* blendSourceMask(unsigned char*, unsigned char*,
 				 unsigned char*, int, int);
+  unsigned char* blendScreenMask(unsigned char*, unsigned char*,
+				 unsigned char*, int, int);
   unsigned char* blendDarkenMask(unsigned char*, unsigned char*,
 				 unsigned char*, int, int);
   unsigned char* blendLightenMask(unsigned char*, unsigned char*,
 				  unsigned char*, int, int);
+  unsigned char blendScreenColor(unsigned char, unsigned char);
   int isIIS();
   void pushMatrices();
   void pushMagnifierMatrices();

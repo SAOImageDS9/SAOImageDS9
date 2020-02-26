@@ -159,9 +159,7 @@
 ::msgcat::mcset cs {Composite} 
 ::msgcat::mcset cs {Compression} [encoding convertfrom iso8859-2 {Komprese}]
 ::msgcat::mcset cs {Configure} [encoding convertfrom iso8859-2 {Konfigurace}]
-::msgcat::mcset cs {Connect Directly} 
 ::msgcat::mcset cs {Connect SAMP} 
-::msgcat::mcset cs {Connect Using Web Proxy} 
 ::msgcat::mcset cs {Connect} [encoding convertfrom iso8859-2 {Pøipoji}]
 ::msgcat::mcset cs {Console} 
 ::msgcat::mcset cs {Contacting Server} 
@@ -205,6 +203,7 @@
 ::msgcat::mcset cs {DS9 has detected an older backup file, do you wish to continue?} [encoding convertfrom iso8859-2 {DS9 detekovala starou verzi zálo¾ního souboru, chcete pokraèovat?}]
 ::msgcat::mcset cs {DS9 has detected an older preferences file, do you wish to update?} [encoding convertfrom iso8859-2 {Starý konfiguraèní soubor, chcete ho zaktualizovat?}]
 ::msgcat::mcset cs {DS9 will complete the initialization process} [encoding convertfrom iso8859-2 {DS9 dokonèí inticializaèní proces}]
+::msgcat::mcset cs {Darken} 
 ::msgcat::mcset cs {Dash} 
 ::msgcat::mcset cs {Data Format} [encoding convertfrom iso8859-2 {Formát dat}]
 ::msgcat::mcset cs {Dataset Name} 
@@ -370,6 +369,7 @@
 ::msgcat::mcset cs {Initialize XPA} 
 ::msgcat::mcset cs {Inner} 
 ::msgcat::mcset cs {Instrument FOV} [encoding convertfrom iso8859-2 {Zorné pole dalekohledù}]
+::msgcat::mcset cs {Instrument} 
 ::msgcat::mcset cs {Interior Axes} 
 ::msgcat::mcset cs {Interior Numerics} 
 ::msgcat::mcset cs {Internal Parse Error} 
@@ -403,6 +403,7 @@
 ::msgcat::mcset cs {Letter} 
 ::msgcat::mcset cs {Levels} [encoding convertfrom iso8859-2 {Úrovnì}]
 ::msgcat::mcset cs {Level} [encoding convertfrom iso8859-2 {Úroveò}]
+::msgcat::mcset cs {Lighten} 
 ::msgcat::mcset cs {Limits} 
 ::msgcat::mcset cs {Line Plot Tool} 
 ::msgcat::mcset cs {Linear} [encoding convertfrom iso8859-2 {Linární}]
@@ -569,7 +570,6 @@
 ::msgcat::mcset cs {Numerics} 
 ::msgcat::mcset cs {OK} [encoding convertfrom iso8859-2 {Budi¾}] 
 ::msgcat::mcset cs {Object} [encoding convertfrom iso8859-2 {Objekt}]
-::msgcat::mcset cs {Opaque} 
 ::msgcat::mcset cs {Open File} [encoding convertfrom iso8859-2 {Otevøít soubor}]
 ::msgcat::mcset cs {Open ME Cube} 
 ::msgcat::mcset cs {Open ME Frames} 
@@ -619,6 +619,7 @@
 ::msgcat::mcset cs {Play} 
 ::msgcat::mcset cs {Please Select a Region} 
 ::msgcat::mcset cs {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset cs {Please specify instruments} 
 ::msgcat::mcset cs {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset cs {Please specify width, height, and either name or (ra,dec)} 
 ::msgcat::mcset cs {Plot 2D} 
@@ -721,6 +722,7 @@
 ::msgcat::mcset cs {Scatter Plot Tool} 
 ::msgcat::mcset cs {Scatter} 
 ::msgcat::mcset cs {Scope} 
+::msgcat::mcset cs {Screen} 
 ::msgcat::mcset cs {Search for Catalogs} 
 ::msgcat::mcset cs {Seconds} 
 ::msgcat::mcset cs {Segment} 
@@ -807,7 +809,6 @@
 ::msgcat::mcset cs {Top} 
 ::msgcat::mcset cs {To} 
 ::msgcat::mcset cs {Transparency} 
-::msgcat::mcset cs {Transparent} 
 ::msgcat::mcset cs {Triangle} 
 ::msgcat::mcset cs {Type} 
 ::msgcat::mcset cs {URL} 

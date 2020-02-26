@@ -19,7 +19,7 @@ proc MaskDef {} {
     set mask(mark) nonzero
     set mask(low) 0
     set mask(high) 0
-    set mask(blend) lighten
+    set mask(blend) screen
 
     array set pmask [array get mask]
 }
@@ -152,9 +152,11 @@ proc MaskDialog {} {
     menu $mb.blend
     $mb.blend add radiobutton -label [msgcat::mc {Source}] \
 	-variable mask(blend) -value source -command MaskBlend
-    $mb.blend add radiobutton -label [msgcat::mc {darken}] \
+    $mb.blend add radiobutton -label [msgcat::mc {Screen}] \
+	-variable mask(blend) -value screen -command MaskBlend
+    $mb.blend add radiobutton -label [msgcat::mc {Darken}] \
 	-variable mask(blend) -value darken -command MaskBlend
-    $mb.blend add radiobutton -label [msgcat::mc {lighten}] \
+    $mb.blend add radiobutton -label [msgcat::mc {Lighten}] \
 	-variable mask(blend) -value lighten -command MaskBlend
 
     # Param

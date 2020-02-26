@@ -297,97 +297,98 @@
      SCAN_ = 513,
      SCIENTIFIC_ = 514,
      SCOPE_ = 515,
-     SEGMENT_ = 516,
-     SELECT_ = 517,
-     SET_ = 518,
-     SEXAGESIMAL_ = 519,
-     SHAPE_ = 520,
-     SHARED_ = 521,
-     SHIFT_ = 522,
-     SHMID_ = 523,
-     SHOW_ = 524,
-     SIGMA_ = 525,
-     SINH_ = 526,
-     SIZE_ = 527,
-     SLICE_ = 528,
-     SMMAP_ = 529,
-     SMOOTH_ = 530,
-     SOCKET_ = 531,
-     SOCKETGZ_ = 532,
-     SOURCE_ = 533,
-     SQRT_ = 534,
-     SQUARED_ = 535,
-     SSHARED_ = 536,
-     STATS_ = 537,
-     STATUS_ = 538,
-     SUM_ = 539,
-     SYSTEM_ = 540,
-     TABLE_ = 541,
-     TAG_ = 542,
-     TEMPLATE_ = 543,
-     TEXT_ = 544,
-     THREADS_ = 545,
-     THREED_ = 546,
-     THRESHOLD_ = 547,
-     THICK_ = 548,
-     TRANSPARENCY_ = 549,
-     TO_ = 550,
-     TOGGLE_ = 551,
-     TOPHAT_ = 552,
-     TRUE_ = 553,
-     TYPE_ = 554,
-     UNDO_ = 555,
-     UNHIGHLITE_ = 556,
-     UNLOAD_ = 557,
-     UNSELECT_ = 558,
-     UPDATE_ = 559,
-     USER_ = 560,
-     VALUE_ = 561,
-     VAR_ = 562,
-     VIEW_ = 563,
-     VECTOR_ = 564,
-     VERSION_ = 565,
-     VERTEX_ = 566,
-     VERTICAL_ = 567,
-     WARP_ = 568,
-     WCS_ = 569,
-     WCSA_ = 570,
-     WCSB_ = 571,
-     WCSC_ = 572,
-     WCSD_ = 573,
-     WCSE_ = 574,
-     WCSF_ = 575,
-     WCSG_ = 576,
-     WCSH_ = 577,
-     WCSI_ = 578,
-     WCSJ_ = 579,
-     WCSK_ = 580,
-     WCSL_ = 581,
-     WCSM_ = 582,
-     WCSN_ = 583,
-     WCSO_ = 584,
-     WCSP_ = 585,
-     WCSQ_ = 586,
-     WCSR_ = 587,
-     WCSS_ = 588,
-     WCST_ = 589,
-     WCSU_ = 590,
-     WCSV_ = 591,
-     WCSW_ = 592,
-     WCSX_ = 593,
-     WCSY_ = 594,
-     WCSZ_ = 595,
-     WCS0_ = 596,
-     WFPC2_ = 597,
-     WIDTH_ = 598,
-     WIN32_ = 599,
-     XML_ = 600,
-     XY_ = 601,
-     YES_ = 602,
-     ZERO_ = 603,
-     ZMAX_ = 604,
-     ZSCALE_ = 605,
-     ZOOM_ = 606
+     SCREEN_ = 516,
+     SEGMENT_ = 517,
+     SELECT_ = 518,
+     SET_ = 519,
+     SEXAGESIMAL_ = 520,
+     SHAPE_ = 521,
+     SHARED_ = 522,
+     SHIFT_ = 523,
+     SHMID_ = 524,
+     SHOW_ = 525,
+     SIGMA_ = 526,
+     SINH_ = 527,
+     SIZE_ = 528,
+     SLICE_ = 529,
+     SMMAP_ = 530,
+     SMOOTH_ = 531,
+     SOCKET_ = 532,
+     SOCKETGZ_ = 533,
+     SOURCE_ = 534,
+     SQRT_ = 535,
+     SQUARED_ = 536,
+     SSHARED_ = 537,
+     STATS_ = 538,
+     STATUS_ = 539,
+     SUM_ = 540,
+     SYSTEM_ = 541,
+     TABLE_ = 542,
+     TAG_ = 543,
+     TEMPLATE_ = 544,
+     TEXT_ = 545,
+     THREADS_ = 546,
+     THREED_ = 547,
+     THRESHOLD_ = 548,
+     THICK_ = 549,
+     TRANSPARENCY_ = 550,
+     TO_ = 551,
+     TOGGLE_ = 552,
+     TOPHAT_ = 553,
+     TRUE_ = 554,
+     TYPE_ = 555,
+     UNDO_ = 556,
+     UNHIGHLITE_ = 557,
+     UNLOAD_ = 558,
+     UNSELECT_ = 559,
+     UPDATE_ = 560,
+     USER_ = 561,
+     VALUE_ = 562,
+     VAR_ = 563,
+     VIEW_ = 564,
+     VECTOR_ = 565,
+     VERSION_ = 566,
+     VERTEX_ = 567,
+     VERTICAL_ = 568,
+     WARP_ = 569,
+     WCS_ = 570,
+     WCSA_ = 571,
+     WCSB_ = 572,
+     WCSC_ = 573,
+     WCSD_ = 574,
+     WCSE_ = 575,
+     WCSF_ = 576,
+     WCSG_ = 577,
+     WCSH_ = 578,
+     WCSI_ = 579,
+     WCSJ_ = 580,
+     WCSK_ = 581,
+     WCSL_ = 582,
+     WCSM_ = 583,
+     WCSN_ = 584,
+     WCSO_ = 585,
+     WCSP_ = 586,
+     WCSQ_ = 587,
+     WCSR_ = 588,
+     WCSS_ = 589,
+     WCST_ = 590,
+     WCSU_ = 591,
+     WCSV_ = 592,
+     WCSW_ = 593,
+     WCSX_ = 594,
+     WCSY_ = 595,
+     WCSZ_ = 596,
+     WCS0_ = 597,
+     WFPC2_ = 598,
+     WIDTH_ = 599,
+     WIN32_ = 600,
+     XML_ = 601,
+     XY_ = 602,
+     YES_ = 603,
+     ZERO_ = 604,
+     ZMAX_ = 605,
+     ZSCALE_ = 606,
+     ZOOM_ = 607
    };
 #endif
 /* Tokens.  */
@@ -649,97 +650,98 @@
 #define SCAN_ 513
 #define SCIENTIFIC_ 514
 #define SCOPE_ 515
-#define SEGMENT_ 516
-#define SELECT_ 517
-#define SET_ 518
-#define SEXAGESIMAL_ 519
-#define SHAPE_ 520
-#define SHARED_ 521
-#define SHIFT_ 522
-#define SHMID_ 523
-#define SHOW_ 524
-#define SIGMA_ 525
-#define SINH_ 526
-#define SIZE_ 527
-#define SLICE_ 528
-#define SMMAP_ 529
-#define SMOOTH_ 530
-#define SOCKET_ 531
-#define SOCKETGZ_ 532
-#define SOURCE_ 533
-#define SQRT_ 534
-#define SQUARED_ 535
-#define SSHARED_ 536
-#define STATS_ 537
-#define STATUS_ 538
-#define SUM_ 539
-#define SYSTEM_ 540
-#define TABLE_ 541
-#define TAG_ 542
-#define TEMPLATE_ 543
-#define TEXT_ 544
-#define THREADS_ 545
-#define THREED_ 546
-#define THRESHOLD_ 547
-#define THICK_ 548
-#define TRANSPARENCY_ 549
-#define TO_ 550
-#define TOGGLE_ 551
-#define TOPHAT_ 552
-#define TRUE_ 553
-#define TYPE_ 554
-#define UNDO_ 555
-#define UNHIGHLITE_ 556
-#define UNLOAD_ 557
-#define UNSELECT_ 558
-#define UPDATE_ 559
-#define USER_ 560
-#define VALUE_ 561
-#define VAR_ 562
-#define VIEW_ 563
-#define VECTOR_ 564
-#define VERSION_ 565
-#define VERTEX_ 566
-#define VERTICAL_ 567
-#define WARP_ 568
-#define WCS_ 569
-#define WCSA_ 570
-#define WCSB_ 571
-#define WCSC_ 572
-#define WCSD_ 573
-#define WCSE_ 574
-#define WCSF_ 575
-#define WCSG_ 576
-#define WCSH_ 577
-#define WCSI_ 578
-#define WCSJ_ 579
-#define WCSK_ 580
-#define WCSL_ 581
-#define WCSM_ 582
-#define WCSN_ 583
-#define WCSO_ 584
-#define WCSP_ 585
-#define WCSQ_ 586
-#define WCSR_ 587
-#define WCSS_ 588
-#define WCST_ 589
-#define WCSU_ 590
-#define WCSV_ 591
-#define WCSW_ 592
-#define WCSX_ 593
-#define WCSY_ 594
-#define WCSZ_ 595
-#define WCS0_ 596
-#define WFPC2_ 597
-#define WIDTH_ 598
-#define WIN32_ 599
-#define XML_ 600
-#define XY_ 601
-#define YES_ 602
-#define ZERO_ 603
-#define ZMAX_ 604
-#define ZSCALE_ 605
-#define ZOOM_ 606
+#define SCREEN_ 516
+#define SEGMENT_ 517
+#define SELECT_ 518
+#define SET_ 519
+#define SEXAGESIMAL_ 520
+#define SHAPE_ 521
+#define SHARED_ 522
+#define SHIFT_ 523
+#define SHMID_ 524
+#define SHOW_ 525
+#define SIGMA_ 526
+#define SINH_ 527
+#define SIZE_ 528
+#define SLICE_ 529
+#define SMMAP_ 530
+#define SMOOTH_ 531
+#define SOCKET_ 532
+#define SOCKETGZ_ 533
+#define SOURCE_ 534
+#define SQRT_ 535
+#define SQUARED_ 536
+#define SSHARED_ 537
+#define STATS_ 538
+#define STATUS_ 539
+#define SUM_ 540
+#define SYSTEM_ 541
+#define TABLE_ 542
+#define TAG_ 543
+#define TEMPLATE_ 544
+#define TEXT_ 545
+#define THREADS_ 546
+#define THREED_ 547
+#define THRESHOLD_ 548
+#define THICK_ 549
+#define TRANSPARENCY_ 550
+#define TO_ 551
+#define TOGGLE_ 552
+#define TOPHAT_ 553
+#define TRUE_ 554
+#define TYPE_ 555
+#define UNDO_ 556
+#define UNHIGHLITE_ 557
+#define UNLOAD_ 558
+#define UNSELECT_ 559
+#define UPDATE_ 560
+#define USER_ 561
+#define VALUE_ 562
+#define VAR_ 563
+#define VIEW_ 564
+#define VECTOR_ 565
+#define VERSION_ 566
+#define VERTEX_ 567
+#define VERTICAL_ 568
+#define WARP_ 569
+#define WCS_ 570
+#define WCSA_ 571
+#define WCSB_ 572
+#define WCSC_ 573
+#define WCSD_ 574
+#define WCSE_ 575
+#define WCSF_ 576
+#define WCSG_ 577
+#define WCSH_ 578
+#define WCSI_ 579
+#define WCSJ_ 580
+#define WCSK_ 581
+#define WCSL_ 582
+#define WCSM_ 583
+#define WCSN_ 584
+#define WCSO_ 585
+#define WCSP_ 586
+#define WCSQ_ 587
+#define WCSR_ 588
+#define WCSS_ 589
+#define WCST_ 590
+#define WCSU_ 591
+#define WCSV_ 592
+#define WCSW_ 593
+#define WCSX_ 594
+#define WCSY_ 595
+#define WCSZ_ 596
+#define WCS0_ 597
+#define WFPC2_ 598
+#define WIDTH_ 599
+#define WIN32_ 600
+#define XML_ 601
+#define XY_ 602
+#define YES_ 603
+#define ZERO_ 604
+#define ZMAX_ 605
+#define ZSCALE_ 606
+#define ZOOM_ 607
 
 
 
@@ -758,7 +760,7 @@ typedef union YYSTYPE
   int dash[2];
 }
 /* Line 1529 of yacc.c.  */
-#line 762 "frame/parser.H"
+#line 764 "frame/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

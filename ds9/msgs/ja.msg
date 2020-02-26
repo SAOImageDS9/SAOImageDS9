@@ -159,9 +159,7 @@
 ::msgcat::mcset ja {Composite} 
 ::msgcat::mcset ja {Compression} [encoding convertfrom euc-jp "\xb0\xb5\xbd\xcc"]
 ::msgcat::mcset ja {Configure} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea"]
-::msgcat::mcset ja {Connect Directly} [encoding convertfrom euc-jp "\xc4\xbe\xc0\xdc\xc0\xdc\xc2\xb3"]
 ::msgcat::mcset ja {Connect SAMP} 
-::msgcat::mcset ja {Connect Using Web Proxy} [encoding convertfrom euc-jp "\x57\x65\x62\x20\xa5\xd7\xa5\xed\xa5\xad\xa5\xb7\xa4\xf2\xb2\xf0\xa4\xb7\xa4\xc6\xc0\xdc\xc2\xb3"]
 ::msgcat::mcset ja {Connect} [encoding convertfrom euc-jp "\xc0\xdc\xc2\xb3"]
 ::msgcat::mcset ja {Console} 
 ::msgcat::mcset ja {Contacting Server} 
@@ -205,6 +203,7 @@
 ::msgcat::mcset ja {DS9 has detected an older backup file, do you wish to continue?} 
 ::msgcat::mcset ja {DS9 has detected an older preferences file, do you wish to update?} [encoding convertfrom euc-jp "\xb8\xc5\xa4\xa4\xa5\xd0\xa1\xbc\xa5\xb8\xa5\xe7\xa5\xf3\xa4\xce\xc0\xdf\xc4\xea\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xac\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3\xb9\xb9\xbf\xb7\xa4\xb7\xa4\xde\xa4\xb9\xa4\xab\x3f"]
 ::msgcat::mcset ja {DS9 will complete the initialization process} [encoding convertfrom euc-jp "\xbd\xe9\xb4\xfc\xb2\xbd\xa4\xf2\xb4\xb0\xce\xbb\xa4\xb7\xa4\xde\xa4\xb9\xa1\xa3"]
+::msgcat::mcset ja {Darken} 
 ::msgcat::mcset ja {Dash} [encoding convertfrom euc-jp "\xc7\xcb\xc0\xfe"]
 ::msgcat::mcset ja {Data Format} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xb7\xc1\xbc\xb0"]
 ::msgcat::mcset ja {Dataset Name} 
@@ -370,6 +369,7 @@
 ::msgcat::mcset ja {Initialize XPA} [encoding convertfrom euc-jp "\x58\x50\x41\x20\xa4\xf2\xbd\xe9\xb4\xfc\xb2\xbd"]
 ::msgcat::mcset ja {Inner} [encoding convertfrom euc-jp "\xc6\xe2\xb7\xc2"]
 ::msgcat::mcset ja {Instrument FOV} [encoding convertfrom euc-jp "\xb8\xa1\xbd\xd0\xb4\xef\xa4\xce\xbb\xeb\xcc\xee"]
+::msgcat::mcset ja {Instrument} 
 ::msgcat::mcset ja {Interior Axes} [encoding convertfrom euc-jp "\xbc\xb4\xa4\xf2\xc6\xe2\xc2\xa6\xa4\xcb"]
 ::msgcat::mcset ja {Interior Numerics} [encoding convertfrom euc-jp "\xbf\xf4\xc3\xcd\xa4\xf2\xc6\xe2\xc2\xa6\xa4\xcb"]
 ::msgcat::mcset ja {Internal Parse Error} [encoding convertfrom euc-jp "\xc6\xe2\xc9\xf4\xb2\xf2\xbc\xe1\xa5\xa8\xa5\xe9\xa1\xbc"]
@@ -403,6 +403,7 @@
 ::msgcat::mcset ja {Letter} [encoding convertfrom euc-jp "\xa5\xec\xa5\xbf\xa1\xbc"]
 ::msgcat::mcset ja {Levels} [encoding convertfrom euc-jp "\xa5\xec\xa5\xd9\xa5\xeb"]
 ::msgcat::mcset ja {Level} [encoding convertfrom euc-jp "\xa5\xec\xa5\xd9\xa5\xeb"]
+::msgcat::mcset ja {Lighten} 
 ::msgcat::mcset ja {Limits} [encoding convertfrom euc-jp "\xbe\xe5\xb2\xbc\xb8\xc2"]
 ::msgcat::mcset ja {Line Plot Tool} 
 ::msgcat::mcset ja {Linear} [encoding convertfrom euc-jp "\xc0\xfe\xb7\xc1"]
@@ -569,7 +570,6 @@
 ::msgcat::mcset ja {Numerics} [encoding convertfrom euc-jp "\xbf\xf4\xc3\xcd"]
 ::msgcat::mcset ja {OK} [encoding convertfrom euc-jp "\xce\xbb\xb2\xf2"]
 ::msgcat::mcset ja {Object} [encoding convertfrom euc-jp "\xc5\xb7\xc2\xce\xcc\xbe"]
-::msgcat::mcset ja {Opaque} 
 ::msgcat::mcset ja {Open File} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xf2\xb3\xab\xa4\xaf"]
 ::msgcat::mcset ja {Open ME Cube} 
 ::msgcat::mcset ja {Open ME Frames} 
@@ -619,6 +619,7 @@
 ::msgcat::mcset ja {Play} [encoding convertfrom euc-jp "\xba\xc6\xc0\xb8"]
 ::msgcat::mcset ja {Please Select a Region} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xbb\xd8\xc4\xea\xa4\xb7\xa4\xc6\xa4\xaf\xa4\xc0\xa4\xb5\xa4\xa4\xa1\xa3"]
 ::msgcat::mcset ja {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset ja {Please specify instruments} 
 ::msgcat::mcset ja {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset ja {Please specify width, height, and either name or (ra,dec)} [encoding convertfrom euc-jp "\xc9\xfd\xa1\xa2\xb9\xe2\xa4\xb5\xa1\xa2\xcc\xbe\xc1\xb0\xa4\xe2\xa4\xb7\xa4\xaf\xa4\xcf\x20\x28\x72\x61\x2c\x64\x65\x63\x29\x20\xa4\xf2\xbb\xd8\xc4\xea\xa4\xb7\xa4\xc6\xa4\xaf\xa4\xc0\xa4\xb5\xa4\xa4\xa1\xa3"]
 ::msgcat::mcset ja {Plot 2D} 
@@ -721,6 +722,7 @@
 ::msgcat::mcset ja {Scatter Plot Tool} 
 ::msgcat::mcset ja {Scatter} 
 ::msgcat::mcset ja {Scope} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xb3\xa1\xbc\xa5\xd7"]
+::msgcat::mcset ja {Screen} 
 ::msgcat::mcset ja {Search for Catalogs} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xf2\xb8\xa1\xba\xf7"]
 ::msgcat::mcset ja {Seconds} [encoding convertfrom euc-jp "\xc9\xc3"]
 ::msgcat::mcset ja {Segment} 
@@ -807,7 +809,6 @@
 ::msgcat::mcset ja {Top} 
 ::msgcat::mcset ja {To} 
 ::msgcat::mcset ja {Transparency} [encoding convertfrom euc-jp "\xc6\xa9\xcc\xc0"]
-::msgcat::mcset ja {Transparent} 
 ::msgcat::mcset ja {Triangle} 
 ::msgcat::mcset ja {Type} [encoding convertfrom euc-jp "\xbc\xef\xce\xe0"]
 ::msgcat::mcset ja {URL} 

@@ -365,6 +365,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SCAN_
 %token SCIENTIFIC_
 %token SCOPE_
+%token SCREEN_
 %token SEGMENT_
 %token SELECT_
 %token SET_
@@ -655,6 +656,7 @@ maskType : /* empty */ {$$ = FitsMask::NONZERO;}
 
 maskBlend : /* empty */ {$$ = FitsMask::SOURCE;}
         | SOURCE_ {$$ = FitsMask::SOURCE;}
+        | SCREEN_ {$$ = FitsMask::SCREEN;}
         | DARKEN_ {$$ = FitsMask::DARKEN;}
         | LIGHTEN_ {$$ = FitsMask::LIGHTEN;}
         ;

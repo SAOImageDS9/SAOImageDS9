@@ -34,7 +34,7 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   maskColorName = dupstr("red");
   maskAlpha = 1;
-  maskBlend = FitsMask::LIGHTEN;
+  maskBlend = FitsMask::SCREEN;
   maskMark = FitsMask::NONZERO;
   maskLow = 0;
   maskHigh = 0;
@@ -121,6 +121,45 @@ unsigned char* Frame::blendSourceMask(unsigned char* dest,
   }
 
   return dest;
+}
+
+unsigned char* Frame::blendScreenMask(unsigned char* dest,
+				      unsigned char* src, unsigned char* bg,
+				      int width, int height)
+{
+  unsigned char* dptr = dest; // 4 component
+  unsigned char* sptr = src; // 4 component
+  unsigned char* bptr = bg; // 4 component
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      if (*(sptr+3)) {
+	*dptr++ = blendScreenColor(*sptr++,*bptr++);
+	*dptr++ = blendScreenColor(*sptr++,*bptr++);
+	*dptr++ = blendScreenColor(*sptr++,*bptr++);
+
+	*dptr++ = *sptr++;
+	bptr++;
+      }
+      else {
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	*dptr++ = *bptr++;
+	sptr+=4;
+      }
+    }
+  }
+
+  return dest;
+}
+
+unsigned char Frame::blendScreenColor(unsigned char src, unsigned char bg)
+{
+  float sm = src/255.;
+  float bm = bg/255.;
+  float rr = (bm+sm - bm*sm) * 255.;
+  return (unsigned char)rr;
 }
 
 unsigned char* Frame::blendDarkenMask(unsigned char* dest,
@@ -320,6 +359,9 @@ unsigned char* Frame::fillImage(int width, int height,
 	  switch (maskBlend) {
 	  case FitsMask::SOURCE:
 	    blendSourceMask(msk,src,bg,width,height);
+	    break;
+	  case FitsMask::SCREEN:
+	    blendScreenMask(msk,src,bg,width,height);
 	    break;
 	  case FitsMask::DARKEN:
 	    blendDarkenMask(msk,src,bg,width,height);
@@ -652,6 +694,9 @@ void Frame::getMaskBlendCmd()
   switch (maskBlend) {
   case FitsMask::SOURCE:
     Tcl_AppendResult(interp, "source", NULL);
+    break;
+  case FitsMask::SCREEN:
+    Tcl_AppendResult(interp, "screen", NULL);
     break;
   case FitsMask::DARKEN:
     Tcl_AppendResult(interp, "darken", NULL);

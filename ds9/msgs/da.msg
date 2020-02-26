@@ -159,9 +159,7 @@
 ::msgcat::mcset da {Composite} {Sammensat}
 ::msgcat::mcset da {Compression} {Komprimer}
 ::msgcat::mcset da {Configure} {Konfigurer}
-::msgcat::mcset da {Connect Directly} {Tilslut direkte}
 ::msgcat::mcset da {Connect SAMP} 
-::msgcat::mcset da {Connect Using Web Proxy} {Tilslut via web proxy} 
 ::msgcat::mcset da {Connect} 
 ::msgcat::mcset da {Console} {konsol}
 ::msgcat::mcset da {Contacting Server} 
@@ -205,6 +203,7 @@
 ::msgcat::mcset da {DS9 has detected an older backup file, do you wish to continue?} 
 ::msgcat::mcset da {DS9 has detected an older preferences file, do you wish to update?} [encoding convertfrom iso8859-1 {DS9 har fundet en ældre fil med foretrukne indstillinger, ønsker du at opdatere?}]
 ::msgcat::mcset da {DS9 will complete the initialization process} [encoding convertfrom iso8859-1 {DS9 vil fuldføre initialiserings processen}]
+::msgcat::mcset da {Darken} 
 ::msgcat::mcset da {Dash} {streg}
 ::msgcat::mcset da {Data Format} {Dataformat}
 ::msgcat::mcset da {Dataset Name} 
@@ -370,6 +369,7 @@
 ::msgcat::mcset da {Initialize XPA} {Initialiser XPA}
 ::msgcat::mcset da {Inner} {Indre}
 ::msgcat::mcset da {Instrument FOV} {Instrument FOV} 
+::msgcat::mcset da {Instrument} 
 ::msgcat::mcset da {Interior Axes} {Indre akser}
 ::msgcat::mcset da {Interior Numerics} {Indre tal}
 ::msgcat::mcset da {Internal Parse Error} 
@@ -403,6 +403,7 @@
 ::msgcat::mcset da {Letter} 
 ::msgcat::mcset da {Levels} {Niveauer}
 ::msgcat::mcset da {Level} {Niveau}
+::msgcat::mcset da {Lighten} 
 ::msgcat::mcset da {Limits} [encoding convertfrom iso8859-1 {Grænser}]
 ::msgcat::mcset da {Line Plot Tool} 
 ::msgcat::mcset da {Linear} [encoding convertfrom iso8859-1 {Lineær}]
@@ -569,7 +570,6 @@
 ::msgcat::mcset da {Numerics} {Talværdier}
 ::msgcat::mcset da {OK} 
 ::msgcat::mcset da {Object} {Objekt}
-::msgcat::mcset da {Opaque} 
 ::msgcat::mcset da {Open File} {Åben fil}
 ::msgcat::mcset da {Open ME Cube} 
 ::msgcat::mcset da {Open ME Frames} 
@@ -619,6 +619,7 @@
 ::msgcat::mcset da {Play} {Afspil}
 ::msgcat::mcset da {Please Select a Region} 
 ::msgcat::mcset da {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset da {Please specify instruments} 
 ::msgcat::mcset da {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset da {Please specify width, height, and either name or (ra,dec)} [encoding convertfrom iso8859-1 {angiv venligst bredde, højde, og enten navn eller (ra,dec)}]
 ::msgcat::mcset da {Plot 2D} 
@@ -721,6 +722,7 @@
 ::msgcat::mcset da {Scatter Plot Tool} 
 ::msgcat::mcset da {Scatter} 
 ::msgcat::mcset da {Scope} [encoding convertfrom iso8859-1 {Gældende}]
+::msgcat::mcset da {Screen} 
 ::msgcat::mcset da {Search for Catalogs} [encoding convertfrom iso8859-1 {søg efter kataloger}]
 ::msgcat::mcset da {Seconds} {Sekunder}
 ::msgcat::mcset da {Segment} 
@@ -807,7 +809,6 @@
 ::msgcat::mcset da {Top} 
 ::msgcat::mcset da {To} {Til}
 ::msgcat::mcset da {Transparency} 
-::msgcat::mcset da {Transparent} 
 ::msgcat::mcset da {Triangle} 
 ::msgcat::mcset da {Type} 
 ::msgcat::mcset da {URL} 

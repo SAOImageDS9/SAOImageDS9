@@ -282,6 +282,7 @@ scale		{return SCALE_;}
 scan		{return SCAN_;}
 scientific	{return SCIENTIFIC_;}
 scope		{return SCOPE_;}
+screen          {return SCREEN_;}
 segment		{return SEGMENT_;}
 select		{return SELECT_;}
 set		{return SET_;}

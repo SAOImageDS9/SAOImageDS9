@@ -159,9 +159,7 @@
 ::msgcat::mcset zh {Composite} 
 ::msgcat::mcset zh {Compression} 
 ::msgcat::mcset zh {Configure} 
-::msgcat::mcset zh {Connect Directly} 
 ::msgcat::mcset zh {Connect SAMP} 
-::msgcat::mcset zh {Connect Using Web Proxy} 
 ::msgcat::mcset zh {Connect} 
 ::msgcat::mcset zh {Console} 
 ::msgcat::mcset zh {Contacting Server} 
@@ -205,6 +203,7 @@
 ::msgcat::mcset zh {DS9 has detected an older backup file, do you wish to continue?} 
 ::msgcat::mcset zh {DS9 has detected an older preferences file, do you wish to update?} 
 ::msgcat::mcset zh {DS9 will complete the initialization process} 
+::msgcat::mcset zh {Darken} 
 ::msgcat::mcset zh {Dash} [encoding convertfrom big5 "\xB5\xEA \xBD\x75"]
 ::msgcat::mcset zh {Data Format} 
 ::msgcat::mcset zh {Dataset Name} 
@@ -370,6 +369,7 @@
 ::msgcat::mcset zh {Initialize XPA} 
 ::msgcat::mcset zh {Inner} 
 ::msgcat::mcset zh {Instrument FOV} 
+::msgcat::mcset zh {Instrument} 
 ::msgcat::mcset zh {Interior Axes} 
 ::msgcat::mcset zh {Interior Numerics} 
 ::msgcat::mcset zh {Internal Parse Error} 
@@ -403,6 +403,7 @@
 ::msgcat::mcset zh {Letter} 
 ::msgcat::mcset zh {Levels} 
 ::msgcat::mcset zh {Level} 
+::msgcat::mcset zh {Lighten} 
 ::msgcat::mcset zh {Limits} 
 ::msgcat::mcset zh {Line Plot Tool} 
 ::msgcat::mcset zh {Linear} [encoding convertfrom big5 "\xBD\x75 \xA9\xCA"]
@@ -569,7 +570,6 @@
 ::msgcat::mcset zh {Numerics} [encoding convertfrom big5 "\xBC\xC6 \xAD\xC8"]
 ::msgcat::mcset zh {OK} 
 ::msgcat::mcset zh {Object} [encoding convertfrom big5 "\xA4\xD1 \xC5\xE9 \xA6\x57 \xBA\xD9"]
-::msgcat::mcset zh {Opaque} 
 ::msgcat::mcset zh {Open File} 
 ::msgcat::mcset zh {Open ME Cube} 
 ::msgcat::mcset zh {Open ME Frames} 
@@ -619,6 +619,7 @@
 ::msgcat::mcset zh {Play} 
 ::msgcat::mcset zh {Please Select a Region} 
 ::msgcat::mcset zh {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset zh {Please specify instruments} 
 ::msgcat::mcset zh {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset zh {Please specify width, height, and either name or (ra,dec)} 
 ::msgcat::mcset zh {Plot 2D} 
@@ -721,6 +722,7 @@
 ::msgcat::mcset zh {Scatter Plot Tool} 
 ::msgcat::mcset zh {Scatter} 
 ::msgcat::mcset zh {Scope} 
+::msgcat::mcset zh {Screen} 
 ::msgcat::mcset zh {Search for Catalogs} 
 ::msgcat::mcset zh {Seconds} 
 ::msgcat::mcset zh {Segment} 
@@ -807,7 +809,6 @@
 ::msgcat::mcset zh {Top} 
 ::msgcat::mcset zh {To} 
 ::msgcat::mcset zh {Transparency} 
-::msgcat::mcset zh {Transparent} 
 ::msgcat::mcset zh {Triangle} 
 ::msgcat::mcset zh {Type} 
 ::msgcat::mcset zh {URL} 

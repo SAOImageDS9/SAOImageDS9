@@ -1209,6 +1209,10 @@ void FitsImage::resetWCS()
       astEnd;
     }
   }
+
+  // WCSNAMEP may have been cleared, check for LTMV
+  processKeywordsPhysical();
+  processKeywordsParams();
 }
 
 void FitsImage::initWCS0(const Vector& pix)

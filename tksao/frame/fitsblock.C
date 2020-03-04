@@ -70,8 +70,6 @@ void FitsImage::block()
   data_ = analysisdata_;
 
   resetWCS();
-  processKeywordsPhysical();
-  processKeywordsParams();
 }
 
 void FitsImage::block(pthread_t* thread)
@@ -137,8 +135,6 @@ void FitsImage::block(pthread_t* thread)
   data_ = analysisdata_;
 
   resetWCS();
-  processKeywordsPhysical();
-  processKeywordsParams();
 }
 
 void* blockproc(void* tt)

@@ -268,6 +268,7 @@ range           {return RANGE_;}
 region		{return REGION_;}
 replace		{return REPLACE_;}
 resample	{return RESAMPLE_;}
+rescan		{return RESCAN_;}
 reset		{return RESET_;}
 resolution	{return RESOLUTION_;}
 rgb		{return RGB_;}

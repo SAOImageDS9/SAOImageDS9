@@ -618,6 +618,7 @@ public:
   void clipModeCmd(float);
   void clipModeCmd(FrScale::ClipMode);
   void clipMinMaxCmd(FrScale::MinMaxMode, int);
+  void clipMinMaxRescanCmd();
   // backward compatibilty backup
   void clipMinMaxModeCmd(FrScale::MinMaxMode);
   // backward compatibilty backup

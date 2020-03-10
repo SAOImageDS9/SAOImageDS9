@@ -57,6 +57,8 @@ class FrScale {
 
   int datasec_;
 
+  int force_;                 // flag to force rescan min/max
+
  public:
   FrScale();
   ~FrScale();
@@ -85,6 +87,7 @@ class FrScale {
   double* histogramX() {return histogramX_;}
   double* histogramY() {return histogramY_;}
   int datasec() {return datasec_;}
+  int force() {return force_;}
   
   void setColorScaleType(ColorScaleType v) {colorScaleType_ = v;}
   void setClipScope(ClipScope v) {clipScope_ = v;}
@@ -106,6 +109,7 @@ class FrScale {
   void setSecMode(SecMode v) {secMode_ = v;}
   void resetSecMode() {secMode_ = datasec_ ? DATASEC : IMGSEC;}
   void setDataSec(int d) {datasec_ = d;}
+  void setForce(int f) {force_ = f;}
 
   double* histequ(FitsImage*);
   void clearHistequ();

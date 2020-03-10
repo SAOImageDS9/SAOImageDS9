@@ -61,104 +61,111 @@ proc minmax::unsetupvalues {numsyms} {
 }
 
 array set minmax::table {
+  5:266,target 8
   0:258 reduce
   0:260 shift
   0:259 shift
-  9:0 reduce
+  15:0,target 3
+  9:0 accept
   0:266,target 8
   0:261 shift
   2:258 reduce
   11:0 reduce
   0:262 shift
   4:257 shift
-  10:258,target 5
+  10:258,target 2
   0:263 shift
+  10:268,target 14
   0:264 shift
   6:258 reduce
   0:265 shift
   5:265,target 7
-  0:266 goto
-  6:258,target 9
-  0:268 goto
+  15:0 reduce
+  0:266 shift
+  8:258 reduce
+  0:267 goto
+  6:258,target 8
   0:265,target 7
-  6:0,target 9
+  6:0,target 8
+  0:270 goto
   0:269 goto
   2:0 reduce
-  1:258,target 12
-  5:264,target 6
-  13:258,target 14
+  1:258,target 13
+  13:258,target 6
   6:0 reduce
   0:264,target 6
-  7:0,target 8
+  7:0,target 10
   12:0 reduce
-  9:258,target 2
   0:0,target 4
-  10:0,target 5
+  10:0,target 1
   0:263,target 5
   10:258 reduce
   12:258 reduce
-  9:267,target 13
-  8:0,target 0
+  8:0,target 9
   3:0 reduce
-  11:258,target 7
-  1:0,target 12
-  11:0,target 7
+  14:258 shift
+  11:258,target 5
+  1:0,target 13
+  11:0,target 5
   0:262,target 4
-  4:257,target 11
+  4:257,target 12
   7:0 reduce
   1:258 reduce
-  7:258,target 8
+  10:268 goto
+  7:258,target 10
   5:261,target 3
   3:258 reduce
-  9:0,target 1
+  13:0 reduce
+  9:0,target 0
   0:261,target 3
-  2:258,target 10
+  2:258,target 11
   5:259 shift
-  2:0,target 10
+  2:0,target 11
   5:260 shift
-  12:0,target 6
+  12:0,target 7
   7:258 reduce
   5:261 shift
-  9:258 reduce
+  14:258,target 15
   5:259,target 1
-  0:0 reduce
   5:260,target 2
-  5:269,target 12
-  5:264 shift
+  0:0 reduce
+  5:270,target 13
   5:265 shift
   0:260,target 2
   0:259,target 1
+  5:266 shift
+  0:270,target 11
   0:269,target 10
-  3:0,target 11
-  5:269 goto
-  9:267 goto
-  8:0 accept
+  3:0,target 12
+  5:270 goto
+  13:0,target 6
+  8:0 reduce
   10:0 reduce
   0:258,target 4
-  0:268,target 9
-  14:0 reduce
-  12:258,target 6
-  14:0,target 3
+  12:258,target 7
   11:258 reduce
   1:0 reduce
-  13:258 shift
-  3:258,target 11
+  8:258,target 9
+  0:267,target 9
+  13:258 reduce
+  3:258,target 12
 }
 
 array set minmax::rules {
-  9,l 269
-  11,l 269
-  2,l 267
-  6,l 268
-  12,l 269
-  3,l 266
-  7,l 268
-  0,l 270
-  4,l 268
+  9,l 270
+  11,l 270
+  2,l 268
+  6,l 269
+  12,l 270
+  3,l 267
+  7,l 269
+  13,l 270
+  0,l 271
+  4,l 269
   8,l 269
-  10,l 269
-  1,l 266
-  5,l 268
+  10,l 270
+  1,l 267
+  5,l 269
 }
 
 array set minmax::rules {
@@ -170,6 +177,7 @@ array set minmax::rules {
   10,dc 1
   6,dc 2
   1,dc 1
+  13,dc 1
   9,dc 1
   4,dc 0
   11,dc 1
@@ -178,50 +186,53 @@ array set minmax::rules {
 }
 
 array set minmax::rules {
+  13,line 41
   2,e 1
-  7,line 31
-  10,line 36
-  4,line 28
-  1,line 24
-  9,line 35
-  12,line 39
-  6,line 30
-  3,line 25
-  8,line 34
+  7,line 32
+  10,line 37
+  4,line 29
+  1,line 25
+  9,line 36
+  12,line 40
+  6,line 31
+  3,line 26
+  8,line 33
   11,line 38
-  5,line 29
-  2,line 24
+  5,line 30
+  2,line 25
 }
 
 array set minmax::lr1_table {
-  13,trans {{258 14}}
-  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 258} 0} {5 {0 258} 0} {6 {0 258} 0} {7 {0 258} 0} {8 {0 258} 0} {9 {0 258} 0} {10 {0 258} 0} {11 {0 258} 0} {12 {0 258} 0}}
-  14,trans {}
-  1 {{12 {0 258} 1}}
-  2 {{10 {0 258} 1}}
-  3 {{11 {0 258} 1}}
+  13,trans {}
+  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 258} 0} {5 {0 258} 0} {6 {0 258} 0} {7 {0 258} 0} {8 {0 258} 0} {9 {0 258} 0} {10 {0 258} 0} {11 {0 258} 0} {12 {0 258} 0} {13 {0 258} 0}}
+  14,trans {{258 15}}
+  1 {{13 {0 258} 1}}
+  15,trans {}
+  2 {{11 {0 258} 1}}
+  3 {{12 {0 258} 1}}
+  0,trans {{259 1} {260 2} {261 3} {262 4} {263 5} {264 6} {265 7} {266 8} {267 9} {269 10} {270 11}}
   4 {{7 {0 258} 1}}
-  0,trans {{259 1} {260 2} {261 3} {262 4} {263 5} {264 6} {265 7} {266 8} {268 9} {269 10}}
   1,trans {}
-  5 {{6 {0 258} 1} {8 {0 258} 0} {9 {0 258} 0} {10 {0 258} 0} {11 {0 258} 0} {12 {0 258} 0}}
+  5 {{6 {0 258} 1} {9 {0 258} 0} {10 {0 258} 0} {11 {0 258} 0} {12 {0 258} 0} {13 {0 258} 0}}
   2,trans {}
-  6 {{9 {0 258} 1}}
+  6 {{8 {0 258} 1}}
   3,trans {}
-  7 {{8 {0 258} 1}}
-  4,trans {{257 11}}
-  8 {{0 0 1}}
-  5,trans {{259 1} {260 2} {261 3} {264 6} {265 7} {269 12}}
-  9 {{1 0 1} {3 0 1} {2 258 0}}
-  10 {{5 {0 258} 1}}
+  7 {{10 {0 258} 1}}
+  4,trans {{257 12}}
+  8 {{9 {0 258} 1}}
+  5,trans {{259 1} {260 2} {261 3} {265 7} {266 8} {270 13}}
+  9 {{0 0 1}}
+  10 {{1 0 1} {3 0 1} {2 258 0}}
   6,trans {}
-  11 {{7 {0 258} 2}}
+  11 {{5 {0 258} 1}}
   7,trans {}
-  12 {{6 {0 258} 2}}
-  13 {{3 0 2}}
+  12 {{7 {0 258} 2}}
   8,trans {}
-  14 {{3 0 3}}
-  10,trans {}
-  9,trans {{267 13}}
+  13 {{6 {0 258} 2}}
+  10,trans {{268 14}}
+  14 {{3 0 2}}
+  9,trans {}
+  15 {{3 0 3}}
   11,trans {}
   12,trans {}
 }
@@ -230,23 +241,24 @@ array set minmax::token_id_table {
   264,line 18
   270,t 1
   269,t 1
-  265,title SCAN
+  265,title SAMPLE
   261,line 15
   257,t 0
   270,title {}
   269,title {}
   257,line 7
   262,t 0
-  270,line 40
-  269,line 33
+  270,line 35
+  269,line 28
   259,title AUTO
   260,title DATAMIN
-  266,t 1
-  264,title SAMPLE
+  266,t 0
+  271,t 1
+  264,title RESCAN
+  266,line 20
   error error
-  266,line 23
   268,title {}
-  error,line 22
+  error,line 23
   258,t 0
   263,line 17
   error,title {}
@@ -256,7 +268,7 @@ array set minmax::token_id_table {
   258,title string
   267,t 1
   263,title MODE
-  268,line 27
+  268,line 25
   267,title {}
   257 INT_
   258 STRING_
@@ -269,22 +281,25 @@ array set minmax::token_id_table {
   262 INTERVAL_
   263 MODE_
   257,title integer
-  264 SAMPLE_
+  264 RESCAN_
   264,t 0
-  265 SCAN_
+  265 SAMPLE_
   262,line 16
-  266 command
-  267 @PSEUDO1
+  266 SCAN_
+  267 command
   268,t 1
-  268 minmax
+  268 @PSEUDO1
   262,title INTERVAL
   0 {$}
   0,t 0
-  270 start'
-  269 mode
+  270 mode
+  269 minmax
+  271 start'
   error,t 0
   258,line 9
-  266,title {}
+  266,title SCAN
+  271,line 42
+  271,title {}
   261,t 0
   267,line 24
   265,t 0
@@ -390,11 +405,12 @@ proc minmax::yyparse {} {
                     5 { ProcessCmdSet minmax mode $1 ChangeMinMax }
                     6 { ProcessCmdSet minmax mode $2 ChangeMinMax }
                     7 { ProcessCmdSet minmax sample $2 ChangeMinMax }
-                    8 { set _ scan }
-                    9 { set _ sample }
-                    10 { set _ datamin }
-                    11 { set _ irafmin }
-                    12 { set _ scan }
+                    8 { RescanMinMax }
+                    9 { set _ scan }
+                    10 { set _ sample }
+                    11 { set _ datamin }
+                    12 { set _ irafmin }
+                    13 { set _ scan }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

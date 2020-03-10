@@ -508,7 +508,6 @@ class FitsImage {
   double low() {return data_ ? data_->low() : 0;}
   double high() {return data_ ? data_->high() : 0;}
 
-  void updateClip(FrScale*);
   void updateClip(FrScale* fr, pthread_t* thread, t_clip_arg* targ);
 
   int hasDATAMIN() {return data_ ? data_->hasDATAMIN() : 0;}

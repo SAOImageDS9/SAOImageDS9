@@ -236,6 +236,7 @@ class Context {
   void unload();
   void updateBinFileNames();
   void clearHist();
+  void rescanClip();
   void updateClip();
   void updateContours(const Matrix&);
   void updateSlice(int, int);

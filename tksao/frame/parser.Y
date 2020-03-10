@@ -351,6 +351,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token REGION_
 %token REPLACE_
 %token RESAMPLE_
+%token RESCAN_
 %token RESET_
 %token RESOLUTION_
 %token RGB_
@@ -859,6 +860,7 @@ clipMode: numeric {fr->clipModeCmd($1);}
 clipMinMax : INT minmaxMode {fr->clipMinMaxCmd((FrScale::MinMaxMode)$2,$1);}
         | MODE_ minmaxMode {fr->clipMinMaxModeCmd((FrScale::MinMaxMode)$2);}
 	| SAMPLE_ INT {fr->clipMinMaxSampleCmd($2);}
+        | RESCAN_ {fr->clipMinMaxRescanCmd();}
 	;
 
 clipZScale: numeric INT INT {fr->clipZScaleCmd($1,$2,$3);}

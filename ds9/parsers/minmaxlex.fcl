@@ -13,6 +13,7 @@ datamin	    {return $DATAMIN_}
 irafmin	    {return $IRAFMIN_}
 interval    {return $INTERVAL_}
 mode	    {return $MODE_}
+rescan	    {return $RESCAN_}
 sample	    {return $SAMPLE_}
 scan	    {return $SCAN_}
 

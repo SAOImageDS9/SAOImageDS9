@@ -2272,11 +2272,6 @@ int FitsImage::nhdu()
   return dd;
 }
 
-void FitsImage::updateClip(FrScale* fr)
-{
-  data_->updateClip(fr,getDataParams(fr->secMode()));
-}
-
 void* clipproc(void* tt)
 {
   t_clip_arg* targ = (t_clip_arg*)tt;

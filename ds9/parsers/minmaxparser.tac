@@ -12,6 +12,7 @@
 %token IRAFMIN_
 %token INTERVAL_
 %token MODE_
+%token RESCAN_
 %token SAMPLE_
 %token SCAN_
 
@@ -25,6 +26,7 @@ minmax : {ProcessCmdSet scale mode minmax ChangeScaleMode}
  | mode {ProcessCmdSet minmax mode $1 ChangeMinMax}
  | MODE_ mode {ProcessCmdSet minmax mode $2 ChangeMinMax}
  | INTERVAL_ INT_ {ProcessCmdSet minmax sample $2 ChangeMinMax}
+ | RESCAN_ {RescanMinMax}
  ;
 
 mode : SCAN_ {set _ scan}

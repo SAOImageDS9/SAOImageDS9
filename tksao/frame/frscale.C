@@ -33,6 +33,7 @@ FrScale::FrScale()
   histogramSize_ = 0;
 
   datasec_ = 1;
+  force_ = 0;
 }
 
 FrScale::~FrScale()
@@ -88,6 +89,9 @@ FrScale::FrScale(const FrScale& a)
   else
     histogramY_ = NULL;
   histogramSize_ = a.histogramSize_;
+
+  datasec_ = a.datasec_;
+  force_ = a.force_;
 }
 
 FrScale& FrScale::operator=(const FrScale& a)
@@ -136,6 +140,9 @@ FrScale& FrScale::operator=(const FrScale& a)
     memcpy(histogramY_,a.histogramY_,a.histogramSize_*sizeof(double));
   }
   histogramSize_ = a.histogramSize_;
+
+  datasec_ = a.datasec_;
+  force_ = a.force_;
 
   return *this;
 }

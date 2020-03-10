@@ -2521,6 +2521,15 @@ void Context::updateClip()
   updateClip(&frScale);
 }
 
+void Context::rescanClip()
+{
+  if (DebugPerf)
+    cerr << "Context::rescanClip()" << endl;
+
+  frScale.setForce(1);
+  updateClip(&frScale);
+}
+
 void Context::updateClip(FrScale* fr)
 {
   if (DebugPerf)

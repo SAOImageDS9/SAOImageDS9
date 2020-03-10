@@ -5,5 +5,6 @@ set DATAMIN_ 260
 set IRAFMIN_ 261
 set INTERVAL_ 262
 set MODE_ 263
-set SAMPLE_ 264
-set SCAN_ 265
+set RESCAN_ 264
+set SAMPLE_ 265
+set SCAN_ 266

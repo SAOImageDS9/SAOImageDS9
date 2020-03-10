@@ -956,6 +956,14 @@ template<class T> void FitsDatam<T>::updateClip(FrScale* fr, FitsBound* params)
   ulow_ = fr->ulow();
   uhigh_ = fr->uhigh();
 
+  // force min/max scan
+  if (fr->force()) {
+    fr->setForce(0);
+    scanValid_ = 0;
+    zscaleValid_ = 0;
+    autoCutValid_ = 0;
+  }
+
   // DATASEC
   if (secMode_ != fr->secMode()) {
     scanValid_ = 0;

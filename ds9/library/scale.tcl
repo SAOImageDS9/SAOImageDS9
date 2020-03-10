@@ -147,6 +147,17 @@ proc ChangeMinMax {} {
     }
 }
 
+proc RescanMinMax {} {
+    global current
+    global minmax
+    global rgb
+
+    if {$current(frame) != {}} {
+	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip minmax rescan]
+	UpdateScale
+    }
+}
+
 proc ChangeZScale {} {
     global current
     global zscale

@@ -310,6 +310,14 @@ void Base::clipMinMaxCmd(FrScale::MinMaxMode mm, int ss)
   }
 }
 
+void Base::clipMinMaxRescanCmd()
+{
+  currentContext->clearHist();
+  currentContext->rescanClip();
+  updateColorScale();
+  update(BASE);
+}
+
 // backward compatibility backup
 void Base::clipMinMaxModeCmd(FrScale::MinMaxMode mm)
 {

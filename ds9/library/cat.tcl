@@ -1004,22 +1004,6 @@ proc CatalogCmdRef {ref} {
     }
 }
 
-proc CatalogCmdFilterLoad {fn} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    if {$fn != {}} {
-	if {[catch {open $fn r} fp]} {
-	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"
-	    yyerror
-	}
-	set flt [read -nonewline $fp]
-	catch {regsub {\n} $flt " " $flt}
-	set cvar(filter) [string trim $flt]
-	catch {close $fp}
-    }
-}
-
 proc CatalogCmdLoad {fn reader} {
     global icat
 

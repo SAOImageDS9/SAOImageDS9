@@ -63,22 +63,22 @@ sia : {if {![SIACmdCheck]} {sia::YYABORT}} siaCmd
  ;
 
 siaCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
- | CLOSE_ {ProcessCmdCVAR0 SIADestroy}
  | CLEAR_ {ProcessCmdCVAR0 SIAOff}
+ | CLOSE_ {ProcessCmdCVAR0 SIADestroy}
  | COORDINATE_ coordinate
- | CROSSHAIR_ {ProcessCmdCVAR0 IMGSVRCrosshair}
+ | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
- | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
  | RADIUS_ numeric rformat {TBLCmdSize $2 $3}
+ | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
 # backward compatibily
  | SIZE_ numeric numeric rformat {TBLCmdSize [expr ($2+$3)/2.] $4}
  | SKY_ skyframe {TBLCmdSkyframe $2}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SYSTEM_ wcssys {TBLCmdSystem $2}
- | UPDATE_ {ProcessCVAR0 IMGSVRUpdate}
+ | UPDATE_ {ProcessCVAR0 TBLUpdate}
  ;
 
 coordinate : numeric numeric {TBLCmdCoord $1 $2 fk5}

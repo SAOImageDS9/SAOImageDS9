@@ -222,6 +222,30 @@ proc TBLSelectTimerCancel {varname layer} {
     set var(blink,marker,color) {}
 }
 
+proc TBLCrosshair {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[info commands $var(frame)] == {}} {
+	return
+    }
+
+    if {![$var(frame) has fits]} {
+	return
+    }
+
+    set var(name) {}
+    set var(x) {}
+    set var(y) {}
+
+    if {[$var(frame) has wcs celestial $var(system)]} {
+	set coord [$var(frame) get crosshair \
+		       $var(system) $var(sky) $var(skyformat)]
+	set var(x) [lindex $coord 0]
+	set var(y) [lindex $coord 1]
+    }
+}
+
 proc TBLPanTo {varname mk layer} {
     upvar #0 $varname var
     global $varname
@@ -243,6 +267,37 @@ proc TBLPanTo {varname mk layer} {
 	    PanToFrame $var(frame) [lindex $cc 0] [lindex $cc 1] \
 		$var(psystem) $var(psky)
 	}
+    }
+}
+
+proc TBLUpdate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[info commands $var(frame)] == {}} {
+	return
+    }
+
+    if {![$var(frame) has fits]} {
+	return
+    }
+
+    set var(name) {}
+    set var(x) {}
+    set var(y) {}
+    set var(radius) {}
+
+    if {[$var(frame) has wcs celestial $var(system)]} {
+	set coord [$var(frame) get fits center \
+		       $var(system) $var(sky) $var(skyformat)]
+	set var(x) [lindex $coord 0]
+	set var(y) [lindex $coord 1]
+
+	set size [$var(frame) get fits size \
+		      $var(system) $var(sky) $var(rformat)]
+	set ww [lindex $size 0]
+	set hh [lindex $size 1]
+	set var(radius) [expr ($ww+$hh)/4]
     }
 }
 
@@ -689,6 +744,22 @@ proc TBLCmdSystem {sys} {
 
     set cvar(system) $sys
     CoordMenuButtonCmd $cvarname system sky [list TBLWCSMenuUpdate $cvarname]
+}
+
+proc TBLCmdFilterLoad {fn} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {$fn != {}} {
+	if {[catch {open $fn r} fp]} {
+	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"
+	    yyerror
+	}
+	set flt [read -nonewline $fp]
+	catch {regsub {\n} $flt " " $flt}
+	set cvar(filter) [string trim $flt]
+	catch {close $fp}
+    }
 }
 
 # print

@@ -173,7 +173,7 @@ array set sia::table {
   54:0,target 31
   6:311,target 75
   33:312,target 29
-  23:0,target 58
+  23:0,target 57
   4:302,target 73
   15:298,target 34
   61:298,target 63
@@ -245,7 +245,7 @@ array set sia::table {
   8:311,target 77
   36:285,target 41
   6:302,target 75
-  17:298,target 52
+  17:298,target 51
   63:298,target 2
   33:303,target 20
   48:291 shift
@@ -268,7 +268,7 @@ array set sia::table {
   18:298 reduce
   7:303 reduce
   30:258,target 63
-  47:0,target 57
+  47:0,target 56
   7:304 reduce
   7:305 reduce
   7:306 reduce
@@ -285,7 +285,7 @@ array set sia::table {
   7:313 reduce
   7:302,target 76
   7:314 reduce
-  18:298,target 51
+  18:298,target 52
   64:298,target 3
   4:299,target 73
   4:309,target 73
@@ -401,7 +401,7 @@ array set sia::table {
   81:0 reduce
   68:0,target 7
   35:296 reduce
-  23:298,target 58
+  23:298,target 57
   35:298 reduce
   68:298,target 7
   8:299,target 77
@@ -450,7 +450,7 @@ array set sia::table {
   10:314,target 79
   67:0 reduce
   0:311 reduce
-  25:298,target 59
+  25:298,target 58
   71:298,target 10
   0:312 reduce
   0:313 reduce
@@ -614,7 +614,7 @@ array set sia::table {
   36:291,target 41
   68:298 reduce
   6:307,target 75
-  17:0,target 52
+  17:0,target 51
   38:295 shift
   33:308,target 25
   38:296 shift
@@ -756,7 +756,7 @@ array set sia::table {
   91:285 shift
   91:286 shift
   6:306,target 75
-  97:0,target 60
+  97:0,target 59
   91:287 shift
   33:307,target 24
   91:288 shift
@@ -874,7 +874,7 @@ array set sia::table {
   90:298,target 49
   89:298,target 64
   0:304,target 45
-  25:0,target 59
+  25:0,target 58
   87:0 reduce
   12:337 goto
   77:298 reduce
@@ -936,10 +936,10 @@ array set sia::table {
   81:0,target 20
   35:296,target 40
   5:313,target 74
-  49:0,target 56
-  47:298,target 57
+  49:0,target 60
+  47:298,target 56
   93:298,target 55
-  18:0,target 51
+  18:0,target 52
   3:304,target 72
   14:311,target 48
   91:290,target 57
@@ -980,7 +980,7 @@ array set sia::table {
   98:291,target 94
   94:298 reduce
   7:313,target 76
-  49:298,target 56
+  49:298,target 60
   95:298,target 38
   35:287,target 40
   64:298 reduce
@@ -1031,7 +1031,7 @@ array set sia::table {
   10:299 reduce
   10:309 reduce
   10:310 reduce
-  97:298,target 60
+  97:298,target 59
   10:311 reduce
   10:312 reduce
   10:313 reduce
@@ -1226,8 +1226,8 @@ array set sia::rules {
   31,dc 1
   7,dc 1
   45,dc 0
-  60,dc 3
-  59,dc 1
+  60,dc 2
+  59,dc 3
   74,dc 1
   23,dc 1
   0,dc 1
@@ -1252,7 +1252,7 @@ array set sia::rules {
   28,dc 1
   5,dc 1
   43,dc 0
-  57,dc 2
+  57,dc 1
   72,dc 1
   21,dc 1
   35,dc 1
@@ -1379,12 +1379,12 @@ array set sia::lr1_table {
   44 {{84 298 1}}
   45 {{85 298 1}}
   46 {{55 {0 298} 2}}
-  47 {{57 {0 298} 2}}
+  47 {{56 {0 298} 2}}
   48 {{40 {291 292 293} 1}}
   49 {{41 {291 292 293} 1}}
-  50 {{60 {0 298} 2} {37 {0 298} 0} {38 {0 298} 0} {39 {0 298} 0}}
+  50 {{59 {0 298} 2} {37 {0 298} 0} {38 {0 298} 0} {39 {0 298} 0}}
   27,trans {{295 35} {296 36} {335 52}}
-  51 {{56 {0 298} 2}}
+  51 {{60 {0 298} 2}}
   46,trans {{298 97}}
   52 {{61 {0 298} 2} {40 {291 292 293} 0} {41 {291 292 293} 0}}
   65,trans {}
@@ -1474,7 +1474,7 @@ array set sia::lr1_table {
   97,trans {}
   8,trans {}
   100 {{39 {0 298} 1}}
-  101 {{60 {0 298} 3}}
+  101 {{59 {0 298} 3}}
   102 {{61 {0 298} 3} {37 {0 298} 0} {38 {0 298} 0} {39 {0 298} 0}}
   103 {{69 {0 298} 3}}
   104 {{67 {0 298} 3}}
@@ -1552,20 +1552,20 @@ array set sia::lr1_table {
   16 {{50 {0 298} 1}}
   29,trans {{291 61} {294 62} {333 63}}
   30,trans {{257 64} {258 65} {259 66} {260 67} {261 68} {262 69} {263 70} {264 71} {265 72} {266 73} {267 74} {268 75} {269 76} {270 77} {271 78} {272 79} {273 80} {274 81} {275 82} {276 83} {277 84} {278 85} {279 86} {280 87} {281 88} {282 89} {283 90} {331 91}}
-  17 {{52 {0 298} 1}}
+  17 {{51 {0 298} 1}}
   48,trans {}
-  18 {{51 {0 298} 1}}
+  18 {{52 {0 298} 1}}
   67,trans {}
   20 {{54 {0 298} 1}}
   19 {{53 {0 298} 1} {66 {0 298} 0} {67 {0 298} 0} {68 {0 298} 0} {69 {0 298} 0} {40 {295 296} 0} {41 {295 296} 0}}
   86,trans {}
   21 {{55 {0 298} 1} {80 298 0} {81 298 0} {82 298 0} {83 298 0} {84 298 0} {85 298 0}}
-  22 {{57 {0 298} 1}}
+  22 {{56 {0 298} 1}}
   100,trans {}
-  23 {{58 {0 298} 1}}
-  24 {{60 {0 298} 1} {40 {291 292 293} 0} {41 {291 292 293} 0}}
-  25 {{59 {0 298} 1}}
-  26 {{56 {0 298} 1}}
+  23 {{57 {0 298} 1}}
+  24 {{59 {0 298} 1} {40 {291 292 293} 0} {41 {291 292 293} 0}}
+  25 {{58 {0 298} 1}}
+  26 {{60 {0 298} 1}}
   27 {{61 {0 298} 1} {40 {295 296} 0} {41 {295 296} 0}}
   28 {{62 {0 298} 1} {28 {0 298} 0} {29 {0 298} 0} {30 {0 298} 0} {31 {0 298} 0} {32 {0 298} 0} {33 {0 298} 0} {34 {0 298} 0}}
   30 {{64 {0 298} 1} {1 {0 298} 0} {2 {0 298} 0} {3 {0 298} 0} {4 {0 298} 0} {5 {0 298} 0} {6 {0 298} 0} {7 {0 298} 0} {8 {0 298} 0} {9 {0 298} 0} {10 {0 298} 0} {11 {0 298} 0} {12 {0 298} 0} {13 {0 298} 0} {14 {0 298} 0} {15 {0 298} 0} {16 {0 298} 0} {17 {0 298} 0} {18 {0 298} 0} {19 {0 298} 0} {20 {0 298} 0} {21 {0 298} 0} {22 {0 298} 0} {23 {0 298} 0} {24 {0 298} 0} {25 {0 298} 0} {26 {0 298} 0} {27 {0 298} 0}}
@@ -2084,20 +2084,20 @@ proc sia::yyparse {} {
                     47 { SIACmdRef $1 }
                     48 { SIACmdRef $1 }
                     50 { ProcessCmdCVAR0 ARCancel }
-                    51 { ProcessCmdCVAR0 SIADestroy }
-                    52 { ProcessCmdCVAR0 SIAOff }
-                    54 { ProcessCmdCVAR0 IMGSVRCrosshair }
+                    51 { ProcessCmdCVAR0 SIAOff }
+                    52 { ProcessCmdCVAR0 SIADestroy }
+                    54 { ProcessCmdCVAR0 TBLCrosshair }
                     55 { TBLCmdSave $3 $2 }
-                    56 { TBLCmdSave $2 VOTWrite }
-                    57 { ProcessCmdCVAR name $2 }
-                    58 { ProcessCmdCVAR0 TBLCmdPrint }
-                    59 { global cvarname; SIAApply $cvarname 1 }
-                    60 { TBLCmdSize $2 $3 }
+                    56 { ProcessCmdCVAR name $2 }
+                    57 { ProcessCmdCVAR0 TBLCmdPrint }
+                    58 { global cvarname; SIAApply $cvarname 1 }
+                    59 { TBLCmdSize $2 $3 }
+                    60 { TBLCmdSave $2 VOTWrite }
                     61 { TBLCmdSize [expr ($2+$3)/2.] $4 }
                     62 { TBLCmdSkyframe $2 }
                     63 { ProcessCmdCVAR skyformat $2 }
                     64 { TBLCmdSystem $2 }
-                    65 { ProcessCVAR0 IMGSVRUpdate }
+                    65 { ProcessCVAR0 TBLUpdate }
                     66 { TBLCmdCoord $1 $2 fk5 }
                     67 { TBLCmdCoord $1 $2 $3 }
                     68 { TBLCmdCoord $1 $2 fk5 }

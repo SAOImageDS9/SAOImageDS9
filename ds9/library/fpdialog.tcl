@@ -117,8 +117,6 @@ proc FPDialog {varname title url instr format action} {
 	-command [list FPApply $varname 0]
     $mb.file add command -label [msgcat::mc {Cancel}] \
 	-command [list ARCancel $varname]
-    $mb.file add command -label [msgcat::mc {Clear}] \
-	-command [list FPOff $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Filter}] \
 	-command [list FPTable $varname]
@@ -129,10 +127,10 @@ proc FPDialog {varname title url instr format action} {
 	-variable ${varname}(show) -command [list FPGenerate $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Update from Current Frame}] \
-	-command [list FPUpdate $varname]
+	-command [list TBLUpdate $varname]
     $mb.file add command \
 	-label [msgcat::mc {Update from Current Crosshair}] \
-	-command [list FPCrosshair $varname]
+	-command [list TBLCrosshair $varname]
     $mb.file add separator
 	$mb.file add command -label [msgcat::mc {Copy to Regions}] \
 	-command [list FPGenerateRegions $varname]
@@ -182,7 +180,7 @@ proc FPDialog {varname title url instr format action} {
     CoordMenuEnable $f.coord.menu $varname system sky skyformat
 
     ttk::button $f.update -text [msgcat::mc {Update}] \
-	-command [list FPUpdate $varname]
+	-command [list TBLUpdate $varname]
 
     ttk::label $f.rtitle -text [msgcat::mc {Radius}]
     ttk::entry $f.r -textvariable ${varname}(radius) -width 14
@@ -309,7 +307,7 @@ proc FPDialog {varname title url instr format action} {
     TBLSortMenu $varname
 
     ARCoord $varname
-    FPUpdate $varname
+    TBLUpdate $varname
     FPDialogUpdate $varname
 
     ARStatus $varname {}
@@ -488,62 +486,3 @@ proc FPDialogUpdate {varname} {
     }
 }
 
-proc FPUpdate {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPUpdate $varname"
-    }
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    set var(name) {}
-    set var(x) {}
-    set var(y) {}
-    set var(radius) {}
-
-    if {[$var(frame) has wcs celestial $var(system)]} {
-	set coord [$var(frame) get fits center \
-		       $var(system) $var(sky) $var(skyformat)]
-	set var(x) [lindex $coord 0]
-	set var(y) [lindex $coord 1]
-
-	set size [$var(frame) get fits size \
-		      $var(system) $var(sky) $var(rformat)]
-	set ww [lindex $size 0]
-	set hh [lindex $size 1]
-	set var(radius) [expr ($ww+$hh)/4]
-    }
-}
-
-proc FPCrosshair {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    set var(name) {}
-    set var(x) {}
-    set var(y) {}
-
-    if {[$var(frame) has wcs celestial $var(system)]} {
-	set coord [$var(frame) get crosshair \
-		       $var(system) $var(sky) $var(skyformat)]
-	set var(x) [lindex $coord 0]
-	set var(y) [lindex $coord 1]
-    }
-}

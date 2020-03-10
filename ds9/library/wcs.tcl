@@ -374,6 +374,7 @@ proc WCSApplyDialog {} {
 	RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs replace text $dwcs(ext) \{\{[WCSFromVar]\}\}"
 	UpdateWCS
 	CATUpdateWCS
+	FPUpdateWCS
     }
 }
 
@@ -386,6 +387,7 @@ proc WCSResetDialog {} {
 	RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs reset $dwcs(ext)]
 	UpdateWCS
 	CATUpdateWCS
+	FPUpdateWCS
 	UpdateWCSDialog
     }
 }
@@ -1152,6 +1154,7 @@ proc WCSCmdReset {ext} {
 	[list $current(frame) wcs reset $ext]
     UpdateWCS
     CATUpdateWCS
+    FPUpdateWCS
     UpdateWCSDialog
 }
 
@@ -1172,6 +1175,7 @@ proc WCSCmdLoad {cmd ext} {
 
     UpdateWCS
     CATUpdateWCS
+    FPUpdateWCS
     UpdateWCSDialog
 }
 
@@ -1186,6 +1190,7 @@ proc WCSCmdLoadFn {cmd ext fn} {
     RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$fn\}\}"
     UpdateWCS
     CATUpdateWCS
+    FPUpdateWCS
     UpdateWCSDialog
 }
 

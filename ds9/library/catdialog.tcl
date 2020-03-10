@@ -148,10 +148,10 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATAck $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Update from Current Frame}] \
-	-command [list CATUpdate $varname]
+	-command [list TBLUpdate $varname]
     $mb.file add command \
 	-label [msgcat::mc {Update from Current Crosshair}] \
-	-command [list CATCrosshair $varname]
+	-command [list TBLCrosshair $varname]
     $mb.file add separator
 	$mb.file add command -label [msgcat::mc {Copy to Regions}] \
 	-command [list CATGenerateRegions $varname]
@@ -323,7 +323,7 @@ proc CATDialog {varname format catalog title action} {
     CoordMenuEnable $f.coord.menu $varname system sky skyformat
 
     ttk::button $f.update -text [msgcat::mc {Update}] \
-	-command [list CATUpdate $varname]
+	-command [list TBLUpdate $varname]
 
     ttk::label $f.rtitle -text [msgcat::mc {Radius}]
     ttk::entry $f.r -textvariable ${varname}(radius) -width 14
@@ -497,7 +497,7 @@ proc CATDialog {varname format catalog title action} {
     }
 
     ARCoord $varname
-    CATUpdate $varname
+    TBLUpdate $varname
     CATDialogUpdate $varname
 
     ARStatus $varname {}
@@ -715,27 +715,6 @@ proc CATDestroy {varname} {
     ARDestroy $varname
 }
 
-proc CATCrosshair {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    if {[$var(frame) has wcs celestial $var(system)]} {
-	set coord [$var(frame) get crosshair \
-		       $var(system) $var(sky) $var(skyformat)]
-	set var(x) [lindex $coord 0]
-	set var(y) [lindex $coord 1]
-	set var(name) {}
-    }
-}
-
 proc CATEdit {varname} {
     upvar #0 $varname var
     global $varname
@@ -885,38 +864,6 @@ proc CATPageSetup {varname} {
 	x11 -
 	aqua {}
 	win32 {win32 pm pagesetup}
-    }
-}
-
-proc CATUpdate {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATUpdate $varname"
-    }
-
-    if {[info commands $var(frame)] == {}} {
-	return
-    }
-
-    if {![$var(frame) has fits]} {
-	return
-    }
-
-    if {[$var(frame) has wcs celestial $var(system)]} {
-	set coord [$var(frame) get fits center \
-		       $var(system) $var(sky) $var(skyformat)]
-	set var(x) [lindex $coord 0]
-	set var(y) [lindex $coord 1]
-
-	set size [$var(frame) get fits size \
-		      $var(system) $var(sky) $var(rformat)]
-	set ww [lindex $size 0]
-	set hh [lindex $size 1]
-	set var(radius) [expr ($ww+$hh)/4]
-	set var(name) {}
     }
 }
 

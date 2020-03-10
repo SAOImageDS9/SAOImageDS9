@@ -133,8 +133,8 @@ array set cat::table {
   7:371,target 73
   107:0 reduce
   59:412,target 162
-  150:0,target 103
-  149:0,target 102
+  150:0,target 104
+  149:0,target 103
   142:316 reduce
   112:316,target 48
   26:303,target 57
@@ -146,7 +146,7 @@ array set cat::table {
   11:420,target 69
   258:316,target 176
   118:0,target 19
-  53:316,target 100
+  53:316,target 101
   1:386,target 70
   26:302 reduce
   150:0 reduce
@@ -205,7 +205,7 @@ array set cat::table {
   170:335,target 206
   169:335,target 113
   77:0 reduce
-  54:316,target 101
+  54:316,target 102
   30:260,target 80
   30:259,target 79
   29:260,target 80
@@ -243,7 +243,7 @@ array set cat::table {
   198:374,target 210
   114:316,target 50
   37:261 shift
-  160:316,target 104
+  160:316,target 105
   159:316,target 156
   37:262 shift
   215:316,target 259
@@ -279,7 +279,7 @@ array set cat::table {
   143:0,target 44
   115:316,target 51
   60:308,target 115
-  161:316,target 105
+  161:316,target 106
   70:344,target 37
   10:333,target 32
   216:316,target 112
@@ -297,7 +297,7 @@ array set cat::table {
   85:0,target 84
   212:435 goto
   10:392,target 65
-  54:0,target 101
+  54:0,target 102
   37:316 reduce
   0:368,target 67
   193:0 reduce
@@ -560,7 +560,7 @@ array set cat::table {
   7:356 reduce
   7:357 reduce
   11:315,target 28
-  192:0,target 106
+  192:0,target 100
   4:385,target 16
   7:358 reduce
   26:309,target 57
@@ -572,7 +572,7 @@ array set cat::table {
   215:316 shift
   43:425 goto
   7:362 reduce
-  161:0,target 105
+  161:0,target 106
   194:411 goto
   138:0 reduce
   57:399,target 156
@@ -1828,7 +1828,7 @@ array set cat::table {
   111:0,target 47
   1:346 reduce
   10:344,target 37
-  192:316,target 106
+  192:316,target 100
   1:349 reduce
   12:356 reduce
   247:316,target 180
@@ -1859,7 +1859,7 @@ array set cat::table {
   211:326,target 246
   1:359 reduce
   12:366 reduce
-  53:0,target 100
+  53:0,target 101
   1:361 reduce
   12:367 reduce
   208:316 shift
@@ -2001,8 +2001,8 @@ array set cat::table {
   104:316,target 92
   43:350,target 101
   227:0 reduce
-  150:316,target 103
-  149:316,target 102
+  150:316,target 104
+  149:316,target 103
   64:293,target 135
   28:315 shift
   205:316,target 237
@@ -2142,7 +2142,7 @@ array set cat::table {
   201:273 shift
   201:274 shift
   101:426,target 182
-  160:0,target 104
+  160:0,target 105
   159:0,target 156
   125:316 reduce
   27:304,target 58
@@ -2556,7 +2556,7 @@ array set cat::rules {
   179,dc 1
   69,dc 1
   70,dc 0
-  106,dc 3
+  106,dc 2
   9,dc 1
   172,dc 2
   62,dc 1
@@ -2586,7 +2586,7 @@ array set cat::rules {
   110,dc 2
   175,dc 2
   65,dc 2
-  102,dc 2
+  102,dc 1
   5,dc 1
   167,dc 2
   57,dc 1
@@ -2703,7 +2703,7 @@ array set cat::rules {
   107,dc 4
   173,dc 2
   63,dc 0
-  100,dc 1
+  100,dc 3
   3,dc 1
   165,dc 2
   55,dc 1
@@ -2999,16 +2999,16 @@ array set cat::lr1_table {
   51 {{118 {0 316} 1}}
   46,trans {{257 77} {258 78} {259 79} {260 80} {261 81} {262 82} {403 107}}
   65,trans {}
-  52 {{106 {0 316} 1} {57 {309 310 311} 0} {58 {309 310 311} 0}}
+  52 {{100 {0 316} 1} {57 {309 310 311} 0} {58 {309 310 311} 0}}
   84,trans {}
-  53 {{100 {0 316} 1}}
-  54 {{101 {0 316} 1}}
-  55 {{102 {0 316} 1} {145 {0 316} 0} {146 {0 316} 0} {147 {0 316} 0}}
-  56 {{103 {0 316} 1}}
+  53 {{101 {0 316} 1}}
+  54 {{102 {0 316} 1}}
+  55 {{103 {0 316} 1} {145 {0 316} 0} {146 {0 316} 0} {147 {0 316} 0}}
+  56 {{104 {0 316} 1}}
   116,trans {}
-  57 {{104 {0 316} 1} {148 {0 316} 0} {149 {0 316} 0} {150 {0 316} 0} {151 {0 316} 0} {152 {0 316} 0} {153 {0 316} 0} {154 {0 316} 0} {155 {0 316} 0} {156 {0 316} 0}}
+  57 {{105 {0 316} 1} {148 {0 316} 0} {149 {0 316} 0} {150 {0 316} 0} {151 {0 316} 0} {152 {0 316} 0} {153 {0 316} 0} {154 {0 316} 0} {155 {0 316} 0} {156 {0 316} 0}}
   135,trans {}
-  58 {{105 {0 316} 1} {1 {0 316} 0} {2 {0 316} 0} {3 {0 316} 0} {4 {0 316} 0} {5 {0 316} 0} {6 {0 316} 0} {7 {0 316} 0}}
+  58 {{106 {0 316} 1} {1 {0 316} 0} {2 {0 316} 0} {3 {0 316} 0} {4 {0 316} 0} {5 {0 316} 0} {6 {0 316} 0} {7 {0 316} 0}}
   154,trans {}
   59 {{107 {0 316} 1} {57 {313 314} 0} {58 {313 314} 0}}
   60 {{108 {0 316} 1} {45 {0 316} 0} {46 {0 316} 0} {47 {0 316} 0} {48 {0 316} 0} {49 {0 316} 0} {50 {0 316} 0} {51 {0 316} 0}}
@@ -3234,14 +3234,14 @@ array set cat::lr1_table {
   107,trans {}
   147 {{58 {309 310 311} 1}}
   126,trans {}
-  148 {{106 {0 316} 2} {54 {0 316} 0} {55 {0 316} 0} {56 {0 316} 0}}
+  148 {{100 {0 316} 2} {54 {0 316} 0} {55 {0 316} 0} {56 {0 316} 0}}
   145,trans {}
   150 {{147 {0 316} 1}}
   149 {{146 {0 316} 1}}
   164,trans {{313 146} {314 147} {412 198}}
-  151 {{102 {0 316} 2}}
+  151 {{103 {0 316} 2}}
   183,trans {}
-  152 {{103 {0 316} 2}}
+  152 {{104 {0 316} 2}}
   212,trans {{316 248}}
   153 {{148 {0 316} 1}}
   231,trans {}
@@ -3262,8 +3262,8 @@ array set cat::lr1_table {
   93,trans {}
   161 {{156 {0 316} 1}}
   4,trans {{340 14} {375 15} {385 16} {389 17} {393 18} {394 19} {428 20}}
-  162 {{104 {0 316} 2}}
-  163 {{105 {0 316} 2}}
+  162 {{105 {0 316} 2}}
+  163 {{106 {0 316} 2}}
   106,trans {}
   164 {{107 {0 316} 2} {57 {309 310 311} 0} {58 {309 310 311} 0}}
   125,trans {}
@@ -3336,7 +3336,7 @@ array set cat::lr1_table {
   205 {{171 {0 316} 1} {13 {0 316} 0} {14 {0 316} 0}}
   195 {{56 {0 316} 1}}
   206 {{172 {0 316} 1} {15 {0 316} 0} {16 {0 316} 0} {17 {0 316} 0}}
-  196 {{106 {0 316} 3}}
+  196 {{100 {0 316} 3}}
   207 {{170 {0 316} 1} {11 {0 316} 0} {12 {0 316} 0}}
   197 {{147 {0 316} 2}}
   104,trans {}
@@ -4428,7 +4428,7 @@ proc cat::yyparse {} {
                     81 { ProcessCmdCVAR0 ARCancel }
                     82 { ProcessCmdCVAR0 CATOff }
                     83 { ProcessCmdCVAR0 CATDestroy }
-                    85 { ProcessCmdCVAR0 CATCrosshair }
+                    85 { ProcessCmdCVAR0 TBLCrosshair }
                     86 { ProcessCmdCVAR edit $2 CATEdit }
                     87 { TBLCmdSave $3 $2 }
                     89 { ProcessCmdCVAR0 CATHeader }
@@ -4441,28 +4441,28 @@ proc cat::yyparse {} {
                     97 { ProcessCmdCVAR0 TBLCmdPrint }
                     98 { ProcessCmdCVAR psky $2 CATGenerate }
                     99 { ProcessCmdCVAR psystem $2 CATGenerate }
-                    100 { ProcessCmdCVAR0 CATGenerateRegions }
-                    101 { global cvarname; CATApply $cvarname 1 }
-                    103 { TBLCmdSave $2 VOTWrite }
-                    104 { ProcessCmdCVAR server $2 }
-                    105 { ProcessCmdCVAR show $2 CATGenerate }
-                    106 { ProcessCmdCVAR3 radius $2 rformat $3 rformat,msg $3 }
-                    107 { ProcessCmdCVAR3 radius [expr ($2+$3)/2.] rformat $4 rformat,msg $4 }
+                    100 { TBLCmdSize $2 $3 }
+                    101 { ProcessCmdCVAR0 CATGenerateRegions }
+                    102 { global cvarname; CATApply $cvarname 1 }
+                    104 { TBLCmdSave $2 VOTWrite }
+                    105 { ProcessCmdCVAR server $2 }
+                    106 { ProcessCmdCVAR show $2 CATGenerate }
+                    107 { TBLCmdSize [expr ($2+$3)/2.] $4 }
                     108 { CatalogCmdSkyframe $2 }
                     109 { ProcessCmdCVAR skyformat $2 }
                     111 { ProcessCmdCVAR row 1 }
                     113 { CagtalogCmdCat row $2 }
                     115 { CatalogCmdSystem $2 }
-                    116 { ProcessCmdCVAR0 CATUpdate }
+                    116 { ProcessCmdCVAR0 TBLUpdate }
                     117 { ProcessCmdCVAR colx $2 CATGenerate }
                     118 { ProcessCmdCVAR colx $2 CATGenerate }
                     119 { ProcessCmdCVAR coly $2 CATGenerate }
                     120 { ProcessCmdCVAR coly $2 CATGenerate }
-                    121 { ProcessCmdCVAR3 x $1 y $2 sky fk5 }
-                    122 { ProcessCmdCVAR3 x $1 y $2 sky $3 }
-                    123 { ProcessCmdCVAR3 x $1 y $2 sky fk5 }
-                    124 { ProcessCmdCVAR3 x $1 y $2 sky $3 }
-                    125 { CatalogCmdFilterLoad $2 }
+                    121 { TBLCmdCoord $1 $2 fk5 }
+                    122 { TBLCmdCoord $1 $2 $3 }
+                    123 { TBLCmdCoord $1 $2 fk5 }
+                    124 { TBLCmdCoord $1 $2 $3 }
+                    125 { TBLCmdFilterLoad $2 }
                     126 { ProcessCmdCVAR filter $1 CATTable }
                     127 { CatalogCmdMatch }
                     128 { ProcessCmdSet2 icat error $2 eformat $3 }

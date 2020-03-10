@@ -12,15 +12,24 @@ clear	    {return $CLEAR_}
 close	    {return $CLOSE_}
 coordinate  {return $COORDINATE_}
 crosshair   {return $CROSSHAIR_}
+decr	    {return $DECR_}
 export	    {return $EXPORT_}
+filter	    {return $FILTER_}
+hide	    {return $HIDE_}
+incr	    {return $INCR_}
+load	    {return $LOAD_}
 name	    {return $NAME_}
+panto	    {return $PANTO_}
 print	    {return $PRINT_}
 radius	    {return $RADIUS_}
+regions	    {return $REGIONS_}
 retrieve    {return $RETRIEVE_}
 save	    {return $SAVE_}
+show	    {return $SHOW_}
 size	    {return $SIZE_}
 sky	    {return $SKY_}
 skyformat   {return $SKYFORMAT_}
+sort	    {return $SORT_}
 system	    {return $SYSTEM_}
 update	    {return $UPDATE_}
 
@@ -34,6 +43,7 @@ starbase    {return $STARBASE_}
 csv	    {return $CSV_}
 tsv	    {return $TSV_}
 
+#include yesno.fin
 #include wcssys.fin
 #include skyframe.fin
 #include wcsformat.fin

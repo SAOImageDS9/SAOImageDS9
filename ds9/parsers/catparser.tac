@@ -144,7 +144,7 @@ catCmd : coordinate
  | CLOSE_ {ProcessCmdCVAR0 CATDestroy}
 # backward compatibilty
  | COORDINATE_ coordinate
- | CROSSHAIR_ {ProcessCmdCVAR0 CATCrosshair}
+ | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
  | EDIT_ yesno {ProcessCmdCVAR edit $2 CATEdit}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | FILTER_ filter
@@ -160,35 +160,35 @@ catCmd : coordinate
  | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | PSKY_ skyframe {ProcessCmdCVAR psky $2 CATGenerate}
  | PSYSTEM_ wcssys {ProcessCmdCVAR psystem $2 CATGenerate}
+ | RADIUS_ numeric rformat {TBLCmdSize $2 $3}
  | REGIONS_ {ProcessCmdCVAR0 CATGenerateRegions}
  | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
  | SAMP_ samp
  | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | SERVER_ server {ProcessCmdCVAR server $2}
  | SHOW_ yesno {ProcessCmdCVAR show $2 CATGenerate}
- | RADIUS_ numeric rformat {ProcessCmdCVAR3 radius $2 rformat $3 rformat,msg $3}
 # backward compatibility
- | SIZE_ numeric numeric rformat {ProcessCmdCVAR3 radius [expr ($2+$3)/2.] rformat $4 rformat,msg $4}
+ | SIZE_ numeric numeric rformat {TBLCmdSize [expr ($2+$3)/2.] $4}
  | SKY_ skyframe {CatalogCmdSkyframe $2}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SORT_ sort
  | SYMBOL_ {ProcessCmdCVAR row 1} symbol
  | SYMBOL_ INT_ {CagtalogCmdCat row $2} symbol
  | SYSTEM_ wcssys {CatalogCmdSystem $2}
- | UPDATE_ {ProcessCmdCVAR0 CATUpdate}
+ | UPDATE_ {ProcessCmdCVAR0 TBLUpdate}
  | 'x' STRING_ {ProcessCmdCVAR colx $2 CATGenerate}
  | RA_ STRING_ {ProcessCmdCVAR colx $2 CATGenerate}
  | 'y' STRING_ {ProcessCmdCVAR coly $2 CATGenerate}
  | DEC_ STRING_ {ProcessCmdCVAR coly $2 CATGenerate}
  ;
 
-coordinate : numeric numeric {ProcessCmdCVAR3 x $1 y $2 sky fk5}
- | numeric numeric skyframe {ProcessCmdCVAR3 x $1 y $2 sky $3}
- | SEXSTR_ SEXSTR_ {ProcessCmdCVAR3 x $1 y $2 sky fk5}
- | SEXSTR_ SEXSTR_ skyframe {ProcessCmdCVAR3 x $1 y $2 sky $3}
+coordinate : numeric numeric {TBLCmdCoord $1 $2 fk5}
+ | numeric numeric skyframe {TBLCmdCoord $1 $2 $3}
+ | SEXSTR_ SEXSTR_ {TBLCmdCoord $1 $2 fk5}
+ | SEXSTR_ SEXSTR_ skyframe {TBLCmdCoord $1 $2 $3}
  ;
 
-filter : LOAD_ STRING_ {CatalogCmdFilterLoad $2}
+filter : LOAD_ STRING_ {TBLCmdFilterLoad $2}
  | STRING_ {ProcessCmdCVAR filter $1 CATTable}
  ;
 

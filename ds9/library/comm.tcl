@@ -259,7 +259,7 @@ proc CommGet {proc id paramlist fn} {
 	fits {ProcessSendFitsCmd $proc $id $param {} $fn}
 	frame {ProcessSendFrameCmd $proc $id $param}
 	fp -
-	footprint {ProcessSendFootPrintCmd $proc $id $param {} $fn}
+	footprint {ProcessSendFootprintCmd $proc $id $param {} $fn}
 	gif {ProcessSendGIFCmd $proc $id $param {} $fn}
 	grid {ProcessSendGridCmd $proc $id $param}
 	header {}

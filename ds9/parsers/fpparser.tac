@@ -72,6 +72,7 @@ fpCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | FILTER_ filter
+# backward compatibily
  | HIDE_ {ProcessCmdCVAR show 0 FPGenerate}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PANTO_ yesno {ProcessCmdCVAR panto $2}

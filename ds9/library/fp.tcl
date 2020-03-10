@@ -471,7 +471,7 @@ proc FPUpdateWCS {} {
 
 # Process Cmds
 
-proc ProcessFPCmd {varname iname} {
+proc ProcessFootprintCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
@@ -526,7 +526,7 @@ proc FPCmdRef {ref} {
     }
 }
 
-proc ProcessSendFPCmd {proc id param sock fn} {
+proc ProcessSendFootprintCmd {proc id param sock fn} {
     global ifp
     $proc $id "$ifp(fps)\n"
 }

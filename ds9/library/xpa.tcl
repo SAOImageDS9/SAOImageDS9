@@ -214,6 +214,11 @@ proc CreateXPA {} {
 	XPASendFits {} "fillbuf=false" \
 	XPARcvdFits {} "fillbuf=false"
 
+    xpacmdadd $xpa footprint \
+	{} \
+	XPASendFP {} {} \
+	XPARcvdFP {} "fillbuf=false"
+
     xpacmdadd $xpa frame \
 	{} \
 	XPASendFrame {} {} \
@@ -1041,6 +1046,19 @@ proc XPARcvdFits {xpa cdata param buf len} {
     XPADebug "XPARcvdFits" $param
     InitError xpa
     catch {set i 0; ProcessFitsCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPASendFP {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendFootprintCmd xpasetbuf $xpa $param {} {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdFP {xpa cdata param buf len} {
+    XPADebug "XPARcvdFP" $param
+    InitError xpa
+    catch {set i 0; ProcessFootprintCmd param i}
     XPACatchError $xpa
 }
 

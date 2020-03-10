@@ -1191,33 +1191,33 @@ array set fp::rules {
 
 array set fp::rules {
   41,line 201
-  96,line 276
+  96,line 277
   7,line 165
   37,line 197
-  93,line 273
+  93,line 274
   4,line 162
   34,line 193
-  90,line 268
-  89,line 267
+  90,line 269
+  89,line 268
   1,line 159
   50,e 1
   31,line 190
-  86,line 260
+  86,line 261
   27,line 186
-  83,line 255
+  83,line 256
   24,line 183
-  80,line 250
-  79,line 249
+  80,line 251
+  79,line 250
   21,line 180
-  76,line 244
+  76,line 245
   17,line 176
-  73,line 241
+  73,line 242
   14,line 173
-  70,line 237
-  69,line 236
+  70,line 238
+  69,line 237
   11,line 170
-  66,line 233
-  63,line 230
+  66,line 234
+  63,line 231
   60,line 227
   59,line 226
   56,line 221
@@ -1229,29 +1229,29 @@ array set fp::rules {
   9,line 168
   40,line 200
   39,line 199
-  95,line 275
+  95,line 276
   6,line 164
   36,line 196
-  92,line 272
+  92,line 273
   3,line 161
   33,line 192
-  88,line 264
+  88,line 265
   29,line 188
   30,line 189
-  85,line 259
+  85,line 260
   26,line 185
-  82,line 252
+  82,line 253
   23,line 182
-  78,line 246
+  78,line 247
   19,line 178
   20,line 179
-  75,line 243
+  75,line 244
   16,line 175
-  72,line 240
+  72,line 241
   13,line 172
-  68,line 235
+  68,line 236
   10,line 169
-  65,line 232
+  65,line 233
   62,line 229
   58,line 225
   55,line 220
@@ -1263,26 +1263,26 @@ array set fp::rules {
   8,line 167
   38,line 198
   52,e 0
-  94,line 274
+  94,line 275
   5,line 163
   35,line 195
-  91,line 271
+  91,line 272
   2,line 160
   32,line 191
-  87,line 263
+  87,line 264
   28,line 187
-  84,line 256
+  84,line 257
   25,line 184
-  81,line 251
+  81,line 252
   22,line 181
-  77,line 245
+  77,line 246
   18,line 177
-  74,line 242
+  74,line 243
   15,line 174
-  71,line 238
+  71,line 239
   12,line 171
-  67,line 234
-  64,line 231
+  67,line 235
+  64,line 232
   61,line 228
   57,line 224
   54,line 220
@@ -1562,7 +1562,7 @@ array set fp::token_id_table {
   351,title {}
   294 ICRS_
   304 STRING_
-  354,line 266
+  354,line 267
   305 CANCEL_
   295 GALACTIC_
   306 CLEAR_
@@ -1576,7 +1576,7 @@ array set fp::token_id_table {
   310 DECR_
   309 CROSSHAIR_
   299 ARCSEC_
-  351,line 254
+  351,line 255
   311 EXPORT_
   283,t 0
   312 FILTER_
@@ -1719,20 +1719,20 @@ array set fp::token_id_table {
   error,title {}
   291,line 43
   301,line 56
-  356,line 277
+  356,line 278
   263,t 0
   258,title NO
   287,line 38
   277,title WCSN
   284,t 0
-  353,line 262
+  353,line 263
   306,title CLEAR
   296,title ECLIPTIC
   325,title SKY
   344,title {}
   315,t 0
   284,line 35
-  350,line 248
+  350,line 249
   349,line 223
   336,t 0
   281,line 32
@@ -1825,11 +1825,11 @@ array set fp::token_id_table {
   289,line 40
   290,line 42
   300,line 54
-  355,line 270
+  355,line 271
   316,t 0
   286,line 37
   337,t 0
-  352,line 258
+  352,line 259
   271,title WCSH
   261,t 0
   283,line 34

@@ -136,14 +136,14 @@ catalog : NEW_ {CATTool}
  | CDS_ STRING_ {CatalogCmdRef $2} catCmd
  ;
 
-catCmd : coordinate
- | ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
+catCmd : ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
  | ALLROWS_ yesno {ProcessCmdCVAR allrows $2}
  | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 CATOff}
  | CLOSE_ {ProcessCmdCVAR0 CATDestroy}
-# backward compatibilty
  | COORDINATE_ coordinate
+# backward compatibilty
+ | coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
  | EDIT_ yesno {ProcessCmdCVAR edit $2 CATEdit}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}

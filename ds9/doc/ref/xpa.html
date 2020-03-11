@@ -392,12 +392,12 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [import sb|tsv &lt;filename&gt;]<br>
 <br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [allcols]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [allrows]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec &lt;col&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [edit yes|no]<br>
@@ -455,12 +455,12 @@ $xpaset -p ds9 catalog cds {I/252}<br>
 $xpaset -p ds9 catalog load foo.xml<br>
 $xpaset -p ds9 catalog import tsv foo.tsv<br>
 <br>
-$xpaset -p ds9 catalog 202.48 47.21 fk5<br>
 $xpaset -p ds9 catalog allrows<br>
 $xpaset -p ds9 catalog allcols<br>
 $xpaset -p ds9 catalog cancel<br>
 $xpaset -p ds9 catalog clear<br>
 $xpaset -p ds9 catalog close<br>
+$xpaset -p ds9 catalog coordinate 202.48 47.21 fk5<br>
 $xpaset -p ds9 catalog crosshair<br>
 $xpaset -p ds9 catalog dec DEC<br>
 $xpaset -p ds9 catalog edit yes<br>
@@ -2398,8 +2398,8 @@ $xpaset -p ds9 shm mosaic wcs key 100 foo<br>
 $xpaset -p ds9 shm rgbcube key 100 foo<br>
 $xpaset -p ds9 shm rgbimage key 100 foo<br>
 $xpaset -p ds9 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
-$xpaset -p ds9 shm array shmid 102 [dim=32,bitpix=-32]<br>
-<br></tt> <b><a name="sia" id="sia"></a>sia<br></b>
+$xpaset -p ds9 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
+<p><b><a name="sia" id="sia"></a>sia</b></b>
 <p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise.</p>
 <tt>Syntax:<br>
 sia [2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>

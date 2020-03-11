@@ -375,12 +375,12 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [import sb|tsv &lt;filename&gt;]<br>
 <br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [allcols]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [allrows]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec &lt;col&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [edit yes|no]<br>
@@ -435,12 +435,12 @@ $ds9 -catalog cds "I/252"<br>
 $ds9 -catalog load foo.xml<br>
 $ds9 -catalog import tsv foo.tsv<br>
 <br>
-$ds9 -catalog 202.48 47.21 fk5<br>
 $ds9 -catalog allrows<br>
 $ds9 -catalog allcols<br>
 $ds9 -catalog cancel<br>
 $ds9 -catalog clear<br>
 $ds9 -catalog close<br>
+$ds9 -catalog coordinate 202.48 47.21 fk5<br>
 $ds9 -catalog crosshair<br>
 $ds9 -catalog dec DEC<br>
 $ds9 -catalog edit yes<br>

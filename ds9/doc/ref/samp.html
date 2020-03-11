@@ -431,12 +431,12 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [import sb|tsv &lt;filename&gt;]<br>
 <br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [allcols]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [allrows]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec &lt;col&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [edit yes|no]<br>
@@ -496,12 +496,12 @@ catalog cds{I/252}<br>
 catalog load foo.xml<br>
 catalog import tsv foo.tsv<br>
 <br>
-catalog coordinate 202.48 47.21 fk5<br>
 catalog allrows<br>
 catalog allcols<br>
 catalog cancel<br>
 catalog clear<br>
 catalog close<br>
+catalog coordinate 202.48 47.21 fk5<br>
 catalog crosshair<br>
 catalog dec DEC<br>
 catalog edit yes<br>
@@ -2494,8 +2494,8 @@ shm mosaic wcs key 100 foo<br>
 shm rgbcube key 100 foo<br>
 shm rgbimage key 100 foo<br>
 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
-shm array shmid 102 [dim=32,bitpix=-32]<br>
-<br></tt> <b><a name="sia" id="sia"></a>sia<br></b>
+shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
+<p><b><a name="sia" id="sia"></a>sia</b></p>
 <p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise.</p>
 <tt>Syntax:<br>
 sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>

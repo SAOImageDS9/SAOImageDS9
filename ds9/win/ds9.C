@@ -37,6 +37,7 @@ extern "C" {
 
   int Tclxpa_Init(Tcl_Interp*);
   int Tcliis_Init(Tcl_Interp*);
+  int Tclfitsy_Init(Tcl_Interp*);
 
   int Tls_Init(Tcl_Interp*);
   int Tclxml_Init(Tcl_Interp*);
@@ -149,6 +150,12 @@ int SAOAppInit(Tcl_Interp *interp)
   if (Tcliis_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
   Tcl_StaticPackage (interp, "tcliis", Tcliis_Init, 
+  		     (Tcl_PackageInitProc*)NULL);
+
+  // Tclfitsy
+  if (Tclfitsy_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  Tcl_StaticPackage (interp, "tclfitsy", Tclfitsy_Init, 
   		     (Tcl_PackageInitProc*)NULL);
 
   // Tkmpeg

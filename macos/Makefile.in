@@ -43,7 +43,7 @@ TKFILES = \
 
 saods9	: dirs tcl tk \
 	openssl \
-	tcliis tclsignal \
+	tclfitsy tcliis tclsignal \
 	tls tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \

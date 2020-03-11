@@ -44,6 +44,7 @@
 <a href="#fifo">fifo</a><br>
 <a href="#fifo_only">fifo_only</a><br>
 <a href="#fits">fits</a><br>
+<a href="#footprint">footprint</a><br>
 <a href="#frame">frame</a><br>
 <a href="#geometry">geometry</a><br>
 <a href="#gif">gif</a><br>
@@ -819,6 +820,57 @@ $ds9 -fits foo.fits<br>
 $ds9 -fits bar.fits[bin=detx,dety]<br>
 $cat foo.fits | ds9 -fits -<br>
 $cat bar.fits | ds9 -fits -[bin=detx,dety]<br></tt>
+<p><b><a name="footprint" id="footprint"></a>footprint<br>
+fp</b></p>
+<p>Support for Chandra (CXC) and Hubble Legacy Archive (HLA) footprint servers.</p>
+<tt>Syntax:<br>
+-footprint [cxc|hla]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export sb|tsv &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [filter &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [filter load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [name &lt;object&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [panto yes|no]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [print]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [regions]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [retrieve]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show yes|no]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sky &lt;skyframe&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [skyformat &lt;skyformat&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sort &lt;col&gt; incr|decr]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
+<br>
+Example:<br>
+$ds9 -footprint cxc<br>
+<br>
+$ds9 -footprint cancel<br>
+$ds9 -footprint clear<br>
+$ds9 -footprint close<br>
+$ds9 -footprint coordinate 202.48 47.21 fk5<br>
+$ds9 -footprint crosshair<br>
+$ds9 -footprint export tsv foo.tsv<br>
+$ds9 -footprint filter'\$ObsId&lt;10000'<br>
+$ds9 -footprint filter load foo.flt<br>
+$ds9 -footprint name m51<br>
+$ds9 -footprint panto no<br>
+$ds9 -footprint print<br>
+$ds9 -footprint regions<br>
+$ds9 -footprint retrieve<br>
+$ds9 -footprint save foo.xml<br>
+$ds9 -footprint show yes<br>
+$ds9 -footprint radius 1 degrees<br>
+$ds9 -footprint sky fk5<br>
+$ds9 -footprint skyformat degrees<br>
+$ds9 -footprint sort "ObsId" incr<br>
+$ds9 -footprint system wcs<br>
+$ds9 -footprint update</tt><br>
 <p><b><a name="frame" id="frame"></a>frame</b></p>
 <p>Controls frame functions. Frames may be created, deleted, reset, and centered. While return the current frame number. If you goto a frame that does not exists, it will be created. If the frame is hidden, it will be shown. The 'frameno' option is available for backward compatibility.</p>
 <tt>Syntax:<br>

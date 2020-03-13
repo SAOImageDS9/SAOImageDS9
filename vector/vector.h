@@ -77,8 +77,6 @@ class Vector {
 
   // restrict vector by bbox
   Vector& clip(const BBox&);
-
-  Vector TkCanvasPs(void* canvas);
 };
 
 // Vector separator(int)

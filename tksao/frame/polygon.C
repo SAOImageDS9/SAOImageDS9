@@ -83,10 +83,10 @@ void Polygon::renderPS(PSColorSpace mode)
   vertex.head();
   Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
   str << "newpath " << endl
-      << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+      << parent->TkCanvasPs(v) << " moveto" << endl;
   while (vertex.next()) {
     Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
-    str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+    str << parent->TkCanvasPs(v) << " lineto" << endl;
   }
 
   str << "closepath ";

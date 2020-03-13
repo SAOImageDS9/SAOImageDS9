@@ -79,9 +79,9 @@ void BaseBox::renderPSDraw(int ii)
     Vector v =  parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
     if (jj==0)
       str << "newpath " 
-	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+	  << parent->TkCanvasPs(v) << " moveto" << endl;
     else
-      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+      str << parent->TkCanvasPs(v) << " lineto" << endl;
   }
   str << "stroke" << endl << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
@@ -94,9 +94,9 @@ void BaseBox::renderPSFillDraw(int ii)
     Vector v =  parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
     if (jj==0)
       str << "newpath " 
-	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+	  << parent->TkCanvasPs(v) << " moveto" << endl;
     else
-      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+      str << parent->TkCanvasPs(v) << " lineto" << endl;
   }
   str << "fill" << endl << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);

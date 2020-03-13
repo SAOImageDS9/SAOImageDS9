@@ -65,11 +65,11 @@ void Segment::renderPS(PSColorSpace mode)
     Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
     if (first) {
       str << "newpath " << endl
-	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+	  << parent->TkCanvasPs(v) << " moveto" << endl;
       first = 0;
     }
     else
-      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+      str << parent->TkCanvasPs(v) << " lineto" << endl;
   } while (vertex.next());
 
   str << "stroke" << endl << ends;

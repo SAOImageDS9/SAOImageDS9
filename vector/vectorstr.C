@@ -2,9 +2,27 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+using namespace std;
+
 #include "vectorstr.h"
 #include "vector.h"
-#include "util.h"
+#include "vector3d.h"
+
+static char* dupstr(const char* str)
+{
+  char* copy;
+  if (str) {
+    copy=new char[strlen(str)+1];
+    strcpy(copy,str);
+  }
+  else
+    copy=NULL;
+
+  return copy;
+}
 
 // VectorStr
 

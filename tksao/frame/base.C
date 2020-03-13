@@ -1037,14 +1037,14 @@ void Base::psCrosshair(PSColorSpace mode)
     ostringstream str;
 
     str << "newpath " 
-	<< aa.TkCanvasPs(canvas) << ' '
+	<< TkCanvasPs(aa) << ' '
 	<< "moveto "
-	<< bb.TkCanvasPs(canvas) << ' '
+	<< TkCanvasPs(bb) << ' '
 	<< "lineto  stroke" << endl
 	<< "newpath " 
-	<< cc.TkCanvasPs(canvas) << ' '
+	<< TkCanvasPs(cc) << ' '
 	<< "moveto "
-	<< dd.TkCanvasPs(canvas) << ' '
+	<< TkCanvasPs(dd) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }

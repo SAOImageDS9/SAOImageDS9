@@ -640,6 +640,10 @@ void Widget::warpTo(Vector& vv)
 #endif
 }
 
+Vector Widget::TkCanvasPs(const Vector& v) {
+  return Vector(v[0], Tk_CanvasPsY(canvas, v[1]));
+}
+
 void Widget::psHead1(ostream& str, int width, int height)
 {
   switch (psColorSpace) {

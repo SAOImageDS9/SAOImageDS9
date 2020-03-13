@@ -83,9 +83,9 @@ void Line::renderPS(PSColorSpace mode)
 
   ostringstream str;
   str << "newpath " 
-      << aa.TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(aa) << ' '
       << "moveto "
-      << bb.TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(bb) << ' '
       << "lineto stroke" << endl << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }

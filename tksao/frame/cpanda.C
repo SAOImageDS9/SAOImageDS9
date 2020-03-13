@@ -112,9 +112,9 @@ void Cpanda::renderPS(PSColorSpace mode)
 
     ostringstream str;
     str << "newpath " 
-    	<< rr0.TkCanvasPs(parent->canvas) << ' '
+    	<< parent->TkCanvasPs(rr0) << ' '
 	<< "moveto "
-    	<< rr1.TkCanvasPs(parent->canvas) << ' '
+    	<< parent->TkCanvasPs(rr1) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }

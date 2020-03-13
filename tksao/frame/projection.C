@@ -86,9 +86,9 @@ void Projection::renderPS(PSColorSpace mode)
   {
     ostringstream str;
     str << "newpath " 
-	<< aa.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(aa) << ' '
 	<< "moveto "
-	<< bb.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(bb) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
@@ -108,13 +108,13 @@ void Projection::renderPS(PSColorSpace mode)
 
     ostringstream str;
     str << "newpath " 
-	<< lr.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(lr) << ' '
 	<< "moveto "
-	<< ur.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ur) << ' '
 	<< "lineto "
-	<< ul.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ul) << ' '
 	<< "lineto "
-	<< ll.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ll) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }

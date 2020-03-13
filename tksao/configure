@@ -5664,9 +5664,9 @@ util/grid3dbase.C
 util/gridbase.C
 util/ps.C
 util/util.C
-vector/vector.C
-vector/vector3d.C
-vector/vectorstr.C
+../vector/vector.C
+../vector/vector3d.C
+../vector/vectorstr.C
 widget/truecolor16.C
 widget/truecolor24.C
 widget/truecolor8.C
@@ -5718,7 +5718,7 @@ widget/widget.C
 
 
 
-    vars="-I. -I./colorbar -I./fitsy++ -I./frame -I./list -I./magnifier -I./panner -I./util -I./vector -I./widget -I${prefix}/include"
+    vars="-I. -I./colorbar -I./fitsy++ -I./frame -I./list -I./magnifier -I./panner -I./util -I../vector -I./widget -I${prefix}/include"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

@@ -153,14 +153,14 @@ void Compass::renderPS(PSColorSpace mode)
   {
     ostringstream str;
     str << "newpath " 
-	<< aa.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(aa) << ' '
 	<< "moveto "
-	<< bb.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(bb) << ' '
 	<< "lineto stroke" << endl
 	<< "newpath " 
-	<< aa.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(aa) << ' '
 	<< "moveto "
-	<< cc.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(cc) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
@@ -175,7 +175,7 @@ void Compass::renderPS(PSColorSpace mode)
 
     if (northText) {
       double angle = (bb-aa).angle();
-      Vector ddd = dd.TkCanvasPs(parent->canvas);
+      Vector ddd = parent->TkCanvasPs(dd);
       str << "gsave" << endl
 	  << "newpath " << endl
 	  << ddd << " moveto" << endl
@@ -216,7 +216,7 @@ void Compass::renderPS(PSColorSpace mode)
 
     if (eastText) {
       double angle = (cc-aa).angle();
-      Vector eee = ee.TkCanvasPs(parent->canvas);
+      Vector eee = parent->TkCanvasPs(ee);
       str << "gsave" << endl
 	  << "newpath " << endl
 	  << eee << " moveto" << endl

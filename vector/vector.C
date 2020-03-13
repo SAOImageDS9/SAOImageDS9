@@ -44,11 +44,6 @@ Vector& Vector::clip(const BBox& bb)
   return *this;
 }
 
-Vector Vector::TkCanvasPs(void* canvas)
-{
-  return Vector(v[0], Tk_CanvasPsY((Tk_Canvas)canvas, v[1]));
-}
-
 ostream& operator<<(ostream& os, const Vector& v)
 {
   unsigned char sep = (unsigned char)os.iword(Vector::separator);

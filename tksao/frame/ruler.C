@@ -115,9 +115,9 @@ void Ruler::renderPS(PSColorSpace mode)
   {
     ostringstream str;
     str << "newpath " 
-	<< dd.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(dd) << ' '
 	<< "moveto "
-	<< ee.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ee) << ' '
 	<< "lineto  stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
     renderPSArrow(p2,p1,Coord::CANVAS);
@@ -129,14 +129,14 @@ void Ruler::renderPS(PSColorSpace mode)
   {
     ostringstream str;
     str << "newpath " 
-	<< aa.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(aa) << ' '
 	<< "moveto "
-	<< cc.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(cc) << ' '
 	<< "lineto stroke" << endl
 	<< "newpath " 
-	<< bb.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(bb) << ' '
 	<< "moveto "
-	<< cc.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(cc) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
@@ -155,7 +155,7 @@ void Ruler::renderPS(PSColorSpace mode)
     distToStr(vstr);
     vstr << ends;
     char* buf = dupstr(vstr.str().c_str());
-    Vector tt = ((bb-aa)/2 + aa).TkCanvasPs(parent->canvas);
+    Vector tt = parent->TkCanvasPs(((bb-aa)/2 + aa));
     str << "gsave" << endl
 	<< "newpath " << endl
 	<< tt << " moveto" << endl

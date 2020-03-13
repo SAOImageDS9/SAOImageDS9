@@ -171,13 +171,13 @@ void Point::renderPS(PSColorSpace mode)
   case DIAMOND:
     vv = generateDiamond(Coord::CANVAS);
     str << "newpath " 
-	<< vv[0].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[0]) << ' '
 	<< "moveto "
-	<< vv[1].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[1]) << ' '
 	<< "lineto "
-	<< vv[2].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[2]) << ' '
 	<< "lineto "
-	<< vv[3].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[3]) << ' '
 	<< "lineto "
 	<< "closepath stroke" << endl
 	<< ends;
@@ -186,14 +186,14 @@ void Point::renderPS(PSColorSpace mode)
   case CROSS:
     vv = generateCross(Coord::CANVAS);
     str << "newpath " 
-	<< vv[0].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[0]) << ' '
 	<< "moveto "
-	<< vv[1].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[1]) << ' '
 	<< "lineto stroke" << endl
 	<< "newpath " 
-	<< vv[2].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[2]) << ' '
 	<< "moveto "
-	<< vv[3].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[3]) << ' '
 	<< "lineto stroke" << endl
 	<< ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
@@ -201,14 +201,14 @@ void Point::renderPS(PSColorSpace mode)
   case EX:
     vv = generateEx(Coord::CANVAS);
     str << "newpath " 
-	<< vv[0].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[0]) << ' '
 	<< "moveto "
-	<< vv[1].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[1]) << ' '
 	<< "lineto stroke" << endl
 	<< "newpath " 
-	<< vv[2].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[2]) << ' '
 	<< "moveto "
-	<< vv[3].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[3]) << ' '
 	<< "lineto stroke" << endl
 	<< ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
@@ -216,19 +216,19 @@ void Point::renderPS(PSColorSpace mode)
   case ARROW:
     vv = generateArrow(Coord::CANVAS);
     str << "newpath " 
-	<< vv[0].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[0]) << ' '
 	<< "moveto "
-	<< vv[3].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[3]) << ' '
 	<< "lineto stroke" << endl
 	<< "newpath " 
-	<< vv[1].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[1]) << ' '
 	<< "moveto "
-	<< vv[3].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[3]) << ' '
 	<< "lineto stroke" << endl
 	<< "newpath " 
-	<< vv[2].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[2]) << ' '
 	<< "moveto "
-	<< vv[3].TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(vv[3]) << ' '
 	<< "lineto stroke" << endl
 	<< ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
@@ -248,16 +248,16 @@ void Point::renderPSCircle(int mode, int ss)
   if (parent->isAzElZero()) {
     Vector cc = parent->mapFromRef(center,Coord::CANVAS);
     ostringstream str;
-    str << "newpath " << cc.TkCanvasPs(parent->canvas) << ' ' << ss/2.
+    str << "newpath " << parent->TkCanvasPs(cc) << ' ' << ss/2.
 	<< " 0 360 arc stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
   else {
     Vector* vv = generateCircle(Coord::CANVAS,ss);
     ostringstream str;
-    str << "newpath " << vv[0].TkCanvasPs(parent->canvas) << " moveto " << endl;
+    str << "newpath " << parent->TkCanvasPs(vv[0]) << " moveto " << endl;
     for (int ii=1; ii<NUMSEG; ii++)
-      str << vv[ii].TkCanvasPs(parent->canvas) << " lineto" << endl;
+      str << parent->TkCanvasPs(vv[ii]) << " lineto" << endl;
     str << "closepath stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
     delete [] vv;
@@ -269,13 +269,13 @@ void Point::renderPSBox(int mode)
   Vector* vv = generateBox(Coord::CANVAS);
   ostringstream str;
   str << "newpath " 
-      << vv[0].TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(vv[0]) << ' '
       << "moveto "
-      << vv[1].TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(vv[1]) << ' '
       << "lineto "
-      << vv[2].TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(vv[2]) << ' '
       << "lineto "
-      << vv[3].TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(vv[3]) << ' '
       << "lineto " << endl
       << "closepath stroke" << endl
       << ends;

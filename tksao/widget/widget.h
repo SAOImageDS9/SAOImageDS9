@@ -168,6 +168,7 @@ class Widget {
   void warp(Vector&);
   void warpTo(Vector&);
 
+  Vector TkCanvasPs(const Vector&);
   void psColor(PSColorSpace mode, XColor* clr);
 
   // Required Canvas Functions

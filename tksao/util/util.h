@@ -21,7 +21,6 @@ using namespace std;
 
 #include "fuzzy.h"
 #include "vector.h"
-#include "vector3d.h"
 
 #ifndef PATH_MAX
 #define PATH_MAX 1024

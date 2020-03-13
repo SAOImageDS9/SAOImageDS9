@@ -216,10 +216,10 @@ int GridBase::psLine(int n, float* x, float* y)
     ostringstream str;
     if (i == 0) {
       str << "newpath " << endl;
-      str << v.TkCanvasPs(parent_->getCanvas()) << " moveto" << endl << ends;
+      str << parent_->TkCanvasPs(v) << " moveto" << endl << ends;
     }
     else
-      str << v.TkCanvasPs(parent_->getCanvas()) << " lineto" << endl << ends;
+      str << parent_->TkCanvasPs(v) << " lineto" << endl << ends;
 
     Tcl_AppendResult(parent_->getInterp(), str.str().c_str(), NULL);
   }
@@ -250,7 +250,7 @@ int GridBase::psText(const char* txt, float x, float y,
   psColor(text_);
 
   str << "gsave " 
-      << cc.TkCanvasPs(parent_->getCanvas()) << " moveto" << endl
+      << parent_->TkCanvasPs(cc) << " moveto" << endl
       << radToDeg(angle) << " rotate " 
       << '(' << psQuote(txt) << ')' << " show"
       << " grestore" << endl << ends;

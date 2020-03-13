@@ -393,9 +393,9 @@ void Marker::renderPSInclude(PSColorSpace mode)
 
     ostringstream str;
     str << "newpath " 
-	<< ll.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ll) << ' '
 	<< "moveto "
-	<< ur.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ur) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
@@ -414,7 +414,7 @@ void Marker::renderPSText(PSColorSpace mode)
 	<< " scalefont setfont" << endl;
 
     Vector bbc = bbox.center();
-    Vector tt =  Vector(bbc[0], bbox.ll[1]).TkCanvasPs(parent->canvas);
+    Vector tt =  parent->TkCanvasPs(Vector(bbc[0], bbox.ll[1]));
     str << "gsave" << endl
 	<< "newpath " << endl
 	<< tt << " moveto" << endl
@@ -437,9 +437,9 @@ void Marker::renderPSArrow(const Vector& p1, const Vector& p2,
   Vector* vv = arrow(p1,p2,sys);
   ostringstream str;
   str << "newpath " << endl
-      << vv[0].TkCanvasPs(parent->canvas) << " moveto" << endl;
+      << parent->TkCanvasPs(vv[0]) << " moveto" << endl;
   for (int ii=1; ii<6; ii++)
-      str << vv[ii].TkCanvasPs(parent->canvas) << " lineto" << endl;
+      str << parent->TkCanvasPs(vv[ii]) << " lineto" << endl;
   str << "closepath fill" << endl << ends;
   Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
   delete [] vv;

@@ -35,11 +35,6 @@ Vector3d& Vector3d::operator=(const Vector& a)
   return *this;
 }
 
-Vector Vector3d::TkCanvasPs(void* canvas)
-{
-  return Vector(v[0], Tk_CanvasPsY((Tk_Canvas)canvas, v[1]));
-}
-
 ostream& operator<<(ostream& os, const Vector3d& v)
 {
   unsigned char sep = (unsigned char)os.iword(Vector::separator);

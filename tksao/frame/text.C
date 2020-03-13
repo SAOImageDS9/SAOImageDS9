@@ -72,7 +72,8 @@ void Text::renderPS(PSColorSpace mode)
 	<< " scalefont setfont" << endl;
 
     double ang = rotate ? calcAngle() : 0;
-    Vector cc = (parent->mapFromRef(center,Coord::CANVAS)).TkCanvasPs(parent->canvas);
+    Vector bb = parent->mapFromRef(center,Coord::CANVAS);
+    Vector cc = parent->TkCanvasPs(bb);
     str << "gsave" << endl
 	<< "newpath " << endl
 	<< cc << " moveto" << endl

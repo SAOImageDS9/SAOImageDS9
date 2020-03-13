@@ -580,8 +580,8 @@ void Frame3dBase::psLine(Vector& ss, Vector& tt, int dd)
     str << "[] 0 setdash" << endl;
 
   str << "newpath " 
-      << ss.TkCanvasPs(canvas) << " moveto" << endl
-      << tt.TkCanvasPs(canvas) << " lineto stroke" << endl << ends;
+      << TkCanvasPs(ss) << " moveto" << endl
+      << TkCanvasPs(tt) << " lineto stroke" << endl << ends;
 
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }

@@ -105,10 +105,11 @@ SPECS	= \
 
 LLIBS	= \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
-	$(libdir)/libfuntools.a \
+	$(libdir)/libvector.a \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
+	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a \
 	$(libdir)/libxml2.a \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))

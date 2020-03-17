@@ -67,7 +67,7 @@ TKIMGTMPFILES = \
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tclfitsy tcliis tclxml tclzipfs tls xpa
 .PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
-.PHONY	: ast funtools openssl
+.PHONY	: vector ast funtools openssl
 
 all	: saods9
 
@@ -317,7 +317,7 @@ tkagif/Makefile :
 
 #-------------------------- tksao
 
-tksao	: ast funtools tksao/Makefile
+tksao	: vector ast funtools tksao/Makefile
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao -j $(JOBS) install
@@ -332,6 +332,22 @@ tksao/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#-------------------------- vector
+
+vector	: vector/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C vector -j $(JOBS) install
+
+vector/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd vector; \
+	./configure \
+	--enable-shared=no \
+	$(STD) \
+	$(PREFIX)
+
 #-------------------------- ast
 
 ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs/libast_pal.a
@@ -345,8 +361,7 @@ ast/Makefile :
 	--without-pthreads --enable-shared=no \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
-	$(PREFIX) \
-	--disable-shared
+	$(PREFIX)
 	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
 
 ast/ast.h :
@@ -470,7 +485,7 @@ scrub :
 .PHONY	: tclxmlclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tkagifclean
-.PHONY	: tksaoclean astclean funtoolsclean tktableclean xpaclean
+.PHONY	: tksaoclean vectorclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: tclclean tkclean \
 	opensslclean \
@@ -478,7 +493,7 @@ clean	: tclclean tkclean \
 	tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkagifclean tkhtml1clean \
-	tksaoclean astclean funtoolsclean ds9clean \
+	tksaoclean vectorclean astclean funtoolsclean ds9clean \
 	osclean dirsclean localclean scrub
 
 dirsclean :
@@ -561,6 +576,11 @@ tksaoclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao clean
 
+vectorclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C vector clean
+
 astclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -588,7 +608,7 @@ xpaclean :
 .PHONY	: tclxmldistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean 
-.PHONY	: tksaodistclean astdistclean funtoolsdistclean
+.PHONY	: tksaodistclean vectordistclean astdistclean funtoolsdistclean
 .PHONY	: tktabledistclean xpadistclean
 
 distclean : tcldistclean tkdistclean \
@@ -597,7 +617,8 @@ distclean : tcldistclean tkdistclean \
 	  tlsdistclean tclxmldistclean xpadistclean \
 	  tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	  tkmpegdistclean tkagifdistclean tkhtml1distclean \
-	  tksaodistclean astdistclean funtoolsdistclean ds9distclean \
+	  tksaodistclean vectordistclean astdistclean \
+	  funtoolsdistclean ds9distclean \
 	  osdistclean dirsdistclean localdistclean scrub
 
 dirsdistclean:
@@ -700,6 +721,11 @@ astdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C ast distclean
+
+vectordistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C vector distclean
 
 funtoolsdistclean :
 	@echo ""

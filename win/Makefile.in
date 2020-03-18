@@ -17,7 +17,13 @@ JOBS		= @CORES@
 ENABLE64BIT	= @ENABLE64BIT@
 TARGET		= @TARGET@
 
-CONFIGFLAGS	=CC=$(TARGET)-gcc AR=$(TARGET)-ar
+# needed for vector/fitsy++
+#CC		= @CC@
+#CXX		= @CXX@
+#AR		= @AR@
+CC		=$(TARGET)-gcc
+CXX		=$(TARGET)-g++
+AR		= $(TARGET)-ar
 
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
@@ -40,8 +46,8 @@ DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 .PHONY	: saods9 tcl tk tkwin libxml2
 
 saods9	: dirs tcl tk \
-	libxml2 openssl \
-	tclfitsy tcliis tls tclxml xpa \
+	libxml2 openssl vector xpa \
+	tclfitsy tcliis tls tclxml \
 	tkblt tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkwin \
@@ -100,8 +106,8 @@ tkwin/Makefile :
 libxml2 : libxml2/win32/config.mingw
 	@echo ""
 	@echo "*** $@ ***"
-	$(CONFIGFLAGS) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
-	$(CONFIGFLAGS) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
+	CC=$(CC) AR=$(AR) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
+	CC=$(CC) AR=$(AR) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
 	cp -p libxml2/win32/bin.mingw/libxml2.a $(libdir)
 	cp -rp libxml2/include $(includedir)/libxml2
 

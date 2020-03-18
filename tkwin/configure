@@ -5125,7 +5125,7 @@ $as_echo "#define AC_APPLE_UNIVERSAL_BUILD 1" >>confdefs.h
 
 
 
-    vars="-I../tksao/vector"
+    vars="-I${prefix}/include"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

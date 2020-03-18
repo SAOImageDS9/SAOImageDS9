@@ -317,7 +317,7 @@ tkagif/Makefile :
 
 #-------------------------- tksao
 
-tksao	: vector ast funtools tksao/Makefile
+tksao	: ast funtools tksao/Makefile
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao -j $(JOBS) install
@@ -337,16 +337,7 @@ tksao/Makefile :
 vector	: vector/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C vector -j $(JOBS) install
-
-vector/Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd vector; \
-	./configure \
-	--enable-shared=no \
-	$(STD) \
-	$(PREFIX)
+	$ CXX=$(CXX) AR=$(AR) $(MAKE) -C vector -j $(JOBS) install libdir=$(libdir) includedir=$(includedir)
 
 #-------------------------- ast
 

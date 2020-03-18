@@ -334,7 +334,7 @@ tksao/Makefile :
 
 #-------------------------- vector
 
-vector	: vector/Makefile
+vector	:
 	@echo ""
 	@echo "*** $@ ***"
 	$ CXX=$(CXX) AR=$(AR) $(MAKE) -C vector -j $(JOBS) install libdir=$(libdir) includedir=$(includedir)

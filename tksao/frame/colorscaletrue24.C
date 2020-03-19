@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "colorscaletrue24.h"
+#include "util.h"
 
 ColorScaleTrueColor24::ColorScaleTrueColor24(int s, Visual* visual, int msb)
   : ColorScale(s), TrueColor24(visual)

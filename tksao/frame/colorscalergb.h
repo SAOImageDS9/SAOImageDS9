@@ -5,8 +5,6 @@
 #ifndef __colorscalergb_h__
 #define __colorscalergb_h__
 
-#include "util.h"
-
 class ColorScaleRGB {
 protected:
   int size_;

@@ -5,8 +5,6 @@
 #ifndef __colorscale_h__
 #define __colorscale_h__
 
-#include "util.h"
-
 // 0 background (white)
 // 1-200 data, 1 lowerlimit 200 upperlimit
 // 201 cursor color (white)

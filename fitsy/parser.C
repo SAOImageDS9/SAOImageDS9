@@ -148,7 +148,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 10 "fitsy++/parser.Y"
+#line 10 "../fitsy/parser.Y"
 
 #define YYDEBUG 1
 
@@ -191,7 +191,7 @@ extern void ffArray(int);
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 32 "fitsy++/parser.Y"
+#line 32 "../fitsy/parser.Y"
 {
   float real;
   int integer;
@@ -199,7 +199,7 @@ typedef union YYSTYPE
   void* ptr;
 }
 /* Line 193 of yacc.c.  */
-#line 203 "fitsy++/parser.C"
+#line 203 "../fitsy/parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -212,7 +212,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 216 "fitsy++/parser.C"
+#line 216 "../fitsy/parser.C"
 
 #ifdef short
 # undef short
@@ -1627,62 +1627,62 @@ yyreduce:
   switch (yyn)
     {
         case 24:
-#line 106 "fitsy++/parser.Y"
+#line 106 "../fitsy/parser.Y"
     {GOTOARR(0);}
     break;
 
   case 26:
-#line 108 "fitsy++/parser.Y"
+#line 108 "../fitsy/parser.Y"
     {GOTOFILT(0);}
     break;
 
   case 27:
-#line 109 "fitsy++/parser.Y"
+#line 109 "../fitsy/parser.Y"
     {ff->setValid(1);ff->setpFilter(ff_filter);;}
     break;
 
   case 29:
-#line 113 "fitsy++/parser.Y"
+#line 113 "../fitsy/parser.Y"
     {ff->setpName((yyvsp[(1) - (1)].str));;}
     break;
 
   case 30:
-#line 123 "fitsy++/parser.Y"
+#line 123 "../fitsy/parser.Y"
     {ff->setpExt((yyvsp[(2) - (3)].str));;}
     break;
 
   case 31:
-#line 124 "fitsy++/parser.Y"
+#line 124 "../fitsy/parser.Y"
     {ff->setpIndex((yyvsp[(2) - (3)].integer));;}
     break;
 
   case 32:
-#line 127 "fitsy++/parser.Y"
+#line 127 "../fitsy/parser.Y"
     {ff->setpExt((yyvsp[(1) - (2)].str));;}
     break;
 
   case 33:
-#line 128 "fitsy++/parser.Y"
+#line 128 "../fitsy/parser.Y"
     {ff->setpIndex((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 44:
-#line 144 "fitsy++/parser.Y"
+#line 144 "../fitsy/parser.Y"
     {ff->setpcoord(0);;}
     break;
 
   case 45:
-#line 145 "fitsy++/parser.Y"
+#line 145 "../fitsy/parser.Y"
     {ff->setpcoord(1);;}
     break;
 
   case 46:
-#line 146 "fitsy++/parser.Y"
+#line 146 "../fitsy/parser.Y"
     {ff->setpcoord(1);;}
     break;
 
   case 47:
-#line 150 "fitsy++/parser.Y"
+#line 150 "../fitsy/parser.Y"
     {
 	  // this is not a mistake
 	  // need to fool parser into processing "xy0:xy1,block"
@@ -1692,12 +1692,12 @@ yyreduce:
     break;
 
   case 48:
-#line 157 "fitsy++/parser.Y"
+#line 157 "../fitsy/parser.Y"
     {ff->setpxmin((yyvsp[(3) - (3)].integer)-(yyvsp[(1) - (3)].integer)/2); ff->setpxmax((yyvsp[(3) - (3)].integer)+(yyvsp[(1) - (3)].integer)/2); ff->setpxvalid(1);;}
     break;
 
   case 49:
-#line 159 "fitsy++/parser.Y"
+#line 159 "../fitsy/parser.Y"
     {
 	  // this is not a mistake
 	  // need to fool parser into processing "*,block"
@@ -1706,22 +1706,22 @@ yyreduce:
     break;
 
   case 50:
-#line 167 "fitsy++/parser.Y"
+#line 167 "../fitsy/parser.Y"
     {ff->setpymin((yyvsp[(1) - (3)].integer)); ff->setpymax((yyvsp[(3) - (3)].integer)); ff->setpyvalid(1);;}
     break;
 
   case 51:
-#line 169 "fitsy++/parser.Y"
+#line 169 "../fitsy/parser.Y"
     {ff->setpymin((yyvsp[(3) - (3)].integer)-(yyvsp[(1) - (3)].integer)/2); ff->setpymax((yyvsp[(3) - (3)].integer)+(yyvsp[(1) - (3)].integer)/2); ff->setpyvalid(1);;}
     break;
 
   case 52:
-#line 170 "fitsy++/parser.Y"
+#line 170 "../fitsy/parser.Y"
     {ff->setpyvalid(0);;}
     break;
 
   case 53:
-#line 174 "fitsy++/parser.Y"
+#line 174 "../fitsy/parser.Y"
     {
 	  ff->setpxmin((yyvsp[(3) - (5)].integer)-(yyvsp[(1) - (5)].integer)/2); ff->setpxmax((yyvsp[(3) - (5)].integer)+(yyvsp[(1) - (5)].integer)/2); ff->setpxvalid(1);
 	  ff->setpymin((yyvsp[(5) - (5)].integer)-(yyvsp[(1) - (5)].integer)/2); ff->setpymax((yyvsp[(5) - (5)].integer)+(yyvsp[(1) - (5)].integer)/2); ff->setpyvalid(1);
@@ -1729,253 +1729,253 @@ yyreduce:
     break;
 
   case 54:
-#line 181 "fitsy++/parser.Y"
+#line 181 "../fitsy/parser.Y"
     {ff->setpzmin((yyvsp[(1) - (3)].integer)); ff->setpzmax((yyvsp[(3) - (3)].integer)); ff->setpzvalid(1);;}
     break;
 
   case 55:
-#line 183 "fitsy++/parser.Y"
+#line 183 "../fitsy/parser.Y"
     {ff->setpzmin((yyvsp[(3) - (3)].integer)-(yyvsp[(1) - (3)].integer)/2); ff->setpzmax((yyvsp[(3) - (3)].integer)+(yyvsp[(1) - (3)].integer)/2); ff->setpzvalid(1);;}
     break;
 
   case 56:
-#line 184 "fitsy++/parser.Y"
+#line 184 "../fitsy/parser.Y"
     {ff->setpzvalid(0);;}
     break;
 
   case 57:
-#line 187 "fitsy++/parser.Y"
+#line 187 "../fitsy/parser.Y"
     {ff->setpblock((yyvsp[(1) - (1)].integer)); ff->setpbvalid(1);;}
     break;
 
   case 65:
-#line 202 "fitsy++/parser.Y"
+#line 202 "../fitsy/parser.Y"
     {ff->setpBinXY((yyvsp[(2) - (5)].str),(yyvsp[(4) - (5)].str));;}
     break;
 
   case 66:
-#line 203 "fitsy++/parser.Y"
+#line 203 "../fitsy/parser.Y"
     {ff->setpBinXY((yyvsp[(1) - (3)].str),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 67:
-#line 204 "fitsy++/parser.Y"
+#line 204 "../fitsy/parser.Y"
     {ff->setpBinXYZ((yyvsp[(2) - (7)].str),(yyvsp[(4) - (7)].str),(yyvsp[(6) - (7)].str));;}
     break;
 
   case 68:
-#line 205 "fitsy++/parser.Y"
+#line 205 "../fitsy/parser.Y"
     {ff->setpBinXYZ((yyvsp[(1) - (5)].str),(yyvsp[(3) - (5)].str),(yyvsp[(5) - (5)].str));;}
     break;
 
   case 69:
-#line 206 "fitsy++/parser.Y"
+#line 206 "../fitsy/parser.Y"
     {ff->setpBinZ((yyvsp[(2) - (3)].str));;}
     break;
 
   case 70:
-#line 207 "fitsy++/parser.Y"
+#line 207 "../fitsy/parser.Y"
     {ff->setpBinZ((yyvsp[(1) - (1)].str));;}
     break;
 
   case 74:
-#line 217 "fitsy++/parser.Y"
+#line 217 "../fitsy/parser.Y"
     {ff->setpWidth((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 75:
-#line 218 "fitsy++/parser.Y"
+#line 218 "../fitsy/parser.Y"
     {ff->setpHeight((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 76:
-#line 219 "fitsy++/parser.Y"
+#line 219 "../fitsy/parser.Y"
     {ff->setpDepth((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 77:
-#line 220 "fitsy++/parser.Y"
+#line 220 "../fitsy/parser.Y"
     {ff->setpWidth((yyvsp[(3) - (3)].integer));ff->setpHeight((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 78:
-#line 221 "fitsy++/parser.Y"
+#line 221 "../fitsy/parser.Y"
     {ff->setpWidth((yyvsp[(3) - (3)].integer));ff->setpHeight((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 79:
-#line 222 "fitsy++/parser.Y"
+#line 222 "../fitsy/parser.Y"
     {ff->setpBitpix((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 80:
-#line 223 "fitsy++/parser.Y"
+#line 223 "../fitsy/parser.Y"
     {ff->setpSkip((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 81:
-#line 224 "fitsy++/parser.Y"
+#line 224 "../fitsy/parser.Y"
     {ff->setpArch((FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 82:
-#line 225 "fitsy++/parser.Y"
+#line 225 "../fitsy/parser.Y"
     {ff->setpArch((FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 83:
-#line 226 "fitsy++/parser.Y"
+#line 226 "../fitsy/parser.Y"
     {ff->setpArch((FitsFile::ArchType)(yyvsp[(1) - (1)].integer));;}
     break;
 
   case 84:
-#line 229 "fitsy++/parser.Y"
+#line 229 "../fitsy/parser.Y"
     {(yyval.integer) = FitsFile::BIG;;}
     break;
 
   case 85:
-#line 230 "fitsy++/parser.Y"
+#line 230 "../fitsy/parser.Y"
     {(yyval.integer) = FitsFile::BIG;;}
     break;
 
   case 86:
-#line 231 "fitsy++/parser.Y"
+#line 231 "../fitsy/parser.Y"
     {(yyval.integer) = FitsFile::LITTLE;;}
     break;
 
   case 87:
-#line 232 "fitsy++/parser.Y"
+#line 232 "../fitsy/parser.Y"
     {(yyval.integer) = FitsFile::LITTLE;;}
     break;
 
   case 89:
-#line 238 "fitsy++/parser.Y"
+#line 238 "../fitsy/parser.Y"
     {ff->setpBitpix(8);;}
     break;
 
   case 90:
-#line 239 "fitsy++/parser.Y"
+#line 239 "../fitsy/parser.Y"
     {ff->setpBitpix(16);;}
     break;
 
   case 91:
-#line 240 "fitsy++/parser.Y"
+#line 240 "../fitsy/parser.Y"
     {ff->setpBitpix(-16);;}
     break;
 
   case 92:
-#line 241 "fitsy++/parser.Y"
+#line 241 "../fitsy/parser.Y"
     {ff->setpBitpix(32);;}
     break;
 
   case 93:
-#line 242 "fitsy++/parser.Y"
+#line 242 "../fitsy/parser.Y"
     {ff->setpBitpix(64);;}
     break;
 
   case 94:
-#line 243 "fitsy++/parser.Y"
+#line 243 "../fitsy/parser.Y"
     {ff->setpBitpix(-32);;}
     break;
 
   case 95:
-#line 244 "fitsy++/parser.Y"
+#line 244 "../fitsy/parser.Y"
     {ff->setpBitpix(-32);;}
     break;
 
   case 96:
-#line 245 "fitsy++/parser.Y"
+#line 245 "../fitsy/parser.Y"
     {ff->setpBitpix(-64);;}
     break;
 
   case 97:
-#line 248 "fitsy++/parser.Y"
+#line 248 "../fitsy/parser.Y"
     {ff->setpWidth((yyvsp[(1) - (1)].integer));ff->setpHeight((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 98:
-#line 249 "fitsy++/parser.Y"
+#line 249 "../fitsy/parser.Y"
     {ff->setpWidth((yyvsp[(1) - (3)].integer));ff->setpHeight((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 99:
-#line 251 "fitsy++/parser.Y"
+#line 251 "../fitsy/parser.Y"
     {ff->setpWidth((yyvsp[(1) - (5)].integer));ff->setpHeight((yyvsp[(3) - (5)].integer));ff->setpDepth((yyvsp[(5) - (5)].integer));;}
     break;
 
   case 101:
-#line 255 "fitsy++/parser.Y"
+#line 255 "../fitsy/parser.Y"
     {ff->setpSkip((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 103:
-#line 259 "fitsy++/parser.Y"
+#line 259 "../fitsy/parser.Y"
     {ff->setpArch(FitsFile::LITTLE);;}
     break;
 
   case 104:
-#line 260 "fitsy++/parser.Y"
+#line 260 "../fitsy/parser.Y"
     {ff->setpArch(FitsFile::BIG);;}
     break;
 
   case 111:
-#line 273 "fitsy++/parser.Y"
+#line 273 "../fitsy/parser.Y"
     {ff->setpHPXColumn((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 112:
-#line 274 "fitsy++/parser.Y"
+#line 274 "../fitsy/parser.Y"
     {ff->setpHPXQuad((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 113:
-#line 277 "fitsy++/parser.Y"
+#line 277 "../fitsy/parser.Y"
     {ff->setpHPXSystem(FitsHPX::EQU);;}
     break;
 
   case 114:
-#line 278 "fitsy++/parser.Y"
+#line 278 "../fitsy/parser.Y"
     {ff->setpHPXSystem(FitsHPX::GAL);;}
     break;
 
   case 115:
-#line 279 "fitsy++/parser.Y"
+#line 279 "../fitsy/parser.Y"
     {ff->setpHPXSystem(FitsHPX::ECL);;}
     break;
 
   case 116:
-#line 280 "fitsy++/parser.Y"
+#line 280 "../fitsy/parser.Y"
     {ff->setpHPXSystem(FitsHPX::UNKNOWN);;}
     break;
 
   case 117:
-#line 283 "fitsy++/parser.Y"
+#line 283 "../fitsy/parser.Y"
     {ff->setpHPXOrder(FitsHPX::RING);;}
     break;
 
   case 118:
-#line 284 "fitsy++/parser.Y"
+#line 284 "../fitsy/parser.Y"
     {ff->setpHPXOrder(FitsHPX::NESTED);;}
     break;
 
   case 119:
-#line 287 "fitsy++/parser.Y"
+#line 287 "../fitsy/parser.Y"
     {ff->setpHPXLayout(FitsHPX::EQUATOR);;}
     break;
 
   case 120:
-#line 288 "fitsy++/parser.Y"
+#line 288 "../fitsy/parser.Y"
     {ff->setpHPXLayout(FitsHPX::NORTH);;}
     break;
 
   case 121:
-#line 289 "fitsy++/parser.Y"
+#line 289 "../fitsy/parser.Y"
     {ff->setpHPXLayout(FitsHPX::SOUTH);;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1979 "fitsy++/parser.C"
+#line 1979 "../fitsy/parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2189,6 +2189,6 @@ yyreturn:
 }
 
 
-#line 292 "fitsy++/parser.Y"
+#line 292 "../fitsy/parser.Y"
 
 

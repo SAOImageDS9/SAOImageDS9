@@ -1,6 +1,6 @@
-#line 2 "fitsy++/nrrdlex.C"
+#line 2 "../fitsy/nrrdlex.C"
 
-#line 4 "fitsy++/nrrdlex.C"
+#line 4 "../fitsy/nrrdlex.C"
 
 #define  YY_INT_ALIGNED short int
 
@@ -778,12 +778,12 @@ static yyconst flex_int16_t yy_chk[1165] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "fitsy++/nrrdlex.L"
+#line 1 "../fitsy/nrrdlex.L"
 /* Copyright (C) 1999-2018
  * Smithsonian Astrophysical Observatory, Cambridge, MA, USA
  * For conditions of distribution and use, see copyright notice in "copyright"
  */
-#line 11 "fitsy++/nrrdlex.L"
+#line 11 "../fitsy/nrrdlex.L"
   #include <stdio.h>
   #include <stdlib.h>
   #include <string.h>
@@ -795,7 +795,7 @@ static yyconst flex_int16_t yy_chk[1165] =
   extern nrrdFlexLexer* nrrdlexx;
 
 /* rules */
-#line 799 "fitsy++/nrrdlex.C"
+#line 799 "../fitsy/nrrdlex.C"
 
 #define INITIAL 0
 #define DISCARD 1
@@ -896,10 +896,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 29 "fitsy++/nrrdlex.L"
+#line 29 "../fitsy/nrrdlex.L"
 
 
-#line 903 "fitsy++/nrrdlex.C"
+#line 903 "../fitsy/nrrdlex.C"
 
 	if ( !(yy_init) )
 		{
@@ -981,7 +981,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 31 "fitsy++/nrrdlex.L"
+#line 31 "../fitsy/nrrdlex.L"
 { // special case-- #\n
 		  BEGIN INITIAL;
 		  yyless(0);             // put back the terminator
@@ -991,7 +991,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 38 "fitsy++/nrrdlex.L"
+#line 38 "../fitsy/nrrdlex.L"
 {  // Discard reset of line
 		  BEGIN INITIAL;
 		  int ll = yyleng <(NRRDPARSERSIZE-1) ? yyleng:(NRRDPARSERSIZE-1);
@@ -1002,477 +1002,477 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 46 "fitsy++/nrrdlex.L"
+#line 46 "../fitsy/nrrdlex.L"
 {return DEBUG_;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 47 "fitsy++/nrrdlex.L"
+#line 47 "../fitsy/nrrdlex.L"
 {return ON_;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 48 "fitsy++/nrrdlex.L"
+#line 48 "../fitsy/nrrdlex.L"
 {return OFF_;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 50 "fitsy++/nrrdlex.L"
+#line 50 "../fitsy/nrrdlex.L"
 {return NRRD0001_;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 51 "fitsy++/nrrdlex.L"
+#line 51 "../fitsy/nrrdlex.L"
 {return NRRD0002_;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 52 "fitsy++/nrrdlex.L"
+#line 52 "../fitsy/nrrdlex.L"
 {return NRRD0003_;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 53 "fitsy++/nrrdlex.L"
+#line 53 "../fitsy/nrrdlex.L"
 {return NRRD0004_;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 54 "fitsy++/nrrdlex.L"
+#line 54 "../fitsy/nrrdlex.L"
 {return NRRD0005_;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 56 "fitsy++/nrrdlex.L"
+#line 56 "../fitsy/nrrdlex.L"
 {return DATA_;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 57 "fitsy++/nrrdlex.L"
+#line 57 "../fitsy/nrrdlex.L"
 {return FILE_;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 59 "fitsy++/nrrdlex.L"
+#line 59 "../fitsy/nrrdlex.L"
 {return SPACE_;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 60 "fitsy++/nrrdlex.L"
+#line 60 "../fitsy/nrrdlex.L"
 {return UNITS_;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 61 "fitsy++/nrrdlex.L"
+#line 61 "../fitsy/nrrdlex.L"
 {return DIMENSIONS_;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 62 "fitsy++/nrrdlex.L"
+#line 62 "../fitsy/nrrdlex.L"
 {return ORIGIN_;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 63 "fitsy++/nrrdlex.L"
+#line 63 "../fitsy/nrrdlex.L"
 {return DIRECTIONS_;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 65 "fitsy++/nrrdlex.L"
+#line 65 "../fitsy/nrrdlex.L"
 {return DIMENSION_;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 67 "fitsy++/nrrdlex.L"
+#line 67 "../fitsy/nrrdlex.L"
 {return TYPE_;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 68 "fitsy++/nrrdlex.L"
+#line 68 "../fitsy/nrrdlex.L"
 {return SIGNED_;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 69 "fitsy++/nrrdlex.L"
+#line 69 "../fitsy/nrrdlex.L"
 {return UNSIGNED_;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 70 "fitsy++/nrrdlex.L"
+#line 70 "../fitsy/nrrdlex.L"
 {return CHAR_;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 71 "fitsy++/nrrdlex.L"
+#line 71 "../fitsy/nrrdlex.L"
 {return INT8_;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 72 "fitsy++/nrrdlex.L"
+#line 72 "../fitsy/nrrdlex.L"
 {return INT8_T_;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 73 "fitsy++/nrrdlex.L"
+#line 73 "../fitsy/nrrdlex.L"
 {return UCHAR_;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 74 "fitsy++/nrrdlex.L"
+#line 74 "../fitsy/nrrdlex.L"
 {return UINT8_;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 75 "fitsy++/nrrdlex.L"
+#line 75 "../fitsy/nrrdlex.L"
 {return UINT8_T_;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 76 "fitsy++/nrrdlex.L"
+#line 76 "../fitsy/nrrdlex.L"
 {return SHORT_;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 77 "fitsy++/nrrdlex.L"
+#line 77 "../fitsy/nrrdlex.L"
 {return INT_;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 78 "fitsy++/nrrdlex.L"
+#line 78 "../fitsy/nrrdlex.L"
 {return INT16_;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 79 "fitsy++/nrrdlex.L"
+#line 79 "../fitsy/nrrdlex.L"
 {return INT16_T_;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 80 "fitsy++/nrrdlex.L"
+#line 80 "../fitsy/nrrdlex.L"
 {return USHORT_;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 81 "fitsy++/nrrdlex.L"
+#line 81 "../fitsy/nrrdlex.L"
 {return UINT16_;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 82 "fitsy++/nrrdlex.L"
+#line 82 "../fitsy/nrrdlex.L"
 {return UINT16_T_;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 83 "fitsy++/nrrdlex.L"
+#line 83 "../fitsy/nrrdlex.L"
 {return INT32_;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 84 "fitsy++/nrrdlex.L"
+#line 84 "../fitsy/nrrdlex.L"
 {return INT32_T_;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 85 "fitsy++/nrrdlex.L"
+#line 85 "../fitsy/nrrdlex.L"
 {return UINT_;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 86 "fitsy++/nrrdlex.L"
+#line 86 "../fitsy/nrrdlex.L"
 {return UINT32_;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 87 "fitsy++/nrrdlex.L"
+#line 87 "../fitsy/nrrdlex.L"
 {return UINT32_T_;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 88 "fitsy++/nrrdlex.L"
+#line 88 "../fitsy/nrrdlex.L"
 {return LONG_;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 89 "fitsy++/nrrdlex.L"
+#line 89 "../fitsy/nrrdlex.L"
 {return LONGLONG_;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 90 "fitsy++/nrrdlex.L"
+#line 90 "../fitsy/nrrdlex.L"
 {return INT64_;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 91 "fitsy++/nrrdlex.L"
+#line 91 "../fitsy/nrrdlex.L"
 {return INT64_T_;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 92 "fitsy++/nrrdlex.L"
+#line 92 "../fitsy/nrrdlex.L"
 {return ULONGLONG_;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 93 "fitsy++/nrrdlex.L"
+#line 93 "../fitsy/nrrdlex.L"
 {return UINT64_;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 94 "fitsy++/nrrdlex.L"
+#line 94 "../fitsy/nrrdlex.L"
 {return UINT64_T_;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 95 "fitsy++/nrrdlex.L"
+#line 95 "../fitsy/nrrdlex.L"
 {return FLOAT_;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 96 "fitsy++/nrrdlex.L"
+#line 96 "../fitsy/nrrdlex.L"
 {return DOUBLE_;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 98 "fitsy++/nrrdlex.L"
+#line 98 "../fitsy/nrrdlex.L"
 {return BLOCK_;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 99 "fitsy++/nrrdlex.L"
+#line 99 "../fitsy/nrrdlex.L"
 {return SIZE_;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 100 "fitsy++/nrrdlex.L"
+#line 100 "../fitsy/nrrdlex.L"
 {return BLOCKSIZE_;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 102 "fitsy++/nrrdlex.L"
+#line 102 "../fitsy/nrrdlex.L"
 {return ENCODING_;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 103 "fitsy++/nrrdlex.L"
+#line 103 "../fitsy/nrrdlex.L"
 {return RAW_;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 104 "fitsy++/nrrdlex.L"
+#line 104 "../fitsy/nrrdlex.L"
 {return TXT_;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 105 "fitsy++/nrrdlex.L"
+#line 105 "../fitsy/nrrdlex.L"
 {return TEXT_;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 106 "fitsy++/nrrdlex.L"
+#line 106 "../fitsy/nrrdlex.L"
 {return ASCII_;}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 107 "fitsy++/nrrdlex.L"
+#line 107 "../fitsy/nrrdlex.L"
 {return HEX_;}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 108 "fitsy++/nrrdlex.L"
+#line 108 "../fitsy/nrrdlex.L"
 {return GZ_;}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 109 "fitsy++/nrrdlex.L"
+#line 109 "../fitsy/nrrdlex.L"
 {return GZIP_;}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 110 "fitsy++/nrrdlex.L"
+#line 110 "../fitsy/nrrdlex.L"
 {return BZ2_;}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 111 "fitsy++/nrrdlex.L"
+#line 111 "../fitsy/nrrdlex.L"
 {return BZIP2_;}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 113 "fitsy++/nrrdlex.L"
+#line 113 "../fitsy/nrrdlex.L"
 {return ENDIAN_;}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 114 "fitsy++/nrrdlex.L"
+#line 114 "../fitsy/nrrdlex.L"
 {return BIG_;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 115 "fitsy++/nrrdlex.L"
+#line 115 "../fitsy/nrrdlex.L"
 {return LITTLE_;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 117 "fitsy++/nrrdlex.L"
+#line 117 "../fitsy/nrrdlex.L"
 {return CONTENT_;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 119 "fitsy++/nrrdlex.L"
+#line 119 "../fitsy/nrrdlex.L"
 {return OLD_;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 120 "fitsy++/nrrdlex.L"
+#line 120 "../fitsy/nrrdlex.L"
 {return MIN_;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 121 "fitsy++/nrrdlex.L"
+#line 121 "../fitsy/nrrdlex.L"
 {return OLDMIN_;}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 122 "fitsy++/nrrdlex.L"
+#line 122 "../fitsy/nrrdlex.L"
 {return MAX_;}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 123 "fitsy++/nrrdlex.L"
+#line 123 "../fitsy/nrrdlex.L"
 {return OLDMAX_;}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 125 "fitsy++/nrrdlex.L"
+#line 125 "../fitsy/nrrdlex.L"
 {return SKIP_;}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 126 "fitsy++/nrrdlex.L"
+#line 126 "../fitsy/nrrdlex.L"
 {return LINE_;}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 127 "fitsy++/nrrdlex.L"
+#line 127 "../fitsy/nrrdlex.L"
 {return LINESKIP_;}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 128 "fitsy++/nrrdlex.L"
+#line 128 "../fitsy/nrrdlex.L"
 {return BYTE_;}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 129 "fitsy++/nrrdlex.L"
+#line 129 "../fitsy/nrrdlex.L"
 {return BYTESKIP_;}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 131 "fitsy++/nrrdlex.L"
+#line 131 "../fitsy/nrrdlex.L"
 {return NUMBER_;}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 133 "fitsy++/nrrdlex.L"
+#line 133 "../fitsy/nrrdlex.L"
 {return SAMPLE_;}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 134 "fitsy++/nrrdlex.L"
+#line 134 "../fitsy/nrrdlex.L"
 {return SAMPLEUNITS_;}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 136 "fitsy++/nrrdlex.L"
+#line 136 "../fitsy/nrrdlex.L"
 {return SIZES_;}
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 137 "fitsy++/nrrdlex.L"
+#line 137 "../fitsy/nrrdlex.L"
 {return SPACINGS_;}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 138 "fitsy++/nrrdlex.L"
+#line 138 "../fitsy/nrrdlex.L"
 {return THICKNESSES_;}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 139 "fitsy++/nrrdlex.L"
+#line 139 "../fitsy/nrrdlex.L"
 {return AXIS_;}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 140 "fitsy++/nrrdlex.L"
+#line 140 "../fitsy/nrrdlex.L"
 {return MINS_;}
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 141 "fitsy++/nrrdlex.L"
+#line 141 "../fitsy/nrrdlex.L"
 {return AXISMINS_;}
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 142 "fitsy++/nrrdlex.L"
+#line 142 "../fitsy/nrrdlex.L"
 {return MAXS_;}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 143 "fitsy++/nrrdlex.L"
+#line 143 "../fitsy/nrrdlex.L"
 {return AXISMAXS_;}
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 144 "fitsy++/nrrdlex.L"
+#line 144 "../fitsy/nrrdlex.L"
 {return CENTERS_;}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 145 "fitsy++/nrrdlex.L"
+#line 145 "../fitsy/nrrdlex.L"
 {return CENTERINGS_;}
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 146 "fitsy++/nrrdlex.L"
+#line 146 "../fitsy/nrrdlex.L"
 {return CELL_;}
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 147 "fitsy++/nrrdlex.L"
+#line 147 "../fitsy/nrrdlex.L"
 {return NODE_;}
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 148 "fitsy++/nrrdlex.L"
+#line 148 "../fitsy/nrrdlex.L"
 {return NONE_;}
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 149 "fitsy++/nrrdlex.L"
+#line 149 "../fitsy/nrrdlex.L"
 {return LABELS_;}
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 150 "fitsy++/nrrdlex.L"
+#line 150 "../fitsy/nrrdlex.L"
 {return KINDS_;}
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 151 "fitsy++/nrrdlex.L"
+#line 151 "../fitsy/nrrdlex.L"
 {return DOMAINS_;}
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 153 "fitsy++/nrrdlex.L"
+#line 153 "../fitsy/nrrdlex.L"
 { // Integer
 		  nrrdlval->integer = atoi(yytext);
 		  return INT;
 		}
 	YY_BREAK
 case 96:
-#line 159 "fitsy++/nrrdlex.L"
+#line 159 "../fitsy/nrrdlex.L"
 case 97:
 YY_RULE_SETUP
-#line 159 "fitsy++/nrrdlex.L"
+#line 159 "../fitsy/nrrdlex.L"
 { // Real Number
 		  nrrdlval->real = atof(yytext);
 		  return REAL;
@@ -1480,7 +1480,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 165 "fitsy++/nrrdlex.L"
+#line 165 "../fitsy/nrrdlex.L"
 { // Quoted String
 		  int ll = (yyleng-2)<(NRRDPARSERSIZE-1) ? (yyleng-2):(NRRDPARSERSIZE-1);
 		  strncpy(nrrdlval->str,yytext+1,ll); // skip the '{'
@@ -1490,7 +1490,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 172 "fitsy++/nrrdlex.L"
+#line 172 "../fitsy/nrrdlex.L"
 { // General String
 		  int ll = yyleng <(NRRDPARSERSIZE-1) ? yyleng:(NRRDPARSERSIZE-1);
 		  strncpy(nrrdlval->str,yytext,ll);
@@ -1500,21 +1500,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 179 "fitsy++/nrrdlex.L"
+#line 179 "../fitsy/nrrdlex.L"
 { // White Spaces
 		} 
 	YY_BREAK
 case 101:
 /* rule 101 can match eol */
 YY_RULE_SETUP
-#line 182 "fitsy++/nrrdlex.L"
+#line 182 "../fitsy/nrrdlex.L"
 { // windows line feed
 		  return '\n';
 		}
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 186 "fitsy++/nrrdlex.L"
+#line 186 "../fitsy/nrrdlex.L"
 { // fake line feed
 		  return '\n';
 		}
@@ -1522,31 +1522,31 @@ YY_RULE_SETUP
 case 103:
 /* rule 103 can match eol */
 YY_RULE_SETUP
-#line 190 "fitsy++/nrrdlex.L"
+#line 190 "../fitsy/nrrdlex.L"
 { // linefeed
 		  return '\n';
 		}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(DISCARD):
-#line 194 "fitsy++/nrrdlex.L"
+#line 194 "../fitsy/nrrdlex.L"
 { // eof
 		  return EOF_;
 		}
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 198 "fitsy++/nrrdlex.L"
+#line 198 "../fitsy/nrrdlex.L"
 { // Else, return the char
 		  return yytext[0];
 		}
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 202 "fitsy++/nrrdlex.L"
+#line 202 "../fitsy/nrrdlex.L"
 ECHO;
 	YY_BREAK
-#line 1550 "fitsy++/nrrdlex.C"
+#line 1550 "../fitsy/nrrdlex.C"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2443,7 +2443,7 @@ void nrrdfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 202 "fitsy++/nrrdlex.L"
+#line 202 "../fitsy/nrrdlex.L"
 
 
 

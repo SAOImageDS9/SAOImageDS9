@@ -8,6 +8,7 @@
 #include "fitsimage.h"
 #include "context.h"
 #include "convolve.h"
+#include "util.h"
 
 void FitsImage::analysis(int which, pthread_t* thread, void* targ)
 {

@@ -194,7 +194,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 10 "fitsy++/enviparser.Y"
+#line 10 "../fitsy/enviparser.Y"
 
 #define YYDEBUG 1
 
@@ -235,7 +235,7 @@ static float wave[MAXWAVES];
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 30 "fitsy++/enviparser.Y"
+#line 30 "../fitsy/enviparser.Y"
 {
 #define ENVIPARSERSIZE 1024
   float real;
@@ -243,7 +243,7 @@ typedef union YYSTYPE
   char str[ENVIPARSERSIZE];
 }
 /* Line 193 of yacc.c.  */
-#line 247 "fitsy++/enviparser.C"
+#line 247 "../fitsy/enviparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -256,7 +256,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 260 "fitsy++/enviparser.C"
+#line 260 "../fitsy/enviparser.C"
 
 #ifdef short
 # undef short
@@ -1629,82 +1629,82 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 102 "fitsy++/enviparser.Y"
+#line 102 "../fitsy/enviparser.Y"
     {envi->setpArch(FitsFile::BIG);}
     break;
 
   case 11:
-#line 113 "fitsy++/enviparser.Y"
+#line 113 "../fitsy/enviparser.Y"
     {envi->setpWidth((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 12:
-#line 114 "fitsy++/enviparser.Y"
+#line 114 "../fitsy/enviparser.Y"
     {envi->setpHeight((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 13:
-#line 115 "fitsy++/enviparser.Y"
+#line 115 "../fitsy/enviparser.Y"
     {envi->setpDepth((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 14:
-#line 116 "fitsy++/enviparser.Y"
+#line 116 "../fitsy/enviparser.Y"
     {envi->setpSkip((yyvsp[(4) - (4)].integer));;}
     break;
 
   case 17:
-#line 119 "fitsy++/enviparser.Y"
+#line 119 "../fitsy/enviparser.Y"
     {DISCARD_(1);}
     break;
 
   case 21:
-#line 122 "fitsy++/enviparser.Y"
+#line 122 "../fitsy/enviparser.Y"
     {DISCARD_(1);}
     break;
 
   case 34:
-#line 134 "fitsy++/enviparser.Y"
+#line 134 "../fitsy/enviparser.Y"
     {DISCARD_(1);}
     break;
 
   case 38:
-#line 137 "fitsy++/enviparser.Y"
+#line 137 "../fitsy/enviparser.Y"
     {numWave=0;;}
     break;
 
   case 45:
-#line 145 "fitsy++/enviparser.Y"
+#line 145 "../fitsy/enviparser.Y"
     {DISCARD_(1);}
     break;
 
   case 48:
-#line 149 "fitsy++/enviparser.Y"
+#line 149 "../fitsy/enviparser.Y"
     {YYACCEPT;;}
     break;
 
   case 49:
-#line 152 "fitsy++/enviparser.Y"
+#line 152 "../fitsy/enviparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 50:
-#line 153 "fitsy++/enviparser.Y"
+#line 153 "../fitsy/enviparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 51:
-#line 156 "fitsy++/enviparser.Y"
+#line 156 "../fitsy/enviparser.Y"
     {yydebug=1;;}
     break;
 
   case 52:
-#line 157 "fitsy++/enviparser.Y"
+#line 157 "../fitsy/enviparser.Y"
     {yydebug=0;;}
     break;
 
   case 53:
-#line 161 "fitsy++/enviparser.Y"
+#line 161 "../fitsy/enviparser.Y"
     {
 	  switch((yyvsp[(1) - (1)].integer)) {
 	  case 1:
@@ -1735,22 +1735,22 @@ yyreduce:
     break;
 
   case 54:
-#line 190 "fitsy++/enviparser.Y"
+#line 190 "../fitsy/enviparser.Y"
     {envi->setpEncoding(FitsFile::BSQ);;}
     break;
 
   case 55:
-#line 191 "fitsy++/enviparser.Y"
+#line 191 "../fitsy/enviparser.Y"
     {envi->setpEncoding(FitsFile::BIP);;}
     break;
 
   case 56:
-#line 192 "fitsy++/enviparser.Y"
+#line 192 "../fitsy/enviparser.Y"
     {envi->setpEncoding(FitsFile::BIL);;}
     break;
 
   case 57:
-#line 196 "fitsy++/enviparser.Y"
+#line 196 "../fitsy/enviparser.Y"
     {
 	  switch((yyvsp[(1) - (1)].integer)) {
 	  case 0:
@@ -1764,7 +1764,7 @@ yyreduce:
     break;
 
   case 72:
-#line 239 "fitsy++/enviparser.Y"
+#line 239 "../fitsy/enviparser.Y"
     {
 	  envi->setpCRPIX3(1);
 	  envi->setpCRVAL3(1);
@@ -1773,7 +1773,7 @@ yyreduce:
     break;
 
   case 73:
-#line 245 "fitsy++/enviparser.Y"
+#line 245 "../fitsy/enviparser.Y"
     {
 	  if (numWave>=2) {
 	    envi->setpCRPIX3(1);
@@ -1789,7 +1789,7 @@ yyreduce:
     break;
 
   case 77:
-#line 265 "fitsy++/enviparser.Y"
+#line 265 "../fitsy/enviparser.Y"
     {
 	  if (numWave < MAXWAVES)
 	    wave[numWave++] = (yyvsp[(1) - (1)].real);
@@ -1798,7 +1798,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1802 "fitsy++/enviparser.C"
+#line 1802 "../fitsy/enviparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2012,6 +2012,6 @@ yyreturn:
 }
 
 
-#line 271 "fitsy++/enviparser.Y"
+#line 271 "../fitsy/enviparser.Y"
 
 

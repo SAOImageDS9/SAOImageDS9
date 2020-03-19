@@ -5,8 +5,6 @@
 #ifndef __baseellipse_h__
 #define __baseellipse_h__
 
-#include <tk.h>
-
 #include "basemarker.h"
 
 class BaseEllipse : public BaseMarker {

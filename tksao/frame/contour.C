@@ -5,6 +5,7 @@
 #include "contour.h"
 #include "base.h"
 #include "context.h"
+#include "util.h"
 
 // ContourLevel
 ContourLevel::ContourLevel(Base* pp, double lev,

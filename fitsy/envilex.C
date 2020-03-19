@@ -1,6 +1,6 @@
-#line 2 "fitsy++/envilex.C"
+#line 2 "../fitsy/envilex.C"
 
-#line 4 "fitsy++/envilex.C"
+#line 4 "../fitsy/envilex.C"
 
 #define  YY_INT_ALIGNED short int
 
@@ -688,12 +688,12 @@ static yyconst flex_int16_t yy_chk[873] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "fitsy++/envilex.L"
+#line 1 "../fitsy/envilex.L"
 /* Copyright (C) 1999-2018
  * Smithsonian Astrophysical Observatory, Cambridge, MA, USA
  * For conditions of distribution and use, see copyright notice in "copyright"
  */
-#line 11 "fitsy++/envilex.L"
+#line 11 "../fitsy/envilex.L"
   #include <stdio.h>
   #include <stdlib.h>
   #include <string.h>
@@ -706,7 +706,7 @@ static yyconst flex_int16_t yy_chk[873] =
 
 
 /* rules */
-#line 710 "fitsy++/envilex.C"
+#line 710 "../fitsy/envilex.C"
 
 #define INITIAL 0
 #define DISCARD 1
@@ -808,10 +808,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 30 "fitsy++/envilex.L"
+#line 30 "../fitsy/envilex.L"
 
 
-#line 815 "fitsy++/envilex.C"
+#line 815 "../fitsy/envilex.C"
 
 	if ( !(yy_init) )
 		{
@@ -893,7 +893,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 32 "fitsy++/envilex.L"
+#line 32 "../fitsy/envilex.L"
 { // special case-- #\n
 		  BEGIN INITIAL;
 		  yyless(0);             // put back the terminator
@@ -903,7 +903,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 39 "fitsy++/envilex.L"
+#line 39 "../fitsy/envilex.L"
 {  // Discard reset of line
 		  BEGIN INITIAL;
 		  int ll = yyleng <(ENVIPARSERSIZE-1) ? yyleng:(ENVIPARSERSIZE-1);
@@ -914,7 +914,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 47 "fitsy++/envilex.L"
+#line 47 "../fitsy/envilex.L"
 {
                   BEGIN BRACKET;
                   return '{';
@@ -922,7 +922,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 52 "fitsy++/envilex.L"
+#line 52 "../fitsy/envilex.L"
 {
 		  BEGIN INITIAL;
                   return '}';
@@ -930,272 +930,272 @@ YY_RULE_SETUP
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 57 "fitsy++/envilex.L"
+#line 57 "../fitsy/envilex.L"
 {return DEBUG_;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 58 "fitsy++/envilex.L"
+#line 58 "../fitsy/envilex.L"
 {return ON_;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 59 "fitsy++/envilex.L"
+#line 59 "../fitsy/envilex.L"
 {return OFF_;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 61 "fitsy++/envilex.L"
+#line 61 "../fitsy/envilex.L"
 {return AVERAGE_;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 62 "fitsy++/envilex.L"
+#line 62 "../fitsy/envilex.L"
 {return BAND_;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 63 "fitsy++/envilex.L"
+#line 63 "../fitsy/envilex.L"
 {return BANDS_;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 64 "fitsy++/envilex.L"
+#line 64 "../fitsy/envilex.L"
 {return BBL_;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 65 "fitsy++/envilex.L"
+#line 65 "../fitsy/envilex.L"
 {return BIL_;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 66 "fitsy++/envilex.L"
+#line 66 "../fitsy/envilex.L"
 {return BIP_;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 67 "fitsy++/envilex.L"
+#line 67 "../fitsy/envilex.L"
 {return BSQ_;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 68 "fitsy++/envilex.L"
+#line 68 "../fitsy/envilex.L"
 {return BYTE_;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 69 "fitsy++/envilex.L"
+#line 69 "../fitsy/envilex.L"
 {return ENVI_;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 70 "fitsy++/envilex.L"
+#line 70 "../fitsy/envilex.L"
 {return DATA_;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 71 "fitsy++/envilex.L"
+#line 71 "../fitsy/envilex.L"
 {return DEFAULT_;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 72 "fitsy++/envilex.L"
+#line 72 "../fitsy/envilex.L"
 {return DESCRIPTION_;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 73 "fitsy++/envilex.L"
+#line 73 "../fitsy/envilex.L"
 {return FACTOR_;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 74 "fitsy++/envilex.L"
+#line 74 "../fitsy/envilex.L"
 {return FRAME_;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 75 "fitsy++/envilex.L"
+#line 75 "../fitsy/envilex.L"
 {return FILE_;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 76 "fitsy++/envilex.L"
+#line 76 "../fitsy/envilex.L"
 {return FWHM_;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 77 "fitsy++/envilex.L"
+#line 77 "../fitsy/envilex.L"
 {return GAIN_;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 78 "fitsy++/envilex.L"
+#line 78 "../fitsy/envilex.L"
 {return HEADER_;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 79 "fitsy++/envilex.L"
+#line 79 "../fitsy/envilex.L"
 {return INFO_;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 80 "fitsy++/envilex.L"
+#line 80 "../fitsy/envilex.L"
 {return IGNORE_;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 81 "fitsy++/envilex.L"
+#line 81 "../fitsy/envilex.L"
 {return INTERLEAVE_;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 82 "fitsy++/envilex.L"
+#line 82 "../fitsy/envilex.L"
 {return LIMITS_;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 83 "fitsy++/envilex.L"
+#line 83 "../fitsy/envilex.L"
 {return LINES_;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 84 "fitsy++/envilex.L"
+#line 84 "../fitsy/envilex.L"
 {return MAJOR_;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 85 "fitsy++/envilex.L"
+#line 85 "../fitsy/envilex.L"
 {return MAP_;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 86 "fitsy++/envilex.L"
+#line 86 "../fitsy/envilex.L"
 {return MINOR_;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 87 "fitsy++/envilex.L"
+#line 87 "../fitsy/envilex.L"
 {return NAMES_;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 88 "fitsy++/envilex.L"
+#line 88 "../fitsy/envilex.L"
 {return OFFSET_;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 89 "fitsy++/envilex.L"
+#line 89 "../fitsy/envilex.L"
 {return OFFSETS_;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 90 "fitsy++/envilex.L"
+#line 90 "../fitsy/envilex.L"
 {return ORDER_;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 91 "fitsy++/envilex.L"
+#line 91 "../fitsy/envilex.L"
 {return PIXEL_;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 92 "fitsy++/envilex.L"
+#line 92 "../fitsy/envilex.L"
 {return PIXELS_;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 93 "fitsy++/envilex.L"
+#line 93 "../fitsy/envilex.L"
 {return PLOT_;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 94 "fitsy++/envilex.L"
+#line 94 "../fitsy/envilex.L"
 {return PROJECTION_;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 95 "fitsy++/envilex.L"
+#line 95 "../fitsy/envilex.L"
 {return RANGE_;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 96 "fitsy++/envilex.L"
+#line 96 "../fitsy/envilex.L"
 {return REFLECTANCE_;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 97 "fitsy++/envilex.L"
+#line 97 "../fitsy/envilex.L"
 {return SAMPLES_;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 98 "fitsy++/envilex.L"
+#line 98 "../fitsy/envilex.L"
 {return SCALE_;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 99 "fitsy++/envilex.L"
+#line 99 "../fitsy/envilex.L"
 {return SCANNER_;}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 100 "fitsy++/envilex.L"
+#line 100 "../fitsy/envilex.L"
 {return SENSOR_;}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 101 "fitsy++/envilex.L"
+#line 101 "../fitsy/envilex.L"
 {return SIZE_;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 102 "fitsy++/envilex.L"
+#line 102 "../fitsy/envilex.L"
 {return STRETCH_;}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 103 "fitsy++/envilex.L"
+#line 103 "../fitsy/envilex.L"
 {return TITLES_;}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 104 "fitsy++/envilex.L"
+#line 104 "../fitsy/envilex.L"
 {return TYPE_;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 105 "fitsy++/envilex.L"
+#line 105 "../fitsy/envilex.L"
 {return UNITS_;}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 106 "fitsy++/envilex.L"
+#line 106 "../fitsy/envilex.L"
 {return VALUE_;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 107 "fitsy++/envilex.L"
+#line 107 "../fitsy/envilex.L"
 {return VALUES_;}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 108 "fitsy++/envilex.L"
+#line 108 "../fitsy/envilex.L"
 {return WAVELENGTH_;}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 111 "fitsy++/envilex.L"
+#line 111 "../fitsy/envilex.L"
 { // Integer
 		  envilval->integer = atoi(yytext);
 		  return INT;
 		}
 	YY_BREAK
 case 57:
-#line 117 "fitsy++/envilex.L"
+#line 117 "../fitsy/envilex.L"
 case 58:
 YY_RULE_SETUP
-#line 117 "fitsy++/envilex.L"
+#line 117 "../fitsy/envilex.L"
 { // Real Number
 		  envilval->real = atof(yytext);
 		  return REAL;
@@ -1203,7 +1203,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 123 "fitsy++/envilex.L"
+#line 123 "../fitsy/envilex.L"
 { // General String
 		  int ll = yyleng <(ENVIPARSERSIZE-1) ? yyleng:(ENVIPARSERSIZE-1);
 		  strncpy(envilval->str,yytext,ll);
@@ -1213,43 +1213,43 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 130 "fitsy++/envilex.L"
+#line 130 "../fitsy/envilex.L"
 {
                   return ',';
                 }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 134 "fitsy++/envilex.L"
+#line 134 "../fitsy/envilex.L"
 { // White Spaces
 		} 
 	YY_BREAK
 case 62:
 /* rule 62 can match eol */
 YY_RULE_SETUP
-#line 137 "fitsy++/envilex.L"
+#line 137 "../fitsy/envilex.L"
 { // linefeed
 		}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 140 "fitsy++/envilex.L"
+#line 140 "../fitsy/envilex.L"
 { // other chars, eat it
                 }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 143 "fitsy++/envilex.L"
+#line 143 "../fitsy/envilex.L"
 { // Integer
 		  envilval->integer = atoi(yytext);
 		  return INT;
 		}
 	YY_BREAK
 case 65:
-#line 149 "fitsy++/envilex.L"
+#line 149 "../fitsy/envilex.L"
 case 66:
 YY_RULE_SETUP
-#line 149 "fitsy++/envilex.L"
+#line 149 "../fitsy/envilex.L"
 { // Real Number
 		  envilval->real = atof(yytext);
 		  return REAL;
@@ -1257,7 +1257,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 155 "fitsy++/envilex.L"
+#line 155 "../fitsy/envilex.L"
 { // General String
 		  int ll = yyleng <(ENVIPARSERSIZE-1) ? yyleng:(ENVIPARSERSIZE-1);
 		  strncpy(envilval->str,yytext,ll);
@@ -1267,14 +1267,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 162 "fitsy++/envilex.L"
+#line 162 "../fitsy/envilex.L"
 { // White Spaces
 		} 
 	YY_BREAK
 case 69:
 /* rule 69 can match eol */
 YY_RULE_SETUP
-#line 165 "fitsy++/envilex.L"
+#line 165 "../fitsy/envilex.L"
 { // windows line feed
 		  return '\n';
 		}
@@ -1282,7 +1282,7 @@ YY_RULE_SETUP
 case 70:
 /* rule 70 can match eol */
 YY_RULE_SETUP
-#line 169 "fitsy++/envilex.L"
+#line 169 "../fitsy/envilex.L"
 { // linefeed
 		  return '\n';
 		}
@@ -1290,24 +1290,24 @@ YY_RULE_SETUP
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(DISCARD):
 case YY_STATE_EOF(BRACKET):
-#line 173 "fitsy++/envilex.L"
+#line 173 "../fitsy/envilex.L"
 { // eof
 		  return EOF_;
 		}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 177 "fitsy++/envilex.L"
+#line 177 "../fitsy/envilex.L"
 { // Else, return the char
 		  return yytext[0];
 		}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 181 "fitsy++/envilex.L"
+#line 181 "../fitsy/envilex.L"
 ECHO;
 	YY_BREAK
-#line 1311 "fitsy++/envilex.C"
+#line 1311 "../fitsy/envilex.C"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2204,7 +2204,7 @@ void envifree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 181 "fitsy++/envilex.L"
+#line 181 "../fitsy/envilex.L"
 
 
 

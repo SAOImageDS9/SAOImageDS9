@@ -5,8 +5,6 @@
 #include <fstream>
 #include "fdstream.hpp"
 
-#include <tk.h>
-
 #include "framebase.h"
 #include "fitsimage.h"
 #include "context.h"

@@ -1,6 +1,6 @@
-#line 2 "fitsy++/lex.C"
+#line 2 "../fitsy/lex.C"
 
-#line 4 "fitsy++/lex.C"
+#line 4 "../fitsy/lex.C"
 
 #define  YY_INT_ALIGNED short int
 
@@ -557,12 +557,12 @@ static yyconst flex_int16_t yy_chk[439] =
 #define yymore() yymore_used_but_not_detected
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
-#line 1 "fitsy++/lex.L"
+#line 1 "../fitsy/lex.L"
 /* Copyright (C) 1999-2018
  * Smithsonian Astrophysical Observatory, Cambridge, MA, USA
  * For conditions of distribution and use, see copyright notice in "copyright"
  */
-#line 11 "fitsy++/lex.L"
+#line 11 "../fitsy/lex.L"
   #include <stdio.h>
   #include <stdlib.h>
   #include <string.h>
@@ -580,7 +580,7 @@ static yyconst flex_int16_t yy_chk[439] =
 
 
 /* rules */
-#line 584 "fitsy++/lex.C"
+#line 584 "../fitsy/lex.C"
 
 #define INITIAL 0
 #define EXT 1
@@ -683,10 +683,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 32 "fitsy++/lex.L"
+#line 32 "../fitsy/lex.L"
 
 
-#line 690 "fitsy++/lex.C"
+#line 690 "../fitsy/lex.C"
 
 	if ( !(yy_init) )
 		{
@@ -768,7 +768,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 34 "fitsy++/lex.L"
+#line 34 "../fitsy/lex.L"
 { // File
 		  strcpy(fflval->str,yytext);
 		  return STRING;
@@ -776,7 +776,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 39 "fitsy++/lex.L"
+#line 39 "../fitsy/lex.L"
 { // first bracket
 		  BEGIN EXT;
 		  CLEARFILTER
@@ -785,13 +785,13 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 45 "fitsy++/lex.L"
+#line 45 "../fitsy/lex.L"
 { // White Spaces
 		} 
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 48 "fitsy++/lex.L"
+#line 48 "../fitsy/lex.L"
 { // Else, return the char
 		  return yytext[0];
 		}
@@ -799,162 +799,162 @@ YY_RULE_SETUP
 
 case 5:
 YY_RULE_SETUP
-#line 54 "fitsy++/lex.L"
+#line 54 "../fitsy/lex.L"
 {RET(ARCH_)}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 55 "fitsy++/lex.L"
+#line 55 "../fitsy/lex.L"
 {RET(ARRAY_)}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 56 "fitsy++/lex.L"
+#line 56 "../fitsy/lex.L"
 {RET(BIG_)}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 57 "fitsy++/lex.L"
+#line 57 "../fitsy/lex.L"
 {RET(BIGENDIAN_)}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 58 "fitsy++/lex.L"
+#line 58 "../fitsy/lex.L"
 {RET(BIN_)}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 59 "fitsy++/lex.L"
+#line 59 "../fitsy/lex.L"
 {RET(BINKEY_)}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 60 "fitsy++/lex.L"
+#line 60 "../fitsy/lex.L"
 {RET(BINCOL_)}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 61 "fitsy++/lex.L"
+#line 61 "../fitsy/lex.L"
 {RET(BITPIX_)}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 62 "fitsy++/lex.L"
+#line 62 "../fitsy/lex.L"
 {RET(COL_)}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 63 "fitsy++/lex.L"
+#line 63 "../fitsy/lex.L"
 {RET(DIM_)}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 64 "fitsy++/lex.L"
+#line 64 "../fitsy/lex.L"
 {RET(DIMS_)}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 65 "fitsy++/lex.L"
+#line 65 "../fitsy/lex.L"
 {RET(ECLIPTIC_)}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 66 "fitsy++/lex.L"
+#line 66 "../fitsy/lex.L"
 {RET(ENDIAN_)}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 67 "fitsy++/lex.L"
+#line 67 "../fitsy/lex.L"
 {RET(EQUATORIAL_)}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 68 "fitsy++/lex.L"
+#line 68 "../fitsy/lex.L"
 {RET(GALACTIC_)}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 69 "fitsy++/lex.L"
+#line 69 "../fitsy/lex.L"
 {RET(KEY_)}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 70 "fitsy++/lex.L"
+#line 70 "../fitsy/lex.L"
 {RET(LAYOUT_)}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 71 "fitsy++/lex.L"
+#line 71 "../fitsy/lex.L"
 {RET(LITTLE_)}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 72 "fitsy++/lex.L"
+#line 72 "../fitsy/lex.L"
 {RET(LITTLEENDIAN_)}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 73 "fitsy++/lex.L"
+#line 73 "../fitsy/lex.L"
 {RET(NESTED_)}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 74 "fitsy++/lex.L"
+#line 74 "../fitsy/lex.L"
 {RET(NORTH_)}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 75 "fitsy++/lex.L"
+#line 75 "../fitsy/lex.L"
 {RET(ORDER_)}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 76 "fitsy++/lex.L"
+#line 76 "../fitsy/lex.L"
 {RET(QUAD_)}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 77 "fitsy++/lex.L"
+#line 77 "../fitsy/lex.L"
 {RET(RING_)}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 78 "fitsy++/lex.L"
+#line 78 "../fitsy/lex.L"
 {RET(SKIP_)}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 79 "fitsy++/lex.L"
+#line 79 "../fitsy/lex.L"
 {RET(SOUTH_)}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 80 "fitsy++/lex.L"
+#line 80 "../fitsy/lex.L"
 {RET(SYSTEM_)}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 81 "fitsy++/lex.L"
+#line 81 "../fitsy/lex.L"
 {RET(UNKNOWN_)}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 82 "fitsy++/lex.L"
+#line 82 "../fitsy/lex.L"
 {RET(XDIM_)}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 83 "fitsy++/lex.L"
+#line 83 "../fitsy/lex.L"
 {RET(YDIM_)}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 84 "fitsy++/lex.L"
+#line 84 "../fitsy/lex.L"
 {RET(ZDIM_)}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 86 "fitsy++/lex.L"
+#line 86 "../fitsy/lex.L"
 { // Integer
 		  fflval->integer = atoi(yytext);
 		  RET(INT)
@@ -962,7 +962,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 91 "fitsy++/lex.L"
+#line 91 "../fitsy/lex.L"
 { // Extn/Col Name
 		  strcpy(fflval->str,yytext);
 		  RET(STRING)
@@ -970,7 +970,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 96 "fitsy++/lex.L"
+#line 96 "../fitsy/lex.L"
 { // bracket
 		  CLEARFILTER
 		  return yytext[0];
@@ -978,7 +978,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 101 "fitsy++/lex.L"
+#line 101 "../fitsy/lex.L"
 { // comma
 		  CLEARFILTER
 		  return yytext[0];
@@ -986,14 +986,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 106 "fitsy++/lex.L"
+#line 106 "../fitsy/lex.L"
 { // White Spaces
 		  strcat(ff_filter,yytext); 
 		} 
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 110 "fitsy++/lex.L"
+#line 110 "../fitsy/lex.L"
 { // Else, return the char
 		  strcat(ff_filter,yytext); 
 		  return yytext[0];
@@ -1002,7 +1002,7 @@ YY_RULE_SETUP
 
 case 42:
 YY_RULE_SETUP
-#line 117 "fitsy++/lex.L"
+#line 117 "../fitsy/lex.L"
 {  // rest of Filter
 		  strcpy(fflval->str,yytext);
 	          fflval->str[yyleng-1] = '\0'; // Remove the ']'
@@ -1013,7 +1013,7 @@ YY_RULE_SETUP
 
 case 43:
 YY_RULE_SETUP
-#line 126 "fitsy++/lex.L"
+#line 126 "../fitsy/lex.L"
 { // Integer
 		  fflval->integer = atoi(yytext);
 		  return INT;
@@ -1021,7 +1021,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 131 "fitsy++/lex.L"
+#line 131 "../fitsy/lex.L"
 { // Else, return the char
 		  return yytext[0];
 		}
@@ -1029,10 +1029,10 @@ YY_RULE_SETUP
 
 case 45:
 YY_RULE_SETUP
-#line 137 "fitsy++/lex.L"
+#line 137 "../fitsy/lex.L"
 ECHO;
 	YY_BREAK
-#line 1036 "fitsy++/lex.C"
+#line 1036 "../fitsy/lex.C"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(EXT):
 case YY_STATE_EOF(FILTER):
@@ -1934,7 +1934,7 @@ void fffree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 137 "fitsy++/lex.L"
+#line 137 "../fitsy/lex.L"
 
 
 

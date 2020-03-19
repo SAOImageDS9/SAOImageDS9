@@ -2,11 +2,10 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "fitsmask.h"
 #include "base.h"
 #include "context.h"
+#include "util.h"
 
 FitsMask::FitsMask(Base* pp, char* clr, MaskType mm, double ll, double hh)
   : mark_(mm), low_(ll), high_(hh)

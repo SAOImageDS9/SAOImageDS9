@@ -4,6 +4,7 @@
 
 #include "coord.h"
 #include "fitsimage.h"
+#include "util.h"
 
 Coord coord;
 

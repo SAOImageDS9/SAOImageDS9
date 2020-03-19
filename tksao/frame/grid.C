@@ -5,6 +5,7 @@
 #include "grid.h"
 #include "context.h"
 #include "fitsimage.h"
+#include "util.h"
 
 extern "C" {
   #include "ast.h"

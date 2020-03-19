@@ -9,6 +9,7 @@
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
+#include "util.h"
 #include "sigbus.h"
 #include "wcsast.h"
 

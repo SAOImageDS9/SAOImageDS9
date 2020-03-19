@@ -11,6 +11,7 @@
 #include "fvcontour.h"
 #include "marker.h"
 #include "basemarker.h"
+#include "util.h"
 #include "sigbus.h"
 
 #include "circle.h"

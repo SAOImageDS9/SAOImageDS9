@@ -223,16 +223,16 @@ cbsaoparser:
 	flex -Pli -ocolorbar/saolex.C colorbar/saolex.L
 
 fitsyparser :
-	bison -d -p ff -o fitsy++/parser.C fitsy++/parser.Y
-	flex -Pff -ofitsy++/lex.C fitsy++/lex.L
+	bison -d -p ff -o ../fitsy/parser.C ../fitsy/parser.Y
+	flex -Pff -o../fitsy/lex.C ../fitsy/lex.L
 
 nrrdparser :
-	bison -d -p nrrd -o fitsy++/nrrdparser.C fitsy++/nrrdparser.Y
-	flex -Pnrrd -ofitsy++/nrrdlex.C fitsy++/nrrdlex.L
+	bison -d -p nrrd -o ../fitsy/nrrdparser.C ../fitsy/nrrdparser.Y
+	flex -Pnrrd -o../fitsy/nrrdlex.C ../fitsy/nrrdlex.L
 
 enviparser :
-	bison -d -p envi -o fitsy++/enviparser.C fitsy++/enviparser.Y
-	flex -Penvi -ofitsy++/envilex.C fitsy++/envilex.L
+	bison -d -p envi -o ../fitsy/enviparser.C ../fitsy/enviparser.Y
+	flex -Penvi -o../fitsy/envilex.C ../fitsy/envilex.L
 
 ciaoparser :
 	bison -d -p ciao -o frame/ciaoparser.C frame/ciaoparser.Y

@@ -2,10 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "compass.h"
 #include "fitsimage.h"
+#include "util.h"
 
 Compass::Compass(const Compass& a) : Marker(a)
 {

@@ -114,7 +114,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 32 "fitsy++/parser.Y"
+#line 32 "../fitsy/parser.Y"
 {
   float real;
   int integer;
@@ -122,7 +122,7 @@ typedef union YYSTYPE
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 126 "fitsy++/parser.H"
+#line 126 "../fitsy/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

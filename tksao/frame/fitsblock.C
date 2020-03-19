@@ -6,6 +6,7 @@
 #include "block.h"
 #include "context.h"
 #include "wcsast.h"
+#include "util.h"
 
 void* blockproc(void* tt);
 

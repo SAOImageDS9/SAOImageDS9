@@ -6,10 +6,11 @@
 
 #include "framergb.h"
 #include "fitsimage.h"
-#include "ps.h"
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
+#include "ps.h"
+#include "util.h"
 
 #include "sigbus.h"
 

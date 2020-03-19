@@ -160,7 +160,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 30 "fitsy++/enviparser.Y"
+#line 30 "../fitsy/enviparser.Y"
 {
 #define ENVIPARSERSIZE 1024
   float real;
@@ -168,7 +168,7 @@ typedef union YYSTYPE
   char str[ENVIPARSERSIZE];
 }
 /* Line 1529 of yacc.c.  */
-#line 172 "fitsy++/enviparser.H"
+#line 172 "../fitsy/enviparser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

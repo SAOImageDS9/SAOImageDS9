@@ -9,6 +9,7 @@
 #include "context.h"
 #include "framebase.h"
 #include "fitsimage.h"
+#include "util.h"
 
 static int xmlRead (void * context, char * buffer, int len)
 {

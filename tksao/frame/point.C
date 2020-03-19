@@ -2,10 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "point.h"
 #include "fitsimage.h"
+#include "util.h"
 
 #define NUMSEG 16
 

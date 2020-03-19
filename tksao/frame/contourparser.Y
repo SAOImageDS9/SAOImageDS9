@@ -21,6 +21,7 @@
 #include "context.h"
 #include "fitsimage.h"
 #include "contour.h"
+#include "util.h"
 
 #undef yyFlexLexer
 #define yyFlexLexer ctFlexLexer

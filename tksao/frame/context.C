@@ -5,6 +5,8 @@
 #include "context.h"
 #include "fitsimage.h"
 #include "fvcontour.h"
+#include "convolve.h"
+#include "util.h"
 
 #include "alloc.h"
 #include "allocgz.h"
@@ -17,8 +19,6 @@
 #include "socket.h"
 #include "socketgz.h"
 #include "var.h"
-#include "convolve.h"
-
 #include "head.h"
 
 extern "C" {

@@ -4,6 +4,7 @@
 
 #include "fitsimage.h"
 #include "context.h"
+#include "util.h"
 
 // Map Point
 

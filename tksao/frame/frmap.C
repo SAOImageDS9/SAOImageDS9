@@ -5,6 +5,7 @@
 #include "context.h"
 #include "framebase.h"
 #include "fitsimage.h"
+#include "util.h"
 
 double Base::mapAngleFromRef(double angle, Coord::CoordSystem sys, 
 			     Coord::SkyFrame sky)

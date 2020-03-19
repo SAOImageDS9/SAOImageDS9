@@ -274,7 +274,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 10 "fitsy++/nrrdparser.Y"
+#line 10 "../fitsy/nrrdparser.Y"
 
 #define YYDEBUG 1
 
@@ -314,7 +314,7 @@ int dim;
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 29 "fitsy++/nrrdparser.Y"
+#line 29 "../fitsy/nrrdparser.Y"
 {
 #define NRRDPARSERSIZE 256
   float real;
@@ -322,7 +322,7 @@ typedef union YYSTYPE
   char str[NRRDPARSERSIZE];
 }
 /* Line 193 of yacc.c.  */
-#line 326 "fitsy++/nrrdparser.C"
+#line 326 "../fitsy/nrrdparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -335,7 +335,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 339 "fitsy++/nrrdparser.C"
+#line 339 "../fitsy/nrrdparser.C"
 
 #ifdef short
 # undef short
@@ -1793,172 +1793,172 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 168 "fitsy++/nrrdparser.Y"
+#line 168 "../fitsy/nrrdparser.Y"
     {dim=0; nrrd->setpArch(FitsFile::BIG);;}
     break;
 
   case 17:
-#line 186 "fitsy++/nrrdparser.Y"
+#line 186 "../fitsy/nrrdparser.Y"
     {DISCARD_(1);}
     break;
 
   case 43:
-#line 215 "fitsy++/nrrdparser.Y"
+#line 215 "../fitsy/nrrdparser.Y"
     {DISCARD_(1);}
     break;
 
   case 46:
-#line 219 "fitsy++/nrrdparser.Y"
+#line 219 "../fitsy/nrrdparser.Y"
     {YYACCEPT;;}
     break;
 
   case 47:
-#line 222 "fitsy++/nrrdparser.Y"
+#line 222 "../fitsy/nrrdparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 48:
-#line 223 "fitsy++/nrrdparser.Y"
+#line 223 "../fitsy/nrrdparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 49:
-#line 226 "fitsy++/nrrdparser.Y"
+#line 226 "../fitsy/nrrdparser.Y"
     {yydebug=1;;}
     break;
 
   case 50:
-#line 227 "fitsy++/nrrdparser.Y"
+#line 227 "../fitsy/nrrdparser.Y"
     {yydebug=0;;}
     break;
 
   case 51:
-#line 230 "fitsy++/nrrdparser.Y"
+#line 230 "../fitsy/nrrdparser.Y"
     {DISCARD_(1);}
     break;
 
   case 54:
-#line 232 "fitsy++/nrrdparser.Y"
+#line 232 "../fitsy/nrrdparser.Y"
     {DISCARD_(1);}
     break;
 
   case 56:
-#line 233 "fitsy++/nrrdparser.Y"
+#line 233 "../fitsy/nrrdparser.Y"
     {DISCARD_(1);}
     break;
 
   case 58:
-#line 234 "fitsy++/nrrdparser.Y"
+#line 234 "../fitsy/nrrdparser.Y"
     {DISCARD_(1);}
     break;
 
   case 60:
-#line 237 "fitsy++/nrrdparser.Y"
+#line 237 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(8);;}
     break;
 
   case 61:
-#line 238 "fitsy++/nrrdparser.Y"
+#line 238 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(8);;}
     break;
 
   case 62:
-#line 239 "fitsy++/nrrdparser.Y"
+#line 239 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(16);;}
     break;
 
   case 63:
-#line 240 "fitsy++/nrrdparser.Y"
+#line 240 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(16);;}
     break;
 
   case 64:
-#line 241 "fitsy++/nrrdparser.Y"
+#line 241 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(32);;}
     break;
 
   case 65:
-#line 242 "fitsy++/nrrdparser.Y"
+#line 242 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(32);;}
     break;
 
   case 66:
-#line 243 "fitsy++/nrrdparser.Y"
+#line 243 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(64);;}
     break;
 
   case 67:
-#line 244 "fitsy++/nrrdparser.Y"
+#line 244 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(64);;}
     break;
 
   case 68:
-#line 245 "fitsy++/nrrdparser.Y"
+#line 245 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(-32);;}
     break;
 
   case 69:
-#line 246 "fitsy++/nrrdparser.Y"
+#line 246 "../fitsy/nrrdparser.Y"
     {nrrd->setpBitpix(-64);;}
     break;
 
   case 112:
-#line 309 "fitsy++/nrrdparser.Y"
+#line 309 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::RAW);;}
     break;
 
   case 113:
-#line 310 "fitsy++/nrrdparser.Y"
+#line 310 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::ASCII);;}
     break;
 
   case 114:
-#line 311 "fitsy++/nrrdparser.Y"
+#line 311 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::ASCII);;}
     break;
 
   case 115:
-#line 312 "fitsy++/nrrdparser.Y"
+#line 312 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::ASCII);;}
     break;
 
   case 116:
-#line 313 "fitsy++/nrrdparser.Y"
+#line 313 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::HEX);;}
     break;
 
   case 117:
-#line 314 "fitsy++/nrrdparser.Y"
+#line 314 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::GZIP);;}
     break;
 
   case 118:
-#line 315 "fitsy++/nrrdparser.Y"
+#line 315 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::GZIP);;}
     break;
 
   case 119:
-#line 316 "fitsy++/nrrdparser.Y"
+#line 316 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::BZ2);;}
     break;
 
   case 120:
-#line 317 "fitsy++/nrrdparser.Y"
+#line 317 "../fitsy/nrrdparser.Y"
     {nrrd->setpEncoding(FitsFile::BZ2);;}
     break;
 
   case 121:
-#line 320 "fitsy++/nrrdparser.Y"
+#line 320 "../fitsy/nrrdparser.Y"
     {nrrd->setpArch(FitsFile::BIG);;}
     break;
 
   case 122:
-#line 321 "fitsy++/nrrdparser.Y"
+#line 321 "../fitsy/nrrdparser.Y"
     {nrrd->setpArch(FitsFile::LITTLE);;}
     break;
 
   case 133:
-#line 345 "fitsy++/nrrdparser.Y"
+#line 345 "../fitsy/nrrdparser.Y"
     {
 	  switch (dim) {
 	  case 0:
@@ -1977,7 +1977,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1981 "fitsy++/nrrdparser.C"
+#line 1981 "../fitsy/nrrdparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2191,6 +2191,6 @@ yyreturn:
 }
 
 
-#line 398 "fitsy++/nrrdparser.Y"
+#line 398 "../fitsy/nrrdparser.Y"
 
 

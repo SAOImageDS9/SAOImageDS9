@@ -6,6 +6,7 @@
 #include "fitsimage.h"
 #include "context.h"
 #include "marker.h"
+#include "util.h"
 
 void Frame3dBase::binToFitCmd()
 {

@@ -7,6 +7,7 @@
 #include "base.h"
 #include "fitsimage.h"
 #include "convolve.h"
+#include "util.h"
 
 #include "sigbus.h"
 

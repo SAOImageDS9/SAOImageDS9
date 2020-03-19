@@ -5,6 +5,7 @@
 #include "frame3d.h"
 #include "fitsimage.h"
 #include "ps.h"
+#include "util.h"
 #include "sigbus.h"
 
 #include <pthread.h>

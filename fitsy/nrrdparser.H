@@ -240,7 +240,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 29 "fitsy++/nrrdparser.Y"
+#line 29 "../fitsy/nrrdparser.Y"
 {
 #define NRRDPARSERSIZE 256
   float real;
@@ -248,7 +248,7 @@ typedef union YYSTYPE
   char str[NRRDPARSERSIZE];
 }
 /* Line 1529 of yacc.c.  */
-#line 252 "fitsy++/nrrdparser.H"
+#line 252 "../fitsy/nrrdparser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

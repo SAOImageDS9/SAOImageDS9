@@ -21,7 +21,6 @@
 #include "inversescale.h"
 #include "list.h"
 #include "tag.h"
-#include "util.h"
 #include "point.h"
 #include "fitsmask.h"
 

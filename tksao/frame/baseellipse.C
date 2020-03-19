@@ -4,6 +4,7 @@
 
 #include "baseellipse.h"
 #include "fitsimage.h"
+#include "util.h"
 
 #define XPOINT_BLOCK 1024
 

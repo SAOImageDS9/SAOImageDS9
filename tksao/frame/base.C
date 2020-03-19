@@ -10,6 +10,7 @@
 #include "marker.h"
 #include "wcsast.h"
 #include "ps.h"
+#include "util.h"
 
 #include "circle.h"
 #include "ellipse.h"

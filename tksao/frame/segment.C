@@ -4,6 +4,7 @@
 
 #include "segment.h"
 #include "fitsimage.h"
+#include "util.h" // macos
 
 Segment::Segment(Base* p, const Vector& ctr,
 		 const Vector& b)

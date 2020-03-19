@@ -4,6 +4,7 @@
 
 #include "line.h"
 #include "fitsimage.h"
+#include "util.h" // macos
 
 Line::Line(Base* p, const Vector& ptr1, const Vector& ptr2)
   : BaseLine(p, ptr1, ptr2)

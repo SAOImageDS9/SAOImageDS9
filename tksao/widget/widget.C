@@ -5,6 +5,7 @@
 #include <tkInt.h>
 
 #include "widget.h"
+#include "util.h" // macos
 
 // Tk Canvas Widget Functions Declaration
 

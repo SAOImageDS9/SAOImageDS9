@@ -4,6 +4,7 @@
 
 #include "projection.h"
 #include "fitsimage.h"
+#include "util.h" // macos
 
 Projection::Projection(const Projection& a) : BaseLine(a)
 {

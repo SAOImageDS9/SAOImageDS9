@@ -4,6 +4,7 @@
 
 #include "polygon.h"
 #include "fitsimage.h"
+#include "util.h" // macos
 
 Polygon::Polygon(const Polygon& a) : BasePolygon(a)
 {

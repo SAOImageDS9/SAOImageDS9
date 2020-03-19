@@ -21,7 +21,6 @@ using namespace std;
 
 #include "vector.h"
 #include "ps.h"
-#include "util.h"
 
 class Attribute;
 

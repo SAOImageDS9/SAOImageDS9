@@ -6,7 +6,6 @@
 #define __colorbarbase_h__
 
 #include "widget.h"
-#include "util.h"
 
 // Widget ConfigSpecs Defines
 

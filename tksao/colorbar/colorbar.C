@@ -5,8 +5,8 @@
 #include <fstream>
 
 #include "colorbar.h"
-#include "util.h"
 #include "ps.h"
+#include "util.h"
 
 #include "lut.h"
 #include "sao.h"

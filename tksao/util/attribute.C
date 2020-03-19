@@ -4,6 +4,7 @@
 
 #include "attribute.h"
 #include "widget.h"
+#include "util.h"
 
 Attribute::Attribute(Widget* p) : parent(p)
 {

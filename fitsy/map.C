@@ -4,6 +4,7 @@
 
 #include "map.h"
 #include "head.h"
+#include "util.h"
 
 FitsMap::FitsMap()
 {

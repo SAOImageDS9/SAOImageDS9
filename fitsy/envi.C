@@ -4,6 +4,7 @@
 
 #include "envi.h"
 #include "head.h"
+#include "util.h"
 
 FitsENVI::FitsENVI(FitsFile* fits)
 {

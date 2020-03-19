@@ -8,6 +8,7 @@
 using namespace std;
 
 #include "plio.h"
+#include "util.h"
 
 extern "C" {
   int pl_l2pi(short *ll_src, int xs, int *px_dst, int npix);

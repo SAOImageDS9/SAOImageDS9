@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "outsocket.h"
+#include "util.h"
 
 #ifndef __WIN32
 

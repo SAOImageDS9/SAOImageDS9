@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "sshare.h"
+#include "util.h"
 
 #if (HAVE_SYS_SHM_H && !__WIN32)
 #include <sys/types.h>

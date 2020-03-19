@@ -4,6 +4,7 @@
 
 #include "nrrd.h"
 #include "head.h"
+#include "util.h"
 
 FitsNRRD::FitsNRRD(FitsFile* fits)
 {

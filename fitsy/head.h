@@ -10,7 +10,6 @@
 
 #include "card.h"
 #include "hdu.h"
-#include "util.h"
 
 class FitsHead {
  public:

@@ -26,6 +26,25 @@ static char* dupstr(const char* str)
   return copy;
 }
 
+int parseSection(char* lbuf, Vector* v1, Vector* v2)
+{
+  double x1, y1, x2, y2;
+  char d1,d2,d3,d4,d5; // dummy char
+  string x(lbuf);
+  istringstream str(x);
+  str >> d1 >> x1 >> d2 >> x2 >> d3 >> y1 >> d4 >> y2 >> d5;
+
+  // verify input
+  if (!(d1=='[' && d2==':' && d3==',' && d4==':' && d5==']'))
+    return 0;
+
+  // it looks ok
+  *v1 = Vector(x1,y1);
+  *v2 = Vector(x2,y2);
+
+  return 1;
+}
+
 // VectorStr
 
 VectorStr::~VectorStr()

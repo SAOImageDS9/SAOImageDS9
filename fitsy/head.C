@@ -14,6 +14,7 @@
 
 #include "file.h"
 #include "head.h"
+#include "util.h"
 
 FitsHead::FitsHead(char* raw, size_t bytes, Memory mem)
 {

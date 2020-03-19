@@ -8,6 +8,7 @@
 using namespace std;
 
 #include "file.h"
+#include "util.h"
 
 // extention parser
 #undef yyFlexLexer

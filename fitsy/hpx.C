@@ -17,7 +17,6 @@ using namespace std;
 
 #include "hpx.h"
 #include "util.h"
-
 #include "fitsy.h"
 
 FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll, 

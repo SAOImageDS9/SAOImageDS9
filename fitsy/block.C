@@ -8,6 +8,7 @@
 using namespace std;
 
 #include "block.h"
+#include "util.h"
 
 FitsBlock::FitsBlock(FitsFile* fits, Vector& block)
 {

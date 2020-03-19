@@ -10,6 +10,8 @@
 #include <iostream>
 using namespace std;
 
+extern int parseSection(char*, Vector*, Vector*);
+
 class VectorStr {
  public:
   char* c[2];

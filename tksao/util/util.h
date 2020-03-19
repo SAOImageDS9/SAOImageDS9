@@ -68,8 +68,6 @@ extern double m180To180(double);
 extern double degToRad(double);
 extern double radToDeg(double);
 
-extern int parseSection(char*, Vector*, Vector*);
-
 extern double dmsToDegree(int, int, int, double);
 extern double parseSEXStr(const char*);
 extern double parseHMSStr(const char*);

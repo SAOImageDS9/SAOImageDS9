@@ -8,6 +8,7 @@
 using namespace std;
 
 #include "rice.h"
+#include "util.h"
 
 extern "C" {
   int fits_rdecomp (unsigned char *c,

@@ -10,6 +10,7 @@ using namespace std;
 #include <tk.h>
 
 #include "photo.h"
+#include "util.h"
 
 FitsPhoto::FitsPhoto(Tcl_Interp* interp, const char* ph)
 {

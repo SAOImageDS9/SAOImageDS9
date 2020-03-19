@@ -5,7 +5,7 @@
 #ifndef __outfits_h__
 #define __outfits_h__
 
-#include "util.h"
+#include <stdlib.h>
 
 #define B1KB 1024
 #define B4KB 4096

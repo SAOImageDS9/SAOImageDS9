@@ -6,6 +6,7 @@
 #define __fitsblock_h__
 
 #include "vector.h"
+#include "vectorstr.h"
 #include "file.h"
 
 class FitsBlock : public FitsFile {

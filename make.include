@@ -317,7 +317,7 @@ tkagif/Makefile :
 
 #-------------------------- tksao
 
-tksao	: ast funtools tksao/Makefile
+tksao	: ast tksao/Makefile
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao -j $(JOBS) install

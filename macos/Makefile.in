@@ -47,7 +47,8 @@ TKFILES = \
 .PHONY	: saods9 tcl tk tkmacosx
 
 saods9	: dirs tcl tk \
-	openssl vector xpa \
+	openssl \
+	xpa vector funtools \
 	tclfitsy tcliis tclsignal \
 	tls tclxml \
 	tkblt tktable tkimg \

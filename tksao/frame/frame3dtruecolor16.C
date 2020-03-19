@@ -4,7 +4,6 @@
 
 #include "frame3dtruecolor16.h"
 #include "colorscaletrue16.h"
-#include "util.h"
 
 // Tk Canvas Widget Function Declarations
 

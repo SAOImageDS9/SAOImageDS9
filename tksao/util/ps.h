@@ -7,6 +7,9 @@
 
 #include <stdint.h>
 
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -20,6 +23,43 @@ extern int DebugGZ;
 #define BUFSIZE GZIPSIZE*8
 #define RLESIZE 128
 #define LINELIMIT 80
+
+enum PSColorSpace {BW, GRAY, RGB, CMYK};
+
+static const char psFonts[12][32] = {
+  {"Helvetica"},
+  {"Helvetica-Oblique"},
+  {"Helvetica-Bold"},
+  {"Helvetica-BoldOblique"},
+
+  {"Times-Roman"},
+  {"Times-Italic"},
+  {"Times-Bold"},
+  {"Times-BoldItalic"},
+
+  {"Courier"},
+  {"Courier-Oblique"},
+  {"Courier-Bold"},
+  {"Courier-BoldOblique"}
+};
+
+extern double RGB2Gray(double, double, double);
+extern unsigned char RGB2Gray(unsigned char, unsigned char, unsigned char);
+extern void RGB2CMYK(unsigned char, unsigned char, unsigned char,
+		     unsigned char*, unsigned char*, unsigned char*, 
+		     unsigned char*);
+extern void RGB2CMYK(unsigned short, unsigned short, unsigned short,
+		     unsigned short*, unsigned short*, unsigned short*, 
+		     unsigned short*);
+extern ostream& psColorGray(XColor*, ostream&);
+extern ostream& psColorRGB(XColor*, ostream&);
+extern ostream& psColorCMYK(XColor*, ostream&);
+
+extern char* psQuote(const char*);
+
+extern const char* psFontName(const char*);
+extern int psFontSize(const char*);
+extern const char* psFontName(const char*, const char*, const char*);
 
 // Filter Base Class
 class Filter {

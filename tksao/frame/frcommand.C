@@ -15,6 +15,10 @@
 #include "outchannel.h"
 #include "outsocket.h"
 
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
+
 void FrameBase::binToFitCmd()
 {
   if (currentContext->fits) {

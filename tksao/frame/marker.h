@@ -17,7 +17,7 @@
 #include "tag.h"
 #include "coord.h"
 #include "xml.h"
-#include "util.h"
+#include "ps.h"
 
 #define POINTSIZE 11
 

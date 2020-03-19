@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "coord.h"
-#include "util.h"
 #include "fitsimage.h"
 
 Coord coord;

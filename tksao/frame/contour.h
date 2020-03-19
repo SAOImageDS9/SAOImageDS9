@@ -5,7 +5,8 @@
 #ifndef __contour_h__
 #define __contour_h__
 
-#include "util.h"
+#include "ps.h"
+#include "vector.h"
 #include "vector3d.h"
 #include "list.h"
 #include "coord.h"

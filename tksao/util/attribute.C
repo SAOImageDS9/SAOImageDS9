@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "attribute.h"
-#include "util.h"
 #include "widget.h"
 
 Attribute::Attribute(Widget* p) : parent(p)

@@ -424,30 +424,6 @@ const char* psFontName(const char* font, const char* weight, const char* slant)
   return psFonts[ptr];
 }
 
-int fCompare(const void* a, const void* b)
-{
-  float* aa = (float*)a;
-  float* bb = (float*)b;
-
-  if (*aa < *bb)
-    return -1;
-  if (*aa > *bb)
-    return 1;
-  return 0;
-}
-
-int dCompare(const void* a, const void* b)
-{
-  double* aa = (double*)a;
-  double* bb = (double*)b;
-
-  if (*aa < *bb)
-    return -1;
-  if (*aa > *bb)
-    return 1;
-  return 0;
-}
-
 #if defined (MAC_OSX_TK) || (_WIN32)
 #include <tkInt.h>
 

@@ -6,7 +6,10 @@
 #define __base_h__
 
 #include "widget.h"
+#include "vector.h"
 #include "vector3d.h"
+#include "vectorstr.h"
+#include "fuzzy.h"
 
 #include "callback.h"
 #include "fvcontour.h"

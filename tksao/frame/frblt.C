@@ -13,6 +13,18 @@ extern "C" {
 
 #include "sigbus.h"
 
+static int dCompare(const void* a, const void* b)
+{
+  double* aa = (double*)a;
+  double* bb = (double*)b;
+
+  if (*aa < *bb)
+    return -1;
+  if (*aa > *bb)
+    return 1;
+  return 0;
+}
+
 void Base::markerAnalysisHistogram(Marker* pp, double** x, double** y,
 				  const BBox& bb, int num)
 {

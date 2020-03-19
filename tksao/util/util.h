@@ -19,7 +19,6 @@ using namespace std;
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-#include "fuzzy.h"
 #include "vector.h"
 
 #ifndef PATH_MAX
@@ -117,6 +116,4 @@ extern const char* psFontName(const char*);
 extern int psFontSize(const char*);
 extern const char* psFontName(const char*, const char*, const char*);
 
-extern int fCompare(const void*, const void*);
-extern int dCompare(const void*, const void*);
 #endif

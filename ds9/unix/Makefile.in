@@ -18,6 +18,8 @@ TK_LIBS		= @TK_LIBS@
 TK_LIB_SPEC	= @TK_LIB_SPEC@
 TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
 
+vector_LIB_SPEC= @vector_LIB_SPEC@
+
 tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
@@ -83,6 +85,7 @@ empty:=
 space:=$(empty) $(empty)
 
 SPECS	= \
+	$(vector_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
@@ -109,7 +112,6 @@ SPECS	= \
 
 LLIBS	= \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
-	$(libdir)/libvector.a \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \

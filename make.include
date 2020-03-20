@@ -334,10 +334,20 @@ tksao/Makefile :
 
 #-------------------------- vector
 
-vector	:
+vector	: vector/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$ CXX=$(CXX) AR=$(AR) $(MAKE) -C vector -j $(JOBS) install libdir=$(libdir) includedir=$(includedir)
+	$(MAKE) -C vector -j $(JOBS) install
+
+vector/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd vector; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
 
 #-------------------------- ast
 

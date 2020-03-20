@@ -5,7 +5,6 @@
 #include <tkInt.h>
 
 #include "magnifiertrue.h"
-#include "util.h"
 
 // Tk Canvas Widget Function Declarations
 

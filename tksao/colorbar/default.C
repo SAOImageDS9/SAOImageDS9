@@ -4,8 +4,8 @@
 
 #include <math.h>
 
-#include "default.h"
 #include "util.h"
+#include "default.h"
 
 GreyColorMap::GreyColorMap(Colorbar* p) : SAOColorMap(p)
 {

@@ -4,13 +4,13 @@
 
 #include <tkInt.h>
 
+#include "util.h"
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"
 #include "marker.h"
 #include "wcsast.h"
 #include "ps.h"
-#include "util.h"
 
 #include "circle.h"
 #include "ellipse.h"

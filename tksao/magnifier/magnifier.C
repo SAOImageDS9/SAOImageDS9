@@ -4,8 +4,8 @@
 
 #include <math.h>
 
-#include "magnifier.h"
 #include "util.h"
+#include "magnifier.h"
 
 // Parser Stuff
 #undef yyFlexLexer

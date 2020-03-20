@@ -2,9 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h" // macos,win
 #include "polygon.h"
 #include "fitsimage.h"
-#include "util.h" // macos
 
 Polygon::Polygon(const Polygon& a) : BasePolygon(a)
 {

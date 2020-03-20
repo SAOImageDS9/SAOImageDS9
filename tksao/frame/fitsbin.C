@@ -2,9 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "fitsimage.h"
 #include "context.h"
-#include "util.h"
 
 Matrix FitsImage::bin(const Vector& vv)
 {

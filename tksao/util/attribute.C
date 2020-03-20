@@ -2,9 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "attribute.h"
 #include "widget.h"
-#include "util.h"
 
 Attribute::Attribute(Widget* p) : parent(p)
 {

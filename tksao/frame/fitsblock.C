@@ -2,11 +2,11 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "fitsimage.h"
 #include "block.h"
 #include "context.h"
 #include "wcsast.h"
-#include "util.h"
 
 void* blockproc(void* tt);
 

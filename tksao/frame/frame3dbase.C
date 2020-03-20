@@ -4,12 +4,12 @@
 
 #include <tkInt.h>
 
+#include "util.h"
 #include "frame3dbase.h"
 #include "fitsimage.h"
 #include "marker.h"
 #include "context.h"
 #include "ps.h"
-#include "util.h"
 #include "sigbus.h"
 
 Frame3dBase::Frame3dBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 

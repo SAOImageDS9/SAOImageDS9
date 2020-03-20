@@ -2,6 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+// important note: needs to be included first as X11 defs are here
+
 #ifndef __util_h__
 #define __util_h__
 

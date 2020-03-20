@@ -5,8 +5,8 @@
 #ifndef __basemarker_h__
 #define __basemarker_h__
 
-#include "marker.h"
 #include "util.h"
+#include "marker.h"
 
 #define MAXANNULI 512
 #define MAXANGLES 720

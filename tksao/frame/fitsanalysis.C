@@ -4,11 +4,11 @@
 
 #include <pthread.h>
 
+#include "util.h"
 #include "analysis.h"
 #include "fitsimage.h"
 #include "context.h"
 #include "convolve.h"
-#include "util.h"
 
 void FitsImage::analysis(int which, pthread_t* thread, void* targ)
 {

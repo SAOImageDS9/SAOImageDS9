@@ -4,11 +4,11 @@
 
 #include <tkInt.h>
 
+#include "util.h"
 #include "frame.h"
 #include "fitsimage.h"
 #include "analysis.h"
 #include "ps.h"
-#include "util.h"
 
 #include "sigbus.h"
 

@@ -2,8 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "colorscaletrue32.h"
 #include "util.h"
+#include "colorscaletrue32.h"
 
 ColorScaleTrueColor32::ColorScaleTrueColor32(int s, Visual* visual, int msb)
   : ColorScale(s), TrueColor24(visual)

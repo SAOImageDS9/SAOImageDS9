@@ -2,8 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "colorbartruecolor8.h"
 #include "util.h"
+#include "colorbartruecolor8.h"
 
 // Tk Canvas Widget Function Declarations
 

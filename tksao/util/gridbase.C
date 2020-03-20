@@ -2,9 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "gridbase.h"
 #include "attribute.h"
-#include "util.h"
 #include "ps.h"
 
 EXTERN void TkDrawAngledChars(Display *display,

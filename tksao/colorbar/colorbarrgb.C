@@ -2,9 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h" // macos,win
 #include "colorbarrgb.h"
 #include "ps.h"
-#include "util.h" // macos
 
 ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
   : ColorbarBase(i,c,item)

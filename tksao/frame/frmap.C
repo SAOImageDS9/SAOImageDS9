@@ -2,10 +2,10 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "context.h"
 #include "framebase.h"
 #include "fitsimage.h"
-#include "util.h"
 
 double Base::mapAngleFromRef(double angle, Coord::CoordSystem sys, 
 			     Coord::SkyFrame sky)

@@ -4,9 +4,9 @@
 
 #include <fstream>
 
+#include "util.h"
 #include "colorbar.h"
 #include "ps.h"
-#include "util.h"
 
 #include "lut.h"
 #include "sao.h"

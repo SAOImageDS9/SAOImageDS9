@@ -4,8 +4,8 @@
 
 #include <string.h>
 
-#include "ps.h"
 #include "util.h"
+#include "ps.h"
 
 double RGB2Gray(double red, double green, double blue)
 {

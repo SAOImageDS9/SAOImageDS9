@@ -2,9 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h" // macos,win
 #include "projection.h"
 #include "fitsimage.h"
-#include "util.h" // macos
 
 Projection::Projection(const Projection& a) : BaseLine(a)
 {

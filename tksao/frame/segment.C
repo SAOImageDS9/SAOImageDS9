@@ -2,9 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h" // macos,win
 #include "segment.h"
 #include "fitsimage.h"
-#include "util.h" // macos
 
 Segment::Segment(Base* p, const Vector& ctr,
 		 const Vector& b)

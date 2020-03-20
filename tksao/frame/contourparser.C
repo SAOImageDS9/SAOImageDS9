@@ -225,11 +225,11 @@
 #include <string.h>
 #include <iostream>
 
+#include "util.h"
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"
 #include "contour.h"
-#include "util.h"
 
 #undef yyFlexLexer
 #define yyFlexLexer ctFlexLexer

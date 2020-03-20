@@ -4,9 +4,9 @@
 
 #include <pthread.h>
 
+#include "util.h"
 #include "fitsimage.h"
 #include "framebase.h"
-#include "util.h"
 
 #include "context.h"
 #include "mmap.h"

@@ -5,6 +5,7 @@
 #include <fstream>
 #include "fdstream.hpp"
 
+#include "util.h"
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"
@@ -12,7 +13,6 @@
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
-#include "util.h"
 
 #include "sigbus.h"
 

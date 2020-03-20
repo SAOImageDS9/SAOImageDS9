@@ -2,6 +2,7 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "context.h"
 #include "framebase.h"
 #include "framergb.h"
@@ -9,7 +10,6 @@
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
-#include "util.h"
 #include "sigbus.h"
 #include "wcsast.h"
 

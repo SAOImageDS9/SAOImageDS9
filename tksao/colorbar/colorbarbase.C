@@ -4,8 +4,8 @@
 
 #include <tkInt.h>
 
-#include "colorbarbase.h"
 #include "util.h"
+#include "colorbarbase.h"
 #include "cbgrid.h"
 #include "ps.h"
 

@@ -6,10 +6,10 @@
 #include "fdstream.hpp"
 #include <libxml/xmlreader.h>
 
+#include "util.h"
 #include "context.h"
 #include "framebase.h"
 #include "fitsimage.h"
-#include "util.h"
 
 static int xmlRead (void * context, char * buffer, int len)
 {

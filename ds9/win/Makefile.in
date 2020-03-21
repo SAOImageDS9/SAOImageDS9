@@ -108,7 +108,6 @@ SPECS	= \
 
 LLIBS	= \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
-	$(libdir)/libvector.a \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \

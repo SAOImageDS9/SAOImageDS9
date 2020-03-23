@@ -17,14 +17,6 @@ JOBS		= @CORES@
 ENABLE64BIT	= @ENABLE64BIT@
 TARGET		= @TARGET@
 
-# needed for vector/fitsy++
-#CC		= @CC@
-#CXX		= @CXX@
-#AR		= @AR@
-CC		=$(TARGET)-gcc
-CXX		=$(TARGET)-g++
-AR		= $(TARGET)-ar
-
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
 TCLXMLFLAGS 	= --with-xml-static=yes
@@ -47,7 +39,7 @@ DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 
 saods9	: dirs tcl tk \
 	libxml2 openssl \
-	xpa vector funtools \
+	xpa util vector fitsy funtools \
 	tclfitsy tcliis tls tclxml \
 	tkblt tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \

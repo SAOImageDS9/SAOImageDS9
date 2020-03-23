@@ -18,7 +18,9 @@ TK_LIBS		= @TK_LIBS@
 TK_LIB_SPEC	= @TK_LIB_SPEC@
 TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
 
+util_LIB_SPEC= @util_LIB_SPEC@
 vector_LIB_SPEC= @vector_LIB_SPEC@
+fitsy_LIB_SPEC= @fitsy_LIB_SPEC@
 
 tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
@@ -88,7 +90,9 @@ empty:=
 space:=$(empty) $(empty)
 
 SPECS	= \
+	$(util_LIB_SPEC) \
 	$(vector_LIB_SPEC) \
+	$(fitsy_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \

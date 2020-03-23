@@ -5157,6 +5157,7 @@ fi
 		   vector.h
 		   vector3d.h
 		   vectorstr.h
+		   fuzzy.h
 	       "
     for i in $vars; do
 	# check for existence, be strict because it is installed

@@ -15,11 +15,6 @@ JOBS		= @CORES@
 
 SSLCONFIG	= ./Configure darwin64-x86_64-cc
 
-# needed for vector/fitsy++
-CC		= @CC@
-CXX		= @CXX@
-AR		= @AR@
-
 include ./make.include
 
 WITHTCL		= --with-tcl=$(prefix)/build/tcl/Development
@@ -48,7 +43,7 @@ TKFILES = \
 
 saods9	: dirs tcl tk \
 	openssl \
-	xpa vector funtools \
+	xpa util vector fitsy funtools \
 	tclfitsy tcliis tclsignal \
 	tls tclxml \
 	tkblt tktable tkimg \

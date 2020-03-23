@@ -7,17 +7,10 @@
 // WCSLIB 4.7 - an implementation of the FITS WCS standard.
 // Copyright (C) 1995-2011, Mark Calabretta
 
-#include <string.h>
 #include <ctype.h>
-
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-using namespace std;
 
 #include "hpx.h"
 #include "util.h"
-#include "fitsy.h"
 
 FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll, 
 		 int cc, int qq) 
@@ -161,7 +154,7 @@ void FitsHPX::build(FitsFile* fits)
   // create image space
   size_t pSize = (size_t)pWidth_*pHeight_;
   float* dest = new float[pSize];
-  for (longlong ii=0; ii<pSize; ii++)
+  for (long long ii=0; ii<pSize; ii++)
     dest[ii] = NAN;
 
   // Write WCS keyrecords
@@ -172,9 +165,9 @@ void FitsHPX::build(FitsFile* fits)
   float row[nside];
 
   // Loop vertically facet-by-facet.
-  longlong fpixel = 1;
+  long long fpixel = 1;
   //  longlong group = 0;
-  longlong nelem = (longlong)nside;
+  long long nelem = (long long)nside;
   for (int jfacet = 0; jfacet<nfacet; jfacet++) {
     // Loop row-by-row.
     for (int jj = 0; jj<nside; jj++) {

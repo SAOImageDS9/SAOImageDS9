@@ -82,6 +82,12 @@ void envierror(FitsFile* envi, enviFlexLexer* ll, const char* m)
     envi->error(cmd);
 }
 
+void internalError(const char* msg)
+{
+  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
+}
+
 FitsFile::FitsFile()
 {
   primary_ = NULL;

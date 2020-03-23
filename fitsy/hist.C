@@ -13,7 +13,6 @@ using namespace std;
 #include "hist.h"
 #include "util.h"
 
-#include "fitsy.h"
 #include "filter.h"
 
 #ifdef __CYGWIN__

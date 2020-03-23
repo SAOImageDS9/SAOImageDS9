@@ -5164,7 +5164,6 @@ fi
 		   sshare.C
 		   strm.C
 		   var.C
-		   util.C
 	       "
     for i in $vars; do
 	case $i in

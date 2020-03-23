@@ -2,25 +2,28 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+using namespace std;
 
 #include "util.h"
 
-Tcl_Interp *global_interp;
+static char tobuf[1024];
 
-static void swap2(char* src, char* dest) {
+void swap2(char* src, char* dest) {
   *(dest  ) = *(src+1);
   *(dest+1) = *(src  );
 }
 
-static void swap4(char* src, char* dest) {
+void swap4(char* src, char* dest) {
   *(dest  ) = *(src+3);
   *(dest+1) = *(src+2);
   *(dest+2) = *(src+1);
   *(dest+3) = *(src  );
 }
 
-static void swap8(char* src, char* dest) {
+void swap8(char* src, char* dest) {
   *(dest  ) = *(src+7);
   *(dest+1) = *(src+6);
   *(dest+2) = *(src+5);
@@ -31,18 +34,12 @@ static void swap8(char* src, char* dest) {
   *(dest+7) = *(src  );
 }
 
-static int lsb()
+int lsb()
 {
   return (*(short *)"\001\000" & 0x0001);
 }
 
-static void internalError(const char* msg)
-{
-  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
-  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
-}
-
-static char* dupstr(const char* str)
+char* dupstr(const char* str)
 {
   char* copy;
   if (str) {
@@ -113,5 +110,3 @@ char* toConstUpper(const char* str)
   }
   return tobuf;
 }
-
-#endif

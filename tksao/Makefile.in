@@ -206,8 +206,6 @@ parsers	: cbparsers fitsyparsers frparsers magparser panparser
 
 cbparsers : cbparser cblutparser cbsaoparser
 
-fitsyparsers : fitsyparser nrrdparser enviparser
-
 frparsers : parser ciaoparser ds9parser prosparser saoparser tngparser xyparser contourparser
 
 cbparser :
@@ -221,18 +219,6 @@ cblutparser:
 cbsaoparser:
 	bison -d -p li -o colorbar/saoparser.C colorbar/saoparser.Y
 	flex -Pli -ocolorbar/saolex.C colorbar/saolex.L
-
-fitsyparser :
-	bison -d -p ff -o ../fitsy/parser.C ../fitsy/parser.Y
-	flex -Pff -o../fitsy/lex.C ../fitsy/lex.L
-
-nrrdparser :
-	bison -d -p nrrd -o ../fitsy/nrrdparser.C ../fitsy/nrrdparser.Y
-	flex -Pnrrd -o../fitsy/nrrdlex.C ../fitsy/nrrdlex.L
-
-enviparser :
-	bison -d -p envi -o ../fitsy/enviparser.C ../fitsy/enviparser.Y
-	flex -Penvi -o../fitsy/envilex.C ../fitsy/envilex.L
 
 ciaoparser :
 	bison -d -p ciao -o frame/ciaoparser.C frame/ciaoparser.Y

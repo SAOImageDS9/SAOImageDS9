@@ -21,8 +21,6 @@ using namespace std;
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
-#include "vector.h"
-
 #ifdef _WIN32
 #include <win32lib.h>
 #endif

@@ -84,9 +84,8 @@ TEA_ADD_HEADERS([
 		   vector.h
 		   vector3d.h
 		   vectorstr.h
-		   fuzzy.h
 	       ])
-TEA_ADD_INCLUDES([])
+TEA_ADD_INCLUDES([-I. -I${prefix}/include])
 TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])

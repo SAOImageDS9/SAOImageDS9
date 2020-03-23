@@ -15,11 +15,6 @@ TKFLAGS		= @TKFLAGS@
 SSLCONFIG	= @SSLCONFIG@
 JOBS		= @CORES@
 
-# needed for vector/fitsy++
-CC		= @CC@
-CXX		= @CXX@
-AR		= @AR@
-
 include ./make.include
 
 WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/unix
@@ -32,7 +27,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 saods9	: dirs tcl tk \
 	openssl \
-	xpa vector funtools \
+	xpa util vector fitsy funtools \
 	tclfitsy tcliis tclsignal \
 	tclzipfs tls tclxml \
 	tkblt tktable tkimg \

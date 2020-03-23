@@ -67,7 +67,7 @@ TKIMGTMPFILES = \
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tclfitsy tcliis tclxml tclzipfs tls xpa
 .PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
-.PHONY	: vector ast funtools openssl
+.PHONY	: util vector fitsy ast funtools openssl
 
 all	: saods9
 
@@ -332,6 +332,23 @@ tksao/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#-------------------------- util
+
+util	: util/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C util -j $(JOBS) install
+
+util/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd util; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
 #-------------------------- vector
 
 vector	: vector/Makefile
@@ -343,6 +360,23 @@ vector/Makefile :
 	@echo ""
 	@echo "*** $@ ***"
 	cd vector; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
+#-------------------------- fitsy
+
+fitsy	: fitsy/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C fitsy -j $(JOBS) install
+
+fitsy/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd fitsy; \
 	./configure \
 	$(WITHTCL) \
 	$(PREFIX) \
@@ -486,7 +520,9 @@ scrub :
 .PHONY	: tclxmlclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tkagifclean
-.PHONY	: tksaoclean vectorclean astclean funtoolsclean tktableclean xpaclean
+.PHONY	: tktableclean xpaclean
+.PHONY	: utilclean vectorclean fitsyclean astclean funtoolsclean
+.PHONY	: tksaoclean
 
 clean	: tclclean tkclean \
 	opensslclean \
@@ -494,8 +530,8 @@ clean	: tclclean tkclean \
 	tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkagifclean tkhtml1clean \
-	tksaoclean vectorclean astclean funtoolsclean ds9clean \
-	osclean dirsclean localclean scrub
+	utilclean vectorclean fitsyclean astclean funtoolsclean ds9clean \
+	tksaoclean osclean dirsclean localclean scrub
 
 dirsclean :
 	@echo ""
@@ -577,10 +613,20 @@ tksaoclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao clean
 
+utilclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C util clean
+
 vectorclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C vector clean
+
+fitsyclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C fitsy clean
 
 astclean :
 	@echo ""
@@ -609,8 +655,10 @@ xpaclean :
 .PHONY	: tclxmldistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean 
-.PHONY	: tksaodistclean vectordistclean astdistclean funtoolsdistclean
 .PHONY	: tktabledistclean xpadistclean
+.PHONY	: utildistclean vectordistclean fitsydistclean
+.PHONY	: astdistclean funtoolsdistclean
+.PHONY	: tksaodistclean
 
 distclean : tcldistclean tkdistclean \
 	  openssldistclean tclfitsydistclean tcliisdistclean \
@@ -618,9 +666,10 @@ distclean : tcldistclean tkdistclean \
 	  tlsdistclean tclxmldistclean xpadistclean \
 	  tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	  tkmpegdistclean tkagifdistclean tkhtml1distclean \
-	  tksaodistclean vectordistclean astdistclean \
+	  utildistclean vectordistclean fitsydistclean astdistclean \
+	  vectordistclean fitsydistclean astdistclean \
 	  funtoolsdistclean ds9distclean \
-	  osdistclean dirsdistclean localdistclean scrub
+	  tksaodistclean osdistclean dirsdistclean localdistclean scrub
 
 dirsdistclean:
 	@echo ""
@@ -723,10 +772,20 @@ astdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C ast distclean
 
+utildistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C util distclean
+
 vectordistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C vector distclean
+
+fitsydistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C fitsy distclean
 
 funtoolsdistclean :
 	@echo ""

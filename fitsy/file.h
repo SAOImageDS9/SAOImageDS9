@@ -13,7 +13,6 @@
 
 extern int DebugGZ;
 extern int DebugCompress;
-extern void internalError(const char*);
 
 class OutFitsStream;
 

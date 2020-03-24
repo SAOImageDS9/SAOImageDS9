@@ -5,7 +5,6 @@
 #ifndef __basemarker_h__
 #define __basemarker_h__
 
-#include "util.h"
 #include "marker.h"
 
 #define MAXANNULI 512

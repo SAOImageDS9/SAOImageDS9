@@ -176,11 +176,30 @@ tcldistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tcl$(TCL_VERSION)/macosx distclean
+	rm -rf \
+	tcl8.6/macosx/Makefile \
+	tcl8.6/macosx/Tcl-Info.plist \
+	tcl8.6/macosx/Tclsh-Info.plist \
+	tcl8.6/macosx/config.log \
+	tcl8.6/macosx/config.status \
+	tcl8.6/macosx/dltest/ \
+	tcl8.6/macosx/tcl.pc \
+	tcl8.6/macosx/tclConfig.h \
+	tcl8.6/macosx/tclConfig.sh
 
 tkdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
+	rm -rf \
+	tk8.6/macosx/Makefile \
+	tk8.6/macosx/Tk-Info.plist \
+	tk8.6/macosx/Wish-Info.plist \
+	tk8.6/macosx/config.log \
+	tk8.6/macosx/config.status \
+	tk8.6/macosx/tk.pc \
+	tk8.6/macosx/tkConfig.h \
+	tk8.6/macosx/tkConfig.sh
 
 osdistclean : tclsignaldistclean tkmacosxdistclean
 
@@ -194,6 +213,7 @@ tkmacosxdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx distclean
+	rm -f tkmacosx/tkmacosxConfig.sh
 
 #--------------------------distribution
 

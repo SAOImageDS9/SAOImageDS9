@@ -717,6 +717,7 @@ tclxmldistclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml distclean
 	rm -f tclxml/tclxmlConfig.sh
+	rm -f tclxml/include/tclxml/tclxml.h
 
 tlsdistclean:
 	@echo ""
@@ -776,16 +777,19 @@ utildistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C util distclean
+	rm -f util/utilConfig.sh
 
 vectordistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C vector distclean
+	rm -f vector/vectorConfig.sh
 
 fitsydistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy distclean
+	rm -f fitsy/fitsyConfig.sh
 
 funtoolsdistclean :
 	@echo ""

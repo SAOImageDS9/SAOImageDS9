@@ -9,16 +9,7 @@
 // Error in mapping
 int maperr= 0;
 
-static char tobuf[1024];
-
 int sexSign;     // used by parser and lex to indicate sign of dms or hms
-
-void internalError(const char* msg)
-{
-  extern Tcl_Interp *global_interp;
-  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
-  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
-}
 
 double zeroTWOPI(double aa)
 {

@@ -48,21 +48,6 @@ static const double M_FOURPI = 4*M_PI;
 
 extern int maperr;
 
-extern int lsb();
-
-extern void swap2(char* src, char* dest);
-extern void swap4(char* src, char* dest);
-extern void swap8(char* src, char* dest);
-
-extern void internalError(const char*);
-
-extern char* dupstr(const char*);
-extern char* trim(const char*);
-extern char* toLower(const char*);
-extern char* toUpper(const char*);
-extern char* toConstLower(const char*);
-extern char* toConstUpper(const char*);
-
 extern double zeroTWOPI(double);
 extern double m180To180(double);
 extern double degToRad(double);

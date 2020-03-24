@@ -17,6 +17,8 @@ JOBS		= @CORES@
 ENABLE64BIT	= @ENABLE64BIT@
 TARGET		= @TARGET@
 
+CONFIGFLAGS	=CC=$(TARGET)-gcc AR=$(TARGET)-ar
+
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
 TCLXMLFLAGS 	= --with-xml-static=yes
@@ -100,8 +102,8 @@ tkwin/Makefile :
 libxml2 : libxml2/win32/config.mingw
 	@echo ""
 	@echo "*** $@ ***"
-	CC=$(CC) AR=$(AR) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
-	CC=$(CC) AR=$(AR) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
+	$(CONFIGFLAGS) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
+	$(CONFIGFLAGS) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
 	cp -p libxml2/win32/bin.mingw/libxml2.a $(libdir)
 	cp -rp libxml2/include $(includedir)/libxml2
 

@@ -378,7 +378,7 @@ fitsy/Makefile :
 	@echo "*** $@ ***"
 	cd fitsy; \
 	./configure \
-	$(WITHTCL) \
+	$(WITHTK) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)

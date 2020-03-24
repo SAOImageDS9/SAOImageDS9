@@ -2,6 +2,7 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "tkutil.h" // macos
 #include "projection.h"
 #include "fitsimage.h"
 

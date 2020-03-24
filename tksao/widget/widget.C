@@ -4,7 +4,7 @@
 
 #include <tkInt.h>
 
-#include "util.h" // macos/win
+#include "tkutil.h" // macos
 #include "widget.h"
 
 // Tk Canvas Widget Functions Declaration

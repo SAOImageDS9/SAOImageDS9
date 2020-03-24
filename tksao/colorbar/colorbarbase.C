@@ -5,6 +5,7 @@
 #include <tkInt.h>
 
 #include "util.h"
+#include "tkutil.h"
 #include "colorbarbase.h"
 #include "cbgrid.h"
 #include "ps.h"

@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
+#include "tkutil.h" // macos
 #include "marker.h"
 #include "framebase.h"
 #include "frame3dbase.h"

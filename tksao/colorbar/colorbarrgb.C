@@ -2,7 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "util.h" // macos,win
+#include "util.h"
+#include "tkutil.h"
 #include "colorbarrgb.h"
 #include "ps.h"
 

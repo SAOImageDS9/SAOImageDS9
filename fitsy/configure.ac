@@ -35,15 +35,15 @@ AC_CONFIG_AUX_DIR(tclconfig)
 # Load the tclConfig.sh file
 #--------------------------------------------------------------------
 
-TEA_PATH_TCLCONFIG
-TEA_LOAD_TCLCONFIG
+#TEA_PATH_TCLCONFIG
+#TEA_LOAD_TCLCONFIG
 
 #--------------------------------------------------------------------
 # Load the tkConfig.sh file if necessary (Tk extension)
 #--------------------------------------------------------------------
 
-#TEA_PATH_TKCONFIG
-#TEA_LOAD_TKCONFIG
+TEA_PATH_TKCONFIG
+TEA_LOAD_TKCONFIG
 
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.
@@ -212,7 +212,7 @@ fi
 
 #TEA_PUBLIC_TK_HEADERS
 #TEA_PRIVATE_TK_HEADERS
-#TEA_PATH_X
+TEA_PATH_X
 
 #--------------------------------------------------------------------
 # Check whether --enable-threads or --disable-threads was given.

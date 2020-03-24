@@ -35,8 +35,8 @@ AC_CONFIG_AUX_DIR(tclconfig)
 # Load the tclConfig.sh file
 #--------------------------------------------------------------------
 
-#TEA_PATH_TCLCONFIG
-#TEA_LOAD_TCLCONFIG
+TEA_PATH_TCLCONFIG
+TEA_LOAD_TCLCONFIG
 
 #--------------------------------------------------------------------
 # Load the tkConfig.sh file if necessary (Tk extension)
@@ -117,7 +117,7 @@ fi
 # This MUST be called after TEA_LOAD_TCLCONFIG / TEA_LOAD_TKCONFIG
 #--------------------------------------------------------------------
 
-#TEA_PUBLIC_TCL_HEADERS
+TEA_PUBLIC_TCL_HEADERS
 #TEA_PRIVATE_TCL_HEADERS
 
 #TEA_PUBLIC_TK_HEADERS

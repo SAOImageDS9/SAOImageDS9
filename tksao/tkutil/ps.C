@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "util.h"
+#include "tkutil.h"
 #include "ps.h"
 
 double RGB2Gray(double red, double green, double blue)

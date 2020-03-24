@@ -4,8 +4,8 @@
 
 // important note: needs to be included first as X11 defs are here
 
-#ifndef __util_h__
-#define __util_h__
+#ifndef __tkutil_h__
+#define __tkutil_h__
 
 #include <stdlib.h>
 #include <string.h>

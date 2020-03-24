@@ -206,16 +206,16 @@ panner/lex.C
 panner/panner.C
 panner/pannertrue.C
 panner/parser.C
-util/attribute.C
-util/convolve.C
-util/grf.C
-util/grf3d.C
-util/grid25dbase.C
-util/grid2dbase.C
-util/grid3dbase.C
-util/gridbase.C
-util/ps.C
-util/util.C
+tkutil/attribute.C
+tkutil/convolve.C
+tkutil/grf.C
+tkutil/grf3d.C
+tkutil/grid25dbase.C
+tkutil/grid2dbase.C
+tkutil/grid3dbase.C
+tkutil/gridbase.C
+tkutil/ps.C
+tkutil/tkutil.C
 widget/truecolor16.C
 widget/truecolor24.C
 widget/truecolor8.C
@@ -223,7 +223,7 @@ widget/widget.C
 ])
 
 TEA_ADD_HEADERS([])
-TEA_ADD_INCLUDES([-I. -I./colorbar -I./frame -I./list -I./magnifier -I./panner -I./util -I./widget -I${prefix}/include])
+TEA_ADD_INCLUDES([-I. -I./colorbar -I./frame -I./list -I./magnifier -I./panner -I./tkutil -I./widget -I${prefix}/include])
 TEA_ADD_LIBS([])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])

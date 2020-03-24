@@ -142,6 +142,7 @@
 #include <string.h>
 #include <iostream>
 
+#include "tkutil.h"
 #include "base.h"
 #include "fitsimage.h"
 #include "basemarker.h"
@@ -187,7 +188,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 44 "frame/ciaoparser.Y"
+#line 45 "frame/ciaoparser.Y"
 {
 #define CIAOBUFSIZE 2048
   double real;
@@ -196,7 +197,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 193 of yacc.c.  */
-#line 200 "frame/ciaoparser.C"
+#line 201 "frame/ciaoparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -209,7 +210,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 213 "frame/ciaoparser.C"
+#line 214 "frame/ciaoparser.C"
 
 #ifdef short
 # undef short
@@ -518,13 +519,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    94,    94,    95,    98,    99,   100,   101,   104,   105,
-     106,   109,   110,   111,   112,   113,   114,   115,   116,   119,
-     120,   123,   124,   127,   130,   133,   136,   147,   150,   151,
-     152,   153,   156,   163,   170,   177,   186,   189,   192,   195,
-     202,   209,   216,   225,   230,   235,   236,   241,   246,   247,
-     252,   257,   257,   262,   269,   270,   271,   274,   281,   282,
-     285
+       0,    95,    95,    96,    99,   100,   101,   102,   105,   106,
+     107,   110,   111,   112,   113,   114,   115,   116,   117,   120,
+     121,   124,   125,   128,   131,   134,   137,   148,   151,   152,
+     153,   154,   157,   164,   171,   178,   187,   190,   193,   196,
+     203,   210,   217,   226,   231,   236,   237,   242,   247,   248,
+     253,   258,   258,   263,   270,   271,   272,   275,   282,   283,
+     286
 };
 #endif
 
@@ -1527,52 +1528,52 @@ yyreduce:
   switch (yyn)
     {
         case 6:
-#line 100 "frame/ciaoparser.Y"
+#line 101 "frame/ciaoparser.Y"
     {cerr << "CIAO Regions File 1.0" << endl;;}
     break;
 
   case 10:
-#line 106 "frame/ciaoparser.Y"
+#line 107 "frame/ciaoparser.Y"
     {YYACCEPT;;}
     break;
 
   case 16:
-#line 114 "frame/ciaoparser.Y"
-    {setProps(&props, Marker::INCLUDE, 0);;}
-    break;
-
-  case 17:
 #line 115 "frame/ciaoparser.Y"
     {setProps(&props, Marker::INCLUDE, 0);;}
     break;
 
-  case 18:
+  case 17:
 #line 116 "frame/ciaoparser.Y"
     {setProps(&props, Marker::INCLUDE, 0);;}
     break;
 
+  case 18:
+#line 117 "frame/ciaoparser.Y"
+    {setProps(&props, Marker::INCLUDE, 0);;}
+    break;
+
   case 19:
-#line 119 "frame/ciaoparser.Y"
+#line 120 "frame/ciaoparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 20:
-#line 120 "frame/ciaoparser.Y"
+#line 121 "frame/ciaoparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 21:
-#line 123 "frame/ciaoparser.Y"
+#line 124 "frame/ciaoparser.Y"
     {yydebug=1;;}
     break;
 
   case 22:
-#line 124 "frame/ciaoparser.Y"
+#line 125 "frame/ciaoparser.Y"
     {yydebug=0;;}
     break;
 
   case 26:
-#line 136 "frame/ciaoparser.Y"
+#line 137 "frame/ciaoparser.Y"
     {
 	  // reset maperr flag
 	  maperr =0;
@@ -1585,32 +1586,32 @@ yyreduce:
     break;
 
   case 27:
-#line 147 "frame/ciaoparser.Y"
+#line 148 "frame/ciaoparser.Y"
     {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 28:
-#line 150 "frame/ciaoparser.Y"
+#line 151 "frame/ciaoparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::PHYSICAL);;}
     break;
 
   case 29:
-#line 151 "frame/ciaoparser.Y"
+#line 152 "frame/ciaoparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::WCS, Coord::DEGREE);;}
     break;
 
   case 30:
-#line 152 "frame/ciaoparser.Y"
+#line 153 "frame/ciaoparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::WCS, Coord::ARCMIN);;}
     break;
 
   case 31:
-#line 153 "frame/ciaoparser.Y"
+#line 154 "frame/ciaoparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::WCS, Coord::ARCSEC);;}
     break;
 
   case 32:
-#line 157 "frame/ciaoparser.Y"
+#line 158 "frame/ciaoparser.Y"
     {
 	  Vector rr = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::PHYSICAL);
 	  (yyval.vector)[0] = rr[0];
@@ -1620,7 +1621,7 @@ yyreduce:
     break;
 
   case 33:
-#line 164 "frame/ciaoparser.Y"
+#line 165 "frame/ciaoparser.Y"
     {
 	  Vector rr= FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::WCS,Coord::DEGREE);
 	  (yyval.vector)[0] = rr[0];
@@ -1630,7 +1631,7 @@ yyreduce:
     break;
 
   case 34:
-#line 171 "frame/ciaoparser.Y"
+#line 172 "frame/ciaoparser.Y"
     {
 	  Vector rr = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::WCS, Coord::ARCMIN);
 	  (yyval.vector)[0] = rr[0];
@@ -1640,7 +1641,7 @@ yyreduce:
     break;
 
   case 35:
-#line 178 "frame/ciaoparser.Y"
+#line 179 "frame/ciaoparser.Y"
     {
 	  Vector rr = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::WCS, Coord::ARCSEC);
 	  (yyval.vector)[0] = rr[0];
@@ -1650,22 +1651,22 @@ yyreduce:
     break;
 
   case 36:
-#line 186 "frame/ciaoparser.Y"
+#line 187 "frame/ciaoparser.Y"
     {(yyval.real) = parseSEXStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 37:
-#line 189 "frame/ciaoparser.Y"
+#line 190 "frame/ciaoparser.Y"
     {(yyval.real) = parseHMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 38:
-#line 192 "frame/ciaoparser.Y"
+#line 193 "frame/ciaoparser.Y"
     {(yyval.real) = parseDMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 39:
-#line 196 "frame/ciaoparser.Y"
+#line 197 "frame/ciaoparser.Y"
     {
 	  Vector rr = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::PHYSICAL);
 	  (yyval.vector)[0] = rr[0];
@@ -1675,7 +1676,7 @@ yyreduce:
     break;
 
   case 40:
-#line 203 "frame/ciaoparser.Y"
+#line 204 "frame/ciaoparser.Y"
     {
 	  Vector rr = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real)*360./24.,(yyvsp[(3) - (3)].real)), Coord::WCS,Coord::FK5);
 	  (yyval.vector)[0] = rr[0];
@@ -1685,7 +1686,7 @@ yyreduce:
     break;
 
   case 41:
-#line 210 "frame/ciaoparser.Y"
+#line 211 "frame/ciaoparser.Y"
     {
 	  Vector rr = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::WCS, Coord::FK5);
 	  (yyval.vector)[0] = rr[0];
@@ -1695,7 +1696,7 @@ yyreduce:
     break;
 
   case 42:
-#line 217 "frame/ciaoparser.Y"
+#line 218 "frame/ciaoparser.Y"
     {
 	  Vector rr = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::WCS, Coord::FK5);
 	  (yyval.vector)[0] = rr[0];
@@ -1705,7 +1706,7 @@ yyreduce:
     break;
 
   case 43:
-#line 226 "frame/ciaoparser.Y"
+#line 227 "frame/ciaoparser.Y"
     {
 	  fr->createAnnulusCmd(Vector((yyvsp[(3) - (7)].vector)), (yyvsp[(5) - (7)].real), (yyvsp[(7) - (7)].real), 1,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1713,7 +1714,7 @@ yyreduce:
     break;
 
   case 44:
-#line 231 "frame/ciaoparser.Y"
+#line 232 "frame/ciaoparser.Y"
     {
 	  fr->createBoxCmd(Vector((yyvsp[(3) - (5)].vector)), (yyvsp[(5) - (5)].vector), 0, fill_,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1721,7 +1722,7 @@ yyreduce:
     break;
 
   case 46:
-#line 237 "frame/ciaoparser.Y"
+#line 238 "frame/ciaoparser.Y"
     {
 	  fr->createCircleCmd(Vector((yyvsp[(3) - (5)].vector)), (yyvsp[(5) - (5)].real), fill_,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1729,7 +1730,7 @@ yyreduce:
     break;
 
   case 47:
-#line 242 "frame/ciaoparser.Y"
+#line 243 "frame/ciaoparser.Y"
     {
 	  fr->createEllipseCmd(Vector((yyvsp[(3) - (7)].vector)), Vector((yyvsp[(5) - (7)].vector)), (yyvsp[(7) - (7)].real), fill_,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1737,12 +1738,12 @@ yyreduce:
     break;
 
   case 48:
-#line 246 "frame/ciaoparser.Y"
+#line 247 "frame/ciaoparser.Y"
     {/* not supported */;}
     break;
 
   case 49:
-#line 248 "frame/ciaoparser.Y"
+#line 249 "frame/ciaoparser.Y"
     {
 	  fr->createCpandaCmd(Vector((yyvsp[(3) - (11)].vector)), (yyvsp[(9) - (11)].real), (yyvsp[(11) - (11)].real), 1, (yyvsp[(5) - (11)].real), (yyvsp[(7) - (11)].real), 1,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1750,7 +1751,7 @@ yyreduce:
     break;
 
   case 50:
-#line 253 "frame/ciaoparser.Y"
+#line 254 "frame/ciaoparser.Y"
     {
 	  fr->createPointCmd(Vector((yyvsp[(3) - (3)].vector)), Point::BOXCIRCLE, POINTSIZE, 
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1758,12 +1759,12 @@ yyreduce:
     break;
 
   case 51:
-#line 257 "frame/ciaoparser.Y"
+#line 258 "frame/ciaoparser.Y"
     {polylist.deleteAll();;}
     break;
 
   case 52:
-#line 258 "frame/ciaoparser.Y"
+#line 259 "frame/ciaoparser.Y"
     {
 	  fr->createPolygonCmd(polylist, fill_,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1771,7 +1772,7 @@ yyreduce:
     break;
 
   case 53:
-#line 263 "frame/ciaoparser.Y"
+#line 264 "frame/ciaoparser.Y"
     { 
 	  Vector cc = (Vector((yyvsp[(5) - (5)].vector))-Vector((yyvsp[(3) - (5)].vector)))/2.+Vector((yyvsp[(3) - (5)].vector));
 	  Vector wh = Vector((yyvsp[(5) - (5)].vector))-Vector((yyvsp[(3) - (5)].vector));
@@ -1781,17 +1782,17 @@ yyreduce:
     break;
 
   case 54:
-#line 269 "frame/ciaoparser.Y"
+#line 270 "frame/ciaoparser.Y"
     {/* not supported */;}
     break;
 
   case 56:
-#line 271 "frame/ciaoparser.Y"
+#line 272 "frame/ciaoparser.Y"
     {/* not supported */;}
     break;
 
   case 57:
-#line 275 "frame/ciaoparser.Y"
+#line 276 "frame/ciaoparser.Y"
     {
 	  fr->createBoxCmd(Vector((yyvsp[(2) - (6)].vector)), Vector((yyvsp[(4) - (6)].vector)), (yyvsp[(6) - (6)].real), fill_,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
@@ -1799,13 +1800,13 @@ yyreduce:
     break;
 
   case 60:
-#line 285 "frame/ciaoparser.Y"
+#line 286 "frame/ciaoparser.Y"
     {polylist.append(new Vertex((yyvsp[(1) - (1)].vector)));;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1809 "frame/ciaoparser.C"
+#line 1810 "frame/ciaoparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2019,7 +2020,7 @@ yyreturn:
 }
 
 
-#line 288 "frame/ciaoparser.Y"
+#line 289 "frame/ciaoparser.Y"
 
 
 static void setProps(unsigned short* props, unsigned short prop, int value)

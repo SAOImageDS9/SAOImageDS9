@@ -202,7 +202,7 @@ binaries: $(BINARIES)
 
 libraries:
 
-parsers	: cbparsers fitsyparsers frparsers magparser panparser
+parsers	: cbparsers frparsers magparser panparser contourparser
 
 cbparsers : cbparser cblutparser cbsaoparser
 
@@ -248,10 +248,6 @@ xyparser :
 	bison -d -p xy -o frame/xyparser.C frame/xyparser.Y
 	flex -Pxy -oframe/xylex.C frame/xylex.L
 
-contourparser :
-	bison -d -p ct -o frame/contourparser.C frame/contourparser.Y
-	flex -Pct -oframe/contourlex.C frame/contourlex.L
-
 magparser :
 	bison -d -p mg -o magnifier/parser.C magnifier/parser.Y
 	flex -Pmg -omagnifier/lex.C magnifier/lex.L
@@ -259,6 +255,10 @@ magparser :
 panparser :
 	bison -d -p pn -o panner/parser.C panner/parser.Y
 	flex -Ppn -opanner/lex.C panner/lex.L
+
+contourparser :
+	bison -d -p ct -o frame/contourparser.C frame/contourparser.Y
+	flex -Pct -oframe/contourlex.C frame/contourlex.L
 
 #========================================================================
 # Your doc target should differentiate from doc builds (by the developer)

@@ -14,12 +14,13 @@
 #include <string.h>
 #include <iostream>
 
+#include "util.h"
+#include "tkutil.h"
 #include "base.h"
 #include "frame3d.h"
 #include "fitsimage.h"
 #include "fitsmask.h"
 #include "marker.h"
-#include "util.h"
 
 #undef yyFlexLexer
 #define yyFlexLexer frFlexLexer

@@ -341,6 +341,7 @@
 #include <string.h>
 #include <iostream>
 
+#include "tkutil.h"
 #include "base.h"
 #include "fitsimage.h"
 #include "basemarker.h"
@@ -482,7 +483,7 @@ static Coord::SkyFrame checkWCSSky();
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 141 "frame/ds9parser.Y"
+#line 142 "frame/ds9parser.Y"
 {
 #define MKBUFSIZE 2048
   double real;
@@ -491,7 +492,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 193 of yacc.c.  */
-#line 495 "frame/ds9parser.C"
+#line 496 "frame/ds9parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -504,7 +505,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 508 "frame/ds9parser.C"
+#line 509 "frame/ds9parser.C"
 
 #ifdef short
 # undef short
@@ -960,39 +961,39 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   300,   300,   303,   304,   307,   308,   309,   311,   312,
-     314,   314,   315,   315,   316,   316,   318,   319,   320,   323,
-     324,   325,   326,   326,   329,   330,   330,   333,   334,   334,
-     335,   336,   336,   339,   340,   340,   341,   342,   342,   345,
-     346,   347,   350,   351,   354,   355,   358,   360,   361,   362,
-     363,   365,   366,   367,   368,   371,   372,   375,   376,   379,
-     380,   383,   384,   385,   388,   389,   392,   394,   396,   399,
-     400,   401,   402,   403,   404,   407,   414,   421,   428,   435,
-     442,   451,   454,   457,   460,   463,   476,   484,   492,   499,
-     507,   514,   522,   523,   524,   525,   526,   529,   530,   531,
-     532,   533,   534,   535,   536,   537,   538,   539,   540,   541,
-     542,   543,   544,   545,   546,   547,   548,   549,   550,   551,
-     552,   553,   554,   555,   556,   559,   560,   561,   562,   563,
-     564,   565,   568,   569,   570,   573,   574,   575,   576,   577,
-     578,   579,   580,   581,   582,   585,   586,   587,   588,   589,
-     590,   591,   592,   593,   594,   595,   596,   597,   598,   599,
-     600,   601,   602,   603,   604,   605,   608,   609,   612,   617,
-     622,   627,   628,   633,   638,   643,   648,   653,   654,   659,
-     663,   668,   669,   673,   674,   675,   684,   685,   686,   689,
-     696,   703,   710,   717,   724,   731,   738,   744,   753,   758,
-     763,   768,   775,   819,   820,   823,   824,   825,   830,   831,
-     832,   833,   834,   836,   837,   838,   840,   841,   842,   843,
-     844,   845,   846,   847,   848,   855,   856,   857,   858,   859,
-     862,   869,   876,   883,   890,   897,   904,   911,   918,   927,
-     932,   937,   942,   949,   949,   950,   953,   953,   955,   958,
-     958,   960,   963,  1014,  1015,  1016,  1017,  1018,  1019,  1020,
-    1023,  1024,  1027,  1035,  1035,  1042,  1049,  1058,  1068,  1076,
-    1084,  1093,  1100,  1108,  1131,  1154,  1163,  1163,  1170,  1170,
-    1178,  1186,  1194,  1201,  1201,  1209,  1216,  1223,  1230,  1237,
-    1244,  1251,  1258,  1265,  1274,  1284,  1292,  1299,  1309,  1317,
-    1327,  1337,  1349,  1357,  1367,  1379,  1389,  1398,  1420,  1444,
-    1469,  1470,  1471,  1473,  1475,  1484,  1485,  1488,  1491,  1492,
-    1495,  1502,  1503,  1506,  1513,  1514,  1517,  1521
+       0,   301,   301,   304,   305,   308,   309,   310,   312,   313,
+     315,   315,   316,   316,   317,   317,   319,   320,   321,   324,
+     325,   326,   327,   327,   330,   331,   331,   334,   335,   335,
+     336,   337,   337,   340,   341,   341,   342,   343,   343,   346,
+     347,   348,   351,   352,   355,   356,   359,   361,   362,   363,
+     364,   366,   367,   368,   369,   372,   373,   376,   377,   380,
+     381,   384,   385,   386,   389,   390,   393,   395,   397,   400,
+     401,   402,   403,   404,   405,   408,   415,   422,   429,   436,
+     443,   452,   455,   458,   461,   464,   477,   485,   493,   500,
+     508,   515,   523,   524,   525,   526,   527,   530,   531,   532,
+     533,   534,   535,   536,   537,   538,   539,   540,   541,   542,
+     543,   544,   545,   546,   547,   548,   549,   550,   551,   552,
+     553,   554,   555,   556,   557,   560,   561,   562,   563,   564,
+     565,   566,   569,   570,   571,   574,   575,   576,   577,   578,
+     579,   580,   581,   582,   583,   586,   587,   588,   589,   590,
+     591,   592,   593,   594,   595,   596,   597,   598,   599,   600,
+     601,   602,   603,   604,   605,   606,   609,   610,   613,   618,
+     623,   628,   629,   634,   639,   644,   649,   654,   655,   660,
+     664,   669,   670,   674,   675,   676,   685,   686,   687,   690,
+     697,   704,   711,   718,   725,   732,   739,   745,   754,   759,
+     764,   769,   776,   820,   821,   824,   825,   826,   831,   832,
+     833,   834,   835,   837,   838,   839,   841,   842,   843,   844,
+     845,   846,   847,   848,   849,   856,   857,   858,   859,   860,
+     863,   870,   877,   884,   891,   898,   905,   912,   919,   928,
+     933,   938,   943,   950,   950,   951,   954,   954,   956,   959,
+     959,   961,   964,  1015,  1016,  1017,  1018,  1019,  1020,  1021,
+    1024,  1025,  1028,  1036,  1036,  1043,  1050,  1059,  1069,  1077,
+    1085,  1094,  1101,  1109,  1132,  1155,  1164,  1164,  1171,  1171,
+    1179,  1187,  1195,  1202,  1202,  1210,  1217,  1224,  1231,  1238,
+    1245,  1252,  1259,  1266,  1275,  1285,  1293,  1300,  1310,  1318,
+    1328,  1338,  1350,  1358,  1368,  1380,  1390,  1399,  1421,  1445,
+    1470,  1471,  1472,  1474,  1476,  1485,  1486,  1489,  1492,  1493,
+    1496,  1503,  1504,  1507,  1514,  1515,  1518,  1522
 };
 #endif
 
@@ -2769,227 +2770,227 @@ yyreduce:
   switch (yyn)
     {
         case 7:
-#line 309 "frame/ds9parser.Y"
+#line 310 "frame/ds9parser.Y"
     {cerr << "DS9 Regions File 3.2" << endl;;}
     break;
 
   case 9:
-#line 312 "frame/ds9parser.Y"
+#line 313 "frame/ds9parser.Y"
     {globalTile = (yyvsp[(2) - (2)].integer);;}
     break;
 
   case 10:
-#line 314 "frame/ds9parser.Y"
+#line 315 "frame/ds9parser.Y"
     {globalSystem=(Coord::CoordSystem)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 12:
-#line 315 "frame/ds9parser.Y"
+#line 316 "frame/ds9parser.Y"
     {globalSystem=globalWCS; globalSky=(Coord::SkyFrame)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 14:
-#line 316 "frame/ds9parser.Y"
+#line 317 "frame/ds9parser.Y"
     {globalSystem=globalWCS; globalSky=Coord::FK5;;}
     break;
 
   case 21:
-#line 325 "frame/ds9parser.Y"
+#line 326 "frame/ds9parser.Y"
     {globalTile = (yyvsp[(2) - (2)].integer);;}
     break;
 
   case 22:
-#line 326 "frame/ds9parser.Y"
+#line 327 "frame/ds9parser.Y"
     {DISCARD_(1);;}
     break;
 
   case 25:
-#line 330 "frame/ds9parser.Y"
+#line 331 "frame/ds9parser.Y"
     {DISCARD_(1);;}
     break;
 
   case 28:
-#line 334 "frame/ds9parser.Y"
+#line 335 "frame/ds9parser.Y"
     {DISCARD_(1);;}
     break;
 
   case 29:
-#line 334 "frame/ds9parser.Y"
+#line 335 "frame/ds9parser.Y"
     {strncpy(localComment,(yyvsp[(3) - (4)].str),80);;}
     break;
 
   case 31:
-#line 336 "frame/ds9parser.Y"
+#line 337 "frame/ds9parser.Y"
     {DISCARD_(1);;}
     break;
 
   case 32:
-#line 336 "frame/ds9parser.Y"
+#line 337 "frame/ds9parser.Y"
     {strncpy(localComment,(yyvsp[(4) - (5)].str),80);;}
     break;
 
   case 34:
-#line 340 "frame/ds9parser.Y"
+#line 341 "frame/ds9parser.Y"
     {DISCARD_(1);;}
     break;
 
   case 35:
-#line 340 "frame/ds9parser.Y"
+#line 341 "frame/ds9parser.Y"
     {strncpy(localComment,(yyvsp[(2) - (3)].str),80);;}
     break;
 
   case 37:
-#line 342 "frame/ds9parser.Y"
+#line 343 "frame/ds9parser.Y"
     {DISCARD_(1);;}
     break;
 
   case 38:
-#line 342 "frame/ds9parser.Y"
+#line 343 "frame/ds9parser.Y"
     {strncpy(localComment,(yyvsp[(3) - (4)].str),80);;}
     break;
 
   case 41:
-#line 347 "frame/ds9parser.Y"
+#line 348 "frame/ds9parser.Y"
     {YYACCEPT;;}
     break;
 
   case 42:
-#line 350 "frame/ds9parser.Y"
+#line 351 "frame/ds9parser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 43:
-#line 351 "frame/ds9parser.Y"
+#line 352 "frame/ds9parser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 44:
-#line 354 "frame/ds9parser.Y"
+#line 355 "frame/ds9parser.Y"
     {yydebug=1;;}
     break;
 
   case 45:
-#line 355 "frame/ds9parser.Y"
+#line 356 "frame/ds9parser.Y"
     {yydebug=0;;}
     break;
 
   case 46:
-#line 358 "frame/ds9parser.Y"
+#line 359 "frame/ds9parser.Y"
     {(yyval.integer)=((yyvsp[(1) - (1)].integer) ? 1 : 0);;}
     break;
 
   case 47:
-#line 360 "frame/ds9parser.Y"
-    {(yyval.integer)=1;;}
-    break;
-
-  case 48:
 #line 361 "frame/ds9parser.Y"
     {(yyval.integer)=1;;}
     break;
 
-  case 49:
+  case 48:
 #line 362 "frame/ds9parser.Y"
     {(yyval.integer)=1;;}
     break;
 
-  case 50:
+  case 49:
 #line 363 "frame/ds9parser.Y"
     {(yyval.integer)=1;;}
     break;
 
-  case 51:
-#line 365 "frame/ds9parser.Y"
-    {(yyval.integer)=0;;}
+  case 50:
+#line 364 "frame/ds9parser.Y"
+    {(yyval.integer)=1;;}
     break;
 
-  case 52:
+  case 51:
 #line 366 "frame/ds9parser.Y"
     {(yyval.integer)=0;;}
     break;
 
-  case 53:
+  case 52:
 #line 367 "frame/ds9parser.Y"
     {(yyval.integer)=0;;}
     break;
 
-  case 54:
+  case 53:
 #line 368 "frame/ds9parser.Y"
     {(yyval.integer)=0;;}
     break;
 
+  case 54:
+#line 369 "frame/ds9parser.Y"
+    {(yyval.integer)=0;;}
+    break;
+
   case 61:
-#line 383 "frame/ds9parser.Y"
+#line 384 "frame/ds9parser.Y"
     {cStatus = 0;;}
     break;
 
   case 62:
-#line 384 "frame/ds9parser.Y"
-    {cStatus = 1;;}
-    break;
-
-  case 63:
 #line 385 "frame/ds9parser.Y"
     {cStatus = 1;;}
     break;
 
+  case 63:
+#line 386 "frame/ds9parser.Y"
+    {cStatus = 1;;}
+    break;
+
   case 64:
-#line 388 "frame/ds9parser.Y"
+#line 389 "frame/ds9parser.Y"
     {(yyval.real) = fr->mapAngleToRef(0,localSystem,localSky);;}
     break;
 
   case 65:
-#line 389 "frame/ds9parser.Y"
+#line 390 "frame/ds9parser.Y"
     {(yyval.real) = (yyvsp[(1) - (1)].real);;}
     break;
 
   case 66:
-#line 393 "frame/ds9parser.Y"
+#line 394 "frame/ds9parser.Y"
     {(yyval.real) = fr->mapAngleToRef(zeroTWOPI(degToRad((yyvsp[(1) - (1)].real))),localSystem,localSky);;}
     break;
 
   case 67:
-#line 395 "frame/ds9parser.Y"
+#line 396 "frame/ds9parser.Y"
     {(yyval.real) = fr->mapAngleToRef(zeroTWOPI(degToRad((yyvsp[(1) - (1)].real))),localSystem,localSky);;}
     break;
 
   case 68:
-#line 396 "frame/ds9parser.Y"
+#line 397 "frame/ds9parser.Y"
     {(yyval.real) = fr->mapAngleToRef((yyvsp[(1) - (1)].real),localSystem,localSky);;}
     break;
 
   case 69:
-#line 399 "frame/ds9parser.Y"
+#line 400 "frame/ds9parser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), localSystem, Coord::DEGREE);;}
     break;
 
   case 70:
-#line 400 "frame/ds9parser.Y"
+#line 401 "frame/ds9parser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::PHYSICAL);;}
     break;
 
   case 71:
-#line 401 "frame/ds9parser.Y"
+#line 402 "frame/ds9parser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::IMAGE);;}
     break;
 
   case 72:
-#line 402 "frame/ds9parser.Y"
+#line 403 "frame/ds9parser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), checkWCSSystem(), Coord::DEGREE);;}
     break;
 
   case 73:
-#line 403 "frame/ds9parser.Y"
+#line 404 "frame/ds9parser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), checkWCSSystem(), Coord::ARCMIN);;}
     break;
 
   case 74:
-#line 404 "frame/ds9parser.Y"
+#line 405 "frame/ds9parser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), checkWCSSystem(), Coord::ARCSEC);;}
     break;
 
   case 75:
-#line 408 "frame/ds9parser.Y"
+#line 409 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), localSystem, Coord::DEGREE);
 	  (yyval.vector)[0] = r[0];
@@ -2999,7 +3000,7 @@ yyreduce:
     break;
 
   case 76:
-#line 415 "frame/ds9parser.Y"
+#line 416 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::PHYSICAL);
 	  (yyval.vector)[0] = r[0];
@@ -3009,7 +3010,7 @@ yyreduce:
     break;
 
   case 77:
-#line 422 "frame/ds9parser.Y"
+#line 423 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::IMAGE);
 	  (yyval.vector)[0] = r[0];
@@ -3019,7 +3020,7 @@ yyreduce:
     break;
 
   case 78:
-#line 429 "frame/ds9parser.Y"
+#line 430 "frame/ds9parser.Y"
     {
 	  Vector r=FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),checkWCSSystem(),Coord::DEGREE);
 	  (yyval.vector)[0] = r[0];
@@ -3029,7 +3030,7 @@ yyreduce:
     break;
 
   case 79:
-#line 436 "frame/ds9parser.Y"
+#line 437 "frame/ds9parser.Y"
     {
 	  Vector r=FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),checkWCSSystem(),Coord::ARCMIN);
 	  (yyval.vector)[0] = r[0];
@@ -3039,7 +3040,7 @@ yyreduce:
     break;
 
   case 80:
-#line 443 "frame/ds9parser.Y"
+#line 444 "frame/ds9parser.Y"
     {
 	  Vector r=FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),checkWCSSystem(),Coord::ARCSEC);
 	  (yyval.vector)[0] = r[0];
@@ -3049,27 +3050,27 @@ yyreduce:
     break;
 
   case 81:
-#line 451 "frame/ds9parser.Y"
+#line 452 "frame/ds9parser.Y"
     {(yyval.integer) = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 82:
-#line 454 "frame/ds9parser.Y"
+#line 455 "frame/ds9parser.Y"
     {(yyval.real) = parseSEXStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 83:
-#line 457 "frame/ds9parser.Y"
+#line 458 "frame/ds9parser.Y"
     {(yyval.real) = parseHMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 84:
-#line 460 "frame/ds9parser.Y"
+#line 461 "frame/ds9parser.Y"
     {(yyval.real) = parseDMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 85:
-#line 464 "frame/ds9parser.Y"
+#line 465 "frame/ds9parser.Y"
     {
 	  Vector r;
 	  Coord::CoordSystem sys = checkWCSSystem();
@@ -3085,7 +3086,7 @@ yyreduce:
     break;
 
   case 86:
-#line 477 "frame/ds9parser.Y"
+#line 478 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	  checkWCSSystem(), checkWCSSky());
@@ -3096,7 +3097,7 @@ yyreduce:
     break;
 
   case 87:
-#line 485 "frame/ds9parser.Y"
+#line 486 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	  checkWCSSystem(), checkWCSSky());
@@ -3107,7 +3108,7 @@ yyreduce:
     break;
 
   case 88:
-#line 493 "frame/ds9parser.Y"
+#line 494 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), localSystem, localSky);
 	  (yyval.vector)[0] = r[0];
@@ -3117,7 +3118,7 @@ yyreduce:
     break;
 
   case 89:
-#line 500 "frame/ds9parser.Y"
+#line 501 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), 
 	    checkWCSSystem(), checkWCSSky());
@@ -3128,7 +3129,7 @@ yyreduce:
     break;
 
   case 90:
-#line 508 "frame/ds9parser.Y"
+#line 509 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::IMAGE);
 	  (yyval.vector)[0] = r[0];
@@ -3138,7 +3139,7 @@ yyreduce:
     break;
 
   case 91:
-#line 515 "frame/ds9parser.Y"
+#line 516 "frame/ds9parser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::PHYSICAL);
 	  (yyval.vector)[0] = r[0];
@@ -3147,377 +3148,377 @@ yyreduce:
     break;
 
   case 92:
-#line 522 "frame/ds9parser.Y"
+#line 523 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::IMAGE;;}
     break;
 
   case 93:
-#line 523 "frame/ds9parser.Y"
+#line 524 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::PHYSICAL;;}
     break;
 
   case 94:
-#line 524 "frame/ds9parser.Y"
+#line 525 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::DETECTOR;;}
     break;
 
   case 95:
-#line 525 "frame/ds9parser.Y"
+#line 526 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::AMPLIFIER;;}
     break;
 
   case 96:
-#line 526 "frame/ds9parser.Y"
+#line 527 "frame/ds9parser.Y"
     {(yyval.integer) = (yyvsp[(1) - (1)].integer); globalWCS = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 97:
-#line 529 "frame/ds9parser.Y"
+#line 530 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCS;;}
     break;
 
   case 98:
-#line 530 "frame/ds9parser.Y"
+#line 531 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSA;;}
     break;
 
   case 99:
-#line 531 "frame/ds9parser.Y"
+#line 532 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSB;;}
     break;
 
   case 100:
-#line 532 "frame/ds9parser.Y"
+#line 533 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSC;;}
     break;
 
   case 101:
-#line 533 "frame/ds9parser.Y"
+#line 534 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSD;;}
     break;
 
   case 102:
-#line 534 "frame/ds9parser.Y"
+#line 535 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSE;;}
     break;
 
   case 103:
-#line 535 "frame/ds9parser.Y"
+#line 536 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSF;;}
     break;
 
   case 104:
-#line 536 "frame/ds9parser.Y"
+#line 537 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSG;;}
     break;
 
   case 105:
-#line 537 "frame/ds9parser.Y"
+#line 538 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSH;;}
     break;
 
   case 106:
-#line 538 "frame/ds9parser.Y"
+#line 539 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSI;;}
     break;
 
   case 107:
-#line 539 "frame/ds9parser.Y"
+#line 540 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSJ;;}
     break;
 
   case 108:
-#line 540 "frame/ds9parser.Y"
+#line 541 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSK;;}
     break;
 
   case 109:
-#line 541 "frame/ds9parser.Y"
+#line 542 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSL;;}
     break;
 
   case 110:
-#line 542 "frame/ds9parser.Y"
+#line 543 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSM;;}
     break;
 
   case 111:
-#line 543 "frame/ds9parser.Y"
+#line 544 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSN;;}
     break;
 
   case 112:
-#line 544 "frame/ds9parser.Y"
+#line 545 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSO;;}
     break;
 
   case 113:
-#line 545 "frame/ds9parser.Y"
+#line 546 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSP;;}
     break;
 
   case 114:
-#line 546 "frame/ds9parser.Y"
+#line 547 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSQ;;}
     break;
 
   case 115:
-#line 547 "frame/ds9parser.Y"
+#line 548 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSR;;}
     break;
 
   case 116:
-#line 548 "frame/ds9parser.Y"
+#line 549 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSS;;}
     break;
 
   case 117:
-#line 549 "frame/ds9parser.Y"
+#line 550 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCST;;}
     break;
 
   case 118:
-#line 550 "frame/ds9parser.Y"
+#line 551 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSU;;}
     break;
 
   case 119:
-#line 551 "frame/ds9parser.Y"
+#line 552 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSV;;}
     break;
 
   case 120:
-#line 552 "frame/ds9parser.Y"
+#line 553 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSW;;}
     break;
 
   case 121:
-#line 553 "frame/ds9parser.Y"
+#line 554 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSX;;}
     break;
 
   case 122:
-#line 554 "frame/ds9parser.Y"
+#line 555 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSY;;}
     break;
 
   case 123:
-#line 555 "frame/ds9parser.Y"
+#line 556 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCSZ;;}
     break;
 
   case 124:
-#line 556 "frame/ds9parser.Y"
+#line 557 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::WCS0;;}
     break;
 
   case 125:
-#line 559 "frame/ds9parser.Y"
-    {(yyval.integer) = Coord::FK4;;}
-    break;
-
-  case 126:
 #line 560 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
-  case 127:
+  case 126:
 #line 561 "frame/ds9parser.Y"
-    {(yyval.integer) = Coord::FK5;;}
+    {(yyval.integer) = Coord::FK4;;}
     break;
 
-  case 128:
+  case 127:
 #line 562 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
-  case 129:
+  case 128:
 #line 563 "frame/ds9parser.Y"
+    {(yyval.integer) = Coord::FK5;;}
+    break;
+
+  case 129:
+#line 564 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::ICRS;;}
     break;
 
   case 130:
-#line 564 "frame/ds9parser.Y"
+#line 565 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::GALACTIC;;}
     break;
 
   case 131:
-#line 565 "frame/ds9parser.Y"
+#line 566 "frame/ds9parser.Y"
     {(yyval.integer) = Coord::ECLIPTIC;;}
     break;
 
   case 132:
-#line 568 "frame/ds9parser.Y"
+#line 569 "frame/ds9parser.Y"
     {(yyval.integer)=Coord::DEGREE;;}
     break;
 
   case 133:
-#line 569 "frame/ds9parser.Y"
+#line 570 "frame/ds9parser.Y"
     {(yyval.integer)=Coord::ARCMIN;;}
     break;
 
   case 134:
-#line 570 "frame/ds9parser.Y"
+#line 571 "frame/ds9parser.Y"
     {(yyval.integer)=Coord::ARCSEC;;}
     break;
 
   case 135:
-#line 573 "frame/ds9parser.Y"
+#line 574 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::SELECT;;}
     break;
 
   case 136:
-#line 574 "frame/ds9parser.Y"
+#line 575 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::HIGHLITE;;}
     break;
 
   case 137:
-#line 575 "frame/ds9parser.Y"
+#line 576 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::DASH;;}
     break;
 
   case 138:
-#line 576 "frame/ds9parser.Y"
+#line 577 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::FIXED;;}
     break;
 
   case 139:
-#line 577 "frame/ds9parser.Y"
+#line 578 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::EDIT;;}
     break;
 
   case 140:
-#line 578 "frame/ds9parser.Y"
+#line 579 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::MOVE;;}
     break;
 
   case 141:
-#line 579 "frame/ds9parser.Y"
+#line 580 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::ROTATE;;}
     break;
 
   case 142:
-#line 580 "frame/ds9parser.Y"
+#line 581 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::DELETE;;}
     break;
 
   case 143:
-#line 581 "frame/ds9parser.Y"
+#line 582 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::INCLUDE;;}
     break;
 
   case 144:
-#line 582 "frame/ds9parser.Y"
+#line 583 "frame/ds9parser.Y"
     {(yyval.integer) = Marker::SOURCE;;}
     break;
 
   case 145:
-#line 585 "frame/ds9parser.Y"
+#line 586 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::SELECTCB;;}
     break;
 
   case 146:
-#line 586 "frame/ds9parser.Y"
+#line 587 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::UNSELECTCB;;}
     break;
 
   case 147:
-#line 587 "frame/ds9parser.Y"
+#line 588 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::HIGHLITECB;;}
     break;
 
   case 148:
-#line 588 "frame/ds9parser.Y"
+#line 589 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::UNHIGHLITECB;;}
     break;
 
   case 149:
-#line 589 "frame/ds9parser.Y"
+#line 590 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::MOVEBEGINCB;;}
     break;
 
   case 150:
-#line 590 "frame/ds9parser.Y"
+#line 591 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::MOVECB;;}
     break;
 
   case 151:
-#line 591 "frame/ds9parser.Y"
+#line 592 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::MOVEENDCB;;}
     break;
 
   case 152:
-#line 592 "frame/ds9parser.Y"
+#line 593 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::EDITBEGINCB;;}
     break;
 
   case 153:
-#line 593 "frame/ds9parser.Y"
+#line 594 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::EDITCB;;}
     break;
 
   case 154:
-#line 594 "frame/ds9parser.Y"
+#line 595 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::EDITENDCB;;}
     break;
 
   case 155:
-#line 595 "frame/ds9parser.Y"
+#line 596 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::ROTATEBEGINCB;;}
     break;
 
   case 156:
-#line 596 "frame/ds9parser.Y"
+#line 597 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::ROTATECB;;}
     break;
 
   case 157:
-#line 597 "frame/ds9parser.Y"
+#line 598 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::ROTATEENDCB;;}
     break;
 
   case 158:
-#line 598 "frame/ds9parser.Y"
+#line 599 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::DELETECB;;}
     break;
 
   case 159:
-#line 599 "frame/ds9parser.Y"
+#line 600 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::TEXTCB;;}
     break;
 
   case 160:
-#line 600 "frame/ds9parser.Y"
+#line 601 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::COLORCB;;}
     break;
 
   case 161:
-#line 601 "frame/ds9parser.Y"
+#line 602 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::LINEWIDTHCB;;}
     break;
 
   case 162:
-#line 602 "frame/ds9parser.Y"
+#line 603 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::PROPERTYCB;;}
     break;
 
   case 163:
-#line 603 "frame/ds9parser.Y"
+#line 604 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::FONTCB;;}
     break;
 
   case 164:
-#line 604 "frame/ds9parser.Y"
+#line 605 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::KEYCB;;}
     break;
 
   case 165:
-#line 605 "frame/ds9parser.Y"
+#line 606 "frame/ds9parser.Y"
     {(yyval.integer) = CallBack::UPDATECB;;}
     break;
 
   case 168:
-#line 613 "frame/ds9parser.Y"
+#line 614 "frame/ds9parser.Y"
     {
 	  setProps(&globalProps,(yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));
 	  setProps(&localProps,(yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));
@@ -3525,7 +3526,7 @@ yyreduce:
     break;
 
   case 169:
-#line 618 "frame/ds9parser.Y"
+#line 619 "frame/ds9parser.Y"
     {
 	  strncpy(globalColor,(yyvsp[(3) - (3)].str),16);
 	  strncpy(localColor,(yyvsp[(3) - (3)].str),16);
@@ -3533,7 +3534,7 @@ yyreduce:
     break;
 
   case 170:
-#line 623 "frame/ds9parser.Y"
+#line 624 "frame/ds9parser.Y"
     {
 	  globalDash[0] = localDash[0] =(yyvsp[(3) - (4)].integer);
 	  globalDash[1] = localDash[1] =(yyvsp[(4) - (4)].integer);
@@ -3541,12 +3542,12 @@ yyreduce:
     break;
 
   case 171:
-#line 627 "frame/ds9parser.Y"
+#line 628 "frame/ds9parser.Y"
     {globalWidth = localWidth = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 172:
-#line 629 "frame/ds9parser.Y"
+#line 630 "frame/ds9parser.Y"
     {
 	  strncpy(globalFont,(yyvsp[(3) - (3)].str),32);
 	  strncpy(localFont,(yyvsp[(3) - (3)].str),32);
@@ -3554,7 +3555,7 @@ yyreduce:
     break;
 
   case 173:
-#line 634 "frame/ds9parser.Y"
+#line 635 "frame/ds9parser.Y"
     {
 	  strncpy(globalText,(yyvsp[(3) - (3)].str),80);
 	  strncpy(localText,(yyvsp[(3) - (3)].str),80);
@@ -3562,7 +3563,7 @@ yyreduce:
     break;
 
   case 174:
-#line 639 "frame/ds9parser.Y"
+#line 640 "frame/ds9parser.Y"
     {
 	  setProps(&globalProps,Marker::DASH,1);
 	  setProps(&localProps,Marker::DASH,1);
@@ -3570,7 +3571,7 @@ yyreduce:
     break;
 
   case 175:
-#line 644 "frame/ds9parser.Y"
+#line 645 "frame/ds9parser.Y"
     {
 	  setProps(&globalProps,Marker::SOURCE,1);
 	  setProps(&localProps,Marker::SOURCE,1);
@@ -3578,7 +3579,7 @@ yyreduce:
     break;
 
   case 176:
-#line 649 "frame/ds9parser.Y"
+#line 650 "frame/ds9parser.Y"
     {
 	  setProps(&globalProps,Marker::SOURCE,0);
 	  setProps(&localProps,Marker::SOURCE,0);
@@ -3586,12 +3587,12 @@ yyreduce:
     break;
 
   case 177:
-#line 653 "frame/ds9parser.Y"
+#line 654 "frame/ds9parser.Y"
     {globalPoint = localPoint = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 178:
-#line 655 "frame/ds9parser.Y"
+#line 656 "frame/ds9parser.Y"
     {
 	  globalPoint = localPoint = (yyvsp[(3) - (4)].integer);
 	  globalPointSize = localPointSize = (yyvsp[(4) - (4)].integer);
@@ -3599,14 +3600,14 @@ yyreduce:
     break;
 
   case 179:
-#line 660 "frame/ds9parser.Y"
+#line 661 "frame/ds9parser.Y"
     {
 	  globalFill = localFill = (yyvsp[(3) - (3)].integer);
 	;}
     break;
 
   case 180:
-#line 664 "frame/ds9parser.Y"
+#line 665 "frame/ds9parser.Y"
     {
 	  globalLine1 = localLine1 = (yyvsp[(3) - (4)].integer);
 	  globalLine2 = localLine2 = (yyvsp[(4) - (4)].integer);
@@ -3614,29 +3615,29 @@ yyreduce:
     break;
 
   case 181:
-#line 668 "frame/ds9parser.Y"
+#line 669 "frame/ds9parser.Y"
     {globalVector = localVector = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 182:
-#line 670 "frame/ds9parser.Y"
+#line 671 "frame/ds9parser.Y"
     {
 	  globalComposite = localComposite = (yyvsp[(3) - (3)].integer);
 	;}
     break;
 
   case 183:
-#line 673 "frame/ds9parser.Y"
+#line 674 "frame/ds9parser.Y"
     {;}
     break;
 
   case 184:
-#line 674 "frame/ds9parser.Y"
+#line 675 "frame/ds9parser.Y"
     {strncpy(globalRulerDistSpec,(yyvsp[(3) - (3)].str),32);;}
     break;
 
   case 185:
-#line 676 "frame/ds9parser.Y"
+#line 677 "frame/ds9parser.Y"
     {
 	  strncpy(globalCompassNorth,(yyvsp[(4) - (7)].str),80);
 	  strncpy(globalCompassEast,(yyvsp[(5) - (7)].str),80);
@@ -3648,22 +3649,22 @@ yyreduce:
     break;
 
   case 186:
-#line 684 "frame/ds9parser.Y"
+#line 685 "frame/ds9parser.Y"
     {globalTextAngle = localTextAngle = (yyvsp[(3) - (3)].real);;}
     break;
 
   case 187:
-#line 685 "frame/ds9parser.Y"
+#line 686 "frame/ds9parser.Y"
     {globalTextRotate = localTextRotate = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 188:
-#line 686 "frame/ds9parser.Y"
+#line 687 "frame/ds9parser.Y"
     {globalWCS = (Coord::CoordSystem)(yyvsp[(3) - (3)].integer);;}
     break;
 
   case 189:
-#line 690 "frame/ds9parser.Y"
+#line 691 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (4)].integer);
 	  globalRulerSkyFrame = localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(2) - (4)].integer);
@@ -3673,7 +3674,7 @@ yyreduce:
     break;
 
   case 190:
-#line 697 "frame/ds9parser.Y"
+#line 698 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
@@ -3683,7 +3684,7 @@ yyreduce:
     break;
 
   case 191:
-#line 704 "frame/ds9parser.Y"
+#line 705 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
@@ -3693,7 +3694,7 @@ yyreduce:
     break;
 
   case 192:
-#line 711 "frame/ds9parser.Y"
+#line 712 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
 	  globalRulerSkyFrame = localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (2)].integer);
@@ -3703,7 +3704,7 @@ yyreduce:
     break;
 
   case 193:
-#line 718 "frame/ds9parser.Y"
+#line 719 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
 	  globalRulerSkyFrame = localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (2)].integer);
@@ -3713,7 +3714,7 @@ yyreduce:
     break;
 
   case 194:
-#line 725 "frame/ds9parser.Y"
+#line 726 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
@@ -3723,7 +3724,7 @@ yyreduce:
     break;
 
   case 195:
-#line 732 "frame/ds9parser.Y"
+#line 733 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
@@ -3733,7 +3734,7 @@ yyreduce:
     break;
 
   case 196:
-#line 739 "frame/ds9parser.Y"
+#line 740 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::IMAGE;
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
@@ -3742,7 +3743,7 @@ yyreduce:
     break;
 
   case 197:
-#line 745 "frame/ds9parser.Y"
+#line 746 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::IMAGE;
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
@@ -3752,7 +3753,7 @@ yyreduce:
     break;
 
   case 198:
-#line 754 "frame/ds9parser.Y"
+#line 755 "frame/ds9parser.Y"
     {
 	  globalCompassCoordSystem = localCompassCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  globalCompassSkyFrame = localCompassSkyFrame = (Coord::SkyFrame)(yyvsp[(2) - (2)].integer);
@@ -3760,7 +3761,7 @@ yyreduce:
     break;
 
   case 199:
-#line 759 "frame/ds9parser.Y"
+#line 760 "frame/ds9parser.Y"
     {
 	  globalCompassCoordSystem = localCompassCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);
 	  globalCompassSkyFrame = localCompassSkyFrame = Coord::FK5;
@@ -3768,7 +3769,7 @@ yyreduce:
     break;
 
   case 200:
-#line 764 "frame/ds9parser.Y"
+#line 765 "frame/ds9parser.Y"
     {
 	  globalCompassCoordSystem = localCompassCoordSystem = Coord::WCS;
 	  globalCompassSkyFrame = localCompassSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (1)].integer);
@@ -3776,7 +3777,7 @@ yyreduce:
     break;
 
   case 201:
-#line 769 "frame/ds9parser.Y"
+#line 770 "frame/ds9parser.Y"
     {
 	  globalCompassCoordSystem = localCompassCoordSystem = Coord::WCS;
 	  globalCompassSkyFrame = localCompassSkyFrame = Coord::FK5;
@@ -3784,7 +3785,7 @@ yyreduce:
     break;
 
   case 202:
-#line 775 "frame/ds9parser.Y"
+#line 776 "frame/ds9parser.Y"
     {
 	  // global properties
 	  globalSystem = Coord::PHYSICAL;
@@ -3830,17 +3831,17 @@ yyreduce:
     break;
 
   case 205:
-#line 823 "frame/ds9parser.Y"
+#line 824 "frame/ds9parser.Y"
     {setProps(&localProps,(yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 206:
-#line 824 "frame/ds9parser.Y"
+#line 825 "frame/ds9parser.Y"
     {strncpy(localColor,(yyvsp[(3) - (3)].str),16);;}
     break;
 
   case 207:
-#line 826 "frame/ds9parser.Y"
+#line 827 "frame/ds9parser.Y"
     {
 	  localDash[0] =(yyvsp[(3) - (4)].integer);
 	  localDash[1] =(yyvsp[(4) - (4)].integer);
@@ -3848,83 +3849,83 @@ yyreduce:
     break;
 
   case 208:
-#line 830 "frame/ds9parser.Y"
+#line 831 "frame/ds9parser.Y"
     {localWidth = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 209:
-#line 831 "frame/ds9parser.Y"
+#line 832 "frame/ds9parser.Y"
     {strncpy(localFont,(yyvsp[(3) - (3)].str),32);;}
     break;
 
   case 210:
-#line 832 "frame/ds9parser.Y"
+#line 833 "frame/ds9parser.Y"
     {strncpy(localText,(yyvsp[(3) - (3)].str),80);;}
     break;
 
   case 211:
-#line 833 "frame/ds9parser.Y"
+#line 834 "frame/ds9parser.Y"
     {taglist.append(new Tag((yyvsp[(3) - (3)].str)));;}
     break;
 
   case 212:
-#line 834 "frame/ds9parser.Y"
+#line 835 "frame/ds9parser.Y"
     {cblist.append(
 	    new CallBack(fr->getInterp(),(CallBack::Type)(yyvsp[(3) - (5)].integer),(yyvsp[(4) - (5)].str),(yyvsp[(5) - (5)].str)));;}
     break;
 
   case 213:
-#line 836 "frame/ds9parser.Y"
+#line 837 "frame/ds9parser.Y"
     {setProps(&localProps,Marker::DASH,1);;}
     break;
 
   case 214:
-#line 837 "frame/ds9parser.Y"
+#line 838 "frame/ds9parser.Y"
     {setProps(&localProps,Marker::SOURCE,1);;}
     break;
 
   case 215:
-#line 838 "frame/ds9parser.Y"
+#line 839 "frame/ds9parser.Y"
     {setProps(&localProps,Marker::SOURCE,0);;}
     break;
 
   case 216:
-#line 840 "frame/ds9parser.Y"
+#line 841 "frame/ds9parser.Y"
     {localPoint = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 217:
-#line 841 "frame/ds9parser.Y"
+#line 842 "frame/ds9parser.Y"
     {localPoint = (yyvsp[(3) - (4)].integer); localPointSize = (yyvsp[(4) - (4)].integer);;}
     break;
 
   case 218:
-#line 842 "frame/ds9parser.Y"
+#line 843 "frame/ds9parser.Y"
     {localFill=(yyvsp[(3) - (3)].integer);;}
     break;
 
   case 219:
-#line 843 "frame/ds9parser.Y"
+#line 844 "frame/ds9parser.Y"
     {localLine1=(yyvsp[(3) - (4)].integer); localLine2=(yyvsp[(4) - (4)].integer);;}
     break;
 
   case 220:
-#line 844 "frame/ds9parser.Y"
+#line 845 "frame/ds9parser.Y"
     {localVector=(yyvsp[(3) - (3)].integer);;}
     break;
 
   case 221:
-#line 845 "frame/ds9parser.Y"
+#line 846 "frame/ds9parser.Y"
     {localComposite=(yyvsp[(3) - (3)].integer);;}
     break;
 
   case 223:
-#line 847 "frame/ds9parser.Y"
+#line 848 "frame/ds9parser.Y"
     {strncpy(localRulerDistSpec,(yyvsp[(3) - (3)].str),32);;}
     break;
 
   case 224:
-#line 849 "frame/ds9parser.Y"
+#line 850 "frame/ds9parser.Y"
     {
 	  strncpy(localCompassNorth,(yyvsp[(4) - (7)].str),80);
 	  strncpy(localCompassEast,(yyvsp[(5) - (7)].str),80);
@@ -3934,17 +3935,17 @@ yyreduce:
     break;
 
   case 225:
-#line 855 "frame/ds9parser.Y"
+#line 856 "frame/ds9parser.Y"
     {localTextAngle=(yyvsp[(3) - (3)].real);;}
     break;
 
   case 226:
-#line 856 "frame/ds9parser.Y"
+#line 857 "frame/ds9parser.Y"
     {localTextRotate=(yyvsp[(3) - (3)].integer);;}
     break;
 
   case 230:
-#line 863 "frame/ds9parser.Y"
+#line 864 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (4)].integer);
 	  localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(2) - (4)].integer);
@@ -3954,7 +3955,7 @@ yyreduce:
     break;
 
   case 231:
-#line 870 "frame/ds9parser.Y"
+#line 871 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  localRulerSkyFrame = Coord::FK5;
@@ -3964,7 +3965,7 @@ yyreduce:
     break;
 
   case 232:
-#line 877 "frame/ds9parser.Y"
+#line 878 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  localRulerSkyFrame = Coord::FK5;
@@ -3974,7 +3975,7 @@ yyreduce:
     break;
 
   case 233:
-#line 884 "frame/ds9parser.Y"
+#line 885 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::WCS;
 	  localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (2)].integer);
@@ -3984,7 +3985,7 @@ yyreduce:
     break;
 
   case 234:
-#line 891 "frame/ds9parser.Y"
+#line 892 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::WCS;
 	  localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (2)].integer);
@@ -3994,7 +3995,7 @@ yyreduce:
     break;
 
   case 235:
-#line 898 "frame/ds9parser.Y"
+#line 899 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::WCS;
 	  localRulerSkyFrame = Coord::FK5;
@@ -4004,7 +4005,7 @@ yyreduce:
     break;
 
   case 236:
-#line 905 "frame/ds9parser.Y"
+#line 906 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::WCS;
 	  localRulerSkyFrame = Coord::FK5;
@@ -4014,7 +4015,7 @@ yyreduce:
     break;
 
   case 237:
-#line 912 "frame/ds9parser.Y"
+#line 913 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::IMAGE;
 	  localRulerSkyFrame = Coord::FK5;
@@ -4024,7 +4025,7 @@ yyreduce:
     break;
 
   case 238:
-#line 919 "frame/ds9parser.Y"
+#line 920 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::IMAGE;
 	  localRulerSkyFrame = Coord::FK5;
@@ -4034,7 +4035,7 @@ yyreduce:
     break;
 
   case 239:
-#line 928 "frame/ds9parser.Y"
+#line 929 "frame/ds9parser.Y"
     {
 	  localCompassCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  localCompassSkyFrame = (Coord::SkyFrame)(yyvsp[(2) - (2)].integer);
@@ -4042,7 +4043,7 @@ yyreduce:
     break;
 
   case 240:
-#line 933 "frame/ds9parser.Y"
+#line 934 "frame/ds9parser.Y"
     {
 	  localCompassCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);
 	  localCompassSkyFrame = Coord::FK5;
@@ -4050,7 +4051,7 @@ yyreduce:
     break;
 
   case 241:
-#line 938 "frame/ds9parser.Y"
+#line 939 "frame/ds9parser.Y"
     {
 	  localCompassCoordSystem = Coord::WCS;
 	  localCompassSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (1)].integer);
@@ -4058,7 +4059,7 @@ yyreduce:
     break;
 
   case 242:
-#line 943 "frame/ds9parser.Y"
+#line 944 "frame/ds9parser.Y"
     {
 	  localCompassCoordSystem = Coord::WCS;
 	  localCompassSkyFrame = Coord::FK5;
@@ -4066,52 +4067,52 @@ yyreduce:
     break;
 
   case 243:
-#line 949 "frame/ds9parser.Y"
+#line 950 "frame/ds9parser.Y"
     {aNum=0; aAngNum=0;;}
     break;
 
   case 244:
-#line 949 "frame/ds9parser.Y"
+#line 950 "frame/ds9parser.Y"
     {localCpanda = 2;;}
     break;
 
   case 245:
-#line 950 "frame/ds9parser.Y"
+#line 951 "frame/ds9parser.Y"
     {localCpanda=0;;}
     break;
 
   case 246:
-#line 953 "frame/ds9parser.Y"
+#line 954 "frame/ds9parser.Y"
     {aNum=0; aAngNum=0, aAngle=0;;}
     break;
 
   case 247:
-#line 954 "frame/ds9parser.Y"
+#line 955 "frame/ds9parser.Y"
     {aAngle=(yyvsp[(9) - (10)].real);localEpanda=2;;}
     break;
 
   case 248:
-#line 955 "frame/ds9parser.Y"
+#line 956 "frame/ds9parser.Y"
     {localEpanda=0;;}
     break;
 
   case 249:
-#line 958 "frame/ds9parser.Y"
+#line 959 "frame/ds9parser.Y"
     {aNum=0; aAngNum=0, aAngle=0;;}
     break;
 
   case 250:
-#line 959 "frame/ds9parser.Y"
+#line 960 "frame/ds9parser.Y"
     {aAngle=(yyvsp[(9) - (10)].real);localBpanda=2;;}
     break;
 
   case 251:
-#line 960 "frame/ds9parser.Y"
+#line 961 "frame/ds9parser.Y"
     {localBpanda=0;;}
     break;
 
   case 252:
-#line 963 "frame/ds9parser.Y"
+#line 964 "frame/ds9parser.Y"
     {
 	  // reset maperr flag
 	  maperr = 0;
@@ -4164,52 +4165,52 @@ yyreduce:
     break;
 
   case 253:
-#line 1014 "frame/ds9parser.Y"
+#line 1015 "frame/ds9parser.Y"
     {(yyval.integer) = Point::CIRCLE;;}
     break;
 
   case 254:
-#line 1015 "frame/ds9parser.Y"
+#line 1016 "frame/ds9parser.Y"
     {(yyval.integer) = Point::BOX;;}
     break;
 
   case 255:
-#line 1016 "frame/ds9parser.Y"
+#line 1017 "frame/ds9parser.Y"
     {(yyval.integer) = Point::DIAMOND;;}
     break;
 
   case 256:
-#line 1017 "frame/ds9parser.Y"
+#line 1018 "frame/ds9parser.Y"
     {(yyval.integer) = Point::CROSS;;}
     break;
 
   case 257:
-#line 1018 "frame/ds9parser.Y"
+#line 1019 "frame/ds9parser.Y"
     {(yyval.integer) = Point::EX;;}
     break;
 
   case 258:
-#line 1019 "frame/ds9parser.Y"
+#line 1020 "frame/ds9parser.Y"
     {(yyval.integer) = Point::ARROW;;}
     break;
 
   case 259:
-#line 1020 "frame/ds9parser.Y"
+#line 1021 "frame/ds9parser.Y"
     {(yyval.integer) = Point::BOXCIRCLE;;}
     break;
 
   case 260:
-#line 1023 "frame/ds9parser.Y"
+#line 1024 "frame/ds9parser.Y"
     {setProps(&localProps, Marker::INCLUDE, 1);;}
     break;
 
   case 261:
-#line 1024 "frame/ds9parser.Y"
+#line 1025 "frame/ds9parser.Y"
     {setProps(&localProps, Marker::INCLUDE, 0);;}
     break;
 
   case 262:
-#line 1028 "frame/ds9parser.Y"
+#line 1029 "frame/ds9parser.Y"
     {
 	  fr->createVectCmd(Vector((yyvsp[(3) - (10)].vector)),
 	  (yyvsp[(5) - (10)].real),(yyvsp[(7) - (10)].real),
@@ -4220,12 +4221,12 @@ yyreduce:
     break;
 
   case 263:
-#line 1035 "frame/ds9parser.Y"
+#line 1036 "frame/ds9parser.Y"
     {polylist.deleteAll();;}
     break;
 
   case 264:
-#line 1037 "frame/ds9parser.Y"
+#line 1038 "frame/ds9parser.Y"
     {
 	  fr->createSegmentCmd(polylist, 
 	  localColor,localDash,localWidth,localFont,
@@ -4234,7 +4235,7 @@ yyreduce:
     break;
 
   case 265:
-#line 1043 "frame/ds9parser.Y"
+#line 1044 "frame/ds9parser.Y"
     {
 	  fr->createTextCmd(Vector((yyvsp[(3) - (6)].vector)),
 	  localTextAngle,localTextRotate,
@@ -4244,7 +4245,7 @@ yyreduce:
     break;
 
   case 266:
-#line 1050 "frame/ds9parser.Y"
+#line 1051 "frame/ds9parser.Y"
     {
 	  fr->createRulerCmd(Vector((yyvsp[(3) - (8)].vector)),
 	  Vector((yyvsp[(5) - (8)].vector)),
@@ -4256,7 +4257,7 @@ yyreduce:
     break;
 
   case 267:
-#line 1059 "frame/ds9parser.Y"
+#line 1060 "frame/ds9parser.Y"
     {
 	  fr->createCompassCmd(Vector((yyvsp[(3) - (8)].vector)), 
 	  (yyvsp[(5) - (8)].real),
@@ -4269,7 +4270,7 @@ yyreduce:
     break;
 
   case 268:
-#line 1069 "frame/ds9parser.Y"
+#line 1070 "frame/ds9parser.Y"
     {
 	  fr->createProjectionCmd(Vector((yyvsp[(3) - (10)].vector)), 
 	  Vector((yyvsp[(5) - (10)].vector)),
@@ -4280,7 +4281,7 @@ yyreduce:
     break;
 
   case 269:
-#line 1077 "frame/ds9parser.Y"
+#line 1078 "frame/ds9parser.Y"
     {
 	  // backward compatibility
 	  fr->createCircleCmd(Vector((yyvsp[(3) - (8)].vector)),
@@ -4291,7 +4292,7 @@ yyreduce:
     break;
 
   case 270:
-#line 1085 "frame/ds9parser.Y"
+#line 1086 "frame/ds9parser.Y"
     {
 	  fr->createCompositeCmd(Vector((yyvsp[(3) - (8)].vector)),
 	  (yyvsp[(5) - (8)].real), localComposite,
@@ -4301,7 +4302,7 @@ yyreduce:
     break;
 
   case 271:
-#line 1094 "frame/ds9parser.Y"
+#line 1095 "frame/ds9parser.Y"
     {
 	  fr->createCircleCmd(Vector((yyvsp[(3) - (8)].vector)),
 	  (yyvsp[(5) - (8)].real), localFill,
@@ -4311,7 +4312,7 @@ yyreduce:
     break;
 
   case 272:
-#line 1101 "frame/ds9parser.Y"
+#line 1102 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createCircleCmd(Vector((yyvsp[(3) - (8)].vector)),
@@ -4322,7 +4323,7 @@ yyreduce:
     break;
 
   case 273:
-#line 1109 "frame/ds9parser.Y"
+#line 1110 "frame/ds9parser.Y"
     {
 	  // for ellipse annulus
 	  aStatus = 1;
@@ -4348,7 +4349,7 @@ yyreduce:
     break;
 
   case 274:
-#line 1132 "frame/ds9parser.Y"
+#line 1133 "frame/ds9parser.Y"
     {
 	  // for box annulus
 	  aStatus = 3;
@@ -4374,7 +4375,7 @@ yyreduce:
     break;
 
   case 275:
-#line 1155 "frame/ds9parser.Y"
+#line 1156 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createBoxCmd(Vector((yyvsp[(3) - (10)].vector)),
@@ -4386,12 +4387,12 @@ yyreduce:
     break;
 
   case 276:
-#line 1163 "frame/ds9parser.Y"
+#line 1164 "frame/ds9parser.Y"
     {polylist.deleteAll();;}
     break;
 
   case 277:
-#line 1165 "frame/ds9parser.Y"
+#line 1166 "frame/ds9parser.Y"
     {
 	  fr->createPolygonCmd(polylist, localFill,
 	  localColor,localDash,localWidth,localFont,
@@ -4400,12 +4401,12 @@ yyreduce:
     break;
 
   case 278:
-#line 1170 "frame/ds9parser.Y"
+#line 1171 "frame/ds9parser.Y"
     {polylist.deleteAll();;}
     break;
 
   case 279:
-#line 1172 "frame/ds9parser.Y"
+#line 1173 "frame/ds9parser.Y"
     {
 	  fr->createSegmentCmd(polylist, 
 	  localColor,localDash,localWidth,localFont,
@@ -4414,7 +4415,7 @@ yyreduce:
     break;
 
   case 280:
-#line 1179 "frame/ds9parser.Y"
+#line 1180 "frame/ds9parser.Y"
     {
 	  fr->createLineCmd(Vector((yyvsp[(3) - (8)].vector)),
 	  Vector((yyvsp[(5) - (8)].vector)),
@@ -4425,7 +4426,7 @@ yyreduce:
     break;
 
   case 281:
-#line 1187 "frame/ds9parser.Y"
+#line 1188 "frame/ds9parser.Y"
     {
 	  fr->createVectCmd(Vector((yyvsp[(3) - (10)].vector)),
 	  (yyvsp[(5) - (10)].real),(yyvsp[(7) - (10)].real),
@@ -4436,7 +4437,7 @@ yyreduce:
     break;
 
   case 282:
-#line 1195 "frame/ds9parser.Y"
+#line 1196 "frame/ds9parser.Y"
     {
 	  fr->createTextCmd(Vector((yyvsp[(3) - (6)].vector)),
 	   localTextAngle,localTextRotate,
@@ -4446,12 +4447,12 @@ yyreduce:
     break;
 
   case 283:
-#line 1201 "frame/ds9parser.Y"
+#line 1202 "frame/ds9parser.Y"
     {strncpy(localText,(yyvsp[(5) - (6)].str),80);;}
     break;
 
   case 284:
-#line 1203 "frame/ds9parser.Y"
+#line 1204 "frame/ds9parser.Y"
     {
 	  fr->createTextCmd(Vector((yyvsp[(3) - (9)].vector)),
 	  localTextAngle,localTextRotate,
@@ -4461,7 +4462,7 @@ yyreduce:
     break;
 
   case 285:
-#line 1210 "frame/ds9parser.Y"
+#line 1211 "frame/ds9parser.Y"
     {
 	  fr->createPointCmd(Vector((yyvsp[(3) - (6)].vector)), 
 	  (Point::PointShape)localPoint, localPointSize, 
@@ -4471,7 +4472,7 @@ yyreduce:
     break;
 
   case 286:
-#line 1217 "frame/ds9parser.Y"
+#line 1218 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createPointCmd(Vector((yyvsp[(4) - (7)].vector)), Point::CIRCLE, localPointSize,
@@ -4481,7 +4482,7 @@ yyreduce:
     break;
 
   case 287:
-#line 1224 "frame/ds9parser.Y"
+#line 1225 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createPointCmd(Vector((yyvsp[(4) - (7)].vector)), Point::BOX, localPointSize,
@@ -4491,7 +4492,7 @@ yyreduce:
     break;
 
   case 288:
-#line 1231 "frame/ds9parser.Y"
+#line 1232 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createPointCmd(Vector((yyvsp[(4) - (7)].vector)), Point::DIAMOND, localPointSize,
@@ -4501,7 +4502,7 @@ yyreduce:
     break;
 
   case 289:
-#line 1238 "frame/ds9parser.Y"
+#line 1239 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createPointCmd(Vector((yyvsp[(4) - (7)].vector)), Point::CROSS, localPointSize,
@@ -4511,7 +4512,7 @@ yyreduce:
     break;
 
   case 290:
-#line 1245 "frame/ds9parser.Y"
+#line 1246 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createPointCmd(Vector((yyvsp[(4) - (7)].vector)), Point::EX, localPointSize,
@@ -4521,7 +4522,7 @@ yyreduce:
     break;
 
   case 291:
-#line 1252 "frame/ds9parser.Y"
+#line 1253 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createPointCmd(Vector((yyvsp[(4) - (7)].vector)), Point::ARROW, localPointSize,
@@ -4531,7 +4532,7 @@ yyreduce:
     break;
 
   case 292:
-#line 1259 "frame/ds9parser.Y"
+#line 1260 "frame/ds9parser.Y"
     {
 	  // backwards compatibility
 	  fr->createPointCmd(Vector((yyvsp[(4) - (7)].vector)), Point::BOXCIRCLE, localPointSize,
@@ -4541,7 +4542,7 @@ yyreduce:
     break;
 
   case 293:
-#line 1266 "frame/ds9parser.Y"
+#line 1267 "frame/ds9parser.Y"
     {
 	  fr->createRulerCmd(Vector((yyvsp[(3) - (8)].vector)),
 	  Vector((yyvsp[(5) - (8)].vector)),
@@ -4553,7 +4554,7 @@ yyreduce:
     break;
 
   case 294:
-#line 1275 "frame/ds9parser.Y"
+#line 1276 "frame/ds9parser.Y"
     {
 	  fr->createCompassCmd(Vector((yyvsp[(3) - (8)].vector)), 
 	  (yyvsp[(5) - (8)].real),
@@ -4566,7 +4567,7 @@ yyreduce:
     break;
 
   case 295:
-#line 1285 "frame/ds9parser.Y"
+#line 1286 "frame/ds9parser.Y"
     {
 	  fr->createProjectionCmd(Vector((yyvsp[(3) - (10)].vector)),
 	  Vector((yyvsp[(5) - (10)].vector)),
@@ -4577,7 +4578,7 @@ yyreduce:
     break;
 
   case 296:
-#line 1293 "frame/ds9parser.Y"
+#line 1294 "frame/ds9parser.Y"
     {
 	  fr->createAnnulusCmd(Vector((yyvsp[(3) - (10)].vector)),
 	  (yyvsp[(5) - (10)].real),(yyvsp[(7) - (10)].real),1,
@@ -4587,7 +4588,7 @@ yyreduce:
     break;
 
   case 297:
-#line 1301 "frame/ds9parser.Y"
+#line 1302 "frame/ds9parser.Y"
     {
 	  aAnnuli[0] = (yyvsp[(5) - (12)].real);
 	  aAnnuli[1] = (yyvsp[(7) - (12)].real);
@@ -4599,7 +4600,7 @@ yyreduce:
     break;
 
   case 298:
-#line 1311 "frame/ds9parser.Y"
+#line 1312 "frame/ds9parser.Y"
     {
 	  fr->createAnnulusCmd(Vector((yyvsp[(3) - (12)].vector)),
 	  (yyvsp[(5) - (12)].real),(yyvsp[(7) - (12)].real),(yyvsp[(9) - (12)].integer),
@@ -4609,7 +4610,7 @@ yyreduce:
     break;
 
   case 299:
-#line 1319 "frame/ds9parser.Y"
+#line 1320 "frame/ds9parser.Y"
     {
 	  // prefered syntax
 	  fr->createEllipseAnnulusCmd(Vector((yyvsp[(3) - (12)].vector)),
@@ -4621,7 +4622,7 @@ yyreduce:
     break;
 
   case 300:
-#line 1329 "frame/ds9parser.Y"
+#line 1330 "frame/ds9parser.Y"
     {
 	  // prefered syntax
 	  fr->createEllipseAnnulusCmd(Vector((yyvsp[(3) - (14)].vector)),
@@ -4633,7 +4634,7 @@ yyreduce:
     break;
 
   case 301:
-#line 1339 "frame/ds9parser.Y"
+#line 1340 "frame/ds9parser.Y"
     {
 	  // prefered syntax
 	  aVector[0] = Vector((yyvsp[(5) - (14)].vector));
@@ -4647,7 +4648,7 @@ yyreduce:
     break;
 
   case 302:
-#line 1351 "frame/ds9parser.Y"
+#line 1352 "frame/ds9parser.Y"
     {	
 	  // backwards compatibility
 	  // old saoimage syntax
@@ -4657,7 +4658,7 @@ yyreduce:
     break;
 
   case 303:
-#line 1359 "frame/ds9parser.Y"
+#line 1360 "frame/ds9parser.Y"
     {
 	  // prefered syntax
 	  fr->createBoxAnnulusCmd(Vector((yyvsp[(3) - (12)].vector)),
@@ -4669,7 +4670,7 @@ yyreduce:
     break;
 
   case 304:
-#line 1369 "frame/ds9parser.Y"
+#line 1370 "frame/ds9parser.Y"
     {
 	  // prefered syntax
 	  aVector[0] = Vector((yyvsp[(5) - (14)].vector));
@@ -4683,7 +4684,7 @@ yyreduce:
     break;
 
   case 305:
-#line 1381 "frame/ds9parser.Y"
+#line 1382 "frame/ds9parser.Y"
     {
 	  // prefered syntax
 	  fr->createBoxAnnulusCmd(Vector((yyvsp[(3) - (14)].vector)),
@@ -4695,7 +4696,7 @@ yyreduce:
     break;
 
   case 306:
-#line 1391 "frame/ds9parser.Y"
+#line 1392 "frame/ds9parser.Y"
     {	
 	  // backwards compatibility
           // old saoimage syntax
@@ -4705,7 +4706,7 @@ yyreduce:
     break;
 
   case 307:
-#line 1400 "frame/ds9parser.Y"
+#line 1401 "frame/ds9parser.Y"
     {
 	  switch (localCpanda) {
 	  case 0: /* ignore it */
@@ -4729,7 +4730,7 @@ yyreduce:
     break;
 
   case 308:
-#line 1422 "frame/ds9parser.Y"
+#line 1423 "frame/ds9parser.Y"
     {
 	  switch (localEpanda) {
 	  case 0: /* ignore it */
@@ -4755,7 +4756,7 @@ yyreduce:
     break;
 
   case 309:
-#line 1446 "frame/ds9parser.Y"
+#line 1447 "frame/ds9parser.Y"
     {
 	  switch (localBpanda) {
 	  case 0: /* ignore it */
@@ -4781,7 +4782,7 @@ yyreduce:
     break;
 
   case 314:
-#line 1476 "frame/ds9parser.Y"
+#line 1477 "frame/ds9parser.Y"
     {
 	  fr->createCompositeCmd(Vector((yyvsp[(3) - (8)].vector)),
 	  (yyvsp[(5) - (8)].real), localComposite,
@@ -4791,12 +4792,12 @@ yyreduce:
     break;
 
   case 317:
-#line 1488 "frame/ds9parser.Y"
+#line 1489 "frame/ds9parser.Y"
     {polylist.append(new Vertex((yyvsp[(1) - (1)].vector)));;}
     break;
 
   case 320:
-#line 1496 "frame/ds9parser.Y"
+#line 1497 "frame/ds9parser.Y"
     {
 	  if (aNum < MAXANNULI)
 	    aAnnuli[aNum++] = (yyvsp[(1) - (1)].real);
@@ -4804,7 +4805,7 @@ yyreduce:
     break;
 
   case 323:
-#line 1507 "frame/ds9parser.Y"
+#line 1508 "frame/ds9parser.Y"
     {
 	  if (aAngNum < MAXANGLES)
 	    aAngles[aAngNum++] = (yyvsp[(1) - (1)].real);
@@ -4812,12 +4813,12 @@ yyreduce:
     break;
 
   case 326:
-#line 1517 "frame/ds9parser.Y"
+#line 1518 "frame/ds9parser.Y"
     {aVector[aNum++] = Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real));;}
     break;
 
   case 327:
-#line 1521 "frame/ds9parser.Y"
+#line 1522 "frame/ds9parser.Y"
     {
 	  // old style annulus
 	  switch (aStatus) {
@@ -4848,7 +4849,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 4852 "frame/ds9parser.C"
+#line 4853 "frame/ds9parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -5062,7 +5063,7 @@ yyreturn:
 }
 
 
-#line 1548 "frame/ds9parser.Y"
+#line 1549 "frame/ds9parser.Y"
 
 
 static void setProps(unsigned short* props, unsigned short prop, int value)

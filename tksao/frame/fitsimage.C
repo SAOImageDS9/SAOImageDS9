@@ -5,6 +5,7 @@
 #include <pthread.h>
 
 #include "util.h"
+#include "tkutil.h"
 #include "fitsimage.h"
 #include "framebase.h"
 

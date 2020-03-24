@@ -175,6 +175,7 @@
 #include <string.h>
 #include <iostream>
 
+#include "tkutil.h"
 #include "base.h"
 #include "fitsimage.h"
 #include "basemarker.h"
@@ -237,7 +238,7 @@ static Coord::SkyFrame checkWCSSky();
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 62 "frame/tngparser.Y"
+#line 63 "frame/tngparser.Y"
 {
 #define TNGBUFSIZE 2048
   double real;
@@ -246,7 +247,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 193 of yacc.c.  */
-#line 250 "frame/tngparser.C"
+#line 251 "frame/tngparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -259,7 +260,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 263 "frame/tngparser.C"
+#line 264 "frame/tngparser.C"
 
 #ifdef short
 # undef short
@@ -576,15 +577,15 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   128,   128,   131,   132,   135,   136,   137,   138,   139,
-     142,   143,   144,   147,   148,   151,   152,   155,   156,   159,
-     160,   163,   164,   167,   168,   171,   172,   175,   178,   187,
-     190,   204,   211,   221,   222,   223,   224,   225,   226,   227,
-     230,   244,   260,   261,   262,   265,   270,   275,   280,   287,
-     292,   292,   298,   298,   304,   305,   308,   311,   312,   312,
-     313,   313,   314,   314,   317,   318,   319,   320,   321,   322,
-     323,   324,   325,   326,   331,   336,   336,   339,   340,   341,
-     342,   346,   350
+       0,   129,   129,   132,   133,   136,   137,   138,   139,   140,
+     143,   144,   145,   148,   149,   152,   153,   156,   157,   160,
+     161,   164,   165,   168,   169,   172,   173,   176,   179,   188,
+     191,   205,   212,   222,   223,   224,   225,   226,   227,   228,
+     231,   245,   261,   262,   263,   266,   271,   276,   281,   288,
+     293,   293,   299,   299,   305,   306,   309,   312,   313,   313,
+     314,   314,   315,   315,   318,   319,   320,   321,   322,   323,
+     324,   325,   326,   327,   332,   337,   337,   340,   341,   342,
+     343,   347,   351
 };
 #endif
 
@@ -1600,62 +1601,62 @@ yyreduce:
   switch (yyn)
     {
         case 7:
-#line 137 "frame/tngparser.Y"
+#line 138 "frame/tngparser.Y"
     {cerr << "SAOtng" << endl;;}
     break;
 
   case 12:
-#line 144 "frame/tngparser.Y"
+#line 145 "frame/tngparser.Y"
     {YYACCEPT;;}
     break;
 
   case 13:
-#line 147 "frame/tngparser.Y"
+#line 148 "frame/tngparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 14:
-#line 148 "frame/tngparser.Y"
+#line 149 "frame/tngparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 15:
-#line 151 "frame/tngparser.Y"
+#line 152 "frame/tngparser.Y"
     {yydebug=1;;}
     break;
 
   case 16:
-#line 152 "frame/tngparser.Y"
+#line 153 "frame/tngparser.Y"
     {yydebug=0;;}
     break;
 
   case 23:
-#line 167 "frame/tngparser.Y"
+#line 168 "frame/tngparser.Y"
     {(yyval.real) = 0;;}
     break;
 
   case 24:
-#line 168 "frame/tngparser.Y"
+#line 169 "frame/tngparser.Y"
     {(yyval.real) = (yyvsp[(1) - (1)].real);;}
     break;
 
   case 25:
-#line 171 "frame/tngparser.Y"
-    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
-    break;
-
-  case 26:
 #line 172 "frame/tngparser.Y"
     {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
+  case 26:
+#line 173 "frame/tngparser.Y"
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
+    break;
+
   case 27:
-#line 175 "frame/tngparser.Y"
+#line 176 "frame/tngparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real),Coord::IMAGE);;}
     break;
 
   case 28:
-#line 179 "frame/tngparser.Y"
+#line 180 "frame/tngparser.Y"
     {
 	  Vector r = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::IMAGE);
 	  (yyval.vector)[0] = r[0];
@@ -1665,12 +1666,12 @@ yyreduce:
     break;
 
   case 29:
-#line 187 "frame/tngparser.Y"
+#line 188 "frame/tngparser.Y"
     {(yyval.real) = parseSEXStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 30:
-#line 191 "frame/tngparser.Y"
+#line 192 "frame/tngparser.Y"
     {
 	  Vector r;
 	  Coord::CoordSystem sys = checkWCSSystem();
@@ -1687,7 +1688,7 @@ yyreduce:
     break;
 
   case 31:
-#line 205 "frame/tngparser.Y"
+#line 206 "frame/tngparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), localSystem, localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1697,7 +1698,7 @@ yyreduce:
     break;
 
   case 32:
-#line 212 "frame/tngparser.Y"
+#line 213 "frame/tngparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	    checkWCSSystem(), checkWCSSky());
@@ -1708,42 +1709,42 @@ yyreduce:
     break;
 
   case 33:
-#line 221 "frame/tngparser.Y"
-    {(yyval.integer) = Coord::FK4;;}
-    break;
-
-  case 34:
 #line 222 "frame/tngparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
-  case 35:
+  case 34:
 #line 223 "frame/tngparser.Y"
-    {(yyval.integer) = Coord::FK5;;}
+    {(yyval.integer) = Coord::FK4;;}
     break;
 
-  case 36:
+  case 35:
 #line 224 "frame/tngparser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
-  case 37:
+  case 36:
 #line 225 "frame/tngparser.Y"
+    {(yyval.integer) = Coord::FK5;;}
+    break;
+
+  case 37:
+#line 226 "frame/tngparser.Y"
     {(yyval.integer) = Coord::ICRS;;}
     break;
 
   case 38:
-#line 226 "frame/tngparser.Y"
+#line 227 "frame/tngparser.Y"
     {(yyval.integer) = Coord::GALACTIC;;}
     break;
 
   case 39:
-#line 227 "frame/tngparser.Y"
+#line 228 "frame/tngparser.Y"
     {(yyval.integer) = Coord::ECLIPTIC;;}
     break;
 
   case 40:
-#line 230 "frame/tngparser.Y"
+#line 231 "frame/tngparser.Y"
     {
 	  // global properties
 	  globalSystem = Coord::IMAGE;
@@ -1759,7 +1760,7 @@ yyreduce:
     break;
 
   case 41:
-#line 244 "frame/tngparser.Y"
+#line 245 "frame/tngparser.Y"
     {
 	  // reset maperr flag
 	  maperr =0;
@@ -1777,43 +1778,43 @@ yyreduce:
     break;
 
   case 42:
-#line 260 "frame/tngparser.Y"
-    {setProps(&localProps, Marker::INCLUDE, 1);;}
-    break;
-
-  case 43:
 #line 261 "frame/tngparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 1);;}
     break;
 
-  case 44:
+  case 43:
 #line 262 "frame/tngparser.Y"
+    {setProps(&localProps, Marker::INCLUDE, 1);;}
+    break;
+
+  case 44:
+#line 263 "frame/tngparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 0);;}
     break;
 
   case 45:
-#line 266 "frame/tngparser.Y"
+#line 267 "frame/tngparser.Y"
     {fr->createCircleCmd(Vector((yyvsp[(3) - (7)].vector)), (yyvsp[(5) - (7)].real), fill_,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);;}
     break;
 
   case 46:
-#line 271 "frame/tngparser.Y"
+#line 272 "frame/tngparser.Y"
     {fr->createEllipseCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real), fill_,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);;}
     break;
 
   case 47:
-#line 276 "frame/tngparser.Y"
+#line 277 "frame/tngparser.Y"
     {fr->createBoxCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real), fill_,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);;}
     break;
 
   case 48:
-#line 281 "frame/tngparser.Y"
+#line 282 "frame/tngparser.Y"
     {fr->createLineCmd(Vector((yyvsp[(3) - (7)].vector)),
 	    Vector((yyvsp[(5) - (7)].vector)),
 	    0,0,
@@ -1822,19 +1823,19 @@ yyreduce:
     break;
 
   case 49:
-#line 288 "frame/tngparser.Y"
+#line 289 "frame/tngparser.Y"
     {fr->createPointCmd(Vector((yyvsp[(3) - (5)].vector)), Point::BOXCIRCLE, POINTSIZE, 
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);;}
     break;
 
   case 50:
-#line 292 "frame/tngparser.Y"
+#line 293 "frame/tngparser.Y"
     {strncpy(localText,(yyvsp[(5) - (6)].str),80);;}
     break;
 
   case 51:
-#line 293 "frame/tngparser.Y"
+#line 294 "frame/tngparser.Y"
     {fr->createTextCmd(Vector((yyvsp[(3) - (8)].vector)),
 	    0, 1,
 	    localColor,dash,1,globalFont,localText,
@@ -1842,84 +1843,84 @@ yyreduce:
     break;
 
   case 52:
-#line 298 "frame/tngparser.Y"
+#line 299 "frame/tngparser.Y"
     {polylist.deleteAll();;}
     break;
 
   case 53:
-#line 299 "frame/tngparser.Y"
+#line 300 "frame/tngparser.Y"
     {fr->createPolygonCmd(polylist, fill_,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);;}
     break;
 
   case 56:
-#line 308 "frame/tngparser.Y"
+#line 309 "frame/tngparser.Y"
     {polylist.append(new Vertex((yyvsp[(1) - (1)].vector)));;}
     break;
 
   case 58:
-#line 312 "frame/tngparser.Y"
-    {DISCARD_(0);;}
-    break;
-
-  case 60:
 #line 313 "frame/tngparser.Y"
     {DISCARD_(0);;}
     break;
 
-  case 62:
+  case 60:
 #line 314 "frame/tngparser.Y"
+    {DISCARD_(0);;}
+    break;
+
+  case 62:
+#line 315 "frame/tngparser.Y"
     {DISCARD_(1);;}
     break;
 
   case 63:
-#line 314 "frame/tngparser.Y"
+#line 315 "frame/tngparser.Y"
     {strncpy(globalText,(yyvsp[(3) - (3)].str),80);;}
     break;
 
   case 65:
-#line 318 "frame/tngparser.Y"
+#line 319 "frame/tngparser.Y"
     {strcpy(localColor,"white");;}
     break;
 
   case 66:
-#line 319 "frame/tngparser.Y"
+#line 320 "frame/tngparser.Y"
     {strcpy(localColor,"black");;}
     break;
 
   case 67:
-#line 320 "frame/tngparser.Y"
+#line 321 "frame/tngparser.Y"
     {strcpy(localColor,"red");;}
     break;
 
   case 68:
-#line 321 "frame/tngparser.Y"
+#line 322 "frame/tngparser.Y"
     {strcpy(localColor,"green");;}
     break;
 
   case 69:
-#line 322 "frame/tngparser.Y"
+#line 323 "frame/tngparser.Y"
     {strcpy(localColor,"blue");;}
     break;
 
   case 70:
-#line 323 "frame/tngparser.Y"
+#line 324 "frame/tngparser.Y"
     {strcpy(localColor,"cyan");;}
     break;
 
   case 71:
-#line 324 "frame/tngparser.Y"
+#line 325 "frame/tngparser.Y"
     {strcpy(localColor,"magenta");;}
     break;
 
   case 72:
-#line 325 "frame/tngparser.Y"
+#line 326 "frame/tngparser.Y"
     {strcpy(localColor,"yellow");;}
     break;
 
   case 73:
-#line 327 "frame/tngparser.Y"
+#line 328 "frame/tngparser.Y"
     {
 	  strcpy(localColor,"green");
 	  setProps(&localProps,Marker::SOURCE,1);
@@ -1927,7 +1928,7 @@ yyreduce:
     break;
 
   case 74:
-#line 332 "frame/tngparser.Y"
+#line 333 "frame/tngparser.Y"
     {
 	  strcpy(localColor,"red");
 	  setProps(&localProps,Marker::SOURCE,0);
@@ -1935,27 +1936,27 @@ yyreduce:
     break;
 
   case 75:
-#line 336 "frame/tngparser.Y"
+#line 337 "frame/tngparser.Y"
     {DISCARD_(1);;}
     break;
 
   case 76:
-#line 336 "frame/tngparser.Y"
+#line 337 "frame/tngparser.Y"
     {strncpy(localComment,(yyvsp[(3) - (3)].str),80);;}
     break;
 
   case 79:
-#line 341 "frame/tngparser.Y"
-    {globalSystem = localSystem = Coord::IMAGE;;}
-    break;
-
-  case 80:
 #line 342 "frame/tngparser.Y"
     {globalSystem = localSystem = Coord::IMAGE;;}
     break;
 
+  case 80:
+#line 343 "frame/tngparser.Y"
+    {globalSystem = localSystem = Coord::IMAGE;;}
+    break;
+
   case 81:
-#line 346 "frame/tngparser.Y"
+#line 347 "frame/tngparser.Y"
     {
 	    globalSystem = localSystem = Coord::WCS;
 	    globalSky = localSky = Coord::FK5;
@@ -1963,7 +1964,7 @@ yyreduce:
     break;
 
   case 82:
-#line 351 "frame/tngparser.Y"
+#line 352 "frame/tngparser.Y"
     {
 	    globalSystem = localSystem = Coord::WCS;
 	    globalSky = localSky = (Coord::SkyFrame)(yyvsp[(2) - (3)].integer);
@@ -1972,7 +1973,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1976 "frame/tngparser.C"
+#line 1977 "frame/tngparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2186,7 +2187,7 @@ yyreturn:
 }
 
 
-#line 357 "frame/tngparser.Y"
+#line 358 "frame/tngparser.Y"
 
 
 static void setProps(unsigned short* props, unsigned short prop, int value)

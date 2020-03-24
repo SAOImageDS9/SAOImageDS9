@@ -108,7 +108,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 66 "frame/prosparser.Y"
+#line 67 "frame/prosparser.Y"
 {
 #define PROSBUFSIZE 2048
   double real;

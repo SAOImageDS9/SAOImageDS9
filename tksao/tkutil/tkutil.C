@@ -5,6 +5,7 @@
 #include <tk.h>
 
 #include "util.h"
+#include "tkutil.h"
 
 // Error in mapping
 int maperr= 0;

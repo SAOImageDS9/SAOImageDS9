@@ -226,6 +226,7 @@
 #include <iostream>
 
 #include "util.h"
+#include "tkutil.h"
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"
@@ -281,7 +282,7 @@ static Coord::SkyFrame checkWCSSky();
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 56 "frame/contourparser.Y"
+#line 57 "frame/contourparser.Y"
 {
 #define CTBUFSIZE 2048
   double real;
@@ -290,7 +291,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 193 of yacc.c.  */
-#line 294 "frame/contourparser.C"
+#line 295 "frame/contourparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -303,7 +304,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 307 "frame/contourparser.C"
+#line 308 "frame/contourparser.C"
 
 #ifdef short
 # undef short
@@ -631,18 +632,18 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   148,   148,   151,   152,   156,   162,   163,   165,   166,
-     170,   175,   180,   181,   181,   182,   182,   183,   188,   189,
-     196,   196,   199,   200,   204,   211,   212,   215,   229,   230,
-     230,   233,   234,   235,   245,   246,   249,   250,   253,   255,
-     256,   257,   258,   260,   261,   262,   263,   266,   267,   270,
-     273,   276,   279,   293,   302,   303,   304,   305,   306,   309,
-     310,   311,   312,   313,   314,   315,   316,   317,   318,   319,
-     320,   321,   322,   323,   324,   325,   326,   327,   328,   329,
-     330,   331,   332,   333,   334,   335,   338,   339,   340,   341,
-     342,   343,   344,   347,   348,   351,   352,   353,   354,   355,
-     358,   359,   362,   363,   364,   365,   368,   381,   389,   397,
-     404,   412,   419
+       0,   149,   149,   152,   153,   157,   163,   164,   166,   167,
+     171,   176,   181,   182,   182,   183,   183,   184,   189,   190,
+     197,   197,   200,   201,   205,   212,   213,   216,   230,   231,
+     231,   234,   235,   236,   246,   247,   250,   251,   254,   256,
+     257,   258,   259,   261,   262,   263,   264,   267,   268,   271,
+     274,   277,   280,   294,   303,   304,   305,   306,   307,   310,
+     311,   312,   313,   314,   315,   316,   317,   318,   319,   320,
+     321,   322,   323,   324,   325,   326,   327,   328,   329,   330,
+     331,   332,   333,   334,   335,   336,   339,   340,   341,   342,
+     343,   344,   345,   348,   349,   352,   353,   354,   355,   356,
+     359,   360,   363,   364,   365,   366,   369,   382,   390,   398,
+     405,   413,   420
 };
 #endif
 
@@ -1707,7 +1708,7 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 156 "frame/contourparser.Y"
+#line 157 "frame/contourparser.Y"
     {
 	  if (cc && cl) {
 	    cl->lcontour().append(cc);
@@ -1717,19 +1718,19 @@ yyreduce:
     break;
 
   case 7:
-#line 163 "frame/contourparser.Y"
+#line 164 "frame/contourparser.Y"
     {cerr << "DS9 Contour File 7.5" << endl;;}
     break;
 
   case 9:
-#line 167 "frame/contourparser.Y"
+#line 168 "frame/contourparser.Y"
     {
 	  globalSystem=(Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	;}
     break;
 
   case 10:
-#line 171 "frame/contourparser.Y"
+#line 172 "frame/contourparser.Y"
     {
 	  globalSystem=globalWCS;
 	  globalSky=(Coord::SkyFrame)(yyvsp[(1) - (2)].integer);
@@ -1737,7 +1738,7 @@ yyreduce:
     break;
 
   case 11:
-#line 176 "frame/contourparser.Y"
+#line 177 "frame/contourparser.Y"
     {
 	  globalSystem=globalWCS;
 	  globalSky=Coord::FK5;
@@ -1745,17 +1746,17 @@ yyreduce:
     break;
 
   case 13:
-#line 181 "frame/contourparser.Y"
-    {localLevel = (yyvsp[(3) - (3)].real);}
-    break;
-
-  case 15:
 #line 182 "frame/contourparser.Y"
     {localLevel = (yyvsp[(3) - (3)].real);}
     break;
 
+  case 15:
+#line 183 "frame/contourparser.Y"
+    {localLevel = (yyvsp[(3) - (3)].real);}
+    break;
+
   case 17:
-#line 184 "frame/contourparser.Y"
+#line 185 "frame/contourparser.Y"
     {
 	  if (cl)
 	    cc = new Contour(cl);
@@ -1763,7 +1764,7 @@ yyreduce:
     break;
 
   case 19:
-#line 190 "frame/contourparser.Y"
+#line 191 "frame/contourparser.Y"
     {
 	  if (cc && cl) {
 	    cl->lcontour().append(cc);
@@ -1773,12 +1774,12 @@ yyreduce:
     break;
 
   case 20:
-#line 196 "frame/contourparser.Y"
+#line 197 "frame/contourparser.Y"
     {DISCARD_(1);;}
     break;
 
   case 24:
-#line 204 "frame/contourparser.Y"
+#line 205 "frame/contourparser.Y"
     {
 	  if (cl)
 	    ct->contourAppendAux(cl);
@@ -1787,7 +1788,7 @@ yyreduce:
     break;
 
   case 27:
-#line 216 "frame/contourparser.Y"
+#line 217 "frame/contourparser.Y"
     {
 	  if (cc)
 	    cc->lvertex().append(new Vertex((yyvsp[(1) - (2)].vector)));
@@ -1802,12 +1803,12 @@ yyreduce:
     break;
 
   case 29:
-#line 230 "frame/contourparser.Y"
+#line 231 "frame/contourparser.Y"
     {DISCARD_(1);;}
     break;
 
   case 33:
-#line 236 "frame/contourparser.Y"
+#line 237 "frame/contourparser.Y"
     {
 	  if (cl) {
 	    ct->contourAppendAux(cl);
@@ -1818,87 +1819,87 @@ yyreduce:
     break;
 
   case 34:
-#line 245 "frame/contourparser.Y"
+#line 246 "frame/contourparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 35:
-#line 246 "frame/contourparser.Y"
+#line 247 "frame/contourparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 36:
-#line 249 "frame/contourparser.Y"
+#line 250 "frame/contourparser.Y"
     {yydebug=1;;}
     break;
 
   case 37:
-#line 250 "frame/contourparser.Y"
+#line 251 "frame/contourparser.Y"
     {yydebug=0;;}
     break;
 
   case 38:
-#line 253 "frame/contourparser.Y"
+#line 254 "frame/contourparser.Y"
     {(yyval.integer)=((yyvsp[(1) - (1)].integer) ? 1 : 0);;}
     break;
 
   case 39:
-#line 255 "frame/contourparser.Y"
-    {(yyval.integer)=1;;}
-    break;
-
-  case 40:
 #line 256 "frame/contourparser.Y"
     {(yyval.integer)=1;;}
     break;
 
-  case 41:
+  case 40:
 #line 257 "frame/contourparser.Y"
     {(yyval.integer)=1;;}
     break;
 
-  case 42:
+  case 41:
 #line 258 "frame/contourparser.Y"
     {(yyval.integer)=1;;}
     break;
 
-  case 43:
-#line 260 "frame/contourparser.Y"
-    {(yyval.integer)=0;;}
+  case 42:
+#line 259 "frame/contourparser.Y"
+    {(yyval.integer)=1;;}
     break;
 
-  case 44:
+  case 43:
 #line 261 "frame/contourparser.Y"
     {(yyval.integer)=0;;}
     break;
 
-  case 45:
+  case 44:
 #line 262 "frame/contourparser.Y"
     {(yyval.integer)=0;;}
     break;
 
-  case 46:
+  case 45:
 #line 263 "frame/contourparser.Y"
     {(yyval.integer)=0;;}
     break;
 
+  case 46:
+#line 264 "frame/contourparser.Y"
+    {(yyval.integer)=0;;}
+    break;
+
   case 49:
-#line 270 "frame/contourparser.Y"
+#line 271 "frame/contourparser.Y"
     {(yyval.real) = parseSEXStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 50:
-#line 273 "frame/contourparser.Y"
+#line 274 "frame/contourparser.Y"
     {(yyval.real) = parseHMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 51:
-#line 276 "frame/contourparser.Y"
+#line 277 "frame/contourparser.Y"
     {(yyval.real) = parseDMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 52:
-#line 279 "frame/contourparser.Y"
+#line 280 "frame/contourparser.Y"
     {
           cl = NULL;
 	  cc = NULL;
@@ -1914,7 +1915,7 @@ yyreduce:
     break;
 
   case 53:
-#line 293 "frame/contourparser.Y"
+#line 294 "frame/contourparser.Y"
     {
 	  strcpy(localColor,globalColor);
 	  localDash = globalDash;
@@ -1925,247 +1926,247 @@ yyreduce:
     break;
 
   case 54:
-#line 302 "frame/contourparser.Y"
+#line 303 "frame/contourparser.Y"
     {(yyval.integer) = Coord::IMAGE;;}
     break;
 
   case 55:
-#line 303 "frame/contourparser.Y"
+#line 304 "frame/contourparser.Y"
     {(yyval.integer) = Coord::PHYSICAL;;}
     break;
 
   case 56:
-#line 304 "frame/contourparser.Y"
+#line 305 "frame/contourparser.Y"
     {(yyval.integer) = Coord::DETECTOR;;}
     break;
 
   case 57:
-#line 305 "frame/contourparser.Y"
+#line 306 "frame/contourparser.Y"
     {(yyval.integer) = Coord::AMPLIFIER;;}
     break;
 
   case 58:
-#line 306 "frame/contourparser.Y"
+#line 307 "frame/contourparser.Y"
     {(yyval.integer) = (yyvsp[(1) - (1)].integer); globalWCS = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 59:
-#line 309 "frame/contourparser.Y"
+#line 310 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCS;;}
     break;
 
   case 60:
-#line 310 "frame/contourparser.Y"
+#line 311 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSA;;}
     break;
 
   case 61:
-#line 311 "frame/contourparser.Y"
+#line 312 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSB;;}
     break;
 
   case 62:
-#line 312 "frame/contourparser.Y"
+#line 313 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSC;;}
     break;
 
   case 63:
-#line 313 "frame/contourparser.Y"
+#line 314 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSD;;}
     break;
 
   case 64:
-#line 314 "frame/contourparser.Y"
+#line 315 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSE;;}
     break;
 
   case 65:
-#line 315 "frame/contourparser.Y"
+#line 316 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSF;;}
     break;
 
   case 66:
-#line 316 "frame/contourparser.Y"
+#line 317 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSG;;}
     break;
 
   case 67:
-#line 317 "frame/contourparser.Y"
+#line 318 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSH;;}
     break;
 
   case 68:
-#line 318 "frame/contourparser.Y"
+#line 319 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSI;;}
     break;
 
   case 69:
-#line 319 "frame/contourparser.Y"
+#line 320 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSJ;;}
     break;
 
   case 70:
-#line 320 "frame/contourparser.Y"
+#line 321 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSK;;}
     break;
 
   case 71:
-#line 321 "frame/contourparser.Y"
+#line 322 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSL;;}
     break;
 
   case 72:
-#line 322 "frame/contourparser.Y"
+#line 323 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSM;;}
     break;
 
   case 73:
-#line 323 "frame/contourparser.Y"
+#line 324 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSN;;}
     break;
 
   case 74:
-#line 324 "frame/contourparser.Y"
+#line 325 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSO;;}
     break;
 
   case 75:
-#line 325 "frame/contourparser.Y"
+#line 326 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSP;;}
     break;
 
   case 76:
-#line 326 "frame/contourparser.Y"
+#line 327 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSQ;;}
     break;
 
   case 77:
-#line 327 "frame/contourparser.Y"
+#line 328 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSR;;}
     break;
 
   case 78:
-#line 328 "frame/contourparser.Y"
+#line 329 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSS;;}
     break;
 
   case 79:
-#line 329 "frame/contourparser.Y"
+#line 330 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCST;;}
     break;
 
   case 80:
-#line 330 "frame/contourparser.Y"
+#line 331 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSU;;}
     break;
 
   case 81:
-#line 331 "frame/contourparser.Y"
+#line 332 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSV;;}
     break;
 
   case 82:
-#line 332 "frame/contourparser.Y"
+#line 333 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSW;;}
     break;
 
   case 83:
-#line 333 "frame/contourparser.Y"
+#line 334 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSX;;}
     break;
 
   case 84:
-#line 334 "frame/contourparser.Y"
+#line 335 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSY;;}
     break;
 
   case 85:
-#line 335 "frame/contourparser.Y"
+#line 336 "frame/contourparser.Y"
     {(yyval.integer) = Coord::WCSZ;;}
     break;
 
   case 86:
-#line 338 "frame/contourparser.Y"
-    {(yyval.integer) = Coord::FK4;;}
-    break;
-
-  case 87:
 #line 339 "frame/contourparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
-  case 88:
+  case 87:
 #line 340 "frame/contourparser.Y"
-    {(yyval.integer) = Coord::FK5;;}
+    {(yyval.integer) = Coord::FK4;;}
     break;
 
-  case 89:
+  case 88:
 #line 341 "frame/contourparser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
-  case 90:
+  case 89:
 #line 342 "frame/contourparser.Y"
+    {(yyval.integer) = Coord::FK5;;}
+    break;
+
+  case 90:
+#line 343 "frame/contourparser.Y"
     {(yyval.integer) = Coord::ICRS;;}
     break;
 
   case 91:
-#line 343 "frame/contourparser.Y"
+#line 344 "frame/contourparser.Y"
     {(yyval.integer) = Coord::GALACTIC;;}
     break;
 
   case 92:
-#line 344 "frame/contourparser.Y"
+#line 345 "frame/contourparser.Y"
     {(yyval.integer) = Coord::ECLIPTIC;;}
     break;
 
   case 95:
-#line 351 "frame/contourparser.Y"
+#line 352 "frame/contourparser.Y"
     {strncpy(globalColor,(yyvsp[(3) - (3)].str),16);;}
     break;
 
   case 96:
-#line 352 "frame/contourparser.Y"
+#line 353 "frame/contourparser.Y"
     {globalDash = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 97:
-#line 353 "frame/contourparser.Y"
+#line 354 "frame/contourparser.Y"
     {globalDashList[0] =(yyvsp[(3) - (4)].integer); globalDashList[1] =(yyvsp[(4) - (4)].integer);;}
     break;
 
   case 98:
-#line 354 "frame/contourparser.Y"
+#line 355 "frame/contourparser.Y"
     {globalWCS = (Coord::CoordSystem)(yyvsp[(3) - (3)].integer);;}
     break;
 
   case 99:
-#line 355 "frame/contourparser.Y"
+#line 356 "frame/contourparser.Y"
     {globalWidth = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 102:
-#line 362 "frame/contourparser.Y"
+#line 363 "frame/contourparser.Y"
     {strncpy(localColor,(yyvsp[(3) - (3)].str),16);;}
     break;
 
   case 103:
-#line 363 "frame/contourparser.Y"
+#line 364 "frame/contourparser.Y"
     {localDash = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 104:
-#line 364 "frame/contourparser.Y"
+#line 365 "frame/contourparser.Y"
     {localDashList[0] =(yyvsp[(3) - (4)].integer); localDashList[1] =(yyvsp[(4) - (4)].integer);;}
     break;
 
   case 105:
-#line 365 "frame/contourparser.Y"
+#line 366 "frame/contourparser.Y"
     {localWidth = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 106:
-#line 369 "frame/contourparser.Y"
+#line 370 "frame/contourparser.Y"
     {
 	  Vector r;
 	  Coord::CoordSystem sys = checkWCSSystem();
@@ -2181,7 +2182,7 @@ yyreduce:
     break;
 
   case 107:
-#line 382 "frame/contourparser.Y"
+#line 383 "frame/contourparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	  checkWCSSystem(), checkWCSSky());
@@ -2192,7 +2193,7 @@ yyreduce:
     break;
 
   case 108:
-#line 390 "frame/contourparser.Y"
+#line 391 "frame/contourparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	  checkWCSSystem(), checkWCSSky());
@@ -2203,7 +2204,7 @@ yyreduce:
     break;
 
   case 109:
-#line 398 "frame/contourparser.Y"
+#line 399 "frame/contourparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), globalSystem, globalSky);
 	  (yyval.vector)[0] = r[0];
@@ -2213,7 +2214,7 @@ yyreduce:
     break;
 
   case 110:
-#line 405 "frame/contourparser.Y"
+#line 406 "frame/contourparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), 
 	    checkWCSSystem(), checkWCSSky());
@@ -2224,7 +2225,7 @@ yyreduce:
     break;
 
   case 111:
-#line 413 "frame/contourparser.Y"
+#line 414 "frame/contourparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::IMAGE);
 	  (yyval.vector)[0] = r[0];
@@ -2234,7 +2235,7 @@ yyreduce:
     break;
 
   case 112:
-#line 420 "frame/contourparser.Y"
+#line 421 "frame/contourparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::PHYSICAL);
 	  (yyval.vector)[0] = r[0];
@@ -2244,7 +2245,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2248 "frame/contourparser.C"
+#line 2249 "frame/contourparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2458,7 +2459,7 @@ yyreturn:
 }
 
 
-#line 426 "frame/contourparser.Y"
+#line 427 "frame/contourparser.Y"
 
 
 static Coord::CoordSystem checkWCSSystem()

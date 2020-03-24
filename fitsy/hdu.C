@@ -14,6 +14,7 @@ using namespace std;
 #include "hdu.h"
 #include "head.h"
 #include "util.h"
+#include "file.h"
 
 FitsHDU::FitsHDU(FitsHead* head)
 {

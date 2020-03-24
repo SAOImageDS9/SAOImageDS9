@@ -11,6 +11,8 @@ using namespace std;
 #include <tcl.h>
 #include <tk.h>
 
+Tcl_Interp *global_interp =NULL;
+
 #define DEBUGS(x) {FILE* fp=fopen("/Users/joye/debug.txt","a+");fprintf(fp,"%s\n",x);fclose(fp);}
 
 extern "C" {
@@ -79,7 +81,6 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   return TCL_OK;
 }
 
-extern Tcl_Interp *global_interp;
 int SAOAppInit(Tcl_Interp *interp)
 {
   // save interp for cputs function

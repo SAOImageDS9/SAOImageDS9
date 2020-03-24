@@ -43,7 +43,8 @@ TKFILES = \
 
 saods9	: dirs tcl tk \
 	openssl \
-	xpa util vector fitsy funtools \
+	xpa funtools ast \
+	util vector fitsy \
 	tclfitsy tcliis tclsignal \
 	tls tclxml \
 	tkblt tktable tkimg \

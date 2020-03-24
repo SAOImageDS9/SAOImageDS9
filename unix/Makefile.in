@@ -27,7 +27,8 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 saods9	: dirs tcl tk \
 	openssl \
-	xpa util vector fitsy funtools \
+	xpa funtools ast \
+	util vector fitsy \
 	tclfitsy tcliis tclsignal \
 	tclzipfs tls tclxml \
 	tkblt tktable tkimg \

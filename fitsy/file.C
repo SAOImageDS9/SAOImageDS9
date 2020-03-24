@@ -2,6 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <tcl.h>
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -84,6 +86,7 @@ void envierror(FitsFile* envi, enviFlexLexer* ll, const char* m)
 
 void internalError(const char* msg)
 {
+  extern Tcl_Interp *global_interp;
   Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
   Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
 }

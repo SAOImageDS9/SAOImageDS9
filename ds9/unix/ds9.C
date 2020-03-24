@@ -12,6 +12,8 @@ using namespace std;
 #include <tcl.h>
 #include <tk.h>
 
+Tcl_Interp *global_interp =NULL;
+
 extern "C" {
   int SAOAppInit(Tcl_Interp *interp);
   int SAOLocalMainHook(int* argc, char*** argv);
@@ -71,7 +73,6 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   return TCL_OK;
 }
 
-extern Tcl_Interp *global_interp;
 int SAOAppInit(Tcl_Interp *interp)
 {
   // save interp for cputs function

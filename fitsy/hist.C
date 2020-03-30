@@ -13,6 +13,9 @@ using namespace std;
 #include "hist.h"
 #include "util.h"
 
+#ifndef HAVE_CONFIG_H
+#define HAVE_CONFIG_H 1
+#endif
 #include "filter.h"
 
 #ifdef __CYGWIN__

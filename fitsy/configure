@@ -5519,7 +5519,7 @@ fi
 
 
 
-    vars="-I. -I${prefix}/funtools/filter -I${prefix}/include"
+    vars="-I. -I${prefix}/include"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

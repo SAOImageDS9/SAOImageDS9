@@ -167,7 +167,7 @@ TEA_ADD_HEADERS([
 		   strm.h
 		   var.h
 	       ])
-TEA_ADD_INCLUDES([-I. -I${prefix}/include])
+TEA_ADD_INCLUDES([-I. -I${prefix}/funtools/filter -I${prefix}/include])
 TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])

@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkutil.h"
 #include "frame3dbase.h"
 #include "fitsimage.h"
 #include "context.h"

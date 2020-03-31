@@ -194,7 +194,6 @@
 #include <string.h>
 #include <iostream>
 
-#include "tkutil.h"
 #include "base.h"
 #include "fitsimage.h"
 #include "basemarker.h"
@@ -241,7 +240,7 @@ static List<CallBack> cblist;
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 46 "frame/xyparser.Y"
+#line 45 "frame/xyparser.Y"
 {
 #define XYBUFSIZE 2048
   double real;
@@ -250,7 +249,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 193 of yacc.c.  */
-#line 254 "frame/xyparser.C"
+#line 253 "frame/xyparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -263,7 +262,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 267 "frame/xyparser.C"
+#line 266 "frame/xyparser.C"
 
 #ifdef short
 # undef short
@@ -572,14 +571,14 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   121,   121,   121,   127,   128,   131,   132,   133,   134,
-     135,   137,   137,   140,   141,   144,   145,   148,   151,   152,
-     153,   156,   157,   160,   161,   164,   165,   168,   171,   174,
-     177,   188,   195,   202,   209,   218,   219,   220,   221,   222,
-     223,   224,   225,   226,   227,   228,   229,   230,   231,   232,
-     233,   234,   235,   236,   237,   238,   239,   240,   241,   242,
-     243,   244,   245,   246,   247,   248,   249,   250,   253,   254,
-     255,   256,   257,   258,   259,   262
+       0,   120,   120,   120,   126,   127,   130,   131,   132,   133,
+     134,   136,   136,   139,   140,   143,   144,   147,   150,   151,
+     152,   155,   156,   159,   160,   163,   164,   167,   170,   173,
+     176,   187,   194,   201,   208,   217,   218,   219,   220,   221,
+     222,   223,   224,   225,   226,   227,   228,   229,   230,   231,
+     232,   233,   234,   235,   236,   237,   238,   239,   240,   241,
+     242,   243,   244,   245,   246,   247,   248,   249,   252,   253,
+     254,   255,   256,   257,   258,   261
 };
 #endif
 
@@ -1565,7 +1564,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 121 "frame/xyparser.Y"
+#line 120 "frame/xyparser.Y"
     {
 	    globalSystem = fr->xySystem(); 
 	    globalSky = fr->xySky();
@@ -1573,72 +1572,72 @@ yyreduce:
     break;
 
   case 8:
-#line 133 "frame/xyparser.Y"
+#line 132 "frame/xyparser.Y"
     {cerr << "X Y Format 1.0" << endl;;}
     break;
 
   case 9:
-#line 134 "frame/xyparser.Y"
+#line 133 "frame/xyparser.Y"
     {globalSystem = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 10:
-#line 136 "frame/xyparser.Y"
+#line 135 "frame/xyparser.Y"
     {globalSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer); globalSky = (Coord::SkyFrame)(yyvsp[(2) - (2)].integer);;}
     break;
 
   case 11:
-#line 137 "frame/xyparser.Y"
+#line 136 "frame/xyparser.Y"
     {localSystem = globalSystem; localSky = globalSky; maperr = 0;;}
     break;
 
   case 17:
-#line 148 "frame/xyparser.Y"
+#line 147 "frame/xyparser.Y"
     {;}
     break;
 
   case 20:
-#line 153 "frame/xyparser.Y"
+#line 152 "frame/xyparser.Y"
     {YYACCEPT;;}
     break;
 
   case 21:
-#line 156 "frame/xyparser.Y"
+#line 155 "frame/xyparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 22:
-#line 157 "frame/xyparser.Y"
+#line 156 "frame/xyparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 23:
-#line 160 "frame/xyparser.Y"
+#line 159 "frame/xyparser.Y"
     {yydebug=1;;}
     break;
 
   case 24:
-#line 161 "frame/xyparser.Y"
+#line 160 "frame/xyparser.Y"
     {yydebug=0;;}
     break;
 
   case 27:
-#line 168 "frame/xyparser.Y"
+#line 167 "frame/xyparser.Y"
     {(yyval.real) = parseSEXStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 28:
-#line 171 "frame/xyparser.Y"
+#line 170 "frame/xyparser.Y"
     {(yyval.real) = parseHMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 29:
-#line 174 "frame/xyparser.Y"
+#line 173 "frame/xyparser.Y"
     {(yyval.real) = parseDMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 30:
-#line 178 "frame/xyparser.Y"
+#line 177 "frame/xyparser.Y"
     {
 	  Vector r;
 	  if (localSky == Coord::GALACTIC || localSky == Coord::ECLIPTIC) 
@@ -1652,7 +1651,7 @@ yyreduce:
     break;
 
   case 31:
-#line 189 "frame/xyparser.Y"
+#line 188 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1662,7 +1661,7 @@ yyreduce:
     break;
 
   case 32:
-#line 196 "frame/xyparser.Y"
+#line 195 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1672,7 +1671,7 @@ yyreduce:
     break;
 
   case 33:
-#line 203 "frame/xyparser.Y"
+#line 202 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1682,7 +1681,7 @@ yyreduce:
     break;
 
   case 34:
-#line 210 "frame/xyparser.Y"
+#line 209 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1692,207 +1691,207 @@ yyreduce:
     break;
 
   case 35:
-#line 218 "frame/xyparser.Y"
+#line 217 "frame/xyparser.Y"
     {(yyval.integer) = Coord::IMAGE;;}
     break;
 
   case 36:
-#line 219 "frame/xyparser.Y"
+#line 218 "frame/xyparser.Y"
     {(yyval.integer) = Coord::IMAGE;;}
     break;
 
   case 37:
-#line 220 "frame/xyparser.Y"
+#line 219 "frame/xyparser.Y"
     {(yyval.integer) = Coord::PHYSICAL;;}
     break;
 
   case 38:
-#line 221 "frame/xyparser.Y"
+#line 220 "frame/xyparser.Y"
     {(yyval.integer) = Coord::PHYSICAL;;}
     break;
 
   case 39:
-#line 222 "frame/xyparser.Y"
+#line 221 "frame/xyparser.Y"
     {(yyval.integer) = Coord::AMPLIFIER;;}
     break;
 
   case 40:
-#line 223 "frame/xyparser.Y"
+#line 222 "frame/xyparser.Y"
     {(yyval.integer) = Coord::DETECTOR;;}
     break;
 
   case 41:
-#line 224 "frame/xyparser.Y"
+#line 223 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCS;;}
     break;
 
   case 42:
-#line 225 "frame/xyparser.Y"
+#line 224 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSA;;}
     break;
 
   case 43:
-#line 226 "frame/xyparser.Y"
+#line 225 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSB;;}
     break;
 
   case 44:
-#line 227 "frame/xyparser.Y"
+#line 226 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSC;;}
     break;
 
   case 45:
-#line 228 "frame/xyparser.Y"
+#line 227 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSD;;}
     break;
 
   case 46:
-#line 229 "frame/xyparser.Y"
+#line 228 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSE;;}
     break;
 
   case 47:
-#line 230 "frame/xyparser.Y"
+#line 229 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSF;;}
     break;
 
   case 48:
-#line 231 "frame/xyparser.Y"
+#line 230 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSG;;}
     break;
 
   case 49:
-#line 232 "frame/xyparser.Y"
+#line 231 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSH;;}
     break;
 
   case 50:
-#line 233 "frame/xyparser.Y"
+#line 232 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSI;;}
     break;
 
   case 51:
-#line 234 "frame/xyparser.Y"
+#line 233 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSJ;;}
     break;
 
   case 52:
-#line 235 "frame/xyparser.Y"
+#line 234 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSK;;}
     break;
 
   case 53:
-#line 236 "frame/xyparser.Y"
+#line 235 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSL;;}
     break;
 
   case 54:
-#line 237 "frame/xyparser.Y"
+#line 236 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSM;;}
     break;
 
   case 55:
-#line 238 "frame/xyparser.Y"
+#line 237 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSN;;}
     break;
 
   case 56:
-#line 239 "frame/xyparser.Y"
+#line 238 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSO;;}
     break;
 
   case 57:
-#line 240 "frame/xyparser.Y"
+#line 239 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSP;;}
     break;
 
   case 58:
-#line 241 "frame/xyparser.Y"
+#line 240 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSQ;;}
     break;
 
   case 59:
-#line 242 "frame/xyparser.Y"
+#line 241 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSR;;}
     break;
 
   case 60:
-#line 243 "frame/xyparser.Y"
+#line 242 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSS;;}
     break;
 
   case 61:
-#line 244 "frame/xyparser.Y"
+#line 243 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCST;;}
     break;
 
   case 62:
-#line 245 "frame/xyparser.Y"
+#line 244 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSU;;}
     break;
 
   case 63:
-#line 246 "frame/xyparser.Y"
+#line 245 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSV;;}
     break;
 
   case 64:
-#line 247 "frame/xyparser.Y"
+#line 246 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSW;;}
     break;
 
   case 65:
-#line 248 "frame/xyparser.Y"
+#line 247 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSX;;}
     break;
 
   case 66:
-#line 249 "frame/xyparser.Y"
+#line 248 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSY;;}
     break;
 
   case 67:
-#line 250 "frame/xyparser.Y"
+#line 249 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSZ;;}
     break;
 
   case 68:
-#line 253 "frame/xyparser.Y"
+#line 252 "frame/xyparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
   case 69:
-#line 254 "frame/xyparser.Y"
+#line 253 "frame/xyparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
   case 70:
-#line 255 "frame/xyparser.Y"
+#line 254 "frame/xyparser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
   case 71:
-#line 256 "frame/xyparser.Y"
+#line 255 "frame/xyparser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
   case 72:
-#line 257 "frame/xyparser.Y"
+#line 256 "frame/xyparser.Y"
     {(yyval.integer) = Coord::ICRS;;}
     break;
 
   case 73:
-#line 258 "frame/xyparser.Y"
+#line 257 "frame/xyparser.Y"
     {(yyval.integer) = Coord::GALACTIC;;}
     break;
 
   case 74:
-#line 259 "frame/xyparser.Y"
+#line 258 "frame/xyparser.Y"
     {(yyval.integer) = Coord::ECLIPTIC;;}
     break;
 
   case 75:
-#line 262 "frame/xyparser.Y"
+#line 261 "frame/xyparser.Y"
     {fr->createPointCmd(Vector((yyvsp[(1) - (1)].vector)), Point::BOXCIRCLE, POINTSIZE, 
 	    color,dash,1,font,text,
 	    Marker::SELECT | Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
@@ -1904,7 +1903,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1908 "frame/xyparser.C"
+#line 1907 "frame/xyparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2118,6 +2117,6 @@ yyreturn:
 }
 
 
-#line 271 "frame/xyparser.Y"
+#line 270 "frame/xyparser.Y"
 
 

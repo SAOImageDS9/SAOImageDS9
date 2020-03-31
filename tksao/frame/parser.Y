@@ -15,7 +15,6 @@
 #include <iostream>
 
 #include "util.h"
-#include "tkutil.h"
 #include "base.h"
 #include "frame3d.h"
 #include "fitsimage.h"

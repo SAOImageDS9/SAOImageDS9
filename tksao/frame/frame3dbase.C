@@ -5,7 +5,6 @@
 #include <tkInt.h>
 
 #include "util.h"
-#include "tkutil.h"
 #include "frame3dbase.h"
 #include "fitsimage.h"
 #include "marker.h"

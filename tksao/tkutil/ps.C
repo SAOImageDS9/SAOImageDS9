@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "util.h"
-#include "tkutil.h"
 #include "ps.h"
 
 Filter::Filter()

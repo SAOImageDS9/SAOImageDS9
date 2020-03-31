@@ -80,7 +80,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 61 "frame/saoparser.Y"
+#line 60 "frame/saoparser.Y"
 {
 #define SAOBUFSIZE 2048
   double real;

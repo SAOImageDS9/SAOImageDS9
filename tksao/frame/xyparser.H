@@ -150,7 +150,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 46 "frame/xyparser.Y"
+#line 45 "frame/xyparser.Y"
 {
 #define XYBUFSIZE 2048
   double real;

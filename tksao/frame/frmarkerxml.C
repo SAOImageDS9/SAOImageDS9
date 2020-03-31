@@ -7,7 +7,6 @@
 #include <libxml/xmlreader.h>
 
 #include "util.h"
-#include "tkutil.h"
 #include "context.h"
 #include "framebase.h"
 #include "fitsimage.h"

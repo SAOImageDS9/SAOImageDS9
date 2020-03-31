@@ -16,7 +16,6 @@
 #include <string.h>
 #include <iostream>
 
-#include "tkutil.h"
 #include "base.h"
 #include "fitsimage.h"
 #include "basemarker.h"

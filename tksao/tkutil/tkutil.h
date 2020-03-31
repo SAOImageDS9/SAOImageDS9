@@ -18,22 +18,5 @@
 #include <iomanip>
 using namespace std;
 
-#ifndef __CYGWIN__
-static const double M_TWOPI = 2*M_PI;
-#endif
-static const double M_THREEPI = 3*M_PI;
-static const double M_FOURPI = 4*M_PI;
-
-extern int maperr;
-
-extern double zeroTWOPI(double);
-extern double m180To180(double);
-extern double degToRad(double);
-extern double radToDeg(double);
-
-extern double dmsToDegree(int, int, int, double);
-extern double parseSEXStr(const char*);
-extern double parseHMSStr(const char*);
-extern double parseDMSStr(const char*);
 
 #endif

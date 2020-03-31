@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkutil.h"
 #include "gridbase.h"
 #include "attribute.h"
 
@@ -11,6 +10,8 @@ EXTERN void TkDrawAngledChars(Display *display,
 			      Drawable drawable, GC gc, Tk_Font tkfont,
 			      const char *source, int numBytes, double x,
 			      double y, double angle);
+extern double radToDeg(double aa);
+
 extern "C" {
   #include "ast.h"
   #include "grf.h"
@@ -377,11 +378,11 @@ double GridBase::calcTextAngle(const char* just, Vector up)
 
   // normalize
   if (rr>0)
-    while (rr>M_TWOPI)
-      rr -= M_TWOPI;
+    while (rr>2*M_PI)
+      rr -= 2*M_PI;
   else
     while (rr<0)
-      rr += M_TWOPI;
+      rr += 2*M_PI;
 
   return rr;
 }

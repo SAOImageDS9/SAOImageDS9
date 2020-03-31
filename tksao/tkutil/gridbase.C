@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
+#include "coord.h"
 #include "gridbase.h"
 #include "attribute.h"
 
@@ -10,8 +11,6 @@ EXTERN void TkDrawAngledChars(Display *display,
 			      Drawable drawable, GC gc, Tk_Font tkfont,
 			      const char *source, int numBytes, double x,
 			      double y, double angle);
-extern double radToDeg(double aa);
-
 extern "C" {
   #include "ast.h"
   #include "grf.h"

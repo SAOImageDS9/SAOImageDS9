@@ -3,7 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkutil.h" // macos
+#include "tkx11.h"
 #include "contour.h"
 #include "base.h"
 #include "context.h"

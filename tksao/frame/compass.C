@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
+#include "tkx11.h"
 #include "tkutil.h"
 #include "compass.h"
 #include "fitsimage.h"

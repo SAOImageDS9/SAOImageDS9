@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include "util.h"
-#include "tkutil.h"
+#include "tkx11.h"
 #include "colorbar.h"
 #include "ps.h"
 #include "psutil.h"

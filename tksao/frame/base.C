@@ -5,7 +5,7 @@
 #include <tkInt.h>
 
 #include "util.h"
-#include "tkutil.h" // macos
+#include "tkx11.h" // macos
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"

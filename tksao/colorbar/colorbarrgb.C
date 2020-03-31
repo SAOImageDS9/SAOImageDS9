@@ -3,7 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkutil.h"
+#include "tkx11.h"
 #include "colorbarrgb.h"
 #include "ps.h"
 #include "psutil.h"

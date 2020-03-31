@@ -5,12 +5,14 @@
 #ifndef __truecolor8_h__
 #define __truecolor8_h__
 
-#include <tk.h>
+#include <string.h>
 
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 using namespace std;
+
+#include <tk.h>
 
 class TrueColor8 {
  protected:

@@ -5,6 +5,8 @@
 #ifndef __truecolor16_h__
 #define __truecolor16_h__
 
+#include <string.h>
+
 #include <iostream>
 #include <sstream>
 #include <iomanip>

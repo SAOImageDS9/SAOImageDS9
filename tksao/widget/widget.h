@@ -16,7 +16,8 @@
 #include <iomanip>
 using namespace std;
 
-#include <tcl.h>
+#include <X11/Xlib.h>
+
 #include <tk.h>
 
 #include "vector.h"

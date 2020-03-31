@@ -615,10 +615,10 @@ void Widget::warpTo(Vector& vv)
   XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
 }
 
-int Widget:setClipRectangles(Display *d, GC gc, int x, int y,
-			     XRectangle* rects, int n, int order)
+int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
+			      XRectangle* rects, int n, int order)
 {
-  XSetClipRectangles(d, gc, x, y, rects, n, order);
+  return XSetClipRectangles(d, gc, x, y, rects, n, order);
 }
 #endif
 

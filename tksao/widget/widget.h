@@ -18,6 +18,9 @@ using namespace std;
 
 #include <tk.h>
 
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+
 #include "vector.h"
 #include "psutil.h"
 

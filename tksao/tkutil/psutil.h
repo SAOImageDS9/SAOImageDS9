@@ -6,7 +6,6 @@
 #define __psutil_h__
 
 #include <tk.h>
-#include <X11/Xlib.h>
 
 #include <iostream>
 #include <sstream>

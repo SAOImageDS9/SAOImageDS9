@@ -6,7 +6,6 @@
 #define __colortag_h__
 
 #include <tk.h>
-#include <X11/Xlib.h>
 
 class Colorbar;
 

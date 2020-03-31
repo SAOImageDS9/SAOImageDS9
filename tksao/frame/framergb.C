@@ -10,7 +10,6 @@
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
-#include "ps.h"
 
 #include "sigbus.h"
 

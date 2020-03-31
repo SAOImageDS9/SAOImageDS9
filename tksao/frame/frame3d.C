@@ -6,7 +6,6 @@
 #include "tkutil.h"
 #include "frame3d.h"
 #include "fitsimage.h"
-#include "ps.h"
 #include "sigbus.h"
 
 #include <pthread.h>

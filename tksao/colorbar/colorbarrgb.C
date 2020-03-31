@@ -6,6 +6,7 @@
 #include "tkutil.h"
 #include "colorbarrgb.h"
 #include "ps.h"
+#include "psutil.h"
 
 ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
   : ColorbarBase(i,c,item)

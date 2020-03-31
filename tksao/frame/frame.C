@@ -8,7 +8,6 @@
 #include "frame.h"
 #include "fitsimage.h"
 #include "analysis.h"
-#include "ps.h"
 
 #include "sigbus.h"
 

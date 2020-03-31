@@ -6,7 +6,6 @@
 #include "tkutil.h"
 #include "gridbase.h"
 #include "attribute.h"
-#include "ps.h"
 
 EXTERN void TkDrawAngledChars(Display *display,
 			      Drawable drawable, GC gc, Tk_Font tkfont,

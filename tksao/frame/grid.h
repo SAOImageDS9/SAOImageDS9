@@ -6,7 +6,7 @@
 #define __grid_h__
 
 #include "coord.h"
-#include "ps.h"
+#include "psutil.h"
 
 class Grid {
  public:

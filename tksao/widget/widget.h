@@ -20,7 +20,7 @@ using namespace std;
 #include <tk.h>
 
 #include "vector.h"
-#include "ps.h"
+#include "psutil.h"
 
 class Attribute;
 

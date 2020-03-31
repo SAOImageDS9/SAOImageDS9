@@ -5,11 +5,6 @@
 #ifndef __tag_h__
 #define __tag_h__
 
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-using namespace std;
-
 class Tag {
   char* tag_;
 

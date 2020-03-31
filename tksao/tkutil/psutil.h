@@ -5,12 +5,12 @@
 #ifndef __psutil_h__
 #define __psutil_h__
 
-#include <tk.h>
-
 #include <iostream>
 #include <sstream>
 #include <iomanip>
 using namespace std;
+
+#include <tk.h>
 
 enum PSColorSpace {BW, GRAY, RGB, CMYK};
 

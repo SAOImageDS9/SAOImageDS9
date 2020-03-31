@@ -2,6 +2,11 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+using namespace std;
+
 #ifndef __colorscale_h__
 #define __colorscale_h__
 

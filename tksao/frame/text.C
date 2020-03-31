@@ -121,7 +121,7 @@ void Text::renderMACOSX()
 #endif
 
 #ifdef __WIN32
-#include <win32xlib.h>
+#include <win32lib.h>
 
 void Text::renderWIN32()
 {

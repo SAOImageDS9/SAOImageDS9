@@ -1933,7 +1933,7 @@ void Base::macosxPrintCmd()
 #endif
 
 #ifdef __WIN32
-#include <win32xlib.h>
+#include <win32lib.h>
 
 void Base::win32()
 {

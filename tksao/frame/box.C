@@ -74,7 +74,7 @@ void Box::renderMACOSXDraw(Vector* vv)
 #endif
 
 #ifdef __WIN32
-#include <win32xlib.h>
+#include <win32lib.h>
 
 void Box::renderWIN32Draw(Vector* vv)
 {

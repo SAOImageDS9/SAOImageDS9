@@ -4,7 +4,6 @@
 
 #include <tkInt.h>
 
-#include "tkx11.h"
 #include "widget.h"
 
 // Tk Canvas Widget Functions Declaration
@@ -605,17 +604,42 @@ XColor* Widget::getXColor(const char* str)
   return cc;
 };
 
+#if !(_WIN32 || MAC_OSX_TK)
 void Widget::warp(Vector& vv)
 {
-#if !(_WIN32 || MAC_OSX_TK)
   XWarpPointer(display, None, None, 0, 0, 0, 0, vv[0], vv[1]);
+}
+
+void Widget::warpTo(Vector& vv)
+{
+  XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
+}
+
+int Widget:setClipRectangles(Display *d, GC gc, int x, int y,
+			     XRectangle* rects, int n, int order)
+{
+  XSetClipRectangles(d, gc, x, y, rects, n, order);
+}
 #endif
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
+void Widget::warp(Vector& vv)
+{
   XXWarpPointer(display, None, None, 0, 0, 0, 0, vv[0], vv[1]);
+}
+
+void Widget::warpTo(Vector& vv)
+{
+  XXWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
+}
+
 #endif
 
 #ifdef _WIN32
+void Widget::warp(Vector& vv)
+{
   Window root, child;
   int rootx,rooty,winx,winy;
   unsigned int msk;
@@ -626,19 +650,35 @@ void Widget::warp(Vector& vv)
 
   XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, 
 	       rootx-xx+vv[0], rooty-yy+vv[1]);
-#endif
 }
 
 void Widget::warpTo(Vector& vv)
 {
-#if !MAC_OSX_TK
   XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
+}
 #endif
 
-#ifdef MAC_OSX_TK
-  XXWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
-#endif
+#if (_WIN32 || MAC_OSX_TK)
+#include <tkInt.h>
+
+int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
+		       XRectangle* rects, int n, int order)
+{
+  TkRegion clipRgn = TkCreateRegion();
+
+  while (n--) {
+    XRectangle rect = *rects;
+
+    rect.x += x;
+    rect.y += y;
+    TkUnionRectWithRegion(&rect, clipRgn, clipRgn);
+    rects++;
+  }
+  TkSetRegion(d, gc, clipRgn);
+  TkDestroyRegion(clipRgn);
+  return 1;
 }
+#endif
 
 Vector Widget::TkCanvasPs(const Vector& v) {
   return Vector(v[0], Tk_CanvasPsY(canvas, v[1]));

@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "tkutil.h"
 #include "bpanda.h"
 #include "fitsimage.h"
@@ -119,6 +118,8 @@ void Bpanda::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Bpanda::renderMACOSX()
 {
   BaseBox::renderMACOSX();
@@ -138,6 +139,8 @@ void Bpanda::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Bpanda::renderWIN32()
 {
   BaseBox::renderWIN32();

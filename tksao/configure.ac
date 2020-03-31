@@ -217,7 +217,6 @@ tkutil/gridbase.C
 tkutil/ps.C
 tkutil/psutil.C
 tkutil/tkutil.C
-tkutil/tkx11.C
 widget/truecolor16.C
 widget/truecolor24.C
 widget/truecolor8.C

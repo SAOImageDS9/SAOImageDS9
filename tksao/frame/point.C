@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkx11.h"
 #include "tkutil.h"
 #include "point.h"
 #include "fitsimage.h"
@@ -295,6 +294,8 @@ void Point::renderPSLineDash()
 // MacOSX
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Point::renderMACOSX() 
 {
   renderMACOSXGC();
@@ -374,6 +375,8 @@ void Point::renderMACOSXLineDash()
 // WIN32
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Point::renderWIN32() 
 {
   renderWIN32GC();

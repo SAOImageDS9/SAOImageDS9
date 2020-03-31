@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "tkutil.h"
 #include "cpanda.h"
 #include "fitsimage.h"
@@ -121,6 +120,8 @@ void Cpanda::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Cpanda::renderMACOSX()
 {
   BaseEllipse::renderMACOSX();
@@ -140,6 +141,8 @@ void Cpanda::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Cpanda::renderWIN32()
 {
   BaseEllipse::renderWIN32();

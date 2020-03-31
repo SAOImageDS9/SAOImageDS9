@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h" // macos
 #include "polygon.h"
 #include "fitsimage.h"
 
@@ -98,6 +97,8 @@ void Polygon::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Polygon::renderMACOSX()
 {
   renderMACOSXGC();
@@ -120,6 +121,8 @@ void Polygon::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Polygon::renderWIN32()
 {
   renderWIN32GC();

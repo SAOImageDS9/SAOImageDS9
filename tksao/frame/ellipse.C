@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "ellipse.h"
 #include "fitsimage.h"
 
@@ -74,6 +73,8 @@ void Ellipse::renderPSDraw()
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Ellipse::renderMACOSXDraw()
 {
   if (fill_)
@@ -84,6 +85,8 @@ void Ellipse::renderMACOSXDraw()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Ellipse::renderWIN32Draw()
 {
   if (fill_)

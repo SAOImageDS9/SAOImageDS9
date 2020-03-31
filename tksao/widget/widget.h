@@ -167,6 +167,8 @@ class Widget {
 
   void warp(Vector&);
   void warpTo(Vector&);
+  int setClipRectangles(Display *d, GC gc, int x, int y,
+			XRectangle* rects, int n, int order);
 
   Vector TkCanvasPs(const Vector&);
   void psColor(PSColorSpace mode, XColor* clr);

@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "box.h"
 #include "fitsimage.h"
 
@@ -63,6 +62,8 @@ void Box::renderPSDraw(int ii)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Box::renderMACOSXDraw(Vector* vv)
 {
   if (fill_)
@@ -73,6 +74,8 @@ void Box::renderMACOSXDraw(Vector* vv)
 #endif
 
 #ifdef __WIN32
+#include <win32xlib.h>
+
 void Box::renderWIN32Draw(Vector* vv)
 {
   if (fill_)

@@ -5,7 +5,6 @@
 #include <tkInt.h>
 
 #include "util.h"
-#include "tkx11.h" // macos
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"
@@ -1410,25 +1409,25 @@ void Base::updateGCs()
   XSetLineAttributes(display, pannerGC, 1, LineSolid, CapButt, JoinMiter);
 
   // highliteGC
-  XSetClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, highliteGC, getColor("blue"));
   XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
 
   // markerGC
-  XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
-  XSetClipRectangles(display, markerGCXOR_, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, markerGCXOR_, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, markerGCXOR_, getColor("white"));
 
   // selectGC
   x11Dash(selectGCXOR,1);
-  XSetClipRectangles(display, selectGCXOR, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, selectGCXOR, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, selectGCXOR, getColor("white"));
 
   // gridGC
-  XSetClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
 
   // contourGC
-  XSetClipRectangles(display, contourGC_, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, contourGC_, 0, 0, rectWidget, 1, Unsorted);
   XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 }
 
@@ -1823,6 +1822,8 @@ void Base::ximageToPixmapMagnifier()
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Base::macosx()
 {
   // clip rect
@@ -1932,6 +1933,8 @@ void Base::macosxPrintCmd()
 #endif
 
 #ifdef __WIN32
+#include <win32xlib.h>
+
 void Base::win32()
 {
   // clip rect

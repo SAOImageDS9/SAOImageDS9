@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkx11.h"
 #include "ruler.h"
 #include "fitsimage.h"
 
@@ -181,6 +180,8 @@ void Ruler::renderPSGC(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Ruler::renderMACOSX()
 {
   renderMACOSXGC();
@@ -236,6 +237,8 @@ void Ruler::renderMACOSXGC()
 
 // WIN32
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Ruler::renderWIN32()
 {
   renderWIN32GC();

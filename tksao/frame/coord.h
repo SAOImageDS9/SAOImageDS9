@@ -12,6 +12,8 @@
 #include <iomanip>
 using namespace std;
 
+#define STRCMP(which,str,cnt) (!strncmp(toConstLower(which), str, cnt) && strlen(which)==cnt)
+
 class FitsImage;
 
 class Coord {

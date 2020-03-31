@@ -3,10 +3,17 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkx11.h"
 #include "contour.h"
 #include "base.h"
 #include "context.h"
+
+#ifdef MAC_OSX_TK
+#include <macosxlib.h>
+#endif
+
+#ifdef __WIN32
+#include <win32lib.h>
+#endif
 
 // ContourLevel
 ContourLevel::ContourLevel(Base* pp, double lev,

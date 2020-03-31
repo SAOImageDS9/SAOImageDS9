@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkx11.h"
 #include "marker.h"
 #include "framebase.h"
 #include "frame3dbase.h"
@@ -474,6 +473,8 @@ void Marker::renderPSLineNoDash()
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Marker::macosx(int tt)
 {
   if (tt)
@@ -553,6 +554,8 @@ void Marker::renderMACOSXLineNoDash()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Marker::win32(int tt)
 {
   if (tt)

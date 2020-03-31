@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "tkutil.h"
 #include "baseellipse.h"
 #include "fitsimage.h"
@@ -573,6 +572,8 @@ void BaseEllipse::renderPSInclude(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void BaseEllipse::renderMACOSX() {
   Vector r = annuli_[numAnnuli_-1];
   Vector z = parent->zoom();
@@ -723,6 +724,8 @@ void BaseEllipse::renderMACOSXInclude()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void BaseEllipse::renderWIN32() {
   Vector r = annuli_[numAnnuli_-1];
   Vector z = parent->zoom();

@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "tkutil.h"
 #include "basebox.h"
 #include "fitsimage.h"
@@ -103,6 +102,8 @@ void BaseBox::renderPSFillDraw(int ii)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void BaseBox::renderMACOSX()
 {
   renderMACOSXGC();
@@ -125,6 +126,8 @@ void BaseBox::renderMACOSXDraw(Vector* vv)
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void BaseBox::renderWIN32()
 {
   renderWIN32GC();

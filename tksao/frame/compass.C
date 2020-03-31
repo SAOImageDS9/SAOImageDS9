@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkx11.h"
 #include "tkutil.h"
 #include "compass.h"
 #include "fitsimage.h"
@@ -256,6 +255,8 @@ void Compass::renderPSGC(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Compass::renderMACOSX()
 {
   renderMACOSXGC();
@@ -321,6 +322,8 @@ void Compass::renderMACOSXGC()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Compass::renderWIN32()
 {
   renderWIN32GC();

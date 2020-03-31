@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "tkutil.h"
 #include "text.h"
 #include "fitsimage.h"
@@ -93,6 +92,8 @@ void Text::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Text::renderMACOSX()
 {
   renderMACOSXGC();
@@ -121,6 +122,8 @@ void Text::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32xlib.h>
+
 void Text::renderWIN32()
 {
   renderWIN32GC();

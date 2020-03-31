@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "tkx11.h"
 #include "tkutil.h"
 #include "gridbase.h"
 #include "attribute.h"
@@ -267,6 +266,8 @@ void GridBase::psColor(Attribute* attr)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 int GridBase::macosxLine(int n, float* x, float* y)
 {
   if (n<2 || !x || !y)
@@ -317,6 +318,8 @@ int GridBase::macosxText(const char* txt, float x, float y,
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 int GridBase::win32Line(int n, float* x, float* y)
 {
   if (n<2 || !x || !y)

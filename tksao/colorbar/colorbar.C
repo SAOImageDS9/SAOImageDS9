@@ -5,7 +5,6 @@
 #include <fstream>
 
 #include "util.h"
-#include "tkx11.h"
 #include "colorbar.h"
 #include "ps.h"
 #include "psutil.h"
@@ -808,6 +807,8 @@ void Colorbar::tagSaveCmd(const char* fn)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Colorbar::macosx(float scale, int width, int height, 
 		      const Vector& v, const Vector& s)
 {
@@ -851,6 +852,8 @@ void Colorbar::macosx(float scale, int width, int height,
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Colorbar::win32(float scale, int width, int height, 
 		      const Vector& v, const Vector& s)
 {

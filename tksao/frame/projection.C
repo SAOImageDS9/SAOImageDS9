@@ -2,7 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "tkx11.h"
 #include "projection.h"
 #include "fitsimage.h"
 
@@ -126,6 +125,8 @@ void Projection::renderPSGC(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Projection::renderMACOSX()
 {
   renderMACOSXGC();
@@ -162,6 +163,8 @@ void Projection::renderMACOSXGC()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Projection::renderWIN32()
 {
   renderWIN32GC();

@@ -5,7 +5,6 @@
 #include <tkInt.h>
 
 #include "util.h"
-#include "tkx11.h"
 #include "tkutil.h"
 #include "frame3dbase.h"
 #include "fitsimage.h"
@@ -752,7 +751,7 @@ void Frame3dBase::updateGCs()
     threedGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
     XSetLineAttributes(display, threedGC, 1, LineSolid, CapButt, JoinMiter);
   }
-  XSetClipRectangles(display, threedGC, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, threedGC, 0, 0, rectWidget, 1, Unsorted);
 }
 
 void Frame3dBase::updateMatrices()
@@ -1242,6 +1241,8 @@ void Frame3dBase::ximageToPixmapMagnifier()
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Frame3dBase::macosxLine(Vector& ss, Vector& tt, int dd)
 {
   if (dd)
@@ -1337,6 +1338,8 @@ void Frame3dBase::macosxHighlite()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Frame3dBase::win32Line(Vector& ss, Vector& tt, int dd)
 {
   if (dd)

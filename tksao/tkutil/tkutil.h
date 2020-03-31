@@ -18,8 +18,6 @@
 #include <iomanip>
 using namespace std;
 
-#define STRCMP(which,str,cnt) (!strncmp(toConstLower(which), str, cnt) && strlen(which)==cnt)
-
 #ifndef __CYGWIN__
 static const double M_TWOPI = 2*M_PI;
 #endif

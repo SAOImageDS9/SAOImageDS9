@@ -355,6 +355,16 @@ proc CATLoadTSVFile {varname} {
     }
 }
 
+proc CATLoadFITSFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog catfitsfbox]
+    if {$fn != {}} {
+	CATLoadFn $varname $fn FITSRead
+    }
+}
+
 # used by backup
 proc CATLoadFn {varname fn reader} {
     upvar #0 $varname var
@@ -1010,7 +1020,6 @@ proc CatalogCmdLoad {fn reader} {
     if {$fn != {}} {
 	CATDialog cattool {} {} {} none
 	CATLoadFn [lindex $icat(cats) end] $fn $reader
-	FileLast rdbfbox $fn
     }
 }
 

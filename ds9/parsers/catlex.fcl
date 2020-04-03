@@ -41,6 +41,7 @@ error	    {return $ERROR_}
 export	    {return $EXPORT_}
 file	    {return $FILE_}
 filter	    {return $FILTER_}
+fits	    {return $FITS_}
 function    {return $FUNCTION_}
 header	    {return $HEADER_}
 hide	    {return $HIDE_}
@@ -60,6 +61,7 @@ psky	    {return $PSKY_}
 psystem	    {return $PSYSTEM_}
 ra	    {return $RA_}
 radius	    {return $RADIUS_}
+rdb	    {return $RDB_}
 regions	    {return $REGIONS_}
 remove	    {return $REMOVE_}
 retrieve    {return $RETRIEVE_}

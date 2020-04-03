@@ -168,6 +168,8 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATLoadRDBFile $varname]
     $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list CATLoadTSVFile $varname]
+    $mb.file.import add command -label "[msgcat::mc {FITS}]..." \
+	-command [list CATLoadFITSFile $varname]
 
     # Export
     menu $mb.file.export

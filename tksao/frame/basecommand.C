@@ -795,7 +795,7 @@ void Base::fitsyHasExtCmd(const char* fn)
     return;
   }
 
-  FitsFile* ext = new FitsFitsMMap(fn, FitsFile::EXACT);
+  FitsFile* ext = new FitsFitsMMap(fn, FitsFile::EXACTIMAGE);
   if (ext->isValid())
     Tcl_AppendResult(interp, "1", NULL);
   else

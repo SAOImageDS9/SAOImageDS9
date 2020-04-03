@@ -161,6 +161,16 @@ proc InitDialogBox {} {
 			       [list [::msgcat::mc {TSV}] {*.csv}] \
 			      ]
 
+    global catfitsfbox
+    set catfitsfbox(file) {cat.fits}
+    set catfitsfbox(dir) {}
+    set catfitsfbox(types) [list \
+				 [list {FITS} {*.fits}] \
+				 [list {FITS} {*.fit}] \
+				 [list {FITS} {*.fts}] \
+				 [list {FITS} {*.fits.gz}] \
+				]
+
     global pixelfbox
     set pixelfbox(file) {ds9.pix}
     set pixelfbox(dir) {}

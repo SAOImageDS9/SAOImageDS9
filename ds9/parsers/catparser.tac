@@ -46,6 +46,7 @@
 %token ERROR_
 %token FILE_
 %token FILTER_
+%token FITS_
 %token FUNCTION_
 %token HEADER_
 %token HIDE_
@@ -65,6 +66,7 @@
 %token PSYSTEM_
 %token RA_
 %token RADIUS_
+%token RDB_
 %token REGIONS_
 %token REMOVE_
 %token RETRIEVE_
@@ -212,10 +214,12 @@ matchReturn : 1AND2_ {set _ 1and2}
 
 reader : XML_ {set _ VOTRead}
  | VOT_ {set _ VOTRead}
+ | RDB_ {set _ starbase_read}
  | SB_ {set _ starbase_read}
  | STARBASE_ {set _ starbase_read}
  | CSV_ {set _ TSVRead}
  | TSV_ {set _ TSVRead}
+ | FITS_ {set _ FITSRead}
  ;
 
 samp : {CatalogCmdSAMP}
@@ -292,6 +296,7 @@ symbolCol : numeric {set _ $1}
 
 writer : XML_ {set _ VOTWrite}
  | VOT_ {set _ VOTWrite}
+ | RDB_ {set _ starbase_write}
  | SB_ {set _ starbase_write}
  | STARBASE_ {set _ starbase_write}
  | CSV_ {set _ TSVWrite}

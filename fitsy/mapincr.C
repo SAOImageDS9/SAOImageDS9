@@ -275,10 +275,34 @@ FitsFitsMapIncr::FitsFitsMapIncr(ScanMode mode)
   if (!valid_)
     return;
 
-  if (mode == EXACTIMAGE || pExt_ || pIndex_>-1)
-    processExactImage();
-  else
-    processRelaxImage();
+  if (pExt_ || pIndex_>-1) {
+    switch (mode) {
+    case FitsFile::EXACTIMAGE:
+    case FitsFile::RELAXIMAGE:
+      processExactImage();
+      return;
+    case FitsFile::EXACTTABLE:
+    case FitsFile::RELAXTABLE:
+      processExactTable();
+      return;
+    }
+  }
+  else {
+    switch (mode) {
+    case FitsFile::EXACTIMAGE:
+      processExactImage();
+      return;
+    case FitsFile::RELAXIMAGE:
+      processRelaxImage();
+      return;
+    case FitsFile::EXACTTABLE:
+      processExactTable();
+      return;
+    case FitsFile::RELAXTABLE:
+      processRelaxTable();
+      return;
+    }
+  }
 }
 
 void FitsFitsMapIncr::processExactImage()
@@ -367,9 +391,7 @@ void FitsFitsMapIncr::processRelaxImage()
     return;
   }
 
-  if (head_ &&
-      head_->isValid() && 
-      head_->naxes() > 0 && 
+  if (head_->naxes() > 0 && 
       head_->naxis(0) > 0 && 
       head_->naxis(1) > 0) {
     found();
@@ -425,6 +447,108 @@ void FitsFitsMapIncr::processRelaxImage()
 
     // else, check for bin table with keyword NSIDE (also HEALPIX)
     if (head_->isBinTable() && head_->find("NSIDE")) {
+      found();
+      return;
+    }
+
+    dataSkipBlock(head_->datablocks());
+    delete head_;
+    head_ = NULL;
+  }
+
+  // did not find anything, bail out
+  error();
+}
+
+void FitsFitsMapIncr::processExactTable()
+{
+  // we are looking for an extension
+  // keep the primary header
+  primary_ = headRead();
+  managePrimary_ = 1;
+  if (!(primary_  && primary_->isValid())) {
+    error();
+    return;
+  }
+  dataSkipBlock(primary_->datablocks());
+
+  if (pExt_) {
+    while (seek_ < filesize_) {
+      head_ = headRead();
+      if (!(head_ && head_->isValid())) {
+	error();
+	return;
+      }
+      ext_++;
+
+      if (head_->extname()) {
+	char* a = toUpper(head_->extname());
+	char* b = toUpper(pExt_);
+	if (!strncmp(a,b,strlen(b))) {
+	  delete [] a;
+	  delete [] b;
+	  found();
+	  return;
+	}
+	delete [] a;
+	delete [] b;
+      }
+      dataSkipBlock(head_->datablocks());
+      delete head_;
+      head_ = NULL;
+    }
+  }
+  else {
+    for (int i=1; i<pIndex_ && seek_<filesize_; i++) {
+      head_ = headRead();
+      if (!(head_ && head_->isValid())) {
+	error();
+	return;
+      }
+      ext_++;
+
+      dataSkipBlock(head_->datablocks());
+      delete head_;
+      head_ = NULL;
+    }
+
+    head_ = headRead();
+    if (head_ && head_->isValid()) {
+      ext_++;
+      found();
+      return;
+    }
+  }
+
+  // Must have an error
+  error();
+}
+
+void FitsFitsMapIncr::processRelaxTable()
+{
+  // check primary
+  head_ = headRead();
+  if (!(head_ && head_->isValid())) {
+    error();
+    return;
+  }
+
+  // save primary and lets check extensions
+  primary_ = head_;
+  managePrimary_ = 1;
+  dataSkipBlock(head_->datablocks());
+  head_ = NULL;
+
+  while (seek_ < filesize_) {
+    head_ = headRead();
+    if (!(head_ && head_->isValid())) {
+      error();
+      return;
+    }
+    ext_++;
+
+    // check for table
+    if (head_->isBinTable()) {
       found();
       return;
     }

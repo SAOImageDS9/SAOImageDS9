@@ -59,10 +59,34 @@ FitsFitsMap::FitsFitsMap(ScanMode mode)
   if (!valid_)
     return;
 
-  if (mode == EXACTIMAGE || pExt_ || pIndex_>-1)
-    processExactImage();
-  else
-    processRelaxImage();
+  if (pExt_ || pIndex_>-1) {
+    switch (mode) {
+    case FitsFile::EXACTIMAGE:
+    case FitsFile::RELAXIMAGE:
+      processExactImage();
+      return;
+    case FitsFile::EXACTTABLE:
+    case FitsFile::RELAXTABLE:
+      processExactTable();
+      return;
+    }
+  }
+  else {
+    switch (mode) {
+    case FitsFile::EXACTIMAGE:
+      processExactImage();
+      return;
+    case FitsFile::RELAXIMAGE:
+      processRelaxImage();
+      return;
+    case FitsFile::EXACTTABLE:
+      processExactTable();
+      return;
+    case FitsFile::RELAXTABLE:
+      processRelaxTable();
+      return;
+    }
+  }
 }
 
 void FitsFitsMap::processExactImage()
@@ -78,7 +102,6 @@ void FitsFitsMap::processExactImage()
   }
 
   if (!(pExt_ || (pIndex_>0))) {
-
     // we are only looking for a primary image
     head_ = new FitsHead(here, size, FitsHead::EXTERNAL);
     if (head_->isValid()) {
@@ -224,6 +247,133 @@ void FitsFitsMap::processRelaxImage()
 
     // else, check for bin table with keyword NSIDE (also HEALPIX)
     if (head_->isBinTable() && head_->find("NSIDE")) {
+      found(here);
+      return;
+    }
+
+    here += head_->headbytes() + head_->databytes();
+    size -= head_->headbytes() + head_->databytes();
+    delete head_;
+    head_ = NULL;
+  }
+
+  // did not find anything, bail out
+  error();
+}
+
+void FitsFitsMap::processExactTable()
+{
+  // find head and data for specified unit
+  char* here = mapdata_;
+  size_t size = mapsize_;
+
+  // simple check for fits file
+  if (strncmp(mapdata_,"SIMPLE  ",8) && strncmp(mapdata_,"XTENSION",8)) {
+    error();
+    return;
+  }
+
+  // we are looking for an extension
+  // keep the primary header
+  primary_ = new FitsHead(here, size, FitsHead::EXTERNAL);
+  managePrimary_ = 1;
+  if (!primary_->isValid()) {
+    error();
+    return;
+  }
+  here += primary_->headbytes() + primary_->databytes();
+  size -= primary_->headbytes() + primary_->databytes();
+
+  if (pExt_) {
+    while (size > 0) {
+      head_ = new FitsHead(here, size, FitsHead::EXTERNAL);
+      if (!head_->isValid()) {
+	error();
+	return;
+      }
+      ext_++;
+
+      if (head_->extname()) {
+	char* a = toUpper(head_->extname());
+	char* b = toUpper(pExt_);
+	if (!strncmp(a,b,strlen(b))) {
+	  delete [] a;
+	  delete [] b;
+	  found(here);
+	  return;
+	}
+	delete [] a;
+	delete [] b;
+      }
+
+      here += head_->headbytes() + head_->databytes();
+      size -= head_->headbytes() + head_->databytes();
+      delete head_;
+      head_ = NULL;
+    }
+  }
+  else {
+    for (int i=1; i<pIndex_ && size>0; i++) {
+      head_ = new FitsHead(here, size, FitsHead::EXTERNAL);
+      if (!head_->isValid()) {
+	error();
+	return;
+      }
+      ext_++;
+
+      here += head_->headbytes() + head_->databytes();
+      size -= head_->headbytes() + head_->databytes();
+      delete head_;
+      head_ = NULL;
+    }
+
+    head_ = new FitsHead(here, size, FitsHead::EXTERNAL);
+    if (head_->isValid()) {
+      ext_++;
+      found(here);
+      return;
+    }
+  }
+
+  // Must have an error
+  error();
+}
+
+void FitsFitsMap::processRelaxTable()
+{
+  char* here = mapdata_;
+  size_t size = mapsize_;
+
+  // simple check for fits file
+  if (strncmp(mapdata_,"SIMPLE  ",8) && strncmp(mapdata_,"XTENSION",8)) {
+    error();
+    return;
+  }
+
+  // check primary
+  head_ = new FitsHead(here, size, FitsHead::EXTERNAL);
+  if (!head_->isValid()) {
+    error();
+    return;
+  }
+
+  // save primary and lets check extensions
+  here += head_->headbytes() + head_->databytes();
+  size -= head_->headbytes() + head_->databytes();
+  primary_ = head_;
+  managePrimary_ = 1;
+  head_ = NULL;
+
+  while (size > 0) {
+    head_ = new FitsHead(here, size, FitsHead::EXTERNAL);
+    if (!head_->isValid()) {
+      error();
+      return;
+    }
+    ext_++;
+
+    // check for table
+    if (head_->isBinTable()) {
       found(here);
       return;
     }

@@ -28,6 +28,8 @@ class FitsFitsMap : public virtual FitsMap {
 protected:
   void processExactImage();
   void processRelaxImage();
+  void processExactTable();
+  void processRelaxTable();
 
 public:
   FitsFitsMap(ScanMode);

@@ -51,6 +51,8 @@ class FitsFitsStream : public virtual FitsStream<T> {
 protected:
   void processExactImage();
   void processRelaxImage();
+  void processExactTable();
+  void processRelaxTable();
 
 public:
   FitsFitsStream(FitsFile::ScanMode, FitsFile::FlushMode);

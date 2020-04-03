@@ -414,10 +414,34 @@ template<class T> FitsFitsStream<T>::FitsFitsStream(FitsFile::ScanMode mode,
 
   this->flush_ = f;
 
-  if (mode == this->EXACTIMAGE || this->pExt_ || this->pIndex_>-1)
-    processExactImage();
-  else
-    processRelaxImage();
+  if (this->pExt_ || this->pIndex_>-1) {
+    switch (mode) {
+    case FitsFile::EXACTIMAGE:
+    case FitsFile::RELAXIMAGE:
+      processExactImage();
+      return;
+    case FitsFile::EXACTTABLE:
+    case FitsFile::RELAXTABLE:
+      processExactTable();
+      return;
+    }
+  }
+  else {
+    switch (mode) {
+    case FitsFile::EXACTIMAGE:
+      processExactImage();
+      return;
+    case FitsFile::RELAXIMAGE:
+      processRelaxImage();
+      return;
+    case FitsFile::EXACTTABLE:
+      processExactTable();
+      return;
+    case FitsFile::RELAXTABLE:
+      processRelaxTable();
+      return;
+    }
+  }
 }
 
 template<class T> void FitsFitsStream<T>::processExactImage()
@@ -425,7 +449,8 @@ template<class T> void FitsFitsStream<T>::processExactImage()
   if (!(this->pExt_ || (this->pIndex_>0))) {
 
     // we are only looking for a primary image
-    if ((this->head_ = this->headRead())) {
+    this->head_ = this->headRead();
+    if (this->head_ && this->head_->isValid()) {
       this->found();
       return;
     }
@@ -436,7 +461,7 @@ template<class T> void FitsFitsStream<T>::processExactImage()
     // keep the primary header
     this->primary_ = this->headRead();
     this->managePrimary_ = 1;
-    if (!this->primary_) {
+    if (!(this->primary_ && this->primary_->isValid())) {
       this->error();
       return;
     }
@@ -496,18 +521,17 @@ template<class T> void FitsFitsStream<T>::processExactImage()
 template<class T> void FitsFitsStream<T>::processRelaxImage()
 {
   // check to see if there is an image in the primary
-  if (!(this->head_ = this->headRead())) {
+  this->head_ = this->headRead();
+  if (!(this->head_ && this->head_->isValid())) {
     this->error();
     return;
   }
-  else {
-    if (this->head_->isValid() && 
-	this->head_->naxes() > 0 && 
-	this->head_->naxis(0) > 0 && 
-	this->head_->naxis(1) > 0) {
-      this->found();
-      return;
-    }
+
+  if (this->head_->naxes() > 0 &&
+      this->head_->naxis(0) > 0 &&
+      this->head_->naxis(1) > 0) {
+    this->found();
+    return;
   }
 
   // ok, no image, save primary and lets check extensions
@@ -558,6 +582,104 @@ template<class T> void FitsFitsStream<T>::processRelaxImage()
 
     // else, check for bin table with keyword NSIDE (also HEALPIX)
     if (this->head_->isBinTable() && this->head_->find("NSIDE")) {
+      this->found();
+      return;
+    }
+
+    this->dataSkipBlock(this->head_->datablocks());
+    delete this->head_;
+    this->head_ = NULL;
+  }
+
+  this->error();
+}
+
+template<class T> void FitsFitsStream<T>::processExactTable()
+{
+  // we are looking for an extension
+  // keep the primary header
+  this->primary_ = this->headRead();
+  this->managePrimary_ = 1;
+  if (!(this->primary_ && this->primary_->isValid())) {
+    this->error();
+    return;
+  }
+  this->dataSkipBlock(this->primary_->datablocks());
+
+  if (this->pExt_) {
+    while (1) {
+      if (!(this->head_ = this->headRead())) {
+	this->error();
+	return;
+      }
+      this->ext_++;
+
+      if (this->head_->extname()) {
+	char* a = toUpper(this->head_->extname());
+	char* b = toUpper(this->pExt_);
+	if (!strncmp(a,b,strlen(b))) {
+	  delete [] a;
+	  delete [] b;
+	  this->found();
+	  return;
+	}
+	delete [] a;
+	delete [] b;
+      }
+
+      this->dataSkipBlock(this->head_->datablocks());
+      delete this->head_;
+      this->head_ = NULL;
+    }
+  }
+  else {
+    for (int i=1; i<this->pIndex_; i++) {
+      if (!(this->head_ = this->headRead())) {
+	this->error();
+	return;
+      }
+      this->ext_++;
+
+      this->dataSkipBlock(this->head_->datablocks());
+      delete this->head_;
+      this->head_ = NULL;
+    }
+
+    if ((this->head_ = this->headRead())) {
+      this->ext_++;
+      this->found();
+      return;
+    }
+  }
+
+  // we must have an error
+  this->error();
+}
+
+template<class T> void FitsFitsStream<T>::processRelaxTable()
+{
+  // check primary
+  this->head_ = this->headRead();
+  if (!(this->head_ && this->head_->isValid())) {
+    this->error();
+    return;
+  }
+
+  // ok, no image, save primary and lets check extensions
+  this->primary_ = this->head_;
+  this->managePrimary_ = 1;
+  this->dataSkipBlock(this->head_->datablocks());
+  this->head_ = NULL;
+
+  // ok, no image, lets check extensions
+  while (1) {
+    if (!(this->head_ = this->headRead())) {
+      this->error();
+      return;
+    }
+    this->ext_++;
+
+    if (this->head_->isBinTable()) {
       this->found();
       return;
     }

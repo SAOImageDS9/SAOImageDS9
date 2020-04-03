@@ -59,13 +59,13 @@ FitsFitsMap::FitsFitsMap(ScanMode mode)
   if (!valid_)
     return;
 
-  if (mode == EXACT || pExt_ || pIndex_>-1)
-    processExact();
+  if (mode == EXACTIMAGE || pExt_ || pIndex_>-1)
+    processExactImage();
   else
-    processRelax();
+    processRelaxImage();
 }
 
-void FitsFitsMap::processExact()
+void FitsFitsMap::processExactImage()
 {
   // find head and data for specified unit
   char* here = mapdata_;
@@ -155,7 +155,7 @@ void FitsFitsMap::processExact()
   error();
 }
 
-void FitsFitsMap::processRelax()
+void FitsFitsMap::processRelaxImage()
 {
   char* here = mapdata_;
   size_t size = mapsize_;

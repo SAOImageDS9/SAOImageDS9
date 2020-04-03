@@ -49,8 +49,8 @@ public:
 template<class T>
 class FitsFitsStream : public virtual FitsStream<T> {
 protected:
-  void processExact();
-  void processRelax();
+  void processExactImage();
+  void processRelaxImage();
 
 public:
   FitsFitsStream(FitsFile::ScanMode, FitsFile::FlushMode);

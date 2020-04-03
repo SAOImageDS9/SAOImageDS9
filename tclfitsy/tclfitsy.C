@@ -12,6 +12,8 @@ using namespace std;
 #include <tcl.h>
 
 #include "tclfitsy.h"
+#include "file.h"
+#include "mmapincr.h"
 
 extern "C" {
   int Tclfitsy_Init(Tcl_Interp* interp);
@@ -40,18 +42,19 @@ int Tclfitsy_Init(Tcl_Interp* interp) {
     return TCL_ERROR;
 }
 
-int TclfitsyCmd(ClientData data, Tcl_Interp *interp, int argc, const char* argv[])
+int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
+		int argc, const char* argv[])
 {
   if (argc>=2) {
-    if (!strncmp(argv[1], "hello", 4))
-      return fitsy->hello(argc, argv);
+    if (!strncmp(argv[1], "table", 5))
+      return fitsy->table(argc, argv);
     else {
       Tcl_AppendResult(interp, "fitsy: unknown command: ", argv[1], NULL);
       return TCL_ERROR;
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?hello?", NULL);
+    Tcl_AppendResult(interp, "usage: fitsy ?table?", NULL);
     return TCL_ERROR;
   }
 }
@@ -65,8 +68,20 @@ TclFITSY::~TclFITSY()
 {
 }
 
-int TclFITSY::hello(int argc, const char* argv[])
+int TclFITSY::table(int argc, const char* argv[])
 {
-  cout << "world" << endl;
-  return TCL_OK;
+  if (argc==4) {
+    if (argv[2] && *argv[2]) {
+      FitsFile* fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
+      if (!fits->isValid()) {
+	cerr << "Bad" << endl;
+	return TCL_ERROR;
+      }
+      cerr << "Good" << endl;
+      return TCL_OK;
+    }
+  }
+  
+  Tcl_AppendResult(interp_, "usage: fitsy table ?filename? ?varname?", NULL);
+  return TCL_ERROR;
 }

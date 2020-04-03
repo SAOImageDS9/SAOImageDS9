@@ -275,13 +275,13 @@ FitsFitsMapIncr::FitsFitsMapIncr(ScanMode mode)
   if (!valid_)
     return;
 
-  if (mode == EXACT || pExt_ || pIndex_>-1)
-    processExact();
+  if (mode == EXACTIMAGE || pExt_ || pIndex_>-1)
+    processExactImage();
   else
-    processRelax();
+    processRelaxImage();
 }
 
-void FitsFitsMapIncr::processExact()
+void FitsFitsMapIncr::processExactImage()
 {
   // simple check for fits file
   if (!(pExt_ || (pIndex_>0))) {
@@ -358,7 +358,7 @@ void FitsFitsMapIncr::processExact()
   error();
 }
 
-void FitsFitsMapIncr::processRelax()
+void FitsFitsMapIncr::processRelaxImage()
 {
   // check to see if there is an image in the primary
   head_ = headRead();
@@ -590,8 +590,8 @@ char* FitsMapIncr::page(char* ptr, size_t row)
 void FitsMapIncr::resetpage() {}
 void FitsMapIncr::error() {}
 FitsFitsMapIncr::FitsFitsMapIncr(ScanMode mode) {}
-void FitsFitsMapIncr::processExact() {}
-void FitsFitsMapIncr::processRelax() {}
+void FitsFitsMapIncr::processExactImage() {}
+void FitsFitsMapIncr::processRelaxImage() {}
 
 FitsFitsNextMapIncr::FitsFitsNextMapIncr(FitsFile* p) {}
 FitsArrMapIncr::FitsArrMapIncr() {}

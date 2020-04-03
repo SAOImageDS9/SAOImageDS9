@@ -77,7 +77,7 @@ fi
 
 TEA_ADD_SOURCES([tclfitsy.C])
 TEA_ADD_HEADERS([])
-TEA_ADD_INCLUDES([])
+TEA_ADD_INCLUDES([-I. -I${prefix}/include])
 TEA_ADD_LIBS([])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])

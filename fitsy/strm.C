@@ -414,13 +414,13 @@ template<class T> FitsFitsStream<T>::FitsFitsStream(FitsFile::ScanMode mode,
 
   this->flush_ = f;
 
-  if (mode == this->EXACT || this->pExt_ || this->pIndex_>-1)
-    processExact();
+  if (mode == this->EXACTIMAGE || this->pExt_ || this->pIndex_>-1)
+    processExactImage();
   else
-    processRelax();
+    processRelaxImage();
 }
 
-template<class T> void FitsFitsStream<T>::processExact()
+template<class T> void FitsFitsStream<T>::processExactImage()
 {
   if (!(this->pExt_ || (this->pIndex_>0))) {
 
@@ -493,7 +493,7 @@ template<class T> void FitsFitsStream<T>::processExact()
   this->error();
 }
 
-template<class T> void FitsFitsStream<T>::processRelax()
+template<class T> void FitsFitsStream<T>::processRelaxImage()
 {
   // check to see if there is an image in the primary
   if (!(this->head_ = this->headRead())) {

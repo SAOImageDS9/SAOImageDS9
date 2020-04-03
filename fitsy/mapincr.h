@@ -36,8 +36,8 @@ public:
 
 class FitsFitsMapIncr : public virtual FitsMapIncr {
 protected:
-  void processExact();
-  void processRelax();
+  void processExactImage();
+  void processRelaxImage();
 
 public:
   FitsFitsMapIncr(ScanMode);

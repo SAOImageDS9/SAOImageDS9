@@ -19,7 +19,7 @@ class OutFitsStream;
 class FitsFile {
 public:
   enum FlushMode {NOFLUSH,FLUSH};
-  enum ScanMode {RELAX, EXACT};
+  enum ScanMode {RELAXIMAGE, EXACTIMAGE, RELAXTABLE, EXACTTABLE};
   enum ArchType {NATIVE,BIG,LITTLE};
   enum EncodingType {RAW,ASCII,HEX,GZIP,BZ2,BIP,BIL,BSQ};
 

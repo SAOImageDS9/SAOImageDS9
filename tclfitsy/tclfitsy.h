@@ -13,7 +13,7 @@ class TclFITSY {
   TclFITSY(Tcl_Interp*);
   ~TclFITSY();
 
-  int hello(int, const char*[]);
+  int table(int, const char*[]);
 };
 
 extern TclFITSY* tclfitsy;

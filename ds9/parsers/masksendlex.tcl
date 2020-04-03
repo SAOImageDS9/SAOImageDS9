@@ -179,11 +179,12 @@ proc masksend::yylex {} {
     variable done_
     variable state_table_
 
-set COLOR_ 257
-set MARK_ 258
-set RANGE_ 259
-set SYSTEM_ 260
-set TRANSPARENCY_ 261
+set BLEND_ 257
+set COLOR_ 258
+set MARK_ 259
+set RANGE_ 260
+set SYSTEM_ 261
+set TRANSPARENCY_ 262
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -205,61 +206,68 @@ set TRANSPARENCY_ 261
         }
         set yyleng 0
         set matched_rule -1
-        # rule 0: color
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(color)} $yy_current_buffer match] > 0 && \
+        # rule 0: blend
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(blend)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 0
         }
-        # rule 1: colour
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(colour)} $yy_current_buffer match] > 0 && \
+        # rule 1: color
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(color)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 1
         }
-        # rule 2: mark
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(mark)} $yy_current_buffer match] > 0 && \
+        # rule 2: colour
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(colour)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
         }
-        # rule 3: range
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(range)} $yy_current_buffer match] > 0 && \
+        # rule 3: mark
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(mark)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 3
         }
-        # rule 4: system
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(system)} $yy_current_buffer match] > 0 && \
+        # rule 4: range
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(range)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 4
         }
-        # rule 5: transparency
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(transparency)} $yy_current_buffer match] > 0 && \
+        # rule 5: system
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(system)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 5
         }
-        # rule 6: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 6: transparency
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(transparency)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 6
         }
-        # rule 7: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 7: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 7
+        }
+        # rule 8: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 8
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -274,27 +282,30 @@ set TRANSPARENCY_ 261
         set numlines [expr {[llength [split $yytext "\n"]] - 1}]
         switch -- $matched_rule {
             0 {
-return $COLOR_
+return $BLEND_
             }
             1 {
 return $COLOR_
             }
             2 {
-return $MARK_
+return $COLOR_
             }
             3 {
-return $RANGE_
+return $MARK_
             }
             4 {
-return $SYSTEM_
+return $RANGE_
             }
             5 {
-return $TRANSPARENCY_
+return $SYSTEM_
             }
             6 {
-# ignore whitespace
+return $TRANSPARENCY_
             }
             7 {
+# ignore whitespace
+            }
+            8 {
 set yylval $yytext; return $yylval
             }
             default

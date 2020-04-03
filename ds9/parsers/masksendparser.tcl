@@ -61,20 +61,24 @@ proc masksend::unsetupvalues {numsyms} {
 }
 
 array set masksend::table {
-  6:0 accept
-  3:0,target 3
+  6:0 reduce
+  3:0,target 2
   0:257 shift
+  7:0 accept
   0:258 shift
-  5:0,target 5
+  5:0,target 4
   0:259 shift
   0:260 shift
   0:261 shift
-  0:262 goto
+  7:0,target 0
   0:258,target 2
+  0:262 shift
+  0:263 goto
   0:261,target 5
-  2:0,target 2
-  4:0,target 4
-  6:0,target 0
+  2:0,target 1
+  0:263,target 7
+  4:0,target 3
+  6:0,target 5
   1:0 reduce
   0:257,target 1
   2:0 reduce
@@ -82,18 +86,19 @@ array set masksend::table {
   0:259,target 3
   0:260,target 4
   4:0 reduce
-  1:0,target 1
+  1:0,target 6
   5:0 reduce
   0:262,target 6
 }
 
 array set masksend::rules {
-  0,l 263
-  1,l 262
-  2,l 262
-  3,l 262
-  4,l 262
-  5,l 262
+  0,l 264
+  1,l 263
+  2,l 263
+  3,l 263
+  4,l 263
+  5,l 263
+  6,l 263
 }
 
 array set masksend::rules {
@@ -101,70 +106,78 @@ array set masksend::rules {
   0,dc 1
   2,dc 1
   4,dc 1
+  6,dc 1
   1,dc 1
   3,dc 1
 }
 
 array set masksend::rules {
-  5,line 21
-  2,line 18
-  4,line 20
-  1,line 17
-  3,line 19
+  5,line 22
+  2,line 19
+  4,line 21
+  6,line 23
+  1,line 18
+  3,line 20
 }
 
 array set masksend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0}}
-  1 {{1 0 1}}
-  2 {{2 0 1}}
-  3 {{3 0 1}}
-  4 {{4 0 1}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6}}
-  5 {{5 0 1}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0}}
+  1 {{6 0 1}}
+  2 {{1 0 1}}
+  3 {{2 0 1}}
+  4 {{3 0 1}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7}}
+  5 {{4 0 1}}
   1,trans {}
-  6 {{0 0 1}}
+  6 {{5 0 1}}
   2,trans {}
+  7 {{0 0 1}}
   3,trans {}
   4,trans {}
   5,trans {}
   6,trans {}
+  7,trans {}
 }
 
 array set masksend::token_id_table {
-  262,title {}
+  264,line 24
   0,t 0
   0 {$}
+  262,title TRANSPARENCY
   263,title {}
+  264,title {}
   error,t 0
   error error
   258,line 9
   261,line 12
-  error,line 15
-  257 COLOR_
+  error,line 16
+  257 BLEND_
   257,t 0
-  263,line 22
-  258 MARK_
+  263,line 17
+  258 COLOR_
   258,t 0
   error,title {}
   260,t 0
-  260 SYSTEM_
-  259 RANGE_
+  260 RANGE_
+  259 MARK_
   259,t 0
   261,t 0
-  261 TRANSPARENCY_
-  262,t 1
-  262 masksend
+  261 SYSTEM_
+  262,t 0
+  262 TRANSPARENCY_
   257,line 8
   263,t 1
-  263 start'
+  263 masksend
+  264,t 1
+  264 start'
   260,line 11
-  257,title COLOR
+  257,title BLEND
   259,line 10
-  258,title MARK
-  262,line 16
-  260,title SYSTEM
-  259,title RANGE
-  261,title TRANSPARENCY
+  258,title COLOR
+  262,line 13
+  260,title RANGE
+  259,title MARK
+  261,title SYSTEM
 }
 
 proc masksend::yyparse {} {
@@ -266,6 +279,7 @@ proc masksend::yyparse {} {
                     3 { ProcessSendCmdGet2 mask low high }
                     4 { ProcessSendCmdGet mask system }
                     5 { ProcessSendCmdGet mask transparency }
+                    6 { ProcessSendCmdGet mask blend }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

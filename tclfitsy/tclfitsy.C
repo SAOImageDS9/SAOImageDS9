@@ -73,11 +73,54 @@ int TclFITSY::table(int argc, const char* argv[])
   if (argc==4) {
     if (argv[2] && *argv[2]) {
       FitsFile* fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
-      if (!fits->isValid()) {
-	cerr << "Bad" << endl;
+
+      // valid?
+      if (!fits->isValid())
 	return TCL_ERROR;
+
+      // sanity check
+      if (!fits->isBinTable())
+	return TCL_ERROR;
+
+      FitsHead* head = fits->head();
+      FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head->hdu());
+      char* ptr = (char*)fits->data();
+      int rows = hdu->rows();
+      int cols = hdu->cols();
+      int width  = hdu->width();
+      
+      ostringstream rowstr;
+      rowstr << rows << ends;
+      Tcl_SetVar2(interp_, argv[3], "Nrows", rowstr.str().c_str(),
+		  TCL_GLOBAL_ONLY);
+
+      ostringstream colstr;
+      colstr << rows << ends;
+      Tcl_SetVar2(interp_, argv[3], "Ncols" , colstr.str().c_str(),
+		  TCL_GLOBAL_ONLY);
+
+      ostringstream headstr;
+      for (int jj=0; jj<cols; jj++) {
+	FitsColumn* cc=hdu->find(jj);
+	headstr << cc->ttype() << ' ';
       }
-      cerr << "Good" << endl;
+      headstr << ends;
+      Tcl_SetVar2(interp_, argv[3], "Header" , headstr.str().c_str(),
+		  TCL_GLOBAL_ONLY);
+
+      for (int ii=0; ii<rows; ii++, ptr+=width) {
+	for (int jj=0; jj<cols; jj++) {
+	  FitsColumn* cc=hdu->find(jj);
+
+	  ostringstream index;
+	  index << ii+1 << ',' << jj+1 << ends;
+	  ostringstream value;
+	  value << cc->str(ptr) << ends;
+	  Tcl_SetVar2(interp_, argv[3], index.str().c_str(),
+		      value.str().c_str(), TCL_GLOBAL_ONLY);
+	}
+      }
+
       return TCL_OK;
     }
   }

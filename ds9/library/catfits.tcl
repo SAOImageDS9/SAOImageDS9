@@ -10,7 +10,7 @@ proc FITSRead {t fn} {
 
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "FITSRead"
+	puts stderr "FITSRead $t"
     }
 
     if {$fn == {}} {
@@ -18,19 +18,24 @@ proc FITSRead {t fn} {
     }
 
     # init db
-    set T(Nrows) 0
-    set T(Ncols) 0
     set T(Header) {}
     set T(HLines) 0
+    set T(Nrows) 0
+    set T(Ncols) 0
+    set T(Dashes) {}
+    set T(Ndshs) 0
 
-    fitsy table $fn foo
+    fitsy table $fn $t
 
-#    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(H_$n) {-}]
-#    set T(Ndshs) [llength $T(Header)]
+    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
+    set T(Ndshs) [llength $T(Header)]
 
-#    incr ${t}(HLines)
-#    set n $T(HLines)
-#    set T(H_$n) [join $T(Dashes)]
-#    starbase_colmap $t
+    incr ${t}(HLines)
+    set n $T(HLines)
+    set T(H_$n) $T(Header)
+    incr ${t}(HLines)
+    set n $T(HLines)
+    set T(H_$n) $T(Dashes)
 
+    starbase_colmap $t
 }

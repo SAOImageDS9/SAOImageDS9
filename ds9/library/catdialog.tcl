@@ -767,9 +767,12 @@ proc CATGetHeader {varname} {
 	for {set ll 1} {$ll <= $nl} {incr ll} {
 	    append hdr "$T(H_$ll)\n"
 	}
+
+	# disable dumping cols stats
+	return $hdr
+
 	append hdr "\n"
 
-	# dump cols stats
 	set nc $T(Ncols)
 	for {set cc 1} {$cc <= $nc} {incr cc} {
 	    append hdr "# name=[lindex $T(Header) [expr $cc-1]] "

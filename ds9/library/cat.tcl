@@ -1018,7 +1018,7 @@ proc CatalogCmdLoad {fn reader} {
     global icat
 
     if {$fn != {}} {
-	CATDialog cattool {} {} {} none
+	CATDialog cattool {} {} [msgcat::mc {Catalog Tool}] none
 	CATLoadFn [lindex $icat(cats) end] $fn $reader
     }
 }

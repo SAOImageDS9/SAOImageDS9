@@ -84,21 +84,32 @@ int TclFITSY::table(int argc, const char* argv[])
 
       FitsHead* head = fits->head();
       FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head->hdu());
+
+      // header
+      char* cc=head->first();
+      int cnt=0;
+      while (cc) {
+	cnt++;
+	ostringstream idstr;
+	idstr << "H_" << cnt << ends;
+	char buf[81];
+	strncpy(buf,cc,80);
+	buf[80]='\0';
+	Tcl_SetVar2(interp_, argv[3], idstr.str().c_str(), buf,
+		    TCL_GLOBAL_ONLY);
+	cc = head->next();
+      }
+      ostringstream ncardstr;
+      ncardstr << head->ncard() << ends;
+      Tcl_SetVar2(interp_, argv[3], "HLines", ncardstr.str().c_str(),
+		  TCL_GLOBAL_ONLY);
+
+      // cols
       char* ptr = (char*)fits->data();
       int rows = hdu->rows();
       int cols = hdu->cols();
       int width  = hdu->width();
       
-      ostringstream rowstr;
-      rowstr << rows << ends;
-      Tcl_SetVar2(interp_, argv[3], "Nrows", rowstr.str().c_str(),
-		  TCL_GLOBAL_ONLY);
-
-      ostringstream colstr;
-      colstr << rows << ends;
-      Tcl_SetVar2(interp_, argv[3], "Ncols" , colstr.str().c_str(),
-		  TCL_GLOBAL_ONLY);
-
       ostringstream headstr;
       for (int jj=0; jj<cols; jj++) {
 	FitsColumn* cc=hdu->find(jj);
@@ -108,6 +119,12 @@ int TclFITSY::table(int argc, const char* argv[])
       Tcl_SetVar2(interp_, argv[3], "Header" , headstr.str().c_str(),
 		  TCL_GLOBAL_ONLY);
 
+      ostringstream rowstr;
+      rowstr << rows << ends;
+      Tcl_SetVar2(interp_, argv[3], "Nrows", rowstr.str().c_str(),
+		  TCL_GLOBAL_ONLY);
+
+      // data
       for (int ii=0; ii<rows; ii++, ptr+=width) {
 	for (int jj=0; jj<cols; jj++) {
 	  FitsColumn* cc=hdu->find(jj);

@@ -289,6 +289,73 @@ proc VOTElemStartCB {t name attlist args} {
 	}
 	TABLEDATA {
 	    # ok, we now need to build the header
+	    starbase_colmap $t
+
+	    incr ${t}(HLines)
+	    set n $T(HLines)
+	    set T(H_$n) {}
+
+	    set nc $T(Ncols)
+	    for {set cc 1} {$cc <= $nc} {incr cc} {
+		set hdr "# name=[lindex $T(Header) [expr $cc-1]] "
+
+		if {[info exists ${t}(DataType)]} {
+		    append hdr "datatype=[lindex $T(DataType) [expr $cc-1]] "
+		}
+
+		if {[info exists ${t}(Id)]} {
+		    if {[lindex $T(Id) [expr $cc-1]] != {}} {
+			append hdr "id=[lindex $T(Id) [expr $cc-1]] "
+		    }
+		}
+
+		if {[info exists ${t}(ArraySize)]} {
+		    if {[lindex $T(ArraySize) [expr $cc-1]] != {}} {
+			append hdr "arraysize=[lindex $T(ArraySize) [expr $cc-1]] "
+		    }
+		}
+
+		if {[info exists ${t}(Width)]} {
+		    if {[lindex $T(Width) [expr $cc-1]] != {}} {
+			append hdr "width=[lindex $T(Width) [expr $cc-1]] "
+		    }
+		}
+
+		if {[info exists ${t}(Precision)]} {
+		    if {[lindex $T(Precision) [expr $cc-1]] != {}} {
+			append hdr "precision=[lindex $T(Precision) [expr $cc-1]] "
+		    }
+		}
+
+		if {[info exists ${t}(Unit)]} {
+		    if {[lindex $T(Unit) [expr $cc-1]] != {}} {
+			append hdr "unit=[lindex $T(Unit) [expr $cc-1]] "
+		    }
+		}
+
+		if {[info exists ${t}(Ref)]} {
+		    if {[lindex $T(Ref) [expr $cc-1]] != {}} {
+			append hdr "ref=[lindex $T(Ref) [expr $cc-1]] "
+		    }
+		}
+
+		if {[info exists ${t}(Ucd)]} {
+		    if {[lindex $T(Ucd) [expr $cc-1]] != {}} {
+			append hdr "ucd=[lindex $T(Ucd) [expr $cc-1]] "
+		    }
+		}
+
+		if {[info exists ${t}(Description)]} {
+		    if {[lindex $T(Description) [expr $cc-1]] != {}} {
+			append hdr "[lindex $T(Description) [expr $cc-1]] "
+		    }
+		}
+
+		incr ${t}(HLines)
+		set n $T(HLines)
+		set T(H_$n) $hdr
+	    }
+
 	    incr ${t}(HLines)
 	    set n $T(HLines)
 	    set T(H_$n) [join $T(Header)]
@@ -299,8 +366,6 @@ proc VOTElemStartCB {t name attlist args} {
 	    incr ${t}(HLines)
 	    set n $T(HLines)
 	    set T(H_$n) [join $T(Dashes)]
-
-	    starbase_colmap $t
 	}
 	TR {
 	    incr ${t}(Nrows)

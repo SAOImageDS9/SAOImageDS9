@@ -758,6 +758,14 @@ tclxml_LIB_FILE
 tclxml_SRC_DIR
 tclxml_BIN_DIR
 tclxml_VERSION
+tclfitsy_STUB_LIB_PATH
+tclfitsy_STUB_LIB_SPEC
+tclfitsy_STUB_LIB_FILE
+tclfitsy_LIB_SPEC
+tclfitsy_LIB_FILE
+tclfitsy_SRC_DIR
+tclfitsy_BIN_DIR
+tclfitsy_VERSION
 tcliis_STUB_LIB_PATH
 tcliis_STUB_LIB_SPEC
 tcliis_STUB_LIB_FILE
@@ -790,6 +798,30 @@ tifftcl_LIB_FILE
 tifftcl_SRC_DIR
 tifftcl_BIN_DIR
 tifftcl_VERSION
+fitsy_STUB_LIB_PATH
+fitsy_STUB_LIB_SPEC
+fitsy_STUB_LIB_FILE
+fitsy_LIB_SPEC
+fitsy_LIB_FILE
+fitsy_SRC_DIR
+fitsy_BIN_DIR
+fitsy_VERSION
+vector_STUB_LIB_PATH
+vector_STUB_LIB_SPEC
+vector_STUB_LIB_FILE
+vector_LIB_SPEC
+vector_LIB_FILE
+vector_SRC_DIR
+vector_BIN_DIR
+vector_VERSION
+util_STUB_LIB_PATH
+util_STUB_LIB_SPEC
+util_STUB_LIB_FILE
+util_LIB_SPEC
+util_LIB_FILE
+util_SRC_DIR
+util_BIN_DIR
+util_VERSION
 TK_XINCLUDES
 TK_LIBS
 TK_STUB_LIB_SPEC
@@ -883,10 +915,14 @@ ac_user_opts='
 enable_option_checking
 with_tcl
 with_tk
+with_util
+with_vector
+with_fitsy
 with_tifftcl
 with_jpegtcl
 with_zlibtcl
 with_tcliis
+with_tclfitsy
 with_tclxml
 with_tls
 with_tkblt
@@ -1546,10 +1582,14 @@ Optional Packages:
   --with-tcl              directory containing tcl configuration
                           (tclConfig.sh)
   --with-tk               directory containing tk configuration (tkConfig.sh)
+  --with-util              directory containing util configuration (utilConfig.sh)
+  --with-vector              directory containing vector configuration (vectorConfig.sh)
+  --with-fitsy              directory containing fitsy configuration (fitsyConfig.sh)
   --with-tifftcl              directory containing tifftcl configuration (tifftclConfig.sh)
   --with-jpegtcl              directory containing jpegtcl configuration (jpegtclConfig.sh)
   --with-zlibtcl              directory containing zlibtcl configuration (zlibtclConfig.sh)
   --with-tcliis              directory containing tcliis configuration (tcliisConfig.sh)
+  --with-tclfitsy              directory containing tclfitsy configuration (tclfitsyConfig.sh)
   --with-tclxml              directory containing tclxml configuration (tclxmlConfig.sh)
   --with-tls              directory containing tls configuration (tlsConfig.sh)
   --with-tkblt              directory containing tkblt configuration (tkbltConfig.sh)
@@ -3832,6 +3872,753 @@ $as_echo "#define MAC_OSX_TK 1" >>confdefs.h
 
 
     #
+    # Ok, lets find the util configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-util
+    #
+
+    if test x"${no_util}" = x ; then
+	# we reset no_util in case something fails here
+	no_util=true
+
+# Check whether --with-util was given.
+if test "${with_util+set}" = set; then :
+  withval=$with_util; with_utilconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for util configuration" >&5
+$as_echo_n "checking for util configuration... " >&6; }
+	if ${ac_cv_c_utilconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-util was specified.
+	    if test x"${with_utilconfig}" != x ; then
+		case ${with_utilconfig} in
+		    */utilConfig.sh )
+			if test -f ${with_utilconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-util argument should refer to directory containing utilConfig.sh, not to utilConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-util argument should refer to directory containing utilConfig.sh, not to utilConfig.sh itself" >&2;}
+			    with_utilconfig=`echo ${with_utilconfig} | sed 's!/utilConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_utilconfig}/utilConfig.sh" ; then
+		    ac_cv_c_utilconfig=`(cd ${with_utilconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_utilconfig} directory doesn't contain utilConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private util installation
+	    if test x"${ac_cv_c_utilconfig}" = x ; then
+		for i in \
+			../util \
+			`ls -dr ../util*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../util*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../util*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../util*[0-9].[0-9]* 2>/dev/null` \
+			../../util \
+			`ls -dr ../../util*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../util*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../util*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../util*[0-9].[0-9]* 2>/dev/null` \
+			../../../util \
+			`ls -dr ../../../util*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../util*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../util*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../util*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../util \
+			`ls -dr ${srcdir}/../util*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../util*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../util*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../util*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/utilConfig.sh" ; then
+			ac_cv_c_utilconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/utilConfig.sh" ; then
+			ac_cv_c_utilconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_utilconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/pkg/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/utilConfig.sh" ; then
+			ac_cv_c_utilconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_utilconfig}" = x ; then
+	    util_BIN_DIR="# no util configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find util configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find util configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_util=
+	    util_BIN_DIR=${ac_cv_c_utilconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $util_BIN_DIR/utilConfig.sh" >&5
+$as_echo "found $util_BIN_DIR/utilConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${util_BIN_DIR}/utilConfig.sh" >&5
+$as_echo_n "checking for existence of ${util_BIN_DIR}/utilConfig.sh... " >&6; }
+
+    if test -f "${util_BIN_DIR}/utilConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${util_BIN_DIR}/utilConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the util_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable util_LIB_SPEC will be set to the value
+    # of util_BUILD_LIB_SPEC. An extension should make use of util_LIB_SPEC
+    # instead of util_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${util_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for util" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for util" >&2;}
+        util_LIB_SPEC=${util_BUILD_LIB_SPEC}
+        util_STUB_LIB_SPEC=${util_BUILD_STUB_LIB_SPEC}
+        util_STUB_LIB_PATH=${util_BUILD_STUB_LIB_PATH}
+        util_INCLUDE_SPEC=${util_BUILD_INCLUDE_SPEC}
+        util_LIBRARY_PATH=${util_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${util_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For UTIL_STUB library for LIBS" >&5
+$as_echo_n "checking For UTIL_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${UTIL_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${UTIL_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using UTIL_STUB_LIB_PATH ${UTIL_STUB_LIB_PATH}" >&5
+$as_echo "using UTIL_STUB_LIB_PATH ${UTIL_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${UTIL_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using UTIL_STUB_LIB_SPEC ${UTIL_STUB_LIB_SPEC}" >&5
+$as_echo "using UTIL_STUB_LIB_SPEC ${UTIL_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For util_STUB library for LIBS" >&5
+$as_echo_n "checking For util_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${util_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${util_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using util_STUB_LIB_PATH ${util_STUB_LIB_PATH}" >&5
+$as_echo "using util_STUB_LIB_PATH ${util_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${util_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using util_STUB_LIB_SPEC ${util_STUB_LIB_SPEC}" >&5
+$as_echo "using util_STUB_LIB_SPEC ${util_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the vector configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-vector
+    #
+
+    if test x"${no_vector}" = x ; then
+	# we reset no_vector in case something fails here
+	no_vector=true
+
+# Check whether --with-vector was given.
+if test "${with_vector+set}" = set; then :
+  withval=$with_vector; with_vectorconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for vector configuration" >&5
+$as_echo_n "checking for vector configuration... " >&6; }
+	if ${ac_cv_c_vectorconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-vector was specified.
+	    if test x"${with_vectorconfig}" != x ; then
+		case ${with_vectorconfig} in
+		    */vectorConfig.sh )
+			if test -f ${with_vectorconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-vector argument should refer to directory containing vectorConfig.sh, not to vectorConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-vector argument should refer to directory containing vectorConfig.sh, not to vectorConfig.sh itself" >&2;}
+			    with_vectorconfig=`echo ${with_vectorconfig} | sed 's!/vectorConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_vectorconfig}/vectorConfig.sh" ; then
+		    ac_cv_c_vectorconfig=`(cd ${with_vectorconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_vectorconfig} directory doesn't contain vectorConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private vector installation
+	    if test x"${ac_cv_c_vectorconfig}" = x ; then
+		for i in \
+			../vector \
+			`ls -dr ../vector*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../vector*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../vector*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../vector*[0-9].[0-9]* 2>/dev/null` \
+			../../vector \
+			`ls -dr ../../vector*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../vector*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../vector*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../vector*[0-9].[0-9]* 2>/dev/null` \
+			../../../vector \
+			`ls -dr ../../../vector*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../vector*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../vector*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../vector*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../vector \
+			`ls -dr ${srcdir}/../vector*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../vector*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../vector*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../vector*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/vectorConfig.sh" ; then
+			ac_cv_c_vectorconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/vectorConfig.sh" ; then
+			ac_cv_c_vectorconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_vectorconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/pkg/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/vectorConfig.sh" ; then
+			ac_cv_c_vectorconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_vectorconfig}" = x ; then
+	    vector_BIN_DIR="# no vector configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find vector configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find vector configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_vector=
+	    vector_BIN_DIR=${ac_cv_c_vectorconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $vector_BIN_DIR/vectorConfig.sh" >&5
+$as_echo "found $vector_BIN_DIR/vectorConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${vector_BIN_DIR}/vectorConfig.sh" >&5
+$as_echo_n "checking for existence of ${vector_BIN_DIR}/vectorConfig.sh... " >&6; }
+
+    if test -f "${vector_BIN_DIR}/vectorConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${vector_BIN_DIR}/vectorConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the vector_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable vector_LIB_SPEC will be set to the value
+    # of vector_BUILD_LIB_SPEC. An extension should make use of vector_LIB_SPEC
+    # instead of vector_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${vector_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for vector" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for vector" >&2;}
+        vector_LIB_SPEC=${vector_BUILD_LIB_SPEC}
+        vector_STUB_LIB_SPEC=${vector_BUILD_STUB_LIB_SPEC}
+        vector_STUB_LIB_PATH=${vector_BUILD_STUB_LIB_PATH}
+        vector_INCLUDE_SPEC=${vector_BUILD_INCLUDE_SPEC}
+        vector_LIBRARY_PATH=${vector_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${vector_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For VECTOR_STUB library for LIBS" >&5
+$as_echo_n "checking For VECTOR_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${VECTOR_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${VECTOR_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using VECTOR_STUB_LIB_PATH ${VECTOR_STUB_LIB_PATH}" >&5
+$as_echo "using VECTOR_STUB_LIB_PATH ${VECTOR_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${VECTOR_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using VECTOR_STUB_LIB_SPEC ${VECTOR_STUB_LIB_SPEC}" >&5
+$as_echo "using VECTOR_STUB_LIB_SPEC ${VECTOR_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For vector_STUB library for LIBS" >&5
+$as_echo_n "checking For vector_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${vector_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${vector_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using vector_STUB_LIB_PATH ${vector_STUB_LIB_PATH}" >&5
+$as_echo "using vector_STUB_LIB_PATH ${vector_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${vector_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using vector_STUB_LIB_SPEC ${vector_STUB_LIB_SPEC}" >&5
+$as_echo "using vector_STUB_LIB_SPEC ${vector_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the fitsy configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-fitsy
+    #
+
+    if test x"${no_fitsy}" = x ; then
+	# we reset no_fitsy in case something fails here
+	no_fitsy=true
+
+# Check whether --with-fitsy was given.
+if test "${with_fitsy+set}" = set; then :
+  withval=$with_fitsy; with_fitsyconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for fitsy configuration" >&5
+$as_echo_n "checking for fitsy configuration... " >&6; }
+	if ${ac_cv_c_fitsyconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-fitsy was specified.
+	    if test x"${with_fitsyconfig}" != x ; then
+		case ${with_fitsyconfig} in
+		    */fitsyConfig.sh )
+			if test -f ${with_fitsyconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-fitsy argument should refer to directory containing fitsyConfig.sh, not to fitsyConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-fitsy argument should refer to directory containing fitsyConfig.sh, not to fitsyConfig.sh itself" >&2;}
+			    with_fitsyconfig=`echo ${with_fitsyconfig} | sed 's!/fitsyConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_fitsyconfig}/fitsyConfig.sh" ; then
+		    ac_cv_c_fitsyconfig=`(cd ${with_fitsyconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_fitsyconfig} directory doesn't contain fitsyConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private fitsy installation
+	    if test x"${ac_cv_c_fitsyconfig}" = x ; then
+		for i in \
+			../fitsy \
+			`ls -dr ../fitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../fitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../fitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../fitsy*[0-9].[0-9]* 2>/dev/null` \
+			../../fitsy \
+			`ls -dr ../../fitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../fitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../fitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../fitsy*[0-9].[0-9]* 2>/dev/null` \
+			../../../fitsy \
+			`ls -dr ../../../fitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../fitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../fitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../fitsy*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../fitsy \
+			`ls -dr ${srcdir}/../fitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../fitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../fitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../fitsy*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/fitsyConfig.sh" ; then
+			ac_cv_c_fitsyconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/fitsyConfig.sh" ; then
+			ac_cv_c_fitsyconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_fitsyconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/pkg/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/fitsyConfig.sh" ; then
+			ac_cv_c_fitsyconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_fitsyconfig}" = x ; then
+	    fitsy_BIN_DIR="# no fitsy configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find fitsy configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find fitsy configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_fitsy=
+	    fitsy_BIN_DIR=${ac_cv_c_fitsyconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $fitsy_BIN_DIR/fitsyConfig.sh" >&5
+$as_echo "found $fitsy_BIN_DIR/fitsyConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${fitsy_BIN_DIR}/fitsyConfig.sh" >&5
+$as_echo_n "checking for existence of ${fitsy_BIN_DIR}/fitsyConfig.sh... " >&6; }
+
+    if test -f "${fitsy_BIN_DIR}/fitsyConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${fitsy_BIN_DIR}/fitsyConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the fitsy_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable fitsy_LIB_SPEC will be set to the value
+    # of fitsy_BUILD_LIB_SPEC. An extension should make use of fitsy_LIB_SPEC
+    # instead of fitsy_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${fitsy_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for fitsy" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for fitsy" >&2;}
+        fitsy_LIB_SPEC=${fitsy_BUILD_LIB_SPEC}
+        fitsy_STUB_LIB_SPEC=${fitsy_BUILD_STUB_LIB_SPEC}
+        fitsy_STUB_LIB_PATH=${fitsy_BUILD_STUB_LIB_PATH}
+        fitsy_INCLUDE_SPEC=${fitsy_BUILD_INCLUDE_SPEC}
+        fitsy_LIBRARY_PATH=${fitsy_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${fitsy_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For FITSY_STUB library for LIBS" >&5
+$as_echo_n "checking For FITSY_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${FITSY_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${FITSY_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using FITSY_STUB_LIB_PATH ${FITSY_STUB_LIB_PATH}" >&5
+$as_echo "using FITSY_STUB_LIB_PATH ${FITSY_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${FITSY_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using FITSY_STUB_LIB_SPEC ${FITSY_STUB_LIB_SPEC}" >&5
+$as_echo "using FITSY_STUB_LIB_SPEC ${FITSY_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For fitsy_STUB library for LIBS" >&5
+$as_echo_n "checking For fitsy_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${fitsy_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${fitsy_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using fitsy_STUB_LIB_PATH ${fitsy_STUB_LIB_PATH}" >&5
+$as_echo "using fitsy_STUB_LIB_PATH ${fitsy_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${fitsy_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using fitsy_STUB_LIB_SPEC ${fitsy_STUB_LIB_SPEC}" >&5
+$as_echo "using fitsy_STUB_LIB_SPEC ${fitsy_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
     # Ok, lets find the tifftcl configuration
     # First, look for one uninstalled.
     # the alternative search directory is invoked by --with-tifftcl
@@ -4815,6 +5602,255 @@ $as_echo "using tcliis_STUB_LIB_PATH ${tcliis_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tcliis_STUB_LIB_SPEC ${tcliis_STUB_LIB_SPEC}" >&5
 $as_echo "using tcliis_STUB_LIB_SPEC ${tcliis_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tclfitsy configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tclfitsy
+    #
+
+    if test x"${no_tclfitsy}" = x ; then
+	# we reset no_tclfitsy in case something fails here
+	no_tclfitsy=true
+
+# Check whether --with-tclfitsy was given.
+if test "${with_tclfitsy+set}" = set; then :
+  withval=$with_tclfitsy; with_tclfitsyconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tclfitsy configuration" >&5
+$as_echo_n "checking for tclfitsy configuration... " >&6; }
+	if ${ac_cv_c_tclfitsyconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tclfitsy was specified.
+	    if test x"${with_tclfitsyconfig}" != x ; then
+		case ${with_tclfitsyconfig} in
+		    */tclfitsyConfig.sh )
+			if test -f ${with_tclfitsyconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tclfitsy argument should refer to directory containing tclfitsyConfig.sh, not to tclfitsyConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tclfitsy argument should refer to directory containing tclfitsyConfig.sh, not to tclfitsyConfig.sh itself" >&2;}
+			    with_tclfitsyconfig=`echo ${with_tclfitsyconfig} | sed 's!/tclfitsyConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tclfitsyconfig}/tclfitsyConfig.sh" ; then
+		    ac_cv_c_tclfitsyconfig=`(cd ${with_tclfitsyconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tclfitsyconfig} directory doesn't contain tclfitsyConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tclfitsy installation
+	    if test x"${ac_cv_c_tclfitsyconfig}" = x ; then
+		for i in \
+			../tclfitsy \
+			`ls -dr ../tclfitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tclfitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tclfitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tclfitsy*[0-9].[0-9]* 2>/dev/null` \
+			../../tclfitsy \
+			`ls -dr ../../tclfitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tclfitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tclfitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tclfitsy*[0-9].[0-9]* 2>/dev/null` \
+			../../../tclfitsy \
+			`ls -dr ../../../tclfitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tclfitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tclfitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tclfitsy*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tclfitsy \
+			`ls -dr ${srcdir}/../tclfitsy*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tclfitsy*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tclfitsy*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tclfitsy*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tclfitsyConfig.sh" ; then
+			ac_cv_c_tclfitsyconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tclfitsyConfig.sh" ; then
+			ac_cv_c_tclfitsyconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tclfitsyconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/pkg/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tclfitsyConfig.sh" ; then
+			ac_cv_c_tclfitsyconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tclfitsyconfig}" = x ; then
+	    tclfitsy_BIN_DIR="# no tclfitsy configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tclfitsy configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tclfitsy configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tclfitsy=
+	    tclfitsy_BIN_DIR=${ac_cv_c_tclfitsyconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tclfitsy_BIN_DIR/tclfitsyConfig.sh" >&5
+$as_echo "found $tclfitsy_BIN_DIR/tclfitsyConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tclfitsy_BIN_DIR}/tclfitsyConfig.sh" >&5
+$as_echo_n "checking for existence of ${tclfitsy_BIN_DIR}/tclfitsyConfig.sh... " >&6; }
+
+    if test -f "${tclfitsy_BIN_DIR}/tclfitsyConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tclfitsy_BIN_DIR}/tclfitsyConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tclfitsy_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tclfitsy_LIB_SPEC will be set to the value
+    # of tclfitsy_BUILD_LIB_SPEC. An extension should make use of tclfitsy_LIB_SPEC
+    # instead of tclfitsy_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tclfitsy_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tclfitsy" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tclfitsy" >&2;}
+        tclfitsy_LIB_SPEC=${tclfitsy_BUILD_LIB_SPEC}
+        tclfitsy_STUB_LIB_SPEC=${tclfitsy_BUILD_STUB_LIB_SPEC}
+        tclfitsy_STUB_LIB_PATH=${tclfitsy_BUILD_STUB_LIB_PATH}
+        tclfitsy_INCLUDE_SPEC=${tclfitsy_BUILD_INCLUDE_SPEC}
+        tclfitsy_LIBRARY_PATH=${tclfitsy_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tclfitsy_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TCLFITSY_STUB library for LIBS" >&5
+$as_echo_n "checking For TCLFITSY_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TCLFITSY_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TCLFITSY_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TCLFITSY_STUB_LIB_PATH ${TCLFITSY_STUB_LIB_PATH}" >&5
+$as_echo "using TCLFITSY_STUB_LIB_PATH ${TCLFITSY_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TCLFITSY_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TCLFITSY_STUB_LIB_SPEC ${TCLFITSY_STUB_LIB_SPEC}" >&5
+$as_echo "using TCLFITSY_STUB_LIB_SPEC ${TCLFITSY_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tclfitsy_STUB library for LIBS" >&5
+$as_echo_n "checking For tclfitsy_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tclfitsy_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tclfitsy_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tclfitsy_STUB_LIB_PATH ${tclfitsy_STUB_LIB_PATH}" >&5
+$as_echo "using tclfitsy_STUB_LIB_PATH ${tclfitsy_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tclfitsy_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tclfitsy_STUB_LIB_SPEC ${tclfitsy_STUB_LIB_SPEC}" >&5
+$as_echo "using tclfitsy_STUB_LIB_SPEC ${tclfitsy_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

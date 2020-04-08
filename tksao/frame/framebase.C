@@ -8,7 +8,6 @@
 #include "fitsimage.h"
 #include "marker.h"
 #include "context.h"
-#include "ps.h"
 #include "sigbus.h"
 
 // Public

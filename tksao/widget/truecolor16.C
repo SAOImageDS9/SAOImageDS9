@@ -2,8 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "truecolor16.h"
 #include "util.h"
+#include "truecolor16.h"
 
 TrueColor16::TrueColor16(Visual* visual)
 {

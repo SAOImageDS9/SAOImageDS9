@@ -5,8 +5,7 @@
 #include <fstream>
 #include "fdstream.hpp"
 
-#include <tk.h>
-
+#include "util.h"
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"
@@ -796,7 +795,7 @@ void Base::fitsyHasExtCmd(const char* fn)
     return;
   }
 
-  FitsFile* ext = new FitsFitsMMap(fn, FitsFile::EXACT);
+  FitsFile* ext = new FitsFitsMMap(fn, FitsFile::EXACTIMAGE);
   if (ext->isValid())
     Tcl_AppendResult(interp, "1", NULL);
   else

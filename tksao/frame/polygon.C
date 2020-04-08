@@ -2,8 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "polygon.h"
 #include "fitsimage.h"
 
@@ -83,10 +81,10 @@ void Polygon::renderPS(PSColorSpace mode)
   vertex.head();
   Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
   str << "newpath " << endl
-      << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+      << parent->TkCanvasPs(v) << " moveto" << endl;
   while (vertex.next()) {
     Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
-    str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+    str << parent->TkCanvasPs(v) << " lineto" << endl;
   }
 
   str << "closepath ";
@@ -99,6 +97,8 @@ void Polygon::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Polygon::renderMACOSX()
 {
   renderMACOSXGC();
@@ -121,6 +121,8 @@ void Polygon::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Polygon::renderWIN32()
 {
   renderWIN32GC();

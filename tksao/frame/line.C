@@ -2,8 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "line.h"
 #include "fitsimage.h"
 
@@ -83,14 +81,16 @@ void Line::renderPS(PSColorSpace mode)
 
   ostringstream str;
   str << "newpath " 
-      << aa.TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(aa) << ' '
       << "moveto "
-      << bb.TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(bb) << ' '
       << "lineto stroke" << endl << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Line::renderMACOSX()
 {
   renderMACOSXGC();
@@ -113,6 +113,8 @@ void Line::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Line::renderWIN32()
 {
   renderWIN32GC();

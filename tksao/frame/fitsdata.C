@@ -33,6 +33,18 @@ ostream& operator<<(ostream& ss, const FitsBound& fb)
   return ss;
 }
 
+static int fCompare(const void* a, const void* b)
+{
+  float* aa = (float*)a;
+  float* bb = (float*)b;
+
+  if (*aa < *bb)
+    return -1;
+  if (*aa > *bb)
+    return 1;
+  return 0;
+}
+
 // FitsData
 
 FitsData::FitsData(FitsFile* fits, Tcl_Interp* pp)

@@ -1,5 +1,6 @@
 # tcl 8.6.8
 # tk 8.6.8
+# tclfitsy 1.0
 # tcliis 1.0
 # tcllib 1.19
 # tclsignal 1.4
@@ -64,9 +65,9 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tcliis tclxml tclzipfs tls xpa
+.PHONY	: all dirs ds9 tclfitsy tcliis tclxml tclzipfs tls xpa
 .PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
-.PHONY	: ast funtools openssl
+.PHONY	: util vector fitsy ast funtools openssl
 
 all	: saods9
 
@@ -111,6 +112,23 @@ openssl/Makefile:
 	@echo "*** $@ ***"
 	cd openssl; \
 	$(SSLCONFIG) --prefix=$(prefix)
+
+#-------------------------- tclfitsy
+
+tclfitsy: tclfitsy/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclfitsy -j $(JOBS) install
+
+tclfitsy/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd tclfitsy; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
 
 #-------------------------- tcliis
 
@@ -299,7 +317,7 @@ tkagif/Makefile :
 
 #-------------------------- tksao
 
-tksao	: ast funtools tksao/Makefile
+tksao	: tksao/Makefile
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao -j $(JOBS) install
@@ -308,6 +326,57 @@ tksao/Makefile :
 	@echo ""
 	@echo "*** $@ ***"
 	cd tksao; \
+	./configure \
+	$(WITHTK) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
+#-------------------------- util
+
+util	: util/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C util -j $(JOBS) install
+
+util/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd util; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
+#-------------------------- vector
+
+vector	: vector/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C vector -j $(JOBS) install
+
+vector/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd vector; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
+#-------------------------- fitsy
+
+fitsy	: fitsy/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C fitsy -j $(JOBS) install
+
+fitsy/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd fitsy; \
 	./configure \
 	$(WITHTK) \
 	$(PREFIX) \
@@ -327,8 +396,7 @@ ast/Makefile :
 	--without-pthreads --enable-shared=no \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
-	$(PREFIX) \
-	--disable-shared
+	$(PREFIX)
 	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
 
 ast/ast.h :
@@ -448,20 +516,22 @@ scrub :
 
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean ds9parsersclean localclean
-.PHONY	: opensslclean tcliisclean 
+.PHONY	: opensslclean tclfitsy tcliisclean 
 .PHONY	: tclxmlclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tkagifclean
-.PHONY	: tksaoclean astclean funtoolsclean tktableclean xpaclean
+.PHONY	: tktableclean xpaclean
+.PHONY	: utilclean vectorclean fitsyclean astclean funtoolsclean
+.PHONY	: tksaoclean
 
 clean	: tclclean tkclean \
 	opensslclean \
-	tcliisclean \
+	tclfitsy tcliisclean \
 	tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkagifclean tkhtml1clean \
-	tksaoclean astclean funtoolsclean ds9clean \
-	osclean dirsclean localclean scrub
+	utilclean vectorclean fitsyclean astclean funtoolsclean ds9clean \
+	tksaoclean osclean dirsclean localclean scrub
 
 dirsclean :
 	@echo ""
@@ -487,6 +557,11 @@ opensslclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C openssl clean
+
+tclfitsyclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclfitsy clean
 
 tcliisclean :
 	@echo ""
@@ -538,6 +613,21 @@ tksaoclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao clean
 
+utilclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C util clean
+
+vectorclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C vector clean
+
+fitsyclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C fitsy clean
+
 astclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -561,20 +651,25 @@ xpaclean :
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
-.PHONY	: openssldistclean tcliisdistclean 
+.PHONY	: openssldistclean tclfitsydistclean tcliisdistclean 
 .PHONY	: tclxmldistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean 
-.PHONY	: tksaodistclean astdistclean funtoolsdistclean
 .PHONY	: tktabledistclean xpadistclean
+.PHONY	: utildistclean vectordistclean fitsydistclean
+.PHONY	: astdistclean funtoolsdistclean
+.PHONY	: tksaodistclean
 
 distclean : tcldistclean tkdistclean \
-	  openssldistclean tcliisdistclean tclsignaldistclean \
+	  openssldistclean tclfitsydistclean tcliisdistclean \
+	  tclsignaldistclean \
 	  tlsdistclean tclxmldistclean xpadistclean \
 	  tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	  tkmpegdistclean tkagifdistclean tkhtml1distclean \
-	  tksaodistclean astdistclean funtoolsdistclean ds9distclean \
-	  osdistclean dirsdistclean localdistclean scrub
+	  utildistclean vectordistclean fitsydistclean astdistclean \
+	  vectordistclean fitsydistclean astdistclean \
+	  funtoolsdistclean ds9distclean \
+	  tksaodistclean osdistclean dirsdistclean localdistclean scrub
 
 dirsdistclean:
 	@echo ""
@@ -605,6 +700,12 @@ openssldistclean :
 	find openssl/apps -type l -exec rm {} \;
 	find openssl/certs/demo -type l -exec rm {} \;
 
+tclfitsydistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclfitsy distclean
+	rm -f tclfitsy/tclfitsyConfig.sh
+
 tcliisdistclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -616,6 +717,7 @@ tclxmldistclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml distclean
 	rm -f tclxml/tclxmlConfig.sh
+	rm -f tclxml/include/tclxml/tclxml.h
 
 tlsdistclean:
 	@echo ""
@@ -670,6 +772,24 @@ astdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C ast distclean
+
+utildistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C util distclean
+	rm -f util/utilConfig.sh
+
+vectordistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C vector distclean
+	rm -f vector/vectorConfig.sh
+
+fitsydistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C fitsy distclean
+	rm -f fitsy/fitsyConfig.sh
 
 funtoolsdistclean :
 	@echo ""

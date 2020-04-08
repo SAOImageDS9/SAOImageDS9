@@ -2,6 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <string.h>
+#include <math.h>
+
 #include "colorscale.h"
 
 ColorScale::ColorScale(int ss)

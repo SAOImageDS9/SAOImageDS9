@@ -5,6 +5,7 @@
 #include <fstream>
 #include "fdstream.hpp"
 
+#include "util.h"
 #include "context.h"
 #include "base.h"
 #include "fitsimage.h"

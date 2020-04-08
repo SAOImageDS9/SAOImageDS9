@@ -446,7 +446,7 @@ void BaseEllipse::renderPSCircle(PSColorSpace mode)
 
     {
       ostringstream str;
-      str << cc.TkCanvasPs(parent->canvas) << ' '
+      str << parent->TkCanvasPs(cc) << ' '
 	  << l << ' '
 	  << a1 << ' ' << a2 << ' '
 	  << "arc" << endl << ends;
@@ -538,11 +538,11 @@ void BaseEllipse::renderPSEllipseArc(double a1, double a2, Vector& rr)
   Vector tt1 = fwdMap(t1*FlipY(),Coord::CANVAS);
 
   ostringstream str;
-  str << tt0.TkCanvasPs(parent->canvas) << ' '
+  str << parent->TkCanvasPs(tt0) << ' '
       << "moveto "
-      << xx1.TkCanvasPs(parent->canvas) << ' '
-      << xx2.TkCanvasPs(parent->canvas) << ' ' 
-      << tt1.TkCanvasPs(parent->canvas) << ' '
+      << parent->TkCanvasPs(xx1) << ' '
+      << parent->TkCanvasPs(xx2) << ' ' 
+      << parent->TkCanvasPs(tt1) << ' '
       << "curveto" << endl << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
@@ -562,15 +562,17 @@ void BaseEllipse::renderPSInclude(PSColorSpace mode)
 
     ostringstream str;
     str << "newpath " 
-	<< r1.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(r1) << ' '
 	<< "moveto "
-	<< r2.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(r2) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void BaseEllipse::renderMACOSX() {
   Vector r = annuli_[numAnnuli_-1];
   Vector z = parent->zoom();
@@ -721,6 +723,8 @@ void BaseEllipse::renderMACOSXInclude()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void BaseEllipse::renderWIN32() {
   Vector r = annuli_[numAnnuli_-1];
   Vector z = parent->zoom();

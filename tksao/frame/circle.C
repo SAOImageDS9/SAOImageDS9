@@ -2,8 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "circle.h"
 #include "fitsimage.h"
 
@@ -87,6 +85,8 @@ void Circle::renderPSDraw()
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Circle::renderMACOSXDraw()
 {
   if (fill_)
@@ -97,6 +97,8 @@ void Circle::renderMACOSXDraw()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Circle::renderWIN32Draw()
 {
   if (fill_)

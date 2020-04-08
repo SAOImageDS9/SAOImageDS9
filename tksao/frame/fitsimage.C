@@ -4,6 +4,7 @@
 
 #include <pthread.h>
 
+#include "util.h"
 #include "fitsimage.h"
 #include "framebase.h"
 
@@ -174,7 +175,7 @@ FitsImageFitsAlloc::FitsImageFitsAlloc(Context* cx, Tcl_Interp* pp,
 				       FitsFile::FlushMode flush, int id)
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsAlloc(ch, FitsFile::RELAX, flush);
+  fits_ = new FitsFitsAlloc(ch, FitsFile::RELAXIMAGE, flush);
   process(fn,id);
 }
 
@@ -183,7 +184,7 @@ FitsImageFitsAllocGZ::FitsImageFitsAllocGZ(Context* cx, Tcl_Interp* pp,
 					   FitsFile::FlushMode flush, int id)
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsAllocGZ(ch, FitsFile::RELAX, flush);
+  fits_ = new FitsFitsAllocGZ(ch, FitsFile::RELAXIMAGE, flush);
   process(fn,id);
 }
 
@@ -192,7 +193,7 @@ FitsImageFitsChannel::FitsImageFitsChannel(Context* cx, Tcl_Interp* pp,
 					   FitsFile::FlushMode flush, int id) 
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsChannel(pp, ch, fn, FitsFile::RELAX, flush);
+  fits_ = new FitsFitsChannel(pp, ch, fn, FitsFile::RELAXIMAGE, flush);
   process(fn,id);
 }
 
@@ -200,7 +201,7 @@ FitsImageFitsMMap::FitsImageFitsMMap(Context* cx, Tcl_Interp* pp,
 				     const char* fn, int id)
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsMMap(fn, FitsFile::RELAX);
+  fits_ = new FitsFitsMMap(fn, FitsFile::RELAXIMAGE);
   process(fn,id);
 }
 
@@ -217,7 +218,7 @@ FitsImageFitsMMapIncr::FitsImageFitsMMapIncr(Context* cx, Tcl_Interp* pp,
 					     const char* fn, int id)
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsMMapIncr(fn, FitsFile::RELAX);
+  fits_ = new FitsFitsMMapIncr(fn, FitsFile::RELAXIMAGE);
   process(fn,id);
 }
 
@@ -228,10 +229,10 @@ FitsImageFitsShare::FitsImageFitsShare(Context* cx, Tcl_Interp* pp,
 {
   switch (type) {
   case Base::SHMID:
-    fits_ = new FitsFitsShareID(sid, fn, FitsFile::RELAX);
+    fits_ = new FitsFitsShareID(sid, fn, FitsFile::RELAXIMAGE);
     break;
   case Base::KEY:
-    fits_ = new FitsFitsShareKey(sid, fn, FitsFile::RELAX);
+    fits_ = new FitsFitsShareKey(sid, fn, FitsFile::RELAXIMAGE);
     break;
   }
   process(fn,id);
@@ -259,7 +260,7 @@ FitsImageFitsSocket::FitsImageFitsSocket(Context* cx, Tcl_Interp* pp,
 					 FitsFile::FlushMode flush, int id) 
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsSocket(s, fn, FitsFile::RELAX, flush);
+  fits_ = new FitsFitsSocket(s, fn, FitsFile::RELAXIMAGE, flush);
   process(fn,id);
 }
 
@@ -268,7 +269,7 @@ FitsImageFitsSocketGZ::FitsImageFitsSocketGZ(Context* cx, Tcl_Interp* pp,
 					     FitsFile::FlushMode flush, int id)
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsSocketGZ(s, fn, FitsFile::RELAX, flush);
+  fits_ = new FitsFitsSocketGZ(s, fn, FitsFile::RELAXIMAGE, flush);
   process(fn,id);
 }
 
@@ -276,7 +277,7 @@ FitsImageFitsVar::FitsImageFitsVar(Context* cx, Tcl_Interp* pp,
 				   const char* var, const char* fn, int id)
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsFitsVar(pp, var, fn, FitsFile::RELAX);
+  fits_ = new FitsFitsVar(pp, var, fn, FitsFile::RELAXIMAGE);
   process(fn,id);
 }
 

@@ -1,0 +1,45 @@
+# fitsyConfig.sh --
+#
+# This shell script (for sh) is generated automatically by fitsy's
+# configure script.  It will create shell variables for most of
+# the configuration options discovered by the configure script.
+# This script is intended to be included by the configure scripts
+# for fitsy extensions so that they don't have to figure this all
+# out for themselves.  This file does not duplicate information
+# already provided by tclConfig.sh, so you may need to use that
+# file in addition to this one.
+#
+# The information in this file is specific to a single platform.
+
+# fitsy's version number.
+fitsy_VERSION='@PACKAGE_VERSION@'
+
+# The name of the fitsy library (may be either a .a file or a shared library):
+fitsy_LIB_FILE=@PKG_LIB_FILE@
+
+# String to pass to linker to pick up the fitsy library from its
+# build directory.
+fitsy_BUILD_LIB_SPEC='@fitsy_BUILD_LIB_SPEC@'
+
+# String to pass to linker to pick up the fitsy library from its
+# installed directory.
+fitsy_LIB_SPEC='@fitsy_LIB_SPEC@'
+
+# The name of the fitsy stub library (a .a file):
+#fitsy_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
+
+# String to pass to linker to pick up the fitsy stub library from its
+# build directory.
+#fitsy_BUILD_STUB_LIB_SPEC='@fitsy_BUILD_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the fitsy stub library from its
+# installed directory.
+#fitsy_STUB_LIB_SPEC='@fitsy_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the fitsy stub library from its
+# build directory.
+#fitsy_BUILD_STUB_LIB_PATH='@fitsy_BUILD_STUB_LIB_PATH@'
+
+# String to pass to linker to pick up the fitsy stub library from its
+# installed directory.
+#fitsy_STUB_LIB_PATH='@fitsy_STUB_LIB_PATH@'

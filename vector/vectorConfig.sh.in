@@ -1,0 +1,45 @@
+# vectorConfig.sh --
+#
+# This shell script (for sh) is generated automatically by vector's
+# configure script.  It will create shell variables for most of
+# the configuration options discovered by the configure script.
+# This script is intended to be included by the configure scripts
+# for vector extensions so that they don't have to figure this all
+# out for themselves.  This file does not duplicate information
+# already provided by tclConfig.sh, so you may need to use that
+# file in addition to this one.
+#
+# The information in this file is specific to a single platform.
+
+# vector's version number.
+vector_VERSION='@PACKAGE_VERSION@'
+
+# The name of the vector library (may be either a .a file or a shared library):
+vector_LIB_FILE=@PKG_LIB_FILE@
+
+# String to pass to linker to pick up the vector library from its
+# build directory.
+vector_BUILD_LIB_SPEC='@vector_BUILD_LIB_SPEC@'
+
+# String to pass to linker to pick up the vector library from its
+# installed directory.
+vector_LIB_SPEC='@vector_LIB_SPEC@'
+
+# The name of the vector stub library (a .a file):
+#vector_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
+
+# String to pass to linker to pick up the vector stub library from its
+# build directory.
+#vector_BUILD_STUB_LIB_SPEC='@vector_BUILD_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the vector stub library from its
+# installed directory.
+#vector_STUB_LIB_SPEC='@vector_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the vector stub library from its
+# build directory.
+#vector_BUILD_STUB_LIB_PATH='@vector_BUILD_STUB_LIB_PATH@'
+
+# String to pass to linker to pick up the vector stub library from its
+# installed directory.
+#vector_STUB_LIB_PATH='@vector_STUB_LIB_PATH@'

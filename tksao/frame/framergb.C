@@ -4,9 +4,9 @@
 
 #include <tkInt.h>
 
+#include "util.h"
 #include "framergb.h"
 #include "fitsimage.h"
-#include "ps.h"
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"

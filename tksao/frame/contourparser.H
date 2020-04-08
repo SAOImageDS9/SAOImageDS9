@@ -180,7 +180,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 55 "frame/contourparser.Y"
+#line 56 "frame/contourparser.Y"
 {
 #define CTBUFSIZE 2048
   double real;

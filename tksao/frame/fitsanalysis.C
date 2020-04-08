@@ -4,6 +4,7 @@
 
 #include <pthread.h>
 
+#include "util.h"
 #include "analysis.h"
 #include "fitsimage.h"
 #include "context.h"

@@ -4,8 +4,8 @@
 
 #include <tkInt.h>
 
-#include "colorbarbase.h"
 #include "util.h"
+#include "colorbarbase.h"
 #include "cbgrid.h"
 #include "ps.h"
 
@@ -385,7 +385,7 @@ void ColorbarBase::updateGCs()
   rectWindow[0].height = (int)sizeWindow[1];
 
   // gridGC
-  XSetClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
 }
 
 void ColorbarBase::renderGrid()
@@ -830,6 +830,8 @@ void ColorbarBase::setColormapLevelCmd(int cc, double* ff)
 // MacOSX
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void ColorbarBase::macosxPrintCmd()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
@@ -998,6 +1000,8 @@ void ColorbarBase::macosxGridAST()
 // WIN32
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void ColorbarBase::win32PrintCmd()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;

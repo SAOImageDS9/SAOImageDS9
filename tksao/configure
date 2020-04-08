@@ -5497,55 +5497,6 @@ colorbar/parser.C
 colorbar/sao.C
 colorbar/saolex.C
 colorbar/saoparser.C
-fitsy++/alloc.C
-fitsy++/allocgz.C
-fitsy++/analysis.C
-fitsy++/block.C
-fitsy++/card.C
-fitsy++/channel.C
-fitsy++/column.C
-fitsy++/compress.C
-fitsy++/envi.C
-fitsy++/envilex.C
-fitsy++/enviparser.C
-fitsy++/file.C
-fitsy++/gzip.C
-fitsy++/hcompress.C
-fitsy++/hdecompress.c
-fitsy++/hdu.C
-fitsy++/head.C
-fitsy++/hist.C
-fitsy++/hpx.C
-fitsy++/iis.C
-fitsy++/lex.C
-fitsy++/map.C
-fitsy++/mapincr.C
-fitsy++/mmap.C
-fitsy++/mmapincr.C
-fitsy++/nrrd.C
-fitsy++/nrrdgzip.C
-fitsy++/nrrdlex.C
-fitsy++/nrrdparser.C
-fitsy++/order.C
-fitsy++/outchannel.C
-fitsy++/outfile.C
-fitsy++/outfits.C
-fitsy++/outsocket.C
-fitsy++/parser.C
-fitsy++/photo.C
-fitsy++/plio.C
-fitsy++/pliocomp.c
-fitsy++/rice.C
-fitsy++/ricecomp.c
-fitsy++/savefits.C
-fitsy++/share.C
-fitsy++/smap.C
-fitsy++/smmap.C
-fitsy++/socket.C
-fitsy++/socketgz.C
-fitsy++/sshare.C
-fitsy++/strm.C
-fitsy++/var.C
 frame/annulus.C
 frame/base.C
 frame/basebox.C
@@ -5654,19 +5605,16 @@ panner/lex.C
 panner/panner.C
 panner/pannertrue.C
 panner/parser.C
-util/attribute.C
-util/convolve.C
-util/grf.C
-util/grf3d.C
-util/grid25dbase.C
-util/grid2dbase.C
-util/grid3dbase.C
-util/gridbase.C
-util/ps.C
-util/util.C
-vector/vector.C
-vector/vector3d.C
-vector/vectorstr.C
+tkutil/attribute.C
+tkutil/convolve.C
+tkutil/grf.C
+tkutil/grf3d.C
+tkutil/grid25dbase.C
+tkutil/grid2dbase.C
+tkutil/grid3dbase.C
+tkutil/gridbase.C
+tkutil/ps.C
+tkutil/psutil.C
 widget/truecolor16.C
 widget/truecolor24.C
 widget/truecolor8.C
@@ -5718,7 +5666,7 @@ widget/widget.C
 
 
 
-    vars="-I. -I./colorbar -I./fitsy++ -I./frame -I./list -I./magnifier -I./panner -I./util -I./vector -I./widget -I${prefix}/include"
+    vars="-I. -I./colorbar -I./frame -I./list -I./magnifier -I./panner -I./tkutil -I./widget -I${prefix}/include"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

@@ -5,7 +5,7 @@
 #ifndef __fitsmask_h__
 #define __fitsmask_h__
 
-#include "util.h"
+#include "vector.h"
 
 class Base;
 class Context;

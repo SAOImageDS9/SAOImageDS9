@@ -168,6 +168,8 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATLoadRDBFile $varname]
     $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list CATLoadTSVFile $varname]
+    $mb.file.import add command -label "[msgcat::mc {FITS}]..." \
+	-command [list CATLoadFITSFile $varname]
 
     # Export
     menu $mb.file.export
@@ -595,7 +597,17 @@ proc CATAck {varname} {
 	ned {CATNEDAck $varname}
 	skybot {CATSkyBotAck $varname}
 	simbad {CATSIMBADAck $varname}
+	default {CATDefaultAck $varname}
     }
+}
+
+proc CATDefaultAck {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set msg {No Acknowledgment available}
+    SimpleTextDialog ${varname}ack [msgcat::mc {Acknowledgment}] \
+	80 10 insert top $msg
 }
 
 proc CATApply {varname sync} {
@@ -757,77 +769,16 @@ proc CATGetHeader {varname} {
     set t $var(tbldb)
     upvar #0 $t T
 
-    if {[TBLValidDB $var(tbldb)]} {
-	set hdr {}
-
-	# header
-	set nl [expr $T(HLines)-2]
-	for {set ll 1} {$ll <= $nl} {incr ll} {
-	    append hdr "$T(H_$ll)\n"
-	}
-	append hdr "\n"
-
-	# dump cols stats
-	set nc $T(Ncols)
-	for {set cc 1} {$cc <= $nc} {incr cc} {
-	    append hdr "# name=[lindex $T(Header) [expr $cc-1]] "
-	    if {[info exists ${t}(DataType)]} {
-		append hdr "datatype=[lindex $T(DataType) [expr $cc-1]] "
-	    }
-
-	    if {[info exists ${t}(Id)]} {
-		if {[lindex $T(Id) [expr $cc-1]] != {}} {
-		    append hdr "id=[lindex $T(Id) [expr $cc-1]] "
-		}
-	    }
-
-	    if {[info exists ${t}(ArraySize)]} {
-		if {[lindex $T(ArraySize) [expr $cc-1]] != {}} {
-		    append hdr "arraysize=[lindex $T(ArraySize) [expr $cc-1]] "
-		}
-	    }
-
-	    if {[info exists ${t}(Width)]} {
-		if {[lindex $T(Width) [expr $cc-1]] != {}} {
-		    append hdr "width=[lindex $T(Width) [expr $cc-1]] "
-		}
-	    }
-
-	    if {[info exists ${t}(Precision)]} {
-		if {[lindex $T(Precision) [expr $cc-1]] != {}} {
-		    append hdr "precision=[lindex $T(Precision) [expr $cc-1]] "
-		}
-	    }
-
-	    if {[info exists ${t}(Unit)]} {
-		if {[lindex $T(Unit) [expr $cc-1]] != {}} {
-		    append hdr "unit=[lindex $T(Unit) [expr $cc-1]] "
-		}
-	    }
-
-	    if {[info exists ${t}(Ref)]} {
-		if {[lindex $T(Ref) [expr $cc-1]] != {}} {
-		    append hdr "ref=[lindex $T(Ref) [expr $cc-1]] "
-		}
-	    }
-
-	    if {[info exists ${t}(Ucd)]} {
-		if {[lindex $T(Ucd) [expr $cc-1]] != {}} {
-		    append hdr "ucd=[lindex $T(Ucd) [expr $cc-1]] "
-		}
-	    }
-
-	    if {[info exists ${t}(Description)]} {
-		if {[lindex $T(Description) [expr $cc-1]] != {}} {
-		    append hdr "[lindex $T(Description) [expr $cc-1]] "
-		}
-	    }
-	    append hdr "\n"
-	}
-
-	return $hdr
+    if {![TBLValidDB $var(tbldb)]} {
+	return {}
     }
-    return {}
+
+    set hdr {}
+    set nl [expr $T(HLines)-2]
+    for {set ll 1} {$ll <= $nl} {incr ll} {
+	append hdr "$T(H_$ll)\n"
+    }
+    return $hdr
 }
 
 proc CATHeader {varname} {

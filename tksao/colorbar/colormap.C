@@ -2,8 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "colormap.h"
 #include "util.h"
+#include "colormap.h"
 
 static int squenceID = 1;
 

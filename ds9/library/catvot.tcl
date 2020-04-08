@@ -59,7 +59,7 @@ proc CATVOTHTTP {url catalog title} {
 proc CATVOTFile {fn} {
     global icat
 
-    CATDialog catvot {} {} {} none
+    CATDialog catvot {} {} [msgcat::mc {Catalog Tool}] none
     if {$fn != {}} {
  	CATLoadFn [lindex $icat(cats) end] $fn VOTRead
     }

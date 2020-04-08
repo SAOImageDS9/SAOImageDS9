@@ -4,11 +4,11 @@
 
 #include <tkInt.h>
 
+#include "util.h"
 #include "frame3dbase.h"
 #include "fitsimage.h"
 #include "marker.h"
 #include "context.h"
-#include "ps.h"
 #include "sigbus.h"
 
 Frame3dBase::Frame3dBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
@@ -580,8 +580,8 @@ void Frame3dBase::psLine(Vector& ss, Vector& tt, int dd)
     str << "[] 0 setdash" << endl;
 
   str << "newpath " 
-      << ss.TkCanvasPs(canvas) << " moveto" << endl
-      << tt.TkCanvasPs(canvas) << " lineto stroke" << endl << ends;
+      << TkCanvasPs(ss) << " moveto" << endl
+      << TkCanvasPs(tt) << " lineto stroke" << endl << ends;
 
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
@@ -750,7 +750,7 @@ void Frame3dBase::updateGCs()
     threedGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
     XSetLineAttributes(display, threedGC, 1, LineSolid, CapButt, JoinMiter);
   }
-  XSetClipRectangles(display, threedGC, 0, 0, rectWidget, 1, Unsorted);
+  setClipRectangles(display, threedGC, 0, 0, rectWidget, 1, Unsorted);
 }
 
 void Frame3dBase::updateMatrices()
@@ -1240,6 +1240,8 @@ void Frame3dBase::ximageToPixmapMagnifier()
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Frame3dBase::macosxLine(Vector& ss, Vector& tt, int dd)
 {
   if (dd)
@@ -1335,6 +1337,8 @@ void Frame3dBase::macosxHighlite()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Frame3dBase::win32Line(Vector& ss, Vector& tt, int dd)
 {
   if (dd)

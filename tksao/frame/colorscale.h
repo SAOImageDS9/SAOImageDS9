@@ -2,10 +2,15 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <string.h>
+
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+using namespace std;
+
 #ifndef __colorscale_h__
 #define __colorscale_h__
-
-#include "util.h"
 
 // 0 background (white)
 // 1-200 data, 1 lowerlimit 200 upperlimit

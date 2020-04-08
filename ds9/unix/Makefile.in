@@ -18,6 +18,10 @@ TK_LIBS		= @TK_LIBS@
 TK_LIB_SPEC	= @TK_LIB_SPEC@
 TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
 
+util_LIB_SPEC= @util_LIB_SPEC@
+vector_LIB_SPEC= @vector_LIB_SPEC@
+fitsy_LIB_SPEC= @fitsy_LIB_SPEC@
+
 tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
@@ -28,6 +32,7 @@ tkimgtiff_LIB_SPEC= @tkimgtiff_LIB_SPEC@
 tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
+tclfitsy_LIB_SPEC= @tclfitsy_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
 tclzipfs_LIB_SPEC= @tclzipfs_LIB_SPEC@
@@ -82,10 +87,8 @@ empty:=
 space:=$(empty) $(empty)
 
 SPECS	= \
-	$(jpegtcl_LIB_SPEC) \
-	$(tifftcl_LIB_SPEC) \
-	$(zlibtcl_LIB_SPEC) \
 	$(tcliis_LIB_SPEC) \
+	$(tclfitsy_LIB_SPEC) \
 	$(tclsignal_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
 	$(tclzipfs_LIB_SPEC) \
@@ -100,19 +103,25 @@ SPECS	= \
 	$(tkagif_LIB_SPEC) \
 	$(tksao_LIB_SPEC) \
 	$(tktable_LIB_SPEC) \
+	$(jpegtcl_LIB_SPEC) \
+	$(tifftcl_LIB_SPEC) \
+	$(zlibtcl_LIB_SPEC) \
+	$(fitsy_LIB_SPEC) \
+	$(vector_LIB_SPEC) \
+	$(util_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) \
 	$(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) \
 	$(TCL_LIB_SPEC)
 
 LLIBS	= \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
-	$(libdir)/libfuntools.a \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS)))) \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
-	$(libdir)/libxpa.a \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libxpa.a
 
 PREQS	= \
 	$(APPDIR) \

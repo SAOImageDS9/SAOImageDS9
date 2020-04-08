@@ -2,8 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "segment.h"
 #include "fitsimage.h"
 
@@ -65,11 +63,11 @@ void Segment::renderPS(PSColorSpace mode)
     Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
     if (first) {
       str << "newpath " << endl
-	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+	  << parent->TkCanvasPs(v) << " moveto" << endl;
       first = 0;
     }
     else
-      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+      str << parent->TkCanvasPs(v) << " lineto" << endl;
   } while (vertex.next());
 
   str << "stroke" << endl << ends;
@@ -77,6 +75,8 @@ void Segment::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Segment::renderMACOSX()
 {
   renderMACOSXGC();
@@ -95,6 +95,8 @@ void Segment::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Segment::renderWIN32()
 {
   renderWIN32GC();

@@ -2,9 +2,10 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "colorbarrgb.h"
 #include "util.h"
+#include "colorbarrgb.h"
 #include "ps.h"
+#include "psutil.h"
 
 ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
   : ColorbarBase(i,c,item)
@@ -331,6 +332,8 @@ void ColorbarRGB::setRGBChannelCmd(const char* c)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void ColorbarRGB::macosx(float scale, int width, int height, 
 			 const Vector& v, const Vector& s)
 {
@@ -407,6 +410,8 @@ void ColorbarRGB::macosx(float scale, int width, int height,
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void ColorbarRGB::win32(float scale, int width, int height, 
 			const Vector& v, const Vector& s)
 {

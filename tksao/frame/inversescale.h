@@ -5,9 +5,6 @@
 #ifndef __inversescale_h__
 #define __inversescale_h__
 
-#include <iostream>
-using namespace std;
-
 #include "vector.h"
 
 class InverseScale {

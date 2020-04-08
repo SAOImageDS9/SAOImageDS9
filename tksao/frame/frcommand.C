@@ -5,8 +5,6 @@
 #include <fstream>
 #include "fdstream.hpp"
 
-#include <tk.h>
-
 #include "framebase.h"
 #include "fitsimage.h"
 #include "context.h"
@@ -14,6 +12,10 @@
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
+
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
 
 void FrameBase::binToFitCmd()
 {

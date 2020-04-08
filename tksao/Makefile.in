@@ -202,11 +202,9 @@ binaries: $(BINARIES)
 
 libraries:
 
-parsers	: cbparsers fitsyparsers frparsers magparser panparser
+parsers	: cbparsers frparsers magparser panparser contourparser
 
 cbparsers : cbparser cblutparser cbsaoparser
-
-fitsyparsers : fitsyparser nrrdparser enviparser
 
 frparsers : parser ciaoparser ds9parser prosparser saoparser tngparser xyparser contourparser
 
@@ -221,18 +219,6 @@ cblutparser:
 cbsaoparser:
 	bison -d -p li -o colorbar/saoparser.C colorbar/saoparser.Y
 	flex -Pli -ocolorbar/saolex.C colorbar/saolex.L
-
-fitsyparser :
-	bison -d -p ff -o fitsy++/parser.C fitsy++/parser.Y
-	flex -Pff -ofitsy++/lex.C fitsy++/lex.L
-
-nrrdparser :
-	bison -d -p nrrd -o fitsy++/nrrdparser.C fitsy++/nrrdparser.Y
-	flex -Pnrrd -ofitsy++/nrrdlex.C fitsy++/nrrdlex.L
-
-enviparser :
-	bison -d -p envi -o fitsy++/enviparser.C fitsy++/enviparser.Y
-	flex -Penvi -ofitsy++/envilex.C fitsy++/envilex.L
 
 ciaoparser :
 	bison -d -p ciao -o frame/ciaoparser.C frame/ciaoparser.Y
@@ -262,10 +248,6 @@ xyparser :
 	bison -d -p xy -o frame/xyparser.C frame/xyparser.Y
 	flex -Pxy -oframe/xylex.C frame/xylex.L
 
-contourparser :
-	bison -d -p ct -o frame/contourparser.C frame/contourparser.Y
-	flex -Pct -oframe/contourlex.C frame/contourlex.L
-
 magparser :
 	bison -d -p mg -o magnifier/parser.C magnifier/parser.Y
 	flex -Pmg -omagnifier/lex.C magnifier/lex.L
@@ -273,6 +255,10 @@ magparser :
 panparser :
 	bison -d -p pn -o panner/parser.C panner/parser.Y
 	flex -Ppn -opanner/lex.C panner/lex.L
+
+contourparser :
+	bison -d -p ct -o frame/contourparser.C frame/contourparser.Y
+	flex -Pct -oframe/contourlex.C frame/contourlex.L
 
 #========================================================================
 # Your doc target should differentiate from doc builds (by the developer)

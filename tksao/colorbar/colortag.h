@@ -5,7 +5,7 @@
 #ifndef __colortag_h__
 #define __colortag_h__
 
-#include "util.h"
+#include <tk.h>
 
 class Colorbar;
 

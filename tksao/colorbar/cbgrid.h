@@ -9,7 +9,6 @@
 
 #include "grid2dbase.h"
 #include "vector.h"
-#include "util.h"
 
 class CBGrid : public Grid2dBase {
  private:

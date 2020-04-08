@@ -2,9 +2,18 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "contour.h"
 #include "base.h"
 #include "context.h"
+
+#ifdef MAC_OSX_TK
+#include <macosxlib.h>
+#endif
+
+#ifdef __WIN32
+#include <win32lib.h>
+#endif
 
 // ContourLevel
 ContourLevel::ContourLevel(Base* pp, double lev,
@@ -224,11 +233,10 @@ void Contour::ps(PSColorSpace mode)
   str << endl;
 
   Vector v1 = base_->mapFromRef(lvertex_.current()->vector,Coord::CANVAS);
-  str << "newpath " << endl
-      << v1.TkCanvasPs(base_->canvas) << " moveto" << endl;
+  str << "newpath " << endl << parent_->parent_->TkCanvasPs(v1) << " moveto" << endl;
   while (lvertex_.next()) {
     Vector vv = base_->mapFromRef(lvertex_.current()->vector,Coord::CANVAS);
-    str << vv.TkCanvasPs(base_->canvas) << " lineto" << endl;
+    str << parent_->parent_->TkCanvasPs(vv) << " lineto" << endl;
   }
   str << "stroke" << endl << ends;
   Tcl_AppendResult(base_->interp, str.str().c_str(), NULL);

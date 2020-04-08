@@ -8,9 +8,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <iostream>
-using namespace std;
-
 #include "vector.h"
 
 class FitsImage;

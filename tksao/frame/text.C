@@ -2,8 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "text.h"
 #include "fitsimage.h"
 
@@ -72,7 +70,8 @@ void Text::renderPS(PSColorSpace mode)
 	<< " scalefont setfont" << endl;
 
     double ang = rotate ? calcAngle() : 0;
-    Vector cc = (parent->mapFromRef(center,Coord::CANVAS)).TkCanvasPs(parent->canvas);
+    Vector bb = parent->mapFromRef(center,Coord::CANVAS);
+    Vector cc = parent->TkCanvasPs(bb);
     str << "gsave" << endl
 	<< "newpath " << endl
 	<< cc << " moveto" << endl
@@ -92,6 +91,8 @@ void Text::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Text::renderMACOSX()
 {
   renderMACOSXGC();
@@ -120,6 +121,8 @@ void Text::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Text::renderWIN32()
 {
   renderWIN32GC();

@@ -17,6 +17,7 @@
 #include <string.h>
 #include <iostream>
 
+#include "util.h"
 #include "base.h"
 #include "context.h"
 #include "fitsimage.h"

@@ -12,6 +12,8 @@ using namespace std;
 #include <tcl.h>
 #include <tk.h>
 
+Tcl_Interp *global_interp =NULL;
+
 extern "C" {
   int SAOAppInit(Tcl_Interp *interp);
   int SAOLocalMainHook(int* argc, char*** argv);
@@ -38,6 +40,7 @@ extern "C" {
 
   int Tclxpa_Init(Tcl_Interp*);
   int Tcliis_Init(Tcl_Interp*);
+  int Tclfitsy_Init(Tcl_Interp*);
 
   int Tls_Init(Tcl_Interp*);
   int Tclxml_Init(Tcl_Interp*);
@@ -70,7 +73,6 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   return TCL_OK;
 }
 
-extern Tcl_Interp *global_interp;
 int SAOAppInit(Tcl_Interp *interp)
 {
   // save interp for cputs function
@@ -149,6 +151,12 @@ int SAOAppInit(Tcl_Interp *interp)
   if (Tcliis_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
   Tcl_StaticPackage (interp, "Tcliis", Tcliis_Init, 
+		     (Tcl_PackageInitProc*)NULL);
+
+  // Tclfitsy
+  if (Tclfitsy_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  Tcl_StaticPackage (interp, "Tclfitsy", Tclfitsy_Init, 
 		     (Tcl_PackageInitProc*)NULL);
 
   // Tkmpeg

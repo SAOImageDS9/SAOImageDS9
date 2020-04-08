@@ -2,8 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "epanda.h"
 #include "fitsimage.h"
 
@@ -110,15 +108,17 @@ void Epanda::renderPS(PSColorSpace mode)
 
     ostringstream str;
     str << "newpath " 
-    	<< rr0.TkCanvasPs(parent->canvas) << ' '
+    	<< parent->TkCanvasPs(rr0) << ' '
 	<< "moveto "
-    	<< rr1.TkCanvasPs(parent->canvas) << ' '
+    	<< parent->TkCanvasPs(rr1) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Epanda::renderMACOSX()
 {
   BaseEllipse::renderMACOSX();
@@ -138,6 +138,8 @@ void Epanda::renderMACOSX()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Epanda::renderWIN32()
 {
   BaseEllipse::renderWIN32();

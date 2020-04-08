@@ -49,6 +49,15 @@ TEA_LOAD_TKCONFIG
 # Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
+TEA_PATH_CONFIG(util)
+TEA_LOAD_CONFIG(util)
+
+TEA_PATH_CONFIG(vector)
+TEA_LOAD_CONFIG(vector)
+
+TEA_PATH_CONFIG(fitsy)
+TEA_LOAD_CONFIG(fitsy)
+
 TEA_PATH_CONFIG(tifftcl)
 TEA_LOAD_CONFIG(tifftcl)
 
@@ -60,6 +69,9 @@ TEA_LOAD_CONFIG(zlibtcl)
 
 TEA_PATH_CONFIG(tcliis)
 TEA_LOAD_CONFIG(tcliis)
+
+TEA_PATH_CONFIG(tclfitsy)
+TEA_LOAD_CONFIG(tclfitsy)
 
 TEA_PATH_CONFIG(tclsignal)
 TEA_LOAD_CONFIG(tclsignal)

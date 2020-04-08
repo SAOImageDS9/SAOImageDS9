@@ -2,8 +2,6 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "projection.h"
 #include "fitsimage.h"
 
@@ -86,9 +84,9 @@ void Projection::renderPS(PSColorSpace mode)
   {
     ostringstream str;
     str << "newpath " 
-	<< aa.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(aa) << ' '
 	<< "moveto "
-	<< bb.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(bb) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
@@ -108,13 +106,13 @@ void Projection::renderPS(PSColorSpace mode)
 
     ostringstream str;
     str << "newpath " 
-	<< lr.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(lr) << ' '
 	<< "moveto "
-	<< ur.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ur) << ' '
 	<< "lineto "
-	<< ul.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ul) << ' '
 	<< "lineto "
-	<< ll.TkCanvasPs(parent->canvas) << ' '
+	<< parent->TkCanvasPs(ll) << ' '
 	<< "lineto stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
@@ -127,6 +125,8 @@ void Projection::renderPSGC(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
+#include <macosxlib.h>
+
 void Projection::renderMACOSX()
 {
   renderMACOSXGC();
@@ -163,6 +163,8 @@ void Projection::renderMACOSXGC()
 #endif
 
 #ifdef __WIN32
+#include <win32lib.h>
+
 void Projection::renderWIN32()
 {
   renderWIN32GC();

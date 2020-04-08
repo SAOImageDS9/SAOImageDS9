@@ -2,9 +2,11 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "util.h"
 #include "context.h"
 #include "fitsimage.h"
 #include "fvcontour.h"
+#include "convolve.h"
 
 #include "alloc.h"
 #include "allocgz.h"
@@ -17,8 +19,6 @@
 #include "socket.h"
 #include "socketgz.h"
 #include "var.h"
-#include "convolve.h"
-
 #include "head.h"
 
 extern "C" {

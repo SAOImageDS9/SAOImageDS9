@@ -2,6 +2,7 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <stdlib.h>
 #include <string.h>
 #include <limits.h>
 #include <float.h>

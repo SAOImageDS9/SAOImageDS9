@@ -14,6 +14,7 @@ using namespace std;
 #include "tclfitsy.h"
 #include "file.h"
 #include "mmapincr.h"
+#include "util.h"
 
 extern "C" {
   int Tclfitsy_Init(Tcl_Interp* interp);
@@ -113,7 +114,21 @@ int TclFITSY::table(int argc, const char* argv[])
       ostringstream headstr;
       for (int jj=0; jj<cols; jj++) {
 	FitsColumn* cc=hdu->find(jj);
-	headstr << cc->ttype() << ' ';
+	headstr << trim(cc->ttype()) << ' ';
+
+	if (cc->repeat()>1) {
+	  switch (cc->type()) {
+	  case 'A':
+	    break;
+	  default:
+	    for (int kk=1; kk<cc->repeat(); kk++) {
+	      char* tt = trim(cc->ttype());
+	      headstr << tt << kk+1 << ' ';
+	      delete [] tt;
+	    }
+	    break;
+	  }
+	}
       }
       headstr << ends;
       Tcl_SetVar2(interp_, argv[3], "Header" , headstr.str().c_str(),
@@ -126,18 +141,37 @@ int TclFITSY::table(int argc, const char* argv[])
 
       // data
       for (int ii=0; ii<rows; ii++, ptr+=width) {
+	int ccnt = 0;
 	for (int jj=0; jj<cols; jj++) {
 	  FitsColumn* cc=hdu->find(jj);
+	  ccnt++;
 
 	  ostringstream index;
-	  index << ii+1 << ',' << jj+1 << ends;
+	  index << ii+1 << ',' << ccnt << ends;
 	  ostringstream value;
 	  value << cc->str(ptr) << ends;
 	  Tcl_SetVar2(interp_, argv[3], index.str().c_str(),
 		      value.str().c_str(), TCL_GLOBAL_ONLY);
+
+	  if (cc->repeat()>1) {
+	    switch (cc->type()) {
+	    case 'A':
+	      break;
+	    default:
+	      for (int kk=1; kk<cc->repeat(); kk++) {
+		ccnt++;
+		ostringstream index;
+		index << ii+1 << ',' << ccnt << ends;
+		ostringstream value;
+		value << cc->str(ptr,kk) << ends;
+		Tcl_SetVar2(interp_, argv[3], index.str().c_str(),
+			    value.str().c_str(), TCL_GLOBAL_ONLY);
+	      }
+	      break;
+	    }
+	  }
 	}
       }
-
       return TCL_OK;
     }
   }

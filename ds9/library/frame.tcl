@@ -1301,27 +1301,6 @@ proc MouseWheelFrame {X Y dd} {
 	puts stderr "MouseWheel $X $Y $dd"
     }
 
-    # macos returns main window coords in X,Y
-    switch $ds9(wm) {
-	x11 -
-	win32 {}
-	aqua {
-	    switch $view(layout) {
-		horizontal {
-		    set aa [winfo height $ds9(main)]
-		    set bb [winfo height $ds9(image)]
-		    set Y [expr $Y-$aa+$bb]
-		}
-		vertical {
-		    set aa [winfo width $ds9(main)]
-		    set bb [winfo width $ds9(image)]
-		    set X [expr $X-$aa+$bb]
-		}
-	    }
-	    
-	}
-    }
-
     set id [$ds9(canvas) find closest $X $Y]
     set which [lindex [$ds9(canvas) gettags $id] 0]
     if {[string equal -length 5 {Frame} $which]} {

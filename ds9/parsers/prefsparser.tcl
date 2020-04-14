@@ -62,160 +62,169 @@ proc prefs::unsetupvalues {numsyms} {
 
 array set prefs::table {
   9:262,target 6
-  7:264,target 16
+  7:264,target 17
   0:257 shift
+  13:263 shift
+  9:272,target 18
   0:258 shift
-  23:0,target 10
-  13:264 reduce
-  11:263,target 19
+  11:263,target 20
   5:0,target 4
   0:259 shift
   0:260 shift
-  27:0 reduce
-  20:264,target 16
-  15:0,target 8
+  19:264,target 15
+  15:0,target 0
   9:0 reduce
   0:266,target 8
   0:261 shift
   2:264,target 5
-  15:264 reduce
   0:262 shift
   17:264 reduce
+  14:264,target 11
   0:264 reduce
-  25:263,target 26
-  19:263 shift
+  20:263 shift
   9:261,target 5
   0:265 shift
-  20:264 reduce
-  15:0 reduce
-  9:271,target 17
+  19:264 reduce
+  15:0 accept
   0:266 shift
   2:264 reduce
-  22:263 shift
   0:267 shift
-  19:263,target 22
+  22:264 reduce
+  20:263,target 24
   4:264 reduce
   0:265,target 7
   0:268 shift
   24:263 shift
   6:0,target 7
   0:269 shift
+  0:275,target 16
   0:270 shift
-  20:0 reduce
-  16:0,target 14
-  15:273 goto
+  19:0 reduce
+  16:0,target 8
   6:264 reduce
-  0:271 goto
+  0:271 shift
   2:0 reduce
   26:263 shift
   0:272 goto
+  23:264,target 25
   9:260,target 4
   9:259,target 3
   8:264 reduce
   5:264,target 4
-  0:274 goto
+  0:273 goto
+  28:263 shift
   6:0 reduce
-  17:264,target 17
+  0:275 goto
+  17:264,target 14
   0:264,target 1
-  0:274,target 15
-  17:0,target 17
+  28:263,target 29
+  25:0,target 10
+  12:264,target 21
+  17:0,target 14
   9:258,target 2
   0:0,target 1
   16:0 reduce
   8:264,target 12
-  12:263,target 20
-  21:264,target 23
+  0:273,target 15
+  21:264,target 16
   9:257,target 1
   3:264,target 3
+  21:0 reduce
   8:0,target 12
   3:0 reduce
-  18:0,target 15
+  18:0,target 18
   1:0,target 2
-  15:264,target 9
   10:264 shift
   0:262,target 6
   26:263,target 27
-  12:263 shift
   0:272,target 14
-  10:264,target 18
+  25:0 reduce
+  12:264 shift
+  10:264,target 19
+  14:264 reduce
+  29:264,target 13
+  29:0 reduce
   16:264 reduce
-  27:0,target 13
-  13:0 reduce
   9:0,target 1
   0:261,target 5
-  20:0,target 16
+  19:0,target 15
   18:264 reduce
-  15:273,target 21
   6:264,target 7
   0:271,target 13
   1:264 reduce
   2:0,target 5
-  21:264 shift
+  21:264 reduce
   9:257 shift
   3:264 reduce
-  18:264,target 15
+  18:264,target 18
   17:0 reduce
   9:258 shift
   0:0 reduce
   1:264,target 2
+  23:264 shift
   9:260 shift
   9:259 shift
   5:264 reduce
-  25:263 shift
   9:261 shift
-  13:264,target 11
   9:262 shift
   7:264 shift
   0:259,target 3
   0:260,target 4
-  24:263,target 25
+  27:263 shift
+  24:263,target 26
+  22:0 reduce
+  16:274 goto
+  4:0 reduce
   0:269,target 11
   0:270,target 12
-  4:0 reduce
-  27:264 reduce
   9:264 reduce
+  21:0,target 16
   3:0,target 3
-  13:0,target 11
-  27:264,target 13
+  29:264 reduce
   9:264,target 1
   8:0 reduce
+  13:263,target 22
   0:258,target 2
-  9:271 goto
+  22:264,target 17
   4:264,target 6
   0:268,target 10
-  14:0 accept
-  16:264,target 14
+  9:272 goto
+  14:0 reduce
+  29:0,target 13
+  16:264,target 9
+  27:263,target 28
+  22:0,target 17
+  16:274,target 23
   4:0,target 6
-  14:0,target 0
+  14:0,target 11
   18:0 reduce
   0:257,target 1
   1:0 reduce
-  22:263,target 24
   0:267,target 9
-  23:0 reduce
   11:263 shift
   5:0 reduce
 }
 
 array set prefs::rules {
-  9,l 273
-  11,l 274
-  15,l 274
-  2,l 271
-  6,l 271
-  12,l 274
-  16,l 274
-  3,l 271
-  7,l 271
-  13,l 274
-  0,l 275
-  17,l 274
-  4,l 271
-  8,l 272
-  10,l 272
-  14,l 274
-  1,l 271
-  5,l 271
+  9,l 274
+  11,l 275
+  15,l 275
+  2,l 272
+  6,l 272
+  12,l 275
+  16,l 275
+  3,l 272
+  7,l 272
+  13,l 275
+  0,l 276
+  17,l 275
+  4,l 272
+  8,l 273
+  10,l 273
+  14,l 275
+  18,l 275
+  1,l 272
+  5,l 272
 }
 
 array set prefs::rules {
@@ -228,6 +237,7 @@ array set prefs::rules {
   15,dc 2
   10,dc 3
   6,dc 1
+  18,dc 2
   1,dc 0
   13,dc 7
   9,dc 0
@@ -240,94 +250,100 @@ array set prefs::rules {
 }
 
 array set prefs::rules {
-  13,line 53
-  7,line 44
-  10,line 48
-  4,line 41
-  1,line 38
-  15,line 55
-  9,line 47
-  12,line 52
-  6,line 43
-  3,line 40
-  17,line 57
-  14,line 54
-  8,line 47
-  11,line 51
-  5,line 42
-  2,line 39
+  13,line 54
+  7,line 45
+  10,line 49
+  4,line 42
+  18,line 59
+  1,line 39
+  15,line 56
+  9,line 48
+  12,line 53
+  6,line 44
+  3,line 41
+  17,line 58
+  14,line 55
+  8,line 48
+  11,line 52
+  5,line 43
+  2,line 40
   9,e 1
-  16,line 56
+  16,line 57
 }
 
 array set prefs::lr1_table {
   14,trans {}
   1,trans {}
   18,trans {}
-  23,trans {}
+  23,trans {{264 25}}
   5,trans {}
-  27,trans {}
-  9,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {271 17}}
-  13,trans {}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {265 7} {266 8} {267 9} {268 10} {269 11} {270 12} {271 13} {272 14} {274 15}}
+  27,trans {{263 28}}
+  9,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {272 18}}
+  13,trans {{263 22}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {265 7} {266 8} {267 9} {268 10} {269 11} {270 12} {271 13} {272 14} {273 15} {275 16}}
   17,trans {}
   4,trans {}
-  22,trans {{263 24}}
+  22,trans {}
   26,trans {{263 27}}
   8,trans {}
-  12,trans {{263 20}}
-  16,trans {}
+  12,trans {{264 21}}
+  16,trans {{274 23}}
   3,trans {}
-  21,trans {{264 23}}
+  21,trans {}
   10 {{15 {0 264} 1}}
   11 {{13 {0 264} 1}}
-  25,trans {{263 26}}
+  25,trans {}
   12 {{16 {0 264} 1}}
-  7,trans {{264 16}}
-  13 {{11 {0 264} 1}}
-  14 {{0 0 1}}
-  15 {{8 0 1} {10 0 1} {9 264 0}}
-  11,trans {{263 19}}
-  16 {{14 {0 264} 2}}
-  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 264} 0} {12 {0 264} 0} {13 {0 264} 0} {14 {0 264} 0} {15 {0 264} 0} {16 {0 264} 0} {17 {0 264} 0} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0} {7 {0 264} 0}}
-  17 {{17 {0 264} 2}}
+  7,trans {{264 17}}
+  13 {{17 {0 264} 1}}
+  14 {{11 {0 264} 1}}
+  15 {{0 0 1}}
+  11,trans {{263 20}}
+  29,trans {}
+  16 {{8 0 1} {10 0 1} {9 264 0}}
+  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 264} 0} {12 {0 264} 0} {13 {0 264} 0} {14 {0 264} 0} {15 {0 264} 0} {16 {0 264} 0} {17 {0 264} 0} {18 {0 264} 0} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0} {7 {0 264} 0}}
+  17 {{14 {0 264} 2}}
   1 {{2 {0 264} 1}}
-  18 {{15 {0 264} 2}}
+  18 {{18 {0 264} 2}}
   2 {{5 {0 264} 1}}
-  19 {{13 {0 264} 2}}
-  20 {{16 {0 264} 2}}
-  15,trans {{273 21}}
+  19 {{15 {0 264} 2}}
+  20 {{13 {0 264} 2}}
+  15,trans {}
   3 {{3 {0 264} 1}}
-  21 {{10 0 2}}
+  21 {{16 {0 264} 2}}
   4 {{6 {0 264} 1}}
-  22 {{13 {0 264} 3}}
+  22 {{17 {0 264} 2}}
   5 {{4 {0 264} 1}}
-  23 {{10 0 3}}
+  23 {{10 0 2}}
   6 {{7 {0 264} 1}}
   2,trans {}
-  19,trans {{263 22}}
-  20,trans {}
-  24 {{13 {0 264} 4}}
-  25 {{13 {0 264} 5}}
+  19,trans {}
+  24 {{13 {0 264} 3}}
+  20,trans {{263 24}}
+  25 {{10 0 3}}
   7 {{14 {0 264} 1}}
-  26 {{13 {0 264} 6}}
+  26 {{13 {0 264} 4}}
   8 {{12 {0 264} 1}}
-  27 {{13 {0 264} 7}}
-  9 {{17 {0 264} 1} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0} {7 {0 264} 0}}
-  24,trans {{263 25}}
+  27 {{13 {0 264} 5}}
+  9 {{18 {0 264} 1} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0} {7 {0 264} 0}}
+  28 {{13 {0 264} 6}}
+  24,trans {{263 26}}
   6,trans {}
-  10,trans {{264 18}}
+  29 {{13 {0 264} 7}}
+  10,trans {{264 19}}
+  28,trans {{263 29}}
 }
 
 array set prefs::token_id_table {
   264,line 16
   270,t 0
   269,t 0
+  276,line 60
   265,title BGCOLOR
   274,t 1
   261,line 11
   257,t 0
-  270,title THREADS
+  270,title THEME
   269,title PRECISION
   273,line 47
   257,line 7
@@ -338,29 +354,30 @@ array set prefs::token_id_table {
   259,title ON
   260,title OFF
   266,t 0
-  271,t 1
   error error
+  271,t 0
   264,title string
   266,line 21
   275,t 1
-  error,line 36
+  error,line 37
   268,title NANCOLOR
   258,t 0
   263,line 14
   error,title {}
-  275,line 58
+  275,line 51
   273,title {}
   263,t 0
   259,line 9
   260,line 10
   258,title NO
-  272,line 46
+  272,line 38
   267,t 0
   263,title integer
   272,t 1
   268,line 23
   267,title IRAFALIGN
   257 YES_
+  276,t 1
   258 NO_
   259,t 0
   259 ON_
@@ -374,6 +391,7 @@ array set prefs::token_id_table {
   257,title YES
   264 STRING_
   264,t 0
+  276,title {}
   265 BGCOLOR_
   262,line 12
   266 CLEAR_
@@ -383,20 +401,21 @@ array set prefs::token_id_table {
   262,title FALSE
   268 NANCOLOR_
   268,t 0
-  274,line 50
-  270 THREADS_
+  274,line 48
+  270 THEME_
   269 PRECISION_
-  271 yesno
   error,t 0
-  272 command
+  271 THREADS_
+  272 yesno
   258,line 8
   273,t 1
-  273 @PSEUDO1
+  273 command
   266,title CLEAR
-  274 prefs
-  275 start'
-  271,line 37
-  271,title {}
+  274 @PSEUDO1
+  275 prefs
+  271,line 26
+  276 start'
+  271,title THREADS
   261,t 0
   267,line 22
   275,title {}
@@ -510,8 +529,9 @@ proc prefs::yyparse {} {
                     13 { ProcessCmdSet pds9 prec,linear $2; ProcessCmdSet pds9 prec,deg $3; ProcessCmdSet pds9 prec,hms $4;ProcessCmdSet pds9 prec,dms $5; ProcessCmdSet pds9 prec,arcmin $6; ProcessCmdSet pds9 prec,arcsec $7 PrefsPrecision }
                     14 { ProcessCmdSet pds9 bg $2 PrefsBgColor }
                     15 { ProcessCmdSet pds9 nan $2 PrefsNanColor }
-                    16 { ProcessCmdSet ds9 threads $2 ChangeThreads }
-                    17 { ProcessCmdSet pds9 iraf $2 PrefsIRAFAlign }
+                    16 { ProcessCmdSet pds9 theme $2 PrefsTheme }
+                    17 { ProcessCmdSet ds9 threads $2 ChangeThreads }
+                    18 { ProcessCmdSet pds9 iraf $2 PrefsIRAFAlign }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

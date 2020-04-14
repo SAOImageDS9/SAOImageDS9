@@ -1074,6 +1074,11 @@ proc SetDefaultTextFont {which} {
     }
 }
 
+proc PrefsTheme {} {
+    global pds9
+    ttk::style theme use $pds9(theme)
+}
+
 proc PrefsBgColor {} {
     global ds9
     global pds9
@@ -1725,6 +1730,7 @@ proc ProcessTclCmd {varname iname buf fn} {
     }
 }
 
+# backward compatibility
 proc ProcessThemeCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -1732,6 +1738,7 @@ proc ProcessThemeCmd {varname iname} {
     ttk::style theme use [lindex $var $i]
 }
 
+# backward compatibility
 proc ProcessSendThemeCmd {proc id param {sock {}} {fn {}}} {
     global pds9
     $proc $id "$pds9(theme)\n"

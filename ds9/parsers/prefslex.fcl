@@ -14,6 +14,7 @@ irafalign   {return $IRAFALIGN_}
 nancolor    {return $NANCOLOR_}
 nancolour   {return $NANCOLOR_}
 precision   {return $PRECISION_}
+theme	    {return $THEME_}
 threads	    {return $THREADS_}
 
 #include yesno.fin

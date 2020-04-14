@@ -412,7 +412,10 @@ proc ProcessCommand {argv argc} {
 	    -sqrt {set scale(type) sqrt; ChangeScale}
 	    -source {incr i; ProcessSourceCmd argv i}
 	    -tcl {incr i; ; ProcessTclCmd argv i {} {}}
-	    -theme {incr i; ProcessThemeCmd argv i}
+	    -theme {
+		# backward compatibility
+		incr i; ProcessThemeCmd argv i
+	    }
 	    -threads {incr i; ProcessThreadsCmd argv i}
 	    -tif -
 	    -tiff {set file(type) tiff}

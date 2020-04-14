@@ -256,8 +256,7 @@ proc PrefsDialogGeneral {} {
     set m $f.theme.menu
     menu $m
     foreach tt [ttk::style theme names] {
-	$m add radiobutton -label $tt \
-	    -variable pds9(theme) -command [list ttk::style theme use $tt]
+	$m add radiobutton -label $tt -variable pds9(theme) -command PrefsTheme
     }
 
     ttk::label $f.tbg -text [msgcat::mc {Background Color}]

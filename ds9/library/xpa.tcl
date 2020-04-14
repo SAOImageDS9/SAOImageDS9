@@ -1151,6 +1151,7 @@ proc XPARcvdIconify {xpa cdata param buf len} {
     XPACatchError $xpa
 }
 
+# backward compatibility
 proc XPASendIExam {xpa cdata param} {
     InitError xpa
     catch {ProcessSendIExamCmd xpasetbuf $xpa $param}
@@ -1893,12 +1894,14 @@ proc XPARcvdTcl {xpa cdata param buf len} {
     XPACatchError $xpa
 }
 
+# backward compatibility
 proc XPASendTheme {xpa cdata param} {
     InitError xpa
     catch {ProcessSendThemeCmd xpasetbuf $xpa $param}
     XPACatchError $xpa
 }
 
+# backward compatibility
 proc XPARcvdTheme {xpa cdata param buf len} {
     XPADebug "XPARcvdTheme" $param
     InitError xpa

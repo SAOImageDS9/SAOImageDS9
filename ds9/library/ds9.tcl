@@ -161,6 +161,8 @@ proc DS9Def {} {
     set pds9(language) locale
     set pds9(language,name) [LanguageToName $pds9(language)]
     set pds9(language,dir) {}
+
+    set pds9(theme) default
 }
 
 # if we have a problem at this point, dump simple message and exit
@@ -348,8 +350,16 @@ switch $ds9(wm) {
 	set ds9(foreground) black
 	set ds9(background) white
 	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) #d9d9d9
+	set ds9(gui,bg) $ds9(background)
 	set ds9(gui,bold) blue
+
+	ttk::style theme use $pds9(theme)
+
+	ttk::style configure TEntry -padding 1
+	ttk::style configure TLabel -borderwidth 2 -padding 1
+
+	if {0} {
+	set ds9(gui,bg) #d9d9d9
 
 	# standard widgets
  	option add {*background} $ds9(gui,bg)
@@ -368,9 +378,8 @@ switch $ds9(wm) {
 	ttk::style configure TScrollbar -background $ds9(gui,bg) \
 	    -troughcolor $ds9(gui,bg)
 	ttk::style configure TProgressbar -troughcolor $ds9(gui,bg)
-
-	ttk::style configure TEntry -padding 1
-	ttk::style configure TLabel -borderwidth 2 -padding 1
+	
+	}
     }
     aqua {
 	set ds9(foreground) systemTextColor
@@ -493,6 +502,9 @@ ProcessCommandLineFirst
 # Load any preferences here, before we do any real work
 if {$ds9(prefs)} {
     LoadPrefs
+
+    # if theme changes
+    ttk::style theme use $pds9(theme)
 }
 
 # set fonts

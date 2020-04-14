@@ -187,6 +187,8 @@ proc PrefsDialogGeneral {} {
     ttk::checkbutton $f.confirm \
 	-text [msgcat::mc {Enable Confirmation Dialogs}] \
 	-variable pds9(confirm)
+    ttk::checkbutton $f.align -text {Mosaic IRAF DETSEC Align} \
+	-variable pds9(iraf) -command PrefsIRAFAlign
     ttk::label $f.tthreads -text [msgcat::mc {Number of Threads}]
     ttk::entry $f.threads -textvariable ds9(threads) \
 	-validate focusout -validatecommand ChangeThreads -width 8
@@ -194,11 +196,13 @@ proc PrefsDialogGeneral {} {
     grid $f.backup -padx 2 -pady 2 -sticky w
     grid $f.auto -padx 2 -pady 2 -sticky w
     grid $f.confirm -padx 2 -pady 2 -sticky w
+    grid $f.align -padx 2 -pady 2 -sticky w
     grid $f.tthreads $f.threads -padx 2 -pady 2 -sticky w
 
-    # Language
-    set f [ttk::labelframe $w.general.lang -text [msgcat::mc {Language}]]
+    # Font
+    set f [ttk::labelframe $w.general.font -text [msgcat::mc {Font}]]
 
+    ttk::label $f.tlang -text [msgcat::mc {Language}]
     ttk::menubutton $f.lang -textvariable pds9(language,name) -menu $f.lang.menu
 
     set m $f.lang.menu
@@ -225,32 +229,36 @@ proc PrefsDialogGeneral {} {
     $m add radiobutton -label [LanguageToName zh] \
 	-variable pds9(language,name) -command "set pds9(language) zh"
 
-    grid $f.lang -padx 2 -pady 2 -sticky w
+    grid $f.tlang $f.lang -padx 2 -pady 2 -sticky w
 
-    # GUI Font
-    set f [ttk::labelframe $w.general.font -text [msgcat::mc {GUI Font}]]
-
-    FontMenuButton $f.font pds9 font \
-	font,size font,weight font,slant \
+    ttk::label $f.tgui -text [msgcat::mc {GUI}]
+    FontMenuButton $f.gui pds9 font font,size font,weight font,slant \
 	[list SetDefaultFont true]
-    ttk::button $f.reset -text [msgcat::mc {Reset}] \
+    ttk::button $f.bgui -text [msgcat::mc {Reset}] \
 	-command ResetDefaultFont
 
-    grid $f.font $f.reset -padx 2 -pady 2 -sticky w
-
-    # Text Font
-    set f [ttk::labelframe $w.general.textfont -text [msgcat::mc {Text Font}]]
-
-    FontMenuButton $f.textfont pds9 text,font \
+    ttk::label $f.ttext -text [msgcat::mc {Text}]
+    FontMenuButton $f.text pds9 text,font \
 	text,font,size text,font,weight text,font,slant \
 	[list SetDefaultTextFont true]
-    ttk::button $f.textreset -text [msgcat::mc {Reset}] \
+    ttk::button $f.btext -text [msgcat::mc {Reset}] \
 	-command ResetDefaultTextFont
 
-    grid $f.textfont $f.textreset -padx 2 -pady 2 -sticky w
+    grid $f.tgui $f.gui $f.bgui -padx 2 -pady 2 -sticky w
+    grid $f.ttext $f.text $f.btext -padx 2 -pady 2 -sticky w
 
     # Color
     set f [ttk::labelframe $w.general.color -text [msgcat::mc {Color}]]
+
+    ttk::label $f.ttheme -text [msgcat::mc {Theme}]
+    ttk::menubutton $f.theme -textvariable pds9(theme) -menu $f.theme.menu
+
+    set m $f.theme.menu
+    menu $m
+    foreach tt [ttk::style theme names] {
+	$m add radiobutton -label $tt \
+	    -variable pds9(theme) -command [list ttk::style theme use $tt]
+    }
 
     ttk::label $f.tbg -text [msgcat::mc {Background Color}]
     ColorMenuButton $f.bg pds9 bg PrefsBgColor
@@ -258,15 +266,9 @@ proc PrefsDialogGeneral {} {
     ttk::label $f.tnan -text [msgcat::mc {Blank/Inf/NaN Color}]
     ColorMenuButton $f.nan pds9 nan PrefsNanColor
 
+    grid $f.ttheme $f.theme -padx 2 -pady 2 -sticky w
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
     grid $f.tnan $f.nan -padx 2 -pady 2 -sticky w
-
-    # Mosaic
-    set f [ttk::labelframe $w.general.mosaic -text [msgcat::mc {Mosaic}]]
-    ttk::checkbutton $f.align -text {IRAF DETSEC Align} -variable pds9(iraf) \
-	-command PrefsIRAFAlign
-
-    grid $f.align -padx 2 -pady 2 -sticky w
 
     # Dialog Box
     set f [ttk::labelframe $w.general.box -text [msgcat::mc {Dialog Box}]]
@@ -295,9 +297,8 @@ proc PrefsDialogGeneral {} {
     grid $f.center - -padx 2 -pady 2 -sticky w
     grid $f.all - -padx 2 -pady 2 -sticky w
 
-    pack $w.general.misc $w.general.lang $w.general.font \
-	$w.general.textfont $w.general.color $w.general.mosaic \
-	$w.general.box \
+    pack $w.general.misc $w.general.font \
+	$w.general.color $w.general.box \
 	-side top -fill both -expand true
 }
 

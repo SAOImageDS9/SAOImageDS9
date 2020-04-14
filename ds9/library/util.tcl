@@ -1725,16 +1725,16 @@ proc ProcessTclCmd {varname iname buf fn} {
     }
 }
 
-# backward compatibility
 proc ProcessThemeCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
+    ttk::style theme use [lindex $var $i]
 }
 
-# backward compatibility
 proc ProcessSendThemeCmd {proc id param {sock {}} {fn {}}} {
     global pds9
-    $proc $id "native\n"
+    $proc $id "$pds9(theme)\n"
 }
 
 proc ProcessSendVersionCmd {proc id param {sock {}} {fn {}}} {

@@ -186,10 +186,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 		ProcessTclCmd param i {} $fn
 	    }
 	}
-	theme {
-	    # backward compatibility
-	    ProcessThemeCmd param i
-	}
+	theme {ProcessThemeCmd param i}
 	threads {ProcessThreadsCmd param i}
 	tif -
 	tiff {ProcessTIFFCmd param i {} $fn}
@@ -353,10 +350,7 @@ proc CommGet {proc id paramlist fn} {
 	source {}
 	srgbcube {}
 	tcl {}
-	theme {
-	    # backward compatibility
-	    ProcessSendThemeCmd $proc $id $param
-	}
+	theme {ProcessSendThemeCmd $proc $id $param}
 	threads {ProcessSendThreadsCmd $proc $id $param}
 	tif -
 	tiff {ProcessSendTIFFCmd $proc $id $param {} $fn}

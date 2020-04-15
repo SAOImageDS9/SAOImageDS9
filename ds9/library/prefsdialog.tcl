@@ -250,13 +250,23 @@ proc PrefsDialogGeneral {} {
     # Color
     set f [ttk::labelframe $w.general.color -text [msgcat::mc {Color}]]
 
-    ttk::label $f.ttheme -text [msgcat::mc {Theme}]
-    ttk::menubutton $f.theme -textvariable pds9(theme) -menu $f.theme.menu
+    switch $ds9(wm) {
+	x11 {
+	    ttk::label $f.ttheme -text [msgcat::mc {Theme}]
+	    ttk::menubutton $f.theme -textvariable pds9(theme) \
+		-menu $f.theme.menu
 
-    set m $f.theme.menu
-    menu $m
-    foreach tt $ds9(themes) {
-	$m add radiobutton -label $tt -variable pds9(theme) -command PrefsTheme
+	    set m $f.theme.menu
+	    menu $m
+	    foreach tt $ds9(themes) {
+		$m add radiobutton -label $tt -variable pds9(theme) \
+		    -command PrefsTheme
+	    }
+
+	    grid $f.ttheme $f.theme -padx 2 -pady 2 -sticky w
+	}
+	aqua -
+	win32 {}
     }
 
     ttk::label $f.tbg -text [msgcat::mc {Background Color}]
@@ -265,7 +275,6 @@ proc PrefsDialogGeneral {} {
     ttk::label $f.tnan -text [msgcat::mc {Blank/Inf/NaN Color}]
     ColorMenuButton $f.nan pds9 nan PrefsNanColor
 
-    grid $f.ttheme $f.theme -padx 2 -pady 2 -sticky w
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
     grid $f.tnan $f.nan -padx 2 -pady 2 -sticky w
 

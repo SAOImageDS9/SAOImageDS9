@@ -50,7 +50,6 @@ proc DS9Def {} {
     set ds9(graph,sp) {}
     set ds9(graph,horz) {}
     set ds9(graph,vert) {}
-    set ds9(themes) {}
 
     set ds9(frames) {}
     set ds9(active) {}
@@ -164,6 +163,13 @@ proc DS9Def {} {
     set pds9(language,dir) {}
 
     set pds9(theme) default
+
+    # colors
+    # ds9(foreground) color of fg
+    # ds9(background) color of bg
+    # ds9(gui,fg) color of gui fg text
+    # ds9(gui,bg) color of gui bg features
+    # ds9(gui,bold) color for gui fg bold text
 }
 
 # if we have a problem at this point, dump simple message and exit
@@ -200,20 +206,6 @@ package require base64
 package require ftp
 package require math::fuzzy
 
-# themes
-package require ttk::theme::aquativo
-package require ttk::theme::black
-package require ttk::theme::blue
-package require ttk::theme::clearlooks
-package require ttk::theme::elegance
-#package require ttk::theme::itft1
-package require ttk::theme::keramik
-#package require ttk::theme::kroc
-package require ttk::theme::plastik
-package require ttk::theme::radiance
-#package require ttk::theme::smog
-#package require ttk::theme::winxpblue
-
 package require tkcon
 package require Tkblt
 package require Tls
@@ -224,11 +216,56 @@ package require DS9
 # post package load
 switch $ds9(wm) {
     x11 {
+	# themes
+	package require ttk::theme::aquativo
+	package require ttk::theme::black
+	package require ttk::theme::blue
+	package require ttk::theme::clearlooks
+	package require ttk::theme::elegance
+	#package require ttk::theme::itft1
+	package require ttk::theme::keramik
+	#package require ttk::theme::kroc
+	package require ttk::theme::plastik
+	package require ttk::theme::radiance
+	#package require ttk::theme::smog
+	#package require ttk::theme::winxpblue
+
+	set ds9(foreground) black
+	set ds9(background) white
+	set ds9(gui,fg) $ds9(foreground)
+	set ds9(gui,bg) $ds9(background)
+	set ds9(gui,bold) blue
+
+	# edit theme list
+	set ds9(themes) [lsort [ttk::style theme names]]
+	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) alt]
+	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) classic]
+
+	# fix TEntry TLabel
+	foreach tt [ttk::style theme names] {
+	    ttk::style theme use $tt
+	    ttk::style configure TEntry -padding 1
+	    ttk::style configure TLabel -borderwidth 2 -padding 1
+	}
+	ttk::style theme use default
+
 	# fix ::tk::dialog::file
 	set ::tk::dialog::file::showHiddenVar 0
 	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
+	set ds9(foreground) systemTextColor
+	set ds9(background) systemTextBackgroundColor
+	set ds9(gui,fg) $ds9(foreground)
+	set ds9(gui,bg) $ds9(background)
+	set ds9(gui,bold) systemControlAccentColor
+
+	set pap(fg) $ds9(foreground)
+	set pap(bg) $ds9(background)
+
+	::tk::unsupported::MacWindowStyle style $ds9(top) document \
+	    "closeBox fullZoom collapseBox resizable"
+
 	proc ::tk::mac::ShowPreferences {} {
 	    PrefsDialog
 	}
@@ -282,7 +319,15 @@ switch $ds9(wm) {
 	proc ::tk::mac::LaunchURL {} {
 	}
     }
-    win32 {}
+    win32 {
+	set ds9(foreground) black
+	set ds9(background) white
+	set ds9(gui,fg) $ds9(foreground)
+	set ds9(gui,bg) $ds9(background)
+	set ds9(gui,bold) blue
+
+	ttk::style theme use xpnative
+    }
 }
 
 # Define Variables
@@ -352,70 +397,6 @@ VLSSDef
 VODef
 WCSDef
 ZScaleDef
-
-# colors
-# ds9(foreground) color of fg
-# ds9(background) color of bg
-# ds9(gui,fg) color of gui fg text
-# ds9(gui,bg) color of gui bg features
-# ds9(gui,bold) color for gui fg bold text
-
-switch $ds9(wm) {
-    x11 {
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) blue
-
-	# edit theme list
-	set ds9(themes) [lsort [ttk::style theme names]]
-	set ii [lsearch $ds9(themes) alt]
-	if {$ii!=-1} {
-	    set ds9(themes) [lreplace $ds9(themes) $ii $ii]
-	}
-	set ii [lsearch $ds9(themes) classic]
-	if {$ii!=-1} {
-	    set ds9(themes) [lreplace $ds9(themes) $ii $ii]
-	}
-
-	# fix TEntry TLabel
-	foreach tt [ttk::style theme names] {
-	    ttk::style theme use $tt
-	    ttk::style configure TEntry -padding 1
-	    ttk::style configure TLabel -borderwidth 2 -padding 1
-	}
-
-	ttk::style theme use $pds9(theme)
-
-	if {0} {
-	set ds9(gui,bg) #d9d9d9
- 	option add {*background} $ds9(gui,bg)
-	}
-    }
-    aqua {
-	set ds9(foreground) systemTextColor
-	set ds9(background) systemTextBackgroundColor
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) systemControlAccentColor
-
-	set pap(fg) $ds9(foreground)
-	set pap(bg) $ds9(background)
-
-	::tk::unsupported::MacWindowStyle style $ds9(top) document \
-	    "closeBox fullZoom collapseBox resizable"
-    }
-    win32 {
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) blue
-
-	ttk::style theme use xpnative
-    }
-}
 
 # let's start
 set ds9(init) 1
@@ -515,8 +496,8 @@ ProcessCommandLineFirst
 if {$ds9(prefs)} {
     LoadPrefs
 
-    # if theme changes
-    ttk::style theme use $pds9(theme)
+    # theme may have changed
+    PrefsTheme
 }
 
 # set fonts

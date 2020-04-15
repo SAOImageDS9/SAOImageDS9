@@ -50,6 +50,7 @@ proc DS9Def {} {
     set ds9(graph,sp) {}
     set ds9(graph,horz) {}
     set ds9(graph,vert) {}
+    set ds9(themes) {}
 
     set ds9(frames) {}
     set ds9(active) {}
@@ -198,6 +199,20 @@ package require http
 package require base64
 package require ftp
 package require math::fuzzy
+
+# themes
+package require ttk::theme::aquativo
+package require ttk::theme::black
+package require ttk::theme::blue
+package require ttk::theme::clearlooks
+package require ttk::theme::elegance
+#package require ttk::theme::itft1
+package require ttk::theme::keramik
+#package require ttk::theme::kroc
+package require ttk::theme::plastik
+package require ttk::theme::radiance
+#package require ttk::theme::smog
+#package require ttk::theme::winxpblue
 
 package require tkcon
 package require Tkblt
@@ -353,32 +368,29 @@ switch $ds9(wm) {
 	set ds9(gui,bg) $ds9(background)
 	set ds9(gui,bold) blue
 
-	ttk::style theme use $pds9(theme)
+	# edit theme list
+	set ds9(themes) [lsort [ttk::style theme names]]
+	set ii [lsearch $ds9(themes) alt]
+	if {$ii!=-1} {
+	    set ds9(themes) [lreplace $ds9(themes) $ii $ii]
+	}
+	set ii [lsearch $ds9(themes) classic]
+	if {$ii!=-1} {
+	    set ds9(themes) [lreplace $ds9(themes) $ii $ii]
+	}
 
-	ttk::style configure TEntry -padding 1
-	ttk::style configure TLabel -borderwidth 2 -padding 1
+	# fix TEntry TLabel
+	foreach tt [ttk::style theme names] {
+	    ttk::style theme use $tt
+	    ttk::style configure TEntry -padding 1
+	    ttk::style configure TLabel -borderwidth 2 -padding 1
+	}
+
+	ttk::style theme use $pds9(theme)
 
 	if {0} {
 	set ds9(gui,bg) #d9d9d9
-
-	# standard widgets
  	option add {*background} $ds9(gui,bg)
-
-	# ttk widgets
-	ttk::style configure TFrame -background $ds9(gui,bg)
-	ttk::style configure TLabelframe -background $ds9(gui,bg)
-	ttk::style configure TLabelframe.Label -background $ds9(gui,bg)
-	ttk::style configure TLabel -background $ds9(gui,bg)
-	ttk::style configure TEntry -fieldbackground $ds9(gui,bg)
-	ttk::style configure TButton -background $ds9(gui,bg)
-	ttk::style configure TCheckbutton -background $ds9(gui,bg)
-	ttk::style configure TRadiobutton -background $ds9(gui,bg)
-	ttk::style configure TMenubutton -background $ds9(gui,bg)
-	ttk::style configure TScale -background $ds9(gui,bg)
-	ttk::style configure TScrollbar -background $ds9(gui,bg) \
-	    -troughcolor $ds9(gui,bg)
-	ttk::style configure TProgressbar -troughcolor $ds9(gui,bg)
-	
 	}
     }
     aqua {

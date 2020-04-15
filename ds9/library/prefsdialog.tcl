@@ -255,7 +255,7 @@ proc PrefsDialogGeneral {} {
 
     set m $f.theme.menu
     menu $m
-    foreach tt [ttk::style theme names] {
+    foreach tt $ds9(themes) {
 	$m add radiobutton -label $tt -variable pds9(theme) -command PrefsTheme
     }
 

@@ -44,6 +44,11 @@ $(LIBDIR)/cmaps : $(prefix)/ds9/cmaps
 $(LIBDIR)/template : $(prefix)/ds9/template
 	cp -prf $? "$@"
 
+#--------------------------ttkthemes
+
+$(LIBDIR)/ttkthemes: $(prefix)/ttkthemes/ttkthemes/themes
+	cp -prf $? "$@"
+
 #--------------------------tls
 
 $(LIBDIR)/tls	: $(prefix)/tls/tls.tcl

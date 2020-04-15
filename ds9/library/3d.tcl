@@ -442,8 +442,8 @@ proc PrefsDialog3d {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {3D}]
-    lappend dprefs(tabs) [ttk::frame $w.threed]
+    $dprefs(list) insert {} end -id [ttk::frame $w.threed] \
+	-text [msgcat::mc {3D}]
 
     set f [ttk::labelframe $w.threed.misc -text [msgcat::mc {Render}]]
     ttk::label $f.tmethod -text [msgcat::mc {Method}]

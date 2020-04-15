@@ -321,8 +321,8 @@ proc PrefsDialogSmooth {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Smooth}]
-    lappend dprefs(tabs) [ttk::frame $w.smooth]
+    $dprefs(list) insert {} end -id [ttk::frame $w.smooth] \
+	-text [msgcat::mc {Smooth}]
 
     set f [ttk::labelframe $w.smooth.param -text [msgcat::mc {Smooth}]]
 

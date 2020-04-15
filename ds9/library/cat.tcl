@@ -876,8 +876,8 @@ proc PrefsDialogCatalog {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Catalogs}]
-    lappend dprefs(tabs) [ttk::frame $w.cat]
+    $dprefs(list) insert {} end -id [ttk::frame $w.cat] \
+	-text [msgcat::mc {Catalogs}]
 
     # Catalog
     set f [ttk::labelframe $w.cat.param -text [msgcat::mc {Catalogs}]]

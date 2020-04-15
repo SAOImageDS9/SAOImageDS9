@@ -220,8 +220,8 @@ proc PrefsDialogColor {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Color}]
-    lappend dprefs(tabs) [ttk::frame $w.color]
+    $dprefs(list) insert {} end -id [ttk::frame $w.color] \
+	-text [msgcat::mc {Color}]
 
     set f [ttk::labelframe $w.color.colorbar -text [msgcat::mc {Colorbar}]]
 

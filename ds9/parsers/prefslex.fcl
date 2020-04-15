@@ -10,10 +10,13 @@
 bgcolor	    {return $BGCOLOR_}
 bgcolour    {return $BGCOLOR_}
 clear	    {return $CLEAR_}
+close       {return $CLOSE_}
 irafalign   {return $IRAFALIGN_}
 nancolor    {return $NANCOLOR_}
 nancolour   {return $NANCOLOR_}
+open	    {return $OPEN_}
 precision   {return $PRECISION_}
+save	    {return $SAVE_}
 theme	    {return $THEME_}
 threads	    {return $THREADS_}
 

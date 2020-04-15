@@ -95,8 +95,8 @@ proc PrefsDialogPageSetup {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Page Setup}]
-    lappend dprefs(tabs) [ttk::frame $w.pagesetup]
+    $dprefs(list) insert {} end -id [ttk::frame $w.pagesetup] \
+	-text [msgcat::mc {Page Setup}]
 
     # Layout
     set f [ttk::labelframe $w.pagesetup.layout -text {Layout}]

@@ -39,17 +39,18 @@ proc PrefsDialog {{which {}}} {
     set f [ttk::frame $w.param]
 
     ttk::scrollbar $f.scroll -command [list $f.box yview]
-    set dprefs(list) [listbox $f.box \
+    set dprefs(list) [ttk::treeview $f.box \
 			  -yscroll [list $f.scroll set] \
 			  -selectmode browse \
-			  -setgrid true \
-			  -width 18 -height 28 \
+			  -height 28 \
+			  -show tree \
 			 ]
+
     grid $f.box $f.scroll -sticky news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    bind $dprefs(list) <<ListboxSelect>> [list PrefsDialogListUpdate]
+    bind $dprefs(list) <<TreeviewSelect>> [list PrefsDialogListUpdate]
 
     set dprefs(tab) $f
     set dprefs(tabs) {}
@@ -99,30 +100,23 @@ proc PrefsDialog {{which {}}} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -fill both -expand true
 
-    # http is hard coded to be last
-    switch $which {
-	http {$dprefs(list) selection set end}
-	default {$dprefs(list) selection set 0}
-    }
-
     bind $w <<Save>> PrefsDialogSave
     bind $w <<Close>> PrefsDialogClose
 
-    PrefsDialogListUpdate
+    # select first item
+    $dprefs(list) selection set $dprefs(tags)
 }
 
 proc PrefsDialogListUpdate {} {
     global dprefs
 
-    set which [$dprefs(list) curselection]
-    if {$which == {}} {
-	set which 0
+    if {$dprefs(tabs) != {}} {
+	grid forget $dprefs(tabs)
     }
-    foreach tab $dprefs(tabs) {
-	grid forget $tab
+    set dprefs(tabs) [$dprefs(list) selection]
+    if {$dprefs(tabs) != {}} {
+	grid $dprefs(tabs) -row 0 -column 2 -sticky new
     }
-
-    grid [lindex $dprefs(tabs) $which] -row 0 -column 2 -sticky new
 }
 
 proc PrefsDialogSave {} {
@@ -173,8 +167,11 @@ proc PrefsDialogGeneral {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {General}]
-    lappend dprefs(tabs) [ttk::frame $w.general]
+    set gg [ttk::frame $w.general]
+    $dprefs(list) insert {} end -id $gg \
+	-text [msgcat::mc {General}]
+    # This is our first item
+    set dprefs(tags) $gg
 
     # General
     set f [ttk::labelframe $w.general.misc -text [msgcat::mc {General}]]
@@ -317,8 +314,8 @@ proc PrefsDialogPrecision {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Precision}]
-    lappend dprefs(tabs) [ttk::frame $w.precision]
+    $dprefs(list) insert {} end -id [ttk::frame $w.precision] \
+	-text [msgcat::mc {Precision}]
 
     # Coordinates
     set f [ttk::labelframe $w.precision.coord -text [msgcat::mc {Coordinates}]]
@@ -380,8 +377,8 @@ proc PrefsDialogStartup {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Startup}]
-    lappend dprefs(tabs) [ttk::frame $w.startup]
+    $dprefs(list) insert {} end -id [ttk::frame $w.startup] \
+	-text [msgcat::mc {Startup}]
 
     set f [ttk::labelframe $w.startup.params -text [msgcat::mc {At Startup}]]
 

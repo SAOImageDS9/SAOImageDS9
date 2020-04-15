@@ -418,8 +418,8 @@ proc PrefsDialogVO {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {VO}]
-    lappend dprefs(tabs) [ttk::frame $w.vo]
+    $dprefs(list) insert {} end -id [ttk::frame $w.vo] \
+	-text [msgcat::mc {VO}]
 
     # Browser
     set f [ttk::labelframe $w.vo.browser -text [msgcat::mc {Browser}]]

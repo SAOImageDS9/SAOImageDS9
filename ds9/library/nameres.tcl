@@ -164,8 +164,8 @@ proc PrefsDialogNRES {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Name Server}]
-    lappend dprefs(tabs) [ttk::frame $w.namesvr]
+    $dprefs(list) insert {} end -id [ttk::frame $w.namesvr] \
+	-text [msgcat::mc {Name Server}]
 
     set f [ttk::labelframe $w.namesvr.params -text [msgcat::mc {Name Server}]]
 

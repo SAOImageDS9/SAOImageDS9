@@ -143,8 +143,8 @@ proc PrefsDialogCoord {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Print Coordinates}]
-    lappend dprefs(tabs) [ttk::frame $w.coord]
+    $dprefs(list) insert {} end -id [ttk::frame $w.coord] \
+	-text [msgcat::mc {Print Coordinates}]
 
     # Print
     set f [ttk::labelframe $w.coord.print -text [msgcat::mc {Print}]]

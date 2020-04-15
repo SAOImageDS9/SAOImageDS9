@@ -25,8 +25,8 @@ proc PrefsDialogHTTP {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {HTTP}]
-    lappend dprefs(tabs) [ttk::frame $w.http]
+    $dprefs(list) insert {} end -id [ttk::frame $w.http] \
+	-text [msgcat::mc {HTTP}]
 
     set f [ttk::labelframe $w.http.params -text [msgcat::mc {HTTP}]]
 

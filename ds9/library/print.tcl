@@ -491,8 +491,8 @@ proc PrefsDialogPrint {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Postscript}]
-    lappend dprefs(tabs) [ttk::frame $w.print]
+    $dprefs(list) insert {} end -id [ttk::frame $w.print] \
+	-text [msgcat::mc {Postscript}]
 
     # PrintTo
     set f [ttk::labelframe $w.print.printto -text [msgcat::mc {Print To}]]

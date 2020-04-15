@@ -9,8 +9,8 @@ proc PrefsDialogPlot {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Plot}]
-    lappend dprefs(tabs) [ttk::frame $w.plot]
+    $dprefs(list) insert {} end -id [ttk::frame $w.plot] \
+	-text [msgcat::mc {Plot}]
 
     # Graph
     set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Graph}]]

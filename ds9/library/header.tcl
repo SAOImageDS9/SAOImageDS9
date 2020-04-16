@@ -82,8 +82,11 @@ proc SLBDialog {ll title width} {
     set f [ttk::frame $w.ed]
 
     ttk::scrollbar $f.scroll -command "$f.box yview"
-    set ed(listbox) [ttk::treeview $f.box -yscroll "$f.scroll set" \
-			 -selectmode browse]
+    set ed(listbox) [ttk::treeview $f.box \
+			 -yscroll "$f.scroll set" \
+			 -selectmode browse \
+			 -show tree \
+			]
 
     foreach ii $ll {
 	$ed(listbox) insert {} end -id $ii -text [lindex $ii 1]

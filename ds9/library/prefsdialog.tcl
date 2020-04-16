@@ -50,7 +50,7 @@ proc PrefsDialog {{which {}}} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    bind $dprefs(list) <<TreeviewSelect>> [list PrefsDialogListUpdate]
+    bind $dprefs(list) <<TreeviewSelect>> PrefsDialogListUpdate
 
     set dprefs(tab) $f
     set dprefs(tabs) {}

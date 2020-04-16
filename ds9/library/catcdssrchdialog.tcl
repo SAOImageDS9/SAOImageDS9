@@ -126,13 +126,15 @@ proc CATCDSSrchDialog {varname} {
 
     ttk::scrollbar $f.srch.wave.f.scroll \
 	-command [list $f.srch.wave.f.list yview]
-    set ${varname}(listbox,wave) [listbox $f.srch.wave.f.list \
-				      -yscroll \
-				      [list $f.srch.wave.f.scroll set] \
-				      -setgrid true \
-				      -selectmode browse \
-				      -exportselection 0 \
-				      -listvariable ${varname}(list,wave)]
+    set var(listbox,wave) [ttk::treeview $f.srch.wave.f.list \
+			       -yscroll [list $f.srch.wave.f.scroll set] \
+			       -selectmode browse \
+			       -show tree \
+			      ]
+    foreach tt $var(list,wave) {
+	$var(listbox,wave) insert {} end -id $tt -text $tt
+    }
+
     grid $f.srch.wave.f.list $f.srch.wave.f.scroll -sticky news
     grid rowconfigure $f.srch.wave.f 0 -weight 1
     grid columnconfigure $f.srch.wave.f 0 -weight 1
@@ -146,13 +148,15 @@ proc CATCDSSrchDialog {varname} {
 
     ttk::scrollbar $f.srch.mission.f.scroll \
 	-command [list $f.srch.mission.f.list yview]
-    set ${varname}(listbox,mission) [listbox $f.srch.mission.f.list \
-					 -yscroll \
-					 [list $f.srch.mission.f.scroll set] \
-					 -setgrid true \
-					 -selectmode browse \
-					 -exportselection 0 \
-					 -listvariable ${varname}(list,mission)]
+    set var(listbox,mission) [ttk::treeview $f.srch.mission.f.list \
+				  -yscroll [list $f.srch.mission.f.scroll set] \
+				  -selectmode browse \
+				  -show tree \
+				 ]
+    foreach tt $var(list,mission) {
+	$var(listbox,mission) insert {} end -id $tt -text $tt
+    }
+
     grid $f.srch.mission.f.list $f.srch.mission.f.scroll \
 	-sticky news
     grid rowconfigure $f.srch.mission.f 0 -weight 1
@@ -167,13 +171,14 @@ proc CATCDSSrchDialog {varname} {
 
     ttk::scrollbar $f.srch.astro.f.scroll \
 	-command [list $f.srch.astro.f.list yview]
-    set ${varname}(listbox,astro) [listbox $f.srch.astro.f.list \
-				       -yscroll \
-				       [list $f.srch.astro.f.scroll set] \
-				       -setgrid true \
-				       -selectmode browse \
-				       -exportselection 0 \
-				       -listvariable ${varname}(list,astro)]
+    set var(listbox,astro) [ttk::treeview $f.srch.astro.f.list \
+				-yscroll [list $f.srch.astro.f.scroll set] \
+				-selectmode browse \
+				-show tree \
+			       ]
+    foreach tt $var(list,astro) {
+	$var(listbox,astro) insert {} end -id $tt -text $tt
+    }
     grid $f.srch.astro.f.list $f.srch.astro.f.scroll -sticky news
     grid rowconfigure $f.srch.astro.f 0 -weight 1
     grid columnconfigure $f.srch.astro.f 0 -weight 1
@@ -250,9 +255,10 @@ proc CATCDSSrchDialog {varname} {
     ARStatus $varname {}
 
     # initialize
-    $var(listbox,wave) selection set 0
-    $var(listbox,mission) selection set 0
-    $var(listbox,astro) selection set 0
+    $var(listbox,wave) selection set [lindex $var(list,wave) 0]
+    $var(listbox,mission) selection set [lindex $var(list,mission) 0]
+    $var(listbox,astro) selection set [lindex $var(list,astro) 0]
+
     $w.param.name.source select range 0 end
 
     bind $w <<Open>> [list CATCDSSrchLoadFile $varname]
@@ -271,22 +277,16 @@ proc CATCDSSrchApply {varname} {
 	puts stderr "CATCDSSrchApply $varname"
     }
 
-    set id [$var(listbox,wave) curselection]
-    if {$id > 0} {
-	set var(wave) [lindex $var(list,wave) $id]
-    } else {
+    set var(wave) [$var(listbox,wave) selection]
+    if {$var(wave) == {none}} {
 	set var(wave) {}
     }
-    set id [$var(listbox,mission) curselection]
-    if {$id > 0} {
-	set var(mission) [lindex $var(list,mission) $id]
-    } else {
+    set var(mission) [$var(listbox,mission) selection]
+    if {$var(mission) == {none}} {
 	set var(mission) {}
     }
-    set id [$var(listbox,astro) curselection]
-    if {$id > 0} {
-	set var(astro) [lindex $var(list,astro) $id]
-    } else {
+    set var(astro) [$var(listbox,astro) selection]
+    if {$var(astro) == {none}} {
 	set var(astro) {}
     }
 

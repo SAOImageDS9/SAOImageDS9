@@ -168,8 +168,7 @@ proc PrefsDialogGeneral {} {
     set w $dprefs(tab)
 
     set gg [ttk::frame $w.general]
-    $dprefs(list) insert {} end -id $gg \
-	-text [msgcat::mc {General}]
+    $dprefs(list) insert {} end -id $gg -text [msgcat::mc {General}]
     # This is our first item
     set dprefs(tags) $gg
 

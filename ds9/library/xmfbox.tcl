@@ -439,7 +439,9 @@ proc ::tk::MotifFDialog_SetListMode {w} {
 proc ::tk::MotifFDialog_MakeSList {w f label cmdPrefix} {
     bind [::tk::AmpWidget ttk::label $f.lab -text $label -anchor w] \
 	<<AltUnderlined>> [list focus $f.l]
-    listbox $f.l -width 12 -height 5 -exportselection 0\
+#    listbox $f.l -width 12 -height 5 -exportselection 0\
+#	-xscrollcommand [list $f.h set]	-yscrollcommand [list $f.v set]
+    ttk::treeview $f.l -height 10 -show tree \
 	-xscrollcommand [list $f.h set]	-yscrollcommand [list $f.v set]
     ttk::scrollbar $f.v -orient vertical   -takefocus 0 -command [list $f.l yview]
     ttk::scrollbar $f.h -orient horizontal -takefocus 0 -command [list $f.l xview]
@@ -456,13 +458,14 @@ proc ::tk::MotifFDialog_MakeSList {w f label cmdPrefix} {
     # bindings for the listboxes
     #
     set list $f.l
-    bind $list <<ListboxSelect>> [list tk::MotifFDialog_Browse$cmdPrefix $w]
+#    bind $list <<ListboxSelect>> [list tk::MotifFDialog_Browse$cmdPrefix $w]
+    bind $list <<TreeviewSelect>> [list tk::MotifFDialog_Browse$cmdPrefix $w]
     bind $list <Double-ButtonRelease-1> \
 	    [list tk::MotifFDialog_Activate$cmdPrefix $w]
     bind $list <Return>	"tk::MotifFDialog_Browse$cmdPrefix [list $w]; \
 	    tk::MotifFDialog_Activate$cmdPrefix [list $w]"
 
-    bindtags $list [list Listbox $list [winfo toplevel $list] all]
+#    bindtags $list [list Listbox $list [winfo toplevel $list] all]
     ListBoxKeyAccel_Set $list
 
     return $f.l
@@ -573,14 +576,21 @@ proc ::tk::MotifFDialog_Update {w} {
 proc ::tk::MotifFDialog_LoadFiles {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
 
-    $data(dList) delete 0 end
-    $data(fList) delete 0 end
+#    $data(dList) delete 0 end
+    foreach cc [$data(dList) children {}] {
+	$data(dList) delete $cc
+    }
+#    $data(fList) delete 0 end
+    foreach cc [$data(fList) children {}] {
+	$data(fList) delete $cc
+    }
 
     set appPWD [pwd]
     if {[catch {cd $data(selectPath)}]} {
 	cd $appPWD
 
-	$data(dList) insert end ".."
+#	$data(dList) insert end ".."
+	$data(dList) insert {} end -id ".." -text ".."
 	return
     }
 
@@ -610,8 +620,14 @@ proc ::tk::MotifFDialog_LoadFiles {w} {
             }
 	}
     }
-    eval [list $data(dList) insert end] [lsort -dictionary $dlist]
-    eval [list $data(fList) insert end] [lsort -dictionary $flist]
+#    eval [list $data(dList) insert end] [lsort -dictionary $dlist]
+    foreach dd [lsort -dictionary $dlist] {
+	$data(dList) insert {} end -id $dd -text $dd
+    }
+#    eval [list $data(fList) insert end] [lsort -dictionary $flist]
+    foreach ff [lsort -dictionary $flist] {
+	$data(fList) insert {} end -id $ff -text $ff
+    }
 
     # The user probably doesn't want to see the . files. We adjust the view
     # so that the listbox displays all the non-dot files
@@ -635,15 +651,20 @@ proc ::tk::MotifFDialog_BrowseDList {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
 
     focus $data(dList)
-    if {[$data(dList) curselection] eq ""} {
+#    if {[$data(dList) curselection] eq ""}
+    if {[$data(dList) selection] eq ""} {
 	return
     }
-    set subdir [$data(dList) get [$data(dList) curselection]]
+#    set subdir [$data(dList) get [$data(dList) curselection]]
+    set subdir [$data(dList) selection]
     if {$subdir eq ""} {
 	return
     }
 
-    $data(fList) selection clear 0 end
+#    $data(fList) selection clear 0 end
+    foreach cc [$data(fList) children {}] {
+	$data(fList) selection remove $cc
+    }
 
     set list [MotifFDialog_InterpFilter $w]
     set data(filter) [lindex $list 1]
@@ -680,15 +701,20 @@ proc ::tk::MotifFDialog_BrowseDList {w} {
 proc ::tk::MotifFDialog_ActivateDList {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
 
-    if {[$data(dList) curselection] eq ""} {
+#    if {[$data(dList) curselection] eq ""}
+    if {[$data(dList) selection] eq ""} {
 	return
     }
-    set subdir [$data(dList) get [$data(dList) curselection]]
+#    set subdir [$data(dList) get [$data(dList) curselection]]
+    set subdir [$data(dList) selection]
     if {$subdir eq ""} {
 	return
     }
 
-    $data(fList) selection clear 0 end
+#    $data(fList) selection clear 0 end
+    foreach cc [$data(fList) children {}] {
+	$data(fList) selection remove $cc
+    }
 
     switch -- $subdir {
 	. {
@@ -706,11 +732,13 @@ proc ::tk::MotifFDialog_ActivateDList {w} {
     MotifFDialog_Update $w
 
     if {$subdir ne ".."} {
-	$data(dList) selection set 0
-	$data(dList) activate 0
+#	$data(dList) selection set 0
+	$data(dList) selection set [lindex [$data(dList) children {}] 0]
+#	$data(dList) activate 0
     } else {
-	$data(dList) selection set 1
-	$data(dList) activate 1
+#	$data(dList) selection set 1
+	$data(dList) selection set [lindex [$data(dList) children {}] 1]
+#	$data(dList) activate 1
     }
 }
 
@@ -730,14 +758,19 @@ proc ::tk::MotifFDialog_BrowseFList {w} {
 
     focus $data(fList)
     set data(selectFile) ""
-    foreach item [$data(fList) curselection] {
-	lappend data(selectFile) [$data(fList) get $item]
+#    foreach item [$data(fList) curselection]
+    foreach item [$data(fList) selection] {
+#	lappend data(selectFile) [$data(fList) get $item]
+	lappend data(selectFile) $item
     }
     if {[llength $data(selectFile)] == 0} {
 	return
     }
 
-    $data(dList) selection clear 0 end
+#    $data(dList) selection clear 0 end
+    foreach cc [$data(dList) children {}] {
+	$data(dList) selection remove $cc
+    }
 
     $data(fEnt) delete 0 end
     $data(fEnt) insert 0 [::tk::dialog::file::JoinFile $data(selectPath) \
@@ -770,10 +803,12 @@ proc ::tk::MotifFDialog_BrowseFList {w} {
 proc ::tk::MotifFDialog_ActivateFList {w} {
     upvar ::tk::dialog::file::[winfo name $w] data
 
-    if {[$data(fList) curselection] eq ""} {
+#    if {[$data(fList) curselection] eq ""}
+    if {[$data(fList) selection] eq ""} {
 	return
     }
-    set data(selectFile) [$data(fList) get [$data(fList) curselection]]
+#    set data(selectFile) [$data(fList) get [$data(fList) curselection]]
+    set data(selectFile) [$data(fList) selection]
     if {$data(selectFile) eq ""} {
 	return
     } else {

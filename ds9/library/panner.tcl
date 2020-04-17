@@ -271,7 +271,7 @@ proc PrefsDialogPanner {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.panner] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.panner] \
 	-text [msgcat::mc {Panner}]
 
     set f [ttk::labelframe $w.panner.param -text [msgcat::mc {Panner}]]

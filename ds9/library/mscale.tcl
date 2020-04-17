@@ -155,7 +155,7 @@ proc PrefsDialogScale {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.scale] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.scale] \
 	-text [msgcat::mc {Scale}]
 
     # Log

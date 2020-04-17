@@ -530,7 +530,7 @@ proc PrefsDialogMenu {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.menu] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.menu] \
 	-text [msgcat::mc {Menus and Buttons}]
 
     PrefsDialogFileMenu $w.menu

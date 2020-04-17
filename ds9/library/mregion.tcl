@@ -335,7 +335,7 @@ proc PrefsDialogRegion {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.region] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.region] \
 	-text [msgcat::mc {Region}]
 
     # Format
@@ -493,7 +493,7 @@ proc PrefsDialogAnnulus {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.annulus] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.annulus] \
 	-text [msgcat::mc {Annulus}]
 
     # Annulus
@@ -570,7 +570,7 @@ proc PrefsDialogPanda {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.panda] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.panda] \
 	-text [msgcat::mc {Panda}]
 
     # Panda

@@ -103,7 +103,7 @@ proc PrefsDialogMagnifier {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.magnifier] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.magnifier] \
 	-text [msgcat::mc {Magnifier}]
 
     set f [ttk::labelframe $w.magnifier.param -text [msgcat::mc {Magnifier}]]

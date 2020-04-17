@@ -236,7 +236,7 @@ proc PrefsDialogPixelTable {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.pixel] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.pixel] \
 	-text [msgcat::mc {Pixel Table}]
 
     set f [ttk::labelframe $w.pixel.param -text [msgcat::mc {Pixel Table}]]

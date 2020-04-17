@@ -1017,7 +1017,7 @@ proc PrefsDialogContour {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.contour] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.contour] \
 	-text [msgcat::mc {Contours}]
 
     set f [ttk::labelframe $w.contour.param -text [msgcat::mc {Contours}]]

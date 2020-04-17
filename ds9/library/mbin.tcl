@@ -110,7 +110,7 @@ proc PrefsDialogBin {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.bin] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.bin] \
 	-text [msgcat::mc {Bin}]
 
     # Mouse

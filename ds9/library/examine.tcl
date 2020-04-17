@@ -278,7 +278,7 @@ proc PrefsDialogExamine {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.examine] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.examine] \
 	-text [msgcat::mc {Examine}]
 
     # Examine

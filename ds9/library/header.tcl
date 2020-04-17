@@ -60,7 +60,7 @@ proc DisplayHeaderMenu {} {
 	if {[llength $ll] <= 1} {
 	    DisplayHeader 1 $fn
 	} else {
-	    set rr [SLBDialog $ll {Select Header} 40]
+	    set rr [DisplayHeaderListDialog $ll {Select Header} 40]
 	    if {$rr != {}} {
 		set ss [lindex $rr 0]
 		DisplayHeader [lindex $ss 0] [lindex $ss 1]
@@ -69,7 +69,7 @@ proc DisplayHeaderMenu {} {
     }
 }
 
-proc SLBDialog {ll title width} {
+proc DisplayHeaderListDialog {ll title width} {
     global ed
 
     set w {.slb}

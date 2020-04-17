@@ -142,7 +142,7 @@ proc PrefsDialogGraph {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.graph] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.graph] \
 	-text [msgcat::mc {Graphs}]
 
     # Horz

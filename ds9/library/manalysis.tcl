@@ -383,7 +383,7 @@ proc PrefsDialogAnalysis {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.analysis] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.analysis] \
 	-text [msgcat::mc {Analysis}]
 
     set f [ttk::labelframe $w.analysis.file \

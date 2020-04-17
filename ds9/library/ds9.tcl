@@ -219,15 +219,23 @@ switch $ds9(wm) {
 	# themes
 	package require ttk::theme::aquativo
 	package require ttk::theme::black
-	package require ttk::theme::blue
+	# no menu bg
+	# package require ttk::theme::blue
 	package require ttk::theme::clearlooks
-	package require ttk::theme::elegance
+	# no menu bg
+	# package require ttk::theme::elegance
+	# ugly
 	#package require ttk::theme::itft1
-	package require ttk::theme::keramik
+	# no menu bg
+	# package require ttk::theme::keramik
+	# ugly
 	#package require ttk::theme::kroc
-	package require ttk::theme::plastik
+	# no menu bg
+	# package require ttk::theme::plastik
 	package require ttk::theme::radiance
+	# ugly
 	#package require ttk::theme::smog
+	# ugly
 	#package require ttk::theme::winxpblue
 
 	set ds9(foreground) black

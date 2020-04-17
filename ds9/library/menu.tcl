@@ -36,6 +36,17 @@ proc CreateMenuBar {} {
     WCSMainMenu
     AnalysisMainMenu
     HelpMainMenu
+
+    switch $ds9(wm) {
+	x11 {bind Menu <<ThemeChanged>> {ThemeChangedMenu %W}}
+	aqua -
+	win32 {}
+    }
+}
+
+proc ThemeChangedMenu {which} {
+    $which configure -bg [ttk::style lookup TMenubutton -background]
+    $which configure -fg [ttk::style lookup TMenubutton -foreground]
 }
 
 proc AppleMenu {mb} {

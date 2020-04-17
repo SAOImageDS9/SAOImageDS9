@@ -39,7 +39,7 @@ proc PrefsDialog {{which {}}} {
     set f [ttk::frame $w.param]
 
     ttk::scrollbar $f.scroll -command [list $f.box yview]
-    set dprefs(list) [ttk::treeview $f.box \
+    set dprefs(listbox) [ttk::treeview $f.box \
 			  -yscroll [list $f.scroll set] \
 			  -selectmode browse \
 			  -height 28 \
@@ -50,7 +50,7 @@ proc PrefsDialog {{which {}}} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    bind $dprefs(list) <<TreeviewSelect>> PrefsDialogListUpdate
+    bind $dprefs(listbox) <<TreeviewSelect>> PrefsDialogListUpdate
 
     set dprefs(tab) $f
     set dprefs(tabs) {}
@@ -104,7 +104,7 @@ proc PrefsDialog {{which {}}} {
     bind $w <<Close>> PrefsDialogClose
 
     # select first item
-    $dprefs(list) selection set $dprefs(tags)
+    $dprefs(listbox) selection set $dprefs(tags)
 }
 
 proc PrefsDialogListUpdate {} {
@@ -113,7 +113,7 @@ proc PrefsDialogListUpdate {} {
     if {$dprefs(tabs) != {}} {
 	grid forget $dprefs(tabs)
     }
-    set dprefs(tabs) [$dprefs(list) selection]
+    set dprefs(tabs) [$dprefs(listbox) selection]
     if {$dprefs(tabs) != {}} {
 	grid $dprefs(tabs) -row 0 -column 2 -sticky new
     }
@@ -168,7 +168,7 @@ proc PrefsDialogGeneral {} {
     set w $dprefs(tab)
 
     set gg [ttk::frame $w.general]
-    $dprefs(list) insert {} end -id $gg -text [msgcat::mc {General}]
+    $dprefs(listbox) insert {} end -id $gg -text [msgcat::mc {General}]
     # This is our first item
     set dprefs(tags) $gg
 
@@ -313,7 +313,7 @@ proc PrefsDialogPrecision {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.precision] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.precision] \
 	-text [msgcat::mc {Precision}]
 
     # Coordinates
@@ -376,7 +376,7 @@ proc PrefsDialogStartup {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert {} end -id [ttk::frame $w.startup] \
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.startup] \
 	-text [msgcat::mc {Startup}]
 
     set f [ttk::labelframe $w.startup.params -text [msgcat::mc {At Startup}]]

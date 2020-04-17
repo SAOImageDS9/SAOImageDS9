@@ -11,7 +11,7 @@ proc GroupDef {} {
     set igroup(top) .grp
     set igroup(mb) .grpmb
 
-    set dgroup(list) {}
+    set dgroup(listbox) {}
 }
 
 proc GroupCreate {} {
@@ -77,7 +77,7 @@ proc GroupDialog {} {
     set f [ttk::frame $w.param]
 
     ttk::scrollbar $f.scroll -command [list $f.box yview] -orient vertical
-    set dgroup(list) [ttk::treeview $f.box \
+    set dgroup(listbox) [ttk::treeview $f.box \
 			  -yscroll [list $f.scroll set] \
 			  -selectmode browse \
 			  -show tree \
@@ -86,7 +86,7 @@ proc GroupDialog {} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
-    bind $dgroup(list) <<TreeviewSelect>> GroupButtonDialog
+    bind $dgroup(listbox) <<TreeviewSelect>> GroupButtonDialog
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -120,7 +120,7 @@ proc GroupButtonDialog {} {
 
     if {$current(frame) != {}} {
 	$current(frame) marker unselect all
-	set tag [$dgroup(list) selection]
+	set tag [$dgroup(listbox) selection]
 	if {$tag != {}} {
 	    $current(frame) marker $tag select
 	}
@@ -133,7 +133,7 @@ proc GroupNoneDialog {} {
 
     if {$current(frame) != {}} {
 	$current(frame) marker unselect all
-	$dgroup(list) select remove [$dgroup(list) selection]
+	$dgroup(listbox) selection remove [$dgroup(listbox) selection]
     }
 }
 
@@ -142,7 +142,7 @@ proc GroupUpdateDialog {} {
     global current
 
     if {$current(frame) != {}} {
-	set tag [$dgroup(list) selection]
+	set tag [$dgroup(listbox) selection]
 	if {$tag != {}} {
 	    $current(frame) marker tag update $tag
 	}
@@ -154,7 +154,7 @@ proc GroupEditDialog {} {
     global current
     
     if {$current(frame) != {}} {
-	set tag [$dgroup(list) selection]
+	set tag [$dgroup(listbox) selection]
 	set old $tag
 	if {$tag != {}} {
 	    set flat [join $tag]
@@ -171,7 +171,7 @@ proc GroupDeleteDialog {} {
     global current
 
     if {$current(frame) != {}} {
-	set tag [$dgroup(list) selection]
+	set tag [$dgroup(listbox) selection]
 	if {$tag != {}} {
 	    $current(frame) marker tag delete $tag
 	    UpdateGroupDialog
@@ -206,13 +206,13 @@ proc UpdateGroupDialog {} {
     }
 
     if {[winfo exists $igroup(top)]} {
-	foreach tag [$dgroup(list) children {}] {
-	    $dgroup(list) delete [list $tag]
+	foreach tag [$dgroup(listbox) children {}] {
+	    $dgroup(listbox) delete [list $tag]
 	}
 
 	if {$current(frame) != {}} {
 	    foreach tag [lsort [$current(frame) get marker tag all]] {
-		$dgroup(list) insert {} end -id $tag -text $tag
+		$dgroup(listbox) insert {} end -id $tag -text $tag
 	    }
 	}
     }

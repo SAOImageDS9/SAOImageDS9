@@ -1,0 +1,29 @@
+environment:
+  matrix:
+    - PYTHON: "C:\\PYTHON35"
+    - PYTHON: "C:\\PYTHON35-x64"
+    - PYTHON: "C:\\PYTHON36"
+    - PYTHON: "C:\\PYTHON36-x64"
+    - PYTHON: "C:\\PYTHON37"
+    - PYTHON: "C:\\PYTHON37-x64"
+    - PYTHON: "C:\\PYTHON38"
+    - PYTHON: "C:\\PYTHON38-x64"
+build: off
+before_test:
+  - "%PYTHON%\\python.exe -m pip install --upgrade pip setuptools"
+test_script:
+  - "%PYTHON%\\python.exe ci.py"
+artifacts:
+  - path: "/dist/*.whl"
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: QimY++/91urL/oMJL/q2zYFqc1C7747HguEaIbPQovtC3zG8CK+TiCmFOCXy1D6e
+  artifact: "/dist/*.whl"
+  draft: false
+  prerelease: false
+  force_update: true
+  on:
+    branch: master
+    appveyor_repo_tag: true
+

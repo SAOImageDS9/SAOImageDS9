@@ -466,6 +466,7 @@ proc ::tk::MotifFDialog_MakeSList {w f label cmdPrefix} {
 	    tk::MotifFDialog_Activate$cmdPrefix [list $w]"
 
 #    bindtags $list [list Listbox $list [winfo toplevel $list] all]
+    bindtags $list [list Treeview $list [winfo toplevel $list] all]
     ListBoxKeyAccel_Set $list
 
     return $f.l
@@ -954,7 +955,8 @@ proc ::tk::MotifFDialog_CancelCmd {w} {
 }
 
 proc ::tk::ListBoxKeyAccel_Set {w} {
-    bind Listbox <Any-KeyPress> ""
+#    bind Listbox <Any-KeyPress> ""
+    bind Treeview <Any-KeyPress> ""
     bind $w <Destroy> [list tk::ListBoxKeyAccel_Unset $w]
     bind $w <Any-KeyPress> [list tk::ListBoxKeyAccel_Key $w %A]
 }
@@ -998,6 +1000,7 @@ proc ::tk::ListBoxKeyAccel_Key {w key} {
 proc ::tk::ListBoxKeyAccel_Goto {w string} {
     variable ::tk::Priv
 
+    if {0} {
     set string [string tolower $string]
     set end [$w index end]
     set theIndex -1
@@ -1019,6 +1022,22 @@ proc ::tk::ListBoxKeyAccel_Goto {w string} {
 	$w activate $theIndex
 	$w see $theIndex
 	event generate $w <<ListboxSelect>>
+    }
+    }
+
+    set string [string trim [string tolower $string]]
+    set ll [string length $string]
+
+    foreach cc [$w children {}] {
+	if {![string compare -length $ll $string $cc]} {
+	    foreach dd [$w children {}] {
+		$w selection remove $dd
+	    }
+	    $w selection set $cc
+	    $w see $cc
+	    event generate $w <<TreeviewSelect>>
+	    break
+	}
     }
 }
 

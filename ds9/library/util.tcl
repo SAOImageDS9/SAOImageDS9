@@ -1741,7 +1741,9 @@ proc ProcessThemeCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    ttk::style theme use [lindex $var $i]
+    global pds9
+    set pds9(theme) [lindex $var $i]
+    PrefsTheme
 }
 
 # backward compatibility

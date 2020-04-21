@@ -47,6 +47,12 @@ proc CreateMenuBar {} {
 proc ThemeChangedMenu {which} {
     $which configure -bg [ttk::style lookup TMenubutton -background]
     $which configure -fg [ttk::style lookup TMenubutton -foreground]
+    if {0} {
+    $which configure -activebackground \
+	[ttk::style lookup TMenubutton -selectbackground]
+    $which configure -activeforeground \
+	[ttk::style lookup TMenubutton -selectforeground]
+    }
 }
 
 proc AppleMenu {mb} {

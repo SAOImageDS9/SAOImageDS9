@@ -219,19 +219,15 @@ switch $ds9(wm) {
 	# themes
 	package require ttk::theme::aquativo
 	package require ttk::theme::black
-	# no menu bg
-	# package require ttk::theme::blue
+	package require ttk::theme::blue
 	package require ttk::theme::clearlooks
-	# no menu bg
-	# package require ttk::theme::elegance
+	package require ttk::theme::elegance
 	# ugly
 	#package require ttk::theme::itft1
-	# no menu bg
-	# package require ttk::theme::keramik
+	package require ttk::theme::keramik
 	# ugly
 	#package require ttk::theme::kroc
-	# no menu bg
-	# package require ttk::theme::plastik
+	package require ttk::theme::plastik
 	package require ttk::theme::radiance
 	# ugly
 	#package require ttk::theme::smog
@@ -255,11 +251,12 @@ switch $ds9(wm) {
 	    ttk::style configure TEntry -padding 1
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
-	ttk::style theme use default
 
 	# fix ::tk::dialog::file
 	set ::tk::dialog::file::showHiddenVar 0
 	set ::tk::dialog::file::showHiddenBtn 1
+
+	ttk::style theme use default
     }
     aqua {
 	set ds9(foreground) systemTextColor
@@ -503,9 +500,6 @@ ProcessCommandLineFirst
 # Load any preferences here, before we do any real work
 if {$ds9(prefs)} {
     LoadPrefs
-
-    # theme may have changed
-    PrefsTheme
 }
 
 # set fonts
@@ -652,6 +646,9 @@ switch $ds9(wm) {
 	update
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
+
+	# be sure theme has been set
+	PrefsTheme
     }
     aqua {}
     win32 {

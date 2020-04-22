@@ -45,6 +45,7 @@ proc CreateMenuBar {} {
 	x11 {
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
 	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
+	    bind Text <<ThemeChanged>> {ThemeConfigText %W}
 	}
 	aqua -
 	win32 {}
@@ -108,6 +109,19 @@ proc ThemeConfigMenu {w} {
 }
 
 proc ThemeConfigTable {w} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {}
+	aqua -
+	win32 {return}
+    }
+
+    $w configure -fg [ThemeForeground]
+    $w configure -bg [ThemeBackground]
+}
+
+proc ThemeConfigText {w} {
     global ds9
     
     switch $ds9(wm) {

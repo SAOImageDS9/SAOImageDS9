@@ -241,17 +241,7 @@ switch $ds9(wm) {
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) alt]
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) classic]
 
-	# fix TEntry TLabel
-	foreach tt [ttk::style theme names] {
-	    ttk::style theme use $tt
-	    ttk::style configure TEntry -padding 1 \
-		-fieldbackground [ttk::style lookup TLabel -background]
-	    ttk::style configure Treeview \
-		-background [ttk::style lookup TLabel -background] \
-		-fieldbackground [ttk::style lookup TLabel -background]
-	    ttk::style configure TLabel -borderwidth 2 -padding 1
-	}
-
+	# colors
 	set ds9(foreground) black
 	set ds9(background) white
 	set ds9(bold) blue
@@ -268,11 +258,30 @@ switch $ds9(wm) {
 	set ds9(menu,active,bg) \
 	    [ttk::style lookup TMenubutton -selectbackground]
 
+	# fix TEntry/Treeview/TLabel widgets
+	foreach tt [ttk::style theme names] {
+	    ttk::style theme use $tt
+	    set fg [ttk::style lookup TLabel -foreground]
+	    if {$fg == {}} {
+		set fg $ds9(gui,fg)
+	    }
+	    set bg [ttk::style lookup TLabel -background]
+	    if {$bg == {}} {
+		set bg $ds9(gui,bg)
+	    }
+	    ttk::style configure TEntry -padding 1 \
+		-fieldbackground $bg -background $bg -foreground $fg
+	    ttk::style configure Treeview -background $bg -fieldbackground $bg
+	    ttk::style configure TLabel -borderwidth 2 -padding 1
+	}
+	ttk::style theme use default
+
 	# fix ::tk::dialog::file
 	set ::tk::dialog::file::showHiddenVar 0
 	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
+	# colors
 	set ds9(foreground) systemTextColor
 	set ds9(background) systemTextBackgroundColor
 	set ds9(bold) systemControlAccentColor
@@ -345,6 +354,7 @@ switch $ds9(wm) {
 	}
     }
     win32 {
+	# colors
 	set ds9(foreground) black
 	set ds9(background) white
 	set ds9(bold) blue

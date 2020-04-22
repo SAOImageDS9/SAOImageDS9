@@ -239,6 +239,8 @@ proc SimpleTextDialog {varname title width height action pos txt
 			   -wrap none \
 			   -yscrollcommand [list $var(top).yscroll set] \
 			   -xscrollcommand [list $var(top).xscroll set] \
+			   -fg [ThemeForeground] \
+			   -bg [ThemeBackground] \
 			  ]
 
 	ttk::scrollbar $var(top).yscroll -command [list $var(text) yview] \

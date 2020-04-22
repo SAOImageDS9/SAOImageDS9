@@ -9,7 +9,7 @@ package provide DS9 1.0
 proc ScaleMainMenu {} {
     global ds9
 
-    menu $ds9(mb).scale
+    ThemeMenu $ds9(mb).scale
     $ds9(mb).scale add radiobutton -label [msgcat::mc {Linear}] \
 	-variable scale(type) -command ChangeScale -value linear
     $ds9(mb).scale add radiobutton -label [msgcat::mc {Log}] \
@@ -71,7 +71,7 @@ proc ScaleMainMenu {} {
     $ds9(mb).scale add command -label "[msgcat::mc {Scale Parameters}]..." \
 	-command ScaleDialog
 
-    menu $ds9(mb).scale.minmax
+    ThemeMenu $ds9(mb).scale.minmax
     $ds9(mb).scale.minmax add radiobutton -label [msgcat::mc {Scan}] \
 	-variable minmax(mode) -value scan -command ChangeMinMax
     $ds9(mb).scale.minmax add radiobutton -label [msgcat::mc {Sample}] \
@@ -94,7 +94,7 @@ proc PrefsDialogScaleMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2 -sticky w
     
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {Linear}] \
 	-variable pscale(type) -value linear
     $m add radiobutton -label [msgcat::mc {Log}] \
@@ -137,7 +137,7 @@ proc PrefsDialogScaleMenu {w} {
     $m add checkbutton -label "[msgcat::mc {Use}] DATASEC" \
 	-variable pscale(datasec)
 
-    menu $m.minmax
+    ThemeMenu $m.minmax
     $m.minmax add radiobutton -label [msgcat::mc {Scan}] \
 	-variable pminmax(mode) -value scan
     $m.minmax add radiobutton -label [msgcat::mc {Sample}] \
@@ -325,7 +325,7 @@ proc PrefsDialogButtonbarScale {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Linear}] \
 	-variable pbuttons(scale,linear) -command {UpdateButtons buttons(scale)}
     $m add checkbutton -label [msgcat::mc {Log}] \

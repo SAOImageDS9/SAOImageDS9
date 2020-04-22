@@ -151,7 +151,7 @@ proc VODialog {} {
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command "VOApply $varname"
     $mb.file add command -label [msgcat::mc {Cancel}] \

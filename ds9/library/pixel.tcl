@@ -53,14 +53,14 @@ proc PixelTableDialog {} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {Size}] -menu $mb.size
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command PixelTableSaveDialog -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command PixelTableDestroyDialog -accelerator "${ds9(ctrl)}W"
 
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-state disabled -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -68,7 +68,7 @@ proc PixelTableDialog {} {
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-state disabled -accelerator "${ds9(ctrl)}V"
 
-    menu $mb.size
+    ThemeMenu $mb.size
     for {set ii 3} {$ii<=$ipixel(max)} {incr ii 2} {
 	$mb.size add radiobutton -label "${ii}x${ii}" -variable pixel(size) \
 	    -value $ii -command PixelTableConfigure
@@ -82,12 +82,13 @@ proc PixelTableDialog {} {
 			 -variable dpixel \
 			 -usecommand 0 \
 			 -maxwidth 1200 \
-			 -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
+			 -fg [ThemeForeground] \
+			 -bg [ThemeBackground] \
 			]
     
     $dpixel(tbl) tag col coord 0
     $dpixel(tbl) tag row coord 0
-    $dpixel(tbl) tag configure coord -foreground $ds9(gui,bold)
+    $dpixel(tbl) tag configure coord -foreground $ds9(bold)
     $dpixel(tbl) tag configure center -foreground red
 
     grid $f.t -sticky news
@@ -249,7 +250,7 @@ proc PrefsDialogPixelTable {} {
 
     global ipixel
     set m $f.size.menu
-    menu $m
+    ThemeMenu $m
     for {set ii 3} {$ii<=$ipixel(max)} {incr ii 2} {
 	$m add radiobutton -label "${ii}x${ii}" -variable ppixel(size) \
 	    -value $ii -command [list PrefsDialogPixelTableButtonCmd $ii]

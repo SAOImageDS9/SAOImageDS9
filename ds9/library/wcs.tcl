@@ -167,7 +167,7 @@ proc WCSDialog {} {
     $mb add cascade -label [msgcat::mc {WCS}] -menu $mb.wcs
     $mb add cascade -label [msgcat::mc {Extention}] -menu $mb.ext
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command WCSLoadDialog -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -181,7 +181,7 @@ proc WCSDialog {} {
 
     EditMenu $mb iwcs
 
-    menu $mb.wcs
+    ThemeMenu $mb.wcs
     $mb.wcs add radiobutton -label [msgcat::mc {WCS}] \
 	-variable dwcs(system) -value wcs -command ConfigWCSDialog
     $mb.wcs add separator
@@ -191,7 +191,7 @@ proc WCSDialog {} {
     }
 
     # configured later
-    menu $mb.ext
+    ThemeMenu $mb.ext
 
     # Param
     set tt [ttk::notebook $w.param]

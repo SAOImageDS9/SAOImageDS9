@@ -80,7 +80,7 @@ proc CATSymDialog {parent} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     # menu
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command "CATSymLoad $varname" -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -97,7 +97,7 @@ proc CATSymDialog {parent} {
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command "CATSymDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command "EntryCut $var(top)" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -142,7 +142,7 @@ proc CATSymDialog {parent} {
     ttk::button $f.bangle -text [msgcat::mc {Edit}] \
 	-command "TBLEditDialog $varname angle $pvar(catdb)"
 
-    menu $f.shape.menu
+    ThemeMenu $f.shape.menu
     $f.shape.menu add radiobutton  -label [msgcat::mc {Circle}] \
 	-variable ${varname}(shape) -value {circle}
     $f.shape.menu add radiobutton  -label [msgcat::mc {Ellipse}] \
@@ -156,7 +156,7 @@ proc CATSymDialog {parent} {
     $f.shape.menu add cascade -label [msgcat::mc {Point}] \
 	-menu $f.shape.menu.point
 
-    menu $f.shape.menu.point
+    ThemeMenu $f.shape.menu.point
     $f.shape.menu.point add radiobutton -label [msgcat::mc {Circle}] \
 	-variable ${varname}(shape) -value {circle point}
     $f.shape.menu.point add radiobutton -label [msgcat::mc {Box}] \
@@ -207,7 +207,8 @@ proc CATSymDialog {parent} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list CATSymSelectCB $varname] \
-		      -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
 		 ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

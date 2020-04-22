@@ -68,11 +68,11 @@ proc CATMatchDialog {cats} {
     DialogCreate $w [msgcat::mc {Match}] ed(ok)
 
     $w configure -menu $mb
-    menu $mb
+    ThemeMenu $mb
 
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
     $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
 
@@ -98,7 +98,8 @@ proc CATMatchDialog {cats} {
     ttk::label $f.tfunction -text [msgcat::mc {Function}]
     ttk::menubutton $f.function -textvariable ed(function,msg) \
 	-menu $f.function.menu
-    menu $f.function.menu -tearoff 0
+    ThemeMenu $f.function.menu
+    $f.function.menu configure -tearoff 0
     $f.function.menu add radiobutton -variable ed(function) \
 	-label "1 [msgcat::mc {and}] 2" \
 	-value 1and2 -command [list CATMatchDialogFunctionMenu $f]
@@ -113,7 +114,8 @@ proc CATMatchDialog {cats} {
     ttk::label $f.treturn -text [msgcat::mc {Return}]
     ttk::menubutton $f.return -textvariable ed(return,msg) \
 	-menu $f.return.menu
-    menu $f.return.menu -tearoff 0
+    ThemeMenu $f.return.menu
+    $f.return.menu configure -tearoff 0
     $f.return.menu add radiobutton -variable ed(return) \
 	-label "1 [msgcat::mc {and}] 2" \
 	-value 1and2 -command [list CATMatchDialogReturnMenu $f]
@@ -210,7 +212,8 @@ proc CATMatchDialogCatsMenu {f which cats} {
 
     set m $f.$which.menu
 
-    menu $m -tearoff 0
+    ThemeMenu $m
+    $m configure -tearoff 0
     foreach varname $cats {
 	upvar #0 $varname var
 	global $varname

@@ -816,7 +816,7 @@ proc ColormapDialog {} {
     $mb add cascade -label [msgcat::mc {Colormap}] -menu $mb.colormap
     $mb add cascade -label [msgcat::mc {Color}] -menu $mb.color
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command LoadColormap -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -847,13 +847,13 @@ proc ColormapDialog {} {
 
     ColorMenu $mb.color colorbar tag {}
 
-    menu $mb.colormap
-    menu $mb.colormap.h5
-    menu $mb.colormap.matplotlib
-    menu $mb.colormap.cubehelix
-    menu $mb.colormap.gist
-    menu $mb.colormap.topo
-    menu $mb.colormap.user
+    ThemeMenu $mb.colormap
+    ThemeMenu $mb.colormap.h5
+    ThemeMenu $mb.colormap.matplotlib
+    ThemeMenu $mb.colormap.cubehelix
+    ThemeMenu $mb.colormap.gist
+    ThemeMenu $mb.colormap.topo
+    ThemeMenu $mb.colormap.user
 
     set id [colorbar list id]
 

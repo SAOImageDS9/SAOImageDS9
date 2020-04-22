@@ -9,7 +9,7 @@ proc AnalysisMainMenu {} {
 
     # WARNING: this is a variable length menu. 
     # Be sure to update ds9(menu,size,analysis)
-    menu $ds9(mb).analysis
+    ThemeMenu $ds9(mb).analysis
     $ds9(mb).analysis add command -label "[msgcat::mc {Pixel Table}]..." \
 	-command PixelTableDialog 
     $ds9(mb).analysis add command -label "[msgcat::mc {Name Resolution}]..." \
@@ -74,7 +74,7 @@ proc AnalysisMainMenu {} {
 	-label [msgcat::mc {Clear Analysis Commands}] \
 	-command ClearAnalysisMenu
 
-    menu $ds9(mb).analysis.block
+    ThemeMenu $ds9(mb).analysis.block
     $ds9(mb).analysis.block add command -label [msgcat::mc {Block In}] \
 	-command {Block .5 .5}
     $ds9(mb).analysis.block add command -label [msgcat::mc {Block Out}] \
@@ -95,7 +95,7 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.block add radiobutton -label "[msgcat::mc {Block}] 32" \
 	-variable block(factor) -value {32 32} -command ChangeBlock
 
-    menu $ds9(mb).analysis.image
+    ThemeMenu $ds9(mb).analysis.image
     $ds9(mb).analysis.image add command \
 	-label {DSS (SAO)} -command SAODialog
     $ds9(mb).analysis.image add command \
@@ -115,13 +115,13 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.image add command \
 	-label {SkyView (NASA/HEASARC)} -command SkyViewDialog
 
-    menu $ds9(mb).analysis.arch
+    ThemeMenu $ds9(mb).analysis.arch
     $ds9(mb).analysis.arch add cascade -label {Chandra (NASA/CXC)} \
 	-menu $ds9(mb).analysis.arch.chandra
     $ds9(mb).analysis.arch add separator
     SIAAnalysisMenu $ds9(mb).analysis.arch
 
-    menu $ds9(mb).analysis.arch.chandra
+    ThemeMenu $ds9(mb).analysis.arch.chandra
     $ds9(mb).analysis.arch.chandra add command \
 	-label {Chaser} -command HVArchChandraChaser
     $ds9(mb).analysis.arch.chandra add command \
@@ -129,19 +129,19 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.arch.chandra add command \
 	-label {Public FTP} -command HVArchChandraFTP
 
-    menu $ds9(mb).analysis.arch.simbad
+    ThemeMenu $ds9(mb).analysis.arch.simbad
     $ds9(mb).analysis.arch.simbad add command -label {SAO} \
 	-command HVArchSIMBADSAO
     $ds9(mb).analysis.arch.simbad add command -label {CDS} \
 	-command HVArchSIMBADCDS
 
-    menu $ds9(mb).analysis.arch.ads
+    ThemeMenu $ds9(mb).analysis.arch.ads
     $ds9(mb).analysis.arch.ads add command -label {SAO} \
 	-command HVArchADSSAO
     $ds9(mb).analysis.arch.ads add command -label {CDS} \
 	-command HVArchADSCDS
 
-    menu $ds9(mb).analysis.cat
+    ThemeMenu $ds9(mb).analysis.cat
     $ds9(mb).analysis.cat add command \
 	-label [msgcat::mc {Search for Catalogs}] \
 	-command "CATCDSSrchDialog catcdssrch1"
@@ -152,13 +152,13 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.cat add separator
     CATAnalysisMenu $ds9(mb).analysis.cat
 
-    menu $ds9(mb).analysis.footprint
+    ThemeMenu $ds9(mb).analysis.footprint
     $ds9(mb).analysis.footprint add command -label [msgcat::mc {Clear All}] \
 	-command [list TBLClearFrame footprint]
     $ds9(mb).analysis.footprint add separator
     FPAnalysisMenu $ds9(mb).analysis.footprint
 
-    menu $ds9(mb).analysis.plot
+    ThemeMenu $ds9(mb).analysis.plot
     $ds9(mb).analysis.plot add command -label [msgcat::mc {Line}] \
 	-command PlotLineTool
     $ds9(mb).analysis.plot add command -label [msgcat::mc {Bar}] \
@@ -178,7 +178,7 @@ proc PrefsDialogAnalysisMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Contours}] \
 	-variable pcontour(view)
     $m add checkbutton -label [msgcat::mc {Coordinate Grid}] \
@@ -189,7 +189,7 @@ proc PrefsDialogAnalysisMenu {w} {
     $m add checkbutton -label [msgcat::mc {Smooth}] \
 	-variable psmooth(view)
 
-    menu $m.block
+    ThemeMenu $m.block
     $m.block add radiobutton -label "[msgcat::mc {Block}] 1" \
 	-variable pblock(factor) -value {1 1}
     $m.block add radiobutton -label "[msgcat::mc {Block}] 2" \
@@ -295,7 +295,7 @@ proc PrefsDialogButtonbarAnalysis {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Contours}] \
 	-variable pbuttons(analysis,contours) \
 	-command {UpdateButtons buttons(analysis)}

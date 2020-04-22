@@ -38,7 +38,7 @@ proc MarkerLoadDialog {} {
     ttk::radiobutton $f.all -text [msgcat::mc {Load into All Frames}] \
 	-variable ed(load) -value all
 
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label {DS9/Funtools} -variable ed(format) -value ds9 \
 	-command UpdateMarkerLoadDialog
     $m add radiobutton -label {XML} -variable ed(format) -value xml \
@@ -139,7 +139,7 @@ proc MarkerSaveDialog {title} {
 
     CoordMenuButton $ed(cb) ed system 1 sky skyformat UpdateMarkerSaveDialog
 
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label {DS9/Funtools} -variable ed(format) -value ds9 \
 	-command UpdateMarkerSaveDialog
     $m add radiobutton -label {XML} -variable ed(format) -value xml \

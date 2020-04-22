@@ -76,7 +76,7 @@ proc MosaicWCSDialog {varname} {
     ttk::menubutton $f.sys -textvariable ed(label) \
 	-menu $f.sys.m -width 10
 
-    menu $f.sys.m
+    ThemeMenu $f.sys.m
     $f.sys.m add radiobutton -label [msgcat::mc {WCS}] \
 	-variable ed(sys) -value "wcs" -command [list set ed(label) WCS]
     $f.sys.m add separator

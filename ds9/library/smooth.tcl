@@ -68,7 +68,7 @@ proc SmoothDialog {} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command SmoothApplyDialog
     $mb.file add command -label [msgcat::mc {Clear}] -command SmoothOffDialog
     $mb.file add separator
@@ -330,7 +330,7 @@ proc PrefsDialogSmooth {} {
     ttk::menubutton $f.function -textvariable psmooth(function) \
 	-menu $f.function.menu
 
-    menu $f.function.menu
+    ThemeMenu $f.function.menu
     $f.function.menu add radiobutton -label [msgcat::mc {Boxcar}] \
 	-variable psmooth(function) -value boxcar
     $f.function.menu add radiobutton -label [msgcat::mc {Tophat}] \

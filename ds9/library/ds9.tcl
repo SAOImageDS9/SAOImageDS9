@@ -167,9 +167,11 @@ proc DS9Def {} {
     # colors
     # ds9(foreground) color of fg
     # ds9(background) color of bg
-    # ds9(gui,fg) color of gui fg text
-    # ds9(gui,bg) color of gui bg features
-    # ds9(gui,bold) color for gui fg bold text
+    # ds9(bold) color for gui fg bold text
+    # ds9(gui,fg) default color of gui fg text
+    # ds9(gui,bg) default color of gui bg features
+    # ds9(menu,fg) default color of menu fg text
+    # ds9(menu,bg) default color of menu bg features
 }
 
 # if we have a problem at this point, dump simple message and exit
@@ -234,12 +236,6 @@ switch $ds9(wm) {
 	# ugly
 	#package require ttk::theme::winxpblue
 
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) blue
-
 	# edit theme list
 	set ds9(themes) [lsort [ttk::style theme names]]
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) alt]
@@ -252,18 +248,38 @@ switch $ds9(wm) {
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
 
+	set ds9(foreground) black
+	set ds9(background) white
+	set ds9(bold) blue
+
+	ttk::style theme use default
+
+	set ds9(gui,fg) [ttk::style lookup TLable -foreground]
+	set ds9(gui,bg) [ttk::style lookup TLable -background]
+
+	set ds9(menu,fg) [ttk::style lookup TMenubutton -foreground]
+	set ds9(menu,bg) [ttk::style lookup TMenubutton -background]
+	set ds9(menu,active,fg) \
+	    [ttk::style lookup TMenubutton -selectforeground]
+	set ds9(menu,active,bg) \
+	    [ttk::style lookup TMenubutton -selectbackground]
+
 	# fix ::tk::dialog::file
 	set ::tk::dialog::file::showHiddenVar 0
 	set ::tk::dialog::file::showHiddenBtn 1
-
-	ttk::style theme use default
     }
     aqua {
 	set ds9(foreground) systemTextColor
 	set ds9(background) systemTextBackgroundColor
+	set ds9(bold) systemControlAccentColor
+
 	set ds9(gui,fg) $ds9(foreground)
 	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) systemControlAccentColor
+
+	set ds9(menu,fg) $ds9(foreground)
+	set ds9(menu,bg) $ds9(background)
+	set ds9(menu,active,fg) $ds9(foreground)
+	set ds9(menu,active,bg) $ds9(background)
 
 	set pap(fg) $ds9(foreground)
 	set pap(bg) $ds9(background)
@@ -327,11 +343,17 @@ switch $ds9(wm) {
     win32 {
 	set ds9(foreground) black
 	set ds9(background) white
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) blue
+	set ds9(bold) blue
 
 	ttk::style theme use xpnative
+
+	set ds9(gui,fg) [ttk::style lookup TLable -foreground]
+	set ds9(gui,bg) [ttk::style lookup TLable -background]
+
+	set ds9(menu,fg) [ttk::style lookup TMenubutton -foreground]
+	set ds9(menu,bg) [ttk::style lookup TMenubutton -background]
+	set ds9(menu,active,fg) $ds9(menu,fg)
+	set ds9(menu,active,bg) $ds9(menu,bg)
     }
 }
 

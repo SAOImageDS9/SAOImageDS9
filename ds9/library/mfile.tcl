@@ -9,7 +9,7 @@ package provide DS9 1.0
 proc FileMainMenu {} {
     global ds9
 
-    menu $ds9(mb).file 
+    ThemeMenu $ds9(mb).file 
     $ds9(mb).file add command -label "[msgcat::mc {Open}]..." \
 	-command [list OpenDialog fits] -accelerator "${ds9(ctrl)}O"
     $ds9(mb).file add cascade -label [msgcat::mc {Open as}] \
@@ -67,7 +67,7 @@ proc FileMainMenu {} {
     }
 
     # File Open Menu
-    menu $ds9(mb).file.open
+    ThemeMenu $ds9(mb).file.open
     $ds9(mb).file.open add command -label "[msgcat::mc {Slice}]..." \
 	-command [list OpenDialog fits {} slice]
     $ds9(mb).file.open add separator
@@ -106,7 +106,7 @@ proc FileMainMenu {} {
 	-command [list OpenURLFits]
 
     # File Save Menu
-    menu $ds9(mb).file.save
+    ThemeMenu $ds9(mb).file.save
     $ds9(mb).file.save add command -label "[msgcat::mc {Slice}]..." \
 	-command [list SaveDialog slice]
     $ds9(mb).file.save add separator
@@ -129,7 +129,7 @@ proc FileMainMenu {} {
 	-command [list SaveDialog mosaicwcs]
 
     # File Import Menu
-    menu $ds9(mb).file.import
+    ThemeMenu $ds9(mb).file.import
     $ds9(mb).file.import add cascade -label [msgcat::mc {Slice}] \
 	-menu $ds9(mb).file.import.slice
     $ds9(mb).file.import add separator
@@ -153,7 +153,7 @@ proc FileMainMenu {} {
 	-command [list ImportDialog png]
 
     # File Import Slice Menu
-    menu $ds9(mb).file.import.slice
+    ThemeMenu $ds9(mb).file.import.slice
     $ds9(mb).file.import.slice add command -label {GIF...} \
 	-command [list ImportDialog gif {} slice]
     $ds9(mb).file.import.slice add command -label {TIFF...} \
@@ -164,7 +164,7 @@ proc FileMainMenu {} {
 	-command [list ImportDialog png {} slice]
 
     # File Export Menu
-    menu $ds9(mb).file.export
+    ThemeMenu $ds9(mb).file.export
     $ds9(mb).file.export add command -label "[msgcat::mc {Array}]..." \
 	-command [list ExportDialog array]
     $ds9(mb).file.export add command -label {NRRD...} \
@@ -185,7 +185,7 @@ proc FileMainMenu {} {
 	-command [list ExportDialog png]
 
     # File Saveimage Menu
-    menu $ds9(mb).file.saveimage
+    ThemeMenu $ds9(mb).file.saveimage
     $ds9(mb).file.saveimage add command -label {FITS...} \
 	-command [list SaveImageDialog fits]
     $ds9(mb).file.saveimage add command -label {EPS...} \
@@ -200,13 +200,13 @@ proc FileMainMenu {} {
 	-command [list SaveImageDialog png]
 
     # File Preserve Menu
-    menu $ds9(mb).file.preserve
+    ThemeMenu $ds9(mb).file.preserve
     $ds9(mb).file.preserve add checkbutton -label [msgcat::mc {Pan}] \
 	-variable panzoom(preserve) -command PreservePan
     $ds9(mb).file.preserve add checkbutton -label [msgcat::mc {Region}] \
 	-variable marker(preserve) -command MarkerPreserve
 
-    menu $ds9(mb).file.samp
+    ThemeMenu $ds9(mb).file.samp
     $ds9(mb).file.samp add command -label [msgcat::mc {Connect}] \
 	-command SAMPConnect
     $ds9(mb).file.samp add command -label [msgcat::mc {Disconnect}] \
@@ -217,17 +217,17 @@ proc FileMainMenu {} {
     $ds9(mb).file.samp add cascade -label [msgcat::mc {Table}] \
 	-menu $ds9(mb).file.samp.table
 
-    menu $ds9(mb).file.samp.image
+    ThemeMenu $ds9(mb).file.samp.image
     $ds9(mb).file.samp.image add command -label [msgcat::mc {Broadcast}] \
 	-command "SAMPSendImageLoadFits {}"
     $ds9(mb).file.samp.image add separator
 
-    menu $ds9(mb).file.samp.table
+    ThemeMenu $ds9(mb).file.samp.table
     $ds9(mb).file.samp.table add command -label [msgcat::mc {Broadcast}] \
 	-command "SAMPSendTableLoadFits {}"
     $ds9(mb).file.samp.table add separator
 
-    menu $ds9(mb).file.xpa
+    ThemeMenu $ds9(mb).file.xpa
     $ds9(mb).file.xpa add command -label "[msgcat::mc {Information}]..." \
 	-command XPAInfo
     $ds9(mb).file.xpa add separator
@@ -257,14 +257,14 @@ proc PrefsDialogFileMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add cascade -label [msgcat::mc {Preserve During Load}] \
 	-menu $m.preserve
 
     global pscale
     global ppanzoom
     global pmarker
-    menu $m.preserve
+    ThemeMenu $m.preserve
     $m.preserve add checkbutton -label [msgcat::mc {Pan}] \
 	-variable ppanzoom(preserve)
     $m.preserve add checkbutton -label [msgcat::mc {Region}] \
@@ -463,7 +463,7 @@ proc PrefsDialogButtonbarFile {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label "[msgcat::mc {Open}]..." \
 	-variable pbuttons(file,open) -command {UpdateButtons buttons(file)}
     $m add cascade -label [msgcat::mc {Open as}] -menu $m.open
@@ -503,7 +503,7 @@ proc PrefsDialogButtonbarFile {f} {
     $m add checkbutton -label [msgcat::mc {Exit}] \
 	-variable pbuttons(file,exit) -command {UpdateButtons buttons(filew)}
 
-    menu $m.open
+    ThemeMenu $m.open
     $m.open add checkbutton \
 	-label "[msgcat::mc {Slice}]..." \
 	-variable pbuttons(file,open,slice) \
@@ -553,7 +553,7 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,open,url) \
 	-command {UpdateButtons buttons(file)}
 
-    menu $m.save
+    ThemeMenu $m.save
     $m.save add checkbutton \
 	-label "[msgcat::mc {Slice}]..." \
 	-variable pbuttons(file,save,slice) \
@@ -582,12 +582,12 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,save,mosaic,wcs,seg) \
 	-command {UpdateButtons buttons(file)}
 
-    menu $m.xpa
+    ThemeMenu $m.xpa
     $m.xpa add checkbutton -label "[msgcat::mc {Information}]..." \
 	-variable pbuttons(file,xpa,info) \
 	-command {UpdateButtons buttons(file)}
 
-    menu $m.samp
+    ThemeMenu $m.samp
     $m.samp add checkbutton -label [msgcat::mc {Image}] \
 	-variable pbuttons(file,samp,image) \
 	-command {UpdateButtons buttons(file)}

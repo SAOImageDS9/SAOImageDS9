@@ -219,7 +219,7 @@ proc ScaleDialog {} {
     $mb add cascade -label [msgcat::mc {Parameters}] -menu $mb.param
     $mb add cascade -label [msgcat::mc {Graph}] -menu $mb.graph
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command ScaleApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
@@ -227,7 +227,7 @@ proc ScaleDialog {} {
 
     EditMenu $mb iscale
 
-    menu $mb.scale
+    ThemeMenu $mb.scale
     $mb.scale add radiobutton -label [msgcat::mc {Linear}] \
 	-variable scale(type) -command ChangeScale -value linear
     $mb.scale add radiobutton -label [msgcat::mc {Log}] \
@@ -248,7 +248,7 @@ proc ScaleDialog {} {
     $mb.scale add command -label "[msgcat::mc {Log Exponent}]..." \
 	-command ScaleLogDialog
 
-    menu $mb.limit
+    ThemeMenu $mb.limit
     $mb.limit add radiobutton -label [msgcat::mc {Min Max}] \
 	-variable scale(mode) -command ChangeScaleMode -value minmax
     $mb.limit add separator
@@ -276,13 +276,13 @@ proc ScaleDialog {} {
     $mb.limit add radiobutton -label [msgcat::mc {User}] \
 	-variable scale(mode) -command ChangeScaleMode -value user
 
-    menu $mb.scope 
+    ThemeMenu $mb.scope 
     $mb.scope add radiobutton -label [msgcat::mc {Global}] \
 	-variable scale(scope) -command ChangeScaleScope -value global
     $mb.scope add radiobutton -label [msgcat::mc {Local}] \
 	-variable scale(scope) -command ChangeScaleScope -value local
 
-    menu $mb.minmax 
+    ThemeMenu $mb.minmax 
     $mb.minmax add radiobutton -label [msgcat::mc {Scan}] \
 	-variable minmax(mode) -value scan -command ChangeMinMax
     $mb.minmax add radiobutton -label [msgcat::mc {Sample}] \
@@ -295,13 +295,13 @@ proc ScaleDialog {} {
     $mb.minmax add command -label "[msgcat::mc {Sample Parameters}]..." \
 	-command MinMaxDialog
 
-    menu $mb.param 
+    ThemeMenu $mb.param 
     $mb.param add checkbutton -label "[msgcat::mc {Use}] DATASEC" \
 	-variable scale(datasec) -command ChangeDATASEC
     $mb.param add separator
     $mb.param add command -label {ZScale...} -command ZScaleDialog
 
-    menu $mb.graph 
+    ThemeMenu $mb.graph 
     $mb.graph add radiobutton -label [msgcat::mc {Linear}] \
 	-value linear -variable scale(yaxis) -command ScaleYAxisDialog
     $mb.graph add radiobutton -label [msgcat::mc {Log}] \
@@ -317,35 +317,35 @@ proc ScaleDialog {} {
 
     # Graph
     set dscale(hist) [blt::graph $f.chart \
-			  -foreground $ds9(gui,fg) \
-			  -background $ds9(gui,bg) \
-			  -plotbackground $ds9(gui,bg) \
 			  -width 500 \
 			  -height 200 \
 			  -title [msgcat::mc {Pixel Distribution}] \
 			  -font [font actual TkDefaultFont] \
 			  -plotrelief groove \
 			  -plotborderwidth 2 \
+			  -foreground [ThemeForeground] \
+			  -background [ThemeBackground] \
+			  -plotbackground [ThemeBackground] \
 			 ]
 
     $dscale(hist) legend configure -hide yes
 
     $dscale(hist) xaxis configure -hide yes -grid no -ticklength 3 \
 	-tickfont [font actual TkDefaultFont] \
-	-bg $ds9(gui,bg) -color $ds9(gui,fg) \
-	-titlecolor $ds9(gui,fg)
+	-bg [ThemeBackground] -color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
 
     $dscale(hist) yaxis configure -hide yes -grid yes -ticklength 3 \
 	-tickfont [font actual TkDefaultFont] \
-	-bg $ds9(gui,bg) -color $ds9(gui,fg) \
-	-titlecolor $ds9(gui,fg)
+	-bg [ThemeBackground] -color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
 
     set dscale(xdata) histX
     set dscale(ydata) histY
     blt::vector create $dscale(xdata) $dscale(ydata)
     $dscale(hist) element create bar1 -smooth step  \
 	-xdata $dscale(xdata) -ydata $dscale(ydata) \
-	-areabackground $ds9(gui,fg) -color $ds9(gui,fg)
+	-areabackground [ThemeForeground] -color [ThemeForeground]
 
     # Cut Lines
     $dscale(hist) marker bind min <B1-Motion> \
@@ -382,8 +382,22 @@ proc ScaleDialog {} {
     pack $w.param -side top -fill both -expand true
 
     bind $w <<Close>> ScaleDestroyDialog
+    bind $dscale(hist) <<ThemeChanged>> {ThemeConfigScale %W}
 
     UpdateScaleDialog
+}
+
+proc ThemeConfigScale {w} {
+    $w configure -foreground [ThemeForeground] \
+	-background [ThemeBackground] -plotbackground [ThemeBackground]
+
+    $w xaxis configure -bg [ThemeBackground] -color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
+    $w yaxis configure -bg [ThemeBackground] -color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
+
+    $w element configure bar1 -areabackground [ThemeForeground] \
+	-color [ThemeForeground]
 }
 
 proc ScaleApplyDialog {} {

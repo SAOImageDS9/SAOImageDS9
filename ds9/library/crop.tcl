@@ -105,7 +105,7 @@ proc CropDialog {} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command CropApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Reset}] -command CropReset

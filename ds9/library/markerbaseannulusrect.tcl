@@ -34,7 +34,7 @@ proc MarkerBaseAnnulusRectDialog {varname unit major minor} {
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
-    menu $var(mb).analysis
+    ThemeMenu $var(mb).analysis
 
     MarkerAnalysisStatsDialog $varname
     MarkerAnalysisRadialDialog $varname

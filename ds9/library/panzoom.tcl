@@ -375,7 +375,7 @@ proc PanZoomDialog {} {
     $mb add cascade -label [msgcat::mc {Orientation}] -menu $mb.orient
     $mb add cascade -label [msgcat::mc {Rotate}] -menu $mb.rotate
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command PanZoomApplyDialog
     $mb.file add separator
@@ -384,13 +384,13 @@ proc PanZoomDialog {} {
 
     EditMenu $mb ipanzoom
 
-    menu $mb.pan
+    ThemeMenu $mb.pan
     $mb.pan add command -label [msgcat::mc {Center Image}] \
 	-command CenterCurrentFrame
     $mb.pan add checkbutton -label [msgcat::mc {Align}] \
 	-variable current(align) -command AlignWCSFrame
 
-    menu $mb.zoom
+    ThemeMenu $mb.zoom
     $mb.zoom add command -label [msgcat::mc {Zoom In}] \
 	-command {Zoom 2 2} -accelerator "${ds9(ctrl)}+"
     $mb.zoom add command -label [msgcat::mc {Zoom Out}] \
@@ -420,7 +420,7 @@ proc PanZoomDialog {} {
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 32" \
  	-variable current(zoom) -value {32 32} -command ChangeZoom
 
-    menu $mb.orient
+    ThemeMenu $mb.orient
     $mb.orient add radiobutton -label [msgcat::mc {None}] \
 	-variable current(orient) -value none -command ChangeOrient
     $mb.orient add radiobutton  -label "[msgcat::mc {Invert}] X" \
@@ -430,7 +430,7 @@ proc PanZoomDialog {} {
     $mb.orient add radiobutton -label "[msgcat::mc {Invert}] XY" \
 	-variable current(orient) -value xy -command ChangeOrient
 
-    menu $mb.rotate
+    ThemeMenu $mb.rotate
     $mb.rotate add radiobutton -label "0 [msgcat::mc {Degrees}]" \
 	-variable current(rotate) -value 0 -command ChangeRotate
     $mb.rotate add radiobutton -label "90 [msgcat::mc {Degrees}]" \

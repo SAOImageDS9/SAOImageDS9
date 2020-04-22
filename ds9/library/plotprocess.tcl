@@ -76,7 +76,7 @@ proc PrefsDialogPlot {} {
     ttk::label $f.smoothtitle -text [msgcat::mc {Smooth}]
     ttk::menubutton $f.smooth -textvariable pap(graph,ds,smooth) \
 	-menu $f.smooth.menu
-    menu $f.smooth.menu
+    ThemeMenu $f.smooth.menu
     $f.smooth.menu add radiobutton -label [msgcat::mc {Step}] \
 	-variable pap(graph,ds,smooth) -value step
     $f.smooth.menu add radiobutton -label [msgcat::mc {Linear}] \

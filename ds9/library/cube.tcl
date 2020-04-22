@@ -367,7 +367,7 @@ proc CubeDialog {} {
     $mb add cascade -label [msgcat::mc {Coordinate}] -menu $mb.coord
     $mb add cascade -label [msgcat::mc {Axes Order}] -menu $mb.axes
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {First}] -command CubeFirst
     $mb.file add command -label [msgcat::mc {Previous}] -command CubePrev
     $mb.file add command -label [msgcat::mc {Stop}] -command CubeStop
@@ -380,7 +380,7 @@ proc CubeDialog {} {
 
     EditMenu $mb icube
 
-    menu $mb.blink
+    ThemeMenu $mb.blink
     $mb.blink add radiobutton -label ".125 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 125
     $mb.blink add radiobutton -label ".25 [msgcat::mc {Seconds}]" \
@@ -398,7 +398,7 @@ proc CubeDialog {} {
 
     CoordMenu $mb.coord cube system 2 {} {} UpdateCubeDialog
 
-    menu $mb.axes
+    ThemeMenu $mb.axes
     $mb.axes add radiobutton -label {1 2 3} -variable cube(axes) \
 	-value 123 -command CubeAxes
     $mb.axes add radiobutton -label {1 3 2} -variable cube(axes) \

@@ -9,7 +9,7 @@ package provide DS9 1.0
 proc ZoomMainMenu {} {
     global ds9
 
-    menu $ds9(mb).zoom
+    ThemeMenu $ds9(mb).zoom
     $ds9(mb).zoom add command -label [msgcat::mc {Center Image}] \
 	-command CenterCurrentFrame
     $ds9(mb).zoom add checkbutton -label [msgcat::mc {Align}] \
@@ -83,7 +83,7 @@ proc PrefsDialogZoomMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2
     
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Align}] \
 	-variable pcurrent(align)
     $m add separator
@@ -312,7 +312,7 @@ proc PrefsDialogButtonbarZoom {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Center Image}] \
 	-variable pbuttons(zoom,center) -command {UpdateButtons buttons(zoom)}
     $m add checkbutton -label [msgcat::mc {Align}] \

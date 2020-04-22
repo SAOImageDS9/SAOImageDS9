@@ -24,7 +24,7 @@ proc PointDialog {varname} {
 
     # menus
     $var(mb) add cascade -label [msgcat::mc {Shape}] -menu $var(mb).shape
-    menu $var(mb).shape
+    ThemeMenu $var(mb).shape
     $var(mb).shape add radiobutton -label [msgcat::mc {Circle}] \
 	-variable ${varname}(shape) -value circle \
 	-command "PointShape $varname"
@@ -49,7 +49,7 @@ proc PointDialog {varname} {
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
-    menu $var(mb).analysis
+    ThemeMenu $var(mb).analysis
 
     # plot3d
     MarkerAnalysisPlot3dDialog $varname

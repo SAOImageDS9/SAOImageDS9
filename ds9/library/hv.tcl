@@ -79,7 +79,7 @@ proc HV {varname title url {init {}} {sync 0}} {
 	$mb add cascade -label [msgcat::mc {View}] -menu $mb.view
 	$mb add cascade -label [msgcat::mc {Frame}] -menu $mb.frame
 
-	menu $mb.file
+	ThemeMenu $mb.file
 	$mb.file add command -label [msgcat::mc {Open URL}] \
 	    -command "HVURLDialogCmd $varname"
 	$mb.file add command -label [msgcat::mc {Open File}] \
@@ -91,7 +91,7 @@ proc HV {varname title url {init {}} {sync 0}} {
 	$mb.file add command -label [msgcat::mc {Close}] \
 	    -command "HVDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
-	menu $mb.edit
+	ThemeMenu $mb.edit
 	$mb.edit add command -label [msgcat::mc {Cut}] \
 	    -state disabled -accelerator "${ds9(ctrl)}X"
 	$mb.edit add command -label [msgcat::mc {Copy}] \
@@ -107,7 +107,7 @@ proc HV {varname title url {init {}} {sync 0}} {
 	$mb.edit add command -label [msgcat::mc {Clear Cache}] \
 	    -command "HVClearCache $varname"
 
-	menu $mb.view
+	ThemeMenu $mb.view
 	$mb.view add command -label [msgcat::mc {Back}] \
 	    -command "HVBackCmd $varname"
 	$mb.view add command -label [msgcat::mc {Forward}] \
@@ -121,7 +121,7 @@ proc HV {varname title url {init {}} {sync 0}} {
 	$mb.view add command -label [msgcat::mc {Page Source}] \
 	    -command "HVPageSourceCmd $varname"
 
-	menu $mb.frame 
+	ThemeMenu $mb.frame 
 	$mb.frame add checkbutton \
 	    -label [msgcat::mc {Save Image on Download}] \
 	    -variable ${varname}(save)

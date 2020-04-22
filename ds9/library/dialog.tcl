@@ -7,7 +7,7 @@ package provide DS9 1.0
 proc DialogCreate {top title varname} {
     global ds9
 
-    eval {toplevel $top}
+    toplevel $top
     switch $ds9(wm) {
 	x11 -
 	win32 {}
@@ -68,7 +68,7 @@ proc EntryDialog {title message size varname} {
     DialogCreate $w $title ed(ok)
 
     $w configure -menu $mb
-    menu $mb
+    ThemeMenu $mb
 
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     EditMenu $mb ed
@@ -191,7 +191,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	set var(font,slant) $pds9(text,font,slant)
 
 	$var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
-	menu $var(mb).file
+	ThemeMenu $var(mb).file
 	$var(mb).file add command -label "[msgcat::mc {Save}]..." \
 	    -command "SimpleTextSave $varname" -accelerator "${ds9(ctrl)}S"
 	switch $ds9(wm) {
@@ -209,7 +209,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	    -command "SimpleTextDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
 	$var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
-	menu $var(mb).edit
+	ThemeMenu $var(mb).edit
 	$var(mb).edit add command -label [msgcat::mc {Cut}] \
 	    -command "SimpleTextCut $varname" -accelerator "${ds9(ctrl)}X"
 	$var(mb).edit add command -label [msgcat::mc {Copy}] \

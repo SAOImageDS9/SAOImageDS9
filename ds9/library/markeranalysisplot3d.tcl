@@ -28,7 +28,7 @@ proc MarkerAnalysisPlot3dDialog {varname} {
 	-label [msgcat::mc {Method}] \
 	-menu $var(mb).analysis.method
 
-    menu $var(mb).analysis.method
+    ThemeMenu $var(mb).analysis.method
     $var(mb).analysis.method add radiobutton \
 	-label [msgcat::mc {Average}] \
 	-variable ${varname}(method) -value average \

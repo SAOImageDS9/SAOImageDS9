@@ -32,7 +32,7 @@ proc ProjectionDialog {varname} {
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
-    menu $var(mb).analysis
+    ThemeMenu $var(mb).analysis
 
     # plot2d
     MarkerAnalysisPlot2dDialog $varname

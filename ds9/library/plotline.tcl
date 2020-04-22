@@ -43,7 +43,7 @@ proc PlotLineMenus {varname} {
     global $varname
 
     # Data
-    menu $var(mb).dataline
+    ThemeMenu $var(mb).dataline
     $var(mb).dataline add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotLineUpdateElement $varname]
@@ -65,7 +65,7 @@ proc PlotLineMenus {varname} {
 	-command [list DatasetNameDialog $varname]
 
     # Shape
-    menu $var(mb).dataline.shape
+    ThemeMenu $var(mb).dataline.shape
     $var(mb).dataline.shape add radiobutton \
 	-label [msgcat::mc {None}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value none \
@@ -118,7 +118,7 @@ proc PlotLineMenus {varname} {
 	[list PlotLineUpdateElement $varname]
 
     # Smooth
-    menu $var(mb).dataline.smooth
+    ThemeMenu $var(mb).dataline.smooth
     $var(mb).dataline.smooth add radiobutton \
 	-label [msgcat::mc {Step}] \
 	-variable ${varname}(graph,ds,smooth) -value step \
@@ -145,7 +145,7 @@ proc PlotLineMenus {varname} {
 	[list PlotLineUpdateElement $varname]
 
     # Width
-    menu $var(mb).dataline.width
+    ThemeMenu $var(mb).dataline.width
     $var(mb).dataline.width add radiobutton \
 	-label {0} -variable ${varname}(graph,ds,width) \
 	-value 0 -command [list PlotLineUpdateElement $varname]
@@ -167,7 +167,7 @@ proc PlotLineMenus {varname} {
 	-command [list PlotLineUpdateElement $varname]
 
     # Fill
-    menu $var(mb).dataline.fill
+    ThemeMenu $var(mb).dataline.fill
     $var(mb).dataline.fill add checkbutton \
 	-label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,fill) \
@@ -180,7 +180,7 @@ proc PlotLineMenus {varname} {
 	[list PlotLineUpdateElement $varname]
 
     # Error
-    menu $var(mb).dataline.error
+    ThemeMenu $var(mb).dataline.error
     $var(mb).dataline.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,error) \
 	-command [list PlotLineUpdateElement $varname]

@@ -420,7 +420,8 @@ proc TBLSortMenu {varname} {
     set m $var(sortmenu).menu
     catch {destroy $m}
 
-    menu $m -tearoff 0
+    ThemeMenu $m
+    $m configure -tearoff 0
     $m add command -label {} -command "TBLSortCmd $varname {}"
     if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
@@ -462,11 +463,11 @@ proc TBLEditDialog {varname which db} {
     DialogCreate $w [msgcat::mc {Edit}] ed(ok)
 
     $w configure -menu $mb
-    menu $mb
+    ThemeMenu $mb
 
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command TBLEditDialogLoad
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -482,7 +483,7 @@ proc TBLEditDialog {varname which db} {
 
     # edit
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Undo}] \
 	-command "$ed(text) edit undo"
     $mb.edit add command -label [msgcat::mc {Redo}] \
@@ -501,7 +502,7 @@ proc TBLEditDialog {varname which db} {
     if {[info exists $mb.col]} {
 	destroy $mb.col
     }
-    menu $mb.col
+    ThemeMenu $mb.col
     if {[TBLValidDB $db]} {
 	set cnt -1
 	foreach col [starbase_columns $db] {
@@ -519,7 +520,7 @@ proc TBLEditDialog {varname which db} {
 
     # operator
     $mb add cascade -label [msgcat::mc {Operator}] -menu $mb.op
-    menu $mb.op
+    ThemeMenu $mb.op
     $mb.op add command -label {-} \
 	-command "$ed(text) insert insert {-}"
     $mb.op add command -label {!} \
@@ -560,7 +561,7 @@ proc TBLEditDialog {varname which db} {
 
     # operator
     $mb add cascade -label [msgcat::mc {Math Function}] -menu $mb.math
-    menu $mb.math
+    ThemeMenu $mb.math
     $mb.math add command -label {acos} \
 	-command "$ed(text) insert insert {acos()}"
     $mb.math add command -label {asin} \

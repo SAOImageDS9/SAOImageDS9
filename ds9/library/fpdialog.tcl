@@ -107,7 +107,7 @@ proc FPDialog {varname title url instr format action} {
     $mb add cascade -label [msgcat::mc {Preferences}] -menu $mb.prefs
 
     # file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
@@ -142,14 +142,14 @@ proc FPDialog {varname title url instr format action} {
 	-command [list FPDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     # Export
-    menu $mb.file.export
+    ThemeMenu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
 	-command [list TBLSaveRDBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list TBLSaveTSVFile $varname]
 
     # edit
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -160,7 +160,7 @@ proc FPDialog {varname title url instr format action} {
     $mb.edit add command -label [msgcat::mc {Clear}] \
 	-command [list ARClear $varname]
 
-    menu $mb.prefs
+    ThemeMenu $mb.prefs
     $mb.prefs add checkbutton -label [msgcat::mc {Pan To}] \
 	-variable ${varname}(panto)
 

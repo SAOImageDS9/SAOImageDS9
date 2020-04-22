@@ -8,8 +8,12 @@ proc CreateMenuBar {} {
     global ds9
 
     # we need this first, before the configure command
-    menu $ds9(mb) 
-    AppleMenu $ds9(mb)
+    ThemeMenu $ds9(mb) 
+    switch $ds9(wm) {
+	x11 {}
+	win32 {}
+	aqua {AppleMenu $ds9(mb)}
+    }
     $ds9(top) configure -menu $ds9(mb)
 
     $ds9(mb) add cascade -label [msgcat::mc {File}] -menu $ds9(mb).file
@@ -38,39 +42,123 @@ proc CreateMenuBar {} {
     HelpMainMenu
 
     switch $ds9(wm) {
-	x11 {bind Menu <<ThemeChanged>> {ThemeChangedMenu %W}}
+	x11 {
+	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
+	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
+	}
 	aqua -
 	win32 {}
     }
 }
 
-proc ThemeChangedMenu {which} {
-    $which configure -bg [ttk::style lookup TMenubutton -background]
-    $which configure -fg [ttk::style lookup TMenubutton -foreground]
-    if {0} {
-    $which configure -activebackground \
-	[ttk::style lookup TMenubutton -selectbackground]
-    $which configure -activeforeground \
-	[ttk::style lookup TMenubutton -selectforeground]
+proc ThemeMenu {w} {
+    global ds9
+
+    menu $w
+    switch $ds9(wm) {
+	x11 {ThemeConfigMenu $w}
+	aqua {}
+	win32 {}
+    }
+
+    return $w
+}
+
+proc ThemeConfigMenu {w} {
+    global ds9
+
+    switch $ds9(wm) {
+	x11 {}
+	aqua -
+	win32 {return}
+    }
+
+    # foreground
+    set fg [ttk::style lookup TMenubutton -foreground]
+    if {$fg != {}} {
+	$w configure -fg $fg
+    } else {
+	$w configure -fg $ds9(menu,fg)
+    }
+
+    # background
+    set bg [ttk::style lookup TMenubutton -background]
+    if {$bg != {}} {
+	$w configure -bg $bg
+    } else {
+	$w configure -bg $ds9(menu,bg)
+    }
+
+    return
+    # selectforeground
+    set fg [ttk::style lookup TMenubutton -selectforeground]
+    if {$fg != {}} {
+	$w configure -activeforeground $fg
+    } else {
+	$w configure -activeforeground $ds9(menu,active,fg)
+    }
+
+    # selectbackground
+    set bg [ttk::style lookup TMenubutton -selectbackground]
+    if {$bg != {}} {
+	$w configure -activebackground $bg
+    } else {
+	$w configure -activebackground $ds9(menu,active,fg)
+    }
+}
+
+proc ThemeConfigTable {w} {
+    switch $ds9(wm) {
+	x11 {}
+	aqua -
+	win32 {return}
+    }
+
+    $w configure -fg [ThemeForeground]
+    $w configure -bg [ThemeBackground]
+}
+
+proc ThemeForeground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {}
+	aqua -
+	win32 {return $ds9(gui,fg)
+	}
+    }
+    
+    set fg [ttk::style lookup TLable -foreground]
+    if {$fg != {}} {
+	return $fg
+    } else {
+	return $ds9(gui,fg)
+    }
+}
+
+proc ThemeBackground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {}
+	aqua -
+	win32 {	return $ds9(gui,bg)}
+    }
+
+    set bg [ttk::style lookup TLable -background]
+    if {$bg != {}} {
+	return $bg
+    } else {
+	return $ds9(gui,bg)
     }
 }
 
 proc AppleMenu {mb} {
-    global ds9
-
-    switch $ds9(wm) {
-	x11 -
-	win32 {}
-	aqua {
-	    # apple menu
-	    menu $mb.apple
-	    $mb add cascade -menu $mb.apple
-	    $mb.apple add command \
-		-label [msgcat::mc {About SAOImageDS9}] \
-		-command AboutBox
-#		-command ::tk::mac::standardAboutPanel
-	}
-    }
+    # apple menu
+    ThemeMenu $mb.apple
+    $mb add cascade -menu $mb.apple
+    $mb.apple add command -label [msgcat::mc {About SAOImageDS9}] \
+	-command AboutBox
 }
 
 # CoordMenu
@@ -78,11 +166,11 @@ proc CoordMenu {w varname system other sky skyformat cmd} {
     upvar #0 $varname var
     global $varname
 
-    menu $w
+    ThemeMenu $w
     $w add radiobutton -label [msgcat::mc {WCS}] \
 	-variable ${varname}($system) -value wcs -command $cmd
     $w add cascade -label [msgcat::mc {Multiple WCS}] -menu $w.wcs
-    menu $w.wcs 
+    ThemeMenu $w.wcs
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$w.wcs add radiobutton -label "[msgcat::mc {WCS}] $l" \
 	    -variable ${varname}($system) -value "wcs$l" -command $cmd
@@ -255,12 +343,12 @@ proc DistMenu {w varname system other format cmd} {
     upvar #0 $varname var
     global $varname
 
-    menu $w 
+    ThemeMenu $w
     $w add radiobutton -label [msgcat::mc {WCS}] \
 	-variable ${varname}($system) -value wcs -command $cmd
     $w add cascade -label [msgcat::mc {Multiple WCS}] \
 	-menu $w.wcs
-    menu $w.wcs 
+    ThemeMenu $w.wcs
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$w.wcs add radiobutton -label "[msgcat::mc {WCS}] $l" \
 	    -variable ${varname}($system) -value "wcs$l" -command $cmd
@@ -393,7 +481,7 @@ proc EditMenu {mb varname} {
     global $varname
     global ds9
 
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command "EntryCut $var(top)" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -407,7 +495,7 @@ proc ColorMenu {w varname color cmd} {
     upvar #0 $varname var
     global $varname
 
-    menu $w
+    ThemeMenu $w
     $w add radiobutton -label [msgcat::mc {Black}] \
 	-variable ${varname}($color) -value black -command $cmd
     $w add radiobutton -label [msgcat::mc {White}] \
@@ -451,7 +539,7 @@ proc FontMenu {w varname font size weight slant cmd} {
     upvar #0 $varname var
     global $varname
 
-    menu $w
+    ThemeMenu $w
     $w add radiobutton -label {Times} -variable ${varname}($font) \
 	-value times -command $cmd
     $w add radiobutton -label {Helvetica} -variable ${varname}($font) \
@@ -516,7 +604,7 @@ proc WidthDashMenu {w varname width dash cmd1 cmd2} {
     upvar #0 $varname var
     global $varname
 
-    menu $w
+    ThemeMenu $w
     $w add radiobutton -label {1} -variable ${varname}($width) \
 	-value 1 -command $cmd1
     $w add radiobutton -label {2} -variable ${varname}($width) \

@@ -586,7 +586,7 @@ proc GridDialog {} {
     $mb add cascade -label [msgcat::mc {Border}] -menu $mb.border
 
     # File
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command GridLoadDialog -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -603,7 +603,7 @@ proc GridDialog {} {
     EditMenu $mb igrid
 
     # Type
-    menu $mb.type
+    ThemeMenu $mb.type
     $mb.type add radiobutton -label [msgcat::mc {Analysis}] \
 	-variable grid(type) -value analysis -command GridApplyDialog
     $mb.type add radiobutton -label [msgcat::mc {Publication}] \
@@ -626,7 +626,7 @@ proc GridDialog {} {
     CoordMenu $mb.coord grid system 1 sky skyformat GridApplyDialog
 
     # Grid
-    menu $mb.grid
+    ThemeMenu $mb.grid
     $mb.grid add checkbutton -label [msgcat::mc {Show}] \
 	-variable grid(grid) -command GridApplyDialog
     $mb.grid add separator
@@ -637,7 +637,7 @@ proc GridDialog {} {
     GridCreateLineMenu $mb.grid.line grid,width grid,style
 
     # Axes
-    menu $mb.axes
+    ThemeMenu $mb.axes
     $mb.axes add checkbutton -label [msgcat::mc {Show}] \
 	-variable grid(axes) -command GridApplyDialog
     $mb.axes add separator
@@ -649,7 +649,7 @@ proc GridDialog {} {
     ColorMenu $mb.axes.color grid axes,color GridApplyDialog
     GridCreateLineMenu $mb.axes.line axes,width axes,style
 
-    menu $mb.axes.origin
+    ThemeMenu $mb.axes.origin
     $mb.axes.origin add radiobutton -label [msgcat::mc {Lower Left Front}] \
 	-variable grid(axes,origin) -value lll -command GridApplyDialog
     $mb.axes.origin add radiobutton -label [msgcat::mc {Lower Right Front}] \
@@ -669,7 +669,7 @@ proc GridDialog {} {
 	-variable grid(axes,origin) -value luu -command GridApplyDialog
 
     # Numerics
-    menu $mb.numlab
+    ThemeMenu $mb.numlab
     $mb.numlab add checkbutton -label [msgcat::mc {Show}] \
 	-variable grid(numlab) -command GridApplyDialog
     $mb.numlab add separator
@@ -684,7 +684,7 @@ proc GridDialog {} {
 	GridApplyDialog
 
     # Labels
-    menu $mb.textlab
+    ThemeMenu $mb.textlab
     $mb.textlab add checkbutton -label [msgcat::mc {Show}] \
 	-variable grid(textlab) -command GridApplyDialog
     $mb.textlab add separator
@@ -699,7 +699,7 @@ proc GridDialog {} {
 	GridApplyDialog
 
     # Tickmarks
-    menu $mb.tick
+    ThemeMenu $mb.tick
     $mb.tick add checkbutton -label [msgcat::mc {Show}] \
 	-variable grid(tick) -command GridApplyDialog
     $mb.tick add separator
@@ -712,7 +712,7 @@ proc GridDialog {} {
     GridCreateLineMenu $mb.tick.line tick,width tick,style
 
     # Title
-    menu $mb.title
+    ThemeMenu $mb.title
     $mb.title add checkbutton -label [msgcat::mc {Show}] \
 	 -variable grid(title) -command GridApplyDialog
     $mb.title add separator
@@ -725,7 +725,7 @@ proc GridDialog {} {
 	GridApplyDialog
 
     # Border
-    menu $mb.border
+    ThemeMenu $mb.border
     $mb.border add checkbutton -label [msgcat::mc {Show}] \
 	-variable grid(border) -command GridApplyDialog
     $mb.border add separator

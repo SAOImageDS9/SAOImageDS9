@@ -24,7 +24,7 @@ proc PrefsDialog {{which {}}} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Clear Preferences}] \
 	-command PrefsDialogClear
     $mb.file add separator
@@ -202,7 +202,7 @@ proc PrefsDialogGeneral {} {
     ttk::menubutton $f.lang -textvariable pds9(language,name) -menu $f.lang.menu
 
     set m $f.lang.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [LanguageToName locale] \
 	-variable pds9(language,name) -command "set pds9(language) locale"
     $m add separator
@@ -253,7 +253,8 @@ proc PrefsDialogGeneral {} {
 		-menu $f.theme.menu
 
 	    set m $f.theme.menu
-	    menu $m
+
+	    ThemeMenu $m
 	    foreach tt $ds9(themes) {
 		$m add radiobutton -label $tt -variable pds9(theme) \
 		    -command PrefsTheme

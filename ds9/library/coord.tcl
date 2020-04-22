@@ -166,7 +166,7 @@ proc PrefsDialogCoord {} {
 	-variable pcoord(detector)
 
     set m $f.mwcs.menu
-    menu $m
+    ThemeMenu $m
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$m add checkbutton -label "[msgcat::mc {WCS}] $l" \
 	    -variable "pcoord(wcs$l)"

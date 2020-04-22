@@ -74,7 +74,7 @@ proc SIADialog {varname title url opts action} {
     $mb add cascade -label [msgcat::mc {Preferences}] -menu $mb.prefs
 
     # file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Save}]..." \
 	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
@@ -103,14 +103,14 @@ proc SIADialog {varname title url opts action} {
 	-command [list SIADestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     # Export
-    menu $mb.file.export
+    ThemeMenu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
 	-command [list TBLSaveRDBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list TBLSaveTSVFile $varname]
 
     # edit
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -122,7 +122,7 @@ proc SIADialog {varname title url opts action} {
 	-command [list ARClear $varname]
 
     # prefs
-    menu $mb.prefs
+    ThemeMenu $mb.prefs
     $mb.prefs add checkbutton -label [msgcat::mc {Save Image on Download}] \
 	-variable ${varname}(save)
     $mb.prefs add separator
@@ -187,7 +187,8 @@ proc SIADialog {varname title url opts action} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list SIASelectCmd $varname %s %S] \
-		      -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
 		     ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

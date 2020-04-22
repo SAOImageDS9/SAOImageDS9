@@ -241,7 +241,8 @@ proc HVFormSelect {varname n a} {
 
 	    ttk::menubutton $path -textvariable ${varname}(form,$n,single,$id) \
 		-menu $path.m
-	    menu $path.m -tearoff 0
+	    ThemeMenu $path.m
+	    $path.m configure -tearoff 0
 
 	    set l 0
 	    set first 1

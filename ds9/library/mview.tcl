@@ -9,7 +9,7 @@ package provide DS9 1.0
 proc ViewMainMenu {} {
     global ds9
 
-    menu $ds9(mb).view
+    ThemeMenu $ds9(mb).view
     $ds9(mb).view add radiobutton -label [msgcat::mc {Horizontal Layout}] \
 	-variable view(layout) -value horizontal -command {ViewHorzCmd}
     $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical Layout}] \
@@ -58,7 +58,7 @@ proc ViewMainMenu {} {
 	-variable view(info,frame) -command UpdateView
 
     # View Info Panel WCS
-    menu $ds9(mb).view.mwcs
+    ThemeMenu $ds9(mb).view.mwcs
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$ds9(mb).view.mwcs add checkbutton \
 	    -label "[msgcat::mc {WCS}] $l" \
@@ -76,7 +76,7 @@ proc PrefsDialogViewMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {Horizontal Layout}] \
 	-variable pview(layout) -value horizontal
     $m add radiobutton -label [msgcat::mc {Vertical Layout}] \
@@ -123,7 +123,7 @@ proc PrefsDialogViewMenu {w} {
     $m add checkbutton -label  [msgcat::mc {Frame Information}]\
 	-variable pview(info,frame)
 
-    menu $m.wcs
+    ThemeMenu $m.wcs
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$m.wcs add checkbutton -label "[msgcat::mc {WCS}] $l" \
 	    -variable "pview(info,wcs$l)"
@@ -327,7 +327,7 @@ proc PrefsDialogButtonbarView {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Horizontal Layout}] \
 	-variable pbuttons(view,horizontal) \
 	-command {UpdateButtons buttons(view)}

@@ -279,7 +279,7 @@ proc ProcessAnalysis {varname} {
 		    lappend ianalysis(menu,hmenu) $nmenu
 		    incr ianalysis(menu,hmenu,count)
 
-		    menu $nmenu
+		    ThemeMenu $nmenu
 		    $currentparent add cascade -label "$item" -menu $nmenu
 
 		    set currentparent $nmenu

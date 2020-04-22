@@ -49,7 +49,7 @@ proc ESODialog {} {
     IMGSVRInit $varname "ESO-DSS [msgcat::mc {Server}]" ESOExec ESOAck
 
     $var(mb) add cascade -label Survey -menu $var(mb).survey
-    menu $var(mb).survey
+    ThemeMenu $var(mb).survey
     # these must be Caps, the server will not accept lower case
     $var(mb).survey add radiobutton -label {DSS1} \
 	-variable ${varname}(survey) -value DSS1

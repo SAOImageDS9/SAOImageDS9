@@ -43,7 +43,7 @@ proc PlotDialog {varname wtt} {
     $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).dataline
 
     # File
-    menu $var(mb).file
+    ThemeMenu $var(mb).file
     $var(mb).file add command -label "[msgcat::mc {Load Data}]..." \
 	-command [list PlotLoadData $varname]
     $var(mb).file add command -label "[msgcat::mc {Save Data}]..." \
@@ -67,7 +67,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add command -label [msgcat::mc {Close}] \
 	-command [list PlotDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
-    menu $var(mb).file.export
+    ThemeMenu $var(mb).file.export
     $var(mb).file.export add command -label {GIF...} \
 	-command [list PlotExportDialog $varname gif]
     $var(mb).file.export add command -label {TIFF...} \
@@ -77,7 +77,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).file.export add command -label {PNG...} \
 	-command [list PlotExportDialog $varname png]
 
-    menu $var(mb).edit
+    ThemeMenu $var(mb).edit
     $var(mb).edit add command -label [msgcat::mc {Cut}] \
 	-state disabled -accelerator "${ds9(ctrl)}X"
     $var(mb).edit add command -label [msgcat::mc {Copy}] \
@@ -95,7 +95,7 @@ proc PlotDialog {varname wtt} {
 	-command [list PlotChangeMode $varname]
 
     # Canvas
-    menu $var(mb).canvas
+    ThemeMenu $var(mb).canvas
 
     $var(mb).canvas add cascade -label [msgcat::mc {Select Graph}] \
 	-menu $var(mb).canvas.select
@@ -127,9 +127,9 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas add cascade -label [msgcat::mc {Grid}] \
 	-menu $var(mb).canvas.grid
 
-    menu $var(mb).canvas.select
+    ThemeMenu $var(mb).canvas.select
 
-    menu $var(mb).canvas.graph
+    ThemeMenu $var(mb).canvas.graph
     $var(mb).canvas.graph add command -label [msgcat::mc {Line}] \
 	-command [list PlotAddGraph $varname line]
     $var(mb).canvas.graph add command -label [msgcat::mc {Bar}] \
@@ -137,7 +137,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.graph add command -label [msgcat::mc {Scatter}] \
 	-command [list PlotAddGraph $varname scatter]
 
-    menu $var(mb).canvas.layout
+    ThemeMenu $var(mb).canvas.layout
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
 	-variable ${varname}(layout) -value grid \
 	-command [list PlotChangeLayout $varname]
@@ -182,7 +182,7 @@ proc PlotDialog {varname wtt} {
 	[list PlotUpdateCanvas $varname]
 
     # Graph
-    menu $var(mb).graph
+    ThemeMenu $var(mb).graph
 
     $var(mb).graph add cascade -label [msgcat::mc {Select Dataset}] \
 	-menu $var(mb).graph.select
@@ -209,9 +209,9 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
 	-command [list PlotGraphTitleDialog $varname]
 
-    menu $var(mb).graph.select
+    ThemeMenu $var(mb).graph.select
 
-    menu $var(mb).graph.axes
+    ThemeMenu $var(mb).graph.axes
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
 	-variable ${varname}(graph,axis,x,grid) \
 	-command [list PlotChangeAxis $varname]
@@ -235,7 +235,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
 	-command [list PlotRangeDialog $varname]
 
-    menu $var(mb).graph.legend
+    ThemeMenu $var(mb).graph.legend
     $var(mb).graph.legend add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,legend) \
 	-command [list PlotChangeLegend $varname]
@@ -256,7 +256,7 @@ proc PlotDialog {varname wtt} {
 	-variable ${varname}(graph,legend,position) -value plotarea \
 	-command [list PlotChangeLegend $varname]
 
-    menu $var(mb).graph.barmode
+    ThemeMenu $var(mb).graph.barmode
     $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Normal}] \
 	-variable ${varname}(bar,mode) -value normal \
 	-command [list PlotUpdateGraph $varname]
@@ -577,27 +577,27 @@ proc DatasetNameDialog {varname} {
     return $rr
 }
 
-proc PlotLineShapeMenu {which var} {
-    menu $which
-    $which add radiobutton -label [msgcat::mc {None}] \
+proc PlotLineShapeMenu {w var} {
+    ThemeMenu $w
+    $w add radiobutton -label [msgcat::mc {None}] \
 	-variable $var -value none
-    $which add radiobutton -label [msgcat::mc {Circle}] \
+    $w add radiobutton -label [msgcat::mc {Circle}] \
 	-variable $var -value circle
-    $which add radiobutton -label [msgcat::mc {Square}] \
+    $w add radiobutton -label [msgcat::mc {Square}] \
 	-variable $var -value square
-    $which add radiobutton -label [msgcat::mc {Diamond}] \
+    $w add radiobutton -label [msgcat::mc {Diamond}] \
 	-variable $var -value diamond
-    $which add radiobutton -label [msgcat::mc {Plus}] \
+    $w add radiobutton -label [msgcat::mc {Plus}] \
 	-variable $var -value plus
-    $which add radiobutton -label [msgcat::mc {Cross}] \
+    $w add radiobutton -label [msgcat::mc {Cross}] \
 	-variable $var -value cross
-    $which add radiobutton -label [msgcat::mc {Simple Plus}] \
+    $w add radiobutton -label [msgcat::mc {Simple Plus}] \
 	-variable $var -value splus
-    $which add radiobutton -label [msgcat::mc {Simple Cross}] \
+    $w add radiobutton -label [msgcat::mc {Simple Cross}] \
 	-variable $var -value scross
-    $which add radiobutton -label [msgcat::mc {Triangle}] \
+    $w add radiobutton -label [msgcat::mc {Triangle}] \
 	-variable $var -value triangle
-    $which add radiobutton -label [msgcat::mc {Arrow}] \
+    $w add radiobutton -label [msgcat::mc {Arrow}] \
 	-variable $var -value arrow
 }
 

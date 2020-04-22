@@ -48,7 +48,7 @@ proc VLADialog {} {
     set w $var(top)
     IMGSVRInit $varname "VLA [msgcat::mc {Server}]" VLAExec VLAAck
 
-    menu $var(mb).survey
+    ThemeMenu $var(mb).survey
     $var(mb) add cascade -label Survey -menu $var(mb).survey
     $var(mb).survey add radiobutton -label {First} \
 	-variable ${varname}(survey) -value first

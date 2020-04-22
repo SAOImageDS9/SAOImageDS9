@@ -48,7 +48,8 @@ proc 2MASSDialog {} {
     IMGSVRInit $varname "IPAC-2MASS [msgcat::mc {Server}]" 2MASSExec 2MASSAck
 
     $var(mb) add cascade -label Survey -menu $var(mb).survey
-    menu $var(mb).survey
+
+    ThemeMenu $var(mb).survey
     $var(mb).survey add radiobutton -label {2MASS (J Band)} \
 	-variable ${varname}(survey) -value j
     $var(mb).survey add radiobutton -label {2MASS (H Band)} \

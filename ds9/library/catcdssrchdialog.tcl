@@ -62,7 +62,7 @@ proc CATCDSSrchDialog {varname} {
 
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command "CATCDSSrchLoadFile $varname" -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -206,7 +206,8 @@ proc CATCDSSrchDialog {varname} {
 		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
 		     ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] \

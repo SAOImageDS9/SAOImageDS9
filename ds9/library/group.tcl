@@ -54,7 +54,7 @@ proc GroupDialog {} {
     Toplevel $w $mb 6 [msgcat::mc {Groups}] GroupDestroyDialog
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Update Group}] \
 	-command GroupUpdateDialog
     $mb.file add command -label [msgcat::mc {Select None}] \

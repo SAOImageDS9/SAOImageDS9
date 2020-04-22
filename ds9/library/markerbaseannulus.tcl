@@ -102,7 +102,7 @@ proc MarkerBaseAnnulusFileMenu {varname} {
     upvar #0 $varname var
     global $varname
 
-    menu $var(mb).file
+    ThemeMenu $var(mb).file
     $var(mb).file add command -label [msgcat::mc {Apply}] \
 	-command "$var(proc,apply) $varname"
     $var(mb).file add command -label [msgcat::mc {Generate}] \
@@ -117,7 +117,7 @@ proc MarkerBaseAnnulusMethodMenu {varname} {
     global $varname
 
     $var(mb) add cascade -label [msgcat::mc {Method}] -menu $var(mb).method
-    menu $var(mb).method
+    ThemeMenu $var(mb).method
     $var(mb).method add radiobutton -label [msgcat::mc {Equal Distance}] \
 	-variable ${varname}(method) -value dist
     $var(mb).method add radiobutton -label [msgcat::mc {Equal Area}] \

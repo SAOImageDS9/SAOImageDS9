@@ -246,6 +246,9 @@ switch $ds9(wm) {
 	    ttk::style theme use $tt
 	    ttk::style configure TEntry -padding 1 \
 		-fieldbackground [ttk::style lookup TLabel -background]
+	    ttk::style configure Treeview \
+		-background [ttk::style lookup TLabel -background] \
+		-fieldbackground [ttk::style lookup TLabel -background]
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
 

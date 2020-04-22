@@ -108,6 +108,8 @@ proc ThemeConfigMenu {w} {
 }
 
 proc ThemeConfigTable {w} {
+    global ds9
+    
     switch $ds9(wm) {
 	x11 {}
 	aqua -
@@ -128,7 +130,7 @@ proc ThemeForeground {} {
 	}
     }
     
-    set fg [ttk::style lookup TLable -foreground]
+    set fg [ttk::style lookup TLabel -foreground]
     if {$fg != {}} {
 	return $fg
     } else {
@@ -145,7 +147,7 @@ proc ThemeBackground {} {
 	win32 {	return $ds9(gui,bg)}
     }
 
-    set bg [ttk::style lookup TLable -background]
+    set bg [ttk::style lookup TLabel -background]
     if {$bg != {}} {
 	return $bg
     } else {

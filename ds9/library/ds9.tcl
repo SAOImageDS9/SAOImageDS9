@@ -244,7 +244,8 @@ switch $ds9(wm) {
 	# fix TEntry TLabel
 	foreach tt [ttk::style theme names] {
 	    ttk::style theme use $tt
-	    ttk::style configure TEntry -padding 1
+	    ttk::style configure TEntry -padding 1 \
+		-fieldbackground [ttk::style lookup TLabel -background]
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
 
@@ -254,8 +255,8 @@ switch $ds9(wm) {
 
 	ttk::style theme use default
 
-	set ds9(gui,fg) [ttk::style lookup TLable -foreground]
-	set ds9(gui,bg) [ttk::style lookup TLable -background]
+	set ds9(gui,fg) [ttk::style lookup TLabel -foreground]
+	set ds9(gui,bg) [ttk::style lookup TLabel -background]
 
 	set ds9(menu,fg) [ttk::style lookup TMenubutton -foreground]
 	set ds9(menu,bg) [ttk::style lookup TMenubutton -background]
@@ -347,8 +348,8 @@ switch $ds9(wm) {
 
 	ttk::style theme use xpnative
 
-	set ds9(gui,fg) [ttk::style lookup TLable -foreground]
-	set ds9(gui,bg) [ttk::style lookup TLable -background]
+	set ds9(gui,fg) [ttk::style lookup TLabel -foreground]
+	set ds9(gui,bg) [ttk::style lookup TLabel -background]
 
 	set ds9(menu,fg) [ttk::style lookup TMenubutton -foreground]
 	set ds9(menu,bg) [ttk::style lookup TMenubutton -background]

@@ -17,9 +17,6 @@ proc DS9Def {} {
     # For display purposes only
     set ds9(version,display) {8.2b2}
 
-    set ds9(top) .
-    set ds9(mb) .mb
-
     set ds9(visual) {}
     set ds9(depth) 8
     set ds9(FTY_MAXAXES) 10
@@ -163,25 +160,21 @@ proc DS9Def {} {
     set pds9(language,dir) {}
 
     set pds9(theme) default
-
-    # colors
-    # ds9(foreground) color of fg
-    # ds9(background) color of bg
-    # ds9(bold) color for gui fg bold text
-    # ds9(gui,fg) default color of gui fg text
-    # ds9(gui,bg) default color of gui bg features
-    # ds9(menu,fg) default color of menu fg text
-    # ds9(menu,bg) default color of menu bg features
 }
 
-# if we have a problem at this point, dump simple message and exit
+# ds9(wm)
 if {[catch {tk windowingsystem} ds9(wm)]} {
     puts stderr "Unable to initialize window system."
     exit
 }
 
-# who are we?
+# ds9(app)
 set ds9(app) [file tail [info nameofexecutable]]
+
+# ds9(top)
+# need for load
+set ds9(top) .
+set ds9(mb) .mb
 
 # pre package load
 switch $ds9(wm) {
@@ -224,16 +217,12 @@ switch $ds9(wm) {
 	package require ttk::theme::blue
 	package require ttk::theme::clearlooks
 	package require ttk::theme::elegance
-	# ugly
 	#package require ttk::theme::itft1
 	package require ttk::theme::keramik
-	# ugly
 	#package require ttk::theme::kroc
 	package require ttk::theme::plastik
 	package require ttk::theme::radiance
-	# ugly
 	#package require ttk::theme::smog
-	# ugly
 	#package require ttk::theme::winxpblue
 
 	# edit theme list
@@ -536,6 +525,9 @@ ProcessCommandLineFirst
 # Load any preferences here, before we do any real work
 if {$ds9(prefs)} {
     LoadPrefs
+
+    # be sure theme has been set
+    PrefsTheme
 }
 
 # set fonts
@@ -682,9 +674,6 @@ switch $ds9(wm) {
 	update
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
-
-	# be sure theme has been set
-	PrefsTheme
     }
     aqua {}
     win32 {

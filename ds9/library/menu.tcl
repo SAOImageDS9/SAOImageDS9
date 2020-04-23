@@ -95,7 +95,7 @@ proc ThemeConfigMenu {w} {
     if {$fg != {}} {
 	$w configure -activeforeground $fg
     } else {
-	$w configure -activeforeground $ds9(gui,fg,active)
+	$w configure -activeforeground $ds9(gui,fg,select)
     }
 
     # selectbackground
@@ -103,7 +103,7 @@ proc ThemeConfigMenu {w} {
     if {$bg != {}} {
 	$w configure -activebackground $bg
     } else {
-	$w configure -activebackground $ds9(gui,bg,active)
+	$w configure -activebackground $ds9(gui,bg,select)
     }
 }
 

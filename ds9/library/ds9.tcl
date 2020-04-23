@@ -239,8 +239,8 @@ switch $ds9(wm) {
 
 	set ds9(gui,fg) [ttk::style lookup . -foreground]
 	set ds9(gui,bg) [ttk::style lookup . -background]
-	set ds9(gui,fg,active) [ttk::style lookup . -selectforeground]
-	set ds9(gui,bg,active) [ttk::style lookup . -selectbackground]
+	set ds9(gui,fg,select) [ttk::style lookup . -selectforeground]
+	set ds9(gui,bg,select) [ttk::style lookup . -selectbackground]
 
 	# fix TEntry/Treeview/TLabel widgets
 	foreach tt [ttk::style theme names] {
@@ -272,8 +272,8 @@ switch $ds9(wm) {
 
 	set ds9(gui,fg) $ds9(foreground)
 	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,fg,active) $ds9(foreground)
-	set ds9(gui,bg,active) $ds9(background)
+	set ds9(gui,fg,select) $ds9(foreground)
+	set ds9(gui,bg,select) $ds9(background)
 
 	set pap(fg) $ds9(foreground)
 	set pap(bg) $ds9(background)
@@ -344,8 +344,8 @@ switch $ds9(wm) {
 
 	set ds9(gui,fg) [ttk::style lookup . -foreground]
 	set ds9(gui,bg) [ttk::style lookup . -background]
-	set ds9(gui,fg,active) [ttk::style lookup . -selectforeground]
-	set ds9(gui,bg,active) [ttk::style lookup . -selectbackground]
+	set ds9(gui,fg,select) [ttk::style lookup . -selectforeground]
+	set ds9(gui,bg,select) [ttk::style lookup . -selectbackground]
     }
 }
 

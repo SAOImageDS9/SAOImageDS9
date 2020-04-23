@@ -237,24 +237,19 @@ switch $ds9(wm) {
 
 	ttk::style theme use default
 
-	set ds9(gui,fg) [ttk::style lookup TLabel -foreground]
-	set ds9(gui,bg) [ttk::style lookup TLabel -background]
-
-	set ds9(menu,fg) [ttk::style lookup TMenubutton -foreground]
-	set ds9(menu,bg) [ttk::style lookup TMenubutton -background]
-	set ds9(menu,active,fg) \
-	    [ttk::style lookup TMenubutton -selectforeground]
-	set ds9(menu,active,bg) \
-	    [ttk::style lookup TMenubutton -selectbackground]
+	set ds9(gui,fg) [ttk::style lookup . -foreground]
+	set ds9(gui,bg) [ttk::style lookup . -background]
+	set ds9(gui,fg,active) [ttk::style lookup . -selectforeground]
+	set ds9(gui,bg,active) [ttk::style lookup . -selectbackground]
 
 	# fix TEntry/Treeview/TLabel widgets
 	foreach tt [ttk::style theme names] {
 	    ttk::style theme use $tt
-	    set fg [ttk::style lookup TLabel -foreground]
+	    set fg [ttk::style lookup . -foreground]
 	    if {$fg == {}} {
 		set fg $ds9(gui,fg)
 	    }
-	    set bg [ttk::style lookup TLabel -background]
+	    set bg [ttk::style lookup . -background]
 	    if {$bg == {}} {
 		set bg $ds9(gui,bg)
 	    }
@@ -277,11 +272,8 @@ switch $ds9(wm) {
 
 	set ds9(gui,fg) $ds9(foreground)
 	set ds9(gui,bg) $ds9(background)
-
-	set ds9(menu,fg) $ds9(foreground)
-	set ds9(menu,bg) $ds9(background)
-	set ds9(menu,active,fg) $ds9(foreground)
-	set ds9(menu,active,bg) $ds9(background)
+	set ds9(gui,fg,active) $ds9(foreground)
+	set ds9(gui,bg,active) $ds9(background)
 
 	set pap(fg) $ds9(foreground)
 	set pap(bg) $ds9(background)
@@ -350,15 +342,10 @@ switch $ds9(wm) {
 
 	ttk::style theme use xpnative
 
-	set ds9(gui,fg) [ttk::style lookup TLabel -foreground]
-	set ds9(gui,bg) [ttk::style lookup TLabel -background]
-
-	set ds9(menu,fg) [ttk::style lookup TMenubutton -foreground]
-	set ds9(menu,bg) [ttk::style lookup TMenubutton -background]
-	set ds9(menu,active,fg) \
-	    [ttk::style lookup TMenubutton -selectforeground]
-	set ds9(menu,active,bg) \
-	    [ttk::style lookup TMenubutton -selectbackground]
+	set ds9(gui,fg) [ttk::style lookup . -foreground]
+	set ds9(gui,bg) [ttk::style lookup . -background]
+	set ds9(gui,fg,active) [ttk::style lookup . -selectforeground]
+	set ds9(gui,bg,active) [ttk::style lookup . -selectbackground]
     }
 }
 

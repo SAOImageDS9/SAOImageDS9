@@ -44,8 +44,8 @@ proc CreateMenuBar {} {
     switch $ds9(wm) {
 	x11 {
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
-	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
-	    bind Text <<ThemeChanged>> {ThemeConfigText %W}
+	    bind Table <<ThemeChanged>> {ThemeConfig %W}
+	    bind Text <<ThemeChanged>> {ThemeConfig %W}
 	}
 	aqua -
 	win32 {}
@@ -75,52 +75,39 @@ proc ThemeConfigMenu {w} {
     }
 
     # foreground
-    set fg [ttk::style lookup TMenubutton -foreground]
+    set fg [ttk::style lookup . -foreground]
     if {$fg != {}} {
 	$w configure -fg $fg
     } else {
-	$w configure -fg $ds9(menu,fg)
+	$w configure -fg $ds9(gui,fg)
     }
 
     # background
-    set bg [ttk::style lookup TMenubutton -background]
+    set bg [ttk::style lookup . -background]
     if {$bg != {}} {
 	$w configure -bg $bg
     } else {
-	$w configure -bg $ds9(menu,bg)
+	$w configure -bg $ds9(gui,bg)
     }
 
     # selectforeground
-    set fg [ttk::style lookup TMenubutton -selectforeground]
+    set fg [ttk::style lookup . -selectforeground]
     if {$fg != {}} {
 	$w configure -activeforeground $fg
     } else {
-	$w configure -activeforeground $ds9(menu,active,fg)
+	$w configure -activeforeground $ds9(gui,fg,active)
     }
 
     # selectbackground
-    set bg [ttk::style lookup TMenubutton -selectbackground]
+    set bg [ttk::style lookup . -selectbackground]
     if {$bg != {}} {
 	$w configure -activebackground $bg
     } else {
-	$w configure -activebackground $ds9(menu,active,bg)
+	$w configure -activebackground $ds9(gui,bg,active)
     }
 }
 
-proc ThemeConfigTable {w} {
-    global ds9
-    
-    switch $ds9(wm) {
-	x11 {}
-	aqua -
-	win32 {return}
-    }
-
-    $w configure -fg [ThemeForeground]
-    $w configure -bg [ThemeBackground]
-}
-
-proc ThemeConfigText {w} {
+proc ThemeConfig {w} {
     global ds9
     
     switch $ds9(wm) {
@@ -138,7 +125,7 @@ proc ThemeForeground {} {
     
     switch $ds9(wm) {
 	x11 {
-	    set fg [ttk::style lookup TLabel -foreground]
+	    set fg [ttk::style lookup . -foreground]
 	    if {$fg != {}} {
 		return $fg
 	    } else {
@@ -156,7 +143,7 @@ proc ThemeBackground {} {
     
     switch $ds9(wm) {
 	x11 {
-	    set bg [ttk::style lookup TLabel -background]
+	    set bg [ttk::style lookup . -background]
 	    if {$bg != {}} {
 		return $bg
 	    } else {

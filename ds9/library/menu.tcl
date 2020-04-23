@@ -90,7 +90,6 @@ proc ThemeConfigMenu {w} {
 	$w configure -bg $ds9(menu,bg)
     }
 
-    return
     # selectforeground
     set fg [ttk::style lookup TMenubutton -selectforeground]
     if {$fg != {}} {
@@ -104,7 +103,7 @@ proc ThemeConfigMenu {w} {
     if {$bg != {}} {
 	$w configure -activebackground $bg
     } else {
-	$w configure -activebackground $ds9(menu,active,fg)
+	$w configure -activebackground $ds9(menu,active,bg)
     }
 }
 
@@ -138,17 +137,17 @@ proc ThemeForeground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {}
+	x11 {
+	    set fg [ttk::style lookup TLabel -foreground]
+	    if {$fg != {}} {
+		return $fg
+	    } else {
+		return $ds9(gui,fg)
+	    }
+	}
 	aqua -
 	win32 {return $ds9(gui,fg)
 	}
-    }
-    
-    set fg [ttk::style lookup TLabel -foreground]
-    if {$fg != {}} {
-	return $fg
-    } else {
-	return $ds9(gui,fg)
     }
 }
 
@@ -156,16 +155,16 @@ proc ThemeBackground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {}
+	x11 {
+	    set bg [ttk::style lookup TLabel -background]
+	    if {$bg != {}} {
+		return $bg
+	    } else {
+		return $ds9(gui,bg)
+	    }
+	}
 	aqua -
-	win32 {	return $ds9(gui,bg)}
-    }
-
-    set bg [ttk::style lookup TLabel -background]
-    if {$bg != {}} {
-	return $bg
-    } else {
-	return $ds9(gui,bg)
+	win32 {return $ds9(gui,bg)}
     }
 }
 

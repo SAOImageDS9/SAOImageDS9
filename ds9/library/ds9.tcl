@@ -214,11 +214,11 @@ switch $ds9(wm) {
 	# themes
 	package require ttk::theme::aquativo
 	package require ttk::theme::black
-	package require ttk::theme::blue
+	#package require ttk::theme::blue
 	package require ttk::theme::clearlooks
 	package require ttk::theme::elegance
 	#package require ttk::theme::itft1
-	package require ttk::theme::keramik
+	#package require ttk::theme::keramik
 	#package require ttk::theme::kroc
 	package require ttk::theme::plastik
 	package require ttk::theme::radiance
@@ -233,7 +233,7 @@ switch $ds9(wm) {
 	# colors
 	set ds9(foreground) black
 	set ds9(background) white
-	set ds9(bold) blue
+	set ds9(bold) cornflowerblue
 
 	ttk::style theme use default
 
@@ -346,7 +346,7 @@ switch $ds9(wm) {
 	# colors
 	set ds9(foreground) black
 	set ds9(background) white
-	set ds9(bold) blue
+	set ds9(bold) cornflowerblue
 
 	ttk::style theme use xpnative
 
@@ -355,8 +355,10 @@ switch $ds9(wm) {
 
 	set ds9(menu,fg) [ttk::style lookup TMenubutton -foreground]
 	set ds9(menu,bg) [ttk::style lookup TMenubutton -background]
-	set ds9(menu,active,fg) $ds9(menu,fg)
-	set ds9(menu,active,bg) $ds9(menu,bg)
+	set ds9(menu,active,fg) \
+	    [ttk::style lookup TMenubutton -selectforeground]
+	set ds9(menu,active,bg) \
+	    [ttk::style lookup TMenubutton -selectbackground]
     }
 }
 

@@ -219,7 +219,7 @@ switch $ds9(wm) {
 	package require ttk::theme::elegance
 #	package require ttk::theme::itft1
 #	package require ttk::theme::keramik
-	package require ttk::theme::kroc
+#	package require ttk::theme::kroc
 	package require ttk::theme::plastik
 	package require ttk::theme::radiance
 	package require ttk::theme::smog

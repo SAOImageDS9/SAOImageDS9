@@ -915,6 +915,7 @@ proc OpenConsole {} {
 	set ::tkcon::OPT(font) [font actual TkFixedFont]
 	
 	tkcon::Init
+	bind $::tkcon::PRIV(curtab) <<ThemeChanged>> {break}
     }
 }
 

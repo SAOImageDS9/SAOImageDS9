@@ -214,16 +214,16 @@ switch $ds9(wm) {
 	# themes
 	package require ttk::theme::aquativo
 	package require ttk::theme::black
-	#package require ttk::theme::blue
+	package require ttk::theme::blue
 	package require ttk::theme::clearlooks
 	package require ttk::theme::elegance
-	#package require ttk::theme::itft1
-	#package require ttk::theme::keramik
-	#package require ttk::theme::kroc
+#	package require ttk::theme::itft1
+#	package require ttk::theme::keramik
+	package require ttk::theme::kroc
 	package require ttk::theme::plastik
 	package require ttk::theme::radiance
-	#package require ttk::theme::smog
-	#package require ttk::theme::winxpblue
+	package require ttk::theme::smog
+	package require ttk::theme::winxpblue
 
 	# edit theme list
 	set ds9(themes) [lsort [ttk::style theme names]]

@@ -211,9 +211,18 @@ package require DS9
 # post package load
 switch $ds9(wm) {
     x11 {
-	# themes
+	# awthemes
+	package require awthemes
+	package require colorutils
+	package require awdark
+	package require awlight
+	package require awblack
+#	package require awwinxpblue
+	package require awbreeze
+
+	# tkthemes
 	package require ttk::theme::aquativo
-	package require ttk::theme::black
+#	package require ttk::theme::black
 	package require ttk::theme::blue
 	package require ttk::theme::clearlooks
 	package require ttk::theme::elegance
@@ -222,7 +231,7 @@ switch $ds9(wm) {
 #	package require ttk::theme::kroc
 	package require ttk::theme::plastik
 	package require ttk::theme::radiance
-	package require ttk::theme::smog
+#	package require ttk::theme::smog
 	package require ttk::theme::winxpblue
 
 	# edit theme list

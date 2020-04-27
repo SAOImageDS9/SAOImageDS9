@@ -1852,6 +1852,11 @@ void Base::getGridVarsCmd()
     Tcl_AppendResult(interp, "", NULL);
 }
 
+void Base::getHighliteColorCmd()
+{
+  Tcl_AppendResult(interp, highliteColourName, NULL);
+}
+
 void Base::getHistogramCmd(char* xName, char* yName, int num)
 {
   currentContext->bltHist(xName, yName, num);
@@ -2438,6 +2443,15 @@ void Base::highliteCmd(int which)
 {
   useHighlite = which ? 1 : 0;
   update(PIXMAP);
+}
+
+void Base::highliteColorCmd(const char* color)
+{
+  if (highliteColourName)
+    delete [] highliteColourName;
+  highliteColourName = dupstr(color);
+
+  update(BASE);
 }
 
 void Base::magnifierCmd(int s)

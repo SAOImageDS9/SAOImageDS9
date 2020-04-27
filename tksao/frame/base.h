@@ -233,6 +233,7 @@ public:
   int invert;
 
   int useHighlite;
+  char* highliteColourName;
   GC highliteGC;
 
   int useCrosshair;
@@ -980,6 +981,8 @@ public:
   virtual void getTypeCmd() =0;
   void getFitsWidthCmd();
   void highliteCmd(int);
+  void highliteColorCmd(const char*);
+  void getHighliteColorCmd();
   void warpCmd(const Vector&);
   void warpToCmd(const Vector&);
 

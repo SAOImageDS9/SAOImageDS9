@@ -484,6 +484,7 @@ command : DEBUG_ debug
 	| HAS_ has
 	| HIDE_ {fr->hideCmd();}
 	| HIGHLITE_ yesno {fr->highliteCmd($2);}
+	| HIGHLITE_ COLOR_ STRING {fr->highliteColorCmd($3);}
 	| IIS_ iis
 	| IRAF_ ALIGN_ INT {fr->irafAlignCmd($3);}
 	| LOAD_ load
@@ -1026,6 +1027,7 @@ get	: BG_ COLOR_ {fr->getBgColorCmd();}
 	| DATASEC_ {fr->getDATASECCmd();}
 	| FITS_ getFits
 	| GRID_ getGrid
+	| HIGHLITE_ COLOR_ {fr->getHighliteColorCmd();}
 	| HISTOGRAM_ STRING STRING INT {fr->getHistogramCmd($2,$3,$4);}
 	| HORIZONTAL_ CUT_ STRING STRING numeric numeric internalSystem INT cutMethod
 	{fr->getHorzCutCmd($3,$4,Vector($5,$6),(Coord::InternalSystem)$7,$8,(Base::CutMethod)$9);}

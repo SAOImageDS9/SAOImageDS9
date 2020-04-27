@@ -140,16 +140,12 @@ proc CreateGraphs {} {
     bind $ds9(graph,vert) <Left> [list ArrowKeyGraph $ds9(graph,vert) -1 0 0]
     bind $ds9(graph,vert) <Right> [list ArrowKeyGraph $ds9(graph,vert) 1 0 0]
 
-    switch $ds9(wm) {
-	x11 {bind $ds9(graph,vert) <<ThemeChanged>> {ThemeConfigGraph %W}}
-	aqua -
-	win32 {}
-    }
-
     UpdateGraphGrid
 }
 
 proc ThemeConfigGraph {w} {
+    # invoked from ThemeConfigCanvs
+
     $w configure -fg [ThemeForeground] -bg [ThemeBackground] \
 	-plotbackground [ThemeBackground]
 

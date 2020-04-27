@@ -168,6 +168,11 @@ proc ThemeConfigCanvas {w} {
 	$w itemconfigure $ff -fg [ThemeForeground]
 	$w itemconfigure $ff -bg [ThemeBackground]
     }
+
+    # since graphs are created, but maybe not realized
+    # must update manually
+    ThemeConfigGraph $ds9(graph,horz)
+    ThemeConfigGraph $ds9(graph,vert)
 }
 
 proc ThemeConfigCanvasBottom {w} {

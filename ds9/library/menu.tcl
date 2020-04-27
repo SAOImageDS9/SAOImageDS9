@@ -68,12 +68,6 @@ proc ThemeMenu {w} {
 proc ThemeConfigMenu {w} {
     global ds9
 
-    switch $ds9(wm) {
-	x11 {}
-	aqua -
-	win32 {return}
-    }
-
     # foreground
     set fg [ttk::style lookup . -foreground]
     if {$fg != {}} {
@@ -108,14 +102,6 @@ proc ThemeConfigMenu {w} {
 }
 
 proc ThemeConfig {w} {
-    global ds9
-    
-    switch $ds9(wm) {
-	x11 {}
-	aqua -
-	win32 {return}
-    }
-
     $w configure -fg [ThemeForeground]
     $w configure -bg [ThemeBackground]
 }

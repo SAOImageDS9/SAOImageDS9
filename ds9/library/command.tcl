@@ -65,6 +65,10 @@ proc ProcessCommandLineSecond {} {
 		incr i
 		set pds9(language,dir) [lindex $argv $i]
 	    }
+	    -theme {
+		incr i
+		ProcessThemeCmd argv i
+	    }
 	    -xpa {
 		incr i
 		ProcessXPAFirstCmd argv i
@@ -413,8 +417,8 @@ proc ProcessCommand {argv argc} {
 	    -source {incr i; ProcessSourceCmd argv i}
 	    -tcl {incr i; ; ProcessTclCmd argv i {} {}}
 	    -theme {
-		# backward compatibility
-		incr i; ProcessThemeCmd argv i
+		#already processed
+		incr i
 	    }
 	    -threads {incr i; ProcessThreadsCmd argv i}
 	    -tif -

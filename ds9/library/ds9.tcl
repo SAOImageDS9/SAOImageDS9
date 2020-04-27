@@ -523,9 +523,6 @@ ProcessCommandLineFirst
 # Load any preferences here, before we do any real work
 if {$ds9(prefs)} {
     LoadPrefs
-
-    # be sure theme has been set
-    PrefsTheme
 }
 
 # set fonts
@@ -603,7 +600,8 @@ InitCanvas
 
 # ok, ready to show the window
 wm deiconify $ds9(top)
-update
+# why is this here?
+#update
 
 # Init external File Formats
 # we want this before processing the command line
@@ -666,12 +664,19 @@ set ds9(init) 0
 # major kludges
 switch $ds9(wm) {
     x11 {
+	# everything must be realized
+	update
+
+	# be sure theme has been set
+	# could be changed in prefs or command line
+	PrefsTheme
+
 	# lock down geometry at statup
 	# so unneeded configure events are not generated
 	# a problem with recent versions of linux
-	update
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
+
     }
     aqua {}
     win32 {

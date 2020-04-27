@@ -15,7 +15,10 @@ proc CreateMagnifier {} {
 			    -borderwidth 2 \
 			    -highlightthickness 0 \
 			    -insertofftime 0 \
-			    -takefocus 0]
+			    -takefocus 0 \
+			    -bg $ds9(background) \
+			   ]
+
     $ds9(magnifier) create magnifier$ds9(visual) \
 	-width $imagnifier(size) \
 	-height $imagnifier(size) \
@@ -24,7 +27,19 @@ proc CreateMagnifier {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg $ds9(foreground) -bg $ds9(background)
+	-fg $ds9(foreground) \
+	-bg $ds9(background)
+
+    switch $ds9(wm) {
+	x11 {bind $ds9(magnifier) <<ThemeChanged>> {ThemeConfigMagnifier %W}}
+	aqua -
+	win32 {}
+    }
+}
+
+proc ThemeConfigMagnifier {w} {
+    $w configure -bg [ThemeBackground]
+    $w itemconfigure magnifier -bg [ThemeBackground]
 }
 
 proc MagnifierDef {} {

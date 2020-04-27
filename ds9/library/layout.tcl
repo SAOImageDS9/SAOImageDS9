@@ -120,20 +120,51 @@ proc CreateCanvas {} {
     set ds9(image) [ttk::frame $ds9(main).f]
     set ds9(canvas) [canvas $ds9(image).c -width $ww -height $hh \
 			 -highlightthickness 0 -insertofftime 0 \
-			 -bg $ds9(background)]
+			 -bg $ds9(background) \
+			]
     grid rowconfigure $ds9(image) 0 -weight 1
     grid columnconfigure $ds9(image) 0 -weight 1
     grid $ds9(canvas) -row 0 -column 0 -sticky news
 
     # extra space for window tab
+    set ds9(canvas,bottom) {}
     if {$canvas(gap,bottom)>0} {
-	set f [frame $ds9(image).b -width 1 -height $canvas(gap,bottom) \
-		   -bg $ds9(background)]
-	grid $f -row 1 -column 0 -sticky ew
+	set ds9(canvas,bottom) [frame $ds9(image).b \
+				    -width 1 \
+				    -height $canvas(gap,bottom) \
+				    -bg [ThemeBackground] \
+				   ]
+	grid $ds9(canvas,bottom) -row 1 -column 0 -sticky ew
     }
 	
     # needed to realize window so Layout routines will work
     grid $ds9(image)
+
+    switch $ds9(wm) {
+	x11 {
+	    bind $ds9(canvas) <<ThemeChanged>> {ThemeConfigCanvas %W}
+	    if {$ds9(canvas,bottom) != {}} {
+		bind $ds9(canvas,bottom) <<ThemeChanged>> \
+		    {ThemeConfigCanvasBottom %W}
+	    }
+	}
+	aqua -
+	win32 {}
+    }
+}
+
+proc ThemeConfigCanvas {w} {
+    $w configure -bg [ThemeBackground]
+
+    $w itemconfigure colorbar -fg [ThemeForeground]
+    $w itemconfigure colorbar -bg [ThemeBackground]
+
+    $w itemconfigure colorbarrgb -fg [ThemeForeground]
+    $w itemconfigure colorbarrgb -bg [ThemeBackground]
+}
+
+proc ThemeConfigCanvasBottom {w} {
+    $w configure -bg [ThemeBackground]
 }
 
 proc InitCanvas {} {

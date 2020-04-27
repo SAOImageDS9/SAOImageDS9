@@ -915,7 +915,12 @@ proc OpenConsole {} {
 	set ::tkcon::OPT(font) [font actual TkFixedFont]
 	
 	tkcon::Init
-	bind $::tkcon::PRIV(curtab) <<ThemeChanged>> {break}
+
+	switch $ds9(wm) {
+	    x11 {bind $::tkcon::PRIV(curtab) <<ThemeChanged>> {break}}
+	    aqua -
+	    win32 {}
+	}
     }
 }
 

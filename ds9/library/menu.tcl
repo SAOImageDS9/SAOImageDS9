@@ -73,7 +73,7 @@ proc ThemeConfigMenu {w} {
     if {$fg != {}} {
 	$w configure -fg $fg
     } else {
-	$w configure -fg $ds9(gui,fg)
+	$w configure -fg $ds9(foreground)
     }
 
     # background
@@ -81,7 +81,7 @@ proc ThemeConfigMenu {w} {
     if {$bg != {}} {
 	$w configure -bg $bg
     } else {
-	$w configure -bg $ds9(gui,bg)
+	$w configure -bg $ds9(background)
     }
 
     # selectforeground
@@ -89,7 +89,7 @@ proc ThemeConfigMenu {w} {
     if {$fg != {}} {
 	$w configure -activeforeground $fg
     } else {
-	$w configure -activeforeground $ds9(gui,fg,select)
+	$w configure -activeforeground $ds9(foreground,select)
     }
 
     # selectbackground
@@ -97,7 +97,7 @@ proc ThemeConfigMenu {w} {
     if {$bg != {}} {
 	$w configure -activebackground $bg
     } else {
-	$w configure -activebackground $ds9(gui,bg,select)
+	$w configure -activebackground $ds9(background,select)
     }
 }
 
@@ -115,11 +115,11 @@ proc ThemeForeground {} {
 	    if {$fg != {}} {
 		return $fg
 	    } else {
-		return $ds9(gui,fg)
+		return $ds9(foreground)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(gui,fg)
+	win32 {return $ds9(foreground)
 	}
     }
 }
@@ -133,11 +133,11 @@ proc ThemeBackground {} {
 	    if {$bg != {}} {
 		return $bg
 	    } else {
-		return $ds9(gui,bg)
+		return $ds9(background)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(gui,bg)}
+	win32 {return $ds9(background)}
     }
 }
 

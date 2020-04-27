@@ -241,27 +241,25 @@ switch $ds9(wm) {
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) classic]
 
 	# colors
-	set ds9(foreground) black
-	set ds9(background) white
 	set ds9(bold) cornflowerblue
 
 	ttk::style theme use default
 
-	set ds9(gui,fg) [ttk::style lookup . -foreground]
-	set ds9(gui,bg) [ttk::style lookup . -background]
-	set ds9(gui,fg,select) [ttk::style lookup . -selectforeground]
-	set ds9(gui,bg,select) [ttk::style lookup . -selectbackground]
+	set ds9(foreground) [ttk::style lookup . -foreground]
+	set ds9(background) [ttk::style lookup . -background]
+	set ds9(foreground,select) [ttk::style lookup . -selectforeground]
+	set ds9(background,select) [ttk::style lookup . -selectbackground]
 
 	# fix TEntry/Treeview/TLabel widgets
 	foreach tt [ttk::style theme names] {
 	    ttk::style theme use $tt
 	    set fg [ttk::style lookup . -foreground]
 	    if {$fg == {}} {
-		set fg $ds9(gui,fg)
+		set fg $ds9(foreground)
 	    }
 	    set bg [ttk::style lookup . -background]
 	    if {$bg == {}} {
-		set bg $ds9(gui,bg)
+		set bg $ds9(background)
 	    }
 	    ttk::style configure TEntry -padding 1 \
 		-fieldbackground $bg -background $bg -foreground $fg
@@ -276,17 +274,15 @@ switch $ds9(wm) {
     }
     aqua {
 	# colors
-	set ds9(foreground) systemTextColor
-	set ds9(background) systemTextBackgroundColor
 	set ds9(bold) systemControlAccentColor
 
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,fg,select) $ds9(foreground)
-	set ds9(gui,bg,select) $ds9(background)
+	set ds9(foreground) systemTextColor
+	set ds9(background) systemTextBackgroundColor
+	set ds9(foreground,select) systemTextColor
+	set ds9(background,select) systemTextBackgroundColor
 
-	set pap(fg) $ds9(foreground)
-	set pap(bg) $ds9(background)
+	set pap(fg) systemTextColor
+	set pap(bg) systemTextBackgroundColor
 
 	::tk::unsupported::MacWindowStyle style $ds9(top) document \
 	    "closeBox fullZoom collapseBox resizable"
@@ -346,16 +342,14 @@ switch $ds9(wm) {
     }
     win32 {
 	# colors
-	set ds9(foreground) black
-	set ds9(background) white
 	set ds9(bold) cornflowerblue
 
 	ttk::style theme use xpnative
 
-	set ds9(gui,fg) [ttk::style lookup . -foreground]
-	set ds9(gui,bg) [ttk::style lookup . -background]
-	set ds9(gui,fg,select) [ttk::style lookup . -selectforeground]
-	set ds9(gui,bg,select) [ttk::style lookup . -selectbackground]
+	set ds9(foreground) [ttk::style lookup . -foreground]
+	set ds9(background) [ttk::style lookup . -background]
+	set ds9(foreground,select) [ttk::style lookup . -selectforeground]
+	set ds9(background,select) [ttk::style lookup . -selectbackground]
     }
 }
 

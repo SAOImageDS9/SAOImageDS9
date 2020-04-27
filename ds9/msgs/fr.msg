@@ -283,6 +283,7 @@
 ::msgcat::mcset fr {Exterior Axes} {Axes exterieurs} 
 ::msgcat::mcset fr {Exterior Numerics} {Chiffres exterieurs}
 ::msgcat::mcset fr {FAQ} {Foire-Aux-Questions} 
+::msgcat::mcset fr {FITS} 
 ::msgcat::mcset fr {FK4} 
 ::msgcat::mcset fr {FK5} 
 ::msgcat::mcset fr {FP} 
@@ -315,7 +316,7 @@
 ::msgcat::mcset fr {Front} {Avant} 
 ::msgcat::mcset fr {Full Range} 
 ::msgcat::mcset fr {Function} {Fonction} 
-::msgcat::mcset fr {GUI Font} 
+::msgcat::mcset fr {GUI} 
 ::msgcat::mcset fr {Galactic} {Galactiques} 
 ::msgcat::mcset fr {Gap} 
 ::msgcat::mcset fr {Gaussian} {Gaussien} 
@@ -790,8 +791,8 @@
 ::msgcat::mcset fr {Tabloid} 
 ::msgcat::mcset fr {Tag Color} 
 ::msgcat::mcset fr {Template} 
-::msgcat::mcset fr {Text Font} 
 ::msgcat::mcset fr {Text} {Texte}
+::msgcat::mcset fr {Theme} 
 ::msgcat::mcset fr {Then} 
 ::msgcat::mcset fr {Thickness} 
 ::msgcat::mcset fr {This analysis task is already running. Do you wish to kill it?} 

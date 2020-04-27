@@ -1,4 +1,3 @@
-
 ::msgcat::mcset pt {2D} 
 ::msgcat::mcset pt {3D View} 
 ::msgcat::mcset pt {3D} 
@@ -284,6 +283,7 @@
 ::msgcat::mcset pt {Exterior Axes} {Eixos exteriores}
 ::msgcat::mcset pt {Exterior Numerics} [encoding convertfrom iso8859-1 {Numeração exterior}]
 ::msgcat::mcset pt {FAQ} 
+::msgcat::mcset pt {FITS} 
 ::msgcat::mcset pt {FK4} 
 ::msgcat::mcset pt {FK5} 
 ::msgcat::mcset pt {FP} 
@@ -316,7 +316,7 @@
 ::msgcat::mcset pt {Front} {Frente}
 ::msgcat::mcset pt {Full Range} {Intervalo completo}
 ::msgcat::mcset pt {Function} [encoding convertfrom iso8859-1 {Função}]
-::msgcat::mcset pt {GUI Font} 
+::msgcat::mcset pt {GUI} 
 ::msgcat::mcset pt {Galactic} [encoding convertfrom iso8859-1 {Galáctico}]
 ::msgcat::mcset pt {Gap} 
 ::msgcat::mcset pt {Gaussian} {Gaussiano}
@@ -791,8 +791,8 @@
 ::msgcat::mcset pt {Tabloid} [encoding convertfrom iso8859-1 {Tablóide}]
 ::msgcat::mcset pt {Tag Color} 
 ::msgcat::mcset pt {Template} 
-::msgcat::mcset pt {Text Font} 
 ::msgcat::mcset pt {Text} {Texto}
+::msgcat::mcset pt {Theme} 
 ::msgcat::mcset pt {Then} [encoding convertfrom iso8859-1 {Então}]
 ::msgcat::mcset pt {Thickness} {Expessura}
 ::msgcat::mcset pt {This analysis task is already running. Do you wish to kill it?} [encoding convertfrom iso8859-1 {Esta análise já está sendo executada. Você deseja parar?}]

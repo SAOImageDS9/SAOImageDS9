@@ -298,7 +298,21 @@ proc PSPrintDialog {which} {
     ttk::radiobutton $f.level3 -text "[msgcat::mc {Level}] 3" \
 	-variable ed(level) -value 3
     ttk::label $f.dpi -text [msgcat::mc {DPI}]
-    tk_optionMenu $f.resolution ed(resolution) 72 Screen 96 144 150 225 300 600 1200
+
+    set m $f.resolution
+    set mm $m.menu
+    ttk::menubutton $m -textvariable ed(resolution) -menu $mm
+    ThemeMenu $mm
+    $mm add radiobutton -label "72" -variable ed(resolution) -value 72
+    $mm add radiobutton -label [msgcat::mc {Screen}] \
+	-variable ed(resolution) -value 96
+    $mm add radiobutton -label "96" -variable ed(resolution) -value 96
+    $mm add radiobutton -label "144" -variable ed(resolution) -value 144
+    $mm add radiobutton -label "150" -variable ed(resolution) -value 150
+    $mm add radiobutton -label "225" -variable ed(resolution) -value 255
+    $mm add radiobutton -label "300" -variable ed(resolution) -value 300
+    $mm add radiobutton -label "600" -variable ed(resolution) -value 600
+    $mm add radiobutton -label "1200" -variable ed(resolution) -value 1200
 
     grid $f.color $f.rgb $f.cmyk $f.gray -padx 2 -pady 2 -sticky w
     grid $f.level $f.level3 $f.level2 $f.level1 -padx 2 -pady 2 -sticky w
@@ -530,7 +544,21 @@ proc PrefsDialogPrint {} {
     ttk::radiobutton $f.level3 -text "[msgcat::mc {Level}] 3" \
 	-variable pps(level) -value 3
     ttk::label $f.dpi -text [msgcat::mc {DPI}]
-    tk_optionMenu $f.resolution pps(resolution) 72 Screen 96 144 150 225 300 600 1200
+
+    set m $f.resolution
+    set mm $m.menu
+    ttk::menubutton $m -textvariable pps(resolution) -menu $mm
+    ThemeMenu $mm
+    $mm add radiobutton -label "72" -variable pps(resolution) -value 72
+    $mm add radiobutton -label [msgcat::mc {Screen}] \
+	-variable pps(resolution) -value 96
+    $mm add radiobutton -label "96" -variable pps(resolution) -value 96
+    $mm add radiobutton -label "144" -variable pps(resolution) -value 144
+    $mm add radiobutton -label "150" -variable pps(resolution) -value 150
+    $mm add radiobutton -label "225" -variable pps(resolution) -value 255
+    $mm add radiobutton -label "300" -variable pps(resolution) -value 300
+    $mm add radiobutton -label "600" -variable pps(resolution) -value 600
+    $mm add radiobutton -label "1200" -variable pps(resolution) -value 1200
 
     grid $f.color $f.rgb $f.cmyk $f.gray -padx 2 -pady 2 -sticky w
     grid $f.level $f.level3 $f.level2 $f.level1 -padx 2 -pady 2 -sticky w

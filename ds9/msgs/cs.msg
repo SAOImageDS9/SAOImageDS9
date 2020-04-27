@@ -283,6 +283,7 @@
 ::msgcat::mcset cs {Exterior Axes} 
 ::msgcat::mcset cs {Exterior Numerics} 
 ::msgcat::mcset cs {FAQ} 
+::msgcat::mcset cs {FITS} 
 ::msgcat::mcset cs {FK4} 
 ::msgcat::mcset cs {FK5} 
 ::msgcat::mcset cs {FP} 
@@ -315,7 +316,7 @@
 ::msgcat::mcset cs {Front} [encoding convertfrom iso8859-2 {První}]
 ::msgcat::mcset cs {Full Range} [encoding convertfrom iso8859-2 {Plný rozsah}]
 ::msgcat::mcset cs {Function} [encoding convertfrom iso8859-2 {Funkce}]
-::msgcat::mcset cs {GUI Font} [encoding convertfrom iso8859-2 {Font GUI}]
+::msgcat::mcset cs {GUI} 
 ::msgcat::mcset cs {Galactic} [encoding convertfrom iso8859-2 {Galaktické}]
 ::msgcat::mcset cs {Gap} 
 ::msgcat::mcset cs {Gaussian} 
@@ -790,8 +791,8 @@
 ::msgcat::mcset cs {Tabloid} 
 ::msgcat::mcset cs {Tag Color} 
 ::msgcat::mcset cs {Template} [encoding convertfrom iso8859-2 {©ablona}]
-::msgcat::mcset cs {Text Font} 
 ::msgcat::mcset cs {Text} 
+::msgcat::mcset cs {Theme} 
 ::msgcat::mcset cs {Then} 
 ::msgcat::mcset cs {Thickness} 
 ::msgcat::mcset cs {This analysis task is already running. Do you wish to kill it?} 

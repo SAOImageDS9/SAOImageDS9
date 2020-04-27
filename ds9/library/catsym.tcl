@@ -134,8 +134,23 @@ proc CATSymDialog {parent} {
     ttk::button $f.bsize2 -text [msgcat::mc {Edit}] \
 	-command "TBLEditDialog $varname size2 $pvar(catdb)"
     ttk::label $f.tunits -text [msgcat::mc {Units}] 
-    tk_optionMenu $f.units ${varname}(units) \
-	image physical degrees arcmin arcsec
+
+    set m $f.units
+    set mm $m.menu
+    ttk::menubutton $m -textvariable ${varname}(units) -menu $mm
+    ThemeMenu $mm
+    $mm add radiobutton -label [msgcat::mc {Image}] \
+	-variable ${varname}(units) -value image
+    $mm add radiobutton -label [msgcat::mc {Physical}] \
+	-variable ${varname}(units) -value physical
+    $mm add separator
+    $mm add radiobutton -label [msgcat::mc {Degrees}] \
+	-variable ${varname}(units) -value degrees
+    $mm add radiobutton -label [msgcat::mc {ArcMin}] \
+	-variable ${varname}(units) -value arcmin
+    $mm add radiobutton -label [msgcat::mc {ArcSec}] \
+	    -variable ${varname}(units) -value arcsec
+
     $f.units.menu configure
     ttk::label $f.tangle -text [msgcat::mc {Angle}] 
     ttk::entry $f.angle -textvariable ${varname}(angle) -width 40

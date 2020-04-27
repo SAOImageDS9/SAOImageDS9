@@ -283,6 +283,7 @@
 ::msgcat::mcset zh {Exterior Axes} 
 ::msgcat::mcset zh {Exterior Numerics} 
 ::msgcat::mcset zh {FAQ} 
+::msgcat::mcset zh {FITS} 
 ::msgcat::mcset zh {FK4} 
 ::msgcat::mcset zh {FK5} 
 ::msgcat::mcset zh {FP} 
@@ -315,7 +316,7 @@
 ::msgcat::mcset zh {Front} 
 ::msgcat::mcset zh {Full Range} 
 ::msgcat::mcset zh {Function} 
-::msgcat::mcset zh {GUI Font} 
+::msgcat::mcset zh {GUI} 
 ::msgcat::mcset zh {Galactic} 
 ::msgcat::mcset zh {Gap} 
 ::msgcat::mcset zh {Gaussian} 
@@ -790,8 +791,8 @@
 ::msgcat::mcset zh {Tabloid} 
 ::msgcat::mcset zh {Tag Color} 
 ::msgcat::mcset zh {Template} [encoding convertfrom big5 "\xBC\xCB \xA5\xBB"]
-::msgcat::mcset zh {Text Font} 
 ::msgcat::mcset zh {Text} [encoding convertfrom big5 "\xA4\xE5 \xA6\x72"]
+::msgcat::mcset zh {Theme} 
 ::msgcat::mcset zh {Then} 
 ::msgcat::mcset zh {Thickness} 
 ::msgcat::mcset zh {This analysis task is already running. Do you wish to kill it?} 

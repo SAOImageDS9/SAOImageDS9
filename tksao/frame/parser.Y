@@ -465,6 +465,7 @@ command : DEBUG_ debug
 	| BIN_ bin
 	| BG_ COLOR_ STRING {fr->bgColorCmd($3);}
 	| BG_ COLOR_ GRAY_ {fr->bgColorCmd("gray");}
+        | BG_ COLOR_ yesno {fr->useBgColorCmd($3);}
         | BLOCK_ block
 	| CENTER_ {fr->centerCmd();}
 	| CLEAR_ {fr->clearCmd();}
@@ -1335,6 +1336,7 @@ gridType : ANALYSIS_ {$$=Grid2d::ANALYSIS;}
 	;
 
 has	: AMPLIFIER_ {fr->hasAmplifierCmd();}
+        | BG_ COLOR_ {fr->hasBgColorCmd();}
 	| BIN_ hasBin
 	| CONTOUR_ hasContour
 	| CROP_ {fr->hasCropCmd();}

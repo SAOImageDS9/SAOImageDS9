@@ -268,11 +268,13 @@ proc PrefsDialogGeneral {} {
 
     ttk::label $f.tbg -text [msgcat::mc {Background Color}]
     ColorMenuButton $f.bg pds9 bg PrefsBgColor
+    ttk::checkbutton $f.ubg -text [msgcat::mc {Use}] -variable pds9(bg,use) \
+	-command PrefsBgColor
 
     ttk::label $f.tnan -text [msgcat::mc {Blank/Inf/NaN Color}]
     ColorMenuButton $f.nan pds9 nan PrefsNanColor
 
-    grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
+    grid $f.tbg $f.bg $f.ubg -padx 2 -pady 2 -sticky w
     grid $f.tnan $f.nan -padx 2 -pady 2 -sticky w
 
     # Dialog Box

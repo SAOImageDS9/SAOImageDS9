@@ -154,6 +154,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
+  useBgColor = 0;
   bgColourName = dupstr("white");
   nanColourName = dupstr("white");
 
@@ -1323,7 +1324,11 @@ void Base::updateBase()
   if (doRender())
     ximageToPixmap(basePixmap, baseXImage, Coord::WIDGET);
   else {
-    XSetForeground(display, widgetGC, getColor(bgColourName));
+    if (useBgColor)
+      XSetForeground(display, widgetGC, getColor(bgColourName));
+    else
+      XSetForeground(display, widgetGC,
+		     ((WidgetOptions*)options)->bgColor->pixel);
     XFillRectangle(display, basePixmap, widgetGC, 0, 0,
 		   options->width,options->height);
   }

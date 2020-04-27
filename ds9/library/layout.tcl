@@ -120,7 +120,7 @@ proc CreateCanvas {} {
     set ds9(image) [ttk::frame $ds9(main).f]
     set ds9(canvas) [canvas $ds9(image).c -width $ww -height $hh \
 			 -highlightthickness 0 -insertofftime 0 \
-			 -bg $ds9(background) \
+			 -bg [ThemeBackground] \
 			]
     grid rowconfigure $ds9(image) 0 -weight 1
     grid columnconfigure $ds9(image) 0 -weight 1
@@ -154,6 +154,8 @@ proc CreateCanvas {} {
 }
 
 proc ThemeConfigCanvas {w} {
+    global ds9
+    
     $w configure -bg [ThemeBackground]
 
     $w itemconfigure colorbar -fg [ThemeForeground]
@@ -161,6 +163,11 @@ proc ThemeConfigCanvas {w} {
 
     $w itemconfigure colorbarrgb -fg [ThemeForeground]
     $w itemconfigure colorbarrgb -bg [ThemeBackground]
+
+    foreach ff $ds9(frames) {
+	$w itemconfigure $ff -fg [ThemeForeground]
+	$w itemconfigure $ff -bg [ThemeBackground]
+    }
 }
 
 proc ThemeConfigCanvasBottom {w} {

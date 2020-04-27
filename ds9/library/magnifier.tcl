@@ -16,7 +16,7 @@ proc CreateMagnifier {} {
 			    -highlightthickness 0 \
 			    -insertofftime 0 \
 			    -takefocus 0 \
-			    -bg $ds9(background) \
+			    -bg [ThemeBackground] \
 			   ]
 
     $ds9(magnifier) create magnifier$ds9(visual) \
@@ -27,8 +27,8 @@ proc CreateMagnifier {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg $ds9(foreground) \
-	-bg $ds9(background)
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
 
     switch $ds9(wm) {
 	x11 {bind $ds9(magnifier) <<ThemeChanged>> {ThemeConfigMagnifier %W}}

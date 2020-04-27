@@ -264,6 +264,7 @@ public:
 
   GC contourGC_;
 
+  int useBgColor;
   char* bgColourName;
   char* nanColourName;
 
@@ -574,6 +575,8 @@ public:
   void getAxesOrderCmd();
 
   // Background Commands
+  void useBgColorCmd(int);
+  void hasBgColorCmd();
   void bgColorCmd(const char*);
   void getBgColorCmd();
 

@@ -56,6 +56,12 @@ void Base::bgColorCmd(const char* color)
   update(BASE);
 }
 
+void Base::useBgColorCmd(int which)
+{
+  useBgColor = which;
+  update(BASE);
+}
+
 void Base::binCmd(const Vector& b, const Vector& vv,
 		  const char* x, const char* y, const char* filter)
 {
@@ -2202,6 +2208,14 @@ void Base::hasBinColCmd(const char* str)
     }
   }
   Tcl_AppendResult(interp, "0", NULL);
+}
+
+void Base::hasBgColorCmd()
+{
+  if (useBgColor)
+    Tcl_AppendResult(interp, "1", NULL);
+  else
+    Tcl_AppendResult(interp, "0", NULL);
 }
 
 void Base::hasContourCmd()

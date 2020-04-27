@@ -114,8 +114,8 @@ proc CreateNameNumberFrame {which type} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg $ds9(foreground) \
-	-bg $ds9(background)
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
 
     $ds9(next) threads $ds9(threads)
 
@@ -145,6 +145,7 @@ proc CreateNameNumberFrame {which type} {
 	$pds9(prec,angle)
     
     $ds9(next) bg color $pds9(bg)
+    $ds9(next) bg color $pds9(bg,use)
     $ds9(next) nan color $pds9(nan)
 
     $ds9(next) iraf align $pds9(iraf)

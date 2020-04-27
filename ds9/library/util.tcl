@@ -1088,6 +1088,7 @@ proc PrefsBgColor {} {
 
     foreach ff $ds9(frames) {
 	$ff bg color $pds9(bg)
+	$ff bg color $pds9(bg,use)
     }
 }
 
@@ -1412,6 +1413,7 @@ proc DS9Backup {ch which} {
     puts $ch "$which precision $pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,len,linear) $pds9(prec,len,deg) $pds9(prec,len,arcmin) $pds9(prec,len,arcsec) $pds9(prec,angle)"
 
     puts $ch "$which bg color $pds9(bg)"
+    puts $ch "$which bg color $pds9(bg,use)"
     puts $ch "$which nan color $pds9(nan)"
 }
 

@@ -71,8 +71,8 @@ proc CreateColorbar {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg $ds9(foreground) \
-	-bg $ds9(background)
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
 
     $ds9(canvas) bind colorbar <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind colorbar <Enter> [list ColorbarEnter %x %y]
@@ -96,8 +96,8 @@ proc CreateColorbar {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg $ds9(foreground) \
-	-bg $ds9(background)
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
 
     $ds9(canvas) bind colorbarrgb <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind colorbarrgb <Enter> [list ColorbarEnter %x %y]

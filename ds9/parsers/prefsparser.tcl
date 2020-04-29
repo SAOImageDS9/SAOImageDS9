@@ -606,7 +606,7 @@ proc prefs::yyparse {} {
                     17 { ProcessCmdSet pds9 bg $2 PrefsBgColor }
                     18 { ProcessCmdSet pds9 bg,use $2 PrefsBgColor }
                     19 { ProcessCmdSet pds9 nan $2 PrefsNanColor }
-                    20 { ProcessCmdSet pds9 theme $2 PrefsTheme }
+                    20 { ProcessCmdSet pds9 theme $2 ThemeChange }
                     21 { ProcessCmdSet ds9 threads $2 ChangeThreads }
                     22 { ProcessCmdSet pds9 iraf $2 PrefsIRAFAlign }
                     23 { PrefsDialogSave }

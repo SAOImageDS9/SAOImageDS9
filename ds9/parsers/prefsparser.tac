@@ -37,7 +37,7 @@ prefs : {PrefsDialog}
  | BGCOLOR_ STRING_ {ProcessCmdSet pds9 bg $2 PrefsBgColor}
  | BGCOLOR_ yesno {ProcessCmdSet pds9 bg,use $2 PrefsBgColor}
  | NANCOLOR_ STRING_ {ProcessCmdSet pds9 nan $2 PrefsNanColor}
- | THEME_ STRING_ {ProcessCmdSet pds9 theme $2 PrefsTheme}
+ | THEME_ STRING_ {ProcessCmdSet pds9 theme $2 ThemeChange}
  | THREADS_ INT_ {ProcessCmdSet ds9 threads $2 ChangeThreads}
  | IRAFALIGN_ yesno {ProcessCmdSet pds9 iraf $2 PrefsIRAFAlign}
  | SAVE_ {PrefsDialogSave}

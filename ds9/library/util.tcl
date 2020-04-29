@@ -1071,7 +1071,7 @@ proc SetDefaultTextFont {which} {
     }
 }
 
-proc PrefsTheme {} {
+proc ThemeChange {} {
     global ds9
     global pds9
 
@@ -1742,7 +1742,7 @@ proc ProcessThemeCmd {varname iname} {
 
     global pds9
     set pds9(theme) [lindex $var $i]
-    PrefsTheme
+    ThemeChange
 }
 
 # backward compatibility

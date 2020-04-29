@@ -257,7 +257,7 @@ proc PrefsDialogGeneral {} {
 	    ThemeMenu $m
 	    foreach tt $ds9(themes) {
 		$m add radiobutton -label $tt -variable pds9(theme) \
-		    -command PrefsTheme
+		    -command ThemeChange
 	    }
 
 	    grid $f.ttheme $f.theme -padx 2 -pady 2 -sticky w

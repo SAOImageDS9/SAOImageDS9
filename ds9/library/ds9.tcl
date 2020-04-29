@@ -241,10 +241,9 @@ switch $ds9(wm) {
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) classic]
 
 	# colors
-	set ds9(bold) cornflowerblue
-
 	ttk::style theme use default
 
+	set ds9(bold) cornflowerblue
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
 	set ds9(foreground,select) [ttk::style lookup . -selectforeground]
@@ -275,7 +274,6 @@ switch $ds9(wm) {
     aqua {
 	# colors
 	set ds9(bold) systemControlAccentColor
-
 	set ds9(foreground) systemTextColor
 	set ds9(background) systemTextBackgroundColor
 	set ds9(foreground,select) systemTextColor
@@ -342,10 +340,9 @@ switch $ds9(wm) {
     }
     win32 {
 	# colors
-	set ds9(bold) cornflowerblue
-
 	ttk::style theme use xpnative
 
+	set ds9(bold) cornflowerblue
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
 	set ds9(foreground,select) [ttk::style lookup . -selectforeground]

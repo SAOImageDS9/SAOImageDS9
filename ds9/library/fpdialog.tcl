@@ -255,6 +255,8 @@ proc FPDialog {varname title url instr format action} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list FPSelectCmd $varname %s %S] \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
 		     ]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

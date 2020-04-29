@@ -68,6 +68,22 @@ proc ThemeMenu {w} {
 proc ThemeConfigMenu {w} {
     global ds9
 
+    if {0} {
+	puts "fg [ttk::style lookup . -foreground]"
+	puts "bg [ttk::style lookup . -background]"
+	puts "active fg [ttk::style lookup . -foreground active]"
+	puts "active bg [ttk::style lookup . -background active]"
+	puts "focus fg [ttk::style lookup . -foreground focus]"
+	puts "focus bg [ttk::style lookup . -background focus]"
+	puts "selectfg [ttk::style lookup . -selectforeground]"
+	puts "selectbg [ttk::style lookup . -selectbackground]"
+	puts "active selectfg [ttk::style lookup . -selectforeground active]"
+	puts "active selectbg [ttk::style lookup . -selectbackground active]"
+	puts "focus selectfg [ttk::style lookup . -selectforeground focus]"
+	puts "focus selectbg [ttk::style lookup . -selectbackground focus]"
+	puts {}
+    }
+
     # foreground
     set fg [ttk::style lookup . -foreground]
     if {$fg != {}} {
@@ -84,20 +100,20 @@ proc ThemeConfigMenu {w} {
 	$w configure -bg $ds9(background)
     }
 
-    # selectforeground
-    set fg [ttk::style lookup . -selectforeground]
+    # active foreground
+    set fg [ttk::style lookup TMenubutton -foreground active]
     if {$fg != {}} {
 	$w configure -activeforeground $fg
     } else {
-	$w configure -activeforeground $ds9(foreground,select)
+	$w configure -activeforeground $ds9(foreground,active)
     }
 
-    # selectbackground
-    set bg [ttk::style lookup . -selectbackground]
+    # active background
+    set bg [ttk::style lookup TMenubutton -background active]
     if {$bg != {}} {
 	$w configure -activebackground $bg
     } else {
-	$w configure -activebackground $ds9(background,select)
+	$w configure -activebackground $ds9(background,active)
     }
 }
 
@@ -119,8 +135,7 @@ proc ThemeForeground {} {
 	    }
 	}
 	aqua -
-	win32 {return $ds9(foreground)
-	}
+	win32 {return $ds9(foreground)}
     }
 }
 
@@ -138,6 +153,40 @@ proc ThemeBackground {} {
 	}
 	aqua -
 	win32 {return $ds9(background)}
+    }
+}
+
+proc ThemeSelectforeground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set fg [ttk::style lookup . -selectforeground]
+	    if {$fg != {}} {
+		return $fg
+	    } else {
+		return $ds9(selectforeground)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(selectforeground)}
+    }
+}
+
+proc ThemeSelectbackground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set bg [ttk::style lookup . -selectbackground]
+	    if {$bg != {}} {
+		return $bg
+	    } else {
+		return $ds9(selectbackground)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(selectbackground)}
     }
 }
 

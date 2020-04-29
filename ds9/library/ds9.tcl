@@ -246,8 +246,12 @@ switch $ds9(wm) {
 	set ds9(bold) cornflowerblue
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
-	set ds9(foreground,select) [ttk::style lookup . -selectforeground]
-	set ds9(background,select) [ttk::style lookup . -selectbackground]
+	set ds9(foreground,active) \
+	    [ttk::style lookup TMenubutton -foreground active]
+	set ds9(background,active) \
+	    [ttk::style lookup TMenubutton -background active]
+	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
+	set ds9(selectbackground) [ttk::style lookup . -selectbackground]
 
 	# fix TEntry/Treeview/TLabel widgets
 	foreach tt [ttk::style theme names] {
@@ -276,8 +280,10 @@ switch $ds9(wm) {
 	set ds9(bold) systemControlAccentColor
 	set ds9(foreground) systemTextColor
 	set ds9(background) systemTextBackgroundColor
-	set ds9(foreground,select) systemTextColor
-	set ds9(background,select) systemTextBackgroundColor
+	set ds9(foreground,active) systemTextColor
+	set ds9(background,active) systemTextBackgroundColor
+	set ds9(selectforeground) systemTextColor
+	set ds9(selectbackground) systemTextBackgroundColor
 
 	set pap(fg) systemTextColor
 	set pap(bg) systemTextBackgroundColor
@@ -345,8 +351,12 @@ switch $ds9(wm) {
 	set ds9(bold) cornflowerblue
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
-	set ds9(foreground,select) [ttk::style lookup . -selectforeground]
-	set ds9(background,select) [ttk::style lookup . -selectbackground]
+	set ds9(foreground,active) \
+	    [ttk::style lookup TMenubutton -foreground active]
+	set ds9(background,active) \
+	    [ttk::style lookup TMenubutton -background active]
+	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
+	set ds9(selectbackground) [ttk::style lookup . -selectbackground]
     }
 }
 

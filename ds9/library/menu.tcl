@@ -44,7 +44,7 @@ proc CreateMenuBar {} {
     switch $ds9(wm) {
 	x11 {
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
-	    bind Table <<ThemeChanged>> {ThemeConfig %W}
+	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
 	    bind Text <<ThemeChanged>> {ThemeConfig %W}
 	}
 	aqua -
@@ -115,6 +115,11 @@ proc ThemeConfigMenu {w} {
     } else {
 	$w configure -activebackground $ds9(background,active)
     }
+}
+
+proc ThemeConfigTable {w} {
+    $w configure -fg [ThemeForeground]
+    $w configure -bg [ThemeBackground]
 }
 
 proc ThemeConfig {w} {

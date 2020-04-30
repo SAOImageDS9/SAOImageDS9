@@ -286,10 +286,10 @@ switch $ds9(wm) {
 	set ds9(background) systemTextBackgroundColor
 	set ds9(foreground,active) systemTextColor
 	set ds9(background,active) systemTextBackgroundColor
-	set ds9(foreground,disabled) systemTextColor
-	set ds9(background,disabled) systemTextBackgroundColor
-	set ds9(selectforeground) systemTextColor
-	set ds9(selectbackground) systemTextBackgroundColor
+	set ds9(foreground,disabled) systemWindowBackgroundColor4
+	set ds9(background,disabled) systemTextColor
+	set ds9(selectforeground) systemSelectedTextColor
+	set ds9(selectbackground) systemSelectedTextBackgroundColor
 
 	set pap(fg) systemTextColor
 	set pap(bg) systemTextBackgroundColor

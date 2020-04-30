@@ -226,6 +226,9 @@ proc CATSymDialog {parent} {
 		      -bg [ThemeBackground] \
 		 ]
 
+    $var(tbl) tag configure sel \
+	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
 

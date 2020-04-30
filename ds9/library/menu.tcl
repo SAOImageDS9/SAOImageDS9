@@ -68,22 +68,6 @@ proc ThemeMenu {w} {
 proc ThemeConfigMenu {w} {
     global ds9
 
-    if {0} {
-	puts "fg [ttk::style lookup . -foreground]"
-	puts "bg [ttk::style lookup . -background]"
-	puts "active fg [ttk::style lookup . -foreground active]"
-	puts "active bg [ttk::style lookup . -background active]"
-	puts "focus fg [ttk::style lookup . -foreground focus]"
-	puts "focus bg [ttk::style lookup . -background focus]"
-	puts "selectfg [ttk::style lookup . -selectforeground]"
-	puts "selectbg [ttk::style lookup . -selectbackground]"
-	puts "active selectfg [ttk::style lookup . -selectforeground active]"
-	puts "active selectbg [ttk::style lookup . -selectbackground active]"
-	puts "focus selectfg [ttk::style lookup . -selectforeground focus]"
-	puts "focus selectbg [ttk::style lookup . -selectbackground focus]"
-	puts {}
-    }
-
     # foreground
     set fg [ttk::style lookup . -foreground]
     if {$fg != {}} {
@@ -120,6 +104,8 @@ proc ThemeConfigMenu {w} {
 proc ThemeConfigTable {w} {
     $w configure -fg [ThemeForeground]
     $w configure -bg [ThemeBackground]
+
+    $w tag configure sel -fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
 }
 
 proc ThemeConfig {w} {

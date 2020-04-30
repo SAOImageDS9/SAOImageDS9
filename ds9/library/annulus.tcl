@@ -41,7 +41,7 @@ proc AnnulusDialog {varname} {
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
-    menu $var(mb).analysis
+    ThemeMenu $var(mb).analysis
 
     MarkerAnalysisStatsDialog $varname
     MarkerAnalysisRadialDialog $varname
@@ -78,6 +78,8 @@ proc AnnulusDialog {varname} {
 			    -wrap none \
 			    -font [font actual TkDefaultFont] \
 			    -yscrollcommand [list $f.yscroll set] \
+			    -fg [ThemeForeground] \
+			    -bg [ThemeBackground] \
 			    ]
     ttk::scrollbar $f.yscroll -command [list $var(annulitxt) yview] \
 	-orient vertical

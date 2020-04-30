@@ -102,7 +102,7 @@ proc BlockDialog {} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {Block}] -menu $mb.block
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command BlockApplyDialog
     $mb.file add separator
@@ -111,7 +111,7 @@ proc BlockDialog {} {
 
     EditMenu $mb iblock
 
-    menu $mb.block
+    ThemeMenu $mb.block
     $mb.block add command -label [msgcat::mc {Block In}] -command {Block .5 .5}
     $mb.block add command -label [msgcat::mc {Block Out}] -command {Block 2 2}
     $mb.block add command -label [msgcat::mc {Block Fit}] -command BlockToFit

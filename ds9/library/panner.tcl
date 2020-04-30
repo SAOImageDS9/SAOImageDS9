@@ -14,7 +14,10 @@ proc CreatePanner {} {
 			 -borderwidth 2 \
 			 -highlightthickness 0 \
 			 -insertofftime 0 \
-			 -takefocus 0]
+			 -takefocus 0 \
+			 -bg [ThemeBackground] \
+			]
+
     $ds9(panner) create panner$ds9(visual) \
 	-width $ipanner(size) \
 	-height $ipanner(size) \
@@ -23,7 +26,19 @@ proc CreatePanner {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg $ds9(foreground) -bg $ds9(background)
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
+
+    switch $ds9(wm) {
+	x11 {bind $ds9(panner) <<ThemeChanged>> {ThemeConfigPanner %W}}
+	aqua -
+	win32 {}
+    }
+}
+
+proc ThemeConfigPanner {w} {
+    $w configure -bg [ThemeBackground]
+    $w itemconfigure panner -bg [ThemeBackground]
 }
 
 proc PannerDef {} {
@@ -271,8 +286,8 @@ proc PrefsDialogPanner {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Panner}]
-    lappend dprefs(tabs) [ttk::frame $w.panner]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.panner] \
+	-text [msgcat::mc {Panner}]
 
     set f [ttk::labelframe $w.panner.param -text [msgcat::mc {Panner}]]
 

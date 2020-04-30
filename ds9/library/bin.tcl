@@ -218,7 +218,7 @@ proc BinDialog {} {
     $mb add cascade -label [msgcat::mc {Bin}] -menu $mb.bin
     $mb add cascade -label [msgcat::mc {Buffer}] -menu $mb.buffer
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command BinApplyDialog
     $mb.file add separator
@@ -232,13 +232,13 @@ proc BinDialog {} {
 
     EditMenu $mb ibin
 
-    menu $mb.method
+    ThemeMenu $mb.method
     $mb.method add radiobutton -label [msgcat::mc {Average}] \
 	-variable bin(function) -value average -command ChangeBinFunction
     $mb.method add radiobutton -label [msgcat::mc {Sum}] \
 	-variable bin(function) -value sum -command ChangeBinFunction
 
-    menu $mb.bin
+    ThemeMenu $mb.bin
     $mb.bin add command -label [msgcat::mc {Bin In}] \
 	-command {Bin .5 .5}
     $mb.bin add command -label [msgcat::mc {Bin Out}] \
@@ -265,7 +265,7 @@ proc BinDialog {} {
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 256" \
 	-variable bin(factor) -value {256 256} -command ChangeBinFactor
 
-    menu $mb.buffer
+    ThemeMenu $mb.buffer
     $mb.buffer add radiobutton -label {128x128} \
 	-variable bin(buffersize) -value 128 -command ChangeBinBufferSize 
     $mb.buffer add radiobutton -label {256x256} \
@@ -368,7 +368,8 @@ proc PopUp {b m l cmd} {
 
     destroy $m
 
-    menu $m -tearoff 0
+    ThemeMenu $m
+    $m configure -tearoff 0
     set cnt -1
     for {set ii 0} {$ii<[llength $l]} {incr ii} {
 	$m add command -label [lindex $l $ii] \
@@ -385,7 +386,8 @@ proc PopUp {b m l cmd} {
 
 proc BlankPopUp {m} {
     destroy $m
-    menu $m -tearoff 0
+    ThemeMenu $m
+    $m configure -tearoff 0
 }
 
 proc UpdateBinDialog {} {

@@ -283,6 +283,7 @@
 ::msgcat::mcset ja {Exterior Axes} [encoding convertfrom euc-jp "\xbc\xb4\xa4\xf2\xb3\xb0\xc2\xa6\xa4\xcb"]
 ::msgcat::mcset ja {Exterior Numerics} [encoding convertfrom euc-jp "\xbf\xf4\xc3\xcd\xa4\xf2\xb3\xb0\xc2\xa6\xa4\xcb"]
 ::msgcat::mcset ja {FAQ} [encoding convertfrom euc-jp "\xa4\xe8\xa4\xaf\xa4\xa2\xa4\xeb\xbc\xc1\xcc\xe4\xa4\xc8\xc5\xfa\xa4\xa8"]
+::msgcat::mcset ja {FITS} 
 ::msgcat::mcset ja {FK4} 
 ::msgcat::mcset ja {FK5} 
 ::msgcat::mcset ja {FP} 
@@ -315,7 +316,7 @@
 ::msgcat::mcset ja {Front} [encoding convertfrom euc-jp "\xc1\xb4\xcc\xcc"]
 ::msgcat::mcset ja {Full Range} [encoding convertfrom euc-jp "\xc1\xb4\xc8\xcf\xb0\xcf"]
 ::msgcat::mcset ja {Function} [encoding convertfrom euc-jp "\xb4\xd8\xbf\xf4"]
-::msgcat::mcset ja {GUI Font} 
+::msgcat::mcset ja {GUI} 
 ::msgcat::mcset ja {Galactic} [encoding convertfrom euc-jp "\xb6\xe4\xb2\xcf\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Gap} 
 ::msgcat::mcset ja {Gaussian} [encoding convertfrom euc-jp "\xa5\xac\xa5\xa6\xa5\xb7\xa5\xa2\xa5\xf3"]
@@ -790,8 +791,8 @@
 ::msgcat::mcset ja {Tabloid} [encoding convertfrom euc-jp "\xa5\xbf\xa5\xd6\xa5\xed\xa5\xa4\xa5\xc9"]
 ::msgcat::mcset ja {Tag Color} 
 ::msgcat::mcset ja {Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1"]
-::msgcat::mcset ja {Text Font} 
 ::msgcat::mcset ja {Text} [encoding convertfrom euc-jp "\xca\xb8\xbb\xfa"]
+::msgcat::mcset ja {Theme} 
 ::msgcat::mcset ja {Then} [encoding convertfrom euc-jp "\xa4\xca\xa4\xe9"]
 ::msgcat::mcset ja {Thickness} [encoding convertfrom euc-jp "\xc2\xc0\xa4\xb5"]
 ::msgcat::mcset ja {This analysis task is already running. Do you wish to kill it?} [encoding convertfrom euc-jp "\xa4\xb3\xa4\xce\xb2\xf2\xc0\xcf\xa5\xbf\xa5\xb9\xa5\xaf\xa4\xcf\xa4\xb9\xa4\xc7\xa4\xcb\xbc\xc2\xb9\xd4\xc3\xe6\xa4\xc7\xa4\xb9\xa1\xa3\xc3\xe6\xc3\xc7\xa4\xb7\xa4\xde\xa4\xb9\xa4\xab\x3f"]

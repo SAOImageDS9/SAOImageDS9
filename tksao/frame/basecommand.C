@@ -56,6 +56,12 @@ void Base::bgColorCmd(const char* color)
   update(BASE);
 }
 
+void Base::useBgColorCmd(int which)
+{
+  useBgColor = which;
+  update(BASE);
+}
+
 void Base::binCmd(const Vector& b, const Vector& vv,
 		  const char* x, const char* y, const char* filter)
 {
@@ -1846,6 +1852,11 @@ void Base::getGridVarsCmd()
     Tcl_AppendResult(interp, "", NULL);
 }
 
+void Base::getHighliteColorCmd()
+{
+  Tcl_AppendResult(interp, highliteColourName, NULL);
+}
+
 void Base::getHistogramCmd(char* xName, char* yName, int num)
 {
   currentContext->bltHist(xName, yName, num);
@@ -2204,6 +2215,14 @@ void Base::hasBinColCmd(const char* str)
   Tcl_AppendResult(interp, "0", NULL);
 }
 
+void Base::hasBgColorCmd()
+{
+  if (useBgColor)
+    Tcl_AppendResult(interp, "1", NULL);
+  else
+    Tcl_AppendResult(interp, "0", NULL);
+}
+
 void Base::hasContourCmd()
 {
   if (hasContour())
@@ -2424,6 +2443,15 @@ void Base::highliteCmd(int which)
 {
   useHighlite = which ? 1 : 0;
   update(PIXMAP);
+}
+
+void Base::highliteColorCmd(const char* color)
+{
+  if (highliteColourName)
+    delete [] highliteColourName;
+  highliteColourName = dupstr(color);
+
+  update(BASE);
 }
 
 void Base::magnifierCmd(int s)

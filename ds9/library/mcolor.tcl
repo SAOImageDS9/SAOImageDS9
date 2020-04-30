@@ -23,7 +23,7 @@ proc ColorMainMenu {} {
     global icolorbar
     global ds9
 
-    menu $ds9(mb).color
+    ThemeMenu $ds9(mb).color
 
     set id [colorbar list id]
     # base
@@ -69,14 +69,14 @@ proc ColorMainMenu {} {
     $ds9(mb).color add command -label "[msgcat::mc {Colormap Parameters}]..." \
 	-command ColormapDialog
 
-    menu $ds9(mb).color.h5
-    menu $ds9(mb).color.matplotlib
-    menu $ds9(mb).color.cubehelix
-    menu $ds9(mb).color.gist
-    menu $ds9(mb).color.topo
-    menu $ds9(mb).color.user
+    ThemeMenu $ds9(mb).color.h5
+    ThemeMenu $ds9(mb).color.matplotlib
+    ThemeMenu $ds9(mb).color.cubehelix
+    ThemeMenu $ds9(mb).color.gist
+    ThemeMenu $ds9(mb).color.topo
+    ThemeMenu $ds9(mb).color.user
 
-    menu $ds9(mb).color.colorbar
+    ThemeMenu $ds9(mb).color.colorbar
     $ds9(mb).color.colorbar add cascade -label [msgcat::mc {Orientation}] \
 	-menu $ds9(mb).color.colorbar.orient
     $ds9(mb).color.colorbar add cascade -label [msgcat::mc {Numerics}] \
@@ -91,7 +91,7 @@ proc ColorMainMenu {} {
 	-label "[msgcat::mc {Number of Ticks}]..." \
 	-command TicksDialog
 
-    menu $ds9(mb).color.colorbar.orient
+    ThemeMenu $ds9(mb).color.colorbar.orient
     $ds9(mb).color.colorbar.orient add radiobutton \
 	-label [msgcat::mc {Horizontal}] -variable colorbar(orientation) \
 	-value horizontal -command UpdateView
@@ -99,7 +99,7 @@ proc ColorMainMenu {} {
 	-label [msgcat::mc {Vertical}] -variable colorbar(orientation) \
 	-value vertical -command UpdateView
 
-    menu $ds9(mb).color.colorbar.numerics
+    ThemeMenu $ds9(mb).color.colorbar.numerics
     $ds9(mb).color.colorbar.numerics add checkbutton \
 	-label [msgcat::mc {Show}] -variable colorbar(numerics) \
 	-command UpdateView
@@ -164,7 +164,7 @@ proc PrefsDialogColorMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2 -sticky w
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
 
     set id [colorbar list id]
     # base
@@ -181,7 +181,7 @@ proc PrefsDialogColorMenu {w} {
     $m add separator
     $m add cascade -label [msgcat::mc {Colorbar}] -menu $m.colorbar
 
-    menu $m.colorbar
+    ThemeMenu $m.colorbar
     $m.colorbar add cascade -label [msgcat::mc {Orientation}] \
 	-menu $m.colorbar.orient
     $m.colorbar add cascade -label [msgcat::mc {Numerics}] \
@@ -189,13 +189,13 @@ proc PrefsDialogColorMenu {w} {
     $m.colorbar add cascade  -label [msgcat::mc {Font}] \
 	-menu $m.colorbar.cb 
 
-    menu $m.colorbar.orient
+    ThemeMenu $m.colorbar.orient
     $m.colorbar.orient add radiobutton -label [msgcat::mc {Horizontal}] \
 	-variable pcolorbar(orientation) -value horizontal
     $m.colorbar.orient add radiobutton -label [msgcat::mc {Vertical}] \
 	-variable pcolorbar(orientation) -value vertical
 
-    menu $m.colorbar.numerics
+    ThemeMenu $m.colorbar.numerics
     $m.colorbar.numerics add checkbutton -label [msgcat::mc {Show}] \
 	-variable pcolorbar(numerics)
     $m.colorbar.numerics add separator
@@ -220,8 +220,8 @@ proc PrefsDialogColor {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Color}]
-    lappend dprefs(tabs) [ttk::frame $w.color]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.color] \
+	-text [msgcat::mc {Color}]
 
     set f [ttk::labelframe $w.color.colorbar -text [msgcat::mc {Colorbar}]]
 
@@ -346,7 +346,7 @@ proc PrefsDialogButtonbarColor {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
 
     set id [colorbar list id]
     # base
@@ -372,13 +372,13 @@ proc PrefsDialogButtonbarColor {f} {
 	-variable pbuttons(color,params) \
 	-command {UpdateButtons buttons(color)}
 
-    menu $m.colorbar
+    ThemeMenu $m.colorbar
     $m.colorbar add cascade -label [msgcat::mc {Orientation}] \
 	-menu $m.colorbar.orient
     $m.colorbar add cascade -label [msgcat::mc {Numerics}] \
 	-menu $m.colorbar.numerics
 
-    menu $m.colorbar.orient
+    ThemeMenu $m.colorbar.orient
     $m.colorbar.orient add checkbutton -label [msgcat::mc {Horizontal}] \
 	-variable pbuttons(color,horz) \
 	-command {UpdateButtons buttons(color)}
@@ -386,7 +386,7 @@ proc PrefsDialogButtonbarColor {f} {
 	-variable pbuttons(color,vert) \
 	-command {UpdateButtons buttons(color)}
 
-    menu $m.colorbar.numerics
+    ThemeMenu $m.colorbar.numerics
     $m.colorbar.numerics add checkbutton -label [msgcat::mc {Show}] \
 	-variable pbuttons(color,numerics) \
 	-command {UpdateButtons buttons(color)}

@@ -1,0 +1,5 @@
+recursive-include ttkthemes themes *
+recursive-include *.tcl
+recursive-include *.png
+recursive-include *.gif
+recursive-include *.md

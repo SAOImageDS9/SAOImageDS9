@@ -1151,6 +1151,7 @@ proc XPARcvdIconify {xpa cdata param buf len} {
     XPACatchError $xpa
 }
 
+# backward compatibility
 proc XPASendIExam {xpa cdata param} {
     InitError xpa
     catch {ProcessSendIExamCmd xpasetbuf $xpa $param}

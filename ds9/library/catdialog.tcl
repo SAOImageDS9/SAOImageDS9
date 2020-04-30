@@ -114,7 +114,7 @@ proc CATDialog {varname format catalog title action} {
     $mb add cascade -label [msgcat::mc {Preferences}] -menu $mb.prefs
 
     # file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command [list CATLoadVOTFile $varname] -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -163,7 +163,7 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     # Import
-    menu $mb.file.import
+    ThemeMenu $mb.file.import
     $mb.file.import add command -label "[msgcat::mc {Starbase}]..." \
 	-command [list CATLoadRDBFile $varname]
     $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
@@ -172,14 +172,14 @@ proc CATDialog {varname format catalog title action} {
 	-command [list CATLoadFITSFile $varname]
 
     # Export
-    menu $mb.file.export
+    ThemeMenu $mb.file.export
     $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
 	-command [list TBLSaveRDBFile $varname]
     $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list TBLSaveTSVFile $varname]
 
     # SAMP
-    menu $mb.file.samp
+    ThemeMenu $mb.file.samp
     $mb.file.samp add command -label [msgcat::mc {Connect}] \
 	-command SAMPConnect
     $mb.file.samp add command -label [msgcat::mc {Disconnect}] \
@@ -188,13 +188,13 @@ proc CATDialog {varname format catalog title action} {
     $mb.file.samp add cascade -label [msgcat::mc {Send}] \
 	-menu $mb.file.samp.send
 
-    menu $mb.file.samp.send
+    ThemeMenu $mb.file.samp.send
     $mb.file.samp.send add command -label [msgcat::mc {Broadcast}] \
 	-command [list SAMPSendTableLoadVotable {} $varname]
     $mb.file.samp.send add separator
 
     # edit
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -217,7 +217,7 @@ proc CATDialog {varname format catalog title action} {
     set fw [starbase_colnum $var(symdb) fontweight]
     set fl [starbase_colnum $var(symdb) fontslant]
 
-    menu $mb.symbol
+    ThemeMenu $mb.symbol
     $mb.symbol add cascade -label [msgcat::mc {Shape}] -menu $mb.symbol.shape
     $mb.symbol add cascade -label [msgcat::mc {Color}] -menu $mb.symbol.color
     $mb.symbol add cascade -label [msgcat::mc {Width}] -menu $mb.symbol.width
@@ -226,7 +226,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.symbol add command -label "[msgcat::mc {Advanced}]..." \
 	-command [list CATSymDialog $varname]
 
-    menu $mb.symbol.shape
+    ThemeMenu $mb.symbol.shape
     $mb.symbol.shape add radiobutton -label [msgcat::mc {Circle}] \
 	-variable ${flt}(1,$sn) -value circle \
 	-command [list CATGenerate $varname]
@@ -242,7 +242,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.symbol.shape add cascade -label [msgcat::mc {Point}] \
 	-menu $mb.symbol.shape.point
 
-    menu $mb.symbol.shape.point
+    ThemeMenu $mb.symbol.shape.point
     $mb.symbol.shape.point add radiobutton -label [msgcat::mc {Circle}] \
 	-variable ${flt}(1,$sn) -value {circle point} \
 	-command [list CATGenerate $varname]
@@ -273,7 +273,7 @@ proc CATDialog {varname format catalog title action} {
     FontMenu $mb.symbol.font $flt 1,$fn 1,$fs 1,$fw 1,$fl \
 	[list CATGenerate $varname]
 
-    menu $mb.prefs
+    ThemeMenu $mb.prefs
     $mb.prefs add checkbutton -label [msgcat::mc {Pan To}] \
 	-variable ${varname}(panto)
     $mb.prefs add separator
@@ -426,8 +426,14 @@ proc CATDialog {varname format catalog title action} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list CATSelectCmd $varname %s %S] \
-		      -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
 		     ]
+
+    $var(tbl) tag configure sel \
+	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+    $var(tbl) tag configure title \
+	-fg [ThemeSelectforeground] -bg [ThemeForegroundDisabled]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal

@@ -10,7 +10,7 @@ proc EditMainMenu {} {
     global ds9
     global current
 
-    menu $ds9(mb).edit
+    ThemeMenu $ds9(mb).edit
     $ds9(mb).edit add command -label [msgcat::mc {Undo}] -command UndoFrame \
 	-accelerator "${ds9(ctrl)}Z"
     $ds9(mb).edit add separator
@@ -80,7 +80,7 @@ proc PrefsDialogEditMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {None}] \
 	-variable pcurrent(mode) -value none
     $m add radiobutton -label [msgcat::mc {Region}] \
@@ -220,7 +220,7 @@ proc PrefsDialogButtonbarEdit {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Undo}] \
 	-variable pbuttons(edit,undo) -command {UpdateButtons buttons(edit)}
     $m add separator

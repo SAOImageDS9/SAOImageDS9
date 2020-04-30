@@ -43,7 +43,7 @@ proc PlotBarMenus {varname} {
     global $varname
 
     # Data
-    menu $var(mb).databar
+    ThemeMenu $var(mb).databar
     $var(mb).databar add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotBarUpdateElement $varname]
@@ -62,7 +62,7 @@ proc PlotBarMenus {varname} {
 	[list PlotBarUpdateElement $varname]
 
     # Relief
-    menu $var(mb).databar.relief
+    ThemeMenu $var(mb).databar.relief
     $var(mb).databar.relief add radiobutton -label [msgcat::mc {Flat}] \
 	-variable ${varname}(graph,ds,bar,relief) -value flat \
 	-command [list PlotBarUpdateElement $varname]
@@ -80,7 +80,7 @@ proc PlotBarMenus {varname} {
 	-command [list PlotBarUpdateElement $varname]
 
     # Error
-    menu $var(mb).databar.error
+    ThemeMenu $var(mb).databar.error
     $var(mb).databar.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,error) \
 	-command [list PlotBarUpdateElement $varname]

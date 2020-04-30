@@ -58,12 +58,12 @@ proc DebugMenu {} {
 
     $ds9(mb) add cascade -label {Debug} -menu $ds9(mb).debug
 
-    menu $ds9(mb).debug
+    ThemeMenu $ds9(mb).debug
     $ds9(mb).debug add cascade -label {Tcl} -menu $ds9(mb).debug.tcl
     $ds9(mb).debug add cascade -label {TKSAO} -menu $ds9(mb).debug.tksao
     $ds9(mb).debug add cascade -label {IIS} -menu $ds9(mb).debug.iis
 
-    menu $ds9(mb).debug.tcl
+    ThemeMenu $ds9(mb).debug.tcl
     $ds9(mb).debug.tcl add checkbutton -label {Events} \
 	-variable debug(tcl,events)
     $ds9(mb).debug.tcl add checkbutton -label {Update} \
@@ -99,7 +99,7 @@ proc DebugMenu {} {
     $ds9(mb).debug.tcl add checkbutton -label {IMAGE} \
 	-variable debug(tcl,image)
 
-    menu $ds9(mb).debug.tksao
+    ThemeMenu $ds9(mb).debug.tksao
     $ds9(mb).debug.tksao add checkbutton -label {Mosaic} \
 	-variable debug(tksao,mosaic) \
 	-command "Debug mosaic debug(tksao,mosaic)"
@@ -131,7 +131,7 @@ proc DebugMenu {} {
 	-variable debug(tksao,crop) \
 	-command "Debug crop debug(tksao,crop)"    
 
-    menu $ds9(mb).debug.iis
+    ThemeMenu $ds9(mb).debug.iis
     $ds9(mb).debug.iis add checkbutton -label {IIS} \
 	-variable debug(iis) -command IISDebug
 }

@@ -49,7 +49,7 @@ proc AnalysisParam {strname param} {
 		ttk::menubutton $f.a$j \
 		    -text "$ianalysis(param,$i,$j,value)" \
 		    -menu $f.a$j.menu
-		set m [menu $f.a$j.menu]
+		set m [ThemeMenu $f.a$j.menu]
 		for {set k 0} {$k<[llength $l]} {incr k} {
 			$m add command -label [lindex $l $k] \
 			    -command "AnalysisParamMenu ianalysis(param,$i,$j,value) [lindex $l $k] $f.a$j"

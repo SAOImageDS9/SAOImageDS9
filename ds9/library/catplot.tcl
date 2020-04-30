@@ -154,11 +154,11 @@ proc CATPlotDialog {varname} {
     DialogCreate $w [msgcat::mc {Plot}] ed2(ok)
 
     $w configure -menu $mb
-    menu $mb
+    ThemeMenu $mb
 
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command {set ed2(ok) 1}
     $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed2(ok) 0}
 
@@ -245,7 +245,8 @@ proc CATPlotDialogColsMenu {varname f ww} {
 
     set m $f.menu
 
-    menu $m -tearoff 0
+    ThemeMenu $m
+    $m configure -tearoff 0
     if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {

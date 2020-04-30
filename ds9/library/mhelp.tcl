@@ -14,14 +14,14 @@ proc HelpMainMenu {} {
 	win32 {}
  	aqua {
 	    # window menu
-	    menu $ds9(mb).window
+	    ThemeMenu $ds9(mb).window
 	    $ds9(mb) add cascade -label [msgcat::mc {Window}] \
 		-menu $ds9(mb).window
 	}
     }
 
     $ds9(mb) add cascade -label [msgcat::mc {Help}] -menu $ds9(mb).help
-    menu $ds9(mb).help
+    ThemeMenu $ds9(mb).help
     switch $ds9(wm) {
  	x11 -
  	win32 {
@@ -130,7 +130,7 @@ proc PrefsDialogButtonbarHelp {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Reference Manual}]\
 	-variable pbuttons(help,ref) -command {UpdateButtons buttons(help)}
     $m add checkbutton -label [msgcat::mc {User Manual}]\

@@ -283,6 +283,7 @@
 ::msgcat::mcset da {Exterior Axes} {Udvendige akser}
 ::msgcat::mcset da {Exterior Numerics} {Udvendige tal}
 ::msgcat::mcset da {FAQ} [encoding convertfrom iso8859-1 {Ofte Stillede Spørgsmål}]
+::msgcat::mcset da {FITS} 
 ::msgcat::mcset da {FK4} 
 ::msgcat::mcset da {FK5} 
 ::msgcat::mcset da {FP} 
@@ -315,7 +316,7 @@
 ::msgcat::mcset da {Front} {Foran}
 ::msgcat::mcset da {Full Range} {Hele intervallet}
 ::msgcat::mcset da {Function} {Funktion}
-::msgcat::mcset da {GUI Font} 
+::msgcat::mcset da {GUI} 
 ::msgcat::mcset da {Galactic} {Galaktisk}
 ::msgcat::mcset da {Gap} 
 ::msgcat::mcset da {Gaussian} {Gaussisk}
@@ -790,8 +791,8 @@
 ::msgcat::mcset da {Tabloid} 
 ::msgcat::mcset da {Tag Color} 
 ::msgcat::mcset da {Template} 
-::msgcat::mcset da {Text Font} 
 ::msgcat::mcset da {Text} {Tekst}
+::msgcat::mcset da {Theme} 
 ::msgcat::mcset da {Then} [encoding convertfrom iso8859-1 {Så}]
 ::msgcat::mcset da {Thickness} {Tykkelse}
 ::msgcat::mcset da {This analysis task is already running. Do you wish to kill it?} {Denne analyseopgave kører allerede - skal den stoppes?}

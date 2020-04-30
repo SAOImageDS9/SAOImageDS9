@@ -283,6 +283,7 @@
 ::msgcat::mcset de {Exterior Axes} [encoding convertfrom iso8859-1 {Äußere Achsen}]
 ::msgcat::mcset de {Exterior Numerics} [encoding convertfrom iso8859-1 {Äußere Ziffern}]
 ::msgcat::mcset de {FAQ} 
+::msgcat::mcset de {FITS} 
 ::msgcat::mcset de {FK4} 
 ::msgcat::mcset de {FK5} 
 ::msgcat::mcset de {FP} 
@@ -315,7 +316,7 @@
 ::msgcat::mcset de {Front} {Vor}
 ::msgcat::mcset de {Full Range} {Ganzer Bereich}
 ::msgcat::mcset de {Function} {Funktion}
-::msgcat::mcset de {GUI Font} 
+::msgcat::mcset de {GUI} 
 ::msgcat::mcset de {Galactic} {Galaktisch}
 ::msgcat::mcset de {Gap} 
 ::msgcat::mcset de {Gaussian} {Gauss}
@@ -790,8 +791,8 @@
 ::msgcat::mcset de {Tabloid} 
 ::msgcat::mcset de {Tag Color} 
 ::msgcat::mcset de {Template} 
-::msgcat::mcset de {Text Font} 
 ::msgcat::mcset de {Text} 
+::msgcat::mcset de {Theme} 
 ::msgcat::mcset de {Then} {dann}
 ::msgcat::mcset de {Thickness} {Dicke}
 ::msgcat::mcset de {This analysis task is already running. Do you wish to kill it?} [encoding convertfrom iso8859-1 {Diese Analyse läuft bereits. Soll sie beendet werden?}]

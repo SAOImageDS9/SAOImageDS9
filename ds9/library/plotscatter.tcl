@@ -43,7 +43,7 @@ proc PlotScatterMenus {varname} {
     global $varname
 
     # Data
-    menu $var(mb).datascatter
+    ThemeMenu $var(mb).datascatter
     $var(mb).datascatter add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotScatterUpdateElement $varname]
@@ -57,7 +57,7 @@ proc PlotScatterMenus {varname} {
 	-command [list DatasetNameDialog $varname]
 
     # Shape
-    menu $var(mb).datascatter.shape
+    ThemeMenu $var(mb).datascatter.shape
     $var(mb).datascatter.shape add radiobutton \
 	-label [msgcat::mc {None}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value none \
@@ -110,7 +110,7 @@ proc PlotScatterMenus {varname} {
 	graph,ds,shape,color [list PlotScatterUpdateElement $varname]
 
     # Error
-    menu $var(mb).datascatter.error
+    ThemeMenu $var(mb).datascatter.error
     $var(mb).datascatter.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,error) \
 	-command [list PlotScatterUpdateElement $varname]

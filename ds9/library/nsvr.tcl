@@ -263,7 +263,7 @@ proc NSVRServerMenu {varname} {
     global $varname
 
     $var(mb) add cascade -label [msgcat::mc {Name Server}] -menu $var(mb).name
-    menu $var(mb).name
+    ThemeMenu $var(mb).name
 
     NSVRServerMenuItems $var(mb).name
 }

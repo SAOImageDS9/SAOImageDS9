@@ -143,8 +143,8 @@ proc PrefsDialogCoord {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Print Coordinates}]
-    lappend dprefs(tabs) [ttk::frame $w.coord]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.coord] \
+	-text [msgcat::mc {Print Coordinates}]
 
     # Print
     set f [ttk::labelframe $w.coord.print -text [msgcat::mc {Print}]]
@@ -166,7 +166,7 @@ proc PrefsDialogCoord {} {
 	-variable pcoord(detector)
 
     set m $f.mwcs.menu
-    menu $m
+    ThemeMenu $m
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$m add checkbutton -label "[msgcat::mc {WCS}] $l" \
 	    -variable "pcoord(wcs$l)"

@@ -10,7 +10,7 @@ proc FrameMainMenu {} {
     global ds9
     global current
 
-    menu $ds9(mb).frame
+    ThemeMenu $ds9(mb).frame
     $ds9(mb).frame add command -label [msgcat::mc {New Frame}] \
 	-command CreateFrame
     $ds9(mb).frame add command -label [msgcat::mc {New Frame RGB}] \
@@ -69,7 +69,7 @@ proc FrameMainMenu {} {
 	-menu $ds9(mb).frame.params
 
     # match
-    menu $ds9(mb).frame.match
+    ThemeMenu $ds9(mb).frame.match
     $ds9(mb).frame.match add cascade -label [msgcat::mc {Frame}] \
 	-menu $ds9(mb).frame.match.frame
     $ds9(mb).frame.match add cascade -label [msgcat::mc {Crosshair}] \
@@ -95,7 +95,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.match add command -label [msgcat::mc {3D View}] \
 	-command Match3DCurrent
 
-    menu $ds9(mb).frame.match.frame
+    ThemeMenu $ds9(mb).frame.match.frame
     $ds9(mb).frame.match.frame add command -label [msgcat::mc {WCS}] \
 	-command {MatchFrameCurrent wcs}
     $ds9(mb).frame.match.frame add separator
@@ -108,7 +108,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.match.frame add command -label [msgcat::mc {Detector}] \
 	-command {MatchFrameCurrent detector}
 
-    menu $ds9(mb).frame.match.crosshair
+    ThemeMenu $ds9(mb).frame.match.crosshair
     $ds9(mb).frame.match.crosshair add command -label [msgcat::mc {WCS}] \
 	-command {MatchCrosshairCurrent wcs}
     $ds9(mb).frame.match.crosshair add separator
@@ -121,7 +121,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.match.crosshair add command -label [msgcat::mc {Detector}] \
 	-command {MatchCrosshairCurrent detector}
 
-    menu $ds9(mb).frame.match.crop
+    ThemeMenu $ds9(mb).frame.match.crop
     $ds9(mb).frame.match.crop add command -label [msgcat::mc {WCS}] \
 	-command {MatchCropCurrent wcs}
     $ds9(mb).frame.match.crop add separator
@@ -134,7 +134,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.match.crop add command -label [msgcat::mc {Detector}] \
 	-command {MatchCropCurrent detector}
 
-    menu $ds9(mb).frame.match.cube
+    ThemeMenu $ds9(mb).frame.match.cube
     $ds9(mb).frame.match.cube add command -label [msgcat::mc {WCS}] \
 	-command {MatchCubeCurrent wcs}
     $ds9(mb).frame.match.cube add separator
@@ -142,7 +142,7 @@ proc FrameMainMenu {} {
 	-command {MatchCubeCurrent image}
 
     # lock
-    menu $ds9(mb).frame.lock
+    ThemeMenu $ds9(mb).frame.lock
     $ds9(mb).frame.lock add cascade -label [msgcat::mc {Frame}] \
 	-menu $ds9(mb).frame.lock.frame
     $ds9(mb).frame.lock add cascade -label [msgcat::mc {Crosshair}] \
@@ -168,7 +168,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {3D View}] \
 	-variable threed(lock) -command {Lock3DCurrent}
 
-    menu $ds9(mb).frame.lock.frame
+    ThemeMenu $ds9(mb).frame.lock.frame
     $ds9(mb).frame.lock.frame add radiobutton -label [msgcat::mc {None}] \
 	-variable panzoom(lock) -value none -command LockFrameCurrent
     $ds9(mb).frame.lock.frame add separator
@@ -184,7 +184,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.lock.frame add radiobutton -label [msgcat::mc {Detector}] \
 	-variable panzoom(lock) -value detector -command LockFrameCurrent
 
-    menu $ds9(mb).frame.lock.crosshair
+    ThemeMenu $ds9(mb).frame.lock.crosshair
     $ds9(mb).frame.lock.crosshair add radiobutton \
 	-label [msgcat::mc {None}] -variable crosshair(lock) \
 	-value none -command LockCrosshairCurrent
@@ -206,7 +206,7 @@ proc FrameMainMenu {} {
 	-label [msgcat::mc {Detector}] -variable crosshair(lock) \
 	-value detector -command LockCrosshairCurrent
 
-    menu $ds9(mb).frame.lock.crop
+    ThemeMenu $ds9(mb).frame.lock.crop
     $ds9(mb).frame.lock.crop add radiobutton -label [msgcat::mc {None}] \
 	-variable crop(lock) -value none -command LockCropCurrent
     $ds9(mb).frame.lock.crop add separator
@@ -222,7 +222,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.lock.crop add radiobutton -label [msgcat::mc {Detector}] \
 	-variable crop(lock) -value detector -command LockCropCurrent
 
-    menu $ds9(mb).frame.lock.cube
+    ThemeMenu $ds9(mb).frame.lock.cube
     $ds9(mb).frame.lock.cube add radiobutton -label [msgcat::mc {None}] \
 	-variable cube(lock) -value none -command LockCubeCurrent
     $ds9(mb).frame.lock.cube add separator
@@ -233,7 +233,7 @@ proc FrameMainMenu {} {
 	-variable cube(lock) -value image -command LockCubeCurrent
 
     # active
-    menu $ds9(mb).frame.active
+    ThemeMenu $ds9(mb).frame.active
     $ds9(mb).frame.active add command -label [msgcat::mc {Show All}] \
 	-command ActiveFrameAll
     $ds9(mb).frame.active add command -label [msgcat::mc {Hide All}] \
@@ -241,7 +241,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.active add separator
 
     # move
-    menu $ds9(mb).frame.move
+    ThemeMenu $ds9(mb).frame.move
     $ds9(mb).frame.move add command -label [msgcat::mc {First}] \
 	-command MoveFirstFrame
     $ds9(mb).frame.move add command -label [msgcat::mc {Back}] \
@@ -251,10 +251,10 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.move add command -label [msgcat::mc {Last}] \
 	-command MoveLastFrame
 
-    menu $ds9(mb).frame.goto
+    ThemeMenu $ds9(mb).frame.goto
 
     # params
-    menu $ds9(mb).frame.params
+    ThemeMenu $ds9(mb).frame.params
     $ds9(mb).frame.params add cascade -label [msgcat::mc {Tile}] \
 	-menu $ds9(mb).frame.params.tile
     $ds9(mb).frame.params add cascade -label [msgcat::mc {Blink Interval}] \
@@ -262,7 +262,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.params add command -label [msgcat::mc {Display Size}] \
 	-command DisplayDefaultDialog
 
-    menu $ds9(mb).frame.params.tile
+    ThemeMenu $ds9(mb).frame.params.tile
     $ds9(mb).frame.params.tile add radiobutton -label [msgcat::mc {Grid}] \
 	-variable tile(mode) -value grid -command DisplayMode
     $ds9(mb).frame.params.tile add radiobutton -label [msgcat::mc {Columns}] \
@@ -273,7 +273,7 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.params.tile add command \
 	-label "[msgcat::mc {Tile Parameters}]..." -command TileDialog
 
-    menu $ds9(mb).frame.params.blink
+    ThemeMenu $ds9(mb).frame.params.blink
     $ds9(mb).frame.params.blink add radiobutton \
 	-label ".125 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 125
@@ -306,7 +306,7 @@ proc PrefsDialogFrameMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {Single Frame}] \
 	-variable pcurrent(display) -value single
     $m add radiobutton -label [msgcat::mc {Tile Frames}] \
@@ -317,13 +317,13 @@ proc PrefsDialogFrameMenu {w} {
     $m add cascade -label [msgcat::mc {Frame Parameters}] \
 	-menu $m.params
 
-    menu $m.params
+    ThemeMenu $m.params
     $m.params add cascade -label [msgcat::mc {Tile}] \
 	-menu $m.params.tile
     $m.params add cascade -label [msgcat::mc {Blink Interval}] \
 	-menu $m.params.blink
 
-    menu $m.params.tile
+    ThemeMenu $m.params.tile
     $m.params.tile add radiobutton -label [msgcat::mc {Grid}] \
 	-variable ptile(mode) -value grid
     $m.params.tile add radiobutton -label [msgcat::mc {Columns}] \
@@ -331,7 +331,7 @@ proc PrefsDialogFrameMenu {w} {
     $m.params.tile add radiobutton -label [msgcat::mc {Rows}] \
 	-variable ptile(mode) -value row
 
-    menu $m.params.blink
+    ThemeMenu $m.params.blink
     $m.params.blink add radiobutton -label ".125 [msgcat::mc {Seconds}]" \
 	-variable pblink(interval) -value 125
     $m.params.blink add radiobutton -label ".25 [msgcat::mc {Seconds}]" \
@@ -755,7 +755,7 @@ proc PrefsDialogButtonbarFrame {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {New Frame}] \
 	-variable pbuttons(frame,new) -command {UpdateButtons buttons(frame)}
     $m add checkbutton -label [msgcat::mc {New Frame RGB}] \
@@ -806,7 +806,7 @@ proc PrefsDialogButtonbarFrame {f} {
     $m add cascade -label [msgcat::mc {Frame Parameters}] -menu $m.params
 
     # match
-    menu $m.match
+    ThemeMenu $m.match
     $m.match add cascade -label [msgcat::mc {Frame}] \
 	-menu $m.match.frame
     $m.match add cascade -label [msgcat::mc {Crosshair}] \
@@ -834,7 +834,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,match,smooth) \
 	-command {UpdateButtons buttons(frame)}
 
-    menu $m.match.frame
+    ThemeMenu $m.match.frame
     $m.match.frame add checkbutton -label [msgcat::mc {WCS}] \
 	-variable pbuttons(frame,match,frame,wcs) \
 	-command {UpdateButtons buttons(frame)}
@@ -852,7 +852,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,match,frame,amplifier) \
 	-command {UpdateButtons buttons(frame)}
 
-    menu $m.match.crosshair
+    ThemeMenu $m.match.crosshair
     $m.match.crosshair add checkbutton -label [msgcat::mc {WCS}] \
 	-variable pbuttons(frame,match,crosshair,wcs) \
 	-command {UpdateButtons buttons(frame)}
@@ -870,7 +870,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,match,crosshair,amplifier) \
 	-command {UpdateButtons buttons(frame)}
 
-    menu $m.match.crop
+    ThemeMenu $m.match.crop
     $m.match.crop add checkbutton -label [msgcat::mc {WCS}] \
 	-variable pbuttons(frame,match,crop,wcs) \
 	-command {UpdateButtons buttons(frame)}
@@ -889,7 +889,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-command {UpdateButtons buttons(frame)}
 
 
-    menu $m.match.cube
+    ThemeMenu $m.match.cube
     $m.match.cube add checkbutton -label [msgcat::mc {WCS}] \
 	-variable pbuttons(frame,match,cube,wcs) \
 	-command {UpdateButtons buttons(frame)}
@@ -899,7 +899,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-command {UpdateButtons buttons(frame)}
 
     # lock
-    menu $m.lock
+    ThemeMenu $m.lock
     $m.lock add cascade -label [msgcat::mc {Frame}] \
 	-menu $m.lock.frame
     $m.lock add cascade -label [msgcat::mc {Crosshair}] \
@@ -927,7 +927,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,lock,smooth) \
 	-command {UpdateButtons buttons(frame)}
 
-    menu $m.lock.frame
+    ThemeMenu $m.lock.frame
     $m.lock.frame add checkbutton -label [msgcat::mc {None}] \
 	-variable pbuttons(frame,lock,frame,none) \
 	-command {UpdateButtons buttons(frame)}
@@ -949,7 +949,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,lock,frame,amplifier) \
 	-command {UpdateButtons buttons(frame)}
 
-    menu $m.lock.crosshair
+    ThemeMenu $m.lock.crosshair
     $m.lock.crosshair add checkbutton -label [msgcat::mc {None}] \
 	-variable pbuttons(frame,lock,crosshair,none) \
 	-command {UpdateButtons buttons(frame)}
@@ -971,7 +971,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,lock,crosshair,amplifier) \
 	-command {UpdateButtons buttons(frame)}
 
-    menu $m.lock.crop
+    ThemeMenu $m.lock.crop
     $m.lock.crop add checkbutton -label [msgcat::mc {None}] \
 	-variable pbuttons(frame,lock,crop,none) \
 	-command {UpdateButtons buttons(frame)}
@@ -994,7 +994,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-command {UpdateButtons buttons(frame)}
 
 
-    menu $m.lock.cube
+    ThemeMenu $m.lock.cube
     $m.lock.cube add checkbutton -label [msgcat::mc {None}] \
 	-variable pbuttons(frame,lock,cube,none) \
 	-command {UpdateButtons buttons(frame)}
@@ -1008,7 +1008,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-command {UpdateButtons buttons(frame)}
 
     # move
-    menu $m.move
+    ThemeMenu $m.move
     $m.move add checkbutton -label [msgcat::mc {First}] \
 	-variable pbuttons(frame,movefirst) \
 	-command {UpdateButtons buttons(frame)}
@@ -1023,7 +1023,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-command {UpdateButtons buttons(frame)}
 
     # params
-    menu $m.params
+    ThemeMenu $m.params
     $m.params add checkbutton -label [msgcat::mc {Display Size}] \
 	-variable pbuttons(frame,size) -command {UpdateButtons buttons(frame)}
 }

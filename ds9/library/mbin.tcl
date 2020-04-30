@@ -9,7 +9,7 @@ package provide DS9 1.0
 proc BinMainMenu {} {
     global ds9
 
-    menu $ds9(mb).bin
+    ThemeMenu $ds9(mb).bin
     $ds9(mb).bin add radiobutton -label [msgcat::mc {Average}] \
 	-variable bin(function) -value average -command ChangeBinFunction
     $ds9(mb).bin add radiobutton -label [msgcat::mc {Sum}] \
@@ -69,7 +69,7 @@ proc PrefsDialogBinMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {Average}] \
 	-variable pbin(function) -value average
     $m add radiobutton -label [msgcat::mc {Sum}] \
@@ -110,8 +110,8 @@ proc PrefsDialogBin {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Bin}]
-    lappend dprefs(tabs) [ttk::frame $w.bin]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.bin] \
+	-text [msgcat::mc {Bin}]
 
     # Mouse
     set f [ttk::labelframe $w.bin.mouse -text [msgcat::mc {Mouse Wheel Bin}]]
@@ -256,7 +256,7 @@ proc PrefsDialogButtonbarBin {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
 
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Average}] \
 	-variable pbuttons(bin,average) -command {UpdateButtons buttons(bin)}
     $m add checkbutton -label [msgcat::mc {Sum}] \

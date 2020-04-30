@@ -55,7 +55,7 @@ proc 3DDialog {} {
     $mb add cascade -label [msgcat::mc {Border}] -menu $mb.border
     $mb add cascade -label [msgcat::mc {Compass}] -menu $mb.compass
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command 3DApplyDialog
     $mb.file add command -label [msgcat::mc {Reset}] -command 3DResetDialog
     $mb.file add separator
@@ -64,7 +64,7 @@ proc 3DDialog {} {
 
     EditMenu $mb ithreed
 
-    menu $mb.render
+    ThemeMenu $mb.render
     $mb.render add radiobutton -label [msgcat::mc {MIP}] \
 	-variable threed(method) -value {mip} -command 3DRenderMethod 
     $mb.render add radiobutton -label [msgcat::mc {AIP}] \
@@ -77,7 +77,7 @@ proc 3DDialog {} {
     $mb.render add radiobutton -label [msgcat::mc {Elevation}] \
 	-variable threed(background) -value {elevation} -command 3DBackground
 
-    menu $mb.highlite
+    ThemeMenu $mb.highlite
     $mb.highlite add checkbutton -label [msgcat::mc {Show}] \
 	-variable threed(highlite) -command 3DHighlite
     $mb.highlite add separator
@@ -85,7 +85,7 @@ proc 3DDialog {} {
 	-menu $mb.highlite.color
     ColorMenu $mb.highlite.color threed highlite,color 3DHighliteColor
 
-    menu $mb.border
+    ThemeMenu $mb.border
     $mb.border add checkbutton -label [msgcat::mc {Show}] \
 	-variable threed(border) -command 3DBorder
     $mb.border add separator
@@ -93,7 +93,7 @@ proc 3DDialog {} {
 	-menu $mb.border.color
     ColorMenu $mb.border.color threed border,color 3DBorderColor
 
-    menu $mb.compass
+    ThemeMenu $mb.compass
     $mb.compass add checkbutton -label [msgcat::mc {Show}] -variable threed(compass) -command 3DCompass
     $mb.compass add separator
     $mb.compass add cascade -label [msgcat::mc {Color}] -menu $mb.compass.color
@@ -442,8 +442,8 @@ proc PrefsDialog3d {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {3D}]
-    lappend dprefs(tabs) [ttk::frame $w.threed]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.threed] \
+	-text [msgcat::mc {3D}]
 
     set f [ttk::labelframe $w.threed.misc -text [msgcat::mc {Render}]]
     ttk::label $f.tmethod -text [msgcat::mc {Method}]
@@ -457,14 +457,14 @@ proc PrefsDialog3d {} {
     grid $f.tbackground $f.background -padx 2 -pady 2 -sticky w
 
     set m $f.method.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {MIP}] \
 	-variable pthreed(method) -value {mip}
     $m add radiobutton -label [msgcat::mc {AIP}] \
 	-variable pthreed(method) -value {aip}
 
     set m $f.background.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {None}] \
 	-variable pthreed(background) -value {none}
     $m add radiobutton -label [msgcat::mc {Azimuth}] \

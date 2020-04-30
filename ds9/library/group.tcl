@@ -11,7 +11,7 @@ proc GroupDef {} {
     set igroup(top) .grp
     set igroup(mb) .grpmb
 
-    set dgroup(list) {}
+    set dgroup(listbox) {}
 }
 
 proc GroupCreate {} {
@@ -54,9 +54,11 @@ proc GroupDialog {} {
     Toplevel $w $mb 6 [msgcat::mc {Groups}] GroupDestroyDialog
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Update Group}] \
 	-command GroupUpdateDialog
+    $mb.file add command -label [msgcat::mc {Select None}] \
+	-command GroupNoneDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {New Group}] \
 	-command GroupCreate
@@ -75,22 +77,23 @@ proc GroupDialog {} {
     set f [ttk::frame $w.param]
 
     ttk::scrollbar $f.scroll -command [list $f.box yview] -orient vertical
-    set dgroup(list) [listbox $f.box \
+    set dgroup(listbox) [ttk::treeview $f.box \
 			  -yscroll [list $f.scroll set] \
-			  -setgrid true \
-			  -selectmode multiple \
+			  -selectmode browse \
+			  -show tree \
 			  ]
     grid $f.box $f.scroll -sticky news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
-    bind $dgroup(list) <<ListboxSelect>> GroupButtonDialog
+    bind $dgroup(listbox) <<TreeviewSelect>> GroupButtonDialog
 
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.update -text [msgcat::mc {Update}] -command GroupUpdateDialog
+    ttk::button $f.none -text [msgcat::mc {None}] -command GroupNoneDialog
     ttk::button $f.close -text [msgcat::mc {Close}] -command GroupDestroyDialog
-    pack $f.update $f.close -side left -expand true -padx 2 -pady 4
+    pack $f.update $f.none $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.sep -orient horizontal
@@ -102,21 +105,6 @@ proc GroupDialog {} {
     UpdateGroupDialog
 }
 
-proc GroupButtonDialog {} {
-    global dgroup
-    global current
-
-    if {$current(frame) != {}} {
-	$current(frame) marker unselect all
-	set rr [$dgroup(list) curselection]
-	foreach ii $rr {
-	    if {[string length $ii] != 0} {
-		$current(frame) marker "\{[$dgroup(list) get $ii]\}" select
-	    }
-	}
-    }
-}
-
 proc GroupDestroyDialog {} {
     global igroup
 
@@ -126,14 +114,37 @@ proc GroupDestroyDialog {} {
     }
 }
 
+proc GroupButtonDialog {} {
+    global dgroup
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) marker unselect all
+	set tag [$dgroup(listbox) selection]
+	if {$tag != {}} {
+	    $current(frame) marker $tag select
+	}
+    }
+}
+
+proc GroupNoneDialog {} {
+    global dgroup
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) marker unselect all
+	$dgroup(listbox) selection remove [$dgroup(listbox) selection]
+    }
+}
+
 proc GroupUpdateDialog {} {
     global dgroup
     global current
 
     if {$current(frame) != {}} {
-	set ll [$dgroup(list) curselection]
-	if {[string length $ll] != 0} {
-	    $current(frame) marker tag update "\{[$dgroup(list) get $ll]\}"
+	set tag [$dgroup(listbox) selection]
+	if {$tag != {}} {
+	    $current(frame) marker tag update $tag
 	}
     }
 }
@@ -143,11 +154,12 @@ proc GroupEditDialog {} {
     global current
     
     if {$current(frame) != {}} {
-	set i [$dgroup(list) curselection]
-	if {[string length $i] != 0} {
-	    set which [$dgroup(list) get $i]
-	    if {[EntryDialog [msgcat::mc {Group Name}] [msgcat::mc {Enter Group Name}] 40 which]} {
-		$current(frame) marker tag edit "\{[$dgroup(list) get $i]\}" "\{$which\}"
+	set tag [$dgroup(listbox) selection]
+	set old $tag
+	if {$tag != {}} {
+	    set flat [join $tag]
+	    if {[EntryDialog [msgcat::mc {Group Name}] [msgcat::mc {Enter Group Name}] 40 flat]} {
+		$current(frame) marker tag edit $old [list $flat]
 		UpdateGroupDialog
 	    }
 	}
@@ -159,10 +171,9 @@ proc GroupDeleteDialog {} {
     global current
 
     if {$current(frame) != {}} {
-	set i [$dgroup(list) curselection]
-	if {[string length $i] != 0} {
-	    set which [$dgroup(list) get $i]
-	    $current(frame) marker tag delete "\{$which\}"
+	set tag [$dgroup(listbox) selection]
+	if {$tag != {}} {
+	    $current(frame) marker tag delete $tag
 	    UpdateGroupDialog
 	}
     }
@@ -195,13 +206,13 @@ proc UpdateGroupDialog {} {
     }
 
     if {[winfo exists $igroup(top)]} {
-	# clear the list
-	$dgroup(list) delete 0 end
+	foreach tag [$dgroup(listbox) children {}] {
+	    $dgroup(listbox) delete [list $tag]
+	}
 
 	if {$current(frame) != {}} {
-	    set grps [lsort [$current(frame) get marker tag all]]
-	    foreach f $grps {
-		$dgroup(list) insert end $f
+	    foreach tag [lsort [$current(frame) get marker tag all]] {
+		$dgroup(listbox) insert {} end -id $tag -text $tag
 	    }
 	}
     }

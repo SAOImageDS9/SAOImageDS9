@@ -24,7 +24,7 @@ proc PrefsDialog {{which {}}} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Clear Preferences}] \
 	-command PrefsDialogClear
     $mb.file add separator
@@ -39,17 +39,18 @@ proc PrefsDialog {{which {}}} {
     set f [ttk::frame $w.param]
 
     ttk::scrollbar $f.scroll -command [list $f.box yview]
-    set dprefs(list) [listbox $f.box \
+    set dprefs(listbox) [ttk::treeview $f.box \
 			  -yscroll [list $f.scroll set] \
 			  -selectmode browse \
-			  -setgrid true \
-			  -width 18 -height 28 \
+			  -height 28 \
+			  -show tree \
 			 ]
+
     grid $f.box $f.scroll -sticky news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    bind $dprefs(list) <<ListboxSelect>> [list PrefsDialogListUpdate]
+    bind $dprefs(listbox) <<TreeviewSelect>> PrefsDialogListUpdate
 
     set dprefs(tab) $f
     set dprefs(tabs) {}
@@ -99,30 +100,23 @@ proc PrefsDialog {{which {}}} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -fill both -expand true
 
-    # http is hard coded to be last
-    switch $which {
-	http {$dprefs(list) selection set end}
-	default {$dprefs(list) selection set 0}
-    }
-
     bind $w <<Save>> PrefsDialogSave
     bind $w <<Close>> PrefsDialogClose
 
-    PrefsDialogListUpdate
+    # select first item
+    $dprefs(listbox) selection set $dprefs(tags)
 }
 
 proc PrefsDialogListUpdate {} {
     global dprefs
 
-    set which [$dprefs(list) curselection]
-    if {$which == {}} {
-	set which 0
+    if {$dprefs(tabs) != {}} {
+	grid forget $dprefs(tabs)
     }
-    foreach tab $dprefs(tabs) {
-	grid forget $tab
+    set dprefs(tabs) [$dprefs(listbox) selection]
+    if {$dprefs(tabs) != {}} {
+	grid $dprefs(tabs) -row 0 -column 2 -sticky new
     }
-
-    grid [lindex $dprefs(tabs) $which] -row 0 -column 2 -sticky new
 }
 
 proc PrefsDialogSave {} {
@@ -173,8 +167,10 @@ proc PrefsDialogGeneral {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {General}]
-    lappend dprefs(tabs) [ttk::frame $w.general]
+    set gg [ttk::frame $w.general]
+    $dprefs(listbox) insert {} end -id $gg -text [msgcat::mc {General}]
+    # This is our first item
+    set dprefs(tags) $gg
 
     # General
     set f [ttk::labelframe $w.general.misc -text [msgcat::mc {General}]]
@@ -187,6 +183,8 @@ proc PrefsDialogGeneral {} {
     ttk::checkbutton $f.confirm \
 	-text [msgcat::mc {Enable Confirmation Dialogs}] \
 	-variable pds9(confirm)
+    ttk::checkbutton $f.align -text {Mosaic IRAF DETSEC Align} \
+	-variable pds9(iraf) -command PrefsIRAFAlign
     ttk::label $f.tthreads -text [msgcat::mc {Number of Threads}]
     ttk::entry $f.threads -textvariable ds9(threads) \
 	-validate focusout -validatecommand ChangeThreads -width 8
@@ -194,15 +192,17 @@ proc PrefsDialogGeneral {} {
     grid $f.backup -padx 2 -pady 2 -sticky w
     grid $f.auto -padx 2 -pady 2 -sticky w
     grid $f.confirm -padx 2 -pady 2 -sticky w
+    grid $f.align -padx 2 -pady 2 -sticky w
     grid $f.tthreads $f.threads -padx 2 -pady 2 -sticky w
 
-    # Language
-    set f [ttk::labelframe $w.general.lang -text [msgcat::mc {Language}]]
+    # Font
+    set f [ttk::labelframe $w.general.font -text [msgcat::mc {Font}]]
 
+    ttk::label $f.tlang -text [msgcat::mc {Language}]
     ttk::menubutton $f.lang -textvariable pds9(language,name) -menu $f.lang.menu
 
     set m $f.lang.menu
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [LanguageToName locale] \
 	-variable pds9(language,name) -command "set pds9(language) locale"
     $m add separator
@@ -225,48 +225,57 @@ proc PrefsDialogGeneral {} {
     $m add radiobutton -label [LanguageToName zh] \
 	-variable pds9(language,name) -command "set pds9(language) zh"
 
-    grid $f.lang -padx 2 -pady 2 -sticky w
+    grid $f.tlang $f.lang -padx 2 -pady 2 -sticky w
 
-    # GUI Font
-    set f [ttk::labelframe $w.general.font -text [msgcat::mc {GUI Font}]]
-
-    FontMenuButton $f.font pds9 font \
-	font,size font,weight font,slant \
+    ttk::label $f.tgui -text [msgcat::mc {GUI}]
+    FontMenuButton $f.gui pds9 font font,size font,weight font,slant \
 	[list SetDefaultFont true]
-    ttk::button $f.reset -text [msgcat::mc {Reset}] \
+    ttk::button $f.bgui -text [msgcat::mc {Reset}] \
 	-command ResetDefaultFont
 
-    grid $f.font $f.reset -padx 2 -pady 2 -sticky w
-
-    # Text Font
-    set f [ttk::labelframe $w.general.textfont -text [msgcat::mc {Text Font}]]
-
-    FontMenuButton $f.textfont pds9 text,font \
+    ttk::label $f.ttext -text [msgcat::mc {Text}]
+    FontMenuButton $f.text pds9 text,font \
 	text,font,size text,font,weight text,font,slant \
 	[list SetDefaultTextFont true]
-    ttk::button $f.textreset -text [msgcat::mc {Reset}] \
+    ttk::button $f.btext -text [msgcat::mc {Reset}] \
 	-command ResetDefaultTextFont
 
-    grid $f.textfont $f.textreset -padx 2 -pady 2 -sticky w
+    grid $f.tgui $f.gui $f.bgui -padx 2 -pady 2 -sticky w
+    grid $f.ttext $f.text $f.btext -padx 2 -pady 2 -sticky w
 
     # Color
     set f [ttk::labelframe $w.general.color -text [msgcat::mc {Color}]]
 
+    switch $ds9(wm) {
+	x11 {
+	    ttk::label $f.ttheme -text [msgcat::mc {Theme}]
+	    ttk::menubutton $f.theme -textvariable pds9(theme) \
+		-menu $f.theme.menu
+
+	    set m $f.theme.menu
+
+	    ThemeMenu $m
+	    foreach tt $ds9(themes) {
+		$m add radiobutton -label $tt -variable pds9(theme) \
+		    -command ThemeChange
+	    }
+
+	    grid $f.ttheme $f.theme -padx 2 -pady 2 -sticky w
+	}
+	aqua -
+	win32 {}
+    }
+
     ttk::label $f.tbg -text [msgcat::mc {Background Color}]
     ColorMenuButton $f.bg pds9 bg PrefsBgColor
+    ttk::checkbutton $f.ubg -text [msgcat::mc {Use}] -variable pds9(bg,use) \
+	-command PrefsBgColor
 
     ttk::label $f.tnan -text [msgcat::mc {Blank/Inf/NaN Color}]
     ColorMenuButton $f.nan pds9 nan PrefsNanColor
 
-    grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
+    grid $f.tbg $f.bg $f.ubg -padx 2 -pady 2 -sticky w
     grid $f.tnan $f.nan -padx 2 -pady 2 -sticky w
-
-    # Mosaic
-    set f [ttk::labelframe $w.general.mosaic -text [msgcat::mc {Mosaic}]]
-    ttk::checkbutton $f.align -text {IRAF DETSEC Align} -variable pds9(iraf) \
-	-command PrefsIRAFAlign
-
-    grid $f.align -padx 2 -pady 2 -sticky w
 
     # Dialog Box
     set f [ttk::labelframe $w.general.box -text [msgcat::mc {Dialog Box}]]
@@ -295,9 +304,8 @@ proc PrefsDialogGeneral {} {
     grid $f.center - -padx 2 -pady 2 -sticky w
     grid $f.all - -padx 2 -pady 2 -sticky w
 
-    pack $w.general.misc $w.general.lang $w.general.font \
-	$w.general.textfont $w.general.color $w.general.mosaic \
-	$w.general.box \
+    pack $w.general.misc $w.general.font \
+	$w.general.color $w.general.box \
 	-side top -fill both -expand true
 }
 
@@ -308,8 +316,8 @@ proc PrefsDialogPrecision {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Precision}]
-    lappend dprefs(tabs) [ttk::frame $w.precision]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.precision] \
+	-text [msgcat::mc {Precision}]
 
     # Coordinates
     set f [ttk::labelframe $w.precision.coord -text [msgcat::mc {Coordinates}]]
@@ -371,8 +379,8 @@ proc PrefsDialogStartup {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Startup}]
-    lappend dprefs(tabs) [ttk::frame $w.startup]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.startup] \
+	-text [msgcat::mc {Startup}]
 
     set f [ttk::labelframe $w.startup.params -text [msgcat::mc {At Startup}]]
 

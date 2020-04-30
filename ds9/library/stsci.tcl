@@ -48,7 +48,7 @@ proc STSCIDialog {} {
     set w $var(top)
     IMGSVRInit $varname "STSCI-DSS [msgcat::mc {Server}]" STSCIExec STSCIAck
 
-    menu $var(mb).survey
+    ThemeMenu $var(mb).survey
     $var(mb) add cascade -label Survey -menu $var(mb).survey
     $var(mb).survey add radiobutton -label {POSS2/UKSTU Red} \
 	-variable ${varname}(survey) -value poss2ukstu_red

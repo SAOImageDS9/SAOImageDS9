@@ -165,7 +165,7 @@ proc ARSkyFormat {w varname} {
 
     set ${varname}(skyformat,msg) [msgcat::mc $var(skyformat)]
     ttk::menubutton $w -textvariable ${varname}(skyformat,msg) -menu $w.menu
-    menu $w.menu
+    ThemeMenu $w.menu
     $w.menu add radiobutton -label [msgcat::mc {Degrees}] \
 	-variable ${varname}(skyformat) -value degrees \
 	-command "ARSkyFormatMenu $varname"
@@ -187,7 +187,7 @@ proc ARRFormat {w varname} {
 
     set ${varname}(rformat,msg) [msgcat::mc $var(rformat)]
     ttk::menubutton $w -textvariable ${varname}(rformat,msg) -menu $w.menu
-    menu $w.menu
+    ThemeMenu $w.menu
     $w.menu add radiobutton -label [msgcat::mc {Degrees}] \
 	-variable ${varname}(rformat) -value degrees \
 	-command "ARRFormatMenu $varname"

@@ -61,110 +61,127 @@ proc prefssend::unsetupvalues {numsyms} {
 }
 
 array set prefssend::table {
-  6:0 accept
-  3:0,target 3
+  6:0 reduce
+  3:0,target 6
   0:257 shift
+  7:0 accept
   0:258 shift
-  5:0,target 4
-  0:260 shift
+  8:0 reduce
+  5:0,target 1
+  2:257 shift
   0:259 shift
+  0:260 shift
   0:261 shift
+  7:0,target 0
   0:258,target 2
-  0:262 goto
+  0:262 shift
+  0:263 goto
   0:261,target 5
-  2:0,target 5
-  4:0,target 1
-  6:0,target 0
+  0:263,target 7
+  4:0,target 4
+  6:0,target 5
   1:0 reduce
   0:257,target 1
-  2:0 reduce
+  8:0,target 2
   3:0 reduce
-  0:260,target 4
+  2:257,target 8
   0:259,target 3
+  0:260,target 4
   4:0 reduce
-  1:0,target 2
+  1:0,target 3
   5:0 reduce
   0:262,target 6
 }
 
 array set prefssend::rules {
-  0,l 263
-  1,l 262
-  2,l 262
-  3,l 262
-  4,l 262
-  5,l 262
+  0,l 264
+  1,l 263
+  2,l 263
+  3,l 263
+  4,l 263
+  5,l 263
+  6,l 263
 }
 
 array set prefssend::rules {
   5,dc 1
   0,dc 1
-  2,dc 1
+  2,dc 2
   4,dc 1
+  6,dc 1
   1,dc 1
   3,dc 1
 }
 
 array set prefssend::rules {
-  5,line 21
-  2,line 18
-  4,line 20
-  1,line 17
-  3,line 19
+  5,line 22
+  2,line 19
+  4,line 21
+  6,line 23
+  1,line 18
+  3,line 20
 }
 
 array set prefssend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0}}
-  1 {{2 0 1}}
-  2 {{5 0 1}}
-  3 {{3 0 1}}
-  4 {{1 0 1}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6}}
-  5 {{4 0 1}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0}}
+  1 {{3 0 1}}
+  2 {{2 0 1}}
+  3 {{6 0 1}}
+  4 {{4 0 1}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7}}
+  5 {{1 0 1}}
   1,trans {}
-  6 {{0 0 1}}
-  2,trans {}
+  6 {{5 0 1}}
+  2,trans {{257 8}}
   3,trans {}
+  7 {{0 0 1}}
   4,trans {}
+  8 {{2 0 2}}
   5,trans {}
   6,trans {}
+  7,trans {}
+  8,trans {}
 }
 
 array set prefssend::token_id_table {
-  262,title {}
+  264,line 24
   0,t 0
   0 {$}
+  262,title THREADS
   263,title {}
+  264,title {}
   error,t 0
   error error
   258,line 9
   261,line 12
-  error,line 15
+  error,line 16
   257 BGCOLOR_
   257,t 0
-  263,line 22
-  258 IRAFALIGN_
+  263,line 17
+  258 HAS_
   258,t 0
   error,title {}
   260,t 0
-  260 PRECISION_
-  259 NANCOLOR_
+  260 NANCOLOR_
+  259 IRAFALIGN_
   259,t 0
   261,t 0
-  261 THREADS_
-  262,t 1
-  262 prefssend
+  261 PRECISION_
+  262,t 0
+  262 THREADS_
   257,line 8
   263,t 1
-  263 start'
+  263 prefssend
+  264,t 1
+  264 start'
   260,line 11
   257,title BGCOLOR
   259,line 10
-  258,title IRAFALIGN
-  262,line 16
-  260,title PRECISION
-  259,title NANCOLOR
-  261,title THREADS
+  258,title HAS
+  262,line 13
+  260,title NANCOLOR
+  259,title IRAFALIGN
+  261,title PRECISION
 }
 
 proc prefssend::yyparse {} {
@@ -262,10 +279,11 @@ proc prefssend::yyparse {} {
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
                     1 { ProcessSendCmdGet6 pds9 prec,linear prec,deg prec,hms prec,dms prec,arcmin prec,arcsec }
-                    2 { ProcessSendCmdGet pds9 bg }
-                    3 { ProcessSendCmdGet pds9 nan }
-                    4 { ProcessSendCmdGet ds9 threads }
-                    5 { ProcessSendCmdYesNo pds9 iraf }
+                    2 { ProcessSendCmdGet pds9 bg,use }
+                    3 { ProcessSendCmdGet pds9 bg }
+                    4 { ProcessSendCmdGet pds9 nan }
+                    5 { ProcessSendCmdGet ds9 threads }
+                    6 { ProcessSendCmdYesNo pds9 iraf }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

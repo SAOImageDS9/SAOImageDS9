@@ -123,6 +123,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   invert = 0;
 
   useHighlite = 0;
+  highliteColourName = dupstr("blue");
   highliteGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   useCrosshair = 0;
@@ -154,6 +155,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
+  useBgColor = 0;
   bgColourName = dupstr("white");
   nanColourName = dupstr("white");
 
@@ -198,6 +200,9 @@ Base::~Base()
 
   if (highliteGC)
     XFreeGC(display, highliteGC);
+
+  if (highliteColourName)
+    delete [] highliteColourName;
 
   if (markerGC_)
     XFreeGC(display, markerGC_);
@@ -1323,7 +1328,11 @@ void Base::updateBase()
   if (doRender())
     ximageToPixmap(basePixmap, baseXImage, Coord::WIDGET);
   else {
-    XSetForeground(display, widgetGC, getColor(bgColourName));
+    if (useBgColor)
+      XSetForeground(display, widgetGC, getColor(bgColourName));
+    else
+      XSetForeground(display, widgetGC,
+		     ((WidgetOptions*)options)->bgColor->pixel);
     XFillRectangle(display, basePixmap, widgetGC, 0, 0,
 		   options->width,options->height);
   }
@@ -1410,7 +1419,6 @@ void Base::updateGCs()
 
   // highliteGC
   setClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
-  XSetForeground(display, highliteGC, getColor("blue"));
   XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
 
   // markerGC
@@ -1794,9 +1802,11 @@ void Base::x11Dash(GC lgc, int which)
 
 void Base::x11Graphics()
 {
-  if (useHighlite)
+  if (useHighlite) {
+    XSetForeground(display, highliteGC, getColor(highliteColourName));
     XDrawRectangle(display, pixmap, highliteGC, 1, 1, 
 		   options->width-2, options->height-2);
+  }
 }
 
 void Base::ximageToPixmap(Pixmap pixmap, XImage* ximage, 

@@ -27,7 +27,7 @@ proc IMGSVRInit {varname title exec ack} {
     Toplevel $w $mb 6 $title "ARDestroy $varname"
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Retrieve}] \
 	-command "IMGSVRApply $varname 0"
     $mb.file add command -label [msgcat::mc {Cancel}] \
@@ -49,7 +49,7 @@ proc IMGSVRInit {varname title exec ack} {
     NSVRServerMenu $varname
 
     $mb add cascade -label [msgcat::mc {Preferences}] -menu $mb.prefs
-    menu $mb.prefs
+    ThemeMenu $mb.prefs
     $mb.prefs add checkbutton -label [msgcat::mc {Save Image on Download}] \
 	-variable ${varname}(save)
     $mb.prefs add separator

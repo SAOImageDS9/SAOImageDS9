@@ -5,6 +5,7 @@
 %start prefssend
 
 %token BGCOLOR_
+%token HAS_
 %token IRAFALIGN_
 %token NANCOLOR_
 %token PRECISION_
@@ -13,6 +14,7 @@
 %%
 
 prefssend : PRECISION_ {ProcessSendCmdGet6 pds9 prec,linear prec,deg prec,hms prec,dms prec,arcmin prec,arcsec}
+ | HAS_ BGCOLOR_ {ProcessSendCmdGet pds9 bg,use}
  | BGCOLOR_ {ProcessSendCmdGet pds9 bg}
  | NANCOLOR_ {ProcessSendCmdGet pds9 nan}
  | THREADS_ {ProcessSendCmdGet ds9 threads}

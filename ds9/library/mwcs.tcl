@@ -122,7 +122,7 @@ proc PrefsDialogButtonbarWCS {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {FK4}] \
 	-variable pbuttons(wcs,fk4) -command {UpdateButtons buttons(wcs)}
     $m add checkbutton -label [msgcat::mc {FK5}] \

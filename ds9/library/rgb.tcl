@@ -138,13 +138,13 @@ proc RGBDialog {} {
     $mb add cascade -label [msgcat::mc {Align}] -menu $mb.align
     $mb add cascade -label [msgcat::mc {Lock}] -menu $mb.lock
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command RGBDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     CoordMenu $mb.align rgb system 1 {} {} RGBSystem
 
-    menu $mb.lock
+    ThemeMenu $mb.lock
     $mb.lock add checkbutton -label [msgcat::mc {WCS}] \
 	-variable rgb(lock,wcs)
     $mb.lock add checkbutton -label [msgcat::mc {Crop}] \

@@ -1067,7 +1067,7 @@ proc PlotColorMenu {w varname color cmd} {
     upvar #0 $varname var
     global $varname
 
-    menu $w
+    ThemeMenu $w
     $w add radiobutton -label [msgcat::mc {Black}] \
 	-variable ${varname}($color) -value black -command $cmd
     $w add radiobutton -label [msgcat::mc {White}] \

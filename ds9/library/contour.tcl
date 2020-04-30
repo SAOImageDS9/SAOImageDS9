@@ -169,7 +169,7 @@ proc ContourDialog {} {
     $mb add cascade -label [msgcat::mc {Scope}] -menu $mb.scope
     $mb add cascade -label [msgcat::mc {Method}] -menu $mb.method
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command ContourLoadDialog -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -198,7 +198,7 @@ proc ContourDialog {} {
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command ContourDestroyDialog -accelerator "${ds9(ctrl)}W"
 
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command ContourCutDialog -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -209,7 +209,7 @@ proc ContourDialog {} {
     ColorMenu $mb.color contour color {}
     WidthDashMenu $mb.width contour width dash {} {}
 
-    menu $mb.scale
+    ThemeMenu $mb.scale
     $mb.scale add radiobutton -label [msgcat::mc {Linear}] \
 	-variable contour(scale) -value linear
     $mb.scale add radiobutton -label [msgcat::mc {Log}] \
@@ -231,7 +231,7 @@ proc ContourDialog {} {
     $mb.scale add command -label "[msgcat::mc {Log Exponent}]..." \
 	-command ContourLogDialog
 
-    menu $mb.limit
+    ThemeMenu $mb.limit
     $mb.limit add radiobutton -label [msgcat::mc {Min Max}] \
 	-variable contour(mode) -value minmax -command ContourModeDialog
     $mb.limit add separator
@@ -253,13 +253,13 @@ proc ContourDialog {} {
     $mb.limit add radiobutton -label [msgcat::mc {User}] \
 	-variable contour(mode) -value user -command ContourModeDialog
 
-    menu $mb.scope 
+    ThemeMenu $mb.scope 
     $mb.scope add radiobutton -label [msgcat::mc {Global}] \
 	-variable contour(scope) -value global -command ContourModeDialog
     $mb.scope add radiobutton -label [msgcat::mc {Local}] \
 	-variable contour(scope) -value local -command ContourModeDialog
 
-    menu $mb.method
+    ThemeMenu $mb.method
     $mb.method add radiobutton -label [msgcat::mc {Block}] \
 	-variable contour(method) -value block
     $mb.method add radiobutton -label [msgcat::mc {Smooth}] \
@@ -290,6 +290,8 @@ proc ContourDialog {} {
 			   -height 10 \
 			   -font [font actual TkDefaultFont] \
 			   -yscrollcommand [list $f.yscroll set] \
+			   -fg [ThemeForeground] \
+			   -bg [ThemeBackground] \
 		      ]
     ttk::scrollbar $f.yscroll -command [list $dcontour(txt) yview] \
 	-orient vertical
@@ -1017,8 +1019,8 @@ proc PrefsDialogContour {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Contours}]
-    lappend dprefs(tabs) [ttk::frame $w.contour]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.contour] \
+	-text [msgcat::mc {Contours}]
 
     set f [ttk::labelframe $w.contour.param -text [msgcat::mc {Contours}]]
 
@@ -1039,7 +1041,7 @@ proc PrefsDialogContour {} {
     grid $f.wtitle $f.width -padx 2 -pady 2 -sticky w
 
     set m $f.method.menu 
-    menu $m
+    ThemeMenu $m
     $m add radiobutton -label [msgcat::mc {Block}] \
 	-variable pcontour(method) -value block
     $m add radiobutton -label [msgcat::mc {Smooth}] \

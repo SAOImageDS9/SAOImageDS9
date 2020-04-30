@@ -114,7 +114,8 @@ proc CreateNameNumberFrame {which type} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg $ds9(foreground) -bg $ds9(background)
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
 
     $ds9(next) threads $ds9(threads)
 
@@ -144,7 +145,9 @@ proc CreateNameNumberFrame {which type} {
 	$pds9(prec,angle)
     
     $ds9(next) bg color $pds9(bg)
+    $ds9(next) bg color $pds9(bg,use)
     $ds9(next) nan color $pds9(nan)
+    $ds9(next) highlite color $ds9(bold)
 
     $ds9(next) iraf align $pds9(iraf)
 
@@ -2013,7 +2016,7 @@ proc TileDialog {} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command TileApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \

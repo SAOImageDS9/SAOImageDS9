@@ -68,7 +68,7 @@ proc NRESDialog {} {
 
     # file
     $mb add cascade -label File -menu $mb.file
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Retrieve}] \
 	-command "NRESApply $varname 0"
     $mb.file add command -label [msgcat::mc {Cancel}] \
@@ -164,15 +164,15 @@ proc PrefsDialogNRES {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Name Server}]
-    lappend dprefs(tabs) [ttk::frame $w.namesvr]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.namesvr] \
+	-text [msgcat::mc {Name Server}]
 
     set f [ttk::labelframe $w.namesvr.params -text [msgcat::mc {Name Server}]]
 
     ttk::label $f.tsvr -text [msgcat::mc {Default}]
     ttk::menubutton $f.svr -textvariable pnres(server) -menu $f.svr.menu
 
-    menu $f.svr.menu
+    ThemeMenu $f.svr.menu
     NSVRServerMenuItems $f.svr.menu
 
     grid $f.tsvr $f.svr -padx 2 -pady 2 -sticky w

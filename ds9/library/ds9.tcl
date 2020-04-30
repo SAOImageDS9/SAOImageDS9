@@ -17,9 +17,6 @@ proc DS9Def {} {
     # For display purposes only
     set ds9(version,display) {8.2b2}
 
-    set ds9(top) .
-    set ds9(mb) .mb
-
     set ds9(visual) {}
     set ds9(depth) 8
     set ds9(FTY_MAXAXES) 10
@@ -146,6 +143,7 @@ proc DS9Def {} {
     set pds9(prec,angle) 8
 
     set pds9(bg) white
+    set pds9(bg,use) 0
     set pds9(nan) white
 
     set pds9(samp) 1
@@ -161,16 +159,23 @@ proc DS9Def {} {
     set pds9(language) locale
     set pds9(language,name) [LanguageToName $pds9(language)]
     set pds9(language,dir) {}
+
+    set pds9(theme) default
 }
 
-# if we have a problem at this point, dump simple message and exit
+# ds9(wm)
 if {[catch {tk windowingsystem} ds9(wm)]} {
     puts stderr "Unable to initialize window system."
     exit
 }
 
-# who are we?
+# ds9(app)
 set ds9(app) [file tail [info nameofexecutable]]
+
+# ds9(top)
+# need for load
+set ds9(top) .
+set ds9(mb) .mb
 
 # pre package load
 switch $ds9(wm) {
@@ -207,11 +212,91 @@ package require DS9
 # post package load
 switch $ds9(wm) {
     x11 {
+	# awthemes
+	package require awthemes
+	package require colorutils
+	package require awdark
+	package require awlight
+	package require awblack
+#	package require awwinxpblue
+	package require awbreeze
+
+	# tkthemes
+	package require ttk::theme::aquativo
+#	package require ttk::theme::black
+	package require ttk::theme::blue
+	package require ttk::theme::clearlooks
+	package require ttk::theme::elegance
+#	package require ttk::theme::itft1
+#	package require ttk::theme::keramik
+#	package require ttk::theme::kroc
+	package require ttk::theme::plastik
+	package require ttk::theme::radiance
+#	package require ttk::theme::smog
+	package require ttk::theme::winxpblue
+
+	# edit theme list
+	set ds9(themes) [lsort [ttk::style theme names]]
+	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) alt]
+	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) classic]
+
+	# colors
+	ttk::style theme use default
+
+	set ds9(bold) cornflowerblue
+	set ds9(foreground) [ttk::style lookup . -foreground]
+	set ds9(background) [ttk::style lookup . -background]
+	set ds9(foreground,active) \
+	    [ttk::style lookup TMenubutton -foreground active]
+	set ds9(background,active) \
+	    [ttk::style lookup TMenubutton -background active]
+	set ds9(foreground,disabled) \
+	    [ttk::style lookup TMenubutton -foreground disabled]
+	set ds9(background,disabled) \
+	    [ttk::style lookup TMenubutton -background disabled]
+	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
+	set ds9(selectbackground) [ttk::style lookup . -selectbackground]
+
+	# fix TEntry/Treeview/TLabel widgets
+	foreach tt [ttk::style theme names] {
+	    ttk::style theme use $tt
+	    set fg [ttk::style lookup . -foreground]
+	    if {$fg == {}} {
+		set fg $ds9(foreground)
+	    }
+	    set bg [ttk::style lookup . -background]
+	    if {$bg == {}} {
+		set bg $ds9(background)
+	    }
+	    ttk::style configure TEntry -padding 1 \
+		-fieldbackground $bg -background $bg -foreground $fg
+	    ttk::style configure Treeview -background $bg -fieldbackground $bg
+	    ttk::style configure TLabel -borderwidth 2 -padding 1
+	}
+	ttk::style theme use default
+
 	# fix ::tk::dialog::file
 	set ::tk::dialog::file::showHiddenVar 0
 	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
+	# colors
+	set ds9(bold) systemControlAccentColor
+	set ds9(foreground) systemTextColor
+	set ds9(background) systemTextBackgroundColor
+	set ds9(foreground,active) systemTextColor
+	set ds9(background,active) systemTextBackgroundColor
+	set ds9(foreground,disabled) systemWindowBackgroundColor4
+	set ds9(background,disabled) systemTextColor
+	set ds9(selectforeground) systemSelectedTextColor
+	set ds9(selectbackground) systemSelectedTextBackgroundColor
+
+	set pap(fg) systemTextColor
+	set pap(bg) systemTextBackgroundColor
+
+	::tk::unsupported::MacWindowStyle style $ds9(top) document \
+	    "closeBox fullZoom collapseBox resizable"
+
 	proc ::tk::mac::ShowPreferences {} {
 	    PrefsDialog
 	}
@@ -265,7 +350,24 @@ switch $ds9(wm) {
 	proc ::tk::mac::LaunchURL {} {
 	}
     }
-    win32 {}
+    win32 {
+	# colors
+	ttk::style theme use xpnative
+
+	set ds9(bold) cornflowerblue
+	set ds9(foreground) [ttk::style lookup . -foreground]
+	set ds9(background) [ttk::style lookup . -background]
+	set ds9(foreground,active) \
+	    [ttk::style lookup TMenubutton -foreground active]
+	set ds9(background,active) \
+	    [ttk::style lookup TMenubutton -background active]
+	set ds9(foreground,disabled) \
+	    [ttk::style lookup TMenubutton -foreground disabled]
+	set ds9(background,disabled) \
+	    [ttk::style lookup TMenubutton -background disabled]
+	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
+	set ds9(selectbackground) [ttk::style lookup . -selectbackground]
+    }
 }
 
 # Define Variables
@@ -335,66 +437,6 @@ VLSSDef
 VODef
 WCSDef
 ZScaleDef
-
-# colors
-# ds9(foreground) color of fg
-# ds9(background) color of bg
-# ds9(gui,fg) color of gui fg text
-# ds9(gui,bg) color of gui bg features
-# ds9(gui,bold) color for gui fg bold text
-
-switch $ds9(wm) {
-    x11 {
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) #d9d9d9
-	set ds9(gui,bold) blue
-
-	# standard widgets
- 	option add {*background} $ds9(gui,bg)
-
-	# ttk widgets
-	ttk::style configure TFrame -background $ds9(gui,bg)
-	ttk::style configure TLabelframe -background $ds9(gui,bg)
-	ttk::style configure TLabelframe.Label -background $ds9(gui,bg)
-	ttk::style configure TLabel -background $ds9(gui,bg)
-	ttk::style configure TEntry -fieldbackground $ds9(gui,bg)
-	ttk::style configure TButton -background $ds9(gui,bg)
-	ttk::style configure TCheckbutton -background $ds9(gui,bg)
-	ttk::style configure TRadiobutton -background $ds9(gui,bg)
-	ttk::style configure TMenubutton -background $ds9(gui,bg)
-	ttk::style configure TScale -background $ds9(gui,bg)
-	ttk::style configure TScrollbar -background $ds9(gui,bg) \
-	    -troughcolor $ds9(gui,bg)
-	ttk::style configure TProgressbar -troughcolor $ds9(gui,bg)
-
-	ttk::style configure TEntry -padding 1
-	ttk::style configure TLabel -borderwidth 2 -padding 1
-    }
-    aqua {
-	set ds9(foreground) systemTextColor
-	set ds9(background) systemTextBackgroundColor
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) systemControlAccentColor
-
-	set pap(fg) $ds9(foreground)
-	set pap(bg) $ds9(background)
-
-	::tk::unsupported::MacWindowStyle style $ds9(top) document \
-	    "closeBox fullZoom collapseBox resizable"
-    }
-    win32 {
-	set ds9(foreground) black
-	set ds9(background) white
-	set ds9(gui,fg) $ds9(foreground)
-	set ds9(gui,bg) $ds9(background)
-	set ds9(gui,bold) blue
-
-	ttk::style theme use xpnative
-    }
-}
 
 # let's start
 set ds9(init) 1
@@ -570,7 +612,6 @@ InitCanvas
 
 # ok, ready to show the window
 wm deiconify $ds9(top)
-update
 
 # Init external File Formats
 # we want this before processing the command line
@@ -630,13 +671,19 @@ after $ds9(msg,timeout) [list ErrorTimer]
 # ok, we're done
 set ds9(init) 0
 
+# everything must be realized
+update
+
 # major kludges
 switch $ds9(wm) {
     x11 {
+	# be sure theme has been set
+	# could be changed in prefs or command line
+	ThemeChange
+
 	# lock down geometry at statup
 	# so unneeded configure events are not generated
 	# a problem with recent versions of linux
-	update
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
     }

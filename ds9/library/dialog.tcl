@@ -7,7 +7,7 @@ package provide DS9 1.0
 proc DialogCreate {top title varname} {
     global ds9
 
-    eval {toplevel $top}
+    toplevel $top
     switch $ds9(wm) {
 	x11 -
 	win32 {}
@@ -51,91 +51,6 @@ proc DialogDismiss {w} {
     destroy $w
 }
 
-# Simple List Box
-
-proc SLBDialog {varname title width} {
-    upvar $varname var
-    global ed
-
-    set w {.slb}
-
-    set ed(ok) 0
-
-    DialogCreate $w $title ed(ok)
-
-    # Lists
-    set f [ttk::frame $w.ed]
-
-    ttk::scrollbar $f.scroll -command "$f.box yview"
-    set ed(listbox) [listbox $f.box \
-			  -yscroll "$f.scroll set" \
-			  -setgrid 1 \
-			  -selectmode single]
-    grid $f.box $f.scroll -sticky news
-    grid rowconfigure $f 0 -weight 1
-    grid columnconfigure $f 0 -weight 1
-
-    # Buttons
-    set f [ttk::frame $w.buttons]
-    ttk::button $f.ok -text [msgcat::mc {OK}] \
-	-command {set ed(ok) 1}
-    ttk::button $f.cancel -text [msgcat::mc {Cancel}] \
-	-command {set ed(ok) 0}
-    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
-
-    # Fini
-    ttk::separator $w.sep -orient horizontal
-    pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.ed -side top -fill both -expand true
-
-    # init
-    for {set i 1} {$i <= $var(count)} {incr i} {
-	$w.ed.box insert end $var($i,item)
-    }
-    $w.ed.box selection set 0
-
-    bind $w <Double-1> {set ed(ok) 1}
-    bind $w <Return> {set ed(ok) 1}
-
-    bind $w <Up> "SLBArrow $ed(listbox) -1"
-    bind $w <Down> "SLBArrow $ed(listbox) 1"
-
-    DialogCenter $w
-    DialogWait $w ed(ok) $w.buttons.ok
-
-    if {$ed(ok)} {
-	set i [expr [$ed(listbox) curselection]+1]
-	if {$i > 0 && $i <= $var(count)} {
-	    set var(item) $var($i,item)
-	    set var(value) $var($i,value)
-	}
-    }
-
-    DialogDismiss $w
-
-    set rr $ed(ok)
-    unset ed
-    return $rr
-}
-
-proc SLBArrow {lb dir} {
-    set which [$lb curselection]
-    if {$which == {}} {
-	set which 0
-    }
-    set end [$lb index end]
-
-    $lb selection clear 0 end
-    incr which $dir
-    if {$which < 0} {
-	set which 0
-    }
-    if {$which >= $end} {
-	set which [expr $end -1]
-    }
-    $lb selection set $which
-}
-
 # Entry Dialog
 
 proc EntryDialog {title message size varname} {
@@ -153,7 +68,7 @@ proc EntryDialog {title message size varname} {
     DialogCreate $w $title ed(ok)
 
     $w configure -menu $mb
-    menu $mb
+    ThemeMenu $mb
 
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     EditMenu $mb ed
@@ -276,7 +191,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	set var(font,slant) $pds9(text,font,slant)
 
 	$var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
-	menu $var(mb).file
+	ThemeMenu $var(mb).file
 	$var(mb).file add command -label "[msgcat::mc {Save}]..." \
 	    -command "SimpleTextSave $varname" -accelerator "${ds9(ctrl)}S"
 	switch $ds9(wm) {
@@ -294,7 +209,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	    -command "SimpleTextDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
 	$var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
-	menu $var(mb).edit
+	ThemeMenu $var(mb).edit
 	$var(mb).edit add command -label [msgcat::mc {Cut}] \
 	    -command "SimpleTextCut $varname" -accelerator "${ds9(ctrl)}X"
 	$var(mb).edit add command -label [msgcat::mc {Copy}] \
@@ -324,6 +239,8 @@ proc SimpleTextDialog {varname title width height action pos txt
 			   -wrap none \
 			   -yscrollcommand [list $var(top).yscroll set] \
 			   -xscrollcommand [list $var(top).xscroll set] \
+			   -fg [ThemeForeground] \
+			   -bg [ThemeBackground] \
 			  ]
 
 	ttk::scrollbar $var(top).yscroll -command [list $var(text) yview] \

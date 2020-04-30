@@ -278,8 +278,8 @@ proc PrefsDialogExamine {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Examine}]
-    lappend dprefs(tabs) [ttk::frame $w.examine]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.examine] \
+	-text [msgcat::mc {Examine}]
 
     # Examine
     set f [ttk::labelframe $w.examine.mode -text [msgcat::mc {Mode}]]

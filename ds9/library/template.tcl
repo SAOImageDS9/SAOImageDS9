@@ -50,7 +50,7 @@ proc CreateFOVMenu {} {
     global marker
 
     set mm $ds9(mb).region.fov
-    menu $mm
+    ThemeMenu $mm
 
     set l0 {}
     set l1 {}
@@ -63,7 +63,7 @@ proc CreateFOVMenu {} {
 	set t2 [lindex $tt 2]
 
 	if {$l0 != $t0} {
-	    menu $mm.$t0 
+	    ThemeMenu $mm.$t0 
 	    $mm add cascade -label [string toupper $t0] -menu $mm.$t0
 	    set l0 $t0
 	    set l1 {}
@@ -72,7 +72,7 @@ proc CreateFOVMenu {} {
 
 	if {$l1 != $t1} {
 	    if {$t2 != {}} {
-		menu $mm.$t0.$t1 
+		ThemeMenu $mm.$t0.$t1 
 		$mm.$t0 add cascade -label [string toupper $t1] \
 		    -menu $mm.$t0.$t1
 		set l1 $t1

@@ -9,6 +9,7 @@
 
 bgcolor	    {return $BGCOLOR_}
 bgcolour    {return $BGCOLOR_}
+has	    {return $HAS_}
 irafalign   {return $IRAFALIGN_}
 nancolor    {return $NANCOLOR_}
 nancolour   {return $NANCOLOR_}

@@ -67,7 +67,7 @@ proc SkyViewDialog {} {
 
     grid $f.pimage x $f.pw x $f.ph $f.ptitle -padx 2 -pady 2 -sticky w
 
-    menu $var(mb).survey
+    ThemeMenu $var(mb).survey
     $var(mb) add cascade -label Survey -menu $var(mb).survey
     $var(mb).survey add cascade -label {Gamma Ray} \
 	-menu $var(mb).survey.gamma
@@ -109,7 +109,7 @@ proc SkyViewDialog {} {
 	-menu $var(mb).survey.goods
 
     set f $var(mb).survey.gamma
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {Fermi 5} \
 	-variable ${varname}(survey) -value {Fermi 5}
     $f add radiobutton -label {Fermi 4} \
@@ -132,7 +132,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {COMPTEL}
 
     set f $var(mb).survey.hard
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {INT GAL 17-35 Flux} \
 	-variable ${varname}(survey) -value {INT GAL 17-35 Flux}
     $f add radiobutton -label {INT GAL 17-60 Flux} \
@@ -153,7 +153,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {RXTE Allsky 8-20keV Flux}
 
     set f $var(mb).survey.bat
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {BAT SNR 14-195} \
 	-variable ${varname}(survey) -value {BAT SNR 14-195}
     $f add radiobutton -label {BAT SNR 14-20} \
@@ -174,7 +174,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {BAT SNR 150-195}
 
     set f $var(mb).survey.soft
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {RASS-Cnt Soft} \
 	-variable ${varname}(survey) -value {RASS-Cnt Soft}
     $f add radiobutton -label {RASS-Cnt Hard} \
@@ -195,7 +195,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {HEAO 1 A-2}
 
     set f $var(mb).survey.diffuse
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {RASS Background 1} \
 	-variable ${varname}(survey) -value {RASS Background 1}
     $f add radiobutton -label {RASS Background 2} \
@@ -212,7 +212,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {RASS Background 7}
 
     set f $var(mb).survey.uv
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {GALEX Near UV} \
 	-variable ${varname}(survey) -value {GALEX Near UV}
     $f add radiobutton -label {GALEX Far UV} \
@@ -231,7 +231,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {EUVE 555 A}
 
     set f $var(mb).survey.dss
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {DSS} \
 	-variable ${varname}(survey) -value {DSS}
     $f add separator
@@ -249,7 +249,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {DSS2 IR}
 
     set f $var(mb).survey.sdss
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {SDSSg} \
 	-variable ${varname}(survey) -value {SDSSg}
     $f add radiobutton -label {SDSSi} \
@@ -273,7 +273,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {SDSSdr7z}
 
     set f $var(mb).survey.other
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {Mellinger Red} \
 	-variable ${varname}(survey) -value {Mellinger Red}
     $f add radiobutton -label {Mellinger Green} \
@@ -296,7 +296,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {SHASSA Sm}
 
     set f $var(mb).survey.iras
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {IRIS 12} \
 	-variable ${varname}(survey) -value {IRIS 12}
     $f add radiobutton -label {IRIS 25} \
@@ -321,7 +321,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {IRAS 100 micron}
 
     set f $var(mb).survey.ir2mass
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {2MASS-J} \
 	-variable ${varname}(survey) -value {2MASS-J}
     $f add radiobutton -label {2MASS-H} \
@@ -330,7 +330,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {2MASS-K}
 
     set f $var(mb).survey.irukidss
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {UKIDSS-Y} \
 	-variable ${varname}(survey) -value {UKIDSS-Y}
     $f add radiobutton -label {UKIDSS-J} \
@@ -341,7 +341,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {UKIDSS-K}
 
     set f $var(mb).survey.irwise
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {WISE 3.4} \
 	-variable ${varname}(survey) -value {WISE 3.4}
     $f add radiobutton -label {WISE 4.6} \
@@ -352,7 +352,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {WISE 22}
 
     set f $var(mb).survey.irakari
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {AKARI N60} \
 	-variable ${varname}(survey) -value {AKARI N60}
     $f add radiobutton -label {AKARI WIDE-S} \
@@ -363,7 +363,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {AKARI N160}
 
     set f $var(mb).survey.planck
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {Planck 857} \
 	-variable ${varname}(survey) -value {Planck 857}
     $f add radiobutton -label {Planck 545} \
@@ -384,7 +384,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {Planck 030}
 
     set f $var(mb).survey.wmap
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {WMAP Ka} \
 	-variable ${varname}(survey) -value {WMAP Ka}
     $f add radiobutton -label {WMAP K} \
@@ -402,7 +402,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value cobezsma
 
     set f $var(mb).survey.radioghz
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {CO} \
 	-variable ${varname}(survey) -value {CO}
     $f add radiobutton -label {GB6 (4850MHZ)} \
@@ -419,7 +419,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {nH}
 
     set f $var(mb).survey.radiomhz
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {SUMSS 843 MHz} \
 	-variable ${varname}(survey) -value {SUMSS 843 MHz}
     $f add radiobutton -label {0408MHz} \
@@ -434,7 +434,7 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {0035MHz}
 
     set f $var(mb).survey.goods
-    menu $f
+    ThemeMenu $f
     $f add radiobutton -label {GOODS: Chandra ACIS HB} \
 	-variable ${varname}(survey) -value {GOODS: Chandra ACIS HB}
     $f add radiobutton -label {GOODS: Chandra ACIS FB} \

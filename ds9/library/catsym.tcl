@@ -80,7 +80,7 @@ proc CATSymDialog {parent} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     # menu
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command "CATSymLoad $varname" -accelerator "${ds9(ctrl)}O"
     $mb.file add command -label "[msgcat::mc {Save}]..." \
@@ -97,7 +97,7 @@ proc CATSymDialog {parent} {
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command "CATSymDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
-    menu $mb.edit
+    ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
 	-command "EntryCut $var(top)" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
@@ -134,15 +134,30 @@ proc CATSymDialog {parent} {
     ttk::button $f.bsize2 -text [msgcat::mc {Edit}] \
 	-command "TBLEditDialog $varname size2 $pvar(catdb)"
     ttk::label $f.tunits -text [msgcat::mc {Units}] 
-    tk_optionMenu $f.units ${varname}(units) \
-	image physical degrees arcmin arcsec
+
+    set m $f.units
+    set mm $m.menu
+    ttk::menubutton $m -textvariable ${varname}(units) -menu $mm
+    ThemeMenu $mm
+    $mm add radiobutton -label [msgcat::mc {Image}] \
+	-variable ${varname}(units) -value image
+    $mm add radiobutton -label [msgcat::mc {Physical}] \
+	-variable ${varname}(units) -value physical
+    $mm add separator
+    $mm add radiobutton -label [msgcat::mc {Degrees}] \
+	-variable ${varname}(units) -value degrees
+    $mm add radiobutton -label [msgcat::mc {ArcMin}] \
+	-variable ${varname}(units) -value arcmin
+    $mm add radiobutton -label [msgcat::mc {ArcSec}] \
+	    -variable ${varname}(units) -value arcsec
+
     $f.units.menu configure
     ttk::label $f.tangle -text [msgcat::mc {Angle}] 
     ttk::entry $f.angle -textvariable ${varname}(angle) -width 40
     ttk::button $f.bangle -text [msgcat::mc {Edit}] \
 	-command "TBLEditDialog $varname angle $pvar(catdb)"
 
-    menu $f.shape.menu
+    ThemeMenu $f.shape.menu
     $f.shape.menu add radiobutton  -label [msgcat::mc {Circle}] \
 	-variable ${varname}(shape) -value {circle}
     $f.shape.menu add radiobutton  -label [msgcat::mc {Ellipse}] \
@@ -156,7 +171,7 @@ proc CATSymDialog {parent} {
     $f.shape.menu add cascade -label [msgcat::mc {Point}] \
 	-menu $f.shape.menu.point
 
-    menu $f.shape.menu.point
+    ThemeMenu $f.shape.menu.point
     $f.shape.menu.point add radiobutton -label [msgcat::mc {Circle}] \
 	-variable ${varname}(shape) -value {circle point}
     $f.shape.menu.point add radiobutton -label [msgcat::mc {Box}] \
@@ -207,8 +222,14 @@ proc CATSymDialog {parent} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list CATSymSelectCB $varname] \
-		      -fg $ds9(gui,fg) -bg $ds9(gui,bg) \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
 		 ]
+
+    $var(tbl) tag configure sel \
+	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+    $var(tbl) tag configure title \
+	-fg [ThemeSelectforeground] -bg [ThemeForegroundDisabled]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal

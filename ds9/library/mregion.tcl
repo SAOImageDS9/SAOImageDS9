@@ -10,7 +10,7 @@ proc RegionMainMenu {} {
     global ds9
     global marker
 
-    menu $ds9(mb).region
+    ThemeMenu $ds9(mb).region
     $ds9(mb).region add command -label "[msgcat::mc {Get Information}]..." \
 	-command MarkerInfo
     $ds9(mb).region add separator
@@ -71,7 +71,7 @@ proc RegionMainMenu {} {
     $ds9(mb).region add cascade -label [msgcat::mc {Region Parameters}] \
 	-menu $ds9(mb).region.params
 
-    menu $ds9(mb).region.shape
+    ThemeMenu $ds9(mb).region.shape
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Circle}] \
 	-variable marker(shape) -value circle
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Ellipse}] \
@@ -116,7 +116,7 @@ proc RegionMainMenu {} {
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Box Panda}] \
 	-variable marker(shape) -value bpanda
 
-    menu $ds9(mb).region.shape.point
+    ThemeMenu $ds9(mb).region.shape.point
     $ds9(mb).region.shape.point add radiobutton -label [msgcat::mc {Circle}] \
 	-variable marker(shape) -value {circle point}
     $ds9(mb).region.shape.point add radiobutton -label [msgcat::mc {Box}] \
@@ -132,7 +132,7 @@ proc RegionMainMenu {} {
     $ds9(mb).region.shape.point add radiobutton -label [msgcat::mc {BoxCircle}]\
 	-variable marker(shape) -value {boxcircle point}
 
-    menu $ds9(mb).region.composite
+    ThemeMenu $ds9(mb).region.composite
     $ds9(mb).region.composite add command -label [msgcat::mc {Create}] \
 	-command CompositeCreate
     $ds9(mb).region.composite add command -label [msgcat::mc {Dissolve}] \
@@ -140,7 +140,7 @@ proc RegionMainMenu {} {
 
     CreateFOVMenu
 
-    menu $ds9(mb).region.template
+    ThemeMenu $ds9(mb).region.template
     $ds9(mb).region.template add command -label "[msgcat::mc {Open}]..." \
 	-command OpenTemplateMarker
     $ds9(mb).region.template add command -label "[msgcat::mc {Save}]..." \
@@ -150,7 +150,7 @@ proc RegionMainMenu {} {
     WidthDashMenu $ds9(mb).region.width marker width dash \
 	MarkerWidth [list MarkerProp dash]
 
-    menu $ds9(mb).region.properties
+    ThemeMenu $ds9(mb).region.properties
     $ds9(mb).region.properties add checkbutton \
 	-label [msgcat::mc {Fixed in Size}] \
 	-variable marker(fixed) -command {MarkerProp fixed}
@@ -185,7 +185,7 @@ proc RegionMainMenu {} {
     FontMenu $ds9(mb).region.font marker font font,size font,weight \
 	font,slant MarkerFont
 
-    menu $ds9(mb).region.params
+    ThemeMenu $ds9(mb).region.params
     $ds9(mb).region.params add checkbutton \
 	-label [msgcat::mc {Show}] \
 	-variable marker(show) -command MarkerShow
@@ -221,7 +221,7 @@ proc PrefsDialogRegionMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2 -sticky w
 
     set m $f.menu.menu
-    menu $m
+    ThemeMenu $m
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add separator
     $m add cascade -label [msgcat::mc {Color}] -menu $m.color
@@ -231,7 +231,7 @@ proc PrefsDialogRegionMenu {w} {
     $m add separator
     $m add cascade -label [msgcat::mc {Region Parameters}] -menu $m.params
 
-    menu $m.shape
+    ThemeMenu $m.shape
     $m.shape add radiobutton -label [msgcat::mc {Circle}] \
 	-variable pmarker(shape) -value circle
     $m.shape add radiobutton -label [msgcat::mc {Ellipse}] \
@@ -274,7 +274,7 @@ proc PrefsDialogRegionMenu {w} {
     $m.shape add radiobutton -label [msgcat::mc {Box Panda}] \
 	-variable pmarker(shape) -value bpanda
 
-    menu $m.shape.point
+    ThemeMenu $m.shape.point
     $m.shape.point add radiobutton -label [msgcat::mc {Circle}] \
 	-variable pmarker(shape) -value {circle point}
     $m.shape.point add radiobutton -label [msgcat::mc {Box}] \
@@ -293,7 +293,7 @@ proc PrefsDialogRegionMenu {w} {
     ColorMenu $m.color pmarker color {}
     WidthDashMenu $m.width pmarker width dash {} {}
 
-    menu $m.properties
+    ThemeMenu $m.properties
     $m.properties add checkbutton -label [msgcat::mc {Fixed in Size}] \
 	-variable pmarker(fixed)
     $m.properties add separator
@@ -318,7 +318,7 @@ proc PrefsDialogRegionMenu {w} {
 
     FontMenu $m.font pmarker font font,size font,weight font,slant {}
 
-    menu $m.params
+    ThemeMenu $m.params
     $m.params add checkbutton -label [msgcat::mc {Show}] \
 	-variable pmarker(show)
     $m.params add checkbutton -label [msgcat::mc {Show Text}] \
@@ -335,8 +335,8 @@ proc PrefsDialogRegion {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Region}]
-    lappend dprefs(tabs) [ttk::frame $w.region]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.region] \
+	-text [msgcat::mc {Region}]
 
     # Format
     set f [ttk::labelframe $w.region.format -text [msgcat::mc {Default Format}]]
@@ -346,7 +346,7 @@ proc PrefsDialogRegion {} {
 
     grid $f.format -padx 2 -pady 2 -sticky w
 
-    menu $f.format.menu
+    ThemeMenu $f.format.menu
     $f.format.menu add radiobutton -label {DS9/Funtools} \
 	-variable pmarker(format) -value ds9
     $f.format.menu add radiobutton -label {XML} \
@@ -371,7 +371,7 @@ proc PrefsDialogRegion {} {
 
     grid $f.dformat -padx 2 -pady 2 -sticky w
 
-    menu $f.dformat.menu
+    ThemeMenu $f.dformat.menu
     $f.dformat.menu add radiobutton -label {Degrees} \
 	-variable pmarker(dformat) -value degrees
     $f.dformat.menu add radiobutton -label {ArcMin} \
@@ -389,7 +389,7 @@ proc PrefsDialogRegion {} {
 
     grid $f.title $f.epsilon -padx 2 -pady 2 -sticky w
 
-    menu $f.epsilon.menu
+    ThemeMenu $f.epsilon.menu
     $f.epsilon.menu add radiobutton -label {2} -variable pmarker(epsilon) \
 	-value 2 -command MarkerEpsilon
     $f.epsilon.menu add radiobutton -label {3} -variable pmarker(epsilon) \
@@ -493,8 +493,8 @@ proc PrefsDialogAnnulus {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Annulus}]
-    lappend dprefs(tabs) [ttk::frame $w.annulus]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.annulus] \
+	-text [msgcat::mc {Annulus}]
 
     # Annulus
     set f [ttk::labelframe $w.annulus.annulus -text [msgcat::mc {Annulus}]]
@@ -570,8 +570,8 @@ proc PrefsDialogPanda {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Panda}]
-    lappend dprefs(tabs) [ttk::frame $w.panda]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.panda] \
+	-text [msgcat::mc {Panda}]
 
     # Panda
     set f [ttk::labelframe $w.panda.panda -text [msgcat::mc {Panda}]]
@@ -899,7 +899,7 @@ proc PrefsDialogButtonbarRegion {f} {
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
     
     set m $f.menu
-    menu $m
+    ThemeMenu $m
     $m add checkbutton -label "[msgcat::mc {Get Information}]..." \
 	-variable pbuttons(region,info) \
 	-command {UpdateButtons buttons(region)}
@@ -959,7 +959,7 @@ proc PrefsDialogButtonbarRegion {f} {
     $m add separator
     $m add cascade -label [msgcat::mc {Region Parameters}] -menu $m.params
 
-    menu $m.shape
+    ThemeMenu $m.shape
     $m.shape add checkbutton -label [msgcat::mc {Circle}] \
 	-variable pbuttons(region,circle) \
 	-command {UpdateButtons buttons(region)}
@@ -1019,7 +1019,7 @@ proc PrefsDialogButtonbarRegion {f} {
 	-variable pbuttons(region,bpanda) \
 	-command {UpdateButtons buttons(region)}
 
-    menu $m.composite
+    ThemeMenu $m.composite
     $m.composite add checkbutton -label [msgcat::mc {Create}] \
 	-variable pbuttons(region,create) \
 	-command {UpdateButtons buttons(region)}
@@ -1027,7 +1027,7 @@ proc PrefsDialogButtonbarRegion {f} {
 	-variable pbuttons(region,dissolve) \
 	-command {UpdateButtons buttons(region)}
 
-    menu $m.template
+    ThemeMenu $m.template
     $m.template add checkbutton -label "[msgcat::mc {Open}]..." \
 	-variable pbuttons(region,loadtemplate) \
 	-command {UpdateButtons buttons(region)}
@@ -1035,7 +1035,7 @@ proc PrefsDialogButtonbarRegion {f} {
 	-variable pbuttons(region,savetemplate) \
 	-command {UpdateButtons buttons(region)}
 
-    menu $m.params
+    ThemeMenu $m.params
     $m.params add checkbutton -label [msgcat::mc {Show}] \
 	-variable pbuttons(region,show) \
 	-command {UpdateButtons buttons(region)}

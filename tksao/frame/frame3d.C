@@ -828,7 +828,8 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
   double hh = keyContext->fits->high();
   double diff = hh - ll;
 
-  XColor* bgColor = getXColor(bgColourName);
+  XColor* bgColor = useBgColor? getXColor(bgColourName) :
+    ((WidgetOptions*)options)->bgColor;
 
   unsigned char* dest = img;
   float* src = zbuf;

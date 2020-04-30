@@ -112,7 +112,7 @@ proc MaskDialog {} {
     $mb add cascade -label [msgcat::mc {Align}] -menu $mb.align
     $mb add cascade -label [msgcat::mc {Blend}] -menu $mb.blend
 
-    menu $mb.file
+    ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
 	-command [list OpenDialog fits mask] -accelerator "${ds9(ctrl)}O"
     $mb.file add cascade -label [msgcat::mc {Open as}] \
@@ -127,7 +127,7 @@ proc MaskDialog {} {
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command MaskDestroyDialog -accelerator "${ds9(ctrl)}W"
 
-    menu $mb.file.open
+    ThemeMenu $mb.file.open
     $mb.file.open add command -label "[msgcat::mc {Mosaic WCS}]..." \
 	-command [list OpenDialog mosaicimagewcs mask]
     $mb.file.open add command -label "[msgcat::mc {Mosaic WCS Segment}]..." \
@@ -139,7 +139,7 @@ proc MaskDialog {} {
     $mb.file.open add command -label "[msgcat::mc {Mosaic WFPC2}]..." \
 	-command [list OpenDialog mosaicimagewfpc2 mask]
 
-    menu $mb.file.import
+    ThemeMenu $mb.file.import
     $mb.file.import add command -label "[msgcat::mc {Array}]..." \
 	-command [list ImportDialog array mask]
     $mb.file.import add command -label {NRRD} \
@@ -149,7 +149,7 @@ proc MaskDialog {} {
 
     CoordMenu $mb.align mask system 1 {} {} MaskSystem
 
-    menu $mb.blend
+    ThemeMenu $mb.blend
     $mb.blend add radiobutton -label [msgcat::mc {Source}] \
 	-variable mask(blend) -value source -command MaskBlend
     $mb.blend add radiobutton -label [msgcat::mc {Screen}] \
@@ -274,7 +274,7 @@ proc MaskParamsDialog {} {
     ttk::label $f.marktitle -text [msgcat::mc {Block Pixel}]
     set mb $f.markbutton.menu
     ttk::menubutton $f.markbutton -textvariable ed2(mark) -menu $mb
-    menu $mb
+    ThemeMenu $mb
     $mb add radiobutton -label [msgcat::mc {Zero}] \
 	-variable ed2(mark) -value zero
     $mb add radiobutton -label [msgcat::mc {Non-Zero}] \

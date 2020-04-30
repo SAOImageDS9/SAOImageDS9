@@ -27,7 +27,7 @@ proc MarkerBasePandaDialog {varname} {
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
-    menu $var(mb).analysis
+    ThemeMenu $var(mb).analysis
 
     MarkerAnalysisStatsDialog $varname
     MarkerAnalysisPandaDialog $varname
@@ -62,7 +62,9 @@ proc MarkerBasePandaDialog {varname} {
 			    -wrap none \
 			    -font [font actual TkDefaultFont] \
 			    -yscrollcommand [list $f.yscroll set] \
-			    ]
+			    -fg [ThemeForeground] \
+			    -bg [ThemeBackground] \
+			   ]
     ttk::scrollbar $f.yscroll -command [list $var(annulitxt) yview] \
 	-orient vertical
 
@@ -80,12 +82,14 @@ proc MarkerBasePandaDialog {varname} {
 	       -padding 2]
 
     set var(angtxt) [text $f.txt \
-			    -height 15 \
-			    -width 15 \
-			    -wrap none \
-			    -font [font actual TkDefaultFont] \
-			    -yscrollcommand [list $f.yscroll set] \
-			    ]
+			 -height 15 \
+			 -width 15 \
+			 -wrap none \
+			 -font [font actual TkDefaultFont] \
+			 -yscrollcommand [list $f.yscroll set] \
+			 -fg [ThemeForeground] \
+			 -bg [ThemeBackground] \
+			]
     ttk::scrollbar $f.yscroll -command [list $var(angtxt) yview] \
 	-orient vertical
 

@@ -520,7 +520,7 @@ proc CATAnalysisMenu {mb} {
 		-command [list CATDialog $ww $ss $cc $ll apply]
 	} else {
 	    set nn "$ss"
-	    menu $mb.$nn
+	    ThemeMenu $mb.$nn
 	    $mb add cascade -label $ww -menu $mb.$nn
 	}
     }
@@ -534,7 +534,7 @@ proc CATServerMenu {varname} {
 
     $var(mb) add cascade -label [msgcat::mc {Catalog Server}] \
 	-menu $var(mb).server
-    menu $var(mb).server
+    ThemeMenu $var(mb).server
 
     set ll [llength $icat(server,menu)]
     for {set ii 0} {$ii<$ll} {incr ii} {
@@ -560,7 +560,8 @@ proc CATColsMenu {varname} {
     set m $var(ramenu).menu
     catch {destroy $m}
 
-    menu $m -tearoff 0
+    ThemeMenu $m
+    $m configure -tearoff 0
     if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
@@ -578,7 +579,8 @@ proc CATColsMenu {varname} {
     set m $var(decmenu).menu
     catch {destroy $m}
 
-    menu $m -tearoff 0
+    ThemeMenu $m
+    $m configure -tearoff 0
     if {[TBLValidDB $var(catdb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(catdb)] {
@@ -876,8 +878,8 @@ proc PrefsDialogCatalog {} {
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Catalogs}]
-    lappend dprefs(tabs) [ttk::frame $w.cat]
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.cat] \
+	-text [msgcat::mc {Catalogs}]
 
     # Catalog
     set f [ttk::labelframe $w.cat.param -text [msgcat::mc {Catalogs}]]
@@ -900,7 +902,7 @@ proc PrefsDialogCatalog {} {
     FontMenuButton $f.font pcat sym,font sym,font,size \
 	sym,font,weight, sym,font,slant {}
 
-    menu $f.svr.menu
+    ThemeMenu $f.svr.menu
 
     set ll [llength $icat(server,menu)]
     for {set ii 0} {$ii<$ll} {incr ii} {
@@ -909,7 +911,7 @@ proc PrefsDialogCatalog {} {
 	-variable pcat(server) -value [lindex $item 1]
     }
 
-    menu $f.shape.menu
+    ThemeMenu $f.shape.menu
     $f.shape.menu add radiobutton -label [msgcat::mc {Circle}] \
 	-variable pcat(sym,shape) -value circle
     $f.shape.menu add radiobutton -label [msgcat::mc {Ellipse}] \
@@ -921,7 +923,7 @@ proc PrefsDialogCatalog {} {
     $f.shape.menu add cascade -label [msgcat::mc {Point}] \
 	-menu $f.shape.menu.point
 
-    menu $f.shape.menu.point
+    ThemeMenu $f.shape.menu.point
     $f.shape.menu.point add radiobutton -label [msgcat::mc {Circle}] \
 	-variable pcat(sym,shape) -value {circle point}
     $f.shape.menu.point add radiobutton -label [msgcat::mc {Box}] \

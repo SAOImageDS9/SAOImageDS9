@@ -410,9 +410,19 @@ proc Toplevel {w mb style title proc} {
     global ds9
 
     toplevel $w
+
+    wm title $w $title
+    wm iconname $w $title
+    wm group $w $ds9(top)
+    wm protocol $w WM_DELETE_WINDOW $proc
+
+    # we need this first, before the configure command
+    ThemeMenu $mb
+
     switch $ds9(wm) {
 	x11 {}
 	aqua {
+	    AppleMenu $mb
 	    switch $style {
 		6 {::tk::unsupported::MacWindowStyle style $w document "closeBox collapseBox"}
 		7 {::tk::unsupported::MacWindowStyle style $w document "closeBox fullZoom collapseBox resizable"}
@@ -421,14 +431,6 @@ proc Toplevel {w mb style title proc} {
 	win32 {}
     }
 
-    wm title $w $title
-    wm iconname $w $title
-    wm group $w $ds9(top)
-    wm protocol $w WM_DELETE_WINDOW $proc
-
-    # we need this first, before the configure command
-    menu $mb
-    AppleMenu $mb
     $w configure -menu $mb
 
     global pds9
@@ -912,18 +914,13 @@ proc OpenConsole {} {
 	set ::tkcon::OPT(exec) {}
 	set ::tkcon::OPT(font) [font actual TkFixedFont]
 	
-	set ::tkcon::COLOR(bg) $ds9(gui,bg)
-#	set ::tkcon::COLOR(blink) $ds9(gui,fg)
-	set ::tkcon::COLOR(cursor) $ds9(gui,fg)
-#	set ::tkcon::COLOR(disabled) $ds9(gui,bg)
-#	set ::tkcon::COLOR(proc) $ds9(gui,bg)
-#	set ::tkcon::COLOR(var) $ds9(gui,bg)
-	set ::tkcon::COLOR(prompt) $ds9(gui,fg)
-	set ::tkcon::COLOR(stdin) $ds9(gui,fg)
-	set ::tkcon::COLOR(stdout) $ds9(gui,fg)
-	set ::tkcon::COLOR(stderr) $ds9(gui,fg)
-
 	tkcon::Init
+
+	switch $ds9(wm) {
+	    x11 {bind $::tkcon::PRIV(curtab) <<ThemeChanged>> {break}}
+	    aqua -
+	    win32 {}
+	}
     }
 }
 
@@ -1074,12 +1071,24 @@ proc SetDefaultTextFont {which} {
     }
 }
 
+proc ThemeChange {} {
+    global ds9
+    global pds9
+
+    switch $ds9(wm) {
+	x11 {ttk::style theme use $pds9(theme)}
+	aqua -
+	win32 {}
+    }
+}
+
 proc PrefsBgColor {} {
     global ds9
     global pds9
 
     foreach ff $ds9(frames) {
 	$ff bg color $pds9(bg)
+	$ff bg color $pds9(bg,use)
     }
 }
 
@@ -1404,6 +1413,7 @@ proc DS9Backup {ch which} {
     puts $ch "$which precision $pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,len,linear) $pds9(prec,len,deg) $pds9(prec,len,arcmin) $pds9(prec,len,arcsec) $pds9(prec,angle)"
 
     puts $ch "$which bg color $pds9(bg)"
+    puts $ch "$which bg color $pds9(bg,use)"
     puts $ch "$which nan color $pds9(nan)"
 }
 
@@ -1729,12 +1739,16 @@ proc ProcessTclCmd {varname iname buf fn} {
 proc ProcessThemeCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
+    global pds9
+    set pds9(theme) [lindex $var $i]
+    ThemeChange
 }
 
 # backward compatibility
 proc ProcessSendThemeCmd {proc id param {sock {}} {fn {}}} {
     global pds9
-    $proc $id "native\n"
+    $proc $id "$pds9(theme)\n"
 }
 
 proc ProcessSendVersionCmd {proc id param {sock {}} {fn {}}} {

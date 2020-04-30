@@ -267,7 +267,7 @@ proc MarkerBaseFileMenu {varname} {
 
     global ds9
     
-    menu $var(mb).file
+    ThemeMenu $var(mb).file
     $var(mb).file add command -label [msgcat::mc {Apply}] \
 	-command "$var(proc,apply) $varname"
     $var(mb).file add separator
@@ -281,7 +281,7 @@ proc MarkerBasePropertyMenu {varname} {
     upvar #0 $varname var
     global $varname
 
-    menu $var(mb).properties
+    ThemeMenu $var(mb).properties
     $var(mb).properties add checkbutton -label [msgcat::mc {Fixed in Size}] \
 	-variable ${varname}(fixed) \
 	-command "MarkerBaseProperty $varname fixed"

@@ -1176,7 +1176,8 @@ void Frame3dBase::ximageToPixmapMagnifier()
   if (!basePixmap || !baseXImage || !magnifierPixmap || !magnifierXImage)
     return;
 
-  XColor* bgColor = getXColor(bgColourName);
+  XColor* bgColor = useBgColor? getXColor(bgColourName) :
+    ((WidgetOptions*)options)->bgColor;
   char bgTrueColor[4];   // color encoded
   encodeTrueColor(bgColor, bgTrueColor);
 

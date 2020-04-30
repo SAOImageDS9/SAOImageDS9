@@ -218,7 +218,8 @@ unsigned char* FrameRGB::fillImage(int width, int height,
   }
 
   // now fill in bg
-  XColor* bgColor = getXColor(bgColourName);
+  XColor* bgColor = useBgColor? getXColor(bgColourName) :
+    ((WidgetOptions*)options)->bgColor;
   XColor* nanColor = getXColor(nanColourName);
   {
     unsigned char* dest = img;
@@ -693,7 +694,8 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
   }
 
   // set remainder to bg
-  XColor* bgColor = getXColor(bgColourName);
+  XColor* bgColor = useBgColor? getXColor(bgColourName) :
+    ((WidgetOptions*)options)->bgColor;
   XColor* nanColor = getXColor(nanColourName);
   {
     unsigned char* dest = img;

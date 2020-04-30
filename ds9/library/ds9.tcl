@@ -250,6 +250,10 @@ switch $ds9(wm) {
 	    [ttk::style lookup TMenubutton -foreground active]
 	set ds9(background,active) \
 	    [ttk::style lookup TMenubutton -background active]
+	set ds9(foreground,disabled) \
+	    [ttk::style lookup TMenubutton -foreground disabled]
+	set ds9(background,disabled) \
+	    [ttk::style lookup TMenubutton -background disabled]
 	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
 	set ds9(selectbackground) [ttk::style lookup . -selectbackground]
 
@@ -282,6 +286,8 @@ switch $ds9(wm) {
 	set ds9(background) systemTextBackgroundColor
 	set ds9(foreground,active) systemTextColor
 	set ds9(background,active) systemTextBackgroundColor
+	set ds9(foreground,disabled) systemTextColor
+	set ds9(background,disabled) systemTextBackgroundColor
 	set ds9(selectforeground) systemTextColor
 	set ds9(selectbackground) systemTextBackgroundColor
 
@@ -355,6 +361,10 @@ switch $ds9(wm) {
 	    [ttk::style lookup TMenubutton -foreground active]
 	set ds9(background,active) \
 	    [ttk::style lookup TMenubutton -background active]
+	set ds9(foreground,disabled) \
+	    [ttk::style lookup TMenubutton -foreground disabled]
+	set ds9(background,disabled) \
+	    [ttk::style lookup TMenubutton -background disabled]
 	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
 	set ds9(selectbackground) [ttk::style lookup . -selectbackground]
     }

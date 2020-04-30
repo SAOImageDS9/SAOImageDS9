@@ -193,6 +193,8 @@ proc SIADialog {varname title url opts action} {
 
     $var(tbl) tag configure sel \
 	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+    $var(tbl) tag configure title \
+	-fg [ThemeSelectforeground] -bg [ThemeForegroundDisabled]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal

@@ -105,7 +105,10 @@ proc ThemeConfigTable {w} {
     $w configure -fg [ThemeForeground]
     $w configure -bg [ThemeBackground]
 
-    $w tag configure sel -fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+    $w tag configure sel \
+	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+    $w tag configure title \
+	-fg [ThemeSelectforeground] -bg [ThemeForegroundDisabled]
 }
 
 proc ThemeConfig {w} {
@@ -144,6 +147,40 @@ proc ThemeBackground {} {
 	}
 	aqua -
 	win32 {return $ds9(background)}
+    }
+}
+
+proc ThemeForegroundDisabled {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set fg [ttk::style lookup TMenubutton -foreground disabled]
+	    if {$fg != {}} {
+		return $fg
+	    } else {
+		return $ds9(foreground,disabled)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(foreground,disabled)}
+    }
+}
+
+proc ThemeBackgroundDisabled {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set bg [ttk::style lookup TMenubutton -background disabled]
+	    if {$bg != {}} {
+		return $bg
+	    } else {
+		return $ds9(background,disabled)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(background,disabled)}
     }
 }
 

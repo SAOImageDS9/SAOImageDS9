@@ -235,6 +235,9 @@ switch $ds9(wm) {
 #	package require ttk::theme::smog
 	package require ttk::theme::winxpblue
 
+	# scidthemes
+	package require ttk::theme::scidthemes
+
 	# edit theme list
 	set ds9(themes) [lsort [ttk::style theme names]]
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) alt]

@@ -54,6 +54,11 @@ $(LIBDIR)/awthemes: $(prefix)/awthemes
 $(LIBDIR)/ttkthemes: $(prefix)/ttkthemes/ttkthemes/themes
 	cp -prf $? "$@"
 
+#--------------------------scidthemes
+
+$(LIBDIR)/scidthemes: $(prefix)/scidthemes
+	cp -prf $? "$@"
+
 #--------------------------tls
 
 $(LIBDIR)/tls	: $(prefix)/tls/tls.tcl

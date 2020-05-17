@@ -224,7 +224,7 @@ switch $ds9(wm) {
 	# tkthemes
 	package require ttk::theme::aquativo
 #	package require ttk::theme::black
-	package require ttk::theme::blue
+#	package require ttk::theme::blue
 	package require ttk::theme::clearlooks
 	package require ttk::theme::elegance
 #	package require ttk::theme::itft1
@@ -233,7 +233,7 @@ switch $ds9(wm) {
 	package require ttk::theme::plastik
 	package require ttk::theme::radiance
 #	package require ttk::theme::smog
-	package require ttk::theme::winxpblue
+#	package require ttk::theme::winxpblue
 
 	# scidthemes
 	package require ttk::theme::scidthemes
@@ -260,20 +260,9 @@ switch $ds9(wm) {
 	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
 	set ds9(selectbackground) [ttk::style lookup . -selectbackground]
 
-	# fix TEntry/Treeview/TLabel widgets
+	# fix TLabel widgets
 	foreach tt [ttk::style theme names] {
 	    ttk::style theme use $tt
-	    set fg [ttk::style lookup . -foreground]
-	    if {$fg == {}} {
-		set fg $ds9(foreground)
-	    }
-	    set bg [ttk::style lookup . -background]
-	    if {$bg == {}} {
-		set bg $ds9(background)
-	    }
-	    ttk::style configure TEntry -padding 1 \
-		-fieldbackground $bg -background $bg -foreground $fg
-	    ttk::style configure Treeview -background $bg -fieldbackground $bg
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
 	ttk::style theme use default

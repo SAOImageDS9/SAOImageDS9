@@ -84,6 +84,14 @@ proc ThemeConfigMenu {w} {
 	$w configure -bg $ds9(background)
     }
 
+    # selectcolor
+    set fg [ttk::style lookup . -foreground]
+    if {$fg != {}} {
+	$w configure -selectcolor $fg
+    } else {
+	$w configure -selectcolor $ds9(foreground)
+    }
+
     # active foreground
     set fg [ttk::style lookup TMenubutton -foreground active]
     if {$fg != {}} {

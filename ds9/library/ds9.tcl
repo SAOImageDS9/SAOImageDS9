@@ -679,7 +679,8 @@ switch $ds9(wm) {
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
     }
-    aqua {}
+    aqua {
+    }
     win32 {
 	# jump start keyevents for windows
 	event generate $ds9(canvas) <Tab> -x 0 -y 0

@@ -704,12 +704,12 @@ proc TileOne {} {
     set xx 0
     set yy 0
 
-    foreach f $ds9(active) {
-	$f configure -x $xx -y $yy -width $ww -height $hh -anchor nw
+    foreach ff $ds9(active) {
+	$ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
     }
 
     # only show the current frame
-    $current(frame) show
+    # $current(frame) show
     FrameToFront
 }
 

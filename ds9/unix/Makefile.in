@@ -219,6 +219,21 @@ $(LIBDIR)/tk$(TCL_VERSION) :
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
 
+#--------------------------awthemes
+
+$(LIBDIR)/awthemes: $(prefix)/awthemes
+	cp -prf $? "$@"
+
+#--------------------------ttkthemes
+
+$(LIBDIR)/ttkthemes: $(prefix)/ttkthemes/ttkthemes/themes
+	cp -prf $? "$@"
+
+#--------------------------scidthemes
+
+$(LIBDIR)/scidthemes: $(prefix)/scidthemes
+	cp -prf $? "$@"
+
 #--------------------------clean
 
 .PHONY	: clean

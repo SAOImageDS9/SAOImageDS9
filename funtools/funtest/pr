@@ -1,8 +1,0 @@
-/* comment */
-# another comment
-if( cur->x > cur->y )
-  fprintf(stdout, "X: %d %d\n", cur->x, cur->y);
-else if( cur->x == cur->y )
-  fprintf(stdout, "E: %d\n", cur->x);
-else
-  fprintf(stdout, "Y: %d %d\n", cur->x, cur->y);

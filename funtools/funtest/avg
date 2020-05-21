@@ -1,2 +1,0 @@
-cur->avg:E=(cur->x+cur->y)/2.0;fprintf(stdout,"%d %d %d %d %f %f\\n",cur->x,cur->y,cur->pha,cur->pi,cur->avg,cur->time);
-

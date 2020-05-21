@@ -1245,11 +1245,13 @@ void Frame3dBase::ximageToPixmapMagnifier()
 
 void Frame3dBase::macosxLine(Vector& ss, Vector& tt, int dd)
 {
+  /*
   if (dd)
     macosxDash(dlist,2);
   else
     macosxDash(NULL,0);
   macosxDrawLine(ss,tt);
+  */
 }
 
 void Frame3dBase::macosxGraphics()
@@ -1267,6 +1269,7 @@ void Frame3dBase::macosxGraphics()
 
 void Frame3dBase::macosxBorder()
 {
+  /*
   Vector3d vv[8];
   int dd[12];
   calcBorder(Coord::WIDGET, keyContext->secMode(), vv, dd);
@@ -1295,10 +1298,12 @@ void Frame3dBase::macosxBorder()
   macosxLine(uu[1],uu[5],dd[9]);
   macosxLine(uu[2],uu[6],dd[10]);
   macosxLine(uu[3],uu[7],dd[11]);
+  */
 }
 
 void Frame3dBase::macosxCompass()
 {
+  /*
   Matrix3d& mm = keyContext->fits->dataToWidget3d;
 
   double ss = 100./(zoom_[0]+zoom_[1]);
@@ -1319,10 +1324,12 @@ void Frame3dBase::macosxCompass()
   macosxLine(o,x,0);
   macosxLine(o,y,0);
   macosxLine(o,z,0);
+  */
 }
 
 void Frame3dBase::macosxHighlite()
 {
+  /*
   Vector vv[4];
   int rr[4];
   calcHighlite(Coord::CANVAS,vv,rr);
@@ -1334,6 +1341,7 @@ void Frame3dBase::macosxHighlite()
   macosxLine(vv[1],vv[2],rr[1]);
   macosxLine(vv[2],vv[3],rr[2]);
   macosxLine(vv[3],vv[0],rr[3]);
+  */
 }
 #endif
 

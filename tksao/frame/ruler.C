@@ -184,6 +184,7 @@ void Ruler::renderPSGC(PSColorSpace mode)
 
 void Ruler::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
@@ -226,12 +227,15 @@ void Ruler::renderMACOSX()
 	delete buf;
     }
   }
+  */
 }
 
 void Ruler::renderMACOSXGC()
 {
+  /*
   macosxColor(parent->getXColor(colorName));
   renderMACOSXLineNoDash();
+  */
 }
 #endif
 

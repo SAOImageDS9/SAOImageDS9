@@ -89,10 +89,12 @@ void Circle::renderPSDraw()
 
 void Circle::renderMACOSXDraw()
 {
+  /*
   if (fill_)
     macosxFill();
   else
     macosxStroke();
+  */
 }
 #endif
 

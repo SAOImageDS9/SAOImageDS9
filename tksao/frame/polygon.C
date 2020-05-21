@@ -101,6 +101,7 @@ void Polygon::renderPS(PSColorSpace mode)
 
 void Polygon::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   int cnt = vertex.count();
@@ -117,6 +118,7 @@ void Polygon::renderMACOSX()
     macosxDrawLines(vv,cnt);
 
   delete [] vv;
+  */
 }
 #endif
 

@@ -590,6 +590,7 @@ void BaseEllipse::renderMACOSX() {
 
 void BaseEllipse::renderMACOSXCircle()
 {
+  /*
   renderMACOSXGC();
 
   Vector cc = parent->mapFromRef(center,Coord::CANVAS);
@@ -616,15 +617,17 @@ void BaseEllipse::renderMACOSXCircle()
 
     renderMACOSXDraw();
   }
+  */
 }
 
 void BaseEllipse::renderMACOSXDraw()
 {
-  macosxStroke();
+  //  macosxStroke();
 }
 
 void BaseEllipse::renderMACOSXEllipse()
 {
+  /*
   renderMACOSXGC();
 
   double a1 = startAng_;
@@ -656,6 +659,7 @@ void BaseEllipse::renderMACOSXEllipse()
       renderMACOSXDraw();
     }
   }
+  */
 }
 
 void BaseEllipse::renderMACOSXEllipsePrep(double a1, double a2, 
@@ -678,6 +682,7 @@ void BaseEllipse::renderMACOSXEllipsePrep(double a1, double a2,
 void BaseEllipse::renderMACOSXEllipseArc(double a1, double a2, Vector& rr)
 
 {
+  /*
   // don't render zero length arcs
   if (a1 == a2)
     return;
@@ -703,10 +708,12 @@ void BaseEllipse::renderMACOSXEllipseArc(double a1, double a2, Vector& rr)
   Vector tt1 = fwdMap(t1*FlipY(),Coord::CANVAS);
 
   macosxCurve(tt0, xx1, xx2, tt1);
+  */
 }
 
 void BaseEllipse::renderMACOSXInclude()
 {
+  /*
   if (!(properties & INCLUDE)) {
     double theta = degToRad(45);
     Vector r1 = fwdMap(Vector(annuli_[numAnnuli_-1][0]*cos(theta), 
@@ -719,6 +726,7 @@ void BaseEllipse::renderMACOSXInclude()
     macosxColor(parent->getXColor("red"));
     macosxDrawLine(r1,r2);
   }
+  */
 }
 #endif
 

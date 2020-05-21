@@ -1836,6 +1836,7 @@ void Base::ximageToPixmapMagnifier()
 
 void Base::macosx()
 {
+  /*
   // clip rect
   XRectangle rectWidget[1];
   XRectangle* rr = rectWidget;
@@ -1852,10 +1853,12 @@ void Base::macosx()
     // image
     macosxImage(scale, width, height, v1, v2-v1);
   }
+  */
 }
 
 void Base::macosxCrosshair()
 {
+  /*
   if (!useCrosshair)
     return;
 
@@ -1869,11 +1872,13 @@ void Base::macosxCrosshair()
   macosxWidth(1);
   macosxDrawLine(aa,bb);
   macosxDrawLine(cc,dd);
+  */
 }
 
 void Base::macosxImage(float scale, int width, int height, 
 		       const Vector& v, const Vector& s)
 {
+  /*
   // we need a colorScale before we can render
   if (!validColorScale())
     return;
@@ -1906,10 +1911,12 @@ void Base::macosxImage(float scale, int width, int height,
 
   if (dst)
     delete [] dst;
+  */
 }
 
 void Base::macosxPrintCmd()
 {
+  /*
   if (!visible)
     return;
 
@@ -1939,6 +1946,7 @@ void Base::macosxPrintCmd()
 
   // cleanup
   macosxEnd();
+  */
 }
 #endif
 

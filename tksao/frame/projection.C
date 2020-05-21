@@ -129,6 +129,7 @@ void Projection::renderPSGC(PSColorSpace mode)
 
 void Projection::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
@@ -153,12 +154,15 @@ void Projection::renderMACOSX()
     macosxDrawLine(ur,ul);
     macosxDrawLine(ul,ll);
   }
+  */
 }
 
 void Projection::renderMACOSXGC()
 {
+  /*
   macosxColor(parent->getXColor(colorName));
   renderMACOSXLineNoDash();
+  */
 }
 #endif
 

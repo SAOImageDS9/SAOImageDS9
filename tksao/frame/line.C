@@ -93,6 +93,7 @@ void Line::renderPS(PSColorSpace mode)
 
 void Line::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
@@ -109,6 +110,7 @@ void Line::renderMACOSX()
   }
 
   macosxDrawLine(aa,bb);
+  */
 }
 #endif
 

@@ -66,10 +66,12 @@ void Box::renderPSDraw(int ii)
 
 void Box::renderMACOSXDraw(Vector* vv)
 {
+  /*
   if (fill_)
     macosxFillPolygon(vv, numPoints_);
   else
     macosxDrawLines(vv, numPoints_);
+  */
 }
 #endif
 

@@ -123,6 +123,7 @@ void Cpanda::renderPS(PSColorSpace mode)
 
 void Cpanda::renderMACOSX()
 {
+  /*
   BaseEllipse::renderMACOSX();
 
   Vector r0 = annuli_[0];
@@ -136,6 +137,7 @@ void Cpanda::renderMACOSX()
 
     macosxDrawLine(rr0,rr1);
   }
+  */
 }
 #endif
 

@@ -105,6 +105,7 @@ void BaseBox::renderPSFillDraw(int ii)
 
 void BaseBox::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   newVertices();
@@ -116,11 +117,12 @@ void BaseBox::renderMACOSX()
     delete [] vv;
   }
   deleteVertices();
+  */
 }
 
 void BaseBox::renderMACOSXDraw(Vector* vv)
 {
-  macosxDrawLines(vv, numPoints_);
+  //  macosxDrawLines(vv, numPoints_);
 }
 #endif
 

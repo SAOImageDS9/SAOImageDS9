@@ -95,6 +95,7 @@ void Text::renderPS(PSColorSpace mode)
 
 void Text::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   if (text && *text && psfont_) {
@@ -117,6 +118,7 @@ void Text::renderMACOSX()
 
     macosxDrawText(cc*mm, 0, text);
   }
+  */
 }
 #endif
 

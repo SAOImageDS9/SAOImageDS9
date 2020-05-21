@@ -79,6 +79,7 @@ void Segment::renderPS(PSColorSpace mode)
 
 void Segment::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   vertex.head();
@@ -91,6 +92,7 @@ void Segment::renderMACOSX()
     v2 = fwdMap(vertex.current()->vector,Coord::CANVAS);
     macosxDrawLine(v1,v2);
   } while (vertex.next());
+  */
 }
 #endif
 

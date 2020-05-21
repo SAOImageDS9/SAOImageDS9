@@ -297,6 +297,7 @@ void Point::renderPSLineDash()
 
 void Point::renderMACOSX() 
 {
+  /*
   renderMACOSXGC();
   Vector* vv = NULL;
 
@@ -335,10 +336,12 @@ void Point::renderMACOSX()
 
   if (vv)
     delete [] vv;
+  */
 }
 
 void Point::renderMACOSXCircle(int ss)
 {
+  /*
   renderMACOSXGC();
 
   if (parent->isAzElZero()) {
@@ -350,24 +353,29 @@ void Point::renderMACOSXCircle(int ss)
     macosxDrawLines(vv,NUMSEG+1);
     delete [] vv;
   }
+  */
 }
 
 void Point::renderMACOSXBox()
 {
+  /*
   renderMACOSXGC();
 
   Vector* vv = generateBox(Coord::CANVAS);
   macosxDrawLines(vv,5);
   delete [] vv;
+  */
 }
 
 void Point::renderMACOSXLineDash()
 {
+  /*
   macosxWidth(lineWidth);
   float dl[2];
   dl[0] = dlist[0]/2.;
   dl[1] = dlist[1]/2.;
   macosxDash(dl,2);
+  */
 }
 #endif
 

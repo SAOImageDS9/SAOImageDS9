@@ -77,10 +77,12 @@ void Ellipse::renderPSDraw()
 
 void Ellipse::renderMACOSXDraw()
 {
+  /*
   if (fill_)
     macosxFill();
   else
     macosxStroke();
+  */
 }
 #endif
 

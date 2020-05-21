@@ -258,6 +258,7 @@ void Compass::renderPSGC(PSColorSpace mode)
 
 void Compass::renderMACOSX()
 {
+  /*
   renderMACOSXGC();
 
   Vector aa = parent->mapFromRef(center,Coord::CANVAS);
@@ -311,12 +312,15 @@ void Compass::renderMACOSX()
       macosxDrawText(eee, 0, eastText);
     }
   }
+  */
 }
 
 void Compass::renderMACOSXGC()
 {
+  /*
   macosxColor(parent->getXColor(colorName));
   renderMACOSXLineNoDash();
+  */
 }
 #endif
 

@@ -256,6 +256,7 @@ void Contour::updateCoords(const Matrix& mx)
 #ifdef MAC_OSX_TK
 void Contour::macosx()
 {
+  /*
   if (lvertex_.head()) {
     macosxColor(base_->getXColor(parent_->colorName_));
     macosxWidth(parent_->lineWidth_);
@@ -279,6 +280,7 @@ void Contour::macosx()
       u1 = u2;
     }
   }
+  */
 }
 #endif
 

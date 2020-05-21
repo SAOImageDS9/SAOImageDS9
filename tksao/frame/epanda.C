@@ -121,6 +121,7 @@ void Epanda::renderPS(PSColorSpace mode)
 
 void Epanda::renderMACOSX()
 {
+  /*
   BaseEllipse::renderMACOSX();
 
   renderMACOSXGC();
@@ -134,6 +135,7 @@ void Epanda::renderMACOSX()
 
     macosxDrawLine(rr0,rr1);
   }
+  */
 }
 #endif
 

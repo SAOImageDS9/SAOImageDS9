@@ -485,6 +485,7 @@ void Marker::macosx(int tt)
 }
 void Marker::renderMACOSXInclude()
 {
+  /*
   if (!(properties & INCLUDE)) {
     macosxColor(parent->getXColor("red"));
 
@@ -492,10 +493,12 @@ void Marker::renderMACOSXInclude()
     Vector ur = handle[2];
     macosxDrawLine(ll,ur);
   }
+  */
 }
 
 void Marker::renderMACOSXText()
 {
+  /*
   if (text && *text && psfont_) {
     macosxColor(parent->getXColor(colorName));
 
@@ -515,11 +518,13 @@ void Marker::renderMACOSXText()
 
     macosxDrawText(tt, 0, text);
   }
+  */
 }
 
 void Marker::renderMACOSXArrow(const Vector& p1, const Vector& p2, 
 			       Coord::InternalSystem sys)
 {
+  /*
   Vector* vv = arrow(p1,p2,sys);
   Vector dd[6];
   for (int ii=0; ii<6; ii++)
@@ -527,10 +532,12 @@ void Marker::renderMACOSXArrow(const Vector& p1, const Vector& p2,
 
   macosxFillPolygon(dd,6);
   delete [] vv;
+  */
 }
 
 void Marker::renderMACOSXGC()
 {
+  /*
   // set width, color, dash
   macosxColor(parent->getXColor(colorName));
 
@@ -538,18 +545,23 @@ void Marker::renderMACOSXGC()
     renderMACOSXLineNoDash();
   else
     renderMACOSXLineDash();
+  */
 }
 
 void Marker::renderMACOSXLineDash()
 {
+  /*
   macosxWidth(lineWidth);
   macosxDash(dlist,2);
+  */
 }
 
 void Marker::renderMACOSXLineNoDash()
 {
+  /*
   macosxWidth(lineWidth);
   macosxDash(NULL,0);
+  */
 }
 #endif
 

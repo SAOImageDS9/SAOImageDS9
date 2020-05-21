@@ -121,6 +121,7 @@ void Bpanda::renderPS(PSColorSpace mode)
 
 void Bpanda::renderMACOSX()
 {
+  /*
   BaseBox::renderMACOSX();
 
   renderMACOSXGC();
@@ -134,6 +135,7 @@ void Bpanda::renderMACOSX()
 
     macosxDrawLine(rr0,rr1);
   }
+  */
 }
 #endif
 

@@ -74,7 +74,6 @@ AC_PROG_CXX
 
 TEA_ADD_SOURCES([
 	tkmacosx.M
-	macosxlib.M
 	xxlib.M
 	])
 TEA_ADD_HEADERS([

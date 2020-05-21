@@ -25,16 +25,6 @@ class TkMacosx {
   Matrix canvasToPage;
   PMView* pmView;
 
-  /*
-  int showDialog;
-  CGContextRef context;
-  OSStatus status;
-
-  PMPageFormat pageFormat;
-  PMPrintSettings printSettings;
-  PMPrintSession printSession;
-  */
-
   int pmPrint(int, const char**);
   int pmPrintBegin(int, const char**);
   int pmPrintEnd();
@@ -50,28 +40,6 @@ class TkMacosx {
   int locale(int, const char**);
 
   const Matrix& getCanvasToPage() {return canvasToPage;}
-
-  void begin();
-  void end();
-  
-  void color(float,float,float);
-  void width(float);
-  void dash(float*,int);
-  void font(const char*, float);
-  void clip(float, float, float, float);
-
-  void newpath();
-  void stroke();
-  void fill();
-  void arc(float, float, float, float, float);
-  void curve(float, float, float, float, float, float, float, float);
-
-  void drawText(float, float, float, const char*);
-  void drawLines(float*, float*, int);
-  void fillPolygon(float*, float*, int);
-  void drawArc(float, float, float, float, float);
-  
-  void bitmapCreate(void*, int, int, float, float, float, float);
 };
 
 extern TkMacosx* tkmacosx;

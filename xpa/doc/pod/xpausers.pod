@@ -1,0 +1,76 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAUsers: Distinguishing Users>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+XPA normally distinguishes between users on a given host, but it is possible
+to send data to access points belonging to other users.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+A single XPA name service typically serves all users on a given
+machine.  Two users can register the same XPA access points on the
+same machine without conflict, because the user's username is
+registered with each access point and, by default, programs such as
+xpaget and xpaset only process access points of the appropriate user.
+For example:
+
+  XPA xpa1 gs 838e2f67:1262 eric
+  XPA xpa2 gs 838e2f67:1266 eric
+  XPA xpa1 gs 838e2f67:2523 john
+  XPA xpa2 gs 838e2f67:2527 john
+
+Here the users "eric" and "john" both have registered the access
+points xpa1 and xpa2. When either "john" or "eric" retrieves
+information from xpa1, they will process only the access point
+registered in their user name.
+
+
+If you want to access another user's XPA access points on a single
+machine, use the -u [user] option on xpaset, xpaget, etc. For example,
+if eric executes:
+
+  xpaget -u john xpa1
+
+he will access John's xpa1 access point.Use "*" to access all users
+on a given machine:
+
+  xpaget -u "*" xpa1
+
+Note that the XPA Environment Variable
+XPA_NSUSERS can be used to specify the default list of users to
+process:
+
+  setenv XPA_NSUSERS "eric,john"
+
+will cause access points from both "eric" and "john" to be processed
+by default.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

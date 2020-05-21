@@ -1,0 +1,56 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAName: What does XPA stand for?>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+What does XPA stand for? Who knows anymore!
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+What does XPA stand for? Dunno! The XPA messaging system originally
+was built on top of the X Window System and XPA was the mnemonic for
+I<X Public Access>, to emphasize that we were providing public
+access to previously private data and algorithms in Xt programs.  Now
+that XPA no longer is tied to X, it can be argued that we ought to
+change the name (how about SPAM: simple public access mechanism
+), but XPA is in wide-spread use in the astronomical community of
+its birth, and the name has taken on a life of its own. If anyone can
+think of what XPA now means, please let us know.
+
+
+If you think this is bad, consider the MMT Telescope on Mount Hopkins,
+Arizona. When first installed twenty years ago, it featured an array
+of six 72-inch diameter mirrors. from which came its name: the
+I<Multiple Mirror Telescope>.  In spring of 1999, these mirrors
+were replaced by a single 21 and 1/2 -foot diameter primary mirror,
+the largest single-piece glass reflector on the North American
+continent. And now MMT stands for ... MMT!
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

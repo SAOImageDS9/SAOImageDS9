@@ -1,0 +1,180 @@
+#!/bin/sh
+set -x
+rm -rf ./config.cache
+
+if [ x"$1" = x ]; then
+  name=`uname -n`
+else
+  if [ x"$1" = x"--" ]; then
+    name=`uname -n`
+  else
+    name="$1"
+  fi
+  shift
+fi
+
+if [ x"$CFLAGS" = x ]; then
+  CFLAGS="-g"
+  export CFLAGS
+fi
+if [ x"$LDFLAGS" = x ]; then
+  LDFLAGS="-g"
+  export LDFLAGS
+fi
+
+GCCFLAGS="-Wall -Wno-implicit-int"
+CF="--config-cache"
+BIT64="-m64 -mcpu=v9"
+LARGEFILE="-D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64"
+
+# handle saord builds specially
+if [ x$name = xsaord ]; then
+  SAORDPREFIX=/soft/saord
+  platform=`uname`
+  case $platform in
+  SunOS)
+    SAORDPREFIX=/soft/saord
+  ;;
+  esac
+fi
+
+echo "configure for: " $name
+
+case $name in
+  cc)
+  ./configure	$CF					\
+		CC=cc CFLAGS="$CFLAGS" $*
+  ;;
+
+  gcc)
+  ./configure	$CF					\
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS" $*
+  ;;
+
+# Solaris 64bit and largefile suport
+  large)
+  ./configure	$CF 						    \
+	 	--x-includes=/usr/openwin/include		    \
+		--x-libraries=/usr/openwin/lib/sparcv9 		    \
+		--without-tcl 					    \
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS $BIT64 $LARGEFILE" \
+      		LDFLAGS="-g $BIT64 -L/usr/lib/sparcv9" $*
+  ;;
+
+  opt)
+  ./configure	$CF					\
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS -O2" $*
+  ;;
+
+  g++)
+  ./configure	$CF					\
+		CC=g++ CFLAGS="$CFLAGS $GCCFLAGS" $*
+  ;;
+
+  noansi)
+  ./configure	$CF					\
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS -DNO_ANSI_FUNC" $*
+  ;;
+
+  dl)
+  ./configure	$CF					\
+		--enable-dl=yes CC=gcc CFLAGS="$CFLAGS $GCCFLAGS" $*
+  ;;
+
+  shared)
+  ./configure 	$CF					\
+      		--enable-shared=yes			\
+  		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS"	\
+		$*
+  ;;
+
+  threads)
+  ./configure 	$CF					\
+		--enable-threaded-xpans			\
+		 CC=cc CFLAGS="$CFLAGS" $*
+  ;;
+
+  saord*)
+  ./configure 	$CF					\
+		--prefix=$SAORDPREFIX			\
+      		CC=gcc CFLAGS="$CFLAGS -O2"		\
+ 		$*
+  ;;
+
+  bokhara*)
+  ./configure 	$CF					\
+		--prefix=${HOME}			\
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS"  $*
+  ;;
+
+  ds9*)
+  ./configure 	$CF					\
+		--prefix=${HOME}			\
+      		--enable-shared=yes			\
+		--with-tcl=/proj/rd/eric/saods9/lib	\
+      		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS"  $*
+  ;;
+
+  cfa208*)
+  ./configure 	$CF					\
+		--prefix=${HOME}			\
+		CC=gcc CFLAGS="$CFLAGS"  $*
+  ;;
+
+  akela*|karapet*)
+  ./configure 	$CF					\
+		--prefix=${HOME}			\
+      		--enable-shared=yes			\
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS" $*
+  ;;
+
+  ds9*)
+  ./configure 	$CF					\
+		--prefix=${HOME}/eric			\
+      		--enable-shared=yes			\
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS" $*
+  ;;
+
+  baba*)
+  ./configure 	$CF					\
+		--prefix=${HOME}			\
+		CC=gcc CFLAGS="$CFLAGS"  $*
+  ;;
+
+  apple*|APPLE*)
+  ./configure 	$CF					\
+		--prefix=${HOME}			\
+		CC=icc CFLAGS="$CFLAGS"  $*
+  ;;
+
+  mred)
+  ./configure 	$CF					\
+		--prefix=${HOME}/pub/usr/local		\
+		--enable-threaded-xpans			\
+		--without-tcl				\
+		 CC=cc CFLAGS="$CFLAGS" $*
+  ;;
+
+  mocha*|Mocha*|luwak*|*Luwak*|decaf*|Decaf*|barista*|Barista*|knomad*|Knomad*)
+  ./configure	$CF 							\
+		--prefix=/usr/local					\
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS $LARGEFILE -O2"	\
+      		$*
+  ;;
+
+  voyager*|VOYAGER*)
+  ./configure 	$CF					\
+  		--enable-posix_spawn --prefix=${HOME}   \
+		CC=gcc CFLAGS="$CFLAGS $GCCFLAGS" $*
+  ;;
+
+
+  kitchensink)
+  ./configure --enable-shared=link --enable-threaded-xpans --with-threads $*
+  ;;
+
+  *)
+  ./configure 	$CF $*
+  ;;
+
+esac

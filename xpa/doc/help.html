@@ -1,0 +1,162 @@
+<!-- =defdoc xpa xpa n -->
+<HTML>
+<HEAD>
+<TITLE>The XPA Help Facility</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpa NAME -->
+<H2><A NAME="xpa">XPA: Public Access to Data and Algorithms</A></H2>
+
+<!-- =section xpa SYNOPSIS -->
+<H2>Summary</H2>
+This document is the Table of Contents for XPA.
+
+<!-- =section xpa DESCRIPTION -->
+<H2>Description</H2>
+<P>
+The XPA messaging system provides seamless communication between many
+kinds of Unix programs, including X programs and Tcl/Tk programs.  It
+also provides an easy way for users to communicate with XPA-enabled
+programs by executing XPA client commands in the shell or by utilizing
+such commands in scripts.  Because XPA works both at the programming
+level and the shell level, it is a powerful tool for unifying any
+analysis environment: users and programmers have great flexibility in
+choosing the best level or levels at which to access XPA services, and
+client access can be extended or modified easily at any time.
+
+<P>
+A program becomes an XPA-enabled server by defining named points of
+public access through which data and commands can be exchanged with
+other client programs (and users).  Using standard TCP sockets as a
+transport mechanism, XPA supports both single-point and broadcast
+messaging to and from these servers.  It supports direct communication
+between clients and servers, or indirect communication via an
+intermediate message bus emulation program. Host-based access control
+is implemented, as is as the ability to communicate with XPA servers
+across a network.
+
+<P>
+XPA implements a layered interface that is designed to be useful both
+to software developers and to users.  The interface consists of a
+library of XPA client and server routines for use in C/C++ programs and
+a suite of high-level user programs built on top of these libraries.
+Using the XPA library, access points can be added to Tcl/Tk programs,
+Xt programs, or to Unix programs that use the XPA event loop or any
+event loop based on select().  Client access subroutines can be added
+to any Tcl/Tk, Xt, or Unix program. Client access also is supported at
+the command line via a suite of high-level programs.
+
+<P>
+Choose from the following topics:
+
+<UL> 
+<LI><A HREF="./intro.html">Introduction to XPA</A>
+<!-- =text [xpaintro(n)] -->
+<LI><A HREF="./template.html">Access Point Names and Templates</A>
+<!-- =text [xpatemplate(n)] -->
+<LI><A HREF="./info.html">Getting Common Information About Access Points</A>
+<!-- =text [xpacommon(n)] -->
+<LI><A HREF="./method.html">Communication Methods</A>
+<!-- =text [xpamethod(n)] -->
+<LI><A HREF="./inet.html">Communication Between Hosts</A>
+<!-- =text [xpainet(n)] -->
+<LI><A HREF="./users.html">Distinguishing Users</A>
+<!-- =text [xpausers(n)] -->
+
+<LI><A HREF="./programs.html">XPA User Programs</A>
+<UL>
+<LI><A HREF="./programs.html#xpaget">xpaget: get data and info</A>
+<!-- =text [xpaget(1)] -->
+<LI><A HREF="./programs.html#xpaset">xpaset: send data and info</A>
+<!-- =text [xpaset(1)] -->
+<LI><A HREF="./programs.html#xpainfo">xpainfo: send info alert</A>
+<!-- =text [xpainfo(1)] -->
+<LI><A HREF="./programs.html#xpaaccess">xpaaccess: get access point info</A>
+<!-- =text [xpaaccess(1)] -->
+<LI><A HREF="./xpamb.html">xpamb: message bus emulation</A>
+<!-- =text [xpamb(1)] -->
+<LI><A HREF="./xpans.html">xpans: the XPA name server</A>
+<!-- =text [xpans(1)] -->
+</UL>
+
+<LI><A HREF="./server.html">XPA Server Routines</A>
+<UL>
+<LI><A HREF="./server.html#xpanew">XPANew: define a new access point</A>
+<!-- =text [xpanew(3)] -->
+<LI><A HREF="./server.html#xpacmdnew">XPACmdNew: define a new command access point</A>
+<!-- =text [xpacmdnew(3)] -->
+<LI><A HREF="./server.html#xpacmdadd">XPACmdAdd: add a command</A>
+<!-- =text [xpacmdadd(3)] -->
+<LI><A HREF="./server.html#xpacmddel">XPACmdDel: delete a command</A>
+<!-- =text [xpacmddel(3)] -->
+<LI><A HREF="./server.html#xpainfonew">XPAInfoNew: define an info access point</A>
+<!-- =text [xpainfonew(3)] -->
+<LI><A HREF="./server.html#xpafree">XPAFree: free an access point</A>
+<!-- =text [xpafree(3)] -->
+<LI><A HREF="./server.html#xpamainloop">XPAMainLoop: event loop for select server</A>
+<!-- =text [xpamainloop(3)] -->
+<LI><A HREF="./server.html#xpapoll">XPAPoll: poll for XPA events</A>
+<!-- =text [xpapoll(3)] -->
+<LI><A HREF="./server.html#xpacleanup">XPACleanup: release reserved XPA memory</A>
+<!-- =text [xpacleanup(3)] -->
+<LI><A HREF="./server.html#macros">XPA Server Macros: accessing structure internals</A>
+<!-- =text [xpamacros(3)] -->
+<LI><A HREF="./server.html#race">XPA Race Conditions: how to avoid them</A>
+<!-- =text [xparace(3)] -->
+<LI><A HREF="./oom.html">XPA Out of Memory (OOM) errors</A>
+<!-- =text [xpaoom(3)] -->
+</UL>
+
+<LI><A HREF="./client.html">XPA Client Routines</A>
+<UL>
+<LI><A HREF="./client.html#xpaopen">XPAOpen: open a persistent client connection</A>
+<!-- =text [xpaopen(3)] -->
+<LI><A HREF="./client.html#xpaclose">XPAClose: close persistent client connection</A>
+<!-- =text [xpaclose(3)] -->
+<LI><A HREF="./client.html#xpaget">XPAGet: get data</A>
+<!-- =text [xpaget(3)] -->
+<LI><A HREF="./client.html#xpaset">XPASet: send data or commands</A>
+<!-- =text [xpaset(3)] -->
+<LI><A HREF="./client.html#xpainfo">XPAInfo: send an info alert</A>
+<!-- =text [xpainfo(3)] -->
+<LI><A HREF="./client.html#xpagetfd">XPAGetFd: get data and write to an fd</A>
+<!-- =text [xpagetfd(3)] -->
+<LI><A HREF="./client.html#xpasetfd">XPASetFd: read data from and fd and send</A>
+<!-- =text [xpasetfd(3)] -->
+<LI><A HREF="./client.html#xpanslookup">XPANSLookup: look up an access point</A>
+<!-- =text [xpanslookup(3)] -->
+<LI><A HREF="./client.html#xpaaccess">XPAAccess: get access info</A>
+<!-- =text [xpaaccess(3)] -->
+<LI><A HREF="./xt.html">The XPA/Xt Interface: Xt interface to XPA</A>
+<!-- =text [xpaxt(n)] -->
+<LI><A HREF="./tcl.html">The XPA/Tcl Interface: Tcl interface to XPA</A>
+<!-- =text [xpatcl(n)] -->
+</UL>
+
+<LI> Tailoring the XPA Environment
+<UL>
+<LI><A HREF="./env.html">Environment Variables</A>
+<!-- =text [xpaenv(n)] -->
+<LI><A HREF="./acl.html">Access Control</A>
+<!-- =text [xpaacl(n)] -->
+</UL>
+
+<LI> Miscellaneous
+<UL>
+<!-- =stop -->
+<LI><A HREF="./changelog.html">XPA ChangeLog</A>
+<!-- =cont -->
+<LI><A HREF="./examples.html">Where to Find Example/Test Code</A>
+<LI><A HREF="./changes.html">User Changes Between XPA 1.0 and 2.0</A>
+<LI><A HREF="./convert.html">API Changes Between XPA 1.0 and 2.0</A>
+<LI><A HREF="./name.html">What Does XPA Stand For, Anyway?</A>
+</UL>
+
+</UL> 
+
+<!-- =stop -->
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

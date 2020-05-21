@@ -1,0 +1,197 @@
+<!-- =defdoc xpamb xpamb 1 -->
+<HTML>
+<HEAD>
+<TITLE>The XPA Message Bus (xpamb)</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpamb NAME -->
+<H2><A NAME="xpamb">xpamb: the XPA Message Bus</A></H2>
+
+<!-- =section xpamb SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+The xpamb program can act as a "classical" message bus interface
+between clients and servers. A client can send a data request to
+the message bus, which then interfaces with multiple servers and
+returns the data back to the client.
+
+<!-- =section xpamb DESCRIPTION -->
+<H2>Description</H2>
+<P>
+A "classical" message bus (such as ToolTalk) consists of servers and
+clients, along with a mediating program that transfers data between
+different processes. XPA takes a slightly different approach in that
+communication between clients and servers is direct.  This generally
+is the correct technique when there is only one connection (or even a
+small number of connections), but can become inefficient for the
+serving program if a large amount of data is being transferred to many
+clients. For example, if a real-time data acquisition program is
+broadcasting a FITS image to several clients, it would need to
+transmit that image to each client individually.  This might interfere
+with its own processing cycles.  The preferable mechanism would be to
+pass the image off to an intermediate program that can then broadcast
+the data to the several clients.
+<P>
+The <B>xpamb</B> program can alleviate such problems by functioning
+as a message bus in cases where such an intermediary process is
+wanted.  It pre-defines a single access point named
+<B>XPAMB:xpamb</B> to which data can be sent for re-broadcast. You
+also can tell <B>xpamb</B> to save the data, and associate with that
+data a new access point, so that it can be retrieved later on.
+
+<P>
+All interaction with <B>xpamb</B> is performed through
+<B>xpaset</B> and <B>xpaget</B> (or the corresponding API
+routines, <B>XPASet()</B> and <B>XPAGet()</B>) to the
+<B>XPAMB:xpamb</B> access point. That is, <B>xpamb</B> is just
+another XPA-enabled program that responds to requests from
+clients. The paramlist is used to specify the targets to which
+the data will be for re-broadcast, as well as the re-broadcast paramlist:
+<PRE>
+  data | xpaset xpamb [switches] broadcast-target broadcast-paramlist
+</PRE>
+Optional switches are used to store data, and manipulate stored data,
+and are described below.
+
+<P>
+In its simplest form, you can, for example, send a FITS image to xpamb for
+broadcasting to all ds9 image simply by executing:
+<PRE>
+  cat foo.fits | xpaset xpamb "DS9:*" fits foo.fits
+</PRE>
+Since <B>DS9</B> is the class name for the ds9 image display
+program, this will result in the FITS image being re-sent to all fits
+access points for all active image display programs.
+
+<P>
+You can send stored data and new data to the same set of access points at
+the same time.  The stored data always is sent first, followed by the new
+data:
+<PRE>
+  cat foo2.fits | xpaset xpamb -send foo "DS9:*" fits foo.fits
+</PRE>
+will first send the foo.fits file, and then the foo2.fits file to all
+access points of class <B>DS9</B>.  Notice that in this example,
+the foo2.fits file is not stored, but it could be stored by using the
+<B>-store [name]</B> switch on the command line.
+
+<P>
+The <B>xpaget</B> command can be used to retrieve a data from XPA
+access points or from a stored data buffer, or retrieve information
+about a stored data buffer.  If no arguments are given:
+<PRE>
+  xpaget xpamb
+</PRE>
+then information about all currently stored data buffers is returned. This
+information includes the data and time at which the data was stored, the
+size in bytes of the data, and the supplied info string.
+
+<P>
+If arguments are specified, they will be in the form:
+<PRE>
+  xpaget xpamb [-info] [-data] [name [paramlist]]
+</PRE>
+If the optional <B>-info</B> and/or <B>-data</B> switches are specified, then
+information and/or data will be returned for the named data buffer
+following the switches. You can use either or both of these switches
+in a single command. For example, if the -info switch is used:
+<PRE>
+  xpaget xpamb -info foo
+</PRE>
+then the info about that stored data buffer will be returned.
+If the -data is used with a specific name:
+<PRE>
+  xpaget xpamb -data foo
+</PRE>
+then the stored data itself will be returned. If both are used:
+<PRE>
+  xpaget xpamb -info -data foo
+</PRE>
+then the info will be returned, followed by the data. Note that it is an
+error to specify one of these switches without a data buffer name and that
+the paramlist will be ignored.
+
+<P>
+If neither the <B>-info</B> or <B>-data</B> switch is specified, then
+the name refers to an XPA access point (with an optional paramlist
+following).
+For example:
+<PRE>
+  xpaget xpamb ds9 file
+</PRE>
+is equivalent to:
+<PRE>
+  xpaget ds9 file
+</PRE>
+
+<!-- =section xpamb OPTIONS -->
+<H2>Options</H2>
+<P>
+For xpaset, several optional switches are used to save data and
+manipulate the stored data:
+<DL>
+
+<P>
+<DT><B>-data [name]</B>
+<DD> Add the supplied data buffer to a pool of stored data buffers,
+using the specified name as a unique identifier for later retrieval.
+An error occurs if the name already exists (use either <B>replace</B>
+or <B>del</B> to rectify this). The <B>-add</B> switch is supported
+for backwards compatibility with xpa 2.0.
+
+<P>
+<DT><B>-replace [name]</B>
+<DD> Replace previously existing stored data having the same unique name
+with new data. This essentially is a combination of the <B>del</B>
+and <B>data</B> commands.
+
+<P>
+<DT><B>-info ["'info string'"]</B>
+<DD> When adding a data buffer, you can specify an informational
+string to be stored with that data.  This string will be returned
+by xpaget:
+<PRE>
+  xpaget xpamb foo -info
+</PRE>
+(along with other information such as the date/time of storage and the size of
+the data buffer) if the -info switch is specified. If the info string contains
+spaces, you must enclose it in <B>two</B> sets of quotes:
+<PRE>
+  cat foo | xpaset xpamb -data foo -info "'this is info on foo'"
+</PRE>
+The first set of quotes is removed by the shell while the second is used to
+delineate the info string.
+
+<P>
+<DT><B>-send [name]</B>
+<DD> Broadcast the stored data buffer to the named template.
+
+<P>
+<DT><B>-del [name]</B>
+<DD> Delete the named data buffer and free all allocated space.
+</DL>
+
+<P>
+Switches can be used in any combination that makes sense. For example:
+<PRE>
+  cat foo.fits | xpaset xpamb -data foo -info "FITS" "DS9:*" fits foo.fits
+</PRE>
+will broadcast the foo.fits image to all access points of class
+<B>DS9</B>.  In addition, the foo.fits file will be stored under the
+name of <B>foo</B> for later manipulation such as:
+<PRE>
+  xpaset -p xpamb -send foo "DS9:*" fits foo.fits
+</PRE>
+will re-broadcast the foo.fits image to all access points of class "DS9".
+
+<!-- =section xpamb SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

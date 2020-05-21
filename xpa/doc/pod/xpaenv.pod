@@ -1,0 +1,517 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAEnv: Environment Variables for XPA Messaging>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+Describes the environment variables which can be used to tailor the overall
+XPA environment.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+The following environment variables are supported by XPA:
+
+
+=over 4
+
+
+
+
+
+=item *
+
+B<XPA_ACL>
+
+
+If I<XPA_ACL> is I<true>, then 
+host-based XPA Access Control
+is turned on and only specified machines can access specified access
+points.  If I<false>, then access control is turned off and any
+machine can access point. The default is turn turn access control on.
+
+
+
+
+=item *
+
+B<XPA_ACLFILE>
+
+
+If
+XPA Access Control
+is turned on, this variable specifies the name of the file containing
+access control information for all access points started by this user.
+The default file name is: I<$HOME/acls.xpa>.
+
+
+
+
+=item *
+
+B<XPA_CONNECT_TIMEOUT>
+
+
+When an XPA server first starts up, it immediately tries to
+connect to the XPA name server program (xpans) on the host specified by
+the I<XPA_NSINET> variable. (If this connection fails on the
+local host, and if xpans can be found in the path, then the name
+server is started automatically.)  Unfortunately, a mis-configured
+network can cause this connect attempt to hang for many seconds while
+the connect() system call times out. Therefore, an alarm is started
+to interrupt the connect() call and prevent a long hang.  The initial
+value of the alarm timeout is 10 seconds, but can be changed by setting
+this environment variable. If you want to disable the alarm and allow
+the initial connect() to time out, set the value of this variable to
+0. Normally, users would not change this variable at all.
+
+
+
+
+=item *
+
+B<XPA_CLIENT_DOXPA>
+
+
+Normally, an XPA client (xpaget, xpaset, etc.) will process incoming
+XPA server requests while awaiting the completion of the client request.
+Setting this variable to "false" will prevent XPA server requests from
+being processed by the client.
+
+
+
+
+=item *
+
+B<XPA_DEFACL>
+
+
+If
+XPA Access Control
+is turned on, this variable specifies the default access control
+condition for all access points, if the I<XPA_ACLFILE> file does
+not exist.  The default acl is: I<$host:* $host +>, meaning that
+all processes on the host machine have full access to all access points.
+
+
+
+
+=item *
+
+B<XPA_HOST>
+
+
+For the INET socket method, XPA utilizes the canonical hostname (as
+returned by the gethostname() routine) to construct the IP part of the
+method id. Under some circumstances, this might not be a correct choice
+of name and IP. For example, if an XPA server is started on a machine
+running VPN, you might want to use the VPN name and IP instead of the
+canonical host name, so that other machines in the VPN network can
+access the server. In this case, you can set the XPA_HOST to be
+the VPN name (if resolvable) or, more easily, the VPN IP.
+
+
+
+
+=item *
+
+B<XPA_IOCALLSXPA>
+
+
+Setting this variable causes all XPA socket IO calls to process
+outstanding XPA requests whenever the primary socket is not ready for
+IO. This means that a server making a client call will (recursively)
+process incoming server requests while waiting for client completion.
+This inter-IO XPA processing avoids a rare
+XPA Race Condition: two or more
+XPA servers sending messages to one another using an XPA client
+routine such as XPASet() can deadlock while each waits for the other
+server to respond. This can happen, for example, if the servers call
+XPAPoll() with a time limit, and send messages in between the polling call.
+
+
+By default, this option is turned off, because we judge that the added
+code complication and overhead involved will not be justified by the
+amount of its use.  Moreover, processing XPA requests within socket IO
+can lead to non-intuitive results, since incoming server requests will
+not necessarily be processed to completion in the order in which they
+are received.
+
+
+
+
+=item *
+
+B<XPA_LOGNAME>
+
+
+XPA preferentially uses the de facto standard environment variable
+LOGNAME to determine the username when registering an access point in
+the name server. If this environment variable has been used for
+something other than the actual user name (such as a log file name),
+unexpected results can ensue. In such cases, use the XPA_LOGNAME
+variable to set the user name. (If neither exists, then getpwuid(geteuid())
+is used as a last resort).
+
+
+
+
+=item *
+
+B<XPA_LONG_TIMEOUT>
+
+
+XPA is designed to allow data to be sent from one process to
+another over a long period of time (i.e., a program that generates
+image data sends that data to an image display, but slowly) but it
+also seeks to prevent hangs. This is done by supporting 2 timeout
+periods: a I<short> timeout for protocol communication
+and a I<long> for data communication.
+
+The I<XPA_LONG_TIMEOUT> variable controls the I<long>
+timeout and is used to prevent hangs in cases where communication
+between the client and server that is I<not> controlled by the
+XPA interface itself. Transfer of data between client and server, or a
+client's wait for a status message after completion of the server
+callback, are two examples of this sort of communication. By default,
+the I<long> timeout is set to 180 seconds.
+Setting the value to -1 will disable I<long> timeouts and allow
+an infinite amount of time.
+
+
+
+
+=item *
+
+B<XPA_MAXHOSTS>
+
+
+The maximum number of access points that the programs 
+I<xpaset>, I<xpaget>, and I<xpainfo> will
+communicate with at one time. The default is 64, meaning, for
+example, that the I<xpaset> program will not send a message
+to more than 100 access points at one time and I<xpaget> will
+not retrieve from more than 100 access points at one time.
+
+
+
+
+=item *
+
+B<XPA_METHOD>
+
+
+Determines the socket connection method used by this session of XPA.
+The choices are: I<inet> (to use INET or Internet-based
+sockets), I<localhost> (to use the machines localhost inet
+socket), or I<local (unix)> (to use UNIX sockets). The default
+is I<INET>.  Using the I<inet> method will allow access
+from other machines (subject to access controls) but using
+I<localhost> or I<local> will not. Localhost is most useful
+for private access and when the machine in question is not connected
+to the Internet. The unix method also can be used for private access
+and non-Internet connections (Unix platforms only).
+
+Once defined, the first registration of an XPA access point will
+ensure that an instance of the
+XPA Name Server (xpans)
+is running that handles that connection method. All new access points
+will use the new connection method but existing access points will use
+the original method.
+
+
+
+
+=item *
+
+B<XPA_NSINET>
+
+
+For the I<inet> method of socket connection, this variable
+specifies the host and port on which the 
+XPA Name Server (xpans)
+is listens for new access points. The default is I<$host:$port>,
+meaning that the default XPA port (14285) on the current machine
+(as returned by gethostname()) is used. If several machines were all
+accessing the same XPA access points, you would use this variable to
+specify that they all use the same name server to find out about these
+access points.  For example, a value of I<myhost:$port> would
+mean that the xpans name server is running on myhost and uses the
+default port 12345.  All machines would then get the XPA access points
+registered with that name server, subject to access controls.
+
+The port used by xpans to register its XPA access point normally is
+taken to be one greater than the port on which it receives new access
+points from XPA servers. You can specify a specific access point port
+using the syntax machine:port1,port2, i.e., the access point port is
+specified after the comma.  For example, $host:12345,23456 will listen
+for new access ports on 12345 and will accept XPA commands on 23456.
+
+
+
+
+=item *
+
+B<XPA_NSREGISTER>
+
+
+This boolean variable specifies whether a server registers its XPA
+access point with the specified xpans name server. The default is
+I<true>.  If set to I<false>, the access point still is
+set up but it is not registered with xpans and therefore cannot be
+accessed by name. (It can be accessed by method, if the latter is
+known.) Note that an access point can be registered later on (using
+-remote or -proxy, for example). This variable mainly is useful in
+cases where the Internet configuration is broken (so that registration
+causes a DNS hang) but you still wish to and can use the server with a
+remote xpans (e.g., ds9's Virtual Observatory capability).
+
+
+
+
+=item *
+
+B<XPA_NSUNIX>
+
+
+For the I<local> method of socket connection, this variable
+specifies the name of the Unix file that will be used to access the
+XPA Name Server (xpans). The default is
+I<xpans_unix>. This variable is not usually needed. Note that
+is the I<local> socket method is used, then remote machines will
+not be able to access the xpans name server or the registered XPA access
+points.
+
+
+
+
+=item *
+
+B<XPA_NSUSERS>
+
+
+This variable specifies whether other users' access points will be
+returned by the
+XPA Name Server (xpans) for use by
+I<xpaget>, I<xpaset>, etc.
+Generally speaking, it is sufficient to run one xpans name server per
+machine and register the access points for all users with that xpans.
+This means, for example, that if you request information from
+ds9 by running:
+
+  xpaget ds9 colormap
+
+you might get information from your own ds9 as well as
+from another user running ds9 on the same machine.  The
+I<XPA_NSUSERS> variable controls whether you want such access 
+to the access points of other users.
+By default, only your own access points are returned, so
+that, in the example above, you would only get the colormap information
+from the ds9 you registered. If, however, you had set the value of the
+I<XPA_NSUSERS> variable to I<eric,fred>, then you would be
+able to communicate with both eric and fred's access points. Note that
+this variable can be overridden using the I<-u> switch on the
+I<xpaget>, I<xpaset>, and I<xpainfo> programs.
+
+
+
+
+=item *
+
+B<XPA_PORT>
+
+
+A semi-colon delimited list of user specified ports to use for specific
+XPA access points. The format is each specification is:
+
+class:template port1[ port2]
+
+where B<port1> is the main (command) port for the access point and
+B<port2> is the (secondary) data port. If port2 is not specified,
+it defaults to a value of 0 (meaning the system assigns the port).
+
+
+Specification of specific ports is useful, for example, when a machine
+outside a firewall needs to communicate with a machine inside a
+firewall. In such a case, the firewall should be configured to allow
+socket connections to both the command and data port from the outside
+machine, and the inside XPA program should be started up with the
+outside machine in its ACL list. Then, when the inside program is
+started with specified ports, outside XPA programs can use
+"machine:port" to contact the inside access points, instead of the
+access point names. That is, the machine outside the firewall does not
+need access to the XPA name server:
+
+export XPA_PORT="DS9:ds9 12345 12346"   # on machine "inside"
+cat foo.fits | xpaset inside:12345 fits # on machine "outside"
+
+Note that 2 ports are required for full XPA communication and
+therefore 2 ports should be specified to go through a firewall.  The
+second port assignment is not important if you simply are assigning
+the command port in order to communicate commands with a known
+port (e.g., to bypass the xpans name server). If only one (command)
+port is specified, the system will negotiate a random data port and
+everything will work properly.
+
+
+This support is somewhat experimental. If you run into problems, please
+let us know.
+
+
+
+
+=item *
+
+B<XPA_PORTFILE>
+
+
+A list of user-specified port to use for specific xpa access points.
+The format of the file is:
+
+class:template port1 [port2]
+
+where B<port1> is the main port for the access point and
+B<port2> is the data port. If port2 is not specified, it defaults
+to a value of 0 (meaning the system assigns the port).  See
+B<XPA_PORT> above for an explanation of user-specified ports.
+
+
+
+
+=item *
+
+B<XPA_SHORT_TIMEOUT>
+
+
+XPA is designed to allow data to be sent from one process to
+another over a long period of time (i.e., a program that generates
+image data sends that data to an image display, but slowly) but it
+also seeks to prevent hangs. This is done by supporting 2 timeout
+periods: a I<short> timeout for protocol communication
+and a I<long> for data communication.
+
+The I<XPA_SHORT_TIMEOUT> variable
+controls the I<short> timeout and is used to prevent hangs
+in cases where the XPA protocol requires internal communication between
+the client and server that is controlled by the XPA interface
+itself. Authentication is an example of this sort of communication,
+as is the establishment of a data channel between the two processes.
+The default value for the I<short> is 30 seconds (which is
+a pretty long time, actually). Setting the value to -1 will disable
+I<short> timeouts and allow an infinite amount of time.
+
+
+
+
+=item *
+
+B<XPA_SIGUSR1>
+
+
+If the value of this variable is I<true>, then XPA will
+catch SIGUSR1 signals when performing an I/O operation in order to
+curtail that operation. This facility allows users to send a SIGUSR1
+signal to an XPA server if a client is hanging up the server by
+sending or receiving data too slowly (timeouts also can be used -- see
+above). When enabled in this way, the SIGUSR1 signal is ignored at all other
+times, so that its safe to send the signal at any time.  If the
+variable is set to I<false>, then SIGUSR1 is not used at
+all. Turning off SIGUSR1 would be desired in cases there the program
+uses SIGUSR1 for some other reason and does not want XPA interfering.
+The default is to use the signal.
+
+
+
+
+=item *
+
+B<XPA_TIMESTAMP_ERRORS>
+
+
+If I<XPA_TIMESTAMP_ERRORS> is I<true>, then error
+messages will include a date/time string.  This can be useful when
+XPA errors are being saved in an error log (e.g. Web/CGI use). The
+default is false.
+
+
+=back
+
+
+
+
+
+
+=item *
+
+B<XPA_TMPDIR>
+
+
+This variable specifies the directory into which XPA logs, Unix
+socket files (when I<XPA_METHOD> is I<local>), etc. are
+stored. The default is I</tmp/.xpa>.
+
+
+
+
+=item *
+
+B<XPA_VERBOSITY>
+
+
+Specify the verbosity level of error messages. If the value is
+set to I<0>, I<false>, or I<off>, then no error
+messages are printed to stderr.  If the value is I<1>, then
+important XPA error messages will be output.  If the value is
+set to I<2>, XPA warnings about out-of-sync messages will also
+be output.  These latter almost always can be ignored.
+
+
+
+
+=item *
+
+B<XPA_VERSIONCHECK>
+
+
+Specify whether a new access point should check its major and minor XPA
+version number against the version used by the xpans name server at
+registration time. The default is I<true>. When checking is
+performed, a warning is issued if the server major version is found to
+be greater than the xpans version. Note that the check is performed
+both by the XPA server and by the xpans process and warnings will be
+issued by each.  Also, instead of the values of I<true> or
+I<false>, you can give this variable an integer value n. In this
+case, each version checking process (i.e., the XPA-enabled server or
+xpans) will print out a maximum of n warning messages (after which
+version warnings are silently swallowed).
+
+In general, it is a bad idea to run an XPA-enabled server program
+using a version of XPA newer than the basic xpaset, xpaget, xpaaccess,
+xpans programs. This sort of mismatch usually will not work due to
+protocol changes.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

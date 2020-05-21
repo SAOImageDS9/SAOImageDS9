@@ -1,0 +1,534 @@
+<html>
+<head>
+<title>XPA ChangeLog</title>
+</head>
+<body>
+<center><h3>XPA ChangeLog</h3></center>
+
+<h3> Public Release 2.1.20 (April 3, 2020)</h3>
+<ul>
+<li> Makefile.in: fix mingw support
+</ul>
+
+<h3> Public Release 2.1.19 (May 21, 2019)</h3>
+<ul>
+<li> Fix a few compiler warnings
+</ul>
+
+<h3> Public Release 2.1.18 (October 18, 2016)</h3>
+<ul>
+<li> Facilitate coordination with SAOimage DS9
+</ul>
+
+<h3> Public Release 2.1.17 (October 20, 2015)</h3>
+<ul>
+<li> Add support for pkg-config
+<li> Avoid clang compiler warnings in tcl.c
+</ul>
+
+<h3> Public Release 2.1.16 (October 19, 2015)</h3>
+<ul>
+<li> Ensure that mingw utilizes Windows error codes instead of *nix codes
+</ul>
+
+<h3> Public Release 2.1.15 (July 23, 2013)</h3>
+<ul>
+<li> Added support for large data transfers
+<li> XPAGet and XPASet now pass size_t instead of int for lengths
+<li> Send and receive callbacks now pass size_t instead of int for lengths
+<li> Port to mingw (Windows)
+</ul>
+
+
+<h3> Public Release 2.1.14 (June 7, 2012)</h3>
+<ul>
+<li> Fixed several memory leaks in the Tcl wrappers (tcl.c).
+<li> Use Tcl stubs library for linking shared Tcl, if available.
+</ul>
+
+<h3> Public Release 2.1.13 (April 14, 2011)</h3>
+<ul>
+<li> An atexit handler is no longer installed automatically (it crashes
+Tcl 8.5.8 applications). Call XPAAtExit(void) to install the handler.
+<li> Removed permission checking from Find() on Cygwin systems. This was broken
+by Windows 7.
+<li> Removed addition of -no-cpp-precomp flag from gcc 4.2 and beyond (Mac).
+</ul>
+
+<h3> Public Release 2.1.12 (January 26, 2010)</h3>
+<ul>
+<li> Added XPA_HOST environment variable to allow users to specify
+the hostname (and hence, ip) component of the INET method id. This is
+useful, for example, if you want to register an access point using a
+VPN-generated IP instead of the canonical IP.
+<li> Fix typo in Tcl binding to xpainfo causing a crash after 2 invocations.
+</ul>
+
+<h3> Public Release 2.1.11 (December 7, 2009)</h3>
+<ul>
+<li> Generalized XPANSKeepAlive() to send messages to xpans, proxy xpans, or
+both. The default is to send just to proxies (e.g. chandra-ed).
+<li> Changed XPANSKeepAlive() to send an in-band new-line char to
+xpans, changed xpans to handle an in-band new-line as a keep-alive
+message. Necessitated by Cisco routers that clear the URG flag in
+a TCP packet, breaking OOB data transfer for the whole Internet, as
+well as the OOB-based keep-alive implemented in xpans.
+<li> In xpans, print warning when the keep-alive option switch is used.
+<li> Port to mingw (thanks to B.Schoenhammer)
+<li> Change OOB character sent by xpans keepalive to a space, trying to working around cisco routers that force OOB data into the inbound stream.
+<li> fix gcc fprintf warning in xpans.c
+</ul>
+
+<h3> Public Release 2.1.10 (September 1, 2009)</h3>
+<ul>
+<li> Update mklib and configure.ac to support 64-bit builds on Macs.
+<li> Fixed bug in XPAAccess() in which the returned names could have an extra
+(bogus) character when the target is an explicit ip:port or local socket file.
+<li> Add setjmp/longjmp support to xalloc.
+<li> Add XPASaveJmp(void *env) as a high-level interface to xalloc_savejmp();
+</ul>
+
+<h3> Internal Release 2.1.9</h3>
+<ul>
+<li> Fixed a bug that prevented an access point starting with a number
+from being recognized properly. NB: a pure number still signifies a
+port on the current machine. Also num:num signifies ip:port, where ip
+can be a pure hex value or the canonical form vvv.xxx.yyy.zzz.
+<li> Modified internal Launch() routine to use posix_spawn(), if necessary.
+This is required for OS X 10.5 (leopard), which frowns upon use of fork()
+and exec(). Also modified zprocess routines to use Launch().
+<li> Added XPASetFree(xpa, void (*myfree)(void *)) routine to allow callbacks
+to specify a free routine other than malloc free (e.g. Perl garbage collection).
+<li> XPACmdAdd() now checks to ensure that it was passed an XPA struct created
+by XPACmdNew().
+<li> Change launch.h to xlaunch.h to avoid conflict with OS X.
+</ul>
+
+<h3> Public Release 2.1.8 (1 November 2007)</h3>
+<ul>
+<li> A public release to complete current XPA development work.
+</ul>
+
+<h3> Patch Release 2.1.7b[1,2] (Feb 22, 2006; March 8, 2007)</h3>
+<ul>
+<li> Added a convenience null to the end of the buffers returned by XPAGet.
+<li> Added code to avoid calling atexit routine if a fork'ed child
+calls exit() instead of _exit().
+<li> Added XPA_CLIENT_DOXPA environment variable to turn off client
+processing of xpa server requests.
+<li> Added --version to xpaset, xpaget, xpainfo, xpaaccess, xpans to
+display XPA version and exit.
+<li> Added support for integrating XPA into a Gtk loop.
+<li> xpaaccess now returns its answer in the error code as well as to stdout
+(without the -n switch, it returns 1 for a match, with the -n switch,
+the number of matches is returned).
+<li> Fixed bug which prevented xpans from being started up automatically
+by an xpa server if its pathname contained a space character.
+<li> Fixed bug in MINGW port of xpans in which an XPA server that
+terminated via an interrupt was not being properly removed from the
+list of registered access points.
+<li> Added XPA_LOGNAME to override LOGNAME when registering username
+<li> Upgraded swish-e indexing code to 2.4.5.
+</ul>
+
+<h3> Patch Release 2.1.6 (4 May 2005)</h3>
+<ul>
+<li> Added -P switch to xpans to enable experimental proxy support
+(default is disabled).  An argument of 1 processes proxy requests in
+the same thread as xpans requests, while an argument of 2 processes
+proxy requests in a separate thread. (The latter is recommended to
+avoid xpans timeouts, since xpa callback processing can take a long
+time.)
+<li> Added ability to build shared libraries (done automatically with
+configure --enable-shared) with compilers other than gcc.
+<li> Made yet another attempt to build shared libraries under OS X.
+<li> Fixed a server bug in Tcl support under Windows (introduced early
+in 2.1.6) which caused an occasional SEGV.
+<li> Fixed race condition in cases where 2 or more servers makes client calls
+to one another.
+<li> Fixed bug in the XPA handler routine in which an access point was
+turned off if an error occurred in that routine (as opposed to the
+user-defined callback routine).
+<li> Fixed race condition when "ack=false" flag (or -n) is used with XPASet()
+(or xpaset).
+<li> Added defensive code to XPA handler to ensure that the passed XPA record
+is valid.
+<li> Tcl/XPA servers such as ds9 were not turning off select() on the
+xpa channels inside an xpa callback, as required. This is now fixed.
+<li> Added timestamps to most server and client error messages if the
+XPA_TIMESTAMP_ERRORS variable is set. This is useful when XPA errors are
+being logged in an error log (e.g. Web/CGI use).
+<li> Generated PostScript and PDF versions of the help pages.
+<li> Moved OPTIONS section before (often-lengthy) DESCRIPTION section in
+man pages.
+<li> All memory allocation now performs error checking on the result.
+<li> Removed some compiler warnings that surfaced when using gcc -O2.
+ <li> Updated configure.ac to better support Tcl in Panther with Apple
+Frameworks.
+</ul>
+
+<h3> Patch Release 2.1.5 (12 January 2004)</h3>
+<ul>
+<li> Fixed bug in XPAPoll(). Erroneously, no requests were being
+processed when maxreq==0. Now, all pending events are processed, as
+per the documentation.
+<li> Added ack=false to XPAInfo() (and corresponding -n to xpainfo)
+so that client does not wait for a response from the server. This is
+essential in cases where XPA servers wish to send info messages to
+one another without causing a race condition.
+<li> Generated man pages from the html pages. These are installed
+automatically at build time.
+<li> The xpans program with Unix sockets now uses a lock file to signal
+that it is running, in order to avoid a potential (but rare) race
+condition at startup.
+<li> Code that calls Unix-type bind() now manipulate umask() to ensure that
+all users have write permissions to the socket file (OS X apparently uses
+these permissions while previous platforms ignore them).
+<li> Configure now checks for socklen_t type (OS X does not define it).
+
+<p> 
+<li> Added an atexit function to run XPAFree. The aim here is to delete Unix
+socket files on exiting.
+<li> Under Windows, the Tcl event-handling code now blocks for 1/1000 of a
+second instead of not blocking at all (which inadvertently used 100% of cpu).
+<li> Upgraded Tcl/Tk support to 8.4.
+<li> Made another round of checks was made through all instances of
+strcat, strcpy, etc. to look for potential buffer overflows.  Changed
+all instances of sprintf() to snprintf().
+<li> Class and name designators are now limited to 1024 characters, for
+no particular reason.
+<li> The obsolete $SAORD_BIN variable was being added to the path when
+searching for xpans. This is no longer the case.
+<li> Fixed non-ANSI compiler errors in both xpa.c and xpans.c.
+<li> Fixed minor problems to support compilation with g++.
+<li> Ported to Intel icc and gcc 3.3 compilers.
+<li> Upgraded autoconf to 2.57. Included in this upgrade is a change that
+makes gcc the default compiler (use "configure CC=cc" to change this).
+Also, by default, the Tcl shared object is no longer automatically built
+if the Tcl libraries are used. Use the --enable-tclshlib switch in 
+configure to enable this feature.
+<li>  Changed license from public domain to GNU GPL.
+</ul>
+
+<h3> Patch Release 2.1.4 (24 March 2003)</h3>
+<ul>
+<li> Made inet method unique, even when hosts are behind a firewall using
+the same ports (on different local machines).
+<li> The initial connection from an xpa server to a local xpans now is
+controlled by a timeout (default 5 sec, controlled by XPA_CONNECT_TIMEOUT
+variable). This should prevent a hang on connect() if the network
+is not set up correctly.
+<li> Fixed rare race condition when an XPA server callback performed its own
+XPAGet or XPASet call to another XPA server.
+<li> Use POSIX O_NONBLOCK for non-blocking I/O in fcntl call if it
+exists, instead of O_NDELAY.
+</ul>
+
+<h3> Patch Release 2.1.3 (26 September 2002)</h3>
+<ul>
+<li> Added -k [sec] switch to xpans to support sending one-byte keepalive
+messages from xpans to registered xpa servers.
+<li> Added XPANSKeepAlive routine (and Tcl equivalent) to allow
+xpa servers to send a one-byte keepalive message to xpans.
+</ul>
+
+<h3> Patch Release 2.1.2 (18 July 2002)</h3>
+<ul>
+<li> The "-help" reserved command now also displays the XPA version, if
+no explicit sub-commands are specified.
+<li> Change internal state of xpans proxy to save ip:port value of a
+server behind a NAT firewall. This is required to give some hope of
+distinguishing multiple instances of ds9 running behind NAT.
+</ul>
+
+<h3> Patch Release 2.1.1 (20 June 2002)</h3>
+<ul>
+<li> Added a version check between xpans and an access point,
+performed when it gets registered by an XPA server.  If the server
+has a version greater than the xpans version, a warning is issued by
+both programs.
+<li> Added a boolean XPA_NSREGISTER environment variable to allow an
+XPA server to skip xpans registration. The default is to register with
+the name server.  If set to "false", the access point still is set up
+but it is not registered with an xpans. It can be registered later on
+(using -remote or -proxy, for example).
+<li> Fixed bug in which xpans was still listening on any interface when
+XPA_METHOD was localhost (instead of just listening on localhost).
+</ul>
+
+<h3> Public Release 2.1.0 (22 April 2002)</h3>
+New features include:
+
+<ul><li> Support for proxy access to XPA servers (e.g. ds9) situated
+behind a firewall (useful for NVO-type applications).
+<li> Improved support for allowing remote machines access rights to the
+XPA access points (useful for NVO-type applications).
+<li> Ability for XPAAccess() routine and xpaaccess program to contact XPA
+ directly.
+<li> Support for a clipboard access point that allows clients to store ASCII
+state information in an XPA-enabled server.
+<li> Improved support for Windows platform, as well as new support for Mac OSX.
+</ul>
+
+<h3> Pre-Release 2.1.0e (2 April 2002)</h3>
+<ul>
+<li> Removed the environment variable generated by each XPA access
+point (of the form XPA_name=method). The putenv() call was causing ds9
+to crash under both Linux and LinuxPPC during a socket operation. We
+suspect a bug in putenv but cannot prove it and this feature is not
+essential, so ...
+</ul>
+
+<h3> Pre-Release 2.1.0e (1 April 2002)</h3>
+<ul>
+<li> Fixed an uninitialized variable in xpamb which prevented it from
+working at all on some systems.
+<li> Changed xpamb switch from "-add" to "-data" (to store named data).
+<li> Changed how xpamb works with xpaget so that xpamb can return data
+from XPA access points as well as from stored data. (Previous versions
+only returned stored data.) Now, you can retrieve stored data
+explicitly using the -info and/or -data switches. For example:
+<PRE>
+  xpaget xpamb -info foo
+</PRE>
+will return info about the previously stored data named foo. If
+neither switch is present, then the name is assumed to be an XPA access
+point.
+</ul>
+
+<h3> Pre-Release 2.1.0e (25 March 2002)</h3>
+<ul>
+<li> Changed symbol for default port from "*" to "$port" to avoid
+a syntactical conflict between class:* and machine:* when processing an
+XPA access point class:name specification. Thus, the default inet
+method now is '$host:$port' instead of '$host:*'.
+</ul>
+
+<h3> Pre-Release 2.1.0e (19 March 2002)</h3>
+<ul>
+<li> Removed timeout check when reading data (in clients using xpaget
+and servers filling the data buffer). We have more and more cases
+where we need to wait a long time to retrieve data (e.g., slow
+networks or receiving data being compressed on the fly).
+<li> Moved call to sigaction(SIGCHLD,...) out of XPAOpen(), so that it
+is only executed when needed by XPAGet()/XPASet() routines called from
+within xpans/proxy. But then changed logic to use a double fork() instead
+of sigaction() to prevent zombies (Stevens Adv. Programming p 202).
+<li> Each XPA access point now generates an environment variable of the
+form XPA_name=method so that children can communicate with the parent access
+point more easily.
+<li> Added version option to Tcl xparec:
+<PRE>
+  if [catch { xparec "" version } version] {
+    puts "pre-2.1.0e"
+  } else {
+    puts [split $version .]
+  }
+</PRE>
+to help differentiate between XPA versions within Tcl code.
+</ul>
+
+<h3> Pre-Release 2.1.0e (14 February 2002)</h3>
+<ul><li> Fixed client handling of out-of-sync messages.
+</ul>
+
+<h3> Pre-Release 2.1.0e (11 February 2002)</h3>
+<ul>
+<li> Fixed client.c/xopen() so that it does not open an extra socket.
+<li> Fixed xpainfo/xopen() to prevent client from hanging waiting for ack.
+
+<p> 
+<li> Modified stest to generate xpaaccess points xpa, xpa1, c_xpa, and
+i_xpa (or more generally, <name>, <name>1, c_<name>, i<name>) to allow
+more flexible testing of templates. Also added -a for testing XPAAccess().
+</ul>
+
+<h3> Beta Release 2.1.0b10 (31 January 2002)</h3>
+<ul>
+<li> Added support for Mac OSX/Darwin to configure file.
+</ul>
+
+<h3> Beta Release 2.1.0b9 (26 January 2002)</h3>
+<ul>
+<li> Fixed bug in client library that caused XPAAccess() call to hang.
+</ul>
+
+<h3> Beta Release 2.1.0b8 (4 January 2002)</h3>
+<ul>
+<li> Made modifications to Makefile.in to make releases easier.
+<li> Added instructions to Makefile.in so that xpa.h will always have
+correct #defines for XPA_VERSION, XPA_MAJOR_VERSION, XPA_MINOR_VERSION,
+and XPA_PATCH_LEVEL.
+</ul>
+
+<h3> Beta Release 2.1.0b7 (21 December 2001)</h3>
+<ul>
+<li> Added -proxy switch to -remote sub-command to allow remote access
+through a firewall, using xpans as a proxy server. The support for proxy
+processing required a change to the client/server protocol. This means
+that new xpa servers will not work with old xpa clients (although new
+xpa clients will work with old xpa servers). For details about proxy
+firewall support, see http://hea-www.harvard.edu/RD/xpa/inet.html.
+<li> Fixed Tcl support for XPA under Windows/Cygwin by re-writing
+the code used to add XPA to the Tcl event loop. This fix makes ds9
+support for XPA much more stable under Windows.
+<li> Added the shutdown() call to XPA under Cygwin/Windows before
+closing send() sockets. It appears that a Cygwin recv() socket call
+does not always sense when the other end closes the socket using
+close(). This measure must be considered a hack, since the actual
+problem was never resolved.
+<li> Added code to protect accept() and select() calls from interrupts.
+<li> Extended syntax of the environment variable XPA_NSINET to:
+<PRE>
+  setenv XPA_NSINET host:port[,port[,port]]
+</PRE>
+to allow specification of the XPA access point port for xpans,
+as well as the proxy data port.
+<li> Modified xpans log file so that it contains the xpaset commands
+required to reconnect with xpa servers.
+<li> xpans now deletes its Unix socket files.
+</ul>
+
+<h3> Beta Release 2.1.0b6 (29 October 2001)</h3>
+<ul>
+<li> Implemented a reserve public access point named -clipboard so
+that clients can store ASCII state information on any number of named
+clipboards. Clipboards of the same name created by clients on
+different machines are kept separate.  The syntax for creating a
+clipboard is:
+<PRE>
+  [data] | xpaset [server] -clipboard add|append [clipboard_name]
+  xpaset -p [server] -clipboard delete [clipboard_name]
+  xpaget [server] -clipboard [clipboard_name]
+</PRE>
+Use "add" to create a new clipboard or replace the contents of an existing
+one. Use "append" to append to an existing clipboard.
+</ul>
+
+<h3> Beta Release 2.1.0b5 (22 October 2001)</h3>
+<ul>
+<li> Use FD_SETSIZE instead of getdtablesize() to determine how many files
+to check during select();
+<li> Under Cygwin, the launch() routine now uses the Cygwin spawnvp()
+instead of fork()/exec() where possible (i.e., if no stdfiles are
+being redirected). This is recommended by Cygwin's (skimpy) on-line
+documentation and seems to fix the problems ds9 had when starting xpans
+automatically.
+<li> Added error check to select() call in xpans.
+</ul>
+
+<h3> Beta Release 2.1.0b4 (24 September 2001)</h3>
+<ul>
+<li> The launch() now can return an error code if the execv() system
+call fails (something system() does not do).
+<li> INET socket calls between xpa clients and servers now will use
+localhost if they are on the same machine. This protects against
+Linux systems where the hostname is hardwired (wrongly) in a DHCP
+environment.
+</ul>
+
+<h3> Beta Release 2.1.0b3 (6 September 2001)</h3>
+<ul>
+<li> Modified xpans so that, in the case of a firewall, it tries to
+correct the specified ip:port by matching against the ip found in
+the socket packet at accept() time.
+<li> Replaced system() call used to start xpans automatically with
+a special launch() call, which performs execvp() directly without going
+through sh. (launch() works under DOS and has fewer security problems.)
+<li> Fixed bug in xpans in which its xpa port was always being set to 14286.
+</ul>
+
+<h3> Beta Release 2.1.0b2 (17 August 2001)</h3>
+<ul>
+<li>Added support for -remote command, which registers the access
+point in the XPA name server of the specified remote server, and gives
+the remote server access rights to the access point. This is used, for
+example, to give data servers xpa access to ds9 so that data can be
+sent to ds9 as a result of a CGI-based Web query.
+<li>Reserved commands (except "-help" and "-version") now can only be
+executed on the machine on which the xpa service is running (not
+through -remote servers).
+<li>Fixed bug in xpans in which a bad telnet command could hang the program.
+<li>Added -s [security file] to xpans to allow logging of all external
+connections.
+</ul>
+
+<h3> Beta Release 2.1.0b1 (6 August 2001)</h3>
+<ul><li> The xpaaccess client program and XPAAccess() client subroutine
+were modified so that an access-type query can directly contact the
+xpa servers matching the requested xpa template, instead of just
+querying the name server for registered access points. This avoid the
+race condition in which an access point is registered but is not yet
+available, perhaps because the server has not yet entered its event
+loop.  Note that the calling sequence of the XPAAccess() routine was
+changed to return all matching access points and their availability
+status (instead of just returning the number of registered access
+points). Because of this, we are calling this a minor release instead
+of a patch.
+<li> Added support for XPA_PORT and XPA_PORTFILE environment variables
+to allow specification of the port to be used by the command channel
+(and data channel, if an optional second port is specified) for a given
+access point.
+<li> Added -m switch to xpaget, xpaset, xpainfo, xpaaccess to allow
+override of the XPA_METHOD environment variable.
+<li> Changed the default name of the ACL file from xpa.acl to acls.xpa.
+<li> Fixed bug in which it was not possible to send a "set ACL"
+command to an XPA server which did not have a receive callback (i.e.,
+did not allow xpaset). The xpans program is one such server. It now is
+possible to set the ACL on xpans.
+<li> We have discovered that Tcl support for datachan and cmdchan is
+broken under Windows due to an unexplained incompatibility between
+Cygwin sockets and Win32 sockets. We therefore have removed datachan
+and cmdchan from the Windows/Tcl support until further notice.
+<li> Extended the behavior of the XPA_DEFACL environment variable so that
+it can support more than one acl, using a list of semi-colon delimited
+controls such as: setenv XPA_DEFACL '*:* $host +; *:foo1 otherhost +'.
+<li> Fixed bug in which the class:name specifier "*:*" was erroneously
+trying to access the xpans name server, instead of accessing all
+access points.
+<li> Support TMPDIR and TMP environment variables as well as XPA_TMPDIR.
+</ul>
+
+<h3> Patch Release 2.0.5 (10 November 2000)</h3>
+<ul><li> Added support for Tcl on Windows where there is no select()-based
+event loop (i.e., where there is no Tcl_CreateFileHandler call in Tcl)<li> Minor fixes in Makefile for installing on Windows<li> Minor compiler fixes from gcc -Wall.
+</ul>
+
+<h3> Patch Release 2.0.4 (20 September 2000) </h3>
+<ul><li> Removed extraneous include of varargs.h from find.c.<li> Ported to SGI C compiler, which caught lots of unused variables, etc.<li> Ported to Cygwin/Windows, which required that we change socket read()
+and write() calls to recv() and send() respectively. Also had to ensure that
+we only did socket I/O on sockets (no fileio).
+</ul>
+
+<h3> Patch Release 2.0.3 (15 June 2000) </h3>
+<ul> <li> Fixed the client XPASet() and XPASetFd() calls to handle the specified
+max number of connections (they were ignoring this argument, leading to
+memory overwrites).<li> Fixed Makefile.in so that CFLAGS and LDFLAGS are not hard-wired values.<li> Fixed word.h to load malloc.h and stdlib.h only if they exist.<li> Documentation fixes to programs.html (in xpaaccess) and client.html
+(XPANSLookup).<li> Added explicit typecast to strlen() argument to MAX #define in
+XPAClientStart (strlen() is unsigned in Linux, which can break MAX).<li> Removed bogus Imakefile from directory.<li> Changed directory name to include patch level (i.e., xpa-2.0.3).
+</ul>
+
+<h3> Patch Release 2.0.2 (9 September 1999)</h3>
+<ul> <li> Fixed server mode (-s) in the xpaset program by properly cleaning up
+the input buffers (sending commands and data in server mode was broken).
+</ul>
+
+<h3> Patch Release 2.0.1 (6 August 1999)</h3>
+<ul> <li> Fixed the Tcl binding code (tcl.c) for 64-bit machines (Dec Alpha)
+(erroneously used %x instead of %p when converting pointers to ASCII).<li> Got rid of a few compiler warnings on 64-bit machines (a few are
+unavoidable since we must cast int to void * and back when passing around
+client data).
+</ul>
+
+<h3> Public Release 2.0 (27 May 1999)</h3>
+<ul> <li> "a new day with no mistakes ... yet"
+</ul>
+
+<hr>
+<p>
+<a HREF="./help.html">Index to the XPA Help Pages</a>
+
+<hr>
+<h5>Last updated: 22 April 2002</h5>
+</body>
+</html>

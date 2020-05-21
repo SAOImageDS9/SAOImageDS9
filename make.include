@@ -1,5 +1,5 @@
-# tcl 8.6.8
-# tk 8.6.8
+# tcl 8.6.10
+# tk 8.6.10
 # tclfitsy 1.0
 # tcliis 1.0
 # tcllib 1.19
@@ -26,7 +26,7 @@
 # openssl 1.0.2k
 
 DS9_VERSION	= 8.2b2
-XPA_VERSION	= 2.1.18
+XPA_VERSION	= 2.1.20
 TCL_VERSION	= 8.6
 
 Tidy = \

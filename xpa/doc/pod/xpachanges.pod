@@ -1,0 +1,102 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPA Changes: Changes For Users from XPA 1.0 and 2.0>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+This document describes changes that will affect users who migrate
+from XPA 1.0 to XPA 2.0.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+There have been a few changes that affect users who upgrade XPA
+from version 1.0 to version 2.0.  These changes are detailed below.
+
+
+=over 4
+
+
+
+
+
+=item *
+
+XPA commands no longer have a resolver routine (this is open to
+negotiations, but we decided the idea was dumb).  For the SAOtng
+program, this means that you must explicitly specify the access
+point, i.e.,:
+
+  cat foo.fits | xpaset SAOtng fits
+
+
+
+instead of:
+
+  cat foo.fits | xpaset SAOtng
+
+
+
+
+=item *
+
+By default, xpaset, xpaget, etc. now wait for the server callback to
+complete; i.e., the old -W is implied (and the switch is ignored).
+This allows support for better error handling.  If you want xpaset, etc.
+to return before the callback is complete, use -n switch:
+
+  echo "file foo.fits" | xpaset -n SAOtng
+
+
+
+
+=item *
+
+The old -w switch in xpaset and xpaget is no longer necessary (and is
+ignored), since you can have more than one process communicating with
+an xpa access point at one time.
+
+
+
+
+=item *
+
+The new -p switch on xpaset means you need not read from stdout:
+              
+  xpaset -p SAOtng colormap I8
+
+
+will send the paramlist to the SAOtng callback without reading from stdin.
+
+
+
+=back
+
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

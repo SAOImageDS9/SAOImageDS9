@@ -8,11 +8,19 @@
 
 %start command
 
+%token BACKGROUND_
 %token BGCOLOR_
-%token CLEAR_
-%token IRAFALIGN_
+%token COLOR_
+%token NAN_
 %token NANCOLOR_
+
+%token CLEAR_
+%token CLOSE_
+%token IRAFALIGN_
+%token OPEN_
 %token PRECISION_
+%token SAVE_
+%token THEME_
 %token THREADS_
 
 %%
@@ -24,12 +32,30 @@ command : prefs
  ;
 
 prefs : yesno {ProcessCmdSet ds9 prefs $1}
+
+ | OPEN_
  | CLEAR_
+ | CLOSE_
+ | SAVE_ STRING_
+
+ | BACKGROUND_ bg
+ | BACKGROUND_ COLOR_ bg
+ | BGCOLOR_ bg
+ | NAN_ nan
+ | NAN_ COLOR_ nan
+ | NANCOLOR_ nan
+
  | PRECISION_ INT_ INT_ INT_ INT_ INT_ INT_
- | BGCOLOR_ STRING_
- | NANCOLOR_ STRING_
+ | THEME_ STRING_
  | THREADS_ INT_
  | IRAFALIGN_ yesno
+ ;
+
+bg : yesno
+ | STRING_
+ ;
+ 
+nan : STRING_
  ;
 
 %%

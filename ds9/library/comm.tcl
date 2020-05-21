@@ -30,7 +30,10 @@ proc CommSet {fn paramlist {safemode 0}} {
 	analysis {ProcessAnalysisCmd param i {} $fn}
 	array {ProcessArrayCmd param i {} $fn}
 	bg -
-	background {ProcessBgCmd param i}
+	background {
+	    # backward compatibility prefs
+	    ProcessBgCmd param i
+	}
 	backup {ProcessBackupCmd param i}
 	blink {ProcessBlinkCmd param i}
 	bin {ProcessBinCmd param i}
@@ -105,7 +108,10 @@ proc CommSet {fn paramlist {safemode 0}} {
 	memf -
 	multiframe {ProcessMultiFrameCmd param i {} $fn}
 	nameserver {ProcessNRESCmd param i}
-	nan {ProcessNanCmd param i}
+	nan {
+	    # backward compatibility prefs
+	    ProcessNanCmd param i
+	}
 	nrrd {ProcessNRRDCmd param i {} $fn}
 	nvss {ProcessNVSSCmd param i}
 	orient {ProcessOrientCmd param i}
@@ -116,7 +122,10 @@ proc CommSet {fn paramlist {safemode 0}} {
 	pixeltable {ProcessPixelTableCmd param i}
 	plot {ProcessPlotCmd param i {} $fn}
 	png {ProcessPNGCmd param i {} $fn}
-	precision {ProcessPrecisionCmd param i}
+	precision {
+	    # backward compatibility prefs
+	    ProcessPrecisionCmd param i
+	}
 	prefs {ProcessPrefsCmd param i}
 	preserve {ProcessPreserveCmd param i}
 	print {
@@ -187,10 +196,13 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    }
 	}
 	theme {
-	    # backward compatibility
+	    # backward compatibility prefs
 	    ProcessThemeCmd param i
 	}
-	threads {ProcessThreadsCmd param i}
+	threads {
+	    # backward compatibility prefs
+	    ProcessThreadsCmd param i
+	}
 	tif -
 	tiff {ProcessTIFFCmd param i {} $fn}
 	tile {ProcessTileCmd param i}
@@ -230,7 +242,10 @@ proc CommGet {proc id paramlist fn} {
 	analysis {ProcessSendAnalysisCmd $proc $id $param {} $fn}
 	array {ProcessSendArrayCmd $proc $id $param {} $fn}
 	bg -
-	background {ProcessSendBgCmd $proc $id $param}
+	background {
+	    # backward compatibility prefs
+	    ProcessSendBgCmd $proc $id $param
+	}
 	blink {ProcessSendBlinkCmd $proc $id $param}
 	bin {ProcessSendBinCmd $proc $id $param}
 	block {ProcessSendBlockCmd $proc $id $param}
@@ -302,7 +317,10 @@ proc CommGet {proc id paramlist fn} {
 	memf -
 	multiframe {}
 	nameserver {ProcessSendNRESCmd $proc $id $param}
-	nan {ProcessSendNanCmd $proc $id $param}
+	nan {
+	    # backward compatibility prefs
+	    ProcessSendNanCmd $proc $id $param
+	}
 	nrrd {ProcessSendNRRDCmd $proc $id $param {} $fn}
 	nvss {ProcessSendNVSSCmd $proc $id $param}
 	orient {ProcessSendOrientCmd $proc $id $param}
@@ -312,7 +330,10 @@ proc CommGet {proc id paramlist fn} {
 	pixeltable {ProcessSendPixelTableCmd $proc $id $param {} $fn}
 	plot {ProcessSendPlotCmd $proc $id $param}
 	png {ProcessSendPNGCmd $proc $id $param {} $fn}
-	precision {ProcessSendPrecisionCmd $proc $id $param}
+	precision {
+	    # backward compatibility prefs
+	    ProcessSendPrecisionCmd $proc $id $param
+	}
 	prefs {ProcessSendPrefsCmd $proc $id $param}
 	preserve {ProcessSendPreserveCmd $proc $id $param}
 	pspagesetup {ProcessSendPSPageSetupCmd $proc $id $param}
@@ -354,10 +375,13 @@ proc CommGet {proc id paramlist fn} {
 	srgbcube {}
 	tcl {}
 	theme {
-	    # backward compatibility
+	    # backward compatibility prefs
 	    ProcessSendThemeCmd $proc $id $param
 	}
-	threads {ProcessSendThreadsCmd $proc $id $param}
+	threads {
+	    # backward compatibility prefs
+	    ProcessSendThreadsCmd $proc $id $param
+	}
 	tif -
 	tiff {ProcessSendTIFFCmd $proc $id $param {} $fn}
 	tile {ProcessSendTileCmd $proc $id $param}

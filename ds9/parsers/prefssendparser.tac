@@ -4,23 +4,48 @@
 
 %start prefssend
 
+%token BACKGROUND_
 %token BGCOLOR_
+%token COLOR_
+%token NAN_
+%token NANCOLOR_
+
 %token HAS_
 %token IRAFALIGN_
-%token NANCOLOR_
 %token PRECISION_
+%token THEME_
 %token THREADS_
 
 %%
 
-prefssend : PRECISION_ {ProcessSendCmdGet6 pds9 prec,linear prec,deg prec,hms prec,dms prec,arcmin prec,arcsec}
- | HAS_ BGCOLOR_ {ProcessSendCmdGet pds9 bg,use}
- | BGCOLOR_ {ProcessSendCmdGet pds9 bg}
- | NANCOLOR_ {ProcessSendCmdGet pds9 nan}
+prefssend : HAS_ has
+ | BGCOLOR_ bg
+ | BACKGROUND_ bg
+ | BACKGROUND_ COLOR_ bg
+ | NANCOLOR_ nan
+ | NAN_ nan
+ | NAN_ COLOR_ nan
+
+ | PRECISION_ {ProcessSendCmdGet9 pds9 prec,linear prec,deg prec,hms prec,dms prec,len,linear prec,len,deg prec,len,arcmin prec,len,arcsec prec,angle}
+ | THEME_ {ProcessSendCmdGet pds9 theme}
  | THREADS_ {ProcessSendCmdGet ds9 threads}
  | IRAFALIGN_ {ProcessSendCmdYesNo pds9 iraf}
  ;
 
+has : BGCOLOR_ hasbg
+ | BACKGROUND_ hasbg
+ | BACKGROUND_ COLOR_ hasbg
+ ;
+
+hasbg : {ProcessSendCmdGet pds9 bg,use}
+ ;
+
+bg : {ProcessSendCmdGet pds9 bg}
+ ;
+
+nan : {ProcessSendCmdGet pds9 nan}
+ ;
+ 
 %%
 
 proc prefssend::yyerror {msg} {

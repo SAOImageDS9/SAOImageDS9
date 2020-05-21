@@ -708,7 +708,6 @@ proc TileOne {} {
     }
 
     # only show the current frame
-    # $current(frame) show
     FrameToFront
 }
 

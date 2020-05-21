@@ -61,36 +61,42 @@ proc precision::unsetupvalues {numsyms} {
 }
 
 array set precision::table {
+  13:258,target 4
   3:0,target 1
   0:257 shift
+  13:0,target 4
   7:0 reduce
   6:257,target 8
   5:258,target 7
   1:257 shift
   0:259 goto
-  10:0 reduce
   8:257,target 9
   0:261 goto
   7:0,target 3
   4:257 shift
   3:258 reduce
   1:257,target 4
-  10:258,target 4
+  11:257,target 12
   3:260 goto
-  10:0,target 4
+  13:0 reduce
   6:257 shift
   5:258 shift
   0:261,target 3
   2:0,target 0
   8:257 shift
   3:260,target 5
+  10:257 shift
   9:257 shift
-  10:258 reduce
+  11:257 shift
+  12:257 shift
   0:257,target 1
+  10:257,target 11
   9:257,target 10
   2:0 accept
+  13:258 reduce
   0:259,target 2
   3:0 reduce
+  12:257,target 13
   4:257,target 6
   3:258,target 2
 }
@@ -106,7 +112,7 @@ array set precision::rules {
 array set precision::rules {
   0,dc 1
   2,dc 0
-  4,dc 6
+  4,dc 9
   1,dc 1
   3,dc 3
 }
@@ -120,6 +126,7 @@ array set precision::rules {
 }
 
 array set precision::lr1_table {
+  13,trans {}
   0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 258} 0}}
   1 {{4 {0 258} 1}}
   2 {{0 0 1}}
@@ -137,11 +144,16 @@ array set precision::lr1_table {
   10 {{4 {0 258} 6}}
   9 {{4 {0 258} 5}}
   5,trans {{258 7}}
+  11 {{4 {0 258} 7}}
   6,trans {{257 8}}
+  12 {{4 {0 258} 8}}
   7,trans {}
+  13 {{4 {0 258} 9}}
   8,trans {{257 9}}
-  10,trans {}
+  10,trans {{257 11}}
   9,trans {{257 10}}
+  11,trans {{257 12}}
+  12,trans {{257 13}}
 }
 
 array set precision::token_id_table {
@@ -272,7 +284,7 @@ proc precision::yyparse {} {
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
                     2 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    4 { ProcessCmdSet pds9 prec,linear $1; ProcessCmdSet pds9 prec,deg $2; ProcessCmdSet pds9 prec,hms $3;ProcessCmdSet pds9 prec,dms $4; ProcessCmdSet pds9 prec,arcmin $5; ProcessCmdSet pds9 prec,arcsec $6 PrefsPrecision }
+                    4 { ProcessCmdSet pds9 prec,linear $1; ProcessCmdSet pds9 prec,deg $2; ProcessCmdSet pds9 prec,hms $3;ProcessCmdSet pds9 prec,dms $4; ProcessCmdSet pds9 prec,len,linear $5; ProcessCmdSet pds9 prec,len,deg $6; ProcessCmdSet pds9 prec,len,arcmin $7; ProcessCmdSet pds9 prec,len,arcsec $8; ProcessCmdSet pds9 prec,angle $9; PrefsPrecision }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

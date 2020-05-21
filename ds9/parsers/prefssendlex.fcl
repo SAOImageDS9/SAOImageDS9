@@ -7,14 +7,21 @@
 
 %%
 
+bg	    {return $BACKGROUND_}
+background  {return $BACKGROUND_}
 bgcolor	    {return $BGCOLOR_}
 bgcolour    {return $BGCOLOR_}
-has	    {return $HAS_}
-irafalign   {return $IRAFALIGN_}
+color	    {return $COLOR_}
+colour	    {return $COLOR_}
+nan	    {return $NAN_}
 nancolor    {return $NANCOLOR_}
 nancolour   {return $NANCOLOR_}
+
+has	    {return $HAS_}
 precision   {return $PRECISION_}
+theme	    {return $THEME_}
 threads	    {return $THREADS_}
+irafalign   {return $IRAFALIGN_}
 
 #include ws.fin
 

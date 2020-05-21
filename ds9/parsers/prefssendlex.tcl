@@ -179,12 +179,16 @@ proc prefssend::yylex {} {
     variable done_
     variable state_table_
 
-set BGCOLOR_ 257
-set HAS_ 258
-set IRAFALIGN_ 259
-set NANCOLOR_ 260
-set PRECISION_ 261
-set THREADS_ 262
+set BACKGROUND_ 257
+set BGCOLOR_ 258
+set COLOR_ 259
+set NAN_ 260
+set NANCOLOR_ 261
+set HAS_ 262
+set IRAFALIGN_ 263
+set PRECISION_ 264
+set THEME_ 265
+set THREADS_ 266
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -206,75 +210,117 @@ set THREADS_ 262
         }
         set yyleng 0
         set matched_rule -1
-        # rule 0: bgcolor
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(bgcolor)} $yy_current_buffer match] > 0 && \
+        # rule 0: bg
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(bg)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 0
         }
-        # rule 1: bgcolour
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(bgcolour)} $yy_current_buffer match] > 0 && \
+        # rule 1: background
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(background)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 1
         }
-        # rule 2: has
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(has)} $yy_current_buffer match] > 0 && \
+        # rule 2: bgcolor
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(bgcolor)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
         }
-        # rule 3: irafalign
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(irafalign)} $yy_current_buffer match] > 0 && \
+        # rule 3: bgcolour
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(bgcolour)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 3
         }
-        # rule 4: nancolor
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(nancolor)} $yy_current_buffer match] > 0 && \
+        # rule 4: color
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(color)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 4
         }
-        # rule 5: nancolour
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(nancolour)} $yy_current_buffer match] > 0 && \
+        # rule 5: colour
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(colour)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 5
         }
-        # rule 6: precision
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(precision)} $yy_current_buffer match] > 0 && \
+        # rule 6: nan
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(nan)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 6
         }
-        # rule 7: threads
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(threads)} $yy_current_buffer match] > 0 && \
+        # rule 7: nancolor
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(nancolor)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 7
         }
-        # rule 8: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 8: nancolour
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(nancolour)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 8
         }
-        # rule 9: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 9: has
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(has)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 9
+        }
+        # rule 10: precision
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(precision)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 10
+        }
+        # rule 11: theme
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(theme)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 11
+        }
+        # rule 12: threads
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(threads)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 12
+        }
+        # rule 13: irafalign
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(irafalign)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 13
+        }
+        # rule 14: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 14
+        }
+        # rule 15: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 15
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -289,33 +335,51 @@ set THREADS_ 262
         set numlines [expr {[llength [split $yytext "\n"]] - 1}]
         switch -- $matched_rule {
             0 {
-return $BGCOLOR_
+return $BACKGROUND_
             }
             1 {
-return $BGCOLOR_
+return $BACKGROUND_
             }
             2 {
-return $HAS_
+return $BGCOLOR_
             }
             3 {
-return $IRAFALIGN_
+return $BGCOLOR_
             }
             4 {
-return $NANCOLOR_
+return $COLOR_
             }
             5 {
-return $NANCOLOR_
+return $COLOR_
             }
             6 {
-return $PRECISION_
+return $NAN_
             }
             7 {
-return $THREADS_
+return $NANCOLOR_
             }
             8 {
-# ignore whitespace
+return $NANCOLOR_
             }
             9 {
+return $HAS_
+            }
+            10 {
+return $PRECISION_
+            }
+            11 {
+return $THEME_
+            }
+            12 {
+return $THREADS_
+            }
+            13 {
+return $IRAFALIGN_
+            }
+            14 {
+# ignore whitespace
+            }
+            15 {
 set yylval $yytext; return $yylval
             }
             default

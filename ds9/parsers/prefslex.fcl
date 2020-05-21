@@ -7,18 +7,25 @@
 
 %%
 
+open	    {return $OPEN_}
+close       {return $CLOSE_}
+clear	    {return $CLEAR_}
+save	    {return $SAVE_}
+
+bg	    {return $BACKGROUND_}
+background  {return $BACKGROUND_}
 bgcolor	    {return $BGCOLOR_}
 bgcolour    {return $BGCOLOR_}
-clear	    {return $CLEAR_}
-close       {return $CLOSE_}
-irafalign   {return $IRAFALIGN_}
+color	    {return $COLOR_}
+colour	    {return $COLOR_}
+nan	    {return $NAN_}
 nancolor    {return $NANCOLOR_}
 nancolour   {return $NANCOLOR_}
-open	    {return $OPEN_}
+
 precision   {return $PRECISION_}
-save	    {return $SAVE_}
 theme	    {return $THEME_}
 threads	    {return $THREADS_}
+irafalign   {return $IRAFALIGN_}
 
 #include yesno.fin
 #include int.fin

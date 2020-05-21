@@ -342,12 +342,12 @@ proc ProcessSendCmdGet3 {varname key key2 key3} {
     $parse(proc) $parse(id) "$var($key) $var($key2) $var($key3)\n"
 }
 
-proc ProcessSendCmdGet6 {varname key key2 key3 key4 key5 key6} {
+proc ProcessSendCmdGet9 {varname key key2 key3 key4 key5 key6 key7 key8 key9} {
     upvar #0 $varname var
     global $varname
 
     global parse
-    $parse(proc) $parse(id) "$var($key) $var($key2) $var($key3) $var($key4) $var($key5) $var($key6)\n"
+    $parse(proc) $parse(id) "$var($key) $var($key2) $var($key3) $var($key4) $var($key5) $var($key6) $var($key7) $var($key8) $var($key9)\n"
 }
 
 proc ProcessSendCmdYesNo {varname key} {

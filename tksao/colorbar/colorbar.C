@@ -812,6 +812,7 @@ void Colorbar::tagSaveCmd(const char* fn)
 void Colorbar::macosx(float scale, int width, int height, 
 		      const Vector& v, const Vector& s)
 {
+  /*
   if (!colorCells)
     return;
 
@@ -848,6 +849,7 @@ void Colorbar::macosx(float scale, int width, int height,
 
   if (dst)
     delete [] dst;
+  */
 }
 #endif
 

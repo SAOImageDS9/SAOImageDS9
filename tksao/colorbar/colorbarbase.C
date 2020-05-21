@@ -834,6 +834,7 @@ void ColorbarBase::setColormapLevelCmd(int cc, double* ff)
 
 void ColorbarBase::macosxPrintCmd()
 {
+  /*
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   if (!visible)
@@ -865,10 +866,12 @@ void ColorbarBase::macosxPrintCmd()
   // we want a border, even if no numerics
   macosxGrid();
   macosxEnd();
+  */
 }
 
 void ColorbarBase::macosxGrid()
 {
+  /*
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   int& width = options->width;
@@ -903,10 +906,12 @@ void ColorbarBase::macosxGrid()
   // numerics
   if (opts->numerics && lut)
     macosxGridNumerics();
+  */
 }
 
 void ColorbarBase::macosxGridNumerics()
 {
+  /*
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
   Matrix mm = Translate(originX, originY);
 
@@ -971,10 +976,12 @@ void ColorbarBase::macosxGridNumerics()
   }
 
   Tk_FreeFont(font);
+  */
 }
 
 void ColorbarBase::macosxGridAST()
 {
+  /*
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   Vector oo(originX, originY);
@@ -993,6 +1000,7 @@ void ColorbarBase::macosxGridAST()
 
   if (grid)
     grid->macosx(originX, originY);
+  */
 }
 
 #endif

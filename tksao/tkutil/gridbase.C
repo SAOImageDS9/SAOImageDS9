@@ -270,6 +270,7 @@ void GridBase::psColor(Attribute* attr)
 
 int GridBase::macosxLine(int n, float* x, float* y)
 {
+  /*
   if (n<2 || !x || !y)
     return 1;
 
@@ -291,6 +292,7 @@ int GridBase::macosxLine(int n, float* x, float* y)
 
   macosxDrawLines(v, n);
   delete [] v;
+  */
 
   return 1;
 }
@@ -298,6 +300,7 @@ int GridBase::macosxLine(int n, float* x, float* y)
 int GridBase::macosxText(const char* txt, float x, float y, 
 			 const char* just, Vector up)
 {
+  /*
   // change this later
   Tcl_DString psdstr;
   Tcl_DStringInit(&psdstr);
@@ -312,6 +315,7 @@ int GridBase::macosxText(const char* txt, float x, float y,
     
   macosxColor(parent_->getXColor(text_->colorName()));
   macosxDrawText(cc, angle, txt);
+  */
 
   return 1;
 }

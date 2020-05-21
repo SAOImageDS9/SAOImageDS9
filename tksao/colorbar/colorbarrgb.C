@@ -337,6 +337,7 @@ void ColorbarRGB::setRGBChannelCmd(const char* c)
 void ColorbarRGB::macosx(float scale, int width, int height, 
 			 const Vector& v, const Vector& s)
 {
+  /*
   if (!colorCells)
     return;
 
@@ -406,6 +407,7 @@ void ColorbarRGB::macosx(float scale, int width, int height,
 
   if (dst)
     delete [] dst;
+  */
 }
 #endif
 

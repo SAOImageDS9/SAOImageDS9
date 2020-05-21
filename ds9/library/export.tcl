@@ -36,10 +36,10 @@ proc ProcessExportCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-	export::YY_FLUSH_BUFFER
-	export::yy_scan_string [lrange $var $i end]
-	export::yyparse
-	incr i [expr $export::yycnt-1]
+    export::YY_FLUSH_BUFFER
+    export::yy_scan_string [lrange $var $i end]
+    export::yyparse
+    incr i [expr $export::yycnt-1]
 }
 
 proc ExportCmdSave {format fn {fn2 {}}} {

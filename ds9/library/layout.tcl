@@ -183,7 +183,6 @@ proc InitCanvas {} {
     global ds9
 
     # Bindings
-
     bind $ds9(canvas) <Tab> [list NextFrame]
     bind $ds9(canvas) <Shift-Tab> [list PrevFrame]
     switch $ds9(wm) {

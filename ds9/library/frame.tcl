@@ -1987,6 +1987,17 @@ proc FrameToFront {} {
 
     UpdateGraphLayout $which
     UpdateDS9
+
+    # Aqua has a problem with refreshing
+    switch $ds9(wm) {
+	x11 {}
+	aqua {
+	    if {!$ds9(init)} {
+		update idletasks
+	    }
+	}
+	win32 {}
+    }
 }
 
 proc TileDialog {} {

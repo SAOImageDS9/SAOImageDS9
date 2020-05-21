@@ -5,25 +5,11 @@
 #ifndef __tkmacosx_h__
 #define __tkmacosx_h__
 
-#include <tkMacOSXPrivate.h>
-
-#include <vector.h>
-
-@interface PMView : NSView
-{
-}
-- (PMView*)init;
-- (void)alloc;
-- (void)dealloc;
-- (void)drawRect: (NSRect)rect;
-@end
+#include <tk.h>
 
 class TkMacosx {
  private:
   Tcl_Interp* interp;
-
-  Matrix canvasToPage;
-  PMView* pmView;
 
   int pmPrint(int, const char**);
   int pmPrintBegin(int, const char**);
@@ -38,8 +24,6 @@ class TkMacosx {
   int pm(int, const char**);
   int sc(int, const char**);
   int locale(int, const char**);
-
-  const Matrix& getCanvasToPage() {return canvasToPage;}
 };
 
 extern TkMacosx* tkmacosx;

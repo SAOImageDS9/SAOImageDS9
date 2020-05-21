@@ -8,6 +8,7 @@ using namespace std;
 
 #include <string.h>
 
+#include <tkMacOSXPrivate.h>
 #include "tkmacosx.h"
 
 extern "C" {
@@ -62,7 +63,7 @@ int TkmacosxCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
 TkMacosx::TkMacosx(Tcl_Interp* intp)
 {
   interp = intp;
-  pmView = NULL;
+  //  pmView = NULL;
 }
 
 TkMacosx::~TkMacosx()
@@ -161,6 +162,7 @@ int TkMacosx::pmPrint(int argc, const char* argv[])
   return TCL_OK;
 }
 
+/*
 @implementation PMView
 - (PMView*)init
 {
@@ -181,9 +183,11 @@ int TkMacosx::pmPrint(int argc, const char* argv[])
 {
 }
 @end
+*/
 
 int TkMacosx::pmPrintBegin(int argc, const char* argv[])
 {
+  /*
   pmView = [[PMView alloc] init];
   NSPrintInfo* printInfo = [NSPrintInfo sharedPrintInfo];
   NSPrintOperation* printOp = \
@@ -191,6 +195,7 @@ int TkMacosx::pmPrintBegin(int argc, const char* argv[])
 
   [printOp runOperation];
   return TCL_OK;
+  */
   return TCL_OK;
 }
 

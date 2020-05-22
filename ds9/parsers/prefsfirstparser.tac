@@ -36,7 +36,7 @@ prefs : yesno {ProcessCmdSet ds9 prefs $1}
  | OPEN_
  | CLEAR_
  | CLOSE_
- | SAVE_ STRING_
+ | SAVE_
 
  | BACKGROUND_ bg
  | BACKGROUND_ COLOR_ bg

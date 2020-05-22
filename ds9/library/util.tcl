@@ -318,6 +318,14 @@ proc ProcessSendCmdGet {varname key} {
     $parse(proc) $parse(id) "$var($key)\n"
 }
 
+proc ProcessSendCmdGetYesNo {varname key} {
+    upvar #0 $varname var
+    global $varname
+
+    global parse
+    $parse(proc) $parse(id) "[ToYesNo $var($key)]"
+}
+
 proc ProcessSendCmdCVARGet {key} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -371,7 +379,7 @@ proc ProcessSendCmdCurrent {cmd} {
     global current
 
     if {$current(frame) != {}} {
-	$parse(proc) $parse(id) "[$current(frame) $cmd]\n"
+	$parse(proc) $parse(id) "[$current(frame) $cmd]\nn"
     }
 }
 

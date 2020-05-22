@@ -73,20 +73,19 @@ array set prefsfirst::table {
   26:264 reduce
   7:262,target 6
   24:0 reduce
-  17:264,target 34
-  33:0,target 15
-  28:283,target 38
+  17:264,target 33
+  33:0,target 23
+  28:283,target 37
   25:0,target 16
-  35:264 reduce
+  35:264 shift
   0:273,target 14
   8:264,target 22
   7:259,target 3
   7:260,target 4
   21:0 reduce
-  44:264 reduce
-  23:282,target 37
-  14:264 reduce
+  23:282,target 36
   23:261,target 5
+  14:264 reduce
   30:264,target 21
   29:264,target 19
   7:278,target 24
@@ -101,7 +100,6 @@ array set prefsfirst::table {
   3:264 reduce
   7:257,target 1
   23:264 shift
-  38:0 reduce
   3:0,target 3
   23:258,target 2
   32:263 shift
@@ -109,14 +107,13 @@ array set prefsfirst::table {
   0:268,target 9
   8:259,target 3
   8:260,target 4
-  37:0,target 17
+  37:0,target 20
   14:0 reduce
   30:0,target 21
   29:0,target 19
   23:278 goto
   22:0,target 27
   41:263 shift
-  35:0 reduce
   14:0,target 12
   9:283,target 29
   23:282 goto
@@ -152,6 +149,7 @@ array set prefsfirst::table {
   0:273 shift
   8:264 shift
   0:274 shift
+  43:264,target 22
   28:264 shift
   0:275 shift
   6:0 reduce
@@ -166,7 +164,7 @@ array set prefsfirst::table {
   0:281 goto
   37:264 reduce
   8:278 goto
-  34:0,target 23
+  34:0,target 24
   21:264,target 9
   26:0,target 18
   3:0 reduce
@@ -176,10 +174,9 @@ array set prefsfirst::table {
   28:283 goto
   25:0 reduce
   10:264,target 27
-  16:264 shift
+  16:264 reduce
   15:263,target 32
   0:281,target 21
-  44:264,target 22
   0:0 reduce
   1:264,target 2
   5:264 reduce
@@ -189,31 +186,33 @@ array set prefsfirst::table {
   0:260,target 4
   0:259,target 3
   22:0 reduce
-  33:264,target 15
+  33:264,target 23
+  43:0 reduce
+  38:263,target 40
   34:264 reduce
   22:264,target 27
   0:278,target 19
   4:0,target 6
   0:257,target 1
   11:264,target 13
-  43:263 shift
   13:257 shift
+  43:264 reduce
   13:258 shift
-  40:0 reduce
+  39:0 reduce
   13:259 shift
   13:260 shift
   13:261 shift
-  38:0,target 20
   13:262 shift
   31:0,target 25
   13:264 reduce
   23:0,target 1
   2:264,target 5
   0:276,target 17
-  34:264,target 23
+  34:264,target 24
   2:264 reduce
   22:264 reduce
-  39:263,target 41
+  36:0 reduce
+  40:263,target 41
   23:264,target 22
   13:278 goto
   7:282,target 25
@@ -223,7 +222,7 @@ array set prefsfirst::table {
   7:261,target 5
   12:0 reduce
   33:0 reduce
-  39:263 shift
+  40:263 shift
   23:262,target 6
   3:264,target 3
   8:0,target 1
@@ -231,11 +230,11 @@ array set prefsfirst::table {
   1:0,target 2
   10:264 shift
   0:272,target 13
-  35:264,target 24
+  35:264,target 39
   7:0 reduce
   7:258,target 2
+  43:0,target 22
   41:263,target 42
-  35:0,target 24
   30:0 reduce
   29:0 reduce
   27:0,target 28
@@ -262,13 +261,13 @@ array set prefsfirst::table {
   27:264 reduce
   7:267 shift
   10:283 goto
-  18:263,target 35
+  18:263,target 34
   26:0 reduce
   23:278,target 24
   4:264,target 6
-  36:264 shift
+  36:264 reduce
   23:257,target 1
-  36:264,target 40
+  36:264,target 17
   7:278 goto
   1:0 reduce
   13:262,target 6
@@ -277,29 +276,29 @@ array set prefsfirst::table {
   42:263,target 43
   23:0 reduce
   25:264,target 16
-  44:0 reduce
   5:0,target 4
   15:263 shift
   14:264,target 12
-  40:0,target 10
+  39:0,target 10
   13:259,target 3
   13:260,target 4
   0:265,target 7
   4:264 reduce
   24:0,target 26
   24:264 reduce
+  16:0,target 15
   19:0 reduce
   20:0 accept
   5:264,target 4
   13:278,target 31
-  37:264,target 17
+  37:264,target 20
   33:264 reduce
-  43:263,target 44
   13:257,target 1
   26:264,target 18
+  16:0 reduce
   42:263 shift
   37:0 reduce
-  32:263,target 39
+  32:263,target 38
   12:264 reduce
   0:261,target 5
   13:0 reduce
@@ -308,8 +307,7 @@ array set prefsfirst::table {
   6:264,target 7
   34:0 reduce
   21:264 reduce
-  38:264,target 20
-  44:0,target 22
+  36:0,target 17
   0:279,target 20
   9:264 shift
   21:0,target 8
@@ -322,9 +320,9 @@ array set prefsfirst::table {
   0:258,target 2
   31:0 reduce
   21:280 goto
-  16:264,target 33
-  38:264 reduce
-  21:280,target 36
+  38:263 shift
+  16:264,target 15
+  21:280,target 35
   0:277,target 18
   5:0 reduce
 }
@@ -371,7 +369,7 @@ array set prefsfirst::rules {
   8,dc 1
   21,dc 2
   3,dc 1
-  15,dc 2
+  15,dc 1
   10,dc 3
   24,dc 2
   6,dc 1
@@ -426,31 +424,30 @@ array set prefsfirst::rules {
 }
 
 array set prefsfirst::lr1_table {
-  35 {{24 {0 264} 2}}
-  36 {{10 0 2}}
+  35 {{10 0 2}}
+  36 {{17 {0 264} 3}}
   14,trans {}
   33,trans {}
-  37 {{17 {0 264} 3}}
-  38 {{20 {0 264} 3}}
-  40 {{10 0 3}}
-  39 {{22 {0 264} 3}}
-  41 {{22 {0 264} 4}}
-  18,trans {{263 35}}
+  37 {{20 {0 264} 3}}
+  38 {{22 {0 264} 3}}
+  40 {{22 {0 264} 4}}
+  39 {{10 0 3}}
+  41 {{22 {0 264} 5}}
+  18,trans {{263 34}}
   1,trans {}
-  42 {{22 {0 264} 5}}
+  42 {{22 {0 264} 6}}
   37,trans {}
-  43 {{22 {0 264} 6}}
-  44 {{22 {0 264} 7}}
-  23,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 22} {278 24} {282 37}}
+  43 {{22 {0 264} 7}}
+  23,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 22} {278 24} {282 36}}
   5,trans {}
   42,trans {{263 43}}
   27,trans {}
   9,trans {{264 27} {267 28} {283 29}}
   13,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {278 31}}
-  32,trans {{263 39}}
-  17,trans {{264 34}}
+  32,trans {{263 38}}
+  17,trans {{264 33}}
   0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {265 7} {266 8} {268 9} {269 10} {270 11} {271 12} {272 13} {273 14} {274 15} {275 16} {276 17} {277 18} {278 19} {279 20} {281 21}}
-  36,trans {{264 40}}
+  36,trans {}
   22,trans {}
   4,trans {}
   41,trans {{263 42}}
@@ -458,18 +455,17 @@ array set prefsfirst::lr1_table {
   8,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 22} {278 24} {282 26}}
   12,trans {}
   31,trans {}
-  16,trans {{264 33}}
-  35,trans {}
-  21,trans {{280 36}}
+  16,trans {}
+  35,trans {{264 39}}
+  21,trans {{280 35}}
   3,trans {}
-  40,trans {}
-  39,trans {{263 41}}
+  40,trans {{263 41}}
+  39,trans {}
   10 {{21 {0 264} 1} {28 {0 264} 0}}
   11 {{13 {0 264} 1}}
   25,trans {}
   12 {{14 {0 264} 1}}
   7,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 22} {267 23} {278 24} {282 25}}
-  44,trans {}
   13 {{25 {0 264} 1} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0} {7 {0 264} 0}}
   14 {{12 {0 264} 1}}
   15 {{22 {0 264} 1}}
@@ -497,7 +493,7 @@ array set prefsfirst::lr1_table {
   6 {{7 {0 264} 1}}
   2,trans {}
   24 {{26 {0 264} 1}}
-  38,trans {}
+  38,trans {{263 40}}
   7 {{16 {0 264} 1} {17 {0 264} 1} {26 {0 264} 0} {27 {0 264} 0} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0} {7 {0 264} 0}}
   25 {{16 {0 264} 2}}
   8 {{18 {0 264} 1} {26 {0 264} 0} {27 {0 264} 0} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0} {7 {0 264} 0}}
@@ -507,15 +503,15 @@ array set prefsfirst::lr1_table {
   24,trans {}
   6,trans {}
   28 {{20 {0 264} 2} {28 {0 264} 0}}
-  43,trans {{263 44}}
+  43,trans {}
   29 {{19 {0 264} 2}}
   30 {{21 {0 264} 2}}
   31 {{25 {0 264} 2}}
   10,trans {{264 27} {283 30}}
   32 {{22 {0 264} 2}}
-  28,trans {{264 27} {283 38}}
-  33 {{15 {0 264} 2}}
-  34 {{23 {0 264} 2}}
+  28,trans {{264 27} {283 37}}
+  33 {{23 {0 264} 2}}
+  34 {{24 {0 264} 2}}
 }
 
 array set prefsfirst::token_id_table {

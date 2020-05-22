@@ -23,9 +23,7 @@ proc BlockToFit {} {
     global current
 
     if {$current(frame) != {}} {
-	SetWatchCursor
 	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block to fit]
-	ResetWatchCursor
 	set block(factor) [$current(frame) get block factor]
 	UpdateBlock
     }
@@ -36,9 +34,7 @@ proc ChangeBlock {} {
     global current
 
     if {$current(frame) != {}} {
-	SetWatchCursor
 	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block to $block(factor)]
-	ResetWatchCursor
 	UpdateBlock
     }
 }
@@ -48,10 +44,8 @@ proc Block {bx by} {
     global current
 
     if {$current(frame) != {}} {
-	SetWatchCursor
 	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block $bx $by]
 	set block(factor) [$current(frame) get block factor]
-	ResetWatchCursor
 	UpdateBlock
     }
 }

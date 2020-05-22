@@ -76,10 +76,8 @@ proc ChangeScale {} {
 	    return {}
 	}
 
-	SetWatchCursor
 	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) colorscale log $scale(log)]
 	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) colorscale $scale(type)]
-	ResetWatchCursor
 	UpdateScale
     }
 }
@@ -94,9 +92,7 @@ proc ChangeScaleMode {} {
 	    return {}
 	}
 
-	SetWatchCursor
 	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip mode $scale(mode)]
-	ResetWatchCursor
 	UpdateScale
     }
 }
@@ -128,9 +124,7 @@ proc ChangeScaleScope {} {
 	    return {}
 	}
 
-	SetWatchCursor
 	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip scope $scale(scope)]
-	ResetWatchCursor
 	UpdateScale
     }
 }

@@ -288,6 +288,11 @@ proc Movie3d {} {
 		break
 	    }
 	    set movie(status) [expr 1.*$nn/$movie(num)*100]
+
+	    global debug
+	    if {$debug(tcl,idletasks)} {
+		puts stderr "Movie3d"
+	    }
 	    update idletasks
 
 	    switch $ds9(display) {

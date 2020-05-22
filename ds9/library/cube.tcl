@@ -867,10 +867,8 @@ proc CubeAxes {} {
     global rgb
 
     if {$current(frame) != {}} {
-	SetWatchCursor
 	RGBEvalLockCurrent rgb(lock,axes) \
 	    "$current(frame) cube axes $cube(axes)"
-	ResetWatchCursor
 
 	LockAxesCurrent
 	UpdateHeaderDialog

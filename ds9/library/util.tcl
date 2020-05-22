@@ -712,10 +712,25 @@ proc RealizeDS9 {} {
 	$ff update now
     }
 
-# idletasks fails for windows. we need to process all events to make
-# sure all windows are realized
-#    update idletasks
-    update
+    # sure all windows are realized
+    switch $ds9(wm) {
+	x11 -
+	aqua {
+	    global debug
+	    if {$debug(tcl,idletasks)} {
+		puts stderr "RealizeDS9"
+	    }
+	    update idletasks
+	}
+	win32 {
+	    # idletasks fails for windows. we need to process all events to make
+	    global debug
+	    if {$debug(tcl,idletasks)} {
+		puts stderr "RealizeDS9 update"
+	    }
+	    update
+	}
+    }
 }
 
 proc Sex2H {str} {
@@ -771,35 +786,6 @@ proc SetCursor {cursor} {
 	    $ds9(canvas) configure -cursor {}
 	}
     }
-}
-
-proc SetWatchCursor {} {
-    global ds9
-    global icursor
-
-    # we don't want to update during initialization
-    if {$ds9(init)} {
-	return
-    }
-
-    set icursor(save) [$ds9(canvas) cget -cursor]
-    $ds9(canvas) configure -cursor {}
-    $ds9(main) configure -cursor watch
-
-    update
-}
-
-proc ResetWatchCursor {} {
-    global ds9
-    global icursor
-
-    # we don't want to update during initialization
-    if {$ds9(init)} {
-	return
-    }
-
-    $ds9(main) configure -cursor {}
-    $ds9(canvas) configure -cursor $icursor(save)
 }
 
 proc CursorTimer {} {

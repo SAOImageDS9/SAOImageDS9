@@ -1993,6 +1993,10 @@ proc FrameToFront {} {
 	x11 {}
 	aqua {
 	    if {!$ds9(init)} {
+		global debug
+		if {$debug(tcl,idletasks)} {
+		    puts stderr "FrameToFront"
+		}
 		update idletasks
 	    }
 	}

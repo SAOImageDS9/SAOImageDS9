@@ -725,6 +725,10 @@ proc PlotLayoutCanvas {varname} {
     PlotRestoreState $varname
 
     # needed so layout can be properly realized
+    global debug
+    if {$debug(tcl,idletasks)} {
+	puts stderr "PlotLayoutCanvas"
+    }
     update idletasks
 }
 

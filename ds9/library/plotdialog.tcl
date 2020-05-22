@@ -646,7 +646,12 @@ proc PlotExport {varname fn format} {
 
     # be sure we are on top
     raise $var(top)
+
     # and realized
+    global debug
+    if {$debug(tcl,idletasks)} {
+	puts stderr "PlotExport update"
+    }
     update
 
     # for darwin only

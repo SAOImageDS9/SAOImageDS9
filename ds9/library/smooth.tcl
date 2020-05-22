@@ -30,13 +30,11 @@ proc SmoothUpdate {} {
     global rgb
 
     if {$current(frame) != {}} {
-	SetWatchCursor
 	if {$smooth(view)} {
 	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth $smooth(function) $smooth(radius) $smooth(radius,minor) $smooth(sigma) $smooth(sigma,minor) $smooth(angle)]
 	} else {
 	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth delete]
 	}
-	ResetWatchCursor
     }
 
     LockSmoothCurrent

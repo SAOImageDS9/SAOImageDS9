@@ -592,8 +592,14 @@ InitDialogBox
 # Set our current state of things
 ChangeMode
 
-# force a update, then layout
+# force a update
+global debug
+if {$debug(tcl,idletasks)} {
+    puts stderr "initialize update"
+}
 update
+
+# layout
 ConfigureView
 
 # our first frame

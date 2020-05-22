@@ -504,6 +504,10 @@ proc LayoutOrient {} {
     pack forget $ds9(magnifier)
 
     UpdateView
+    global debug
+    if {$debug(tcl,idletasks)} {
+	puts stderr "LayoutOrient update"
+    }
     update
 
     # restore original canvas size

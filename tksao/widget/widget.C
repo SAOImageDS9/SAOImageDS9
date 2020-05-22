@@ -519,7 +519,6 @@ void Widget::redraw()
 void Widget::redraw(BBox bb)
 {
   // bb in canvas coords
-  // we need to expand by 1, i don't know why
   Tk_CanvasEventuallyRedraw(canvas, (int)bb.ll[0], (int)bb.ll[1], 
 			    (int)bb.ur[0]+1, (int)bb.ur[1]+1);
 }
@@ -534,7 +533,6 @@ void Widget::redrawNow()
 void Widget::redrawNow(BBox bb)
 {
   // bb in canvas coords
-  // we need to expand by 1, i don't know why
   Tk_CanvasEventuallyRedraw(canvas, (int)bb.ll[0], (int)bb.ll[1], 
 			    (int)bb.ur[0]+1, (int)bb.ur[1]+1);
   Tcl_DoOneEvent(TCL_IDLE_EVENTS);

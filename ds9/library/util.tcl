@@ -706,31 +706,14 @@ proc RealizeDS9 {} {
 	puts stderr "RealizeDS9"
     }
 
-    # update all frames
     global ds9
     foreach ff $ds9(frames) {
-	$ff update now
+	# get all frames ready
+	$ff update
     }
 
-    # sure all windows are realized
-    switch $ds9(wm) {
-	x11 -
-	aqua {
-	    global debug
-	    if {$debug(tcl,idletasks)} {
-		puts stderr "RealizeDS9"
-	    }
-	    update idletasks
-	}
-	win32 {
-	    # idletasks fails for windows. we need to process all events to make
-	    global debug
-	    if {$debug(tcl,idletasks)} {
-		puts stderr "RealizeDS9 update"
-	    }
-	    update
-	}
-    }
+    # now all update all at once
+    update
 }
 
 proc Sex2H {str} {

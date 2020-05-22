@@ -1354,7 +1354,8 @@ void Base::updateBin(const Matrix& mx)
   alignWCS();
   updateColorScale();
   // because we have changed zoom
-  //   now because repeated bin cmds will mult markers/contours relative
+  // now because repeated bin cmds will mult markers/contours relative
+  //  update(MATRIX);
   updateNow(MATRIX);
 
   // update markers call backs
@@ -1380,9 +1381,7 @@ void Base::updateBlock(const Vector& vv)
 
   alignWCS();
   updateColorScale();
-  // because we have changed zoom
-  //   now because repeated bin cmds will mult markers/contours relative
-  updateNow(MATRIX);
+  update(MATRIX);
 
   // update markers call backs
   // wait til matrices have been updated so that any dialogs will print

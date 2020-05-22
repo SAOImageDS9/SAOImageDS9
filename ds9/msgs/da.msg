@@ -854,6 +854,7 @@
 ::msgcat::mcset da {Use Internal Web Browser} {Brug intern web browser}
 ::msgcat::mcset da {Use Original Color/Width} 
 ::msgcat::mcset da {Use Proxy} {Anvend proxy}
+::msgcat::mcset da {Use background color instead of theme color} 
 ::msgcat::mcset da {User Manual} 
 ::msgcat::mcset da {Username} {Brugernavn}
 ::msgcat::mcset da {User} {Brugerdefineret}

@@ -854,6 +854,7 @@
 ::msgcat::mcset pt {Use Internal Web Browser} {Utilizar Navegador Web Interno}
 ::msgcat::mcset pt {Use Original Color/Width} 
 ::msgcat::mcset pt {Use Proxy} {Utilizar Proxy}
+::msgcat::mcset pt {Use background color instead of theme color} 
 ::msgcat::mcset pt {User Manual} 
 ::msgcat::mcset pt {Username} [encoding convertfrom iso8859-1 {Nome de usuário}]
 ::msgcat::mcset pt {User} [encoding convertfrom iso8859-1 {Usuário}]

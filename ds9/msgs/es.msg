@@ -854,6 +854,7 @@
 ::msgcat::mcset es {Use Internal Web Browser} {Usar Web Browser interno}
 ::msgcat::mcset es {Use Original Color/Width} 
 ::msgcat::mcset es {Use Proxy} {Usar Proxy}
+::msgcat::mcset es {Use background color instead of theme color} 
 ::msgcat::mcset es {User Manual} 
 ::msgcat::mcset es {Username} {Nombre de usuario}
 ::msgcat::mcset es {User} {Usuario}

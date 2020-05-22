@@ -854,6 +854,7 @@
 ::msgcat::mcset ja {Use Internal Web Browser} [encoding convertfrom euc-jp "\xc6\xe2\xc9\xf4\xa5\xd6\xa5\xe9\xa5\xa6\xa5\xb6\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Original Color/Width} 
 ::msgcat::mcset ja {Use Proxy} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xad\xa5\xb7\xa4\xf2\xbb\xc8\xcd\xd1"]
+::msgcat::mcset ja {Use background color instead of theme color} 
 ::msgcat::mcset ja {User Manual} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc\xa5\xde\xa5\xcb\xa5\xe5\xa5\xa2\xa5\xeb"]
 ::msgcat::mcset ja {Username} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc\xcc\xbe"]
 ::msgcat::mcset ja {User} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc"]

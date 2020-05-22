@@ -854,6 +854,7 @@
 ::msgcat::mcset zh {Use Internal Web Browser} 
 ::msgcat::mcset zh {Use Original Color/Width} 
 ::msgcat::mcset zh {Use Proxy} 
+::msgcat::mcset zh {Use background color instead of theme color} 
 ::msgcat::mcset zh {User Manual} 
 ::msgcat::mcset zh {Username} 
 ::msgcat::mcset zh {User} 

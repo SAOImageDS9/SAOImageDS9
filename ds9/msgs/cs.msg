@@ -854,6 +854,7 @@
 ::msgcat::mcset cs {Use Internal Web Browser} 
 ::msgcat::mcset cs {Use Original Color/Width} 
 ::msgcat::mcset cs {Use Proxy} 
+::msgcat::mcset cs {Use background color instead of theme color} 
 ::msgcat::mcset cs {User Manual} [encoding convertfrom iso8859-2 {U¾ivatelský manuál}]
 ::msgcat::mcset cs {Username} 
 ::msgcat::mcset cs {User} [encoding convertfrom iso8859-2 {U¾ivatelské}]

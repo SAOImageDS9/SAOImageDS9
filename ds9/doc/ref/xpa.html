@@ -16,7 +16,6 @@
 <a href="#align">align</a><br>
 <a href="#analysis">analysis</a><br>
 <a href="#array">array</a><br>
-<a href="#background">background</a><br>
 <a href="#backup">backup</a><br>
 <a href="#bin">bin</a><br>
 <a href="#blink">blink</a><br>
@@ -71,7 +70,6 @@
 <a href="#pixeltable">pixeltable</a><br>
 <a href="#plot">plot</a><br>
 <a href="#png">png</a><br>
-<a href="#precision">precision</a><br>
 <a href="#prefs">prefs</a><br>
 <a href="#preserve">preserve</a><br>
 <a href="#print">psprint</a><br>
@@ -96,7 +94,6 @@
 <a href="#smooth">smooth</a><br>
 <a href="#source">source</a><br>
 <a href="#tcl">tcl</a><br>
-<a href="#threads">threads</a><br>
 <a href="#tile">tile</a><br>
 <a href="#update">update</a><br>
 <a href="#url">url</a><br>
@@ -263,16 +260,6 @@ $xpaset -p ds9 array mask foo.arr[dim=512,bitpix=-32,endian=little]<br>
 $cat foo.arr | xpaset ds9 array[dim=512,bitpix=-32,endian=little]<br>
 $cat foo.arr | xpaset ds9 array new[dim=512,bitpix=-32,endian=little]<br>
 $cat foo.arr | xpaset ds9 array mask [dim=512,bitpix=-32,endian=little]</tt>
-<p><b><a name="background" id="background"></a>bg<br>
-background</b></p>
-<p>Set image background color.</p>
-<tt>Syntax:<br>
-bg &lt;color&gt;<br>
-&nbsp;<br>
-Example:<br>
-$xpaget ds9 bg<br>
-<br>
-$xpaset -p ds9 bg red</tt><br>
 <p><b><a name="backup" id="backup"></a>backup</b></p>
 <p>Create a backup save set.</p>
 <tt>Syntax:<br>
@@ -1609,15 +1596,6 @@ $xpaset -p ds9 nameserver pan<br>
 $xpaset -p ds9 nameserver crosshair<br>
 $xpaset -p ds9 nameserver open<br>
 $xpaset -p ds9 nameserver close</tt><br>
-<p><b><a name="nan" id="nan"></a>nan</b></p>
-<p>Set image not-a-number color.</p>
-<tt>Syntax:<br>
-nan &lt;color&gt;<br>
-&nbsp;<br>
-Example:<br>
-$xpaget ds9 nan<br>
-<br>
-$xpaset -p ds9 nan red<br></tt>
 <p><b><a name="nrrd" id="nrrd"></a>nrrd</b></p>
 <p>Load an NRRD (Nearly Raw Raster Data) file. Optional parameter: array endian.<br></p>
 <tt>Syntax:<br>
@@ -1976,37 +1954,38 @@ $cat foo.png | xpaset ds9 png slice</tt><br>
 <p><b><a name="prefs" id="prefs"></a>prefs</b></p>
 <p>Controls various preference settings.</p>
 <tt>Syntax:<br>
-prefs [bgcolor <color>]<br>
-&nbsp;&nbsp;&nbsp; [bgcolor yes|no]<br>
-&nbsp;&nbsp;&nbsp; [nancolor <color>]<br>
-&nbsp;&nbsp;&nbsp; [irafalign yes|no]<br>
-&nbsp;&nbsp;&nbsp; [precision &lt;linear&gt;&lt;degree&gt;&lt;hms&gt;&lt;dms&gt;&lt;arcmin&gt;&lt;arcsec&gt;]<br>
-&nbsp;&nbsp;&nbsp; [theme <theme>]<br>
-&nbsp;&nbsp;&nbsp; [threads <int>]<br>
+prefs [open]<br>
 &nbsp;&nbsp;&nbsp; [save]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
-&nbsp;&nbsp;&nbsp; [open]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [bg color yes|no]<br>
+&nbsp;&nbsp;&nbsp; [bg color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [nan color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [precision &lt;linear&gt; &lt;degree&gt; &lt;hms&gt; &lt;dms&gt; &lt;len linear&gt; &lt;len degree&gt; &lt;len arcmin&gt; &lt;len arcsec&gt; &lt;angle&gt;]<br>
+&nbsp;&nbsp;&nbsp; [theme &lt;theme&gt;]<br>
+&nbsp;&nbsp;&nbsp; [threads &lt;numeric&gt;]<br>
+&nbsp;&nbsp;&nbsp; [irafalign yes|no]<br>
 &nbsp;<br>
 Example:<br>
-$xpaget ds9 prefs bgcolor<br>
-$xpaget ds9 prefs nancolor<br>
-$xpaget ds9 prefs irafalign<br>
+$xpaget ds9 prefs has bg color<br>
+$xpaget ds9 prefs bg color<br>
+$xpaget ds9 prefs nan color<br>
 $xpaget ds9 prefs precision<br>
 $xpaget ds9 prefs theme<br>
 $xpaget ds9 prefs threads<br>
+$xpaget ds9 prefs irafalign<br>
 <br>
-$xpaset -p ds9 prefs bgcolor red<br>
-$xpaset -p ds9 prefs bgcolor yes<br>
-$xpaset -p ds9 prefs nancolor blue<br>
-$xpaset -p ds9 prefs iraf yes<br></tt>
-$xpaset -p ds9 prefs precision 8 10 4 3 5 3</tt><br>
-$xpaset -p ds9 prefs theme radiance<br>
-$xpaset -p ds9 prefs threads 8<br>
+$xpaset -p ds9 prefs open<br>
 $xpaset -p ds9 prefs save<br>
 $xpaset -p ds9 prefs clear<br>
-$xpaset -p ds9 prefs open<br>
 $xpaset -p ds9 prefs close<br>
+$xpaset -p ds9 prefs bg color no<br>
+$xpaset -p ds9 prefs bg color red<br>
+$xpaset -p ds9 prefs nan color blue<br>
+$xpaset -p ds9 prefs precision 8 7 4 3 8 7 5 3 8<br>
+$xpaset -p ds9 prefs theme radiance<br>
+$xpaset -p ds9 prefs threads 8<br>
+$xpaset -p ds9 prefs iraf yes<br></tt>
 <p><b><a name="preserve" id="preserve"></a>preserve</b></p>
 <p>Preserve the follow attributes while loading a new image.</p>
 <tt>Syntax:<br>
@@ -2018,7 +1997,7 @@ $xpaget ds9 preserve pan<br>
 $xpaget ds9 preserve regions<br>
 <br>
 $xpaset -p ds9 preserve pan yes<br>
-$xpaset -p ds9 preserve regions yes<br></tt>
+$xpaset -p ds9 preserve regions yes</tt><br>
 <p><b><a name="psprint" id="psprint"></a>psprint</b></p>
 <p>Invokes postscript printing. Please see <a href="command.html#print">print</a> for further details.</p>
 <p><b><a name="print" id="print"></a>print</b></p>

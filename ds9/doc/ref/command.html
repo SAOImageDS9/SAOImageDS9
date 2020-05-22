@@ -19,7 +19,6 @@
 <a href="#analysis">analysis</a><br>
 <a href="#array">array</a><br>
 <a href="#asinh">asinh</a><br>
-<a href="#background">background</a><br>
 <a href="#backup">backup</a><br>
 <a href="#bin">bin</a><br>
 <a href="#blink">blink</a><br>
@@ -76,7 +75,6 @@
 <a href="#msg">msg</a><br>
 <a href="#multiframe">multiframe</a><br>
 <a href="#nameserver">nameserver</a><br>
-<a href="#nan">nan</a><br>
 <a href="#nrrd">nrrd</a><br>
 <a href="#nvss">nvss</a><br>
 <a href="#orient">orient</a><br>
@@ -85,7 +83,6 @@
 <a href="#pixeltable">pixeltable</a><br>
 <a href="#plot">plot</a><br>
 <a href="#png">png</a><br>
-<a href="#precision">precision</a><br>
 <a href="#prefs">prefs</a><br>
 <a href="#preserve">preserve</a><br>
 <a href="#psprint">psprint</a><br>
@@ -119,7 +116,6 @@
 <a href="#sqrt">sqrt</a><br>
 <a href="#source">source</a><br>
 <a href="#tcl">tcl</a><br>
-<a href="#threads">threads</a><br>
 <a href="#tiff">tiff</a><br>
 <a href="#tile">tile</a><br>
 <a href="#title">title</a><br>
@@ -258,15 +254,6 @@ $cat foo.arr | ds9 -array -[dim=512,bitpix=-32,endian=little]<br></tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -asinh</tt><br>
-<p><b><a name="background" id="background"></a>bg<br>
-background</b></p>
-<p>Set image background color.</p>
-<tt>Syntax:<br>
--bg &lt;color&gt;<br>
-&nbsp;<br>
-Example:<br>
-$ds9 -background red<br>
-$ds9 -bg red</tt><br>
 <p><b><a name="backup" id="backup"></a>backup</b></p>
 <p>Create a backup save set.</p>
 <tt>Syntax:<br>
@@ -1363,13 +1350,6 @@ $ds9 -nameserver pan<br>
 $ds9 -nameserver crosshair<br>
 $ds9 -nameserver open<br>
 $ds9 -nameserver close<br></tt>
-<p><b><a name="nan" id="nan"></a>nan</b></p>
-<p>Set image not-a-number color.</p>
-<tt>Syntax:<br>
--nan &lt;color&gt;<br>
-&nbsp;<br>
-Example:<br>
-$ds9 -nan red</tt><br>
 <p><b><a name="nrrd" id="nrrd"></a>nrrd</b></p>
 <p>Load an NRRD (Nearly Raw Raster Data) file.<br></p>
 <tt>Syntax:<br>
@@ -1627,22 +1607,33 @@ $ds9 -port_only<br></tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -pow<br></tt>
-<p><b><a name="precision" id="precision"></a>precision</b></p>
-<p>Set region and coordinate output format precision.</p>
-<tt>Syntax:<br>
--precision &lt;linear&gt;&lt;degree&gt;&lt;hms&gt;&lt;dms&gt;&lt;arcmin&gt;&lt;arcsec&gt;<br>
-<br>
-Example:<br>
-$ds9 -precision 8 10 4 3 5 3</tt><br>
 <p><b><a name="prefs" id="prefs"></a>prefs</b></p>
 <p>Controls various preference settings.</p>
 <tt>Syntax:<br>
--prefs [clear]<br>
+-prefs [open]<br>
+&nbsp;&nbsp;&nbsp; [save]<br>
+&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [bg color yes|no]<br>
+&nbsp;&nbsp;&nbsp; [bg color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [nan color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [precision &lt;linear&gt; &lt;degree&gt; &lt;hms&gt; &lt;dms&gt; &lt;len linear&gt; &lt;len degree&gt; &lt;len arcmin&gt; &lt;len arcsec&gt; &lt;angle&gt;]<br>
+&nbsp;&nbsp;&nbsp; [theme &lt;theme&gt;]<br>
+&nbsp;&nbsp;&nbsp; [threads &lt;numeric&gt;]<br>
 &nbsp;&nbsp;&nbsp; [irafalign yes|no]<br>
 &nbsp;<br>
 Example:<br>
+$ds9 -prefs open<br>
+$ds9 -prefs save<br>
 $ds9 -prefs clear<br>
-$ds9 -prefs irafalign yes<br></tt>
+$ds9 -prefs close<br>
+$ds9 -prefs bg color no<br>
+$ds9 -prefs bg color red<br>
+$ds9 -prefs nan color blue<br>
+$ds9 -prefs precision 8 7 4 3 8 7 5 3 8<br>
+$ds9 -prefs theme radiance<br>
+$ds9 -prefs threads 8<br>
+$ds9 -prefs iraf yes</tt><br>
 <p><b><a name="preserve" id="preserve"></a>preserve</b></p>
 <p>Preserve the follow attributes while loading a new image.</p>
 <tt>Syntax:<br>
@@ -2118,14 +2109,6 @@ $ds9 -source extensions.tcl<br></tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -tcl 'puts "Hello, World"'</tt><br>
-<p><b><a name="threads" id="threads"></a>threads</b></p>
-<p>Set number of process threads for functions which are multi-threaded.</p>
-<tt>Syntax:<br>
--threads #<br>
-&nbsp;<br>
-Example:<br>
-$ds9 -threads 8</tt><br>
-<br>
 <b><a name="tiff" id="tiff"></a>tiff</b><br>
 <p>Load TIFF image into current frame.<br></p>
 <tt>Syntax:<br>

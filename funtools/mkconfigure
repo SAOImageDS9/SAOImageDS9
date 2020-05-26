@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # directories needing configure files
 DIRS=". wcs filter fitsy util"

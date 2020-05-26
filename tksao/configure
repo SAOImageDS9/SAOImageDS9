@@ -5814,6 +5814,15 @@ case $system in
 
 
 	;;
+    FreeBSD* )
+
+    vars="-I/usr/local/include/libxml2"
+    for i in $vars; do
+	PKG_INCLUDES="$PKG_INCLUDES $i"
+    done
+
+
+	;;
     windows*)
 
     vars="-I${prefix}/include/libxml2"

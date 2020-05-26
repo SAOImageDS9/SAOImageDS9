@@ -263,6 +263,9 @@ case $system in
     Linux* )
 	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
 	;;
+    FreeBSD* )
+	TEA_ADD_INCLUDES([-I/usr/local/include/libxml2])
+	;;
     windows*)
 	TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
 	;;

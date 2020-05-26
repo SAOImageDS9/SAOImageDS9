@@ -93,6 +93,10 @@ case $system in
 	SSLCONFIG="./config"
 	CORES=`grep -c ^processor /proc/cpuinfo`
 	;;
+    FreeBSD* )
+	SSLCONFIG="./config"
+	CORES=`sysctl -n "hw.ncpu"`
+	;;
     *)
 	SSLCONFIG="./config"
 	CORES=1

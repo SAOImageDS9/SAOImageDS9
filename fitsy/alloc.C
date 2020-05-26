@@ -3,6 +3,8 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <stdio.h>
+// FreeBSD
+#include <unistd.h>
 #include "alloc.h"
 
 FitsAlloc::FitsAlloc(const char* fn)

@@ -153,7 +153,7 @@ static int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
 		       int offset, char* savePtr, int flags)
 {
   ElemCoords* coordsPtr = (ElemCoords*)(widgRec + offset);
-  *(double*)savePtr = (double)NULL;
+  *(double*)savePtr = *(double*)NULL;
 
   double* values;
   int nValues;

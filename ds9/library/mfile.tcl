@@ -510,7 +510,7 @@ proc PrefsDialogButtonbarFile {f} {
     $m add cascade -label [msgcat::mc {Save as}] -menu $m.save
     $m add separator
     $m add cascade -label [msgcat::mc {Save Image}] -menu $m.saveimage
-    $m add checkbutton -label "[msgcat::mc {Movie}]..." \
+    $m add checkbutton -label "[msgcat::mc {Create Movie}]..." \
 	-variable pbuttons(file,movie) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Backup}]..." \

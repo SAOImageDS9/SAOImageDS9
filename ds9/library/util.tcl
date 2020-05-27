@@ -379,7 +379,7 @@ proc ProcessSendCmdCurrent {cmd} {
     global current
 
     if {$current(frame) != {}} {
-	$parse(proc) $parse(id) "[$current(frame) $cmd]\nn"
+	$parse(proc) $parse(id) "[$current(frame) $cmd]\n"
     }
 }
 

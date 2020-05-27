@@ -291,6 +291,7 @@ proc ButtonsFileDef {} {
 	file,open,mosaic,iraf,seg 0
 	file,open,mosaic,wfpc2 0
 	file,open,url 0
+
 	file,save 1
 	file,save,slice 0
 	file,save,rgb,image 0
@@ -298,6 +299,14 @@ proc ButtonsFileDef {} {
 	file,save,me,cube 0
 	file,save,mosaic,wcs 0
 	file,save,mosaic,wcs,seg 0
+
+	file,saveimage,fits 0
+	file,saveimage,eps 0
+	file,saveimage,gif 0
+	file,saveimage,tiff 0
+	file,saveimage,jpeg 0
+	file,saveimage,png 0
+	
 	file,movie 0
 	file,backup 0
 	file,restore 0
@@ -382,6 +391,25 @@ proc CreateButtonsFile {} {
 	[string tolower [msgcat::mc {Save Mosaic WCS Seg}]] \
 	[list SaveDialog mosaicwcs]
 
+    ButtonButton $ds9(buttons).file.saveimagefits \
+	[string tolower [msgcat::mc {Save Image FITS}]] \
+	[list SaveImageDialog fits]
+    ButtonButton $ds9(buttons).file.saveimageeps \
+	[string tolower [msgcat::mc {Save Image EPS}]] \
+	[list SaveImageDialog eps]
+    ButtonButton $ds9(buttons).file.saveimagegif \
+	[string tolower [msgcat::mc {Save Image GIF}]] \
+	[list SaveImageDialog gif]
+    ButtonButton $ds9(buttons).file.saveimagetiff \
+	[string tolower [msgcat::mc {Save Image TIFF}]] \
+	[list SaveImageDialog tiff]
+    ButtonButton $ds9(buttons).file.saveimagejpeg \
+	[string tolower [msgcat::mc {Save Image JPEG}]] \
+	[list SaveImageDialog jpeg]
+    ButtonButton $ds9(buttons).file.saveimagepng \
+	[string tolower [msgcat::mc {Save Image PNG}]] \
+	[list SaveImageDialog png]
+
     ButtonButton $ds9(buttons).file.movie \
 	[string tolower [msgcat::mc {Movie}]] MovieDialog
 
@@ -431,6 +459,7 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.openmosaicirafseg pbuttons(file,open,mosaic,iraf,seg)
         $ds9(buttons).file.openmosaicwfpc2 pbuttons(file,open,mosaic,wfpc2)
         $ds9(buttons).file.openurl pbuttons(file,open,url)
+
         $ds9(buttons).file.save pbuttons(file,save)
         $ds9(buttons).file.saveslice pbuttons(file,save,slice)
         $ds9(buttons).file.savergbimage pbuttons(file,save,rgb,image)
@@ -438,6 +467,14 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.savemecube pbuttons(file,save,me,cube)
         $ds9(buttons).file.savemosaicwcs pbuttons(file,save,mosaic,wcs)
         $ds9(buttons).file.savemosaicwcsseg pbuttons(file,save,mosaic,wcs,seg)
+
+        $ds9(buttons).file.saveimagefits pbuttons(file,saveimage,fits)
+        $ds9(buttons).file.saveimageeps pbuttons(file,saveimage,eps)
+        $ds9(buttons).file.saveimagegif pbuttons(file,saveimage,gif)
+        $ds9(buttons).file.saveimagetiff pbuttons(file,saveimage,tiff)
+        $ds9(buttons).file.saveimagejpeg pbuttons(file,saveimage,jpeg)
+        $ds9(buttons).file.saveimagepng pbuttons(file,saveimage,png)
+
         $ds9(buttons).file.movie pbuttons(file,movie)
         $ds9(buttons).file.backup pbuttons(file,backup)
         $ds9(buttons).file.restore pbuttons(file,restore)
@@ -472,6 +509,7 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,save) -command {UpdateButtons buttons(file)}
     $m add cascade -label [msgcat::mc {Save as}] -menu $m.save
     $m add separator
+    $m add cascade -label [msgcat::mc {Save Image}] -menu $m.saveimage
     $m add checkbutton -label "[msgcat::mc {Movie}]..." \
 	-variable pbuttons(file,movie) -command {UpdateButtons buttons(file)}
     $m add separator
@@ -580,6 +618,32 @@ proc PrefsDialogButtonbarFile {f} {
     $m.save add checkbutton \
 	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
 	-variable pbuttons(file,save,mosaic,wcs,seg) \
+	-command {UpdateButtons buttons(file)}
+
+    ThemeMenu $m.saveimage
+    $m.saveimage add checkbutton \
+	-label "[msgcat::mc {FITS}]..." \
+	-variable pbuttons(file,saveimage,fits) \
+	-command {UpdateButtons buttons(file)}
+    $m.saveimage add checkbutton \
+	-label "[msgcat::mc {EPS}]..." \
+	-variable pbuttons(file,saveimage,eps) \
+	-command {UpdateButtons buttons(file)}
+    $m.saveimage add checkbutton \
+	-label "[msgcat::mc {GIF}]..." \
+	-variable pbuttons(file,saveimage,gif) \
+	-command {UpdateButtons buttons(file)}
+    $m.saveimage add checkbutton \
+	-label "[msgcat::mc {TIFF}]..." \
+	-variable pbuttons(file,saveimage,tiff) \
+	-command {UpdateButtons buttons(file)}
+    $m.saveimage add checkbutton \
+	-label "[msgcat::mc {JPEG}]..." \
+	-variable pbuttons(file,saveimage,jpeg) \
+	-command {UpdateButtons buttons(file)}
+    $m.saveimage add checkbutton \
+	-label "[msgcat::mc {PNG}]..." \
+	-variable pbuttons(file,saveimage,png) \
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.xpa
@@ -813,8 +877,20 @@ proc UpdateFileMenuSaveImage {} {
 
     if {$current(frame) != {}} {
 	$mm entryconfig [msgcat::mc {Save Image}] -state normal
+	$bb.saveimagefits configure -state normal
+	$bb.saveimageeps configure -state normal
+	$bb.saveimagegif configure -state normal
+	$bb.saveimagetiff configure -state normal
+	$bb.saveimagejpeg configure -state normal
+	$bb.saveimagepng configure -state normal
     } else {
 	$mm entryconfig [msgcat::mc {Save Image}] -state disabled
+	$bb.saveimagefits configure -state disabled
+	$bb.saveimageeps configure -state disabled
+	$bb.saveimagegif configure -state disabled
+	$bb.saveimagetiff configure -state disabled
+	$bb.saveimagejpeg configure -state disabled
+	$bb.saveimagepng configure -state disabled
     }
 }
 

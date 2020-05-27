@@ -383,7 +383,7 @@ proc CreateButtonsFile {} {
 	[list SaveDialog mosaicwcs]
 
     ButtonButton $ds9(buttons).file.movie \
-	[string tolower [msgcat::mc {Create Movie}]] MovieDialog
+	[string tolower [msgcat::mc {Movie}]] MovieDialog
 
     ButtonButton $ds9(buttons).file.backup \
 	[string tolower [msgcat::mc {Backup}]] BackupDialog
@@ -472,7 +472,7 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,save) -command {UpdateButtons buttons(file)}
     $m add cascade -label [msgcat::mc {Save as}] -menu $m.save
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Create Movie}]..." \
+    $m add checkbutton -label "[msgcat::mc {Movie}]..." \
 	-variable pbuttons(file,movie) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Backup}]..." \
@@ -811,11 +811,10 @@ proc UpdateFileMenuSaveImage {} {
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
-    $mm entryconfig [msgcat::mc {Save Image}] -state disabled
     if {$current(frame) != {}} {
-	if {[$current(frame) has fits]} {
-	    $mm entryconfig [msgcat::mc {Save Image}] -state normal
-	}
+	$mm entryconfig [msgcat::mc {Save Image}] -state normal
+    } else {
+	$mm entryconfig [msgcat::mc {Save Image}] -state disabled
     }
 }
 
@@ -826,13 +825,12 @@ proc UpdateFileMenuMovie {} {
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
-    $mm entryconfig "[msgcat::mc {Create Movie}]..." -state disabled
-    $bb.movie configure -state disabled
     if {$current(frame) != {}} {
-	if {[$current(frame) has fits]} {
-	    $mm entryconfig "[msgcat::mc {Create Movie}]..." -state normal
-	    $bb.movie configure -state normal
-	}
+	$mm entryconfig "[msgcat::mc {Create Movie}]..." -state normal
+	$bb.movie configure -state normal
+    } else {
+	$mm entryconfig "[msgcat::mc {Create Movie}]..." -state disabled
+	$bb.movie configure -state disabled
     }
 }
 

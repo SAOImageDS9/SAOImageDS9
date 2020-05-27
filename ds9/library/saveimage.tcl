@@ -54,7 +54,7 @@ proc SaveImage {fn format} {
     global saveimage
     global cube
 
-    if {$fn == {} || ![$current(frame) has fits]} {
+    if {$fn == {}} {
 	return
     }
 

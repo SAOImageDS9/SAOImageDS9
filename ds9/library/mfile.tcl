@@ -300,6 +300,15 @@ proc ButtonsFileDef {} {
 	file,save,mosaic,wcs 0
 	file,save,mosaic,wcs,seg 0
 
+	file,export,array 0
+	file,export,nrrd 0
+	file,export,envi 0
+	file,export,rgbarray 0
+	file,export,gif 0
+	file,export,tiff 0
+	file,export,jpeg 0
+	file,export,png 0
+
 	file,saveimage,fits 0
 	file,saveimage,eps 0
 	file,saveimage,gif 0
@@ -391,6 +400,31 @@ proc CreateButtonsFile {} {
 	[string tolower [msgcat::mc {Save Mosaic WCS Seg}]] \
 	[list SaveDialog mosaicwcs]
 
+    ButtonButton $ds9(buttons).file.exportarray \
+	[string tolower [msgcat::mc {Export Array}]] \
+	[list ExportDialog array]
+    ButtonButton $ds9(buttons).file.exportnrrd \
+	[string tolower [msgcat::mc {Export NRRD}]] \
+	[list ExportDialog nrrd]
+    ButtonButton $ds9(buttons).file.exportenvi \
+	[string tolower [msgcat::mc {Export ENVI}]] \
+	[list ExportDialog envi]
+    ButtonButton $ds9(buttons).file.exportrgbarray \
+	[string tolower [msgcat::mc {Export RGB Array}]] \
+	[list ExportDialog rgbarray]
+    ButtonButton $ds9(buttons).file.exportgif \
+	[string tolower [msgcat::mc {Export GIF}]] \
+	[list ExportDialog gif]
+    ButtonButton $ds9(buttons).file.exporttiff \
+	[string tolower [msgcat::mc {Export TIFF}]] \
+	[list ExportDialog tiff]
+    ButtonButton $ds9(buttons).file.exportjpeg \
+	[string tolower [msgcat::mc {Export JPEG}]] \
+	[list ExportDialog jpeg]
+    ButtonButton $ds9(buttons).file.exportpng \
+	[string tolower [msgcat::mc {Export PNG}]] \
+	[list ExportDialog png]
+
     ButtonButton $ds9(buttons).file.saveimagefits \
 	[string tolower [msgcat::mc {Save Image FITS}]] \
 	[list SaveImageDialog fits]
@@ -468,6 +502,15 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.savemosaicwcs pbuttons(file,save,mosaic,wcs)
         $ds9(buttons).file.savemosaicwcsseg pbuttons(file,save,mosaic,wcs,seg)
 
+        $ds9(buttons).file.exportarray pbuttons(file,export,array)
+        $ds9(buttons).file.exportnrrd pbuttons(file,export,nrrd)
+        $ds9(buttons).file.exportenvi pbuttons(file,export,envi)
+        $ds9(buttons).file.exportrgbarray pbuttons(file,export,rgbarray)
+        $ds9(buttons).file.exportgif pbuttons(file,export,gif)
+        $ds9(buttons).file.exporttiff pbuttons(file,export,tiff)
+        $ds9(buttons).file.exportjpeg pbuttons(file,export,jpeg)
+        $ds9(buttons).file.exportpng pbuttons(file,export,png)
+
         $ds9(buttons).file.saveimagefits pbuttons(file,saveimage,fits)
         $ds9(buttons).file.saveimageeps pbuttons(file,saveimage,eps)
         $ds9(buttons).file.saveimagegif pbuttons(file,saveimage,gif)
@@ -508,6 +551,8 @@ proc PrefsDialogButtonbarFile {f} {
     $m add checkbutton -label "[msgcat::mc {Save}]..." \
 	-variable pbuttons(file,save) -command {UpdateButtons buttons(file)}
     $m add cascade -label [msgcat::mc {Save as}] -menu $m.save
+    $m add separator
+    $m add cascade -label [msgcat::mc {Export}] -menu $m.export
     $m add separator
     $m add cascade -label [msgcat::mc {Save Image}] -menu $m.saveimage
     $m add checkbutton -label "[msgcat::mc {Create Movie}]..." \
@@ -618,6 +663,42 @@ proc PrefsDialogButtonbarFile {f} {
     $m.save add checkbutton \
 	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
 	-variable pbuttons(file,save,mosaic,wcs,seg) \
+	-command {UpdateButtons buttons(file)}
+
+    ThemeMenu $m.export
+    $m.export add checkbutton \
+	-label "[msgcat::mc {Array}]..." \
+	-variable pbuttons(file,export,array) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add checkbutton \
+	-label "[msgcat::mc {NRRD}]..." \
+	-variable pbuttons(file,export,nrrd) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add checkbutton \
+	-label "[msgcat::mc {ENVI}]..." \
+	-variable pbuttons(file,export,envi) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add separator
+    $m.export add checkbutton \
+	-label "[msgcat::mc {RGB Array}]..." \
+	-variable pbuttons(file,export,rgbarray) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add separator
+    $m.export add checkbutton \
+	-label "[msgcat::mc {GIF}]..." \
+	-variable pbuttons(file,export,gif) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add checkbutton \
+	-label "[msgcat::mc {TIFF}]..." \
+	-variable pbuttons(file,export,tiff) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add checkbutton \
+	-label "[msgcat::mc {JPEG}]..." \
+	-variable pbuttons(file,export,jpeg) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add checkbutton \
+	-label "[msgcat::mc {PNG}]..." \
+	-variable pbuttons(file,export,png) \
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.saveimage
@@ -847,13 +928,32 @@ proc UpdateFileMenuExport {} {
     set bb $ds9(buttons).file
 
     $mm entryconfig [msgcat::mc {Export}] -state disabled
+    $bb.exportarray configure -state disabled
+    $bb.exportnrrd configure -state disabled
+    $bb.exportenvi configure -state disabled
+    $bb.exportrgbarray configure -state disabled
+    $bb.exportgif configure -state disabled
+    $bb.exporttiff configure -state disabled
+    $bb.exportjpeg configure -state disabled
+    $bb.exportpng configure -state disabled
+
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
 	    $mm entryconfig [msgcat::mc {Export}] -state normal
+	    $bb.exportarray configure -state normal
+	    $bb.exportnrrd configure -state normal
+	    $bb.exportenvi configure -state normal
+	    $bb.exportrgbarray configure -state normal
+	    $bb.exportgif configure -state normal
+	    $bb.exporttiff configure -state normal
+	    $bb.exportjpeg configure -state normal
+	    $bb.exportpng configure -state normal
+
 	    switch -- [$current(frame) get type] {
 		base {
 		    $mm.export entryconfig \
 			"[msgcat::mc {RGB Array}]..." -state disabled
+		    $bb.exportrgbarray configure -state disabled
 		}
 		rgb {
 		    $mm.export entryconfig \
@@ -862,6 +962,7 @@ proc UpdateFileMenuExport {} {
 		3d {
 		    $mm.export entryconfig \
 			"[msgcat::mc {RGB Array}]..." -state disabled
+		    $bb.exportrgbarray configure -state disabled
 		}
 	    }
 	}

@@ -300,6 +300,20 @@ proc ButtonsFileDef {} {
 	file,save,mosaic,wcs 0
 	file,save,mosaic,wcs,seg 0
 
+	file,import,array 0
+	file,import,nrrd 0
+	file,import,envi 0
+	file,import,rgbarray 0
+	file,import,gif 0
+	file,import,tiff 0
+	file,import,jpeg 0
+	file,import,png 0
+
+	file,import,slice,gif 0
+	file,import,slice,tiff 0
+	file,import,slice,jpeg 0
+	file,import,slice,png 0
+
 	file,export,array 0
 	file,export,nrrd 0
 	file,export,envi 0
@@ -399,6 +413,44 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.savemosaicwcsseg \
 	[string tolower [msgcat::mc {Save Mosaic WCS Seg}]] \
 	[list SaveDialog mosaicwcs]
+
+    ButtonButton $ds9(buttons).file.importarray \
+	[string tolower [msgcat::mc {Import Array}]] \
+	[list ImportDialog array]
+    ButtonButton $ds9(buttons).file.importnrrd \
+	[string tolower [msgcat::mc {Import NRRD}]] \
+	[list ImportDialog nrrd]
+    ButtonButton $ds9(buttons).file.importenvi \
+	[string tolower [msgcat::mc {Import ENVI}]] \
+	[list ImportDialog envi]
+    ButtonButton $ds9(buttons).file.importrgbarray \
+	[string tolower [msgcat::mc {Import RGB Array}]] \
+	[list ImportDialog rgbarray]
+    ButtonButton $ds9(buttons).file.importgif \
+	[string tolower [msgcat::mc {Import GIF}]] \
+	[list ImportDialog gif]
+    ButtonButton $ds9(buttons).file.importtiff \
+	[string tolower [msgcat::mc {Import TIFF}]] \
+	[list ImportDialog tiff]
+    ButtonButton $ds9(buttons).file.importjpeg \
+	[string tolower [msgcat::mc {Import JPEG}]] \
+	[list ImportDialog jpeg]
+    ButtonButton $ds9(buttons).file.importpng \
+	[string tolower [msgcat::mc {Import PNG}]] \
+	[list ImportDialog png]
+
+    ButtonButton $ds9(buttons).file.importslicegif \
+	[string tolower [msgcat::mc {Import Slice GIF}]] \
+	[list ImportDialog gif {} slice]
+    ButtonButton $ds9(buttons).file.importslicetiff \
+	[string tolower [msgcat::mc {Import Slice TIFF}]] \
+	[list ImportDialog gif {} tiff]
+    ButtonButton $ds9(buttons).file.importslicejpeg \
+	[string tolower [msgcat::mc {Import Slice JPEG}]] \
+	[list ImportDialog gif {} jpeg]
+    ButtonButton $ds9(buttons).file.importslicepng \
+	[string tolower [msgcat::mc {Import Slice PNG}]] \
+	[list ImportDialog gif {} png]
 
     ButtonButton $ds9(buttons).file.exportarray \
 	[string tolower [msgcat::mc {Export Array}]] \
@@ -502,6 +554,20 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.savemosaicwcs pbuttons(file,save,mosaic,wcs)
         $ds9(buttons).file.savemosaicwcsseg pbuttons(file,save,mosaic,wcs,seg)
 
+        $ds9(buttons).file.importarray pbuttons(file,import,array)
+        $ds9(buttons).file.importnrrd pbuttons(file,import,nrrd)
+        $ds9(buttons).file.importenvi pbuttons(file,import,envi)
+        $ds9(buttons).file.importrgbarray pbuttons(file,import,rgbarray)
+        $ds9(buttons).file.importgif pbuttons(file,import,gif)
+        $ds9(buttons).file.importtiff pbuttons(file,import,tiff)
+        $ds9(buttons).file.importjpeg pbuttons(file,import,jpeg)
+        $ds9(buttons).file.importpng pbuttons(file,import,png)
+
+        $ds9(buttons).file.importslicegif pbuttons(file,import,slice,gif)
+        $ds9(buttons).file.importslicetiff pbuttons(file,import,slice,tiff)
+        $ds9(buttons).file.importslicejpeg pbuttons(file,import,slice,jpeg)
+        $ds9(buttons).file.importslicepng pbuttons(file,import,slice,png)
+
         $ds9(buttons).file.exportarray pbuttons(file,export,array)
         $ds9(buttons).file.exportnrrd pbuttons(file,export,nrrd)
         $ds9(buttons).file.exportenvi pbuttons(file,export,envi)
@@ -552,6 +618,7 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,save) -command {UpdateButtons buttons(file)}
     $m add cascade -label [msgcat::mc {Save as}] -menu $m.save
     $m add separator
+    $m add cascade -label [msgcat::mc {Import}] -menu $m.import
     $m add cascade -label [msgcat::mc {Export}] -menu $m.export
     $m add separator
     $m add cascade -label [msgcat::mc {Save Image}] -menu $m.saveimage
@@ -663,6 +730,62 @@ proc PrefsDialogButtonbarFile {f} {
     $m.save add checkbutton \
 	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
 	-variable pbuttons(file,save,mosaic,wcs,seg) \
+	-command {UpdateButtons buttons(file)}
+
+    ThemeMenu $m.import
+    $m.import add cascade -label [msgcat::mc {Slice}] -menu $m.import.slice
+    $m.import add separator
+    $m.import add checkbutton \
+	-label "[msgcat::mc {Array}]..." \
+	-variable pbuttons(file,import,array) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add checkbutton \
+	-label "[msgcat::mc {NRRD}]..." \
+	-variable pbuttons(file,import,nrrd) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add checkbutton \
+	-label "[msgcat::mc {ENVI}]..." \
+	-variable pbuttons(file,import,envi) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add separator
+    $m.import add checkbutton \
+	-label "[msgcat::mc {RGB Array}]..." \
+	-variable pbuttons(file,import,rgbarray) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add separator
+    $m.import add checkbutton \
+	-label "[msgcat::mc {GIF}]..." \
+	-variable pbuttons(file,import,gif) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add checkbutton \
+	-label "[msgcat::mc {TIFF}]..." \
+	-variable pbuttons(file,import,tiff) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add checkbutton \
+	-label "[msgcat::mc {JPEG}]..." \
+	-variable pbuttons(file,import,jpeg) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add checkbutton \
+	-label "[msgcat::mc {PNG}]..." \
+	-variable pbuttons(file,import,png) \
+	-command {UpdateButtons buttons(file)}
+
+    ThemeMenu $m.import.slice
+    $m.import.slice add checkbutton \
+	-label "[msgcat::mc {GIF}]..." \
+	-variable pbuttons(file,import,slice,gif) \
+	-command {UpdateButtons buttons(file)}
+    $m.import.slice add checkbutton \
+	-label "[msgcat::mc {TIFF}]..." \
+	-variable pbuttons(file,import,slice,tiff) \
+	-command {UpdateButtons buttons(file)}
+    $m.import.slice add checkbutton \
+	-label "[msgcat::mc {JPEG}]..." \
+	-variable pbuttons(file,import,slice,jpeg) \
+	-command {UpdateButtons buttons(file)}
+    $m.import.slice add checkbutton \
+	-label "[msgcat::mc {PNG}]..." \
+	-variable pbuttons(file,import,slice,png) \
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.export

@@ -247,6 +247,7 @@ proc WCSDialog {} {
 	ttk::entry $base.lonpole${aa} \
 	    -textvariable dwcs(lonpole${aa}) -width 14
 
+	# CTYPEx CRPIXx CRVALx CUNITx CDELTx
 	for {set ii 1} {$ii<=4} {incr ii} {
 	    ttk::label $base.tctype${ii}${aa} -text "CTYPE${ii}${bb}"
 	    ttk::entry $base.ctype${ii}${aa} \
@@ -269,6 +270,7 @@ proc WCSDialog {} {
 		-textvariable dwcs(cdelt${ii}${aa}) -width 14
 	}
 
+	# CDx_x PCx_x
 	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set jj 1} {$jj<=4} {incr jj} {
 		ttk::label $base.tcd${ii}_${jj}${aa} \
@@ -280,9 +282,22 @@ proc WCSDialog {} {
 		    -text "PC${ii}_${jj}${bb}"
 		ttk::entry $base.pc${ii}_${jj}${aa} \
 		    -textvariable dwcs(pc${ii}_${jj}${aa}) -width 14
+
 	    }
 	}
 
+	# PSx_x
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 0} {$jj<=1} {incr jj} {
+		ttk::label $base.tps${ii}_${jj}${aa} \
+		    -text "PS${ii}_${jj}${bb}"
+		ttk::entry $base.ps${ii}_${jj}${aa} \
+		    -textvariable dwcs(ps${ii}_${jj}${aa}) -width 14
+	    }
+	}
+
+
+	# PVx_x
 	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<18} {incr mm} {
 		ttk::label $pv00.tpv${ii}_${mm}${aa} \
@@ -535,6 +550,12 @@ proc ConfigWCSDialog {{force {0}}} {
     }
 
     for {set ii 1} {$ii<=4} {incr ii} {
+	for {set jj 0} {$jj<=1} {incr jj} {
+	    grid forget $base.tps${ii}_${jj}${aa} $base.ps${ii}_${jj}${aa}
+	}
+    }
+
+    for {set ii 1} {$ii<=4} {incr ii} {
 	for {set mm 0} {$mm<18} {incr mm} {
 	    grid forget $pv00.tpv${ii}_${mm}${aa} $pv00.pv${ii}_${mm}${aa}
 	}
@@ -656,6 +677,17 @@ proc ConfigWCSDialog {{force {0}}} {
 	$base.tpc2_4${aa} $base.pc2_4${aa} \
 	$base.tpc3_4${aa} $base.pc3_4${aa} \
 	$base.tpc4_4${aa} $base.pc4_4${aa} \
+	-padx 2 -pady 2 -sticky w
+
+    grid $base.tps1_0${aa} $base.ps1_0${aa} \
+	$base.tps2_0${aa} $base.ps2_0${aa} \
+	$base.tps3_0${aa} $base.ps3_0${aa} \
+	$base.tps4_0${aa} $base.ps4_0${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tps1_1${aa} $base.ps1_1${aa} \
+	$base.tps2_1${aa} $base.ps2_1${aa} \
+	$base.tps3_1${aa} $base.ps3_1${aa} \
+	$base.tps4_1${aa} $base.ps4_1${aa} \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tlatpole${aa} $base.latpole${aa} \
@@ -850,6 +882,12 @@ proc WCSToVar {txt} {
 	}
 
 	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 0} {$jj<=1} {incr jj} {
+		set dwcs(ps${ii}_${jj}${aa}) {}
+	    }
+	}
+
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<36} {incr mm} {
 		set dwcs(pv${ii}_${mm}${aa}) {}
 	    }
@@ -985,6 +1023,10 @@ proc WCSToVar {txt} {
 	    pc2_ -
 	    pc3_ -
 	    pc4_ -
+	    ps1_ -
+	    ps2_ -
+	    ps3_ -
+	    ps4_ -
 	    pv1_ -
 	    pv2_ -
 	    pv3_ -
@@ -1072,6 +1114,15 @@ proc WCSFromVar {} {
 		}
 		if {$dwcs(pc${ii}_${jj}${aa}) != {}} {
 		    append rr "PC${ii}_${jj}${bb} = $dwcs(pc${ii}_${jj}${aa})\n"
+		}
+	    }
+	}
+
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 0} {$jj<=1} {incr jj} {
+		if {$dwcs(ps${ii}_${jj}${aa}) != {}} {
+		    append rr \
+			"PS${ii}_${jj}${bb} = '$dwcs(ps${ii}_${jj}${aa})'\n"
 		}
 	    }
 	}

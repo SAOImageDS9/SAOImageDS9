@@ -227,6 +227,10 @@ proc WCSDialog {} {
 	ttk::entry $base.wcsname${aa} \
 	    -textvariable dwcs(wcsname${aa}) -width 14
 
+	ttk::label $base.twcsaxes${aa} -text "WCSAXES${bb}"
+	ttk::entry $base.wcsaxes${aa} \
+	    -textvariable dwcs(wcsaxes${aa}) -width 14
+
 	ttk::label $base.tradesys${aa} -text "RADESYS${bb}"
 	ttk::entry $base.radesys${aa} \
 	    -textvariable dwcs(radesys${aa}) -width 14
@@ -509,6 +513,7 @@ proc ConfigWCSDialog {{force {0}}} {
     set aa [string tolower [string range $dwcs(prev) 3 3]]
 
     grid forget $base.twcsname${aa} $base.wcsname${aa}
+    grid forget $base.twcsaxes${aa} $base.wcsaxes${aa}
     grid forget $base.tradesys${aa} $base.radesys${aa}
     grid forget $base.tequinox${aa} $base.equinox${aa}
     grid forget $base.tlatpole${aa} $base.latpole${aa}
@@ -576,6 +581,7 @@ proc ConfigWCSDialog {{force {0}}} {
     set aa [string tolower [string range $dwcs(system) 3 3]]
 
     grid $base.twcsname${aa} $base.wcsname${aa} -padx 2 -pady 2 -sticky w
+    grid $base.twcsaxes${aa} $base.wcsaxes${aa} -padx 2 -pady 2 -sticky w
     grid $base.tradesys${aa} $base.radesys${aa} -padx 2 -pady 2 -sticky w
 
     grid $base.tequinox${aa} $base.equinox${aa} \
@@ -822,6 +828,7 @@ proc WCSToVar {txt} {
 
     foreach aa {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	set dwcs(wcsname${aa}) {}
+	set dwcs(wcsaxes${aa}) {}
 	set dwcs(radesys${aa}) {}
 	set dwcs(equinox${aa}) {}
 	set dwcs(latpole${aa}) {}
@@ -944,6 +951,7 @@ proc WCSToVar {txt} {
 	}
 	switch [string range $key 0 5] {
 	    wcsnam -
+	    wcsaxe -
 	    radesy -
 	    equino -
 	    latpol -
@@ -1022,6 +1030,9 @@ proc WCSFromVar {} {
 
 	if {$dwcs(wcsname${aa}) != {}} {
 	    append rr "WCSNAME${bb} = '$dwcs(wcsname${aa})'\n"
+	}
+	if {$dwcs(wcsaxes${aa}) != {}} {
+	    append rr "WCSAXES${bb} = '$dwcs(wcsaxes${aa})'\n"
 	}
 	if {$dwcs(radesys${aa}) != {}} {
 	    append rr "RADESYS${bb} = '$dwcs(radesys${aa})'\n"

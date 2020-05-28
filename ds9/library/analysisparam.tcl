@@ -40,7 +40,7 @@ proc AnalysisParam {strname param} {
 		    -textvariable ianalysis(param,$i,$j,value) \
 		    -width 40
 	    }
-	    fileopen {
+	    open {
 		ttk::frame $f.a$j
 		ttk::entry $f.a$j.e \
 		    -textvariable ianalysis(param,$i,$j,value) \
@@ -49,7 +49,7 @@ proc AnalysisParam {strname param} {
 		    -command [list AnalysisParamFileOpen param,$i,$j,value]
 		grid $f.a$j.e $f.a$j.b -padx 2 -pady 2 -sticky w
 	    }
-	    filesave {
+	    save {
 		ttk::frame $f.a$j
 		ttk::entry $f.a$j.e \
 		    -textvariable ianalysis(param,$i,$j,value) \

@@ -1144,6 +1144,9 @@ void FitsImage::initWCS(FitsHead* hd)
     astPermAxes(ast_,orr);
   }
 
+  if (DebugWCS)
+    astShow(ast_);
+
   scanWCS(hd);
 
   // init wcsState
@@ -1168,9 +1171,6 @@ void FitsImage::initWCS(FitsHead* hd)
   }
 
   wcsPhyInit(hd);
-
-  if (DebugWCS)
-    astShow(ast_);
 }
 
 void FitsImage::resetWCS()

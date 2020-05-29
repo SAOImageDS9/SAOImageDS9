@@ -209,18 +209,22 @@ proc ProcessAnalysis {varname} {
     $baseparent add separator
 
     set lines [split $var \n]
-    set l [llength $lines]
+    set len [llength $lines]
 
-    for {set ii 0} {$ii<$l} {incr ii} {
-	set line [string trim [lindex $lines $ii]]
+    for {set ll 0} {$ll<$len} {incr ll} {
+	set line [string trim [lindex $lines $ll]]
 
 	# eat empty lines and comments for all except help
 	if {$state != 6} {
 	    # empty line
-	    if {[string length $line] == 0} continue
+	    if {[string length $line] == 0} {
+		continue
+	    }
 
 	    # comments	    
-	    if {[string range $line 0 0] == "\#"} continue
+	    if {[string range $line 0 0] == "\#"} {
+		continue
+	    }
 
 	    # strip any end of line comments
 	    set id [string first "\#" $line]
@@ -251,15 +255,15 @@ proc ProcessAnalysis {varname} {
 			set item Help
 		    }
 
-		    set i $ianalysis(menu,count)
-		    set ianalysis(menu,$i,parent) $currentparent
-		    set ianalysis(menu,$i,item) $item
-		    set ianalysis(menu,$i,template) {*}
-		    set ianalysis(menu,$i,cmd) {help}
-		    set ianalysis(menu,$i,inuse) 0
-		    set ianalysis(menu,$i,var) {}
+		    set ii $ianalysis(menu,count)
+		    set ianalysis(menu,$ii,parent) $currentparent
+		    set ianalysis(menu,$ii,item) $item
+		    set ianalysis(menu,$ii,template) {*}
+		    set ianalysis(menu,$ii,cmd) {help}
+		    set ianalysis(menu,$ii,inuse) 0
+		    set ianalysis(menu,$ii,var) {}
 		    $currentparent add command -label $item \
-			-command [list AnalysisTask $i menu]
+			-command [list AnalysisTask $ii menu]
 
 		    set state 6
 		    continue
@@ -325,39 +329,39 @@ proc ProcessAnalysis {varname} {
 		    $type != {} && $cmd != {}} {
 		    switch -- [lindex $type 0] {
 			bind {
-			    set b [lindex $type 1]
-			    if {$b != {}} {
-				set i $ianalysis(bind,count)
-				set ianalysis(bind,$i,item) "<$b>"
-				set ianalysis(bind,$i,template) "$template"
-				set ianalysis(bind,$i,cmd) "$cmd"
-				set ianalysis(bind,$i,inuse) 0
+			    set bb [lindex $type 1]
+			    if {$bb != {}} {
+				set ii $ianalysis(bind,count)
+				set ianalysis(bind,$ii,item) "<$bb>"
+				set ianalysis(bind,$ii,template) "$template"
+				set ianalysis(bind,$ii,cmd) "$cmd"
+				set ianalysis(bind,$ii,inuse) 0
 				incr ianalysis(bind,count)
 			    }
 			}
 			web {
-			    set i $ianalysis(menu,count)
-			    set ianalysis(menu,$i,parent) $currentparent
-			    set ianalysis(menu,$i,item) $item
-			    set ianalysis(menu,$i,template) "$template"
-			    set ianalysis(menu,$i,cmd) {web}
-			    set ianalysis(menu,$i,inuse) 0
-			    set ianalysis(menu,$i,var) "$cmd"
+			    set ii $ianalysis(menu,count)
+			    set ianalysis(menu,$ii,parent) $currentparent
+			    set ianalysis(menu,$ii,item) $item
+			    set ianalysis(menu,$ii,template) "$template"
+			    set ianalysis(menu,$ii,cmd) {web}
+			    set ianalysis(menu,$ii,inuse) 0
+			    set ianalysis(menu,$ii,var) "$cmd"
 			    $currentparent add command -label "$item" \
-				-command [list AnalysisTask $i menu]
+				-command [list AnalysisTask $ii menu]
 			    incr ianalysis(menu,count)
 			}
 			menu {
-			    set i $ianalysis(menu,count)
-			    set ianalysis(menu,$i,parent) $currentparent
-			    set ianalysis(menu,$i,item) "$item"
-			    set ianalysis(menu,$i,template) "$template"
-			    set ianalysis(menu,$i,cmd) "$cmd"
-			    set ianalysis(menu,$i,inuse) 0
-			    set ianalysis(menu,$i,var) {}
+			    set ii $ianalysis(menu,count)
+			    set ianalysis(menu,$ii,parent) $currentparent
+			    set ianalysis(menu,$ii,item) "$item"
+			    set ianalysis(menu,$ii,template) "$template"
+			    set ianalysis(menu,$ii,cmd) "$cmd"
+			    set ianalysis(menu,$ii,inuse) 0
+			    set ianalysis(menu,$ii,var) {}
 			    $currentparent add check -label "$item" \
-				-command [list AnalysisTask $i menu] \
-				-variable ianalysis(menu,$i,inuse) \
+				-command [list AnalysisTask $ii menu] \
+				-variable ianalysis(menu,$ii,inuse) \
 				-selectcolor green
 			    incr ianalysis(menu,count)
 			}
@@ -371,6 +375,16 @@ proc ProcessAnalysis {varname} {
 	    }
 
 	    5 {
+		# tab
+		if {[lindex $line 0] == {tab}} {
+		    continue
+		}
+
+		# endtab
+		if {[lindex $line 0] == {endtab}} {
+		    continue
+		}
+
 		# end param
 		if {[lindex $line 0] == {endparam} || 
 		    [lindex $line 0] == {end}} {
@@ -384,23 +398,23 @@ proc ProcessAnalysis {varname} {
 		    continue
 		}
 
-		set i $ianalysis(param,count)
-		set j $ianalysis(param,$i,count)
-		set ianalysis(param,$i,$j,var) [lindex $line 0]
-		set ianalysis(param,$i,$j,type) [lindex $line 1]
-		set ianalysis(param,$i,$j,title) [lindex $line 2]
+		set ii $ianalysis(param,count)
+		set jj $ianalysis(param,$ii,count)
+		set ianalysis(param,$ii,$jj,var) [lindex $line 0]
+		set ianalysis(param,$ii,$jj,type) [lindex $line 1]
+		set ianalysis(param,$ii,$jj,title) [lindex $line 2]
 
 		# default can contain the full menu 'aaa|bbb|ccc'
-		set ianalysis(param,$i,$j,default) [lindex $line 3]
+		set ianalysis(param,$ii,$jj,default) [lindex $line 3]
 		# set last to first item
-		set ianalysis(param,$i,$j,last) \
+		set ianalysis(param,$ii,$jj,last) \
 		    [lindex [split [lindex $line 3] |] 0]
 		# and set value to last
-		set ianalysis(param,$i,$j,value) \
-		    $ianalysis(param,$i,$j,last)
+		set ianalysis(param,$ii,$jj,value) \
+		    $ianalysis(param,$ii,$jj,last)
 
-		set ianalysis(param,$i,$j,info) [lindex $line 4]
-		incr ianalysis(param,$i,count)
+		set ianalysis(param,$ii,$jj,info) [lindex $line 4]
+		incr ianalysis(param,$ii,count)
 	    }
 
 	    6 {
@@ -412,8 +426,8 @@ proc ProcessAnalysis {varname} {
 		    continue
 		}
 
-		set i $ianalysis(menu,count)
-		append ianalysis(menu,$i,var) "$line\n"
+		set ii $ianalysis(menu,count)
+		append ianalysis(menu,$ii,var) "$line\n"
 	    }
 	}
     }

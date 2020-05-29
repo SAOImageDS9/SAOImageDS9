@@ -100,16 +100,20 @@ proc ClearAnalysis {} {
     # clear params
     for {set ii 0} {$ii<$ianalysis(param,count)} {incr ii} {
 	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
-	    unset ianalysis(param,$ii,$jj,var)
-	    unset ianalysis(param,$ii,$jj,type)
-	    unset ianalysis(param,$ii,$jj,title)
-	    unset ianalysis(param,$ii,$jj,default)
-	    unset ianalysis(param,$ii,$jj,last)
-	    unset ianalysis(param,$ii,$jj,value)
-	    unset ianalysis(param,$ii,$jj,info)
+	    for {set kk 0} {$jj<$ianalysis(param,$ii,$jj,count)} {incr kk} {
+		unset ianalysis(param,$ii,$jj,$kk,var)
+		unset ianalysis(param,$ii,$jj,$kk,type)
+		unset ianalysis(param,$ii,$jj,$kk,title)
+		unset ianalysis(param,$ii,$jj,$kk,default)
+		unset ianalysis(param,$ii,$jj,$kk,last)
+		unset ianalysis(param,$ii,$jj,$kk,value)
+		unset ianalysis(param,$ii,$jj,$kk,info)
+	    }
+	    unset ianalysis(param,$ii,$jj)
+	    unset ianalysis(param,$ii,$jj,count)
 	}
-	unset ianalysis(param,$ii,count)
 	unset ianalysis(param,$ii)
+	unset ianalysis(param,$ii,count)
     }
     set ianalysis(param,count) 0
 }
@@ -238,9 +242,11 @@ proc ProcessAnalysis {varname} {
 		# param
 		if {[lindex $line 0] == {param}} {
 		    if {[lindex $line 1] != {}} {
-			set ianalysis(param,$ianalysis(param,count)) \
-			    [lindex $line 1]
-			set ianalysis(param,$ianalysis(param,count),count) 0
+			set id $ianalysis(param,count)
+			set ianalysis(param,$id) [lindex $line 1]
+			set ianalysis(param,$id,count) 0
+			set ianalysis(param,$id,0) def
+			set ianalysis(param,$id,0,count) 0
 			set state 5
 		    }
 		    continue
@@ -375,46 +381,56 @@ proc ProcessAnalysis {varname} {
 	    }
 
 	    5 {
-		# tab
-		if {[lindex $line 0] == {tab}} {
-		    continue
-		}
-
-		# endtab
-		if {[lindex $line 0] == {endtab}} {
-		    continue
-		}
-
-		# end param
-		if {[lindex $line 0] == {endparam} || 
-		    [lindex $line 0] == {end}} {
-		    incr ianalysis(param,count)
-		    set state 1
-		    continue
-		}
-
 		if {[string range $line 0 0] == {@}} {
 		    ParseIRAFParam [string range $line 1 end]
 		    continue
 		}
 
 		set ii $ianalysis(param,count)
+
+		# endtab
+		if {[lindex $line 0] == {endtab}} {
+		    incr ianalysis(param,$ii,count)
+		    continue
+		}
+
+		# end param
+		if {[lindex $line 0] == {endparam}} {
+		    if {$ianalysis(param,$ii,count) == 0} {
+			incr ianalysis(param,$ii,count)
+			set $ianalysis(param,$ii) def
+		    }
+		    incr ianalysis(param,count)
+		    set state 1
+		    continue
+		}
+
 		set jj $ianalysis(param,$ii,count)
-		set ianalysis(param,$ii,$jj,var) [lindex $line 0]
-		set ianalysis(param,$ii,$jj,type) [lindex $line 1]
-		set ianalysis(param,$ii,$jj,title) [lindex $line 2]
+
+		# tab
+		if {[lindex $line 0] == {tab}} {
+		    set ianalysis(param,$ii,$jj) [lindex $line 1]
+		    set ianalysis(param,$ii,$jj,count) 0
+		    continue
+		}
+
+		set kk $ianalysis(param,$ii,$jj,count)
+
+		set ianalysis(param,$ii,$jj,$kk,var) [lindex $line 0]
+		set ianalysis(param,$ii,$jj,$kk,type) [lindex $line 1]
+		set ianalysis(param,$ii,$jj,$kk,title) [lindex $line 2]
 
 		# default can contain the full menu 'aaa|bbb|ccc'
-		set ianalysis(param,$ii,$jj,default) [lindex $line 3]
+		set ianalysis(param,$ii,$jj,$kk,default) [lindex $line 3]
 		# set last to first item
-		set ianalysis(param,$ii,$jj,last) \
+		set ianalysis(param,$ii,$jj,$kk,last) \
 		    [lindex [split [lindex $line 3] |] 0]
 		# and set value to last
-		set ianalysis(param,$ii,$jj,value) \
-		    $ianalysis(param,$ii,$jj,last)
+		set ianalysis(param,$ii,$jj,$kk,value) \
+		    $ianalysis(param,$ii,$jj,$kk,last)
+		set ianalysis(param,$ii,$jj,$kk,info) [lindex $line 4]
 
-		set ianalysis(param,$ii,$jj,info) [lindex $line 4]
-		incr ianalysis(param,$ii,count)
+		incr ianalysis(param,$ii,$jj,count)
 	    }
 
 	    6 {
@@ -437,6 +453,19 @@ proc ProcessAnalysis {varname} {
     BindEventsCanvas
 
     UpdateAnalysisMenu
+
+    if {0} {
+    puts "param count: $ianalysis(param,count)"
+    for {set ii 0} {$ii<$ianalysis(param,count)} {incr ii} {
+	puts "$ii $ianalysis(param,$ii):$ianalysis(param,$ii,count)"
+	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
+	    puts "$ii-$jj $ianalysis(param,$ii,$jj):$ianalysis(param,$ii,$jj,count)"
+	    for {set kk 0} {$kk<$ianalysis(param,$ii,$jj,count)} {incr kk} {
+		puts "$ianalysis(param,$ii,$jj,$kk,var) $ianalysis(param,$ii,$jj,$kk,type) $ianalysis(param,$ii,$jj,$kk,title)"
+	    }
+	}
+    }
+    }
 
     return 1
 }

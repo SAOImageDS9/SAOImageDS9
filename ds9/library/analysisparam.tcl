@@ -9,9 +9,6 @@ proc AnalysisParam {strname param} {
     global ianalysis
     global ed
 
-    global ds9
-    global pds9
-
     # find it
     for {set ii 0} {$ii<$ianalysis(param,count)} {incr ii} {
 	if {$ianalysis(param,$ii) == "$param"} {
@@ -31,53 +28,43 @@ proc AnalysisParam {strname param} {
     # Param
     set f [ttk::frame $w.param]
 
-    for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
-	set ianalysis(param,$ii,$jj,value) $ianalysis(param,$ii,$jj,last)
-	ttk::label $f.l$jj -text "$ianalysis(param,$ii,$jj,title)"
-	switch -- $ianalysis(param,$ii,$jj,type) {
-	    entry {
-		ttk::entry $f.a$jj \
-		    -textvariable ianalysis(param,$ii,$jj,value) \
-		    -width 40
-	    }
-	    open {
-		ttk::frame $f.a$jj
-		ttk::entry $f.a$jj.e \
-		    -textvariable ianalysis(param,$ii,$jj,value) \
-		    -width 30
-		ttk::button $f.a$jj.b -text [msgcat::mc {Browse}] \
-		    -command [list AnalysisParamFileOpen param,$ii,$jj,value]
-		grid $f.a$jj.e $f.a$jj.b -padx 2 -pady 2 -sticky w
-	    }
-	    save {
-		ttk::frame $f.a$jj
-		ttk::entry $f.a$jj.e \
-		    -textvariable ianalysis(param,$ii,$jj,value) \
-		    -width 30
-		ttk::button $f.a$jj.b -text [msgcat::mc {Browse}] \
-		    -command [list AnalysisParamFileSave param,$ii,$jj,value]
-		grid $f.a$jj.e $f.a$jj.b -padx 2 -pady 2 -sticky w
-	    }
-	    checkbox {
-		ttk::checkbutton $f.a$jj -text {} \
-		    -variable ianalysis(param,$ii,$jj,value)
-	    }
-	    menu {
-		set ll [split $ianalysis(param,$ii,$jj,default) |]
-		ttk::menubutton $f.a$jj \
-		    -text "$ianalysis(param,$ii,$jj,value)" \
-		    -menu $f.a$jj.menu
-		set m [ThemeMenu $f.a$jj.menu]
-		for {set kk 0} {$kk<[llength $ll]} {incr kk} {
-			$m add command -label [lindex $ll $kk] \
-			    -command "AnalysisParamMenu ianalysis(param,$ii,$jj,value) [lindex $ll $kk] $f.a$jj"
-		}
+    if {$ianalysis(param,$ii,count) == 1 && $ianalysis(param,$ii,0) == {def}} {
+	# simple case
+	set jj 0
+	for {set kk 0} {$kk<$ianalysis(param,$ii,$jj,count)} {incr kk} {
+	    AnalysisParamItem $f $ii $jj $kk
+	}
+    } else {
+	# tree view
+
+	ttk::scrollbar $f.scroll -command [list $f.box yview]
+	set ianalysis(listbox) [ttk::treeview $f.box \
+				    -yscroll [list $f.scroll set] \
+				    -selectmode browse \
+				    -height 28 \
+				    -show tree \
+				   ]
+
+	grid $f.box $f.scroll -sticky news
+	grid rowconfigure $f 0 -weight 1
+	grid columnconfigure $f 2 -weight 1
+
+	bind $ianalysis(listbox) <<TreeviewSelect>> AnalysisParamListUpdate
+
+	set ianalysis(tabs) {}
+
+	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
+	    set gg [ttk::frame $f.t$ii-$jj]
+	    $ianalysis(listbox) insert {} end -id $gg \
+		-text "$ianalysis(param,$ii,$jj)"
+
+	    for {set kk 0} {$kk<$ianalysis(param,$ii,$jj,count)} {incr kk} {
+		AnalysisParamItem $gg $ii $jj $kk
 	    }
 	}
-	ttk::label $f.i$jj -text "$ianalysis(param,$ii,$jj,info)" \
-	    -font "{$ds9(times)} $pds9(font,size) normal italic"
 
-	grid $f.l$jj $f.a$jj $f.i$jj -padx 2 -pady 2 -sticky w
+	# select first item
+	$ianalysis(listbox) selection set $f.t$ii-0
     }
 
     # Buttons
@@ -100,17 +87,92 @@ proc AnalysisParam {strname param} {
 
     if {$ed(ok)} {
 	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
-	    set exp "\\\$$ianalysis(param,$ii,$jj,var)"
-	    if {[regexp $exp $str]} {
-		regsub -all $exp $str "$ianalysis(param,$ii,$jj,value)" str
+	    for {set kk 0} {$kk<$ianalysis(param,$ii,$jj,count)} {incr kk} {
+		set exp "\\\$$ianalysis(param,$ii,$jj,$kk,var)"
+		if {[regexp $exp $str]} {
+		    regsub -all $exp $str \
+			"$ianalysis(param,$ii,$jj,$kk,value)" str
+		}
+		set ianalysis(param,$ii,$jj,$kk,last) \
+		    $ianalysis(param,$ii,$jj,$kk,value)
 	    }
-	    set ianalysis(param,$ii,$jj,last) $ianalysis(param,$ii,$jj,value)
 	}
     }
 
     set rr $ed(ok)
     unset ed
     return $rr
+}
+
+proc AnalysisParamItem {f ii jj kk} {
+    global ds9
+    global pds9
+    global ianalysis
+
+    set ianalysis(param,$ii,$jj,$kk,value) $ianalysis(param,$ii,$jj,$kk,last)
+
+    ttk::label $f.l$ii-$jj-$kk -text "$ianalysis(param,$ii,$jj,$kk,title)"
+
+    switch -- $ianalysis(param,$ii,$jj,$kk,type) {
+	entry {
+	    ttk::entry $f.a$ii-$jj-$kk \
+		-textvariable ianalysis(param,$ii,$jj,$kk,value) \
+		-width 40
+	}
+	open {
+	    ttk::frame $f.a$ii-$jj-$kk
+	    ttk::entry $f.a$ii-$jj-$kk.e \
+		-textvariable ianalysis(param,$ii,$jj,$kk,value) \
+		-width 30
+	    ttk::button $f.a$ii-$jj-$kk.b -text [msgcat::mc {Browse}] \
+		-command \
+		[list AnalysisParamFileOpen param,$ii,$jj,$kk,value]
+	    grid $f.a$ii-$jj-$kk.e $f.a$ii-$jj-$kk.b \
+		-padx 2 -pady 2 -sticky w
+	}
+	save {
+	    ttk::frame $f.a$ii-$jj-$kk
+	    ttk::entry $f.a$ii-$jj-$kk.e \
+		-textvariable ianalysis(param,$ii,$jj,$kk,value) \
+		-width 30
+	    ttk::button $f.a$ii-$jj-$kk.b -text [msgcat::mc {Browse}] \
+		-command \
+		[list AnalysisParamFileSave param,$ii,$jj,$kk,value]
+	    grid $f.a$ii-$jj-$kk.e $f.a$ii-$jj-$kk.b \
+		-padx 2 -pady 2 -sticky w
+	}
+	checkbox {
+	    ttk::checkbutton $f.a$ii-$jj-$kk -text {} \
+		-variable ianalysis(param,$ii,$jj,$kk,value)
+	}
+	menu {
+	    set ll [split $ianalysis(param,$ii,$jj,$kk,default) |]
+	    ttk::menubutton $f.a$ii-$jj-$kk \
+		-text "$ianalysis(param,$ii,$jj,$kk,value)" \
+		-menu $f.a$ii-$jj-$kk.menu
+	    set mm [ThemeMenu $f.a$ii-$jj-$kk.menu]
+	    for {set nn 0} {$nn<[llength $ll]} {incr nn} {
+		$mm add command -label [lindex $ll $nn] \
+		    -command "AnalysisParamMenu ianalysis(param,$ii,$jj,$kk,value) [lindex $ll $nn] $f.a$ii-$jj-$kk"
+	    }
+	}
+    }
+    ttk::label $f.i$ii-$jj-$kk -text "$ianalysis(param,$ii,$jj,$kk,info)" -font "{$ds9(times)} $pds9(font,size) normal italic"
+
+    grid $f.l$ii-$jj-$kk $f.a$ii-$jj-$kk $f.i$ii-$jj-$kk \
+	-padx 2 -pady 2 -sticky w
+}
+
+proc AnalysisParamListUpdate {} {
+    global ianalysis
+
+    if {$ianalysis(tabs) != {}} {
+	grid forget $ianalysis(tabs)
+    }
+    set ianalysis(tabs) [$ianalysis(listbox) selection]
+    if {$ianalysis(tabs) != {}} {
+	grid $ianalysis(tabs) -row 0 -column 2 -sticky new
+    }
 }
 
 proc AnalysisParamFileOpen {which} {
@@ -167,37 +229,39 @@ proc ParseIRAFParam {filename} {
 		regsub -all {\"} $p4 {} p4
 		regsub -all {\"} $p7 {} p7
 		set jj $ianalysis(param,$ii,count)
-		set ianalysis(param,$ii,$jj,var) "$p1"
+		set kk $ianalysis(param,$ii,$jj,count)
+		set ianalysis(param,$ii,$jj,$kk,var) "$p1"
 		if {$p3 == {h}} {
-		    set ianalysis(param,$ii,$jj,title) "(${p1})"
+		    set ianalysis(param,$ii,$jj,$kk,title) "(${p1})"
 		} else {
-		    set ianalysis(param,$ii,$jj,title) "$p1"
+		    set ianalysis(param,$ii,$jj,$kk,title) "$p1"
 		}
-		set ianalysis(param,$ii,$jj,info) "$p7"
-		incr ianalysis(param,$ii,count)
+		set ianalysis(param,$ii,$jj,$kk,info) "$p7"
+		incr ianalysis(param,$ii,$jj,count)
+		
 		switch -- $p2 {
 		    b {
-			set ianalysis(param,$ii,$jj,type) checkbox
-			set ianalysis(param,$ii,$jj,default) [FromYesNo $p4]
-			set ianalysis(param,$ii,$jj,last) [FromYesNo $p4]
-			set ianalysis(param,$ii,$jj,value) [FromYesNo $p4]
+			set ianalysis(param,$ii,$jj,$kk,type) checkbox
+			set ianalysis(param,$ii,$jj,$kk,default) [FromYesNo $p4]
+			set ianalysis(param,$ii,$jj,$kk,last) [FromYesNo $p4]
+			set ianalysis(param,$ii,$jj,$kk,value) [FromYesNo $p4]
 		    }
 		    s {
 			if {$p5 != {}} {
-			    set ianalysis(param,$ii,$jj,type) menu
-			    set ianalysis(param,$ii,$jj,default) "$p5"
+			    set ianalysis(param,$ii,$jj,$kk,type) menu
+			    set ianalysis(param,$ii,$jj,$kk,default) "$p5"
 			} else {
-			    set ianalysis(param,$ii,$jj,type) entry
-			    set ianalysis(param,$ii,$jj,default) "$p4"
+			    set ianalysis(param,$ii,$jj,$kk,type) entry
+			    set ianalysis(param,$ii,$jj,$kk,default) "$p4"
 			}
-			set ianalysis(param,$ii,$jj,last) "$p4"
-			set ianalysis(param,$ii,$jj,value) "$p4"
+			set ianalysis(param,$ii,$jj,$kk,last) "$p4"
+			set ianalysis(param,$ii,$jj,$kk,value) "$p4"
 		    }
 		    default {
-			set ianalysis(param,$ii,$jj,type) entry
-			set ianalysis(param,$ii,$jj,default) "$p4"
-			set ianalysis(param,$ii,$jj,last) "$p4"
-			set ianalysis(param,$ii,$jj,value) "$p4"
+			set ianalysis(param,$ii,$jj,$kk,type) entry
+			set ianalysis(param,$ii,$jj,$kk,default) "$p4"
+			set ianalysis(param,$ii,$jj,$kk,last) "$p4"
+			set ianalysis(param,$ii,$jj,$kk,value) "$p4"
 		    }
 		}
 	    }

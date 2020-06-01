@@ -44,7 +44,6 @@ proc CATMatchDialog {cats} {
     set mb {.catmatmb}
 
     set ed(top) $w
-    set ed(mb) $mb
     set ed(ok) 0
 
     set ed(match1) [lindex $cats 0]

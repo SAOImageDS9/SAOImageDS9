@@ -20,10 +20,25 @@ proc AnalysisParam {strname param} {
     }
 
     set w {.param}
+    set mb {.parammb}
 
+    set ed(top) $w
     set ed(ok) 0
 
     DialogCreate $w $param ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
 
     # Param
     set f [ttk::frame $w.param]
@@ -41,7 +56,6 @@ proc AnalysisParam {strname param} {
 	set ianalysis(listbox) [ttk::treeview $f.box \
 				    -yscroll [list $f.scroll set] \
 				    -selectmode browse \
-				    -height 28 \
 				    -show tree \
 				   ]
 
@@ -84,6 +98,7 @@ proc AnalysisParam {strname param} {
     DialogCenter $w 
     DialogWait $w ed(ok) $w.buttons.ok
     DialogDismiss $w
+    destroy $mb
 
     if {$ed(ok)} {
 	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {

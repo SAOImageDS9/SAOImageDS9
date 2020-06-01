@@ -7,7 +7,7 @@
 <title>Analysis</title>
 </head>
 <body link="#0000EE" vlink="#551A8B" text="#000000" bgcolor="#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" align="middle" height="98"> Analysis</h3>
+<h3><img alt="" src="../sun.gif" align="middle" width="100" height="98"> Analysis</h3>
 <blockquote>
 <p>Each file type known to DS9 can have user-defined analysis commands associated with it. These analysis commands are defined at start-up time , or loaded by the user, by means of an ASCII analysis description file. The analysis commands are available for execution, either via the <i>Analysis Menu</i> or the XPA point <i>Analysis</i>. In addition, commands may be <i>bound</i> to events, such as keystrokes or mouse clicks. This type of command is called a bind command.<br></p>
 <p>DS9 searches for an analysis file named <tt>ds9.ans</tt> or <tt>ds9.analysis</tt> in the current directory and <tt>$HOME</tt> to be loaded at startup. In addition, DS9 will search the following directories for any analysis files to be loaded at startup in the form of <tt>*.ds9</tt>: the current directory, <tt>$HOME/bin</tt>, <tt>/usr/local/bin</tt>, <tt>/opt/local/bin</tt>, and <tt>/soft/saord/bin</tt>. Finally, the user may specify analysis files to be loaded at startup in the preferences analysis panel. The user may also load or clear current analysis commands via command line options or the <i>Analysis m</i>enu<i>.</i></p>
@@ -290,11 +290,21 @@ $z<br></b></p>
 <tt>in the menu or menus</tt><br>
 <tt>endhelp</tt></blockquote>
 <p><b><a name="Parameters" id="Parameters"></a>Parameters</b></p>
-<p>The user may define his own macros or parameters to be evaluated before the command line is executed. To do this, the user defines a param segment that is referenced in the command line. The param definition has the follow format:</p>
-<blockquote><tt>param &lt;name&gt;</tt><br>
-<tt>&lt;variable&gt; &lt;entry|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;</tt><br>
-<tt>...</tt><br>
-<tt>endparam</tt></blockquote>
+<p>The user may define his own macros or parameters to be evaluated before the command line is executed. To do this, the user defines a parameter segment that is referenced in the command line. Parameters maybe displayed in a notebook style via use of the 'tab' 'endtab' keywords. The parameter definition has the follow format:</p>
+<blockquote><tt>param &lt;name&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;&nbsp;...<br>
+endparam</tt></blockquote>
+<blockquote><tt>param &lt;name&gt;<br>
+&nbsp; tab &lt;text&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;&nbsp;...<br>
+endtab<br>
+tab &lt;text&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;...<br>
+endtab<br>
+endparam</tt></blockquote>
 <p>or</p>
 <blockquote><tt>param &lt;name&gt;</tt><br>
 <tt>@&lt;iraf param filename&gt;</tt><br>
@@ -304,12 +314,25 @@ $z<br></b></p>
 <tt>$UPARM/&lt;filename&gt;</tt><br>
 <tt>$HOME/iraf/&lt;filename&gt;</tt></blockquote>
 <tt>Example:<br></tt>
-<blockquote><tt>param foobar</tt><br>
-<tt>var1 entry {Variable 1} default {this is a entry}</tt><br>
-<tt>var2 checkbox {Variable 2} 1 {this is a checkbox}</tt><br>
-<tt>var3 menu {Variable 3} AAA|BBB|CCC {this is a menu}<br>
-var4 open {Variable 4} default {this is a open file dialog}<br>
-var5 save {Variable 5} default {this is a save file dialog}<br></tt> <tt>endparam</tt></blockquote>
+<blockquote><tt>param foo<br>
+&nbsp;var1 entry {Variable 1} default {this is a entry}<br>
+&nbsp;var2 checkbox {Variable 2} 1 {this is a checkbox}<br>
+&nbsp;var3 menu {Variable 3} AAA|BBB|CCC {this is a menu}<br>
+&nbsp;var4 open {Variable 4} default {this is a open file dialog}<br>
+&nbsp;var5 save {Variable 5} default {this is a save file dialog}<br>
+endparam<br>
+<br>
+param bar<br>
+&nbsp; tab first<br>
+&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} default {this is a entry}<br>
+&nbsp;&nbsp;&nbsp;var2 checkbox {Variable 2} 1 {this is a checkbox}<br>
+&nbsp;&nbsp;&nbsp;var3 menu {Variable 3} AAA|BBB|CCC {this is a menu}<br>
+&nbsp; endtab<br>
+&nbsp; tab second<br>
+&nbsp;&nbsp;&nbsp;var4 open {Variable 4} default {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp;var5 save {Variable 5} default {this is a save file dialog}<br>
+&nbsp; endtab<br>
+endparam</tt></blockquote>
 <p>To use parameters, specify the param name at the beginning of your command line:</p>
 <blockquote><tt>Parameter Test</tt><br>
 <tt>*</tt><br>
@@ -318,23 +341,23 @@ var5 save {Variable 5} default {this is a save file dialog}<br></tt> <tt>endpara
 <p>When the menu item is selected, the user will be presented with a dialog box that contains <i>entry, checkbox, or menu</i> choices for each variable specified. If the user clicks ok, the values are substituted in the command line before execution.</p>
 <p><b><a name="HierarchicalMenus" id="HierarchicalMenus"></a>Hierarchical Menus</b></p>
 <p>The user may define hierarchical menus. Use this to organized crowded menus. To do this, frame menu entries with <tt>hmenu &lt;label&gt;</tt> and <tt>endhmenu</tt>. Hierarchical menu labels may contain spaces. Multiple levels maybe implemented.</p>
-<tt>Example:<br></tt>
-<blockquote><tt>hmenu Stuff</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; hello</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; *</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; menu</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; echo "Hello" | $text</tt>
-<p><tt>&nbsp;&nbsp;&nbsp; world</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; *</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; menu</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; echo "World" | $text</tt></p>
-<p><tt>&nbsp;&nbsp;&nbsp; hmenu More Stuff</tt><br>
-<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hello world</tt><br>
-<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *</tt><br>
-<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; menu</tt><br>
-<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "Hello World" | $text</tt><br>
-<tt>&nbsp;&nbsp;&nbsp; endhmenu</tt><br>
-<tt>endhmenu</tt></p>
+Example:<br>
+<blockquote><tt>hmenu Stuff<br>
+&nbsp;&nbsp;&nbsp; hello<br>
+&nbsp;&nbsp;&nbsp; *<br>
+&nbsp;&nbsp;&nbsp; menu<br>
+&nbsp;&nbsp;&nbsp; echo "Hello" | $text</tt>
+<p><tt>&nbsp;&nbsp;&nbsp; world<br>
+&nbsp;&nbsp;&nbsp; *<br>
+&nbsp;&nbsp;&nbsp; menu<br>
+&nbsp;&nbsp;&nbsp; echo "World" | $text</tt></p>
+<p><tt>&nbsp;&nbsp;&nbsp; hmenu More Stuff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hello world<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; menu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "Hello World" | $text<br>
+&nbsp;&nbsp;&nbsp; endhmenu<br>
+endhmenu</tt></p>
 </blockquote>
 <p>Will create an hierarchical menu with two members, <tt>hello</tt> and <tt>world</tt>.</p>
 <p><b><a name="Sample" id="Sample"></a>Sample</b></p>
@@ -354,11 +377,19 @@ param foo<br>
 endparam<br>
 <br>
 param bar<br>
-&nbsp;&nbsp;&nbsp; @analysis.par<br>
+&nbsp; tab "First Parameters"<br>
+&nbsp;&nbsp;&nbsp; var1 entry entry {something} {this is a entry}<br>
+&nbsp;&nbsp;&nbsp; var2 checkbox checkbox 1 {this is a checkbox}<br>
+&nbsp;&nbsp;&nbsp; var3 menu menu AAA|BBB|CCC {this is a menu}<br>
+&nbsp; endtab<br>
+&nbsp; tab "Second Parmeters"<br>
+&nbsp;&nbsp;&nbsp; var4 open {open file} {} {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp; var5 save {save file} {} {this is a save file dialog}<br>
+&nbsp; endtab<br>
 endparam<br>
 <br>
 param foobar<br>
-&nbsp;&nbsp;&nbsp; @tvdisply.par<br>
+&nbsp;&nbsp;&nbsp; @analysis.par<br>
 endparam<br>
 <br>
 # Help Main Help<br>
@@ -575,10 +606,13 @@ hmenu Test Params<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; $param(foo); echo "$var1 $var2 $var3 $var4" | $text<br>
 <br>
+&nbsp;&nbsp;&nbsp; menu<br>
+&nbsp;&nbsp;&nbsp; $param(bar); echo "$var1 $var2 $var3 $var4" | $text<br>
+<br>
 &nbsp;&nbsp;&nbsp; Test $param @file<br>
 &nbsp;&nbsp;&nbsp; *<br>
 &nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(bar); echo "$var1 $var2 $var3 $var5" | $text<br>
+&nbsp;&nbsp;&nbsp; $param(foobar); echo "$var1 $var2 $var3 $var5" | $text<br>
 endhmenu<br>
 <br>
 hmenu Test Network<br>
@@ -612,11 +646,6 @@ hmenu Test Other<br>
 &nbsp;&nbsp;&nbsp; Help for other features<br>
 &nbsp;&nbsp;&nbsp; endhelp<br>
 &nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; Test $param @tvdisply<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(foobar); echo "$frame $erase" | $text<br>
-<br>
 &nbsp;&nbsp;&nbsp; hmenu Test MultiLevel<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; test<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; *<br>

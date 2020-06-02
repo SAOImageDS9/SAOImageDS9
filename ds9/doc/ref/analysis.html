@@ -313,7 +313,15 @@ endparam</tt></blockquote>
 <blockquote><tt>./&lt;filename&gt;</tt><br>
 <tt>$UPARM/&lt;filename&gt;</tt><br>
 <tt>$HOME/iraf/&lt;filename&gt;</tt></blockquote>
-<tt>Example:<br></tt>
+<p>The following macros are supported if encounted in the default field:</p>
+<blockquote><tt>$width<br>
+$height<br>
+$depth<br>
+$bitpix<br>
+$filename<br>
+$filename[region]<br>
+$env<br></tt></blockquote>
+<p>Example:</p>
 <blockquote><tt>param foo<br>
 &nbsp;var1 entry {Variable 1} default {this is a entry}<br>
 &nbsp;var2 checkbox {Variable 2} 1 {this is a checkbox}<br>
@@ -332,7 +340,15 @@ param bar<br>
 &nbsp;&nbsp;&nbsp;var4 open {Variable 4} default {this is a open file dialog}<br>
 &nbsp;&nbsp;&nbsp;var5 save {Variable 5} default {this is a save file dialog}<br>
 &nbsp; endtab<br>
-endparam</tt></blockquote>
+endparam<br>
+<br>
+param foobar<br>
+&nbsp;&nbsp;&nbsp; var1 entry filename {$filename} {image filename}<br>
+&nbsp;&nbsp;&nbsp; var2 entry width {$width} {image width}<br>
+&nbsp;&nbsp;&nbsp; var3 entry height {$height} {image height}<br>
+&nbsp;&nbsp;&nbsp; var4 entry depth {$depth} {image depth}<br>
+&nbsp;&nbsp;&nbsp; var5 entry bitpix {$bitpix} {image bitpix}<br>
+endparam<br></tt></blockquote>
 <p>To use parameters, specify the param name at the beginning of your command line:</p>
 <blockquote><tt>Parameter Test</tt><br>
 <tt>*</tt><br>
@@ -389,6 +405,14 @@ param bar<br>
 endparam<br>
 <br>
 param foobar<br>
+&nbsp;&nbsp;&nbsp; var1 entry filename {$filename} {image filename}<br>
+&nbsp;&nbsp;&nbsp; var2 entry width {$width} {image width}<br>
+&nbsp;&nbsp;&nbsp; var3 entry height {$height} {image height}<br>
+&nbsp;&nbsp;&nbsp; var4 entry depth {$depth} {image depth}<br>
+&nbsp;&nbsp;&nbsp; var5 entry bitpix {$bitpix} {image bitpix}<br>
+endparam<br>
+<br>
+param barfoo<br>
 &nbsp;&nbsp;&nbsp; @analysis.par<br>
 endparam<br>
 <br>
@@ -606,13 +630,20 @@ hmenu Test Params<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; $param(foo); echo "$var1 $var2 $var3 $var4" | $text<br>
 <br>
+&nbsp;&nbsp;&nbsp; Test $param tab<br>
+&nbsp;&nbsp;&nbsp; *<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; $param(bar); echo "$var1 $var2 $var3 $var4" | $text<br>
+<br>
+&nbsp;&nbsp;&nbsp; Test $param macro<br>
+&nbsp;&nbsp;&nbsp; *<br>
+&nbsp;&nbsp;&nbsp; menu<br>
+&nbsp;&nbsp;&nbsp; $param(foobar); echo "$var1 $var2 $var3 $var4 $var5" | $text<br>
 <br>
 &nbsp;&nbsp;&nbsp; Test $param @file<br>
 &nbsp;&nbsp;&nbsp; *<br>
 &nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(foobar); echo "$var1 $var2 $var3 $var5" | $text<br>
+&nbsp;&nbsp;&nbsp; $param(barfoo); echo "$var1 $var2 $var3 $var4" | $text<br>
 endhmenu<br>
 <br>
 hmenu Test Network<br>

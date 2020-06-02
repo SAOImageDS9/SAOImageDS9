@@ -105,7 +105,6 @@ proc ClearAnalysis {} {
 		unset ianalysis(param,$ii,$jj,$kk,type)
 		unset ianalysis(param,$ii,$jj,$kk,title)
 		unset ianalysis(param,$ii,$jj,$kk,default)
-		unset ianalysis(param,$ii,$jj,$kk,last)
 		unset ianalysis(param,$ii,$jj,$kk,value)
 		unset ianalysis(param,$ii,$jj,$kk,info)
 	    }
@@ -419,15 +418,7 @@ proc ProcessAnalysis {varname} {
 		set ianalysis(param,$ii,$jj,$kk,var) [lindex $line 0]
 		set ianalysis(param,$ii,$jj,$kk,type) [lindex $line 1]
 		set ianalysis(param,$ii,$jj,$kk,title) [lindex $line 2]
-
-		# default can contain the full menu 'aaa|bbb|ccc'
 		set ianalysis(param,$ii,$jj,$kk,default) [lindex $line 3]
-		# set last to first item
-		set ianalysis(param,$ii,$jj,$kk,last) \
-		    [lindex [split [lindex $line 3] |] 0]
-		# and set value to last
-		set ianalysis(param,$ii,$jj,$kk,value) \
-		    $ianalysis(param,$ii,$jj,$kk,last)
 		set ianalysis(param,$ii,$jj,$kk,info) [lindex $line 4]
 
 		incr ianalysis(param,$ii,$jj,count)

@@ -141,6 +141,7 @@ proc CrosshairDialog {} {
     global icrosshair
     global dcrosshair
     global current
+    global ds9
 
     # see if we already have a window visible
     if {[winfo exists $icrosshair(top)]} {

@@ -34,6 +34,9 @@ proc AnalysisParam {strname param} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+    $mb.file add command -label [msgcat::mc {Reset}] \
+	-command [list AnalysisParamReset $ii]
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
 
     # edit
@@ -85,8 +88,10 @@ proc AnalysisParam {strname param} {
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
 	-default active
+    ttk::button $f.reset -text [msgcat::mc {Reset}] \
+	-command [list AnalysisParamReset $ii]
     ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
-    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+    pack $f.ok $f.reset $f.cancel -side left -expand true -padx 2 -pady 4
 
     bind $w <Return> {set ed(ok) 1}
 
@@ -108,6 +113,8 @@ proc AnalysisParam {strname param} {
 		    regsub -all $exp $str \
 			"$ianalysis(param,$ii,$jj,$kk,value)" str
 		}
+		set ianalysis(param,$ii,$jj,$kk,last) \
+		    $ianalysis(param,$ii,$jj,$kk,value)
 	    }
 	}
     }
@@ -115,6 +122,44 @@ proc AnalysisParam {strname param} {
     set rr $ed(ok)
     unset ed
     return $rr
+}
+
+proc AnalysisParamReset {ii} {
+    global ianalysis
+    global current
+
+    for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
+	for {set kk 0} {$kk<$ianalysis(param,$ii,$jj,count)} {incr kk} {
+	    switch $ianalysis(param,$ii,$jj,$kk,type) {
+		entry -
+		open -
+		save {
+		    set cmd $ianalysis(param,$ii,$jj,$kk,default)
+		    AnalysisParamMacro cmd $current(frame)
+		    set ianalysis(param,$ii,$jj,$kk,last) $cmd
+		    set ianalysis(param,$ii,$jj,$kk,value) \
+			$ianalysis(param,$ii,$jj,$kk,last)
+		}
+		checkbox {
+		    set ianalysis(param,$ii,$jj,$kk,last) \
+			$ianalysis(param,$ii,$jj,$kk,default)
+		    set ianalysis(param,$ii,$jj,$kk,value) \
+			$ianalysis(param,$ii,$jj,$kk,last)
+		}
+		menu {
+		    # default can contain the full menu 'aaa|bbb|ccc'
+		    # set last to first item
+		    set pp [split $ianalysis(param,$ii,$jj,$kk,default) |]
+		    set ianalysis(param,$ii,$jj,$kk,last) [lindex $pp 0]
+		    set ianalysis(param,$ii,$jj,$kk,value) \
+			$ianalysis(param,$ii,$jj,$kk,last)
+
+		    $ianalysis(param,$ii,$jj,$kk,menubutton) configure \
+			-text $ianalysis(param,$ii,$jj,$kk,value)
+		}
+	    }
+	}
+    }
 }
 
 proc AnalysisParamItem {f ii jj kk} {
@@ -127,7 +172,7 @@ proc AnalysisParamItem {f ii jj kk} {
 
     switch -- $ianalysis(param,$ii,$jj,$kk,type) {
 	entry {
-	    set cmd $ianalysis(param,$ii,$jj,$kk,default)
+	    set cmd $ianalysis(param,$ii,$jj,$kk,last)
 	    AnalysisParamMacro cmd $current(frame)
 	    set ianalysis(param,$ii,$jj,$kk,value) $cmd
 
@@ -136,7 +181,7 @@ proc AnalysisParamItem {f ii jj kk} {
 		-width 40
 	}
 	open {
-	    set cmd $ianalysis(param,$ii,$jj,$kk,default)
+	    set cmd $ianalysis(param,$ii,$jj,$kk,last)
 	    AnalysisParamMacro cmd $current(frame)
 	    set ianalysis(param,$ii,$jj,$kk,value) $cmd
 
@@ -151,7 +196,7 @@ proc AnalysisParamItem {f ii jj kk} {
 		-padx 2 -pady 2 -sticky w
 	}
 	save {
-	    set cmd $ianalysis(param,$ii,$jj,$kk,default)
+	    set cmd $ianalysis(param,$ii,$jj,$kk,last)
 	    AnalysisParamMacro cmd $current(frame)
 	    set ianalysis(param,$ii,$jj,$kk,value) $cmd
 
@@ -167,25 +212,25 @@ proc AnalysisParamItem {f ii jj kk} {
 	}
 	checkbox {
 	    set ianalysis(param,$ii,$jj,$kk,value) \
-		$ianalysis(param,$ii,$jj,$kk,default)
+		$ianalysis(param,$ii,$jj,$kk,last)
 
 	    ttk::checkbutton $f.a$ii-$jj-$kk -text {} \
 		-variable ianalysis(param,$ii,$jj,$kk,value)
 	}
 	menu {
-	    # default can contain the full menu 'aaa|bbb|ccc'
-	    # set last to first item
-	    set ll [split $ianalysis(param,$ii,$jj,$kk,default) |]
-	    set ianalysis(param,$ii,$jj,$kk,value) [lindex $ll 0]
+	    set ianalysis(param,$ii,$jj,$kk,value) \
+		$ianalysis(param,$ii,$jj,$kk,last)
 
 	    ttk::menubutton $f.a$ii-$jj-$kk \
 		-text "$ianalysis(param,$ii,$jj,$kk,value)" \
 		-menu $f.a$ii-$jj-$kk.menu
 
+	    set ianalysis(param,$ii,$jj,$kk,menubutton) $f.a$ii-$jj-$kk
 	    set mm [ThemeMenu $f.a$ii-$jj-$kk.menu]
-	    for {set nn 0} {$nn<[llength $ll]} {incr nn} {
-		$mm add command -label [lindex $ll $nn] \
-		    -command "AnalysisParamMenu ianalysis(param,$ii,$jj,$kk,value) [lindex $ll $nn] $f.a$ii-$jj-$kk"
+	    set pp [split $ianalysis(param,$ii,$jj,$kk,default) |]
+	    for {set nn 0} {$nn<[llength $pp]} {incr nn} {
+		$mm add command -label [lindex $pp $nn] \
+		    -command [list AnalysisParamMenu [lindex $pp $nn] $ii $jj $kk]
 	    }
 	}
     }
@@ -223,11 +268,11 @@ proc AnalysisParamFileSave {which} {
     set ianalysis($which) [SaveFileDialog analysisparamfbox]
 }
 
-proc AnalysisParamMenu {varname value menu} {
-    upvar $varname var
+proc AnalysisParamMenu {value ii jj kk} {
+    global ianalysis
 
-    set var $value
-    $menu configure -text $value
+    set ianalysis(param,$ii,$jj,$kk,value) $value
+    $ianalysis(param,$ii,$jj,$kk,menubutton) configure -text $value
 }
 
 proc AnalysisParamMacro {varname {frame {}}} {
@@ -306,30 +351,40 @@ proc ParseIRAFParam {filename} {
 		    set ianalysis(param,$ii,$jj,$kk,title) "$p1"
 		}
 		set ianalysis(param,$ii,$jj,$kk,info) "$p7"
+		# to be filled in later
+		set ianalysis(param,$ii,$jj,$kk,menubutton) {}
 		incr ianalysis(param,$ii,$jj,count)
 		
 		switch -- $p2 {
 		    b {
 			set ianalysis(param,$ii,$jj,$kk,type) checkbox
 			set ianalysis(param,$ii,$jj,$kk,default) [FromYesNo $p4]
-			set ianalysis(param,$ii,$jj,$kk,value) [FromYesNo $p4]
+			set ianalysis(param,$ii,$jj,$kk,last) \
+			    $ianalysis(param,$ii,$jj,$kk,default)
 		    }
 		    s {
 			if {$p5 != {}} {
 			    set ianalysis(param,$ii,$jj,$kk,type) menu
 			    set ianalysis(param,$ii,$jj,$kk,default) "$p5"
+			    set pp \
+				[split $ianalysis(param,$ii,$jj,$kk,default) |]
+			    set ianalysis(param,$ii,$jj,$kk,last) [lindex $pp 0]
 			} else {
 			    set ianalysis(param,$ii,$jj,$kk,type) entry
 			    set ianalysis(param,$ii,$jj,$kk,default) "$p4"
+			    set ianalysis(param,$ii,$jj,$kk,last) \
+				$ianalysis(param,$ii,$jj,$kk,default)
 			}
-			set ianalysis(param,$ii,$jj,$kk,value) "$p4"
 		    }
 		    default {
 			set ianalysis(param,$ii,$jj,$kk,type) entry
 			set ianalysis(param,$ii,$jj,$kk,default) "$p4"
-			set ianalysis(param,$ii,$jj,$kk,value) "$p4"
+			set ianalysis(param,$ii,$jj,$kk,last) \
+			    $ianalysis(param,$ii,$jj,$kk,default)
 		    }
 		}
+		set ianalysis(param,$ii,$jj,$kk,value) \
+		    $ianalysis(param,$ii,$jj,$kk,last)
 	    }
 	}
     }

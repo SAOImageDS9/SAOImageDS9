@@ -1,0 +1,26 @@
+#tab ansparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+entry		{return $ENTRY_}
+checkbox	{return $CHECKBOX_}
+menu		{return $MENU_}
+open		{return $OPEN_}
+save		{return $SAVE_}
+
+param		{return $PARAM_}
+endparam	{return $ENDPARAM_}
+tab		{return $TAB_}
+endtab		{return $ENDTAB_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+#include ws.fin
+
+%%

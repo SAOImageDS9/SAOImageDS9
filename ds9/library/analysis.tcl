@@ -105,7 +105,9 @@ proc ClearAnalysis {} {
 		unset ianalysis(param,$ii,$jj,$kk,type)
 		unset ianalysis(param,$ii,$jj,$kk,title)
 		unset ianalysis(param,$ii,$jj,$kk,default)
+		unset ianalysis(param,$ii,$jj,$kk,last)
 		unset ianalysis(param,$ii,$jj,$kk,value)
+		unset ianalysis(param,$ii,$jj,$kk,menubutton)
 		unset ianalysis(param,$ii,$jj,$kk,info)
 	    }
 	    unset ianalysis(param,$ii,$jj)
@@ -164,8 +166,6 @@ proc InitAnalysisFile {} {
 	    }
 	}
     }
-
-#    UpdateAnalysisMenu
 }
 
 proc ProcessAnalysisFile {fn} {
@@ -181,16 +181,21 @@ proc ProcessAnalysisFile {fn} {
 	set data [read $ch]
 	close $ch
 
-	if {![ProcessAnalysis data]} {
-	    Error "[msgcat::mc {Unable to process Analysis file}] $fn"
-	    return
-	}
+	ProcessAnalysis data
 
 	# add directory to path
 	set env(PATH) "[file dirname $fn]:$env(PATH)"
     } else {
 	Error "[msgcat::mc {Unable to open file}] $fn"
     }
+}
+
+proc ProcessAnalysisNew {varname} {
+    upvar $varname var
+
+    ans::YY_FLUSH_BUFFER
+    ans::yy_scan_string $var
+    ans::yyparse
 }
 
 proc ProcessAnalysis {varname} {
@@ -420,6 +425,24 @@ proc ProcessAnalysis {varname} {
 		set ianalysis(param,$ii,$jj,$kk,title) [lindex $line 2]
 		set ianalysis(param,$ii,$jj,$kk,default) [lindex $line 3]
 		set ianalysis(param,$ii,$jj,$kk,info) [lindex $line 4]
+		# to be filled in later
+		set ianalysis(param,$ii,$jj,$kk,menubutton) {}
+
+		switch $ianalysis(param,$ii,$jj,$kk,type) {
+		    menu {
+			# default can contain the full menu 'aaa|bbb|ccc'
+			# set last to first item
+			set pp [split $ianalysis(param,$ii,$jj,$kk,default) |]
+			set ianalysis(param,$ii,$jj,$kk,last) [lindex $pp 0]
+		    }
+		    default {
+			set ianalysis(param,$ii,$jj,$kk,last) \
+			    $ianalysis(param,$ii,$jj,$kk,default)
+		    }
+		}
+		set ianalysis(param,$ii,$jj,$kk,value) \
+		    $ianalysis(param,$ii,$jj,$kk,last)
+
 
 		incr ianalysis(param,$ii,$jj,count)
 	    }
@@ -444,19 +467,6 @@ proc ProcessAnalysis {varname} {
     BindEventsCanvas
 
     UpdateAnalysisMenu
-
-    if {0} {
-    puts "param count: $ianalysis(param,count)"
-    for {set ii 0} {$ii<$ianalysis(param,count)} {incr ii} {
-	puts "$ii $ianalysis(param,$ii):$ianalysis(param,$ii,count)"
-	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
-	    puts "$ii-$jj $ianalysis(param,$ii,$jj):$ianalysis(param,$ii,$jj,count)"
-	    for {set kk 0} {$kk<$ianalysis(param,$ii,$jj,count)} {incr kk} {
-		puts "$ianalysis(param,$ii,$jj,$kk,var) $ianalysis(param,$ii,$jj,$kk,type) $ianalysis(param,$ii,$jj,$kk,title)"
-	    }
-	}
-    }
-    }
 
     return 1
 }
@@ -1809,14 +1819,14 @@ proc ProcessAnalysisCmd {varname iname buf fn} {
     upvar $varname var
     upvar $iname i
 
-	global parse
-	set parse(buf) $buf
-	set parse(fn) $fn
-	
-	analysis::YY_FLUSH_BUFFER
-	analysis::yy_scan_string [lrange $var $i end]
-	analysis::yyparse
-	incr i [expr $analysis::yycnt-1]
+    global parse
+    set parse(buf) $buf
+    set parse(fn) $fn
+    
+    analysis::YY_FLUSH_BUFFER
+    analysis::yy_scan_string [lrange $var $i end]
+    analysis::yyparse
+    incr i [expr $analysis::yycnt-1]
 }
 
 proc AnalysisCmdTask {task} {

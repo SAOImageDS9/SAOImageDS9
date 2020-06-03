@@ -471,6 +471,88 @@ proc ProcessAnalysis {varname} {
     return 1
 }
 
+proc ParseIRAFParam {filename} {
+    global ianalysis
+    global env
+
+    # we are only concerned with unix like os
+    set uparm {}
+    if {[info exists env(UPARM)]} {
+	set uparm "$env(UPARM)/$filename"
+    }
+    set iraf {}
+    if {[info exists env(HOME)]} {
+	set iraf "$env(HOME)/$filename"
+    }
+    
+    if {[file exists "$filename"]} {
+	catch {set ch [open "$filename"]}
+    } elseif {[file exists "$uparm"]} {
+	catch {set ch [open "$uparm"]}
+    } elseif {[file exists "$iraf"]} {
+	catch {set ch [open "$iraf"]}
+    } else {
+	return
+    }
+
+    set ii $ianalysis(param,count)
+
+    while {[gets $ch line] >= 0} {
+	set exp {([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*),([^,]*)}
+	if {[regexp $exp $line foo p1 p2 p3 p4 p5 p6 p7]} {
+	    if {$p1 != {mode}} {
+		regsub -all {\"} $p4 {} p4
+		regsub -all {\"} $p7 {} p7
+		set jj $ianalysis(param,$ii,count)
+		set kk $ianalysis(param,$ii,$jj,count)
+		set ianalysis(param,$ii,$jj,$kk,var) "$p1"
+		if {$p3 == {h}} {
+		    set ianalysis(param,$ii,$jj,$kk,title) "(${p1})"
+		} else {
+		    set ianalysis(param,$ii,$jj,$kk,title) "$p1"
+		}
+		set ianalysis(param,$ii,$jj,$kk,info) "$p7"
+		# to be filled in later
+		set ianalysis(param,$ii,$jj,$kk,menubutton) {}
+		incr ianalysis(param,$ii,$jj,count)
+		
+		switch -- $p2 {
+		    b {
+			set ianalysis(param,$ii,$jj,$kk,type) checkbox
+			set ianalysis(param,$ii,$jj,$kk,default) [FromYesNo $p4]
+			set ianalysis(param,$ii,$jj,$kk,last) \
+			    $ianalysis(param,$ii,$jj,$kk,default)
+		    }
+		    s {
+			if {$p5 != {}} {
+			    set ianalysis(param,$ii,$jj,$kk,type) menu
+			    set ianalysis(param,$ii,$jj,$kk,default) "$p5"
+			    set pp \
+				[split $ianalysis(param,$ii,$jj,$kk,default) |]
+			    set ianalysis(param,$ii,$jj,$kk,last) [lindex $pp 0]
+			} else {
+			    set ianalysis(param,$ii,$jj,$kk,type) entry
+			    set ianalysis(param,$ii,$jj,$kk,default) "$p4"
+			    set ianalysis(param,$ii,$jj,$kk,last) \
+				$ianalysis(param,$ii,$jj,$kk,default)
+			}
+		    }
+		    default {
+			set ianalysis(param,$ii,$jj,$kk,type) entry
+			set ianalysis(param,$ii,$jj,$kk,default) "$p4"
+			set ianalysis(param,$ii,$jj,$kk,last) \
+			    $ianalysis(param,$ii,$jj,$kk,default)
+		    }
+		}
+		set ianalysis(param,$ii,$jj,$kk,value) \
+		    $ianalysis(param,$ii,$jj,$kk,last)
+	    }
+	}
+    }
+
+    close $ch
+}
+
 proc AnalysisTask {i which {frame {}} {x 0} {y 0} {sync 0}} {
     global ianalysis
     global current

@@ -292,16 +292,16 @@ $z<br></b></p>
 <p><b><a name="Parameters" id="Parameters"></a>Parameters</b></p>
 <p>The user may define his own macros or parameters to be evaluated before the command line is executed. To do this, the user defines a parameter segment that is referenced in the command line. Parameters maybe displayed in a notebook style via use of the 'tab' 'endtab' keywords. The parameter definition has the follow format:</p>
 <blockquote><tt>param &lt;name&gt;<br>
-&nbsp;&nbsp;&lt;variable&gt; &lt;entry|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
 &nbsp;&nbsp;...<br>
 endparam</tt></blockquote>
 <blockquote><tt>param &lt;name&gt;<br>
 &nbsp; tab &lt;text&gt;<br>
-&nbsp;&nbsp;&lt;variable&gt; &lt;entry|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
 &nbsp;&nbsp;...<br>
 endtab<br>
 tab &lt;text&gt;<br>
-&nbsp;&nbsp;&lt;variable&gt; &lt;entry|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
 &nbsp;...<br>
 endtab<br>
 endparam</tt></blockquote>
@@ -323,93 +323,97 @@ $filename[region]<br>
 $env<br></tt></blockquote>
 <p>Example:</p>
 <blockquote><tt>param foo<br>
-&nbsp;var1 entry {Variable 1} default {this is a entry}<br>
-&nbsp;var2 checkbox {Variable 2} 1 {this is a checkbox}<br>
-&nbsp;var3 menu {Variable 3} AAA|BBB|CCC {this is a menu}<br>
-&nbsp;var4 open {Variable 4} default {this is a open file dialog}<br>
-&nbsp;var5 save {Variable 5} default {this is a save file dialog}<br>
+&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
+&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
+&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
+&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
 endparam<br>
 <br>
 param bar<br>
-&nbsp; tab first<br>
-&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} default {this is a entry}<br>
-&nbsp;&nbsp;&nbsp;var2 checkbox {Variable 2} 1 {this is a checkbox}<br>
-&nbsp;&nbsp;&nbsp;var3 menu {Variable 3} AAA|BBB|CCC {this is a menu}<br>
-&nbsp; endtab<br>
-&nbsp; tab second<br>
-&nbsp;&nbsp;&nbsp;var4 open {Variable 4} default {this is a open file dialog}<br>
-&nbsp;&nbsp;&nbsp;var5 save {Variable 5} default {this is a save file dialog}<br>
-&nbsp; endtab<br>
+&nbsp;&nbsp;tab {First Params}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
+&nbsp;&nbsp;endtab<br>
+&nbsp;&nbsp;tab {Second Params}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
+&nbsp;&nbsp;endtab<br>
 endparam<br>
 <br>
 param foobar<br>
-&nbsp;&nbsp;&nbsp; var1 entry filename {$filename} {image filename}<br>
-&nbsp;&nbsp;&nbsp; var2 entry width {$width} {image width}<br>
-&nbsp;&nbsp;&nbsp; var3 entry height {$height} {image height}<br>
-&nbsp;&nbsp;&nbsp; var4 entry depth {$depth} {image depth}<br>
-&nbsp;&nbsp;&nbsp; var5 entry bitpix {$bitpix} {image bitpix}<br>
+&nbsp;&nbsp;var1 entry {filename} {$filename} {image filename}<br>
+&nbsp;&nbsp;var2 text {width} {$width} {image width}<br>
+&nbsp;&nbsp;var3 text {height} {$height} {image height}<br>
+&nbsp;&nbsp;var4 text {depth} {$depth} {image depth}<br>
+&nbsp;&nbsp;var5 entry {bitpix} {$bitpix} {image bitpix}<br>
 endparam<br></tt></blockquote>
 <p>To use parameters, specify the param name at the beginning of your command line:</p>
 <blockquote><tt>Parameter Test</tt><br>
 <tt>*</tt><br>
 <tt>menu</tt><br>
 <tt>$param(foobar); echo "$var1 $var2 $var3 $var4 $var5" | $text</tt></blockquote>
-<p>When the menu item is selected, the user will be presented with a dialog box that contains <i>entry, checkbox, or menu</i> choices for each variable specified. If the user clicks ok, the values are substituted in the command line before execution.</p>
+<p>When the menu item is selected, the user will be presented with a dialog box that contains <i>entry, text, open, save, checkbox, or menu</i> choices for each variable specified. If the user clicks ok, the values are substituted in the command line before execution.</p>
 <p><b><a name="HierarchicalMenus" id="HierarchicalMenus"></a>Hierarchical Menus</b></p>
 <p>The user may define hierarchical menus. Use this to organized crowded menus. To do this, frame menu entries with <tt>hmenu &lt;label&gt;</tt> and <tt>endhmenu</tt>. Hierarchical menu labels may contain spaces. Multiple levels maybe implemented.</p>
 Example:<br>
 <blockquote><tt>hmenu Stuff<br>
-&nbsp;&nbsp;&nbsp; hello<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "Hello" | $text</tt>
-<p><tt>&nbsp;&nbsp;&nbsp; world<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "World" | $text</tt></p>
-<p><tt>&nbsp;&nbsp;&nbsp; hmenu More Stuff<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hello world<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "Hello World" | $text<br>
-&nbsp;&nbsp;&nbsp; endhmenu<br>
-endhmenu</tt></p>
-</blockquote>
+&nbsp;&nbsp;hello<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "Hello" | $text<br>
+<br>
+&nbsp;&nbsp;world<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "World" | $text<br>
+<br>
+&nbsp;&nbsp;hmenu More Stuff<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hello world<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;echo "Hello World" | $text<br>
+&nbsp;&nbsp;endhmenu<br>
+endhmenu</tt></blockquote>
 <p>Will create an hierarchical menu with two members, <tt>hello</tt> and <tt>world</tt>.</p>
 <p><b><a name="Sample" id="Sample"></a>Sample</b></p>
-<tt>#<br>
-# Analysis command descriptions:<br>
-#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; menu label<br>
-#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file templates<br>
-#&nbsp;&nbsp;&nbsp; menu/bind<br>
-#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; analysis command line<br>
+<tt># Analysis command descriptions:<br>
+#&nbsp;&nbsp;menu label<br>
+#&nbsp;&nbsp;file templates<br>
+#&nbsp;&nbsp;menu/bind<br>
+#&nbsp;&nbsp;analysis command line<br>
 <br>
 param foo<br>
-&nbsp;&nbsp;&nbsp; var1 entry entry {something} {this is a entry}<br>
-&nbsp;&nbsp;&nbsp; var2 checkbox checkbox 1 {this is a checkbox}<br>
-&nbsp;&nbsp;&nbsp; var3 menu menu AAA|BBB|CCC {this is a menu}<br>
-&nbsp;&nbsp;&nbsp; var4 open {open file} {} {this is a open file dialog}<br>
-&nbsp;&nbsp;&nbsp; var5 save {save file} {} {this is a save file dialog}<br>
+&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
+&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
+&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
+&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
 endparam<br>
 <br>
 param bar<br>
-&nbsp; tab "First Parameters"<br>
-&nbsp;&nbsp;&nbsp; var1 entry entry {something} {this is a entry}<br>
-&nbsp;&nbsp;&nbsp; var2 checkbox checkbox 1 {this is a checkbox}<br>
-&nbsp;&nbsp;&nbsp; var3 menu menu AAA|BBB|CCC {this is a menu}<br>
-&nbsp; endtab<br>
-&nbsp; tab "Second Parmeters"<br>
-&nbsp;&nbsp;&nbsp; var4 open {open file} {} {this is a open file dialog}<br>
-&nbsp;&nbsp;&nbsp; var5 save {save file} {} {this is a save file dialog}<br>
-&nbsp; endtab<br>
+&nbsp;&nbsp;tab {First Params}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
+&nbsp;&nbsp;endtab<br>
+&nbsp;&nbsp;tab {Second Params}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
+&nbsp;&nbsp;endtab<br>
 endparam<br>
 <br>
 param foobar<br>
-&nbsp;&nbsp;&nbsp; var1 entry filename {$filename} {image filename}<br>
-&nbsp;&nbsp;&nbsp; var2 entry width {$width} {image width}<br>
-&nbsp;&nbsp;&nbsp; var3 entry height {$height} {image height}<br>
-&nbsp;&nbsp;&nbsp; var4 entry depth {$depth} {image depth}<br>
-&nbsp;&nbsp;&nbsp; var5 entry bitpix {$bitpix} {image bitpix}<br>
+&nbsp;&nbsp;var1 entry {filename} {$filename} {image filename}<br>
+&nbsp;&nbsp;var2 text {width} {$width} {image width}<br>
+&nbsp;&nbsp;var3 text {height} {$height} {image height}<br>
+&nbsp;&nbsp;var4 text {depth} {$depth} {image depth}<br>
+&nbsp;&nbsp;var5 entry {bitpix} {$bitpix} {image bitpix}<br>
 endparam<br>
 <br>
 param barfoo<br>
@@ -426,263 +430,263 @@ endhelp<br>
 ---<br>
 <br>
 hmenu Test Web<br>
-&nbsp;&nbsp;&nbsp; help Web Help<br>
-&nbsp;&nbsp;&nbsp; Help for web features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
+&nbsp;&nbsp;help Web Help<br>
+&nbsp;&nbsp;Help for web features<br>
+&nbsp;&nbsp;endhelp<br>
 <br>
-&nbsp;&nbsp;&nbsp; Web Test url<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; web<br>
-&nbsp;&nbsp;&nbsp; http://hea-www.harvard.edu/RD/ds9/<br>
+&nbsp;&nbsp;Web Test url<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;web<br>
+&nbsp;&nbsp;http://hea-www.harvard.edu/RD/ds9/<br>
 <br>
-&nbsp;&nbsp;&nbsp; Web Test file<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; web<br>
-&nbsp;&nbsp;&nbsp; file:/home/joye/saods9/ds9/tests/hv.html<br>
+&nbsp;&nbsp;Web Test file<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;web<br>
+&nbsp;&nbsp;file:/home/joye/saods9/ds9/tests/hv.html<br>
 endhmenu<br>
 <br>
 hmenu Test Basics<br>
-&nbsp;&nbsp;&nbsp; help Basic Help<br>
-&nbsp;&nbsp;&nbsp; Help for basic features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
-&nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; Test escape char # this is a comment<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "this is not a macro $$xpa" | $text<br>
+&nbsp;&nbsp;help Basic Help<br>
+&nbsp;&nbsp;Help for basic features<br>
+&nbsp;&nbsp;endhelp<br>
+&nbsp;&nbsp;---<br>
+&nbsp;&nbsp;Test escape char # this is a comment<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "this is not a macro $$xpa" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test pass thru # this is a comment<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "this is not a macro $foo" | $text<br>
+&nbsp;&nbsp;Test pass thru # this is a comment<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "this is not a macro $foo" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $xpa # this is a comment<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo $xpa | $text<br>
+&nbsp;&nbsp;Test $xpa # this is a comment<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo $xpa | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $xpa_method<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo $xpa_method | $text<br>
+&nbsp;&nbsp;Test $xpa_method<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo $xpa_method | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $vo_method<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo $vo_method | $text<br>
+&nbsp;&nbsp;Test $vo_method<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo $vo_method | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $filename<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo $filename | $text<br>
+&nbsp;&nbsp;Test $filename<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo $filename | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $filename(root)<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo $filename(root) | $text<br>
+&nbsp;&nbsp;Test $filename(root)<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo $filename(root) | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $xdim $ydim $bitpix<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "$xdim $ydim $bitpix" | $text<br>
+&nbsp;&nbsp;Test $xdim $ydim $bitpix<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "$xdim $ydim $bitpix" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $xcen $ycen<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "$xcen $ycen" | $text<br>
+&nbsp;&nbsp;Test $xcen $ycen<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "$xcen $ycen" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $env<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo $env(PATH) | $text<br>
+&nbsp;&nbsp;Test $env<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo $env(PATH) | $text<br>
 endhmenu<br>
 <br>
 hmenu Test Regions<br>
-&nbsp;&nbsp;&nbsp; help Regions Help<br>
-&nbsp;&nbsp;&nbsp; Help for regions features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
-&nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; Test $regions<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "$regions ds9_s:$regions(ds9,source,image) ciao_b:$regions(ciao,background) saotng_i:$regions(saotng,include,wcs,fk5) pros_e:$regions(pros,exclude,wcs,fk5,sexagesimal) xy_be:$regions(xy,background,exclude,wcs,fk4,hms)" | $text<br>
+&nbsp;&nbsp;help Regions Help<br>
+&nbsp;&nbsp;Help for regions features<br>
+&nbsp;&nbsp;endhelp<br>
+&nbsp;&nbsp;---<br>
+&nbsp;&nbsp;Test $regions<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "$regions ds9_s:$regions(ds9,source,image) ciao_b:$regions(ciao,background) saotng_i:$regions(saotng,include,wcs,fk5) pros_e:$regions(pros,exclude,wcs,fk5,sexagesimal) xy_be:$regions(xy,background,exclude,wcs,fk4,hms)" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $regions wcs<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "$regions(ds9,wcs) $regions(ds9,wcs,fk5,sexagesimal) $regions(ds9,wcsa) " | $text<br>
+&nbsp;&nbsp;Test $regions wcs<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "$regions(ds9,wcs) $regions(ds9,wcs,fk5,sexagesimal) $regions(ds9,wcsa) " | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $include_regions_pixels<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "ds9_s: $source_regions ds9_b: $background_regions_pixels ds9_i: $include_regions_degrees ds9_e: $exclude_regions_hms" | $text<br>
+&nbsp;&nbsp;Test $include_regions_pixels<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "ds9_s: $source_regions ds9_b: $background_regions_pixels ds9_i: $include_regions_degrees ds9_e: $exclude_regions_hms" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $filename $regions<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "$filename[$regions]" | $text<br>
+&nbsp;&nbsp;Test $filename $regions<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "$filename[$regions]" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $filename $regions()<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "$filename[$regions()]" | $text<br>
+&nbsp;&nbsp;Test $filename $regions()<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "$filename[$regions()]" | $text<br>
 endhmenu<br>
 <br>
 hmenu Test Output<br>
-&nbsp;&nbsp;&nbsp; help Output Help<br>
-&nbsp;&nbsp;&nbsp; Help for output features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
-&nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; Test $null<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "This is Text" &gt; /dev/null | $null<br>
+&nbsp;&nbsp;help Output Help<br>
+&nbsp;&nbsp;Help for output features<br>
+&nbsp;&nbsp;endhelp<br>
+&nbsp;&nbsp;---<br>
+&nbsp;&nbsp;Test $null<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "This is Text" &gt;/dev/null | $null<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $text<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "This is Text" | $text<br>
+&nbsp;&nbsp;Test $text<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "This is Text" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $text stderr<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; ls foofoofoo | $text<br>
+&nbsp;&nbsp;Test $text stderr<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;ls foofoofoo | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xy.dat | $plot<br>
+&nbsp;&nbsp;Test $plot<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xy.dat | $plot<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot(title,x,y,xyey)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xye.dat | $plot(Title,X Axis,Y Axis,xyey)<br>
+&nbsp;&nbsp;Test $plot(title,x,y,xyey)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xye.dat | $plot(Title,X Axis,Y Axis,xyey)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot(title,x,y,xyexey)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xyee.dat | $plot(Title,X Axis,Y Axis,xyexey)<br>
+&nbsp;&nbsp;Test $plot(title,x,y,xyexey)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xyee.dat | $plot(Title,X Axis,Y Axis,xyexey)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot(title,x,y,4)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xyey.dat | $plot(Title,X Axis,Y Axis,4)<br>
+&nbsp;&nbsp;Test $plot(title,x,y,4)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xyey.dat | $plot(Title,X Axis,Y Axis,4)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot(title,x,y,5)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xyeye.dat | $plot(Title,X Axis,Y Axis,5)<br>
+&nbsp;&nbsp;Test $plot(title,x,y,5)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xyeye.dat | $plot(Title,X Axis,Y Axis,5)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot(stdin)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xye.stdin.dat | $plot(stdin)<br>
+&nbsp;&nbsp;Test $plot(stdin)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xye.stdin.dat | $plot(stdin)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot(stdin) text<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xye.stdin.text.dat | $plot(stdin)<br>
+&nbsp;&nbsp;Test $plot(stdin) text<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xye.stdin.text.dat | $plot(stdin)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $plot(stdin) error<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat xy.stdin.error.dat | $plot(stdin)<br>
+&nbsp;&nbsp;Test $plot(stdin) error<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat xy.stdin.error.dat | $plot(stdin)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $data<br>
-&nbsp;&nbsp;&nbsp; *.fits<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $data | $image(new)<br>
+&nbsp;&nbsp;Test $data<br>
+&nbsp;&nbsp;*.fits<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$data | $image(new)<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $image<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; cat img16.fits | $image<br>
+&nbsp;&nbsp;Test $image<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;cat img16.fits | $image<br>
 endhmenu<br>
 <br>
 hmenu Test Dialogs<br>
-&nbsp;&nbsp;&nbsp; help Dialogs Help<br>
-&nbsp;&nbsp;&nbsp; Help for dialog features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
-&nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; Test $message(message)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $message(ok,This is a Message) | echo "hello" | $text<br>
+&nbsp;&nbsp;help Dialogs Help<br>
+&nbsp;&nbsp;Help for dialog features<br>
+&nbsp;&nbsp;endhelp<br>
+&nbsp;&nbsp;---<br>
+&nbsp;&nbsp;Test $message(message)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$message(ok,This is a Message) | echo "hello" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $message(ok,message)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $message(ok,This is a Message) | echo "World" | $text<br>
+&nbsp;&nbsp;Test $message(ok,message)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$message(ok,This is a Message) | echo "World" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $entry(message)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo "$entry(Enter Something)" | $text<br>
+&nbsp;&nbsp;Test $entry(message)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo "$entry(Enter Something)" | $text<br>
 endhmenu<br>
 <br>
 hmenu Test Params<br>
-&nbsp;&nbsp;&nbsp; help Param Help<br>
-&nbsp;&nbsp;&nbsp; Help for param features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
-&nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; Test $param<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(foo); echo "$var1 $var2 $var3 $var4" | $text<br>
+&nbsp;&nbsp;help Param Help<br>
+&nbsp;&nbsp;Help for param features<br>
+&nbsp;&nbsp;endhelp<br>
+&nbsp;&nbsp;---<br>
+&nbsp;&nbsp;Test $param<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$param(foo);echo "$var1 $var2 $var3 $var4 $var5 $var6" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $param tab<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(bar); echo "$var1 $var2 $var3 $var4" | $text<br>
+&nbsp;&nbsp;Test $param tab<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$param(bar);echo "$var1 $var2 $var3 $var4 $var5 $var6" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $param macro<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(foobar); echo "$var1 $var2 $var3 $var4 $var5" | $text<br>
+&nbsp;&nbsp;Test $param macro<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$param(foobar);echo "$var1 $var2 $var3 $var4 $var5" | $text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $param @file<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(barfoo); echo "$var1 $var2 $var3 $var4" | $text<br>
+&nbsp;&nbsp;Test $param @file<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$param(barfoo);echo "$var1 $var2 $var3" | $text<br>
 endhmenu<br>
 <br>
 hmenu Test Network<br>
-&nbsp;&nbsp;&nbsp; help Network Help<br>
-&nbsp;&nbsp;&nbsp; Help for network features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
-&nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; Test $url(http://)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $url(http://legacy.gsfc.nasa.gov/FTP/rosat/data/cdrom/vol1/IMAGES/00h/p000s26b.img.Z) | gunzip | $image<br>
+&nbsp;&nbsp;help Network Help<br>
+&nbsp;&nbsp;Help for network features<br>
+&nbsp;&nbsp;endhelp<br>
+&nbsp;&nbsp;---<br>
+&nbsp;&nbsp;Test $url(http://)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$url(http://legacy.gsfc.nasa.gov/FTP/rosat/data/cdrom/vol1/IMAGES/00h/p000s26b.img.Z) | gunzip | $image<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $url(ftp://)<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $url(ftp://legacy.gsfc.nasa.gov/rosat/data/hri/images/fits/rh100193_img.fits) | $image<br>
+&nbsp;&nbsp;Test $url(ftp://)<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$url(ftp://legacy.gsfc.nasa.gov/rosat/data/hri/images/fits/rh100193_img.fits) | $image<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $geturl $text<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $geturl(http://hea-www.harvard.edu/RD/saord-cgi/funtools?funcnts+$filename+$regions(source,,)+$regions(background,,))|$text<br>
+&nbsp;&nbsp;Test $geturl $text<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$geturl(http://hea-www.harvard.edu/RD/saord-cgi/funtools?funcnts+$filename+$regions(source,,)+$regions(background,,))|$text<br>
 <br>
-&nbsp;&nbsp;&nbsp; Test $geturl $plotstd<br>
-&nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; $param(ltc); $geturl(http://hea-www.harvard.edu/RD/saord-cgi/funtools?funhist_plot+$filename[$regions]+time+$bins)|$plot(stdin)<br>
+&nbsp;&nbsp;Test $geturl $plotstd<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;$param(ltc);$geturl(http://hea-www.harvard.edu/RD/saord-cgi/funtools?funhist_plot+$filename[$regions]+time+$bins)|$plot(stdin)<br>
 endhmenu<br>
 <br>
 hmenu Test Other<br>
-&nbsp;&nbsp;&nbsp; help Other Help<br>
-&nbsp;&nbsp;&nbsp; Help for other features<br>
-&nbsp;&nbsp;&nbsp; endhelp<br>
-&nbsp;&nbsp;&nbsp; ---<br>
-&nbsp;&nbsp;&nbsp; hmenu Test MultiLevel<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; test<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; *<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; echo "Hello World" | $text<br>
-&nbsp;&nbsp;&nbsp; endhmenu<br>
+&nbsp;&nbsp;help Other Help<br>
+&nbsp;&nbsp;Help for other features<br>
+&nbsp;&nbsp;endhelp<br>
+&nbsp;&nbsp;---<br>
+&nbsp;&nbsp;hmenu Test MultiLevel<br>
+&nbsp;&nbsp;&nbsp;&nbsp;test<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;&nbsp;&nbsp;echo "Hello World" | $text<br>
+&nbsp;&nbsp;endhmenu<br>
 endhmenu<br>
 <br>
 $x $y<br>

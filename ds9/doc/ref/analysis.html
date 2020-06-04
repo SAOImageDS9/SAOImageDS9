@@ -155,6 +155,14 @@ $depth</b></p>
 <br>
 <tt>Example:<br>
 &nbsp;&nbsp;&nbsp; $message(okcancel,This is a Message)| doit | $text</tt>
+<p><b>$messageok</b></p>
+<p>Display a message dialog box, with option buttons.&nbsp; After displaying the message, the button selected is substituted in the command line.</p>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $messageok(&lt;message&gt;)</tt><br>
+<tt>&nbsp;&nbsp;&nbsp; $messageok([ok|okcancel|yesno],&lt;message&gt;)</tt><br>
+<br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$messageok(okcancel,This is a Message)" | $text</tt>
 <p><b>$null</b></p>
 <p>Expect no output or results from analysis task. Note: no error message will be returned if the analysis task fails to execute correctly.</p>
 <tt>Syntax:<br>

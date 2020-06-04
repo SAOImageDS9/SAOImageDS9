@@ -190,14 +190,6 @@ proc ProcessAnalysisFile {fn} {
     }
 }
 
-proc ProcessAnalysisNew {varname} {
-    upvar $varname var
-
-    ans::YY_FLUSH_BUFFER
-    ans::yy_scan_string $var
-    ans::yyparse
-}
-
 proc ProcessAnalysis {varname} {
     upvar $varname var
 

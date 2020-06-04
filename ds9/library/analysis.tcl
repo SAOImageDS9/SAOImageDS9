@@ -724,6 +724,8 @@ proc AnalysisTaskDoit {i which frame x y sync} {
     ParseZMacro cmd $frame
 
     # $message
+    ParseMessageOKMacro cmd
+
     if {![ParseMessageMacro cmd]} {
 	AnalysisTaskEnd $which $i
 	return
@@ -1721,6 +1723,24 @@ while {[regexp $exp $cmd foo message]} {
 return 1
 }
 
+proc ParseMessageOKMacro {cmdname} {
+    upvar $cmdname cmd
+
+    # two args
+    set exp {\|?.?\$messageok\((ok|okcancel|yesno),([^)]*)\).?\|?}
+while {[regexp $exp $cmd foo type message]} {
+    set result [AnalysisMessageOK $type $message]
+    regsub $exp $cmd $result cmd
+}
+
+# one args
+set exp {\|?.?\$messageok\(([^)]*)\).?\|?}
+while {[regexp $exp $cmd foo message]} {
+    set result [AnalysisMessageOK ok $message]
+    regsub $exp $cmd $result cmd
+}
+}
+
 proc ParseEntryMacro {cmdname} {
     upvar $cmdname cmd
     
@@ -1872,6 +1892,14 @@ proc AnalysisMessage {type message} {
 	cancel -
 	default {return 0}
     }
+}
+
+proc AnalysisMessageOK {type message} {
+    if {$type == {}} {
+	set type ok
+    }
+
+    return [tk_messageBox -message $message -type $type]
 }
 
 proc AnalysisEntry {message resultvar} {

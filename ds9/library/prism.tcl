@@ -58,23 +58,26 @@ proc PrismDialog {} {
     # Exts
     set f [ttk::labelframe $p.ext -text [msgcat::mc {Extensions}]]
 
-    ttk::scrollbar $f.scroll -command [list $f.box yview]
+    ttk::scrollbar $f.yscroll -command [list $f.box yview] -orient vertical
+    ttk::scrollbar $f.xscroll -command [list $f.box xview] -orient horizontal
     set dprism(ext) [ttk::treeview $f.box \
-			     -yscroll [list $f.scroll set] \
-			     -selectmode browse \
-			     -height 10 \
-			     -show headings \
-			     -columns {ext type dim} \
-			 ]
-    $dprism(ext) column ext -minwidth 100 -width 100 -anchor w
-    $dprism(ext) column type -minwidth 50 -width 50 -anchor w
-    $dprism(ext) column dim -minwidth 220 -width 220 -anchor w
+			 -xscroll [list $f.xscroll set]\
+			 -yscroll [list $f.yscroll set] \
+			 -selectmode browse \
+			 -height 10 \
+			 -show headings \
+			 -columns {ext type dim} \
+			]
+    $dprism(ext) column ext -width 100 -anchor w
+    $dprism(ext) column type -width 50 -anchor w
+    $dprism(ext) column dim -width 220 -anchor w
 
     $dprism(ext) heading ext -text [msgcat::mc {Extension}] -anchor w
     $dprism(ext) heading type -text [msgcat::mc {Type}] -anchor w
     $dprism(ext) heading dim -text [msgcat::mc {Dimensions}] -anchor w
 
-    grid $f.box $f.scroll -sticky news
+    grid $f.box $f.yscroll -sticky news
+    grid $f.xscroll -stick news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
@@ -85,19 +88,22 @@ proc PrismDialog {} {
     # Header
     set f [ttk::labelframe $p.header -text [msgcat::mc {Header}]]
 
-    ttk::scrollbar $f.scroll -command [list $f.box yview]
+    ttk::scrollbar $f.yscroll -command [list $f.box yview] -orient vertical
+    ttk::scrollbar $f.xscroll -command [list $f.box xview] -orient horizontal
+
     set dprism(header) [ttk::treeview $f.box \
-			     -yscroll [list $f.scroll set] \
-			     -selectmode browse \
-			     -height 10 \
-			     -show headings \
-			     -columns {name value type comment unit} \
-			 ]
-    $dprism(header) column name -minwidth 100 -width 100 -anchor w
-    $dprism(header) column value -minwidth 300 -width 300 -anchor w
-    $dprism(header) column type -minwidth 50 -width 50 -anchor w
-    $dprism(header) column comment -minwidth 300 -width 300 -anchor w
-    $dprism(header) column unit -minwidth 40 -width 40 -anchor w
+			    -xscroll [list $f.xscroll set]\
+			    -yscroll [list $f.yscroll set] \
+			    -selectmode browse \
+			    -height 10 \
+			    -show headings \
+			    -columns {name value type comment unit} \
+			   ]
+    $dprism(header) column name -width 100 -anchor w
+    $dprism(header) column value -width 300 -anchor w
+    $dprism(header) column type -width 50 -anchor w
+    $dprism(header) column comment -width 300 -anchor w
+    $dprism(header) column unit  -width 40 -anchor w
 
     $dprism(header) heading name -text [msgcat::mc {Name}] -anchor w
     $dprism(header) heading value -text [msgcat::mc {Value}] -anchor w
@@ -105,9 +111,10 @@ proc PrismDialog {} {
     $dprism(header) heading comment -text [msgcat::mc {Comment}] -anchor w
     $dprism(header) heading unit -text [msgcat::mc {Units}] -anchor w
 
-    grid $f.box $f.scroll -sticky news
+    grid $f.box $f.yscroll -sticky news
+    grid $f.xscroll -stick news
     grid rowconfigure $f 0 -weight 1
-    grid columnconfigure $f 2 -weight 1
+    grid columnconfigure $f 0 -weight 1
 
     bind $dprism(header) <<TreeviewSelect>> PrismHeaderCmd
 
@@ -218,13 +225,13 @@ proc PrismLoad {} {
 proc PrismClear {} {
     global dprism
     
-    $dprism(ext) delete I001
-    $dprism(ext) delete I002
-    $dprism(ext) delete I003
+    foreach id [$dprism(ext) children {}] {
+	$dprism(ext) delete $id
+    }
 
-    $dprism(header) delete I001
-    $dprism(header) delete I002
-    $dprism(header) delete I003
+    foreach id [$dprism(header) children {}] {
+	$dprism(header) delete $id
+    }
 }
 
 proc PrismPlot {} {

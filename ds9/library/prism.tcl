@@ -86,7 +86,7 @@ proc PrismDialog {} {
     grid $f -row 0 -column 0
 
     # Header
-    set f [ttk::labelframe $p.header -text [msgcat::mc {Header}]]
+    set f [ttk::labelframe $p.header -text [msgcat::mc {Header Keywords}]]
 
     ttk::scrollbar $f.yscroll -command [list $f.box yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $f.box xview] -orient horizontal

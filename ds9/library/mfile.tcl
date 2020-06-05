@@ -14,7 +14,6 @@ proc FileMainMenu {} {
 	-command [list OpenDialog fits] -accelerator "${ds9(ctrl)}O"
     $ds9(mb).file add cascade -label [msgcat::mc {Open as}] \
 	-menu $ds9(mb).file.open
-    $ds9(mb).file add separator
     $ds9(mb).file add command -label "[msgcat::mc {Save}]..." \
 	-command [list SaveDialog fits] -accelerator "${ds9(ctrl)}S"
     $ds9(mb).file add cascade -label [msgcat::mc {Save as}] \
@@ -24,6 +23,9 @@ proc FileMainMenu {} {
 	-menu $ds9(mb).file.import
     $ds9(mb).file add cascade -label [msgcat::mc {Export}] \
 	-menu $ds9(mb).file.export
+    $ds9(mb).file add separator
+    $ds9(mb).file add command -label "[msgcat::mc {Prism}]..." \
+	-command PrismDialog
     $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {Save Image}] \
 	-menu $ds9(mb).file.saveimage

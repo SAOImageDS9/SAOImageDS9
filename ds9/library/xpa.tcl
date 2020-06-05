@@ -450,6 +450,11 @@ proc CreateXPA {} {
 	XPASendPrint {} {} \
 	XPARcvdPrint {} "fillbuf=false"
 
+    xpacmdadd $xpa prism \
+	{} \
+	XPASendPrism {} {} \
+	XPARcvdPrism {} "fillbuf=false"
+
     xpacmdadd $xpa psprint \
 	{} \
 	XPASendPSPrint {} {} \
@@ -1612,6 +1617,19 @@ proc XPARcvdPrint {xpa cdata param buf len} {
 	    Error [msgcat::mc {This function is not available.}]    
 	}
     }
+    XPACatchError $xpa
+}
+
+proc XPASendPrism {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendPrismCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdPrism {xpa cdata param buf len} {
+    XPADebug "XPARcvdPrism" $param
+    InitError xpa
+    catch {set i 0; ProcessPrismCmd param i}
     XPACatchError $xpa
 }
 

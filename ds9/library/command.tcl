@@ -334,6 +334,7 @@ proc ProcessCommand {argv argc} {
 		incr i
 		ProcessPrecisionCmd argv i
 	    }
+	    -prism {incr i; ProcessPrismCmd argv i}
 	    -port {incr i; set iis(port) [lindex $argv $i]}
 	    -inet_only -
 	    -port_only {

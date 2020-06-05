@@ -379,6 +379,7 @@ CentroidDef
 ColorbarDef
 ContourDef
 CoordDef
+CropDef
 CrosshairDef
 CubeDef
 CurrentDef
@@ -405,7 +406,7 @@ NRESDef
 NVSSDef
 PannerDef
 PanZoomDef
-CropDef
+PrismDef
 PixelDef
 PlotDef
 PrefsDef

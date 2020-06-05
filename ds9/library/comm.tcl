@@ -135,6 +135,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 		ProcessPrintCmd param i
 	    }
 	}
+	prism {ProcessPrismCmd param i}
 	psprint {
 	    if {$safemode} {
 		Error [msgcat::mc {Command not allowed}]
@@ -338,6 +339,7 @@ proc CommGet {proc id paramlist fn} {
 	preserve {ProcessSendPreserveCmd $proc $id $param}
 	pspagesetup {ProcessSendPSPageSetupCmd $proc $id $param}
 	print {ProcessSendPrintCmd $proc $id $param}
+	prism {ProcessSendPrismCmd $proc $id $param}
 	psprint {ProcessSendPSPrintCmd $proc $id $param}
 	exit -
 	quit {}

@@ -1,0 +1,14 @@
+#tab prismsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+about		{return $ABOUT_}
+
+#include ws.fin
+
+%%

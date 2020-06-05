@@ -1,0 +1,19 @@
+#tab prismparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+clear		{return $CLEAR_}
+close		{return $CLOSE_}
+open		{return $OPEN_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+#include ws.fin
+
+%%

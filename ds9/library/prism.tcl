@@ -150,7 +150,7 @@ proc PrismDialog {} {
 		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list PrismExtSelectCmd %s %S] \
+		      -browsecommand [list PrismTableSelectCmd %s %S] \
 		      -fg [ThemeTreeForeground] \
 		      -bg [ThemeTreeBackground] \
 		     ]

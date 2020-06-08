@@ -58,7 +58,7 @@ proc ThemeMenu {w} {
     menu $w
     switch $ds9(wm) {
 	x11 {ThemeConfigMenu $w}
-	aqua {}
+	aqua -
 	win32 {}
     }
 
@@ -97,7 +97,7 @@ proc ThemeConfigMenu {w} {
     if {$fg != {}} {
 	$w configure -activeforeground $fg
     } else {
-	$w configure -activeforeground $ds9(foreground,active)
+	$w configure -activeforeground $ds9(foreground,menu,active)
     }
 
     # active background
@@ -105,23 +105,26 @@ proc ThemeConfigMenu {w} {
     if {$bg != {}} {
 	$w configure -activebackground $bg
     } else {
-	$w configure -activebackground $ds9(background,active)
+	$w configure -activebackground $ds9(background,menu,active)
     }
 }
 
 proc ThemeConfigTable {w} {
-    $w configure -fg [ThemeEntryForeground]
-    $w configure -bg [ThemeEntryBackground]
+    $w configure -fg [ThemeTreeForeground]
+    $w configure -bg [ThemeTreeBackground]
 
     $w tag configure sel \
-	-fg [ThemeSelectForeground] -bg [ThemeSelectBackground]
+	-fg [ThemeTreeForegroundSelect] -bg [ThemeTreeBackgroundSelect]
     $w tag configure title \
-	-fg [ThemeSelectForeground] -bg [ThemeForegroundDisabled]
+	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 }
 
 proc ThemeConfigText {w} {
     $w configure -fg [ThemeForeground]
     $w configure -bg [ThemeBackground]
+
+    # header
+    # $w tag configure keyword -foreground [ThemeSelectBackground]
 }
 
 proc ThemeForeground {} {
@@ -158,105 +161,105 @@ proc ThemeBackground {} {
     }
 }
 
-proc ThemeEntryForeground {} {
+proc ThemeTreeForeground {} {
     global ds9
     
     switch $ds9(wm) {
 	x11 {
-	    set fg [ttk::style lookup TEntry -foreground]
+	    set fg [ttk::style lookup Treeview -foreground]
 	    if {$fg != {}} {
 		return $fg
 	    } else {
-		return $ds9(foreground,entry)
+		return $ds9(foreground,tree)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(foreground,entry)}
+	win32 {return $ds9(foreground,tree)}
     }
 }
 
-proc ThemeEntryBackground {} {
+proc ThemeTreeBackground {} {
     global ds9
     
     switch $ds9(wm) {
 	x11 {
-	    set bg [ttk::style lookup TEntry -fieldbackground]
+	    set bg [ttk::style lookup Treeview -background]
 	    if {$bg != {}} {
 		return $bg
 	    } else {
-		return $ds9(background,entry)
+		return $ds9(background,tree)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(background,entry)}
+	win32 {return $ds9(background,tree)}
     }
 }
 
-proc ThemeForegroundDisabled {} {
+proc ThemeTreeForegroundSelect {} {
     global ds9
     
     switch $ds9(wm) {
 	x11 {
-	    set fg [ttk::style lookup TMenubutton -foreground disabled]
+	    set fg [ttk::style lookup Treeview -foreground selected]
 	    if {$fg != {}} {
 		return $fg
 	    } else {
-		return $ds9(foreground,disabled)
+		return $ds9(foreground,tree,select)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(foreground,disabled)}
+	win32 {return $ds9(foreground,tree,select)}
     }
 }
 
-proc ThemeBackgroundDisabled {} {
+proc ThemeTreeBackgroundSelect {} {
     global ds9
     
     switch $ds9(wm) {
 	x11 {
-	    set bg [ttk::style lookup TMenubutton -background disabled]
+	    set bg [ttk::style lookup Treeview -background selected]
 	    if {$bg != {}} {
 		return $bg
 	    } else {
-		return $ds9(background,disabled)
+		return $ds9(background,tree,select)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(background,disabled)}
+	win32 {return $ds9(background,tree,select)}
     }
 }
 
-proc ThemeSelectForeground {} {
+proc ThemeHeadingForeground {} {
     global ds9
     
     switch $ds9(wm) {
 	x11 {
-	    set fg [ttk::style lookup . -selectforeground]
+	    set fg [ttk::style lookup Heading -foreground]
 	    if {$fg != {}} {
 		return $fg
 	    } else {
-		return $ds9(selectforeground)
+		return $ds9(foreground,heading)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(selectforeground)}
+	win32 {return $ds9(foreground,heading)}
     }
 }
 
-proc ThemeSelectBackground {} {
+proc ThemeHeadingBackground {} {
     global ds9
     
     switch $ds9(wm) {
 	x11 {
-	    set bg [ttk::style lookup . -selectbackground]
+	    set bg [ttk::style lookup Heading -background]
 	    if {$bg != {}} {
 		return $bg
 	    } else {
-		return $ds9(selectbackground)
+		return $ds9(background,heading)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(selectbackground)}
+	win32 {return $ds9(background,heading)}
     }
 }
 

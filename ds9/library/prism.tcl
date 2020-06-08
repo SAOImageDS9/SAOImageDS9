@@ -106,14 +106,14 @@ proc PrismDialog {} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list PrismHeaderSelectCmd %s %S] \
-		      -fg [ThemeEntryForeground] \
-		      -bg [ThemeEntryBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		     ]
 
     $dprism(header) tag configure sel \
-	-fg [ThemeSelectForeground] -bg [ThemeSelectBackground]
+	-fg [ThemeTreeForegroundSelect] -bg [ThemeTreeBackgroundSelect]
     $dprism(header) tag configure title \
-	-fg [ThemeSelectForeground] -bg [ThemeForegroundDisabled]
+	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 
     ttk::scrollbar $f.yscroll -command [list $dprism(header) yview] \
 	-orient vertical
@@ -151,14 +151,14 @@ proc PrismDialog {} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list PrismExtSelectCmd %s %S] \
-		      -fg [ThemeEntryForeground] \
-		      -bg [ThemeEntryBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		     ]
 
     $dprism(tbl) tag configure sel \
-	-fg [ThemeSelectForeground] -bg [ThemeSelectBackground]
+	-fg [ThemeTreeForegroundSelect] -bg [ThemeTreeBackgroundSelect]
     $dprism(tbl) tag configure title \
-	-fg [ThemeSelectForeground] -bg [ThemeForegroundDisabled]
+	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 
     ttk::scrollbar $f.yscroll -command [list $dprism(tbl) yview] \
 	-orient vertical

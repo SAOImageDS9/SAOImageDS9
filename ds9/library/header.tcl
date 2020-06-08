@@ -142,6 +142,7 @@ proc DisplayHeader {id title} {
     # create a special text tag for keywords
     upvar #0 $varname var
     $var(text) tag configure keyword -foreground $ds9(bold)
+#    $var(text) tag configure keyword -foreground [ThemeSelectBackground]
     
     # color tag keywords
     set stop [$var(text) index end]

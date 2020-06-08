@@ -32,6 +32,7 @@ proc PrismDialog {} {
     set w $iprism(top)
     set mb $iprism(mb)
 
+    set dprism(headerdb) prismheaderdb
     set dprism(tbldb) prismtbldb
 
     Toplevel $w $mb 6 [msgcat::mc {Prism}] PrismDestroyDialog
@@ -83,43 +84,48 @@ proc PrismDialog {} {
 
     bind $dprism(ext) <<TreeviewSelect>> PrismExtCmd
 
-    grid $f -row 0 -column 0
-
     # Header
     set f [ttk::labelframe $p.header -text [msgcat::mc {Header Keywords}]]
 
-    ttk::scrollbar $f.yscroll -command [list $f.box yview] -orient vertical
-    ttk::scrollbar $f.xscroll -command [list $f.box xview] -orient horizontal
+    set dprism(header) [table $f.t \
+		      -state disabled \
+		      -usecommand 0 \
+		      -variable $dprism(headerdb) \
+		      -colorigin 1 \
+		      -roworigin 0 \
+		      -cols 5 \
+		      -rows 10 \
+		      -width -1 \
+		      -height -1 \
+		      -colwidth 14 \
+		      -titlerows 1 \
+		      -xscrollcommand [list $f.xscroll set]\
+		      -yscrollcommand [list $f.yscroll set]\
+		      -selecttype row \
+		      -selectmode extended \
+		      -anchor w \
+		      -font [font actual TkDefaultFont] \
+		      -browsecommand [list PrismHeaderSelectCmd %s %S] \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
+		     ]
 
-    set dprism(header) [ttk::treeview $f.box \
-			    -xscroll [list $f.xscroll set]\
-			    -yscroll [list $f.yscroll set] \
-			    -selectmode browse \
-			    -height 10 \
-			    -show headings \
-			    -columns {name value type comment unit} \
-			   ]
-    $dprism(header) column name -width 100 -anchor w
-    $dprism(header) column value -width 300 -anchor w
-    $dprism(header) column type -width 50 -anchor w
-    $dprism(header) column comment -width 300 -anchor w
-    $dprism(header) column unit  -width 40 -anchor w
+    $dprism(header) tag configure sel \
+	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+    $dprism(header) tag configure title \
+	-fg [ThemeSelectforeground] -bg [ThemeForegroundDisabled]
 
-    $dprism(header) heading name -text [msgcat::mc {Name}] -anchor w
-    $dprism(header) heading value -text [msgcat::mc {Value}] -anchor w
-    $dprism(header) heading type -text [msgcat::mc {Type}] -anchor w
-    $dprism(header) heading comment -text [msgcat::mc {Comment}] -anchor w
-    $dprism(header) heading unit -text [msgcat::mc {Units}] -anchor w
-
-    grid $f.box $f.yscroll -sticky news
+    ttk::scrollbar $f.yscroll -command [list $dprism(header) yview] \
+	-orient vertical
+    ttk::scrollbar $f.xscroll -command [list $dprism(header) xview] \
+	-orient horizontal
+    grid $dprism(header) $f.yscroll -sticky news
     grid $f.xscroll -stick news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
-    bind $dprism(header) <<TreeviewSelect>> PrismHeaderCmd
-
-#    pack $f -fill both -expand true
-    grid $f -row 0 -column 1
+    pack $p.ext -side left
+    pack $p.header -side left -fill both -expand true
 
     # Table
     set f [ttk::labelframe $w.tbl -text [msgcat::mc {Extension Data}]]
@@ -144,7 +150,7 @@ proc PrismDialog {} {
 		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list PrismSelectCmd %s %S] \
+		      -browsecommand [list PrismExtSelectCmd %s %S] \
 		      -fg [ThemeForeground] \
 		      -bg [ThemeBackground] \
 		     ]
@@ -176,8 +182,8 @@ proc PrismDialog {} {
 	-side left -expand true -padx 2 -pady 4
 
     # Fini
-    ttk::separator $w.stbl -orient horizontal
-    pack $w.buttons $w.stbl -side bottom -fill x
+    ttk::separator $w.sext -orient horizontal
+    pack $w.buttons $w.sext -side bottom -fill x
     pack $w.param -side top -fill x
     pack $w.tbl -side top -fill both -expand true
 
@@ -213,13 +219,6 @@ proc PrismLoad {} {
     $dprism(ext) insert {} end -values {STDEVT table "7 cols, 18758 rows"}
 
  #   $dprism(ext) selection set I001
-
-    $dprism(header) insert {} end -values \
-	{CONTENT BASIC string "data content" ""}
-    $dprism(header) insert {} end -values \
-	{ORIGIN "MPE Garching, FRG" string "origin of processed data" ""}
-    $dprism(header) insert {} end -values \
-	{DATE 28/06/95 string "FITS creation date" ""}
 }
 
 proc PrismClear {} {
@@ -229,9 +228,6 @@ proc PrismClear {} {
 	$dprism(ext) delete $id
     }
 
-    foreach id [$dprism(header) children {}] {
-	$dprism(header) delete $id
-    }
 }
 
 proc PrismPlot {} {
@@ -252,13 +248,10 @@ proc PrismExtCmd {} {
     puts [$dprism(ext) selection]
 }
 
-proc PrismHeaderCmd {} {
-    global dprism
-
-    puts [$dprism(header) selection]
+proc PrismHeaderSelectCmd {ss rc} {
 }
 
-proc PrismSelectCmd {ss rc} {
+proc PrismTableSelectCmd {ss rc} {
 }
 
 # Process Cmds

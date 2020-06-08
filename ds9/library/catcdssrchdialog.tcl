@@ -206,14 +206,14 @@ proc CATCDSSrchDialog {varname} {
 		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -fg [ThemeForeground] \
-		      -bg [ThemeBackground] \
+		      -fg [ThemeEntryForeground] \
+		      -bg [ThemeEntryBackground] \
 		     ]
 
     $var(tbl) tag configure sel \
-	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+	-fg [ThemeSelectForeground] -bg [ThemeSelectBackground]
     $var(tbl) tag configure title \
-	-fg [ThemeSelectforeground] -bg [ThemeForegroundDisabled]
+	-fg [ThemeSelectForeground] -bg [ThemeForegroundDisabled]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] \
 	-orient vertical

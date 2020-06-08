@@ -226,7 +226,7 @@ switch $ds9(wm) {
 #	package require ttk::theme::black
 #	package require ttk::theme::blue
 	package require ttk::theme::clearlooks
-	package require ttk::theme::elegance
+#	package require ttk::theme::elegance
 #	package require ttk::theme::itft1
 #	package require ttk::theme::keramik
 #	package require ttk::theme::kroc
@@ -246,9 +246,12 @@ switch $ds9(wm) {
 	# colors
 	ttk::style theme use default
 
-	set ds9(bold) cornflowerblue
+	set ds9(bold) blue
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
+	set ds9(foreground,entry) [ttk::style lookup TEntry -foreground]
+	set ds9(background,entry) [ttk::style lookup TEntry -fieldbackground]
+
 	set ds9(foreground,active) \
 	    [ttk::style lookup TMenubutton -foreground active]
 	set ds9(background,active) \
@@ -276,6 +279,8 @@ switch $ds9(wm) {
 	set ds9(bold) systemControlAccentColor
 	set ds9(foreground) systemTextColor
 	set ds9(background) systemTextBackgroundColor
+	set ds9(foreground,entry) systemTextColor
+	set ds9(background,entry) systemTextBackgroundColor
 	set ds9(foreground,active) systemTextColor
 	set ds9(background,active) systemTextBackgroundColor
 	set ds9(foreground,disabled) systemWindowBackgroundColor4
@@ -349,6 +354,8 @@ switch $ds9(wm) {
 	set ds9(bold) cornflowerblue
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
+	set ds9(foreground,entry) [ttk::style lookup . -foreground]
+	set ds9(background,entry) [ttk::style lookup . -background]
 	set ds9(foreground,active) \
 	    [ttk::style lookup TMenubutton -foreground active]
 	set ds9(background,active) \

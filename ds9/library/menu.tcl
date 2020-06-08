@@ -45,7 +45,7 @@ proc CreateMenuBar {} {
 	x11 {
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
 	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
-	    bind Text <<ThemeChanged>> {ThemeConfig %W}
+	    bind Text <<ThemeChanged>> {ThemeConfigText %W}
 	}
 	aqua -
 	win32 {}
@@ -110,16 +110,16 @@ proc ThemeConfigMenu {w} {
 }
 
 proc ThemeConfigTable {w} {
-    $w configure -fg [ThemeForeground]
-    $w configure -bg [ThemeBackground]
+    $w configure -fg [ThemeEntryForeground]
+    $w configure -bg [ThemeEntryBackground]
 
     $w tag configure sel \
-	-fg [ThemeSelectforeground] -bg [ThemeSelectbackground]
+	-fg [ThemeSelectForeground] -bg [ThemeSelectBackground]
     $w tag configure title \
-	-fg [ThemeSelectforeground] -bg [ThemeForegroundDisabled]
+	-fg [ThemeSelectForeground] -bg [ThemeForegroundDisabled]
 }
 
-proc ThemeConfig {w} {
+proc ThemeConfigText {w} {
     $w configure -fg [ThemeForeground]
     $w configure -bg [ThemeBackground]
 }
@@ -158,6 +158,40 @@ proc ThemeBackground {} {
     }
 }
 
+proc ThemeEntryForeground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set fg [ttk::style lookup TEntry -foreground]
+	    if {$fg != {}} {
+		return $fg
+	    } else {
+		return $ds9(foreground,entry)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(foreground,entry)}
+    }
+}
+
+proc ThemeEntryBackground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set bg [ttk::style lookup TEntry -fieldbackground]
+	    if {$bg != {}} {
+		return $bg
+	    } else {
+		return $ds9(background,entry)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(background,entry)}
+    }
+}
+
 proc ThemeForegroundDisabled {} {
     global ds9
     
@@ -192,7 +226,7 @@ proc ThemeBackgroundDisabled {} {
     }
 }
 
-proc ThemeSelectforeground {} {
+proc ThemeSelectForeground {} {
     global ds9
     
     switch $ds9(wm) {
@@ -209,7 +243,7 @@ proc ThemeSelectforeground {} {
     }
 }
 
-proc ThemeSelectbackground {} {
+proc ThemeSelectBackground {} {
     global ds9
     
     switch $ds9(wm) {

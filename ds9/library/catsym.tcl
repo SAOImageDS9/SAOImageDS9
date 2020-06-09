@@ -227,7 +227,7 @@ proc CATSymDialog {parent} {
 		 ]
 
     $var(tbl) tag configure sel \
-	-fg [ThemeTreeForegroundSelect] -bg [ThemeTreeBackgroundSelect]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $var(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 

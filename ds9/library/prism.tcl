@@ -110,7 +110,7 @@ proc PrismDialog {} {
 		     ]
 
     $dprism(header) tag configure sel \
-	-fg [ThemeTreeForegroundSelect] -bg [ThemeTreeBackgroundSelect]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $dprism(header) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 
@@ -155,7 +155,7 @@ proc PrismDialog {} {
 		     ]
 
     $dprism(tbl) tag configure sel \
-	-fg [ThemeTreeForegroundSelect] -bg [ThemeTreeBackgroundSelect]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $dprism(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 

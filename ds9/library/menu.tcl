@@ -114,7 +114,7 @@ proc ThemeConfigTable {w} {
     $w configure -bg [ThemeTreeBackground]
 
     $w tag configure sel \
-	-fg [ThemeTreeForegroundSelect] -bg [ThemeTreeBackgroundSelect]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $w tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 }
@@ -195,7 +195,7 @@ proc ThemeTreeBackground {} {
     }
 }
 
-proc ThemeTreeForegroundSelect {} {
+proc ThemeTreeForegroundSelected {} {
     global ds9
     
     switch $ds9(wm) {
@@ -212,7 +212,7 @@ proc ThemeTreeForegroundSelect {} {
     }
 }
 
-proc ThemeTreeBackgroundSelect {} {
+proc ThemeTreeBackgroundSelected {} {
     global ds9
     
     switch $ds9(wm) {

@@ -54,7 +54,8 @@ proc PrismDialog {} {
     set p [ttk::frame $w.param]
 
     # Exts
-    set f [ttk::labelframe $p.ext -text [msgcat::mc {Extensions}]]
+    set f [ttk::labelframe $p.ext -padding {0 2} \
+	       -text [msgcat::mc {Extensions}]]
 
     ttk::scrollbar $f.yscroll -command [list $f.box yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $f.box xview] -orient horizontal
@@ -82,7 +83,8 @@ proc PrismDialog {} {
     bind $dprism(ext) <<TreeviewSelect>> PrismExtCmd
 
     # Header
-    set f [ttk::labelframe $p.header -text [msgcat::mc {Header Keywords}]]
+    set f [ttk::labelframe $p.header -padding {0 2} \
+	       -text [msgcat::mc {Header Keywords}]]
 
     set dprism(header) [table $f.t \
 		      -state disabled \
@@ -94,14 +96,14 @@ proc PrismDialog {} {
 		      -rows 40 \
 		      -width -1 \
 		      -height -1 \
-		      -colwidth 14 \
+		      -colwidth 20 \
 		      -maxwidth 300 \
-		      -maxheight 214 \
+		      -maxheight 220 \
 		      -titlerows 1 \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \
-		      -selectmode extended \
+		      -selectmode single \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list PrismHeaderSelectCmd %s %S] \
@@ -123,11 +125,16 @@ proc PrismDialog {} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
-    pack $p.ext -side left
-    pack $p.header -side left -fill x -expand true
+#    pack $p.ext -side left
+#    pack $p.header -side left -fill x -expand true
+
+    grid $p.ext -row 0 -column 0 -sticky ns
+    grid $p.header -row 0 -column 1 -sticky ew
+    grid columnconfigure $p 1 -weight 1
 
     # Table
-    set f [ttk::labelframe $w.tbl -text [msgcat::mc {Extension Data}]]
+    set f [ttk::labelframe $w.tbl -padding {0 2} \
+	       -text [msgcat::mc {Extension Data}]]
 
     set dprism(tbl) [table $f.t \
 		      -state disabled \
@@ -146,7 +153,7 @@ proc PrismDialog {} {
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \
-		      -selectmode extended \
+		      -selectmode single \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list PrismTableSelectCmd %s %S] \

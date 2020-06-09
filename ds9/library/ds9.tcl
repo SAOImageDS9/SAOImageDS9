@@ -247,22 +247,25 @@ switch $ds9(wm) {
 	ttk::style theme use default
 
 	set ds9(bold) blue
+
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
+	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
+
 	set ds9(foreground,tree) [ttk::style lookup Treeview -foreground]
 	set ds9(background,tree) [ttk::style lookup Treeview -background]
 	set ds9(foreground,tree,select) \
 	    [ttk::style lookup Treeview -foreground selected]
 	set ds9(background,tree,select) \
 	    [ttk::style lookup Treeview -background selected]
-	set ds9(foreground,heading) [ttk::style lookup Heading -foreground]
-	set ds9(background,heading) [ttk::style lookup Heading -background]
 
 	set ds9(foreground,menu,active) \
 	    [ttk::style lookup TMenubutton -foreground active]
+	set ds9(foreground,menu,disabled) \
+ 	    [ttk::style lookup TMenubutton -foreground disabled]
 	set ds9(background,menu,active) \
 	    [ttk::style lookup TMenubutton -background active]
-
+	
 	# fix TLabel widgets
 	foreach tt [ttk::style theme names] {
 	    ttk::style theme use $tt
@@ -275,17 +278,20 @@ switch $ds9(wm) {
 	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
-	# colors
+	# most of these will not be used
 	set ds9(bold) systemControlAccentColor
+
 	set ds9(foreground) systemTextColor
 	set ds9(background) systemTextBackgroundColor
+	set ds9(selectforeground) systemTextColor
+
 	set ds9(foreground,tree) systemTextColor
 	set ds9(background,tree) systemTextBackgroundColor
 	set ds9(foreground,tree,select) systemTextColor
 	set ds9(background,tree,select) systemTextBackgroundColor
-	set ds9(foreground,heading) systemTextColor
-	set ds9(background,heading) systemTextBackgroundColor
+
 	set ds9(foreground,menu,active) systemTextColor
+	set ds9(foreground,menu,disabled) systemTextColor
 	set ds9(background,menu,active) systemTextBackgroundColor
 
 	set pap(fg) systemTextColor
@@ -352,16 +358,22 @@ switch $ds9(wm) {
 	ttk::style theme use xpnative
 
 	set ds9(bold) blue
+
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
+	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
+
 	set ds9(foreground,tree) [ttk::style lookup Treeview -foreground]
 	set ds9(background,tree) [ttk::style lookup Treeview -background]
-	set ds9(foreground,tree,select) [ttk::style lookup Treeview -foreground]
-	set ds9(background,tree,select) [ttk::style lookup Treeview -background]
-	set ds9(foreground,heading) [ttk::style lookup Heading -foreground]
-	set ds9(background,heading) [ttk::style lookup Heading -background]
+	set ds9(foreground,tree,select) \
+	    [ttk::style lookup Treeview -foreground selected]
+	set ds9(background,tree,select) \
+	    [ttk::style lookup Treeview -background selected]
+
 	set ds9(foreground,menu,active) \
 	    [ttk::style lookup TMenubutton -foreground active]
+	set ds9(foreground,menu,disabled) \
+ 	    [ttk::style lookup TMenubutton -foreground disabled]
 	set ds9(background,menu,active) \
 	    [ttk::style lookup TMenubutton -background active]
     }

@@ -11,9 +11,6 @@ proc PrismDef {} {
 
     set iprism(top) .prism
     set iprism(mb) .prismmb
-
-    set iprism(minrows) 20
-    set iprism(mincols) 10
 }
 
 proc PrismDialog {} {
@@ -94,10 +91,12 @@ proc PrismDialog {} {
 		      -colorigin 1 \
 		      -roworigin 0 \
 		      -cols 5 \
-		      -rows 10 \
+		      -rows 40 \
 		      -width -1 \
 		      -height -1 \
 		      -colwidth 14 \
+		      -maxwidth 300 \
+		      -maxheight 214 \
 		      -titlerows 1 \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
@@ -125,7 +124,7 @@ proc PrismDialog {} {
     grid columnconfigure $f 0 -weight 1
 
     pack $p.ext -side left
-    pack $p.header -side left -fill both -expand true
+    pack $p.header -side left -fill x -expand true
 
     # Table
     set f [ttk::labelframe $w.tbl -text [msgcat::mc {Extension Data}]]
@@ -136,8 +135,8 @@ proc PrismDialog {} {
 		      -variable $dprism(tbldb) \
 		      -colorigin 1 \
 		      -roworigin 0 \
-		      -cols $iprism(mincols) \
-		      -rows $iprism(minrows) \
+		      -cols 10 \
+		      -rows 20 \
 		      -width -1 \
 		      -height -1 \
 		      -colwidth 14 \

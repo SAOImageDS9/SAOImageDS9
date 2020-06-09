@@ -234,15 +234,15 @@ proc ThemeHeadingForeground {} {
     
     switch $ds9(wm) {
 	x11 {
-	    set fg [ttk::style lookup Heading -foreground]
+	    set fg [ttk::style lookup . -selectforeground]
 	    if {$fg != {}} {
 		return $fg
 	    } else {
-		return $ds9(foreground,heading)
+		return $ds9(selectforeground)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(foreground,heading)}
+	win32 {return $ds9(selectforeground)}
     }
 }
 
@@ -251,15 +251,15 @@ proc ThemeHeadingBackground {} {
     
     switch $ds9(wm) {
 	x11 {
-	    set bg [ttk::style lookup Heading -background]
+	    set bg [ttk::style lookup TMenubutton -foreground disabled]
 	    if {$bg != {}} {
 		return $bg
 	    } else {
-		return $ds9(background,heading)
+		return ds9(foreground,menu,disabled)
 	    }
 	}
 	aqua -
-	win32 {return $ds9(background,heading)}
+	win32 {return ds9(foreground,menu,disabled)}
     }
 }
 

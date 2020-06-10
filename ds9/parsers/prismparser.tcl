@@ -61,69 +61,79 @@ proc prism::unsetupvalues {numsyms} {
 }
 
 array set prism::table {
-  6:265,target 7
-  3:0,target 14
+  6:265,target 11
+  6:0 reduce
+  0:272,target 5
   7:0 reduce
-  5:272 goto
-  5:0,target 10
-  1:265,target 16
+  8:265,target 9
+  5:0,target 0
+  0:274,target 6
+  9:0 reduce
+  1:265,target 17
   0:266,target 1
-  7:0,target 12
-  3:265,target 14
-  0:0,target 13
+  7:0,target 16
+  6:273 goto
+  3:265,target 7
   0:268,target 3
-  5:265,target 11
+  0:0,target 13
+  9:0,target 12
   2:0,target 15
-  0:271,target 4
   0:265 reduce
   1:265 reduce
   0:266 shift
-  4:0,target 0
+  7:265,target 16
+  4:0,target 14
   2:265 reduce
-  0:273,target 5
   0:267 shift
-  3:265 reduce
+  3:265 shift
+  0:268 shift
   0:0 reduce
   0:265,target 13
-  0:268 shift
+  6:0,target 10
+  4:265 reduce
   1:0 reduce
-  5:265 reduce
+  0:269 shift
   2:265,target 15
   2:0 reduce
   0:267,target 2
-  0:271 goto
-  6:265 shift
-  5:272,target 6
-  3:0 reduce
-  4:0 accept
-  1:0,target 16
-  0:273 goto
-  5:0 reduce
+  6:265 reduce
+  0:272 goto
+  7:265 reduce
+  4:265,target 14
+  4:0 reduce
+  1:0,target 17
+  0:269,target 4
+  8:265 shift
+  6:273,target 8
+  5:0 accept
+  0:274 goto
 }
 
 array set prism::rules {
-  9,l 270
-  11,l 272
-  15,l 273
-  2,l 269
-  6,l 269
-  12,l 271
-  16,l 273
-  3,l 269
-  7,l 269
-  13,l 273
-  0,l 274
-  4,l 269
-  8,l 270
-  10,l 271
-  14,l 273
-  1,l 269
-  5,l 269
+  9,l 271
+  11,l 273
+  15,l 274
+  2,l 270
+  6,l 270
+  12,l 272
+  16,l 274
+  3,l 270
+  7,l 270
+  13,l 274
+  0,l 275
+  17,l 274
+  4,l 270
+  8,l 271
+  10,l 272
+  14,l 274
+  1,l 270
+  5,l 270
 }
 
 array set prism::rules {
   5,dc 1
   0,dc 1
+  17,dc 1
   12,dc 3
   8,dc 1
   3,dc 1
@@ -134,7 +144,7 @@ array set prism::rules {
   13,dc 0
   9,dc 1
   4,dc 1
-  16,dc 1
+  16,dc 2
   11,dc 0
   7,dc 1
   2,dc 1
@@ -142,60 +152,65 @@ array set prism::rules {
 }
 
 array set prism::rules {
-  13,line 55
-  7,line 45
-  10,line 51
-  4,line 42
-  1,line 39
-  15,line 57
-  9,line 48
-  12,line 52
-  6,line 44
-  3,line 41
-  14,line 56
-  8,line 47
-  11,line 51
-  5,line 43
-  2,line 40
-  16,line 58
+  13,line 56
+  7,line 46
+  10,line 52
+  4,line 43
+  1,line 40
+  15,line 58
+  9,line 49
+  12,line 53
+  6,line 45
+  3,line 42
+  17,line 60
+  14,line 57
+  8,line 48
+  11,line 52
+  5,line 44
+  2,line 41
+  16,line 59
   11,e 1
 }
 
 array set prism::lr1_table {
-  0 {{0 0 0} {10 0 0} {12 0 0} {13 {0 265} 0} {14 {0 265} 0} {15 {0 265} 0} {16 {0 265} 0}}
-  1 {{16 {0 265} 1}}
+  0 {{0 0 0} {10 0 0} {12 0 0} {13 {0 265} 0} {14 {0 265} 0} {15 {0 265} 0} {16 {0 265} 0} {17 {0 265} 0}}
+  1 {{17 {0 265} 1}}
   2 {{15 {0 265} 1}}
-  3 {{14 {0 265} 1}}
-  4 {{0 0 1}}
-  0,trans {{266 1} {267 2} {268 3} {271 4} {273 5}}
-  5 {{10 0 1} {12 0 1} {11 265 0}}
+  3 {{16 {0 265} 1}}
+  4 {{14 {0 265} 1}}
+  0,trans {{266 1} {267 2} {268 3} {269 4} {272 5} {274 6}}
+  5 {{0 0 1}}
   1,trans {}
+  6 {{10 0 1} {12 0 1} {11 265 0}}
   2,trans {}
-  6 {{12 0 2}}
-  7 {{12 0 3}}
-  3,trans {}
+  7 {{16 {0 265} 2}}
+  3,trans {{265 7}}
+  8 {{12 0 2}}
   4,trans {}
-  5,trans {{272 6}}
-  6,trans {{265 7}}
+  9 {{12 0 3}}
+  5,trans {}
+  6,trans {{273 8}}
   7,trans {}
+  8,trans {{265 9}}
+  9,trans {}
 }
 
 array set prism::token_id_table {
   264,line 15
   270,t 1
-  269,t 1
+  269,t 0
   265,title string
   274,t 1
   261,line 11
   257,t 0
   270,title {}
-  269,title {}
-  273,line 54
+  269,title OPEN
+  273,line 52
   257,line 7
   262,t 0
   274,title {}
-  270,line 46
-  269,line 38
+  270,line 39
+  269,line 24
   259,title ON
   260,title OFF
   266,t 0
@@ -203,11 +218,13 @@ array set prism::token_id_table {
   error error
   264,title float
   266,line 21
-  error,line 37
-  268,title OPEN
+  275,t 1
+  error,line 38
+  268,title LOAD
   258,t 0
   263,line 14
   error,title {}
+  275,line 61
   273,title {}
   263,t 0
   259,line 9
@@ -240,23 +257,25 @@ array set prism::token_id_table {
   0,t 0
   0 {$}
   262,title FALSE
-  268 OPEN_
+  268 LOAD_
   268,t 0
-  274,line 59
-  270 numeric
-  269 yesno
-  271 command
+  274,line 55
+  270 yesno
+  269 OPEN_
+  271 numeric
   error,t 0
-  272 @PSEUDO1
+  272 command
   258,line 8
   273,t 1
-  273 prism
+  273 @PSEUDO1
   266,title CLEAR
-  274 start'
-  271,line 50
+  274 prism
+  275 start'
+  271,line 47
   271,title {}
   261,t 0
   267,line 22
+  275,title {}
   265,t 0
   261,title TRUE
 }
@@ -368,6 +387,8 @@ proc prism::yyparse {} {
                     13 { PrismDialog }
                     14 { PrismDialog }
                     15 { PrismDestroyDialog }
+                    16 { PrismDialog; PrismLoad $2 }
+                    17 { PrismDialog; PrismClear }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

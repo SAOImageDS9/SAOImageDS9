@@ -10,6 +10,7 @@
 
 %token CLEAR_
 %token CLOSE_
+%token LOAD_
 %token OPEN_
 
 %%
@@ -24,7 +25,8 @@ command : prism
 prism : {PrismDialog}
  | OPEN_ {PrismDialog}
  | CLOSE_ {PrismDestroyDialog}
- | CLEAR_
+ | LOAD_ STRING_ {PrismDialog; PrismLoad $2}
+ | CLEAR_ {PrismDialog; PrismClear}
  ;
 
 %%

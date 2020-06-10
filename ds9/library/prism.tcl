@@ -37,7 +37,7 @@ proc PrismDialog {} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     ThemeMenu $mb.file
-    $mb.file add command -label [msgcat::mc {Load}] -command PrismLoad 
+    $mb.file add command -label [msgcat::mc {Load}] -command PrismLoadFile
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Clear}] -command PrismClear
     $mb.file add separator
@@ -177,7 +177,7 @@ proc PrismDialog {} {
 
     # Buttons
     set f [ttk::frame $w.buttons]
-    ttk::button $f.load -text [msgcat::mc {Load}] -command PrismLoad
+    ttk::button $f.load -text [msgcat::mc {Load}] -command PrismLoadFile
     ttk::button $f.clear -text [msgcat::mc {Clear}] -command PrismClear
     ttk::button $f.plot -text [msgcat::mc {Plot}] -command PrismPlot
     ttk::button $f.histogram -text [msgcat::mc {Histogram}] \
@@ -217,14 +217,23 @@ proc UpdatePrismDialog {} {
 
 }
 
-proc PrismLoad {} {
+proc PrismLoadFile {} {
     global dprism
     
-    $dprism(ext) insert {} end -values {PRIMARY image NULL}
-    $dprism(ext) insert {} end -values {STDGTI table "3 cols, 35 rows"}
-    $dprism(ext) insert {} end -values {STDEVT table "7 cols, 18758 rows"}
+    set fn [OpenFileDialog fitsfbox]
+    if {$fn != {}} {
+	PrismLoad $fn
+    }
+}
 
- #   $dprism(ext) selection set I001
+proc PrismLoad {fn} {
+    global dprism
+
+    set rr [fitsy dir $fn]
+    foreach {ext name type info} $rr {
+	$dprism(ext) insert {} end -id $ext \
+	    -values [list "$name" "$type" "$info"]
+    }
 }
 
 proc PrismClear {} {
@@ -233,7 +242,6 @@ proc PrismClear {} {
     foreach id [$dprism(ext) children {}] {
 	$dprism(ext) delete $id
     }
-
 }
 
 proc PrismPlot {} {
@@ -251,7 +259,10 @@ proc PrismImage {} {
 proc PrismExtCmd {} {
     global dprism
 
-    puts [$dprism(ext) selection]
+    set ext [$dprism(ext) selection]
+    if {$ext} {
+	fitsy header $fn $ext
+    }
 }
 
 proc PrismHeaderSelectCmd {ss rc} {

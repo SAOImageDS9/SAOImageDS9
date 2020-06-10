@@ -9,4 +9,5 @@ set REAL_ 264
 set STRING_ 265
 set CLEAR_ 266
 set CLOSE_ 267
-set OPEN_ 268
+set LOAD_ 268
+set OPEN_ 269

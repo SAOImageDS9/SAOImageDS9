@@ -9,6 +9,7 @@
 
 clear		{return $CLEAR_}
 close		{return $CLOSE_}
+load		{return $LOAD_}
 open		{return $OPEN_}
 
 #include yesno.fin

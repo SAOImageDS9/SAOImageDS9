@@ -15,6 +15,7 @@ class TclFITSY {
 
   int table(int, const char*[]);
   int dir(int, const char*[]);
+  int header(int, const char*[]);
 };
 
 extern TclFITSY* tclfitsy;

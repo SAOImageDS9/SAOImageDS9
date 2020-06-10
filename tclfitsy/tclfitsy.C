@@ -52,13 +52,15 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
       return fitsy->table(argc, argv);
     else if (!strncmp(argv[1], "dir", 3))
       return fitsy->dir(argc, argv);
+    else if (!strncmp(argv[1], "header", 6))
+      return fitsy->header(argc, argv);
     else {
       Tcl_AppendResult(interp, "fitsy: unknown command: ", argv[1], NULL);
       return TCL_ERROR;
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?table? ?dir?", NULL);
+    Tcl_AppendResult(interp, "usage: fitsy ?table? ?dir? ?header?", NULL);
     return TCL_ERROR;
   }
 }
@@ -80,6 +82,9 @@ int TclFITSY::table(int argc, const char* argv[])
   }
   
   if (!(argv[2] && *argv[2]))
+    return TCL_ERROR;
+
+  if (!(argv[3] && *argv[3]))
     return TCL_ERROR;
 
   FitsFile* fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
@@ -249,3 +254,78 @@ int TclFITSY::dir(int argc, const char* argv[])
 
   return TCL_OK;
 }
+
+int TclFITSY::header(int argc, const char* argv[])
+{
+  if (argc!=5) {
+    Tcl_AppendResult(interp_, "usage: fitsy header ?filename? ?ext? ?varname?",
+		     NULL);
+    return TCL_ERROR;
+  }
+  
+  if (!(argv[2] && *argv[2]))
+    return TCL_ERROR;
+
+  int ext =0;
+  string x(argv[3]);
+  istringstream sstr(x);
+  sstr >> ext;
+  
+  if (ext<0)
+    return TCL_ERROR;
+
+  if (!(argv[4] && *argv[4]))
+    return TCL_ERROR;
+
+  FitsFile* fits = new FitsFitsMMapIncr(argv[2]);
+  if (!fits->isValid())
+    return TCL_ERROR;
+
+  for (int ii=0; ii<ext; ii++) {
+    FitsFile* next = new FitsMosaicNextMMapIncr(fits);
+    delete fits;
+    fits = next;
+    if (!fits->isValid())
+      return TCL_ERROR;
+  }
+
+  FitsHead* head = fits->head();
+
+  int cnt=0;
+  char buf[80];
+  char* cc=head->first();
+  while (cc) {
+    cnt++;
+
+    // Index
+    {
+      ostringstream index;
+      index << cnt << ',' << 1 << ends;
+      ostringstream value;
+      value << cnt << ends;
+      Tcl_SetVar2(interp_, argv[4], index.str().c_str(), value.str().c_str(),
+		  TCL_GLOBAL_ONLY);
+    }
+
+    // Name
+    {
+      ostringstream index;
+      index << cnt << ',' << 2 << ends;
+      strncpy(buf,cc,8);
+      buf[8] = '\0';
+      Tcl_SetVar2(interp_, argv[4], index.str().c_str(), buf, TCL_GLOBAL_ONLY);
+    }
+
+    cc = head->next();
+  }
+
+  // Nrows
+  {
+    ostringstream str;
+    str << cnt << ends;
+    Tcl_SetVar2(interp_, argv[4], "Nrows", str.str().c_str(), TCL_GLOBAL_ONLY);
+  }
+
+  return TCL_OK;
+}
+

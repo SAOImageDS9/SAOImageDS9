@@ -295,12 +295,10 @@ proc PrismExtCmd {} {
     global dprism
 
     set t $dprism(headerdb)
-
     upvar #0 $t T
     global $t
     
     # clear previous db
-    global $t
     if {[info exists $t]} {
 	unset $t
     }

@@ -9,6 +9,9 @@ class TclFITSY {
  private:
   Tcl_Interp* interp_;
   
+ protected:
+  //  int headerComment(char*, char*, char*);
+
  public:
   TclFITSY(Tcl_Interp*);
   ~TclFITSY();
@@ -16,6 +19,7 @@ class TclFITSY {
   int table(int, const char*[]);
   int dir(int, const char*[]);
   int header(int, const char*[]);
+
 };
 
 extern TclFITSY* tclfitsy;

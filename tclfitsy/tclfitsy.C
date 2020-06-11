@@ -255,6 +255,7 @@ int TclFITSY::dir(int argc, const char* argv[])
   return TCL_OK;
 }
 
+/*
 int TclFITSY::header(int argc, const char* argv[])
 {
   if (argc!=5) {
@@ -292,7 +293,7 @@ int TclFITSY::header(int argc, const char* argv[])
   FitsHead* head = fits->head();
 
   int cnt=0;
-  char buf[80];
+  char buf[81];
   char* cc=head->first();
   while (cc) {
     cnt++;
@@ -316,6 +317,113 @@ int TclFITSY::header(int argc, const char* argv[])
       Tcl_SetVar2(interp_, argv[4], index.str().c_str(), buf, TCL_GLOBAL_ONLY);
     }
 
+    // process simpliest to hard
+    {
+      ostringstream vindex;
+      vindex << cnt << ',' << 3 << ends;
+
+      ostringstream tindex;
+      tindex << cnt << ',' << 4 << ends;
+
+      ostringstream cindex;
+      cindex << cnt << ',' << 5 << ends;
+
+      // comment
+      if (!strncmp(cc,"COMMENT",7)) {
+	Tcl_SetVar2(interp_, argv[4], tindex.str().c_str(), "comment",
+		    TCL_GLOBAL_ONLY);
+	strncpy(buf,cc+10,70);
+	buf[71] = '\0';
+	Tcl_SetVar2(interp_, argv[4], vindex.str().c_str(), trim(buf),
+		    TCL_GLOBAL_ONLY);
+      }
+
+      // history
+      else if (!strncmp(cc,"HISTORY",7)) {
+	Tcl_SetVar2(interp_, argv[4], tindex.str().c_str(), "history",
+		    TCL_GLOBAL_ONLY);
+	strncpy(buf,cc+10,70);
+	buf[71] = '\0';
+	Tcl_SetVar2(interp_, argv[4], vindex.str().c_str(), trim(buf),
+		    TCL_GLOBAL_ONLY);
+      }
+
+      // string
+      else if (cc[10] == '\'') {
+	Tcl_SetVar2(interp_, argv[4], tindex.str().c_str(), "string",
+		    TCL_GLOBAL_ONLY);
+	strncpy(buf,cc+11,70);
+	buf[80] = '\0';
+	int ii =0;
+	for (; ii<70; ii++) {
+	  if (buf[ii] == '\'') {
+	    buf[ii] = '\0';
+	    break;
+	  }
+	}
+	Tcl_SetVar2(interp_, argv[4], vindex.str().c_str(), trim(buf),
+		    TCL_GLOBAL_ONLY);
+	if (headerComment(buf, cc+ii+11, cc+80)) {
+	  Tcl_SetVar2(interp_, argv[4], cindex.str().c_str(), trim(buf),
+		      TCL_GLOBAL_ONLY);
+	}
+      }
+
+      // logical
+      else if (cc[29] == 'T' || cc[29] == 'F') {
+	Tcl_SetVar2(interp_, argv[4], tindex.str().c_str(), "logical",
+		    TCL_GLOBAL_ONLY);
+	buf[0] = cc[29];
+	buf[1] = '\0';
+	Tcl_SetVar2(interp_, argv[4], vindex.str().c_str(), buf,
+		    TCL_GLOBAL_ONLY);
+	if (headerComment(buf, cc+30, cc+80))
+	  Tcl_SetVar2(interp_, argv[4], cindex.str().c_str(), trim(buf),
+		      TCL_GLOBAL_ONLY);
+
+      }
+
+      // numeric
+      else {
+	// real
+	strncpy(buf,cc+11,70);
+	buf[80] = '\0';
+
+	char* ss = trim(buf);
+	float rr = atof(ss);
+	if (rr || (!rr && (*ss == '0' || *ss == '+' || *ss == '-'))) {
+	  Tcl_SetVar2(interp_, argv[4], tindex.str().c_str(), "real",
+		      TCL_GLOBAL_ONLY);
+	  ostringstream str;
+	  str << rr;
+	  Tcl_SetVar2(interp_, argv[4], vindex.str().c_str(),
+		      str.str().c_str(), TCL_GLOBAL_ONLY);
+	  if (headerComment(buf, cc+11, cc+80))
+	    Tcl_SetVar2(interp_, argv[4], cindex.str().c_str(), trim(buf),
+			TCL_GLOBAL_ONLY);
+      }
+	else {
+	  // integer
+	  strncpy(buf,cc+11,70);
+	  buf[80] = '\0';
+
+	  char* ss = trim(buf);
+	  int rr = atoi(ss);
+	  if (rr || (!rr && (*ss == '0' || *ss == '+' || *ss == '-'))) {
+	    Tcl_SetVar2(interp_, argv[4], tindex.str().c_str(), "integer",
+			TCL_GLOBAL_ONLY);
+	    ostringstream str;
+	    str << rr;
+	    Tcl_SetVar2(interp_, argv[4], vindex.str().c_str(),
+			str.str().c_str(), TCL_GLOBAL_ONLY);
+	    if (headerComment(buf, cc+11, cc+80))
+	      Tcl_SetVar2(interp_, argv[4], cindex.str().c_str(), trim(buf),
+			  TCL_GLOBAL_ONLY);
+	  }
+	}
+      }
+    }
+    
     cc = head->next();
   }
 
@@ -329,3 +437,19 @@ int TclFITSY::header(int argc, const char* argv[])
   return TCL_OK;
 }
 
+int TclFITSY::headerComment(char* dest, char* src, char* end)
+{
+  int found =0;
+  while (src < end) {
+    if (found)
+      *dest++ = *src;
+    else if (*src == '/')
+      found =1;
+      
+    src++;
+  }
+  *dest = '\0';
+
+  return found;
+}
+*/

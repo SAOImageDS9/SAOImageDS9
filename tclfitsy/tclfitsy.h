@@ -13,9 +13,11 @@ class TclFITSY {
   TclFITSY(Tcl_Interp*);
   ~TclFITSY();
 
-  int table(int, const char*[]);
   int dir(int, const char*[]);
   int header(int, const char*[]);
+  int isimage(int, const char*[]);
+  int istable(int, const char*[]);
+  int table(int, const char*[]);
 };
 
 extern TclFITSY* tclfitsy;

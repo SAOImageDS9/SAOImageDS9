@@ -25,7 +25,7 @@ proc FITSRead {t fn} {
     set T(Dashes) {}
     set T(Ndshs) 0
 
-    fitsy table $fn $t
+    fitsy table $fn -1 $t
 
     set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
     set T(Ndshs) [llength $T(Header)]

@@ -11,10 +11,8 @@ proc PrismDef {} {
 
     set iprism(top) .prism
     set iprism(mb) .prismmb
-    set iprism(mincols,header) 5
-    set iprism(minrows,header) 20
-    set iprism(mincols,tbl) 10
-    set iprism(minrows,tbl) 20
+    set iprism(mincols) 10
+    set iprism(minrows) 20
 }
 
 proc PrismDialog {} {
@@ -122,29 +120,29 @@ proc PrismDialog {} {
 	       -text [msgcat::mc {Extension Data}]]
 
     set dprism(tbl) [table $f.t \
-		      -state disabled \
-		      -usecommand 0 \
-		      -variable $dprism(tbldb) \
-		      -colorigin 1 \
-		      -roworigin 0 \
-		      -cols $iprism(mincols,tbl) \
-		      -rows $iprism(minrows,tbl) \
-		      -width -1 \
-		      -height -1 \
-		      -colwidth 14 \
-		      -maxwidth 300 \
-		      -maxheight 300 \
-		      -titlerows 1 \
-		      -xscrollcommand [list $f.xscroll set]\
-		      -yscrollcommand [list $f.yscroll set]\
-		      -selecttype row \
-		      -selectmode single \
-		      -anchor w \
-		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list PrismTableSelectCmd %s %S] \
-		      -fg [ThemeTreeForeground] \
-		      -bg [ThemeTreeBackground] \
-		     ]
+			 -state disabled \
+			 -usecommand 0 \
+			 -variable $dprism(tbldb) \
+			 -colorigin 1 \
+			 -roworigin 0 \
+			 -cols $iprism(mincols) \
+			 -rows $iprism(minrows) \
+			 -width -1 \
+			 -height -1 \
+			 -colwidth 14 \
+			 -maxwidth 300 \
+			 -maxheight 300 \
+			 -titlerows 1 \
+			 -xscrollcommand [list $f.xscroll set]\
+			 -yscrollcommand [list $f.yscroll set]\
+			 -selecttype row \
+			 -selectmode single \
+			 -anchor w \
+			 -font [font actual TkDefaultFont] \
+			 -browsecommand [list PrismTableSelectCmd %s %S] \
+			 -fg [ThemeTreeForeground] \
+			 -bg [ThemeTreeBackground] \
+			]
 
     $dprism(tbl) tag configure sel \
 	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
@@ -227,14 +225,24 @@ proc PrismClear {} {
     global iprism
     global dprism
     
-    # header
-    $dprism(header) delete 1.0 end
-
     # extension
     foreach id [$dprism(ext) children {}] {
 	$dprism(ext) delete $id
     }
     set dprism(fn) {}
+
+    # header
+    $dprism(header) delete 1.0 end
+
+    # table
+    set t $dprism(tbldb)
+    upvar #0 $t T
+    global $t
+    
+    # clear previous db
+    if {[info exists $t]} {
+	unset $t
+    }
 }
 
 proc PrismPlot {} {
@@ -253,14 +261,14 @@ proc PrismExtCmd {} {
     global iprism
     global dprism
 
-    # clear header
-    $dprism(header) delete 1.0 end
-
     set ext [$dprism(ext) selection]
     if {$ext == {}} {
 	return
     }
 
+    # header
+
+    $dprism(header) delete 1.0 end
     $dprism(header) insert end [fitsy header $dprism(fn) $ext]
 
     # color tag keywords
@@ -268,9 +276,53 @@ proc PrismExtCmd {} {
     for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
 	$dprism(header) tag add keyword $ii "$ii +8 chars"
     }
-
-    # set top
+    # see top
     $dprism(header) see 1.0
+
+    # table
+
+    set t $dprism(tbldb)
+    upvar #0 $t T
+    global $t
+    
+    # clear previous db
+    if {[info exists $t]} {
+	unset $t
+    }
+
+    # init db
+    set T(Header) {}
+    set T(Dashes) {}
+    set T(HLines) 0
+    set T(Nrows) 0
+    set T(Ncols) 0
+    set T(Ndshs) 0
+
+    if {![fitsy istable $dprism(fn) $ext]} {
+	$dprism(tbl) configure -rows $iprism(minrows)
+	return
+    }
+
+    fitsy table $dprism(fn) $ext $t
+
+    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
+    set T(Ndshs) [llength $T(Header)]
+
+    incr ${t}(HLines)
+    set n $T(HLines)
+    set T(H_$n) $T(Header)
+    incr ${t}(HLines)
+    set n $T(HLines)
+    set T(H_$n) $T(Dashes)
+
+    starbase_colmap $t
+
+    set nr [expr [starbase_nrows $t]+1]
+    if {$nr > $iprism(minrows)} {
+	$dprism(tbl) configure -rows $nr
+    } else {
+	$dprism(tbl) configure -rows $iprism(minrows)
+    }
 }
 
 proc PrismHeaderSelectCmd {ss rc} {

@@ -33,7 +33,6 @@ proc PrismDialog {} {
     set w $iprism(top)
     set mb $iprism(mb)
 
-    set dprism(headerdb) prismheaderdb
     set dprism(tbldb) prismtbldb
     set dprism(fn) {}
 
@@ -91,61 +90,31 @@ proc PrismDialog {} {
     set f [ttk::labelframe $p.header -padding {0 2} \
 	       -text [msgcat::mc {Header Keywords}]]
 
-    set dprism(header) [table $f.t \
-		      -state disabled \
-		      -usecommand 0 \
-		      -variable $dprism(headerdb) \
-		      -colorigin 1 \
-		      -roworigin 0 \
-		      -cols $iprism(mincols,header) \
-		      -rows $iprism(minrows,header) \
-		      -width -1 \
-		      -height -1 \
-		      -colwidth 20 \
-		      -maxwidth 300 \
-		      -maxheight 220 \
-		      -titlerows 1 \
-		      -xscrollcommand [list $f.xscroll set]\
-		      -yscrollcommand [list $f.yscroll set]\
-		      -selecttype row \
-		      -selectmode single \
-		      -anchor w \
-		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list PrismHeaderSelectCmd %s %S] \
-		      -fg [ThemeTreeForeground] \
-		      -bg [ThemeTreeBackground] \
-		     ]
+    set dprism(header) [text $f.header \
+			    -wrap none \
+			    -height 10 \
+			    -yscrollcommand [list $f.yscroll set] \
+			    -xscrollcommand [list $f.xscroll set] \
+			    -fg [ThemeTreeForeground] \
+			    -bg [ThemeTreeForeground] \
+			   ]
 
-    # index
-    $dprism(header) width 1 5
-    # name
-    $dprism(header) width 2 10
-    # value
-    $dprism(header) width 3 40
-    # type
-    $dprism(header) width 4 10
-    # comment
-    $dprism(header) width 5 40
-
-    $dprism(header) tag configure sel \
-	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
-    $dprism(header) tag configure title \
-	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 
     ttk::scrollbar $f.yscroll -command [list $dprism(header) yview] \
 	-orient vertical
     ttk::scrollbar $f.xscroll -command [list $dprism(header) xview] \
 	-orient horizontal
+
+    $dprism(header) tag configure keyword -foreground $ds9(bold)
+    $dprism(header) configure -state normal
+
     grid $dprism(header) $f.yscroll -sticky news
     grid $f.xscroll -stick news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
-#    pack $p.ext -side left
-#    pack $p.header -side left -fill x -expand true
-
     grid $p.ext -row 0 -column 0 -sticky ns
-    grid $p.header -row 0 -column 1 -sticky ew
+    grid $p.header -row 0 -column 1 -sticky news
     grid columnconfigure $p 1 -weight 1
 
     # Table
@@ -259,17 +228,7 @@ proc PrismClear {} {
     global dprism
     
     # header
-    $dprism(header) configure -rows $iprism(minrows,header)
-
-    set t $dprism(headerdb)
-    upvar #0 $t T
-    global $t
-    
-    # clear previous db
-    global $t
-    if {[info exists $t]} {
-	unset $t
-    }
+    $dprism(header) delete 1.0 end
 
     # extension
     foreach id [$dprism(ext) children {}] {
@@ -294,48 +253,24 @@ proc PrismExtCmd {} {
     global iprism
     global dprism
 
-    set t $dprism(headerdb)
-    upvar #0 $t T
-    global $t
-    
-    # clear previous db
-    if {[info exists $t]} {
-	unset $t
-    }
+    # clear header
+    $dprism(header) delete 1.0 end
 
     set ext [$dprism(ext) selection]
     if {$ext == {}} {
 	return
     }
 
-    # init db
-    set T(Header) {Index Name Value Type Comment}
-    set T(Dashes) {}
-    set T(HLines) 0
-    set T(Nrows) 0
-    set T(Ncols) 0
-    set T(Ndshs) 0
+    $dprism(header) insert end [fitsy header $dprism(fn) $ext]
 
-    fitsy header $dprism(fn) $ext $t
-
-    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
-    set T(Ndshs) [llength $T(Header)]
-
-    incr ${t}(HLines)
-    set n $T(HLines)
-    set T(H_$n) $T(Header)
-    incr ${t}(HLines)
-    set n $T(HLines)
-    set T(H_$n) $T(Dashes)
-
-    starbase_colmap $t
-
-    set nr [expr [starbase_nrows $t]+1]
-    if {$nr > $iprism(minrows,header)} {
-	$dprism(header) configure -rows $nr
-    } else {
-	$dprism(header) configure -rows $iprism(minrows,header)
+    # color tag keywords
+    set stop [$dprism(header) index end]
+    for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
+	$dprism(header) tag add keyword $ii "$ii +8 chars"
     }
+
+    # set top
+    $dprism(header) see 1.0
 }
 
 proc PrismHeaderSelectCmd {ss rc} {

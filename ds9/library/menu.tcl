@@ -120,8 +120,8 @@ proc ThemeConfigTable {w} {
 }
 
 proc ThemeConfigText {w} {
-    $w configure -fg [ThemeForeground]
-    $w configure -bg [ThemeBackground]
+    $w configure -fg [ThemeTreeForeground]
+    $w configure -bg [ThemeTreeBackground]
 
     # header
     # $w tag configure keyword -foreground [ThemeSelectBackground]

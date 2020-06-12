@@ -62,8 +62,8 @@ proc MarkerBasePandaDialog {varname} {
 			    -wrap none \
 			    -font [font actual TkDefaultFont] \
 			    -yscrollcommand [list $f.yscroll set] \
-			    -fg [ThemeForeground] \
-			    -bg [ThemeBackground] \
+			    -fg [ThemeTreeForeground] \
+			    -bg [ThemeTreeBackground] \
 			   ]
     ttk::scrollbar $f.yscroll -command [list $var(annulitxt) yview] \
 	-orient vertical
@@ -87,8 +87,8 @@ proc MarkerBasePandaDialog {varname} {
 			 -wrap none \
 			 -font [font actual TkDefaultFont] \
 			 -yscrollcommand [list $f.yscroll set] \
-			 -fg [ThemeForeground] \
-			 -bg [ThemeBackground] \
+			 -fg [ThemeTreeForeground] \
+			 -bg [ThemeTreeBackground] \
 			]
     ttk::scrollbar $f.yscroll -command [list $var(angtxt) yview] \
 	-orient vertical

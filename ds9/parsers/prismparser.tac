@@ -22,11 +22,15 @@ command : prism
  | prism {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-prism : {PrismDialog}
- | OPEN_ {PrismDialog}
- | CLOSE_ {PrismDestroyDialog}
- | LOAD_ STRING_ {PrismDialog; PrismLoad $2}
- | CLEAR_ {PrismDialog; PrismClear}
+prism : {PrismDialog prism}
+ | OPEN_ {PrismDialog prism}
+ | {if {![PrismCmdCheck]} {plot::YYABORT}} prismCmd
+ | STRING_ {if {![PrismCmdRef $1]} {plot::YYABORT}} prismCmd
+ ;
+
+prismCmd : CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
+ | CLEAR_ {ProcessCmdCVAR0 PrismClear}
+ | LOAD_ STRING_ {PrismCmdLoad $2}
  ;
 
 %%

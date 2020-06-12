@@ -290,8 +290,8 @@ proc ContourDialog {} {
 			   -height 10 \
 			   -font [font actual TkDefaultFont] \
 			   -yscrollcommand [list $f.yscroll set] \
-			   -fg [ThemeForeground] \
-			   -bg [ThemeBackground] \
+			   -fg [ThemeTreeForeground] \
+			   -bg [ThemeTreeBackground] \
 		      ]
     ttk::scrollbar $f.yscroll -command [list $dcontour(txt) yview] \
 	-orient vertical

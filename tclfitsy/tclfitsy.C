@@ -153,31 +153,11 @@ int TclFITSY::header(int argc, const char* argv[])
     return TCL_ERROR;
   }
   
-  if (!(argv[2] && *argv[2]))
+  FitsFile* fits = findFits(argv);
+  if (!fits)
     return TCL_ERROR;
-
-  int ext =0;
-  string x(argv[3]);
-  istringstream sstr(x);
-  sstr >> ext;
-  
-  if (ext<0)
-    return TCL_ERROR;
-
-  FitsFile* fits = new FitsFitsMMapIncr(argv[2]);
-  if (!fits->isValid())
-    return TCL_ERROR;
-
-  for (int ii=0; ii<ext; ii++) {
-    FitsFile* next = new FitsMosaicNextMMapIncr(fits);
-    delete fits;
-    fits = next;
-    if (!fits->isValid())
-      return TCL_ERROR;
-  }
 
   FitsHead* hd = fits->head();
-
   int size = hd->ncard() * (FTY_CARDLEN+1);
   char* lbuf = new char[size+1];
 
@@ -203,15 +183,7 @@ int TclFITSY::isimage(int argc, const char* argv[])
     return TCL_ERROR;
   }
   
-  if (!(argv[2] && *argv[2]))
-    return TCL_ERROR;
-
-  int ext =0;
-  string x(argv[3]);
-  istringstream sstr(x);
-  sstr >> ext;
-
-  FitsFile* fits = findFits(argv[2], ext);
+  FitsFile* fits = findFits(argv);
   if (!fits)
     return TCL_ERROR;
 
@@ -231,16 +203,8 @@ int TclFITSY::istable(int argc, const char* argv[])
 		     NULL);
     return TCL_ERROR;
   }
-  
-  if (!(argv[2] && *argv[2]))
-    return TCL_ERROR;
 
-  int ext =0;
-  string x(argv[3]);
-  istringstream sstr(x);
-  sstr >> ext;
-
-  FitsFile* fits = findFits(argv[2], ext);
+  FitsFile* fits = findFits(argv);
   if (!fits)
     return TCL_ERROR;
 
@@ -261,18 +225,10 @@ int TclFITSY::table(int argc, const char* argv[])
     return TCL_ERROR;
   }
   
-  if (!(argv[2] && *argv[2]))
-    return TCL_ERROR;
-
-  int ext =0;
-  string x(argv[3]);
-  istringstream sstr(x);
-  sstr >> ext;
-
   if (!(argv[4] && *argv[4]))
     return TCL_ERROR;
 
-  FitsFile* fits = findFits(argv[2], ext);
+  FitsFile* fits = findFits(argv);
   if (!fits)
     return TCL_ERROR;
 
@@ -380,14 +336,6 @@ int TclFITSY::histogram(int argc, const char* argv[])
     return TCL_ERROR;
   }
   
-  if (!(argv[2] && *argv[2]))
-    return TCL_ERROR;
-
-  int ext =0;
-  string x(argv[3]);
-  istringstream sstr(x);
-  sstr >> ext;
-
   if (!(argv[4] && *argv[4]))
     return TCL_ERROR;
 
@@ -397,7 +345,7 @@ int TclFITSY::histogram(int argc, const char* argv[])
   if (!(argv[6] && *argv[6]))
     return TCL_ERROR;
 
-  FitsFile* fits = findFits(argv[2], ext);
+  FitsFile* fits = findFits(argv);
   if (!fits)
     return TCL_ERROR;
 
@@ -406,19 +354,27 @@ int TclFITSY::histogram(int argc, const char* argv[])
 
 // Support
 
-FitsFile* TclFITSY::findFits(const char* fn, int ext)
+FitsFile* TclFITSY::findFits(const char** argv)
 {
   FitsFile* fits =NULL;
 
+  if (!(argv[2] && *argv[2]))
+    return NULL;
+
+  int ext =0;
+  string x(argv[3]);
+  istringstream sstr(x);
+  sstr >> ext;
+
   if (ext<0) {
-    fits = new FitsFitsMMapIncr(fn, FitsFile::RELAXTABLE);
+    fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
     if (!fits->isValid()) {
       delete fits;
       return NULL;
     }
   }
   else {
-    fits = new FitsFitsMMapIncr(fn);
+    fits = new FitsFitsMMapIncr(argv[2]);
     if (!fits->isValid()) {
       delete fits;
       return NULL;

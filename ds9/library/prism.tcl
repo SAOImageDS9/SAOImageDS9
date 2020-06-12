@@ -251,6 +251,12 @@ proc PrismPlot {} {
 
 proc PrismHistogram {} {
     global dprism
+
+    if {$dprism(fn) == {} || $dprism(ext) == {}} {
+	return
+    }
+
+    fitsy histogram $dprism(fn) $dprism(ext) $col vecx vecy
 }
 
 proc PrismImage {} {

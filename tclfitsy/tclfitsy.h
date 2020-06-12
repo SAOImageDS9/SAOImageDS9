@@ -13,7 +13,7 @@ class TclFITSY {
   
  protected:
   void bltHistogram(char* col, char* xname, char* yname, int num);
-  FitsFile* findFits(const char* fn, int ext);
+  FitsFile* findFits(const char**);
   
  public:
   TclFITSY(Tcl_Interp*);

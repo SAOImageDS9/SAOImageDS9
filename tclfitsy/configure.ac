@@ -75,7 +75,7 @@ fi
 # and PKG_TCL_SOURCES.
 #-----------------------------------------------------------------------
 
-TEA_ADD_SOURCES([tclfitsy.C])
+TEA_ADD_SOURCES([tclfitsy.C blt.C])
 TEA_ADD_HEADERS([])
 TEA_ADD_INCLUDES([-I. -I${prefix}/include])
 TEA_ADD_LIBS([])

@@ -12,7 +12,6 @@ using namespace std;
 #include <tcl.h>
 
 #include "tclfitsy.h"
-#include "file.h"
 #include "head.h"
 #include "mmapincr.h"
 #include "util.h"
@@ -58,13 +57,15 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
       return fitsy->istable(argc, argv);
     else if (!strncmp(argv[1], "table", 5))
       return fitsy->table(argc, argv);
+    else if (!strncmp(argv[1], "histogram", 8))
+      return fitsy->table(argc, argv);
     else {
       Tcl_AppendResult(interp, "fitsy: unknown command: ", argv[1], NULL);
       return TCL_ERROR;
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table?",
+    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table? ?histogram?",
 		     NULL);
     return TCL_ERROR;
   }
@@ -210,25 +211,9 @@ int TclFITSY::isimage(int argc, const char* argv[])
   istringstream sstr(x);
   sstr >> ext;
 
-  FitsFile* fits =NULL;
-  if (ext<0) {
-    fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
-    if (!fits->isValid())
+  FitsFile* fits = findFits(argv[2], ext);
+  if (!fits)
     return TCL_ERROR;
-  }
-  else {
-    fits = new FitsFitsMMapIncr(argv[2]);
-    if (!fits->isValid())
-      return TCL_ERROR;
-
-    for (int ii=0; ii<ext; ii++) {
-      FitsFile* next = new FitsMosaicNextMMapIncr(fits);
-      delete fits;
-      fits = next;
-      if (!fits->isValid())
-	return TCL_ERROR;
-    }
-  }
 
   // sanity check
   if (fits->isImage())
@@ -255,25 +240,9 @@ int TclFITSY::istable(int argc, const char* argv[])
   istringstream sstr(x);
   sstr >> ext;
 
-  FitsFile* fits =NULL;
-  if (ext<0) {
-    fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
-    if (!fits->isValid())
+  FitsFile* fits = findFits(argv[2], ext);
+  if (!fits)
     return TCL_ERROR;
-  }
-  else {
-    fits = new FitsFitsMMapIncr(argv[2]);
-    if (!fits->isValid())
-      return TCL_ERROR;
-
-    for (int ii=0; ii<ext; ii++) {
-      FitsFile* next = new FitsMosaicNextMMapIncr(fits);
-      delete fits;
-      fits = next;
-      if (!fits->isValid())
-	return TCL_ERROR;
-    }
-  }
 
   // sanity check
   if (fits->isBinTable())
@@ -303,25 +272,9 @@ int TclFITSY::table(int argc, const char* argv[])
   if (!(argv[4] && *argv[4]))
     return TCL_ERROR;
 
-  FitsFile* fits =NULL;
-  if (ext<0) {
-    fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
-    if (!fits->isValid())
+  FitsFile* fits = findFits(argv[2], ext);
+  if (!fits)
     return TCL_ERROR;
-  }
-  else {
-    fits = new FitsFitsMMapIncr(argv[2]);
-    if (!fits->isValid())
-      return TCL_ERROR;
-
-    for (int ii=0; ii<ext; ii++) {
-      FitsFile* next = new FitsMosaicNextMMapIncr(fits);
-      delete fits;
-      fits = next;
-      if (!fits->isValid())
-	return TCL_ERROR;
-    }
-  }
 
   // sanity check
   if (!fits->isBinTable())
@@ -419,3 +372,68 @@ int TclFITSY::table(int argc, const char* argv[])
   return TCL_OK;
 }
 
+int TclFITSY::histogram(int argc, const char* argv[])
+{
+  if (argc!=7) {
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname?",
+		     NULL);
+    return TCL_ERROR;
+  }
+  
+  if (!(argv[2] && *argv[2]))
+    return TCL_ERROR;
+
+  int ext =0;
+  string x(argv[3]);
+  istringstream sstr(x);
+  sstr >> ext;
+
+  if (!(argv[4] && *argv[4]))
+    return TCL_ERROR;
+
+  if (!(argv[5] && *argv[5]))
+    return TCL_ERROR;
+
+  if (!(argv[6] && *argv[6]))
+    return TCL_ERROR;
+
+  FitsFile* fits = findFits(argv[2], ext);
+  if (!fits)
+    return TCL_ERROR;
+
+  return TCL_OK;
+}
+
+// Support
+
+FitsFile* TclFITSY::findFits(const char* fn, int ext)
+{
+  FitsFile* fits =NULL;
+
+  if (ext<0) {
+    fits = new FitsFitsMMapIncr(fn, FitsFile::RELAXTABLE);
+    if (!fits->isValid()) {
+      delete fits;
+      return NULL;
+    }
+  }
+  else {
+    fits = new FitsFitsMMapIncr(fn);
+    if (!fits->isValid()) {
+      delete fits;
+      return NULL;
+    }
+
+    for (int ii=0; ii<ext; ii++) {
+      FitsFile* next = new FitsMosaicNextMMapIncr(fits);
+      delete fits;
+      fits = next;
+      if (!fits->isValid()) {
+	delete fits;
+	return NULL;
+      }
+    }
+  }
+  
+  return fits;
+}

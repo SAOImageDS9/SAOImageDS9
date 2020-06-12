@@ -9,6 +9,7 @@
 
 about		{return $ABOUT_}
 
+#include string.fin
 #include ws.fin
 
 %%

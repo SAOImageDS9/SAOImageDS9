@@ -401,11 +401,11 @@ proc ProcessPrismCmd {varname iname} {
 }
 
 proc ProcessSendPrismCmd {proc id param {sock {}} {fn {}}} {
+    global iprism
     global parse
     set parse(proc) $proc
     set parse(id) $id
 
-    global iprism
     set ref [lindex $iprism(prisms) end]
     global cvarname
     set cvarname $ref

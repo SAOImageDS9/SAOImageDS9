@@ -24,13 +24,13 @@ command : prism
 
 prism : {PrismDialog prism}
  | OPEN_ {PrismDialog prism}
+ | LOAD_ STRING_ {PrismCmdLoad $2}
  | {if {![PrismCmdCheck]} {plot::YYABORT}} prismCmd
  | STRING_ {if {![PrismCmdRef $1]} {plot::YYABORT}} prismCmd
  ;
 
 prismCmd : CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
  | CLEAR_ {ProcessCmdCVAR0 PrismClear}
- | LOAD_ STRING_ {PrismCmdLoad $2}
  ;
 
 %%

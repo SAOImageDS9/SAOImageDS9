@@ -61,58 +61,123 @@ proc prismsend::unsetupvalues {numsyms} {
 }
 
 array set prismsend::table {
-  2:0 accept
+  6:0 reduce
   0:257 shift
+  7:0 reduce
+  0:258 reduce
+  5:0,target 6
+  1:258 reduce
+  0:259 goto
+  0:260 goto
+  4:262,target 7
+  7:0,target 5
+  3:258 shift
   0:258,target 2
-  0:258 goto
-  1:0,target 1
+  1:261 goto
+  4:258 shift
+  0:0,target 1
+  3:262 goto
   2:0,target 0
-  1:0 reduce
+  4:258,target 5
+  4:262 goto
+  3:262,target 6
+  0:0 reduce
+  6:0,target 3
   0:257,target 1
+  2:0 accept
+  1:258,target 4
+  0:259,target 2
+  0:260,target 3
+  5:0 reduce
+  3:258,target 5
+  1:261,target 4
 }
 
 array set prismsend::rules {
-  0,l 259
-  1,l 258
+  0,l 263
+  1,l 259
+  2,l 260
+  3,l 259
+  4,l 261
+  5,l 259
+  6,l 262
 }
 
 array set prismsend::rules {
-  1,dc 1
+  5,dc 3
   0,dc 1
+  2,dc 0
+  4,dc 0
+  6,dc 1
+  1,dc 0
+  3,dc 2
 }
 
 array set prismsend::rules {
-  1,line 13
+  5,line 18
+  2,e 0
+  4,e 1
+  2,line 16
+  4,line 17
+  6,line 21
+  1,line 16
+  3,line 17
 }
 
 array set prismsend::lr1_table {
-  0,trans {{257 1} {258 2}}
-  0 {{0 0 0} {1 0 0}}
-  1,trans {}
-  1 {{1 0 1}}
-  2,trans {}
+  0 {{0 0 0} {1 0 0} {3 0 0} {5 0 0} {2 258 0}}
+  1 {{5 0 1} {4 258 0}}
   2 {{0 0 1}}
+  3 {{3 0 1} {6 0 0}}
+  0,trans {{257 1} {259 2} {260 3}}
+  4 {{5 0 2} {6 0 0}}
+  1,trans {{261 4}}
+  5 {{6 0 1}}
+  2,trans {}
+  6 {{3 0 2}}
+  3,trans {{258 5} {262 6}}
+  7 {{5 0 3}}
+  4,trans {{258 5} {262 7}}
+  5,trans {}
+  6,trans {}
+  7,trans {}
 }
 
 array set prismsend::token_id_table {
+  262,title {}
   0 {$}
   0,t 0
-  error error
+  263,title {}
   error,t 0
-  258,line 12
-  257 ABOUT_
+  error error
+  258,line 11
+  261,line 17
+  error,line 14
+  257 STRING_
   257,t 0
-  error,line 11
-  258,t 1
-  258 prismsend
+  263,line 22
+  258 ABOUT_
+  258,t 0
+  260,t 1
+  260 @PSEUDO1
   259,t 1
-  259 start'
+  259 prismsend
   error,title {}
-  257,line 8
-  259,line 14
-  257,title ABOUT
-  258,title {}
+  261,t 1
+  261 @PSEUDO2
+  262,t 1
+  262 prismCmd
+  257,line 7
+  263,t 1
+  263 start'
+  260,line 16
+  259,line 15
+  257,title string
+  258,title ABOUT
+  262,line 20
+  260,title {}
   259,title {}
+  261,title {}
 }
 
 proc prismsend::yyparse {} {
@@ -209,6 +274,9 @@ proc prismsend::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
+                    1 { ProcessSendCmdGet iprism prisms }
+                    2 { if {![PrismCmdCheck]} {prism::YYABORT} }
+                    4 { if {![PrismCmdRef $1]} {prism::YYABORT} }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

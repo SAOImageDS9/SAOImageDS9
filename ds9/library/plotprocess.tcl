@@ -139,6 +139,21 @@ proc ProcessPlotCmd {xarname iname buf fn} {
     incr i [expr $plot::yycnt-1]
 }
 
+proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
+    global iap
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    set ref [lindex $iap(windows) end]
+    global cvarname
+    set cvarname $ref
+
+    plotsend::YY_FLUSH_BUFFER
+    plotsend::yy_scan_string $param
+    plotsend::yyparse
+}
+
 proc PlotCmdCheck {} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -314,18 +329,3 @@ proc PlotCmdExport {format fn} {
     PlotExport $cvarname $fn $format
 }
 
-proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
-    global iap
-    global parse
-    set parse(proc) $proc
-    set parse(id) $id
-
-    set ref [lindex $iap(windows) end]
-    global cvarname
-    set cvarname $ref
-    global parse
-
-    plotsend::YY_FLUSH_BUFFER
-    plotsend::yy_scan_string $param
-    plotsend::yyparse
-}

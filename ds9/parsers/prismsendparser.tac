@@ -2,13 +2,20 @@
 %}
 #include def.tin
 
+#include string.tin
+
 %start prismsend
 
 %token ABOUT_
 
 %%
 
-prismsend : ABOUT_
+prismsend : {ProcessSendCmdGet iprism prisms}
+ | {if {![PrismCmdCheck]} {prism::YYABORT}} prismCmd
+ | STRING_ {if {![PrismCmdRef $1]} {prism::YYABORT}} prismCmd
+ ;
+
+prismCmd : ABOUT_
  ;
 
 %%

@@ -61,233 +61,201 @@ proc prism::unsetupvalues {numsyms} {
 }
 
 array set prism::table {
-  11:265 reduce
-  5:0,target 10
-  13:265 reduce
-  0:266,target 16
-  11:0 reduce
+  11:265 shift
+  0:266,target 2
+  9:0 reduce
   0:265 shift
-  5:265,target 11
-  0:266 reduce
-  0:267 reduce
-  2:265 shift
-  0:268 shift
+  5:265,target 10
+  0:266 shift
+  0:267 shift
+  2:265 reduce
   0:265,target 1
+  0:268 shift
   0:269 shift
-  0:275,target 6
-  12:265,target 17
-  0:272 goto
-  6:266 shift
+  0:270 shift
+  0:275,target 8
+  4:265 shift
+  6:0,target 14
+  2:0 reduce
+  6:265 reduce
+  0:273 goto
   8:265 reduce
-  0:274 goto
-  6:267 shift
   0:275 goto
-  8:265,target 15
-  0:274,target 5
-  6:267,target 11
-  6:277,target 12
+  6:0 reduce
+  8:265,target 11
+  7:0,target 0
   12:0 reduce
   0:0,target 13
-  1:267,target 18
-  3:265,target 14
-  10:0,target 21
-  5:273,target 9
-  6:277 goto
-  6:266,target 10
-  10:265,target 21
-  1:266,target 18
-  8:0,target 15
-  1:276,target 7
+  3:265,target 17
+  10:0,target 16
+  8:274 goto
+  0:273,target 7
+  8:274,target 11
+  10:265,target 16
   3:0 reduce
-  11:0,target 20
+  8:0,target 10
+  1:0,target 15
   10:265 reduce
-  0:272,target 4
-  12:265 reduce
-  13:265,target 19
-  13:0 reduce
-  12:0,target 17
-  1:266 reduce
+  6:265,target 14
+  7:0 accept
+  1:265,target 15
+  9:0,target 19
+  2:0,target 18
+  12:0,target 12
+  1:265 reduce
   0:0 reduce
-  1:267 reduce
   3:265 reduce
-  9:265,target 14
-  7:267,target 11
-  5:265 reduce
-  7:277,target 13
-  0:269,target 3
-  4:0 accept
-  7:266 shift
-  9:265 shift
-  3:0,target 14
-  7:267 shift
-  13:0,target 19
+  9:265,target 19
+  5:265 shift
+  0:270,target 6
+  0:269,target 5
+  4:265,target 9
+  9:265 reduce
+  3:0,target 17
   8:0 reduce
-  7:266,target 10
-  1:276 goto
   10:0 reduce
-  5:273 goto
-  11:265,target 20
-  0:268,target 2
-  14:0 reduce
-  4:0,target 0
-  7:277 goto
-  14:0,target 12
-  0:267,target 16
-  2:265,target 8
-  5:0 reduce
+  11:265,target 12
+  0:268,target 4
+  1:0 reduce
+  0:267,target 3
+  2:265,target 18
 }
 
 array set prism::rules {
-  9,l 271
-  11,l 273
-  15,l 274
-  20,l 277
-  19,l 274
-  2,l 270
-  6,l 270
-  12,l 272
+  9,l 272
+  11,l 274
+  15,l 275
+  19,l 275
+  2,l 271
+  6,l 271
+  12,l 273
   16,l 275
-  21,l 277
-  3,l 270
-  7,l 270
-  13,l 274
-  0,l 278
-  17,l 274
-  4,l 270
-  8,l 271
-  10,l 272
-  14,l 274
-  18,l 276
-  1,l 270
-  5,l 270
+  3,l 271
+  7,l 271
+  13,l 275
+  0,l 276
+  17,l 275
+  4,l 271
+  8,l 272
+  10,l 273
+  14,l 275
+  18,l 275
+  1,l 271
+  5,l 271
 }
 
 array set prism::rules {
   5,dc 1
   0,dc 1
-  17,dc 2
+  17,dc 1
   12,dc 3
   8,dc 1
-  21,dc 1
   3,dc 1
-  15,dc 2
+  15,dc 1
   10,dc 1
   6,dc 1
-  18,dc 0
+  18,dc 1
   1,dc 0
   13,dc 0
   9,dc 1
   4,dc 1
-  16,dc 0
+  16,dc 2
   11,dc 0
   7,dc 1
-  20,dc 1
-  19,dc 3
+  19,dc 2
   2,dc 1
   14,dc 1
 }
 
 array set prism::rules {
-  13,line 56
-  7,line 46
-  10,line 52
-  4,line 43
-  18,line 59
-  1,line 40
-  16,e 0
-  15,line 58
-  9,line 49
-  12,line 53
-  6,line 45
-  21,line 64
-  3,line 42
-  17,line 59
-  14,line 57
-  8,line 48
-  11,line 52
-  5,line 44
-  18,e 1
-  20,line 63
-  19,line 60
-  2,line 41
-  16,line 58
+  13,line 57
+  7,line 47
+  10,line 53
+  4,line 44
+  18,line 62
+  1,line 41
+  15,line 59
+  9,line 50
+  12,line 54
+  6,line 46
+  3,line 43
+  17,line 61
+  14,line 58
+  8,line 49
+  11,line 53
+  5,line 45
+  19,line 63
+  2,line 42
+  16,line 60
   11,e 1
 }
 
 array set prism::lr1_table {
-  13,trans {}
-  0 {{0 0 0} {10 0 0} {12 0 0} {13 {0 265} 0} {14 {0 265} 0} {15 {0 265} 0} {17 {0 265} 0} {19 {0 265} 0} {16 {266 267} 0}}
-  14,trans {}
-  1 {{19 {0 265} 1} {18 {266 267} 0}}
-  2 {{15 {0 265} 1}}
-  3 {{14 {0 265} 1}}
-  4 {{0 0 1}}
-  0,trans {{265 1} {268 2} {269 3} {272 4} {274 5} {275 6}}
-  5 {{10 0 1} {12 0 1} {11 265 0}}
-  1,trans {{276 7}}
-  6 {{17 {0 265} 1} {20 {0 265} 0} {21 {0 265} 0}}
-  2,trans {{265 8}}
+  0 {{0 0 0} {10 0 0} {12 0 0} {13 {0 265} 0} {14 {0 265} 0} {15 {0 265} 0} {16 {0 265} 0} {17 {0 265} 0} {18 {0 265} 0} {19 {0 265} 0}}
+  1 {{15 {0 265} 1}}
+  2 {{18 {0 265} 1}}
+  3 {{17 {0 265} 1}}
+  4 {{19 {0 265} 1}}
+  0,trans {{265 1} {266 2} {267 3} {268 4} {269 5} {270 6} {273 7} {275 8}}
+  5 {{16 {0 265} 1}}
+  1,trans {}
+  6 {{14 {0 265} 1}}
+  2,trans {}
   3,trans {}
-  7 {{19 {0 265} 2} {20 {0 265} 0} {21 {0 265} 0}}
-  4,trans {}
-  8 {{15 {0 265} 2}}
-  10 {{21 {0 265} 1}}
-  5,trans {{273 9}}
-  9 {{12 0 2}}
-  6,trans {{266 10} {267 11} {277 12}}
-  11 {{20 {0 265} 1}}
-  7,trans {{266 10} {267 11} {277 13}}
-  12 {{17 {0 265} 2}}
-  8,trans {}
-  13 {{19 {0 265} 3}}
+  7 {{0 0 1}}
+  4,trans {{265 9}}
+  8 {{10 0 1} {12 0 1} {11 265 0}}
+  5,trans {{265 10}}
+  10 {{16 {0 265} 2}}
+  9 {{19 {0 265} 2}}
+  11 {{12 0 2}}
+  6,trans {}
+  12 {{12 0 3}}
+  7,trans {}
+  8,trans {{274 11}}
   10,trans {}
-  9,trans {{265 14}}
-  14 {{12 0 3}}
-  11,trans {}
+  9,trans {}
+  11,trans {{265 12}}
   12,trans {}
 }
 
 array set prism::token_id_table {
   264,line 15
-  270,t 1
+  270,t 0
   269,t 0
-  276,line 59
+  276,line 64
   265,title string
   274,t 1
   261,line 11
   257,t 0
-  270,title {}
-  269,title OPEN
+  270,title OPEN
+  269,title LOAD
   273,line 52
-  278,t 1
   257,line 7
   262,t 0
   274,title {}
-  270,line 39
+  270,line 25
   269,line 24
   259,title ON
   260,title OFF
   266,t 0
-  278,title {}
   271,t 1
   error error
   264,title float
   266,line 21
-  278,line 65
   275,t 1
-  error,line 38
-  268,title LOAD
+  error,line 39
+  268,title CURRENT
   258,t 0
   263,line 14
   error,title {}
-  275,line 58
+  275,line 56
   273,title {}
   263,t 0
   259,line 9
   260,line 10
   258,title NO
-  277,title {}
-  272,line 51
+  272,line 48
   267,t 0
   263,title integer
   272,t 1
@@ -305,7 +273,6 @@ array set prism::token_id_table {
   265,line 17
   262 FALSE_
   263 INT_
-  277,line 62
   257,title YES
   264 REAL_
   264,t 0
@@ -317,26 +284,23 @@ array set prism::token_id_table {
   0,t 0
   0 {$}
   262,title FALSE
-  268 LOAD_
+  268 CURRENT_
   268,t 0
-  274,line 55
-  270 yesno
-  269 OPEN_
-  271 numeric
+  274,line 53
+  270 OPEN_
+  269 LOAD_
+  271 yesno
   error,t 0
-  272 command
+  272 numeric
   258,line 8
   273,t 1
-  273 @PSEUDO1
+  273 command
   266,title CLEAR
-  274 prism
-  275 @PSEUDO2
-  271,line 47
-  276 @PSEUDO3
-  277,t 1
-  277 prismCmd
+  274 @PSEUDO1
+  275 prism
+  271,line 40
+  276 start'
   271,title {}
-  278 start'
   261,t 0
   267,line 22
   275,title {}
@@ -450,11 +414,11 @@ proc prism::yyparse {} {
                     11 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
                     13 { PrismDialog prism }
                     14 { PrismDialog prism }
-                    15 { PrismCmdLoad $2 }
-                    16 { if {![PrismCmdCheck]} {plot::YYABORT} }
-                    18 { if {![PrismCmdRef $1]} {plot::YYABORT} }
-                    20 { ProcessCmdCVAR0 PrismDestroy }
-                    21 { ProcessCmdCVAR0 PrismClear }
+                    15 { PrismCmdLoad $1 }
+                    16 { PrismCmdCVAR0 PrismdLoad $2 }
+                    17 { ProcessCmdCVAR0 PrismDestroy }
+                    18 { ProcessCmdCVAR0 PrismClear }
+                    19 { PrismCmdRef $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

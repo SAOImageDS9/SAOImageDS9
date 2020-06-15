@@ -10,6 +10,7 @@
 
 %token CLEAR_
 %token CLOSE_
+%token CURRENT_
 %token LOAD_
 %token OPEN_
 
@@ -24,13 +25,11 @@ command : prism
 
 prism : {PrismDialog prism}
  | OPEN_ {PrismDialog prism}
- | LOAD_ STRING_ {PrismCmdLoad $2}
- | {if {![PrismCmdCheck]} {plot::YYABORT}} prismCmd
- | STRING_ {if {![PrismCmdRef $1]} {plot::YYABORT}} prismCmd
- ;
-
-prismCmd : CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
+ | STRING_ {PrismCmdLoad $1}
+ | LOAD_ STRING_ {PrismCmdCVAR0 PrismdLoad $2}
+ | CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
  | CLEAR_ {ProcessCmdCVAR0 PrismClear}
+ | CURRENT_ STRING_ {PrismCmdRef $2}
  ;
 
 %%

@@ -422,26 +422,10 @@ proc PrismCmdRef {ref} {
     # look for reference in current list
     if {[lsearch $iprism(prisms) $ref] < 0} {
 	Error "[msgcat::mc {Unable to find prism window}] $ref"
-	return 0
+	return
     }
 
     set cvarname $ref
-    return [PrismCmdCheck]
-}
-
-proc PrismCmdCheck {} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    if {![info exists cvar(top)]} {
-	Error "[msgcat::mc {Unable to find prism window}] $cvarname"
-	return 0
-    }
-    if {![winfo exists $cvar(top)]} {
-	Error "[msgcat::mc {Unable to find prism window}] $cvarname"
-	return 0
-    }
-    return 1
 }
 
 proc PrismCmdLoad {fn} {
@@ -450,4 +434,3 @@ proc PrismCmdLoad {fn} {
     PrismDialog prism
     PrismLoad [lindex $iprism(prisms) end] $fn
 }
-

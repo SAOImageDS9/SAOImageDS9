@@ -251,7 +251,7 @@ proc PrismLoadFile {varname} {
     upvar #0 $varname var
     global $varname
     
-    set fn [OpenFileDialog fitsfbox]
+    set fn [OpenFileDialog fitsfbox $var(top)]
     if {$fn != {}} {
 	PrismLoad $varname $fn
     }

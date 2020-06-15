@@ -6,10 +6,6 @@ package provide DS9 1.0
 
 # do this after the language has been defined and the prefs sourced
 proc InitDialogBox {} {
-    global ds9
-    global pds9
-    global env
-
     global fitsurl
     set fitsurl {}
 
@@ -445,27 +441,38 @@ proc ExtToFormat {fn} {
 }
 
 # used by backup
-proc OpenFileDialog {varname} {
-    return [FileDialog $varname tk_getOpenFile]
+proc OpenFileDialog {varname {parent {}}} {
+    global ds9
+
+    if {$parent == {}} {
+	set parent $ds9(top)
+    }
+
+    return [FileDialog $varname tk_getOpenFile $parent]
 }
 
-proc SaveFileDialog {varname} {
-    return [FileDialog $varname tk_getSaveFile]
+proc SaveFileDialog {varname {parent {}}} {
+    global ds9
+
+    if {$parent == {}} {
+	set parent $ds9(top)
+    }
+
+    return [FileDialog $varname tk_getSaveFile $parent]
 }
 
-proc FileDialog {varname which} {
+proc FileDialog {varname which parent} {
     global pds9
 
     switch -- $pds9(dialog) {
-	motif {return [FileDialogMotif $varname $which]}
-	windows {return [FileDialogWindows $varname $which]}
-	native {return [FileDialogNative $varname $which]}
+	motif {return [FileDialogMotif $varname $which $parent]}
+	windows {return [FileDialogWindows $varname $which $parent]}
+	native {return [FileDialogNative $varname $which $parent]}
     }
 }
 
-proc FileDialogMotif {varname which} {
+proc FileDialogMotif {varname which parent} {
     upvar #0 $varname var
-    global ds9
     global pds9
 
     switch -- $which {
@@ -484,7 +491,7 @@ proc FileDialogMotif {varname which} {
 		    -filetypes $types \
 		    -initialdir $var(dir) \
 		    -initialfile $var(file) \
-		    -parent $ds9(top)]
+		    -parent $parent]
 
     if {$result != {}} {
 	set var(file) [file tail $result]
@@ -494,9 +501,8 @@ proc FileDialogMotif {varname which} {
     return $result
 }
 
-proc FileDialogWindows {varname which} {
+proc FileDialogWindows {varname which parent} {
     upvar #0 $varname var
-    global ds9
     global pds9
 
     switch -- $which {
@@ -514,7 +520,7 @@ proc FileDialogWindows {varname which} {
 		    -filetypes $types \
 		    -initialdir $var(dir) \
 		    -initialfile $var(file) \
-		    -parent $ds9(top)]
+		    -parent $parent]
 
     if {$result != {}} {
 	set var(file) [file tail $result]
@@ -524,9 +530,8 @@ proc FileDialogWindows {varname which} {
     return $result
 }
 
-proc FileDialogNative {varname which} {
+proc FileDialogNative {varname which parent} {
     upvar #0 $varname var
-    global ds9
     global pds9
 
     if {$pds9(dialog,all)} {
@@ -539,17 +544,17 @@ proc FileDialogNative {varname which} {
 		    -filetypes $types \
 		    -initialdir $var(dir) \
 		    -initialfile $var(file) \
-		    -parent $ds9(top)} result]} {
+		    -parent $parent} result]} {
 
 	# must have a bad file name, just clear and try again
 	set var(file) {}
 	set var(dir) {}
 	if {[catch {$which \
 			-filetypes $types \
-			-parent $ds9(top)} result]} {
+			-parent $parent} result]} {
 
 	    #ok, something is really wrong
-	    catch {$which -parent $ds9(top)} result
+	    catch {$which -parent $parent} result
 	}
     }
 

@@ -1175,10 +1175,10 @@ proc HVParseImg {varname} {
 
     if {$var(save)} {
 	switch -- $var(mime) {
-	    "image/gif" {set fn [SaveFileDialog giffbox]}
-	    "image/jpeg" {set fn [SaveFileDialog jpegfbox]}
-	    "image/tiff" {set fn [SaveFileDialog tifffbox]}
-	    "image/png" {set fn [SaveFileDialog pngfbox]}
+	    "image/gif" {set fn [SaveFileDialog giffbox $var(top)]}
+	    "image/jpeg" {set fn [SaveFileDialog jpegfbox $var(top)]}
+	    "image/tiff" {set fn [SaveFileDialog tifffbox $var(top)]}
+	    "image/png" {set fn [SaveFileDialog pngfbox $var(top)]}
 	}
 	
 	if {[string length "$fn"] != 0} {
@@ -1217,7 +1217,7 @@ proc HVParseFITS {varname} {
 	    default {FileLast savefitsfbox "ds9.fits"}
 	}
 
-	set fn [SaveFileDialog savefitsfbox]
+	set fn [SaveFileDialog savefitsfbox $var(top)]
 	if {[string length "$fn"] != 0} {
 	    if {![catch {file rename -force "$var(fn)" "$fn"}]} {
 		set var(fn) "$fn"
@@ -1323,7 +1323,7 @@ proc HVParseSave {varname} {
 	set fn [file tail $r(path)]
     }
     FileLast savefitsfbox $fn
-    set fn [SaveFileDialog savefitsfbox]
+    set fn [SaveFileDialog savefitsfbox $var(top)]
     if {[string length "$fn"] != 0} {
 	if {![catch {file rename -force "$var(fn)" "$fn"}]} {
 	    set var(delete) 0

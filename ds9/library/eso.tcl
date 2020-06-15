@@ -69,7 +69,7 @@ proc ESOExec {varname} {
 
     if {$var(save)} {
 	set mime "application/x-fits"
-	set var(fn) [SaveFileDialog savefitsfbox]
+	set var(fn) [SaveFileDialog savefitsfbox $var(top)]
 	if {$var(fn) == {}} {
 	    ARDone $varname
 	    return

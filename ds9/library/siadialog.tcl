@@ -460,7 +460,7 @@ proc SIAImageCmd {varname} {
 	    http -
 	    https {
 		if {$var(save)} {
-		    set var(fn) [SaveFileDialog savefitsfbox]
+		    set var(fn) [SaveFileDialog savefitsfbox $var(top)]
 		    if {$var(fn) == {}} {
 			SIADone $varname
 			return

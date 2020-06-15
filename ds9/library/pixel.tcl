@@ -159,7 +159,9 @@ proc PixelTableClearDialog {} {
 }
 
 proc PixelTableSaveDialog {} {
-    set filename [SaveFileDialog pixelfbox]
+    global ipixel
+    
+    set filename [SaveFileDialog pixelfbox $ipixel(top)]
 
     if {$filename != {}} {
 	set file [open $filename w]

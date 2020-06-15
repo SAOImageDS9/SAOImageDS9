@@ -8,7 +8,7 @@ proc PlotLoadConfig {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotLoadConfigFile $varname [OpenFileDialog apconfigfbox]
+    PlotLoadConfigFile $varname [OpenFileDialog apconfigfbox $var(top)]
 }
 
 # used by backup
@@ -190,7 +190,7 @@ proc PlotSaveConfig {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotSaveConfigFile $varname [SaveFileDialog apconfigfbox]
+    PlotSaveConfigFile $varname [SaveFileDialog apconfigfbox $var(top)]
 }
 
 proc PlotSaveConfigFile {varname filename} {

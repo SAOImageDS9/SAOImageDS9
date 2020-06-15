@@ -612,10 +612,10 @@ proc PlotExportDialog {varname format} {
     global iap
 
     switch -- $format {
-	gif {set fn [SaveFileDialog giffbox]}
-	jpeg {set fn [SaveFileDialog jpegfbox]}
-	tiff {set fn [SaveFileDialog tifffbox]}
-	png {set fn [SaveFileDialog pngfbox]}
+	gif {set fn [SaveFileDialog giffbox $var(top)]}
+	jpeg {set fn [SaveFileDialog jpegfbox $var(top)]}
+	tiff {set fn [SaveFileDialog tifffbox $var(top)]}
+	png {set fn [SaveFileDialog pngfbox $var(top)]}
     }
 
     if {$fn != {}} {

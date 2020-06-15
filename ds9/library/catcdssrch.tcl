@@ -104,7 +104,7 @@ proc CATCDSSrchLoadFile {varname} {
 	unset $var(catdb)
     }
 
-    set fn [OpenFileDialog catcdssrchfbox]
+    set fn [OpenFileDialog catcdssrchfbox $var(top)]
     if {$fn != {}} {
 	if {[file exists $fn]} {
 	    starbase_read $var(catdb) $fn
@@ -122,7 +122,7 @@ proc CATCDSSrchSaveFile {varname} {
     global $varname
     global $var(catdb)
 
-    set fn [SaveFileDialog catcdssrchfbox]
+    set fn [SaveFileDialog catcdssrchfbox $var(top)]
     if {$fn != {}} {
 	starbase_write $var(catdb) $fn
     }

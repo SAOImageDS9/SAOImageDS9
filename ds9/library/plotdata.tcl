@@ -331,7 +331,7 @@ proc PlotLoadData {varname} {
     upvar #0 $varname var
     global $varname
 
-    set filename [OpenFileDialog apdatafbox]
+    set filename [OpenFileDialog apdatafbox $var(top)]
     if {$filename != {}} {
 	set dim xy
 	if {[PlotDataFormatDialog dim]} {
@@ -363,7 +363,7 @@ proc PlotSaveData {varname} {
 	return
     }
 
-    PlotSaveDataFile $varname [SaveFileDialog apdatafbox]
+    PlotSaveDataFile $varname [SaveFileDialog apdatafbox $var(top)]
 }
 
 proc PlotSaveDataFile {varname filename} {

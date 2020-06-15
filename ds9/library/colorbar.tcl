@@ -133,7 +133,9 @@ proc ResetColormap {} {
 }
 
 proc LoadColormap {} {
-    LoadColormapFile [OpenFileDialog colorbarfbox]
+    global icolorbar
+    
+    LoadColormapFile [OpenFileDialog colorbarfbox $icolorbar(top)]
 }
 
 # used by backup
@@ -173,8 +175,10 @@ proc LoadColormapFile {fn} {
 }
 
 proc SaveColormap {} {
+    global icolorbar
+
     FileLast colorbarfbox [colorbar get file name]
-    SaveColormapFile [SaveFileDialog colorbarfbox]
+    SaveColormapFile [SaveFileDialog colorbarfbox $icolorbar(top)]
 }
 
 proc SaveColormapFile {fn} {
@@ -189,9 +193,10 @@ proc SaveColormapFile {fn} {
 }
 
 proc LoadContrastBias {} {
+    global icolorbar
     global dcolorbar
 
-    set fn [OpenFileDialog contrastbiasfbox]
+    set fn [OpenFileDialog contrastbiasfbox $icolorbar(top)]
     if {$fn == {}} {
 	return
     }
@@ -206,9 +211,10 @@ proc LoadContrastBias {} {
 }
 
 proc SaveContrastBias {} {
+    global icolorbar
     global dcolorbar
 
-    set fn [SaveFileDialog contrastbiasfbox]
+    set fn [SaveFileDialog contrastbiasfbox $icolorbar(top)]
     if {$fn == {}} {
 	return
     }
@@ -686,7 +692,9 @@ proc TicksDialog {} {
 }
 
 proc OpenColorTag {} {
-    LoadColorTag [OpenFileDialog colortagfbox]
+    global icolorbar
+    
+    LoadColorTag [OpenFileDialog colortagfbox $icolorbar(top)]
 }
 
 proc LoadColorTag {fn} {
@@ -707,9 +715,10 @@ proc LoadColorTag {fn} {
 }
 
 proc SaveColorTag {} {
+    global icolorbar
     global current
 
-    set fn [SaveFileDialog colortagfbox]
+    set fn [SaveFileDialog colortagfbox $icolorbar(top)]
     if {$fn == {}} {
 	return
     }

@@ -531,8 +531,9 @@ proc ContourModeDialog {} {
 }
 
 proc ContourLoadLevels {} {
-    set fn [OpenFileDialog contourlevlfbox]
-
+    global icontour
+    
+    set fn [OpenFileDialog contourlevlfbox $icontour(top)]
     ContourLoadLevelsNow $fn
 }
 
@@ -572,7 +573,9 @@ proc ContourLoadLevelsNew {ch} {
 }
 
 proc ContourSaveLevels {} {
-    set fn [SaveFileDialog contourlevsfbox]
+    global icontour
+
+    set fn [SaveFileDialog contourlevsfbox $icontour(top)]
     if {$fn != {}} {
 	ContourSaveLevelsNow $fn
     }
@@ -593,11 +596,12 @@ proc ContourSaveLevelsNow {fn} {
 proc ContourSaveDialog {} {
     global ds9
     global current
+    global icontour
     global contour
     global ed
     global wcs
 
-    set fn [SaveFileDialog contoursfbox]
+    set fn [SaveFileDialog contoursfbox $icontour(top)]
 
     if {$fn == {} || $current(frame) == {}} {
 	return
@@ -669,10 +673,11 @@ proc ContourSaveDialog {} {
 proc ContourLoadDialog {} {
     global ds9
     global current
+    global icontour
     global contour
     global ed
 
-    set fn [OpenFileDialog contourlfbox]
+    set fn [OpenFileDialog contourlfbox $icontour(top)]
 
     if {$fn == {} || $current(frame) == {}} {
 	return

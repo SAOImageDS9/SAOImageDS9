@@ -990,7 +990,9 @@ proc GridCreateLineMenu {which width dash} {
 }
 
 proc GridLoadDialog {} {
-    set fn [OpenFileDialog gridfbox]
+    global igrid
+    
+    set fn [OpenFileDialog gridfbox $igrid(top)]
     GridLoad $fn
 }
 
@@ -1011,7 +1013,9 @@ proc GridLoad {fn} {
 }
 
 proc GridSaveDialog {} {
-    set fn [SaveFileDialog gridfbox]
+    global igrid
+
+    set fn [SaveFileDialog gridfbox $igrid(top)]
     GridSave $fn
 }
 

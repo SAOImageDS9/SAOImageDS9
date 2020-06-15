@@ -274,7 +274,7 @@ proc PSPrintDialog {which} {
     ttk::label $f.tname -text [msgcat::mc {Name}]
     ttk::entry $f.name -textvariable ed(filename) -width 20
     ttk::button $f.browse -text [msgcat::mc {Browse}] \
-	-command "PSPrintBrowse ed(filename)"
+	-command "PSPrintBrowse ed(filename) $w"
 
     grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
@@ -348,11 +348,11 @@ proc PSPrintDialog {which} {
     return $rr
 }
 
-proc PSPrintBrowse {varname} {
+proc PSPrintBrowse {varname parent} {
     upvar $varname var
 
     FileLast pssavfbox $var
-    set var [SaveFileDialog pssavfbox]
+    set var [SaveFileDialog pssavfbox $parent]
 }
 
 # Used for plots
@@ -380,7 +380,7 @@ proc PlotPrintDialog {} {
     ttk::label $f.tname -text [msgcat::mc {Name}]
     ttk::entry $f.name -textvariable ed(filename) -width 20
     ttk::button $f.browse -text [msgcat::mc {Browse}] \
-	-command "PlotPrintBrowse ed(filename)"
+	-command "PlotPrintBrowse ed(filename) $w"
 
     grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
@@ -427,11 +427,11 @@ proc PlotPrintDialog {} {
     return $rr
 }
 
-proc PlotPrintBrowse {varname} {
+proc PlotPrintBrowse {varname parent} {
     upvar $varname var
 
     FileLast apsavfbox $var
-    set var [SaveFileDialog apsavfbox]
+    set var [SaveFileDialog apsavfbox $parent]
 }
 
 # Used for SimpleText,Catalog,SIA,Footprint
@@ -459,7 +459,7 @@ proc PRPrintDialog {} {
     ttk::label $f.tname -text [msgcat::mc {Name}]
     ttk::entry $f.name -textvariable ed(filename,txt) -width 20
     ttk::button $f.browse -text [msgcat::mc {Browse}] \
-	-command "PRPrintBrowse ed(filename,txt)"
+	-command "PRPrintBrowse ed(filename,txt) $w"
 
     grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
@@ -493,11 +493,11 @@ proc PRPrintDialog {} {
     return $rr
 }
 
-proc PRPrintBrowse {varname} {
+proc PRPrintBrowse {varname parent} {
     upvar $varname var
 
     FileLast prsavfbox $var
-    set var [SaveFileDialog prsavfbox]
+    set var [SaveFileDialog prsavfbox $parent]
 }
 
 proc PrefsDialogPrint {} {

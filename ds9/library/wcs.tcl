@@ -423,9 +423,10 @@ proc WCSDestroyDialog {} {
 }
 
 proc WCSSaveDialog {} {
+    global iwcs
     global dwcs
 
-    set fn [SaveFileDialog wcsfbox]
+    set fn [SaveFileDialog wcsfbox $iwcs(top)]
     if {$fn != {}} {
 	WCSSaveFile $fn
     }
@@ -442,9 +443,10 @@ proc WCSSaveFile {fn} {
 }
 
 proc WCSLoadDialog {} {
+    global iwcs
     global dwcs
 
-    set fn [OpenFileDialog wcsfbox]
+    set fn [OpenFileDialog wcsfbox $iwcs(top)]
     WCSLoadFile $fn
 }
 

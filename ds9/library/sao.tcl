@@ -54,7 +54,7 @@ proc SAOExec {varname} {
 
     if {$var(save)} {
 	set compress no
-	set var(fn) [SaveFileDialog savefitsfbox]
+	set var(fn) [SaveFileDialog savefitsfbox $var(top)]
 	if {$var(fn) == {}} {
 	    ARDone $varname
 	    return

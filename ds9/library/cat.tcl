@@ -329,7 +329,7 @@ proc CATLoadVOTFile {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog votfbox]
+    set fn [OpenFileDialog votfbox $var(top)]
     if {$fn != {}} {
 	CATLoadFn $varname $fn VOTRead
     }
@@ -339,7 +339,7 @@ proc CATLoadRDBFile {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog rdbfbox]
+    set fn [OpenFileDialog rdbfbox $var(top)]
     if {$fn != {}} {
 	CATLoadFn $varname $fn starbase_read
     }
@@ -349,7 +349,7 @@ proc CATLoadTSVFile {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog tsvfbox]
+    set fn [OpenFileDialog tsvfbox $var(top)]
     if {$fn != {}} {
 	CATLoadFn $varname $fn TSVRead
     }
@@ -359,7 +359,7 @@ proc CATLoadFITSFile {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog catfitsfbox]
+    set fn [OpenFileDialog catfitsfbox $var(top)]
     if {$fn != {}} {
 	CATLoadFn $varname $fn FITSRead
     }

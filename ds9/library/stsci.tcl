@@ -84,7 +84,7 @@ proc STSCIExec {varname} {
 
     if {$var(save)} {
 	set compress none
-	set var(fn) [SaveFileDialog savefitsfbox]
+	set var(fn) [SaveFileDialog savefitsfbox $var(top)]
 	if {$var(fn) == {}} {
 	    ARDone $varname
 	    return

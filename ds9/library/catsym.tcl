@@ -378,7 +378,7 @@ proc CATSymSave {varname} {
     global $varname
     global $var(symdb)
 
-    set fn [SaveFileDialog catsymfbox]
+    set fn [SaveFileDialog catsymfbox $var(top)]
     if {$fn != {}} {
 	starbase_write $var(symdb) $fn
     }
@@ -389,7 +389,7 @@ proc CATSymLoad {varname} {
     global $varname
     global $var(symdb)
 
-    set fn [OpenFileDialog catsymfbox]
+    set fn [OpenFileDialog catsymfbox $var(top)]
     if {$fn != {}} {
 	if {[file exists $fn]} {
 	    if {[info exists $var(symdb)]} {

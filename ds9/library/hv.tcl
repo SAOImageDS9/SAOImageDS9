@@ -404,7 +404,7 @@ proc HVFileDialogCmd {varname} {
 
     global debug
 
-    set fn [OpenFileDialog hvhtmlfbox]
+    set fn [OpenFileDialog hvhtmlfbox $var(top)]
     if {"$fn" != {}} {
 	HVFileDialog $varname "$fn"
     }

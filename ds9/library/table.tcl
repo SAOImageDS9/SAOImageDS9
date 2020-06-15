@@ -376,17 +376,26 @@ proc TBLCopyTable {varname} {
 # Save via File
 
 proc TBLSaveVOTFile {varname} {
-    set fn [SaveFileDialog votfbox]
+    upvar #0 $varname var
+    global $varname
+
+    set fn [SaveFileDialog votfbox $var(top)]
     TBLSaveFn $varname $fn VOTWrite
 }
 
 proc TBLSaveRDBFile {varname} {
-    set fn [SaveFileDialog rdbfbox]
+    upvar #0 $varname var
+    global $varname
+
+    set fn [SaveFileDialog rdbfbox $var(top)]
     TBLSaveFn $varname $fn starbase_write
 }
 
 proc TBLSaveTSVFile {varname} {
-    set fn [SaveFileDialog tsvfbox]
+    upvar #0 $varname var
+    global $varname
+
+    set fn [SaveFileDialog tsvfbox $var(top)]
     TBLSaveFn $varname $fn TSVWrite
 }
 
@@ -469,9 +478,9 @@ proc TBLEditDialog {varname which db} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
-	-command TBLEditDialogLoad
+	-command [list TBLEditDialogLoad $w]
     $mb.file add command -label "[msgcat::mc {Save}]..." \
-	-command TBLEditDialogSave
+	-command [list TBLEditDialogSave $w]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command {set ed(ok) 1}
@@ -670,10 +679,10 @@ proc TBLEditDialogClear {} {
     $ed(text) delete 1.0 end
 }
 
-proc TBLEditDialogSave {} {
+proc TBLEditDialogSave {parent} {
     global ed
 
-    set fn [SaveFileDialog catfltfbox]
+    set fn [SaveFileDialog catfltfbox $parent]
     if {$fn != {}} {
 	if {[catch {open $fn w} fp]} {
 	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"
@@ -686,10 +695,10 @@ proc TBLEditDialogSave {} {
     }
 }
 
-proc TBLEditDialogLoad {} {
+proc TBLEditDialogLoad {parent} {
     global ed
 
-    set fn [OpenFileDialog catfltfbox]
+    set fn [OpenFileDialog catfltfbox $parent]
     if {$fn != {}} {
 	if {[catch {open $fn r} fp]} {
 	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"

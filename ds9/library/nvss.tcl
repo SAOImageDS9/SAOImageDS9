@@ -53,7 +53,7 @@ proc NVSSExec {varname} {
     global $varname
 
     if {$var(save)} {
-	set var(fn) [SaveFileDialog savefitsfbox]
+	set var(fn) [SaveFileDialog savefitsfbox $var(top)]
 	if {$var(fn) == {}} {
 	    ARDone $varname
 	    return

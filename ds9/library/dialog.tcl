@@ -469,7 +469,7 @@ proc SimpleTextSave {varname} {
     upvar #0 $varname var
     global $varname
 
-    set filename [SaveFileDialog textfbox]
+    set filename [SaveFileDialog textfbox $var(top)]
     if {$filename != {}} {
 	if {[catch {set ch [open "| cat > \"$filename\"" w]}]} {
 	    Error [msgcat::mc {An error has occurred while saving}]

@@ -35,6 +35,7 @@ proc MovieDef {} {
 }
 
 proc MovieDialog {} {
+    global imovie
     global movie
     global mpegfbox
     global giffbox
@@ -108,8 +109,8 @@ proc MovieDialog {} {
 	set movie(type) $ed(type)
 
 	switch $movie(type) {
-	    mpeg {set fn [SaveFileDialog mpegfbox]}
-	    gif {set fn [SaveFileDialog giffbox]}
+	    mpeg {set fn [SaveFileDialog mpegfbox $w]}
+	    gif {set fn [SaveFileDialog giffbox $w]}
 	}
 
 	if {$fn != {}} {

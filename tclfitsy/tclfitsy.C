@@ -219,15 +219,32 @@ int TclFITSY::istable(int argc, const char* argv[])
 
 int TclFITSY::table(int argc, const char* argv[])
 {
-  if (argc!=5) {
-    Tcl_AppendResult(interp_, "usage: fitsy table ?filename? ?ext? ?varname?",
-		     NULL);
+  if (argc!=7) {
+    Tcl_AppendResult(interp_, "usage: fitsy table ?filename? ?ext? ?varname? ?start? ?max?", NULL);
     return TCL_ERROR;
   }
   
   if (!(argv[4] && *argv[4]))
     return TCL_ERROR;
 
+  int start =0;
+  {
+    string x(argv[5]);
+    istringstream sstr(x);
+    sstr >> start;
+  }
+  if (start<0)
+    return TCL_ERROR;
+  
+  int max =0;
+  {
+    string x(argv[6]);
+    istringstream sstr(x);
+    sstr >> max;
+  }
+  if (max<=0)
+    return TCL_ERROR;
+  
   FitsFile* fits = findFits(argv);
   if (!fits)
     return TCL_ERROR;
@@ -240,23 +257,26 @@ int TclFITSY::table(int argc, const char* argv[])
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head->hdu());
 
   // header
-  char* cc=head->first();
-  int cnt=0;
-  while (cc) {
-    cnt++;
-    ostringstream idstr;
-    idstr << "H_" << cnt << ends;
-    char buf[81];
-    strncpy(buf,cc,80);
-    buf[80]='\0';
-    Tcl_SetVar2(interp_, argv[4], idstr.str().c_str(), buf,
+  // first time only
+  if (start==0) {
+    char* cc=head->first();
+    int cnt=0;
+    while (cc) {
+      cnt++;
+      ostringstream idstr;
+      idstr << "H_" << cnt << ends;
+      char buf[81];
+      strncpy(buf,cc,80);
+      buf[80]='\0';
+      Tcl_SetVar2(interp_, argv[4], idstr.str().c_str(), buf,
+		  TCL_GLOBAL_ONLY);
+      cc = head->next();
+    }
+    ostringstream ncardstr;
+    ncardstr << head->ncard() << ends;
+    Tcl_SetVar2(interp_, argv[4], "HLines", ncardstr.str().c_str(),
 		TCL_GLOBAL_ONLY);
-    cc = head->next();
   }
-  ostringstream ncardstr;
-  ncardstr << head->ncard() << ends;
-  Tcl_SetVar2(interp_, argv[4], "HLines", ncardstr.str().c_str(),
-	      TCL_GLOBAL_ONLY);
 
   // cols
   char* ptr = (char*)fits->data();
@@ -264,36 +284,40 @@ int TclFITSY::table(int argc, const char* argv[])
   int cols = hdu->cols();
   int width  = hdu->width();
       
-  ostringstream headstr;
-  for (int jj=0; jj<cols; jj++) {
-    FitsColumn* cc=hdu->find(jj);
-    headstr << trim(cc->ttype()) << ' ';
+  // first time only
+  if (start==0) {
+    ostringstream headstr;
+    for (int jj=0; jj<cols; jj++) {
+      FitsColumn* cc=hdu->find(jj);
+      headstr << trim(cc->ttype()) << ' ';
 
-    if (cc->repeat()>1) {
-      switch (cc->type()) {
-      case 'A':
-	break;
-      default:
-	for (int kk=1; kk<cc->repeat(); kk++) {
-	  char* tt = trim(cc->ttype());
-	  headstr << tt << kk+1 << ' ';
-	  delete [] tt;
+      if (cc->repeat()>1) {
+	switch (cc->type()) {
+	case 'A':
+	  break;
+	default:
+	  for (int kk=1; kk<cc->repeat(); kk++) {
+	    char* tt = trim(cc->ttype());
+	    headstr << tt << kk+1 << ' ';
+	    delete [] tt;
+	  }
+	  break;
 	}
-	break;
       }
     }
-  }
-  headstr << ends;
-  Tcl_SetVar2(interp_, argv[4], "Header" , headstr.str().c_str(),
-	      TCL_GLOBAL_ONLY);
+    headstr << ends;
+    Tcl_SetVar2(interp_, argv[4], "Header" , headstr.str().c_str(),
+		TCL_GLOBAL_ONLY);
 
-  ostringstream rowstr;
-  rowstr << rows << ends;
-  Tcl_SetVar2(interp_, argv[4], "Nrows", rowstr.str().c_str(),
-	      TCL_GLOBAL_ONLY);
+    ostringstream rowstr;
+    rowstr << rows << ends;
+    Tcl_SetVar2(interp_, argv[4], "Nrows", rowstr.str().c_str(),
+		TCL_GLOBAL_ONLY);
+  }
 
   // data
-  for (int ii=0; ii<rows; ii++, ptr+=width) {
+  int end = (max<rows-start) ? start+max : rows;
+  for (int ii=start; ii<end; ii++, ptr+=width) {
     int ccnt = 0;
     for (int jj=0; jj<cols; jj++) {
       FitsColumn* cc=hdu->find(jj);
@@ -325,14 +349,19 @@ int TclFITSY::table(int argc, const char* argv[])
       }
     }
   }
+  
+  {
+    ostringstream str;
+    str << ((end-start<0) ? 0 : end-start) << ends;
+    Tcl_AppendResult(interp_, str.str().c_str(), NULL);
+  }
   return TCL_OK;
 }
 
 int TclFITSY::histogram(int argc, const char* argv[])
 {
   if (argc!=7) {
-    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname?",
-		     NULL);
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname?", NULL);
     return TCL_ERROR;
   }
   

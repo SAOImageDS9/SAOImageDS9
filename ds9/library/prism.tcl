@@ -7,19 +7,18 @@ package provide DS9 1.0
 proc PrismDef {} {
     global prism
     global iprism
-    global pprism
 
     set iprism(prisms) {}
     set iprism(id) 0
 
     set iprism(mincols) 10
     set iprism(minrows) 20
+    set iprism(maxevents) 10000
 }
 
 proc PrismDialog {varname} {
     global prism
     global iprism
-    global dprism
     global ds9
 
     # first determine if aready in use, then increment
@@ -47,6 +46,7 @@ proc PrismDialog {varname} {
     set var(tbldb) ${varname}tbldb
     set var(fn) {}
     set var(ext) {}
+    set var(last) 0
 
     # create the window
     set w $var(top)
@@ -172,10 +172,11 @@ proc PrismDialog {varname} {
     $var(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 
-    ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] \
+    ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
+    #ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
+    ttk::scrollbar $f.yscroll -command [list PrismYViewCmd $varname] \
 	-orient vertical
-    ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] \
-	-orient horizontal
+
     grid $var(tbl) $f.yscroll -sticky news
     grid $f.xscroll -stick news
     grid rowconfigure $f 0 -weight 1
@@ -208,7 +209,39 @@ proc PrismDialog {varname} {
 
     PrismDialogUpdate $varname
 
+    $var(tbl) see 1,1
+
     return $varname
+}
+
+proc PrismYViewCmd {varname aa bb {cc {}}} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
+    
+    if {$cc != {}} {
+	$var(tbl) yview $aa $bb $cc
+    } else {
+	$var(tbl) yview $aa $bb
+    }
+
+    global $var(tbldb)
+    if {[info exists $var(tbldb)]} {
+	set nr [starbase_nrows $var(tbldb)]
+	set row [expr int([lindex [$var(tbl) yview] 1] * $nr)]
+	if {$row>$nr} {
+	    set row $nr
+	}
+
+	while {$row>$var(last)} {
+	    set rr [fitsy table $var(fn) $var(ext) $var(tbldb) $var(last) $iprism(maxevents)]
+	    incr var(last) $rr
+	    if {$var(last)>=$nr} {
+		set var(last) $nr
+		break
+	    }
+	}
+    }
 }
 
 proc PrismDestroy {varname} {
@@ -217,7 +250,6 @@ proc PrismDestroy {varname} {
     global iprism
 
     global $var(tbldb)
-
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
     }
@@ -273,6 +305,7 @@ proc PrismLoad {varname fn} {
 proc PrismClear {varname} {
     upvar #0 $varname var
     global $varname
+    global iprism
 
     # extension
     foreach id [$var(dir) children {}] {
@@ -280,14 +313,18 @@ proc PrismClear {varname} {
     }
     set var(fn) {}
     set var(ext) {}
+    set var(last) 0
 
     # header
     $var(header) delete 1.0 end
 
     # clear previous db
+    global $var(tbldb)
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
     }
+    $var(tbl) configure -rows $iprism(minrows)
+    $var(tbl) see 1,1
 }
 
 proc PrismPlot {varname} {
@@ -335,28 +372,28 @@ proc PrismExtCmd {varname} {
     $var(header) see 1.0
 
     # clear previous db
+    global $var(tbldb)
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
     }
 
-    set t $varname
-    upvar #0 $t T
+    set t $var(tbldb)
+    upvar $t T
 
-    global $varname
     # init db
     set T(Header) {}
-    set T(Dashes) {}
     set T(HLines) 0
     set T(Nrows) 0
     set T(Ncols) 0
-    set T(Ndshs) 0
-
+    
     if {![fitsy istable $var(fn) $var(ext)]} {
 	$var(tbl) configure -rows $iprism(minrows)
+	$var(tbl) see 1,1
 	return
     }
 
-    fitsy table $var(fn) $var(ext) $var(tbldb)
+    set var(last) \
+	[fitsy table $var(fn) $var(ext) $var(tbldb) 0 $iprism(maxevents)]
 
     set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
     set T(Ndshs) [llength $T(Header)]
@@ -370,12 +407,13 @@ proc PrismExtCmd {varname} {
 
     starbase_colmap $t
 
-    set nr [expr [starbase_nrows $t]+1]
+    set nr [starbase_nrows $t]
     if {$nr > $iprism(minrows)} {
-	$var(tbl) configure -rows $nr
+	$var(tbl) configure -rows [expr $nr+1]
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
+    $var(tbl) see 1,1
 }
 
 proc PrismSelectCmd {varname ss rc} {

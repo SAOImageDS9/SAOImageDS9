@@ -277,6 +277,40 @@ proc UpdatePrismDialog {} {
 proc PrismDialogUpdate {varname} {
     upvar #0 $varname var
     global $varname
+
+    set bb $var(top).buttons
+
+    $var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
+    $var(mb).file entryconfig [msgcat::mc {Plot}] -state disabled
+    $var(mb).file entryconfig [msgcat::mc {Histogram}] -state disabled
+    $var(mb).file entryconfig [msgcat::mc {Image}] -state disabled
+
+    $bb.clear configure -state disabled
+    $bb.plot configure -state disabled
+    $bb.histogram configure -state disabled
+    $bb.image configure -state disabled
+
+    if {$var(fn) == {}} {
+	return
+    }
+
+    $var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
+    $bb.clear configure -state normal
+
+    if {$var(ext) == {}} {
+	return
+    }
+
+    if {[fitsy isimage $var(fn) $var(ext)]} {
+	$var(mb).file entryconfig [msgcat::mc {Image}] -state normal
+	$bb.image configure -state normal
+    } elseif {[fitsy istable $var(fn) $var(ext)]} {
+	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
+	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state normal
+
+	$bb.plot configure -state normal
+	$bb.histogram configure -state normal
+    }
 }
 
 proc PrismLoadFile {varname} {
@@ -293,13 +327,15 @@ proc PrismLoad {varname fn} {
     upvar #0 $varname var
     global $varname
 
+    PrismClear $varname
     set var(fn) $fn
-    set var(ext) {}
-
+    
     set rr [fitsy dir $fn]
     foreach {ext name type info} $rr {
 	$var(dir) insert {} end -id $ext -values [list "$name" "$type" "$info"]
     }
+
+    PrismDialogUpdate $varname
 }
 
 proc PrismClear {varname} {
@@ -325,6 +361,8 @@ proc PrismClear {varname} {
     }
     $var(tbl) configure -rows $iprism(minrows)
     $var(tbl) see 1,1
+
+    PrismDialogUpdate $varname
 }
 
 proc PrismPlot {varname} {
@@ -362,7 +400,6 @@ proc PrismExtCmd {varname} {
 
     $var(header) delete 1.0 end
     $var(header) insert end [fitsy header $var(fn) $var(ext)]
-
     # color tag keywords
     set stop [$var(header) index end]
     for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
@@ -371,10 +408,20 @@ proc PrismExtCmd {varname} {
     # see top
     $var(header) see 1.0
 
+    # table
+    
     # clear previous db
     global $var(tbldb)
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
+    }
+
+    if {![fitsy istable $var(fn) $var(ext)]} {
+	$var(tbl) configure -rows $iprism(minrows)
+	$var(tbl) see 1,1
+
+	PrismDialogUpdate $varname
+	return
     }
 
     set t $var(tbldb)
@@ -386,12 +433,6 @@ proc PrismExtCmd {varname} {
     set T(Nrows) 0
     set T(Ncols) 0
     
-    if {![fitsy istable $var(fn) $var(ext)]} {
-	$var(tbl) configure -rows $iprism(minrows)
-	$var(tbl) see 1,1
-	return
-    }
-
     set var(last) \
 	[fitsy table $var(fn) $var(ext) $var(tbldb) 0 $iprism(maxevents)]
 
@@ -414,6 +455,8 @@ proc PrismExtCmd {varname} {
 	$var(tbl) configure -rows $iprism(minrows)
     }
     $var(tbl) see 1,1
+
+    PrismDialogUpdate $varname
 }
 
 proc PrismSelectCmd {varname ss rc} {

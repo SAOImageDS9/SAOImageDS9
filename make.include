@@ -68,8 +68,8 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclfitsy tcliis tclxml tclzipfs tls xpa
-.PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
+.PHONY	: all dirs ds9 tcliis tclxml tclzipfs tls xpa
+.PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
 .PHONY	: util vector fitsy ast funtools openssl
 
 all	: saods9
@@ -519,9 +519,9 @@ scrub :
 
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean ds9parsersclean localclean
-.PHONY	: opensslclean tclfitsy tcliisclean 
+.PHONY	: opensslclean tcliisclean 
 .PHONY	: tclxmlclean tlsclean
-.PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
+.PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tkagifclean
 .PHONY	: tktableclean xpaclean
 .PHONY	: utilclean vectorclean fitsyclean astclean funtoolsclean
@@ -529,9 +529,9 @@ scrub :
 
 clean	: tclclean tkclean \
 	opensslclean \
-	tclfitsy tcliisclean \
+	tcliisclean \
 	tlsclean tclxmlclean xpaclean \
-	tkbltclean tkconclean tktableclean tkimgclean \
+	tkbltclean tclfitsy tkconclean tktableclean tkimgclean \
 	tkmpegclean tkagifclean tkhtml1clean \
 	utilclean vectorclean fitsyclean astclean funtoolsclean ds9clean \
 	tksaoclean osclean dirsclean localclean scrub
@@ -654,9 +654,9 @@ xpaclean :
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
-.PHONY	: openssldistclean tclfitsydistclean tcliisdistclean 
+.PHONY	: openssldistclean tcliisdistclean 
 .PHONY	: tclxmldistclean tlsdistclean
-.PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
+.PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean 
 .PHONY	: tktabledistclean xpadistclean
 .PHONY	: utildistclean vectordistclean fitsydistclean
@@ -664,10 +664,11 @@ xpaclean :
 .PHONY	: tksaodistclean
 
 distclean : tcldistclean tkdistclean \
-	  openssldistclean tclfitsydistclean tcliisdistclean \
+	  openssldistclean tcliisdistclean \
 	  tclsignaldistclean \
 	  tlsdistclean tclxmldistclean xpadistclean \
-	  tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
+	  tkbltdistclean tclfitsydistclean tktabledistclean \
+	  tkcondistclean tkimgdistclean \
 	  tkmpegdistclean tkagifdistclean tkhtml1distclean \
 	  utildistclean vectordistclean fitsydistclean astdistclean \
 	  vectordistclean fitsydistclean astdistclean \

@@ -45,9 +45,9 @@ saods9	: dirs tcl tk \
 	openssl \
 	xpa funtools ast \
 	util vector fitsy \
-	tclfitsy tcliis tclsignal \
+	tcliis tclsignal \
 	tls tclxml \
-	tkblt tktable tkimg \
+	tkblt tclfitsy tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkmacosx \
 	tksao ds9

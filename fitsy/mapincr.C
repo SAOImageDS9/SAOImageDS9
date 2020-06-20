@@ -19,6 +19,8 @@
 //#define PAGELIMIT 1073741824
 #define PAGELIMIT 536870912
 
+// FitsMapIncr
+
 FitsMapIncr::FitsMapIncr()
 {
   mapdata_ = NULL;
@@ -268,6 +270,19 @@ void FitsMapIncr::error()
   dataSkip_ = 0;
 
   valid_ = 0;
+}
+
+// FitsMapIncr
+
+FitsFitsMapIncr::FitsFitsMapIncr()
+{
+  if (!valid_)
+    return;
+
+  // we are only looking for a primary image
+  head_ = headRead();
+  if (head_ && head_->isValid())
+    found();
 }
 
 FitsFitsMapIncr::FitsFitsMapIncr(ScanMode mode)
@@ -713,6 +728,7 @@ char* FitsMapIncr::page(char* ptr, size_t row)
 }
 void FitsMapIncr::resetpage() {}
 void FitsMapIncr::error() {}
+FitsFitsMapIncr::FitsFitsMapIncr() {}
 FitsFitsMapIncr::FitsFitsMapIncr(ScanMode mode) {}
 void FitsFitsMapIncr::processExactImage() {}
 void FitsFitsMapIncr::processRelaxImage() {}

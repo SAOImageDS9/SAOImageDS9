@@ -14,6 +14,8 @@ public:
 
 class FitsFitsMMapIncr : public FitsMMapIncr, public FitsFitsMapIncr {
 public:
+  FitsFitsMMapIncr(const char* fn) 
+    : FitsMMapIncr(fn), FitsFitsMapIncr() {}
   FitsFitsMMapIncr(const char* fn, ScanMode mode) 
     : FitsMMapIncr(fn), FitsFitsMapIncr(mode) {}
 };

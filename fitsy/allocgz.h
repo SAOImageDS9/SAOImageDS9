@@ -16,6 +16,8 @@ public:
 
 class FitsFitsAllocGZ : public FitsAllocGZ, public FitsFitsStream<gzFile> {
 public:
+  FitsFitsAllocGZ(const char* fn, FlushMode flush) 
+    : FitsAllocGZ(fn), FitsFitsStream<gzFile>(flush) {}
   FitsFitsAllocGZ(const char* fn, ScanMode mode, FlushMode flush) 
     : FitsAllocGZ(fn), FitsFitsStream<gzFile>(mode, flush) {}
 };

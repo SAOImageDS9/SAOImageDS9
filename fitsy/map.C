@@ -6,6 +6,8 @@
 #include "head.h"
 #include "util.h"
 
+// FitsMap
+
 FitsMap::FitsMap()
 {
   mapdata_ = NULL;
@@ -52,6 +54,29 @@ void FitsMap::error()
   dataSkip_ = 0;
 
   valid_ = 0;
+}
+
+// FitsFitsMap
+
+FitsFitsMap::FitsFitsMap()
+{
+  if (!valid_)
+    return;
+
+  // find head and data for specified unit
+  char* here = mapdata_;
+  size_t size = mapsize_;
+
+  // simple check for fits file
+  if (strncmp(mapdata_,"SIMPLE  ",8)) {
+    error();
+    return;
+  }
+
+  // we are only looking for a primary image
+  head_ = new FitsHead(here, size, FitsHead::EXTERNAL);
+  if (head_->isValid())
+    found(here);
 }
 
 FitsFitsMap::FitsFitsMap(ScanMode mode)

@@ -32,6 +32,7 @@ protected:
   void processRelaxTable();
 
 public:
+  FitsFitsMap();
   FitsFitsMap(ScanMode);
 };
 

@@ -55,6 +55,7 @@ protected:
   void processRelaxTable();
 
 public:
+  FitsFitsStream(FitsFile::FlushMode);
   FitsFitsStream(FitsFile::ScanMode, FitsFile::FlushMode);
 };
 

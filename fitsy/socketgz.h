@@ -16,6 +16,8 @@ public:
 class FitsFitsSocketGZ : public FitsSocketGZ, 
 			 public FitsFitsStream<gzStream> {
 public:
+  FitsFitsSocketGZ(int s, const char* ext, FlushMode flush) 
+    : FitsSocketGZ(s, ext), FitsFitsStream<gzStream>(flush) {}
   FitsFitsSocketGZ(int s, const char* ext, ScanMode mode, FlushMode flush) 
     : FitsSocketGZ(s, ext), FitsFitsStream<gzStream>(mode, flush) {}
 };

@@ -15,6 +15,9 @@ public:
 class FitsFitsChannel : public FitsChannel, public FitsFitsStream<Tcl_Channel>{
 public:
   FitsFitsChannel(Tcl_Interp* interp, const char* ch, 
+		  const char* ext, FlushMode flush)
+    : FitsChannel(interp, ch, ext), FitsFitsStream<Tcl_Channel>(flush) {}
+  FitsFitsChannel(Tcl_Interp* interp, const char* ch, 
 		  const char* ext, ScanMode mode, FlushMode flush)
     : FitsChannel(interp, ch, ext), FitsFitsStream<Tcl_Channel>(mode, flush) {}
 };

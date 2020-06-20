@@ -42,6 +42,7 @@ protected:
   void processRelaxTable();
 
 public:
+  FitsFitsMapIncr();
   FitsFitsMapIncr(ScanMode);
 };
 

@@ -14,6 +14,8 @@
 #include "strm.h"
 #include "util.h"
 
+// FitsStream
+
 template<class T> FitsStream<T>::FitsStream()
 {
   stream_ =0;
@@ -405,6 +407,23 @@ template class FitsStream<Tcl_Channel>;
 template class FitsStream<int>;
 template class FitsStream<gzFile>;
 template class FitsStream<gzStream>;
+
+// FitsFitsStream
+
+template<class T> FitsFitsStream<T>::FitsFitsStream(FitsFile::FlushMode f)
+{
+  if (!this->valid_)
+    return;
+
+  this->flush_ = f;
+
+  // we are only looking for a primary image
+  this->head_ = this->headRead();
+  if (this->head_ && this->head_->isValid()) {
+    this->found();
+    return;
+  }
+}
 
 template<class T> FitsFitsStream<T>::FitsFitsStream(FitsFile::ScanMode mode,
 						    FitsFile::FlushMode f)

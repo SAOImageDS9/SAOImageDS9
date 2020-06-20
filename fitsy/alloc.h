@@ -15,6 +15,8 @@ public:
 
 class FitsFitsAlloc : public FitsAlloc, public FitsFitsStream<FILE*> {
 public:
+  FitsFitsAlloc(const char* fn, FlushMode flush) 
+    : FitsAlloc(fn), FitsFitsStream<FILE*>(flush) {}
   FitsFitsAlloc(const char* fn, ScanMode mode, FlushMode flush) 
     : FitsAlloc(fn), FitsFitsStream<FILE*>(mode, flush) {}
 };

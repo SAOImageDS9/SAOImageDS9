@@ -15,7 +15,9 @@ public:
 
 class FitsFitsMMap : public FitsMMap, public FitsFitsMap {
 public:
-  FitsFitsMMap(const char* fn, ScanMode mode) 
+  FitsFitsMMap(const char* fn)
+    : FitsMMap(fn), FitsFitsMap() {}
+  FitsFitsMMap(const char* fn, ScanMode mode)
     : FitsMMap(fn), FitsFitsMap(mode) {}
 };
 

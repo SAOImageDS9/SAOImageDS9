@@ -14,6 +14,8 @@ public:
 
 class FitsFitsSocket : public FitsSocket, public FitsFitsStream<int> {
 public:
+  FitsFitsSocket(int s, const char* ext, FlushMode flush) 
+    : FitsSocket(s, ext), FitsFitsStream<int>(flush) {}
   FitsFitsSocket(int s, const char* ext, ScanMode mode, FlushMode flush) 
     : FitsSocket(s, ext), FitsFitsStream<int>(mode, flush) {}
 };

@@ -48,6 +48,9 @@ proc PrismDialog {varname} {
     set var(ext) {}
     set var(last) 0
 
+    set var(xx) {}
+    set var(yy) {}
+
     # create the window
     set w $var(top)
     set mb $var(mb)
@@ -301,10 +304,11 @@ proc PrismDialogUpdate {varname} {
 	return
     }
 
-    if {[fitsy isimage $var(fn) $var(ext)]} {
-	$var(mb).file entryconfig [msgcat::mc {Image}] -state normal
-	$bb.image configure -state normal
-    } elseif {[fitsy istable $var(fn) $var(ext)]} {
+    $var(mb).file entryconfig [msgcat::mc {Image}] -state normal
+    $bb.image configure -state normal
+
+
+    if {[fitsy istable $var(fn) $var(ext)]} {
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state normal
 
@@ -378,12 +382,134 @@ proc PrismHistogram {varname} {
 	return
     }
 
- #   fitsy histogram $var(fn) $var(ext) $col vecx vecy
+ #   fitsy histogram $var(fn) $var(ext) $col vecx vecy $num
 }
 
 proc PrismImage {varname} {
     upvar #0 $varname var
     global $varname
+
+    if {$var(fn) == {} || $var(ext) == {}} {
+	return
+    }
+
+    if {[fitsy isimage $var(fn) $var(ext)]} {
+	PrismImageImage $varname
+    } elseif {[fitsy istable $var(fn) $var(ext)]} {
+	PrismImageTable $varname
+    }
+}
+    
+proc PrismImageImage {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    CreateFrame
+    LoadFitsFile "$var(fn)\[$var(ext)\]" {} {}
+    FinishLoad
+}
+
+proc PrismImageTable {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ed
+    
+    set w ".${varname}img"
+    set mb ".${varname}imgmb"
+
+    set ed(top) $w
+    set ed(ok) 0
+
+    set ed(xx) $var(xx)
+    set ed(yy) $var(yy)
+
+    DialogCreate $w [msgcat::mc {Match}] ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
+
+    # param
+    set f [ttk::frame $w.param]
+
+    ttk::label $f.txx -text [msgcat::mc {X Column}]
+    ttk::menubutton $f.xx -textvariable ed(xx) -menu $f.xx.menu
+
+    ttk::label $f.tyy -text [msgcat::mc {Y Column}]
+    ttk::menubutton $f.yy -textvariable ed(yy) -menu $f.yy.menu
+
+    PrismColsMenu $varname $f.xx xx
+    PrismColsMenu $varname $f.yy yy
+
+    grid $f.txx $f.xx -padx 2 -pady 2 -sticky ew
+    grid $f.tyy $f.yy -padx 2 -pady 2 -sticky ew
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+        -default active 
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.param -side top -fill both -expand true
+    pack $w.buttons $w.sep -side bottom -fill x
+
+    DialogCenter $w
+    DialogWait $w ed(ok) $w.buttons.ok
+
+    if {$ed(ok)} {
+	if {$ed(xx) != {} && $ed(yy) != {}} {
+	    set var(xx) $ed(xx)
+	    set var(yy) $ed(yy)
+
+	    CreateFrame
+	    LoadFitsFile "$var(fn)\[$var(ext)\]\[bin=$ed(xx),$ed(yy)\]" {} {}
+	    FinishLoad
+	}
+    }
+
+    DialogDismiss $w
+    destroy $mb
+}
+
+proc PrismColsMenu {varname f ww} {
+    upvar #0 $varname var
+    global $varname
+    global $var(tbldb)
+    global ed
+    global ds9
+
+    set m $f.menu
+
+    ThemeMenu $m
+    $m configure -tearoff 0
+    if {[TBLValidDB $var(tbldb)]} {
+	set cnt -1
+	foreach col [starbase_columns $var(tbldb)] {
+	    $m add command -label $col -command "set ed($ww) \\$col"
+
+	    # wrap if needed
+	    incr cnt
+	    if {$cnt>=$ds9(menu,size,wrap)} {
+		set cnt 0
+		$m entryconfig $col -columnbreak 1
+	    }
+	}
+    }
 }
 
 proc PrismExtCmd {varname} {

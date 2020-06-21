@@ -15,6 +15,8 @@ using namespace std;
 #include "head.h"
 #include "mmapincr.h"
 #include "util.h"
+#include "vector.h"
+#include "tkbltVector.h"
 
 extern "C" {
   int Tclfitsy_Init(Tcl_Interp* interp);
@@ -361,7 +363,7 @@ int TclFITSY::table(int argc, const char* argv[])
 int TclFITSY::histogram(int argc, const char* argv[])
 {
   if (argc!=7) {
-    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname?", NULL);
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num?", NULL);
     return TCL_ERROR;
   }
   
@@ -374,9 +376,87 @@ int TclFITSY::histogram(int argc, const char* argv[])
   if (!(argv[6] && *argv[6]))
     return TCL_ERROR;
 
+  int num =0;
+  {
+    string x(argv[7]);
+    istringstream sstr(x);
+    sstr >> num;
+  }
+  if (num<1)
+    return TCL_ERROR;
+
   FitsFile* fits = findFits(argv);
   if (!fits)
     return TCL_ERROR;
+
+  if (!fits->isValid())
+    return TCL_ERROR;
+      
+  if (!fits->isTable()) 
+    return TCL_ERROR;
+
+  FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
+  int rows = hdu->rows();
+  int width  = hdu->width();
+  FitsColumn* col=hdu->find(argv[4]);
+
+  if (!col)
+    return TCL_ERROR;
+
+  // find min/max
+  double min =DBL_MAX;
+  double max =-DBL_MIN;
+  if (col->hasTLMinTLMax()) {
+    Vector dim = col->dimension();
+    min = dim[0];
+    max = dim[1];
+  }
+  else {
+    char* ptr = (char*)fits->data();
+    for (int ii=0; ii<rows; ii++, ptr+=width) {
+      double vv = col->value(ptr);
+      if (vv<min)
+	min = vv;
+      if (vv>max)
+	max = vv;
+    }
+  }
+
+  // we need one extra max,0 value at the end
+  int nn = num+1;
+  double* x = (double*)malloc(nn*sizeof(double));
+  double* y = (double*)malloc(nn*sizeof(double));
+  memset(x,0,nn*sizeof(double));
+  memset(y,0,nn*sizeof(double));
+
+  // fill Axes
+  double diff = max-min;
+  int last = num-1;
+  if (diff>0) {
+    char* ptr = (char*)fits->data();
+
+    for (int ii=0; ii<nn; ii++)
+      x[ii] = (double)ii/last*diff + min;
+
+    for (int ii=0; ii<rows; ii++, ptr+=width) {
+      double vv = col->value(ptr);
+      int jj = (int)((vv-min)/(max-min)*num);
+      y[jj]++;
+    }
+  }
+  else {
+    for (int ii=0; ii<nn; ii++)
+      x[ii] = min;
+  }
+  
+  // load into BLT vectors
+  Blt_Vector* xx;
+  Blt_GetVector(interp_, argv[5], &xx);
+  Blt_ResetVector(xx, x, nn, num*sizeof(double), TCL_DYNAMIC);
+
+  Blt_Vector* yy;
+  Blt_GetVector(interp_, argv[6], &yy);
+  Blt_ResetVector(yy, y, nn, num*sizeof(double), TCL_DYNAMIC);
 
   return TCL_OK;
 }

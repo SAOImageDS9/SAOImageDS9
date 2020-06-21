@@ -5118,7 +5118,7 @@ fi
 #-----------------------------------------------------------------------
 
 
-    vars="tclfitsy.C blt.C"
+    vars="tclfitsy.C"
     for i in $vars; do
 	case $i in
 	    \$*)

@@ -363,7 +363,7 @@ proc BinDialog {} {
     UpdateBinDialog
 }
 
-proc PopUp {b m l cmd} {
+proc BinPopUp {b m l cmd} {
     global ds9
 
     destroy $m
@@ -384,7 +384,7 @@ proc PopUp {b m l cmd} {
     }
 }
 
-proc BlankPopUp {m} {
+proc BinBlankPopUp {m} {
     destroy $m
     ThemeMenu $m
     $m configure -tearoff 0
@@ -422,8 +422,8 @@ proc UpdateBinDialog {} {
 
 	set dbin(xcol) [lindex $cols 0]
 	set dbin(ycol) [lindex $cols 1]
-	PopUp dbin(xcol) $w.cols.x.m $colslist UpdateXCol
-	PopUp dbin(ycol) $w.cols.y.m $colslist UpdateYCol
+	BinPopUp dbin(xcol) $w.cols.x.m $colslist UpdateXCol
+	BinPopUp dbin(ycol) $w.cols.y.m $colslist UpdateYCol
 
 	set mm [$current(frame) get bin cols minmax \{$dbin(xcol)\}]
 	set dbin(xcol,min) [lindex $mm 0]
@@ -440,7 +440,7 @@ proc UpdateBinDialog {} {
 	set dbin(filter) [$current(frame) get bin filter]
 
 	set dbin(zcol) [lindex $cols 2]
-	PopUp dbin(zcol) $w.z.z.m $colslist UpdateZCol
+	BinPopUp dbin(zcol) $w.z.z.m $colslist UpdateZCol
 	set mm [$current(frame) get bin cols dim \{$dbin(zcol)\}]
 	set dbin(zcol,min) [lindex $mm 0]
 	set dbin(zcol,max) [lindex $mm 1]
@@ -462,9 +462,9 @@ proc UpdateBinDialog {} {
 	set dbin(zcol,min) {}
 	set dbin(zcol,max) {}
 
-	BlankPopUp $w.cols.x.m
-	BlankPopUp $w.cols.y.m
-	BlankPopUp $w.z.z.m
+	BinBlankPopUp $w.cols.x.m
+	BinBlankPopUp $w.cols.y.m
+	BinBlankPopUp $w.z.z.m
     }
 }
 

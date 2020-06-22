@@ -54,7 +54,7 @@ cube : OPEN_
  | PREV_ {CubePrev}
  | FIRST_ {CubeFirst}
  | LAST_ {CubeLast}
- | INTERVAL_ numeric {ProcessCmdSet cube interval [expr int($2*1000)]}
+ | INTERVAL_ numeric {ProcessCmdSet blink interval [expr int($2*1000)]}
  | AXES_ order
  | ORDER_ order
  | INT_ {CubeCmd $1}

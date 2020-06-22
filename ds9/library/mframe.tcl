@@ -276,7 +276,7 @@ proc FrameMainMenu {} {
     ThemeMenu $ds9(mb).frame.params.blink
     $ds9(mb).frame.params.blink add radiobutton \
 	-label "1/16 [msgcat::mc {Seconds}]" \
-	-variable blink(interval) -value 62.5
+	-variable blink(interval) -value 6
     $ds9(mb).frame.params.blink add radiobutton \
 	-label "1/8 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 125

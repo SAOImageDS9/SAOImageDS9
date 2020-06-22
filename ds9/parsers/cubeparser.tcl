@@ -1563,7 +1563,7 @@ proc cube::yyparse {} {
                     47 { CubePrev }
                     48 { CubeFirst }
                     49 { CubeLast }
-                    50 { ProcessCmdSet cube interval [expr int($2*1000)] }
+                    50 { ProcessCmdSet blink interval [expr int($2*1000)] }
                     53 { CubeCmd $1 }
                     54 { CubeCmd $1 }
                     55 { CubeCmdCoord $1 $2 }

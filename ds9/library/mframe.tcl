@@ -275,13 +275,16 @@ proc FrameMainMenu {} {
 
     ThemeMenu $ds9(mb).frame.params.blink
     $ds9(mb).frame.params.blink add radiobutton \
-	-label ".125 [msgcat::mc {Seconds}]" \
+	-label "1/16 [msgcat::mc {Seconds}]" \
+	-variable blink(interval) -value 62.5
+    $ds9(mb).frame.params.blink add radiobutton \
+	-label "1/8 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 125
     $ds9(mb).frame.params.blink add radiobutton \
-	-label ".25 [msgcat::mc {Seconds}]" \
+	-label "1/4 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 250
     $ds9(mb).frame.params.blink add radiobutton \
-	-label ".5 [msgcat::mc {Seconds}]" \
+	-label "1/2 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 500
     $ds9(mb).frame.params.blink add radiobutton \
 	-label "1 [msgcat::mc {Seconds}]" \
@@ -295,6 +298,9 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.params.blink add radiobutton \
 	-label "8 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 8000
+    $ds9(mb).frame.params.blink add radiobutton \
+	-label "16 [msgcat::mc {Seconds}]" \
+	-variable blink(interval) -value 16000
 }
 
 proc PrefsDialogFrameMenu {w} {

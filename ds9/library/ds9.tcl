@@ -246,7 +246,8 @@ switch $ds9(wm) {
 	# colors
 	ttk::style theme use default
 
-	set ds9(bold) blue
+#	set ds9(bold) blue
+	set ds9(bold) cornflowerblue
 
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]
@@ -357,7 +358,8 @@ switch $ds9(wm) {
 	# colors
 	ttk::style theme use xpnative
 
-	set ds9(bold) blue
+#	set ds9(bold) blue
+	set ds9(bold) cornflowerblue
 
 	set ds9(foreground) [ttk::style lookup . -foreground]
 	set ds9(background) [ttk::style lookup . -background]

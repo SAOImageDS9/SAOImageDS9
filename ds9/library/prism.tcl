@@ -50,6 +50,11 @@ proc PrismDialog {varname} {
 
     set var(xx) {}
     set var(yy) {}
+    set var(xerr) {}
+    set var(yerr) {}
+
+    set var(plot) 0
+    set var(plot,var) {}
 
     # create the window
     set w $var(top)
@@ -262,6 +267,11 @@ proc PrismDestroy {varname} {
 	set iprism(prisms) [lreplace $iprism(prisms) $ii $ii]
     }
 
+    # plot window?
+    if {$var(plot)} {
+	PlotDestroy $var(plot,var)
+    }
+
     if {[winfo exists $var(top)]} {
 	destroy $var(top)
 	destroy $var(mb)
@@ -372,6 +382,188 @@ proc PrismClear {varname} {
 proc PrismPlot {varname} {
     upvar #0 $varname var
     global $varname
+
+    global ed
+    
+    set w ".${varname}plot"
+    set mb ".${varname}plotmb"
+
+    set ed(top) $w
+    set ed(ok) 0
+
+    set ed(xx) $var(xx)
+    set ed(yy) $var(yy)
+    set ed(xerr) $var(xerr)
+    set ed(yerr) $var(yerr)
+
+    DialogCreate $w [msgcat::mc {Plot}] ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
+
+    # param
+    set f [ttk::frame $w.param]
+
+    ttk::label $f.txx -text [msgcat::mc {X Column}]
+    ttk::menubutton $f.xx -textvariable ed(xx) -menu $f.xx.menu
+
+    ttk::label $f.tyy -text [msgcat::mc {Y Column}]
+    ttk::menubutton $f.yy -textvariable ed(yy) -menu $f.yy.menu
+
+    PrismColsMenu $varname $f.xx xx
+    PrismColsMenu $varname $f.yy yy
+
+    grid $f.txx $f.xx -padx 2 -pady 2 -sticky ew
+    grid $f.tyy $f.yy -padx 2 -pady 2 -sticky ew
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+        -default active 
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.param -side top -fill both -expand true
+    pack $w.buttons $w.sep -side bottom -fill x
+
+    DialogCenter $w
+    DialogWait $w ed(ok) $w.buttons.ok
+
+    if {$ed(ok)} {
+	if {$ed(xx) != {} && $ed(yy) != {}} {
+	    set var(xx) $ed(xx)
+	    set var(yy) $ed(yy)
+	    set var(xerr) $ed(xerr)
+	    set var(yerr) $ed(yerr)
+
+	    PrismPlotGenerate $varname
+	}
+    }
+
+    DialogDismiss $w
+    destroy $mb
+}
+
+proc PrismPlotGenerate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {$var(xerr) == {} && $var(yerr) == {}} {
+	set dim xy
+    } elseif {$var(xerr) != {} && $var(yerr) == {}} {
+	set dim xyex
+    } elseif {$var(xerr) == {} && $var(yerr) != {}} {
+	set dim xyey
+    } else {
+	set dim xyexey
+    }
+
+    global $var(tbldb)
+    set nrows [starbase_nrows $var(tbldb)]
+    set cols [starbase_columns $var(tbldb)]
+
+    set vvarname plot${varname}
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
+    set xedata ${vvarname}xe
+    set yedata ${vvarname}ye
+    global $xdata $ydata $xedata $yedata
+
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata $ydata $xedata $yedata
+    }
+
+    set xx {}
+    set yy {}
+    set xe {}
+    set ye {}
+    for {set ii 1} {$ii <= $nrows} {incr ii} {
+	foreach col $cols {
+	    set val [starbase_get $var(tbldb) $ii \
+			 [starbase_colnum $var(tbldb) $col]]
+	    # here's a tough one-- what to do if the col is blank
+	    # for now, just set it to '0'
+	    if {[string trim "$val"] == {}} {
+		set val 0
+	    }
+	    eval "set \{$col\} \{$val\}"
+	}
+
+	switch $dim {
+	    xy {
+		append xx [subst "$var(xx) "]
+		append yy [subst "$var(yy) "]
+		append xe [subst "0 "]
+		append ye [subst "0 "]
+	    }
+	    xyex {
+		append xx [subst "$var(xx) "]
+		append yy [subst "$var(yy) "]
+		append xe [subst "$var(xerr) "]
+		append ye [subst "0 "]
+	    }
+	    xyey {
+		append xx [subst "$var(xx) "]
+		append yy [subst "$var(yy) "]
+		append xe [subst "0 "]
+		append ye [subst "$var(yerr) "]
+	    }
+	    xyexey {
+		append xx [subst "$var(xx) "]
+		append yy [subst "$var(yy) "]
+		append xe [subst "$var(xerr) "]
+		append ye [subst "$var(yerr) "]
+	    }
+	}
+    }
+
+    $xdata set $xx
+    $ydata set $yy
+    $xedata set $xe
+    $yedata set $ye
+
+    if {![PlotPing $vvarname]} {
+	PlotDialog $vvarname $var(title)
+	PlotAddGraph $vvarname scatter
+
+	set vvar(mode) pointer
+	PlotChangeMode $vvarname
+
+	set var(plot) 1
+	set var(plot,var) $vvarname
+
+	set vvar(graph,ds,xdata) $xdata
+	set vvar(graph,ds,ydata) $ydata
+	set vvar(graph,ds,xedata) $xedata
+	set vvar(graph,ds,yedata) $yedata
+
+	PlotExternal $vvarname xyexey
+    }
+
+    # colnames can change
+    set xtitle [regsub -all {\$*} $var(xx) {}]
+    set ytitle [regsub -all {\$*} $var(yy) {}]
+    PlotTitle $vvarname $var(title) $xtitle $ytitle
+
+    PlotStats $vvarname
+    PlotList $vvarname
 }
 
 proc PrismHistogram {varname} {
@@ -424,7 +616,7 @@ proc PrismImageTable {varname} {
     set ed(xx) $var(xx)
     set ed(yy) $var(yy)
 
-    DialogCreate $w [msgcat::mc {Match}] ed(ok)
+    DialogCreate $w [msgcat::mc {Bin Image}] ed(ok)
 
     $w configure -menu $mb
     ThemeMenu $mb
@@ -522,8 +714,13 @@ proc PrismExtCmd {varname} {
 	return
     }
 
-    # header
+    # clear previous cols
+    set var(xx) {}
+    set var(yy) {}
+    set var(xerr) {}
+    set var(yerr) {}
 
+    # header
     $var(header) delete 1.0 end
     $var(header) insert end [fitsy header $var(fn) $var(ext)]
     # color tag keywords
@@ -535,7 +732,6 @@ proc PrismExtCmd {varname} {
     $var(header) see 1.0
 
     # table
-    
     # clear previous db
     global $var(tbldb)
     if {[info exists $var(tbldb)]} {

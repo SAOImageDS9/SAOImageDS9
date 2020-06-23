@@ -128,6 +128,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     } elseif {[info exists vvar(system)]} {
     } else {
 	set vvar(system) $wcs(system)
+	AdjustCoordSystem $vvarname system
     }
 
     if {[info exists var(method)]} {

@@ -55,6 +55,7 @@ proc MarkerAnalysisStatsSystem {varname} {
 # hardcoded marker.C
 proc MarkerAnalysisStatsCB {frame id} {
     global imarker
+    global wcs
 
     set varname ${imarker(prefix,dialog)}${id}${frame}
     global $varname
@@ -66,26 +67,21 @@ proc MarkerAnalysisStatsCB {frame id} {
 
     if {[info exists var(system)]} {
 	set vvar(system) $var(system)
-	set sys $var(system)
     } elseif {[info exists vvar(system)]} {
-	set sys $vvar(system)
     } else {
-	global wcs
-	set sys $wcs(system)
+	set vvar(system) $wcs(system)
+	AdjustCoordSystem $vvarname system
     }
 
     if {[info exists var(sky)]} {
 	set vvar(sky) $var(sky)
-	set sky $var(sky)
     } elseif {[info exists vvar(sky)]} {
-	set sky $vvar(sky)
     } else {
-	global wcs
 	set sky $wcs(sky)
     }
 
     set tt [string totitle [$frame get marker $id type]]
-    set rr [$frame get marker $id analysis stats $sys $sky]
+    set rr [$frame get marker $id analysis stats $vvar(system) $vvar(sky)]
     SimpleTextDialog $vvarname $tt 80 20 insert top $rr
 }
 

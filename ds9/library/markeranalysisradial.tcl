@@ -72,6 +72,7 @@ proc MarkerAnalysisRadialSystem {varname} {
 # hardcoded marker.C
 proc MarkerAnalysisRadialCB {frame id} {
     global imarker
+    global wcs
 
     set varname ${imarker(prefix,dialog)}${id}${frame}
     global $varname
@@ -86,13 +87,10 @@ proc MarkerAnalysisRadialCB {frame id} {
 
     if {[info exists var(system)]} {
 	set vvar(system) $var(system)
-	set sys $var(system)
     } elseif {[info exists vvar(system)]} {
-	set sys $vvar(system)
     } else {
-	global wcs
 	set vvar(system) $wcs(system)
-	set sys $wcs(system)
+	AdjustCoordSystem $vvarname system
     }
 
     set xdata ${vvarname}xx
@@ -103,7 +101,7 @@ proc MarkerAnalysisRadialCB {frame id} {
     if {[info command $xdata] == {}} {
 	blt::vector create $xdata $ydata $yedata
     }
-    $frame get marker $id analysis radial $xdata $ydata $yedata $sys
+    $frame get marker $id analysis radial $xdata $ydata $yedata $vvar(system)
     
     if {![PlotPing $vvarname]} {
 	PlotDialog $vvarname [string totitle [$frame get marker $id type]]

@@ -72,6 +72,7 @@ proc MarkerAnalysisPandaSystem {varname} {
 # hardcoded marker.C
 proc MarkerAnalysisPandaCB {frame id} {
     global imarker
+    global wcs
 
     set varname ${imarker(prefix,dialog)}${id}${frame}
     global $varname
@@ -86,13 +87,10 @@ proc MarkerAnalysisPandaCB {frame id} {
 
     if {[info exists var(system)]} {
 	set vvar(system) $var(system)
-	set sys $var(system)
     } elseif {[info exists vvar(system)]} {
-	set sys $vvar(system)
     } else {
-	global wcs
 	set vvar(system) $wcs(system)
-	set sys $wcs(system)
+	AdjustCoordSystem $vvarname system
     }
 
     for {set jj 0} {$jj<$var(angnum)} {incr jj} {
@@ -104,7 +102,8 @@ proc MarkerAnalysisPandaCB {frame id} {
 	if {[info command $xdata] == {}} {
 	    blt::vector create $xdata $ydata $yedata
 	}
-	$frame get marker $id analysis panda $xdata $ydata $yedata $sys $jj
+	$frame get marker $id analysis panda $xdata $ydata $yedata \
+	    $vvar(system) $jj
     }
 
     if {![PlotPing $vvarname]} {

@@ -65,6 +65,10 @@ proc ProcessCommandLineSecond {} {
 		incr i
 		set pds9(language,dir) [lindex $argv $i]
 	    }
+	    -samp {
+		incr i
+		ProcessSAMPFirstCmd argv i
+	    }
 	    -xpa {
 		incr i
 		ProcessXPAFirstCmd argv i

@@ -55,6 +55,7 @@ proc PrismDialog {varname} {
 
     set var(plot) 0
     set var(plot,var) {}
+    set var(plot,type) scatter
 
     # create the window
     set w $var(top)
@@ -396,6 +397,8 @@ proc PrismPlot {varname} {
     set ed(xerr) $var(xerr)
     set ed(yerr) $var(yerr)
 
+    set ed(plot,type) $var(plot,type)
+
     DialogCreate $w [msgcat::mc {Plot}] ed(ok)
 
     $w configure -menu $mb
@@ -414,6 +417,16 @@ proc PrismPlot {varname} {
     # param
     set f [ttk::frame $w.param]
 
+    ttk::label $f.ttype -text [msgcat::mc {Plot Type}]
+    ttk::menubutton $f.type -textvariable ed(plot,type) -menu $f.type.menu
+
+    set m $f.type.menu
+    ThemeMenu $m
+    $m configure -tearoff 0
+    $m add command -label [msgcat::mc {Line}]
+    $m add command -label [msgcat::mc {Bar}]
+    $m add command -label [msgcat::mc {Scatter}]
+
     ttk::label $f.txx -text [msgcat::mc {X Column}]
     ttk::menubutton $f.xx -textvariable ed(xx) -menu $f.xx.menu
 
@@ -423,6 +436,7 @@ proc PrismPlot {varname} {
     PrismColsMenu $varname $f.xx xx
     PrismColsMenu $varname $f.yy yy
 
+    grid $f.ttype $f.type -padx 2 -pady 2 -sticky ew
     grid $f.txx $f.xx -padx 2 -pady 2 -sticky ew
     grid $f.tyy $f.yy -padx 2 -pady 2 -sticky ew
 
@@ -449,6 +463,8 @@ proc PrismPlot {varname} {
 	    set var(yy) $ed(yy)
 	    set var(xerr) $ed(xerr)
 	    set var(yerr) $ed(yerr)
+
+	    set var(plot,type) $ed(plot,type)
 
 	    PrismPlotGenerate $varname
 	}
@@ -503,6 +519,7 @@ proc PrismPlotGenerate {varname} {
 	    if {[string trim "$val"] == {}} {
 		set val 0
 	    }
+	    puts "set $col $val"
 	    eval "set \{$col\} \{$val\}"
 	}
 
@@ -541,7 +558,7 @@ proc PrismPlotGenerate {varname} {
 
     if {![PlotPing $vvarname]} {
 	PlotDialog $vvarname $var(title)
-	PlotAddGraph $vvarname scatter
+	PlotAddGraph $vvarname $var(plot,type)
 
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
@@ -719,6 +736,8 @@ proc PrismExtCmd {varname} {
     set var(yy) {}
     set var(xerr) {}
     set var(yerr) {}
+
+    set var(plot,type) scatter
 
     # header
     $var(header) delete 1.0 end

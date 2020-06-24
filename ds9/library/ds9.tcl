@@ -642,7 +642,9 @@ InitAnalysisFile
 ConfigHTTP
 
 # SAMP
-InitSAMP
+if {$pds9(samp)} {
+    InitSAMP
+}
 
 # XPA
 if {$pds9(xpa)} {

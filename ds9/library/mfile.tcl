@@ -1172,12 +1172,24 @@ proc UpdateFileMenuXPA {} {
 }
 
 proc UpdateFileMenuSAMP {} {
+    global pds9
     global ds9
     global current
     global samp
  
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
+
+    if {!$pds9(samp)} {
+	$mm.samp entryconfig [msgcat::mc {Connect}] -state disabled
+	$mm.samp entryconfig [msgcat::mc {Disconnect}] -state disabled
+
+	$mm.samp entryconfig [msgcat::mc {Image}] -state disabled
+	$mm.samp entryconfig [msgcat::mc {Table}] -state disabled
+	$bb.sampimage configure -state disabled
+	$bb.samptable configure -state disabled
+	return
+    }
 
     if {[info exists samp]} {
 	$mm.samp entryconfig [msgcat::mc {Connect}] -state disabled

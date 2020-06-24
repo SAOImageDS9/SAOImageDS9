@@ -16,14 +16,13 @@
 
 %%
 
-#include yes-no.trl
+#include yesno.trl
 
 command : samp 
  | samp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-samp : yes {SAMPConnect}
- | no {SAMPDisconnect}
+samp : yesno 
  | CONNECT_ {SAMPConnect}
  | DISCONNECT_ {SAMPDisconnect}
  | BROADCAST_ broadcast

@@ -11,11 +11,8 @@ proc SAMPDef {} {
 }
 
 proc InitSAMP {} {
-    global pds9
-
-    if {$pds9(samp)} {
-	catch {SAMPConnect 0}
-    }
+    SAMPConnect 0
+#    catch {SAMPConnect 0}
 }
 
 # Cmds
@@ -1700,6 +1697,16 @@ proc SAMPDelTmpFiles {} {
 }
 
 # Cmds
+
+proc ProcessSAMPFirstCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    sampfirst::YY_FLUSH_BUFFER
+    sampfirst::yy_scan_string [lrange $var $i end]
+    sampfirst::yyparse
+    incr i [expr $sampfirst::yycnt-1]
+}
 
 proc ProcessSAMPCmd {varname iname} {
     upvar $varname var

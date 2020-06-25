@@ -53,10 +53,10 @@ proc PrismDialog {varname} {
     set var(xerr) {}
     set var(yerr) {}
 
-    set var(plot) 0
+    set var(plots) {}
+    set var(plot,seq) 0
     set var(plot,mode) overplot
     set var(plot,type) scatter
-    set var(plot,var) {}
 
     # create the window
     set w $var(top)
@@ -95,13 +95,13 @@ proc PrismDialog {varname} {
     ttk::scrollbar $f.yscroll -command [list $f.box yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $f.box xview] -orient horizontal
     set var(dir) [ttk::treeview $f.box \
-			 -xscroll [list $f.xscroll set]\
-			 -yscroll [list $f.yscroll set] \
-			 -selectmode browse \
-			 -height 10 \
-			 -show headings \
-			 -columns {ext type dim} \
-			]
+		      -xscroll [list $f.xscroll set]\
+		      -yscroll [list $f.yscroll set] \
+		      -selectmode browse \
+		      -height 10 \
+		      -show headings \
+		      -columns {ext type dim} \
+		     ]
     $var(dir) column ext -width 100 -anchor w
     $var(dir) column type -width 50 -anchor w
     $var(dir) column dim -width 220 -anchor w
@@ -122,13 +122,13 @@ proc PrismDialog {varname} {
 	       -text [msgcat::mc {Header Keywords}]]
 
     set var(header) [text $f.header \
-			    -wrap none \
-			    -height 10 \
-			    -yscrollcommand [list $f.yscroll set] \
-			    -xscrollcommand [list $f.xscroll set] \
-			    -fg [ThemeTreeForeground] \
-			    -bg [ThemeTreeBackground] \
-			   ]
+			 -wrap none \
+			 -height 10 \
+			 -yscrollcommand [list $f.yscroll set] \
+			 -xscrollcommand [list $f.xscroll set] \
+			 -fg [ThemeTreeForeground] \
+			 -bg [ThemeTreeBackground] \
+			]
 
 
     ttk::scrollbar $f.yscroll -command [list $var(header) yview] \
@@ -153,29 +153,29 @@ proc PrismDialog {varname} {
 	       -text [msgcat::mc {Extension Data}]]
 
     set var(tbl) [table $f.t \
-			 -state disabled \
-			 -usecommand 0 \
-			 -variable $var(tbldb) \
-			 -colorigin 1 \
-			 -roworigin 0 \
-			 -cols $iprism(mincols) \
-			 -rows $iprism(minrows) \
-			 -width -1 \
-			 -height -1 \
-			 -colwidth 14 \
-			 -maxwidth 300 \
-			 -maxheight 300 \
-			 -titlerows 1 \
-			 -xscrollcommand [list $f.xscroll set]\
-			 -yscrollcommand [list $f.yscroll set]\
-			 -selecttype row \
-			 -selectmode single \
-			 -anchor w \
-			 -font [font actual TkDefaultFont] \
-			 -browsecommand [list PrismSelectCmd $varname %s %S] \
-			 -fg [ThemeTreeForeground] \
-			 -bg [ThemeTreeBackground] \
-			]
+		      -state disabled \
+		      -usecommand 0 \
+		      -variable $var(tbldb) \
+		      -colorigin 1 \
+		      -roworigin 0 \
+		      -cols $iprism(mincols) \
+		      -rows $iprism(minrows) \
+		      -width -1 \
+		      -height -1 \
+		      -colwidth 14 \
+		      -maxwidth 300 \
+		      -maxheight 300 \
+		      -titlerows 1 \
+		      -xscrollcommand [list $f.xscroll set]\
+		      -yscrollcommand [list $f.yscroll set]\
+		      -selecttype row \
+		      -selectmode single \
+		      -anchor w \
+		      -font [font actual TkDefaultFont] \
+		      -browsecommand [list PrismSelectCmd $varname %s %S] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
+		     ]
 
     $var(tbl) tag configure sel \
 	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
@@ -269,9 +269,9 @@ proc PrismDestroy {varname} {
 	set iprism(prisms) [lreplace $iprism(prisms) $ii $ii]
     }
 
-    # plot window?
-    if {$var(plot)} {
-	PlotDestroy $var(plot,var)
+    # plot windows?
+    foreach pp $var(plots) {
+	PlotDestroy $pp
     }
 
     if {[winfo exists $var(top)]} {
@@ -363,9 +363,21 @@ proc PrismClear {varname} {
     foreach id [$var(dir) children {}] {
 	$var(dir) delete $id
     }
+
+    # plot windows?
+    foreach pp $var(plots) {
+	PlotDestroy $pp
+    }
+
     set var(fn) {}
     set var(ext) {}
     set var(last) 0
+
+    # reset plots
+    set var(plots) {}
+    set var(plot,seq) 0
+    set var(plot,mode) overplot
+    set var(plot,type) scatter
 
     # header
     $var(header) delete 1.0 end
@@ -509,7 +521,10 @@ proc PrismPlotGenerate {varname} {
     set nrows [starbase_nrows $var(tbldb)]
     set cols [starbase_columns $var(tbldb)]
 
-    set vvarname plot${varname}
+    if {$var(plot,mode) == {newplot}} {
+	incr ${varname}(plot,seq)
+    }
+    set vvarname plot$var(plot,seq)${varname}
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -519,7 +534,12 @@ proc PrismPlotGenerate {varname} {
     set yedata ${vvarname}ye
 
     global $xdata $ydata
-    blt::vector create $xdata $ydata
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata
+    }
+    if {[info command $ydata] == {}} {
+	blt::vector create $ydata
+    }
 
     switch $dim {
 	xy {
@@ -529,7 +549,9 @@ proc PrismPlotGenerate {varname} {
 	}
 	xyex {
 	    global $xedata
-	    blt::vector create $xedata
+	    if {[info command $xedata] == {}} {
+		blt::vector create $xedata
+	    }
 	    fitsy plot $var(fn) $var(ext) xyex \
 		$var(xx) $xdata \
 		$var(yy) $ydata \
@@ -537,7 +559,9 @@ proc PrismPlotGenerate {varname} {
 	}
 	xyey {
 	    global $yedata
-	    blt::vector create $yedata
+	    if {[info command $yedata] == {}} {
+		blt::vector create $yedata
+	    }
 	    fitsy plot $var(fn) $var(ext) xyey \
 		$var(xx) $xdata \
 		$var(yy) $ydata \
@@ -545,7 +569,12 @@ proc PrismPlotGenerate {varname} {
 	}
 	xyexey {
 	    global $xedata $yedata
-	    blt::vector create $xedata $yedata
+	    if {[info command $xedata] == {}} {
+		blt::vector create $xedata
+	    }
+	    if {[info command $yedata] == {}} {
+		blt::vector create $yedata
+	    }
 	    fitsy plot $var(fn) $var(ext) xyexey \
 		$var(xx) $xdata \
 		$var(yy) $ydata \
@@ -554,28 +583,25 @@ proc PrismPlotGenerate {varname} {
 	}
     }
 
-    if {![PlotPing $vvarname]} {
+    if {$var(plot,mode) == {newplot} || $var(plots) == {}} {
 	PlotDialog $vvarname $var(plot,type)
 	PlotAddGraph $vvarname $var(plot,type)
 	PlotTitle $vvarname $var(plot,type) $var(xx) $var(yy)
-
-	set var(plot) 1
-	set var(plot,var) $vvarname
-
-	set vvar(graph,ds,xdata) $xdata
-	set vvar(graph,ds,ydata) $ydata
-
-	switch $dim {
-	    xy {}
-	    xyex {set vvar(graph,ds,xedata) $xedata}
-	    xyey {set vvar(graph,ds,yedata) $yedata}
-	    xyexey {
-		set vvar(graph,ds,xedata) $xedata
-		set vvar(graph,ds,yedata) $yedata
-	    }
-	}
-	PlotExternal $vvarname $dim
+	lappend ${varname}(plots) $vvarname
     }
+
+    set vvar(graph,ds,xdata) $xdata
+    set vvar(graph,ds,ydata) $ydata
+    switch $dim {
+	xy {}
+	xyex {set vvar(graph,ds,xedata) $xedata}
+	xyey {set vvar(graph,ds,yedata) $yedata}
+	xyexey {
+	    set vvar(graph,ds,xedata) $xedata
+	    set vvar(graph,ds,yedata) $yedata
+	}
+    }
+    PlotExternal $vvarname $dim
 
     PlotStats $vvarname
     PlotList $vvarname
@@ -589,7 +615,7 @@ proc PrismHistogram {varname} {
 	return
     }
 
- #   fitsy histogram $var(fn) $var(ext) $col vecx vecy $num
+    #   fitsy histogram $var(fn) $var(ext) $col vecx vecy $num
 }
 
 proc PrismImage {varname} {
@@ -606,7 +632,7 @@ proc PrismImage {varname} {
 	PrismImageTable $varname
     }
 }
-    
+
 proc PrismImageImage {varname} {
     upvar #0 $varname var
     global $varname
@@ -734,8 +760,6 @@ proc PrismExtCmd {varname} {
     set var(yy) {}
     set var(xerr) {}
     set var(yerr) {}
-
-    set var(plot,type) scatter
 
     # header
     $var(header) delete 1.0 end

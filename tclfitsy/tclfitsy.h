@@ -9,6 +9,8 @@
 
 class TclFITSY {
  private:
+  enum Dimension {XY,XYXE,XYYE,XYXEYE};
+
   Tcl_Interp* interp_;
   
  protected:
@@ -25,6 +27,7 @@ class TclFITSY {
   int istable(int, const char*[]);
   int table(int, const char*[]);
   int histogram(int, const char*[]);
+  int plot(int, const char*[]);
 };
 
 extern TclFITSY* tclfitsy;

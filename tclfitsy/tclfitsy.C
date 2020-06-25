@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include <iostream>
@@ -61,13 +62,15 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
       return fitsy->table(argc, argv);
     else if (!strncmp(argv[1], "histogram", 8))
       return fitsy->table(argc, argv);
+    else if (!strncmp(argv[1], "plot", 4))
+      return fitsy->plot(argc, argv);
     else {
       Tcl_AppendResult(interp, "fitsy: unknown command: ", argv[1], NULL);
       return TCL_ERROR;
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table? ?histogram?",
+    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table? ?histogram? ?plot?",
 		     NULL);
     return TCL_ERROR;
   }
@@ -457,6 +460,183 @@ int TclFITSY::histogram(int argc, const char* argv[])
   Blt_Vector* yy;
   Blt_GetVector(interp_, argv[6], &yy);
   Blt_ResetVector(yy, y, nn, num*sizeof(double), TCL_DYNAMIC);
+
+  return TCL_OK;
+}
+
+int TclFITSY::plot(int argc, const char* argv[])
+{
+  if (argc<9) {
+    Tcl_AppendResult(interp_, "usage: fitsy plot ?filename? ?ext? ?dim? ?xcol? ?xname? ?ycol? ?yname? [?xerrcol? ?xerrname?] [?yerrcol? ?yerrname?]", NULL);
+    return TCL_ERROR;
+  }
+  
+  // dim
+  if (!(argv[4] && *argv[4]))
+    return TCL_ERROR;
+
+  // xcolname
+  if (!(argv[5] && *argv[5]))
+    return TCL_ERROR;
+
+  // xvarname
+  if (!(argv[6] && *argv[6]))
+    return TCL_ERROR;
+
+  // ycolname
+  if (!(argv[7] && *argv[7]))
+    return TCL_ERROR;
+
+  // yvarname
+  if (!(argv[8] && *argv[8]))
+    return TCL_ERROR;
+
+  Dimension dim = XY;
+  if (!strncmp(argv[4],"xy",2))
+    dim = XY;
+  else if (!strncmp(argv[4],"xyxe",4)) {
+    dim = XYXE;
+    // xerrcol
+    if (!(argv[9] && *argv[9]))
+      return TCL_ERROR;
+    // xerrvarname
+    if (!(argv[10] && *argv[10]))
+      return TCL_ERROR;
+  }
+  else if (!strncmp(argv[4],"xyye",4)) {
+    dim = XYYE;
+    // yerrcol
+    if (!(argv[9] && *argv[9]))
+      return TCL_ERROR;
+    // yerrvarname
+    if (!(argv[10] && *argv[10]))
+      return TCL_ERROR;
+  }
+  else if (!strncmp(argv[4],"xyxeye",6)) {
+    dim = XYXEYE;
+    // xerrcol
+    if (!(argv[9] && *argv[9]))
+      return TCL_ERROR;
+    // xerrvarname
+    if (!(argv[10] && *argv[10]))
+      return TCL_ERROR;
+    // yerrcol
+    if (!(argv[11] && *argv[11]))
+      return TCL_ERROR;
+    // yerrvarname
+    if (!(argv[12] && *argv[12]))
+      return TCL_ERROR;
+  }
+  else
+    return TCL_ERROR;
+
+  FitsFile* fits = findFits(argv);
+  if (!fits)
+    return TCL_ERROR;
+
+  if (!fits->isValid())
+    return TCL_ERROR;
+      
+  if (!fits->isTable()) 
+    return TCL_ERROR;
+
+  char* ptr = (char*)fits->data();
+  FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
+  int rows = hdu->rows();
+  int width  = hdu->width();
+
+  FitsColumn* xcol =hdu->find(argv[5]);
+  FitsColumn* ycol =hdu->find(argv[7]);
+  FitsColumn* xecol =NULL;
+  FitsColumn* yecol =NULL;
+
+  double* x = new double[rows];
+  double* y = new double[rows];
+  double* xe =NULL;
+  double* ye =NULL;
+
+  if (!xcol)
+    return TCL_ERROR;
+  if (!ycol)
+    return TCL_ERROR;
+
+  switch (dim) {
+  case XY:
+    break;
+  case XYXE:
+    xecol=hdu->find(argv[9]);
+    if (!xecol)
+      return TCL_ERROR;
+    xe = new double[rows];
+    break;
+  case XYYE:
+    yecol=hdu->find(argv[9]);
+    if (!yecol)
+      return TCL_ERROR;
+    ye = new double[rows];
+    break;
+  case XYXEYE:
+    xecol=hdu->find(argv[9]);
+    yecol=hdu->find(argv[11]);
+    if (!xecol)
+      return TCL_ERROR;
+    if (!yecol)
+      return TCL_ERROR;
+    xe = new double[rows];
+    ye = new double[rows];
+    break;
+  }
+
+  for (int ii=0; ii<rows; ii++, ptr+=width) {
+    x[ii] = xcol->value(ptr);
+    y[ii] = ycol->value(ptr);
+    switch (dim) {
+    case XY:
+      break;
+    case XYXE:
+      xe[ii] = xecol->value(ptr);
+      break;
+    case XYYE:
+      ye[ii] = yecol->value(ptr);
+      break;
+    case XYXEYE:
+      xe[ii] = xecol->value(ptr);
+      ye[ii] = yecol->value(ptr);
+      break;
+    }
+  }
+
+  // load into BLT vectors
+  Blt_Vector* xx =NULL;
+  Blt_Vector* yy =NULL;
+  Blt_Vector* xxe =NULL;
+  Blt_Vector* yye =NULL;
+
+  Blt_GetVector(interp_, argv[6], &xx);
+  Blt_ResetVector(xx, x, rows, rows*sizeof(double), TCL_DYNAMIC);
+
+  Blt_GetVector(interp_, argv[8], &yy);
+  Blt_ResetVector(yy, y, rows, rows*sizeof(double), TCL_DYNAMIC);
+
+  switch (dim) {
+  case XY:
+    break;
+  case XYXE:
+    Blt_GetVector(interp_, argv[10], &xxe);
+    Blt_ResetVector(xxe, xe, rows, rows*sizeof(double), TCL_DYNAMIC);
+    break;
+  case XYYE:
+      Blt_GetVector(interp_, argv[10], &yye);
+    Blt_ResetVector(yye, ye, rows, rows*sizeof(double), TCL_DYNAMIC);
+    break;
+  case XYXEYE:
+    Blt_GetVector(interp_, argv[10], &xxe);
+    Blt_ResetVector(xxe, xe, rows, rows*sizeof(double), TCL_DYNAMIC);
+
+    Blt_GetVector(interp_, argv[12], &yye);
+    Blt_ResetVector(yye, ye, rows, rows*sizeof(double), TCL_DYNAMIC);
+    break;
+  }
 
   return TCL_OK;
 }

@@ -54,8 +54,9 @@ proc PrismDialog {varname} {
     set var(yerr) {}
 
     set var(plot) 0
-    set var(plot,var) {}
+    set var(plot,mode) overplot
     set var(plot,type) scatter
+    set var(plot,var) {}
 
     # create the window
     set w $var(top)
@@ -398,6 +399,7 @@ proc PrismPlot {varname} {
     set ed(yerr) $var(yerr)
 
     set ed(plot,type) $var(plot,type)
+    set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Plot}] ed(ok)
 
@@ -433,12 +435,26 @@ proc PrismPlot {varname} {
     ttk::label $f.tyy -text [msgcat::mc {Y Column}]
     ttk::menubutton $f.yy -textvariable ed(yy) -menu $f.yy.menu
 
+    ttk::label $f.txerr -text [msgcat::mc {X Error Column}]
+    ttk::menubutton $f.xerr -textvariable ed(xerr) -menu $f.xerr.menu
+
+    ttk::label $f.tyerr -text [msgcat::mc {Y Error Column}]
+    ttk::menubutton $f.yerr -textvariable ed(yerr) -menu $f.yerr.menu
+
     PrismColsMenu $varname $f.xx xx
     PrismColsMenu $varname $f.yy yy
+    PrismColsMenu $varname $f.xerr xerr
+    PrismColsMenu $varname $f.yerr yerr
+
+    ttk::radiobutton $f.over -text [msgcat::mc {Overplot}] \
+	-variable ${varname}(plot,mode) -value overplot
+    ttk::radiobutton $f.new -text [msgcat::mc {New Plot}] \
+	-variable ${varname}(plot,mode) -value newplot
 
     grid $f.ttype $f.type -padx 2 -pady 2 -sticky ew
-    grid $f.txx $f.xx -padx 2 -pady 2 -sticky ew
-    grid $f.tyy $f.yy -padx 2 -pady 2 -sticky ew
+    grid $f.txx $f.xx $f.txerr $f.xerr -padx 2 -pady 2 -sticky ew
+    grid $f.tyy $f.yy $f.tyerr $f.yerr -padx 2 -pady 2 -sticky ew
+    grid x $f.over $f.new -padx 2 -pady 2 -sticky ew
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -465,6 +481,7 @@ proc PrismPlot {varname} {
 	    set var(yerr) $ed(yerr)
 
 	    set var(plot,type) $ed(plot,type)
+	    set var(plot,mode) $ed(plot,mode)
 
 	    PrismPlotGenerate $varname
 	}
@@ -500,84 +517,65 @@ proc PrismPlotGenerate {varname} {
     set ydata ${vvarname}yy
     set xedata ${vvarname}xe
     set yedata ${vvarname}ye
-    global $xdata $ydata $xedata $yedata
 
-    if {[info command $xdata] == {}} {
-	blt::vector create $xdata $ydata $xedata $yedata
-    }
+    global $xdata $ydata
+    blt::vector create $xdata $ydata
 
-    set xx {}
-    set yy {}
-    set xe {}
-    set ye {}
-    for {set ii 1} {$ii <= $nrows} {incr ii} {
-	foreach col $cols {
-	    set val [starbase_get $var(tbldb) $ii \
-			 [starbase_colnum $var(tbldb) $col]]
-	    # here's a tough one-- what to do if the col is blank
-	    # for now, just set it to '0'
-	    if {[string trim "$val"] == {}} {
-		set val 0
-	    }
-	    puts "set $col $val"
-	    eval "set \{$col\} \{$val\}"
+    switch $dim {
+	xy {
+	    fitsy plot $var(fn) $var(ext) xy \
+		$var(xx) $xdata \
+		$var(yy) $ydata
 	}
-
-	switch $dim {
-	    xy {
-		append xx [subst "$var(xx) "]
-		append yy [subst "$var(yy) "]
-		append xe [subst "0 "]
-		append ye [subst "0 "]
-	    }
-	    xyex {
-		append xx [subst "$var(xx) "]
-		append yy [subst "$var(yy) "]
-		append xe [subst "$var(xerr) "]
-		append ye [subst "0 "]
-	    }
-	    xyey {
-		append xx [subst "$var(xx) "]
-		append yy [subst "$var(yy) "]
-		append xe [subst "0 "]
-		append ye [subst "$var(yerr) "]
-	    }
-	    xyexey {
-		append xx [subst "$var(xx) "]
-		append yy [subst "$var(yy) "]
-		append xe [subst "$var(xerr) "]
-		append ye [subst "$var(yerr) "]
-	    }
+	xyex {
+	    global $xedata
+	    blt::vector create $xedata
+	    fitsy plot $var(fn) $var(ext) xyex \
+		$var(xx) $xdata \
+		$var(yy) $ydata \
+		$var(xerr) $xedata
+	}
+	xyey {
+	    global $yedata
+	    blt::vector create $yedata
+	    fitsy plot $var(fn) $var(ext) xyey \
+		$var(xx) $xdata \
+		$var(yy) $ydata \
+		$var(yerr) $yedata
+	}
+	xyexey {
+	    global $xedata $yedata
+	    blt::vector create $xedata $yedata
+	    fitsy plot $var(fn) $var(ext) xyexey \
+		$var(xx) $xdata \
+		$var(yy) $ydata \
+		$var(xerr) $xedata \
+		$var(yerr) $yedata
 	}
     }
-
-    $xdata set $xx
-    $ydata set $yy
-    $xedata set $xe
-    $yedata set $ye
 
     if {![PlotPing $vvarname]} {
-	PlotDialog $vvarname $var(title)
+	PlotDialog $vvarname $var(plot,type)
 	PlotAddGraph $vvarname $var(plot,type)
-
-	set vvar(mode) pointer
-	PlotChangeMode $vvarname
+	PlotTitle $vvarname $var(plot,type) $var(xx) $var(yy)
 
 	set var(plot) 1
 	set var(plot,var) $vvarname
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
-	set vvar(graph,ds,xedata) $xedata
-	set vvar(graph,ds,yedata) $yedata
 
-	PlotExternal $vvarname xyexey
+	switch $dim {
+	    xy {}
+	    xyex {set vvar(graph,ds,xedata) $xedata}
+	    xyey {set vvar(graph,ds,yedata) $yedata}
+	    xyexey {
+		set vvar(graph,ds,xedata) $xedata
+		set vvar(graph,ds,yedata) $yedata
+	    }
+	}
+	PlotExternal $vvarname $dim
     }
-
-    # colnames can change
-    set xtitle [regsub -all {\$*} $var(xx) {}]
-    set ytitle [regsub -all {\$*} $var(yy) {}]
-    PlotTitle $vvarname $var(title) $xtitle $ytitle
 
     PlotStats $vvarname
     PlotList $vvarname

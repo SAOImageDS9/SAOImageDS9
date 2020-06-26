@@ -2392,24 +2392,25 @@ $xpaset -p ds9 shm rgbimage key 100 foo<br>
 $xpaset -p ds9 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 $xpaset -p ds9 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
 <tt>Syntax:<br>
 sia [2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export sb|tsv &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [name &lt;object&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [print]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [retrieve]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sky &lt;skyframe&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [skyformat &lt;skyformat&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
+&nbsp;&nbsp;&nbsp; [cancel]<br>
+&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [crosshair]<br>
+&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export sb|tsv &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+&nbsp;&nbsp;&nbsp; [print]<br>
+&nbsp;&nbsp;&nbsp; [retrieve]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
+&nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;]<br>
+&nbsp;&nbsp;&nbsp; [skyformat &lt;skyformat&gt;]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [update]<br>
 &nbsp;<br>
 Example:<br>
 $xpaget ds9 sia<br>
@@ -2420,6 +2421,7 @@ $xpaset -p ds9 sia clear<br>
 $xpaset -p ds9 sia close<br>
 $xpaset -p ds9 sia coordinate 202.48 47.21 fk5<br>
 $xpaset -p ds9 sia crosshair<br>
+$xpaset -p ds9 sia current 2mass<br>
 $xpaset -p ds9 sia export tsv bar.tsv<br>
 $xpaset -p ds9 sia name m51<br>
 $xpaset -p ds9 sia print<br>
@@ -2429,8 +2431,8 @@ $xpaset -p ds9 sia radius 1 degrees<br>
 $xpaset -p ds9 sia sky fk5<br>
 $xpaset -p ds9 sia skyformat degrees<br>
 $xpaset -p ds9 sia system wcs<br>
-$xpaset -p ds9 sia update<br>
-<br></tt> <b><a name="single" id="single"></a>single</b>
+$xpaset -p ds9 sia update<br></tt>
+<p><b><a name="single" id="single"></a>single</b></p>
 <p>Select Single Display mode</p>
 <tt>Syntax:<br>
 single<br>

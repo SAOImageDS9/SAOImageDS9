@@ -32,16 +32,6 @@ proc SIADef {} {
 			     {http://jvo.nao.ac.jp/skynode/do/siap/akari/fis_image_v1/1.0}\
 			     {} \
 			} \
-			{{Astro-Wise} \
-			     siaastrowise \
-			     {http://vo.astro-wise.org/SIAP}\
-			     {VERB=2&FORM=VOTable&PROJECT=ALL&INSTRUMENT=ALL&} \
-			} \
-			{{CADC} \
-			     siacadc \
-			     {http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query}\
-			     {} \
-			} \
 			{{Chandra (NASA/CXC)} \
 			     siacxc \
 			     {http://cda.harvard.edu/cxcsiap/queryImages}\
@@ -57,11 +47,6 @@ proc SIADef {} {
 			     {http://archive.stsci.edu/siap/search.php}\
 			     {} \
 			} \
-			{{SDSS DR12} \
-			     siasdss \
-			     {http://skyserver.sdss.org/SkyserverWS/dr12/SIAP/getSIAP}\
-			     {} \
-			} \
 			{{SkyView (NASA/HEASARC)} \
 			     siaskyview \
 			     {http://skyview.gsfc.nasa.gov/cgi-bin/vo/sia.pl}\
@@ -73,6 +58,11 @@ proc SIADef {} {
 			     {} \
 			 } \
 		    }
+
+    #{{Astro-Wise} siaastrowise {http://vo.astro-wise.org/SIAP} {VERB=2&FORM=VOTable&PROJECT=ALL&INSTRUMENT=ALL&}}
+    #{{CADC} siacadc {http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query} {}}
+    #{{SDSS DR12} siasdss {http://skyserver.sdss.org/SkyserverWS/dr12/SIAP/getSIAP} {} }
+
 }
 
 proc SIAAnalysisMenu {mb} {
@@ -210,22 +200,34 @@ proc ProcessSIACmd {varname iname} {
     incr i [expr $sia::yycnt-1]
 }
 
-proc SIACmdCheck {} {
-    global cvarname
-    upvar #0 $cvarname cvar
+proc ProcessSendSIACmd {proc id param sock fn} {
+    global isia
 
-    if {![info exists cvar(top)]} {
-	Error "[msgcat::mc {Unable to find SIAP window}] $cvarname"
-	return 0
+    set rr {}
+    foreach ii $isia(sias) {
+	lappend rr [string replace $ii 0 2]
     }
-    if {![winfo exists $cvar(top)]} {
-	Error "[msgcat:: mc {Unable to find SIAP window}] $cvarname"
-	return 0
-    }
-    return 1
+    $proc $id "$rr\n"
 }
 
 proc SIACmdRef {ref} {
+    global isia
+    global cvarname
+
+    set rr sia${ref}
+    set id [lsearch $isia(sias) $rr]
+
+    # look for reference in current list
+    if { $id < 0} {
+	Error "[msgcat::mc {Unable to find SIAP window}] $ref"
+	return
+    }
+
+    set isia(sias) [lreplace $isia(sias) $id $id]
+    lappend isia(sias) $rr
+}
+
+proc SIACmdLoad {ref} {
     global isia
     global cvarname
 
@@ -246,7 +248,3 @@ proc SIACmdRef {ref} {
     }
 }
 
-proc ProcessSendSIACmd {proc id param sock fn} {
-    global isia
-    $proc $id "$isia(sias)\n"
-}

@@ -16,6 +16,7 @@
 %token CLOSE_
 %token COORDINATE_
 %token CROSSHAIR_
+%token CURRENT_
 %token EXPORT_
 %token NAME_
 %token PRINT_
@@ -57,16 +58,13 @@ command : sia
  | sia {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-sia : {if {![SIACmdCheck]} {sia::YYABORT}} siaCmd
- | site {SIACmdRef $1}
- | site {SIACmdRef $1} siaCmd
- ;
-
-siaCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
+sia : site {SIACmdLoad $1}
+ | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 SIAOff}
  | CLOSE_ {ProcessCmdCVAR0 SIADestroy}
  | COORDINATE_ coordinate
- | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
+ | CROSSHAIR_ {ProcessCmdCVAR0 SIACrosshair}
+ | CURRENT_ site {SIACmdRef $2}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}

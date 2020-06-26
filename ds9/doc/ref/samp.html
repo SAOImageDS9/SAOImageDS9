@@ -2479,47 +2479,49 @@ shm rgbimage key 100 foo<br>
 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
 <tt>Syntax:<br>
 sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export sb|tsv &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [name &lt;object&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [print]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [retrieve]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sky &lt;skyframe&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [skyformat &lt;skyformat&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
+&nbsp;&nbsp;&nbsp; [cancel]<br>
+&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [crosshair]<br>
+&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export sb|tsv &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+&nbsp;&nbsp;&nbsp; [print]<br>
+&nbsp;&nbsp;&nbsp; [retrieve]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
+&nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;]<br>
+&nbsp;&nbsp;&nbsp; [skyformat &lt;skyformat&gt;]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [update]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
 sia<br>
 <br>
 ds9.set(string cmd)<br>
-sia2mass<br>
-siacancel<br>
-siaclear<br>
-siaclose<br>
-siacoordinate 202.48 47.21 fk5<br>
-siacrosshair<br>
-siaexport tsv bar.tsv<br>
-sianame m51<br>
-siaprint<br>
-siaretrieve<br>
-siasave foo.xml<br>
-siaradius 1degrees<br>
-siasky fk5<br>
+sia 2mass<br>
+sia cancel<br>
+sia clear<br>
+sia close<br>
+sia coordinate 202.48 47.21 fk5<br>
+sia crosshair<br>
+sia current 2mass<br>
+sia export tsv bar.tsv<br>
+sia name m51<br>
+sia print<br>
+sia retrieve<br>
+sia save foo.xml<br>
+sia radius 1degrees<br>
+sia sky fk5<br>
 sia skyformat degrees<br>
-siasystem wcs<br>
-siaupdate<br>
-<br></tt> <b><a name="single" id="single"></a>single</b>
+sia system wcs<br>
+sia update<br></tt>
+<p><b><a name="single" id="single"></a>single</b></p>
 <p>Select Single Display mode</p>
 <tt>Syntax:<br>
 single<br>

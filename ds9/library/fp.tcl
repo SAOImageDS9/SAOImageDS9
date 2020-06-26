@@ -489,6 +489,11 @@ proc ProcessFootprintCmd {varname iname} {
     incr i [expr $fp::yycnt-1]
 }
 
+proc ProcessSendFootprintCmd {proc id param sock fn} {
+    global ifp
+    $proc $id "$ifp(fps)\n"
+}
+
 proc FPCmdCheck {} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -526,7 +531,3 @@ proc FPCmdRef {ref} {
     }
 }
 
-proc ProcessSendFootprintCmd {proc id param sock fn} {
-    global ifp
-    $proc $id "$ifp(fps)\n"
-}

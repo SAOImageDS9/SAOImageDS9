@@ -853,30 +853,23 @@ proc ProcessPrismCmd {varname iname} {
 
 proc ProcessSendPrismCmd {proc id param {sock {}} {fn {}}} {
     global iprism
-    global parse
-    set parse(proc) $proc
-    set parse(id) $id
-
-    set ref [lindex $iprism(prisms) end]
-    global cvarname
-    set cvarname $ref
-
-    prismsend::YY_FLUSH_BUFFER
-    prismsend::yy_scan_string $param
-    prismsend::yyparse
+    $proc $id "$iprism(prisms)\n"
 }
 
 proc PrismCmdRef {ref} {
     global iprism
     global cvarname
 
+    set id [lsearch $iprism(prisms) $ref]
+
     # look for reference in current list
-    if {[lsearch $iprism(prisms) $ref] < 0} {
-	Error "[msgcat::mc {Unable to find prism window}] $ref"
+    if { $id < 0} {
+	Error "[msgcat::mc {Unable to find PRISM window}] $ref"
 	return
     }
 
-    set cvarname $ref
+    set iprism(prisms) [lreplace $iprism(prisms) $id $id]
+    lappend iprism(prisms) $ref
 }
 
 proc PrismCmdLoad {fn} {

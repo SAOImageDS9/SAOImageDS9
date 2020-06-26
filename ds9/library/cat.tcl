@@ -970,6 +970,23 @@ proc ProcessCatalogCmd {varname iname} {
     incr i [expr $cat::yycnt-1]
 }
 
+proc ProcessSendCatalogCmd {proc id param sock fn} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
+
+    global icat
+    set ref [lindex $icat(cats) end]
+    global cvarname
+    set cvarname $ref
+
+    catsend::YY_FLUSH_BUFFER
+    catsend::yy_scan_string $param
+    catsend::yyparse
+}
+
 proc CatalogCmdCheck {} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -1191,23 +1208,6 @@ proc CatalogCmdSymbolSave {fn} {
     global $cvar(symdb)
 
     starbase_write $cvar(symdb) $fn
-}
-
-proc ProcessSendCatalogCmd {proc id param sock fn} {
-    global parse
-    set parse(proc) $proc
-    set parse(id) $id
-    set parse(sock) $sock
-    set parse(fn) $fn
-
-    global icat
-    set ref [lindex $icat(cats) end]
-    global cvarname
-    set cvarname $ref
-
-    catsend::YY_FLUSH_BUFFER
-    catsend::yy_scan_string $param
-    catsend::yyparse
 }
 
 proc CatalogSendCmdHeader {} {

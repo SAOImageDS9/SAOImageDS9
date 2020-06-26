@@ -9,7 +9,7 @@ proc PrismDef {} {
     global iprism
 
     set iprism(prisms) {}
-    set iprism(id) 0
+    set iprism(seq) 0
 
     set iprism(mincols) 10
     set iprism(minrows) 20
@@ -23,8 +23,8 @@ proc PrismDialog {varname} {
 
     # first determine if aready in use, then increment
     if {[lsearch $iprism(prisms) $varname] >= 0} {
-	incr iprism(id)
-	append varname $iprism(id)
+	incr iprism(seq)
+	append varname $iprism(seq)
     }
 
     upvar #0 $varname var
@@ -55,6 +55,7 @@ proc PrismDialog {varname} {
 
     set var(plots) {}
     set var(plot,seq) 0
+    set var(plot,data,seq) 0
     set var(plot,mode) overplot
     set var(plot,type) scatter
 
@@ -376,6 +377,7 @@ proc PrismClear {varname} {
     # reset plots
     set var(plots) {}
     set var(plot,seq) 0
+    set var(plot,data,seq) 0
     set var(plot,mode) overplot
     set var(plot,type) scatter
 
@@ -459,9 +461,9 @@ proc PrismPlot {varname} {
     PrismColsMenu $varname $f.yerr yerr
 
     ttk::radiobutton $f.over -text [msgcat::mc {Overplot}] \
-	-variable ${varname}(plot,mode) -value overplot
+	-variable ed(plot,mode) -value overplot
     ttk::radiobutton $f.new -text [msgcat::mc {New Plot}] \
-	-variable ${varname}(plot,mode) -value newplot
+	-variable ed(plot,mode) -value newplot
 
     grid $f.ttype $f.type -padx 2 -pady 2 -sticky ew
     grid $f.txx $f.xx $f.txerr $f.xerr -padx 2 -pady 2 -sticky ew
@@ -521,17 +523,20 @@ proc PrismPlotGenerate {varname} {
     set nrows [starbase_nrows $var(tbldb)]
     set cols [starbase_columns $var(tbldb)]
 
-    if {$var(plot,mode) == {newplot}} {
-	incr ${varname}(plot,seq)
+    switch $var(plot,mode) {
+	newplot {incr ${varname}(plot,seq)}
+	overplot {}
     }
+
     set vvarname plot$var(plot,seq)${varname}
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set xdata ${vvarname}xx
-    set ydata ${vvarname}yy
-    set xedata ${vvarname}xe
-    set yedata ${vvarname}ye
+    set xdata ${vvarname}xx$var(plot,data,seq)
+    set ydata ${vvarname}yy$var(plot,data,seq)
+    set xedata ${vvarname}xe$var(plot,data,seq)
+    set yedata ${vvarname}ye$var(plot,data,seq)
+    incr ${varname}(plot,data,seq)
 
     global $xdata $ydata
     if {[info command $xdata] == {}} {
@@ -583,7 +588,7 @@ proc PrismPlotGenerate {varname} {
 	}
     }
 
-    if {$var(plot,mode) == {newplot} || $var(plots) == {}} {
+    if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
 	PlotDialog $vvarname $var(plot,type)
 	PlotAddGraph $vvarname $var(plot,type)
 	PlotTitle $vvarname $var(plot,type) $var(xx) $var(yy)
@@ -592,6 +597,7 @@ proc PrismPlotGenerate {varname} {
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
+
     switch $dim {
 	xy {}
 	xyex {set vvar(graph,ds,xedata) $xedata}
@@ -601,6 +607,7 @@ proc PrismPlotGenerate {varname} {
 	    set vvar(graph,ds,yedata) $yedata
 	}
     }
+
     PlotExternal $vvarname $dim
 
     PlotStats $vvarname

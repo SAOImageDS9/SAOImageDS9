@@ -202,6 +202,7 @@ proc PlotAddElement {varname} {
     # create graph elements
     set nn $var(graph,ds,current)
     global $var(graph,ds,xdata) $var(graph,ds,ydata)
+    
     $var(graph) element create $nn \
 	-xdata $var(graph,ds,xdata) -ydata $var(graph,ds,ydata) \
     

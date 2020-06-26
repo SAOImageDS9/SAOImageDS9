@@ -17,6 +17,7 @@
 %token CLOSE_
 %token COORDINATE_
 %token CROSSHAIR_
+%token CURRENT_
 %token DECR_
 %token EXPORT_
 %token FILTER_
@@ -60,16 +61,13 @@ command : fp
  | fp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-fp : {if {![FPCmdCheck]} {fp::YYABORT}} fpCmd
- | site {FPCmdRef $1}
- | site {FPCmdRef $1} fpCmd
- ;
-
-fpCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
+fp : site {FPCmdLoad $1}
+ | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 FPOff}
  | CLOSE_ {ProcessCmdCVAR0 FPDestroy}
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
+ | CURRENT_ site {FPCmdRef $2}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | FILTER_ filter
 # backward compatibily

@@ -12,6 +12,7 @@ clear	    {return $CLEAR_}
 close	    {return $CLOSE_}
 coordinate  {return $COORDINATE_}
 crosshair   {return $CROSSHAIR_}
+current	    {return $CURRENT_}
 decr	    {return $DECR_}
 export	    {return $EXPORT_}
 filter	    {return $FILTER_}

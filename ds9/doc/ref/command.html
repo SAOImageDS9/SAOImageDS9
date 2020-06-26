@@ -812,27 +812,28 @@ fp</b></p>
 <p>Support for Chandra (CXC) and Hubble Legacy Archive (HLA) footprint servers.</p>
 <tt>Syntax:<br>
 -footprint [cxc|hla]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export sb|tsv &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [filter &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [filter load &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [name &lt;object&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [panto yes|no]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [print]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [regions]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [retrieve]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show yes|no]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sky &lt;skyframe&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [skyformat &lt;skyformat&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sort &lt;col&gt; incr|decr]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
+&nbsp;&nbsp;&nbsp; [cancel]<br>
+&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [crosshair]<br>
+&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export sb|tsv &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [filter &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [filter load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+&nbsp;&nbsp;&nbsp; [panto yes|no]<br>
+&nbsp;&nbsp;&nbsp; [print]<br>
+&nbsp;&nbsp;&nbsp; [regions]<br>
+&nbsp;&nbsp;&nbsp; [retrieve]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [show yes|no]<br>
+&nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
+&nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;]<br>
+&nbsp;&nbsp;&nbsp; [skyformat &lt;skyformat&gt;]<br>
+&nbsp;&nbsp;&nbsp; [sort &lt;col&gt; incr|decr]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [update]<br>
 <br>
 Example:<br>
 $ds9 -footprint cxc<br>
@@ -842,6 +843,7 @@ $ds9 -footprint clear<br>
 $ds9 -footprint close<br>
 $ds9 -footprint coordinate 202.48 47.21 fk5<br>
 $ds9 -footprint crosshair<br>
+$ds9 -footprint current cxc<br>
 $ds9 -footprint export tsv foo.tsv<br>
 $ds9 -footprint filter'\$ObsId&lt;10000'<br>
 $ds9 -footprint filter load foo.flt<br>

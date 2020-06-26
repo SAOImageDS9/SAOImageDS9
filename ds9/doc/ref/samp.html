@@ -992,27 +992,28 @@ fp<br></b></p>
 <p>Support for Chandra (CXC) and Hubble Legacy Archive (HLA) footprint servers.</p>
 <tt>Syntax:<br>
 footprint [cxc|hla]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [crosshair]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export sb|tsv &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [filter &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [filter load &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [name &lt;object&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [panto yes|no]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [print]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [regions]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [retrieve]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show yes|no]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sky &lt;skyframe&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [skyformat &lt;skyformat&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sort &lt;col&gt; incr|decr]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system &lt;coordsys&gt;]<br>
-&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [update]<br>
+&nbsp;&nbsp;&nbsp; [cancel]<br>
+&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [crosshair]<br>
+&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export sb|tsv &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [filter &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [filter load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+&nbsp;&nbsp;&nbsp; [panto yes|no]<br>
+&nbsp;&nbsp;&nbsp; [print]<br>
+&nbsp;&nbsp;&nbsp; [regions]<br>
+&nbsp;&nbsp;&nbsp; [retrieve]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [show yes|no]<br>
+&nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
+&nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;]<br>
+&nbsp;&nbsp;&nbsp; [skyformat &lt;skyformat&gt;]<br>
+&nbsp;&nbsp;&nbsp; [sort &lt;col&gt; incr|decr]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [update]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
@@ -1026,6 +1027,7 @@ footprint clear<br>
 footprint close<br>
 footprint coordinate 202.48 47.21 fk5<br>
 footprint crosshair<br>
+footprint current cxc<br>
 footprint export tsv foo.tsv<br>
 footprint filter {$ObsId&lt;10000}<br>
 footprint filter load foo.flt<br>
@@ -1041,7 +1043,8 @@ footprint sky fk5<br>
 footprint skyformat degrees<br>
 footprint sort {ObsId} incr<br>
 footprint system wcs<br>
-footprint update<br></tt> <b><a name="frame" id="frame"></a>frame</b>
+footprint update<br></tt>
+<p><b><a name="frame" id="frame"></a>frame</b></p>
 <p>Controls frame functions. Frames may be created, deleted, reset, and centered. While return the current frame number. If you goto a frame that does not exists, it will be created. If the frame is hidden, it will be shown. The 'frameno' option is available for backward compatibility.</p>
 <tt>Syntax:<br>
 frame [center [#|all]]<br>

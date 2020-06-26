@@ -491,25 +491,32 @@ proc ProcessFootprintCmd {varname iname} {
 
 proc ProcessSendFootprintCmd {proc id param sock fn} {
     global ifp
-    $proc $id "$ifp(fps)\n"
-}
 
-proc FPCmdCheck {} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    if {![info exists cvar(top)]} {
-	Error "[msgcat::mc {Unable to find Footprint window}] $cvarname"
-	return 0
+    set rr {}
+    foreach ii $ifp(fps) {
+	lappend rr [string replace $ii 0 1]
     }
-    if {![winfo exists $cvar(top)]} {
-	Error "[msgcat:: mc {Unable to find Footprint window}] $cvarname"
-	return 0
-    }
-    return 1
+    $proc $id "$rr\n"
 }
 
 proc FPCmdRef {ref} {
+    global ifp
+    global cvarname
+
+    set rr fp${ref}
+    set id [lsearch $ifp(fps) $rr]
+
+    # look for reference in current list
+    if { $id < 0} {
+	Error "[msgcat::mc {Unable to find Footprint window}] $ref"
+	return
+    }
+
+    set ifp(fps) [lreplace $ifp(fps) $id $id]
+    lappend ifp(fps) $rr
+}
+
+proc FPCmdLoad {ref} {
     global ifp
     global cvarname
 

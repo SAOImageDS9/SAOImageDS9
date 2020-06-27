@@ -58,7 +58,7 @@ command : sia
  | sia {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-sia : site {SIACmdLoad $1}
+sia : site {SIACmdRetrieve $1}
  | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 SIAOff}
  | CLOSE_ {ProcessCmdCVAR0 SIADestroy}

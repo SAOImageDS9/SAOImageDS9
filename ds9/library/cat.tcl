@@ -971,38 +971,37 @@ proc ProcessCatalogCmd {varname iname} {
 }
 
 proc ProcessSendCatalogCmd {proc id param sock fn} {
-    global parse
-    set parse(proc) $proc
-    set parse(id) $id
-    set parse(sock) $sock
-    set parse(fn) $fn
-
     global icat
-    set ref [lindex $icat(cats) end]
-    global cvarname
-    set cvarname $ref
 
-    catsend::YY_FLUSH_BUFFER
-    catsend::yy_scan_string $param
-    catsend::yyparse
-}
-
-proc CatalogCmdCheck {} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    if {![info exists cvar(top)]} {
-	Error "[msgcat::mc {Unable to find catalog window}] $cvarname"
-	return 0
+    set rr {}
+    foreach ii $icat(cats) {
+	lappend rr [string replace $ii 0 2]
     }
-    if {![winfo exists $cvar(top)]} {
-	Error "[msgcat:: mc {Unable to find catalog window}] $cvarname"
-	return 0
-    }
-    return 1
+    $proc $id "$rr\n"
 }
 
 proc CatalogCmdRef {ref} {
+    global icat
+    global cvarname
+
+    # backward compatibility
+    if {$ref == "cxc"} {
+	set ref csc
+    }
+    set rr cat${ref}
+    set id [lsearch $icat(cats) $rr]
+
+    # look for reference in current list
+    if { $id < 0} {
+	Error "[msgcat::mc {Unable to find catalog window}] $ref"
+	return
+    }
+
+    set icat(cats) [lreplace $icat(cats) $id $id]
+    lappend icat(cats) $rr
+}
+
+proc CatalogCmdRetrieve {ref} {
     global icat
     global cvarname
 
@@ -1022,14 +1021,12 @@ proc CatalogCmdRef {ref} {
 
 	    if {$ll != {-} && "cat${ref}" == $ww} {
 		CATDialog $ww $ss $cc $ll sync
-		set cvarname cat${ref}
 		return
 	    }
 	}
 
 	# not a default, assume other name
 	CATDialog cat${ref} cds $ref $ref sync
-	set cvarname cat${ref}
     }
 }
 
@@ -1209,31 +1206,3 @@ proc CatalogCmdSymbolSave {fn} {
 
     starbase_write $cvar(symdb) $fn
 }
-
-proc CatalogSendCmdHeader {} {
-    global parse
-    global cvarname
-
-    ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) \
-	{.txt} [CATGetHeader $cvarname]
-}
-
-proc CatalogSendCmdRef {ref} {
-    global icat
-    global cvarname
-
-    # backward compatibility
-    if {$ref == "catcxc"} {
-	set ref catcsc
-    }
-
-    # look for reference in current list
-    if {[lsearch $icat(cats) $ref] < 0} {
-	Error "[msgcat::mc {Unable to find catalog window}] $ref"
-	return 0
-    }
-
-    set cvarname $ref
-    return [CatalogCmdCheck]
-}
-

@@ -37,6 +37,7 @@
 %token CROSS_
 %token CROSSHAIR_
 %token CSV_
+%token CURRENT_
 %token DEC_
 %token DECR_
 %token DIAMOND_
@@ -120,25 +121,19 @@ command : catalog
 catalog : NEW_ {CATTool}
 # backward compatibility
  | {CATTool}
+
+ | STRING_ {CatalogCmdRetrieve $1}
+# backward compatibility
+ | SAO_ {CatalogCmdRetrieve sao}
+# backward compatibility
+ | CDS_ STRING_ {CatalogCmdRetrieve $2}
+
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
 # backward compatibility
  | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
 
- | {if {![CatalogCmdCheck]} {cat::YYABORT}} catCmd
- | STRING_ {CatalogCmdRef $1}
- | STRING_ {CatalogCmdRef $1} catCmd
-# special case
-# backward compatibility
- | SAO_ {CatalogCmdRef sao}
- | SAO_ {CatalogCmdRef sao} catCmd
-# backward compatibility
- | CDS_ STRING_ {CatalogCmdRef $2}
-# backward compatibility
- | CDS_ STRING_ {CatalogCmdRef $2} catCmd
- ;
-
-catCmd : ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
+ | ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
  | ALLROWS_ yesno {ProcessCmdCVAR allrows $2}
  | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 CATOff}
@@ -147,6 +142,9 @@ catCmd : ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
 # backward compatibilty
  | coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
+ | CURRENT_ STRING_ {CatalogCmdRef $2}
+# backward compatibility
+ | CURRENT_ SAO_ {CatalogCmdRef sao}
  | EDIT_ yesno {ProcessCmdCVAR edit $2 CATEdit}
  | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | FILTER_ filter

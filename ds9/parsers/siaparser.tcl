@@ -1653,7 +1653,7 @@ proc sia::yyparse {} {
                     40 { set _ $1 }
                     41 { set _ $1 }
                     43 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    45 { SIACmdLoad $1 }
+                    45 { SIACmdRetrieve $1 }
                     46 { ProcessCmdCVAR0 ARCancel }
                     47 { ProcessCmdCVAR0 SIAOff }
                     48 { ProcessCmdCVAR0 SIADestroy }

@@ -32,6 +32,7 @@ coordinate  {return $COORDINATE_}
 cross	    {return $CROSS_}
 crosshair   {return $CROSSHAIR_}
 csv	    {return $CSV_}
+current	    {return $CURRENT_}
 dec	    {return $DEC_}
 decr	    {return $DECR_}
 diamond	    {return $DIAMOND_}

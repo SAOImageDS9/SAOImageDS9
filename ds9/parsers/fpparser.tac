@@ -61,7 +61,7 @@ command : fp
  | fp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-fp : site {FPCmdLoad $1}
+fp : site {FPCmdRetrieve $1}
  | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 FPOff}
  | CLOSE_ {ProcessCmdCVAR0 FPDestroy}

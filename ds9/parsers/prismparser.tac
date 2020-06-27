@@ -2,8 +2,6 @@
 %}
 #include def.tin
 
-#include yesno.tin
-#include numeric.tin
 #include string.tin
 
 %start command
@@ -15,9 +13,6 @@
 %token OPEN_
 
 %%
-
-#include yesno.trl
-#include numeric.trl
 
 command : prism
  | prism {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_

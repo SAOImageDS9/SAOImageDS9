@@ -516,7 +516,7 @@ proc FPCmdRef {ref} {
     lappend ifp(fps) $rr
 }
 
-proc FPCmdLoad {ref} {
+proc FPCmdRetrieve {ref} {
     global ifp
     global cvarname
 
@@ -532,7 +532,6 @@ proc FPCmdLoad {ref} {
 
 	    if {$title != {-} && "fp${ref}" == $vars} {
 		FPDialog $vars $title $url $instr $format sync
-		set cvarname fp${ref}
 	    }
 	}
     }

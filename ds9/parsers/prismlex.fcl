@@ -13,8 +13,6 @@ current		{return $CURRENT_}
 load		{return $LOAD_}
 open		{return $OPEN_}
 
-#include yesno.fin
-#include numeric.fin
 #include string.fin
 #include ws.fin
 

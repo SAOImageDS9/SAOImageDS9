@@ -1841,7 +1841,7 @@ proc fp::yyparse {} {
                     47 { set _ $1 }
                     48 { set _ $1 }
                     50 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    52 { FPCmdLoad $1 }
+                    52 { FPCmdRetrieve $1 }
                     53 { ProcessCmdCVAR0 ARCancel }
                     54 { ProcessCmdCVAR0 FPOff }
                     55 { ProcessCmdCVAR0 FPDestroy }

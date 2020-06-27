@@ -227,7 +227,7 @@ proc SIACmdRef {ref} {
     lappend isia(sias) $rr
 }
 
-proc SIACmdLoad {ref} {
+proc SIACmdRetrieve {ref} {
     global isia
     global cvarname
 
@@ -242,7 +242,6 @@ proc SIACmdLoad {ref} {
 
 	    if {$title != {-} && "sia${ref}" == $vars} {
 		SIADialog $vars $title $url $opts sync
-		set cvarname sia${ref}
 	    }
 	}
     }

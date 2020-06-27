@@ -32,6 +32,7 @@
 %token COMMAND_
 %token CROSS_
 %token CUBIC_
+%token CURRENT_
 %token DASH_
 %token DATA_
 %token DATASET_
@@ -165,17 +166,14 @@ command : plot
  | plot {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
- plot : LINE_ line
+ plot : plotCmd
+ | LINE_ line
  | BAR_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | SCATTER_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
 # parse error command line
  | {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- 
- | NEW_ {PlotCmdNew {}} new
  | NEW_ NAME_ STRING_ {PlotCmdNew $3} new
-
- | {if {![PlotCmdCheck]} {plot::YYABORT}} plotCmd
- | STRING_ {if {![PlotCmdRef $1]} {plot::YYABORT}} plotCmd
+ | NEW_ {PlotCmdNew {}} new
  ;
 
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
@@ -235,6 +233,7 @@ dim : XY_ {set _ xy}
 
 plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
+ | CURRENT_ STRING_ {PlotCmdRef $2}
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
 

@@ -58,23 +58,8 @@
 
 %%
 
-plotsend : {ProcessSendCmdGet iap windows}
- | {if {![PlotCmdCheck]} {plot::YYABORT}} plotCmd
- | STRING_ {if {![PlotCmdRef $1]} {plot::YYABORT}} plotCmd
- ;
-
-xy : 'x' {set _ x}
- | 'X' {set _ x}
- | 'y' {set _ y}
- | 'Y' {set _ y}
- ;
-
-# backward compatibility
-xyaxis : XAXIS_ {set _ x}
- | YAXIS_ {set _ y}
- ;
-
-plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
+plotsend : {ProcessSendCmdGet iap plots}
+ | STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  # backward compatibility
  | STATISTICS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | LIST_ {ProcessSendCmdCVAR PlotListGenerate}
@@ -164,6 +149,17 @@ errorr : {ProcessSendCmdCVARYesNo graph,ds,error}
 shape : {ProcessSendCmdCVARGet graph,ds,shape,symbol}
  | FILL_ {ProcessSendCmdCVARYesNo graph,ds,shape,fill}
  | COLOR_ {ProcessSendCmdCVARGet graph,ds,shape,color}
+ ;
+
+xy : 'x' {set _ x}
+ | 'X' {set _ x}
+ | 'y' {set _ y}
+ | 'Y' {set _ y}
+ ;
+
+# backward compatibility
+xyaxis : XAXIS_ {set _ x}
+ | YAXIS_ {set _ y}
  ;
 
 %%

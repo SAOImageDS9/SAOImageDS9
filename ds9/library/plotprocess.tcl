@@ -129,7 +129,7 @@ proc ProcessPlotCmd {xarname iname buf fn} {
     set parse(fn) $fn
     set parse(tt) $iap(tt)
 
-    set ref [lindex $iap(windows) end]
+    set ref [lindex $iap(plots) end]
     global cvarname
     set cvarname $ref
 
@@ -145,7 +145,7 @@ proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     set parse(proc) $proc
     set parse(id) $id
 
-    set ref [lindex $iap(windows) end]
+    set ref [lindex $iap(plots) end]
     global cvarname
     set cvarname $ref
 
@@ -154,33 +154,20 @@ proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     plotsend::yyparse
 }
 
-proc PlotCmdCheck {} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    if {![info exists cvar(top)]} {
-	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
-	return 0
-    }
-    if {![winfo exists $cvar(top)]} {
-	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
-	return 0
-    }
-    return 1
-}
-
 proc PlotCmdRef {ref} {
     global iap
     global cvarname
 
+    set id [lsearch $iap(plots) $ref]
+
     # look for reference in current list
-    if {[lsearch $iap(windows) $ref] < 0} {
+    if { $id < 0} {
 	Error "[msgcat::mc {Unable to find plot window}] $ref"
-	return 0
+	return
     }
 
-    set cvarname $ref
-    return [PlotCmdCheck]
+    set iap(plots) [lreplace $iap(plots) $id $id]
+    lappend iap(plots) $ref
 }
 
 proc PlotCmdNew {name} {

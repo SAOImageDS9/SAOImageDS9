@@ -1431,7 +1431,7 @@ $ds9 -pixeltable yes<br>
 $ds9 -pixeltable open<br>
 $ds9 -pixeltable close<br></tt>
 <p><b><a name="plot" id="plot"></a>plot</b></p>
-<p>Display and configure data plots. All plot commands take an optional second command, the plot name. If no plot name is specified, the last plot created is assumed. Plot data is assumed to be a pair of coordinates, with optional error values. The follow are valid data descriptions:</p>
+<p>Display and configure data plots. The last plot created is assumed. Plot data is assumed to be a pair of coordinates, with optional error values. The follow are valid data descriptions:</p>
 <blockquote><tt>xy &nbsp;&nbsp; &nbsp; &nbsp; x and y coordinates<br>
 xyex&nbsp;&nbsp;&nbsp; &nbsp; x,y coordinates with x errors<br>
 xyey&nbsp;&nbsp;&nbsp; &nbsp; x,y coordinates with y errors<br>
@@ -1442,68 +1442,69 @@ xyexey&nbsp;&nbsp;&nbsp; x,y coordinates with&nbsp; x and y errors<br></tt></blo
 -plot [line|bar|scatter]<br>
 <br>
 # existing plot<br>
--plot [[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout grid|row|column|strip]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout strip scale &lt;percent&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] add graph line|bar|scatter]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select graph &lt;graph&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete graph]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select dataset &lt;dataset&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete dataset]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] duplicate]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] stats yes|no]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] list yes|no]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] loadconfig &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] saveconfig &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] pagesetup orient portrait|landscape]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] pagesetup size letter|legal|tabloid|poster|a4]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print destination printer|file]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print command &lt;command&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print filename &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print color rgb|gray]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] close]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] mode pointer|zoom]<br>
+-plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
+&nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
+&nbsp;&nbsp;&nbsp; [layout strip scale &lt;percent&gt;]<br>
+&nbsp;&nbsp;&nbsp; [add graph line|bar|scatter]<br>
+&nbsp;&nbsp;&nbsp; [select graph &lt;graph&gt;]<br>
+&nbsp;&nbsp;&nbsp; [delete graph]<br>
+&nbsp;&nbsp;&nbsp; [select dataset &lt;dataset&gt;]<br>
+&nbsp;&nbsp;&nbsp; [delete dataset]<br>
+&nbsp;&nbsp;&nbsp; [duplicate]<br>
+&nbsp;&nbsp;&nbsp; [stats yes|no]<br>
+&nbsp;&nbsp;&nbsp; [list yes|no]<br>
+&nbsp;&nbsp;&nbsp; [loadconfig &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [saveconfig &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [pagesetup orient portrait|landscape]<br>
+&nbsp;&nbsp;&nbsp; [pagesetup size letter|legal|tabloid|poster|a4]<br>
+&nbsp;&nbsp;&nbsp; [print]<br>
+&nbsp;&nbsp;&nbsp; [print destination printer|file]<br>
+&nbsp;&nbsp;&nbsp; [print command &lt;command&gt;]<br>
+&nbsp;&nbsp;&nbsp; [print filename &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [print color rgb|gray]<br>
+&nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [mode pointer|zoom]<br>
 <br>
 # export image<br>
-plot [[&lt;plotname&gt;] export &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export gif|tiff|jpeg|png &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export jpeg &lt;filename&gt; [1-100]]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
+plot [export &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export gif|tiff|jpeg|png &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export jpeg &lt;filename&gt; [1-100]]<br>
+&nbsp;&nbsp;&nbsp; [export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
 # configure graph<br>
--plot [[&lt;plotname&gt;] axis x|y grid yes|no]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y log yes|no]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y flip yes|no]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y auto yes|no]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y min &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y max &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y format &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] background &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend yes|no]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend position right|left|top|bottom|plotarea]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers font times|helvetica|courier]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers size &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers weight normal|bold]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers slant roman|italic]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title x|y &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] barmode normal|stacked|aligned|overlap]<br>
+-plot [axis x|y grid yes|no]<br>
+&nbsp;&nbsp;&nbsp; [axis x|y log yes|no]<br>
+&nbsp;&nbsp;&nbsp; [axis x|y flip yes|no]<br>
+&nbsp;&nbsp;&nbsp; [axis x|y auto yes|no]<br>
+&nbsp;&nbsp;&nbsp; [axis x|y min &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [axis x|y max &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [axis x|y format &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [background &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [legend yes|no]<br>
+&nbsp;&nbsp;&nbsp; [legend position right|left|top|bottom|plotarea]<br>
+&nbsp;&nbsp;&nbsp; [font title|labels|numbers font times|helvetica|courier]<br>
+&nbsp;&nbsp;&nbsp; [font title|labels|numbers size &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [font title|labels|numbers weight normal|bold]<br>
+&nbsp;&nbsp;&nbsp; [font title|labels|numbers slant roman|italic]<br>
+&nbsp;&nbsp;&nbsp; [title &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [title x|y &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [barmode normal|stacked|aligned|overlap]<br>
 <br>
 # configure current dataset<br>
--plot [[&lt;plotname&gt;] show yes|no]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] shape none|circle|square|diamond|plus|splus|scross|triangle|arrow]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] shape fill yes|no]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] shape color &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] smooth step|linear|cubic|quadratic|catrom]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] color &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] width &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] dash yes|no]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] error yes|no]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] error color &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] error cap yes|no]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] error width &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] name &lt;string&gt;]<br>
+-plot [show yes|no]<br>
+&nbsp;&nbsp;&nbsp;[shape none|circle|square|diamond|plus|splus|scross|triangle|arrow]<br>
+&nbsp;&nbsp;&nbsp;[shape fill yes|no]<br>
+&nbsp;&nbsp;&nbsp;[shape color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp;[smooth step|linear|cubic|quadratic|catrom]<br>
+&nbsp;&nbsp;&nbsp;[color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp;[width &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp;[dash yes|no]<br>
+&nbsp;&nbsp;&nbsp;[error yes|no]<br>
+&nbsp;&nbsp;&nbsp;[error color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp;[error cap yes|no]<br>
+&nbsp;&nbsp;&nbsp;[error width &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp;[name &lt;string&gt;]<br>
 <br>
 Example:<br>
 # create new empty plot window<br>
@@ -1512,6 +1513,7 @@ $ds9 -plot bar<br>
 # existing plot<br>
 $ds9 -plot load xy.dat<br>
 $ds9 -plot save foo.dat<br>
+$ds9 -plot current foo<br>
 $ds9 -plot layout strip<br>
 $ds9 -plot layout strip scale 30<br>
 $ds9 -plot add graph scatter<br>

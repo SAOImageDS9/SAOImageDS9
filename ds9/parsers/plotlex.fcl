@@ -30,6 +30,7 @@ column	    {return $COLUMN_}
 command	    {return $COMMAND_}
 cross	    {return $CROSS_}
 cubic	    {return $CUBIC_}
+current	    {return $CURRENT_}
 dash	    {return $DASH_}
 data	    {return $DATA_}
 dataset	    {return $DATASET_}

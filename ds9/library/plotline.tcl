@@ -15,7 +15,7 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
     global iap
 
     # make the window name unique
-    set ii [lsearch $iap(windows) $tt]
+    set ii [lsearch $iap(plots) $tt]
     if {$ii>=0} {
 	incr iap(unique)
 	append tt $iap(unique)

@@ -48,6 +48,7 @@ proc PrismDialog {varname} {
     set var(ext) {}
     set var(last) 0
 
+    set var(col) {}
     set var(xx) {}
     set var(yy) {}
     set var(xerr) {}
@@ -400,7 +401,7 @@ proc PrismPlot {varname} {
     global $varname
 
     global ed
-    
+
     set w ".${varname}plot"
     set mb ".${varname}plotmb"
 
@@ -473,7 +474,7 @@ proc PrismPlot {varname} {
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-        -default active 
+        -default active
     ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 
@@ -518,10 +519,6 @@ proc PrismPlotGenerate {varname} {
     } else {
 	set dim xyexey
     }
-
-    global $var(tbldb)
-    set nrows [starbase_nrows $var(tbldb)]
-    set cols [starbase_columns $var(tbldb)]
 
     switch $var(plot,mode) {
 	newplot {incr ${varname}(plot,seq)}
@@ -622,7 +619,119 @@ proc PrismHistogram {varname} {
 	return
     }
 
-    #   fitsy histogram $var(fn) $var(ext) $col vecx vecy $num
+    global ed
+
+    set w ".${varname}plot"
+    set mb ".${varname}plotmb"
+
+    set ed(top) $w
+    set ed(ok) 0
+
+    set ed(col) $var(col)
+    set ed(plot,mode) $var(plot,mode)
+
+    DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
+
+    # param
+    set f [ttk::frame $w.param]
+
+    ttk::label $f.tcol -text [msgcat::mc {Column}]
+    ttk::menubutton $f.col -textvariable ed(col) -menu $f.col.menu
+
+    PrismColsMenu $varname $f.col col
+
+    ttk::radiobutton $f.over -text [msgcat::mc {Overplot}] \
+	-variable ed(plot,mode) -value overplot
+    ttk::radiobutton $f.new -text [msgcat::mc {New Plot}] \
+	-variable ed(plot,mode) -value newplot
+
+    grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
+    grid x $f.over $f.new -padx 2 -pady 2 -sticky ew
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+        -default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.param -side top -fill both -expand true
+    pack $w.buttons $w.sep -side bottom -fill x
+
+    DialogCenter $w
+    DialogWait $w ed(ok) $w.buttons.ok
+
+    if {$ed(ok)} {
+	if {$ed(col) != {}} {
+	    set var(col) $ed(col)
+	    set var(plot,mode) $ed(plot,mode)
+
+	    PrismHistogramGenerate $varname
+	}
+    }
+
+    DialogDismiss $w
+    destroy $mb
+}
+
+proc PrismHistogramGenerate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    switch $var(plot,mode) {
+	newplot {incr ${varname}(plot,seq)}
+	overplot {}
+    }
+
+    set vvarname plot$var(plot,seq)${varname}
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    set xdata ${vvarname}xx$var(plot,data,seq)
+    set ydata ${vvarname}yy$var(plot,data,seq)
+    incr ${varname}(plot,data,seq)
+
+    global $xdata $ydata
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata
+    }
+    if {[info command $ydata] == {}} {
+	blt::vector create $ydata
+    }
+
+    fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata 20
+
+    if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
+	PlotDialog $vvarname $var(plot,type)
+	PlotAddGraph $vvarname bar
+	PlotTitle $vvarname $var(plot,type) $var(xx) $var(yy)
+	lappend ${varname}(plots) $vvarname
+    }
+
+    set vvar(graph,ds,xdata) $xdata
+    set vvar(graph,ds,ydata) $ydata
+
+    PlotExternal $vvarname xy
+
+    PlotStats $vvarname
+    PlotList $vvarname
 }
 
 proc PrismImage {varname} {
@@ -697,7 +806,7 @@ proc PrismImageTable {varname} {
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-        -default active 
+        -default active
     ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 

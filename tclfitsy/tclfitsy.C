@@ -61,7 +61,7 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
     else if (!strncmp(argv[1], "table", 5))
       return fitsy->table(argc, argv);
     else if (!strncmp(argv[1], "histogram", 8))
-      return fitsy->table(argc, argv);
+      return fitsy->histogram(argc, argv);
     else if (!strncmp(argv[1], "plot", 4))
       return fitsy->plot(argc, argv);
     else {
@@ -365,7 +365,7 @@ int TclFITSY::table(int argc, const char* argv[])
 
 int TclFITSY::histogram(int argc, const char* argv[])
 {
-  if (argc!=7) {
+  if (argc!=8) {
     Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num?", NULL);
     return TCL_ERROR;
   }

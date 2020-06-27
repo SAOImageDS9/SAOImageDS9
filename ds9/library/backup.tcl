@@ -155,7 +155,7 @@ proc Restore {fn} {
 
     # kill all plots
     global iap
-    foreach varname $iap(windows) {
+    foreach varname $iap(plots) {
 	PlotDestroy $varname
     }
 

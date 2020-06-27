@@ -17,7 +17,7 @@ proc PlotDialog {varname wtt} {
 
     # add it to our xpa list
     global iap
-    lappend iap(windows) $varname
+    lappend iap(plots) $varname
 
     set var(top) ".${varname}"
     set var(mb) ".${varname}mb"

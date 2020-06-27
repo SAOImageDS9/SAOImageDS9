@@ -8,7 +8,7 @@ proc PlotDef {} {
     global iap
 
     set iap(tt) {ap}
-    set iap(windows) {}
+    set iap(plots) {}
     set iap(unique) 0
 
     set iap(jpeg,quality) 75
@@ -53,9 +53,9 @@ proc PlotDestroy {varname} {
     }
 
     # delete it from the xpa list
-    set ii [lsearch $iap(windows) $varname]
+    set ii [lsearch $iap(plots) $varname]
     if {$ii>=0} {
-	set iap(windows) [lreplace $iap(windows) $ii $ii]
+	set iap(plots) [lreplace $iap(plots) $ii $ii]
     }
 
     unset $varname
@@ -1127,7 +1127,7 @@ proc PlotBackup {ch dir} {
     set rdir "./[lindex [file split $dir] end]"
 
     # only save ap plots
-    foreach ww $iap(windows) {
+    foreach ww $iap(plots) {
 	if {[string range $ww 0 1] == {ap}} {
 	    set fdir [file join $dir $ww]
 	    

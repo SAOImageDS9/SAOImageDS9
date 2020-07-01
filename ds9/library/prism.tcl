@@ -49,6 +49,7 @@ proc PrismDialog {varname} {
     set var(last) 0
 
     set var(col) {}
+    set var(num) 10
     set var(xx) {}
     set var(yy) {}
     set var(xerr) {}
@@ -628,6 +629,7 @@ proc PrismHistogram {varname} {
     set ed(ok) 0
 
     set ed(col) $var(col)
+    set ed(num) $var(num)
     set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
@@ -648,6 +650,9 @@ proc PrismHistogram {varname} {
     # param
     set f [ttk::frame $w.param]
 
+    ttk::label $f.tnum -text [msgcat::mc {Bins}]
+    ttk::entry $f.num -textvariable ed(num) -width 7
+
     ttk::label $f.tcol -text [msgcat::mc {Column}]
     ttk::menubutton $f.col -textvariable ed(col) -menu $f.col.menu
 
@@ -658,6 +663,7 @@ proc PrismHistogram {varname} {
     ttk::radiobutton $f.new -text [msgcat::mc {New Plot}] \
 	-variable ed(plot,mode) -value newplot
 
+    grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
     grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
     grid x $f.over $f.new -padx 2 -pady 2 -sticky ew
 
@@ -681,6 +687,7 @@ proc PrismHistogram {varname} {
     if {$ed(ok)} {
 	if {$ed(col) != {}} {
 	    set var(col) $ed(col)
+	    set var(num) $ed(num)
 	    set var(plot,mode) $ed(plot,mode)
 
 	    PrismHistogramGenerate $varname
@@ -716,11 +723,11 @@ proc PrismHistogramGenerate {varname} {
 	blt::vector create $ydata
     }
 
-    fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata 20
+    fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata $var(num)
 
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
 	PlotDialog $vvarname $var(plot,type)
-	PlotAddGraph $vvarname bar
+	PlotAddGraph $vvarname line
 	PlotTitle $vvarname $var(plot,type) $var(xx) $var(yy)
 	lappend ${varname}(plots) $vvarname
     }
@@ -872,6 +879,8 @@ proc PrismExtCmd {varname} {
     }
 
     # clear previous cols
+    set var(col) {}
+    set var(num) 10
     set var(xx) {}
     set var(yy) {}
     set var(xerr) {}
@@ -934,6 +943,11 @@ proc PrismExtCmd {varname} {
 	$var(tbl) configure -rows $iprism(minrows)
     }
     $var(tbl) see 1,1
+
+    # set default cols
+    set var(col) [lindex [starbase_columns $var(tbldb)] 0]
+    set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
+    set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
 
     PrismDialogUpdate $varname
 }

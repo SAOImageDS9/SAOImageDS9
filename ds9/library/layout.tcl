@@ -156,17 +156,17 @@ proc CreateCanvas {} {
 proc ThemeConfigCanvas {w} {
     global ds9
     
-    $w configure -bg [ThemeBackground]
+    $w configure -bg [ThemeTreeBackground]
 
-    $w itemconfigure colorbar -fg [ThemeForeground]
-    $w itemconfigure colorbar -bg [ThemeBackground]
+    $w itemconfigure colorbar -fg [ThemeTreeForeground]
+    $w itemconfigure colorbar -bg [ThemeTreeBackground]
 
-    $w itemconfigure colorbarrgb -fg [ThemeForeground]
-    $w itemconfigure colorbarrgb -bg [ThemeBackground]
+    $w itemconfigure colorbarrgb -fg [ThemeTreeForeground]
+    $w itemconfigure colorbarrgb -bg [ThemeTreeBackground]
 
     foreach ff $ds9(frames) {
-	$w itemconfigure $ff -fg [ThemeForeground]
-	$w itemconfigure $ff -bg [ThemeBackground]
+	$w itemconfigure $ff -fg [ThemeTreeForeground]
+	$w itemconfigure $ff -bg [ThemeTreeBackground]
     }
 
     # since graphs are created, but maybe not realized
@@ -176,7 +176,7 @@ proc ThemeConfigCanvas {w} {
 }
 
 proc ThemeConfigCanvasBottom {w} {
-    $w configure -bg [ThemeBackground]
+    $w configure -bg [ThemeTreeBackground]
 }
 
 proc InitCanvas {} {

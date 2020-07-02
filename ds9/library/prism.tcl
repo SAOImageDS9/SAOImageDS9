@@ -48,6 +48,8 @@ proc PrismDialog {varname} {
     set var(ext) {}
     set var(last) 0
 
+    set var(search) {}
+
     set var(col) {}
     set var(num) 10
     set var(xx) {}
@@ -95,9 +97,14 @@ proc PrismDialog {varname} {
 	-state disabled -accelerator "${ds9(ctrl)}V"
     $mb.edit add separator
     $mb.edit add command -label [msgcat::mc {Select All}] \
-	-command [list PrismSelectAll $varname]
+	-command [list SimpleTextSelectAll $varname]
     $mb.edit add command -label [msgcat::mc {Select None}] \
-	-command [list PrismSelectNone $varname]
+	-command [list SimpleTextSelectNone $varname]
+    $mb.edit add separator
+    $mb.edit add command -label "[msgcat::mc {Find}]..." \
+	-command "SimpleTextFind $varname" -accelerator "${ds9(ctrl)}F"
+    $mb.edit add command -label [msgcat::mc {Find Next}] \
+	-command "SimpleTextFindNext $varname" -accelerator "${ds9(ctrl)}G"
 
     # Param
     set p [ttk::frame $w.param]
@@ -135,25 +142,23 @@ proc PrismDialog {varname} {
     set f [ttk::labelframe $p.header -padding {0 2} \
 	       -text [msgcat::mc {Header Keywords}]]
 
-    set var(header) [text $f.header \
-			 -wrap none \
-			 -height 10 \
-			 -yscrollcommand [list $f.yscroll set] \
-			 -xscrollcommand [list $f.xscroll set] \
-			 -fg [ThemeTreeForeground] \
-			 -bg [ThemeTreeBackground] \
-			]
+    set var(text) $f.header
+    roText::roText $var(text)
+    $var(text) configure -wrap none \
+	-height 10 \
+	-yscrollcommand [list $f.yscroll set] \
+	-xscrollcommand [list $f.xscroll set] \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground] \
+	-state normal
+    $var(text) tag configure keyword -foreground $ds9(bold)
 
-
-    ttk::scrollbar $f.yscroll -command [list $var(header) yview] \
+    ttk::scrollbar $f.yscroll -command [list $var(text) yview] \
 	-orient vertical
-    ttk::scrollbar $f.xscroll -command [list $var(header) xview] \
+    ttk::scrollbar $f.xscroll -command [list $var(text) xview] \
 	-orient horizontal
 
-    $var(header) tag configure keyword -foreground $ds9(bold)
-    $var(header) configure -state normal
-
-    grid $var(header) $f.yscroll -sticky news
+    grid $var(text) $f.yscroll -sticky news
     grid $f.xscroll -stick news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
@@ -161,6 +166,9 @@ proc PrismDialog {varname} {
     grid $p.ext -row 0 -column 0 -sticky ns
     grid $p.header -row 0 -column 1 -sticky news
     grid columnconfigure $p 1 -weight 1
+
+    bind $var(top) <<Find>> [list SimpleTextFind $varname]
+    bind $var(top) <<FindNext>> [list SimpleTextFindNext $varname]
 
     # Table
     set f [ttk::labelframe $w.tbl -padding {0 2} \
@@ -183,7 +191,7 @@ proc PrismDialog {varname} {
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \
-		      -selectmode single \
+		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list PrismSelectCmd $varname %s %S] \
@@ -301,39 +309,10 @@ proc PrismCopy {varname} {
 
     set w [focus -displayof $var(top)]
     if {$w == $var(dir)} {
-	set id [$var(dir) selection]
-	if {$id != {}} {
-	    clipboard clear -displayof $w
-	    clipboard append -displayof $w [$var(dir) item $id -value]
-	}
-    } elseif {$w == $var(header)} {
+    } elseif {$w == $var(text)} {
 	tk_textCopy $w
     } elseif {$w == $var(tbl)} {
 	TBLCopyTable $varname
-    }
-}
-
-proc PrismSelectAll {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set w [focus -displayof $var(top)]
-    if {$w == $var(dir)} {
-    } elseif {$w == $var(header)} {
-	$var(text) tag add sel 1.0 end
-    } elseif {$w == $var(tbl)} {
-    }
-}
-
-proc PrismSelectNone {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set w [focus -displayof $var(top)]
-    if {$w == $var(dir)} {
-    } elseif {$w == $var(header)} {
-	$var(text) tag remove sel 1.0 end
-    } elseif {$w == $var(tbl)} {
     }
 }
 
@@ -437,7 +416,7 @@ proc PrismClear {varname} {
     set var(plot,type) scatter
 
     # header
-    $var(header) delete 1.0 end
+    $var(text) delete 1.0 end
 
     # clear previous db
     global $var(tbldb)
@@ -940,15 +919,15 @@ proc PrismExtCmd {varname} {
     set var(yerr) {}
 
     # header
-    $var(header) delete 1.0 end
-    $var(header) insert end [fitsy header $var(fn) $var(ext)]
+    $var(text) delete 1.0 end
+    $var(text) insert end [fitsy header $var(fn) $var(ext)]
     # color tag keywords
-    set stop [$var(header) index end]
+    set stop [$var(text) index end]
     for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
-	$var(header) tag add keyword $ii "$ii +8 chars"
+	$var(text) tag add keyword $ii "$ii +8 chars"
     }
     # see top
-    $var(header) see 1.0
+    $var(text) see 1.0
 
     # table
     # clear previous db
@@ -1054,3 +1033,4 @@ proc PrismCmdLoad {fn} {
     PrismDialog prism
     PrismLoad [lindex $iprism(prisms) end] $fn
 }
+

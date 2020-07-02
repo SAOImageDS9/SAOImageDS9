@@ -210,14 +210,13 @@ proc SimpleTextDialog {varname title width height action pos txt
 
 	$var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
 	ThemeMenu $var(mb).edit
-	$var(mb).edit add command -label [msgcat::mc {Cut}] \
-	    -command "SimpleTextCut $varname" -accelerator "${ds9(ctrl)}X"
+	$var(mb).edit add command -label [msgcat::mc {Cut}] \-state disabled -accelerator "${ds9(ctrl)}X"
+#	$var(mb).edit add command -label [msgcat::mc {Cut}] -command "SimpleTextCut $varname" -accelerator "${ds9(ctrl)}X"
 	$var(mb).edit add command -label [msgcat::mc {Copy}] \
 	    -command "SimpleTextCopy $varname" -accelerator "${ds9(ctrl)}C"
 	$var(mb).edit add command -label [msgcat::mc {Paste}] \
 	    -state disabled -accelerator "${ds9(ctrl)}V"
-	$var(mb).edit add command -label [msgcat::mc {Clear}] \
-	    -command "SimpleTextClear $varname"
+#	$var(mb).edit add command -label [msgcat::mc {Clear}] -command "SimpleTextClear $varname"
 	$var(mb).edit add separator
 	$var(mb).edit add command -label [msgcat::mc {Select All}] \
 	    -command "SimpleTextSelectAll $varname"
@@ -235,13 +234,16 @@ proc SimpleTextDialog {varname title width height action pos txt
 
 	# create the text and scroll widgets
 	
-	set var(text) [text $var(top).text -height $height -width $width \
-			   -wrap none \
-			   -yscrollcommand [list $var(top).yscroll set] \
-			   -xscrollcommand [list $var(top).xscroll set] \
-			   -fg [ThemeTreeForeground] \
-			   -bg [ThemeTreeBackground] \
-			  ]
+	set var(text) $var(top).text
+	roText::roText $var(text)
+	$var(text) configure \
+	    -height $height -width $width \
+	    -wrap none \
+	    -yscrollcommand [list $var(top).yscroll set] \
+	    -xscrollcommand [list $var(top).xscroll set] \
+	    -fg [ThemeTreeForeground] \
+	    -bg [ThemeTreeBackground] \
+	    -state normal
 
 	ttk::scrollbar $var(top).yscroll -command [list $var(text) yview] \
 	    -orient vertical
@@ -260,7 +262,6 @@ proc SimpleTextDialog {varname title width height action pos txt
 	bind $var(top) <<Print>> [list SimpleTextPrint $varname]
     }
 
-    $var(text) configure -state normal
     if {$action != {append}} {
 	$var(text) delete 1.0 end
     }
@@ -368,10 +369,10 @@ proc SimpleTextFind {varname} {
     set result "$var(search)"
     if {[EntryDialog [msgcat::mc {Search}] [msgcat::mc {Enter Search Expression}] 40 result]} {
 	set var(search) "$result"
-	set start [$var(text) search -nocase -count cnt \
+	set start [$var(text) search -nocase -count ::roText::cnt \
 		       -regexp -- $result 1.0 end]
 	if {$start != {}} {
-	    $var(text) tag add sel $start "$start + $cnt chars"
+	    $var(text) tag add sel $start "$start + $::roText::cnt chars"
 	    $var(text) see $start
 	} else {
 	    Error "$var(search) [msgcat::mc {Not Found}]"
@@ -390,19 +391,19 @@ proc SimpleTextFindNext {varname} {
 	    set ss {1.0}
 	}
 
-	set start [$var(text) search -nocase -count cnt \
+	set start [$var(text) search -nocase -count ::roText::cnt \
 		       -regexp -- $var(search) $ss end]
 	if {$start != {}} {
 	    $var(text) tag remove sel 1.0 end
-	    $var(text) tag add sel $start "$start + $cnt chars"
+	    $var(text) tag add sel $start "$start + $::roText::cnt chars"
 	    $var(text) see $start
 	} else {
 	    # wrap
-	    set start [$var(text) search -nocase -count cnt \
+	    set start [$var(text) search -nocase -count ::roText::cnt \
 			   -regexp -- $var(search) 1.0 end]
 	    if {$start != {}} {
 		$var(text) tag remove sel 1.0 end
-		$var(text) tag add sel $start "$start + $cnt chars"
+		$var(text) tag add sel $start "$start + $::roText::cnt chars"
 		$var(text) see $start
 	    } else {
 		Error "$var(search) [msgcat::mc {Not Found}]"
@@ -480,3 +481,34 @@ proc SimpleTextSave {varname} {
     }
 }
 
+# read only text widget, idea and code by emiliano and ccbbaa, tested: tcl/tk8.6, linux - version 20191217-0
+namespace eval ::roText {
+  proc roText {w args} {
+    if {[info exists ::roText::$w]} {
+      puts stderr "::roText::$w and possibly $w already exist"
+      return ;# discuss: better way to flag error to caller, return "" for now
+    }
+    text $w {*}$args
+    bind $w <Control-KeyPress-z> break ;# delete all
+    bind $w <Control-KeyPress-k> break ;# kill line
+    bind $w <Control-KeyPress-h> break ;# Backspace alternate
+    bind $w <Control-KeyPress-d> break ;# Del alternate
+    bind $w <Control-KeyPress-o> break ;# Ins newline
+    bind $w <Key-Delete> break
+    bind $w <Key-BackSpace> break
+    rename $w ::roText::$w
+    proc ::$w {cmd args} [format {
+      set w %s
+      set inf [lindex [info level 1] 0] ;# caller proc name; find tk vs scr.
+      #puts "* $cmd $args ([info level]) '$inf'" ;# debug
+      if {($cmd ni "insert delete") || ( ($cmd in "insert delete") \
+        && ([string range $inf 0 3] != "tk::") \
+        && ($inf != "tk_textCut") && ($inf != "tk_textPaste") ) \
+      } {
+        ::roText::$w $cmd {*}$args
+      } 
+    } $w $w]
+    bind ::$w <Destroy> [list rename $w {}]
+    return $w ;# created
+  }
+}

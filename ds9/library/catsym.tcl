@@ -97,14 +97,8 @@ proc CATSymDialog {parent} {
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command "CATSymDestroy $varname" -accelerator "${ds9(ctrl)}W"
 
-    ThemeMenu $mb.edit
-    $mb.edit add command -label [msgcat::mc {Cut}] \
-	-command "EntryCut $var(top)" -accelerator "${ds9(ctrl)}X"
-    $mb.edit add command -label [msgcat::mc {Copy}] \
-	-command "EntryCopy $var(top)" -accelerator "${ds9(ctrl)}C"
-    $mb.edit add command -label [msgcat::mc {Paste}] \
-	-command "EntryPaste $var(top)" -accelerator "${ds9(ctrl)}V"
-
+    EditMenu $mb $varname
+    
     # Param
     set f [ttk::frame $w.param]
 

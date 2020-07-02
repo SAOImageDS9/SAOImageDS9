@@ -86,7 +86,13 @@ proc PrismDialog {varname} {
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list PrismDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
-    EditMenu $mb $varname
+    ThemeMenu $mb.edit
+    $mb.edit add command -label [msgcat::mc {Cut}] \
+	-state disabled -accelerator "${ds9(ctrl)}X"
+    $mb.edit add command -label [msgcat::mc {Copy}] \
+	-command [list PrismCopy $varname] -accelerator "${ds9(ctrl)}C"
+    $mb.edit add command -label [msgcat::mc {Paste}] \
+	-state disabled -accelerator "${ds9(ctrl)}V"
 
     # Param
     set p [ttk::frame $w.param]
@@ -282,6 +288,24 @@ proc PrismDestroy {varname} {
 	destroy $var(mb)
     }
     unset $varname
+}
+
+proc PrismCopy {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set w [focus -displayof $var(top)]
+    if {$w == $var(dir)} {
+	set id [$var(dir) selection]
+	if {$id != {}} {
+	    clipboard clear -displayof $w
+	    clipboard append -displayof $w [$var(dir) item $id -value]
+	}
+    } elseif {$w == $var(header)} {
+	tk_textCopy $w
+    } elseif {$w == $var(tbl)} {
+	TBLCopyTable $varname
+    }
 }
 
 proc UpdatePrismDialog {} {

@@ -46,6 +46,7 @@ proc PrismDialog {varname} {
     set var(tbldb) ${varname}tbldb
     set var(fn) {}
     set var(ext) {}
+    set var(extname) {}
     set var(last) 0
 
     set var(search) {}
@@ -406,6 +407,7 @@ proc PrismClear {varname} {
 
     set var(fn) {}
     set var(ext) {}
+    set var(extname) {}
     set var(last) 0
 
     # reset plots
@@ -473,9 +475,12 @@ proc PrismPlot {varname} {
     set m $f.type.menu
     ThemeMenu $m
     $m configure -tearoff 0
-    $m add command -label [msgcat::mc {Line}]
-    $m add command -label [msgcat::mc {Bar}]
-    $m add command -label [msgcat::mc {Scatter}]
+    $m add command -label [msgcat::mc {Line}] \
+	-command "set ed(plot,type) line"
+    $m add command -label [msgcat::mc {Bar}] \
+	-command "set ed(plot,type) bar"
+    $m add command -label [msgcat::mc {Scatter}] \
+	-command "set ed(plot,type) scatter"
 
     ttk::label $f.txx -text [msgcat::mc {X Column}]
     ttk::menubutton $f.xx -textvariable ed(xx) -menu $f.xx.menu
@@ -619,9 +624,9 @@ proc PrismPlotGenerate {varname} {
     }
 
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
-	PlotDialog $vvarname $var(plot,type)
+	PlotDialog $vvarname {}
 	PlotAddGraph $vvarname $var(plot,type)
-	PlotTitle $vvarname $var(plot,type) $var(xx) $var(yy)
+	PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
 	lappend ${varname}(plots) $vvarname
     }
 
@@ -758,9 +763,9 @@ proc PrismHistogramGenerate {varname} {
     fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata $var(num)
 
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
-	PlotDialog $vvarname $var(plot,type)
+	PlotDialog $vvarname {}
 	PlotAddGraph $vvarname line
-	PlotTitle $vvarname $var(plot,type) $var(xx) $var(yy)
+	PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
 	lappend ${varname}(plots) $vvarname
     }
 
@@ -907,8 +912,11 @@ proc PrismExtCmd {varname} {
 
     set var(ext) [$var(dir) selection]
     if {$var(ext) == {}} {
+	set var(extname) {}
 	return
     }
+
+    set var(extname) [lindex [$var(dir) item $var(ext) -value] 0]
 
     # clear previous cols
     set var(col) {}

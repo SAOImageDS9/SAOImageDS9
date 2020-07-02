@@ -93,6 +93,11 @@ proc PrismDialog {varname} {
 	-command [list PrismCopy $varname] -accelerator "${ds9(ctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-state disabled -accelerator "${ds9(ctrl)}V"
+    $mb.edit add separator
+    $mb.edit add command -label [msgcat::mc {Select All}] \
+	-command [list PrismSelectAll $varname]
+    $mb.edit add command -label [msgcat::mc {Select None}] \
+	-command [list PrismSelectNone $varname]
 
     # Param
     set p [ttk::frame $w.param]
@@ -305,6 +310,30 @@ proc PrismCopy {varname} {
 	tk_textCopy $w
     } elseif {$w == $var(tbl)} {
 	TBLCopyTable $varname
+    }
+}
+
+proc PrismSelectAll {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set w [focus -displayof $var(top)]
+    if {$w == $var(dir)} {
+    } elseif {$w == $var(header)} {
+	$var(text) tag add sel 1.0 end
+    } elseif {$w == $var(tbl)} {
+    }
+}
+
+proc PrismSelectNone {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set w [focus -displayof $var(top)]
+    if {$w == $var(dir)} {
+    } elseif {$w == $var(header)} {
+	$var(text) tag remove sel 1.0 end
+    } elseif {$w == $var(tbl)} {
     }
 }
 

@@ -250,12 +250,10 @@ proc ProcessCmdFontStyle {varname key value {cmd {}}} {
 
 proc ProcessCmdCVAR0 {cmd} {
     global cvarname
-    eval $cmd $cvarname
-}
 
-proc ProcessCmdCVAROpt {cmd opt} {
-    global cvarname
-    eval $cmd $cvarname {$opt}
+    if {$cvarname != {}} {
+	eval $cmd $cvarname
+    }
 }
 
 proc ProcessCmdCVAR {key value {cmd {}}} {
@@ -263,7 +261,7 @@ proc ProcessCmdCVAR {key value {cmd {}}} {
     upvar #0 $cvarname cvar
 
     set cvar($key) $value
-    if {$cmd != {}} {
+    if {$cmd != {} && $cvarname != {}} {
 	eval $cmd $cvarname
     }
 }
@@ -274,7 +272,19 @@ proc ProcessCmdCVAR2 {key value key2 value2 {cmd {}}} {
 
     set cvar($key) $value
     set cvar($key2) $value2
-    if {$cmd != {}} {
+    if {$cmd != {} && $cvarname != {}} {
+	eval $cmd $cvarname
+    }
+}
+
+proc ProcessCmdCVAR3 {key value key2 value2 key3 value3 {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($key) $value
+    set cvar($key2) $value2
+    set cvar($key3) $value3
+    if {$cmd != {} && $cvarname != {}} {
 	eval $cmd $cvarname
     }
 }
@@ -287,8 +297,31 @@ proc ProcessCmdCVAR4 {key value key2 value2 key3 value3 key4 value4 {cmd {}}} {
     set cvar($key2) $value2
     set cvar($key3) $value3
     set cvar($key4) $value4
-    if {$cmd != {}} {
+    if {$cmd != {} && $cvarname != {}} {
 	eval $cmd $cvarname
+    }
+}
+
+proc ProcessCmdCVAR6 {key value key2 value2 key3 value3 key4 value4 key5 value 5 key6 value6 {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($key) $value
+    set cvar($key2) $value2
+    set cvar($key3) $value3
+    set cvar($key4) $value4
+    set cvar($key5) $value5
+    set cvar($key6) $value6
+    if {$cmd != {} && $cvarname != {}} {
+	eval $cmd $cvarname
+    }
+}
+
+proc ProcessCmdCVAROpt {cmd opt} {
+    global cvarname
+
+    if {$cvarname != {}} {
+	eval $cmd $cvarname {$opt}
     }
 }
 
@@ -302,7 +335,9 @@ proc ProcessSendCmdCVAR {cmd} {
     upvar #0 $cvarname cvar
 
     global parse
-    $parse(proc) $parse(id) "[$cmd $cvarname]"
+    if {$cmd != {} && $cvarname != {}} {
+	$parse(proc) $parse(id) "[$cmd $cvarname]"
+    }
 }
 
 proc ProcessSendCmdTxt {rr} {
@@ -1426,6 +1461,12 @@ proc ProcessSendPrefsCmd {proc id param {sock {}} {fn {}}} {
     prefssend::yyparse
 }
 
+proc PrefsSendCmdPrecision {} {
+    global parse
+
+    ProcessSendPrecisionCmd $parse(proc) $parse(id) {}
+}
+
 proc ProcessPrecisionCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -1438,6 +1479,7 @@ proc ProcessPrecisionCmd {varname iname} {
 
 proc ProcessSendPrecisionCmd {proc id param {sock {}} {fn {}}} {
     global pds9
+
     $proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,len,linear) $pds9(prec,len,deg) $pds9(prec,len,arcmin) $pds9(prec,len,arcsec) $pds9(prec,angle)\n"
 }
 

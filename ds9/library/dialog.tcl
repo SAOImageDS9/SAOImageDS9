@@ -232,12 +232,12 @@ proc SimpleTextDialog {varname title width height action pos txt
 	FontMenu $var(mb).font $varname font font,size font,weight font,slant \
 	    [list SimpleTextFont $varname]
 
-	# create the text and scroll widgets
-	
 	set var(text) $var(top).text
 	roText::roText $var(text)
+
 	$var(text) configure \
-	    -height $height -width $width \
+	    -height $height \
+	    -width $width \
 	    -wrap none \
 	    -yscrollcommand [list $var(top).yscroll set] \
 	    -xscrollcommand [list $var(top).xscroll set] \
@@ -245,10 +245,10 @@ proc SimpleTextDialog {varname title width height action pos txt
 	    -bg [ThemeTreeBackground] \
 	    -state normal
 
-	ttk::scrollbar $var(top).yscroll -command [list $var(text) yview] \
-	    -orient vertical
-	ttk::scrollbar $var(top).xscroll -command [list $var(text) xview] \
-	    -orient horizontal
+	ttk::scrollbar $var(top).yscroll \
+	    -command [list roText::$var(text) yview] -orient vertical
+	ttk::scrollbar $var(top).xscroll \
+	    -command [list roText::$var(text) xview] -orient horizontal
 
 	grid $var(text) $var(top).yscroll -sticky news
 	grid $var(top).xscroll -stick news

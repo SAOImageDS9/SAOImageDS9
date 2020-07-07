@@ -26,7 +26,7 @@ prefssend : HAS_ has
  | NAN_ nan
  | NAN_ COLOR_ nan
 
- | PRECISION_ {ProcessSendCmdGet9 pds9 prec,linear prec,deg prec,hms prec,dms prec,len,linear prec,len,deg prec,len,arcmin prec,len,arcsec prec,angle}
+ | PRECISION_ {PrefsSendCmdPrecision}
  | THEME_ {ProcessSendCmdGet pds9 theme}
  | THREADS_ {ProcessSendCmdGet ds9 threads}
  | IRAFALIGN_ {ProcessSendCmdYesNo pds9 iraf}

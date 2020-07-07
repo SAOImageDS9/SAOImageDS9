@@ -445,7 +445,7 @@ proc prefssend::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
-                    8 { ProcessSendCmdGet9 pds9 prec,linear prec,deg prec,hms prec,dms prec,len,linear prec,len,deg prec,len,arcmin prec,len,arcsec prec,angle }
+                    8 { PrefsSendCmdPrecision }
                     9 { ProcessSendCmdGet pds9 theme }
                     10 { ProcessSendCmdGet ds9 threads }
                     11 { ProcessSendCmdYesNo pds9 iraf }

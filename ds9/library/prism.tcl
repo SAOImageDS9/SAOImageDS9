@@ -45,8 +45,10 @@ proc PrismDialog {varname} {
 
     set var(tbldb) ${varname}tbldb
     set var(fn) {}
-    set var(ext) {}
+    set var(ext) 0
     set var(extname) {}
+    set var(extnames) {}
+    set var(extnum) 0
     set var(last) 0
 
     set var(search) {}
@@ -143,21 +145,24 @@ proc PrismDialog {varname} {
     set f [ttk::labelframe $p.header -padding {0 2} \
 	       -text [msgcat::mc {Header Keywords}]]
 
-    set var(text) $f.header
+    set var(text) $f.text
     roText::roText $var(text)
-    $var(text) configure -wrap none \
+
+    $var(text) configure \
+	-wrap none \
 	-height 10 \
 	-yscrollcommand [list $f.yscroll set] \
 	-xscrollcommand [list $f.xscroll set] \
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground] \
 	-state normal
+    
+    ttk::scrollbar $f.yscroll \
+	-command [list roText::$var(text) yview] -orient vertical
+    ttk::scrollbar $f.xscroll \
+	-command [list roText::$var(text) xview] -orient horizontal
+    
     $var(text) tag configure keyword -foreground $ds9(bold)
-
-    ttk::scrollbar $f.yscroll -command [list $var(text) yview] \
-	-orient vertical
-    ttk::scrollbar $f.xscroll -command [list $var(text) xview] \
-	-orient horizontal
 
     grid $var(text) $f.yscroll -sticky news
     grid $f.xscroll -stick news
@@ -348,10 +353,6 @@ proc PrismDialogUpdate {varname} {
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
     $bb.clear configure -state normal
 
-    if {$var(ext) == {}} {
-	return
-    }
-
     $var(mb).file entryconfig [msgcat::mc {Image}] -state normal
     $bb.image configure -state normal
 
@@ -385,7 +386,12 @@ proc PrismLoad {varname fn} {
     set rr [fitsy dir $fn]
     foreach {ext name type info} $rr {
 	$var(dir) insert {} end -id $ext -values [list "$name" "$type" "$info"]
+	lappend ${varname}(extnames) $name
+	incr ${varname}(extnum)
     }
+    set var(ext) 0
+    set var(extname) [lindex $var(extnames) 0]
+    $var(dir) selection set $var(ext)
 
     PrismDialogUpdate $varname
 }
@@ -406,8 +412,10 @@ proc PrismClear {varname} {
     }
 
     set var(fn) {}
-    set var(ext) {}
+    set var(ext) 0
     set var(extname) {}
+    set var(extnames) {}
+    set var(extnum) 0
     set var(last) 0
 
     # reset plots
@@ -581,6 +589,7 @@ proc PrismPlotGenerate {varname} {
 	blt::vector create $ydata
     }
 
+    if {[catch {
     switch $dim {
 	xy {
 	    fitsy plot $var(fn) $var(ext) xy \
@@ -622,6 +631,10 @@ proc PrismPlotGenerate {varname} {
 		$var(yerr) $yedata
 	}
     }
+    }]} {
+	Error "[msgcat::mc {Unable to generate plot}]"
+	return
+    }
 
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
 	PlotDialog $vvarname {}
@@ -653,7 +666,7 @@ proc PrismHistogram {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(fn) == {} || $var(ext) == {}} {
+    if {$var(fn) == {}} {
 	return
     }
 
@@ -782,7 +795,7 @@ proc PrismImage {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(fn) == {} || $var(ext) == {}} {
+    if {$var(fn) == {}} {
 	return
     }
 
@@ -870,13 +883,26 @@ proc PrismImageTable {varname} {
 	    set var(yy) $ed(yy)
 
 	    CreateFrame
-	    LoadFitsFile "$var(fn)\[$var(ext)\]\[bin=$ed(xx),$ed(yy)\]" {} {}
+	    LoadFitsFile "$var(fn)\[$var(ext)\]\[bin=$var(xx),$var(yy)\]" {} {}
 	    FinishLoad
 	}
     }
 
     DialogDismiss $w
     destroy $mb
+}
+
+proc PrismCmdImage {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    CreateFrame
+    if {$var(xx) == {} || $var(yy) == {}} {
+	LoadFitsFile "$var(fn)\[$var(ext)\]" {} {}
+    } else {
+	LoadFitsFile "$var(fn)\[$var(ext)\]\[bin=$var(xx),$var(yy)\]" {} {}
+    }
+    FinishLoad
 }
 
 proc PrismColsMenu {varname f ww} {
@@ -912,11 +938,10 @@ proc PrismExtCmd {varname} {
 
     set var(ext) [$var(dir) selection]
     if {$var(ext) == {}} {
-	set var(extname) {}
-	return
+	set var(ext) 0
     }
-
-    set var(extname) [lindex [$var(dir) item $var(ext) -value] 0]
+    
+    set var(extname) [lindex $var(extnames) 0]
 
     # clear previous cols
     set var(col) {}
@@ -1042,3 +1067,32 @@ proc PrismCmdLoad {fn} {
     PrismLoad [lindex $iprism(prisms) end] $fn
 }
 
+proc PrismCmdExt {ext} {
+    global iprism
+    global cvarname
+    upvar #0 $cvarname cvar
+    
+    if {$ext >= 0 && $ext <= $cvar(extnum)} {
+	$cvar(dir) selection set $ext
+	# let dialog catchup
+	update
+    } else {
+	Error "[msgcat::mc {Extension not found}]: $ext"
+    }
+
+}
+
+proc PrismCmdExtName {extname} {
+    global iprism
+    global cvarname
+    upvar #0 $cvarname cvar
+    
+    set ext [lsearch $cvar(extnames) $extname]
+    if {$ext >= 0} {
+	$cvar(dir) selection set $ext
+	# let dialog catchup
+	update
+    } else {
+	Error "[msgcat::mc {Extension not found}]: $extname"
+    }
+}

@@ -80,9 +80,11 @@
 ::msgcat::mcset zh {Bin Columns} 
 ::msgcat::mcset zh {Bin Filter} 
 ::msgcat::mcset zh {Bin Fit} 
+::msgcat::mcset zh {Bin Image} 
 ::msgcat::mcset zh {Bin In} 
 ::msgcat::mcset zh {Bin Out} 
 ::msgcat::mcset zh {Binning Parameters} 
+::msgcat::mcset zh {Bins} 
 ::msgcat::mcset zh {Bin} 
 ::msgcat::mcset zh {Black} [encoding convertfrom big5 "\xB6\xC2 \xA6\xE2"]
 ::msgcat::mcset zh {Blank/Inf/NaN Color} 
@@ -236,6 +238,7 @@
 ::msgcat::mcset zh {Dialog Box} 
 ::msgcat::mcset zh {Diameter} 
 ::msgcat::mcset zh {Diamond} 
+::msgcat::mcset zh {Dimensions} 
 ::msgcat::mcset zh {Dimension} 
 ::msgcat::mcset zh {Direction} 
 ::msgcat::mcset zh {Disconnect} 
@@ -247,6 +250,8 @@
 ::msgcat::mcset zh {Download Colormap} 
 ::msgcat::mcset zh {Drag to Center} 
 ::msgcat::mcset zh {Duplicate Dataset} 
+::msgcat::mcset zh {ENVI} 
+::msgcat::mcset zh {EPS} 
 ::msgcat::mcset zh {East} 
 ::msgcat::mcset zh {Ecliptic} 
 ::msgcat::mcset zh {Edit Group Name} 
@@ -278,7 +283,18 @@
 ::msgcat::mcset zh {Exclude} 
 ::msgcat::mcset zh {Exit} [encoding convertfrom big5 "\xC2\xF7 \xB6\x7D"]
 ::msgcat::mcset zh {Export Array} 
+::msgcat::mcset zh {Export ENVI} 
+::msgcat::mcset zh {Export GIF} 
+::msgcat::mcset zh {Export JPEG} 
+::msgcat::mcset zh {Export NRRD} 
+::msgcat::mcset zh {Export PNG} 
+::msgcat::mcset zh {Export RGB Array} 
+::msgcat::mcset zh {Export TIFF} 
 ::msgcat::mcset zh {Export} 
+::msgcat::mcset zh {Extension Data} 
+::msgcat::mcset zh {Extension not found} 
+::msgcat::mcset zh {Extensions} 
+::msgcat::mcset zh {Extension} 
 ::msgcat::mcset zh {Extention} 
 ::msgcat::mcset zh {Exterior Axes} 
 ::msgcat::mcset zh {Exterior Numerics} 
@@ -316,6 +332,7 @@
 ::msgcat::mcset zh {Front} 
 ::msgcat::mcset zh {Full Range} 
 ::msgcat::mcset zh {Function} 
+::msgcat::mcset zh {GIF} 
 ::msgcat::mcset zh {GUI} 
 ::msgcat::mcset zh {Galactic} 
 ::msgcat::mcset zh {Gap} 
@@ -342,6 +359,7 @@
 ::msgcat::mcset zh {Groups} 
 ::msgcat::mcset zh {HMS} 
 ::msgcat::mcset zh {HTTP} 
+::msgcat::mcset zh {Header Keywords} 
 ::msgcat::mcset zh {Header} 
 ::msgcat::mcset zh {Height} 
 ::msgcat::mcset zh {Help Desk} 
@@ -362,6 +380,17 @@
 ::msgcat::mcset zh {Image Servers} 
 ::msgcat::mcset zh {Image} 
 ::msgcat::mcset zh {Import Array} 
+::msgcat::mcset zh {Import ENVI} 
+::msgcat::mcset zh {Import GIF} 
+::msgcat::mcset zh {Import JPEG} 
+::msgcat::mcset zh {Import NRRD} 
+::msgcat::mcset zh {Import PNG} 
+::msgcat::mcset zh {Import RGB Array} 
+::msgcat::mcset zh {Import Slice GIF} 
+::msgcat::mcset zh {Import Slice JPEG} 
+::msgcat::mcset zh {Import Slice PNG} 
+::msgcat::mcset zh {Import Slice TIFF} 
+::msgcat::mcset zh {Import TIFF} 
 ::msgcat::mcset zh {Import} 
 ::msgcat::mcset zh {Include} 
 ::msgcat::mcset zh {Increase} 
@@ -385,6 +414,7 @@
 ::msgcat::mcset zh {Items Found} 
 ::msgcat::mcset zh {Iteration} 
 ::msgcat::mcset zh {JPEG Quality Factor} 
+::msgcat::mcset zh {JPEG} 
 ::msgcat::mcset zh {Keep-Alive} 
 ::msgcat::mcset zh {Keyword} 
 ::msgcat::mcset zh {Labels} 
@@ -539,6 +569,7 @@
 ::msgcat::mcset zh {Multiple Extension Frames} 
 ::msgcat::mcset zh {Multiple WCS} 
 ::msgcat::mcset zh {NAN} 
+::msgcat::mcset zh {NRRD} 
 ::msgcat::mcset zh {Name Resolution} 
 ::msgcat::mcset zh {Name Server} 
 ::msgcat::mcset zh {Name or Designation} 
@@ -550,6 +581,7 @@
 ::msgcat::mcset zh {New Frame each Time} 
 ::msgcat::mcset zh {New Frame} [encoding convertfrom big5 "\xB7\x73 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {New Group} 
+::msgcat::mcset zh {New Plot} 
 ::msgcat::mcset zh {New} 
 ::msgcat::mcset zh {Next Frame} [encoding convertfrom big5 "\xAB\xE1 \xA4\x40 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Next} 
@@ -596,6 +628,8 @@
 ::msgcat::mcset zh {Other} [encoding convertfrom big5 "\xA8\xE4 \xA5\xA6"]
 ::msgcat::mcset zh {Outer} 
 ::msgcat::mcset zh {Overlap} 
+::msgcat::mcset zh {Overplot} 
+::msgcat::mcset zh {PNG} 
 ::msgcat::mcset zh {PS Page Setup} 
 ::msgcat::mcset zh {PS Print} 
 ::msgcat::mcset zh {Page Setup} 
@@ -627,6 +661,7 @@
 ::msgcat::mcset zh {Plot 3D} 
 ::msgcat::mcset zh {Plot Area} 
 ::msgcat::mcset zh {Plot Tool} 
+::msgcat::mcset zh {Plot Type} 
 ::msgcat::mcset zh {Plotting Regions} 
 ::msgcat::mcset zh {Plot} 
 ::msgcat::mcset zh {Plus} 
@@ -648,6 +683,7 @@
 ::msgcat::mcset zh {Print To} 
 ::msgcat::mcset zh {Printer} 
 ::msgcat::mcset zh {Print} [encoding convertfrom big5 "\xA6\x43 \xA6\x4C"]
+::msgcat::mcset zh {Prism} 
 ::msgcat::mcset zh {Projection} 
 ::msgcat::mcset zh {Properties} [encoding convertfrom big5 "\xA6\x43 \xA6\x4C"]
 ::msgcat::mcset zh {Property} 
@@ -704,6 +740,12 @@
 ::msgcat::mcset zh {Save Contour Levels} 
 ::msgcat::mcset zh {Save Contrast/Bias} 
 ::msgcat::mcset zh {Save Data} 
+::msgcat::mcset zh {Save Image EPS} 
+::msgcat::mcset zh {Save Image FITS} 
+::msgcat::mcset zh {Save Image GIF} 
+::msgcat::mcset zh {Save Image JPEG} 
+::msgcat::mcset zh {Save Image PNG} 
+::msgcat::mcset zh {Save Image TIFF} 
 ::msgcat::mcset zh {Save Image on Download} 
 ::msgcat::mcset zh {Save Image} [encoding convertfrom big5 "\xC0\x78 \xA6\x73 \xBC\x76 \xB9\xB3"]
 ::msgcat::mcset zh {Save ME Cube} 
@@ -785,6 +827,7 @@
 ::msgcat::mcset zh {Sunken} 
 ::msgcat::mcset zh {Symbol Editor} 
 ::msgcat::mcset zh {Symbol} 
+::msgcat::mcset zh {TIFF} 
 ::msgcat::mcset zh {TSV} 
 ::msgcat::mcset zh {Tab-Separated-Value} 
 ::msgcat::mcset zh {Table} 
@@ -818,6 +861,7 @@
 ::msgcat::mcset zh {Unable to determine date of observation} 
 ::msgcat::mcset zh {Unable to evaluate filter} 
 ::msgcat::mcset zh {Unable to find Footprint window} 
+::msgcat::mcset zh {Unable to find PRISM window} 
 ::msgcat::mcset zh {Unable to find SIAP window} 
 ::msgcat::mcset zh {Unable to find URL column} 
 ::msgcat::mcset zh {Unable to find catalog window} 
@@ -832,7 +876,6 @@
 ::msgcat::mcset zh {Unable to locate URL} 
 ::msgcat::mcset zh {Unable to match target with XPA Mime request} 
 ::msgcat::mcset zh {Unable to open file} 
-::msgcat::mcset zh {Unable to process Analysis file} 
 ::msgcat::mcset zh {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset zh {Undo} 
 ::msgcat::mcset zh {Unique} 
@@ -879,6 +922,8 @@
 ::msgcat::mcset zh {Window} 
 ::msgcat::mcset zh {Words matching title, description} 
 ::msgcat::mcset zh {X Axis Title} 
+::msgcat::mcset zh {X Column} 
+::msgcat::mcset zh {X Error Column} 
 ::msgcat::mcset zh {X Flip} 
 ::msgcat::mcset zh {X Grid} 
 ::msgcat::mcset zh {X Log} 
@@ -887,6 +932,8 @@
 ::msgcat::mcset zh {XPA} 
 ::msgcat::mcset zh {X} 
 ::msgcat::mcset zh {Y Axis Title} 
+::msgcat::mcset zh {Y Column} 
+::msgcat::mcset zh {Y Error Column} 
 ::msgcat::mcset zh {Y Flip} 
 ::msgcat::mcset zh {Y Grid} 
 ::msgcat::mcset zh {Y Log} 

@@ -302,7 +302,8 @@ proc ProcessCmdCVAR4 {key value key2 value2 key3 value3 key4 value4 {cmd {}}} {
     }
 }
 
-proc ProcessCmdCVAR6 {key value key2 value2 key3 value3 key4 value4 key5 value 5 key6 value6 {cmd {}}} {
+proc ProcessCmdCVAR6 {key value key2 value2 key3 value3
+		      key4 value4 key5 value5 key6 value6 {cmd {}}} {
     global cvarname
     upvar #0 $cvarname cvar
 

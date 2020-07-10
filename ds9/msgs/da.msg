@@ -80,9 +80,11 @@
 ::msgcat::mcset da {Bin Columns} [encoding convertfrom iso8859-1 {Bin søjler}]
 ::msgcat::mcset da {Bin Filter} {Bin filter}
 ::msgcat::mcset da {Bin Fit} 
+::msgcat::mcset da {Bin Image} 
 ::msgcat::mcset da {Bin In} 
 ::msgcat::mcset da {Bin Out} 
 ::msgcat::mcset da {Binning Parameters} {Parameter binning}
+::msgcat::mcset da {Bins} 
 ::msgcat::mcset da {Bin} {Bin}
 ::msgcat::mcset da {Black} {Sort}
 ::msgcat::mcset da {Blank/Inf/NaN Color} {Blank/Inf/NaN farve}
@@ -236,6 +238,7 @@
 ::msgcat::mcset da {Dialog Box} {Dialog vindue}
 ::msgcat::mcset da {Diameter} 
 ::msgcat::mcset da {Diamond} {Ruder}
+::msgcat::mcset da {Dimensions} 
 ::msgcat::mcset da {Dimension} {Dimension}
 ::msgcat::mcset da {Direction} 
 ::msgcat::mcset da {Disconnect} 
@@ -247,6 +250,8 @@
 ::msgcat::mcset da {Download Colormap} 
 ::msgcat::mcset da {Drag to Center} [encoding convertfrom iso8859-1 {Træk til center}]
 ::msgcat::mcset da {Duplicate Dataset} 
+::msgcat::mcset da {ENVI} 
+::msgcat::mcset da {EPS} 
 ::msgcat::mcset da {East} [encoding convertfrom iso8859-1 {Øst}]
 ::msgcat::mcset da {Ecliptic} {Ekliptisk}
 ::msgcat::mcset da {Edit Group Name} {Rediger gruppe navn}
@@ -278,7 +283,18 @@
 ::msgcat::mcset da {Exclude} {Udelad}
 ::msgcat::mcset da {Exit} {Luk}
 ::msgcat::mcset da {Export Array} 
+::msgcat::mcset da {Export ENVI} 
+::msgcat::mcset da {Export GIF} 
+::msgcat::mcset da {Export JPEG} 
+::msgcat::mcset da {Export NRRD} 
+::msgcat::mcset da {Export PNG} 
+::msgcat::mcset da {Export RGB Array} 
+::msgcat::mcset da {Export TIFF} 
 ::msgcat::mcset da {Export} 
+::msgcat::mcset da {Extension Data} 
+::msgcat::mcset da {Extension not found} 
+::msgcat::mcset da {Extensions} 
+::msgcat::mcset da {Extension} 
 ::msgcat::mcset da {Extention} 
 ::msgcat::mcset da {Exterior Axes} {Udvendige akser}
 ::msgcat::mcset da {Exterior Numerics} {Udvendige tal}
@@ -316,6 +332,7 @@
 ::msgcat::mcset da {Front} {Foran}
 ::msgcat::mcset da {Full Range} {Hele intervallet}
 ::msgcat::mcset da {Function} {Funktion}
+::msgcat::mcset da {GIF} 
 ::msgcat::mcset da {GUI} 
 ::msgcat::mcset da {Galactic} {Galaktisk}
 ::msgcat::mcset da {Gap} 
@@ -342,6 +359,7 @@
 ::msgcat::mcset da {Groups} {Gupper}
 ::msgcat::mcset da {HMS} 
 ::msgcat::mcset da {HTTP} {HTTP}
+::msgcat::mcset da {Header Keywords} 
 ::msgcat::mcset da {Header} {Hovede}
 ::msgcat::mcset da {Height} [encoding convertfrom iso8859-1 {Højde}]
 ::msgcat::mcset da {Help Desk} [encoding convertfrom iso8859-1 {Hjælp}]
@@ -362,6 +380,17 @@
 ::msgcat::mcset da {Image Servers} 
 ::msgcat::mcset da {Image} {Billed}
 ::msgcat::mcset da {Import Array} 
+::msgcat::mcset da {Import ENVI} 
+::msgcat::mcset da {Import GIF} 
+::msgcat::mcset da {Import JPEG} 
+::msgcat::mcset da {Import NRRD} 
+::msgcat::mcset da {Import PNG} 
+::msgcat::mcset da {Import RGB Array} 
+::msgcat::mcset da {Import Slice GIF} 
+::msgcat::mcset da {Import Slice JPEG} 
+::msgcat::mcset da {Import Slice PNG} 
+::msgcat::mcset da {Import Slice TIFF} 
+::msgcat::mcset da {Import TIFF} 
 ::msgcat::mcset da {Import} 
 ::msgcat::mcset da {Include} {Inkluder}
 ::msgcat::mcset da {Increase} [encoding convertfrom iso8859-1 {Forøg}]
@@ -385,6 +414,7 @@
 ::msgcat::mcset da {Items Found} {Emner fundet}
 ::msgcat::mcset da {Iteration} 
 ::msgcat::mcset da {JPEG Quality Factor} {JPEG kvalitetsfaktor}
+::msgcat::mcset da {JPEG} 
 ::msgcat::mcset da {Keep-Alive} 
 ::msgcat::mcset da {Keyword} 
 ::msgcat::mcset da {Labels} {Etiketter}
@@ -539,6 +569,7 @@
 ::msgcat::mcset da {Multiple Extension Frames} 
 ::msgcat::mcset da {Multiple WCS} {Multipel WCS}
 ::msgcat::mcset da {NAN} 
+::msgcat::mcset da {NRRD} 
 ::msgcat::mcset da {Name Resolution} [encoding convertfrom iso8859-1 {Navnesøgning}]
 ::msgcat::mcset da {Name Server} {Navneserver}
 ::msgcat::mcset da {Name or Designation} {navn eller beskrivelse}
@@ -550,6 +581,7 @@
 ::msgcat::mcset da {New Frame each Time} {Ny ramme hver gang}
 ::msgcat::mcset da {New Frame} {Ny ramme}
 ::msgcat::mcset da {New Group} {Ny gruppe}
+::msgcat::mcset da {New Plot} 
 ::msgcat::mcset da {New} {Ny}
 ::msgcat::mcset da {Next Frame} [encoding convertfrom iso8859-1 {Næste ramme}]
 ::msgcat::mcset da {Next} [encoding convertfrom iso8859-1 {Næste}]
@@ -596,6 +628,8 @@
 ::msgcat::mcset da {Other} {Anden}
 ::msgcat::mcset da {Outer} {Ydre}
 ::msgcat::mcset da {Overlap} 
+::msgcat::mcset da {Overplot} 
+::msgcat::mcset da {PNG} 
 ::msgcat::mcset da {PS Page Setup} {PS side opsætning}
 ::msgcat::mcset da {PS Print} {PS udskrift}
 ::msgcat::mcset da {Page Setup} [encoding convertfrom iso8859-1 {Side opsætning}]
@@ -627,6 +661,7 @@
 ::msgcat::mcset da {Plot 3D} 
 ::msgcat::mcset da {Plot Area} 
 ::msgcat::mcset da {Plot Tool} 
+::msgcat::mcset da {Plot Type} 
 ::msgcat::mcset da {Plotting Regions} [encoding convertfrom iso8859-1 {Plotte områder}]
 ::msgcat::mcset da {Plot} 
 ::msgcat::mcset da {Plus} 
@@ -648,6 +683,7 @@
 ::msgcat::mcset da {Print To} {Udskriv til}
 ::msgcat::mcset da {Printer} {Printer}
 ::msgcat::mcset da {Print} {Udskriv}
+::msgcat::mcset da {Prism} 
 ::msgcat::mcset da {Projection} {Projektion}
 ::msgcat::mcset da {Properties} {Egenskaber}
 ::msgcat::mcset da {Property} {Egenskab}
@@ -704,6 +740,12 @@
 ::msgcat::mcset da {Save Contour Levels} {Gem konturniveauer}
 ::msgcat::mcset da {Save Contrast/Bias} {Gem kontrast/bias}
 ::msgcat::mcset da {Save Data} {Gem data}
+::msgcat::mcset da {Save Image EPS} 
+::msgcat::mcset da {Save Image FITS} 
+::msgcat::mcset da {Save Image GIF} 
+::msgcat::mcset da {Save Image JPEG} 
+::msgcat::mcset da {Save Image PNG} 
+::msgcat::mcset da {Save Image TIFF} 
 ::msgcat::mcset da {Save Image on Download} 
 ::msgcat::mcset da {Save Image} {Gem billede}
 ::msgcat::mcset da {Save ME Cube} 
@@ -785,6 +827,7 @@
 ::msgcat::mcset da {Sunken} 
 ::msgcat::mcset da {Symbol Editor} 
 ::msgcat::mcset da {Symbol} 
+::msgcat::mcset da {TIFF} 
 ::msgcat::mcset da {TSV} 
 ::msgcat::mcset da {Tab-Separated-Value} 
 ::msgcat::mcset da {Table} 
@@ -818,6 +861,7 @@
 ::msgcat::mcset da {Unable to determine date of observation} 
 ::msgcat::mcset da {Unable to evaluate filter} {kan ikke bestemme filter}
 ::msgcat::mcset da {Unable to find Footprint window} 
+::msgcat::mcset da {Unable to find PRISM window} 
 ::msgcat::mcset da {Unable to find SIAP window} 
 ::msgcat::mcset da {Unable to find URL column} 
 ::msgcat::mcset da {Unable to find catalog window} {Kan ikke finde katalog vinduet}
@@ -832,7 +876,6 @@
 ::msgcat::mcset da {Unable to locate URL} {Kan ikke finde URL}
 ::msgcat::mcset da {Unable to match target with XPA Mime request} 
 ::msgcat::mcset da {Unable to open file} [encoding convertfrom iso8859-1 {Kan ikke åbne fil}]
-::msgcat::mcset da {Unable to process Analysis file} 
 ::msgcat::mcset da {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset da {Undo} {Fortryd}
 ::msgcat::mcset da {Unique} 
@@ -879,6 +922,8 @@
 ::msgcat::mcset da {Window} 
 ::msgcat::mcset da {Words matching title, description} {Ord tilpasset titel, beskrivelse }
 ::msgcat::mcset da {X Axis Title} 
+::msgcat::mcset da {X Column} 
+::msgcat::mcset da {X Error Column} 
 ::msgcat::mcset da {X Flip} 
 ::msgcat::mcset da {X Grid} 
 ::msgcat::mcset da {X Log} 
@@ -887,6 +932,8 @@
 ::msgcat::mcset da {XPA} 
 ::msgcat::mcset da {X} 
 ::msgcat::mcset da {Y Axis Title} 
+::msgcat::mcset da {Y Column} 
+::msgcat::mcset da {Y Error Column} 
 ::msgcat::mcset da {Y Flip} 
 ::msgcat::mcset da {Y Grid} 
 ::msgcat::mcset da {Y Log} 

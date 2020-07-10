@@ -80,9 +80,11 @@
 ::msgcat::mcset cs {Bin Columns} [encoding convertfrom iso8859-2 {Binuj sloupce}]
 ::msgcat::mcset cs {Bin Filter} [encoding convertfrom iso8859-2 {Filtr binování}]
 ::msgcat::mcset cs {Bin Fit} 
+::msgcat::mcset cs {Bin Image} 
 ::msgcat::mcset cs {Bin In} 
 ::msgcat::mcset cs {Bin Out} 
 ::msgcat::mcset cs {Binning Parameters} [encoding convertfrom iso8859-2 {Parametry binování}]
+::msgcat::mcset cs {Bins} 
 ::msgcat::mcset cs {Bin} 
 ::msgcat::mcset cs {Black} [encoding convertfrom iso8859-2 {Èerná}]
 ::msgcat::mcset cs {Blank/Inf/NaN Color} [encoding convertfrom iso8859-2 {Barva nedefinovaných pixelù}]
@@ -236,6 +238,7 @@
 ::msgcat::mcset cs {Dialog Box} [encoding convertfrom iso8859-2 {Dialogové okno}]
 ::msgcat::mcset cs {Diameter} 
 ::msgcat::mcset cs {Diamond} [encoding convertfrom iso8859-2 {Diamant}]
+::msgcat::mcset cs {Dimensions} 
 ::msgcat::mcset cs {Dimension} [encoding convertfrom iso8859-2 {Rozmìr}]
 ::msgcat::mcset cs {Direction} 
 ::msgcat::mcset cs {Disconnect} 
@@ -247,6 +250,8 @@
 ::msgcat::mcset cs {Download Colormap} 
 ::msgcat::mcset cs {Drag to Center} 
 ::msgcat::mcset cs {Duplicate Dataset} 
+::msgcat::mcset cs {ENVI} 
+::msgcat::mcset cs {EPS} 
 ::msgcat::mcset cs {East} [encoding convertfrom iso8859-2 {Východ}]
 ::msgcat::mcset cs {Ecliptic} [encoding convertfrom iso8859-2 {Ekliptikální}]
 ::msgcat::mcset cs {Edit Group Name} 
@@ -278,7 +283,18 @@
 ::msgcat::mcset cs {Exclude} 
 ::msgcat::mcset cs {Exit} [encoding convertfrom iso8859-2 {Ukonèi}]
 ::msgcat::mcset cs {Export Array} 
+::msgcat::mcset cs {Export ENVI} 
+::msgcat::mcset cs {Export GIF} 
+::msgcat::mcset cs {Export JPEG} 
+::msgcat::mcset cs {Export NRRD} 
+::msgcat::mcset cs {Export PNG} 
+::msgcat::mcset cs {Export RGB Array} 
+::msgcat::mcset cs {Export TIFF} 
 ::msgcat::mcset cs {Export} [encoding convertfrom iso8859-2 {Ulo¾it jako}]
+::msgcat::mcset cs {Extension Data} 
+::msgcat::mcset cs {Extension not found} 
+::msgcat::mcset cs {Extensions} 
+::msgcat::mcset cs {Extension} 
 ::msgcat::mcset cs {Extention} 
 ::msgcat::mcset cs {Exterior Axes} 
 ::msgcat::mcset cs {Exterior Numerics} 
@@ -316,6 +332,7 @@
 ::msgcat::mcset cs {Front} [encoding convertfrom iso8859-2 {První}]
 ::msgcat::mcset cs {Full Range} [encoding convertfrom iso8859-2 {Plný rozsah}]
 ::msgcat::mcset cs {Function} [encoding convertfrom iso8859-2 {Funkce}]
+::msgcat::mcset cs {GIF} 
 ::msgcat::mcset cs {GUI} 
 ::msgcat::mcset cs {Galactic} [encoding convertfrom iso8859-2 {Galaktické}]
 ::msgcat::mcset cs {Gap} 
@@ -342,6 +359,7 @@
 ::msgcat::mcset cs {Groups} [encoding convertfrom iso8859-2 {Skupiny}]
 ::msgcat::mcset cs {HMS} 
 ::msgcat::mcset cs {HTTP} 
+::msgcat::mcset cs {Header Keywords} 
 ::msgcat::mcset cs {Header} [encoding convertfrom iso8859-2 {Hlavièka}]
 ::msgcat::mcset cs {Height} [encoding convertfrom iso8859-2 {Vý¹ka}]
 ::msgcat::mcset cs {Help Desk} [encoding convertfrom iso8859-2 {Podpora}]
@@ -362,6 +380,17 @@
 ::msgcat::mcset cs {Image Servers} 
 ::msgcat::mcset cs {Image} [encoding convertfrom iso8859-2 {Obrázek}]
 ::msgcat::mcset cs {Import Array} 
+::msgcat::mcset cs {Import ENVI} 
+::msgcat::mcset cs {Import GIF} 
+::msgcat::mcset cs {Import JPEG} 
+::msgcat::mcset cs {Import NRRD} 
+::msgcat::mcset cs {Import PNG} 
+::msgcat::mcset cs {Import RGB Array} 
+::msgcat::mcset cs {Import Slice GIF} 
+::msgcat::mcset cs {Import Slice JPEG} 
+::msgcat::mcset cs {Import Slice PNG} 
+::msgcat::mcset cs {Import Slice TIFF} 
+::msgcat::mcset cs {Import TIFF} 
 ::msgcat::mcset cs {Import} 
 ::msgcat::mcset cs {Include} 
 ::msgcat::mcset cs {Increase} 
@@ -385,6 +414,7 @@
 ::msgcat::mcset cs {Items Found} 
 ::msgcat::mcset cs {Iteration} 
 ::msgcat::mcset cs {JPEG Quality Factor} [encoding convertfrom iso8859-2 {Kvalita JPEGu}]
+::msgcat::mcset cs {JPEG} 
 ::msgcat::mcset cs {Keep-Alive} 
 ::msgcat::mcset cs {Keyword} 
 ::msgcat::mcset cs {Labels} [encoding convertfrom iso8859-2 {Oznaèení}]
@@ -539,6 +569,7 @@
 ::msgcat::mcset cs {Multiple Extension Frames} 
 ::msgcat::mcset cs {Multiple WCS} [encoding convertfrom iso8859-2 {Multi WCS}]
 ::msgcat::mcset cs {NAN} 
+::msgcat::mcset cs {NRRD} 
 ::msgcat::mcset cs {Name Resolution} [encoding convertfrom iso8859-2 {Vyhledání objektu}]
 ::msgcat::mcset cs {Name Server} 
 ::msgcat::mcset cs {Name or Designation} 
@@ -550,6 +581,7 @@
 ::msgcat::mcset cs {New Frame each Time} 
 ::msgcat::mcset cs {New Frame} [encoding convertfrom iso8859-2 {Nový snímek}]
 ::msgcat::mcset cs {New Group} [encoding convertfrom iso8859-2 {Nová skupina}]
+::msgcat::mcset cs {New Plot} 
 ::msgcat::mcset cs {New} [encoding convertfrom iso8859-2 {Nový}]
 ::msgcat::mcset cs {Next Frame} [encoding convertfrom iso8859-2 {Dal¹í snímek}]
 ::msgcat::mcset cs {Next} [encoding convertfrom iso8859-2 {Dal¹í}]
@@ -596,6 +628,8 @@
 ::msgcat::mcset cs {Other} 
 ::msgcat::mcset cs {Outer} 
 ::msgcat::mcset cs {Overlap} 
+::msgcat::mcset cs {Overplot} 
+::msgcat::mcset cs {PNG} 
 ::msgcat::mcset cs {PS Page Setup} 
 ::msgcat::mcset cs {PS Print} 
 ::msgcat::mcset cs {Page Setup} [encoding convertfrom iso8859-2 {Vlastnosti tisku}]
@@ -627,6 +661,7 @@
 ::msgcat::mcset cs {Plot 3D} 
 ::msgcat::mcset cs {Plot Area} 
 ::msgcat::mcset cs {Plot Tool} 
+::msgcat::mcset cs {Plot Type} 
 ::msgcat::mcset cs {Plotting Regions} 
 ::msgcat::mcset cs {Plot} 
 ::msgcat::mcset cs {Plus} 
@@ -648,6 +683,7 @@
 ::msgcat::mcset cs {Print To} 
 ::msgcat::mcset cs {Printer} 
 ::msgcat::mcset cs {Print} [encoding convertfrom iso8859-2 {Vytisknout}]
+::msgcat::mcset cs {Prism} 
 ::msgcat::mcset cs {Projection} 
 ::msgcat::mcset cs {Properties} [encoding convertfrom iso8859-2 {Vlastnosti}]
 ::msgcat::mcset cs {Property} 
@@ -704,6 +740,12 @@
 ::msgcat::mcset cs {Save Contour Levels} 
 ::msgcat::mcset cs {Save Contrast/Bias} 
 ::msgcat::mcset cs {Save Data} 
+::msgcat::mcset cs {Save Image EPS} 
+::msgcat::mcset cs {Save Image FITS} 
+::msgcat::mcset cs {Save Image GIF} 
+::msgcat::mcset cs {Save Image JPEG} 
+::msgcat::mcset cs {Save Image PNG} 
+::msgcat::mcset cs {Save Image TIFF} 
 ::msgcat::mcset cs {Save Image on Download} 
 ::msgcat::mcset cs {Save Image} [encoding convertfrom iso8859-2 {Ulo¾it snímek}]
 ::msgcat::mcset cs {Save ME Cube} 
@@ -785,6 +827,7 @@
 ::msgcat::mcset cs {Sunken} 
 ::msgcat::mcset cs {Symbol Editor} 
 ::msgcat::mcset cs {Symbol} 
+::msgcat::mcset cs {TIFF} 
 ::msgcat::mcset cs {TSV} 
 ::msgcat::mcset cs {Tab-Separated-Value} 
 ::msgcat::mcset cs {Table} 
@@ -818,6 +861,7 @@
 ::msgcat::mcset cs {Unable to determine date of observation} 
 ::msgcat::mcset cs {Unable to evaluate filter} 
 ::msgcat::mcset cs {Unable to find Footprint window} 
+::msgcat::mcset cs {Unable to find PRISM window} 
 ::msgcat::mcset cs {Unable to find SIAP window} 
 ::msgcat::mcset cs {Unable to find URL column} 
 ::msgcat::mcset cs {Unable to find catalog window} 
@@ -832,7 +876,6 @@
 ::msgcat::mcset cs {Unable to locate URL} 
 ::msgcat::mcset cs {Unable to match target with XPA Mime request} 
 ::msgcat::mcset cs {Unable to open file} 
-::msgcat::mcset cs {Unable to process Analysis file} 
 ::msgcat::mcset cs {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset cs {Undo} [encoding convertfrom iso8859-2 {Zpìt}]
 ::msgcat::mcset cs {Unique} 
@@ -879,6 +922,8 @@
 ::msgcat::mcset cs {Window} 
 ::msgcat::mcset cs {Words matching title, description} 
 ::msgcat::mcset cs {X Axis Title} 
+::msgcat::mcset cs {X Column} 
+::msgcat::mcset cs {X Error Column} 
 ::msgcat::mcset cs {X Flip} 
 ::msgcat::mcset cs {X Grid} 
 ::msgcat::mcset cs {X Log} 
@@ -887,6 +932,8 @@
 ::msgcat::mcset cs {XPA} 
 ::msgcat::mcset cs {X} 
 ::msgcat::mcset cs {Y Axis Title} 
+::msgcat::mcset cs {Y Column} 
+::msgcat::mcset cs {Y Error Column} 
 ::msgcat::mcset cs {Y Flip} 
 ::msgcat::mcset cs {Y Grid} 
 ::msgcat::mcset cs {Y Log} 

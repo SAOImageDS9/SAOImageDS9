@@ -80,9 +80,11 @@
 ::msgcat::mcset ja {Bin Columns} [encoding convertfrom euc-jp "\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1\xa4\xb9\xa4\xeb\xce\xf3"]
 ::msgcat::mcset ja {Bin Filter} [encoding convertfrom euc-jp "\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1\xa4\xce\xb9\xca\xa4\xea\xb9\xfe\xa4\xdf\xbe\xf2\xb7\xef"]
 ::msgcat::mcset ja {Bin Fit} 
+::msgcat::mcset ja {Bin Image} 
 ::msgcat::mcset ja {Bin In} 
 ::msgcat::mcset ja {Bin Out} 
 ::msgcat::mcset ja {Binning Parameters} [encoding convertfrom euc-jp "\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1\xa4\xce\xc0\xdf\xc4\xea"]
+::msgcat::mcset ja {Bins} 
 ::msgcat::mcset ja {Bin} [encoding convertfrom euc-jp "\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1"]
 ::msgcat::mcset ja {Black} [encoding convertfrom euc-jp "\xb9\xf5\xbf\xa7"]
 ::msgcat::mcset ja {Blank/Inf/NaN Color} [encoding convertfrom euc-jp "\xcc\xa4\xc4\xea\xb5\xc1\xc3\xcd\x28\x42\x6c\x61\x6e\x6b\x2f\x49\x6e\x66\x2f\x4e\x61\x4e\x29\xa4\xce\xbf\xa7"]
@@ -236,6 +238,7 @@
 ::msgcat::mcset ja {Dialog Box} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xc3\xa5\xd7\xa5\xa2\xa5\xc3\xa5\xd7\xa5\xe1\xa5\xcb\xa5\xe5\xa1\xbc"]
 ::msgcat::mcset ja {Diameter} 
 ::msgcat::mcset ja {Diamond} [encoding convertfrom euc-jp "\xc9\xa9\xb7\xc1"]
+::msgcat::mcset ja {Dimensions} 
 ::msgcat::mcset ja {Dimension} [encoding convertfrom euc-jp "\xbc\xa1\xb8\xb5"]
 ::msgcat::mcset ja {Direction} 
 ::msgcat::mcset ja {Disconnect} [encoding convertfrom euc-jp "\xc0\xdc\xc2\xb3\xbd\xaa\xce\xbb"]
@@ -247,6 +250,8 @@
 ::msgcat::mcset ja {Download Colormap} 
 ::msgcat::mcset ja {Drag to Center} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4\xa4\xcb\xa5\xc9\xa5\xe9\xa5\xc3\xa5\xb0"]
 ::msgcat::mcset ja {Duplicate Dataset} 
+::msgcat::mcset ja {ENVI} 
+::msgcat::mcset ja {EPS} 
 ::msgcat::mcset ja {East} [encoding convertfrom euc-jp "\xc5\xec"]
 ::msgcat::mcset ja {Ecliptic} [encoding convertfrom euc-jp "\xb2\xab\xc6\xbb\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Edit Group Name} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xcc\xbe\xa4\xf2\xca\xd1\xb9\xb9"]
@@ -278,7 +283,18 @@
 ::msgcat::mcset ja {Exclude} [encoding convertfrom euc-jp "\xb3\xb0\xc2\xa6"]
 ::msgcat::mcset ja {Exit} [encoding convertfrom euc-jp "\xbd\xaa\xce\xbb"]
 ::msgcat::mcset ja {Export Array} 
+::msgcat::mcset ja {Export ENVI} 
+::msgcat::mcset ja {Export GIF} 
+::msgcat::mcset ja {Export JPEG} 
+::msgcat::mcset ja {Export NRRD} 
+::msgcat::mcset ja {Export PNG} 
+::msgcat::mcset ja {Export RGB Array} 
+::msgcat::mcset ja {Export TIFF} 
 ::msgcat::mcset ja {Export} 
+::msgcat::mcset ja {Extension Data} 
+::msgcat::mcset ja {Extension not found} 
+::msgcat::mcset ja {Extensions} 
+::msgcat::mcset ja {Extension} 
 ::msgcat::mcset ja {Extention} 
 ::msgcat::mcset ja {Exterior Axes} [encoding convertfrom euc-jp "\xbc\xb4\xa4\xf2\xb3\xb0\xc2\xa6\xa4\xcb"]
 ::msgcat::mcset ja {Exterior Numerics} [encoding convertfrom euc-jp "\xbf\xf4\xc3\xcd\xa4\xf2\xb3\xb0\xc2\xa6\xa4\xcb"]
@@ -316,6 +332,7 @@
 ::msgcat::mcset ja {Front} [encoding convertfrom euc-jp "\xc1\xb4\xcc\xcc"]
 ::msgcat::mcset ja {Full Range} [encoding convertfrom euc-jp "\xc1\xb4\xc8\xcf\xb0\xcf"]
 ::msgcat::mcset ja {Function} [encoding convertfrom euc-jp "\xb4\xd8\xbf\xf4"]
+::msgcat::mcset ja {GIF} 
 ::msgcat::mcset ja {GUI} 
 ::msgcat::mcset ja {Galactic} [encoding convertfrom euc-jp "\xb6\xe4\xb2\xcf\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Gap} 
@@ -342,6 +359,7 @@
 ::msgcat::mcset ja {Groups} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7"]
 ::msgcat::mcset ja {HMS} 
 ::msgcat::mcset ja {HTTP} [encoding convertfrom euc-jp "\x48\x54\x54\x50"]
+::msgcat::mcset ja {Header Keywords} 
 ::msgcat::mcset ja {Header} [encoding convertfrom euc-jp "\xa5\xd8\xa5\xc3\xa5\xc0"]
 ::msgcat::mcset ja {Height} [encoding convertfrom euc-jp "\xb9\xe2\xa4\xb5"]
 ::msgcat::mcset ja {Help Desk} [encoding convertfrom euc-jp "\xa5\xd8\xa5\xeb\xa5\xd7\xa5\xc7\xa5\xb9\xa5\xaf"]
@@ -362,6 +380,17 @@
 ::msgcat::mcset ja {Image Servers} 
 ::msgcat::mcset ja {Image} [encoding convertfrom euc-jp "\xcf\xc0\xcd\xfd\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Import Array} 
+::msgcat::mcset ja {Import ENVI} 
+::msgcat::mcset ja {Import GIF} 
+::msgcat::mcset ja {Import JPEG} 
+::msgcat::mcset ja {Import NRRD} 
+::msgcat::mcset ja {Import PNG} 
+::msgcat::mcset ja {Import RGB Array} 
+::msgcat::mcset ja {Import Slice GIF} 
+::msgcat::mcset ja {Import Slice JPEG} 
+::msgcat::mcset ja {Import Slice PNG} 
+::msgcat::mcset ja {Import Slice TIFF} 
+::msgcat::mcset ja {Import TIFF} 
 ::msgcat::mcset ja {Import} 
 ::msgcat::mcset ja {Include} [encoding convertfrom euc-jp "\xc6\xe2\xc2\xa6"]
 ::msgcat::mcset ja {Increase} [encoding convertfrom euc-jp "\xbe\xba\xbd\xe7"]
@@ -385,6 +414,7 @@
 ::msgcat::mcset ja {Items Found} 
 ::msgcat::mcset ja {Iteration} [encoding convertfrom euc-jp "\xb7\xab\xa4\xea\xca\xd6\xa4\xb7"]
 ::msgcat::mcset ja {JPEG Quality Factor} [encoding convertfrom euc-jp "\x4a\x50\x45\x47\xa4\xce\xc9\xca\xbc\xc1"]
+::msgcat::mcset ja {JPEG} 
 ::msgcat::mcset ja {Keep-Alive} 
 ::msgcat::mcset ja {Keyword} 
 ::msgcat::mcset ja {Labels} [encoding convertfrom euc-jp "\xa5\xe9\xa5\xd9\xa5\xeb"]
@@ -539,6 +569,7 @@
 ::msgcat::mcset ja {Multiple Extension Frames} 
 ::msgcat::mcset ja {Multiple WCS} [encoding convertfrom euc-jp "\xca\xa3\xbf\xf4\x57\x43\x53"]
 ::msgcat::mcset ja {NAN} 
+::msgcat::mcset ja {NRRD} 
 ::msgcat::mcset ja {Name Resolution} [encoding convertfrom euc-jp "\xcc\xbe\xc1\xb0\xa4\xc7\xb8\xa1\xba\xf7"]
 ::msgcat::mcset ja {Name Server} [encoding convertfrom euc-jp "\xc5\xb7\xc2\xce\xcc\xbe\xb8\xa1\xba\xf7\xa5\xb5\xa1\xbc\xa5\xd0\xa1\xbc"]
 ::msgcat::mcset ja {Name or Designation} [encoding convertfrom euc-jp "\xc5\xb7\xc2\xce\xcc\xbe"]
@@ -550,6 +581,7 @@
 ::msgcat::mcset ja {New Frame each Time} [encoding convertfrom euc-jp "\xcb\xe8\xb2\xf3\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xba\xee\xc0\xae"]
 ::msgcat::mcset ja {New Frame} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {New Group} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7"]
+::msgcat::mcset ja {New Plot} 
 ::msgcat::mcset ja {New} [encoding convertfrom euc-jp "\xbf\xb7\xb5\xac"]
 ::msgcat::mcset ja {Next Frame} [encoding convertfrom euc-jp "\xbc\xa1\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {Next} [encoding convertfrom euc-jp "\xbf\xca\xa4\xe0"]
@@ -596,6 +628,8 @@
 ::msgcat::mcset ja {Other} [encoding convertfrom euc-jp "\xa4\xbd\xa4\xce\xc2\xbe"]
 ::msgcat::mcset ja {Outer} [encoding convertfrom euc-jp "\xb3\xb0\xb7\xc2"]
 ::msgcat::mcset ja {Overlap} 
+::msgcat::mcset ja {Overplot} 
+::msgcat::mcset ja {PNG} 
 ::msgcat::mcset ja {PS Page Setup} [encoding convertfrom euc-jp "\x50\x53\xa5\xda\xa1\xbc\xa5\xb8\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {PS Print} [encoding convertfrom euc-jp "\x50\x53\xb0\xf5\xba\xfe"]
 ::msgcat::mcset ja {Page Setup} [encoding convertfrom euc-jp "\xa5\xda\xa1\xbc\xa5\xb8\xc0\xdf\xc4\xea"]
@@ -627,6 +661,7 @@
 ::msgcat::mcset ja {Plot 3D} 
 ::msgcat::mcset ja {Plot Area} 
 ::msgcat::mcset ja {Plot Tool} 
+::msgcat::mcset ja {Plot Type} 
 ::msgcat::mcset ja {Plotting Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8\xa4\xb7\xa4\xc6\xa4\xa4\xa4\xde\xa4\xb9"]
 ::msgcat::mcset ja {Plot} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Plus} [encoding convertfrom euc-jp "\xa1\xdc"]
@@ -648,6 +683,7 @@
 ::msgcat::mcset ja {Print To} [encoding convertfrom euc-jp "\xbd\xd0\xce\xcf\xc0\xe8"]
 ::msgcat::mcset ja {Printer} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xea\xa5\xf3\xa5\xbf"]
 ::msgcat::mcset ja {Print} [encoding convertfrom euc-jp "\xb0\xf5\xba\xfe"]
+::msgcat::mcset ja {Prism} 
 ::msgcat::mcset ja {Projection} [encoding convertfrom euc-jp "\xc0\xda\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Properties} [encoding convertfrom euc-jp "\xc2\xb0\xc0\xad"]
 ::msgcat::mcset ja {Property} [encoding convertfrom euc-jp "\xc2\xb0\xc0\xad"]
@@ -704,6 +740,12 @@
 ::msgcat::mcset ja {Save Contour Levels} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa5\xec\xa5\xd9\xa5\xeb\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Contrast/Bias} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8\xa1\xa6\xa5\xd0\xa5\xa4\xa5\xa2\xa5\xb9\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Data} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xf2\xca\xdd\xc2\xb8"]
+::msgcat::mcset ja {Save Image EPS} 
+::msgcat::mcset ja {Save Image FITS} 
+::msgcat::mcset ja {Save Image GIF} 
+::msgcat::mcset ja {Save Image JPEG} 
+::msgcat::mcset ja {Save Image PNG} 
+::msgcat::mcset ja {Save Image TIFF} 
 ::msgcat::mcset ja {Save Image on Download} 
 ::msgcat::mcset ja {Save Image} [encoding convertfrom euc-jp "\xa5\xa4\xa5\xe1\xa1\xbc\xa5\xb8\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save ME Cube} 
@@ -785,6 +827,7 @@
 ::msgcat::mcset ja {Sunken} 
 ::msgcat::mcset ja {Symbol Editor} [encoding convertfrom euc-jp "\xb5\xad\xb9\xe6\xa4\xce\xca\xd4\xbd\xb8"]
 ::msgcat::mcset ja {Symbol} [encoding convertfrom euc-jp "\xb5\xad\xb9\xe6"]
+::msgcat::mcset ja {TIFF} 
 ::msgcat::mcset ja {TSV} 
 ::msgcat::mcset ja {Tab-Separated-Value} [encoding convertfrom euc-jp "\xa5\xbf\xa5\xd6\xca\xac\xb3\xe4\xb5\xad\xcb\xa1"]
 ::msgcat::mcset ja {Table} 
@@ -818,6 +861,7 @@
 ::msgcat::mcset ja {Unable to determine date of observation} 
 ::msgcat::mcset ja {Unable to evaluate filter} [encoding convertfrom euc-jp "\xb9\xca\xa4\xea\xb9\xfe\xa4\xdf\xbe\xf2\xb7\xef\xa4\xac\xc9\xbe\xb2\xc1\xa4\xc7\xa4\xad\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to find Footprint window} 
+::msgcat::mcset ja {Unable to find PRISM window} 
 ::msgcat::mcset ja {Unable to find SIAP window} 
 ::msgcat::mcset ja {Unable to find URL column} 
 ::msgcat::mcset ja {Unable to find catalog window} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa5\xa6\xa5\xa3\xa5\xf3\xa5\xc9\xa5\xa6\xa4\xac\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
@@ -832,7 +876,6 @@
 ::msgcat::mcset ja {Unable to locate URL} [encoding convertfrom euc-jp "\x55\x52\x4c\xa4\xf2\xc6\xc3\xc4\xea\xa4\xc7\xa4\xad\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to match target with XPA Mime request} 
 ::msgcat::mcset ja {Unable to open file} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xf2\xb3\xab\xa4\xb1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
-::msgcat::mcset ja {Unable to process Analysis file} 
 ::msgcat::mcset ja {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset ja {Undo} [encoding convertfrom euc-jp "\xa4\xe4\xa4\xea\xc4\xbe\xa4\xb7"]
 ::msgcat::mcset ja {Unique} 
@@ -879,6 +922,8 @@
 ::msgcat::mcset ja {Window} 
 ::msgcat::mcset ja {Words matching title, description} 
 ::msgcat::mcset ja {X Axis Title} 
+::msgcat::mcset ja {X Column} 
+::msgcat::mcset ja {X Error Column} 
 ::msgcat::mcset ja {X Flip} 
 ::msgcat::mcset ja {X Grid} 
 ::msgcat::mcset ja {X Log} 
@@ -887,6 +932,8 @@
 ::msgcat::mcset ja {XPA} [encoding convertfrom euc-jp "\x58\x50\x41"]
 ::msgcat::mcset ja {X} 
 ::msgcat::mcset ja {Y Axis Title} 
+::msgcat::mcset ja {Y Column} 
+::msgcat::mcset ja {Y Error Column} 
 ::msgcat::mcset ja {Y Flip} 
 ::msgcat::mcset ja {Y Grid} 
 ::msgcat::mcset ja {Y Log} 

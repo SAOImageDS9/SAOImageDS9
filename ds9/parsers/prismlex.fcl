@@ -10,9 +10,21 @@
 clear		{return $CLEAR_}
 close		{return $CLOSE_}
 current		{return $CURRENT_}
+extension	{return $EXTENSION_}
+histogram	{return $HISTOGRAM_}
+image		{return $IMAGE_}
 load		{return $LOAD_}
 open		{return $OPEN_}
+plot		{return $PLOT_}
 
+line		{return $LINE_}
+bar		{return $BAR_}
+scatter		{return $SCATTER}
+
+new		{return NEW_}
+over		{return OVER_}
+
+#include numeric.fin
 #include string.fin
 #include ws.fin
 

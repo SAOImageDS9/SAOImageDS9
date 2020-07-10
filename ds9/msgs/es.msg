@@ -80,9 +80,11 @@
 ::msgcat::mcset es {Bin Columns} {Columnas del bin}
 ::msgcat::mcset es {Bin Filter} {Filtro del bin} 
 ::msgcat::mcset es {Bin Fit} 
+::msgcat::mcset es {Bin Image} 
 ::msgcat::mcset es {Bin In} 
 ::msgcat::mcset es {Bin Out} 
 ::msgcat::mcset es {Binning Parameters} [encoding convertfrom iso8859-1 {Parámetros de resolución}]
+::msgcat::mcset es {Bins} 
 ::msgcat::mcset es {Bin} 
 ::msgcat::mcset es {Black} {Negro}
 ::msgcat::mcset es {Blank/Inf/NaN Color} {Color en blanco/Inf/NaN}
@@ -236,6 +238,7 @@
 ::msgcat::mcset es {Dialog Box} [encoding convertfrom iso8859-1 {Caja de diálogo}]
 ::msgcat::mcset es {Diameter} 
 ::msgcat::mcset es {Diamond} {Diamante}
+::msgcat::mcset es {Dimensions} 
 ::msgcat::mcset es {Dimension} [encoding convertfrom iso8859-1 {Dimensión}]
 ::msgcat::mcset es {Direction} 
 ::msgcat::mcset es {Disconnect} 
@@ -247,6 +250,8 @@
 ::msgcat::mcset es {Download Colormap} 
 ::msgcat::mcset es {Drag to Center} {Arrastrar para centrar} 
 ::msgcat::mcset es {Duplicate Dataset} 
+::msgcat::mcset es {ENVI} 
+::msgcat::mcset es {EPS} 
 ::msgcat::mcset es {East} {Este}
 ::msgcat::mcset es {Ecliptic} [encoding convertfrom iso8859-1 {Eclíptica}]
 ::msgcat::mcset es {Edit Group Name} {Editar el nombre del grupo}
@@ -278,7 +283,18 @@
 ::msgcat::mcset es {Exclude} {Excluir}
 ::msgcat::mcset es {Exit} {Salir}
 ::msgcat::mcset es {Export Array} 
+::msgcat::mcset es {Export ENVI} 
+::msgcat::mcset es {Export GIF} 
+::msgcat::mcset es {Export JPEG} 
+::msgcat::mcset es {Export NRRD} 
+::msgcat::mcset es {Export PNG} 
+::msgcat::mcset es {Export RGB Array} 
+::msgcat::mcset es {Export TIFF} 
 ::msgcat::mcset es {Export} 
+::msgcat::mcset es {Extension Data} 
+::msgcat::mcset es {Extension not found} 
+::msgcat::mcset es {Extensions} 
+::msgcat::mcset es {Extension} 
 ::msgcat::mcset es {Extention} 
 ::msgcat::mcset es {Exterior Axes} {Ejes exteriores}
 ::msgcat::mcset es {Exterior Numerics} {Numeración exterior}
@@ -316,6 +332,7 @@
 ::msgcat::mcset es {Front} {Al frente}
 ::msgcat::mcset es {Full Range} {Rango completo}
 ::msgcat::mcset es {Function} [encoding convertfrom iso8859-1 {Función}]
+::msgcat::mcset es {GIF} 
 ::msgcat::mcset es {GUI} 
 ::msgcat::mcset es {Galactic} [encoding convertfrom iso8859-1 {Galáctico}]
 ::msgcat::mcset es {Gap} 
@@ -342,6 +359,7 @@
 ::msgcat::mcset es {Groups} {Grupos}
 ::msgcat::mcset es {HMS} 
 ::msgcat::mcset es {HTTP} 
+::msgcat::mcset es {Header Keywords} 
 ::msgcat::mcset es {Header} {Cabecera}
 ::msgcat::mcset es {Height} {Altura}
 ::msgcat::mcset es {Help Desk} {Mesa de ayuda} 
@@ -362,6 +380,17 @@
 ::msgcat::mcset es {Image Servers} 
 ::msgcat::mcset es {Image} {Imagen}
 ::msgcat::mcset es {Import Array} 
+::msgcat::mcset es {Import ENVI} 
+::msgcat::mcset es {Import GIF} 
+::msgcat::mcset es {Import JPEG} 
+::msgcat::mcset es {Import NRRD} 
+::msgcat::mcset es {Import PNG} 
+::msgcat::mcset es {Import RGB Array} 
+::msgcat::mcset es {Import Slice GIF} 
+::msgcat::mcset es {Import Slice JPEG} 
+::msgcat::mcset es {Import Slice PNG} 
+::msgcat::mcset es {Import Slice TIFF} 
+::msgcat::mcset es {Import TIFF} 
 ::msgcat::mcset es {Import} 
 ::msgcat::mcset es {Include} {Incluir}
 ::msgcat::mcset es {Increase} {Aumento}
@@ -385,6 +414,7 @@
 ::msgcat::mcset es {Items Found} [encoding convertfrom iso8859-1 {Artículos hallados}]
 ::msgcat::mcset es {Iteration} [encoding convertfrom iso8859-1 {Iteración}]
 ::msgcat::mcset es {JPEG Quality Factor} {Factor de calidad JPEG}
+::msgcat::mcset es {JPEG} 
 ::msgcat::mcset es {Keep-Alive} 
 ::msgcat::mcset es {Keyword} 
 ::msgcat::mcset es {Labels} {Etiquetas} 
@@ -539,6 +569,7 @@
 ::msgcat::mcset es {Multiple Extension Frames} 
 ::msgcat::mcset es {Multiple WCS} [encoding convertfrom iso8859-1 {Múltiple WCS}]
 ::msgcat::mcset es {NAN} 
+::msgcat::mcset es {NRRD} 
 ::msgcat::mcset es {Name Resolution} [encoding convertfrom iso8859-1 {Conversión a coordenadas}]
 ::msgcat::mcset es {Name Server} {Nombre del servidor}
 ::msgcat::mcset es {Name or Designation} [encoding convertfrom iso8859-1 {Nombre o designación}]
@@ -550,6 +581,7 @@
 ::msgcat::mcset es {New Frame each Time} {Nuevo marco cada vez}
 ::msgcat::mcset es {New Frame} {Nuevo marco}
 ::msgcat::mcset es {New Group} {Nuevo grupo}
+::msgcat::mcset es {New Plot} 
 ::msgcat::mcset es {New} {Nuevo}
 ::msgcat::mcset es {Next Frame} {Siguiente Marco}
 ::msgcat::mcset es {Next} {Siguiente}
@@ -596,6 +628,8 @@
 ::msgcat::mcset es {Other} {Otro}
 ::msgcat::mcset es {Outer} {Exterior} 
 ::msgcat::mcset es {Overlap} 
+::msgcat::mcset es {Overplot} 
+::msgcat::mcset es {PNG} 
 ::msgcat::mcset es {PS Page Setup}  [encoding convertfrom iso8859-1 {Setup para Página PS}]
 ::msgcat::mcset es {PS Print} {Imprimir PS}
 ::msgcat::mcset es {Page Setup} [encoding convertfrom iso8859-1 {Formato de página}] 
@@ -627,6 +661,7 @@
 ::msgcat::mcset es {Plot 3D} 
 ::msgcat::mcset es {Plot Area} 
 ::msgcat::mcset es {Plot Tool} 
+::msgcat::mcset es {Plot Type} 
 ::msgcat::mcset es {Plotting Regions} {Dibujando regiones}
 ::msgcat::mcset es {Plot} 
 ::msgcat::mcset es {Plus} [encoding convertfrom iso8859-1 {Más}]
@@ -648,6 +683,7 @@
 ::msgcat::mcset es {Print To} {Imprimir en}
 ::msgcat::mcset es {Printer} {Impresora}
 ::msgcat::mcset es {Print} {Imprimir}
+::msgcat::mcset es {Prism} 
 ::msgcat::mcset es {Projection} [encoding convertfrom iso8859-1 {Proyección}]
 ::msgcat::mcset es {Properties} {Propiedades}
 ::msgcat::mcset es {Property} {Propiedad}
@@ -704,6 +740,12 @@
 ::msgcat::mcset es {Save Contour Levels} {Guardar niveles de contorno}
 ::msgcat::mcset es {Save Contrast/Bias} {Guardar contraste/Bias}
 ::msgcat::mcset es {Save Data} {Guardar datos}
+::msgcat::mcset es {Save Image EPS} 
+::msgcat::mcset es {Save Image FITS} 
+::msgcat::mcset es {Save Image GIF} 
+::msgcat::mcset es {Save Image JPEG} 
+::msgcat::mcset es {Save Image PNG} 
+::msgcat::mcset es {Save Image TIFF} 
 ::msgcat::mcset es {Save Image on Download} 
 ::msgcat::mcset es {Save Image} {Guardar imagen}
 ::msgcat::mcset es {Save ME Cube} 
@@ -785,6 +827,7 @@
 ::msgcat::mcset es {Sunken} 
 ::msgcat::mcset es {Symbol Editor} [encoding convertfrom iso8859-1 {Editor de símbolos}]
 ::msgcat::mcset es {Symbol} [encoding convertfrom iso8859-1 {Símbolo}]
+::msgcat::mcset es {TIFF} 
 ::msgcat::mcset es {TSV} 
 ::msgcat::mcset es {Tab-Separated-Value} 
 ::msgcat::mcset es {Table} 
@@ -818,6 +861,7 @@
 ::msgcat::mcset es {Unable to determine date of observation} 
 ::msgcat::mcset es {Unable to evaluate filter} {Incapaz de evaluar el filtro}
 ::msgcat::mcset es {Unable to find Footprint window} 
+::msgcat::mcset es {Unable to find PRISM window} 
 ::msgcat::mcset es {Unable to find SIAP window} 
 ::msgcat::mcset es {Unable to find URL column} 
 ::msgcat::mcset es {Unable to find catalog window} [encoding convertfrom iso8859-1 {Incapaz de hallar la ventana de catálogo}]
@@ -832,7 +876,6 @@
 ::msgcat::mcset es {Unable to locate URL} {Incapaz de localizar URL}
 ::msgcat::mcset es {Unable to match target with XPA Mime request} 
 ::msgcat::mcset es {Unable to open file} {Incapaz de abrir fichero}
-::msgcat::mcset es {Unable to process Analysis file} 
 ::msgcat::mcset es {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset es {Undo} {Deshacer}
 ::msgcat::mcset es {Unique} 
@@ -879,6 +922,8 @@
 ::msgcat::mcset es {Window} 
 ::msgcat::mcset es {Words matching title, description} [encoding convertfrom iso8859-1 {Palabras que coincidan con el título, descripción}]
 ::msgcat::mcset es {X Axis Title} 
+::msgcat::mcset es {X Column} 
+::msgcat::mcset es {X Error Column} 
 ::msgcat::mcset es {X Flip} 
 ::msgcat::mcset es {X Grid} 
 ::msgcat::mcset es {X Log} 
@@ -887,6 +932,8 @@
 ::msgcat::mcset es {XPA} 
 ::msgcat::mcset es {X} 
 ::msgcat::mcset es {Y Axis Title} 
+::msgcat::mcset es {Y Column} 
+::msgcat::mcset es {Y Error Column} 
 ::msgcat::mcset es {Y Flip} 
 ::msgcat::mcset es {Y Grid} 
 ::msgcat::mcset es {Y Log} 

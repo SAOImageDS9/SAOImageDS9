@@ -50,7 +50,9 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
 		int argc, const char* argv[])
 {
   if (argc>=2) {
-    if (!strncmp(argv[1], "dir", 3))
+    if (!strncmp(argv[1], "parse", 5))
+      return fitsy->parse(argc, argv);
+    else if (!strncmp(argv[1], "dir", 3))
       return fitsy->dir(argc, argv);
     else if (!strncmp(argv[1], "header", 6))
       return fitsy->header(argc, argv);
@@ -70,7 +72,7 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table? ?histogram? ?plot?",
+    Tcl_AppendResult(interp, "usage: fitsy ?parse? ?dir? ?header? ?istable? ?table? ?histogram? ?plot?",
 		     NULL);
     return TCL_ERROR;
   }
@@ -84,6 +86,42 @@ TclFITSY::TclFITSY(Tcl_Interp* interp)
 TclFITSY::~TclFITSY()
 {
 }
+
+int TclFITSY::parse(int argc, const char* argv[])
+{
+  if (argc!=4) { 
+    Tcl_AppendResult(interp_, "usage: fitsy parse ?filename? ?varname?", NULL);
+    return TCL_ERROR;
+  }
+
+  if (!(argv[2] && *argv[2]))
+    return TCL_ERROR;
+
+  if (!(argv[3] && *argv[3]))
+    return TCL_ERROR;
+
+  FitsFile* fits = new FitsFitsMMapIncr(argv[2]);
+
+  if (fits->pName())
+    Tcl_SetVar2(interp_, argv[3], "fn", fits->pName(), TCL_GLOBAL_ONLY);
+  if (fits->pExt())
+    Tcl_SetVar2(interp_, argv[3], "extname", toUpper(fits->pExt()),
+		TCL_GLOBAL_ONLY);
+  {
+    ostringstream str;
+    str << fits->pIndex() << ends;
+    Tcl_SetVar2(interp_, argv[3], "ext", str.str().c_str(), TCL_GLOBAL_ONLY);
+  }
+  if (fits->pBinX())
+    Tcl_SetVar2(interp_, argv[3], "xx", fits->pBinX(), TCL_GLOBAL_ONLY);
+  if (fits->pBinY())
+    Tcl_SetVar2(interp_, argv[3], "yy", fits->pBinY(), TCL_GLOBAL_ONLY);
+
+  if (fits)
+    delete fits;
+
+  return TCL_OK;
+}  
 
 int TclFITSY::dir(int argc, const char* argv[])
 {

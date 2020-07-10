@@ -53,10 +53,12 @@ proc PrismDialog {varname} {
 
     set var(search) {}
 
-    set var(col) {}
     set var(num) 10
+    set var(col) {}
     set var(xx) {}
     set var(yy) {}
+    set var(xx,default) {}
+    set var(yy,default) {}
     set var(xerr) {}
     set var(yerr) {}
 
@@ -381,18 +383,40 @@ proc PrismLoad {varname fn} {
     global $varname
 
     PrismClear $varname
-    set var(fn) $fn
-    
-    set rr [fitsy dir $fn]
+    fitsy parse $fn $varname
+
+    # save cols if any
+    set var(xx,default) $var(xx)
+    set var(yy,default) $var(yy)
+
+    set rr [fitsy dir $var(fn)]
     foreach {ext name type info} $rr {
 	$var(dir) insert {} end -id $ext -values [list "$name" "$type" "$info"]
 	lappend ${varname}(extnames) $name
 	incr ${varname}(extnum)
     }
-    set var(ext) 0
-    set var(extname) [lindex $var(extnames) 0]
-    $var(dir) selection set $var(ext)
 
+    # any parsed vars
+    if {$var(extname) != {}} {
+	set ext [lsearch $var(extnames) $var(extname)]
+	if {$ext >= 0} {
+	    set var(ext) $ext
+	} else {
+	    Error "[msgcat::mc {Extension not found}]: $var(extname)"
+	    PrismClear $varname
+	}
+    } elseif {$var(ext)>=0} {
+	set var(extname) [lindex $var(extnames) $var(ext)]
+	if {$var(extname) == {}} {
+	    Error "[msgcat::mc {Extension not found}]: $var(extname)"
+	    PrismClear $varname
+	}
+    } else {
+	set var(ext) 0
+	set var(extname) [lindex $var(extnames) $var(ext)]
+    }
+    $var(dir) selection set $var(ext)
+    
     PrismDialogUpdate $varname
 }
 
@@ -1011,8 +1035,18 @@ proc PrismExtCmd {varname} {
 
     # set default cols
     set var(col) [lindex [starbase_columns $var(tbldb)] 0]
-    set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
-    set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
+    if {$var(xx,default) == {}} {
+	set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
+    } else {
+	set var(xx) $var(xx,default)
+	set var(xx,default) {}
+    }
+    if {$var(yy,default) == {}} {
+	set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
+    } else {
+	set var(yy) $var(yy,default)
+	set var(yy,default) {}
+    }
 
     PrismDialogUpdate $varname
 }

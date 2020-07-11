@@ -112,10 +112,6 @@ int TclFITSY::parse(int argc, const char* argv[])
     str << fits->pIndex() << ends;
     Tcl_SetVar2(interp_, argv[3], "ext", str.str().c_str(), TCL_GLOBAL_ONLY);
   }
-  if (fits->pBinX())
-    Tcl_SetVar2(interp_, argv[3], "xx", fits->pBinX(), TCL_GLOBAL_ONLY);
-  if (fits->pBinY())
-    Tcl_SetVar2(interp_, argv[3], "yy", fits->pBinY(), TCL_GLOBAL_ONLY);
 
   if (fits)
     delete fits;

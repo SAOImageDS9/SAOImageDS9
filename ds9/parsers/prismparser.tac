@@ -39,7 +39,7 @@ prism : {PrismDialog prism}
  | CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
  | CLEAR_ {ProcessCmdCVAR0 PrismClear}
  | EXTENSION_ ext
- | IMAGE_ image
+ | IMAGE_ {ProcessCmdCVAR0 PrismImage}
  | PLOT_ plot
  | HISTOGRAM_
  | CURRENT_ STRING_ {PrismCmdRef $2}
@@ -47,10 +47,6 @@ prism : {PrismDialog prism}
 
 ext : INT_ {PrismCmdExt $1}
  | STRING_ {PrismCmdExtName $1}
- ;
-
-image : {ProcessCmdCVAR0 PrismCmdImage}
- | ext STRING_ STRING_ {ProcessCmdCVAR2 xx $2 yy $3; ProcessCmdCVAR0 PrismCmdImage}
  ;
 
 histogram : STRING_ {ProcessCmdCVAR3 col $1 num 20 plot,mode newplot}

@@ -57,8 +57,6 @@ proc PrismDialog {varname} {
     set var(col) {}
     set var(xx) {}
     set var(yy) {}
-    set var(xx,default) {}
-    set var(yy,default) {}
     set var(xerr) {}
     set var(yerr) {}
 
@@ -385,10 +383,6 @@ proc PrismLoad {varname fn} {
     PrismClear $varname
     fitsy parse $fn $varname
 
-    # save cols if any
-    set var(xx,default) $var(xx)
-    set var(yy,default) $var(yy)
-
     set rr [fitsy dir $var(fn)]
     foreach {ext name type info} $rr {
 	$var(dir) insert {} end -id $ext -values [list "$name" "$type" "$info"]
@@ -416,6 +410,9 @@ proc PrismLoad {varname fn} {
 	set var(extname) [lindex $var(extnames) $var(ext)]
     }
     $var(dir) selection set $var(ext)
+
+    # need this so that PrismExtCmd is invoked before next command
+    update
     
     PrismDialogUpdate $varname
 }
@@ -819,113 +816,8 @@ proc PrismImage {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(fn) == {}} {
-	return
-    }
-
-    if {[fitsy isimage $var(fn) $var(ext)]} {
-	PrismImageImage $varname
-    } elseif {[fitsy istable $var(fn) $var(ext)]} {
-	PrismImageTable $varname
-    }
-}
-
-proc PrismImageImage {varname} {
-    upvar #0 $varname var
-    global $varname
-
     CreateFrame
     LoadFitsFile "$var(fn)\[$var(ext)\]" {} {}
-    FinishLoad
-}
-
-proc PrismImageTable {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ed
-    
-    set w ".${varname}img"
-    set mb ".${varname}imgmb"
-
-    set ed(top) $w
-    set ed(ok) 0
-
-    set ed(xx) $var(xx)
-    set ed(yy) $var(yy)
-
-    DialogCreate $w [msgcat::mc {Bin Image}] ed(ok)
-
-    $w configure -menu $mb
-    ThemeMenu $mb
-
-    # file
-    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    ThemeMenu $mb.file
-    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
-    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
-
-    # edit
-    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
-    EditMenu $mb ed
-
-    # param
-    set f [ttk::frame $w.param]
-
-    ttk::label $f.txx -text [msgcat::mc {X Column}]
-    ttk::menubutton $f.xx -textvariable ed(xx) -menu $f.xx.menu
-
-    ttk::label $f.tyy -text [msgcat::mc {Y Column}]
-    ttk::menubutton $f.yy -textvariable ed(yy) -menu $f.yy.menu
-
-    PrismColsMenu $varname $f.xx xx
-    PrismColsMenu $varname $f.yy yy
-
-    grid $f.txx $f.xx -padx 2 -pady 2 -sticky ew
-    grid $f.tyy $f.yy -padx 2 -pady 2 -sticky ew
-
-    # Buttons
-    set f [ttk::frame $w.buttons]
-    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-        -default active
-    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
-    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
-
-    bind $w <Return> {set ed(ok) 1}
-
-    # Fini
-    ttk::separator $w.sep -orient horizontal
-    pack $w.param -side top -fill both -expand true
-    pack $w.buttons $w.sep -side bottom -fill x
-
-    DialogCenter $w
-    DialogWait $w ed(ok) $w.buttons.ok
-
-    if {$ed(ok)} {
-	if {$ed(xx) != {} && $ed(yy) != {}} {
-	    set var(xx) $ed(xx)
-	    set var(yy) $ed(yy)
-
-	    CreateFrame
-	    LoadFitsFile "$var(fn)\[$var(ext)\]\[bin=$var(xx),$var(yy)\]" {} {}
-	    FinishLoad
-	}
-    }
-
-    DialogDismiss $w
-    destroy $mb
-}
-
-proc PrismCmdImage {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    CreateFrame
-    if {$var(xx) == {} || $var(yy) == {}} {
-	LoadFitsFile "$var(fn)\[$var(ext)\]" {} {}
-    } else {
-	LoadFitsFile "$var(fn)\[$var(ext)\]\[bin=$var(xx),$var(yy)\]" {} {}
-    }
     FinishLoad
 }
 
@@ -1035,18 +927,8 @@ proc PrismExtCmd {varname} {
 
     # set default cols
     set var(col) [lindex [starbase_columns $var(tbldb)] 0]
-    if {$var(xx,default) == {}} {
-	set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
-    } else {
-	set var(xx) $var(xx,default)
-	set var(xx,default) {}
-    }
-    if {$var(yy,default) == {}} {
-	set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
-    } else {
-	set var(yy) $var(yy,default)
-	set var(yy,default) {}
-    }
+    set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
+    set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
 
     PrismDialogUpdate $varname
 }

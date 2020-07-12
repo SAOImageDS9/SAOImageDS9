@@ -383,6 +383,12 @@ proc PrismLoad {varname fn} {
     PrismClear $varname
     fitsy parse $fn $varname
 
+    # sanity check (command line error)
+    if {![file exists $var(fn)]} {
+	Error "[msgcat::mc {file not found}]: $var(fn)"
+	return
+    }
+
     set rr [fitsy dir $var(fn)]
     foreach {ext name type info} $rr {
 	$var(dir) insert {} end -id $ext -values [list "$name" "$type" "$info"]

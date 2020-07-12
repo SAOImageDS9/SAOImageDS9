@@ -794,7 +794,10 @@ proc PrismHistogramGenerate {varname} {
 	blt::vector create $ydata
     }
 
-    fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata $var(num)
+    if {[catch {fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata $var(num)} ]} {
+	Error "[msgcat::mc {Unable to generate plot}]"
+	return
+    }
 
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
 	PlotDialog $vvarname {}
@@ -852,12 +855,18 @@ proc PrismExtCmd {varname} {
     global $varname
     global iprism
 
+    # this proc can be called in any time
+    # prepare for the worst
+    if {$var(fn) == {}} {
+	return
+    }
+
     set var(ext) [$var(dir) selection]
     if {$var(ext) == {}} {
 	set var(ext) 0
     }
     
-    set var(extname) [lindex $var(extnames) 0]
+    set var(extname) [lindex $var(extnames) $var(ext)]
 
     # clear previous cols
     set var(col) {}
@@ -870,6 +879,7 @@ proc PrismExtCmd {varname} {
     # header
     $var(text) delete 1.0 end
     $var(text) insert end [fitsy header $var(fn) $var(ext)]
+
     # color tag keywords
     set stop [$var(text) index end]
     for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {

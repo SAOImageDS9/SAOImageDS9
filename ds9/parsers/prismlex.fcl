@@ -19,10 +19,10 @@ plot		{return $PLOT_}
 
 line		{return $LINE_}
 bar		{return $BAR_}
-scatter		{return $SCATTER}
+scatter		{return $SCATTER_}
 
-new		{return NEW_}
-over		{return OVER_}
+new		{return $NEW_}
+over		{return $OVER_}
 
 #include numeric.fin
 #include string.fin

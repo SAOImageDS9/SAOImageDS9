@@ -424,13 +424,13 @@ return $LINE_
 return $BAR_
             }
             11 {
-return $SCATTER
+return $SCATTER_
             }
             12 {
-return NEW_
+return $NEW_
             }
             13 {
-return OVER_
+return $OVER_
             }
             14 {
 set yylval $yytext; return $INT_

@@ -391,7 +391,8 @@ proc ProcessAnalysis {varname} {
 		}
 
 		# end param
-		if {[lindex $line 0] == {endparam}} {
+		if {[lindex $line 0] == {endparam} || 
+		    [lindex $line 0] == {end}} {
 		    if {$ianalysis(param,$ii,count) == 0} {
 			incr ianalysis(param,$ii,count)
 			set $ianalysis(param,$ii) def

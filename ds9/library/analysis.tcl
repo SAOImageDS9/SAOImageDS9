@@ -100,7 +100,7 @@ proc ClearAnalysis {} {
     # clear params
     for {set ii 0} {$ii<$ianalysis(param,count)} {incr ii} {
 	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
-	    for {set kk 0} {$jj<$ianalysis(param,$ii,$jj,count)} {incr kk} {
+	    for {set kk 0} {$kk<$ianalysis(param,$ii,$jj,count)} {incr kk} {
 		unset ianalysis(param,$ii,$jj,$kk,var)
 		unset ianalysis(param,$ii,$jj,$kk,type)
 		unset ianalysis(param,$ii,$jj,$kk,title)

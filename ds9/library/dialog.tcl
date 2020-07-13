@@ -497,6 +497,13 @@ namespace eval ::roText {
     bind $w <Key-Delete> break
     bind $w <Key-BackSpace> break
     rename $w ::roText::$w
+
+      proc ::$w {cmd args} [format {
+	  set w %s
+	  ::roText::$w $cmd {*}$args
+      } $w $w]
+
+      if {0} {
     proc ::$w {cmd args} [format {
       set w %s
       set inf [lindex [info level 1] 0] ;# caller proc name; find tk vs scr.
@@ -508,6 +515,8 @@ namespace eval ::roText {
         ::roText::$w $cmd {*}$args
       } 
     } $w $w]
+      }
+
     bind ::$w <Destroy> [list rename $w {}]
     return $w ;# created
   }

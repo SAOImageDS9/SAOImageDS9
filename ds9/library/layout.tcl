@@ -121,7 +121,7 @@ proc CreateCanvas {} {
     set ds9(canvas) [canvas $ds9(image).c -width $ww -height $hh \
 			 -highlightthickness 0 \
 			 -insertofftime 0 \
-			 -bg [ThemeTreeBackground] \
+			 -bg [ThemeBackground] \
 			]
     grid rowconfigure $ds9(image) 0 -weight 1
     grid columnconfigure $ds9(image) 0 -weight 1
@@ -133,7 +133,7 @@ proc CreateCanvas {} {
 	set ds9(canvas,bottom) [frame $ds9(image).b \
 				    -width 1 \
 				    -height $canvas(gap,bottom) \
-				    -bg [ThemeTreeBackground] \
+				    -bg [ThemeBackground] \
 				   ]
 	grid $ds9(canvas,bottom) -row 1 -column 0 -sticky ew
     }
@@ -157,17 +157,17 @@ proc CreateCanvas {} {
 proc ThemeConfigCanvas {w} {
     global ds9
     
-    $w configure -bg [ThemeTreeBackground]
+    $w configure -bg [ThemeBackground]
 
-    $w itemconfigure colorbar -fg [ThemeTreeForeground]
-    $w itemconfigure colorbar -bg [ThemeTreeBackground]
+    $w itemconfigure colorbar -fg [ThemeForeground]
+    $w itemconfigure colorbar -bg [ThemeBackground]
 
-    $w itemconfigure colorbarrgb -fg [ThemeTreeForeground]
-    $w itemconfigure colorbarrgb -bg [ThemeTreeBackground]
+    $w itemconfigure colorbarrgb -fg [ThemeForeground]
+    $w itemconfigure colorbarrgb -bg [ThemeBackground]
 
     foreach ff $ds9(frames) {
-	$w itemconfigure $ff -fg [ThemeTreeForeground]
-	$w itemconfigure $ff -bg [ThemeTreeBackground]
+	$w itemconfigure $ff -fg [ThemeForeground]
+	$w itemconfigure $ff -bg [ThemeBackground]
     }
 
     # since graphs are created, but maybe not realized
@@ -177,7 +177,7 @@ proc ThemeConfigCanvas {w} {
 }
 
 proc ThemeConfigCanvasBottom {w} {
-    $w configure -bg [ThemeTreeBackground]
+    $w configure -bg [ThemeBackground]
 }
 
 proc InitCanvas {} {

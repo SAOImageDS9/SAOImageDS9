@@ -58,27 +58,27 @@ proc CreateGraphs {} {
 			     -font [font actual TkDefaultFont] \
 			     -plotpadx 0 -plotpady 0 \
  			     -borderwidth 0 \
-			     -foreground [ThemeTreeForeground] \
-			     -background [ThemeTreeBackground] \
-			     -plotbackground [ThemeTreeBackground] \
+			     -foreground [ThemeForeground] \
+			     -background [ThemeBackground] \
+			     -plotbackground [ThemeBackground] \
 			    ]
 
     $ds9(graph,horz) legend configure -hide yes
     $ds9(graph,horz) crosshairs configure -color green
 
     $ds9(graph,horz) xaxis configure -hide no -showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeBackground] -color [ThemeForeground]
     $ds9(graph,horz) x2axis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeBackground] -color [ThemeForeground]
     $ds9(graph,horz) yaxis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $ds9(graph,horz) y2axis configure -hide no -bg [ThemeTreeBackground] \
+	-bg [ThemeBackground] -color [ThemeForeground]
+    $ds9(graph,horz) y2axis configure -hide no -bg [ThemeBackground] \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeBackground] -color [ThemeForeground]
 
     $ds9(graph,horz) element create line1 \
 	-xdata graphHorzX -ydata graphHorzY -symbol none \
-	-color [ThemeTreeForeground]
+	-color [ThemeForeground]
 
     bind $ds9(graph,horz) <Enter> [list EnterGraph $ds9(graph,horz) 1]
     bind $ds9(graph,horz) <Leave> [list LeaveGraph $ds9(graph,horz)]
@@ -105,29 +105,29 @@ proc CreateGraphs {} {
 			     -highlightthickness 0 \
 			     -borderwidth 0 \
 			     -font [font actual TkDefaultFont] \
-			     -foreground [ThemeTreeForeground] \
-			     -background [ThemeTreeBackground] \
-			     -plotbackground [ThemeTreeBackground] \
+			     -foreground [ThemeForeground] \
+			     -background [ThemeBackground] \
+			     -plotbackground [ThemeBackground] \
 			    ]
 
     $ds9(graph,vert) legend configure -hide yes
     $ds9(graph,vert) crosshairs configure -color green
 
     $ds9(graph,vert) xaxis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeBackground] -color [ThemeForeground]
     $ds9(graph,vert) x2axis configure -hide no -descending yes 	\
 	-showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-bg [ThemeBackground] -color [ThemeForeground] \
 
     $ds9(graph,vert) yaxis configure -hide no -descending yes \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeBackground] -color [ThemeForeground]
     $ds9(graph,vert) y2axis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeBackground] -color [ThemeForeground]
 
     $ds9(graph,vert) element create line1 \
 	-xdata graphVertX -ydata graphVertY -symbol none \
-	-color [ThemeTreeForeground]
+	-color [ThemeForeground]
 
     bind $ds9(graph,vert) <Enter> [list EnterGraph $ds9(graph,vert) 0]
     bind $ds9(graph,vert) <Leave> [list LeaveGraph $ds9(graph,vert)]
@@ -146,16 +146,16 @@ proc CreateGraphs {} {
 proc ThemeConfigGraph {w} {
     # invoked from ThemeConfigCanvas
 
-    $w configure -fg [ThemeTreeForeground] -bg [ThemeTreeBackground] \
-	-plotbackground [ThemeTreeBackground]
+    $w configure -fg [ThemeForeground] -bg [ThemeBackground] \
+	-plotbackground [ThemeBackground]
 
-    $w xaxis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $w x2axis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+    $w xaxis configure -bg [ThemeBackground] -color [ThemeForeground]
+    $w x2axis configure -bg [ThemeBackground] -color [ThemeForeground]
 
-    $w yaxis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $w y2axis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+    $w yaxis configure -bg [ThemeBackground] -color [ThemeForeground]
+    $w y2axis configure -bg [ThemeBackground] -color [ThemeForeground]
 
-    $w element configure line1 -color [ThemeTreeForeground]
+    $w element configure line1 -color [ThemeForeground]
 }
 
 proc UpdateGraphFont {} {

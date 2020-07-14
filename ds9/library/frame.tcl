@@ -114,8 +114,8 @@ proc CreateNameNumberFrame {which type} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
 
     $ds9(next) threads $ds9(threads)
 

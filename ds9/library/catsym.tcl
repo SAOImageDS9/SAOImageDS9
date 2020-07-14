@@ -216,12 +216,12 @@ proc CATSymDialog {parent} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list CATSymSelectCB $varname] \
-		      -fg [ThemeTreeForeground] \
-		      -bg [ThemeTreeBackground] \
+		      -fg [ThemeForeground] \
+		      -bg [ThemeBackground] \
 		 ]
 
     $var(tbl) tag configure sel \
-	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
+	-fg [ThemeForegroundSelected] -bg [ThemeBackgroundSelected]
     $var(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 

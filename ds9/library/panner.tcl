@@ -15,7 +15,7 @@ proc CreatePanner {} {
 			 -highlightthickness 0 \
 			 -insertofftime 0 \
 			 -takefocus 0 \
-			 -bg [ThemeTreeBackground] \
+			 -bg [ThemeBackground] \
 			]
 
     $ds9(panner) create panner$ds9(visual) \
@@ -26,8 +26,8 @@ proc CreatePanner {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+	-fg [ThemeForeground] \
+	-bg [ThemeBackground]
 
     switch $ds9(wm) {
 	x11 {bind $ds9(panner) <<ThemeChanged>> {ThemeConfigPanner %W}}
@@ -37,8 +37,8 @@ proc CreatePanner {} {
 }
 
 proc ThemeConfigPanner {w} {
-    $w configure -bg [ThemeTreeBackground]
-    $w itemconfigure panner -bg [ThemeTreeBackground]
+    $w configure -bg [ThemeBackground]
+    $w itemconfigure panner -bg [ThemeBackground]
 }
 
 proc PannerDef {} {

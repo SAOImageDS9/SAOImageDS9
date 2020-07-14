@@ -316,9 +316,9 @@ proc ScaleDialog {} {
 			  -font [font actual TkDefaultFont] \
 			  -plotrelief groove \
 			  -plotborderwidth 2 \
-			  -foreground [ThemeTreeForeground] \
-			  -background [ThemeTreeBackground] \
-			  -plotbackground [ThemeTreeBackground] \
+			  -foreground [ThemeForeground] \
+			  -background [ThemeBackground] \
+			  -plotbackground [ThemeBackground] \
 			 ]
 
     $dscale(hist) legend configure -hide yes
@@ -328,18 +328,18 @@ proc ScaleDialog {} {
 	-grid no \
 	-ticklength 3 \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] \
-	-color [ThemeTreeForeground] \
-	-titlecolor [ThemeTreeForeground]
+	-bg [ThemeBackground] \
+	-color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
 
     $dscale(hist) yaxis configure \
 	-hide yes \
 	-grid yes \
 	-ticklength 3 \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] \
-	-color [ThemeTreeForeground] \
-	-titlecolor [ThemeTreeForeground]
+	-bg [ThemeBackground] \
+	-color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
 
     set dscale(xdata) histX
     set dscale(ydata) histY
@@ -348,8 +348,8 @@ proc ScaleDialog {} {
 	-smooth step  \
 	-xdata $dscale(xdata) \
 	-ydata $dscale(ydata) \
-	-areabackground [ThemeTreeForeground] \
-	-color [ThemeTreeForeground]
+	-areabackground [ThemeForeground] \
+	-color [ThemeForeground]
 
     # Cut Lines
     $dscale(hist) marker bind min <B1-Motion> \
@@ -406,16 +406,16 @@ proc ScaleDialog {} {
 }
 
 proc ThemeConfigScale {w} {
-    $w configure -foreground [ThemeTreeForeground] \
-	-background [ThemeTreeBackground] -plotbackground [ThemeTreeBackground]
+    $w configure -foreground [ThemeForeground] \
+	-background [ThemeBackground] -plotbackground [ThemeBackground]
 
-    $w xaxis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-titlecolor [ThemeTreeForeground]
-    $w yaxis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-titlecolor [ThemeTreeForeground]
+    $w xaxis configure -bg [ThemeBackground] -color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
+    $w yaxis configure -bg [ThemeBackground] -color [ThemeForeground] \
+	-titlecolor [ThemeForeground]
 
-    $w element configure bar1 -areabackground [ThemeTreeForeground] \
-	-color [ThemeTreeForeground]
+    $w element configure bar1 -areabackground [ThemeForeground] \
+	-color [ThemeForeground]
 }
 
 proc ScaleApplyDialog {} {

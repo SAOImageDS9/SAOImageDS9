@@ -110,58 +110,24 @@ proc ThemeConfigMenu {w} {
 }
 
 proc ThemeConfigTable {w} {
-    $w configure -fg [ThemeTreeForeground]
-    $w configure -bg [ThemeTreeBackground]
+    $w configure -fg [ThemeForeground]
+    $w configure -bg [ThemeBackground]
 
     $w tag configure sel \
-	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
+	-fg [ThemeForegroundSelected] -bg [ThemeBackgroundSelected]
     $w tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 }
 
 proc ThemeConfigText {w} {
-    $w configure -fg [ThemeTreeForeground]
-    $w configure -bg [ThemeTreeBackground]
+    $w configure -fg [ThemeForeground]
+    $w configure -bg [ThemeBackground]
 
     # header
     # $w tag configure keyword -foreground [ThemeSelectBackground]
 }
 
 proc ThemeForeground {} {
-    global ds9
-    
-    switch $ds9(wm) {
-	x11 {
-	    set fg [ttk::style lookup . -foreground]
-	    if {$fg != {}} {
-		return $fg
-	    } else {
-		return $ds9(foreground)
-	    }
-	}
-	aqua -
-	win32 {return $ds9(foreground)}
-    }
-}
-
-proc ThemeBackground {} {
-    global ds9
-    
-    switch $ds9(wm) {
-	x11 {
-	    set bg [ttk::style lookup . -background]
-	    if {$bg != {}} {
-		return $bg
-	    } else {
-		return $ds9(background)
-	    }
-	}
-	aqua -
-	win32 {return $ds9(background)}
-    }
-}
-
-proc ThemeTreeForeground {} {
     global ds9
     
     switch $ds9(wm) {
@@ -178,7 +144,7 @@ proc ThemeTreeForeground {} {
     }
 }
 
-proc ThemeTreeBackground {} {
+proc ThemeBackground {} {
     global ds9
     
     switch $ds9(wm) {
@@ -195,7 +161,7 @@ proc ThemeTreeBackground {} {
     }
 }
 
-proc ThemeTreeForegroundSelected {} {
+proc ThemeForegroundSelected {} {
     global ds9
     
     switch $ds9(wm) {
@@ -212,7 +178,7 @@ proc ThemeTreeForegroundSelected {} {
     }
 }
 
-proc ThemeTreeBackgroundSelected {} {
+proc ThemeBackgroundSelected {} {
     global ds9
     
     switch $ds9(wm) {

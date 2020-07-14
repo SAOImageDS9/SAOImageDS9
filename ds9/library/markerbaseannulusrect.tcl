@@ -85,8 +85,8 @@ proc MarkerBaseAnnulusRectDialog {varname unit major minor} {
 			    -wrap none \
 			    -font [font actual TkDefaultFont] \
 			    -yscrollcommand [list $f.yscroll set] \
-			    -fg [ThemeTreeForeground] \
-			    -bg [ThemeTreeBackground] \
+			    -fg [ThemeForeground] \
+			    -bg [ThemeBackground] \
 			    ]
     ttk::scrollbar $f.yscroll -command [list $var(annulitxt) yview] \
 	-orient vertical

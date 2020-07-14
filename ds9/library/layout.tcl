@@ -119,8 +119,9 @@ proc CreateCanvas {} {
 
     set ds9(image) [ttk::frame $ds9(main).f]
     set ds9(canvas) [canvas $ds9(image).c -width $ww -height $hh \
-			 -highlightthickness 0 -insertofftime 0 \
-			 -bg [ThemeBackground] \
+			 -highlightthickness 0 \
+			 -insertofftime 0 \
+			 -bg [ThemeTreeBackground] \
 			]
     grid rowconfigure $ds9(image) 0 -weight 1
     grid columnconfigure $ds9(image) 0 -weight 1
@@ -132,7 +133,7 @@ proc CreateCanvas {} {
 	set ds9(canvas,bottom) [frame $ds9(image).b \
 				    -width 1 \
 				    -height $canvas(gap,bottom) \
-				    -bg [ThemeBackground] \
+				    -bg [ThemeTreeBackground] \
 				   ]
 	grid $ds9(canvas,bottom) -row 1 -column 0 -sticky ew
     }

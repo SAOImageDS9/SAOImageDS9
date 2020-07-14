@@ -324,22 +324,33 @@ proc ScaleDialog {} {
 
     $dscale(hist) legend configure -hide yes
 
-    $dscale(hist) xaxis configure -hide yes -grid no -ticklength 3 \
+    $dscale(hist) xaxis configure \
+	-hide yes \
+	-grid no \
+	-ticklength 3 \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeBackground] -color [ThemeForeground] \
+	-bg [ThemeBackground] \
+	-color [ThemeForeground] \
 	-titlecolor [ThemeForeground]
 
-    $dscale(hist) yaxis configure -hide yes -grid yes -ticklength 3 \
+    $dscale(hist) yaxis configure \
+	-hide yes \
+	-grid yes \
+	-ticklength 3 \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeBackground] -color [ThemeForeground] \
+	-bg [ThemeBackground] \
+	-color [ThemeForeground] \
 	-titlecolor [ThemeForeground]
 
     set dscale(xdata) histX
     set dscale(ydata) histY
     blt::vector create $dscale(xdata) $dscale(ydata)
-    $dscale(hist) element create bar1 -smooth step  \
-	-xdata $dscale(xdata) -ydata $dscale(ydata) \
-	-areabackground [ThemeForeground] -color [ThemeForeground]
+    $dscale(hist) element create bar1 \
+	-smooth step  \
+	-xdata $dscale(xdata) \
+	-ydata $dscale(ydata) \
+	-areabackground [ThemeForeground] \
+	-color [ThemeForeground]
 
     # Cut Lines
     $dscale(hist) marker bind min <B1-Motion> \
@@ -348,10 +359,16 @@ proc ScaleDialog {} {
 	[list ScaleMotionDialog %x %y dscale(max)]
     $dscale(hist) marker bind up <ButtonRelease-1> ScaleReleaseDialog
 
-    set dscale(histmin) [$dscale(hist) marker create line -element bar1 \
-			     -outline red -bindtags [list min up]]
-    set dscale(histmax) [$dscale(hist) marker create line -element bar1 \
-			     -outline green -bindtags [list max up]]
+    set dscale(histmin) [$dscale(hist) marker create line \
+			     -element bar1 \
+			     -outline red \
+			     -bindtags [list min up] \
+			    ]
+    set dscale(histmax) [$dscale(hist) marker create line \
+			     -element bar1 \
+			     -outline green \
+			     -bindtags [list max up] \
+			    ]
 
     # Cut Levels
     ttk::label $f.title -text [msgcat::mc {Limits}]

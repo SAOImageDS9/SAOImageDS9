@@ -306,10 +306,9 @@ proc ScaleDialog {} {
     $mb.graph add radiobutton -label [msgcat::mc {Current Range}] \
 	-value current -variable scale(xaxis) -command ScaleXAxisDialog
 
-    # Param
-    set f [ttk::frame $w.param]
-
     # Graph
+    set f [ttk::frame $w.ch]
+
     set dscale(hist) [blt::graph $f.chart \
 			  -width 500 \
 			  -height 200 \
@@ -371,6 +370,8 @@ proc ScaleDialog {} {
 			    ]
 
     # Cut Levels
+    set f [ttk::frame $w.param]
+
     ttk::label $f.title -text [msgcat::mc {Limits}]
     ttk::label $f.ltitle -text [msgcat::mc {Low}]
     ttk::entry $f.lvalue -textvariable dscale(min) -width 13
@@ -388,9 +389,10 @@ proc ScaleDialog {} {
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
+    pack $w.ch -side top -fill both -expand true
     ttk::separator $w.sep -orient horizontal
-    pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.param -side top -fill both -expand true
+    ttk::separator $w.sep2 -orient horizontal
+    pack $w.buttons $w.sep2 $w.param $w.sep -side bottom -fill x
 
     bind $w <<Close>> ScaleDestroyDialog
 

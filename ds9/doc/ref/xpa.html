@@ -74,6 +74,7 @@
 <a href="#preserve">preserve</a><br>
 <a href="#print">psprint</a><br>
 <a href="#print">print</a><br>
+<a href="#prism">prism</a><br>
 <a href="#exit">quit</a><br>
 <a href="#raise">raise</a><br>
 <a href="#regions">regions</a><br>
@@ -2028,6 +2029,38 @@ $xpaset -p ds9 print filename foo.ps<br>
 $xpaset -p ds9 print color cmyk<br>
 $xpaset -p ds9 print level 2<br>
 $xpaset -p ds9 print resolution 96</tt>
+
+<p><b><a name="prism" id="prism"></a>prism</b></p>
+<p>Invoke FITS analysis tool.</p>
+<tt>Syntax:<br>
+prism []<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [extension &lt;int&gt;|&lt;extname&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; [&lt;int&gt;] new|over]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter new|over]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 prism<br>
+<br>
+$xpaset -p ds9 prism<br>
+$xpaset -p ds9 prism open<br>
+$xpaset -p ds9 prism foo.fits<br>
+$xpaset -p ds9 prism load bar.fits<br>
+$xpaset -p ds9 prism clear<br>
+$xpaset -p ds9 prism current prism2<br>
+$xpaset -p ds9 prism extension 2<br>
+$xpaset -p ds9 prism extension STDEVT<br>
+$xpaset -p ds9 prism image<br>
+$xpaset -p ds9 prism histogram RAWX new<br>
+$xpaset -p ds9 prism histogram RAWX 40 new<br>
+$xpaset -p ds9 prism plot RAWX RAWY scatter new<br>
+$xpaset -p ds9 prism plot RAWX RAWY PHA scatter new<br>
+$xpaset -p ds9 prism plot RAWX RAWY PHA PHI scatter new<br></tt>
 <p><b><a name="raise" id="raise"></a>raise</b></p>
 <p>Raise in the window stacking order.</p>
 <tt>Syntax:<br>

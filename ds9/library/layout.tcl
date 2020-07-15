@@ -193,6 +193,8 @@ proc InitCanvas {} {
     }
 
     bind $ds9(canvas) <Configure> [list ConfigureView]
+
+    # keyboard focus
     switch $ds9(wm) {
 	x11 -
 	aqua {

@@ -630,7 +630,6 @@ void Base::crosshairWarpCmd(const Vector& vv)
   crosshair = rr*canvasToRef;
 
   update(PIXMAP);
-  updateMagnifier();
 }
 
 void Base::colorScaleCmd(FrScale::ColorScaleType s)
@@ -2454,17 +2453,17 @@ void Base::highliteColorCmd(const char* color)
   update(BASE);
 }
 
-void Base::magnifierCmd(int s)
+void Base::magnifierCmd(int ss)
 {
-  useMagnifier = s;
+  useMagnifier = ss;
   updateMagnifier();
 }
 
-void Base::magnifierCmd(char* n, int w, int h)
+void Base::magnifierCmd(char* nm, int ww, int hh)
 {
-  strcpy(magnifierName,n);
-  magnifierWidth = w;
-  magnifierHeight = h;
+  strcpy(magnifierName,nm);
+  magnifierWidth = ww;
+  magnifierHeight = hh;
 
   if (magnifierPixmap)
     Tk_FreePixmap(display, magnifierPixmap);
@@ -2846,7 +2845,6 @@ void Base::sliceCmd(int ii, int ss)
 {
   // IMAGE (ranges 1-n)
   setSlice(ii,ss);
-  updateMagnifier();
 }
 
 void Base::sliceCmd(double dd, Coord::CoordSystem sys)
@@ -2863,7 +2861,6 @@ void Base::sliceCmd(double dd, Coord::CoordSystem sys)
   // IMAGE (ranges 1-n)
   // be sure to round properly
   setSlice(2,int(out[2]+.5));
-  updateMagnifier();
 }
 
 void Base::smoothCmd(int ff, int rr, int rm, double ss, double sm, double aa)

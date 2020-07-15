@@ -1455,13 +1455,13 @@ void Base::updateMagnifier(const Vector& vv)
     return;
   }
 
-  // vv is in CANVAS coords
-  // save it, we may need it later
-  magnifierCursor = vv;
-
   // just in case
   if (!(magnifierXImage && magnifierPixmap))
     return;
+
+  // vv is in CANVAS coords
+  // save it, we may need it later
+  magnifierCursor = vv;
 
   // just in case
   if (!widgetGC)
@@ -1663,12 +1663,16 @@ int Base::updatePixmap(const BBox& bb)
     updatePanner();
   case PIXMAP:
     updatePM(bb);
+    // graphic overlay may have changed
+    updateMagnifier();
     break;
 
   case BASEONLY:
     // specal 3D
     updateBase();
     updatePM(bb);
+    // graphic overlay may have changed
+    updateMagnifier();
     break;
   }
 

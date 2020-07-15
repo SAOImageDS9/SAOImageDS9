@@ -268,8 +268,6 @@ proc LoadUpdate {} {
 }
 
 proc FinishLoad {} {
-    global current
-
     LoadUpdate
     UpdateDS9
 }

@@ -597,7 +597,6 @@ int Frame3d::processDetach()
 
 	// update image
 	update(BASEONLY);
-	updateMagnifier();
 
 	status_ = 2;
 	return 1;
@@ -615,7 +614,6 @@ int Frame3d::processDetach()
 
 	// update image
 	update(BASEONLY);
-	updateMagnifier();
       }
     }
     return 1;

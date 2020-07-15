@@ -380,7 +380,8 @@ proc BindEventsFrame {which} {
     $ds9(canvas) bind $which <Enter> [list EnterFrame $which %x %y]
     $ds9(canvas) bind $which <Leave> [list LeaveFrame $which]
 
-    $ds9(canvas) bind $which <Button-1> [list Button1Frame $which %x %y]
+    $ds9(canvas) bind $which <Button-1> \
+	[list Button1Frame $which %x %y]
     $ds9(canvas) bind $which <Shift-Button-1> \
 	[list ShiftButton1Frame $which %x %y]
     $ds9(canvas) bind $which <Control-Button-1> \
@@ -594,7 +595,6 @@ proc EnterFrame {which x y} {
     UpdateGraphLayout $which
     UpdateGraphAxis $which
     UpdateGraphData $which $x $y canvas
-    UpdateMagnifier $which $x $y
 
     if {$view(magnifier)} {
 	# don't turn on the magnifier until we've finished the init process
@@ -605,6 +605,7 @@ proc EnterFrame {which x y} {
     }
 
     UpdateEditMenu
+    UpdateMagnifier $which $x $y
 }
 
 proc LeaveFrame {which} {
@@ -744,7 +745,6 @@ proc Button1Frame {which x y} {
 		set ds9(next) $which
 		GotoFrame
 	    }
-	    UpdateMagnifier $which $x $y
 	}
 	pointer -
 	region {
@@ -759,7 +759,6 @@ proc Button1Frame {which x y} {
 		set ds9(next) $which
 		GotoFrame
 	    }
-	    UpdateMagnifier $which $x $y
 	}
 	crosshair {
 	    CrosshairButton $which $x $y
@@ -770,21 +769,17 @@ proc Button1Frame {which x y} {
 	    UpdateGraphLayout $which
 	    UpdateGraphAxis $which
 	    UpdateGraphData $which $x $y canvas
-	    UpdateMagnifier $which $x $y
 	}
 	colorbar {ColorbarButton3 $x $y}
 	pan {
 	    PanButton $which $x $y
-	    UpdateMagnifier $which $x $y
 	}
 	zoom {
 	    ZoomButton $which $x $y
-	    UpdateMagnifier $which $x $y
 	}
 	rotate {RotateButton $which $x $y}
 	crop {
 	    CropButton $which $x $y
-	    UpdateMagnifier $which $x $y
 	}
 	catalog {
 	    if {$which == $current(frame)} {
@@ -798,7 +793,6 @@ proc Button1Frame {which x y} {
 		set ds9(next) $which
 		GotoFrame
 	    }
-	    UpdateMagnifier $which $x $y
 	}
         footprint {
             if {$which == $current(frame)} {
@@ -812,7 +806,6 @@ proc Button1Frame {which x y} {
                 set ds9(next) $which
                 GotoFrame
             }
-            UpdateMagnifier $which $x $y
         }
 	examine {ExamineButton $which $x $y}
 	iexam {IExamButton $which $x $y}
@@ -839,7 +832,6 @@ proc ShiftButton1Frame {which x y} {
 	    if {$which == $current(frame)} {
 		MarkerShift $which $x $y
 	    }
-	    UpdateMagnifier $which $x $y
 	}
 	crosshair {}
 	colorbar {}
@@ -848,19 +840,16 @@ proc ShiftButton1Frame {which x y} {
 	rotate -
 	crop {
 	    Crop3dButton $which $x $y 0
-	    UpdateMagnifier $which $x $y
 	}
 	catalog {
 	    if {$which == $current(frame)} {
 		CATShift $which $x $y
 	    }
-	    UpdateMagnifier $which $x $y
 	}
         footprint {
             if {$which == $current(frame)} {
                 FPShift $which $x $y
             }
-            UpdateMagnifier $which $x $y
         }
 	examine {}
 	iexam {}
@@ -896,7 +885,6 @@ proc ControlButton1Frame {which x y} {
 		set imarker(motion) none
 		set imarker(handle) -1
 	    }
-	    UpdateMagnifier $which $x $y
 	}
 	crosshair -
 	colorbar -
@@ -905,7 +893,6 @@ proc ControlButton1Frame {which x y} {
 	rotate {}
 	crop {
 	    Crop3dButton $which $x $y 1
-	    UpdateMagnifier $which $x $y
 	}
 	examine {}
 	iexam {}
@@ -941,7 +928,6 @@ proc ControlShiftButton1Frame {which x y} {
 		set imarker(motion) none
 		set imarker(handle) -1
 	    }
-	    UpdateMagnifier $which $x $y
 	}
 	crosshair -
 	colorbar -
@@ -971,7 +957,7 @@ proc Motion1Frame {which x y} {
     }
 
     switch -- $current(mode) {
-	none {UpdateMagnifier $which $x $y}
+	none {}
 	pointer -
 	region {
 	    if {$which == $current(frame)} {
@@ -981,7 +967,6 @@ proc Motion1Frame {which x y} {
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
 	    UpdateGraphData $which $x $y canvas
-	    UpdateMagnifier $which $x $y
 	}
 	crosshair {
 	    if {$ds9(b1)} {
@@ -991,7 +976,6 @@ proc Motion1Frame {which x y} {
 		UpdateInfoBox $which $x $y canvas
 		UpdatePixelTableDialog $which $x $y canvas
 		UpdateGraphData $which $x $y canvas
-		UpdateMagnifier $which $x $y
 	    }
 	}
 	colorbar {
@@ -1002,10 +986,9 @@ proc Motion1Frame {which x y} {
 	pan {
 	    if {$ds9(b1)} {
 		PanMotion $which $x $y
-		UpdateMagnifier $which $x $y
 	    }
 	}
-	zoom {UpdateMagnifier $which $x $y}
+	zoom {}
 	rotate {
 	    if {$ds9(b1)} {
 		RotateMotion $which $x $y
@@ -1021,8 +1004,6 @@ proc Motion1Frame {which x y} {
 	    if {$ds9(cb1)} {
 		Crop3dMotion $which $x $y 1
 	    }
-
-	    UpdateMagnifier $which $x $y
 	}
 	catalog {
 	    if {$which == $current(frame)} {
@@ -1032,7 +1013,6 @@ proc Motion1Frame {which x y} {
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
 	    UpdateGraphData $which $x $y canvas
-	    UpdateMagnifier $which $x $y
 	}
         footprint {
             if {$which == $current(frame)} {
@@ -1042,7 +1022,6 @@ proc Motion1Frame {which x y} {
             UpdateInfoBox $which $x $y canvas
             UpdatePixelTableDialog $which $x $y canvas
             UpdateGraphData $which $x $y canvas
-            UpdateMagnifier $which $x $y
         }
 	examine {}
 	iexam {}
@@ -1052,6 +1031,8 @@ proc Motion1Frame {which x y} {
 	    }
 	}
     }
+
+    UpdateMagnifier $which $x $y
 }
 
 proc Release1Frame {which x y} {
@@ -1136,7 +1117,6 @@ proc Release1Frame {which x y} {
     set ds9(csb1) 0
 
     UpdateEditMenu
-    UpdateMagnifier $which $x $y
 }
 
 proc Double1Frame {which x y} {
@@ -1152,7 +1132,6 @@ proc Double1Frame {which x y} {
 	region {
 	    if {$which == $current(frame)} {
 		MarkerDouble $which $x $y
-		UpdateMagnifier $which $x $y
 	    }
 	}
 	none -
@@ -1197,7 +1176,6 @@ proc DoubleRelease1Frame {which x y} {
     }
 
     UpdateEditMenu
-    UpdateMagnifier $which $x $y
 }
 
 proc Button2Frame {which x y} {
@@ -1230,6 +1208,7 @@ proc Motion2Frame {which x y} {
     }
 
     PanMotion $which $x $y
+    UpdateMagnifier $which $x $y
 }
 
 proc Release2Frame {which x y} {
@@ -1493,8 +1472,6 @@ proc KeyFrame {which K A xx yy} {
     }
 
     # since most modes do zoom
-    UpdateMagnifier $which $xx $yy
-
     UpdateEditMenu
 }
 

@@ -94,6 +94,7 @@ ds9.set<br>
 <a href="#preserve">preserve</a><br>
 <a href="#psprint">psprint</a><br>
 <a href="#print">print</a><br>
+<a href="#prism">prism</a><br>
 <a href="#exit">quit</a><br>
 <a href="#raise">raise</a><br>
 <a href="#regions">regions</a><br>
@@ -2104,7 +2105,41 @@ print command lp<br>
 print filename foo.ps<br>
 print color cmyk<br>
 print level 2<br>
-print resolution 96</tt>
+print resolution 96<br></tt>
+
+<p><b><a name="prism" id="prism"></a>prism</b></p>
+<p>Invoke FITS analysis tool.</p>
+<tt>Syntax:<br>
+prism []<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [open]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [&lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [extension &lt;int&gt;|&lt;extname&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; [&lt;int&gt;] new|over]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter new|over]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+prism<br>
+<br>
+ds9.set(string cmd)<br>
+prism<br>
+prism open<br>
+prism foo.fits<br>
+prism load bar.fits<br>
+prism clear<br>
+prism current prism2<br>
+prism extension 2<br>
+prism extension STDEVT<br>
+prism image<br>
+prism histogram RAWX new<br>
+prism histogram RAWX 40 new<br>
+prism plot RAWX RAWY scatter new<br>
+prism plot RAWX RAWY PHA scatter new<br>
+prism plot RAWX RAWY PHA PHI scatter new<br></tt>
 <p><b><a name="raise" id="raise"></a>raise</b></p>
 <p>Raise in the window stacking order.</p>
 <tt>Syntax:<br>

@@ -1662,17 +1662,15 @@ int Base::updatePixmap(const BBox& bb)
     updateBase();
     updatePanner();
   case PIXMAP:
-    updatePM(bb);
-    // graphic overlay may have changed
     updateMagnifier();
+    updatePM(bb);
     break;
 
   case BASEONLY:
     // specal 3D
     updateBase();
-    updatePM(bb);
-    // graphic overlay may have changed
     updateMagnifier();
+    updatePM(bb);
     break;
   }
 

@@ -55,8 +55,6 @@ proc PrismDialog {varname} {
 
     set var(col) {}
     set var(num) 10
-    set var(min) 0
-    set var(max) 0
 
     set var(xx) {}
     set var(yy) {}
@@ -66,7 +64,7 @@ proc PrismDialog {varname} {
     set var(plots) {}
     set var(plot,seq) 0
     set var(plot,data,seq) 0
-    set var(plot,mode) overplot
+    set var(plot,mode) newplot
     set var(plot,type) scatter
 
     # create the window
@@ -452,7 +450,7 @@ proc PrismClear {varname} {
     set var(plots) {}
     set var(plot,seq) 0
     set var(plot,data,seq) 0
-    set var(plot,mode) overplot
+    set var(plot,mode) newplot
     set var(plot,type) scatter
 
     # header
@@ -667,7 +665,7 @@ proc PrismPlotGenerate {varname} {
     }
 
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
-	PlotDialog $vvarname {}
+	PlotDialog $vvarname "[string totitle $varname] Plot"
 	PlotAddGraph $vvarname $var(plot,type)
 	PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
 	lappend ${varname}(plots) $vvarname
@@ -687,6 +685,21 @@ proc PrismPlotGenerate {varname} {
     }
 
     PlotExternal $vvarname $dim
+
+    set vvar(graph,ds,name) "$var(extname) $var(xx) $var(yy)"
+    switch $var(plot,type) {
+	line {PlotLineUpdateElement $vvarname}
+	bar {PlotBarUpdateElement $vvarname}
+	scatter {PlotScatterUpdateElement $vvarname}
+    }
+
+    switch $var(plot,mode) {
+	newplot {}
+	overplot {
+	    set vvar(graph,legend) 1
+	    PlotChangeLegend $vvarname
+	}
+    }
 
     PlotStats $vvarname
     PlotList $vvarname
@@ -710,8 +723,6 @@ proc PrismHistogram {varname} {
 
     set ed(col) $var(col)
     set ed(num) $var(num)
-    set ed(min) $var(min)
-    set ed(max) $var(max)
     set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
@@ -735,11 +746,6 @@ proc PrismHistogram {varname} {
     ttk::label $f.tnum -text [msgcat::mc {Bins}]
     ttk::entry $f.num -textvariable ed(num) -width 7
 
-    ttk::label $f.tmin -text [msgcat::mc {Min}]
-    ttk::entry $f.min -textvariable ed(min) -width 7
-    ttk::label $f.tmax -text [msgcat::mc {Max}]
-    ttk::entry $f.max -textvariable ed(max) -width 7
-
     ttk::label $f.tcol -text [msgcat::mc {Column}]
     ttk::menubutton $f.col -textvariable ed(col) -menu $f.col.menu
 
@@ -751,7 +757,6 @@ proc PrismHistogram {varname} {
 	-variable ed(plot,mode) -value newplot
 
     grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
-    grid $f.tmin $f.min $f.tmax $f.max -padx 2 -pady 2 -sticky ew
     grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
     grid x $f.over $f.new -padx 2 -pady 2 -sticky ew
 
@@ -776,8 +781,6 @@ proc PrismHistogram {varname} {
 	if {$ed(col) != {}} {
 	    set var(col) $ed(col)
 	    set var(num) $ed(num)
-	    set var(min) $ed(min)
-	    set var(max) $ed(max)
 	    set var(plot,mode) $ed(plot,mode)
 
 	    PrismHistogramGenerate $varname
@@ -813,15 +816,15 @@ proc PrismHistogramGenerate {varname} {
 	blt::vector create $ydata
     }
 
-    if {[catch {fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata $var(min) $var(max) $var(num)} ]} {
+    if {[catch {fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata $var(num)} ]} {
 	Error "[msgcat::mc {Unable to generate plot}]"
 	return
     }
 
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
-	PlotDialog $vvarname "[string totitle $varname]"
+	PlotDialog $vvarname "[string totitle $varname] Histogram"
 	PlotAddGraph $vvarname bar
-	PlotTitle $vvarname {Histogram} {Value} {Count}
+	PlotTitle $vvarname $var(col) {Values} {Counts}
 	lappend ${varname}(plots) $vvarname
     }
 
@@ -830,18 +833,20 @@ proc PrismHistogramGenerate {varname} {
 
     PlotExternal $vvarname xy
 
-    set width [expr ($var(max)-$var(min)+1)/double($var(num))]
-    if {$width >= 1.0} {
-	set width .9
-    }
-    set vvar(graph,ds,width) $width
+    set vvar(graph,ds,width) \
+	[expr ([$xdata max]-[$xdata min])/double($var(num)-1)*.90]
     set vvar(graph,ds,color) blue
-    set vvar(graph,ds,name) $var(col)
+    set vvar(graph,ds,name) "$var(extname) $var(col)"
     set vvar(graph,ds,bar,relief) flat
     PlotBarUpdateElement $vvarname
 
-    set vvar(graph,legend) 1
-    PlotChangeLegend $vvarname
+    switch $var(plot,mode) {
+	newplot {}
+	overplot {
+	    set vvar(graph,legend) 1
+	    PlotChangeLegend $vvarname
+	}
+    }
 
     PlotStats $vvarname
     PlotList $vvarname

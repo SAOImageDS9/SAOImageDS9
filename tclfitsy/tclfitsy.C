@@ -461,7 +461,7 @@ int TclFITSY::histogram(int argc, const char* argv[])
     double vv = col->value(ptr);
     double jj = (vv-min)/diff*num;
     cerr << vv << "->" << jj << endl;
-    int kk = int(jj);
+    int kk = int(jj+.5);
     if (kk>=0 && kk<num)
       y[kk]++;
   }

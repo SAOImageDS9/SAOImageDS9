@@ -451,29 +451,23 @@ int TclFITSY::histogram(int argc, const char* argv[])
   memset(y,0,num*sizeof(double));
 
   // fill Axes
-  double diff = max-min+1;
-  if (diff>0) {
-    char* ptr = (char*)fits->data();
+  char* ptr = (char*)fits->data();
 
-    for (int ii=0; ii<num; ii++)
-      x[ii] = (double(ii)/num)*diff + min;
+  int diff = max-min+1;
+  for (int ii=0; ii<num; ii++)
+    x[ii] = double(ii)/num*diff + min;
 
-    for (int ii=0; ii<rows; ii++, ptr+=width) {
-      double vv = col->value(ptr);
-      double jj = (vv-min)/diff*num;
-      //      cerr << vv << "->" << jj << endl;
-      int kk = int(jj+.5);
-      if (kk>=0 && kk<num)
-	y[kk]++;
-    }
-  }
-  else {
-    for (int ii=0; ii<num; ii++)
-      x[ii] = min;
+  for (int ii=0; ii<rows; ii++, ptr+=width) {
+    double vv = col->value(ptr);
+    double jj = (vv-min)/diff*num;
+    cerr << vv << "->" << jj << endl;
+    int kk = int(jj);
+    if (kk>=0 && kk<num)
+      y[kk]++;
   }
   
-  //  for (int ii=0; ii<num; ii++)
-  //    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
+  for (int ii=0; ii<num; ii++)
+    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
 
   // load into BLT vectors
   Blt_Vector* xx;

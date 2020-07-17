@@ -50,8 +50,7 @@ ext : INT_ {PrismCmdExt $1}
  | STRING_ {PrismCmdExtName $1}
  ;
 
-histogram : STRING_ mode {ProcessCmdCVAR3 col $1 num 20 plot,mode $2 PrismHistogramGenerate}
- | STRING_ INT_ mode {ProcessCmdCVAR3 col $1 num $2 plot,mode $3  PrismHistogramGenerate}
+histogram : STRING_ numeric numeric INT_ mode {ProcessCmdCVAR5 col $1 min $2 max $3 num $4 plot,mode $5  PrismHistogramGenerate}
  ;
 
 plot : STRING_ STRING_ type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr {} plot,type $3 plot,mode $4 PrismPlotGenerate}

@@ -399,8 +399,8 @@ int TclFITSY::table(int argc, const char* argv[])
 
 int TclFITSY::histogram(int argc, const char* argv[])
 {
-  if (argc!=8) {
-    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num?", NULL);
+  if (argc!=10) {
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?min? ?max? ?num?", NULL);
     return TCL_ERROR;
   }
   
@@ -413,9 +413,27 @@ int TclFITSY::histogram(int argc, const char* argv[])
   if (!(argv[6] && *argv[6]))
     return TCL_ERROR;
 
-  int num =0;
+  double min =FLT_MAX;
   {
     string x(argv[7]);
+    istringstream sstr(x);
+    sstr >> min;
+  }
+  if (min==FLT_MAX)
+    return TCL_ERROR;
+
+  double max =-FLT_MAX;
+  {
+    string x(argv[8]);
+    istringstream sstr(x);
+    sstr >> max;
+  }
+  if (max==-FLT_MAX)
+    return TCL_ERROR;
+
+  int num =0;
+  {
+    string x(argv[9]);
     istringstream sstr(x);
     sstr >> num;
   }
@@ -441,44 +459,47 @@ int TclFITSY::histogram(int argc, const char* argv[])
     return TCL_ERROR;
 
   // find min/max
-  double min =DBL_MAX;
-  double max =-DBL_MIN;
-  if (col->hasTLMinTLMax()) {
-    Vector dim = col->dimension();
-    min = dim[0];
-    max = dim[1];
-  }
-  else {
-    char* ptr = (char*)fits->data();
-    for (int ii=0; ii<rows; ii++, ptr+=width) {
-      double vv = col->value(ptr);
-      if (vv<min)
-	min = vv;
-      if (vv>max)
-	max = vv;
+  if (0) {
+    double min =DBL_MAX;
+    double max =-DBL_MIN;
+    if (col->hasTLMinTLMax()) {
+      Vector dim = col->dimension();
+      min = dim[0];
+      max = dim[1];
+    }
+    else {
+      char* ptr = (char*)fits->data();
+      for (int ii=0; ii<rows; ii++, ptr+=width) {
+	double vv = col->value(ptr);
+	if (vv<min)
+	  min = vv;
+	if (vv>max)
+	  max = vv;
+      }
     }
   }
 
-  // we need one extra max,0 value at the end
-  int nn = num+1;
+  int nn = num;
   double* x = (double*)malloc(nn*sizeof(double));
   double* y = (double*)malloc(nn*sizeof(double));
   memset(x,0,nn*sizeof(double));
   memset(y,0,nn*sizeof(double));
 
   // fill Axes
-  double diff = max-min;
-  int last = num-1;
+  double diff = max-min+1;
   if (diff>0) {
     char* ptr = (char*)fits->data();
 
     for (int ii=0; ii<nn; ii++)
-      x[ii] = (double)ii/last*diff + min;
+      x[ii] = (double(ii)/nn)*diff + min;
 
     for (int ii=0; ii<rows; ii++, ptr+=width) {
       double vv = col->value(ptr);
-      int jj = (int)((vv-min)/(max-min)*num);
-      y[jj]++;
+      double jj = (vv-min)/diff*nn;
+      cerr << vv << "->" << jj << endl;
+      int kk = int(jj+.5);
+      if (kk>=0 && kk<nn)
+	y[kk]++;
     }
   }
   else {
@@ -486,6 +507,9 @@ int TclFITSY::histogram(int argc, const char* argv[])
       x[ii] = min;
   }
   
+  for (int ii=0; ii<nn; ii++)
+    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
+
   // load into BLT vectors
   Blt_Vector* xx;
   Blt_GetVector(interp_, argv[5], &xx);

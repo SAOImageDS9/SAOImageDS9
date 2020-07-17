@@ -302,6 +302,21 @@ proc ProcessCmdCVAR4 {key value key2 value2 key3 value3 key4 value4 {cmd {}}} {
     }
 }
 
+proc ProcessCmdCVAR5 {key value key2 value2 key3 value3
+		      key4 value4 key5 value5 {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($key) $value
+    set cvar($key2) $value2
+    set cvar($key3) $value3
+    set cvar($key4) $value4
+    set cvar($key5) $value5
+    if {$cmd != {} && $cvarname != {}} {
+	eval $cmd $cvarname
+    }
+}
+
 proc ProcessCmdCVAR6 {key value key2 value2 key3 value3
 		      key4 value4 key5 value5 key6 value6 {cmd {}}} {
     global cvarname

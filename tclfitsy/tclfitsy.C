@@ -463,14 +463,14 @@ int TclFITSY::histogram(int argc, const char* argv[])
   for (int ii=0; ii<rows; ii++, ptr+=width) {
     double vv = col->value(ptr);
     double jj = (vv-min)/diff*num;
-    cerr << vv << "->" << jj << endl;
+    //    cerr << vv << "->" << jj << endl;
     int kk = jj;
     if (kk>=0 && kk<num)
       y[kk]++;
   }
   
-  for (int ii=0; ii<num; ii++)
-    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
+  //  for (int ii=0; ii<num; ii++)
+  //    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
 
   // calc width
   {

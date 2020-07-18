@@ -444,10 +444,12 @@ int TclFITSY::histogram(int argc, const char* argv[])
     return TCL_ERROR;
 
   // find min/max
-  Vector maxmin= fits->getColDim(argv[4]);
+  //  Vector maxmin= fits->getColDim(argv[4]);
+  Vector maxmin= fits->getColMinMax(argv[4]);
   double min =maxmin[0];
   double max =maxmin[1];
-
+  cerr << "min=" << min << ' ' << "max=" << max << endl;
+  
   double* x = (double*)malloc(num*sizeof(double));
   double* y = (double*)malloc(num*sizeof(double));
   memset(x,0,num*sizeof(double));
@@ -457,6 +459,9 @@ int TclFITSY::histogram(int argc, const char* argv[])
   char* ptr = (char*)fits->data();
 
   double diff = max-min+1;
+  double barwidth = diff/num;
+  cerr << "barwidth=" << barwidth << endl;
+
   for (int ii=0; ii<num; ii++)
     x[ii] = double(ii)/num*diff + min;
 
@@ -469,14 +474,14 @@ int TclFITSY::histogram(int argc, const char* argv[])
       y[kk]++;
   }
   
-  //  for (int ii=0; ii<num; ii++)
-  //    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
+  for (int ii=0; ii<num; ii++)
+    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
 
   // calc width
   {
     ostringstream str;
-    str << diff/num << ends;
-    Tcl_SetVar2(interp_, argv[8], "width", str.str().c_str(), TCL_GLOBAL_ONLY);
+    str << barwidth << ends;
+    Tcl_SetVar2(interp_, argv[8], "bar,width", str.str().c_str(), TCL_GLOBAL_ONLY);
   }
 
   // load into BLT vectors

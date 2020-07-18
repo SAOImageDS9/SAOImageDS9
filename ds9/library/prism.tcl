@@ -837,7 +837,7 @@ proc PrismHistogramGenerate {varname} {
     set vvar(graph,ds,color) blue
     set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     set vvar(graph,ds,bar,relief) flat
-    set vvar(graph,ds,bar,width) $var(width)
+    set vvar(graph,ds,bar,width) $var(bar,width)
     PlotBarUpdateElement $vvarname
 
     switch $var(plot,mode) {

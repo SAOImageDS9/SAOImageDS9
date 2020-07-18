@@ -833,8 +833,14 @@ proc PrismHistogramGenerate {varname} {
 
     PlotExternal $vvarname xy
 
-    set vvar(graph,ds,width) \
-	[expr ([$xdata max]-[$xdata min])/double($var(num)-1)*.90]
+#    set min [$xdata min]
+#    set max [$xdata max]
+    set min .5
+    set max 13.5
+    set width [expr ($max-$min)/double($var(num))]
+    puts $width
+    set vvar(graph,ds,width) $width
+	
     set vvar(graph,ds,color) blue
     set vvar(graph,ds,name) "$var(extname) $var(col)"
     set vvar(graph,ds,bar,relief) flat

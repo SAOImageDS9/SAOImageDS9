@@ -250,13 +250,21 @@ proc PlotLineUpdateElement {varname} {
 
     set nn $var(graph,ds,current)
     $var(graph) element configure ${nn} \
-	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
-	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
-	-pixels 5 -outline $var(graph,ds,shape,color) \
+	-label $var(graph,ds,name) \
+	-hide [expr !$var(graph,ds,show)] \
+	-symbol $var(graph,ds,shape,symbol) \
+	-fill $clr \
+	-scalesymbols no \
+	-pixels 5 \
+	-outline $var(graph,ds,shape,color) \
 	-smooth $var(graph,ds,smooth) \
-	-color $var(graph,ds,color) -areabackground $fillClr \
-	-linewidth $var(graph,ds,width) -dashes $dash \
-	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
-	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
+	-color $var(graph,ds,color) \
+	-areabackground $fillClr \
+	-linewidth $var(graph,ds,width) \
+	-dashes $dash \
+	-showerrorbars $show \
+	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarwidth $var(graph,ds,error,width) \
+	-errorbarcap $cap
 }
 

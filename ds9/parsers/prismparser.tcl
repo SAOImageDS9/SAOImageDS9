@@ -659,7 +659,7 @@ proc prism::yyparse {} {
                     16 { PrismCmdRef $2 }
                     17 { PrismCmdExt $1 }
                     18 { PrismCmdExtName $1 }
-                    19 { ProcessCmdCVAR3 col $1 num $2 plot,mode $3 PrismHistogramGenerate }
+                    19 { ProcessCmdCVAR3 bar,col $1 bar,num $2 plot,mode $3 PrismHistogramGenerate }
                     20 { ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr {} plot,type $3 plot,mode $4 PrismPlotGenerate }
                     21 { ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr $3 plot,type $4 plot,mode $5 PrismPlotGenerate }
                     22 { ProcessCmdCVAR6 xx $1 yy $2 xerr $3 yerr $4 plot,type $5 plot,mode $6 PrismPlotGenerate }

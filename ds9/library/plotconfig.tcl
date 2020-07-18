@@ -89,6 +89,7 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,ds,error,width) $analysisplot(error,width) 
 
     set var(graph,ds,bar,relief) $analysisplot(bar,relief) 
+    set var(graph,ds,bar,width) $analysisplot(bar,width) 
 
     unset analysisplot
 
@@ -271,6 +272,7 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(error,width) $var(graph,ds,error,width)
 
     set analysisplot(bar,relief) $var(graph,ds,bar,relief)
+    set analysisplot(bar,width) $var(graph,ds,bar,width)
 
     puts $ch "array set analysisplot \{ [array get analysisplot] \}"
     close $ch

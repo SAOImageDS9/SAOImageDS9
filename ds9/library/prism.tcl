@@ -53,8 +53,9 @@ proc PrismDialog {varname} {
 
     set var(search) {}
 
-    set var(col) {}
-    set var(num) 10
+    set var(bar,col) {}
+    set var(bar,num) 10
+    set var(bar,width) 1
 
     set var(xx) {}
     set var(yy) {}
@@ -721,8 +722,8 @@ proc PrismHistogram {varname} {
     set ed(top) $w
     set ed(ok) 0
 
-    set ed(col) $var(col)
-    set ed(num) $var(num)
+    set ed(col) $var(bar,col)
+    set ed(num) $var(bar,num)
     set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
@@ -779,8 +780,8 @@ proc PrismHistogram {varname} {
 
     if {$ed(ok)} {
 	if {$ed(col) != {}} {
-	    set var(col) $ed(col)
-	    set var(num) $ed(num)
+	    set var(bar,col) $ed(col)
+	    set var(bar,num) $ed(num)
 	    set var(plot,mode) $ed(plot,mode)
 
 	    PrismHistogramGenerate $varname
@@ -816,7 +817,7 @@ proc PrismHistogramGenerate {varname} {
 	blt::vector create $ydata
     }
 
-    if {[catch {fitsy histogram $var(fn) $var(ext) $var(col) $xdata $ydata $var(num)} ]} {
+    if {[catch {fitsy histogram $var(fn) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $varname} ]} {
 	Error "[msgcat::mc {Unable to generate plot}]"
 	return
     }
@@ -824,7 +825,7 @@ proc PrismHistogramGenerate {varname} {
     if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
 	PlotDialog $vvarname "[string totitle $varname] Histogram"
 	PlotAddGraph $vvarname bar
-	PlotTitle $vvarname $var(col) {Values} {Counts}
+	PlotTitle $vvarname $var(bar,col) {Values} {Counts}
 	lappend ${varname}(plots) $vvarname
     }
 
@@ -833,17 +834,10 @@ proc PrismHistogramGenerate {varname} {
 
     PlotExternal $vvarname xy
 
-#    set min [$xdata min]
-#    set max [$xdata max]
-    set min .5
-    set max 13.5
-    set width [expr ($max-$min)/double($var(num))]
-    puts $width
-    set vvar(graph,ds,width) $width
-	
     set vvar(graph,ds,color) blue
-    set vvar(graph,ds,name) "$var(extname) $var(col)"
+    set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     set vvar(graph,ds,bar,relief) flat
+    set vvar(graph,ds,bar,width) $var(width)
     PlotBarUpdateElement $vvarname
 
     switch $var(plot,mode) {
@@ -912,8 +906,10 @@ proc PrismExtCmd {varname} {
     set var(extname) [lindex $var(extnames) $var(ext)]
 
     # clear previous cols
-    set var(col) {}
-    set var(num) 10
+    set var(bar,col) {}
+    set var(bar,num) 10
+    set var(bar,width) 1
+
     set var(xx) {}
     set var(yy) {}
     set var(xerr) {}
@@ -979,7 +975,7 @@ proc PrismExtCmd {varname} {
     $var(tbl) see 1,1
 
     # set default cols
-    set var(col) [lindex [starbase_columns $var(tbldb)] 0]
+    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 0]
     set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
     set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
 

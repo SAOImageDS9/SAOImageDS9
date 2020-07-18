@@ -93,6 +93,7 @@ proc PlotDefState {} {
     set pap(graph,ds,error,width) 1
 
     set pap(graph,ds,bar,relief) raised
+    set pap(graph,ds,bar,width) 1
 }
 
 proc PlotInitGraph {varname} {
@@ -173,6 +174,7 @@ proc PlotInitGraph {varname} {
     set var(graph,ds,error,width) $pap(graph,ds,error,width) 
 
     set var(graph,ds,bar,relief) $pap(graph,ds,bar,relief) 
+    set var(graph,ds,bar,width) $pap(graph,ds,bar,width) 
 }
 
 proc PlotSaveState {varname} {
@@ -251,6 +253,7 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,error,width) $var(graph,ds,error,width)
 
     set var($cc,$nn,bar,relief) $var(graph,ds,bar,relief)
+    set var($cc,$nn,bar,width) $var(graph,ds,bar,width)
 }
 
 proc PlotRestoreState {varname} {
@@ -329,4 +332,5 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,error,width) $var($cc,$nn,error,width) 
 
     set var(graph,ds,bar,relief) $var($cc,$nn,bar,relief) 
+    set var(graph,ds,bar,width) $var($cc,$nn,bar,width) 
 }

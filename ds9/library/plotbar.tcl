@@ -135,9 +135,13 @@ proc PlotBarUpdateElement {varname} {
 
     set nn $var(graph,ds,current)
     $var(graph) element configure $nn \
-	-barwidth $var(graph,ds,width) \
-	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
-	-relief $var(graph,ds,bar,relief) -color $var(graph,ds,color) \
-	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
-	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
+	-label $var(graph,ds,name) \
+	-hide [expr !$var(graph,ds,show)] \
+	-color $var(graph,ds,color) \
+	-relief $var(graph,ds,bar,relief) \
+	-barwidth $var(graph,ds,bar,width) \
+	-showerrorbars $show \
+	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarwidth $var(graph,ds,error,width) \
+	-errorbarcap $cap
 }

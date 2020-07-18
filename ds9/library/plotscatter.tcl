@@ -173,18 +173,27 @@ proc PlotScatterUpdateElement {varname} {
 
     set nn $var(graph,ds,current)
     $var(graph) element configure ${nn} \
-	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
-	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
+	-label $var(graph,ds,name) \
+	-hide [expr !$var(graph,ds,show)] \
+	-symbol $var(graph,ds,shape,symbol) \
+	-fill $clr \
+	-scalesymbols no \
 	-outline $var(graph,ds,shape,color) \
-	-linewidth 0 -pixels 5 \
-	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
-	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
+	-linewidth 0 \
+	-pixels 5 \
+	-showerrorbars $show \
+	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarwidth $var(graph,ds,error,width) \
+	-errorbarcap $cap
 
     $var(graph) pen configure active -color blue \
 	-symbol $var(graph,ds,shape,symbol) \
-	-linewidth 0 -pixels 5 \
-	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
-	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
+	-linewidth 0 \
+	-pixels 5 \
+	-showerrorbars $show \
+	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarwidth $var(graph,ds,error,width) \
+	-errorbarcap $cap
 }
 
 proc PlotScatterButton {varname cc nn xx yy} {

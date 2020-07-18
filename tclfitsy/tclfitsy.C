@@ -399,8 +399,8 @@ int TclFITSY::table(int argc, const char* argv[])
 
 int TclFITSY::histogram(int argc, const char* argv[])
 {
-  if (argc!=8) {
-    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num?", NULL);
+  if (argc!=9) {
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num? ?varname?", NULL);
     return TCL_ERROR;
   }
   
@@ -420,6 +420,9 @@ int TclFITSY::histogram(int argc, const char* argv[])
     sstr >> num;
   }
   if (num<1)
+    return TCL_ERROR;
+
+  if (!(argv[8] && *argv[8]))
     return TCL_ERROR;
 
   FitsFile* fits = findFits(argv);
@@ -453,7 +456,7 @@ int TclFITSY::histogram(int argc, const char* argv[])
   // fill Axes
   char* ptr = (char*)fits->data();
 
-  int diff = max-min+1;
+  double diff = max-min+1;
   for (int ii=0; ii<num; ii++)
     x[ii] = double(ii)/num*diff + min;
 
@@ -468,6 +471,13 @@ int TclFITSY::histogram(int argc, const char* argv[])
   
   for (int ii=0; ii<num; ii++)
     cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
+
+  // calc width
+  {
+    ostringstream str;
+    str << diff/num << ends;
+    Tcl_SetVar2(interp_, argv[8], "width", str.str().c_str(), TCL_GLOBAL_ONLY);
+  }
 
   // load into BLT vectors
   Blt_Vector* xx;

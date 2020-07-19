@@ -50,12 +50,12 @@ ext : INT_ {PrismCmdExt $1}
  | STRING_ {PrismCmdExtName $1}
  ;
 
-histogram : STRING_ INT_ mode {ProcessCmdCVAR3 bar,col $1 bar,num $2 plot,mode $3 PrismHistogramGenerate}
+histogram : cols INT_ mode {ProcessCmdCVAR3 bar,col $1 bar,num $2 plot,mode $3 PrismHistogramGenerate}
  ;
 
-plot : STRING_ STRING_ type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr {} plot,type $3 plot,mode $4 PrismPlotGenerate}
- | STRING_ STRING_ STRING_ type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr $3 plot,type $4 plot,mode $5 PrismPlotGenerate}
- | STRING_ STRING_ STRING_ STRING_ type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr $3 yerr $4 plot,type $5 plot,mode $6 PrismPlotGenerate} ;
+plot : cols cols type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr {} plot,type $3 plot,mode $4 PrismPlotGenerate}
+ | cols cols cols type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr $3 plot,type $4 plot,mode $5 PrismPlotGenerate}
+ | cols cols cols cols type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr $3 yerr $4 plot,type $5 plot,mode $6 PrismPlotGenerate} ;
 
 type : LINE_ {set _ line}
  | BAR_ {set _ bar}
@@ -66,6 +66,18 @@ mode : NEW_ {set _ newplot}
  | OVER_ {set _ overplot}
  ;
  
+cols : STRING_ {set _ $1}
+ | colsxyz {set _ $1}
+ ;
+
+colsxyz : 'x' {set _ $1}
+ | 'X' {set _ $1}
+ | 'y' {set _ $1}
+ | 'Y' {set _ $1}
+ | 'z' {set _ $1}
+ | 'Z' {set _ $1}
+ ;
+
 %%
 
 proc prism::yyerror {msg} {

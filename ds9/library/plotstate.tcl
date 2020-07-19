@@ -24,7 +24,6 @@ proc PlotDefState {} {
     set pap(fg) black
     set pap(bg) white
     set pap(grid,color) gray64
-    set pap(bar,mode) normal
 
     set pap(graph,format) 1
     set pap(graph,title) {}
@@ -92,7 +91,6 @@ proc PlotDefState {} {
     set pap(graph,ds,error,color) red
     set pap(graph,ds,error,width) 1
 
-    set pap(graph,ds,bar,relief) raised
     set pap(graph,ds,bar,width) 1
 }
 
@@ -173,7 +171,6 @@ proc PlotInitGraph {varname} {
     set var(graph,ds,error,color) $pap(graph,ds,error,color) 
     set var(graph,ds,error,width) $pap(graph,ds,error,width) 
 
-    set var(graph,ds,bar,relief) $pap(graph,ds,bar,relief) 
     set var(graph,ds,bar,width) $pap(graph,ds,bar,width) 
 }
 
@@ -252,7 +249,6 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,error,color) $var(graph,ds,error,color)
     set var($cc,$nn,error,width) $var(graph,ds,error,width)
 
-    set var($cc,$nn,bar,relief) $var(graph,ds,bar,relief)
     set var($cc,$nn,bar,width) $var(graph,ds,bar,width)
 }
 
@@ -331,6 +327,5 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,error,color) $var($cc,$nn,error,color) 
     set var(graph,ds,error,width) $var($cc,$nn,error,width) 
 
-    set var(graph,ds,bar,relief) $var($cc,$nn,bar,relief) 
     set var(graph,ds,bar,width) $var($cc,$nn,bar,width) 
 }

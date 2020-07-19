@@ -204,7 +204,10 @@ proc PlotLineAddGraph {varname} {
     global $varname
 
     set var(graph,type) line
-    blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0
+    blt::graph $var(graph) \
+	-width 600 \
+	-height 500 \
+	-highlightthickness 0
 }
 
 proc PlotLineUpdateElement {varname} {

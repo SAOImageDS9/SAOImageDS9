@@ -135,7 +135,10 @@ proc PlotScatterAddGraph {varname} {
     global $varname
 
     set var(graph,type) scatter
-    blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0
+    blt::graph $var(graph) \
+	-width 600 \
+	-height 500 \
+	-highlightthickness 0
 }
 
 proc PlotScatterUpdateElement {varname} {

@@ -56,8 +56,6 @@ proc PlotBarMenus {varname} {
 	-menu $var(mb).databar.fill
     $var(mb).databar add cascade -label [msgcat::mc {Error}] \
 	-menu $var(mb).databar.error
-    $var(mb).databar add cascade -label [msgcat::mc {Relief}] \
-	-menu $var(mb).databar.relief
     $var(mb).databar add separator
     $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
@@ -114,24 +112,6 @@ proc PlotBarMenus {varname} {
 	[list PlotBarUpdateElement $varname]
     WidthDashMenu $var(mb).databar.error.width $varname graph,ds,error,width \
 	{} [list PlotBarUpdateElement $varname] {}
-
-    # Relief
-    ThemeMenu $var(mb).databar.relief
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Flat}] \
-	-variable ${varname}(graph,ds,bar,relief) -value flat \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Sunken}] \
-	-variable ${varname}(graph,ds,bar,relief) -value sunken \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Raised}] \
-	-variable ${varname}(graph,ds,bar,relief) -value raised \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Solid}] \
-	-variable ${varname}(graph,ds,bar,relief) -value solid \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Groove}] \
-	-variable ${varname}(graph,ds,bar,relief) -value groove \
-	-command [list PlotBarUpdateElement $varname]
 }
 
 proc PlotBarAddGraph {varname} {
@@ -139,8 +119,11 @@ proc PlotBarAddGraph {varname} {
     global $varname
 
     set var(graph,type) bar
-    blt::barchart $var(graph) -width 600 -height 500 -highlightthickness 0
-
+    blt::barchart $var(graph) \
+	-width 600 \
+	-height 500 \
+	-highlightthickness 0 \
+	-barmode normal
     $var(graph) xaxis configure -grid no -stepsize 0
     $var(graph) yaxis configure -grid yes
 }
@@ -181,7 +164,7 @@ proc PlotBarUpdateElement {varname} {
 	-outline $var(graph,ds,color) \
 	-borderwidth $var(graph,ds,width) \
 	-fill $fillColor \
-	-relief $var(graph,ds,bar,relief) \
+	-relief flat \
 	-barwidth $var(graph,ds,bar,width) \
 	-showerrorbars $show \
 	-errorbarcolor $var(graph,ds,error,color) \

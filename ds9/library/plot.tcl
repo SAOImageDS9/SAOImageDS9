@@ -962,12 +962,6 @@ proc PlotUpdateGraph {varname} {
 	set xflip $var(layout,axis,x,flip)
     }
 
-    switch $var(graph,type) {
-	line {}
-	bar {$var(graph) configure -barmode $var(bar,mode)}
-	scatter {}
-    }
-
     if {$var(graph,format)} {
 	if {$var(graph,axis,x,format) != {}} {
 	    $var(graph) xaxis configure \
@@ -1180,7 +1174,6 @@ proc PlotBackup {ch dir} {
 	    puts $ch "set ${varname}(foreground) $var(foreground)"
 	    puts $ch "set ${varname}(background) $var(background)"
 	    puts $ch "set ${varname}(grid,color) $var(grid,color)"
-	    puts $ch "set ${varname}(bar,mode) $var(bar,mode)"
 	    puts $ch "PlotUpdateCanvas $varname"
 
 	    puts $ch "set ${varname}(mode) $var(mode)"

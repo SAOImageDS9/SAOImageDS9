@@ -722,79 +722,79 @@ array set plotsend::rules {
 }
 
 array set plotsend::rules {
-  41,line 122
+  41,line 124
   7,line 76
-  37,line 113
+  37,line 115
   4,line 73
-  34,line 110
+  34,line 112
   1,line 69
-  31,line 107
-  27,line 98
-  24,line 94
-  21,line 91
-  17,line 87
-  73,line 170
-  14,line 83
-  70,line 164
-  69,line 163
-  11,line 80
-  66,line 158
-  63,line 153
-  60,line 148
-  59,line 147
-  56,line 142
-  53,line 139
-  50,line 134
-  49,line 131
-  46,line 128
-  43,line 124
+  31,line 109
+  27,line 100
+  24,line 96
+  21,line 93
+  17,line 88
+  73,line 172
+  14,line 84
+  70,line 166
+  69,line 165
+  11,line 81
+  66,line 160
+  63,line 155
+  60,line 150
+  59,line 149
+  56,line 144
+  53,line 141
+  50,line 136
+  49,line 133
+  46,line 130
+  43,line 126
   9,line 78
-  40,line 121
-  39,line 117
+  40,line 123
+  39,line 119
   6,line 75
-  36,line 112
+  36,line 114
   3,line 72
-  33,line 109
-  29,line 103
-  30,line 104
-  26,line 97
-  23,line 93
-  19,line 89
-  20,line 90
-  16,line 86
-  72,line 169
-  13,line 82
-  68,line 162
-  10,line 79
-  65,line 157
-  62,line 152
-  58,line 146
-  55,line 141
-  52,line 137
-  48,line 130
-  45,line 127
-  42,line 123
+  33,line 111
+  29,line 105
+  30,line 106
+  26,line 99
+  23,line 95
+  19,line 91
+  20,line 92
+  16,line 87
+  72,line 171
+  13,line 83
+  68,line 164
+  10,line 80
+  65,line 159
+  62,line 154
+  58,line 148
+  55,line 143
+  52,line 139
+  48,line 132
+  45,line 129
+  42,line 125
   8,line 77
-  38,line 116
+  38,line 118
   5,line 74
-  35,line 111
+  35,line 113
   2,line 71
-  32,line 108
-  28,line 101
-  25,line 95
-  22,line 92
-  18,line 88
-  15,line 84
-  71,line 165
-  12,line 81
-  67,line 159
-  64,line 154
-  61,line 151
-  57,line 145
-  54,line 140
-  51,line 136
-  47,line 129
-  44,line 126
+  32,line 110
+  28,line 103
+  25,line 97
+  22,line 94
+  18,line 89
+  15,line 85
+  71,line 167
+  12,line 82
+  67,line 161
+  64,line 156
+  61,line 153
+  57,line 147
+  54,line 142
+  51,line 138
+  47,line 131
+  44,line 128
 }
 
 array set plotsend::lr1_table {
@@ -1052,8 +1052,8 @@ array set plotsend::token_id_table {
   273,t 0
   294,t 0
   304,t 0
-  321,line 168
-  317,line 144
+  321,line 170
+  317,line 146
   261,title FONTWEIGHT
   279,title FORMAT
   280,title GRAPH
@@ -1061,7 +1061,7 @@ array set plotsend::token_id_table {
   269,t 0
   270,t 0
   298,title SHOW
-  314,line 115
+  314,line 117
   291,t 0
   301,t 0
   322,t 1
@@ -1104,7 +1104,7 @@ array set plotsend::token_id_table {
   305,title STYLE
   295,title SCALE
   274,line 28
-  Y,line 164
+  Y,line 166
   271,line 25
   x x
   277,t 0
@@ -1125,16 +1125,16 @@ array set plotsend::token_id_table {
   293,title POSITION
   303,title STATISTICS
   322,title {}
-  320,line 161
-  319,line 156
+  320,line 163
+  319,line 158
   error error
   271,t 0
-  y,line 163
+  y,line 165
   292,t 0
   302,t 0
-  316,line 133
+  316,line 135
   273,title ERROR
-  313,line 106
+  313,line 108
   292,title NAME
   302,title STATS
   321,title {}
@@ -1182,7 +1182,7 @@ array set plotsend::token_id_table {
   288,title MAX
   317,title {}
   278,t 0
-  X,line 162
+  X,line 164
   310,t 0
   309,t 0
   299,t 0
@@ -1201,7 +1201,7 @@ array set plotsend::token_id_table {
   260,line 10
   259,line 9
   x,title {}
-  322,line 171
+  322,line 173
   272,t 0
   267,title BACKGROUND
   257 FONT_
@@ -1210,15 +1210,15 @@ array set plotsend::token_id_table {
   303,t 0
   315,title {}
   258 FONTSIZE_
-  318,line 150
+  318,line 152
   260 FONTSTYLE_
   259 FONTSLANT_
   261 FONTWEIGHT_
   262 STRING_
   263 AUTO_
-  x,line 161
+  x,line 163
   264 AXIS_
-  315,line 119
+  315,line 121
   265 AXESNUMBERS_
   266 AXESTITLE_
   267 BACKGROUND_
@@ -1226,7 +1226,7 @@ array set plotsend::token_id_table {
   268 BARMODE_
   269 CAP_
   270 COLOR_
-  312,line 100
+  312,line 102
   271 DASH_
   272 DATASET_
   289,t 0
@@ -1357,13 +1357,13 @@ proc plotsend::yyparse {} {
                     4 { ProcessSendCmdCVAR PlotListGenerate }
                     5 { ProcessSendCmdCVARGet mode }
                     7 { ProcessSendCmdCVARGet background }
-                    11 { ProcessSendCmdCVARGet bar,mode }
+                    11 { ProcessSendCmdTxt normal }
                     12 { ProcessSendCmdCVARYesNo graph,ds,show }
                     13 { ProcessSendCmdCVARGet graph,ds,color }
                     14 { ProcessSendCmdCVARGet graph,ds,fill }
                     15 { ProcessSendCmdCVARGet graph,ds,fill,color }
                     18 { ProcessSendCmdCVARGet graph,ds,name }
-                    20 { ProcessSendCmdCVARGet graph,ds,bar,relief }
+                    20 { ProcessSendCmdTxt flat }
                     21 { ProcessSendCmdCVARGet graph,ds,smooth }
                     22 { ProcessSendCmdCVARGet graph,ds,width }
                     23 { ProcessSendCmdCVARYesNo graph,ds,dash }

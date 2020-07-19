@@ -69,7 +69,8 @@ plotsend : {ProcessSendCmdGet iap plots}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title
- | BARMODE_ {ProcessSendCmdCVARGet bar,mode}
+ # backward compatibility
+ | BARMODE_ {ProcessSendCmdTxt normal}
  | SHOW_ {ProcessSendCmdCVARYesNo graph,ds,show}
  | COLOR_ {ProcessSendCmdCVARGet graph,ds,color}
  | FILL_ {ProcessSendCmdCVARGet graph,ds,fill}
@@ -79,7 +80,8 @@ plotsend : {ProcessSendCmdGet iap plots}
  | ERRORBAR_ errorr
  | NAME_ {ProcessSendCmdCVARGet graph,ds,name}
  | SHAPE_ shape
- | RELIEF_ {ProcessSendCmdCVARGet graph,ds,bar,relief}
+ # backward compatibility
+ | RELIEF_ {ProcessSendCmdTxt flat}
  | SMOOTH_ {ProcessSendCmdCVARGet graph,ds,smooth}
  | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
  | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}

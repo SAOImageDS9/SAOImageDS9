@@ -1786,7 +1786,6 @@ plot [axis x|y grid yes|no]<br>
 &nbsp;&nbsp;&nbsp; [font title|labels|numbers slant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [title &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [title x|y &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [barmode normal|stacked|aligned|overlap]<br>
 <br>
 # configure current dataset<br>
 plot[show yes|no]<br>
@@ -1906,11 +1905,6 @@ $xpaset -p ds9 plot title {This is a Title}<br>
 $xpaset -p ds9 plot title x {X Axis}<br>
 $xpaset -p ds9 plot title y {Y Axis}<br>
 $xpaset -p ds9 plot title legend {This is the Legend}<br>
-<br>
-# bar plot<br>
-$xpaget ds9 plot barmode<br>
-<br>
-$xpaset -p ds9 plot barmode aligned<br>
 <br>
 # configure current dataset<br>
 $xpaget ds9 plot show<br>

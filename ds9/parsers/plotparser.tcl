@@ -3302,70 +3302,70 @@ array set plot::rules {
   24,line 248
   21,line 243
   17,line 236
-  265,line 627
+  265,line 631
   14,line 231
-  262,line 624
+  262,line 628
   11,line 226
-  258,line 617
-  255,line 612
-  252,line 609
-  248,line 602
-  245,line 595
-  242,line 590
-  238,line 584
+  258,line 621
+  255,line 616
+  252,line 613
+  248,line 606
+  245,line 599
+  242,line 594
+  238,line 588
   9,line 222
-  235,line 579
+  235,line 583
   6,line 218
-  232,line 576
+  232,line 580
   3,line 215
-  228,line 568
-  225,line 563
-  222,line 560
-  218,line 554
-  215,line 548
-  212,line 545
-  208,line 538
-  198,line 523
-  205,line 535
-  195,line 520
-  202,line 532
-  192,line 515
-  188,line 509
-  185,line 506
-  182,line 499
-  178,line 495
-  175,line 490
-  172,line 483
-  168,line 477
-  165,line 473
-  162,line 467
-  158,line 463
-  155,line 459
-  152,line 453
-  148,line 447
-  145,line 444
-  142,line 435
-  138,line 427
-  135,line 424
-  132,line 419
-  128,line 415
-  125,line 408
-  122,line 405
-  118,line 399
-  115,line 394
-  99,line 367
-  112,line 389
-  96,line 364
-  108,line 383
-  93,line 361
-  105,line 377
-  89,line 355
-  90,line 356
-  102,line 371
-  86,line 351
-  83,line 347
-  79,line 341
-  80,line 343
+  228,line 572
+  225,line 567
+  222,line 564
+  218,line 558
+  215,line 552
+  212,line 549
+  208,line 542
+  198,line 527
+  205,line 539
+  195,line 524
+  202,line 536
+  192,line 519
+  188,line 512
+  185,line 509
+  182,line 502
+  178,line 498
+  175,line 493
+  172,line 486
+  168,line 479
+  165,line 475
+  162,line 469
+  158,line 465
+  155,line 461
+  152,line 455
+  148,line 449
+  145,line 446
+  142,line 437
+  138,line 429
+  135,line 426
+  132,line 421
+  128,line 417
+  125,line 410
+  122,line 407
+  118,line 401
+  115,line 396
+  99,line 368
+  112,line 391
+  96,line 365
+  108,line 385
+  93,line 362
+  105,line 379
+  89,line 356
+  90,line 357
+  102,line 373
+  86,line 352
+  83,line 348
+  79,line 342
+  80,line 344
   76,line 336
   73,line 332
   69,line 324
@@ -3390,72 +3390,72 @@ array set plot::rules {
   23,line 247
   20,line 243
   19,line 240
-  267,line 629
+  267,line 633
   16,line 235
-  264,line 626
+  264,line 630
   13,line 230
-  261,line 620
+  261,line 624
   10,line 223
-  257,line 616
-  254,line 611
-  251,line 605
-  247,line 599
-  244,line 594
-  241,line 589
-  237,line 581
+  257,line 620
+  254,line 615
+  251,line 609
+  247,line 603
+  244,line 598
+  241,line 593
+  237,line 585
   8,line 221
-  234,line 578
+  234,line 582
   5,line 217
-  231,line 575
+  231,line 579
   2,line 214
-  227,line 567
-  224,line 562
-  221,line 559
-  217,line 553
-  214,line 547
-  211,line 542
-  207,line 537
-  197,line 522
-  204,line 534
-  194,line 517
-  201,line 529
-  191,line 514
-  187,line 508
-  184,line 503
-  181,line 498
-  177,line 494
-  174,line 489
-  171,line 482
-  167,line 476
-  164,line 472
+  227,line 571
+  224,line 566
+  221,line 563
+  217,line 557
+  214,line 551
+  211,line 546
+  207,line 541
+  197,line 526
+  204,line 538
+  194,line 521
+  201,line 533
+  191,line 518
+  187,line 511
+  184,line 506
+  181,line 501
+  177,line 497
+  174,line 492
+  171,line 485
+  167,line 478
+  164,line 474
   28,e 3
-  161,line 466
-  157,line 462
-  154,line 458
-  151,line 452
-  147,line 446
-  144,line 440
-  141,line 434
-  137,line 426
-  134,line 423
-  131,line 418
-  127,line 412
-  124,line 407
-  121,line 402
-  117,line 398
-  114,line 393
-  98,line 366
-  111,line 388
-  95,line 363
+  161,line 468
+  157,line 464
+  154,line 460
+  151,line 454
+  147,line 448
+  144,line 442
+  141,line 436
+  137,line 428
+  134,line 425
+  131,line 420
+  127,line 414
+  124,line 409
+  121,line 404
+  117,line 400
+  114,line 395
+  98,line 367
+  111,line 390
+  95,line 364
   30,e 1
-  107,line 382
-  92,line 360
-  104,line 375
-  88,line 354
-  101,line 370
-  85,line 350
-  82,line 346
-  78,line 338
+  107,line 384
+  92,line 361
+  104,line 377
+  88,line 355
+  101,line 371
+  85,line 351
+  82,line 347
+  78,line 339
   75,line 334
   72,line 331
   68,line 323
@@ -3474,84 +3474,84 @@ array set plot::rules {
   25,line 249
   22,line 244
   18,line 239
-  266,line 628
+  266,line 632
   15,line 234
-  263,line 625
+  263,line 629
   12,line 227
-  260,line 619
-  259,line 618
-  256,line 615
-  253,line 610
-  250,line 604
-  249,line 603
-  246,line 598
-  243,line 593
-  240,line 588
-  239,line 585
-  236,line 580
+  260,line 623
+  259,line 622
+  256,line 619
+  253,line 614
+  250,line 608
+  249,line 607
+  246,line 602
+  243,line 597
+  240,line 592
+  239,line 589
+  236,line 584
   7,line 219
-  233,line 577
+  233,line 581
   4,line 216
-  230,line 574
-  229,line 569
+  230,line 578
+  229,line 573
   1,line 213
-  226,line 566
-  223,line 561
-  220,line 558
-  219,line 557
-  216,line 549
-  213,line 546
-  210,line 541
-  209,line 539
-  199,line 527
-  206,line 536
-  196,line 521
-  203,line 533
-  193,line 516
-  200,line 528
-  190,line 513
-  189,line 510
-  186,line 507
-  183,line 502
-  180,line 497
-  179,line 496
-  176,line 493
-  173,line 484
-  170,line 481
-  169,line 478
-  166,line 475
-  163,line 470
-  160,line 465
-  159,line 464
-  156,line 460
-  153,line 457
-  149,line 450
-  150,line 451
-  146,line 445
-  143,line 439
-  139,line 430
-  140,line 431
-  136,line 425
-  133,line 422
-  129,line 416
-  130,line 417
-  126,line 411
-  123,line 406
-  119,line 400
-  120,line 401
-  116,line 395
-  113,line 392
-  97,line 365
-  109,line 386
-  110,line 387
-  94,line 362
-  106,line 378
-  91,line 357
-  103,line 372
-  87,line 353
-  100,line 368
-  84,line 348
-  81,line 345
+  226,line 570
+  223,line 565
+  220,line 562
+  219,line 561
+  216,line 553
+  213,line 550
+  210,line 545
+  209,line 543
+  199,line 531
+  206,line 540
+  196,line 525
+  203,line 537
+  193,line 520
+  200,line 532
+  190,line 517
+  189,line 513
+  186,line 510
+  183,line 505
+  180,line 500
+  179,line 499
+  176,line 496
+  173,line 487
+  170,line 484
+  169,line 480
+  166,line 477
+  163,line 472
+  160,line 467
+  159,line 466
+  156,line 462
+  153,line 459
+  149,line 452
+  150,line 453
+  146,line 447
+  143,line 441
+  139,line 432
+  140,line 433
+  136,line 427
+  133,line 424
+  129,line 418
+  130,line 419
+  126,line 413
+  123,line 408
+  119,line 402
+  120,line 403
+  116,line 397
+  113,line 394
+  97,line 366
+  109,line 388
+  110,line 389
+  94,line 363
+  106,line 380
+  91,line 358
+  103,line 374
+  87,line 354
+  100,line 369
+  84,line 349
+  81,line 346
   77,line 337
   74,line 333
   21,e 1
@@ -4435,41 +4435,41 @@ array set plot::token_id_table {
   363,title RANGE
   434,t 1
   448,title {}
-  471,line 623
+  471,line 627
   259,t 0
   260,t 0
-  467,line 597
+  467,line 601
   276,title float
   312,t 0
   362,title RAISED
-  464,line 583
+  464,line 587
   354,t 0
   447,title {}
-  461,line 556
+  461,line 560
   x x
   y y
   396,t 0
   406,t 0
-  457,line 526
+  457,line 530
   275,title integer
   448,t 1
   361,title QUADRATIC
-  454,line 505
+  454,line 508
   446,title {}
   274,t 0
-  451,line 487
-  447,line 449
+  451,line 490
+  447,line 451
   274,title ITALIC
   326,t 0
   359,title PRINT
   360,title PRINTER
-  444,line 433
+  444,line 435
   368,t 0
   445,title {}
-  441,line 414
+  441,line 416
   421,t 1
   273,title ROMAN
-  437,line 391
+  437,line 393
   463,t 1
   358,title POSTER
   434,line 311
@@ -4651,33 +4651,33 @@ array set plot::token_id_table {
   358,t 0
   337,title LOADCONFIG
   411,t 0
-  470,line 614
-  469,line 608
+  470,line 618
+  469,line 612
   423,title {}
-  466,line 592
+  466,line 596
   453,t 1
-  463,line 573
+  463,line 577
   278,t 0
   336,title LOAD
-  460,line 551
-  459,line 544
+  460,line 555
+  459,line 548
   422,title {}
   331,t 0
-  456,line 519
+  456,line 523
   373,t 0
-  453,line 501
+  453,line 504
   X,t 0
   335,title LIST
   425,t 1
-  450,line 480
-  449,line 469
+  450,line 483
+  449,line 471
   421,title {}
   467,t 1
-  446,line 443
+  446,line 445
   303,t 0
   293,t 0
   257 YES_
-  443,line 429
+  443,line 431
   258 NO_
   259 ON_
   260 OFF_
@@ -4689,15 +4689,15 @@ array set plot::token_id_table {
   345,t 0
   419,title {}
   420,title {}
-  439,line 404
-  440,line 410
+  439,line 406
+  440,line 412
   265 FONTSLANT_
   266 FONTSTYLE_
   267 FONTWEIGHT_
   268 TIMES_
   270 COURIER_
   269 HELVETICA_
-  436,line 385
+  436,line 387
   271 NORMAL_
   387,t 0
   272 BOLD_
@@ -5091,46 +5091,46 @@ array set plot::token_id_table {
   457,t 1
   388,title STYLE
   283,t 0
-  472,line 630
+  472,line 634
   335,t 0
   312,title EXPORT
-  468,line 601
+  468,line 605
   387,title STRIP
   377,t 0
-  465,line 587
+  465,line 591
   429,t 1
   430,t 1
-  462,line 565
+  462,line 569
   311,title ERRORBAR
   472,t 1
-  458,line 531
+  458,line 535
   386,title STEP
-  455,line 512
+  455,line 516
   297,t 0
   307,t 0
   472,title {}
-  452,line 492
+  452,line 495
   349,t 0
   350,t 0
   299,title CUBIC
   309,title DUPLICATE
   310,title ERROR
-  448,line 455
+  448,line 457
   385,title STDIN
   392,t 0
   402,t 0
-  445,line 438
+  445,line 440
   471,title {}
   444,t 1
-  442,line 421
+  442,line 423
   298,title CROSS
   270,t 0
   269,t 0
   308,title DUP
-  438,line 397
+  438,line 399
   384,title STATISTICS
   322,t 0
-  435,line 381
+  435,line 383
   470,title {}
   469,title {}
   364,t 0
@@ -5417,7 +5417,6 @@ proc plot::yyparse {} {
                     75 { ProcessCmdCVAR layout $2 PlotChangeLayout }
                     76 { ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout }
                     78 { ProcessCmdCVAR background $2 PlotUpdateCanvas }
-                    79 { ProcessCmdCVAR bar,mode $2 PlotUpdateGraph }
                     80 { ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
                     81 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
                     82 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
@@ -5432,7 +5431,6 @@ proc plot::yyparse {} {
                     98 { PlotCmdUpdateElement graph,ds,dash $2 }
                     99 { PlotCmdUpdateElement graph,ds,fill $2 }
                     100 { PlotCmdUpdateElement graph,ds,fill,color $2 }
-                    103 { PlotCmdUpdateElement graph,ds,bar,relief $2 }
                     104 { ProcessCmdCVAROpt PlotDataSetName $2 }
                     107 { PlotCmdLoad $1 xy }
                     108 { PlotCmdLoad $1 $2 }

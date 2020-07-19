@@ -1859,7 +1859,6 @@ plot [axis x|y grid yes|no]<br>
 &nbsp;&nbsp;&nbsp; [font title|labels|numbers slant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [title &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [title x|y &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [barmode normal|stacked|aligned|overlap]<br>
 <br>
 # configure current dataset<br>
 plot [show yes|no]<br>
@@ -1975,13 +1974,6 @@ plot title "This is a Title"<br>
 plot title x "X Axis"<br>
 plot title y "Y Axis"<br>
 plot title legend "This is the Legend"<br>
-<br>
-# bar plot<br>
-string value = ds9.get(string cmd)<br>
-plot barmode<br>
-<br>
-ds9.set(string cmd)<br>
-plot barmode aligned<br>
 <br>
 # configure current dataset<br>
 string value = ds9.get(string cmd)<br>

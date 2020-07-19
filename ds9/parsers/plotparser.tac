@@ -258,7 +258,8 @@ plotCmd : LOAD_ load
    {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
  | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvas}
- | BARMODE_ barmode {ProcessCmdCVAR bar,mode $2 PlotUpdateGraph}
+ # backward compatibility
+ | BARMODE_ barmode
 
  # Graph Menu
  | SELECT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
@@ -291,7 +292,8 @@ plotCmd : LOAD_ load
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
- | RELIEF_ relief {PlotCmdUpdateElement graph,ds,bar,relief $2}
+ # backward compatibility
+ | RELIEF_ relief
  | NAME_ STRING_ {ProcessCmdCVAROpt PlotDataSetName $2}
 
  # backward compatibility
@@ -400,6 +402,7 @@ fontType : TITLE_ {set _ graph,title}
  | LEGENDTITLE_ {set _ legend,title}
  ;
 
+# backward compatibility
 barmode : NORMAL_ {set _ normal}
  | STACKED_ {set _ stacked}
  | ALIGNED_ {set _ aligned}
@@ -432,6 +435,7 @@ legendPos : RIGHT_ {set _ right}
  | PLOTAREA_ {set _ plotarea}
  ;
 
+# backward compatibility
 relief : FLAT_ {set _ flat}
  | SUNKEN_ {set _ sunken}
  | RAISED_ {set _ raised}

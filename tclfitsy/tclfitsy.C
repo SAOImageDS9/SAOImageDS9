@@ -444,11 +444,9 @@ int TclFITSY::histogram(int argc, const char* argv[])
     return TCL_ERROR;
 
   // find min/max
-  //  Vector maxmin= fits->getColDim(argv[4]);
   Vector maxmin= fits->getColMinMax(argv[4]);
   double min =maxmin[0];
   double max =maxmin[1];
-  cerr << "min=" << min << ' ' << "max=" << max << endl;
   
   double* x = (double*)malloc(num*sizeof(double));
   double* y = (double*)malloc(num*sizeof(double));
@@ -474,8 +472,8 @@ int TclFITSY::histogram(int argc, const char* argv[])
       y[kk]++;
   }
   
-  for (int ii=0; ii<num; ii++)
-    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
+  //  for (int ii=0; ii<num; ii++)
+  //    cerr << "ii=" << ii << ' ' << x[ii] << ',' << y[ii] << endl;
 
   // calc width
   {

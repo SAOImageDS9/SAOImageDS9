@@ -1679,7 +1679,7 @@ $ds9 -print resolution 96</tt>
 &nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
-&nbsp;&nbsp;&nbsp;&nbsp; [extension &lt;int&gt;|&lt;extname&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [ext &lt;int&gt;|&lt;extname&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; [&lt;int&gt;] new|over]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter new|over]<br>
@@ -1691,8 +1691,8 @@ $ds9 -prism foo.fits<br>
 $ds9 -prism load bar.fits<br>
 $ds9 -prism clear<br>
 $ds9 -prism current prism2<br>
-$ds9 -prism extension 2<br>
-$ds9 -prism extension STDEVT<br>
+$ds9 -prism ext 2<br>
+$ds9 -prism ext STDEVT<br>
 $ds9 -prism image<br>
 $ds9 -prism histogram RAWX new<br>
 $ds9 -prism histogram RAWX 40 new<br>

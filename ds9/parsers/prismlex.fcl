@@ -10,7 +10,8 @@
 clear		{return $CLEAR_}
 close		{return $CLOSE_}
 current		{return $CURRENT_}
-extension	{return $EXTENSION_}
+ext		{return $EXT_}
+extension	{return $EXT_}
 histogram	{return $HISTOGRAM_}
 image		{return $IMAGE_}
 load		{return $LOAD_}

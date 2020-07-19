@@ -484,7 +484,7 @@ array set prism::token_id_table {
   277,title {}
   272,line 28
   267,t 0
-  263,title EXTENSION
+  263,title EXT
   282,title {}
   272,t 0
   268,line 22
@@ -502,7 +502,7 @@ array set prism::token_id_table {
   265,line 19
   262 CURRENT_
   281,t 1
-  263 EXTENSION_
+  263 EXT_
   277,line 45
   257,title integer
   264 HISTOGRAM_

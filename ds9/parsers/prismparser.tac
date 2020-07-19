@@ -10,7 +10,7 @@
 %token CLEAR_
 %token CLOSE_
 %token CURRENT_
-%token EXTENSION_
+%token EXT_
 %token HISTOGRAM_
 %token IMAGE_
 %token LOAD_
@@ -39,7 +39,7 @@ prism : {PrismDialog prism}
  | LOAD_ STRING_ {PrismCmdLoad $2}
  | CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
  | CLEAR_ {ProcessCmdCVAR0 PrismClear}
- | EXTENSION_ ext
+ | EXT_ ext
  | IMAGE_ {ProcessCmdCVAR0 PrismImage}
  | PLOT_ plot
  | HISTOGRAM_ histogram

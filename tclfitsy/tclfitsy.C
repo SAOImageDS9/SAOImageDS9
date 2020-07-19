@@ -458,7 +458,6 @@ int TclFITSY::histogram(int argc, const char* argv[])
 
   double diff = max-min+1;
   double barwidth = diff/num;
-  cerr << "barwidth=" << barwidth << endl;
 
   for (int ii=0; ii<num; ii++)
     x[ii] = double(ii)/num*diff + min;

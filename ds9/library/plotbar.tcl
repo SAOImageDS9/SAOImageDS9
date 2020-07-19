@@ -50,10 +50,14 @@ proc PlotBarMenus {varname} {
     $var(mb).databar add separator
     $var(mb).databar add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).databar.color
-    $var(mb).databar add cascade -label [msgcat::mc {Relief}] \
-	-menu $var(mb).databar.relief
+    $var(mb).databar add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).databar.width
+    $var(mb).databar add cascade -label [msgcat::mc {Fill}] \
+	-menu $var(mb).databar.fill
     $var(mb).databar add cascade -label [msgcat::mc {Error}] \
 	-menu $var(mb).databar.error
+    $var(mb).databar add cascade -label [msgcat::mc {Relief}] \
+	-menu $var(mb).databar.relief
     $var(mb).databar add separator
     $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
@@ -61,23 +65,36 @@ proc PlotBarMenus {varname} {
     PlotColorMenu $var(mb).databar.color $varname graph,ds,color \
 	[list PlotBarUpdateElement $varname]
 
-    # Relief
-    ThemeMenu $var(mb).databar.relief
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Flat}] \
-	-variable ${varname}(graph,ds,bar,relief) -value flat \
+    # Width
+    ThemeMenu $var(mb).databar.width
+    $var(mb).databar.width add radiobutton \
+	-label {0} -variable ${varname}(graph,ds,width) \
+	-value 0 -command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.width add radiobutton \
+	-label {1} -variable ${varname}(graph,ds,width) \
+	-value 1 -command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.width add radiobutton \
+	-label {2} -variable ${varname}(graph,ds,width) \
+	-value 2 -command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.width add radiobutton \
+	-label {3} -variable ${varname}(graph,ds,width) \
+	-value 3 -command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.width add radiobutton \
+	-label {4} -variable ${varname}(graph,ds,width) \
+	-value 4 -command [list PlotBarUpdateElement $varname]
+
+    # Fill
+    ThemeMenu $var(mb).databar.fill
+    $var(mb).databar.fill add checkbutton \
+	-label [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,fill) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Sunken}] \
-	-variable ${varname}(graph,ds,bar,relief) -value sunken \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Raised}] \
-	-variable ${varname}(graph,ds,bar,relief) -value raised \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Solid}] \
-	-variable ${varname}(graph,ds,bar,relief) -value solid \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Groove}] \
-	-variable ${varname}(graph,ds,bar,relief) -value groove \
-	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.fill add separator
+    $var(mb).databar.fill add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).databar.fill.color
+
+    PlotColorMenu $var(mb).databar.fill.color $varname graph,ds,fill,color \
+	[list PlotBarUpdateElement $varname]
 
     # Error
     ThemeMenu $var(mb).databar.error
@@ -97,6 +114,24 @@ proc PlotBarMenus {varname} {
 	[list PlotBarUpdateElement $varname]
     WidthDashMenu $var(mb).databar.error.width $varname graph,ds,error,width \
 	{} [list PlotBarUpdateElement $varname] {}
+
+    # Relief
+    ThemeMenu $var(mb).databar.relief
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Flat}] \
+	-variable ${varname}(graph,ds,bar,relief) -value flat \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Sunken}] \
+	-variable ${varname}(graph,ds,bar,relief) -value sunken \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Raised}] \
+	-variable ${varname}(graph,ds,bar,relief) -value raised \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Solid}] \
+	-variable ${varname}(graph,ds,bar,relief) -value solid \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Groove}] \
+	-variable ${varname}(graph,ds,bar,relief) -value groove \
+	-command [list PlotBarUpdateElement $varname]
 }
 
 proc PlotBarAddGraph {varname} {
@@ -121,6 +156,12 @@ proc PlotBarUpdateElement {varname} {
  	return
     }
     
+    if {$var(graph,ds,fill)} {
+	set fillColor $var(graph,ds,fill,color)
+    } else {
+	set fillColor [PlotBGColor $varname]
+    }
+
     if {$var(graph,ds,error)} {
 	set show both
     } else {
@@ -137,7 +178,9 @@ proc PlotBarUpdateElement {varname} {
     $var(graph) element configure $nn \
 	-label $var(graph,ds,name) \
 	-hide [expr !$var(graph,ds,show)] \
-	-color $var(graph,ds,color) \
+	-outline $var(graph,ds,color) \
+	-borderwidth $var(graph,ds,width) \
+	-fill $fillColor \
 	-relief $var(graph,ds,bar,relief) \
 	-barwidth $var(graph,ds,bar,width) \
 	-showerrorbars $show \

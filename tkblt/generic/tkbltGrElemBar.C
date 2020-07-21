@@ -499,7 +499,9 @@ void BarElement::extents(Region2d *regPtr)
 
   int nPoints = NUMBEROFPOINTS(ops);
 
-  double middle = 0.5;
+  double barWidth = (ops->barWidth > 0.0) ? ops->barWidth : gops->barWidth;
+  double middle = barWidth/2.;
+  //  double middle = 0.5;
   regPtr->left = ops->coords.x->min() - middle;
   regPtr->right = ops->coords.x->max() + middle;
 

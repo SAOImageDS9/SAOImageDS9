@@ -61,41 +61,44 @@ proc prism::unsetupvalues {numsyms} {
 }
 
 array set prism::table {
-  38:272 reduce
   10:280,target 28
   17:257 reduce
   18:271,target 33
-  38:273 reduce
+  38:y,target 21
   29:283 goto
   17:259 reduce
+  38:281,target 42
   29:284 goto
   27:0 reduce
   26:257,target 29
   23:y,target 28
   6:259,target 23
-  31:273,target 35
   6:z,target 22
   23:x reduce
+  38:259,target 23
+  38:281 goto
   26:257 reduce
   23:y reduce
   20:Y,target 30
   6:259 shift
   19:Y,target 35
+  36:272,target 25
   23:z reduce
+  38:283 goto
   26:259 reduce
+  38:284 goto
   0:275,target 11
   17:269 reduce
   17:270 reduce
-  41:z,target 22
   2:0 reduce
   17:271 reduce
   27:259,target 9
   17:z,target 31
   24:0 reduce
   10:z,target 22
-  35:259 reduce
+  45:282,target 46
+  41:0,target 20
   29:Z,target 19
-  45:0 reduce
   33:0,target 5
   26:270 reduce
   26:269 reduce
@@ -109,41 +112,35 @@ array set prism::table {
   19:y reduce
   20:z reduce
   19:z reduce
-  41:x shift
-  43:273,target 35
-  41:y shift
-  41:z shift
   20:271,target 30
   19:271,target 35
-  41:x,target 20
+  44:259 reduce
   6:279 goto
   10:X shift
   7:259,target 13
   10:Y shift
+  35:272 reduce
   6:283 goto
   10:Z shift
   17:x,target 31
+  35:273 reduce
   6:284 goto
   10:x,target 20
   14:259 reduce
-  42:0 reduce
   29:X,target 17
+  40:259,target 27
+  39:259,target 26
   22:X,target 34
-  37:272,target 23
-  44:270 shift
-  44:269 shift
-  44:271 shift
+  37:272,target 39
   23:257 reduce
   3:259 reduce
-  41:283,target 44
+  43:271,target 36
   28:259,target 14
   23:259 reduce
   20:y,target 30
   19:y,target 35
-  46:282,target 47
   32:Y,target 18
-  32:271,target 39
-  44:281 goto
+  32:271,target 36
   29:283,target 32
   17:259,target 31
   32:259 shift
@@ -154,34 +151,26 @@ array set prism::table {
   29:z,target 22
   21:271,target 32
   22:z,target 34
-  41:281,target 43
   0:268,target 10
   8:259,target 27
-  45:0,target 21
   26:270,target 29
   26:269,target 29
-  41:259 shift
+  41:259 reduce
   26:Z,target 29
   14:0 reduce
   32:270 shift
   32:269 shift
   18:Z,target 33
   32:271 shift
-  41:259,target 23
-  35:0 reduce
+  41:259,target 20
   14:0,target 17
-  38:272,target 24
   10:x shift
   17:257,target 31
   10:y shift
   10:z shift
-  44:271,target 39
-  41:270 shift
-  41:269 shift
   30:259,target 33
   29:x,target 20
   29:259,target 23
-  41:271 shift
   22:x,target 34
   32:281 goto
   0:260 shift
@@ -207,15 +196,15 @@ array set prism::table {
   21:Z reduce
   0:265 shift
   0:266 shift
+  38:270,target 35
+  38:269,target 34
   0:267 shift
-  41:281 goto
+  45:273,target 40
   0:268 shift
   8:259 shift
   32:y,target 21
   22:271,target 34
-  41:283 goto
   28:259 reduce
-  41:284 goto
   20:270 reduce
   19:269 reduce
   19:270 reduce
@@ -223,101 +212,115 @@ array set prism::table {
   20:271 reduce
   9:259,target 7
   19:271 reduce
+  34:273,target 23
   0:275 goto
   21:Y,target 32
   0:264,target 6
   0:277 goto
   17:X reduce
-  42:259,target 20
   17:Y reduce
-  40:272,target 34
-  39:272,target 25
   28:0 reduce
   7:0,target 13
   17:Z reduce
   18:257,target 33
+  38:X shift
   0:0,target 6
+  38:Y shift
+  38:Z shift
   26:z,target 29
   18:z,target 33
-  42:0,target 20
-  34:0,target 26
+  31:259,target 19
+  38:Z,target 19
+  46:259 reduce
   23:Z,target 28
   3:0 reduce
-  37:272 reduce
-  32:283,target 41
+  37:272 shift
+  32:283,target 38
   0:262,target 4
   11:0,target 0
   19:259,target 35
   20:259,target 30
-  37:273 reduce
+  37:273 shift
   16:259 reduce
-  46:273,target 35
+  37:282,target 41
+  46:0 reduce
   23:271,target 28
   26:x,target 29
   21:x reduce
   5:257 shift
   21:y reduce
   18:x,target 33
-  46:272 shift
+  43:281,target 45
   25:257 shift
   21:z reduce
   5:259 shift
-  46:273 shift
+  38:X,target 17
+  37:282 goto
+  35:273,target 24
   6:284,target 26
   23:X,target 28
   0:0 reduce
   10:283,target 29
   6:Y,target 18
-  32:281,target 40
+  32:281,target 37
   0:260,target 2
   0:259,target 1
   19:257,target 35
   20:257,target 30
+  38:284,target 26
   17:269,target 31
   17:270,target 31
   32:X shift
-  46:282 goto
   32:Y shift
-  34:259 reduce
   32:Z shift
   21:y,target 32
   32:259,target 23
   17:x reduce
-  41:Y,target 18
   17:y reduce
   17:z reduce
+  38:x shift
+  38:y shift
   17:Y,target 31
+  38:z shift
   10:Y,target 18
   21:259,target 32
   5:278 goto
   6:X shift
   6:Y shift
+  38:z,target 22
   6:Z shift
-  41:270,target 38
-  41:269,target 37
+  34:272 reduce
   23:z,target 28
+  34:273 reduce
+  40:0 reduce
+  39:0 reduce
   10:259,target 23
   13:259 reduce
-  44:281,target 46
+  46:0,target 22
+  31:0,target 19
   20:Z,target 30
   19:Z,target 35
+  43:270 shift
+  43:269 shift
+  36:273,target 25
+  43:271 shift
   15:0,target 18
-  43:272 shift
   22:257 reduce
   2:259 reduce
-  43:273 shift
+  44:259,target 21
   6:279,target 24
+  42:272,target 39
   22:259 reduce
   21:257,target 32
   1:259,target 8
   18:269,target 33
   18:270,target 33
+  38:x,target 20
   15:0 reduce
   23:x,target 28
-  36:0 reduce
-  31:272,target 34
+  43:281 goto
   6:y,target 21
-  43:282 goto
+  31:259 reduce
   32:x shift
   22:270 reduce
   22:269 reduce
@@ -327,9 +330,9 @@ array set prism::table {
   22:271 reduce
   32:z shift
   22:259,target 34
-  41:y,target 21
-  40:282,target 42
   12:0 reduce
+  40:259 reduce
+  39:259 reduce
   22:X reduce
   17:y,target 31
   22:Y reduce
@@ -337,49 +340,38 @@ array set prism::table {
   33:0 reduce
   22:Z reduce
   6:x shift
-  31:272 shift
   29:Y,target 18
   6:y shift
-  31:273 shift
   22:Y,target 34
   6:z shift
-  37:273,target 23
+  37:273,target 40
   10:259 shift
-  45:259,target 21
   1:0,target 8
-  43:272,target 34
   22:257,target 34
   2:259,target 11
-  41:284,target 26
   20:270,target 30
   20:269,target 30
   19:269,target 35
   19:270,target 35
-  40:272 shift
-  39:272 reduce
   20:z,target 30
   7:0 reduce
   18:257 reduce
   19:z,target 35
-  40:273 shift
-  39:273 reduce
-  31:282 goto
   18:259 reduce
   18:X reduce
-  34:259,target 26
   32:Z,target 19
   18:Y reduce
-  35:0,target 27
   18:Z reduce
   29:284,target 26
   27:0,target 9
   12:0,target 3
   7:259 reduce
-  40:282 goto
   23:259,target 28
   27:259 reduce
   18:269 reduce
   18:270 reduce
+  43:270,target 35
+  43:269,target 34
   10:280 goto
   18:271 reduce
   26:271,target 29
@@ -389,12 +381,10 @@ array set prism::table {
   12:259,target 4
   10:284 goto
   32:X,target 17
-  36:259 reduce
-  32:270,target 38
-  32:269,target 37
-  38:273,target 24
-  47:0 reduce
+  32:270,target 35
+  32:269,target 34
   22:x reduce
+  46:259,target 22
   22:y reduce
   23:257,target 28
   22:z reduce
@@ -403,42 +393,44 @@ array set prism::table {
   21:270,target 32
   21:269,target 32
   22:y,target 34
-  45:259 reduce
   1:0 reduce
   0:267,target 9
-  35:259,target 27
+  36:272 reduce
   26:Y,target 29
+  36:273 reduce
   18:Y,target 33
   15:259 reduce
+  44:0 reduce
+  38:271,target 36
   24:259,target 15
   18:x reduce
   32:z,target 22
   18:y reduce
   18:z reduce
-  44:270,target 38
-  44:269,target 37
+  45:272 shift
   4:259 shift
+  45:273 shift
+  42:282,target 44
   12:276,target 30
-  47:0,target 22
   24:259 reduce
+  40:0,target 27
+  39:0,target 26
   13:259,target 16
   21:Z,target 32
   0:265,target 7
   24:0,target 15
   16:0,target 12
-  40:273,target 35
-  39:273,target 25
-  31:282,target 36
   29:X shift
   29:Y shift
+  45:282 goto
+  41:0 reduce
   29:Z shift
-  47:259,target 22
+  45:272,target 39
   4:259,target 13
   32:x,target 20
   22:270,target 34
   22:269,target 34
-  36:259,target 19
-  42:259 reduce
+  34:272,target 23
   32:284,target 26
   21:X,target 32
   0:263,target 5
@@ -449,11 +441,13 @@ array set prism::table {
   12:259 reduce
   26:y,target 29
   18:y,target 33
-  43:282,target 45
+  38:Y,target 18
   14:259,target 17
+  42:272 shift
   23:Y,target 28
   21:257 reduce
   1:259 reduce
+  42:273 shift
   10:284,target 26
   21:259 reduce
   6:Z,target 19
@@ -464,21 +458,19 @@ array set prism::table {
   2:0,target 11
   17:271,target 31
   23:Y reduce
-  34:0 reduce
   23:Z reduce
-  46:272,target 34
   25:257,target 31
   21:z,target 32
   5:259,target 15
   23:270,target 28
   23:269,target 28
   9:259 reduce
-  41:Z,target 19
+  42:282 goto
   12:276 goto
+  44:0,target 21
   30:259 shift
   29:x shift
   29:259 shift
-  36:0,target 19
   29:y shift
   21:270 reduce
   21:269 reduce
@@ -486,33 +478,35 @@ array set prism::table {
   28:0,target 14
   21:271 reduce
   17:Z,target 31
+  35:272,target 24
   6:283,target 25
   10:Z,target 19
   13:0,target 16
   5:278,target 16
   6:X,target 17
-  41:271,target 39
   20:X reduce
   19:X reduce
+  38:259 shift
+  38:283,target 43
   26:259,target 29
   20:Y reduce
   19:Y reduce
+  31:0 reduce
   20:Z reduce
   19:Z reduce
-  41:X shift
-  41:Y shift
   21:x,target 32
   5:257,target 14
-  41:Z shift
-  41:X,target 17
   26:x reduce
   26:y reduce
   15:259,target 18
   26:z reduce
-  47:259 reduce
   0:277,target 12
   17:X,target 31
+  38:270 shift
+  38:269 shift
   10:X,target 17
+  42:273,target 40
+  38:271 shift
 }
 
 array set prism::rules {
@@ -588,7 +582,7 @@ array set prism::rules {
   13,dc 1
   27,dc 1
   4,dc 0
-  19,dc 3
+  19,dc 2
   20,dc 4
   34,dc 1
 }
@@ -633,7 +627,7 @@ array set prism::rules {
 }
 
 array set prism::lr1_table {
-  66,trans {{272 50} {273 51} {282 69}}
+  66,trans {{269 50} {270 51} {271 52} {281 69}}
   35 {{14 {0 259} 2}}
   14,trans {}
   36 {{20 {0 259} 1} {21 {0 259} 1} {22 {0 259} 1} {28 {259 269 270 271 X Y Z x y z} 0} {29 {259 269 270 271 X Y Z x y z} 0} {30 {259 269 270 271 X Y Z x y z} 0} {31 {259 269 270 271 X Y Z x y z} 0} {32 {259 269 270 271 X Y Z x y z} 0} {33 {259 269 270 271 X Y Z x y z} 0} {34 {259 269 270 271 X Y Z x y z} 0} {35 {259 269 270 271 X Y Z x y z} 0}}
@@ -641,15 +635,14 @@ array set prism::lr1_table {
   37 {{29 {259 X Y Z x y z} 1}}
   52,trans {}
   38 {{5 0 2}}
-  71,trans {}
   40 {{31 {259 269 270 271 X Y Z x y z} 1}}
-  39 {{19 {0 259} 2} {26 {0 259} 0} {27 {0 259} 0}}
+  39 {{19 {0 259} 2}}
   41 {{33 {259 269 270 271 X Y Z x y z} 1}}
   18,trans {}
   1,trans {}
   37,trans {}
   42 {{35 {259 269 270 271 X Y Z x y z} 1}}
-  56,trans {{272 50} {273 51} {282 58}}
+  56,trans {}
   43 {{30 {259 269 270 271 X Y Z x y z} 1}}
   44 {{32 {259 269 270 271 X Y Z x y z} 1}}
   45 {{34 {259 269 270 271 X Y Z x y z} 1}}
@@ -660,63 +653,62 @@ array set prism::lr1_table {
   61,trans {}
   47 {{20 {0 259} 2} {21 {0 259} 2} {22 {0 259} 2} {23 {272 273} 0} {24 {272 273} 0} {25 {272 273} 0} {28 {259 269 270 271 X Y Z x y z} 0} {29 {259 269 270 271 X Y Z x y z} 0} {30 {259 269 270 271 X Y Z x y z} 0} {31 {259 269 270 271 X Y Z x y z} 0} {32 {259 269 270 271 X Y Z x y z} 0} {33 {259 269 270 271 X Y Z x y z} 0} {34 {259 269 270 271 X Y Z x y z} 0} {35 {259 269 270 271 X Y Z x y z} 0}}
   48 {{29 {259 269 270 271 X Y Z x y z} 1}}
-  50 {{26 {0 259} 1}}
+  50 {{23 {272 273} 1}}
   49 {{5 0 3}}
   27,trans {}
   9,trans {}
+  51 {{24 {272 273} 1}}
   46,trans {}
-  51 {{27 {0 259} 1}}
-  65,trans {}
-  52 {{19 {0 259} 3}}
-  53 {{23 {272 273} 1}}
+  65,trans {{272 55} {273 56} {282 68}}
+  52 {{25 {272 273} 1}}
+  53 {{20 {0 259} 3} {26 {0 259} 0} {27 {0 259} 0}}
   13,trans {}
-  54 {{24 {272 273} 1}}
+  54 {{21 {0 259} 3} {22 {0 259} 3} {23 {272 273} 0} {24 {272 273} 0} {25 {272 273} 0} {28 {269 270 271} 0} {29 {269 270 271} 0} {30 {269 270 271} 0} {31 {269 270 271} 0} {32 {269 270 271} 0} {33 {269 270 271} 0} {34 {269 270 271} 0} {35 {269 270 271} 0}}
   32,trans {}
+  55 {{26 {0 259} 1}}
   51,trans {}
-  55 {{25 {272 273} 1}}
-  70,trans {{272 50} {273 51} {282 71}}
-  69,trans {}
-  56 {{20 {0 259} 3} {26 {0 259} 0} {27 {0 259} 0}}
-  57 {{21 {0 259} 3} {22 {0 259} 3} {23 {272 273} 0} {24 {272 273} 0} {25 {272 273} 0} {28 {269 270 271} 0} {29 {269 270 271} 0} {30 {269 270 271} 0} {31 {269 270 271} 0} {32 {269 270 271} 0} {33 {269 270 271} 0} {34 {269 270 271} 0} {35 {269 270 271} 0}}
+  70,trans {}
+  69,trans {{272 55} {273 56} {282 70}}
+  56 {{27 {0 259} 1}}
+  57 {{20 {0 259} 4}}
   17,trans {}
   0,trans {{259 1} {260 2} {261 3} {262 4} {263 5} {264 6} {265 7} {266 8} {267 9} {268 10} {275 11} {277 12}}
-  58 {{20 {0 259} 4}}
+  58 {{31 {269 270 271} 1}}
   36,trans {{X 40} {Y 41} {Z 42} {x 43} {y 44} {z 45} {259 46} {283 47} {284 48}}
-  60 {{33 {269 270 271} 1}}
-  59 {{31 {269 270 271} 1}}
   55,trans {}
-  61 {{35 {269 270 271} 1}}
-  62 {{30 {269 270 271} 1}}
+  60 {{35 {269 270 271} 1}}
+  59 {{33 {269 270 271} 1}}
+  61 {{30 {269 270 271} 1}}
+  62 {{32 {269 270 271} 1}}
   22,trans {}
   4,trans {{259 13}}
-  63 {{32 {269 270 271} 1}}
+  63 {{34 {269 270 271} 1}}
   41,trans {}
   60,trans {}
   59,trans {}
-  64 {{34 {269 270 271} 1}}
-  65 {{28 {269 270 271} 1}}
-  66 {{21 {0 259} 4} {26 {0 259} 0} {27 {0 259} 0}}
+  64 {{28 {269 270 271} 1}}
+  65 {{21 {0 259} 4} {26 {0 259} 0} {27 {0 259} 0}}
+  66 {{22 {0 259} 4} {23 {272 273} 0} {24 {272 273} 0} {25 {272 273} 0}}
   26,trans {}
   8,trans {{259 27}}
-  67 {{22 {0 259} 4} {23 {272 273} 0} {24 {272 273} 0} {25 {272 273} 0}}
+  67 {{29 {269 270 271} 1}}
   45,trans {}
+  68 {{21 {0 259} 5}}
   64,trans {}
-  68 {{29 {269 270 271} 1}}
-  70 {{22 {0 259} 5} {26 {0 259} 0} {27 {0 259} 0}}
-  69 {{21 {0 259} 5}}
+  70 {{22 {0 259} 6}}
+  69 {{22 {0 259} 5} {26 {0 259} 0} {27 {0 259} 0}}
   12,trans {{276 38}}
-  71 {{22 {0 259} 6}}
   31,trans {}
   50,trans {}
   49,trans {}
   68,trans {}
   16,trans {}
   35,trans {}
-  54,trans {}
+  54,trans {{X 58} {Y 59} {Z 60} {x 61} {y 62} {z 63} {259 64} {269 50} {270 51} {271 52} {281 65} {283 66} {284 67}}
   21,trans {}
   3,trans {}
   40,trans {}
-  39,trans {{272 50} {273 51} {282 52}}
+  39,trans {}
   58,trans {}
   10 {{14 {0 259} 1} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {28 {259 X Y Z x y z} 0} {29 {259 X Y Z x y z} 0} {30 {259 X Y Z x y z} 0} {31 {259 X Y Z x y z} 0} {32 {259 X Y Z x y z} 0} {33 {259 X Y Z x y z} 0} {34 {259 X Y Z x y z} 0} {35 {259 X Y Z x y z} 0}}
   11 {{0 0 1}}
@@ -735,7 +727,7 @@ array set prism::lr1_table {
   48,trans {}
   0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {10 {0 259} 0} {11 {0 259} 0} {12 {0 259} 0} {13 {0 259} 0} {14 {0 259} 0} {15 {0 259} 0} {16 {0 259} 0}}
   17 {{31 257 1}}
-  67,trans {{269 53} {270 54} {271 55} {281 70}}
+  67,trans {}
   1 {{8 {0 259} 1}}
   18 {{33 257 1}}
   15,trans {}
@@ -745,7 +737,7 @@ array set prism::lr1_table {
   34,trans {}
   3 {{10 {0 259} 1}}
   21 {{32 257 1}}
-  53,trans {}
+  53,trans {{272 55} {273 56} {282 57}}
   4 {{16 {0 259} 1}}
   22 {{34 257 1}}
   5 {{12 {0 259} 1} {17 {0 259} 0} {18 {0 259} 0}}
@@ -758,7 +750,7 @@ array set prism::lr1_table {
   38,trans {{259 49}}
   7 {{13 {0 259} 1}}
   25 {{19 {0 259} 1}}
-  57,trans {{X 59} {Y 60} {Z 61} {x 62} {y 63} {z 64} {259 65} {269 53} {270 54} {271 55} {281 66} {283 67} {284 68}}
+  57,trans {}
   8 {{9 {0 259} 1}}
   26 {{29 257 1}}
   9 {{7 {0 259} 1}}
@@ -775,7 +767,7 @@ array set prism::lr1_table {
   32 {{32 {259 X Y Z x y z} 1}}
   28,trans {}
   33 {{34 {259 X Y Z x y z} 1}}
-  47,trans {{X 40} {Y 41} {Z 42} {x 43} {y 44} {z 45} {259 46} {269 53} {270 54} {271 55} {281 56} {283 57} {284 48}}
+  47,trans {{X 40} {Y 41} {Z 42} {x 43} {y 44} {z 45} {259 46} {269 50} {270 51} {271 52} {281 53} {283 54} {284 48}}
   34 {{28 {259 X Y Z x y z} 1}}
 }
 
@@ -1035,7 +1027,7 @@ proc prism::yyparse {} {
                     16 { PrismCmdRef $2 }
                     17 { PrismCmdExt $1 }
                     18 { PrismCmdExtName $1 }
-                    19 { ProcessCmdCVAR3 bar,col $1 bar,num $2 plot,mode $3 PrismHistogramGenerate }
+                    19 { ProcessCmdCVAR2 bar,col $1 bar,num $2 PrismHistogramGenerate }
                     20 { ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr {} plot,type $3 plot,mode $4 PrismPlotGenerate }
                     21 { ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr $3 plot,type $4 plot,mode $5 PrismPlotGenerate }
                     22 { ProcessCmdCVAR6 xx $1 yy $2 xerr $3 yerr $4 plot,type $5 plot,mode $6 PrismPlotGenerate }

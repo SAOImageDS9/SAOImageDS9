@@ -724,7 +724,6 @@ proc PrismHistogram {varname} {
 
     set ed(col) $var(bar,col)
     set ed(num) $var(bar,num)
-    set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
 
@@ -752,14 +751,8 @@ proc PrismHistogram {varname} {
 
     PrismColsMenu $varname $f.col col
 
-    ttk::radiobutton $f.over -text [msgcat::mc {Overplot}] \
-	-variable ed(plot,mode) -value overplot
-    ttk::radiobutton $f.new -text [msgcat::mc {New Plot}] \
-	-variable ed(plot,mode) -value newplot
-
     grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
     grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
-    grid x $f.over $f.new -padx 2 -pady 2 -sticky ew
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -782,7 +775,6 @@ proc PrismHistogram {varname} {
 	if {$ed(col) != {}} {
 	    set var(bar,col) $ed(col)
 	    set var(bar,num) $ed(num)
-	    set var(plot,mode) $ed(plot,mode)
 
 	    PrismHistogramGenerate $varname
 	}
@@ -796,11 +788,7 @@ proc PrismHistogramGenerate {varname} {
     upvar #0 $varname var
     global $varname
 
-    switch $var(plot,mode) {
-	newplot {incr ${varname}(plot,seq)}
-	overplot {}
-    }
-
+    incr ${varname}(plot,seq)
     set vvarname plot$var(plot,seq)${varname}
     upvar #0 $vvarname vvar
     global $vvarname
@@ -822,12 +810,10 @@ proc PrismHistogramGenerate {varname} {
 	return
     }
 
-    if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
-	PlotDialog $vvarname "[string totitle $varname] Histogram"
-	PlotAddGraph $vvarname bar
-	PlotTitle $vvarname $var(bar,col) {Values} {Counts}
-	lappend ${varname}(plots) $vvarname
-    }
+    PlotDialog $vvarname "[string totitle $varname] Histogram"
+    PlotAddGraph $vvarname bar
+    PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+    lappend ${varname}(plots) $vvarname
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
@@ -838,14 +824,6 @@ proc PrismHistogramGenerate {varname} {
     set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     set vvar(graph,ds,bar,width) $var(bar,width)
     PlotBarUpdateElement $vvarname
-
-    switch $var(plot,mode) {
-	newplot {}
-	overplot {
-	    set vvar(graph,legend) 1
-	    PlotChangeLegend $vvarname
-	}
-    }
 
     PlotStats $vvarname
     PlotList $vvarname

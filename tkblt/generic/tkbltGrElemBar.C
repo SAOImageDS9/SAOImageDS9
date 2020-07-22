@@ -436,8 +436,9 @@ void BarElement::map()
 
     rp->x = (int)MIN(c1.x, c2.x);
 
-    rp->width = width + 1;
-    rp->width |= 0x1;
+    rp->width = width;
+    if (rp->width & 0x1)
+      rp->width++;
     if (rp->width < 1)
       rp->width = 1;
 
@@ -499,7 +500,8 @@ void BarElement::extents(Region2d *regPtr)
 
   int nPoints = NUMBEROFPOINTS(ops);
 
-  double middle = 0.5;
+  double barWidth = (ops->barWidth > 0.0) ? ops->barWidth : gops->barWidth;
+  double middle = barWidth/2.;
   regPtr->left = ops->coords.x->min() - middle;
   regPtr->right = ops->coords.x->max() + middle;
 
@@ -1255,13 +1257,12 @@ void BarElement::printSegments(PSOutput* psPtr, BarPen* penPtr,
       continue;
 
     psPtr->fill3DRectangle(pops->fill, (double)rp->x, (double)rp->y,
-			   (int)rp->width, (int)rp->height,
+			   rp->width, rp->height,
 			   pops->borderWidth, pops->relief);
 
     if (pops->outlineColor) {
       psPtr->setForeground(pops->outlineColor);
-      psPtr->printRectangle((double)rp->x, (double)rp->y, 
-			   (int)rp->width, (int)rp->height);
+      psPtr->printRectangle((double)rp->x, (double)rp->y, rp->width, rp->height);
     }
   }
 }

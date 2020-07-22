@@ -443,8 +443,8 @@ void BarElement::map()
     rp->width = width;
     if (rp->width & 0x1)
       rp->width++;
-    if (rp->width < 0)
-      rp->width = 0;
+    if (rp->width < 1)
+      rp->width = 1;
 
     rp->height = height + 1;
     if (rp->height < 1)
@@ -1262,13 +1262,12 @@ void BarElement::printSegments(PSOutput* psPtr, BarPen* penPtr,
       continue;
 
     psPtr->fill3DRectangle(pops->fill, (double)rp->x, (double)rp->y,
-			   (int)rp->width, (int)rp->height,
+			   rp->width, rp->height,
 			   pops->borderWidth, pops->relief);
 
     if (pops->outlineColor) {
       psPtr->setForeground(pops->outlineColor);
-      psPtr->printRectangle((double)rp->x, (double)rp->y, 
-			   (int)rp->width, (int)rp->height);
+      psPtr->printRectangle((double)rp->x, (double)rp->y, rp->width, rp->height);
     }
   }
 }

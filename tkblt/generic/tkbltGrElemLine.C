@@ -2009,7 +2009,7 @@ void LineElement::drawSCross(Display* display, Drawable drawable,
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
-  Point pattern[4];
+  Point2d pattern[4];
   if (penOps->symbol.type == SYMBOL_SCROSS) {
     r2 = (int)(r2 * M_SQRT1_2);
     pattern[3].y = pattern[2].x = pattern[0].x = pattern[0].y = -r2;
@@ -2051,7 +2051,7 @@ void LineElement::drawCross(Display *display, Drawable drawable,
    *          9   8
    */
   int d = (r2 / 3);
-  Point pattern[13];
+  Point2d pattern[13];
   pattern[0].x = pattern[11].x = pattern[12].x = -r2;
   pattern[2].x = pattern[1].x = pattern[10].x = pattern[9].x = -d;
   pattern[3].x = pattern[4].x = pattern[7].x = pattern[8].x = d;
@@ -2122,7 +2122,7 @@ void LineElement::drawDiamond(Display *display, Drawable drawable,
    *                      (fifth) point connects the first and
    *            3         last points.
    */
-  Point pattern[5];
+  Point2d pattern[5];
   pattern[1].y = pattern[0].x = -r1;
   pattern[2].y = pattern[3].x = pattern[0].y = pattern[1].x = 0;
   pattern[3].y = pattern[2].x = r1;
@@ -2184,7 +2184,7 @@ void LineElement::drawArrow(Display *display, Drawable drawable,
    *      2           1   last points.
    */
 
-  Point pattern[4];
+  Point2d pattern[4];
   if (penOps->symbol.type == SYMBOL_ARROW) {
     pattern[3].x = pattern[0].x = 0;
     pattern[3].y = pattern[0].y = h1;

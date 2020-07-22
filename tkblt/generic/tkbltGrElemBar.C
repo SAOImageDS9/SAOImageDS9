@@ -436,10 +436,6 @@ void BarElement::map()
 
     rp->x = (int)MIN(c1.x, c2.x);
 
-    //    rp->width = width + 1;
-    //    rp->width |= 0x1;
-    //    if (rp->width < 1)
-    //      rp->width = 1;
     rp->width = width;
     if (rp->width & 0x1)
       rp->width++;
@@ -506,7 +502,6 @@ void BarElement::extents(Region2d *regPtr)
 
   double barWidth = (ops->barWidth > 0.0) ? ops->barWidth : gops->barWidth;
   double middle = barWidth/2.;
-  //  double middle = 0.5;
   regPtr->left = ops->coords.x->min() - middle;
   regPtr->right = ops->coords.x->max() + middle;
 

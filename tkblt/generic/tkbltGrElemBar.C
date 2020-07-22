@@ -436,10 +436,15 @@ void BarElement::map()
 
     rp->x = (int)MIN(c1.x, c2.x);
 
-    rp->width = width + 1;
-    rp->width |= 0x1;
-    if (rp->width < 1)
-      rp->width = 1;
+    //    rp->width = width + 1;
+    //    rp->width |= 0x1;
+    //    if (rp->width < 1)
+    //      rp->width = 1;
+    rp->width = width;
+    if (rp->width & 0x1)
+      rp->width++;
+    if (rp->width < 0)
+      rp->width = 0;
 
     rp->height = height + 1;
     if (rp->height < 1)

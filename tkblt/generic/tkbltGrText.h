@@ -70,7 +70,6 @@ namespace Blt {
     void drawText(Drawable, const char*, int, int);
     void drawText(Drawable, const char*, double, double);
     void drawTextBBox(Drawable, const char*, int, int, int*, int*);
-    void printText(PSOutput*, const char*, int, int);
     void printText(PSOutput*, const char*, double, double);
     void getExtents(const char*, int*, int*);
   };

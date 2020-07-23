@@ -427,22 +427,20 @@ void BarElement::map()
     if ((dx == 0) || (dy == 0))
       continue;
 
-    int height = (int)dy;
-    int width  = (int)dx;
+    double height = dy;
+    double width  = dx;
     if (invertBar)
-      rp->y = (int)MIN(c1.y, c2.y);
+      rp->y = MIN(c1.y, c2.y);
     else
-      rp->y = (int)(MAX(c1.y, c2.y)) - height;
+      rp->y = (MAX(c1.y, c2.y)) - height;
 
-    rp->x = (int)MIN(c1.x, c2.x);
+    rp->x = MIN(c1.x, c2.x);
 
     rp->width = width;
-    if (rp->width & 0x1)
-      rp->width++;
     if (rp->width < 1)
       rp->width = 1;
 
-    rp->height = height + 1;
+    rp->height = height;
     if (rp->height < 1)
       rp->height = 1;
 
@@ -457,7 +455,7 @@ void BarElement::map()
   if (nActiveIndices_ > 0)
     mapActive();
 	
-  int size = 20;
+  double size = 20;
   if (count > 0)
     size = bars->width;
 
@@ -634,8 +632,8 @@ void BarElement::closest()
     }
     double left = bp->x;
     double top = bp->y;
-    double right = (double)(bp->x + bp->width);
-    double bottom = (double)(bp->y + bp->height);
+    double right = bp->x + bp->width;
+    double bottom = bp->y + bp->height;
 
     Point2d outline[5];
     outline[4].x = outline[3].x = outline[0].x = left;
@@ -668,9 +666,9 @@ void BarElement::closest()
     searchPtr->dist = minDist;
     searchPtr->index = imin;
     searchPtr->point.x = 
-      ops->coords.x ? (double)ops->coords.x->values_[imin] : 0;
+      ops->coords.x ? ops->coords.x->values_[imin] : 0;
     searchPtr->point.y = 
-      ops->coords.y ? (double)ops->coords.y->values_[imin] : 0;
+      ops->coords.y ? ops->coords.y->values_[imin] : 0;
   }
 }
 
@@ -734,16 +732,14 @@ void BarElement::drawActive(Drawable drawable)
   }
 }
 
-void BarElement::drawSymbol(Drawable drawable, int x, int y, int size)
+void BarElement::drawSymbol(Drawable drawable, double x, double y, double size)
 {
   BarElementOptions* ops = (BarElementOptions*)ops_;
 
   BarPen* penPtr = NORMALPEN(ops);
   BarPenOptions* pops = (BarPenOptions*)penPtr->ops();
 
-  int radius = (size / 2);
-  size--;
-
+  double radius = (size / 2.);
   x -= radius;
   y -= radius;
 
@@ -830,7 +826,7 @@ void BarElement::printActive(PSOutput* psPtr)
   }
 }
 
-void BarElement::printSymbol(PSOutput* psPtr, double x, double y, int size)
+void BarElement::printSymbol(PSOutput* psPtr, double x, double y, double size)
 {
   BarElementOptions* ops = (BarElementOptions*)ops_;
 
@@ -1187,9 +1183,6 @@ void BarElement::drawSegments(Drawable drawable, BarPen* penPtr,
 {
   BarPenOptions* pops = (BarPenOptions*)penPtr->ops();
   for (Rectangle *rp = bars, *rend = rp + nBars; rp < rend; rp++) {
-    if ((rp->width < 1) || (rp->height < 1))
-      continue;
-
     Tk_Fill3DRectangle(graphPtr_->tkwin_, drawable, 
 		       pops->fill, rp->x, rp->y, rp->width, rp->height, 
 		       pops->borderWidth, pops->relief);
@@ -1201,7 +1194,7 @@ void BarElement::drawSegments(Drawable drawable, BarPen* penPtr,
 }
 
 void BarElement::drawValues(Drawable drawable, BarPen* penPtr, 
-			       Rectangle *bars, int nBars, int *barToData)
+			       Rectangle *bars, int nBars, int* barToData)
 {
   BarElementOptions* ops = (BarElementOptions*)ops_;
   BarPenOptions* pops = (BarPenOptions*)penPtr->ops();
@@ -1249,26 +1242,24 @@ void BarElement::drawValues(Drawable drawable, BarPen* penPtr,
 }
 
 void BarElement::printSegments(PSOutput* psPtr, BarPen* penPtr, 
-			       Rectangle *bars, int nBars)
+			       Rectangle* bars, int nBars)
 {
   BarPenOptions* pops = (BarPenOptions*)penPtr->ops();
   for (Rectangle *rp = bars, *rend = rp + nBars; rp < rend; rp++) {
-    if ((rp->width < 1) || (rp->height < 1))
-      continue;
-
-    psPtr->fill3DRectangle(pops->fill, (double)rp->x, (double)rp->y,
+    psPtr->fill3DRectangle(pops->fill, rp->x, rp->y,
 			   rp->width, rp->height,
 			   pops->borderWidth, pops->relief);
-
+    
     if (pops->outlineColor) {
       psPtr->setForeground(pops->outlineColor);
-      psPtr->printRectangle((double)rp->x, (double)rp->y, rp->width, rp->height);
+      psPtr->setLineWidth(pops->borderWidth);
+      psPtr->printRectangle(rp->x, rp->y, rp->width, rp->height);
     }
   }
 }
 
 void BarElement::printValues(PSOutput* psPtr, BarPen* penPtr, 
-			     Rectangle *bars, int nBars, int *barToData)
+			     Rectangle* bars, int nBars, int* barToData)
 {
   BarPenOptions* pops = (BarPenOptions*)penPtr->ops();
   BarElementOptions* ops = (BarElementOptions*)ops_;

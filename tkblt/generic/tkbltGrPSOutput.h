@@ -60,13 +60,14 @@ namespace Blt {
     void printPolyline(Point2d*, int);
     void printMaxPolyline(Point2d*, int);
     void printSegments(Segment2d*, int);
-    void printRectangle(double, double, int, int);
+    void printRectangle(double, double, double, double);
     void printPolygon(Point2d*, int);
-    void print3DRectangle(Tk_3DBorder, double, double, int, int, int, int);
+    void print3DRectangle(Tk_3DBorder, double, double, double, double,
+			  int, int);
 
-    void fillRectangle(double, double, int, int);
+    void fillRectangle(double, double, double, double);
     void fillRectangles(Rectangle*, int);
-    void fill3DRectangle(Tk_3DBorder, double, double, int, int, int, int);
+    void fill3DRectangle(Tk_3DBorder, double, double, double, double, int, int);
     void fillPolygon(Point2d*, int);
 
     void setFont(Tk_Font); 

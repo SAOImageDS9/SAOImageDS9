@@ -596,7 +596,7 @@ void Legend::print(PSOutput* psPtr)
 			       ops->entryBW, elemOps->legendRelief);
     }
     elemPtr->printSymbol(psPtr, x + xSymbol, y + ySymbol, symbolSize);
-    ts.printText(psPtr, elemOps->label, x + xLabel, 
+    ts.printText(psPtr, elemOps->label, x + xLabel,
 		 y + ops->entryBW + ops->iyPad);
     count++;
 

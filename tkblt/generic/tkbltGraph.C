@@ -588,7 +588,7 @@ void Graph::printMargins(PSOutput* psPtr)
       int y = top_ - ops->plotBW;
       int w = (right_ - left_) + (2*ops->plotBW);
       int h = (bottom_ - top_) + (2*ops->plotBW);
-      psPtr->print3DRectangle(ops->normalBg, (double)x, (double)y, w, h,
+      psPtr->print3DRectangle(ops->normalBg, x, y, w, h,
 			      ops->plotBW, ops->plotRelief);
     }
   }

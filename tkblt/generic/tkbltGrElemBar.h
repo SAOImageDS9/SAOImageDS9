@@ -53,7 +53,7 @@ namespace Blt {
     int nBars;
     GraphSegments xeb;
     GraphSegments yeb;
-    int symbolSize;
+    double symbolSize;
     int errorBarCapWidth;
   } BarStyle;
 
@@ -122,10 +122,10 @@ namespace Blt {
     void closest();
     void draw(Drawable);
     void drawActive(Drawable);
-    void drawSymbol(Drawable, int, int, int);
+    void drawSymbol(Drawable, double, double, double);
     void print(PSOutput*);
     void printActive(PSOutput*);
-    void printSymbol(PSOutput*, double, double, int);
+    void printSymbol(PSOutput*, double, double, double);
   };
 };
 

@@ -62,7 +62,7 @@ namespace Blt {
     GraphPoints symbolPts;
     GraphSegments xeb;
     GraphSegments yeb;
-    int symbolSize;
+    double symbolSize;
     int errorBarCapWidth;
   } LineStyle;
 
@@ -115,15 +115,15 @@ namespace Blt {
     int symbolCounter_;
     Chain* traces_;
 
-    void drawCircle(Display*, Drawable, LinePen*, int, Point2d*, int);
-    void drawSquare(Display*, Drawable, LinePen*, int, Point2d*, int);
-    void drawSCross(Display*, Drawable, LinePen*, int, Point2d*, int);
-    void drawCross(Display*, Drawable, LinePen*, int, Point2d*, int);
-    void drawDiamond(Display*, Drawable, LinePen*, int, Point2d*, int);
-    void drawArrow(Display*, Drawable, LinePen*, int, Point2d*, int);
+    void drawCircle(Display*, Drawable, LinePen*, int, Point2d*, double);
+    void drawSquare(Display*, Drawable, LinePen*, int, Point2d*, double);
+    void drawSCross(Display*, Drawable, LinePen*, int, Point2d*, double);
+    void drawCross(Display*, Drawable, LinePen*, int, Point2d*, double);
+    void drawDiamond(Display*, Drawable, LinePen*, int, Point2d*, double);
+    void drawArrow(Display*, Drawable, LinePen*, int, Point2d*, double);
 
   protected:
-    int scaleSymbol(int);
+    double scaleSymbol(double);
     void getScreenPoints(MapInfo*);
     void reducePoints(MapInfo*, double);
     void generateSteps(MapInfo*);
@@ -142,13 +142,13 @@ namespace Blt {
     void reset();
     int closestTrace();
     void closestPoint(ClosestSearch*);
-    void drawSymbols(Drawable, LinePen*, int, int, Point2d*);
+    void drawSymbols(Drawable, LinePen*, double, int, Point2d*);
     void drawTraces(Drawable, LinePen*);
     void drawValues(Drawable, LinePen*, int, Point2d*, int*);
     void setLineAttributes(PSOutput*, LinePen*);
     void printTraces(PSOutput*, LinePen*);
     void printValues(PSOutput*, LinePen*, int, Point2d*, int*);
-    void printSymbols(PSOutput*, LinePen*, int, int, Point2d*);
+    void printSymbols(PSOutput*, LinePen*, double, int, Point2d*);
     double distanceToLine(int, int, Point2d*, Point2d*, Point2d*);
     double distanceToX(int, int, Point2d*, Point2d*, Point2d*);
     double distanceToY(int, int, Point2d*, Point2d*, Point2d*);
@@ -174,10 +174,10 @@ namespace Blt {
     void closest();
     void draw(Drawable);
     void drawActive(Drawable);
-    void drawSymbol(Drawable, int, int, int);
+    void drawSymbol(Drawable, double, double, double);
     void print(PSOutput*);
     void printActive(PSOutput*);
-    void printSymbol(PSOutput*, double, double, int);
+    void printSymbol(PSOutput*, double, double, double);
   };
 };
 

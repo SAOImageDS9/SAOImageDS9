@@ -178,11 +178,11 @@ namespace Blt {
     virtual void extents(Region2d*) =0;
     virtual void draw(Drawable) =0;
     virtual void drawActive(Drawable) =0;
-    virtual void drawSymbol(Drawable, int, int, int) =0;
+    virtual void drawSymbol(Drawable, double, double, double) =0;
     virtual void closest() =0;
     virtual void print(PSOutput*) =0;
     virtual void printActive(PSOutput*) =0;
-    virtual void printSymbol(PSOutput*, double, double, int) =0;
+    virtual void printSymbol(PSOutput*, double, double, double) =0;
 
     virtual ClassId classId() =0;
     virtual const char* className() =0;

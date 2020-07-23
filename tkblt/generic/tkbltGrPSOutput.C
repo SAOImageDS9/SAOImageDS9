@@ -214,24 +214,24 @@ void PSOutput::setLineWidth(int lineWidth)
   format("%d setlinewidth\n", lineWidth);
 }
 
-void PSOutput::printRectangle(double x, double y, int width, int height)
+void PSOutput::printRectangle(double x, double y, double width, double height)
 {
   append("newpath\n");
   format("  %g %g moveto\n", x, y);
-  format("  %d %d rlineto\n", width, 0);
-  format("  %d %d rlineto\n", 0, height);
-  format("  %d %d rlineto\n", -width, 0);
+  format("  %g %g rlineto\n", width, 0.);
+  format("  %g %g rlineto\n", 0., height);
+  format("  %g %g rlineto\n", -width, 0.);
   append("closepath\n");
   append("stroke\n");
 }
 
-void PSOutput::fillRectangle(double x, double y, int width, int height)
+void PSOutput::fillRectangle(double x, double y, double width, double height)
 {
   append("newpath\n");
   format("  %g %g moveto\n", x, y);
-  format("  %d %d rlineto\n", width, 0);
-  format("  %d %d rlineto\n", 0, height);
-  format("  %d %d rlineto\n", -width, 0);
+  format("  %g %g rlineto\n", width, 0.);
+  format("  %g %g rlineto\n", 0., height);
+  format("  %g %g rlineto\n", -width, 0.);
   append("closepath\n");
   append("fill\n");
 }
@@ -288,7 +288,7 @@ void PSOutput::setLineAttributes(XColor* colorPtr,int lineWidth,
 }
 
 void PSOutput::fill3DRectangle(Tk_3DBorder border, double x, double y,
-				 int width, int height, int borderWidth, 
+				 double width, double height, int borderWidth, 
 				 int relief)
 {
   TkBorder* borderPtr = (TkBorder*)border;
@@ -351,8 +351,8 @@ void PSOutput::printPolygon(Point2d *screenPts, int nScreenPts)
 }
 
 void PSOutput::print3DRectangle(Tk_3DBorder border, double x, double y,
-				 int width, int height, int borderWidth,
-				 int relief)
+				double width, double height, int borderWidth,
+				int relief)
 {
   int twiceWidth = (borderWidth * 2);
   if ((width < twiceWidth) || (height < twiceWidth))
@@ -364,11 +364,11 @@ void PSOutput::print3DRectangle(Tk_3DBorder border, double x, double y,
   if ((relief == TK_RELIEF_GROOVE) || (relief == TK_RELIEF_RIDGE)) {
     int halfWidth = borderWidth / 2;
     int insideOffset = borderWidth - halfWidth;
-    print3DRectangle(border, (double)x, (double)y, width, height, halfWidth, 
+    print3DRectangle(border, x, y, width, height, halfWidth, 
 		    (relief == TK_RELIEF_GROOVE) ? 
 		    TK_RELIEF_SUNKEN : TK_RELIEF_RAISED);
-    print3DRectangle(border, (double)(x + insideOffset), 
-		    (double)(y + insideOffset), width - insideOffset * 2, 
+    print3DRectangle(border, (x + insideOffset), 
+		    (y + insideOffset), width - insideOffset * 2, 
 		    height - insideOffset * 2, halfWidth,
 		    (relief == TK_RELIEF_GROOVE) ? 
 		    TK_RELIEF_RAISED : TK_RELIEF_SUNKEN);

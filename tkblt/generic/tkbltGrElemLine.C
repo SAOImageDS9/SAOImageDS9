@@ -364,8 +364,7 @@ void LineElement::map()
     LineStyle* stylePtr = (LineStyle*)Chain_GetValue(link);
     LinePen* penPtr = (LinePen *)stylePtr->penPtr;
     LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
-    int size = scaleSymbol(penOps->symbol.size);
-    stylePtr->symbolSize = size;
+    stylePtr->symbolSize = scaleSymbol(penOps->symbol.size);
     stylePtr->errorBarCapWidth = penOps->errorBarCapWidth;
   }
 
@@ -599,7 +598,7 @@ void LineElement::drawActive(Drawable drawable)
   if (ops->hide || !active_)
     return;
 
-  int symbolSize = scaleSymbol(penOps->symbol.size);
+  double symbolSize = scaleSymbol(penOps->symbol.size);
 
   if (nActiveIndices_ > 0) {
     mapActiveSymbols();
@@ -626,7 +625,7 @@ void LineElement::drawActive(Drawable drawable)
   }
 }
 
-void LineElement::drawSymbol(Drawable drawable, int x, int y, int size)
+void LineElement::drawSymbol(Drawable drawable, double x, double y, double size)
 {
   LineElementOptions* ops = (LineElementOptions*)ops_;
 
@@ -737,7 +736,7 @@ void LineElement::printActive(PSOutput* psPtr)
 
   psPtr->format("\n%% Active Element \"%s\"\n\n", name_);
 
-  int symbolSize = scaleSymbol(penOps->symbol.size);
+  double symbolSize = scaleSymbol(penOps->symbol.size);
   if (nActiveIndices_ > 0) {
     mapActiveSymbols();
 
@@ -763,20 +762,21 @@ void LineElement::printActive(PSOutput* psPtr)
   }
 }
 
-void LineElement::printSymbol(PSOutput* psPtr, double x, double y, int size)
+void LineElement::printSymbol(PSOutput* psPtr, double x, double y, double size)
 {
   LineElementOptions* ops = (LineElementOptions*)ops_;
 
   LinePen* penPtr = NORMALPEN(ops);
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
+  cerr << size << endl;
   if (penOps->traceWidth > 0) {
     // Draw an extra line offset by one pixel from the previous to give a
     // thicker appearance.  This is only for the legend entry.  This routine
     // is never called for drawing the actual line segments.
     psPtr->setLineAttributes(penOps->traceColor, penOps->traceWidth, 
 			      &penOps->traceDashes, CapButt, JoinMiter);
-    psPtr->format("%g %g %d Li\n", x, y, size + size);
+    psPtr->format("%g %g %g Li\n", x, y, size + size);
   }
 
   if (penOps->symbol.type != SYMBOL_NONE) {
@@ -911,7 +911,7 @@ double LineElement::distanceToY(int x, int y, Point2d *p, Point2d *q,
   return fabs(d);
 }
 
-int LineElement::scaleSymbol(int normalSize)
+double LineElement::scaleSymbol(double normalSize)
 {
   LineElementOptions* ops = (LineElementOptions*)ops_;
 
@@ -931,14 +931,11 @@ int LineElement::scaleSymbol(int normalSize)
       scale = MIN(xScale, yScale);
     }
   }
-  int newSize = (int)(normalSize * scale);
+  double newSize = normalSize * scale;
 
-  int maxSize = MIN(graphPtr_->hRange_, graphPtr_->vRange_);
+  double maxSize = MIN(graphPtr_->hRange_, graphPtr_->vRange_);
   if (newSize > maxSize)
     newSize = maxSize;
-
-  // Make the symbol size odd so that its center is a single pixel.
-  newSize |= 0x01;
 
   return newSize;
 }
@@ -1931,14 +1928,14 @@ void LineElement::closestPoint(ClosestSearch *searchPtr)
   }
 }
 
-void LineElement::drawCircle(Display *display, Drawable drawable, 
-			     LinePen* penPtr, 
-			     int nSymbolPts, Point2d *symbolPts, int radius)
+void LineElement::drawCircle(Display *display, Drawable drawable,
+			     LinePen* penPtr, int nSymbolPts,
+			     Point2d *symbolPts, double radius)
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
   int count = 0;
-  int s = radius + radius;
+  double s = radius + radius;
   XArc* arcs = new XArc[nSymbolPts];
   XArc *ap = arcs;
   for (Point2d *pp=symbolPts, *pend=pp+nSymbolPts; pp<pend; pp++) {
@@ -1970,11 +1967,11 @@ void LineElement::drawCircle(Display *display, Drawable drawable,
 
 void LineElement::drawSquare(Display *display, Drawable drawable, 
 			     LinePen* penPtr, 
-			     int nSymbolPts, Point2d *symbolPts, int r)
+			     int nSymbolPts, Point2d *symbolPts, double r)
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
-  int s = r + r;
+  double s = r + r;
   int count =0;
   Rectangle* rectangles = new Rectangle[nSymbolPts];
   Rectangle* rp=rectangles;
@@ -1990,7 +1987,7 @@ void LineElement::drawSquare(Display *display, Drawable drawable,
     symbolCounter_++;
   }
 
-  for (Rectangle *rp=rectangles, *rend=rp+count; rp<rend; rp ++) {
+  for (Rectangle *rp=rectangles, *rend=rp+count; rp<rend; rp++) {
     if (penOps->symbol.fillGC)
       XFillRectangle(display, drawable, penOps->symbol.fillGC,
 		     rp->x, rp->y, rp->width, rp->height);
@@ -2005,7 +2002,7 @@ void LineElement::drawSquare(Display *display, Drawable drawable,
 
 void LineElement::drawSCross(Display* display, Drawable drawable, 
 			     LinePen* penPtr, 
-			     int nSymbolPts, Point2d* symbolPts, int r2)
+			     int nSymbolPts, Point2d* symbolPts, double r2)
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
@@ -2023,8 +2020,8 @@ void LineElement::drawSCross(Display* display, Drawable drawable,
 
   for (Point2d *pp=symbolPts, *endp=pp+nSymbolPts; pp<endp; pp++) {
     if (DRAW_SYMBOL()) {
-      int rndx = (int)pp->x;
-      int rndy = (int)pp->y;
+      double rndx = pp->x;
+      double rndy = pp->y;
       XDrawLine(graphPtr_->display_, drawable, penOps->symbol.outlineGC,
 		pattern[0].x + rndx, pattern[0].y + rndy,
 		pattern[1].x + rndx, pattern[1].y + rndy);
@@ -2037,7 +2034,7 @@ void LineElement::drawSCross(Display* display, Drawable drawable,
 
 void LineElement::drawCross(Display *display, Drawable drawable, 
 			    LinePen* penPtr, 
-			    int nSymbolPts, Point2d *symbolPts, int r2)
+			    int nSymbolPts, Point2d *symbolPts, double r2)
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
@@ -2050,7 +2047,7 @@ void LineElement::drawCross(Display *display, Drawable drawable,
    *                      last points.
    *          9   8
    */
-  int d = (r2 / 3);
+  double d = (r2 / 3);
   Point2d pattern[13];
   pattern[0].x = pattern[11].x = pattern[12].x = -r2;
   pattern[2].x = pattern[1].x = pattern[10].x = pattern[9].x = -d;
@@ -2078,11 +2075,11 @@ void LineElement::drawCross(Display *display, Drawable drawable,
   XPoint* xpp = polygon;
   for (Point2d *pp = symbolPts, *endp = pp + nSymbolPts; pp < endp; pp++) {
     if (DRAW_SYMBOL()) {
-      int rndx = (int)pp->x;
-      int rndy = (int)pp->y;
+      double rndx = pp->x;
+      double rndy = pp->y;
       for (int ii=0; ii<13; ii++) {
-	xpp->x = (short)(pattern[ii].x + rndx);
-	xpp->y = (short)(pattern[ii].y + rndy);
+	xpp->x = (pattern[ii].x + rndx);
+	xpp->y = (pattern[ii].y + rndy);
 	xpp++;
       }
       count++;
@@ -2110,7 +2107,7 @@ void LineElement::drawCross(Display *display, Drawable drawable,
 
 void LineElement::drawDiamond(Display *display, Drawable drawable, 
 			      LinePen* penPtr, 
-			      int nSymbolPts, Point2d *symbolPts, int r1)
+			      int nSymbolPts, Point2d *symbolPts, double r1)
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
@@ -2133,11 +2130,11 @@ void LineElement::drawDiamond(Display *display, Drawable drawable,
   XPoint* xpp = polygon;
   for (Point2d *pp = symbolPts, *endp = pp + nSymbolPts; pp < endp; pp++) {
     if (DRAW_SYMBOL()) {
-      int rndx = (int)pp->x;
-      int rndy = (int)pp->y;
+      double rndx = (int)pp->x;
+      double rndy = (int)pp->y;
       for (int ii=0; ii<5; ii++) {
-	xpp->x = (short)(pattern[ii].x + rndx);
-	xpp->y = (short)(pattern[ii].y + rndy);
+	xpp->x = (pattern[ii].x + rndx);
+	xpp->y = (pattern[ii].y + rndy);
 	xpp++;
       }
       count++;
@@ -2167,14 +2164,14 @@ void LineElement::drawDiamond(Display *display, Drawable drawable,
 #define COS30		0.86602540378443871
 void LineElement::drawArrow(Display *display, Drawable drawable, 
 			    LinePen* penPtr, 
-			    int nSymbolPts, Point2d *symbolPts, int size)
+			    int nSymbolPts, Point2d *symbolPts, double size)
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
 
   double b = size * B_RATIO * 0.7 * 0.5;
-  short b2 = (short)b;
-  short h2 = (short)(TAN30 * b);
-  short h1 = (short)(b / COS30);
+  double b2 = b;
+  double h2 = (TAN30 * b);
+  double h1 = (b / COS30);
   /*
    *                      The triangle symbol is a closed polygon
    *           0,3         of 3 points. The diagram to the left
@@ -2204,11 +2201,11 @@ void LineElement::drawArrow(Display *display, Drawable drawable,
   XPoint* xpp = polygon;
   for (Point2d *pp = symbolPts, *endp = pp + nSymbolPts; pp < endp; pp++) {
     if (DRAW_SYMBOL()) {
-      int rndx = (int)pp->x;
-      int rndy = (int)pp->y;
+      double rndx = pp->x;
+      double rndy = pp->y;
       for (int ii=0; ii<4; ii++) {
-	xpp->x = (short)(pattern[ii].x + rndx);
-	xpp->y = (short)(pattern[ii].y + rndy);
+	xpp->x = (pattern[ii].x + rndx);
+	xpp->y = (pattern[ii].y + rndy);
 	xpp++;
       }
       count++;
@@ -2234,7 +2231,7 @@ void LineElement::drawArrow(Display *display, Drawable drawable,
 }
 
 #define S_RATIO		0.886226925452758
-void LineElement::drawSymbols(Drawable drawable, LinePen* penPtr, int size,
+void LineElement::drawSymbols(Drawable drawable, LinePen* penPtr, double size,
 			      int nSymbolPts, Point2d* symbolPts)
 {
   LinePenOptions* penOps = (LinePenOptions*)penPtr->ops();
@@ -2243,13 +2240,13 @@ void LineElement::drawSymbols(Drawable drawable, LinePen* penPtr, int size,
     if (penOps->symbol.fillGC) {
       for (Point2d *pp = symbolPts, *endp = pp + nSymbolPts; pp < endp; pp++)
 	XDrawLine(graphPtr_->display_, drawable, penOps->symbol.fillGC, 
-		  (int)pp->x, (int)pp->y, (int)pp->x+1, (int)pp->y+1);
+		  pp->x, pp->y, pp->x+1, pp->y+1);
     }
     return;
   }
 
-  int r1 = (int)ceil(size * 0.5);
-  int r2 = (int)ceil(size * S_RATIO * 0.5);
+  double r1 = size * 0.5;
+  double r2 = size * S_RATIO * 0.5;
 
   switch (penOps->symbol.type) {
   case SYMBOL_NONE:
@@ -2331,7 +2328,7 @@ void LineElement::drawValues(Drawable drawable, LinePen* penPtr,
   } 
 }
 
-void LineElement::printSymbols(PSOutput* psPtr, LinePen* penPtr, int size,
+void LineElement::printSymbols(PSOutput* psPtr, LinePen* penPtr, double size,
 			       int nSymbolPts, Point2d *symbolPts)
 {
   LinePenOptions* pops = (LinePenOptions*)penPtr->ops();
@@ -2414,8 +2411,7 @@ void LineElement::setLineAttributes(PSOutput* psPtr, LinePen* penPtr)
   psPtr->setLineAttributes(pops->traceColor, pops->traceWidth, 
 			   &pops->traceDashes, CapButt, JoinMiter);
 
-  if ((LineIsDashed(pops->traceDashes)) && 
-      (pops->traceOffColor)) {
+  if ((LineIsDashed(pops->traceDashes)) && (pops->traceOffColor)) {
     psPtr->append("/DashesProc {\n  gsave\n    ");
     psPtr->setBackground(pops->traceOffColor);
     psPtr->append("    ");

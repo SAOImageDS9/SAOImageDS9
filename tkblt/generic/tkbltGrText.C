@@ -128,7 +128,7 @@ void TextStyle::drawTextBBox(Drawable drawable, const char *text,
   }
 }
 
-void TextStyle::printText(PSOutput* psPtr, const char *text, int x, int y)
+void TextStyle::printText(PSOutput* psPtr, const char *text, double x, double y)
 {
   TextStyleOptions* ops = (TextStyleOptions*)ops_;
 
@@ -163,16 +163,12 @@ void TextStyle::printText(PSOutput* psPtr, const char *text, int x, int y)
   psPtr->setFont(ops->font);
   psPtr->setForeground(ops->color);
 
-  psPtr->format("%g %d %d [\n", ops->angle, x, y);
+  psPtr->format("%g %g %g [\n", ops->angle, x, y);
   Tcl_ResetResult(graphPtr_->interp_);
   Tk_TextLayoutToPostscript(graphPtr_->interp_, layout);
   psPtr->append(Tcl_GetStringResult(graphPtr_->interp_));
   Tcl_ResetResult(graphPtr_->interp_);
   psPtr->format("] %g %g %s DrawText\n", xx/-2.0, yy/-2.0, justify);
-}
-
-void TextStyle::printText(PSOutput* psPtr, const char *text, double x, double y) {
-  return printText(psPtr, text, (int)x, (int)y);
 }
 
 void TextStyle::resetStyle()

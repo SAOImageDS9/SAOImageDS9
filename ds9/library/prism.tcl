@@ -155,8 +155,8 @@ proc PrismDialog {varname} {
 	-height 10 \
 	-yscrollcommand [list $f.yscroll set] \
 	-xscrollcommand [list $f.xscroll set] \
-	-fg [ThemeForeground] \
-	-bg [ThemeBackground] \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground] \
 	-state normal
     
     ttk::scrollbar $f.yscroll \
@@ -203,8 +203,8 @@ proc PrismDialog {varname} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list PrismSelectCmd $varname %s %S] \
-		      -fg [ThemeForeground] \
-		      -bg [ThemeBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		     ]
 
     $var(tbl) tag configure sel \

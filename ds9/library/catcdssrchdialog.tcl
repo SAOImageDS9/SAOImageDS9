@@ -206,8 +206,8 @@ proc CATCDSSrchDialog {varname} {
 		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -fg [ThemeForeground] \
-		      -bg [ThemeBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		     ]
 
     $var(tbl) tag configure sel \

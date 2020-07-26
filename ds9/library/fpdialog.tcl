@@ -255,8 +255,8 @@ proc FPDialog {varname title url instr format action} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list FPSelectCmd $varname %s %S] \
-		      -fg [ThemeForeground] \
-		      -bg [ThemeBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		     ]
 
     $var(tbl) tag configure sel \

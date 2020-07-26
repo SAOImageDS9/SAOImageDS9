@@ -426,8 +426,8 @@ proc CATDialog {varname format catalog title action} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list CATSelectCmd $varname %s %S] \
-		      -fg [ThemeForeground] \
-		      -bg [ThemeBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		     ]
 
     $var(tbl) tag configure sel \

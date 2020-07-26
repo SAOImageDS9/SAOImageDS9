@@ -216,8 +216,8 @@ proc CATSymDialog {parent} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list CATSymSelectCB $varname] \
-		      -fg [ThemeForeground] \
-		      -bg [ThemeBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		 ]
 
     $var(tbl) tag configure sel \

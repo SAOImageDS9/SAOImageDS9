@@ -187,8 +187,8 @@ proc SIADialog {varname title url opts action} {
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list SIASelectCmd $varname %s %S] \
-		      -fg [ThemeForeground] \
-		      -bg [ThemeBackground] \
+		      -fg [ThemeTreeForeground] \
+		      -bg [ThemeTreeBackground] \
 		     ]
 
     $var(tbl) tag configure sel \

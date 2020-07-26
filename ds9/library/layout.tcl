@@ -121,7 +121,7 @@ proc CreateCanvas {} {
     set ds9(canvas) [canvas $ds9(image).c -width $ww -height $hh \
 			 -highlightthickness 0 \
 			 -insertofftime 0 \
-			 -bg [ThemeBackground] \
+			 -bg [ThemeTreeBackground] \
 			]
     grid rowconfigure $ds9(image) 0 -weight 1
     grid columnconfigure $ds9(image) 0 -weight 1
@@ -130,10 +130,10 @@ proc CreateCanvas {} {
     # extra space for window tab
     set ds9(canvas,bottom) {}
     if {$canvas(gap,bottom)>0} {
-	set ds9(canvas,bottom) [frame $ds9(image).b \
+	set ds9(canvas,bottom) [ttk::frame $ds9(image).b \
 				    -width 1 \
 				    -height $canvas(gap,bottom) \
-				    -bg [ThemeBackground] \
+				    -style Tree.TFrame \
 				   ]
 	grid $ds9(canvas,bottom) -row 1 -column 0 -sticky ew
     }
@@ -142,13 +142,7 @@ proc CreateCanvas {} {
     grid $ds9(image)
 
     switch $ds9(wm) {
-	x11 {
-	    bind $ds9(canvas) <<ThemeChanged>> {ThemeConfigCanvas %W}
-	    if {$ds9(canvas,bottom) != {}} {
-		bind $ds9(canvas,bottom) <<ThemeChanged>> \
-		    {ThemeConfigCanvasBottom %W}
-	    }
-	}
+	x11 {bind $ds9(canvas) <<ThemeChanged>> {ThemeConfigCanvas %W}}
 	aqua -
 	win32 {}
     }
@@ -157,27 +151,23 @@ proc CreateCanvas {} {
 proc ThemeConfigCanvas {w} {
     global ds9
     
-    $w configure -bg [ThemeBackground]
+    $w configure -bg [ThemeTreeBackground]
 
-    $w itemconfigure colorbar -fg [ThemeForeground]
-    $w itemconfigure colorbar -bg [ThemeBackground]
+    $w itemconfigure colorbar -fg [ThemeTreeForeground]
+    $w itemconfigure colorbar -bg [ThemeTreeBackground]
 
-    $w itemconfigure colorbarrgb -fg [ThemeForeground]
-    $w itemconfigure colorbarrgb -bg [ThemeBackground]
+    $w itemconfigure colorbarrgb -fg [ThemeTreeForeground]
+    $w itemconfigure colorbarrgb -bg [ThemeTreeBackground]
 
     foreach ff $ds9(frames) {
-	$w itemconfigure $ff -fg [ThemeForeground]
-	$w itemconfigure $ff -bg [ThemeBackground]
+	$w itemconfigure $ff -fg [ThemeTreeForeground]
+	$w itemconfigure $ff -bg [ThemeTreeBackground]
     }
 
     # since graphs are created, but maybe not realized
     # must update manually
     ThemeConfigGraph $ds9(graph,horz)
     ThemeConfigGraph $ds9(graph,vert)
-}
-
-proc ThemeConfigCanvasBottom {w} {
-    $w configure -bg [ThemeBackground]
 }
 
 proc InitCanvas {} {

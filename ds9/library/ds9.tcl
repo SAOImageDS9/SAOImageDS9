@@ -274,6 +274,10 @@ switch $ds9(wm) {
 	}
 	ttk::style theme use default
 
+	# special frame style
+	ttk::style configure Tree.TFrame \
+	    -background [ttk::style lookup Treeview -background]
+
 	# fix ::tk::dialog::file
 	set ::tk::dialog::file::showHiddenVar 0
 	set ::tk::dialog::file::showHiddenBtn 1

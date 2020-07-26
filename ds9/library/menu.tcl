@@ -43,9 +43,25 @@ proc CreateMenuBar {} {
 
     switch $ds9(wm) {
 	x11 {
+	    bind TFrame <<ThemeChanged>> {ThemeConfigTFrame %W}
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
+	    bind Text <<ThemeChanged>> {ThemeConfigFgBg %W}
 	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
-	    bind Text <<ThemeChanged>> {ThemeConfigText %W}
+
+	    # for Obsvis
+	    bind Frame <<ThemeChanged>> {ThemeConfigBg %W}
+	    bind Labelframe <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Panedwindow <<ThemeChanged>> {ThemeConfigBg %W}
+	    bind Label <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Entry <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Button <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Radiobutton <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Checkbutton <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Menubutton <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Listbox <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Spinbox <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Scale <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Scrollbar <<ThemeChanged>> {ThemeConfigBg %W}
 	}
 	aqua -
 	win32 {}
@@ -63,6 +79,20 @@ proc ThemeMenu {w} {
     }
 
     return $w
+}
+
+proc ThemeConfigFgBg {w} {
+    $w configure -fg [ThemeForeground]
+    $w configure -bg [ThemeBackground]
+}
+
+proc ThemeConfigBg {w} {
+    $w configure -bg [ThemeBackground]
+}
+
+proc ThemeConfigTFrame {w} {
+    ttk::style configure Tree.TFrame -background \
+	[ttk::style lookup Treeview -background]
 }
 
 proc ThemeConfigMenu {w} {
@@ -110,8 +140,8 @@ proc ThemeConfigMenu {w} {
 }
 
 proc ThemeConfigTable {w} {
-    $w configure -fg [ThemeForeground]
-    $w configure -bg [ThemeBackground]
+    $w configure -fg [ThemeTreeForeground]
+    $w configure -bg [ThemeTreeBackground]
 
     $w tag configure sel \
 	-fg [ThemeForegroundSelected] -bg [ThemeBackgroundSelected]
@@ -119,15 +149,41 @@ proc ThemeConfigTable {w} {
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 }
 
-proc ThemeConfigText {w} {
-    $w configure -fg [ThemeForeground]
-    $w configure -bg [ThemeBackground]
-
-    # header
-    # $w tag configure keyword -foreground [ThemeSelectBackground]
+proc ThemeForeground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set fg [ttk::style lookup . -foreground]
+	    if {$fg != {}} {
+		return $fg
+	    } else {
+		return $ds9(foreground)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(foreground)}
+    }
 }
 
-proc ThemeForeground {} {
+proc ThemeBackground {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set bg [ttk::style lookup . -background]
+	    if {$bg != {}} {
+		return $bg
+	    } else {
+		return $ds9(background)
+	    }
+	}
+	aqua -
+	win32 {return $ds9(background)}
+    }
+}
+
+proc ThemeTreeForeground {} {
     global ds9
     
     switch $ds9(wm) {
@@ -144,7 +200,7 @@ proc ThemeForeground {} {
     }
 }
 
-proc ThemeBackground {} {
+proc ThemeTreeBackground {} {
     global ds9
     
     switch $ds9(wm) {

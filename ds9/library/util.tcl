@@ -858,7 +858,7 @@ proc AboutBox {} {
     DialogCreate $w [msgcat::mc {About SAOImageDS9}] ed(ok)
 
     # Param
-    set f [frame $w.param -background white]
+    set f [ttk::frame $w.param]
     canvas $f.c -background white -height 450 -width 500
     pack $f.c -fill both -expand true
     

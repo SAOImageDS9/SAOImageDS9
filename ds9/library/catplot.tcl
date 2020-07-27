@@ -111,6 +111,7 @@ proc CATPlotGenerate {varname} {
     if {![PlotPing $vvarname]} {
 	PlotDialog $vvarname $var(title)
 	PlotAddGraph $vvarname scatter
+	set vvar(theme) 1
 
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname

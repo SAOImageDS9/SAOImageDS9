@@ -44,9 +44,12 @@ proc CreateMenuBar {} {
     switch $ds9(wm) {
 	x11 {
 	    bind TFrame <<ThemeChanged>> {ThemeConfigTFrame %W}
+
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
 	    bind Text <<ThemeChanged>> {ThemeConfigFgBg %W}
 	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
+	    bind Graph <<ThemeChanged>> {ThemeConfigPlot %W}
+	    bind Barchart <<ThemeChanged>> {ThemeConfigPlot %W}
 
 	    # for Obsvis
 	    bind Frame <<ThemeChanged>> {ThemeConfigBg %W}
@@ -144,10 +147,23 @@ proc ThemeConfigTable {w} {
     $w configure -bg [ThemeTreeBackground]
 
     $w tag configure sel \
-	-fg [ThemeForegroundSelected] -bg [ThemeBackgroundSelected]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $w tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 }
+
+proc ThemeConfigPlot {w} {
+    set varname [lindex [split $w {.}] 1]
+    if {$varname != {}} {
+	upvar #0 $varname var
+	global $varname
+	if {[info exists $varname]} {
+	    PlotChangeTheme $varname
+	}
+    }
+}
+
+# Theme Style Colors
 
 proc ThemeForeground {} {
     global ds9
@@ -217,7 +233,7 @@ proc ThemeTreeBackground {} {
     }
 }
 
-proc ThemeForegroundSelected {} {
+proc ThemeTreeForegroundSelected {} {
     global ds9
     
     switch $ds9(wm) {
@@ -234,7 +250,7 @@ proc ThemeForegroundSelected {} {
     }
 }
 
-proc ThemeBackgroundSelected {} {
+proc ThemeTreeBackgroundSelected {} {
     global ds9
     
     switch $ds9(wm) {

@@ -10,7 +10,6 @@
 ::msgcat::mcset da {Add Graph} 
 ::msgcat::mcset da {Add} [encoding convertfrom iso8859-1 {Tilføj}]
 ::msgcat::mcset da {Advanced} {Avanceret}
-::msgcat::mcset da {Aligned} 
 ::msgcat::mcset da {Align} {Juster}
 ::msgcat::mcset da {All Columns} {Alle søjler}
 ::msgcat::mcset da {All Rows} [encoding convertfrom iso8859-1 {Alle rækker}]
@@ -71,7 +70,6 @@
 ::msgcat::mcset da {Background} {Baggrund}
 ::msgcat::mcset da {Backup} 
 ::msgcat::mcset da {Back} {Tilbage}
-::msgcat::mcset da {Bar Mode} 
 ::msgcat::mcset da {Bar Plot Tool} 
 ::msgcat::mcset da {Bar} 
 ::msgcat::mcset da {Bias} {Bias}
@@ -80,7 +78,6 @@
 ::msgcat::mcset da {Bin Columns} [encoding convertfrom iso8859-1 {Bin søjler}]
 ::msgcat::mcset da {Bin Filter} {Bin filter}
 ::msgcat::mcset da {Bin Fit} 
-::msgcat::mcset da {Bin Image} 
 ::msgcat::mcset da {Bin In} 
 ::msgcat::mcset da {Bin Out} 
 ::msgcat::mcset da {Binning Parameters} {Parameter binning}
@@ -315,7 +312,6 @@
 ::msgcat::mcset da {First} [encoding convertfrom iso8859-1 {Første}]
 ::msgcat::mcset da {Fits} 
 ::msgcat::mcset da {Fixed in Size} [encoding convertfrom iso8859-1 {Fastlåst størrelse}]
-::msgcat::mcset da {Flat} 
 ::msgcat::mcset da {Font} {Skrifttype}
 ::msgcat::mcset da {Footprint Servers} 
 ::msgcat::mcset da {Footprint} 
@@ -355,7 +351,6 @@
 ::msgcat::mcset da {Green} [encoding convertfrom iso8859-1 {Grøn}]
 ::msgcat::mcset da {Grid Gap} {Mellemrum i nettet}
 ::msgcat::mcset da {Grid} {Net}
-::msgcat::mcset da {Groove} 
 ::msgcat::mcset da {Groups} {Gupper}
 ::msgcat::mcset da {HMS} 
 ::msgcat::mcset da {HTTP} {HTTP}
@@ -627,7 +622,6 @@
 ::msgcat::mcset da {Other Font Size} 
 ::msgcat::mcset da {Other} {Anden}
 ::msgcat::mcset da {Outer} {Ydre}
-::msgcat::mcset da {Overlap} 
 ::msgcat::mcset da {Overplot} 
 ::msgcat::mcset da {PNG} 
 ::msgcat::mcset da {PS Page Setup} {PS side opsætning}
@@ -698,7 +692,6 @@
 ::msgcat::mcset da {RGB} 
 ::msgcat::mcset da {Radial Profile} 
 ::msgcat::mcset da {Radius} 
-::msgcat::mcset da {Raised} 
 ::msgcat::mcset da {Range} 
 ::msgcat::mcset da {Redo} {Gentag sidste}
 ::msgcat::mcset da {Red} [encoding convertfrom iso8859-1 {Rød}]
@@ -710,7 +703,6 @@
 ::msgcat::mcset da {Region} [encoding convertfrom iso8859-1 {Område}]
 ::msgcat::mcset da {Release Notes} {Frigvelsesnoter}
 ::msgcat::mcset da {Release} {Frigivelsesnoter}
-::msgcat::mcset da {Relief} 
 ::msgcat::mcset da {Reload} {Genhent}
 ::msgcat::mcset da {Render} 
 ::msgcat::mcset da {Repeat} 
@@ -798,7 +790,6 @@
 ::msgcat::mcset da {Smooth Parameters} {Udglatningsparametre}
 ::msgcat::mcset da {Smoothness} 
 ::msgcat::mcset da {Smooth} {Udglat}
-::msgcat::mcset da {Solid} 
 ::msgcat::mcset da {Sorry, DS9 does not support} [encoding convertfrom iso8859-1 {DS9 understøtter ikke}]
 ::msgcat::mcset da {Sorry, DS9 requires a Truecolor8, Truecolor16, Truecolor24 visual be available} 
 ::msgcat::mcset da {Sort} {Sorter}
@@ -811,7 +802,6 @@
 ::msgcat::mcset da {Square Root} {Kvadratrod}
 ::msgcat::mcset da {Squared} {Kvadratisk}
 ::msgcat::mcset da {Square} 
-::msgcat::mcset da {Stacked} 
 ::msgcat::mcset da {Starbase} 
 ::msgcat::mcset da {Startup} 
 ::msgcat::mcset da {Start} 
@@ -824,7 +814,6 @@
 ::msgcat::mcset da {Strip Parameters} 
 ::msgcat::mcset da {Strip} 
 ::msgcat::mcset da {Sum} 
-::msgcat::mcset da {Sunken} 
 ::msgcat::mcset da {Symbol Editor} 
 ::msgcat::mcset da {Symbol} 
 ::msgcat::mcset da {TIFF} 
@@ -867,6 +856,7 @@
 ::msgcat::mcset da {Unable to find catalog window} {Kan ikke finde katalog vinduet}
 ::msgcat::mcset da {Unable to find plot window} {kan ikke finde plotte vinduet}
 ::msgcat::mcset da {Unable to find web window} 
+::msgcat::mcset da {Unable to generate plot} 
 ::msgcat::mcset da {Unable to load RGB image into a non-rgb frame} {Kan ikke hente et RGB billede ind i en ikke-RGB ramme}
 ::msgcat::mcset da {Unable to load compressed region file} 
 ::msgcat::mcset da {Unable to load plot data} 
@@ -897,6 +887,7 @@
 ::msgcat::mcset da {Use Internal Web Browser} {Brug intern web browser}
 ::msgcat::mcset da {Use Original Color/Width} 
 ::msgcat::mcset da {Use Proxy} {Anvend proxy}
+::msgcat::mcset da {Use Theme} 
 ::msgcat::mcset da {Use background color instead of theme color} 
 ::msgcat::mcset da {User Manual} 
 ::msgcat::mcset da {Username} {Brugernavn}
@@ -952,6 +943,7 @@
 ::msgcat::mcset da {b} 
 ::msgcat::mcset da {color} 
 ::msgcat::mcset da {cool} 
+::msgcat::mcset da {file not found} 
 ::msgcat::mcset da {green} 
 ::msgcat::mcset da {grey} [encoding convertfrom iso8859-1 {grå}]
 ::msgcat::mcset da {g} 

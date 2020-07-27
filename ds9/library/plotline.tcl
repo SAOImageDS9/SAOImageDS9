@@ -221,16 +221,32 @@ proc PlotLineUpdateElement {varname} {
  	return
     }
     
+    if {$var(theme)} {
+	set color [ThemeTreeBackgroundSelected]
+	set shapecolor [ThemeTreeBackgroundSelected]
+    } else {
+	set color $var(graph,ds,color)
+	set shapecolor $var(graph,ds,shape,color)
+    }
+
     if {$var(graph,ds,fill)} {
-	set fillColor $var(graph,ds,fill,color)
+	if {$var(theme)} {
+	    set fillColor [ThemeTreeBackgroundSelected]
+	} else {
+	    set fillColor $var(graph,ds,fill,color)
+	}
     } else {
 	set fillColor {}
     }
 
     if {$var(graph,ds,shape,fill)} {
-	set color $var(graph,ds,shape,color)
+	if {$var(theme)} {
+	    set shapefillcolor [ThemeTreeForegroundSelected]
+	} else {
+	    set shapefillcolor $var(graph,ds,shape,color)
+	}
     } else {
-	set color {}
+	set shapefillcolor {}
     }
 
     if {$var(graph,ds,dash)} {
@@ -256,13 +272,13 @@ proc PlotLineUpdateElement {varname} {
 	-label $var(graph,ds,name) \
 	-hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) \
-	-fill $color \
+	-color $color \
+	-areabackground $fillColor \
+	-fill $shapefillcolor \
+	-outline $shapecolor \
 	-scalesymbols no \
 	-pixels 5 \
-	-outline $var(graph,ds,shape,color) \
 	-smooth $var(graph,ds,smooth) \
-	-color $var(graph,ds,color) \
-	-areabackground $fillColor \
 	-linewidth $var(graph,ds,width) \
 	-dashes $dash \
 	-showerrorbars $show \

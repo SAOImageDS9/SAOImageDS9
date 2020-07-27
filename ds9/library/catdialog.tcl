@@ -431,7 +431,7 @@ proc CATDialog {varname format catalog title action} {
 		     ]
 
     $var(tbl) tag configure sel \
-	-fg [ThemeForegroundSelected] -bg [ThemeBackgroundSelected]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $var(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 

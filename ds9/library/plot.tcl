@@ -408,6 +408,14 @@ proc PlotChangeTitle {varname} {
     }
 }
 
+proc PlotChangeTheme {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(graph,proc,updateelement) $varname
+    PlotUpdateCanvas $varname
+}
+
 # used by backup
 proc PlotChangeMode {varname} {
     upvar #0 $varname var
@@ -535,7 +543,13 @@ proc PlotBGColor {varname} {
 
     global ds9
     switch $ds9(wm) {
-	x11 -
+	x11 {
+	    if {$var(theme)} {
+		return [ThemeTreeBackground]
+	    } else {
+		return $var(background)
+	    }
+	}
 	win32 {return $var(background)}
 	aqua {
 	    switch $var(background) {
@@ -552,7 +566,13 @@ proc PlotFGColor {varname} {
 
     global ds9
     switch $ds9(wm) {
-	x11 -
+	x11 {
+	    if {$var(theme)} {
+		return [ThemeTreeForeground]
+	    } else {
+		return $var(foreground)
+	    }
+	}
 	win32 {return $var(foreground)}
 	aqua {
 	    switch $var(foreground) {

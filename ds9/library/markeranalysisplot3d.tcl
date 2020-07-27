@@ -162,6 +162,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	PlotAddGraph $vvarname line
 
 	MarkerAnalysisPlot3dAxisTitle $vvarname
+	set vvar(theme) 1
 
 	set vvar(markerslice) [$vvar(graph) marker create line -element bar1 \
 			     -outline cyan -linewidth 2 \

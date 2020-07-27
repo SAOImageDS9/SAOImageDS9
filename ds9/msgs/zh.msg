@@ -10,7 +10,6 @@
 ::msgcat::mcset zh {Add Graph} 
 ::msgcat::mcset zh {Add} 
 ::msgcat::mcset zh {Advanced} 
-::msgcat::mcset zh {Aligned} 
 ::msgcat::mcset zh {Align} [encoding convertfrom big5 "\xB9\xEF \xBB\xF4 \xA4\xE8 \xA6\xEC"]
 ::msgcat::mcset zh {All Columns} 
 ::msgcat::mcset zh {All Rows} 
@@ -71,7 +70,6 @@
 ::msgcat::mcset zh {Background} 
 ::msgcat::mcset zh {Backup} 
 ::msgcat::mcset zh {Back} 
-::msgcat::mcset zh {Bar Mode} 
 ::msgcat::mcset zh {Bar Plot Tool} 
 ::msgcat::mcset zh {Bar} 
 ::msgcat::mcset zh {Bias} 
@@ -80,7 +78,6 @@
 ::msgcat::mcset zh {Bin Columns} 
 ::msgcat::mcset zh {Bin Filter} 
 ::msgcat::mcset zh {Bin Fit} 
-::msgcat::mcset zh {Bin Image} 
 ::msgcat::mcset zh {Bin In} 
 ::msgcat::mcset zh {Bin Out} 
 ::msgcat::mcset zh {Binning Parameters} 
@@ -315,7 +312,6 @@
 ::msgcat::mcset zh {First} 
 ::msgcat::mcset zh {Fits} 
 ::msgcat::mcset zh {Fixed in Size} [encoding convertfrom big5 "\xA9\x54 \xA9\x77 \xA4\x6A \xA4\x70"]
-::msgcat::mcset zh {Flat} 
 ::msgcat::mcset zh {Font} 
 ::msgcat::mcset zh {Footprint Servers} 
 ::msgcat::mcset zh {Footprint} 
@@ -355,7 +351,6 @@
 ::msgcat::mcset zh {Green} 
 ::msgcat::mcset zh {Grid Gap} 
 ::msgcat::mcset zh {Grid} 
-::msgcat::mcset zh {Groove} 
 ::msgcat::mcset zh {Groups} 
 ::msgcat::mcset zh {HMS} 
 ::msgcat::mcset zh {HTTP} 
@@ -627,7 +622,6 @@
 ::msgcat::mcset zh {Other Font Size} 
 ::msgcat::mcset zh {Other} [encoding convertfrom big5 "\xA8\xE4 \xA5\xA6"]
 ::msgcat::mcset zh {Outer} 
-::msgcat::mcset zh {Overlap} 
 ::msgcat::mcset zh {Overplot} 
 ::msgcat::mcset zh {PNG} 
 ::msgcat::mcset zh {PS Page Setup} 
@@ -698,7 +692,6 @@
 ::msgcat::mcset zh {RGB} 
 ::msgcat::mcset zh {Radial Profile} 
 ::msgcat::mcset zh {Radius} 
-::msgcat::mcset zh {Raised} 
 ::msgcat::mcset zh {Range} 
 ::msgcat::mcset zh {Redo} 
 ::msgcat::mcset zh {Red} 
@@ -710,7 +703,6 @@
 ::msgcat::mcset zh {Region} [encoding convertfrom big5 "\xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Release Notes} 
 ::msgcat::mcset zh {Release} 
-::msgcat::mcset zh {Relief} 
 ::msgcat::mcset zh {Reload} 
 ::msgcat::mcset zh {Render} 
 ::msgcat::mcset zh {Repeat} 
@@ -798,7 +790,6 @@
 ::msgcat::mcset zh {Smooth Parameters} 
 ::msgcat::mcset zh {Smoothness} 
 ::msgcat::mcset zh {Smooth} 
-::msgcat::mcset zh {Solid} 
 ::msgcat::mcset zh {Sorry, DS9 does not support} 
 ::msgcat::mcset zh {Sorry, DS9 requires a Truecolor8, Truecolor16, Truecolor24 visual be available} 
 ::msgcat::mcset zh {Sort} 
@@ -811,7 +802,6 @@
 ::msgcat::mcset zh {Square Root} 
 ::msgcat::mcset zh {Squared} 
 ::msgcat::mcset zh {Square} 
-::msgcat::mcset zh {Stacked} 
 ::msgcat::mcset zh {Starbase} 
 ::msgcat::mcset zh {Startup} 
 ::msgcat::mcset zh {Start} 
@@ -824,7 +814,6 @@
 ::msgcat::mcset zh {Strip Parameters} 
 ::msgcat::mcset zh {Strip} 
 ::msgcat::mcset zh {Sum} 
-::msgcat::mcset zh {Sunken} 
 ::msgcat::mcset zh {Symbol Editor} 
 ::msgcat::mcset zh {Symbol} 
 ::msgcat::mcset zh {TIFF} 
@@ -867,6 +856,7 @@
 ::msgcat::mcset zh {Unable to find catalog window} 
 ::msgcat::mcset zh {Unable to find plot window} 
 ::msgcat::mcset zh {Unable to find web window} 
+::msgcat::mcset zh {Unable to generate plot} 
 ::msgcat::mcset zh {Unable to load RGB image into a non-rgb frame} 
 ::msgcat::mcset zh {Unable to load compressed region file} 
 ::msgcat::mcset zh {Unable to load plot data} 
@@ -897,6 +887,7 @@
 ::msgcat::mcset zh {Use Internal Web Browser} 
 ::msgcat::mcset zh {Use Original Color/Width} 
 ::msgcat::mcset zh {Use Proxy} 
+::msgcat::mcset zh {Use Theme} 
 ::msgcat::mcset zh {Use background color instead of theme color} 
 ::msgcat::mcset zh {User Manual} 
 ::msgcat::mcset zh {Username} 
@@ -952,6 +943,7 @@
 ::msgcat::mcset zh {b} 
 ::msgcat::mcset zh {color} 
 ::msgcat::mcset zh {cool} 
+::msgcat::mcset zh {file not found} 
 ::msgcat::mcset zh {green} [encoding convertfrom big5 "\xBA\xF1"]
 ::msgcat::mcset zh {grey} [encoding convertfrom big5 "\xA6\xC7"]
 ::msgcat::mcset zh {g} 

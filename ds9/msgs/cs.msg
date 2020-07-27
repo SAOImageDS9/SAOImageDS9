@@ -10,7 +10,6 @@
 ::msgcat::mcset cs {Add Graph} 
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
-::msgcat::mcset cs {Aligned} 
 ::msgcat::mcset cs {Align} [encoding convertfrom iso8859-2 {Zarovnat}]
 ::msgcat::mcset cs {All Columns} [encoding convertfrom iso8859-2 {V¹echny sloupce}]
 ::msgcat::mcset cs {All Rows} [encoding convertfrom iso8859-2 {V¹echny øádky}]
@@ -71,7 +70,6 @@
 ::msgcat::mcset cs {Background} [encoding convertfrom iso8859-2 {Pozadí}]
 ::msgcat::mcset cs {Backup} [encoding convertfrom iso8859-2 {Záloha}]
 ::msgcat::mcset cs {Back} [encoding convertfrom iso8859-2 {Zpìt}]
-::msgcat::mcset cs {Bar Mode} 
 ::msgcat::mcset cs {Bar Plot Tool} 
 ::msgcat::mcset cs {Bar} 
 ::msgcat::mcset cs {Bias} 
@@ -80,7 +78,6 @@
 ::msgcat::mcset cs {Bin Columns} [encoding convertfrom iso8859-2 {Binuj sloupce}]
 ::msgcat::mcset cs {Bin Filter} [encoding convertfrom iso8859-2 {Filtr binování}]
 ::msgcat::mcset cs {Bin Fit} 
-::msgcat::mcset cs {Bin Image} 
 ::msgcat::mcset cs {Bin In} 
 ::msgcat::mcset cs {Bin Out} 
 ::msgcat::mcset cs {Binning Parameters} [encoding convertfrom iso8859-2 {Parametry binování}]
@@ -315,7 +312,6 @@
 ::msgcat::mcset cs {First} [encoding convertfrom iso8859-2 {První}]
 ::msgcat::mcset cs {Fits} 
 ::msgcat::mcset cs {Fixed in Size} 
-::msgcat::mcset cs {Flat} 
 ::msgcat::mcset cs {Font} [encoding convertfrom iso8859-2 {Znak}]
 ::msgcat::mcset cs {Footprint Servers} 
 ::msgcat::mcset cs {Footprint} 
@@ -355,7 +351,6 @@
 ::msgcat::mcset cs {Green} [encoding convertfrom iso8859-2 {Zelená}]
 ::msgcat::mcset cs {Grid Gap} 
 ::msgcat::mcset cs {Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]
-::msgcat::mcset cs {Groove} 
 ::msgcat::mcset cs {Groups} [encoding convertfrom iso8859-2 {Skupiny}]
 ::msgcat::mcset cs {HMS} 
 ::msgcat::mcset cs {HTTP} 
@@ -627,7 +622,6 @@
 ::msgcat::mcset cs {Other Font Size} 
 ::msgcat::mcset cs {Other} 
 ::msgcat::mcset cs {Outer} 
-::msgcat::mcset cs {Overlap} 
 ::msgcat::mcset cs {Overplot} 
 ::msgcat::mcset cs {PNG} 
 ::msgcat::mcset cs {PS Page Setup} 
@@ -698,7 +692,6 @@
 ::msgcat::mcset cs {RGB} 
 ::msgcat::mcset cs {Radial Profile} 
 ::msgcat::mcset cs {Radius} 
-::msgcat::mcset cs {Raised} 
 ::msgcat::mcset cs {Range} 
 ::msgcat::mcset cs {Redo} 
 ::msgcat::mcset cs {Red} 
@@ -710,7 +703,6 @@
 ::msgcat::mcset cs {Region} [encoding convertfrom iso8859-2 {Oblasti}]
 ::msgcat::mcset cs {Release Notes} [encoding convertfrom iso8859-2 {Informace o vydání}]
 ::msgcat::mcset cs {Release} 
-::msgcat::mcset cs {Relief} 
 ::msgcat::mcset cs {Reload} 
 ::msgcat::mcset cs {Render} 
 ::msgcat::mcset cs {Repeat} 
@@ -798,7 +790,6 @@
 ::msgcat::mcset cs {Smooth Parameters} [encoding convertfrom iso8859-2 {Nastavení vyhlazení}]
 ::msgcat::mcset cs {Smoothness} 
 ::msgcat::mcset cs {Smooth} [encoding convertfrom iso8859-2 {Vyhlazení}]
-::msgcat::mcset cs {Solid} 
 ::msgcat::mcset cs {Sorry, DS9 does not support} 
 ::msgcat::mcset cs {Sorry, DS9 requires a Truecolor8, Truecolor16, Truecolor24 visual be available} 
 ::msgcat::mcset cs {Sort} 
@@ -811,7 +802,6 @@
 ::msgcat::mcset cs {Square Root} [encoding convertfrom iso8859-2 {Odmocninové}]
 ::msgcat::mcset cs {Squared} 
 ::msgcat::mcset cs {Square} 
-::msgcat::mcset cs {Stacked} 
 ::msgcat::mcset cs {Starbase} 
 ::msgcat::mcset cs {Startup} 
 ::msgcat::mcset cs {Start} 
@@ -824,7 +814,6 @@
 ::msgcat::mcset cs {Strip Parameters} 
 ::msgcat::mcset cs {Strip} 
 ::msgcat::mcset cs {Sum} 
-::msgcat::mcset cs {Sunken} 
 ::msgcat::mcset cs {Symbol Editor} 
 ::msgcat::mcset cs {Symbol} 
 ::msgcat::mcset cs {TIFF} 
@@ -867,6 +856,7 @@
 ::msgcat::mcset cs {Unable to find catalog window} 
 ::msgcat::mcset cs {Unable to find plot window} 
 ::msgcat::mcset cs {Unable to find web window} 
+::msgcat::mcset cs {Unable to generate plot} 
 ::msgcat::mcset cs {Unable to load RGB image into a non-rgb frame} 
 ::msgcat::mcset cs {Unable to load compressed region file} 
 ::msgcat::mcset cs {Unable to load plot data} 
@@ -897,6 +887,7 @@
 ::msgcat::mcset cs {Use Internal Web Browser} 
 ::msgcat::mcset cs {Use Original Color/Width} 
 ::msgcat::mcset cs {Use Proxy} 
+::msgcat::mcset cs {Use Theme} 
 ::msgcat::mcset cs {Use background color instead of theme color} 
 ::msgcat::mcset cs {User Manual} [encoding convertfrom iso8859-2 {U¾ivatelský manuál}]
 ::msgcat::mcset cs {Username} 
@@ -952,6 +943,7 @@
 ::msgcat::mcset cs {b} 
 ::msgcat::mcset cs {color} [encoding convertfrom iso8859-2 {barva}]
 ::msgcat::mcset cs {cool} [encoding convertfrom iso8859-2 {chlad}]
+::msgcat::mcset cs {file not found} 
 ::msgcat::mcset cs {green} [encoding convertfrom iso8859-2 {zelená}]
 ::msgcat::mcset cs {grey} [encoding convertfrom iso8859-2 {¹edá}]
 ::msgcat::mcset cs {g} 

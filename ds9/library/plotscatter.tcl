@@ -99,10 +99,6 @@ proc PlotScatterMenus {varname} {
 	-variable ${varname}(graph,ds,shape,symbol) -value arrow \
 	-command [list PlotScatterUpdateElement $varname]
     $var(mb).datascatter.shape add separator
-    $var(mb).datascatter.shape add checkbutton \
-	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(graph,ds,shape,fill) \
-	-command [list PlotScatterUpdateElement $varname]
     $var(mb).datascatter.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).datascatter.shape.color
 
@@ -156,10 +152,12 @@ proc PlotScatterUpdateElement {varname} {
 	set var(graph,ds,shape,symbol) circle
     }
 
-    if {$var(graph,ds,shape,fill)} {
-	set clr $var(graph,ds,shape,color)
+    if {$var(theme)} {
+	set shapecolor [ThemeTreeBackgroundSelected]
+	set shapefillcolor [ThemeTreeBackgroundSelected]
     } else {
-	set clr {}
+	set shapecolor $var(graph,ds,shape,color)
+	set shapefillcolor $var(graph,ds,shape,color)
     }
 
     if {$var(graph,ds,error)} {
@@ -179,9 +177,9 @@ proc PlotScatterUpdateElement {varname} {
 	-label $var(graph,ds,name) \
 	-hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) \
-	-fill $clr \
+	-fill $shapefillcolor \
+	-outline $shapecolor \
 	-scalesymbols no \
-	-outline $var(graph,ds,shape,color) \
 	-linewidth 0 \
 	-pixels 5 \
 	-showerrorbars $show \
@@ -189,7 +187,8 @@ proc PlotScatterUpdateElement {varname} {
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
 
-    $var(graph) pen configure active -color blue \
+    $var(graph) pen configure active \
+	-color blue \
 	-symbol $var(graph,ds,shape,symbol) \
 	-linewidth 0 \
 	-pixels 5 \

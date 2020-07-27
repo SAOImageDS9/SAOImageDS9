@@ -10,7 +10,6 @@
 ::msgcat::mcset pt {Add Graph} 
 ::msgcat::mcset pt {Add} {Adicionar}
 ::msgcat::mcset pt {Advanced} [encoding convertfrom iso8859-1 {Avançado}]
-::msgcat::mcset pt {Aligned} 
 ::msgcat::mcset pt {Align} {Alinhar}
 ::msgcat::mcset pt {All Columns} {Todas as colunas}
 ::msgcat::mcset pt {All Rows} {Todas as linhas}
@@ -71,7 +70,6 @@
 ::msgcat::mcset pt {Background} {Fundo}
 ::msgcat::mcset pt {Backup} 
 ::msgcat::mcset pt {Back} {Anterior}
-::msgcat::mcset pt {Bar Mode} 
 ::msgcat::mcset pt {Bar Plot Tool} 
 ::msgcat::mcset pt {Bar} 
 ::msgcat::mcset pt {Bias} 
@@ -80,7 +78,6 @@
 ::msgcat::mcset pt {Bin Columns} {Binar colunas}
 ::msgcat::mcset pt {Bin Filter} {Filtro do Bin}
 ::msgcat::mcset pt {Bin Fit} 
-::msgcat::mcset pt {Bin Image} 
 ::msgcat::mcset pt {Bin In} 
 ::msgcat::mcset pt {Bin Out} 
 ::msgcat::mcset pt {Binning Parameters} [encoding convertfrom iso8859-1 {Parâmetros de Binning}]
@@ -315,7 +312,6 @@
 ::msgcat::mcset pt {First} {Primeiro}
 ::msgcat::mcset pt {Fits} 
 ::msgcat::mcset pt {Fixed in Size} {Fixa em tamanho}
-::msgcat::mcset pt {Flat} 
 ::msgcat::mcset pt {Font} {Fonte}
 ::msgcat::mcset pt {Footprint Servers} 
 ::msgcat::mcset pt {Footprint} 
@@ -355,7 +351,6 @@
 ::msgcat::mcset pt {Green} {Verde}
 ::msgcat::mcset pt {Grid Gap} 
 ::msgcat::mcset pt {Grid} {Grade}
-::msgcat::mcset pt {Groove} 
 ::msgcat::mcset pt {Groups} {Grupos}
 ::msgcat::mcset pt {HMS} 
 ::msgcat::mcset pt {HTTP} 
@@ -627,7 +622,6 @@
 ::msgcat::mcset pt {Other Font Size} 
 ::msgcat::mcset pt {Other} {Outro}
 ::msgcat::mcset pt {Outer} {Fora}
-::msgcat::mcset pt {Overlap} 
 ::msgcat::mcset pt {Overplot} 
 ::msgcat::mcset pt {PNG} 
 ::msgcat::mcset pt {PS Page Setup} 
@@ -698,7 +692,6 @@
 ::msgcat::mcset pt {RGB} 
 ::msgcat::mcset pt {Radial Profile} 
 ::msgcat::mcset pt {Radius} {Raio}
-::msgcat::mcset pt {Raised} 
 ::msgcat::mcset pt {Range} 
 ::msgcat::mcset pt {Redo} {Refazer}
 ::msgcat::mcset pt {Red} {Vermelho}
@@ -710,7 +703,6 @@
 ::msgcat::mcset pt {Region} [encoding convertfrom iso8859-1 {Região}]
 ::msgcat::mcset pt {Release Notes} [encoding convertfrom iso8859-1 {Notas das Versão}]
 ::msgcat::mcset pt {Release} [encoding convertfrom iso8859-1 {Versão}]
-::msgcat::mcset pt {Relief} 
 ::msgcat::mcset pt {Reload} {Recarregar}
 ::msgcat::mcset pt {Render} 
 ::msgcat::mcset pt {Repeat} 
@@ -798,7 +790,6 @@
 ::msgcat::mcset pt {Smooth Parameters} [encoding convertfrom iso8859-1 {Parâmetros da Suavização}]
 ::msgcat::mcset pt {Smoothness} 
 ::msgcat::mcset pt {Smooth} {Suavizar}
-::msgcat::mcset pt {Solid} 
 ::msgcat::mcset pt {Sorry, DS9 does not support} [encoding convertfrom iso8859-1 {Perdão, o DS9 não suporta}]
 ::msgcat::mcset pt {Sorry, DS9 requires a Truecolor8, Truecolor16, Truecolor24 visual be available} 
 ::msgcat::mcset pt {Sort} {Organizar}
@@ -811,7 +802,6 @@
 ::msgcat::mcset pt {Square Root} {Raiz Quadrada}
 ::msgcat::mcset pt {Squared} {Quadrado}
 ::msgcat::mcset pt {Square} 
-::msgcat::mcset pt {Stacked} 
 ::msgcat::mcset pt {Starbase} 
 ::msgcat::mcset pt {Startup} 
 ::msgcat::mcset pt {Start} {Iniciar}
@@ -824,7 +814,6 @@
 ::msgcat::mcset pt {Strip Parameters} 
 ::msgcat::mcset pt {Strip} 
 ::msgcat::mcset pt {Sum} {Soma}
-::msgcat::mcset pt {Sunken} 
 ::msgcat::mcset pt {Symbol Editor} 
 ::msgcat::mcset pt {Symbol} [encoding convertfrom iso8859-1 {Símbolo}]
 ::msgcat::mcset pt {TIFF} 
@@ -867,6 +856,7 @@
 ::msgcat::mcset pt {Unable to find catalog window} [encoding convertfrom iso8859-1 {Incapaz de encontrar janela do catálogo}]
 ::msgcat::mcset pt {Unable to find plot window} [encoding convertfrom iso8859-1 {Incapaz de encontrar janela de gráfico}]
 ::msgcat::mcset pt {Unable to find web window} 
+::msgcat::mcset pt {Unable to generate plot} 
 ::msgcat::mcset pt {Unable to load RGB image into a non-rgb frame} [encoding convertfrom iso8859-1 {Incapaz de carregar imagem RGB em um frame não RGB}]
 ::msgcat::mcset pt {Unable to load compressed region file} 
 ::msgcat::mcset pt {Unable to load plot data} 
@@ -897,6 +887,7 @@
 ::msgcat::mcset pt {Use Internal Web Browser} {Utilizar Navegador Web Interno}
 ::msgcat::mcset pt {Use Original Color/Width} 
 ::msgcat::mcset pt {Use Proxy} {Utilizar Proxy}
+::msgcat::mcset pt {Use Theme} 
 ::msgcat::mcset pt {Use background color instead of theme color} 
 ::msgcat::mcset pt {User Manual} 
 ::msgcat::mcset pt {Username} [encoding convertfrom iso8859-1 {Nome de usuário}]
@@ -952,6 +943,7 @@
 ::msgcat::mcset pt {b} 
 ::msgcat::mcset pt {color} 
 ::msgcat::mcset pt {cool} 
+::msgcat::mcset pt {file not found} 
 ::msgcat::mcset pt {green} 
 ::msgcat::mcset pt {grey} 
 ::msgcat::mcset pt {g} 

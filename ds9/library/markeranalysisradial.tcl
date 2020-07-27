@@ -106,6 +106,7 @@ proc MarkerAnalysisRadialCB {frame id} {
     if {![PlotPing $vvarname]} {
 	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotAddGraph $vvarname line
+	set vvar(theme) 1
 
 	MarkerAnalysisRadialAxisTitle $vvarname
 

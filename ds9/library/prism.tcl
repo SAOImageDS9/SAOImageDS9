@@ -208,7 +208,7 @@ proc PrismDialog {varname} {
 		     ]
 
     $var(tbl) tag configure sel \
-	-fg [ThemeForegroundSelected] -bg [ThemeBackgroundSelected]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $var(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 
@@ -670,6 +670,7 @@ proc PrismPlotGenerate {varname} {
 	PlotAddGraph $vvarname $var(plot,type)
 	PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
 	lappend ${varname}(plots) $vvarname
+	set vvar(theme) 1
     }
 
     set vvar(graph,ds,xdata) $xdata
@@ -688,11 +689,7 @@ proc PrismPlotGenerate {varname} {
     PlotExternal $vvarname $dim
 
     set vvar(graph,ds,name) "$var(extname) $var(xx) $var(yy)"
-    switch $var(plot,type) {
-	line {PlotLineUpdateElement $vvarname}
-	bar {PlotBarUpdateElement $vvarname}
-	scatter {PlotScatterUpdateElement $vvarname}
-    }
+    $vvar(graph,proc,updateelement) $vvarname
 
     switch $var(plot,mode) {
 	newplot {}
@@ -814,6 +811,7 @@ proc PrismHistogramGenerate {varname} {
     PlotAddGraph $vvarname bar
     PlotTitle $vvarname $var(bar,col) {Values} {Counts}
     lappend ${varname}(plots) $vvarname
+    set vvar(theme) 1
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
@@ -823,7 +821,7 @@ proc PrismHistogramGenerate {varname} {
     set vvar(graph,ds,color) blue
     set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     set vvar(graph,ds,bar,width) $var(bar,width)
-    PlotBarUpdateElement $vvarname
+    $vvar(graph,proc,updateelement) $vvarname
 
     PlotStats $vvarname
     PlotList $vvarname

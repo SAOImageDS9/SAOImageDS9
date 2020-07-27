@@ -139,8 +139,18 @@ proc PlotBarUpdateElement {varname} {
  	return
     }
     
+    if {$var(theme)} {
+	set color [ThemeTreeForegroundSelected]
+    } else {
+	set color $var(graph,ds,color)
+    }
+
     if {$var(graph,ds,fill)} {
-	set fillColor $var(graph,ds,fill,color)
+	if {$var(theme)} {
+	    set fillColor [ThemeTreeBackgroundSelected]
+	} else {
+	    set fillColor $var(graph,ds,fill,color)
+	}
     } else {
 	set fillColor [PlotBGColor $varname]
     }
@@ -161,7 +171,7 @@ proc PlotBarUpdateElement {varname} {
     $var(graph) element configure $nn \
 	-label $var(graph,ds,name) \
 	-hide [expr !$var(graph,ds,show)] \
-	-outline $var(graph,ds,color) \
+	-outline $color \
 	-borderwidth $var(graph,ds,width) \
 	-fill $fillColor \
 	-relief flat \

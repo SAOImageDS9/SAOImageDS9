@@ -260,7 +260,7 @@ proc FPDialog {varname title url instr format action} {
 		     ]
 
     $var(tbl) tag configure sel \
-	-fg [ThemeForegroundSelected] -bg [ThemeBackgroundSelected]
+	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
     $var(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 

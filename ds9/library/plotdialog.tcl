@@ -23,6 +23,7 @@ proc PlotDialog {varname wtt} {
     set var(mb) ".${varname}mb"
     set var(stats) 0
     set var(list) 0
+    set var(theme) 0
 
     set var(mode) zoom
     set var(callback) {}
@@ -119,6 +120,10 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas add cascade -label [msgcat::mc {Legend}] \
 	-menu $var(mb).canvas.legend
 
+    $var(mb).canvas add separator
+    $var(mb).canvas add checkbutton -label [msgcat::mc {Use Theme Colors}] \
+	-variable ${varname}(theme) \
+	-command [list PlotChangeTheme $varname]
     $var(mb).canvas add separator
     $var(mb).canvas add cascade -label [msgcat::mc {Forground}] \
 	-menu $var(mb).canvas.fg

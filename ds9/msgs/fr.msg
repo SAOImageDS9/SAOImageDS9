@@ -10,7 +10,6 @@
 ::msgcat::mcset fr {Add Graph} 
 ::msgcat::mcset fr {Add} {Ajouter}
 ::msgcat::mcset fr {Advanced} [encoding convertfrom iso8859-1 {Avancé}]
-::msgcat::mcset fr {Aligned} 
 ::msgcat::mcset fr {Align} {Aligner}
 ::msgcat::mcset fr {All Columns} {Toutes les colonnes}
 ::msgcat::mcset fr {All Rows} [encoding convertfrom iso8859-1 {Toutes les rangées}]
@@ -71,7 +70,6 @@
 ::msgcat::mcset fr {Background} {Fond}
 ::msgcat::mcset fr {Backup} 
 ::msgcat::mcset fr {Back} {Retour}
-::msgcat::mcset fr {Bar Mode} 
 ::msgcat::mcset fr {Bar Plot Tool} 
 ::msgcat::mcset fr {Bar} 
 ::msgcat::mcset fr {Bias} {Biais}
@@ -80,7 +78,6 @@
 ::msgcat::mcset fr {Bin Columns} {Colonnes de bin}
 ::msgcat::mcset fr {Bin Filter} {Filtre de bin}
 ::msgcat::mcset fr {Bin Fit} 
-::msgcat::mcset fr {Bin Image} 
 ::msgcat::mcset fr {Bin In} 
 ::msgcat::mcset fr {Bin Out} 
 ::msgcat::mcset fr {Binning Parameters} [encoding convertfrom iso8859-1 {Paramètres de bin}]
@@ -315,7 +312,6 @@
 ::msgcat::mcset fr {First} {Premier} 
 ::msgcat::mcset fr {Fits} 
 ::msgcat::mcset fr {Fixed in Size} [encoding convertfrom iso8859-1 {Taille fixée}]
-::msgcat::mcset fr {Flat} 
 ::msgcat::mcset fr {Font} {Police}
 ::msgcat::mcset fr {Footprint Servers} 
 ::msgcat::mcset fr {Footprint} 
@@ -355,7 +351,6 @@
 ::msgcat::mcset fr {Green} {Vert} 
 ::msgcat::mcset fr {Grid Gap} {Espacement de la grille} 
 ::msgcat::mcset fr {Grid} {Grille} 
-::msgcat::mcset fr {Groove} 
 ::msgcat::mcset fr {Groups} {Groupes} 
 ::msgcat::mcset fr {HMS} 
 ::msgcat::mcset fr {HTTP} 
@@ -627,7 +622,6 @@
 ::msgcat::mcset fr {Other Font Size} 
 ::msgcat::mcset fr {Other} {Autre}
 ::msgcat::mcset fr {Outer} {Externe}
-::msgcat::mcset fr {Overlap} 
 ::msgcat::mcset fr {Overplot} 
 ::msgcat::mcset fr {PNG} 
 ::msgcat::mcset fr {PS Page Setup} 
@@ -698,7 +692,6 @@
 ::msgcat::mcset fr {RGB} 
 ::msgcat::mcset fr {Radial Profile} 
 ::msgcat::mcset fr {Radius} 
-::msgcat::mcset fr {Raised} 
 ::msgcat::mcset fr {Range} 
 ::msgcat::mcset fr {Redo} {Refaire}
 ::msgcat::mcset fr {Red} 
@@ -710,7 +703,6 @@
 ::msgcat::mcset fr {Region} [encoding convertfrom iso8859-1 {Région}]
 ::msgcat::mcset fr {Release Notes} 
 ::msgcat::mcset fr {Release} 
-::msgcat::mcset fr {Relief} 
 ::msgcat::mcset fr {Reload} 
 ::msgcat::mcset fr {Render} 
 ::msgcat::mcset fr {Repeat} 
@@ -798,7 +790,6 @@
 ::msgcat::mcset fr {Smooth Parameters} 
 ::msgcat::mcset fr {Smoothness} 
 ::msgcat::mcset fr {Smooth} 
-::msgcat::mcset fr {Solid} 
 ::msgcat::mcset fr {Sorry, DS9 does not support} 
 ::msgcat::mcset fr {Sorry, DS9 requires a Truecolor8, Truecolor16, Truecolor24 visual be available} 
 ::msgcat::mcset fr {Sort} 
@@ -811,7 +802,6 @@
 ::msgcat::mcset fr {Square Root} 
 ::msgcat::mcset fr {Squared} 
 ::msgcat::mcset fr {Square} 
-::msgcat::mcset fr {Stacked} 
 ::msgcat::mcset fr {Starbase} 
 ::msgcat::mcset fr {Startup} 
 ::msgcat::mcset fr {Start} 
@@ -824,7 +814,6 @@
 ::msgcat::mcset fr {Strip Parameters} 
 ::msgcat::mcset fr {Strip} 
 ::msgcat::mcset fr {Sum} 
-::msgcat::mcset fr {Sunken} 
 ::msgcat::mcset fr {Symbol Editor} 
 ::msgcat::mcset fr {Symbol} 
 ::msgcat::mcset fr {TIFF} 
@@ -867,6 +856,7 @@
 ::msgcat::mcset fr {Unable to find catalog window} 
 ::msgcat::mcset fr {Unable to find plot window} 
 ::msgcat::mcset fr {Unable to find web window} 
+::msgcat::mcset fr {Unable to generate plot} 
 ::msgcat::mcset fr {Unable to load RGB image into a non-rgb frame} 
 ::msgcat::mcset fr {Unable to load compressed region file} 
 ::msgcat::mcset fr {Unable to load plot data} 
@@ -897,6 +887,7 @@
 ::msgcat::mcset fr {Use Internal Web Browser} 
 ::msgcat::mcset fr {Use Original Color/Width} 
 ::msgcat::mcset fr {Use Proxy} 
+::msgcat::mcset fr {Use Theme} 
 ::msgcat::mcset fr {Use background color instead of theme color} 
 ::msgcat::mcset fr {User Manual} 
 ::msgcat::mcset fr {Username} 
@@ -952,6 +943,7 @@
 ::msgcat::mcset fr {b} 
 ::msgcat::mcset fr {color} 
 ::msgcat::mcset fr {cool} 
+::msgcat::mcset fr {file not found} 
 ::msgcat::mcset fr {green} 
 ::msgcat::mcset fr {grey} 
 ::msgcat::mcset fr {g} 

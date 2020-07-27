@@ -153,12 +153,16 @@ proc ThemeConfigTable {w} {
 }
 
 proc ThemeConfigPlot {w} {
+    # this will be invoked for all blt graphs,
+    # we only want plots
     set varname [lindex [split $w {.}] 1]
     if {$varname != {}} {
 	upvar #0 $varname var
 	global $varname
 	if {[info exists $varname]} {
-	    PlotChangeTheme $varname
+	    if {[info exists ${varname}(theme)]} {
+		PlotUpdateTheme $varname
+	    }
 	}
     }
 }

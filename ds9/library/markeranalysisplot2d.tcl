@@ -168,7 +168,6 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	}
 	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotAddGraph $vvarname line
-	set vvar(theme) 1
 
 	MarkerAnalysisPlot2dAxisTitle $vvarname
 

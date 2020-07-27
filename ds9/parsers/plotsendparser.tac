@@ -50,6 +50,7 @@
 %token STATISTICS_
 %token STRIP_
 %token STYLE_
+%token THEME_
 %token TITLE_
 %token WEIGHT_
 %token WIDTH_
@@ -73,7 +74,7 @@ plotsend : {ProcessSendCmdGet iap plots}
  | BARMODE_ {ProcessSendCmdTxt normal}
  | SHOW_ {ProcessSendCmdCVARYesNo graph,ds,show}
  | COLOR_ {ProcessSendCmdCVARGet graph,ds,color}
- | FILL_ {ProcessSendCmdCVARGet graph,ds,fill}
+ | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,fill}
  | FILLCOLOR_ {ProcessSendCmdCVARGet graph,ds,fill,color}
  | ERROR_ errorr
  # backward compatibility
@@ -88,6 +89,7 @@ plotsend : {ProcessSendCmdGet iap plots}
  | LAYOUT_ {ProcessSendCmdCVARGet layout}
  | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet layout,strip,scale}
  | SELECT_ select
+ | THEME_ {ProcessSendCmdCVARYesNo theme}
  # backward compatibility
  | DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
  ;

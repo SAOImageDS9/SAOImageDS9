@@ -124,6 +124,7 @@ strip	    {return $STRIP_}
 style	    {return $STYLE_}
 sunken	    {return $SUNKEN_}
 tabloid	    {return $TABLOID_}
+theme	    {return $THEME_}
 title	    {return $TITLE_}
 top	    {return $TOP_}
 triangle    {return $TRIANGLE_}

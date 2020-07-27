@@ -125,6 +125,7 @@
 %token STYLE_
 %token SUNKEN_
 %token TABLOID_
+%token THEME_
 %token TITLE_
 %token TOP_
 %token TRIANGLE_
@@ -258,6 +259,7 @@ plotCmd : LOAD_ load
    {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
  | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvas}
+ | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateTheme}
  # backward compatibility
  | BARMODE_ barmode
 

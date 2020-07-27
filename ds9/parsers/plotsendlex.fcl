@@ -52,6 +52,7 @@ stats		{return $STATS_}
 statistics	{return $STATISTICS_}
 strip		{return $STRIP_}
 style		{return $STYLE_}
+theme		{return $THEME_}
 title		{return $TITLE_}
 weight		{return $WEIGHT_}
 width		{return $WIDTH_}

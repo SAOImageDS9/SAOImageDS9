@@ -61,92 +61,80 @@ proc plotsend::unsetupvalues {numsyms} {
 }
 
 array set plotsend::table {
-  8:318,target 45
-  38:281,target 68
-  30:300,target 55
-  29:300,target 51
-  33:261,target 50
-  1:306 shift
-  48:0 reduce
+  38:281,target 72
+  30:300,target 52
+  29:300,target 53
+  27:0 accept
+  33:261,target 54
+  1:307 shift
   38:278 reduce
-  0:306,target 24
   0:296,target 18
+  0:306,target 24
   38:279 reduce
   38:281 reduce
   30:300 reduce
   29:300 reduce
-  24:320,target 60
   70:0 reduce
   69:0 reduce
-  41:287,target 76
+  48:295,target 80
   6:0,target 23
-  1:315 goto
-  79:0,target 25
+  80:0,target 25
+  79:0,target 36
   30:305 reduce
   29:305 reduce
   1:316 goto
-  72:0,target 34
+  72:0,target 48
   38:287 reduce
-  27:260,target 54
-  27:259,target 54
-  2:313,target 40
-  9:308 shift
-  64:0,target 44
+  1:317 goto
+  64:0,target 43
   38:288 reduce
-  30:307 reduce
-  29:307 reduce
-  56:0,target 60
+  9:309 shift
+  56:0,target 19
   38:289 reduce
-  35:257 shift
-  32:275,target 53
+  32:275,target 57
+  30:308 reduce
+  29:308 reduce
   24:0 reduce
-  48:0,target 39
-  38:278,target 68
-  35:258 shift
+  38:278,target 72
   30:299 reduce
   29:299 reduce
-  35:260 shift
-  35:259 shift
-  33:258,target 50
-  27:299,target 54
+  41:0,target 6
+  33:258,target 54
   45:0 reduce
-  35:261 shift
+  25:322,target 62
   0:294,target 17
-  25:0,target 22
+  25:0,target 58
   17:0,target 20
   66:0 reduce
+  42:289,target 79
+  33:308,target 54
   10:0,target 14
-  24:317,target 59
-  9:318 goto
+  9:319 goto
   0:273,target 8
-  9:318,target 46
-  39:281,target 70
+  40:281,target 71
+  39:281,target 69
   31:300,target 56
-  27:257,target 54
-  47:295 shift
+  25:x,target 39
+  34:261,target 51
   21:0 reduce
-  1:306,target 33
-  42:0 reduce
-  36:288,target 69
-  35:275 shift
-  27:307,target 54
   0:292,target 16
   0:302,target 22
   63:0 reduce
-  28:260,target 52
-  28:259,target 52
+  42:287,target 77
+  28:260,target 55
+  28:259,target 55
   0:271,target 6
-  33:275,target 50
-  24:284,target 56
-  39:278,target 70
+  33:275,target 54
+  40:278,target 71
+  39:278,target 69
+  13:315,target 50
   17:0 reduce
-  28:299,target 52
-  24:Y,target 37
+  34:258,target 51
+  28:299,target 55
   38:0 reduce
-  35:300 shift
   32:257 reduce
   32:258 reduce
-  27:305,target 54
+  34:308,target 51
   32:260 reduce
   32:259 reduce
   60:0 reduce
@@ -155,493 +143,510 @@ array set plotsend::table {
   0:290,target 15
   3:0,target 7
   76:0,target 32
-  35:305 shift
-  68:0,target 46
+  68:0,target 42
   61:0,target 59
-  35:307 shift
   2:X shift
-  53:0,target 67
-  41:281,target 75
-  32:300,target 53
-  28:257,target 52
+  53:0,target 26
+  32:300,target 57
+  28:257,target 55
   0:268,target 4
   2:Y shift
-  45:0,target 16
-  35:299 shift
-  35:261,target 66
-  37:0,target 71
+  45:0,target 65
+  37:0,target 70
   14:0 reduce
-  24:X shift
-  37:288,target 71
-  28:307,target 52
+  37:288,target 70
+  8:309,target 45
   22:0,target 2
-  24:Y shift
-  41:263 shift
+  35:0 reduce
   14:0,target 4
-  18:312,target 52
   56:0 reduce
   32:275 reduce
   77:0 reduce
-  30:260,target 55
-  30:259,target 55
-  29:260,target 51
-  29:259,target 51
+  30:260,target 52
+  30:259,target 52
+  29:260,target 53
+  29:259,target 53
   0:257 shift
-  36:263,target 69
-  41:278,target 73
+  34:275,target 51
+  25:284,target 57
   9:0 reduce
-  35:258,target 63
-  30:299,target 55
-  29:299,target 51
+  30:299,target 52
+  29:299,target 53
   11:0 reduce
   0:264 shift
-  28:305,target 52
-  41:278 shift
-  2:Y,target 37
-  41:279 shift
+  28:305,target 55
+  2:Y,target 38
   0:267 shift
   53:0 reduce
-  41:281 shift
   32:300 reduce
-  28:257 reduce
   0:268 shift
+  28:257 reduce
   28:258 reduce
   0:270 shift
   28:260 reduce
   28:259 reduce
   0:271 shift
-  24:y,target 39
   74:0 reduce
   28:261 reduce
   0:272 shift
   19:270 shift
-  33:300,target 50
-  30:257,target 55
-  29:257,target 51
+  42:281,target 76
+  33:300,target 54
+  30:257,target 52
+  29:257,target 53
   0:273 shift
+  36:261,target 67
   32:305 reduce
   0:274 shift
-  41:287 shift
   6:0 reduce
-  41:288 shift
-  32:307 reduce
   0:276 shift
   0:264,target 2
-  41:289 shift
-  38:288,target 68
-  30:307,target 55
-  29:307,target 51
+  38:288,target 72
+  32:308 reduce
   0:277 shift
+  9:309,target 45
   32:299 reduce
   8:269 shift
   8:270 shift
   19:276 shift
   2:x shift
-  7:0,target 27
+  7:0,target 28
   0:0,target 1
   2:y shift
-  73:0,target 33
+  73:0,target 35
   50:0 reduce
   49:0 reduce
   37:263 reduce
   0:283 shift
-  12:304,target 47
+  12:304,target 48
   65:0,target 45
-  36:279,target 69
   0:284 shift
-  24:x shift
-  57:0,target 72
+  57:0,target 61
   31:260,target 56
   31:259,target 56
-  24:y shift
+  25:311,target 59
   71:0 reduce
-  50:0,target 28
-  49:0,target 8
-  37:263,target 71
+  50:0,target 8
+  49:0,target 40
+  37:263,target 70
   28:275 reduce
   0:286 shift
   0:283,target 12
-  42:0,target 62
-  35:275,target 67
-  34:0,target 9
-  1:266,target 28
+  42:278,target 74
+  1:266,target 29
+  36:258,target 64
   31:299,target 56
   0:290 shift
+  2:321,target 42
   3:0 reduce
-  26:0,target 0
+  26:0,target 22
   0:301 shift
-  18:0,target 30
+  18:0,target 31
   0:292 shift
   0:302 shift
   11:0,target 15
-  30:305,target 55
-  29:305,target 51
+  30:305,target 52
+  29:305,target 53
   0:303 shift
   1:316,target 35
+  36:308,target 72
   0:294 shift
   25:0 reduce
-  0:306 shift
+  0:312,target 27
   0:296 shift
+  0:306 shift
   46:0 reduce
   0:297 shift
+  0:307 shift
   37:278 reduce
-  0:308 shift
   0:298 shift
-  1:285,target 31
+  1:285,target 32
   37:279 reduce
+  0:309 shift
   67:0 reduce
   37:281 reduce
+  34:300,target 51
   31:257,target 56
   28:300 reduce
-  0:311 goto
-  2:y,target 39
+  0:312 goto
+  2:y,target 40
   0:0 reduce
-  39:288,target 70
-  31:307,target 56
+  40:288,target 71
+  39:288,target 69
   28:305 reduce
   37:287 reduce
-  8:308 shift
   37:288 reduce
-  28:307 reduce
+  8:309 shift
   22:0 reduce
   37:289 reduce
+  34:257 reduce
+  28:308 reduce
+  34:258 reduce
   28:299 reduce
   43:0 reduce
-  37:279,target 71
-  19:319 goto
-  32:260,target 53
-  32:259,target 53
-  38:263,target 68
+  37:279,target 70
+  34:260 reduce
+  34:259 reduce
+  0:309,target 26
+  19:320 goto
+  34:261 reduce
+  32:260,target 57
+  32:259,target 57
+  38:263,target 72
   64:0 reduce
-  32:299,target 53
-  8:318 goto
-  8:269,target 42
-  8:270,target 43
-  19:276,target 54
+  36:275,target 68
+  25:Y,target 38
+  32:299,target 57
+  8:269,target 43
+  8:270,target 44
+  19:276,target 55
+  8:319 goto
   31:305,target 56
   4:0,target 11
-  18:272,target 50
-  77:0,target 36
+  18:272,target 51
+  8:319,target 46
+  77:0,target 33
   0:257,target 1
   18:0 reduce
   70:0,target 49
-  69:0,target 48
-  62:0,target 40
-  54:0,target 66
+  69:0,target 47
+  62:0,target 60
+  54:0,target 68
   40:0 reduce
   39:0 reduce
-  46:0,target 17
+  46:0,target 16
+  34:275 reduce
   0:297,target 19
-  38:0,target 68
-  35:300,target 69
-  32:257,target 53
+  0:307,target 25
+  25:284 shift
+  38:0,target 72
+  32:257,target 57
   61:0 reduce
-  24:321,target 61
   23:0,target 3
   15:0,target 5
-  41:288,target 77
-  32:307,target 53
   0:276,target 10
-  27:261,target 54
+  2:314,target 41
   15:0 reduce
-  38:279,target 68
-  36:0 reduce
-  33:260,target 50
-  33:259,target 50
-  39:263,target 70
+  25:X shift
+  38:279,target 72
+  25:Y shift
+  33:260,target 54
+  33:259,target 54
+  40:263,target 71
+  39:263,target 69
+  34:300 reduce
   31:257 reduce
   31:258 reduce
+  25:310 shift
   57:0 reduce
   31:260 reduce
   31:259 reduce
-  33:299,target 50
+  25:311 shift
+  33:299,target 54
   31:261 reduce
-  9:269,target 42
-  9:270,target 43
+  9:269,target 43
+  9:270,target 44
   78:0 reduce
-  32:305,target 53
+  34:305 reduce
+  32:305,target 57
   0:274,target 9
+  9:319,target 47
+  34:308 reduce
+  34:299 reduce
   12:0 reduce
-  27:258,target 54
+  25:318 goto
+  25:y,target 40
+  25:321 goto
+  1:307,target 34
+  25:322 goto
+  40:263 reduce
   39:263 reduce
-  36:289,target 69
-  33:257,target 50
+  36:300,target 70
+  33:257,target 54
+  25:321,target 61
   54:0 reduce
   0:303,target 23
   31:275 reduce
   13:293 shift
-  33:307,target 50
-  8:0,target 61
+  42:288,target 78
+  8:0,target 62
   75:0 reduce
-  74:0,target 37
-  28:261,target 52
+  74:0,target 34
+  28:261,target 55
   0:272,target 7
-  19:270,target 53
-  66:0,target 43
+  19:270,target 54
+  66:0,target 46
   7:0 reduce
   58:0,target 73
   51:0,target 29
-  39:279,target 70
+  40:279,target 71
+  39:279,target 69
   43:0,target 63
-  19:319,target 55
-  41:263,target 72
-  13:314 goto
+  34:260,target 51
+  34:259,target 51
+  19:320,target 56
+  35:0,target 9
+  27:0,target 0
+  40:278 reduce
   39:278 reduce
-  36:287,target 69
-  19:0,target 65
+  13:315 goto
+  19:0,target 66
   20:0,target 12
   51:0 reduce
+  40:279 reduce
   39:279 reduce
+  34:299,target 51
   12:0,target 24
+  25:318,target 60
+  40:281 reduce
   39:281 reduce
   31:300 reduce
   0:301,target 21
-  27:257 reduce
-  27:258 reduce
+  25:x shift
+  25:y shift
   72:0 reduce
-  33:305,target 50
-  27:260 reduce
-  2:313 goto
-  27:259 reduce
-  27:275,target 54
-  27:261 reduce
+  33:305,target 54
+  2:314 goto
   31:305 reduce
-  28:258,target 52
+  28:258,target 55
   0:270,target 5
   4:0 reduce
   18:272 shift
+  40:287 reduce
   39:287 reduce
+  40:288 reduce
   39:288 reduce
-  31:307 reduce
+  40:289 reduce
   39:289 reduce
-  2:320 goto
-  13:314,target 49
-  37:289,target 71
+  36:257 shift
+  31:308 reduce
+  37:289,target 70
+  36:258 shift
+  34:257,target 51
   31:299 reduce
-  26:0 accept
-  24:X,target 36
+  28:308,target 55
+  2:321 goto
+  26:0 reduce
+  36:260 shift
+  36:259 shift
+  36:261 shift
+  47:0 reduce
+  18:313,target 53
   18:280 shift
-  36:263 reduce
   68:0 reduce
-  30:261,target 55
-  29:261,target 51
-  27:275 reduce
-  41:279,target 74
+  30:261,target 52
+  29:261,target 53
   0:267,target 3
-  35:260,target 65
-  35:259,target 64
+  48:295 shift
+  42:263,target 73
   23:0 reduce
-  37:287,target 71
-  8:308,target 44
-  35:299,target 68
+  37:287,target 70
+  36:275 shift
   44:0 reduce
-  1:291,target 32
+  1:291,target 33
   5:0,target 13
-  78:0,target 35
-  36:278 reduce
-  71:0,target 47
+  78:0,target 37
+  34:305,target 51
+  71:0,target 50
   65:0 reduce
-  36:279 reduce
-  28:275,target 52
+  28:275,target 55
   0:286,target 14
-  63:0,target 42
-  36:281 reduce
-  27:300 reduce
-  55:0,target 19
-  30:258,target 55
-  29:258,target 51
-  24:309,target 57
-  24:310,target 58
-  18:280,target 51
-  40:0,target 6
-  39:0,target 70
-  18:312 goto
-  38:289,target 68
-  35:257,target 62
-  27:305 reduce
-  24:0,target 57
-  36:287 reduce
+  63:0,target 41
+  55:0,target 67
+  30:258,target 52
+  29:258,target 53
+  47:0,target 17
+  18:280,target 52
+  40:0,target 71
+  39:0,target 69
+  18:313 goto
+  38:289,target 72
+  30:308,target 52
+  29:308,target 53
+  24:0,target 27
   16:0,target 18
   19:0 reduce
   20:0 reduce
-  36:288 reduce
-  27:307 reduce
-  36:289 reduce
+  36:300 shift
   33:257 reduce
-  35:307,target 71
+  41:0 reduce
   33:258 reduce
-  27:299 reduce
-  2:X,target 36
+  2:X,target 37
   33:260 reduce
   33:259 reduce
-  36:281,target 69
   33:261 reduce
-  27:300,target 54
   62:0 reduce
   31:261,target 56
+  36:305 shift
   0:284,target 13
-  24:x,target 38
-  38:287,target 68
-  9:308,target 44
+  42:279,target 75
+  36:308 shift
+  36:260,target 66
+  36:259,target 65
+  36:299 shift
+  38:287,target 72
+  1:317,target 36
   16:0 reduce
+  36:299,target 69
+  42:263 shift
   37:0 reduce
-  35:305,target 70
   33:275 reduce
-  30:275,target 55
-  29:275,target 51
-  24:284 shift
+  30:275,target 52
+  29:275,target 53
   58:0 reduce
-  36:278,target 69
   31:258,target 56
+  25:310,target 58
+  80:0 reduce
   79:0 reduce
-  1:265,target 27
-  39:289,target 70
-  2:320,target 41
-  9:0,target 61
+  1:265,target 28
+  40:289,target 71
+  39:289,target 69
+  36:257,target 63
+  31:308,target 56
+  9:0,target 62
   13:0 reduce
-  1:315,target 34
   1:265 shift
-  75:0,target 31
-  34:0 reduce
+  75:0,target 38
+  42:278 shift
   1:266 shift
-  67:0,target 41
-  37:281,target 71
-  28:300,target 52
-  0:311,target 26
-  60:0,target 58
-  59:0,target 10
+  67:0,target 44
+  42:279 shift
+  37:281,target 70
+  28:300,target 55
+  60:0,target 10
+  59:0,target 74
+  42:281 shift
   33:300 reduce
-  32:261,target 53
+  32:261,target 57
   30:257 reduce
   29:257 reduce
   55:0 reduce
-  52:0,target 26
+  52:0,target 30
   30:258 reduce
   29:258 reduce
-  1:284,target 30
-  24:309 shift
-  24:310 shift
+  1:284,target 31
   44:0,target 64
   30:260 reduce
   30:259 reduce
   29:260 reduce
   29:259 reduce
-  36:0,target 69
   30:261 reduce
   29:261 reduce
   76:0 reduce
-  2:x,target 38
-  47:295,target 79
+  2:x,target 39
   33:305 reduce
   21:0,target 21
-  13:0,target 38
-  39:287,target 70
-  33:307 reduce
+  42:287 shift
+  13:0,target 39
+  42:288 shift
+  40:287,target 71
+  39:287,target 69
   8:0 reduce
+  42:289 shift
+  33:308 reduce
   10:0 reduce
-  24:317 goto
   33:299 reduce
   9:269 shift
   9:270 shift
-  24:320 goto
-  24:321 goto
+  36:305,target 71
   31:275,target 56
   1:282 shift
-  13:293,target 48
+  13:293,target 49
   38:263 reduce
-  37:278,target 71
-  0:308,target 25
+  37:278,target 70
   0:298,target 20
   52:0 reduce
-  32:258,target 53
+  32:258,target 57
   1:284 shift
-  1:282,target 29
+  1:282,target 30
   1:285 shift
   30:275 reduce
   29:275 reduce
   73:0 reduce
   12:304 shift
-  41:289,target 78
+  25:X,target 37
+  32:308,target 57
   0:277,target 11
   1:291 shift
   5:0 reduce
 }
 
 array set plotsend::rules {
-  9,l 311
-  11,l 311
-  32,l 313
-  53,l 316
-  6,l 311
+  9,l 312
+  11,l 312
+  32,l 314
+  53,l 317
+  74,l 322
+  6,l 312
   28,l 312
   50,l 316
-  49,l 315
-  71,l 320
-  3,l 311
-  25,l 311
-  46,l 315
-  67,l 319
-  0,l 322
-  22,l 311
-  43,l 315
-  64,l 318
-  18,l 311
+  49,l 316
+  71,l 321
+  3,l 312
+  25,l 312
+  46,l 316
+  67,l 320
+  0,l 323
+  22,l 312
+  43,l 316
+  64,l 319
+  18,l 312
   40,l 315
-  39,l 314
+  39,l 315
   61,l 318
-  15,l 311
-  36,l 313
+  15,l 312
+  36,l 314
   57,l 317
-  12,l 311
-  33,l 313
-  54,l 316
-  7,l 311
-  29,l 312
-  30,l 312
-  51,l 316
+  12,l 312
+  33,l 314
+  54,l 317
+  7,l 312
+  29,l 313
+  30,l 313
+  51,l 317
   72,l 321
-  4,l 311
-  26,l 311
-  47,l 315
+  4,l 312
+  26,l 312
+  47,l 316
   68,l 320
-  1,l 311
-  23,l 311
-  44,l 315
+  1,l 312
+  23,l 312
+  44,l 316
   65,l 319
-  19,l 311
-  20,l 311
-  41,l 315
-  62,l 318
-  16,l 311
-  37,l 313
-  58,l 317
-  13,l 311
-  34,l 313
-  55,l 316
-  8,l 311
-  10,l 311
+  19,l 312
+  20,l 312
+  41,l 316
+  62,l 319
+  16,l 312
+  37,l 314
+  58,l 318
+  13,l 312
+  34,l 314
+  55,l 317
+  8,l 312
+  10,l 312
   31,l 313
-  52,l 316
-  73,l 321
-  5,l 311
-  27,l 311
-  48,l 315
-  70,l 320
-  69,l 320
-  2,l 311
-  24,l 311
-  45,l 315
-  66,l 319
-  21,l 311
-  42,l 315
-  63,l 318
-  17,l 311
+  52,l 317
+  73,l 322
+  5,l 312
+  27,l 312
+  48,l 316
+  70,l 321
+  69,l 321
+  2,l 312
+  24,l 312
+  45,l 316
+  66,l 320
+  21,l 312
+  42,l 316
+  63,l 319
+  17,l 312
   38,l 314
-  60,l 317
-  59,l 317
-  14,l 311
-  35,l 313
-  56,l 316
+  60,l 318
+  59,l 318
+  14,l 312
+  35,l 314
+  56,l 317
 }
 
 array set plotsend::rules {
@@ -657,56 +662,57 @@ array set plotsend::rules {
   33,dc 2
   9,dc 2
   47,dc 2
-  62,dc 1
+  62,dc 0
   11,dc 1
   25,dc 3
   2,dc 1
-  40,dc 2
-  39,dc 1
+  40,dc 1
+  39,dc 0
   54,dc 1
   68,dc 1
   17,dc 2
   32,dc 2
   8,dc 2
   46,dc 2
-  61,dc 0
+  61,dc 1
   10,dc 2
   24,dc 1
   1,dc 0
-  38,dc 0
+  38,dc 2
   53,dc 1
   67,dc 1
   16,dc 2
-  31,dc 2
+  31,dc 0
   7,dc 1
   45,dc 2
   60,dc 1
   59,dc 1
+  74,dc 1
   23,dc 1
   0,dc 1
   37,dc 2
   52,dc 1
-  66,dc 1
+  66,dc 0
   15,dc 1
   29,dc 1
-  30,dc 0
+  30,dc 1
   6,dc 2
   44,dc 2
-  58,dc 1
+  58,dc 0
   73,dc 1
   22,dc 1
   36,dc 2
   51,dc 1
-  65,dc 0
+  65,dc 1
   14,dc 1
   28,dc 1
   5,dc 1
   43,dc 2
-  57,dc 0
+  57,dc 1
   72,dc 1
   21,dc 1
   35,dc 2
-  50,dc 1
+  50,dc 2
   49,dc 2
   64,dc 1
   13,dc 1
@@ -722,194 +728,197 @@ array set plotsend::rules {
 }
 
 array set plotsend::rules {
-  41,line 124
-  7,line 76
-  37,line 115
-  4,line 73
-  34,line 112
-  1,line 69
-  31,line 109
-  27,line 100
-  24,line 96
-  21,line 93
-  17,line 88
-  73,line 172
-  14,line 84
-  70,line 166
-  69,line 165
-  11,line 81
-  66,line 160
-  63,line 155
-  60,line 150
-  59,line 149
-  56,line 144
+  41,line 125
+  7,line 77
+  37,line 116
+  4,line 74
+  34,line 113
+  1,line 70
+  31,line 108
+  27,line 101
+  24,line 97
+  21,line 94
+  17,line 89
+  73,line 173
+  14,line 85
+  70,line 167
+  69,line 166
+  11,line 82
+  66,line 161
+  63,line 156
+  60,line 151
+  59,line 150
+  56,line 145
   53,line 141
-  50,line 136
-  49,line 133
-  46,line 130
-  43,line 126
-  9,line 78
-  40,line 123
-  39,line 119
-  6,line 75
-  36,line 114
-  3,line 72
-  33,line 111
+  50,line 135
+  49,line 134
+  46,line 131
+  43,line 127
+  9,line 79
+  40,line 121
+  39,line 120
+  6,line 76
+  36,line 115
+  3,line 73
+  33,line 112
   29,line 105
-  30,line 106
+  30,line 107
   26,line 99
-  23,line 95
-  19,line 91
-  20,line 92
-  16,line 87
-  72,line 171
-  13,line 83
-  68,line 164
-  10,line 80
-  65,line 159
-  62,line 154
-  58,line 148
-  55,line 143
-  52,line 139
-  48,line 132
-  45,line 129
-  42,line 125
-  8,line 77
-  38,line 118
-  5,line 74
-  35,line 113
-  2,line 71
-  32,line 110
-  28,line 103
-  25,line 97
-  22,line 94
-  18,line 89
-  15,line 85
-  71,line 167
-  12,line 82
-  67,line 161
-  64,line 156
-  61,line 153
-  57,line 147
-  54,line 142
+  23,line 96
+  19,line 92
+  20,line 93
+  16,line 88
+  72,line 169
+  13,line 84
+  68,line 163
+  10,line 81
+  65,line 158
+  62,line 155
+  58,line 149
+  55,line 144
+  52,line 140
+  48,line 133
+  45,line 130
+  42,line 126
+  8,line 78
+  38,line 117
+  5,line 75
+  35,line 114
+  2,line 72
+  32,line 111
+  28,line 102
+  25,line 98
+  22,line 95
+  18,line 90
+  74,line 174
+  15,line 86
+  71,line 168
+  12,line 83
+  67,line 162
+  64,line 157
+  61,line 152
+  57,line 146
+  54,line 143
   51,line 138
-  47,line 131
+  47,line 132
   44,line 128
 }
 
 array set plotsend::lr1_table {
   66,trans {}
-  35 {{40 0 1} {41 0 1} {42 0 1} {43 0 1} {44 0 1} {45 0 1} {46 0 1} {47 0 1} {48 0 1} {49 0 1}}
+  35 {{9 0 2}}
   14,trans {}
-  36 {{69 {263 278 279 281 287 288 289} 1}}
+  36 {{41 0 1} {42 0 1} {43 0 1} {44 0 1} {45 0 1} {46 0 1} {47 0 1} {48 0 1} {49 0 1} {50 0 1}}
   33,trans {}
-  37 {{71 {263 278 279 281 287 288 289} 1}}
+  37 {{70 {263 278 279 281 287 288 289} 1}}
   52,trans {}
-  38 {{68 {263 278 279 281 287 288 289} 1}}
+  38 {{72 {263 278 279 281 287 288 289} 1}}
   71,trans {}
-  39 {{70 {263 278 279 281 287 288 289} 1}}
-  40 {{6 0 2}}
-  18,trans {{272 50} {280 51} {312 52}}
-  1,trans {{265 27} {266 28} {282 29} {284 30} {285 31} {291 32} {306 33} {315 34} {316 35}}
-  41 {{31 0 1} {32 0 1} {33 0 1} {34 0 1} {35 0 1} {36 0 1} {37 0 1}}
+  39 {{69 {263 278 279 281 287 288 289} 1}}
+  40 {{71 {263 278 279 281 287 288 289} 1}}
+  18,trans {{272 51} {280 52} {313 53}}
+  1,trans {{265 28} {266 29} {282 30} {284 31} {285 32} {291 33} {307 34} {316 35} {317 36}}
+  41 {{6 0 2}}
   37,trans {}
-  42 {{62 0 1}}
+  42 {{32 0 1} {33 0 1} {34 0 1} {35 0 1} {36 0 1} {37 0 1} {38 0 1}}
   56,trans {}
   43 {{63 0 1}}
   75,trans {}
   44 {{64 0 1}}
   23,trans {}
-  45 {{16 0 2}}
+  45 {{65 0 1}}
   5,trans {}
-  42,trans {}
-  46 {{17 0 2}}
+  42,trans {{263 77} {278 78} {279 79} {281 80} {287 81} {288 82} {289 83}}
+  46 {{16 0 2}}
   61,trans {}
-  47 {{25 0 2}}
+  47 {{17 0 2}}
   80,trans {}
   79,trans {}
-  48 {{39 0 1}}
+  48 {{25 0 2}}
   27,trans {}
-  50 {{28 0 1}}
-  49 {{8 0 2}}
-  9,trans {{269 42} {270 43} {308 44} {318 46}}
+  50 {{8 0 2}}
+  49 {{40 0 1}}
+  9,trans {{269 43} {270 44} {309 45} {319 47}}
   46,trans {}
   51 {{29 0 1}}
   65,trans {}
-  52 {{26 0 2}}
-  53 {{67 0 1}}
-  13,trans {{293 48} {314 49}}
+  52 {{30 0 1}}
+  84,trans {}
+  53 {{26 0 2}}
+  13,trans {{293 49} {315 50}}
   32,trans {}
-  54 {{66 0 1}}
+  54 {{68 0 1}}
   51,trans {}
-  55 {{19 0 2}}
+  55 {{67 0 1}}
   70,trans {}
   69,trans {}
-  56 {{69 0 1}}
-  57 {{71 0 1}}
+  56 {{19 0 2}}
+  57 {{70 0 1}}
   17,trans {}
-  0,trans {{257 1} {264 2} {267 3} {268 4} {270 5} {271 6} {272 7} {273 8} {274 9} {276 10} {277 11} {283 12} {284 13} {286 14} {290 15} {292 16} {294 17} {296 18} {297 19} {298 20} {301 21} {302 22} {303 23} {306 24} {308 25} {311 26}}
-  36,trans {}
-  58 {{68 0 1}}
+  0,trans {{257 1} {264 2} {267 3} {268 4} {270 5} {271 6} {272 7} {273 8} {274 9} {276 10} {277 11} {283 12} {284 13} {286 14} {290 15} {292 16} {294 17} {296 18} {297 19} {298 20} {301 21} {302 22} {303 23} {306 24} {307 25} {309 26} {312 27}}
+  36,trans {{257 67} {258 68} {259 69} {260 70} {261 71} {275 72} {299 73} {300 74} {305 75} {308 76}}
+  58 {{72 0 1}}
   55,trans {}
-  60 {{60 0 1}}
-  59 {{70 0 1}}
+  60 {{71 0 1}}
+  59 {{69 0 1}}
   74,trans {}
-  61 {{72 0 1}}
+  61 {{61 0 1}}
   62 {{73 0 1}}
   22,trans {}
   4,trans {}
-  41,trans {{263 76} {278 77} {279 78} {281 79} {287 80} {288 81} {289 82}}
-  63 {{10 0 2}}
+  41,trans {}
+  63 {{74 0 1}}
   60,trans {}
   59,trans {}
-  64 {{58 0 1}}
+  64 {{10 0 2}}
   78,trans {}
   65 {{59 0 1}}
-  66 {{40 0 2}}
   26,trans {}
-  8,trans {{269 42} {270 43} {308 44} {318 45}}
+  66 {{60 0 1}}
+  8,trans {{269 43} {270 44} {309 45} {319 46}}
   45,trans {}
-  67 {{42 0 2}}
+  67 {{41 0 2}}
   64,trans {}
-  68 {{44 0 2}}
+  68 {{43 0 2}}
   83,trans {}
-  70 {{43 0 2}}
+  70 {{46 0 2}}
   69 {{45 0 2}}
-  12,trans {{304 47}}
-  71 {{41 0 2}}
+  12,trans {{304 48}}
+  71 {{44 0 2}}
   31,trans {}
   50,trans {}
   49,trans {}
-  72 {{46 0 2}}
+  72 {{42 0 2}}
   68,trans {}
-  73 {{48 0 2}}
+  73 {{47 0 2}}
   74 {{49 0 2}}
   16,trans {}
-  35,trans {{257 66} {258 67} {259 68} {260 69} {261 70} {275 71} {299 72} {300 73} {305 74} {307 75}}
-  75 {{47 0 2}}
+  75 {{50 0 2}}
+  35,trans {}
   54,trans {}
-  76 {{34 0 2}}
+  76 {{48 0 2}}
   73,trans {}
-  77 {{33 0 2}}
-  78 {{37 0 2}}
+  77 {{35 0 2}}
+  78 {{34 0 2}}
   21,trans {}
   3,trans {}
   80 {{32 0 2}}
-  79 {{31 0 2}}
+  79 {{38 0 2}}
   40,trans {}
   39,trans {}
   58,trans {}
-  81 {{36 0 2}}
+  81 {{33 0 2}}
   10 {{14 0 1}}
   77,trans {}
-  82 {{35 0 2}}
+  82 {{37 0 2}}
   11 {{15 0 1}}
-  83 {{25 0 3}}
-  25,trans {}
+  83 {{36 0 2}}
+  25,trans {{X 57} {Y 58} {x 59} {y 60} {284 61} {310 62} {311 63} {318 64} {321 65} {322 66}}
   7,trans {}
   12 {{24 0 1} {25 0 1}}
+  84 {{25 0 3}}
   44,trans {}
-  13 {{8 0 1} {38 0 0} {39 0 0}}
+  13 {{8 0 1} {39 0 0} {40 0 0}}
   63,trans {}
   14 {{4 0 1}}
   82,trans {}
@@ -918,15 +927,15 @@ array set plotsend::lr1_table {
   30,trans {}
   29,trans {}
   16 {{18 0 1}}
-  48,trans {}
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0} {13 0 0} {14 0 0} {15 0 0} {16 0 0} {17 0 0} {18 0 0} {19 0 0} {20 0 0} {21 0 0} {22 0 0} {23 0 0} {24 0 0} {25 0 0} {26 0 0} {27 0 0}}
+  48,trans {{295 84}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0} {13 0 0} {14 0 0} {15 0 0} {16 0 0} {17 0 0} {18 0 0} {19 0 0} {20 0 0} {21 0 0} {22 0 0} {23 0 0} {24 0 0} {25 0 0} {26 0 0} {27 0 0} {28 0 0}}
   17 {{20 0 1}}
   67,trans {}
-  1 {{9 0 1} {40 0 0} {41 0 0} {42 0 0} {43 0 0} {44 0 0} {45 0 0} {46 0 0} {47 0 0} {48 0 0} {49 0 0} {50 {257 258 259 260 261 275 299 300 305 307} 0} {51 {257 258 259 260 261 275 299 300 305 307} 0} {52 {257 258 259 260 261 275 299 300 305 307} 0} {53 {257 258 259 260 261 275 299 300 305 307} 0} {54 {257 258 259 260 261 275 299 300 305 307} 0} {55 {257 258 259 260 261 275 299 300 305 307} 0} {56 {257 258 259 260 261 275 299 300 305 307} 0}}
-  18 {{26 0 1} {28 0 0} {29 0 0} {30 0 0}}
+  1 {{9 0 1} {41 0 0} {42 0 0} {43 0 0} {44 0 0} {45 0 0} {46 0 0} {47 0 0} {48 0 0} {49 0 0} {50 0 0} {51 {257 258 259 260 261 275 299 300 305 308} 0} {52 {257 258 259 260 261 275 299 300 305 308} 0} {53 {257 258 259 260 261 275 299 300 305 308} 0} {54 {257 258 259 260 261 275 299 300 305 308} 0} {55 {257 258 259 260 261 275 299 300 305 308} 0} {56 {257 258 259 260 261 275 299 300 305 308} 0} {57 {257 258 259 260 261 275 299 300 305 308} 0}}
+  18 {{26 0 1} {29 0 0} {30 0 0} {31 0 0}}
   15,trans {}
-  2 {{6 0 1} {31 0 0} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {68 {263 278 279 281 287 288 289} 0} {69 {263 278 279 281 287 288 289} 0} {70 {263 278 279 281 287 288 289} 0} {71 {263 278 279 281 287 288 289} 0}}
-  19 {{19 0 1} {65 0 0} {66 0 0} {67 0 0}}
+  2 {{6 0 1} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0} {69 {263 278 279 281 287 288 289} 0} {70 {263 278 279 281 287 288 289} 0} {71 {263 278 279 281 287 288 289} 0} {72 {263 278 279 281 287 288 289} 0}}
+  19 {{19 0 1} {66 0 0} {67 0 0} {68 0 0}}
   20 {{12 0 1}}
   34,trans {}
   3 {{7 0 1}}
@@ -938,34 +947,34 @@ array set plotsend::lr1_table {
   5 {{13 0 1}}
   23 {{3 0 1}}
   20,trans {}
-  19,trans {{270 53} {276 54} {319 55}}
+  19,trans {{270 54} {276 55} {320 56}}
   6 {{23 0 1}}
-  24 {{10 0 1} {57 0 0} {58 0 0} {59 0 0} {60 0 0} {68 0 0} {69 0 0} {70 0 0} {71 0 0} {72 0 0} {73 0 0}}
-  2,trans {{X 36} {Y 37} {x 38} {y 39} {313 40} {320 41}}
+  24 {{27 0 1}}
+  2,trans {{X 37} {Y 38} {x 39} {y 40} {314 41} {321 42}}
   38,trans {}
-  7 {{27 0 1}}
-  25 {{22 0 1}}
+  7 {{28 0 1}}
+  25 {{10 0 1} {58 0 0} {59 0 0} {60 0 0} {61 0 0} {69 0 0} {70 0 0} {71 0 0} {72 0 0} {73 0 0} {74 0 0}}
   57,trans {}
-  8 {{16 0 1} {61 0 0} {62 0 0} {63 0 0} {64 0 0}}
-  26 {{0 0 1}}
+  8 {{16 0 1} {62 0 0} {63 0 0} {64 0 0} {65 0 0}}
+  26 {{22 0 1}}
   76,trans {}
-  9 {{17 0 1} {61 0 0} {62 0 0} {63 0 0} {64 0 0}}
-  27 {{54 {257 258 259 260 261 275 299 300 305 307} 1}}
-  24,trans {{X 56} {Y 57} {x 58} {y 59} {284 60} {309 61} {310 62} {317 63} {320 64} {321 65}}
+  9 {{17 0 1} {62 0 0} {63 0 0} {64 0 0} {65 0 0}}
+  27 {{0 0 1}}
+  24,trans {}
   6,trans {}
-  28 {{52 {257 258 259 260 261 275 299 300 305 307} 1}}
+  28 {{55 {257 258 259 260 261 275 299 300 305 308} 1}}
   43,trans {}
-  29 {{51 {257 258 259 260 261 275 299 300 305 307} 1}}
-  30 {{55 {257 258 259 260 261 275 299 300 305 307} 1}}
+  29 {{53 {257 258 259 260 261 275 299 300 305 308} 1}}
+  30 {{52 {257 258 259 260 261 275 299 300 305 308} 1}}
   62,trans {}
-  31 {{56 {257 258 259 260 261 275 299 300 305 307} 1}}
+  31 {{56 {257 258 259 260 261 275 299 300 305 308} 1}}
   81,trans {}
   10,trans {}
-  32 {{53 {257 258 259 260 261 275 299 300 305 307} 1}}
+  32 {{57 {257 258 259 260 261 275 299 300 305 308} 1}}
   28,trans {}
-  33 {{50 {257 258 259 260 261 275 299 300 305 307} 1}}
-  47,trans {{295 83}}
-  34 {{9 0 2}}
+  33 {{54 {257 258 259 260 261 275 299 300 305 308} 1}}
+  47,trans {}
+  34 {{51 {257 258 259 260 261 275 299 300 305 308} 1}}
 }
 
 array set plotsend::token_id_table {
@@ -993,46 +1002,47 @@ array set plotsend::token_id_table {
   304 STRIP_
   305 STYLE_
   295 SCALE_
-  306 TITLE_
+  306 THEME_
   296 SELECT_
-  307 WEIGHT_
+  307 TITLE_
   262,t 0
   297 SHAPE_
-  308 WIDTH_
+  308 WEIGHT_
   285,line 39
   298 SHOW_
-  310 YAXIS_
-  309 XAXIS_
+  310 XAXIS_
+  309 WIDTH_
   299 SIZE_
-  311 plotsend
+  311 YAXIS_
   283,t 0
-  312 select
-  313 axis
+  312 plotsend
+  313 select
   314,t 1
-  314 legend
+  314 axis
   282,line 36
-  315 fontt
-  316 fontType
+  315 legend
+  316 fontt
   264,title AXIS
-  317 title
+  317 fontType
   283,title LAYOUT
-  318 errorr
+  318 title
   312,title {}
-  320 xy
-  319 shape
+  320 shape
+  319 errorr
   278,line 32
-  321 xyaxis
-  error,line 67
-  322 start'
+  321 xy
+  error,line 68
+  322 xyaxis
   258,t 0
+  323 start'
   275,line 29
   279,t 0
   280,t 0
-  311,t 1
+  311,t 0
   272,line 26
   263,title AUTO
   282,title LABELS
-  311,title {}
+  311,title YAXIS
   268,line 22
   276,t 0
   Y,t 0
@@ -1045,35 +1055,35 @@ array set plotsend::token_id_table {
   262,title string
   281,title GRID
   error,t 0
-  310,title YAXIS
-  309,title XAXIS
+  310,title XAXIS
+  309,title WIDTH
   299,title SIZE
   258,line 8
   273,t 0
   294,t 0
   304,t 0
-  321,line 170
-  317,line 146
+  321,line 165
+  317,line 137
   261,title FONTWEIGHT
   279,title FORMAT
   280,title GRAPH
-  308,title WIDTH
+  308,title WEIGHT
   269,t 0
   270,t 0
   298,title SHOW
-  314,line 117
+  314,line 110
   291,t 0
   301,t 0
   322,t 1
   y,t 0
-  311,line 68
+  311,line 65
   307,line 61
   266,t 0
   260,title FONTSTYLE
   259,title FONTSLANT
   297,line 51
   278,title FLIP
-  307,title WEIGHT
+  307,title TITLE
   297,title SHAPE
   287,t 0
   294,line 48
@@ -1089,7 +1099,7 @@ array set plotsend::token_id_table {
   287,line 41
   277,title FILLCOLOR
   284,t 0
-  306,title TITLE
+  306,title THEME
   296,title SELECT
   315,t 1
   284,line 38
@@ -1104,7 +1114,7 @@ array set plotsend::token_id_table {
   305,title STYLE
   295,title SCALE
   274,line 28
-  Y,line 166
+  Y,line 168
   271,line 25
   x x
   277,t 0
@@ -1115,6 +1125,7 @@ array set plotsend::token_id_table {
   275,title FAMILY
   294,title RELIEF
   304,title STRIP
+  323,title {}
   264,line 18
   261,line 11
   274,t 0
@@ -1122,19 +1133,21 @@ array set plotsend::token_id_table {
   295,t 0
   257,line 7
   274,title ERRORBAR
+  323,line 175
   293,title POSITION
   303,title STATISTICS
   322,title {}
-  320,line 163
-  319,line 158
+  320,line 160
+  319,line 154
   error error
   271,t 0
-  y,line 165
+  y,line 167
   292,t 0
   302,t 0
-  316,line 135
+  316,line 123
+  323,t 1
   273,title ERROR
-  313,line 108
+  313,line 104
   292,title NAME
   302,title STATS
   321,title {}
@@ -1182,7 +1195,7 @@ array set plotsend::token_id_table {
   288,title MAX
   317,title {}
   278,t 0
-  X,line 164
+  X,line 166
   310,t 0
   309,t 0
   299,t 0
@@ -1201,7 +1214,7 @@ array set plotsend::token_id_table {
   260,line 10
   259,line 9
   x,title {}
-  322,line 173
+  322,line 172
   272,t 0
   267,title BACKGROUND
   257 FONT_
@@ -1210,15 +1223,15 @@ array set plotsend::token_id_table {
   303,t 0
   315,title {}
   258 FONTSIZE_
-  318,line 152
+  318,line 148
   260 FONTSTYLE_
   259 FONTSLANT_
   261 FONTWEIGHT_
   262 STRING_
   263 AUTO_
-  x,line 163
+  x,line 165
   264 AXIS_
-  315,line 121
+  315,line 119
   265 AXESNUMBERS_
   266 AXESTITLE_
   267 BACKGROUND_
@@ -1226,7 +1239,7 @@ array set plotsend::token_id_table {
   268 BARMODE_
   269 CAP_
   270 COLOR_
-  312,line 102
+  312,line 69
   271 DASH_
   272 DATASET_
   289,t 0
@@ -1360,7 +1373,7 @@ proc plotsend::yyparse {} {
                     11 { ProcessSendCmdTxt normal }
                     12 { ProcessSendCmdCVARYesNo graph,ds,show }
                     13 { ProcessSendCmdCVARGet graph,ds,color }
-                    14 { ProcessSendCmdCVARGet graph,ds,fill }
+                    14 { ProcessSendCmdCVARGetYesNo graph,ds,fill }
                     15 { ProcessSendCmdCVARGet graph,ds,fill,color }
                     18 { ProcessSendCmdCVARGet graph,ds,name }
                     20 { ProcessSendCmdTxt flat }
@@ -1369,53 +1382,54 @@ proc plotsend::yyparse {} {
                     23 { ProcessSendCmdCVARYesNo graph,ds,dash }
                     24 { ProcessSendCmdCVARGet layout }
                     25 { ProcessSendCmdCVARGet layout,strip,scale }
-                    27 { ProcessSendCmdCVARGet graph,ds,current }
+                    27 { ProcessSendCmdCVARYesNo theme }
                     28 { ProcessSendCmdCVARGet graph,ds,current }
-                    29 { ProcessSendCmdCVARGet graph,current }
-                    30 { ProcessSendCmdCVARGet graph,ds,current }
-                    31 { ProcessSendCmdCVARYesNo "graph,axis,$1,grid" }
-                    32 { ProcessSendCmdCVARYesNo "graph,axis,$1,log" }
-                    33 { ProcessSendCmdCVARYesNo "graph,axis,$1,flip" }
-                    34 { ProcessSendCmdCVARYesNo "graph,axis,$1,auto" }
-                    35 { ProcessSendCmdCVARGet "graph,axis,$1,min" }
-                    36 { ProcessSendCmdCVARGet "graph,axis,$1,max" }
-                    37 { ProcessSendCmdCVARGet "graph,axis,$1,format" }
-                    38 { ProcessSendCmdCVARYesNo graph,legend }
-                    39 { ProcessSendCmdCVARGet graph,legend,position }
-                    40 { ProcessSendCmdCVARGet "$1,family" }
+                    29 { ProcessSendCmdCVARGet graph,ds,current }
+                    30 { ProcessSendCmdCVARGet graph,current }
+                    31 { ProcessSendCmdCVARGet graph,ds,current }
+                    32 { ProcessSendCmdCVARYesNo "graph,axis,$1,grid" }
+                    33 { ProcessSendCmdCVARYesNo "graph,axis,$1,log" }
+                    34 { ProcessSendCmdCVARYesNo "graph,axis,$1,flip" }
+                    35 { ProcessSendCmdCVARYesNo "graph,axis,$1,auto" }
+                    36 { ProcessSendCmdCVARGet "graph,axis,$1,min" }
+                    37 { ProcessSendCmdCVARGet "graph,axis,$1,max" }
+                    38 { ProcessSendCmdCVARGet "graph,axis,$1,format" }
+                    39 { ProcessSendCmdCVARYesNo graph,legend }
+                    40 { ProcessSendCmdCVARGet graph,legend,position }
                     41 { ProcessSendCmdCVARGet "$1,family" }
-                    42 { ProcessSendCmdCVARGet "$1,size" }
-                    43 { ProcessSendCmdCVARGet "$1,weight" }
-                    44 { ProcessSendCmdCVARGet "$1,slant" }
-                    45 { ProcessSendCmdCVARGet "$1,weight" }
-                    46 { ProcessSendCmdCVARGet "$1,size" }
-                    47 { ProcessSendCmdCVARGet "$1,weight" }
-                    48 { ProcessSendCmdCVARGet "$1,slant" }
-                    49 { ProcessSendCmdCVARGet "$1,weight" }
-                    50 { set _ graph,title }
-                    51 { set _ axis,title }
+                    42 { ProcessSendCmdCVARGet "$1,family" }
+                    43 { ProcessSendCmdCVARGet "$1,size" }
+                    44 { ProcessSendCmdCVARGet "$1,weight" }
+                    45 { ProcessSendCmdCVARGet "$1,slant" }
+                    46 { ProcessSendCmdCVARGet "$1,weight" }
+                    47 { ProcessSendCmdCVARGet "$1,size" }
+                    48 { ProcessSendCmdCVARGet "$1,weight" }
+                    49 { ProcessSendCmdCVARGet "$1,slant" }
+                    50 { ProcessSendCmdCVARGet "$1,weight" }
+                    51 { set _ graph,title }
                     52 { set _ axis,title }
-                    53 { set _ axis,font }
+                    53 { set _ axis,title }
                     54 { set _ axis,font }
-                    55 { set _ legend,font }
-                    56 { set _ legend,title }
-                    57 { ProcessSendCmdCVARGet graph,title }
-                    58 { ProcessSendCmdCVARGet "graph,axis,$1,title" }
+                    55 { set _ axis,font }
+                    56 { set _ legend,font }
+                    57 { set _ legend,title }
+                    58 { ProcessSendCmdCVARGet graph,title }
                     59 { ProcessSendCmdCVARGet "graph,axis,$1,title" }
-                    60 { ProcessSendCmdCVARGet graph,legend,title }
-                    61 { ProcessSendCmdCVARYesNo graph,ds,error }
-                    62 { ProcessSendCmdCVARYesNo graph,ds,error,cap }
-                    63 { ProcessSendCmdCVARGet graph,ds,error,color }
-                    64 { ProcessSendCmdCVARGet graph,ds,error,width }
-                    65 { ProcessSendCmdCVARGet graph,ds,shape,symbol }
-                    66 { ProcessSendCmdCVARYesNo graph,ds,shape,fill }
-                    67 { ProcessSendCmdCVARGet graph,ds,shape,color }
-                    68 { set _ x }
+                    60 { ProcessSendCmdCVARGet "graph,axis,$1,title" }
+                    61 { ProcessSendCmdCVARGet graph,legend,title }
+                    62 { ProcessSendCmdCVARYesNo graph,ds,error }
+                    63 { ProcessSendCmdCVARYesNo graph,ds,error,cap }
+                    64 { ProcessSendCmdCVARGet graph,ds,error,color }
+                    65 { ProcessSendCmdCVARGet graph,ds,error,width }
+                    66 { ProcessSendCmdCVARGet graph,ds,shape,symbol }
+                    67 { ProcessSendCmdCVARYesNo graph,ds,shape,fill }
+                    68 { ProcessSendCmdCVARGet graph,ds,shape,color }
                     69 { set _ x }
-                    70 { set _ y }
+                    70 { set _ x }
                     71 { set _ y }
-                    72 { set _ x }
-                    73 { set _ y }
+                    72 { set _ y }
+                    73 { set _ x }
+                    74 { set _ y }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

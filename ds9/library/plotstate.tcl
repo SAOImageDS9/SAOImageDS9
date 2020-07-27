@@ -77,7 +77,7 @@ proc PlotDefState {} {
     set pap(graph,ds,show) 1
     set pap(graph,ds,smooth) linear
     set pap(graph,ds,color) black
-    set pap(graph,ds,fill) 1
+    set pap(graph,ds,fill) 0
     set pap(graph,ds,fill,color) black
     set pap(graph,ds,width) 1
     set pap(graph,ds,dash) 0

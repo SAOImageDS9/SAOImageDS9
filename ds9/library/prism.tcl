@@ -669,8 +669,8 @@ proc PrismPlotGenerate {varname} {
 	PlotDialog $vvarname "[string totitle $varname] Plot"
 	PlotAddGraph $vvarname $var(plot,type)
 	PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
+
 	lappend ${varname}(plots) $vvarname
-	set vvar(theme) 1
     }
 
     set vvar(graph,ds,xdata) $xdata
@@ -810,14 +810,15 @@ proc PrismHistogramGenerate {varname} {
     PlotDialog $vvarname "[string totitle $varname] Histogram"
     PlotAddGraph $vvarname bar
     PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+
     lappend ${varname}(plots) $vvarname
-    set vvar(theme) 1
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
 
     PlotExternal $vvarname xy
 
+    set vvar(graph,ds,fill) 1
     set vvar(graph,ds,color) blue
     set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     set vvar(graph,ds,bar,width) $var(bar,width)

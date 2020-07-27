@@ -408,7 +408,7 @@ proc PlotChangeTitle {varname} {
     }
 }
 
-proc PlotChangeTheme {varname} {
+proc PlotUpdateTheme {varname} {
     upvar #0 $varname var
     global $varname
 

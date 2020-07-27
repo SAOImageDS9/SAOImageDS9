@@ -83,7 +83,6 @@ proc MarkerAnalysisHistogramCB {frame id} {
 	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotAddGraph $vvarname line
 	PlotTitle $vvarname Histogram $bunit Counts
-	set vvar(theme) 1
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata

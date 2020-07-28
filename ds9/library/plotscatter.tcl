@@ -176,8 +176,8 @@ proc PlotScatterUpdateElement {varname} {
     $var(graph) element configure ${nn} \
 	-label $var(graph,ds,name) \
 	-hide [expr !$var(graph,ds,show)] \
-	-fill $shapefillcolor \
 	-outline $shapecolor \
+	-fill $shapefillcolor \
 	-symbol $var(graph,ds,shape,symbol) \
 	-scalesymbols no \
 	-linewidth 0 \

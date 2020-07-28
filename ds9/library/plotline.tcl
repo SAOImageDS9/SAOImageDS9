@@ -271,11 +271,11 @@ proc PlotLineUpdateElement {varname} {
     $var(graph) element configure ${nn} \
 	-label $var(graph,ds,name) \
 	-hide [expr !$var(graph,ds,show)] \
-	-symbol $var(graph,ds,shape,symbol) \
 	-color $color \
 	-areabackground $fillColor \
 	-fill $shapefillcolor \
 	-outline $shapecolor \
+	-symbol $var(graph,ds,shape,symbol) \
 	-scalesymbols no \
 	-pixels 5 \
 	-smooth $var(graph,ds,smooth) \

@@ -172,9 +172,9 @@ proc PlotBarUpdateElement {varname} {
 	-label $var(graph,ds,name) \
 	-hide [expr !$var(graph,ds,show)] \
 	-outline $color \
-	-borderwidth $var(graph,ds,width) \
 	-fill $fillColor \
 	-relief flat \
+	-borderwidth $var(graph,ds,width) \
 	-barwidth $var(graph,ds,bar,width) \
 	-showerrorbars $show \
 	-errorbarcolor $var(graph,ds,error,color) \

@@ -46,7 +46,7 @@ proc CreateMenuBar {} {
 	    bind TFrame <<ThemeChanged>> {ThemeConfigTFrame %W}
 
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
-	    bind Text <<ThemeChanged>> {ThemeConfigFgBg %W}
+	    bind Text <<ThemeChanged>> {ThemeConfigText %W}
 	    bind Table <<ThemeChanged>> {ThemeConfigTable %W}
 	    bind Graph <<ThemeChanged>> {ThemeConfigPlot %W}
 	    bind Barchart <<ThemeChanged>> {ThemeConfigPlot %W}
@@ -140,6 +140,11 @@ proc ThemeConfigMenu {w} {
     } else {
 	$w configure -activebackground $ds9(background,menu,active)
     }
+}
+
+proc ThemeConfigText {w} {
+    $w configure -fg [ThemeTreeForeground]
+    $w configure -bg [ThemeTreeBackground]
 }
 
 proc ThemeConfigTable {w} {

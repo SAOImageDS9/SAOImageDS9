@@ -273,8 +273,8 @@ proc PlotLineUpdateElement {varname} {
 	-hide [expr !$var(graph,ds,show)] \
 	-color $color \
 	-areabackground $fillColor \
-	-fill $shapefillcolor \
 	-outline $shapecolor \
+	-fill $shapefillcolor \
 	-symbol $var(graph,ds,shape,symbol) \
 	-scalesymbols no \
 	-pixels 5 \

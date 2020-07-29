@@ -944,7 +944,7 @@ proc PrismExtCmd {varname} {
 
     set nc [starbase_ncols $t]
     if {$nc > $iprism(mincols)} {
-	$var(tbl) configure -cols [expr $nc+1]
+	$var(tbl) configure -cols $nc
     } else {
 	$var(tbl) configure -cols $iprism(mincols)
     }

@@ -334,6 +334,8 @@ int TclFITSY::table(int argc, const char* argv[])
 	switch (col->type()) {
 	case 'A':
 	  break;
+	case 'X':
+	  break;
 	default:
 	  for (int kk=1; kk<col->repeat(); kk++) {
 	    char* tt = trim(col->ttype());
@@ -372,6 +374,8 @@ int TclFITSY::table(int argc, const char* argv[])
       if (col->repeat()>1) {
 	switch (col->type()) {
 	case 'A':
+	  break;
+	case 'X':
 	  break;
 	default:
 	  for (int kk=1; kk<col->repeat(); kk++) {

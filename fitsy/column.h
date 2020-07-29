@@ -53,7 +53,6 @@ public:
 
   virtual double value(const char* ptr, int i =0) {return 0;}
   virtual char* str(const char* ptr, int i =0) {return NULL;}
-  virtual Vector dimension() {return Vector();}
   virtual int repeat() {return 1;}
 };
 
@@ -189,6 +188,8 @@ public:
   double getMin() {return min_;}
   double getMax() {return max_;}
   int hasMinMax() {return min_ != -DBL_MAX ? 1 : 0;}
+
+  Vector dimension();
 };
 
 template<class T>
@@ -201,7 +202,6 @@ public:
 
   double value(const char*, int i =0);
   char* str(const char* ptr, int i =0);
-  Vector dimension();
 };
 
 #endif

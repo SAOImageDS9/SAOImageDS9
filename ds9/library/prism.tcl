@@ -851,7 +851,7 @@ proc PrismColsMenu {varname f ww} {
     if {[TBLValidDB $var(tbldb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(tbldb)] {
-	    $m add command -label $col -command "set ed($ww) \\$col"
+	    $m add command -label $col -command [list set ed($ww) "$col"]
 
 	    # wrap if needed
 	    incr cnt

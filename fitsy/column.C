@@ -62,7 +62,7 @@ FitsAsciiColumn::FitsAsciiColumn(FitsHead* head, int i, int offset)
     offset_ = tbcol-1;
 }
 
-char* FitsAsciiColumn::str(const char* ptr, int i)
+char* FitsAsciiColumn::str(const char* ptr)
 {
   strncpy(buf_, ptr+offset_, width_);
   buf_[width_] = '\0';
@@ -92,7 +92,7 @@ FitsAsciiColumnA::FitsAsciiColumnA(FitsHead* head, int i, int offset)
   }
 }
 
-double FitsAsciiColumnA::value(const char* ptr, int i)
+double FitsAsciiColumnA::value(const char* ptr)
 {
   string x(ptr+offset_);
   istringstream str(x);

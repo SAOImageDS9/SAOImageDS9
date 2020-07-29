@@ -21,7 +21,7 @@ class FitsHPX : public FitsFile {
   int quad_;
   long nside_;
 
-  FitsBinColumn* col_;
+  FitsBinColumnB* col_;
 
   void build(FitsFile*);
   void initHeader(FitsFile*);

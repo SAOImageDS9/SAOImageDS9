@@ -93,12 +93,12 @@ class FitsTableHDU : public FitsHDU {
   char* list();
   FitsColumn* find(const char*);
   FitsColumn* find(int);
-  Vector dimension(const char*);
 };
 
 class FitsBinTableHDU : public FitsTableHDU {
  public:
   FitsBinTableHDU(FitsHead*);
+  Vector dimension(const char*);
 };
 
 class FitsAsciiTableHDU : public FitsTableHDU {

@@ -201,9 +201,9 @@ FitsColumn* FitsTableHDU::find(int i)
   return NULL;
 }
 
-Vector FitsTableHDU::dimension(const char* name)
+Vector FitsBinTableHDU::dimension(const char* name)
 {
-  FitsColumn* col = find(name);
+  FitsBinColumnB* col = (FitsBinColumnB*)find(name);
   return col ? col->dimension() : Vector();
 }
 

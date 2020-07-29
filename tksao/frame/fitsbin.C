@@ -184,7 +184,7 @@ Matrix FitsImage::nextBin(const Vector& c)
       +  .5;
 
     // now, figure out any offset due to mod(lowerleft,binFactor_)
-    FitsTableHDU* hdu = (FitsTableHDU*)(fits_->head())->hdu();
+    FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
     Vector xd = hdu->dimension(fits_->pBinX());
     Vector yd = hdu->dimension(fits_->pBinY());
     Vector ll(xd[0],yd[0]);
@@ -242,7 +242,7 @@ Vector FitsImage::getHistDim()
     return Vector();
 
   // assumes we aready have our columns
-  FitsTableHDU* hdu = (FitsTableHDU*)(fits_->head())->hdu();
+  FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
   Vector xd = hdu->dimension(fits_->pBinX());
   Vector yd = hdu->dimension(fits_->pBinY());
 
@@ -262,7 +262,7 @@ Vector FitsImage::getHistCenter()
     return Vector();
 
   // assumes we aready have our columns
-  FitsTableHDU* hdu = (FitsTableHDU*)(fits_->head())->hdu();
+  FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
   Vector xd = hdu->dimension(fits_->pBinX());
   Vector yd = hdu->dimension(fits_->pBinY());
 

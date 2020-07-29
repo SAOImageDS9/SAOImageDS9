@@ -50,10 +50,6 @@ public:
 
   int hasscaling() {return tscal_ != 1 || tzero_ != 0;}
   int hastnull() {return hastnull_;}
-
-  virtual double value(const char* ptr, int i =0) {return 0;}
-  virtual char* str(const char* ptr, int i =0) {return NULL;}
-  virtual int repeat() {return 1;}
 };
 
 // FitsAsciiColumn
@@ -61,8 +57,7 @@ public:
 class FitsAsciiColumn : public FitsColumn {
 public:
   FitsAsciiColumn(FitsHead*, int, int);
-
-  char* str(const char* ptr, int i =0);
+  char* str(const char* ptr);
 };
 
 class FitsAsciiColumnStr : public FitsAsciiColumn {
@@ -76,8 +71,7 @@ class FitsAsciiColumnA : public FitsAsciiColumn {
 
 public:
   FitsAsciiColumnA(FitsHead*, int, int);
-
-  double value(const char*, int i =0);
+  double value(const char*);
 };
 
 template<class T>
@@ -107,6 +101,8 @@ public:
   int tdimM() {return tdimM_;}
   int* tdimK() {return tdimK_;}
   int tdimK(int ii) {return tdimK_[ii];}
+
+  virtual char* str(const char* ptr, int i =0) =0;
 };
 
 class FitsBinColumnStr : public FitsBinColumn {
@@ -146,6 +142,7 @@ public:
   virtual ~FitsBinColumnArray();  
 
   virtual void* get(const char* heap, const char* ptr, int* cnt);
+  char* str(const char* ptr, int i =0) {return NULL;}
 };
 
 class FitsBinColumnArrayP : public FitsBinColumnArray {
@@ -189,7 +186,8 @@ public:
   double getMax() {return max_;}
   int hasMinMax() {return min_ != -DBL_MAX ? 1 : 0;}
 
-  Vector dimension();
+  virtual double value(const char*, int i =0) =0;
+  virtual Vector dimension() =0;
 };
 
 template<class T>
@@ -202,6 +200,7 @@ public:
 
   double value(const char*, int i =0);
   char* str(const char* ptr, int i =0);
+  Vector dimension();
 };
 
 #endif

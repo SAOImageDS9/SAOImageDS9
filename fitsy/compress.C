@@ -44,14 +44,14 @@ FitsCompress::FitsCompress(FitsFile* fits)
   size_ = (size_t)width_*height_*depth_;
 
   FitsHead* srcHead = fits->head();
-  FitsTableHDU* srcHDU = (FitsTableHDU*)(srcHead->hdu());
-  uncompress_ = srcHDU->find("UNCOMPRESSED_DATA");
-  gzcompress_ = srcHDU->find("GZIP_COMPRESSED_DATA");
-  compress_ = srcHDU->find("COMPRESSED_DATA");
-  zscale_ = srcHDU->find("ZSCALE");
-  zzero_ = srcHDU->find("ZZERO");
-  zblank_ = srcHDU->find("ZBLANK");
-  null_ =  srcHDU->find("NULL_PIXEL_MASK");
+  FitsBinTableHDU* srcHDU = (FitsBinTableHDU*)(srcHead->hdu());
+  uncompress_ = (FitsBinColumnB*)srcHDU->find("UNCOMPRESSED_DATA");
+  gzcompress_ = (FitsBinColumnB*)srcHDU->find("GZIP_COMPRESSED_DATA");
+  compress_ = (FitsBinColumnB*)srcHDU->find("COMPRESSED_DATA");
+  zscale_ = (FitsBinColumnB*)srcHDU->find("ZSCALE");
+  zzero_ = (FitsBinColumnB*)srcHDU->find("ZZERO");
+  zblank_ = (FitsBinColumnB*)srcHDU->find("ZBLANK");
+  null_ =  (FitsBinColumnB*)srcHDU->find("NULL_PIXEL_MASK");
 
   hasScaling_ = (zscale_ && zzero_) || (fits->find("ZSCALE") && fits->find("ZZERO")) ? 1 : 0;
   hasBlank_ = zblank_ || fits->find("ZBLANK") ? 1 : 0;

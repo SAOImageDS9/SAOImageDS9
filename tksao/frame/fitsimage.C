@@ -3400,7 +3400,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
   AstFitsTable* table = (AstFitsTable*)astFitsTable(header," ");
 
   for (int ii=0; ii<cols; ii++) {
-    FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
+    FitsBinColumnB* col = (FitsBinColumnB*)hdu->find(ii);
     int width = col->width();
     int repeat = col->repeat();
 

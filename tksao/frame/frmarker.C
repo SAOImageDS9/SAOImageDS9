@@ -4522,32 +4522,32 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
 
   FitsFile* mk = mkfits->fitsFile();
   FitsHead* mkh = mk->head();
-  FitsTableHDU* mkhdu = (FitsTableHDU*)mkh->hdu();
+  FitsBinTableHDU* mkhdu = (FitsBinTableHDU*)mkh->hdu();
 
   // determine x and y column names
   // if image, hard code 'x' and 'y'
   // however, if table, find out the columns used to bin
-  FitsColumn* x;
-  FitsColumn* y;
+  FitsBinColumnB* x;
+  FitsBinColumnB* y;
   if (keyContext->fits) {
     FitsImage* ptr = keyContext->fits;
     if (ptr->isHist()) {
-      x = mkhdu->find(ptr->getHistX());
-      y = mkhdu->find(ptr->getHistY());
+      x = (FitsBinColumnB*)mkhdu->find(ptr->getHistX());
+      y = (FitsBinColumnB*)mkhdu->find(ptr->getHistY());
     }
     else {
-      x = mkhdu->find("x");
-      y = mkhdu->find("y");
+      x = (FitsBinColumnB*)mkhdu->find("x");
+      y = (FitsBinColumnB*)mkhdu->find("y");
     }
   }
   else {
-    x = mkhdu->find("x");
-    y = mkhdu->find("y");
+    x = (FitsBinColumnB*)mkhdu->find("x");
+    y = (FitsBinColumnB*)mkhdu->find("y");
   }
 
-  FitsColumn* shape = mkhdu->find("shape");
-  FitsColumn* r = mkhdu->find("r");
-  FitsColumn* ang = mkhdu->find("rotang");
+  FitsBinColumn* shape = (FitsBinColumn*)mkhdu->find("shape");
+  FitsBinColumnB* r = (FitsBinColumnB*)mkhdu->find("r");
+  FitsBinColumnB* ang = (FitsBinColumnB*)mkhdu->find("rotang");
   
   // manatory columns x and y
   if (!x || !y) {
@@ -4564,7 +4564,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
     result = TCL_ERROR;
     return;
   }
-  int repeat = ((FitsBinColumn*)x)->repeat();
+  int repeat = x->repeat();
 
   char* ptr = (char*)mk->data();
   int rows = mkhdu->rows();

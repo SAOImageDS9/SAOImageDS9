@@ -17,8 +17,8 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
   : order_(oo), coord_(ss), layout_(ll), quad_(qq)
 {
   FitsHead* head = fits->head();
-  FitsTableHDU* hdu = (FitsTableHDU*)(head->hdu());
-  col_ = (FitsBinColumn*)hdu->find(cc);
+  FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head->hdu());
+  col_ = (FitsBinColumnB*)hdu->find(cc);
   if (!col_)
     return;
 

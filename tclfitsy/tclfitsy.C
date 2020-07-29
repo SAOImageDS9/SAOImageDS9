@@ -327,16 +327,16 @@ int TclFITSY::table(int argc, const char* argv[])
   if (start==0) {
     ostringstream headstr;
     for (int jj=0; jj<cols; jj++) {
-      FitsColumn* cc=hdu->find(jj);
-      headstr << trim(cc->ttype()) << ' ';
+      FitsBinColumn* col= (FitsBinColumn*)hdu->find(jj);
+      headstr << trim(col->ttype()) << ' ';
 
-      if (cc->repeat()>1) {
-	switch (cc->type()) {
+      if (col->repeat()>1) {
+	switch (col->type()) {
 	case 'A':
 	  break;
 	default:
-	  for (int kk=1; kk<cc->repeat(); kk++) {
-	    char* tt = trim(cc->ttype());
+	  for (int kk=1; kk<col->repeat(); kk++) {
+	    char* tt = trim(col->ttype());
 	    headstr << tt << kk+1 << ' ';
 	    delete [] tt;
 	  }
@@ -359,27 +359,27 @@ int TclFITSY::table(int argc, const char* argv[])
   for (int ii=start; ii<end; ii++, ptr+=width) {
     int ccnt = 0;
     for (int jj=0; jj<cols; jj++) {
-      FitsColumn* cc=hdu->find(jj);
+      FitsBinColumn* col=(FitsBinColumn*)hdu->find(jj);
       ccnt++;
 
       ostringstream index;
       index << ii+1 << ',' << ccnt << ends;
       ostringstream value;
-      value << cc->str(ptr) << ends;
+      value << col->str(ptr) << ends;
       Tcl_SetVar2(interp_, argv[4], index.str().c_str(),
 		  value.str().c_str(), TCL_GLOBAL_ONLY);
 
-      if (cc->repeat()>1) {
-	switch (cc->type()) {
+      if (col->repeat()>1) {
+	switch (col->type()) {
 	case 'A':
 	  break;
 	default:
-	  for (int kk=1; kk<cc->repeat(); kk++) {
+	  for (int kk=1; kk<col->repeat(); kk++) {
 	    ccnt++;
 	    ostringstream index;
 	    index << ii+1 << ',' << ccnt << ends;
 	    ostringstream value;
-	    value << cc->str(ptr,kk) << ends;
+	    value << col->str(ptr,kk) << ends;
 	    Tcl_SetVar2(interp_, argv[4], index.str().c_str(),
 			value.str().c_str(), TCL_GLOBAL_ONLY);
 	  }
@@ -435,10 +435,10 @@ int TclFITSY::histogram(int argc, const char* argv[])
   if (!fits->isTable()) 
     return TCL_ERROR;
 
-  FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
+  FitsBinTableHDU* hdu = (FitsBinTableHDU*)fits->head()->hdu();
   int rows = hdu->rows();
   int width  = hdu->width();
-  FitsColumn* col=hdu->find(argv[4]);
+  FitsBinColumnB* col = (FitsBinColumnB*)hdu->find(argv[4]);
 
   if (!col)
     return TCL_ERROR;
@@ -574,14 +574,14 @@ int TclFITSY::plot(int argc, const char* argv[])
     return TCL_ERROR;
 
   char* ptr = (char*)fits->data();
-  FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
+  FitsBinTableHDU* hdu = (FitsBinTableHDU*)fits->head()->hdu();
   int rows = hdu->rows();
   int width  = hdu->width();
 
-  FitsColumn* xcol =hdu->find(argv[5]);
-  FitsColumn* ycol =hdu->find(argv[7]);
-  FitsColumn* xecol =NULL;
-  FitsColumn* yecol =NULL;
+  FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(argv[5]);
+  FitsBinColumnB* ycol = (FitsBinColumnB*) hdu->find(argv[7]);
+  FitsBinColumnB* xecol =NULL;
+  FitsBinColumnB* yecol =NULL;
 
   double* x = new double[rows];
   double* y = new double[rows];
@@ -597,20 +597,20 @@ int TclFITSY::plot(int argc, const char* argv[])
   case XY:
     break;
   case XYXE:
-    xecol=hdu->find(argv[9]);
+    xecol= (FitsBinColumnB*)hdu->find(argv[9]);
     if (!xecol)
       return TCL_ERROR;
     xe = new double[rows];
     break;
   case XYYE:
-    yecol=hdu->find(argv[9]);
+    yecol= (FitsBinColumnB*)hdu->find(argv[9]);
     if (!yecol)
       return TCL_ERROR;
     ye = new double[rows];
     break;
   case XYXEYE:
-    xecol=hdu->find(argv[9]);
-    yecol=hdu->find(argv[11]);
+    xecol= (FitsBinColumnB*)hdu->find(argv[9]);
+    yecol= (FitsBinColumnB*)hdu->find(argv[11]);
     if (!xecol)
       return TCL_ERROR;
     if (!yecol)

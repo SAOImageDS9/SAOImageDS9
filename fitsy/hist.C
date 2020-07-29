@@ -184,21 +184,21 @@ int FitsHist::initHeader(FitsFile* fits)
 
   // get X column
   if (fits->pBinX())
-    xcol_ = srcHDU->find(fits->pBinX());
+    xcol_ = (FitsBinColumnB*)srcHDU->find(fits->pBinX());
 
   if (!xcol_)
     return 0;
 
   // get Y column
   if (fits->pBinY())
-    ycol_ = srcHDU->find(fits->pBinY());
+    ycol_ = (FitsBinColumnB*)srcHDU->find(fits->pBinY());
 
   if (!ycol_)
     return 0;
 
   // get Z column (if specified)
   if (fits->pBinZ() && depth_ > 1)
-    zcol_ = srcHDU->find(fits->pBinZ());
+    zcol_ = (FitsBinColumnB*)srcHDU->find(fits->pBinZ());
   else
     zcol_ = NULL;
 

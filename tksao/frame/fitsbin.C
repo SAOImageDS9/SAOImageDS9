@@ -226,12 +226,12 @@ Matrix FitsImage::nextBin(const Vector& c)
   return refToPhysical * mm * dataToRef;
 }
 
-Vector FitsImage::getHistColMinMax(const char* col)
+Vector FitsImage::getColMinMax(const char* col)
 {
   return fits_ ? fits_->getColMinMax(col) : Vector();
 }
 
-Vector FitsImage::getHistColDim(const char* col)
+Vector FitsImage::getColDim(const char* col)
 {
   return fits_ ? fits_->getColDim(col) : Vector();
 }

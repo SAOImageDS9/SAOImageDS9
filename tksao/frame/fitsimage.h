@@ -339,9 +339,9 @@ class FitsImage {
 
   Matrix nextBin(const Vector&);
   void calcHistSize();
+  Vector getColMinMax(const char*);
+  Vector getColDim(const char*);
   Vector getHistDim();
-  Vector getHistColMinMax(const char*);
-  Vector getHistColDim(const char*);
   Vector getHistCursor() {return actualHistCursor;}
   const char* getHistFilter();
   const char* getHistX();

@@ -32,61 +32,6 @@ FitsColumn::FitsColumn(FitsHead* head, int i, int off)
   tzero_ = head->getReal(keycat("TZERO",i), 0);
   hastnull_ = head->find(keycat("TNULL",i)) ? 1:0;
   tnull_ = head->getInteger(keycat("TNULL",i), 0);
-
-  char* td = head->find(keycat("TDMAX",i));
-  char* tl = head->find(keycat("TLMAX",i));
-  char* ta = head->find(keycat("TALEN",i));
-  char* ax = head->find(keycat("AXLEN",i));
-
-  // this provides backward compatibility
-  if (td) {
-    hastlmin_ = head->find(keycat("TDMIN",i)) ? 1:0;
-    hastlmax_ = 1;
-    tlmin_ = head->getReal(keycat("TDMIN",i), 0);
-    tlmax_ = head->getReal(keycat("TDMAX",i), 0);
-  }
-  else if (tl) {
-    hastlmin_ = head->find(keycat("TLMIN",i)) ? 1:0;
-    hastlmax_ = 1;
-    tlmin_ = head->getReal(keycat("TLMIN",i), 0);
-    tlmax_ = head->getReal(keycat("TLMAX",i), 0);
-  }
-  else if (ta) {
-    hastlmin_ = 0;
-    hastlmax_ = 1;
-    tlmin_ = 1;
-    tlmax_ = head->getReal(keycat("TALEN",i), 0);
-  }
-  else if (ax) {
-    hastlmin_ = 0;
-    hastlmax_ = 1;
-    tlmin_ = 1;
-    tlmax_ = head->getReal(keycat("AXLEN",i), 0);
-  }
-  else {
-    hastlmin_ = 0;
-    hastlmax_ = 0;
-    tlmin_ = 0;
-    tlmax_ = 0;
-  }
-
-  // now, make sure they are valid
-  if (tlmin_>tlmax_) {
-    hastlmin_ = 0;
-    hastlmax_ = 0;
-    tlmin_ = 0;
-    tlmax_ = 0;
-  }
-
-  // use tlmin/tlmax if available
-  if (hastlmin_ || hastlmax_) {
-    min_ = tlmin_;
-    max_ = tlmax_;
-  }
-  else {
-    min_ = -DBL_MAX;
-    max_ = DBL_MAX;
-  }
 }
 
 FitsColumn::~FitsColumn()
@@ -161,24 +106,6 @@ template<class T> FitsAsciiColumnT<T>::FitsAsciiColumnT(FitsHead* head,
 							int i, int off)
   : FitsAsciiColumnA(head, i, off) {}
 
-template <> Vector FitsAsciiColumnT<int>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
-    : Vector(INT_MIN,INT_MAX);
-}
-
-template <> Vector FitsAsciiColumnT<float>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
-    : Vector(-FLT_MAX,FLT_MAX);
-}
-
-template <> Vector FitsAsciiColumnT<double>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
-    : Vector(-DBL_MAX,DBL_MAX);
-}
-
 // FitsBinColumn
 
 FitsBinColumn::FitsBinColumn(FitsHead* head, int i, int offset)
@@ -237,6 +164,22 @@ char* FitsBinColumnStr::str(const char* ptr, int i)
   strncpy(buf_, ptr+offset_, width_);
   buf_[width_] = '\0';
   return buf_;
+}
+
+// FitsbinColumnBit
+
+FitsBinColumnBit::FitsBinColumnBit(FitsHead* head, int i, int off)
+  : FitsBinColumn(head, i, off)
+{
+  width_ = (repeat_+7)/8;
+}
+
+char* FitsBinColumnBit::str(const char* ptr, int i)
+{
+  ostringstream ost;
+  //  ost << value(ptr,i) << ends;
+  ost << "hi" << ends;
+  return (char*)dupstr(ost.str().c_str());
 }
 
 // FitsBinColumnLogical
@@ -407,20 +350,67 @@ int FitsBinColumnArrayQ::swap(const char* ptr, int i)
   return u.l;
 }
 
-// FitsbinColumnBit
-
-FitsBinColumnBit::FitsBinColumnBit(FitsHead* head, int i, int off)
-  : FitsBinColumn(head, i, off)
-{
-  width_ = (repeat_+7)/8;
-}
-
 // FitsBinColumnB
 
 FitsBinColumnB::FitsBinColumnB(FitsHead* head, int i, int offset)
   : FitsBinColumn(head, i, offset)
 {
   byteswap_ = lsb();
+
+  char* td = head->find(keycat("TDMAX",i));
+  char* tl = head->find(keycat("TLMAX",i));
+  char* ta = head->find(keycat("TALEN",i));
+  char* ax = head->find(keycat("AXLEN",i));
+
+  // this provides backward compatibility
+  if (td) {
+    hastlmin_ = head->find(keycat("TDMIN",i)) ? 1:0;
+    hastlmax_ = 1;
+    tlmin_ = head->getReal(keycat("TDMIN",i), 0);
+    tlmax_ = head->getReal(keycat("TDMAX",i), 0);
+  }
+  else if (tl) {
+    hastlmin_ = head->find(keycat("TLMIN",i)) ? 1:0;
+    hastlmax_ = 1;
+    tlmin_ = head->getReal(keycat("TLMIN",i), 0);
+    tlmax_ = head->getReal(keycat("TLMAX",i), 0);
+  }
+  else if (ta) {
+    hastlmin_ = 0;
+    hastlmax_ = 1;
+    tlmin_ = 1;
+    tlmax_ = head->getReal(keycat("TALEN",i), 0);
+  }
+  else if (ax) {
+    hastlmin_ = 0;
+    hastlmax_ = 1;
+    tlmin_ = 1;
+    tlmax_ = head->getReal(keycat("AXLEN",i), 0);
+  }
+  else {
+    hastlmin_ = 0;
+    hastlmax_ = 0;
+    tlmin_ = 0;
+    tlmax_ = 0;
+  }
+
+  // now, make sure they are valid
+  if (tlmin_>tlmax_) {
+    hastlmin_ = 0;
+    hastlmax_ = 0;
+    tlmin_ = 0;
+    tlmax_ = 0;
+  }
+
+  // use tlmin/tlmax if available
+  if (hastlmin_ || hastlmax_) {
+    min_ = tlmin_;
+    max_ = tlmax_;
+  }
+  else {
+    min_ = -DBL_MAX;
+    max_ = DBL_MAX;
+  }
 }
 
 // FitsBinColumnT

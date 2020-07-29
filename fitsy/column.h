@@ -25,13 +25,6 @@ protected:
   int tnull_;
   int hastnull_;
 
-  float tlmin_;
-  float tlmax_;
-  int hastlmin_;
-  int hastlmax_;
-
-  double min_;
-  double max_;
   int validmm_;
 
   char buf_[128];
@@ -54,8 +47,6 @@ public:
   float tscal() {return tscal_;}
   float tzero() {return tzero_;}
   int tnull() {return tnull_;}
-  float tlmin() {return tlmin_;}
-  float tlmax() {return tlmax_;}
 
   int hasscaling() {return tscal_ != 1 || tzero_ != 0;}
   int hastnull() {return hastnull_;}
@@ -64,15 +55,6 @@ public:
   virtual char* str(const char* ptr, int i =0) {return NULL;}
   virtual Vector dimension() {return Vector();}
   virtual int repeat() {return 1;}
-
-  void setMin(double m) {min_=m;}
-  void setMax(double m) {max_=m;}
-
-  double getMin() {return min_;}
-  double getMax() {return max_;}
-
-  int hasMinMax() {return min_ != -DBL_MAX ? 1 : 0;}
-  int hasTLMinTLMax() {return hastlmin_ && hastlmax_;}
 };
 
 // FitsAsciiColumn
@@ -90,7 +72,7 @@ public:
 };
 
 class FitsAsciiColumnA : public FitsAsciiColumn {
-private:
+ private:
   int prec_;
 
 public:
@@ -101,10 +83,9 @@ public:
 
 template<class T>
 class FitsAsciiColumnT : public FitsAsciiColumnA {
+
 public:
   FitsAsciiColumnT(FitsHead*, int, int);
-
-  Vector dimension();
 };
 
 // FitsBinColumn
@@ -145,6 +126,12 @@ public:
   char* str(const char* ptr, int i =0);
 };
 
+class FitsBinColumnBit : public FitsBinColumn {
+public:
+  FitsBinColumnBit(FitsHead*, int, int);
+  char* str(const char* ptr, int i =0);
+};
+
 class FitsBinColumnArray : public FitsBinColumn {
  protected:
   int byteswap_;
@@ -178,17 +165,30 @@ public:
   FitsBinColumnArrayQ(FitsHead*, int, int);
 };
 
-class FitsBinColumnBit : public FitsBinColumn {
-public:
-  FitsBinColumnBit(FitsHead*, int, int);
-};
-
 class FitsBinColumnB : public FitsBinColumn {
 protected:
   int byteswap_;
 
+  float tlmin_;
+  float tlmax_;
+  int hastlmin_;
+  int hastlmax_;
+
+  double min_;
+  double max_;
+
 public:
   FitsBinColumnB(FitsHead*, int, int);
+
+  float tlmin() {return tlmin_;}
+  float tlmax() {return tlmax_;}
+  int hasTLMinTLMax() {return hastlmin_ && hastlmax_;}
+
+  void setMin(double m) {min_=m;}
+  void setMax(double m) {max_=m;}
+  double getMin() {return min_;}
+  double getMax() {return max_;}
+  int hasMinMax() {return min_ != -DBL_MAX ? 1 : 0;}
 };
 
 template<class T>

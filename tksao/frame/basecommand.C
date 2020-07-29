@@ -850,7 +850,7 @@ void Base::getBinColsMinMaxCmd(const char* col)
 {
   if (currentContext->fits && col && *col) {
     ostringstream str;
-    str << currentContext->fits->getHistColMinMax(col) << ends;
+    str << currentContext->fits->getColMinMax(col) << ends;
     Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }
 }
@@ -859,7 +859,7 @@ void Base::getBinColsDimCmd(const char* col)
 {
   if (currentContext->fits && col && *col) {
     ostringstream str;
-    str << currentContext->fits->getHistColDim(col) << ends;
+    str << currentContext->fits->getColDim(col) << ends;
     Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }
   else

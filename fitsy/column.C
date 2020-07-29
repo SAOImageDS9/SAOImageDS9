@@ -177,8 +177,38 @@ FitsBinColumnBit::FitsBinColumnBit(FitsHead* head, int i, int off)
 char* FitsBinColumnBit::str(const char* ptr, int i)
 {
   ostringstream ost;
-  //  ost << value(ptr,i) << ends;
-  ost << "x0000" << ends;
+  if (repeat_ <= 8) {
+    unsigned char vv = *(ptr+offset_+i);
+    if (vv)
+      ost << showbase << internal << setfill('0') << hex << uppercase
+	  << setw(4) << (unsigned short)vv << ends;
+    else
+      ost << "0X00" << ends;
+  }
+  else if (repeat_ > 8 && repeat_ <= 16) {
+    unsigned short vv = *(ptr+offset_+i);
+    if (vv)
+      ost << showbase << internal << setfill('0') << hex << uppercase
+	  << setw(6) << vv << ends;
+    else
+      ost << "0X0000" << ends;
+  }
+  else if (repeat_ > 16 && repeat_ <= 32) {
+    unsigned long vv = *(ptr+offset_+i);
+    if (vv)
+      ost << showbase << internal << setfill('0') << hex << uppercase
+	  << setw(10) << vv << ends;
+    else
+      ost << "0X00000000" << ends;
+  }
+  else {
+    unsigned long long vv = *(ptr+offset_+i);
+    if (vv)
+      ost << showbase << internal << setfill('0') << hex << uppercase
+	  << setw(18) << vv << ends;
+    else
+      ost << "0X00000000" << ends;
+  }
   return (char*)dupstr(ost.str().c_str());
 }
 

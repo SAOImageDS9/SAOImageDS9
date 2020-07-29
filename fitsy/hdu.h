@@ -78,11 +78,11 @@ public:
 };
 
 class FitsTableHDU : public FitsHDU {
-protected:
+ protected:
   int tfields_;
   FitsColumn** cols_;
 
-public:
+ public:
   FitsTableHDU(FitsHead*);
   virtual ~FitsTableHDU();
 
@@ -97,12 +97,12 @@ public:
 };
 
 class FitsBinTableHDU : public FitsTableHDU {
-public:
+ public:
   FitsBinTableHDU(FitsHead*);
 };
 
 class FitsAsciiTableHDU : public FitsTableHDU {
-public:
+ public:
   FitsAsciiTableHDU(FitsHead*);
 };
 

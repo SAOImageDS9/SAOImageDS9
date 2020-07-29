@@ -277,7 +277,7 @@ void FitsFile::setpFilter(const char* filt)
 Vector FitsFile::getColMinMax(const char* name)
 {
   if (isBinTable()) {
-    FitsTableHDU* hdu = (FitsTableHDU*)(head()->hdu());
+    FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head()->hdu());
     FitsBinColumnB* col = (FitsBinColumnB*)hdu->find(name);
     if (col) {
       if (!col->hasMinMax()) {
@@ -314,7 +314,7 @@ Vector FitsFile::getColMinMax(const char* name)
 void FitsFile::setColMinMax(const char* name, const Vector& lim)
 {
   if (isBinTable()) {
-    FitsTableHDU* hdu = (FitsTableHDU*)(head()->hdu());
+    FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head()->hdu());
     FitsBinColumnB* col = (FitsBinColumnB*)hdu->find(name);
     if (col) {
       Vector ll=lim;
@@ -327,7 +327,7 @@ void FitsFile::setColMinMax(const char* name, const Vector& lim)
 Vector FitsFile::getColDim(const char* name)
 {
   if (isBinTable()) {
-    FitsTableHDU* hdu = (FitsTableHDU*)(head()->hdu());
+    FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head()->hdu());
     FitsBinColumnB* col = (FitsBinColumnB*)hdu->find(name);
     if (col) {
       if (col->hasTLMinTLMax()) {

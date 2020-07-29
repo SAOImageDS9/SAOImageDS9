@@ -108,7 +108,6 @@ public:
 class FitsBinColumnStr : public FitsBinColumn {
 public:
   FitsBinColumnStr(FitsHead*, int, int);
-
   char* str(const char* ptr, int i =0);
 };
 
@@ -116,7 +115,7 @@ class FitsBinColumnLogical : public FitsBinColumn {
 public:
   FitsBinColumnLogical(FitsHead*, int, int);
 
-  double value(const char* ptr, int i =0) 
+  double value(const char* ptr, int i =0)
   {return (*(ptr+offset_+i) == 'T') ? 1 : 0;}
   char* str(const char* ptr, int i =0);
 };
@@ -134,7 +133,6 @@ class FitsBinColumnArray : public FitsBinColumn {
   int psize_;
   int pmax_;
   char* abuf_;
-
   virtual int swap(const char* ptr, int i =0) =0;
 
 public:
@@ -142,7 +140,7 @@ public:
   virtual ~FitsBinColumnArray();  
 
   virtual void* get(const char* heap, const char* ptr, int* cnt);
-  char* str(const char* ptr, int i =0) {return NULL;}
+  char* str(const char* ptr, int i =0);
 };
 
 class FitsBinColumnArrayP : public FitsBinColumnArray {

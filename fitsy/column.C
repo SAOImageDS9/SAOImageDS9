@@ -178,7 +178,7 @@ char* FitsBinColumnBit::str(const char* ptr, int i)
 {
   ostringstream ost;
   //  ost << value(ptr,i) << ends;
-  ost << "hi" << ends;
+  ost << "x0000" << ends;
   return (char*)dupstr(ost.str().c_str());
 }
 
@@ -292,6 +292,12 @@ void* FitsBinColumnArray::get(const char* heap, const char* ptr, int* cnt)
   }
 
   return abuf_;
+}
+
+char* FitsBinColumnArray::str(const char* ptr, int i)
+{
+  buf_[0] = '\0';
+  return buf_;
 }
 
 FitsBinColumnArrayP::FitsBinColumnArrayP(FitsHead* head, int i, int offset)

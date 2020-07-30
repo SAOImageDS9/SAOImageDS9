@@ -28,13 +28,13 @@ class FitsCompress : public FitsFile {
   size_t tilesize_;
   size_t size_;
 
-  FitsBinColumnB* gzcompress_;
-  FitsBinColumnB* compress_;
-  FitsBinColumnB* uncompress_;
+  FitsBinColumn* gzcompress_;
+  FitsBinColumn* compress_;
+  FitsBinColumn* uncompress_;
+  FitsBinColumn* null_;
   FitsBinColumnB* zscale_;
   FitsBinColumnB* zzero_;
   FitsBinColumnB* zblank_;
-  FitsBinColumnB* null_;
 
   int hasScaling_;
   int hasBlank_;

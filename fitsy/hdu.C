@@ -263,6 +263,9 @@ FitsBinTableHDU::FitsBinTableHDU(FitsHead* head) : FitsTableHDU(head)
     }
 
     switch (type) {
+    case 'A':
+      cols_[i] = new FitsBinColumnStr(head, i+1, offset);
+      break;
     case 'L':
       cols_[i] = new FitsBinColumnLogical(head, i+1, offset);
       break;
@@ -286,9 +289,6 @@ FitsBinTableHDU::FitsBinTableHDU(FitsHead* head) : FitsTableHDU(head)
       break;
     case 'K':
       cols_[i] = new FitsBinColumnT<long long>(head, i+1, offset);
-      break;
-    case 'A':
-      cols_[i] = new FitsBinColumnStr(head, i+1, offset);
       break;
     case 'E':
       cols_[i] = new FitsBinColumnT<float>(head, i+1, offset);

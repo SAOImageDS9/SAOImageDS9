@@ -383,7 +383,7 @@ proc PrismLoad {varname fn} {
     global $varname
 
     PrismClear $varname
-    fitsy parse $fn $varname
+    set var(fn) $fn
 
     # sanity check (command line error)
     if {![file exists $var(fn)]} {

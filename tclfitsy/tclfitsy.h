@@ -17,11 +17,14 @@ class TclFITSY {
   void bltHistogram(char* col, char* xname, char* yname, int num);
   FitsFile* findFits(const char**);
   
+  int asciitable(int, const char*[]);
+  int bintable(int, const char*[]);
+
  public:
   TclFITSY(Tcl_Interp*);
   ~TclFITSY();
 
-  int parse(int, const char*[]);
+  //  int parse(int, const char*[]);
   int dir(int, const char*[]);
   int header(int, const char*[]);
   int isimage(int, const char*[]);

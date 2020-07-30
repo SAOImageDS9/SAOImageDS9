@@ -82,6 +82,9 @@ class FitsTableHDU : public FitsHDU {
   int tfields_;
   FitsColumn** cols_;
 
+  FitsColumn* find(const char*);
+  FitsColumn* find(int);
+
  public:
   FitsTableHDU(FitsHead*);
   virtual ~FitsTableHDU();
@@ -91,19 +94,22 @@ class FitsTableHDU : public FitsHDU {
   int cols() {return tfields_;}
   int width() {return naxis_[0];}
   char* list();
-  FitsColumn* find(const char*);
-  FitsColumn* find(int);
 };
 
 class FitsBinTableHDU : public FitsTableHDU {
  public:
   FitsBinTableHDU(FitsHead*);
-  Vector dimension(const char*);
+
+  FitsBinColumn* find(const char*);
+  FitsBinColumn* find(int);
 };
 
 class FitsAsciiTableHDU : public FitsTableHDU {
  public:
   FitsAsciiTableHDU(FitsHead*);
+
+  FitsAsciiColumn* find(const char*);
+  FitsAsciiColumn* find(int);
 };
 
 #endif

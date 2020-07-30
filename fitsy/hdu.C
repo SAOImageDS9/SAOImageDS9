@@ -201,10 +201,24 @@ FitsColumn* FitsTableHDU::find(int i)
   return NULL;
 }
 
-Vector FitsBinTableHDU::dimension(const char* name)
+FitsAsciiColumn* FitsAsciiTableHDU::find(const char* name)
 {
-  FitsBinColumnB* col = (FitsBinColumnB*)find(name);
-  return col ? col->dimension() : Vector();
+  return (FitsAsciiColumn*)FitsTableHDU::find(name);
+}
+
+FitsAsciiColumn* FitsAsciiTableHDU::find(int i)
+{
+  return (FitsAsciiColumn*)FitsTableHDU::find(i);
+}
+
+FitsBinColumn* FitsBinTableHDU::find(const char* name)
+{
+  return (FitsBinColumn*)FitsTableHDU::find(name);
+}
+
+FitsBinColumn* FitsBinTableHDU::find(int i)
+{
+  return (FitsBinColumn*)FitsTableHDU::find(i);
 }
 
 FitsAsciiTableHDU::FitsAsciiTableHDU(FitsHead* head) : FitsTableHDU(head)

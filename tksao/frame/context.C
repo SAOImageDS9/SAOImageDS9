@@ -1454,18 +1454,18 @@ int Context::loadMosaicWFPC2(Base::MemType which, const char* fn,
 
     FitsAsciiTableHDU* thdu = (FitsAsciiTableHDU*)th->hdu();
 
-    FitsAsciiColumn* crval1 = (FitsAsciiColumn*)thdu->find("CRVAL1");
-    FitsAsciiColumn* crval2 = (FitsAsciiColumn*)thdu->find("CRVAL2");
-    FitsAsciiColumn* crpix1 = (FitsAsciiColumn*)thdu->find("CRPIX1");
-    FitsAsciiColumn* crpix2 = (FitsAsciiColumn*)thdu->find("CRPIX2");
+    FitsAsciiColumn* crval1 = thdu->find("CRVAL1");
+    FitsAsciiColumn* crval2 = thdu->find("CRVAL2");
+    FitsAsciiColumn* crpix1 = thdu->find("CRPIX1");
+    FitsAsciiColumn* crpix2 = thdu->find("CRPIX2");
 
-    FitsAsciiColumn* cd1_1 = (FitsAsciiColumn*)thdu->find("CD1_1");
-    FitsAsciiColumn* cd1_2 = (FitsAsciiColumn*)thdu->find("CD1_2");
-    FitsAsciiColumn* cd2_1 = (FitsAsciiColumn*)thdu->find("CD2_1");
-    FitsAsciiColumn* cd2_2 = (FitsAsciiColumn*)thdu->find("CD2_2");
+    FitsAsciiColumn* cd1_1 = thdu->find("CD1_1");
+    FitsAsciiColumn* cd1_2 = thdu->find("CD1_2");
+    FitsAsciiColumn* cd2_1 = thdu->find("CD2_1");
+    FitsAsciiColumn* cd2_2 = thdu->find("CD2_2");
 
-    FitsAsciiColumn* ctype1 = (FitsAsciiColumn*)thdu->find("CTYPE1");
-    FitsAsciiColumn* ctype2 = (FitsAsciiColumn*)thdu->find("CTYPE2");
+    FitsAsciiColumn* ctype1 = thdu->find("CTYPE1");
+    FitsAsciiColumn* ctype2 = thdu->find("CTYPE2");
 
     char* tptr = (char*)table->data();
     int rows = thdu->rows();

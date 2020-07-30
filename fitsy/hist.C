@@ -172,7 +172,7 @@ FitsHist::~FitsHist()
 int FitsHist::initHeader(FitsFile* fits) 
 {
   FitsHead* srcHead = fits->head();
-  FitsTableHDU* srcHDU = (FitsTableHDU*)(srcHead->hdu());
+  FitsBinTableHDU* srcHDU = (FitsBinTableHDU*)(srcHead->hdu());
 
   // make sure we have a table with columns, X, Y
   if (!fits->isBinTable())

@@ -38,11 +38,11 @@ void FitsImage::initBin()
   if (!fits_->pBinX() || !fits_->pBinY()) {
     FitsHead* head = fits_->head();
     if (head) {
-      FitsTableHDU* hdu = (FitsTableHDU*)head->hdu();
+      FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
 
       // try for X and Y
-      FitsColumn* x = hdu->find("X");
-      FitsColumn* y = hdu->find("Y");
+      FitsBinColumn* x = hdu->find("X");
+      FitsBinColumn* y = hdu->find("Y");
 
       // next, try for ra and dec
       if (!x)
@@ -77,10 +77,10 @@ void FitsImage::initBin()
   if (!fits_->pBinZ()) {
     FitsHead* head = fits_->head();
     if (head) {
-      FitsTableHDU* hdu = (FitsTableHDU*)head->hdu();
+      FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
 
       // try for TIME
-      FitsColumn* z = hdu->find("TIME");
+      FitsBinColumn* z = hdu->find("TIME");
 
       // last chance, try third column
       if (!z)
@@ -102,7 +102,7 @@ int FitsImage::hasBinCol(const char* str)
   if (fits_) {
     FitsHead* head = fits_->head();
     if (head) {
-      FitsTableHDU* hdu = (FitsTableHDU*)head->hdu();
+      FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
       return hdu->find(str) ? 1 : 0;
     }
   }
@@ -185,8 +185,10 @@ Matrix FitsImage::nextBin(const Vector& c)
 
     // now, figure out any offset due to mod(lowerleft,binFactor_)
     FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
-    Vector xd = hdu->dimension(fits_->pBinX());
-    Vector yd = hdu->dimension(fits_->pBinY());
+    FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(fits_->pBinX());
+    FitsBinColumnB* ycol = (FitsBinColumnB*)hdu->find(fits_->pBinY());
+    Vector xd = xcol->dimension();
+    Vector yd = ycol->dimension();
     Vector ll(xd[0],yd[0]);
 
     //    Vector a = ((ll/binFactor_).floor() * binFactor_) + Vector(.5,.5);
@@ -243,8 +245,10 @@ Vector FitsImage::getHistDim()
 
   // assumes we aready have our columns
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
-  Vector xd = hdu->dimension(fits_->pBinX());
-  Vector yd = hdu->dimension(fits_->pBinY());
+  FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(fits_->pBinX());
+  FitsBinColumnB* ycol = (FitsBinColumnB*)hdu->find(fits_->pBinY());
+  Vector xd = xcol->dimension();
+  Vector yd = ycol->dimension();
 
   // if DBL_MAX, we will get nan
   Vector r(xd[1]-xd[0],yd[1]-yd[0]);
@@ -263,8 +267,10 @@ Vector FitsImage::getHistCenter()
 
   // assumes we aready have our columns
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
-  Vector xd = hdu->dimension(fits_->pBinX());
-  Vector yd = hdu->dimension(fits_->pBinY());
+  FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(fits_->pBinX());
+  FitsBinColumnB* ycol = (FitsBinColumnB*)hdu->find(fits_->pBinY());
+  Vector xd = xcol->dimension();
+  Vector yd = ycol->dimension();
 
   // if DBL_MAX, we will get nan
   Vector r = Vector(xd[1]-xd[0],yd[1]-yd[0])/2 + Vector(xd[0],yd[0]);

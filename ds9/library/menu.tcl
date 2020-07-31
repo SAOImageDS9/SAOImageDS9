@@ -145,6 +145,9 @@ proc ThemeConfigMenu {w} {
 proc ThemeConfigText {w} {
     $w configure -fg [ThemeTreeForeground]
     $w configure -bg [ThemeTreeBackground]
+
+    # create a special text tag for keywords
+    $w tag configure keyword -foreground [ThemeBold]
 }
 
 proc ThemeConfigTable {w} {
@@ -155,6 +158,9 @@ proc ThemeConfigTable {w} {
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $w tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
+
+    # pixel table
+    $w tag configure coord -foreground [ThemeBold]
 }
 
 proc ThemeConfigPlot {w} {
@@ -307,6 +313,23 @@ proc ThemeHeadingBackground {} {
 	}
 	win32 {return $ds9(foreground,menu,disabled)}
 	aqua {return $ds9(background)}
+    }
+}
+
+proc ThemeBold {} {
+    global ds9
+    
+    switch $ds9(wm) {
+	x11 {
+	    set bold [ttk::style lookup Treeview -background selected]
+	    if {$bold != {}} {
+		return $bold
+	    } else {
+		return $ds9(bold)
+	    }
+	}
+	win32 {return $ds9(bold)}
+	aqua {return $ds9(bold)}
     }
 }
 

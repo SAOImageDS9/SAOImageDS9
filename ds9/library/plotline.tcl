@@ -222,9 +222,9 @@ proc PlotLineUpdateElement {varname} {
     }
     
     if {$var(theme)} {
-	set color [ThemeSelectedBackground]
-	set shapecolor [ThemeSelectedBackground]
-	set errorcolor [ThemeSelectedBackground]
+	set color [ThemeBold]
+	set shapecolor [ThemeBold]
+	set errorcolor [ThemeBold]
     } else {
 	set color $var(graph,ds,color)
 	set shapecolor $var(graph,ds,shape,color)
@@ -233,7 +233,7 @@ proc PlotLineUpdateElement {varname} {
 
     if {$var(graph,ds,fill)} {
 	if {$var(theme)} {
-	    set fillColor [ThemeSelectedBackground]
+	    set fillColor [ThemeBold]
 	} else {
 	    set fillColor $var(graph,ds,fill,color)
 	}
@@ -243,7 +243,7 @@ proc PlotLineUpdateElement {varname} {
 
     if {$var(graph,ds,shape,fill)} {
 	if {$var(theme)} {
-	    set shapefillcolor [ThemeSelectedBackground]
+	    set shapefillcolor [ThemeBold]
 	} else {
 	    set shapefillcolor $var(graph,ds,shape,color)
 	}

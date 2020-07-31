@@ -137,11 +137,12 @@ proc DisplayHeader {id title} {
     if {[$frame has fits]} {
 	set hh [$frame get fits header $id]
     }
+
     SimpleTextDialog $varname $title 80 40 insert top $hh
 
     # create a special text tag for keywords
     upvar #0 $varname var
-    $var(text) tag configure keyword -foreground $ds9(bold)
+    $var(text) tag configure keyword -foreground [ThemeBold]
     
     # color tag keywords
     set stop [$var(text) index end]

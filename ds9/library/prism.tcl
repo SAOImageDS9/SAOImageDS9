@@ -164,7 +164,7 @@ proc PrismDialog {varname} {
     ttk::scrollbar $f.xscroll \
 	-command [list roText::$var(text) xview] -orient horizontal
     
-    $var(text) tag configure keyword -foreground $ds9(bold)
+    $var(text) tag configure keyword -foreground [ThemeBold]
 
     grid $var(text) $f.yscroll -sticky news
     grid $f.xscroll -stick news

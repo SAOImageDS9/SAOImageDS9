@@ -88,7 +88,7 @@ proc PixelTableDialog {} {
     
     $dpixel(tbl) tag col coord 0
     $dpixel(tbl) tag row coord 0
-    $dpixel(tbl) tag configure coord -foreground $ds9(bold)
+    $dpixel(tbl) tag configure coord -foreground [ThemeBold]
     $dpixel(tbl) tag configure center -foreground red
 
     grid $f.t -sticky news

@@ -18,9 +18,9 @@ class FitsHist : public FitsFile {
   int depth_;
   size_t size_;
 
-  FitsBinColumnB* xcol_;
-  FitsBinColumnB* ycol_;
-  FitsBinColumnB* zcol_;
+  FitsColumn* xcol_;
+  FitsColumn* ycol_;
+  FitsColumn* zcol_;
 
   void* fitsy_;
   void* filter_;

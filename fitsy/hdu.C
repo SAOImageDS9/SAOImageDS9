@@ -201,26 +201,6 @@ FitsColumn* FitsTableHDU::find(int i)
   return NULL;
 }
 
-FitsAsciiColumn* FitsAsciiTableHDU::find(const char* name)
-{
-  return (FitsAsciiColumn*)FitsTableHDU::find(name);
-}
-
-FitsAsciiColumn* FitsAsciiTableHDU::find(int i)
-{
-  return (FitsAsciiColumn*)FitsTableHDU::find(i);
-}
-
-FitsBinColumn* FitsBinTableHDU::find(const char* name)
-{
-  return (FitsBinColumn*)FitsTableHDU::find(name);
-}
-
-FitsBinColumn* FitsBinTableHDU::find(int i)
-{
-  return (FitsBinColumn*)FitsTableHDU::find(i);
-}
-
 FitsAsciiTableHDU::FitsAsciiTableHDU(FitsHead* head) : FitsTableHDU(head)
 {
   cols_ = new FitsColumn*[tfields_];

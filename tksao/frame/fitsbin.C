@@ -41,8 +41,8 @@ void FitsImage::initBin()
       FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
 
       // try for X and Y
-      FitsBinColumn* x = hdu->find("X");
-      FitsBinColumn* y = hdu->find("Y");
+      FitsColumn* x = hdu->find("X");
+      FitsColumn* y = hdu->find("Y");
 
       // next, try for ra and dec
       if (!x)
@@ -80,7 +80,7 @@ void FitsImage::initBin()
       FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
 
       // try for TIME
-      FitsBinColumn* z = hdu->find("TIME");
+      FitsColumn* z = hdu->find("TIME");
 
       // last chance, try third column
       if (!z)

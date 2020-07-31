@@ -24,6 +24,7 @@ FitsColumn::FitsColumn(FitsHead* head, int i, int off)
   width_ = 0;
   offset_ = off;
   type_ = ' ';
+  repeat_ = 1;
 
   tform_ = dupstr(head->getString(keycat("TFORM",i)));
   ttype_ = dupstr(head->getString(keycat("TTYPE",i)));
@@ -99,6 +100,12 @@ FitsColumn::~FitsColumn()
     delete [] ttype_;
 }
 
+char* FitsColumn::str(const char* ptr, int i)
+{
+  buf_[0] = '\0';
+  return buf_;
+}
+
 char* FitsColumn::keycat(const char* name, int i)
 {
   ostringstream str;
@@ -117,7 +124,7 @@ FitsAsciiColumn::FitsAsciiColumn(FitsHead* head, int i, int offset)
     offset_ = tbcol-1;
 }
 
-char* FitsAsciiColumn::str(const char* ptr)
+char* FitsAsciiColumn::str(const char* ptr, int i)
 {
   strncpy(buf_, ptr+offset_, width_);
   buf_[width_] = '\0';
@@ -147,7 +154,7 @@ FitsAsciiColumnA::FitsAsciiColumnA(FitsHead* head, int i, int offset)
   }
 }
 
-double FitsAsciiColumnA::value(const char* ptr)
+double FitsAsciiColumnA::value(const char* ptr, int i)
 {
   string x(ptr+offset_);
   istringstream str(x);
@@ -186,7 +193,6 @@ FitsBinColumn::FitsBinColumn(FitsHead* head, int i, int offset)
 {
   tdisp_ = dupstr(head->getString(keycat("TDISP",i)));
 
-  repeat_ = 1;
   if (tform_) {
     string x(tform_);
     istringstream str(x);
@@ -394,12 +400,6 @@ void* FitsBinColumnArray::get(const char* heap, const char* ptr, int* cnt)
   return abuf_;
 }
 
-char* FitsBinColumnArray::str(const char* ptr, int i)
-{
-  buf_[0] = '\0';
-  return buf_;
-}
-
 FitsBinColumnArrayP::FitsBinColumnArrayP(FitsHead* head, int i, int offset)
   : FitsBinColumnArray(head, i, offset)
 {
@@ -472,6 +472,13 @@ template<class T> FitsBinColumnT<T>::FitsBinColumnT(FitsHead* head,
   : FitsBinColumnB(head, i, off)
 {
   width_ = repeat_ * sizeof(T);
+}
+
+template<class T> char* FitsBinColumnT<T>::str(const char* ptr, int i)
+{
+  ostringstream ost;
+  ost << value(ptr,i) << ends;
+  return (char*)dupstr(ost.str().c_str());
 }
 
 template <> double FitsBinColumnT<unsigned char>::value(const char* ptr, int i)
@@ -625,13 +632,6 @@ template <> double FitsBinColumnT<double>::value(const char* ptr, int i)
     memcpy(u.c,p,8);
 
   return u.d;
-}
-
-template<class T> char* FitsBinColumnT<T>::str(const char* ptr, int i)
-{
-  ostringstream ost;
-  ost << value(ptr,i) << ends;
-  return (char*)dupstr(ost.str().c_str());
 }
 
 template <> Vector FitsBinColumnT<unsigned char>::dimension()

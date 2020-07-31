@@ -232,42 +232,33 @@ int TclFITSY::table(int argc, const char* argv[])
   if (!(argv[4] && *argv[4]))
     return TCL_ERROR;
 
+  int start =0;
+  {
+    string x(argv[5]);
+    istringstream sstr(x);
+    sstr >> start;
+  }
+  if (start<0)
+    return TCL_ERROR;
+  
+  int max =0;
+  {
+    string x(argv[6]);
+    istringstream sstr(x);
+    sstr >> max;
+  }
+  if (max<=0)
+    return TCL_ERROR;
+  
   FitsFile* fits = findFits(argv);
   if (!fits)
     return TCL_ERROR;
 
-  // sanity check
-  if (fits->isAsciiTable())
-    return asciitable(argc, argv);
-  else if (fits->isBinTable())
-    return bintable(argc, argv);
-
-  return TCL_ERROR;
-}
-
-int TclFITSY::asciitable(int argc, const char* argv[])
-{
-  int start =0;
-  {
-    string x(argv[5]);
-    istringstream sstr(x);
-    sstr >> start;
-  }
-  if (start<0)
+  if (!fits->isTable()) 
     return TCL_ERROR;
-  
-  int max =0;
-  {
-    string x(argv[6]);
-    istringstream sstr(x);
-    sstr >> max;
-  }
-  if (max<=0)
-    return TCL_ERROR;
-  
-  FitsFile* fits = findFits(argv);
+
   FitsHead* head = fits->head();
-  FitsAsciiTableHDU* hdu = (FitsAsciiTableHDU*)head->hdu();
+  FitsTableHDU* hdu = (FitsTableHDU*)head->hdu();
 
   // header
   // first time only
@@ -301,102 +292,7 @@ int TclFITSY::asciitable(int argc, const char* argv[])
   if (start==0) {
     ostringstream headstr;
     for (int jj=0; jj<cols; jj++) {
-      FitsAsciiColumn* col= hdu->find(jj);
-      headstr << trim(col->ttype()) << ' ';
-    }
-    headstr << ends;
-    Tcl_SetVar2(interp_, argv[4], "Header" , headstr.str().c_str(),
-		TCL_GLOBAL_ONLY);
-
-    ostringstream rowstr;
-    rowstr << rows << ends;
-    Tcl_SetVar2(interp_, argv[4], "Nrows", rowstr.str().c_str(),
-		TCL_GLOBAL_ONLY);
-  }
-
-  // data
-  int end = (max<rows-start) ? start+max : rows;
-  for (int ii=start; ii<end; ii++, ptr+=width) {
-    int ccnt = 0;
-    for (int jj=0; jj<cols; jj++) {
-      FitsAsciiColumn* col = hdu->find(jj);
-      ccnt++;
-
-      ostringstream index;
-      index << ii+1 << ',' << ccnt << ends;
-      ostringstream value;
-      value << col->str(ptr) << ends;
-      Tcl_SetVar2(interp_, argv[4], index.str().c_str(),
-		  value.str().c_str(), TCL_GLOBAL_ONLY);
-    }
-  }
-  
-  {
-    ostringstream str;
-    str << ((end-start<0) ? 0 : end-start) << ends;
-    Tcl_AppendResult(interp_, str.str().c_str(), NULL);
-  }
-
-  return TCL_OK;
-}
-
-int TclFITSY::bintable(int argc, const char* argv[])
-{
-  int start =0;
-  {
-    string x(argv[5]);
-    istringstream sstr(x);
-    sstr >> start;
-  }
-  if (start<0)
-    return TCL_ERROR;
-  
-  int max =0;
-  {
-    string x(argv[6]);
-    istringstream sstr(x);
-    sstr >> max;
-  }
-  if (max<=0)
-    return TCL_ERROR;
-  
-  FitsFile* fits = findFits(argv);
-  FitsHead* head = fits->head();
-  FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
-
-  // header
-  // first time only
-  if (start==0) {
-    char* cc=head->first();
-    int cnt=0;
-    while (cc) {
-      cnt++;
-      ostringstream idstr;
-      idstr << "H_" << cnt << ends;
-      char buf[81];
-      strncpy(buf,cc,80);
-      buf[80]='\0';
-      Tcl_SetVar2(interp_, argv[4], idstr.str().c_str(), buf,
-		  TCL_GLOBAL_ONLY);
-      cc = head->next();
-    }
-    ostringstream ncardstr;
-    ncardstr << head->ncard() << ends;
-    Tcl_SetVar2(interp_, argv[4], "HLines", ncardstr.str().c_str(),
-		TCL_GLOBAL_ONLY);
-  }
-
-  // cols
-  char* ptr = (char*)fits->data();
-  int rows = hdu->rows();
-  int cols = hdu->cols();
-  int width  = hdu->width();
-      
-  // first time only
-  if (start==0) {
-    ostringstream headstr;
-    for (int jj=0; jj<cols; jj++) {
-      FitsBinColumn* col= hdu->find(jj);
+      FitsColumn* col= hdu->find(jj);
       headstr << trim(col->ttype()) << ' ';
 
       if (col->repeat()>1) {
@@ -430,7 +326,7 @@ int TclFITSY::bintable(int argc, const char* argv[])
   for (int ii=start; ii<end; ii++, ptr+=width) {
     int ccnt = 0;
     for (int jj=0; jj<cols; jj++) {
-      FitsBinColumn* col = hdu->find(jj);
+      FitsColumn* col = hdu->find(jj);
       ccnt++;
 
       ostringstream index;
@@ -467,6 +363,7 @@ int TclFITSY::bintable(int argc, const char* argv[])
     str << ((end-start<0) ? 0 : end-start) << ends;
     Tcl_AppendResult(interp_, str.str().c_str(), NULL);
   }
+
   return TCL_OK;
 }
 
@@ -505,13 +402,13 @@ int TclFITSY::histogram(int argc, const char* argv[])
   if (!fits->isValid())
     return TCL_ERROR;
       
-  if (!fits->isBinTable()) 
+  if (!fits->isTable()) 
     return TCL_ERROR;
 
-  FitsBinTableHDU* hdu = (FitsBinTableHDU*)fits->head()->hdu();
+  FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
   int rows = hdu->rows();
   int width  = hdu->width();
-  FitsBinColumnB* col = (FitsBinColumnB*)hdu->find(argv[4]);
+  FitsColumn* col = hdu->find(argv[4]);
 
   if (!col)
     return TCL_ERROR;
@@ -529,8 +426,8 @@ int TclFITSY::histogram(int argc, const char* argv[])
   // fill Axes
   char* ptr = (char*)fits->data();
 
-  min -= .5;
-  max += .5;
+  //  min -= .5;
+  //  max += .5;
   double diff = max-min;
   double barwidth = diff/num;
 
@@ -643,18 +540,18 @@ int TclFITSY::plot(int argc, const char* argv[])
   if (!fits->isValid())
     return TCL_ERROR;
       
-  if (!fits->isBinTable()) 
+  if (!fits->isTable()) 
     return TCL_ERROR;
 
   char* ptr = (char*)fits->data();
-  FitsBinTableHDU* hdu = (FitsBinTableHDU*)fits->head()->hdu();
+  FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
   int rows = hdu->rows();
   int width  = hdu->width();
 
-  FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(argv[5]);
-  FitsBinColumnB* ycol = (FitsBinColumnB*) hdu->find(argv[7]);
-  FitsBinColumnB* xecol =NULL;
-  FitsBinColumnB* yecol =NULL;
+  FitsColumn* xcol = (FitsBinColumnB*)hdu->find(argv[5]);
+  FitsColumn* ycol = (FitsBinColumnB*) hdu->find(argv[7]);
+  FitsColumn* xecol =NULL;
+  FitsColumn* yecol =NULL;
 
   double* x = new double[rows];
   double* y = new double[rows];

@@ -15,6 +15,7 @@ protected:
   int width_;        // overall width of field in chars
   int offset_;       // offset in chars from start of row
   char type_;        // type
+  int repeat_;       // repeat count
 
   char* tform_;
   char* ttype_;
@@ -47,6 +48,7 @@ public:
   int offset() {return offset_;}
   int index() {return index_;}
   char type() {return type_;}
+  int repeat() {return repeat_;}
 
   const char* tform() {return tform_;}
   const char* ttype() {return ttype_;}
@@ -68,6 +70,10 @@ public:
 
   int hasMinMax() {return min_ != -DBL_MAX ? 1 : 0;}
   int hasTLMinTLMax() {return hastlmin_ && hastlmax_;}
+
+  virtual char* str(const char* ptr, int i =0);
+  virtual double value(const char*, int i =0) {return 0;}
+  virtual Vector dimension() {return Vector();}
 };
 
 // FitsAsciiColumn
@@ -76,7 +82,7 @@ class FitsAsciiColumn : public FitsColumn {
 public:
   FitsAsciiColumn(FitsHead*, int, int);
   
-  char* str(const char* ptr);
+  char* str(const char* ptr, int i =0);
 };
 
 class FitsAsciiColumnStr : public FitsAsciiColumn {
@@ -90,9 +96,8 @@ class FitsAsciiColumnA : public FitsAsciiColumn {
 
 public:
   FitsAsciiColumnA(FitsHead*, int, int);
-  
-  double value(const char*);
-  virtual Vector dimension() =0;
+
+  double value(const char*, int i =0);
 };
 
 template<class T>
@@ -109,7 +114,6 @@ public:
 class FitsBinColumn : public FitsColumn {
 protected:
   char* tdisp_;
-  int repeat_;           // repeat count
   char* tdim_;
   int tdimM_;
   int* tdimK_;
@@ -119,13 +123,10 @@ public:
   ~FitsBinColumn();
 
   const char* tdisp() {return tdisp_;}
-  int repeat() {return repeat_;}
   const char* tdim() {return tdim_;}
   int tdimM() {return tdimM_;}
   int* tdimK() {return tdimK_;}
   int tdimK(int ii) {return tdimK_[ii];}
-
-  virtual char* str(const char* ptr, int i =0) =0;
 };
 
 class FitsBinColumnStr : public FitsBinColumn {
@@ -156,13 +157,13 @@ class FitsBinColumnArray : public FitsBinColumn {
   int psize_;
   int pmax_;
   char* abuf_;
+
   virtual int swap(const char* ptr, int i =0) =0;
 
 public:
   FitsBinColumnArray(FitsHead*, int, int);
   virtual ~FitsBinColumnArray();  
 
-  char* str(const char* ptr, int i =0);
   virtual void* get(const char* heap, const char* ptr, int* cnt);
 };
 
@@ -189,8 +190,6 @@ protected:
 public:
   FitsBinColumnB(FitsHead*, int, int);
 
-  virtual double value(const char*, int i =0) =0;
-  virtual Vector dimension() =0;
 };
 
 template<class T>
@@ -201,8 +200,8 @@ private:
 public:
   FitsBinColumnT(FitsHead*, int, int);
 
-  double value(const char*, int i =0);
   char* str(const char* ptr, int i =0);
+  double value(const char*, int i =0);
   Vector dimension();
 };
 

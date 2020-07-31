@@ -243,7 +243,7 @@ proc PlotLineUpdateElement {varname} {
 
     if {$var(graph,ds,shape,fill)} {
 	if {$var(theme)} {
-	    set shapefillcolor [ThemeTreeForegroundSelected]
+	    set shapefillcolor [ThemeTreeBackgroundSelected]
 	} else {
 	    set shapefillcolor $var(graph,ds,shape,color)
 	}

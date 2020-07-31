@@ -154,7 +154,11 @@ proc PlotBarUpdateElement {varname} {
 	    set fillColor $var(graph,ds,fill,color)
 	}
     } else {
-	set fillColor [PlotBGColor $varname]
+	if {$var(theme)} {
+	    set fillColor [ThemeTreeBackground]
+	} else {
+	    set fillColor $var(background)
+	}
     }
 
     if {$var(graph,ds,error)} {

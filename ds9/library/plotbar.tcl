@@ -140,8 +140,8 @@ proc PlotBarUpdateElement {varname} {
     }
     
     if {$var(theme)} {
-	set color [ThemeTreeForegroundSelected]
-	set errorcolor [ThemeTreeForegroundSelected]
+	set color [ThemeSelectedForeground]
+	set errorcolor [ThemeSelectedForeground]
     } else {
 	set color $var(graph,ds,color)
 	set errorcolor $var(graph,ds,error,color)
@@ -149,7 +149,7 @@ proc PlotBarUpdateElement {varname} {
 
     if {$var(graph,ds,fill)} {
 	if {$var(theme)} {
-	    set fillColor [ThemeTreeBackgroundSelected]
+	    set fillColor [ThemeSelectedBackground]
 	} else {
 	    set fillColor $var(graph,ds,fill,color)
 	}

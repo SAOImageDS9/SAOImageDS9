@@ -152,7 +152,7 @@ proc ThemeConfigTable {w} {
     $w configure -bg [ThemeTreeBackground]
 
     $w tag configure sel \
-	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
+	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $w tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 }
@@ -186,8 +186,8 @@ proc ThemeForeground {} {
 		return $ds9(foreground)
 	    }
 	}
-	aqua -
 	win32 {return $ds9(foreground)}
+	aqua {return $ds9(foreground)}
     }
 }
 
@@ -203,8 +203,8 @@ proc ThemeBackground {} {
 		return $ds9(background)
 	    }
 	}
-	aqua -
 	win32 {return $ds9(background)}
+	aqua {return $ds9(background)}
     }
 }
 
@@ -220,8 +220,8 @@ proc ThemeTreeForeground {} {
 		return $ds9(foreground,tree)
 	    }
 	}
-	aqua -
 	win32 {return $ds9(foreground,tree)}
+	aqua {return $ds9(foreground)}
     }
 }
 
@@ -237,12 +237,12 @@ proc ThemeTreeBackground {} {
 		return $ds9(background,tree)
 	    }
 	}
-	aqua -
 	win32 {return $ds9(background,tree)}
+	aqua {return $ds9(background)}
     }
 }
 
-proc ThemeTreeForegroundSelected {} {
+proc ThemeSelectedForeground {} {
     global ds9
     
     switch $ds9(wm) {
@@ -254,12 +254,12 @@ proc ThemeTreeForegroundSelected {} {
 		return $ds9(foreground,tree,select)
 	    }
 	}
-	aqua -
 	win32 {return $ds9(foreground,tree,select)}
+	aqua {return $ds9(background)}
     }
 }
 
-proc ThemeTreeBackgroundSelected {} {
+proc ThemeSelectedBackground {} {
     global ds9
     
     switch $ds9(wm) {
@@ -271,8 +271,8 @@ proc ThemeTreeBackgroundSelected {} {
 		return $ds9(background,tree,select)
 	    }
 	}
-	aqua -
 	win32 {return $ds9(background,tree,select)}
+	aqua {return $ds9(bold)}
     }
 }
 
@@ -288,8 +288,8 @@ proc ThemeHeadingForeground {} {
 		return $ds9(selectforeground)
 	    }
 	}
-	aqua -
 	win32 {return $ds9(selectforeground)}
+	aqua {return $ds9(foreground)}
     }
 }
 
@@ -302,11 +302,11 @@ proc ThemeHeadingBackground {} {
 	    if {$bg != {}} {
 		return $bg
 	    } else {
-		return ds9(foreground,menu,disabled)
+		return $ds9(foreground,menu,disabled)
 	    }
 	}
-	aqua -
-	win32 {return ds9(foreground,menu,disabled)}
+	win32 {return $ds9(foreground,menu,disabled)}
+	aqua {return $ds9(background)}
     }
 }
 

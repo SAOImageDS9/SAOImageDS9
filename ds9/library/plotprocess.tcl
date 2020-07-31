@@ -296,7 +296,7 @@ proc PlotCmdFontStyle {which value} {
 	    set cvar($which,slant) italic
 	}
     }
-    PlotUpdateCanvas $cvarname
+    PlotUpdateCanvasElement $cvarname
 }
 
 proc PlotCmdExport {format fn} {

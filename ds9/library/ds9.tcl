@@ -283,24 +283,9 @@ switch $ds9(wm) {
 	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
-	# most of these will not be used
 	set ds9(bold) systemControlAccentColor
-
 	set ds9(foreground) systemTextColor
 	set ds9(background) systemTextBackgroundColor
-	set ds9(selectforeground) systemTextColor
-
-	set ds9(foreground,tree) systemTextColor
-	set ds9(background,tree) systemTextBackgroundColor
-	set ds9(foreground,tree,select) systemTextColor
-	set ds9(background,tree,select) systemTextBackgroundColor
-
-	set ds9(foreground,menu,active) systemTextColor
-	set ds9(foreground,menu,disabled) systemTextColor
-	set ds9(background,menu,active) systemTextBackgroundColor
-
-	set pap(fg) systemTextColor
-	set pap(bg) systemTextBackgroundColor
 
 	::tk::unsupported::MacWindowStyle style $ds9(top) document \
 	    "closeBox fullZoom collapseBox resizable"

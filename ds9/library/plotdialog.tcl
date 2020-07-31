@@ -163,28 +163,28 @@ proc PlotDialog {varname wtt} {
 
     FontMenu $var(mb).canvas.title \
 	$varname graph,title,family graph,title,size graph,title,weight \
-	graph,title,slant [list PlotUpdateCanvas $varname]
+	graph,title,slant [list PlotUpdateCanvasElement $varname]
     FontMenu $var(mb).canvas.textlab \
 	$varname axis,title,family axis,title,size axis,title,weight \
-	axis,title,slant [list PlotUpdateCanvas $varname]
+	axis,title,slant [list PlotUpdateCanvasElement $varname]
     FontMenu $var(mb).canvas.numlab \
 	$varname axis,font,family axis,font,size axis,font,weight \
-	axis,font,slant [list PlotUpdateCanvas $varname]
+	axis,font,slant [list PlotUpdateCanvasElement $varname]
     FontMenu $var(mb).canvas.legendtitle \
 	$varname legend,title,family legend,title,size legend,title,weight \
-	legend,title,slant [list PlotUpdateCanvas $varname]
+	legend,title,slant [list PlotUpdateCanvasElement $varname]
     FontMenu $var(mb).canvas.legend \
 	$varname legend,font,family legend,font,size legend,font,weight \
-	legend,font,slant [list PlotUpdateCanvas $varname]
+	legend,font,slant [list PlotUpdateCanvasElement $varname]
 
     PlotColorMenu $var(mb).canvas.fg $varname foreground \
-	[list PlotUpdateCanvas $varname]
+	[list PlotUpdateCanvasElement $varname]
 
     PlotColorMenu $var(mb).canvas.bg $varname background \
-	[list PlotUpdateCanvas $varname]
+	[list PlotUpdateCanvasElement $varname]
 
     PlotColorMenu $var(mb).canvas.grid $varname grid,color \
-	[list PlotUpdateCanvas $varname]
+	[list PlotUpdateCanvasElement $varname]
 
     # Graph
     ThemeMenu $var(mb).graph

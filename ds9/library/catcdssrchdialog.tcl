@@ -211,7 +211,7 @@ proc CATCDSSrchDialog {varname} {
 		     ]
 
     $var(tbl) tag configure sel \
-	-fg [ThemeTreeForegroundSelected] -bg [ThemeTreeBackgroundSelected]
+	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $var(tbl) tag configure title \
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 

@@ -53,6 +53,7 @@
 %token FLAT_
 %token FLIP_
 %token FONT_
+%token FOREGROUND_
 %token FORMAT_
 %token GRAPH_
 %token GRAY_
@@ -258,7 +259,8 @@ plotCmd : LOAD_ load
  | LAYOUT_ STRIP_ SCALE_ numeric
    {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
- | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvas}
+ | FOREGROUND_ STRING_ {ProcessCmdCVAR foreground $2 PlotUpdateCanvasElement}
+ | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvasElement}
  | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateTheme}
  # backward compatibility
  | BARMODE_ barmode
@@ -379,17 +381,17 @@ layout: ROW_ {set _ row}
  | STRIP_ {set _ strip}
  ;
 
-fontt : fontType FONT_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvas}
+fontt : fontType FONT_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasElement}
 # backward compatibility
- | fontType FAMILY_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvas}
- | fontType FONTSIZE_ INT_ {ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvas}
- | fontType FONTWEIGHT_ fontWeight {ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvas}
- | fontType FONTSLANT_ fontSlant {ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvas}
+ | fontType FAMILY_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasElement}
+ | fontType FONTSIZE_ INT_ {ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvasElement}
+ | fontType FONTWEIGHT_ fontWeight {ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement}
+ | fontType FONTSLANT_ fontSlant {ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement}
 # backward compatibility
  | fontType FONTSTYLE_ fontStyle {PlotCmdFontStyle $1 $3}
- | fontType SIZE_ INT_ {ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvas}
- | fontType WEIGHT_ fontWeight {ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvas}
- | fontType SLANT_ fontSlant {ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvas}
+ | fontType SIZE_ INT_ {ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvasElement}
+ | fontType WEIGHT_ fontWeight {ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement}
+ | fontType SLANT_ fontSlant {ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement}
  | fontType STYLE_ fontStyle {PlotCmdFontStyle $1 $3}
  ;
 

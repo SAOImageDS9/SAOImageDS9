@@ -48,10 +48,11 @@ file	    {return $FILE_}
 filename    {return $FILENAME_}
 fill	    {return $FILL_}
 fillcolor   {return $FILLCOLOR_}
-fillcolour   {return $FILLCOLOR_}
+fillcolour  {return $FILLCOLOR_}
 flat	    {return $FLAT_}
 flip	    {return $FLIP_}
 font	    {return $FONT_}
+foreground  {return $FOREGROUND_}
 format	    {return $FORMAT_}
 graph	    {return $GRAPH_}
 gray	    {return $GRAY_}

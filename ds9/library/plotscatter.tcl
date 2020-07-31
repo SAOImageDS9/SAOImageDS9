@@ -153,9 +153,9 @@ proc PlotScatterUpdateElement {varname} {
     }
 
     if {$var(theme)} {
-	set shapecolor [ThemeTreeBackgroundSelected]
-	set shapefillcolor [ThemeTreeBackgroundSelected]
-	set errorcolor [ThemeTreeBackgroundSelected]
+	set shapecolor [ThemeSelectedBackground]
+	set shapefillcolor [ThemeSelectedBackground]
+	set errorcolor [ThemeSelectedBackground]
     } else {
 	set shapecolor $var(graph,ds,shape,color)
 	set shapefillcolor $var(graph,ds,shape,color)

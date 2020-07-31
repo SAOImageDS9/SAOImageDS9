@@ -1119,7 +1119,7 @@ proc PlotBackup {ch dir} {
 	    puts $ch "set ${varname}(foreground) $var(foreground)"
 	    puts $ch "set ${varname}(background) $var(background)"
 	    puts $ch "set ${varname}(grid,color) $var(grid,color)"
-	    puts $ch "PlotUpdateCanvas $varname"
+	    puts $ch "PlotUpdateCanvasElement $varname"
 
 	    puts $ch "set ${varname}(mode) $var(mode)"
 	    puts $ch "PlotChangeMode $varname"

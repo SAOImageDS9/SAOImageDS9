@@ -162,6 +162,8 @@ proc ThemeConfigCanvas {w} {
     foreach ff $ds9(frames) {
 	$w itemconfigure $ff -fg [ThemeTreeForeground]
 	$w itemconfigure $ff -bg [ThemeTreeBackground]
+
+	$ff highlite color [ThemeBold]
     }
 
     # since graphs are created, but maybe not realized

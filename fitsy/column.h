@@ -140,8 +140,6 @@ public:
   FitsBinColumnLogical(FitsHead*, int, int);
 
   char* str(const char* ptr, int i =0);
-  double value(const char* ptr, int i =0)
-  {return (*(ptr+offset_+i) == 'T') ? 1 : 0;}
 };
 
 class FitsBinColumnBit : public FitsBinColumn {

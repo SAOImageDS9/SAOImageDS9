@@ -221,8 +221,8 @@ switch $ds9(wm) {
 #	package require awwinxpblue
 	package require awbreeze
 
-	# tkthemes
-	package require ttk::theme::aquativo
+	# tkthemes- alot of these lacks full set of colors
+#	package require ttk::theme::aquativo
 #	package require ttk::theme::black
 #	package require ttk::theme::blue
 	package require ttk::theme::clearlooks
@@ -230,7 +230,7 @@ switch $ds9(wm) {
 #	package require ttk::theme::itft1
 #	package require ttk::theme::keramik
 #	package require ttk::theme::kroc
-	package require ttk::theme::plastik
+#	package require ttk::theme::plastik
 	package require ttk::theme::radiance
 #	package require ttk::theme::smog
 #	package require ttk::theme::winxpblue
@@ -243,29 +243,6 @@ switch $ds9(wm) {
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) alt]
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) classic]
 
-	# colors
-	ttk::style theme use default
-
-	set ds9(bold) [ttk::style lookup Treeview -background selected]
-
-	set ds9(foreground) [ttk::style lookup . -foreground]
-	set ds9(background) [ttk::style lookup . -background]
-	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
-
-	set ds9(foreground,tree) [ttk::style lookup Treeview -foreground]
-	set ds9(background,tree) [ttk::style lookup Treeview -background]
-	set ds9(foreground,tree,select) \
-	    [ttk::style lookup Treeview -foreground selected]
-	set ds9(background,tree,select) \
-	    [ttk::style lookup Treeview -background selected]
-
-	set ds9(foreground,menu,active) \
-	    [ttk::style lookup TMenubutton -foreground active]
-	set ds9(foreground,menu,disabled) \
- 	    [ttk::style lookup TMenubutton -foreground disabled]
-	set ds9(background,menu,active) \
-	    [ttk::style lookup TMenubutton -background active]
-	
 	# fix TLabel widgets
 	foreach tt [ttk::style theme names] {
 	    ttk::style theme use $tt
@@ -282,10 +259,6 @@ switch $ds9(wm) {
 	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
-	set ds9(bold) systemControlAccentColor
-	set ds9(foreground) systemTextColor
-	set ds9(background) systemTextBackgroundColor
-
 	::tk::unsupported::MacWindowStyle style $ds9(top) document \
 	    "closeBox fullZoom collapseBox resizable"
 
@@ -345,26 +318,6 @@ switch $ds9(wm) {
     win32 {
 	# colors
 	ttk::style theme use xpnative
-
-	set ds9(bold) [ttk::style lookup Treeview -background selected]
-
-	set ds9(foreground) [ttk::style lookup . -foreground]
-	set ds9(background) [ttk::style lookup . -background]
-	set ds9(selectforeground) [ttk::style lookup . -selectforeground]
-
-	set ds9(foreground,tree) [ttk::style lookup Treeview -foreground]
-	set ds9(background,tree) [ttk::style lookup Treeview -background]
-	set ds9(foreground,tree,select) \
-	    [ttk::style lookup Treeview -foreground selected]
-	set ds9(background,tree,select) \
-	    [ttk::style lookup Treeview -background selected]
-
-	set ds9(foreground,menu,active) \
-	    [ttk::style lookup TMenubutton -foreground active]
-	set ds9(foreground,menu,disabled) \
- 	    [ttk::style lookup TMenubutton -foreground disabled]
-	set ds9(background,menu,active) \
-	    [ttk::style lookup TMenubutton -background active]
     }
 }
 

@@ -93,55 +93,6 @@ proc ThemeConfigBg {w} {
     $w configure -bg [ThemeBackground]
 }
 
-proc ThemeConfigTFrame {w} {
-    ttk::style configure Tree.TFrame -background \
-	[ttk::style lookup Treeview -background]
-}
-
-proc ThemeConfigMenu {w} {
-    global ds9
-
-    # foreground
-    set fg [ttk::style lookup . -foreground]
-    if {$fg != {}} {
-	$w configure -fg $fg
-    } else {
-	$w configure -fg $ds9(foreground)
-    }
-
-    # background
-    set bg [ttk::style lookup . -background]
-    if {$bg != {}} {
-	$w configure -bg $bg
-    } else {
-	$w configure -bg $ds9(background)
-    }
-
-    # selectcolor
-    set fg [ttk::style lookup . -foreground]
-    if {$fg != {}} {
-	$w configure -selectcolor $fg
-    } else {
-	$w configure -selectcolor $ds9(foreground)
-    }
-
-    # active foreground
-    set fg [ttk::style lookup TMenubutton -foreground active]
-    if {$fg != {}} {
-	$w configure -activeforeground $fg
-    } else {
-	$w configure -activeforeground $ds9(foreground,menu,active)
-    }
-
-    # active background
-    set bg [ttk::style lookup TMenubutton -background active]
-    if {$bg != {}} {
-	$w configure -activebackground $bg
-    } else {
-	$w configure -activebackground $ds9(background,menu,active)
-    }
-}
-
 proc ThemeConfigText {w} {
     $w configure -fg [ThemeTreeForeground]
     $w configure -bg [ThemeTreeBackground]
@@ -180,20 +131,32 @@ proc ThemeConfigPlot {w} {
 
 # Theme Style Colors
 
+proc ThemeConfigTFrame {w} {
+    ttk::style configure Tree.TFrame -background \
+	[ttk::style lookup Treeview -background]
+}
+
+proc ThemeConfigMenu {w} {
+    global ds9
+
+    $w configure -fg [ttk::style lookup . -foreground]
+    $w configure -bg [ttk::style lookup . -background]
+
+    $w configure -selectcolor [ttk::style lookup . -foreground]
+
+    $w configure -activeforeground \
+	[ttk::style lookup TMenubutton -foreground active]
+    $w configure -activebackground \
+	[ttk::style lookup TMenubutton -background active]
+}
+
 proc ThemeForeground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set fg [ttk::style lookup . -foreground]
-	    if {$fg != {}} {
-		return $fg
-	    } else {
-		return $ds9(foreground)
-	    }
-	}
-	win32 {return $ds9(foreground)}
-	aqua {return $ds9(foreground)}
+	x11 -
+	win32 {return [ttk::style lookup . -foreground]}
+	aqua {systemTextColor)}
     }
 }
 
@@ -201,16 +164,9 @@ proc ThemeBackground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set bg [ttk::style lookup . -background]
-	    if {$bg != {}} {
-		return $bg
-	    } else {
-		return $ds9(background)
-	    }
-	}
-	win32 {return $ds9(background)}
-	aqua {return $ds9(background)}
+	x11 -
+	win32 {return [ttk::style lookup . -background]}
+	aqua {return systemTextBackgroundColor)}
     }
 }
 
@@ -218,16 +174,9 @@ proc ThemeTreeForeground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set fg [ttk::style lookup Treeview -foreground]
-	    if {$fg != {}} {
-		return $fg
-	    } else {
-		return $ds9(foreground,tree)
-	    }
-	}
-	win32 {return $ds9(foreground,tree)}
-	aqua {return $ds9(foreground)}
+	x11 -
+	win32 {return [ttk::style lookup Treeview -foreground]}
+	aqua {return systemTextColor}
     }
 }
 
@@ -235,16 +184,9 @@ proc ThemeTreeBackground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set bg [ttk::style lookup Treeview -background]
-	    if {$bg != {}} {
-		return $bg
-	    } else {
-		return $ds9(background,tree)
-	    }
-	}
-	win32 {return $ds9(background,tree)}
-	aqua {return $ds9(background)}
+	x11 -
+	win32 {return [ttk::style lookup Treeview -background]}
+	aqua {return systemTextBackgroundColor}
     }
 }
 
@@ -252,16 +194,9 @@ proc ThemeSelectedForeground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set fg [ttk::style lookup Treeview -foreground selected]
-	    if {$fg != {}} {
-		return $fg
-	    } else {
-		return $ds9(foreground,tree,select)
-	    }
-	}
-	win32 {return $ds9(foreground,tree,select)}
-	aqua {return $ds9(background)}
+	x11 -
+	win32 {return [ttk::style lookup Treeview -foreground selected]}
+	aqua {return systemTextBackgroundColor}
     }
 }
 
@@ -269,16 +204,9 @@ proc ThemeSelectedBackground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set bg [ttk::style lookup Treeview -background selected]
-	    if {$bg != {}} {
-		return $bg
-	    } else {
-		return $ds9(background,tree,select)
-	    }
-	}
-	win32 {return $ds9(background,tree,select)}
-	aqua {return $ds9(bold)}
+	x11 -
+	win32 {return [ttk::style lookup Treeview -background selected]}
+	aqua {return systemControlAccentColor}
     }
 }
 
@@ -286,16 +214,9 @@ proc ThemeHeadingForeground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set fg [ttk::style lookup . -selectforeground]
-	    if {$fg != {}} {
-		return $fg
-	    } else {
-		return $ds9(selectforeground)
-	    }
-	}
-	win32 {return $ds9(selectforeground)}
-	aqua {return $ds9(foreground)}
+	x11 -
+	win32 {return [ttk::style lookup . -selectforeground]}
+	aqua {return systemTextColor}
     }
 }
 
@@ -303,16 +224,9 @@ proc ThemeHeadingBackground {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set bg [ttk::style lookup TMenubutton -foreground disabled]
-	    if {$bg != {}} {
-		return $bg
-	    } else {
-		return $ds9(foreground,menu,disabled)
-	    }
-	}
-	win32 {return $ds9(foreground,menu,disabled)}
-	aqua {return $ds9(background)}
+	x11 -
+	win32 {return [ttk::style lookup TMenubutton -foreground disabled]}
+	aqua {return systemTextBackgroundColor}
     }
 }
 
@@ -320,16 +234,9 @@ proc ThemeBold {} {
     global ds9
     
     switch $ds9(wm) {
-	x11 {
-	    set bold [ttk::style lookup Treeview -background selected]
-	    if {$bold != {}} {
-		return $bold
-	    } else {
-		return $ds9(bold)
-	    }
-	}
-	win32 {return $ds9(bold)}
-	aqua {return $ds9(bold)}
+	x11 -
+	win32 {return [ttk::style lookup Treeview -background selected]}
+	aqua {return systemControlAccentColor}
     }
 }
 

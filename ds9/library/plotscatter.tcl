@@ -155,9 +155,11 @@ proc PlotScatterUpdateElement {varname} {
     if {$var(theme)} {
 	set shapecolor [ThemeTreeBackgroundSelected]
 	set shapefillcolor [ThemeTreeBackgroundSelected]
+	set errorcolor [ThemeTreeBackgroundSelected]
     } else {
 	set shapecolor $var(graph,ds,shape,color)
 	set shapefillcolor $var(graph,ds,shape,color)
+	set errorcolor $var(graph,ds,error,color)
     }
 
     if {$var(graph,ds,error)} {
@@ -183,7 +185,7 @@ proc PlotScatterUpdateElement {varname} {
 	-linewidth 0 \
 	-pixels 5 \
 	-showerrorbars $show \
-	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
 
@@ -193,7 +195,7 @@ proc PlotScatterUpdateElement {varname} {
 	-linewidth 0 \
 	-pixels 5 \
 	-showerrorbars $show \
-	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
 }

@@ -224,9 +224,11 @@ proc PlotLineUpdateElement {varname} {
     if {$var(theme)} {
 	set color [ThemeTreeBackgroundSelected]
 	set shapecolor [ThemeTreeBackgroundSelected]
+	set errorcolor [ThemeTreeBackgroundSelected]
     } else {
 	set color $var(graph,ds,color)
 	set shapecolor $var(graph,ds,shape,color)
+	set errorcolor $var(graph,ds,error,color)
     }
 
     if {$var(graph,ds,fill)} {
@@ -282,7 +284,7 @@ proc PlotLineUpdateElement {varname} {
 	-linewidth $var(graph,ds,width) \
 	-dashes $dash \
 	-showerrorbars $show \
-	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
 }

@@ -141,8 +141,10 @@ proc PlotBarUpdateElement {varname} {
     
     if {$var(theme)} {
 	set color [ThemeTreeForegroundSelected]
+	set errorcolor [ThemeTreeForegroundSelected]
     } else {
 	set color $var(graph,ds,color)
+	set errorcolor $var(graph,ds,error,color)
     }
 
     if {$var(graph,ds,fill)} {
@@ -177,7 +179,7 @@ proc PlotBarUpdateElement {varname} {
 	-borderwidth $var(graph,ds,width) \
 	-barwidth $var(graph,ds,bar,width) \
 	-showerrorbars $show \
-	-errorbarcolor $var(graph,ds,error,color) \
+	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
 }

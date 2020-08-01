@@ -104,9 +104,8 @@ proc PrefsDialogPlot {} {
     ttk::label $f.tborder -text [msgcat::mc {Border}]
     ColorMenuButton $f.bordercolor pap graph,ds,bar,border,color {}
     ttk::label $f.tborderwidth -text [msgcat::mc {Width}]
-    ttk::menubutton $f.borderwidth \
-	-textvariable pap(graph,ds,bar,border,width) -menu $f.borderwidth.menu
-    WidthDashMenu $f.borderwidth.menu pap graph,ds,bar,border,width {} {} {}
+    ttk::entry $f.borderwidth -textvariable pap(graph,ds,bar,border,width) \
+	-width y
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.fillcolor pap graph,ds,bar,fill,color {}

@@ -72,7 +72,7 @@ proc PrefsDialogPlot {} {
 	-menu $f.width.menu
     WidthDashMenu $f.width.menu pap graph,ds,line,width graph,ds,line,dash {} {}
 
-    ttk::label $f.tfill -text [msgcat::mc {Shadow}]
+    ttk::label $f.tshadow -text [msgcat::mc {Shadow}]
     ColorMenuButton $f.fillcolor pap graph,ds,line,fill,color {}
     ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
 	-variable pap(graph,ds,line,fill)
@@ -81,6 +81,7 @@ proc PrefsDialogPlot {} {
     ttk::menubutton $f.shape -textvariable pap(graph,ds,line,shape,symbol) \
 	-menu $f.shape.menu
     PlotLineShapeMenu $f.shape.menu pap(graph,ds,line,shape,symbol) {}
+    ttk::label $f.tborder -text [msgcat::mc {Border}]
     ColorMenuButton $f.shapecolor pap graph,ds,line,shape,color {}
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
 	-variable pap(graph,ds,line,shape,fill)
@@ -93,9 +94,9 @@ proc PrefsDialogPlot {} {
 
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
-    grid $f.tfill $f.fillcolor $f.fill -padx 2 -pady 2 -sticky w
-    grid $f.tshape $f.shape $f.shapecolor $f.shapefill $f.shapefillcolor \
-	-padx 2 -pady 2 -sticky w
+    grid $f.tshadow $f.fillcolor $f.fill -padx 2 -pady 2 -sticky w
+    grid $f.tshape $f.shape $f.tborder $f.shapecolor \
+	$f.shapefill $f.shapefillcolor -padx 2 -pady 2 -sticky w
     grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky w
 
     # Bar
@@ -104,18 +105,17 @@ proc PrefsDialogPlot {} {
     ttk::label $f.tborder -text [msgcat::mc {Border}]
     ColorMenuButton $f.bordercolor pap graph,ds,bar,border,color {}
     ttk::label $f.tborderwidth -text [msgcat::mc {Width}]
-    ttk::entry $f.borderwidth -textvariable pap(graph,ds,bar,border,width) \
-	-width y
+    ttk::menubutton $f.borderwidth \
+	-textvariable pap(graph,ds,bar,border,width) -menu $f.borderwidth.menu
+    WidthDashMenu $f.borderwidth.menu pap graph,ds,bar,border,width {} {} {}
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.fillcolor pap graph,ds,bar,fill,color {}
     ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
 	-variable pap(graph,ds,bar,fill)
 
-    ttk::label $f.twidth -text [msgcat::mc {Bar Width}]
-    ttk::menubutton $f.width \
-	-textvariable pap(graph,ds,bar,width) -menu $f.width.menu
-    WidthDashMenu $f.width.menu pap graph,ds,bar,width {} {} {}
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::entry $f.width -textvariable pap(graph,ds,bar,width) -width 7
 
     grid $f.tborder $f.bordercolor $f.tborderwidth $f.borderwidth \
 	-padx 2 -pady 2 -sticky w
@@ -129,15 +129,14 @@ proc PrefsDialogPlot {} {
     ttk::menubutton $f.shape -textvariable pap(graph,ds,scatter,shape,symbol) \
 	-menu $f.shape.menu
     PlotScatterShapeMenu $f.shape.menu pap(graph,ds,scatter,shape,symbol) {}
+    ttk::label $f.tborder -text [msgcat::mc {Border}]
+    ColorMenuButton $f.shapecolor pap graph,ds,scatter,shape,color {}
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
 	-variable pap(graph,ds,scatter,shape,fill)
-    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.shapecolor pap graph,ds,scatter,shape,color {}
+    ColorMenuButton $f.shapefillcolor pap graph,ds,scatter,shape,fill,color {}
 
-    grid $f.tshape $f.shape -padx 2 -pady 2 -sticky w
-    grid $f.shapefill -padx 2 -pady 2 -sticky w
-    grid $f.tshapecolor $f.shapecolor \
-	-padx 2 -pady 2 -sticky w
+    grid $f.tshape $f.shape $f.tborder $f.shapecolor \
+	$f.shapefill $f.shapefillcolor -padx 2 -pady 2 -sticky w
 
     # Error
     set f [ttk::labelframe $w.plot.error -text [msgcat::mc {Error Bar}]]
@@ -146,7 +145,7 @@ proc PrefsDialogPlot {} {
 	-variable pap(graph,ds,error)
     ttk::checkbutton $f.cap -text [msgcat::mc {Cap}] \
 	-variable pap(graph,ds,error,cap)
-
+    
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.color pap graph,ds,error,color {}
 
@@ -155,11 +154,9 @@ proc PrefsDialogPlot {} {
 	-menu $f.width.menu
     WidthDashMenu $f.width.menu pap \
 	graph,ds,error,width graph,ds,error,dash {} {}
-    
-    grid $f.show -padx 2 -pady 2 -sticky w
-    grid $f.cap -padx 2 -pady 2 -sticky w
-    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
-    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
+
+    grid $f.show $f.cap -padx 2 -pady 2 -sticky w
+    grid $f.tcolor $f.color $f.twidth $f.width -padx 2 -pady 2 -sticky w
 
     pack $w.plot.graph $w.plot.grid $w.plot.axis $w.plot.ds \
 	$w.plot.line $w.plot.bar $w.plot.scatter $w.plot.error \

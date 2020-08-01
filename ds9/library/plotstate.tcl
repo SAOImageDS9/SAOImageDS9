@@ -21,8 +21,7 @@ proc PlotDefState {} {
 
     set pap(foreground) black
     set pap(background) white
-    set pap(fg) black
-    set pap(bg) white
+
     set pap(grid,color) gray64
 
     set pap(graph,format) 1
@@ -75,23 +74,38 @@ proc PlotDefState {} {
 
     # per DataSet
     set pap(graph,ds,show) 1
-    set pap(graph,ds,smooth) linear
-    set pap(graph,ds,color) black
-    set pap(graph,ds,fill) 0
-    set pap(graph,ds,fill,color) black
-    set pap(graph,ds,width) 1
-    set pap(graph,ds,dash) 0
 
-    set pap(graph,ds,shape,symbol) none
-    set pap(graph,ds,shape,fill) 1
-    set pap(graph,ds,shape,color) red
+    # Line
+    set pap(graph,ds,line,smooth) linear
+    set pap(graph,ds,line,color) black
+    set pap(graph,ds,line,width) 1
+    set pap(graph,ds,line,dash) 0
+    set pap(graph,ds,line,fill) 0
+    set pap(graph,ds,line,fill,color) white
 
+    set pap(graph,ds,line,shape,symbol) none
+    set pap(graph,ds,line,shape,color) red
+    set pap(graph,ds,line,shape,fill) 1
+    set pap(graph,ds,line,shape,fill,color) red
+
+    # Bar
+    set pap(graph,ds,bar,border,color) white
+    set pap(graph,ds,bar,border,width) 1
+    set pap(graph,ds,bar,fill) 1
+    set pap(graph,ds,bar,fill,color) black
+    set pap(graph,ds,bar,width) 1
+
+    # Scatter
+    set pap(graph,ds,scatter,shape,symbol) circle
+    set pap(graph,ds,scatter,shape,fill) 1
+    set pap(graph,ds,scatter,shape,color) black
+    set pap(graph,ds,scatter,shape,fill,color) black
+
+    # Error
     set pap(graph,ds,error) 1
     set pap(graph,ds,error,cap) 0
     set pap(graph,ds,error,color) red
     set pap(graph,ds,error,width) 1
-
-    set pap(graph,ds,bar,width) 1
 }
 
 proc PlotInitGraph {varname} {
@@ -155,23 +169,38 @@ proc PlotInitGraph {varname} {
     set var(graph,ds,yedata) {}
 
     set var(graph,ds,show) $pap(graph,ds,show) 
-    set var(graph,ds,smooth) $pap(graph,ds,smooth) 
-    set var(graph,ds,color) $pap(graph,ds,color) 
-    set var(graph,ds,fill) $pap(graph,ds,fill) 
-    set var(graph,ds,fill,color) $pap(graph,ds,fill,color) 
-    set var(graph,ds,width) $pap(graph,ds,width) 
-    set var(graph,ds,dash) $pap(graph,ds,dash) 
 
-    set var(graph,ds,shape,symbol) $pap(graph,ds,shape,symbol) 
-    set var(graph,ds,shape,fill) $pap(graph,ds,shape,fill) 
-    set var(graph,ds,shape,color) $pap(graph,ds,shape,color)
+    # Line
+    set var(graph,ds,line,smooth) $pap(graph,ds,line,smooth) 
+    set var(graph,ds,line,color) $pap(graph,ds,line,color) 
+    set var(graph,ds,line,width) $pap(graph,ds,line,width) 
+    set var(graph,ds,line,dash) $pap(graph,ds,line,dash) 
+    set var(graph,ds,line,fill) $pap(graph,ds,line,fill) 
+    set var(graph,ds,line,fill,color) $pap(graph,ds,line,fill,color) 
 
+    set var(graph,ds,line,shape,symbol) $pap(graph,ds,line,shape,symbol) 
+    set var(graph,ds,line,shape,color) $pap(graph,ds,line,shape,color)
+    set var(graph,ds,line,shape,fill) $pap(graph,ds,line,shape,fill) 
+    set var(graph,ds,line,shape,fill,color) $pap(graph,ds,line,shape,fill,color)
+
+    # Bar
+    set var(graph,ds,bar,border,color) $pap(graph,ds,bar,border,color) 
+    set var(graph,ds,bar,border,width) $pap(graph,ds,bar,border,width) 
+    set var(graph,ds,bar,fill) $pap(graph,ds,bar,fill) 
+    set var(graph,ds,bar,fill,color) $pap(graph,ds,bar,fill,color) 
+    set var(graph,ds,bar,width) $pap(graph,ds,bar,width) 
+
+    # Scatter
+    set var(graph,ds,scatter,shape,symbol) $pap(graph,ds,scatter,shape,symbol) 
+    set var(graph,ds,scatter,shape,color) $pap(graph,ds,scatter,shape,color)
+    set var(graph,ds,scatter,shape,fill) $pap(graph,ds,scatter,shape,fill) 
+    set var(graph,ds,scatter,shape,fill,color) $pap(graph,ds,scatter,shape,fill,color)
+
+    # Error
     set var(graph,ds,error) $pap(graph,ds,error) 
     set var(graph,ds,error,cap) $pap(graph,ds,error,cap) 
     set var(graph,ds,error,color) $pap(graph,ds,error,color) 
     set var(graph,ds,error,width) $pap(graph,ds,error,width) 
-
-    set var(graph,ds,bar,width) $pap(graph,ds,bar,width) 
 }
 
 proc PlotSaveState {varname} {
@@ -233,23 +262,38 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,yedata) $var(graph,ds,yedata)
 
     set var($cc,$nn,show) $var(graph,ds,show)
-    set var($cc,$nn,smooth) $var(graph,ds,smooth)
-    set var($cc,$nn,color) $var(graph,ds,color)
-    set var($cc,$nn,fill) $var(graph,ds,fill)
-    set var($cc,$nn,fill,color) $var(graph,ds,fill,color)
-    set var($cc,$nn,width) $var(graph,ds,width)
-    set var($cc,$nn,dash) $var(graph,ds,dash)
 
-    set var($cc,$nn,shape,symbol) $var(graph,ds,shape,symbol)
-    set var($cc,$nn,shape,fill) $var(graph,ds,shape,fill)
-    set var($cc,$nn,shape,color) $var(graph,ds,shape,color)
+    # Line
+    set var($cc,$nn,line,smooth) $var(graph,ds,line,smooth)
+    set var($cc,$nn,line,color) $var(graph,ds,line,color)
+    set var($cc,$nn,line,width) $var(graph,ds,line,width)
+    set var($cc,$nn,line,dash) $var(graph,ds,line,dash)
+    set var($cc,$nn,line,fill) $var(graph,ds,line,fill)
+    set var($cc,$nn,line,fill,color) $var(graph,ds,line,fill,color)
 
+    set var($cc,$nn,line,shape,symbol) $var(graph,ds,line,shape,symbol)
+    set var($cc,$nn,line,shape,color) $var(graph,ds,line,shape,color)
+    set var($cc,$nn,line,shape,fill) $var(graph,ds,line,shape,fill)
+    set var($cc,$nn,line,shape,fill,color) $var(graph,ds,line,shape,fill,color)
+
+    # Bar
+    set var($cc,$nn,bar,border,color) $var(graph,ds,bar,border,color)
+    set var($cc,$nn,bar,border,width) $var(graph,ds,bar,border,width)
+    set var($cc,$nn,bar,fill) $var(graph,ds,bar,fill)
+    set var($cc,$nn,bar,fill,color) $var(graph,ds,bar,fill,color)
+    set var($cc,$nn,bar,width) $var(graph,ds,bar,width)
+
+    # Scatter
+    set var($cc,$nn,scatter,shape,symbol) $var(graph,ds,scatter,shape,symbol)
+    set var($cc,$nn,scatter,shape,color) $var(graph,ds,scatter,shape,color)
+    set var($cc,$nn,scatter,shape,fill) $var(graph,ds,scatter,shape,fill)
+    set var($cc,$nn,scatter,shape,fill,color) $var(graph,ds,scatter,shape,fill,color)
+
+    # Error
     set var($cc,$nn,error) $var(graph,ds,error)
     set var($cc,$nn,error,cap) $var(graph,ds,error,cap)
     set var($cc,$nn,error,color) $var(graph,ds,error,color)
     set var($cc,$nn,error,width) $var(graph,ds,error,width)
-
-    set var($cc,$nn,bar,width) $var(graph,ds,bar,width)
 }
 
 proc PlotRestoreState {varname} {
@@ -311,21 +355,36 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,yedata) $var($cc,$nn,yedata)
 
     set var(graph,ds,show) $var($cc,$nn,show) 
-    set var(graph,ds,smooth) $var($cc,$nn,smooth) 
-    set var(graph,ds,color) $var($cc,$nn,color) 
-    set var(graph,ds,fill) $var($cc,$nn,fill) 
-    set var(graph,ds,fill,color) $var($cc,$nn,fill,color) 
-    set var(graph,ds,width) $var($cc,$nn,width) 
-    set var(graph,ds,dash) $var($cc,$nn,dash) 
 
-    set var(graph,ds,shape,symbol) $var($cc,$nn,shape,symbol) 
-    set var(graph,ds,shape,fill) $var($cc,$nn,shape,fill) 
-    set var(graph,ds,shape,color) $var($cc,$nn,shape,color)
+    # Line
+    set var(graph,ds,line,smooth) $var($cc,$nn,line,smooth) 
+    set var(graph,ds,line,color) $var($cc,$nn,line,color) 
+    set var(graph,ds,line,width) $var($cc,$nn,line,width) 
+    set var(graph,ds,line,dash) $var($cc,$nn,line,dash) 
+    set var(graph,ds,line,fill) $var($cc,$nn,line,fill) 
+    set var(graph,ds,line,fill,color) $var($cc,$nn,line,fill,color) 
 
+    set var(graph,ds,line,shape,symbol) $var($cc,$nn,line,shape,symbol) 
+    set var(graph,ds,line,shape,color) $var($cc,$nn,line,shape,color)
+    set var(graph,ds,line,shape,fill) $var($cc,$nn,line,shape,fill) 
+    set var(graph,ds,line,shape,fill,color) $var($cc,$nn,line,shape,fill,color)
+
+    # Bar
+    set var(graph,ds,bar,border,color) $var($cc,$nn,bar,border,color) 
+    set var(graph,ds,bar,border,width) $var($cc,$nn,bar,border,width) 
+    set var(graph,ds,bar,fill) $var($cc,$nn,bar,fill) 
+    set var(graph,ds,bar,fill,color) $var($cc,$nn,bar,fill,color) 
+    set var(graph,ds,bar,width) $var($cc,$nn,bar,width) 
+    
+    # Scatter
+    set var(graph,ds,scatter,shape,symbol) $var($cc,$nn,scatter,shape,symbol) 
+    set var(graph,ds,scatter,shape,color) $var($cc,$nn,scatter,shape,color)
+    set var(graph,ds,scatter,shape,fill) $var($cc,$nn,scatter,shape,fill) 
+    set var(graph,ds,scatter,shape,fill,color) $var($cc,$nn,scatter,shape,fill,color)
+    
+    # Error
     set var(graph,ds,error) $var($cc,$nn,error) 
     set var(graph,ds,error,cap) $var($cc,$nn,error,cap) 
     set var(graph,ds,error,color) $var($cc,$nn,error,color) 
     set var(graph,ds,error,width) $var($cc,$nn,error,width) 
-
-    set var(graph,ds,bar,width) $var($cc,$nn,bar,width) 
 }

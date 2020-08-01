@@ -43,160 +43,160 @@ proc PlotLineMenus {varname} {
     global $varname
 
     # Data
-    ThemeMenu $var(mb).dataline
-    $var(mb).dataline add checkbutton -label [msgcat::mc {Show}] \
+    ThemeMenu $var(mb).ds
+    $var(mb).ds add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline add separator
-    $var(mb).dataline add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataline.color
-    $var(mb).dataline add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).dataline.width
-    $var(mb).dataline add cascade -label [msgcat::mc {Fill}] \
-	-menu $var(mb).dataline.fill
-    $var(mb).dataline add cascade -label [msgcat::mc {Error}] \
-	-menu $var(mb).dataline.error
-    $var(mb).dataline add cascade -label [msgcat::mc {Shape}] \
-	-menu $var(mb).dataline.shape
-    $var(mb).dataline add cascade -label [msgcat::mc {Smooth}] \
-	-menu $var(mb).dataline.smooth
-    $var(mb).dataline add separator
-    $var(mb).dataline add command -label "[msgcat::mc {Name}]..." \
+    $var(mb).ds add separator
+    $var(mb).ds add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).ds.color
+    $var(mb).ds add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).ds.width
+    $var(mb).ds add cascade -label [msgcat::mc {Fill}] \
+	-menu $var(mb).ds.fill
+    $var(mb).ds add cascade -label [msgcat::mc {Shape}] \
+	-menu $var(mb).ds.shape
+    $var(mb).ds add cascade -label [msgcat::mc {Smooth}] \
+	-menu $var(mb).ds.smooth
+    $var(mb).ds add cascade -label [msgcat::mc {Error}] \
+	-menu $var(mb).ds.error
+    $var(mb).ds add separator
+    $var(mb).ds add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
     # Color
-    PlotColorMenu $var(mb).dataline.color $varname graph,ds,color \
+    PlotColorMenu $var(mb).ds.color $varname graph,ds,line,color \
 	[list PlotLineUpdateElement $varname]
 
     # Width
-    ThemeMenu $var(mb).dataline.width
-    $var(mb).dataline.width add radiobutton \
-	-label {0} -variable ${varname}(graph,ds,width) \
+    ThemeMenu $var(mb).ds.width
+    $var(mb).ds.width add radiobutton \
+	-label {0} -variable ${varname}(graph,ds,line,width) \
 	-value 0 -command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.width add radiobutton \
-	-label {1} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {1} -variable ${varname}(graph,ds,line,width) \
 	-value 1 -command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.width add radiobutton \
-	-label {2} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {2} -variable ${varname}(graph,ds,line,width) \
 	-value 2 -command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.width add radiobutton \
-	-label {3} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {3} -variable ${varname}(graph,ds,line,width) \
 	-value 3 -command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.width add radiobutton \
-	-label {4} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {4} -variable ${varname}(graph,ds,line,width) \
 	-value 4 -command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.width add separator
-    $var(mb).dataline.width add checkbutton \
-	-label [msgcat::mc {Dash}] -variable ${varname}(graph,ds,dash) \
+    $var(mb).ds.width add separator
+    $var(mb).ds.width add checkbutton \
+	-label [msgcat::mc {Dash}] -variable ${varname}(graph,ds,line,dash) \
 	-command [list PlotLineUpdateElement $varname]
 
     # Fill
-    ThemeMenu $var(mb).dataline.fill
-    $var(mb).dataline.fill add checkbutton \
+    ThemeMenu $var(mb).ds.fill
+    $var(mb).ds.fill add checkbutton \
 	-label [msgcat::mc {Show}] \
-	-variable ${varname}(graph,ds,fill) \
+	-variable ${varname}(graph,ds,line,fill) \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.fill add separator
-    $var(mb).dataline.fill add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataline.fill.color
+    $var(mb).ds.fill add separator
+    $var(mb).ds.fill add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).ds.fill.color
 
-    PlotColorMenu $var(mb).dataline.fill.color $varname graph,ds,fill,color \
-	[list PlotLineUpdateElement $varname]
-
-    # Error
-    ThemeMenu $var(mb).dataline.error
-    $var(mb).dataline.error add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(graph,ds,error) \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.error add checkbutton -label [msgcat::mc {Cap}] \
-	-variable ${varname}(graph,ds,error,cap) \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.error add separator
-    $var(mb).dataline.error add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataline.error.color
-    $var(mb).dataline.error add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).dataline.error.width
-
-    PlotColorMenu $var(mb).dataline.error.color $varname graph,ds,error,color \
-	[list PlotLineUpdateElement $varname]
-    WidthDashMenu $var(mb).dataline.error.width $varname \
-	graph,ds,error,width {} [list PlotLineUpdateElement $varname] {}
+    PlotColorMenu $var(mb).ds.fill.color \
+	$varname graph,ds,line,fill,color [list PlotLineUpdateElement $varname]
 
     # Shape
-    ThemeMenu $var(mb).dataline.shape
-    $var(mb).dataline.shape add radiobutton \
+    ThemeMenu $var(mb).ds.shape
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {None}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value none \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value none \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Circle}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value circle \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value circle \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Square}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value square \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value square \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Diamond}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value diamond \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value diamond \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Plus}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value plus \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value plus \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Cross}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value cross \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value cross \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Simple Plus}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value splus \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value splus \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Simple Cross}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value scross \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value scross \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Triangle}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value triangle \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value triangle \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add radiobutton \
+    $var(mb).ds.shape add radiobutton \
 	-label [msgcat::mc {Arrow}] \
-	-variable ${varname}(graph,ds,shape,symbol) -value arrow \
+	-variable ${varname}(graph,ds,line,shape,symbol) -value arrow \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add separator
-    $var(mb).dataline.shape add checkbutton \
+    $var(mb).ds.shape add separator
+    $var(mb).ds.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(graph,ds,shape,fill) \
+	-variable ${varname}(graph,ds,line,shape,fill) \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataline.shape.color
+    $var(mb).ds.shape add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).ds.shape.color
 
-    PlotColorMenu $var(mb).dataline.shape.color $varname graph,ds,shape,color \
-	[list PlotLineUpdateElement $varname]
+    PlotColorMenu $var(mb).ds.shape.color \
+	$varname graph,ds,line,shape,color [list PlotLineUpdateElement $varname]
 
     # Smooth
-    ThemeMenu $var(mb).dataline.smooth
-    $var(mb).dataline.smooth add radiobutton \
+    ThemeMenu $var(mb).ds.smooth
+    $var(mb).ds.smooth add radiobutton \
 	-label [msgcat::mc {Step}] \
-	-variable ${varname}(graph,ds,smooth) -value step \
+	-variable ${varname}(graph,ds,line,smooth) -value step \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.smooth add radiobutton \
+    $var(mb).ds.smooth add radiobutton \
 	-label [msgcat::mc {Linear}] \
-	-variable ${varname}(graph,ds,smooth) -value linear \
+	-variable ${varname}(graph,ds,line,smooth) -value linear \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.smooth add radiobutton \
+    $var(mb).ds.smooth add radiobutton \
 	-label [msgcat::mc {Cubic}] \
-	-variable ${varname}(graph,ds,smooth) -value cubic \
+	-variable ${varname}(graph,ds,line,smooth) -value cubic \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.smooth add radiobutton \
+    $var(mb).ds.smooth add radiobutton \
 	-label [msgcat::mc {Quadratic}] \
-	-variable ${varname}(graph,ds,smooth) -value quadratic \
+	-variable ${varname}(graph,ds,line,smooth) -value quadratic \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline.smooth add radiobutton \
+    $var(mb).ds.smooth add radiobutton \
 	-label [msgcat::mc {Catrom}] \
-	-variable ${varname}(graph,ds,smooth) -value catrom \
+	-variable ${varname}(graph,ds,line,smooth) -value catrom \
 	-command [list PlotLineUpdateElement $varname]
+
+    # Error
+    ThemeMenu $var(mb).ds.error
+    $var(mb).ds.error add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,error) \
+	-command [list PlotLineUpdateElement $varname]
+    $var(mb).ds.error add checkbutton -label [msgcat::mc {Cap}] \
+	-variable ${varname}(graph,ds,error,cap) \
+	-command [list PlotLineUpdateElement $varname]
+    $var(mb).ds.error add separator
+    $var(mb).ds.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).ds.error.color
+    $var(mb).ds.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).ds.error.width
+
+    PlotColorMenu $var(mb).ds.error.color $varname graph,ds,error,color \
+	[list PlotLineUpdateElement $varname]
+    WidthDashMenu $var(mb).ds.error.width $varname \
+	graph,ds,error,width {} [list PlotLineUpdateElement $varname] {}
 }
 
 proc PlotLineAddGraph {varname} {
@@ -226,32 +226,32 @@ proc PlotLineUpdateElement {varname} {
 	set shapecolor [ThemeBold]
 	set errorcolor [ThemeBold]
     } else {
-	set color $var(graph,ds,color)
-	set shapecolor $var(graph,ds,shape,color)
+	set color $var(graph,ds,line,color)
+	set shapecolor $var(graph,ds,line,shape,color)
 	set errorcolor $var(graph,ds,error,color)
     }
 
-    if {$var(graph,ds,fill)} {
+    if {$var(graph,ds,line,fill)} {
 	if {$var(theme)} {
 	    set fillColor [ThemeBold]
 	} else {
-	    set fillColor $var(graph,ds,fill,color)
+	    set fillColor $var(graph,ds,line,fill,color)
 	}
     } else {
 	set fillColor {}
     }
 
-    if {$var(graph,ds,shape,fill)} {
+    if {$var(graph,ds,line,shape,fill)} {
 	if {$var(theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
-	    set shapefillcolor $var(graph,ds,shape,color)
+	    set shapefillcolor $var(graph,ds,line,shape,color)
 	}
     } else {
 	set shapefillcolor {}
     }
 
-    if {$var(graph,ds,dash)} {
+    if {$var(graph,ds,line,dash)} {
 	set dash {8 3}
     } else {
 	set dash { }
@@ -277,11 +277,11 @@ proc PlotLineUpdateElement {varname} {
 	-areabackground $fillColor \
 	-outline $shapecolor \
 	-fill $shapefillcolor \
-	-symbol $var(graph,ds,shape,symbol) \
+	-symbol $var(graph,ds,line,shape,symbol) \
 	-scalesymbols no \
 	-pixels 5 \
-	-smooth $var(graph,ds,smooth) \
-	-linewidth $var(graph,ds,width) \
+	-smooth $var(graph,ds,line,smooth) \
+	-linewidth $var(graph,ds,line,width) \
 	-dashes $dash \
 	-showerrorbars $show \
 	-errorbarcolor $errorcolor \

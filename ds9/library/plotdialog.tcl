@@ -565,28 +565,64 @@ proc DatasetNameDialog {varname} {
     return $rr
 }
 
-proc PlotLineShapeMenu {w var} {
+proc PlotLineShapeMenu {w var cmd} {
     ThemeMenu $w
     $w add radiobutton -label [msgcat::mc {None}] \
-	-variable $var -value none
+	-variable $var -value none -command $cmd
     $w add radiobutton -label [msgcat::mc {Circle}] \
-	-variable $var -value circle
+	-variable $var -value circle -command $cmd
     $w add radiobutton -label [msgcat::mc {Square}] \
-	-variable $var -value square
+	-variable $var -value square -command $cmd
     $w add radiobutton -label [msgcat::mc {Diamond}] \
-	-variable $var -value diamond
+	-variable $var -value diamond -command $cmd
     $w add radiobutton -label [msgcat::mc {Plus}] \
-	-variable $var -value plus
+	-variable $var -value plus -command $cmd
     $w add radiobutton -label [msgcat::mc {Cross}] \
-	-variable $var -value cross
+	-variable $var -value cross -command $cmd
     $w add radiobutton -label [msgcat::mc {Simple Plus}] \
-	-variable $var -value splus
+	-variable $var -value splus -command $cmd
     $w add radiobutton -label [msgcat::mc {Simple Cross}] \
-	-variable $var -value scross
+	-variable $var -value scross -command $cmd
     $w add radiobutton -label [msgcat::mc {Triangle}] \
-	-variable $var -value triangle
+	-variable $var -value triangle -command $cmd
     $w add radiobutton -label [msgcat::mc {Arrow}] \
-	-variable $var -value arrow
+	-variable $var -value arrow -command $cmd
+}
+
+proc PlotLineSmoothMenu {w var cmd} {
+    ThemeMenu $w
+    $w add radiobutton -label [msgcat::mc {Step}] \
+	-variable $var -value step -command $cmd
+    $w add radiobutton -label [msgcat::mc {Linear}] \
+	-variable $var -value linear -command $cmd
+    $w add radiobutton -label [msgcat::mc {Cubic}] \
+	-variable $var -value cubic -command $cmd
+    $w add radiobutton -label [msgcat::mc {Quadratic}] \
+	-variable $var -value quadratic -command $cmd
+    $w add radiobutton -label [msgcat::mc {Catrom}] \
+	-variable $var -value catrom -command $cmd
+}
+
+proc PlotScatterShapeMenu {w var cmd} {
+    ThemeMenu $w
+    $w add radiobutton -label [msgcat::mc {Circle}] \
+	-variable $var -value circle -command $cmd
+    $w add radiobutton -label [msgcat::mc {Square}] \
+	-variable $var -value square -command $cmd
+    $w add radiobutton -label [msgcat::mc {Diamond}] \
+	-variable $var -value diamond -command $cmd
+    $w add radiobutton -label [msgcat::mc {Plus}] \
+	-variable $var -value plus -command $cmd
+    $w add radiobutton -label [msgcat::mc {Cross}] \
+	-variable $var -value cross -command $cmd
+    $w add radiobutton -label [msgcat::mc {Simple Plus}] \
+	-variable $var -value splus -command $cmd
+    $w add radiobutton -label [msgcat::mc {Simple Cross}] \
+	-variable $var -value scross -command $cmd
+    $w add radiobutton -label [msgcat::mc {Triangle}] \
+	-variable $var -value triangle -command $cmd
+    $w add radiobutton -label [msgcat::mc {Arrow}] \
+	-variable $var -value arrow -command $cmd
 }
 
 proc PlotExportDialog {varname format} {

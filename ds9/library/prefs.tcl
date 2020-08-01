@@ -564,7 +564,10 @@ proc FixPrefs {version} {
 	8.0 {
 	    FixPrefs8.0to8.1
 	}
-	8.1 {}
+	8.1 {
+	    FixPrefs8.1to8.2
+	}
+	8.2 {}
     }
 }
 
@@ -592,6 +595,21 @@ proc FixPrefsVarOld {} {
 
     # 8.0
     FixVarRm pbuttons(file,samp)
+}
+
+proc FixPrefs8.1to8.2 {} {
+    FixVar pap(graph,ds,line,smooth) pap(graph,ds,smooth)
+    FixVar pap(graph,ds,line,color) pap(graph,ds,color)
+    FixVar pap(graph,ds,line,width) pap(graph,ds,width)
+    FixVar pap(graph,ds,line,dash) pap(graph,ds,dash)
+    FixVar pap(graph,ds,line,fill) pap(graph,ds,fill)
+    FixVar pap(graph,ds,line,fill,color) pap(graph,ds,fill,color)
+
+    FixVar pap(graph,ds,line,shape,symbol) pap(graph,ds,shape,symbol)
+    FixVar pap(graph,ds,line,shape,color) pap(graph,ds,shape,color)
+    FixVar pap(graph,ds,line,shape,fill) pap(graph,ds,shape,fill)
+
+    FixVarRm pap(graph,ds,bar,relief)
 }
 
 proc FixPrefs8.0to8.1 {} {

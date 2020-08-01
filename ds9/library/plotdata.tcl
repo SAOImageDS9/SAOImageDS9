@@ -52,24 +52,39 @@ proc PlotDataSetOne {varname dim data} {
     # init new state
     global pap
     set var(graph,ds,show) $pap(graph,ds,show)
-    set var(graph,ds,smooth) $pap(graph,ds,smooth)
-    set var(graph,ds,color) $pap(graph,ds,color)
-    set var(graph,ds,fill) $pap(graph,ds,fill)
-    set var(graph,ds,fill,color) $pap(graph,ds,fill,color)
-    set var(graph,ds,width) $pap(graph,ds,width)
-    set var(graph,ds,dash) $pap(graph,ds,dash)
 
-    set var(graph,ds,shape,symbol) $pap(graph,ds,shape,symbol)
-    set var(graph,ds,shape,fill) $pap(graph,ds,shape,fill)
-    set var(graph,ds,shape,color) $pap(graph,ds,shape,color)
+    # Line
+    set var(graph,ds,line,smooth) $pap(graph,ds,line,smooth)
+    set var(graph,ds,line,color) $pap(graph,ds,line,color)
+    set var(graph,ds,line,width) $pap(graph,ds,line,width)
+    set var(graph,ds,line,dash) $pap(graph,ds,line,dash)
+    set var(graph,ds,line,fill) $pap(graph,ds,line,fill)
+    set var(graph,ds,line,fill,color) $pap(graph,ds,line,fill,color)
 
+    set var(graph,ds,line,shape,symbol) $pap(graph,ds,line,shape,symbol)
+    set var(graph,ds,line,shape,color) $pap(graph,ds,line,shape,color)
+    set var(graph,ds,line,shape,fill) $pap(graph,ds,line,shape,fill)
+    set var(graph,ds,line,shape,fill,color) $pap(graph,ds,line,shape,fill,color)
+
+    # Bar
+    set var(graph,ds,bar,border,color) $pap(graph,ds,bar,border,color)
+    set var(graph,ds,bar,border,width) $pap(graph,ds,bar,border,width)
+    set var(graph,ds,bar,fill) $pap(graph,ds,bar,fill)
+    set var(graph,ds,bar,fill,color) $pap(graph,ds,bar,fill,color)
+    set var(graph,ds,bar,width) $pap(graph,ds,bar,width)
+
+    # Scatter
+    set var(graph,ds,scatter,shape,symbol) $pap(graph,ds,scatter,shape,symbol)
+    set var(graph,ds,scatter,shape,color) $pap(graph,ds,scatter,shape,color)
+    set var(graph,ds,scatter,shape,fill) $pap(graph,ds,scatter,shape,fill)
+    set var(graph,ds,scatter,shape,fill,color) $pap(graph,ds,scatter,shape,fill,color)
+
+    # Error
     set var(graph,ds,error) $pap(graph,ds,error)
     set var(graph,ds,error,cap) $pap(graph,ds,error,cap)
     set var(graph,ds,error,color) $pap(graph,ds,error,color)
     set var(graph,ds,error,width) $pap(graph,ds,error,width)
 
-    set var(graph,ds,bar,width) $pap(graph,ds,bar,width)
-    
     # new vector names
     set xdata ap${varname}graph${cc}xx${nn}
     set ydata ap${varname}graph${cc}yy${nn}
@@ -247,9 +262,6 @@ proc PlotExternal {varname dim} {
 
     set var(graph,ds,dim) $dim
 
-    set var(graph,ds,color) $pap(fg)
-    set var(graph,ds,fill,color) $pap(fg)
-
     PlotAddElement $varname
 }
 
@@ -274,23 +286,38 @@ proc PlotDupDataSet {varname} {
 
     # init new state
     set var(graph,ds,show) $var($cc,$mm,show)
-    set var(graph,ds,smooth) $var($cc,$mm,smooth)
-    set var(graph,ds,color) $var($cc,$mm,color)
-    set var(graph,ds,fill) $var($cc,$mm,fill)
-    set var(graph,ds,fill,color) $var($cc,$mm,fill,color)
-    set var(graph,ds,width) $var($cc,$mm,width)
-    set var(graph,ds,dash) $var($cc,$mm,dash)
 
-    set var(graph,ds,shape,symbol) $var($cc,$mm,shape,symbol)
-    set var(graph,ds,shape,fill) $var($cc,$mm,shape,fill)
-    set var(graph,ds,shape,color) $var($cc,$mm,shape,color)
+    # Line
+    set var(graph,ds,line,smooth) $var($cc,$mm,line,smooth)
+    set var(graph,ds,line,color) $var($cc,$mm,line,color)
+    set var(graph,ds,line,width) $var($cc,$mm,line,width)
+    set var(graph,ds,line,dash) $var($cc,$mm,line,dash)
+    set var(graph,ds,line,fill) $var($cc,$mm,line,fill)
+    set var(graph,ds,line,fill,color) $var($cc,$mm,line,fill,color)
 
+    set var(graph,ds,line,shape,symbol) $var($cc,$mm,line,shape,symbol)
+    set var(graph,ds,line,shape,color) $var($cc,$mm,line,shape,color)
+    set var(graph,ds,line,shape,fill) $var($cc,$mm,line,shape,fill)
+    set var(graph,ds,line,shape,file,color) $var($cc,$mm,line,shape,fill,color)
+
+    # Bar
+    set var(graph,ds,bar,border,color) $var($cc,$mm,bar,border,color)
+    set var(graph,ds,bar,border,width) $var($cc,$mm,bar,border,width)
+    set var(graph,ds,bar,fill) $var($cc,$mm,bar,fill)
+    set var(graph,ds,bar,fill,color) $var($cc,$mm,bar,fill,color)
+    set var(graph,ds,bar,width) $var($cc,$mm,bar,width)
+
+    # Scatter
+    set var(graph,ds,scatter,shape,symbol) $var($cc,$mm,scatter,shape,symbol)
+    set var(graph,ds,scatter,shape,color) $var($cc,$mm,scatter,shape,color)
+    set var(graph,ds,scatter,shape,fill) $var($cc,$mm,scatter,shape,fill)
+    set var(graph,ds,scatter,shape,file,color) $var($cc,$mm,scatter,shape,fill,color)
+
+    # Error
     set var(graph,ds,error) $var($cc,$mm,error)
     set var(graph,ds,error,cap) $var($cc,$mm,error,cap)
     set var(graph,ds,error,color) $var($cc,$mm,error,color)
     set var(graph,ds,error,width) $var($cc,$mm,error,width)
-
-    set var(graph,ds,bar,width) $var($cc,$mm,bar,width)
 
     # new vector names
     set xdata ap${varname}graph${cc}xx${nn}

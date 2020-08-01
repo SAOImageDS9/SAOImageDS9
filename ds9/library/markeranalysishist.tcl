@@ -86,8 +86,8 @@ proc MarkerAnalysisHistogramCB {frame id} {
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
-	set vvar(graph,ds,smooth) step
-	set vvar(graph,ds,fill) 1
+	set vvar(graph,ds,line,smooth) step
+	set vvar(graph,ds,line,fill) 1
 	PlotExternal $vvarname xy
     }
 

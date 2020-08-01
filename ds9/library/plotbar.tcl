@@ -43,74 +43,74 @@ proc PlotBarMenus {varname} {
     global $varname
 
     # Data
-    ThemeMenu $var(mb).databar
-    $var(mb).databar add checkbutton -label [msgcat::mc {Show}] \
+    ThemeMenu $var(mb).ds
+    $var(mb).ds add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar add separator
-    $var(mb).databar add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).databar.color
-    $var(mb).databar add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).databar.width
-    $var(mb).databar add cascade -label [msgcat::mc {Fill}] \
-	-menu $var(mb).databar.fill
-    $var(mb).databar add cascade -label [msgcat::mc {Error}] \
-	-menu $var(mb).databar.error
-    $var(mb).databar add separator
-    $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
+    $var(mb).ds add separator
+    $var(mb).ds add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).ds.color
+    $var(mb).ds add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).ds.width
+    $var(mb).ds add cascade -label [msgcat::mc {Fill}] \
+	-menu $var(mb).ds.fill
+    $var(mb).ds add cascade -label [msgcat::mc {Error}] \
+	-menu $var(mb).ds.error
+    $var(mb).ds add separator
+    $var(mb).ds add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    PlotColorMenu $var(mb).databar.color $varname graph,ds,color \
+    PlotColorMenu $var(mb).ds.color $varname graph,ds,bar,border,color \
 	[list PlotBarUpdateElement $varname]
 
     # Width
-    ThemeMenu $var(mb).databar.width
-    $var(mb).databar.width add radiobutton \
-	-label {0} -variable ${varname}(graph,ds,width) \
+    ThemeMenu $var(mb).ds.width
+    $var(mb).ds.width add radiobutton \
+	-label {0} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 0 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
-	-label {1} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {1} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 1 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
-	-label {2} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {2} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 2 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
-	-label {3} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {3} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 3 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
-	-label {4} -variable ${varname}(graph,ds,width) \
+    $var(mb).ds.width add radiobutton \
+	-label {4} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 4 -command [list PlotBarUpdateElement $varname]
 
     # Fill
-    ThemeMenu $var(mb).databar.fill
-    $var(mb).databar.fill add checkbutton \
+    ThemeMenu $var(mb).ds.fill
+    $var(mb).ds.fill add checkbutton \
 	-label [msgcat::mc {Show}] \
-	-variable ${varname}(graph,ds,fill) \
+	-variable ${varname}(graph,ds,bar,fill) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.fill add separator
-    $var(mb).databar.fill add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).databar.fill.color
+    $var(mb).ds.fill add separator
+    $var(mb).ds.fill add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).ds.fill.color
 
-    PlotColorMenu $var(mb).databar.fill.color $varname graph,ds,fill,color \
+    PlotColorMenu $var(mb).ds.fill.color $varname graph,ds,bar,fill,color \
 	[list PlotBarUpdateElement $varname]
 
     # Error
-    ThemeMenu $var(mb).databar.error
-    $var(mb).databar.error add checkbutton -label [msgcat::mc {Show}] \
+    ThemeMenu $var(mb).ds.error
+    $var(mb).ds.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,error) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.error add checkbutton -label [msgcat::mc {Cap}] \
+    $var(mb).ds.error add checkbutton -label [msgcat::mc {Cap}] \
 	-variable ${varname}(graph,ds,error,cap) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.error add separator
-    $var(mb).databar.error add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).databar.error.color
-    $var(mb).databar.error add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).databar.error.width
+    $var(mb).ds.error add separator
+    $var(mb).ds.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).ds.error.color
+    $var(mb).ds.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).ds.error.width
 
-    PlotColorMenu $var(mb).databar.error.color $varname graph,ds,error,color \
+    PlotColorMenu $var(mb).ds.error.color $varname graph,ds,error,color \
 	[list PlotBarUpdateElement $varname]
-    WidthDashMenu $var(mb).databar.error.width $varname graph,ds,error,width \
+    WidthDashMenu $var(mb).ds.error.width $varname graph,ds,error,width \
 	{} [list PlotBarUpdateElement $varname] {}
 }
 
@@ -143,15 +143,15 @@ proc PlotBarUpdateElement {varname} {
 	set color [ThemeTreeBackground]
 	set errorcolor [ThemeBold]
     } else {
-	set color $var(graph,ds,color)
+	set color $var(graph,ds,bar,border,color)
 	set errorcolor $var(graph,ds,error,color)
     }
 
-    if {$var(graph,ds,fill)} {
+    if {$var(graph,ds,bar,fill)} {
 	if {$var(theme)} {
 	    set fillColor [ThemeBold]
 	} else {
-	    set fillColor $var(graph,ds,fill,color)
+	    set fillColor $var(graph,ds,bar,fill,color)
 	}
     } else {
 	if {$var(theme)} {
@@ -179,8 +179,8 @@ proc PlotBarUpdateElement {varname} {
 	-hide [expr !$var(graph,ds,show)] \
 	-outline $color \
 	-fill $fillColor \
+	-borderwidth $var(graph,ds,bar,border,width) \
 	-relief flat \
-	-borderwidth $var(graph,ds,width) \
 	-barwidth $var(graph,ds,bar,width) \
 	-showerrorbars $show \
 	-errorbarcolor $errorcolor \

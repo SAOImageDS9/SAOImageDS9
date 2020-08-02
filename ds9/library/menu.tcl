@@ -123,7 +123,7 @@ proc ThemeConfigPlot {w} {
 	global $varname
 	if {[info exists $varname]} {
 	    if {[info exists ${varname}(theme)]} {
-		PlotUpdateTheme $varname
+		PlotChangeTheme $varname
 	    }
 	}
     }

@@ -42,7 +42,6 @@ proc PlotLineMenus {varname} {
     upvar #0 $varname var
     global $varname
 
-    # Data
     ThemeMenu $var(mb).dataline
     $var(mb).dataline add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
@@ -52,7 +51,7 @@ proc PlotLineMenus {varname} {
 	-menu $var(mb).dataline.color
     $var(mb).dataline add cascade -label [msgcat::mc {Width}] \
 	-menu $var(mb).dataline.width
-    $var(mb).dataline add cascade -label [msgcat::mc {Fill}] \
+    $var(mb).dataline add cascade -label [msgcat::mc {Shadow}] \
 	-menu $var(mb).dataline.fill
     $var(mb).dataline add cascade -label [msgcat::mc {Shape}] \
 	-menu $var(mb).dataline.shape
@@ -64,11 +63,9 @@ proc PlotLineMenus {varname} {
     $var(mb).dataline add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    # Color
     PlotColorMenu $var(mb).dataline.color $varname graph,ds,line,color \
 	[list PlotLineUpdateElement $varname]
 
-    # Width
     ThemeMenu $var(mb).dataline.width
     $var(mb).dataline.width add radiobutton \
 	-label {0} -variable ${varname}(graph,ds,line,width) \
@@ -90,10 +87,9 @@ proc PlotLineMenus {varname} {
 	-label [msgcat::mc {Dash}] -variable ${varname}(graph,ds,line,dash) \
 	-command [list PlotLineUpdateElement $varname]
 
-    # Fill
     ThemeMenu $var(mb).dataline.fill
     $var(mb).dataline.fill add checkbutton \
-	-label [msgcat::mc {Show}] \
+	-label [msgcat::mc {Fill}] \
 	-variable ${varname}(graph,ds,line,fill) \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).dataline.fill add separator
@@ -103,27 +99,33 @@ proc PlotLineMenus {varname} {
     PlotColorMenu $var(mb).dataline.fill.color \
 	$varname graph,ds,line,fill,color [list PlotLineUpdateElement $varname]
 
-    # Shape
-    PlotLineShapeMenu $var(mb).dataline.shape \
-	${varname}(graph,ds,line,shape,symbol) \
-	[list PlotLineUpdateElement $varname]
-    $var(mb).dataline.shape add separator
+    ThemeMenu $var(mb).dataline.shape
     $var(mb).dataline.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
 	-variable ${varname}(graph,ds,line,shape,fill) \
 	-command [list PlotLineUpdateElement $varname]
+    $var(mb).dataline.shape add separator
+    $var(mb).dataline.shape add cascade -label [msgcat::mc {Symbol}] \
+	-menu $var(mb).dataline.shape.symbol
     $var(mb).dataline.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).dataline.shape.color
+    $var(mb).dataline.shape add cascade -label [msgcat::mc {Fill Color}] \
+	-menu $var(mb).dataline.shape.fillcolor
 
+    PlotLineShapeMenu $var(mb).dataline.shape.symbol \
+	${varname}(graph,ds,line,shape,symbol) \
+	[list PlotLineUpdateElement $varname]
     PlotColorMenu $var(mb).dataline.shape.color \
-	$varname graph,ds,line,shape,color [list PlotLineUpdateElement $varname]
+	$varname graph,ds,line,shape,color \
+	[list PlotLineUpdateElement $varname]
+    PlotColorMenu $var(mb).dataline.shape.fillcolor \
+	$varname graph,ds,line,shape,fill,color \
+	[list PlotLineUpdateElement $varname]
     
-    # Smooth
     PlotLineSmoothMenu $var(mb).dataline.smooth \
 	${varname}(graph,ds,line,smooth) \
 	[list PlotLineUpdateElement $varname]
     
-    # Error
     ThemeMenu $var(mb).dataline.error
     $var(mb).dataline.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,error) \
@@ -227,10 +229,10 @@ proc PlotLineUpdateElement {varname} {
 	if {$var(theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
-	    set shapefillcolor $var(graph,ds,line,shape,color)
+	    set shapefillcolor $var(graph,ds,line,shape,fill,color)
 	}
     } else {
-	set shapefillcolor {}
+	set shapefillcolor $var(background)
     }
 
     if {$var(graph,ds,line,dash)} {

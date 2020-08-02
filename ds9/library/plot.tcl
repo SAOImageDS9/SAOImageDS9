@@ -408,7 +408,15 @@ proc PlotChangeTitle {varname} {
     }
 }
 
-proc PlotUpdateTheme {varname} {
+proc PlotChangeBackground {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(graph,proc,updateelement) $varname
+    PlotUpdateCanvasElement $varname
+}
+
+proc PlotChangeTheme {varname} {
     upvar #0 $varname var
     global $varname
 

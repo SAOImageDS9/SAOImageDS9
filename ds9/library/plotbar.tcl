@@ -60,7 +60,7 @@ proc PlotBarMenus {varname} {
     $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    PlotColorMenu $var(mb).databar.color $varname graph,ds,bar,border,color \
+    ColorMenu $var(mb).databar.color $varname graph,ds,bar,border,color \
 	[list PlotBarUpdateElement $varname]
 
     # Width
@@ -91,7 +91,7 @@ proc PlotBarMenus {varname} {
     $var(mb).databar.fill add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).databar.fill.color
 
-    PlotColorMenu $var(mb).databar.fill.color $varname graph,ds,bar,fill,color \
+    ColorMenu $var(mb).databar.fill.color $varname graph,ds,bar,fill,color \
 	[list PlotBarUpdateElement $varname]
 
     # Error
@@ -108,7 +108,7 @@ proc PlotBarMenus {varname} {
     $var(mb).databar.error add cascade -label [msgcat::mc {Width}] \
 	-menu $var(mb).databar.error.width
 
-    PlotColorMenu $var(mb).databar.error.color $varname graph,ds,error,color \
+    ColorMenu $var(mb).databar.error.color $varname graph,ds,error,color \
 	[list PlotBarUpdateElement $varname]
     WidthDashMenu $var(mb).databar.error.width $varname graph,ds,error,width \
 	{} [list PlotBarUpdateElement $varname] {}

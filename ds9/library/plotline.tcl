@@ -63,7 +63,7 @@ proc PlotLineMenus {varname} {
     $var(mb).dataline add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    PlotColorMenu $var(mb).dataline.color $varname graph,ds,line,color \
+    ColorMenu $var(mb).dataline.color $varname graph,ds,line,color \
 	[list PlotLineUpdateElement $varname]
 
     ThemeMenu $var(mb).dataline.width
@@ -96,7 +96,7 @@ proc PlotLineMenus {varname} {
     $var(mb).dataline.fill add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).dataline.fill.color
 
-    PlotColorMenu $var(mb).dataline.fill.color \
+    ColorMenu $var(mb).dataline.fill.color \
 	$varname graph,ds,line,fill,color [list PlotLineUpdateElement $varname]
 
     ThemeMenu $var(mb).dataline.shape
@@ -115,10 +115,10 @@ proc PlotLineMenus {varname} {
     PlotLineShapeMenu $var(mb).dataline.shape.symbol \
 	${varname}(graph,ds,line,shape,symbol) \
 	[list PlotLineUpdateElement $varname]
-    PlotColorMenu $var(mb).dataline.shape.color \
+    ColorMenu $var(mb).dataline.shape.color \
 	$varname graph,ds,line,shape,color \
 	[list PlotLineUpdateElement $varname]
-    PlotColorMenu $var(mb).dataline.shape.fillcolor \
+    ColorMenu $var(mb).dataline.shape.fillcolor \
 	$varname graph,ds,line,shape,fill,color \
 	[list PlotLineUpdateElement $varname]
     
@@ -139,7 +139,7 @@ proc PlotLineMenus {varname} {
     $var(mb).dataline.error add cascade -label [msgcat::mc {Width}] \
 	-menu $var(mb).dataline.error.width
 
-    PlotColorMenu $var(mb).dataline.error.color $varname graph,ds,error,color \
+    ColorMenu $var(mb).dataline.error.color $varname graph,ds,error,color \
 	[list PlotLineUpdateElement $varname]
     WidthDashMenu $var(mb).dataline.error.width $varname \
 	graph,ds,error,width {} [list PlotLineUpdateElement $varname] {}

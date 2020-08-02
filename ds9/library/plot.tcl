@@ -408,19 +408,23 @@ proc PlotChangeTitle {varname} {
     }
 }
 
-proc PlotChangeBackground {varname} {
+proc PlotUpdateAllElement {varname} {
     upvar #0 $varname var
     global $varname
 
-    $var(graph,proc,updateelement) $varname
-    PlotUpdateCanvasElement $varname
-}
+    set cc $var(graph,current)
+    set nn $var(graph,ds,current)
+    foreach gg $var(graphs) {
+	set var(graph,current) $gg
+	set var(graph,ds,current) [lindex $var($gg,dss) 0]
+	PlotRestoreState $varname
 
-proc PlotChangeTheme {varname} {
-    upvar #0 $varname var
-    global $varname
+	$var(graph,proc,updateelement) $varname
+    }
+    set var(graph,current) $cc
+    set var(graph,ds,current) $nn
+    PlotRestoreState $varname
 
-    $var(graph,proc,updateelement) $varname
     PlotUpdateCanvasElement $varname
 }
 
@@ -1015,32 +1019,6 @@ proc PlotHighliteElement {varname cc nn rowlist} {
 }
 
 # menus
-proc PlotColorMenu {w varname color cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ThemeMenu $w
-    $w add radiobutton -label [msgcat::mc {Black}] \
-	-variable ${varname}($color) -value black -command $cmd
-    $w add radiobutton -label [msgcat::mc {White}] \
-	-variable ${varname}($color) -value white -command $cmd
-    $w add radiobutton -label [msgcat::mc {Red}] \
-	-variable ${varname}($color) -value red -command $cmd
-    $w add radiobutton -label [msgcat::mc {Green}] \
-	-variable ${varname}($color) -value green -command $cmd
-    $w add radiobutton -label [msgcat::mc {Blue}] \
-	-variable ${varname}($color) -value blue -command $cmd
-    $w add radiobutton -label [msgcat::mc {Cyan}] \
-	-variable ${varname}($color) -value cyan -command $cmd
-    $w add radiobutton -label [msgcat::mc {Magenta}] \
-	-variable ${varname}($color) -value magenta -command $cmd
-    $w add radiobutton -label [msgcat::mc {Yellow}] \
-	-variable ${varname}($color) -value yellow -command $cmd
-    $w add separator
-    $w add command -label "[msgcat::mc {Other Color}]..." \
-	-command [list ColorMenuOther $varname $color $cmd]
-}
-
 proc PlotTitle {varname title xaxis yaxis} {
     upvar #0 $varname var
     global $varname

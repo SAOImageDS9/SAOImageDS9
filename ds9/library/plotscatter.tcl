@@ -71,10 +71,10 @@ proc PlotScatterMenus {varname} {
     PlotScatterShapeMenu $var(mb).datascatter.shape.symbol \
 	${varname}(graph,ds,scatter,shape,symbol) \
 	[list PlotScatterUpdateElement $varname]
-    PlotColorMenu $var(mb).datascatter.shape.color \
+    ColorMenu $var(mb).datascatter.shape.color \
 	$varname graph,ds,scatter,shape,color \
 	[list PlotScatterUpdateElement $varname]
-    PlotColorMenu $var(mb).datascatter.shape.fillcolor \
+    ColorMenu $var(mb).datascatter.shape.fillcolor \
 	$varname graph,ds,scatter,shape,fill,color \
 	[list PlotScatterUpdateElement $varname]
 
@@ -92,7 +92,7 @@ proc PlotScatterMenus {varname} {
     $var(mb).datascatter.error add cascade -label [msgcat::mc {Width}] \
 	-menu $var(mb).datascatter.error.width
 
-    PlotColorMenu $var(mb).datascatter.error.color $varname \
+    ColorMenu $var(mb).datascatter.error.color $varname \
 	graph,ds,error,color [list PlotScatterUpdateElement $varname]
     WidthDashMenu $var(mb).datascatter.error.width $varname \
 	graph,ds,error,width {} [list PlotScatterUpdateElement $varname] {}

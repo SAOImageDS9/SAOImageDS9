@@ -123,7 +123,8 @@ proc PlotDialog {varname wtt} {
 
     $var(mb).canvas add separator
     $var(mb).canvas add checkbutton -label [msgcat::mc {Use Theme Colors}] \
-	-variable ${varname}(theme) -command [list PlotChangeTheme $varname]
+	-variable ${varname}(theme) \
+	-command [list PlotUpdateAllElement $varname]
     $var(mb).canvas add separator
     $var(mb).canvas add cascade -label [msgcat::mc {Forground}] \
 	-menu $var(mb).canvas.fg
@@ -177,13 +178,11 @@ proc PlotDialog {varname wtt} {
 	$varname legend,font,family legend,font,size legend,font,weight \
 	legend,font,slant [list PlotUpdateCanvasElement $varname]
 
-    PlotColorMenu $var(mb).canvas.fg $varname foreground \
+    ColorMenu $var(mb).canvas.fg $varname foreground \
 	[list PlotUpdateCanvasElement $varname]
-
-    PlotColorMenu $var(mb).canvas.bg $varname background \
-	[list PlotChangeBackground $varname]
-
-    PlotColorMenu $var(mb).canvas.grid $varname grid,color \
+    ColorMenu $var(mb).canvas.bg $varname background \
+	[list PlotUpdateAllElement $varname]
+    ColorMenu $var(mb).canvas.grid $varname grid,color \
 	[list PlotUpdateCanvasElement $varname]
 
     # Graph

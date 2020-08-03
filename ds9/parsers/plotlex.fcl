@@ -18,6 +18,7 @@ axis	    {return $AXIS_}
 background  {return $BACKGROUND_}
 bar	    {return $BAR_}
 barmode	    {return $BARMODE_}
+border	    {return $BORDER_}
 bottom	    {return $BOTTOM_}
 cap	    {return $CAP_}
 catrom	    {return $CATROM_}

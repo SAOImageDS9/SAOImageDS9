@@ -97,8 +97,8 @@ proc PlotDefState {} {
 
     # Scatter
     set pap(graph,ds,scatter,shape,symbol) circle
-    set pap(graph,ds,scatter,shape,fill) 1
     set pap(graph,ds,scatter,shape,color) black
+    set pap(graph,ds,scatter,shape,fill) 1
     set pap(graph,ds,scatter,shape,fill,color) black
 
     # Error

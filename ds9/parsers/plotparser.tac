@@ -21,6 +21,7 @@
 %token BACKGROUND_
 %token BAR_
 %token BARMODE_
+%token BORDER_
 %token BOTTOM_
 %token CAP_
 %token CATROM_
@@ -256,8 +257,7 @@ plotCmd : LOAD_ load
  | SELECT_ GRAPH_ INT_ {ProcessCmdCVAR graph,current $3 PlotCurrentGraph}
  | DELETE_ GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
  | LAYOUT_ layout {ProcessCmdCVAR layout $2 PlotChangeLayout}
- | LAYOUT_ STRIP_ SCALE_ numeric
-   {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
+ | LAYOUT_ STRIP_ SCALE_ numeric {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
  | FOREGROUND_ STRING_ {ProcessCmdCVAR foreground $2 PlotUpdateCanvasElement}
  | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvasElement}
@@ -286,24 +286,91 @@ plotCmd : LOAD_ load
 
  # Data
  | SHOW_ yesno {PlotCmdUpdateElement graph,ds,show $2}
- | SHAPE_ shape
- | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,smooth $2}
- | COLOR_ color
- | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
- | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
- | FILL_ yesno {PlotCmdUpdateElement graph,ds,fill $2}
- | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,fill,color $2}
+ | lineparams
+ | LINE_ lineparams
+ | BAR_ barparams
+ | SCATTER_ scatterparams
+ | NAME_ STRING_ {ProcessCmdCVAROpt PlotDataSetName $2}
+ 
+# Error
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
- # backward compatibility
- | RELIEF_ relief
- | NAME_ STRING_ {ProcessCmdCVAROpt PlotDataSetName $2}
 
  # backward compatibility
  | GRAPH_ oldGraph
  # backward compatibility
  | VIEW_ oldView
+ ;
+
+# Line
+lineparams : SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,line,smooth $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,color $2}
+ | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,line,width $2}
+ | DASH_ yesno {PlotCmdUpdateElement graph,ds,line,dash $2}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,fill $2}
+ | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,fill,color $2}
+ | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,fill,color $3}
+ | SHAPE_ lineshape
+ ;
+
+lineshape : linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $1}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,color $2}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,shape,fill $2}
+ | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,fill,color $2}
+ | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,fill,color $3}
+ ;
+
+linesymbol : NONE_ {set _ none}
+ | CIRCLE_ {set _ circle}
+ | SQUARE_ {set _ square}
+ | DIAMOND_ {set _ diamond}
+ | PLUS_ {set _ plus}
+ | SPLUS_ {set _ splus}
+ | SCROSS_ {set _ scross}
+ | TRIANGLE_ {set _ triangle}
+ | ARROW_ {set _ arrow}
+ # backward compatibility
+ | CROSS_ {set _ scross}
+ ;
+
+smooth : STEP_ {set _ step}
+ | LINEAR_ {set _ linear}
+ | CUBIC_ {set _ cubic}
+ | QUADRATIC_ {set _ quadratic}
+ | CATROM_ {set _ catrom}
+ ;
+
+# Bar
+barparams: 
+ | BORDER_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,border,color $3}
+ | BORDER_ WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,border,width $3}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,bar,fill $2}
+ | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,fill,color $3}
+ | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,fill,color $2}
+ | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,width $2}
+ # backward compatibility
+ | RELIEF_ relief
+ ;
+
+# Scatter
+scatterparams : scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $1}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,color $2}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,shape,fill $2}
+ | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,fill,color $2}
+ | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,fill,color $3}
+ ;
+
+scattersymbol : CIRCLE_ {set _ circle}
+ | SQUARE_ {set _ square}
+ | DIAMOND_ {set _ diamond}
+ | PLUS_ {set _ plus}
+ | SPLUS_ {set _ splus}
+ | SCROSS_ {set _ scross}
+ | TRIANGLE_ {set _ triangle}
+ | ARROW_ {set _ arrow}
+ # backward compatibility
+ | CROSS_ {set _ scross}
  ;
 
 # File Menu params
@@ -453,54 +520,14 @@ title : STRING_ {ProcessCmdCVAR graph,title $1 PlotChangeTitle}
  | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotChangeTitle}
  ;
 
-# Data Menu params
-shape : shapes {PlotCmdUpdateElement graph,ds,shape,symbol $1}
- | FILL_ yesno {PlotCmdUpdateElement graph,ds,shape,file $2}
- | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,shape,color $2}
- ;
-
-shapes : NONE_ {set _ none}
- | CIRCLE_ {set _ circle}
- | SQUARE_ {set _ square}
- | DIAMOND_ {set _ diamond}
- | PLUS_ {set _ plus}
- | SPLUS_ {set _ splus}
- | SCROSS_ {set _ scross}
- | TRIANGLE_ {set _ triangle}
- | ARROW_ {set _ arrow}
- # backward compatibility
- | CROSS_ {set _ scross}
- ;
-
-smooth : STEP_ {set _ step}
- | LINEAR_ {set _ linear}
- | CUBIC_ {set _ cubic}
- | QUADRATIC_ {set _ quadratic}
- | CATROM_ {set _ catrom}
- ;
-
-color : STRING_ {PlotCmdUpdateElement graph,ds,color $1}
-# backward compatiabilty
- | dummy1 STRING_ {PlotCmdUpdateElement graph,ds,color $2}
- ;
-
-dummy1 : DISCRETE_
- | LINE_
- | STEP_
- | QUADRATIC_
- | BAR_
- | ERROR_
- | ERRORBAR_
- ; 
-
 errorr : yesno {PlotCmdUpdateElement graph,ds,error $1}
  | CAP_ yesno {PlotCmdUpdateElement graph,ds,error,cap $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,error,color $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,error,width $2}
  ;
 
-# Really old stuff
 # backward compatibility
+# Really old stuff, may not be work, never tested
 oldGraph : GRID_ oldGraphGrid
  | LOG_ xy yesno {ProcessCmdCVAR "graph,axis,$2,log" $3 PlotChangeAxis}
  | FLIP_ xy yesno {ProcessCmdCVAR "graph,axis,$2,flip" $3 PlotChangeAxis}
@@ -535,11 +562,10 @@ oldGraphScale : LINEARLINEAR_ {ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCV
  | LOGLOG_ {ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis}
  ;
 
-# backward compatibility
-oldLine : DISCRETE_ shapes {PlotCmdUpdateElement graph,ds,shape,symbol $2}
- | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $3}
- | dummy2 DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $3}
- | dummy2 STYLE_ INT_ {PlotCmdUpdateElement graph,ds,error $3}
+oldLine : DISCRETE_ lineshape {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}
+ | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,line,width $3}
+ | dummy2 DASH_ yesno {PlotCmdUpdateElement graph,ds,line,dash $3}
+ | dummy2 STYLE_ INT_ {PlotCmdUpdateElement graph,ds,line,error $3}
  ;
 
 dummy2 : LINE_
@@ -550,7 +576,6 @@ dummy2 : LINE_
  | ERRORBAR_
  ; 
 
-# backward compatibility
 oldView : DISCRETE_ yesno {PlotCmdUpdateElement graph,ds,show $2}
  | LINE_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear}
  | STEP_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step}

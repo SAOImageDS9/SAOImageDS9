@@ -66,6 +66,7 @@
 %token MIN_
 %token MODE_
 %token NAME_
+%token NEW_
 %token NONE_
 %token NUMBERS_
 %token ORIENT_
@@ -196,11 +197,12 @@ plot : line
  
 # Line
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | STRING_ blankdim {PlotCmdNewFile $1; PlotCmdLine {} {} {} $2}
- | STRING_ STRING_ axistitle axistitle blankdim {PlotCmdNewFile $1; PlotCmdLine $2 $3 $4 $5}
+ | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ | STRING_ dim {PlotCmdNewFile $1; PlotCmdLine {} {} {} $2}
+ | STRING_ STRING_ axistitle axistitle dim {PlotCmdNewFile $1; PlotCmdLine $2 $3 $4 $5}
 
 # xpa only
- | STRING_ STRING_ STRING_ blankdim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin line}
 
@@ -242,11 +244,12 @@ smooth : STEP_ {set _ step}
 
 # Bar
 bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
- | STRING_ blankdim {PlotCmdNewFile $1; PlotCmdBar {} {} {} $2}
- | STRING_ STRING_ axistitle axistitle blankdim {PlotCmdNewFile $1; PlotCmdBar $2 $3 $4 $5}
+ | NEW_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
+ | STRING_ dim {PlotCmdNewFile $1; PlotCmdBar {} {} {} $2}
+ | STRING_ STRING_ axistitle axistitle dim {PlotCmdNewFile $1; PlotCmdBar $2 $3 $4 $5}
 
 # xpa only
- | STRING_ STRING_ STRING_ blankdim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin bar}
 
@@ -259,11 +262,12 @@ bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
 
 # Scatter
 scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
- | STRING_ blankdim {PlotCmdNewFile $1; PlotCmdScatter {} {} {} $2}
- | STRING_ STRING_ axistitle axistitle blankdim {PlotCmdNewFile $1; PlotCmdScatter $2 $3 $4 $5}
+ | NEW_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
+ | STRING_ dim {PlotCmdNewFile $1; PlotCmdScatter {} {} {} $2}
+ | STRING_ STRING_ axistitle axistitle dim {PlotCmdNewFile $1; PlotCmdScatter $2 $3 $4 $5}
 
 # xpa only
- | STRING_ STRING_ STRING_ blankdim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter}
 
@@ -430,10 +434,6 @@ axistitle : STRING_ {set _ $1}
 
 xyaxis : XAXIS_ {set _ x}
  | YAXIS_ {set _ y}
- ;
-
-blankdim : {set _ xy}
- | dim {set _ $1}
  ;
 
 dim : XY_ {set _ xy}

@@ -66,6 +66,7 @@ max	    {return $MAX_}
 min	    {return $MIN_}
 mode	    {return $MODE_}
 name	    {return $NAME_}
+new	    {return $NEW_}
 none	    {return $NONE_}
 normal	    {return $NORMAL_}
 numbers	    {return $NUMBERS_}

@@ -242,6 +242,8 @@ proc PlotCmdNewFile {fn} {
 	set parse(buf) [read $ch]
 	close $ch
 	return
+    } else {
+	Error "[msgcat::mc {file not found}]: $fn"
     }
 }
 

@@ -172,7 +172,7 @@ plot : line
  | FONT_ fontt
  | FOREGROUND_ STRING_ {ProcessCmdCVAR foreground $2 PlotUpdateCanvasElement}
  | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvasElement}
- | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateTheme}
+ | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateAllElement}
 
  # Graph Menu
  | SELECT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}

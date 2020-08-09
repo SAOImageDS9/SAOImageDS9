@@ -125,17 +125,17 @@ proc PlotLoadConfigFile {varname filename} {
 
     FixVar ${varname}(graph,ds,show) ${varname}(linear)
 
-    FixRm ${varname}(linear,width)
-    FixRm ${varname}(linear,color)
-    FixRm ${varname}(linear,dash)
+    FixVarRm ${varname}(linear,width)
+    FixVarRm ${varname}(linear,color)
+    FixVarRm ${varname}(linear,dash)
 
     FixVarRm ${varname}(bar)
     FixVarRm ${varname}(bar,color)
 
     FixVarRm ${varname}(discrete)
-    FixRm ${varname}(discrete,color)
-    FixRm ${varname}(discrete,fill)
-    FixRm ${varname}(discrete,symbol)
+    FixVarRm ${varname}(discrete,color)
+    FixVarRm ${varname}(discrete,fill)
+    FixVarRm ${varname}(discrete,symbol)
 
     FixVarRm ${varname}(quadratic)
     FixVarRm ${varname}(quadratic,width)
@@ -270,10 +270,10 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(shape,color) $var(graph,ds,line,shape,color)
     set analysisplot(shape,fill) $var(graph,ds,line,shape,fill)
 
-    set analysisplot(error) $var(graph,ds,line,error)
-    set analysisplot(error,cap) $var(graph,ds,line,error,cap)
-    set analysisplot(error,color) $var(graph,ds,line,error,color)
-    set analysisplot(error,width) $var(graph,ds,line,error,width)
+    set analysisplot(error) $var(graph,ds,error)
+    set analysisplot(error,cap) $var(graph,ds,error,cap)
+    set analysisplot(error,color) $var(graph,ds,error,color)
+    set analysisplot(error,width) $var(graph,ds,error,width)
 
     puts $ch "array set analysisplot \{ [array get analysisplot] \}"
     close $ch

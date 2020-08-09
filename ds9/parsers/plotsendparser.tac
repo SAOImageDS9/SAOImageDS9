@@ -3,33 +3,30 @@
 #include def.tin
 
 #include font.tin
-#include string.tin
 
 %start plotsend
 
 %token AUTO_
 %token AXIS_
-%token AXESNUMBERS_
-%token AXESTITLE_
 %token BACKGROUND_
-%token BARMODE_
+%token BAR_
+%token BORDER_
 %token CAP_
 %token COLOR_
 %token DASH_
 %token DATASET_
 %token ERROR_
-%token ERRORBAR_
 %token FAMILY_
 %token FILL_
-%token FILLCOLOR_
 %token FLIP_
+%token FOREGROUND_
 %token FORMAT_
 %token GRAPH_
 %token GRID_
 %token LABELS_
 %token LAYOUT_
 %token LEGEND_
-%token LEGENDTITLE_
+%token LINE_
 %token LIST_
 %token LOG_
 %token MAX_
@@ -38,18 +35,18 @@
 %token NUMBERS_
 %token NAME_
 %token POSITION_
-%token RELIEF_
 %token SCALE_
+%token SCATTER_
 %token SELECT_
 %token SHAPE_
 %token SHOW_
 %token SIZE_
 %token SLANT_
 %token SMOOTH_
-%token STATS_
 %token STATISTICS_
 %token STRIP_
 %token STYLE_
+%token SYMBOL_
 %token THEME_
 %token TITLE_
 %token WEIGHT_
@@ -60,59 +57,77 @@
 %%
 
 plotsend : {ProcessSendCmdGet iap plots}
- | STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
- # backward compatibility
- | STATISTICS_ {ProcessSendCmdCVAR PlotStatsGenerate}
- | LIST_ {ProcessSendCmdCVAR PlotListGenerate}
- | MODE_ {ProcessSendCmdCVARGet mode}
- | AXIS_ axis
- | BACKGROUND_ {ProcessSendCmdCVARGet background}
- | LEGEND_ legend
- | FONT_ fontt
- | TITLE_ title
- # backward compatibility
- | BARMODE_ {ProcessSendCmdTxt normal}
- | SHOW_ {ProcessSendCmdCVARYesNo graph,ds,show}
- | COLOR_ {ProcessSendCmdCVARGet graph,ds,color}
- | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,fill}
- | FILLCOLOR_ {ProcessSendCmdCVARGet graph,ds,fill,color}
+ | line
+ | LINE_ line
+ | BAR_ bar
+ | SCATTER_ scatter
  | ERROR_ errorr
- # backward compatibility
- | ERRORBAR_ errorr
- | NAME_ {ProcessSendCmdCVARGet graph,ds,name}
- | SHAPE_ shape
- # backward compatibility
- | RELIEF_ {ProcessSendCmdTxt flat}
- | SMOOTH_ {ProcessSendCmdCVARGet graph,ds,smooth}
- | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
- | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
+ 
+# Edit Menu
+ | MODE_ {ProcessSendCmdCVARGet mode}
+
+# Canvas Menu
+ | SELECT_ GRAPH_ {ProcessSendCmdCVARGet graph,current}
  | LAYOUT_ {ProcessSendCmdCVARGet layout}
  | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet layout,strip,scale}
- | SELECT_ select
- | THEME_ {ProcessSendCmdCVARYesNo theme}
+ | FONT_ fontt
+ | FOREGROUND_ {ProcessSendCmdCVARGet foreground}
+ | BACKGROUND_ {ProcessSendCmdCVARGet background}
+ | THEME_ {ProcessSendCmdCVARGetYesNo theme}
+
+# Graph Menu
+ | SELECT_ DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
+ # backward compatibility
+ | SELECT_ {ProcessSendCmdCVARGet graph,ds,current}
  # backward compatibility
  | DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
+ | STATISTICS_ {ProcessSendCmdCVAR PlotStatsGenerate}
+ | LIST_ {ProcessSendCmdCVAR PlotListGenerate}
+ | AXIS_ axis
+ | LEGEND_ legend
+ | TITLE_ title
+
+# Data Menu
+ | SHOW_ {ProcessSendCmdCVARGetYesNo graph,ds,show}
+ | NAME_ {ProcessSendCmdCVARGet graph,ds,name}
  ;
  
-select : DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
- | GRAPH_ {ProcessSendCmdCVARGet graph,current}
- # backward compatibility
- | {ProcessSendCmdCVARGet graph,ds,current}
+line : SMOOTH_ {ProcessSendCmdCVARGet graph,ds,line,smooth}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,line,color}
+ | WIDTH_ {ProcessSendCmdCVARGet graph,ds,line,width}
+ | DASH_ {ProcessSendCmdCVARGetYesNo graph,ds,line,dash}
+ | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,line,fill}
+ | FILL_ COLOR_ {ProcessSendCmdCVARGet graph,ds,line,fill,color}
+ | SHAPE_ lineshape
  ;
 
-axis : xy GRID_ {ProcessSendCmdCVARYesNo "graph,axis,$1,grid"}
- | xy LOG_ {ProcessSendCmdCVARYesNo "graph,axis,$1,log"}
- | xy FLIP_ {ProcessSendCmdCVARYesNo "graph,axis,$1,flip"}
- | xy AUTO_ {ProcessSendCmdCVARYesNo "graph,axis,$1,auto"}
- | xy MIN_ {ProcessSendCmdCVARGet "graph,axis,$1,min"}
- | xy MAX_ {ProcessSendCmdCVARGet "graph,axis,$1,max"}
- | xy FORMAT_ {ProcessSendCmdCVARGet "graph,axis,$1,format"}
+lineshape : {ProcessSendCmdCVARGet graph,ds,line,shape,symbol}
+ | SYMBOL_ {ProcessSendCmdCVARGet graph,ds,line,shape,symbol}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,line,shape,color}
+ | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,line,shape,fill}
+ | FILL_ COLOR_ {ProcessSendCmdCVARGet graph,ds,line,shape,color}
  ;
 
-legend : {ProcessSendCmdCVARYesNo graph,legend}
- | POSITION_ {ProcessSendCmdCVARGet graph,legend,position}
+bar : BORDER_ COLOR_ {ProcessSendCmdCVARGet graph,ds,bar,border,color}
+ | BORDER_ WIDTH_ {ProcessSendCmdCVARGet graph,ds,bar,border,width}
+ | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,bar,fill}
+ | FILL_ COLOR_ {ProcessSendCmdCVARGet graph,ds,bar,color}
+ | WIDTH_ {ProcessSendCmdCVARGet graph,ds,bar,width}
  ;
- 
+
+scatter : {ProcessSendCmdCVARGet graph,ds,scatter,shape,symbol}
+ | SYMBOL_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,symbol}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,color}
+ | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,scatter,shape,fill}
+ | FILL_ COLOR_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,color}
+ ;
+
+errorr : {ProcessSendCmdCVARGetYesNo graph,ds,error}
+ | CAP_ {ProcessSendCmdCVARGetYesNo graph,ds,error,cap}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,error,color}
+ | WIDTH_ {ProcessSendCmdCVARGet graph,ds,error,width}
+ ;
+
 fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}
 # backward compatibility
  | fontType FAMILY_ {ProcessSendCmdCVARGet "$1,family"}
@@ -129,30 +144,29 @@ fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}
 
 fontType : TITLE_ {set _ graph,title}
  | LABELS_ {set _ axis,title}
- # backward compatibility
- | AXESTITLE_ {set _ axis,title}
  | NUMBERS_ {set _ axis,font}
- # backward compatibility
- | AXESNUMBERS_ {set _ axis,font}
  | LEGEND_ {set _ legend,font}
- | LEGENDTITLE_ {set _ legend,title}
+ | LEGEND_ TITLE_ {set _ legend,title}
  ;
 
+axis : xy GRID_ {ProcessSendCmdCVARGetYesNo "graph,axis,$1,grid"}
+ | xy LOG_ {ProcessSendCmdCVARGetYesNo "graph,axis,$1,log"}
+ | xy FLIP_ {ProcessSendCmdCVARGetYesNo "graph,axis,$1,flip"}
+ | xy AUTO_ {ProcessSendCmdCVARGetYesNo "graph,axis,$1,auto"}
+ | xy MIN_ {ProcessSendCmdCVARGet "graph,axis,$1,min"}
+ | xy MAX_ {ProcessSendCmdCVARGet "graph,axis,$1,max"}
+ | xy FORMAT_ {ProcessSendCmdCVARGet "graph,axis,$1,format"}
+ ;
+
+legend : {ProcessSendCmdCVARGetYesNo graph,legend}
+ | POSITION_ {ProcessSendCmdCVARGet graph,legend,position}
+ ;
+ 
 title : {ProcessSendCmdCVARGet graph,title}
  | xy {ProcessSendCmdCVARGet "graph,axis,$1,title"}
+# backward compatibility
  | xyaxis {ProcessSendCmdCVARGet "graph,axis,$1,title"}
  | LEGEND_ {ProcessSendCmdCVARGet graph,legend,title}
- ;
-
-errorr : {ProcessSendCmdCVARYesNo graph,ds,error}
- | CAP_ {ProcessSendCmdCVARYesNo graph,ds,error,cap}
- | COLOR_ {ProcessSendCmdCVARGet graph,ds,error,color}
- | WIDTH_ {ProcessSendCmdCVARGet graph,ds,error,width}
- ;
-
-shape : {ProcessSendCmdCVARGet graph,ds,shape,symbol}
- | FILL_ {ProcessSendCmdCVARYesNo graph,ds,shape,fill}
- | COLOR_ {ProcessSendCmdCVARGet graph,ds,shape,color}
  ;
 
 xy : 'x' {set _ x}
@@ -161,7 +175,6 @@ xy : 'x' {set _ x}
  | 'Y' {set _ y}
  ;
 
-# backward compatibility
 xyaxis : XAXIS_ {set _ x}
  | YAXIS_ {set _ y}
  ;

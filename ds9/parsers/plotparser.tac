@@ -1,4 +1,3 @@
-
 %{
 %}
 #include def.tin
@@ -12,15 +11,11 @@
 
 %token A4_
 %token ADD_
-%token ALIGNED_
 %token ARROW_
 %token AUTO_
-%token AXESNUMBERS_
-%token AXESTITLE_
 %token AXIS_
 %token BACKGROUND_
 %token BAR_
-%token BARMODE_
 %token BORDER_
 %token BOTTOM_
 %token CAP_
@@ -31,6 +26,7 @@
 %token COLOR_
 %token COLUMN_
 %token COMMAND_
+%token CONFIG_
 %token CROSS_
 %token CUBIC_
 %token CURRENT_
@@ -40,18 +36,13 @@
 %token DELETE_
 %token DESTINATION_
 %token DIAMOND_
-%token DISCRETE_
-%token DUP_
 %token DUPLICATE_
 %token ERROR_
-%token ERRORBAR_
 %token EXPORT_
 %token FAMILY_
 %token FILE_
 %token FILENAME_
 %token FILL_
-%token FILLCOLOR_
-%token FLAT_
 %token FLIP_
 %token FONT_
 %token FOREGROUND_
@@ -59,33 +50,26 @@
 %token GRAPH_
 %token GRAY_
 %token GRID_
-%token GROOVE_
 %token LABELS_
 %token LANDSCAPE_
 %token LAYOUT_
 %token LEFT_
 %token LEGAL_
 %token LEGEND_
-%token LEGENDTITLE_
 %token LETTER_
 %token LINE_
 %token LINEAR_
 %token LIST_
 %token LOAD_
-%token LOADCONFIG_
 %token LOG_
 %token MAX_
 %token MIN_
 %token MODE_
 %token NAME_
-%token NEW_
 %token NONE_
-%token NORMAL_
 %token NUMBERS_
 %token ORIENT_
 %token ORIENTATION_
-%token OVERLAP_
-%token PAGE_
 %token PAGESETUP_
 %token PAGESIZE_
 %token PALETTE_
@@ -98,14 +82,10 @@
 %token PRINT_
 %token PRINTER_
 %token QUADRATIC_
-%token RAISED_
-%token RANGE_
-%token RELIEF_
 %token RGB_
 %token RIGHT_
 %token ROW_
 %token SAVE_
-%token SAVECONFIG_
 %token SCALE_
 %token SCATTER_
 %token SCROSS_
@@ -115,24 +95,19 @@
 %token SIZE_
 %token SLANT_
 %token SMOOTH_
-%token SOLID_
 %token SPLUS_
 %token SQUARE_
-%token STACKED_
-%token STATS_
 %token STATISTICS_
 %token STDIN_
 %token STEP_
 %token STRIP_
 %token STYLE_
-%token SUNKEN_
+%token SYMBOL_
 %token TABLOID_
 %token THEME_
 %token TITLE_
 %token TOP_
 %token TRIANGLE_
-%token TYPE_
-%token VIEW_
 %token WEIGHT_
 %token WIDTH_
 %token ZOOM_
@@ -141,11 +116,6 @@
 %token XYEX_
 %token XYEY_
 %token XYEXEY_
-
-%token LINEARLINEAR_
-%token LOGLINEAR_
-%token LINEARLOG_
-%token LOGLOG_
 
 %token XAXIS_
 %token YAXIS_
@@ -169,83 +139,23 @@ command : plot
  | plot {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
- plot : plotCmd
+plot : line
  | LINE_ line
- | BAR_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
- | SCATTER_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
-# parse error command line
- | {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | NEW_ NAME_ STRING_ {PlotCmdNew $3} new
- | NEW_ {PlotCmdNew {}} new
- ;
+ | BAR_ bar
+ | SCATTER_ scatter
+ | ERROR_ errorr
 
-line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- # backward compatibility
- | oldLine
- ;
- 
-new : newLine
- | LINE_ newLine
- | BAR_ newBar
- | SCATTER_ newScatter
- ;
- 
-newLine : STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
-# parse error command line
- | {PlotCmdLine {} {} {} xy}
-# xpa only
- | STDIN_ {PlotCmdAnalysisPlotStdin line}
-# backward compatibility
- | STRING_ STRING_ STRING_ INT_ {PlotCmdLine $1 $2 $3 $4}
- ;
-
-newBar : STRING_ STRING_ STRING_ dim {PlotCmdBar $1 $2 $3 $4}
-# parse error command line
- | {PlotCmdBar {} {} {} xy}
-# xpa only
- | STDIN_ {PlotCmdAnalysisPlotStdin bar}
-# backward compatibility
- | STRING_ STRING_ STRING_ INT_ {PlotCmdBar $1 $2 $3 $4}
- ;
-
-newScatter : STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
-# parse error command line
- | {PlotCmdScatter {} {} {} xy}
-# xpa only
- | STDIN_ {PlotCmdAnalysisPlotStdin scatter}
- # backward compatibility
- | STRING_ STRING_ STRING_ INT_  {PlotCmdScatter $1 $2 $3 $4}
- ;
-
-xy : 'x' {set _ x}
- | 'X' {set _ x}
- | 'y' {set _ y}
- | 'Y' {set _ y}
- ;
-
-# backward compatibility
-xyaxis : XAXIS_ {set _ x}
- | YAXIS_ {set _ y}
- ;
-
-dim : XY_ {set _ xy}
- | XYEX_ {set _ xyex}
- | XYEY_ {set _ xyey}
- | XYEXEY_ {set _ xyexey}
- ;
-
-plotCmd : LOAD_ load
+# File Menu
+ | LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
  | CURRENT_ STRING_ {PlotCmdRef $2}
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
 
  | EXPORT_ export
- | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}
- | SAVECONFIG_ STRING_ {PlotCmdSaveConfig $2}
+ | LOAD_ CONFIG_ STRING_ {PlotCmdLoadConfig $3}
+ | SAVE_ CONFIG_ STRING_ {PlotCmdSaveConfig $3}
  | PAGESETUP_ pagesetup
- # backward compatibility
- | PAGE_ pagesetup
  | PRINT_ print
  | CLOSE_ {ProcessCmdCVAR0 PlotDestroy}
 
@@ -262,8 +172,6 @@ plotCmd : LOAD_ load
  | FOREGROUND_ STRING_ {ProcessCmdCVAR foreground $2 PlotUpdateCanvasElement}
  | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvasElement}
  | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateTheme}
- # backward compatibility
- | BARMODE_ barmode
 
  # Graph Menu
  | SELECT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
@@ -272,52 +180,43 @@ plotCmd : LOAD_ load
  # backward compatibility
  | DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
  | DUPLICATE_ duplicate
- | DUP_ duplicate
  | DELETE_ DATASET_ {ProcessCmdCVAR0 PlotDeleteDataSetCurrent}
  # backward compatibility
  | CLEAR_ {ProcessCmdCVAR0 PlotDeleteDataSetAll}
  | STATISTICS_ yesno {ProcessCmdCVAR stats $2 PlotStats}
- # backward compatibility
- | STATS_ yesno {ProcessCmdCVAR stats $2 PlotStats}
  | LIST_ yesno {ProcessCmdCVAR list $2 PlotList}
  | AXIS_ axis
  | LEGEND_ legend
  | TITLE_ title
 
- # Data
+ # Data Menu
  | SHOW_ yesno {PlotCmdUpdateElement graph,ds,show $2}
- | lineparams
- | LINE_ lineparams
- | BAR_ barparams
- | SCATTER_ scatterparams
  | NAME_ STRING_ {ProcessCmdCVAROpt PlotDataSetName $2}
- 
-# Error
- | ERROR_ errorr
- # backward compatibility
- | ERRORBAR_ errorr
-
- # backward compatibility
- | GRAPH_ oldGraph
- # backward compatibility
- | VIEW_ oldView
  ;
-
+ 
 # Line
-lineparams : SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,line,smooth $2}
+line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ | STRING_ blankdim {PlotCmdNewFile $1; PlotCmdLine {} {} {} $2}
+ | STRING_ STRING_ axistitle axistitle blankdim {PlotCmdNewFile $1; PlotCmdLine $2 $3 $4 $5}
+
+# xpa only
+ | STRING_ STRING_ STRING_ blankdim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
+ | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin line}
+
+ | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,line,smooth $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,color $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,line,width $2}
  | DASH_ yesno {PlotCmdUpdateElement graph,ds,line,dash $2}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,fill $2}
- | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,fill,color $2}
  | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,fill,color $3}
  | SHAPE_ lineshape
  ;
 
 lineshape : linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $1}
+ | SYMBOL_ linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,color $2}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,shape,fill $2}
- | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,fill,color $2}
  | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,fill,color $3}
  ;
 
@@ -342,22 +241,36 @@ smooth : STEP_ {set _ step}
  ;
 
 # Bar
-barparams: 
+bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
+ | STRING_ blankdim {PlotCmdNewFile $1; PlotCmdBar {} {} {} $2}
+ | STRING_ STRING_ axistitle axistitle blankdim {PlotCmdNewFile $1; PlotCmdBar $2 $3 $4 $5}
+
+# xpa only
+ | STRING_ STRING_ STRING_ blankdim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
+ | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin bar}
+
  | BORDER_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,border,color $3}
  | BORDER_ WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,border,width $3}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,bar,fill $2}
  | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,fill,color $3}
- | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,fill,color $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,width $2}
- # backward compatibility
- | RELIEF_ relief
  ;
 
 # Scatter
-scatterparams : scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $1}
+scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
+ | STRING_ blankdim {PlotCmdNewFile $1; PlotCmdScatter {} {} {} $2}
+ | STRING_ STRING_ axistitle axistitle blankdim {PlotCmdNewFile $1; PlotCmdScatter $2 $3 $4 $5}
+
+# xpa only
+ | STRING_ STRING_ STRING_ blankdim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
+ | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter}
+
+ | scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $1}
+ | SYMBOL_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,color $2}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,shape,fill $2}
- | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,fill,color $2}
  | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,fill,color $3}
  ;
 
@@ -373,7 +286,12 @@ scattersymbol : CIRCLE_ {set _ circle}
  | CROSS_ {set _ scross}
  ;
 
-# File Menu params
+errorr : yesno {PlotCmdUpdateElement graph,ds,error $1}
+ | CAP_ yesno {PlotCmdUpdateElement graph,ds,error,cap $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,error,color $2}
+ | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,error,width $2}
+ ;
+
 load : STRING_ {PlotCmdLoad $1 xy}
  | STRING_ dim  {PlotCmdLoad $1 $2}
  ;
@@ -430,12 +348,10 @@ printColor : RGB_ {set _ rgb}
  | GRAY_ {set _ gray}
  ;
  
-# Edit Menu params
 mode : POINTER_ {set _ pointer}
  | ZOOM_ {set _ zoom}
  ;
 
-# Canvas Menu params
 graph : {set _ line}
  | LINE_ {set _ line}
  | BAR_ {set _ bar}
@@ -464,23 +380,11 @@ fontt : fontType FONT_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasEleme
 
 fontType : TITLE_ {set _ graph,title}
  | LABELS_ {set _ axis,title}
- # backward compatibility
- | AXESTITLE_ {set _ axis,title}
  | NUMBERS_ {set _ axis,font}
- # backward compatibility
- | AXESNUMBERS_ {set _ axis,font}
  | LEGEND_ {set _ legend,font}
- | LEGENDTITLE_ {set _ legend,title}
+ | LEGEND_ TITLE_ {set _ legend,title}
  ;
 
-# backward compatibility
-barmode : NORMAL_ {set _ normal}
- | STACKED_ {set _ stacked}
- | ALIGNED_ {set _ aligned}
- | OVERLAP_ {set _ overlap}
- ;
-
-# Graph Menu parmas
 duplicate : {global cvarname; PlotDupDataSet $cvarname}
 # backward compatibility
  | INT_ {global cvarname; PlotDupDataSet $cvarname}
@@ -506,82 +410,36 @@ legendPos : RIGHT_ {set _ right}
  | PLOTAREA_ {set _ plotarea}
  ;
 
-# backward compatibility
-relief : FLAT_ {set _ flat}
- | SUNKEN_ {set _ sunken}
- | RAISED_ {set _ raised}
- | SOLID_ {set _ solid}
- | GROOVE_ {set _ groove}
- ;
-
 title : STRING_ {ProcessCmdCVAR graph,title $1 PlotChangeTitle}
  | xy STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
+# backward compatibility
  | xyaxis STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
  | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotChangeTitle}
  ;
 
-errorr : yesno {PlotCmdUpdateElement graph,ds,error $1}
- | CAP_ yesno {PlotCmdUpdateElement graph,ds,error,cap $2}
- | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,error,color $2}
- | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,error,width $2}
+# Support
+xy : 'x' {set _ x}
+ | 'X' {set _ x}
+ | 'y' {set _ y}
+ | 'Y' {set _ y}
  ;
 
-# backward compatibility
-# Really old stuff, may not be work, never tested
-oldGraph : GRID_ oldGraphGrid
- | LOG_ xy yesno {ProcessCmdCVAR "graph,axis,$2,log" $3 PlotChangeAxis}
- | FLIP_ xy yesno {ProcessCmdCVAR "graph,axis,$2,flip" $3 PlotChangeAxis}
- | FORMAT_ xy STRING_ {ProcessCmdCVAR "graph,axis,$2,format" $3 PlotChangeAxis}
- | RANGE_ oldGraphRange
- | LABELS_ oldGraphLabels
- | TYPE_ oldGraphType
- | SCALE_ oldGraphScale
+axistitle : STRING_ {set _ $1}
+ | xy {set _ $1}
  ;
 
-oldGraphGrid : xy yesno {ProcessCmdCVAR "graph,axis,$1,grid" $2 PlotChangeAxis}
- | yesno {ProcessCmdCVAR graph,axis,x,grid $1; ProcessCmdCVAR graph,axis,y,grid $1 PlotChangeAxis}
+xyaxis : XAXIS_ {set _ x}
+ | YAXIS_ {set _ y}
  ;
 
-oldGraphRange : xy AUTO_ yesno {ProcessCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis}
- | xy MIN_ numeric {ProcessCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis}
- | xy MAX_ numeric {ProcessCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis}
+blankdim : {set _ xy}
+ | dim {set _ $1}
  ;
 
-oldGraphLabels : TITLE_ STRING_ {ProcessCmdCVAR graph,title $2 PlotChangeAxis}
- | xyaxis STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeAxis}
- | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotChangeLegend}
- ;
-
-oldGraphType : LINE_
- | BAR_
- ;
-
-oldGraphScale : LINEARLINEAR_ {ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis}
- | LINEARLOG_ {ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis}
- | LOGLINEAR_ {ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis}
- | LOGLOG_ {ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis}
- ;
-
-oldLine : DISCRETE_ lineshape {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}
- | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,line,width $3}
- | dummy2 DASH_ yesno {PlotCmdUpdateElement graph,ds,line,dash $3}
- | dummy2 STYLE_ INT_ {PlotCmdUpdateElement graph,ds,line,error $3}
- ;
-
-dummy2 : LINE_
- | LINEAR_
- | STEP_
- | QUADRATIC_
- | ERROR_
- | ERRORBAR_
- ; 
-
-oldView : DISCRETE_ yesno {PlotCmdUpdateElement graph,ds,show $2}
- | LINE_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear}
- | STEP_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step}
- | QUADRATIC_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth quadratic}
- | ERROR_ yesno {PlotCmdUpdateElement graph,ds,error $2}
- | ERRORBAR_ yesno {PlotCmdUpdateElement graph,ds,error $2}
+dim : XY_ {set _ xy}
+ | XYEX_ {set _ xyex}
+ | XYEY_ {set _ xyey}
+ | XYEXEY_ {set _ xyexey}
  ;
 
 %%

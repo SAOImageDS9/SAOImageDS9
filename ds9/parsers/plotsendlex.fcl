@@ -9,29 +9,26 @@
 
 auto		{return $AUTO_}
 axis		{return $AXIS_}
-axesnumbers	{return $AXESNUMBERS_}
-axestitle	{return $AXESTITLE_}
 background	{return $BACKGROUND_}
-barmode		{return $BARMODE_}
+bar		{return $BAR_}
+border		{return $BORDER_}
 cap		{return $CAP_}
 color		{return $COLOR_}
 colour		{return $COLOR_}
 dash		{return $DASH_}
 dataset		{return $DATASET_}
 error		{return $ERROR_}
-errorbar	{return $ERRORBAR_}
 family		{return $FAMILY_}
 fill		{return $FILL_}
-fillcolor	{return $FILLCOLOR_}
-fillcolour	{return $FILLCOLOR_}
 flip		{return $FLIP_}
+foreground	{return $FOREGROUND_}
 format		{return $FORMAT_}
 graph		{return $GRAPH_}
 grid		{return $GRID_}
 labels		{return $LABELS_}
 layout		{return $LAYOUT_}
 legend		{return $LEGEND_}
-legendtitle	{return $LEGENDTITLE_}
+line		{return $LINE_}
 list		{return $LIST_}
 log		{return $LOG_}
 max		{return $MAX_}
@@ -42,16 +39,18 @@ name		{return $NAME_}
 position	{return $POSITION_}
 relief		{return $RELIEF_}
 scale		{return $SCALE_}
+scatter		{return $SCATTER_}
 select		{return $SELECT_}
 shape		{return $SHAPE_}
 show		{return $SHOW_}
 size		{return $SIZE_}
 slant		{return $SLANT_}
 smooth		{return $SMOOTH_}
-stats		{return $STATS_}
+stats		{return $STATISTICS_}
 statistics	{return $STATISTICS_}
 strip		{return $STRIP_}
 style		{return $STYLE_}
+symbol		{return $SYMBOL_}
 theme		{return $THEME_}
 title		{return $TITLE_}
 weight		{return $WEIGHT_}
@@ -60,7 +59,6 @@ xaxis		{return $XAXIS_}
 yaxis		{return $YAXIS_}
 
 #include font.fin
-#include string.fin
 #include ws.fin
 
 %%

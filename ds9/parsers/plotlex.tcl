@@ -204,144 +204,117 @@ set REAL_ 276
 set STRING_ 277
 set A4_ 278
 set ADD_ 279
-set ALIGNED_ 280
-set ARROW_ 281
-set AUTO_ 282
-set AXESNUMBERS_ 283
-set AXESTITLE_ 284
-set AXIS_ 285
-set BACKGROUND_ 286
-set BAR_ 287
-set BARMODE_ 288
-set BORDER_ 289
-set BOTTOM_ 290
-set CAP_ 291
-set CATROM_ 292
-set CIRCLE_ 293
-set CLEAR_ 294
-set CLOSE_ 295
-set COLOR_ 296
-set COLUMN_ 297
-set COMMAND_ 298
-set CROSS_ 299
-set CUBIC_ 300
-set CURRENT_ 301
-set DASH_ 302
-set DATA_ 303
-set DATASET_ 304
-set DELETE_ 305
-set DESTINATION_ 306
-set DIAMOND_ 307
-set DISCRETE_ 308
-set DUP_ 309
-set DUPLICATE_ 310
-set ERROR_ 311
-set ERRORBAR_ 312
-set EXPORT_ 313
-set FAMILY_ 314
-set FILE_ 315
-set FILENAME_ 316
-set FILL_ 317
-set FILLCOLOR_ 318
-set FLAT_ 319
-set FLIP_ 320
-set FOREGROUND_ 321
-set FORMAT_ 322
-set GRAPH_ 323
-set GRAY_ 324
-set GRID_ 325
-set GROOVE_ 326
-set LABELS_ 327
-set LANDSCAPE_ 328
-set LAYOUT_ 329
-set LEFT_ 330
-set LEGAL_ 331
-set LEGEND_ 332
-set LEGENDTITLE_ 333
-set LETTER_ 334
-set LINE_ 335
-set LINEAR_ 336
-set LIST_ 337
-set LOAD_ 338
-set LOADCONFIG_ 339
-set LOG_ 340
-set MAX_ 341
-set MIN_ 342
-set MODE_ 343
-set NAME_ 344
-set NEW_ 345
-set NONE_ 346
-set NUMBERS_ 347
-set ORIENT_ 348
-set ORIENTATION_ 349
-set OVERLAP_ 350
-set PAGE_ 351
-set PAGESETUP_ 352
-set PAGESIZE_ 353
-set PALETTE_ 354
-set PLOTAREA_ 355
-set PLUS_ 356
-set POINTER_ 357
-set PORTRAIT_ 358
-set POSITION_ 359
-set POSTER_ 360
-set PRINT_ 361
-set PRINTER_ 362
-set QUADRATIC_ 363
-set RAISED_ 364
-set RANGE_ 365
-set RELIEF_ 366
-set RGB_ 367
-set RIGHT_ 368
-set ROW_ 369
-set SAVE_ 370
-set SAVECONFIG_ 371
-set SCALE_ 372
-set SCATTER_ 373
-set SCROSS_ 374
-set SELECT_ 375
-set SHAPE_ 376
-set SHOW_ 377
-set SIZE_ 378
-set SLANT_ 379
-set SMOOTH_ 380
-set SOLID_ 381
-set SPLUS_ 382
-set SQUARE_ 383
-set STACKED_ 384
-set STATS_ 385
-set STATISTICS_ 386
-set STDIN_ 387
-set STEP_ 388
-set STRIP_ 389
-set STYLE_ 390
-set SUNKEN_ 391
-set TABLOID_ 392
-set THEME_ 393
-set TITLE_ 394
-set TOP_ 395
-set TRIANGLE_ 396
-set TYPE_ 397
-set VIEW_ 398
-set WEIGHT_ 399
-set WIDTH_ 400
-set ZOOM_ 401
-set XY_ 402
-set XYEX_ 403
-set XYEY_ 404
-set XYEXEY_ 405
-set LINEARLINEAR_ 406
-set LOGLINEAR_ 407
-set LINEARLOG_ 408
-set LOGLOG_ 409
-set XAXIS_ 410
-set YAXIS_ 411
-set GIF_ 412
-set TIFF_ 413
-set JPEG_ 414
-set PNG_ 415
-set PACKBITS_ 416
-set DEFLATE_ 417
+set ARROW_ 280
+set AUTO_ 281
+set AXIS_ 282
+set BACKGROUND_ 283
+set BAR_ 284
+set BORDER_ 285
+set BOTTOM_ 286
+set CAP_ 287
+set CATROM_ 288
+set CIRCLE_ 289
+set CLEAR_ 290
+set CLOSE_ 291
+set COLOR_ 292
+set COLUMN_ 293
+set COMMAND_ 294
+set CONFIG_ 295
+set CROSS_ 296
+set CUBIC_ 297
+set CURRENT_ 298
+set DASH_ 299
+set DATA_ 300
+set DATASET_ 301
+set DELETE_ 302
+set DESTINATION_ 303
+set DIAMOND_ 304
+set DUPLICATE_ 305
+set ERROR_ 306
+set EXPORT_ 307
+set FAMILY_ 308
+set FILE_ 309
+set FILENAME_ 310
+set FILL_ 311
+set FLIP_ 312
+set FOREGROUND_ 313
+set FORMAT_ 314
+set GRAPH_ 315
+set GRAY_ 316
+set GRID_ 317
+set LABELS_ 318
+set LANDSCAPE_ 319
+set LAYOUT_ 320
+set LEFT_ 321
+set LEGAL_ 322
+set LEGEND_ 323
+set LETTER_ 324
+set LINE_ 325
+set LINEAR_ 326
+set LIST_ 327
+set LOAD_ 328
+set LOG_ 329
+set MAX_ 330
+set MIN_ 331
+set MODE_ 332
+set NAME_ 333
+set NONE_ 334
+set NUMBERS_ 335
+set ORIENT_ 336
+set ORIENTATION_ 337
+set PAGESETUP_ 338
+set PAGESIZE_ 339
+set PALETTE_ 340
+set PLOTAREA_ 341
+set PLUS_ 342
+set POINTER_ 343
+set PORTRAIT_ 344
+set POSITION_ 345
+set POSTER_ 346
+set PRINT_ 347
+set PRINTER_ 348
+set QUADRATIC_ 349
+set RGB_ 350
+set RIGHT_ 351
+set ROW_ 352
+set SAVE_ 353
+set SCALE_ 354
+set SCATTER_ 355
+set SCROSS_ 356
+set SELECT_ 357
+set SHAPE_ 358
+set SHOW_ 359
+set SIZE_ 360
+set SLANT_ 361
+set SMOOTH_ 362
+set SPLUS_ 363
+set SQUARE_ 364
+set STATISTICS_ 365
+set STDIN_ 366
+set STEP_ 367
+set STRIP_ 368
+set STYLE_ 369
+set SYMBOL_ 370
+set TABLOID_ 371
+set THEME_ 372
+set TITLE_ 373
+set TOP_ 374
+set TRIANGLE_ 375
+set WEIGHT_ 376
+set WIDTH_ 377
+set ZOOM_ 378
+set XY_ 379
+set XYEX_ 380
+set XYEY_ 381
+set XYEXEY_ 382
+set XAXIS_ 383
+set YAXIS_ 384
+set GIF_ 385
+set TIFF_ 386
+set JPEG_ 387
+set PNG_ 388
+set PACKBITS_ 389
+set DEFLATE_ 390
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -382,1365 +355,1157 @@ set DEFLATE_ 417
             set matched_rule 1
             set yyrule_num "rule at line 60"
         }
-        # rule 2: aligned
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(aligned)} $yy_current_buffer match] > 0 && \
+        # rule 2: arrow
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(arrow)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
             set yyrule_num "rule at line 61"
         }
-        # rule 3: arrow
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(arrow)} $yy_current_buffer match] > 0 && \
+        # rule 3: auto
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(auto)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 3
             set yyrule_num "rule at line 62"
         }
-        # rule 4: auto
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(auto)} $yy_current_buffer match] > 0 && \
+        # rule 4: axis
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(axis)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 4
             set yyrule_num "rule at line 63"
         }
-        # rule 5: axesnumbers
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(axesnumbers)} $yy_current_buffer match] > 0 && \
+        # rule 5: background
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(background)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 5
             set yyrule_num "rule at line 64"
         }
-        # rule 6: axestitle
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(axestitle)} $yy_current_buffer match] > 0 && \
+        # rule 6: bar
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(bar)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 6
             set yyrule_num "rule at line 65"
         }
-        # rule 7: axis
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(axis)} $yy_current_buffer match] > 0 && \
+        # rule 7: border
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(border)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 7
             set yyrule_num "rule at line 66"
         }
-        # rule 8: background
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(background)} $yy_current_buffer match] > 0 && \
+        # rule 8: bottom
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(bottom)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 8
             set yyrule_num "rule at line 67"
         }
-        # rule 9: bar
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(bar)} $yy_current_buffer match] > 0 && \
+        # rule 9: cap
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(cap)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 9
             set yyrule_num "rule at line 68"
         }
-        # rule 10: barmode
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(barmode)} $yy_current_buffer match] > 0 && \
+        # rule 10: catrom
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(catrom)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 10
             set yyrule_num "rule at line 69"
         }
-        # rule 11: border
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(border)} $yy_current_buffer match] > 0 && \
+        # rule 11: circle
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(circle)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 11
             set yyrule_num "rule at line 70"
         }
-        # rule 12: bottom
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(bottom)} $yy_current_buffer match] > 0 && \
+        # rule 12: clear
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(clear)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 12
             set yyrule_num "rule at line 71"
         }
-        # rule 13: cap
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(cap)} $yy_current_buffer match] > 0 && \
+        # rule 13: close
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(close)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 13
             set yyrule_num "rule at line 72"
         }
-        # rule 14: catrom
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(catrom)} $yy_current_buffer match] > 0 && \
+        # rule 14: color
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(color)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 14
             set yyrule_num "rule at line 73"
         }
-        # rule 15: circle
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(circle)} $yy_current_buffer match] > 0 && \
+        # rule 15: colour
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(colour)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 15
             set yyrule_num "rule at line 74"
         }
-        # rule 16: clear
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(clear)} $yy_current_buffer match] > 0 && \
+        # rule 16: column
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(column)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 16
             set yyrule_num "rule at line 75"
         }
-        # rule 17: close
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(close)} $yy_current_buffer match] > 0 && \
+        # rule 17: command
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(command)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 17
             set yyrule_num "rule at line 76"
         }
-        # rule 18: color
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(color)} $yy_current_buffer match] > 0 && \
+        # rule 18: config
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(config)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 18
             set yyrule_num "rule at line 77"
         }
-        # rule 19: colour
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(colour)} $yy_current_buffer match] > 0 && \
+        # rule 19: cross
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(cross)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 19
             set yyrule_num "rule at line 78"
         }
-        # rule 20: column
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(column)} $yy_current_buffer match] > 0 && \
+        # rule 20: cubic
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(cubic)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 20
             set yyrule_num "rule at line 79"
         }
-        # rule 21: command
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(command)} $yy_current_buffer match] > 0 && \
+        # rule 21: current
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(current)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 21
             set yyrule_num "rule at line 80"
         }
-        # rule 22: cross
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(cross)} $yy_current_buffer match] > 0 && \
+        # rule 22: dash
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(dash)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 22
             set yyrule_num "rule at line 81"
         }
-        # rule 23: cubic
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(cubic)} $yy_current_buffer match] > 0 && \
+        # rule 23: data
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(data)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 23
             set yyrule_num "rule at line 82"
         }
-        # rule 24: current
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(current)} $yy_current_buffer match] > 0 && \
+        # rule 24: dataset
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(dataset)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 24
             set yyrule_num "rule at line 83"
         }
-        # rule 25: dash
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(dash)} $yy_current_buffer match] > 0 && \
+        # rule 25: delete
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(delete)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 25
             set yyrule_num "rule at line 84"
         }
-        # rule 26: data
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(data)} $yy_current_buffer match] > 0 && \
+        # rule 26: destination
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(destination)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 26
             set yyrule_num "rule at line 85"
         }
-        # rule 27: dataset
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(dataset)} $yy_current_buffer match] > 0 && \
+        # rule 27: diamond
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(diamond)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 27
             set yyrule_num "rule at line 86"
         }
-        # rule 28: delete
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(delete)} $yy_current_buffer match] > 0 && \
+        # rule 28: dup
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(dup)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 28
             set yyrule_num "rule at line 87"
         }
-        # rule 29: destination
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(destination)} $yy_current_buffer match] > 0 && \
+        # rule 29: duplicate
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(duplicate)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 29
             set yyrule_num "rule at line 88"
         }
-        # rule 30: diamond
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(diamond)} $yy_current_buffer match] > 0 && \
+        # rule 30: error
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(error)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 30
             set yyrule_num "rule at line 89"
         }
-        # rule 31: discrete
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(discrete)} $yy_current_buffer match] > 0 && \
+        # rule 31: export
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(export)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 31
             set yyrule_num "rule at line 90"
         }
-        # rule 32: dup
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(dup)} $yy_current_buffer match] > 0 && \
+        # rule 32: family
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(family)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 32
             set yyrule_num "rule at line 91"
         }
-        # rule 33: duplicate
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(duplicate)} $yy_current_buffer match] > 0 && \
+        # rule 33: file
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(file)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 33
             set yyrule_num "rule at line 92"
         }
-        # rule 34: error
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(error)} $yy_current_buffer match] > 0 && \
+        # rule 34: filename
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(filename)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 34
             set yyrule_num "rule at line 93"
         }
-        # rule 35: errorbar
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(errorbar)} $yy_current_buffer match] > 0 && \
+        # rule 35: fill
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(fill)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 35
             set yyrule_num "rule at line 94"
         }
-        # rule 36: export
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(export)} $yy_current_buffer match] > 0 && \
+        # rule 36: flip
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(flip)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 36
             set yyrule_num "rule at line 95"
         }
-        # rule 37: family
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(family)} $yy_current_buffer match] > 0 && \
+        # rule 37: font
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(font)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 37
             set yyrule_num "rule at line 96"
         }
-        # rule 38: file
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(file)} $yy_current_buffer match] > 0 && \
+        # rule 38: foreground
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(foreground)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 38
             set yyrule_num "rule at line 97"
         }
-        # rule 39: filename
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(filename)} $yy_current_buffer match] > 0 && \
+        # rule 39: format
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(format)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 39
             set yyrule_num "rule at line 98"
         }
-        # rule 40: fill
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fill)} $yy_current_buffer match] > 0 && \
+        # rule 40: graph
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(graph)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 40
             set yyrule_num "rule at line 99"
         }
-        # rule 41: fillcolor
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fillcolor)} $yy_current_buffer match] > 0 && \
+        # rule 41: gray
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(gray)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 41
             set yyrule_num "rule at line 100"
         }
-        # rule 42: fillcolour
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fillcolour)} $yy_current_buffer match] > 0 && \
+        # rule 42: grid
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(grid)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 42
             set yyrule_num "rule at line 101"
         }
-        # rule 43: flat
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(flat)} $yy_current_buffer match] > 0 && \
+        # rule 43: labels
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(labels)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 43
             set yyrule_num "rule at line 102"
         }
-        # rule 44: flip
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(flip)} $yy_current_buffer match] > 0 && \
+        # rule 44: landscape
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(landscape)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 44
             set yyrule_num "rule at line 103"
         }
-        # rule 45: font
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(font)} $yy_current_buffer match] > 0 && \
+        # rule 45: layout
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(layout)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 45
             set yyrule_num "rule at line 104"
         }
-        # rule 46: foreground
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(foreground)} $yy_current_buffer match] > 0 && \
+        # rule 46: left
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(left)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 46
             set yyrule_num "rule at line 105"
         }
-        # rule 47: format
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(format)} $yy_current_buffer match] > 0 && \
+        # rule 47: legal
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(legal)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 47
             set yyrule_num "rule at line 106"
         }
-        # rule 48: graph
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(graph)} $yy_current_buffer match] > 0 && \
+        # rule 48: legend
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(legend)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 48
             set yyrule_num "rule at line 107"
         }
-        # rule 49: gray
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(gray)} $yy_current_buffer match] > 0 && \
+        # rule 49: letter
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(letter)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 49
             set yyrule_num "rule at line 108"
         }
-        # rule 50: grid
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(grid)} $yy_current_buffer match] > 0 && \
+        # rule 50: line
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(line)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 50
             set yyrule_num "rule at line 109"
         }
-        # rule 51: groove
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(groove)} $yy_current_buffer match] > 0 && \
+        # rule 51: linear
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(linear)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 51
             set yyrule_num "rule at line 110"
         }
-        # rule 52: labels
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(labels)} $yy_current_buffer match] > 0 && \
+        # rule 52: list
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(list)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 52
             set yyrule_num "rule at line 111"
         }
-        # rule 53: landscape
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(landscape)} $yy_current_buffer match] > 0 && \
+        # rule 53: load
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(load)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 53
             set yyrule_num "rule at line 112"
         }
-        # rule 54: layout
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(layout)} $yy_current_buffer match] > 0 && \
+        # rule 54: log
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(log)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 54
             set yyrule_num "rule at line 113"
         }
-        # rule 55: left
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(left)} $yy_current_buffer match] > 0 && \
+        # rule 55: max
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(max)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 55
             set yyrule_num "rule at line 114"
         }
-        # rule 56: legal
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(legal)} $yy_current_buffer match] > 0 && \
+        # rule 56: min
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(min)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 56
             set yyrule_num "rule at line 115"
         }
-        # rule 57: legend
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(legend)} $yy_current_buffer match] > 0 && \
+        # rule 57: mode
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(mode)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 57
             set yyrule_num "rule at line 116"
         }
-        # rule 58: legendtitle
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(legendtitle)} $yy_current_buffer match] > 0 && \
+        # rule 58: name
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(name)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 58
             set yyrule_num "rule at line 117"
         }
-        # rule 59: letter
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(letter)} $yy_current_buffer match] > 0 && \
+        # rule 59: none
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(none)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 59
             set yyrule_num "rule at line 118"
         }
-        # rule 60: line
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(line)} $yy_current_buffer match] > 0 && \
+        # rule 60: normal
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(normal)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 60
             set yyrule_num "rule at line 119"
         }
-        # rule 61: linear
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(linear)} $yy_current_buffer match] > 0 && \
+        # rule 61: numbers
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(numbers)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 61
             set yyrule_num "rule at line 120"
         }
-        # rule 62: list
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(list)} $yy_current_buffer match] > 0 && \
+        # rule 62: orient
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(orient)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 62
             set yyrule_num "rule at line 121"
         }
-        # rule 63: load
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(load)} $yy_current_buffer match] > 0 && \
+        # rule 63: orientation
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(orientation)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 63
             set yyrule_num "rule at line 122"
         }
-        # rule 64: loadconfig
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(loadconfig)} $yy_current_buffer match] > 0 && \
+        # rule 64: pagesetup
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(pagesetup)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 64
             set yyrule_num "rule at line 123"
         }
-        # rule 65: log
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(log)} $yy_current_buffer match] > 0 && \
+        # rule 65: pagesize
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(pagesize)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 65
             set yyrule_num "rule at line 124"
         }
-        # rule 66: max
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(max)} $yy_current_buffer match] > 0 && \
+        # rule 66: palette
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(palette)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 66
             set yyrule_num "rule at line 125"
         }
-        # rule 67: min
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(min)} $yy_current_buffer match] > 0 && \
+        # rule 67: plotarea
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(plotarea)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 67
             set yyrule_num "rule at line 126"
         }
-        # rule 68: mode
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(mode)} $yy_current_buffer match] > 0 && \
+        # rule 68: plus
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(plus)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 68
             set yyrule_num "rule at line 127"
         }
-        # rule 69: name
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(name)} $yy_current_buffer match] > 0 && \
+        # rule 69: pointer
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(pointer)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 69
             set yyrule_num "rule at line 128"
         }
-        # rule 70: none
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(none)} $yy_current_buffer match] > 0 && \
+        # rule 70: portrait
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(portrait)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 70
             set yyrule_num "rule at line 129"
         }
-        # rule 71: normal
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(normal)} $yy_current_buffer match] > 0 && \
+        # rule 71: position
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(position)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 71
             set yyrule_num "rule at line 130"
         }
-        # rule 72: new
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(new)} $yy_current_buffer match] > 0 && \
+        # rule 72: poster
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(poster)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 72
             set yyrule_num "rule at line 131"
         }
-        # rule 73: numbers
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(numbers)} $yy_current_buffer match] > 0 && \
+        # rule 73: print
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(print)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 73
             set yyrule_num "rule at line 132"
         }
-        # rule 74: orient
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(orient)} $yy_current_buffer match] > 0 && \
+        # rule 74: printer
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(printer)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 74
             set yyrule_num "rule at line 133"
         }
-        # rule 75: orientation
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(orientation)} $yy_current_buffer match] > 0 && \
+        # rule 75: quadratic
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(quadratic)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 75
             set yyrule_num "rule at line 134"
         }
-        # rule 76: overlap
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(overlap)} $yy_current_buffer match] > 0 && \
+        # rule 76: rgb
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(rgb)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 76
             set yyrule_num "rule at line 135"
         }
-        # rule 77: page
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(page)} $yy_current_buffer match] > 0 && \
+        # rule 77: right
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(right)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 77
             set yyrule_num "rule at line 136"
         }
-        # rule 78: pagesetup
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(pagesetup)} $yy_current_buffer match] > 0 && \
+        # rule 78: row
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(row)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 78
             set yyrule_num "rule at line 137"
         }
-        # rule 79: pagesize
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(pagesize)} $yy_current_buffer match] > 0 && \
+        # rule 79: save
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(save)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 79
             set yyrule_num "rule at line 138"
         }
-        # rule 80: palette
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(palette)} $yy_current_buffer match] > 0 && \
+        # rule 80: scale
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(scale)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 80
             set yyrule_num "rule at line 139"
         }
-        # rule 81: plotarea
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(plotarea)} $yy_current_buffer match] > 0 && \
+        # rule 81: scatter
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(scatter)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 81
             set yyrule_num "rule at line 140"
         }
-        # rule 82: plus
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(plus)} $yy_current_buffer match] > 0 && \
+        # rule 82: scross
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(scross)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 82
             set yyrule_num "rule at line 141"
         }
-        # rule 83: pointer
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(pointer)} $yy_current_buffer match] > 0 && \
+        # rule 83: select
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(select)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 83
             set yyrule_num "rule at line 142"
         }
-        # rule 84: portrait
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(portrait)} $yy_current_buffer match] > 0 && \
+        # rule 84: shape
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(shape)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 84
             set yyrule_num "rule at line 143"
         }
-        # rule 85: position
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(position)} $yy_current_buffer match] > 0 && \
+        # rule 85: show
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(show)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 85
             set yyrule_num "rule at line 144"
         }
-        # rule 86: poster
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(poster)} $yy_current_buffer match] > 0 && \
+        # rule 86: size
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(size)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 86
             set yyrule_num "rule at line 145"
         }
-        # rule 87: print
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(print)} $yy_current_buffer match] > 0 && \
+        # rule 87: slant
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(slant)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 87
             set yyrule_num "rule at line 146"
         }
-        # rule 88: printer
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(printer)} $yy_current_buffer match] > 0 && \
+        # rule 88: smooth
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(smooth)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 88
             set yyrule_num "rule at line 147"
         }
-        # rule 89: quadratic
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(quadratic)} $yy_current_buffer match] > 0 && \
+        # rule 89: splus
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(splus)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 89
             set yyrule_num "rule at line 148"
         }
-        # rule 90: raised
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(raised)} $yy_current_buffer match] > 0 && \
+        # rule 90: square
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(square)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 90
             set yyrule_num "rule at line 149"
         }
-        # rule 91: range
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(range)} $yy_current_buffer match] > 0 && \
+        # rule 91: stats
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(stats)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 91
             set yyrule_num "rule at line 150"
         }
-        # rule 92: relief
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(relief)} $yy_current_buffer match] > 0 && \
+        # rule 92: statistics
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(statistics)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 92
             set yyrule_num "rule at line 151"
         }
-        # rule 93: rgb
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(rgb)} $yy_current_buffer match] > 0 && \
+        # rule 93: stdin
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(stdin)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 93
             set yyrule_num "rule at line 152"
         }
-        # rule 94: right
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(right)} $yy_current_buffer match] > 0 && \
+        # rule 94: step
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(step)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 94
             set yyrule_num "rule at line 153"
         }
-        # rule 95: row
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(row)} $yy_current_buffer match] > 0 && \
+        # rule 95: strip
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(strip)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 95
             set yyrule_num "rule at line 154"
         }
-        # rule 96: save
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(save)} $yy_current_buffer match] > 0 && \
+        # rule 96: style
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(style)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 96
             set yyrule_num "rule at line 155"
         }
-        # rule 97: saveconfig
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(saveconfig)} $yy_current_buffer match] > 0 && \
+        # rule 97: symbol
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(symbol)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 97
             set yyrule_num "rule at line 156"
         }
-        # rule 98: scale
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(scale)} $yy_current_buffer match] > 0 && \
+        # rule 98: tabloid
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(tabloid)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 98
             set yyrule_num "rule at line 157"
         }
-        # rule 99: scatter
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(scatter)} $yy_current_buffer match] > 0 && \
+        # rule 99: theme
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(theme)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 99
             set yyrule_num "rule at line 158"
         }
-        # rule 100: scross
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(scross)} $yy_current_buffer match] > 0 && \
+        # rule 100: title
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(title)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 100
             set yyrule_num "rule at line 159"
         }
-        # rule 101: select
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(select)} $yy_current_buffer match] > 0 && \
+        # rule 101: top
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(top)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 101
             set yyrule_num "rule at line 160"
         }
-        # rule 102: shape
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(shape)} $yy_current_buffer match] > 0 && \
+        # rule 102: triangle
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(triangle)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 102
             set yyrule_num "rule at line 161"
         }
-        # rule 103: show
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(show)} $yy_current_buffer match] > 0 && \
+        # rule 103: weight
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(weight)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 103
             set yyrule_num "rule at line 162"
         }
-        # rule 104: size
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(size)} $yy_current_buffer match] > 0 && \
+        # rule 104: width
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(width)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 104
             set yyrule_num "rule at line 163"
         }
-        # rule 105: slant
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(slant)} $yy_current_buffer match] > 0 && \
+        # rule 105: zoom
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(zoom)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 105
             set yyrule_num "rule at line 164"
         }
-        # rule 106: smooth
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(smooth)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 106
-            set yyrule_num "rule at line 165"
-        }
-        # rule 107: solid
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(solid)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 107
-            set yyrule_num "rule at line 166"
-        }
-        # rule 108: splus
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(splus)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 108
-            set yyrule_num "rule at line 167"
-        }
-        # rule 109: square
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(square)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 109
-            set yyrule_num "rule at line 168"
-        }
-        # rule 110: stacked
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(stacked)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 110
-            set yyrule_num "rule at line 169"
-        }
-        # rule 111: stats
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(stats)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 111
-            set yyrule_num "rule at line 170"
-        }
-        # rule 112: statistics
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(statistics)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 112
-            set yyrule_num "rule at line 171"
-        }
-        # rule 113: stdin
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(stdin)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 113
-            set yyrule_num "rule at line 172"
-        }
-        # rule 114: step
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(step)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 114
-            set yyrule_num "rule at line 173"
-        }
-        # rule 115: strip
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(strip)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 115
-            set yyrule_num "rule at line 174"
-        }
-        # rule 116: style
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(style)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 116
-            set yyrule_num "rule at line 175"
-        }
-        # rule 117: sunken
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(sunken)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 117
-            set yyrule_num "rule at line 176"
-        }
-        # rule 118: tabloid
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(tabloid)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 118
-            set yyrule_num "rule at line 177"
-        }
-        # rule 119: theme
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(theme)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 119
-            set yyrule_num "rule at line 178"
-        }
-        # rule 120: title
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(title)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 120
-            set yyrule_num "rule at line 179"
-        }
-        # rule 121: top
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(top)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 121
-            set yyrule_num "rule at line 180"
-        }
-        # rule 122: triangle
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(triangle)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 122
-            set yyrule_num "rule at line 181"
-        }
-        # rule 123: type
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(type)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 123
-            set yyrule_num "rule at line 182"
-        }
-        # rule 124: view
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(view)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 124
-            set yyrule_num "rule at line 183"
-        }
-        # rule 125: weight
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(weight)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 125
-            set yyrule_num "rule at line 184"
-        }
-        # rule 126: width
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(width)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 126
-            set yyrule_num "rule at line 185"
-        }
-        # rule 127: zoom
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(zoom)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 127
-            set yyrule_num "rule at line 186"
-        }
-        # rule 128: xy
+        # rule 106: xy
         if {[regexp -start $index_ -indices -line -nocase -- {\A(xy)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 128
-            set yyrule_num "rule at line 188"
+            set matched_rule 106
+            set yyrule_num "rule at line 166"
         }
-        # rule 129: xyex
+        # rule 107: xyex
         if {[regexp -start $index_ -indices -line -nocase -- {\A(xyex)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 129
-            set yyrule_num "rule at line 189"
+            set matched_rule 107
+            set yyrule_num "rule at line 167"
         }
-        # rule 130: xyey
+        # rule 108: xyey
         if {[regexp -start $index_ -indices -line -nocase -- {\A(xyey)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 130
-            set yyrule_num "rule at line 190"
+            set matched_rule 108
+            set yyrule_num "rule at line 168"
         }
-        # rule 131: xyexey
+        # rule 109: xyexey
         if {[regexp -start $index_ -indices -line -nocase -- {\A(xyexey)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 131
-            set yyrule_num "rule at line 191"
+            set matched_rule 109
+            set yyrule_num "rule at line 169"
         }
-        # rule 132: linearlinear
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(linearlinear)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 132
-            set yyrule_num "rule at line 193"
-        }
-        # rule 133: loglinear
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(loglinear)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 133
-            set yyrule_num "rule at line 194"
-        }
-        # rule 134: linearlog
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(linearlog)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 134
-            set yyrule_num "rule at line 195"
-        }
-        # rule 135: loglog
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(loglog)} $yy_current_buffer match] > 0 && \
-                [lindex $match 1] - $index_ + 1 > $yyleng} {
-            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
-            set yyleng [string length $yytext]
-            set matched_rule 135
-            set yyrule_num "rule at line 196"
-        }
-        # rule 136: xaxis
+        # rule 110: xaxis
         if {[regexp -start $index_ -indices -line -nocase -- {\A(xaxis)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 136
-            set yyrule_num "rule at line 198"
+            set matched_rule 110
+            set yyrule_num "rule at line 171"
         }
-        # rule 137: yaxis
+        # rule 111: yaxis
         if {[regexp -start $index_ -indices -line -nocase -- {\A(yaxis)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 137
-            set yyrule_num "rule at line 199"
+            set matched_rule 111
+            set yyrule_num "rule at line 172"
         }
-        # rule 138: gif
+        # rule 112: gif
         if {[regexp -start $index_ -indices -line -nocase -- {\A(gif)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 138
-            set yyrule_num "rule at line 201"
+            set matched_rule 112
+            set yyrule_num "rule at line 174"
         }
-        # rule 139: tiff
+        # rule 113: tiff
         if {[regexp -start $index_ -indices -line -nocase -- {\A(tiff)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 139
-            set yyrule_num "rule at line 202"
+            set matched_rule 113
+            set yyrule_num "rule at line 175"
         }
-        # rule 140: jpeg
+        # rule 114: jpeg
         if {[regexp -start $index_ -indices -line -nocase -- {\A(jpeg)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 140
-            set yyrule_num "rule at line 203"
+            set matched_rule 114
+            set yyrule_num "rule at line 176"
         }
-        # rule 141: png
+        # rule 115: png
         if {[regexp -start $index_ -indices -line -nocase -- {\A(png)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 141
-            set yyrule_num "rule at line 204"
+            set matched_rule 115
+            set yyrule_num "rule at line 177"
         }
-        # rule 142: none
+        # rule 116: none
         if {[regexp -start $index_ -indices -line -nocase -- {\A(none)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 142
-            set yyrule_num "rule at line 206"
+            set matched_rule 116
+            set yyrule_num "rule at line 179"
         }
-        # rule 143: packbits
+        # rule 117: packbits
         if {[regexp -start $index_ -indices -line -nocase -- {\A(packbits)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 143
-            set yyrule_num "rule at line 207"
+            set matched_rule 117
+            set yyrule_num "rule at line 180"
         }
-        # rule 144: deflate
+        # rule 118: deflate
         if {[regexp -start $index_ -indices -line -nocase -- {\A(deflate)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 144
-            set yyrule_num "rule at line 208"
+            set matched_rule 118
+            set yyrule_num "rule at line 181"
         }
-        # rule 145: yes
+        # rule 119: yes
         if {[regexp -start $index_ -indices -line -nocase -- {\A(yes)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 145
-            set yyrule_num "rule at line 210"
+            set matched_rule 119
+            set yyrule_num "rule at line 183"
         }
-        # rule 146: no
+        # rule 120: no
         if {[regexp -start $index_ -indices -line -nocase -- {\A(no)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 146
-            set yyrule_num "rule at line 211"
+            set matched_rule 120
+            set yyrule_num "rule at line 184"
         }
-        # rule 147: on
+        # rule 121: on
         if {[regexp -start $index_ -indices -line -nocase -- {\A(on)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 147
-            set yyrule_num "rule at line 212"
+            set matched_rule 121
+            set yyrule_num "rule at line 185"
         }
-        # rule 148: off
+        # rule 122: off
         if {[regexp -start $index_ -indices -line -nocase -- {\A(off)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 148
-            set yyrule_num "rule at line 213"
+            set matched_rule 122
+            set yyrule_num "rule at line 186"
         }
-        # rule 149: true
+        # rule 123: true
         if {[regexp -start $index_ -indices -line -nocase -- {\A(true)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 149
-            set yyrule_num "rule at line 214"
+            set matched_rule 123
+            set yyrule_num "rule at line 187"
         }
-        # rule 150: false
+        # rule 124: false
         if {[regexp -start $index_ -indices -line -nocase -- {\A(false)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 150
-            set yyrule_num "rule at line 215"
+            set matched_rule 124
+            set yyrule_num "rule at line 188"
         }
-        # rule 151: font
+        # rule 125: font
         if {[regexp -start $index_ -indices -line -nocase -- {\A(font)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 151
-            set yyrule_num "rule at line 216"
+            set matched_rule 125
+            set yyrule_num "rule at line 189"
         }
-        # rule 152: fontsize
+        # rule 126: fontsize
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontsize)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 152
-            set yyrule_num "rule at line 217"
+            set matched_rule 126
+            set yyrule_num "rule at line 190"
         }
-        # rule 153: fontslant
+        # rule 127: fontslant
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontslant)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 153
-            set yyrule_num "rule at line 218"
+            set matched_rule 127
+            set yyrule_num "rule at line 191"
         }
-        # rule 154: fontstyle
+        # rule 128: fontstyle
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontstyle)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 154
-            set yyrule_num "rule at line 219"
+            set matched_rule 128
+            set yyrule_num "rule at line 192"
         }
-        # rule 155: fontweight
+        # rule 129: fontweight
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontweight)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 155
-            set yyrule_num "rule at line 220"
+            set matched_rule 129
+            set yyrule_num "rule at line 193"
         }
-        # rule 156: times
+        # rule 130: times
         if {[regexp -start $index_ -indices -line -nocase -- {\A(times)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 156
-            set yyrule_num "rule at line 221"
+            set matched_rule 130
+            set yyrule_num "rule at line 194"
         }
-        # rule 157: helvetica
+        # rule 131: helvetica
         if {[regexp -start $index_ -indices -line -nocase -- {\A(helvetica)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 157
-            set yyrule_num "rule at line 222"
+            set matched_rule 131
+            set yyrule_num "rule at line 195"
         }
-        # rule 158: courier
+        # rule 132: courier
         if {[regexp -start $index_ -indices -line -nocase -- {\A(courier)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 158
-            set yyrule_num "rule at line 223"
+            set matched_rule 132
+            set yyrule_num "rule at line 196"
         }
-        # rule 159: normal
+        # rule 133: normal
         if {[regexp -start $index_ -indices -line -nocase -- {\A(normal)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 159
-            set yyrule_num "rule at line 224"
+            set matched_rule 133
+            set yyrule_num "rule at line 197"
         }
-        # rule 160: bold
+        # rule 134: bold
         if {[regexp -start $index_ -indices -line -nocase -- {\A(bold)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 160
-            set yyrule_num "rule at line 225"
+            set matched_rule 134
+            set yyrule_num "rule at line 198"
         }
-        # rule 161: roman
+        # rule 135: roman
         if {[regexp -start $index_ -indices -line -nocase -- {\A(roman)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 161
-            set yyrule_num "rule at line 226"
+            set matched_rule 135
+            set yyrule_num "rule at line 199"
         }
-        # rule 162: italic
+        # rule 136: italic
         if {[regexp -start $index_ -indices -line -nocase -- {\A(italic)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 162
-            set yyrule_num "rule at line 227"
+            set matched_rule 136
+            set yyrule_num "rule at line 200"
         }
-        # rule 163: [+-]?{D}+
+        # rule 137: [+-]?{D}+
         if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 163
-            set yyrule_num "rule at line 229"
+            set matched_rule 137
+            set yyrule_num "rule at line 202"
         }
-        # rule 164: [+-]?{D}+\.?({E})?
+        # rule 138: [+-]?{D}+\.?({E})?
         if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+\.?(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 164
-            set yyrule_num "rule at line 232"
+            set matched_rule 138
+            set yyrule_num "rule at line 205"
         }
-        # rule 165: [+-]?{D}*\.{D}+({E})?
+        # rule 139: [+-]?{D}*\.{D}+({E})?
         if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])*\.([0-9])+(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 165
-            set yyrule_num "rule at line 233"
+            set matched_rule 139
+            set yyrule_num "rule at line 206"
         }
-        # rule 166: \"[^\"]*\"
+        # rule 140: \"[^\"]*\"
         if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 166
-            set yyrule_num "rule at line 236"
+            set matched_rule 140
+            set yyrule_num "rule at line 209"
         }
-        # rule 167: \'[^\']*\'
+        # rule 141: \'[^\']*\'
         if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 167
-            set yyrule_num "rule at line 239"
+            set matched_rule 141
+            set yyrule_num "rule at line 212"
         }
-        # rule 168: \{[^\}]*\}
+        # rule 142: \{[^\}]*\}
         if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 168
-            set yyrule_num "rule at line 242"
+            set matched_rule 142
+            set yyrule_num "rule at line 215"
         }
-        # rule 169: \S+\S+
+        # rule 143: \S+\S+
         if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 169
-            set yyrule_num "rule at line 245"
+            set matched_rule 143
+            set yyrule_num "rule at line 218"
         }
-        # rule 170: \s
+        # rule 144: \s
         if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 170
-            set yyrule_num "rule at line 246"
+            set matched_rule 144
+            set yyrule_num "rule at line 219"
         }
-        # rule 171: .
+        # rule 145: .
         if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
-            set matched_rule 171
-            set yyrule_num "rule at line 248"
+            set matched_rule 145
+            set yyrule_num "rule at line 221"
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -1765,511 +1530,433 @@ return $A4_
 return $ADD_
             }
             2 {
-return $ALIGNED_
-            }
-            3 {
 return $ARROW_
             }
-            4 {
+            3 {
 return $AUTO_
             }
-            5 {
-return $AXESNUMBERS_
-            }
-            6 {
-return $AXESTITLE_
-            }
-            7 {
+            4 {
 return $AXIS_
             }
-            8 {
+            5 {
 return $BACKGROUND_
             }
-            9 {
+            6 {
 return $BAR_
             }
-            10 {
-return $BARMODE_
-            }
-            11 {
+            7 {
 return $BORDER_
             }
-            12 {
+            8 {
 return $BOTTOM_
             }
-            13 {
+            9 {
 return $CAP_
             }
-            14 {
+            10 {
 return $CATROM_
             }
-            15 {
+            11 {
 return $CIRCLE_
             }
-            16 {
+            12 {
 return $CLEAR_
             }
-            17 {
+            13 {
 return $CLOSE_
             }
-            18 {
+            14 {
 return $COLOR_
             }
-            19 {
+            15 {
 return $COLOR_
             }
-            20 {
+            16 {
 return $COLUMN_
             }
-            21 {
+            17 {
 return $COMMAND_
             }
-            22 {
+            18 {
+return $CONFIG_
+            }
+            19 {
 return $CROSS_
             }
-            23 {
+            20 {
 return $CUBIC_
             }
-            24 {
+            21 {
 return $CURRENT_
             }
-            25 {
+            22 {
 return $DASH_
             }
-            26 {
+            23 {
 return $DATA_
             }
-            27 {
+            24 {
 return $DATASET_
             }
-            28 {
+            25 {
 return $DELETE_
             }
-            29 {
+            26 {
 return $DESTINATION_
             }
-            30 {
+            27 {
 return $DIAMOND_
             }
-            31 {
-return $DISCRETE_
-            }
-            32 {
-return $DUP_
-            }
-            33 {
+            28 {
 return $DUPLICATE_
             }
-            34 {
+            29 {
+return $DUPLICATE_
+            }
+            30 {
 return $ERROR_
             }
-            35 {
-return $ERRORBAR_
-            }
-            36 {
+            31 {
 return $EXPORT_
             }
-            37 {
+            32 {
 return $FAMILY_
             }
-            38 {
+            33 {
 return $FILE_
             }
-            39 {
+            34 {
 return $FILENAME_
             }
-            40 {
+            35 {
 return $FILL_
             }
-            41 {
-return $FILLCOLOR_
-            }
-            42 {
-return $FILLCOLOR_
-            }
-            43 {
-return $FLAT_
-            }
-            44 {
+            36 {
 return $FLIP_
             }
-            45 {
+            37 {
 return $FONT_
             }
-            46 {
+            38 {
 return $FOREGROUND_
             }
-            47 {
+            39 {
 return $FORMAT_
             }
-            48 {
+            40 {
 return $GRAPH_
             }
-            49 {
+            41 {
 return $GRAY_
             }
-            50 {
+            42 {
 return $GRID_
             }
-            51 {
-return $GROOVE_
-            }
-            52 {
+            43 {
 return $LABELS_
             }
-            53 {
+            44 {
 return $LANDSCAPE_
             }
-            54 {
+            45 {
 return $LAYOUT_
             }
-            55 {
+            46 {
 return $LEFT_
             }
-            56 {
+            47 {
 return $LEGAL_
             }
-            57 {
+            48 {
 return $LEGEND_
             }
-            58 {
-return $LEGENDTITLE_
-            }
-            59 {
+            49 {
 return $LETTER_
             }
-            60 {
+            50 {
 return $LINE_
             }
-            61 {
+            51 {
 return $LINEAR_
             }
-            62 {
+            52 {
 return $LIST_
             }
-            63 {
+            53 {
 return $LOAD_
             }
-            64 {
-return $LOADCONFIG_
-            }
-            65 {
+            54 {
 return $LOG_
             }
-            66 {
+            55 {
 return $MAX_
             }
-            67 {
+            56 {
 return $MIN_
             }
-            68 {
+            57 {
 return $MODE_
             }
-            69 {
+            58 {
 return $NAME_
             }
-            70 {
+            59 {
 return $NONE_
             }
-            71 {
+            60 {
 return $NORMAL_
             }
-            72 {
-return $NEW_
-            }
-            73 {
+            61 {
 return $NUMBERS_
             }
-            74 {
+            62 {
 return $ORIENT_
             }
-            75 {
+            63 {
 return $ORIENTATION_
             }
-            76 {
-return $OVERLAP_
-            }
-            77 {
-return $PAGE_
-            }
-            78 {
+            64 {
 return $PAGESETUP_
             }
-            79 {
+            65 {
 return $PAGESIZE_
             }
-            80 {
+            66 {
 return $PALETTE_
             }
-            81 {
+            67 {
 return $PLOTAREA_
             }
-            82 {
+            68 {
 return $PLUS_
             }
-            83 {
+            69 {
 return $POINTER_
             }
-            84 {
+            70 {
 return $PORTRAIT_
             }
-            85 {
+            71 {
 return $POSITION_
             }
-            86 {
+            72 {
 return $POSTER_
             }
-            87 {
+            73 {
 return $PRINT_
             }
-            88 {
+            74 {
 return $PRINTER_
             }
-            89 {
+            75 {
 return $QUADRATIC_
             }
-            90 {
-return $RAISED_
-            }
-            91 {
-return $RANGE_
-            }
-            92 {
-return $RELIEF_
-            }
-            93 {
+            76 {
 return $RGB_
             }
-            94 {
+            77 {
 return $RIGHT_
             }
-            95 {
+            78 {
 return $ROW_
             }
-            96 {
+            79 {
 return $SAVE_
             }
-            97 {
-return $SAVECONFIG_
-            }
-            98 {
+            80 {
 return $SCALE_
             }
-            99 {
+            81 {
 return $SCATTER_
             }
-            100 {
+            82 {
 return $SCROSS_
             }
-            101 {
+            83 {
 return $SELECT_
             }
-            102 {
+            84 {
 return $SHAPE_
             }
-            103 {
+            85 {
 return $SHOW_
             }
-            104 {
+            86 {
 return $SIZE_
             }
-            105 {
+            87 {
 return $SLANT_
             }
-            106 {
+            88 {
 return $SMOOTH_
             }
-            107 {
-return $SOLID_
-            }
-            108 {
+            89 {
 return $SPLUS_
             }
-            109 {
+            90 {
 return $SQUARE_
             }
-            110 {
-return $STACKED_
-            }
-            111 {
-return $STATS_
-            }
-            112 {
+            91 {
 return $STATISTICS_
             }
-            113 {
+            92 {
+return $STATISTICS_
+            }
+            93 {
 return $STDIN_
             }
-            114 {
+            94 {
 return $STEP_
             }
-            115 {
+            95 {
 return $STRIP_
             }
-            116 {
+            96 {
 return $STYLE_
             }
-            117 {
-return $SUNKEN_
+            97 {
+return $SYMBOL_
             }
-            118 {
+            98 {
 return $TABLOID_
             }
-            119 {
+            99 {
 return $THEME_
             }
-            120 {
+            100 {
 return $TITLE_
             }
-            121 {
+            101 {
 return $TOP_
             }
-            122 {
+            102 {
 return $TRIANGLE_
             }
-            123 {
-return $TYPE_
-            }
-            124 {
-return $VIEW_
-            }
-            125 {
+            103 {
 return $WEIGHT_
             }
-            126 {
+            104 {
 return $WIDTH_
             }
-            127 {
+            105 {
 return $ZOOM_
             }
-            128 {
+            106 {
 return $XY_
             }
-            129 {
+            107 {
 return $XYEX_
             }
-            130 {
+            108 {
 return $XYEY_
             }
-            131 {
+            109 {
 return $XYEXEY_
             }
-            132 {
-return $LINEARLINEAR_
-            }
-            133 {
-return $LOGLINEAR_
-            }
-            134 {
-return $LINEARLOG_
-            }
-            135 {
-return $LOGLOG_
-            }
-            136 {
+            110 {
 return $XAXIS_
             }
-            137 {
+            111 {
 return $YAXIS_
             }
-            138 {
+            112 {
 return $GIF_
             }
-            139 {
+            113 {
 return $TIFF_
             }
-            140 {
+            114 {
 return $JPEG_
             }
-            141 {
+            115 {
 return $PNG_
             }
-            142 {
+            116 {
 return $NONE_
             }
-            143 {
+            117 {
 return $PACKBITS_
             }
-            144 {
+            118 {
 return $DEFLATE_
             }
-            145 {
+            119 {
 return $YES_
             }
-            146 {
+            120 {
 return $NO_
             }
-            147 {
+            121 {
 return $ON_
             }
-            148 {
+            122 {
 return $OFF_
             }
-            149 {
+            123 {
 return $TRUE_
             }
-            150 {
+            124 {
 return $FALSE_
             }
-            151 {
+            125 {
 return $FONT_
             }
-            152 {
+            126 {
 return $FONTSIZE_
             }
-            153 {
+            127 {
 return $FONTSLANT_
             }
-            154 {
+            128 {
 return $FONTSTYLE_
             }
-            155 {
+            129 {
 return $FONTWEIGHT_
             }
-            156 {
+            130 {
 return $TIMES_
             }
-            157 {
+            131 {
 return $HELVETICA_
             }
-            158 {
+            132 {
 return $COURIER_
             }
-            159 {
+            133 {
 return $NORMAL_
             }
-            160 {
+            134 {
 return $BOLD_
             }
-            161 {
+            135 {
 return $ROMAN_
             }
-            162 {
+            136 {
 return $ITALIC_
             }
-            163 {
+            137 {
 set yylval $yytext; return $INT_
             }
-            164 -
-            165 {
+            138 -
+            139 {
 set yylval $yytext; return $REAL_
             }
-            166 {
+            140 {
 set yylval [string range $yytext 1 end-1]; return $STRING_
             }
-            167 {
+            141 {
 set yylval [string range $yytext 1 end-1]; return $STRING_
             }
-            168 {
+            142 {
 set yylval [string range $yytext 1 end-1]; return $STRING_
             }
-            169 {
+            143 {
 set yylval $yytext; return $STRING_
             }
-            170 {
+            144 {
 # ignore whitespace
             }
-            171 {
+            145 {
 set yylval $yytext; return $yylval
             }
             default

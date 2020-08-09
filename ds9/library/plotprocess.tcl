@@ -234,6 +234,17 @@ proc PlotCmdNew {name} {
     set parse(buf) {}
 }
 
+proc PlotCmdNewFile {fn} {
+    global parse
+
+    if {[file exists $fn]} {
+	set ch [open $fn r]
+	set parse(buf) [read $ch]
+	close $ch
+	return
+    }
+}
+
 proc PlotCmdLine {title xaxis yaxis dim} {
     global parse
     PlotLine $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)

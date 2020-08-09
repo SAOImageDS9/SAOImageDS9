@@ -356,9 +356,20 @@ proc ProcessSendCmdCVAR {cmd} {
     }
 }
 
-proc ProcessSendCmdTxt {rr} {
+proc ProcessSendCmdCVARGet {key} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
     global parse
-    $parse(proc) $parse(id) "$rr\n"
+    $parse(proc) $parse(id) "$cvar($key)\n"
+}
+
+proc ProcessSendCmdCVARGetYesNo {key} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    global parse
+    $parse(proc) $parse(id) [ToYesNo $cvar($key)]
 }
 
 proc ProcessSendCmdGet {varname key} {
@@ -375,14 +386,6 @@ proc ProcessSendCmdGetYesNo {varname key} {
 
     global parse
     $parse(proc) $parse(id) "[ToYesNo $var($key)]"
-}
-
-proc ProcessSendCmdCVARGet {key} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    global parse
-    $parse(proc) $parse(id) "$cvar($key)\n"
 }
 
 proc ProcessSendCmdGet2 {varname key key2} {
@@ -409,22 +412,6 @@ proc ProcessSendCmdGet9 {varname key key2 key3 key4 key5 key6 key7 key8 key9} {
     $parse(proc) $parse(id) "$var($key) $var($key2) $var($key3) $var($key4) $var($key5) $var($key6) $var($key7) $var($key8) $var($key9)\n"
 }
 
-proc ProcessSendCmdYesNo {varname key} {
-    upvar #0 $varname var
-    global $varname
-
-    global parse
-    $parse(proc) $parse(id) [ToYesNo $var($key)]
-}
-
-proc ProcessSendCmdCVARYesNo {key} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    global parse
-    $parse(proc) $parse(id) [ToYesNo $cvar($key)]
-}
-
 proc ProcessSendCmdCurrent {cmd} {
     global parse
     global current
@@ -441,6 +428,11 @@ proc ProcessSendCmdCurrentYesNo {cmd} {
     if {$current(frame) != {}} {
 	$parse(proc) $parse(id) "[ToYesNo [$current(frame) $cmd]]"
     }
+}
+
+proc ProcessSendCmdTxt {rr} {
+    global parse
+    $parse(proc) $parse(id) "$rr\n"
 }
 
 proc ProcessSendCmdSend {ext cmd} {

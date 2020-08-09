@@ -818,10 +818,8 @@ proc PrismHistogramGenerate {varname} {
 
     PlotExternal $vvarname xy
 
-    set vvar(graph,ds,fill) 1
-    set vvar(graph,ds,color) blue
-    set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     set vvar(graph,ds,bar,width) $var(bar,width)
+    set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     $vvar(graph,proc,updateelement) $vvarname
 
     PlotStats $vvarname

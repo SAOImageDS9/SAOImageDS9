@@ -16,8 +16,6 @@ namespace eval plotsend {
     variable yyout stdout
     variable yy_current_buffer {}
 
-    variable yy_flex_debug 1
-
     variable yylineno 1
 
     variable index_ 0
@@ -247,9 +245,6 @@ set YAXIS_ 308
                 }
             }
             if $done_ {
-                if $yy_flex_debug {
-                    puts stderr "   plotsend --reached end of input buffer"
-                }
                 if {[string length $yy_current_buffer] - $index_ == 0} {
                     break
                 }
@@ -263,7 +258,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 0
-            set yyrule_num "rule at line 28"
         }
         # rule 1: axis
         if {[regexp -start $index_ -indices -line -nocase -- {\A(axis)} $yy_current_buffer match] > 0 && \
@@ -271,7 +265,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 1
-            set yyrule_num "rule at line 29"
         }
         # rule 2: background
         if {[regexp -start $index_ -indices -line -nocase -- {\A(background)} $yy_current_buffer match] > 0 && \
@@ -279,7 +272,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
-            set yyrule_num "rule at line 30"
         }
         # rule 3: bar
         if {[regexp -start $index_ -indices -line -nocase -- {\A(bar)} $yy_current_buffer match] > 0 && \
@@ -287,7 +279,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 3
-            set yyrule_num "rule at line 31"
         }
         # rule 4: border
         if {[regexp -start $index_ -indices -line -nocase -- {\A(border)} $yy_current_buffer match] > 0 && \
@@ -295,7 +286,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 4
-            set yyrule_num "rule at line 32"
         }
         # rule 5: cap
         if {[regexp -start $index_ -indices -line -nocase -- {\A(cap)} $yy_current_buffer match] > 0 && \
@@ -303,7 +293,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 5
-            set yyrule_num "rule at line 33"
         }
         # rule 6: color
         if {[regexp -start $index_ -indices -line -nocase -- {\A(color)} $yy_current_buffer match] > 0 && \
@@ -311,7 +300,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 6
-            set yyrule_num "rule at line 34"
         }
         # rule 7: colour
         if {[regexp -start $index_ -indices -line -nocase -- {\A(colour)} $yy_current_buffer match] > 0 && \
@@ -319,7 +307,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 7
-            set yyrule_num "rule at line 35"
         }
         # rule 8: dash
         if {[regexp -start $index_ -indices -line -nocase -- {\A(dash)} $yy_current_buffer match] > 0 && \
@@ -327,7 +314,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 8
-            set yyrule_num "rule at line 36"
         }
         # rule 9: dataset
         if {[regexp -start $index_ -indices -line -nocase -- {\A(dataset)} $yy_current_buffer match] > 0 && \
@@ -335,7 +321,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 9
-            set yyrule_num "rule at line 37"
         }
         # rule 10: error
         if {[regexp -start $index_ -indices -line -nocase -- {\A(error)} $yy_current_buffer match] > 0 && \
@@ -343,7 +328,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 10
-            set yyrule_num "rule at line 38"
         }
         # rule 11: family
         if {[regexp -start $index_ -indices -line -nocase -- {\A(family)} $yy_current_buffer match] > 0 && \
@@ -351,7 +335,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 11
-            set yyrule_num "rule at line 39"
         }
         # rule 12: fill
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fill)} $yy_current_buffer match] > 0 && \
@@ -359,7 +342,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 12
-            set yyrule_num "rule at line 40"
         }
         # rule 13: flip
         if {[regexp -start $index_ -indices -line -nocase -- {\A(flip)} $yy_current_buffer match] > 0 && \
@@ -367,7 +349,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 13
-            set yyrule_num "rule at line 41"
         }
         # rule 14: foreground
         if {[regexp -start $index_ -indices -line -nocase -- {\A(foreground)} $yy_current_buffer match] > 0 && \
@@ -375,7 +356,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 14
-            set yyrule_num "rule at line 42"
         }
         # rule 15: format
         if {[regexp -start $index_ -indices -line -nocase -- {\A(format)} $yy_current_buffer match] > 0 && \
@@ -383,7 +363,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 15
-            set yyrule_num "rule at line 43"
         }
         # rule 16: graph
         if {[regexp -start $index_ -indices -line -nocase -- {\A(graph)} $yy_current_buffer match] > 0 && \
@@ -391,7 +370,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 16
-            set yyrule_num "rule at line 44"
         }
         # rule 17: grid
         if {[regexp -start $index_ -indices -line -nocase -- {\A(grid)} $yy_current_buffer match] > 0 && \
@@ -399,7 +377,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 17
-            set yyrule_num "rule at line 45"
         }
         # rule 18: labels
         if {[regexp -start $index_ -indices -line -nocase -- {\A(labels)} $yy_current_buffer match] > 0 && \
@@ -407,7 +384,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 18
-            set yyrule_num "rule at line 46"
         }
         # rule 19: layout
         if {[regexp -start $index_ -indices -line -nocase -- {\A(layout)} $yy_current_buffer match] > 0 && \
@@ -415,7 +391,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 19
-            set yyrule_num "rule at line 47"
         }
         # rule 20: legend
         if {[regexp -start $index_ -indices -line -nocase -- {\A(legend)} $yy_current_buffer match] > 0 && \
@@ -423,7 +398,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 20
-            set yyrule_num "rule at line 48"
         }
         # rule 21: line
         if {[regexp -start $index_ -indices -line -nocase -- {\A(line)} $yy_current_buffer match] > 0 && \
@@ -431,7 +405,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 21
-            set yyrule_num "rule at line 49"
         }
         # rule 22: list
         if {[regexp -start $index_ -indices -line -nocase -- {\A(list)} $yy_current_buffer match] > 0 && \
@@ -439,7 +412,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 22
-            set yyrule_num "rule at line 50"
         }
         # rule 23: log
         if {[regexp -start $index_ -indices -line -nocase -- {\A(log)} $yy_current_buffer match] > 0 && \
@@ -447,7 +419,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 23
-            set yyrule_num "rule at line 51"
         }
         # rule 24: max
         if {[regexp -start $index_ -indices -line -nocase -- {\A(max)} $yy_current_buffer match] > 0 && \
@@ -455,7 +426,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 24
-            set yyrule_num "rule at line 52"
         }
         # rule 25: min
         if {[regexp -start $index_ -indices -line -nocase -- {\A(min)} $yy_current_buffer match] > 0 && \
@@ -463,7 +433,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 25
-            set yyrule_num "rule at line 53"
         }
         # rule 26: mode
         if {[regexp -start $index_ -indices -line -nocase -- {\A(mode)} $yy_current_buffer match] > 0 && \
@@ -471,7 +440,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 26
-            set yyrule_num "rule at line 54"
         }
         # rule 27: numbers
         if {[regexp -start $index_ -indices -line -nocase -- {\A(numbers)} $yy_current_buffer match] > 0 && \
@@ -479,7 +447,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 27
-            set yyrule_num "rule at line 55"
         }
         # rule 28: name
         if {[regexp -start $index_ -indices -line -nocase -- {\A(name)} $yy_current_buffer match] > 0 && \
@@ -487,7 +454,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 28
-            set yyrule_num "rule at line 56"
         }
         # rule 29: position
         if {[regexp -start $index_ -indices -line -nocase -- {\A(position)} $yy_current_buffer match] > 0 && \
@@ -495,7 +461,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 29
-            set yyrule_num "rule at line 57"
         }
         # rule 30: relief
         if {[regexp -start $index_ -indices -line -nocase -- {\A(relief)} $yy_current_buffer match] > 0 && \
@@ -503,7 +468,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 30
-            set yyrule_num "rule at line 58"
         }
         # rule 31: scale
         if {[regexp -start $index_ -indices -line -nocase -- {\A(scale)} $yy_current_buffer match] > 0 && \
@@ -511,7 +475,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 31
-            set yyrule_num "rule at line 59"
         }
         # rule 32: scatter
         if {[regexp -start $index_ -indices -line -nocase -- {\A(scatter)} $yy_current_buffer match] > 0 && \
@@ -519,7 +482,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 32
-            set yyrule_num "rule at line 60"
         }
         # rule 33: select
         if {[regexp -start $index_ -indices -line -nocase -- {\A(select)} $yy_current_buffer match] > 0 && \
@@ -527,7 +489,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 33
-            set yyrule_num "rule at line 61"
         }
         # rule 34: shape
         if {[regexp -start $index_ -indices -line -nocase -- {\A(shape)} $yy_current_buffer match] > 0 && \
@@ -535,7 +496,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 34
-            set yyrule_num "rule at line 62"
         }
         # rule 35: show
         if {[regexp -start $index_ -indices -line -nocase -- {\A(show)} $yy_current_buffer match] > 0 && \
@@ -543,7 +503,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 35
-            set yyrule_num "rule at line 63"
         }
         # rule 36: size
         if {[regexp -start $index_ -indices -line -nocase -- {\A(size)} $yy_current_buffer match] > 0 && \
@@ -551,7 +510,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 36
-            set yyrule_num "rule at line 64"
         }
         # rule 37: slant
         if {[regexp -start $index_ -indices -line -nocase -- {\A(slant)} $yy_current_buffer match] > 0 && \
@@ -559,7 +517,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 37
-            set yyrule_num "rule at line 65"
         }
         # rule 38: smooth
         if {[regexp -start $index_ -indices -line -nocase -- {\A(smooth)} $yy_current_buffer match] > 0 && \
@@ -567,7 +524,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 38
-            set yyrule_num "rule at line 66"
         }
         # rule 39: stats
         if {[regexp -start $index_ -indices -line -nocase -- {\A(stats)} $yy_current_buffer match] > 0 && \
@@ -575,7 +531,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 39
-            set yyrule_num "rule at line 67"
         }
         # rule 40: statistics
         if {[regexp -start $index_ -indices -line -nocase -- {\A(statistics)} $yy_current_buffer match] > 0 && \
@@ -583,7 +538,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 40
-            set yyrule_num "rule at line 68"
         }
         # rule 41: strip
         if {[regexp -start $index_ -indices -line -nocase -- {\A(strip)} $yy_current_buffer match] > 0 && \
@@ -591,7 +545,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 41
-            set yyrule_num "rule at line 69"
         }
         # rule 42: style
         if {[regexp -start $index_ -indices -line -nocase -- {\A(style)} $yy_current_buffer match] > 0 && \
@@ -599,7 +552,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 42
-            set yyrule_num "rule at line 70"
         }
         # rule 43: symbol
         if {[regexp -start $index_ -indices -line -nocase -- {\A(symbol)} $yy_current_buffer match] > 0 && \
@@ -607,7 +559,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 43
-            set yyrule_num "rule at line 71"
         }
         # rule 44: theme
         if {[regexp -start $index_ -indices -line -nocase -- {\A(theme)} $yy_current_buffer match] > 0 && \
@@ -615,7 +566,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 44
-            set yyrule_num "rule at line 72"
         }
         # rule 45: title
         if {[regexp -start $index_ -indices -line -nocase -- {\A(title)} $yy_current_buffer match] > 0 && \
@@ -623,7 +573,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 45
-            set yyrule_num "rule at line 73"
         }
         # rule 46: weight
         if {[regexp -start $index_ -indices -line -nocase -- {\A(weight)} $yy_current_buffer match] > 0 && \
@@ -631,7 +580,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 46
-            set yyrule_num "rule at line 74"
         }
         # rule 47: width
         if {[regexp -start $index_ -indices -line -nocase -- {\A(width)} $yy_current_buffer match] > 0 && \
@@ -639,7 +587,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 47
-            set yyrule_num "rule at line 75"
         }
         # rule 48: xaxis
         if {[regexp -start $index_ -indices -line -nocase -- {\A(xaxis)} $yy_current_buffer match] > 0 && \
@@ -647,7 +594,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 48
-            set yyrule_num "rule at line 76"
         }
         # rule 49: yaxis
         if {[regexp -start $index_ -indices -line -nocase -- {\A(yaxis)} $yy_current_buffer match] > 0 && \
@@ -655,7 +601,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 49
-            set yyrule_num "rule at line 77"
         }
         # rule 50: font
         if {[regexp -start $index_ -indices -line -nocase -- {\A(font)} $yy_current_buffer match] > 0 && \
@@ -663,7 +608,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 50
-            set yyrule_num "rule at line 79"
         }
         # rule 51: fontsize
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontsize)} $yy_current_buffer match] > 0 && \
@@ -671,7 +615,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 51
-            set yyrule_num "rule at line 80"
         }
         # rule 52: fontslant
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontslant)} $yy_current_buffer match] > 0 && \
@@ -679,7 +622,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 52
-            set yyrule_num "rule at line 81"
         }
         # rule 53: fontstyle
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontstyle)} $yy_current_buffer match] > 0 && \
@@ -687,7 +629,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 53
-            set yyrule_num "rule at line 82"
         }
         # rule 54: fontweight
         if {[regexp -start $index_ -indices -line -nocase -- {\A(fontweight)} $yy_current_buffer match] > 0 && \
@@ -695,7 +636,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 54
-            set yyrule_num "rule at line 83"
         }
         # rule 55: \s
         if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
@@ -703,7 +643,6 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 55
-            set yyrule_num "rule at line 84"
         }
         # rule 56: .
         if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
@@ -711,21 +650,16 @@ set YAXIS_ 308
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 56
-            set yyrule_num "rule at line 86"
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
             set yyleng 1
-            set yyrule_num "default rule"
         }
         incr index_ $yyleng
         # workaround for Tcl's circumflex behavior
         if {[string index $yytext end] == "\n"} {
             set yy_current_buffer [string range $yy_current_buffer $index_ end]
             set index_ 0
-        }
-        if $yy_flex_debug {
-            puts stderr "   plotsend --accepting $yyrule_num (\"$yytext\")"
         }
         set numlines [expr {[llength [split $yytext "\n"]] - 1}]
         switch -- $matched_rule {

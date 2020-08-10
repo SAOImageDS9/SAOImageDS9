@@ -130,6 +130,17 @@
 %token PACKBITS_
 %token DEFLATE_
 
+# old tokens
+%token DISCRETE_
+%token ERRORBAR_
+%token LINEARLINEAR_
+%token LOGLINEAR_
+%token LINEARLOG_
+%token LOGLOG_
+%token RANGE_
+%token TYPE_
+%token VIEW_
+
 %%
 
 #include yesno.trl
@@ -145,7 +156,9 @@ plot : line
  | BAR_ bar
  | SCATTER_ scatter
  | ERROR_ errorr
-
+ # backward compatibility
+ | NEW_ oldnew
+ 
 # File Menu
  | LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
@@ -193,6 +206,11 @@ plot : line
  # Data Menu
  | SHOW_ yesno {PlotCmdUpdateElement graph,ds,show $2}
  | NAME_ STRING_ {ProcessCmdCVAROpt PlotDataSetName $2}
+
+ # backward compatibility
+ | GRAPH_ oldGraph
+ # backward compatibility
+ | VIEW_ oldView
  ;
  
 # Line
@@ -213,6 +231,8 @@ line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,fill $2}
  | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,fill,color $3}
  | SHAPE_ lineshape
+# backward compatibility
+ | oldLine
  ;
 
 lineshape : linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $1}
@@ -440,6 +460,73 @@ dim : XY_ {set _ xy}
  | XYEX_ {set _ xyex}
  | XYEY_ {set _ xyey}
  | XYEXEY_ {set _ xyexey}
+ ;
+
+# backward compatibility
+# used by DAX
+oldnew : NAME_ STRING_ dummy {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ | NAME_ STRING_ dummy STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $4 $5 $6 $7}
+ ;
+
+dummy :
+ | LINE_
+ ;
+
+# backward compatibility
+# Really old stuff
+oldGraph : GRID_ oldGraphGrid
+ | LOG_ xy yesno {ProcessCmdCVAR "graph,axis,$2,log" $3 PlotChangeAxis}
+ | FLIP_ xy yesno {ProcessCmdCVAR "graph,axis,$2,flip" $3 PlotChangeAxis}
+ | FORMAT_ xy STRING_ {ProcessCmdCVAR "graph,axis,$2,format" $3 PlotChangeAxis}
+ | RANGE_ oldGraphRange
+ | LABELS_ oldGraphLabels
+ | TYPE_ oldGraphType
+ | SCALE_ oldGraphScale
+ ;
+
+oldGraphGrid : xy yesno {ProcessCmdCVAR "graph,axis,$1,grid" $2 PlotChangeAxis}
+ | yesno {ProcessCmdCVAR graph,axis,x,grid $1; ProcessCmdCVAR graph,axis,y,grid $1 PlotChangeAxis}
+ ;
+
+oldGraphRange : xy AUTO_ yesno {ProcessCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis}
+ | xy MIN_ numeric {ProcessCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis}
+ | xy MAX_ numeric {ProcessCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis}
+ ;
+
+oldGraphLabels : TITLE_ STRING_ {ProcessCmdCVAR graph,title $2 PlotChangeAxis}
+ | xyaxis STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeAxis}
+ | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotChangeLegend}
+ ;
+
+oldGraphType : LINE_
+ | BAR_
+ ;
+
+oldGraphScale : LINEARLINEAR_ {ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis}
+ | LINEARLOG_ {ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis}
+ | LOGLINEAR_ {ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis}
+ | LOGLOG_ {ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis}
+ ;
+
+oldLine : DISCRETE_ linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}
+ | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,line,width $3}
+ | dummy2 DASH_ yesno {PlotCmdUpdateElement graph,ds,line,dash $3}
+ | dummy2 STYLE_ INT_ {PlotCmdUpdateElement graph,ds,error $3}
+ ;
+
+dummy2 : STEP_
+ | LINEAR_
+ | QUADRATIC_
+ | ERRORBAR_
+ ; 
+
+# backward compatibility
+oldView : DISCRETE_ yesno {PlotCmdUpdateElement graph,ds,show $2}
+ | LINE_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,line,smooth linear}
+ | STEP_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,line,smooth step}
+ | QUADRATIC_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,line,smooth quadratic}
+ | ERROR_ yesno {PlotCmdUpdateElement graph,ds,error $2}
+ | ERRORBAR_ yesno {PlotCmdUpdateElement graph,ds,error $2}
  ;
 
 %%

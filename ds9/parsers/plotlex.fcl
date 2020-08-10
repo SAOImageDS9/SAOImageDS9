@@ -132,6 +132,16 @@ none	    {return $NONE_}
 packbits    {return $PACKBITS_}
 deflate	    {return $DEFLATE_}
 
+discrete    {return $DISCRETE_}
+errorbar    {return $ERRORBAR_}
+linearlinear {return $LINEARLINEAR_}
+loglinear   {return $LOGLINEAR_}
+linearlog   {return $LINEARLOG_}
+loglog	    {return $LOGLOG_}
+range	    {return $RANGE_}
+type	    {return $TYPE_}
+view	    {return $VIEW_}
+
 #include yesno.fin
 #include fonts.fin
 #include numeric.fin

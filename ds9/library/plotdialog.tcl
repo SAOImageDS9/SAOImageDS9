@@ -726,10 +726,4 @@ proc PlotUpdateMenus {varname} {
 		-menu $var(mb).datascatter
 	}
     }
-
-    if {[llength $var(graph,dss)] == 0} {
-	$var(mb) entryconfig [msgcat::mc {Data}] -state disabled
-    } else {
-	$var(mb) entryconfig [msgcat::mc {Data}] -state normal
-    }
 }

@@ -128,7 +128,6 @@ tiff	    {return $TIFF_}
 jpeg	    {return $JPEG_}
 png	    {return $PNG_}
 
-none	    {return $NONE_}
 packbits    {return $PACKBITS_}
 deflate	    {return $DEFLATE_}
 

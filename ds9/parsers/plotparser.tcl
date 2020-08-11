@@ -99,7 +99,7 @@ array set plot::table {
   56:265 reduce
   381:406,target 396
   377:277 reduce
-  356:0,target 71
+  356:0,target 67
   135:0 reduce
   95:0,target 1
   56:266 reduce
@@ -112,7 +112,7 @@ array set plot::table {
   233:259,target 84
   112:277 reduce
   325:0,target 221
-  64:0,target 66
+  64:0,target 68
   379:260,target 85
   379:259,target 84
   347:277 reduce
@@ -221,7 +221,7 @@ array set plot::table {
   92:277 reduce
   80:277,target 74
   79:277,target 25
-  386:277,target 119
+  386:277,target 121
   177:292 shift
   206:401 goto
   45:296,target 175
@@ -262,7 +262,7 @@ array set plot::table {
   185:277,target 79
   69:258,target 225
   34:304,target 157
-  241:277,target 103
+  241:277,target 106
   286:277,target 213
   67:257 reduce
   24:370,target 264
@@ -410,8 +410,8 @@ array set plot::table {
   183:343 shift
   83:277,target 5
   6:311,target 75
-  400:277,target 121
-  390:277,target 67
+  400:277,target 117
+  390:277,target 70
   234:257 shift
   274:0,target 244
   234:258 shift
@@ -477,8 +477,8 @@ array set plot::table {
   194:277 reduce
   345:277,target 16
   84:277,target 3
-  401:277,target 69
-  391:277,target 108
+  401:277,target 71
+  391:277,target 104
   39:261,target 86
   47:451,target 211
   374:0,target 245
@@ -501,7 +501,7 @@ array set plot::table {
   259:0 reduce
   134:277 reduce
   18:258 shift
-  312:0,target 117
+  312:0,target 119
   269:260 shift
   269:259 shift
   18:259 shift
@@ -644,8 +644,8 @@ array set plot::table {
   86:277,target 4
   21:317,target 120
   45:364,target 181
-  403:277,target 104
-  393:277,target 107
+  403:277,target 107
+  393:277,target 103
   109:277 reduce
   66:317,target 224
   16:0,target 1
@@ -690,7 +690,7 @@ array set plot::table {
   101:277,target 148
   215:275 shift
   43:384 shift
-  398:0,target 122
+  398:0,target 118
   202:277,target 325
   192:277,target 96
   0:282,target 4
@@ -859,7 +859,7 @@ array set plot::table {
   89:277,target 32
   66:0 reduce
   54:362 reduce
-  406:277,target 118
+  406:277,target 120
   396:277,target 248
   69:317,target 225
   356:277 reduce
@@ -929,7 +929,7 @@ array set plot::table {
   352:277,target 194
   99:0,target 27
   91:277,target 53
-  407:277,target 106
+  407:277,target 108
   397:277,target 404
   111:x,target 68
   71:317,target 236
@@ -998,7 +998,7 @@ array set plot::table {
   154:0,target 129
   353:277,target 196
   92:277,target 42
-  398:277,target 122
+  398:277,target 118
   123:0,target 43
   110:438 goto
   59:380 shift
@@ -1079,7 +1079,7 @@ array set plot::table {
   16:260 shift
   25:0 reduce
   410:277,target 234
-  409:277,target 120
+  409:277,target 122
   399:277,target 405
   367:277 reduce
   0:305 shift
@@ -1250,7 +1250,7 @@ array set plot::table {
   0:358 shift
   49:277,target 21
   50:277,target 23
-  356:277,target 71
+  356:277,target 67
   95:277,target 1
   0:359 shift
   0:360 shift
@@ -1301,7 +1301,7 @@ array set plot::table {
   247:0,target 139
   226:272,target 349
   143:277 reduce
-  312:277,target 117
+  312:277,target 119
   51:277,target 80
   378:277 reduce
   357:277,target 389
@@ -1358,7 +1358,7 @@ array set plot::table {
   313:277,target 126
   213:261,target 86
   41:370,target 263
-  358:277,target 70
+  358:277,target 66
   227:383,target 63
   316:0,target 125
   183:412,target 322
@@ -1458,7 +1458,7 @@ array set plot::table {
   68:262 reduce
   158:277,target 1
   22:401 goto
-  241:0,target 103
+  241:0,target 106
   154:277 reduce
   1:374,target 56
   12:381,target 61
@@ -1609,7 +1609,7 @@ array set plot::table {
   205:260 shift
   205:259 shift
   410:0,target 234
-  409:0,target 120
+  409:0,target 122
   305:277 reduce
   295:277 reduce
   205:261 shift
@@ -1699,7 +1699,7 @@ array set plot::table {
   100:0,target 144
   3:315 shift
   38:368 shift
-  406:0,target 118
+  406:0,target 120
   396:0,target 248
   311:277 shift
   165:296 shift
@@ -1796,8 +1796,8 @@ array set plot::table {
   130:382 shift
   60:277,target 229
   59:277,target 227
-  403:0,target 104
-  393:0,target 107
+  403:0,target 107
+  393:0,target 103
   366:277,target 392
   316:277 reduce
   130:383 shift
@@ -1890,8 +1890,8 @@ array set plot::table {
   130:382,target 62
   11:260,target 85
   11:259,target 84
-  400:0,target 121
-  390:0,target 67
+  400:0,target 117
+  390:0,target 70
   322:277 reduce
   186:0 reduce
   61:277 reduce
@@ -1902,7 +1902,7 @@ array set plot::table {
   405:440 goto
   36:411,target 185
   53:267,target 199
-  358:0,target 70
+  358:0,target 66
   68:262,target 223
   282:277 reduce
   141:347 shift
@@ -1984,7 +1984,7 @@ array set plot::table {
   253:0 reduce
   268:277,target 242
   17:277,target 100
-  386:0,target 119
+  386:0,target 121
   327:277 reduce
   324:277,target 220
   66:277 reduce
@@ -2067,7 +2067,7 @@ array set plot::table {
   42:257 shift
   325:277,target 221
   157:277 reduce
-  64:277,target 66
+  64:277,target 68
   4:Y shift
   20:443 goto
   42:258 shift
@@ -2338,7 +2338,7 @@ array set plot::table {
   52:299,target 213
   357:440 goto
   273:0,target 258
-  228:277,target 68
+  228:277,target 69
   22:0,target 1
   274:277,target 244
   23:277,target 2
@@ -2632,7 +2632,7 @@ array set plot::table {
   391:277 reduce
   39:261 shift
   47:451 goto
-  407:0,target 106
+  407:0,target 108
   284:0 reduce
   39:262 shift
   58:361 shift
@@ -2817,7 +2817,7 @@ array set plot::table {
   385:381,target 61
   336:277,target 8
   236:261,target 86
-  228:0,target 68
+  228:0,target 69
   219:404,target 343
   75:277,target 1
   34:364,target 162
@@ -2853,8 +2853,8 @@ array set plot::table {
   402:382,target 62
   392:382,target 62
   37:262,target 87
-  401:0,target 69
-  391:0,target 108
+  401:0,target 71
+  391:0,target 104
   6:285,target 74
   1:336,target 55
   136:277 reduce
@@ -3202,7 +3202,7 @@ array set plot::rules {
 }
 
 array set plot::rules {
-  122,dc 4
+  122,dc 6
   187,dc 1
   263,dc 1
   12,dc 1
@@ -3211,9 +3211,9 @@ array set plot::rules {
   180,dc 0
   179,dc 1
   255,dc 1
-  69,dc 6
-  70,dc 4
-  106,dc 6
+  69,dc 3
+  70,dc 5
+  106,dc 2
   9,dc 1
   172,dc 2
   247,dc 3
@@ -3244,7 +3244,7 @@ array set plot::rules {
   266,dc 1
   15,dc 1
   81,dc 1
-  117,dc 2
+  117,dc 4
   183,dc 1
   258,dc 1
   73,dc 2
@@ -3282,7 +3282,7 @@ array set plot::rules {
   269,dc 2
   18,dc 1
   84,dc 2
-  121,dc 4
+  121,dc 3
   186,dc 1
   262,dc 3
   11,dc 1
@@ -3290,7 +3290,7 @@ array set plot::rules {
   113,dc 3
   178,dc 1
   254,dc 1
-  68,dc 3
+  68,dc 2
   105,dc 3
   8,dc 1
   171,dc 2
@@ -3329,7 +3329,7 @@ array set plot::rules {
   182,dc 1
   257,dc 1
   72,dc 1
-  108,dc 4
+  108,dc 6
   174,dc 1
   250,dc 2
   249,dc 3
@@ -3359,8 +3359,8 @@ array set plot::rules {
   268,dc 2
   17,dc 1
   83,dc 2
-  119,dc 3
-  120,dc 6
+  119,dc 2
+  120,dc 5
   185,dc 1
   261,dc 3
   10,dc 1
@@ -3368,8 +3368,8 @@ array set plot::rules {
   112,dc 2
   177,dc 1
   253,dc 1
-  67,dc 5
-  104,dc 5
+  67,dc 4
+  104,dc 4
   7,dc 1
   170,dc 2
   169,dc 2
@@ -3405,8 +3405,8 @@ array set plot::rules {
   115,dc 0
   181,dc 1
   256,dc 1
-  71,dc 4
-  107,dc 4
+  71,dc 6
+  107,dc 5
   173,dc 2
   248,dc 3
   63,dc 2
@@ -3440,7 +3440,7 @@ array set plot::rules {
   267,dc 2
   16,dc 1
   82,dc 2
-  118,dc 5
+  118,dc 4
   184,dc 1
   260,dc 3
   259,dc 2
@@ -3448,8 +3448,8 @@ array set plot::rules {
   111,dc 3
   176,dc 1
   252,dc 2
-  66,dc 2
-  103,dc 2
+  66,dc 4
+  103,dc 4
   6,dc 1
   168,dc 0
   244,dc 2
@@ -3478,279 +3478,279 @@ array set plot::rules {
 }
 
 array set plot::rules {
-  41,line 259
-  37,line 251
-  34,line 248
-  31,line 244
-  27,line 237
-  24,line 233
-  272,line 612
-  21,line 228
-  268,line 608
-  17,line 221
-  265,line 602
-  14,line 216
-  262,line 597
-  11,line 211
-  258,line 591
-  255,line 588
-  252,line 581
-  248,line 575
-  245,line 570
-  242,line 565
-  238,line 561
-  9,line 207
-  235,line 554
-  6,line 203
-  232,line 545
-  3,line 200
-  228,line 539
-  225,line 534
-  222,line 528
-  218,line 521
-  215,line 518
-  212,line 513
-  208,line 507
-  198,line 492
-  205,line 504
-  195,line 487
-  202,line 496
-  192,line 484
-  188,line 479
-  185,line 473
-  182,line 468
-  178,line 462
-  175,line 455
-  172,line 450
-  168,line 446
-  165,line 441
-  162,line 436
-  158,line 430
-  155,line 425
-  152,line 422
-  148,line 416
-  145,line 411
-  142,line 406
-  138,line 400
-  135,line 394
-  132,line 391
-  128,line 385
-  125,line 382
-  122,line 378
+  41,line 258
+  37,line 250
+  34,line 247
+  31,line 243
+  27,line 236
+  24,line 232
+  272,line 611
+  21,line 227
+  268,line 607
+  17,line 220
+  265,line 601
+  14,line 215
+  262,line 596
+  11,line 210
+  258,line 590
+  255,line 587
+  252,line 580
+  248,line 574
+  245,line 569
+  242,line 564
+  238,line 560
+  9,line 206
+  235,line 553
+  6,line 202
+  232,line 544
+  3,line 199
+  228,line 538
+  225,line 533
+  222,line 527
+  218,line 520
+  215,line 517
+  212,line 512
+  208,line 506
+  198,line 491
+  205,line 503
+  195,line 486
+  202,line 495
+  192,line 483
+  188,line 478
+  185,line 472
+  182,line 467
+  178,line 461
+  175,line 454
+  172,line 449
+  168,line 445
+  165,line 440
+  162,line 435
+  158,line 429
+  155,line 424
+  152,line 421
+  148,line 415
+  145,line 410
+  142,line 405
+  138,line 399
+  135,line 393
+  132,line 390
+  128,line 384
+  125,line 381
+  122,line 377
   118,line 372
-  115,line 368
-  99,line 342
-  112,line 362
-  96,line 339
-  108,line 357
-  93,line 333
+  115,line 367
+  99,line 341
+  112,line 361
+  96,line 338
+  108,line 356
+  93,line 332
   105,line 352
-  89,line 329
-  90,line 330
+  89,line 328
+  90,line 329
   102,line 348
-  86,line 326
-  83,line 321
-  79,line 315
-  80,line 316
-  76,line 311
-  73,line 308
-  69,line 303
-  70,line 304
+  86,line 325
+  83,line 320
+  79,line 314
+  80,line 315
+  76,line 310
+  73,line 307
+  69,line 301
+  70,line 302
   66,line 297
-  63,line 291
-  59,line 284
-  60,line 285
-  56,line 279
-  53,line 276
-  49,line 270
-  50,line 272
-  46,line 264
-  43,line 261
-  39,line 257
-  40,line 258
-  36,line 250
-  33,line 247
-  30,line 242
-  29,line 241
-  26,line 235
-  23,line 232
-  271,line 611
-  20,line 228
-  19,line 225
-  267,line 607
-  16,line 220
-  264,line 601
-  13,line 215
-  261,line 596
-  10,line 208
-  257,line 590
-  254,line 585
-  251,line 580
-  247,line 574
-  244,line 567
-  241,line 564
-  237,line 560
-  8,line 206
-  234,line 551
-  5,line 202
-  231,line 544
-  2,line 199
-  227,line 538
-  224,line 533
-  221,line 527
-  217,line 520
-  214,line 517
-  211,line 510
-  207,line 506
-  197,line 489
-  204,line 501
-  194,line 486
-  201,line 495
-  191,line 482
-  187,line 475
-  184,line 472
-  181,line 467
-  177,line 459
-  174,line 454
-  171,line 449
-  167,line 443
-  164,line 440
-  161,line 435
-  157,line 429
-  154,line 424
-  151,line 419
-  147,line 413
-  144,line 410
-  141,line 403
-  137,line 397
-  134,line 393
-  131,line 390
-  127,line 384
-  124,line 381
-  121,line 377
+  63,line 290
+  59,line 283
+  60,line 284
+  56,line 278
+  53,line 275
+  49,line 269
+  50,line 271
+  46,line 263
+  43,line 260
+  39,line 256
+  40,line 257
+  36,line 249
+  33,line 246
+  30,line 241
+  29,line 240
+  26,line 234
+  23,line 231
+  271,line 610
+  20,line 227
+  19,line 224
+  267,line 606
+  16,line 219
+  264,line 600
+  13,line 214
+  261,line 595
+  10,line 207
+  257,line 589
+  254,line 584
+  251,line 579
+  247,line 573
+  244,line 566
+  241,line 563
+  237,line 559
+  8,line 205
+  234,line 550
+  5,line 201
+  231,line 543
+  2,line 198
+  227,line 537
+  224,line 532
+  221,line 526
+  217,line 519
+  214,line 516
+  211,line 509
+  207,line 505
+  197,line 488
+  204,line 500
+  194,line 485
+  201,line 494
+  191,line 481
+  187,line 474
+  184,line 471
+  181,line 466
+  177,line 458
+  174,line 453
+  171,line 448
+  167,line 442
+  164,line 439
+  161,line 434
+  157,line 428
+  154,line 423
+  151,line 418
+  147,line 412
+  144,line 409
+  141,line 402
+  137,line 396
+  134,line 392
+  131,line 389
+  127,line 383
+  124,line 380
+  121,line 375
   117,line 370
-  114,line 364
-  98,line 341
-  111,line 361
-  95,line 336
-  107,line 356
-  92,line 332
+  114,line 363
+  98,line 340
+  111,line 360
+  95,line 335
+  107,line 354
+  92,line 331
   104,line 351
-  88,line 328
-  101,line 347
-  85,line 323
-  82,line 320
-  78,line 313
-  75,line 310
-  72,line 307
+  88,line 327
+  101,line 346
+  85,line 322
+  82,line 319
+  78,line 312
+  75,line 309
+  72,line 306
   68,line 300
   65,line 296
-  62,line 290
-  58,line 281
-  55,line 278
-  52,line 274
-  48,line 268
-  45,line 263
-  42,line 260
-  38,line 254
-  35,line 249
-  32,line 246
-  28,line 240
-  25,line 234
-  22,line 229
-  270,line 610
-  269,line 609
-  18,line 224
-  266,line 603
-  15,line 219
-  263,line 600
-  12,line 212
-  260,line 595
-  259,line 594
-  256,line 589
-  253,line 584
-  250,line 579
-  249,line 576
-  246,line 571
-  243,line 566
-  240,line 563
-  239,line 562
-  236,line 555
-  7,line 204
-  233,line 550
-  4,line 201
-  230,line 543
-  229,line 542
-  1,line 198
-  226,line 535
-  223,line 532
-  220,line 526
-  219,line 524
-  216,line 519
-  213,line 514
-  210,line 509
-  209,line 508
-  199,line 493
-  206,line 505
-  196,line 488
-  203,line 500
-  193,line 485
-  200,line 494
-  190,line 481
-  189,line 480
-  186,line 474
-  183,line 469
-  180,line 466
-  179,line 463
-  176,line 458
-  173,line 451
-  170,line 448
-  169,line 447
-  166,line 442
-  163,line 439
-  160,line 432
-  159,line 431
-  156,line 426
-  153,line 423
-  149,line 417
-  150,line 418
-  146,line 412
-  143,line 407
-  139,line 401
-  140,line 402
-  136,line 396
-  133,line 392
-  129,line 388
-  130,line 389
-  126,line 383
-  123,line 380
+  62,line 289
+  58,line 280
+  55,line 277
+  52,line 273
+  48,line 267
+  45,line 262
+  42,line 259
+  38,line 253
+  35,line 248
+  32,line 245
+  28,line 239
+  25,line 233
+  22,line 228
+  270,line 609
+  269,line 608
+  18,line 223
+  266,line 602
+  15,line 218
+  263,line 599
+  12,line 211
+  260,line 594
+  259,line 593
+  256,line 588
+  253,line 583
+  250,line 578
+  249,line 575
+  246,line 570
+  243,line 565
+  240,line 562
+  239,line 561
+  236,line 554
+  7,line 203
+  233,line 549
+  4,line 200
+  230,line 542
+  229,line 541
+  1,line 197
+  226,line 534
+  223,line 531
+  220,line 525
+  219,line 523
+  216,line 518
+  213,line 513
+  210,line 508
+  209,line 507
+  199,line 492
+  206,line 504
+  196,line 487
+  203,line 499
+  193,line 484
+  200,line 493
+  190,line 480
+  189,line 479
+  186,line 473
+  183,line 468
+  180,line 465
+  179,line 462
+  176,line 457
+  173,line 450
+  170,line 447
+  169,line 446
+  166,line 441
+  163,line 438
+  160,line 431
+  159,line 430
+  156,line 425
+  153,line 422
+  149,line 416
+  150,line 417
+  146,line 411
+  143,line 406
+  139,line 400
+  140,line 401
+  136,line 395
+  133,line 391
+  129,line 387
+  130,line 388
+  126,line 382
+  123,line 379
   119,line 373
-  120,line 376
+  120,line 374
   116,line 369
-  113,line 363
-  97,line 340
-  109,line 359
-  110,line 360
-  94,line 335
-  106,line 355
-  91,line 331
+  113,line 362
+  97,line 339
+  109,line 358
+  110,line 359
+  94,line 334
+  106,line 353
+  91,line 330
   103,line 349
-  87,line 327
-  100,line 343
-  84,line 322
-  81,line 319
-  77,line 312
-  74,line 309
+  87,line 326
+  100,line 342
+  84,line 321
+  81,line 318
+  77,line 311
+  74,line 308
   21,e 1
-  71,line 305
+  71,line 304
   67,line 299
-  64,line 295
-  61,line 288
-  57,line 280
-  54,line 277
-  51,line 273
-  47,line 265
-  44,line 262
+  64,line 294
+  61,line 287
+  57,line 279
+  54,line 276
+  51,line 272
+  47,line 264
+  44,line 261
 }
 
 array set plot::lr1_table {
@@ -4072,8 +4072,8 @@ array set plot::lr1_table {
   228 {{196 {0 277} 2} {13 {0 277} 0} {14 {0 277} 0}}
   229 {{197 {0 277} 2} {15 {0 277} 0} {16 {0 277} 0} {17 {0 277} 0}}
   230 {{195 {0 277} 2} {11 {0 277} 0} {12 {0 277} 0}}
-  231 {{67 {0 277} 3} {69 {0 277} 3} {70 {0 277} 3} {71 {0 277} 3} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
-  232 {{68 {0 277} 3}}
+  231 {{66 {0 277} 3} {67 {0 277} 3} {70 {0 277} 3} {71 {0 277} 3} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  232 {{69 {0 277} 3}}
   245,trans {}
   233 {{182 {0 277} 1}}
   234 {{181 {0 277} 1}}
@@ -4090,9 +4090,9 @@ array set plot::lr1_table {
   241 {{206 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
   242 {{210 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
   243 {{209 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
-  244 {{104 {0 277} 2} {105 {0 277} 2} {106 {0 277} 2} {107 {0 277} 2} {108 {0 277} 2} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  244 {{103 {0 277} 2} {104 {0 277} 2} {105 {0 277} 2} {107 {0 277} 2} {108 {0 277} 2} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   158,trans {{257 82} {258 83} {259 84} {260 85} {261 86} {262 87} {292 326} {401 327}}
-  245 {{103 {0 277} 2}}
+  245 {{106 {0 277} 2}}
   246 {{110 {0 277} 2}}
   247 {{111 {0 277} 2}}
   248 {{113 {0 277} 2}}
@@ -4238,16 +4238,16 @@ array set plot::lr1_table {
   319 {{169 {0 277} 2}}
   320 {{171 {0 277} 2}}
   60 {{229 {0 277} 1}}
-  59 {{67 {0 277} 2} {68 {0 277} 2} {69 {0 277} 2} {70 {0 277} 2} {71 {0 277} 2} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  59 {{66 {0 277} 2} {67 {0 277} 2} {69 {0 277} 2} {70 {0 277} 2} {71 {0 277} 2} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   321 {{172 {0 277} 2}}
   154,trans {}
   61 {{230 {0 277} 1}}
   322 {{35 {0 277} 3}}
   62 {{231 {0 277} 1}}
-  323 {{118 {0 277} 2} {119 {0 277} 2} {120 {0 277} 2} {121 {0 277} 2} {122 {0 277} 2} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  323 {{117 {0 277} 2} {118 {0 277} 2} {120 {0 277} 2} {121 {0 277} 2} {122 {0 277} 2} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   63 {{232 {0 277} 1}}
-  324 {{117 {0 277} 2}}
-  64 {{66 {0 277} 2}}
+  324 {{119 {0 277} 2}}
+  64 {{68 {0 277} 2}}
   325 {{126 {0 277} 2}}
   239,trans {{277 373}}
   240,trans {{257 82} {258 83} {259 84} {260 85} {261 86} {262 87} {401 374}}
@@ -4344,9 +4344,9 @@ array set plot::lr1_table {
   408,trans {}
   398,trans {}
   367 {{195 {0 277} 3}}
-  368 {{71 {0 277} 4}}
-  369 {{67 {0 277} 4} {69 {0 277} 4} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
-  370 {{70 {0 277} 4}}
+  368 {{67 {0 277} 4}}
+  369 {{70 {0 277} 4} {71 {0 277} 4} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  370 {{66 {0 277} 4}}
   151,trans {{277 322}}
   371 {{208 {0 277} 3}}
   372 {{207 {0 277} 3}}
@@ -4356,7 +4356,7 @@ array set plot::lr1_table {
   375 {{206 {0 277} 3}}
   376 {{210 {0 277} 3}}
   377 {{209 {0 277} 3}}
-  378 {{104 {0 277} 3} {106 {0 277} 3} {107 {0 277} 3} {108 {0 277} 3} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  378 {{103 {0 277} 3} {104 {0 277} 3} {107 {0 277} 3} {108 {0 277} 3} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   61,trans {}
   379 {{105 {0 277} 3}}
   380 {{110 {0 277} 3}}
@@ -4377,16 +4377,16 @@ array set plot::lr1_table {
   389 {{251 {0 277} 2}}
   390 {{238 {0 277} 3}}
   400 {{85 {0 277} 3}}
-  401 {{69 {0 277} 5} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  401 {{71 {0 277} 5} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   391 {{247 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  402 {{67 {0 277} 5}}
+  402 {{70 {0 277} 5}}
   235,trans {}
   392 {{249 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
-  403 {{108 {0 277} 4}}
+  403 {{104 {0 277} 4}}
   393 {{248 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
-  404 {{104 {0 277} 4} {106 {0 277} 4} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  404 {{107 {0 277} 4} {108 {0 277} 4} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   394 {{44 {0 277} 4}}
-  405 {{107 {0 277} 4}}
+  405 {{103 {0 277} 4}}
   395 {{236 {0 277} 1}}
   406 {{247 {0 277} 3}}
   59,trans {{277 231} {380 60} {381 61} {382 62} {383 63} {440 232}}
@@ -4394,28 +4394,28 @@ array set plot::lr1_table {
   396 {{233 {0 277} 3} {234 {0 277} 3}}
   321,trans {}
   407 {{249 {0 277} 3}}
-  397 {{118 {0 277} 3} {120 {0 277} 3} {121 {0 277} 3} {122 {0 277} 3} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  397 {{117 {0 277} 3} {118 {0 277} 3} {120 {0 277} 3} {122 {0 277} 3} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   408 {{248 {0 277} 3}}
   8,trans {}
-  398 {{119 {0 277} 3}}
-  410 {{122 {0 277} 4}}
+  398 {{121 {0 277} 3}}
+  410 {{118 {0 277} 4}}
   409 {{234 {0 277} 4}}
   399 {{128 {0 277} 3}}
   406,trans {}
-  411 {{118 {0 277} 4} {120 {0 277} 4} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  411 {{120 {0 277} 4} {122 {0 277} 4} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   396,trans {{277 409}}
-  412 {{121 {0 277} 4}}
-  413 {{69 {0 277} 6}}
-  414 {{106 {0 277} 5} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  412 {{117 {0 277} 4}}
+  413 {{71 {0 277} 6}}
+  414 {{108 {0 277} 5} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
   148,trans {{316 313} {351 314} {427 321}}
-  415 {{104 {0 277} 5}}
+  415 {{107 {0 277} 5}}
   416 {{234 {0 277} 5}}
-  417 {{120 {0 277} 5} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
-  418 {{118 {0 277} 5}}
+  417 {{122 {0 277} 5} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
+  418 {{120 {0 277} 5}}
   234,trans {}
   420 {{234 {0 277} 6} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0}}
-  419 {{106 {0 277} 6}}
-  421 {{120 {0 277} 6}}
+  419 {{108 {0 277} 6}}
+  421 {{122 {0 277} 6}}
   422 {{234 {0 277} 7}}
   58,trans {{263 221} {264 222} {265 223} {266 224} {267 225} {308 226} {361 227} {362 228} {370 229} {377 230}}
   319,trans {}
@@ -4676,58 +4676,58 @@ array set plot::token_id_table {
   361,title SIZE
   446,title {}
   274,t 0
-  451,line 606
-  447,line 583
+  451,line 605
+  447,line 582
   274,title ITALIC
   326,t 0
   359,title SHAPE
   360,title SHOW
-  444,line 569
+  444,line 568
   368,t 0
   445,title {}
-  441,line 549
+  441,line 548
   421,t 1
   273,title ROMAN
-  437,line 523
+  437,line 522
   358,title SELECT
-  434,line 503
+  434,line 502
   444,title {}
   288,t 0
-  431,line 477
+  431,line 476
   341,t 0
   272,title BOLD
-  427,line 457
+  427,line 456
   357,title SCROSS
   383,t 0
-  424,line 438
+  424,line 437
   Y,title {}
   443,title {}
-  421,line 421
+  421,line 420
   435,t 1
   271,title NORMAL
-  417,line 399
+  417,line 398
   261,t 0
   356,title SCATTER
-  414,line 346
+  414,line 345
   X,title {}
   313,t 0
   442,title {}
-  411,line 318
+  411,line 317
   355,t 0
   270,title COURIER
   269,title HELVETICA
-  397,line 161
-  407,line 227
+  397,line 160
+  407,line 226
   355,title SCALE
   397,t 0
   407,t 1
-  394,line 158
-  404,line 214
+  394,line 157
+  404,line 213
   441,title {}
   450,t 1
   449,t 1
-  391,line 153
-  401,line 197
+  391,line 152
+  401,line 196
   275,t 0
   268,title TIMES
   387,line 147
@@ -4835,7 +4835,7 @@ array set plot::token_id_table {
   274,line 25
   452,t 1
   428,title {}
-  Y,line 534
+  Y,line 533
   271,line 22
   277,t 0
   267,line 18
@@ -4875,14 +4875,14 @@ array set plot::token_id_table {
   X,t 0
   335,title NONE
   425,t 1
-  450,line 599
-  449,line 593
+  450,line 598
+  449,line 592
   421,title {}
-  446,line 578
+  446,line 577
   303,t 0
   293,t 0
   257 YES_
-  443,line 559
+  443,line 558
   258 NO_
   259 ON_
   260 OFF_
@@ -4894,22 +4894,22 @@ array set plot::token_id_table {
   345,t 0
   419,title {}
   420,title {}
-  439,line 537
-  440,line 541
+  439,line 536
+  440,line 540
   265 FONTSLANT_
   266 FONTSTYLE_
   267 FONTWEIGHT_
   268 TIMES_
   270 COURIER_
   269 HELVETICA_
-  436,line 516
+  436,line 515
   271 NORMAL_
   387,t 0
   272 BOLD_
   273 ROMAN_
   274 ITALIC_
   275 INT_
-  433,line 498
+  433,line 497
   276 REAL_
   333,title NAME
   277 STRING_
@@ -4920,15 +4920,15 @@ array set plot::token_id_table {
   279 ADD_
   281 AUTO_
   418,title {}
-  429,line 465
-  430,line 471
+  429,line 464
+  430,line 470
   282 AXIS_
   283 BACKGROUND_
   265,t 0
   284 BAR_
   285 BORDER_
   286 BOTTOM_
-  426,line 453
+  426,line 452
   287 CAP_
   288 CATROM_
   300 DATA_
@@ -4939,7 +4939,7 @@ array set plot::token_id_table {
   291 CLOSE_
   302 DELETE_
   292 COLOR_
-  423,line 434
+  423,line 433
   303 DESTINATION_
   293 COLUMN_
   332,title MODE
@@ -4954,8 +4954,8 @@ array set plot::token_id_table {
   297 CUBIC_
   307 EXPORT_
   417,title {}
-  419,line 409
-  420,line 415
+  419,line 408
+  420,line 414
   298 CURRENT_
   308 FAMILY_
   299 DASH_
@@ -4965,24 +4965,24 @@ array set plot::token_id_table {
   312 FLIP_
   313 FOREGROUND_
   412,t 1
-  416,line 387
+  416,line 386
   314 FORMAT_
   315 GRAPH_
   316 GRAY_
   317 GRID_
   318 LABELS_
-  413,line 338
+  413,line 337
   319 LANDSCAPE_
   320 LAYOUT_
   331,title MIN
   321 LEFT_
-  error,line 196
+  error,line 195
   322 LEGAL_
   323 LEGEND_
   324 LETTER_
-  399,line 163
-  409,line 231
-  410,line 294
+  399,line 162
+  409,line 230
+  410,line 293
   416,title {}
   280,t 0
   279,t 0
@@ -4992,16 +4992,16 @@ array set plot::token_id_table {
   328 LOAD_
   329 LOG_
   330 MAX_
-  396,line 160
-  406,line 223
+  396,line 159
+  406,line 222
   331 MIN_
   332 MODE_
   332,t 0
   333 NAME_
   334 NEW_
   335 NONE_
-  393,line 157
-  403,line 210
+  393,line 156
+  403,line 209
   329,title LOG
   330,title MAX
   336 NUMBERS_
@@ -5012,8 +5012,8 @@ array set plot::token_id_table {
   340 PAGESIZE_
   341 PALETTE_
   389,line 149
-  390,line 152
-  400,line 164
+  390,line 151
+  400,line 163
   415,title {}
   342 PLOTAREA_
   Y,t 0
@@ -5194,7 +5194,7 @@ array set plot::token_id_table {
   389,t 0
   390,t 0
   400,t 0
-  y,line 533
+  y,line 532
   316,line 73
   442,t 1
   313,line 70
@@ -5233,7 +5233,7 @@ array set plot::token_id_table {
   273,line 24
   376,t 0
   317,title GRID
-  X,line 532
+  X,line 531
   270,line 21
   269,line 20
   393,title ERRORBAR
@@ -5278,55 +5278,55 @@ array set plot::token_id_table {
   386,title GIF
   297,t 0
   307,t 0
-  452,line 613
+  452,line 612
   349,t 0
   350,t 0
   299,title DASH
   309,title FILE
   310,title FILENAME
-  448,line 587
+  448,line 586
   385,title YAXIS
   392,t 0
   402,t 1
-  445,line 573
+  445,line 572
   444,t 1
-  442,line 553
+  442,line 552
   298,title CURRENT
   270,t 0
   269,t 0
   308,title FAMILY
-  438,line 531
+  438,line 530
   384,title XAXIS
   322,t 0
-  435,line 512
+  435,line 511
   364,t 0
-  432,line 491
+  432,line 490
   297,title CUBIC
   307,title EXPORT
-  428,line 461
+  428,line 460
   416,t 1
   383,title XYEXEY
-  425,line 445
-  422,line 428
+  425,line 444
+  422,line 427
   284,t 0
   296,title CROSS
   306,title ERROR
-  418,line 405
+  418,line 404
   382,title XYEY
   336,t 0
-  415,line 367
+  415,line 366
   378,t 0
-  412,line 325
+  412,line 324
   295,title CONFIG
   305,title DUPLICATE
-  398,line 162
-  408,line 228
+  398,line 161
+  408,line 227
   431,t 1
   381,title XYEX
-  395,line 159
-  405,line 218
-  392,line 156
-  402,line 205
+  395,line 158
+  405,line 217
+  392,line 155
+  402,line 204
   298,t 0
   308,t 0
   304,title DIAMOND
@@ -5381,7 +5381,7 @@ array set plot::token_id_table {
   309,t 0
   310,t 0
   374,title TITLE
-  335,line 151
+  335,line 92
   352,t 0
   332,line 89
   287,title CAP
@@ -5397,7 +5397,7 @@ array set plot::token_id_table {
   318,line 75
   324,t 0
   372,title TABLOID
-  x,line 531
+  x,line 530
   315,line 72
   366,t 0
   312,line 68
@@ -5551,12 +5551,12 @@ proc plot::yyparse {} {
                     61 { ProcessCmdCVAROpt PlotDataSetName $2 }
                     64 { PlotCmdNew {}; PlotCmdLine {} {} {} xy }
                     65 { PlotCmdNew {}; PlotCmdLine {} {} {} xy }
-                    66 { PlotCmdNewFile $1 {}; PlotCmdLine {} {} {} $2 }
-                    67 { PlotCmdNewFile $1 {}; PlotCmdLine $2 $3 $4 $5 }
-                    68 { PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3 }
-                    69 { PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6 }
-                    70 { PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4 }
-                    71 { PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4 }
+                    66 { PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4 }
+                    67 { PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4 }
+                    68 { PlotCmdNewFile $1 {}; PlotCmdLine {} {} {} $2 }
+                    69 { PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3 }
+                    70 { PlotCmdNewFile $1 {}; PlotCmdLine $2 $3 $4 $5 }
+                    71 { PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6 }
                     72 { PlotCmdNew {}; PlotCmdAnalysisPlotStdin line }
                     73 { PlotCmdUpdateElement graph,ds,line,smooth $2 }
                     74 { PlotCmdUpdateElement graph,ds,line,color $2 }
@@ -5586,12 +5586,12 @@ proc plot::yyparse {} {
                     100 { set _ catrom }
                     101 { PlotCmdNew {}; PlotCmdBar {} {} {} xy }
                     102 { PlotCmdNew {}; PlotCmdBar {} {} {} xy }
-                    103 { PlotCmdNewFile $1 {}; PlotCmdBar {} {} {} $2 }
-                    104 { PlotCmdNewFile $1 {}; PlotCmdBar $2 $3 $4 $5 }
+                    103 { PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4 }
+                    104 { PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4 }
                     105 { PlotCmdNewFile $1 $2; PlotCmdBar {} {} {} $3 }
-                    106 { PlotCmdNewFile $1 $2; PlotCmdBar $3 $4 $5 $6 }
-                    107 { PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4 }
-                    108 { PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4 }
+                    106 { PlotCmdNewFile $1 {}; PlotCmdBar {} {} {} $2 }
+                    107 { PlotCmdNewFile $1 {}; PlotCmdBar $2 $3 $4 $5 }
+                    108 { PlotCmdNewFile $1 $2; PlotCmdBar $3 $4 $5 $6 }
                     109 { PlotCmdNew {}; PlotCmdAnalysisPlotStdin bar }
                     110 { PlotCmdUpdateElement graph,ds,bar,border,color $3 }
                     111 { PlotCmdUpdateElement graph,ds,bar,border,width $3 }
@@ -5600,12 +5600,12 @@ proc plot::yyparse {} {
                     114 { PlotCmdUpdateElement graph,ds,bar,width $2 }
                     115 { PlotCmdNew {}; PlotCmdScatter {} {} {} xy }
                     116 { PlotCmdNew {}; PlotCmdScatter {} {} {} xy }
-                    117 { PlotCmdNewFile $1 {}; PlotCmdScatter {} {} {} $2 }
-                    118 { PlotCmdNewFile $1 {}; PlotCmdScatter $2 $3 $4 $5 }
-                    119 { PlotCmdNewFile $1 $2; PlotCmdScatter {} {} {} $3 }
-                    120 { PlotCmdNewFile $1 $2; PlotCmdScatter $3 $4 $5 $6 }
-                    121 { PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4 }
-                    122 { PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4 }
+                    117 { PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4 }
+                    118 { PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4 }
+                    119 { PlotCmdNewFile $1 {}; PlotCmdScatter {} {} {} $2 }
+                    120 { PlotCmdNewFile $1 {}; PlotCmdScatter $2 $3 $4 $5 }
+                    121 { PlotCmdNewFile $1 $2; PlotCmdScatter {} {} {} $3 }
+                    122 { PlotCmdNewFile $1 $2; PlotCmdScatter $3 $4 $5 $6 }
                     123 { PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter }
                     124 { PlotCmdUpdateElement graph,ds,scatter,shape,symbol $1 }
                     125 { PlotCmdUpdateElement graph,ds,scatter,shape,symbol $2 }

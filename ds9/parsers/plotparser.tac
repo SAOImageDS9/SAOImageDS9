@@ -126,7 +126,6 @@
 %token JPEG_
 %token PNG_
 
-%token NONE_
 %token PACKBITS_
 %token DEFLATE_
 
@@ -216,15 +215,15 @@ plot : line
 # Line
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
  | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine {} {} {} $2}
- | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine $2 $3 $4 $5}
 
- | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3}
- | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6}
-
-# xpa only
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
+
+ | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine {} {} {} $2}
+ | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine $2 $3 $4 $5}
+ | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6}
+
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin line}
 
  | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,line,smooth $2}
@@ -268,15 +267,15 @@ smooth : STEP_ {set _ step}
 # Bar
 bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | NEW_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
- | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar {} {} {} $2}
- | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar $2 $3 $4 $5}
 
- | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar {} {} {} $3}
- | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar $3 $4 $5 $6}
-
-# xpa only
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
+
+ | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar {} {} {} $3}
+ | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar {} {} {} $2}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar $2 $3 $4 $5}
+ | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar $3 $4 $5 $6}
+
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin bar}
 
  | BORDER_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,border,color $3}
@@ -289,15 +288,15 @@ bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
 # Scatter
 scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
  | NEW_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
+
+ | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
+
  | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdScatter {} {} {} $2}
  | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdScatter $2 $3 $4 $5}
-
  | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdScatter {} {} {} $3}
  | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdScatter $3 $4 $5 $6}
 
-# xpa only
- | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
- | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter}
 
  | scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $1}

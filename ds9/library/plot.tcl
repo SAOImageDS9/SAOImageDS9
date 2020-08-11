@@ -9,7 +9,7 @@ proc PlotDef {} {
 
     set iap(tt) {ap}
     set iap(plots) {}
-    set iap(unique) 0
+    set iap(unique) 1
 
     set iap(jpeg,quality) 75
     set iap(tiff,compress) none

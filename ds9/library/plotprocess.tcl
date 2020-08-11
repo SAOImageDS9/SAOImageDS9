@@ -234,8 +234,12 @@ proc PlotCmdNew {name} {
     set parse(buf) {}
 }
 
-proc PlotCmdNewFile {fn} {
+proc PlotCmdNewFile {fn name} {
     global parse
+
+    if {$name != {}} {
+	set parse(tt) $name
+    }
 
     if {[file exists $fn]} {
 	set ch [open $fn r]

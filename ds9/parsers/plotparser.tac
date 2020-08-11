@@ -216,8 +216,11 @@ plot : line
 # Line
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
  | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | STRING_ dim {PlotCmdNewFile $1; PlotCmdLine {} {} {} $2}
- | STRING_ STRING_ axistitle axistitle dim {PlotCmdNewFile $1; PlotCmdLine $2 $3 $4 $5}
+ | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine {} {} {} $2}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine $2 $3 $4 $5}
+
+ | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3}
+ | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6}
 
 # xpa only
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
@@ -265,8 +268,11 @@ smooth : STEP_ {set _ step}
 # Bar
 bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | NEW_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
- | STRING_ dim {PlotCmdNewFile $1; PlotCmdBar {} {} {} $2}
- | STRING_ STRING_ axistitle axistitle dim {PlotCmdNewFile $1; PlotCmdBar $2 $3 $4 $5}
+ | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar {} {} {} $2}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar $2 $3 $4 $5}
+
+ | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar {} {} {} $3}
+ | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar $3 $4 $5 $6}
 
 # xpa only
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
@@ -283,8 +289,11 @@ bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
 # Scatter
 scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
  | NEW_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
- | STRING_ dim {PlotCmdNewFile $1; PlotCmdScatter {} {} {} $2}
- | STRING_ STRING_ axistitle axistitle dim {PlotCmdNewFile $1; PlotCmdScatter $2 $3 $4 $5}
+ | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdScatter {} {} {} $2}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdScatter $2 $3 $4 $5}
+
+ | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdScatter {} {} {} $3}
+ | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdScatter $3 $4 $5 $6}
 
 # xpa only
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
@@ -448,10 +457,6 @@ xy : 'x' {set _ x}
  | 'Y' {set _ y}
  ;
 
-axistitle : STRING_ {set _ $1}
- | xy {set _ $1}
- ;
-
 xyaxis : XAXIS_ {set _ x}
  | YAXIS_ {set _ y}
  ;
@@ -464,8 +469,8 @@ dim : XY_ {set _ xy}
 
 # backward compatibility
 # used by DAX
-oldnew : NAME_ STRING_ dummy {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | NAME_ STRING_ dummy STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $4 $5 $6 $7}
+oldnew : NAME_ STRING_ dummy {PlotCmdNew $2; PlotCmdLine {} {} {} xy}
+ | NAME_ STRING_ dummy STRING_ STRING_ STRING_ dim {PlotCmdNew $2; PlotCmdLine $4 $5 $6 $7}
  ;
 
 dummy :

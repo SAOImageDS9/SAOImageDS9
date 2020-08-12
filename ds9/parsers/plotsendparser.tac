@@ -110,14 +110,14 @@ lineshape : {ProcessSendCmdCVARGet graph,ds,line,shape,symbol}
 bar : BORDER_ COLOR_ {ProcessSendCmdCVARGet graph,ds,bar,border,color}
  | BORDER_ WIDTH_ {ProcessSendCmdCVARGet graph,ds,bar,border,width}
  | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,bar,fill}
- | FILL_ COLOR_ {ProcessSendCmdCVARGet graph,ds,bar,color}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,bar,color}
  | WIDTH_ {ProcessSendCmdCVARGet graph,ds,bar,width}
  ;
 
-scatter : {ProcessSendCmdCVARGet graph,ds,scatter,shape,symbol}
- | SYMBOL_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,symbol}
- | COLOR_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,color}
- | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,scatter,shape,fill}
+scatter : {ProcessSendCmdCVARGet graph,ds,scatter,symbol}
+ | SYMBOL_ {ProcessSendCmdCVARGet graph,ds,scatter,symbol}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,scatter,color}
+ | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,scatter,fill}
  ;
 
 errorr : {ProcessSendCmdCVARGetYesNo graph,ds,error}

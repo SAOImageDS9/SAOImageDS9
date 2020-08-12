@@ -48,50 +48,40 @@ proc PlotBarMenus {varname} {
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).databar add separator
+    $var(mb).databar add cascade -label [msgcat::mc {Border Color}] \
+	-menu $var(mb).databar.bordercolor
+    $var(mb).databar add cascade -label [msgcat::mc {Border Width}] \
+	-menu $var(mb).databar.borderwidth
+    $var(mb).databar add checkbutton -label [msgcat::mc {Fill}] \
+	-variable ${varname}(graph,ds,bar,fill) \
+	-command [list PlotBarUpdateElement $varname]
     $var(mb).databar add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).databar.color
-    $var(mb).databar add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).databar.width
-    $var(mb).databar add cascade -label [msgcat::mc {Fill}] \
-	-menu $var(mb).databar.fill
     $var(mb).databar add cascade -label [msgcat::mc {Error}] \
 	-menu $var(mb).databar.error
     $var(mb).databar add separator
     $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    ColorMenu $var(mb).databar.color $varname graph,ds,bar,border,color \
+    ColorMenu $var(mb).databar.bordercolor $varname graph,ds,bar,border,color \
 	[list PlotBarUpdateElement $varname]
 
     # Width
-    ThemeMenu $var(mb).databar.width
-    $var(mb).databar.width add radiobutton \
-	-label {0} -variable ${varname}(graph,ds,bar,border,width) \
-	-value 0 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
+    ThemeMenu $var(mb).databar.borderwidth
+    $var(mb).databar.borderwidth add radiobutton \
 	-label {1} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 1 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
+    $var(mb).databar.borderwidth add radiobutton \
 	-label {2} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 2 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
+    $var(mb).databar.borderwidth add radiobutton \
 	-label {3} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 3 -command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.width add radiobutton \
+    $var(mb).databar.borderwidth add radiobutton \
 	-label {4} -variable ${varname}(graph,ds,bar,border,width) \
 	-value 4 -command [list PlotBarUpdateElement $varname]
 
-    # Fill
-    ThemeMenu $var(mb).databar.fill
-    $var(mb).databar.fill add checkbutton \
-	-label [msgcat::mc {Show}] \
-	-variable ${varname}(graph,ds,bar,fill) \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).databar.fill add separator
-    $var(mb).databar.fill add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).databar.fill.color
-
-    ColorMenu $var(mb).databar.fill.color $varname graph,ds,bar,fill,color \
+    ColorMenu $var(mb).databar.color $varname graph,ds,bar,color \
 	[list PlotBarUpdateElement $varname]
 
     # Error
@@ -151,7 +141,7 @@ proc PlotBarUpdateElement {varname} {
 	if {$var(theme)} {
 	    set fillColor [ThemeBold]
 	} else {
-	    set fillColor $var(graph,ds,bar,fill,color)
+	    set fillColor $var(graph,ds,bar,color)
 	}
     } else {
 	if {$var(theme)} {

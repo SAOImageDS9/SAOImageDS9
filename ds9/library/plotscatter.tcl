@@ -58,7 +58,7 @@ proc PlotScatterMenus {varname} {
     ThemeMenu $var(mb).datascatter.shape
     $var(mb).datascatter.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(graph,ds,scatter,shape,fill) \
+	-variable ${varname}(graph,ds,scatter,fill) \
 	-command [list PlotScatterUpdateElement $varname]
     $var(mb).datascatter.shape add separator
     $var(mb).datascatter.shape add cascade -label [msgcat::mc {Symbol}] \
@@ -67,10 +67,10 @@ proc PlotScatterMenus {varname} {
 	-menu $var(mb).datascatter.shape.color
 
     PlotScatterShapeMenu $var(mb).datascatter.shape.symbol \
-	${varname}(graph,ds,scatter,shape,symbol) \
+	${varname}(graph,ds,scatter,symbol) \
 	[list PlotScatterUpdateElement $varname]
     ColorMenu $var(mb).datascatter.shape.color \
-	$varname graph,ds,scatter,shape,color \
+	$varname graph,ds,scatter,color \
 	[list PlotScatterUpdateElement $varname]
 
     # Error
@@ -141,15 +141,15 @@ proc PlotScatterUpdateElement {varname} {
 	set shapecolor [ThemeBold]
 	set errorcolor [ThemeBold]
     } else {
-	set shapecolor $var(graph,ds,scatter,shape,color)
+	set shapecolor $var(graph,ds,scatter,color)
 	set errorcolor $var(graph,ds,error,color)
     }
 
-    if {$var(graph,ds,scatter,shape,fill)} {
+    if {$var(graph,ds,scatter,fill)} {
 	if {$var(theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
-	    set shapefillcolor $var(graph,ds,scatter,shape,color)
+	    set shapefillcolor $var(graph,ds,scatter,color)
 	}
     } else {
 	set shapefillcolor $var(background)
@@ -173,7 +173,7 @@ proc PlotScatterUpdateElement {varname} {
 	-hide [expr !$var(graph,ds,show)] \
 	-outline $shapecolor \
 	-fill $shapefillcolor \
-	-symbol $var(graph,ds,scatter,shape,symbol) \
+	-symbol $var(graph,ds,scatter,symbol) \
 	-scalesymbols no \
 	-linewidth 0 \
 	-pixels 5 \
@@ -184,7 +184,7 @@ proc PlotScatterUpdateElement {varname} {
 
     $var(graph) pen configure active \
 	-color blue \
-	-symbol $var(graph,ds,scatter,shape,symbol) \
+	-symbol $var(graph,ds,scatter,symbol) \
 	-linewidth 0 \
 	-pixels 5 \
 	-showerrorbars $show \

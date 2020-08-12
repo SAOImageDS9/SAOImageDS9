@@ -289,7 +289,7 @@ bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | BORDER_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,border,color $3}
  | BORDER_ WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,border,width $3}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,bar,fill $2}
- | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,fill,color $3}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,color $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,width $2}
  ;
 
@@ -307,10 +307,10 @@ scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
 
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter}
 
- | scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $1}
- | SYMBOL_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $2}
- | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,color $2}
- | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,shape,fill $2}
+ | scattersymbol {PlotCmdUpdateElement graph,ds,scatter,symbol $1}
+ | SYMBOL_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,symbol $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,color $2}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,fill $2}
  ;
 
 scattersymbol : CIRCLE_ {set _ circle}

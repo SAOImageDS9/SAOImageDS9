@@ -109,7 +109,7 @@ proc PrefsDialogPlot {} {
     WidthDashMenu $f.borderwidth.menu pap graph,ds,bar,border,width {} {} {}
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.fillcolor pap graph,ds,bar,fill,color {}
+    ColorMenuButton $f.color pap graph,ds,bar,color {}
     ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
 	-variable pap(graph,ds,bar,fill)
 
@@ -118,20 +118,20 @@ proc PrefsDialogPlot {} {
 
     grid $f.tborder $f.bordercolor $f.tborderwidth $f.borderwidth \
 	-padx 2 -pady 2 -sticky w
-    grid $f.tcolor $f.fillcolor $f.fill -padx 2 -pady 2 -sticky w
+    grid $f.tcolor $f.color $f.fill -padx 2 -pady 2 -sticky w
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
 
     # Scatter
     set f [ttk::labelframe $w.plot.scatter -text [msgcat::mc {Scatter}]]
 
     ttk::label $f.tshape -text [msgcat::mc {Shape}]
-    ttk::menubutton $f.shape -textvariable pap(graph,ds,scatter,shape,symbol) \
+    ttk::menubutton $f.shape -textvariable pap(graph,ds,scatter,symbol) \
 	-menu $f.shape.menu
-    PlotScatterShapeMenu $f.shape.menu pap(graph,ds,scatter,shape,symbol) {}
+    PlotScatterShapeMenu $f.shape.menu pap(graph,ds,scatter,symbol) {}
     ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.shapecolor pap graph,ds,scatter,shape,color {}
+    ColorMenuButton $f.shapecolor pap graph,ds,scatter,color {}
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
-	-variable pap(graph,ds,scatter,shape,fill)
+	-variable pap(graph,ds,scatter,fill)
 
     grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
 	-padx 2 -pady 2 -sticky w

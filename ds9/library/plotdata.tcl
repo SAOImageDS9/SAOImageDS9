@@ -69,13 +69,13 @@ proc PlotDataSetOne {varname dim data} {
     set var(graph,ds,bar,border,color) $pap(graph,ds,bar,border,color)
     set var(graph,ds,bar,border,width) $pap(graph,ds,bar,border,width)
     set var(graph,ds,bar,fill) $pap(graph,ds,bar,fill)
-    set var(graph,ds,bar,fill,color) $pap(graph,ds,bar,fill,color)
+    set var(graph,ds,bar,color) $pap(graph,ds,bar,color)
     set var(graph,ds,bar,width) $pap(graph,ds,bar,width)
 
     # Scatter
-    set var(graph,ds,scatter,shape,symbol) $pap(graph,ds,scatter,shape,symbol)
-    set var(graph,ds,scatter,shape,color) $pap(graph,ds,scatter,shape,color)
-    set var(graph,ds,scatter,shape,fill) $pap(graph,ds,scatter,shape,fill)
+    set var(graph,ds,scatter,symbol) $pap(graph,ds,scatter,symbol)
+    set var(graph,ds,scatter,color) $pap(graph,ds,scatter,color)
+    set var(graph,ds,scatter,fill) $pap(graph,ds,scatter,fill)
 
     # Error
     set var(graph,ds,error) $pap(graph,ds,error)
@@ -301,13 +301,13 @@ proc PlotDupDataSet {varname} {
     set var(graph,ds,bar,border,color) $var($cc,$mm,bar,border,color)
     set var(graph,ds,bar,border,width) $var($cc,$mm,bar,border,width)
     set var(graph,ds,bar,fill) $var($cc,$mm,bar,fill)
-    set var(graph,ds,bar,fill,color) $var($cc,$mm,bar,fill,color)
+    set var(graph,ds,bar,color) $var($cc,$mm,bar,color)
     set var(graph,ds,bar,width) $var($cc,$mm,bar,width)
 
     # Scatter
-    set var(graph,ds,scatter,shape,symbol) $var($cc,$mm,scatter,shape,symbol)
-    set var(graph,ds,scatter,shape,color) $var($cc,$mm,scatter,shape,color)
-    set var(graph,ds,scatter,shape,fill) $var($cc,$mm,scatter,shape,fill)
+    set var(graph,ds,scatter,symbol) $var($cc,$mm,scatter,symbol)
+    set var(graph,ds,scatter,color) $var($cc,$mm,scatter,color)
+    set var(graph,ds,scatter,fill) $var($cc,$mm,scatter,fill)
 
     # Error
     set var(graph,ds,error) $var($cc,$mm,error)

@@ -232,11 +232,11 @@ proc PlotCmdNew {name} {
     set parse(buf) {}
 }
 
-proc PlotCmdNewFile {fn name} {
+proc PlotCmdNewFile {fn ref} {
     global parse
 
-    if {$name != {}} {
-	set parse(tt) $name
+    if {$ref != {}} {
+	set parse(tt) $ref
     }
 
     if {[file exists $fn]} {
@@ -247,6 +247,25 @@ proc PlotCmdNewFile {fn name} {
     } else {
 	Error "[msgcat::mc {file not found}]: $fn"
     }
+}
+
+# special case, is 1st arg a file? or ref?
+proc PlotCmdNewParam1 {proc fn} {
+    if {[file exists $fn]} {
+	PlotCmdNewFile $fn {}
+    } else {
+	PlotCmdNew $fn
+    }
+    $proc {} {} {} xy
+}
+
+proc PlotCmdNewParam5 {proc fn title xaxis yaxis dim} {
+    if {[file exists $fn]} {
+	PlotCmdNewFile $fn {}
+    } else {
+	PlotCmdNew $fn
+    }
+    $proc $title $xaxis $yaxis $dim
 }
 
 proc PlotCmdLine {title xaxis yaxis dim} {

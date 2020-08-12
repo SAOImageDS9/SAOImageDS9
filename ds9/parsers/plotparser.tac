@@ -217,22 +217,22 @@ plot : line
 
 # Line
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
-# | STRING_ {PlotCmdNew $1; PlotCmdLine {} {} {} xy}
-  | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
-# | STRING_ NEW_ {PlotCmdNew $1; PlotCmdLine {} {} {} xy}
+ | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
-# | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNew $1; PlotCmdLine $2 $3 $4 $5}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
-# | STRING_ STRING_ STRING_ STRING_ INT_ {PlotCmdNew $1; PlotCmdLine $2 $3 $4 $5}
+ | STRING_ STRING_ STRING_ STRING_ INT_ {PlotCmdNew $1; PlotCmdLine $2 $3 $4 $5}
 
  | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine {} {} {} $2}
-# | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3}
- | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine $2 $3 $4 $5}
-# | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6}
+ | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3}
+ | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6}
+
+# special case, is 1st arg a file? or ref?
+ | STRING_ {PlotCmdNewParam1 PlotCmdLine $1}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewParam5 PlotCmdLine $1 $2 $3 $4 $5}
 
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin line}
-# | STRING_ STDIN_ {PlotCmdNew $1; PlotCmdAnalysisPlotStdin line}
+ | STRING_ STDIN_ {PlotCmdNew $1; PlotCmdAnalysisPlotStdin line}
 
  | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,line,smooth $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,color $2}
@@ -274,7 +274,7 @@ smooth : STEP_ {set _ step}
  ;
 
 # Bar
-bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
+bar : {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | NEW_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
@@ -282,9 +282,15 @@ bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | STRING_ STRING_ STRING_ STRING_ INT_ {PlotCmdNew $1; PlotCmdBar $2 $3 $4 $5}
 
  | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar {} {} {} $2}
- | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar $2 $3 $4 $5}
+ | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar {} {} {} $3}
+ | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar $3 $4 $5 $6}
+
+# special case, is 1st arg a file? or ref?
+ | STRING_ {PlotCmdNewParam1 PlotCmdBar $1}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewParam5 PlotCmdBar $1 $2 $3 $4 $5}
 
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin bar}
+ | STRING_ STDIN_ {PlotCmdNew $1; PlotCmdAnalysisPlotStdin bar}
 
  | BORDER_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,bar,border,color $3}
  | BORDER_ WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,border,width $3}
@@ -299,13 +305,18 @@ scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ STRING_ INT_ {PlotCmdNew $1; PlotCmdScatter $2 $3 $4 $5}
 
  | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdScatter {} {} {} $2}
- | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdScatter $2 $3 $4 $5}
  | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdScatter {} {} {} $3}
  | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdScatter $3 $4 $5 $6}
 
+# special case, is 1st arg a file? or ref?
+ | STRING_ {PlotCmdNewParam1 PlotCmdScatter $1}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewParam PlotCmdScatter $1 $2 $3 $4 $5}
+
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter}
+ | STRING_ STDIN_ {PlotCmdNew $1; PlotCmdAnalysisPlotStdin scatter}
 
  | scattersymbol {PlotCmdUpdateElement graph,ds,scatter,symbol $1}
  | SYMBOL_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,symbol $2}

@@ -272,6 +272,7 @@
 ::msgcat::mcset da {Equal Distance} {Samme afstand}
 ::msgcat::mcset da {Equal Spacing} 
 ::msgcat::mcset da {Equal Value} 
+::msgcat::mcset da {Error Bar} 
 ::msgcat::mcset da {Error code was returned} {Fejlkode blev returneret}
 ::msgcat::mcset da {Error} {Fejl}
 ::msgcat::mcset da {Examine Frame} [encoding convertfrom iso8859-1 {Undersøg ramme}]
@@ -769,6 +770,7 @@
 ::msgcat::mcset da {Send} 
 ::msgcat::mcset da {Server} {Server}
 ::msgcat::mcset da {Sexagesimal} 
+::msgcat::mcset da {Shadow} 
 ::msgcat::mcset da {Shape} {Form}
 ::msgcat::mcset da {Show All} {Vis alle}
 ::msgcat::mcset da {Show Command} 
@@ -887,7 +889,7 @@
 ::msgcat::mcset da {Use Internal Web Browser} {Brug intern web browser}
 ::msgcat::mcset da {Use Original Color/Width} 
 ::msgcat::mcset da {Use Proxy} {Anvend proxy}
-::msgcat::mcset da {Use Theme} 
+::msgcat::mcset da {Use Theme Colors} 
 ::msgcat::mcset da {Use background color instead of theme color} 
 ::msgcat::mcset da {User Manual} 
 ::msgcat::mcset da {Username} {Brugernavn}

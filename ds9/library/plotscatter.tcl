@@ -65,17 +65,12 @@ proc PlotScatterMenus {varname} {
 	-menu $var(mb).datascatter.shape.symbol
     $var(mb).datascatter.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).datascatter.shape.color
-    $var(mb).datascatter.shape add cascade -label [msgcat::mc {Fill Color}] \
-	-menu $var(mb).datascatter.shape.fillcolor
 
     PlotScatterShapeMenu $var(mb).datascatter.shape.symbol \
 	${varname}(graph,ds,scatter,shape,symbol) \
 	[list PlotScatterUpdateElement $varname]
     ColorMenu $var(mb).datascatter.shape.color \
 	$varname graph,ds,scatter,shape,color \
-	[list PlotScatterUpdateElement $varname]
-    ColorMenu $var(mb).datascatter.shape.fillcolor \
-	$varname graph,ds,scatter,shape,fill,color \
 	[list PlotScatterUpdateElement $varname]
 
     # Error
@@ -154,7 +149,7 @@ proc PlotScatterUpdateElement {varname} {
 	if {$var(theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
-	    set shapefillcolor $var(graph,ds,scatter,shape,fill,color)
+	    set shapefillcolor $var(graph,ds,scatter,shape,color)
 	}
     } else {
 	set shapefillcolor $var(background)

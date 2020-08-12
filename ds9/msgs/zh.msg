@@ -272,6 +272,7 @@
 ::msgcat::mcset zh {Equal Distance} 
 ::msgcat::mcset zh {Equal Spacing} 
 ::msgcat::mcset zh {Equal Value} 
+::msgcat::mcset zh {Error Bar} 
 ::msgcat::mcset zh {Error code was returned} 
 ::msgcat::mcset zh {Error} 
 ::msgcat::mcset zh {Examine Frame} 
@@ -769,6 +770,7 @@
 ::msgcat::mcset zh {Send} 
 ::msgcat::mcset zh {Server} 
 ::msgcat::mcset zh {Sexagesimal} 
+::msgcat::mcset zh {Shadow} 
 ::msgcat::mcset zh {Shape} [encoding convertfrom big5 "\xA7\xCE \xAA\xAC"]
 ::msgcat::mcset zh {Show All} [encoding convertfrom big5 "\xC5\xE3 \xA5\xDC \xA5\xFE \xB3\xA1"]
 ::msgcat::mcset zh {Show Command} 
@@ -887,7 +889,7 @@
 ::msgcat::mcset zh {Use Internal Web Browser} 
 ::msgcat::mcset zh {Use Original Color/Width} 
 ::msgcat::mcset zh {Use Proxy} 
-::msgcat::mcset zh {Use Theme} 
+::msgcat::mcset zh {Use Theme Colors} 
 ::msgcat::mcset zh {Use background color instead of theme color} 
 ::msgcat::mcset zh {User Manual} 
 ::msgcat::mcset zh {Username} 

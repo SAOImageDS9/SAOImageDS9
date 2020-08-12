@@ -109,17 +109,12 @@ proc PlotLineMenus {varname} {
 	-menu $var(mb).dataline.shape.symbol
     $var(mb).dataline.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).dataline.shape.color
-    $var(mb).dataline.shape add cascade -label [msgcat::mc {Fill Color}] \
-	-menu $var(mb).dataline.shape.fillcolor
 
     PlotLineShapeMenu $var(mb).dataline.shape.symbol \
 	${varname}(graph,ds,line,shape,symbol) \
 	[list PlotLineUpdateElement $varname]
     ColorMenu $var(mb).dataline.shape.color \
 	$varname graph,ds,line,shape,color \
-	[list PlotLineUpdateElement $varname]
-    ColorMenu $var(mb).dataline.shape.fillcolor \
-	$varname graph,ds,line,shape,fill,color \
 	[list PlotLineUpdateElement $varname]
     
     PlotLineSmoothMenu $var(mb).dataline.smooth \
@@ -229,7 +224,7 @@ proc PlotLineUpdateElement {varname} {
 	if {$var(theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
-	    set shapefillcolor $var(graph,ds,line,shape,fill,color)
+	    set shapefillcolor $var(graph,ds,line,shape,color)
 	}
     } else {
 	set shapefillcolor $var(background)

@@ -81,11 +81,10 @@ proc PrefsDialogPlot {} {
     ttk::menubutton $f.shape -textvariable pap(graph,ds,line,shape,symbol) \
 	-menu $f.shape.menu
     PlotLineShapeMenu $f.shape.menu pap(graph,ds,line,shape,symbol) {}
-    ttk::label $f.tborder -text [msgcat::mc {Border}]
+    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.shapecolor pap graph,ds,line,shape,color {}
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
 	-variable pap(graph,ds,line,shape,fill)
-    ColorMenuButton $f.shapefillcolor pap graph,ds,line,shape,fill,color {}
 
     ttk::label $f.tsmooth -text [msgcat::mc {Smooth}]
     ttk::menubutton $f.smooth -textvariable pap(graph,ds,line,smooth) \
@@ -95,8 +94,8 @@ proc PrefsDialogPlot {} {
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
     grid $f.tshadow $f.fillcolor $f.fill -padx 2 -pady 2 -sticky w
-    grid $f.tshape $f.shape $f.tborder $f.shapecolor \
-	$f.shapefill $f.shapefillcolor -padx 2 -pady 2 -sticky w
+    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
+	-padx 2 -pady 2 -sticky w
     grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky w
 
     # Bar
@@ -129,14 +128,13 @@ proc PrefsDialogPlot {} {
     ttk::menubutton $f.shape -textvariable pap(graph,ds,scatter,shape,symbol) \
 	-menu $f.shape.menu
     PlotScatterShapeMenu $f.shape.menu pap(graph,ds,scatter,shape,symbol) {}
-    ttk::label $f.tborder -text [msgcat::mc {Border}]
+    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.shapecolor pap graph,ds,scatter,shape,color {}
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
 	-variable pap(graph,ds,scatter,shape,fill)
-    ColorMenuButton $f.shapefillcolor pap graph,ds,scatter,shape,fill,color {}
 
-    grid $f.tshape $f.shape $f.tborder $f.shapecolor \
-	$f.shapefill $f.shapefillcolor -padx 2 -pady 2 -sticky w
+    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
+	-padx 2 -pady 2 -sticky w
 
     # Error
     set f [ttk::labelframe $w.plot.error -text [msgcat::mc {Error Bar}]]

@@ -272,6 +272,7 @@
 ::msgcat::mcset ja {Equal Distance} [encoding convertfrom euc-jp "\xc5\xf9\xb5\xf7\xce\xa5"]
 ::msgcat::mcset ja {Equal Spacing} 
 ::msgcat::mcset ja {Equal Value} 
+::msgcat::mcset ja {Error Bar} 
 ::msgcat::mcset ja {Error code was returned} [encoding convertfrom euc-jp "\xa5\xa8\xa5\xe9\xa1\xbc\xa5\xb3\xa1\xbc\xa5\xc9\xa4\xac\xca\xd6\xa4\xb5\xa4\xec\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {Error} [encoding convertfrom euc-jp "\xa5\xa8\xa5\xe9\xa1\xbc"]
 ::msgcat::mcset ja {Examine Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xdc\xba\xd9\xc9\xbd\xbc\xa8"]
@@ -769,6 +770,7 @@
 ::msgcat::mcset ja {Send} [encoding convertfrom euc-jp "\xc1\xf7\xbf\xae"]
 ::msgcat::mcset ja {Server} [encoding convertfrom euc-jp "\xa5\xb5\xa1\xbc\xa5\xd0\xa1\xbc"]
 ::msgcat::mcset ja {Sexagesimal} [encoding convertfrom euc-jp "\xbb\xfe\xca\xac\xc9\xc3"]
+::msgcat::mcset ja {Shadow} 
 ::msgcat::mcset ja {Shape} [encoding convertfrom euc-jp "\xb7\xc1"]
 ::msgcat::mcset ja {Show All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show Command} 
@@ -887,7 +889,7 @@
 ::msgcat::mcset ja {Use Internal Web Browser} [encoding convertfrom euc-jp "\xc6\xe2\xc9\xf4\xa5\xd6\xa5\xe9\xa5\xa6\xa5\xb6\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Original Color/Width} 
 ::msgcat::mcset ja {Use Proxy} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xad\xa5\xb7\xa4\xf2\xbb\xc8\xcd\xd1"]
-::msgcat::mcset ja {Use Theme} 
+::msgcat::mcset ja {Use Theme Colors} 
 ::msgcat::mcset ja {Use background color instead of theme color} 
 ::msgcat::mcset ja {User Manual} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc\xa5\xde\xa5\xcb\xa5\xe5\xa5\xa2\xa5\xeb"]
 ::msgcat::mcset ja {Username} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc\xcc\xbe"]

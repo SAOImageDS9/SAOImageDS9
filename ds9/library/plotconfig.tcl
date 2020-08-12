@@ -84,7 +84,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,ds,line,shape,symbol) $analysisplot(shape,symbol) 
     set var(graph,ds,line,shape,color) $analysisplot(shape,color) 
     set var(graph,ds,line,shape,fill) $analysisplot(shape,fill) 
-    set var(graph,ds,line,shape,fill,color) $analysisplot(shape,color) 
 
     # Bar
     set var(graph,ds,bar,border,color) $analysisplot(color) 
@@ -97,7 +96,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,ds,scatter,shape,symbol) $analysisplot(shape,symbol) 
     set var(graph,ds,scatter,shape,color) $analysisplot(shape,color) 
     set var(graph,ds,scatter,shape,fill) $analysisplot(shape,fill) 
-    set var(graph,ds,scatter,shape,fill,color) $analysisplot(shape,color) 
 
     # Error
     set var(graph,ds,error) $analysisplot(error) 

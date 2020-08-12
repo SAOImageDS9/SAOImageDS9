@@ -272,6 +272,7 @@
 ::msgcat::mcset cs {Equal Distance} 
 ::msgcat::mcset cs {Equal Spacing} 
 ::msgcat::mcset cs {Equal Value} 
+::msgcat::mcset cs {Error Bar} 
 ::msgcat::mcset cs {Error code was returned} 
 ::msgcat::mcset cs {Error} 
 ::msgcat::mcset cs {Examine Frame} 
@@ -769,6 +770,7 @@
 ::msgcat::mcset cs {Send} 
 ::msgcat::mcset cs {Server} 
 ::msgcat::mcset cs {Sexagesimal} [encoding convertfrom iso8859-2 {©edesátkové}]
+::msgcat::mcset cs {Shadow} 
 ::msgcat::mcset cs {Shape} [encoding convertfrom iso8859-2 {Tvar}]
 ::msgcat::mcset cs {Show All} [encoding convertfrom iso8859-2 {Zobrazit v¹e}]
 ::msgcat::mcset cs {Show Command} 
@@ -887,7 +889,7 @@
 ::msgcat::mcset cs {Use Internal Web Browser} 
 ::msgcat::mcset cs {Use Original Color/Width} 
 ::msgcat::mcset cs {Use Proxy} 
-::msgcat::mcset cs {Use Theme} 
+::msgcat::mcset cs {Use Theme Colors} 
 ::msgcat::mcset cs {Use background color instead of theme color} 
 ::msgcat::mcset cs {User Manual} [encoding convertfrom iso8859-2 {U¾ivatelský manuál}]
 ::msgcat::mcset cs {Username} 

@@ -251,7 +251,6 @@ lineshape : linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $1}
  | SYMBOL_ linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,color $2}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,shape,fill $2}
- | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,fill,color $3}
  ;
 
 linesymbol : NONE_ {set _ none}
@@ -312,7 +311,6 @@ scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
  | SYMBOL_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,color $2}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,shape,fill $2}
- | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,fill,color $3}
  ;
 
 scattersymbol : CIRCLE_ {set _ circle}

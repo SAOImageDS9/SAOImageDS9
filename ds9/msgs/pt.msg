@@ -272,6 +272,7 @@
 ::msgcat::mcset pt {Equal Distance} [encoding convertfrom iso8859-1 {Distância Igual}]
 ::msgcat::mcset pt {Equal Spacing} 
 ::msgcat::mcset pt {Equal Value} 
+::msgcat::mcset pt {Error Bar} 
 ::msgcat::mcset pt {Error code was returned} [encoding convertfrom iso8859-1 {Retornou código de erro}]
 ::msgcat::mcset pt {Error} {Erro}
 ::msgcat::mcset pt {Examine Frame} {Examinar Frame} 
@@ -769,6 +770,7 @@
 ::msgcat::mcset pt {Send} 
 ::msgcat::mcset pt {Server} {Servidor}
 ::msgcat::mcset pt {Sexagesimal} 
+::msgcat::mcset pt {Shadow} 
 ::msgcat::mcset pt {Shape} {Formato}
 ::msgcat::mcset pt {Show All} {Mostre todos}
 ::msgcat::mcset pt {Show Command} 
@@ -887,7 +889,7 @@
 ::msgcat::mcset pt {Use Internal Web Browser} {Utilizar Navegador Web Interno}
 ::msgcat::mcset pt {Use Original Color/Width} 
 ::msgcat::mcset pt {Use Proxy} {Utilizar Proxy}
-::msgcat::mcset pt {Use Theme} 
+::msgcat::mcset pt {Use Theme Colors} 
 ::msgcat::mcset pt {Use background color instead of theme color} 
 ::msgcat::mcset pt {User Manual} 
 ::msgcat::mcset pt {Username} [encoding convertfrom iso8859-1 {Nome de usuário}]

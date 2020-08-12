@@ -105,7 +105,6 @@ lineshape : {ProcessSendCmdCVARGet graph,ds,line,shape,symbol}
  | SYMBOL_ {ProcessSendCmdCVARGet graph,ds,line,shape,symbol}
  | COLOR_ {ProcessSendCmdCVARGet graph,ds,line,shape,color}
  | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,line,shape,fill}
- | FILL_ COLOR_ {ProcessSendCmdCVARGet graph,ds,line,shape,color}
  ;
 
 bar : BORDER_ COLOR_ {ProcessSendCmdCVARGet graph,ds,bar,border,color}
@@ -119,7 +118,6 @@ scatter : {ProcessSendCmdCVARGet graph,ds,scatter,shape,symbol}
  | SYMBOL_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,symbol}
  | COLOR_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,color}
  | FILL_ {ProcessSendCmdCVARGetYesNo graph,ds,scatter,shape,fill}
- | FILL_ COLOR_ {ProcessSendCmdCVARGet graph,ds,scatter,shape,color}
  ;
 
 errorr : {ProcessSendCmdCVARGetYesNo graph,ds,error}

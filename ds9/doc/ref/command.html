@@ -1435,17 +1435,24 @@ $ds9 -pixeltable open<br>
 $ds9 -pixeltable close<br></tt>
 <p><b><a name="plot" id="plot"></a>plot</b></p>
 <p>Display and configure data plots. The last plot created is assumed. Plot data is assumed to be a pair of coordinates, with optional error values. The follow are valid data descriptions:</p>
-<blockquote><tt>xy &nbsp;&nbsp; &nbsp; &nbsp; x and y coordinates<br>
-xyex&nbsp;&nbsp;&nbsp; &nbsp; x,y coordinates with x errors<br>
-xyey&nbsp;&nbsp;&nbsp; &nbsp; x,y coordinates with y errors<br>
+<blockquote><tt>xy&nbsp;&nbsp;&nbsp;&nbsp; x and y coordinates<br>
+xyex&nbsp;&nbsp;&nbsp; x,y coordinates with x errors<br>
+xyey&nbsp;&nbsp;&nbsp; x,y coordinates with y errors<br>
 xyexey&nbsp;&nbsp;&nbsp; x,y coordinates with&nbsp; x and y errors<br></tt></blockquote>
-<p><tt>To create a new plot, use the plot new command.</tt></p>
 <tt>Syntax:<br>
+<p>
 # create new empty plot window<br>
--plot [line|bar|scatter]<br>
-<br>
+plot [line|bar|scatter]<br>
+&nbsp;&nbsp;&nbsp; [line|bar|scatter &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; xy|xyex|xyey|xyexey]<br>
+</p>
+<p>
+# create new plot from data file<br>
+&nbsp;&nbsp;&nbsp; [line|bar|scatter &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+&nbsp;&nbsp;&nbsp; [line|bar|scatter &lt;filename&gt; &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; xy|xyex|xyey|xyexey]<br>
+</p>
+<p>
 # existing plot<br>
--plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
@@ -1469,14 +1476,17 @@ xyexey&nbsp;&nbsp;&nbsp; x,y coordinates with&nbsp; x and y errors<br></tt></blo
 &nbsp;&nbsp;&nbsp; [print color rgb|gray]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
 &nbsp;&nbsp;&nbsp; [mode pointer|zoom]<br>
-<br>
-# export image<br>
+</p>
+<p>
+# export<br>
 plot [export &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export gif|tiff|jpeg|png &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export jpeg &lt;filename&gt; [1-100]]<br>
 &nbsp;&nbsp;&nbsp; [export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
+</p>
+<p>
 # configure graph<br>
--plot [axis x|y grid yes|no]<br>
+plot [axis x|y grid yes|no]<br>
 &nbsp;&nbsp;&nbsp; [axis x|y log yes|no]<br>
 &nbsp;&nbsp;&nbsp; [axis x|y flip yes|no]<br>
 &nbsp;&nbsp;&nbsp; [axis x|y auto yes|no]<br>
@@ -1492,28 +1502,61 @@ plot [export &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [font title|labels|numbers slant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [title &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [title x|y &lt;string&gt;]<br>
-<br>
-# configure current dataset<br>
--plot [show yes|no]<br>
-&nbsp;&nbsp;&nbsp;[shape none|circle|square|diamond|plus|splus|scross|triangle|arrow]<br>
-&nbsp;&nbsp;&nbsp;[shape fill yes|no]<br>
-&nbsp;&nbsp;&nbsp;[shape color &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[smooth step|linear|cubic|quadratic|catrom]<br>
-&nbsp;&nbsp;&nbsp;[color &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[width &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[dash yes|no]<br>
-&nbsp;&nbsp;&nbsp;[error yes|no]<br>
-&nbsp;&nbsp;&nbsp;[error color &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[error cap yes|no]<br>
-&nbsp;&nbsp;&nbsp;[error width &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp;[name &lt;string&gt;]<br>
-<br>
+</p>
+<p>
+# dataset<br>
+plot [show yes|no]<br>
+&nbsp;&nbsp;&nbsp; [name &lt;string&gt;]<br>
+</p>
+<p>
+# line dataset<br>
+plot [line smooth step|linear|cubic|quadratic|catrom]<br>
+&nbsp;&nbsp;&nbsp; [line color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [line width &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [line dash yes|no]<br>
+&nbsp;&nbsp;&nbsp; [line fill yes|no]<br>
+&nbsp;&nbsp;&nbsp; [line fill color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [line shape symbol none|circle|square|diamond|plus|splus|scross|triangle|arrow]<br>
+&nbsp;&nbsp;&nbsp; [line shape color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [line shape fill yes|no]<br>
+</p>
+<p>
+# bar dataset<br>
+plot [bar border color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [bar border width &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [bar fill yes|no]<br>
+&nbsp;&nbsp;&nbsp; [bar color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [bar width &lt;value&gt;]<br>
+</p>
+<p>
+# scatter dataset<br>
+plot [scatter symbol circle|square|diamond|plus|splus|scross|triangle|arrow]<br>
+&nbsp;&nbsp;&nbsp; [scatter color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [scatter fill yes|no]<br>
+</p>
+<p>
+# error bar<br>
+plot [error yes|no]<br>
+&nbsp;&nbsp;&nbsp; [error color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [error cap yes|no]<br>
+&nbsp;&nbsp;&nbsp; [error width &lt;value&gt;]<br>
+</p>
+<p>
 Example:<br>
+<p>
 # create new empty plot window<br>
+$ds9 -plot line<br>
 $ds9 -plot bar<br>
-<br>
+$ds9 -plot scatter<br>
+</p>
+<p>
+# create new plot from data file<br>
+$ds9 -plot line xy.dat xy<br>
+$ds9 -plot line xy.dat 'The Title' 'X Axis' 'Y Axis' xy <br>
+</p>
+<p>
 # existing plot<br>
-$ds9 -plot load xy.dat<br>
+$ds9 -plot load xy.dat xy<br>
 $ds9 -plot save foo.dat<br>
 $ds9 -plot current foo<br>
 $ds9 -plot layout strip<br>
@@ -1536,16 +1579,16 @@ $ds9 -plot print command lp<br>
 $ds9 -plot print filename foo.ps<br>
 $ds9 -plot print color rgb<br>
 $ds9 -plot close<br>
-<br>
-# plot mode<br>
 $ds9 -plot mode pointer<br>
-<br>
+</p>
+<p>
 # export plot<br>
 $ds9 -plot export tiff foo.tiff jpeg<br>
 $ds9 -plot export jpeg foo.jpeg 75<br>
 $ds9 -plot export png foo.png<br>
-<br>
-# configure plot<br>
+</p>
+<p>
+# configure graph<br>
 $ds9 -plot axis x grid yes<br>
 $ds9 -plot axis x log yes<br>
 $ds9 -plot axis x flip yes<br>
@@ -1564,21 +1607,44 @@ $ds9 -plot title 'This is a Title'<br>
 $ds9 -plot title x 'X Axis'<br>
 $ds9 -plot title y 'Y Axis'<br>
 $ds9 -plot title legend 'This is the Legend'<br>
-<br>
+</p>
+<p>
 # configure current dataset<br>
 $ds9 -plot show yes<br>
-$ds9 -plot shape circle<br>
-$ds9 -plot shape fill no<br>
-$ds9 -plot shape color cyan<br>
-$ds9 -plot smooth step<br>
-$ds9 -plot color red<br>
-$ds9 -plot width 2<br>
-$ds9 -plot dash yes<br>
+$ds9 -plot name 'My Data'<br>
+</p>
+<p>
+# line dataset<br>
+$ds9 -plot line smooth step<br>
+$ds9 -plot line color red<br>
+$ds9 -plot line width 2<br>
+$ds9 -plot line dash yes<br>
+$ds9 -plot line fill no<br>
+$ds9 -plot line fill color red<br>
+$ds9 -plot line shape symbol circle<br>
+$ds9 -plot line shape color cyan<br>
+$ds9 -plot line shape fill no<br>
+</p>
+<p>
+# bar dataset<br>
+$ds9 -plot bar border color red<br>
+$ds9 -plot bar border width 2<br>
+$ds9 -plot bar fill no<br>
+$ds9 -plot bar color red<br>
+$ds9 -plot bar width 10<br>
+</p>
+<p>
+# scatter dataset<br>
+$ds9 -plot scatter symbol circle<br>
+$ds9 -plot scatter color cyan<br>
+$ds9 -plot scatter fill no<br>
+</p>
+<p>
 $ds9 -plot error yes<br>
 $ds9 -plot error color red<br>
 $ds9 -plot error cap yes<br>
 $ds9 -plot error width 2<br>
-$ds9 -plot name 'My Data'<br>
+</p>
 <br></tt> <b><a name="png" id="png"></a>png</b>
 <p>Load PNG image into current frame.<br></p>
 <tt>Syntax:<br>
@@ -1807,7 +1873,7 @@ $ds9 -regions group foo color red<br>
 $ds9 -regions group foo copy<br>
 $ds9 -regions group foo delete<br>
 $ds9 -regions group foo cut<br>
-$ds9 -regions group foo font {times 14 bold}<br>
+$ds9 -regions group foo font 'times 14 bold'<br>
 $ds9 -regions group foo move 100 100<br>
 $ds9 -regions group foo movefront<br>
 $ds9 -regions group foo moveback<br>

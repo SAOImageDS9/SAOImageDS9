@@ -1837,10 +1837,7 @@ $xpaset -p ds9 plot scatter<br>
 # create new plot from data file<br>
 $xpaset -p ds9 plot line xy.dat xy<br>
 $xpaset -p ds9 plot line xy.dat {The Title} {X Axis} {Y Axis} xy <br>
-$xpaset -p ds9 plot line xy.dat foo xy<br>
-$xpaset -p ds9 plot line xy.dat foo {The Title} {X Axis} {Y Axis} xy<br>
 $cat xy.dat | xpaset ds9 plot line {The Title} {X Axis} {Y Axis} xy<br>
-$cat xy.dat | xpaset ds9 plot line foo {The Title} {X Axis} {Y Axis} xy<br>
 </p>
 <p>
 # create new plot with data from stdin which includes title/dim headers<br>

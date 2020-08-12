@@ -155,8 +155,6 @@ plot : line
  | BAR_ bar
  | SCATTER_ scatter
  | ERROR_ errorr
- # backward compatibility
- | NEW_ oldnew
  
 # File Menu
  | LOAD_ load
@@ -210,21 +208,31 @@ plot : line
  | GRAPH_ oldGraph
  # backward compatibility
  | VIEW_ oldView
+
+ # backward compatibility
+ # used by DAX
+ | NEW_ NAME_ STRING_ LINE_ STRING_ STRING_ STRING_ dim {PlotCmdNew $2; PlotCmdLine $5 $6 $7 $8}
+ | NEW_ NAME_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdLine $4 $5 $6 $7}
  ;
- 
+
 # Line
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+# | STRING_ {PlotCmdNew $1; PlotCmdLine {} {} {} xy}
+  | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+# | STRING_ NEW_ {PlotCmdNew $1; PlotCmdLine {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
+# | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNew $1; PlotCmdLine $2 $3 $4 $5}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
+# | STRING_ STRING_ STRING_ STRING_ INT_ {PlotCmdNew $1; PlotCmdLine $2 $3 $4 $5}
 
  | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine {} {} {} $2}
- | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3}
+# | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine {} {} {} $3}
  | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdLine $2 $3 $4 $5}
- | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6}
+# | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdLine $3 $4 $5 $6}
 
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin line}
+# | STRING_ STDIN_ {PlotCmdNew $1; PlotCmdAnalysisPlotStdin line}
 
  | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,line,smooth $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,color $2}
@@ -233,7 +241,9 @@ line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,fill $2}
  | FILL_ COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,fill,color $3}
  | SHAPE_ lineshape
-# backward compatibility
+
+ # backward compatibility
+ # used by DAX
  | oldLine
  ;
 
@@ -270,11 +280,10 @@ bar: {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ STRING_ INT_ {PlotCmdNew $1; PlotCmdBar $2 $3 $4 $5}
 
- | STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar {} {} {} $3}
  | STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar {} {} {} $2}
  | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 {}; PlotCmdBar $2 $3 $4 $5}
- | STRING_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewFile $1 $2; PlotCmdBar $3 $4 $5 $6}
 
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin bar}
 
@@ -464,16 +473,6 @@ dim : XY_ {set _ xy}
  | XYEX_ {set _ xyex}
  | XYEY_ {set _ xyey}
  | XYEXEY_ {set _ xyexey}
- ;
-
-# backward compatibility
-# used by DAX
-oldnew : NAME_ STRING_ dummy {PlotCmdNew $2; PlotCmdLine {} {} {} xy}
- | NAME_ STRING_ dummy STRING_ STRING_ STRING_ dim {PlotCmdNew $2; PlotCmdLine $4 $5 $6 $7}
- ;
-
-dummy :
- | LINE_
  ;
 
 # backward compatibility

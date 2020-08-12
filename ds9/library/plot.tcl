@@ -416,7 +416,7 @@ proc PlotUpdateAllElement {varname} {
     set nn $var(graph,ds,current)
     foreach gg $var(graphs) {
 	set var(graph,current) $gg
-	foreach nn $var($cc,dss) {
+	foreach nn $var($gg,dss) {
 	    set var(graph,ds,current) $nn
 	    PlotRestoreState $varname
 	    $var(graph,proc,updateelement) $varname

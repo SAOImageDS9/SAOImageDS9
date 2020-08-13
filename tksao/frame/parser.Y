@@ -1749,8 +1749,7 @@ marker	: CENTROID_ markerCentroid
 	| COMPOSITE_ DELETE_ {fr->markerCompositeDeleteCmd();}
 	| CREATE_ {maperr =0;} markerCreate
 	| CUT_ {fr->markerCutCmd();}
-	| DELETE_ {fr->markerDeleteCmd();}
-	| DELETE_ ALL_ {fr->markerDeleteAllCmd();}
+        | DELETE_ markerDelete
 	| EDIT_ markerEdit
         | EPSILON_ INT {fr->markerEpsilonCmd($2);}
 	| FONT_ STRING {fr->markerFontCmd($2);}
@@ -1981,9 +1980,7 @@ marker	: CENTROID_ markerCentroid
 	| ROTATE_ MOTION_ numeric numeric INT
 	{fr->markerRotateMotionCmd(Vector($3,$4),$5);}
 	| ROTATE_ END_ {fr->markerRotateEndCmd();}
-	| SAVE_ STRING markerFormat coordSystem skyFrame skyFormat yesno
-	{fr->markerSaveCmd($2, (Base::MarkerFormat)$3, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5, (Coord::SkyFormat)$6, $7);}
-	| SAVE_ TEMPLATE_ STRING {fr->markerSaveTemplateCmd($3);}
+        | SAVE_ markerSave
 	| SELECT_ markerSelect
 
 	| SHOW_ markerShow
@@ -2270,6 +2267,14 @@ markerCreateTemplate : STRING numeric numeric
 markerDash : INT INT {$$[0] = $1; $$[1] = $2;}
 	;
 
+markerDelete :	{fr->markerDeleteAllCmd(0);}
+        | SELECT_ {fr->markerDeleteAllCmd(1);}
+	| ALL_ {
+	  // backward compatibility
+	  fr->markerDeleteAllCmd(0);
+        }
+        ;
+
 markerEdit : BEGIN_ numeric numeric INT 
 	{fr->markerEditBeginCmd(Vector($2,$3),$4);}
 	| MOTION_ numeric numeric INT 
@@ -2479,13 +2484,11 @@ markerLayer : /* empty */ {fr->markerLayerCmd(Base::USER);}
 markerList : markerFormat coordSystem skyFrame skyFormat 
 	    yesno markerQuery markerTags
 	{fr->markerListCmd((Base::MarkerFormat)$1,
-	    (Coord::CoordSystem)$2, (Coord::SkyFrame)$3, (Coord::SkyFormat)$4, $5,
-	    0, propQMask, propQValue, taglist);}
+	    (Coord::CoordSystem)$2, (Coord::SkyFrame)$3, (Coord::SkyFormat)$4, $5, 0, propQMask, propQValue, taglist);}
 	| SELECT_ markerFormat coordSystem skyFrame skyFormat 
 	    yesno markerQuery markerTags
 	{fr->markerListCmd((Base::MarkerFormat)$2, 
-	    (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, (Coord::SkyFormat)$5, $6,
-	    1, propQMask, propQValue, taglist);}
+	    (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, (Coord::SkyFormat)$5, $6, 1, propQMask, propQValue, taglist);}
 	;
 
 markerLoad : markerFormat STRING
@@ -2546,6 +2549,13 @@ markerProperties : /* empty */ markerInitProp
 markerQuery: /* empty */ {propQMask=0;propQValue=0;}
 	| {propQMask=0;propQValue=0;} queries
 	;
+
+markerSave : STRING markerFormat coordSystem skyFrame skyFormat yesno
+        {fr->markerSaveCmd($1, (Base::MarkerFormat)$2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, (Coord::SkyFormat)$5, $6, 0);}
+        | SELECT_ STRING markerFormat coordSystem skyFrame skyFormat yesno
+	{fr->markerSaveCmd($2, (Base::MarkerFormat)$3, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5, (Coord::SkyFormat)$6, $7, 1);}
+	| TEMPLATE_ STRING {fr->markerSaveTemplateCmd($2);}
+        ;
 
 markerSelect : ALL_ {fr->markerSelectAllCmd();}
 	| ONLY_ numeric numeric {fr->markerSelectOnlyCmd(Vector($2,$3));}

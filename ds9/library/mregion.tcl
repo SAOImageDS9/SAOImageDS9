@@ -51,18 +51,21 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Invert Selection}] \
 	-command MarkerSelectInvert
     $ds9(mb).region add separator
+    $ds9(mb).region add command -label [msgcat::mc {Save Selected Regions}] \
+	-command [list MarkerSave select]
+    $ds9(mb).region add command -label [msgcat::mc {List Selected Regions}] \
+	-command [list MarkerList select]
     $ds9(mb).region add command -label [msgcat::mc {Delete Selected Regions}] \
-	-command MarkerDeleteSelect
-    $ds9(mb).region add command -label [msgcat::mc {Delete Regions}] \
-	-command MarkerDeleteAllMenu
-    $ds9(mb).region add separator
-    $ds9(mb).region add command -label "[msgcat::mc {List Regions}]..." \
-	-command MarkerList
+	-command [list MarkerDelete select]
     $ds9(mb).region add separator
     $ds9(mb).region add command -label "[msgcat::mc {Open Regions}]..." \
 	-command MarkerLoad
     $ds9(mb).region add command -label "[msgcat::mc {Save Regions}]..." \
-	-command MarkerSave
+	-command [list MarkerSave {}]
+    $ds9(mb).region add command -label "[msgcat::mc {List Regions}]..." \
+	-command [list MarkerList {}]
+    $ds9(mb).region add command -label [msgcat::mc {Delete Regions}] \
+	-command [list MarkerDelete {}]
     $ds9(mb).region add separator
     $ds9(mb).region add command \
 	-label "[msgcat::mc {Delete and Open Regions}]..." \
@@ -709,18 +712,19 @@ proc ButtonsRegionDef {} {
 	region,centroid 0
 	region,front 1
 	region,back 1
+	region,newgroup 0
+	region,group 0
 	region,all 1
 	region,none 1
 	region,invert 0
-	region,delete,selected 1
-	region,delete 0
-	region,newgroup 0
-	region,group 0
-	region,list 1
+	region,save,select 0
+	region,list,select 0
+	region,delete,select 0
 	region,load 1
-	region,delete,load 0
 	region,save 1
-	region,mask 0
+	region,list 1
+	region,delete 1
+	region,delete,load 0
 	region,show 0
 	region,showtext 0
 	region,autocentroid 0
@@ -819,23 +823,25 @@ proc CreateButtonsRegion {} {
 	[string tolower [msgcat::mc {None}]] MarkerUnselectAll
     ButtonButton $ds9(buttons).region.invert \
 	[string tolower [msgcat::mc {Invert}]] MarkerSelectInvert
-    ButtonButton $ds9(buttons).region.delete \
-	[string tolower [msgcat::mc {Delete Select}]] MarkerDeleteSelect
-    ButtonButton $ds9(buttons).region.deleteall \
-	[string tolower [msgcat::mc {Delete}]] MarkerDeleteAllMenu
 
-    ButtonButton $ds9(buttons).region.list \
-	[string tolower [msgcat::mc {List}]] MarkerList
+    ButtonButton $ds9(buttons).region.saveselect \
+	[string tolower [msgcat::mc {Save Select}]] [list MarkerSave select]
+    ButtonButton $ds9(buttons).region.listselect \
+	[string tolower [msgcat::mc {List Select}]] [list MarkerList select]
+    ButtonButton $ds9(buttons).region.deleteselect \
+	[string tolower [msgcat::mc {Delete Select}]] [list MarkerDelete select]
+
     ButtonButton $ds9(buttons).region.load \
 	[string tolower [msgcat::mc {Open}]] MarkerLoad
+    ButtonButton $ds9(buttons).region.save \
+	[string tolower [msgcat::mc {Save}]] [list MarkerSave {}]
+    ButtonButton $ds9(buttons).region.list \
+	[string tolower [msgcat::mc {List}]] [list MarkerList {}]
+    ButtonButton $ds9(buttons).region.delete \
+	[string tolower [msgcat::mc {Delete}]] [list MarkerDelete {}]
+    
     ButtonButton $ds9(buttons).region.deleteload \
 	[string tolower [msgcat::mc {Delete Load}]] MarkerDeleteLoad
-
-    ButtonButton $ds9(buttons).region.save \
-	[string tolower [msgcat::mc {Save}]] MarkerSave
-    
-    ButtonButton $ds9(buttons).region.mask \
-	[string tolower [msgcat::mc {Mask}]] MarkerMask
 
     CheckButton $ds9(buttons).region.show \
 	[string tolower [msgcat::mc {Show}]] \
@@ -874,18 +880,19 @@ proc CreateButtonsRegion {} {
         $ds9(buttons).region.centroid pbuttons(region,centroid)
         $ds9(buttons).region.front pbuttons(region,front)
         $ds9(buttons).region.back pbuttons(region,back)
+        $ds9(buttons).region.newgroup pbuttons(region,newgroup)
+        $ds9(buttons).region.group pbuttons(region,group)
         $ds9(buttons).region.all pbuttons(region,all)
         $ds9(buttons).region.none pbuttons(region,none)
         $ds9(buttons).region.invert pbuttons(region,invert)
-        $ds9(buttons).region.delete pbuttons(region,delete,selected)
-        $ds9(buttons).region.deleteall pbuttons(region,delete)
-        $ds9(buttons).region.newgroup pbuttons(region,newgroup)
-        $ds9(buttons).region.group pbuttons(region,group)
-        $ds9(buttons).region.list pbuttons(region,list)
+        $ds9(buttons).region.saveselect pbuttons(region,save,select)
+        $ds9(buttons).region.listselect pbuttons(region,list,select)
+        $ds9(buttons).region.deleteselect pbuttons(region,delete,select)
         $ds9(buttons).region.load pbuttons(region,load)
-        $ds9(buttons).region.deleteload pbuttons(region,delete,load)
         $ds9(buttons).region.save pbuttons(region,save)
-        $ds9(buttons).region.mask pbuttons(region,mask)
+        $ds9(buttons).region.list pbuttons(region,list)
+        $ds9(buttons).region.delete pbuttons(region,delete)
+        $ds9(buttons).region.deleteload pbuttons(region,delete,load)
         $ds9(buttons).region.show pbuttons(region,show)
         $ds9(buttons).region.showtext pbuttons(region,showtext)
         $ds9(buttons).region.autocentroid pbuttons(region,autocentroid)
@@ -935,15 +942,14 @@ proc PrefsDialogButtonbarRegion {f} {
 	-variable pbuttons(region,invert) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
+    $m add checkbutton -label [msgcat::mc {Save Selected Regions}] \
+	-variable pbuttons(region,save,select) \
+	-command {UpdateButtons buttons(region)}
+    $m add checkbutton -label [msgcat::mc {List Selected Regions}] \
+	-variable pbuttons(region,list,select) \
+	-command {UpdateButtons buttons(region)}
     $m add checkbutton -label [msgcat::mc {Delete Selected Regions}] \
-	-variable pbuttons(region,delete,selected) \
-	-command {UpdateButtons buttons(region)}
-    $m add checkbutton -label [msgcat::mc {Delete Regions}] \
-	-variable pbuttons(region,delete) \
-	-command {UpdateButtons buttons(region)}
-    $m add separator
-    $m add checkbutton -label "[msgcat::mc {List Regions}]..." \
-	-variable pbuttons(region,list) \
+	-variable pbuttons(region,delete,select) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Open Regions}]..." \
@@ -951,6 +957,12 @@ proc PrefsDialogButtonbarRegion {f} {
 	-command {UpdateButtons buttons(region)}
     $m add checkbutton -label "[msgcat::mc {Save Regions}]..." \
 	-variable pbuttons(region,save) \
+	-command {UpdateButtons buttons(region)}
+    $m add checkbutton -label "[msgcat::mc {List Regions}]..." \
+	-variable pbuttons(region,list) \
+	-command {UpdateButtons buttons(region)}
+    $m add checkbutton -label [msgcat::mc {Delete Regions}] \
+	-variable pbuttons(region,delete) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Delete and Open Regions}]..." \
@@ -1142,12 +1154,11 @@ proc UpdateRegionMenu {} {
 	    $mm entryconfig [msgcat::mc {Invert Selection}] -state normal
 
 	    $mm entryconfig [msgcat::mc {Delete Selected Regions}] -state normal
-	    $mm entryconfig [msgcat::mc {Delete Regions}] -state normal
-
-	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state normal
 
 	    $mm entryconfig "[msgcat::mc {Open Regions}]..." -state normal
 	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state normal
+	    $mm entryconfig [msgcat::mc {Delete Regions}] -state normal
 
 	    $mm entryconfig "[msgcat::mc {Delete and Open Regions}]..." \
 		-state normal
@@ -1171,13 +1182,16 @@ proc UpdateRegionMenu {} {
 	    $bb.none configure -state normal
 	    $bb.invert configure -state normal
 
-	    $bb.delete configure -state normal
-	    $bb.deleteall configure -state normal
+	    $bb.saveselect configure -state normal
+	    $bb.listselect configure -state normal
+	    $bb.deleteselect configure -state normal
 
-	    $bb.list configure -state normal
 	    $bb.load configure -state normal
-	    $bb.deleteload configure -state normal
 	    $bb.save configure -state normal
+	    $bb.list configure -state normal
+	    $bb.delete configure -state normal
+
+	    $bb.deleteload configure -state normal
 	} else {
 	    $mm entryconfig "[msgcat::mc {Get Information}]..." -state disabled
 
@@ -1197,15 +1211,13 @@ proc UpdateRegionMenu {} {
 	    $mm entryconfig [msgcat::mc {Invert Selection}] -state disabled
 
 	    $mm entryconfig [msgcat::mc {Delete Selected Regions}] -state disabled
-	    $mm entryconfig [msgcat::mc {Delete Regions}] -state disabled
-
-	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state disabled
 
 	    $mm entryconfig "[msgcat::mc {Open Regions}]..." -state disabled
 	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state disabled
+	    $mm entryconfig [msgcat::mc {Delete Regions}] -state disabled
 
-	    $mm entryconfig "[msgcat::mc {Delete and Open Regions}]..." \
-		-state disabled
+	    $mm entryconfig "[msgcat::mc {Delete and Open Regions}]..." -state disabled
 
 	    $bb.info configure -state disabled
 
@@ -1226,13 +1238,16 @@ proc UpdateRegionMenu {} {
 	    $bb.none configure -state disabled
 	    $bb.invert configure -state disabled
 
-	    $bb.delete configure -state disabled
-	    $bb.deleteall configure -state disabled
+	    $bb.saveselect configure -state disabled
+	    $bb.listselect configure -state disabled
+	    $bb.deleteselect configure -state disabled
 
-	    $bb.list configure -state disabled
 	    $bb.load configure -state disabled
-	    $bb.deleteload configure -state disabled
 	    $bb.save configure -state disabled
+	    $bb.list configure -state disabled
+	    $bb.delete configure -state disabled
+
+	    $bb.deleteload configure -state disabled
 	}
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state disabled

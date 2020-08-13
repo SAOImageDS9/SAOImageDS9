@@ -129,7 +129,7 @@ region : {RegionCmdLoad}
  | LOAD_ loadall STRING_ {RegionCmdLoadFn $3 $2}
 # backward compatibility
  | FILE_ loadall STRING_ {RegionCmdLoadFn $3 $2}
- | SAVE_ STRING_ {RegionCmdSave $2}
+ | SAVE_ save
  | LIST_ list
  | EPSILON_ INT_ {ProcessCmdSet pmarker epsilon $2 MarkerEpsilon}
  | SHOW_ yesno {ProcessCmdSet marker show $2 MarkerShow}
@@ -150,7 +150,7 @@ region : {RegionCmdLoad}
  | SELECTNONE_ {MarkerUnSelectAll}
  | DELETE_ delete
 # backward compatibility
- | DELETEALL_ {MarkerDeleteAll}
+ | DELETEALL_ {MarkerDeleteSelect {}}
  | FORMAT_ format {ProcessCmdSet marker format $2}
  | SYSTEM_ coordsys {ProcessCmdSet marker system $2}
  | SYSTEM_ wcssys {ProcessCmdSet marker system $2}
@@ -205,8 +205,19 @@ loadall : {set _ 0}
  | ALL_ {set _ 1}
  ;
 
-list : {RegionCmdList}
+save : STRING_ {RegionCmdSave $1 {}}
+ | SELECT_ STRING_ {RegionCmdSaveSelect $1 select}
+ ;
+
+list : {RegionCmdList {}}
+ | SELECT_ {RegionCmdList select}
  | CLOSE_ {SimpleTextDestroy markertxt}
+ ;
+
+delete : {MarkerDeleteSelect {}}
+ | SELECT_ {MarkerDeleteSelect select}
+# backward compatibility
+ | ALL_ {MarkerDeleteSelect {}}
  ;
 
 centroid : {MarkerCentroid}
@@ -226,10 +237,6 @@ select : ALL_ {MarkerSelectAll}
  | GROUP_ STRING_ {ProcessCmdSet marker tag $2; RegionCmdGroup select}
  ;
  
-delete : ALL_ {MarkerDeleteAll}
- | SELECT_ {MarkerDeleteSelect}
- ;
-
 format : DS9_ {set _ ds9}
  | XML_ {set _ xml}
  | CIAO_ {set _ ciao}

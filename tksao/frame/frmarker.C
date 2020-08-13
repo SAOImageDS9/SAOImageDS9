@@ -3505,27 +3505,6 @@ void Base::markerDeleteCallBackCmd(int id, CallBack::Type cb,
   result = TCL_ERROR;
 }
 
-void Base::markerDeleteCmd()
-{
-  undoMarkers->deleteAll();
-  Marker* mm = markers->head();
-  while (mm) {
-    if (mm->isSelected() && mm->canDelete()) {
-      Marker* next = markers->extractNext(mm);
-      update(PIXMAP);
-
-      mm->doCallBack(CallBack::DELETECB);
-      mm->deleteCBs();
-      undoMarkers->append(mm);
-      undoMarkerType = DELETE;
-
-      mm = next;
-    }
-    else
-      mm=mm->next();
-  }
-}
-
 void Base::markerDeleteCmd(const char* tag)
 {
   undoMarkers->deleteAll();
@@ -3569,14 +3548,14 @@ void Base::markerDeleteCmd(int id)
   }
 }
 
-void Base::markerDeleteAllCmd()
+void Base::markerDeleteAllCmd(int select)
 {
   undoMarkers->deleteAll();
   Marker* mm = markers->head();
   while (mm) {
-    if (mm->canDelete()) {
-      update(PIXMAP);
+    if ((mm->isSelected() || !select) && mm->canDelete()) {
       Marker* next = markers->extractNext(mm);
+      update(PIXMAP);
 
       mm->doCallBack(CallBack::DELETECB);
       mm->deleteCBs();
@@ -5307,7 +5286,7 @@ void Base::markerRulerSystemCmd(int id, Coord::CoordSystem sys,
 void Base::markerSaveCmd(const char* fileName, MarkerFormat type, 
 			 Coord::CoordSystem sys, Coord::SkyFrame sky,
 			 Coord::SkyFormat format,
-			 int strip)
+			 int strip, int select)
 {
   ofstream fn(fileName);
   if (!fn) {
@@ -5360,6 +5339,12 @@ void Base::markerSaveCmd(const char* fileName, MarkerFormat type,
     Marker* mm = markers->head();
     Marker* first = mm;
     while (mm) {
+      // selected
+      if (select) {
+	if (!mm->isSelected())
+	  goto next;
+      }
+
       switch (type) {
       case DS9:
 	// only do this once
@@ -5388,6 +5373,8 @@ void Base::markerSaveCmd(const char* fileName, MarkerFormat type,
 	mm->listXY(fn, sys, sky, format, strip);
 	break;
       }
+
+    next:
       mm=mm->next();
     }
   }

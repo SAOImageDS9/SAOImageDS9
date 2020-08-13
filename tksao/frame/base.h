@@ -1397,10 +1397,10 @@ public:
   void markerCutCmd();
   void markerCutCmd(const char*);
 
-  void markerDeleteCmd();
+  void markerDeleteAllCmd(int);
+
   void markerDeleteCmd(const char*);
   void markerDeleteCmd(int);
-  void markerDeleteAllCmd();
   void markerDeleteLastCmd();
   void markerDeleteCallBackCmd(int, CallBack::Type, const char*);
   void markerDeleteTagCmd(int);
@@ -1501,8 +1501,7 @@ public:
   void markerRulerSystemCmd(int, Coord::CoordSystem, Coord::SkyFrame, 
 			    Coord::CoordSystem, Coord::DistFormat);
 
-  void markerSaveCmd(const char*, MarkerFormat, Coord::CoordSystem, Coord::SkyFrame,
-		     Coord::SkyFormat, int strip);
+  void markerSaveCmd(const char*, MarkerFormat, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int strip, int select);
   void markerSaveTemplateCmd(const char*);
   void markerSegmentCreateVertexCmd(int, int, const Vector&);
   void markerSegmentDeleteVertexCmd(int, int);

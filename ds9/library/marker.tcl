@@ -980,34 +980,24 @@ proc MarkerSelectInvert {} {
     UpdateEditMenu
 }
 
-proc MarkerDeleteSelect {} {
-    global current
-    
-    if {$current(frame) != {}} {
-	$current(frame) marker delete
-	UpdateGroupDialog
-    }
-
-    UpdateEditMenu
-}
-
-proc MarkerDeleteAllMenu {} {
-    global current
+proc MarkerDelete {select} {
     global pds9
 
     if {$pds9(confirm)} {
-	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Delete All Regions?}]] != {ok}} {
-	    return
+	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Delete Regions?}]] != {ok}} {
+	    return 0
 	}
     }
-    MarkerDeleteAll
+
+    MarkerDeleteSelect $select
+    return 1
 }
 
-proc MarkerDeleteAll {} {
+proc MarkerDeleteSelect {select} {
     global current
     
     if {$current(frame) != {}} {
-	$current(frame) marker delete all
+	$current(frame) marker delete $select
 	UpdateGroupDialog
     }
 
@@ -1015,15 +1005,9 @@ proc MarkerDeleteAll {} {
 }
 
 proc MarkerDeleteLoad {} {
-    global pds9
-
-    if {$pds9(confirm)} {
-	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Delete All Regions?}]] != {ok}} {
-	    return
-	}
+    if {[MarkerDelete {}]} {
+	MarkerLoad
     }
-    MarkerDeleteAll
-    MarkerLoad
 }
 
 proc MarkerColor {} {
@@ -1062,7 +1046,7 @@ proc MarkerFont {} {
     }
 }
 
-proc MarkerList {} {
+proc MarkerList {select} {
     global current
     global marker
 
@@ -1075,7 +1059,8 @@ proc MarkerList {} {
 
     if {[MarkerSaveDialog [msgcat::mc {List Regions}]]} {
 	SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
-	    [$current(frame) marker list $marker(format) $marker(system) \
+	    [$current(frame) marker list $select \
+		 $marker(format) $marker(system) \
 		 $marker(sky) $marker(skyformat) $marker(strip)]
     }
 }
@@ -1224,7 +1209,7 @@ proc MarkerLoadFile {filename which format sys sky} {
     UpdateGroupDialog
 }
 
-proc MarkerSave {} {
+proc MarkerSave {select} {
     global current
     global marker
 
@@ -1241,7 +1226,7 @@ proc MarkerSave {} {
     }
 
     if {[MarkerSaveDialog [msgcat::mc {Save Regions}]]} {
-	$current(frame) marker save "\{$filename\}" \
+	$current(frame) marker save $select "\{$filename\}" \
 	    $marker(format) $marker(system) $marker(sky) \
 	    $marker(skyformat) $marker(strip)
     }
@@ -1499,7 +1484,7 @@ proc RegionCmdLoadFn {fn {all {0}}} {
 	$marker(load,format) $marker(load,system) $marker(load,sky)
 }
 
-proc RegionCmdSave {fn} {
+proc RegionCmdSave {fn select} {
     global marker
     global current
 
@@ -1510,12 +1495,12 @@ proc RegionCmdSave {fn} {
 	return
     }
 
-    $current(frame) marker save $fn $marker(format) \
+    $current(frame) marker save $select $fn $marker(format) \
 	$marker(system) $marker(sky) $marker(skyformat) $marker(strip)
     FileLast markerfbox $fn
 }
 
-proc RegionCmdList {} {
+proc RegionCmdList {select} {
     global marker
     global current
 
@@ -1527,7 +1512,7 @@ proc RegionCmdList {} {
     }
 
     SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
-	[$current(frame) marker list $marker(format) $marker(system) \
+	[$current(frame) marker list $select $marker(format) $marker(system) \
 	     $marker(sky) $marker(skyformat) $marker(strip)]
 }
 

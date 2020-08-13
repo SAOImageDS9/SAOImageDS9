@@ -595,6 +595,9 @@ proc FixPrefsVarOld {} {
 
     # 8.0
     FixVarRm pbuttons(file,samp)
+
+    # 8.1
+    FixVarRm pbuttons(region,mask)
 }
 
 proc FixPrefs8.1to8.2 {} {

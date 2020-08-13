@@ -206,7 +206,7 @@ loadall : {set _ 0}
  ;
 
 save : STRING_ {RegionCmdSave $1 {}}
- | SELECT_ STRING_ {RegionCmdSave $1 select}
+ | SELECT_ STRING_ {RegionCmdSave $2 select}
  ;
 
 list : {RegionCmdList {}}

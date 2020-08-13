@@ -4852,7 +4852,7 @@ proc region::yyparse {} {
                     115 { set _ 0 }
                     116 { set _ 1 }
                     117 { RegionCmdSave $1 {} }
-                    118 { RegionCmdSave $1 select }
+                    118 { RegionCmdSave $2 select }
                     119 { RegionCmdList {} }
                     120 { RegionCmdList select }
                     121 { SimpleTextDestroy markertxt }

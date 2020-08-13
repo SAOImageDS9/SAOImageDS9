@@ -218,6 +218,7 @@ delete : {MarkerDeleteSelect {}}
  | SELECT_ {MarkerDeleteSelect select}
 # backward compatibility
  | ALL_ {MarkerDeleteSelect {}}
+ | LOAD_ STRING_ {MarkerDeleteSelect {}; RegionCmdLoadFn $2}
  ;
 
 centroid : {MarkerCentroid}

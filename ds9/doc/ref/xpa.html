@@ -2117,8 +2117,8 @@ $xpaset -p ds9 raise</tt>
 <tt>Syntax:<br>
 regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [list [close]]<br>
+&nbsp;&nbsp;&nbsp; [save [select] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [list [select|close]]<br>
 &nbsp;&nbsp;&nbsp; [epsilon &lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [showtext yes|no]<br>
@@ -2126,13 +2126,10 @@ regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [getinfo]<br>
-&nbsp;&nbsp;&nbsp; [move front]<br>
-&nbsp;&nbsp;&nbsp; [move back]<br>
-&nbsp;&nbsp;&nbsp; [select all]<br>
-&nbsp;&nbsp;&nbsp; [select none]<br>
-&nbsp;&nbsp;&nbsp; [select invert]<br>
-&nbsp;&nbsp;&nbsp; [delete all]<br>
-&nbsp;&nbsp;&nbsp; [delete select]<br>
+&nbsp;&nbsp;&nbsp; [move front|back]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|invert]<br>
+&nbsp;&nbsp;&nbsp; [delete [select]]<br>
+&nbsp;&nbsp;&nbsp; [delete load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [format ds9|xml|ciao|saotng|saoimage|pros|xy]<br>
 &nbsp;&nbsp;&nbsp; [system image|physical|wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [sky fk4|fk5|icrs|galactic|ecliptic]<br>
@@ -2222,7 +2219,9 @@ $xpaset -p ds9 regions load all foo.reg # load foo.reg into all frames<br>
 $xpaset -p ds9 regions load '*.reg'# expand *.reg and load into current frame<br>
 $xpaset -p ds9 regions load all '*.reg' # expand *.reg and load into all frames<br>
 $xpaset -p ds9 regions save foo.reg<br>
+$xpaset -p ds9 regions save select foo.reg<br>
 $xpaset -p ds9 regions list<br>
+$xpaset -p ds9 regions list select<br>
 $xpaset -p ds9 regions list close<br>
 $xpaset -p ds9 regions epsilon 5<br>
 $xpaset -p ds9 regions show yes<br>
@@ -2237,8 +2236,9 @@ $xpaset -p ds9 regions move front<br>
 $xpaset -p ds9 regions select all<br>
 $xpaset -p ds9 regions select none<br>
 $xpaset -p ds9 regions select invert<br>
-$xpaset -p ds9 regions delete all<br>
+$xpaset -p ds9 regions delete<br>
 $xpaset -p ds9 regions delete select<br>
+$xpaset -p ds9 regions delete load foo.reg<br>
 $xpaset -p ds9 regions format ds9<br>
 $xpaset -p ds9 regions system wcs<br>
 $xpaset -p ds9 regions sky fk5<br>

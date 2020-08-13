@@ -2217,8 +2217,8 @@ raise</tt>
 <tt>Syntax:<br>
 regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [list [close]]<br>
+&nbsp;&nbsp;&nbsp; [save [select] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [list [close|select]]<br>
 &nbsp;&nbsp;&nbsp; [epsilon &lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [showtext yes|no]<br>
@@ -2226,13 +2226,10 @@ regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [getinfo]<br>
-&nbsp;&nbsp;&nbsp; [move front]<br>
-&nbsp;&nbsp;&nbsp; [move back]<br>
-&nbsp;&nbsp;&nbsp; [select all]<br>
-&nbsp;&nbsp;&nbsp; [select none]<br>
-&nbsp;&nbsp;&nbsp; [select invert]<br>
-&nbsp;&nbsp;&nbsp; [delete all]<br>
-&nbsp;&nbsp;&nbsp; [delete select]<br>
+&nbsp;&nbsp;&nbsp; [move front|back]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|invert]<br>
+&nbsp;&nbsp;&nbsp; [delete [select]]<br>
+&nbsp;&nbsp;&nbsp; [delete load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [format ds9|xml|ciao|saotng|saoimage|pros|xy]<br>
 &nbsp;&nbsp;&nbsp; [system image|physical|wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [sky fk4|fk5|icrs|galactic|ecliptic]<br>
@@ -2314,7 +2311,9 @@ regions load all foo.reg # load foo.reg into all frames<br>
 regions load *.reg# expand *.reg and load into current frame<br>
 regions load all *.reg # expand *.reg and load into all frames<br>
 regions save foo.reg<br>
+regions save select foo.reg<br>
 regions list<br>
+regions list select<br>
 regions list close<br>
 regions epsilon 5<br>
 regions show yes<br>
@@ -2329,8 +2328,9 @@ regions move front<br>
 regions select all<br>
 regions select none<br>
 regions select invert<br>
-regions delete all<br>
+regions delete<br>
 regions delete select<br>
+regions delete load foo.reg<br>
 regions format ds9<br>
 regions system wcs<br>
 regions sky fk5<br>

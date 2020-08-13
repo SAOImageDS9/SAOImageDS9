@@ -449,7 +449,7 @@ proc prefssend::yyparse {} {
                     9 { ProcessSendCmdGet pds9 theme }
                     10 { ProcessSendCmdGet ds9 threads }
                     11 { ProcessSendCmdYesNo pds9 iraf }
-                    15 { ProcessSendCmdGetYesNo pds9 bg,use }
+                    15 { ProcessSendCmdYesNo pds9 bg,use }
                     16 { ProcessSendCmdGet pds9 bg }
                     17 { ProcessSendCmdGet pds9 nan }
                 }

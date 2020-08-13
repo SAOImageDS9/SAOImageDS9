@@ -37,7 +37,7 @@ has : BGCOLOR_ hasbg
  | BACKGROUND_ COLOR_ hasbg
  ;
 
-hasbg : {ProcessSendCmdGetYesNo pds9 bg,use}
+hasbg : {ProcessSendCmdYesNo pds9 bg,use}
  ;
 
 bg : {ProcessSendCmdGet pds9 bg}

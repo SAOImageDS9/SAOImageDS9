@@ -368,6 +368,36 @@ proc PrismDialogUpdate {varname} {
     }
 }
 
+proc PrismDialogLoad {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global current
+
+    if {$current(frame) == {}} {
+	PrismDialog $varname
+	return
+    }
+    if {![$current(frame) has fits]} {
+	PrismDialog $varname
+	return
+    }
+
+    set fn [$current(frame) get fits file name full]
+    set id [string first "\[" $fn]
+    if {$id > 0} {
+	set fn [string range $fn 0 [expr $id-1]]
+    }
+
+    if {![file exists $fn]} {
+	PrismDialog $varname
+	return
+    }
+
+    set varname [PrismDialog prism]
+    PrismLoad $varname $fn
+}
+
 proc PrismLoadFile {varname} {
     upvar #0 $varname var
     global $varname
@@ -1007,10 +1037,11 @@ proc PrismCmdRef {ref} {
 }
 
 proc PrismCmdLoad {fn} {
-    global iprism
+    set varname [PrismDialog prism]
+    upvar #0 $varname var
+    global $varname
 
-    PrismDialog prism
-    PrismLoad [lindex $iprism(prisms) end] $fn
+    PrismLoad $varname $fn
 }
 
 proc PrismCmdExt {ext} {

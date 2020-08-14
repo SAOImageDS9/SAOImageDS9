@@ -25,7 +25,7 @@ proc FileMainMenu {} {
 	-menu $ds9(mb).file.export
     $ds9(mb).file add separator
     $ds9(mb).file add command -label "[msgcat::mc {Prism}]..." \
-	-command [list PrismDialog prism]
+	-command [list PrismDialogLoad prism]
     $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {Save Image}] \
 	-menu $ds9(mb).file.saveimage

@@ -1017,10 +1017,10 @@ proc prism::yyparse {} {
                     1 { set _ $1 }
                     2 { set _ $1 }
                     4 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    6 { PrismDialog prism }
-                    7 { PrismDialog prism }
+                    6 { PrismDialogLoad prism }
+                    7 { PrismDialogLoad prism }
                     8 { PrismCmdLoad $1 }
-                    9 { PrismCmdLoad $2 }
+                    9 { ProcessCmdCVAROpt PrismLoad $2 }
                     10 { ProcessCmdCVAR0 PrismDestroy }
                     11 { ProcessCmdCVAR0 PrismClear }
                     13 { ProcessCmdCVAR0 PrismImage }

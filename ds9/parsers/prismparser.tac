@@ -33,10 +33,10 @@ command : prism
  ;
 
 
-prism : {PrismDialog prism}
- | OPEN_ {PrismDialog prism}
+prism : {PrismDialogLoad prism}
+ | OPEN_ {PrismDialogLoad prism}
  | STRING_ {PrismCmdLoad $1}
- | LOAD_ STRING_ {PrismCmdLoad $2}
+ | LOAD_ STRING_ {ProcessCmdCVAROpt PrismLoad $2}
  | CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
  | CLEAR_ {ProcessCmdCVAR0 PrismClear}
  | EXT_ ext

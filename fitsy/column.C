@@ -168,17 +168,23 @@ template<class T> FitsAsciiColumnT<T>::FitsAsciiColumnT(FitsHead* head,
 							int i, int off)
   : FitsAsciiColumnA(head, i, off) {}
 
+template <> int FitsAsciiColumnT<int>::isInt() {return 1;}
+
 template <> Vector FitsAsciiColumnT<int>::dimension()
 {
   return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
     : Vector(INT_MIN,INT_MAX);
 }
 
+template <> int FitsAsciiColumnT<float>::isInt() {return 0;}
+
 template <> Vector FitsAsciiColumnT<float>::dimension()
 {
   return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
     : Vector(-FLT_MAX,FLT_MAX);
 }
+
+template <> int FitsAsciiColumnT<double>::isInt() {return 0;}
 
 template <> Vector FitsAsciiColumnT<double>::dimension()
 {
@@ -462,7 +468,6 @@ FitsBinColumnB::FitsBinColumnB(FitsHead* head, int i, int offset)
   : FitsBinColumn(head, i, offset)
 {
   byteswap_ = lsb();
-
 }
 
 // FitsBinColumnT
@@ -481,9 +486,29 @@ template<class T> char* FitsBinColumnT<T>::str(const char* ptr, int i)
   return (char*)dupstr(ost.str().c_str());
 }
 
+// unsigned char
+
+template <> int FitsBinColumnT<unsigned char>::isInt() {return 1;}
+  
+template <> Vector FitsBinColumnT<unsigned char>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
+    : Vector(0,UCHAR_MAX);
+}
+
 template <> double FitsBinColumnT<unsigned char>::value(const char* ptr, int i)
 {
   return (unsigned char)(*(ptr+offset_+i));
+}
+
+// short
+
+template <> int FitsBinColumnT<short>::isInt() {return 1;}
+
+template <> Vector FitsBinColumnT<short>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
+    : Vector(SHRT_MIN,SHRT_MAX);
 }
 
 template <> double FitsBinColumnT<short>::value(const char* ptr, int i)
@@ -506,6 +531,16 @@ template <> double FitsBinColumnT<short>::value(const char* ptr, int i)
   return u.s;
 }
 
+// unsigned short
+
+template <> int FitsBinColumnT<unsigned short>::isInt() {return 1;}
+
+template <> Vector FitsBinColumnT<unsigned short>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
+    : Vector(0,USHRT_MAX);
+}
+
 template <> double FitsBinColumnT<unsigned short>::value(const char* ptr, int i)
 {
   const char* p = ptr+offset_+i*2;
@@ -524,6 +559,16 @@ template <> double FitsBinColumnT<unsigned short>::value(const char* ptr, int i)
   }
 
   return u.s;
+}
+
+// int
+
+template <> int FitsBinColumnT<int>::isInt() {return 1;}
+
+template <> Vector FitsBinColumnT<int>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
+    : Vector(INT_MIN,INT_MAX);
 }
 
 template <> double FitsBinColumnT<int>::value(const char* ptr, int i)
@@ -546,6 +591,16 @@ template <> double FitsBinColumnT<int>::value(const char* ptr, int i)
   return u.i;
 }
 
+// unsigned int
+
+template <> int FitsBinColumnT<unsigned int>::isInt() {return 1;}
+
+template <> Vector FitsBinColumnT<unsigned int>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
+    : Vector(0,UINT_MAX);
+}
+
 template <> double FitsBinColumnT<unsigned int>::value(const char* ptr, int i)
 {
   const char* p = ptr+offset_+i*4;
@@ -564,6 +619,33 @@ template <> double FitsBinColumnT<unsigned int>::value(const char* ptr, int i)
     memcpy(u.c,p,4);
 
   return u.i;
+}
+
+// some older versions of gcc do not have LLONG
+#ifndef LLONG_MIN
+#  ifdef LONG_LONG_MIN
+#    define LLONG_MIN LONG_LONG_MIN
+#  else
+#    define LLONG_MIN LONG_MIN
+#  endif
+#endif
+
+#ifndef LLONG_MAX
+#  ifdef LONG_LONG_MAX
+#    define LLONG_MAX LONG_LONG_MAX
+#  else
+#    define LLONG_MAX LONG_MAX
+#  endif
+#endif
+
+// long long
+
+template <> int FitsBinColumnT<long long>::isInt() {return 1;}
+
+template <> Vector FitsBinColumnT<long long>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
+    : Vector(LLONG_MIN,LLONG_MAX);
 }
 
 template <> double FitsBinColumnT<long long>::value(const char* ptr, int i)
@@ -590,6 +672,16 @@ template <> double FitsBinColumnT<long long>::value(const char* ptr, int i)
   return u.i;
 }
 
+// float
+
+template <> int FitsBinColumnT<float>::isInt() {return 0;}
+
+template <> Vector FitsBinColumnT<float>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
+    : Vector(-FLT_MAX,FLT_MAX);
+}
+
 template <> double FitsBinColumnT<float>::value(const char* ptr, int i)
 {
   const char* p = ptr+offset_+i*4;
@@ -608,6 +700,16 @@ template <> double FitsBinColumnT<float>::value(const char* ptr, int i)
     memcpy(u.c,p,4);
 
   return u.f;
+}
+
+// double
+
+template <> int FitsBinColumnT<double>::isInt() {return 0;}
+
+template <> Vector FitsBinColumnT<double>::dimension()
+{
+  return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
+    : Vector(-DBL_MAX,DBL_MAX);
 }
 
 template <> double FitsBinColumnT<double>::value(const char* ptr, int i)
@@ -632,71 +734,6 @@ template <> double FitsBinColumnT<double>::value(const char* ptr, int i)
     memcpy(u.c,p,8);
 
   return u.d;
-}
-
-template <> Vector FitsBinColumnT<unsigned char>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
-    : Vector(0,UCHAR_MAX);
-}
-
-template <> Vector FitsBinColumnT<short>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
-    : Vector(SHRT_MIN,SHRT_MAX);
-}
-
-template <> Vector FitsBinColumnT<unsigned short>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
-    : Vector(0,USHRT_MAX);
-}
-
-template <> Vector FitsBinColumnT<int>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
-    : Vector(INT_MIN,INT_MAX);
-}
-
-template <> Vector FitsBinColumnT<unsigned int>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
-    : Vector(0,UINT_MAX);
-}
-
-// some older versions of gcc do not have LLONG
-#ifndef LLONG_MIN
-#  ifdef LONG_LONG_MIN
-#    define LLONG_MIN LONG_LONG_MIN
-#  else
-#    define LLONG_MIN LONG_MIN
-#  endif
-#endif
-
-#ifndef LLONG_MAX
-#  ifdef LONG_LONG_MAX
-#    define LLONG_MAX LONG_LONG_MAX
-#  else
-#    define LLONG_MAX LONG_MAX
-#  endif
-#endif
-
-template <> Vector FitsBinColumnT<long long>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_-.5,tlmax_+.5) 
-    : Vector(LLONG_MIN,LLONG_MAX);
-}
-
-template <> Vector FitsBinColumnT<float>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
-    : Vector(-FLT_MAX,FLT_MAX);
-}
-
-template <> Vector FitsBinColumnT<double>::dimension()
-{
-  return (hastlmin_ || hastlmax_) ? Vector(tlmin_,tlmax_) 
-    : Vector(-DBL_MAX,DBL_MAX);
 }
 
 template class FitsAsciiColumnT<int>;

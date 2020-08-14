@@ -198,7 +198,8 @@ proc PlotBarUpdateElement {varname} {
     }
     
     if {$var(theme)} {
-	set color [ThemeTreeBackground]
+#	set color [ThemeTreeBackground]
+	set color [ThemeBold]
 	set errorcolor [ThemeBold]
     } else {
 	set color $var(graph,ds,bar,border,color)

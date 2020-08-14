@@ -88,7 +88,7 @@ proc PlotDefState {} {
     set pap(graph,ds,line,shape,fill) 1
 
     # Bar
-    set pap(graph,ds,bar,border,color) white
+    set pap(graph,ds,bar,border,color) black
     set pap(graph,ds,bar,border,width) 1
     set pap(graph,ds,bar,fill) 1
     set pap(graph,ds,bar,color) black

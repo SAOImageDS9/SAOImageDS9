@@ -426,14 +426,16 @@ int TclFITSY::histogram(int argc, const char* argv[])
   // fill Axes
   char* ptr = (char*)fits->data();
 
-  //  min -= .5;
-  //  max += .5;
+  if (col->isInt()) {
+    min -= .5;
+    max += .5;
+  }
   double diff = max-min;
   double barwidth = diff/num;
 
   for (int ii=0; ii<num; ii++)
     x[ii] = double(ii)*barwidth + barwidth/2. + min;
-    //    x[ii] = double(ii)/num*diff + min;
+  //  x[ii] = double(ii)/num*diff + min;
 
   for (int ii=0; ii<rows; ii++, ptr+=width) {
     double vv = col->value(ptr);

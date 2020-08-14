@@ -71,6 +71,7 @@ public:
   int hasMinMax() {return min_ != -DBL_MAX ? 1 : 0;}
   int hasTLMinTLMax() {return hastlmin_ && hastlmax_;}
 
+  virtual int isInt() =0;
   virtual char* str(const char* ptr, int i =0);
   virtual double value(const char*, int i =0) {return 0;}
   virtual Vector dimension() {return Vector();}
@@ -88,6 +89,7 @@ public:
 class FitsAsciiColumnStr : public FitsAsciiColumn {
 public:
   FitsAsciiColumnStr(FitsHead*, int, int);
+  int isInt() {return 0;}
 };
 
 class FitsAsciiColumnA : public FitsAsciiColumn {
@@ -106,6 +108,7 @@ class FitsAsciiColumnT : public FitsAsciiColumnA {
 public:
   FitsAsciiColumnT(FitsHead*, int, int);
 
+  int isInt();
   Vector dimension();
 };
 
@@ -134,6 +137,7 @@ public:
   FitsBinColumnStr(FitsHead*, int, int);
 
   char* str(const char* ptr, int i =0);
+  int isInt() {return 0;}
 };
 
 class FitsBinColumnLogical : public FitsBinColumn {
@@ -141,6 +145,7 @@ public:
   FitsBinColumnLogical(FitsHead*, int, int);
 
   char* str(const char* ptr, int i =0);
+  int isInt() {return 0;}
 };
 
 class FitsBinColumnBit : public FitsBinColumn {
@@ -148,6 +153,7 @@ public:
   FitsBinColumnBit(FitsHead*, int, int);
 
   char* str(const char* ptr, int i =0);
+  int isInt() {return 0;}
 };
 
 class FitsBinColumnArray : public FitsBinColumn {
@@ -165,6 +171,7 @@ public:
   virtual ~FitsBinColumnArray();  
 
   virtual void* get(const char* heap, const char* ptr, int* cnt);
+  int isInt() {return 0;}
 };
 
 class FitsBinColumnArrayP : public FitsBinColumnArray {
@@ -189,7 +196,6 @@ protected:
 
 public:
   FitsBinColumnB(FitsHead*, int, int);
-
 };
 
 template<class T>
@@ -203,6 +209,7 @@ public:
   char* str(const char* ptr, int i =0);
   double value(const char*, int i =0);
   Vector dimension();
+  int isInt();
 };
 
 #endif

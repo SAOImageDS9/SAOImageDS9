@@ -147,7 +147,7 @@ proc CreateNameNumberFrame {which type} {
     $ds9(next) bg color $pds9(bg)
     $ds9(next) bg color $pds9(bg,use)
     $ds9(next) nan color $pds9(nan)
-    $ds9(next) highlite color [ThemeBold]
+    $ds9(next) highlite color blue
 
     $ds9(next) iraf align $pds9(iraf)
 

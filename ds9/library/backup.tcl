@@ -111,6 +111,9 @@ proc Backup {fn} {
     # User Plots
     PlotBackup $ch $dir
 
+    # Prisms
+    PrismBackup $ch $dir
+
     # all done
     close $ch
 }

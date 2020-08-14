@@ -865,6 +865,16 @@ proc PrismImage {varname} {
     FinishLoad
 }
 
+# used by backup	
+proc PrismSetExt {varname ext} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(dir) selection set $ext
+    # let dialog catchup
+    update
+}
+
 proc PrismColsMenu {varname f ww} {
     upvar #0 $varname var
     global $varname
@@ -1056,7 +1066,6 @@ proc PrismCmdExt {ext} {
     } else {
 	Error "[msgcat::mc {Extension not found}]: $ext"
     }
-
 }
 
 proc PrismCmdExtName {extname} {
@@ -1073,3 +1082,76 @@ proc PrismCmdExtName {extname} {
 	Error "[msgcat::mc {Extension not found}]: $extname"
     }
 }
+
+# Backup
+
+proc PrismBackup {ch dir} {
+    global iprism
+    global pds9
+
+    foreach ww $iprism(prisms) {
+	set varname $ww
+	upvar #0 $varname var
+	global $varname
+
+	set fdir [file join $dir $ww]
+	set rdir "./[lindex [file split $dir] end]/$ww"
+	
+	# create dir if needed
+	if {![file isdirectory $fdir]} {
+	    if {[catch {file mkdir $fdir}]} {
+		Error [msgcat::mc {An error has occurred during backup}]
+		return
+	    }
+	}
+
+	puts $ch "PrismDialog $varname"
+	if {$var(fn) != {}} {
+	    set fn $var(fn)
+
+	    # check for extension
+	    set id [string first "\[" $var(fn)]
+	    if {$id > 0} {
+		set fn [string range $var(fn) 0 [expr $id-1]]
+		set ext [string range $var(fn) $id end]
+	    } else {
+		set fn $var(fn)
+		set ext {}
+	    }
+
+	    if {![file exists $fn]} {
+		return 0
+	    }
+
+	    if {$pds9(backup)} {
+		# look for sym links
+		switch [file type $fn] {
+		    file {}
+		    link {set fn [file join [file dirname $fn] [file readlink $fn]]}
+		    default {
+			return 0
+		    }
+		}
+
+		set src [lindex [file split $fn] end]
+		if {![file exists [file join $fdir $src]]} {
+		    if {[catch {file copy $var(fn) $fdir}]} {
+			return 0
+		    }
+		}
+		puts $ch "PrismLoad $varname $rdir/[file tail $fn]"
+	    } else {
+		if {[file pathtype $fn] == {relative}} {
+		    puts $ch "PrismLoad $varname [file join [pwd] $fn]"
+		} else {
+		    puts $ch "PrismLoad $varname $fn"
+		}
+	    }
+	}
+
+	if {$var(ext) > 0} {
+	    puts $ch "PrismSetExt $varname $var(ext)"
+	}
+    }
+}
+

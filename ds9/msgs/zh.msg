@@ -71,6 +71,7 @@
 ::msgcat::mcset zh {Backup} 
 ::msgcat::mcset zh {Back} 
 ::msgcat::mcset zh {Bar Plot Tool} 
+::msgcat::mcset zh {Bar Width} 
 ::msgcat::mcset zh {Bar} 
 ::msgcat::mcset zh {Bias} 
 ::msgcat::mcset zh {Bin 3rd Column} 
@@ -97,6 +98,8 @@
 ::msgcat::mcset zh {Block} 
 ::msgcat::mcset zh {Blue} 
 ::msgcat::mcset zh {Bold} 
+::msgcat::mcset zh {Border Color} 
+::msgcat::mcset zh {Border Width} 
 ::msgcat::mcset zh {Border} 
 ::msgcat::mcset zh {Bottom} 
 ::msgcat::mcset zh {Box Annulus} [encoding convertfrom big5 "\xA4\xE8 \xA7\xCE \xB0\xE9"]
@@ -218,8 +221,6 @@
 ::msgcat::mcset zh {Delete All Frames} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xA9\xD2 \xA6\xB3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Delete All Groups?} 
 ::msgcat::mcset zh {Delete All Groups} 
-::msgcat::mcset zh {Delete All Regions?} 
-::msgcat::mcset zh {Delete All Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xA5\xEF \xB3\xA1 \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Delete All} 
 ::msgcat::mcset zh {Delete Color Tags} 
 ::msgcat::mcset zh {Delete Dataset} 
@@ -227,7 +228,10 @@
 ::msgcat::mcset zh {Delete Graph} 
 ::msgcat::mcset zh {Delete Group} 
 ::msgcat::mcset zh {Delete Load} 
+::msgcat::mcset zh {Delete Regions?} 
+::msgcat::mcset zh {Delete Regions} 
 ::msgcat::mcset zh {Delete Selected Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBF\xEF \xA8\xFA \xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {Delete Select} 
 ::msgcat::mcset zh {Delete and Open Regions} 
 ::msgcat::mcset zh {Delete} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3"]
 ::msgcat::mcset zh {Depth} 
@@ -437,6 +441,8 @@
 ::msgcat::mcset zh {Line} [encoding convertfrom big5 "\xAA\xBD \xBD\x75"]
 ::msgcat::mcset zh {List Data} 
 ::msgcat::mcset zh {List Regions} [encoding convertfrom big5 "\xA6\x43 \xA5\x58 \xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {List Selected Regions} 
+::msgcat::mcset zh {List Select} 
 ::msgcat::mcset zh {List} 
 ::msgcat::mcset zh {Load Analysis Commands} 
 ::msgcat::mcset zh {Load Color Tags} 
@@ -497,7 +503,6 @@
 ::msgcat::mcset zh {Major} 
 ::msgcat::mcset zh {Manual} 
 ::msgcat::mcset zh {Mask Parameters} 
-::msgcat::mcset zh {Mask} 
 ::msgcat::mcset zh {Match Axes} 
 ::msgcat::mcset zh {Match Bin} 
 ::msgcat::mcset zh {Match Catalog requires at least 1 row per catalog} 
@@ -747,6 +752,8 @@
 ::msgcat::mcset zh {Save RGB Cube} 
 ::msgcat::mcset zh {Save RGB Image} 
 ::msgcat::mcset zh {Save Regions} [encoding convertfrom big5 "\xC0\x78 \xA6\x73 \xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {Save Selected Regions} 
+::msgcat::mcset zh {Save Select} 
 ::msgcat::mcset zh {Save Slice} 
 ::msgcat::mcset zh {Save Template} 
 ::msgcat::mcset zh {Save as} 

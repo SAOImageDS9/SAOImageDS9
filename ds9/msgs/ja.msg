@@ -71,6 +71,7 @@
 ::msgcat::mcset ja {Backup} 
 ::msgcat::mcset ja {Back} [encoding convertfrom euc-jp "\xc1\xb0"]
 ::msgcat::mcset ja {Bar Plot Tool} 
+::msgcat::mcset ja {Bar Width} 
 ::msgcat::mcset ja {Bar} 
 ::msgcat::mcset ja {Bias} [encoding convertfrom euc-jp "\xa5\xd0\xa5\xa4\xa5\xa2\xa5\xb9"]
 ::msgcat::mcset ja {Bin 3rd Column} [encoding convertfrom euc-jp "\xc2\xe8\xa3\xb3\xa4\xce\xce\xf3\xa4\xf2\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1"]
@@ -97,6 +98,8 @@
 ::msgcat::mcset ja {Block} [encoding convertfrom euc-jp "\xa5\xd6\xa5\xed\xa5\xc3\xa5\xaf"]
 ::msgcat::mcset ja {Blue} [encoding convertfrom euc-jp "\xc0\xc4\xbf\xa7"]
 ::msgcat::mcset ja {Bold} [encoding convertfrom euc-jp "\xc2\xc0\xbb\xfa"]
+::msgcat::mcset ja {Border Color} 
+::msgcat::mcset ja {Border Width} 
 ::msgcat::mcset ja {Border} [encoding convertfrom euc-jp "\xcf\xc8\xc0\xfe"]
 ::msgcat::mcset ja {Bottom} 
 ::msgcat::mcset ja {Box Annulus} [encoding convertfrom euc-jp "\xc3\xe6\xc8\xb4\xa4\xad\xbb\xcd\xb3\xd1\xb7\xc1"]
@@ -218,8 +221,6 @@
 ::msgcat::mcset ja {Delete All Frames} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete All Groups?} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee\xa4\xb7\xa4\xde\xa4\xb9\xa4\xab\x3f"]
 ::msgcat::mcset ja {Delete All Groups} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
-::msgcat::mcset ja {Delete All Regions?} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xce\xce\xb0\xe8\xa4\xf2\xbe\xc3\xb5\xee\xa4\xb7\xa4\xde\xa4\xb9\xa4\xab\x3f"]
-::msgcat::mcset ja {Delete All Regions} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xce\xce\xb0\xe8\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Color Tags} 
 ::msgcat::mcset ja {Delete Dataset} 
@@ -227,7 +228,10 @@
 ::msgcat::mcset ja {Delete Graph} 
 ::msgcat::mcset ja {Delete Group} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Load} 
+::msgcat::mcset ja {Delete Regions?} 
+::msgcat::mcset ja {Delete Regions} 
 ::msgcat::mcset ja {Delete Selected Regions} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xa4\xb7\xa4\xbf\xce\xce\xb0\xe8\xa4\xf2\xba\xef\xbd\xfc"]
+::msgcat::mcset ja {Delete Select} 
 ::msgcat::mcset ja {Delete and Open Regions} 
 ::msgcat::mcset ja {Delete} [encoding convertfrom euc-jp "\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Depth} [encoding convertfrom euc-jp "\xbf\xbc\xa4\xb5"]
@@ -437,6 +441,8 @@
 ::msgcat::mcset ja {Line} [encoding convertfrom euc-jp "\xc0\xfe"]
 ::msgcat::mcset ja {List Data} 
 ::msgcat::mcset ja {List Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xce\xf3\xb5\xf3"]
+::msgcat::mcset ja {List Selected Regions} 
+::msgcat::mcset ja {List Select} 
 ::msgcat::mcset ja {List} [encoding convertfrom euc-jp "\xce\xf3\xb5\xf3"]
 ::msgcat::mcset ja {Load Analysis Commands} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Color Tags} 
@@ -497,7 +503,6 @@
 ::msgcat::mcset ja {Major} [encoding convertfrom euc-jp "\xc4\xb9\xbc\xb4"]
 ::msgcat::mcset ja {Manual} [encoding convertfrom euc-jp "\xbc\xea\xc6\xb0"]
 ::msgcat::mcset ja {Mask Parameters} [encoding convertfrom euc-jp "\xa5\xde\xa5\xb9\xa5\xaf\xa4\xce\xc0\xdf\xc4\xea"]
-::msgcat::mcset ja {Mask} 
 ::msgcat::mcset ja {Match Axes} 
 ::msgcat::mcset ja {Match Bin} 
 ::msgcat::mcset ja {Match Catalog requires at least 1 row per catalog} 
@@ -747,6 +752,8 @@
 ::msgcat::mcset ja {Save RGB Cube} 
 ::msgcat::mcset ja {Save RGB Image} 
 ::msgcat::mcset ja {Save Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xca\xdd\xc2\xb8"]
+::msgcat::mcset ja {Save Selected Regions} 
+::msgcat::mcset ja {Save Select} 
 ::msgcat::mcset ja {Save Slice} 
 ::msgcat::mcset ja {Save Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save as} 

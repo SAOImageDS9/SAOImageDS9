@@ -57,6 +57,9 @@ proc PlotBarMenus {varname} {
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).databar add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).databar.color
+    $var(mb).databar add command -label "[msgcat::mc {Bar Width}]..." \
+	-command [list PlotBarWidthDialog $varname]
+    $var(mb).databar add separator
     $var(mb).databar add cascade -label [msgcat::mc {Error}] \
 	-menu $var(mb).databar.error
     $var(mb).databar add separator
@@ -102,6 +105,71 @@ proc PlotBarMenus {varname} {
 	[list PlotBarUpdateElement $varname]
     WidthDashMenu $var(mb).databar.error.width $varname graph,ds,error,width \
 	{} [list PlotBarUpdateElement $varname] {}
+}
+
+proc PlotBarWidthDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ed
+
+    set w {.apbarwidth}
+    set mb {.apbarwidthmb}
+
+    set ed(top) $w
+    set ed(ok) 0
+    set ed(width) $var(graph,ds,bar,width)
+
+    DialogCreate $w [msgcat::mc {Bar Width}] ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
+
+    # Param
+    set f [ttk::frame $w.param]
+    ttk::label $f.title -text [msgcat::mc {Bar Width}]
+    ttk::entry $f.width -textvariable ed(width) -width 13
+
+    grid $f.title $f.width -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogCenter $w 
+    DialogWait $w ed(ok) $w.param.width
+    DialogDismiss $w
+    destroy $mb
+
+    if {$ed(ok)} {
+	set ${varname}(graph,ds,bar,width) $ed(width)
+	PlotBarUpdateElement $varname
+    }
+
+    set rr $ed(ok)
+    unset ed
+    return $rr
 }
 
 proc PlotBarAddGraph {varname} {

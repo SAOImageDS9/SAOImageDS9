@@ -71,6 +71,7 @@
 ::msgcat::mcset cs {Backup} [encoding convertfrom iso8859-2 {Záloha}]
 ::msgcat::mcset cs {Back} [encoding convertfrom iso8859-2 {Zpìt}]
 ::msgcat::mcset cs {Bar Plot Tool} 
+::msgcat::mcset cs {Bar Width} 
 ::msgcat::mcset cs {Bar} 
 ::msgcat::mcset cs {Bias} 
 ::msgcat::mcset cs {Bin 3rd Column} [encoding convertfrom iso8859-2 {Binuj tøetí sloupec}]
@@ -97,6 +98,8 @@
 ::msgcat::mcset cs {Block} 
 ::msgcat::mcset cs {Blue} [encoding convertfrom iso8859-2 {Modrá}]
 ::msgcat::mcset cs {Bold} [encoding convertfrom iso8859-2 {Tuènì}]
+::msgcat::mcset cs {Border Color} 
+::msgcat::mcset cs {Border Width} 
 ::msgcat::mcset cs {Border} [encoding convertfrom iso8859-2 {Okraj}]
 ::msgcat::mcset cs {Bottom} 
 ::msgcat::mcset cs {Box Annulus} 
@@ -218,8 +221,6 @@
 ::msgcat::mcset cs {Delete All Frames} [encoding convertfrom iso8859-2 {Smazat v¹echny snímky}]
 ::msgcat::mcset cs {Delete All Groups?} [encoding convertfrom iso8859-2 {Smazat v¹echny skupiny?}]
 ::msgcat::mcset cs {Delete All Groups} [encoding convertfrom iso8859-2 {Smazat v¹echny skupiny}]
-::msgcat::mcset cs {Delete All Regions?} [encoding convertfrom iso8859-2 {Smazat v¹echny oblasti?}]
-::msgcat::mcset cs {Delete All Regions} [encoding convertfrom iso8859-2 {Smazat v¹echny oblasti}]
 ::msgcat::mcset cs {Delete All} [encoding convertfrom iso8859-2 {Smazat v¹e}]
 ::msgcat::mcset cs {Delete Color Tags} 
 ::msgcat::mcset cs {Delete Dataset} 
@@ -227,7 +228,10 @@
 ::msgcat::mcset cs {Delete Graph} 
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
 ::msgcat::mcset cs {Delete Load} 
+::msgcat::mcset cs {Delete Regions?} 
+::msgcat::mcset cs {Delete Regions} 
 ::msgcat::mcset cs {Delete Selected Regions} [encoding convertfrom iso8859-2 {Smazat vybrané oblasti}]
+::msgcat::mcset cs {Delete Select} 
 ::msgcat::mcset cs {Delete and Open Regions} 
 ::msgcat::mcset cs {Delete} [encoding convertfrom iso8859-2 {Smazat}]
 ::msgcat::mcset cs {Depth} [encoding convertfrom iso8859-2 {Hloubka}]
@@ -437,6 +441,8 @@
 ::msgcat::mcset cs {Line} 
 ::msgcat::mcset cs {List Data} 
 ::msgcat::mcset cs {List Regions} [encoding convertfrom iso8859-2 {Seznam oblastí}]
+::msgcat::mcset cs {List Selected Regions} 
+::msgcat::mcset cs {List Select} 
 ::msgcat::mcset cs {List} [encoding convertfrom iso8859-2 {Seznam}]
 ::msgcat::mcset cs {Load Analysis Commands} [encoding convertfrom iso8859-2 {Nahrát analytické pøíkazy}]
 ::msgcat::mcset cs {Load Color Tags} 
@@ -497,7 +503,6 @@
 ::msgcat::mcset cs {Major} 
 ::msgcat::mcset cs {Manual} 
 ::msgcat::mcset cs {Mask Parameters} [encoding convertfrom iso8859-2 {Nastavení masky}]
-::msgcat::mcset cs {Mask} 
 ::msgcat::mcset cs {Match Axes} 
 ::msgcat::mcset cs {Match Bin} [encoding convertfrom iso8859-2 {Zarovnat bin}]
 ::msgcat::mcset cs {Match Catalog requires at least 1 row per catalog} 
@@ -747,6 +752,8 @@
 ::msgcat::mcset cs {Save RGB Cube} 
 ::msgcat::mcset cs {Save RGB Image} 
 ::msgcat::mcset cs {Save Regions} [encoding convertfrom iso8859-2 {Ulo¾it oblasti}]
+::msgcat::mcset cs {Save Selected Regions} 
+::msgcat::mcset cs {Save Select} 
 ::msgcat::mcset cs {Save Slice} 
 ::msgcat::mcset cs {Save Template} [encoding convertfrom iso8859-2 {Ulo¾it ¹ablony}]
 ::msgcat::mcset cs {Save as} 

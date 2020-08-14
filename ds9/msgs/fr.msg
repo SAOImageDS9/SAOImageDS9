@@ -71,6 +71,7 @@
 ::msgcat::mcset fr {Backup} 
 ::msgcat::mcset fr {Back} {Retour}
 ::msgcat::mcset fr {Bar Plot Tool} 
+::msgcat::mcset fr {Bar Width} 
 ::msgcat::mcset fr {Bar} 
 ::msgcat::mcset fr {Bias} {Biais}
 ::msgcat::mcset fr {Bin 3rd Column} [encoding convertfrom iso8859-1 {3ème colonne de bin}]
@@ -97,6 +98,8 @@
 ::msgcat::mcset fr {Block} {Bin}
 ::msgcat::mcset fr {Blue} {Bleu}
 ::msgcat::mcset fr {Bold} {Gras}
+::msgcat::mcset fr {Border Color} 
+::msgcat::mcset fr {Border Width} 
 ::msgcat::mcset fr {Border} {Bordure}
 ::msgcat::mcset fr {Bottom} 
 ::msgcat::mcset fr {Box Annulus} [encoding convertfrom iso8859-1 {Anneau de boîte}]
@@ -218,8 +221,6 @@
 ::msgcat::mcset fr {Delete All Frames} [encoding convertfrom iso8859-1 {Supprimer toutes les fenêtres}] 
 ::msgcat::mcset fr {Delete All Groups?} {Supprimer tous les groupes ?} 
 ::msgcat::mcset fr {Delete All Groups} {Supprimer tous les groupes} 
-::msgcat::mcset fr {Delete All Regions?} [encoding convertfrom iso8859-1 {Supprimer toutes les régions ?}]
-::msgcat::mcset fr {Delete All Regions} [encoding convertfrom iso8859-1 {Supprimer toutes les régions}]
 ::msgcat::mcset fr {Delete All} 
 ::msgcat::mcset fr {Delete Color Tags} 
 ::msgcat::mcset fr {Delete Dataset} 
@@ -227,7 +228,10 @@
 ::msgcat::mcset fr {Delete Graph} 
 ::msgcat::mcset fr {Delete Group} {Supprimer le groupe} 
 ::msgcat::mcset fr {Delete Load} 
+::msgcat::mcset fr {Delete Regions?} 
+::msgcat::mcset fr {Delete Regions} 
 ::msgcat::mcset fr {Delete Selected Regions} [encoding convertfrom iso8859-1 {Supprimer les régions séléctionnées}]
+::msgcat::mcset fr {Delete Select} 
 ::msgcat::mcset fr {Delete and Open Regions} 
 ::msgcat::mcset fr {Delete} {Supprimer} 
 ::msgcat::mcset fr {Depth} {Profondeur} 
@@ -437,6 +441,8 @@
 ::msgcat::mcset fr {Line} {Ligne}
 ::msgcat::mcset fr {List Data} 
 ::msgcat::mcset fr {List Regions} [encoding convertfrom iso8859-1 {Énumérer les régions}]
+::msgcat::mcset fr {List Selected Regions} 
+::msgcat::mcset fr {List Select} 
 ::msgcat::mcset fr {List} [encoding convertfrom iso8859-1 {Énumérer}]
 ::msgcat::mcset fr {Load Analysis Commands} {Charger le commandes d'analyse}
 ::msgcat::mcset fr {Load Color Tags} 
@@ -497,7 +503,6 @@
 ::msgcat::mcset fr {Major} {Majeure}
 ::msgcat::mcset fr {Manual} 
 ::msgcat::mcset fr {Mask Parameters} [encoding convertfrom iso8859-1 {Paramètres de masque}]
-::msgcat::mcset fr {Mask} 
 ::msgcat::mcset fr {Match Axes} 
 ::msgcat::mcset fr {Match Bin} 
 ::msgcat::mcset fr {Match Catalog requires at least 1 row per catalog} 
@@ -747,6 +752,8 @@
 ::msgcat::mcset fr {Save RGB Cube} 
 ::msgcat::mcset fr {Save RGB Image} 
 ::msgcat::mcset fr {Save Regions} 
+::msgcat::mcset fr {Save Selected Regions} 
+::msgcat::mcset fr {Save Select} 
 ::msgcat::mcset fr {Save Slice} 
 ::msgcat::mcset fr {Save Template} 
 ::msgcat::mcset fr {Save as} 

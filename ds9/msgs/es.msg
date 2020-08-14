@@ -71,6 +71,7 @@
 ::msgcat::mcset es {Backup} 
 ::msgcat::mcset es {Back} [encoding convertfrom iso8859-1 {Para atrás}]  
 ::msgcat::mcset es {Bar Plot Tool} 
+::msgcat::mcset es {Bar Width} 
 ::msgcat::mcset es {Bar} 
 ::msgcat::mcset es {Bias} 
 ::msgcat::mcset es {Bin 3rd Column} {Bin tercera columna} 
@@ -97,6 +98,8 @@
 ::msgcat::mcset es {Block} {Bin}
 ::msgcat::mcset es {Blue} {Azul}
 ::msgcat::mcset es {Bold} {Negrilla}
+::msgcat::mcset es {Border Color} 
+::msgcat::mcset es {Border Width} 
 ::msgcat::mcset es {Border} {Borde}
 ::msgcat::mcset es {Bottom} 
 ::msgcat::mcset es {Box Annulus} {Caja con caja inscrita}
@@ -218,8 +221,6 @@
 ::msgcat::mcset es {Delete All Frames} {Borrar todos los marcos}
 ::msgcat::mcset es {Delete All Groups?} [encoding convertfrom iso8859-1 {¿Borrar todos los grupos?}]
 ::msgcat::mcset es {Delete All Groups} {Borrar todos los grupos}
-::msgcat::mcset es {Delete All Regions?} [encoding convertfrom iso8859-1 {¿Borrar todas las regiones?}]
-::msgcat::mcset es {Delete All Regions} {Borrar todas las regiones}
 ::msgcat::mcset es {Delete All} 
 ::msgcat::mcset es {Delete Color Tags} 
 ::msgcat::mcset es {Delete Dataset} 
@@ -227,7 +228,10 @@
 ::msgcat::mcset es {Delete Graph} 
 ::msgcat::mcset es {Delete Group} {Borrar grupo}
 ::msgcat::mcset es {Delete Load} 
+::msgcat::mcset es {Delete Regions?} 
+::msgcat::mcset es {Delete Regions} 
 ::msgcat::mcset es {Delete Selected Regions} {Borrar regiones seleccionadas}
+::msgcat::mcset es {Delete Select} 
 ::msgcat::mcset es {Delete and Open Regions} 
 ::msgcat::mcset es {Delete} {Borrar}
 ::msgcat::mcset es {Depth} {Profundidad}
@@ -437,6 +441,8 @@
 ::msgcat::mcset es {Line} [encoding convertfrom iso8859-1 {Línea}]
 ::msgcat::mcset es {List Data} 
 ::msgcat::mcset es {List Regions} {Listar regiones}
+::msgcat::mcset es {List Selected Regions} 
+::msgcat::mcset es {List Select} 
 ::msgcat::mcset es {List} {Listar}
 ::msgcat::mcset es {Load Analysis Commands} [encoding convertfrom iso8859-1 {Cargar las instrucciones de análisis}]
 ::msgcat::mcset es {Load Color Tags} 
@@ -497,7 +503,6 @@
 ::msgcat::mcset es {Major} {Mayor}
 ::msgcat::mcset es {Manual} 
 ::msgcat::mcset es {Mask Parameters} [encoding convertfrom iso8859-1 {Parámetros de mascara}]
-::msgcat::mcset es {Mask} 
 ::msgcat::mcset es {Match Axes} 
 ::msgcat::mcset es {Match Bin} 
 ::msgcat::mcset es {Match Catalog requires at least 1 row per catalog} 
@@ -747,6 +752,8 @@
 ::msgcat::mcset es {Save RGB Cube} 
 ::msgcat::mcset es {Save RGB Image} 
 ::msgcat::mcset es {Save Regions} {Guardar regiones}
+::msgcat::mcset es {Save Selected Regions} 
+::msgcat::mcset es {Save Select} 
 ::msgcat::mcset es {Save Slice} 
 ::msgcat::mcset es {Save Template} {Guardar modelo}
 ::msgcat::mcset es {Save as} 

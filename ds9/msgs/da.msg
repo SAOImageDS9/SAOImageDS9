@@ -71,6 +71,7 @@
 ::msgcat::mcset da {Backup} 
 ::msgcat::mcset da {Back} {Tilbage}
 ::msgcat::mcset da {Bar Plot Tool} 
+::msgcat::mcset da {Bar Width} 
 ::msgcat::mcset da {Bar} 
 ::msgcat::mcset da {Bias} {Bias}
 ::msgcat::mcset da {Bin 3rd Column} [encoding convertfrom iso8859-1 {Bin 3dje søjle}]
@@ -97,6 +98,8 @@
 ::msgcat::mcset da {Block} {Bin}
 ::msgcat::mcset da {Blue} [encoding convertfrom iso8859-1 {Blå}]
 ::msgcat::mcset da {Bold} {Fed}
+::msgcat::mcset da {Border Color} 
+::msgcat::mcset da {Border Width} 
 ::msgcat::mcset da {Border} {Kant}
 ::msgcat::mcset da {Bottom} 
 ::msgcat::mcset da {Box Annulus} {Kasseformet ringform}
@@ -218,8 +221,6 @@
 ::msgcat::mcset da {Delete All Frames} {Slet alle rammer}
 ::msgcat::mcset da {Delete All Groups?} {Slet alle grupper?}
 ::msgcat::mcset da {Delete All Groups} {Slet alle grupper}
-::msgcat::mcset da {Delete All Regions?} {Slet alle områder?}
-::msgcat::mcset da {Delete All Regions} {Slet alle områder}
 ::msgcat::mcset da {Delete All} {Slet alt}
 ::msgcat::mcset da {Delete Color Tags} 
 ::msgcat::mcset da {Delete Dataset} 
@@ -227,7 +228,10 @@
 ::msgcat::mcset da {Delete Graph} 
 ::msgcat::mcset da {Delete Group} {Slet gruppe}
 ::msgcat::mcset da {Delete Load} 
+::msgcat::mcset da {Delete Regions?} 
+::msgcat::mcset da {Delete Regions} 
 ::msgcat::mcset da {Delete Selected Regions} [encoding convertfrom iso8859-1 {Slet valgte områder}]
+::msgcat::mcset da {Delete Select} 
 ::msgcat::mcset da {Delete and Open Regions} 
 ::msgcat::mcset da {Delete} {Slet} 
 ::msgcat::mcset da {Depth} {Dybde}
@@ -437,6 +441,8 @@
 ::msgcat::mcset da {Line} {Linie}
 ::msgcat::mcset da {List Data} 
 ::msgcat::mcset da {List Regions} [encoding convertfrom iso8859-1 {Vis områder}]
+::msgcat::mcset da {List Selected Regions} 
+::msgcat::mcset da {List Select} 
 ::msgcat::mcset da {List} {Liste}
 ::msgcat::mcset da {Load Analysis Commands} [encoding convertfrom iso8859-1 {Indlæs analyse funktioner}]
 ::msgcat::mcset da {Load Color Tags} 
@@ -497,7 +503,6 @@
 ::msgcat::mcset da {Major} 
 ::msgcat::mcset da {Manual} 
 ::msgcat::mcset da {Mask Parameters} {Maske parametre}
-::msgcat::mcset da {Mask} 
 ::msgcat::mcset da {Match Axes} 
 ::msgcat::mcset da {Match Bin} 
 ::msgcat::mcset da {Match Catalog requires at least 1 row per catalog} 
@@ -747,6 +752,8 @@
 ::msgcat::mcset da {Save RGB Cube} 
 ::msgcat::mcset da {Save RGB Image} 
 ::msgcat::mcset da {Save Regions} [encoding convertfrom iso8859-1 {Gem områder}]
+::msgcat::mcset da {Save Selected Regions} 
+::msgcat::mcset da {Save Select} 
 ::msgcat::mcset da {Save Slice} 
 ::msgcat::mcset da {Save Template} {Gem skabelon}
 ::msgcat::mcset da {Save as} 

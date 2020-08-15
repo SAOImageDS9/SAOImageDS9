@@ -20,8 +20,14 @@ proc PlotDialog {varname wtt} {
     global iap
     lappend iap(plots) $varname
 
+    # plot window
     set var(top) ".${varname}"
     set var(mb) ".${varname}mb"
+
+    # gui tool
+    set var(top,gui) ".${varname}gui"
+    set var(mb,gui) ".${varname}guimb"
+
     set var(stats) 0
     set var(list) 0
     set var(theme) 1
@@ -53,6 +59,9 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add separator
     $var(mb).file add cascade -label [msgcat::mc {Export}] \
 	-menu $var(mb).file.export
+    $var(mb).file add separator
+    $var(mb).file add command -label "[msgcat::mc {GUI Tool}]..." \
+	-command [list PlotGUI $varname]
     $var(mb).file add separator
     $var(mb).file add command -label "[msgcat::mc {Load Configuration}]..." \
 	-command [list PlotLoadConfig $varname]

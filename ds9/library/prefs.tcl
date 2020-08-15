@@ -11,7 +11,6 @@ proc PrefsDef {} {
 
     set iprefs(top) .pf
     set iprefs(mb) .pfmb
-    set iprefs(tabs) {}
 
     set prefs(ext) {.prf}
     set prefs(version) [lindex $ds9(version) 0]

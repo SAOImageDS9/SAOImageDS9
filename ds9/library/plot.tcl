@@ -9,6 +9,7 @@ proc PlotDef {} {
 
     set iap(tt) {ap}
     set iap(plots) {}
+    set iap(tools) {}
     set iap(unique) 1
 
     set iap(jpeg,quality) 75
@@ -41,6 +42,11 @@ proc PlotDestroy {varname} {
     
     destroy $var(top)
     destroy $var(mb)
+
+    # gui window?
+    if {$var(top,gui)} {
+	PlotGUIDestroy $varname
+    }
 
     # stats window?
     if {$var(stats)} {

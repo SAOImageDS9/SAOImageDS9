@@ -37,7 +37,6 @@ proc PrefsDialog {{which {}}} {
 
     # List
     set f [ttk::frame $w.param]
-
     ttk::scrollbar $f.scroll -command [list $f.box yview]
     set dprefs(listbox) [ttk::treeview $f.box \
 			  -yscroll [list $f.scroll set] \
@@ -50,10 +49,10 @@ proc PrefsDialog {{which {}}} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    bind $dprefs(listbox) <<TreeviewSelect>> PrefsDialogListUpdate
-
     set dprefs(tab) $f
     set dprefs(tabs) {}
+
+    bind $dprefs(listbox) <<TreeviewSelect>> PrefsDialogListUpdate
 
     PrefsDialogGeneral
     PrefsDialogPrecision
@@ -92,8 +91,7 @@ proc PrefsDialog {{which {}}} {
 	-command PrefsDialogClose
     ttk::button $f.clear -text [msgcat::mc {Clear Preferences}] \
 	-command PrefsDialogClear
-    pack $f.clear $f.save $f.close \
-	-side left -expand true -padx 2 -pady 4
+    pack $f.clear $f.save $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.sep -orient horizontal
@@ -104,7 +102,7 @@ proc PrefsDialog {{which {}}} {
     bind $w <<Close>> PrefsDialogClose
 
     # select first item
-    $dprefs(listbox) selection set $dprefs(tags)
+    $dprefs(listbox) selection set $dprefs(tabs)
 }
 
 proc PrefsDialogListUpdate {} {
@@ -170,7 +168,7 @@ proc PrefsDialogGeneral {} {
     set gg [ttk::frame $w.general]
     $dprefs(listbox) insert {} end -id $gg -text [msgcat::mc {General}]
     # This is our first item
-    set dprefs(tags) $gg
+    set dprefs(tabs) $gg
 
     # General
     set f [ttk::labelframe $w.general.misc -text [msgcat::mc {General}]]
@@ -308,8 +306,7 @@ proc PrefsDialogGeneral {} {
     grid $f.center - -padx 2 -pady 2 -sticky w
     grid $f.all - -padx 2 -pady 2 -sticky w
 
-    pack $w.general.misc $w.general.font \
-	$w.general.color $w.general.box \
+    pack $w.general.misc $w.general.font $w.general.color $w.general.box \
 	-side top -fill both -expand true
 }
 

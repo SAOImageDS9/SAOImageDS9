@@ -19,9 +19,9 @@ proc PlotDefState {} {
     set pap(canvas,layout,axis,x,log) 0
     set pap(canvas,layout,axis,x,flip) 0
 
-    set pap(graph,foreground) black
-    set pap(graph,background) white
-    set pap(graph,grid,color) gray64
+    set pap(canvas,foreground) black
+    set pap(canvas,background) white
+    set pap(canvas,grid,color) gray64
 
     set pap(graph,format) 1
     set pap(graph,title) {}

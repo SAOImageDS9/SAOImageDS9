@@ -180,8 +180,9 @@ plot : line
  | LAYOUT_ layout {ProcessCmdCVAR canvas,layout $2 PlotChangeLayout}
  | LAYOUT_ STRIP_ SCALE_ numeric {ProcessCmdCVAR canvas,layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
- | FOREGROUND_ STRING_ {ProcessCmdCVAR graph,foreground $2 PlotUpdateCanvasElement}
- | BACKGROUND_ STRING_ {ProcessCmdCVAR graph,background $2 PlotUpdateCanvasElement}
+ | FOREGROUND_ STRING_ {ProcessCmdCVAR canvas,foreground $2 PlotUpdateCanvasElement}
+ | BACKGROUND_ STRING_ {ProcessCmdCVAR canvas,background $2 PlotUpdateAllElement}
+ | GRID_ COLOR_ STRING_ {ProcessCmdCVAR canvas,grid,color $3 PlotUpdateCanvasElement}
  | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateAllElement}
 
  # Graph Menu

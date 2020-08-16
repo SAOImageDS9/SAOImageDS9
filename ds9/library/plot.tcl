@@ -1113,9 +1113,9 @@ proc PlotBackup {ch dir} {
 	    puts $ch "set ${varname}(canvas,layout,strip,scale) $var(canvas,layout,strip,scale)"
 	    puts $ch "PlotChangeLayout $varname"
 
-	    puts $ch "set ${varname}(graph,foreground) $var(graph,foreground)"
-	    puts $ch "set ${varname}(graph,background) $var(graph,background)"
-	    puts $ch "set ${varname}(graph,grid,color) $var(graph,grid,color)"
+	    puts $ch "set ${varname}(canvas,foreground) $var(canvas,foreground)"
+	    puts $ch "set ${varname}(canvas,background) $var(canvas,background)"
+	    puts $ch "set ${varname}(canvas,grid,color) $var(canvas,grid,color)"
 	    puts $ch "PlotUpdateCanvasElement $varname"
 
 	    puts $ch "set ${varname}(mode) $var(mode)"
@@ -1145,8 +1145,8 @@ proc PlotUpdateCanvasElement {varname} {
 	set fg [ThemeTreeForeground]
 	set bg [ThemeTreeBackground]
     } else {
-	set fg $var(graph,foreground)
-	set bg $var(graph,background)
+	set fg $var(canvas,foreground)
+	set bg $var(canvas,background)
     }
 
     foreach cc $var(graphs) {
@@ -1160,8 +1160,8 @@ proc PlotUpdateCanvasElement {varname} {
 	    -bg $bg \
 	    -color $fg \
 	    -titlecolor $fg \
-	    -gridcolor $var(graph,grid,color) \
-	    -gridminorcolor $var(graph,grid,color) \
+	    -gridcolor $var(canvas,grid,color) \
+	    -gridminorcolor $var(canvas,grid,color) \
 	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
 	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
 
@@ -1169,8 +1169,8 @@ proc PlotUpdateCanvasElement {varname} {
 	    -bg $bg \
 	    -color $fg \
 	    -titlecolor $fg \
-	    -gridcolor $var(graph,grid,color) \
-	    -gridminorcolor $var(graph,grid,color) \
+	    -gridcolor $var(canvas,grid,color) \
+	    -gridminorcolor $var(canvas,grid,color) \
 	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
 	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
 

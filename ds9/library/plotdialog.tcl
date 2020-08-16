@@ -191,7 +191,7 @@ proc PlotDialog {varname wtt} {
 	[list PlotUpdateCanvasElement $varname]
     ColorMenu $var(mb).canvas.bg $varname background \
 	[list PlotUpdateAllElement $varname]
-    ColorMenu $var(mb).canvas.grid $varname graph,grid,color \
+    ColorMenu $var(mb).canvas.grid $varname canvas,grid,color \
 	[list PlotUpdateCanvasElement $varname]
 
     # Graph

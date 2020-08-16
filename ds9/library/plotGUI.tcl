@@ -231,7 +231,7 @@ proc PlotGUICanvas {varname} {
     ColorMenuButton $f.background $varname background \
 	[list PlotUpdateAllElement $varname]
     ttk::label $f.tgrid -text [msgcat::mc {Grid}]
-    ColorMenuButton $f.grid $varname graph,grid,color \
+    ColorMenuButton $f.grid $varname canvas,grid,color \
 	[list PlotUpdateCanvasElement $varname]
 
     grid $f.theme -padx 2 -pady 2 -sticky w

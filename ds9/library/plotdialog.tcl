@@ -172,8 +172,8 @@ proc PlotDialog {varname wtt} {
 	-command [list PlotStripDialog $varname]
 
     FontMenu $var(mb).canvas.title \
-	$varname graph,title,family graph,title,size graph,title,weight \
-	graph,title,slant [list PlotUpdateCanvasElement $varname]
+	$varname canvas,title,family canvas,title,size canvas,title,weight \
+	canvas,title,slant [list PlotUpdateCanvasElement $varname]
     FontMenu $var(mb).canvas.textlab \
 	$varname axis,title,family axis,title,size axis,title,weight \
 	axis,title,slant [list PlotUpdateCanvasElement $varname]

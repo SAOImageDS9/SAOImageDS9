@@ -158,13 +158,13 @@ proc PlotGUICanvas {varname} {
 
     ttk::label $f.ttitle -text [msgcat::mc {Title}]
     FontFamilyMenuButton $f.titlefamily $varname \
-	graph,title,family [list PlotUpdateCanvasElement $varname]
+	canvas,title,family [list PlotUpdateCanvasElement $varname]
     FontSizeMenuButton $f.titlesize $varname \
-	graph,title,size [list PlotUpdateCanvasElement $varname]
+	canvas,title,size [list PlotUpdateCanvasElement $varname]
     FontWeightMenuButton $f.titleweight $varname \
-	graph,title,weight [list PlotUpdateCanvasElement $varname]
+	canvas,title,weight [list PlotUpdateCanvasElement $varname]
     FontSlantMenuButton $f.titleslant $varname \
-	graph,title,slant [list PlotUpdateCanvasElement $varname]
+	canvas,title,slant [list PlotUpdateCanvasElement $varname]
 
     ttk::label $f.ttextlab -text [msgcat::mc {Axes Title}]
     FontFamilyMenuButton $f.textlabfamily $varname \

@@ -14,20 +14,29 @@ proc PrefsDialogPlot {} {
 
     # Graph
     set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Graph}]]
-    ttk::label $f.tbg -text [msgcat::mc {Background}]
-    ColorMenuButton $f.bg pap background {}
 
-    grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
-
-    # Grid
-    set f [ttk::labelframe $w.plot.grid -text [msgcat::mc {Grid}]]
     ttk::label $f.ttitle -text [msgcat::mc {Title}]
-    FontMenuButton $f.title pap graph,title,family graph,title,size graph,title,weight graph,title,slant {}
+    FontMenuButton $f.title pap canvas,title,family canvas,title,size canvas,title,weight canvas,title,slant {}
+
+    ttk::label $f.tfg -text [msgcat::mc {Foreground}]
+    ColorMenuButton $f.fg pap canvas,foreground {}
+    ttk::label $f.tbg -text [msgcat::mc {Background}]
+    ColorMenuButton $f.bg pap canvas,background {}
+    ttk::label $f.tgrid -text [msgcat::mc {Grid}]
+    ColorMenuButton $f.grid pap canvas,grid,color {}
 
     grid $f.ttitle $f.title -padx 2 -pady 2 -sticky w
+    grid $f.tfg $f.fg -padx 2 -pady 2 -sticky w
+    grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
+    grid $f.tgrid $f.grid -padx 2 -pady 2 -sticky w
 
     # Axis
     set f [ttk::labelframe $w.plot.axis -text [msgcat::mc {Axis}]]
+
+    ttk::label $f.ttextlab -text [msgcat::mc {Axis Title}]
+    FontMenuButton $f.textlab pap canvas,axis,title,family canvas,axis,title,size canvas,axis,title,weight canvas,axis,title,slant {}
+    ttk::label $f.tnumlab -text [msgcat::mc {Axis Numbers}]
+    FontMenuButton $f.numlab pap canvas,axis,font,family canvas,axis,font,size canvas,axis,font,weight canvas,axis,font,slant {}
 
     ttk::label $f.xtitle -text [msgcat::mc {X}]
     ttk::checkbutton $f.x -text [msgcat::mc {Grid}] -variable pap(graph,axis,x,grid)
@@ -43,15 +52,10 @@ proc PrefsDialogPlot {} {
     ttk::radiobutton $f.ylog -text [msgcat::mc {Log}] \
 	-variable pap(graph,axis,y,log) -value 1
 
-    ttk::label $f.ttextlab -text [msgcat::mc {Axis Title}]
-    FontMenuButton $f.textlab pap axis,title,family axis,title,size axis,title,weight axis,title,slant {}
-    ttk::label $f.tnumlab -text [msgcat::mc {Axis Numbers}]
-    FontMenuButton $f.numlab pap axis,font,family axis,font,size axis,font,weight axis,font,slant {}
-
-    grid $f.xtitle $f.x $f.xlinear $f.xlog -padx 2 -pady 2 -sticky w
-    grid $f.ytitle $f.y $f.ylinear $f.ylog -padx 2 -pady 2 -sticky w
     grid $f.ttextlab $f.textlab  -padx 2 -pady 2 -sticky w
     grid $f.tnumlab $f.numlab -padx 2 -pady 2 -sticky w
+    grid $f.xtitle $f.x $f.xlinear $f.xlog -padx 2 -pady 2 -sticky w
+    grid $f.ytitle $f.y $f.ylinear $f.ylog -padx 2 -pady 2 -sticky w
 
     # Data
     set f [ttk::labelframe $w.plot.ds -text [msgcat::mc {Dataset}]]
@@ -156,7 +160,7 @@ proc PrefsDialogPlot {} {
     grid $f.show $f.cap -padx 2 -pady 2 -sticky w
     grid $f.tcolor $f.color $f.twidth $f.width -padx 2 -pady 2 -sticky w
 
-    pack $w.plot.graph $w.plot.grid $w.plot.axis $w.plot.ds \
+    pack $w.plot.graph $w.plot.axis $w.plot.ds \
 	$w.plot.line $w.plot.bar $w.plot.scatter $w.plot.error \
 	-side top -fill both -expand true
 }

@@ -1154,7 +1154,7 @@ proc PlotUpdateCanvasElement {varname} {
 	    -bg $bg \
 	    -plotbackground $bg \
 	    -fg $fg \
-	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
+	    -font "{$ds9($var(canvas,title,family))} $var(canvas,title,size) $var(canvas,title,weight) $var(canvas,title,slant)"
 
 	$var($cc,graph) xaxis configure \
 	    -bg $bg \

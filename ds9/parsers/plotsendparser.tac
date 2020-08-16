@@ -144,8 +144,8 @@ fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}
 fontType : TITLE_ {set _ graph,title}
  | LABELS_ {set _ graph,axis,title}
  | NUMBERS_ {set _ graph,axis,font}
- | LEGEND_ {set _ graph,legend,font}
- | LEGEND_ TITLE_ {set _ graph,legend,title}
+ | LEGEND_ {set _ canvas,legend,font}
+ | LEGEND_ TITLE_ {set _ canvas,legend,title}
  ;
 
 axis : xy GRID_ {ProcessSendCmdCVARGetYesNo "graph,axis,$1,grid"}

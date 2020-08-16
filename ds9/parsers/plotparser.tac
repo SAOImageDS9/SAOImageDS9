@@ -432,8 +432,8 @@ fontt : fontType FONT_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasEleme
 fontType : TITLE_ {set _ graph,title}
  | LABELS_ {set _ graph,axis,title}
  | NUMBERS_ {set _ graph,axis,font}
- | LEGEND_ {set _ graph,legend,font}
- | LEGEND_ TITLE_ {set _ graph,legend,title}
+ | LEGEND_ {set _ canvas,legend,font}
+ | LEGEND_ TITLE_ {set _ canvas,legend,title}
  ;
 
 duplicate : {global cvarname; PlotDupDataSet $cvarname}

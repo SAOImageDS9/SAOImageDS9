@@ -1473,8 +1473,8 @@ proc plotsend::yyparse {} {
                     60 { set _ graph,title }
                     61 { set _ graph,axis,title }
                     62 { set _ graph,axis,font }
-                    63 { set _ graph,legend,font }
-                    64 { set _ graph,legend,title }
+                    63 { set _ canvas,legend,font }
+                    64 { set _ canvas,legend,title }
                     65 { ProcessSendCmdCVARGetYesNo "graph,axis,$1,grid" }
                     66 { ProcessSendCmdCVARGetYesNo "graph,axis,$1,log" }
                     67 { ProcessSendCmdCVARGetYesNo "graph,axis,$1,flip" }

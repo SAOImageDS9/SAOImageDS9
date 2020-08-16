@@ -5753,8 +5753,8 @@ proc plot::yyparse {} {
                     207 { set _ graph,title }
                     208 { set _ graph,axis,title }
                     209 { set _ graph,axis,font }
-                    210 { set _ graph,legend,font }
-                    211 { set _ graph,legend,title }
+                    210 { set _ canvas,legend,font }
+                    211 { set _ canvas,legend,title }
                     212 { global cvarname; PlotDupDataSet $cvarname }
                     213 { global cvarname; PlotDupDataSet $cvarname }
                     214 { ProcessCmdCVAR "graph,axis,$1,grid" $3 PlotChangeAxis }

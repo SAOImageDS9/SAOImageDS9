@@ -772,10 +772,10 @@ proc PlotCalcMargins {varname rpixname lpixname} {
 	}
     }
     if {$rchar>0} {
-	set rpix [expr $rpix + int(($var(graph,legend,title,size)*4 + $var(graph,legend,font,size)*$rchar)*.75)]
+	set rpix [expr $rpix + int(($var(canvas,legend,title,size)*4 + $var(canvas,legend,font,size)*$rchar)*.75)]
     }
     if {$lchar>0} {
-	set lpix [expr $lpix + int(($var(graph,legend,title,size)*4 + $var(graph,legend,font,size)*$lchar)*.75)]
+	set lpix [expr $lpix + int(($var(canvas,legend,title,size)*4 + $var(canvas,legend,font,size)*$lchar)*.75)]
     }
 
     set rpix [expr 10 + $rpix]
@@ -1178,7 +1178,7 @@ proc PlotUpdateCanvasElement {varname} {
 	    -bg $bg \
 	    -fg $fg \
 	    -titlecolor $fg \
-	    -font "{$ds9($var(graph,legend,font,family))} $var(graph,legend,font,size) $var(graph,legend,font,weight) $var(graph,legend,font,slant)" \
-	    -titlefont "{$ds9($var(graph,legend,title,family))} $var(graph,legend,title,size) $var(graph,legend,title,weight) $var(graph,legend,title,slant)"
+	    -font "{$ds9($var(canvas,legend,font,family))} $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" \
+	    -titlefont "{$ds9($var(canvas,legend,title,family))} $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
     }
 }

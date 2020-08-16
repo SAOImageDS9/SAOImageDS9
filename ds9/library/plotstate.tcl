@@ -30,14 +30,14 @@ proc PlotDefState {} {
     set pap(graph,title,weight) normal
     set pap(graph,title,slant) roman
 
-    set pap(graph,legend,title,family) helvetica
-    set pap(graph,legend,title,size) 10
-    set pap(graph,legend,title,weight) normal
-    set pap(graph,legend,title,slant) roman
-    set pap(graph,legend,font,family) helvetica
-    set pap(graph,legend,font,size) 9
-    set pap(graph,legend,font,weight) normal
-    set pap(graph,legend,font,slant) roman
+    set pap(canvas,legend,title,family) helvetica
+    set pap(canvas,legend,title,size) 10
+    set pap(canvas,legend,title,weight) normal
+    set pap(canvas,legend,title,slant) roman
+    set pap(canvas,legend,font,family) helvetica
+    set pap(canvas,legend,font,size) 9
+    set pap(canvas,legend,font,weight) normal
+    set pap(canvas,legend,font,slant) roman
 
     set pap(graph,axis,title,family) helvetica
     set pap(graph,axis,title,size) 9

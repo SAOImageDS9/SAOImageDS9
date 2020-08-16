@@ -142,8 +142,8 @@ fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}
  ;
 
 fontType : TITLE_ {set _ graph,title}
- | LABELS_ {set _ graph,axis,title}
- | NUMBERS_ {set _ graph,axis,font}
+ | LABELS_ {set _ canvas,axis,title}
+ | NUMBERS_ {set _ canvas,axis,font}
  | LEGEND_ {set _ canvas,legend,font}
  | LEGEND_ TITLE_ {set _ canvas,legend,title}
  ;

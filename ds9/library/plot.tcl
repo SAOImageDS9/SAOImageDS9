@@ -1162,8 +1162,8 @@ proc PlotUpdateCanvasElement {varname} {
 	    -titlecolor $fg \
 	    -gridcolor $var(canvas,grid,color) \
 	    -gridminorcolor $var(canvas,grid,color) \
-	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
-	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	    -tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	    -titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
 	$var($cc,graph) yaxis configure \
 	    -bg $bg \
@@ -1171,8 +1171,8 @@ proc PlotUpdateCanvasElement {varname} {
 	    -titlecolor $fg \
 	    -gridcolor $var(canvas,grid,color) \
 	    -gridminorcolor $var(canvas,grid,color) \
-	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
-	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	    -tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	    -titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
 	$var($cc,graph) legend configure \
 	    -bg $bg \

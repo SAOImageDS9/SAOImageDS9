@@ -24,7 +24,6 @@ proc PlotDefState {} {
     set pap(canvas,grid,color) gray64
 
     set pap(graph,format) 1
-    set pap(graph,title) {}
     set pap(graph,title,family) helvetica
     set pap(graph,title,size) 12
     set pap(graph,title,weight) normal
@@ -39,16 +38,18 @@ proc PlotDefState {} {
     set pap(canvas,legend,font,weight) normal
     set pap(canvas,legend,font,slant) roman
 
-    set pap(graph,axis,title,family) helvetica
-    set pap(graph,axis,title,size) 9
-    set pap(graph,axis,title,weight) normal
-    set pap(graph,axis,title,slant) roman
-    set pap(graph,axis,font,family) helvetica
-    set pap(graph,axis,font,size) 9
-    set pap(graph,axis,font,weight) normal
-    set pap(graph,axis,font,slant) roman
+    set pap(canvas,axis,title,family) helvetica
+    set pap(canvas,axis,title,size) 9
+    set pap(canvas,axis,title,weight) normal
+    set pap(canvas,axis,title,slant) roman
+    set pap(canvas,axis,font,family) helvetica
+    set pap(canvas,axis,font,size) 9
+    set pap(canvas,axis,font,weight) normal
+    set pap(canvas,axis,font,slant) roman
 
     # per Graph
+    set pap(graph,title) {}
+
     set pap(graph,legend) 0
     set pap(graph,legend,title) Legend
     set pap(graph,legend,position) right

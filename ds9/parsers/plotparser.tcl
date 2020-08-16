@@ -5751,8 +5751,8 @@ proc plot::yyparse {} {
                     205 { ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement }
                     206 { PlotCmdFontStyle $1 $3 }
                     207 { set _ graph,title }
-                    208 { set _ graph,axis,title }
-                    209 { set _ graph,axis,font }
+                    208 { set _ canvas,axis,title }
+                    209 { set _ canvas,axis,font }
                     210 { set _ canvas,legend,font }
                     211 { set _ canvas,legend,title }
                     212 { global cvarname; PlotDupDataSet $cvarname }

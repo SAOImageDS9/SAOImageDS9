@@ -37,9 +37,9 @@ proc PlotPostScriptSingle {varname} {
     # set postscript fonts
     $var(graph) configure -font "$var(graph,title,family) $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
-    $var(graph) xaxis configure -tickfont "$var(graph,axis,font,family) $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" -titlefont "$var(graph,axis,title,family) $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+    $var(graph) xaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
-    $var(graph) yaxis configure -tickfont "$var(graph,axis,font,family) $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" -titlefont "$var(graph,axis,title,family) $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+    $var(graph) yaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
     $var(graph) legend configure -font "$var(canvas,legend,font,family) $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" -titlefont "$var(canvas,legend,title,family) $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
 
@@ -102,12 +102,12 @@ proc PlotPostScriptSingle {varname} {
 	-font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
     $var(graph) xaxis configure \
-	-tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
-	-titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	-tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	-titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
     $var(graph) yaxis configure \
-	-tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
-	-titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	-tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	-titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
     $var(graph) legend configure \
 	-font "{$ds9($var(canvas,legend,font,family))} $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" \
@@ -186,9 +186,9 @@ proc PlotPostScriptMulti {varname} {
 	# set postscript fonts
 	$var($cc,graph) configure -font "$var(graph,title,family) $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
-	$var($cc,graph) xaxis configure -tickfont "$var(graph,axis,font,family) $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" -titlefont "$var(graph,axis,title,family) $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	$var($cc,graph) xaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
-	$var($cc,graph) yaxis configure -tickfont "$var(graph,axis,font,family) $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" -titlefont "$var(graph,axis,title,family) $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	$var($cc,graph) yaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
 	$var($cc,graph) legend configure -font "$var(canvas,legend,font,family) $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" -titlefont "$var(canvas,legend,title,family) $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
 
@@ -204,12 +204,12 @@ proc PlotPostScriptMulti {varname} {
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
 	$var($cc,graph) xaxis configure \
-	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
-	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	    -tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	    -titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
 	$var($cc,graph) yaxis configure \
-	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
-	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
+	    -tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	    -titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
 
 	$var($cc,graph) legend configure \
 	    -font "{$ds9($var(canvas,legend,font,family))} $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" \

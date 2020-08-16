@@ -68,8 +68,8 @@ plotsend : {ProcessSendCmdGet iap plots}
 
 # Canvas Menu
  | SELECT_ GRAPH_ {ProcessSendCmdCVARGet graph,current}
- | LAYOUT_ {ProcessSendCmdCVARGet layout}
- | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet layout,strip,scale}
+ | LAYOUT_ {ProcessSendCmdCVARGet canvas,layout}
+ | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet canvas,layout,strip,scale}
  | FONT_ fontt
  | FOREGROUND_ {ProcessSendCmdCVARGet graph,foreground}
  | BACKGROUND_ {ProcessSendCmdCVARGet graph,background}

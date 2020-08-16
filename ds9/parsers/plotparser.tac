@@ -177,8 +177,8 @@ plot : line
  | ADD_ GRAPH_ graph {ProcessCmdCVAROpt PlotAddGraph $3}
  | SELECT_ GRAPH_ INT_ {ProcessCmdCVAR graph,current $3 PlotCurrentGraph}
  | DELETE_ GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
- | LAYOUT_ layout {ProcessCmdCVAR layout $2 PlotChangeLayout}
- | LAYOUT_ STRIP_ SCALE_ numeric {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
+ | LAYOUT_ layout {ProcessCmdCVAR canvas,layout $2 PlotChangeLayout}
+ | LAYOUT_ STRIP_ SCALE_ numeric {ProcessCmdCVAR canvas,layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
  | FOREGROUND_ STRING_ {ProcessCmdCVAR graph,foreground $2 PlotUpdateCanvasElement}
  | BACKGROUND_ STRING_ {ProcessCmdCVAR graph,background $2 PlotUpdateCanvasElement}

@@ -129,22 +129,22 @@ proc PlotGUICanvas {varname} {
     # Layout
     set f [ttk::labelframe $w.canvas.layout -text [msgcat::mc {Layout}]]
 
-    ttk::menubutton $f.layout -textvariable ${varname}(layout) \
+    ttk::menubutton $f.layout -textvariable ${varname}(canvas,layout) \
 	-menu $f.layout.menu
 
     ThemeMenu $f.layout.menu
     $f.layout.menu add radiobutton -label [msgcat::mc {Grid}] \
-	-variable ${varname}(layout) -value grid \
+	-variable ${varname}(canvas,layout) -value grid \
 	-command [list PlotChangeLayout $varname]
     $f.layout.menu add radiobutton -label [msgcat::mc {Row}] \
-	-variable ${varname}(layout) -value row \
+	-variable ${varname}(canvas,layout) -value row \
 	-command [list PlotChangeLayout $varname]
     $f.layout.menu add radiobutton -label [msgcat::mc {Column}] \
-	-variable ${varname}(layout) -value column \
+	-variable ${varname}(canvas,layout) -value column \
 	-command [list PlotChangeLayout $varname]
     $f.layout.menu add separator
     $f.layout.menu add radiobutton -label [msgcat::mc {Strip}] \
-	-variable ${varname}(layout) -value strip \
+	-variable ${varname}(canvas,layout) -value strip \
 	-command [list PlotChangeLayout $varname]
 
     ttk::label $f.tstrip

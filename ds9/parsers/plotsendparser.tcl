@@ -1411,8 +1411,8 @@ proc plotsend::yyparse {} {
                     1 { ProcessSendCmdGet iap plots }
                     7 { ProcessSendCmdCVARGet mode }
                     8 { ProcessSendCmdCVARGet graph,current }
-                    9 { ProcessSendCmdCVARGet layout }
-                    10 { ProcessSendCmdCVARGet layout,strip,scale }
+                    9 { ProcessSendCmdCVARGet canvas,layout }
+                    10 { ProcessSendCmdCVARGet canvas,layout,strip,scale }
                     12 { ProcessSendCmdCVARGet graph,foreground }
                     13 { ProcessSendCmdCVARGet graph,background }
                     14 { ProcessSendCmdCVARGetYesNo theme }

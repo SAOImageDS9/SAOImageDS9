@@ -342,7 +342,7 @@ proc PlotChangeAxis {varname} {
     upvar #0 $varname var
     global $varname
 
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	column -
 	row {PlotUpdateGraph $varname}
@@ -368,7 +368,7 @@ proc PlotChangeLegend {varname} {
     upvar #0 $varname var
     global $varname
 
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	column -
 	row {PlotUpdateGraph $varname}
@@ -406,7 +406,7 @@ proc PlotChangeTitle {varname} {
     upvar #0 $varname var
     global $varname
 
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	column -
 	row {PlotUpdateGraph $varname}
@@ -451,7 +451,7 @@ proc PlotChangeMode {varname} {
 	    }
 	    zoom {
 		bind $var($cc,graph) <1> {}
-		switch $var(layout) {
+		switch $var(canvas,layout) {
 		    grid -
 		    row -
 		    column {
@@ -627,7 +627,7 @@ proc PlotLayoutCanvas {varname} {
 	place forget $var($cc,graph)
     }
 
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid {
 	    set ll [llength $var(graphs)]
 	    set nr [expr int(sqrt($ll)+.5)]
@@ -683,7 +683,7 @@ proc PlotLayoutCanvas {varname} {
 	    }
 	}
 	strip {
-	    set pp [expr $var(layout,strip,scale)/100.]
+	    set pp [expr $var(canvas,layout,strip,scale)/100.]
 	    if {$pp<0 && $pp>1} {
 		set pp 1
 	    }
@@ -795,16 +795,16 @@ proc PlotUpdateCanvas {varname} {
     set first [lindex $var(graphs) 0]
     set last [lindex $var(graphs) end]
     
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	row -
 	column {
-	    set var(layout,axis,x,title) {}
-	    set var(layout,axis,x,min) 0
-	    set var(layout,axis,x,max) 1
-	    set var(layout,axis,x,grid) 1
-	    set var(layout,axis,x,log) 0
-	    set var(layout,axis,x,flip) 0
+	    set var(canvas,layout,axis,x,title) {}
+	    set var(canvas,layout,axis,x,min) 0
+	    set var(canvas,layout,axis,x,max) 1
+	    set var(canvas,layout,axis,x,grid) 1
+	    set var(canvas,layout,axis,x,log) 0
+	    set var(canvas,layout,axis,x,flip) 0
 	}
 	strip {
 	    if {$var($first,axis,x,auto)} {
@@ -820,18 +820,18 @@ proc PlotUpdateCanvas {varname} {
 		set xmax $var($first,axis,x,max)
 	    }
 
-	    set var(layout,axis,x,title) $var($first,axis,x,title)
-	    set var(layout,axis,x,min) $xmin
-	    set var(layout,axis,x,max) $xmax
-	    set var(layout,axis,x,grid) $var($first,axis,x,grid)
-	    set var(layout,axis,x,log) $var($first,axis,x,log)
-	    set var(layout,axis,x,flip) $var($first,axis,x,flip)
+	    set var(canvas,layout,axis,x,title) $var($first,axis,x,title)
+	    set var(canvas,layout,axis,x,min) $xmin
+	    set var(canvas,layout,axis,x,max) $xmax
+	    set var(canvas,layout,axis,x,grid) $var($first,axis,x,grid)
+	    set var(canvas,layout,axis,x,log) $var($first,axis,x,log)
+	    set var(canvas,layout,axis,x,flip) $var($first,axis,x,flip)
 	}
     }
     
     set right 0
     set left 0
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	row -
 	column {}
@@ -841,7 +841,7 @@ proc PlotUpdateCanvas {varname} {
     }
     
     foreach cc $var(graphs) {
-	switch $var(layout) {
+	switch $var(canvas,layout) {
 	    grid -
 	    row -
 	    column {
@@ -902,8 +902,8 @@ proc PlotUpdateGraph {varname} {
 	    set xmax $var(graph,axis,x,max)
 	}
     } else {
-	set xmin $var(layout,axis,x,min)
-	set xmax $var(layout,axis,x,max)
+	set xmin $var(canvas,layout,axis,x,min)
+	set xmax $var(canvas,layout,axis,x,max)
     }
 
     if {$var(graph,axis,y,auto)} {
@@ -920,10 +920,10 @@ proc PlotUpdateGraph {varname} {
 	set xlog $var(graph,axis,x,log)
 	set xflip $var(graph,axis,x,flip)
     } else {
-	set xtitle $var(layout,axis,x,title)
-	set xgrid $var(layout,axis,x,grid)
-	set xlog $var(layout,axis,x,log)
-	set xflip $var(layout,axis,x,flip)
+	set xtitle $var(canvas,layout,axis,x,title)
+	set xgrid $var(canvas,layout,axis,x,grid)
+	set xlog $var(canvas,layout,axis,x,log)
+	set xflip $var(canvas,layout,axis,x,flip)
     }
 
     if {$var(graph,format)} {
@@ -963,7 +963,7 @@ proc PlotUpdateGraph {varname} {
 
     $var(graph) yaxis configure -title $var(graph,axis,y,title)
 
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	row -
 	column {
@@ -1049,7 +1049,7 @@ proc PlotDataSetName {varname name} {
     set var(graph,ds,name) $name
     $var(graph,proc,updateelement) $varname
 
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	row -
 	column {}
@@ -1109,8 +1109,8 @@ proc PlotBackup {ch dir} {
 		}
 	    }
 	    puts $ch "wm geometry $var(top) [winfo width $var(top)]x[winfo height $var(top)]"
-	    puts $ch "set ${varname}(layout) $var(layout)"
-	    puts $ch "set ${varname}(layout,strip,scale) $var(layout,strip,scale)"
+	    puts $ch "set ${varname}(canvas,layout) $var(canvas,layout)"
+	    puts $ch "set ${varname}(canvas,layout,strip,scale) $var(canvas,layout,strip,scale)"
 	    puts $ch "PlotChangeLayout $varname"
 
 	    puts $ch "set ${varname}(graph,foreground) $var(graph,foreground)"

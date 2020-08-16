@@ -154,17 +154,17 @@ proc PlotDialog {varname wtt} {
 
     ThemeMenu $var(mb).canvas.layout
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
-	-variable ${varname}(layout) -value grid \
+	-variable ${varname}(canvas,layout) -value grid \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Row}] \
-	-variable ${varname}(layout) -value row \
+	-variable ${varname}(canvas,layout) -value row \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
-	-variable ${varname}(layout) -value column \
+	-variable ${varname}(canvas,layout) -value column \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add separator
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Strip}] \
-	-variable ${varname}(layout) -value strip \
+	-variable ${varname}(canvas,layout) -value strip \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add separator
     $var(mb).canvas.layout add command \
@@ -339,14 +339,14 @@ proc PlotStripDialog {varname} {
 
     set ed(ok) 0
 
-    set ed(layout,strip,scale) $var(layout,strip,scale)
+    set ed(canvas,layout,strip,scale) $var(canvas,layout,strip,scale)
 
     DialogCreate $w [msgcat::mc {Strip Parameters}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]
     ttk::label $f.t -text [msgcat::mc {Scale}]
-    ttk::entry $f.ww -textvariable ed(layout,strip,scale) -width 6
+    ttk::entry $f.ww -textvariable ed(canvas,layout,strip,scale) -width 6
     ttk::label $f.tt -text {%}
 
     grid $f.t $f.ww $f.tt -padx 2 -pady 2 -sticky w
@@ -370,7 +370,7 @@ proc PlotStripDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	set var(layout,strip,scale) $ed(layout,strip,scale)
+	set var(canvas,layout,strip,scale) $ed(canvas,layout,strip,scale)
 	PlotChangeLayout $varname
     }
     
@@ -664,7 +664,7 @@ proc PlotUpdateMenus {varname} {
     # Canvas
 
     # Graph
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	row -
 	column {

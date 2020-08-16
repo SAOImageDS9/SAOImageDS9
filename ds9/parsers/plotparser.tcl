@@ -5575,8 +5575,8 @@ proc plot::yyparse {} {
                     39 { ProcessCmdCVAROpt PlotAddGraph $3 }
                     40 { ProcessCmdCVAR graph,current $3 PlotCurrentGraph }
                     41 { ProcessCmdCVAR0 PlotDeleteGraphCurrent }
-                    42 { ProcessCmdCVAR layout $2 PlotChangeLayout }
-                    43 { ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout }
+                    42 { ProcessCmdCVAR canvas,layout $2 PlotChangeLayout }
+                    43 { ProcessCmdCVAR canvas,layout,strip,scale $4 PlotChangeLayout }
                     45 { ProcessCmdCVAR graph,foreground $2 PlotUpdateCanvasElement }
                     46 { ProcessCmdCVAR graph,background $2 PlotUpdateCanvasElement }
                     47 { ProcessCmdCVAR theme $2 PlotUpdateAllElement }

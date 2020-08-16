@@ -11,7 +11,7 @@ proc PlotZoomStack {g} {
     global $varname
 
     set cmd {}
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	column -
 	row {}
@@ -36,7 +36,7 @@ proc PlotZoomStackReset {g} {
     global $varname
 
     set cmd {}
-    switch $var(layout) {
+    switch $var(canvas,layout) {
 	grid -
 	column -
 	row {}

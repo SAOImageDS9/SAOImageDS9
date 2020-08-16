@@ -10,14 +10,14 @@ proc PlotDefState {} {
     global ds9
 
     # per Canvas
-    set pap(layout) grid
-    set pap(layout,strip,scale) 50
-    set pap(layout,axis,x,title) {}
-    set pap(layout,axis,x,min) 0
-    set pap(layout,axis,x,max) 0
-    set pap(layout,axis,x,grid) 0
-    set pap(layout,axis,x,log) 0
-    set pap(layout,axis,x,flip) 0
+    set pap(canvas,layout) grid
+    set pap(canvas,layout,strip,scale) 50
+    set pap(canvas,layout,axis,x,title) {}
+    set pap(canvas,layout,axis,x,min) 0
+    set pap(canvas,layout,axis,x,max) 0
+    set pap(canvas,layout,axis,x,grid) 0
+    set pap(canvas,layout,axis,x,log) 0
+    set pap(canvas,layout,axis,x,flip) 0
 
     set pap(graph,foreground) black
     set pap(graph,background) white

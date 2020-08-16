@@ -44,7 +44,7 @@ proc PlotDestroy {varname} {
     destroy $var(mb)
 
     # gui window?
-    if {$var(top,gui)} {
+    if {[winfo exists $var(top,gui)]} {
 	PlotGUIDestroy $varname
     }
 
@@ -772,10 +772,10 @@ proc PlotCalcMargins {varname rpixname lpixname} {
 	}
     }
     if {$rchar>0} {
-	set rpix [expr $rpix + int(($var(legend,title,size)*4 + $var(legend,font,size)*$rchar)*.75)]
+	set rpix [expr $rpix + int(($var(graph,legend,title,size)*4 + $var(graph,legend,font,size)*$rchar)*.75)]
     }
     if {$lchar>0} {
-	set lpix [expr $lpix + int(($var(legend,title,size)*4 + $var(legend,font,size)*$lchar)*.75)]
+	set lpix [expr $lpix + int(($var(graph,legend,title,size)*4 + $var(graph,legend,font,size)*$lchar)*.75)]
     }
 
     set rpix [expr 10 + $rpix]
@@ -1041,6 +1041,10 @@ proc PlotDataSetName {varname name} {
     upvar #0 $varname var
     global $varname
 
+    if {[llength $var(graph,dss)] == 0} {
+	return
+    }
+
     $var(mb).graph.select entryconfig "$var(graph,ds,name)" -label "$name"
     set var(graph,ds,name) $name
     $var(graph,proc,updateelement) $varname
@@ -1058,9 +1062,9 @@ proc PlotBackup {ch dir} {
 
     set rdir "./[lindex [file split $dir] end]"
 
-    # only save ap plots
+    # don't save marker analysis plots
     foreach ww $iap(plots) {
-	if {[string range $ww 0 1] == {ap}} {
+	if {[string range $ww 0 2] != {mkr}} {
 	    set fdir [file join $dir $ww]
 	    
 	    # create dir if needed
@@ -1076,7 +1080,7 @@ proc PlotBackup {ch dir} {
 	    global $varname
 
 	    puts $ch "global $varname"
-	    puts $ch "PlotDialog $varname $varname"
+	    puts $ch "PlotDialog $varname $var(graph,name)"
 
 	    set cc $var(graph,current)
 	    set gr $var(graph,current)
@@ -1109,9 +1113,9 @@ proc PlotBackup {ch dir} {
 	    puts $ch "set ${varname}(layout,strip,scale) $var(layout,strip,scale)"
 	    puts $ch "PlotChangeLayout $varname"
 
-	    puts $ch "set ${varname}(foreground) $var(foreground)"
-	    puts $ch "set ${varname}(background) $var(background)"
-	    puts $ch "set ${varname}(grid,color) $var(grid,color)"
+	    puts $ch "set ${varname}(graph,foreground) $var(graph,foreground)"
+	    puts $ch "set ${varname}(graph,background) $var(graph,background)"
+	    puts $ch "set ${varname}(graph,grid,color) $var(graph,grid,color)"
 	    puts $ch "PlotUpdateCanvasElement $varname"
 
 	    puts $ch "set ${varname}(mode) $var(mode)"
@@ -1141,8 +1145,8 @@ proc PlotUpdateCanvasElement {varname} {
 	set fg [ThemeTreeForeground]
 	set bg [ThemeTreeBackground]
     } else {
-	set fg $var(foreground)
-	set bg $var(background)
+	set fg $var(graph,foreground)
+	set bg $var(graph,background)
     }
 
     foreach cc $var(graphs) {
@@ -1156,25 +1160,25 @@ proc PlotUpdateCanvasElement {varname} {
 	    -bg $bg \
 	    -color $fg \
 	    -titlecolor $fg \
-	    -gridcolor $var(grid,color) \
-	    -gridminorcolor $var(grid,color) \
-	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+	    -gridcolor $var(graph,grid,color) \
+	    -gridminorcolor $var(graph,grid,color) \
+	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
+	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
 
 	$var($cc,graph) yaxis configure \
 	    -bg $bg \
 	    -color $fg \
 	    -titlecolor $fg \
-	    -gridcolor $var(grid,color) \
-	    -gridminorcolor $var(grid,color) \
-	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+	    -gridcolor $var(graph,grid,color) \
+	    -gridminorcolor $var(graph,grid,color) \
+	    -tickfont "{$ds9($var(graph,axis,font,family))} $var(graph,axis,font,size) $var(graph,axis,font,weight) $var(graph,axis,font,slant)" \
+	    -titlefont "{$ds9($var(graph,axis,title,family))} $var(graph,axis,title,size) $var(graph,axis,title,weight) $var(graph,axis,title,slant)"
 
 	$var($cc,graph) legend configure \
 	    -bg $bg \
 	    -fg $fg \
 	    -titlecolor $fg \
-	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
-	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
+	    -font "{$ds9($var(graph,legend,font,family))} $var(graph,legend,font,size) $var(graph,legend,font,weight) $var(graph,legend,font,slant)" \
+	    -titlefont "{$ds9($var(graph,legend,title,family))} $var(graph,legend,title,size) $var(graph,legend,title,weight) $var(graph,legend,title,slant)"
     }
 }

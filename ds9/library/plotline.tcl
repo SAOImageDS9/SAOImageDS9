@@ -227,7 +227,7 @@ proc PlotLineUpdateElement {varname} {
 	    set shapefillcolor $var(graph,ds,line,shape,color)
 	}
     } else {
-	set shapefillcolor $var(background)
+	set shapefillcolor $var(graph,background)
     }
 
     if {$var(graph,ds,line,dash)} {

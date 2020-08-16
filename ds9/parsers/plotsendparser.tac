@@ -71,8 +71,8 @@ plotsend : {ProcessSendCmdGet iap plots}
  | LAYOUT_ {ProcessSendCmdCVARGet layout}
  | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet layout,strip,scale}
  | FONT_ fontt
- | FOREGROUND_ {ProcessSendCmdCVARGet foreground}
- | BACKGROUND_ {ProcessSendCmdCVARGet background}
+ | FOREGROUND_ {ProcessSendCmdCVARGet graph,foreground}
+ | BACKGROUND_ {ProcessSendCmdCVARGet graph,background}
  | THEME_ {ProcessSendCmdCVARGetYesNo theme}
 
 # Graph Menu
@@ -141,10 +141,10 @@ fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}
  ;
 
 fontType : TITLE_ {set _ graph,title}
- | LABELS_ {set _ axis,title}
- | NUMBERS_ {set _ axis,font}
- | LEGEND_ {set _ legend,font}
- | LEGEND_ TITLE_ {set _ legend,title}
+ | LABELS_ {set _ graph,axis,title}
+ | NUMBERS_ {set _ graph,axis,font}
+ | LEGEND_ {set _ graph,legend,font}
+ | LEGEND_ TITLE_ {set _ graph,legend,title}
  ;
 
 axis : xy GRID_ {ProcessSendCmdCVARGetYesNo "graph,axis,$1,grid"}

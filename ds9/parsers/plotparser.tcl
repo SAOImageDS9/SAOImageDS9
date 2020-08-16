@@ -5577,8 +5577,8 @@ proc plot::yyparse {} {
                     41 { ProcessCmdCVAR0 PlotDeleteGraphCurrent }
                     42 { ProcessCmdCVAR layout $2 PlotChangeLayout }
                     43 { ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout }
-                    45 { ProcessCmdCVAR foreground $2 PlotUpdateCanvasElement }
-                    46 { ProcessCmdCVAR background $2 PlotUpdateCanvasElement }
+                    45 { ProcessCmdCVAR graph,foreground $2 PlotUpdateCanvasElement }
+                    46 { ProcessCmdCVAR graph,background $2 PlotUpdateCanvasElement }
                     47 { ProcessCmdCVAR theme $2 PlotUpdateAllElement }
                     48 { ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
                     49 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
@@ -5654,7 +5654,7 @@ proc plot::yyparse {} {
                     127 { PlotCmdNewFile $1 $2; PlotCmdScatter {} {} {} $3 }
                     128 { PlotCmdNewFile $1 $2; PlotCmdScatter $3 $4 $5 $6 }
                     129 { PlotCmdNewParam1 PlotCmdScatter $1 }
-                    130 { PlotCmdNewParam PlotCmdScatter $1 $2 $3 $4 $5 }
+                    130 { PlotCmdNewParam5 PlotCmdScatter $1 $2 $3 $4 $5 }
                     131 { PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter }
                     132 { PlotCmdNew $1; PlotCmdAnalysisPlotStdin scatter }
                     133 { PlotCmdUpdateElement graph,ds,scatter,symbol $1 }
@@ -5731,10 +5731,10 @@ proc plot::yyparse {} {
                     204 { ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement }
                     205 { PlotCmdFontStyle $1 $3 }
                     206 { set _ graph,title }
-                    207 { set _ axis,title }
-                    208 { set _ axis,font }
-                    209 { set _ legend,font }
-                    210 { set _ legend,title }
+                    207 { set _ graph,axis,title }
+                    208 { set _ graph,axis,font }
+                    209 { set _ graph,legend,font }
+                    210 { set _ graph,legend,title }
                     211 { global cvarname; PlotDupDataSet $cvarname }
                     212 { global cvarname; PlotDupDataSet $cvarname }
                     213 { ProcessCmdCVAR "graph,axis,$1,grid" $3 PlotChangeAxis }

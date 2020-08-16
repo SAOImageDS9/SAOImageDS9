@@ -19,10 +19,9 @@ proc PlotDefState {} {
     set pap(layout,axis,x,log) 0
     set pap(layout,axis,x,flip) 0
 
-    set pap(foreground) black
-    set pap(background) white
-
-    set pap(grid,color) gray64
+    set pap(graph,foreground) black
+    set pap(graph,background) white
+    set pap(graph,grid,color) gray64
 
     set pap(graph,format) 1
     set pap(graph,title) {}
@@ -31,23 +30,23 @@ proc PlotDefState {} {
     set pap(graph,title,weight) normal
     set pap(graph,title,slant) roman
 
-    set pap(legend,title,family) helvetica
-    set pap(legend,title,size) 10
-    set pap(legend,title,weight) normal
-    set pap(legend,title,slant) roman
-    set pap(legend,font,family) helvetica
-    set pap(legend,font,size) 9
-    set pap(legend,font,weight) normal
-    set pap(legend,font,slant) roman
+    set pap(graph,legend,title,family) helvetica
+    set pap(graph,legend,title,size) 10
+    set pap(graph,legend,title,weight) normal
+    set pap(graph,legend,title,slant) roman
+    set pap(graph,legend,font,family) helvetica
+    set pap(graph,legend,font,size) 9
+    set pap(graph,legend,font,weight) normal
+    set pap(graph,legend,font,slant) roman
 
-    set pap(axis,title,family) helvetica
-    set pap(axis,title,size) 9
-    set pap(axis,title,weight) normal
-    set pap(axis,title,slant) roman
-    set pap(axis,font,family) helvetica
-    set pap(axis,font,size) 9
-    set pap(axis,font,weight) normal
-    set pap(axis,font,slant) roman
+    set pap(graph,axis,title,family) helvetica
+    set pap(graph,axis,title,size) 9
+    set pap(graph,axis,title,weight) normal
+    set pap(graph,axis,title,slant) roman
+    set pap(graph,axis,font,family) helvetica
+    set pap(graph,axis,font,size) 9
+    set pap(graph,axis,font,weight) normal
+    set pap(graph,axis,font,slant) roman
 
     # per Graph
     set pap(graph,legend) 0
@@ -74,6 +73,7 @@ proc PlotDefState {} {
 
     # per DataSet
     set pap(graph,ds,show) 1
+    set pap(graph,ds,name) {}
 
     # Line
     set pap(graph,ds,line,smooth) linear
@@ -127,11 +127,11 @@ proc PlotInitGraph {varname} {
     set var(graph,proc,button) {}
     
     set var(graph,name) "Graph $var(seq)"
-    set var(graph,format) $pap(graph,format)
-    set var(graph,title) $pap(graph,title)
-
     set var(graph,seq) 0
     set var(graph,dss) {}
+
+    set var(graph,format) $pap(graph,format)
+    set var(graph,title) $pap(graph,title)
 
     set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
@@ -157,7 +157,6 @@ proc PlotInitGraph {varname} {
     set var(graph,axis,y,format) $pap(graph,axis,y,format)
 
     # per DataSet
-    set var(graph,ds,name) {}
     set var(graph,ds,dim) xy
     set var(graph,ds,manage) 1
 
@@ -167,6 +166,7 @@ proc PlotInitGraph {varname} {
     set var(graph,ds,yedata) {}
 
     set var(graph,ds,show) $pap(graph,ds,show) 
+    set var(graph,ds,name) $pap(graph,ds,name)
 
     # Line
     set var(graph,ds,line,smooth) $pap(graph,ds,line,smooth) 
@@ -218,11 +218,11 @@ proc PlotSaveState {varname} {
     set var($cc,proc,button) $var(graph,proc,button)
 
     set var($cc,name) $var(graph,name)
-    set var($cc,format) $var(graph,format)
-    set var($cc,title) $var(graph,title)
-
     set var($cc,seq) $var(graph,seq)
     set var($cc,dss) $var(graph,dss)
+
+    set var($cc,format) $var(graph,format)
+    set var($cc,title) $var(graph,title)
 
     set var($cc,legend) $var(graph,legend)
     set var($cc,legend,title) $var(graph,legend,title)
@@ -248,7 +248,6 @@ proc PlotSaveState {varname} {
     set var($cc,axis,y,format) $var(graph,axis,y,format)
 
     # per DataSet
-    set var($cc,$nn,name) $var(graph,ds,name)
     set var($cc,$nn,dim) $var(graph,ds,dim)
     set var($cc,$nn,manage) $var(graph,ds,manage)
 
@@ -258,6 +257,7 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,yedata) $var(graph,ds,yedata)
 
     set var($cc,$nn,show) $var(graph,ds,show)
+    set var($cc,$nn,name) $var(graph,ds,name)
 
     # Line
     set var($cc,$nn,line,smooth) $var(graph,ds,line,smooth)
@@ -308,12 +308,12 @@ proc PlotRestoreState {varname} {
     set var(graph,proc,highlite) $var($cc,proc,highlite)
     set var(graph,proc,button) $var($cc,proc,button)
     
-    set var(graph,name) $var($cc,name)
-    set var(graph,format) $var($cc,format)
     set var(graph,title) $var($cc,title)
-
     set var(graph,seq) $var($cc,seq)
     set var(graph,dss) $var($cc,dss) 
+
+    set var(graph,name) $var($cc,name)
+    set var(graph,format) $var($cc,format)
 
     set var(graph,legend) $var($cc,legend)
     set var(graph,legend,title) $var($cc,legend,title)
@@ -339,7 +339,6 @@ proc PlotRestoreState {varname} {
     set var(graph,axis,y,format) $var($cc,axis,y,format)
 
     # per DataSet
-    set var(graph,ds,name) $var($cc,$nn,name)
     set var(graph,ds,dim) $var($cc,$nn,dim)
     set var(graph,ds,manage) $var($cc,$nn,manage)
 
@@ -349,6 +348,7 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,yedata) $var($cc,$nn,yedata)
 
     set var(graph,ds,show) $var($cc,$nn,show) 
+    set var(graph,ds,name) $var($cc,$nn,name)
 
     # Line
     set var(graph,ds,line,smooth) $var($cc,$nn,line,smooth) 

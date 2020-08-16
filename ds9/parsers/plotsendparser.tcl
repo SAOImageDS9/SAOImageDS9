@@ -1413,8 +1413,8 @@ proc plotsend::yyparse {} {
                     8 { ProcessSendCmdCVARGet graph,current }
                     9 { ProcessSendCmdCVARGet layout }
                     10 { ProcessSendCmdCVARGet layout,strip,scale }
-                    12 { ProcessSendCmdCVARGet foreground }
-                    13 { ProcessSendCmdCVARGet background }
+                    12 { ProcessSendCmdCVARGet graph,foreground }
+                    13 { ProcessSendCmdCVARGet graph,background }
                     14 { ProcessSendCmdCVARGetYesNo theme }
                     15 { ProcessSendCmdCVARGet graph,ds,current }
                     16 { ProcessSendCmdCVARGet graph,ds,current }
@@ -1457,10 +1457,10 @@ proc plotsend::yyparse {} {
                     57 { ProcessSendCmdCVARGet "$1,slant" }
                     58 { ProcessSendCmdCVARGet "$1,weight" }
                     59 { set _ graph,title }
-                    60 { set _ axis,title }
-                    61 { set _ axis,font }
-                    62 { set _ legend,font }
-                    63 { set _ legend,title }
+                    60 { set _ graph,axis,title }
+                    61 { set _ graph,axis,font }
+                    62 { set _ graph,legend,font }
+                    63 { set _ graph,legend,title }
                     64 { ProcessSendCmdCVARGetYesNo "graph,axis,$1,grid" }
                     65 { ProcessSendCmdCVARGetYesNo "graph,axis,$1,log" }
                     66 { ProcessSendCmdCVARGetYesNo "graph,axis,$1,flip" }

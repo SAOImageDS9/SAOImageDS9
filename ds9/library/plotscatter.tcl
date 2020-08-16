@@ -152,7 +152,7 @@ proc PlotScatterUpdateElement {varname} {
 	    set shapefillcolor $var(graph,ds,scatter,color)
 	}
     } else {
-	set shapefillcolor $var(background)
+	set shapefillcolor $var(graph,background)
     }
 
     if {$var(graph,ds,error)} {

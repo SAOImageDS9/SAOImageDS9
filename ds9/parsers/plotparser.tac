@@ -180,8 +180,8 @@ plot : line
  | LAYOUT_ layout {ProcessCmdCVAR layout $2 PlotChangeLayout}
  | LAYOUT_ STRIP_ SCALE_ numeric {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
- | FOREGROUND_ STRING_ {ProcessCmdCVAR foreground $2 PlotUpdateCanvasElement}
- | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvasElement}
+ | FOREGROUND_ STRING_ {ProcessCmdCVAR graph,foreground $2 PlotUpdateCanvasElement}
+ | BACKGROUND_ STRING_ {ProcessCmdCVAR graph,background $2 PlotUpdateCanvasElement}
  | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateAllElement}
 
  # Graph Menu
@@ -313,7 +313,7 @@ scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
 
 # special case, is 1st arg a file? or ref?
  | STRING_ {PlotCmdNewParam1 PlotCmdScatter $1}
- | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewParam PlotCmdScatter $1 $2 $3 $4 $5}
+ | STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNewParam5 PlotCmdScatter $1 $2 $3 $4 $5}
 
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter}
  | STRING_ STDIN_ {PlotCmdNew $1; PlotCmdAnalysisPlotStdin scatter}
@@ -429,10 +429,10 @@ fontt : fontType FONT_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasEleme
  ;
 
 fontType : TITLE_ {set _ graph,title}
- | LABELS_ {set _ axis,title}
- | NUMBERS_ {set _ axis,font}
- | LEGEND_ {set _ legend,font}
- | LEGEND_ TITLE_ {set _ legend,title}
+ | LABELS_ {set _ graph,axis,title}
+ | NUMBERS_ {set _ graph,axis,font}
+ | LEGEND_ {set _ graph,legend,font}
+ | LEGEND_ TITLE_ {set _ graph,legend,title}
  ;
 
 duplicate : {global cvarname; PlotDupDataSet $cvarname}

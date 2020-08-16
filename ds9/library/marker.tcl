@@ -15,12 +15,12 @@ proc MarkerDef {} {
     set imarker(motion) none
     set imarker(handle) -1
     set imarker(prefix,dialog) {mkr}
-    set imarker(prefix,plot3d) {plot3d}
-    set imarker(prefix,plot2d) {plot2d}
+    set imarker(prefix,plot3d) {mkrplot3d}
+    set imarker(prefix,plot2d) {mkrplot2d}
     set imarker(prefix,stats) {stats}
-    set imarker(prefix,radial) {radial}
-    set imarker(prefix,panda) {panda}
-    set imarker(prefix,histogram) {hist}
+    set imarker(prefix,radial) {mkrradial}
+    set imarker(prefix,panda) {mkrpanda}
+    set imarker(prefix,histogram) {mkrhist}
 
     set marker(show) 1
     set marker(show,text) 1

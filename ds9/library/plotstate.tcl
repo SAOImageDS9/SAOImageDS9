@@ -134,7 +134,7 @@ proc PlotInitGraph {varname} {
     set var(graph,dss) {}
     set var(graph,layout,x,manage) 1
 
-    set var(graph,name) "Graph $var(seq)"
+    set var(graph,name) $pap(graph,name)
     set var(graph,title) $pap(graph,title)
     set var(graph,format) $pap(graph,format)
 

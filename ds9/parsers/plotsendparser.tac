@@ -141,7 +141,7 @@ fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}
  | fontType STYLE_ {ProcessSendCmdCVARGet "$1,weight"}
  ;
 
-fontType : TITLE_ {set _ graph,title}
+fontType : TITLE_ {set _ canvas,title}
  | LABELS_ {set _ canvas,axis,title}
  | NUMBERS_ {set _ canvas,axis,font}
  | LEGEND_ {set _ canvas,legend,font}

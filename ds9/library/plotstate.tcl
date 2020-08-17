@@ -10,14 +10,6 @@ proc PlotDefState {} {
     global ds9
 
     # per Canvas
-    set pap(canvas,layout,axis,x,title) {}
-
-    set pap(canvas,layout,axis,x,min) 0
-    set pap(canvas,layout,axis,x,max) 0
-    set pap(canvas,layout,axis,x,grid) 0
-    set pap(canvas,layout,axis,x,log) 0
-    set pap(canvas,layout,axis,x,flip) 0
-
     set pap(canvas,layout) grid
     set pap(canvas,layout,strip,scale) 50
 
@@ -116,20 +108,27 @@ proc PlotInitGraph {varname} {
 
     global pap
 
+    # per Canvas
+    # dynamic
+    set var(layout,axis,x,title) {}
+    set var(layout,axis,x,min) 0
+    set var(layout,axis,x,max) 0
+    set var(layout,axis,x,grid) 0
+    set var(layout,axis,x,log) 0
+    set var(layout,axis,x,flip) 0
+
     # per Graph
     set cc $var(graph,current)
+
+    # dynamic
     set var(graph,ds,current) {}
-
     set var(graph) $var(top).gr$cc
-
     set var(graph,tx) 0
     set var(graph,ty) 0
-
     set var(graph,type) {}
     set var(graph,proc,updateelement) {}
     set var(graph,proc,hightlite) {}
     set var(graph,proc,button) {}
-    
     set var(graph,seq) 0
     set var(graph,dss) {}
 
@@ -161,14 +160,15 @@ proc PlotInitGraph {varname} {
     set var(graph,axis,y,format) $pap(graph,axis,y,format)
 
     # per DataSet
+    # dynamic
     set var(graph,ds,dim) xy
     set var(graph,ds,manage) 1
-
     set var(graph,ds,xdata) {}
     set var(graph,ds,ydata) {}
     set var(graph,ds,xedata) {}
     set var(graph,ds,yedata) {}
 
+    # Dataset
     set var(graph,ds,show) $pap(graph,ds,show)
     set var(graph,ds,name) $pap(graph,ds,name)
 
@@ -209,18 +209,15 @@ proc PlotSaveState {varname} {
 
     # per Graph
     set cc $var(graph,current)
-    set nn $var(graph,ds,current)
 
+    # dynamic
     set var($cc,graph) $var(graph)
-
     set var($cc,tx) $var(graph,tx)
     set var($cc,ty) $var(graph,ty)
-
     set var($cc,type) $var(graph,type)
     set var($cc,proc,updateelement) $var(graph,proc,updateelement)
     set var($cc,proc,highlite) $var(graph,proc,highlite)
     set var($cc,proc,button) $var(graph,proc,button)
-
     set var($cc,seq) $var(graph,seq)
     set var($cc,dss) $var(graph,dss)
 
@@ -252,14 +249,17 @@ proc PlotSaveState {varname} {
     set var($cc,axis,y,format) $var(graph,axis,y,format)
 
     # per DataSet
+    set nn $var(graph,ds,current)
+
+    # dynamic
     set var($cc,$nn,dim) $var(graph,ds,dim)
     set var($cc,$nn,manage) $var(graph,ds,manage)
-
     set var($cc,$nn,xdata) $var(graph,ds,xdata)
     set var($cc,$nn,ydata) $var(graph,ds,ydata)
     set var($cc,$nn,xedata) $var(graph,ds,xedata)
     set var($cc,$nn,yedata) $var(graph,ds,yedata)
 
+    # Dataset
     set var($cc,$nn,show) $var(graph,ds,show)
     set var($cc,$nn,name) $var(graph,ds,name)
 
@@ -300,18 +300,15 @@ proc PlotRestoreState {varname} {
 
     # per Graph
     set cc $var(graph,current)
-    set nn $var(graph,ds,current)
 
+    # dynamic
     set var(graph) $var($cc,graph)
-
     set var(graph,tx) $var($cc,tx)
     set var(graph,ty) $var($cc,ty)
-
     set var(graph,type) $var($cc,type)
     set var(graph,proc,updateelement) $var($cc,proc,updateelement)
     set var(graph,proc,highlite) $var($cc,proc,highlite)
     set var(graph,proc,button) $var($cc,proc,button)
-    
     set var(graph,seq) $var($cc,seq)
     set var(graph,dss) $var($cc,dss) 
 
@@ -343,14 +340,17 @@ proc PlotRestoreState {varname} {
     set var(graph,axis,y,format) $var($cc,axis,y,format)
 
     # per DataSet
+    set nn $var(graph,ds,current)
+
+    # dynamic
     set var(graph,ds,dim) $var($cc,$nn,dim)
     set var(graph,ds,manage) $var($cc,$nn,manage)
-
     set var(graph,ds,xdata) $var($cc,$nn,xdata)
     set var(graph,ds,ydata) $var($cc,$nn,ydata)
     set var(graph,ds,xedata) $var($cc,$nn,xedata)
     set var(graph,ds,yedata) $var($cc,$nn,yedata)
 
+    # Dataset
     set var(graph,ds,show) $var($cc,$nn,show) 
     set var(graph,ds,name) $var($cc,$nn,name)
 

@@ -799,12 +799,12 @@ proc PlotUpdateCanvas {varname} {
 	grid -
 	row -
 	column {
-	    set var(canvas,layout,axis,x,title) {}
-	    set var(canvas,layout,axis,x,min) 0
-	    set var(canvas,layout,axis,x,max) 1
-	    set var(canvas,layout,axis,x,grid) 1
-	    set var(canvas,layout,axis,x,log) 0
-	    set var(canvas,layout,axis,x,flip) 0
+	    set var(layout,axis,x,title) {}
+	    set var(layout,axis,x,min) 0
+	    set var(layout,axis,x,max) 1
+	    set var(layout,axis,x,grid) 1
+	    set var(layout,axis,x,log) 0
+	    set var(layout,axis,x,flip) 0
 	}
 	strip {
 	    if {$var($first,axis,x,auto)} {
@@ -820,12 +820,12 @@ proc PlotUpdateCanvas {varname} {
 		set xmax $var($first,axis,x,max)
 	    }
 
-	    set var(canvas,layout,axis,x,title) $var($first,axis,x,title)
-	    set var(canvas,layout,axis,x,min) $xmin
-	    set var(canvas,layout,axis,x,max) $xmax
-	    set var(canvas,layout,axis,x,grid) $var($first,axis,x,grid)
-	    set var(canvas,layout,axis,x,log) $var($first,axis,x,log)
-	    set var(canvas,layout,axis,x,flip) $var($first,axis,x,flip)
+	    set var(layout,axis,x,title) $var($first,axis,x,title)
+	    set var(layout,axis,x,min) $xmin
+	    set var(layout,axis,x,max) $xmax
+	    set var(layout,axis,x,grid) $var($first,axis,x,grid)
+	    set var(layout,axis,x,log) $var($first,axis,x,log)
+	    set var(layout,axis,x,flip) $var($first,axis,x,flip)
 	}
     }
     
@@ -902,8 +902,8 @@ proc PlotUpdateGraph {varname} {
 	    set xmax $var(graph,axis,x,max)
 	}
     } else {
-	set xmin $var(canvas,layout,axis,x,min)
-	set xmax $var(canvas,layout,axis,x,max)
+	set xmin $var(layout,axis,x,min)
+	set xmax $var(layout,axis,x,max)
     }
 
     if {$var(graph,axis,y,auto)} {
@@ -920,10 +920,10 @@ proc PlotUpdateGraph {varname} {
 	set xlog $var(graph,axis,x,log)
 	set xflip $var(graph,axis,x,flip)
     } else {
-	set xtitle $var(canvas,layout,axis,x,title)
-	set xgrid $var(canvas,layout,axis,x,grid)
-	set xlog $var(canvas,layout,axis,x,log)
-	set xflip $var(canvas,layout,axis,x,flip)
+	set xtitle $var(layout,axis,x,title)
+	set xgrid $var(layout,axis,x,grid)
+	set xlog $var(layout,axis,x,log)
+	set xflip $var(layout,axis,x,flip)
     }
 
     if {$var(graph,format)} {

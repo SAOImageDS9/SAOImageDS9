@@ -600,6 +600,36 @@ proc FixPrefsVarOld {} {
 }
 
 proc FixPrefs8.1to8.2 {} {
+    FixVar pap(canvas,layout) pap(layout)
+    FixVar pap(canvas,layout,strip,scale) pap(layout,strip,scale)
+
+    FixVar pap(canvas,foreground) pap(foreground)
+    FixVar pap(canvas,background) pap(background)
+    FixVar pap(canvas,grid,color) pap(grid,color)
+
+    FixVar pap(canvas,title,family) pap(title,family)
+    FixVar pap(canvas,title,size) pap(title,size)
+    FixVar pap(canvas,title,weight) pap(title,weight)
+    FixVar pap(canvas,title,slant) pap(title,slant)
+
+    FixVar pap(canvas,legend,title,family) pap(legend,title,family)
+    FixVar pap(canvas,legend,title,size) pap(legend,title,size)
+    FixVar pap(canvas,legend,title,weight) pap(legend,title,weight)
+    FixVar pap(canvas,legend,title,slant) pap(legend,title,slant)
+    FixVar pap(canvas,legend,font,family) pap(legend,font,family)
+    FixVar pap(canvas,legend,font,size) pap(legend,font,size)
+    FixVar pap(canvas,legend,font,weight) pap(legend,font,weight)
+    FixVar pap(canvas,legend,font,slant) pap(legend,font,slant)
+
+    FixVar pap(canvas,axis,title,family) pap(axis,title,family)
+    FixVar pap(canvas,axis,title,size) pap(axis,title,size)
+    FixVar pap(canvas,axis,title,weight) pap(axis,title,weight)
+    FixVar pap(canvas,axis,title,slant) pap(axis,title,slant)
+    FixVar pap(canvas,axis,font,family) pap(axis,font,family)
+    FixVar pap(canvas,axis,font,size) pap(axis,font,size)
+    FixVar pap(canvas,axis,font,weight) pap(axis,font,weight)
+    FixVar pap(canvas,axis,font,slant) pap(axis,font,slant)
+
     FixVar pap(graph,ds,line,smooth) pap(graph,ds,smooth)
     FixVar pap(graph,ds,line,color) pap(graph,ds,color)
     FixVar pap(graph,ds,line,width) pap(graph,ds,width)

@@ -37,14 +37,14 @@ proc PlotLoadConfigFile {varname fn} {
     }
 }
 
-proc PlotSaveConfigDataset {varname} {
+proc PlotSaveConfig {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotSaveConfigFileDataset $varname [SaveFileDialog apconfigfbox $var(top)]
+    PlotSaveConfigFile $varname [SaveFileDialog apconfigfbox $var(top)]
 }
 
-proc PlotSaveConfigFileDataset {varname filename} {
+proc PlotSaveConfigFile {varname filename} {
     upvar #0 $varname var
     global $varname
 

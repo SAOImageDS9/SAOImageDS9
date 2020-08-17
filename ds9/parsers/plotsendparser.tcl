@@ -1470,7 +1470,7 @@ proc plotsend::yyparse {} {
                     57 { ProcessSendCmdCVARGet "$1,weight" }
                     58 { ProcessSendCmdCVARGet "$1,slant" }
                     59 { ProcessSendCmdCVARGet "$1,weight" }
-                    60 { set _ graph,title }
+                    60 { set _ canvas,title }
                     61 { set _ canvas,axis,title }
                     62 { set _ canvas,axis,font }
                     63 { set _ canvas,legend,font }

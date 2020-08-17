@@ -37,14 +37,14 @@ proc PlotLoadConfigFile {varname fn} {
     }
 }
 
-proc PlotSaveConfig {varname} {
+proc PlotSaveConfigDataset {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotSaveConfigFile $varname [SaveFileDialog apconfigfbox $var(top)]
+    PlotSaveConfigFileDataset $varname [SaveFileDialog apconfigfbox $var(top)]
 }
 
-proc PlotSaveConfigFile {varname filename} {
+proc PlotSaveConfigFileDataset {varname filename} {
     upvar #0 $varname var
     global $varname
 
@@ -57,20 +57,10 @@ proc PlotSaveConfigFile {varname filename} {
 	unset apca
     }
     set apca(version) $ds9(version)
-    array set apca [array get $varname "graph,*"]
+    array set apca [array get $varname "graph,ds,*"]
 
     # cleanup
-    unset apca(graph,current)
     unset apca(graph,ds,current)
-    unset apca(graph,tx)
-    unset apca(graph,ty)
-    unset apca(graph,type)
-    unset apca(graph,proc,updateelement)
-    unset apca(graph,proc,highlite)
-    unset apca(graph,proc,button)
-    unset apca(graph,name)
-    unset apca(graph,seq)
-    unset apca(graph,dss)
     unset apca(graph,ds,dim)
     unset apca(graph,ds,manage)
     unset apca(graph,ds,xdata)

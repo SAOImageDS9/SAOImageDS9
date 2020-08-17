@@ -779,7 +779,7 @@ proc PlotCalcMargins {varname rpixname lpixname} {
     }
 
     set rpix [expr 10 + $rpix]
-    set lpix [expr 8*$var(axis,font,size) + $ytitle*$var(axis,title,size) + $lpix]
+    set lpix [expr 8*$var(canvas,axis,font,size) + $ytitle*$var(canvas,axis,title,size) + $lpix]
 }
 
 

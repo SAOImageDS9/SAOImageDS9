@@ -12,11 +12,23 @@ proc PrefsDialogPlot {} {
     $dprefs(listbox) insert {} end -id [ttk::frame $w.plot] \
 	-text [msgcat::mc {Plot}]
 
-    # Graph
-    set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Graph}]]
+    # Canvas
+    set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Canvas}]]
 
-    ttk::label $f.ttitle -text [msgcat::mc {Title}]
-    FontMenuButton $f.title pap canvas,title,family canvas,title,size canvas,title,weight canvas,title,slant {}
+    ttk::label $f.tlayout -text [msgcat::mc {Layout}]
+    ttk::menubutton $f.layout -textvariable pap(canvas,layout) \
+	-menu $f.layout.menu
+
+    ThemeMenu $f.layout.menu
+    $f.layout.menu add radiobutton -label [msgcat::mc {Grid}] \
+	-variable pap(canvas,layout) -value grid
+    $f.layout.menu add radiobutton -label [msgcat::mc {Row}] \
+	-variable pap(canvas,layout) -value row
+    $f.layout.menu add radiobutton -label [msgcat::mc {Column}] \
+	-variable pap(canvas,layout) -value column
+    $f.layout.menu add separator
+    $f.layout.menu add radiobutton -label [msgcat::mc {Strip}] \
+	-variable pap(canvas,layout) -value strip
 
     ttk::label $f.tfg -text [msgcat::mc {Foreground}]
     ColorMenuButton $f.fg pap canvas,foreground {}
@@ -25,35 +37,81 @@ proc PrefsDialogPlot {} {
     ttk::label $f.tgrid -text [msgcat::mc {Grid}]
     ColorMenuButton $f.grid pap canvas,grid,color {}
 
-    grid $f.ttitle $f.title -padx 2 -pady 2 -sticky w
+    ttk::label $f.ttitle -text [msgcat::mc {Title}]
+    FontMenuButton $f.title pap canvas,title,family \
+	canvas,title,size canvas,title,weight \
+	canvas,title,slant {}
+
+    ttk::label $f.tlegendtitle -text [msgcat::mc {Legend Title}]
+    FontMenuButton $f.legendtitle pap canvas,legend,title,family \
+	canvas,legend,title,size canvas,legend,title,weight \
+	canvas,legend,title,slant {}
+
+    ttk::label $f.tlegend -text [msgcat::mc {Legend}]
+    FontMenuButton $f.legend pap canvas,legend,font,family \
+	canvas,legend,font,size canvas,legend,font,weight \
+	canvas,legend,font,slant {}
+
+    ttk::label $f.ttextlab -text [msgcat::mc {Axis Title}]
+    FontMenuButton $f.textlab pap canvas,axis,title,family \
+	canvas,axis,title,size canvas,axis,title,weight \
+	canvas,axis,title,slant {}
+
+    ttk::label $f.tnumlab -text [msgcat::mc {Axis Numbers}]
+    FontMenuButton $f.numlab pap canvas,axis,font,family \
+	canvas,axis,font,size canvas,axis,font,weight \
+	canvas,axis,font,slant {}
+
+    grid $f.tlayout $f.layout -padx 2 -pady 2 -sticky w
     grid $f.tfg $f.fg -padx 2 -pady 2 -sticky w
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
     grid $f.tgrid $f.grid -padx 2 -pady 2 -sticky w
+    grid $f.ttitle $f.title -padx 2 -pady 2 -sticky w
+    grid $f.tlegendtitle $f.legendtitle -padx 2 -pady 2 -sticky w
+    grid $f.tlegend $f.legend -padx 2 -pady 2 -sticky w
+    grid $f.ttextlab $f.textlab  -padx 2 -pady 2 -sticky w
+    grid $f.tnumlab $f.numlab -padx 2 -pady 2 -sticky w
+    
+    # Graph
+    set f [ttk::labelframe $w.plot.axis -text [msgcat::mc {Graph}]]
 
-    # Axis
-    set f [ttk::labelframe $w.plot.axis -text [msgcat::mc {Axis}]]
+    ttk::checkbutton $f.legend -text [msgcat::mc {Show Legend}] \
+	-variable pap(graph,legend)
 
-    ttk::label $f.ttextlab -text [msgcat::mc {Axis Title}]
-    FontMenuButton $f.textlab pap canvas,axis,title,family canvas,axis,title,size canvas,axis,title,weight canvas,axis,title,slant {}
-    ttk::label $f.tnumlab -text [msgcat::mc {Axis Numbers}]
-    FontMenuButton $f.numlab pap canvas,axis,font,family canvas,axis,font,size canvas,axis,font,weight canvas,axis,font,slant {}
+    ttk::label $f.tlegendposition -text [msgcat::mc {Legend Position}]
+    ttk::menubutton $f.legendposition -textvariable pap(graph,legend,position) \
+	-menu $f.legendposition.menu
 
-    ttk::label $f.xtitle -text [msgcat::mc {X}]
-    ttk::checkbutton $f.x -text [msgcat::mc {Grid}] -variable pap(graph,axis,x,grid)
+    ThemeMenu $f.legendposition.menu
+    $f.legendposition.menu add radiobutton -label [msgcat::mc {Right}] \
+	-variable pap(graph,legend,position) -value right
+    $f.legendposition.menu add radiobutton -label [msgcat::mc {Left}] \
+	-variable pap(graph,legend,position) -value left
+    $f.legendposition.menu add radiobutton -label [msgcat::mc {Top}] \
+	-variable pap(graph,legend,position) -value top
+    $f.legendposition.menu add radiobutton -label [msgcat::mc {Bottom}] \
+	-variable pap(graph,legend,position) -value bottom
+    $f.legendposition.menu add radiobutton -label [msgcat::mc {Plot Area}] \
+	-variable pap(graph,legend,position) -value plotarea
+
+    ttk::label $f.xtitle -text [msgcat::mc {X Axis}]
+    ttk::checkbutton $f.x -text [msgcat::mc {Grid}] \
+	-variable pap(graph,axis,x,grid)
     ttk::radiobutton $f.xlinear -text [msgcat::mc {Linear}] \
 	-variable pap(graph,axis,x,log) -value 0
     ttk::radiobutton $f.xlog -text [msgcat::mc {Log}] \
 	-variable pap(graph,axis,x,log) -value 1
 
-    ttk::label $f.ytitle -text [msgcat::mc {Y}]
-    ttk::checkbutton $f.y -text [msgcat::mc {Grid}] -variable pap(graph,axis,y,grid)
+    ttk::label $f.ytitle -text [msgcat::mc {Y Axis}]
+    ttk::checkbutton $f.y -text [msgcat::mc {Grid}] \
+	-variable pap(graph,axis,y,grid)
     ttk::radiobutton $f.ylinear -text [msgcat::mc {Linear}] \
 	-variable pap(graph,axis,y,log) -value 0
     ttk::radiobutton $f.ylog -text [msgcat::mc {Log}] \
 	-variable pap(graph,axis,y,log) -value 1
 
-    grid $f.ttextlab $f.textlab  -padx 2 -pady 2 -sticky w
-    grid $f.tnumlab $f.numlab -padx 2 -pady 2 -sticky w
+    grid $f.legend -padx 2 -pady 2 -sticky w
+    grid $f.tlegendposition $f.legendposition - -padx 2 -pady 2 -sticky w
     grid $f.xtitle $f.x $f.xlinear $f.xlog -padx 2 -pady 2 -sticky w
     grid $f.ytitle $f.y $f.ylinear $f.ylog -padx 2 -pady 2 -sticky w
 

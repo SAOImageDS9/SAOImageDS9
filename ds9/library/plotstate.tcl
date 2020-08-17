@@ -68,8 +68,8 @@ proc PlotDefState {} {
     set pap(graph,axis,y,format) {}
 
     # per DataSet
-    set pap(graph,ds,show) 1
     set pap(graph,ds,name) {}
+    set pap(graph,ds,show) 1
 
     # Line
     set pap(graph,ds,line,smooth) linear
@@ -133,8 +133,8 @@ proc PlotInitGraph {varname} {
     set var(graph,dss) {}
 
     set var(graph,name) "Graph $var(seq)"
-    set var(graph,format) $pap(graph,format)
     set var(graph,title) $pap(graph,title)
+    set var(graph,format) $pap(graph,format)
 
     set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
@@ -169,8 +169,8 @@ proc PlotInitGraph {varname} {
     set var(graph,ds,yedata) {}
 
     # Dataset
+    set var(graph,ds,name) {}
     set var(graph,ds,show) $pap(graph,ds,show)
-    set var(graph,ds,name) $pap(graph,ds,name)
 
     # Line
     set var(graph,ds,line,smooth) $pap(graph,ds,line,smooth) 
@@ -260,8 +260,8 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,yedata) $var(graph,ds,yedata)
 
     # Dataset
-    set var($cc,$nn,show) $var(graph,ds,show)
     set var($cc,$nn,name) $var(graph,ds,name)
+    set var($cc,$nn,show) $var(graph,ds,show)
 
     # Line
     set var($cc,$nn,line,smooth) $var(graph,ds,line,smooth)
@@ -312,8 +312,8 @@ proc PlotRestoreState {varname} {
     set var(graph,seq) $var($cc,seq)
     set var(graph,dss) $var($cc,dss) 
 
-    set var(graph,title) $var($cc,title)
     set var(graph,name) $var($cc,name)
+    set var(graph,title) $var($cc,title)
     set var(graph,format) $var($cc,format)
 
     set var(graph,legend) $var($cc,legend)
@@ -351,8 +351,8 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,yedata) $var($cc,$nn,yedata)
 
     # Dataset
-    set var(graph,ds,show) $var($cc,$nn,show) 
     set var(graph,ds,name) $var($cc,$nn,name)
+    set var(graph,ds,show) $var($cc,$nn,show) 
 
     # Line
     set var(graph,ds,line,smooth) $var($cc,$nn,line,smooth) 

@@ -80,6 +80,8 @@ proc PlotAddGraph {varname type} {
 
     # Init graph vars
     PlotInitGraph $varname
+    set var(graph) $var(top).gr$var(graph,current)
+    set var(graph,name) "Graph $var(seq)"
 
     # create graph
     set var(graph,type) $type

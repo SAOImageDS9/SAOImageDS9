@@ -108,6 +108,7 @@ proc PlotInitGraph {varname} {
     global $varname
 
     global pap
+    array set $varname [array get pap "graph,*"]
 
     # per Canvas
     # dynamic
@@ -119,11 +120,9 @@ proc PlotInitGraph {varname} {
     set var(layout,axis,x,flip) 0
 
     # per Graph
-    set cc $var(graph,current)
-
     # dynamic
     set var(graph,ds,current) {}
-    set var(graph) $var(top).gr$cc
+    set var(graph) {}
     set var(graph,tx) 0
     set var(graph,ty) 0
     set var(graph,type) {}
@@ -134,32 +133,6 @@ proc PlotInitGraph {varname} {
     set var(graph,dss) {}
     set var(graph,layout,x,manage) 1
 
-    set var(graph,name) $pap(graph,name)
-    set var(graph,title) $pap(graph,title)
-    set var(graph,format) $pap(graph,format)
-
-    set var(graph,legend) $pap(graph,legend)
-    set var(graph,legend,title) $pap(graph,legend,title)
-    set var(graph,legend,position) $pap(graph,legend,position)
-
-    set var(graph,axis,x,title) $pap(graph,axis,x,title)
-    set var(graph,axis,x,grid) $pap(graph,axis,x,grid)
-    set var(graph,axis,x,log) $pap(graph,axis,x,log)
-    set var(graph,axis,x,flip) $pap(graph,axis,x,flip)
-    set var(graph,axis,x,auto) $pap(graph,axis,x,auto)
-    set var(graph,axis,x,min) $pap(graph,axis,x,min)
-    set var(graph,axis,x,max) $pap(graph,axis,x,max)
-    set var(graph,axis,x,format) $pap(graph,axis,x,format)
-
-    set var(graph,axis,y,title) $pap(graph,axis,y,title)
-    set var(graph,axis,y,grid) $pap(graph,axis,y,grid)
-    set var(graph,axis,y,log) $pap(graph,axis,y,log)
-    set var(graph,axis,y,flip) $pap(graph,axis,y,flip)
-    set var(graph,axis,y,auto) $pap(graph,axis,y,auto)
-    set var(graph,axis,y,min) $pap(graph,axis,y,min)
-    set var(graph,axis,y,max) $pap(graph,axis,y,max)
-    set var(graph,axis,y,format) $pap(graph,axis,y,format)
-
     # per DataSet
     # dynamic
     set var(graph,ds,dim) xy
@@ -168,40 +141,6 @@ proc PlotInitGraph {varname} {
     set var(graph,ds,ydata) {}
     set var(graph,ds,xedata) {}
     set var(graph,ds,yedata) {}
-
-    # Dataset
-    set var(graph,ds,name) {}
-    set var(graph,ds,show) $pap(graph,ds,show)
-
-    # Line
-    set var(graph,ds,line,smooth) $pap(graph,ds,line,smooth) 
-    set var(graph,ds,line,color) $pap(graph,ds,line,color) 
-    set var(graph,ds,line,width) $pap(graph,ds,line,width) 
-    set var(graph,ds,line,dash) $pap(graph,ds,line,dash) 
-    set var(graph,ds,line,fill) $pap(graph,ds,line,fill) 
-    set var(graph,ds,line,fill,color) $pap(graph,ds,line,fill,color) 
-
-    set var(graph,ds,line,shape,symbol) $pap(graph,ds,line,shape,symbol) 
-    set var(graph,ds,line,shape,color) $pap(graph,ds,line,shape,color)
-    set var(graph,ds,line,shape,fill) $pap(graph,ds,line,shape,fill) 
-
-    # Bar
-    set var(graph,ds,bar,border,color) $pap(graph,ds,bar,border,color) 
-    set var(graph,ds,bar,border,width) $pap(graph,ds,bar,border,width) 
-    set var(graph,ds,bar,fill) $pap(graph,ds,bar,fill) 
-    set var(graph,ds,bar,color) $pap(graph,ds,bar,color) 
-    set var(graph,ds,bar,width) $pap(graph,ds,bar,width) 
-
-    # Scatter
-    set var(graph,ds,scatter,symbol) $pap(graph,ds,scatter,symbol) 
-    set var(graph,ds,scatter,color) $pap(graph,ds,scatter,color)
-    set var(graph,ds,scatter,fill) $pap(graph,ds,scatter,fill) 
-
-    # Error
-    set var(graph,ds,error) $pap(graph,ds,error) 
-    set var(graph,ds,error,cap) $pap(graph,ds,error,cap) 
-    set var(graph,ds,error,color) $pap(graph,ds,error,color) 
-    set var(graph,ds,error,width) $pap(graph,ds,error,width) 
 }
 
 proc PlotSaveState {varname} {

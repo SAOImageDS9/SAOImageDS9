@@ -208,6 +208,7 @@
 ::msgcat::mcset de {Darken} 
 ::msgcat::mcset de {Dash} {Gestrichelt}
 ::msgcat::mcset de {Data Format} {Datenformat}
+::msgcat::mcset de {DataSet} 
 ::msgcat::mcset de {Dataset Name} 
 ::msgcat::mcset de {Dataset} {Datensatz}
 ::msgcat::mcset de {Data} 
@@ -321,6 +322,7 @@
 ::msgcat::mcset de {Footprint Servers} 
 ::msgcat::mcset de {Footprint} 
 ::msgcat::mcset de {For more information, use --help} 
+::msgcat::mcset de {Foreground} 
 ::msgcat::mcset de {Forground} 
 ::msgcat::mcset de {Format} 
 ::msgcat::mcset de {Forward} [encoding convertfrom iso8859-1 {Vorwärts}]
@@ -334,6 +336,7 @@
 ::msgcat::mcset de {Full Range} {Ganzer Bereich}
 ::msgcat::mcset de {Function} {Funktion}
 ::msgcat::mcset de {GIF} 
+::msgcat::mcset de {GUI Tool} 
 ::msgcat::mcset de {GUI} 
 ::msgcat::mcset de {Galactic} {Galaktisch}
 ::msgcat::mcset de {Gap} 
@@ -428,6 +431,7 @@
 ::msgcat::mcset de {Layout} 
 ::msgcat::mcset de {Left} 
 ::msgcat::mcset de {Legal} 
+::msgcat::mcset de {Legend Position} 
 ::msgcat::mcset de {Legend Title} 
 ::msgcat::mcset de {Legend} 
 ::msgcat::mcset de {Length} [encoding convertfrom iso8859-1 {Länge}]
@@ -642,6 +646,7 @@
 ::msgcat::mcset de {Panner} [encoding convertfrom iso8859-1 {Übersichtsfeld}]
 ::msgcat::mcset de {Pan} {Ausrichtung}
 ::msgcat::mcset de {Parameters} {Parameter}
+::msgcat::mcset de {Params} 
 ::msgcat::mcset de {Password} {Passwort}
 ::msgcat::mcset de {Paste Contours} [encoding convertfrom iso8859-1 {Konturen einfügen}]
 ::msgcat::mcset de {Paste} [encoding convertfrom iso8859-1 {Einfügen}]
@@ -660,6 +665,7 @@
 ::msgcat::mcset de {Plot 2D} 
 ::msgcat::mcset de {Plot 3D} 
 ::msgcat::mcset de {Plot Area} 
+::msgcat::mcset de {Plot GUI} 
 ::msgcat::mcset de {Plot Tool} 
 ::msgcat::mcset de {Plot Type} 
 ::msgcat::mcset de {Plotting Regions} {Regionen drucken}
@@ -783,6 +789,7 @@
 ::msgcat::mcset de {Show Command} 
 ::msgcat::mcset de {Show Compass} 
 ::msgcat::mcset de {Show Grid} 
+::msgcat::mcset de {Show Legend} 
 ::msgcat::mcset de {Show Text} 
 ::msgcat::mcset de {Show/Hide Frames} {Rahmen zeigen/verstecken}
 ::msgcat::mcset de {Show} 
@@ -922,6 +929,7 @@
 ::msgcat::mcset de {Window} 
 ::msgcat::mcset de {Words matching title, description} {Worte im Titel, Bezeichnung}
 ::msgcat::mcset de {X Axis Title} 
+::msgcat::mcset de {X Axis} 
 ::msgcat::mcset de {X Column} 
 ::msgcat::mcset de {X Error Column} 
 ::msgcat::mcset de {X Flip} 
@@ -932,6 +940,7 @@
 ::msgcat::mcset de {XPA} 
 ::msgcat::mcset de {X} 
 ::msgcat::mcset de {Y Axis Title} 
+::msgcat::mcset de {Y Axis} 
 ::msgcat::mcset de {Y Column} 
 ::msgcat::mcset de {Y Error Column} 
 ::msgcat::mcset de {Y Flip} 

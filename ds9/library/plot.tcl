@@ -845,7 +845,7 @@ proc PlotUpdateCanvas {varname} {
 	    grid -
 	    row -
 	    column {
-		set var($cc,axis,x,manage) 1
+		set var($cc,layout,x,manage) 1
 		$var($cc,graph) configure \
 		    -topmargin 0 -bottommargin 0 \
 		    -leftmargin 0 -rightmargin 0 \
@@ -856,9 +856,9 @@ proc PlotUpdateCanvas {varname} {
 	    }
 	    strip {
 		if {$cc == $first} {
-		    set var($cc,axis,x,manage) 1
+		    set var($cc,layout,x,manage) 1
 		} else {
-		    set var($cc,axis,x,manage) 0
+		    set var($cc,layout,x,manage) 0
 		}
 
 		$var($cc,graph) configure \
@@ -893,7 +893,7 @@ proc PlotUpdateGraph {varname} {
 
     PlotSaveState $varname
 
-    if {$var(graph,axis,x,manage)} {
+    if {$var(graph,layout,x,manage)} {
 	if {$var(graph,axis,x,auto)} {
 	    set xmin {}
 	    set xmax {}
@@ -914,7 +914,7 @@ proc PlotUpdateGraph {varname} {
 	set ymax $var(graph,axis,y,max)
     }
 
-    if {$var(graph,axis,x,manage)} {
+    if {$var(graph,layout,x,manage)} {
 	set xtitle $var(graph,axis,x,title)
 	set xgrid $var(graph,axis,x,grid)
 	set xlog $var(graph,axis,x,log)
@@ -949,7 +949,7 @@ proc PlotUpdateGraph {varname} {
 	-min $ymin -max $ymax -descending $var(graph,axis,y,flip) \
 	-grid $var(graph,axis,y,grid) -logscale $var(graph,axis,y,log)
 
-    if {$var(graph,axis,x,manage)} {
+    if {$var(graph,layout,x,manage)} {
 	$var(graph) configure -plotpadx 0 -plotpady 0 -title $var(graph,title) 
     } else {
 	$var(graph) configure -plotpadx 0 -plotpady 0 -title {}
@@ -974,7 +974,7 @@ proc PlotUpdateGraph {varname} {
 	strip {
 	    switch $var(graph,legend,position) {
 		top {
-		    if {$var(graph,axis,x,manage)} {
+		    if {$var(graph,layout,x,manage)} {
 			$var(graph) legend configure \
 			    -hide [expr !$var(graph,legend)] \
 			    -title $var(graph,legend,title) \
@@ -1062,7 +1062,7 @@ proc PlotUpdateCanvasElement {varname} {
     global $varname
     global ds9
 
-    if {$var(theme)} {
+    if {$var(canvas,theme)} {
 	set fg [ThemeTreeForeground]
 	set bg [ThemeTreeBackground]
     } else {

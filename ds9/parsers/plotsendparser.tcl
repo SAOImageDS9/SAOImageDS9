@@ -106,7 +106,7 @@ array set plotsend::table {
   38:278,target 80
   45:0 reduce
   40:262,target 83
-  33:0,target 11
+  33:0,target 15
   37:274,target 78
   35:262 reduce
   0:304,target 25
@@ -118,7 +118,7 @@ array set plotsend::table {
   72:305,target 64
   66:0 reduce
   9:268,target 50
-  10:0,target 12
+  10:0,target 11
   87:0 reduce
   0:273,target 9
   25:x,target 37
@@ -162,7 +162,7 @@ array set plotsend::table {
   59:0 reduce
   32:261 reduce
   0:289,target 17
-  3:0,target 13
+  3:0,target 12
   84:0,target 67
   76:0,target 55
   72:301,target 64
@@ -400,7 +400,7 @@ array set plotsend::table {
   66:0,target 77
   7:0 reduce
   58:0,target 43
-  51:0,target 14
+  51:0,target 13
   40:274 shift
   43:0,target 39
   34:260,target 76
@@ -473,7 +473,7 @@ array set plotsend::table {
   0:265,target 4
   18:313 goto
   36:286 reduce
-  24:0,target 15
+  24:0,target 14
   4:266 shift
   16:0,target 7
   19:0 reduce
@@ -683,7 +683,7 @@ array set plotsend::rules {
   9,dc 1
   47,dc 1
   62,dc 1
-  11,dc 2
+  11,dc 1
   76,dc 1
   25,dc 1
   2,dc 1
@@ -717,7 +717,7 @@ array set plotsend::rules {
   37,dc 2
   52,dc 2
   66,dc 2
-  15,dc 1
+  15,dc 2
   81,dc 1
   29,dc 1
   30,dc 1
@@ -729,7 +729,7 @@ array set plotsend::rules {
   36,dc 1
   51,dc 2
   65,dc 2
-  14,dc 2
+  14,dc 1
   80,dc 1
   79,dc 1
   28,dc 1
@@ -742,7 +742,7 @@ array set plotsend::rules {
   50,dc 2
   49,dc 1
   64,dc 2
-  13,dc 1
+  13,dc 2
   78,dc 1
   27,dc 1
   4,dc 2
@@ -861,7 +861,7 @@ array set plotsend::lr1_table {
   49 {{6 0 2}}
   50 {{31 0 2}}
   27,trans {}
-  51 {{14 0 2}}
+  51 {{13 0 2}}
   46,trans {}
   52 {{10 0 2}}
   65,trans {}
@@ -911,12 +911,12 @@ array set plotsend::lr1_table {
   87 {{68 0 2}}
   0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0} {13 0 0} {14 0 0} {15 0 0} {16 0 0} {17 0 0} {18 0 0} {19 0 0} {20 0 0} {21 0 0} {22 0 0} {23 0 0} {24 0 0} {25 0 0} {26 0 0} {27 0 0} {28 0 0} {29 0 0} {30 0 0} {31 0 0} {32 0 0}}
   88 {{67 0 2}}
-  1 {{11 0 1} {50 0 0} {51 0 0} {52 0 0} {53 0 0} {54 0 0} {55 0 0} {56 0 0} {57 0 0} {58 0 0} {59 0 0} {60 {257 258 259 260 261 272 296 297 301 305} 0} {61 {257 258 259 260 261 272 296 297 301 305} 0} {62 {257 258 259 260 261 272 296 297 301 305} 0} {63 {257 258 259 260 261 272 296 297 301 305} 0} {64 {257 258 259 260 261 272 296 297 301 305} 0}}
+  1 {{15 0 1} {50 0 0} {51 0 0} {52 0 0} {53 0 0} {54 0 0} {55 0 0} {56 0 0} {57 0 0} {58 0 0} {59 0 0} {60 {257 258 259 260 261 272 296 297 301 305} 0} {61 {257 258 259 260 261 272 296 297 301 305} 0} {62 {257 258 259 260 261 272 296 297 301 305} 0} {63 {257 258 259 260 261 272 296 297 301 305} 0} {64 {257 258 259 260 261 272 296 297 301 305} 0}}
   89 {{71 0 2}}
   90 {{65 0 2}}
   2 {{21 0 1} {65 0 0} {66 0 0} {67 0 0} {68 0 0} {69 0 0} {70 0 0} {71 0 0} {78 {262 274 276 278 284 285 286} 0} {79 {262 274 276 278 284 285 286} 0} {80 {262 274 276 278 284 285 286} 0} {81 {262 274 276 278 284 285 286} 0}}
   91 {{66 0 2}}
-  3 {{13 0 1}}
+  3 {{12 0 1}}
   92 {{70 0 2}}
   4 {{4 0 1} {37 0 0} {38 0 0} {39 0 0} {40 0 0} {41 0 0}}
   93 {{69 0 2}}
@@ -1002,8 +1002,8 @@ array set plotsend::lr1_table {
   50,trans {}
   68,trans {}
   87,trans {}
-  10 {{12 0 1}}
-  11 {{14 0 1}}
+  10 {{11 0 1}}
+  11 {{13 0 1}}
   12 {{9 0 1} {10 0 1}}
   13 {{22 0 1} {72 0 0} {73 0 0}}
   14 {{3 0 1} {26 0 0} {27 0 0} {28 0 0} {29 0 0} {30 0 0} {31 0 0} {32 0 0}}
@@ -1022,7 +1022,7 @@ array set plotsend::lr1_table {
   21 {{24 0 1}}
   22 {{26 0 1}}
   23 {{19 0 1}}
-  24 {{15 0 1}}
+  24 {{14 0 1}}
   25 {{23 0 1} {74 0 0} {75 0 0} {76 0 0} {77 0 0} {78 0 0} {79 0 0} {80 0 0} {81 0 0} {82 0 0} {83 0 0}}
   26 {{28 0 1}}
   27 {{0 0 1}}
@@ -1032,7 +1032,7 @@ array set plotsend::lr1_table {
   31 {{62 {257 258 259 260 261 272 296 297 301 305} 1}}
   32 {{60 {257 258 259 260 261 272 296 297 301 305} 1}}
   10,trans {}
-  33 {{11 0 2}}
+  33 {{15 0 2}}
   28,trans {}
   34 {{50 0 1} {51 0 1} {52 0 1} {53 0 1} {54 0 1} {55 0 1} {56 0 1} {57 0 1} {58 0 1} {59 0 1}}
   47,trans {}
@@ -1426,10 +1426,10 @@ proc plotsend::yyparse {} {
                     8 { ProcessSendCmdCVARGet graph,current }
                     9 { ProcessSendCmdCVARGet canvas,layout }
                     10 { ProcessSendCmdCVARGet canvas,layout,strip,scale }
-                    12 { ProcessSendCmdCVARGet canvas,foreground }
-                    13 { ProcessSendCmdCVARGet canvas,background }
-                    14 { ProcessSendCmdCVARGet canvas,grid,color }
-                    15 { ProcessSendCmdCVARGetYesNo theme }
+                    11 { ProcessSendCmdCVARGet canvas,foreground }
+                    12 { ProcessSendCmdCVARGet canvas,background }
+                    13 { ProcessSendCmdCVARGet canvas,grid,color }
+                    14 { ProcessSendCmdCVARGetYesNo canvas,theme }
                     16 { ProcessSendCmdCVARGet graph,ds,current }
                     17 { ProcessSendCmdCVARGet graph,ds,current }
                     18 { ProcessSendCmdCVARGet graph,ds,current }

@@ -10,12 +10,13 @@ proc PlotDefState {} {
     global ds9
 
     # per Canvas
-    set pap(canvas,layout) grid
-    set pap(canvas,layout,strip,scale) 50
-
+    set pap(canvas,theme) 1
     set pap(canvas,foreground) black
     set pap(canvas,background) white
     set pap(canvas,grid,color) gray64
+
+    set pap(canvas,layout) grid
+    set pap(canvas,layout,strip,scale) 50
 
     set pap(canvas,title,family) helvetica
     set pap(canvas,title,size) 12
@@ -131,6 +132,7 @@ proc PlotInitGraph {varname} {
     set var(graph,proc,button) {}
     set var(graph,seq) 0
     set var(graph,dss) {}
+    set var(graph,layout,x,manage) 1
 
     set var(graph,name) "Graph $var(seq)"
     set var(graph,title) $pap(graph,title)
@@ -140,7 +142,6 @@ proc PlotInitGraph {varname} {
     set var(graph,legend,title) $pap(graph,legend,title)
     set var(graph,legend,position) $pap(graph,legend,position)
 
-    set var(graph,axis,x,manage) 1
     set var(graph,axis,x,title) $pap(graph,axis,x,title)
     set var(graph,axis,x,grid) $pap(graph,axis,x,grid)
     set var(graph,axis,x,log) $pap(graph,axis,x,log)
@@ -220,6 +221,7 @@ proc PlotSaveState {varname} {
     set var($cc,proc,button) $var(graph,proc,button)
     set var($cc,seq) $var(graph,seq)
     set var($cc,dss) $var(graph,dss)
+    set var($cc,layout,x,manage) $var(graph,layout,x,manage)
 
     set var($cc,name) $var(graph,name)
     set var($cc,title) $var(graph,title)
@@ -229,7 +231,6 @@ proc PlotSaveState {varname} {
     set var($cc,legend,title) $var(graph,legend,title)
     set var($cc,legend,position) $var(graph,legend,position)
 
-    set var($cc,axis,x,manage) $var(graph,axis,x,manage)
     set var($cc,axis,x,title) $var(graph,axis,x,title)
     set var($cc,axis,x,grid) $var(graph,axis,x,grid)
     set var($cc,axis,x,log) $var(graph,axis,x,log)
@@ -311,6 +312,7 @@ proc PlotRestoreState {varname} {
     set var(graph,proc,button) $var($cc,proc,button)
     set var(graph,seq) $var($cc,seq)
     set var(graph,dss) $var($cc,dss) 
+    set var(graph,layout,x,manage) $var($cc,layout,x,manage)
 
     set var(graph,name) $var($cc,name)
     set var(graph,title) $var($cc,title)
@@ -320,7 +322,6 @@ proc PlotRestoreState {varname} {
     set var(graph,legend,title) $var($cc,legend,title)
     set var(graph,legend,position) $var($cc,legend,position)
 
-    set var(graph,axis,x,manage) $var($cc,axis,x,manage)
     set var(graph,axis,x,title) $var($cc,axis,x,title)
     set var(graph,axis,x,grid) $var($cc,axis,x,grid)
     set var(graph,axis,x,log) $var($cc,axis,x,log)

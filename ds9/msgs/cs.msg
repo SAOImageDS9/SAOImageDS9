@@ -208,6 +208,7 @@
 ::msgcat::mcset cs {Darken} 
 ::msgcat::mcset cs {Dash} 
 ::msgcat::mcset cs {Data Format} [encoding convertfrom iso8859-2 {Formát dat}]
+::msgcat::mcset cs {DataSet} 
 ::msgcat::mcset cs {Dataset Name} 
 ::msgcat::mcset cs {Dataset} [encoding convertfrom iso8859-2 {Soubor dat}]
 ::msgcat::mcset cs {Data} 
@@ -321,6 +322,7 @@
 ::msgcat::mcset cs {Footprint Servers} 
 ::msgcat::mcset cs {Footprint} 
 ::msgcat::mcset cs {For more information, use --help} [encoding convertfrom iso8859-2 {Pro více informací, pou¾ijte --help}]
+::msgcat::mcset cs {Foreground} 
 ::msgcat::mcset cs {Forground} 
 ::msgcat::mcset cs {Format} [encoding convertfrom iso8859-2 {Formát}]
 ::msgcat::mcset cs {Forward} [encoding convertfrom iso8859-2 {Vpøed}]
@@ -334,6 +336,7 @@
 ::msgcat::mcset cs {Full Range} [encoding convertfrom iso8859-2 {Plný rozsah}]
 ::msgcat::mcset cs {Function} [encoding convertfrom iso8859-2 {Funkce}]
 ::msgcat::mcset cs {GIF} 
+::msgcat::mcset cs {GUI Tool} 
 ::msgcat::mcset cs {GUI} 
 ::msgcat::mcset cs {Galactic} [encoding convertfrom iso8859-2 {Galaktické}]
 ::msgcat::mcset cs {Gap} 
@@ -428,6 +431,7 @@
 ::msgcat::mcset cs {Layout} [encoding convertfrom iso8859-2 {Rozvr¾ení}]
 ::msgcat::mcset cs {Left} [encoding convertfrom iso8859-2 {Vlevo}]
 ::msgcat::mcset cs {Legal} 
+::msgcat::mcset cs {Legend Position} 
 ::msgcat::mcset cs {Legend Title} 
 ::msgcat::mcset cs {Legend} 
 ::msgcat::mcset cs {Length} [encoding convertfrom iso8859-2 {Délka}]
@@ -642,6 +646,7 @@
 ::msgcat::mcset cs {Panner} [encoding convertfrom iso8859-2 {Náhled snímku}]
 ::msgcat::mcset cs {Pan} [encoding convertfrom iso8859-2 {Posun}] 
 ::msgcat::mcset cs {Parameters} 
+::msgcat::mcset cs {Params} 
 ::msgcat::mcset cs {Password} 
 ::msgcat::mcset cs {Paste Contours} 
 ::msgcat::mcset cs {Paste} [encoding convertfrom iso8859-2 {Vlo¾it}]
@@ -660,6 +665,7 @@
 ::msgcat::mcset cs {Plot 2D} 
 ::msgcat::mcset cs {Plot 3D} 
 ::msgcat::mcset cs {Plot Area} 
+::msgcat::mcset cs {Plot GUI} 
 ::msgcat::mcset cs {Plot Tool} 
 ::msgcat::mcset cs {Plot Type} 
 ::msgcat::mcset cs {Plotting Regions} 
@@ -783,6 +789,7 @@
 ::msgcat::mcset cs {Show Command} 
 ::msgcat::mcset cs {Show Compass} 
 ::msgcat::mcset cs {Show Grid} 
+::msgcat::mcset cs {Show Legend} 
 ::msgcat::mcset cs {Show Text} 
 ::msgcat::mcset cs {Show/Hide Frames} [encoding convertfrom iso8859-2 {Zobrazit/skrýt snímky}]
 ::msgcat::mcset cs {Show} 
@@ -922,6 +929,7 @@
 ::msgcat::mcset cs {Window} 
 ::msgcat::mcset cs {Words matching title, description} 
 ::msgcat::mcset cs {X Axis Title} 
+::msgcat::mcset cs {X Axis} 
 ::msgcat::mcset cs {X Column} 
 ::msgcat::mcset cs {X Error Column} 
 ::msgcat::mcset cs {X Flip} 
@@ -932,6 +940,7 @@
 ::msgcat::mcset cs {XPA} 
 ::msgcat::mcset cs {X} 
 ::msgcat::mcset cs {Y Axis Title} 
+::msgcat::mcset cs {Y Axis} 
 ::msgcat::mcset cs {Y Column} 
 ::msgcat::mcset cs {Y Error Column} 
 ::msgcat::mcset cs {Y Flip} 

@@ -208,6 +208,7 @@
 ::msgcat::mcset da {Darken} 
 ::msgcat::mcset da {Dash} {streg}
 ::msgcat::mcset da {Data Format} {Dataformat}
+::msgcat::mcset da {DataSet} 
 ::msgcat::mcset da {Dataset Name} 
 ::msgcat::mcset da {Dataset} [encoding convertfrom iso8859-1 {Datasæt}]
 ::msgcat::mcset da {Data} 
@@ -321,6 +322,7 @@
 ::msgcat::mcset da {Footprint Servers} 
 ::msgcat::mcset da {Footprint} 
 ::msgcat::mcset da {For more information, use --help} 
+::msgcat::mcset da {Foreground} 
 ::msgcat::mcset da {Forground} 
 ::msgcat::mcset da {Format} {Format}
 ::msgcat::mcset da {Forward} {Videre}
@@ -334,6 +336,7 @@
 ::msgcat::mcset da {Full Range} {Hele intervallet}
 ::msgcat::mcset da {Function} {Funktion}
 ::msgcat::mcset da {GIF} 
+::msgcat::mcset da {GUI Tool} 
 ::msgcat::mcset da {GUI} 
 ::msgcat::mcset da {Galactic} {Galaktisk}
 ::msgcat::mcset da {Gap} 
@@ -428,6 +431,7 @@
 ::msgcat::mcset da {Layout} 
 ::msgcat::mcset da {Left} 
 ::msgcat::mcset da {Legal} 
+::msgcat::mcset da {Legend Position} 
 ::msgcat::mcset da {Legend Title} 
 ::msgcat::mcset da {Legend} 
 ::msgcat::mcset da {Length} [encoding convertfrom iso8859-1 {Længde}]
@@ -642,6 +646,7 @@
 ::msgcat::mcset da {Panner} {Oversigtskort}
 ::msgcat::mcset da {Pan} {Flyt}
 ::msgcat::mcset da {Parameters} {Parametre}
+::msgcat::mcset da {Params} 
 ::msgcat::mcset da {Password} {Kodeord}
 ::msgcat::mcset da {Paste Contours} {Indsæt konturer}
 ::msgcat::mcset da {Paste} [encoding convertfrom iso8859-1 {Sæt ind}]
@@ -660,6 +665,7 @@
 ::msgcat::mcset da {Plot 2D} 
 ::msgcat::mcset da {Plot 3D} 
 ::msgcat::mcset da {Plot Area} 
+::msgcat::mcset da {Plot GUI} 
 ::msgcat::mcset da {Plot Tool} 
 ::msgcat::mcset da {Plot Type} 
 ::msgcat::mcset da {Plotting Regions} [encoding convertfrom iso8859-1 {Plotte områder}]
@@ -783,6 +789,7 @@
 ::msgcat::mcset da {Show Command} 
 ::msgcat::mcset da {Show Compass} 
 ::msgcat::mcset da {Show Grid} 
+::msgcat::mcset da {Show Legend} 
 ::msgcat::mcset da {Show Text} {Vis tekst}
 ::msgcat::mcset da {Show/Hide Frames} {Vis/skjul rammer}
 ::msgcat::mcset da {Show} {Vis}
@@ -922,6 +929,7 @@
 ::msgcat::mcset da {Window} 
 ::msgcat::mcset da {Words matching title, description} {Ord tilpasset titel, beskrivelse }
 ::msgcat::mcset da {X Axis Title} 
+::msgcat::mcset da {X Axis} 
 ::msgcat::mcset da {X Column} 
 ::msgcat::mcset da {X Error Column} 
 ::msgcat::mcset da {X Flip} 
@@ -932,6 +940,7 @@
 ::msgcat::mcset da {XPA} 
 ::msgcat::mcset da {X} 
 ::msgcat::mcset da {Y Axis Title} 
+::msgcat::mcset da {Y Axis} 
 ::msgcat::mcset da {Y Column} 
 ::msgcat::mcset da {Y Error Column} 
 ::msgcat::mcset da {Y Flip} 

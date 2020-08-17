@@ -30,7 +30,6 @@ proc PlotDialog {varname wtt} {
 
     set var(stats) 0
     set var(list) 0
-    set var(theme) 1
 
     set var(mode) zoom
     set var(callback) {}
@@ -38,7 +37,8 @@ proc PlotDialog {varname wtt} {
     set var(graphs) {}
     set var(seq) 0
 
-    array set $varname [array get pap]
+    # set canvas vars
+    array set $varname [array get pap "canvas,*"]
 
     # create window
     Toplevel $var(top) $var(mb) 7 $wtt [list PlotDestroy $varname]
@@ -132,7 +132,7 @@ proc PlotDialog {varname wtt} {
 
     $var(mb).canvas add separator
     $var(mb).canvas add checkbutton -label [msgcat::mc {Use Theme Colors}] \
-	-variable ${varname}(theme) \
+	-variable ${varname}(canvas,theme) \
 	-command [list PlotUpdateAllElement $varname]
     $var(mb).canvas add separator
     $var(mb).canvas add cascade -label [msgcat::mc {Forground}] \

@@ -200,7 +200,7 @@ proc PlotLineUpdateElement {varname} {
  	return
     }
     
-    if {$var(theme)} {
+    if {$var(canvas,theme)} {
 	set color [ThemeBold]
 	set shapecolor [ThemeBold]
 	set errorcolor [ThemeBold]
@@ -211,7 +211,7 @@ proc PlotLineUpdateElement {varname} {
     }
 
     if {$var(graph,ds,line,fill)} {
-	if {$var(theme)} {
+	if {$var(canvas,theme)} {
 	    set fillColor [ThemeBold]
 	} else {
 	    set fillColor $var(graph,ds,line,fill,color)
@@ -221,7 +221,7 @@ proc PlotLineUpdateElement {varname} {
     }
 
     if {$var(graph,ds,line,shape,fill)} {
-	if {$var(theme)} {
+	if {$var(canvas,theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
 	    set shapefillcolor $var(graph,ds,line,shape,color)

@@ -5599,7 +5599,7 @@ proc plot::yyparse {} {
                     45 { ProcessCmdCVAR canvas,foreground $2 PlotUpdateCanvasElement }
                     46 { ProcessCmdCVAR canvas,background $2 PlotUpdateAllElement }
                     47 { ProcessCmdCVAR canvas,grid,color $3 PlotUpdateCanvasElement }
-                    48 { ProcessCmdCVAR theme $2 PlotUpdateAllElement }
+                    48 { ProcessCmdCVAR canvas,theme $2 PlotUpdateAllElement }
                     49 { ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
                     50 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
                     51 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }

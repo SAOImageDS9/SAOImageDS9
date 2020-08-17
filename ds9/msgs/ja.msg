@@ -208,6 +208,7 @@
 ::msgcat::mcset ja {Darken} 
 ::msgcat::mcset ja {Dash} [encoding convertfrom euc-jp "\xc7\xcb\xc0\xfe"]
 ::msgcat::mcset ja {Data Format} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xb7\xc1\xbc\xb0"]
+::msgcat::mcset ja {DataSet} 
 ::msgcat::mcset ja {Dataset Name} 
 ::msgcat::mcset ja {Dataset} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa5\xbb\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Data} 
@@ -321,6 +322,7 @@
 ::msgcat::mcset ja {Footprint Servers} 
 ::msgcat::mcset ja {Footprint} 
 ::msgcat::mcset ja {For more information, use --help} [encoding convertfrom euc-jp "\xbe\xdc\xa4\xb7\xa4\xaf\xa4\xcf\x20\x2d\x2d\x68\x65\x6c\x70\x20\xa5\xaa\xa5\xd7\xa5\xb7\xa5\xe7\xa5\xf3\xa4\xc7\xa1\xa3"]
+::msgcat::mcset ja {Foreground} 
 ::msgcat::mcset ja {Forground} 
 ::msgcat::mcset ja {Format} [encoding convertfrom euc-jp "\xb7\xc1\xbc\xb0"]
 ::msgcat::mcset ja {Forward} [encoding convertfrom euc-jp "\xbc\xa1"]
@@ -334,6 +336,7 @@
 ::msgcat::mcset ja {Full Range} [encoding convertfrom euc-jp "\xc1\xb4\xc8\xcf\xb0\xcf"]
 ::msgcat::mcset ja {Function} [encoding convertfrom euc-jp "\xb4\xd8\xbf\xf4"]
 ::msgcat::mcset ja {GIF} 
+::msgcat::mcset ja {GUI Tool} 
 ::msgcat::mcset ja {GUI} 
 ::msgcat::mcset ja {Galactic} [encoding convertfrom euc-jp "\xb6\xe4\xb2\xcf\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Gap} 
@@ -428,6 +431,7 @@
 ::msgcat::mcset ja {Layout} 
 ::msgcat::mcset ja {Left} 
 ::msgcat::mcset ja {Legal} [encoding convertfrom euc-jp "\xa5\xea\xa1\xbc\xa5\xac\xa5\xeb"]
+::msgcat::mcset ja {Legend Position} 
 ::msgcat::mcset ja {Legend Title} 
 ::msgcat::mcset ja {Legend} 
 ::msgcat::mcset ja {Length} [encoding convertfrom euc-jp "\xc4\xb9\xa4\xb5"]
@@ -642,6 +646,7 @@
 ::msgcat::mcset ja {Panner} [encoding convertfrom euc-jp "\xc1\xb4\xc2\xce\xbf\xde"]
 ::msgcat::mcset ja {Pan} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xf3"]
 ::msgcat::mcset ja {Parameters} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xe9\xa5\xe1\xa1\xbc\xa5\xbf"]
+::msgcat::mcset ja {Params} 
 ::msgcat::mcset ja {Password} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xb9\xa5\xef\xa1\xbc\xa5\xc9"]
 ::msgcat::mcset ja {Paste Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xf2\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]
 ::msgcat::mcset ja {Paste} [encoding convertfrom euc-jp "\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]
@@ -660,6 +665,7 @@
 ::msgcat::mcset ja {Plot 2D} 
 ::msgcat::mcset ja {Plot 3D} 
 ::msgcat::mcset ja {Plot Area} 
+::msgcat::mcset ja {Plot GUI} 
 ::msgcat::mcset ja {Plot Tool} 
 ::msgcat::mcset ja {Plot Type} 
 ::msgcat::mcset ja {Plotting Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8\xa4\xb7\xa4\xc6\xa4\xa4\xa4\xde\xa4\xb9"]
@@ -783,6 +789,7 @@
 ::msgcat::mcset ja {Show Command} 
 ::msgcat::mcset ja {Show Compass} 
 ::msgcat::mcset ja {Show Grid} 
+::msgcat::mcset ja {Show Legend} 
 ::msgcat::mcset ja {Show Text} [encoding convertfrom euc-jp "\xca\xb8\xbb\xfa\xa4\xf2\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show/Hide Frames} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xce\xc9\xbd\xbc\xa8\x2f\xc8\xf3\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show} [encoding convertfrom euc-jp "\xc9\xbd\xbc\xa8"]
@@ -922,6 +929,7 @@
 ::msgcat::mcset ja {Window} 
 ::msgcat::mcset ja {Words matching title, description} 
 ::msgcat::mcset ja {X Axis Title} 
+::msgcat::mcset ja {X Axis} 
 ::msgcat::mcset ja {X Column} 
 ::msgcat::mcset ja {X Error Column} 
 ::msgcat::mcset ja {X Flip} 
@@ -932,6 +940,7 @@
 ::msgcat::mcset ja {XPA} [encoding convertfrom euc-jp "\x58\x50\x41"]
 ::msgcat::mcset ja {X} 
 ::msgcat::mcset ja {Y Axis Title} 
+::msgcat::mcset ja {Y Axis} 
 ::msgcat::mcset ja {Y Column} 
 ::msgcat::mcset ja {Y Error Column} 
 ::msgcat::mcset ja {Y Flip} 

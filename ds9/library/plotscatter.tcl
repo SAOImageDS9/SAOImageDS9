@@ -137,7 +137,7 @@ proc PlotScatterUpdateElement {varname} {
  	return
     }
     
-    if {$var(theme)} {
+    if {$var(canvas,theme)} {
 	set shapecolor [ThemeBold]
 	set errorcolor [ThemeBold]
     } else {
@@ -146,7 +146,7 @@ proc PlotScatterUpdateElement {varname} {
     }
 
     if {$var(graph,ds,scatter,fill)} {
-	if {$var(theme)} {
+	if {$var(canvas,theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
 	    set shapefillcolor $var(graph,ds,scatter,color)

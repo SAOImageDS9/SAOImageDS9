@@ -70,11 +70,11 @@ plotsend : {ProcessSendCmdGet iap plots}
  | SELECT_ GRAPH_ {ProcessSendCmdCVARGet graph,current}
  | LAYOUT_ {ProcessSendCmdCVARGet canvas,layout}
  | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet canvas,layout,strip,scale}
- | FONT_ fontt
  | FOREGROUND_ {ProcessSendCmdCVARGet canvas,foreground}
  | BACKGROUND_ {ProcessSendCmdCVARGet canvas,background}
  | GRID_ COLOR_ {ProcessSendCmdCVARGet canvas,grid,color}
- | THEME_ {ProcessSendCmdCVARGetYesNo theme}
+ | THEME_ {ProcessSendCmdCVARGetYesNo canvas,theme}
+ | FONT_ fontt
 
 # Graph Menu
  | SELECT_ DATASET_ {ProcessSendCmdCVARGet graph,ds,current}

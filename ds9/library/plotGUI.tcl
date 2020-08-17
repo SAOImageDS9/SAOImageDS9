@@ -221,7 +221,7 @@ proc PlotGUICanvas {varname} {
     set f [ttk::labelframe $w.canvas.color -text [msgcat::mc {Color}]]
 
     ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
-	-variable ${varname}(theme) \
+	-variable ${varname}(canvas,theme) \
 	-command [list PlotUpdateAllElement $varname]
 
     ttk::label $f.tforeground -text [msgcat::mc {Foreground}]

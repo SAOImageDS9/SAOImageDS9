@@ -15,6 +15,9 @@ proc PrefsDialogPlot {} {
     # Canvas
     set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Canvas}]]
 
+    ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
+	-variable pap(canvas,theme)
+
     ttk::label $f.tlayout -text [msgcat::mc {Layout}]
     ttk::menubutton $f.layout -textvariable pap(canvas,layout) \
 	-menu $f.layout.menu
@@ -62,6 +65,7 @@ proc PrefsDialogPlot {} {
 	canvas,axis,font,size canvas,axis,font,weight \
 	canvas,axis,font,slant {}
 
+    grid $f.theme -padx 2 -pady 2 -sticky w
     grid $f.tlayout $f.layout -padx 2 -pady 2 -sticky w
     grid $f.tfg $f.fg -padx 2 -pady 2 -sticky w
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w

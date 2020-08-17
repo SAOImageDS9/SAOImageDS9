@@ -183,7 +183,7 @@ plot : line
  | FOREGROUND_ STRING_ {ProcessCmdCVAR canvas,foreground $2 PlotUpdateCanvasElement}
  | BACKGROUND_ STRING_ {ProcessCmdCVAR canvas,background $2 PlotUpdateAllElement}
  | GRID_ COLOR_ STRING_ {ProcessCmdCVAR canvas,grid,color $3 PlotUpdateCanvasElement}
- | THEME_ yesno {ProcessCmdCVAR theme $2 PlotUpdateAllElement}
+ | THEME_ yesno {ProcessCmdCVAR canvas,theme $2 PlotUpdateAllElement}
 
  # Graph Menu
  | SELECT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}

@@ -208,6 +208,7 @@
 ::msgcat::mcset zh {Darken} 
 ::msgcat::mcset zh {Dash} [encoding convertfrom big5 "\xB5\xEA \xBD\x75"]
 ::msgcat::mcset zh {Data Format} 
+::msgcat::mcset zh {DataSet} 
 ::msgcat::mcset zh {Dataset Name} 
 ::msgcat::mcset zh {Dataset} 
 ::msgcat::mcset zh {Data} 
@@ -321,6 +322,7 @@
 ::msgcat::mcset zh {Footprint Servers} 
 ::msgcat::mcset zh {Footprint} 
 ::msgcat::mcset zh {For more information, use --help} 
+::msgcat::mcset zh {Foreground} 
 ::msgcat::mcset zh {Forground} 
 ::msgcat::mcset zh {Format} 
 ::msgcat::mcset zh {Forward} 
@@ -334,6 +336,7 @@
 ::msgcat::mcset zh {Full Range} 
 ::msgcat::mcset zh {Function} 
 ::msgcat::mcset zh {GIF} 
+::msgcat::mcset zh {GUI Tool} 
 ::msgcat::mcset zh {GUI} 
 ::msgcat::mcset zh {Galactic} 
 ::msgcat::mcset zh {Gap} 
@@ -428,6 +431,7 @@
 ::msgcat::mcset zh {Layout} 
 ::msgcat::mcset zh {Left} 
 ::msgcat::mcset zh {Legal} 
+::msgcat::mcset zh {Legend Position} 
 ::msgcat::mcset zh {Legend Title} 
 ::msgcat::mcset zh {Legend} 
 ::msgcat::mcset zh {Length} 
@@ -642,6 +646,7 @@
 ::msgcat::mcset zh {Panner} [encoding convertfrom big5 "\xC1\x59 \xB9\xCF"]
 ::msgcat::mcset zh {Pan} 
 ::msgcat::mcset zh {Parameters} 
+::msgcat::mcset zh {Params} 
 ::msgcat::mcset zh {Password} 
 ::msgcat::mcset zh {Paste Contours} 
 ::msgcat::mcset zh {Paste} 
@@ -660,6 +665,7 @@
 ::msgcat::mcset zh {Plot 2D} 
 ::msgcat::mcset zh {Plot 3D} 
 ::msgcat::mcset zh {Plot Area} 
+::msgcat::mcset zh {Plot GUI} 
 ::msgcat::mcset zh {Plot Tool} 
 ::msgcat::mcset zh {Plot Type} 
 ::msgcat::mcset zh {Plotting Regions} 
@@ -783,6 +789,7 @@
 ::msgcat::mcset zh {Show Command} 
 ::msgcat::mcset zh {Show Compass} 
 ::msgcat::mcset zh {Show Grid} 
+::msgcat::mcset zh {Show Legend} 
 ::msgcat::mcset zh {Show Text} 
 ::msgcat::mcset zh {Show/Hide Frames} 
 ::msgcat::mcset zh {Show} [encoding convertfrom big5 "\xC5\xE3 \xA5\xDC"]
@@ -922,6 +929,7 @@
 ::msgcat::mcset zh {Window} 
 ::msgcat::mcset zh {Words matching title, description} 
 ::msgcat::mcset zh {X Axis Title} 
+::msgcat::mcset zh {X Axis} 
 ::msgcat::mcset zh {X Column} 
 ::msgcat::mcset zh {X Error Column} 
 ::msgcat::mcset zh {X Flip} 
@@ -932,6 +940,7 @@
 ::msgcat::mcset zh {XPA} 
 ::msgcat::mcset zh {X} 
 ::msgcat::mcset zh {Y Axis Title} 
+::msgcat::mcset zh {Y Axis} 
 ::msgcat::mcset zh {Y Column} 
 ::msgcat::mcset zh {Y Error Column} 
 ::msgcat::mcset zh {Y Flip} 

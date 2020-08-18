@@ -7,8 +7,6 @@ package provide DS9 1.0
 proc PlotBackup {ch dir} {
     global iap
 
-    set rdir "./[lindex [file split $dir] end]"
-
     # don't save marker analysis plots
     foreach ww $iap(plots) {
 	if {[string range $ww 0 2] != {mkr}} {
@@ -22,60 +20,63 @@ proc PlotBackup {ch dir} {
 		}
 	    }
 
-	    set varname $ww
-	    upvar #0 $varname var
-	    global $varname
-
-	    puts $ch "global $varname"
-	    puts $ch "PlotDialog $varname {}"
-
-	    set gr $var(graph,current)
-	    set ds $var(graph,ds,current)
-
-	    # for each graph
-	    foreach cc $var(graphs) {
-		set var(graph,current) $cc
-		PlotCurrentGraph $varname
-		puts $ch "PlotAddGraph $varname $var($cc,type)"
-
-		PlotBackupGraph $varname "$fdir/graph${cc}.plt"
-		puts $ch "PlotBackupLoadFile $varname $fdir/graph${cc}.plt"
-
-		# for each dataset
-		foreach nn $var($cc,dss) {
-		    set var(graph,ds,current) $nn
-		    PlotCurrentDataSet $varname
-
-		    PlotSaveDataFile $varname "$fdir/graph${cc}ds${nn}.dat"
-		    puts $ch "PlotLoadDataFile $varname $fdir/graph${cc}ds${nn}.dat $var($cc,$nn,dim)"
-
-		    PlotBackupDataset $varname "$fdir/graph${cc}ds${nn}.plt"
-		    puts $ch "PlotBackupLoadFile $varname $fdir/graph${cc}ds${nn}.plt"
-		}
-	    }
-
-	    PlotBackupCanvas $varname "$fdir/canvas.plt"
-	    puts $ch "PlotBackupLoadFile $varname $fdir/canvas.plt"
-
-	    puts $ch "wm geometry $var(top) [winfo width $var(top)]x[winfo height $var(top)]"
-	    puts $ch "PlotChangeLayout $varname"
-
-	    puts $ch "set ${varname}(mode) $var(mode)"
-	    puts $ch "PlotChangeMode $varname"
-
-	    puts $ch "set ${varname}(graph,current) $gr"
-	    puts $ch "PlotCurrentGraph $varname"
-
-	    puts $ch "set ${varname}(graph,ds,current) $ds"
-	    puts $ch "PlotCurrentDataSet $varname"
-
-	    set var(graph,current) $gr
-	    PlotCurrentGraph $varname
-	    
-	    set var(graph,ds,current) $ds
-	    PlotCurrentDataSet $varname
+	    PlotBackupOne $ww $ch $fdir
 	}
     }
+}
+
+proc PlotBackupOne {varname ch fdir} {
+    upvar #0 $varname var
+    global $varname
+
+    puts $ch "global $varname"
+    puts $ch "PlotDialog $varname {}"
+
+    set gr $var(graph,current)
+    set ds $var(graph,ds,current)
+
+    # for each graph
+    foreach cc $var(graphs) {
+	set var(graph,current) $cc
+	PlotCurrentGraph $varname
+	puts $ch "PlotAddGraph $varname $var($cc,type)"
+
+	PlotBackupGraph $varname "$fdir/graph${cc}.plt"
+	puts $ch "PlotBackupLoadFile $varname $fdir/graph${cc}.plt"
+
+	# for each dataset
+	foreach nn $var($cc,dss) {
+	    set var(graph,ds,current) $nn
+	    PlotCurrentDataSet $varname
+
+	    PlotSaveDataFile $varname "$fdir/graph${cc}ds${nn}.dat"
+	    puts $ch "PlotLoadDataFile $varname $fdir/graph${cc}ds${nn}.dat $var($cc,$nn,dim)"
+
+	    PlotBackupDataset $varname "$fdir/graph${cc}ds${nn}.plt"
+	    puts $ch "PlotBackupLoadFile $varname $fdir/graph${cc}ds${nn}.plt"
+	}
+    }
+
+    PlotBackupCanvas $varname "$fdir/canvas.plt"
+    puts $ch "PlotBackupLoadFile $varname $fdir/canvas.plt"
+
+    puts $ch "wm geometry $var(top) [winfo width $var(top)]x[winfo height $var(top)]"
+    puts $ch "PlotChangeLayout $varname"
+
+    puts $ch "set ${varname}(mode) $var(mode)"
+    puts $ch "PlotChangeMode $varname"
+
+    puts $ch "set ${varname}(graph,current) $gr"
+    puts $ch "PlotCurrentGraph $varname"
+
+    puts $ch "set ${varname}(graph,ds,current) $ds"
+    puts $ch "PlotCurrentDataSet $varname"
+
+    set var(graph,current) $gr
+    PlotCurrentGraph $varname
+    
+    set var(graph,ds,current) $ds
+    PlotCurrentDataSet $varname
 }
 
 # used by backup
@@ -152,3 +153,84 @@ proc PlotBackupDataset {varname filename} {
     close $ch
 }
 
+proc PlotBackupDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [SaveFileDialog backupfbox]
+    if {[string length $fn] != 0} {
+	PlotBackupPlot $varname $fn
+    }
+}
+
+# Backup Plot
+
+proc PlotBackupPlot {varname fn} {
+    upvar #0 $varname var
+    global $varname
+
+    set ch {}
+    set dir {}
+    if {![BackupPreamble $fn ch dir]} {
+	return
+    }
+
+    set fdir [file join $dir $varname]
+	    
+    # create dir if needed
+    if {![file isdirectory $fdir]} {
+	if {[catch {file mkdir $fdir}]} {
+	    Error [msgcat::mc {An error has occurred during backup}]
+	    return
+	}
+    }
+
+    PlotBackupOne $varname $ch $fdir
+    
+    # all done
+    close $ch
+}
+
+proc PlotRestoreDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog backupfbox]
+    if {[string length $fn] != 0} {
+	PlotRestore $varname $fn
+    }
+}
+
+proc PlotRestore {varname fn} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[string length $fn] == 0} {
+	return
+    }
+
+    PlotDestroy $varname
+
+    set dir [file dirname $fn]
+    set ffn [lindex [file split $fn] end]
+    set cd [pwd]
+    cd $dir
+
+    set src {}
+    if {![catch {set ch [open "$ffn" r]}]} {
+	set src [read $ch]
+	close $ch
+    } else {
+	Error [msgcat::mc {An error has occurred during restore}]
+	return
+    }
+
+    # and load
+    if {[catch {eval $src}]} {
+	Error [msgcat::mc {An error has occurred during restore}]
+	return
+    }
+
+    # return to start dir
+    cd $cd
+}

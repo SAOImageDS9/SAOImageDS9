@@ -63,10 +63,10 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add command -label "[msgcat::mc {GUI Tool}]..." \
 	-command [list PlotGUI $varname]
     $var(mb).file add separator
-    $var(mb).file add command -label "[msgcat::mc {Load Configuration}]..." \
-	-command [list PlotLoadConfig $varname]
-    $var(mb).file add command -label "[msgcat::mc {Save Configuration}]..." \
-	-command [list PlotSaveConfig $varname]
+    $var(mb).file add command -label "[msgcat::mc {Backup}]..." \
+	-command [list PlotBackupDialog $varname]
+    $var(mb).file add command -label "[msgcat::mc {Restore}]..." \
+	-command [list PlotRestoreDialog $varname]
     $var(mb).file add separator
     $var(mb).file add command \
 	-label "[msgcat::mc {Page Setup}]..." \

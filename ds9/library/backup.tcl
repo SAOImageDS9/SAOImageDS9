@@ -15,10 +15,55 @@ proc Backup {fn} {
     global ds9
     global current
 
+    set ch {}
+    set dir {}
+    if {![BackupPreamble $fn ch dir]} {
+	return
+    }
+    
+    # update any tags
+    if {$current(frame) != {}} {
+	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
+    }
+
+    # Panner
+    PannerBackup $ch
+
+    # Colorbar
+    ColorbarBackupCmaps $ch $dir
+    ColorbarBackup $ch colorbar
+    ColorbarBackup $ch colorbarrgb
+
+    # Frames
+    foreach ff $ds9(frames) {
+	if {![$ff has iis]} {
+	    BackupFrame $ch $ff $dir
+	}
+    }
+
+    # Geometry
+    BackupGUI $ch
+
+    # User Plots
+    PlotBackup $ch $dir
+
+    # Prisms
+    PrismBackup $ch $dir
+
+    # all done
+    close $ch
+}
+
+proc BackupPreamble {fn chname dirname} {
+    upvar $chname ch
+    upvar $dirname dir
+    
+    global ds9
+    
     # script, always overwrite if present
     if {[catch {set ch [open $fn w]}]} {
 	Error [msgcat::mc {An error has occurred during backup}]
-	return
+	return {}
     }
 
     # aux directory, create if needed
@@ -26,18 +71,13 @@ proc Backup {fn} {
     if {[file exists $dir]} {
 	if {![file isdirectory $dir]} {
 	    Error [msgcat::mc {An error has occurred during backup}]
-	    return
+	    return 0
 	}
     } else {
 	if {[catch {file mkdir $dir}]} {
 	    Error [msgcat::mc {An error has occurred during backup}]
-	    return
+	    return 0
 	}
-    }
-
-    # update any tags
-    if {$current(frame) != {}} {
-	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
     }
 
     # check for newer backup version
@@ -90,32 +130,7 @@ proc Backup {fn} {
     puts $ch "  return 1"
     puts $ch "}"
 
-    # Panner
-    PannerBackup $ch
-
-    # Colorbar
-    ColorbarBackupCmaps $ch $dir
-    ColorbarBackup $ch colorbar
-    ColorbarBackup $ch colorbarrgb
-
-    # Frames
-    foreach ff $ds9(frames) {
-	if {![$ff has iis]} {
-	    BackupFrame $ch $ff $dir
-	}
-    }
-
-    # Geometry
-    BackupGUI $ch
-
-    # User Plots
-    PlotBackup $ch $dir
-
-    # Prisms
-    PrismBackup $ch $dir
-
-    # all done
-    close $ch
+    return 1
 }
 
 proc RestoreDialog {} {

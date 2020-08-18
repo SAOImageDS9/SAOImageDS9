@@ -60,6 +60,8 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
       return fitsy->istable(argc, argv);
     else if (!strncmp(argv[1], "table", 5))
       return fitsy->table(argc, argv);
+    else if (!strncmp(argv[1], "minmax", 6))
+      return fitsy->minmax(argc, argv);
     else if (!strncmp(argv[1], "histogram", 8))
       return fitsy->histogram(argc, argv);
     else if (!strncmp(argv[1], "plot", 4))
@@ -70,7 +72,7 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table? ?histogram? ?plot?",
+    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table? ?minmax? ?histogram? ?plot?",
 		     NULL);
     return TCL_ERROR;
   }
@@ -367,10 +369,62 @@ int TclFITSY::table(int argc, const char* argv[])
   return TCL_OK;
 }
 
+int TclFITSY::minmax(int argc, const char* argv[])
+{
+  if (argc!=6) {
+    Tcl_AppendResult(interp_, "usage: fitsy minmax ?filename? ?ext? ?col? ?varname?", NULL);
+    return TCL_ERROR;
+  }
+  
+  if (!(argv[4] && *argv[4]))
+    return TCL_ERROR;
+
+  if (!(argv[5] && *argv[5]))
+    return TCL_ERROR;
+
+  FitsFile* fits = findFits(argv);
+  if (!fits)
+    return TCL_ERROR;
+
+  if (!fits->isValid())
+    return TCL_ERROR;
+      
+  if (!fits->isTable()) 
+    return TCL_ERROR;
+
+  FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
+  FitsColumn* col = hdu->find(argv[4]);
+
+  if (!col)
+    return TCL_ERROR;
+
+  // find min/max
+  Vector maxmin= fits->getColMinMax(argv[4]);
+  double min =maxmin[0];
+  double max =maxmin[1];
+  if (col->isInt()) {
+    min -= .5;
+    max += .5;
+  }
+
+  {
+    ostringstream str;
+    str << min << ends;
+    Tcl_SetVar2(interp_, argv[5], "min", str.str().c_str(), TCL_GLOBAL_ONLY);
+  }
+  {
+    ostringstream str;
+    str << max << ends;
+    Tcl_SetVar2(interp_, argv[5], "max", str.str().c_str(), TCL_GLOBAL_ONLY);
+  }
+
+  return TCL_OK;
+}
+
 int TclFITSY::histogram(int argc, const char* argv[])
 {
-  if (argc!=9) {
-    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num? ?varname?", NULL);
+  if (argc!=12) {
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num? ?min? ?max? ?useMinMax? ?varname?", NULL);
     return TCL_ERROR;
   }
   
@@ -392,7 +446,28 @@ int TclFITSY::histogram(int argc, const char* argv[])
   if (num<1)
     return TCL_ERROR;
 
-  if (!(argv[8] && *argv[8]))
+  double min =0;
+  {
+    string x(argv[8]);
+    istringstream sstr(x);
+    sstr >> min;
+  }
+
+  double max =0;
+  {
+    string x(argv[9]);
+    istringstream sstr(x);
+    sstr >> max;
+  }
+
+  int useminmax =1;
+  {
+    string x(argv[10]);
+    istringstream sstr(x);
+    sstr >> useminmax;
+  }
+
+  if (!(argv[11] && *argv[11]))
     return TCL_ERROR;
 
   FitsFile* fits = findFits(argv);
@@ -413,11 +488,6 @@ int TclFITSY::histogram(int argc, const char* argv[])
   if (!col)
     return TCL_ERROR;
 
-  // find min/max
-  Vector maxmin= fits->getColMinMax(argv[4]);
-  double min =maxmin[0];
-  double max =maxmin[1];
-  
   double* x = (double*)malloc(num*sizeof(double));
   double* y = (double*)malloc(num*sizeof(double));
   memset(x,0,num*sizeof(double));
@@ -426,10 +496,20 @@ int TclFITSY::histogram(int argc, const char* argv[])
   // fill Axes
   char* ptr = (char*)fits->data();
 
-  if (col->isInt()) {
-    min -= .5;
-    max += .5;
+  if (!useminmax) {
+  // find min/max
+    Vector minmax= fits->getColMinMax(argv[4]);
+    min =minmax[0];
+    max =minmax[1];
+    if (col->isInt()) {
+      min -= .5;
+      max += .5;
+    }
   }
+
+  if ((max-min) <= 0)
+    return TCL_ERROR;
+
   double diff = max-min;
   double barwidth = diff/num;
 
@@ -454,7 +534,7 @@ int TclFITSY::histogram(int argc, const char* argv[])
   {
     ostringstream str;
     str << barwidth << ends;
-    Tcl_SetVar2(interp_, argv[8], "bar,width", str.str().c_str(), TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, argv[11], "bar,width", str.str().c_str(), TCL_GLOBAL_ONLY);
   }
 
   // load into BLT vectors

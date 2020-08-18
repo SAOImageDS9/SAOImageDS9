@@ -55,6 +55,9 @@ proc PrismDialog {varname} {
 
     set var(bar,col) {}
     set var(bar,num) 10
+    set var(bar,min) 0
+    set var(bar,max) 0
+    set var(bar,minmax) 1
     set var(bar,width) 1
 
     set var(xx) {}
@@ -561,10 +564,10 @@ proc PrismPlot {varname} {
     ttk::label $f.tyerr -text [msgcat::mc {Y Error Column}]
     ttk::menubutton $f.yerr -textvariable ed(yerr) -menu $f.yerr.menu
 
-    PrismColsMenu $varname $f.xx xx
-    PrismColsMenu $varname $f.yy yy
-    PrismColsMenu $varname $f.xerr xerr
-    PrismColsMenu $varname $f.yerr yerr
+    PrismColsMenu $varname $f.xx xx {}
+    PrismColsMenu $varname $f.yy yy {}
+    PrismColsMenu $varname $f.xerr xerr {}
+    PrismColsMenu $varname $f.yerr yerr {}
 
     ttk::radiobutton $f.over -text [msgcat::mc {Overplot}] \
 	-variable ed(plot,mode) -value overplot
@@ -751,6 +754,8 @@ proc PrismHistogram {varname} {
 
     set ed(col) $var(bar,col)
     set ed(num) $var(bar,num)
+    set ed(min) $var(bar,min)
+    set ed(max) $var(bar,max)
 
     DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
 
@@ -770,16 +775,24 @@ proc PrismHistogram {varname} {
     # param
     set f [ttk::frame $w.param]
 
-    ttk::label $f.tnum -text [msgcat::mc {Bins}]
-    ttk::entry $f.num -textvariable ed(num) -width 7
-
     ttk::label $f.tcol -text [msgcat::mc {Column}]
     ttk::menubutton $f.col -textvariable ed(col) -menu $f.col.menu
 
-    PrismColsMenu $varname $f.col col
+    PrismColsMenu $varname $f.col col [list PrismHistogramMinMax $varname]
 
-    grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
+    ttk::label $f.tnum -text [msgcat::mc {Bins}]
+    ttk::entry $f.num -textvariable ed(num) -width 7
+
+    ttk::label $f.tmin -text [msgcat::mc {Min}]
+    ttk::entry $f.min -textvariable ed(min) -width 13
+
+    ttk::label $f.tmax -text [msgcat::mc {Max}]
+    ttk::entry $f.max -textvariable ed(max) -width 13
+
     grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
+    grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
+    grid $f.tmin $f.min -padx 2 -pady 2 -sticky ew
+    grid $f.tmax $f.max -padx 2 -pady 2 -sticky ew
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -795,6 +808,8 @@ proc PrismHistogram {varname} {
     pack $w.param -side top -fill both -expand true
     pack $w.buttons $w.sep -side bottom -fill x
 
+    PrismHistogramMinMax $varname
+    
     DialogCenter $w
     DialogWait $w ed(ok) $w.buttons.ok
 
@@ -802,6 +817,9 @@ proc PrismHistogram {varname} {
 	if {$ed(col) != {}} {
 	    set var(bar,col) $ed(col)
 	    set var(bar,num) $ed(num)
+	    set var(bar,min) $ed(min)
+	    set var(bar,max) $ed(max)
+	    set var(bar,minmax) 1
 
 	    PrismHistogramGenerate $varname
 	}
@@ -809,6 +827,16 @@ proc PrismHistogram {varname} {
 
     DialogDismiss $w
     destroy $mb
+}
+
+proc PrismHistogramMinMax {varname} {
+    global ed
+    upvar #0 $varname var
+    global $varname
+
+    if {[catch {fitsy minmax $var(fn) $var(ext) $ed(col) ed} ]} {
+	Error "[msgcat::mc {Unable to generate plot}]"
+    }
 }
 
 proc PrismHistogramGenerate {varname} {
@@ -832,7 +860,7 @@ proc PrismHistogramGenerate {varname} {
 	blt::vector create $ydata
     }
 
-    if {[catch {fitsy histogram $var(fn) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $varname} ]} {
+    if {[catch {fitsy histogram $var(fn) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
 	Error "[msgcat::mc {Unable to generate plot}]"
 	return
     }
@@ -875,7 +903,7 @@ proc PrismSetExt {varname ext} {
     update
 }
 
-proc PrismColsMenu {varname f ww} {
+proc PrismColsMenu {varname f ww cmd} {
     upvar #0 $varname var
     global $varname
     global $var(tbldb)
@@ -889,7 +917,8 @@ proc PrismColsMenu {varname f ww} {
     if {[TBLValidDB $var(tbldb)]} {
 	set cnt -1
 	foreach col [starbase_columns $var(tbldb)] {
-	    $m add command -label $col -command [list set ed($ww) "$col"]
+	    $m add command -label $col \
+		-command [list PrismColsMenuCmd $ww $col $cmd]
 
 	    # wrap if needed
 	    incr cnt
@@ -898,6 +927,15 @@ proc PrismColsMenu {varname f ww} {
 		$m entryconfig $col -columnbreak 1
 	    }
 	}
+    }
+}
+
+proc PrismColsMenuCmd {ww col cmd} {
+    global ed
+
+    set ed($ww) "$col"
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

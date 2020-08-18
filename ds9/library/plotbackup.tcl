@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc PlotBackup {ch dir} {
+proc PlotBackupAll {ch dir} {
     global iap
 
     # don't save marker analysis plots
@@ -159,13 +159,11 @@ proc PlotBackupDialog {varname} {
 
     set fn [SaveFileDialog backupfbox]
     if {[string length $fn] != 0} {
-	PlotBackupPlot $varname $fn
+	PlotBackup $varname $fn
     }
 }
 
-# Backup Plot
-
-proc PlotBackupPlot {varname fn} {
+proc PlotBackup {varname fn} {
     upvar #0 $varname var
     global $varname
 
@@ -202,14 +200,34 @@ proc PlotRestoreDialog {varname} {
 }
 
 proc PlotRestore {varname fn} {
-    upvar #0 $varname var
-    global $varname
+    global iap
+    
+    # special case
+    # do we have a plot window?
+    if {$varname != {}} {
+	upvar #0 $varname var
+	global $varname
 
-    if {[string length $fn] == 0} {
-	return
+	if {[string length $fn] == 0} {
+	    return
+	}
+
+	PlotDestroy $varname
+    } else {
+	# create a new name
+	set tt $iap(tt)
+
+	# make the window name unique
+	set ii [lsearch $iap(plots) $tt]
+	if {$ii>=0} {
+	    incr iap(unique)
+	    append tt $iap(unique)
+	}
+
+	set varname $tt
+	upvar #0 $varname var
+	global $varname
     }
-
-    PlotDestroy $varname
 
     set dir [file dirname $fn]
     set ffn [lindex [file split $fn] end]
@@ -233,4 +251,11 @@ proc PlotRestore {varname fn} {
 
     # return to start dir
     cd $cd
+}
+
+# used by backup
+# backward compatibilty
+proc PlotLoadConfigFile {varname fn} {
+    upvar #0 $varname var
+    global $varname
 }

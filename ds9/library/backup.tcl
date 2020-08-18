@@ -45,7 +45,7 @@ proc Backup {fn} {
     BackupGUI $ch
 
     # User Plots
-    PlotBackup $ch $dir
+    PlotBackupAll $ch $dir
 
     # Prisms
     PrismBackup $ch $dir

@@ -325,6 +325,7 @@ proc PlotCmdNewParam1 {proc fn} {
     $proc {} {} {} xy
 }
 
+# special case, is 1st arg a file? or ref?
 proc PlotCmdNewParam5 {proc fn title xaxis yaxis dim} {
     if {[file exists $fn]} {
 	PlotCmdNewFile $fn {}
@@ -396,20 +397,20 @@ proc PlotCmdSave {fn} {
     }
 }
 
-proc PlotCmdLoadConfig {fn} {
+proc PlotCmdBackup {fn} {
     global cvarname
     
     if {$fn != {}} {
-	PlotLoadConfigFile $cvarname $fn
+	PlotBackup $cvarname $fn
 	FileLast apconfigfbox $fn
     }
 }
 
-proc PlotCmdSaveConfig {fn} {
+proc PlotCmdRestore {fn} {
     global cvarname
     
     if {$fn != {}} {
-	PlotSaveConfigFile $cvarname $fn
+	PlotRestore $cvarname $fn
 	FileLast apconfigfbox $fn
     }
 }

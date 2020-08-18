@@ -13,6 +13,7 @@ arrow	    {return $ARROW_}
 auto	    {return $AUTO_}
 axis	    {return $AXIS_}
 background  {return $BACKGROUND_}
+backup      {return $BACKUP_}
 bar	    {return $BAR_}
 border	    {return $BORDER_}
 bottom	    {return $BOTTOM_}
@@ -25,7 +26,6 @@ color	    {return $COLOR_}
 colour	    {return $COLOR_}
 column	    {return $COLUMN_}
 command	    {return $COMMAND_}
-config	    {return $CONFIG_}
 cross	    {return $CROSS_}
 cubic	    {return $CUBIC_}
 current	    {return $CURRENT_}
@@ -84,6 +84,7 @@ poster	    {return $POSTER_}
 print	    {return $PRINT_} 
 printer	    {return $PRINTER_}
 quadratic   {return $QUADRATIC_}
+restore	    {return $RESTORE_}
 rgb	    {return $RGB_}
 right	    {return $RIGHT_}
 row	    {return $ROW_}

@@ -15,6 +15,7 @@
 %token AUTO_
 %token AXIS_
 %token BACKGROUND_
+%token BACKUP_
 %token BAR_
 %token BORDER_
 %token BOTTOM_
@@ -26,7 +27,6 @@
 %token COLOR_
 %token COLUMN_
 %token COMMAND_
-%token CONFIG_
 %token CROSS_
 %token CUBIC_
 %token CURRENT_
@@ -83,6 +83,7 @@
 %token PRINT_
 %token PRINTER_
 %token QUADRATIC_
+%token RESTORE_
 %token RGB_
 %token RIGHT_
 %token ROW_
@@ -164,8 +165,8 @@ plot : line
  | DATA_ dim {PlotCmdData $2}
 
  | EXPORT_ export
- | LOAD_ CONFIG_ STRING_ {PlotCmdLoadConfig $3}
- | SAVE_ CONFIG_ STRING_ {PlotCmdSaveConfig $3}
+ | BACKUP_ STRING_ {PlotCmdBackup $2}
+ | RESTORE_ STRING_ {PlotCmdRestore $2}
  | PAGESETUP_ pagesetup
  | PRINT_ print
  | CLOSE_ {ProcessCmdCVAR0 PlotDestroy}

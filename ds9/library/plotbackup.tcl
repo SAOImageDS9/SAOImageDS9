@@ -30,7 +30,7 @@ proc PlotBackupOne {varname ch fdir} {
     global $varname
 
     puts $ch "global $varname"
-    puts $ch "PlotDialog $varname {}"
+    puts $ch "PlotDialog $varname $var(tt)"
 
     set gr $var(graph,current)
     set ds $var(graph,ds,current)

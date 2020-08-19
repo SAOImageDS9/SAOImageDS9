@@ -213,8 +213,10 @@ plot : line
 
  # backward compatibility
  # used by DAX
- | NEW_ NAME_ STRING_ LINE_ STRING_ STRING_ STRING_ dim {PlotCmdNew $2; PlotCmdLine $5 $6 $7 $8}
  | NEW_ NAME_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdLine $4 $5 $6 $7}
+ | NEW_ NAME_ STRING_ LINE_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdLine $5 $6 $7 $8}
+ | NEW_ NAME_ STRING_ BAR_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdBar $5 $6 $7 $8}
+ | NEW_ NAME_ STRING_ SCATTER_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdScatter $5 $6 $7 $8}
  ;
 
 # Line

@@ -1743,7 +1743,7 @@ $ds9 -print resolution 96</tt>
 &nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [ext &lt;int&gt;|&lt;extname&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
-&nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt; [&lt;min&gt; &lt;max&gt;]]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter new|over]<br>
 &nbsp;<br>
 Example:<br>
@@ -1757,6 +1757,7 @@ $ds9 -prism ext 2<br>
 $ds9 -prism ext STDEVT<br>
 $ds9 -prism image<br>
 $ds9 -prism histogram RAWX 40<br>
+$ds9 -prism histogram RAWX 40 0 100<br>
 $ds9 -prism plot RAWX RAWY scatter new<br>
 $ds9 -prism plot RAWX RAWY PHA scatter new<br>
 $ds9 -prism plot RAWX RAWY PHA PHI scatter new<br></tt>

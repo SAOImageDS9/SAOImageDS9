@@ -4,6 +4,7 @@
 
 package provide DS9 1.0
 
+
 proc PlotGUI {varname} {
     upvar #0 $varname var
     global $varname

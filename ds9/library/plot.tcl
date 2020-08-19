@@ -44,7 +44,7 @@ proc PlotDestroy {varname} {
     destroy $var(mb)
 
     # gui window?
-    if {[winfo exists $var(top,gui)]} {
+    if {[winfo exists $var(gui,top)]} {
 	PlotGUIDestroy $varname
     }
 

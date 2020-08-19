@@ -23,11 +23,11 @@ proc PlotDialog {varname wtt} {
     # plot window
     set var(top) ".${varname}"
     set var(mb) ".${varname}mb"
+    set var(tt) $wtt
 
     # gui tool
-    set var(top,gui) ".${varname}gui"
-    set var(mb,gui) ".${varname}guimb"
-    set var(tt) $wtt
+    set var(gui,top) ".${varname}gui"
+    set var(gui,mb) ".${varname}guimb"
 
     set var(stats) 0
     set var(list) 0

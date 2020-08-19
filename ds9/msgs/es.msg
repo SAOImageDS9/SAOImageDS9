@@ -1,3 +1,5 @@
+# ::msgcat::mcset es {Load Configuration} [encoding convertfrom iso8859-1 {Cargar configuración}]
+# ::msgcat::mcset es {Save Configuration} [encoding convertfrom iso8859-1 {Guardar configuración}]
 ::msgcat::mcset es {2D} 
 ::msgcat::mcset es {3D View} 
 ::msgcat::mcset es {3D} 
@@ -450,7 +452,6 @@
 ::msgcat::mcset es {List} {Listar}
 ::msgcat::mcset es {Load Analysis Commands} [encoding convertfrom iso8859-1 {Cargar las instrucciones de análisis}]
 ::msgcat::mcset es {Load Color Tags} 
-::msgcat::mcset es {Load Configuration} [encoding convertfrom iso8859-1 {Cargar configuración}]
 ::msgcat::mcset es {Load Contour Levels} {Cargar niveles de contorno}
 ::msgcat::mcset es {Load Contrast/Bias} {Cargar contraste/Bias}
 ::msgcat::mcset es {Load Data} {Cargar datos}
@@ -740,7 +741,6 @@
 ::msgcat::mcset es {Sample} 
 ::msgcat::mcset es {Save 3D Movie} 
 ::msgcat::mcset es {Save Color Tags} 
-::msgcat::mcset es {Save Configuration} [encoding convertfrom iso8859-1 {Guardar configuración}]
 ::msgcat::mcset es {Save Contour Levels} {Guardar niveles de contorno}
 ::msgcat::mcset es {Save Contrast/Bias} {Guardar contraste/Bias}
 ::msgcat::mcset es {Save Data} {Guardar datos}
@@ -828,6 +828,7 @@
 ::msgcat::mcset es {Story of SAOImageDS9} 
 ::msgcat::mcset es {Story} 
 ::msgcat::mcset es {Strip Parameters} 
+::msgcat::mcset es {Strip Scale} 
 ::msgcat::mcset es {Strip} 
 ::msgcat::mcset es {Sum} {Suma}
 ::msgcat::mcset es {Symbol Editor} [encoding convertfrom iso8859-1 {Editor de símbolos}]

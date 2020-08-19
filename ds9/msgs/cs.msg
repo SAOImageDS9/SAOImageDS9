@@ -1,3 +1,5 @@
+# ::msgcat::mcset cs {Load Configuration} [encoding convertfrom iso8859-2 {Nahraj konfiguraci}]
+# ::msgcat::mcset cs {Save Configuration} 
 ::msgcat::mcset cs {2D} 
 ::msgcat::mcset cs {3D View} 
 ::msgcat::mcset cs {3D} 
@@ -450,7 +452,6 @@
 ::msgcat::mcset cs {List} [encoding convertfrom iso8859-2 {Seznam}]
 ::msgcat::mcset cs {Load Analysis Commands} [encoding convertfrom iso8859-2 {Nahrát analytické pøíkazy}]
 ::msgcat::mcset cs {Load Color Tags} 
-::msgcat::mcset cs {Load Configuration} [encoding convertfrom iso8859-2 {Nahraj konfiguraci}]
 ::msgcat::mcset cs {Load Contour Levels} 
 ::msgcat::mcset cs {Load Contrast/Bias} 
 ::msgcat::mcset cs {Load Data} 
@@ -740,7 +741,6 @@
 ::msgcat::mcset cs {Sample} 
 ::msgcat::mcset cs {Save 3D Movie} 
 ::msgcat::mcset cs {Save Color Tags} 
-::msgcat::mcset cs {Save Configuration} 
 ::msgcat::mcset cs {Save Contour Levels} 
 ::msgcat::mcset cs {Save Contrast/Bias} 
 ::msgcat::mcset cs {Save Data} 
@@ -828,6 +828,7 @@
 ::msgcat::mcset cs {Story of SAOImageDS9} 
 ::msgcat::mcset cs {Story} 
 ::msgcat::mcset cs {Strip Parameters} 
+::msgcat::mcset cs {Strip Scale} 
 ::msgcat::mcset cs {Strip} 
 ::msgcat::mcset cs {Sum} 
 ::msgcat::mcset cs {Symbol Editor} 

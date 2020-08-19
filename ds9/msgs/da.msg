@@ -1,3 +1,5 @@
+# ::msgcat::mcset da {Load Configuration} [encoding convertfrom iso8859-1 {Indlæs konfiguration}]
+# ::msgcat::mcset da {Save Configuration} {Gem konfiguration}
 ::msgcat::mcset da {2D} 
 ::msgcat::mcset da {3D View} 
 ::msgcat::mcset da {3D} 
@@ -450,7 +452,6 @@
 ::msgcat::mcset da {List} {Liste}
 ::msgcat::mcset da {Load Analysis Commands} [encoding convertfrom iso8859-1 {Indlæs analyse funktioner}]
 ::msgcat::mcset da {Load Color Tags} 
-::msgcat::mcset da {Load Configuration} [encoding convertfrom iso8859-1 {Indlæs konfiguration}]
 ::msgcat::mcset da {Load Contour Levels} [encoding convertfrom iso8859-1 {Indlæs konturniveauer}]
 ::msgcat::mcset da {Load Contrast/Bias} [encoding convertfrom iso8859-1 {Indlæs kontrast/bias}]
 ::msgcat::mcset da {Load Data} [encoding convertfrom iso8859-1 {Indlæs data}]
@@ -740,7 +741,6 @@
 ::msgcat::mcset da {Sample} 
 ::msgcat::mcset da {Save 3D Movie} 
 ::msgcat::mcset da {Save Color Tags} 
-::msgcat::mcset da {Save Configuration} {Gem konfiguration}
 ::msgcat::mcset da {Save Contour Levels} {Gem konturniveauer}
 ::msgcat::mcset da {Save Contrast/Bias} {Gem kontrast/bias}
 ::msgcat::mcset da {Save Data} {Gem data}
@@ -828,6 +828,7 @@
 ::msgcat::mcset da {Story of SAOImageDS9} 
 ::msgcat::mcset da {Story} 
 ::msgcat::mcset da {Strip Parameters} 
+::msgcat::mcset da {Strip Scale} 
 ::msgcat::mcset da {Strip} 
 ::msgcat::mcset da {Sum} 
 ::msgcat::mcset da {Symbol Editor} 

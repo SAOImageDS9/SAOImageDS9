@@ -11,14 +11,14 @@ proc PlotGUI {varname} {
     global ds9
     
     # see if we already have a window visible
-    if {[winfo exists $var(top,gui)]} {
-	raise $var(top,gui)
+    if {[winfo exists $var(gui,top)]} {
+	raise $var(gui,top)
 	return
     }
 
     # create the window
-    set w $var(top,gui)
-    set mb $var(mb,gui)
+    set w $var(gui,top)
+    set mb $var(gui,mb)
 
     Toplevel $w $mb 6 [msgcat::mc {Plot GUI}] [list PlotGUIDestroy $varname]
 
@@ -31,11 +31,11 @@ proc PlotGUI {varname} {
 
     ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
-	-command "EntryCut $var(top,gui)" -accelerator "${ds9(ctrl)}X"
+	-command "EntryCut $var(gui,top)" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
-	-command "EntryCopy $var(top,gui)" -accelerator "${ds9(ctrl)}C"
+	-command "EntryCopy $var(gui,top)" -accelerator "${ds9(ctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
-	-command "EntryPaste $var(top,gui)" -accelerator "${ds9(ctrl)}V"
+	-command "EntryPaste $var(gui,top)" -accelerator "${ds9(ctrl)}V"
 
     # List
     set f [ttk::frame $w.param]
@@ -81,8 +81,8 @@ proc PlotGUIDestroy {varname} {
     upvar #0 $varname var
     global $varname
     
-    destroy $var(top,gui)
-    destroy $var(mb,gui)
+    destroy $var(gui,top)
+    destroy $var(gui,mb)
 
     unset ${varname}(listbox)
     unset ${varname}(tab)
@@ -117,14 +117,20 @@ proc PlotGUICanvas {varname} {
     set f [ttk::labelframe $w.canvas.graph -text [msgcat::mc {Graph}]]
 
     ttk::label $f.tselect -text [msgcat::mc {Select Graph}]
+    ttk::menubutton $f.select -textvariable ${varname}(graph,name) \
+	-menu $f.select.menu
 
-    ttk::label $f.tadd -text [msgcat::mc {Add Graph}]
+    $var(mb).canvas.select clone $f.select.menu
 
-    ttk::label $f.tdelete -text [msgcat::mc {Delete Graph}]
+    ttk::menubutton $f.add -text [msgcat::mc {Add Graph}] \
+	-menu $f.add.menu
 
-    grid $f.tselect -padx 2 -pady 2 -sticky w
-    grid $f.tadd -padx 2 -pady 2 -sticky w
-    grid $f.tdelete -padx 2 -pady 2 -sticky w
+    $var(mb).canvas.graph clone $f.add.menu
+
+    ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
+	-command [list PlotDeleteGraphCurrent $varname]
+
+    grid $f.tselect $f.select $f.add $f.delete -padx 2 -pady 2 -sticky w
 
     # Layout
     set f [ttk::labelframe $w.canvas.layout -text [msgcat::mc {Layout}]]
@@ -147,11 +153,12 @@ proc PlotGUICanvas {varname} {
 	-variable ${varname}(canvas,layout) -value strip \
 	-command [list PlotChangeLayout $varname]
 
-    ttk::label $f.tstrip
-    ttk::button $f.strip -text [msgcat::mc {Strip Parameters}] \
-	-command [list PlotStripDialog $varname]
+    ttk::label $f.tstrip -text [msgcat::mc {Strip Scale}]
+    ttk::entry $f.strip -textvariable ${varname}(canvas,layout,strip,scale) \
+	-width 6
+    ttk::label $f.stript -text {%}
 
-    grid $f.layout $f.strip -padx 2 -pady 2 -sticky w
+    grid $f.layout $f.tstrip $f.strip $f.stript -padx 2 -pady 2 -sticky w
 
     # Font
     set f [ttk::labelframe $w.canvas.font -text [msgcat::mc {Font}]]
@@ -168,43 +175,43 @@ proc PlotGUICanvas {varname} {
 
     ttk::label $f.ttextlab -text [msgcat::mc {Axes Title}]
     FontFamilyMenuButton $f.textlabfamily $varname \
-	axis,title,family [list PlotUpdateCanvasElement $varname]
+	canvas,axis,title,family [list PlotUpdateCanvasElement $varname]
     FontSizeMenuButton $f.textlabsize $varname \
-	axis,title,size [list PlotUpdateCanvasElement $varname]
+	canvas,axis,title,size [list PlotUpdateCanvasElement $varname]
     FontWeightMenuButton $f.textlabweight $varname \
-	axis,title,weight [list PlotUpdateCanvasElement $varname]
+	canvas,axis,title,weight [list PlotUpdateCanvasElement $varname]
     FontSlantMenuButton $f.textlabslant $varname \
-	axis,title,slant [list PlotUpdateCanvasElement $varname]
+	canvas,axis,title,slant [list PlotUpdateCanvasElement $varname]
 
     ttk::label $f.tnumlab -text [msgcat::mc {Axes Number}]
     FontFamilyMenuButton $f.numlabfamily $varname \
-	axis,font,family [list PlotUpdateCanvasElement $varname]
+	canvas,axis,font,family [list PlotUpdateCanvasElement $varname]
     FontSizeMenuButton $f.numlabsize $varname \
-	axis,font,size [list PlotUpdateCanvasElement $varname]
+	canvas,axis,font,size [list PlotUpdateCanvasElement $varname]
     FontWeightMenuButton $f.numlabweight $varname \
-	axis,font,weight [list PlotUpdateCanvasElement $varname]
+	canvas,axis,font,weight [list PlotUpdateCanvasElement $varname]
     FontSlantMenuButton $f.numlabslant $varname \
-	axis,font,slant [list PlotUpdateCanvasElement $varname]
+	canvas,axis,font,slant [list PlotUpdateCanvasElement $varname]
 
     ttk::label $f.tlegendtitle -text [msgcat::mc {Legend Title}]
     FontFamilyMenuButton $f.legendtitlefamily $varname \
-	legend,title,family [list PlotUpdateCanvasElement $varname]
+	canvas,legend,title,family [list PlotUpdateCanvasElement $varname]
     FontSizeMenuButton $f.legendtitlesize $varname \
-	legend,title,size [list PlotUpdateCanvasElement $varname]
+	canvas,legend,title,size [list PlotUpdateCanvasElement $varname]
     FontWeightMenuButton $f.legendtitleweight $varname \
-	legend,title,weight [list PlotUpdateCanvasElement $varname]
+	canvas,legend,title,weight [list PlotUpdateCanvasElement $varname]
     FontSlantMenuButton $f.legendtitleslant $varname \
-	legend,title,slant [list PlotUpdateCanvasElement $varname]
+	canvas,legend,title,slant [list PlotUpdateCanvasElement $varname]
 
     ttk::label $f.tlegend -text [msgcat::mc {Legend}]
     FontFamilyMenuButton $f.legendfamily $varname \
-	legend,font,family [list PlotUpdateCanvasElement $varname]
+	canvas,legend,font,family [list PlotUpdateCanvasElement $varname]
     FontSizeMenuButton $f.legendsize $varname \
-	legend,font,size [list PlotUpdateCanvasElement $varname]
+	canvas,legend,font,size [list PlotUpdateCanvasElement $varname]
     FontWeightMenuButton $f.legendweight $varname \
-	legend,font,weight [list PlotUpdateCanvasElement $varname]
+	canvas,legend,font,weight [list PlotUpdateCanvasElement $varname]
     FontSlantMenuButton $f.legendslant $varname \
-	legend,font,slant [list PlotUpdateCanvasElement $varname]
+	canvas,legend,font,slant [list PlotUpdateCanvasElement $varname]
 
     grid $f.ttitle $f.titlefamily $f.titlesize \
 	$f.titleweight $f.titleslant -padx 2 -pady 2 -sticky w
@@ -225,10 +232,10 @@ proc PlotGUICanvas {varname} {
 	-command [list PlotUpdateAllElement $varname]
 
     ttk::label $f.tforeground -text [msgcat::mc {Foreground}]
-    ColorMenuButton $f.foreground $varname foreground \
+    ColorMenuButton $f.foreground $varname canvas,foreground \
 	[list PlotUpdateCanvasElement $varname]
     ttk::label $f.tbackground -text [msgcat::mc {Background}]
-    ColorMenuButton $f.background $varname background \
+    ColorMenuButton $f.background $varname canvas,background \
 	[list PlotUpdateAllElement $varname]
     ttk::label $f.tgrid -text [msgcat::mc {Grid}]
     ColorMenuButton $f.grid $varname canvas,grid,color \

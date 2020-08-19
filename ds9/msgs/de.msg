@@ -1,3 +1,5 @@
+# ::msgcat::mcset de {Load Configuration} {Konfiguration laden}
+# ::msgcat::mcset de {Save Configuration} {Konfiguration speichern}
 ::msgcat::mcset de {2D} 
 ::msgcat::mcset de {3D View} 
 ::msgcat::mcset de {3D} 
@@ -450,7 +452,6 @@
 ::msgcat::mcset de {List} {Auflisten}
 ::msgcat::mcset de {Load Analysis Commands} {Analysebefehle laden}
 ::msgcat::mcset de {Load Color Tags} 
-::msgcat::mcset de {Load Configuration} {Konfiguration laden}
 ::msgcat::mcset de {Load Contour Levels} {Kontourniveaus laden}
 ::msgcat::mcset de {Load Contrast/Bias} {Kontrast/Bias laden}
 ::msgcat::mcset de {Load Data} {Daten laden}
@@ -740,7 +741,6 @@
 ::msgcat::mcset de {Sample} 
 ::msgcat::mcset de {Save 3D Movie} 
 ::msgcat::mcset de {Save Color Tags} 
-::msgcat::mcset de {Save Configuration} {Konfiguration speichern}
 ::msgcat::mcset de {Save Contour Levels} {Konturniveaus speichern}
 ::msgcat::mcset de {Save Contrast/Bias} {Kontrast/Bias speichern}
 ::msgcat::mcset de {Save Data} {Daten speichern}
@@ -828,6 +828,7 @@
 ::msgcat::mcset de {Story of SAOImageDS9} 
 ::msgcat::mcset de {Story} 
 ::msgcat::mcset de {Strip Parameters} 
+::msgcat::mcset de {Strip Scale} 
 ::msgcat::mcset de {Strip} 
 ::msgcat::mcset de {Sum} {Summieren}
 ::msgcat::mcset de {Symbol Editor} 

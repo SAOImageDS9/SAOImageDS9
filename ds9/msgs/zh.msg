@@ -1,3 +1,5 @@
+# ::msgcat::mcset zh {Load Configuration} 
+# ::msgcat::mcset zh {Save Configuration} 
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D View} 
 ::msgcat::mcset zh {3D} 
@@ -450,7 +452,6 @@
 ::msgcat::mcset zh {List} 
 ::msgcat::mcset zh {Load Analysis Commands} 
 ::msgcat::mcset zh {Load Color Tags} 
-::msgcat::mcset zh {Load Configuration} 
 ::msgcat::mcset zh {Load Contour Levels} 
 ::msgcat::mcset zh {Load Contrast/Bias} 
 ::msgcat::mcset zh {Load Data} 
@@ -740,7 +741,6 @@
 ::msgcat::mcset zh {Sample} 
 ::msgcat::mcset zh {Save 3D Movie} 
 ::msgcat::mcset zh {Save Color Tags} 
-::msgcat::mcset zh {Save Configuration} 
 ::msgcat::mcset zh {Save Contour Levels} 
 ::msgcat::mcset zh {Save Contrast/Bias} 
 ::msgcat::mcset zh {Save Data} 
@@ -828,6 +828,7 @@
 ::msgcat::mcset zh {Story of SAOImageDS9} 
 ::msgcat::mcset zh {Story} 
 ::msgcat::mcset zh {Strip Parameters} 
+::msgcat::mcset zh {Strip Scale} 
 ::msgcat::mcset zh {Strip} 
 ::msgcat::mcset zh {Sum} 
 ::msgcat::mcset zh {Symbol Editor} 

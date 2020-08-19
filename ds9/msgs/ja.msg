@@ -1,3 +1,5 @@
+# ::msgcat::mcset ja {Load Configuration} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
+# ::msgcat::mcset ja {Save Configuration} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {2D} 
 ::msgcat::mcset ja {3D View} 
 ::msgcat::mcset ja {3D} [encoding convertfrom euc-jp "\x33\xbc\xa1\xb8\xb5"]
@@ -450,7 +452,6 @@
 ::msgcat::mcset ja {List} [encoding convertfrom euc-jp "\xce\xf3\xb5\xf3"]
 ::msgcat::mcset ja {Load Analysis Commands} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Color Tags} 
-::msgcat::mcset ja {Load Configuration} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Contour Levels} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa5\xec\xa5\xd9\xa5\xeb\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Contrast/Bias} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8\xa1\xa6\xa5\xd0\xa5\xa4\xa5\xa2\xa5\xb9\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Data} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
@@ -740,7 +741,6 @@
 ::msgcat::mcset ja {Sample} 
 ::msgcat::mcset ja {Save 3D Movie} 
 ::msgcat::mcset ja {Save Color Tags} 
-::msgcat::mcset ja {Save Configuration} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Contour Levels} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa5\xec\xa5\xd9\xa5\xeb\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Contrast/Bias} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8\xa1\xa6\xa5\xd0\xa5\xa4\xa5\xa2\xa5\xb9\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Data} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xf2\xca\xdd\xc2\xb8"]
@@ -828,6 +828,7 @@
 ::msgcat::mcset ja {Story of SAOImageDS9} 
 ::msgcat::mcset ja {Story} 
 ::msgcat::mcset ja {Strip Parameters} 
+::msgcat::mcset ja {Strip Scale} 
 ::msgcat::mcset ja {Strip} 
 ::msgcat::mcset ja {Sum} [encoding convertfrom euc-jp "\xb9\xe7\xb7\xd7"]
 ::msgcat::mcset ja {Symbol Editor} [encoding convertfrom euc-jp "\xb5\xad\xb9\xe6\xa4\xce\xca\xd4\xbd\xb8"]

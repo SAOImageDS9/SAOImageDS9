@@ -173,24 +173,29 @@ proc PlotDialog {varname wtt} {
 	-command [list PlotStripDialog $varname]
 
     FontMenu $var(mb).canvas.title \
-	$varname canvas,title,family canvas,title,size canvas,title,weight \
-	canvas,title,slant [list PlotUpdateCanvasElement $varname]
-    FontMenu $var(mb).canvas.textlab \
-	$varname axis,title,family axis,title,size axis,title,weight \
-	axis,title,slant [list PlotUpdateCanvasElement $varname]
-    FontMenu $var(mb).canvas.numlab \
-	$varname axis,font,family axis,font,size axis,font,weight \
-	axis,font,slant [list PlotUpdateCanvasElement $varname]
-    FontMenu $var(mb).canvas.legendtitle \
-	$varname legend,title,family legend,title,size legend,title,weight \
-	legend,title,slant [list PlotUpdateCanvasElement $varname]
-    FontMenu $var(mb).canvas.legend \
-	$varname legend,font,family legend,font,size legend,font,weight \
-	legend,font,slant [list PlotUpdateCanvasElement $varname]
-
-    ColorMenu $var(mb).canvas.fg $varname foreground \
+	$varname canvas,title,family canvas,title,size \
+	canvas,title,weight canvas,title,slant \
 	[list PlotUpdateCanvasElement $varname]
-    ColorMenu $var(mb).canvas.bg $varname background \
+    FontMenu $var(mb).canvas.textlab \
+	$varname canvas,axis,title,family canvas,axis,title,size \
+	canvas,axis,title,weight canvas,axis,title,slant \
+	[list PlotUpdateCanvasElement $varname]
+    FontMenu $var(mb).canvas.numlab \
+	$varname canvas,axis,font,family canvas,axis,font,size \
+	canvas,axis,font,weight canvas,axis,font,slant \
+	[list PlotUpdateCanvasElement $varname]
+    FontMenu $var(mb).canvas.legendtitle \
+	$varname canvas,legend,title,family canvas,legend,title,size \
+	canvas,legend,title,weight canvas,legend,title,slant \
+	[list PlotUpdateCanvasElement $varname]
+    FontMenu $var(mb).canvas.legend \
+	$varname canvas,legend,font,family canvas,legend,font,size \
+	canvas,legend,font,weight canvas,legend,font,slant \
+	[list PlotUpdateCanvasElement $varname]
+
+    ColorMenu $var(mb).canvas.fg $varname canvas,foreground \
+	[list PlotUpdateCanvasElement $varname]
+    ColorMenu $var(mb).canvas.bg $varname canvas,background \
 	[list PlotUpdateAllElement $varname]
     ColorMenu $var(mb).canvas.grid $varname canvas,grid,color \
 	[list PlotUpdateCanvasElement $varname]

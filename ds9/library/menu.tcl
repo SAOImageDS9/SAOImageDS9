@@ -678,106 +678,12 @@ proc FontMenuSize {varname size cmd} {
     }
 }
 
-proc FontFamilyMenu {w varname font cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ThemeMenu $w
-    $w add radiobutton -label {Times} -variable ${varname}($font) \
-	-value times -command $cmd
-    $w add radiobutton -label {Helvetica} -variable ${varname}($font) \
-	-value helvetica -command $cmd
-    $w add radiobutton -label {Courier} -variable ${varname}($font) \
-	-value courier -command $cmd
-}
-
-proc FontSizeMenu {w varname size cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ThemeMenu $w
-    $w add radiobutton -label {9} -variable ${varname}($size) \
-	-value 9 -command $cmd
-    $w add radiobutton -label {10} -variable ${varname}($size) \
-	-value 10 -command $cmd
-    $w add radiobutton -label {12} -variable ${varname}($size) \
-	-value 12 -command $cmd
-    $w add radiobutton -label {14} -variable ${varname}($size) \
-	-value 14 -command $cmd
-    $w add radiobutton -label {16} -variable ${varname}($size) \
-	-value 16 -command $cmd
-    $w add radiobutton -label {20} -variable ${varname}($size) \
-	-value 20 -command $cmd
-    $w add radiobutton -label {24} -variable ${varname}($size) \
-	-value 24 -command $cmd
-    $w add radiobutton -label {30} -variable ${varname}($size) \
-	-value 30 -command $cmd
-    $w add radiobutton -label {36} -variable ${varname}($size) \
-	-value 36 -command $cmd
-    $w add radiobutton -label {72} -variable ${varname}($size) \
-	-value 72 -command $cmd
-}
-
-proc FontWeightMenu {w varname weight cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ThemeMenu $w
-    $w add radiobutton -label [msgcat::mc {Normal}] \
-	-variable ${varname}($weight) -value normal -command $cmd
-    $w add radiobutton -label [msgcat::mc {Bold}] \
-	-variable ${varname}($weight) -value bold -command $cmd
-}
-
-proc FontSlantMenu {w varname slant cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ThemeMenu $w
-    $w add radiobutton -label [msgcat::mc {Roman}] \
-	-variable ${varname}($slant) -value roman -command $cmd
-    $w add radiobutton -label [msgcat::mc {Italic}] \
-	-variable ${varname}($slant) -value italic -command $cmd
-}
-
 proc FontMenuButton {w varname font size weight slant cmd} {
     upvar #0 $varname var
     global $varname
 
     ttk::menubutton $w -textvariable ${varname}($font) -menu $w.menu
     FontMenu $w.menu $varname $font $size $weight $slant $cmd
-}
-
-proc FontFamilyMenuButton {w varname font cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ttk::menubutton $w -textvariable ${varname}($font) -menu $w.menu
-    FontFamilyMenu $w.menu $varname $font $cmd
-}
-
-proc FontSizeMenuButton {w varname size cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ttk::menubutton $w -textvariable ${varname}($size) -menu $w.menu
-    FontSizeMenu $w.menu $varname $size $cmd
-}
-
-proc FontWeightMenuButton {w varname weight cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ttk::menubutton $w -textvariable ${varname}($weight) -menu $w.menu
-    FontWeightMenu $w.menu $varname $weight $cmd
-}
-
-proc FontSlantMenuButton {w varname slant cmd} {
-    upvar #0 $varname var
-    global $varname
-
-    ttk::menubutton $w -textvariable ${varname}($slant) -menu $w.menu
-    FontSlantMenu $w.menu $varname $slant $cmd
 }
 
 # WidthDashMenu

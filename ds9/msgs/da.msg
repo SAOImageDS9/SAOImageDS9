@@ -1,5 +1,3 @@
-# ::msgcat::mcset da {Load Configuration} [encoding convertfrom iso8859-1 {Indlæs konfiguration}]
-# ::msgcat::mcset da {Save Configuration} {Gem konfiguration}
 ::msgcat::mcset da {2D} 
 ::msgcat::mcset da {3D View} 
 ::msgcat::mcset da {3D} 
@@ -61,6 +59,7 @@
 ::msgcat::mcset da {Average} [encoding convertfrom iso8859-1 {Middelværdi}]
 ::msgcat::mcset da {Axes Number} 
 ::msgcat::mcset da {Axes Order} 
+::msgcat::mcset da {Axes Range} 
 ::msgcat::mcset da {Axes Title} 
 ::msgcat::mcset da {Axes} {Akser}
 ::msgcat::mcset da {Axis Length} [encoding convertfrom iso8859-1 {Akse længde}]
@@ -254,6 +253,7 @@
 ::msgcat::mcset da {Download Colormap} 
 ::msgcat::mcset da {Drag to Center} [encoding convertfrom iso8859-1 {Træk til center}]
 ::msgcat::mcset da {Duplicate Dataset} 
+::msgcat::mcset da {Duplicate Graph} 
 ::msgcat::mcset da {ENVI} 
 ::msgcat::mcset da {EPS} 
 ::msgcat::mcset da {East} [encoding convertfrom iso8859-1 {Øst}]
@@ -281,6 +281,7 @@
 ::msgcat::mcset da {Equal Value} 
 ::msgcat::mcset da {Error Bar} 
 ::msgcat::mcset da {Error code was returned} {Fejlkode blev returneret}
+::msgcat::mcset da {Errorbar} 
 ::msgcat::mcset da {Error} {Fejl}
 ::msgcat::mcset da {Examine Frame} [encoding convertfrom iso8859-1 {Undersøg ramme}]
 ::msgcat::mcset da {Examine} [encoding convertfrom iso8859-1 {Undersøg}]
@@ -320,6 +321,7 @@
 ::msgcat::mcset da {First} [encoding convertfrom iso8859-1 {Første}]
 ::msgcat::mcset da {Fits} 
 ::msgcat::mcset da {Fixed in Size} [encoding convertfrom iso8859-1 {Fastlåst størrelse}]
+::msgcat::mcset da {Flip} 
 ::msgcat::mcset da {Font} {Skrifttype}
 ::msgcat::mcset da {Footprint Servers} 
 ::msgcat::mcset da {Footprint} 
@@ -647,7 +649,6 @@
 ::msgcat::mcset da {Panner} {Oversigtskort}
 ::msgcat::mcset da {Pan} {Flyt}
 ::msgcat::mcset da {Parameters} {Parametre}
-::msgcat::mcset da {Params} 
 ::msgcat::mcset da {Password} {Kodeord}
 ::msgcat::mcset da {Paste Contours} {Indsæt konturer}
 ::msgcat::mcset da {Paste} [encoding convertfrom iso8859-1 {Sæt ind}]
@@ -778,6 +779,7 @@
 ::msgcat::mcset da {Select All} [encoding convertfrom iso8859-1 {Vælg alle}]
 ::msgcat::mcset da {Select Coordinate System } [encoding convertfrom iso8859-1 {vælg koordinat system}]
 ::msgcat::mcset da {Select Dataset} 
+::msgcat::mcset da {Select Datatset} 
 ::msgcat::mcset da {Select Graph} 
 ::msgcat::mcset da {Select None} [encoding convertfrom iso8859-1 {Vælg ingen}]
 ::msgcat::mcset da {Send} 
@@ -933,9 +935,6 @@
 ::msgcat::mcset da {X Axis} 
 ::msgcat::mcset da {X Column} 
 ::msgcat::mcset da {X Error Column} 
-::msgcat::mcset da {X Flip} 
-::msgcat::mcset da {X Grid} 
-::msgcat::mcset da {X Log} 
 ::msgcat::mcset da {XPA Information} {XPA information}
 ::msgcat::mcset da {XPA not initialized} {XPA ikke startet}
 ::msgcat::mcset da {XPA} 
@@ -944,9 +943,6 @@
 ::msgcat::mcset da {Y Axis} 
 ::msgcat::mcset da {Y Column} 
 ::msgcat::mcset da {Y Error Column} 
-::msgcat::mcset da {Y Flip} 
-::msgcat::mcset da {Y Grid} 
-::msgcat::mcset da {Y Log} 
 ::msgcat::mcset da {Yellow} {Gul}
 ::msgcat::mcset da {Y} 
 ::msgcat::mcset da {Z Axis Scale} 

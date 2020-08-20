@@ -1,5 +1,3 @@
-# ::msgcat::mcset es {Load Configuration} [encoding convertfrom iso8859-1 {Cargar configuración}]
-# ::msgcat::mcset es {Save Configuration} [encoding convertfrom iso8859-1 {Guardar configuración}]
 ::msgcat::mcset es {2D} 
 ::msgcat::mcset es {3D View} 
 ::msgcat::mcset es {3D} 
@@ -61,6 +59,7 @@
 ::msgcat::mcset es {Average} {Promedio}
 ::msgcat::mcset es {Axes Number} 
 ::msgcat::mcset es {Axes Order} 
+::msgcat::mcset es {Axes Range} 
 ::msgcat::mcset es {Axes Title} 
 ::msgcat::mcset es {Axes} {Ejes}
 ::msgcat::mcset es {Axis Length} {Longitud del eje}
@@ -254,6 +253,7 @@
 ::msgcat::mcset es {Download Colormap} 
 ::msgcat::mcset es {Drag to Center} {Arrastrar para centrar} 
 ::msgcat::mcset es {Duplicate Dataset} 
+::msgcat::mcset es {Duplicate Graph} 
 ::msgcat::mcset es {ENVI} 
 ::msgcat::mcset es {EPS} 
 ::msgcat::mcset es {East} {Este}
@@ -281,6 +281,7 @@
 ::msgcat::mcset es {Equal Value} 
 ::msgcat::mcset es {Error Bar} 
 ::msgcat::mcset es {Error code was returned} [encoding convertfrom iso8859-1 {Error de código fue regresado}]
+::msgcat::mcset es {Errorbar} 
 ::msgcat::mcset es {Error} 
 ::msgcat::mcset es {Examine Frame} {Examinar marco}
 ::msgcat::mcset es {Examine} {Examinar}
@@ -320,6 +321,7 @@
 ::msgcat::mcset es {First} {Primer}
 ::msgcat::mcset es {Fits} 
 ::msgcat::mcset es {Fixed in Size} [encoding convertfrom iso8859-1 {Fijado en tamaño}]
+::msgcat::mcset es {Flip} 
 ::msgcat::mcset es {Font} {Fuente}
 ::msgcat::mcset es {Footprint Servers} 
 ::msgcat::mcset es {Footprint} 
@@ -647,7 +649,6 @@
 ::msgcat::mcset es {Panner} [encoding convertfrom iso8859-1 {Ventanilla panorámica}] 
 ::msgcat::mcset es {Pan} {Trasladar} 
 ::msgcat::mcset es {Parameters} [encoding convertfrom iso8859-1 {Parámetros}]
-::msgcat::mcset es {Params} 
 ::msgcat::mcset es {Password} [encoding convertfrom iso8859-1 {Contraseña}]
 ::msgcat::mcset es {Paste Contours} {Pegar contornos}
 ::msgcat::mcset es {Paste} {Pegar}
@@ -778,6 +779,7 @@
 ::msgcat::mcset es {Select All} {Seleccionar todos}
 ::msgcat::mcset es {Select Coordinate System } {Seleccionar el sistema de coordenadas}
 ::msgcat::mcset es {Select Dataset} 
+::msgcat::mcset es {Select Datatset} 
 ::msgcat::mcset es {Select Graph} 
 ::msgcat::mcset es {Select None} {Seleccionar nada}
 ::msgcat::mcset es {Send} 
@@ -933,9 +935,6 @@
 ::msgcat::mcset es {X Axis} 
 ::msgcat::mcset es {X Column} 
 ::msgcat::mcset es {X Error Column} 
-::msgcat::mcset es {X Flip} 
-::msgcat::mcset es {X Grid} 
-::msgcat::mcset es {X Log} 
 ::msgcat::mcset es {XPA Information} [encoding convertfrom iso8859-1 {Información XPA}]
 ::msgcat::mcset es {XPA not initialized} {XPA no inicializado}
 ::msgcat::mcset es {XPA} 
@@ -944,9 +943,6 @@
 ::msgcat::mcset es {Y Axis} 
 ::msgcat::mcset es {Y Column} 
 ::msgcat::mcset es {Y Error Column} 
-::msgcat::mcset es {Y Flip} 
-::msgcat::mcset es {Y Grid} 
-::msgcat::mcset es {Y Log} 
 ::msgcat::mcset es {Yellow} {Amarillo}
 ::msgcat::mcset es {Y} 
 ::msgcat::mcset es {Z Axis Scale} 

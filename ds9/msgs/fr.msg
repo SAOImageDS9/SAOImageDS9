@@ -1,5 +1,3 @@
-# ::msgcat::mcset fr {Load Configuration} {Charger la configuration}
-# ::msgcat::mcset fr {Save Configuration} 
 ::msgcat::mcset fr {2D} 
 ::msgcat::mcset fr {3D View} 
 ::msgcat::mcset fr {3D} 
@@ -61,6 +59,7 @@
 ::msgcat::mcset fr {Average} {Moyenne}
 ::msgcat::mcset fr {Axes Number} 
 ::msgcat::mcset fr {Axes Order} 
+::msgcat::mcset fr {Axes Range} 
 ::msgcat::mcset fr {Axes Title} 
 ::msgcat::mcset fr {Axes} 
 ::msgcat::mcset fr {Axis Length} {Longueur de l'axe}
@@ -254,6 +253,7 @@
 ::msgcat::mcset fr {Download Colormap} 
 ::msgcat::mcset fr {Drag to Center} {Glisser au centre} 
 ::msgcat::mcset fr {Duplicate Dataset} 
+::msgcat::mcset fr {Duplicate Graph} 
 ::msgcat::mcset fr {ENVI} 
 ::msgcat::mcset fr {EPS} 
 ::msgcat::mcset fr {East} {Est} 
@@ -281,6 +281,7 @@
 ::msgcat::mcset fr {Equal Value} 
 ::msgcat::mcset fr {Error Bar} 
 ::msgcat::mcset fr {Error code was returned} [encoding convertfrom iso8859-1 {Un code d'erreur a été renvoyé}]
+::msgcat::mcset fr {Errorbar} 
 ::msgcat::mcset fr {Error} {Erreur} 
 ::msgcat::mcset fr {Examine Frame} [encoding convertfrom iso8859-1 {Examiner la fenêtre}]
 ::msgcat::mcset fr {Examine} {Examiner} 
@@ -320,6 +321,7 @@
 ::msgcat::mcset fr {First} {Premier} 
 ::msgcat::mcset fr {Fits} 
 ::msgcat::mcset fr {Fixed in Size} [encoding convertfrom iso8859-1 {Taille fixée}]
+::msgcat::mcset fr {Flip} 
 ::msgcat::mcset fr {Font} {Police}
 ::msgcat::mcset fr {Footprint Servers} 
 ::msgcat::mcset fr {Footprint} 
@@ -647,7 +649,6 @@
 ::msgcat::mcset fr {Panner} 
 ::msgcat::mcset fr {Pan} 
 ::msgcat::mcset fr {Parameters} [encoding convertfrom iso8859-1 {Paramètres}]
-::msgcat::mcset fr {Params} 
 ::msgcat::mcset fr {Password} {Mot de passe}
 ::msgcat::mcset fr {Paste Contours} {Coller les contours}
 ::msgcat::mcset fr {Paste} {Coller}
@@ -778,6 +779,7 @@
 ::msgcat::mcset fr {Select All} 
 ::msgcat::mcset fr {Select Coordinate System } 
 ::msgcat::mcset fr {Select Dataset} 
+::msgcat::mcset fr {Select Datatset} 
 ::msgcat::mcset fr {Select Graph} 
 ::msgcat::mcset fr {Select None} 
 ::msgcat::mcset fr {Send} 
@@ -933,9 +935,6 @@
 ::msgcat::mcset fr {X Axis} 
 ::msgcat::mcset fr {X Column} 
 ::msgcat::mcset fr {X Error Column} 
-::msgcat::mcset fr {X Flip} 
-::msgcat::mcset fr {X Grid} 
-::msgcat::mcset fr {X Log} 
 ::msgcat::mcset fr {XPA Information} 
 ::msgcat::mcset fr {XPA not initialized} 
 ::msgcat::mcset fr {XPA} 
@@ -944,9 +943,6 @@
 ::msgcat::mcset fr {Y Axis} 
 ::msgcat::mcset fr {Y Column} 
 ::msgcat::mcset fr {Y Error Column} 
-::msgcat::mcset fr {Y Flip} 
-::msgcat::mcset fr {Y Grid} 
-::msgcat::mcset fr {Y Log} 
 ::msgcat::mcset fr {Yellow} 
 ::msgcat::mcset fr {Y} 
 ::msgcat::mcset fr {Z Axis Scale} 

@@ -1,5 +1,3 @@
-# ::msgcat::mcset zh {Load Configuration} 
-# ::msgcat::mcset zh {Save Configuration} 
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D View} 
 ::msgcat::mcset zh {3D} 
@@ -61,6 +59,7 @@
 ::msgcat::mcset zh {Average} 
 ::msgcat::mcset zh {Axes Number} 
 ::msgcat::mcset zh {Axes Order} 
+::msgcat::mcset zh {Axes Range} 
 ::msgcat::mcset zh {Axes Title} 
 ::msgcat::mcset zh {Axes} 
 ::msgcat::mcset zh {Axis Length} 
@@ -254,6 +253,7 @@
 ::msgcat::mcset zh {Download Colormap} 
 ::msgcat::mcset zh {Drag to Center} 
 ::msgcat::mcset zh {Duplicate Dataset} 
+::msgcat::mcset zh {Duplicate Graph} 
 ::msgcat::mcset zh {ENVI} 
 ::msgcat::mcset zh {EPS} 
 ::msgcat::mcset zh {East} 
@@ -281,6 +281,7 @@
 ::msgcat::mcset zh {Equal Value} 
 ::msgcat::mcset zh {Error Bar} 
 ::msgcat::mcset zh {Error code was returned} 
+::msgcat::mcset zh {Errorbar} 
 ::msgcat::mcset zh {Error} 
 ::msgcat::mcset zh {Examine Frame} 
 ::msgcat::mcset zh {Examine} [encoding convertfrom big5 "\xA9\xF1 \xA4\x6A \xC0\xCB \xB5\xF8"]
@@ -320,6 +321,7 @@
 ::msgcat::mcset zh {First} 
 ::msgcat::mcset zh {Fits} 
 ::msgcat::mcset zh {Fixed in Size} [encoding convertfrom big5 "\xA9\x54 \xA9\x77 \xA4\x6A \xA4\x70"]
+::msgcat::mcset zh {Flip} 
 ::msgcat::mcset zh {Font} 
 ::msgcat::mcset zh {Footprint Servers} 
 ::msgcat::mcset zh {Footprint} 
@@ -647,7 +649,6 @@
 ::msgcat::mcset zh {Panner} [encoding convertfrom big5 "\xC1\x59 \xB9\xCF"]
 ::msgcat::mcset zh {Pan} 
 ::msgcat::mcset zh {Parameters} 
-::msgcat::mcset zh {Params} 
 ::msgcat::mcset zh {Password} 
 ::msgcat::mcset zh {Paste Contours} 
 ::msgcat::mcset zh {Paste} 
@@ -778,6 +779,7 @@
 ::msgcat::mcset zh {Select All} [encoding convertfrom big5 "\xBF\xEF \xA8\xFA \xA5\xFE \xB3\xA1"]
 ::msgcat::mcset zh {Select Coordinate System } 
 ::msgcat::mcset zh {Select Dataset} 
+::msgcat::mcset zh {Select Datatset} 
 ::msgcat::mcset zh {Select Graph} 
 ::msgcat::mcset zh {Select None} [encoding convertfrom big5 "\xA8\xFA \xAE\xF8 \xBF\xEF \xA8\xFA"]
 ::msgcat::mcset zh {Send} 
@@ -933,9 +935,6 @@
 ::msgcat::mcset zh {X Axis} 
 ::msgcat::mcset zh {X Column} 
 ::msgcat::mcset zh {X Error Column} 
-::msgcat::mcset zh {X Flip} 
-::msgcat::mcset zh {X Grid} 
-::msgcat::mcset zh {X Log} 
 ::msgcat::mcset zh {XPA Information} 
 ::msgcat::mcset zh {XPA not initialized} 
 ::msgcat::mcset zh {XPA} 
@@ -944,9 +943,6 @@
 ::msgcat::mcset zh {Y Axis} 
 ::msgcat::mcset zh {Y Column} 
 ::msgcat::mcset zh {Y Error Column} 
-::msgcat::mcset zh {Y Flip} 
-::msgcat::mcset zh {Y Grid} 
-::msgcat::mcset zh {Y Log} 
 ::msgcat::mcset zh {Yellow} [encoding convertfrom big5 "\xB6\xC0 \xA6\xE2"]
 ::msgcat::mcset zh {Y} 
 ::msgcat::mcset zh {Z Axis Scale} 

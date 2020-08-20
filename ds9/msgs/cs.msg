@@ -1,5 +1,3 @@
-# ::msgcat::mcset cs {Load Configuration} [encoding convertfrom iso8859-2 {Nahraj konfiguraci}]
-# ::msgcat::mcset cs {Save Configuration} 
 ::msgcat::mcset cs {2D} 
 ::msgcat::mcset cs {3D View} 
 ::msgcat::mcset cs {3D} 
@@ -61,6 +59,7 @@
 ::msgcat::mcset cs {Average} [encoding convertfrom iso8859-2 {Prùmìr}]
 ::msgcat::mcset cs {Axes Number} 
 ::msgcat::mcset cs {Axes Order} 
+::msgcat::mcset cs {Axes Range} 
 ::msgcat::mcset cs {Axes Title} 
 ::msgcat::mcset cs {Axes} [encoding convertfrom iso8859-2 {Osy}]
 ::msgcat::mcset cs {Axis Length} [encoding convertfrom iso8859-2 {Délka osy}]
@@ -254,6 +253,7 @@
 ::msgcat::mcset cs {Download Colormap} 
 ::msgcat::mcset cs {Drag to Center} 
 ::msgcat::mcset cs {Duplicate Dataset} 
+::msgcat::mcset cs {Duplicate Graph} 
 ::msgcat::mcset cs {ENVI} 
 ::msgcat::mcset cs {EPS} 
 ::msgcat::mcset cs {East} [encoding convertfrom iso8859-2 {Východ}]
@@ -281,6 +281,7 @@
 ::msgcat::mcset cs {Equal Value} 
 ::msgcat::mcset cs {Error Bar} 
 ::msgcat::mcset cs {Error code was returned} 
+::msgcat::mcset cs {Errorbar} 
 ::msgcat::mcset cs {Error} 
 ::msgcat::mcset cs {Examine Frame} 
 ::msgcat::mcset cs {Examine} [encoding convertfrom iso8859-2 {Prozkoumat}]
@@ -320,6 +321,7 @@
 ::msgcat::mcset cs {First} [encoding convertfrom iso8859-2 {První}]
 ::msgcat::mcset cs {Fits} 
 ::msgcat::mcset cs {Fixed in Size} 
+::msgcat::mcset cs {Flip} 
 ::msgcat::mcset cs {Font} [encoding convertfrom iso8859-2 {Znak}]
 ::msgcat::mcset cs {Footprint Servers} 
 ::msgcat::mcset cs {Footprint} 
@@ -647,7 +649,6 @@
 ::msgcat::mcset cs {Panner} [encoding convertfrom iso8859-2 {Náhled snímku}]
 ::msgcat::mcset cs {Pan} [encoding convertfrom iso8859-2 {Posun}] 
 ::msgcat::mcset cs {Parameters} 
-::msgcat::mcset cs {Params} 
 ::msgcat::mcset cs {Password} 
 ::msgcat::mcset cs {Paste Contours} 
 ::msgcat::mcset cs {Paste} [encoding convertfrom iso8859-2 {Vlo¾it}]
@@ -778,6 +779,7 @@
 ::msgcat::mcset cs {Select All} [encoding convertfrom iso8859-2 {Vybrat v¹echny}]
 ::msgcat::mcset cs {Select Coordinate System } 
 ::msgcat::mcset cs {Select Dataset} 
+::msgcat::mcset cs {Select Datatset} 
 ::msgcat::mcset cs {Select Graph} 
 ::msgcat::mcset cs {Select None} [encoding convertfrom iso8859-2 {Zru¹it výbìr}]
 ::msgcat::mcset cs {Send} 
@@ -933,9 +935,6 @@
 ::msgcat::mcset cs {X Axis} 
 ::msgcat::mcset cs {X Column} 
 ::msgcat::mcset cs {X Error Column} 
-::msgcat::mcset cs {X Flip} 
-::msgcat::mcset cs {X Grid} 
-::msgcat::mcset cs {X Log} 
 ::msgcat::mcset cs {XPA Information} 
 ::msgcat::mcset cs {XPA not initialized} [encoding convertfrom iso8859-2]
 ::msgcat::mcset cs {XPA} 
@@ -944,9 +943,6 @@
 ::msgcat::mcset cs {Y Axis} 
 ::msgcat::mcset cs {Y Column} 
 ::msgcat::mcset cs {Y Error Column} 
-::msgcat::mcset cs {Y Flip} 
-::msgcat::mcset cs {Y Grid} 
-::msgcat::mcset cs {Y Log} 
 ::msgcat::mcset cs {Yellow} [encoding convertfrom iso8859-2 {®lutá}]
 ::msgcat::mcset cs {Y} 
 ::msgcat::mcset cs {Z Axis Scale} 

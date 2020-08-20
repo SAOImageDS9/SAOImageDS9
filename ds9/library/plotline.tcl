@@ -59,7 +59,7 @@ proc PlotLineMenus {varname} {
 	-menu $var(mb).dataline.shape
     $var(mb).dataline add cascade -label [msgcat::mc {Smooth}] \
 	-menu $var(mb).dataline.smooth
-    $var(mb).dataline add cascade -label [msgcat::mc {Error}] \
+    $var(mb).dataline add cascade -label [msgcat::mc {Errorbar}] \
 	-menu $var(mb).dataline.error
 
     ColorMenu $var(mb).dataline.color $varname graph,ds,line,color \

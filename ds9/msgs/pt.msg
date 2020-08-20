@@ -1,5 +1,3 @@
-# ::msgcat::mcset pt {Load Configuration} [encoding convertfrom iso8859-1 {Carregar Configuração}]
-# ::msgcat::mcset pt {Save Configuration} [encoding convertfrom iso8859-1 {Salvar Configuração}]
 ::msgcat::mcset pt {2D} 
 ::msgcat::mcset pt {3D View} 
 ::msgcat::mcset pt {3D} 
@@ -61,6 +59,7 @@
 ::msgcat::mcset pt {Average} [encoding convertfrom iso8859-1 {Média}]
 ::msgcat::mcset pt {Axes Number} 
 ::msgcat::mcset pt {Axes Order} 
+::msgcat::mcset pt {Axes Range} 
 ::msgcat::mcset pt {Axes Title} 
 ::msgcat::mcset pt {Axes} {Eixos}
 ::msgcat::mcset pt {Axis Length} {Tamanho do eixo}
@@ -254,6 +253,7 @@
 ::msgcat::mcset pt {Download Colormap} 
 ::msgcat::mcset pt {Drag to Center} {Arrate para centralizar}
 ::msgcat::mcset pt {Duplicate Dataset} 
+::msgcat::mcset pt {Duplicate Graph} 
 ::msgcat::mcset pt {ENVI} 
 ::msgcat::mcset pt {EPS} 
 ::msgcat::mcset pt {East} {Leste}
@@ -281,6 +281,7 @@
 ::msgcat::mcset pt {Equal Value} 
 ::msgcat::mcset pt {Error Bar} 
 ::msgcat::mcset pt {Error code was returned} [encoding convertfrom iso8859-1 {Retornou código de erro}]
+::msgcat::mcset pt {Errorbar} 
 ::msgcat::mcset pt {Error} {Erro}
 ::msgcat::mcset pt {Examine Frame} {Examinar Frame} 
 ::msgcat::mcset pt {Examine} {Examinar}
@@ -320,6 +321,7 @@
 ::msgcat::mcset pt {First} {Primeiro}
 ::msgcat::mcset pt {Fits} 
 ::msgcat::mcset pt {Fixed in Size} {Fixa em tamanho}
+::msgcat::mcset pt {Flip} 
 ::msgcat::mcset pt {Font} {Fonte}
 ::msgcat::mcset pt {Footprint Servers} 
 ::msgcat::mcset pt {Footprint} 
@@ -647,7 +649,6 @@
 ::msgcat::mcset pt {Panner} 
 ::msgcat::mcset pt {Pan} 
 ::msgcat::mcset pt {Parameters} [encoding convertfrom iso8859-1 {Parâmetros}]
-::msgcat::mcset pt {Params} 
 ::msgcat::mcset pt {Password} {Senha}
 ::msgcat::mcset pt {Paste Contours} {Colar Contornos}
 ::msgcat::mcset pt {Paste} {Colar}
@@ -778,6 +779,7 @@
 ::msgcat::mcset pt {Select All} {Selecionar tudo}
 ::msgcat::mcset pt {Select Coordinate System } {Selecionar Sistema de Coordenadas}
 ::msgcat::mcset pt {Select Dataset} 
+::msgcat::mcset pt {Select Datatset} 
 ::msgcat::mcset pt {Select Graph} 
 ::msgcat::mcset pt {Select None} {Selecionar Nada}
 ::msgcat::mcset pt {Send} 
@@ -933,9 +935,6 @@
 ::msgcat::mcset pt {X Axis} 
 ::msgcat::mcset pt {X Column} 
 ::msgcat::mcset pt {X Error Column} 
-::msgcat::mcset pt {X Flip} 
-::msgcat::mcset pt {X Grid} 
-::msgcat::mcset pt {X Log} 
 ::msgcat::mcset pt {XPA Information} [encoding convertfrom iso8859-1 {Informação sobre o XPA}]
 ::msgcat::mcset pt {XPA not initialized} [encoding convertfrom iso8859-1 {XPA não inicializado}]
 ::msgcat::mcset pt {XPA} 
@@ -944,9 +943,6 @@
 ::msgcat::mcset pt {Y Axis} 
 ::msgcat::mcset pt {Y Column} 
 ::msgcat::mcset pt {Y Error Column} 
-::msgcat::mcset pt {Y Flip} 
-::msgcat::mcset pt {Y Grid} 
-::msgcat::mcset pt {Y Log} 
 ::msgcat::mcset pt {Yellow} {Amarelo}
 ::msgcat::mcset pt {Y} 
 ::msgcat::mcset pt {Z Axis Scale} 

@@ -1,5 +1,3 @@
-# ::msgcat::mcset de {Load Configuration} {Konfiguration laden}
-# ::msgcat::mcset de {Save Configuration} {Konfiguration speichern}
 ::msgcat::mcset de {2D} 
 ::msgcat::mcset de {3D View} 
 ::msgcat::mcset de {3D} 
@@ -61,6 +59,7 @@
 ::msgcat::mcset de {Average} {Mitteln}
 ::msgcat::mcset de {Axes Number} 
 ::msgcat::mcset de {Axes Order} 
+::msgcat::mcset de {Axes Range} 
 ::msgcat::mcset de {Axes Title} 
 ::msgcat::mcset de {Axes}  {Achsen}
 ::msgcat::mcset de {Axis Length} [encoding convertfrom iso8859-1 {Achsenlänge}]
@@ -254,6 +253,7 @@
 ::msgcat::mcset de {Download Colormap} 
 ::msgcat::mcset de {Drag to Center} {Ziehen zum zentrieren}
 ::msgcat::mcset de {Duplicate Dataset} 
+::msgcat::mcset de {Duplicate Graph} 
 ::msgcat::mcset de {ENVI} 
 ::msgcat::mcset de {EPS} 
 ::msgcat::mcset de {East} {Osten}
@@ -281,6 +281,7 @@
 ::msgcat::mcset de {Equal Value} 
 ::msgcat::mcset de {Error Bar} 
 ::msgcat::mcset de {Error code was returned} [encoding convertfrom iso8859-1 {Fehlercode wurde zurückgegeben}]
+::msgcat::mcset de {Errorbar} 
 ::msgcat::mcset de {Error} {Fehler}
 ::msgcat::mcset de {Examine Frame} {Rahmen inspizieren}
 ::msgcat::mcset de {Examine} {Inspizieren}
@@ -320,6 +321,7 @@
 ::msgcat::mcset de {First} {Erster}
 ::msgcat::mcset de {Fits} 
 ::msgcat::mcset de {Fixed in Size} [encoding convertfrom iso8859-1 {Feste Größe}]
+::msgcat::mcset de {Flip} 
 ::msgcat::mcset de {Font} 
 ::msgcat::mcset de {Footprint Servers} 
 ::msgcat::mcset de {Footprint} 
@@ -647,7 +649,6 @@
 ::msgcat::mcset de {Panner} [encoding convertfrom iso8859-1 {Übersichtsfeld}]
 ::msgcat::mcset de {Pan} {Ausrichtung}
 ::msgcat::mcset de {Parameters} {Parameter}
-::msgcat::mcset de {Params} 
 ::msgcat::mcset de {Password} {Passwort}
 ::msgcat::mcset de {Paste Contours} [encoding convertfrom iso8859-1 {Konturen einfügen}]
 ::msgcat::mcset de {Paste} [encoding convertfrom iso8859-1 {Einfügen}]
@@ -778,6 +779,7 @@
 ::msgcat::mcset de {Select All} [encoding convertfrom iso8859-1 {Alle auswählen}]
 ::msgcat::mcset de {Select Coordinate System }  [encoding convertfrom iso8859-1 {Koordinatensystem auswählen}]
 ::msgcat::mcset de {Select Dataset} 
+::msgcat::mcset de {Select Datatset} 
 ::msgcat::mcset de {Select Graph} 
 ::msgcat::mcset de {Select None} [encoding convertfrom iso8859-1 {Nichts auswählen}]
 ::msgcat::mcset de {Send} 
@@ -933,9 +935,6 @@
 ::msgcat::mcset de {X Axis} 
 ::msgcat::mcset de {X Column} 
 ::msgcat::mcset de {X Error Column} 
-::msgcat::mcset de {X Flip} 
-::msgcat::mcset de {X Grid} 
-::msgcat::mcset de {X Log} 
 ::msgcat::mcset de {XPA Information} 
 ::msgcat::mcset de {XPA not initialized} {XPA nicht initialisiert}
 ::msgcat::mcset de {XPA} 
@@ -944,9 +943,6 @@
 ::msgcat::mcset de {Y Axis} 
 ::msgcat::mcset de {Y Column} 
 ::msgcat::mcset de {Y Error Column} 
-::msgcat::mcset de {Y Flip} 
-::msgcat::mcset de {Y Grid} 
-::msgcat::mcset de {Y Log} 
 ::msgcat::mcset de {Yellow} {Gelb}
 ::msgcat::mcset de {Y} 
 ::msgcat::mcset de {Z Axis Scale} 

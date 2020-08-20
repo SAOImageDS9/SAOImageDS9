@@ -120,12 +120,10 @@ proc PlotGUICanvas {varname} {
     ttk::label $f.tselect -text [msgcat::mc {Select Graph}]
     ttk::menubutton $f.select -textvariable ${varname}(graph,name) \
 	-menu $f.select.menu
-
     $var(mb).canvas.select clone $f.select.menu
 
     ttk::menubutton $f.add -text [msgcat::mc {Add Graph}] \
 	-menu $f.add.menu
-
     $var(mb).canvas.graph clone $f.add.menu
 
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
@@ -242,17 +240,60 @@ proc PlotGUIGraph {varname} {
     # Dataset
     set f [ttk::labelframe $w.graph.dataset -text [msgcat::mc {DataSet}]]
 
+    ttk::label $f.tselect -text [msgcat::mc {Select Datatset}]
+    ttk::menubutton $f.select -textvariable ${varname}(graph,ds,name) \
+	-menu $f.select.menu
+    $var(mb).graph.select clone $f.select.menu
+
+    ttk::button $f.duplicate -text [msgcat::mc {Duplicate Graph}] \
+	-command [list PlotDupDataSet $varname]
+
+    ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
+	-command [list PlotDeleteDataSetCurrent $varname]
+
+    grid $f.tselect $f.select $f.duplicate $f.delete -padx 2 -pady 2 -sticky w
+
+    # Data
+    set f [ttk::labelframe $w.graph.data -text [msgcat::mc {Data}]]
+
+    ttk::button $f.stats -text [msgcat::mc {Statistics}] \
+	-command "set ${varname}(stats) 1; PlotStats $varname"
+
+    ttk::button $f.list -text [msgcat::mc {List Data}] \
+	-command "set ${varname}(list) 1; PlotList $varname"
+
+    grid $f.stats $f.list -padx 2 -pady 2 -sticky w
+
     # Axes
     set f [ttk::labelframe $w.graph.axes -text [msgcat::mc {Axes}]]
 
-    # Legend
-    set f [ttk::labelframe $w.graph.legend -text [msgcat::mc {Legend}]]
+    ttk::menubutton $f.axis -text [msgcat::mc {Axes}] \
+	-menu $f.axis.menu
+    $var(mb).graph.axes clone $f.axis.menu
+
+    ttk::menubutton $f.legend -text [msgcat::mc {Legend}] \
+	-menu $f.legend.menu
+    $var(mb).graph.legend clone $f.legend.menu
 
     # Titles
     set f [ttk::labelframe $w.graph.titles -text [msgcat::mc {Titles}]]
 
-    pack $w.graph.dataset $w.graph.axes $w.graph.legend $w.graph.titles \
-	-side top -fill both -expand true
+    ttk::label $f.label -text [msgcat::mc {Title}]
+    ttk::entry $f.title -textvariable ed(graph,title) -width 30
+    ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
+    ttk::entry $f.xtitle -textvariable ed(graph,axis,x,title) -width 30
+    ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
+    ttk::entry $f.ytitle -textvariable ed(graph,axis,y,title) -width 30
+    ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
+    ttk::entry $f.legendtitle -textvariable ed(graph,legend,title) -width 30
+
+    grid $f.label $f.title -padx 2 -pady 2 -sticky ew
+    grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
+    grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
+    grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
+
+    pack $w.graph.dataset $w.graph.data $w.graph.axes \
+	$w.graph.titles -side top -fill both -expand true
 }
 
 proc PlotGUIDataset {varname} {

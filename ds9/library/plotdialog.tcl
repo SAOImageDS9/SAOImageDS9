@@ -219,6 +219,7 @@ proc PlotDialog {varname wtt} {
 
     $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
 	-menu $var(mb).graph.legend
+    $var(mb).graph add separator
     $var(mb).graph add cascade -label [msgcat::mc {X Axis}] \
 	-menu $var(mb).graph.xaxis
     $var(mb).graph add cascade -label [msgcat::mc {Y Axis}] \

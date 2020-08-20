@@ -47,6 +47,8 @@ proc PlotBarMenus {varname} {
     $var(mb).databar add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
+	-command [list DatasetNameDialog $varname]
     $var(mb).databar add separator
     $var(mb).databar add cascade -label [msgcat::mc {Border Color}] \
 	-menu $var(mb).databar.bordercolor
@@ -62,9 +64,6 @@ proc PlotBarMenus {varname} {
     $var(mb).databar add separator
     $var(mb).databar add cascade -label [msgcat::mc {Error}] \
 	-menu $var(mb).databar.error
-    $var(mb).databar add separator
-    $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
-	-command [list DatasetNameDialog $varname]
 
     ColorMenu $var(mb).databar.bordercolor $varname graph,ds,bar,border,color \
 	[list PlotBarUpdateElement $varname]

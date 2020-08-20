@@ -46,14 +46,13 @@ proc PlotScatterMenus {varname} {
     $var(mb).datascatter add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter add command -label "[msgcat::mc {Name}]..." \
+	-command [list DatasetNameDialog $varname]
     $var(mb).datascatter add separator
     $var(mb).datascatter add cascade -label [msgcat::mc {Shape}] \
 	-menu $var(mb).datascatter.shape
     $var(mb).datascatter add cascade -label [msgcat::mc {Error}] \
 	-menu $var(mb).datascatter.error
-    $var(mb).datascatter add separator
-    $var(mb).datascatter add command -label "[msgcat::mc {Name}]..." \
-	-command [list DatasetNameDialog $varname]
 
     ThemeMenu $var(mb).datascatter.shape
     $var(mb).datascatter.shape add checkbutton \

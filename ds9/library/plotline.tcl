@@ -267,3 +267,109 @@ proc PlotLineUpdateElement {varname} {
 	-errorbarcap $cap
 }
 
+
+proc PlotGUILine {varname w} {
+    upvar #0 $varname var
+    global $varname
+
+    # Line
+    set f [ttk::labelframe $w.dataset.line -text [msgcat::mc {Line}]]
+
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,show) \
+	-command [list PlotLineUpdateElement $varname]
+
+    ttk::label $f.tname -text [msgcat::mc {Dataset Name}]
+    ttk::entry $f.name -textvariable ${varname}(name) -width 20
+
+    grid $f.show -padx 2 -pady 2 -sticky ew
+    grid $f.tname $f.name -padx 2 -pady 2 -sticky ew
+
+    # Params
+    set f [ttk::labelframe $w.dataset.params -text [msgcat::mc {Params}]]
+
+    # Color
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.color \
+	-textvariable ${varname}(graph,ds,line,color) \
+	-menu $f.color.menu
+    $var(mb).dataline.color clone $f.color.menu
+
+    # Width
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::menubutton $f.width \
+	-textvariable ${varname}(graph,ds,line,width) \
+	-menu $f.width.menu
+    $var(mb).dataline.width clone $f.width.menu
+
+    # Shadow
+    ttk::label $f.tshadow -text [msgcat::mc {Shadow}]
+    ttk::menubutton $f.fillcolor \
+	-textvariable ${varname}(graph,ds,line,fill,color) \
+	-menu $f.fillcolor.menu
+    $var(mb).dataline.fill.color clone $f.fillcolor.menu
+    ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
+	-variable ${varname}(graph,ds,line,fill) \
+	-command [list PlotLineUpdateElement $varname]
+
+    # Shape
+    ttk::label $f.tshape -text [msgcat::mc {Shape}]
+    ttk::menubutton $f.shape \
+	-textvariable ${varname}(graph,ds,line,shape,symbol) \
+	-menu $f.shape.menu
+    $var(mb).dataline.shape.symbol clone $f.shape.menu
+
+    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.shapecolor \
+	-textvariable ${varname}(graph,ds,line,shape,color) \
+	-menu $f.shapecolor.menu
+    $var(mb).dataline.shape.color clone $f.shapecolor.menu
+
+    ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
+	-variable ${varname}(graph,ds,line,shape,fill) \
+	-command [list PlotLineUpdateElement $varname]
+
+    # Smooth
+    ttk::label $f.tsmooth -text [msgcat::mc {Smooth}]
+    ttk::menubutton $f.smooth \
+	-textvariable ${varname}(graph,ds,line,smooth) \
+	-menu $f.smooth.menu
+    $var(mb).dataline.smooth clone $f.smooth.menu
+
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
+    grid $f.tshadow $f.fillcolor $f.fill -padx 2 -pady 2 -sticky ew
+    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor \
+	$f.shapefill  -padx 2 -pady 2 -sticky ew
+    grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky ew
+
+    # Errorbar
+    set f [ttk::labelframe $w.dataset.error -text [msgcat::mc {Errorbar}]]
+
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,error) \
+	-command [list PlotLineUpdateElement $varname]
+
+    ttk::checkbutton $f.cap -text [msgcat::mc {Cap}] \
+	-variable ${varname}(graph,ds,error,cap) \
+	-command [list PlotLineUpdateElement $varname]
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.color \
+	-textvariable ${varname}(graph,ds,error,color) \
+	-menu $f.color.menu
+    $var(mb).dataline.error.color clone $f.color.menu
+
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::menubutton $f.width \
+	-textvariable ${varname}(graph,ds,error,width) \
+	-menu $f.width.menu
+    $var(mb).dataline.error.width clone $f.width.menu
+
+    grid $f.show $f.cap -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
+
+    pack $w.dataset.line $w.dataset.params $w.dataset.error \
+	-side top -fill both -expand true
+}

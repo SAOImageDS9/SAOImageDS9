@@ -338,65 +338,10 @@ proc PlotGUIDataset {varname} {
     set gg [ttk::frame $w.dataset]
     $var(listbox) insert {} end -id $gg -text [msgcat::mc {Dataset}]
 
-    # forget all
-    if {[info exists $w.dataset.error]} {
-	pack forget $w.dataset.error
-	$w.dataset.error delete
-    }
-    if {[info exists $w.dataset.line]} {
-	pack forget $w.dataset.line
-	$w.dataset.line delete
-    }
-    if {[info exists $w.dataset.bar]} {
-	pack forget $w.dataset.bar
-	$w.dataset.bar delete
-    }
-    if {[info exists $w.dataset.scatter]} {
-	pack forget $w.dataset.scatter
-	$w.dataset.scatter delete
-    }
-
-    # Error
-    set f [ttk::labelframe $w.dataset.error -text [msgcat::mc {Error}]]
-
     # Params
     switch $var(graph,type) {
-	line {
-	    set f [ttk::labelframe $w.dataset.line -text [msgcat::mc {Line}]]
-
-	    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
-		-variable ${varname}(graph,ds,show) \
-		-command [list PlotLineUpdateElement $varname]
-
-	    ttk::label $f.tcolor -text [msgcat::mc {Color}]
-	    ttk::menubutton $f.color \
-		-textvariable ${varname}(graph,ds,line,color) \
-		-menu $f.color.menu
-	    $var(mb).dataline.color clone $f.color.menu
-
-	    ttk::label $f.twidth -text [msgcat::mc {Width}]
-	    ttk::menubutton $f.width \
-		-textvariable ${varname}(graph,ds,line,width) \
-		-menu $f.width.menu
-	    $var(mb).dataline.width clone $f.width.menu
-
-	    grid $f.show -padx 2 -pady 2 -sticky ew
-	    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
-	    grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
-
-	    pack $w.dataset.line $w.dataset.error \
-		-side top -fill both -expand true
-	}
-	bar {
-	    set f [ttk::labelframe $w.dataset.bar -text [msgcat::mc {Bar}]]
-	    pack $w.dataset.bar $w.dataset.error \
-		-side top -fill both -expand true
-	}
-	scatter {
-	    set f [ttk::labelframe $w.dataset.scatter -text [msgcat::mc {Scatter}]]
-	    pack $w.dataset.scatter $w.dataset.error \
-		-side top -fill both -expand true
-	}
+	line {PlotGUILine $varname $w}
+	bar {}
+	scatter {}
     }
 }
-

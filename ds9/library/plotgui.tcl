@@ -129,7 +129,8 @@ proc PlotGUICanvas {varname} {
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
 
-    grid $f.tselect $f.select $f.add $f.delete -padx 2 -pady 2 -sticky w
+    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
+    grid $f.add $f.delete -padx 2 -pady 2 -sticky w
 
     # Layout
     set f [ttk::labelframe $w.canvas.layout -text [msgcat::mc {Layout}]]
@@ -251,7 +252,8 @@ proc PlotGUIGraph {varname} {
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteDataSetCurrent $varname]
 
-    grid $f.tselect $f.select $f.duplicate $f.delete -padx 2 -pady 2 -sticky w
+    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
+    grid $f.duplicate $f.delete -padx 2 -pady 2 -sticky w
 
     # Data
     set f [ttk::labelframe $w.graph.data -text [msgcat::mc {Data}]]
@@ -267,32 +269,63 @@ proc PlotGUIGraph {varname} {
     # Axes
     set f [ttk::labelframe $w.graph.axes -text [msgcat::mc {Axes}]]
 
-    ttk::menubutton $f.axis -text [msgcat::mc {Axes}] \
-	-menu $f.axis.menu
-    $var(mb).graph.axes clone $f.axis.menu
-
     ttk::menubutton $f.legend -text [msgcat::mc {Legend}] \
 	-menu $f.legend.menu
     $var(mb).graph.legend clone $f.legend.menu
+
+    ttk::menubutton $f.xaxis -text [msgcat::mc {X Axis}] \
+	-menu $f.xaxis.menu
+    $var(mb).graph.xaxis clone $f.xaxis.menu
+
+    ttk::menubutton $f.yaxis -text [msgcat::mc {Y Axis}] \
+	-menu $f.yaxis.menu
+    $var(mb).graph.yaxis clone $f.yaxis.menu
+
+    grid $f.legend $f.xaxis $f.yaxis -padx 2 -pady 2 -sticky w
+
+    # Range
+    set f [ttk::labelframe $w.graph.range -text [msgcat::mc {Range}]]
+
+    ttk::label $f.t -text [msgcat::mc {Axis}]
+    ttk::label $f.tto -text [msgcat::mc {To}]
+    ttk::label $f.tfrom -text [msgcat::mc {From}]
+    ttk::label $f.tformat -text [msgcat::mc {Format}]
+    ttk::label $f.tauto -text [msgcat::mc {Automatic}]
+
+    ttk::label $f.x -text [msgcat::mc {X}]
+    ttk::entry $f.xmin -textvariable ${varname}(graph,axis,x,min) -width 12
+    ttk::entry $f.xmax -textvariable ${varname}(graph,axis,x,max) -width 12
+    ttk::entry $f.xformat -textvariable ${varname}(graph,axis,x,format) -width 8
+    ttk::checkbutton $f.xauto -variable ${varname}(graph,axis,x,auto)
+
+    ttk::label $f.y -text [msgcat::mc {Y}]
+    ttk::entry $f.ymin -textvariable ${varname}(graph,axis,y,min) -width 12
+    ttk::entry $f.ymax -textvariable ${varname}(graph,axis,y,max) -width 12
+    ttk::entry $f.yformat -textvariable ${varname}(graph,axis,y,format) -width 8
+    ttk::checkbutton $f.yauto -variable ${varname}(graph,axis,y,auto)
+
+    grid $f.t $f.tfrom $f.tto $f.tformat $f.tauto -padx 2 -pady 2 -sticky w
+    grid $f.x $f.xmin $f.xmax $f.xformat $f.xauto -padx 2 -pady 2 -sticky w
+    grid $f.y $f.ymin $f.ymax $f.yformat $f.yauto -padx 2 -pady 2 -sticky w
 
     # Titles
     set f [ttk::labelframe $w.graph.titles -text [msgcat::mc {Titles}]]
 
     ttk::label $f.label -text [msgcat::mc {Title}]
-    ttk::entry $f.title -textvariable ed(graph,title) -width 30
+    ttk::entry $f.title -textvariable ${varname}(graph,title) -width 30
     ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
-    ttk::entry $f.xtitle -textvariable ed(graph,axis,x,title) -width 30
+    ttk::entry $f.xtitle -textvariable ${varname}(graph,axis,x,title) -width 30
     ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
-    ttk::entry $f.ytitle -textvariable ed(graph,axis,y,title) -width 30
+    ttk::entry $f.ytitle -textvariable ${varname}(graph,axis,y,title) -width 30
     ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
-    ttk::entry $f.legendtitle -textvariable ed(graph,legend,title) -width 30
+    ttk::entry $f.legendtitle -textvariable ${varname}(graph,legend,title) -width 30
 
     grid $f.label $f.title -padx 2 -pady 2 -sticky ew
     grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
     grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
     grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
 
-    pack $w.graph.dataset $w.graph.data $w.graph.axes \
+    pack $w.graph.dataset $w.graph.data $w.graph.axes $w.graph.range \
 	$w.graph.titles -side top -fill both -expand true
 }
 

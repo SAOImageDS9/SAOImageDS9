@@ -245,3 +245,27 @@ proc PlotBarUpdateElement {varname} {
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
 }
+
+proc PlotPrefsBar {w} {
+    set f [ttk::labelframe $w.plot.bar -text [msgcat::mc {Bar}]]
+
+    ttk::label $f.tborder -text [msgcat::mc {Border}]
+    ColorMenuButton $f.bordercolor pap graph,ds,bar,border,color {}
+    ttk::label $f.tborderwidth -text [msgcat::mc {Width}]
+    ttk::menubutton $f.borderwidth \
+	-textvariable pap(graph,ds,bar,border,width) -menu $f.borderwidth.menu
+    WidthDashMenu $f.borderwidth.menu pap graph,ds,bar,border,width {} {} {}
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ColorMenuButton $f.color pap graph,ds,bar,color {}
+    ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
+	-variable pap(graph,ds,bar,fill)
+
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::entry $f.width -textvariable pap(graph,ds,bar,width) -width 7
+
+    grid $f.tborder $f.bordercolor $f.tborderwidth $f.borderwidth \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tcolor $f.color $f.fill -padx 2 -pady 2 -sticky w
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
+}

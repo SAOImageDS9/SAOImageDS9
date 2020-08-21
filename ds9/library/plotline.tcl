@@ -268,6 +268,44 @@ proc PlotLineUpdateElement {varname} {
 }
 
 
+proc PlotPrefsLine {w} {
+    set f [ttk::labelframe $w.plot.line -text [msgcat::mc {Line}]]
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ColorMenuButton $f.color pap graph,ds,line,color {}
+
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::menubutton $f.width -textvariable pap(graph,ds,line,width) \
+	-menu $f.width.menu
+    WidthDashMenu $f.width.menu pap graph,ds,line,width graph,ds,line,dash {} {}
+
+    ttk::label $f.tshadow -text [msgcat::mc {Shadow}]
+    ColorMenuButton $f.fillcolor pap graph,ds,line,fill,color {}
+    ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
+	-variable pap(graph,ds,line,fill)
+
+    ttk::label $f.tshape -text [msgcat::mc {Shape}]
+    ttk::menubutton $f.shape -textvariable pap(graph,ds,line,shape,symbol) \
+	-menu $f.shape.menu
+    PlotLineShapeMenu $f.shape.menu pap(graph,ds,line,shape,symbol) {}
+    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
+    ColorMenuButton $f.shapecolor pap graph,ds,line,shape,color {}
+    ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
+	-variable pap(graph,ds,line,shape,fill)
+
+    ttk::label $f.tsmooth -text [msgcat::mc {Smooth}]
+    ttk::menubutton $f.smooth -textvariable pap(graph,ds,line,smooth) \
+	-menu $f.smooth.menu
+    PlotLineSmoothMenu $f.smooth.menu pap(graph,ds,line,smooth) {}
+
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
+    grid $f.tshadow $f.fillcolor $f.fill -padx 2 -pady 2 -sticky w
+    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky w
+}
+
 proc PlotGUILine {varname w} {
     upvar #0 $varname var
     global $varname

@@ -237,3 +237,19 @@ proc PlotScatterHighliteElement {varname cc nn rowlist} {
 	}
     }
 }
+
+proc PlotPrefsScatter {w} {
+    set f [ttk::labelframe $w.plot.scatter -text [msgcat::mc {Scatter}]]
+
+    ttk::label $f.tshape -text [msgcat::mc {Shape}]
+    ttk::menubutton $f.shape -textvariable pap(graph,ds,scatter,symbol) \
+	-menu $f.shape.menu
+    PlotScatterShapeMenu $f.shape.menu pap(graph,ds,scatter,symbol) {}
+    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
+    ColorMenuButton $f.shapecolor pap graph,ds,scatter,color {}
+    ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
+	-variable pap(graph,ds,scatter,fill)
+
+    grid $f.tshape $f.shape -padx 2 -pady 2 -sticky w
+    grid $f.tshapecolor $f.shapecolor $f.shapefill -padx 2 -pady 2 -sticky w
+}

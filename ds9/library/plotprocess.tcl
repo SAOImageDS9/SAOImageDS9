@@ -127,83 +127,12 @@ proc PrefsDialogPlot {} {
 	-variable pap(graph,ds,show)
     grid $f.show -padx 2 -pady 2 -sticky w
 
-    # Line
-    set f [ttk::labelframe $w.plot.line -text [msgcat::mc {Line}]]
-
-    ttk::label $f.tcolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.color pap graph,ds,line,color {}
-
-    ttk::label $f.twidth -text [msgcat::mc {Width}]
-    ttk::menubutton $f.width -textvariable pap(graph,ds,line,width) \
-	-menu $f.width.menu
-    WidthDashMenu $f.width.menu pap graph,ds,line,width graph,ds,line,dash {} {}
-
-    ttk::label $f.tshadow -text [msgcat::mc {Shadow}]
-    ColorMenuButton $f.fillcolor pap graph,ds,line,fill,color {}
-    ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
-	-variable pap(graph,ds,line,fill)
-
-    ttk::label $f.tshape -text [msgcat::mc {Shape}]
-    ttk::menubutton $f.shape -textvariable pap(graph,ds,line,shape,symbol) \
-	-menu $f.shape.menu
-    PlotLineShapeMenu $f.shape.menu pap(graph,ds,line,shape,symbol) {}
-    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.shapecolor pap graph,ds,line,shape,color {}
-    ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
-	-variable pap(graph,ds,line,shape,fill)
-
-    ttk::label $f.tsmooth -text [msgcat::mc {Smooth}]
-    ttk::menubutton $f.smooth -textvariable pap(graph,ds,line,smooth) \
-	-menu $f.smooth.menu
-    PlotLineSmoothMenu $f.smooth.menu pap(graph,ds,line,smooth) {}
-
-    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
-    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
-    grid $f.tshadow $f.fillcolor $f.fill -padx 2 -pady 2 -sticky w
-    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
-	-padx 2 -pady 2 -sticky w
-    grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky w
-
-    # Bar
-    set f [ttk::labelframe $w.plot.bar -text [msgcat::mc {Bar}]]
-
-    ttk::label $f.tborder -text [msgcat::mc {Border}]
-    ColorMenuButton $f.bordercolor pap graph,ds,bar,border,color {}
-    ttk::label $f.tborderwidth -text [msgcat::mc {Width}]
-    ttk::menubutton $f.borderwidth \
-	-textvariable pap(graph,ds,bar,border,width) -menu $f.borderwidth.menu
-    WidthDashMenu $f.borderwidth.menu pap graph,ds,bar,border,width {} {} {}
-
-    ttk::label $f.tcolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.color pap graph,ds,bar,color {}
-    ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
-	-variable pap(graph,ds,bar,fill)
-
-    ttk::label $f.twidth -text [msgcat::mc {Width}]
-    ttk::entry $f.width -textvariable pap(graph,ds,bar,width) -width 7
-
-    grid $f.tborder $f.bordercolor $f.tborderwidth $f.borderwidth \
-	-padx 2 -pady 2 -sticky w
-    grid $f.tcolor $f.color $f.fill -padx 2 -pady 2 -sticky w
-    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
-
-    # Scatter
-    set f [ttk::labelframe $w.plot.scatter -text [msgcat::mc {Scatter}]]
-
-    ttk::label $f.tshape -text [msgcat::mc {Shape}]
-    ttk::menubutton $f.shape -textvariable pap(graph,ds,scatter,symbol) \
-	-menu $f.shape.menu
-    PlotScatterShapeMenu $f.shape.menu pap(graph,ds,scatter,symbol) {}
-    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.shapecolor pap graph,ds,scatter,color {}
-    ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
-	-variable pap(graph,ds,scatter,fill)
-
-    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
-	-padx 2 -pady 2 -sticky w
+    PlotPrefsLine $w
+    PlotPrefsBar $w
+    PlotPrefsScatter $w
 
     # Error
-    set f [ttk::labelframe $w.plot.error -text [msgcat::mc {Error Bar}]]
+    set f [ttk::labelframe $w.plot.error -text [msgcat::mc {Errorbar}]]
 
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable pap(graph,ds,error)
@@ -220,7 +149,8 @@ proc PrefsDialogPlot {} {
 	graph,ds,error,width graph,ds,error,dash {} {}
 
     grid $f.show $f.cap -padx 2 -pady 2 -sticky w
-    grid $f.tcolor $f.color $f.twidth $f.width -padx 2 -pady 2 -sticky w
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
 
     pack $w.plot.graph $w.plot.axis $w.plot.ds \
 	$w.plot.line $w.plot.bar $w.plot.scatter $w.plot.error \

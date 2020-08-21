@@ -40,28 +40,20 @@ proc PlotGUI {varname} {
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command "EntryPaste $var(gui,top)" -accelerator "${ds9(ctrl)}V"
 
+    set ff [ttk::frame $w.param]
+
     # List
-    set f [ttk::frame $w.param]
-    ttk::scrollbar $f.scroll -command [list $f.box yview]
-    set var(listbox) [ttk::treeview $f.box \
-			  -yscroll [list $f.scroll set] \
-			  -selectmode browse \
-			  -height 28 \
-			  -show tree \
-			 ]
+    set f [ttk::frame $ff.canvas]
+    PlotGUICanvas $varname $f
 
-    grid $f.box $f.scroll -sticky news
-    grid rowconfigure $f 0 -weight 1
-    grid columnconfigure $f 2 -weight 1
+    set f [ttk::frame $ff.graph]
+    PlotGUIGraph $varname $f
 
-    set var(tab) $f
-    set var(tabs) {}
+    set f [ttk::frame $ff.dataset]
+    PlotGUIDataset $varname $f
 
-    bind $var(listbox) <<TreeviewSelect>> [list PlotGUIListUpdate $varname]
-  
-    PlotGUICanvas $varname
-    PlotGUIGraph $varname
-    PlotGUIDataset $varname
+    pack $ff.canvas $ff.graph $ff.dataset \
+	-side left -fill y -expand true
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -78,9 +70,6 @@ proc PlotGUI {varname} {
 
     bind $w <<Close>> [list PlotGUIDestroy $varname]
 
-    # select first item
-    $var(listbox) selection set $var(tabs)
-
     PlotGUICurrentGraph $varname
 }
 
@@ -90,10 +79,6 @@ proc PlotGUIDestroy {varname} {
     
     destroy $var(gui,top)
     destroy $var(gui,mb)
-
-    unset ${varname}(listbox)
-    unset ${varname}(tab)
-    unset ${varname}(tabs)
 }
 
 proc PlotGUIApply {varname} {
@@ -108,32 +93,12 @@ proc PlotGUIApply {varname} {
     PlotUpdateMenus $varname
 }
 
-proc PlotGUIListUpdate {varname} {
+proc PlotGUICanvas {varname w} {
     upvar #0 $varname var
     global $varname
-
-    if {$var(tabs) != {}} {
-	grid forget $var(tabs)
-    }
-    set var(tabs) [$var(listbox) selection]
-    if {$var(tabs) != {}} {
-	grid $var(tabs) -row 0 -column 2 -sticky new
-    }
-}
-
-proc PlotGUICanvas {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set w $var(tab)
-
-    set gg [ttk::frame $w.canvas]
-    $var(listbox) insert {} end -id $gg -text [msgcat::mc {Canvas}]
-    # This is our first item
-    set var(tabs) $gg
 
     # Canvas
-    set f [ttk::labelframe $w.canvas.graph -text [msgcat::mc {Canvas}]]
+    set f [ttk::labelframe $w.canvas -text [msgcat::mc {Canvas}]]
 
     ttk::label $f.tselect -text [msgcat::mc {Select Graph}]
     ttk::menubutton $f.select -textvariable ${varname}(graph,name) \
@@ -143,7 +108,7 @@ proc PlotGUICanvas {varname} {
     grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
 
     # Layout
-    set f [ttk::labelframe $w.canvas.layout -text [msgcat::mc {Layout}]]
+    set f [ttk::labelframe $w.layout -text [msgcat::mc {Layout}]]
 
     ttk::menubutton $f.add -text [msgcat::mc {Add Graph}] \
 	-menu $f.add.menu
@@ -175,7 +140,7 @@ proc PlotGUICanvas {varname} {
     grid $f.tscale - $f.scale $f.scalet -padx 2 -pady 2 -sticky w
 
     # Font
-    set f [ttk::labelframe $w.canvas.font -text [msgcat::mc {Font}]]
+    set f [ttk::labelframe $w.font -text [msgcat::mc {Font}]]
 
     ttk::label $f.ttitle -text [msgcat::mc {Title}]
     ttk::menubutton $f.title -textvariable \
@@ -213,7 +178,7 @@ proc PlotGUICanvas {varname} {
     grid $f.tlegend $f.legend -padx 2 -pady 2 -sticky w
 
     # Color
-    set f [ttk::labelframe $w.canvas.color -text [msgcat::mc {Color}]]
+    set f [ttk::labelframe $w.color -text [msgcat::mc {Color}]]
 
     ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
 	-variable ${varname}(canvas,theme) \
@@ -239,21 +204,15 @@ proc PlotGUICanvas {varname} {
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
     grid $f.tgrid $f.grid -padx 2 -pady 2 -sticky w
 
-    pack $w.canvas.graph $w.canvas.layout $w.canvas.font $w.canvas.color \
-	-side top -fill both -expand true
+    pack $w.canvas $w.layout $w.font $w.color -side top -fill both -expand true
 }
 
-proc PlotGUIGraph {varname} {
+proc PlotGUIGraph {varname w} {
     upvar #0 $varname var
     global $varname
 
-    set w $var(tab)
-
-    set gg [ttk::frame $w.graph]
-    $var(listbox) insert {} end -id $gg -text [msgcat::mc {Graph}]
-
     # Graph
-    set f [ttk::labelframe $w.graph.dataset -text [msgcat::mc {Graph}]]
+    set f [ttk::labelframe $w.graph -text [msgcat::mc {Graph}]]
 
     ttk::label $f.tselect -text [msgcat::mc {Select Datatset}]
     ttk::menubutton $f.select -textvariable ${varname}(graph,ds,name) \
@@ -263,7 +222,7 @@ proc PlotGUIGraph {varname} {
     grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
 
     # Dataset
-    set f [ttk::labelframe $w.graph.buttons -text [msgcat::mc {Dataset}]]
+    set f [ttk::labelframe $w.dataset -text [msgcat::mc {Dataset}]]
 
     ttk::button $f.duplicate -text [msgcat::mc {Duplicate Dataset}] \
 	-command [list PlotDupDataSet $varname]
@@ -273,7 +232,7 @@ proc PlotGUIGraph {varname} {
     grid $f.duplicate $f.delete -padx 2 -pady 2 -sticky w
 
     # Legend
-    set f [ttk::labelframe $w.graph.legend -text [msgcat::mc {Legend}]]
+    set f [ttk::labelframe $w.legend -text [msgcat::mc {Legend}]]
 
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable ${varname}(graph,legend) \
@@ -305,7 +264,7 @@ proc PlotGUIGraph {varname} {
     grid $f.tposition $f.position -padx 2 -pady 2 -sticky w
 
     # Axis
-    set f [ttk::labelframe $w.graph.axis -text [msgcat::mc {Axis}]]
+    set f [ttk::labelframe $w.axis -text [msgcat::mc {Axis}]]
 
     ttk::label $f.txaxis -text [msgcat::mc {X Axis}]
     ttk::checkbutton $f.xgrid -text [msgcat::mc {Grid}] \
@@ -333,7 +292,7 @@ proc PlotGUIGraph {varname} {
     grid $f.tyaxis $f.ygrid $f.ylog $f.yflip -padx 2 -pady 2 -sticky w
 
     # Range
-    set f [ttk::labelframe $w.graph.range -text [msgcat::mc {Range}]]
+    set f [ttk::labelframe $w.range -text [msgcat::mc {Range}]]
 
     ttk::label $f.t -text [msgcat::mc {Axis}]
     ttk::label $f.tto -text [msgcat::mc {To}]
@@ -360,7 +319,7 @@ proc PlotGUIGraph {varname} {
     grid $f.y $f.ymin $f.ymax $f.yformat $f.yauto -padx 2 -pady 2 -sticky w
 
     # Titles
-    set f [ttk::labelframe $w.graph.titles -text [msgcat::mc {Titles}]]
+    set f [ttk::labelframe $w.titles -text [msgcat::mc {Titles}]]
 
     ttk::label $f.label -text [msgcat::mc {Title}]
     ttk::entry $f.title -textvariable ${varname}(graph,title) -width 30
@@ -377,27 +336,21 @@ proc PlotGUIGraph {varname} {
     grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
     grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
 
-    pack $w.graph.dataset $w.graph.buttons $w.graph.legend \
-	$w.graph.axis $w.graph.range \
-	$w.graph.titles -side top -fill both -expand true
+    pack $w.graph $w.dataset $w.legend $w.axis $w.range $w.titles \
+	-side top -fill both -expand true
 }
 
-proc PlotGUIDataset {varname} {
+proc PlotGUIDataset {varname w} {
     upvar #0 $varname var
     global $varname
 
-    set w $var(tab)
-
-    set gg [ttk::frame $w.dataset]
-    $var(listbox) insert {} end -id $gg -text [msgcat::mc {Dataset}]
-
-    set ff [ttk::frame $w.dataset.line]
+    set ff [ttk::frame $w.line]
     PlotGUILine $varname $ff
 
-    set ff [ttk::frame $w.dataset.bar]
+    set ff [ttk::frame $w.bar]
     PlotGUIBar $varname $ff
 
-    set ff [ttk::frame $w.dataset.scatter]
+    set ff [ttk::frame $w.scatter]
     PlotGUIScatter $varname $ff
 }
 
@@ -406,15 +359,16 @@ proc PlotGUICurrentGraph {varname} {
     global $varname
 
     if {[winfo exists $var(gui,top)]} {
-	set w $var(tab)
-	pack forget $w.dataset.line
-	pack forget $w.dataset.bar
-	pack forget $w.dataset.scatter
+	set w $var(gui,top).param.dataset
+	
+	pack forget $w.line
+	pack forget $w.bar
+	pack forget $w.scatter
 
 	switch $var(graph,type) {
-	    line {pack $w.dataset.line}
-	    bar {pack $w.dataset.bar}
-	    scatter {pack $w.dataset.scatter}
+	    line {pack $w.line}
+	    bar {pack $w.bar}
+	    scatter {pack $w.scatter}
 	}
     }
 }

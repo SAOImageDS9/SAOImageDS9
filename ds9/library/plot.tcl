@@ -127,8 +127,8 @@ proc PlotAddGraph {varname type} {
     PlotStats $varname
     PlotList $varname
 
+    PlotGUICurrentGraph $varname
     PlotChangeMode $varname
-
     PlotLayoutCanvas $varname
 }
 
@@ -322,6 +322,8 @@ proc PlotCurrentGraph {varname} {
 
     PlotStats $varname
     PlotList $varname
+
+    PlotGUICurrentGraph $varname
 }
 
 # used by backup

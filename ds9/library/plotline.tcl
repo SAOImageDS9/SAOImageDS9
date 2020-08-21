@@ -317,7 +317,7 @@ proc PlotGUILine {varname w} {
     global $varname
 
     # Line
-    set f [ttk::labelframe $w.dataset.line -text [msgcat::mc {Line}]]
+    set f [ttk::labelframe $w.line -text [msgcat::mc {Line}]]
 
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
@@ -330,7 +330,7 @@ proc PlotGUILine {varname w} {
     grid $f.tname $f.name -padx 2 -pady 2 -sticky ew
 
     # Params
-    set f [ttk::labelframe $w.dataset.params -text [msgcat::mc {Params}]]
+    set f [ttk::labelframe $w.params -text [msgcat::mc {Params}]]
 
     # Color
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
@@ -388,7 +388,7 @@ proc PlotGUILine {varname w} {
     grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky ew
 
     # Errorbar
-    set f [ttk::labelframe $w.dataset.error -text [msgcat::mc {Errorbar}]]
+    set f [ttk::labelframe $w.error -text [msgcat::mc {Errorbar}]]
 
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,error) \
@@ -414,6 +414,5 @@ proc PlotGUILine {varname w} {
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
 
-    pack $w.dataset.line $w.dataset.params $w.dataset.error \
-	-side top -fill both -expand true
+    pack $w.line $w.params $w.error -side top -fill both -expand true
 }

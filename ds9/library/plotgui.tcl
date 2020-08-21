@@ -76,6 +76,8 @@ proc PlotGUI {varname} {
 
     # select first item
     $var(listbox) selection set $var(tabs)
+
+    PlotGUICurrentGraph $varname
 }
 
 proc PlotGUIDestroy {varname} {
@@ -349,7 +351,8 @@ proc PlotGUIGraph {varname} {
     ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
     ttk::entry $f.ytitle -textvariable ${varname}(graph,axis,y,title) -width 30
     ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
-    ttk::entry $f.legendtitle -textvariable ${varname}(graph,legend,title) -width 30
+    ttk::entry $f.legendtitle -textvariable ${varname}(graph,legend,title) \
+	-width 30
 
     grid $f.label $f.title -padx 2 -pady 2 -sticky ew
     grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
@@ -370,11 +373,30 @@ proc PlotGUIDataset {varname} {
     set gg [ttk::frame $w.dataset]
     $var(listbox) insert {} end -id $gg -text [msgcat::mc {Dataset}]
 
+    set ff [ttk::frame $w.dataset.line]
+    PlotGUILine $varname $ff
 
-    # Params
-    switch $var(graph,type) {
-	line {PlotGUILine $varname $w}
-	bar {}
-	scatter {}
+    set ff [ttk::frame $w.dataset.bar]
+    PlotGUIBar $varname $ff
+
+    set ff [ttk::frame $w.dataset.scatter]
+    PlotGUIScatter $varname $ff
+}
+
+proc PlotGUICurrentGraph {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[winfo exists $var(gui,top)]} {
+	set w $var(tab)
+	pack forget $w.dataset.line
+	pack forget $w.dataset.bar
+	pack forget $w.dataset.scatter
+
+	switch $var(graph,type) {
+	    line {pack $w.dataset.line}
+	    bar {pack $w.dataset.bar}
+	    scatter {pack $w.dataset.scatter}
+	}
     }
 }

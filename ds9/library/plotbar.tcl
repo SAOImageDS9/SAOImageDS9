@@ -273,3 +273,80 @@ proc PlotPrefsBar {w} {
     grid $f.tcolor $f.color $f.fill -padx 2 -pady 2 -sticky w
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
 }
+
+proc PlotGUIBar {varname w} {
+    upvar #0 $varname var
+    global $varname
+
+    # Bar
+    set f [ttk::labelframe $w.bar -text [msgcat::mc {Bar}]]
+
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,show) \
+	-command [list PlotBarUpdateElement $varname]
+
+    ttk::label $f.tname -text [msgcat::mc {Dataset Name}]
+    ttk::entry $f.name -textvariable ${varname}(name) -width 20
+
+    grid $f.show -padx 2 -pady 2 -sticky ew
+    grid $f.tname $f.name -padx 2 -pady 2 -sticky ew
+
+    # Params
+    set f [ttk::labelframe $w.params -text [msgcat::mc {Params}]]
+
+    ttk::label $f.tbordercolor -text [msgcat::mc {Border}]
+    ttk::menubutton $f.bordercolor \
+	-textvariable ${varname}(graph,ds,bar,border,color) \
+	-menu $f.bordercolor.menu
+    $var(mb).databar.bordercolor clone $f.bordercolor.menu
+
+    ttk::label $f.tborderwidth -text [msgcat::mc {Width}]
+    ttk::menubutton $f.borderwidth \
+	-textvariable ${varname}(graph,ds,bar,border,width) \
+	-menu $f.borderwidth.menu
+    $var(mb).databar.borderwidth clone $f.borderwidth.menu
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.color \
+	-textvariable ${varname}(graph,ds,bar,color) \
+	-menu $f.color.menu
+    $var(mb).databar.color clone $f.color.menu
+
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::entry $f.width -textvariable ${varname}(graph,ds,bar,width) -width 7
+
+    grid $f.tbordercolor $f.bordercolor $f.tborderwidth $f.borderwidth \
+	-padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
+
+    # Errorbar
+    set f [ttk::labelframe $w.error -text [msgcat::mc {Errorbar}]]
+
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,error) \
+	-command [list PlotBarUpdateElement $varname]
+
+    ttk::checkbutton $f.cap -text [msgcat::mc {Cap}] \
+	-variable ${varname}(graph,ds,error,cap) \
+	-command [list PlotBarUpdateElement $varname]
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.color \
+	-textvariable ${varname}(graph,ds,error,color) \
+	-menu $f.color.menu
+    $var(mb).databar.error.color clone $f.color.menu
+
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::menubutton $f.width \
+	-textvariable ${varname}(graph,ds,error,width) \
+	-menu $f.width.menu
+    $var(mb).databar.error.width clone $f.width.menu
+
+    grid $f.show $f.cap -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
+
+    pack $w.bar $w.params $w.error -side top -fill both -expand true
+}    
+

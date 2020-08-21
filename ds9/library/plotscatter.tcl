@@ -259,3 +259,54 @@ proc PlotPrefsScatter {w} {
     grid $f.tshape $f.shape -padx 2 -pady 2 -sticky w
     grid $f.tshapecolor $f.shapecolor $f.shapefill -padx 2 -pady 2 -sticky w
 }
+
+proc PlotGUIScatter {varname w} {
+    upvar #0 $varname var
+    global $varname
+
+    # Scatter
+    set f [ttk::labelframe $w.scatter -text [msgcat::mc {Scatter}]]
+
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,show) \
+	-command [list PlotScatterUpdateElement $varname]
+
+    ttk::label $f.tname -text [msgcat::mc {Dataset Name}]
+    ttk::entry $f.name -textvariable ${varname}(name) -width 20
+
+    grid $f.show -padx 2 -pady 2 -sticky ew
+    grid $f.tname $f.name -padx 2 -pady 2 -sticky ew
+
+    # Params
+    set f [ttk::labelframe $w.params -text [msgcat::mc {Params}]]
+
+    # Errorbar
+    set f [ttk::labelframe $w.error -text [msgcat::mc {Errorbar}]]
+
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,error) \
+	-command [list PlotScatterUpdateElement $varname]
+
+    ttk::checkbutton $f.cap -text [msgcat::mc {Cap}] \
+	-variable ${varname}(graph,ds,error,cap) \
+	-command [list PlotScatterUpdateElement $varname]
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.color \
+	-textvariable ${varname}(graph,ds,error,color) \
+	-menu $f.color.menu
+    $var(mb).datascatter.error.color clone $f.color.menu
+
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    ttk::menubutton $f.width \
+	-textvariable ${varname}(graph,ds,error,width) \
+	-menu $f.width.menu
+    $var(mb).datascatter.error.width clone $f.width.menu
+
+    grid $f.show $f.cap -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
+
+    pack $w.scatter $w.params $w.error -side top -fill both -expand true
+}    
+

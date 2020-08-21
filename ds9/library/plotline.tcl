@@ -324,7 +324,7 @@ proc PlotGUILine {varname w} {
 	-command [list PlotLineUpdateElement $varname]
 
     ttk::label $f.tname -text [msgcat::mc {Dataset Name}]
-    ttk::entry $f.name -textvariable ${varname}(name) -width 20
+    ttk::entry $f.name -textvariable ${varname}(graph,ds,name) -width 20
 
     grid $f.show -padx 2 -pady 2 -sticky ew
     grid $f.tname $f.name -padx 2 -pady 2 -sticky ew

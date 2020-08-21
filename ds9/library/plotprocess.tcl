@@ -104,23 +104,23 @@ proc PrefsDialogPlot {} {
     ttk::label $f.xtitle -text [msgcat::mc {X Axis}]
     ttk::checkbutton $f.x -text [msgcat::mc {Grid}] \
 	-variable pap(graph,axis,x,grid)
-    ttk::radiobutton $f.xlinear -text [msgcat::mc {Linear}] \
-	-variable pap(graph,axis,x,log) -value 0
-    ttk::radiobutton $f.xlog -text [msgcat::mc {Log}] \
-	-variable pap(graph,axis,x,log) -value 1
+    ttk::checkbutton $f.xlog -text [msgcat::mc {Log}] \
+	-variable pap(graph,axis,x,log)
+    ttk::checkbutton $f.xflip -text [msgcat::mc {Flip}] \
+	-variable pap(graph,axis,x,flip)
 
     ttk::label $f.ytitle -text [msgcat::mc {Y Axis}]
     ttk::checkbutton $f.y -text [msgcat::mc {Grid}] \
 	-variable pap(graph,axis,y,grid)
-    ttk::radiobutton $f.ylinear -text [msgcat::mc {Linear}] \
-	-variable pap(graph,axis,y,log) -value 0
-    ttk::radiobutton $f.ylog -text [msgcat::mc {Log}] \
-	-variable pap(graph,axis,y,log) -value 1
+    ttk::checkbutton $f.ylog -text [msgcat::mc {Log}] \
+	-variable pap(graph,axis,y,log)
+    ttk::checkbutton $f.yflip -text [msgcat::mc {Flip}] \
+	-variable pap(graph,axis,y,flip)
 
     grid $f.legend -padx 2 -pady 2 -sticky w
     grid $f.tlegendposition $f.legendposition - -padx 2 -pady 2 -sticky w
-    grid $f.xtitle $f.x $f.xlinear $f.xlog -padx 2 -pady 2 -sticky w
-    grid $f.ytitle $f.y $f.ylinear $f.ylog -padx 2 -pady 2 -sticky w
+    grid $f.xtitle $f.x $f.xlog $f.xflip -padx 2 -pady 2 -sticky w
+    grid $f.ytitle $f.y $f.ylog $f.yflip -padx 2 -pady 2 -sticky w
 
     # Right
     set ff [ttk::frame $w.plot.right]

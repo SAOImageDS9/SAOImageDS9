@@ -27,6 +27,8 @@ proc PlotGUI {varname} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] \
+	-command [list PlotGUIApply $varname]
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list PlotGUIDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
@@ -63,9 +65,11 @@ proc PlotGUI {varname} {
 
     # Buttons
     set f [ttk::frame $w.buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] \
+	-command [list PlotGUIApply $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list PlotGUIDestroy $varname]
-    pack $f.close -side left -expand true -padx 2 -pady 4
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.sep -orient horizontal
@@ -90,6 +94,18 @@ proc PlotGUIDestroy {varname} {
     unset ${varname}(listbox)
     unset ${varname}(tab)
     unset ${varname}(tabs)
+}
+
+proc PlotGUIApply {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # update the world?
+    $var(graph,proc,updateelement) $varname
+    PlotChangeAxis $varname
+    PlotUpdateCanvas $varname
+    PlotUpdateGraph $varname
+    PlotUpdateMenus $varname
 }
 
 proc PlotGUIListUpdate {varname} {
@@ -295,26 +311,26 @@ proc PlotGUIGraph {varname} {
     ttk::checkbutton $f.xgrid -text [msgcat::mc {Grid}] \
 	-variable ${varname}(graph,axis,x,grid) \
 	-command [list PlotChangeAxis $varname]
-    ttk::radiobutton $f.xlinear -text [msgcat::mc {Linear}] \
-	-variable ${varname}(graph,axis,x,log) -value linear \
+    ttk::checkbutton $f.xlog -text [msgcat::mc {Log}] \
+	-variable ${varname}(graph,axis,x,log) \
 	-command [list PlotChangeAxis $varname]
-    ttk::radiobutton $f.xlog -text [msgcat::mc {Log}] \
-	-variable ${varname}(graph,axis,x,log) -value log \
+    ttk::checkbutton $f.xflip -text [msgcat::mc {Flip}] \
+	-variable ${varname}(graph,axis,x,flip) \
 	-command [list PlotChangeAxis $varname]
 
     ttk::label $f.tyaxis -text [msgcat::mc {Y Axis}]
     ttk::checkbutton $f.ygrid -text [msgcat::mc {Grid}] \
 	-variable ${varname}(graph,axis,y,grid) \
 	-command [list PlotChangeAxis $varname]
-    ttk::radiobutton $f.ylinear -text [msgcat::mc {Linear}] \
-	-variable ${varname}(graph,axis,y,log) -value linear \
+    ttk::checkbutton $f.ylog -text [msgcat::mc {Log}] \
+	-variable ${varname}(graph,axis,y,log) \
 	-command [list PlotChangeAxis $varname]
-    ttk::radiobutton $f.ylog -text [msgcat::mc {Log}] \
-	-variable ${varname}(graph,axis,y,log) -value log \
+    ttk::checkbutton $f.yflip -text [msgcat::mc {Flip}] \
+	-variable ${varname}(graph,axis,y,flip) \
 	-command [list PlotChangeAxis $varname]
 
-    grid $f.txaxis $f.xgrid $f.xlinear $f.xlog -padx 2 -pady 2 -sticky w
-    grid $f.tyaxis $f.ygrid $f.ylinear $f.ylog -padx 2 -pady 2 -sticky w
+    grid $f.txaxis $f.xgrid $f.xlog $f.xflip -padx 2 -pady 2 -sticky w
+    grid $f.tyaxis $f.ygrid $f.ylog $f.yflip -padx 2 -pady 2 -sticky w
 
     # Range
     set f [ttk::labelframe $w.graph.range -text [msgcat::mc {Range}]]
@@ -329,13 +345,15 @@ proc PlotGUIGraph {varname} {
     ttk::entry $f.xmin -textvariable ${varname}(graph,axis,x,min) -width 12
     ttk::entry $f.xmax -textvariable ${varname}(graph,axis,x,max) -width 12
     ttk::entry $f.xformat -textvariable ${varname}(graph,axis,x,format) -width 8
-    ttk::checkbutton $f.xauto -variable ${varname}(graph,axis,x,auto)
+    ttk::checkbutton $f.xauto -variable ${varname}(graph,axis,x,auto) \
+	-command [list PlotChangeAxis $varname]
 
     ttk::label $f.y -text [msgcat::mc {Y}]
     ttk::entry $f.ymin -textvariable ${varname}(graph,axis,y,min) -width 12
     ttk::entry $f.ymax -textvariable ${varname}(graph,axis,y,max) -width 12
     ttk::entry $f.yformat -textvariable ${varname}(graph,axis,y,format) -width 8
-    ttk::checkbutton $f.yauto -variable ${varname}(graph,axis,y,auto)
+    ttk::checkbutton $f.yauto -variable ${varname}(graph,axis,y,auto) \
+	-command [list PlotChangeAxis $varname]
 
     grid $f.t $f.tfrom $f.tto $f.tformat $f.tauto -padx 2 -pady 2 -sticky w
     grid $f.x $f.xmin $f.xmax $f.xformat $f.xauto -padx 2 -pady 2 -sticky w

@@ -49,9 +49,15 @@ proc PlotScatterMenus {varname} {
     $var(mb).datascatter add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
     $var(mb).datascatter add separator
+    $var(mb).datascatter add command -label [msgcat::mc {Statistics}] \
+       -command "set ${varname}(stats) 1; PlotStats $varname"
+    $var(mb).datascatter add command -label [msgcat::mc {List Data}] \
+       -command "set ${varname}(list) 1; PlotList $varname"
+    $var(mb).datascatter add separator
     $var(mb).datascatter add cascade -label [msgcat::mc {Shape}] \
 	-menu $var(mb).datascatter.shape
-    $var(mb).datascatter add cascade -label [msgcat::mc {Error}] \
+    $var(mb).datascatter add separator
+    $var(mb).datascatter add cascade -label [msgcat::mc {Errorbar}] \
 	-menu $var(mb).datascatter.error
 
     ThemeMenu $var(mb).datascatter.shape
@@ -239,7 +245,7 @@ proc PlotScatterHighliteElement {varname cc nn rowlist} {
 }
 
 proc PlotPrefsScatter {w} {
-    set f [ttk::labelframe $w.plot.scatter -text [msgcat::mc {Scatter}]]
+    set f [ttk::labelframe $w.scatter -text [msgcat::mc {Scatter}]]
 
     ttk::label $f.tshape -text [msgcat::mc {Shape}]
     ttk::menubutton $f.shape -textvariable pap(graph,ds,scatter,symbol) \

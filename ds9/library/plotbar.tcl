@@ -42,13 +42,17 @@ proc PlotBarMenus {varname} {
     upvar #0 $varname var
     global $varname
 
-    # Data
     ThemeMenu $var(mb).databar
     $var(mb).databar add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
+    $var(mb).databar add separator
+    $var(mb).databar add command -label [msgcat::mc {Statistics}] \
+       -command "set ${varname}(stats) 1; PlotStats $varname"
+    $var(mb).databar add command -label [msgcat::mc {List Data}] \
+       -command "set ${varname}(list) 1; PlotList $varname"
     $var(mb).databar add separator
     $var(mb).databar add cascade -label [msgcat::mc {Border Color}] \
 	-menu $var(mb).databar.bordercolor
@@ -62,7 +66,7 @@ proc PlotBarMenus {varname} {
     $var(mb).databar add command -label "[msgcat::mc {Bar Width}]..." \
 	-command [list PlotBarWidthDialog $varname]
     $var(mb).databar add separator
-    $var(mb).databar add cascade -label [msgcat::mc {Error}] \
+    $var(mb).databar add cascade -label [msgcat::mc {Errorbar}] \
 	-menu $var(mb).databar.error
 
     ColorMenu $var(mb).databar.bordercolor $varname graph,ds,bar,border,color \
@@ -247,7 +251,7 @@ proc PlotBarUpdateElement {varname} {
 }
 
 proc PlotPrefsBar {w} {
-    set f [ttk::labelframe $w.plot.bar -text [msgcat::mc {Bar}]]
+    set f [ttk::labelframe $w.bar -text [msgcat::mc {Bar}]]
 
     ttk::label $f.tborder -text [msgcat::mc {Border}]
     ColorMenuButton $f.bordercolor pap graph,ds,bar,border,color {}

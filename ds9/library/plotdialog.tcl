@@ -61,7 +61,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add cascade -label [msgcat::mc {Export}] \
 	-menu $var(mb).file.export
     $var(mb).file add separator
-    $var(mb).file add command -label "[msgcat::mc {GUI Tool}]..." \
+    $var(mb).file add command -label "[msgcat::mc {Control Panel}]..." \
 	-command [list PlotGUI $varname]
     $var(mb).file add separator
     $var(mb).file add command -label "[msgcat::mc {Backup}]..." \
@@ -211,12 +211,6 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph add command -label [msgcat::mc {Delete Dataset}] \
 	-command [list PlotDeleteDataSetCurrent $varname]
     $var(mb).graph add separator
-    $var(mb).graph add command -label [msgcat::mc {Statistics}] \
-	-command "set ${varname}(stats) 1; PlotStats $varname"
-    $var(mb).graph add command -label [msgcat::mc {List Data}] \
-	-command "set ${varname}(list) 1; PlotList $varname"
-    $var(mb).graph add separator
-
     $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
 	-menu $var(mb).graph.legend
     $var(mb).graph add separator

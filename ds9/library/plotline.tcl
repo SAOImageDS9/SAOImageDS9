@@ -49,6 +49,11 @@ proc PlotLineMenus {varname} {
     $var(mb).dataline add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
     $var(mb).dataline add separator
+    $var(mb).dataline add command -label [msgcat::mc {Statistics}] \
+       -command "set ${varname}(stats) 1; PlotStats $varname"
+    $var(mb).dataline add command -label [msgcat::mc {List Data}] \
+       -command "set ${varname}(list) 1; PlotList $varname"
+    $var(mb).dataline add separator
     $var(mb).dataline add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).dataline.color
     $var(mb).dataline add cascade -label [msgcat::mc {Width}] \
@@ -59,6 +64,7 @@ proc PlotLineMenus {varname} {
 	-menu $var(mb).dataline.shape
     $var(mb).dataline add cascade -label [msgcat::mc {Smooth}] \
 	-menu $var(mb).dataline.smooth
+    $var(mb).dataline add separator
     $var(mb).dataline add cascade -label [msgcat::mc {Errorbar}] \
 	-menu $var(mb).dataline.error
 
@@ -269,7 +275,7 @@ proc PlotLineUpdateElement {varname} {
 
 
 proc PlotPrefsLine {w} {
-    set f [ttk::labelframe $w.plot.line -text [msgcat::mc {Line}]]
+    set f [ttk::labelframe $w.line -text [msgcat::mc {Line}]]
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.color pap graph,ds,line,color {}

@@ -114,13 +114,18 @@ proc PlotGUICanvas {varname} {
     # This is our first item
     set var(tabs) $gg
 
-    # Graph
-    set f [ttk::labelframe $w.canvas.graph -text [msgcat::mc {Graph}]]
+    # Canvas
+    set f [ttk::labelframe $w.canvas.graph -text [msgcat::mc {Canvas}]]
 
     ttk::label $f.tselect -text [msgcat::mc {Select Graph}]
     ttk::menubutton $f.select -textvariable ${varname}(graph,name) \
 	-menu $f.select.menu
     $var(mb).canvas.select clone $f.select.menu
+
+    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
+
+    # Layout
+    set f [ttk::labelframe $w.canvas.layout -text [msgcat::mc {Layout}]]
 
     ttk::menubutton $f.add -text [msgcat::mc {Add Graph}] \
 	-menu $f.add.menu
@@ -129,36 +134,27 @@ proc PlotGUICanvas {varname} {
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
 
-    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
-    grid $f.add $f.delete -padx 2 -pady 2 -sticky w
-
-    # Layout
-    set f [ttk::labelframe $w.canvas.layout -text [msgcat::mc {Layout}]]
-
-    ttk::menubutton $f.layout -textvariable ${varname}(canvas,layout) \
-	-menu $f.layout.menu
-
-    ThemeMenu $f.layout.menu
-    $f.layout.menu add radiobutton -label [msgcat::mc {Grid}] \
+    ttk::radiobutton $f.grid -text [msgcat::mc {Grid}] \
 	-variable ${varname}(canvas,layout) -value grid \
 	-command [list PlotChangeLayout $varname]
-    $f.layout.menu add radiobutton -label [msgcat::mc {Row}] \
+    ttk::radiobutton $f.row -text [msgcat::mc {Row}] \
 	-variable ${varname}(canvas,layout) -value row \
 	-command [list PlotChangeLayout $varname]
-    $f.layout.menu add radiobutton -label [msgcat::mc {Column}] \
+    ttk::radiobutton $f.column -text [msgcat::mc {Column}] \
 	-variable ${varname}(canvas,layout) -value column \
 	-command [list PlotChangeLayout $varname]
-    $f.layout.menu add separator
-    $f.layout.menu add radiobutton -label [msgcat::mc {Strip}] \
+    ttk::radiobutton $f.strip -text [msgcat::mc {Strip}] \
 	-variable ${varname}(canvas,layout) -value strip \
 	-command [list PlotChangeLayout $varname]
 
-    ttk::label $f.tstrip -text [msgcat::mc {Strip Scale}]
-    ttk::entry $f.strip -textvariable ${varname}(canvas,layout,strip,scale) \
+    ttk::label $f.tscale -text [msgcat::mc {Strip Scale}]
+    ttk::entry $f.scale -textvariable ${varname}(canvas,layout,strip,scale) \
 	-width 6
-    ttk::label $f.stript -text {%}
+    ttk::label $f.scalet -text {%}
 
-    grid $f.layout $f.tstrip $f.strip $f.stript -padx 2 -pady 2 -sticky w
+    grid $f.add - $f.delete - -padx 2 -pady 2 -sticky w
+    grid $f.grid $f.row $f.column $f.strip -padx 2 -pady 2 -sticky w
+    grid $f.tscale - $f.scale $f.scalet -padx 2 -pady 2 -sticky w
 
     # Font
     set f [ttk::labelframe $w.canvas.font -text [msgcat::mc {Font}]]
@@ -238,50 +234,85 @@ proc PlotGUIGraph {varname} {
     set gg [ttk::frame $w.graph]
     $var(listbox) insert {} end -id $gg -text [msgcat::mc {Graph}]
 
-    # Dataset
-    set f [ttk::labelframe $w.graph.dataset -text [msgcat::mc {DataSet}]]
+    # Graph
+    set f [ttk::labelframe $w.graph.dataset -text [msgcat::mc {Graph}]]
 
     ttk::label $f.tselect -text [msgcat::mc {Select Datatset}]
     ttk::menubutton $f.select -textvariable ${varname}(graph,ds,name) \
 	-menu $f.select.menu
     $var(mb).graph.select clone $f.select.menu
 
-    ttk::button $f.duplicate -text [msgcat::mc {Duplicate Graph}] \
-	-command [list PlotDupDataSet $varname]
+    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
 
-    ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
+    # Dataset
+    set f [ttk::labelframe $w.graph.buttons -text [msgcat::mc {Dataset}]]
+
+    ttk::button $f.duplicate -text [msgcat::mc {Duplicate Dataset}] \
+	-command [list PlotDupDataSet $varname]
+    ttk::button $f.delete -text [msgcat::mc {Delete Dataset}] \
 	-command [list PlotDeleteDataSetCurrent $varname]
 
-    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
     grid $f.duplicate $f.delete -padx 2 -pady 2 -sticky w
 
-    # Data
-    set f [ttk::labelframe $w.graph.data -text [msgcat::mc {Data}]]
+    # Legend
+    set f [ttk::labelframe $w.graph.legend -text [msgcat::mc {Legend}]]
 
-    ttk::button $f.stats -text [msgcat::mc {Statistics}] \
-	-command "set ${varname}(stats) 1; PlotStats $varname"
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable ${varname}(graph,legend) \
+	-command [list PlotChangeLegend $varname]
 
-    ttk::button $f.list -text [msgcat::mc {List Data}] \
-	-command "set ${varname}(list) 1; PlotList $varname"
+    ttk::label $f.tposition -text [msgcat::mc {Position}]
+    ttk::menubutton $f.position \
+	-textvariable ${varname}(graph,legend,position) \
+	-menu $f.position.menu
 
-    grid $f.stats $f.list -padx 2 -pady 2 -sticky w
+    ThemeMenu $f.position.menu
+    $f.position.menu add radiobutton -label [msgcat::mc {Right}] \
+	-variable ${varname}(graph,legend,position) -value right \
+	-command [list PlotChangeLegend $varname]
+    $f.position.menu add radiobutton -label [msgcat::mc {Left}] \
+	-variable ${varname}(graph,legend,position) -value left \
+	-command [list PlotChangeLegend $varname]
+    $f.position.menu add radiobutton -label [msgcat::mc {Top}] \
+	-variable ${varname}(graph,legend,position) -value top \
+	-command [list PlotChangeLegend $varname]
+    $f.position.menu add radiobutton -label [msgcat::mc {Bottom}] \
+	-variable ${varname}(graph,legend,position) -value bottom \
+	-command [list PlotChangeLegend $varname]
+    $f.position.menu add radiobutton -label [msgcat::mc {Plot Area}] \
+	-variable ${varname}(graph,legend,position) -value plotarea \
+	-command [list PlotChangeLegend $varname]
 
-    # Axes
-    set f [ttk::labelframe $w.graph.axes -text [msgcat::mc {Axes}]]
+    grid $f.show -padx 2 -pady 2 -sticky w
+    grid $f.tposition $f.position -padx 2 -pady 2 -sticky w
 
-    ttk::menubutton $f.legend -text [msgcat::mc {Legend}] \
-	-menu $f.legend.menu
-    $var(mb).graph.legend clone $f.legend.menu
+    # Axis
+    set f [ttk::labelframe $w.graph.axis -text [msgcat::mc {Axis}]]
 
-    ttk::menubutton $f.xaxis -text [msgcat::mc {X Axis}] \
-	-menu $f.xaxis.menu
-    $var(mb).graph.xaxis clone $f.xaxis.menu
+    ttk::label $f.txaxis -text [msgcat::mc {X Axis}]
+    ttk::checkbutton $f.xgrid -text [msgcat::mc {Grid}] \
+	-variable ${varname}(graph,axis,x,grid) \
+	-command [list PlotChangeAxis $varname]
+    ttk::radiobutton $f.xlinear -text [msgcat::mc {Linear}] \
+	-variable ${varname}(graph,axis,x,log) -value linear \
+	-command [list PlotChangeAxis $varname]
+    ttk::radiobutton $f.xlog -text [msgcat::mc {Log}] \
+	-variable ${varname}(graph,axis,x,log) -value log \
+	-command [list PlotChangeAxis $varname]
 
-    ttk::menubutton $f.yaxis -text [msgcat::mc {Y Axis}] \
-	-menu $f.yaxis.menu
-    $var(mb).graph.yaxis clone $f.yaxis.menu
+    ttk::label $f.tyaxis -text [msgcat::mc {Y Axis}]
+    ttk::checkbutton $f.ygrid -text [msgcat::mc {Grid}] \
+	-variable ${varname}(graph,axis,y,grid) \
+	-command [list PlotChangeAxis $varname]
+    ttk::radiobutton $f.ylinear -text [msgcat::mc {Linear}] \
+	-variable ${varname}(graph,axis,y,log) -value linear \
+	-command [list PlotChangeAxis $varname]
+    ttk::radiobutton $f.ylog -text [msgcat::mc {Log}] \
+	-variable ${varname}(graph,axis,y,log) -value log \
+	-command [list PlotChangeAxis $varname]
 
-    grid $f.legend $f.xaxis $f.yaxis -padx 2 -pady 2 -sticky w
+    grid $f.txaxis $f.xgrid $f.xlinear $f.xlog -padx 2 -pady 2 -sticky w
+    grid $f.tyaxis $f.ygrid $f.ylinear $f.ylog -padx 2 -pady 2 -sticky w
 
     # Range
     set f [ttk::labelframe $w.graph.range -text [msgcat::mc {Range}]]
@@ -325,7 +356,8 @@ proc PlotGUIGraph {varname} {
     grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
     grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
 
-    pack $w.graph.dataset $w.graph.data $w.graph.axes $w.graph.range \
+    pack $w.graph.dataset $w.graph.buttons $w.graph.legend \
+	$w.graph.axis $w.graph.range \
 	$w.graph.titles -side top -fill both -expand true
 }
 
@@ -337,6 +369,7 @@ proc PlotGUIDataset {varname} {
 
     set gg [ttk::frame $w.dataset]
     $var(listbox) insert {} end -id $gg -text [msgcat::mc {Dataset}]
+
 
     # Params
     switch $var(graph,type) {

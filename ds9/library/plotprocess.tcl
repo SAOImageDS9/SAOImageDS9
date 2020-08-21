@@ -12,8 +12,11 @@ proc PrefsDialogPlot {} {
     $dprefs(listbox) insert {} end -id [ttk::frame $w.plot] \
 	-text [msgcat::mc {Plot}]
 
+    # Left
+    set ff [ttk::frame $w.plot.left]
+
     # Canvas
-    set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Canvas}]]
+    set f [ttk::labelframe $ff.canvas -text [msgcat::mc {Canvas}]]
 
     ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
 	-variable pap(canvas,theme)
@@ -77,7 +80,7 @@ proc PrefsDialogPlot {} {
     grid $f.tnumlab $f.numlab -padx 2 -pady 2 -sticky w
     
     # Graph
-    set f [ttk::labelframe $w.plot.axis -text [msgcat::mc {Graph}]]
+    set f [ttk::labelframe $ff.graph -text [msgcat::mc {Graph}]]
 
     ttk::checkbutton $f.legend -text [msgcat::mc {Show Legend}] \
 	-variable pap(graph,legend)
@@ -119,20 +122,23 @@ proc PrefsDialogPlot {} {
     grid $f.xtitle $f.x $f.xlinear $f.xlog -padx 2 -pady 2 -sticky w
     grid $f.ytitle $f.y $f.ylinear $f.ylog -padx 2 -pady 2 -sticky w
 
+    # Right
+    set ff [ttk::frame $w.plot.right]
+
     # Data
-    set f [ttk::labelframe $w.plot.ds -text [msgcat::mc {Dataset}]]
+    set f [ttk::labelframe $ff.ds -text [msgcat::mc {Dataset}]]
 
     #  Show
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable pap(graph,ds,show)
     grid $f.show -padx 2 -pady 2 -sticky w
 
-    PlotPrefsLine $w
-    PlotPrefsBar $w
-    PlotPrefsScatter $w
+    PlotPrefsLine $ff
+    PlotPrefsBar $ff
+    PlotPrefsScatter $ff
 
     # Error
-    set f [ttk::labelframe $w.plot.error -text [msgcat::mc {Errorbar}]]
+    set f [ttk::labelframe $ff.error -text [msgcat::mc {Errorbar}]]
 
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable pap(graph,ds,error)
@@ -152,9 +158,14 @@ proc PrefsDialogPlot {} {
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
 
-    pack $w.plot.graph $w.plot.axis $w.plot.ds \
-	$w.plot.line $w.plot.bar $w.plot.scatter $w.plot.error \
+    pack $w.plot.left.canvas $w.plot.left.graph \
 	-side top -fill both -expand true
+    pack $w.plot.right.ds $w.plot.right.line $w.plot.right.bar \
+	$w.plot.right.scatter $w.plot.right.error \
+	-side top -fill both -expand true
+
+    pack $w.plot.left $w.plot.right \
+	-side left -fill both -expand true
 }
 
 proc ProcessPlotCmd {xarname iname buf fn} {

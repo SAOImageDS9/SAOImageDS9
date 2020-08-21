@@ -172,6 +172,7 @@
 ::msgcat::mcset cs {Contours} [encoding convertfrom iso8859-2 {Obrysy}]
 ::msgcat::mcset cs {Contour} [encoding convertfrom iso8859-2 {Obrys}]
 ::msgcat::mcset cs {Contrast} [encoding convertfrom iso8859-2 {Kontrast}]
+::msgcat::mcset cs {Control Panel} 
 ::msgcat::mcset cs {Convert to Polygons} [encoding convertfrom iso8859-2 {Zmìnit na obdélníky}]
 ::msgcat::mcset cs {Coordinate Grid Parameters} [encoding convertfrom iso8859-2 {Nastavení møí¾ky}]
 ::msgcat::mcset cs {Coordinate Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]
@@ -209,7 +210,6 @@
 ::msgcat::mcset cs {Darken} 
 ::msgcat::mcset cs {Dash} 
 ::msgcat::mcset cs {Data Format} [encoding convertfrom iso8859-2 {Formát dat}]
-::msgcat::mcset cs {DataSet} 
 ::msgcat::mcset cs {Dataset Name} 
 ::msgcat::mcset cs {Dataset} [encoding convertfrom iso8859-2 {Soubor dat}]
 ::msgcat::mcset cs {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset cs {Download Colormap} 
 ::msgcat::mcset cs {Drag to Center} 
 ::msgcat::mcset cs {Duplicate Dataset} 
-::msgcat::mcset cs {Duplicate Graph} 
 ::msgcat::mcset cs {ENVI} 
 ::msgcat::mcset cs {EPS} 
 ::msgcat::mcset cs {East} [encoding convertfrom iso8859-2 {Východ}]
@@ -279,7 +278,6 @@
 ::msgcat::mcset cs {Equal Distance} 
 ::msgcat::mcset cs {Equal Spacing} 
 ::msgcat::mcset cs {Equal Value} 
-::msgcat::mcset cs {Error Bar} 
 ::msgcat::mcset cs {Error code was returned} 
 ::msgcat::mcset cs {Errorbar} 
 ::msgcat::mcset cs {Error} 
@@ -340,7 +338,6 @@
 ::msgcat::mcset cs {Full Range} [encoding convertfrom iso8859-2 {Plný rozsah}]
 ::msgcat::mcset cs {Function} [encoding convertfrom iso8859-2 {Funkce}]
 ::msgcat::mcset cs {GIF} 
-::msgcat::mcset cs {GUI Tool} 
 ::msgcat::mcset cs {GUI} 
 ::msgcat::mcset cs {Galactic} [encoding convertfrom iso8859-2 {Galaktické}]
 ::msgcat::mcset cs {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset cs {Panner} [encoding convertfrom iso8859-2 {Náhled snímku}]
 ::msgcat::mcset cs {Pan} [encoding convertfrom iso8859-2 {Posun}] 
 ::msgcat::mcset cs {Parameters} 
+::msgcat::mcset cs {Params} 
 ::msgcat::mcset cs {Password} 
 ::msgcat::mcset cs {Paste Contours} 
 ::msgcat::mcset cs {Paste} [encoding convertfrom iso8859-2 {Vlo¾it}]
@@ -678,6 +676,7 @@
 ::msgcat::mcset cs {Point} 
 ::msgcat::mcset cs {Polygon} 
 ::msgcat::mcset cs {Portrait} 
+::msgcat::mcset cs {Position} 
 ::msgcat::mcset cs {Poster} 
 ::msgcat::mcset cs {Postscript} 
 ::msgcat::mcset cs {Power} [encoding convertfrom iso8859-2 {Mocninové}]

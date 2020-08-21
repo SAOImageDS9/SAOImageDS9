@@ -172,6 +172,7 @@
 ::msgcat::mcset fr {Contours} 
 ::msgcat::mcset fr {Contour} 
 ::msgcat::mcset fr {Contrast} {Contraste}
+::msgcat::mcset fr {Control Panel} 
 ::msgcat::mcset fr {Convert to Polygons} {Convertir en polygones}
 ::msgcat::mcset fr {Coordinate Grid Parameters} [encoding convertfrom iso8859-1 {Paramètres de grille de coordonnées}]
 ::msgcat::mcset fr {Coordinate Grid} [encoding convertfrom iso8859-1 {Grille de coordonnées}]
@@ -209,7 +210,6 @@
 ::msgcat::mcset fr {Darken} 
 ::msgcat::mcset fr {Dash} {Tiret} 
 ::msgcat::mcset fr {Data Format} [encoding convertfrom iso8859-1 {Format de données}]
-::msgcat::mcset fr {DataSet} 
 ::msgcat::mcset fr {Dataset Name} 
 ::msgcat::mcset fr {Dataset} [encoding convertfrom iso8859-1 {Ensemble de données}]
 ::msgcat::mcset fr {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset fr {Download Colormap} 
 ::msgcat::mcset fr {Drag to Center} {Glisser au centre} 
 ::msgcat::mcset fr {Duplicate Dataset} 
-::msgcat::mcset fr {Duplicate Graph} 
 ::msgcat::mcset fr {ENVI} 
 ::msgcat::mcset fr {EPS} 
 ::msgcat::mcset fr {East} {Est} 
@@ -279,7 +278,6 @@
 ::msgcat::mcset fr {Equal Distance} {Egale distance} 
 ::msgcat::mcset fr {Equal Spacing} 
 ::msgcat::mcset fr {Equal Value} 
-::msgcat::mcset fr {Error Bar} 
 ::msgcat::mcset fr {Error code was returned} [encoding convertfrom iso8859-1 {Un code d'erreur a été renvoyé}]
 ::msgcat::mcset fr {Errorbar} 
 ::msgcat::mcset fr {Error} {Erreur} 
@@ -340,7 +338,6 @@
 ::msgcat::mcset fr {Full Range} 
 ::msgcat::mcset fr {Function} {Fonction} 
 ::msgcat::mcset fr {GIF} 
-::msgcat::mcset fr {GUI Tool} 
 ::msgcat::mcset fr {GUI} 
 ::msgcat::mcset fr {Galactic} {Galactiques} 
 ::msgcat::mcset fr {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset fr {Panner} 
 ::msgcat::mcset fr {Pan} 
 ::msgcat::mcset fr {Parameters} [encoding convertfrom iso8859-1 {Paramètres}]
+::msgcat::mcset fr {Params} 
 ::msgcat::mcset fr {Password} {Mot de passe}
 ::msgcat::mcset fr {Paste Contours} {Coller les contours}
 ::msgcat::mcset fr {Paste} {Coller}
@@ -678,6 +676,7 @@
 ::msgcat::mcset fr {Point} 
 ::msgcat::mcset fr {Polygon} {Polygone}
 ::msgcat::mcset fr {Portrait} 
+::msgcat::mcset fr {Position} 
 ::msgcat::mcset fr {Poster} 
 ::msgcat::mcset fr {Postscript} 
 ::msgcat::mcset fr {Power} {Puissance}

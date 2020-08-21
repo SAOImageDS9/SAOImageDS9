@@ -172,6 +172,7 @@
 ::msgcat::mcset da {Contours} {Konturer}
 ::msgcat::mcset da {Contour} {Konturer}
 ::msgcat::mcset da {Contrast} {Kontrast}
+::msgcat::mcset da {Control Panel} 
 ::msgcat::mcset da {Convert to Polygons} {Omdan til poygoner}
 ::msgcat::mcset da {Coordinate Grid Parameters} {Koordinatnetparametre}
 ::msgcat::mcset da {Coordinate Grid} {Koordinatnet}
@@ -209,7 +210,6 @@
 ::msgcat::mcset da {Darken} 
 ::msgcat::mcset da {Dash} {streg}
 ::msgcat::mcset da {Data Format} {Dataformat}
-::msgcat::mcset da {DataSet} 
 ::msgcat::mcset da {Dataset Name} 
 ::msgcat::mcset da {Dataset} [encoding convertfrom iso8859-1 {Datasæt}]
 ::msgcat::mcset da {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset da {Download Colormap} 
 ::msgcat::mcset da {Drag to Center} [encoding convertfrom iso8859-1 {Træk til center}]
 ::msgcat::mcset da {Duplicate Dataset} 
-::msgcat::mcset da {Duplicate Graph} 
 ::msgcat::mcset da {ENVI} 
 ::msgcat::mcset da {EPS} 
 ::msgcat::mcset da {East} [encoding convertfrom iso8859-1 {Øst}]
@@ -279,7 +278,6 @@
 ::msgcat::mcset da {Equal Distance} {Samme afstand}
 ::msgcat::mcset da {Equal Spacing} 
 ::msgcat::mcset da {Equal Value} 
-::msgcat::mcset da {Error Bar} 
 ::msgcat::mcset da {Error code was returned} {Fejlkode blev returneret}
 ::msgcat::mcset da {Errorbar} 
 ::msgcat::mcset da {Error} {Fejl}
@@ -340,7 +338,6 @@
 ::msgcat::mcset da {Full Range} {Hele intervallet}
 ::msgcat::mcset da {Function} {Funktion}
 ::msgcat::mcset da {GIF} 
-::msgcat::mcset da {GUI Tool} 
 ::msgcat::mcset da {GUI} 
 ::msgcat::mcset da {Galactic} {Galaktisk}
 ::msgcat::mcset da {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset da {Panner} {Oversigtskort}
 ::msgcat::mcset da {Pan} {Flyt}
 ::msgcat::mcset da {Parameters} {Parametre}
+::msgcat::mcset da {Params} 
 ::msgcat::mcset da {Password} {Kodeord}
 ::msgcat::mcset da {Paste Contours} {Indsæt konturer}
 ::msgcat::mcset da {Paste} [encoding convertfrom iso8859-1 {Sæt ind}]
@@ -678,6 +676,7 @@
 ::msgcat::mcset da {Point} {Punkt}
 ::msgcat::mcset da {Polygon} {Polygon}
 ::msgcat::mcset da {Portrait} [encoding convertfrom iso8859-1 {Portræt}]
+::msgcat::mcset da {Position} 
 ::msgcat::mcset da {Poster} {Plakat}
 ::msgcat::mcset da {Postscript} 
 ::msgcat::mcset da {Power} {Potenslov}

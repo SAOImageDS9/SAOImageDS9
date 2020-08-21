@@ -172,6 +172,7 @@
 ::msgcat::mcset de {Contours} {Konturen}
 ::msgcat::mcset de {Contour} 
 ::msgcat::mcset de {Contrast} {Kontrast}
+::msgcat::mcset de {Control Panel} 
 ::msgcat::mcset de {Convert to Polygons} {Zu Polygonen konvertieren}
 ::msgcat::mcset de {Coordinate Grid Parameters} {Koordinatennetzparameter}
 ::msgcat::mcset de {Coordinate Grid} {Koordinatennetz}
@@ -209,7 +210,6 @@
 ::msgcat::mcset de {Darken} 
 ::msgcat::mcset de {Dash} {Gestrichelt}
 ::msgcat::mcset de {Data Format} {Datenformat}
-::msgcat::mcset de {DataSet} 
 ::msgcat::mcset de {Dataset Name} 
 ::msgcat::mcset de {Dataset} {Datensatz}
 ::msgcat::mcset de {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset de {Download Colormap} 
 ::msgcat::mcset de {Drag to Center} {Ziehen zum zentrieren}
 ::msgcat::mcset de {Duplicate Dataset} 
-::msgcat::mcset de {Duplicate Graph} 
 ::msgcat::mcset de {ENVI} 
 ::msgcat::mcset de {EPS} 
 ::msgcat::mcset de {East} {Osten}
@@ -279,7 +278,6 @@
 ::msgcat::mcset de {Equal Distance} {Gleicher Abstand}
 ::msgcat::mcset de {Equal Spacing} 
 ::msgcat::mcset de {Equal Value} 
-::msgcat::mcset de {Error Bar} 
 ::msgcat::mcset de {Error code was returned} [encoding convertfrom iso8859-1 {Fehlercode wurde zurückgegeben}]
 ::msgcat::mcset de {Errorbar} 
 ::msgcat::mcset de {Error} {Fehler}
@@ -340,7 +338,6 @@
 ::msgcat::mcset de {Full Range} {Ganzer Bereich}
 ::msgcat::mcset de {Function} {Funktion}
 ::msgcat::mcset de {GIF} 
-::msgcat::mcset de {GUI Tool} 
 ::msgcat::mcset de {GUI} 
 ::msgcat::mcset de {Galactic} {Galaktisch}
 ::msgcat::mcset de {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset de {Panner} [encoding convertfrom iso8859-1 {Übersichtsfeld}]
 ::msgcat::mcset de {Pan} {Ausrichtung}
 ::msgcat::mcset de {Parameters} {Parameter}
+::msgcat::mcset de {Params} 
 ::msgcat::mcset de {Password} {Passwort}
 ::msgcat::mcset de {Paste Contours} [encoding convertfrom iso8859-1 {Konturen einfügen}]
 ::msgcat::mcset de {Paste} [encoding convertfrom iso8859-1 {Einfügen}]
@@ -678,6 +676,7 @@
 ::msgcat::mcset de {Point} {Punkt}
 ::msgcat::mcset de {Polygon} 
 ::msgcat::mcset de {Portrait} {Vertikal}
+::msgcat::mcset de {Position} 
 ::msgcat::mcset de {Poster} 
 ::msgcat::mcset de {Postscript} 
 ::msgcat::mcset de {Power} {Exp}

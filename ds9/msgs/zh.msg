@@ -172,6 +172,7 @@
 ::msgcat::mcset zh {Contours} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75"]
 ::msgcat::mcset zh {Contour} 
 ::msgcat::mcset zh {Contrast} 
+::msgcat::mcset zh {Control Panel} 
 ::msgcat::mcset zh {Convert to Polygons} 
 ::msgcat::mcset zh {Coordinate Grid Parameters} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Coordinate Grid} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75"]
@@ -209,7 +210,6 @@
 ::msgcat::mcset zh {Darken} 
 ::msgcat::mcset zh {Dash} [encoding convertfrom big5 "\xB5\xEA \xBD\x75"]
 ::msgcat::mcset zh {Data Format} 
-::msgcat::mcset zh {DataSet} 
 ::msgcat::mcset zh {Dataset Name} 
 ::msgcat::mcset zh {Dataset} 
 ::msgcat::mcset zh {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset zh {Download Colormap} 
 ::msgcat::mcset zh {Drag to Center} 
 ::msgcat::mcset zh {Duplicate Dataset} 
-::msgcat::mcset zh {Duplicate Graph} 
 ::msgcat::mcset zh {ENVI} 
 ::msgcat::mcset zh {EPS} 
 ::msgcat::mcset zh {East} 
@@ -279,7 +278,6 @@
 ::msgcat::mcset zh {Equal Distance} 
 ::msgcat::mcset zh {Equal Spacing} 
 ::msgcat::mcset zh {Equal Value} 
-::msgcat::mcset zh {Error Bar} 
 ::msgcat::mcset zh {Error code was returned} 
 ::msgcat::mcset zh {Errorbar} 
 ::msgcat::mcset zh {Error} 
@@ -340,7 +338,6 @@
 ::msgcat::mcset zh {Full Range} 
 ::msgcat::mcset zh {Function} 
 ::msgcat::mcset zh {GIF} 
-::msgcat::mcset zh {GUI Tool} 
 ::msgcat::mcset zh {GUI} 
 ::msgcat::mcset zh {Galactic} 
 ::msgcat::mcset zh {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset zh {Panner} [encoding convertfrom big5 "\xC1\x59 \xB9\xCF"]
 ::msgcat::mcset zh {Pan} 
 ::msgcat::mcset zh {Parameters} 
+::msgcat::mcset zh {Params} 
 ::msgcat::mcset zh {Password} 
 ::msgcat::mcset zh {Paste Contours} 
 ::msgcat::mcset zh {Paste} 
@@ -678,6 +676,7 @@
 ::msgcat::mcset zh {Point} 
 ::msgcat::mcset zh {Polygon} [encoding convertfrom big5 "\xA6\x68 \xA8\xA4 \xA7\xCE"]
 ::msgcat::mcset zh {Portrait} 
+::msgcat::mcset zh {Position} 
 ::msgcat::mcset zh {Poster} 
 ::msgcat::mcset zh {Postscript} 
 ::msgcat::mcset zh {Power} [encoding convertfrom big5 "\xAB\xFC \xBC\xC6"]

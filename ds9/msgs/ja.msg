@@ -172,6 +172,7 @@
 ::msgcat::mcset ja {Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2"]
 ::msgcat::mcset ja {Contour} 
 ::msgcat::mcset ja {Contrast} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8"]
+::msgcat::mcset ja {Control Panel} 
 ::msgcat::mcset ja {Convert to Polygons} [encoding convertfrom euc-jp "\xc2\xbf\xb3\xd1\xb7\xc1\xa4\xcb\xca\xd1\xb4\xb9"]
 ::msgcat::mcset ja {Coordinate Grid Parameters} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Coordinate Grid} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9"]
@@ -209,7 +210,6 @@
 ::msgcat::mcset ja {Darken} 
 ::msgcat::mcset ja {Dash} [encoding convertfrom euc-jp "\xc7\xcb\xc0\xfe"]
 ::msgcat::mcset ja {Data Format} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xb7\xc1\xbc\xb0"]
-::msgcat::mcset ja {DataSet} 
 ::msgcat::mcset ja {Dataset Name} 
 ::msgcat::mcset ja {Dataset} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa5\xbb\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset ja {Download Colormap} 
 ::msgcat::mcset ja {Drag to Center} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4\xa4\xcb\xa5\xc9\xa5\xe9\xa5\xc3\xa5\xb0"]
 ::msgcat::mcset ja {Duplicate Dataset} 
-::msgcat::mcset ja {Duplicate Graph} 
 ::msgcat::mcset ja {ENVI} 
 ::msgcat::mcset ja {EPS} 
 ::msgcat::mcset ja {East} [encoding convertfrom euc-jp "\xc5\xec"]
@@ -279,7 +278,6 @@
 ::msgcat::mcset ja {Equal Distance} [encoding convertfrom euc-jp "\xc5\xf9\xb5\xf7\xce\xa5"]
 ::msgcat::mcset ja {Equal Spacing} 
 ::msgcat::mcset ja {Equal Value} 
-::msgcat::mcset ja {Error Bar} 
 ::msgcat::mcset ja {Error code was returned} [encoding convertfrom euc-jp "\xa5\xa8\xa5\xe9\xa1\xbc\xa5\xb3\xa1\xbc\xa5\xc9\xa4\xac\xca\xd6\xa4\xb5\xa4\xec\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {Errorbar} 
 ::msgcat::mcset ja {Error} [encoding convertfrom euc-jp "\xa5\xa8\xa5\xe9\xa1\xbc"]
@@ -340,7 +338,6 @@
 ::msgcat::mcset ja {Full Range} [encoding convertfrom euc-jp "\xc1\xb4\xc8\xcf\xb0\xcf"]
 ::msgcat::mcset ja {Function} [encoding convertfrom euc-jp "\xb4\xd8\xbf\xf4"]
 ::msgcat::mcset ja {GIF} 
-::msgcat::mcset ja {GUI Tool} 
 ::msgcat::mcset ja {GUI} 
 ::msgcat::mcset ja {Galactic} [encoding convertfrom euc-jp "\xb6\xe4\xb2\xcf\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset ja {Panner} [encoding convertfrom euc-jp "\xc1\xb4\xc2\xce\xbf\xde"]
 ::msgcat::mcset ja {Pan} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xf3"]
 ::msgcat::mcset ja {Parameters} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xe9\xa5\xe1\xa1\xbc\xa5\xbf"]
+::msgcat::mcset ja {Params} 
 ::msgcat::mcset ja {Password} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xb9\xa5\xef\xa1\xbc\xa5\xc9"]
 ::msgcat::mcset ja {Paste Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xf2\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]
 ::msgcat::mcset ja {Paste} [encoding convertfrom euc-jp "\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]
@@ -678,6 +676,7 @@
 ::msgcat::mcset ja {Point} [encoding convertfrom euc-jp "\xc5\xc0"]
 ::msgcat::mcset ja {Polygon} [encoding convertfrom euc-jp "\xc2\xbf\xb3\xd1\xb7\xc1"]
 ::msgcat::mcset ja {Portrait} [encoding convertfrom euc-jp "\xbd\xc4\xc4\xb9"]
+::msgcat::mcset ja {Position} 
 ::msgcat::mcset ja {Poster} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xbf\xa1\xbc"]
 ::msgcat::mcset ja {Postscript} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8"]
 ::msgcat::mcset ja {Power} [encoding convertfrom euc-jp "\xd1\xd1\xbe\xe8"]

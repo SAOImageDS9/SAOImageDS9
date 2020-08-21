@@ -172,6 +172,7 @@
 ::msgcat::mcset pt {Contours} {Contornos}
 ::msgcat::mcset pt {Contour} 
 ::msgcat::mcset pt {Contrast} {Contraste}
+::msgcat::mcset pt {Control Panel} 
 ::msgcat::mcset pt {Convert to Polygons} [encoding convertfrom iso8859-1 {Converter para polígonos}]
 ::msgcat::mcset pt {Coordinate Grid Parameters} [encoding convertfrom iso8859-1 {Parâmetros do Grid de Coordenadas}]
 ::msgcat::mcset pt {Coordinate Grid} {Grid de Coordenadas}
@@ -209,7 +210,6 @@
 ::msgcat::mcset pt {Darken} 
 ::msgcat::mcset pt {Dash} [encoding convertfrom iso8859-1 {Traço}]
 ::msgcat::mcset pt {Data Format} {Formato de dados}
-::msgcat::mcset pt {DataSet} 
 ::msgcat::mcset pt {Dataset Name} 
 ::msgcat::mcset pt {Dataset} {Conjunto de dados}
 ::msgcat::mcset pt {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset pt {Download Colormap} 
 ::msgcat::mcset pt {Drag to Center} {Arrate para centralizar}
 ::msgcat::mcset pt {Duplicate Dataset} 
-::msgcat::mcset pt {Duplicate Graph} 
 ::msgcat::mcset pt {ENVI} 
 ::msgcat::mcset pt {EPS} 
 ::msgcat::mcset pt {East} {Leste}
@@ -279,7 +278,6 @@
 ::msgcat::mcset pt {Equal Distance} [encoding convertfrom iso8859-1 {Distância Igual}]
 ::msgcat::mcset pt {Equal Spacing} 
 ::msgcat::mcset pt {Equal Value} 
-::msgcat::mcset pt {Error Bar} 
 ::msgcat::mcset pt {Error code was returned} [encoding convertfrom iso8859-1 {Retornou código de erro}]
 ::msgcat::mcset pt {Errorbar} 
 ::msgcat::mcset pt {Error} {Erro}
@@ -340,7 +338,6 @@
 ::msgcat::mcset pt {Full Range} {Intervalo completo}
 ::msgcat::mcset pt {Function} [encoding convertfrom iso8859-1 {Função}]
 ::msgcat::mcset pt {GIF} 
-::msgcat::mcset pt {GUI Tool} 
 ::msgcat::mcset pt {GUI} 
 ::msgcat::mcset pt {Galactic} [encoding convertfrom iso8859-1 {Galáctico}]
 ::msgcat::mcset pt {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset pt {Panner} 
 ::msgcat::mcset pt {Pan} 
 ::msgcat::mcset pt {Parameters} [encoding convertfrom iso8859-1 {Parâmetros}]
+::msgcat::mcset pt {Params} 
 ::msgcat::mcset pt {Password} {Senha}
 ::msgcat::mcset pt {Paste Contours} {Colar Contornos}
 ::msgcat::mcset pt {Paste} {Colar}
@@ -678,6 +676,7 @@
 ::msgcat::mcset pt {Point} {Ponto}
 ::msgcat::mcset pt {Polygon} [encoding convertfrom iso8859-1 {Polígono}]
 ::msgcat::mcset pt {Portrait} {Retrato}
+::msgcat::mcset pt {Position} 
 ::msgcat::mcset pt {Poster} 
 ::msgcat::mcset pt {Postscript} 
 ::msgcat::mcset pt {Power} [encoding convertfrom iso8859-1 {Potência}]

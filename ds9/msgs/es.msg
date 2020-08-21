@@ -172,6 +172,7 @@
 ::msgcat::mcset es {Contours} {Contornos}
 ::msgcat::mcset es {Contour} 
 ::msgcat::mcset es {Contrast} {Contraste}
+::msgcat::mcset es {Control Panel} 
 ::msgcat::mcset es {Convert to Polygons} [encoding convertfrom iso8859-1 {Convertir a polígonos}]
 ::msgcat::mcset es {Coordinate Grid Parameters} [encoding convertfrom iso8859-1 {Parámetros de la cuadrícula de coordenadas}]
 ::msgcat::mcset es {Coordinate Grid} [encoding convertfrom iso8859-1 {Cuadrícula de coordenadas}]
@@ -209,7 +210,6 @@
 ::msgcat::mcset es {Darken} 
 ::msgcat::mcset es {Dash} [encoding convertfrom iso8859-1 {Guión}]
 ::msgcat::mcset es {Data Format} {Formato de los datos}
-::msgcat::mcset es {DataSet} 
 ::msgcat::mcset es {Dataset Name} 
 ::msgcat::mcset es {Dataset} {Conjunto de datos}
 ::msgcat::mcset es {Data} 
@@ -253,7 +253,6 @@
 ::msgcat::mcset es {Download Colormap} 
 ::msgcat::mcset es {Drag to Center} {Arrastrar para centrar} 
 ::msgcat::mcset es {Duplicate Dataset} 
-::msgcat::mcset es {Duplicate Graph} 
 ::msgcat::mcset es {ENVI} 
 ::msgcat::mcset es {EPS} 
 ::msgcat::mcset es {East} {Este}
@@ -279,7 +278,6 @@
 ::msgcat::mcset es {Equal Distance} {Misma distancia}
 ::msgcat::mcset es {Equal Spacing} 
 ::msgcat::mcset es {Equal Value} 
-::msgcat::mcset es {Error Bar} 
 ::msgcat::mcset es {Error code was returned} [encoding convertfrom iso8859-1 {Error de código fue regresado}]
 ::msgcat::mcset es {Errorbar} 
 ::msgcat::mcset es {Error} 
@@ -340,7 +338,6 @@
 ::msgcat::mcset es {Full Range} {Rango completo}
 ::msgcat::mcset es {Function} [encoding convertfrom iso8859-1 {Función}]
 ::msgcat::mcset es {GIF} 
-::msgcat::mcset es {GUI Tool} 
 ::msgcat::mcset es {GUI} 
 ::msgcat::mcset es {Galactic} [encoding convertfrom iso8859-1 {Galáctico}]
 ::msgcat::mcset es {Gap} 
@@ -649,6 +646,7 @@
 ::msgcat::mcset es {Panner} [encoding convertfrom iso8859-1 {Ventanilla panorámica}] 
 ::msgcat::mcset es {Pan} {Trasladar} 
 ::msgcat::mcset es {Parameters} [encoding convertfrom iso8859-1 {Parámetros}]
+::msgcat::mcset es {Params} 
 ::msgcat::mcset es {Password} [encoding convertfrom iso8859-1 {Contraseña}]
 ::msgcat::mcset es {Paste Contours} {Pegar contornos}
 ::msgcat::mcset es {Paste} {Pegar}
@@ -678,6 +676,7 @@
 ::msgcat::mcset es {Point} [encoding convertfrom iso8859-1 {Posición}]
 ::msgcat::mcset es {Polygon} [encoding convertfrom iso8859-1 {Polígono}]
 ::msgcat::mcset es {Portrait} 
+::msgcat::mcset es {Position} 
 ::msgcat::mcset es {Poster} [encoding convertfrom iso8859-1 {Póster}]
 ::msgcat::mcset es {Postscript} 
 ::msgcat::mcset es {Power} {Potencia}

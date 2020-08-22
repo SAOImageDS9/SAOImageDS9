@@ -14,7 +14,11 @@ using namespace std;
 
 #include "tclfitsy.h"
 #include "head.h"
+#ifndef __WIN32
 #include "mmapincr.h"
+#else
+#include "allocgz.h"
+#endif
 #include "util.h"
 #include "vector.h"
 #include "tkbltVector.h"
@@ -97,7 +101,12 @@ int TclFITSY::dir(int argc, const char* argv[])
   if (!(argv[2] && *argv[2]))
     return TCL_ERROR;
 
+#ifndef __WIN32
   FitsFile* fits = new FitsFitsMMapIncr(argv[2]);
+#else
+  FitsFile* fits = new FitsFitsAllocgz(argv[2]);
+#endif
+  
   int cnt =0;
   while (fits->isValid()) {
     FitsHead* head = fits->head();
@@ -145,7 +154,13 @@ int TclFITSY::dir(int argc, const char* argv[])
     Tcl_AppendResult(interp_, str.str().c_str(), NULL);
 
     cnt++;
+
+#ifndef __WIN32
     FitsFile* next = new FitsMosaicNextMMapIncr(fits);
+#else
+    FitsFile* next = new FitsMosaicNextAllocgz(fits);
+#endif
+    
     delete fits;
     fits = next;
   }
@@ -741,21 +756,33 @@ FitsFile* TclFITSY::findFits(const char** argv)
   sstr >> ext;
 
   if (ext<0) {
+#ifndef __WIN32
     fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
+#else
+    fits = new FitsFitsAllocgz(argv[2], FitsFile::RELAXTABLE);
+#endif    
     if (!fits->isValid()) {
       delete fits;
       return NULL;
     }
   }
   else {
+#ifndef __WIN32
     fits = new FitsFitsMMapIncr(argv[2]);
+#else
+    fits = new FitsFitsAllocgz(argv[2]);
+#endif    
     if (!fits->isValid()) {
       delete fits;
       return NULL;
     }
 
     for (int ii=0; ii<ext; ii++) {
+#ifndef __WIN32
       FitsFile* next = new FitsMosaicNextMMapIncr(fits);
+#else
+      FitsFile* next = new FitsMosaicNextAllocgz(fits);
+#endif    
       delete fits;
       fits = next;
       if (!fits->isValid()) {

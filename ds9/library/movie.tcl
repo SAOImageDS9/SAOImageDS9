@@ -15,6 +15,8 @@ proc MovieDef {} {
 
     set movie(type) gif
     set movie(action) slice
+    set movie(delay) 0
+
     set movie(num) 24
     set movie(az,from) 45
     set movie(az,to) -45
@@ -45,8 +47,9 @@ proc MovieDialog {} {
     set w {.movie}
 
     set ed(ok) 0
-    set ed(action) $movie(action)
     set ed(type) $movie(type)
+    set ed(action) $movie(action)
+    set ed(delay) $movie(delay)
 
     DialogCreate $w [msgcat::mc {Create Movie}] ed(ok)
 
@@ -83,6 +86,14 @@ proc MovieDialog {} {
 	3d {$f.3d configure -state normal}
     }
 
+    # Param
+    set f [ttk::labelframe $w.delay -text [msgcat::mc {Delay}]]
+
+    ttk::entry $f.delay -textvariable ed(delay) -width 7
+    ttk::label $f.tdelay -text [msgcat::mc {hundredths second}]
+
+    grid $f.delay $f.tdelay -padx 2 -pady 2 -sticky w
+
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
@@ -95,6 +106,7 @@ proc MovieDialog {} {
     # Fini
     grid $w.type -sticky news
     grid $w.param -sticky news
+    grid $w.delay -sticky news
     grid $w.buttons -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid rowconfigure $w 1 -weight 1
@@ -107,10 +119,11 @@ proc MovieDialog {} {
     if {$ed(ok)} {
 	set movie(action) $ed(action)
 	set movie(type) $ed(type)
-
+	set movie(delay) $ed(delay)
+	
 	switch $movie(type) {
-	    mpeg {set fn [SaveFileDialog mpegfbox $w]}
-	    gif {set fn [SaveFileDialog giffbox $w]}
+	    mpeg {set fn [SaveFileDialog mpegfbox]}
+	    gif {set fn [SaveFileDialog giffbox]}
 	}
 
 	if {$fn != {}} {
@@ -427,7 +440,8 @@ proc MoviePhotoGIF {} {
     }
 
     if {$movie(first)} {
-	agif create $movie(fn) [image width $ph] [image height $ph]
+	agif create $movie(fn) [image width $ph] [image height $ph] \
+	    $movie(delay)
 	set movie(first) 0
     }
     agif add $ph

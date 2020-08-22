@@ -41,16 +41,20 @@ movie : STRING_
    {ProcessCmdSet2 movie action slice type [ExtToFormat $1]; MovieCreate $1}
  | action STRING_
    {ProcessCmdSet2 movie action $1 type [ExtToFormat $2]; MovieCreate $2}
- | type STRING_ {ProcessCmdSet2 movie action slice type $1; MovieCreate $2}
  | action type STRING_ {ProcessCmdSet2 movie action $1 type $2; MovieCreate $3}
+ | action type INT_ STRING_ {ProcessCmdSet3 movie action $1 type $2 delay $3; MovieCreate $4}
 
  | 3D_ STRING_
    {ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2}
  | 3D_ type STRING_ {ProcessCmdSet2 movie action 3d type $2; MovieCreate $3}
+ | 3D_ type INT_ STRING_ {ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4}
+
  | 3D_ STRING_ opts
    {ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2}
  | 3D_ type STRING_ opts
    {ProcessCmdSet2 movie action 3d type $2; MovieCreate $3}
+ | 3D_ type INT_ STRING_ opts
+   {ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4}
  ;
 
 action : FRAME_ {set _ frame}

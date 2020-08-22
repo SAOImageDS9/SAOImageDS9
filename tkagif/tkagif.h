@@ -49,6 +49,7 @@ private:
   int width_;
   int height_;
   int resolution_;
+  unsigned short delay_;
 
   unsigned char* pict_;
   long pictCount_;

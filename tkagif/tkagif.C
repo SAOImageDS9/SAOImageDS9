@@ -102,14 +102,14 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
 
 int TkAGIF::create(int argc, const char* argv[])
 {
-  if (argc == 5) {
+  if (argc == 6) {
     if (*argv[2] == '\0') {
       Tcl_AppendResult(interp_, "bad filename", NULL);
       return TCL_ERROR;
     }
   }
   else {
-    Tcl_AppendResult(interp_, "usage: tkagif create <filename> <width> <height>", NULL);
+    Tcl_AppendResult(interp_, "usage: tkagif create <filename> <width> <height> <delay>", NULL);
     return TCL_ERROR;
   }
 
@@ -131,6 +131,11 @@ int TkAGIF::create(int argc, const char* argv[])
     string s(argv[4]);
     istringstream str(s);
     str >> height_;
+  }
+  {
+    string s(argv[5]);
+    istringstream str(s);
+    str >> delay_;
   }
 
   // *** Header ***
@@ -249,8 +254,8 @@ int TkAGIF::create(int argc, const char* argv[])
     out_->write((char*)&pkg.cc,1);
 
     // Delay Time
-    unsigned short delay = 0x00;
-    out_->write((char*)&delay,2);
+    //    unsigned short delay = 0x00;
+    out_->write((char*)&delay_,2);
     // Transparent Color Index
     unsigned char trans= 0x00;
     out_->write((char*)&trans,1);

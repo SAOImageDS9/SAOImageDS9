@@ -69,6 +69,7 @@
 %token NEW_
 %token NONE_
 %token NUMBERS_
+%token OPEN_
 %token ORIENT_
 %token ORIENTATION_
 %token PAGESETUP_
@@ -221,7 +222,7 @@ plot : line
 
 # Line
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | NEW_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ | OPEN_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdLine $1 $2 $3 $4}

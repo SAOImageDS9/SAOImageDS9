@@ -70,6 +70,7 @@ new	    {return $NEW_}
 none	    {return $NONE_}
 normal	    {return $NORMAL_}
 numbers	    {return $NUMBERS_}
+open	    {return $OPEN_}
 orient	    {return $ORIENT_}
 orientation {return $ORIENTATION_}
 pagesetup   {return $PAGESETUP_}

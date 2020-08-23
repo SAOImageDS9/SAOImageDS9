@@ -22,4 +22,3 @@ FitsAllocGZ::FitsAllocGZ(const char* fn)
   valid_ = stream_ ? 1 : 0;
 }
 
-

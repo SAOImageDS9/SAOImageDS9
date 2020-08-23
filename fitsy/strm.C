@@ -419,10 +419,8 @@ template<class T> FitsFitsStream<T>::FitsFitsStream(FitsFile::FlushMode f)
 
   // we are only looking for a primary image
   this->head_ = this->headRead();
-  if (this->head_ && this->head_->isValid()) {
-    this->found();
-    return;
-  }
+  if (!(this->head_ && this->head_->isValid()))
+    this->error();
 }
 
 template<class T> FitsFitsStream<T>::FitsFitsStream(FitsFile::ScanMode mode,

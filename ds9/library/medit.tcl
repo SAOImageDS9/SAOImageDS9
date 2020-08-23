@@ -22,9 +22,11 @@ proc EditMainMenu {} {
 	-accelerator "${ds9(ctrl)}V"
     $ds9(mb).edit add separator
     $ds9(mb).edit add radiobutton -label [msgcat::mc {None}] \
-	-variable current(mode) -value none -command ChangeMode
+	-variable current(mode) -value none -command ChangeMode \
+	-accelerator "${ds9(ctrl)}N"
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Region}] \
-	-variable current(mode) -value region -command ChangeMode
+	-variable current(mode) -value region -command ChangeMode \
+	-accelerator "${ds9(ctrl)}R"
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Crosshair}] \
 	-variable current(mode) -value crosshair -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Colorbar}] \
@@ -62,6 +64,10 @@ proc EditMainMenu {} {
     bind $ds9(top) <<Cut>> CutFrame
     bind $ds9(top) <<Copy>> CopyFrame
     bind $ds9(top) <<Paste>> PasteFrame
+
+    bind $ds9(top) <<None>>  [list ChangeModeItem none]
+    bind $ds9(top) <<Region>> [list ChangeModeItem region]
+
     switch $ds9(wm) {
 	x11 -
 	win32 {bind $ds9(top) <<Pref>> PrefsDialog}

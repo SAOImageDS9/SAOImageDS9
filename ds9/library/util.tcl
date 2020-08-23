@@ -962,12 +962,6 @@ proc ChangeMode {} {
     global ds9
     global current
 
-    if {0} {
-	bind $ds9(canvas) <Button-1> {}
-	bind $ds9(canvas) <B1-Motion> {}
-	bind $ds9(canvas) <ButtonRelease-1> {}
-    }
-    
     foreach ff $ds9(frames) {
 	$ff crosshair off
 	$ff marker catalog unselect all
@@ -1003,6 +997,13 @@ proc ChangeMode {} {
 	iexam {}
 	3d {SetCursor {}}
     }
+}
+
+proc ChangeModeItem {which} {
+    global current
+
+    set current(mode) $which
+    ChangeMode
 }
 
 # Font procs

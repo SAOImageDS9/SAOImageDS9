@@ -422,12 +422,17 @@ event add <<FindNext>> <${ds9(ctrl)}g>
 event add <<Close>> <${ds9(ctrl)}w>
 event add <<ZoomIn>> <${ds9(ctrl)}plus>
 event add <<ZoomOut>> <${ds9(ctrl)}minus>
+
+event add <<Region>> <${ds9(ctrl)}r>
+event add <<None>> <${ds9(ctrl)}n>
+
 switch $ds9(wm) {
     x11 -
     win32 {
-	event add <<PageSetup>> <${ds9(shiftctrl)}P>
 	event add <<Quit>> <${ds9(ctrl)}q>
 	event add <<Pref>> <${ds9(ctrl)}comma>
+
+	event add <<PageSetup>> <${ds9(shiftctrl)}P>
 	event add <<SelectNone>> <${ds9(shiftctrl)}A>
     }
     aqua {

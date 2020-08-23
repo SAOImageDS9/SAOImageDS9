@@ -109,15 +109,23 @@ proc PlotGUICanvas {varname w} {
     grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
 
     # Layout
-    set f [ttk::labelframe $w.layout -text [msgcat::mc {Layout}]]
+    set g [ttk::labelframe $w.layout -text [msgcat::mc {Graph}]]
 
-    ttk::menubutton $f.add -text [msgcat::mc {Add Graph}] \
-	-menu $f.add.menu
-    $var(mb).canvas.graph clone $f.add.menu
+    set f [ttk::frame $g.add]
+    ttk::button $f.line -text [msgcat::mc {Add Line}] \
+	-command [list PlotAddGraph $varname line]
+    ttk::button $f.bar -text [msgcat::mc {Add Bar}] \
+	-command [list PlotAddGraph $varname bar]
+    ttk::button $f.scatter -text [msgcat::mc {Add Scatter}] \
+	-command [list PlotAddGraph $varname scatter]
+    pack $f.line $f.bar $f.scatter -side left -padx 2
 
+    set f [ttk::frame $g.delete]
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
+    pack $f.delete -side left -padx 2
 
+    set f [ttk::frame $g.layout]
     ttk::radiobutton $f.grid -text [msgcat::mc {Grid}] \
 	-variable ${varname}(canvas,layout) -value grid \
 	-command [list PlotChangeLayout $varname]
@@ -130,15 +138,18 @@ proc PlotGUICanvas {varname w} {
     ttk::radiobutton $f.strip -text [msgcat::mc {Strip}] \
 	-variable ${varname}(canvas,layout) -value strip \
 	-command [list PlotChangeLayout $varname]
+    pack $f.grid $f.row $f.column $f.strip -side left -padx 2
 
+    set f [ttk::frame $g.strip]
     ttk::label $f.tscale -text [msgcat::mc {Strip Scale}]
     ttk::entry $f.scale -textvariable ${varname}(canvas,layout,strip,scale) \
 	-width 6
     ttk::label $f.scalet -text {%}
+    pack $f.tscale $f.scale $f.scalet -side left -padx 2
 
-    grid $f.add - $f.delete - -padx 2 -pady 2 -sticky w
-    grid $f.grid $f.row $f.column $f.strip -padx 2 -pady 2 -sticky w
-    grid $f.tscale - $f.scale $f.scalet -padx 2 -pady 2 -sticky w
+    pack $g.add $g.delete $g.layout $g.strip \
+	-side top  -fill both -expand true \
+	-padx 2 -pady 2
 
     # Font
     set f [ttk::labelframe $w.font -text [msgcat::mc {Font}]]

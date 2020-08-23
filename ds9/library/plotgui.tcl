@@ -21,7 +21,8 @@ proc PlotGUI {varname} {
     set w $var(gui,top)
     set mb $var(gui,mb)
 
-    Toplevel $w $mb 6 [msgcat::mc {Plot GUI}] [list PlotGUIDestroy $varname]
+    Toplevel $w $mb 6 [msgcat::mc {Plot Control Panel}] \
+	[list PlotGUIDestroy $varname]
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit

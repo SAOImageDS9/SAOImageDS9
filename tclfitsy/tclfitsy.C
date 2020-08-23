@@ -104,7 +104,7 @@ int TclFITSY::dir(int argc, const char* argv[])
 #ifndef __WIN32
   FitsFile* fits = new FitsFitsMMapIncr(argv[2]);
 #else
-  FitsFile* fits = new FitsFitsAllocGZ(argv[2],FitsFile::NOFLUSH);
+  FitsFile* fits = new FitsFitsAllocGZ(argv[2],FitsFile::FLUSH);
 #endif
   
   int cnt =0;
@@ -158,7 +158,7 @@ int TclFITSY::dir(int argc, const char* argv[])
 #ifndef __WIN32
     FitsFile* next = new FitsMosaicNextMMapIncr(fits);
 #else
-    FitsFile* next = new FitsMosaicNextAllocGZ(fits,FitsFile::NOFLUSH);
+    FitsFile* next = new FitsMosaicNextAllocGZ(fits,FitsFile::FLUSH);
 #endif
     
     delete fits;
@@ -759,7 +759,7 @@ FitsFile* TclFITSY::findFits(const char** argv)
 #ifndef __WIN32
     fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
 #else
-    fits = new FitsFitsAllocGZ(argv[2], FitsFile::RELAXTABLE,FitsFile::NOFLUSH);
+    fits = new FitsFitsAllocGZ(argv[2], FitsFile::RELAXTABLE,FitsFile::FLUSH);
 #endif    
     if (!fits->isValid()) {
       delete fits;
@@ -770,7 +770,7 @@ FitsFile* TclFITSY::findFits(const char** argv)
 #ifndef __WIN32
     fits = new FitsFitsMMapIncr(argv[2]);
 #else
-    fits = new FitsFitsAllocGZ(argv[2],FitsFile::NOFLUSH);
+    fits = new FitsFitsAllocGZ(argv[2],FitsFile::FLUSH);
 #endif    
     if (!fits->isValid()) {
       delete fits;
@@ -781,7 +781,7 @@ FitsFile* TclFITSY::findFits(const char** argv)
 #ifndef __WIN32
       FitsFile* next = new FitsMosaicNextMMapIncr(fits);
 #else
-      FitsFile* next = new FitsMosaicNextAllocGZ(fits,FitsFile::NOFLUSH);
+      FitsFile* next = new FitsMosaicNextAllocGZ(fits,FitsFile::FLUSH);
 #endif    
       delete fits;
       fits = next;

@@ -28,7 +28,8 @@ proc GridDefault {} {
     set grid(skyformat) sexagesimal
 
     set grid(grid) 1
-    set grid(grid,color) blue
+#    set grid(grid,color) blue
+    set grid(grid,color) cyan
     set grid(grid,width) 1
     set grid(grid,style) 0
     set grid(grid,gap1) {}
@@ -39,19 +40,22 @@ proc GridDefault {} {
     set grid(grid,gapunit3) {}
 
     set grid(axes) 1
-    set grid(axes,color) red
+#    set grid(axes,color) red
+    set grid(axes,color) cyan
     set grid(axes,width) 1
     set grid(axes,style) 0
     set grid(axes,type) interior
     set grid(axes,origin) lll
 
     set grid(tick) 1
-    set grid(tick,color) white
+#    set grid(tick,color) white
+    set grid(tick,color) cyan
     set grid(tick,width) 1
     set grid(tick,style) 0
 
     set grid(border) 1
-    set grid(border,color) blue
+#    set grid(border,color) blue
+    set grid(border,color) cyan
     set grid(border,width) 1
     set grid(border,style) 0
 
@@ -63,7 +67,8 @@ proc GridDefault {} {
     set grid(numlab,size) 10
     set grid(numlab,weight) normal
     set grid(numlab,slant) roman
-    set grid(numlab,color) green
+#    set grid(numlab,color) green
+    set grid(numlab,color) cyan
     set grid(numlab,gap1) {}
     set grid(numlab,gap2) {}
     set grid(numlab,gap3) {}

@@ -642,6 +642,9 @@ proc FixPrefs8.1to8.2 {} {
     FixVar pap(graph,ds,line,shape,fill) pap(graph,ds,shape,fill)
 
     FixVarRm pap(graph,ds,bar,relief)
+
+    FixVar pbuttons(region,deleteselect) pbuttons(region,delete)
+    FixVar pbuttons(region,delete) pbuttons(region,deleteall)
 }
 
 proc FixPrefs8.0to8.1 {} {

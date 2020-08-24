@@ -307,4 +307,3 @@ proc ShowButton {which varname} {
  	}
     }
 }
-

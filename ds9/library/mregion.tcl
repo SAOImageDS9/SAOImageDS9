@@ -717,14 +717,14 @@ proc ButtonsRegionDef {} {
 	region,all 1
 	region,none 1
 	region,invert 0
-	region,save,select 0
-	region,list,select 0
-	region,delete,select 0
+	region,saveselect 0
+	region,listselect 0
+	region,deleteselect 0
 	region,load 1
 	region,save 1
 	region,list 1
 	region,delete 1
-	region,delete,load 0
+	region,deleteload 0
 	region,show 0
 	region,showtext 0
 	region,autocentroid 0
@@ -885,14 +885,14 @@ proc CreateButtonsRegion {} {
         $ds9(buttons).region.all pbuttons(region,all)
         $ds9(buttons).region.none pbuttons(region,none)
         $ds9(buttons).region.invert pbuttons(region,invert)
-        $ds9(buttons).region.saveselect pbuttons(region,save,select)
-        $ds9(buttons).region.listselect pbuttons(region,list,select)
-        $ds9(buttons).region.deleteselect pbuttons(region,delete,select)
+        $ds9(buttons).region.saveselect pbuttons(region,saveselect)
+        $ds9(buttons).region.listselect pbuttons(region,listselect)
+        $ds9(buttons).region.deleteselect pbuttons(region,deleteselect)
         $ds9(buttons).region.load pbuttons(region,load)
         $ds9(buttons).region.save pbuttons(region,save)
         $ds9(buttons).region.list pbuttons(region,list)
         $ds9(buttons).region.delete pbuttons(region,delete)
-        $ds9(buttons).region.deleteload pbuttons(region,delete,load)
+        $ds9(buttons).region.deleteload pbuttons(region,deleteload)
         $ds9(buttons).region.show pbuttons(region,show)
         $ds9(buttons).region.showtext pbuttons(region,showtext)
         $ds9(buttons).region.autocentroid pbuttons(region,autocentroid)
@@ -943,13 +943,13 @@ proc PrefsDialogButtonbarRegion {f} {
 	-command {UpdateButtons buttons(region)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Save Selected Regions}] \
-	-variable pbuttons(region,save,select) \
+	-variable pbuttons(region,saveselect) \
 	-command {UpdateButtons buttons(region)}
     $m add checkbutton -label [msgcat::mc {List Selected Regions}] \
-	-variable pbuttons(region,list,select) \
+	-variable pbuttons(region,listselect) \
 	-command {UpdateButtons buttons(region)}
     $m add checkbutton -label [msgcat::mc {Delete Selected Regions}] \
-	-variable pbuttons(region,delete,select) \
+	-variable pbuttons(region,deleteselect) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Open Regions}]..." \
@@ -966,7 +966,7 @@ proc PrefsDialogButtonbarRegion {f} {
 	-command {UpdateButtons buttons(region)}
     $m add separator
     $m add checkbutton -label "[msgcat::mc {Delete and Open Regions}]..." \
-	-variable pbuttons(region,delete,load) \
+	-variable pbuttons(region,deleteload) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
     $m add cascade -label [msgcat::mc {Region Parameters}] -menu $m.params

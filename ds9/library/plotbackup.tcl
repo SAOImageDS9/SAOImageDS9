@@ -72,6 +72,9 @@ proc PlotBackupOne {varname ch fdir} {
     puts $ch "set ${varname}(graph,ds,current) $ds"
     puts $ch "PlotCurrentDataSet $varname"
 
+    puts $ch "set ${varname}(canvas,theme) $var(canvas,theme)"
+    puts $ch "PlotUpdateAllElement $varname"
+
     set var(graph,current) $gr
     PlotCurrentGraph $varname
     

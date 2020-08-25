@@ -171,6 +171,9 @@ plot : line
  | PAGESETUP_ pagesetup
  | PRINT_ print
  | CLOSE_ {ProcessCmdCVAR0 PlotDestroy}
+ # backward compatibility
+ # used by DAX
+ | STRING_ CLOSE_ {ProcessCmdCVAR0 PlotDestroy}
 
  # Edit Menu
  | MODE_ mode {ProcessCmdCVAR mode $2 PlotChangeMode}
@@ -280,7 +283,7 @@ smooth : STEP_ {set _ step}
 
 # Bar
 bar : {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
- | NEW_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
+ | OPEN_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdBar $1 $2 $3 $4}
@@ -306,7 +309,7 @@ bar : {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
 
 # Scatter
 scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
- | NEW_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
+ | OPEN_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
 
  | STRING_ STRING_ STRING_ dim {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdNew {}; PlotCmdScatter $1 $2 $3 $4}

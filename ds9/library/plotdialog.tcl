@@ -96,8 +96,6 @@ proc PlotDialog {varname wtt} {
 	-state disabled -accelerator "${ds9(ctrl)}C"
     $var(mb).edit add command -label [msgcat::mc {Paste}] \
 	-state disabled -accelerator "${ds9(ctrl)}V"
-    $var(mb).edit add command -label [msgcat::mc {Clear}] \
-	-state disabled
     $var(mb).edit add separator
     $var(mb).edit add radiobutton -label [msgcat::mc {Pointer}] \
 	-variable ${varname}(mode) -value pointer \

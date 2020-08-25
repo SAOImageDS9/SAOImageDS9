@@ -30,8 +30,30 @@ proc PlotGUI {varname} {
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command [list PlotGUIApply $varname]
+    $mb.file add separator
+    $mb.file add command -label "[msgcat::mc {Load Data}]..." \
+	-command [list PlotLoadData $varname]
+    $mb.file add command -label "[msgcat::mc {Save Data}]..." \
+	-command [list PlotSaveData $varname]
+    $mb.file add separator
+    $mb.file add cascade -label [msgcat::mc {Export}] \
+	-menu $mb.file.export
+    $mb.file add separator
+    $mb.file add command -label "[msgcat::mc {Backup}]..." \
+	-command [list PlotBackupDialog $varname]
+    $mb.file add command -label "[msgcat::mc {Restore}]..." \
+	-command [list PlotRestoreDialog $varname]
+    $mb.file add separator
+    $mb.file add command \
+	-label "[msgcat::mc {Page Setup}]..." \
+	-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
+    $mb.file add command -label "[msgcat::mc {Print}]..." \
+	-command [list PlotPSPrint $varname] -accelerator "${ds9(ctrl)}P"
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list PlotGUIDestroy $varname] -accelerator "${ds9(ctrl)}W"
+
+    $var(mb).file.export clone $mb.file.export
 
     ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
@@ -40,6 +62,13 @@ proc PlotGUI {varname} {
 	-command "EntryCopy $var(gui,top)" -accelerator "${ds9(ctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command "EntryPaste $var(gui,top)" -accelerator "${ds9(ctrl)}V"
+    $mb.edit add separator
+    $mb.edit add radiobutton -label [msgcat::mc {Pointer}] \
+	-variable ${varname}(mode) -value pointer \
+	-command [list PlotChangeMode $varname]
+    $mb.edit add radiobutton -label [msgcat::mc {Zoom}] \
+	-variable ${varname}(mode) -value zoom \
+	-command [list PlotChangeMode $varname]
 
     set ff [ttk::frame $w.param]
 

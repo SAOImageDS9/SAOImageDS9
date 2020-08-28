@@ -610,11 +610,10 @@ proc FixPrefsVarOld {} {
     FixVarRm pbuttons(region,mask)
 
     # 8.2
+    FixVar pbuttons(region,delete) pbuttons(region,deleteall)
 }
 
 proc FixPrefs8.1to8.2 {} {
-    FixVar pbuttons(region,delete) pbuttons(region,deleteall)
-
     FixVar pap(canvas,layout) pap(layout)
     FixVar pap(canvas,layout,strip,scale) pap(layout,strip,scale)
 

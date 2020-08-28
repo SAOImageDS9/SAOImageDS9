@@ -280,6 +280,26 @@ proc PlotGUIScatter {varname w} {
     # Params
     set f [ttk::labelframe $w.params -text [msgcat::mc {Params}]]
 
+    # Shape
+    ttk::label $f.tshape -text [msgcat::mc {Shape}]
+    ttk::menubutton $f.shape \
+	-textvariable ${varname}(graph,ds,scatter,symbol) \
+	-menu $f.shape.menu
+    $var(mb).datascatter.shape.symbol clone $f.shape.menu
+
+    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.shapecolor \
+	-textvariable ${varname}(graph,ds,scatter,color) \
+	-menu $f.shapecolor.menu
+    $var(mb).datascatter.shape.color clone $f.shapecolor.menu
+
+    ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
+	-variable ${varname}(graph,ds,scatter,fill) \
+	-command [list PlotScatterUpdateElement $varname]
+
+    grid $f.tshape $f.shape  -padx 2 -pady 2 -sticky ew
+    grid $f.tshapecolor $f.shapecolor $f.shapefill  -padx 2 -pady 2 -sticky ew
+
     # Errorbar
     set f [ttk::labelframe $w.error -text [msgcat::mc {Errorbar}]]
 

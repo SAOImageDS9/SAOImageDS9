@@ -58,7 +58,7 @@ proc PlotDestroy {varname} {
 	SimpleTextDestroy "${varname}list"
     }
 
-    # delete it from the xpa list
+    # delete it from the list
     set ii [lsearch $iap(plots) $varname]
     if {$ii>=0} {
 	set iap(plots) [lreplace $iap(plots) $ii $ii]
@@ -1045,6 +1045,10 @@ proc PlotDataSetName {varname name} {
 	return
     }
 
+    if {$name == {}} {
+	set nn $var(graph,ds,current)
+	set name "Dataset $nn"
+    }
     $var(mb).graph.select entryconfig "$var(graph,ds,name)" -label "$name"
     set var(graph,ds,name) $name
     $var(graph,proc,updateelement) $varname

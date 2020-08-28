@@ -65,7 +65,6 @@ proc PrismDialog {varname} {
     set var(xerr) {}
     set var(yerr) {}
 
-    set var(plots) {}
     set var(plot,seq) 0
     set var(plot,data,seq) 0
     set var(plot,mode) newplot
@@ -302,11 +301,6 @@ proc PrismDestroy {varname} {
 	set iprism(prisms) [lreplace $iprism(prisms) $ii $ii]
     }
 
-    # plot windows?
-    foreach pp $var(plots) {
-	PlotDestroy $pp
-    }
-
     if {[winfo exists $var(top)]} {
 	destroy $var(top)
 	destroy $var(mb)
@@ -468,11 +462,6 @@ proc PrismClear {varname} {
 	$var(dir) delete $id
     }
 
-    # plot windows?
-    foreach pp $var(plots) {
-	PlotDestroy $pp
-    }
-
     set var(fn) {}
     set var(ext) 0
     set var(extname) {}
@@ -481,7 +470,6 @@ proc PrismClear {varname} {
     set var(last) 0
 
     # reset plots
-    set var(plots) {}
     set var(plot,seq) 0
     set var(plot,data,seq) 0
     set var(plot,mode) newplot
@@ -569,15 +557,17 @@ proc PrismPlot {varname} {
     PrismColsMenu $varname $f.xerr xerr {}
     PrismColsMenu $varname $f.yerr yerr {}
 
-    ttk::radiobutton $f.over -text [msgcat::mc {Overplot}] \
-	-variable ed(plot,mode) -value overplot
-    ttk::radiobutton $f.new -text [msgcat::mc {New Plot}] \
+    ttk::radiobutton $f.newplot -text [msgcat::mc {New Plot}] \
 	-variable ed(plot,mode) -value newplot
+    ttk::radiobutton $f.newgraph -text [msgcat::mc {New Graph}] \
+	-variable ed(plot,mode) -value newgraph
+    ttk::radiobutton $f.newdataset -text [msgcat::mc {Overplot}] \
+	-variable ed(plot,mode) -value newdataset
 
     grid $f.ttype $f.type -padx 2 -pady 2 -sticky ew
     grid $f.txx $f.xx $f.txerr $f.xerr -padx 2 -pady 2 -sticky ew
     grid $f.tyy $f.yy $f.tyerr $f.yerr -padx 2 -pady 2 -sticky ew
-    grid x $f.over $f.new -padx 2 -pady 2 -sticky ew
+    grid x $f.newplot $f.newgraph $f.newdataset -padx 2 -pady 2 -sticky ew
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -628,12 +618,22 @@ proc PrismPlotGenerate {varname} {
 	set dim xyexey
     }
 
+    global iap
     switch $var(plot,mode) {
-	newplot {incr ${varname}(plot,seq)}
-	overplot {}
+	newplot {
+	    incr ${varname}(plot,seq)
+	    set vvarname plot$var(plot,seq)${varname}
+	}
+	newgraph -
+	newdataset {
+	    set vvarname [lindex $iap(plots) end]
+	    if {$vvarname == {}} {
+		incr ${varname}(plot,seq)
+		set vvarname plot$var(plot,seq)${varname}
+	    }
+	}
     }
 
-    set vvarname plot$var(plot,seq)${varname}
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -698,12 +698,26 @@ proc PrismPlotGenerate {varname} {
 	return
     }
 
-    if {$var(plot,mode) == {newplot} || ![PlotPing $vvarname]} {
-	PlotDialog $vvarname "[string totitle $varname] Plot"
-	PlotAddGraph $vvarname $var(plot,type)
-	PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
-
-	lappend ${varname}(plots) $vvarname
+    switch $var(plot,mode) {
+	newplot {
+	    PlotDialog $vvarname "[string totitle $varname] Plot"
+	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
+	}
+	newgraph {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Plot"
+	    }
+	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
+	}
+	newdataset {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Plot"
+		PlotAddGraph $vvarname $var(plot,type)
+		PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
+	    }
+	}
     }
 
     set vvar(graph,ds,xdata) $xdata
@@ -720,17 +734,7 @@ proc PrismPlotGenerate {varname} {
     }
 
     PlotExternal $vvarname $dim
-
-    set vvar(graph,ds,name) "$var(extname) $var(xx) $var(yy)"
-    $vvar(graph,proc,updateelement) $vvarname
-
-    switch $var(plot,mode) {
-	newplot {}
-	overplot {
-	    set vvar(graph,legend) 1
-	    PlotChangeLegend $vvarname
-	}
-    }
+    PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
 
     PlotStats $vvarname
     PlotList $vvarname
@@ -756,6 +760,8 @@ proc PrismHistogram {varname} {
     set ed(num) $var(bar,num)
     set ed(min) $var(bar,min)
     set ed(max) $var(bar,max)
+
+    set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
 
@@ -789,10 +795,18 @@ proc PrismHistogram {varname} {
     ttk::label $f.tmax -text [msgcat::mc {Max}]
     ttk::entry $f.max -textvariable ed(max) -width 13
 
+    ttk::radiobutton $f.newplot -text [msgcat::mc {New Plot}] \
+	-variable ed(plot,mode) -value newplot
+    ttk::radiobutton $f.newgraph -text [msgcat::mc {New Graph}] \
+	-variable ed(plot,mode) -value newgraph
+    ttk::radiobutton $f.newdataset -text [msgcat::mc {Overplot}] \
+	-variable ed(plot,mode) -value newdataset
+
     grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
     grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
     grid $f.tmin $f.min -padx 2 -pady 2 -sticky ew
     grid $f.tmax $f.max -padx 2 -pady 2 -sticky ew
+    grid x $f.newplot $f.newgraph $f.newdataset -padx 2 -pady 2 -sticky ew
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -821,6 +835,8 @@ proc PrismHistogram {varname} {
 	    set var(bar,max) $ed(max)
 	    set var(bar,minmax) 1
 
+	    set var(plot,mode) $ed(plot,mode)
+
 	    PrismHistogramGenerate $varname
 	}
     }
@@ -843,8 +859,22 @@ proc PrismHistogramGenerate {varname} {
     upvar #0 $varname var
     global $varname
 
-    incr ${varname}(plot,seq)
-    set vvarname plot$var(plot,seq)${varname}
+    global iap
+    switch $var(plot,mode) {
+	newplot {
+	    incr ${varname}(plot,seq)
+	    set vvarname plot$var(plot,seq)${varname}
+	}
+	newgraph -
+	newdataset {
+	    set vvarname [lindex $iap(plots) end]
+	    if {$vvarname == {}} {
+		incr ${varname}(plot,seq)
+		set vvarname plot$var(plot,seq)${varname}
+	    }
+	}
+    }
+
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -865,19 +895,35 @@ proc PrismHistogramGenerate {varname} {
 	return
     }
 
-    PlotDialog $vvarname "[string totitle $varname] Histogram"
-    PlotAddGraph $vvarname bar
-    PlotTitle $vvarname $var(bar,col) {Values} {Counts}
-
-    lappend ${varname}(plots) $vvarname
+    switch $var(plot,mode) {
+	newplot {
+	    PlotDialog $vvarname "[string totitle $varname] Histogram"
+	    PlotAddGraph $vvarname bar
+	    PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+	}
+	newgraph {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Histogram"
+	    }
+	    PlotAddGraph $vvarname bar
+	    PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+	}
+	newdataset {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Histogram"
+		PlotAddGraph $vvarname bar
+		PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+	    }
+	}
+    }
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
 
     PlotExternal $vvarname xy
+    PlotDataSetName $vvarname "$var(extname) $var(bar,col)"
 
     set vvar(graph,ds,bar,width) $var(bar,width)
-    set vvar(graph,ds,name) "$var(extname) $var(bar,col)"
     $vvar(graph,proc,updateelement) $vvarname
 
     PlotStats $vvarname

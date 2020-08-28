@@ -61,6 +61,11 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add cascade -label [msgcat::mc {Export}] \
 	-menu $var(mb).file.export
     $var(mb).file add separator
+    $var(mb).file add command -label [msgcat::mc {Statistics}] \
+       -command "set ${varname}(stats) 1; PlotStats $varname"
+    $var(mb).file add command -label [msgcat::mc {List Data}] \
+       -command "set ${varname}(list) 1; PlotList $varname"
+    $var(mb).file add separator
     $var(mb).file add command -label "[msgcat::mc {Control Panel}]..." \
 	-command [list PlotGUI $varname]
     $var(mb).file add separator

@@ -39,6 +39,11 @@ proc PlotGUI {varname} {
     $mb.file add cascade -label [msgcat::mc {Export}] \
 	-menu $mb.file.export
     $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Statistics}] \
+       -command "set ${varname}(stats) 1; PlotStats $varname"
+    $mb.file add command -label [msgcat::mc {List Data}] \
+       -command "set ${varname}(list) 1; PlotList $varname"
+    $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Backup}]..." \
 	-command [list PlotBackupDialog $varname]
     $mb.file add command -label "[msgcat::mc {Restore}]..." \
@@ -115,8 +120,15 @@ proc PlotGUIApply {varname} {
     upvar #0 $varname var
     global $varname
 
+    # special case
+    if {$var(graph,ds,name) == {}} {
+	set nn $var(graph,ds,current)
+	set var(graph,ds,name) "Dataset $nn"
+    }
+
     # update the world?
     $var(graph,proc,updateelement) $varname
+
     PlotChangeAxis $varname
     PlotUpdateCanvas $varname
     PlotUpdateGraph $varname

@@ -49,11 +49,6 @@ proc PlotBarMenus {varname} {
     $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
     $var(mb).databar add separator
-    $var(mb).databar add command -label [msgcat::mc {Statistics}] \
-       -command "set ${varname}(stats) 1; PlotStats $varname"
-    $var(mb).databar add command -label [msgcat::mc {List Data}] \
-       -command "set ${varname}(list) 1; PlotList $varname"
-    $var(mb).databar add separator
     $var(mb).databar add cascade -label [msgcat::mc {Border Color}] \
 	-menu $var(mb).databar.bordercolor
     $var(mb).databar add cascade -label [msgcat::mc {Border Width}] \

@@ -1740,9 +1740,9 @@ plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
 &nbsp;&nbsp;&nbsp; [layout strip scale &lt;percent&gt;]<br>
 &nbsp;&nbsp;&nbsp; [add graph line|bar|scatter]<br>
-&nbsp;&nbsp;&nbsp; [select graph &lt;graph&gt;]<br>
+&nbsp;&nbsp;&nbsp; [current graph &lt;graph&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete graph]<br>
-&nbsp;&nbsp;&nbsp; [select dataset &lt;dataset&gt;]<br>
+&nbsp;&nbsp;&nbsp; [current dataset &lt;dataset&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete dataset]<br>
 &nbsp;&nbsp;&nbsp; [duplicate]<br>
 &nbsp;&nbsp;&nbsp; [stats yes|no]<br>
@@ -1852,8 +1852,9 @@ $cat xy.dat | xpaset ds9 plot data xy<br>
 # existing plot<br>
 $xpaget ds9 plot layout<br>
 $xpaget ds9 plot layout strip scale<br>
-$xpaget ds9 plot select graph<br>
-$xpaget ds9 plot select dataset<br>
+$xpaget ds9 plot current<br>
+$xpaget ds9 plot current graph<br>
+$xpaget ds9 plot current dataset<br>
 $xpaget ds9 plot stats<br>
 $xpaget ds9 plot list<br>
 $xpaget ds9 plot mode<br>
@@ -1863,9 +1864,9 @@ $xpaset -p ds9 plot current foo<br>
 $xpaset -p ds9 plot layout strip<br>
 $xpaset -p ds9 plot layout strip scale 30<br>
 $xpaset -p ds9 plot add graph scatter<br>
-$xpaset -p ds9 plot select graph 1<br>
+$xpaset -p ds9 plot current graph 1<br>
 $xpaset -p ds9 plot delete graph<br>
-$xpaset -p ds9 plot select dataset 1<br>
+$xpaset -p ds9 plot current dataset 1<br>
 $xpaset -p ds9 plot delete dataset<br>
 $xpaset -p ds9 plot duplicate<br>
 $xpaset -p ds9 plot stats yes<br>

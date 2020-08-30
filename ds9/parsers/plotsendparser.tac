@@ -13,6 +13,7 @@
 %token BORDER_
 %token CAP_
 %token COLOR_
+%token CURRENT_
 %token DASH_
 %token DATASET_
 %token ERROR_
@@ -62,11 +63,14 @@ plotsend : {ProcessSendCmdGet iap plots}
  | BAR_ bar
  | SCATTER_ scatter
  | ERROR_ errorr
+ | CURRENT_ {PlotSendCmdRef}
  
 # Edit Menu
  | MODE_ {ProcessSendCmdCVARGet mode}
 
 # Canvas Menu
+ | CURRENT_ GRAPH_ {ProcessSendCmdCVARGet graph,current}
+ # backward compatibility
  | SELECT_ GRAPH_ {ProcessSendCmdCVARGet graph,current}
  | LAYOUT_ {ProcessSendCmdCVARGet canvas,layout}
  | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet canvas,layout,strip,scale}
@@ -77,6 +81,8 @@ plotsend : {ProcessSendCmdGet iap plots}
  | FONT_ fontt
 
 # Graph Menu
+ | CURRENT_ DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
+ # backward compatibility
  | SELECT_ DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
  # backward compatibility
  | SELECT_ {ProcessSendCmdCVARGet graph,ds,current}

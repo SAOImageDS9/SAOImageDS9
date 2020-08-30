@@ -160,7 +160,7 @@ proc PlotBackupDialog {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [SaveFileDialog backupfbox]
+    set fn [SaveFileDialog plotbackupfbox]
     if {[string length $fn] != 0} {
 	PlotBackup $varname $fn
     }
@@ -196,7 +196,7 @@ proc PlotRestoreDialog {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog backupfbox]
+    set fn [OpenFileDialog plotbackupfbox]
     if {[string length $fn] != 0} {
 	PlotRestore $varname $fn
     }

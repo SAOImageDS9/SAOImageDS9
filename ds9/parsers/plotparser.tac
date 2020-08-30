@@ -180,6 +180,8 @@ plot : line
 
  # Canvas Menu
  | ADD_ GRAPH_ graph {ProcessCmdCVAROpt PlotAddGraph $3}
+ | CURRENT_ GRAPH_ INT_ {ProcessCmdCVAR graph,current $3 PlotCurrentGraph}
+# backward compatibility
  | SELECT_ GRAPH_ INT_ {ProcessCmdCVAR graph,current $3 PlotCurrentGraph}
  | DELETE_ GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
  | LAYOUT_ layout {ProcessCmdCVAR canvas,layout $2 PlotChangeLayout}
@@ -191,6 +193,9 @@ plot : line
  | THEME_ yesno {ProcessCmdCVAR canvas,theme $2 PlotUpdateAllElement}
 
  # Graph Menu
+ | CURRENT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
+ | CURRENT_ INT_ {ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
+# backward compatibility
  | SELECT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
  # backward compatibility
  | SELECT_ INT_ {ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet}

@@ -219,6 +219,13 @@ proc PlotCmdRef {ref} {
     lappend iap(plots) $ref
 }
 
+proc PlotSendCmdRef {} {
+    global iap
+    global parse
+
+    $parse(proc) $parse(id) "[lindex $iap(plots) end]\n"
+}
+
 proc PlotCmdNew {name} {
     global parse
 

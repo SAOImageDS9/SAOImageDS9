@@ -1459,9 +1459,9 @@ plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
 &nbsp;&nbsp;&nbsp; [layout strip scale &lt;percent&gt;]<br>
 &nbsp;&nbsp;&nbsp; [add graph line|bar|scatter]<br>
-&nbsp;&nbsp;&nbsp; [select graph &lt;graph&gt;]<br>
+&nbsp;&nbsp;&nbsp; [current graph &lt;graph&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete graph]<br>
-&nbsp;&nbsp;&nbsp; [select dataset &lt;dataset&gt;]<br>
+&nbsp;&nbsp;&nbsp; [current dataset &lt;dataset&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete dataset]<br>
 &nbsp;&nbsp;&nbsp; [duplicate]<br>
 &nbsp;&nbsp;&nbsp; [stats yes|no]<br>
@@ -1563,9 +1563,9 @@ $ds9 -plot current foo<br>
 $ds9 -plot layout strip<br>
 $ds9 -plot layout strip scale 30<br>
 $ds9 -plot add graph scatter<br>
-$ds9 -plot select graph 1<br>
+$ds9 -plot current graph 1<br>
 $ds9 -plot delete graph<br>
-$ds9 -plot select dataset 1<br>
+$ds9 -plot current dataset 1<br>
 $ds9 -plot delete dataset<br>
 $ds9 -plot duplicate<br>
 $ds9 -plot stats yes<br>

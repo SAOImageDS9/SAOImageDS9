@@ -367,6 +367,13 @@ proc InitDialogBox {} {
 			       [list {BCK} {*.bck}] \
 			      ]
 
+    global plotbackupfbox
+    set plotbackupfbox(file) {ds9.plb}
+    set plotbackupfbox(dir) {}
+    set plotbackupfbox(types) [list \
+			       [list {PLB} {*.plb}] \
+			      ]
+
 }
 
 proc SetFileLast {format item} {

@@ -1817,9 +1817,9 @@ plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
 &nbsp;&nbsp;&nbsp; [layout strip scale &lt;percent&gt;]<br>
 &nbsp;&nbsp;&nbsp; [add graph line|bar|scatter]<br>
-&nbsp;&nbsp;&nbsp; [select graph &lt;graph&gt;]<br>
+&nbsp;&nbsp;&nbsp; [current graph &lt;graph&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete graph]<br>
-&nbsp;&nbsp;&nbsp; [select dataset &lt;dataset&gt;]<br>
+&nbsp;&nbsp;&nbsp; [current dataset &lt;dataset&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete dataset]<br>
 &nbsp;&nbsp;&nbsp; [duplicate]<br>
 &nbsp;&nbsp;&nbsp; [stats yes|no]<br>
@@ -1924,8 +1924,9 @@ plot line xy.dat {The Title} {X Axis} {Y Axis} xy <br>
 string value = ds9.get(string cmd)<br>
 plot layout<br>
 plot layout strip scale<br>
-plot select graph<br>
-plot select dataset<br>
+plot current<br>
+plot current graph<br>
+plot current dataset<br>
 plot stats<br>
 plot list<br>
 plot mode<br>
@@ -1937,9 +1938,9 @@ plot current foo<br>
 plot layout strip<br>
 plot layout strip scale 30<br>
 plot add graph scatter<br>
-plot select graph 1<br>
+plot current graph 1<br>
 plot delete graph<br>
-plot select dataset 1<br>
+plot current dataset 1<br>
 plot delete dataset<br>
 plot duplicate<br>
 plot stats yes<br>

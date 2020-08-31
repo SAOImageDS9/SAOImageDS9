@@ -611,6 +611,15 @@ proc FixPrefsVarOld {} {
 
     # 8.2
     FixVar pbuttons(region,delete) pbuttons(region,deleteall)
+
+    # and fix any previous theme issues
+    global pds9
+    if {[info exists pds9(theme)]} {
+	global ds9
+	if {[lsearch -nocase $ds9(themes) $pds9(theme)] == -1} {
+	    set pds9(theme) default
+	}
+    }
 }
 
 proc FixPrefs8.1to8.2 {} {

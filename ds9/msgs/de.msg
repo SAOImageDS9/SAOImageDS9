@@ -7,7 +7,10 @@
 ::msgcat::mcset de {About SAOImageDS9} 
 ::msgcat::mcset de {About} [encoding convertfrom iso8859-1 {Über}]
 ::msgcat::mcset de {Acknowledgment} {Danksagung}
+::msgcat::mcset de {Add Bar} 
 ::msgcat::mcset de {Add Graph} 
+::msgcat::mcset de {Add Line} 
+::msgcat::mcset de {Add Scatter} 
 ::msgcat::mcset de {Add} [encoding convertfrom iso8859-1 {Hinzufügen}]
 ::msgcat::mcset de {Advanced} {Erweitert}
 ::msgcat::mcset de {Align} {Ausrichten}
@@ -219,6 +222,7 @@
 ::msgcat::mcset de {Default Length} 
 ::msgcat::mcset de {Default} {Standard}
 ::msgcat::mcset de {Degrees} {Grad}
+::msgcat::mcset de {Delay} 
 ::msgcat::mcset de {Delete All Frames?} [encoding convertfrom iso8859-1 {Alle rahmen löschen?}]
 ::msgcat::mcset de {Delete All Frames} [encoding convertfrom iso8859-1 {Alle rahmen löschen}]
 ::msgcat::mcset de {Delete All Groups?} [encoding convertfrom iso8859-1 {Alle Gruppen löschen?}]
@@ -456,8 +460,8 @@
 ::msgcat::mcset de {Load Data} {Daten laden}
 ::msgcat::mcset de {Load Mosaic} {Mosaic laden}
 ::msgcat::mcset de {Load Template} {Vorlage laden}
-::msgcat::mcset de {Load into All Frames} 
-::msgcat::mcset de {Load into Current Frame} 
+::msgcat::mcset de {Load into All} 
+::msgcat::mcset de {Load into Current} 
 ::msgcat::mcset de {Loading Catalog} 
 ::msgcat::mcset de {Loading} 
 ::msgcat::mcset de {Load} {Laden}
@@ -585,6 +589,7 @@
 ::msgcat::mcset de {New Frame RGB} {Neuer RGB rahmen}
 ::msgcat::mcset de {New Frame each Time} {Neuer rahmen jedes Mal}
 ::msgcat::mcset de {New Frame} {Neuer rahmen}
+::msgcat::mcset de {New Graph} 
 ::msgcat::mcset de {New Group} {Neue Gruppe}
 ::msgcat::mcset de {New Plot} 
 ::msgcat::mcset de {New} {Neu}
@@ -665,7 +670,7 @@
 ::msgcat::mcset de {Plot 2D} 
 ::msgcat::mcset de {Plot 3D} 
 ::msgcat::mcset de {Plot Area} 
-::msgcat::mcset de {Plot GUI} 
+::msgcat::mcset de {Plot Control Panel} 
 ::msgcat::mcset de {Plot Tool} 
 ::msgcat::mcset de {Plot Type} 
 ::msgcat::mcset de {Plotting Regions} {Regionen drucken}
@@ -901,6 +906,7 @@
 ::msgcat::mcset de {Upper Right Back} 
 ::msgcat::mcset de {Upper Right Front} 
 ::msgcat::mcset de {Use Authentication} {Authentifizierung verwenden}
+::msgcat::mcset de {Use Color} 
 ::msgcat::mcset de {Use Current Frame on Download} {Aktuellen rahmen bei Download verwenden}
 ::msgcat::mcset de {Use Internal Web Browser} {Internen Webbrowser verwenden}
 ::msgcat::mcset de {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset de {g} 
 ::msgcat::mcset de {h5utils} 
 ::msgcat::mcset de {heat} 
+::msgcat::mcset de {hundredths second} 
 ::msgcat::mcset de {internal error} 
 ::msgcat::mcset de {not connected} 
 ::msgcat::mcset de {not} 

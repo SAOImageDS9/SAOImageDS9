@@ -7,7 +7,10 @@
 ::msgcat::mcset cs {About SAOImageDS9} 
 ::msgcat::mcset cs {About} [encoding convertfrom iso8859-2 {O programu}] 
 ::msgcat::mcset cs {Acknowledgment} [encoding convertfrom iso8859-2 {Podìkování}]
+::msgcat::mcset cs {Add Bar} 
 ::msgcat::mcset cs {Add Graph} 
+::msgcat::mcset cs {Add Line} 
+::msgcat::mcset cs {Add Scatter} 
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
 ::msgcat::mcset cs {Align} [encoding convertfrom iso8859-2 {Zarovnat}]
@@ -219,6 +222,7 @@
 ::msgcat::mcset cs {Default Length} 
 ::msgcat::mcset cs {Default} [encoding convertfrom iso8859-2 {Výchozí}]
 ::msgcat::mcset cs {Degrees} [encoding convertfrom iso8859-2 {Stupnì}]
+::msgcat::mcset cs {Delay} 
 ::msgcat::mcset cs {Delete All Frames?} [encoding convertfrom iso8859-2 {Smazat v¹echny snímky?}]
 ::msgcat::mcset cs {Delete All Frames} [encoding convertfrom iso8859-2 {Smazat v¹echny snímky}]
 ::msgcat::mcset cs {Delete All Groups?} [encoding convertfrom iso8859-2 {Smazat v¹echny skupiny?}]
@@ -456,8 +460,8 @@
 ::msgcat::mcset cs {Load Data} 
 ::msgcat::mcset cs {Load Mosaic} 
 ::msgcat::mcset cs {Load Template} 
-::msgcat::mcset cs {Load into All Frames} 
-::msgcat::mcset cs {Load into Current Frame} 
+::msgcat::mcset cs {Load into All} 
+::msgcat::mcset cs {Load into Current} 
 ::msgcat::mcset cs {Loading Catalog} 
 ::msgcat::mcset cs {Loading} 
 ::msgcat::mcset cs {Load} [encoding convertfrom iso8859-2 {Nahrát}]
@@ -585,6 +589,7 @@
 ::msgcat::mcset cs {New Frame RGB} [encoding convertfrom iso8859-2 {Nový barevný RGB snímek}]
 ::msgcat::mcset cs {New Frame each Time} 
 ::msgcat::mcset cs {New Frame} [encoding convertfrom iso8859-2 {Nový snímek}]
+::msgcat::mcset cs {New Graph} 
 ::msgcat::mcset cs {New Group} [encoding convertfrom iso8859-2 {Nová skupina}]
 ::msgcat::mcset cs {New Plot} 
 ::msgcat::mcset cs {New} [encoding convertfrom iso8859-2 {Nový}]
@@ -665,7 +670,7 @@
 ::msgcat::mcset cs {Plot 2D} 
 ::msgcat::mcset cs {Plot 3D} 
 ::msgcat::mcset cs {Plot Area} 
-::msgcat::mcset cs {Plot GUI} 
+::msgcat::mcset cs {Plot Control Panel} 
 ::msgcat::mcset cs {Plot Tool} 
 ::msgcat::mcset cs {Plot Type} 
 ::msgcat::mcset cs {Plotting Regions} 
@@ -901,6 +906,7 @@
 ::msgcat::mcset cs {Upper Right Back} 
 ::msgcat::mcset cs {Upper Right Front} 
 ::msgcat::mcset cs {Use Authentication} 
+::msgcat::mcset cs {Use Color} 
 ::msgcat::mcset cs {Use Current Frame on Download} 
 ::msgcat::mcset cs {Use Internal Web Browser} 
 ::msgcat::mcset cs {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset cs {g} 
 ::msgcat::mcset cs {h5utils} 
 ::msgcat::mcset cs {heat} [encoding convertfrom iso8859-2 {horko}]
+::msgcat::mcset cs {hundredths second} 
 ::msgcat::mcset cs {internal error} 
 ::msgcat::mcset cs {not connected} 
 ::msgcat::mcset cs {not} 

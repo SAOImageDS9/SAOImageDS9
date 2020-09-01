@@ -45,6 +45,9 @@ proc MarkerDef {} {
     set marker(font,slant) roman
     set marker(preserve) 0
 
+    set marker(default,use) 0
+    set marker(default,color) green
+
     set marker(plot2d) 0
     set marker(plot3d) 0
     set marker(stats) 0
@@ -1167,7 +1170,7 @@ proc MarkerLoadFile {filename which format sys sky} {
     if {$ll == "SIMPLE  ="} {
 	# ok, its fits
 	# try filename first
-	if {[catch {$which marker load fits "\{$filename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+	if {[catch {$which marker load fits "\{$filename\}" $marker(default,color)}]} {
 
 	    # reset errorInfo
 	    set errorInfo {}
@@ -1177,14 +1180,14 @@ proc MarkerLoadFile {filename which format sys sky} {
 	    if {$ext == {}} {
 		set regfilename "$base\[REGION\]"
 
-		if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+		if {[catch {$which marker load fits "\{$regfilename\}" $marker(default,color)}]} {
 
 		    # reset errorInfo
 		    set errorInfo {}
 
 		    # ok now try the first extension
 		    set regfilename "$base\[1\]"
-		    if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+		    if {[catch {$which marker load fits "\{$regfilename\}" $marker(default,color)}]} {
 			Error "[msgcat::mc {Unable to load region file}] $filename"
 			return -code error
 		    }
@@ -1196,7 +1199,7 @@ proc MarkerLoadFile {filename which format sys sky} {
 	}
     } else {
 	# no, its ascii
-	if {[catch {$which marker load $format "\{$filename\}" $sys $sky}]} {
+	if {[catch {$which marker load $format "\{$filename\}" $marker(default,use) $marker(default,color) $sys $sky}]} {
 	    Error "[msgcat::mc {Unable to load region file}] $filename"
 	    return -code error
 	}

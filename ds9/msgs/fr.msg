@@ -7,7 +7,10 @@
 ::msgcat::mcset fr {About SAOImageDS9} 
 ::msgcat::mcset fr {About} [encoding convertfrom iso8859-1 {À propos de}]
 ::msgcat::mcset fr {Acknowledgment} {Remerciement}
+::msgcat::mcset fr {Add Bar} 
 ::msgcat::mcset fr {Add Graph} 
+::msgcat::mcset fr {Add Line} 
+::msgcat::mcset fr {Add Scatter} 
 ::msgcat::mcset fr {Add} {Ajouter}
 ::msgcat::mcset fr {Advanced} [encoding convertfrom iso8859-1 {Avancé}]
 ::msgcat::mcset fr {Align} {Aligner}
@@ -219,6 +222,7 @@
 ::msgcat::mcset fr {Default Length} 
 ::msgcat::mcset fr {Default} {Defaut} 
 ::msgcat::mcset fr {Degrees} [encoding convertfrom iso8859-1 {Degrés}]
+::msgcat::mcset fr {Delay} 
 ::msgcat::mcset fr {Delete All Frames?} [encoding convertfrom iso8859-1 {Supprimer toutes les fenêtres ?}]
 ::msgcat::mcset fr {Delete All Frames} [encoding convertfrom iso8859-1 {Supprimer toutes les fenêtres}] 
 ::msgcat::mcset fr {Delete All Groups?} {Supprimer tous les groupes ?} 
@@ -456,8 +460,8 @@
 ::msgcat::mcset fr {Load Data} [encoding convertfrom iso8859-1 {Charger les données}]
 ::msgcat::mcset fr {Load Mosaic} [encoding convertfrom iso8859-1 {Charger le mosaïque}]
 ::msgcat::mcset fr {Load Template} {Charger le patron}
-::msgcat::mcset fr {Load into All Frames} 
-::msgcat::mcset fr {Load into Current Frame} 
+::msgcat::mcset fr {Load into All} 
+::msgcat::mcset fr {Load into Current} 
 ::msgcat::mcset fr {Loading Catalog} 
 ::msgcat::mcset fr {Loading} 
 ::msgcat::mcset fr {Load} {Charger}
@@ -585,6 +589,7 @@
 ::msgcat::mcset fr {New Frame RGB} [encoding convertfrom iso8859-1 {Nouvelle fenêtre RGB}]
 ::msgcat::mcset fr {New Frame each Time} [encoding convertfrom iso8859-1 {Nouvelle fenêtre à chaque fois}]
 ::msgcat::mcset fr {New Frame} [encoding convertfrom iso8859-1 {Nouvelle fenêtre}]
+::msgcat::mcset fr {New Graph} 
 ::msgcat::mcset fr {New Group} {Nouveau groupe}
 ::msgcat::mcset fr {New Plot} 
 ::msgcat::mcset fr {New} {Nouveau}
@@ -665,7 +670,7 @@
 ::msgcat::mcset fr {Plot 2D} 
 ::msgcat::mcset fr {Plot 3D} 
 ::msgcat::mcset fr {Plot Area} 
-::msgcat::mcset fr {Plot GUI} 
+::msgcat::mcset fr {Plot Control Panel} 
 ::msgcat::mcset fr {Plot Tool} 
 ::msgcat::mcset fr {Plot Type} 
 ::msgcat::mcset fr {Plotting Regions} [encoding convertfrom iso8859-1 {Tracer les régions}]
@@ -901,6 +906,7 @@
 ::msgcat::mcset fr {Upper Right Back} 
 ::msgcat::mcset fr {Upper Right Front} 
 ::msgcat::mcset fr {Use Authentication} 
+::msgcat::mcset fr {Use Color} 
 ::msgcat::mcset fr {Use Current Frame on Download} 
 ::msgcat::mcset fr {Use Internal Web Browser} 
 ::msgcat::mcset fr {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset fr {g} 
 ::msgcat::mcset fr {h5utils} 
 ::msgcat::mcset fr {heat} 
+::msgcat::mcset fr {hundredths second} 
 ::msgcat::mcset fr {internal error} 
 ::msgcat::mcset fr {not connected} 
 ::msgcat::mcset fr {not} 

@@ -7,7 +7,10 @@
 ::msgcat::mcset ja {About SAOImageDS9} 
 ::msgcat::mcset ja {About} [encoding convertfrom euc-jp "\x44\x53\x39\x20\xa4\xcb\xa4\xc4\xa4\xa4\xa4\xc6"]
 ::msgcat::mcset ja {Acknowledgment} [encoding convertfrom euc-jp "\xbc\xd5\xbc\xad"]
+::msgcat::mcset ja {Add Bar} 
 ::msgcat::mcset ja {Add Graph} 
+::msgcat::mcset ja {Add Line} 
+::msgcat::mcset ja {Add Scatter} 
 ::msgcat::mcset ja {Add} [encoding convertfrom euc-jp "\xc4\xc9\xb2\xc3"]
 ::msgcat::mcset ja {Advanced} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9\xa4\xca\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Align} [encoding convertfrom euc-jp "\xc0\xb0\xce\xf3"]
@@ -219,6 +222,7 @@
 ::msgcat::mcset ja {Default Length} 
 ::msgcat::mcset ja {Default} [encoding convertfrom euc-jp "\xc9\xb8\xbd\xe0"]
 ::msgcat::mcset ja {Degrees} [encoding convertfrom euc-jp "\xc5\xd9"]
+::msgcat::mcset ja {Delay} 
 ::msgcat::mcset ja {Delete All Frames?} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee\xa4\xb7\xa4\xde\xa4\xb9\xa4\xab\x3f"]
 ::msgcat::mcset ja {Delete All Frames} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete All Groups?} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee\xa4\xb7\xa4\xde\xa4\xb9\xa4\xab\x3f"]
@@ -456,8 +460,8 @@
 ::msgcat::mcset ja {Load Data} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Mosaic} [encoding convertfrom euc-jp "\xa5\xe2\xa5\xb6\xa5\xa4\xa5\xaf\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
-::msgcat::mcset ja {Load into All Frames} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
-::msgcat::mcset ja {Load into Current Frame} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xc3\xe6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
+::msgcat::mcset ja {Load into All} 
+::msgcat::mcset ja {Load into Current} 
 ::msgcat::mcset ja {Loading Catalog} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xf2\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf\xc3\xe6"]
 ::msgcat::mcset ja {Loading} [encoding convertfrom euc-jp "\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf\xc3\xe6"]
 ::msgcat::mcset ja {Load} [encoding convertfrom euc-jp "\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
@@ -585,6 +589,7 @@
 ::msgcat::mcset ja {New Frame RGB} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\x52\x47\x42\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {New Frame each Time} [encoding convertfrom euc-jp "\xcb\xe8\xb2\xf3\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xba\xee\xc0\xae"]
 ::msgcat::mcset ja {New Frame} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
+::msgcat::mcset ja {New Graph} 
 ::msgcat::mcset ja {New Group} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7"]
 ::msgcat::mcset ja {New Plot} 
 ::msgcat::mcset ja {New} [encoding convertfrom euc-jp "\xbf\xb7\xb5\xac"]
@@ -665,7 +670,7 @@
 ::msgcat::mcset ja {Plot 2D} 
 ::msgcat::mcset ja {Plot 3D} 
 ::msgcat::mcset ja {Plot Area} 
-::msgcat::mcset ja {Plot GUI} 
+::msgcat::mcset ja {Plot Control Panel} 
 ::msgcat::mcset ja {Plot Tool} 
 ::msgcat::mcset ja {Plot Type} 
 ::msgcat::mcset ja {Plotting Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8\xa4\xb7\xa4\xc6\xa4\xa4\xa4\xde\xa4\xb9"]
@@ -901,6 +906,7 @@
 ::msgcat::mcset ja {Upper Right Back} 
 ::msgcat::mcset ja {Upper Right Front} 
 ::msgcat::mcset ja {Use Authentication} [encoding convertfrom euc-jp "\xc7\xa7\xbe\xda\xa4\xf2\xbb\xc8\xcd\xd1"]
+::msgcat::mcset ja {Use Color} 
 ::msgcat::mcset ja {Use Current Frame on Download} [encoding convertfrom euc-jp "\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xbb\xfe\xa4\xcb\xc1\xaa\xc2\xf2\xc3\xe6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Internal Web Browser} [encoding convertfrom euc-jp "\xc6\xe2\xc9\xf4\xa5\xd6\xa5\xe9\xa5\xa6\xa5\xb6\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset ja {g} 
 ::msgcat::mcset ja {h5utils} 
 ::msgcat::mcset ja {heat} 
+::msgcat::mcset ja {hundredths second} 
 ::msgcat::mcset ja {internal error} 
 ::msgcat::mcset ja {not connected} 
 ::msgcat::mcset ja {not} 

@@ -7,7 +7,10 @@
 ::msgcat::mcset da {About SAOImageDS9} 
 ::msgcat::mcset da {About} {Om}
 ::msgcat::mcset da {Acknowledgment} {Tak}
+::msgcat::mcset da {Add Bar} 
 ::msgcat::mcset da {Add Graph} 
+::msgcat::mcset da {Add Line} 
+::msgcat::mcset da {Add Scatter} 
 ::msgcat::mcset da {Add} [encoding convertfrom iso8859-1 {Tilføj}]
 ::msgcat::mcset da {Advanced} {Avanceret}
 ::msgcat::mcset da {Align} {Juster}
@@ -219,6 +222,7 @@
 ::msgcat::mcset da {Default Length} 
 ::msgcat::mcset da {Default} {Standard}
 ::msgcat::mcset da {Degrees} {Grader}
+::msgcat::mcset da {Delay} 
 ::msgcat::mcset da {Delete All Frames?} {Slet alle rammer?}
 ::msgcat::mcset da {Delete All Frames} {Slet alle rammer}
 ::msgcat::mcset da {Delete All Groups?} {Slet alle grupper?}
@@ -456,8 +460,8 @@
 ::msgcat::mcset da {Load Data} [encoding convertfrom iso8859-1 {Indlæs data}]
 ::msgcat::mcset da {Load Mosaic} [encoding convertfrom iso8859-1 {Indlæs mosaik}]
 ::msgcat::mcset da {Load Template} [encoding convertfrom iso8859-1 {Indlæs skabelon}]
-::msgcat::mcset da {Load into All Frames} 
-::msgcat::mcset da {Load into Current Frame} 
+::msgcat::mcset da {Load into All} 
+::msgcat::mcset da {Load into Current} 
 ::msgcat::mcset da {Loading Catalog} 
 ::msgcat::mcset da {Loading} 
 ::msgcat::mcset da {Load} [encoding convertfrom iso8859-1 {Indlæs}]
@@ -585,6 +589,7 @@
 ::msgcat::mcset da {New Frame RGB} {Ny ramme (RGB)}
 ::msgcat::mcset da {New Frame each Time} {Ny ramme hver gang}
 ::msgcat::mcset da {New Frame} {Ny ramme}
+::msgcat::mcset da {New Graph} 
 ::msgcat::mcset da {New Group} {Ny gruppe}
 ::msgcat::mcset da {New Plot} 
 ::msgcat::mcset da {New} {Ny}
@@ -665,7 +670,7 @@
 ::msgcat::mcset da {Plot 2D} 
 ::msgcat::mcset da {Plot 3D} 
 ::msgcat::mcset da {Plot Area} 
-::msgcat::mcset da {Plot GUI} 
+::msgcat::mcset da {Plot Control Panel} 
 ::msgcat::mcset da {Plot Tool} 
 ::msgcat::mcset da {Plot Type} 
 ::msgcat::mcset da {Plotting Regions} [encoding convertfrom iso8859-1 {Plotte områder}]
@@ -901,6 +906,7 @@
 ::msgcat::mcset da {Upper Right Back} 
 ::msgcat::mcset da {Upper Right Front} 
 ::msgcat::mcset da {Use Authentication} [encoding convertfrom iso8859-1 {Anvend bekræftelse}]
+::msgcat::mcset da {Use Color} 
 ::msgcat::mcset da {Use Current Frame on Download} {Brug nuværende ramme til download}
 ::msgcat::mcset da {Use Internal Web Browser} {Brug intern web browser}
 ::msgcat::mcset da {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset da {g} 
 ::msgcat::mcset da {h5utils} 
 ::msgcat::mcset da {heat} 
+::msgcat::mcset da {hundredths second} 
 ::msgcat::mcset da {internal error} 
 ::msgcat::mcset da {not connected} 
 ::msgcat::mcset da {not} 

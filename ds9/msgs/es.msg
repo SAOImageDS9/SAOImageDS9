@@ -7,7 +7,10 @@
 ::msgcat::mcset es {About SAOImageDS9} 
 ::msgcat::mcset es {About} {Acerca de}
 ::msgcat::mcset es {Acknowledgment} {Reconocimientos}
+::msgcat::mcset es {Add Bar} 
 ::msgcat::mcset es {Add Graph} 
+::msgcat::mcset es {Add Line} 
+::msgcat::mcset es {Add Scatter} 
 ::msgcat::mcset es {Add} {Agregar}
 ::msgcat::mcset es {Advanced} {Avanzado}
 ::msgcat::mcset es {Align} {Alinear}
@@ -219,6 +222,7 @@
 ::msgcat::mcset es {Default Length} 
 ::msgcat::mcset es {Default} {Por defecto}
 ::msgcat::mcset es {Degrees} {Grados}
+::msgcat::mcset es {Delay} 
 ::msgcat::mcset es {Delete All Frames?} [encoding convertfrom iso8859-1 {¿Borrar todos los marcos?}]
 ::msgcat::mcset es {Delete All Frames} {Borrar todos los marcos}
 ::msgcat::mcset es {Delete All Groups?} [encoding convertfrom iso8859-1 {¿Borrar todos los grupos?}]
@@ -456,8 +460,8 @@
 ::msgcat::mcset es {Load Data} {Cargar datos}
 ::msgcat::mcset es {Load Mosaic} {Cargar mosaico}
 ::msgcat::mcset es {Load Template} {Cargar modelo}
-::msgcat::mcset es {Load into All Frames} 
-::msgcat::mcset es {Load into Current Frame} 
+::msgcat::mcset es {Load into All} 
+::msgcat::mcset es {Load into Current} 
 ::msgcat::mcset es {Loading Catalog} 
 ::msgcat::mcset es {Loading} 
 ::msgcat::mcset es {Load} {Cargar}
@@ -585,6 +589,7 @@
 ::msgcat::mcset es {New Frame RGB} {Nuevo marco RGB}  
 ::msgcat::mcset es {New Frame each Time} {Nuevo marco cada vez}
 ::msgcat::mcset es {New Frame} {Nuevo marco}
+::msgcat::mcset es {New Graph} 
 ::msgcat::mcset es {New Group} {Nuevo grupo}
 ::msgcat::mcset es {New Plot} 
 ::msgcat::mcset es {New} {Nuevo}
@@ -665,7 +670,7 @@
 ::msgcat::mcset es {Plot 2D} 
 ::msgcat::mcset es {Plot 3D} 
 ::msgcat::mcset es {Plot Area} 
-::msgcat::mcset es {Plot GUI} 
+::msgcat::mcset es {Plot Control Panel} 
 ::msgcat::mcset es {Plot Tool} 
 ::msgcat::mcset es {Plot Type} 
 ::msgcat::mcset es {Plotting Regions} {Dibujando regiones}
@@ -901,6 +906,7 @@
 ::msgcat::mcset es {Upper Right Back} 
 ::msgcat::mcset es {Upper Right Front} 
 ::msgcat::mcset es {Use Authentication} [encoding convertfrom iso8859-1 {Usa autenticación}]
+::msgcat::mcset es {Use Color} 
 ::msgcat::mcset es {Use Current Frame on Download} {Usar marco actual al transferir}
 ::msgcat::mcset es {Use Internal Web Browser} {Usar Web Browser interno}
 ::msgcat::mcset es {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset es {g} 
 ::msgcat::mcset es {h5utils} 
 ::msgcat::mcset es {heat} 
+::msgcat::mcset es {hundredths second} 
 ::msgcat::mcset es {internal error} 
 ::msgcat::mcset es {not connected} 
 ::msgcat::mcset es {not} 

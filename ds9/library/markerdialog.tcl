@@ -15,8 +15,10 @@ proc MarkerLoadDialog {} {
     set ed(ok) 0
     set ed(format) $marker(format)
     set ed(load) $marker(load)
-    set ed(frame) $current(frame)
+    set ed(default,use) $marker(default,use)
+    set ed(default,color) $marker(default,color)
 
+    set ed(frame) $current(frame)
     set ed(system) $wcs(system)
     set ed(sky) $wcs(sky)
     set ed(skyformat) $wcs(skyformat)
@@ -24,19 +26,13 @@ proc MarkerLoadDialog {} {
 
     DialogCreate $w [msgcat::mc {Open Regions}] ed(ok)
 
-    # Param
-    set f [ttk::frame $w.param]
+    # Format
+    set f [ttk::labelframe $w.format  -text [msgcat::mc {Format}]]
 
-    ttk::label $f.formattitle -text [msgcat::mc {Format}]
     set m $f.formatbutton.menu
     ttk::menubutton $f.formatbutton -textvariable ed(format) -menu $m
-    ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
     set ed(cb) $f.coordbutton
     CoordMenuButton $ed(cb) ed system 1 sky skyformat {}
-    ttk::radiobutton $f.current -text [msgcat::mc {Load into Current Frame}] \
-	-variable ed(load) -value current
-    ttk::radiobutton $f.all -text [msgcat::mc {Load into All Frames}] \
-	-variable ed(load) -value all
 
     ThemeMenu $m
     $m add radiobutton -label {DS9/Funtools} -variable ed(format) -value ds9 \
@@ -54,10 +50,27 @@ proc MarkerLoadDialog {} {
     $m add radiobutton -label {X Y} -variable ed(format) -value xy \
 	-command UpdateMarkerLoadDialog
 
-    grid $f.formattitle $f.formatbutton -padx 2 -pady 2 -sticky w
-    grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
+    grid $f.formatbutton $f.coordbutton -padx 2 -pady 2 -sticky w
+
+    # Frame
+    set f [ttk::labelframe $w.frames  -text [msgcat::mc {Frames}]]
+
+    ttk::radiobutton $f.current -text [msgcat::mc {Load into Current}] \
+	-variable ed(load) -value current
+    ttk::radiobutton $f.all -text [msgcat::mc {Load into All}] \
+	-variable ed(load) -value all
+
     grid $f.current - -padx 2 -pady 2 -sticky w
     grid $f.all - -padx 2 -pady 2 -sticky w
+
+    # Color
+    set f [ttk::labelframe $w.color  -text [msgcat::mc {Color}]]
+
+    ttk::checkbutton $f.default -text [msgcat::mc {Use Color}] \
+	-variable ed(default,use)
+    ColorMenuButton $f.color ed default,color {}
+
+    grid $f.default $f.color -padx 2 -pady 2 -sticky w
 
     # Button
     set f [ttk::frame $w.buttons]
@@ -71,7 +84,7 @@ proc MarkerLoadDialog {} {
     # Fini
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.param -side top -fill both -expand true
+    pack $w.format $w.frames $w.color -side top -fill both -expand true
 
     UpdateMarkerLoadDialog
 
@@ -84,7 +97,10 @@ proc MarkerLoadDialog {} {
 	set marker(system) $ed(system)
 	set marker(sky) $ed(sky)
 	set marker(skyformat) $ed(skyformat)
+
 	set marker(load) $ed(load)
+	set marker(default,use) $ed(default,use)
+	set marker(default,color) $ed(default,color)
     }
 
     set rr $ed(ok)

@@ -7,7 +7,10 @@
 ::msgcat::mcset pt {About SAOImageDS9} 
 ::msgcat::mcset pt {About} {Sobre}
 ::msgcat::mcset pt {Acknowledgment} [encoding convertfrom iso8859-1 {Créditos}]
+::msgcat::mcset pt {Add Bar} 
 ::msgcat::mcset pt {Add Graph} 
+::msgcat::mcset pt {Add Line} 
+::msgcat::mcset pt {Add Scatter} 
 ::msgcat::mcset pt {Add} {Adicionar}
 ::msgcat::mcset pt {Advanced} [encoding convertfrom iso8859-1 {Avançado}]
 ::msgcat::mcset pt {Align} {Alinhar}
@@ -219,6 +222,7 @@
 ::msgcat::mcset pt {Default Length} 
 ::msgcat::mcset pt {Default} [encoding convertfrom iso8859-1 {Padrão}]
 ::msgcat::mcset pt {Degrees} {Graus}
+::msgcat::mcset pt {Delay} 
 ::msgcat::mcset pt {Delete All Frames?} {Apagar todos Frames?}
 ::msgcat::mcset pt {Delete All Frames} {Apagar todos Frames}
 ::msgcat::mcset pt {Delete All Groups?} {Apagar todos os grupos?}
@@ -456,8 +460,8 @@
 ::msgcat::mcset pt {Load Data} {Carregar Dados}
 ::msgcat::mcset pt {Load Mosaic} {Carregar Mosaico}
 ::msgcat::mcset pt {Load Template} {Carregar Template}
-::msgcat::mcset pt {Load into All Frames} 
-::msgcat::mcset pt {Load into Current Frame} 
+::msgcat::mcset pt {Load into All} 
+::msgcat::mcset pt {Load into Current} 
 ::msgcat::mcset pt {Loading Catalog} 
 ::msgcat::mcset pt {Loading} 
 ::msgcat::mcset pt {Load} {Carregar}
@@ -585,6 +589,7 @@
 ::msgcat::mcset pt {New Frame RGB} {Novo Frame RGB}
 ::msgcat::mcset pt {New Frame each Time} 
 ::msgcat::mcset pt {New Frame} {Novo frame}
+::msgcat::mcset pt {New Graph} 
 ::msgcat::mcset pt {New Group} {Novo grupo}
 ::msgcat::mcset pt {New Plot} 
 ::msgcat::mcset pt {New} {Novo}
@@ -665,7 +670,7 @@
 ::msgcat::mcset pt {Plot 2D} 
 ::msgcat::mcset pt {Plot 3D} 
 ::msgcat::mcset pt {Plot Area} 
-::msgcat::mcset pt {Plot GUI} 
+::msgcat::mcset pt {Plot Control Panel} 
 ::msgcat::mcset pt {Plot Tool} 
 ::msgcat::mcset pt {Plot Type} 
 ::msgcat::mcset pt {Plotting Regions} 
@@ -901,6 +906,7 @@
 ::msgcat::mcset pt {Upper Right Back} 
 ::msgcat::mcset pt {Upper Right Front} 
 ::msgcat::mcset pt {Use Authentication} [encoding convertfrom iso8859-1 {Utilizar Autenticação}]
+::msgcat::mcset pt {Use Color} 
 ::msgcat::mcset pt {Use Current Frame on Download} {Utilizar Frame Atual ao Descarregar}
 ::msgcat::mcset pt {Use Internal Web Browser} {Utilizar Navegador Web Interno}
 ::msgcat::mcset pt {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset pt {g} 
 ::msgcat::mcset pt {h5utils} 
 ::msgcat::mcset pt {heat} 
+::msgcat::mcset pt {hundredths second} 
 ::msgcat::mcset pt {internal error} 
 ::msgcat::mcset pt {not connected} 
 ::msgcat::mcset pt {not} 

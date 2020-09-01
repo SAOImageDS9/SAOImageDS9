@@ -38,9 +38,7 @@ proc LoadFitsFile {fn layer mode} {
 	set reg "${base}\[REGION\]"
 	if {[$current(frame) fitsy has ext "\"$reg\""]} {
 	    RealizeDS9
-	    catch {
-		$current(frame) marker load fits "\"$reg\"" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"
-	    }
+	    catch {$current(frame) marker load fits "\"$reg\"" $marker(default,color)}
 	}
     }
 }

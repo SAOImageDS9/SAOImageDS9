@@ -7,7 +7,10 @@
 ::msgcat::mcset zh {About SAOImageDS9} 
 ::msgcat::mcset zh {About} [encoding convertfrom big5 "\xC3\xF6 \xA9\xF3"]
 ::msgcat::mcset zh {Acknowledgment} 
+::msgcat::mcset zh {Add Bar} 
 ::msgcat::mcset zh {Add Graph} 
+::msgcat::mcset zh {Add Line} 
+::msgcat::mcset zh {Add Scatter} 
 ::msgcat::mcset zh {Add} 
 ::msgcat::mcset zh {Advanced} 
 ::msgcat::mcset zh {Align} [encoding convertfrom big5 "\xB9\xEF \xBB\xF4 \xA4\xE8 \xA6\xEC"]
@@ -219,6 +222,7 @@
 ::msgcat::mcset zh {Default Length} 
 ::msgcat::mcset zh {Default} 
 ::msgcat::mcset zh {Degrees} 
+::msgcat::mcset zh {Delay} 
 ::msgcat::mcset zh {Delete All Frames?} 
 ::msgcat::mcset zh {Delete All Frames} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xA9\xD2 \xA6\xB3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Delete All Groups?} 
@@ -456,8 +460,8 @@
 ::msgcat::mcset zh {Load Data} 
 ::msgcat::mcset zh {Load Mosaic} 
 ::msgcat::mcset zh {Load Template} 
-::msgcat::mcset zh {Load into All Frames} 
-::msgcat::mcset zh {Load into Current Frame} 
+::msgcat::mcset zh {Load into All} 
+::msgcat::mcset zh {Load into Current} 
 ::msgcat::mcset zh {Loading Catalog} 
 ::msgcat::mcset zh {Loading} 
 ::msgcat::mcset zh {Load} [encoding convertfrom big5 "\xB8\xFC \xA4\x4A"]
@@ -585,6 +589,7 @@
 ::msgcat::mcset zh {New Frame RGB} 
 ::msgcat::mcset zh {New Frame each Time} 
 ::msgcat::mcset zh {New Frame} [encoding convertfrom big5 "\xB7\x73 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
+::msgcat::mcset zh {New Graph} 
 ::msgcat::mcset zh {New Group} 
 ::msgcat::mcset zh {New Plot} 
 ::msgcat::mcset zh {New} 
@@ -665,7 +670,7 @@
 ::msgcat::mcset zh {Plot 2D} 
 ::msgcat::mcset zh {Plot 3D} 
 ::msgcat::mcset zh {Plot Area} 
-::msgcat::mcset zh {Plot GUI} 
+::msgcat::mcset zh {Plot Control Panel} 
 ::msgcat::mcset zh {Plot Tool} 
 ::msgcat::mcset zh {Plot Type} 
 ::msgcat::mcset zh {Plotting Regions} 
@@ -901,6 +906,7 @@
 ::msgcat::mcset zh {Upper Right Back} 
 ::msgcat::mcset zh {Upper Right Front} 
 ::msgcat::mcset zh {Use Authentication} 
+::msgcat::mcset zh {Use Color} 
 ::msgcat::mcset zh {Use Current Frame on Download} 
 ::msgcat::mcset zh {Use Internal Web Browser} 
 ::msgcat::mcset zh {Use Original Color/Width} 
@@ -963,6 +969,7 @@
 ::msgcat::mcset zh {g} 
 ::msgcat::mcset zh {h5utils} 
 ::msgcat::mcset zh {heat} 
+::msgcat::mcset zh {hundredths second} 
 ::msgcat::mcset zh {internal error} 
 ::msgcat::mcset zh {not connected} 
 ::msgcat::mcset zh {not} 

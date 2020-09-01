@@ -37,8 +37,8 @@ static Coord::SkyFrame localSky;
 static unsigned short globalProps;
 static unsigned short localProps;
 
-static char globalColor[16];
-static char localColor[16];
+static char globalColor[32];
+static char localColor[32];
 
 static int dash[] = {8,3};
 static int fill_ =0;
@@ -249,7 +249,10 @@ initLocal : {
 	  localSystem = globalSystem;
 	  localSky = globalSky;
 	  localProps = globalProps;
-	  strcpy(localColor,globalColor);
+	  if (fr->useMarkerColor())
+	    strcpy(localColor,fr->markerColor());
+	  else
+	    strcpy(localColor,globalColor);
 	  strcpy(localText,globalText);
 	  strcpy(localComment,"");
 

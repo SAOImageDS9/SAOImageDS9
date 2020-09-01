@@ -256,6 +256,9 @@ public:
   float centroidRadius;
   int preserveMarkers;       // flag to indicate preserve between loads
 
+  int useMarkerColor_;
+  char* markerColor_;
+
   GC markerGC_; // marker gc
   GC markerGCXOR_; // marker xor gc
   GC selectGCXOR; // select gc
@@ -563,6 +566,9 @@ public:
 
   Coord::CoordSystem xySystem() {return xySystem_;}
   Coord::SkyFrame xySky() {return xySky_;}
+
+  int useMarkerColor() {return useMarkerColor_;}
+  char* markerColor() {return markerColor_;}
 
   void matchCmd(const char* xxname1, const char* yyname1,
 		Coord::CoordSystem sys1, Coord::SkyFrame sky1,
@@ -1451,18 +1457,22 @@ public:
   void markerKeyCmd();
   void markerKeyCmd(const Vector&);
 
-  void markerLineCmd(int, const Vector&, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
+  void markerLineCmd(int, const Vector&, const Vector&,
+		     Coord::CoordSystem, Coord::SkyFrame);
   void markerLineArrowCmd(int, int, int);
   void markerLineWidthCmd(int);
   void markerLineWidthCmd(int, int);
-  void markerListCmd(MarkerFormat, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, 
+  void markerListCmd(MarkerFormat,
+		     Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, 
 		     int strip, int select,
 		     unsigned short, unsigned short, List<Tag>&);
-  void markerLoadCmd(MarkerFormat,const char*);
-  void markerLoadCmd(MarkerFormat,const char*,Coord::CoordSystem,Coord::SkyFrame);
-  void markerLoadCmd(MarkerFormat,int);
-  void markerLoadCmd(MarkerFormat,int,Coord::CoordSystem,Coord::SkyFrame);
-  void markerLoadFitsCmd(const char*, const char*, int*, int, const char*);
+  void markerLoadCmd(MarkerFormat, const char*);
+  void markerLoadCmd(MarkerFormat, const char*, int, const char*,
+		     Coord::CoordSystem,Coord::SkyFrame);
+  void markerLoadCmd(MarkerFormat, int);
+  void markerLoadCmd(MarkerFormat, int, int, const char*,
+		     Coord::CoordSystem,Coord::SkyFrame);
+  void markerLoadFitsCmd(const char*, const char*);
 
   void markerMoveCmd(const Vector&);
   void markerMoveCmd(const char*, const Vector&);

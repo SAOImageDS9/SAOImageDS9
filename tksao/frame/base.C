@@ -146,6 +146,9 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   centroidRadius = 10;
   preserveMarkers = 0;
 
+  useMarkerColor_ =0;
+  markerColor_ = dupstr("green");
+
   markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   selectGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);

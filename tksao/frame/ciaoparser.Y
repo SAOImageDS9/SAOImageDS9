@@ -27,7 +27,7 @@
 extern int ciaolex(void*, ciaoFlexLexer*);
 extern void ciaoerror(Base*, ciaoFlexLexer*, const char*);
 
-static const char *color = "green";
+static char color[32];
 static int dash[] = {8,3};
 static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
@@ -90,6 +90,14 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token VERSION_
 
 %%
+
+start	: {
+  if (fr->useMarkerColor())
+    strcpy(color, fr->markerColor());
+  else
+    strcpy(color, "green");
+ } commands
+	;
 
 commands: commands command terminator
 	| command terminator

@@ -4443,11 +4443,17 @@ void Base::markerLoadCmd(MarkerFormat fm, const char* fn)
   parseMarker(fm, str);
 }
 
-void Base::markerLoadCmd(MarkerFormat fm, const char* fn, 
+void Base::markerLoadCmd(MarkerFormat fm, const char* fn,
+			 int use, const char* color,
 			 Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
+  useMarkerColor_ = use;
+  if (markerColor_)
+    delete markerColor_;
+  markerColor_ = dupstr(color);
   xySystem_ = sys;
   xySky_ = sky;
+
   markerLoadCmd(fm,fn);
 }
 
@@ -4462,16 +4468,24 @@ void Base::markerLoadCmd(MarkerFormat fm, int fd)
 }
 
 void Base::markerLoadCmd(MarkerFormat fm, int fd, 
+			 int use, const char* color,
 			 Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
+  if (markerColor_)
+    delete markerColor_;
+  markerColor_ = dupstr(color);
   xySystem_ = sys;
   xySky_ = sky;
+
   markerLoadCmd(fm,fd);
 }
 
-void Base::markerLoadFitsCmd(const char* fn, const char* color,
-			     int* dash, int width, const char* font)
+void Base::markerLoadFitsCmd(const char* fn, const char* color)
 {
+  int dash[] = {8,3};
+  int width =1;
+  const char* font = "helvetica 10 normal roman";
+
   if (!keyContext->fits)
     return;
 

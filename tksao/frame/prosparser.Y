@@ -37,7 +37,7 @@ static Coord::SkyFrame localSky;
 static unsigned short globalProps;
 static unsigned short localProps;
 
-static const char *color = "green";
+static char color[32];
 static int dash[] ={8,3};
 static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
@@ -123,7 +123,15 @@ static Coord::SkyFrame checkWCSSky();
 
 %%
 
-start	: initGlobal commands processAnnulus
+start	:  {
+  if (fr->useMarkerColor())
+    strcpy(color, fr->markerColor());
+  else
+    strcpy(color, "green");
+
+  globalSystem = fr->xySystem(); 
+  globalSky = fr->xySky();
+ } initGlobal commands processAnnulus
 	;
 
 commands: commands command terminator

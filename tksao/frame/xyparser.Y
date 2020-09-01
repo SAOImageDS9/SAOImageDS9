@@ -27,7 +27,7 @@
 extern int xylex(void*, xyFlexLexer*);
 extern void xyerror(Base*, xyFlexLexer*, const char*);
 
-static const char *color = "green";
+static char color[32];
 static int dash[] = {8,3};
 //static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
@@ -118,9 +118,14 @@ static List<CallBack> cblist;
 %%
 
 start	: {
-	    globalSystem = fr->xySystem(); 
-	    globalSky = fr->xySky();
-	  } commands
+  if (fr->useMarkerColor())
+    strcpy(color, fr->markerColor());
+  else
+    strcpy(color, "green");
+
+  globalSystem = fr->xySystem(); 
+  globalSky = fr->xySky();
+ } commands
 	;
 
 commands: commands command terminator

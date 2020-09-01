@@ -32,7 +32,7 @@ extern void saoDiscard(int);
 static unsigned short globalProps;
 static unsigned short localProps;
 
-static const char *color = "green";
+static char color[32];
 static int dash[] = {8,3};
 static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
@@ -95,7 +95,12 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 
 %%
 
-start	: initGlobal commands processAnnulus
+start	: {
+  if (fr->useMarkerColor())
+    strcpy(color, fr->markerColor());
+  else
+    strcpy(color, "green");
+ } initGlobal commands processAnnulus
 	;
 
 commands: commands command terminator

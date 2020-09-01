@@ -81,7 +81,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> markerCallBack
 %type <integer> markerFormat
 %type <integer> markerLayer
-%type <dash> markerDash
 %type <integer> maskType
 %type <integer> maskBlend
 %type <integer> pscolorspace
@@ -2264,9 +2263,6 @@ markerCreateTemplate : STRING numeric numeric
 	{fr->createTemplateCmd(Vector($4),(Coord::CoordSystem)$2,(Coord::SkyFrame)$3, $1);}
 	;
 
-markerDash : INT INT {$$[0] = $1; $$[1] = $2;}
-	;
-
 markerDelete :	{fr->markerDeleteAllCmd(0);}
         | SELECT_ {fr->markerDeleteAllCmd(1);}
 	| ALL_ {
@@ -2493,16 +2489,16 @@ markerList : markerFormat coordSystem skyFrame skyFormat
 
 markerLoad : markerFormat STRING
 	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2);}
-	| markerFormat STRING coordSystem skyFrame
-	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,
-	    (Coord::CoordSystem)$3,(Coord::SkyFrame)$4);}
+	| markerFormat STRING INT STRING coordSystem skyFrame
+	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,$3,$4,
+	    (Coord::CoordSystem)$5,(Coord::SkyFrame)$6);}
 	| markerFormat INT
 	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2);}
-	| markerFormat INT coordSystem skyFrame
-	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,
-	    (Coord::CoordSystem)$3,(Coord::SkyFrame)$4);}
-	| FITS_ STRING STRING markerDash INT STRING 
-	{fr->markerLoadFitsCmd($2, $3, $4, $5, $6);}
+	| markerFormat INT INT STRING coordSystem skyFrame
+	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,$3,$4,
+	    (Coord::CoordSystem)$5,(Coord::SkyFrame)$6);}
+	| FITS_ STRING STRING
+	{fr->markerLoadFitsCmd($2, $3);}
 	;
 
 markerMoveSelected : numeric numeric {fr->markerMoveCmd(Vector($1,$2));}

@@ -48,8 +48,8 @@ static int localDash[2];
 static int globalWidth;
 static int localWidth;
 
-static char globalColor[16];
-static char localColor[16];
+static char globalColor[32];
+static char localColor[32];
 
 static char globalFont[32];
 static char localFont[32];
@@ -821,7 +821,10 @@ local	: local sp localProperty
 	;
 
 localProperty : property '=' yesno {setProps(&localProps,$1,$3);}
-	| COLOR_ '=' STRING {strncpy(localColor,$3,16);}
+	| COLOR_ '=' STRING {
+	  if (!fr->useMarkerColor())
+	    strncpy(localColor,$3,16);
+	  }
 	| DASHLIST_ '=' INT INT 
 	{
 	  localDash[0] =$3;
@@ -974,7 +977,10 @@ initLocal : {
 	  localSystem = globalSystem;
 	  localSky = globalSky;
 	  localProps = globalProps;
-	  strcpy(localColor,globalColor);
+	  if (fr->useMarkerColor())
+	    strcpy(localColor,fr->markerColor());
+	  else
+	    strcpy(localColor,globalColor);
 	  localDash[0] = globalDash[0];
 	  localDash[1] = globalDash[1];
 	  localWidth = globalWidth;

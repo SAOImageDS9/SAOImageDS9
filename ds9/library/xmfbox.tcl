@@ -579,11 +579,11 @@ proc ::tk::MotifFDialog_LoadFiles {w} {
 
 #    $data(dList) delete 0 end
     foreach cc [$data(dList) children {}] {
-	$data(dList) delete $cc
+	$data(dList) delete [list $cc]
     }
 #    $data(fList) delete 0 end
     foreach cc [$data(fList) children {}] {
-	$data(fList) delete $cc
+	$data(fList) delete [list $cc]
     }
 
     set appPWD [pwd]
@@ -657,14 +657,14 @@ proc ::tk::MotifFDialog_BrowseDList {w} {
 	return
     }
 #    set subdir [$data(dList) get [$data(dList) curselection]]
-    set subdir [$data(dList) selection]
+    set subdir [join [$data(dList) selection]]
     if {$subdir eq ""} {
 	return
     }
 
 #    $data(fList) selection clear 0 end
     foreach cc [$data(fList) children {}] {
-	$data(fList) selection remove $cc
+	$data(fList) selection remove [list $cc]
     }
 
     set list [MotifFDialog_InterpFilter $w]
@@ -683,7 +683,6 @@ proc ::tk::MotifFDialog_BrowseDList {w} {
 		    $data(selectPath) $subdir] $data(filter)]
 	}
     }
-
     $data(fEnt) delete 0 end
     $data(fEnt) insert 0 $newSpec
 }
@@ -707,14 +706,14 @@ proc ::tk::MotifFDialog_ActivateDList {w} {
 	return
     }
 #    set subdir [$data(dList) get [$data(dList) curselection]]
-    set subdir [$data(dList) selection]
+    set subdir [join [$data(dList) selection]]
     if {$subdir eq ""} {
 	return
     }
 
 #    $data(fList) selection clear 0 end
     foreach cc [$data(fList) children {}] {
-	$data(fList) selection remove $cc
+	$data(fList) selection remove [list $cc]
     }
 
     switch -- $subdir {
@@ -770,7 +769,7 @@ proc ::tk::MotifFDialog_BrowseFList {w} {
 
 #    $data(dList) selection clear 0 end
     foreach cc [$data(dList) children {}] {
-	$data(dList) selection remove $cc
+	$data(dList) selection remove [list $cc]
     }
 
     $data(fEnt) delete 0 end
@@ -1031,7 +1030,7 @@ proc ::tk::ListBoxKeyAccel_Goto {w string} {
     foreach cc [$w children {}] {
 	if {![string compare -length $ll $string $cc]} {
 	    foreach dd [$w children {}] {
-		$w selection remove $dd
+		$w selection remove [list $dd]
 	    }
 	    $w selection set $cc
 	    $w see $cc

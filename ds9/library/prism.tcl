@@ -45,6 +45,7 @@ proc PrismDialog {varname} {
 
     set var(tbldb) ${varname}tbldb
     set var(fn) {}
+    set var(load) mmapincr
     set var(ext) 0
     set var(extname) {}
     set var(extnames) {}
@@ -80,7 +81,7 @@ proc PrismDialog {varname} {
 
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Load}] \
-	-command [list PrismLoadFile $varname]  -accelerator "${ds9(ctrl)}O"
+	-command [list PrismLoadFile $varname] -accelerator "${ds9(ctrl)}O"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command [list PrismClear $varname]
@@ -276,7 +277,7 @@ proc PrismYViewCmd {varname aa bb {cc {}}} {
 	}
 
 	while {$row>$var(last)} {
-	    set rr [fitsy table $var(fn) $var(ext) $var(tbldb) $var(last) $iprism(maxevents)]
+	    set rr [fitsy table $var(fn) $var(load) $var(ext) $var(tbldb) $var(last) $iprism(maxevents)]
 	    incr var(last) $rr
 	    if {$var(last)>=$nr} {
 		set var(last) $nr
@@ -356,7 +357,7 @@ proc PrismDialogUpdate {varname} {
     $bb.image configure -state normal
 
 
-    if {[fitsy istable $var(fn) $var(ext)]} {
+    if {[fitsy istable $var(fn) $var(load) $var(ext)]} {
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state normal
 
@@ -408,17 +409,40 @@ proc PrismLoadFile {varname} {
 proc PrismLoad {varname fn} {
     upvar #0 $varname var
     global $varname
-
+    global ds9
+    
     PrismClear $varname
-    set var(fn) $fn
 
     # sanity check (command line error)
-    if {![file exists $var(fn)]} {
-	Error "[msgcat::mc {file not found}]: $var(fn)"
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {file not found}]: $fn"
 	return
     }
 
-    set rr [fitsy dir $var(fn)]
+    set var(fn) $fn
+    switch $ds9(wm) {
+	x11 -
+	aqua {
+	    set var(load) mmapincr
+
+	    # compressed?
+	    catch {
+		set ch [open $fn r]
+		fconfigure $ch -encoding binary -translation binary
+		set bb [read $ch 2]
+		close $ch
+		binary scan $bb H4 cc
+		if {$cc == {1f8b}} {
+		    set var(load) allocgz
+		}
+	    }
+	}
+	win32 {
+	    set var(load) allocgz
+	}
+    }
+
+    set rr [fitsy dir $var(fn) $var(load)]
     foreach {ext name type info} $rr {
 	$var(dir) insert {} end -id $ext -values [list "$name" "$type" "$info"]
 	lappend ${varname}(extnames) $name
@@ -463,6 +487,7 @@ proc PrismClear {varname} {
     }
 
     set var(fn) {}
+    set var(load) {}
     set var(ext) 0
     set var(extname) {}
     set var(extnames) {}
@@ -654,7 +679,7 @@ proc PrismPlotGenerate {varname} {
     if {[catch {
     switch $dim {
 	xy {
-	    fitsy plot $var(fn) $var(ext) xy \
+	    fitsy plot $var(fn) $var(load) $var(ext) xy \
 		$var(xx) $xdata \
 		$var(yy) $ydata
 	}
@@ -663,7 +688,7 @@ proc PrismPlotGenerate {varname} {
 	    if {[info command $xedata] == {}} {
 		blt::vector create $xedata
 	    }
-	    fitsy plot $var(fn) $var(ext) xyex \
+	    fitsy plot $var(fn) $var(load) $var(ext) xyex \
 		$var(xx) $xdata \
 		$var(yy) $ydata \
 		$var(xerr) $xedata
@@ -673,7 +698,7 @@ proc PrismPlotGenerate {varname} {
 	    if {[info command $yedata] == {}} {
 		blt::vector create $yedata
 	    }
-	    fitsy plot $var(fn) $var(ext) xyey \
+	    fitsy plot $var(fn) $var(load) $var(ext) xyey \
 		$var(xx) $xdata \
 		$var(yy) $ydata \
 		$var(yerr) $yedata
@@ -686,7 +711,7 @@ proc PrismPlotGenerate {varname} {
 	    if {[info command $yedata] == {}} {
 		blt::vector create $yedata
 	    }
-	    fitsy plot $var(fn) $var(ext) xyexey \
+	    fitsy plot $var(fn) $var(load) $var(ext) xyexey \
 		$var(xx) $xdata \
 		$var(yy) $ydata \
 		$var(xerr) $xedata \
@@ -850,7 +875,7 @@ proc PrismHistogramMinMax {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {[catch {fitsy minmax $var(fn) $var(ext) $ed(col) ed} ]} {
+    if {[catch {fitsy minmax $var(fn) $var(load) $var(ext) $ed(col) ed} ]} {
 	Error "[msgcat::mc {Unable to generate plot}]"
     }
 }
@@ -890,7 +915,7 @@ proc PrismHistogramGenerate {varname} {
 	blt::vector create $ydata
     }
 
-    if {[catch {fitsy histogram $var(fn) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
+    if {[catch {fitsy histogram $var(fn) $var(load) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
 	Error "[msgcat::mc {Unable to generate plot}]"
 	return
     }
@@ -1015,7 +1040,7 @@ proc PrismExtCmd {varname} {
 
     # header
     $var(text) delete 1.0 end
-    $var(text) insert end [fitsy header $var(fn) $var(ext)]
+    $var(text) insert end [fitsy header $var(fn) $var(load) $var(ext)]
 
     # color tag keywords
     set stop [$var(text) index end]
@@ -1032,7 +1057,7 @@ proc PrismExtCmd {varname} {
 	unset $var(tbldb)
     }
 
-    if {![fitsy istable $var(fn) $var(ext)]} {
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
 	$var(tbl) configure -rows $iprism(minrows)
 	$var(tbl) see 1,1
 
@@ -1049,8 +1074,7 @@ proc PrismExtCmd {varname} {
     set T(Nrows) 0
     set T(Ncols) 0
     
-    set var(last) \
-	[fitsy table $var(fn) $var(ext) $var(tbldb) 0 $iprism(maxevents)]
+    set var(last) [fitsy table $var(fn) $var(load) $var(ext) $var(tbldb) 0 $iprism(maxevents)]
 
     set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
     set T(Ndshs) [llength $T(Header)]

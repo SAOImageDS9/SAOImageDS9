@@ -14,11 +14,8 @@ using namespace std;
 
 #include "tclfitsy.h"
 #include "head.h"
-#ifndef __WIN32
 #include "mmapincr.h"
-#else
 #include "allocgz.h"
-#endif
 #include "util.h"
 #include "vector.h"
 #include "tkbltVector.h"
@@ -93,19 +90,20 @@ TclFITSY::~TclFITSY()
 
 int TclFITSY::dir(int argc, const char* argv[])
 {
-  if (argc!=3) { 
-    Tcl_AppendResult(interp_, "usage: fitsy dir ?filename?", NULL);
+  if (argc!=4) { 
+    Tcl_AppendResult(interp_, "usage: fitsy dir ?filename? ?load?", NULL);
     return TCL_ERROR;
   }
   
-  if (!(argv[2] && *argv[2]))
-    return TCL_ERROR;
+  for (int ii=2; ii<4; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return TCL_ERROR;
 
-#ifndef __WIN32
-  FitsFile* fits = new FitsFitsMMapIncr(argv[2]);
-#else
-  FitsFile* fits = new FitsFitsAllocGZ(argv[2],FitsFile::FLUSH);
-#endif
+  FitsFile* fits =NULL;
+  if (!strncmp(argv[3],"mmapincr",8))
+    fits = new FitsFitsMMapIncr(argv[2]);
+  else
+    fits = new FitsFitsAllocGZ(argv[2],FitsFile::FLUSH);
   
   int cnt =0;
   while (fits->isValid()) {
@@ -155,11 +153,11 @@ int TclFITSY::dir(int argc, const char* argv[])
 
     cnt++;
 
-#ifndef __WIN32
-    FitsFile* next = new FitsMosaicNextMMapIncr(fits);
-#else
-    FitsFile* next = new FitsMosaicNextAllocGZ(fits,FitsFile::FLUSH);
-#endif
+    FitsFile* next =NULL;
+    if (!strncmp(argv[3],"mmapincr",8))
+      next = new FitsMosaicNextMMapIncr(fits);
+    else
+      next = new FitsMosaicNextAllocGZ(fits,FitsFile::FLUSH);
     
     delete fits;
     fits = next;
@@ -170,8 +168,8 @@ int TclFITSY::dir(int argc, const char* argv[])
 
 int TclFITSY::header(int argc, const char* argv[])
 {
-  if (argc!=4) {
-    Tcl_AppendResult(interp_, "usage: fitsy header ?filename? ?ext?", NULL);
+  if (argc!=5) {
+    Tcl_AppendResult(interp_, "usage: fitsy header ?filename? ?load? ?ext?", NULL);
     return TCL_ERROR;
   }
   
@@ -199,8 +197,8 @@ int TclFITSY::header(int argc, const char* argv[])
 
 int TclFITSY::isimage(int argc, const char* argv[])
 {
-  if (argc!=4) {
-    Tcl_AppendResult(interp_, "usage: fitsy isimage ?filename? ?ext?",
+  if (argc!=5) {
+    Tcl_AppendResult(interp_, "usage: fitsy isimage ?filename? ?load? ?ext?",
 		     NULL);
     return TCL_ERROR;
   }
@@ -220,8 +218,8 @@ int TclFITSY::isimage(int argc, const char* argv[])
 
 int TclFITSY::istable(int argc, const char* argv[])
 {
-  if (argc!=4) {
-    Tcl_AppendResult(interp_, "usage: fitsy istable ?filename? ?ext?",
+  if (argc!=5) {
+    Tcl_AppendResult(interp_, "usage: fitsy istable ?filename? ?load? ?ext?",
 		     NULL);
     return TCL_ERROR;
   }
@@ -241,17 +239,18 @@ int TclFITSY::istable(int argc, const char* argv[])
 
 int TclFITSY::table(int argc, const char* argv[])
 {
-  if (argc!=7) {
-    Tcl_AppendResult(interp_, "usage: fitsy table ?filename? ?ext? ?varname? ?start? ?max?", NULL);
+  if (argc!=8) {
+    Tcl_AppendResult(interp_, "usage: fitsy table ?filename? ?load? ?ext? ?varname? ?start? ?max?", NULL);
     return TCL_ERROR;
   }
   
-  if (!(argv[4] && *argv[4]))
-    return TCL_ERROR;
+  for (int ii=5; ii<8; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return TCL_ERROR;
 
   int start =0;
   {
-    string x(argv[5]);
+    string x(argv[6]);
     istringstream sstr(x);
     sstr >> start;
   }
@@ -260,7 +259,7 @@ int TclFITSY::table(int argc, const char* argv[])
   
   int max =0;
   {
-    string x(argv[6]);
+    string x(argv[7]);
     istringstream sstr(x);
     sstr >> max;
   }
@@ -289,13 +288,13 @@ int TclFITSY::table(int argc, const char* argv[])
       char buf[81];
       strncpy(buf,cc,80);
       buf[80]='\0';
-      Tcl_SetVar2(interp_, argv[4], idstr.str().c_str(), buf,
+      Tcl_SetVar2(interp_, argv[5], idstr.str().c_str(), buf,
 		  TCL_GLOBAL_ONLY);
       cc = head->next();
     }
     ostringstream ncardstr;
     ncardstr << head->ncard() << ends;
-    Tcl_SetVar2(interp_, argv[4], "HLines", ncardstr.str().c_str(),
+    Tcl_SetVar2(interp_, argv[5], "HLines", ncardstr.str().c_str(),
 		TCL_GLOBAL_ONLY);
   }
 
@@ -329,12 +328,12 @@ int TclFITSY::table(int argc, const char* argv[])
       }
     }
     headstr << ends;
-    Tcl_SetVar2(interp_, argv[4], "Header" , headstr.str().c_str(),
+    Tcl_SetVar2(interp_, argv[5], "Header" , headstr.str().c_str(),
 		TCL_GLOBAL_ONLY);
 
     ostringstream rowstr;
     rowstr << rows << ends;
-    Tcl_SetVar2(interp_, argv[4], "Nrows", rowstr.str().c_str(),
+    Tcl_SetVar2(interp_, argv[5], "Nrows", rowstr.str().c_str(),
 		TCL_GLOBAL_ONLY);
   }
 
@@ -350,7 +349,7 @@ int TclFITSY::table(int argc, const char* argv[])
       index << ii+1 << ',' << ccnt << ends;
       ostringstream value;
       value << col->str(ptr) << ends;
-      Tcl_SetVar2(interp_, argv[4], index.str().c_str(),
+      Tcl_SetVar2(interp_, argv[5], index.str().c_str(),
 		  value.str().c_str(), TCL_GLOBAL_ONLY);
 
       if (col->repeat()>1) {
@@ -366,7 +365,7 @@ int TclFITSY::table(int argc, const char* argv[])
 	    index << ii+1 << ',' << ccnt << ends;
 	    ostringstream value;
 	    value << col->str(ptr,kk) << ends;
-	    Tcl_SetVar2(interp_, argv[4], index.str().c_str(),
+	    Tcl_SetVar2(interp_, argv[5], index.str().c_str(),
 			value.str().c_str(), TCL_GLOBAL_ONLY);
 	  }
 	  break;
@@ -386,16 +385,14 @@ int TclFITSY::table(int argc, const char* argv[])
 
 int TclFITSY::minmax(int argc, const char* argv[])
 {
-  if (argc!=6) {
-    Tcl_AppendResult(interp_, "usage: fitsy minmax ?filename? ?ext? ?col? ?varname?", NULL);
+  if (argc!=7) {
+    Tcl_AppendResult(interp_, "usage: fitsy minmax ?filename? ?load? ?ext? ?col? ?varname?", NULL);
     return TCL_ERROR;
   }
   
-  if (!(argv[4] && *argv[4]))
-    return TCL_ERROR;
-
-  if (!(argv[5] && *argv[5]))
-    return TCL_ERROR;
+  for (int ii=5; ii<7; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return TCL_ERROR;
 
   FitsFile* fits = findFits(argv);
   if (!fits)
@@ -408,13 +405,13 @@ int TclFITSY::minmax(int argc, const char* argv[])
     return TCL_ERROR;
 
   FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
-  FitsColumn* col = hdu->find(argv[4]);
+  FitsColumn* col = hdu->find(argv[5]);
 
   if (!col)
     return TCL_ERROR;
 
   // find min/max
-  Vector maxmin= fits->getColMinMax(argv[4]);
+  Vector maxmin= fits->getColMinMax(argv[5]);
   double min =maxmin[0];
   double max =maxmin[1];
   if (col->isInt()) {
@@ -425,12 +422,12 @@ int TclFITSY::minmax(int argc, const char* argv[])
   {
     ostringstream str;
     str << min << ends;
-    Tcl_SetVar2(interp_, argv[5], "min", str.str().c_str(), TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, argv[6], "min", str.str().c_str(), TCL_GLOBAL_ONLY);
   }
   {
     ostringstream str;
     str << max << ends;
-    Tcl_SetVar2(interp_, argv[5], "max", str.str().c_str(), TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, argv[6], "max", str.str().c_str(), TCL_GLOBAL_ONLY);
   }
 
   return TCL_OK;
@@ -438,23 +435,18 @@ int TclFITSY::minmax(int argc, const char* argv[])
 
 int TclFITSY::histogram(int argc, const char* argv[])
 {
-  if (argc!=12) {
-    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?ext? ?col? ?xname? ?yname? ?num? ?min? ?max? ?useMinMax? ?varname?", NULL);
+  if (argc!=13) {
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?load? ?ext? ?col? ?xname? ?yname? ?num? ?min? ?max? ?useMinMax? ?varname?", NULL);
     return TCL_ERROR;
   }
   
-  if (!(argv[4] && *argv[4]))
-    return TCL_ERROR;
-
-  if (!(argv[5] && *argv[5]))
-    return TCL_ERROR;
-
-  if (!(argv[6] && *argv[6]))
-    return TCL_ERROR;
+  for (int ii=5; ii<13; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return TCL_ERROR;
 
   int num =0;
   {
-    string x(argv[7]);
+    string x(argv[8]);
     istringstream sstr(x);
     sstr >> num;
   }
@@ -463,27 +455,24 @@ int TclFITSY::histogram(int argc, const char* argv[])
 
   double min =0;
   {
-    string x(argv[8]);
+    string x(argv[9]);
     istringstream sstr(x);
     sstr >> min;
   }
 
   double max =0;
   {
-    string x(argv[9]);
+    string x(argv[10]);
     istringstream sstr(x);
     sstr >> max;
   }
 
   int useminmax =1;
   {
-    string x(argv[10]);
+    string x(argv[11]);
     istringstream sstr(x);
     sstr >> useminmax;
   }
-
-  if (!(argv[11] && *argv[11]))
-    return TCL_ERROR;
 
   FitsFile* fits = findFits(argv);
   if (!fits)
@@ -498,7 +487,7 @@ int TclFITSY::histogram(int argc, const char* argv[])
   FitsTableHDU* hdu = (FitsTableHDU*)fits->head()->hdu();
   int rows = hdu->rows();
   int width  = hdu->width();
-  FitsColumn* col = hdu->find(argv[4]);
+  FitsColumn* col = hdu->find(argv[5]);
 
   if (!col)
     return TCL_ERROR;
@@ -513,7 +502,7 @@ int TclFITSY::histogram(int argc, const char* argv[])
 
   if (!useminmax) {
   // find min/max
-    Vector minmax= fits->getColMinMax(argv[4]);
+    Vector minmax= fits->getColMinMax(argv[5]);
     min =minmax[0];
     max =minmax[1];
     if (col->isInt()) {
@@ -549,16 +538,16 @@ int TclFITSY::histogram(int argc, const char* argv[])
   {
     ostringstream str;
     str << barwidth << ends;
-    Tcl_SetVar2(interp_, argv[11], "bar,width", str.str().c_str(), TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, argv[12], "bar,width", str.str().c_str(), TCL_GLOBAL_ONLY);
   }
 
   // load into BLT vectors
   Blt_Vector* xx;
-  Blt_GetVector(interp_, argv[5], &xx);
+  Blt_GetVector(interp_, argv[6], &xx);
   Blt_ResetVector(xx, x, num, num*sizeof(double), TCL_DYNAMIC);
 
   Blt_Vector* yy;
-  Blt_GetVector(interp_, argv[6], &yy);
+  Blt_GetVector(interp_, argv[7], &yy);
   Blt_ResetVector(yy, y, num, num*sizeof(double), TCL_DYNAMIC);
 
   return TCL_OK;
@@ -566,65 +555,49 @@ int TclFITSY::histogram(int argc, const char* argv[])
 
 int TclFITSY::plot(int argc, const char* argv[])
 {
-  if (argc<9) {
-    Tcl_AppendResult(interp_, "usage: fitsy plot ?filename? ?ext? ?dim? ?xcol? ?xname? ?ycol? ?yname? [?xerrcol? ?xerrname?] [?yerrcol? ?yerrname?]", NULL);
+  if (argc<10) {
+    Tcl_AppendResult(interp_, "usage: fitsy plot ?filename? ?load? ?ext? ?dim? ?xcol? ?xname? ?ycol? ?yname? [?xerrcol? ?xerrname?] [?yerrcol? ?yerrname?]", NULL);
     return TCL_ERROR;
   }
   
-  // dim
-  if (!(argv[4] && *argv[4]))
-    return TCL_ERROR;
-
-  // xcolname
-  if (!(argv[5] && *argv[5]))
-    return TCL_ERROR;
-
-  // xvarname
-  if (!(argv[6] && *argv[6]))
-    return TCL_ERROR;
-
-  // ycolname
-  if (!(argv[7] && *argv[7]))
-    return TCL_ERROR;
-
-  // yvarname
-  if (!(argv[8] && *argv[8]))
-    return TCL_ERROR;
+  for (int ii=5; ii<10; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return TCL_ERROR;
 
   Dimension dim = XY;
-  if (!strncmp(argv[4],"xy",2))
+  if (!strncmp(argv[5],"xy",2))
     dim = XY;
-  else if (!strncmp(argv[4],"xyxe",4)) {
+  else if (!strncmp(argv[5],"xyxe",4)) {
     dim = XYXE;
     // xerrcol
-    if (!(argv[9] && *argv[9]))
+    if (!(argv[10] && *argv[10]))
       return TCL_ERROR;
     // xerrvarname
-    if (!(argv[10] && *argv[10]))
-      return TCL_ERROR;
-  }
-  else if (!strncmp(argv[4],"xyye",4)) {
-    dim = XYYE;
-    // yerrcol
-    if (!(argv[9] && *argv[9]))
-      return TCL_ERROR;
-    // yerrvarname
-    if (!(argv[10] && *argv[10]))
-      return TCL_ERROR;
-  }
-  else if (!strncmp(argv[4],"xyxeye",6)) {
-    dim = XYXEYE;
-    // xerrcol
-    if (!(argv[9] && *argv[9]))
-      return TCL_ERROR;
-    // xerrvarname
-    if (!(argv[10] && *argv[10]))
-      return TCL_ERROR;
-    // yerrcol
     if (!(argv[11] && *argv[11]))
       return TCL_ERROR;
+  }
+  else if (!strncmp(argv[5],"xyye",4)) {
+    dim = XYYE;
+    // yerrcol
+    if (!(argv[10] && *argv[10]))
+      return TCL_ERROR;
     // yerrvarname
+    if (!(argv[11] && *argv[11]))
+      return TCL_ERROR;
+  }
+  else if (!strncmp(argv[5],"xyxeye",6)) {
+    dim = XYXEYE;
+    // xerrcol
+    if (!(argv[10] && *argv[10]))
+      return TCL_ERROR;
+    // xerrvarname
+    if (!(argv[11] && *argv[11]))
+      return TCL_ERROR;
+    // yerrcol
     if (!(argv[12] && *argv[12]))
+      return TCL_ERROR;
+    // yerrvarname
+    if (!(argv[13] && *argv[13]))
       return TCL_ERROR;
   }
   else
@@ -645,8 +618,8 @@ int TclFITSY::plot(int argc, const char* argv[])
   int rows = hdu->rows();
   int width  = hdu->width();
 
-  FitsColumn* xcol = (FitsBinColumnB*)hdu->find(argv[5]);
-  FitsColumn* ycol = (FitsBinColumnB*) hdu->find(argv[7]);
+  FitsColumn* xcol = (FitsBinColumnB*)hdu->find(argv[6]);
+  FitsColumn* ycol = (FitsBinColumnB*) hdu->find(argv[8]);
   FitsColumn* xecol =NULL;
   FitsColumn* yecol =NULL;
 
@@ -664,20 +637,20 @@ int TclFITSY::plot(int argc, const char* argv[])
   case XY:
     break;
   case XYXE:
-    xecol= (FitsBinColumnB*)hdu->find(argv[9]);
+    xecol= (FitsBinColumnB*)hdu->find(argv[10]);
     if (!xecol)
       return TCL_ERROR;
     xe = new double[rows];
     break;
   case XYYE:
-    yecol= (FitsBinColumnB*)hdu->find(argv[9]);
+    yecol= (FitsBinColumnB*)hdu->find(argv[10]);
     if (!yecol)
       return TCL_ERROR;
     ye = new double[rows];
     break;
   case XYXEYE:
-    xecol= (FitsBinColumnB*)hdu->find(argv[9]);
-    yecol= (FitsBinColumnB*)hdu->find(argv[11]);
+    xecol= (FitsBinColumnB*)hdu->find(argv[10]);
+    yecol= (FitsBinColumnB*)hdu->find(argv[12]);
     if (!xecol)
       return TCL_ERROR;
     if (!yecol)
@@ -712,28 +685,28 @@ int TclFITSY::plot(int argc, const char* argv[])
   Blt_Vector* xxe =NULL;
   Blt_Vector* yye =NULL;
 
-  Blt_GetVector(interp_, argv[6], &xx);
+  Blt_GetVector(interp_, argv[7], &xx);
   Blt_ResetVector(xx, x, rows, rows*sizeof(double), TCL_DYNAMIC);
 
-  Blt_GetVector(interp_, argv[8], &yy);
+  Blt_GetVector(interp_, argv[9], &yy);
   Blt_ResetVector(yy, y, rows, rows*sizeof(double), TCL_DYNAMIC);
 
   switch (dim) {
   case XY:
     break;
   case XYXE:
-    Blt_GetVector(interp_, argv[10], &xxe);
+    Blt_GetVector(interp_, argv[11], &xxe);
     Blt_ResetVector(xxe, xe, rows, rows*sizeof(double), TCL_DYNAMIC);
     break;
   case XYYE:
-      Blt_GetVector(interp_, argv[10], &yye);
+      Blt_GetVector(interp_, argv[11], &yye);
     Blt_ResetVector(yye, ye, rows, rows*sizeof(double), TCL_DYNAMIC);
     break;
   case XYXEYE:
-    Blt_GetVector(interp_, argv[10], &xxe);
+    Blt_GetVector(interp_, argv[11], &xxe);
     Blt_ResetVector(xxe, xe, rows, rows*sizeof(double), TCL_DYNAMIC);
 
-    Blt_GetVector(interp_, argv[12], &yye);
+    Blt_GetVector(interp_, argv[13], &yye);
     Blt_ResetVector(yye, ye, rows, rows*sizeof(double), TCL_DYNAMIC);
     break;
   }
@@ -745,44 +718,45 @@ int TclFITSY::plot(int argc, const char* argv[])
 
 FitsFile* TclFITSY::findFits(const char** argv)
 {
-  FitsFile* fits =NULL;
-
-  if (!(argv[2] && *argv[2]))
-    return NULL;
+  for (int ii=2; ii<5; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return NULL;
 
   int ext =0;
-  string x(argv[3]);
+  string x(argv[4]);
   istringstream sstr(x);
   sstr >> ext;
 
+  FitsFile* fits =NULL;
   if (ext<0) {
-#ifndef __WIN32
-    fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
-#else
-    fits = new FitsFitsAllocGZ(argv[2], FitsFile::RELAXTABLE,FitsFile::FLUSH);
-#endif    
+    if (!strncmp(argv[3],"mmapincr",8))
+      fits = new FitsFitsMMapIncr(argv[2], FitsFile::RELAXTABLE);
+    else
+      fits = new FitsFitsAllocGZ(argv[2], FitsFile::RELAXTABLE,FitsFile::FLUSH);
+
     if (!fits->isValid()) {
       delete fits;
       return NULL;
     }
   }
   else {
-#ifndef __WIN32
-    fits = new FitsFitsMMapIncr(argv[2]);
-#else
-    fits = new FitsFitsAllocGZ(argv[2],FitsFile::FLUSH);
-#endif    
+    if (!strncmp(argv[3],"mmapincr",8))
+      fits = new FitsFitsMMapIncr(argv[2]);
+    else
+      fits = new FitsFitsAllocGZ(argv[2],FitsFile::FLUSH);
+
     if (!fits->isValid()) {
       delete fits;
       return NULL;
     }
 
+    FitsFile* next =NULL;
     for (int ii=0; ii<ext; ii++) {
-#ifndef __WIN32
-      FitsFile* next = new FitsMosaicNextMMapIncr(fits);
-#else
-      FitsFile* next = new FitsMosaicNextAllocGZ(fits,FitsFile::FLUSH);
-#endif    
+      if (!strncmp(argv[3],"mmapincr",8))
+	next = new FitsMosaicNextMMapIncr(fits);
+      else
+	next = new FitsMosaicNextAllocGZ(fits,FitsFile::FLUSH);
+
       delete fits;
       fits = next;
       if (!fits->isValid()) {

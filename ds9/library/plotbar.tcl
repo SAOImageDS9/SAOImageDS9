@@ -196,7 +196,6 @@ proc PlotBarUpdateElement {varname} {
     }
     
     if {$var(canvas,theme)} {
-#	set color [ThemeTreeBackground]
 	set color [ThemeBold]
 	set errorcolor [ThemeBold]
     } else {

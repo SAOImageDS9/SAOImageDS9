@@ -113,6 +113,9 @@ proc MarkerAnalysisRadialCB {frame id} {
 	set vvar(graph,ds,ydata) $ydata
 	set vvar(graph,ds,yedata) $yedata
 	PlotExternal $vvarname xyey
+
+	set vvar(canvas,theme) 1
+	PlotUpdateAllElement $vvarname
     }
 
     PlotStats $vvarname

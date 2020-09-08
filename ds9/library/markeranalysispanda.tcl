@@ -118,6 +118,9 @@ proc MarkerAnalysisPandaCB {frame id} {
 	    set vvar(graph,ds,yedata) ${vvarname}ye$jj
 	    PlotExternal $vvarname xyey
 	}
+
+	set vvar(canvas,theme) 1
+	PlotUpdateAllElement $vvarname
     }
 
     PlotStats $vvarname

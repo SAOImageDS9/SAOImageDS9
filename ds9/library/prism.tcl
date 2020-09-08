@@ -761,6 +761,9 @@ proc PrismPlotGenerate {varname} {
     PlotExternal $vvarname $dim
     PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
 
+    set vvar(canvas,theme) 1
+    PlotUpdateAllElement $vvarname
+
     PlotStats $vvarname
     PlotList $vvarname
 }
@@ -949,7 +952,8 @@ proc PrismHistogramGenerate {varname} {
     PlotDataSetName $vvarname "$var(extname) $var(bar,col)"
 
     set vvar(graph,ds,bar,width) $var(bar,width)
-    $vvar(graph,proc,updateelement) $vvarname
+    set vvar(canvas,theme) 1
+    PlotUpdateAllElement $vvarname
 
     PlotStats $vvarname
     PlotList $vvarname

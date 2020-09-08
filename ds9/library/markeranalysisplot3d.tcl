@@ -176,6 +176,9 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	PlotExternal $vvarname xy
+
+	set vvar(canvas,theme) 1
+	PlotUpdateAllElement $vvarname
     }
 
     set vvar(slice) [$frame get fits slice from image $vvar(system)]

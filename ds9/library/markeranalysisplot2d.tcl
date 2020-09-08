@@ -182,6 +182,9 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	PlotExternal $vvarname xy
+
+	set vvar(canvas,theme) 1
+	PlotUpdateAllElement $vvarname
     }
 
     PlotStats $vvarname

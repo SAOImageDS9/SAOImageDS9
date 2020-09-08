@@ -125,6 +125,9 @@ proc CATPlotGenerate {varname} {
 	set vvar(graph,ds,yedata) $yedata
 
 	PlotExternal $vvarname xyexey
+
+	set vvar(canvas,theme) 1
+	PlotUpdateAllElement $vvarname
     }
 
     # colnames can change

@@ -4433,16 +4433,6 @@ void Base::markerListCmd(MarkerFormat type,
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Base::markerLoadCmd(MarkerFormat fm, const char* fn)
-{
-  ifstream str(fn);
-  if (!str) {
-    result = TCL_ERROR;
-    return;
-  }  
-  parseMarker(fm, str);
-}
-
 void Base::markerLoadCmd(MarkerFormat fm, const char* fn,
 			 int use, const char* color,
 			 Coord::CoordSystem sys, Coord::SkyFrame sky)
@@ -4454,12 +4444,7 @@ void Base::markerLoadCmd(MarkerFormat fm, const char* fn,
   xySystem_ = sys;
   xySky_ = sky;
 
-  markerLoadCmd(fm,fn);
-}
-
-void Base::markerLoadCmd(MarkerFormat fm, int fd)
-{
-  boost::fdistream str(fd);
+  ifstream str(fn);
   if (!str) {
     result = TCL_ERROR;
     return;
@@ -4471,13 +4456,19 @@ void Base::markerLoadCmd(MarkerFormat fm, int fd,
 			 int use, const char* color,
 			 Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
+  useMarkerColor_ = use;
   if (markerColor_)
     delete markerColor_;
   markerColor_ = dupstr(color);
   xySystem_ = sys;
   xySky_ = sky;
-
-  markerLoadCmd(fm,fd);
+  
+  boost::fdistream str(fd);
+  if (!str) {
+    result = TCL_ERROR;
+    return;
+  }  
+  parseMarker(fm, str);
 }
 
 void Base::markerLoadFitsCmd(const char* fn, const char* color)

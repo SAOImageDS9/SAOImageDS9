@@ -2488,15 +2488,17 @@ markerList : markerFormat coordSystem skyFrame skyFormat
 	;
 
 markerLoad : markerFormat STRING
-	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2);}
+        {fr->markerLoadCmd((Base::MarkerFormat)$1,$2,0,"green",Coord::PHYSICAL,Coord::FK5);}
 	| markerFormat STRING INT STRING coordSystem skyFrame
 	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,$3,$4,
 	    (Coord::CoordSystem)$5,(Coord::SkyFrame)$6);}
 	| markerFormat INT
-	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2);}
+	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,0,"green",Coord::PHYSICAL,Coord::FK5);}
 	| markerFormat INT INT STRING coordSystem skyFrame
 	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,$3,$4,
 	    (Coord::CoordSystem)$5,(Coord::SkyFrame)$6);}
+	| FITS_ STRING
+	{fr->markerLoadFitsCmd($2, "green");}
 	| FITS_ STRING STRING
 	{fr->markerLoadFitsCmd($2, $3);}
 	;

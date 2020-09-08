@@ -1464,7 +1464,8 @@ proc RegionCmdLoad {} {
 	# xpa path
 	# fits regions files not supported  
 	$current(frame) marker load $marker(load,format) \
-	    $parse(sock) $marker(load,system) $marker(load,sky)
+	    $parse(sock) $marker(default,use) $marker(default,color) \
+	    $marker(load,system) $marker(load,sky)
 	UpdateGroupDialog
     } elseif {$parse(fn) != {}} {
 	# samp path

@@ -1466,12 +1466,10 @@ public:
 		     Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, 
 		     int strip, int select,
 		     unsigned short, unsigned short, List<Tag>&);
-  void markerLoadCmd(MarkerFormat, const char*);
   void markerLoadCmd(MarkerFormat, const char*, int, const char*,
-		     Coord::CoordSystem,Coord::SkyFrame);
-  void markerLoadCmd(MarkerFormat, int);
+		     Coord::CoordSystem, Coord::SkyFrame);
   void markerLoadCmd(MarkerFormat, int, int, const char*,
-		     Coord::CoordSystem,Coord::SkyFrame);
+		     Coord::CoordSystem, Coord::SkyFrame);
   void markerLoadFitsCmd(const char*, const char*);
 
   void markerMoveCmd(const Vector&);

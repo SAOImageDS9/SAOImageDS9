@@ -723,24 +723,41 @@ proc PrismPlotGenerate {varname} {
 	return
     }
 
+    set txx [string toupper $var(xx)]
+    set xnum [fitsy colnum $var(fn) $var(load) $var(ext) $var(xx)]
+    if {$xnum != {}} {
+	set unit [string trim [fitsy keyword $var(fn) $var(load) $var(ext) "TUNIT$xnum"]]
+	if {$unit != {}} {
+	    append txx " ($unit)"
+	}
+    }
+    set tyy [string toupper $var(yy)]
+    set ynum [fitsy colnum $var(fn) $var(load) $var(ext) $var(yy)]
+    if {$ynum != {}} {
+	set unit [string trim [fitsy keyword $var(fn) $var(load) $var(ext) "TUNIT$ynum"]]
+	if {$unit != {}} {
+	    append tyy " ($unit)"
+	}
+    }
+
     switch $var(plot,mode) {
 	newplot {
 	    PlotDialog $vvarname "[string totitle $varname] Plot"
 	    PlotAddGraph $vvarname $var(plot,type)
-	    PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
+	    PlotTitle $vvarname $var(extname) $txx $tyy
 	}
 	newgraph {
 	    if {![PlotPing $vvarname]} {
 		PlotDialog $vvarname "[string totitle $varname] Plot"
 	    }
 	    PlotAddGraph $vvarname $var(plot,type)
-	    PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
+	    PlotTitle $vvarname $var(extname) $txx $tyy
 	}
 	newdataset {
 	    if {![PlotPing $vvarname]} {
 		PlotDialog $vvarname "[string totitle $varname] Plot"
 		PlotAddGraph $vvarname $var(plot,type)
-		PlotTitle $vvarname $var(extname) $var(xx) $var(yy)
+		PlotTitle $vvarname $var(extname) $txx $tyy
 	    }
 	}
     }

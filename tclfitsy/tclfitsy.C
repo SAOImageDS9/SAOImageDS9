@@ -59,6 +59,10 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
       return fitsy->isimage(argc, argv);
     else if (!strncmp(argv[1], "istable", 7))
       return fitsy->istable(argc, argv);
+    else if (!strncmp(argv[1], "colnum", 7))
+      return fitsy->colnum(argc, argv);
+    else if (!strncmp(argv[1], "keyword", 7))
+      return fitsy->keyword(argc, argv);
     else if (!strncmp(argv[1], "table", 5))
       return fitsy->table(argc, argv);
     else if (!strncmp(argv[1], "minmax", 6))
@@ -73,8 +77,7 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?table? ?minmax? ?histogram? ?plot?",
-		     NULL);
+    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?header? ?istable? ?colnum? ?keyword? ?table? ?minmax? ?histogram? ?plot?", NULL);
     return TCL_ERROR;
   }
 }
@@ -198,8 +201,7 @@ int TclFITSY::header(int argc, const char* argv[])
 int TclFITSY::isimage(int argc, const char* argv[])
 {
   if (argc!=5) {
-    Tcl_AppendResult(interp_, "usage: fitsy isimage ?filename? ?load? ?ext?",
-		     NULL);
+    Tcl_AppendResult(interp_, "usage: fitsy isimage ?filename? ?load? ?ext?", NULL);
     return TCL_ERROR;
   }
   
@@ -219,8 +221,7 @@ int TclFITSY::isimage(int argc, const char* argv[])
 int TclFITSY::istable(int argc, const char* argv[])
 {
   if (argc!=5) {
-    Tcl_AppendResult(interp_, "usage: fitsy istable ?filename? ?load? ?ext?",
-		     NULL);
+    Tcl_AppendResult(interp_, "usage: fitsy istable ?filename? ?load? ?ext?", NULL);
     return TCL_ERROR;
   }
 
@@ -233,6 +234,58 @@ int TclFITSY::istable(int argc, const char* argv[])
     Tcl_AppendResult(interp_, "1", NULL);
   else
     Tcl_AppendResult(interp_, "0", NULL);
+
+  return TCL_OK;
+}
+
+int TclFITSY::colnum(int argc, const char* argv[])
+{
+  if (argc!=6) {
+    Tcl_AppendResult(interp_, "usage: fitsy colnum ?filename? ?load? ?ext? ?column name?", NULL);
+    return TCL_ERROR;
+  }
+
+  for (int ii=5; ii<6; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return TCL_ERROR;
+
+  FitsFile* fits = findFits(argv);
+  if (!fits)
+    return TCL_ERROR;
+
+  // sanity check
+  if (!fits->isTable())
+    Tcl_AppendResult(interp_, "", NULL);
+
+  FitsHead* head = fits->head();
+  FitsTableHDU* hdu = (FitsTableHDU*)head->hdu();
+  FitsColumn* col= hdu->find(argv[5]);
+
+  if (!col)
+    return TCL_ERROR;
+
+  ostringstream str;
+  str << col->index() << ends;
+  Tcl_AppendResult(interp_, str.str().c_str(), NULL);
+  return TCL_OK;
+}
+
+int TclFITSY::keyword(int argc, const char* argv[])
+{
+  if (argc!=6) {
+    Tcl_AppendResult(interp_, "usage: fitsy keyword ?filename? ?load? ?ext? ?keyword?", NULL);
+    return TCL_ERROR;
+  }
+
+  for (int ii=5; ii<6; ii++)
+    if (!(argv[ii] && *argv[ii]))
+      return TCL_ERROR;
+
+  FitsFile* fits = findFits(argv);
+  if (!fits)
+    return TCL_ERROR;
+
+  Tcl_AppendResult(interp_, fits->getString(argv[5]), NULL);
 
   return TCL_OK;
 }

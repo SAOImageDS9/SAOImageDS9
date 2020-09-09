@@ -13,7 +13,7 @@ proc PrismDef {} {
 
     set iprism(mincols) 10
     set iprism(minrows) 20
-    set iprism(maxevents) 10000
+    set iprism(block) 10000
 }
 
 proc PrismDialog {varname} {
@@ -50,7 +50,7 @@ proc PrismDialog {varname} {
     set var(extname) {}
     set var(extnames) {}
     set var(extnum) 0
-    set var(last) 0
+    set var(start) 0
 
     set var(search) {}
 
@@ -78,6 +78,7 @@ proc PrismDialog {varname} {
     Toplevel $w $mb 6 [msgcat::mc {Prism}] "PrismDestroy $varname"
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    $mb add cascade -label [msgcat::mc {Table}] -menu $mb.table
 
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Load}] \
@@ -113,6 +114,16 @@ proc PrismDialog {varname} {
 	-command "SimpleTextFind $varname" -accelerator "${ds9(ctrl)}F"
     $mb.edit add command -label [msgcat::mc {Find Next}] \
 	-command "SimpleTextFindNext $varname" -accelerator "${ds9(ctrl)}G"
+
+    ThemeMenu $mb.table
+    $mb.table add command -label [msgcat::mc {First}] \
+	-command [list PrismTableFirst $varname]
+    $mb.table add command -label [msgcat::mc {Next}] \
+	-command [list PrismTableNext $varname]
+    $mb.table add command -label [msgcat::mc {Previous}] \
+	-command [list PrismTablePrev $varname]
+    $mb.table add command -label [msgcat::mc {Last}] \
+	-command [list PrismTableLast $varname]
 
     # Param
     set p [ttk::frame $w.param]
@@ -216,9 +227,7 @@ proc PrismDialog {varname} {
 	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
 
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
-    #ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
-    ttk::scrollbar $f.yscroll -command [list PrismYViewCmd $varname] \
-	-orient vertical
+    ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
 
     grid $var(tbl) $f.yscroll -sticky news
     grid $f.xscroll -stick news
@@ -237,9 +246,19 @@ proc PrismDialog {varname} {
 	-command [list PrismHistogram $varname]
     ttk::button $f.image -text [msgcat::mc {Image}] \
 	-command [list PrismImage $varname]
+    ttk::button $f.first -text [msgcat::mc {First}] \
+	-command [list PrismTableFirst $varname]
+    ttk::button $f.next -text [msgcat::mc {Next}] \
+	-command [list PrismTableNext $varname]
+    ttk::button $f.prev -text [msgcat::mc {Previous}] \
+	-command [list PrismTablePrev $varname]
+    ttk::button $f.last -text [msgcat::mc {Last}] \
+	-command [list PrismTableLast $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list PrismDestroy $varname]
-    pack $f.load $f.clear $f.plot $f.histogram $f.image $f.close \
+
+    pack $f.load $f.clear $f.plot $f.histogram $f.image \
+	$f.first $f.next $f.prev $f.last $f.close \
 	-side left -expand true -padx 2 -pady 4
 
     # Fini
@@ -255,36 +274,6 @@ proc PrismDialog {varname} {
     $var(tbl) see 1,1
 
     return $varname
-}
-
-proc PrismYViewCmd {varname aa bb {cc {}}} {
-    upvar #0 $varname var
-    global $varname
-    global iprism
-    
-    if {$cc != {}} {
-	$var(tbl) yview $aa $bb $cc
-    } else {
-	$var(tbl) yview $aa $bb
-    }
-
-    global $var(tbldb)
-    if {[info exists $var(tbldb)]} {
-	set nr [starbase_nrows $var(tbldb)]
-	set row [expr int([lindex [$var(tbl) yview] 1] * $nr)]
-	if {$row>$nr} {
-	    set row $nr
-	}
-
-	while {$row>$var(last)} {
-	    set rr [fitsy table $var(fn) $var(load) $var(ext) $var(tbldb) $var(last) $iprism(maxevents)]
-	    incr var(last) $rr
-	    if {$var(last)>=$nr} {
-		set var(last) $nr
-		break
-	    }
-	}
-    }
 }
 
 proc PrismDestroy {varname} {
@@ -341,10 +330,17 @@ proc PrismDialogUpdate {varname} {
     $var(mb).file entryconfig [msgcat::mc {Histogram}] -state disabled
     $var(mb).file entryconfig [msgcat::mc {Image}] -state disabled
 
+    $var(mb) entryconfig [msgcat::mc {Table}] -state disabled
+
     $bb.clear configure -state disabled
     $bb.plot configure -state disabled
     $bb.histogram configure -state disabled
     $bb.image configure -state disabled
+
+    $bb.first configure -state disabled
+    $bb.next configure -state disabled
+    $bb.prev configure -state disabled
+    $bb.last configure -state disabled
 
     if {$var(fn) == {}} {
 	return
@@ -361,8 +357,15 @@ proc PrismDialogUpdate {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state normal
 
+	$var(mb) entryconfig [msgcat::mc {Table}] -state normal
+
 	$bb.plot configure -state normal
 	$bb.histogram configure -state normal
+
+	$bb.first configure -state normal
+	$bb.next configure -state normal
+	$bb.prev configure -state normal
+	$bb.last configure -state normal
     }
 }
 
@@ -464,7 +467,6 @@ proc PrismLoad {varname fn} {
 	}
     }
     set var(extname) [lindex $var(extnames) $var(ext)]
-
     $var(dir) selection set $var(ext)
 
     # need this so that PrismExtCmd is invoked before next command
@@ -489,7 +491,7 @@ proc PrismClear {varname} {
     set var(extname) {}
     set var(extnames) {}
     set var(extnum) 0
-    set var(last) 0
+    set var(start) 0
 
     # reset plots
     set var(plot,seq) 0
@@ -1046,7 +1048,9 @@ proc PrismExtCmd {varname} {
     
     set var(extname) [lindex $var(extnames) $var(ext)]
 
-    # clear previous cols
+    # clear
+    set var(start) 0
+
     set var(bar,col) {}
     set var(bar,num) 10
     set var(bar,width) 1
@@ -1069,6 +1073,68 @@ proc PrismExtCmd {varname} {
     $var(text) see 1.0
 
     # table
+    if {[fitsy istable $var(fn) $var(load) $var(ext)]} {
+	set var(rows) [fitsy rows $var(fn) $var(load) $var(ext)]
+    } else {
+	set var(rows) 0
+    }
+    PrismTable $varname
+}
+
+proc PrismSelectCmd {varname ss rc} {
+    upvar #0 $varname var
+    global $varname
+}
+
+proc PrismTableFirst {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(start) 0
+    PrismTable $varname
+}
+
+proc PrismTableNext {varname} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
+
+    set var(start) [expr $var(start)+$iprism(block)]
+    if {$var(start) > $var(rows)} {
+	PrismTableLast $varname
+    } else {
+	PrismTable $varname
+    }
+}
+
+proc PrismTablePrev {varname} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
+
+    set var(start) [expr $var(start)-$iprism(block)]
+    if {$var(start) < 0} {
+	PrismTableFirst $varname
+    } else {
+	PrismTable $varname
+    }
+}
+
+proc PrismTableLast {varname} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
+
+    set aa [expr int($var(rows)/$iprism(block))]
+    set var(start) [expr $aa*$iprism(block)]
+    PrismTable $varname
+}
+
+proc PrismTable {varname} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
+
     # clear previous db
     global $var(tbldb)
     if {[info exists $var(tbldb)]} {
@@ -1083,27 +1149,9 @@ proc PrismExtCmd {varname} {
 	return
     }
 
-    set t $var(tbldb)
-    upvar $t T
-
     # init db
-    set T(Header) {}
-    set T(HLines) 0
-    set T(Nrows) 0
-    set T(Ncols) 0
-    
-    set var(last) [fitsy table $var(fn) $var(load) $var(ext) $var(tbldb) 0 $iprism(maxevents)]
-
-    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
-    set T(Ndshs) [llength $T(Header)]
-
-    incr ${t}(HLines)
-    set n $T(HLines)
-    set T(H_$n) $T(Header)
-    incr ${t}(HLines)
-    set n $T(HLines)
-    set T(H_$n) $T(Dashes)
-
+    fitsy table $var(fn) $var(load) $var(ext) $var(tbldb) $var(start) $iprism(block)
+    set t $var(tbldb)
     starbase_colmap $t
 
     set nc [starbase_ncols $t]
@@ -1127,11 +1175,6 @@ proc PrismExtCmd {varname} {
     set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
 
     PrismDialogUpdate $varname
-}
-
-proc PrismSelectCmd {varname ss rc} {
-    upvar #0 $varname var
-    global $varname
 }
 
 # Process Cmds

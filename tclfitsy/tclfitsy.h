@@ -26,10 +26,11 @@ class TclFITSY {
   int header(int, const char*[]);
   int isimage(int, const char*[]);
   int istable(int, const char*[]);
+  int rows(int, const char*[]);
   int colnum(int, const char*[]);
   int keyword(int, const char*[]);
-  int table(int, const char*[]);
   int minmax(int, const char*[]);
+  int table(int, const char*[]);
   int histogram(int, const char*[]);
   int plot(int, const char*[]);
 };

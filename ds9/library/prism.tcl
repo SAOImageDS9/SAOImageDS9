@@ -449,25 +449,22 @@ proc PrismLoad {varname fn} {
 	incr ${varname}(extnum)
     }
 
-    # any parsed vars
-    if {$var(extname) != {}} {
-	set ext [lsearch $var(extnames) $var(extname)]
-	if {$ext >= 0} {
-	    set var(ext) $ext
-	} else {
-	    Error "[msgcat::mc {Extension not found}]: $var(extname)"
-	    PrismClear $varname
+    # is primary NULL?
+    set var(ext) 0
+    if {$var(extnum)>1} {
+	foreach {ext name type info} $rr {
+	    if {$info != "NULL"} {
+		break
+	    }
+	    incr var(ext)
 	}
-    } elseif {$var(ext)>=0} {
-	set var(extname) [lindex $var(extnames) $var(ext)]
-	if {$var(extname) == {}} {
-	    Error "[msgcat::mc {Extension not found}]: $var(extname)"
-	    PrismClear $varname
+	# sanity check
+	if {$var(ext) >= $var(extnum)} {
+	    set var(ext) 0
 	}
-    } else {
-	set var(ext) 0
-	set var(extname) [lindex $var(extnames) $var(ext)]
     }
+    set var(extname) [lindex $var(extnames) $var(ext)]
+
     $var(dir) selection set $var(ext)
 
     # need this so that PrismExtCmd is invoked before next command

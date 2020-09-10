@@ -122,9 +122,7 @@ proc ThemeConfigPlot {w} {
 	upvar #0 $varname var
 	global $varname
 	if {[info exists $varname]} {
-	    if {[info exists ${varname}(theme)]} {
-		PlotUpdateAllElement $varname
-	    }
+	    PlotUpdateAllElement $varname
 	}
     }
 }

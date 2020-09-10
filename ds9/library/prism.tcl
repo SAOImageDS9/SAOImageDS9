@@ -794,6 +794,7 @@ proc PrismHistogram {varname} {
     global $varname
 
     # sanity check
+
     if {$var(fn) == {}} {
 	Error "No FITS file loaded"
 	return
@@ -1353,9 +1354,9 @@ proc PrismTable {varname} {
     $var(tbl) see 1,1
 
     # set default cols
-    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 0]
-    set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
-    set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
+    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 1]
+    set var(xx) [lindex [starbase_columns $var(tbldb)] 1]
+    set var(yy) [lindex [starbase_columns $var(tbldb)] 2]
 
     PrismDialogUpdate $varname
 }

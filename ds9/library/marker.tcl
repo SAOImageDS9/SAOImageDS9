@@ -853,13 +853,13 @@ proc MarkerDeleteKey {which x y} {
 		}
 	    } else {
 		# delete polygon/segment
-		$which marker delete
+		$which marker delete select
 		UpdateGroupDialog
 	    }
 	}
 	default {
 	    # delete marker
-	    $which marker delete
+	    $which marker delete select
 	    UpdateGroupDialog
 	}
     }

@@ -113,7 +113,6 @@ proc TBLValidDB {varname} {
 
     if {[info exists var(Nrows)] && 
 	[info exists var(Ncols)] &&
-	[info exists var(HLines)] &&
 	[info exists var(Header)]} {
 	return 1
     } else {

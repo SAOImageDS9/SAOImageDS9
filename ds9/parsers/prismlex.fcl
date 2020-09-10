@@ -12,11 +12,16 @@ close		{return $CLOSE_}
 current		{return $CURRENT_}
 ext		{return $EXT_}
 extension	{return $EXT_}
+first		{return $FIRST_}
+goto		{return $GOTO_}
 histogram	{return $HISTOGRAM_}
 image		{return $IMAGE_}
+last		{return $LAST_}
 load		{return $LOAD_}
+next		{return $NEXT_}
 open		{return $OPEN_}
 plot		{return $PLOT_}
+previous	{return $PREVIOUS_}
 
 line		{return $LINE_}
 bar		{return $BAR_}

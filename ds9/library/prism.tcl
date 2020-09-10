@@ -126,7 +126,7 @@ proc PrismDialog {varname} {
 	-command [list PrismTableLast $varname]
     $mb.table add separator
     $mb.table add command -label "[msgcat::mc {Goto}]..." \
-	-command [list PrismTableGoto $varname]
+	-command [list PrismTableGotoQuery $varname]
 
     # Param
     set p [ttk::frame $w.param]
@@ -1126,14 +1126,19 @@ proc PrismTableLast {varname} {
     PrismTable $varname
 }
 
+proc PrismTableGotoQuery {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[PrismTableGotoDialog $varname]} {
+	PrismTableGoto $varname
+    }
+}
+
 proc PrismTableGoto {varname} {
     upvar #0 $varname var
     global $varname
     global iprism
-
-    if {![PrismTableGotoDialog $varname]} {
-	return
-    }
 
     # santity check
     if {$var(goto) < 1} {

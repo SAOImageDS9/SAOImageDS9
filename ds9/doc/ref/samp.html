@@ -2184,6 +2184,8 @@ prism []<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [ext &lt;int&gt;|&lt;extname&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [first|next|previous|last]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [goto &lt;int&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt; &lt;min&gt; &lt;max&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter new|over]<br>
@@ -2201,6 +2203,9 @@ prism clear<br>
 prism current prism2<br>
 prism ext 2<br>
 prism ext STDEVT<br>
+prism first<br>
+prism next<br>
+prism goto 20345<br>
 prism image<br>
 prism histogram RAWX 40<br>
 prism histogram RAWX 40 0 100<br>

@@ -11,11 +11,16 @@
 %token CLOSE_
 %token CURRENT_
 %token EXT_
+%token FIRST_
+%token GOTO_
 %token HISTOGRAM_
 %token IMAGE_
+%token LAST_
 %token LOAD_
+%token NEXT_
 %token OPEN_
 %token PLOT_
+%token PREVIOUS_
 
 %token LINE_
 %token BAR_
@@ -32,7 +37,6 @@ command : prism
  | prism {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-
 prism : {PrismDialogLoad prism}
  | OPEN_ {PrismDialogLoad prism}
  | STRING_ {PrismCmdLoad $1}
@@ -44,6 +48,12 @@ prism : {PrismDialogLoad prism}
  | PLOT_ plot
  | HISTOGRAM_ histogram
  | CURRENT_ STRING_ {PrismCmdRef $2}
+
+ | FIRST_ {ProcessCmdCVAR0 PrismTableFirst}
+ | NEXT_ {ProcessCmdCVAR0 PrismTableNext}
+ | PREVIOUS_ {ProcessCmdCVAR0 PrismTablePrev}
+ | LAST_ {ProcessCmdCVAR0 PrismTableLast}
+ | GOTO_ INT_ {ProcessCmdCVAR goto $2 PrismTableGoto}
  ;
 
 ext : INT_ {PrismCmdExt $1}

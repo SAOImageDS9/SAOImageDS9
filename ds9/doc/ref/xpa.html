@@ -2087,6 +2087,8 @@ prism []<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ext &lt;int&gt;|&lt;extname&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [first|next|previous|last]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [goto &lt;int&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt; [&lt;min&gt; &lt;max&gt;]]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter new|over]<br>
@@ -2102,6 +2104,9 @@ $xpaset -p ds9 prism clear<br>
 $xpaset -p ds9 prism current prism2<br>
 $xpaset -p ds9 prism ext 2<br>
 $xpaset -p ds9 prism ext STDEVT<br>
+$xpaset -p ds9 prism first<br>
+$xpaset -p ds9 prism next<br>
+$xpaset -p ds9 prism goto 20345<br>
 $xpaset -p ds9 prism image<br>
 $xpaset -p ds9 prism histogram RAWX 40<br>
 $xpaset -p ds9 prism histogram RAWX 40 0 100 <br>

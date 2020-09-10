@@ -51,6 +51,7 @@ proc PrismDialog {varname} {
     set var(extnames) {}
     set var(extnum) 0
     set var(start) 0
+    set var(goto) 1
 
     set var(search) {}
 
@@ -83,16 +84,8 @@ proc PrismDialog {varname} {
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Load}] \
 	-command [list PrismLoadFile $varname] -accelerator "${ds9(ctrl)}O"
-    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command [list PrismClear $varname]
-    $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Plot}] \
-	-command [list PrismPlot $varname]
-    $mb.file add command -label [msgcat::mc {Histogram}] \
-	-command [list PrismHistogram $varname]
-    $mb.file add command -label [msgcat::mc {Image}] \
-	-command [list PrismImage $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list PrismDestroy $varname] -accelerator "${ds9(ctrl)}W"
@@ -116,6 +109,13 @@ proc PrismDialog {varname} {
 	-command "SimpleTextFindNext $varname" -accelerator "${ds9(ctrl)}G"
 
     ThemeMenu $mb.table
+    $mb.table add command -label [msgcat::mc {Plot}] \
+	-command [list PrismPlot $varname]
+    $mb.table add command -label [msgcat::mc {Histogram}] \
+	-command [list PrismHistogram $varname]
+    $mb.table add command -label [msgcat::mc {Image}] \
+	-command [list PrismImage $varname]
+    $mb.table add separator
     $mb.table add command -label [msgcat::mc {First}] \
 	-command [list PrismTableFirst $varname]
     $mb.table add command -label [msgcat::mc {Next}] \
@@ -124,6 +124,9 @@ proc PrismDialog {varname} {
 	-command [list PrismTablePrev $varname]
     $mb.table add command -label [msgcat::mc {Last}] \
 	-command [list PrismTableLast $varname]
+    $mb.table add separator
+    $mb.table add command -label "[msgcat::mc {Goto}]..." \
+	-command [list PrismTableGoto $varname]
 
     # Param
     set p [ttk::frame $w.param]
@@ -326,13 +329,10 @@ proc PrismDialogUpdate {varname} {
     set bb $var(top).buttons
 
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
-    $var(mb).file entryconfig [msgcat::mc {Plot}] -state disabled
-    $var(mb).file entryconfig [msgcat::mc {Histogram}] -state disabled
-    $var(mb).file entryconfig [msgcat::mc {Image}] -state disabled
-
     $var(mb) entryconfig [msgcat::mc {Table}] -state disabled
 
     $bb.clear configure -state disabled
+
     $bb.plot configure -state disabled
     $bb.histogram configure -state disabled
     $bb.image configure -state disabled
@@ -349,18 +349,12 @@ proc PrismDialogUpdate {varname} {
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
     $bb.clear configure -state normal
 
-    $var(mb).file entryconfig [msgcat::mc {Image}] -state normal
-    $bb.image configure -state normal
-
-
     if {[fitsy istable $var(fn) $var(load) $var(ext)]} {
-	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
-	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state normal
-
 	$var(mb) entryconfig [msgcat::mc {Table}] -state normal
 
 	$bb.plot configure -state normal
 	$bb.histogram configure -state normal
+	$bb.image configure -state normal
 
 	$bb.first configure -state normal
 	$bb.next configure -state normal
@@ -492,6 +486,7 @@ proc PrismClear {varname} {
     set var(extnames) {}
     set var(extnum) 0
     set var(start) 0
+    set var(goto) 1
 
     # reset plots
     set var(plot,seq) 0
@@ -794,8 +789,8 @@ proc PrismHistogram {varname} {
 
     global ed
 
-    set w ".${varname}plot"
-    set mb ".${varname}plotmb"
+    set w ".${varname}hist"
+    set mb ".${varname}histmb"
 
     set ed(top) $w
     set ed(ok) 0
@@ -1050,6 +1045,7 @@ proc PrismExtCmd {varname} {
 
     # clear
     set var(start) 0
+    set var(goto) 1
 
     set var(bar,col) {}
     set var(bar,num) 10
@@ -1128,6 +1124,104 @@ proc PrismTableLast {varname} {
     set aa [expr int($var(rows)/$iprism(block))]
     set var(start) [expr $aa*$iprism(block)]
     PrismTable $varname
+}
+
+proc PrismTableGoto {varname} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
+
+    if {![PrismTableGotoDialog $varname]} {
+	return
+    }
+
+    # santity check
+    if {$var(goto) < 1} {
+	set var(goto) 1
+    }
+    if {$var(goto)>$var(rows)} {
+	set var(goto) $var(rows)
+    }
+
+    set aa [expr int($var(goto)/$iprism(block))]
+    set rr [expr int(fmod($var(goto),$iprism(block)))]
+    set var(start) [expr $aa*$iprism(block)]
+
+    if {$var(start) > $var(rows)} {
+	PrismTableLast $varname
+    } else {
+	PrismTable $varname
+    }
+
+    $var(tbl) see $rr,1
+    $var(tbl) selection set $rr,1
+}
+
+proc PrismTableGotoDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ed
+
+    set w ".${varname}goto"
+    set mb ".${varname}gotomb"
+
+    # needed for edit menu
+    set ed(top) $w
+    set ed(ok) 0
+
+    set ed(goto) $var(goto)
+
+    DialogCreate $w [msgcat::mc {Prism Goto}] ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
+
+    # Param
+    set f [ttk::frame $w.param]
+    ttk::label $f.tgoto -text [msgcat::mc {Goto}]
+    ttk::entry $f.goto -textvariable ed(goto) -width 12
+
+    grid $f.tgoto $f.goto -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active 
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogCenter $w 
+    DialogWait $w ed(ok) $w.param.goto
+    DialogDismiss $w
+    destroy $mb
+
+    if {$ed(ok)} {
+	set var(goto) $ed(goto)
+    }
+    
+    set rr $ed(ok)
+    unset ed
+    return $rr
 }
 
 proc PrismTable {varname} {

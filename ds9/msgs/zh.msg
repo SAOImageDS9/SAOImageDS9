@@ -313,6 +313,7 @@
 ::msgcat::mcset zh {FP} 
 ::msgcat::mcset zh {Factor} 
 ::msgcat::mcset zh {File not Found or Unable to load FITS data MIME type} 
+::msgcat::mcset zh {File not found} 
 ::msgcat::mcset zh {Filename} [encoding convertfrom big5 "\xC0\xC9 \xAE\xD7 \xA6\x57 \xBA\xD9"]
 ::msgcat::mcset zh {File} [encoding convertfrom big5 "\xC0\xC9 \xAE\xD7"]
 ::msgcat::mcset zh {Fill} 
@@ -354,6 +355,7 @@
 ::msgcat::mcset zh {Global Properties} 
 ::msgcat::mcset zh {Global} 
 ::msgcat::mcset zh {Goto Frame} [encoding convertfrom big5 "\xA8\xEC \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
+::msgcat::mcset zh {Goto} 
 ::msgcat::mcset zh {Graph Horz} 
 ::msgcat::mcset zh {Graph Parameters} 
 ::msgcat::mcset zh {Graph Vert} 
@@ -695,6 +697,7 @@
 ::msgcat::mcset zh {Print To} 
 ::msgcat::mcset zh {Printer} 
 ::msgcat::mcset zh {Print} [encoding convertfrom big5 "\xA6\x43 \xA6\x4C"]
+::msgcat::mcset zh {Prism Goto} 
 ::msgcat::mcset zh {Prism} 
 ::msgcat::mcset zh {Projection} 
 ::msgcat::mcset zh {Properties} [encoding convertfrom big5 "\xA6\x43 \xA6\x4C"]

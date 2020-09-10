@@ -21,7 +21,8 @@ load		{return $LOAD_}
 next		{return $NEXT_}
 open		{return $OPEN_}
 plot		{return $PLOT_}
-previous	{return $PREVIOUS_}
+prev		{return $PREV_}
+previous	{return $PREV_}
 
 line		{return $LINE_}
 bar		{return $BAR_}

@@ -14,7 +14,7 @@ set LOAD_ 269
 set NEXT_ 270
 set OPEN_ 271
 set PLOT_ 272
-set PREVIOUS_ 273
+set PREV_ 273
 set LINE_ 274
 set BAR_ 275
 set SCATTER_ 276

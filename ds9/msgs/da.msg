@@ -313,6 +313,7 @@
 ::msgcat::mcset da {FP} 
 ::msgcat::mcset da {Factor} 
 ::msgcat::mcset da {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-1 {Filen blev ikke fundet, eller det var ikke muligt at åbne FITS data MIME filtype}]
+::msgcat::mcset da {File not found} 
 ::msgcat::mcset da {Filename} {Filnavn}
 ::msgcat::mcset da {File} {Fil}
 ::msgcat::mcset da {Fill} 
@@ -354,6 +355,7 @@
 ::msgcat::mcset da {Global Properties} 
 ::msgcat::mcset da {Global} {Global}
 ::msgcat::mcset da {Goto Frame} [encoding convertfrom iso8859-1 {Gå til ramme}]
+::msgcat::mcset da {Goto} 
 ::msgcat::mcset da {Graph Horz} {vandret graf}
 ::msgcat::mcset da {Graph Parameters} 
 ::msgcat::mcset da {Graph Vert} {lodret graf}
@@ -695,6 +697,7 @@
 ::msgcat::mcset da {Print To} {Udskriv til}
 ::msgcat::mcset da {Printer} {Printer}
 ::msgcat::mcset da {Print} {Udskriv}
+::msgcat::mcset da {Prism Goto} 
 ::msgcat::mcset da {Prism} 
 ::msgcat::mcset da {Projection} {Projektion}
 ::msgcat::mcset da {Properties} {Egenskaber}

@@ -410,12 +410,6 @@ proc PrismLoad {varname fn} {
     
     PrismClear $varname
 
-    # sanity check (command line error)
-    if {![file exists $fn]} {
-	Error "[msgcat::mc {file not found}]: $fn"
-	return
-    }
-
     set var(fn) $fn
     switch $ds9(wm) {
 	x11 -
@@ -513,6 +507,17 @@ proc PrismPlot {varname} {
     global $varname
 
     global ed
+
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
+	return
+    }
 
     set w ".${varname}plot"
     set mb ".${varname}plotmb"
@@ -783,7 +788,14 @@ proc PrismHistogram {varname} {
     upvar #0 $varname var
     global $varname
 
+    # sanity check
     if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
 	return
     }
 
@@ -974,6 +986,17 @@ proc PrismImage {varname} {
     upvar #0 $varname var
     global $varname
 
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
+	return
+    }
+
     CreateFrame
     LoadFitsFile "$var(fn)\[$var(ext)\]" {} {}
     FinishLoad
@@ -1074,6 +1097,7 @@ proc PrismExtCmd {varname} {
     } else {
 	set var(rows) 0
     }
+
     PrismTable $varname
 }
 
@@ -1095,6 +1119,17 @@ proc PrismTableNext {varname} {
     global $varname
     global iprism
 
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
+	return
+    }
+    
     set var(start) [expr $var(start)+$iprism(block)]
     if {$var(start) > $var(rows)} {
 	PrismTableLast $varname
@@ -1108,6 +1143,17 @@ proc PrismTablePrev {varname} {
     global $varname
     global iprism
 
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
+	return
+    }
+    
     set var(start) [expr $var(start)-$iprism(block)]
     if {$var(start) < 0} {
 	PrismTableFirst $varname
@@ -1121,6 +1167,17 @@ proc PrismTableLast {varname} {
     global $varname
     global iprism
 
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
+	return
+    }
+    
     set aa [expr int($var(rows)/$iprism(block))]
     set var(start) [expr $aa*$iprism(block)]
     PrismTable $varname
@@ -1130,6 +1187,17 @@ proc PrismTableGotoQuery {varname} {
     upvar #0 $varname var
     global $varname
 
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
+	return
+    }
+    
     if {[PrismTableGotoDialog $varname]} {
 	PrismTableGoto $varname
     }
@@ -1140,6 +1208,17 @@ proc PrismTableGoto {varname} {
     global $varname
     global iprism
 
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No FITS file loaded"
+	return
+    }
+
+    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+	Error "Current extension is not a table"
+	return
+    }
+    
     # santity check
     if {$var(goto) < 1} {
 	set var(goto) 1
@@ -1315,6 +1394,11 @@ proc PrismCmdRef {ref} {
 }
 
 proc PrismCmdLoad {fn} {
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
+	return
+    }
+
     set varname [PrismDialog prism]
     upvar #0 $varname var
     global $varname

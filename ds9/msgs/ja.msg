@@ -313,6 +313,7 @@
 ::msgcat::mcset ja {FP} 
 ::msgcat::mcset ja {Factor} 
 ::msgcat::mcset ja {File not Found or Unable to load FITS data MIME type} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xac\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3\xa4\xde\xa4\xbf\xa4\xcf\xa1\xa2\x46\x49\x54\x53\x20\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xac\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
+::msgcat::mcset ja {File not found} 
 ::msgcat::mcset ja {Filename} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xcc\xbe"]
 ::msgcat::mcset ja {File} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb"]
 ::msgcat::mcset ja {Fill} 
@@ -354,6 +355,7 @@
 ::msgcat::mcset ja {Global Properties} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xed\xa1\xbc\xa5\xd0\xa5\xeb\xa5\xd7\xa5\xed\xa5\xd1\xa5\xc6\xa5\xa3"]
 ::msgcat::mcset ja {Global} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xed\xa1\xbc\xa5\xd0\xa5\xeb"]
 ::msgcat::mcset ja {Goto Frame} [encoding convertfrom euc-jp "\xbb\xd8\xc4\xea\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xb0\xdc\xc6\xb0"]
+::msgcat::mcset ja {Goto} 
 ::msgcat::mcset ja {Graph Horz} [encoding convertfrom euc-jp "\xb2\xa3\xc3\xc7\xcc\xcc\xbf\xde"]
 ::msgcat::mcset ja {Graph Parameters} 
 ::msgcat::mcset ja {Graph Vert} [encoding convertfrom euc-jp "\xbd\xc4\xc3\xc7\xcc\xcc\xbf\xde"]
@@ -695,6 +697,7 @@
 ::msgcat::mcset ja {Print To} [encoding convertfrom euc-jp "\xbd\xd0\xce\xcf\xc0\xe8"]
 ::msgcat::mcset ja {Printer} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xea\xa5\xf3\xa5\xbf"]
 ::msgcat::mcset ja {Print} [encoding convertfrom euc-jp "\xb0\xf5\xba\xfe"]
+::msgcat::mcset ja {Prism Goto} 
 ::msgcat::mcset ja {Prism} 
 ::msgcat::mcset ja {Projection} [encoding convertfrom euc-jp "\xc0\xda\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Properties} [encoding convertfrom euc-jp "\xc2\xb0\xc0\xad"]

@@ -259,7 +259,7 @@ proc PlotCmdNewFile {fn ref} {
 	close $ch
 	return
     } else {
-	Error "[msgcat::mc {file not found}]: $fn"
+	Error "[msgcat::mc {File not found}]: $fn"
     }
 }
 

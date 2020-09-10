@@ -22,6 +22,7 @@ open	    {return $OPEN_}
 order	    {return $ORDER_}
 play	    {return $PLAY_}
 prev	    {return $PREV_}
+previous    {return $PREV_}
 stop	    {return $STOP_}
 
 123	    {return $123_}

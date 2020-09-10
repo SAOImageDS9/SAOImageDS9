@@ -940,7 +940,7 @@ array set prism::token_id_table {
   280,t 1
   279,t 1
   275,line 30
-  273,title PREVIOUS
+  273,title PREV
   263,t 0
   259,line 10
   260,line 14
@@ -1007,7 +1007,7 @@ array set prism::token_id_table {
   258,line 8
   286,line 80
   273,t 0
-  273 PREVIOUS_
+  273 PREV_
   266,title HISTOGRAM
   Y,line 96
   285,title {}

@@ -26,6 +26,7 @@ new	    {return $NEW_}
 next	    {return $NEXT_}
 none	    {return $NONE_}
 prev	    {return $PREV_}
+previous    {return $PREV_}
 refresh	    {return $REFRESH_}
 reset	    {return $RESET_}
 rgb	    {return $RGB_}

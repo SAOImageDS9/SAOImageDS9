@@ -313,6 +313,7 @@
 ::msgcat::mcset cs {FP} 
 ::msgcat::mcset cs {Factor} [encoding convertfrom iso8859-2 {Faktor}]
 ::msgcat::mcset cs {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-2 {Soubor nenalezen nebo není mo¾né nahrát daný FITS MIME typ}]
+::msgcat::mcset cs {File not found} 
 ::msgcat::mcset cs {Filename} [encoding convertfrom iso8859-2 {Název souboru}]
 ::msgcat::mcset cs {File} [encoding convertfrom iso8859-2 {Soubor}]
 ::msgcat::mcset cs {Fill} 
@@ -354,6 +355,7 @@
 ::msgcat::mcset cs {Global Properties} 
 ::msgcat::mcset cs {Global} 
 ::msgcat::mcset cs {Goto Frame} [encoding convertfrom iso8859-2 {Bì¾ na snímek}]
+::msgcat::mcset cs {Goto} 
 ::msgcat::mcset cs {Graph Horz} 
 ::msgcat::mcset cs {Graph Parameters} 
 ::msgcat::mcset cs {Graph Vert} 
@@ -695,6 +697,7 @@
 ::msgcat::mcset cs {Print To} 
 ::msgcat::mcset cs {Printer} 
 ::msgcat::mcset cs {Print} [encoding convertfrom iso8859-2 {Vytisknout}]
+::msgcat::mcset cs {Prism Goto} 
 ::msgcat::mcset cs {Prism} 
 ::msgcat::mcset cs {Projection} 
 ::msgcat::mcset cs {Properties} [encoding convertfrom iso8859-2 {Vlastnosti}]

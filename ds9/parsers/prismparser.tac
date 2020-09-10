@@ -20,7 +20,7 @@
 %token NEXT_
 %token OPEN_
 %token PLOT_
-%token PREVIOUS_
+%token PREV_
 
 %token LINE_
 %token BAR_
@@ -51,7 +51,7 @@ prism : {PrismDialogLoad prism}
 
  | FIRST_ {ProcessCmdCVAR0 PrismTableFirst}
  | NEXT_ {ProcessCmdCVAR0 PrismTableNext}
- | PREVIOUS_ {ProcessCmdCVAR0 PrismTablePrev}
+ | PREV_ {ProcessCmdCVAR0 PrismTablePrev}
  | LAST_ {ProcessCmdCVAR0 PrismTableLast}
  | GOTO_ INT_ {ProcessCmdCVAR goto $2 PrismTableGoto}
  ;

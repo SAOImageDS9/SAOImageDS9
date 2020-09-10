@@ -313,6 +313,7 @@
 ::msgcat::mcset pt {FP} 
 ::msgcat::mcset pt {Factor} 
 ::msgcat::mcset pt {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-1 {Arquivo não encontrado ou incapaz de carregar dados FITS do tipo MIME}]
+::msgcat::mcset pt {File not found} 
 ::msgcat::mcset pt {Filename} {Nome de Arquivo}
 ::msgcat::mcset pt {File} {Arquivo}
 ::msgcat::mcset pt {Fill} 
@@ -354,6 +355,7 @@
 ::msgcat::mcset pt {Global Properties} 
 ::msgcat::mcset pt {Global} 
 ::msgcat::mcset pt {Goto Frame} 
+::msgcat::mcset pt {Goto} 
 ::msgcat::mcset pt {Graph Horz} 
 ::msgcat::mcset pt {Graph Parameters} 
 ::msgcat::mcset pt {Graph Vert} 
@@ -695,6 +697,7 @@
 ::msgcat::mcset pt {Print To} {Imprimir Para}
 ::msgcat::mcset pt {Printer} {Impressora}
 ::msgcat::mcset pt {Print} {Imprimir}
+::msgcat::mcset pt {Prism Goto} 
 ::msgcat::mcset pt {Prism} 
 ::msgcat::mcset pt {Projection} [encoding convertfrom iso8859-1 {Projeção}]
 ::msgcat::mcset pt {Properties} {Propriedades}

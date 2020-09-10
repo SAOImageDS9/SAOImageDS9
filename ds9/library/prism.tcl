@@ -219,7 +219,7 @@ proc PrismDialog {varname} {
 		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list PrismSelectCmd $varname %s %S] \
+		      -browsecommand [list PrismTableCmd $varname %s %S] \
 		      -fg [ThemeTreeForeground] \
 		      -bg [ThemeTreeBackground] \
 		     ]
@@ -236,6 +236,11 @@ proc PrismDialog {varname} {
     grid $f.xscroll -stick news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
+
+    bind $var(tbl) <Button-4> [list TBLYScroll $varname -1]
+    bind $var(tbl) <Button-5> [list TBLYScroll $varname 1]
+    bind $var(tbl) <Shift-Button-4> [list TBLXScroll $varname -1]
+    bind $var(tbl) <Shift-Button-5> [list TBLXScroll $varname 1]
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -1101,7 +1106,7 @@ proc PrismExtCmd {varname} {
     PrismTable $varname
 }
 
-proc PrismSelectCmd {varname ss rc} {
+proc PrismTableCmd {varname ss rc} {
     upvar #0 $varname var
     global $varname
 }

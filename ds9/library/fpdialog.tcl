@@ -272,6 +272,11 @@ proc FPDialog {varname title url instr format action} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
+    bind $var(tbl) <Button-4> [list TBLYScroll $varname -1]
+    bind $var(tbl) <Button-5> [list TBLYScroll $varname 1]
+    bind $var(tbl) <Shift-Button-4> [list TBLXScroll $varname -1]
+    bind $var(tbl) <Shift-Button-5> [list TBLXScroll $varname 1]
+
     # Status
     set f [ttk::frame $w.status]
 

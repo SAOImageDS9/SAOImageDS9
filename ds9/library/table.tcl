@@ -321,6 +321,22 @@ proc TBLUpdateFont {ll} {
     }
 }
 
+# Scroll
+
+proc TBLXScroll {varname which} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(tbl) xview scroll $which units
+}
+
+proc TBLYScroll {varname which} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(tbl) yview scroll $which units
+}
+
 # Cut/Copy
 
 proc TBLCopy {varname} {

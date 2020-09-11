@@ -612,8 +612,9 @@ proc PrismPlot {varname} {
     pack $w.param -side top -fill both -expand true
     pack $w.buttons $w.sep -side bottom -fill x
 
-    DialogCenter $w
     DialogWait $w ed(ok) $w.buttons.ok
+    DialogDismiss $w
+    destroy $mb
 
     if {$ed(ok)} {
 	if {$ed(xx) != {} && $ed(yy) != {}} {
@@ -628,9 +629,6 @@ proc PrismPlot {varname} {
 	    PrismPlotGenerate $varname
 	}
     }
-
-    DialogDismiss $w
-    destroy $mb
 }
 
 proc PrismPlotGenerate {varname} {
@@ -881,8 +879,9 @@ proc PrismHistogram {varname} {
 
     PrismHistogramMinMax $varname
     
-    DialogCenter $w
     DialogWait $w ed(ok) $w.buttons.ok
+    DialogDismiss $w
+    destroy $mb
 
     if {$ed(ok)} {
 	if {$ed(col) != {}} {
@@ -897,9 +896,6 @@ proc PrismHistogram {varname} {
 	    PrismHistogramGenerate $varname
 	}
     }
-
-    DialogDismiss $w
-    destroy $mb
 }
 
 proc PrismHistogramMinMax {varname} {
@@ -1300,7 +1296,6 @@ proc PrismTableGotoDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok) $w.param.goto
     DialogDismiss $w
     destroy $mb

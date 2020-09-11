@@ -88,7 +88,6 @@ proc MarkerLoadDialog {} {
 
     UpdateMarkerLoadDialog
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 
@@ -190,7 +189,6 @@ proc MarkerSaveDialog {title} {
 
     UpdateMarkerSaveDialog
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 

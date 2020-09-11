@@ -457,39 +457,6 @@ proc ProcessSend {proc id sock fn ext rr} {
     }
 }
 
-proc Toplevel {w mb style title proc} {
-    global ds9
-
-    toplevel $w
-
-    wm title $w $title
-    wm iconname $w $title
-    wm group $w $ds9(top)
-    wm protocol $w WM_DELETE_WINDOW $proc
-
-    # we need this first, before the configure command
-    ThemeMenu $mb
-
-    switch $ds9(wm) {
-	x11 {}
-	aqua {
-	    AppleMenu $mb
-	    switch $style {
-		6 {::tk::unsupported::MacWindowStyle style $w document "closeBox collapseBox"}
-		7 {::tk::unsupported::MacWindowStyle style $w document "closeBox fullZoom collapseBox resizable"}
-	    }
-	}
-	win32 {}
-    }
-
-    $w configure -menu $mb
-
-    global pds9
-    if {$pds9(dialog,center)} {
-	DialogCenter $w
-    }
-}
-
 proc SourceInitFileDir {ext} {
     global ds9
     
@@ -872,7 +839,6 @@ proc AboutBox {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w
     DialogWait $w ed(ok)
     DialogDismiss $w
 

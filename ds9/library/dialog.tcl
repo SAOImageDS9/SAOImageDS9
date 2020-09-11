@@ -4,42 +4,79 @@
 
 package provide DS9 1.0
 
-proc DialogCreate {top title varname} {
+proc Toplevel {w mb style title proc} {
     global ds9
 
-    toplevel $top
+    toplevel $w
+
+    wm title $w $title
+    wm iconname $w $title
+    wm group $w $ds9(top)
+    wm protocol $w WM_DELETE_WINDOW $proc
+
+    # we need this first, before the configure command
+    ThemeMenu $mb
+
+    switch $ds9(wm) {
+	x11 {}
+	aqua {
+	    AppleMenu $mb
+	    switch $style {
+		6 {::tk::unsupported::MacWindowStyle style $w document "closeBox collapseBox"}
+		7 {::tk::unsupported::MacWindowStyle style $w document "closeBox fullZoom collapseBox resizable"}
+	    }
+	}
+	win32 {}
+    }
+
+    $w configure -menu $mb
+
+    DialogCenter $w
+}
+
+proc DialogCreate {w title varname} {
+    global ds9
+    puts hi
+    toplevel $w
     switch $ds9(wm) {
 	x11 -
 	win32 {}
 	aqua {
-	    ::tk::unsupported::MacWindowStyle style $top document "closeBox fullZoom collapseBox resizable"
+	    ::tk::unsupported::MacWindowStyle style $w document "closeBox fullZoom collapseBox resizable"
 	}
     }
 
-    wm title $top "$title"
-    wm iconname $top "$title"
+    wm title $w "$title"
+    wm iconname $w "$title"
 
     upvar #0 varname var
-    wm protocol $top WM_DELETE_WINDOW "set $varname 1"
+    wm protocol $w WM_DELETE_WINDOW "set $varname 1"
+
+    DialogCenter $w
 }
 
 proc DialogCenter {w} {
-    global ds9
-    ::tk::PlaceWindow $w widget $ds9(top)
+    global pds9
+
+    if {$pds9(dialog,center)} {
+	::tk::PlaceWindow $w
+	# global ds9
+	# ::tk::PlaceWindow $w widget $ds9(top)
+    }
 }
 
-proc DialogWait {top varname {focus {}}} {
+proc DialogWait {w varname {focus {}}} {
     upvar $varname var
 
     if {[string length $focus] == 0} {
-	set focus $top
+	set focus $w
     }
-    set old [focus -displayof $top]
+    set old [focus -displayof $w]
     focus $focus
-    catch {tkwait visibility $top}
-    catch {grab $top}
+    catch {tkwait visibility $w}
+    catch {grab $w}
     tkwait variable $varname
-    catch {grab release $top}
+    catch {grab release $w}
     focus $old
 
     # reset errorInfo
@@ -98,17 +135,16 @@ proc EntryDialog {title message size varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     $w.param.txt select range 0 end
+
     DialogWait $w ed(ok) $w.param.txt
+    DialogDismiss $w
+    destroy $mb
 
     if {$ed(ok)} {
 	set var $ed(text)
     }
     
-    DialogDismiss $w
-    destroy $mb
-
     set rr $ed(ok)
     unset ed
     return $rr

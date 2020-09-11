@@ -221,8 +221,9 @@ proc CATPlotDialog {varname} {
     pack $w.param -side top -fill both -expand true
     pack $w.buttons $w.sep -side bottom -fill x
 
-    DialogCenter $w
     DialogWait $w ed2(ok) $w.buttons.ok
+    DialogDismiss $w
+    destroy $mb
 
     if {$ed2(ok)} {
 	set var(plot,x) $ed2(x)
@@ -230,9 +231,6 @@ proc CATPlotDialog {varname} {
 	set var(plot,y) $ed2(y)
 	set var(plot,yerr) $ed2(yerr)
     }
-
-    DialogDismiss $w
-    destroy $mb
 
     set rr $ed2(ok)
     unset ed2

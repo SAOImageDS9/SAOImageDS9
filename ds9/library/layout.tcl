@@ -812,7 +812,6 @@ proc DisplayDefaultDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     $w.param.x select range 0 end
     DialogWait $w ed(ok) $w.param.x
     DialogDismiss $w

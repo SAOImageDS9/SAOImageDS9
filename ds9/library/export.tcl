@@ -156,7 +156,6 @@ proc ArrayExportDialog {varname} {
     grid rowconfigure $w 0 -weight 1
     grid columnconfigure $w 0 -weight 1
 
-    DialogCenter $w 
     DialogWait $w ed2(ok)
     DialogDismiss $w
 
@@ -211,7 +210,6 @@ proc TIFFExportDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed2(ok)
     DialogDismiss $w
 
@@ -257,7 +255,6 @@ proc JPEGExportDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed2(ok)
     DialogDismiss $w
 

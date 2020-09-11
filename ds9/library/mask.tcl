@@ -308,7 +308,6 @@ proc MaskParamsDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed2(ok)
     DialogDismiss $w
 

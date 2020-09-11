@@ -671,17 +671,15 @@ proc TBLEditDialog {varname which db} {
     $ed(text) insert end $var($which)
     $ed(text) see end
 
-    DialogCenter $w
     DialogWait $w ed(ok) $w.buttons.ok
+    DialogDismiss $w
+    destroy $mb
 
     if {$ed(ok)} {
 	set flt [$ed(text) get 1.0 end]
 	catch {regsub {\n} $flt " " flt}
 	set var($which) [string trim $flt]
     }
-
-    DialogDismiss $w
-    destroy $mb
 
     set rr $ed(ok)
     unset ed

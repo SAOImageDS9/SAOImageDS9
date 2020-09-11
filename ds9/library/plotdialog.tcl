@@ -322,7 +322,6 @@ proc PlotDataFormatDialog {xarname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok) $w.param.xy
     DialogDismiss $w
 
@@ -371,7 +370,6 @@ proc PlotStripDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok) $w.param.ww
     DialogDismiss $w
 
@@ -445,7 +443,6 @@ proc PlotRangeDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok) $w.param.xmin
     DialogDismiss $w
 
@@ -514,7 +511,6 @@ proc PlotGraphTitleDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok) $w.param.title
     DialogDismiss $w
 
@@ -566,7 +562,6 @@ proc DatasetNameDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok) $w.param.name
     DialogDismiss $w
 

@@ -669,7 +669,6 @@ proc MinMaxDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 
@@ -720,7 +719,6 @@ proc ZScaleDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 

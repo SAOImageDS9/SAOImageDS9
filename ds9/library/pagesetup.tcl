@@ -77,7 +77,6 @@ proc PSPageSetup {} {
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
 
-    DialogCenter $w
     DialogWait $w ed(ok) $w.buttons.ok 
     DialogDismiss $w
 

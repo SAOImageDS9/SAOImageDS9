@@ -147,8 +147,9 @@ proc CATMatchDialog {cats} {
     CATMatchDialogFunctionMenu $w.param
     CATMatchDialogReturnMenu $w.param
 
-    DialogCenter $w
     DialogWait $w ed(ok) $w.buttons.ok
+    DialogDismiss $w
+    destroy $mb
 
     if {$ed(ok)} {
 	set icat(match1) $ed(match1)
@@ -159,9 +160,6 @@ proc CATMatchDialog {cats} {
 	set icat(unique) $ed(unique)
 	set icat(return) $ed(return)
     }
-
-    DialogDismiss $w
-    destroy $mb
 
     set rr $ed(ok)
     unset ed

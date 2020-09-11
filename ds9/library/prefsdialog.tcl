@@ -298,7 +298,7 @@ proc PrefsDialogGeneral {} {
 	}
     }
 
-    ttk::checkbutton $f.center -text [msgcat::mc {Center Non-modal Dialogs}] \
+    ttk::checkbutton $f.center -text [msgcat::mc {Center Dialogs}] \
 	-variable pds9(dialog,center)
     ttk::checkbutton $f.all -text [msgcat::mc {Default All Files}] \
 	-variable pds9(dialog,all)

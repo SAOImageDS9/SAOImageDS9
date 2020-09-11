@@ -208,7 +208,6 @@ proc ArrayImportDialog {depth varname} {
     grid rowconfigure $w 3 -weight 1
     grid columnconfigure $w 0 -weight 1
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 

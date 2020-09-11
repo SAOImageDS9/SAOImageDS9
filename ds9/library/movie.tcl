@@ -112,7 +112,6 @@ proc MovieDialog {} {
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 
@@ -531,7 +530,6 @@ proc Movie3dDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed2(ok)
     DialogDismiss $w
 

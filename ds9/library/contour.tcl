@@ -494,7 +494,6 @@ proc ContourCPasteDialog {} {
     pack $w.param1 $w.sep2 $w.param -side top -fill both -expand true
 #    pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 
@@ -643,7 +642,6 @@ proc ContourSaveDialog {} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 
@@ -753,7 +751,6 @@ proc ContourLoadOldDialog {fn} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 
@@ -822,7 +819,6 @@ proc ContourLoadNewDialog {fn} {
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param1 $w.sep2 $w.param2 -side top -fill both -expand true
 
-    DialogCenter $w 
     DialogWait $w ed(ok)
     DialogDismiss $w
 

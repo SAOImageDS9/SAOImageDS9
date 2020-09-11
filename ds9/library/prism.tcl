@@ -87,6 +87,9 @@ proc PrismDialog {varname} {
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command [list PrismClear $varname]
     $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Image}] \
+	-command [list PrismImage $varname]
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list PrismDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
@@ -113,8 +116,6 @@ proc PrismDialog {varname} {
 	-command [list PrismPlot $varname]
     $mb.table add command -label [msgcat::mc {Histogram}] \
 	-command [list PrismHistogram $varname]
-    $mb.table add command -label [msgcat::mc {Image}] \
-	-command [list PrismImage $varname]
     $mb.table add separator
     $mb.table add command -label [msgcat::mc {First}] \
 	-command [list PrismTableFirst $varname]
@@ -245,12 +246,12 @@ proc PrismDialog {varname} {
 	-command [list PrismLoadFile $varname]
     ttk::button $f.clear -text [msgcat::mc {Clear}] \
 	-command [list PrismClear $varname]
+    ttk::button $f.image -text [msgcat::mc {Image}] \
+	-command [list PrismImage $varname]
     ttk::button $f.plot -text [msgcat::mc {Plot}] \
 	-command [list PrismPlot $varname]
     ttk::button $f.histogram -text [msgcat::mc {Histogram}] \
 	-command [list PrismHistogram $varname]
-    ttk::button $f.image -text [msgcat::mc {Image}] \
-	-command [list PrismImage $varname]
     ttk::button $f.first -text [msgcat::mc {First}] \
 	-command [list PrismTableFirst $varname]
     ttk::button $f.next -text [msgcat::mc {Next}] \
@@ -262,7 +263,7 @@ proc PrismDialog {varname} {
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list PrismDestroy $varname]
 
-    pack $f.load $f.clear $f.plot $f.histogram $f.image \
+    pack $f.load $f.clear $f.image $f.plot $f.histogram \
 	$f.first $f.next $f.prev $f.last $f.close \
 	-side left -expand true -padx 2 -pady 4
 
@@ -331,9 +332,12 @@ proc PrismDialogUpdate {varname} {
     set bb $var(top).buttons
 
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
+    $var(mb).file entryconfig [msgcat::mc {Image}] -state disabled
+
     $var(mb) entryconfig [msgcat::mc {Table}] -state disabled
 
     $bb.clear configure -state disabled
+    $bb.image configure -state disabled
 
     $bb.plot configure -state disabled
     $bb.histogram configure -state disabled
@@ -349,7 +353,10 @@ proc PrismDialogUpdate {varname} {
     }
 
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
+    $var(mb).file entryconfig [msgcat::mc {Image}] -state normal
+
     $bb.clear configure -state normal
+    $bb.image configure -state normal
 
     if {[fitsy istable $var(fn) $var(load) $var(ext)]} {
 	$var(mb) entryconfig [msgcat::mc {Table}] -state normal
@@ -988,11 +995,6 @@ proc PrismImage {varname} {
     # sanity check
     if {$var(fn) == {}} {
 	Error "No FITS file loaded"
-	return
-    }
-
-    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
-	Error "Current extension is not a table"
 	return
     }
 

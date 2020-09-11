@@ -322,18 +322,37 @@ proc TBLUpdateFont {ll} {
 
 # Scroll
 
-proc TBLXScroll {varname which} {
+proc TBLBindMouseWheel {varname} {
+    upvar #0 $varname var
+    global $varname
+    global ds9
+
+    switch $ds9(wm) {
+	x11 {
+	    bind $var(tbl) <Button-4> [list TBLYScroll $varname 1]
+	    bind $var(tbl) <Button-5> [list TBLYScroll $varname -1]
+	    bind $var(tbl) <Shift-Button-4> [list TBLXScroll $varname 1]
+	    bind $var(tbl) <Shift-Button-5> [list TBLXScroll $varname -1]
+	}
+	aqua -
+	win32 {
+	    bind $var(tbl) <MouseWheel> [list TBLYScroll $varname %D]
+	}
+    }
+} 
+
+proc TBLXScroll {varname cnt} {
     upvar #0 $varname var
     global $varname
 
-    $var(tbl) xview scroll $which units
+    $var(tbl) xview scroll [expr -$cnt] units
 }
 
-proc TBLYScroll {varname which} {
+proc TBLYScroll {varname cnt} {
     upvar #0 $varname var
     global $varname
 
-    $var(tbl) yview scroll $which units
+    $var(tbl) yview scroll [expr -$cnt] units
 }
 
 # Cut/Copy
@@ -839,4 +858,5 @@ proc TBLCmdPrint {varname} {
     starbase_writefp $var(tbldb) $ch
     close $ch
 }
+
 

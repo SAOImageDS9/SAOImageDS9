@@ -133,8 +133,8 @@
 ::msgcat::mcset da {Catalog} {Katalog}
 ::msgcat::mcset da {Catrom} 
 ::msgcat::mcset da {Cat} 
+::msgcat::mcset da {Center Dialogs} 
 ::msgcat::mcset da {Center Image} {Centrer billedet}
-::msgcat::mcset da {Center Non-modal Dialogs} 
 ::msgcat::mcset da {Center} {Centrer}
 ::msgcat::mcset da {Centroid Parameters} 
 ::msgcat::mcset da {Centroid} {Centroide}
@@ -213,6 +213,7 @@
 ::msgcat::mcset da {Darken} 
 ::msgcat::mcset da {Dash} {streg}
 ::msgcat::mcset da {Data Format} {Dataformat}
+::msgcat::mcset da {Data must be ascii numeric values} 
 ::msgcat::mcset da {Dataset Name} 
 ::msgcat::mcset da {Dataset} [encoding convertfrom iso8859-1 {Datasæt}]
 ::msgcat::mcset da {Data} 
@@ -966,7 +967,6 @@
 ::msgcat::mcset da {b} 
 ::msgcat::mcset da {color} 
 ::msgcat::mcset da {cool} 
-::msgcat::mcset da {file not found} 
 ::msgcat::mcset da {green} 
 ::msgcat::mcset da {grey} [encoding convertfrom iso8859-1 {grå}]
 ::msgcat::mcset da {g} 

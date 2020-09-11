@@ -133,8 +133,8 @@
 ::msgcat::mcset cs {Catalog} [encoding convertfrom iso8859-2 {Katalog}]
 ::msgcat::mcset cs {Catrom} 
 ::msgcat::mcset cs {Cat} 
+::msgcat::mcset cs {Center Dialogs} 
 ::msgcat::mcset cs {Center Image} [encoding convertfrom iso8859-2 {Vycentruj obrázek}]
-::msgcat::mcset cs {Center Non-modal Dialogs} 
 ::msgcat::mcset cs {Center} [encoding convertfrom iso8859-2 {Støed}]
 ::msgcat::mcset cs {Centroid Parameters} [encoding convertfrom iso8859-2 {Parametry centroidu}]
 ::msgcat::mcset cs {Centroid} [encoding convertfrom iso8859-2 {Vystøedit}]
@@ -213,6 +213,7 @@
 ::msgcat::mcset cs {Darken} 
 ::msgcat::mcset cs {Dash} 
 ::msgcat::mcset cs {Data Format} [encoding convertfrom iso8859-2 {Formát dat}]
+::msgcat::mcset cs {Data must be ascii numeric values} 
 ::msgcat::mcset cs {Dataset Name} 
 ::msgcat::mcset cs {Dataset} [encoding convertfrom iso8859-2 {Soubor dat}]
 ::msgcat::mcset cs {Data} 
@@ -966,7 +967,6 @@
 ::msgcat::mcset cs {b} 
 ::msgcat::mcset cs {color} [encoding convertfrom iso8859-2 {barva}]
 ::msgcat::mcset cs {cool} [encoding convertfrom iso8859-2 {chlad}]
-::msgcat::mcset cs {file not found} 
 ::msgcat::mcset cs {green} [encoding convertfrom iso8859-2 {zelená}]
 ::msgcat::mcset cs {grey} [encoding convertfrom iso8859-2 {¹edá}]
 ::msgcat::mcset cs {g} 

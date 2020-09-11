@@ -133,8 +133,8 @@
 ::msgcat::mcset zh {Catalog} 
 ::msgcat::mcset zh {Catrom} 
 ::msgcat::mcset zh {Cat} 
+::msgcat::mcset zh {Center Dialogs} 
 ::msgcat::mcset zh {Center Image} [encoding convertfrom big5 "\xBC\x76 \xB9\xB3 \xB8\x6D \xA4\xA4"]
-::msgcat::mcset zh {Center Non-modal Dialogs} 
 ::msgcat::mcset zh {Center} 
 ::msgcat::mcset zh {Centroid Parameters} [encoding convertfrom big5 "\xA4\xA4 \xA4\xDF \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Centroid} 
@@ -213,6 +213,7 @@
 ::msgcat::mcset zh {Darken} 
 ::msgcat::mcset zh {Dash} [encoding convertfrom big5 "\xB5\xEA \xBD\x75"]
 ::msgcat::mcset zh {Data Format} 
+::msgcat::mcset zh {Data must be ascii numeric values} 
 ::msgcat::mcset zh {Dataset Name} 
 ::msgcat::mcset zh {Dataset} 
 ::msgcat::mcset zh {Data} 
@@ -966,7 +967,6 @@
 ::msgcat::mcset zh {b} 
 ::msgcat::mcset zh {color} 
 ::msgcat::mcset zh {cool} 
-::msgcat::mcset zh {file not found} 
 ::msgcat::mcset zh {green} [encoding convertfrom big5 "\xBA\xF1"]
 ::msgcat::mcset zh {grey} [encoding convertfrom big5 "\xA6\xC7"]
 ::msgcat::mcset zh {g} 

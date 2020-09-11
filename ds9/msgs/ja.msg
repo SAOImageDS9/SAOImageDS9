@@ -133,8 +133,8 @@
 ::msgcat::mcset ja {Catalog} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0"]
 ::msgcat::mcset ja {Catrom} 
 ::msgcat::mcset ja {Cat} 
+::msgcat::mcset ja {Center Dialogs} 
 ::msgcat::mcset ja {Center Image} [encoding convertfrom euc-jp "\xa5\xa4\xa5\xe1\xa1\xbc\xa5\xb8\xa4\xf2\xc3\xe6\xbf\xb4\xa4\xcb"]
-::msgcat::mcset ja {Center Non-modal Dialogs} 
 ::msgcat::mcset ja {Center} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4"]
 ::msgcat::mcset ja {Centroid Parameters} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4\xb9\xe7\xa4\xef\xa4\xbb\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Centroid} 
@@ -213,6 +213,7 @@
 ::msgcat::mcset ja {Darken} 
 ::msgcat::mcset ja {Dash} [encoding convertfrom euc-jp "\xc7\xcb\xc0\xfe"]
 ::msgcat::mcset ja {Data Format} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xb7\xc1\xbc\xb0"]
+::msgcat::mcset ja {Data must be ascii numeric values} 
 ::msgcat::mcset ja {Dataset Name} 
 ::msgcat::mcset ja {Dataset} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa5\xbb\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Data} 
@@ -966,7 +967,6 @@
 ::msgcat::mcset ja {b} 
 ::msgcat::mcset ja {color} 
 ::msgcat::mcset ja {cool} 
-::msgcat::mcset ja {file not found} 
 ::msgcat::mcset ja {green} 
 ::msgcat::mcset ja {grey} 
 ::msgcat::mcset ja {g} 

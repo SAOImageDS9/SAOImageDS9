@@ -133,8 +133,8 @@
 ::msgcat::mcset fr {Catalog} {Catalogue}
 ::msgcat::mcset fr {Catrom} 
 ::msgcat::mcset fr {Cat} 
+::msgcat::mcset fr {Center Dialogs} 
 ::msgcat::mcset fr {Center Image} {Centrer l'image}
-::msgcat::mcset fr {Center Non-modal Dialogs} 
 ::msgcat::mcset fr {Center} {Centrer}
 ::msgcat::mcset fr {Centroid Parameters} 
 ::msgcat::mcset fr {Centroid} 
@@ -213,6 +213,7 @@
 ::msgcat::mcset fr {Darken} 
 ::msgcat::mcset fr {Dash} {Tiret} 
 ::msgcat::mcset fr {Data Format} [encoding convertfrom iso8859-1 {Format de données}]
+::msgcat::mcset fr {Data must be ascii numeric values} 
 ::msgcat::mcset fr {Dataset Name} 
 ::msgcat::mcset fr {Dataset} [encoding convertfrom iso8859-1 {Ensemble de données}]
 ::msgcat::mcset fr {Data} 
@@ -966,7 +967,6 @@
 ::msgcat::mcset fr {b} 
 ::msgcat::mcset fr {color} 
 ::msgcat::mcset fr {cool} 
-::msgcat::mcset fr {file not found} 
 ::msgcat::mcset fr {green} 
 ::msgcat::mcset fr {grey} 
 ::msgcat::mcset fr {g} 

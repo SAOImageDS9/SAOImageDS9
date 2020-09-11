@@ -733,11 +733,11 @@ proc ::tk::MotifFDialog_ActivateDList {w} {
 
     if {$subdir ne ".."} {
 #	$data(dList) selection set 0
-	$data(dList) selection set [lindex [$data(dList) children {}] 0]
+#	$data(dList) selection set [lindex [$data(dList) children {}] 0]
 #	$data(dList) activate 0
     } else {
 #	$data(dList) selection set 1
-	$data(dList) selection set [lindex [$data(dList) children {}] 1]
+#	$data(dList) selection set [lindex [$data(dList) children {}] 1]
 #	$data(dList) activate 1
     }
 }

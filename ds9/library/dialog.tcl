@@ -36,7 +36,7 @@ proc Toplevel {w mb style title proc} {
 
 proc DialogCreate {w title varname} {
     global ds9
-    puts hi
+
     toplevel $w
     switch $ds9(wm) {
 	x11 -

@@ -8,6 +8,14 @@ proc PlotAddDataSet {varname dim data} {
     upvar #0 $varname var
     global $varname
 
+    # simple test for ascii data
+    set xx [lindex $data 0]
+    set yy [lindex $data 1]
+    if {![string is double $xx] || ![string is double $yy]} {
+	Error [msgcat::mc {Data must be ascii numeric values}]
+	return
+    }
+
     switch -- $dim {
 	4 {
 	    # first data set

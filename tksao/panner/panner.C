@@ -35,6 +35,7 @@ void pnerror(Panner* pn, pnFlexLexer* ll, const char* m)
 
 Panner::Panner(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) : Widget(i, c, item)
 {
+  // no XCreateGC() at this level
   thumbnail = 0;
   highLite = 0;
   panning = 0;

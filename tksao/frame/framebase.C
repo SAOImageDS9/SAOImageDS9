@@ -361,6 +361,10 @@ void FrameBase::x11MagnifierCursor(const Vector& vv)
       pts[ii].x = (short)z[0];
       pts[ii].y = (short)z[1];
     }
+    // just in cast
+    if (!widgetGC)
+      widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
     XSetForeground(display, widgetGC, getColor(magnifierColorName));
     XDrawLines(display, magnifierPixmap, widgetGC, pts, 5, CoordModeOrigin);
 

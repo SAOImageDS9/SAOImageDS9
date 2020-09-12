@@ -41,6 +41,7 @@ void cberror(ColorbarBase* cb, cbFlexLexer* ll, const char* m)
 ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : Widget(i,c,item)
 {
+  // no XCreateGC() at this level
   // this is needed because of a problem with Tk_ConfigureWidget
   ((ColorbarBaseOptions*)options)->font = NULL;
   ((ColorbarBaseOptions*)options)->fontWeight = NULL;

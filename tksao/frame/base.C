@@ -62,6 +62,7 @@ void frerror(Base* fr, frFlexLexer* ll, const char* m)
 Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : Widget(i, c, item)
 {
+  // no XCreateGC() at this level
   nthreads_ = 8;
 
   byteorder_ = 0;
@@ -89,7 +90,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   pannerHeight = 0;
   pannerName[0] = '\0';
   usePanner = 0;
-  pannerGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   magnifierPixmap = 0;
   magnifierXImage = NULL;
@@ -149,14 +149,14 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   useMarkerColor_ =0;
   markerColor_ = dupstr("green");
 
-  markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  selectGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  markerGC_ = NULL;
+  markerGCXOR_ = NULL;
+  selectGCXOR = NULL;
 
   grid = NULL;
-  gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  gridGC_ = NULL;
 
-  contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  contourGC_ = NULL;
 
   useBgColor = 0;
   bgColourName = dupstr("white");
@@ -191,9 +191,6 @@ Base::~Base()
 
   if (pannerXImage)
     XDestroyImage(pannerXImage);
-
-  if (pannerGC)
-    XFreeGC(display, pannerGC);
 
   if (magnifierPixmap)
     Tk_FreePixmap(display, magnifierPixmap);
@@ -1288,9 +1285,6 @@ void Base::update(UpdateType flag, BBox bb)
 
 void Base::updateBase()
 {
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   if (DebugPerf)
     cerr << "Base::updateBase()...";
 
@@ -1331,6 +1325,10 @@ void Base::updateBase()
   if (doRender())
     ximageToPixmap(basePixmap, baseXImage, Coord::WIDGET);
   else {
+    // just in case
+    if (!widgetGC)
+      widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
     if (useBgColor)
       XSetForeground(display, widgetGC, getColor(bgColourName));
     else
@@ -1416,27 +1414,34 @@ void Base::updateGCs()
   rectWindow[0].width = (int)sizeWindow[0];
   rectWindow[0].height = (int)sizeWindow[1];
 
-  // pannerGC
-  XSetLineAttributes(display, pannerGC, 1, LineSolid, CapButt, JoinMiter);
-
   // highliteGC
   setClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
   XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
 
   // markerGC
+  if (!markerGC_)
+    markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
+  if (!markerGCXOR_)
+    markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, markerGCXOR_, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, markerGCXOR_, getColor("white"));
 
   // selectGC
+  if (!selectGCXOR)
+    selectGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   x11Dash(selectGCXOR,1);
   setClipRectangles(display, selectGCXOR, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, selectGCXOR, getColor("white"));
 
   // gridGC
+  if (!gridGC_)
+    gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
 
   // contourGC
+  if (!contourGC_)
+    contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, contourGC_, 0, 0, rectWidget, 1, Unsorted);
   XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 }
@@ -1465,10 +1470,6 @@ void Base::updateMagnifier(const Vector& vv)
   // vv is in CANVAS coords
   // save it, we may need it later
   magnifierCursor = vv;
-
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   // do this first
   updateMagnifierMatrices();
@@ -1710,6 +1711,10 @@ void Base::updatePM(const BBox& bbox)
     }
   }
 
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   XCopyArea(display, basePixmap, pixmap, widgetGC, 0, 0, width, height, 0, 0);
 
   // contours
@@ -1778,6 +1783,10 @@ void Base::x11Crosshair(Pixmap pm, Coord::InternalSystem sys,
 {
   Vector rr = mapFromRef(crosshair,sys);
 
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   XSetForeground(display, widgetGC, getColor("green"));
   if (rr[0]>=0 && rr[0]<width)
     XDrawLine(display, pm, widgetGC, rr[0], 1, rr[0], height);
@@ -1825,6 +1834,10 @@ void Base::ximageToPixmap(Pixmap pixmap, XImage* ximage,
     encodeTrueColor(img, ximage);
     delete [] img;
   }
+
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   TkPutImage(NULL, 0, display, pixmap, widgetGC, ximage, 
 	     0, 0, 0, 0, ximage->width, ximage->height);

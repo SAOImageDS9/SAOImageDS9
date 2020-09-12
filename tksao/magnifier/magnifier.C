@@ -36,6 +36,7 @@ void mgerror(Magnifier* mg, mgFlexLexer* ll, const char* m)
 Magnifier::Magnifier(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : Widget(i, c, item)
 {
+  // no XCreateGC() at this level
   thumbnail = 0;
   needsUpdate = 0;
 }

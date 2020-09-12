@@ -194,7 +194,6 @@ public:
   int pannerHeight;          // panner height
   char pannerName[32];       // panner widget name
   int usePanner;             // panner status
-  GC pannerGC;
 
   Pixmap magnifierPixmap;    // pixmap for magnifier
   XImage* magnifierXImage;   // ximage for magnifier

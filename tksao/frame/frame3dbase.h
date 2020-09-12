@@ -34,6 +34,7 @@ class Frame3dBase : public Base {
   
   MotionType render_;     // enable background rendering
 
+  GC pannerGC;
   GC threedGC;
 
   int border_;

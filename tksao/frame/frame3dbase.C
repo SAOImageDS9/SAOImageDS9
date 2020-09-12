@@ -26,6 +26,7 @@ Frame3dBase::Frame3dBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   preservecache_ =0;
   render_ =NONE;
 
+  pannerGC = NULL;
   threedGC = NULL;
 
   border_ =0;
@@ -40,6 +41,9 @@ Frame3dBase::Frame3dBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
 Frame3dBase::~Frame3dBase()
 {
+  if (pannerGC)
+    XFreeGC(display, pannerGC);
+
   if (threedGC)
     XFreeGC(display, threedGC);
 
@@ -745,11 +749,19 @@ void Frame3dBase::updateGCs()
   rectWidget[0].width = (int)sizeWidget[0];
   rectWidget[0].height = (int)sizeWidget[1];
 
+  // pannerGC
+  if (!pannerGC) {
+    pannerGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+    XSetLineAttributes(display, pannerGC, 1, LineSolid, CapButt, JoinMiter);
+  }
+  
   // 3d highlite
   if (!threedGC) {
     threedGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
     XSetLineAttributes(display, threedGC, 1, LineSolid, CapButt, JoinMiter);
   }
+
+  // clip may have changed
   setClipRectangles(display, threedGC, 0, 0, rectWidget, 1, Unsorted);
 }
 
@@ -933,9 +945,9 @@ void Frame3dBase::updatePanner()
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
 
   // always render (to update panner background color)
-  if (keyContext->fits) {
+  if (keyContext->fits && pannerGC) {
     XSetForeground(display, pannerGC, getColor("black"));
-    x11Border(Coord::PANNER,FrScale::IMGSEC,pannerGC,pannerPixmap);
+    x11Border(Coord::PANNER, FrScale::IMGSEC, pannerGC, pannerPixmap);
   }
 
   ostringstream str;
@@ -1232,6 +1244,10 @@ void Frame3dBase::ximageToPixmapMagnifier()
 	memcpy(dest, bgTrueColor, bytesPerPixel);
     }
   }
+
+  // just in cast
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   TkPutImage(NULL, 0, display, magnifierPixmap, widgetGC, magnifierXImage, 
 	     0, 0, 0, 0, magnifierXImage->width, magnifierXImage->height);

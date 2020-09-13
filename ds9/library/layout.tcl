@@ -404,20 +404,8 @@ proc LayoutViewAdjust {varname} {
 	# hh vertical: approx number of numerals to display
 	set hh 7
 
-	# can't trust 'tk scaling'
-	switch $ds9(wm) {
-	    x11 -
-	    win32 {
-		set scaling [tk scaling]
-		if {$scaling == Inf} {
-		    set scaling 1.334
-		}
-	    }
-	    aqua {set scaling 1.4}
-	}
-
 	set icolorbar(horizontal,height) \
-	    [expr int($colorbar(size) + $colorbar(font,size)*$scaling+$ww)]
+	    [expr int($colorbar(size) + $colorbar(font,size)*$ds9(scaling)+$ww)]
 
 	set icolorbar(vertical,width) \
 	    [expr $colorbar(size) + $colorbar(font,size)*$hh]

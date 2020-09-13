@@ -557,3 +557,69 @@ namespace eval ::roText {
     return $w ;# created
   }
 }
+
+# Used for SimpleText,Catalog,SIA,Footprint
+proc PRPrintDialog {} {
+    global ps
+    global ed
+
+    set ed(ok) 0
+    array set ed [array get ps]
+
+    set w {.print}
+
+    DialogCreate $w [msgcat::mc {Print}] ed(ok)
+
+    # PrintTo
+    set f [ttk::labelframe $w.pt -text [msgcat::mc {Print To}]]
+
+    ttk::radiobutton $f.printer -text [msgcat::mc {Printer}] \
+	-variable ed(dest) -value printer
+    ttk::label $f.tcmd -text [msgcat::mc {Command}]
+    ttk::entry $f.cmd -textvariable ed(cmd) -width 20
+
+    ttk::radiobutton $f.file -text [msgcat::mc {File}] \
+	-variable ed(dest) -value file
+    ttk::label $f.tname -text [msgcat::mc {Name}]
+    ttk::entry $f.name -textvariable ed(filename,txt) -width 20
+    ttk::button $f.browse -text [msgcat::mc {Browse}] \
+	-command "PRPrintBrowse ed(filename,txt) $w"
+
+    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
+    grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 2 -weight 1
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    grid $w.pt -sticky news
+    grid $w.buttons -sticky ew
+    grid rowconfigure $w 0 -weight 1
+    grid columnconfigure $w 0 -weight 1
+
+    DialogWait $w ed(ok) $w.buttons.ok
+    DialogDismiss $w
+
+    if {$ed(ok)} {
+	array set ps [array get ed]
+    }
+
+    set rr $ed(ok)
+    unset ed
+    return $rr
+}
+
+proc PRPrintBrowse {varname parent} {
+    upvar $varname var
+
+    FileLast prsavfbox $var
+    set var [SaveFileDialog prsavfbox $parent]
+}
+

@@ -4,6 +4,83 @@
 
 package provide DS9 1.0
 
+proc PlotPrintDialog {} {
+    global ps
+    global ed
+
+    set ed(ok) 0
+    array set ed [array get ps]
+
+    set w {.print}
+
+    DialogCreate $w [msgcat::mc {Print}] ed(ok)
+
+    # PrintTo
+    set f [ttk::labelframe $w.pt -text [msgcat::mc {Print To}]]
+
+    ttk::radiobutton $f.printer -text [msgcat::mc {Printer}] \
+	-variable ed(dest) -value printer
+    ttk::label $f.tcmd -text [msgcat::mc {Command}]
+    ttk::entry $f.cmd -textvariable ed(cmd) -width 20
+
+    ttk::radiobutton $f.file -text [msgcat::mc {File}] \
+	-variable ed(dest) -value file
+    ttk::label $f.tname -text [msgcat::mc {Name}]
+    ttk::entry $f.name -textvariable ed(filename) -width 20
+    ttk::button $f.browse -text [msgcat::mc {Browse}] \
+	-command "PlotPrintBrowse ed(filename) $w"
+
+    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
+    grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 2 -weight 1
+
+    # Options
+    set f [ttk::labelframe $w.ps -text [msgcat::mc {Postscript}]]
+
+    ttk::label $f.color -text [msgcat::mc {Color}]
+    ttk::radiobutton $f.rgb -text [msgcat::mc {RGB}] \
+	-variable ed(color) -value rgb 
+    ttk::radiobutton $f.gray -text [msgcat::mc {Grayscale}] \
+	-variable ed(color) -value gray 
+
+    grid $f.color $f.rgb $f.gray -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    grid $w.pt -sticky news
+    grid $w.ps -sticky news
+    grid $w.buttons -sticky ew
+    grid rowconfigure $w 0 -weight 1
+    grid rowconfigure $w 1 -weight 1
+    grid columnconfigure $w 0 -weight 1
+
+    DialogWait $w ed(ok) $w.buttons.ok
+    DialogDismiss $w
+
+    if {$ed(ok)} {
+	array set ps [array get ed]
+    }
+
+    set rr $ed(ok)
+    unset ed
+    return $rr
+}
+
+proc PlotPrintBrowse {varname parent} {
+    upvar $varname var
+
+    FileLast apsavfbox $var
+    set var [SaveFileDialog apsavfbox $parent]
+}
+
 proc PlotPSPrint {varname} {
     upvar #0 $varname var
     global $varname
@@ -52,12 +129,9 @@ proc PlotPostScriptSingle {varname} {
 	gray {append options " -greyscale yes"}
     }
 
-    # can't trust 'tk scaling'
-    set scaling 1.475
-
     # Size
-    set ww [expr [winfo width $var(graph)]*$ps(scale)/100./$scaling]
-    set hh [expr [winfo height $var(graph)]*$ps(scale)/100./$scaling]
+    set ww [expr int([winfo width $var(graph)]*$ps(scale)/100./$ds9(scaling))]
+    set hh [expr int([winfo height $var(graph)]*$ps(scale)/100./$ds9(scaling))]
     append options " -width $ww -height $hh"
 
     # Page size
@@ -130,18 +204,6 @@ proc PlotPostScriptMulti {varname} {
 	gray {append options " -greyscale yes"}
     }
 
-    # can't trust 'tk scaling'
-    switch $ds9(wm) {
-	x11 -
-	win32 {
-	    set scaling [tk scaling]
-	    if {$scaling == Inf} {
-		set scaling 1.334
-	    }
-	}
-	aqua {set scaling 1.4}
-    }
-
     # Page size
     switch -- $ps(size) {
 	letter {append options " -paperwidth 8.5i -paperheight 11.i"}
@@ -173,8 +235,8 @@ proc PlotPostScriptMulti {varname} {
 
     # Prolog
 
-    set width [expr [winfo width $var(top)]*$ps(scale)/100./$scaling]
-    set height [expr [winfo height $var(top)]*$ps(scale)/100./$scaling]
+    set width [expr [winfo width $var(top)]*$ps(scale)/100./$ds9(scaling)]
+    set height [expr [winfo height $var(top)]*$ps(scale)/100./$ds9(scaling)]
     set prolog [eval $var([lindex $var(graphs) 0],graph) postscript output \
 		    "$options -width $width -height $height"]
 
@@ -193,8 +255,8 @@ proc PlotPostScriptMulti {varname} {
 	$var($cc,graph) legend configure -font "$var(canvas,legend,font,family) $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" -titlefont "$var(canvas,legend,title,family) $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
 
 	# Size
-	set ww [expr [winfo width $var($cc,graph)]*$ps(scale)/100./$scaling]
-	set hh [expr [winfo height $var($cc,graph)]*$ps(scale)/100./$scaling]
+	set ww [expr [winfo width $var($cc,graph)]*$ps(scale)/100./$ds9(scaling)]
+	set hh [expr [winfo height $var($cc,graph)]*$ps(scale)/100./$ds9(scaling)]
 
 	set var($cc,ps) [eval $var($cc,graph) postscript output \
 			     "$options -width $ww -height $hh"]

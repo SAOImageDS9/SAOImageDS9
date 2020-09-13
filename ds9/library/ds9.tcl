@@ -23,6 +23,19 @@ proc DS9Def {} {
     set ds9(threads) [GetNumCores]
     set ds9(prefs) 1
 
+    # can't trust 'tk scaling'
+    switch $ds9(wm) {
+	x11 -
+	win32 {
+	    set ds9(scaling) [tk scaling]
+	    if {$ds9(scaling) == Inf} {
+		set ds9(scaling) [expr 96./72.]
+	    }
+	}
+	aqua {set ds9(scaling) 1.4}
+    }
+    puts $ds9(scaling)
+
     set ds9(helvetica) [font configure TkDefaultFont -family]
     set ds9(courier) [font configure TkFixedFont -family]
     switch $ds9(wm) {

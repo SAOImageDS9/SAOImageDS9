@@ -261,14 +261,7 @@ switch $ds9(wm) {
 	    ttk::style theme use $tt
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
-
-	switch $ds9(wm) {
-	    x11 {ttk::style theme use default}
-	    win32 {
-		set pds9(theme) xpnative
-		ttk::style theme use xpnative
-	    }
-	}
+	ttk::style theme use default
 
 	# used by x11/darwin
 	ttk::style configure Tree.TFrame \
@@ -657,8 +650,7 @@ update
 
 # major kludges
 switch $ds9(wm) {
-    x11 -
-    win32 {
+    x11 {
 	# be sure theme has been set
 	# could be changed in prefs or command line
 	ThemeChange
@@ -668,6 +660,14 @@ switch $ds9(wm) {
 	# a problem with recent versions of linux
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
+    }
+    win32 {
+	# default for win32
+	if {$pds(theme) == {default}} {
+	    set pds9(theme) xpnative
+	    ttk::style theme use xpnative
+	}
+	ThemeChange
 
 	# jump start keyevents for windows
 	event generate $ds9(canvas) <Tab> -x 0 -y 0

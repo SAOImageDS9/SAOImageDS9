@@ -138,6 +138,9 @@ PREQS	= \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
+	$(LIBDIR)/awthemes \
+	$(LIBDIR)/ttkthemes \
+	$(LIBDIR)/scidthemes \
 	$(APPDIR)/xpans.exe \
 	$(APPDIR)/install.vbs \
 	$(APPDIR)/tcc \

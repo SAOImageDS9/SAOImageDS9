@@ -179,13 +179,25 @@ proc EPS {fn} {
 
     # create a bg
     set cc [$ds9(canvas) cget -background]
-    set bg [$ds9(canvas) create rectangle 0 0 $width $height \
+    set bg [$ds9(canvas) create rectangle -10 -10 \
+		[expr $width+10] [expr $height+10] \
 		-fill $cc -outline $cc]
     $ds9(canvas) lower $bg 1
 
     set options { -colormode color}
 
+    # Page size
+    # reduce size to .95 for backward compatibility
+    set xx [expr $width*(1- (1/.95))/2.]
+    set yy [expr $height*(1- (1/.95))/2.]
+    set ww [expr $width/.95]
+    set hh [expr $height/.95]
+    puts "$xx $yy $ww $hh"
+
+    append options " -x $xx -y $yy -width $ww -height $hh"
+
     append options " -pagex 0 -pagey 0 -pageanchor sw"
+
     if ($width>$height) {
 	append options " -pagewidth $width"
     } else {

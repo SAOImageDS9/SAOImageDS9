@@ -34,7 +34,6 @@ proc DS9Def {} {
 	}
 	aqua {set ds9(scaling) 1.4}
     }
-    puts $ds9(scaling)
 
     set ds9(helvetica) [font configure TkDefaultFont -family]
     set ds9(courier) [font configure TkFixedFont -family]

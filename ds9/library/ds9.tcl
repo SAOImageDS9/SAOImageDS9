@@ -261,7 +261,11 @@ switch $ds9(wm) {
 	    ttk::style theme use $tt
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
-	ttk::style theme use default
+
+	switch $ds9(wm) {
+	    x11 {ttk::style theme use default}
+	    win32 {ttk::style theme use xpnative}
+	}
 
 	# used by x11/darwin
 	ttk::style configure Tree.TFrame \

@@ -199,6 +199,21 @@ $(APPDIR)/tcl8 : $(prefix)/lib/tcl8
 $(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
 	cp -pr $? $@
 
+#--------------------------awthemes
+
+$(APPDIR)/awthemes: $(prefix)/awthemes
+	cp -prf $? "$@"
+
+#--------------------------ttkthemes
+
+$(APPDIR)/ttkthemes: $(prefix)/ttkthemes/ttkthemes/themes
+	cp -prf $? "$@"
+
+#--------------------------scidthemes
+
+$(APPDIR)/scidthemes: $(prefix)/scidthemes
+	cp -prf $? "$@"
+
 $(APPDIR)/xpans.exe: $(bindir)/xpans.exe
 	cp -p $? $@
 

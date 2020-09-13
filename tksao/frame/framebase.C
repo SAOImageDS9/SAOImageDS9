@@ -279,6 +279,10 @@ void FrameBase::updatePanner()
     return;
   }
 
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
 
@@ -361,9 +365,6 @@ void FrameBase::x11MagnifierCursor(const Vector& vv)
       pts[ii].x = (short)z[0];
       pts[ii].y = (short)z[1];
     }
-    // just in cast
-    if (!widgetGC)
-      widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
     XSetForeground(display, widgetGC, getColor(magnifierColorName));
     XDrawLines(display, magnifierPixmap, widgetGC, pts, 5, CoordModeOrigin);
@@ -391,6 +392,7 @@ void FrameBase::x11MagnifierCursor(const Vector& vv)
       pts[ii].x = (int)zz[0];
       pts[ii].y = (int)zz[1];
     }
+
     XSetForeground(display, widgetGC, getColor("black"));
     XDrawLines(display, magnifierPixmap, widgetGC, pts, 5, CoordModeOrigin);
 }

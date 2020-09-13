@@ -1288,6 +1288,9 @@ void Base::updateBase()
   if (DebugPerf)
     cerr << "Base::updateBase()...";
 
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   int& width = options->width;
   int& height = options->height;
 
@@ -1325,10 +1328,6 @@ void Base::updateBase()
   if (doRender())
     ximageToPixmap(basePixmap, baseXImage, Coord::WIDGET);
   else {
-    // just in case
-    if (!widgetGC)
-      widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
     if (useBgColor)
       XSetForeground(display, widgetGC, getColor(bgColourName));
     else
@@ -1462,6 +1461,10 @@ void Base::updateMagnifier(const Vector& vv)
     Tcl_Eval(interp, str.str().c_str());
     return;
   }
+
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   // just in case
   if (!(magnifierXImage && magnifierPixmap))
@@ -1700,6 +1703,10 @@ void Base::updatePM(const BBox& bbox)
   if (DebugPerf)
     cerr << "Base::updatePM()...";
 
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   int& width = options->width;
   int& height = options->height;
 
@@ -1710,10 +1717,6 @@ void Base::updatePM(const BBox& bbox)
       return;
     }
   }
-
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   XCopyArea(display, basePixmap, pixmap, widgetGC, 0, 0, width, height, 0, 0);
 
@@ -1783,10 +1786,6 @@ void Base::x11Crosshair(Pixmap pm, Coord::InternalSystem sys,
 {
   Vector rr = mapFromRef(crosshair,sys);
 
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   XSetForeground(display, widgetGC, getColor("green"));
   if (rr[0]>=0 && rr[0]<width)
     XDrawLine(display, pm, widgetGC, rr[0], 1, rr[0], height);
@@ -1834,10 +1833,6 @@ void Base::ximageToPixmap(Pixmap pixmap, XImage* ximage,
     encodeTrueColor(img, ximage);
     delete [] img;
   }
-
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   TkPutImage(NULL, 0, display, pixmap, widgetGC, ximage, 
 	     0, 0, 0, 0, ximage->width, ximage->height);

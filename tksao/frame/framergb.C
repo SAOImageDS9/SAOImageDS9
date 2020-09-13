@@ -726,10 +726,6 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
     delete [] mk;
 
   // XImage to Pixmap
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   TkPutImage(NULL, 0, display, colormapPM, widgetGC, colormapXM, 
 	     0, 0, 0, 0, width, height);
 

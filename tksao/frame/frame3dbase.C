@@ -941,6 +941,10 @@ void Frame3dBase::updatePanner()
     return;
   }
 
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
 
@@ -1244,10 +1248,6 @@ void Frame3dBase::ximageToPixmapMagnifier()
 	memcpy(dest, bgTrueColor, bytesPerPixel);
     }
   }
-
-  // just in cast
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   TkPutImage(NULL, 0, display, magnifierPixmap, widgetGC, magnifierXImage, 
 	     0, 0, 0, 0, magnifierXImage->width, magnifierXImage->height);

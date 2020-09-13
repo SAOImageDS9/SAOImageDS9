@@ -663,7 +663,7 @@ switch $ds9(wm) {
     }
     win32 {
 	# default for win32
-	if {$pds(theme) == {default}} {
+	if {$pds9(theme) == {default}} {
 	    set pds9(theme) xpnative
 	    ttk::style theme use xpnative
 	}

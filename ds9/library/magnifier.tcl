@@ -31,9 +31,9 @@ proc CreateMagnifier {} {
 	-bg [ThemeTreeBackground]
 
     switch $ds9(wm) {
-	x11 {bind $ds9(magnifier) <<ThemeChanged>> {ThemeConfigMagnifier %W}}
-	aqua -
-	win32 {}
+	x11 -
+	win32 {bind $ds9(magnifier) <<ThemeChanged>> {ThemeConfigMagnifier %W}}
+	aqua {}
     }
 }
 

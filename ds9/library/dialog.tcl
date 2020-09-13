@@ -18,7 +18,8 @@ proc Toplevel {w mb style title proc} {
     ThemeMenu $mb
 
     switch $ds9(wm) {
-	x11 {}
+	x11 -
+	win32 {}
 	aqua {
 	    AppleMenu $mb
 	    switch $style {
@@ -26,7 +27,6 @@ proc Toplevel {w mb style title proc} {
 		7 {::tk::unsupported::MacWindowStyle style $w document "closeBox fullZoom collapseBox resizable"}
 	    }
 	}
-	win32 {}
     }
 
     $w configure -menu $mb
@@ -498,7 +498,6 @@ proc SimpleTextPageSetup {varname} {
 	x11 -
 	aqua -
 	win32 {}
-	wwin32 {win32 pm pagesetup}
     }
 }
 

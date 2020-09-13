@@ -821,8 +821,8 @@ proc CATPageSetup {varname} {
     global ds9
     switch $ds9(wm) {
 	x11 -
-	aqua {}
-	win32 {win32 pm pagesetup}
+	aqua -
+	win32 {}
     }
 }
 

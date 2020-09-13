@@ -92,9 +92,9 @@ proc CreateGraphs {} {
     bind $ds9(graph,horz) <Right> [list ArrowKeyGraph $ds9(graph,horz) 1 0 1]
 
     switch $ds9(wm) {
-	x11 {bind $ds9(graph,horz) <<ThemeChanged>> {ThemeConfigGraph %W}}
-	aqua -
-	win32 {}
+	x11 -
+	win32 {bind $ds9(graph,horz) <<ThemeChanged>> {ThemeConfigGraph %W}}
+	aqua {}
     }
 
     # Vertical Graph

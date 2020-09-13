@@ -903,9 +903,9 @@ proc OpenConsole {} {
 	tkcon::Init
 
 	switch $ds9(wm) {
-	    x11 {bind $::tkcon::PRIV(curtab) <<ThemeChanged>> {break}}
-	    aqua -
-	    win32 {}
+	    x11 -
+	    win32 {bind $::tkcon::PRIV(curtab) <<ThemeChanged>> {break}}
+	    aqua {}
 	}
     }
 }

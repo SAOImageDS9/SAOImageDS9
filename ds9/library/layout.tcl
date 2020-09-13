@@ -143,9 +143,9 @@ proc CreateCanvas {} {
     grid $ds9(image)
 
     switch $ds9(wm) {
-	x11 {bind $ds9(canvas) <<ThemeChanged>> {ThemeConfigCanvas %W}}
-	aqua -
-	win32 {}
+	x11 -
+	win32 {bind $ds9(canvas) <<ThemeChanged>> {ThemeConfigCanvas %W}}
+	aqua {}
     }
 }
 

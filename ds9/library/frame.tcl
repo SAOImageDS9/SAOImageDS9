@@ -1967,7 +1967,8 @@ proc FrameToFront {} {
 
     # Aqua has a problem with refreshing
     switch $ds9(wm) {
-	x11 {}
+	x11 -
+	win32 {}
 	aqua {
 	    if {!$ds9(init)} {
 		global debug
@@ -1977,7 +1978,6 @@ proc FrameToFront {} {
 		update idletasks
 	    }
 	}
-	win32 {}
     }
 }
 

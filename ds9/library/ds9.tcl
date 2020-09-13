@@ -45,7 +45,7 @@ proc DS9Def {} {
 	    font configure TkCaptionFont -weight normal
 	    font configure TkHeadingFont -weight normal
 	}
-	aqua {set ds9(times) times}
+	aqua -
 	win32 {set ds9(times) times}
     }
     set ds9(main) {}
@@ -264,7 +264,10 @@ switch $ds9(wm) {
 
 	switch $ds9(wm) {
 	    x11 {ttk::style theme use default}
-	    win32 {ttk::style theme use xpnative}
+	    win32 {
+		set pds9(theme) xpnative
+		ttk::style theme use xpnative
+	    }
 	}
 
 	# used by x11/darwin
@@ -654,7 +657,8 @@ update
 
 # major kludges
 switch $ds9(wm) {
-    x11 {
+    x11 -
+    win32 {
 	# be sure theme has been set
 	# could be changed in prefs or command line
 	ThemeChange
@@ -664,10 +668,9 @@ switch $ds9(wm) {
 	# a problem with recent versions of linux
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
-    }
-    aqua {}
-    win32 {
+
 	# jump start keyevents for windows
 	event generate $ds9(canvas) <Tab> -x 0 -y 0
     }
+    aqua {}
 }

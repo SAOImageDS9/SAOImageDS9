@@ -397,9 +397,9 @@ proc ScaleDialog {} {
     bind $w <<Close>> ScaleDestroyDialog
 
     switch $ds9(wm) {
-	x11 {bind $dscale(hist) <<ThemeChanged>> {ThemeConfigScale %W}}
-	aqua -
-	win32 {}
+	x11 -
+	win32 {bind $dscale(hist) <<ThemeChanged>> {ThemeConfigScale %W}}
+	aqua {}
     }
 
     UpdateScaleDialog

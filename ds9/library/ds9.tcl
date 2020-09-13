@@ -211,14 +211,15 @@ package require DS9
 
 # post package load
 switch $ds9(wm) {
-    x11 {
+    x11 -
+    win32 {
 	# awthemes
 	package require awthemes
 	package require colorutils
 	package require awdark
 	package require awlight
 	package require awblack
-#	package require awwinxpblue
+	package require awwinxpblue
 	package require awbreeze
 
 	# tkthemes- alot of these lacks full set of colors
@@ -248,9 +249,13 @@ switch $ds9(wm) {
 	    ttk::style theme use $tt
 	    ttk::style configure TLabel -borderwidth 2 -padding 1
 	}
-	ttk::style theme use default
 
-	# special frame style
+	switch $ds9(wm) {
+	    x11 {ttk::style theme use default}
+	    win32 {ttk::style theme use xpnative}
+	}
+
+	# used by x11/darwin
 	ttk::style configure Tree.TFrame \
 	    -background [ttk::style lookup Treeview -background]
 
@@ -314,10 +319,6 @@ switch $ds9(wm) {
 
 	proc ::tk::mac::LaunchURL {} {
 	}
-    }
-    win32 {
-	# colors
-	ttk::style theme use xpnative
     }
 }
 

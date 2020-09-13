@@ -245,7 +245,8 @@ proc PrefsDialogGeneral {} {
     set f [ttk::labelframe $w.general.color -text [msgcat::mc {Color}]]
 
     switch $ds9(wm) {
-	x11 {
+	x11 -
+	win32 {
 	    ttk::label $f.ttheme -text [msgcat::mc {Theme}]
 	    ttk::menubutton $f.theme -textvariable pds9(theme) \
 		-menu $f.theme.menu
@@ -260,8 +261,7 @@ proc PrefsDialogGeneral {} {
 
 	    grid $f.ttheme $f.theme -padx 2 -pady 2 -sticky w
 	}
-	aqua -
-	win32 {}
+	aqua {}
     }
 
     ttk::label $f.tnan -text [msgcat::mc {Blank/Inf/NaN Color}]

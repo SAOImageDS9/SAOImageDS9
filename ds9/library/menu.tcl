@@ -10,7 +10,7 @@ proc CreateMenuBar {} {
     # we need this first, before the configure command
     ThemeMenu $ds9(mb) 
     switch $ds9(wm) {
-	x11 {}
+	x11 -
 	win32 {}
 	aqua {AppleMenu $ds9(mb)}
     }
@@ -42,7 +42,8 @@ proc CreateMenuBar {} {
     HelpMainMenu
 
     switch $ds9(wm) {
-	x11 {
+	x11 -
+	win32 {
 	    bind TFrame <<ThemeChanged>> {ThemeConfigTFrame %W}
 
 	    bind Menu <<ThemeChanged>> {ThemeConfigMenu %W}
@@ -66,8 +67,7 @@ proc CreateMenuBar {} {
 	    bind Scale <<ThemeChanged>> {ThemeConfigFgBg %W}
 	    bind Scrollbar <<ThemeChanged>> {ThemeConfigBg %W}
 	}
-	aqua -
-	win32 {}
+	aqua {}
     }
 }
 
@@ -76,9 +76,9 @@ proc ThemeMenu {w} {
 
     menu $w
     switch $ds9(wm) {
-	x11 {ThemeConfigMenu $w}
-	aqua -
-	win32 {}
+	x11 -
+	win32 {ThemeConfigMenu $w}
+	aqua {}
     }
 
     return $w
@@ -146,6 +146,17 @@ proc ThemeConfigMenu {w} {
 	[ttk::style lookup TMenubutton -foreground active]
     $w configure -activebackground \
 	[ttk::style lookup TMenubutton -background active]
+}
+
+proc ThemeChange {} {
+    global ds9
+    global pds9
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {ttk::style theme use $pds9(theme)}
+	aqua {}
+    }
 }
 
 proc ThemeForeground {} {

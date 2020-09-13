@@ -1060,17 +1060,6 @@ proc SetDefaultTextFont {which} {
     }
 }
 
-proc ThemeChange {} {
-    global ds9
-    global pds9
-
-    switch $ds9(wm) {
-	x11 {ttk::style theme use $pds9(theme)}
-	aqua -
-	win32 {}
-    }
-}
-
 proc PrefsBgColor {} {
     global ds9
     global pds9

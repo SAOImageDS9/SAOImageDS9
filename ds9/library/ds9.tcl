@@ -231,7 +231,7 @@ switch $ds9(wm) {
 	package require awdark
 	package require awlight
 	package require awblack
-	package require awwinxpblue
+#	package require awwinxpblue
 	package require awbreeze
 
 	# tkthemes- alot of these lacks full set of colors

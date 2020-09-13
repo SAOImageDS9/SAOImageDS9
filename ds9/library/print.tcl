@@ -171,11 +171,11 @@ proc EPS {fn} {
 
     set color rgb
     set level 2
-    set resolution 72
+    set resolution 96
 
     # Page size
-    set width [winfo width $ds9(canvas)]
-    set height [winfo height $ds9(canvas)]
+    set width [expr int([winfo width $ds9(canvas)]*72./96.)]
+    set height [expr int([winfo height $ds9(canvas)]*72./96.)]
 
     # create a bg
     set cc [$ds9(canvas) cget -background]

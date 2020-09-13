@@ -130,6 +130,7 @@ proc CreateCanvas {} {
     # extra space for window tab
     set ds9(canvas,bottom) {}
     if {$canvas(gap,bottom)>0} {
+	# set background style to TreeView, not TFrame
 	set ds9(canvas,bottom) [ttk::frame $ds9(image).b \
 				    -width 1 \
 				    -height $canvas(gap,bottom) \

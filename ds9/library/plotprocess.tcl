@@ -397,6 +397,7 @@ proc PlotCmdExport {format fn} {
     upvar #0 $cvarname cvar
 
     switch -- $format {
+	eps {FileLast epsbox $fn}
 	gif {FileLast giffbox $fn}
 	jpeg {FileLast jpegfbox $fn}
 	tiff {FileLast tifffbox $fn}

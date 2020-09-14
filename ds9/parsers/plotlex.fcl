@@ -37,6 +37,7 @@ destination {return $DESTINATION_}
 diamond	    {return $DIAMOND_}
 dup	    {return $DUPLICATE_}
 duplicate   {return $DUPLICATE_}
+eps	    {return $EPS_}
 error	    {return $ERROR_}
 export	    {return $EXPORT_}
 family	    {return $FAMILY_}

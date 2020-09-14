@@ -39,10 +39,6 @@ proc PSPrint {} {
 proc PostScript {} {
     global ds9
     global ps
-    global view
-    global canvas
-    global colorbar
-    global current
 
     # we need to be realized
     RealizeDS9
@@ -158,11 +154,6 @@ proc PostScript {} {
 
 proc EPS {fn} {
     global ds9
-    global ps
-    global view
-    global canvas
-    global colorbar
-    global current
 
     # we need to be realized
     RealizeDS9
@@ -174,27 +165,16 @@ proc EPS {fn} {
     set resolution 96
 
     # Page size
-    set width [expr int([winfo width $ds9(canvas)]/$ds9(scaling))]
-    set height [expr int([winfo height $ds9(canvas)]/$ds9(scaling))]
+    set width [winfo width $ds9(canvas)]
+    set height [winfo height $ds9(canvas)]
 
     # create a bg
     set cc [$ds9(canvas) cget -background]
-    set bg [$ds9(canvas) create rectangle -10 -10 \
-		[expr $width+10] [expr $height+10] \
+    set bg [$ds9(canvas) create rectangle 0 0 $width $height \
 		-fill $cc -outline $cc]
     $ds9(canvas) lower $bg 1
 
     set options { -colormode color}
-
-    # Page size
-    # reduce size to .95 for backward compatibility
-    set xx [expr $width*(1- (1/.95))/2.]
-    set yy [expr $height*(1- (1/.95))/2.]
-    set ww [expr $width/.95]
-    set hh [expr $height/.95]
-    puts "$xx $yy $ww $hh"
-
-    append options " -x $xx -y $yy -width $ww -height $hh"
 
     append options " -pagex 0 -pagey 0 -pageanchor sw"
 

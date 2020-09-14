@@ -37,6 +37,7 @@
 %token DESTINATION_
 %token DIAMOND_
 %token DUPLICATE_
+%token EPS_
 %token ERROR_
 %token EXPORT_
 %token FAMILY_
@@ -365,7 +366,8 @@ export : STRING_ {PlotCmdExport [ExtToFormat $1] $1}
  | exportExt STRING_ exportOps {PlotCmdExport $1 $2}
  ;
 
-exportExt : GIF_ {set _ gif}
+exportExt : EPS_ {set _ eps}
+ | GIF_ {set _ gif}
  | TIFF_ {set _ tiff}
  | JPEG_ {set _ jpeg}
  | PNG_ {set _ png}

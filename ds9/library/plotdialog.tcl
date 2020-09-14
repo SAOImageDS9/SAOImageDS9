@@ -85,6 +85,8 @@ proc PlotDialog {varname wtt} {
 	-command [list PlotDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     ThemeMenu $var(mb).file.export
+    $var(mb).file.export add command -label {EPS...} \
+	-command [list PlotExportDialog $varname eps]
     $var(mb).file.export add command -label {GIF...} \
 	-command [list PlotExportDialog $varname gif]
     $var(mb).file.export add command -label {TIFF...} \
@@ -585,6 +587,7 @@ proc PlotExportDialog {varname format} {
     global iap
 
     switch -- $format {
+	eps {set fn [SaveFileDialog epsfbox $var(top)]}
 	gif {set fn [SaveFileDialog giffbox $var(top)]}
 	jpeg {set fn [SaveFileDialog jpegfbox $var(top)]}
 	tiff {set fn [SaveFileDialog tifffbox $var(top)]}
@@ -594,6 +597,7 @@ proc PlotExportDialog {varname format} {
     if {$fn != {}} {
 	set ok 1
 	switch -- $format {
+	    eps {}
 	    gif {}
 	    jpeg {set ok [JPEGExportDialog iap(jpeg,quality)]}
 	    tiff {set ok [TIFFExportDialog iap(tiff,compress)]}
@@ -626,6 +630,19 @@ proc PlotExport {varname fn format} {
 	puts stderr "PlotExport update"
     }
     update
+
+    switch -- $format {
+	eps {PlotEPS $varname $fn}
+	gif -
+	tiff -
+	jpeg -
+	png {PlotExportPhoto $varname $fn $format}
+    }
+}
+
+proc PlotExportPhoto {varname fn format} {
+    upvar #0 $varname var
+    global $varname
 
     # for darwin only
     set geom [MacOSPhotoFix $var(top) 0 0]

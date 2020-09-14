@@ -4,6 +4,17 @@
 
 package provide DS9 1.0
 
+proc PlotPSPrint {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[PlotPrintDialog]} {
+	if {[catch {PlotPostScript $varname} printError]} {
+	    Error "[msgcat::mc {An error has occurred while printing}] $printError"
+	}
+    }
+}
+
 proc PlotPrintDialog {} {
     global ps
     global ed
@@ -81,17 +92,7 @@ proc PlotPrintBrowse {varname parent} {
     set var [SaveFileDialog apsavfbox $parent]
 }
 
-proc PlotPSPrint {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {[PlotPrintDialog]} {
-	if {[catch {PlotPostScript $varname} printError]} {
-	    Error "[msgcat::mc {An error has occurred while printing}] $printError"
-	}
-    }
-}
-
+# Postscript
 proc PlotPostScript {varname} {
     upvar #0 $varname var
     global $varname
@@ -111,14 +112,7 @@ proc PlotPostScriptSingle {varname} {
     global ps
     global ds9
 
-    # set postscript fonts
-    $var(graph) configure -font "$var(canvas,title,family) $var(canvas,title,size) $var(canvas,title,weight) $var(canvas,title,slant)"
-
-    $var(graph) xaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-    $var(graph) yaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-    $var(graph) legend configure -font "$var(canvas,legend,font,family) $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" -titlefont "$var(canvas,legend,title,family) $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
+    PlotPostScriptSetFonts $varname $var(graphs)
 
     set options {}
 
@@ -171,21 +165,7 @@ proc PlotPostScriptSingle {varname} {
 	close $ch
     }
 
-    # reset fonts
-    $var(graph) configure \
-	-font "{$ds9($var(canvas,title,family))} $var(canvas,title,size) $var(canvas,title,weight) $var(canvas,title,slant)"
-
-    $var(graph) xaxis configure \
-	-tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
-	-titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-    $var(graph) yaxis configure \
-	-tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
-	-titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-    $var(graph) legend configure \
-	-font "{$ds9($var(canvas,legend,font,family))} $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" \
-	-titlefont "{$ds9($var(canvas,legend,title,family))} $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
+    PlotPostScriptResetFonts $varname $var(graphs)
 }
 
 proc PlotPostScriptMulti {varname} {
@@ -234,56 +214,132 @@ proc PlotPostScriptMulti {varname} {
     }
 
     # Prolog
-
     set width [expr [winfo width $var(top)]*$ps(scale)/100./$ds9(scaling)]
     set height [expr [winfo height $var(top)]*$ps(scale)/100./$ds9(scaling)]
     set prolog [eval $var([lindex $var(graphs) 0],graph) postscript output \
 		    "$options -width $width -height $height"]
 
-    #
     # For each graph
-    #
     foreach cc $var(graphs) {
-
-	# set postscript fonts
-	$var($cc,graph) configure -font "$var(canvas,title,family) $var(canvas,title,size) $var(canvas,title,weight) $var(canvas,title,slant)"
-
-	$var($cc,graph) xaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-	$var($cc,graph) yaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-	$var($cc,graph) legend configure -font "$var(canvas,legend,font,family) $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" -titlefont "$var(canvas,legend,title,family) $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
+	PlotPostScriptSetFonts $varname $cc
 
 	# Size
 	set ww [expr [winfo width $var($cc,graph)]*$ps(scale)/100./$ds9(scaling)]
 	set hh [expr [winfo height $var($cc,graph)]*$ps(scale)/100./$ds9(scaling)]
-
 	set var($cc,ps) [eval $var($cc,graph) postscript output \
 			     "$options -width $ww -height $hh"]
 
-	# reset fonts
-	$var($cc,graph) configure \
-	    -font "{$ds9($var(canvas,title,family))} $var(canvas,title,size) $var(canvas,title,weight) $var(canvas,title,slant)"
-
-	$var($cc,graph) xaxis configure \
-	    -tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
-	    -titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-	$var($cc,graph) yaxis configure \
-	    -tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
-	    -titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
-
-	$var($cc,graph) legend configure \
-	    -font "{$ds9($var(canvas,legend,font,family))} $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" \
-	    -titlefont "{$ds9($var(canvas,legend,title,family))} $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
+	PlotPostScriptResetFonts $varname $cc
     }
 
-    # channel
     if {$ps(dest) == "file" && $ps(filename) != {}} {
 	set ch [open $ps(filename) w]
     } else {
 	set ch [open "| $ps(cmd)" w]
     }
+    PlotPostScriptMultiBuild $varname $ch $prolog $width $height
+}
+
+# EPS
+proc PlotEPS {varname fn} {
+    upvar #0 $varname var
+    global $varname
+
+    set ll [llength $var(graphs)]
+    if {$ll == 1} {
+	PlotEPSSingle $varname $fn
+    } else {
+	PlotEPSMulti $varname $fn
+    }
+}
+
+proc PlotEPSSingle {varname fn} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+
+    PlotPostScriptSetFonts $varname $var(graphs)
+
+    set ww [winfo width $var(graph)]
+    set hh [winfo height $var(graph)]
+
+    set options { -greyscale no -landscape false -width $ww -height $hh -paperwidth 0 -paperheight 0}
+
+    if {[catch {eval $var(graph) postscript output $fn $options} rr]} {
+	Error "[msgcat::mc {A postscript generation error has occurred}] $rr"
+    }
+
+    PlotPostScriptResetFonts $varname $var(graphs)
+}
+
+proc PlotEPSMulti {varname fn} {
+    upvar #0 $varname var
+    global $varname
+
+    set options { -greyscale no -landscape false -paperwidth 0 -paperheight 0}
+
+    # Prolog
+    set width [winfo width $var(top)]
+    set height [winfo height $var(top)]
+    set prolog [eval $var([lindex $var(graphs) 0],graph) postscript output \
+		    "$options -width $width -height $height"]
+
+    # For each graph
+    foreach cc $var(graphs) {
+	PlotPostScriptSetFonts $varname $cc
+
+	# Size
+	set ww [winfo width $var($cc,graph)]
+	set hh [winfo height $var($cc,graph)]
+	set var($cc,ps) [eval $var($cc,graph) postscript output \
+			     "$options -width $ww -height $hh"]
+
+	PlotPostScriptResetFonts $varname $cc
+    }
+
+    set ch [open $fn w]
+    PlotPostScriptMultiBuild $varname $ch $prolog $width $height
+}
+
+proc PlotPostScriptSetFonts {varname cc} {
+    upvar #0 $varname var
+    global $varname
+
+    $var($cc,graph) configure -font "$var(canvas,title,family) $var(canvas,title,size) $var(canvas,title,weight) $var(canvas,title,slant)"
+
+    $var($cc,graph) xaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
+
+    $var($cc,graph) yaxis configure -tickfont "$var(canvas,axis,font,family) $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" -titlefont "$var(canvas,axis,title,family) $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
+
+    $var($cc,graph) legend configure -font "$var(canvas,legend,font,family) $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" -titlefont "$var(canvas,legend,title,family) $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
+}
+
+proc PlotPostScriptResetFonts {varname cc} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+
+    $var($cc,graph) configure \
+	-font "{$ds9($var(canvas,title,family))} $var(canvas,title,size) $var(canvas,title,weight) $var(canvas,title,slant)"
+
+    $var($cc,graph) xaxis configure \
+	-tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	-titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
+
+    $var($cc,graph) yaxis configure \
+	-tickfont "{$ds9($var(canvas,axis,font,family))} $var(canvas,axis,font,size) $var(canvas,axis,font,weight) $var(canvas,axis,font,slant)" \
+	-titlefont "{$ds9($var(canvas,axis,title,family))} $var(canvas,axis,title,size) $var(canvas,axis,title,weight) $var(canvas,axis,title,slant)"
+
+    $var($cc,graph) legend configure \
+	-font "{$ds9($var(canvas,legend,font,family))} $var(canvas,legend,font,size) $var(canvas,legend,font,weight) $var(canvas,legend,font,slant)" \
+	-titlefont "{$ds9($var(canvas,legend,title,family))} $var(canvas,legend,title,size) $var(canvas,legend,title,weight) $var(canvas,legend,title,slant)"
+}
+
+proc PlotPostScriptMultiBuild {varname ch prolog width height} {
+    upvar #0 $varname var
+    global $varname
 
     # prolog
     set bb [string first {%%EndSetup} $prolog]

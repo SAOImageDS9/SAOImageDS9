@@ -941,10 +941,6 @@ void Frame3dBase::updatePanner()
     return;
   }
 
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
 

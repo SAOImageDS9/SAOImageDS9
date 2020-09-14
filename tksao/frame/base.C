@@ -62,7 +62,9 @@ void frerror(Base* fr, frFlexLexer* ll, const char* m)
 Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : Widget(i, c, item)
 {
-  // no XCreateGC() at this level
+  // assumes top window has been realized at this point
+  widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   nthreads_ = 8;
 
   byteorder_ = 0;
@@ -124,7 +126,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   useHighlite = 0;
   highliteColourName = dupstr("blue");
-  highliteGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  highliteGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   useCrosshair = 0;
 
@@ -149,14 +151,14 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   useMarkerColor_ =0;
   markerColor_ = dupstr("green");
 
-  markerGC_ = NULL;
-  markerGCXOR_ = NULL;
-  selectGCXOR = NULL;
+  markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  selectGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   grid = NULL;
-  gridGC_ = NULL;
+  gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  contourGC_ = NULL;
+  contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   useBgColor = 0;
   bgColourName = dupstr("white");
@@ -198,8 +200,8 @@ Base::~Base()
   if (magnifierXImage)
     XDestroyImage(magnifierXImage);
 
-  if (highliteGC)
-    XFreeGC(display, highliteGC);
+  if (highliteGC_)
+    XFreeGC(display, highliteGC_);
 
   if (highliteColourName)
     delete [] highliteColourName;
@@ -1288,9 +1290,6 @@ void Base::updateBase()
   if (DebugPerf)
     cerr << "Base::updateBase()...";
 
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   int& width = options->width;
   int& height = options->height;
 
@@ -1414,33 +1413,23 @@ void Base::updateGCs()
   rectWindow[0].height = (int)sizeWindow[1];
 
   // highliteGC
-  setClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
-  XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
+  setClipRectangles(display, highliteGC_, 0, 0, rectWidget, 1, Unsorted);
+  XSetLineAttributes(display, highliteGC_, 2, LineSolid, CapButt, JoinMiter);
 
   // markerGC
-  if (!markerGC_)
-    markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
-  if (!markerGCXOR_)
-    markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, markerGCXOR_, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, markerGCXOR_, getColor("white"));
 
   // selectGC
-  if (!selectGCXOR)
-    selectGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   x11Dash(selectGCXOR,1);
   setClipRectangles(display, selectGCXOR, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, selectGCXOR, getColor("white"));
 
   // gridGC
-  if (!gridGC_)
-    gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
 
   // contourGC
-  if (!contourGC_)
-    contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   setClipRectangles(display, contourGC_, 0, 0, rectWidget, 1, Unsorted);
   XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 }
@@ -1461,10 +1450,6 @@ void Base::updateMagnifier(const Vector& vv)
     Tcl_Eval(interp, str.str().c_str());
     return;
   }
-
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   // just in case
   if (!(magnifierXImage && magnifierPixmap))
@@ -1703,10 +1688,6 @@ void Base::updatePM(const BBox& bbox)
   if (DebugPerf)
     cerr << "Base::updatePM()...";
 
-  // just in case
-  if (!widgetGC)
-    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   int& width = options->width;
   int& height = options->height;
 
@@ -1815,8 +1796,8 @@ void Base::x11Dash(GC lgc, int which)
 void Base::x11Graphics()
 {
   if (useHighlite) {
-    XSetForeground(display, highliteGC, getColor(highliteColourName));
-    XDrawRectangle(display, pixmap, highliteGC, 1, 1, 
+    XSetForeground(display, highliteGC_, getColor(highliteColourName));
+    XDrawRectangle(display, pixmap, highliteGC_, 1, 1, 
 		   options->width-2, options->height-2);
   }
 }

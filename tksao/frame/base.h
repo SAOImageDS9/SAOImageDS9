@@ -233,7 +233,7 @@ public:
 
   int useHighlite;
   char* highliteColourName;
-  GC highliteGC;
+  GC highliteGC_;
 
   int useCrosshair;
 

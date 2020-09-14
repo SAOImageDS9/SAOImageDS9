@@ -1183,10 +1183,7 @@ proc FixPrefs5.xto6.0 {} {
                     color -
                     region -
                     wcs -
-                    help {
-			set pbuttons($nn) $buttons($nn)
-			unset buttons($nn)
-		    }
+                    help {unset buttons($nn)}
                 }
             }
         }

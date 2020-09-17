@@ -137,7 +137,7 @@ proc PrefsDialogZoom {} {
     set w $dprefs(tab)
 
     $dprefs(listbox) insert {} end -id [ttk::frame $w.zoom] \
-	-text [msgcat::mc {Zoom}]
+	-text [msgcat::mc {Pan Zoom}]
 
     # PanZoom
     set f [ttk::labelframe $w.zoom.panzoom -text [msgcat::mc {Pan Zoom}]]

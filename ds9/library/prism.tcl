@@ -45,6 +45,7 @@ proc PrismDialog {varname} {
 
     set var(tbldb) ${varname}tbldb
     set var(fn) {}
+    set var(type) fits
     set var(load) mmapincr
     set var(ext) 0
     set var(extname) {}
@@ -82,16 +83,27 @@ proc PrismDialog {varname} {
     $mb add cascade -label [msgcat::mc {Table}] -menu $mb.table
 
     ThemeMenu $mb.file
-    $mb.file add command -label [msgcat::mc {Load}] \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command [list PrismLoadFile $varname] -accelerator "${ds9(ctrl)}O"
-    $mb.file add command -label [msgcat::mc {Clear}] \
-	-command [list PrismClear $varname]
+    $mb.file add separator
+    $mb.file add cascade -label [msgcat::mc {Import}] -menu $mb.file.import
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Image}] \
 	-command [list PrismImage $varname]
+    $mb.file add command -label [msgcat::mc {Clear}] \
+	-command [list PrismClear $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command [list PrismDestroy $varname] -accelerator "${ds9(ctrl)}W"
+
+    # Import
+    ThemeMenu $mb.file.import
+    $mb.file.import add command -label "[msgcat::mc {VOTable}]..." \
+	-command [list PrismImportVOTFile $varname]
+    $mb.file.import add command -label "[msgcat::mc {Starbase}]..." \
+	-command [list PrismImportRDBFile $varname]
+    $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
+	-command [list PrismImportTSVFile $varname]
 
     ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \
@@ -334,14 +346,20 @@ proc PrismDialogUpdate {varname} {
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
     $var(mb).file entryconfig [msgcat::mc {Image}] -state disabled
 
-    $var(mb) entryconfig [msgcat::mc {Table}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Plot}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Histogram}] -state disabled
+
+    $var(mb).table entryconfig [msgcat::mc {First}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Next}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Previous}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Last}] -state disabled
+    $var(mb).table entryconfig "[msgcat::mc {Goto}]..." -state disabled
 
     $bb.clear configure -state disabled
     $bb.image configure -state disabled
 
     $bb.plot configure -state disabled
     $bb.histogram configure -state disabled
-    $bb.image configure -state disabled
 
     $bb.first configure -state disabled
     $bb.next configure -state disabled
@@ -353,24 +371,47 @@ proc PrismDialogUpdate {varname} {
     }
 
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
-    $var(mb).file entryconfig [msgcat::mc {Image}] -state normal
-
     $bb.clear configure -state normal
-    $bb.image configure -state normal
 
-    if {[fitsy istable $var(fn) $var(load) $var(ext)]} {
-	$var(mb) entryconfig [msgcat::mc {Table}] -state normal
+    switch $var(type) {
+	fits  {
+	    $var(mb).file entryconfig [msgcat::mc {Image}] -state normal
+	    $bb.image configure -state normal
 
-	$bb.plot configure -state normal
-	$bb.histogram configure -state normal
-	$bb.image configure -state normal
+	    if {[fitsy istable $var(fn) $var(load) $var(ext)]} {
+		$var(mb).table entryconfig [msgcat::mc {Plot}] -state normal
+		$var(mb).table entryconfig [msgcat::mc {Histogram}] \
+		    -state normal
 
-	$bb.first configure -state normal
-	$bb.next configure -state normal
-	$bb.prev configure -state normal
-	$bb.last configure -state normal
+		$var(mb).table entryconfig [msgcat::mc {First}] -state normal
+		$var(mb).table entryconfig [msgcat::mc {Next}] -state normal
+		$var(mb).table entryconfig [msgcat::mc {Previous}] -state normal
+		$var(mb).table entryconfig [msgcat::mc {Last}] -state normal
+		$var(mb).table entryconfig "[msgcat::mc {Goto}]..." \
+		    -state normal
+
+		$bb.plot configure -state normal
+		$bb.histogram configure -state normal
+
+		$bb.first configure -state normal
+		$bb.next configure -state normal
+		$bb.prev configure -state normal
+		$bb.last configure -state normal
+	    }
+	}
+	ascii {
+	    $var(mb).file entryconfig [msgcat::mc {Image}] -state disabled
+	    $bb.image configure -state disabled
+
+	    $var(mb).table entryconfig [msgcat::mc {Plot}] -state normal
+	    $var(mb).table entryconfig [msgcat::mc {Histogram}] -state normal
+	    $bb.plot configure -state normal
+	    $bb.histogram configure -state normal
+	}
     }
 }
+
+# Load
 
 proc PrismDialogLoad {varname} {
     upvar #0 $varname var
@@ -420,6 +461,7 @@ proc PrismLoad {varname fn} {
     PrismClear $varname
 
     set var(fn) $fn
+    set var(type fits
     switch $ds9(wm) {
 	x11 -
 	aqua {
@@ -472,6 +514,71 @@ proc PrismLoad {varname fn} {
     PrismDialogUpdate $varname
 }
 
+# Import
+
+proc PrismImportVOTFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog votfbox $var(top)]
+    if {$fn != {}} {
+	PrismImportFn $varname $fn VOTRead
+    }
+}
+
+proc PrismImportRDBFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog rdbfbox $var(top)]
+    if {$fn != {}} {
+	PrismImportFn $varname $fn starbase_read
+    }
+}
+
+proc PrismImportTSVFile {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog tsvfbox $var(top)]
+    if {$fn != {}} {
+	PrismImportFn $varname $fn TSVRead
+    }
+}
+
+proc PrismImportFn {varname fn reader} {
+    upvar #0 $varname var
+    global $varname
+    global $var(tbldb)
+
+    PrismClear $varname
+
+    if {[file exists $fn]} {
+	set var(fn) $fn
+	set var(type) ascii
+
+	$reader $var(tbldb) $fn
+    } else {
+	Error "[msgcat::mc {Unable to open file}] $fn"
+	return
+    }
+
+    set info \
+	"[starbase_ncols $var(tbldb)] cols, [starbase_nrows $var(tbldb)] rows"
+    $var(dir) insert {} end -id 0 -values [list [file tail $fn] "Table" "$info"]
+    lappend ${varname}(extnames) [file tail $fn]
+    incr ${varname}(extnum)
+
+    set var(ext) 0
+    set var(extname) [lindex $var(extnames) $var(ext)]
+    $var(dir) selection set $var(ext)
+    
+    # need this so that PrismExtCmd is invoked before next command
+    update
+    
+    PrismDialogUpdate $varname
+}
+
 proc PrismClear {varname} {
     upvar #0 $varname var
     global $varname
@@ -483,6 +590,7 @@ proc PrismClear {varname} {
     }
 
     set var(fn) {}
+    set var(type) fits
     set var(load) {}
     set var(ext) 0
     set var(extname) {}
@@ -523,9 +631,14 @@ proc PrismPlot {varname} {
 	return
     }
 
-    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
-	Error "Current extension is not a table"
-	return
+    switch $var(type) {
+	fits {
+	    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+		Error "Current extension is not a table"
+		return
+	    }
+	}
+	ascii {}
     }
 
     set w ".${varname}plot"
@@ -630,12 +743,22 @@ proc PrismPlot {varname} {
 	    set var(plot,type) $ed(plot,type)
 	    set var(plot,mode) $ed(plot,mode)
 
-	    PrismPlotGenerate $varname
+	    PrismPlotGenerateFits $varname
 	}
     }
 }
 
-proc PrismPlotGenerate {varname} {
+proc PrismPlotGenerateFits {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    switch $var(type) {
+	fits {PrismPlotGenerateFits $varname}
+	ascii {PrismPlotGenerateAscii $varname}
+    }
+}
+
+proc PrismPlotGenerateFits {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -791,6 +914,21 @@ proc PrismPlotGenerate {varname} {
     PlotList $vvarname
 }
 
+proc PrismPlotGenerateAscii {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {$var(xerr) == {} && $var(yerr) == {}} {
+	set dim xy
+    } elseif {$var(xerr) != {} && $var(yerr) == {}} {
+	set dim xyex
+    } elseif {$var(xerr) == {} && $var(yerr) != {}} {
+	set dim xyey
+    } else {
+	set dim xyexey
+    }
+}
+
 proc PrismHistogram {varname} {
     upvar #0 $varname var
     global $varname
@@ -802,9 +940,14 @@ proc PrismHistogram {varname} {
 	return
     }
 
-    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
-	Error "Current extension is not a table"
-	return
+    switch $var(type) {
+	fits {
+	    if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
+		Error "Current extension is not a table"
+		return
+	    }
+	}
+	ascii {}
     }
 
     global ed
@@ -907,12 +1050,27 @@ proc PrismHistogramMinMax {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {[catch {fitsy minmax $var(fn) $var(load) $var(ext) $ed(col) ed} ]} {
-	Error "[msgcat::mc {Unable to generate plot}]"
+    switch $var(type) {
+	fits {
+	    if {[catch {fitsy minmax $var(fn) $var(load) $var(ext) $ed(col) ed} ]} {
+		Error "[msgcat::mc {Unable to generate plot}]"
+	    }
+	}
+	ascii {}
     }
 }
 
 proc PrismHistogramGenerate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    switch $var(type) {
+	fits {PrismHistogramGenerateFits $varname} 
+	ascii {PrismHistogramGenerateAscii $varname}
+    }
+}
+
+proc PrismHistogramGenerateFits {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -988,6 +1146,34 @@ proc PrismHistogramGenerate {varname} {
     PlotList $vvarname
 }
 
+proc PrismHistogramMinMaxAscii {varname} {
+    global ed
+    upvar #0 $varname var
+    global $varname
+
+}
+
+proc PrismHistogramGenerateAscii {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global iap
+    switch $var(plot,mode) {
+	newplot {
+	    incr ${varname}(plot,seq)
+	    set vvarname plot$var(plot,seq)${varname}
+	}
+	newgraph -
+	newdataset {
+	    set vvarname [lindex $iap(plots) end]
+	    if {$vvarname == {}} {
+		incr ${varname}(plot,seq)
+		set vvarname plot$var(plot,seq)${varname}
+	    }
+	}
+    }
+}
+
 proc PrismImage {varname} {
     upvar #0 $varname var
     global $varname
@@ -995,6 +1181,12 @@ proc PrismImage {varname} {
     # sanity check
     if {$var(fn) == {}} {
 	Error "No FITS file loaded"
+	return
+    }
+
+    # sanity check
+    if {$var(type) != {fits}} {
+	Error "No FITS table file loaded"
 	return
     }
 
@@ -1050,6 +1242,16 @@ proc PrismColsMenuCmd {ww col cmd} {
 }
 
 proc PrismExtCmd {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    switch $var(type) {
+	fits {PrismExtFitsCmd $varname}
+	ascii {}
+    }
+}
+
+proc PrismExtFitsCmd {varname} {
     upvar #0 $varname var
     global $varname
     global iprism
@@ -1126,6 +1328,12 @@ proc PrismTableNext {varname} {
 	return
     }
 
+    # sanity check
+    if {$var(type) != {fits}} {
+	Error "No FITS table file loaded"
+	return
+    }
+    
     if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
 	Error "Current extension is not a table"
 	return
@@ -1147,6 +1355,12 @@ proc PrismTablePrev {varname} {
     # sanity check
     if {$var(fn) == {}} {
 	Error "No FITS file loaded"
+	return
+    }
+
+    # sanity check
+    if {$var(type) != {fits}} {
+	Error "No FITS table file loaded"
 	return
     }
 
@@ -1174,6 +1388,12 @@ proc PrismTableLast {varname} {
 	return
     }
 
+    # sanity check
+    if {$var(type) != {fits}} {
+	Error "No FITS table file loaded"
+	return
+    }
+
     if {![fitsy istable $var(fn) $var(load) $var(ext)]} {
 	Error "Current extension is not a table"
 	return
@@ -1191,6 +1411,12 @@ proc PrismTableGotoQuery {varname} {
     # sanity check
     if {$var(fn) == {}} {
 	Error "No FITS file loaded"
+	return
+    }
+
+    # sanity check
+    if {$var(type) != {fits}} {
+	Error "No FITS table file loaded"
 	return
     }
 
@@ -1212,6 +1438,12 @@ proc PrismTableGoto {varname} {
     # sanity check
     if {$var(fn) == {}} {
 	Error "No FITS file loaded"
+	return
+    }
+
+    # sanity check
+    if {$var(type) != {fits}} {
+	Error "No FITS table file loaded"
 	return
     }
 
@@ -1391,6 +1623,19 @@ proc PrismCmdRef {ref} {
 
     set iprism(prisms) [lreplace $iprism(prisms) $id $id]
     lappend iprism(prisms) $ref
+}
+
+proc PrismCmdImport {fn reader} {
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
+	return
+    }
+
+    set varname [PrismDialog prism]
+    upvar #0 $varname var
+    global $varname
+
+    PrismImportFn $varname $fn $reader
 }
 
 proc PrismCmdLoad {fn} {

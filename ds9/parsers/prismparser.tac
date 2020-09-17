@@ -15,6 +15,7 @@
 %token GOTO_
 %token HISTOGRAM_
 %token IMAGE_
+%token IMPORT_
 %token LAST_
 %token LOAD_
 %token NEXT_
@@ -29,6 +30,14 @@
 %token NEW_
 %token OVER_
 
+%token VOT_
+%token XML_
+%token SB_
+%token STARBASE_
+%token RDB_
+%token CSV_
+%token TSV_
+
 %%
 
 #include numeric.trl
@@ -41,6 +50,7 @@ prism : {PrismDialogLoad prism}
  | OPEN_ {PrismDialogLoad prism}
  | STRING_ {PrismCmdLoad $1}
  | LOAD_ STRING_ {ProcessCmdCVAROpt PrismLoad $2}
+ | IMPORT_ reader STRING_ {PrismCmdImport $3 $2}
  | CLOSE_ {ProcessCmdCVAR0 PrismDestroy}
  | CLEAR_ {ProcessCmdCVAR0 PrismClear}
  | EXT_ ext
@@ -89,6 +99,15 @@ colsxyz : 'x' {set _ $1}
  | 'Z' {set _ $1}
  ;
 
+reader : XML_ {set _ VOTRead}
+ | VOT_ {set _ VOTRead}
+ | RDB_ {set _ starbase_read}
+ | SB_ {set _ starbase_read}
+ | STARBASE_ {set _ starbase_read}
+ | CSV_ {set _ TSVRead}
+ | TSV_ {set _ TSVRead}
+ ;
+ 
 %%
 
 proc prism::yyerror {msg} {

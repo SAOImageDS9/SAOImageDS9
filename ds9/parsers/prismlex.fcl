@@ -16,6 +16,7 @@ first		{return $FIRST_}
 goto		{return $GOTO_}
 histogram	{return $HISTOGRAM_}
 image		{return $IMAGE_}
+import		{return $IMPORT_}
 last		{return $LAST_}
 load		{return $LOAD_}
 next		{return $NEXT_}
@@ -30,6 +31,14 @@ scatter		{return $SCATTER_}
 
 new		{return $NEW_}
 over		{return $OVER_}
+
+vot		{return $VOT_}
+xml		{return $XML_}
+starbase	{return $STARBASE_}
+sb		{return $SB_}
+rdb		{return $RDB_}
+csv		{return $CSV_}
+tsv		{return $TSV_}
 
 #include numeric.fin
 #include string.fin

@@ -414,7 +414,7 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogid&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [import sb|tsv &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [import rdb|sb|tsv|csv|fits &lt;filename&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [allcols]<br>
 &nbsp;&nbsp;&nbsp; [allrows]<br>
@@ -2178,6 +2178,7 @@ prism []<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [open]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [import vot|xml|rdb|sb|tsv|csv &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [ext &lt;int&gt;|&lt;extname&gt;]<br>
@@ -2196,6 +2197,7 @@ prism<br>
 prism open<br>
 prism foo.fits<br>
 prism load bar.fits<br>
+prism import tsv bar.tsv<br>
 prism clear<br>
 prism current prism2<br>
 prism ext 2<br>

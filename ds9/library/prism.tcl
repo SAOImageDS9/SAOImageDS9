@@ -755,16 +755,18 @@ proc PrismPlot {varname} {
     destroy $mb
 
     if {$ed(ok)} {
+	set var(xx) $ed(xx)
+	set var(yy) $ed(yy)
+	set var(xerr) $ed(xerr)
+	set var(yerr) $ed(yerr)
+
+	set var(plot,type) $ed(plot,type)
+	set var(plot,mode) $ed(plot,mode)
+
 	if {$ed(xx) != {} && $ed(yy) != {}} {
-	    set var(xx) $ed(xx)
-	    set var(yy) $ed(yy)
-	    set var(xerr) $ed(xerr)
-	    set var(yerr) $ed(yerr)
-
-	    set var(plot,type) $ed(plot,type)
-	    set var(plot,mode) $ed(plot,mode)
-
 	    PrismPlotGenerate $varname
+	} else {
+	    Error "[msgcat::mc {Unable to generate plot}]"
 	}
     }
 }
@@ -1192,16 +1194,18 @@ proc PrismHistogram {varname} {
     destroy $mb
 
     if {$ed(ok)} {
+	set var(bar,col) $ed(col)
+	set var(bar,num) $ed(num)
+	set var(bar,min) $ed(min)
+	set var(bar,max) $ed(max)
+	set var(bar,minmax) 1
+
+	set var(plot,mode) $ed(plot,mode)
+
 	if {$ed(col) != {}} {
-	    set var(bar,col) $ed(col)
-	    set var(bar,num) $ed(num)
-	    set var(bar,min) $ed(min)
-	    set var(bar,max) $ed(max)
-	    set var(bar,minmax) 1
-
-	    set var(plot,mode) $ed(plot,mode)
-
 	    PrismHistogramGenerate $varname
+	} else {
+	    Error "[msgcat::mc {Unable to generate plot}]"
 	}
     }
 }
@@ -1379,6 +1383,9 @@ proc PrismColsMenu {varname f ww cmd} {
     $m configure -tearoff 0
     if {[TBLValidDB $var(tbldb)]} {
 	set cnt -1
+	$m add command -label {} \
+	    -command [list PrismColsMenuCmd $ww {} $cmd]
+	incr cnt
 	foreach col [starbase_columns $var(tbldb)] {
 	    $m add command -label $col \
 		-command [list PrismColsMenuCmd $ww $col $cmd]

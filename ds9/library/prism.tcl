@@ -60,7 +60,6 @@ proc PrismDialog {varname} {
     set var(bar,num) 10
     set var(bar,min) 0
     set var(bar,max) 0
-    set var(bar,minmax) 1
     set var(bar,width) 1
 
     set var(xx) {}
@@ -1123,7 +1122,6 @@ proc PrismHistogram {varname} {
 	set var(bar,num) $ed(num)
 	set var(bar,min) $ed(min)
 	set var(bar,max) $ed(max)
-	set var(bar,minmax) 1
 
 	set var(plot,mode) $ed(plot,mode)
 
@@ -1151,16 +1149,6 @@ proc PrismHistogramMinMax {varname} {
 }
 
 proc PrismHistogramGenerate {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    switch $var(type) {
-	fits {PrismHistogramGenerateFits $varname} 
-	ascii {PrismHistogramGenerateAscii $varname}
-    }
-}
-
-proc PrismHistogramGenerateFits {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -1195,7 +1183,12 @@ proc PrismHistogramGenerateFits {varname} {
 	blt::vector create $ydata
     }
 
-    if {[catch {fitsy histogram $var(fn) $var(load) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
+    if {[catch {
+    switch $var(type) {
+	fits {PrismHistogramGenerateFits $varname $xdata $ydata} 
+	ascii {PrismHistogramGenerateAscii $varname $xdata $ydata}
+    }
+    }]} {
 	Error "[msgcat::mc {Unable to generate plot}]"
 	return
     }
@@ -1234,6 +1227,22 @@ proc PrismHistogramGenerateFits {varname} {
 
     PlotStats $vvarname
     PlotList $vvarname
+}
+
+proc PrismHistogramGenerateFits {varname xdata ydata} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[catch {fitsy histogram $var(fn) $var(load) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $varname} ]} {
+	return -code error
+    }
+}
+
+proc PrismHistogramGenerateAscii {varname xdata ydata} {
+    upvar #0 $varname var
+    global $varname
+
+    # hist here
 }
 
 proc PrismHistogramMinMaxAscii {varname} {

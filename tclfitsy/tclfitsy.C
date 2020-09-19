@@ -515,12 +515,12 @@ int TclFITSY::table(int argc, const char* argv[])
 
 int TclFITSY::histogram(int argc, const char* argv[])
 {
-  if (argc!=13) {
-    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?load? ?ext? ?col? ?xname? ?yname? ?num? ?min? ?max? ?useMinMax? ?varname?", NULL);
+  if (argc!=12) {
+    Tcl_AppendResult(interp_, "usage: fitsy histogram ?filename? ?load? ?ext? ?col? ?xname? ?yname? ?num? ?min? ?max? ?varname?", NULL);
     return TCL_ERROR;
   }
   
-  for (int ii=5; ii<13; ii++)
+  for (int ii=5; ii<12; ii++)
     if (!(argv[ii] && *argv[ii]))
       return TCL_ERROR;
 
@@ -545,13 +545,6 @@ int TclFITSY::histogram(int argc, const char* argv[])
     string x(argv[10]);
     istringstream sstr(x);
     sstr >> max;
-  }
-
-  int useminmax =1;
-  {
-    string x(argv[11]);
-    istringstream sstr(x);
-    sstr >> useminmax;
   }
 
   FitsFile* fits = findFits(argv);
@@ -580,17 +573,6 @@ int TclFITSY::histogram(int argc, const char* argv[])
   // fill Axes
   char* ptr = (char*)fits->data();
 
-  if (!useminmax) {
-  // find min/max
-    Vector minmax= fits->getColMinMax(argv[5]);
-    min =minmax[0];
-    max =minmax[1];
-    if (col->isInt()) {
-      min -= .5;
-      max += .5;
-    }
-  }
-
   if ((max-min) <= 0)
     return TCL_ERROR;
 
@@ -618,7 +600,7 @@ int TclFITSY::histogram(int argc, const char* argv[])
   {
     ostringstream str;
     str << barwidth << ends;
-    Tcl_SetVar2(interp_, argv[12], "bar,width", str.str().c_str(), TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, argv[11], "bar,width", str.str().c_str(), TCL_GLOBAL_ONLY);
   }
 
   // load into BLT vectors

@@ -550,7 +550,8 @@ proc PrismImportFn {varname fn reader} {
     upvar #0 $varname var
     global $varname
     global $var(tbldb)
-
+    global iprism
+    
     PrismClear $varname
 
     if {[file exists $fn]} {
@@ -562,6 +563,26 @@ proc PrismImportFn {varname fn reader} {
 	Error "[msgcat::mc {Unable to open file}] $fn"
 	return
     }
+
+    set nc [starbase_ncols $var(tbldb)]
+    if {$nc > $iprism(mincols)} {
+	$var(tbl) configure -cols $nc
+    } else {
+	$var(tbl) configure -cols $iprism(mincols)
+    }
+
+    set nr [starbase_nrows $var(tbldb)]
+    if {$nr > $iprism(minrows)} {
+	$var(tbl) configure -rows [expr $nr+1]
+    } else {
+	$var(tbl) configure -rows $iprism(minrows)
+    }
+    $var(tbl) see 1,1
+
+    # set default cols
+    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 1]
+    set var(xx) [lindex [starbase_columns $var(tbldb)] 1]
+    set var(yy) [lindex [starbase_columns $var(tbldb)] 2]
 
     set info \
 	"[starbase_ncols $var(tbldb)] cols, [starbase_nrows $var(tbldb)] rows"
@@ -743,12 +764,12 @@ proc PrismPlot {varname} {
 	    set var(plot,type) $ed(plot,type)
 	    set var(plot,mode) $ed(plot,mode)
 
-	    PrismPlotGenerateFits $varname
+	    PrismPlotGenerate $varname
 	}
     }
 }
 
-proc PrismPlotGenerateFits {varname} {
+proc PrismPlotGenerate {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -917,6 +938,7 @@ proc PrismPlotGenerateFits {varname} {
 proc PrismPlotGenerateAscii {varname} {
     upvar #0 $varname var
     global $varname
+    global $var(tbldb)
 
     if {$var(xerr) == {} && $var(yerr) == {}} {
 	set dim xy
@@ -927,6 +949,145 @@ proc PrismPlotGenerateAscii {varname} {
     } else {
 	set dim xyexey
     }
+
+    global iap
+    switch $var(plot,mode) {
+	newplot {
+	    incr ${varname}(plot,seq)
+	    set vvarname plot$var(plot,seq)${varname}
+	}
+	newgraph -
+	newdataset {
+	    set vvarname [lindex $iap(plots) end]
+	    if {$vvarname == {}} {
+		incr ${varname}(plot,seq)
+		set vvarname plot$var(plot,seq)${varname}
+	    }
+	}
+    }
+
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    set xdata ${vvarname}xx$var(plot,data,seq)
+    set ydata ${vvarname}yy$var(plot,data,seq)
+    set xedata ${vvarname}xe$var(plot,data,seq)
+    set yedata ${vvarname}ye$var(plot,data,seq)
+    incr ${varname}(plot,data,seq)
+
+    global $xdata $ydata
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata
+    }
+    if {[info command $ydata] == {}} {
+	blt::vector create $ydata
+    }
+
+    set rows [starbase_nrows $var(tbldb)]
+    set colx [starbase_colnum $var(tbldb) $var(xx)]
+    set coly [starbase_colnum $var(tbldb) $var(yy)]
+
+    if {[catch {
+    switch $dim {
+	xy {
+	    for {set ii 1} {$ii<=$rows} {incr ii} {
+		$xdata append [starbase_get $var(tbldb) $ii $colx]
+		$ydata append [starbase_get $var(tbldb) $ii $coly]
+	    }
+	}
+	xyex {
+	    global $xedata
+	    if {[info command $xedata] == {}} {
+		blt::vector create $xedata
+	    }
+	    set colxe [starbase_colnum $var(tbldb) $var(xerr)]
+	    for {set ii 1} {$ii<=$rows} {incr ii} {
+		$xdata append [starbase_get $var(tbldb) $ii $colx]
+		$ydata append [starbase_get $var(tbldb) $ii $coly]
+		$xedata append [starbase_get $var(tbldb) $ii $colxe]
+	    }
+	}
+	xyey {
+	    global $yedata
+	    if {[info command $yedata] == {}} {
+		blt::vector create $yedata
+	    }
+	    set colye [starbase_colnum $var(tbldb) $var(yerr)]
+	    for {set ii 1} {$ii<=$rows} {incr ii} {
+		$xdata append [starbase_get $var(tbldb) $ii $colx]
+		$ydata append [starbase_get $var(tbldb) $ii $coly]
+		$yedata append [starbase_get $var(tbldb) $ii $colye]
+	    }
+	}
+	xyexey {
+	    global $xedata $yedata
+	    if {[info command $xedata] == {}} {
+		blt::vector create $xedata
+	    }
+	    if {[info command $yedata] == {}} {
+		blt::vector create $yedata
+	    }
+	    set colxe [starbase_colnum $var(tbldb) $var(xerr)]
+	    set colye [starbase_colnum $var(tbldb) $var(yerr)]
+	    for {set ii 1} {$ii<=$rows} {incr ii} {
+		$xdata append [starbase_get $var(tbldb) $ii $colx]
+		$ydata append [starbase_get $var(tbldb) $ii $coly]
+		$xedata append [starbase_get $var(tbldb) $ii $colxe]
+		$yedata append [starbase_get $var(tbldb) $ii $colye]
+	    }
+	}
+    }
+    }]} {
+	Error "[msgcat::mc {Unable to generate plot}]"
+	return
+    }
+
+    set txx [string toupper $var(xx)]
+    set tyy [string toupper $var(yy)]
+
+    switch $var(plot,mode) {
+	newplot {
+	    PlotDialog $vvarname "[string totitle $varname] Plot"
+	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotTitle $vvarname $var(extname) $txx $tyy
+	}
+	newgraph {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Plot"
+	    }
+	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotTitle $vvarname $var(extname) $txx $tyy
+	}
+	newdataset {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Plot"
+		PlotAddGraph $vvarname $var(plot,type)
+		PlotTitle $vvarname $var(extname) $txx $tyy
+	    }
+	}
+    }
+
+    set vvar(graph,ds,xdata) $xdata
+    set vvar(graph,ds,ydata) $ydata
+
+    switch $dim {
+	xy {}
+	xyex {set vvar(graph,ds,xedata) $xedata}
+	xyey {set vvar(graph,ds,yedata) $yedata}
+	xyexey {
+	    set vvar(graph,ds,xedata) $xedata
+	    set vvar(graph,ds,yedata) $yedata
+	}
+    }
+
+    PlotExternal $vvarname $dim
+    PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
+
+    set vvar(canvas,theme) 1
+    PlotUpdateAllElement $vvarname
+
+    PlotStats $vvarname
+    PlotList $vvarname
 }
 
 proc PrismHistogram {varname} {

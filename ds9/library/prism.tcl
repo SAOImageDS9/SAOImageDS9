@@ -775,16 +775,6 @@ proc PrismPlotGenerate {varname} {
     upvar #0 $varname var
     global $varname
 
-    switch $var(type) {
-	fits {PrismPlotGenerateFits $varname}
-	ascii {PrismPlotGenerateAscii $varname}
-    }
-}
-
-proc PrismPlotGenerateFits {varname} {
-    upvar #0 $varname var
-    global $varname
-
     if {$var(xerr) == {} && $var(yerr) == {}} {
 	set dim xy
     } elseif {$var(xerr) != {} && $var(yerr) == {}} {
@@ -810,7 +800,6 @@ proc PrismPlotGenerateFits {varname} {
 	    }
 	}
     }
-
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -827,6 +816,45 @@ proc PrismPlotGenerateFits {varname} {
     if {[info command $ydata] == {}} {
 	blt::vector create $ydata
     }
+
+    if {[catch {
+    switch $var(type) {
+	fits {PrismPlotGenerateFits $varname $vvarname $dim $xdata $ydata $xedata $yedata}
+	ascii {PrismPlotGenerateAscii $varname $vvarname $dim $xdata $ydata $xedata $yedata}
+    }
+    }]} {
+	Error "[msgcat::mc {Unable to generate plot}]"
+	return
+    }
+
+    set vvar(graph,ds,xdata) $xdata
+    set vvar(graph,ds,ydata) $ydata
+    switch $dim {
+	xy {}
+	xyex {set vvar(graph,ds,xedata) $xedata}
+	xyey {set vvar(graph,ds,yedata) $yedata}
+	xyexey {
+	    set vvar(graph,ds,xedata) $xedata
+	    set vvar(graph,ds,yedata) $yedata
+	}
+    }
+
+    PlotExternal $vvarname $dim
+    PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
+
+    set vvar(canvas,theme) 1
+    PlotUpdateAllElement $vvarname
+
+    PlotStats $vvarname
+    PlotList $vvarname
+}
+
+proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata} {
+    upvar #0 $varname var
+    global $varname
+
+    upvar #0 $vvarname vvar
+    global $vvarname
 
     if {[catch {
     switch $dim {
@@ -871,8 +899,7 @@ proc PrismPlotGenerateFits {varname} {
 	}
     }
     }]} {
-	Error "[msgcat::mc {Unable to generate plot}]"
-	return
+	return -code error
     }
 
     set txx [string toupper $var(xx)]
@@ -913,78 +940,16 @@ proc PrismPlotGenerateFits {varname} {
 	    }
 	}
     }
-
-    set vvar(graph,ds,xdata) $xdata
-    set vvar(graph,ds,ydata) $ydata
-
-    switch $dim {
-	xy {}
-	xyex {set vvar(graph,ds,xedata) $xedata}
-	xyey {set vvar(graph,ds,yedata) $yedata}
-	xyexey {
-	    set vvar(graph,ds,xedata) $xedata
-	    set vvar(graph,ds,yedata) $yedata
-	}
-    }
-
-    PlotExternal $vvarname $dim
-    PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
-
-    set vvar(canvas,theme) 1
-    PlotUpdateAllElement $vvarname
-
-    PlotStats $vvarname
-    PlotList $vvarname
 }
 
-proc PrismPlotGenerateAscii {varname} {
+proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata} {
     upvar #0 $varname var
     global $varname
-    global $var(tbldb)
-
-    if {$var(xerr) == {} && $var(yerr) == {}} {
-	set dim xy
-    } elseif {$var(xerr) != {} && $var(yerr) == {}} {
-	set dim xyex
-    } elseif {$var(xerr) == {} && $var(yerr) != {}} {
-	set dim xyey
-    } else {
-	set dim xyexey
-    }
-
-    global iap
-    switch $var(plot,mode) {
-	newplot {
-	    incr ${varname}(plot,seq)
-	    set vvarname plot$var(plot,seq)${varname}
-	}
-	newgraph -
-	newdataset {
-	    set vvarname [lindex $iap(plots) end]
-	    if {$vvarname == {}} {
-		incr ${varname}(plot,seq)
-		set vvarname plot$var(plot,seq)${varname}
-	    }
-	}
-    }
 
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set xdata ${vvarname}xx$var(plot,data,seq)
-    set ydata ${vvarname}yy$var(plot,data,seq)
-    set xedata ${vvarname}xe$var(plot,data,seq)
-    set yedata ${vvarname}ye$var(plot,data,seq)
-    incr ${varname}(plot,data,seq)
-
-    global $xdata $ydata
-    if {[info command $xdata] == {}} {
-	blt::vector create $xdata
-    }
-    if {[info command $ydata] == {}} {
-	blt::vector create $ydata
-    }
-
+    global $var(tbldb)
     set rows [starbase_nrows $var(tbldb)]
     set colx [starbase_colnum $var(tbldb) $var(xx)]
     set coly [starbase_colnum $var(tbldb) $var(yy)]
@@ -1040,8 +1005,7 @@ proc PrismPlotGenerateAscii {varname} {
 	}
     }
     }]} {
-	Error "[msgcat::mc {Unable to generate plot}]"
-	return
+	return -code error
     }
 
     set txx [string toupper $var(xx)]
@@ -1068,28 +1032,6 @@ proc PrismPlotGenerateAscii {varname} {
 	    }
 	}
     }
-
-    set vvar(graph,ds,xdata) $xdata
-    set vvar(graph,ds,ydata) $ydata
-
-    switch $dim {
-	xy {}
-	xyex {set vvar(graph,ds,xedata) $xedata}
-	xyey {set vvar(graph,ds,yedata) $yedata}
-	xyexey {
-	    set vvar(graph,ds,xedata) $xedata
-	    set vvar(graph,ds,yedata) $yedata
-	}
-    }
-
-    PlotExternal $vvarname $dim
-    PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
-
-    set vvar(canvas,theme) 1
-    PlotUpdateAllElement $vvarname
-
-    PlotStats $vvarname
-    PlotList $vvarname
 }
 
 proc PrismHistogram {varname} {

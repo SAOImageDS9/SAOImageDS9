@@ -817,14 +817,41 @@ proc PrismPlotGenerate {varname} {
 	blt::vector create $ydata
     }
 
+    set txx {}
+    set tyy {}
     if {[catch {
     switch $var(type) {
-	fits {PrismPlotGenerateFits $varname $vvarname $dim $xdata $ydata $xedata $yedata}
-	ascii {PrismPlotGenerateAscii $varname $vvarname $dim $xdata $ydata $xedata $yedata}
+	fits {PrismPlotGenerateFits $varname $vvarname $dim $xdata $ydata $xedata $yedata txx tyy}
+	ascii {PrismPlotGenerateAscii $varname $vvarname $dim $xdata $ydata $xedata $yedata txx tyy}
     }
     }]} {
 	Error "[msgcat::mc {Unable to generate plot}]"
 	return
+    }
+
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    switch $var(plot,mode) {
+	newplot {
+	    PlotDialog $vvarname "[string totitle $varname] Plot"
+	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotTitle $vvarname $var(extname) $txx $tyy
+	}
+	newgraph {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Plot"
+	    }
+	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotTitle $vvarname $var(extname) $txx $tyy
+	}
+	newdataset {
+	    if {![PlotPing $vvarname]} {
+		PlotDialog $vvarname "[string totitle $varname] Plot"
+		PlotAddGraph $vvarname $var(plot,type)
+		PlotTitle $vvarname $var(extname) $txx $tyy
+	    }
+	}
     }
 
     set vvar(graph,ds,xdata) $xdata
@@ -849,12 +876,12 @@ proc PrismPlotGenerate {varname} {
     PlotList $vvarname
 }
 
-proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata} {
+proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxname tyyname} {
     upvar #0 $varname var
     global $varname
 
-    upvar #0 $vvarname vvar
-    global $vvarname
+    upvar $txxname txx
+    upvar $tyyname tyy
 
     if {[catch {
     switch $dim {
@@ -918,36 +945,11 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata} {
 	    append tyy " ($unit)"
 	}
     }
-
-    switch $var(plot,mode) {
-	newplot {
-	    PlotDialog $vvarname "[string totitle $varname] Plot"
-	    PlotAddGraph $vvarname $var(plot,type)
-	    PlotTitle $vvarname $var(extname) $txx $tyy
-	}
-	newgraph {
-	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Plot"
-	    }
-	    PlotAddGraph $vvarname $var(plot,type)
-	    PlotTitle $vvarname $var(extname) $txx $tyy
-	}
-	newdataset {
-	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Plot"
-		PlotAddGraph $vvarname $var(plot,type)
-		PlotTitle $vvarname $var(extname) $txx $tyy
-	    }
-	}
-    }
 }
 
-proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata} {
+proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata txxname tyyname} {
     upvar #0 $varname var
     global $varname
-
-    upvar #0 $vvarname vvar
-    global $vvarname
 
     global $var(tbldb)
     set rows [starbase_nrows $var(tbldb)]
@@ -1008,30 +1010,11 @@ proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata} {
 	return -code error
     }
 
+    upvar $txxname txx
+    upvar $tyyname tyy
+
     set txx [string toupper $var(xx)]
     set tyy [string toupper $var(yy)]
-
-    switch $var(plot,mode) {
-	newplot {
-	    PlotDialog $vvarname "[string totitle $varname] Plot"
-	    PlotAddGraph $vvarname $var(plot,type)
-	    PlotTitle $vvarname $var(extname) $txx $tyy
-	}
-	newgraph {
-	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Plot"
-	    }
-	    PlotAddGraph $vvarname $var(plot,type)
-	    PlotTitle $vvarname $var(extname) $txx $tyy
-	}
-	newdataset {
-	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Plot"
-		PlotAddGraph $vvarname $var(plot,type)
-		PlotTitle $vvarname $var(extname) $txx $tyy
-	    }
-	}
-    }
 }
 
 proc PrismHistogram {varname} {

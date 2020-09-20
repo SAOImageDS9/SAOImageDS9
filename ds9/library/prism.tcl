@@ -60,6 +60,7 @@ proc PrismDialog {varname} {
     set var(bar,num) 10
     set var(bar,min) 0
     set var(bar,max) 0
+    set var(bar,minmax) 1
     set var(bar,width) 1
 
     set var(xx) {}
@@ -579,9 +580,9 @@ proc PrismImportFn {varname fn reader} {
     $var(tbl) see 1,1
 
     # set default cols
-    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 1]
-    set var(xx) [lindex [starbase_columns $var(tbldb)] 1]
-    set var(yy) [lindex [starbase_columns $var(tbldb)] 2]
+    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 0]
+    set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
+    set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
 
     set info \
 	"[starbase_ncols $var(tbldb)] cols, [starbase_nrows $var(tbldb)] rows"
@@ -879,6 +880,8 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
     upvar #0 $varname var
     global $varname
 
+    global $xdata $ydata $xedata $yedata
+
     upvar $txxname txx
     upvar $tyyname tyy
 
@@ -890,7 +893,6 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
 		$var(yy) $ydata
 	}
 	xyex {
-	    global $xedata
 	    if {[info command $xedata] == {}} {
 		blt::vector create $xedata
 	    }
@@ -900,7 +902,6 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
 		$var(xerr) $xedata
 	}
 	xyey {
-	    global $yedata
 	    if {[info command $yedata] == {}} {
 		blt::vector create $yedata
 	    }
@@ -910,7 +911,6 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
 		$var(yerr) $yedata
 	}
 	xyexey {
-	    global $xedata $yedata
 	    if {[info command $xedata] == {}} {
 		blt::vector create $xedata
 	    }
@@ -950,7 +950,9 @@ proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata txxn
     upvar #0 $varname var
     global $varname
 
+    global $xdata $ydata $xedata $yedata
     global $var(tbldb)
+
     set rows [starbase_nrows $var(tbldb)]
     set colx [starbase_colnum $var(tbldb) $var(xx)]
     set coly [starbase_colnum $var(tbldb) $var(yy)]
@@ -964,7 +966,6 @@ proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata txxn
 	    }
 	}
 	xyex {
-	    global $xedata
 	    if {[info command $xedata] == {}} {
 		blt::vector create $xedata
 	    }
@@ -976,7 +977,6 @@ proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata txxn
 	    }
 	}
 	xyey {
-	    global $yedata
 	    if {[info command $yedata] == {}} {
 		blt::vector create $yedata
 	    }
@@ -988,7 +988,6 @@ proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata txxn
 	    }
 	}
 	xyexey {
-	    global $xedata $yedata
 	    if {[info command $xedata] == {}} {
 		blt::vector create $xedata
 	    }
@@ -1021,7 +1020,6 @@ proc PrismHistogram {varname} {
     global $varname
 
     # sanity check
-
     if {$var(fn) == {}} {
 	Error "No FITS file loaded"
 	return
@@ -1122,6 +1120,7 @@ proc PrismHistogram {varname} {
 	set var(bar,num) $ed(num)
 	set var(bar,min) $ed(min)
 	set var(bar,max) $ed(max)
+	set var(bar,minmax) 1
 
 	set var(plot,mode) $ed(plot,mode)
 
@@ -1134,18 +1133,46 @@ proc PrismHistogram {varname} {
 }
 
 proc PrismHistogramMinMax {varname} {
-    global ed
     upvar #0 $varname var
     global $varname
+
+    global ed
 
     switch $var(type) {
 	fits {
 	    if {[catch {fitsy minmax $var(fn) $var(load) $var(ext) $ed(col) ed} ]} {
-		Error "[msgcat::mc {Unable to generate plot}]"
+		set ed(min) 0
+		set ed(max) 0
 	    }
 	}
-	ascii {}
+	ascii {PrismHistogramMinMaxAscii $varname}
     }
+}
+
+proc PrismHistogramMinMaxAscii {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ed
+    global $var(tbldb)
+
+    if {$ed(col)=={}} {
+	set ed(min) 0
+	set ed(max) 0
+	return
+    }
+
+    set rows [starbase_nrows $var(tbldb)]
+    set colnum [starbase_colnum $var(tbldb) $ed(col)]
+    set ll {}
+
+    for {set ii 1} {$ii<=$rows} {incr ii} {
+	lappend ll "[starbase_get $var(tbldb) $ii $colnum]"
+    }
+    set ll [join $ll ","]
+
+    set ed(min) [expr min($ll)]
+    set ed(max) [expr max($ll)]
 }
 
 proc PrismHistogramGenerate {varname} {
@@ -1217,11 +1244,10 @@ proc PrismHistogramGenerate {varname} {
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
-
+    set vvar(graph,ds,bar,width) $var(bar,width)
     PlotExternal $vvarname xy
     PlotDataSetName $vvarname "$var(extname) $var(bar,col)"
 
-    set vvar(graph,ds,bar,width) $var(bar,width)
     set vvar(canvas,theme) 1
     PlotUpdateAllElement $vvarname
 
@@ -1232,8 +1258,9 @@ proc PrismHistogramGenerate {varname} {
 proc PrismHistogramGenerateFits {varname xdata ydata} {
     upvar #0 $varname var
     global $varname
+    global $xdata $ydata
 
-    if {[catch {fitsy histogram $var(fn) $var(load) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $varname} ]} {
+    if {[catch {fitsy histogram $var(fn) $var(load) $var(ext) $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
 	return -code error
     }
 }
@@ -1242,33 +1269,38 @@ proc PrismHistogramGenerateAscii {varname xdata ydata} {
     upvar #0 $varname var
     global $varname
 
-    # hist here
-}
+    global $var(tbldb)
+    global $xdata $ydata
 
-proc PrismHistogramMinMaxAscii {varname} {
-    global ed
-    upvar #0 $varname var
-    global $varname
+    if {$var(bar,minmax)} {
+	set min $var(bar,min)
+	set max $var(bar,max)
+    } else {
+	set min 0
+	set max 0
+	PrismHistogramMinMaxAscii $varname min max
+    }
 
-}
+    set num $var(bar,num)
+    set rows [starbase_nrows $var(tbldb)]
+    set colnum [starbase_colnum $var(tbldb) $var(bar,col)]
 
-proc PrismHistogramGenerateAscii {varname} {
-    upvar #0 $varname var
-    global $varname
+    set diff [expr double($max-$min)]
+    set barwidth [expr $diff/double($num)]
 
-    global iap
-    switch $var(plot,mode) {
-	newplot {
-	    incr ${varname}(plot,seq)
-	    set vvarname plot$var(plot,seq)${varname}
-	}
-	newgraph -
-	newdataset {
-	    set vvarname [lindex $iap(plots) end]
-	    if {$vvarname == {}} {
-		incr ${varname}(plot,seq)
-		set vvarname plot$var(plot,seq)${varname}
-	    }
+    for {set ii 0} {$ii<$num} {incr ii} {
+	$xdata append [expr double($ii)*$barwidth + $barwidth/2. + $min]
+	$ydata append 0
+    }
+
+    for {set ii 1} {$ii<=$rows} {incr ii} {
+	set vv [starbase_get $var(tbldb) $ii $colnum]
+	set jj [expr ($vv-$min)/$barwidth]
+
+	set kk [expr int($jj)]
+	if {$kk>=0 && $kk<$num} {
+	    set ww [$ydata index $kk]
+	    $ydata index $kk [expr $ww+1]
 	}
     }
 }

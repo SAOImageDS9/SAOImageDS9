@@ -78,7 +78,7 @@ proc PSPageSetup {} {
     grid columnconfigure $w 0 -weight 1
 
     DialogWait $w ed(ok) $w.buttons.ok 
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	array set ps [array get ed]

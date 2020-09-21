@@ -803,7 +803,7 @@ proc DisplayDefaultDialog {} {
 
     $w.param.x select range 0 end
     DialogWait $w ed(ok) $w.param.x
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set canvas(width) $ed(x)

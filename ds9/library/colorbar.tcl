@@ -786,7 +786,7 @@ proc ColorTagDialog {x y} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	$current(colorbar) tag $ed2(id) $ed2(start) $ed2(stop) $ed2(color)

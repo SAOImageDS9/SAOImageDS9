@@ -156,7 +156,7 @@ proc PlotBarWidthDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.param.width
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed(ok)} {

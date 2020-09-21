@@ -104,7 +104,7 @@ proc MosaicWCSDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set var $ed(sys)

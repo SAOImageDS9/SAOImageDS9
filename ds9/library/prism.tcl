@@ -751,7 +751,7 @@ proc PrismPlot {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
 
     DialogWait $w ed(ok) $w.buttons.ok
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed(ok)} {
@@ -1112,7 +1112,7 @@ proc PrismHistogram {varname} {
     PrismHistogramMinMax $varname
     
     DialogWait $w ed(ok) $w.buttons.ok
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed(ok)} {
@@ -1664,7 +1664,7 @@ proc PrismTableGotoDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.param.goto
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed(ok)} {

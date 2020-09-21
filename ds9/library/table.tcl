@@ -691,8 +691,6 @@ proc TBLEditDialog {varname which db} {
     $ed(text) see end
 
     DialogWait $w ed(ok) $w.buttons.ok
-    DialogDismiss $w
-    destroy $mb
 
     if {$ed(ok)} {
 	set flt [$ed(text) get 1.0 end]
@@ -700,6 +698,9 @@ proc TBLEditDialog {varname which db} {
 	set var($which) [string trim $flt]
     }
 
+    # must wait until now
+    destroy $w
+    destroy $mb
     set rr $ed(ok)
     unset ed
     return $rr

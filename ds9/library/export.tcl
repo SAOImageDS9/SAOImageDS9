@@ -157,7 +157,7 @@ proc ArrayExportDialog {varname} {
     grid columnconfigure $w 0 -weight 1
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	set var $ed2(arch)
@@ -211,7 +211,7 @@ proc TIFFExportDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	set var $ed2(compress)
@@ -256,7 +256,7 @@ proc JPEGExportDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	set var $ed2(quality)

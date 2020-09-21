@@ -113,7 +113,7 @@ proc MovieDialog {} {
     grid columnconfigure $w 0 -weight 1
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set movie(action) $ed(action)
@@ -531,7 +531,7 @@ proc Movie3dDialog {} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	set movie(num) $ed2(num)

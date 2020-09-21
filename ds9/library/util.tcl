@@ -840,7 +840,7 @@ proc AboutBox {} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     image delete $ed(sun)
     unset ed

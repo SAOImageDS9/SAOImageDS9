@@ -222,7 +222,7 @@ proc CATPlotDialog {varname} {
     pack $w.buttons $w.sep -side bottom -fill x
 
     DialogWait $w ed2(ok) $w.buttons.ok
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed2(ok)} {

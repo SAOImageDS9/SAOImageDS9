@@ -114,13 +114,14 @@ proc DisplayHeaderListDialog {ll title width} {
     bind $w <Return> {set ed(ok) 1}
 
     DialogWait $w ed(ok) $w.buttons.ok
-    DialogDismiss $w
 
     set rr {}
     if {$ed(ok)} {
 	set rr [$ed(listbox) selection]
     }
 
+    # must wait until now
+    destroy $w
     return $rr
 }
 

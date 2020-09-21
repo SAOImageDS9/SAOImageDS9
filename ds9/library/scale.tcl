@@ -670,7 +670,7 @@ proc MinMaxDialog {} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	if {$ed(sample) == 0} {
@@ -720,7 +720,7 @@ proc ZScaleDialog {} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	if {$ed(line) == 0} {

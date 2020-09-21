@@ -101,7 +101,7 @@ proc AnalysisParam {strname param} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.buttons.ok
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed(ok)} {

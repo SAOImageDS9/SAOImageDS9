@@ -209,7 +209,7 @@ proc ArrayImportDialog {depth varname} {
     grid columnconfigure $w 0 -weight 1
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set ds9(array,x) $ed(x)

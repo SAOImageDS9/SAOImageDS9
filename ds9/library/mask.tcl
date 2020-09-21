@@ -309,7 +309,7 @@ proc MaskParamsDialog {} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	set mask(color) [string tolower $ed2(color)]

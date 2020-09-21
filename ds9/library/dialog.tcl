@@ -84,10 +84,6 @@ proc DialogWait {w varname {focus {}}} {
     set errorInfo {}
 }
 
-proc DialogDismiss {w} {
-    destroy $w
-}
-
 # Entry Dialog
 
 proc EntryDialog {title message size varname} {
@@ -138,7 +134,7 @@ proc EntryDialog {title message size varname} {
     $w.param.txt select range 0 end
 
     DialogWait $w ed(ok) $w.param.txt
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed(ok)} {
@@ -604,7 +600,7 @@ proc PRPrintDialog {} {
     grid columnconfigure $w 0 -weight 1
 
     DialogWait $w ed(ok) $w.buttons.ok
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	array set ps [array get ed]

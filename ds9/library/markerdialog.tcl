@@ -89,7 +89,7 @@ proc MarkerLoadDialog {} {
     UpdateMarkerLoadDialog
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set marker(format) $ed(format)
@@ -190,7 +190,7 @@ proc MarkerSaveDialog {title} {
     UpdateMarkerSaveDialog
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set marker(format) $ed(format)

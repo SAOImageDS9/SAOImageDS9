@@ -495,7 +495,7 @@ proc ContourCPasteDialog {} {
 #    pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set ed(color) [string tolower $ed(color)]
@@ -643,7 +643,7 @@ proc ContourSaveDialog {} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	switch -- $ed(system) {
@@ -752,7 +752,7 @@ proc ContourLoadOldDialog {fn} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set ed(color) [string tolower $ed(color)]
@@ -820,7 +820,7 @@ proc ContourLoadNewDialog {fn} {
     pack $w.param1 $w.sep2 $w.param2 -side top -fill both -expand true
 
     DialogWait $w ed(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set ed(color) [string tolower $ed(color)]

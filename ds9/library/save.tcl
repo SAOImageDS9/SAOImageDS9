@@ -126,7 +126,7 @@ proc SaveParams {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	set var(type) $ed2(type)
@@ -169,7 +169,7 @@ proc SaveMosaicParams {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed2(ok)
-    DialogDismiss $w
+    destroy $w
 
     if {$ed2(ok)} {
 	set var(mosaic) $ed2(mosaic)

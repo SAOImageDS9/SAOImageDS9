@@ -325,7 +325,7 @@ proc PlotDataFormatDialog {xarname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.param.xy
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set xar $ed(dim)
@@ -373,7 +373,7 @@ proc PlotStripDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.param.ww
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set var(canvas,layout,strip,scale) $ed(canvas,layout,strip,scale)
@@ -446,7 +446,7 @@ proc PlotRangeDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.param.xmin
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set var(graph,axis,x,auto) $ed(graph,axis,x,auto)
@@ -514,7 +514,7 @@ proc PlotGraphTitleDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.param.title
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	set var(graph,title) $ed(graph,title)
@@ -565,7 +565,7 @@ proc DatasetNameDialog {varname} {
     pack $w.param -side top -fill both -expand true
 
     DialogWait $w ed(ok) $w.param.name
-    DialogDismiss $w
+    destroy $w
 
     if {$ed(ok)} {
 	PlotDataSetName $varname $ed(name)

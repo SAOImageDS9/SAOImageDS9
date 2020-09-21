@@ -148,7 +148,7 @@ proc CATMatchDialog {cats} {
     CATMatchDialogReturnMenu $w.param
 
     DialogWait $w ed(ok) $w.buttons.ok
-    DialogDismiss $w
+    destroy $w
     destroy $mb
 
     if {$ed(ok)} {

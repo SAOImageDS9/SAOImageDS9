@@ -1145,25 +1145,27 @@ proc PrismHistogramMinMax {varname} {
 		set ed(max) 0
 	    }
 	}
-	ascii {PrismHistogramMinMaxAscii $varname}
+	ascii {PrismHistogramMinMaxAscii $varname $ed(col) ed(min) ed(max)}
     }
 }
 
-proc PrismHistogramMinMaxAscii {varname} {
+proc PrismHistogramMinMaxAscii {varname col minname maxname} {
     upvar #0 $varname var
     global $varname
 
-    global ed
+    upvar $minname min
+    upvar $maxname max
+    
     global $var(tbldb)
 
-    if {$ed(col)=={}} {
-	set ed(min) 0
-	set ed(max) 0
+    if {$col=={}} {
+	set min 0
+	set max 0
 	return
     }
 
     set rows [starbase_nrows $var(tbldb)]
-    set colnum [starbase_colnum $var(tbldb) $ed(col)]
+    set colnum [starbase_colnum $var(tbldb) $col]
     set ll {}
 
     for {set ii 1} {$ii<=$rows} {incr ii} {
@@ -1171,8 +1173,8 @@ proc PrismHistogramMinMaxAscii {varname} {
     }
     set ll [join $ll ","]
 
-    set ed(min) [expr min($ll)]
-    set ed(max) [expr max($ll)]
+    set min [expr min($ll)]
+    set max [expr max($ll)]
 }
 
 proc PrismHistogramGenerate {varname} {
@@ -1278,7 +1280,7 @@ proc PrismHistogramGenerateAscii {varname xdata ydata} {
     } else {
 	set min 0
 	set max 0
-	PrismHistogramMinMaxAscii $varname min max
+	PrismHistogramMinMaxAscii $varname $var(bar,col) min max
     }
 
     set num $var(bar,num)

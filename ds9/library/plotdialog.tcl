@@ -643,6 +643,7 @@ proc PlotExport {varname fn format} {
 proc PlotExportPhoto {varname fn format} {
     upvar #0 $varname var
     global $varname
+    global iap
 
     # for darwin only
     set geom [MacOSPhotoFix $var(top) 0 0]

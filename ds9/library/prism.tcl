@@ -460,6 +460,16 @@ proc PrismLoad {varname fn} {
     
     PrismClear $varname
 
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
+	return
+    }
+
+    if {![ValidFitsFile $fn]} {
+	Error "[msgcat::mc {Not valid fits file}] $fn"
+	return
+    }
+
     set var(fn) $fn
     set var(type fits
     switch $ds9(wm) {
@@ -554,15 +564,19 @@ proc PrismImportFn {varname fn reader} {
     
     PrismClear $varname
 
-    if {[file exists $fn]} {
-	set var(fn) $fn
-	set var(type) ascii
-
-	$reader $var(tbldb) $fn
-    } else {
-	Error "[msgcat::mc {Unable to open file}] $fn"
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
 	return
     }
+
+    if {[ValidFitsFile $fn]} {
+	Error "[msgcat::mc {Fits file found, not supported}] $fn"
+	return
+    }
+
+    set var(fn) $fn
+    set var(type) ascii
+    $reader $var(tbldb) $fn
 
     set nc [starbase_ncols $var(tbldb)]
     if {$nc > $iprism(mincols)} {

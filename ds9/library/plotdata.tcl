@@ -372,11 +372,21 @@ proc PlotLoadData {varname} {
 }
 
 # used by backup
-proc PlotLoadDataFile {varname filename dim} {
+proc PlotLoadDataFile {varname fn dim} {
     upvar #0 $varname var
     global $varname
 
-    set ch [open $filename]
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
+	return
+    }
+
+    if {[ValidFitsFile $fn]} {
+	Error "[msgcat::mc {Fits file found, not supported}] $fn"
+	return
+    }
+
+    set ch [open $fn]
     set data [read $ch]
     close $ch
 
@@ -397,7 +407,7 @@ proc PlotSaveData {varname} {
     PlotSaveDataFile $varname [SaveFileDialog apdatafbox $var(top)]
 }
 
-proc PlotSaveDataFile {varname filename} {
+proc PlotSaveDataFile {varname fn} {
     upvar #0 $varname var
     global $varname
 
@@ -405,7 +415,7 @@ proc PlotSaveDataFile {varname filename} {
 	return
     }
 
-    if {$filename == {}} {
+    if {$fn == {}} {
 	return
     }
 
@@ -415,7 +425,7 @@ proc PlotSaveDataFile {varname filename} {
     set xx [$var(graph,ds,xdata) range]
     set yy [$var(graph,ds,ydata) range]
 
-    set ch [open $filename w]
+    set ch [open $fn w]
     switch $var(graph,ds,dim) {
 	xy {
 	    for {set ii 0} {$ii<$ll} {incr ii} {

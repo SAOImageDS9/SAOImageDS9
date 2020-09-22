@@ -253,14 +253,19 @@ proc PlotCmdNewFile {fn ref} {
 	set parse(tt) $ref
     }
 
-    if {[file exists $fn]} {
-	set ch [open $fn r]
-	set parse(buf) [read $ch]
-	close $ch
-	return
-    } else {
+    if {![file exists $fn]} {
 	Error "[msgcat::mc {File not found}]: $fn"
+	return
     }
+
+    if {[ValidFitsFile $fn]} {
+	Error "[msgcat::mc {Fits file found, not supported}] $fn"
+	return
+    }
+
+    set ch [open $fn r]
+    set parse(buf) [read $ch]
+    close $ch
 }
 
 # special case, is 1st arg a file? or ref?
@@ -310,13 +315,20 @@ proc PlotCmdData {dim} {
 
     if {$parse(buf) == {}} {
 	if {$parse(fn) != {}} {
-	    if {[file exists $parse(fn)]} {
-		set ch [open $parse(fn) r]
-		set parse(buf) [read $ch]
-		close $ch
+	    if {![file exists $fn]} {
+		Error "[msgcat::mc {File not found}]: $fn"
+		return
 	    }
-	}
-	if {$parse(buf) == {}} {
+
+	    if {[ValidFitsFile $fn]} {
+		Error "[msgcat::mc {Fits file found, not supported}] $fn"
+		return
+	    }
+
+	    set ch [open $parse(fn) r]
+	    set parse(buf) [read $ch]
+	    close $ch
+	} else {
 	    Error "[msgcat::mc {Unable to load plot data}] $fn"
 	}
     }

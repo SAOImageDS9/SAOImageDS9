@@ -187,6 +187,9 @@ Matrix FitsImage::nextBin(const Vector& c)
     FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
     FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(fits_->pBinX());
     FitsBinColumnB* ycol = (FitsBinColumnB*)hdu->find(fits_->pBinY());
+    if (!xcol || !ycol)
+      return Matrix();
+
     Vector xd = xcol->dimension();
     Vector yd = ycol->dimension();
     Vector ll(xd[0],yd[0]);
@@ -247,6 +250,9 @@ Vector FitsImage::getHistDim()
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
   FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(fits_->pBinX());
   FitsBinColumnB* ycol = (FitsBinColumnB*)hdu->find(fits_->pBinY());
+  if (!xcol || !ycol)
+    return Vector();
+
   Vector xd = xcol->dimension();
   Vector yd = ycol->dimension();
 
@@ -269,6 +275,9 @@ Vector FitsImage::getHistCenter()
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(fits_->head())->hdu();
   FitsBinColumnB* xcol = (FitsBinColumnB*)hdu->find(fits_->pBinX());
   FitsBinColumnB* ycol = (FitsBinColumnB*)hdu->find(fits_->pBinY());
+  if (!xcol || !ycol)
+    return Vector();
+
   Vector xd = xcol->dimension();
   Vector yd = ycol->dimension();
 

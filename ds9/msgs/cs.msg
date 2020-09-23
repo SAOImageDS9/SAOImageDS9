@@ -138,9 +138,6 @@
 ::msgcat::mcset cs {Center} [encoding convertfrom iso8859-2 {Støed}]
 ::msgcat::mcset cs {Centroid Parameters} [encoding convertfrom iso8859-2 {Parametry centroidu}]
 ::msgcat::mcset cs {Centroid} [encoding convertfrom iso8859-2 {Vystøedit}]
-::msgcat::mcset cs {Chandra Public Archive by Cone Search} 
-::msgcat::mcset cs {Chandra Public Archive by FTP} 
-::msgcat::mcset cs {Chandra Public Archive by ObsId} 
 ::msgcat::mcset cs {Circle} [encoding convertfrom iso8859-2 {Kru¾nice}]
 ::msgcat::mcset cs {Clear All} [encoding convertfrom iso8859-2 {Vyma¾ v¹e}]
 ::msgcat::mcset cs {Clear Analysis Commands} [encoding convertfrom iso8859-2 {Vyma¾ analytické pøíkazy}]

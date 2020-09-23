@@ -138,9 +138,6 @@
 ::msgcat::mcset ja {Center} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4"]
 ::msgcat::mcset ja {Centroid Parameters} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4\xb9\xe7\xa4\xef\xa4\xbb\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Centroid} 
-::msgcat::mcset ja {Chandra Public Archive by Cone Search} 
-::msgcat::mcset ja {Chandra Public Archive by FTP} 
-::msgcat::mcset ja {Chandra Public Archive by ObsId} 
 ::msgcat::mcset ja {Circle} [encoding convertfrom euc-jp "\xb1\xdf"]
 ::msgcat::mcset ja {Clear All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Clear Analysis Commands} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xf2\xbe\xc3\xb5\xee"]

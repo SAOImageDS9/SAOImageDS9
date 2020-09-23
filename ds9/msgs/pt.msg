@@ -138,9 +138,6 @@
 ::msgcat::mcset pt {Center} {Centro}
 ::msgcat::mcset pt {Centroid Parameters} 
 ::msgcat::mcset pt {Centroid} 
-::msgcat::mcset pt {Chandra Public Archive by Cone Search} 
-::msgcat::mcset pt {Chandra Public Archive by FTP} 
-::msgcat::mcset pt {Chandra Public Archive by ObsId} 
 ::msgcat::mcset pt {Circle} {Circulo}
 ::msgcat::mcset pt {Clear All} {Limpar tudo}
 ::msgcat::mcset pt {Clear Analysis Commands} [encoding convertfrom iso8859-1 {Limpar Comandos de Análise}]

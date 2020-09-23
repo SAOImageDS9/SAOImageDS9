@@ -138,9 +138,6 @@
 ::msgcat::mcset es {Center} {Centrar}
 ::msgcat::mcset es {Centroid Parameters} [encoding convertfrom iso8859-1 {Párametros del centroide}]
 ::msgcat::mcset es {Centroid} {Centroide}
-::msgcat::mcset es {Chandra Public Archive by Cone Search} 
-::msgcat::mcset es {Chandra Public Archive by FTP} 
-::msgcat::mcset es {Chandra Public Archive by ObsId} 
 ::msgcat::mcset es {Circle} [encoding convertfrom iso8859-1 {Círculo}]
 ::msgcat::mcset es {Clear All} {Despejar todos}
 ::msgcat::mcset es {Clear Analysis Commands} {Borrar las instrucciones de análisis}

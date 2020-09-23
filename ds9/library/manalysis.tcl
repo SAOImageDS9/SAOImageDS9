@@ -117,13 +117,13 @@ proc AnalysisMainMenu {} {
 
     ThemeMenu $ds9(mb).analysis.arch
     $ds9(mb).analysis.arch add command \
-	-label "[msgcat::mc {Chandra Public Archive by ObsId}]..." \
+	-label {Chandra Public Archive by ObsId} \
 	-command CXCPublicObsId
     $ds9(mb).analysis.arch add command \
-	-label "[msgcat::mc {Chandra Public Archive by Cone Search}]..." \
+	-label {Chandra Public Archive by Cone Search} \
 	-command CXCPublicConeSearch
 #    $ds9(mb).analysis.arch add command \
-#	-label "[msgcat::mc {Chandra Public Archive by FTP}]..." -command HVArchChandraFTP
+#	-label {Chandra Public Archive by FTP} -command HVArchChandraFTP
 
     $ds9(mb).analysis.arch add separator
     SIAAnalysisMenu $ds9(mb).analysis.arch

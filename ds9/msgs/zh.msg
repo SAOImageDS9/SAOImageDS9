@@ -138,9 +138,6 @@
 ::msgcat::mcset zh {Center} 
 ::msgcat::mcset zh {Centroid Parameters} [encoding convertfrom big5 "\xA4\xA4 \xA4\xDF \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Centroid} 
-::msgcat::mcset zh {Chandra Public Archive by Cone Search} 
-::msgcat::mcset zh {Chandra Public Archive by FTP} 
-::msgcat::mcset zh {Chandra Public Archive by ObsId} 
 ::msgcat::mcset zh {Circle} [encoding convertfrom big5 "\xB6\xEA \xA7\xCE"]
 ::msgcat::mcset zh {Clear All} 
 ::msgcat::mcset zh {Clear Analysis Commands} 

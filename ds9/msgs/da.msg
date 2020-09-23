@@ -138,9 +138,6 @@
 ::msgcat::mcset da {Center} {Centrer}
 ::msgcat::mcset da {Centroid Parameters} 
 ::msgcat::mcset da {Centroid} {Centroide}
-::msgcat::mcset da {Chandra Public Archive by Cone Search} 
-::msgcat::mcset da {Chandra Public Archive by FTP} 
-::msgcat::mcset da {Chandra Public Archive by ObsId} 
 ::msgcat::mcset da {Circle} {Cirkel}
 ::msgcat::mcset da {Clear All} {Fjern alt}
 ::msgcat::mcset da {Clear Analysis Commands} {Fjern analyse funktioner}

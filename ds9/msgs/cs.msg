@@ -138,6 +138,9 @@
 ::msgcat::mcset cs {Center} [encoding convertfrom iso8859-2 {Støed}]
 ::msgcat::mcset cs {Centroid Parameters} [encoding convertfrom iso8859-2 {Parametry centroidu}]
 ::msgcat::mcset cs {Centroid} [encoding convertfrom iso8859-2 {Vystøedit}]
+::msgcat::mcset cs {Chandra Public Archive by Cone Search} 
+::msgcat::mcset cs {Chandra Public Archive by FTP} 
+::msgcat::mcset cs {Chandra Public Archive by ObsId} 
 ::msgcat::mcset cs {Circle} [encoding convertfrom iso8859-2 {Kru¾nice}]
 ::msgcat::mcset cs {Clear All} [encoding convertfrom iso8859-2 {Vyma¾ v¹e}]
 ::msgcat::mcset cs {Clear Analysis Commands} [encoding convertfrom iso8859-2 {Vyma¾ analytické pøíkazy}]
@@ -323,7 +326,7 @@
 ::msgcat::mcset cs {Find} [encoding convertfrom iso8859-2 {Najít}]
 ::msgcat::mcset cs {First Frame} [encoding convertfrom iso8859-2 {První snímek}]
 ::msgcat::mcset cs {First} [encoding convertfrom iso8859-2 {První}]
-::msgcat::mcset cs {Fits file found, use Open command} 
+::msgcat::mcset cs {Fits file found, not supported} 
 ::msgcat::mcset cs {Fits} 
 ::msgcat::mcset cs {Fixed in Size} 
 ::msgcat::mcset cs {Flip} 
@@ -618,6 +621,7 @@
 ::msgcat::mcset cs {Numerics} 
 ::msgcat::mcset cs {OK} [encoding convertfrom iso8859-2 {Budi¾}] 
 ::msgcat::mcset cs {Object} [encoding convertfrom iso8859-2 {Objekt}]
+::msgcat::mcset cs {ObsId} 
 ::msgcat::mcset cs {Open File} [encoding convertfrom iso8859-2 {Otevøít soubor}]
 ::msgcat::mcset cs {Open ME Cube} 
 ::msgcat::mcset cs {Open ME Frames} 

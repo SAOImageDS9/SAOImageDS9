@@ -138,6 +138,9 @@
 ::msgcat::mcset pt {Center} {Centro}
 ::msgcat::mcset pt {Centroid Parameters} 
 ::msgcat::mcset pt {Centroid} 
+::msgcat::mcset pt {Chandra Public Archive by Cone Search} 
+::msgcat::mcset pt {Chandra Public Archive by FTP} 
+::msgcat::mcset pt {Chandra Public Archive by ObsId} 
 ::msgcat::mcset pt {Circle} {Circulo}
 ::msgcat::mcset pt {Clear All} {Limpar tudo}
 ::msgcat::mcset pt {Clear Analysis Commands} [encoding convertfrom iso8859-1 {Limpar Comandos de Análise}]
@@ -323,7 +326,7 @@
 ::msgcat::mcset pt {Find} {Encontrado}
 ::msgcat::mcset pt {First Frame} 
 ::msgcat::mcset pt {First} {Primeiro}
-::msgcat::mcset pt {Fits file found, use Open command} 
+::msgcat::mcset pt {Fits file found, not supported} 
 ::msgcat::mcset pt {Fits} 
 ::msgcat::mcset pt {Fixed in Size} {Fixa em tamanho}
 ::msgcat::mcset pt {Flip} 
@@ -618,6 +621,7 @@
 ::msgcat::mcset pt {Numerics} 
 ::msgcat::mcset pt {OK} 
 ::msgcat::mcset pt {Object} {Objeto}
+::msgcat::mcset pt {ObsId} 
 ::msgcat::mcset pt {Open File} {Abrir Arquivo}
 ::msgcat::mcset pt {Open ME Cube} 
 ::msgcat::mcset pt {Open ME Frames} 

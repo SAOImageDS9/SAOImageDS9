@@ -138,6 +138,9 @@
 ::msgcat::mcset zh {Center} 
 ::msgcat::mcset zh {Centroid Parameters} [encoding convertfrom big5 "\xA4\xA4 \xA4\xDF \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Centroid} 
+::msgcat::mcset zh {Chandra Public Archive by Cone Search} 
+::msgcat::mcset zh {Chandra Public Archive by FTP} 
+::msgcat::mcset zh {Chandra Public Archive by ObsId} 
 ::msgcat::mcset zh {Circle} [encoding convertfrom big5 "\xB6\xEA \xA7\xCE"]
 ::msgcat::mcset zh {Clear All} 
 ::msgcat::mcset zh {Clear Analysis Commands} 
@@ -323,7 +326,7 @@
 ::msgcat::mcset zh {Find} 
 ::msgcat::mcset zh {First Frame} [encoding convertfrom big5 "\xB3\xCC \xA4\x57 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {First} 
-::msgcat::mcset zh {Fits file found, use Open command} 
+::msgcat::mcset zh {Fits file found, not supported} 
 ::msgcat::mcset zh {Fits} 
 ::msgcat::mcset zh {Fixed in Size} [encoding convertfrom big5 "\xA9\x54 \xA9\x77 \xA4\x6A \xA4\x70"]
 ::msgcat::mcset zh {Flip} 
@@ -618,6 +621,7 @@
 ::msgcat::mcset zh {Numerics} [encoding convertfrom big5 "\xBC\xC6 \xAD\xC8"]
 ::msgcat::mcset zh {OK} 
 ::msgcat::mcset zh {Object} [encoding convertfrom big5 "\xA4\xD1 \xC5\xE9 \xA6\x57 \xBA\xD9"]
+::msgcat::mcset zh {ObsId} 
 ::msgcat::mcset zh {Open File} 
 ::msgcat::mcset zh {Open ME Cube} 
 ::msgcat::mcset zh {Open ME Frames} 

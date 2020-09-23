@@ -138,6 +138,9 @@
 ::msgcat::mcset ja {Center} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4"]
 ::msgcat::mcset ja {Centroid Parameters} [encoding convertfrom euc-jp "\xc3\xe6\xbf\xb4\xb9\xe7\xa4\xef\xa4\xbb\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Centroid} 
+::msgcat::mcset ja {Chandra Public Archive by Cone Search} 
+::msgcat::mcset ja {Chandra Public Archive by FTP} 
+::msgcat::mcset ja {Chandra Public Archive by ObsId} 
 ::msgcat::mcset ja {Circle} [encoding convertfrom euc-jp "\xb1\xdf"]
 ::msgcat::mcset ja {Clear All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Clear Analysis Commands} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xf2\xbe\xc3\xb5\xee"]
@@ -323,7 +326,7 @@
 ::msgcat::mcset ja {Find} [encoding convertfrom euc-jp "\xb8\xa1\xba\xf7"]
 ::msgcat::mcset ja {First Frame} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {First} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9"]
-::msgcat::mcset ja {Fits file found, use Open command} 
+::msgcat::mcset ja {Fits file found, not supported} 
 ::msgcat::mcset ja {Fits} 
 ::msgcat::mcset ja {Fixed in Size} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xa4\xa5\xba\xb8\xc7\xc4\xea"]
 ::msgcat::mcset ja {Flip} 
@@ -618,6 +621,7 @@
 ::msgcat::mcset ja {Numerics} [encoding convertfrom euc-jp "\xbf\xf4\xc3\xcd"]
 ::msgcat::mcset ja {OK} [encoding convertfrom euc-jp "\xce\xbb\xb2\xf2"]
 ::msgcat::mcset ja {Object} [encoding convertfrom euc-jp "\xc5\xb7\xc2\xce\xcc\xbe"]
+::msgcat::mcset ja {ObsId} 
 ::msgcat::mcset ja {Open File} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xf2\xb3\xab\xa4\xaf"]
 ::msgcat::mcset ja {Open ME Cube} 
 ::msgcat::mcset ja {Open ME Frames} 

@@ -116,18 +116,17 @@ proc AnalysisMainMenu {} {
 	-label {SkyView (NASA/HEASARC)} -command SkyViewDialog
 
     ThemeMenu $ds9(mb).analysis.arch
-    $ds9(mb).analysis.arch add cascade -label {Chandra (NASA/CXC)} \
-	-menu $ds9(mb).analysis.arch.chandra
+    $ds9(mb).analysis.arch add command \
+	-label "[msgcat::mc {Chandra Public Archive by ObsId}]..." \
+	-command CXCPublicObsId
+    $ds9(mb).analysis.arch add command \
+	-label "[msgcat::mc {Chandra Public Archive by Cone Search}]..." \
+	-command CXCPublicConeSearch
+#    $ds9(mb).analysis.arch add command \
+#	-label "[msgcat::mc {Chandra Public Archive by FTP}]..." -command HVArchChandraFTP
+
     $ds9(mb).analysis.arch add separator
     SIAAnalysisMenu $ds9(mb).analysis.arch
-
-    ThemeMenu $ds9(mb).analysis.arch.chandra
-    $ds9(mb).analysis.arch.chandra add command \
-	-label {Public by ObsId} -command CXCPublicObsId
-    $ds9(mb).analysis.arch.chandra add command \
-	-label {Public Cone Search} -command CXCPublicConeSearch
-    $ds9(mb).analysis.arch.chandra add command \
-	-label {Old Public FTP} -command HVArchChandraFTP
 
     ThemeMenu $ds9(mb).analysis.arch.simbad
     $ds9(mb).analysis.arch.simbad add command -label {SAO} \

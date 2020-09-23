@@ -5,6 +5,66 @@
 package provide DS9 1.0
 
 proc CXCPublicObsId {} {
+    global ed
+
+    set w {.apobsid}
+    set mb {.apobsidmb}
+
+    set ed(top) $w
+    set ed(ok) 0
+    set ed(obsid) 100
+    set ed(hv) cxcpubhv
+
+    DialogCreate $w [msgcat::mc {ObsId}] ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    # file
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] -command {set ed(ok) 1}
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+
+    # edit
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
+
+    # Param
+    set f [ttk::frame $w.param]
+    ttk::label $f.title -text [msgcat::mc {ObsId}]
+    ttk::entry $f.obsid -textvariable ed(obsid) -width 13
+
+    grid $f.title $f.obsid -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogWait $w ed(ok) $w.param.obsid
+    destroy $w
+    destroy $mb
+
+    if {$ed(ok)} {
+	set last [string range $ed(obsid) end end]
+	set url "https://cxc.cfa.harvard.edu/cdaftp/byobsid/$last/$ed(obsid)/primary/"
+	HV $ed(hv) "ObsId $ed(obsid)" $url
+    }
+
+    set rr $ed(ok)
+    unset ed
+    return $rr
 }
 
 proc CXCPublicConeSearch {} {

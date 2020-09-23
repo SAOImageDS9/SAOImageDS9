@@ -1134,13 +1134,26 @@ proc HVParseImg {varname} {
     }
 
     if {$var(save)} {
+	set fn [file tail $var(url)]
 	switch -- $var(mime) {
-	    "image/gif" {set fn [SaveFileDialog giffbox $var(top)]}
-	    "image/jpeg" {set fn [SaveFileDialog jpegfbox $var(top)]}
-	    "image/tiff" {set fn [SaveFileDialog tifffbox $var(top)]}
-	    "image/png" {set fn [SaveFileDialog pngfbox $var(top)]}
+	    "image/gif" {
+		FileLast giffbox $fn
+		set fn [SaveFileDialog giffbox $var(top)]
+	    }
+	    "image/jpeg" {
+		FileLast jpegfbox $fn
+		set fn [SaveFileDialog jpegfbox $var(top)]
+	    }
+	    "image/tiff" {
+		FileLast tifffbox $fn
+		set fn [SaveFileDialog tifffbox $var(top)]
+	    }
+	    "image/png" {
+		FileLast pngfbox $fn
+		set fn [SaveFileDialog pngfbox $var(top)]
+	    }
 	}
-	
+
 	if {[string length "$fn"] != 0} {
 	    if {![catch {file rename -force "$var(fn)" "$fn"}]} {
 		set var(fn) "$fn"
@@ -1169,12 +1182,13 @@ proc HVParseFITS {varname} {
     global debug
 
     if {$var(save)} {
+	set fn [file tail $var(url)]
 	switch -- $var(encoding) {
-	    gzip {FileLast savefitsfbox "ds9.fits.gz"}
-	    bzip2 {FileLast savefitsfbox "ds9.fits.bz2"}
-	    compress {FileLast savefitsfbox "ds9.fits.Z"}
-	    pack {FileLast savefitsfbox "ds9.fits.z"}
-	    default {FileLast savefitsfbox "ds9.fits"}
+	    gzip {FileLast savefitsfbox "$fn"}
+	    bzip2 {FileLast savefitsfbox "$fn"}
+	    compress {FileLast savefitsfbox "$fn"}
+	    pack {FileLast savefitsfbox "$fn"}
+	    default {FileLast savefitsfbox "$fn"}
 	}
 
 	set fn [SaveFileDialog savefitsfbox $var(top)]
@@ -1454,7 +1468,7 @@ proc HVProgress {varname token totalsize currentsize} {
 
     global debug
     if {$debug(tcl,hv)} {
-	puts stderr "HVProgress:$varname"
+#	puts stderr "HVProgress:$varname"
     }
 
     if {$totalsize != 0} {

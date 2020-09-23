@@ -13,7 +13,7 @@ proc HVDef {} {
 
 # Public
 
-proc HV {varname title url {init {}} {sync 0}} {
+proc HV {varname title url {init {}} {sync 0} {save 0}} {
     upvar #0 $varname var
     global $varname
 
@@ -42,7 +42,7 @@ proc HV {varname title url {init {}} {sync 0}} {
 	set var(status) {}
 	set var(sync) $sync
 	set var(frame) new
-	set var(save) 0
+	set var(save) $save
 	set var(title) "$title"
 	set var(copy) {}
 	set var(search) {}

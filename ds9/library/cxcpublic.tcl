@@ -59,7 +59,7 @@ proc CXCPublicObsId {} {
     if {$ed(ok)} {
 	set last [string range $ed(obsid) end end]
 	set url "https://cxc.cfa.harvard.edu/cdaftp/byobsid/$last/$ed(obsid)/primary/"
-	HV $ed(hv) "ObsId $ed(obsid)" $url
+	HV $ed(hv) "ObsId $ed(obsid)" $url {} 0 1
     }
 
     set rr $ed(ok)
@@ -116,7 +116,7 @@ proc CXCPublicSelectCmd {varname ss rc} {
 	    set obsid [starbase_get $var(tbldb) $rr $col]
 	    set last [string range $obsid end end]
 	    set url "https://cxc.cfa.harvard.edu/cdaftp/byobsid/$last/$obsid/primary/"
-	    HV $var(hv) "ObsId $obsid" $url
+	    HV $var(hv) "ObsId $obsid" $url {} 0 1
 	}
     }
 

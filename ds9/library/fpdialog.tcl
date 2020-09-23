@@ -39,31 +39,38 @@ proc FPDialog {varname title url instr format action} {
     ARInit $varname FPServer
 
     # procs
-    set var(proc,process) FPProcess
     set var(proc,load) FPLoad
-    set var(proc,error) ARError
+    set var(proc,process) FPProcess
     set var(proc,table) FPTable
+    set var(proc,error) ARError
 
     # format
     switch $format {
 	cxc {
+	    set var(proc,reg) FPRegCXC
 	    set var(colid) ObsId
 	    set var(colreg) stcs
-	    set var(proc,reg) FPRegCXC
 	}
 	hla {
+	    set var(proc,reg) FPRegHLA
 	    set var(colid) PropID
 	    set var(colreg) regionSTCS
-	    set var(proc,reg) FPRegHLA
+	}
+	cxcpublic {
+	    set var(proc,reg) FPRegCXC
+	    set var(colid) ObsId
+	    set var(colreg) stcs
 	}
     }
 
     # FP variables
     lappend ifp(fps) $varname
 
+    set var(format) $format
     set var(catdb) ${varname}catdb
     set var(tbldb) ${varname}tbldb
     set var(frame) $current(frame)
+    set var(hv) ${varname}hv
 
     set var(system) $wcs(system)
     set var(sky) $wcs(sky)
@@ -119,21 +126,33 @@ proc FPDialog {varname title url instr format action} {
 	-command [list ARCancel $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Filter}] \
-	-command [list FPTable $varname]
+	-command [list TBLTable $varname]
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command [list FPOff $varname]
-    $mb.file add separator
-    $mb.file add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(show) -command [list FPGenerate $varname]
+    switch $var(format) {
+	cxc -
+	hla {
+	    $mb.file add separator
+	    $mb.file add checkbutton -label [msgcat::mc {Show}] \
+		-variable ${varname}(show) -command [list FPGenerate $varname]
+	}
+	cxcpublic {}
+    }
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Update from Current Frame}] \
 	-command [list TBLUpdate $varname]
     $mb.file add command \
 	-label [msgcat::mc {Update from Current Crosshair}] \
 	-command [list TBLCrosshair $varname]
-    $mb.file add separator
-	$mb.file add command -label [msgcat::mc {Copy to Regions}] \
-	-command [list FPGenerateRegions $varname]
+    switch $var(format) {
+	cxc -
+	hla {
+	    $mb.file add separator
+	    $mb.file add command -label [msgcat::mc {Copy to Regions}] \
+		-command [list FPGenerateRegions $varname]
+	}
+	cxcpublic {}
+    }
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
 	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
@@ -217,10 +236,10 @@ proc FPDialog {varname title url instr format action} {
 			   -menu $f.sort.menu -width 14]
     ttk::radiobutton $f.isort -text [msgcat::mc {Increase}] \
 	-variable ${varname}(sort,dir) -value "-increasing" \
-	-command [list FPTable $varname]
+	-command [list TBLTable $varname]
     ttk::radiobutton $f.dsort -text [msgcat::mc {Decrease}] \
 	-variable ${varname}(sort,dir) -value "-decreasing" \
-	-command [list FPTable $varname]
+	-command [list TBLTable $varname]
 
     ttk::label $f.ftitle -text [msgcat::mc {Found}] 
     set var(found) [ttk::label $f.found \
@@ -251,13 +270,24 @@ proc FPDialog {varname title url instr format action} {
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \
-		      -selectmode extended \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list FPSelectCmd $varname %s %S] \
 		      -fg [ThemeTreeForeground] \
 		      -bg [ThemeTreeBackground] \
 		     ]
+
+    switch $var(format) {
+	cxc -
+	hla {
+	    $var(tbl) configure -selectmode extended \
+		-browsecommand [list FPSelectCmd $varname %s %S]
+	}
+	cxcpublic {
+	    $var(tbl) configure -selectmode single \
+		-browsecommand [list CXCPublicSelectCmd $varname %s %S]
+	}
+    }
 
     $var(tbl) tag configure sel \
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
@@ -293,7 +323,7 @@ proc FPDialog {varname title url instr format action} {
 			 -command [list ARCancel $varname] \
 			 -state disabled]
     ttk::button $f.filter -text [msgcat::mc {Filter}] \
-	-command [list FPTable $varname]
+	-command [list TBLTable $varname]
     ttk::button $f.clear -text [msgcat::mc {Clear}] \
 	-command [list FPOff $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
@@ -430,6 +460,7 @@ proc FPVOT {varname} {
 proc FPDestroy {varname} {
     upvar #0 $varname var
     global $varname
+
     global $var(catdb)
     global $var(tbldb)
     global ifp
@@ -445,13 +476,24 @@ proc FPDestroy {varname} {
 	after cancel [list TBLSelectTimer $varname footprint]
     }
 
-    # frame may have been deleted
-    if {[info commands $var(frame)] != {}} {
-	# unhighlite any makers
-	if {[$var(frame) has fits]} {
-	    $var(frame) marker footprint $varname unhighlite
+    switch $var(format) {
+	cxc -
+	hla {
+	    # frame may have been deleted
+	    if {[info commands $var(frame)] != {}} {
+		# unhighlite any makers
+		if {[$var(frame) has fits]} {
+		    $var(frame) marker footprint $varname unhighlite
+		}
+	    }
 	}
-    }
+	cxcpublic {
+	    global $var(hv)
+	    if {[info exists $var(hv)]} {
+		HVDestroy $var(hv)
+	    }
+	}
+    }	    
 
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
@@ -482,13 +524,21 @@ proc FPDialogUpdate {varname} {
     # do we have a db?
     if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
-	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state normal
+	switch $var(format) {
+	    cxc -
+	    hla {$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state normal}
+	    cxcpublic {}
+	}
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state normal
 
 	$var(top).buttons.clear configure -state normal
     } else {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
-	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state disabled
+	switch $var(format) {
+	    cxc -
+	    hla {$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state disabled}
+	    cxcpublic {}
+	}
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state disabled
 
 	$var(top).buttons.clear configure -state disabled

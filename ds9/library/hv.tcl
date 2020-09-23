@@ -234,6 +234,46 @@ proc HV {varname title url {init {}} {sync 0}} {
     }
 }
 
+proc HVDestroy {varname} {
+    upvar #0 $varname var
+    global $varname
+    global ihv
+
+    global debug
+    if {$debug(tcl,hv)} {
+	puts stderr "HVDestroy"
+    }
+
+    HVCancel $varname
+
+    # clear the widge and all images
+    $var(widget) clear
+
+    # clear image cache
+    foreach x [array names $varname "images,*"] {
+	image delete $var($x)
+	unset ${varname}($x)
+    }
+
+    # clear cache
+    HVClearCache $varname
+
+    # destroy the window and menubar
+    if {[winfo exists $var(top)]} {
+	destroy $var(top)
+	destroy $var(mb)
+    }
+
+    # delete it from the xpa list
+    set ii [lsearch $ihv(windows) $varname]
+    if {$ii>=0} {
+	set ihv(windows) [lreplace $ihv(windows) $ii $ii]
+    }
+
+    # clear varname
+    unset $varname
+}
+
 # Bindings
 
 proc HVMotion {varname x y} {
@@ -729,53 +769,6 @@ proc HVAnalysisCancel {which i} {
 }
 
 # Archive Servers
-
-proc HVArchChandraChaser {} {
-    global current
-
-    set coord {}
-    if {$current(frame) != {}} {
-	if {[$current(frame) has wcs celestial wcs]} {
-	    set coord [$current(frame) get fits center wcs fk5 degrees]
-	    set size \
-		[expr [lindex [$current(frame) get fits size wcs fk5 arcmin] 0]/2.]
-	}
-    }
-
-    set l {}
-    if {[string length $coord] != 0} {
-	lappend l "1 lon [lindex $coord 0]"
-	lappend l "1 lat [lindex $coord 1]"
-	lappend l "1 radius $size"
-    }
-
-    global hvchandrachaser
-    HV hvchandrachaser {Chandra Chaser} http://cda.harvard.edu/chaser/mainEntry.do $l
-}
-
-proc HVArchChandraPop {} {
-    global current
-
-    set coord {}
-    if {$current(frame) != {}} {
-	if {[$current(frame) has wcs celestial wcs]} {
-	    set coord [$current(frame) get fits center wcs fk5 degrees]
-	    set size \
-		[expr [lindex [$current(frame) get fits size wcs fk5 arcmin] 0]/2.]
-	}
-    }
-
-    set l {}
-    if {[string length $coord] != 0} {
-	lappend l "1 lon [lindex $coord 0]"
-	lappend l "1 lat [lindex $coord 1]"
-	lappend l "1 radius $size"
-	lappend l "1 searchBy position"
-    }
-
-    global hvchandrapop
-    HV hvchandrapop {Chandra Popular} http://cda.harvard.edu/pop/mainEntry.do $l
-}
 
 proc HVArchChandraFTP {} {
     global current

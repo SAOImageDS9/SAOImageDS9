@@ -10,22 +10,10 @@ proc FPSelectCmd {varname ss rc} {
     upvar #0 $varname var
     global $varname
 
-    global debug
-    if {$debug(tcl,fp)} {
-	puts stderr "FPSelectCmd $varname $ss $rc"
-    }
-
-    FPSelectBrowseCmd $varname $ss $rc
-}
-
-proc FPSelectBrowseCmd {varname ss rc} {
-    upvar #0 $varname var
-    global $varname
-
     # starts at 1
     global debug
     if {$debug(tcl,fp)} {
-	puts stderr "FPSelectBrowseCmd $varname ss=$ss rc=$rc"
+	puts stderr "FPSelectCmd $varname ss=$ss rc=$rc"
     }
 
     global $var(catdb)

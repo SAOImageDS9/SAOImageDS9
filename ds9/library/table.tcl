@@ -489,6 +489,13 @@ proc TBLSortCmd {varname val} {
     $var(proc,table) $varname
 }
 
+proc TBLTable {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    eval [list $var(proc,table) $varname]
+}
+
 # Edit Dialog
 
 proc TBLEditDialog {varname which db} {

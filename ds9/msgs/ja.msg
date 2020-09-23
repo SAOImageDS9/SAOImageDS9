@@ -323,6 +323,7 @@
 ::msgcat::mcset ja {Find} [encoding convertfrom euc-jp "\xb8\xa1\xba\xf7"]
 ::msgcat::mcset ja {First Frame} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {First} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9"]
+::msgcat::mcset ja {Fits file found, use Open command} 
 ::msgcat::mcset ja {Fits} 
 ::msgcat::mcset ja {Fixed in Size} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xa4\xa5\xba\xb8\xc7\xc4\xea"]
 ::msgcat::mcset ja {Flip} 
@@ -609,6 +610,7 @@
 ::msgcat::mcset ja {Not Found} 
 ::msgcat::mcset ja {Not Supported} 
 ::msgcat::mcset ja {Not valid export format} 
+::msgcat::mcset ja {Not valid fits file} 
 ::msgcat::mcset ja {Number of Samples} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xf3\xa5\xd7\xa5\xeb\xa4\xce\xbf\xf4"]
 ::msgcat::mcset ja {Number of Threads} 
 ::msgcat::mcset ja {Number of Ticks} 
@@ -922,6 +924,7 @@
 ::msgcat::mcset ja {User} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc"]
 ::msgcat::mcset ja {Use} [encoding convertfrom euc-jp "\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {VO Server} 
+::msgcat::mcset ja {VOTable} 
 ::msgcat::mcset ja {VOT} 
 ::msgcat::mcset ja {VO} [encoding convertfrom euc-jp "\xb2\xbe\xc1\xdb\xc5\xb7\xca\xb8\xc2\xe6"]
 ::msgcat::mcset ja {Value} [encoding convertfrom euc-jp "\xc3\xcd"]

@@ -123,11 +123,11 @@ proc AnalysisMainMenu {} {
 
     ThemeMenu $ds9(mb).analysis.arch.chandra
     $ds9(mb).analysis.arch.chandra add command \
-	-label {Chaser} -command HVArchChandraChaser
+	-label {Public by ObsId} -command CXCPublicObsId
     $ds9(mb).analysis.arch.chandra add command \
-	-label {Fast Image} -command HVArchChandraPop
+	-label {Public Cone Search} -command CXCPublicConeSearch
     $ds9(mb).analysis.arch.chandra add command \
-	-label {Public FTP} -command HVArchChandraFTP
+	-label {Old Public FTP} -command HVArchChandraFTP
 
     ThemeMenu $ds9(mb).analysis.arch.simbad
     $ds9(mb).analysis.arch.simbad add command -label {SAO} \

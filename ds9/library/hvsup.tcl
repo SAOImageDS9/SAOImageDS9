@@ -40,46 +40,6 @@ proc HVCancel {varname} {
     }
 }
 
-proc HVDestroy {varname} {
-    upvar #0 $varname var
-    global $varname
-    global ihv
-
-    global debug
-    if {$debug(tcl,hv)} {
-	puts stderr "HVDestroy"
-    }
-
-    HVCancel $varname
-
-    # clear the widge and all images
-    $var(widget) clear
-
-    # clear image cache
-    foreach x [array names $varname "images,*"] {
-	image delete $var($x)
-	unset ${varname}($x)
-    }
-
-    # clear cache
-    HVClearCache $varname
-
-    # destroy the window and menubar
-    if {[winfo exists $var(top)]} {
-	destroy $var(top)
-	destroy $var(mb)
-    }
-
-    # delete it from the xpa list
-    set ii [lsearch $ihv(windows) $varname]
-    if {$ii>=0} {
-	set ihv(windows) [lreplace $ihv(windows) $ii $ii]
-    }
-
-    # clear varname
-    unset $varname
-}
-
 proc HVReset {varname} {
     upvar #0 $varname var
     global $varname

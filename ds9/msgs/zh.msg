@@ -323,6 +323,7 @@
 ::msgcat::mcset zh {Find} 
 ::msgcat::mcset zh {First Frame} [encoding convertfrom big5 "\xB3\xCC \xA4\x57 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {First} 
+::msgcat::mcset zh {Fits file found, use Open command} 
 ::msgcat::mcset zh {Fits} 
 ::msgcat::mcset zh {Fixed in Size} [encoding convertfrom big5 "\xA9\x54 \xA9\x77 \xA4\x6A \xA4\x70"]
 ::msgcat::mcset zh {Flip} 
@@ -609,6 +610,7 @@
 ::msgcat::mcset zh {Not Found} 
 ::msgcat::mcset zh {Not Supported} 
 ::msgcat::mcset zh {Not valid export format} 
+::msgcat::mcset zh {Not valid fits file} 
 ::msgcat::mcset zh {Number of Samples} 
 ::msgcat::mcset zh {Number of Threads} 
 ::msgcat::mcset zh {Number of Ticks} 
@@ -922,6 +924,7 @@
 ::msgcat::mcset zh {User} 
 ::msgcat::mcset zh {Use} 
 ::msgcat::mcset zh {VO Server} 
+::msgcat::mcset zh {VOTable} 
 ::msgcat::mcset zh {VOT} 
 ::msgcat::mcset zh {VO} 
 ::msgcat::mcset zh {Value} 

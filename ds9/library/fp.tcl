@@ -87,6 +87,7 @@ proc FPProcess {varname} {
     if {![TBLValidDB $tmpdb]} {
 	return
     }
+
     global $var(catdb)
     if {![eval $var(proc,reg) $varname $tmpdb $var(catdb)]} {
 	Error [msgcat::mc {Internal Parse Error}]
@@ -94,7 +95,7 @@ proc FPProcess {varname} {
     }
 
     TBLSortMenu $varname
-    FPTable $varname
+    eval [list $var(proc,table) $varname]
     FPDialogUpdate $varname
 }
 
@@ -108,7 +109,6 @@ proc FPTable {varname} {
     if {$debug(tcl,fp)} {
 	puts stderr "FPTable $varname"
     }
-
     if {![TBLValidDB $var(catdb)]} {
 	return
     }
@@ -123,11 +123,17 @@ proc FPTable {varname} {
     # clear the selection
     $var(tbl) selection clear all
 
-    # clear regions
-    if {[info commands $var(frame)] != {}} {
-	if {[$var(frame) has fits]} {
-	    $var(frame) marker footprint $varname delete
+    switch $var(format) {
+	cxc -
+	hla {
+	    # clear regions
+	    if {[info commands $var(frame)] != {}} {
+		if {[$var(frame) has fits]} {
+		    $var(frame) marker footprint $varname delete
+		}
+	    }
 	}
+	cxcpublic {}
     }
 
     if {$var(filter) == {} && $var(sort) == {}} {
@@ -171,7 +177,11 @@ proc FPTable {varname} {
 	$var(tbl) configure -rows $ifp(minrows)
     }
 
-    FPGenerate $varname
+    switch $var(format) {
+	cxc -
+	hla {FPGenerate $varname}
+	cxcpublic {}
+    }
 }
 
 proc FPRegCXC {varname src dest} {
@@ -439,10 +449,16 @@ proc FPOff {varname} {
 
     $var(tbl) selection clear all
 
-    if {[info commands $var(frame)] != {}} {
-	if {[$var(frame) has fits]} {
-	    $var(frame) marker footprint $varname delete
+    switch $var(format) {
+	cxc -
+	hla {
+	    if {[info commands $var(frame)] != {}} {
+		if {[$var(frame) has fits]} {
+		    $var(frame) marker footprint $varname delete
+		}
+	    }
 	}
+	cxcpublic {}
     }
 
     TBLSortMenu $varname
@@ -457,15 +473,21 @@ proc FPUpdateWCS {} {
     global ifp
     global current
 
-    if {$current(frame) != {}} {
-	$current(frame) marker footprint delete all
+    switch $var(format) {
+	cxc -
+	hla {
+	    if {$current(frame) != {}} {
+		$current(frame) marker footprint delete all
 
-	foreach varname $ifp(fps) {
-	    upvar #0 $varname var
-	    global $varname
+		foreach varname $ifp(fps) {
+		    upvar #0 $varname var
+		    global $varname
 
-	    FPGenerate $varname
+		    FPGenerate $varname
+		}
+	    }
 	}
+	cxcpublic {}
     }
 }
 

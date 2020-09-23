@@ -323,6 +323,7 @@
 ::msgcat::mcset cs {Find} [encoding convertfrom iso8859-2 {Najít}]
 ::msgcat::mcset cs {First Frame} [encoding convertfrom iso8859-2 {První snímek}]
 ::msgcat::mcset cs {First} [encoding convertfrom iso8859-2 {První}]
+::msgcat::mcset cs {Fits file found, use Open command} 
 ::msgcat::mcset cs {Fits} 
 ::msgcat::mcset cs {Fixed in Size} 
 ::msgcat::mcset cs {Flip} 
@@ -609,6 +610,7 @@
 ::msgcat::mcset cs {Not Found} 
 ::msgcat::mcset cs {Not Supported} 
 ::msgcat::mcset cs {Not valid export format} 
+::msgcat::mcset cs {Not valid fits file} 
 ::msgcat::mcset cs {Number of Samples} 
 ::msgcat::mcset cs {Number of Threads} 
 ::msgcat::mcset cs {Number of Ticks} 
@@ -922,6 +924,7 @@
 ::msgcat::mcset cs {User} [encoding convertfrom iso8859-2 {U¾ivatelské}]
 ::msgcat::mcset cs {Use} [encoding convertfrom iso8859-2 {Pou¾ívat}]
 ::msgcat::mcset cs {VO Server} 
+::msgcat::mcset cs {VOTable} 
 ::msgcat::mcset cs {VOT} 
 ::msgcat::mcset cs {VO} 
 ::msgcat::mcset cs {Value} [encoding convertfrom iso8859-2 {Hodnota}]

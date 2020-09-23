@@ -323,6 +323,7 @@
 ::msgcat::mcset de {Find} {Suchen}
 ::msgcat::mcset de {First Frame} {Erster rahmen}
 ::msgcat::mcset de {First} {Erster}
+::msgcat::mcset de {Fits file found, use Open command} 
 ::msgcat::mcset de {Fits} 
 ::msgcat::mcset de {Fixed in Size} [encoding convertfrom iso8859-1 {Feste Größe}]
 ::msgcat::mcset de {Flip} 
@@ -609,6 +610,7 @@
 ::msgcat::mcset de {Not Found} 
 ::msgcat::mcset de {Not Supported} 
 ::msgcat::mcset de {Not valid export format} 
+::msgcat::mcset de {Not valid fits file} 
 ::msgcat::mcset de {Number of Samples} {Anzahl der Stichproben}
 ::msgcat::mcset de {Number of Threads} 
 ::msgcat::mcset de {Number of Ticks} 
@@ -922,6 +924,7 @@
 ::msgcat::mcset de {User} {Benutzer}
 ::msgcat::mcset de {Use} {Benutze}
 ::msgcat::mcset de {VO Server} 
+::msgcat::mcset de {VOTable} 
 ::msgcat::mcset de {VOT} 
 ::msgcat::mcset de {VO} 
 ::msgcat::mcset de {Value} {Wert}

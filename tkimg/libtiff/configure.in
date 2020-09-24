@@ -54,10 +54,10 @@ TIFFCC=`which $TIFFCC 2>/dev/null`
 # does not support this we have to bail out.
 #--------------------------------------------------------------------
 
-if test `grep STDC_HEADERS confdefs.h | wc -l` -eq 0
-then
-    AC_MSG_ERROR([Compiler does not use stdarg.h, required for TIFF])
-fi
+#if test `grep STDC_HEADERS confdefs.h | wc -l` -eq 0
+#then
+#    AC_MSG_ERROR([Compiler does not use stdarg.h, required for TIFF])
+#fi
 
 mv -f confdefs.h tifftcl_confdefs.h
 if test "X$host" = X -o "X$host" = XNONE

@@ -329,12 +329,12 @@ void Panner::renderImageCompass()
   Vector center(options->width/2., options->height/2.);
 
   renderArm(int(length*imageX.length()), center, 
-	    Rotate(-imageX.angle()), "X", getColor("green"));
+	    Rotate(-imageX.angle()), "X", getColor("cyan"));
   renderArm(int(length*imageY.length()), center, 
-	    Rotate(-imageY.angle()), "Y", getColor("green"));
+	    Rotate(-imageY.angle()), "Y", getColor("cyan"));
   if (threed) {
     renderArm(int(length*imageZ.length()), center, 
-	      Rotate(-imageZ.angle()), "Z", getColor("green"));
+	      Rotate(-imageZ.angle()), "Z", getColor("cyan"));
   }
 }
 

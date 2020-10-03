@@ -614,11 +614,17 @@ proc FixPrefsVarOld {} {
 
     # and fix any previous theme issues
     global pds9
-    if {[info exists pds9(theme)]} {
-	global ds9
-	if {[lsearch -nocase $ds9(themes) $pds9(theme)] == -1} {
-	    set pds9(theme) default
+    global ds9
+    switch $ds9(wm) {
+	x11 -
+	win32 {
+	    if {[info exists pds9(theme)]} {
+		if {[lsearch -nocase $ds9(themes) $pds9(theme)] == -1} {
+		    set pds9(theme) default
+		}
+	    }
 	}
+	aqua {}
     }
 }
 

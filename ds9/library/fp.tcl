@@ -473,21 +473,20 @@ proc FPUpdateWCS {} {
     global ifp
     global current
 
-    switch $var(format) {
-	cxc -
-	hla {
-	    if {$current(frame) != {}} {
-		$current(frame) marker footprint delete all
+    foreach varname $ifp(fps) {
+	upvar #0 $varname var
+	global $varname
 
-		foreach varname $ifp(fps) {
-		    upvar #0 $varname var
-		    global $varname
-
-		    FPGenerate $varname
+	switch $var(format) {
+	    cxc -
+	    hla {
+		if {$current(frame) != {}} {
+		    $current(frame) marker footprint delete all
 		}
+		FPGenerate $varname
 	    }
+	    cxcpublic {}
 	}
-	cxcpublic {}
     }
 }
 

@@ -4,23 +4,6 @@
 
 package provide DS9 1.0
 
-proc ValidFitsFile {fn} {
-    if {[catch {open $fn} ch]} {
-	Error "[msgcat::mc {Unable to open file}] $fn"
-	return 0
-    }
-
-    set ll [read $ch 9]
-    close $ch
-
-    # is it a fits file?
-    if {$ll == "SIMPLE  ="} {
-	return 1
-    } else {
-	return 0
-    }
-}
-
 proc LoadFitsFile {fn layer mode} {
     global loadParam
     global current

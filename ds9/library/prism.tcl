@@ -465,11 +465,6 @@ proc PrismLoad {varname fn} {
 	return
     }
 
-    if {![ValidFitsFile $fn]} {
-	Error "[msgcat::mc {Not valid fits file}] $fn"
-	return
-    }
-
     set var(fn) $fn
     set var(type fits
     switch $ds9(wm) {
@@ -566,11 +561,6 @@ proc PrismImportFn {varname fn reader} {
 
     if {![file exists $fn]} {
 	Error "[msgcat::mc {File not found}]: $fn"
-	return
-    }
-
-    if {[ValidFitsFile $fn]} {
-	Error "[msgcat::mc {Fits file found, not supported}] $fn"
 	return
     }
 

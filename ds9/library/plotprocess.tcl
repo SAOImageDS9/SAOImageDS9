@@ -258,11 +258,6 @@ proc PlotCmdNewFile {fn ref} {
 	return
     }
 
-    if {[ValidFitsFile $fn]} {
-	Error "[msgcat::mc {Fits file found, not supported}] $fn"
-	return
-    }
-
     set ch [open $fn r]
     set parse(buf) [read $ch]
     close $ch
@@ -317,11 +312,6 @@ proc PlotCmdData {dim} {
 	if {$parse(fn) != {}} {
 	    if {![file exists $fn]} {
 		Error "[msgcat::mc {File not found}]: $fn"
-		return
-	    }
-
-	    if {[ValidFitsFile $fn]} {
-		Error "[msgcat::mc {Fits file found, not supported}] $fn"
 		return
 	    }
 

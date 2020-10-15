@@ -381,11 +381,6 @@ proc PlotLoadDataFile {varname fn dim} {
 	return
     }
 
-    if {[ValidFitsFile $fn]} {
-	Error "[msgcat::mc {Fits file found, not supported}] $fn"
-	return
-    }
-
     set ch [open $fn]
     set data [read $ch]
     close $ch

@@ -8,6 +8,8 @@ proc FITSRead {t fn} {
     upvar #0 $t T
     global $t
 
+    global ds9
+
     global debug
     if {$debug(tcl,cat)} {
 	puts stderr "FITSRead $t"
@@ -23,7 +25,28 @@ proc FITSRead {t fn} {
     set T(Nrows) 0
     set T(Ncols) 0
 
-    fitsy table $fn -1 $t 0 10000
+    set load mmapincr
+    switch $ds9(wm) {
+	x11 -
+	aqua {
+	    # compressed?
+	    catch {
+		set ch [open $fn r]
+		fconfigure $ch -encoding binary -translation binary
+		set bb [read $ch 2]
+		close $ch
+		binary scan $bb H4 cc
+		if {$cc == {1f8b}} {
+		    set load allocgz
+		}
+	    }
+	}
+	win32 {
+	    set load allocgz
+	}
+    }
+
+    fitsy table $fn $load -1 $t 0 10000
 
     set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
     set T(Ndshs) [llength $T(Header)]

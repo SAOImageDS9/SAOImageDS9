@@ -482,7 +482,7 @@ template<class T> FitsBinColumnT<T>::FitsBinColumnT(FitsHead* head,
 template<class T> char* FitsBinColumnT<T>::str(const char* ptr, int i)
 {
   ostringstream ost;
-  ost << value(ptr,i) << ends;
+  ost << setprecision(13) << value(ptr,i) << ends;
   return (char*)dupstr(ost.str().c_str());
 }
 

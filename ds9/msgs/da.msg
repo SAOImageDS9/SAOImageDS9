@@ -7,10 +7,10 @@
 ::msgcat::mcset da {About SAOImageDS9} 
 ::msgcat::mcset da {About} {Om}
 ::msgcat::mcset da {Acknowledgment} {Tak}
-::msgcat::mcset da {Add Bar} 
+::msgcat::mcset da {Add Bar Graph} 
 ::msgcat::mcset da {Add Graph} 
-::msgcat::mcset da {Add Line} 
-::msgcat::mcset da {Add Scatter} 
+::msgcat::mcset da {Add Line Graph} 
+::msgcat::mcset da {Add Scatter Graph} 
 ::msgcat::mcset da {Add} [encoding convertfrom iso8859-1 {Tilføj}]
 ::msgcat::mcset da {Advanced} {Avanceret}
 ::msgcat::mcset da {Align} {Juster}
@@ -323,7 +323,6 @@
 ::msgcat::mcset da {Find} {Find}
 ::msgcat::mcset da {First Frame} [encoding convertfrom iso8859-1 {Første ramme}]
 ::msgcat::mcset da {First} [encoding convertfrom iso8859-1 {Første}]
-::msgcat::mcset da {Fits file found, not supported} 
 ::msgcat::mcset da {Fits} 
 ::msgcat::mcset da {Fixed in Size} [encoding convertfrom iso8859-1 {Fastlåst størrelse}]
 ::msgcat::mcset da {Flip} 
@@ -610,7 +609,6 @@
 ::msgcat::mcset da {Not Found} 
 ::msgcat::mcset da {Not Supported} 
 ::msgcat::mcset da {Not valid export format} 
-::msgcat::mcset da {Not valid fits file} 
 ::msgcat::mcset da {Number of Samples} {Antal}
 ::msgcat::mcset da {Number of Threads} 
 ::msgcat::mcset da {Number of Ticks} 
@@ -657,7 +655,6 @@
 ::msgcat::mcset da {Panner} {Oversigtskort}
 ::msgcat::mcset da {Pan} {Flyt}
 ::msgcat::mcset da {Parameters} {Parametre}
-::msgcat::mcset da {Params} 
 ::msgcat::mcset da {Password} {Kodeord}
 ::msgcat::mcset da {Paste Contours} {Indsæt konturer}
 ::msgcat::mcset da {Paste} [encoding convertfrom iso8859-1 {Sæt ind}]

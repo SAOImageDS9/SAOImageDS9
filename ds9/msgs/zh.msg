@@ -7,10 +7,10 @@
 ::msgcat::mcset zh {About SAOImageDS9} 
 ::msgcat::mcset zh {About} [encoding convertfrom big5 "\xC3\xF6 \xA9\xF3"]
 ::msgcat::mcset zh {Acknowledgment} 
-::msgcat::mcset zh {Add Bar} 
+::msgcat::mcset zh {Add Bar Graph} 
 ::msgcat::mcset zh {Add Graph} 
-::msgcat::mcset zh {Add Line} 
-::msgcat::mcset zh {Add Scatter} 
+::msgcat::mcset zh {Add Line Graph} 
+::msgcat::mcset zh {Add Scatter Graph} 
 ::msgcat::mcset zh {Add} 
 ::msgcat::mcset zh {Advanced} 
 ::msgcat::mcset zh {Align} [encoding convertfrom big5 "\xB9\xEF \xBB\xF4 \xA4\xE8 \xA6\xEC"]
@@ -323,7 +323,6 @@
 ::msgcat::mcset zh {Find} 
 ::msgcat::mcset zh {First Frame} [encoding convertfrom big5 "\xB3\xCC \xA4\x57 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {First} 
-::msgcat::mcset zh {Fits file found, not supported} 
 ::msgcat::mcset zh {Fits} 
 ::msgcat::mcset zh {Fixed in Size} [encoding convertfrom big5 "\xA9\x54 \xA9\x77 \xA4\x6A \xA4\x70"]
 ::msgcat::mcset zh {Flip} 
@@ -610,7 +609,6 @@
 ::msgcat::mcset zh {Not Found} 
 ::msgcat::mcset zh {Not Supported} 
 ::msgcat::mcset zh {Not valid export format} 
-::msgcat::mcset zh {Not valid fits file} 
 ::msgcat::mcset zh {Number of Samples} 
 ::msgcat::mcset zh {Number of Threads} 
 ::msgcat::mcset zh {Number of Ticks} 
@@ -657,7 +655,6 @@
 ::msgcat::mcset zh {Panner} [encoding convertfrom big5 "\xC1\x59 \xB9\xCF"]
 ::msgcat::mcset zh {Pan} 
 ::msgcat::mcset zh {Parameters} 
-::msgcat::mcset zh {Params} 
 ::msgcat::mcset zh {Password} 
 ::msgcat::mcset zh {Paste Contours} 
 ::msgcat::mcset zh {Paste} 

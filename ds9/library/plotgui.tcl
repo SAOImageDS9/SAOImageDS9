@@ -149,24 +149,25 @@ proc PlotGUICanvas {varname w} {
 
     grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
 
-    # Layout
-    set g [ttk::labelframe $w.layout -text [msgcat::mc {Graph}]]
+    # Graph
+    set f [ttk::labelframe $w.graph -text [msgcat::mc {Graph}]]
 
-    set f [ttk::frame $g.add]
-    ttk::button $f.line -text [msgcat::mc {Add Line}] \
+    ttk::button $f.line -text [msgcat::mc {Add Line Graph}] \
 	-command [list PlotAddGraph $varname line]
-    ttk::button $f.bar -text [msgcat::mc {Add Bar}] \
+    ttk::button $f.bar -text [msgcat::mc {Add Bar Graph}] \
 	-command [list PlotAddGraph $varname bar]
-    ttk::button $f.scatter -text [msgcat::mc {Add Scatter}] \
+    ttk::button $f.scatter -text [msgcat::mc {Add Scatter Graph}] \
 	-command [list PlotAddGraph $varname scatter]
-    pack $f.line $f.bar $f.scatter -side left -padx 2
-
-    set f [ttk::frame $g.delete]
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
-    pack $f.delete -side left -padx 2
 
-    set f [ttk::frame $g.layout]
+    grid $f.line $f.bar -padx 2 -pady 2 -sticky w
+    grid $f.scatter $f.delete -padx 2 -pady 2 -sticky w
+
+    # Layout
+    set g [ttk::labelframe $w.layout -text [msgcat::mc {Layout}]]
+
+    set f [ttk::frame $g.arrange]
     ttk::radiobutton $f.grid -text [msgcat::mc {Grid}] \
 	-variable ${varname}(canvas,layout) -value grid \
 	-command [list PlotChangeLayout $varname]
@@ -188,8 +189,7 @@ proc PlotGUICanvas {varname w} {
     ttk::label $f.scalet -text {%}
     pack $f.tscale $f.scale $f.scalet -side left -padx 2
 
-    pack $g.add $g.delete $g.layout $g.strip \
-	-side top  -fill both -expand true \
+    pack $g.arrange $g.strip -side top -fill both -expand true \
 	-padx 2 -pady 2
 
     # Font
@@ -257,7 +257,8 @@ proc PlotGUICanvas {varname w} {
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
     grid $f.tgrid $f.grid -padx 2 -pady 2 -sticky w
 
-    pack $w.canvas $w.layout $w.font $w.color -side top -fill both -expand true
+    pack $w.canvas $w.graph $w.layout $w.font $w.color \
+	-side top -fill both -expand true
 }
 
 proc PlotGUIGraph {varname w} {

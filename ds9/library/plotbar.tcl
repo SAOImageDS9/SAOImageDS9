@@ -285,7 +285,7 @@ proc PlotGUIBar {varname w} {
     grid $f.tname $f.name -padx 2 -pady 2 -sticky ew
 
     # Params
-    set f [ttk::labelframe $w.params -text [msgcat::mc {Params}]]
+    set f [ttk::labelframe $w.params -text [msgcat::mc {Properties}]]
 
     ttk::label $f.tbordercolor -text [msgcat::mc {Border}]
     ttk::menubutton $f.bordercolor \

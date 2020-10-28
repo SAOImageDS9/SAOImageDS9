@@ -7,10 +7,10 @@
 ::msgcat::mcset de {About SAOImageDS9} 
 ::msgcat::mcset de {About} [encoding convertfrom iso8859-1 {Über}]
 ::msgcat::mcset de {Acknowledgment} {Danksagung}
-::msgcat::mcset de {Add Bar} 
+::msgcat::mcset de {Add Bar Graph} 
 ::msgcat::mcset de {Add Graph} 
-::msgcat::mcset de {Add Line} 
-::msgcat::mcset de {Add Scatter} 
+::msgcat::mcset de {Add Line Graph} 
+::msgcat::mcset de {Add Scatter Graph} 
 ::msgcat::mcset de {Add} [encoding convertfrom iso8859-1 {Hinzufügen}]
 ::msgcat::mcset de {Advanced} {Erweitert}
 ::msgcat::mcset de {Align} {Ausrichten}
@@ -323,7 +323,6 @@
 ::msgcat::mcset de {Find} {Suchen}
 ::msgcat::mcset de {First Frame} {Erster rahmen}
 ::msgcat::mcset de {First} {Erster}
-::msgcat::mcset de {Fits file found, not supported} 
 ::msgcat::mcset de {Fits} 
 ::msgcat::mcset de {Fixed in Size} [encoding convertfrom iso8859-1 {Feste Größe}]
 ::msgcat::mcset de {Flip} 
@@ -610,7 +609,6 @@
 ::msgcat::mcset de {Not Found} 
 ::msgcat::mcset de {Not Supported} 
 ::msgcat::mcset de {Not valid export format} 
-::msgcat::mcset de {Not valid fits file} 
 ::msgcat::mcset de {Number of Samples} {Anzahl der Stichproben}
 ::msgcat::mcset de {Number of Threads} 
 ::msgcat::mcset de {Number of Ticks} 
@@ -657,7 +655,6 @@
 ::msgcat::mcset de {Panner} [encoding convertfrom iso8859-1 {Übersichtsfeld}]
 ::msgcat::mcset de {Pan} {Ausrichtung}
 ::msgcat::mcset de {Parameters} {Parameter}
-::msgcat::mcset de {Params} 
 ::msgcat::mcset de {Password} {Passwort}
 ::msgcat::mcset de {Paste Contours} [encoding convertfrom iso8859-1 {Konturen einfügen}]
 ::msgcat::mcset de {Paste} [encoding convertfrom iso8859-1 {Einfügen}]

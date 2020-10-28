@@ -7,10 +7,10 @@
 ::msgcat::mcset ja {About SAOImageDS9} 
 ::msgcat::mcset ja {About} [encoding convertfrom euc-jp "\x44\x53\x39\x20\xa4\xcb\xa4\xc4\xa4\xa4\xa4\xc6"]
 ::msgcat::mcset ja {Acknowledgment} [encoding convertfrom euc-jp "\xbc\xd5\xbc\xad"]
-::msgcat::mcset ja {Add Bar} 
+::msgcat::mcset ja {Add Bar Graph} 
 ::msgcat::mcset ja {Add Graph} 
-::msgcat::mcset ja {Add Line} 
-::msgcat::mcset ja {Add Scatter} 
+::msgcat::mcset ja {Add Line Graph} 
+::msgcat::mcset ja {Add Scatter Graph} 
 ::msgcat::mcset ja {Add} [encoding convertfrom euc-jp "\xc4\xc9\xb2\xc3"]
 ::msgcat::mcset ja {Advanced} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9\xa4\xca\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Align} [encoding convertfrom euc-jp "\xc0\xb0\xce\xf3"]
@@ -323,7 +323,6 @@
 ::msgcat::mcset ja {Find} [encoding convertfrom euc-jp "\xb8\xa1\xba\xf7"]
 ::msgcat::mcset ja {First Frame} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {First} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9"]
-::msgcat::mcset ja {Fits file found, not supported} 
 ::msgcat::mcset ja {Fits} 
 ::msgcat::mcset ja {Fixed in Size} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xa4\xa5\xba\xb8\xc7\xc4\xea"]
 ::msgcat::mcset ja {Flip} 
@@ -610,7 +609,6 @@
 ::msgcat::mcset ja {Not Found} 
 ::msgcat::mcset ja {Not Supported} 
 ::msgcat::mcset ja {Not valid export format} 
-::msgcat::mcset ja {Not valid fits file} 
 ::msgcat::mcset ja {Number of Samples} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xf3\xa5\xd7\xa5\xeb\xa4\xce\xbf\xf4"]
 ::msgcat::mcset ja {Number of Threads} 
 ::msgcat::mcset ja {Number of Ticks} 
@@ -657,7 +655,6 @@
 ::msgcat::mcset ja {Panner} [encoding convertfrom euc-jp "\xc1\xb4\xc2\xce\xbf\xde"]
 ::msgcat::mcset ja {Pan} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xf3"]
 ::msgcat::mcset ja {Parameters} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xe9\xa5\xe1\xa1\xbc\xa5\xbf"]
-::msgcat::mcset ja {Params} 
 ::msgcat::mcset ja {Password} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xb9\xa5\xef\xa1\xbc\xa5\xc9"]
 ::msgcat::mcset ja {Paste Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xf2\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]
 ::msgcat::mcset ja {Paste} [encoding convertfrom euc-jp "\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]

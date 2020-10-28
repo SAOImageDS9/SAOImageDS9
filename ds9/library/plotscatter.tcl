@@ -273,7 +273,7 @@ proc PlotGUIScatter {varname w} {
     grid $f.tname $f.name -padx 2 -pady 2 -sticky ew
 
     # Params
-    set f [ttk::labelframe $w.params -text [msgcat::mc {Params}]]
+    set f [ttk::labelframe $w.params -text [msgcat::mc {Properties}]]
 
     # Shape
     ttk::label $f.tshape -text [msgcat::mc {Shape}]

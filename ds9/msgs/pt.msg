@@ -7,10 +7,10 @@
 ::msgcat::mcset pt {About SAOImageDS9} 
 ::msgcat::mcset pt {About} {Sobre}
 ::msgcat::mcset pt {Acknowledgment} [encoding convertfrom iso8859-1 {Créditos}]
-::msgcat::mcset pt {Add Bar} 
+::msgcat::mcset pt {Add Bar Graph} 
 ::msgcat::mcset pt {Add Graph} 
-::msgcat::mcset pt {Add Line} 
-::msgcat::mcset pt {Add Scatter} 
+::msgcat::mcset pt {Add Line Graph} 
+::msgcat::mcset pt {Add Scatter Graph} 
 ::msgcat::mcset pt {Add} {Adicionar}
 ::msgcat::mcset pt {Advanced} [encoding convertfrom iso8859-1 {Avançado}]
 ::msgcat::mcset pt {Align} {Alinhar}
@@ -323,7 +323,6 @@
 ::msgcat::mcset pt {Find} {Encontrado}
 ::msgcat::mcset pt {First Frame} 
 ::msgcat::mcset pt {First} {Primeiro}
-::msgcat::mcset pt {Fits file found, not supported} 
 ::msgcat::mcset pt {Fits} 
 ::msgcat::mcset pt {Fixed in Size} {Fixa em tamanho}
 ::msgcat::mcset pt {Flip} 
@@ -610,7 +609,6 @@
 ::msgcat::mcset pt {Not Found} 
 ::msgcat::mcset pt {Not Supported} 
 ::msgcat::mcset pt {Not valid export format} 
-::msgcat::mcset pt {Not valid fits file} 
 ::msgcat::mcset pt {Number of Samples} 
 ::msgcat::mcset pt {Number of Threads} 
 ::msgcat::mcset pt {Number of Ticks} 
@@ -657,7 +655,6 @@
 ::msgcat::mcset pt {Panner} 
 ::msgcat::mcset pt {Pan} 
 ::msgcat::mcset pt {Parameters} [encoding convertfrom iso8859-1 {Parâmetros}]
-::msgcat::mcset pt {Params} 
 ::msgcat::mcset pt {Password} {Senha}
 ::msgcat::mcset pt {Paste Contours} {Colar Contornos}
 ::msgcat::mcset pt {Paste} {Colar}

@@ -7,10 +7,10 @@
 ::msgcat::mcset cs {About SAOImageDS9} 
 ::msgcat::mcset cs {About} [encoding convertfrom iso8859-2 {O programu}] 
 ::msgcat::mcset cs {Acknowledgment} [encoding convertfrom iso8859-2 {Podìkování}]
-::msgcat::mcset cs {Add Bar} 
+::msgcat::mcset cs {Add Bar Graph} 
 ::msgcat::mcset cs {Add Graph} 
-::msgcat::mcset cs {Add Line} 
-::msgcat::mcset cs {Add Scatter} 
+::msgcat::mcset cs {Add Line Graph} 
+::msgcat::mcset cs {Add Scatter Graph} 
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
 ::msgcat::mcset cs {Align} [encoding convertfrom iso8859-2 {Zarovnat}]
@@ -323,7 +323,6 @@
 ::msgcat::mcset cs {Find} [encoding convertfrom iso8859-2 {Najít}]
 ::msgcat::mcset cs {First Frame} [encoding convertfrom iso8859-2 {První snímek}]
 ::msgcat::mcset cs {First} [encoding convertfrom iso8859-2 {První}]
-::msgcat::mcset cs {Fits file found, not supported} 
 ::msgcat::mcset cs {Fits} 
 ::msgcat::mcset cs {Fixed in Size} 
 ::msgcat::mcset cs {Flip} 
@@ -610,7 +609,6 @@
 ::msgcat::mcset cs {Not Found} 
 ::msgcat::mcset cs {Not Supported} 
 ::msgcat::mcset cs {Not valid export format} 
-::msgcat::mcset cs {Not valid fits file} 
 ::msgcat::mcset cs {Number of Samples} 
 ::msgcat::mcset cs {Number of Threads} 
 ::msgcat::mcset cs {Number of Ticks} 
@@ -657,7 +655,6 @@
 ::msgcat::mcset cs {Panner} [encoding convertfrom iso8859-2 {Náhled snímku}]
 ::msgcat::mcset cs {Pan} [encoding convertfrom iso8859-2 {Posun}] 
 ::msgcat::mcset cs {Parameters} 
-::msgcat::mcset cs {Params} 
 ::msgcat::mcset cs {Password} 
 ::msgcat::mcset cs {Paste Contours} 
 ::msgcat::mcset cs {Paste} [encoding convertfrom iso8859-2 {Vlo¾it}]

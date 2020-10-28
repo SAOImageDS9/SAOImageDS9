@@ -254,7 +254,7 @@ proc PrismDialog {varname} {
 
     # Buttons
     set f [ttk::frame $w.buttons]
-    ttk::button $f.load -text [msgcat::mc {Load}] \
+    ttk::button $f.load -text [msgcat::mc {Open}] \
 	-command [list PrismLoadFile $varname]
     ttk::button $f.clear -text [msgcat::mc {Clear}] \
 	-command [list PrismClear $varname]

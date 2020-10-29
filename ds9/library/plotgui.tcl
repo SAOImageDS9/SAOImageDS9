@@ -130,6 +130,7 @@ proc PlotGUIApply {varname} {
     # update the world?
     $var(graph,proc,updateelement) $varname
 
+    PlotChangeLayout $varname
     PlotChangeAxis $varname
     PlotUpdateCanvas $varname
     PlotUpdateGraph $varname

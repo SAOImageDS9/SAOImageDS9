@@ -74,6 +74,7 @@
 ::msgcat::mcset da {Background} {Baggrund}
 ::msgcat::mcset da {Backup} 
 ::msgcat::mcset da {Back} {Tilbage}
+::msgcat::mcset da {Bar Dataset} 
 ::msgcat::mcset da {Bar Plot Tool} 
 ::msgcat::mcset da {Bar Width} 
 ::msgcat::mcset da {Bar} 
@@ -175,7 +176,7 @@
 ::msgcat::mcset da {Contours} {Konturer}
 ::msgcat::mcset da {Contour} {Konturer}
 ::msgcat::mcset da {Contrast} {Kontrast}
-::msgcat::mcset da {Control Panel} 
+::msgcat::mcset da {Control Panel GUI} 
 ::msgcat::mcset da {Convert to Polygons} {Omdan til poygoner}
 ::msgcat::mcset da {Coordinate Grid Parameters} {Koordinatnetparametre}
 ::msgcat::mcset da {Coordinate Grid} {Koordinatnet}
@@ -321,6 +322,7 @@
 ::msgcat::mcset da {Filter} {Filter}
 ::msgcat::mcset da {Find Next} [encoding convertfrom iso8859-1 {Find næste}]
 ::msgcat::mcset da {Find} {Find}
+::msgcat::mcset da {First Block} 
 ::msgcat::mcset da {First Frame} [encoding convertfrom iso8859-1 {Første ramme}]
 ::msgcat::mcset da {First} [encoding convertfrom iso8859-1 {Første}]
 ::msgcat::mcset da {Fits} 
@@ -356,6 +358,7 @@
 ::msgcat::mcset da {Global Properties} 
 ::msgcat::mcset da {Global} {Global}
 ::msgcat::mcset da {Goto Frame} [encoding convertfrom iso8859-1 {Gå til ramme}]
+::msgcat::mcset da {Goto Row} 
 ::msgcat::mcset da {Goto} 
 ::msgcat::mcset da {Graph Horz} {vandret graf}
 ::msgcat::mcset da {Graph Parameters} 
@@ -432,6 +435,7 @@
 ::msgcat::mcset da {Label} {Etikette}
 ::msgcat::mcset da {Landscape} {Landskab}
 ::msgcat::mcset da {Language} {Sprog}
+::msgcat::mcset da {Last Block} 
 ::msgcat::mcset da {Last Frame} {Sidste ramme}
 ::msgcat::mcset da {Last} {Sidste}
 ::msgcat::mcset da {Layout Horz} 
@@ -448,6 +452,7 @@
 ::msgcat::mcset da {Level} {Niveau}
 ::msgcat::mcset da {Lighten} 
 ::msgcat::mcset da {Limits} [encoding convertfrom iso8859-1 {Grænser}]
+::msgcat::mcset da {Line Dataset} 
 ::msgcat::mcset da {Line Plot Tool} 
 ::msgcat::mcset da {Linear} [encoding convertfrom iso8859-1 {Lineær}]
 ::msgcat::mcset da {Line} {Linie}
@@ -596,6 +601,7 @@
 ::msgcat::mcset da {New Group} {Ny gruppe}
 ::msgcat::mcset da {New Plot} 
 ::msgcat::mcset da {New} {Ny}
+::msgcat::mcset da {Next Block} 
 ::msgcat::mcset da {Next Frame} [encoding convertfrom iso8859-1 {Næste ramme}]
 ::msgcat::mcset da {Next} [encoding convertfrom iso8859-1 {Næste}]
 ::msgcat::mcset da {No Catalog specified} {Intet katalog er specificeret}
@@ -691,6 +697,7 @@
 ::msgcat::mcset da {Precision} 
 ::msgcat::mcset da {Preferences} {Foretrukne}
 ::msgcat::mcset da {Preserve During Load} [encoding convertfrom iso8859-1 {Bevar under indlæsning}]
+::msgcat::mcset da {Previous Block} 
 ::msgcat::mcset da {Previous Frame} [encoding convertfrom iso8859-1 {Foregående ramme}]
 ::msgcat::mcset da {Previous} [encoding convertfrom iso8859-1 {Foregående}]
 ::msgcat::mcset da {Prev} 
@@ -777,6 +784,7 @@
 ::msgcat::mcset da {Scale and Limits} 
 ::msgcat::mcset da {Scale} {Skala}
 ::msgcat::mcset da {Scan} {skan}
+::msgcat::mcset da {Scatter Dataset} 
 ::msgcat::mcset da {Scatter Plot Tool} 
 ::msgcat::mcset da {Scatter} 
 ::msgcat::mcset da {Scope} [encoding convertfrom iso8859-1 {Gældende}]

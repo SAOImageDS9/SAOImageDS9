@@ -74,6 +74,7 @@
 ::msgcat::mcset de {Background} {Hintergrund} 
 ::msgcat::mcset de {Backup} 
 ::msgcat::mcset de {Back}  [encoding convertfrom iso8859-1 {Zurück}]
+::msgcat::mcset de {Bar Dataset} 
 ::msgcat::mcset de {Bar Plot Tool} 
 ::msgcat::mcset de {Bar Width} 
 ::msgcat::mcset de {Bar} 
@@ -175,7 +176,7 @@
 ::msgcat::mcset de {Contours} {Konturen}
 ::msgcat::mcset de {Contour} 
 ::msgcat::mcset de {Contrast} {Kontrast}
-::msgcat::mcset de {Control Panel} 
+::msgcat::mcset de {Control Panel GUI} 
 ::msgcat::mcset de {Convert to Polygons} {Zu Polygonen konvertieren}
 ::msgcat::mcset de {Coordinate Grid Parameters} {Koordinatennetzparameter}
 ::msgcat::mcset de {Coordinate Grid} {Koordinatennetz}
@@ -321,6 +322,7 @@
 ::msgcat::mcset de {Filter} 
 ::msgcat::mcset de {Find Next} [encoding convertfrom iso8859-1 {Nächsten finden}]
 ::msgcat::mcset de {Find} {Suchen}
+::msgcat::mcset de {First Block} 
 ::msgcat::mcset de {First Frame} {Erster rahmen}
 ::msgcat::mcset de {First} {Erster}
 ::msgcat::mcset de {Fits} 
@@ -356,6 +358,7 @@
 ::msgcat::mcset de {Global Properties} 
 ::msgcat::mcset de {Global} 
 ::msgcat::mcset de {Goto Frame} 
+::msgcat::mcset de {Goto Row} 
 ::msgcat::mcset de {Goto} 
 ::msgcat::mcset de {Graph Horz} 
 ::msgcat::mcset de {Graph Parameters} 
@@ -432,6 +435,7 @@
 ::msgcat::mcset de {Label} 
 ::msgcat::mcset de {Landscape} {Horizontal}
 ::msgcat::mcset de {Language} {Sprache}
+::msgcat::mcset de {Last Block} 
 ::msgcat::mcset de {Last Frame} {Letzter rahmen}
 ::msgcat::mcset de {Last} {Letzter}
 ::msgcat::mcset de {Layout Horz} 
@@ -448,6 +452,7 @@
 ::msgcat::mcset de {Level} {Niveau}
 ::msgcat::mcset de {Lighten} 
 ::msgcat::mcset de {Limits} {Grenzen}
+::msgcat::mcset de {Line Dataset} 
 ::msgcat::mcset de {Line Plot Tool} 
 ::msgcat::mcset de {Linear} 
 ::msgcat::mcset de {Line} {Linie}
@@ -596,6 +601,7 @@
 ::msgcat::mcset de {New Group} {Neue Gruppe}
 ::msgcat::mcset de {New Plot} 
 ::msgcat::mcset de {New} {Neu}
+::msgcat::mcset de {Next Block} 
 ::msgcat::mcset de {Next Frame} [encoding convertfrom iso8859-1 {Nächster rahmen}]
 ::msgcat::mcset de {Next} [encoding convertfrom iso8859-1 {Nächster}]
 ::msgcat::mcset de {No Catalog specified} {Keine Katalog spezifiziert}
@@ -691,6 +697,7 @@
 ::msgcat::mcset de {Precision} 
 ::msgcat::mcset de {Preferences} {Einstellungen}
 ::msgcat::mcset de {Preserve During Load} {Beim Laden beibehalten}
+::msgcat::mcset de {Previous Block} 
 ::msgcat::mcset de {Previous Frame} {Vorheriger rahmen}
 ::msgcat::mcset de {Previous} {Vorheriger}
 ::msgcat::mcset de {Prev} 
@@ -777,6 +784,7 @@
 ::msgcat::mcset de {Scale and Limits} 
 ::msgcat::mcset de {Scale} {Skalierung}
 ::msgcat::mcset de {Scan} {Abtastung}
+::msgcat::mcset de {Scatter Dataset} 
 ::msgcat::mcset de {Scatter Plot Tool} 
 ::msgcat::mcset de {Scatter} 
 ::msgcat::mcset de {Scope} {Anwendungsbereich}

@@ -74,6 +74,7 @@
 ::msgcat::mcset es {Background} {Fondo}
 ::msgcat::mcset es {Backup} 
 ::msgcat::mcset es {Back} [encoding convertfrom iso8859-1 {Para atrás}]  
+::msgcat::mcset es {Bar Dataset} 
 ::msgcat::mcset es {Bar Plot Tool} 
 ::msgcat::mcset es {Bar Width} 
 ::msgcat::mcset es {Bar} 
@@ -175,7 +176,7 @@
 ::msgcat::mcset es {Contours} {Contornos}
 ::msgcat::mcset es {Contour} 
 ::msgcat::mcset es {Contrast} {Contraste}
-::msgcat::mcset es {Control Panel} 
+::msgcat::mcset es {Control Panel GUI} 
 ::msgcat::mcset es {Convert to Polygons} [encoding convertfrom iso8859-1 {Convertir a polígonos}]
 ::msgcat::mcset es {Coordinate Grid Parameters} [encoding convertfrom iso8859-1 {Parámetros de la cuadrícula de coordenadas}]
 ::msgcat::mcset es {Coordinate Grid} [encoding convertfrom iso8859-1 {Cuadrícula de coordenadas}]
@@ -321,6 +322,7 @@
 ::msgcat::mcset es {Filter} {Filtro}
 ::msgcat::mcset es {Find Next} {Hallar la siguiente}
 ::msgcat::mcset es {Find} {Hallar}
+::msgcat::mcset es {First Block} 
 ::msgcat::mcset es {First Frame} {Primer Marco}
 ::msgcat::mcset es {First} {Primer}
 ::msgcat::mcset es {Fits} 
@@ -356,6 +358,7 @@
 ::msgcat::mcset es {Global Properties} 
 ::msgcat::mcset es {Global} 
 ::msgcat::mcset es {Goto Frame} 
+::msgcat::mcset es {Goto Row} 
 ::msgcat::mcset es {Goto} 
 ::msgcat::mcset es {Graph Horz} 
 ::msgcat::mcset es {Graph Parameters} 
@@ -432,6 +435,7 @@
 ::msgcat::mcset es {Label} {Etiqueta}
 ::msgcat::mcset es {Landscape} {Apaisado}
 ::msgcat::mcset es {Language} {Idioma}
+::msgcat::mcset es {Last Block} 
 ::msgcat::mcset es {Last Frame} [encoding convertfrom iso8859-1 {Último marco}]
 ::msgcat::mcset es {Last} [encoding convertfrom iso8859-1 {Último}]
 ::msgcat::mcset es {Layout Horz} 
@@ -448,6 +452,7 @@
 ::msgcat::mcset es {Level} {Nivel}
 ::msgcat::mcset es {Lighten} 
 ::msgcat::mcset es {Limits} [encoding convertfrom iso8859-1 {Límites}]
+::msgcat::mcset es {Line Dataset} 
 ::msgcat::mcset es {Line Plot Tool} 
 ::msgcat::mcset es {Linear} {Lineal}
 ::msgcat::mcset es {Line} [encoding convertfrom iso8859-1 {Línea}]
@@ -596,6 +601,7 @@
 ::msgcat::mcset es {New Group} {Nuevo grupo}
 ::msgcat::mcset es {New Plot} 
 ::msgcat::mcset es {New} {Nuevo}
+::msgcat::mcset es {Next Block} 
 ::msgcat::mcset es {Next Frame} {Siguiente Marco}
 ::msgcat::mcset es {Next} {Siguiente}
 ::msgcat::mcset es {No Catalog specified} [encoding convertfrom iso8859-1 {No se ha especificado el catálogo}]
@@ -691,6 +697,7 @@
 ::msgcat::mcset es {Precision} 
 ::msgcat::mcset es {Preferences} {Preferencias}
 ::msgcat::mcset es {Preserve During Load} {Conservar mientras se carga}
+::msgcat::mcset es {Previous Block} 
 ::msgcat::mcset es {Previous Frame} {Marco Previo}
 ::msgcat::mcset es {Previous} {Previo}
 ::msgcat::mcset es {Prev} 
@@ -777,6 +784,7 @@
 ::msgcat::mcset es {Scale and Limits} 
 ::msgcat::mcset es {Scale} {Escala}
 ::msgcat::mcset es {Scan} {Escanear} 
+::msgcat::mcset es {Scatter Dataset} 
 ::msgcat::mcset es {Scatter Plot Tool} 
 ::msgcat::mcset es {Scatter} 
 ::msgcat::mcset es {Scope} {Alcance}

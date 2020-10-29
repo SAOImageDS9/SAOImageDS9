@@ -74,6 +74,7 @@
 ::msgcat::mcset zh {Background} 
 ::msgcat::mcset zh {Backup} 
 ::msgcat::mcset zh {Back} 
+::msgcat::mcset zh {Bar Dataset} 
 ::msgcat::mcset zh {Bar Plot Tool} 
 ::msgcat::mcset zh {Bar Width} 
 ::msgcat::mcset zh {Bar} 
@@ -175,7 +176,7 @@
 ::msgcat::mcset zh {Contours} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75"]
 ::msgcat::mcset zh {Contour} 
 ::msgcat::mcset zh {Contrast} 
-::msgcat::mcset zh {Control Panel} 
+::msgcat::mcset zh {Control Panel GUI} 
 ::msgcat::mcset zh {Convert to Polygons} 
 ::msgcat::mcset zh {Coordinate Grid Parameters} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Coordinate Grid} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75"]
@@ -321,6 +322,7 @@
 ::msgcat::mcset zh {Filter} 
 ::msgcat::mcset zh {Find Next} 
 ::msgcat::mcset zh {Find} 
+::msgcat::mcset zh {First Block} 
 ::msgcat::mcset zh {First Frame} [encoding convertfrom big5 "\xB3\xCC \xA4\x57 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {First} 
 ::msgcat::mcset zh {Fits} 
@@ -356,6 +358,7 @@
 ::msgcat::mcset zh {Global Properties} 
 ::msgcat::mcset zh {Global} 
 ::msgcat::mcset zh {Goto Frame} [encoding convertfrom big5 "\xA8\xEC \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
+::msgcat::mcset zh {Goto Row} 
 ::msgcat::mcset zh {Goto} 
 ::msgcat::mcset zh {Graph Horz} 
 ::msgcat::mcset zh {Graph Parameters} 
@@ -432,6 +435,7 @@
 ::msgcat::mcset zh {Label} 
 ::msgcat::mcset zh {Landscape} 
 ::msgcat::mcset zh {Language} 
+::msgcat::mcset zh {Last Block} 
 ::msgcat::mcset zh {Last Frame} [encoding convertfrom big5 "\xB3\xCC \xA9\xB3 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Last} 
 ::msgcat::mcset zh {Layout Horz} 
@@ -448,6 +452,7 @@
 ::msgcat::mcset zh {Level} 
 ::msgcat::mcset zh {Lighten} 
 ::msgcat::mcset zh {Limits} 
+::msgcat::mcset zh {Line Dataset} 
 ::msgcat::mcset zh {Line Plot Tool} 
 ::msgcat::mcset zh {Linear} [encoding convertfrom big5 "\xBD\x75 \xA9\xCA"]
 ::msgcat::mcset zh {Line} [encoding convertfrom big5 "\xAA\xBD \xBD\x75"]
@@ -596,6 +601,7 @@
 ::msgcat::mcset zh {New Group} 
 ::msgcat::mcset zh {New Plot} 
 ::msgcat::mcset zh {New} 
+::msgcat::mcset zh {Next Block} 
 ::msgcat::mcset zh {Next Frame} [encoding convertfrom big5 "\xAB\xE1 \xA4\x40 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Next} 
 ::msgcat::mcset zh {No Catalog specified} 
@@ -691,6 +697,7 @@
 ::msgcat::mcset zh {Precision} 
 ::msgcat::mcset zh {Preferences} [encoding convertfrom big5 "\xB0\xBE \xA6\x6E \xB3\x5D \xA9\x77"]
 ::msgcat::mcset zh {Preserve During Load} 
+::msgcat::mcset zh {Previous Block} 
 ::msgcat::mcset zh {Previous Frame} [encoding convertfrom big5 "\xAB\x65 \xA4\x40 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Previous} 
 ::msgcat::mcset zh {Prev} 
@@ -777,6 +784,7 @@
 ::msgcat::mcset zh {Scale and Limits} 
 ::msgcat::mcset zh {Scale} [encoding convertfrom big5 "\xA6\xE2 \xB6\xA5"]
 ::msgcat::mcset zh {Scan} 
+::msgcat::mcset zh {Scatter Dataset} 
 ::msgcat::mcset zh {Scatter Plot Tool} 
 ::msgcat::mcset zh {Scatter} 
 ::msgcat::mcset zh {Scope} 

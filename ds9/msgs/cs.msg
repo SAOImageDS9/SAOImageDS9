@@ -74,6 +74,7 @@
 ::msgcat::mcset cs {Background} [encoding convertfrom iso8859-2 {Pozadí}]
 ::msgcat::mcset cs {Backup} [encoding convertfrom iso8859-2 {Záloha}]
 ::msgcat::mcset cs {Back} [encoding convertfrom iso8859-2 {Zpìt}]
+::msgcat::mcset cs {Bar Dataset} 
 ::msgcat::mcset cs {Bar Plot Tool} 
 ::msgcat::mcset cs {Bar Width} 
 ::msgcat::mcset cs {Bar} 
@@ -175,7 +176,7 @@
 ::msgcat::mcset cs {Contours} [encoding convertfrom iso8859-2 {Obrysy}]
 ::msgcat::mcset cs {Contour} [encoding convertfrom iso8859-2 {Obrys}]
 ::msgcat::mcset cs {Contrast} [encoding convertfrom iso8859-2 {Kontrast}]
-::msgcat::mcset cs {Control Panel} 
+::msgcat::mcset cs {Control Panel GUI} 
 ::msgcat::mcset cs {Convert to Polygons} [encoding convertfrom iso8859-2 {Zmìnit na obdélníky}]
 ::msgcat::mcset cs {Coordinate Grid Parameters} [encoding convertfrom iso8859-2 {Nastavení møí¾ky}]
 ::msgcat::mcset cs {Coordinate Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]
@@ -321,6 +322,7 @@
 ::msgcat::mcset cs {Filter} [encoding convertfrom iso8859-2 {Filtr}]
 ::msgcat::mcset cs {Find Next} [encoding convertfrom iso8859-2 {Najít dal¹í}]
 ::msgcat::mcset cs {Find} [encoding convertfrom iso8859-2 {Najít}]
+::msgcat::mcset cs {First Block} 
 ::msgcat::mcset cs {First Frame} [encoding convertfrom iso8859-2 {První snímek}]
 ::msgcat::mcset cs {First} [encoding convertfrom iso8859-2 {První}]
 ::msgcat::mcset cs {Fits} 
@@ -356,6 +358,7 @@
 ::msgcat::mcset cs {Global Properties} 
 ::msgcat::mcset cs {Global} 
 ::msgcat::mcset cs {Goto Frame} [encoding convertfrom iso8859-2 {Bì¾ na snímek}]
+::msgcat::mcset cs {Goto Row} 
 ::msgcat::mcset cs {Goto} 
 ::msgcat::mcset cs {Graph Horz} 
 ::msgcat::mcset cs {Graph Parameters} 
@@ -432,6 +435,7 @@
 ::msgcat::mcset cs {Label} [encoding convertfrom iso8859-2 {Oznaèení}]
 ::msgcat::mcset cs {Landscape} [encoding convertfrom iso8859-2 {Horizontálnì}]
 ::msgcat::mcset cs {Language} [encoding convertfrom iso8859-2 {Jazyk}]
+::msgcat::mcset cs {Last Block} 
 ::msgcat::mcset cs {Last Frame} [encoding convertfrom iso8859-2 {Poslední snímek}]
 ::msgcat::mcset cs {Last} [encoding convertfrom iso8859-2 {Poslední}]
 ::msgcat::mcset cs {Layout Horz} 
@@ -448,6 +452,7 @@
 ::msgcat::mcset cs {Level} [encoding convertfrom iso8859-2 {Úroveò}]
 ::msgcat::mcset cs {Lighten} 
 ::msgcat::mcset cs {Limits} 
+::msgcat::mcset cs {Line Dataset} 
 ::msgcat::mcset cs {Line Plot Tool} 
 ::msgcat::mcset cs {Linear} [encoding convertfrom iso8859-2 {Linární}]
 ::msgcat::mcset cs {Line} 
@@ -596,6 +601,7 @@
 ::msgcat::mcset cs {New Group} [encoding convertfrom iso8859-2 {Nová skupina}]
 ::msgcat::mcset cs {New Plot} 
 ::msgcat::mcset cs {New} [encoding convertfrom iso8859-2 {Nový}]
+::msgcat::mcset cs {Next Block} 
 ::msgcat::mcset cs {Next Frame} [encoding convertfrom iso8859-2 {Dal¹í snímek}]
 ::msgcat::mcset cs {Next} [encoding convertfrom iso8859-2 {Dal¹í}]
 ::msgcat::mcset cs {No Catalog specified} 
@@ -691,6 +697,7 @@
 ::msgcat::mcset cs {Precision} 
 ::msgcat::mcset cs {Preferences} [encoding convertfrom iso8859-2 {Nastavení}]
 ::msgcat::mcset cs {Preserve During Load} [encoding convertfrom iso8859-2 {Zachovej pøi otevøení}]
+::msgcat::mcset cs {Previous Block} 
 ::msgcat::mcset cs {Previous Frame} [encoding convertfrom iso8859-2 {Pøede¹lí snímek}]
 ::msgcat::mcset cs {Previous} [encoding convertfrom iso8859-2 {Pøedchozí}]
 ::msgcat::mcset cs {Prev} 
@@ -777,6 +784,7 @@
 ::msgcat::mcset cs {Scale and Limits} 
 ::msgcat::mcset cs {Scale} [encoding convertfrom iso8859-2 {©kálování}]
 ::msgcat::mcset cs {Scan} 
+::msgcat::mcset cs {Scatter Dataset} 
 ::msgcat::mcset cs {Scatter Plot Tool} 
 ::msgcat::mcset cs {Scatter} 
 ::msgcat::mcset cs {Scope} 

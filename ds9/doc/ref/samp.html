@@ -1808,7 +1808,8 @@ plot [line|bar|scatter &lt;filename&gt; [&lt;ref&gt;] xy|xyex|xyey|xyexey]<br>
 </p>
 <p>
 # existing plot<br>
-plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+plot [gui]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
@@ -1929,6 +1930,7 @@ plot list<br>
 plot mode<br>
 <br>
 ds9.set(string cmd)<br>
+plot gui<br>
 plot load xy.dat xy<br>
 plot save foo.dat<br>
 plot current foo<br>

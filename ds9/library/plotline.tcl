@@ -312,7 +312,7 @@ proc PlotGUILine {varname w} {
     global $varname
 
     # Line
-    set f [ttk::labelframe $w.line -text [msgcat::mc {Line}]]
+    set f [ttk::labelframe $w.line -text [msgcat::mc {Line Dataset}]]
 
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \

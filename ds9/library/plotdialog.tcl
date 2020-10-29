@@ -47,7 +47,7 @@ proc PlotDialog {varname wtt} {
 
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
-    $var(mb) add cascade -label [msgcat::mc {Canvas}] -menu $var(mb).canvas
+    $var(mb) add cascade -label [msgcat::mc {Plot}] -menu $var(mb).canvas
     $var(mb) add cascade -label [msgcat::mc {Graph}] -menu $var(mb).graph
     $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).dataline
 
@@ -66,7 +66,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).file add command -label [msgcat::mc {List Data}] \
        -command "set ${varname}(list) 1; PlotList $varname"
     $var(mb).file add separator
-    $var(mb).file add command -label "[msgcat::mc {Control Panel}]..." \
+    $var(mb).file add command -label "[msgcat::mc {Control Panel GUI}]..." \
 	-command [list PlotGUI $varname]
     $var(mb).file add separator
     $var(mb).file add command -label "[msgcat::mc {Backup}]..." \

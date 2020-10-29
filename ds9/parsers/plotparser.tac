@@ -51,6 +51,7 @@
 %token GRAPH_
 %token GRAY_
 %token GRID_
+%token GUI_
 %token LABELS_
 %token LANDSCAPE_
 %token LAYOUT_
@@ -158,6 +159,7 @@ plot : line
  | BAR_ bar
  | SCATTER_ scatter
  | ERROR_ errorr
+ | GUI_ {ProcessCmdCVAR0 PlotGUI}
  
 # File Menu
  | LOAD_ load

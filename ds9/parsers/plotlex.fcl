@@ -51,6 +51,7 @@ format	    {return $FORMAT_}
 graph	    {return $GRAPH_}
 gray	    {return $GRAY_}
 grid	    {return $GRID_}
+gui	    {return $GUI_}
 labels	    {return $LABELS_}
 landscape   {return $LANDSCAPE_}
 layout	    {return $LAYOUT_}

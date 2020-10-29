@@ -1731,7 +1731,8 @@ plot [data xy|xyex|xyey|xyexey]<br>
 </p>
 <p>
 # existing plot<br>
-plot [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+plot [gui]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
@@ -1855,6 +1856,7 @@ $xpaget ds9 plot current dataset<br>
 $xpaget ds9 plot stats<br>
 $xpaget ds9 plot list<br>
 $xpaget ds9 plot mode<br>
+$xpaset ds9 plot gui<br>
 $xpaset -p ds9 plot load xy.dat xy<br>
 $xpaset -p ds9 plot save foo.dat<br>
 $xpaset -p ds9 plot current foo<br>

@@ -260,7 +260,7 @@ proc PlotGUIScatter {varname w} {
     global $varname
 
     # Scatter
-    set f [ttk::labelframe $w.scatter -text [msgcat::mc {Scatter}]]
+    set f [ttk::labelframe $w.scatter -text [msgcat::mc {Scatter Dataset}]]
 
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \

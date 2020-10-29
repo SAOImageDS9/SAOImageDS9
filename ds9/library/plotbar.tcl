@@ -244,7 +244,7 @@ proc PlotBarUpdateElement {varname} {
 }
 
 proc PlotPrefsBar {w} {
-    set f [ttk::labelframe $w.bar -text [msgcat::mc {Bar}]]
+    set f [ttk::labelframe $w.bar -text [msgcat::mc {Bar Dataset}]]
 
     ttk::label $f.tborder -text [msgcat::mc {Border}]
     ColorMenuButton $f.bordercolor pap graph,ds,bar,border,color {}

@@ -140,17 +140,12 @@ proc PlotGUICanvas {varname w} {
     global $varname
 
     # Canvas
-    set f [ttk::labelframe $w.canvas -text [msgcat::mc {Canvas}]]
+    set f [ttk::labelframe $w.canvas -text [msgcat::mc {Plot}]]
 
     ttk::label $f.tselect -text [msgcat::mc {Select Graph}]
     ttk::menubutton $f.select -textvariable ${varname}(graph,name) \
 	-menu $f.select.menu
     $var(mb).canvas.select clone $f.select.menu
-
-    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
-
-    # Graph
-    set f [ttk::labelframe $w.graph -text [msgcat::mc {Graph}]]
 
     ttk::button $f.line -text [msgcat::mc {Add Line Graph}] \
 	-command [list PlotAddGraph $varname line]
@@ -161,6 +156,7 @@ proc PlotGUICanvas {varname w} {
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
 
+    grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
     grid $f.line $f.bar -padx 2 -pady 2 -sticky w
     grid $f.scatter $f.delete -padx 2 -pady 2 -sticky w
 
@@ -257,7 +253,7 @@ proc PlotGUICanvas {varname w} {
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
     grid $f.tgrid $f.grid -padx 2 -pady 2 -sticky w
 
-    pack $w.canvas $w.graph $w.layout $w.font $w.color \
+    pack $w.canvas $w.layout $w.font $w.color \
 	-side top -fill both -expand true
 }
 

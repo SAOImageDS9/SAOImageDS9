@@ -12,17 +12,19 @@ class TclFITSY {
   enum Dimension {XY,XYXE,XYYE,XYXEYE};
 
   Tcl_Interp* interp_;
-  
+  FitsFile* fits_;
+
  protected:
   void bltHistogram(char* col, char* xname, char* yname, int num);
-  FitsFile* findFits(const char**);
+  void findFits(const char**);
 
  public:
   TclFITSY(Tcl_Interp*);
   ~TclFITSY();
 
-  //  int parse(int, const char*[]);
   int dir(int, const char*[]);
+  int open(int, const char*[]);
+  int close(int, const char*[]);
   int header(int, const char*[]);
   int isimage(int, const char*[]);
   int istable(int, const char*[]);

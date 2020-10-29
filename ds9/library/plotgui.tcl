@@ -317,29 +317,29 @@ proc PlotGUIGraph {varname w} {
     set f [ttk::labelframe $w.axis -text [msgcat::mc {Axis}]]
 
     ttk::label $f.txaxis -text [msgcat::mc {X Axis}]
-    ttk::checkbutton $f.xgrid -text [msgcat::mc {Grid}] \
-	-variable ${varname}(graph,axis,x,grid) \
-	-command [list PlotChangeAxis $varname]
     ttk::checkbutton $f.xlog -text [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,x,log) \
 	-command [list PlotChangeAxis $varname]
     ttk::checkbutton $f.xflip -text [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,x,flip) \
 	-command [list PlotChangeAxis $varname]
+    ttk::checkbutton $f.xgrid -text [msgcat::mc {Grid}] \
+	-variable ${varname}(graph,axis,x,grid) \
+	-command [list PlotChangeAxis $varname]
 
     ttk::label $f.tyaxis -text [msgcat::mc {Y Axis}]
-    ttk::checkbutton $f.ygrid -text [msgcat::mc {Grid}] \
-	-variable ${varname}(graph,axis,y,grid) \
-	-command [list PlotChangeAxis $varname]
     ttk::checkbutton $f.ylog -text [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,y,log) \
 	-command [list PlotChangeAxis $varname]
     ttk::checkbutton $f.yflip -text [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,y,flip) \
 	-command [list PlotChangeAxis $varname]
+    ttk::checkbutton $f.ygrid -text [msgcat::mc {Grid}] \
+	-variable ${varname}(graph,axis,y,grid) \
+	-command [list PlotChangeAxis $varname]
 
-    grid $f.txaxis $f.xgrid $f.xlog $f.xflip -padx 2 -pady 2 -sticky w
-    grid $f.tyaxis $f.ygrid $f.ylog $f.yflip -padx 2 -pady 2 -sticky w
+    grid $f.txaxis $f.xlog $f.xflip $f.xgrid -padx 2 -pady 2 -sticky w
+    grid $f.tyaxis $f.ylog $f.yflip $f.ygrid -padx 2 -pady 2 -sticky w
 
     # Range
     set f [ttk::labelframe $w.range -text [msgcat::mc {Range}]]

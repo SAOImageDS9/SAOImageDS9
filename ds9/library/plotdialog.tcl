@@ -232,25 +232,25 @@ proc PlotDialog {varname wtt} {
     ThemeMenu $var(mb).graph.select
 
     ThemeMenu $var(mb).graph.xaxis
-    $var(mb).graph.xaxis add checkbutton -label [msgcat::mc {Grid}] \
-	-variable ${varname}(graph,axis,x,grid) \
-	-command [list PlotChangeAxis $varname]
     $var(mb).graph.xaxis add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,x,log) \
 	-command [list PlotChangeAxis $varname]
     $var(mb).graph.xaxis add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,x,flip) \
 	-command [list PlotChangeAxis $varname]
+    $var(mb).graph.xaxis add checkbutton -label [msgcat::mc {Grid}] \
+	-variable ${varname}(graph,axis,x,grid) \
+	-command [list PlotChangeAxis $varname]
 
     ThemeMenu $var(mb).graph.yaxis
-    $var(mb).graph.yaxis add checkbutton -label [msgcat::mc {Grid}] \
-	-variable ${varname}(graph,axis,y,grid) \
-	-command [list PlotChangeAxis $varname]
     $var(mb).graph.yaxis add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,y,log) \
 	-command [list PlotChangeAxis $varname]
     $var(mb).graph.yaxis add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,y,flip) \
+	-command [list PlotChangeAxis $varname]
+    $var(mb).graph.yaxis add checkbutton -label [msgcat::mc {Grid}] \
+	-variable ${varname}(graph,axis,y,grid) \
 	-command [list PlotChangeAxis $varname]
 
     ThemeMenu $var(mb).graph.legend

@@ -13,7 +13,6 @@ proc PrismDef {} {
 
     set iprism(mincols) 10
     set iprism(minrows) 20
-#    set iprism(block) 10000
     set iprism(block) 1000
 }
 
@@ -345,22 +344,17 @@ proc PrismDialogUpdate {varname} {
     $var(mb).table entryconfig [msgcat::mc {Plot}] -state disabled
     $var(mb).table entryconfig [msgcat::mc {Histogram}] -state disabled
 
-    $var(mb).table entryconfig [msgcat::mc {First}] -state disabled
-    $var(mb).table entryconfig [msgcat::mc {Next}] -state disabled
-    $var(mb).table entryconfig [msgcat::mc {Previous}] -state disabled
-    $var(mb).table entryconfig [msgcat::mc {Last}] -state disabled
-    $var(mb).table entryconfig "[msgcat::mc {Goto}]..." -state disabled
+    $var(mb).table entryconfig [msgcat::mc {First Block}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Next Block}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Previous Block}] -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Last Block}] -state disabled
+    $var(mb).table entryconfig "[msgcat::mc {Goto Row}]..." -state disabled
 
     $bb.clear configure -state disabled
     $bb.image configure -state disabled
 
     $bb.plot configure -state disabled
     $bb.histogram configure -state disabled
-
-    $bb.first configure -state disabled
-    $bb.next configure -state disabled
-    $bb.prev configure -state disabled
-    $bb.last configure -state disabled
 
     if {$var(fn) == {}} {
 	return
@@ -374,26 +368,30 @@ proc PrismDialogUpdate {varname} {
 	    $var(mb).file entryconfig [msgcat::mc {Image}] -state normal
 	    $bb.image configure -state normal
 
+	    # open extension
+	    fitsy open $var(fn) $var(load) $var(ext)
+
 	    if {[fitsy istable]} {
 		$var(mb).table entryconfig [msgcat::mc {Plot}] -state normal
 		$var(mb).table entryconfig [msgcat::mc {Histogram}] \
 		    -state normal
 
-		$var(mb).table entryconfig [msgcat::mc {First}] -state normal
-		$var(mb).table entryconfig [msgcat::mc {Next}] -state normal
-		$var(mb).table entryconfig [msgcat::mc {Previous}] -state normal
-		$var(mb).table entryconfig [msgcat::mc {Last}] -state normal
-		$var(mb).table entryconfig "[msgcat::mc {Goto}]..." \
+		$var(mb).table entryconfig [msgcat::mc {First Block}] \
+		    -state normal
+		$var(mb).table entryconfig [msgcat::mc {Next Block}] \
+		    -state normal
+		$var(mb).table entryconfig [msgcat::mc {Previous Block}] \
+		    -state normal
+		$var(mb).table entryconfig [msgcat::mc {Last Block}] \
+		    -state normal
+		$var(mb).table entryconfig "[msgcat::mc {Goto Row}]..." \
 		    -state normal
 
 		$bb.plot configure -state normal
 		$bb.histogram configure -state normal
-
-		$bb.first configure -state normal
-		$bb.next configure -state normal
-		$bb.prev configure -state normal
-		$bb.last configure -state normal
 	    }
+
+	    fitsy close
 	}
 	ascii {
 	    $var(mb).file entryconfig [msgcat::mc {Image}] -state disabled
@@ -657,10 +655,14 @@ proc PrismPlot {varname} {
 
     switch $var(type) {
 	fits {
+	    # open extension
+	    fitsy open $var(fn) $var(load) $var(ext)
 	    if {![fitsy istable]} {
+		fitsy close
 		Error "Current extension is not a table"
 		return
 	    }
+	    fitsy close
 	}
 	ascii {}
     }
@@ -888,6 +890,9 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
     upvar $txxname txx
     upvar $tyyname tyy
 
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
+
     if {[catch {
     switch $dim {
 	xy {
@@ -928,6 +933,7 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
 	}
     }
     }]} {
+	fitsy close
 	return -code error
     }
 
@@ -947,6 +953,8 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
 	    append tyy " ($unit)"
 	}
     }
+
+    fitsy close
 }
 
 proc PrismPlotGenerateAscii {varname vvarname dim xdata ydata xedata yedata txxname tyyname} {
@@ -1030,10 +1038,14 @@ proc PrismHistogram {varname} {
 
     switch $var(type) {
 	fits {
+	    # open extension
+	    fitsy open $var(fn) $var(load) $var(ext)
 	    if {![fitsy istable]} {
+		fitsy close
 		Error "Current extension is not a table"
 		return
 	    }
+	    fitsy close
 	}
 	ascii {}
     }
@@ -1143,10 +1155,13 @@ proc PrismHistogramMinMax {varname} {
 
     switch $var(type) {
 	fits {
+	    # open extension
+	    fitsy open $var(fn) $var(load) $var(ext)
 	    if {[catch {fitsy minmax $ed(col) ed} ]} {
 		set ed(min) 0
 		set ed(max) 0
 	    }
+	    fits close
 	}
 	ascii {PrismHistogramMinMaxAscii $varname $ed(col) ed(min) ed(max)}
     }
@@ -1265,9 +1280,13 @@ proc PrismHistogramGenerateFits {varname xdata ydata} {
     global $varname
     global $xdata $ydata
 
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
     if {[catch {fitsy histogram $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
+	fitsy close
 	return -code error
     }
+    fitsy close
 }
 
 proc PrismHistogramGenerateAscii {varname xdata ydata} {
@@ -1337,9 +1356,6 @@ proc PrismSetExt {varname ext} {
     global $varname
 
     $var(dir) selection set $ext
-
-    # open extension
-    fitsy open $var(fn) $var(load) $var(ext)
 
     # let dialog catchup
     update
@@ -1446,6 +1462,7 @@ proc PrismExtFitsCmd {varname} {
     } else {
 	set var(rows) 0
     }
+    fitsy close
 
     PrismTable $varname
 }
@@ -1480,10 +1497,14 @@ proc PrismTableNext {varname} {
 	return
     }
     
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
     if {![fitsy istable]} {
+	fitsy close
 	Error "Current extension is not a table"
 	return
     }
+    fitsy close
     
     set var(start) [expr $var(start)+$iprism(block)]
     if {$var(start) > $var(rows)} {
@@ -1510,10 +1531,14 @@ proc PrismTablePrev {varname} {
 	return
     }
 
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
     if {![fitsy istable]} {
+	fitsy close
 	Error "Current extension is not a table"
 	return
     }
+    fitsy close
     
     set var(start) [expr $var(start)-$iprism(block)]
     if {$var(start) < 0} {
@@ -1540,10 +1565,14 @@ proc PrismTableLast {varname} {
 	return
     }
 
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
     if {![fitsy istable]} {
+	fitsy close
 	Error "Current extension is not a table"
 	return
     }
+    fitsy close
     
     set aa [expr int($var(rows)/$iprism(block))]
     set var(start) [expr $aa*$iprism(block)]
@@ -1566,10 +1595,13 @@ proc PrismTableGotoQuery {varname} {
 	return
     }
 
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
     if {![fitsy istable]} {
 	Error "Current extension is not a table"
 	return
     }
+    fitsy close
     
     if {[PrismTableGotoDialog $varname]} {
 	PrismTableGoto $varname
@@ -1593,10 +1625,14 @@ proc PrismTableGoto {varname} {
 	return
     }
 
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
     if {![fitsy istable]} {
+	fitsy close
 	Error "Current extension is not a table"
 	return
     }
+    fitsy close
     
     # santity check
     if {$var(goto) < 1} {
@@ -1697,7 +1733,12 @@ proc PrismTable {varname} {
 	unset $var(tbldb)
     }
 
+    # open extension
+    fitsy open $var(fn) $var(load) $var(ext)
+
     if {![fitsy istable]} {
+	fitsy close
+
 	$var(tbl) configure -rows $iprism(minrows)
 	$var(tbl) see 1,1
 
@@ -1730,6 +1771,8 @@ proc PrismTable {varname} {
     set var(xx) [lindex [starbase_columns $var(tbldb)] 1]
     set var(yy) [lindex [starbase_columns $var(tbldb)] 2]
 
+    fitsy close
+    
     PrismDialogUpdate $varname
 }
 
@@ -1805,9 +1848,6 @@ proc PrismCmdExt {ext} {
     if {$ext >= 0 && $ext <= $cvar(extnum)} {
 	$cvar(dir) selection set $ext
 
-	# open extension
-	fitsy open $cvar(fn) $cvar(load) $cvar(ext)
-
 	# let dialog catchup
 	update
     } else {
@@ -1823,9 +1863,6 @@ proc PrismCmdExtName {extname} {
     set ext [lsearch $cvar(extnames) $extname]
     if {$ext >= 0} {
 	$cvar(dir) selection set $ext
-
-	# open extension
-	fitsy open $cvar(fn) $cvar(load) $cvar(ext)
 
 	# let dialog catchup
 	update

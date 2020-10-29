@@ -101,6 +101,7 @@ proc PlotBackupLoadFile {varname fn} {
 	PlotUpdateCanvas $varname
 	PlotUpdateGraph $varname
 	PlotUpdateMenus $varname
+	PlotUpdateGUI $varname
     }
 }
 

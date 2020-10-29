@@ -687,46 +687,37 @@ proc PlotUpdateMenus {varname} {
 	grid -
 	row -
 	column {
-	    $var(mb).graph.xaxis entryconfig [msgcat::mc {Grid}] -state normal
 	    $var(mb).graph.xaxis entryconfig [msgcat::mc {Log}] -state normal
 	    $var(mb).graph.xaxis entryconfig [msgcat::mc {Flip}] -state normal
+	    $var(mb).graph.xaxis entryconfig [msgcat::mc {Grid}] -state normal
 
-	    $var(mb).graph.yaxis entryconfig [msgcat::mc {Grid}] -state normal
 	    $var(mb).graph.yaxis entryconfig [msgcat::mc {Log}] -state normal
 	    $var(mb).graph.yaxis entryconfig [msgcat::mc {Flip}] -state normal
+	    $var(mb).graph.yaxis entryconfig [msgcat::mc {Grid}] -state normal
 	}
 	strip {
 	    set cc $var(graph,current)
 	    set first [lindex $var(graphs) 0]
 	    if {$cc == $first} {
-		$var(mb).graph.xaxis entryconfig [msgcat::mc {Grid}] \
-		    -state normal
 		$var(mb).graph.xaxis entryconfig [msgcat::mc {Log}] \
 		    -state normal
 		$var(mb).graph.xaxis entryconfig [msgcat::mc {Flip}] \
 		    -state normal
+		$var(mb).graph.xaxis entryconfig [msgcat::mc {Grid}] \
+		    -state normal
 
-		$var(mb).graph.yaxis entryconfig [msgcat::mc {Grid}] \
-		    -state normal
-		$var(mb).graph.yaxis entryconfig [msgcat::mc {Log}] \
-		    -state normal
-		$var(mb).graph.yaxis entryconfig [msgcat::mc {Flip}] \
-		    -state normal
 	    } else {
-		$var(mb).graph.xaxis entryconfig [msgcat::mc {Grid}] \
-		    -state disabled
 		$var(mb).graph.xaxis entryconfig [msgcat::mc {Log}] \
 		    -state disabled
 		$var(mb).graph.xaxis entryconfig [msgcat::mc {Flip}] \
 		    -state disabled
-
-		$var(mb).graph.yaxis entryconfig [msgcat::mc {Grid}] \
-		    -state disabled
-		$var(mb).graph.yaxis entryconfig [msgcat::mc {Log}] \
-		    -state disabled
-		$var(mb).graph.yaxis entryconfig [msgcat::mc {Flip}] \
+		$var(mb).graph.xaxis entryconfig [msgcat::mc {Grid}] \
 		    -state disabled
 	    }
+
+	    $var(mb).graph.yaxis entryconfig [msgcat::mc {Log}] -state normal
+	    $var(mb).graph.yaxis entryconfig [msgcat::mc {Flip}] -state normal
+	    $var(mb).graph.yaxis entryconfig [msgcat::mc {Grid}] -state normal
 	}
     }
 

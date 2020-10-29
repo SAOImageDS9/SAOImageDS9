@@ -106,6 +106,7 @@ proc PlotGUI {varname} {
     bind $w <<Close>> [list PlotGUIDestroy $varname]
 
     PlotGUICurrentGraph $varname
+    PlotUpdateGUI $varname
 }
 
 proc PlotGUIDestroy {varname} {
@@ -133,6 +134,7 @@ proc PlotGUIApply {varname} {
     PlotUpdateCanvas $varname
     PlotUpdateGraph $varname
     PlotUpdateMenus $varname
+    PlotUpdateGUI $varname
 }
 
 proc PlotGUICanvas {varname w} {
@@ -419,6 +421,53 @@ proc PlotGUICurrentGraph {varname} {
 	    line {pack $w.line}
 	    bar {pack $w.bar}
 	    scatter {pack $w.scatter}
+	}
+    }
+}
+
+proc PlotUpdateGUI {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![winfo exists $var(gui,top)]} {
+	return
+    }
+
+    set f $var(gui,top).param.graph.axis
+    switch $var(canvas,layout) {
+	grid -
+	row -
+	column {
+	    $f.xlog configure -state normal
+	    $f.xflip configure -state normal
+	    $f.xgrid configure -state normal
+	}
+	strip {
+	    set cc $var(graph,current)
+	    set first [lindex $var(graphs) 0]
+	    if {$cc == $first} {
+		$f.xlog configure -state normal
+		$f.xflip configure -state normal
+		$f.xgrid configure -state normal
+	    } else {
+		$f.xlog configure -state disabled
+		$f.xflip configure -state disabled
+		$f.xgrid configure -state disabled
+	    }
+	}
+    }
+
+    set f $var(gui,top).param.graph.dataset
+    if {[llength $var(graph,dss)] == 0} {
+	$f.duplicate configure -state disabled
+	$f.delete configure -state disabled
+    } else {
+	$f.duplicate configure -state normal
+
+	if {!$var(graph,ds,manage)} {
+	    $f.delete configure -state disabled
+	} else {
+	    $f.delete configure -state normal
 	}
     }
 }

@@ -123,6 +123,7 @@ proc PlotAddGraph {varname type} {
     PlotUpdateCanvas $varname
     PlotUpdateGraph $varname
     PlotUpdateMenus $varname
+    PlotUpdateGUI $varname
 
     PlotStats $varname
     PlotList $varname
@@ -191,6 +192,7 @@ proc PlotDeleteGraph {varname} {
     PlotUpdateCanvas $varname
     PlotUpdateGraph $varname
     PlotUpdateMenus $varname
+    PlotUpdateGUI $varname
 
     PlotStats $varname
     PlotList $varname
@@ -226,6 +228,7 @@ proc PlotAddElement {varname} {
     # update menus
     $var(graph,proc,updateelement) $varname
     PlotUpdateMenus $varname
+    PlotUpdateGUI $varname
 
     PlotStats $varname
     PlotList $varname
@@ -303,6 +306,7 @@ proc PlotDeleteDataSet {varname} {
     # update menus
     $var(graph,proc,updateelement) $varname
     PlotUpdateMenus $varname
+    PlotUpdateGUI $varname
 
     PlotStats $varname
     PlotList $varname
@@ -319,6 +323,7 @@ proc PlotCurrentGraph {varname} {
 
     PlotRestoreState $varname
     PlotUpdateMenus $varname
+    PlotUpdateGUI $varname
 
     PlotStats $varname
     PlotList $varname
@@ -397,6 +402,7 @@ proc PlotChangeLayout {varname} {
     set var(graph,ds,current) $nn
     PlotRestoreState $varname
     PlotUpdateMenus $varname
+    PlotUpdateGUI $varname
 
     PlotLayoutCanvas $varname
     PlotChangeMode $varname

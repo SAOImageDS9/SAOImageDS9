@@ -18,6 +18,10 @@
 
 void Base::axesOrderCmd(int order)
 {
+  // if same do nothing
+  if (order == currentContext->axesOrder())
+    return;
+  
   currentContext->setAxesOrder(order);
   if (currentContext->fits) {
     if (!preserveMarkers) {

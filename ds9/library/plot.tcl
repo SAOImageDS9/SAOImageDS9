@@ -346,6 +346,8 @@ proc PlotChangeAxis {varname} {
     upvar #0 $varname var
     global $varname
 
+    DumpCallStack
+    
     switch $var(canvas,layout) {
 	grid -
 	column -

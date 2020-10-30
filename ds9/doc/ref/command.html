@@ -1747,7 +1747,7 @@ $ds9 -print resolution 96</tt>
 &nbsp;&nbsp;&nbsp;&nbsp; [goto &lt;int&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt; [&lt;min&gt; &lt;max&gt;]]<br>
-&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter new|over]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter newplot|newgraph|overplot]<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -prism<br>
@@ -1765,9 +1765,9 @@ $ds9 -prism goto 20345<br>
 $ds9 -prism image<br>
 $ds9 -prism histogram RAWX 40<br>
 $ds9 -prism histogram RAWX 40 0 100<br>
-$ds9 -prism plot RAWX RAWY scatter new<br>
-$ds9 -prism plot RAWX RAWY PHA scatter new<br>
-$ds9 -prism plot RAWX RAWY PHA PHI scatter new<br></tt>
+$ds9 -prism plot RAWX RAWY scatter newgraph<br>
+$ds9 -prism plot RAWX RAWY PHA scatter newgraph<br>
+$ds9 -prism plot RAWX RAWY PHA PHI scatter newgraph<br></tt>
 
 <p><b><a name="raise" id="raise"></a>raise</b></p>
 <p>Raise in the window stacking order.</p>

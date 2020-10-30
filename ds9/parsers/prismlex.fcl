@@ -29,8 +29,9 @@ line		{return $LINE_}
 bar		{return $BAR_}
 scatter		{return $SCATTER_}
 
-new		{return $NEW_}
-over		{return $OVER_}
+newplot		{return $NEWPLOT_}
+newgraph	{return $NEWGRAPH_}
+overplot	{return $OVERPLOT_}
 
 vot		{return $VOT_}
 xml		{return $XML_}

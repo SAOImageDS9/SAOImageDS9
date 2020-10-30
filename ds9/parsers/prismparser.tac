@@ -27,8 +27,9 @@
 %token BAR_
 %token SCATTER_
 
-%token NEW_
-%token OVER_
+%token NEWPLOT_
+%token NEWGRAPH_
+%token OVERPLOT_
 
 %token VOT_
 %token XML_
@@ -83,8 +84,9 @@ type : LINE_ {set _ line}
  | SCATTER_ {set _ scatter}
  ;
 
-mode : NEW_ {set _ newplot}
- | OVER_ {set _ overplot}
+mode : NEWPLOT_ {set _ newplot}
+ | NEWGRAPH_ {set _ newgraph}
+ | OVERPLOT_ {set _ newdataset}
  ;
  
 cols : STRING_ {set _ $1}

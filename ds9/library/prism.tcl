@@ -794,10 +794,10 @@ proc PrismPlotGenerate {varname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set xdata ${vvarname}xx$var(plot,data,seq)
-    set ydata ${vvarname}yy$var(plot,data,seq)
-    set xedata ${vvarname}xe$var(plot,data,seq)
-    set yedata ${vvarname}ye$var(plot,data,seq)
+    set xdata ${vvarname}xx$var(plot,data,seq)${varname}
+    set ydata ${vvarname}yy$var(plot,data,seq)${varname}
+    set xedata ${vvarname}xe$var(plot,data,seq)${varname}
+    set yedata ${vvarname}ye$var(plot,data,seq)${varname}
     incr ${varname}(plot,data,seq)
 
     global $xdata $ydata

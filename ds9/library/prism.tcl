@@ -653,20 +653,6 @@ proc PrismPlot {varname} {
 	return
     }
 
-    switch $var(type) {
-	fits {
-	    # open extension
-	    fitsy open $var(fn) $var(load) $var(ext)
-	    if {![fitsy istable]} {
-		fitsy close
-		Error "Current extension is not a table"
-		return
-	    }
-	    fitsy close
-	}
-	ascii {}
-    }
-
     set w ".${varname}plot"
     set mb ".${varname}plotmb"
 
@@ -1036,20 +1022,6 @@ proc PrismHistogram {varname} {
 	return
     }
 
-    switch $var(type) {
-	fits {
-	    # open extension
-	    fitsy open $var(fn) $var(load) $var(ext)
-	    if {![fitsy istable]} {
-		fitsy close
-		Error "Current extension is not a table"
-		return
-	    }
-	    fitsy close
-	}
-	ascii {}
-    }
-
     global ed
 
     set w ".${varname}hist"
@@ -1161,7 +1133,7 @@ proc PrismHistogramMinMax {varname} {
 		set ed(min) 0
 		set ed(max) 0
 	    }
-	    fits close
+	    fitsy close
 	}
 	ascii {PrismHistogramMinMaxAscii $varname $ed(col) ed(min) ed(max)}
     }
@@ -1497,15 +1469,6 @@ proc PrismTableNext {varname} {
 	return
     }
     
-    # open extension
-    fitsy open $var(fn) $var(load) $var(ext)
-    if {![fitsy istable]} {
-	fitsy close
-	Error "Current extension is not a table"
-	return
-    }
-    fitsy close
-    
     set var(start) [expr $var(start)+$iprism(block)]
     if {$var(start) > $var(rows)} {
 	PrismTableLast $varname
@@ -1531,15 +1494,6 @@ proc PrismTablePrev {varname} {
 	return
     }
 
-    # open extension
-    fitsy open $var(fn) $var(load) $var(ext)
-    if {![fitsy istable]} {
-	fitsy close
-	Error "Current extension is not a table"
-	return
-    }
-    fitsy close
-    
     set var(start) [expr $var(start)-$iprism(block)]
     if {$var(start) < 0} {
 	PrismTableFirst $varname
@@ -1565,15 +1519,6 @@ proc PrismTableLast {varname} {
 	return
     }
 
-    # open extension
-    fitsy open $var(fn) $var(load) $var(ext)
-    if {![fitsy istable]} {
-	fitsy close
-	Error "Current extension is not a table"
-	return
-    }
-    fitsy close
-    
     set aa [expr int($var(rows)/$iprism(block))]
     set var(start) [expr $aa*$iprism(block)]
     PrismTable $varname
@@ -1595,14 +1540,6 @@ proc PrismTableGotoQuery {varname} {
 	return
     }
 
-    # open extension
-    fitsy open $var(fn) $var(load) $var(ext)
-    if {![fitsy istable]} {
-	Error "Current extension is not a table"
-	return
-    }
-    fitsy close
-    
     if {[PrismTableGotoDialog $varname]} {
 	PrismTableGoto $varname
     }
@@ -1625,15 +1562,6 @@ proc PrismTableGoto {varname} {
 	return
     }
 
-    # open extension
-    fitsy open $var(fn) $var(load) $var(ext)
-    if {![fitsy istable]} {
-	fitsy close
-	Error "Current extension is not a table"
-	return
-    }
-    fitsy close
-    
     # santity check
     if {$var(goto) < 1} {
 	set var(goto) 1

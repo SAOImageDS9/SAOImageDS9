@@ -785,8 +785,8 @@ proc MatchScaleLimits {which} {
     global rgb
     global scale
 
-    set limits [$which get clip]
     set mode user
+    set limits [$which get clip]
     set type [$which get colorscale]
     set log  [$which get colorscale log]
     set scope [$which get clip scope]
@@ -796,18 +796,17 @@ proc MatchScaleLimits {which} {
     set zssample [$which get clip zscale sample]
     set zsline [$which get clip zscale line]
 
+    # do all frames as we are changing mode to user
     foreach ff $ds9(frames) {
-	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,scalelimits) $ff [list $ff colorscale $type]
-	    RGBEvalLock rgb(lock,scalelimits) $ff [list $ff colorscale log $log]
-	    RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip user $limits]
-	    RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip mode $mode]
-	    RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip scope $scope]
-	    RGBEvalLock rgb(lock,scalelimits) $ff \
-		[list $ff clip minmax $mmsample $mmmode]
-	    RGBEvalLock rgb(lock,scalelimits) $ff \
-		[list $ff clip zscale $zscontrast $zssample $zsline]
-	}
+	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip mode $mode]
+	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip user $limits]
+	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff colorscale $type]
+	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff colorscale log $log]
+	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip scope $scope]
+	RGBEvalLock rgb(lock,scalelimits) $ff \
+	    [list $ff clip minmax $mmsample $mmmode]
+	RGBEvalLock rgb(lock,scalelimits) $ff \
+	    [list $ff clip zscale $zscontrast $zssample $zsline]
     }
 }
 

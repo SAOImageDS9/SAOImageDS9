@@ -56,12 +56,17 @@ proc PrismDialog {varname} {
 
     set var(search) {}
 
+    set var(theme,colors) 1
+
     set var(bar,col) {}
     set var(bar,num) 10
     set var(bar,min) 0
     set var(bar,max) 0
     set var(bar,minmax) 1
     set var(bar,width) 1
+
+    set var(bar,border,color) blue
+    set var(bar,color) white
 
     set var(xx) {}
     set var(yy) {}
@@ -1035,6 +1040,11 @@ proc PrismHistogram {varname} {
     set ed(min) $var(bar,min)
     set ed(max) $var(bar,max)
 
+    set ed(bar,border,color) $var(bar,border,color)
+    set ed(bar,color) $var(bar,color)
+
+    set ed(theme,colors) $var(theme,colors)
+
     set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Histogram}] ed(ok)
@@ -1069,6 +1079,19 @@ proc PrismHistogram {varname} {
     ttk::label $f.tmax -text [msgcat::mc {Max}]
     ttk::entry $f.max -textvariable ed(max) -width 13
 
+    ttk::label $f.tbordercolor -text [msgcat::mc {Border}]
+    ttk::menubutton $f.bordercolor \
+	-textvariable ed(bar,border,color) \
+	-menu $f.bordercolor.menu
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::menubutton $f.color \
+	-textvariable ed(bar,color) \
+	-menu $f.color.menu
+
+    ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
+	-variable ed(theme,colors)
+
     ttk::radiobutton $f.newplot -text [msgcat::mc {New Plot}] \
 	-variable ed(plot,mode) -value newplot
     ttk::radiobutton $f.newgraph -text [msgcat::mc {New Graph}] \
@@ -1080,6 +1103,9 @@ proc PrismHistogram {varname} {
     grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
     grid $f.tmin $f.min -padx 2 -pady 2 -sticky ew
     grid $f.tmax $f.max -padx 2 -pady 2 -sticky ew
+    grid $f.tbordercolor $f.bordercolor -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
+    grid x $f.theme -padx 2 -pady 2 -sticky ew
     grid x $f.newplot $f.newgraph $f.newdataset -padx 2 -pady 2 -sticky ew
 
     # Buttons
@@ -1108,6 +1134,11 @@ proc PrismHistogram {varname} {
 	set var(bar,min) $ed(min)
 	set var(bar,max) $ed(max)
 	set var(bar,minmax) 1
+
+	set var(bar,border,color) $ed(bar,border,color)
+	set var(bar,color) $ed(bar,color)
+	
+	set var(theme,colors) $ed(theme,colors)
 
 	set var(plot,mode) $ed(plot,mode)
 
@@ -1240,7 +1271,11 @@ proc PrismHistogramGenerate {varname} {
     PlotExternal $vvarname xy
     PlotDataSetName $vvarname "$var(extname) $var(bar,col)"
 
-    set vvar(canvas,theme) 1
+    set vvar(graph,ds,bar,border,color) $var(bar,border,color)
+    set vvar(graph,ds,bar,color) $var(bar,color)
+    PlotBarUpdateElement $vvarname
+    
+    set vvar(canvas,theme) $var(theme,colors)
     PlotUpdateAllElement $vvarname
 
     PlotStats $vvarname

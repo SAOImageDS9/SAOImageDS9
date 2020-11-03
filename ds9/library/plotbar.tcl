@@ -305,12 +305,16 @@ proc PlotGUIBar {varname w} {
 	-menu $f.color.menu
     $var(mb).databar.color clone $f.color.menu
 
+    ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
+	-variable ${varname}(graph,ds,bar,fill) \
+	-command [list PlotBarUpdateElement $varname]
+
     ttk::label $f.twidth -text [msgcat::mc {Width}]
     ttk::entry $f.width -textvariable ${varname}(graph,ds,bar,width) -width 7
 
     grid $f.tbordercolor $f.bordercolor $f.tborderwidth $f.borderwidth \
 	-padx 2 -pady 2 -sticky ew
-    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color $f.fill -padx 2 -pady 2 -sticky ew
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
 
     # Errorbar

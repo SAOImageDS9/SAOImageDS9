@@ -58,7 +58,20 @@ proc PrismDialog {varname} {
 
     set var(theme,colors) 1
 
-    set var(bar,col) {}
+    set var(xx) {}
+    set var(yy) {}
+    set var(xerr) {}
+    set var(yerr) {}
+
+    set var(line,color) blue
+    set var(line,width) 1
+    set var(line,dash) 0
+    set var(line,shape) circle
+    set var(line,shape,color) blue
+    set var(line,shape,fill) 1
+
+    set var(col) {}
+
     set var(bar,num) 10
     set var(bar,min) 0
     set var(bar,max) 0
@@ -69,15 +82,9 @@ proc PrismDialog {varname} {
     set var(bar,color) white
     set var(bar,fill) 1
 
-    set var(xx) {}
-    set var(yy) {}
-    set var(xerr) {}
-    set var(yerr) {}
-
     set var(plot,seq) 0
     set var(plot,data,seq) 0
     set var(plot,mode) newplot
-    set var(plot,type) scatter
 
     # create the window
     set w $var(top)
@@ -584,7 +591,7 @@ proc PrismImportFn {varname fn reader} {
     $var(tbl) see 1,1
 
     # set default cols
-    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 0]
+    set var(col) [lindex [starbase_columns $var(tbldb)] 0]
     set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
     set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
 
@@ -631,7 +638,6 @@ proc PrismClear {varname} {
     set var(plot,seq) 0
     set var(plot,data,seq) 0
     set var(plot,mode) newplot
-    set var(plot,type) scatter
 
     # header
     $var(text) delete 1.0 end
@@ -670,7 +676,15 @@ proc PrismPlot {varname} {
     set ed(xerr) $var(xerr)
     set ed(yerr) $var(yerr)
 
-    set ed(plot,type) $var(plot,type)
+    set ed(theme,colors) $var(theme,colors)
+
+    set ed(line,color) $var(line,color)
+    set ed(line,width) $var(line,width)
+    set ed(line,dash) $var(line,dash)
+    set ed(line,shape) $var(line,shape)
+    set ed(line,shape,color) $var(line,shape,color)
+    set ed(line,shape,fill) $var(line,shape,fill)
+
     set ed(plot,mode) $var(plot,mode)
 
     DialogCreate $w [msgcat::mc {Plot}] ed(ok)
@@ -688,21 +702,10 @@ proc PrismPlot {varname} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     EditMenu $mb ed
 
-    # param
-    set f [ttk::frame $w.param]
+    set g [ttk::frame $w.param]
 
-    ttk::label $f.ttype -text [msgcat::mc {Plot Type}]
-    ttk::menubutton $f.type -textvariable ed(plot,type) -menu $f.type.menu
-
-    set m $f.type.menu
-    ThemeMenu $m
-    $m configure -tearoff 0
-    $m add command -label [msgcat::mc {Line}] \
-	-command "set ed(plot,type) line"
-    $m add command -label [msgcat::mc {Bar}] \
-	-command "set ed(plot,type) bar"
-    $m add command -label [msgcat::mc {Scatter}] \
-	-command "set ed(plot,type) scatter"
+    # Params
+    set f [ttk::labelframe $g.plot -text [msgcat::mc {Parameters}]]
 
     ttk::label $f.txx -text [msgcat::mc {X Column}]
     ttk::menubutton $f.xx -textvariable ed(xx) -menu $f.xx.menu
@@ -721,6 +724,39 @@ proc PrismPlot {varname} {
     PrismColsMenu $varname $f.xerr xerr {}
     PrismColsMenu $varname $f.yerr yerr {}
 
+    grid $f.txx $f.xx $f.txerr $f.xerr -padx 2 -pady 2 -sticky ew
+    grid $f.tyy $f.yy $f.tyerr $f.yerr -padx 2 -pady 2 -sticky ew
+
+    # Properties
+    set f [ttk::labelframe $g.prop -text [msgcat::mc {Properties}]]
+
+    ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
+	-variable ed(theme,colors)
+
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ColorMenuButton $f.color ed line,color {}
+
+    ttk::label $f.twidth -text [msgcat::mc {Width}]
+    WidthDashMenuButton $f.width ed line,width line,dash {} {}
+
+    ttk::label $f.tshape -text [msgcat::mc {Shape}]
+    ttk::menubutton $f.shape -textvariable ed(line,shape) -menu $f.shape.menu
+    PlotLineShapeMenu $f.shape.menu ed(line,shape) {}
+
+    ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
+    ColorMenuButton $f.shapecolor ed line,shape,color {}
+
+    ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
+	-variable ed(line,shape,fill)
+
+    grid $f.theme - -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color $f.twidth $f.width -padx 2 -pady 2 -sticky ew
+    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
+	-padx 2 -pady 2 -sticky ew
+
+    # Mode
+    set f [ttk::labelframe $g.mode -text [msgcat::mc {Behavior}]]
+
     ttk::radiobutton $f.newplot -text [msgcat::mc {New Plot}] \
 	-variable ed(plot,mode) -value newplot
     ttk::radiobutton $f.newgraph -text [msgcat::mc {New Graph}] \
@@ -728,10 +764,9 @@ proc PrismPlot {varname} {
     ttk::radiobutton $f.newdataset -text [msgcat::mc {Overplot}] \
 	-variable ed(plot,mode) -value newdataset
 
-    grid $f.ttype $f.type -padx 2 -pady 2 -sticky ew
-    grid $f.txx $f.xx $f.txerr $f.xerr -padx 2 -pady 2 -sticky ew
-    grid $f.tyy $f.yy $f.tyerr $f.yerr -padx 2 -pady 2 -sticky ew
     grid x $f.newplot $f.newgraph $f.newdataset -padx 2 -pady 2 -sticky ew
+
+    pack $g.plot $g.prop $g.mode -side top -fill both -expand true
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -757,7 +792,15 @@ proc PrismPlot {varname} {
 	set var(xerr) $ed(xerr)
 	set var(yerr) $ed(yerr)
 
-	set var(plot,type) $ed(plot,type)
+	set var(theme,colors) $ed(theme,colors)
+
+	set var(line,color) $ed(line,color)
+	set var(line,width) $ed(line,width)
+	set var(line,dash) $ed(line,dash)
+	set var(line,shape) $ed(line,shape)
+	set var(line,shape,color) $ed(line,shape,color)
+	set var(line,shape,fill) $ed(line,shape,fill)
+
 	set var(plot,mode) $ed(plot,mode)
 
 	if {$ed(xx) != {} && $ed(yy) != {}} {
@@ -832,20 +875,20 @@ proc PrismPlotGenerate {varname} {
     switch $var(plot,mode) {
 	newplot {
 	    PlotDialog $vvarname "[string totitle $varname] Plot"
-	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotAddGraph $vvarname line
 	    PlotTitle $vvarname $var(extname) $txx $tyy
 	}
 	newgraph {
 	    if {![PlotPing $vvarname]} {
 		PlotDialog $vvarname "[string totitle $varname] Plot"
 	    }
-	    PlotAddGraph $vvarname $var(plot,type)
+	    PlotAddGraph $vvarname line
 	    PlotTitle $vvarname $var(extname) $txx $tyy
 	}
 	newdataset {
 	    if {![PlotPing $vvarname]} {
 		PlotDialog $vvarname "[string totitle $varname] Plot"
-		PlotAddGraph $vvarname $var(plot,type)
+		PlotAddGraph $vvarname line
 		PlotTitle $vvarname $var(extname) $txx $tyy
 	    }
 	}
@@ -866,7 +909,15 @@ proc PrismPlotGenerate {varname} {
     PlotExternal $vvarname $dim
     PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
 
-    set vvar(canvas,theme) 1
+    set vvar(graph,ds,line,color) $var(line,color)
+    set vvar(graph,ds,line,width) $var(line,width)
+    set vvar(graph,ds,line,dash) $var(line,dash)
+    set vvar(graph,ds,line,shape,symbol) $var(line,shape)
+    set vvar(graph,ds,line,shape,color) $var(line,shape,color)
+    set vvar(graph,ds,line,shape,fill) $var(line,shape,fill)
+    PlotLineUpdateElement $vvarname
+
+    set vvar(canvas,theme) $var(theme,colors)
     PlotUpdateAllElement $vvarname
 
     PlotStats $vvarname
@@ -1036,7 +1087,7 @@ proc PrismHistogram {varname} {
     set ed(top) $w
     set ed(ok) 0
 
-    set ed(col) $var(bar,col)
+    set ed(col) $var(col)
     set ed(num) $var(bar,num)
     set ed(min) $var(bar,min)
     set ed(max) $var(bar,max)
@@ -1066,6 +1117,7 @@ proc PrismHistogram {varname} {
 
     set g [ttk::frame $w.param]
 
+    # Params
     set f [ttk::labelframe $g.hist -text [msgcat::mc {Parameters}]]
 
     ttk::label $f.tcol -text [msgcat::mc {Column}]
@@ -1087,29 +1139,27 @@ proc PrismHistogram {varname} {
     grid $f.tmin $f.min -padx 2 -pady 2 -sticky ew
     grid $f.tmax $f.max -padx 2 -pady 2 -sticky ew
 
+    # Properties
     set f [ttk::labelframe $g.prop -text [msgcat::mc {Properties}]]
 
     ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
 	-variable ed(theme,colors)
 
     ttk::label $f.tbordercolor -text [msgcat::mc {Border}]
-    ttk::menubutton $f.bordercolor \
-	-textvariable ed(bar,border,color) \
-	-menu $f.bordercolor.menu
+    ColorMenuButton $f.bordercolor ed bar,border,color {}
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
-    ttk::menubutton $f.color \
-	-textvariable ed(bar,color) \
-	-menu $f.color.menu
+    ColorMenuButton $f.color ed bar,color {}
 
     ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
 	-variable ed(bar,fill)
 
-    grid x $f.theme -padx 2 -pady 2 -sticky ew
+    grid $f.theme - -padx 2 -pady 2 -sticky ew
     grid $f.tbordercolor $f.bordercolor -padx 2 -pady 2 -sticky ew
     grid $f.tcolor $f.color $f.fill -padx 2 -pady 2 -sticky ew
 
-    set f [ttk::labelframe $g.action -text [msgcat::mc {Behavior}]]
+    # Mode
+    set f [ttk::labelframe $g.mode -text [msgcat::mc {Behavior}]]
 
     ttk::radiobutton $f.newplot -text [msgcat::mc {New Plot}] \
 	-variable ed(plot,mode) -value newplot
@@ -1120,7 +1170,7 @@ proc PrismHistogram {varname} {
 
     grid x $f.newplot $f.newgraph $f.newdataset -padx 2 -pady 2 -sticky ew
 
-    pack $g.hist $g.prop $g.action -side top -fill both -expand true
+    pack $g.hist $g.prop $g.mode -side top -fill both -expand true
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -1143,7 +1193,8 @@ proc PrismHistogram {varname} {
     destroy $mb
 
     if {$ed(ok)} {
-	set var(bar,col) $ed(col)
+	set var(col) $ed(col)
+
 	set var(bar,num) $ed(num)
 	set var(bar,min) $ed(min)
 	set var(bar,max) $ed(max)
@@ -1262,20 +1313,20 @@ proc PrismHistogramGenerate {varname} {
 	newplot {
 	    PlotDialog $vvarname "[string totitle $varname] Histogram"
 	    PlotAddGraph $vvarname bar
-	    PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+	    PlotTitle $vvarname $var(col) {Values} {Counts}
 	}
 	newgraph {
 	    if {![PlotPing $vvarname]} {
 		PlotDialog $vvarname "[string totitle $varname] Histogram"
 	    }
 	    PlotAddGraph $vvarname bar
-	    PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+	    PlotTitle $vvarname $var(col) {Values} {Counts}
 	}
 	newdataset {
 	    if {![PlotPing $vvarname]} {
 		PlotDialog $vvarname "[string totitle $varname] Histogram"
 		PlotAddGraph $vvarname bar
-		PlotTitle $vvarname $var(bar,col) {Values} {Counts}
+		PlotTitle $vvarname $var(col) {Values} {Counts}
 	    }
 	}
     }
@@ -1284,7 +1335,7 @@ proc PrismHistogramGenerate {varname} {
     set vvar(graph,ds,ydata) $ydata
     set vvar(graph,ds,bar,width) $var(bar,width)
     PlotExternal $vvarname xy
-    PlotDataSetName $vvarname "$var(extname) $var(bar,col)"
+    PlotDataSetName $vvarname "$var(extname) $var(col)"
 
     set vvar(graph,ds,bar,border,color) $var(bar,border,color)
     set vvar(graph,ds,bar,color) $var(bar,color)
@@ -1305,7 +1356,7 @@ proc PrismHistogramGenerateFits {varname xdata ydata} {
 
     # open extension
     fitsy open $var(fn) $var(load) $var(ext)
-    if {[catch {fitsy histogram $var(bar,col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
+    if {[catch {fitsy histogram $var(col) $xdata $ydata $var(bar,num) $var(bar,min) $var(bar,max) $var(bar,minmax) $varname} ]} {
 	fitsy close
 	return -code error
     }
@@ -1325,12 +1376,12 @@ proc PrismHistogramGenerateAscii {varname xdata ydata} {
     } else {
 	set min 0
 	set max 0
-	PrismHistogramMinMaxAscii $varname $var(bar,col) min max
+	PrismHistogramMinMaxAscii $varname $var(col) min max
     }
 
     set num $var(bar,num)
     set rows [starbase_nrows $var(tbldb)]
-    set colnum [starbase_colnum $var(tbldb) $var(bar,col)]
+    set colnum [starbase_colnum $var(tbldb) $var(col)]
 
     set diff [expr double($max-$min)]
     set barwidth [expr $diff/double($num)]
@@ -1458,7 +1509,7 @@ proc PrismExtFitsCmd {varname} {
     set var(start) 0
     set var(goto) 1
 
-    set var(bar,col) {}
+    set var(col) {}
     set var(bar,num) 10
     set var(bar,width) 1
 
@@ -1746,7 +1797,7 @@ proc PrismTable {varname} {
     $var(tbl) see 1,1
 
     # set default cols
-    set var(bar,col) [lindex [starbase_columns $var(tbldb)] 1]
+    set var(col) [lindex [starbase_columns $var(tbldb)] 1]
     set var(xx) [lindex [starbase_columns $var(tbldb)] 1]
     set var(yy) [lindex [starbase_columns $var(tbldb)] 2]
 

@@ -63,12 +63,15 @@ proc PrismDialog {varname} {
     set var(xerr) {}
     set var(yerr) {}
 
-    set var(line,color) blue
-    set var(line,width) 1
-    set var(line,dash) 0
-    set var(line,shape) circle
-    set var(line,shape,color) blue
-    set var(line,shape,fill) 1
+    set var(graph,ds,line,color) blue
+    set var(graph,ds,line,width) 1
+    set var(graph,ds,line,dash) 0
+    set var(graph,ds,line,shape,symbol) circle
+    set var(graph,ds,line,shape,color) blue
+    set var(graph,ds,line,shape,fill) 1
+
+    set var(graph,ds,error,color) red
+    set var(graph,ds,error,width) 1
 
     set var(col) {}
 
@@ -78,9 +81,9 @@ proc PrismDialog {varname} {
     set var(bar,minmax) 1
     set var(bar,width) 1
 
-    set var(bar,border,color) blue
-    set var(bar,color) white
-    set var(bar,fill) 1
+    set var(graph,ds,bar,border,color) blue
+    set var(graph,ds,bar,color) white
+    set var(graph,ds,bar,fill) 1
 
     set var(plot,seq) 0
     set var(plot,data,seq) 0
@@ -678,12 +681,15 @@ proc PrismPlot {varname} {
 
     set ed(theme,colors) $var(theme,colors)
 
-    set ed(line,color) $var(line,color)
-    set ed(line,width) $var(line,width)
-    set ed(line,dash) $var(line,dash)
-    set ed(line,shape) $var(line,shape)
-    set ed(line,shape,color) $var(line,shape,color)
-    set ed(line,shape,fill) $var(line,shape,fill)
+    set ed(graph,ds,line,color) $var(graph,ds,line,color)
+    set ed(graph,ds,line,width) $var(graph,ds,line,width)
+    set ed(graph,ds,line,dash) $var(graph,ds,line,dash)
+    set ed(graph,ds,line,shape,symbol) $var(graph,ds,line,shape,symbol)
+    set ed(graph,ds,line,shape,color) $var(graph,ds,line,shape,color)
+    set ed(graph,ds,line,shape,fill) $var(graph,ds,line,shape,fill)
+
+    set ed(graph,ds,error,color) $var(graph,ds,error,color)
+    set ed(graph,ds,error,width) $var(graph,ds,error,width)
 
     set ed(plot,mode) $var(plot,mode)
 
@@ -734,24 +740,36 @@ proc PrismPlot {varname} {
 	-variable ed(theme,colors)
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.color ed line,color {}
+    ColorMenuButton $f.color ed graph,ds,line,color {}
 
     ttk::label $f.twidth -text [msgcat::mc {Width}]
-    WidthDashMenuButton $f.width ed line,width line,dash {} {}
+    ttk::menubutton $f.width -textvariable ed(graph,ds,line,width) \
+	-menu $f.width.menu
+    PlotLineWidthMenu $f.width.menu ed {}
 
     ttk::label $f.tshape -text [msgcat::mc {Shape}]
-    ttk::menubutton $f.shape -textvariable ed(line,shape) -menu $f.shape.menu
-    PlotLineShapeMenu $f.shape.menu ed(line,shape) {}
+    ttk::menubutton $f.shape -textvariable ed(graph,ds,line,shape,symbol) \
+	-menu $f.shape.menu
+    PlotLineShapeMenu $f.shape.menu ed {}
 
     ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.shapecolor ed line,shape,color {}
+    ColorMenuButton $f.shapecolor ed graph,ds,line,shape,color {}
 
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
-	-variable ed(line,shape,fill)
+	-variable ed(graph,ds,line,shape,fill)
+
+    ttk::label $f.terror -text [msgcat::mc {Error}]
+    ColorMenuButton $f.error ed graph,ds,error,color {}
+
+    ttk::label $f.terrorwidth -text [msgcat::mc {Width}]
+    WidthDashMenuButton $f.errorwidth ed graph,ds,error,width {} {} {}
 
     grid $f.theme - -padx 2 -pady 2 -sticky ew
-    grid $f.tcolor $f.color $f.twidth $f.width -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color $f.twidth $f.width \
+	-padx 2 -pady 2 -sticky ew
     grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
+	-padx 2 -pady 2 -sticky ew
+    grid $f.terror $f.error $f.terrorwidth $f.errorwidth \
 	-padx 2 -pady 2 -sticky ew
 
     # Mode
@@ -794,12 +812,15 @@ proc PrismPlot {varname} {
 
 	set var(theme,colors) $ed(theme,colors)
 
-	set var(line,color) $ed(line,color)
-	set var(line,width) $ed(line,width)
-	set var(line,dash) $ed(line,dash)
-	set var(line,shape) $ed(line,shape)
-	set var(line,shape,color) $ed(line,shape,color)
-	set var(line,shape,fill) $ed(line,shape,fill)
+	set var(graph,ds,line,color) $ed(graph,ds,line,color)
+	set var(graph,ds,line,width) $ed(graph,ds,line,width)
+	set var(graph,ds,line,dash) $ed(graph,ds,line,dash)
+	set var(graph,ds,line,shape,symbol) $ed(graph,ds,line,shape,symbol)
+	set var(graph,ds,line,shape,color) $ed(graph,ds,line,shape,color)
+	set var(graph,ds,line,shape,fill) $ed(graph,ds,line,shape,fill)
+
+	set var(graph,ds,error,color) $ed(graph,ds,error,color)
+	set var(graph,ds,error,width) $ed(graph,ds,error,width)
 
 	set var(plot,mode) $ed(plot,mode)
 
@@ -909,12 +930,14 @@ proc PrismPlotGenerate {varname} {
     PlotExternal $vvarname $dim
     PlotDataSetName $vvarname "$var(extname) $var(xx) $var(yy)"
 
-    set vvar(graph,ds,line,color) $var(line,color)
-    set vvar(graph,ds,line,width) $var(line,width)
-    set vvar(graph,ds,line,dash) $var(line,dash)
-    set vvar(graph,ds,line,shape,symbol) $var(line,shape)
-    set vvar(graph,ds,line,shape,color) $var(line,shape,color)
-    set vvar(graph,ds,line,shape,fill) $var(line,shape,fill)
+    set vvar(graph,ds,line,color) $var(graph,ds,line,color)
+    set vvar(graph,ds,line,width) $var(graph,ds,line,width)
+    set vvar(graph,ds,line,dash) $var(graph,ds,line,dash)
+    set vvar(graph,ds,line,shape,symbol) $var(graph,ds,line,shape,symbol)
+    set vvar(graph,ds,line,shape,color) $var(graph,ds,line,shape,color)
+    set vvar(graph,ds,line,shape,fill) $var(graph,ds,line,shape,fill)
+    set vvar(graph,ds,error,color) $var(graph,ds,error,color)
+    set vvar(graph,ds,error,width) $var(graph,ds,error,width)
     PlotLineUpdateElement $vvarname
 
     set vvar(canvas,theme) $var(theme,colors)
@@ -1094,9 +1117,9 @@ proc PrismHistogram {varname} {
 
     set ed(theme,colors) $var(theme,colors)
 
-    set ed(bar,border,color) $var(bar,border,color)
-    set ed(bar,color) $var(bar,color)
-    set ed(bar,fill) $var(bar,fill)
+    set ed(graph,ds,bar,border,color) $var(graph,ds,bar,border,color)
+    set ed(graph,ds,bar,color) $var(graph,ds,bar,color)
+    set ed(graph,ds,bar,fill) $var(graph,ds,bar,fill)
 
     set ed(plot,mode) $var(plot,mode)
 
@@ -1146,13 +1169,13 @@ proc PrismHistogram {varname} {
 	-variable ed(theme,colors)
 
     ttk::label $f.tbordercolor -text [msgcat::mc {Border}]
-    ColorMenuButton $f.bordercolor ed bar,border,color {}
+    ColorMenuButton $f.bordercolor ed graph,ds,bar,border,color {}
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
-    ColorMenuButton $f.color ed bar,color {}
+    ColorMenuButton $f.color ed graph,ds,bar,color {}
 
     ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
-	-variable ed(bar,fill)
+	-variable ed(graph,ds,bar,fill)
 
     grid $f.theme - -padx 2 -pady 2 -sticky ew
     grid $f.tbordercolor $f.bordercolor -padx 2 -pady 2 -sticky ew
@@ -1202,9 +1225,9 @@ proc PrismHistogram {varname} {
 
 	set var(theme,colors) $ed(theme,colors)
 
-	set var(bar,border,color) $ed(bar,border,color)
-	set var(bar,color) $ed(bar,color)
-	set var(bar,fill) $ed(bar,fill)
+	set var(graph,ds,bar,border,color) $ed(graph,ds,bar,border,color)
+	set var(graph,ds,bar,color) $ed(graph,ds,bar,color)
+	set var(graph,ds,bar,fill) $ed(graph,ds,bar,fill)
 
 	set var(plot,mode) $ed(plot,mode)
 
@@ -1287,8 +1310,8 @@ proc PrismHistogramGenerate {varname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set xdata ${vvarname}xx$var(plot,data,seq)
-    set ydata ${vvarname}yy$var(plot,data,seq)
+    set xdata ${vvarname}xx$var(plot,data,seq)${varname}
+    set ydata ${vvarname}yy$var(plot,data,seq)${varname}
     incr ${varname}(plot,data,seq)
 
     global $xdata $ydata
@@ -1337,9 +1360,9 @@ proc PrismHistogramGenerate {varname} {
     PlotExternal $vvarname xy
     PlotDataSetName $vvarname "$var(extname) $var(col)"
 
-    set vvar(graph,ds,bar,border,color) $var(bar,border,color)
-    set vvar(graph,ds,bar,color) $var(bar,color)
-    set vvar(graph,ds,bar,fill) $var(bar,fill)
+    set vvar(graph,ds,bar,border,color) $var(graph,ds,bar,border,color)
+    set vvar(graph,ds,bar,color) $var(graph,ds,bar,color)
+    set vvar(graph,ds,bar,fill) $var(graph,ds,bar,fill)
     PlotBarUpdateElement $vvarname
     
     set vvar(canvas,theme) $var(theme,colors)

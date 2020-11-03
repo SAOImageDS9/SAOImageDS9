@@ -67,6 +67,7 @@ proc PrismDialog {varname} {
 
     set var(bar,border,color) blue
     set var(bar,color) white
+    set var(bar,fill) 1
 
     set var(xx) {}
     set var(yy) {}
@@ -1040,10 +1041,11 @@ proc PrismHistogram {varname} {
     set ed(min) $var(bar,min)
     set ed(max) $var(bar,max)
 
+    set ed(theme,colors) $var(theme,colors)
+
     set ed(bar,border,color) $var(bar,border,color)
     set ed(bar,color) $var(bar,color)
-
-    set ed(theme,colors) $var(theme,colors)
+    set ed(bar,fill) $var(bar,fill)
 
     set ed(plot,mode) $var(plot,mode)
 
@@ -1062,8 +1064,9 @@ proc PrismHistogram {varname} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     EditMenu $mb ed
 
-    # param
-    set f [ttk::frame $w.param]
+    set g [ttk::frame $w.param]
+
+    set f [ttk::labelframe $g.hist -text [msgcat::mc {Parameters}]]
 
     ttk::label $f.tcol -text [msgcat::mc {Column}]
     ttk::menubutton $f.col -textvariable ed(col) -menu $f.col.menu
@@ -1079,6 +1082,16 @@ proc PrismHistogram {varname} {
     ttk::label $f.tmax -text [msgcat::mc {Max}]
     ttk::entry $f.max -textvariable ed(max) -width 13
 
+    grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
+    grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
+    grid $f.tmin $f.min -padx 2 -pady 2 -sticky ew
+    grid $f.tmax $f.max -padx 2 -pady 2 -sticky ew
+
+    set f [ttk::labelframe $g.prop -text [msgcat::mc {Properties}]]
+
+    ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
+	-variable ed(theme,colors)
+
     ttk::label $f.tbordercolor -text [msgcat::mc {Border}]
     ttk::menubutton $f.bordercolor \
 	-textvariable ed(bar,border,color) \
@@ -1089,8 +1102,14 @@ proc PrismHistogram {varname} {
 	-textvariable ed(bar,color) \
 	-menu $f.color.menu
 
-    ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
-	-variable ed(theme,colors)
+    ttk::checkbutton $f.fill -text [msgcat::mc {Fill}] \
+	-variable ed(bar,fill)
+
+    grid x $f.theme -padx 2 -pady 2 -sticky ew
+    grid $f.tbordercolor $f.bordercolor -padx 2 -pady 2 -sticky ew
+    grid $f.tcolor $f.color $f.fill -padx 2 -pady 2 -sticky ew
+
+    set f [ttk::labelframe $g.action -text [msgcat::mc {Behavior}]]
 
     ttk::radiobutton $f.newplot -text [msgcat::mc {New Plot}] \
 	-variable ed(plot,mode) -value newplot
@@ -1099,14 +1118,9 @@ proc PrismHistogram {varname} {
     ttk::radiobutton $f.newdataset -text [msgcat::mc {Overplot}] \
 	-variable ed(plot,mode) -value newdataset
 
-    grid $f.tcol $f.col -padx 2 -pady 2 -sticky ew
-    grid $f.tnum $f.num -padx 2 -pady 2 -sticky ew
-    grid $f.tmin $f.min -padx 2 -pady 2 -sticky ew
-    grid $f.tmax $f.max -padx 2 -pady 2 -sticky ew
-    grid $f.tbordercolor $f.bordercolor -padx 2 -pady 2 -sticky ew
-    grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
-    grid x $f.theme -padx 2 -pady 2 -sticky ew
     grid x $f.newplot $f.newgraph $f.newdataset -padx 2 -pady 2 -sticky ew
+
+    pack $g.hist $g.prop $g.action -side top -fill both -expand true
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -1135,10 +1149,11 @@ proc PrismHistogram {varname} {
 	set var(bar,max) $ed(max)
 	set var(bar,minmax) 1
 
+	set var(theme,colors) $ed(theme,colors)
+
 	set var(bar,border,color) $ed(bar,border,color)
 	set var(bar,color) $ed(bar,color)
-	
-	set var(theme,colors) $ed(theme,colors)
+	set var(bar,fill) $ed(bar,fill)
 
 	set var(plot,mode) $ed(plot,mode)
 
@@ -1273,6 +1288,7 @@ proc PrismHistogramGenerate {varname} {
 
     set vvar(graph,ds,bar,border,color) $var(bar,border,color)
     set vvar(graph,ds,bar,color) $var(bar,color)
+    set vvar(graph,ds,bar,fill) $var(bar,fill)
     PlotBarUpdateElement $vvarname
     
     set vvar(canvas,theme) $var(theme,colors)

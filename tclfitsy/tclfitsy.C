@@ -665,28 +665,8 @@ int TclFITSY::plot(int argc, const char* argv[])
       return TCL_ERROR;
 
   Dimension dim = XY;
-  if (!strncmp(argv[2],"xy",2))
-    dim = XY;
-  else if (!strncmp(argv[2],"xyxe",4)) {
-    dim = XYXE;
-    // xerrcol
-    if (!(argv[7] && *argv[7]))
-      return TCL_ERROR;
-    // xerrvarname
-    if (!(argv[8] && *argv[8]))
-      return TCL_ERROR;
-  }
-  else if (!strncmp(argv[2],"xyye",4)) {
-    dim = XYYE;
-    // yerrcol
-    if (!(argv[7] && *argv[7]))
-      return TCL_ERROR;
-    // yerrvarname
-    if (!(argv[8] && *argv[8]))
-      return TCL_ERROR;
-  }
-  else if (!strncmp(argv[2],"xyxeye",6)) {
-    dim = XYXEYE;
+  if (!strncmp(argv[2],"xyexey",6)) {
+    dim = XYEXEY;
     // xerrcol
     if (!(argv[7] && *argv[7]))
       return TCL_ERROR;
@@ -700,6 +680,26 @@ int TclFITSY::plot(int argc, const char* argv[])
     if (!(argv[10] && *argv[10]))
       return TCL_ERROR;
   }
+  else if (!strncmp(argv[2],"xyey",4)) {
+    dim = XYEY;
+    // yerrcol
+    if (!(argv[7] && *argv[7]))
+      return TCL_ERROR;
+    // yerrvarname
+    if (!(argv[8] && *argv[8]))
+      return TCL_ERROR;
+  }
+  else if (!strncmp(argv[2],"xyex",4)) {
+    dim = XYEX;
+    // xerrcol
+    if (!(argv[7] && *argv[7]))
+      return TCL_ERROR;
+    // xerrvarname
+    if (!(argv[8] && *argv[8]))
+      return TCL_ERROR;
+  }
+  else if (!strncmp(argv[2],"xy",2))
+    dim = XY;
   else
     return TCL_ERROR;
 
@@ -735,19 +735,19 @@ int TclFITSY::plot(int argc, const char* argv[])
   switch (dim) {
   case XY:
     break;
-  case XYXE:
+  case XYEX:
     xecol= (FitsBinColumnB*)hdu->find(argv[7]);
     if (!xecol)
       return TCL_ERROR;
     xe = new double[rows];
     break;
-  case XYYE:
+  case XYEY:
     yecol= (FitsBinColumnB*)hdu->find(argv[7]);
     if (!yecol)
       return TCL_ERROR;
     ye = new double[rows];
     break;
-  case XYXEYE:
+  case XYEXEY:
     xecol= (FitsBinColumnB*)hdu->find(argv[7]);
     yecol= (FitsBinColumnB*)hdu->find(argv[9]);
     if (!xecol)
@@ -765,13 +765,13 @@ int TclFITSY::plot(int argc, const char* argv[])
     switch (dim) {
     case XY:
       break;
-    case XYXE:
+    case XYEX:
       xe[ii] = xecol->value(ptr);
       break;
-    case XYYE:
+    case XYEY:
       ye[ii] = yecol->value(ptr);
       break;
-    case XYXEYE:
+    case XYEXEY:
       xe[ii] = xecol->value(ptr);
       ye[ii] = yecol->value(ptr);
       break;
@@ -793,15 +793,15 @@ int TclFITSY::plot(int argc, const char* argv[])
   switch (dim) {
   case XY:
     break;
-  case XYXE:
+  case XYEX:
     Blt_GetVector(interp_, argv[8], &xxe);
     Blt_ResetVector(xxe, xe, rows, rows*sizeof(double), TCL_DYNAMIC);
     break;
-  case XYYE:
+  case XYEY:
       Blt_GetVector(interp_, argv[8], &yye);
     Blt_ResetVector(yye, ye, rows, rows*sizeof(double), TCL_DYNAMIC);
     break;
-  case XYXEYE:
+  case XYEXEY:
     Blt_GetVector(interp_, argv[8], &xxe);
     Blt_ResetVector(xxe, xe, rows, rows*sizeof(double), TCL_DYNAMIC);
 

@@ -2090,8 +2090,9 @@ prism []<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [first|next|prev|last]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [goto &lt;int&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [mode newplot|newgraph|overplot]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt; [&lt;min&gt; &lt;max&gt;]]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter newplot|newgraph|overplot]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] xy|xyex|xyey|xyexey]<br>
 &nbsp;<br>
 Example:<br>
 $xpaget ds9 prism<br>
@@ -2109,11 +2110,12 @@ $xpaset -p ds9 prism first<br>
 $xpaset -p ds9 prism next<br>
 $xpaset -p ds9 prism goto 20345<br>
 $xpaset -p ds9 prism image<br>
+$xpaset -p ds9 prism mode newplot<br>
 $xpaset -p ds9 prism histogram RAWX 40<br>
 $xpaset -p ds9 prism histogram RAWX 40 0 100 <br>
-$xpaset -p ds9 prism plot RAWX RAWY scatter newplot<br>
-$xpaset -p ds9 prism plot RAWX RAWY PHA scatter newplot<br>
-$xpaset -p ds9 prism plot RAWX RAWY PHA PHI scatter newplot<br></tt>
+$xpaset -p ds9 prism plot RAWX RAWY xy<br>
+$xpaset -p ds9 prism plot RAWX RAWY PHA xyex<br>
+$xpaset -p ds9 prism plot RAWX RAWY PHA PHI xyexey<br></tt>
 <p><b><a name="raise" id="raise"></a>raise</b></p>
 <p>Raise in the window stacking order.</p>
 <tt>Syntax:<br>

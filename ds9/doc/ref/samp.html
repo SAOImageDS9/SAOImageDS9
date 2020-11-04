@@ -2187,8 +2187,9 @@ prism []<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [first|next|previous|last]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [goto &lt;int&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [image]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [mode newplot|newgraph|overplot]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt; &lt;min&gt; &lt;max&gt;]<br>
-&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] line|bar|scatter newplot|newgraph|overplot]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [plot &lt;colx&gt; &lt;coly&gt; [&lt;colerrx&gt;] [&lt;colerry&gt;] xy|xyex|xyey|xyexey]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
@@ -2208,11 +2209,12 @@ prism first<br>
 prism next<br>
 prism goto 20345<br>
 prism image<br>
+prism mode newplot<br>
 prism histogram RAWX 40<br>
 prism histogram RAWX 40 0 100<br>
-prism plot RAWX RAWY scatter newplot<br>
-prism plot RAWX RAWY PHA scatter newplot<br>
-prism plot RAWX RAWY PHA PHI scatter newplot<br></tt>
+prism plot RAWX RAWY xy<br>
+prism plot RAWX RAWY PHA xyex<br>
+prism plot RAWX RAWY PHA PHI xyexey<br></tt>
 <p><b><a name="raise" id="raise"></a>raise</b></p>
 <p>Raise in the window stacking order.</p>
 <tt>Syntax:<br>

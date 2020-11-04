@@ -9,7 +9,7 @@
 
 class TclFITSY {
  private:
-  enum Dimension {XY,XYXE,XYYE,XYXEYE};
+  enum Dimension {XY,XYEX,XYEY,XYEXEY};
 
   Tcl_Interp* interp_;
   FitsFile* fits_;

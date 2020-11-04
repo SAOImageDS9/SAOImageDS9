@@ -18,18 +18,20 @@
 %token IMPORT_
 %token LAST_
 %token LOAD_
+%token MODE_
 %token NEXT_
 %token OPEN_
 %token PLOT_
 %token PREV_
 
-%token LINE_
-%token BAR_
-%token SCATTER_
-
 %token NEWPLOT_
 %token NEWGRAPH_
 %token OVERPLOT_
+
+%token XY_
+%token XYEX_
+%token XYEY_
+%token XYEXEY_
 
 %token VOT_
 %token XML_
@@ -56,6 +58,7 @@ prism : {PrismDialogLoad prism}
  | CLEAR_ {ProcessCmdCVAR0 PrismClear}
  | EXT_ ext
  | IMAGE_ {ProcessCmdCVAR0 PrismImage}
+ | MODE_ mode
  | PLOT_ plot
  | HISTOGRAM_ histogram
  | CURRENT_ STRING_ {PrismCmdRef $2}
@@ -75,18 +78,14 @@ histogram : cols INT_ {ProcessCmdCVAR3 bar,col $1 bar,num $2 bar,minmax 0 PrismH
  | cols INT_ numeric numeric {ProcessCmdCVAR5 bar,col $1 bar,num $2 bar,min $3 bar,max $4 bar,minmax 1 PrismHistogramGenerate}
  ;
 
-plot : cols cols type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr {} plot,type $3 plot,mode $4 PrismPlotGenerate}
- | cols cols cols type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr {} yerr $3 plot,type $4 plot,mode $5 PrismPlotGenerate}
- | cols cols cols cols type mode {ProcessCmdCVAR6 xx $1 yy $2 xerr $3 yerr $4 plot,type $5 plot,mode $6 PrismPlotGenerate} ;
+plot : cols cols XY_ {ProcessCmdCVAR4 xx $1 yy $2 xerr {} yerr {} PrismPlotGenerate}
+ | cols cols cols XYEX_ {ProcessCmdCVAR4 xx $1 yy $2 xerr $3 yerr {} PrismPlotGenerate}
+ | cols cols cols XYEY_ {ProcessCmdCVAR4 xx $1 yy $2 xerr {} yerr $3 PrismPlotGenerate}
+ | cols cols cols cols XYEXEY_ {ProcessCmdCVAR4 xx $1 yy $2 xerr $3 yerr $4 PrismPlotGenerate} ;
 
-type : LINE_ {set _ line}
- | BAR_ {set _ bar}
- | SCATTER_ {set _ scatter}
- ;
-
-mode : NEWPLOT_ {set _ newplot}
- | NEWGRAPH_ {set _ newgraph}
- | OVERPLOT_ {set _ newdataset}
+mode : NEWPLOT_ {ProcessCmdCVAR mode newplot}
+ | NEWGRAPH_ {ProcessCmdCVAR mode newgraph}
+ | OVERPLOT_ {ProcessCmdCVAR mode newdataset}
  ;
  
 cols : STRING_ {set _ $1}

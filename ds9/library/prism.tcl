@@ -241,7 +241,7 @@ proc PrismDialog {varname} {
 		      -colwidth 14 \
 		      -maxwidth 300 \
 		      -maxheight 300 \
-		      -titlerows 1 \
+		      -titlerows 2 \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \
@@ -296,7 +296,7 @@ proc PrismDialog {varname} {
 
     PrismDialogUpdate $varname
 
-    $var(tbl) see 1,1
+    $var(tbl) see 2,1
 
     return $varname
 }
@@ -591,7 +591,7 @@ proc PrismImportFn {varname fn reader} {
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
-    $var(tbl) see 1,1
+    $var(tbl) see 2,1
 
     # set default cols
     set var(col) [lindex [starbase_columns $var(tbldb)] 0]
@@ -651,7 +651,7 @@ proc PrismClear {varname} {
 	unset $var(tbldb)
     }
     $var(tbl) configure -rows $iprism(minrows)
-    $var(tbl) see 1,1
+    $var(tbl) see 2,1
 
     PrismDialogUpdate $varname
 }
@@ -1696,7 +1696,7 @@ proc PrismTableGoto {varname} {
     }
 
     set aa [expr int($var(goto)/$iprism(block))]
-    set rr [expr int(fmod($var(goto),$iprism(block)))]
+    set rr [expr int(fmod($var(goto),$iprism(block)))+1]
     set var(start) [expr $aa*$iprism(block)]
 
     if {$var(start) > $var(rows)} {
@@ -1793,7 +1793,7 @@ proc PrismTable {varname} {
 	fitsy close
 
 	$var(tbl) configure -rows $iprism(minrows)
-	$var(tbl) see 1,1
+	$var(tbl) see 2,1
 
 	PrismDialogUpdate $varname
 	return
@@ -1817,7 +1817,7 @@ proc PrismTable {varname} {
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
-    $var(tbl) see 1,1
+    $var(tbl) see 2,1
 
     # set default cols
     set var(col) [lindex [starbase_columns $var(tbldb)] 1]

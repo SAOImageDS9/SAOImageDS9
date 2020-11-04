@@ -448,6 +448,7 @@ int TclFITSY::table(int argc, const char* argv[])
   int cols = hdu->cols();
   int width  = hdu->width();
       
+  // Header
   ostringstream headstr;
   headstr << "Row" << ' ';
   for (int jj=0; jj<cols; jj++) {
@@ -474,9 +475,54 @@ int TclFITSY::table(int argc, const char* argv[])
   Tcl_SetVar2(interp_, argv[2], "Header" , headstr.str().c_str(),
 	      TCL_GLOBAL_ONLY);
   
+  // secondary header
+  {
+    int ccnt=1;
+    for (int jj=0; jj<cols; jj++) {
+      FitsColumn* col= hdu->find(jj);
+      ccnt++;
+
+      ostringstream index;
+      index << '1' << ',' << ccnt << ends;
+      const char* unit = col->tunit();
+      ostringstream value;
+      if (unit && *unit)
+	value << trim(col->tunit()) << ends;
+      else
+	value << ' ' << endl;
+      Tcl_SetVar2(interp_, argv[2], index.str().c_str(),
+		  value.str().c_str(), TCL_GLOBAL_ONLY);
+
+      if (col->repeat()>1) {
+	switch (col->type()) {
+	case 'A':
+	case 'X':
+	case 'L':
+	  break;
+	default:
+	  for (int kk=1; kk<col->repeat(); kk++) {
+	    ccnt++;
+	    ostringstream index;
+	    index << '1' << ',' << ccnt << ends;
+	    const char* unit = col->tunit();
+	    ostringstream value;
+	    if (unit && *unit)
+	      value << trim(col->tunit()) << kk+1 << ends;
+	    else
+	      value << ' ' << endl;
+	    Tcl_SetVar2(interp_, argv[2], index.str().c_str(),
+			value.str().c_str(), TCL_GLOBAL_ONLY);
+
+	  }
+	  break;
+	}
+      }
+    }
+  }
+  
   int end = (max<rows-start) ? max : rows-start;
   ostringstream rowstr;
-  rowstr << end << ends;
+  rowstr << end+1 << ends;
   Tcl_SetVar2(interp_, argv[2], "Nrows", rowstr.str().c_str(),
 	      TCL_GLOBAL_ONLY);
   
@@ -486,7 +532,7 @@ int TclFITSY::table(int argc, const char* argv[])
     int ccnt = 1;
 
     ostringstream index;
-    index << ii+1 << ',' << ccnt << ends;
+    index << ii+2 << ',' << ccnt << ends;
     ostringstream value;
     value << ii+1+start << ends;
     Tcl_SetVar2(interp_, argv[2], index.str().c_str(),
@@ -497,7 +543,7 @@ int TclFITSY::table(int argc, const char* argv[])
       ccnt++;
 
       ostringstream index;
-      index << ii+1 << ',' << ccnt << ends;
+      index << ii+2 << ',' << ccnt << ends;
       ostringstream value;
       value << col->str(ptr) << ends;
       Tcl_SetVar2(interp_, argv[2], index.str().c_str(),

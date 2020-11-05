@@ -401,18 +401,22 @@ int TclFITSY::minmax(int argc, const char* argv[])
 
 int TclFITSY::table(int argc, const char* argv[])
 {
-  if (argc!=5) {
-    Tcl_AppendResult(interp_, "usage: fitsy table ?varname? ?start? ?max?", NULL);
+  if (argc!=6) {
+    Tcl_AppendResult(interp_, "usage: fitsy table ?varname? ?units? ?start? ?max?", NULL);
     return TCL_ERROR;
   }
   
-  for (int ii=2; ii<5; ii++)
+  for (int ii=2; ii<6; ii++)
     if (!(argv[ii] && *argv[ii]))
       return TCL_ERROR;
 
+  int doUnits = (!strncmp(argv[3],"yes",3) ||
+		 !strncmp(argv[3],"1",1) ||
+		 !strncmp(argv[3],"true",4)) ? 1 : 0;
+
   int start =0;
   {
-    string x(argv[3]);
+    string x(argv[4]);
     istringstream sstr(x);
     sstr >> start;
   }
@@ -421,7 +425,7 @@ int TclFITSY::table(int argc, const char* argv[])
   
   int max =0;
   {
-    string x(argv[4]);
+    string x(argv[5]);
     istringstream sstr(x);
     sstr >> max;
   }
@@ -476,7 +480,7 @@ int TclFITSY::table(int argc, const char* argv[])
 	      TCL_GLOBAL_ONLY);
   
   // secondary header
-  {
+  if (doUnits) {
     int ccnt=1;
     for (int jj=0; jj<cols; jj++) {
       FitsColumn* col= hdu->find(jj);
@@ -522,7 +526,7 @@ int TclFITSY::table(int argc, const char* argv[])
   
   int end = (max<rows-start) ? max : rows-start;
   ostringstream rowstr;
-  rowstr << end+1 << ends;
+  rowstr << end+doUnits << ends;
   Tcl_SetVar2(interp_, argv[2], "Nrows", rowstr.str().c_str(),
 	      TCL_GLOBAL_ONLY);
   
@@ -532,7 +536,7 @@ int TclFITSY::table(int argc, const char* argv[])
     int ccnt = 1;
 
     ostringstream index;
-    index << ii+2 << ',' << ccnt << ends;
+    index << ii+1+doUnits << ',' << ccnt << ends;
     ostringstream value;
     value << ii+1+start << ends;
     Tcl_SetVar2(interp_, argv[2], index.str().c_str(),
@@ -543,7 +547,7 @@ int TclFITSY::table(int argc, const char* argv[])
       ccnt++;
 
       ostringstream index;
-      index << ii+2 << ',' << ccnt << ends;
+      index << ii+1+doUnits << ',' << ccnt << ends;
       ostringstream value;
       value << col->str(ptr) << ends;
       Tcl_SetVar2(interp_, argv[2], index.str().c_str(),

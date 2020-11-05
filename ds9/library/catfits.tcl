@@ -47,7 +47,7 @@ proc FITSRead {t fn} {
     }
 
     fitsy open $fn $load -1
-    fitsy table $t 0 10000
+    fitsy table $t false 0 10000
     fitsy close
 
     set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]

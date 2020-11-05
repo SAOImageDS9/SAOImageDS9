@@ -1798,7 +1798,7 @@ proc PrismTable {varname} {
     }
 
     # init db
-    fitsy table $var(tbldb) $var(start) $iprism(block)
+    fitsy table $var(tbldb) true $var(start) $iprism(block)
     set t $var(tbldb)
     starbase_colmap $t
 

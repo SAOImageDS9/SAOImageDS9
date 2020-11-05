@@ -209,6 +209,7 @@ proc CATSymDialog {parent} {
 		      -maxwidth 550 \
 		      -maxheight 300 \
 		      -titlerows 1 \
+		      -resizeborders col \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \

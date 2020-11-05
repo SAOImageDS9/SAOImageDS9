@@ -180,6 +180,7 @@ proc SIADialog {varname title url opts action} {
 		      -maxwidth 300 \
 		      -maxheight 300 \
 		      -titlerows 1 \
+		      -resizeborders col \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \

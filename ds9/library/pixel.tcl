@@ -82,6 +82,7 @@ proc PixelTableDialog {} {
 			 -variable dpixel \
 			 -usecommand 0 \
 			 -maxwidth 1200 \
+			 -resizeborders none \
 			 -fg [ThemeTreeForeground] \
 			 -bg [ThemeTreeBackground] \
 			]

@@ -200,6 +200,7 @@ proc CATCDSSrchDialog {varname} {
 		      -maxwidth 400 \
 		      -maxheight 190 \
 		      -titlerows 1 \
+		      -resizeborders col \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
 		      -selecttype row \

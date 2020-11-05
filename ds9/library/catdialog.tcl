@@ -432,8 +432,7 @@ proc CATDialog {varname format catalog title action} {
 
     $var(tbl) tag configure sel \
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
-    $var(tbl) tag configure title \
-	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
+    $var(tbl) tag configure title -fg [ThemeForeground] -bg [ThemeBackground]
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal

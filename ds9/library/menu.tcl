@@ -107,8 +107,7 @@ proc ThemeConfigTable {w} {
 
     $w tag configure sel \
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
-    $w tag configure title \
-	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
+    $w tag configure title -fg [ThemeForeground] -bg [ThemeBackground]
 
     # pixel table
     $w tag configure coord -foreground [ThemeBold]
@@ -218,26 +217,6 @@ proc ThemeSelectedBackground {} {
 	x11 -
 	win32 {return [ttk::style lookup Treeview -background selected]}
 	aqua {return systemControlAccentColor}
-    }
-}
-
-proc ThemeHeadingForeground {} {
-    global ds9
-    
-    switch $ds9(wm) {
-	x11 -
-	win32 {return [ttk::style lookup . -selectforeground]}
-	aqua {return systemTextColor}
-    }
-}
-
-proc ThemeHeadingBackground {} {
-    global ds9
-    
-    switch $ds9(wm) {
-	x11 -
-	win32 {return [ttk::style lookup TMenubutton -foreground disabled]}
-	aqua {return systemTextBackgroundColor}
     }
 }
 

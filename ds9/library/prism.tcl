@@ -244,8 +244,8 @@ proc PrismDialog {varname} {
 		      -titlerows 2 \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
-		      -selecttype row \
 		      -selectmode extended \
+		      -selecttype row \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
 		      -browsecommand [list PrismTableCmd $varname %s %S] \
@@ -253,10 +253,8 @@ proc PrismDialog {varname} {
 		      -bg [ThemeTreeBackground] \
 		     ]
 
-    $var(tbl) tag configure sel \
-	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
-    $var(tbl) tag configure title \
-	-fg [ThemeHeadingForeground] -bg [ThemeHeadingBackground]
+    $var(tbl) tag configure sel -fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
+    $var(tbl) tag configure title -fg [ThemeForeground] -bg [ThemeBackground]
 
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

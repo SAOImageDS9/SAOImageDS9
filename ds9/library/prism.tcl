@@ -45,6 +45,7 @@ proc PrismDialog {varname} {
 
     set var(tbldb) ${varname}tbldb
     set var(fn) {}
+    set var(rows) 0
     set var(type) fits
     set var(load) mmapincr
     set var(ext) 0
@@ -380,6 +381,7 @@ proc PrismDialogUpdate {varname} {
     }
 
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
+    $var(mb).table entryconfig "[msgcat::mc {Goto Row}]..." -state normal
     $bb.clear configure -state normal
 
     switch $var(type) {
@@ -402,8 +404,6 @@ proc PrismDialogUpdate {varname} {
 		$var(mb).table entryconfig [msgcat::mc {Previous Block}] \
 		    -state normal
 		$var(mb).table entryconfig [msgcat::mc {Last Block}] \
-		    -state normal
-		$var(mb).table entryconfig "[msgcat::mc {Goto Row}]..." \
 		    -state normal
 
 		$bb.plot configure -state normal
@@ -595,6 +595,7 @@ proc PrismImportFn {varname fn reader} {
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
+    set var(rows) $nr
     $var(tbl) see topleft
 
     set info \
@@ -627,6 +628,7 @@ proc PrismClear {varname} {
     fitsy close
 
     set var(fn) {}
+    set var(rows) 0
     set var(type) fits
     set var(load) {}
     set var(ext) 0
@@ -664,7 +666,7 @@ proc PrismPlot {varname} {
 
     # sanity check
     if {$var(fn) == {}} {
-	Error "No FITS file loaded"
+	Error "No file loaded"
 	return
     }
 
@@ -1098,7 +1100,7 @@ proc PrismHistogram {varname} {
 
     # sanity check
     if {$var(fn) == {}} {
-	Error "No FITS file loaded"
+	Error "No file loaded"
 	return
     }
 
@@ -1432,13 +1434,7 @@ proc PrismImage {varname} {
 
     # sanity check
     if {$var(fn) == {}} {
-	Error "No FITS file loaded"
-	return
-    }
-
-    # sanity check
-    if {$var(type) != {fits}} {
-	Error "No FITS table file loaded"
+	Error "No file loaded"
 	return
     }
 
@@ -1501,9 +1497,15 @@ proc PrismExtCmd {varname} {
     upvar #0 $varname var
     global $varname
 
+    # this proc can be called in any time
+    # prepare for the worst
+    if {$var(fn) == {}} {
+	return
+    }
+
     switch $var(type) {
 	fits {PrismExtFitsCmd $varname}
-	ascii {}
+	ascii {PrismExtAsciiCmd $varname}
     }
 }
 
@@ -1511,12 +1513,6 @@ proc PrismExtFitsCmd {varname} {
     upvar #0 $varname var
     global $varname
     global iprism
-
-    # this proc can be called in any time
-    # prepare for the worst
-    if {$var(fn) == {}} {
-	return
-    }
 
     set var(ext) [$var(dir) selection]
     if {$var(ext) == {}} {
@@ -1565,6 +1561,11 @@ proc PrismExtFitsCmd {varname} {
     fitsy close
 
     PrismTable $varname
+}
+
+proc PrismExtAsciiCmd {varname} {
+    upvar #0 $varname var
+    global $varname
 }
 
 proc PrismTableBrowseCmd {varname ss} {
@@ -1637,6 +1638,18 @@ proc PrismTableFirst {varname} {
     upvar #0 $varname var
     global $varname
 
+    # sanity check
+    if {$var(fn) == {}} {
+	Error "No file loaded"
+	return
+    }
+
+    # sanity check
+    if {$var(type) != {fits}} {
+	Error "No FITS table file loaded"
+	return
+    }
+    
     set var(start) 0
     PrismTable $varname
 }
@@ -1648,7 +1661,7 @@ proc PrismTableNext {varname} {
 
     # sanity check
     if {$var(fn) == {}} {
-	Error "No FITS file loaded"
+	Error "No file loaded"
 	return
     }
 
@@ -1673,7 +1686,7 @@ proc PrismTablePrev {varname} {
 
     # sanity check
     if {$var(fn) == {}} {
-	Error "No FITS file loaded"
+	Error "No file loaded"
 	return
     }
 
@@ -1698,7 +1711,7 @@ proc PrismTableLast {varname} {
 
     # sanity check
     if {$var(fn) == {}} {
-	Error "No FITS file loaded"
+	Error "No file loaded"
 	return
     }
 
@@ -1717,18 +1730,6 @@ proc PrismTableGotoQuery {varname} {
     upvar #0 $varname var
     global $varname
 
-    # sanity check
-    if {$var(fn) == {}} {
-	Error "No FITS file loaded"
-	return
-    }
-
-    # sanity check
-    if {$var(type) != {fits}} {
-	Error "No FITS table file loaded"
-	return
-    }
-
     if {[PrismTableGotoDialog $varname]} {
 	PrismTableGoto $varname
     }
@@ -1737,17 +1738,10 @@ proc PrismTableGotoQuery {varname} {
 proc PrismTableGoto {varname} {
     upvar #0 $varname var
     global $varname
-    global iprism
 
     # sanity check
     if {$var(fn) == {}} {
-	Error "No FITS file loaded"
-	return
-    }
-
-    # sanity check
-    if {$var(type) != {fits}} {
-	Error "No FITS table file loaded"
+	Error "No file loaded"
 	return
     }
 
@@ -1758,6 +1752,17 @@ proc PrismTableGoto {varname} {
     if {$var(goto)>$var(rows)} {
 	set var(goto) $var(rows)
     }
+
+    switch $var(type) {
+	fits {PrismTableGotoFits $varname}
+	ascii {PrismTableGotoAscii $varname}
+    }
+}
+
+proc PrismTableGotoFits {varname} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
 
     set aa [expr int($var(goto)/$iprism(block))]
     set rr [expr int(fmod($var(goto),$iprism(block)))+1]
@@ -1772,6 +1777,16 @@ proc PrismTableGoto {varname} {
     $var(tbl) see $rr,1
     $var(tbl) configure -selecttype row -selectmode single
     $var(tbl) selection set $rr,1
+    $var(tbl) configure -selecttype col -selectmode mulitple
+}
+
+proc PrismTableGotoAscii {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(tbl) see $var(goto),1
+    $var(tbl) configure -selecttype row -selectmode single
+    $var(tbl) selection set $var(goto),1
     $var(tbl) configure -selecttype col -selectmode mulitple
 }
 

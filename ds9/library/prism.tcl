@@ -236,7 +236,7 @@ proc PrismDialog {varname} {
 		      -state disabled \
 		      -usecommand 0 \
 		      -variable $var(tbldb) \
-		      -colorigin 1 \
+		      -colorigin 0 \
 		      -roworigin 0 \
 		      -cols $iprism(mincols) \
 		      -rows $iprism(minrows) \
@@ -246,6 +246,7 @@ proc PrismDialog {varname} {
 		      -maxwidth 300 \
 		      -maxheight 300 \
 		      -titlerows 1 \
+		      -titlecols 1 \
 		      -resizeborders col \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
@@ -261,7 +262,8 @@ proc PrismDialog {varname} {
 
     $var(tbl) tag configure sel -fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $var(tbl) tag configure title -fg [ThemeForeground] -bg [ThemeBackground]
-
+    $prism(tbl) width 0 7
+    
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
 
@@ -299,8 +301,6 @@ proc PrismDialog {varname} {
     bind $w <<Close>> [list PrismDestroy $varname]
 
     PrismDialogUpdate $varname
-
-    $var(tbl) see topleft
 
     return $varname
 }
@@ -596,7 +596,6 @@ proc PrismImportFn {varname fn reader} {
 	$var(tbl) configure -rows $iprism(minrows)
     }
     set var(rows) $nr
-    $var(tbl) see topleft
 
     set info \
 	"[starbase_ncols $var(tbldb)] cols, [starbase_nrows $var(tbldb)] rows"
@@ -608,6 +607,12 @@ proc PrismImportFn {varname fn reader} {
     set var(extname) [lindex $var(extnames) $var(ext)]
     $var(dir) selection set $var(ext)
     
+    # add row numbers
+    set $var(tbldb)(0,0) {Row}
+    for {set ii 1} {$ii<=$nr} {incr ii} {
+	set $var(tbldb)($ii,0) $ii
+    }
+
     # need this so that PrismExtCmd is invoked before next command
     update
     
@@ -653,7 +658,6 @@ proc PrismClear {varname} {
     }
     $var(tbl) configure -rows $iprism(minrows)
     $var(tbl) configure -titlerows 1
-    $var(tbl) see topleft
 
     PrismDialogUpdate $varname
 }
@@ -1503,6 +1507,22 @@ proc PrismExtCmd {varname} {
 	return
     }
 
+    # clear
+    set var(start) 0
+    set var(goto) 1
+
+    set var(xx) {}
+    set var(yy) {}
+    set var(xerr) {}
+    set var(yerr) {}
+
+    set var(col) {}
+    set var(bar,num) 10
+    set var(bar,width) 1
+
+    set var(ccp,last) {}
+    set var(ccp,prev) {}
+
     switch $var(type) {
 	fits {PrismExtFitsCmd $varname}
 	ascii {PrismExtAsciiCmd $varname}
@@ -1524,22 +1544,6 @@ proc PrismExtFitsCmd {varname} {
     # find our extension
     fitsy open $var(fn) $var(load) $var(ext)
 
-    # clear
-    set var(start) 0
-    set var(goto) 1
-
-    set var(xx) {}
-    set var(yy) {}
-    set var(xerr) {}
-    set var(yerr) {}
-
-    set var(col) {}
-    set var(bar,num) 10
-    set var(bar,width) 1
-
-    set var(ccp,last) {}
-    set var(ccp,prev) {}
-
     # header
     $var(text) delete 1.0 end
     $var(text) insert end [fitsy header]
@@ -1560,7 +1564,7 @@ proc PrismExtFitsCmd {varname} {
     }
     fitsy close
 
-    PrismTable $varname
+    PrismTableFits $varname
 }
 
 proc PrismExtAsciiCmd {varname} {
@@ -1651,7 +1655,7 @@ proc PrismTableFirst {varname} {
     }
     
     set var(start) 0
-    PrismTable $varname
+    PrismTableFits $varname
 }
 
 proc PrismTableNext {varname} {
@@ -1675,7 +1679,7 @@ proc PrismTableNext {varname} {
     if {$var(start) > $var(rows)} {
 	PrismTableLast $varname
     } else {
-	PrismTable $varname
+	PrismTableFits $varname
     }
 }
 
@@ -1700,7 +1704,7 @@ proc PrismTablePrev {varname} {
     if {$var(start) < 0} {
 	PrismTableFirst $varname
     } else {
-	PrismTable $varname
+	PrismTableFits $varname
     }
 }
 
@@ -1723,7 +1727,7 @@ proc PrismTableLast {varname} {
 
     set aa [expr int($var(rows)/$iprism(block))]
     set var(start) [expr $aa*$iprism(block)]
-    PrismTable $varname
+    PrismTableFits $varname
 }
 
 proc PrismTableGotoQuery {varname} {
@@ -1771,7 +1775,7 @@ proc PrismTableGotoFits {varname} {
     if {$var(start) > $var(rows)} {
 	PrismTableLast $varname
     } else {
-	PrismTable $varname
+	PrismTableFits $varname
     }
 
     $var(tbl) see $rr,1
@@ -1856,7 +1860,7 @@ proc PrismTableGotoDialog {varname} {
     return $rr
 }
 
-proc PrismTable {varname} {
+proc PrismTableFits {varname} {
     upvar #0 $varname var
     global $varname
     global iprism
@@ -1874,17 +1878,18 @@ proc PrismTable {varname} {
 	fitsy close
 
 	$var(tbl) configure -rows $iprism(minrows)
-	$var(tbl) see topleft
 	$var(tbl) configure -titlerows 1
 
 	PrismDialogUpdate $varname
 	return
     }
 
-    $var(tbl) configure -titlerows 2
-
     # init db
     fitsy table $var(tbldb) true $var(start) $iprism(block)
+    fitsy close
+    
+    $var(tbl) configure -titlerows 2
+
     set t $var(tbldb)
     starbase_colmap $t
 
@@ -1901,10 +1906,16 @@ proc PrismTable {varname} {
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
-    $var(tbl) see topleft
 
-    fitsy close
-    
+    # add row numbers
+    set $var(tbldb)(0,0) {Row}
+    set $var(tbldb)(1,0) {}
+    for {set ii 2} {$ii<=$nr} {incr ii} {
+	set $var(tbldb)($ii,0) [expr $ii-1+$var(start)]
+    }
+
+    $var(tbl) see 2,1
+
     PrismDialogUpdate $varname
 }
 

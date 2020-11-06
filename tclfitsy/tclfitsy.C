@@ -454,7 +454,6 @@ int TclFITSY::table(int argc, const char* argv[])
       
   // Header
   ostringstream headstr;
-  headstr << "Row" << ' ';
   for (int jj=0; jj<cols; jj++) {
     FitsColumn* col= hdu->find(jj);
     headstr << trim(col->ttype()) << ' ';
@@ -481,7 +480,7 @@ int TclFITSY::table(int argc, const char* argv[])
   
   // secondary header
   if (doUnits) {
-    int ccnt=1;
+    int ccnt=0;
     for (int jj=0; jj<cols; jj++) {
       FitsColumn* col= hdu->find(jj);
       ccnt++;
@@ -533,15 +532,8 @@ int TclFITSY::table(int argc, const char* argv[])
   // data
   ptr += start*width;
   for (int ii=0; ii<end; ii++, ptr+=width) {
-    int ccnt = 1;
 
-    ostringstream index;
-    index << ii+1+doUnits << ',' << ccnt << ends;
-    ostringstream value;
-    value << ii+1+start << ends;
-    Tcl_SetVar2(interp_, argv[2], index.str().c_str(),
-		value.str().c_str(), TCL_GLOBAL_ONLY);
-
+    int ccnt = 0;
     for (int jj=0; jj<cols; jj++) {
       FitsColumn* col = hdu->find(jj);
       ccnt++;

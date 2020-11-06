@@ -89,6 +89,9 @@ proc PrismDialog {varname} {
     set var(plot,data,seq) 0
     set var(plot,mode) newplot
 
+    set var(ccp,last) {}
+    set var(ccp,prev) {}
+
     # create the window
     set w $var(top)
     set mb $var(mb)
@@ -241,14 +244,16 @@ proc PrismDialog {varname} {
 		      -colwidth 14 \
 		      -maxwidth 300 \
 		      -maxheight 300 \
-		      -titlerows 2 \
+		      -titlerows 1 \
+		      -resizeborders col \
 		      -xscrollcommand [list $f.xscroll set]\
 		      -yscrollcommand [list $f.yscroll set]\
-		      -selectmode extended \
-		      -selecttype row \
+		      -selecttitle 1 \
+		      -selectmode single \
+		      -selecttype col \
 		      -anchor w \
 		      -font [font actual TkDefaultFont] \
-		      -browsecommand [list PrismTableCmd $varname %s %S] \
+		      -browsecommand [list PrismTableBrowseCmd $varname %S] \
 		      -fg [ThemeTreeForeground] \
 		      -bg [ThemeTreeBackground] \
 		     ]
@@ -294,7 +299,7 @@ proc PrismDialog {varname} {
 
     PrismDialogUpdate $varname
 
-    $var(tbl) see 2,1
+    $var(tbl) see topleft
 
     return $varname
 }
@@ -576,6 +581,7 @@ proc PrismImportFn {varname fn reader} {
     set var(type) ascii
     $reader $var(tbldb) $fn
 
+    $var(tbl) configure -titlerows 1
     set nc [starbase_ncols $var(tbldb)]
     if {$nc > $iprism(mincols)} {
 	$var(tbl) configure -cols $nc
@@ -589,12 +595,7 @@ proc PrismImportFn {varname fn reader} {
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
-    $var(tbl) see 2,1
-
-    # set default cols
-    set var(col) [lindex [starbase_columns $var(tbldb)] 0]
-    set var(xx) [lindex [starbase_columns $var(tbldb)] 0]
-    set var(yy) [lindex [starbase_columns $var(tbldb)] 1]
+    $var(tbl) see topleft
 
     set info \
 	"[starbase_ncols $var(tbldb)] cols, [starbase_nrows $var(tbldb)] rows"
@@ -649,7 +650,8 @@ proc PrismClear {varname} {
 	unset $var(tbldb)
     }
     $var(tbl) configure -rows $iprism(minrows)
-    $var(tbl) see 2,1
+    $var(tbl) configure -titlerows 1
+    $var(tbl) see topleft
 
     PrismDialogUpdate $varname
 }
@@ -1530,14 +1532,17 @@ proc PrismExtFitsCmd {varname} {
     set var(start) 0
     set var(goto) 1
 
-    set var(col) {}
-    set var(bar,num) 10
-    set var(bar,width) 1
-
     set var(xx) {}
     set var(yy) {}
     set var(xerr) {}
     set var(yerr) {}
+
+    set var(col) {}
+    set var(bar,num) 10
+    set var(bar,width) 1
+
+    set var(ccp,last) {}
+    set var(ccp,prev) {}
 
     # header
     $var(text) delete 1.0 end
@@ -1562,9 +1567,70 @@ proc PrismExtFitsCmd {varname} {
     PrismTable $varname
 }
 
-proc PrismTableCmd {varname ss rc} {
+proc PrismTableBrowseCmd {varname ss} {
     upvar #0 $varname var
     global $varname
+    global $var(tbldb)
+
+    set cc [lindex [split $ss ','] 1]
+    set rows [$var(tbl) cget -rows]
+    set cols [starbase_ncols $var(tbldb)]
+
+    # reset current cell so next click in same cell will trigger this proc
+    $var(tbl) activate 1,1
+    $var(tbl) selection clear all
+
+    if {$cc == 1 || $cc > $cols} {
+	# greater than last column: clear
+	set var(ccp,last) {}
+	set var(ccp,prev) {}
+    } elseif {$var(ccp,last) == $cc} {
+	# click on same column
+	set var(ccp,last) $var(ccp,prev)
+	set var(ccp,prev) {}
+    } elseif {$var(ccp,prev) == $cc} {
+	# click on same column
+	set var(ccp,prev) {}
+    } else {
+	# new column
+	if {$var(ccp,prev) == {}} {
+	    set var(ccp,prev) $var(ccp,last)
+	}
+	set var(ccp,last) $cc
+    }
+
+    # set selection
+    if {$var(ccp,last) != {}} {
+	$var(tbl) selection set 2,$var(ccp,last) $rows,$var(ccp,last)
+    }
+    if {$var(ccp,prev) != {}} {
+	$var(tbl) selection set 2,$var(ccp,prev) $rows,$var(ccp,prev)
+    }
+
+    # set histogram col
+    if {$var(ccp,last) != {}} {
+	set var(col) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
+    } else {
+	set var(col) {}
+    }
+    
+    # set plot xx,yy
+    if {$var(ccp,last) != {} && $var(ccp,prev) != {}} {
+	set var(xx) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,prev)-1]]
+	set var(yy) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
+    } elseif {$var(ccp,last) != {}} {
+	set var(xx) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
+	set var(yy) {}
+    } else {
+	set var(xx) {}
+	set var(yy) {}
+    }
+
+    puts "last=$var(ccp,last) prev=$var(ccp,prev)"
 }
 
 proc PrismTableFirst {varname} {
@@ -1704,7 +1770,9 @@ proc PrismTableGoto {varname} {
     }
 
     $var(tbl) see $rr,1
+    $var(tbl) configure -selecttype row -selectmode single
     $var(tbl) selection set $rr,1
+    $var(tbl) configure -selecttype col -selectmode mulitple
 }
 
 proc PrismTableGotoDialog {varname} {
@@ -1791,11 +1859,14 @@ proc PrismTable {varname} {
 	fitsy close
 
 	$var(tbl) configure -rows $iprism(minrows)
-	$var(tbl) see 2,1
+	$var(tbl) see topleft
+	$var(tbl) configure -titlerows 1
 
 	PrismDialogUpdate $varname
 	return
     }
+
+    $var(tbl) configure -titlerows 2
 
     # init db
     fitsy table $var(tbldb) true $var(start) $iprism(block)
@@ -1815,12 +1886,7 @@ proc PrismTable {varname} {
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
-    $var(tbl) see 2,1
-
-    # set default cols
-    set var(col) [lindex [starbase_columns $var(tbldb)] 1]
-    set var(xx) [lindex [starbase_columns $var(tbldb)] 1]
-    set var(yy) [lindex [starbase_columns $var(tbldb)] 2]
+    $var(tbl) see topleft
 
     fitsy close
     

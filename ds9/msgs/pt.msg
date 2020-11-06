@@ -78,6 +78,7 @@
 ::msgcat::mcset pt {Bar Plot Tool} 
 ::msgcat::mcset pt {Bar Width} 
 ::msgcat::mcset pt {Bar} 
+::msgcat::mcset pt {Behavior} 
 ::msgcat::mcset pt {Bias} 
 ::msgcat::mcset pt {Bin 3rd Column} {Bin terceira coluna}
 ::msgcat::mcset pt {Bin Center} {Centro do Bin}
@@ -681,7 +682,6 @@
 ::msgcat::mcset pt {Plot Area} 
 ::msgcat::mcset pt {Plot Control Panel} 
 ::msgcat::mcset pt {Plot Tool} 
-::msgcat::mcset pt {Plot Type} 
 ::msgcat::mcset pt {Plotting Regions} 
 ::msgcat::mcset pt {Plot} 
 ::msgcat::mcset pt {Plus} {Mais}

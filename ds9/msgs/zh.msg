@@ -78,6 +78,7 @@
 ::msgcat::mcset zh {Bar Plot Tool} 
 ::msgcat::mcset zh {Bar Width} 
 ::msgcat::mcset zh {Bar} 
+::msgcat::mcset zh {Behavior} 
 ::msgcat::mcset zh {Bias} 
 ::msgcat::mcset zh {Bin 3rd Column} 
 ::msgcat::mcset zh {Bin Center} 
@@ -681,7 +682,6 @@
 ::msgcat::mcset zh {Plot Area} 
 ::msgcat::mcset zh {Plot Control Panel} 
 ::msgcat::mcset zh {Plot Tool} 
-::msgcat::mcset zh {Plot Type} 
 ::msgcat::mcset zh {Plotting Regions} 
 ::msgcat::mcset zh {Plot} 
 ::msgcat::mcset zh {Plus} 

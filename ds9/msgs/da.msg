@@ -78,6 +78,7 @@
 ::msgcat::mcset da {Bar Plot Tool} 
 ::msgcat::mcset da {Bar Width} 
 ::msgcat::mcset da {Bar} 
+::msgcat::mcset da {Behavior} 
 ::msgcat::mcset da {Bias} {Bias}
 ::msgcat::mcset da {Bin 3rd Column} [encoding convertfrom iso8859-1 {Bin 3dje søjle}]
 ::msgcat::mcset da {Bin Center} {Bin center}
@@ -681,7 +682,6 @@
 ::msgcat::mcset da {Plot Area} 
 ::msgcat::mcset da {Plot Control Panel} 
 ::msgcat::mcset da {Plot Tool} 
-::msgcat::mcset da {Plot Type} 
 ::msgcat::mcset da {Plotting Regions} [encoding convertfrom iso8859-1 {Plotte områder}]
 ::msgcat::mcset da {Plot} 
 ::msgcat::mcset da {Plus} 

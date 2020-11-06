@@ -78,6 +78,7 @@
 ::msgcat::mcset ja {Bar Plot Tool} 
 ::msgcat::mcset ja {Bar Width} 
 ::msgcat::mcset ja {Bar} 
+::msgcat::mcset ja {Behavior} 
 ::msgcat::mcset ja {Bias} [encoding convertfrom euc-jp "\xa5\xd0\xa5\xa4\xa5\xa2\xa5\xb9"]
 ::msgcat::mcset ja {Bin 3rd Column} [encoding convertfrom euc-jp "\xc2\xe8\xa3\xb3\xa4\xce\xce\xf3\xa4\xf2\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1"]
 ::msgcat::mcset ja {Bin Center} [encoding convertfrom euc-jp "\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1\xa4\xce\xc3\xe6\xbf\xb4"]
@@ -681,7 +682,6 @@
 ::msgcat::mcset ja {Plot Area} 
 ::msgcat::mcset ja {Plot Control Panel} 
 ::msgcat::mcset ja {Plot Tool} 
-::msgcat::mcset ja {Plot Type} 
 ::msgcat::mcset ja {Plotting Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8\xa4\xb7\xa4\xc6\xa4\xa4\xa4\xde\xa4\xb9"]
 ::msgcat::mcset ja {Plot} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Plus} [encoding convertfrom euc-jp "\xa1\xdc"]

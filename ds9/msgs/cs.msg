@@ -78,6 +78,7 @@
 ::msgcat::mcset cs {Bar Plot Tool} 
 ::msgcat::mcset cs {Bar Width} 
 ::msgcat::mcset cs {Bar} 
+::msgcat::mcset cs {Behavior} 
 ::msgcat::mcset cs {Bias} 
 ::msgcat::mcset cs {Bin 3rd Column} [encoding convertfrom iso8859-2 {Binuj tøetí sloupec}]
 ::msgcat::mcset cs {Bin Center} [encoding convertfrom iso8859-2 {Binuj støed}]
@@ -681,7 +682,6 @@
 ::msgcat::mcset cs {Plot Area} 
 ::msgcat::mcset cs {Plot Control Panel} 
 ::msgcat::mcset cs {Plot Tool} 
-::msgcat::mcset cs {Plot Type} 
 ::msgcat::mcset cs {Plotting Regions} 
 ::msgcat::mcset cs {Plot} 
 ::msgcat::mcset cs {Plus} 

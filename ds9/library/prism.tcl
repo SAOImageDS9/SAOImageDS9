@@ -1631,7 +1631,7 @@ proc PrismTableBrowseCmd {varname ss} {
 	set var(yy) {}
     }
 
-    puts "last=$var(ccp,last) prev=$var(ccp,prev)"
+#    puts "last=$var(ccp,last) prev=$var(ccp,prev)"
 }
 
 proc PrismTableFirst {varname} {

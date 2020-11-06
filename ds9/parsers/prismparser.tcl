@@ -1289,8 +1289,8 @@ proc prism::yyparse {} {
                     23 { ProcessCmdCVAR goto $2 PrismTableGoto }
                     24 { PrismCmdExt $1 }
                     25 { PrismCmdExtName $1 }
-                    26 { ProcessCmdCVAR3 bar,col $1 bar,num $2 bar,minmax 0 PrismHistogramGenerate }
-                    27 { ProcessCmdCVAR5 bar,col $1 bar,num $2 bar,min $3 bar,max $4 bar,minmax 1 PrismHistogramGenerate }
+                    26 { ProcessCmdCVAR3 col $1 bar,num $2 bar,minmax 0 PrismHistogramGenerate }
+                    27 { ProcessCmdCVAR5 col $1 bar,num $2 bar,min $3 bar,max $4 bar,minmax 1 PrismHistogramGenerate }
                     28 { ProcessCmdCVAR4 xx $1 yy $2 xerr {} yerr {} PrismPlotGenerate }
                     29 { ProcessCmdCVAR4 xx $1 yy $2 xerr $3 yerr {} PrismPlotGenerate }
                     30 { ProcessCmdCVAR4 xx $1 yy $2 xerr {} yerr $3 PrismPlotGenerate }

@@ -74,8 +74,8 @@ ext : INT_ {PrismCmdExt $1}
  | STRING_ {PrismCmdExtName $1}
  ;
 
-histogram : cols INT_ {ProcessCmdCVAR3 bar,col $1 bar,num $2 bar,minmax 0 PrismHistogramGenerate}
- | cols INT_ numeric numeric {ProcessCmdCVAR5 bar,col $1 bar,num $2 bar,min $3 bar,max $4 bar,minmax 1 PrismHistogramGenerate}
+histogram : cols INT_ {ProcessCmdCVAR3 col $1 bar,num $2 bar,minmax 0 PrismHistogramGenerate}
+ | cols INT_ numeric numeric {ProcessCmdCVAR5 col $1 bar,num $2 bar,min $3 bar,max $4 bar,minmax 1 PrismHistogramGenerate}
  ;
 
 plot : cols cols XY_ {ProcessCmdCVAR4 xx $1 yy $2 xerr {} yerr {} PrismPlotGenerate}

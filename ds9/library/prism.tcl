@@ -20,6 +20,7 @@ proc PrismDialog {varname} {
     global prism
     global iprism
     global ds9
+    global pap
 
     # first determine if aready in use, then increment
     if {[lsearch $iprism(prisms) $varname] >= 0} {
@@ -57,7 +58,7 @@ proc PrismDialog {varname} {
 
     set var(search) {}
 
-    set var(theme,colors) 1
+    set var(canvas,theme) $pap(canvas,theme)
 
     set var(xx) {}
     set var(yy) {}
@@ -669,6 +670,7 @@ proc PrismPlot {varname} {
     global $varname
 
     global ed
+    global pap
 
     # sanity check
     if {$var(fn) == {}} {
@@ -687,7 +689,7 @@ proc PrismPlot {varname} {
     set ed(xerr) $var(xerr)
     set ed(yerr) $var(yerr)
 
-    set ed(theme,colors) $var(theme,colors)
+    set ed(canvas,theme) $pap(canvas,theme)
 
     set ed(graph,ds,line,color) $var(graph,ds,line,color)
     set ed(graph,ds,line,width) $var(graph,ds,line,width)
@@ -745,7 +747,7 @@ proc PrismPlot {varname} {
     set f [ttk::labelframe $g.prop -text [msgcat::mc {Properties}]]
 
     ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
-	-variable ed(theme,colors)
+	-variable ed(canvas,theme)
 
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.color ed graph,ds,line,color {}
@@ -818,7 +820,7 @@ proc PrismPlot {varname} {
 	set var(xerr) $ed(xerr)
 	set var(yerr) $ed(yerr)
 
-	set var(theme,colors) $ed(theme,colors)
+	set var(canvas,theme) $ed(canvas,theme)
 
 	set var(graph,ds,line,color) $ed(graph,ds,line,color)
 	set var(graph,ds,line,width) $ed(graph,ds,line,width)
@@ -903,20 +905,20 @@ proc PrismPlotGenerate {varname} {
 
     switch $var(plot,mode) {
 	newplot {
-	    PlotDialog $vvarname "[string totitle $varname] Plot"
+	    PlotDialog $vvarname "[string totitle $varname] Plot" true
 	    PlotAddGraph $vvarname line
 	    PlotTitle $vvarname $var(extname) $txx $tyy
 	}
 	newgraph {
 	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Plot"
+		PlotDialog $vvarname "[string totitle $varname] Plot" true
 	    }
 	    PlotAddGraph $vvarname line
 	    PlotTitle $vvarname $var(extname) $txx $tyy
 	}
 	newdataset {
 	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Plot"
+		PlotDialog $vvarname "[string totitle $varname] Plot" true
 		PlotAddGraph $vvarname line
 		PlotTitle $vvarname $var(extname) $txx $tyy
 	    }
@@ -948,7 +950,7 @@ proc PrismPlotGenerate {varname} {
     set vvar(graph,ds,error,width) $var(graph,ds,error,width)
     PlotLineUpdateElement $vvarname
 
-    set vvar(canvas,theme) $var(theme,colors)
+    set vvar(canvas,theme) $var(canvas,theme)
     PlotUpdateAllElement $vvarname
 
     PlotStats $vvarname
@@ -1111,6 +1113,7 @@ proc PrismHistogram {varname} {
     }
 
     global ed
+    global pap
 
     set w ".${varname}hist"
     set mb ".${varname}histmb"
@@ -1123,7 +1126,7 @@ proc PrismHistogram {varname} {
     set ed(min) $var(bar,min)
     set ed(max) $var(bar,max)
 
-    set ed(theme,colors) $var(theme,colors)
+    set ed(canvas,theme) $pap(canvas,theme)
 
     set ed(graph,ds,bar,border,color) $var(graph,ds,bar,border,color)
     set ed(graph,ds,bar,color) $var(graph,ds,bar,color)
@@ -1174,7 +1177,7 @@ proc PrismHistogram {varname} {
     set f [ttk::labelframe $g.prop -text [msgcat::mc {Properties}]]
 
     ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
-	-variable ed(theme,colors)
+	-variable ed(canvas,theme)
 
     ttk::label $f.tbordercolor -text [msgcat::mc {Border}]
     ColorMenuButton $f.bordercolor ed graph,ds,bar,border,color {}
@@ -1231,7 +1234,7 @@ proc PrismHistogram {varname} {
 	set var(bar,max) $ed(max)
 	set var(bar,minmax) 1
 
-	set var(theme,colors) $ed(theme,colors)
+	set var(canvas,theme) $ed(canvas,theme)
 
 	set var(graph,ds,bar,border,color) $ed(graph,ds,bar,border,color)
 	set var(graph,ds,bar,color) $ed(graph,ds,bar,color)
@@ -1342,20 +1345,20 @@ proc PrismHistogramGenerate {varname} {
 
     switch $var(plot,mode) {
 	newplot {
-	    PlotDialog $vvarname "[string totitle $varname] Histogram"
+	    PlotDialog $vvarname "[string totitle $varname] Histogram" true
 	    PlotAddGraph $vvarname bar
 	    PlotTitle $vvarname $var(col) {Values} {Counts}
 	}
 	newgraph {
 	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Histogram"
+		PlotDialog $vvarname "[string totitle $varname] Histogram" true
 	    }
 	    PlotAddGraph $vvarname bar
 	    PlotTitle $vvarname $var(col) {Values} {Counts}
 	}
 	newdataset {
 	    if {![PlotPing $vvarname]} {
-		PlotDialog $vvarname "[string totitle $varname] Histogram"
+		PlotDialog $vvarname "[string totitle $varname] Histogram" true
 		PlotAddGraph $vvarname bar
 		PlotTitle $vvarname $var(col) {Values} {Counts}
 	    }
@@ -1373,7 +1376,7 @@ proc PrismHistogramGenerate {varname} {
     set vvar(graph,ds,bar,fill) $var(graph,ds,bar,fill)
     PlotBarUpdateElement $vvarname
     
-    set vvar(canvas,theme) $var(theme,colors)
+    set vvar(canvas,theme) $var(canvas,theme)
     PlotUpdateAllElement $vvarname
 
     PlotStats $vvarname

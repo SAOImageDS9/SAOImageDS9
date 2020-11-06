@@ -4,8 +4,8 @@
 
 package provide DS9 1.0
 
-# used by backup
-proc PlotDialog {varname wtt} {
+# used by backup (need the hidden param)
+proc PlotDialog {varname wtt {theme true}} {
     upvar #0 $varname var
     global $varname
 
@@ -40,6 +40,9 @@ proc PlotDialog {varname wtt} {
 
     # set canvas vars
     array set $varname [array get pap "canvas,*"]
+    if {!$theme} {
+	set var(canvas,theme) 0
+    }	
 
     # create window
     Toplevel $var(top) $var(mb) 7 $wtt [list PlotDestroy $varname]

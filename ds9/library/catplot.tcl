@@ -109,7 +109,7 @@ proc CATPlotGenerate {varname} {
     $yedata set $ye
 
     if {![PlotPing $vvarname]} {
-	PlotDialog $vvarname $var(title)
+	PlotDialog $vvarname $var(title) true
 	PlotAddGraph $vvarname scatter
 
 	set vvar(mode) pointer
@@ -125,9 +125,6 @@ proc CATPlotGenerate {varname} {
 	set vvar(graph,ds,yedata) $yedata
 
 	PlotExternal $vvarname xyexey
-
-	set vvar(canvas,theme) 1
-	PlotUpdateAllElement $vvarname
     }
 
     # colnames can change

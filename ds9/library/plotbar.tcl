@@ -8,10 +8,10 @@ package provide DS9 1.0
 proc PlotBarTool {} {
     global iap
 
-    PlotBar $iap(tt) [msgcat::mc {Bar Plot Tool}] {} {} {} 2 {}
+    PlotBar $iap(tt) [msgcat::mc {Bar Plot Tool}] {} {} {} 2 {} true
 }
 
-proc PlotBar {tt wtt title xaxis yaxis dim data} {
+proc PlotBar {tt wtt title xaxis yaxis dim data theme} {
     global iap
 
     # make the window name unique
@@ -30,7 +30,7 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotDialog $varname $wtt
+    PlotDialog $varname $wtt $theme
     PlotAddGraph $varname bar
     PlotTitle $varname $title $xaxis $yaxis
     PlotAddDataSet $varname $dim $data

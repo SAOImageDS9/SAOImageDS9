@@ -16,7 +16,7 @@ proc PrefsDialogPlot {} {
     set ff [ttk::frame $w.plot.left]
 
     # Canvas
-    set f [ttk::labelframe $ff.canvas -text [msgcat::mc {Canvas}]]
+    set f [ttk::labelframe $ff.canvas -text [msgcat::mc {Plot}]]
 
     ttk::checkbutton $f.theme -text [msgcat::mc {Use Theme Colors}] \
 	-variable pap(canvas,theme)
@@ -285,17 +285,17 @@ proc PlotCmdNewParam5 {proc fn title xaxis yaxis dim} {
 
 proc PlotCmdLine {title xaxis yaxis dim} {
     global parse
-    PlotLine $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
+    PlotLine $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf) false
 }
 
 proc PlotCmdBar {title xaxis yaxis dim} {
     global parse
-    PlotBar $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
+    PlotBar $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf) false
 }
 
 proc PlotCmdScatter {title xaxis yaxis dim} {
     global parse
-    PlotScatter $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
+    PlotScatter $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf) false
 }
 
 proc PlotCmdAnalysisPlotStdin {which} {

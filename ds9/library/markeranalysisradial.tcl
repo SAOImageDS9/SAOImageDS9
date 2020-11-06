@@ -104,7 +104,7 @@ proc MarkerAnalysisRadialCB {frame id} {
     $frame get marker $id analysis radial $xdata $ydata $yedata $vvar(system)
     
     if {![PlotPing $vvarname]} {
-	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]] true
 	PlotAddGraph $vvarname line
 
 	MarkerAnalysisRadialAxisTitle $vvarname
@@ -113,9 +113,6 @@ proc MarkerAnalysisRadialCB {frame id} {
 	set vvar(graph,ds,ydata) $ydata
 	set vvar(graph,ds,yedata) $yedata
 	PlotExternal $vvarname xyey
-
-	set vvar(canvas,theme) 1
-	PlotUpdateAllElement $vvarname
     }
 
     PlotStats $vvarname

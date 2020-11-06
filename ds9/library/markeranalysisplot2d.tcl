@@ -166,7 +166,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	if {$vvar(bunit)=={}} {
 	    set vvar(bunit) {Counts}
 	}
-	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]] true
 	PlotAddGraph $vvarname line
 
 	MarkerAnalysisPlot2dAxisTitle $vvarname
@@ -182,9 +182,6 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	PlotExternal $vvarname xy
-
-	set vvar(canvas,theme) 1
-	PlotUpdateAllElement $vvarname
     }
 
     PlotStats $vvarname

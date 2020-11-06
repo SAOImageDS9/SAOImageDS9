@@ -107,7 +107,7 @@ proc MarkerAnalysisPandaCB {frame id} {
     }
 
     if {![PlotPing $vvarname]} {
-	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]] true
 	PlotAddGraph $vvarname line
 
 	MarkerAnalysisPandaAxisTitle $vvarname
@@ -118,9 +118,6 @@ proc MarkerAnalysisPandaCB {frame id} {
 	    set vvar(graph,ds,yedata) ${vvarname}ye$jj
 	    PlotExternal $vvarname xyey
 	}
-
-	set vvar(canvas,theme) 1
-	PlotUpdateAllElement $vvarname
     }
 
     PlotStats $vvarname

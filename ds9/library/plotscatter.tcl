@@ -8,10 +8,10 @@ package provide DS9 1.0
 proc PlotScatterTool {} {
     global iap
 
-    PlotScatter $iap(tt) [msgcat::mc {Scatter Plot Tool}] {} {} {} 2 {}
+    PlotScatter $iap(tt) [msgcat::mc {Scatter Plot Tool}] {} {} {} 2 {} true
 }
 
-proc PlotScatter {tt wtt title xaxis yaxis dim data} {
+proc PlotScatter {tt wtt title xaxis yaxis dim data theme} {
     global iap
 
     # make the window name unique
@@ -30,7 +30,7 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotDialog $varname $wtt
+    PlotDialog $varname $wtt $theme
     PlotAddGraph $varname scatter
     PlotTitle $varname $title $xaxis $yaxis
     PlotAddDataSet $varname $dim $data

@@ -10,7 +10,7 @@ proc PlotDefState {} {
     global ds9
 
     # per Canvas
-    set pap(canvas,theme) 0
+    set pap(canvas,theme) 1
     set pap(canvas,foreground) black
     set pap(canvas,background) white
     set pap(canvas,grid,color) gray64
@@ -78,7 +78,7 @@ proc PlotDefState {} {
     set pap(graph,ds,line,width) 1
     set pap(graph,ds,line,dash) 0
     set pap(graph,ds,line,fill) 0
-    set pap(graph,ds,line,fill,color) white
+    set pap(graph,ds,line,fill,color) black
 
     set pap(graph,ds,line,shape,symbol) none
     set pap(graph,ds,line,shape,color) red

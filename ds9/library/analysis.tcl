@@ -899,7 +899,8 @@ proc AnalysisReaderFinish {ch which i} {
 		$ianalysis($which,$i,plot,xaxis) \
 		$ianalysis($which,$i,plot,yaxis) \
 		$ianalysis($which,$i,plot,dim) \
-		$ianalysis($which,$i,result)
+		$ianalysis($which,$i,result) \
+		false
 	}
 	plotstdin {
 	    AnalysisPlotStdin line "at${which}${i}" $ianalysis($which,$i,item) \
@@ -960,9 +961,9 @@ proc AnalysisPlotStdin {type w wtt result} {
 
     if {$d != {} && $rr != {}} {
 	switch $type {
-	    line {PlotLine $w $wtt $t $x $y $d $rr}
-	    bar {PlotBar $w $wtt $t $x $y $d $rr}
-	    scatter {PlotScatter $w $wtt $t $x $y $d $rr}
+	    line {PlotLine $w $wtt $t $x $y $d $rr false}
+	    bar {PlotBar $w $wtt $t $x $y $d $rr false}
+	    scatter {PlotScatter $w $wtt $t $x $y $d $rr false}
 	}
     } else {
 	Error "[msgcat::mc {Error}] [string range $tt 0 40]"
@@ -1007,7 +1008,9 @@ proc AnalysisProcessGetURL {which i result} {
 		  $ianalysis($which,$i,plot,xaxis) \
 		  $ianalysis($which,$i,plot,yaxis) \
 		  $ianalysis($which,$i,plot,dim) \
-		  $ianalysis($which,$i,result)}
+		  $ianalysis($which,$i,result) \
+		  false
+	      } 
 	plotstdin {AnalysisPlotStdin line "at${which}${i}" \
 		       $ianalysis($which,$i,item) \
 		       $ianalysis($which,$i,result)}
@@ -1980,16 +1983,16 @@ proc AnalysisCmdPlotLine {title xaxis yaxis dim} {
     global parse
 
     if {$parse(buf) != {}} {
-	PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim $parse(buf)
+	PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim $parse(buf) false
     } elseif {$parse(fn) != {}} {
 	if {[file exists $parse(fn)]} {
 	    set ch [open $parse(fn) r]
 	    set rr [read $ch]
 	    close $ch
-	    PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim $rr
+	    PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim $rr false
 	}
     } else {
-	PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim {}
+	PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim {} false
     }
 }
 

@@ -158,7 +158,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	if {$vvar(bunit)=={}} {
 	    set vvar(bunit) {Counts}
 	}
-	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]] true
 	PlotAddGraph $vvarname line
 
 	MarkerAnalysisPlot3dAxisTitle $vvarname
@@ -176,9 +176,6 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	PlotExternal $vvarname xy
-
-	set vvar(canvas,theme) 1
-	PlotUpdateAllElement $vvarname
     }
 
     set vvar(slice) [$frame get fits slice from image $vvar(system)]

@@ -260,8 +260,10 @@ proc PrismDialog {varname} {
 		      -bg [ThemeTreeBackground] \
 		     ]
 
-    $var(tbl) tag configure sel -fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
-    $var(tbl) tag configure title -fg [ThemeForeground] -bg [ThemeBackground]
+    $var(tbl) tag configure sel \
+	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
+    $var(tbl) tag configure title \
+	-fg [ThemeForeground] -bg [ThemeBackground] -bd 0
     $prism(tbl) width 0 7
     
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
@@ -1585,7 +1587,7 @@ proc PrismTableBrowseCmd {varname ss} {
     $var(tbl) activate 1,1
     $var(tbl) selection clear all
 
-    if {$cc == 1 || $cc > $cols} {
+    if {$cc == 0 || $cc > $cols} {
 	# greater than last column: clear
 	set var(ccp,last) {}
 	set var(ccp,prev) {}

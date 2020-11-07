@@ -53,12 +53,12 @@ proc PrismDialog {varname} {
     set var(extname) {}
     set var(extnames) {}
     set var(extnum) 0
-    set var(start) 0
-    set var(goto) 1
-
-    set var(search) {}
 
     set var(canvas,theme) $pap(canvas,theme)
+
+    # also set PrismExtCmd
+    set var(start) 0
+    set var(goto) 1
 
     set var(xx) {}
     set var(yy) {}
@@ -77,6 +77,7 @@ proc PrismDialog {varname} {
 
     set var(col) {}
 
+    # also set PrismExtCmd
     set var(bar,num) 10
     set var(bar,min) 0
     set var(bar,max) 0
@@ -643,8 +644,6 @@ proc PrismClear {varname} {
     set var(extname) {}
     set var(extnames) {}
     set var(extnum) 0
-    set var(start) 0
-    set var(goto) 1
 
     # reset plots
     set var(plot,seq) 0
@@ -1290,12 +1289,19 @@ proc PrismHistogramMinMaxAscii {varname col minname maxname} {
     set ll {}
 
     for {set ii 1} {$ii<=$rows} {incr ii} {
-	lappend ll "[starbase_get $var(tbldb) $ii $colnum]"
+	set vv [starbase_get $var(tbldb) $ii $colnum]
+	if {$vv != {} && [string is double $vv]} {
+	    lappend ll $vv
+	}
     }
     set ll [join $ll ","]
-
-    set min [expr min($ll)]
-    set max [expr max($ll)]
+    if {$ll != {}} {
+	set min [expr min($ll)]
+	set max [expr max($ll)]
+    } else {
+	set min 0
+	set max 0
+    }
 }
 
 proc PrismHistogramGenerate {varname} {
@@ -1418,21 +1424,24 @@ proc PrismHistogramGenerateAscii {varname xdata ydata} {
     set colnum [starbase_colnum $var(tbldb) $var(col)]
 
     set diff [expr double($max-$min)]
-    set barwidth [expr $diff/double($num)]
+    set var(bar,width) [expr $diff/double($num)]
 
     for {set ii 0} {$ii<$num} {incr ii} {
-	$xdata append [expr double($ii)*$barwidth + $barwidth/2. + $min]
+	$xdata append \
+	    [expr double($ii)*$var(bar,width) + $var(bar,width)/2. + $min]
 	$ydata append 0
     }
 
     for {set ii 1} {$ii<=$rows} {incr ii} {
 	set vv [starbase_get $var(tbldb) $ii $colnum]
-	set jj [expr ($vv-$min)/$barwidth]
+	if {$vv != {} && [string is double $vv]} {
+	    set jj [expr ($vv-$min)/$var(bar,width)]
 
-	set kk [expr int($jj)]
-	if {$kk>=0 && $kk<$num} {
-	    set ww [$ydata index $kk]
-	    $ydata index $kk [expr $ww+1]
+	    set kk [expr int($jj)]
+	    if {$kk>=0 && $kk<$num} {
+		set ww [$ydata index $kk]
+		$ydata index $kk [expr $ww+1]
+	    }
 	}
     }
 }
@@ -1500,147 +1509,6 @@ proc PrismColsMenuCmd {ww col cmd} {
     if {$cmd != {}} {
 	eval $cmd
     }
-}
-
-proc PrismExtCmd {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    # this proc can be called in any time
-    # prepare for the worst
-    if {$var(fn) == {}} {
-	return
-    }
-
-    # clear
-    set var(start) 0
-    set var(goto) 1
-
-    set var(xx) {}
-    set var(yy) {}
-    set var(xerr) {}
-    set var(yerr) {}
-
-    set var(col) {}
-    set var(bar,num) 10
-    set var(bar,width) 1
-
-    set var(ccp,last) {}
-    set var(ccp,prev) {}
-
-    switch $var(type) {
-	fits {PrismExtFitsCmd $varname}
-	ascii {PrismExtAsciiCmd $varname}
-    }
-}
-
-proc PrismExtFitsCmd {varname} {
-    upvar #0 $varname var
-    global $varname
-    global iprism
-
-    set var(ext) [$var(dir) selection]
-    if {$var(ext) == {}} {
-	set var(ext) 0
-    }
-    
-    set var(extname) [lindex $var(extnames) $var(ext)]
-
-    # find our extension
-    fitsy open $var(fn) $var(load) $var(ext)
-
-    # header
-    $var(text) delete 1.0 end
-    $var(text) insert end [fitsy header]
-
-    # color tag keywords
-    set stop [$var(text) index end]
-    for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
-	$var(text) tag add keyword $ii "$ii +8 chars"
-    }
-    # see top
-    $var(text) see 1.0
-
-    # table
-    if {[fitsy istable]} {
-	set var(rows) [fitsy rows]
-    } else {
-	set var(rows) 0
-    }
-    fitsy close
-
-    PrismTableFits $varname
-}
-
-proc PrismExtAsciiCmd {varname} {
-    upvar #0 $varname var
-    global $varname
-}
-
-proc PrismTableBrowseCmd {varname ss} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    set cc [lindex [split $ss ','] 1]
-    set rows [$var(tbl) cget -rows]
-    set cols [starbase_ncols $var(tbldb)]
-
-    # reset current cell so next click in same cell will trigger this proc
-    $var(tbl) activate 1,1
-    $var(tbl) selection clear all
-
-    if {$cc == 0 || $cc > $cols} {
-	# greater than last column: clear
-	set var(ccp,last) {}
-	set var(ccp,prev) {}
-    } elseif {$var(ccp,last) == $cc} {
-	# click on same column
-	set var(ccp,last) $var(ccp,prev)
-	set var(ccp,prev) {}
-    } elseif {$var(ccp,prev) == $cc} {
-	# click on same column
-	set var(ccp,prev) {}
-    } else {
-	# new column
-	if {$var(ccp,prev) == {}} {
-	    set var(ccp,prev) $var(ccp,last)
-	}
-	set var(ccp,last) $cc
-    }
-
-    # set selection
-    if {$var(ccp,last) != {}} {
-	$var(tbl) selection set 2,$var(ccp,last) $rows,$var(ccp,last)
-    }
-    if {$var(ccp,prev) != {}} {
-	$var(tbl) selection set 2,$var(ccp,prev) $rows,$var(ccp,prev)
-    }
-
-    # set histogram col
-    if {$var(ccp,last) != {}} {
-	set var(col) \
-	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
-    } else {
-	set var(col) {}
-    }
-    
-    # set plot xx,yy
-    if {$var(ccp,last) != {} && $var(ccp,prev) != {}} {
-	set var(xx) \
-	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,prev)-1]]
-	set var(yy) \
-	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
-    } elseif {$var(ccp,last) != {}} {
-	set var(xx) \
-	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
-	set var(yy) {}
-    } else {
-	set var(xx) {}
-	set var(yy) {}
-    }
-
-#    puts "last=$var(ccp,last) prev=$var(ccp,prev)"
 }
 
 proc PrismTableFirst {varname} {
@@ -1922,6 +1790,167 @@ proc PrismTableFits {varname} {
     $var(tbl) see 2,1
 
     PrismDialogUpdate $varname
+}
+
+proc PrismTableBrowseCmd {varname ss} {
+    upvar #0 $varname var
+    global $varname
+    global $var(tbldb)
+
+    $var(tbl) selection clear all
+
+    # just in case
+    if {![info exists $var(tbldb)]} {
+	return
+    }
+
+    if {![TBLValidDB $var(tbldb)]} {
+	return
+    }
+
+    set rows [$var(tbl) cget -rows]
+    set cols [starbase_ncols $var(tbldb)]
+
+    # reset current cell so next click in same cell will trigger this proc
+    $var(tbl) activate 0,0
+
+    # determine ccp,last ccp,prev
+    set cc [lindex [split $ss ','] 1]
+    if {$cc == 0 || $cc > $cols} {
+	# greater than last column: clear
+	set var(ccp,last) {}
+	set var(ccp,prev) {}
+    } elseif {$var(ccp,last) == $cc} {
+	# click on same column
+	set var(ccp,last) $var(ccp,prev)
+	set var(ccp,prev) {}
+    } elseif {$var(ccp,prev) == $cc} {
+	# click on same column
+	set var(ccp,prev) {}
+    } else {
+	# new column
+	if {$var(ccp,prev) == {}} {
+	    set var(ccp,prev) $var(ccp,last)
+	}
+	set var(ccp,last) $cc
+    }
+
+    # select columns
+    set rows [$var(tbl) cget -rows]
+    # set selection
+    if {$var(ccp,last) != {}} {
+	$var(tbl) selection set 2,$var(ccp,last) $rows,$var(ccp,last)
+    }
+    if {$var(ccp,prev) != {}} {
+	$var(tbl) selection set 2,$var(ccp,prev) $rows,$var(ccp,prev)
+    }
+
+    # set histogram col
+    if {$var(ccp,last) != {}} {
+	set var(col) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
+    } else {
+	set var(col) {}
+    }
+    
+    # set plot xx,yy
+    if {$var(ccp,last) != {} && $var(ccp,prev) != {}} {
+	set var(xx) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,prev)-1]]
+	set var(yy) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
+    } elseif {$var(ccp,last) != {}} {
+	set var(xx) \
+	    [lindex [starbase_columns $var(tbldb)] [expr $var(ccp,last)-1]]
+	set var(yy) {}
+    } else {
+	set var(xx) {}
+	set var(yy) {}
+    }
+
+#    puts "last=$var(ccp,last) prev=$var(ccp,prev)"
+}
+
+proc PrismExtCmd {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # clear any selection
+    $var(tbl) selection clear all
+
+    # this proc can be called in any time
+    # prepare for the worst
+    if {$var(fn) == {}} {
+	return
+    }
+
+    # clear
+    set var(start) 0
+    set var(goto) 1
+
+    set var(xx) {}
+    set var(yy) {}
+    set var(xerr) {}
+    set var(yerr) {}
+
+    set var(col) {}
+
+    set var(bar,num) 10
+    set var(bar,min) 0
+    set var(bar,max) 0
+    set var(bar,minmax) 1
+    set var(bar,width) 1
+
+    set var(ccp,last) {}
+    set var(ccp,prev) {}
+
+    switch $var(type) {
+	fits {PrismExtFitsCmd $varname}
+	ascii {PrismExtAsciiCmd $varname}
+    }
+}
+
+proc PrismExtFitsCmd {varname} {
+    upvar #0 $varname var
+    global $varname
+    global iprism
+
+    set var(ext) [$var(dir) selection]
+    if {$var(ext) == {}} {
+	set var(ext) 0
+    }
+    
+    set var(extname) [lindex $var(extnames) $var(ext)]
+
+    # find our extension
+    fitsy open $var(fn) $var(load) $var(ext)
+
+    # header
+    $var(text) delete 1.0 end
+    $var(text) insert end [fitsy header]
+
+    # color tag keywords
+    set stop [$var(text) index end]
+    for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
+	$var(text) tag add keyword $ii "$ii +8 chars"
+    }
+    # see top
+    $var(text) see 1.0
+
+    # table
+    if {[fitsy istable]} {
+	set var(rows) [fitsy rows]
+    } else {
+	set var(rows) 0
+    }
+    fitsy close
+
+    PrismTableFits $varname
+}
+
+proc PrismExtAsciiCmd {varname} {
+    upvar #0 $varname var
+    global $varname
 }
 
 # Process Cmds

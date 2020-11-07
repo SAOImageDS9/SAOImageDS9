@@ -464,11 +464,6 @@ proc PlotUpdateGUI {varname} {
 	$f.delete configure -state disabled
     } else {
 	$f.duplicate configure -state normal
-
-	if {!$var(graph,ds,manage)} {
-	    $f.delete configure -state disabled
-	} else {
-	    $f.delete configure -state normal
-	}
+	$f.delete configure -state normal
     }
 }

@@ -127,7 +127,6 @@
 ::msgcat::mcset da {Can Rotate} [encoding convertfrom iso8859-1 {Må rotere}]
 ::msgcat::mcset da {Cancelled} 
 ::msgcat::mcset da {Cancel} {Slet}
-::msgcat::mcset da {Canvas} 
 ::msgcat::mcset da {Cap} 
 ::msgcat::mcset da {Catalog Server} {Katalog server}
 ::msgcat::mcset da {Catalog Tool} {Katalog funktion} 

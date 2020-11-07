@@ -127,7 +127,6 @@
 ::msgcat::mcset zh {Can Rotate} [encoding convertfrom big5 "\xA5\x69 \xA5\x48 \xB1\xDB \xC2\xE0"]
 ::msgcat::mcset zh {Cancelled} 
 ::msgcat::mcset zh {Cancel} 
-::msgcat::mcset zh {Canvas} 
 ::msgcat::mcset zh {Cap} 
 ::msgcat::mcset zh {Catalog Server} 
 ::msgcat::mcset zh {Catalog Tool} 

@@ -136,7 +136,6 @@ proc PlotInitGraph {varname} {
     # per DataSet
     # dynamic
     set var(graph,ds,dim) xy
-    set var(graph,ds,manage) 1
     set var(graph,ds,xdata) {}
     set var(graph,ds,ydata) {}
     set var(graph,ds,xedata) {}
@@ -193,7 +192,6 @@ proc PlotSaveState {varname} {
 
     # dynamic
     set var($cc,$nn,dim) $var(graph,ds,dim)
-    set var($cc,$nn,manage) $var(graph,ds,manage)
     set var($cc,$nn,xdata) $var(graph,ds,xdata)
     set var($cc,$nn,ydata) $var(graph,ds,ydata)
     set var($cc,$nn,xedata) $var(graph,ds,xedata)
@@ -284,7 +282,6 @@ proc PlotRestoreState {varname} {
 
     # dynamic
     set var(graph,ds,dim) $var($cc,$nn,dim)
-    set var(graph,ds,manage) $var($cc,$nn,manage)
     set var(graph,ds,xdata) $var($cc,$nn,xdata)
     set var(graph,ds,ydata) $var($cc,$nn,ydata)
     set var(graph,ds,xedata) $var($cc,$nn,xedata)

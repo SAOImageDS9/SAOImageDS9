@@ -127,7 +127,6 @@
 ::msgcat::mcset de {Can Rotate} {Kann rotieren}
 ::msgcat::mcset de {Cancelled} 
 ::msgcat::mcset de {Cancel} {Abbrechen}
-::msgcat::mcset de {Canvas} 
 ::msgcat::mcset de {Cap} 
 ::msgcat::mcset de {Catalog Server}  {Katalogserver}
 ::msgcat::mcset de {Catalog Tool} {Katalogwerkzeug}

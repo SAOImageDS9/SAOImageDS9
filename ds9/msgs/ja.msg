@@ -127,7 +127,6 @@
 ::msgcat::mcset ja {Can Rotate} [encoding convertfrom euc-jp "\xb2\xf3\xc5\xbe\xb2\xc4"]
 ::msgcat::mcset ja {Cancelled} 
 ::msgcat::mcset ja {Cancel} [encoding convertfrom euc-jp "\xbc\xe8\xa4\xea\xbe\xc3\xa4\xb7"]
-::msgcat::mcset ja {Canvas} 
 ::msgcat::mcset ja {Cap} 
 ::msgcat::mcset ja {Catalog Server} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xb8\xa1\xba\xf7\xa5\xb5\xa1\xbc\xa5\xd0\xa1\xbc"]
 ::msgcat::mcset ja {Catalog Tool} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa5\xc4\xa1\xbc\xa5\xeb"]

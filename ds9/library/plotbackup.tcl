@@ -146,7 +146,6 @@ proc PlotBackupDataset {varname filename} {
     # cleanup
     unset apca(graph,ds,current)
     unset apca(graph,ds,dim)
-    unset apca(graph,ds,manage)
     unset apca(graph,ds,xdata)
     unset apca(graph,ds,ydata)
     unset apca(graph,ds,xedata)

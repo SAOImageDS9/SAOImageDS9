@@ -127,7 +127,6 @@
 ::msgcat::mcset cs {Can Rotate} 
 ::msgcat::mcset cs {Cancelled} 
 ::msgcat::mcset cs {Cancel} [encoding convertfrom iso8859-2 {Zru¹it}]
-::msgcat::mcset cs {Canvas} 
 ::msgcat::mcset cs {Cap} 
 ::msgcat::mcset cs {Catalog Server} [encoding convertfrom iso8859-2 {Katalogový server}]
 ::msgcat::mcset cs {Catalog Tool} [encoding convertfrom iso8859-2 {Katalogový nástroj}]

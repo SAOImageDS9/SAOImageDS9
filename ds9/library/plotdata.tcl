@@ -53,8 +53,6 @@ proc PlotDataSetOne {varname dim data} {
     set nn $var(graph,seq)
     lappend ${varname}(graph,dss) $nn
     set var(graph,ds,current) $nn
-
-    set var(graph,ds,manage) 1
     set var(graph,ds,name) "Dataset $nn"
 
     # init new state
@@ -262,8 +260,6 @@ proc PlotExternal {varname dim} {
     set nn $var(graph,seq)
     lappend ${varname}(graph,dss) $nn
     set var(graph,ds,current) $nn
-
-    set var(graph,ds,manage) 0
     set var(graph,ds,name) "Dataset $nn"
 
     set var(graph,ds,dim) $dim
@@ -286,8 +282,6 @@ proc PlotDupDataSet {varname} {
     set nn $var(graph,seq)
     lappend var(graph,dss) $nn
     set var(graph,ds,current) $nn
-
-    set var(graph,ds,manage) 1
     set var(graph,ds,name) "Dataset $nn"
 
     # init new state

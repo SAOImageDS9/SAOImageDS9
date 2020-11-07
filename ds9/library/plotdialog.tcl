@@ -732,14 +732,8 @@ proc PlotUpdateMenus {varname} {
     } else {
 	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
 	    -state normal
-
-	if {!$var(graph,ds,manage)} {
-	    $var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
-		-state disabled
-	} else {
-	    $var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
-		-state normal
-	}
+	$var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
+	    -state normal
     }
 
     $var(mb).graph.select delete 0 end

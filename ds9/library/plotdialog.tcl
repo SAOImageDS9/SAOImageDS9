@@ -50,6 +50,7 @@ proc PlotDialog {varname wtt {theme true}} {
 
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
+    $var(mb) add cascade -label [msgcat::mc {Control Panel}] -menu $var(mb).gui
     $var(mb) add cascade -label [msgcat::mc {Plot}] -menu $var(mb).canvas
     $var(mb) add cascade -label [msgcat::mc {Graph}] -menu $var(mb).graph
     $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).dataline
@@ -68,9 +69,6 @@ proc PlotDialog {varname wtt {theme true}} {
        -command "set ${varname}(stats) 1; PlotStats $varname"
     $var(mb).file add command -label [msgcat::mc {List Data}] \
        -command "set ${varname}(list) 1; PlotList $varname"
-    $var(mb).file add separator
-    $var(mb).file add command -label "[msgcat::mc {Control Panel GUI}]..." \
-	-command [list PlotGUI $varname]
     $var(mb).file add separator
     $var(mb).file add command -label "[msgcat::mc {Backup}]..." \
 	-command [list PlotBackupDialog $varname]
@@ -280,6 +278,11 @@ proc PlotDialog {varname wtt {theme true}} {
     PlotLineMenus $varname
     PlotBarMenus $varname
     PlotScatterMenus $varname
+
+    # GUI
+    ThemeMenu $var(mb).gui
+    $var(mb).gui add command -label [msgcat::mc {Open}] \
+	-command [list PlotGUI $varname]
 
     bind $var(top) <<Close>> [list PlotDestroy $varname]
     bind $var(top) <<PageSetup>> PSPageSetup

@@ -176,7 +176,7 @@
 ::msgcat::mcset zh {Contours} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75"]
 ::msgcat::mcset zh {Contour} 
 ::msgcat::mcset zh {Contrast} 
-::msgcat::mcset zh {Control Panel GUI} 
+::msgcat::mcset zh {Control Panel} 
 ::msgcat::mcset zh {Convert to Polygons} 
 ::msgcat::mcset zh {Coordinate Grid Parameters} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Coordinate Grid} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75"]

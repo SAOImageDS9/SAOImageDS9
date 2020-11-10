@@ -176,7 +176,7 @@
 ::msgcat::mcset da {Contours} {Konturer}
 ::msgcat::mcset da {Contour} {Konturer}
 ::msgcat::mcset da {Contrast} {Kontrast}
-::msgcat::mcset da {Control Panel GUI} 
+::msgcat::mcset da {Control Panel} 
 ::msgcat::mcset da {Convert to Polygons} {Omdan til poygoner}
 ::msgcat::mcset da {Coordinate Grid Parameters} {Koordinatnetparametre}
 ::msgcat::mcset da {Coordinate Grid} {Koordinatnet}

@@ -176,7 +176,7 @@
 ::msgcat::mcset cs {Contours} [encoding convertfrom iso8859-2 {Obrysy}]
 ::msgcat::mcset cs {Contour} [encoding convertfrom iso8859-2 {Obrys}]
 ::msgcat::mcset cs {Contrast} [encoding convertfrom iso8859-2 {Kontrast}]
-::msgcat::mcset cs {Control Panel GUI} 
+::msgcat::mcset cs {Control Panel} 
 ::msgcat::mcset cs {Convert to Polygons} [encoding convertfrom iso8859-2 {Zmìnit na obdélníky}]
 ::msgcat::mcset cs {Coordinate Grid Parameters} [encoding convertfrom iso8859-2 {Nastavení møí¾ky}]
 ::msgcat::mcset cs {Coordinate Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]

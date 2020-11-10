@@ -176,7 +176,7 @@
 ::msgcat::mcset ja {Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2"]
 ::msgcat::mcset ja {Contour} 
 ::msgcat::mcset ja {Contrast} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8"]
-::msgcat::mcset ja {Control Panel GUI} 
+::msgcat::mcset ja {Control Panel} 
 ::msgcat::mcset ja {Convert to Polygons} [encoding convertfrom euc-jp "\xc2\xbf\xb3\xd1\xb7\xc1\xa4\xcb\xca\xd1\xb4\xb9"]
 ::msgcat::mcset ja {Coordinate Grid Parameters} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Coordinate Grid} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9"]

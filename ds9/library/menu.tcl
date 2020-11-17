@@ -158,7 +158,7 @@ proc ThemeForeground {} {
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup . -foreground]}
-	aqua {systemTextColor)}
+	aqua {return systemTextColor}
     }
 }
 
@@ -168,7 +168,7 @@ proc ThemeBackground {} {
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup . -background]}
-	aqua {return systemTextBackgroundColor)}
+	aqua {return systemTextBackgroundColor}
     }
 }
 

@@ -306,9 +306,7 @@ proc InitDialogBox {} {
     set analysisparamfbox(file) {}
     set analysisparamfbox(dir) {}
     # MacOS needs a default file type
-    set analysisparamfbox(types) [list \
-				      [list [::msgcat::mc {Analysis}] {*.dat}]\
-				     ]
+    set analysisparamfbox(types) [list {}]
 
     global apsavfbox
     set apsavfbox(file) {ds9.ps}

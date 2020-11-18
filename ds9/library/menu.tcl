@@ -116,7 +116,16 @@ proc ThemeConfigTable {w} {
 proc ThemeConfigPlot {w} {
     set varname [lindex [split $w {.}] 1]
     if {$varname != {}} {
-	PlotUpdateAllElement $varname
+	# All non-plot blt::graphs need to be listed here
+	#   scale
+	#   horz/vert graph
+	switch $varname {
+	    scale -
+	    ds9 {}
+	    default {
+		PlotUpdateAllElement $varname
+	    }
+	}
     }
 }
 

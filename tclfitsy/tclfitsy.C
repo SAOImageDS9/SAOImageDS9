@@ -507,12 +507,6 @@ int TclFITSY::table(int argc, const char* argv[])
 	    ccnt++;
 	    ostringstream index;
 	    index << '1' << ',' << ccnt << ends;
-	    const char* unit = col->tunit();
-	    ostringstream value;
-	    if (unit && *unit)
-	      value << trim(col->tunit()) << kk+1 << ends;
-	    else
-	      value << ' ' << endl;
 	    Tcl_SetVar2(interp_, argv[2], index.str().c_str(),
 			value.str().c_str(), TCL_GLOBAL_ONLY);
 
@@ -555,7 +549,7 @@ int TclFITSY::table(int argc, const char* argv[])
 	  for (int kk=1; kk<col->repeat(); kk++) {
 	    ccnt++;
 	    ostringstream index;
-	    index << ii+1 << ',' << ccnt << ends;
+	    index << ii+1+doUnits << ',' << ccnt << ends;
 	    ostringstream value;
 	    value << col->str(ptr,kk) << ends;
 	    Tcl_SetVar2(interp_, argv[2], index.str().c_str(),

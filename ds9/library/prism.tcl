@@ -53,6 +53,7 @@ proc PrismDialog {varname} {
     set var(extname) {}
     set var(extnames) {}
     set var(extnum) 0
+    set var(search) {}
 
     set var(canvas,theme) $pap(canvas,theme)
 

@@ -124,11 +124,7 @@ static Coord::SkyFrame checkWCSSky();
 %%
 
 start	:  {
-  if (fr->useMarkerColor())
-    strcpy(color, fr->markerColor());
-  else
-    strcpy(color, "green");
-
+  strcpy(color, fr->markerColor());
   globalSystem = fr->xySystem(); 
   globalSky = fr->xySky();
  } initGlobal commands processAnnulus

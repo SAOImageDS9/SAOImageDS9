@@ -648,6 +648,7 @@
 ::msgcat::mcset pt {Other} {Outro}
 ::msgcat::mcset pt {Outer} {Fora}
 ::msgcat::mcset pt {Overplot} 
+::msgcat::mcset pt {Override Color} 
 ::msgcat::mcset pt {PNG} 
 ::msgcat::mcset pt {PS Page Setup} 
 ::msgcat::mcset pt {PS Print} 
@@ -917,7 +918,6 @@
 ::msgcat::mcset pt {Upper Right Back} 
 ::msgcat::mcset pt {Upper Right Front} 
 ::msgcat::mcset pt {Use Authentication} [encoding convertfrom iso8859-1 {Utilizar Autenticação}]
-::msgcat::mcset pt {Use Color} 
 ::msgcat::mcset pt {Use Current Frame on Download} {Utilizar Frame Atual ao Descarregar}
 ::msgcat::mcset pt {Use Internal Web Browser} {Utilizar Navegador Web Interno}
 ::msgcat::mcset pt {Use Original Color/Width} 

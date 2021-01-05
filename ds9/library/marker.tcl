@@ -29,6 +29,7 @@ proc MarkerDef {} {
     set marker(centroid,radius) 10
     set marker(shape) circle
     set marker(color) green
+    set marker(color,default) 0
     set marker(dashlist) {8 3}
     set marker(width) 1
     set marker(dash) 0
@@ -44,9 +45,6 @@ proc MarkerDef {} {
     set marker(font,weight) normal
     set marker(font,slant) roman
     set marker(preserve) 0
-
-    set marker(default,use) 0
-    set marker(default,color) green
 
     set marker(plot2d) 0
     set marker(plot3d) 0
@@ -1170,7 +1168,7 @@ proc MarkerLoadFile {filename which format sys sky} {
     if {$ll == "SIMPLE  ="} {
 	# ok, its fits
 	# try filename first
-	if {[catch {$which marker load fits "\{$filename\}" $marker(default,color)}]} {
+	if {[catch {$which marker load fits "\{$filename\}" $marker(color)}]} {
 
 	    # reset errorInfo
 	    set errorInfo {}
@@ -1180,14 +1178,14 @@ proc MarkerLoadFile {filename which format sys sky} {
 	    if {$ext == {}} {
 		set regfilename "$base\[REGION\]"
 
-		if {[catch {$which marker load fits "\{$regfilename\}" $marker(default,color)}]} {
+		if {[catch {$which marker load fits "\{$regfilename\}" $marker(color)}]} {
 
 		    # reset errorInfo
 		    set errorInfo {}
 
 		    # ok now try the first extension
 		    set regfilename "$base\[1\]"
-		    if {[catch {$which marker load fits "\{$regfilename\}" $marker(default,color)}]} {
+		    if {[catch {$which marker load fits "\{$regfilename\}" $marker(color)}]} {
 			Error "[msgcat::mc {Unable to load region file}] $filename"
 			return -code error
 		    }
@@ -1199,7 +1197,7 @@ proc MarkerLoadFile {filename which format sys sky} {
 	}
     } else {
 	# no, its ascii
-	if {[catch {$which marker load $format "\{$filename\}" $marker(default,use) $marker(default,color) $sys $sky}]} {
+	if {[catch {$which marker load $format "\{$filename\}" $marker(color,default) $marker(color) $sys $sky}]} {
 	    Error "[msgcat::mc {Unable to load region file}] $filename"
 	    return -code error
 	}
@@ -1464,7 +1462,7 @@ proc RegionCmdLoad {} {
 	# xpa path
 	# fits regions files not supported  
 	$current(frame) marker load $marker(load,format) \
-	    $parse(sock) $marker(default,use) $marker(default,color) \
+	    $parse(sock) $marker(color,default) $marker(color) \
 	    $marker(load,system) $marker(load,sky)
 	UpdateGroupDialog
     } elseif {$parse(fn) != {}} {

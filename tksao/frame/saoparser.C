@@ -519,13 +519,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    98,    98,    98,   106,   107,   110,   111,   112,   113,
-     114,   117,   118,   119,   122,   123,   126,   127,   130,   131,
-     134,   135,   138,   139,   142,   143,   146,   149,   152,   161,
-     164,   173,   181,   189,   190,   191,   194,   197,   201,   201,
-     210,   216,   230,   237,   251,   254,   261,   265,   265,   270,
-     271,   274,   277,   278,   281,   285,   312,   312,   315,   316,
-     316
+       0,    98,    98,    98,   103,   104,   107,   108,   109,   110,
+     111,   114,   115,   116,   119,   120,   123,   124,   127,   128,
+     131,   132,   135,   136,   139,   140,   143,   146,   149,   158,
+     161,   170,   178,   186,   187,   188,   191,   194,   198,   198,
+     207,   213,   227,   234,   248,   251,   258,   262,   262,   267,
+     268,   271,   274,   275,   278,   282,   309,   309,   312,   313,
+     313
 };
 #endif
 
@@ -1535,65 +1535,62 @@ yyreduce:
         case 2:
 #line 98 "frame/saoparser.Y"
     {
-  if (fr->useMarkerColor())
-    strcpy(color, fr->markerColor());
-  else
-    strcpy(color, "green");
+  strcpy(color, fr->markerColor());
  ;}
     break;
 
   case 8:
-#line 112 "frame/saoparser.Y"
+#line 109 "frame/saoparser.Y"
     {cerr << "SAOimage" << endl;;}
     break;
 
   case 13:
-#line 119 "frame/saoparser.Y"
+#line 116 "frame/saoparser.Y"
     {YYACCEPT;;}
     break;
 
   case 14:
-#line 122 "frame/saoparser.Y"
+#line 119 "frame/saoparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 15:
-#line 123 "frame/saoparser.Y"
+#line 120 "frame/saoparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 16:
-#line 126 "frame/saoparser.Y"
+#line 123 "frame/saoparser.Y"
     {yydebug=1;;}
     break;
 
   case 17:
-#line 127 "frame/saoparser.Y"
+#line 124 "frame/saoparser.Y"
     {yydebug=0;;}
     break;
 
   case 24:
-#line 142 "frame/saoparser.Y"
+#line 139 "frame/saoparser.Y"
     {(yyval.real) = 0;;}
     break;
 
   case 25:
-#line 143 "frame/saoparser.Y"
+#line 140 "frame/saoparser.Y"
     {(yyval.real) = (yyvsp[(1) - (1)].real);;}
     break;
 
   case 26:
-#line 146 "frame/saoparser.Y"
+#line 143 "frame/saoparser.Y"
     {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 27:
-#line 149 "frame/saoparser.Y"
+#line 146 "frame/saoparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::IMAGE);;}
     break;
 
   case 28:
-#line 153 "frame/saoparser.Y"
+#line 150 "frame/saoparser.Y"
     {
 	  Vector r = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::IMAGE);
 	  (yyval.vector)[0] = r[0];
@@ -1603,12 +1600,12 @@ yyreduce:
     break;
 
   case 29:
-#line 161 "frame/saoparser.Y"
+#line 158 "frame/saoparser.Y"
     {(yyval.integer) = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 30:
-#line 165 "frame/saoparser.Y"
+#line 162 "frame/saoparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::IMAGE);
 	  (yyval.vector)[0] = r[0];
@@ -1618,7 +1615,7 @@ yyreduce:
     break;
 
   case 31:
-#line 173 "frame/saoparser.Y"
+#line 170 "frame/saoparser.Y"
     {
 	  globalProps =
 	    Marker::SELECT | Marker::EDIT | Marker::MOVE |
@@ -1628,7 +1625,7 @@ yyreduce:
     break;
 
   case 32:
-#line 181 "frame/saoparser.Y"
+#line 178 "frame/saoparser.Y"
     {
 	    // reset maperr flag
 	    maperr =0;
@@ -1638,40 +1635,40 @@ yyreduce:
     break;
 
   case 33:
-#line 189 "frame/saoparser.Y"
+#line 186 "frame/saoparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 1);;}
     break;
 
   case 34:
-#line 190 "frame/saoparser.Y"
+#line 187 "frame/saoparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 1);;}
     break;
 
   case 35:
-#line 191 "frame/saoparser.Y"
+#line 188 "frame/saoparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 0);;}
     break;
 
   case 36:
-#line 195 "frame/saoparser.Y"
+#line 192 "frame/saoparser.Y"
     {fr->createCircleCmd(Vector((yyvsp[(3) - (7)].vector)), (yyvsp[(5) - (7)].real), fill_,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 37:
-#line 198 "frame/saoparser.Y"
+#line 195 "frame/saoparser.Y"
     {fr->createAnnulusCmd(Vector((yyvsp[(3) - (9)].vector)),
 	    (yyvsp[(5) - (9)].real),(yyvsp[(7) - (9)].real),1,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 38:
-#line 201 "frame/saoparser.Y"
+#line 198 "frame/saoparser.Y"
     {aNum=2;;}
     break;
 
   case 39:
-#line 203 "frame/saoparser.Y"
+#line 200 "frame/saoparser.Y"
     {
 	  aAnnuli[0] = (yyvsp[(5) - (12)].real);
 	  aAnnuli[1] = (yyvsp[(7) - (12)].real);
@@ -1682,14 +1679,14 @@ yyreduce:
     break;
 
   case 40:
-#line 211 "frame/saoparser.Y"
+#line 208 "frame/saoparser.Y"
     {fr->createAnnulusCmd(Vector((yyvsp[(3) - (11)].vector)),
 	    (yyvsp[(5) - (11)].real),(yyvsp[(7) - (11)].real),(yyvsp[(9) - (11)].integer),
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 41:
-#line 217 "frame/saoparser.Y"
+#line 214 "frame/saoparser.Y"
     {
 	  // for ellipse annulus
 	  aStatus = 1;
@@ -1706,7 +1703,7 @@ yyreduce:
     break;
 
   case 42:
-#line 232 "frame/saoparser.Y"
+#line 229 "frame/saoparser.Y"
     {	
 	  aStatus = 2;
 	  aVector[aNum++] = Vector((yyvsp[(5) - (18)].vector));
@@ -1714,7 +1711,7 @@ yyreduce:
     break;
 
   case 43:
-#line 238 "frame/saoparser.Y"
+#line 235 "frame/saoparser.Y"
     {
 	  // for box annulus
 	  aStatus = 3;
@@ -1731,13 +1728,13 @@ yyreduce:
     break;
 
   case 44:
-#line 252 "frame/saoparser.Y"
+#line 249 "frame/saoparser.Y"
     {fr->createBoxCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real), fill_,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 45:
-#line 256 "frame/saoparser.Y"
+#line 253 "frame/saoparser.Y"
     {	
 	  aStatus = 4;
 	  aVector[aNum++] = Vector((yyvsp[(5) - (18)].vector));
@@ -1745,34 +1742,34 @@ yyreduce:
     break;
 
   case 46:
-#line 262 "frame/saoparser.Y"
+#line 259 "frame/saoparser.Y"
     {fr->createPointCmd(Vector((yyvsp[(3) - (5)].vector)), Point::BOXCIRCLE, POINTSIZE, 
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 47:
-#line 265 "frame/saoparser.Y"
+#line 262 "frame/saoparser.Y"
     {polylist.deleteAll();;}
     break;
 
   case 48:
-#line 266 "frame/saoparser.Y"
+#line 263 "frame/saoparser.Y"
     {fr->createPolygonCmd(polylist, fill_,
 	      color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 51:
-#line 274 "frame/saoparser.Y"
+#line 271 "frame/saoparser.Y"
     {polylist.append(new Vertex((yyvsp[(1) - (1)].vector)));;}
     break;
 
   case 54:
-#line 281 "frame/saoparser.Y"
+#line 278 "frame/saoparser.Y"
     {aAnnuli[aNum++] = (yyvsp[(1) - (1)].real);;}
     break;
 
   case 55:
-#line 285 "frame/saoparser.Y"
+#line 282 "frame/saoparser.Y"
     {
 	  switch (aStatus) {
 	  case 0: // do nothing
@@ -1801,23 +1798,23 @@ yyreduce:
     break;
 
   case 56:
-#line 312 "frame/saoparser.Y"
+#line 309 "frame/saoparser.Y"
     {DISCARD_(1);;}
     break;
 
   case 59:
-#line 316 "frame/saoparser.Y"
+#line 313 "frame/saoparser.Y"
     {DISCARD_(0);;}
     break;
 
   case 60:
-#line 317 "frame/saoparser.Y"
+#line 314 "frame/saoparser.Y"
     {strncpy(localComment,(yyvsp[(3) - (4)].str),80);;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1821 "frame/saoparser.C"
+#line 1818 "frame/saoparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2031,7 +2028,7 @@ yyreturn:
 }
 
 
-#line 320 "frame/saoparser.Y"
+#line 317 "frame/saoparser.Y"
 
 
 static void setProps(unsigned short* props, unsigned short prop, int value)

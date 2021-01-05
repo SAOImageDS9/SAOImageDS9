@@ -648,6 +648,7 @@
 ::msgcat::mcset zh {Other} [encoding convertfrom big5 "\xA8\xE4 \xA5\xA6"]
 ::msgcat::mcset zh {Outer} 
 ::msgcat::mcset zh {Overplot} 
+::msgcat::mcset zh {Override Color} 
 ::msgcat::mcset zh {PNG} 
 ::msgcat::mcset zh {PS Page Setup} 
 ::msgcat::mcset zh {PS Print} 
@@ -917,7 +918,6 @@
 ::msgcat::mcset zh {Upper Right Back} 
 ::msgcat::mcset zh {Upper Right Front} 
 ::msgcat::mcset zh {Use Authentication} 
-::msgcat::mcset zh {Use Color} 
 ::msgcat::mcset zh {Use Current Frame on Download} 
 ::msgcat::mcset zh {Use Internal Web Browser} 
 ::msgcat::mcset zh {Use Original Color/Width} 

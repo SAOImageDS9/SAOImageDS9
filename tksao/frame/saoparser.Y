@@ -96,10 +96,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %%
 
 start	: {
-  if (fr->useMarkerColor())
-    strcpy(color, fr->markerColor());
-  else
-    strcpy(color, "green");
+  strcpy(color, fr->markerColor());
  } initGlobal commands processAnnulus
 	;
 

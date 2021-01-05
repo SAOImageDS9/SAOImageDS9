@@ -15,8 +15,8 @@ proc MarkerLoadDialog {} {
     set ed(ok) 0
     set ed(format) $marker(format)
     set ed(load) $marker(load)
-    set ed(default,use) $marker(default,use)
-    set ed(default,color) $marker(default,color)
+    set ed(color) $marker(color)
+    set ed(color,default) $marker(color,default)
 
     set ed(frame) $current(frame)
     set ed(system) $wcs(system)
@@ -66,9 +66,12 @@ proc MarkerLoadDialog {} {
     # Color
     set f [ttk::labelframe $w.color  -text [msgcat::mc {Color}]]
 
-    ttk::checkbutton $f.default -text [msgcat::mc {Use Color}] \
-	-variable ed(default,use)
-    ColorMenuButton $f.color ed default,color {}
+    set ed(color,chk) \
+	[ttk::checkbutton $f.default -text [msgcat::mc {Override Color}] \
+	     -variable ed(color,default) \
+	     ]
+    ColorMenuButton $f.color ed color {}
+    set ed(color,mb) $f.color
 
     grid $f.default $f.color -padx 2 -pady 2 -sticky w
 
@@ -98,8 +101,8 @@ proc MarkerLoadDialog {} {
 	set marker(skyformat) $ed(skyformat)
 
 	set marker(load) $ed(load)
-	set marker(default,use) $ed(default,use)
-	set marker(default,color) $ed(default,color)
+	set marker(color) $ed(color)
+	set marker(color,default) $ed(color,default)
     }
 
     set rr $ed(ok)
@@ -116,8 +119,41 @@ proc UpdateMarkerLoadDialog {} {
     CoordMenuEnable $mm ed system sky skyformat
 
     switch -- $ed(format) {
-	xy {$ed(cb) configure -state normal}
-	default {$ed(cb) configure -state disabled}
+	ds9 {
+	    $ed(color,chk) configure -state normal
+	    $ed(color,mb) configure -state normal
+	    $ed(cb) configure -state disabled
+	}
+	xml {
+	    $ed(color,chk) configure -state disabled
+	    $ed(color,mb) configure -state normal
+	    $ed(cb) configure -state disabled
+	}
+	ciao {
+	    $ed(color,chk) configure -state disabled
+	    $ed(color,mb) configure -state normal
+	    $ed(cb) configure -state disabled
+	}
+	saotng {
+	    $ed(color,chk) configure -state normal
+	    $ed(color,mb) configure -state normal
+	    $ed(cb) configure -state disabled
+	}
+	saoimage {
+	    $ed(color,chk) configure -state disabled
+	    $ed(color,mb) configure -state normal
+	    $ed(cb) configure -state disabled
+	}
+	pros {
+	    $ed(color,chk) configure -state disabled
+	    $ed(color,mb) configure -state normal
+	    $ed(cb) configure -state disabled
+	}
+	xy {
+	    $ed(color,chk) configure -state disabled
+	    $ed(color,mb) configure -state normal
+	    $ed(cb) configure -state normal
+	}
     }
 
     AdjustCoordSystem ed system

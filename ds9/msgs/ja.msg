@@ -648,6 +648,7 @@
 ::msgcat::mcset ja {Other} [encoding convertfrom euc-jp "\xa4\xbd\xa4\xce\xc2\xbe"]
 ::msgcat::mcset ja {Outer} [encoding convertfrom euc-jp "\xb3\xb0\xb7\xc2"]
 ::msgcat::mcset ja {Overplot} 
+::msgcat::mcset ja {Override Color} 
 ::msgcat::mcset ja {PNG} 
 ::msgcat::mcset ja {PS Page Setup} [encoding convertfrom euc-jp "\x50\x53\xa5\xda\xa1\xbc\xa5\xb8\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {PS Print} [encoding convertfrom euc-jp "\x50\x53\xb0\xf5\xba\xfe"]
@@ -917,7 +918,6 @@
 ::msgcat::mcset ja {Upper Right Back} 
 ::msgcat::mcset ja {Upper Right Front} 
 ::msgcat::mcset ja {Use Authentication} [encoding convertfrom euc-jp "\xc7\xa7\xbe\xda\xa4\xf2\xbb\xc8\xcd\xd1"]
-::msgcat::mcset ja {Use Color} 
 ::msgcat::mcset ja {Use Current Frame on Download} [encoding convertfrom euc-jp "\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xbb\xfe\xa4\xcb\xc1\xaa\xc2\xf2\xc3\xe6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Internal Web Browser} [encoding convertfrom euc-jp "\xc6\xe2\xc9\xf4\xa5\xd6\xa5\xe9\xa5\xa6\xa5\xb6\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Original Color/Width} 

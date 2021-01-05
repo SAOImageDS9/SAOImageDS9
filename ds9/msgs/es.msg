@@ -648,6 +648,7 @@
 ::msgcat::mcset es {Other} {Otro}
 ::msgcat::mcset es {Outer} {Exterior} 
 ::msgcat::mcset es {Overplot} 
+::msgcat::mcset es {Override Color} 
 ::msgcat::mcset es {PNG} 
 ::msgcat::mcset es {PS Page Setup}  [encoding convertfrom iso8859-1 {Setup para Página PS}]
 ::msgcat::mcset es {PS Print} {Imprimir PS}
@@ -917,7 +918,6 @@
 ::msgcat::mcset es {Upper Right Back} 
 ::msgcat::mcset es {Upper Right Front} 
 ::msgcat::mcset es {Use Authentication} [encoding convertfrom iso8859-1 {Usa autenticación}]
-::msgcat::mcset es {Use Color} 
 ::msgcat::mcset es {Use Current Frame on Download} {Usar marco actual al transferir}
 ::msgcat::mcset es {Use Internal Web Browser} {Usar Web Browser interno}
 ::msgcat::mcset es {Use Original Color/Width} 

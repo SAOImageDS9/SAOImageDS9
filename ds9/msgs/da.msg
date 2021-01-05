@@ -648,6 +648,7 @@
 ::msgcat::mcset da {Other} {Anden}
 ::msgcat::mcset da {Outer} {Ydre}
 ::msgcat::mcset da {Overplot} 
+::msgcat::mcset da {Override Color} 
 ::msgcat::mcset da {PNG} 
 ::msgcat::mcset da {PS Page Setup} {PS side opsætning}
 ::msgcat::mcset da {PS Print} {PS udskrift}
@@ -917,7 +918,6 @@
 ::msgcat::mcset da {Upper Right Back} 
 ::msgcat::mcset da {Upper Right Front} 
 ::msgcat::mcset da {Use Authentication} [encoding convertfrom iso8859-1 {Anvend bekræftelse}]
-::msgcat::mcset da {Use Color} 
 ::msgcat::mcset da {Use Current Frame on Download} {Brug nuværende ramme til download}
 ::msgcat::mcset da {Use Internal Web Browser} {Brug intern web browser}
 ::msgcat::mcset da {Use Original Color/Width} 

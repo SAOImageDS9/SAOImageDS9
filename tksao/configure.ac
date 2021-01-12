@@ -229,12 +229,6 @@ TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])
 
-#case ${TEA_PLATFORM} in
-#    windows*)
-#	AC_DEFINE(HAVE_MINGW32)
-#	;;
-#esac
-
 #--------------------------------------------------------------------
 # __CHANGE__
 #

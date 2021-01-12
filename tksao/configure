@@ -5636,12 +5636,6 @@ widget/widget.C
 
 
 
-#case ${TEA_PLATFORM} in
-#    windows*)
-#	AC_DEFINE(HAVE_MINGW32)
-#	;;
-#esac
-
 #--------------------------------------------------------------------
 # __CHANGE__
 #

@@ -2914,10 +2914,12 @@ void Base::updateFitsCmd(int now)
   // for 3d, rebuffer
   if (now) {
     syncUpdate =1;
+    // schedule redraw and process idletasks events
     updateNow(MATRIX);
     syncUpdate =0;
   }
   else
+    // schedule redraw only
     update(MATRIX);
 }
 
@@ -2947,10 +2949,12 @@ void Base::updateFitsCmd(int which, BBox bb, int now)
 
     if (now) {
       syncUpdate =1;
+      // schedule redraw and process idletasks events
       updateNow(BASE, rr);
       syncUpdate =0;
     }
     else
+      // schedule redraw only
       update(BASE, rr);
   }
 }

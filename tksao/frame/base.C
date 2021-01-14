@@ -1270,6 +1270,7 @@ void Base::update(UpdateType flag)
 
   if (flag < needsUpdate)
     needsUpdate = flag;
+  // schedule redraw only
   redraw();
 }
 
@@ -1282,6 +1283,7 @@ void Base::update(UpdateType flag, BBox bb)
 
   if (flag < needsUpdate)
     needsUpdate = flag;
+  // schedule redraw only
   redraw(bb);
 }
 
@@ -1380,7 +1382,8 @@ void Base::updateBlock(const Vector& vv)
 
   alignWCS();
   updateColorScale();
-  update(MATRIX);
+  //  update(MATRIX);
+  updateNow(MATRIX);
 
   // update markers call backs
   // wait til matrices have been updated so that any dialogs will print
@@ -1623,6 +1626,7 @@ void Base::updateNow(UpdateType flag)
 
   if (flag < needsUpdate)
     needsUpdate = flag;
+  // schedule redraw and process idletasks events
   redrawNow();
 }
 
@@ -1634,6 +1638,7 @@ void Base::updateNow(UpdateType flag, BBox bb)
   // bb is in canvas coords
   if (flag < needsUpdate)
     needsUpdate = flag;
+  // schedule redraw and process idletasks events
   redrawNow(bb);
 }
 

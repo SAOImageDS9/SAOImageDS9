@@ -297,6 +297,11 @@ proc BackupFrame {ch which dir} {
     BlockBackup $ch $which
     # WCS nees to be before Pan/Zoom
     WCSBackup $ch $which $fdir $rdir
+
+    # ok, at this point, we must realize the frame, so that all matrices
+    # are valid for pan/zoom/crosshair/markers etc...
+    puts $ch "update"
+
     PanZoomBackup $ch $which
     CropBackup $ch $which
     # must be after Pan and Block

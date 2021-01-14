@@ -77,7 +77,7 @@ proc MarkerAnalysisStatsCB {frame id} {
 	set vvar(sky) $var(sky)
     } elseif {[info exists vvar(sky)]} {
     } else {
-	set sky $wcs(sky)
+	set vvar(sky) $wcs(sky)
     }
 
     set tt [string totitle [$frame get marker $id type]]

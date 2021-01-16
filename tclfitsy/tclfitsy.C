@@ -478,7 +478,7 @@ int TclFITSY::table(int argc, const char* argv[])
   Tcl_SetVar2(interp_, argv[2], "Header" , headstr.str().c_str(),
 	      TCL_GLOBAL_ONLY);
   
-  // secondary header
+  // secondary headers
   if (doUnits) {
     int ccnt=0;
     for (int jj=0; jj<cols; jj++) {
@@ -517,6 +517,95 @@ int TclFITSY::table(int argc, const char* argv[])
     }
   }
   
+  // VOT DataType
+  {
+    ostringstream datatypestr;
+    ostringstream unitstr;
+    ostringstream arraysizestr;
+
+    for (int jj=0; jj<cols; jj++) {
+      FitsColumn* col= hdu->find(jj);
+
+      char dt[32];
+      dt[0] = '\0';
+      switch (col->type()) {
+      case 'L':
+	strcpy(dt,"boolean");
+	break;
+      case 'X':
+	strcpy(dt,"bit");
+	break;
+      case 'B':
+	strcpy(dt,"unsignedByte");
+	break;
+      case 'I':
+	strcpy(dt, "short");
+	break;
+      case 'J':
+	strcpy(dt, "int");
+	break;
+      case 'K':
+	strcpy(dt, "long");
+	break;
+      case 'A':
+	strcpy(dt, "char");
+	break;
+      case 'E':
+	strcpy(dt, "float");
+	break;
+      case 'D':
+	strcpy(dt, "double");
+	break;
+      case 'C':
+      case 'M':
+      case 'P':
+      case 'Q':
+	// not supported
+	break;
+      }
+      datatypestr << dt << ' ';
+
+      const char* ut = col->tunit();
+      if (ut && *ut)
+	unitstr << ut << ' ';
+      else
+	unitstr << '"' << '"' << ' ';
+
+      if (col->repeat()>1) {
+	switch (col->type()) {
+	case 'A':
+	case 'X':
+	case 'L':
+	  arraysizestr << col->repeat() << ' ';
+	  break;
+	default:
+	  for (int kk=1; kk<col->repeat(); kk++) {
+	    datatypestr << dt << ' ';
+	    if (ut && *ut)
+	      unitstr << ut << ' ';
+	    else
+	      unitstr << '"' << '"' << ' ';
+	    arraysizestr << '1' << ' ';
+	  }
+	  break;
+	}
+      }
+      else {
+	arraysizestr << '1' << ' ';
+      }
+    }
+
+    datatypestr << ends;
+    Tcl_SetVar2(interp_, argv[2], "DataType" , datatypestr.str().c_str(),
+		TCL_GLOBAL_ONLY);
+    unitstr << ends;
+    Tcl_SetVar2(interp_, argv[2], "Unit" , unitstr.str().c_str(),
+		TCL_GLOBAL_ONLY);
+    arraysizestr << ends;
+    Tcl_SetVar2(interp_, argv[2], "ArraySize" , arraysizestr.str().c_str(),
+		TCL_GLOBAL_ONLY);
+  }
+
   int end = (max<rows-start) ? max : rows-start;
   ostringstream rowstr;
   rowstr << end+doUnits << ends;

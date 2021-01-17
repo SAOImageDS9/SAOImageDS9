@@ -310,8 +310,8 @@ proc PlotCmdData {dim} {
 
     if {$parse(buf) == {}} {
 	if {$parse(fn) != {}} {
-	    if {![file exists $fn]} {
-		Error "[msgcat::mc {File not found}]: $fn"
+	    if {![file exists $parse(fn)]} {
+		Error "[msgcat::mc {File not found}]: $parse(fn)"
 		return
 	    }
 
@@ -319,7 +319,7 @@ proc PlotCmdData {dim} {
 	    set parse(buf) [read $ch]
 	    close $ch
 	} else {
-	    Error "[msgcat::mc {Unable to load plot data}] $fn"
+	    Error "[msgcat::mc {Unable to load plot data}] $parse(fn)"
 	}
     }
     

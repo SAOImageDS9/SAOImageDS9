@@ -39,14 +39,12 @@ proc SAMPConnect {{verbose 1}} {
     set samp(apps,image) {}
     set samp(apps,table) {}
     set samp(apps,votable) {}
+    set samp(tmp,files) {}
 
     # these are to try to prevent feedback problems with 
     # other probgrams
     set samp(rcvd,lock) 0
     set samp(send,lock) 0
-
-    # delete any old tmp files
-    SAMPDelTmpFiles
 
     # can we find a hub?
     if {![SAMPParseHub]} {
@@ -235,7 +233,8 @@ proc SAMPSendImageLoadFits {id} {
     }
 
     # save current frame
-    set fn [tmpnam {.samp}]
+    set fn [tmpnam {.fits}]
+    lappend samp(tmp,files) $fn
     catch {$current(frame) save fits image file "\{$fn\}"}
 
     # name to use
@@ -311,7 +310,8 @@ proc SAMPSendTableLoadFits {id} {
     }
 
     # save current frame
-    set fn [tmpnam {.samp}]
+    set fn [tmpnam {.fits}]
+    lappend samp(tmp,files) $fn
     catch {$current(frame) save fits table file "\{$fn\}"}
 
     # name to use
@@ -388,7 +388,8 @@ proc SAMPSendTableLoadVotable {id varname} {
     set samp(ocat,$varname) $varname$samp(port)
 
     # save votable
-    set fn [tmpnam {.samp}]
+    set fn [tmpnam {.xml}]
+    lappend samp(tmp,files) $fn
     TBLSaveFn $varname $fn VOTWrite
 
     # cmd
@@ -1050,6 +1051,7 @@ proc SAMPParseHub {} {
 		switch -- $rr(scheme) {
 		    ftp {
 			set fn [tmpnam {.samp}]
+			lappend samp(tmp,files) $fn
 			GetFileFTP $rr(authority) $rr(path) $fn
 		    }
 		    file {set fn $rr(path)}
@@ -1057,6 +1059,7 @@ proc SAMPParseHub {} {
 		    https -
 		    default {
 			set fn [tmpnam {.samp}]
+			lappend samp(tmp,files) $fn
 			GetFileHTTP $url $fn
 		    }
 		}
@@ -1579,7 +1582,8 @@ proc SAMPRcvdDS9Set {msgid varname safemode} {
 
     InitError samp
     if {$url != {}} {
-	set fn [tmpnam {.samp}]
+	set fn [tmpnam {.xpa}]
+	lappend samp(tmp,files) $fn
 	GetFileURL $url fn
     }
     CommSet $fn $cmd $safemode
@@ -1646,7 +1650,8 @@ proc SAMPRcvdDS9Get {msgid varname} {
 	}
     }
 
-    set fn [tmpnam {.samp}]
+    set fn [tmpnam {.xpa}]
+    lappend samp(tmp,files) $fn
     InitError samp
     CommGet SAMPRcvdDS9GetReply $msgid $cmd $fn
 }
@@ -1688,10 +1693,10 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 }
 
 proc SAMPDelTmpFiles {} {
-    global ds9
+    global samp
 
-    # delete any previous files
-    foreach fn [glob -directory $ds9(tmpdir) -nocomplain {ds9*samp*}] {
+    # delete any tmp files
+    foreach fn $samp(tmp,files) {
 	catch {file delete -force "$fn"}
     }
 }

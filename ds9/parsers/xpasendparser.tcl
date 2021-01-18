@@ -86,8 +86,8 @@ array set xpasend::rules {
 }
 
 array set xpasend::rules {
-  2,line 14
-  1,line 13
+  2,line 15
+  1,line 14
 }
 
 array set xpasend::lr1_table {
@@ -114,7 +114,7 @@ array set xpasend::token_id_table {
   259 start'
   error,title {}
   257,line 8
-  259,line 15
+  259,line 16
   257,title INFO
   258,title {}
   259,title {}

@@ -2958,12 +2958,16 @@ $xpaset -p ds9 width 512</tt><br>
 <p><b><a name="xpa" id="xpa"></a>xpa</b></p>
 <p>Configure XPA.</p>
 <tt>Syntax:<br>
--xpa [disconnect]<br>
+-xpa [no]<br>
+&nbsp;&nbsp;&nbsp; [disconnect]<br>
 &nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;<br>
 Example:<br>
-$xpaget ds9 info<br>
+$xpaget ds9 xpa info<br>
 <br>
+$xpaget ds9 xpa info<br>
+<br>
+$xpaset -p ds9 no<br>
 $xpaset -p ds9 disconnect<br>
 $xpaset -p ds9 info<br></tt>
 <p><b><a name="zscale" id="zscale"></a>zscale</b></p>

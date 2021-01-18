@@ -9,6 +9,7 @@
 %%
 
 xpasend : {ProcessSendCmd XPAInfoResult}
+# backward compatibility	
  | INFO_ {ProcessSendCmd XPAInfoResult}
  ;
 

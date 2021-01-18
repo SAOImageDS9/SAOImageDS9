@@ -236,28 +236,28 @@ array set xpa::rules {
 }
 
 array set xpa::rules {
-  13,line 55
+  13,line 56
   7,line 45
   10,line 49
   4,line 42
-  18,line 63
+  18,line 64
   1,line 39
-  15,line 57
+  15,line 58
   9,line 48
-  12,line 53
+  12,line 54
   6,line 44
-  21,line 66
+  21,line 67
   3,line 41
-  17,line 60
-  14,line 56
+  17,line 61
+  14,line 57
   8,line 48
   11,line 52
   5,line 43
-  20,line 65
-  19,line 64
+  20,line 66
+  19,line 65
   2,line 40
   9,e 1
-  16,line 59
+  16,line 60
 }
 
 array set xpa::lr1_table {
@@ -333,7 +333,7 @@ array set xpa::token_id_table {
   271,t 0
   264,title CONNECT
   266,line 20
-  278,line 67
+  278,line 68
   275,t 1
   error,line 37
   268,title LOCAL
@@ -365,7 +365,7 @@ array set xpa::token_id_table {
   265,line 19
   262 FALSE_
   263 STRING_
-  277,line 62
+  277,line 63
   257,title YES
   264 CONNECT_
   264,t 0
@@ -506,6 +506,7 @@ proc xpa::yyparse {} {
                     6 { set _ 0 }
                     7 { set _ 0 }
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
+                    11 { if {$1} {XPAConnect} else {XPADisconnect} }
                     14 { XPAConnect }
                     15 { XPADisconnect }
                     16 { XPAInfo }

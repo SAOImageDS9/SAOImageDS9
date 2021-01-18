@@ -218,6 +218,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	wcs {ProcessWCSCmd param i {} $fn}
 	web {ProcessWebCmd param i}
 	width {ProcessWidthCmd param i}
+	xpa {ProcessXPACmd param i}
 	zoom {ProcessZoomCmd param i}
 	zscale {ProcessZScaleCmd param i}
 	default {Error "[msgcat::mc {Unknown command}]: $cmd"}
@@ -398,6 +399,7 @@ proc CommGet {proc id paramlist fn} {
 	wcs {ProcessSendWCSCmd $proc $id $param}
 	web {ProcessSendWebCmd $proc $id $param}
 	width {ProcessSendWidthCmd $proc $id $param}
+	xpa {ProcessSendXPACmd $proc $id $param}
 	zscale {ProcessSendZScaleCmd $proc $id $param}
 	zoom {ProcessSendZoomCmd $proc $id $param} 
 	default {

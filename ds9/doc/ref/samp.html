@@ -127,6 +127,7 @@ ds9.set<br>
 <a href="#wcs">wcs</a><br>
 <a href="#web">web</a><br>
 <a href="#width">width</a><br>
+<a href="#xpa">xpa</a><br>
 <a href="#zscale">zscale</a><br>
 <a href="#zoom">zoom</a><br></tt>
 <p><b><a name="twomass" id="twomass"></a>2mass</b></p>
@@ -3051,6 +3052,22 @@ width<br>
 <br>
 ds9.set(string cmd)<br>
 width 512<br></tt>
+<p><b><a name="xpa" id="xpa"></a>xpa</b></p>
+<p>Configure XPA.</p>
+<tt>Syntax:<br>
+xpa [yes|no]<br>
+&nbsp;&nbsp;&nbsp; [connect|disconnect]<br>
+&nbsp;&nbsp;&nbsp; [info]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+xpa info<br>
+<br>
+ds9.set(string cmd)<br>
+xpa yes<br>
+xpa connect<br>
+xpa local<br>
+xpa info<br></tt>
 <p><b><a name="zscale" id="zscale"></a>zscale</b></p>
 <p>Set Scale Limits based&nbsp; on the <i>IRAF</i> algorithm.</p>
 <tt>Syntax:<br>

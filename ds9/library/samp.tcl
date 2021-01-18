@@ -1727,6 +1727,16 @@ proc ProcessSAMPCmd {varname iname} {
     incr i [expr $samp::yycnt-1]
 }
 
+proc ProcessSendSAMPCmd {proc id param {sock {}} {fn {}}} {
+    global samp
+
+    if {[info exists samp]} {
+	$proc $id "yes\n"
+    } else {
+	$proc $id "no\n"
+    }
+}
+
 proc SAMPCmdSendImage {name} {
     global samp
 

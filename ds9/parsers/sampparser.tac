@@ -22,7 +22,7 @@ command : samp
  | samp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-samp : yesno 
+samp : yesno {if {$1} {SAMPConnect} else {SAMPDisconnect}}
  | CONNECT_ {SAMPConnect}
  | DISCONNECT_ {SAMPDisconnect}
  | BROADCAST_ broadcast

@@ -351,7 +351,7 @@ proc CommGet {proc id paramlist fn} {
 	rgbcube {ProcessSendRGBCubeCmd $proc $id $param {} $fn}
 	rgbimage {ProcessSendRGBImageCmd $proc $id $param {} $fn}
 	rotate {ProcessSendRotateCmd $proc $id $param}
-	samp {}
+	samp {ProcessSendSAMPCmd $proc $id $param}
 	save -
 	savefits {}
 	saveimage {}

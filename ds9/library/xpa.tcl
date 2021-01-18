@@ -510,6 +510,11 @@ proc CreateXPA {} {
 	XPASendRotate {} {} \
 	XPARcvdRotate {} "fillbuf=false"
 
+    xpacmdadd $xpa samp \
+	{} \
+	XPASendSAMP {} {} \
+	XPARcvdSAMP {} "fillbuf=false"
+
     xpacmdadd $xpa save \
 	{} \
 	{} {} {} \
@@ -1742,6 +1747,19 @@ proc XPARcvdRotate {xpa cdata param buf len} {
     XPADebug "XPARcvdRotate" $param
     InitError xpa
     catch {set i 0; ProcessRotateCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendSAMP {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendSAMPCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdSAMP {xpa cdata param buf len} {
+    XPADebug "XPARcvdSAMP" $param
+    InitError xpa
+    catch {set i 0; ProcessSAMPCmd param i}
     XPACatchError $xpa
 }
 

@@ -475,11 +475,16 @@ proc SimpleTextPostScript {varname} {
     global ps
 
     if {$ps(dest) == "file"} {
-	set ch [open "| cat > $ps(filename,txt)" w]
+	if {[catch {set ch [open "$ps(filename,txt)" w]}]} {
+	    Error [msgcat::mc {An error has occurred while saving}]
+	    return
+	}
     } else {
-	set ch [open "| $ps(cmd)" w]
+	if {[catch {set ch [open "| $ps(cmd)" w]}]} {
+	    Error [msgcat::mc {An error has occurred while saving}]
+	    return
+	}
     }
-
     puts -nonewline $ch [$var(text) get 1.0 end]
     close $ch
 }
@@ -503,7 +508,7 @@ proc SimpleTextSave {varname} {
 
     set filename [SaveFileDialog textfbox $var(top)]
     if {$filename != {}} {
-	if {[catch {set ch [open "| cat > \"$filename\"" w]}]} {
+	if {[catch {set ch [open "$filename" w]}]} {
 	    Error [msgcat::mc {An error has occurred while saving}]
 	    return
 	}

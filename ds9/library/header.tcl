@@ -224,7 +224,7 @@ proc SaveHeaderCmd {id fn} {
     global current
 
     if {$fn != {}} {
-	if {[catch {set ch [open "| cat > \"$fn\"" w]}]} {
+	if {[catch {set ch [open "$fn" w]}]} {
 	    Error [msgcat::mc {An error has occurred while saving}]
 	    return
 	}

@@ -42,9 +42,7 @@ proc SAMPConnect {{verbose 1}} {
     set samp(tmp,files) {}
 
     # these are to try to prevent feedback problems with 
-    # other probgrams
-    set samp(rcvd,lock) 0
-    set samp(send,lock) 0
+    set samp(locked) 0
 
     # can we find a hub?
     if {![SAMPParseHub]} {
@@ -219,14 +217,6 @@ proc SAMPSendImageLoadFits {id} {
 	return
     }
 
-    # are we locked?
-    if {$samp(rcvd,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Rcvd locked"
-	}
-	return
-    }
-
     # got something to send?
     if {![$current(frame) has fits]} {
 	return
@@ -271,10 +261,6 @@ proc SAMPSendImageLoadFits {id} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
     }
-
-    # set lock
-    set samp(send,lock) 1
-    after $isamp(timeout) SAMPClearSendLock
 }
 
 proc SAMPSendTableLoadFits {id} {
@@ -293,14 +279,6 @@ proc SAMPSendTableLoadFits {id} {
     # connected?
     if {![info exists samp]} {
 	Error "SAMP: [msgcat::mc {not connected}]"
-	return
-    }
-
-    # are we locked?
-    if {$samp(rcvd,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Rcvd locked"
-	}
 	return
     }
 
@@ -348,10 +326,6 @@ proc SAMPSendTableLoadFits {id} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
     }
-
-    # set lock
-    set samp(send,lock) 1
-    after $isamp(timeout) SAMPClearSendLock
 }
 
 proc SAMPSendTableLoadVotable {id varname} {
@@ -372,14 +346,6 @@ proc SAMPSendTableLoadVotable {id varname} {
     # connected?
     if {![info exists samp]} {
 	Error "SAMP: [msgcat::mc {not connected}]"
-	return
-    }
-
-    # are we locked?
-    if {$samp(rcvd,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Rcvd locked"
-	}
 	return
     }
 
@@ -421,10 +387,31 @@ proc SAMPSendTableLoadVotable {id varname} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
     }
+}
 
-    # set lock
-    set samp(send,lock) 1
-    after $isamp(timeout) SAMPClearSendLock
+proc SAMPSendTableRowListCmd {varname rowlist} {
+    global ds9
+    global samp
+
+    # connected?
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(apps,votable) == {}} {
+	return
+    }
+
+    # are we good?
+    if {![info exists samp(ocat,$varname)]} {
+	return
+    }
+
+    switch -- [llength $rowlist] {
+	0 {}
+	1 {SAMPSendTableHighlightRow {} $varname $rowlist}
+	default {SAMPSendTableSelectRowList {} $varname $rowlist}
+    }
 }
 
 proc SAMPSendTableHighlightRow {id varname row} {
@@ -469,10 +456,6 @@ proc SAMPSendTableHighlightRow {id varname row} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
     }
-
-    # set lock
-    set samp(send,lock) 1
-    after $isamp(timeout) SAMPClearSendLock
 }
 
 proc SAMPSendTableSelectRowList {id varname rows} {
@@ -521,13 +504,9 @@ proc SAMPSendTableSelectRowList {id varname rows} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
     }
-
-    # set lock
-    set samp(send,lock) 1
-    after $isamp(timeout) SAMPClearSendLock
 }
 
-proc SAMPSendTableRowListCmd {varname rowlist} {
+proc SAMPSendCoordPointAtSkyCmd {which} {
     global ds9
     global samp
 
@@ -536,28 +515,24 @@ proc SAMPSendTableRowListCmd {varname rowlist} {
 	return
     }
 
-    if {$samp(apps,votable) == {}} {
-	return
-    }
-
-    # are we good?
-    if {![info exists samp(ocat,$varname)]} {
-	return
-    }
-
     # are we locked?
-    if {$samp(rcvd,lock)} {
+    if {$samp(locked)} {
 	global debug
 	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Rcvd locked"
+	    puts stderr "SAMP: SAMPSendCoordPointAtSkyCmd: ABORT locked"
 	}
 	return
     }
 
-    switch -- [llength $rowlist] {
-	0 {}
-	1 {SAMPSendTableHighlightRow {} $varname $rowlist}
-	default {SAMPSendTableSelectRowList {} $varname $rowlist}
+    if {$samp(apps,image) == {} || $samp(apps,table) == {}} {
+	return
+    }
+
+    if {[$which has wcs celestial wcs]} {
+	set coord [$which get coordinates [$which get cursor canvas] wcs fk5 degrees]
+	if {$coord != {}} {
+	    SAMPSendCoordPointAtSky {} "$coord"
+	}
     }
 }
 
@@ -597,40 +572,6 @@ proc SAMPSendCoordPointAtSky {id coord} {
     } else {
 	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
-    }
-
-    # set lock
-    set samp(send,lock) 1
-    after $isamp(timeout) SAMPClearSendLock
-}
-
-proc SAMPSendCoordPointAtSkyCmd {which} {
-    global ds9
-    global samp
-
-    # connected?
-    if {![info exists samp]} {
-	return
-    }
-
-    # are we locked?
-    if {$samp(rcvd,lock)} {
-	global debug
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Rcvd locked"
-	}
-	return
-    }
-
-    if {$samp(apps,image) == {} || $samp(apps,table) == {}} {
-	return
-    }
-
-    if {[$which has wcs celestial wcs]} {
-	set coord [$which get coordinates [$which get cursor canvas] wcs fk5 degrees]
-	if {$coord != {}} {
-	    SAMPSendCoordPointAtSky {} "$coord"
 	}
     }
 }
@@ -766,6 +707,7 @@ proc SAMPSend {method params resultVar} {
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPSend Result: $result"
     }
+
     return 1
 }
 
@@ -832,25 +774,7 @@ proc SAMPReplySimple {msgid str} {
     }
 
     global samp
-
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
-    }
-
     SAMPReply $msgid OK "$str"
-}
-
-proc SAMPClearSendLock {} {
-    global samp
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPClearSendLock"
-    }
-    set samp(send,lock) 0
 }
 
 # receiveNotification(string sender-id, map message)
@@ -859,6 +783,7 @@ proc samp.client.receiveNotification {args} {
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPReceivedNotification: $args"
     }
+    
     set secret [lindex $args 0]
     set id [lindex $args 1]
     set map [lindex $args 2]
@@ -917,13 +842,13 @@ proc samp.client.receiveNotification {args} {
 	    }
 	}
     }
+
     return {string OK}
 }
 
 # receiveCall(string sender-id, string msg-id, map message)
 proc samp.client.receiveCall {args} {
     global ds9
-
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPReceivedCall: $args"
@@ -1017,6 +942,7 @@ proc samp.client.receiveCall {args} {
 	    }
 	}
     }
+
     return {string OK}
 }
 
@@ -1256,14 +1182,6 @@ proc SAMPRcvdImageLoadFits {varname} {
     global current
     global samp
 
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
-    }
-
     set url {}
     set imageid {}
     set name {}
@@ -1299,14 +1217,6 @@ proc SAMPRcvdTableLoadFits {varname} {
     global current
     global samp
 
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
-    }
-
     set url {}
     set imageid {}
     set name {}
@@ -1338,14 +1248,6 @@ proc SAMPRcvdTableLoadVotable {varname} {
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPRcvdTableLoadVotable: $args"
-    }
-
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
     }
 
     set url {}
@@ -1386,14 +1288,6 @@ proc SAMPRcvdTableHighlightRow {varname} {
 	puts stderr "SAMPRcvdTableHighlightRow: $args"
     }
 
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
-    }
-
     set url {}
     set tabid {}
     set row {}
@@ -1414,7 +1308,7 @@ proc SAMPRcvdTableHighlightRow {varname} {
 
     if {$tabid != {} && $row != {}} {
 	if {[info exists samp(icat,$tabid)]} {
-	    CATSelectRows $samp(icat,$tabid) samp [expr $row+1]
+	    CATSelectRows $samp(icat,$tabid) samp [expr $row+1] 1
 	}
     }
 }
@@ -1426,14 +1320,6 @@ proc SAMPRcvdTableSelectRowList {varname} {
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPRcvdTableSelectRowList: $args"
-    }
-
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
     }
 
     set url {}
@@ -1460,7 +1346,7 @@ proc SAMPRcvdTableSelectRowList {varname} {
 
     if {$tabid != {} && [llength $rowlist] != 0} {
 	if {[info exists samp(icat,$tabid)]} {
-	    CATSelectRows $samp(icat,$tabid) samp $rowlist
+	    CATSelectRows $samp(icat,$tabid) samp $rowlist 1
 	}
     }
 }
@@ -1472,14 +1358,6 @@ proc SAMPRcvdCoordPointAtSky {varname} {
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPRcvdCoordPointAtSky: $args"
-    }
-
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
     }
 
     set ra {}
@@ -1500,9 +1378,7 @@ proc SAMPRcvdCoordPointAtSky {varname} {
 
     global current
     if {$ra != {} && $dec != {} && [$current(frame) has wcs celestial wcs]} {
-	set samp(rcvd,lock) 1
 	PanTo $ra $dec wcs fk5
-	set samp(rcvd,lock) 0
     }
 }
 
@@ -1513,14 +1389,6 @@ proc SAMPRcvdClientEnvGet {msgid varname} {
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPRcvdClientEnvGet: $msgid $args"
-    }
-
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
     }
 
     set name {}
@@ -1558,14 +1426,6 @@ proc SAMPRcvdDS9Set {msgid varname safemode} {
     global current
     global samp
 
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
-    }
-
     set url {}
     set cmd {}
 
@@ -1586,7 +1446,9 @@ proc SAMPRcvdDS9Set {msgid varname safemode} {
 	lappend samp(tmp,files) $fn
 	GetFileURL $url fn
     }
+    set samp(locked) 1
     CommSet $fn $cmd $safemode
+    set samp(locked) 0
     if {$msgid != {}} {
 	SAMPRcvdDS9SetReply $msgid
     }
@@ -1630,14 +1492,6 @@ proc SAMPRcvdDS9Get {msgid varname} {
     global current
     global samp
 
-    # are we locked?
-    if {$samp(send,lock)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: ABORT Send locked"
-	}
-	return
-    }
-
     set url {}
     set cmd {}
 
@@ -1653,7 +1507,9 @@ proc SAMPRcvdDS9Get {msgid varname} {
     set fn [tmpnam {.xpa}]
     lappend samp(tmp,files) $fn
     InitError samp
+    set samp(locked) 1
     CommGet SAMPRcvdDS9GetReply $msgid $cmd $fn
+    set samp(locked) 0
 }
 
 proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {

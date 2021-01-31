@@ -2056,6 +2056,7 @@ proc PrismBackup {ch dir} {
     global iprism
     global pds9
 
+    puts "***$iprism(prisms)***"
     foreach ww $iprism(prisms) {
 	set varname $ww
 	upvar #0 $varname var

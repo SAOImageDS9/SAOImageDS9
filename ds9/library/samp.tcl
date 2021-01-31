@@ -42,7 +42,7 @@ proc SAMPConnect {{verbose 1}} {
     set samp(tmp,files) {}
 
     # these are to try to prevent feedback problems with 
-    set samp(locked) 0
+    set samp(lock) 0
 
     # can we find a hub?
     if {![SAMPParseHub]} {
@@ -516,7 +516,7 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
     }
 
     # are we locked?
-    if {$samp(locked)} {
+    if {$samp(lock)} {
 	global debug
 	if {$debug(tcl,samp)} {
 	    puts stderr "SAMP: SAMPSendCoordPointAtSkyCmd: ABORT locked"
@@ -799,6 +799,9 @@ proc samp.client.receiveNotification {args} {
 	}
     }
 
+    # be sure to lock any command that may cause a
+    #   SAMPSendCoordPointAtSkyCmd response
+    global samp
     switch -- $mtype {
 	samp.hub.event.shutdown {
 	    SAMPRcvdEventShutdown params
@@ -813,28 +816,42 @@ proc samp.client.receiveNotification {args} {
 	    SAMPRcvdDisconnect params
 	}
 	image.load.fits {
+	    set samp(lock) 1
 	    SAMPRcvdImageLoadFits params
+	    set samp(lock) 0
 	}
 	table.load.fits {
+	    set samp(lock) 1
 	    SAMPRcvdTableLoadFits params
+	    set samp(lock) 0
 	}
 	table.load.votable {
 	    SAMPRcvdTableLoadVotable params
 	}
 	table.highlight.row {
+	    set samp(lock) 1
 	    SAMPRcvdTableHighlightRow params
+	    set samp(lock) 0
 	}
 	table.select.rowList {
+	    set samp(lock) 1
 	    SAMPRcvdTableSelectRowList params
+	    set samp(lock) 0
 	}
 	coord.pointAt.sky {
+	    set samp(lock) 1
 	    SAMPRcvdCoordPointAtSky params
+	    set samp(lock) 0
 	}
 	ds9.set {
+	    set samp(lock) 1
 	    SAMPRcvdDS9Set {} params 0
+	    set samp(lock) 0
 	}
 	ds9.restricted-set {
+	    set samp(lock) 1
 	    SAMPRcvdDS9Set {} params 1
+	    set samp(lock) 0
 	}
 	default {
 	    if {$debug(tcl,samp)} {
@@ -870,16 +887,23 @@ proc samp.client.receiveCall {args} {
 	}
     }
 
+    # be sure to lock any command that may cause a
+    #   SAMPSendCoordPointAtSkyCmd response
+    global samp
     switch -- $mtype {
 	samp.app.ping {
 	    SAMPReply $msgid OK
 	}
 	image.load.fits {
+	    set samp(lock) 1
 	    SAMPRcvdImageLoadFits params
+	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.load.fits {
+	    set samp(lock) 1
 	    SAMPRcvdTableLoadFits params
+	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.load.votable {
@@ -887,15 +911,21 @@ proc samp.client.receiveCall {args} {
 	    SAMPReply $msgid OK
 	}
 	table.highlight.row {
+	    set samp(lock) 1
 	    SAMPRcvdTableHighlightRow params
+	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.select.rowList {
+	    set samp(lock) 1
 	    SAMPRcvdTableSelectRowList params
+	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	coord.pointAt.sky {
+	    set samp(lock) 1
 	    SAMPRcvdCoordPointAtSky params
+	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	client.env.get {
@@ -924,16 +954,24 @@ proc samp.client.receiveCall {args} {
 	    SAMPReplySimple $msgid OK "$ds9(version,display)"
 	}
 	ds9.get {
+	    set samp(lock) 1
 	    SAMPRcvdDS9Get $msgid params
+	    set samp(lock) 0
 	}
 	ds9.set {
+	    set samp(lock) 1
 	    SAMPRcvdDS9Set $msgid params 0
+	    set samp(lock) 0
 	}
 	ds9.restricted-get {
+	    set samp(lock) 1
 	    SAMPRcvdDS9Get $msgid params
+	    set samp(lock) 0
 	}
 	ds9.restricted-set {
+	    set samp(lock) 1
 	    SAMPRcvdDS9Set $msgid params 1
+	    set samp(lock) 0
 	}
 	default {
 	    SAMPReply $msgid ERROR {} {} "[msgcat::mc {Unknown command}]: $mtype"
@@ -1446,9 +1484,7 @@ proc SAMPRcvdDS9Set {msgid varname safemode} {
 	lappend samp(tmp,files) $fn
 	GetFileURL $url fn
     }
-    set samp(locked) 1
     CommSet $fn $cmd $safemode
-    set samp(locked) 0
     if {$msgid != {}} {
 	SAMPRcvdDS9SetReply $msgid
     }
@@ -1507,9 +1543,7 @@ proc SAMPRcvdDS9Get {msgid varname} {
     set fn [tmpnam {.xpa}]
     lappend samp(tmp,files) $fn
     InitError samp
-    set samp(locked) 1
     CommGet SAMPRcvdDS9GetReply $msgid $cmd $fn
-    set samp(locked) 0
 }
 
 proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {

@@ -95,6 +95,7 @@ proc PlotBackupLoadFile {varname fn} {
 		array set $varname [array get apca]
 		unset apca
 	    }
+	    8.3 {}
 	}
 
 	$var(graph,proc,updateelement) $varname

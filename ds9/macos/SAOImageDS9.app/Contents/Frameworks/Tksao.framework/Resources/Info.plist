@@ -14,8 +14,8 @@
 	<key>CFBundleExecutable</key>
 	<string>Tk</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Tksao 8.2,
-Copyright 1999-2019
+	<string>Tksao 8.3,
+Copyright 1999-2021
 Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.sao.tksao</string>
@@ -26,10 +26,10 @@ Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>8.2</string>
+	<string>8.3</string>
 	<key>CFBundleSignature</key>
 	<string>Tksao  </string>
 	<key>CFBundleVersion</key>
-	<string>8.2</string>
+	<string>8.3</string>
 </dict>
 </plist>

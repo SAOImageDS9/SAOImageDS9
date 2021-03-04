@@ -57,6 +57,10 @@ Frame3d::Frame3d(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
 Frame3d::~Frame3d()
 {
+  // be sure the timer is shutdown
+  if (timer_)
+    Tcl_DeleteTimerHandler(timer_);
+      
   if (context)
     delete context;
 

@@ -11073,7 +11073,13 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 #TEA_ADD_SOURCES([sample.c tclsample.c])
 #TEA_ADD_HEADERS([])
-#TEA_ADD_INCLUDES([])
+
+    vars="-I${prefix}/tk8.6/macosx"
+    for i in $vars; do
+	PKG_INCLUDES="$PKG_INCLUDES $i"
+    done
+
+
 #TEA_ADD_LIBS()
 #TEA_ADD_CFLAGS([])
 #TEA_ADD_STUB_SOURCES([])

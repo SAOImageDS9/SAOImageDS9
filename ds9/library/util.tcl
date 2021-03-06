@@ -1225,11 +1225,16 @@ proc HTTPLog {token} {
 	DisplayLog "url: $t(url)\n"
 	DisplayLog "http: $t(http)\n"
 	DisplayLog "type: $t(type)\n"
+	DisplayLog "binary: $t(binary)\n"
+	DisplayLog "coding: $t(coding)\n"
 	DisplayLog "currentsize: $t(currentsize)\n"
 	DisplayLog "totalsize: $t(totalsize)\n"
 	DisplayLog "status: $t(status)\n"
 	if {[info exists t(error)]} {
 	    DisplayLog "error: $t(error)\n"
+	}
+	if {[info exists t(posterror)]} {
+	    DisplayLog "posterror: $t(posterror)\n"
 	}
 	DisplayLog "meta: [BreakUp $t(meta)]\n"
     }

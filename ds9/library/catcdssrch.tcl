@@ -170,11 +170,9 @@ proc CATCDSSrchVOTParse {t token} {
     global $t
     global debug
 
-    if {$debug(tcl,cat)} {
-	set fp [open debug.xml w]
-	puts $fp [http::data $token]
-	close $fp
-    }
+    #set fp [open debug.xml w]
+    #puts $fp [http::data $token]
+    #close $fp
 
     set xml [xml::parser \
 		 -characterdatacommand [list CATCDSSrchVOTCharCB $t] \

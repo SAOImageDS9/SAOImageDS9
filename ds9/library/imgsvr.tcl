@@ -334,7 +334,9 @@ proc IMGSVRGetURLFinish {varname token} {
 	}
     }
 
+    # Log it
     HTTPLog $token
+
     # Result?
     switch -- $var(code) {
 	200 -

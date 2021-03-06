@@ -22,43 +22,39 @@ proc SIADef {} {
     set isia(save) 0
 
     set isia(def) { \
-			{{2MASS (NASA/IPAC)} \
-			     sia2mass \
-			     {http://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia}\
-			     {} \
-			} \
 			{{AKARI (ISAS/JAXA)} \
 			     siaakari \
-			     {http://jvo.nao.ac.jp/skynode/do/siap/akari/fis_image_v1/1.0}\
+			     {https://jvo.nao.ac.jp/skynode/do/siap/akari/fis_image_v1/1.0} \
 			     {} \
 			} \
 			{{Chandra (NASA/CXC)} \
 			     siacxc \
-			     {http://cda.harvard.edu/cxcsiap/queryImages}\
+			     {https://cda.harvard.edu/cxcsiap/queryImages} \
 			     {} \
 			} \
 			{{Hubble Legacy Archive (STSCI)} \
 			     siahla \
-			     {http://hla.stsci.edu/cgi-bin/hlaSIAP.cgi}\
+			     {https://hla.stsci.edu/cgi-bin/hlaSIAP.cgi} \
 			     {} \
 			} \
 			{{MAST (STSCI)} \
 			     siamast \
-			     {http://archive.stsci.edu/siap/search.php}\
+			     {https://archive.stsci.edu/siap/search.php} \
 			     {} \
 			} \
 			{{SkyView (NASA/HEASARC)} \
 			     siaskyview \
-			     {http://skyview.gsfc.nasa.gov/cgi-bin/vo/sia.pl}\
+			     {https://skyview.gsfc.nasa.gov/current/cgi/vo/sia.pl} \
 			     {} \
 			} \
 			{{TGSSADR (GMRT)} \
 			     siatgssadr \
-			     {http://vo.astron.nl/tgssadr/q_fits/imgs/siap.xml}\
+			     {https://vo.astron.nl/tgssadr/q_fits/imgs/siap.xml} \
 			     {} \
 			 } \
 		    }
 
+    #{{2MASS (NASA/IPAC)} sia2mass {https://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia} {}}
     #{{Astro-Wise} siaastrowise {http://vo.astro-wise.org/SIAP} {VERB=2&FORM=VOTable&PROJECT=ALL&INSTRUMENT=ALL&}}
     #{{CADC} siacadc {http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query} {}}
     #{{SDSS DR12} siasdss {http://skyserver.sdss.org/SkyserverWS/dr12/SIAP/getSIAP} {} }
@@ -136,7 +132,7 @@ proc SIATable {varname} {
     global $var(tbldb)
     $var(found) configure -textvariable ${var(tbldb)}(Nrows)
 
-#    starbase_writefp $var(tbldb) stdout
+    #    starbase_writefp $var(tbldb) stdout
 
     if {[starbase_nrows $var(tbldb)] == 0} {
 	ARStatus $varname [msgcat::mc {No Items Found}]
@@ -242,8 +238,10 @@ proc SIACmdRetrieve {ref} {
 
 	    if {$title != {-} && "sia${ref}" == $vars} {
 		SIADialog $vars $title $url $opts sync
+		return
 	    }
 	}
+	Error "SIA site no longer supported: $ref"
     }
 }
 

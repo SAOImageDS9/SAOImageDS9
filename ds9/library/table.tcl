@@ -67,13 +67,10 @@ proc TBLGetURLFinish {varname token} {
 
     # Result?
     switch -- $code {
-	{} -
 	200 -
 	203 -
 	404 -
-	503 {
-	    eval [list $var(proc,process) $varname]
-	}
+	503 {eval [list $var(proc,process) $varname]}
 
 	201 -
 	300 -

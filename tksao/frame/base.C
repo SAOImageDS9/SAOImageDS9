@@ -1687,6 +1687,10 @@ void TkUnixSetXftClipRegion(TkRegion clipRegion);
 
 void Base::updatePM(const BBox& bbox)
 {
+  // just in case (MacOS)
+  if (!basePixmap)
+    return;
+
   // bbox is in Canvas Coords
   // Gave up on only redrawing bbox, contours, and grid causes problems
 

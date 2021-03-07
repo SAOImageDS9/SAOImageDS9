@@ -274,6 +274,10 @@ void Widget::displayProc(Drawable draw, int clipX, int clipY,
   if (updatePixmap(bb) != TCL_OK)
     return; // something is wrong, bail out
 
+  // just in case (MacOS)
+  if (!pixmap)
+    return;
+
   // define pixmap clip region
   // NOTE: it appears that the canvas coord system is 1 to n, width/height = n
   // with the original of value 1,1 located at upper left corner
@@ -505,6 +509,10 @@ void Widget::invalidPixmap()
 
 void Widget::clearPixmap()
 {
+  // just in case (MacOS)
+  if (!pixmap)
+    return;
+
   XSetForeground(display, widgetGC, options->bgColor->pixel);
   XFillRectangle(display, pixmap, widgetGC, 0, 0,
 		 options->width, options->height);
@@ -514,6 +522,9 @@ void Widget::redraw()
 {
   Tk_CanvasEventuallyRedraw(canvas, options->item.x1, options->item.y1, 
 			    options->item.x2, options->item.y2);
+#ifdef MAC_OSX_TK
+  Tcl_DoOneEvent(TCL_IDLE_EVENTS);
+#endif
 }
 
 void Widget::redraw(BBox bb)
@@ -521,6 +532,9 @@ void Widget::redraw(BBox bb)
   // bb in canvas coords
   Tk_CanvasEventuallyRedraw(canvas, (int)bb.ll[0], (int)bb.ll[1], 
 			    (int)bb.ur[0]+1, (int)bb.ur[1]+1);
+#ifdef MAC_OSX_TK
+  Tcl_DoOneEvent(TCL_IDLE_EVENTS);
+#endif
 }
 
 void Widget::redrawNow()
@@ -625,12 +639,12 @@ int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
 
 void Widget::warp(Vector& vv)
 {
-  XXWarpPointer(display, None, None, 0, 0, 0, 0, vv[0], vv[1]);
+  XWarpPointer(display, None, None, 0, 0, 0, 0, vv[0], vv[1]);
 }
 
 void Widget::warpTo(Vector& vv)
 {
-  XXWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
+  XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
 }
 
 #endif

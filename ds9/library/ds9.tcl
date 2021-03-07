@@ -649,12 +649,12 @@ after $ds9(msg,timeout) [list ErrorTimer]
 # ok, we're done
 set ds9(init) 0
 
-# everything must be realized
-update
-
 # major kludges
 switch $ds9(wm) {
     x11 {
+        # everything must be realized
+        update
+
 	# be sure theme has been set
 	# could be changed in prefs or command line
 	ThemeChange
@@ -666,6 +666,9 @@ switch $ds9(wm) {
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
     }
     win32 {
+        # everything must be realized
+        update
+
 	# default for win32
 	if {$pds9(theme) == {default}} {
 	    set pds9(theme) xpnative
@@ -676,5 +679,8 @@ switch $ds9(wm) {
 	# jump start keyevents for windows
 	event generate $ds9(canvas) <Tab> -x 0 -y 0
     }
-    aqua {}
+    aqua {
+        # special, widgets need to be updated
+        RealizeDS9
+    }
 }

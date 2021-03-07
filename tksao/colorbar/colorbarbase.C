@@ -391,12 +391,16 @@ void ColorbarBase::updateGCs()
 
 void ColorbarBase::renderGrid()
 {
+  // just in case (MacOS)
+  if (!pixmap)
+    return;
+
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   // box
   XSetForeground(display, widgetGC, opts->fgColor->pixel);
   if (!opts->orientation)
-    XDrawRectangle(display, pixmap, widgetGC, 0, 0, 
+    XDrawRectangle(display, pixmap, widgetGC, 0, 0,
 		   options->width-1, opts->size-1);
   else
     XDrawRectangle(display, pixmap, widgetGC, 0, 0, 
@@ -408,6 +412,10 @@ void ColorbarBase::renderGrid()
 
 void ColorbarBase::renderGridNumerics()
 {
+  // just in case (MacOS)
+  if (!pixmap)
+    return;
+
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   // font

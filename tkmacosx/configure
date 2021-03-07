@@ -5375,10 +5375,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 #-----------------------------------------------------------------------
 
 
-    vars="
-	tkmacosx.M
-	xxlib.M
-	"
+    vars="tkmacosx.M"
     for i in $vars; do
 	case $i in
 	    \$*)
@@ -5413,9 +5410,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-    vars="
-	macosxlib.h
-	"
+    vars=""
     for i in $vars; do
 	# check for existence, be strict because it is installed
 	if test ! -f "${srcdir}/$i" ; then

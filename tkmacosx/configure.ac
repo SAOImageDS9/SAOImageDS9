@@ -72,13 +72,8 @@ AC_PROG_CXX
 # and PKG_TCL_SOURCES.
 #-----------------------------------------------------------------------
 
-TEA_ADD_SOURCES([
-	tkmacosx.M
-	xxlib.M
-	])
-TEA_ADD_HEADERS([
-	macosxlib.h
-	])
+TEA_ADD_SOURCES([tkmacosx.M])
+TEA_ADD_HEADERS([])
 TEA_ADD_INCLUDES([-I${prefix}/include])
 TEA_ADD_LIBS()
 TEA_ADD_CFLAGS([])

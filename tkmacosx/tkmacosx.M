@@ -8,7 +8,7 @@ using namespace std;
 
 #include <string.h>
 
-#include <tkMacOSXPrivate.h>
+//#include <tkMacOSXPrivate.h>
 #include "tkmacosx.h"
 
 extern "C" {
@@ -73,6 +73,7 @@ TkMacosx::~TkMacosx()
 // Locale
 int TkMacosx::locale(int argc, const char* argv[])
 {
+  /*
   CFPropertyListRef preferences = 
     CFPreferencesCopyAppValue(CFSTR("AppleLanguages"), 
 			      kCFPreferencesCurrentApplication);
@@ -93,7 +94,7 @@ int TkMacosx::locale(int argc, const char* argv[])
 
     CFRelease(preferences);
   }
-
+  */
   return TCL_OK;
 }
 

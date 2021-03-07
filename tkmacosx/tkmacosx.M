@@ -120,7 +120,7 @@ int TkMacosx::pm(int argc, const char* argv[])
 }
 
 // major kludge, located in hacked tk8.6/macosx/tkMacOSXDraw.c
-extern int enableScreenCapture;
+int enableScreenCapture=0;
 int TkMacosx::sc(int argc, const char* argv[])
 {
   if (argc >= 1) {

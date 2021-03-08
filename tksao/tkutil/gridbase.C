@@ -266,7 +266,6 @@ void GridBase::psColor(Attribute* attr)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 int GridBase::macosxLine(int n, float* x, float* y)
 {

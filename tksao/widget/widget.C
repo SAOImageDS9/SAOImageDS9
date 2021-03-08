@@ -635,7 +635,6 @@ int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
 #endif
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Widget::warp(Vector& vv)
 {

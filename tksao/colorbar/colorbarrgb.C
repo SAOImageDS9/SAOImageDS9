@@ -332,7 +332,6 @@ void ColorbarRGB::setRGBChannelCmd(const char* c)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void ColorbarRGB::macosx(float scale, int width, int height, 
 			 const Vector& v, const Vector& s)

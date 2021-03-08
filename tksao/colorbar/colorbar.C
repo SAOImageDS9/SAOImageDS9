@@ -807,7 +807,6 @@ void Colorbar::tagSaveCmd(const char* fn)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Colorbar::macosx(float scale, int width, int height, 
 		      const Vector& v, const Vector& s)

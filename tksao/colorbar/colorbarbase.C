@@ -839,7 +839,6 @@ void ColorbarBase::setColormapLevelCmd(int cc, double* ff)
 // MacOSX
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void ColorbarBase::macosxPrintCmd()
 {

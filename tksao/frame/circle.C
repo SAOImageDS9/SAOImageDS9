@@ -85,7 +85,6 @@ void Circle::renderPSDraw()
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Circle::renderMACOSXDraw()
 {

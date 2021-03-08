@@ -101,7 +101,6 @@ void BaseBox::renderPSFillDraw(int ii)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void BaseBox::renderMACOSX()
 {

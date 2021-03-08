@@ -254,7 +254,6 @@ void Compass::renderPSGC(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Compass::renderMACOSX()
 {

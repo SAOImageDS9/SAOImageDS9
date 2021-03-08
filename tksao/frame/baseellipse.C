@@ -571,7 +571,6 @@ void BaseEllipse::renderPSInclude(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void BaseEllipse::renderMACOSX() {
   Vector r = annuli_[numAnnuli_-1];

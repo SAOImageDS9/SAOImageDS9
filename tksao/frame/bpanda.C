@@ -117,7 +117,6 @@ void Bpanda::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Bpanda::renderMACOSX()
 {

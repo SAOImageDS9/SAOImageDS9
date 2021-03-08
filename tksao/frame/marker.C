@@ -473,7 +473,6 @@ void Marker::renderPSLineNoDash()
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Marker::macosx(int tt)
 {

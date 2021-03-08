@@ -62,7 +62,6 @@ void Box::renderPSDraw(int ii)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Box::renderMACOSXDraw(Vector* vv)
 {

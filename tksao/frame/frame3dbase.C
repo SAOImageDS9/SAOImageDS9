@@ -1253,7 +1253,6 @@ void Frame3dBase::ximageToPixmapMagnifier()
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Frame3dBase::macosxLine(Vector& ss, Vector& tt, int dd)
 {

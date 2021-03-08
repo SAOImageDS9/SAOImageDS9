@@ -97,7 +97,6 @@ void Polygon::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Polygon::renderMACOSX()
 {

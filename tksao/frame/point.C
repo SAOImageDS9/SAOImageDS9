@@ -293,7 +293,6 @@ void Point::renderPSLineDash()
 // MacOSX
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Point::renderMACOSX() 
 {

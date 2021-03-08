@@ -7,10 +7,6 @@
 #include "base.h"
 #include "context.h"
 
-#ifdef MAC_OSX_TK
-#include <macosxlib.h>
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 #endif

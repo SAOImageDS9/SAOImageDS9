@@ -1834,7 +1834,6 @@ void Base::ximageToPixmapMagnifier()
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Base::macosx()
 {

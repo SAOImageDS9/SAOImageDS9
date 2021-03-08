@@ -117,7 +117,6 @@ void Epanda::renderPS(PSColorSpace mode)
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Epanda::renderMACOSX()
 {

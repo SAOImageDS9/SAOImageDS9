@@ -73,7 +73,6 @@ void Ellipse::renderPSDraw()
 }
 
 #ifdef MAC_OSX_TK
-#include <macosxlib.h>
 
 void Ellipse::renderMACOSXDraw()
 {

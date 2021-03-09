@@ -528,13 +528,7 @@ switch $pds9(language) {
 		    }
 		}
 	    }
-	    aqua {
-		foreach ll [MacOSXGetLocale] {
-		    if {[SetLanguage $ll]} {
-			break
-		    }
-		}
-	    }
+	    aqua {}
 	    win32 {}
 	}
     }

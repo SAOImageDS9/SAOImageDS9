@@ -61,19 +61,6 @@ void Box::renderPSDraw(int ii)
     BaseBox::renderPSDraw(ii);
 }
 
-#ifdef MAC_OSX_TK
-
-void Box::renderMACOSXDraw(Vector* vv)
-{
-  /*
-  if (fill_)
-    macosxFillPolygon(vv, numPoints_);
-  else
-    macosxDrawLines(vv, numPoints_);
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

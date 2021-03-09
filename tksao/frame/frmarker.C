@@ -6247,23 +6247,6 @@ void Base::updateMarkerCBs(List<Marker>* ml)
   }
 }
 
-#ifdef MAC_OSX_TK
-void Base::macosxMarkers(List<Marker>* ml)
-{
-  // render from back to front
-  // bbox is in canvas coords
-  const BBox bb = BBox(0, 0, options->width-1, options->height-1) * 
-    widgetToCanvas;
-
-  Marker* mm=ml->tail();
-  while (mm) {
-    if (mm->isVisible(bb))
-      mm->macosx(showMarkersText);
-    mm=mm->previous();
-  }
-}
-#endif
-
 #ifdef __WIN32
 void Base::win32Markers(List<Marker>* ml)
 {

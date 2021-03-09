@@ -116,28 +116,6 @@ void Bpanda::renderPS(PSColorSpace mode)
   }
 }
 
-#ifdef MAC_OSX_TK
-
-void Bpanda::renderMACOSX()
-{
-  /*
-  BaseBox::renderMACOSX();
-
-  renderMACOSXGC();
-
-  Vector r0 = annuli_[0]/2;
-  Vector r1 = annuli_[numAnnuli_-1]/2;
-
-  for (int ii=0; ii<numAngles_; ii++) {
-    Vector rr0 = fwdMap(intersect(r0,angles_[ii]),Coord::CANVAS);
-    Vector rr1 = fwdMap(intersect(r1,angles_[ii]),Coord::CANVAS);
-
-    macosxDrawLine(rr0,rr1);
-  }
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

@@ -84,19 +84,6 @@ void Circle::renderPSDraw()
     BaseEllipse::renderPSDraw();
 }
 
-#ifdef MAC_OSX_TK
-
-void Circle::renderMACOSXDraw()
-{
-  /*
-  if (fill_)
-    macosxFill();
-  else
-    macosxStroke();
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

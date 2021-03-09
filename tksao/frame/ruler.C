@@ -179,66 +179,8 @@ void Ruler::renderPSGC(PSColorSpace mode)
   renderPSLineNoDash();
 }
 
-#ifdef MAC_OSX_TK
-
-void Ruler::renderMACOSX()
-{
-  /*
-  renderMACOSXGC();
-
-  Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
-  Vector bb = parent->mapFromRef(p2,Coord::CANVAS);
-  Vector cc = parent->mapFromRef(p3,Coord::CANVAS);
-  Vector dd = modifyArrow(p2,p1,Coord::CANVAS);
-  Vector ee = modifyArrow(p1,p2,Coord::CANVAS);
-
-  // line
-  macosxDrawLine(dd,ee);
-  renderMACOSXArrow(p2,p1,Coord::CANVAS);
-  renderMACOSXArrow(p1,p2,Coord::CANVAS);
-
-  // axes
-  renderMACOSXLineDash();
-  macosxDrawLine(aa,cc);
-  macosxDrawLine(bb,cc);
-
-  // dist
-  {
-    ostringstream vstr;
-    distToStr(vstr);
-    vstr << ends;
-
-    if (psfont_) {
-      Tcl_DString psdstr;
-      Tcl_DStringInit(&psdstr);
-      int psSize = Tk_PostscriptFontName(psfont_, &psdstr);
-      macosxFont(Tcl_DStringValue(&psdstr), psSize);
-      Tcl_DStringFree(&psdstr);
-
-      Tk_FontMetrics metrics;
-      Tk_GetFontMetrics(psfont_, &metrics);
-      char* buf = dupstr(vstr.str().c_str());
-      int width = Tk_TextWidth(psfont_, buf, strlen(buf));
-
-      Vector tt = ((bb-aa)/2 + aa) * Translate(-width/2., -metrics.descent);
-      macosxDrawText(tt, 0, buf);
-      if (buf)
-	delete buf;
-    }
-  }
-  */
-}
-
-void Ruler::renderMACOSXGC()
-{
-  /*
-  macosxColor(parent->getXColor(colorName));
-  renderMACOSXLineNoDash();
-  */
-}
-#endif
-
 // WIN32
+
 #ifdef __WIN32
 #include <win32lib.h>
 

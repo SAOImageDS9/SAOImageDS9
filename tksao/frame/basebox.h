@@ -33,10 +33,6 @@ protected:
   virtual void renderPSDraw(int);
   void renderPSFillDraw(int);
 
-#ifdef MAC_OSX_TK
-  void renderMACOSX();
-  virtual void renderMACOSXDraw(Vector*);
-#endif
 #ifdef __WIN32
   void renderWIN32();
   virtual void renderWIN32Draw(Vector*);

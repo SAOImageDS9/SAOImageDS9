@@ -67,25 +67,6 @@ void Composite::ps(PSColorSpace mode, int tt)
   }
 }
 
-#ifdef MAC_OSX_TK
-void Composite::macosx(int tt)
-{
-  if (tt)
-    renderMACOSXText();
-
-  Marker* mk=members.head();
-  while (mk) {
-    Marker* m = mk->dup();
-    m->setComposite(fwdMatrix(), angle);
-    if (global)
-      m->setComposite(colorName, lineWidth, highlited);
-    m->macosx(tt);
-    delete m;
-    mk=mk->next();
-  }
-}
-#endif
-
 #ifdef __WIN32
 void Composite::win32(int tt)
 {

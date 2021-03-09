@@ -17,10 +17,6 @@ class Ellipse : public BaseEllipse {
 
   void renderPSDraw();
 
-#ifdef MAC_OSX_TK
-  void renderMACOSXDraw();
-#endif
-
 #ifdef __WIN32
   void renderWIN32Draw();
 #endif

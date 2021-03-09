@@ -100,31 +100,6 @@ void BaseBox::renderPSFillDraw(int ii)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-#ifdef MAC_OSX_TK
-
-void BaseBox::renderMACOSX()
-{
-  /*
-  renderMACOSXGC();
-
-  newVertices();
-  for (int ii=0; ii<numAnnuli_; ii++) {
-    Vector* vv = new Vector[numPoints_];
-    for (int jj=0; jj<numPoints_; jj++)
-      vv[jj] = parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
-    macosxDrawLines(vv, numPoints_);
-    delete [] vv;
-  }
-  deleteVertices();
-  */
-}
-
-void BaseBox::renderMACOSXDraw(Vector* vv)
-{
-  //  macosxDrawLines(vv, numPoints_);
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

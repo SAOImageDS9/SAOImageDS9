@@ -32,12 +32,6 @@ private:
   void renderPSInclude(PSColorSpace) {}
   void renderPSGC(PSColorSpace);
 
-#ifdef MAC_OSX_TK
-  void renderMACOSX();
-  void renderMACOSXInclude() {}
-  void renderMACOSXGC();
-#endif
-
 #ifdef __WIN32
   void renderWIN32();
   void renderWIN32Include() {}

@@ -146,9 +146,6 @@ class Context {
 		      const char*, int, int);
   void contourPS(PSColorSpace cs);
   void contourX11(Pixmap, Coord::InternalSystem, const BBox&);
-#ifdef MAC_OSX_TK
-  void contourMacOSX();
-#endif
 #ifdef __WIN32
   void contourWin32();
 #endif

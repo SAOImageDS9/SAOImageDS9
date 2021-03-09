@@ -1714,11 +1714,7 @@ loadIncr: DATA_ INT INT INT INT INT {fr->loadIncrDataCmd($2,$3,$4,$5,$6);}
 	| END_ {fr->loadIncrEndCmd();}
 	;
 
-macosx	: PRINT_ {
-#ifdef MAC_OSX_TK
-	  fr->macosxPrintCmd();
-#endif
-	}
+macosx	: PRINT_ {}
 	;
 
 magnifier: yesno {fr->magnifierCmd($1);}

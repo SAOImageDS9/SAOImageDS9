@@ -24,9 +24,6 @@ class Grid2d : public Grid, public Grid2dBase {
 
   void x11() {doit(X11);}
   void ps(PSColorSpace mode) {mode_=mode; doit(PS);}
-#ifdef MAC_OSX_TK
-  void macosx() {doit(MACOSX);}
-#endif
 #ifdef __WIN32
   void win32() {doit(GWIN32);}
 #endif

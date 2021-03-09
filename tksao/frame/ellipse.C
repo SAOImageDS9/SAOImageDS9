@@ -72,19 +72,6 @@ void Ellipse::renderPSDraw()
     BaseEllipse::renderPSDraw();
 }
 
-#ifdef MAC_OSX_TK
-
-void Ellipse::renderMACOSXDraw()
-{
-  /*
-  if (fill_)
-    macosxFill();
-  else
-    macosxStroke();
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

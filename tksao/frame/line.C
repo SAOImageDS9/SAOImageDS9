@@ -88,31 +88,6 @@ void Line::renderPS(PSColorSpace mode)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-#ifdef MAC_OSX_TK
-
-void Line::renderMACOSX()
-{
-  /*
-  renderMACOSXGC();
-
-  Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
-  Vector bb = parent->mapFromRef(p2,Coord::CANVAS);
-
-  if (p1Arrow) {
-    aa = modifyArrow(p2,p1,Coord::CANVAS);
-    renderMACOSXArrow(p2,p1,Coord::CANVAS);
-  }
-
-  if (p2Arrow) {
-    bb = modifyArrow(p1,p2,Coord::CANVAS);
-    renderMACOSXArrow(p1,p2,Coord::CANVAS);
-  }
-
-  macosxDrawLine(aa,bb);
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

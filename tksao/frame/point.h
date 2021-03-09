@@ -32,12 +32,6 @@ class Point : public Marker {
   void renderPSBox(int);
   void renderPSLineDash();
 
-#ifdef MAC_OSX_TK
-  void renderMACOSXCircle(int);
-  void renderMACOSXBox();
-  void renderMACOSXLineDash();
-#endif
-
 #ifdef __WIN32
   void renderWIN32Circle(int);
   void renderWIN32Box();
@@ -64,10 +58,6 @@ class Point : public Marker {
 
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   void renderPS(PSColorSpace mode);
-
-#ifdef MAC_OSX_TK
-  void renderMACOSX();
-#endif
 
 #ifdef __WIN32
   void renderWIN32();

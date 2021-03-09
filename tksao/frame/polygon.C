@@ -96,31 +96,6 @@ void Polygon::renderPS(PSColorSpace mode)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-#ifdef MAC_OSX_TK
-
-void Polygon::renderMACOSX()
-{
-  /*
-  renderMACOSXGC();
-
-  int cnt = vertex.count();
-  Vector* vv = new Vector[cnt];
-  vertex.head();
-  for (int ii=0; ii<cnt; ii++) {
-    vv[ii] = fwdMap(vertex.current()->vector,Coord::CANVAS);
-    vertex.next();
-  }
-
-  if (fill_)
-    macosxFillPolygon(vv,cnt);
-  else
-    macosxDrawLines(vv,cnt);
-
-  delete [] vv;
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

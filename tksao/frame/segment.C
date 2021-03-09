@@ -74,27 +74,6 @@ void Segment::renderPS(PSColorSpace mode)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-#ifdef MAC_OSX_TK
-
-void Segment::renderMACOSX()
-{
-  /*
-  renderMACOSXGC();
-
-  vertex.head();
-  Vector v1;
-  Vector v2 = fwdMap(vertex.current()->vector,Coord::CANVAS);
-  vertex.next();
-
-  do {
-    v1 = v2;
-    v2 = fwdMap(vertex.current()->vector,Coord::CANVAS);
-    macosxDrawLine(v1,v2);
-  } while (vertex.next());
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

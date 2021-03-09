@@ -214,13 +214,6 @@ class Frame3dBase : public Base {
   void set3dViewCmd(float, float);
   void set3dViewPointCmd(const Vector3d&, const Vector&);
 
-#ifdef MAC_OSX_TK
-  void macosxLine(Vector&, Vector&, int);
-  void macosxGraphics();
-  void macosxBorder();
-  void macosxCompass();
-  void macosxHighlite();
-#endif
 #ifdef __WIN32
   void win32Line(Vector&, Vector&, int);
   void win32Graphics();

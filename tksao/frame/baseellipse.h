@@ -32,14 +32,6 @@ class BaseEllipse : public BaseMarker {
   void renderPSEllipseArc(double, double, Vector&);
   void renderPSInclude(PSColorSpace);
 
-#ifdef MAC_OSX_TK
-  void renderMACOSXCircle();
-  void renderMACOSXEllipse();
-  void renderMACOSXEllipsePrep(double, double, double, double, Vector&);
-  void renderMACOSXEllipseArc(double, double, Vector&);
-  void renderMACOSXInclude();
-#endif
-
 #ifdef __WIN32
   void renderWIN32Circle();
   void renderWIN32Ellipse();
@@ -59,10 +51,6 @@ class BaseEllipse : public BaseMarker {
   virtual void renderPSDraw();
   void renderPSFill();
 
-#ifdef MAC_OSX_TK
-  void renderMACOSX();
-  virtual void renderMACOSXDraw();
-#endif
 #ifdef __WIN32
   void renderWIN32();
   virtual void renderWIN32Draw();

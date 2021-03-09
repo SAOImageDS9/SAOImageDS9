@@ -122,17 +122,6 @@ void ContourLevel::setColor(const char* clr)
   color_ = parent_->getColor(colorName_);
 }
 
-#ifdef MAC_OSX_TK
-void ContourLevel::macosx()
-{
-  if (lcontour_.head()) {
-    do
-      lcontour_.current()->macosx();
-    while (lcontour_.next());
-  }
-}
-#endif
-
 #ifdef __WIN32
 void ContourLevel::win32()
 {
@@ -248,37 +237,6 @@ void Contour::updateCoords(const Matrix& mx)
     while (lvertex_.next());
   }
 }
-
-#ifdef MAC_OSX_TK
-void Contour::macosx()
-{
-  /*
-  if (lvertex_.head()) {
-    macosxColor(base_->getXColor(parent_->colorName_));
-    macosxWidth(parent_->lineWidth_);
-    if (parent_->dash_) {
-      float dl[2];
-      dl[0] = parent_->dlist_[0];
-      dl[1] = parent_->dlist_[1];
-      macosxDash(dl,2);
-    }
-    else
-      macosxDash(NULL,0);
-
-    Vector u1 = lvertex_.current()->vector;
-    while (lvertex_.next()) {
-      Vector u2 = lvertex_.current()->vector;
-
-      Vector v1 = base_->mapFromRef(u1,Coord::CANVAS);
-      Vector v2 = base_->mapFromRef(u2,Coord::CANVAS);
-      macosxDrawLine(v1,v2);
-
-      u1 = u2;
-    }
-  }
-  */
-}
-#endif
 
 #ifdef __WIN32
 void Contour::win32()

@@ -15,9 +15,6 @@ class Composite : public Marker {
 
   void renderX(Drawable, Coord::InternalSystem, RenderMode) {}
   void renderPS(PSColorSpace mode) {}
-#ifdef MAC_OSX_TK
-  void renderMACOSX() {}
-#endif
 #ifdef __WIN32
   void renderWIN32() {}
 #endif
@@ -38,9 +35,6 @@ public:
 
   void x11(Drawable, Coord::InternalSystem, int, HandleMode);
   void ps(PSColorSpace,int);
-#ifdef MAC_OSX_TK
-  void macosx(int);
-#endif
 #ifdef __WIN32
   void win32(int);
 #endif

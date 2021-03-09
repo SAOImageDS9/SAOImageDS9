@@ -118,28 +118,6 @@ void Cpanda::renderPS(PSColorSpace mode)
   }
 }
 
-#ifdef MAC_OSX_TK
-
-void Cpanda::renderMACOSX()
-{
-  /*
-  BaseEllipse::renderMACOSX();
-
-  Vector r0 = annuli_[0];
-  Vector r1 = annuli_[numAnnuli_-1];
-
-  for (int ii=0; ii<numAngles_; ii++) {
-    Vector rr0 = fwdMap(Vector(r0[0]*cos(-angles_[ii]),r0[1]*sin(-angles_[ii])),
-			Coord::CANVAS);
-    Vector rr1 = fwdMap(Vector(r1[0]*cos(-angles_[ii]),r1[1]*sin(-angles_[ii])),
-			Coord::CANVAS);
-
-    macosxDrawLine(rr0,rr1);
-  }
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

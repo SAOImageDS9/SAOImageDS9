@@ -90,37 +90,6 @@ void Text::renderPS(PSColorSpace mode)
   }
 }
 
-#ifdef MAC_OSX_TK
-
-void Text::renderMACOSX()
-{
-  /*
-  renderMACOSXGC();
-
-  if (text && *text && psfont_) {
-    Tcl_DString psdstr;
-    Tcl_DStringInit(&psdstr);
-    int psSize = Tk_PostscriptFontName(psfont_, &psdstr);
-    macosxFont(Tcl_DStringValue(&psdstr), psSize);
-    Tcl_DStringFree(&psdstr);
-
-    Tk_FontMetrics metrics;
-    Tk_GetFontMetrics(psfont_, &metrics);
-    int width = Tk_TextWidth(psfont_, text, strlen(text));
-
-    double ang = rotate ? calcAngle() : 0;
-    Vector cc = parent->mapFromRef(center,Coord::CANVAS);
-    Matrix mm = Translate(-cc) *
-      Translate(-width/2.,metrics.descent) *
-      Rotate(ang) * 
-      Translate(cc);
-
-    macosxDrawText(cc*mm, 0, text);
-  }
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

@@ -24,11 +24,6 @@ private:
   void renderPS(PSColorSpace);
   void renderPSGC(PSColorSpace);
 
-#ifdef MAC_OSX_TK
-  void renderMACOSX();
-  void renderMACOSXGC();
-#endif
-
 #ifdef __WIN32
   void renderWIN32();
   void renderWIN32GC();

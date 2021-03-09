@@ -129,16 +129,6 @@ protected:
   virtual void renderPSLineDash();
   void renderPSLineNoDash();
 
-#ifdef MAC_OSX_TK
-  virtual void renderMACOSX() =0;
-  virtual void renderMACOSXInclude();
-  virtual void renderMACOSXText();
-  void renderMACOSXArrow(const Vector&, const Vector&, Coord::InternalSystem);
-  virtual void renderMACOSXGC();
-  virtual void renderMACOSXLineDash();
-  void renderMACOSXLineNoDash();
-#endif
-
 #ifdef __WIN32
   virtual void renderWIN32() =0;
   virtual void renderWIN32Include();
@@ -215,9 +205,6 @@ protected:
 
   virtual void x11(Drawable, Coord::InternalSystem, int, HandleMode);
   virtual void ps(PSColorSpace,int);
-#ifdef MAC_OSX_TK
-  virtual void macosx(int);
-#endif
 #ifdef __WIN32
   virtual void win32(int);
 #endif

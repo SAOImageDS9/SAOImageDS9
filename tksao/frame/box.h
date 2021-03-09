@@ -15,10 +15,6 @@ class Box : public BaseBox {
   void renderXDraw(Drawable, GC, XPoint*, RenderMode);
   void renderPSDraw(int);
 
-#ifdef MAC_OSX_TK
-  void renderMACOSXDraw(Vector*);
-#endif
-
 #ifdef __WIN32
   void renderWIN32Draw(Vector*);
 #endif

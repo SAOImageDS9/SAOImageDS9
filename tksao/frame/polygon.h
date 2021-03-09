@@ -17,9 +17,6 @@ class Polygon : public BasePolygon {
   int isInRef(const Vector& v);
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   void renderPS(PSColorSpace);
-#ifdef MAC_OSX_TK
-  void renderMACOSX();
-#endif
 #ifdef __WIN32
   void renderWIN32();
 #endif

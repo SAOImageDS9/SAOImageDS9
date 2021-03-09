@@ -28,9 +28,6 @@ class Grid {
 
   virtual void x11() =0;
   virtual void ps(PSColorSpace) =0;
-#ifdef MAC_OSX_TK
-  virtual void macosx() =0;
-#endif
 #ifdef __WIN32
   virtual void win32() =0;
 #endif

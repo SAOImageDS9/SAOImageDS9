@@ -45,9 +45,6 @@ class ContourLevel {
   void render(Pixmap, Coord::InternalSystem, const BBox&);
   void ps(PSColorSpace);
   void updateCoords(const Matrix&);
-#ifdef MAC_OSX_TK
-  void macosx();
-#endif
 #ifdef __WIN32
   void win32();
 #endif
@@ -86,9 +83,6 @@ class Contour {
   void render(Pixmap, Coord::InternalSystem, const BBox&);
   void ps(PSColorSpace);
   void updateCoords(const Matrix&);
-#ifdef MAC_OSX_TK
-  void macosx();
-#endif
 #ifdef __WIN32
   void win32();
 #endif

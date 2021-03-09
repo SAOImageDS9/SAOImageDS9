@@ -1858,62 +1858,62 @@ static const yytype_uint16 yyrline[] =
     1669,  1670,  1671,  1672,  1673,  1674,  1676,  1678,  1679,  1680,
     1683,  1684,  1685,  1686,  1687,  1688,  1690,  1691,  1692,  1695,
     1697,  1699,  1700,  1702,  1704,  1708,  1709,  1712,  1713,  1714,
-    1717,  1724,  1725,  1726,  1727,  1728,  1729,  1730,  1733,  1741,
-    1742,  1743,  1744,  1746,  1748,  1749,  1749,  1750,  1751,  1752,
-    1753,  1754,  1756,  1757,  1759,  1762,  1765,  1766,  1767,  1770,
-    1773,  1776,  1777,  1781,  1784,  1787,  1790,  1794,  1799,  1804,
-    1806,  1807,  1809,  1810,  1812,  1814,  1816,  1818,  1819,  1821,
-    1823,  1827,  1832,  1834,  1836,  1838,  1840,  1842,  1844,  1846,
-    1848,  1850,  1852,  1855,  1856,  1858,  1860,  1861,  1863,  1865,
-    1866,  1867,  1869,  1871,  1872,  1873,  1875,  1876,  1877,  1880,
-    1884,  1887,  1890,  1894,  1899,  1905,  1906,  1907,  1909,  1910,
-    1914,  1916,  1917,  1918,  1921,  1924,  1927,  1929,  1931,  1932,
-    1937,  1940,  1941,  1942,  1945,  1949,  1950,  1952,  1953,  1954,
-    1956,  1957,  1959,  1960,  1965,  1967,  1968,  1970,  1971,  1972,
-    1973,  1974,  1975,  1977,  1979,  1981,  1982,  1983,  1985,  1987,
-    1988,  1989,  1990,  1991,  1992,  1993,  1994,  1995,  1996,  1997,
-    1999,  2001,  2002,  2003,  2004,  2006,  2007,  2008,  2009,  2010,
-    2012,  2013,  2014,  2015,  2016,  2017,  2020,  2021,  2022,  2023,
-    2024,  2025,  2026,  2027,  2028,  2029,  2030,  2031,  2032,  2033,
-    2034,  2035,  2036,  2037,  2038,  2039,  2040,  2043,  2044,  2045,
-    2046,  2047,  2048,  2056,  2063,  2072,  2081,  2088,  2095,  2103,
-    2111,  2118,  2123,  2128,  2133,  2138,  2143,  2148,  2154,  2164,
-    2174,  2184,  2191,  2201,  2211,  2220,  2232,  2245,  2250,  2253,
-    2255,  2257,  2262,  2266,  2267,  2268,  2274,  2276,  2278,  2281,
-    2282,  2283,  2284,  2285,  2286,  2287,  2290,  2291,  2292,  2293,
-    2294,  2295,  2297,  2299,  2301,  2303,  2305,  2307,  2310,  2311,
-    2312,  2313,  2315,  2318,  2319,  2321,  2323,  2324,  2325,  2327,
-    2330,  2333,  2334,  2336,  2337,  2338,  2339,  2341,  2342,  2343,
-    2344,  2345,  2347,  2349,  2350,  2352,  2355,  2356,  2357,  2359,
-    2361,  2362,  2363,  2364,  2366,  2369,  2373,  2374,  2375,  2376,
-    2379,  2382,  2384,  2385,  2386,  2387,  2389,  2392,  2393,  2395,
-    2396,  2397,  2398,  2399,  2401,  2402,  2404,  2407,  2408,  2409,
-    2410,  2411,  2413,  2415,  2416,  2417,  2418,  2420,  2422,  2423,
-    2424,  2425,  2426,  2427,  2429,  2430,  2432,  2435,  2436,  2437,
-    2438,  2441,  2442,  2445,  2446,  2449,  2450,  2453,  2466,  2467,
-    2471,  2472,  2476,  2477,  2480,  2484,  2490,  2492,  2495,  2497,
-    2500,  2502,  2506,  2507,  2508,  2509,  2510,  2511,  2512,  2516,
-    2517,  2520,  2521,  2522,  2523,  2524,  2525,  2526,  2527,  2530,
-    2531,  2532,  2533,  2534,  2535,  2536,  2537,  2538,  2539,  2540,
-    2543,  2544,  2547,  2548,  2548,  2551,  2553,  2555,  2558,  2559,
-    2560,  2561,  2564,  2565,  2568,  2569,  2572,  2576,  2577,  2577,
-    2580,  2581,  2584,  2587,  2591,  2592,  2593,  2594,  2595,  2596,
-    2597,  2598,  2604,  2605,  2606,  2607,  2610,  2612,  2613,  2618,
-    2620,  2621,  2622,  2623,  2626,  2627,  2632,  2636,  2637,  2638,
-    2641,  2642,  2647,  2648,  2651,  2653,  2654,  2655,  2660,  2662,
-    2668,  2669,  2670,  2671,  2674,  2675,  2678,  2680,  2682,  2683,
-    2686,  2688,  2689,  2690,  2693,  2694,  2697,  2698,  2699,  2702,
-    2703,  2704,  2707,  2708,  2709,  2710,  2711,  2714,  2715,  2716,
-    2719,  2720,  2721,  2722,  2723,  2726,  2728,  2730,  2732,  2735,
-    2737,  2739,  2742,  2743,  2744,  2745,  2746,  2747,  2748,  2749,
-    2750,  2753,  2754,  2755,  2758,  2759,  2760,  2763,  2764,  2765,
-    2768,  2769,  2770,  2773,  2774,  2775,  2776,  2779,  2780,  2781,
-    2784,  2785,  2786,  2789,  2790,  2791,  2794,  2795,  2796,  2799,
-    2801,  2803,  2807,  2811,  2813,  2818,  2821,  2822,  2823,  2824,
-    2827,  2828,  2830,  2831,  2833,  2836,  2837,  2838,  2841,  2842,
-    2845,  2847,  2848,  2849,  2850,  2853,  2854,  2855,  2858,  2859,
-    2860,  2863,  2864,  2869,  2873,  2880,  2881,  2883,  2888,  2890,
-    2893,  2894,  2895,  2896,  2898,  2903
+    1717,  1720,  1721,  1722,  1723,  1724,  1725,  1726,  1729,  1737,
+    1738,  1739,  1740,  1742,  1744,  1745,  1745,  1746,  1747,  1748,
+    1749,  1750,  1752,  1753,  1755,  1758,  1761,  1762,  1763,  1766,
+    1769,  1772,  1773,  1777,  1780,  1783,  1786,  1790,  1795,  1800,
+    1802,  1803,  1805,  1806,  1808,  1810,  1812,  1814,  1815,  1817,
+    1819,  1823,  1828,  1830,  1832,  1834,  1836,  1838,  1840,  1842,
+    1844,  1846,  1848,  1851,  1852,  1854,  1856,  1857,  1859,  1861,
+    1862,  1863,  1865,  1867,  1868,  1869,  1871,  1872,  1873,  1876,
+    1880,  1883,  1886,  1890,  1895,  1901,  1902,  1903,  1905,  1906,
+    1910,  1912,  1913,  1914,  1917,  1920,  1923,  1925,  1927,  1928,
+    1933,  1936,  1937,  1938,  1941,  1945,  1946,  1948,  1949,  1950,
+    1952,  1953,  1955,  1956,  1961,  1963,  1964,  1966,  1967,  1968,
+    1969,  1970,  1971,  1973,  1975,  1977,  1978,  1979,  1981,  1983,
+    1984,  1985,  1986,  1987,  1988,  1989,  1990,  1991,  1992,  1993,
+    1995,  1997,  1998,  1999,  2000,  2002,  2003,  2004,  2005,  2006,
+    2008,  2009,  2010,  2011,  2012,  2013,  2016,  2017,  2018,  2019,
+    2020,  2021,  2022,  2023,  2024,  2025,  2026,  2027,  2028,  2029,
+    2030,  2031,  2032,  2033,  2034,  2035,  2036,  2039,  2040,  2041,
+    2042,  2043,  2044,  2052,  2059,  2068,  2077,  2084,  2091,  2099,
+    2107,  2114,  2119,  2124,  2129,  2134,  2139,  2144,  2150,  2160,
+    2170,  2180,  2187,  2197,  2207,  2216,  2228,  2241,  2246,  2249,
+    2251,  2253,  2258,  2262,  2263,  2264,  2270,  2272,  2274,  2277,
+    2278,  2279,  2280,  2281,  2282,  2283,  2286,  2287,  2288,  2289,
+    2290,  2291,  2293,  2295,  2297,  2299,  2301,  2303,  2306,  2307,
+    2308,  2309,  2311,  2314,  2315,  2317,  2319,  2320,  2321,  2323,
+    2326,  2329,  2330,  2332,  2333,  2334,  2335,  2337,  2338,  2339,
+    2340,  2341,  2343,  2345,  2346,  2348,  2351,  2352,  2353,  2355,
+    2357,  2358,  2359,  2360,  2362,  2365,  2369,  2370,  2371,  2372,
+    2375,  2378,  2380,  2381,  2382,  2383,  2385,  2388,  2389,  2391,
+    2392,  2393,  2394,  2395,  2397,  2398,  2400,  2403,  2404,  2405,
+    2406,  2407,  2409,  2411,  2412,  2413,  2414,  2416,  2418,  2419,
+    2420,  2421,  2422,  2423,  2425,  2426,  2428,  2431,  2432,  2433,
+    2434,  2437,  2438,  2441,  2442,  2445,  2446,  2449,  2462,  2463,
+    2467,  2468,  2472,  2473,  2476,  2480,  2486,  2488,  2491,  2493,
+    2496,  2498,  2502,  2503,  2504,  2505,  2506,  2507,  2508,  2512,
+    2513,  2516,  2517,  2518,  2519,  2520,  2521,  2522,  2523,  2526,
+    2527,  2528,  2529,  2530,  2531,  2532,  2533,  2534,  2535,  2536,
+    2539,  2540,  2543,  2544,  2544,  2547,  2549,  2551,  2554,  2555,
+    2556,  2557,  2560,  2561,  2564,  2565,  2568,  2572,  2573,  2573,
+    2576,  2577,  2580,  2583,  2587,  2588,  2589,  2590,  2591,  2592,
+    2593,  2594,  2600,  2601,  2602,  2603,  2606,  2608,  2609,  2614,
+    2616,  2617,  2618,  2619,  2622,  2623,  2628,  2632,  2633,  2634,
+    2637,  2638,  2643,  2644,  2647,  2649,  2650,  2651,  2656,  2658,
+    2664,  2665,  2666,  2667,  2670,  2671,  2674,  2676,  2678,  2679,
+    2682,  2684,  2685,  2686,  2689,  2690,  2693,  2694,  2695,  2698,
+    2699,  2700,  2703,  2704,  2705,  2706,  2707,  2710,  2711,  2712,
+    2715,  2716,  2717,  2718,  2719,  2722,  2724,  2726,  2728,  2731,
+    2733,  2735,  2738,  2739,  2740,  2741,  2742,  2743,  2744,  2745,
+    2746,  2749,  2750,  2751,  2754,  2755,  2756,  2759,  2760,  2761,
+    2764,  2765,  2766,  2769,  2770,  2771,  2772,  2775,  2776,  2777,
+    2780,  2781,  2782,  2785,  2786,  2787,  2790,  2791,  2792,  2795,
+    2797,  2799,  2803,  2807,  2809,  2814,  2817,  2818,  2819,  2820,
+    2823,  2824,  2826,  2827,  2829,  2832,  2833,  2834,  2837,  2838,
+    2841,  2843,  2844,  2845,  2846,  2849,  2850,  2851,  2854,  2855,
+    2856,  2859,  2860,  2865,  2869,  2876,  2877,  2879,  2884,  2886,
+    2889,  2890,  2891,  2892,  2894,  2899
 };
 #endif
 
@@ -8322,50 +8322,46 @@ yyreduce:
 
   case 720:
 #line 1717 "frame/parser.Y"
-    {
-#ifdef MAC_OSX_TK
-	  fr->macosxPrintCmd();
-#endif
-	;}
+    {;}
     break;
 
   case 721:
-#line 1724 "frame/parser.Y"
+#line 1720 "frame/parser.Y"
     {fr->magnifierCmd((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 722:
-#line 1725 "frame/parser.Y"
+#line 1721 "frame/parser.Y"
     {fr->magnifierGraphicsCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 723:
-#line 1726 "frame/parser.Y"
+#line 1722 "frame/parser.Y"
     {fr->magnifierCursorCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 724:
-#line 1727 "frame/parser.Y"
+#line 1723 "frame/parser.Y"
     {fr->magnifierColorCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 725:
-#line 1728 "frame/parser.Y"
+#line 1724 "frame/parser.Y"
     {fr->magnifierCmd((yyvsp[(1) - (3)].str), (yyvsp[(2) - (3)].integer), (yyvsp[(3) - (3)].integer));;}
     break;
 
   case 726:
-#line 1729 "frame/parser.Y"
+#line 1725 "frame/parser.Y"
     {fr->updateMagnifierCmd(Vector((yyvsp[(2) - (3)].real), (yyvsp[(3) - (3)].real)));;}
     break;
 
   case 727:
-#line 1730 "frame/parser.Y"
+#line 1726 "frame/parser.Y"
     {fr->magnifierZoomCmd((yyvsp[(2) - (2)].real));;}
     break;
 
   case 728:
-#line 1734 "frame/parser.Y"
+#line 1730 "frame/parser.Y"
     {
 	  fr->matchCmd((yyvsp[(1) - (12)].str),(yyvsp[(2) - (12)].str),(Coord::CoordSystem)(yyvsp[(3) - (12)].integer),(Coord::SkyFrame)(yyvsp[(4) - (12)].integer),
 		       (yyvsp[(5) - (12)].str),(yyvsp[(6) - (12)].str),(Coord::CoordSystem)(yyvsp[(7) - (12)].integer),(Coord::SkyFrame)(yyvsp[(8) - (12)].integer),
@@ -8375,849 +8371,849 @@ yyreduce:
     break;
 
   case 730:
-#line 1742 "frame/parser.Y"
+#line 1738 "frame/parser.Y"
     {fr->markerColorCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 731:
-#line 1743 "frame/parser.Y"
+#line 1739 "frame/parser.Y"
     {fr->markerCopyCmd();;}
     break;
 
   case 732:
-#line 1745 "frame/parser.Y"
+#line 1741 "frame/parser.Y"
     {fr->markerCommandCmd((Base::MarkerFormat)(yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 733:
-#line 1747 "frame/parser.Y"
+#line 1743 "frame/parser.Y"
     {fr->markerCommandVarCmd((Base::MarkerFormat)(yyvsp[(2) - (4)].integer),(yyvsp[(4) - (4)].str));;}
     break;
 
   case 734:
-#line 1748 "frame/parser.Y"
+#line 1744 "frame/parser.Y"
     {fr->markerCompositeDeleteCmd();;}
     break;
 
   case 735:
-#line 1749 "frame/parser.Y"
+#line 1745 "frame/parser.Y"
     {maperr =0;;}
     break;
 
   case 737:
-#line 1750 "frame/parser.Y"
+#line 1746 "frame/parser.Y"
     {fr->markerCutCmd();;}
     break;
 
   case 740:
-#line 1753 "frame/parser.Y"
+#line 1749 "frame/parser.Y"
     {fr->markerEpsilonCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 741:
-#line 1754 "frame/parser.Y"
+#line 1750 "frame/parser.Y"
     {fr->markerFontCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 742:
-#line 1756 "frame/parser.Y"
+#line 1752 "frame/parser.Y"
     {fr->markerHighliteAllCmd();;}
     break;
 
   case 743:
-#line 1758 "frame/parser.Y"
+#line 1754 "frame/parser.Y"
     {fr->markerHighliteOnlyCmd(Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 744:
-#line 1760 "frame/parser.Y"
+#line 1756 "frame/parser.Y"
     {fr->markerHighliteToggleCmd(Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 745:
-#line 1763 "frame/parser.Y"
+#line 1759 "frame/parser.Y"
     {fr->markerAnalysisCmd((yyvsp[(1) - (4)].integer), (Marker::AnalysisTask)(yyvsp[(3) - (4)].integer), (yyvsp[(4) - (4)].integer));;}
     break;
 
   case 746:
-#line 1765 "frame/parser.Y"
+#line 1761 "frame/parser.Y"
     {fr->markerAngleCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].real));;}
     break;
 
   case 747:
-#line 1766 "frame/parser.Y"
+#line 1762 "frame/parser.Y"
     {fr->markerAngleCmd((yyvsp[(1) - (4)].integer),(yyvsp[(3) - (4)].real));;}
     break;
 
   case 748:
-#line 1768 "frame/parser.Y"
+#line 1764 "frame/parser.Y"
     {fr->markerAngleCmd((yyvsp[(1) - (5)].integer),(yyvsp[(3) - (5)].real),(Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::SkyFrame)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 749:
-#line 1771 "frame/parser.Y"
+#line 1767 "frame/parser.Y"
     {fr->markerAnnulusRadiusCmd((yyvsp[(1) - (8)].integer), (yyvsp[(4) - (8)].real), (yyvsp[(5) - (8)].real), (yyvsp[(6) - (8)].integer),
 	    (Coord::CoordSystem)(yyvsp[(7) - (8)].integer), (Coord::DistFormat)(yyvsp[(8) - (8)].integer));;}
     break;
 
   case 750:
-#line 1774 "frame/parser.Y"
+#line 1770 "frame/parser.Y"
     {fr->markerAnnulusRadiusCmd((yyvsp[(1) - (6)].integer), (yyvsp[(4) - (6)].str),(Coord::CoordSystem)(yyvsp[(5) - (6)].integer),(Coord::DistFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 751:
-#line 1776 "frame/parser.Y"
+#line 1772 "frame/parser.Y"
     {fr->markerBoxFillCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 752:
-#line 1779 "frame/parser.Y"
+#line 1775 "frame/parser.Y"
     {fr->markerBoxAnnulusRadiusCmd((yyvsp[(1) - (9)].integer), Vector((yyvsp[(4) - (9)].real), (yyvsp[(5) - (9)].real)), 
 	    Vector((yyvsp[(6) - (9)].real), (yyvsp[(6) - (9)].real)*(yyvsp[(5) - (9)].real)/(yyvsp[(4) - (9)].real)), (yyvsp[(7) - (9)].integer), (Coord::CoordSystem)(yyvsp[(8) - (9)].integer), (Coord::DistFormat)(yyvsp[(9) - (9)].integer));;}
     break;
 
   case 753:
-#line 1782 "frame/parser.Y"
+#line 1778 "frame/parser.Y"
     {fr->markerBoxAnnulusRadiusCmd((yyvsp[(1) - (6)].integer),(yyvsp[(4) - (6)].str),(Coord::CoordSystem)(yyvsp[(5) - (6)].integer),(Coord::DistFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 754:
-#line 1785 "frame/parser.Y"
+#line 1781 "frame/parser.Y"
     {fr->markerBoxRadiusCmd((yyvsp[(1) - (7)].integer), Vector((yyvsp[(4) - (7)].real),(yyvsp[(5) - (7)].real)), 
 	    (Coord::CoordSystem)(yyvsp[(6) - (7)].integer), (Coord::DistFormat)(yyvsp[(7) - (7)].integer));;}
     break;
 
   case 755:
-#line 1788 "frame/parser.Y"
+#line 1784 "frame/parser.Y"
     {fr->markerBpandaEditCmd((yyvsp[(1) - (10)].integer), (yyvsp[(4) - (10)].real), (yyvsp[(5) - (10)].real), (yyvsp[(6) - (10)].integer),
 	    Vector((yyvsp[(7) - (10)].real),(yyvsp[(8) - (10)].real)), Vector((yyvsp[(9) - (10)].real),(yyvsp[(9) - (10)].real)*(yyvsp[(8) - (10)].real)/(yyvsp[(7) - (10)].real)), (yyvsp[(10) - (10)].integer));;}
     break;
 
   case 756:
-#line 1792 "frame/parser.Y"
+#line 1788 "frame/parser.Y"
     {fr->markerBpandaEditCmd((yyvsp[(1) - (11)].integer), (yyvsp[(4) - (11)].real), (yyvsp[(5) - (11)].real), (yyvsp[(6) - (11)].integer),
 	    Vector((yyvsp[(7) - (11)].real),(yyvsp[(8) - (11)].real)), Vector((yyvsp[(9) - (11)].real),(yyvsp[(9) - (11)].real)*(yyvsp[(8) - (11)].real)/(yyvsp[(7) - (11)].real)), (yyvsp[(10) - (11)].integer));;}
     break;
 
   case 757:
-#line 1796 "frame/parser.Y"
+#line 1792 "frame/parser.Y"
     {fr->markerBpandaEditCmd((yyvsp[(1) - (12)].integer), (yyvsp[(4) - (12)].real), (yyvsp[(5) - (12)].real), (yyvsp[(6) - (12)].integer),
 	    Vector((yyvsp[(7) - (12)].real),(yyvsp[(8) - (12)].real)), Vector((yyvsp[(9) - (12)].real),(yyvsp[(9) - (12)].real)*(yyvsp[(8) - (12)].real)/(yyvsp[(7) - (12)].real)), (yyvsp[(10) - (12)].integer),
 	    (Coord::CoordSystem)(yyvsp[(11) - (12)].integer), (Coord::SkyFrame)(yyvsp[(12) - (12)].integer));;}
     break;
 
   case 758:
-#line 1801 "frame/parser.Y"
+#line 1797 "frame/parser.Y"
     {fr->markerBpandaEditCmd((yyvsp[(1) - (9)].integer), (yyvsp[(4) - (9)].str), (yyvsp[(5) - (9)].str), 
 	    (Coord::CoordSystem)(yyvsp[(6) - (9)].integer), (Coord::SkyFrame)(yyvsp[(7) - (9)].integer), (Coord::CoordSystem)(yyvsp[(8) - (9)].integer), (Coord::DistFormat)(yyvsp[(9) - (9)].integer));;}
     break;
 
   case 759:
-#line 1805 "frame/parser.Y"
+#line 1801 "frame/parser.Y"
     {fr->markerCallBackCmd((yyvsp[(1) - (5)].integer),(CallBack::Type)(yyvsp[(3) - (5)].integer),(yyvsp[(4) - (5)].str),(yyvsp[(5) - (5)].str));;}
     break;
 
   case 760:
-#line 1806 "frame/parser.Y"
+#line 1802 "frame/parser.Y"
     {fr->markerCircleFillCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 761:
-#line 1808 "frame/parser.Y"
+#line 1804 "frame/parser.Y"
     {fr->markerCircleRadiusCmd((yyvsp[(1) - (6)].integer), (yyvsp[(4) - (6)].real), (Coord::CoordSystem)(yyvsp[(5) - (6)].integer), (Coord::DistFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 762:
-#line 1809 "frame/parser.Y"
+#line 1805 "frame/parser.Y"
     {fr->markerColorCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 763:
-#line 1811 "frame/parser.Y"
+#line 1807 "frame/parser.Y"
     {fr->markerCompassArrowCmd((yyvsp[(1) - (5)].integer),(yyvsp[(4) - (5)].integer),(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 764:
-#line 1813 "frame/parser.Y"
+#line 1809 "frame/parser.Y"
     {fr->markerCompassLabelCmd((yyvsp[(1) - (5)].integer),(yyvsp[(4) - (5)].str),(yyvsp[(5) - (5)].str));;}
     break;
 
   case 765:
-#line 1815 "frame/parser.Y"
+#line 1811 "frame/parser.Y"
     {fr->markerCompassRadiusCmd((yyvsp[(1) - (6)].integer),(yyvsp[(4) - (6)].real),(Coord::CoordSystem)(yyvsp[(5) - (6)].integer),(Coord::DistFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 766:
-#line 1817 "frame/parser.Y"
+#line 1813 "frame/parser.Y"
     {fr->markerCompassSystemCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::SkyFrame)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 767:
-#line 1818 "frame/parser.Y"
+#line 1814 "frame/parser.Y"
     {fr->markerCompositeCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 768:
-#line 1820 "frame/parser.Y"
+#line 1816 "frame/parser.Y"
     {fr->markerCpandaEditCmd((yyvsp[(1) - (9)].integer), (yyvsp[(4) - (9)].real), (yyvsp[(5) - (9)].real), (yyvsp[(6) - (9)].integer), (yyvsp[(7) - (9)].real), (yyvsp[(8) - (9)].real), (yyvsp[(9) - (9)].integer));;}
     break;
 
   case 769:
-#line 1822 "frame/parser.Y"
+#line 1818 "frame/parser.Y"
     {fr->markerCpandaEditCmd((yyvsp[(1) - (10)].integer), (yyvsp[(4) - (10)].real), (yyvsp[(5) - (10)].real), (yyvsp[(6) - (10)].integer), (yyvsp[(7) - (10)].real), (yyvsp[(8) - (10)].real), (yyvsp[(9) - (10)].integer));;}
     break;
 
   case 770:
-#line 1825 "frame/parser.Y"
+#line 1821 "frame/parser.Y"
     {fr->markerCpandaEditCmd((yyvsp[(1) - (11)].integer), (yyvsp[(4) - (11)].real), (yyvsp[(5) - (11)].real), (yyvsp[(6) - (11)].integer), (yyvsp[(7) - (11)].real), (yyvsp[(8) - (11)].real), (yyvsp[(9) - (11)].integer),
 	    (Coord::CoordSystem)(yyvsp[(10) - (11)].integer), (Coord::SkyFrame)(yyvsp[(11) - (11)].integer));;}
     break;
 
   case 771:
-#line 1829 "frame/parser.Y"
+#line 1825 "frame/parser.Y"
     {fr->markerCpandaEditCmd((yyvsp[(1) - (9)].integer), (yyvsp[(4) - (9)].str), (yyvsp[(5) - (9)].str), (Coord::CoordSystem)(yyvsp[(6) - (9)].integer), (Coord::SkyFrame)(yyvsp[(7) - (9)].integer),
 	    (Coord::CoordSystem)(yyvsp[(8) - (9)].integer), (Coord::DistFormat)(yyvsp[(9) - (9)].integer));;}
     break;
 
   case 772:
-#line 1833 "frame/parser.Y"
+#line 1829 "frame/parser.Y"
     {fr->markerAnnulusCreateRadiusCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 773:
-#line 1835 "frame/parser.Y"
+#line 1831 "frame/parser.Y"
     {fr->markerBoxAnnulusCreateRadiusCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 774:
-#line 1837 "frame/parser.Y"
+#line 1833 "frame/parser.Y"
     {fr->markerBpandaCreateAnglesCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 775:
-#line 1839 "frame/parser.Y"
+#line 1835 "frame/parser.Y"
     {fr->markerBpandaCreateRadiusCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 776:
-#line 1841 "frame/parser.Y"
+#line 1837 "frame/parser.Y"
     {fr->markerEllipseAnnulusCreateRadiusCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 777:
-#line 1843 "frame/parser.Y"
+#line 1839 "frame/parser.Y"
     {fr->markerEpandaCreateAnglesCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 778:
-#line 1845 "frame/parser.Y"
+#line 1841 "frame/parser.Y"
     {fr->markerEpandaCreateRadiusCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 779:
-#line 1847 "frame/parser.Y"
+#line 1843 "frame/parser.Y"
     {fr->markerCpandaCreateAnglesCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 780:
-#line 1849 "frame/parser.Y"
+#line 1845 "frame/parser.Y"
     {fr->markerCpandaCreateRadiusCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 781:
-#line 1851 "frame/parser.Y"
+#line 1847 "frame/parser.Y"
     {fr->markerPolygonCreateVertexCmd((yyvsp[(1) - (7)].integer),(yyvsp[(5) - (7)].integer),Vector((yyvsp[(6) - (7)].real),(yyvsp[(7) - (7)].real)));;}
     break;
 
   case 782:
-#line 1853 "frame/parser.Y"
+#line 1849 "frame/parser.Y"
     {fr->markerSegmentCreateVertexCmd((yyvsp[(1) - (7)].integer),(yyvsp[(5) - (7)].integer),Vector((yyvsp[(6) - (7)].real),(yyvsp[(7) - (7)].real)));;}
     break;
 
   case 783:
-#line 1855 "frame/parser.Y"
+#line 1851 "frame/parser.Y"
     {fr->markerDeleteCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 784:
-#line 1857 "frame/parser.Y"
+#line 1853 "frame/parser.Y"
     {fr->markerAnnulusDeleteRadiusCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 785:
-#line 1859 "frame/parser.Y"
+#line 1855 "frame/parser.Y"
     {fr->markerBoxAnnulusDeleteRadiusCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 786:
-#line 1860 "frame/parser.Y"
+#line 1856 "frame/parser.Y"
     {fr->markerBpandaDeleteCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 787:
-#line 1862 "frame/parser.Y"
+#line 1858 "frame/parser.Y"
     {fr->markerEllipseAnnulusDeleteRadiusCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 788:
-#line 1864 "frame/parser.Y"
+#line 1860 "frame/parser.Y"
     {fr->markerDeleteCallBackCmd((yyvsp[(1) - (5)].integer),(CallBack::Type)(yyvsp[(4) - (5)].integer),(yyvsp[(5) - (5)].str));;}
     break;
 
   case 789:
-#line 1865 "frame/parser.Y"
+#line 1861 "frame/parser.Y"
     {fr->markerEpandaDeleteCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 790:
-#line 1866 "frame/parser.Y"
+#line 1862 "frame/parser.Y"
     {fr->markerCpandaDeleteCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 791:
-#line 1868 "frame/parser.Y"
+#line 1864 "frame/parser.Y"
     {fr->markerPolygonDeleteVertexCmd((yyvsp[(1) - (5)].integer),(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 792:
-#line 1870 "frame/parser.Y"
+#line 1866 "frame/parser.Y"
     {fr->markerSegmentDeleteVertexCmd((yyvsp[(1) - (5)].integer),(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 793:
-#line 1871 "frame/parser.Y"
+#line 1867 "frame/parser.Y"
     {fr->markerDeleteTagCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 794:
-#line 1872 "frame/parser.Y"
+#line 1868 "frame/parser.Y"
     {fr->markerDeleteTagCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].str));;}
     break;
 
   case 795:
-#line 1873 "frame/parser.Y"
+#line 1869 "frame/parser.Y"
     {fr->markerDeleteTagCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 796:
-#line 1875 "frame/parser.Y"
+#line 1871 "frame/parser.Y"
     {fr->markerEditBeginCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 797:
-#line 1876 "frame/parser.Y"
+#line 1872 "frame/parser.Y"
     {fr->markerEllipseFillCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 798:
-#line 1878 "frame/parser.Y"
+#line 1874 "frame/parser.Y"
     {fr->markerEllipseRadiusCmd((yyvsp[(1) - (7)].integer), Vector((yyvsp[(4) - (7)].real), (yyvsp[(5) - (7)].real)),
 	    (Coord::CoordSystem)(yyvsp[(6) - (7)].integer), (Coord::DistFormat)(yyvsp[(7) - (7)].integer));;}
     break;
 
   case 799:
-#line 1882 "frame/parser.Y"
+#line 1878 "frame/parser.Y"
     {fr->markerEllipseAnnulusRadiusCmd((yyvsp[(1) - (9)].integer), Vector((yyvsp[(4) - (9)].real),(yyvsp[(5) - (9)].real)), 
 	    Vector((yyvsp[(6) - (9)].real),(yyvsp[(6) - (9)].real)*(yyvsp[(5) - (9)].real)/(yyvsp[(4) - (9)].real)), (yyvsp[(7) - (9)].integer), (Coord::CoordSystem)(yyvsp[(8) - (9)].integer), (Coord::DistFormat)(yyvsp[(9) - (9)].integer));;}
     break;
 
   case 800:
-#line 1885 "frame/parser.Y"
+#line 1881 "frame/parser.Y"
     {fr->markerEllipseAnnulusRadiusCmd((yyvsp[(1) - (6)].integer), (yyvsp[(4) - (6)].str),
 	    (Coord::CoordSystem)(yyvsp[(5) - (6)].integer), (Coord::DistFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 801:
-#line 1888 "frame/parser.Y"
+#line 1884 "frame/parser.Y"
     {fr->markerEpandaEditCmd((yyvsp[(1) - (10)].integer), (yyvsp[(4) - (10)].real), (yyvsp[(5) - (10)].real), (yyvsp[(6) - (10)].integer),
 	    Vector((yyvsp[(7) - (10)].real),(yyvsp[(8) - (10)].real)), Vector((yyvsp[(9) - (10)].real),(yyvsp[(9) - (10)].real)*(yyvsp[(8) - (10)].real)/(yyvsp[(7) - (10)].real)), (yyvsp[(10) - (10)].integer));;}
     break;
 
   case 802:
-#line 1892 "frame/parser.Y"
+#line 1888 "frame/parser.Y"
     {fr->markerEpandaEditCmd((yyvsp[(1) - (11)].integer), (yyvsp[(4) - (11)].real), (yyvsp[(5) - (11)].real), (yyvsp[(6) - (11)].integer),
 	    Vector((yyvsp[(7) - (11)].real),(yyvsp[(8) - (11)].real)), Vector((yyvsp[(9) - (11)].real),(yyvsp[(9) - (11)].real)*(yyvsp[(8) - (11)].real)/(yyvsp[(7) - (11)].real)), (yyvsp[(10) - (11)].integer));;}
     break;
 
   case 803:
-#line 1896 "frame/parser.Y"
+#line 1892 "frame/parser.Y"
     {fr->markerEpandaEditCmd((yyvsp[(1) - (12)].integer), (yyvsp[(4) - (12)].real), (yyvsp[(5) - (12)].real), (yyvsp[(6) - (12)].integer),
 	    Vector((yyvsp[(7) - (12)].real),(yyvsp[(8) - (12)].real)), Vector((yyvsp[(9) - (12)].real),(yyvsp[(9) - (12)].real)*(yyvsp[(8) - (12)].real)/(yyvsp[(7) - (12)].real)), (yyvsp[(10) - (12)].integer),
 	    (Coord::CoordSystem)(yyvsp[(11) - (12)].integer), (Coord::SkyFrame)(yyvsp[(12) - (12)].integer));;}
     break;
 
   case 804:
-#line 1901 "frame/parser.Y"
+#line 1897 "frame/parser.Y"
     {fr->markerEpandaEditCmd((yyvsp[(1) - (9)].integer), (yyvsp[(4) - (9)].str), (yyvsp[(5) - (9)].str), 
 	    (Coord::CoordSystem)(yyvsp[(6) - (9)].integer), (Coord::SkyFrame)(yyvsp[(7) - (9)].integer),
 	    (Coord::CoordSystem)(yyvsp[(8) - (9)].integer), (Coord::DistFormat)(yyvsp[(9) - (9)].integer));;}
     break;
 
   case 805:
-#line 1905 "frame/parser.Y"
+#line 1901 "frame/parser.Y"
     {fr->markerFontCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 806:
-#line 1906 "frame/parser.Y"
+#line 1902 "frame/parser.Y"
     {fr->markerHighliteCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 807:
-#line 1907 "frame/parser.Y"
+#line 1903 "frame/parser.Y"
     {fr->markerHighliteOnlyCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 808:
-#line 1909 "frame/parser.Y"
+#line 1905 "frame/parser.Y"
     {fr->markerLineArrowCmd((yyvsp[(1) - (5)].integer),(yyvsp[(4) - (5)].integer),(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 809:
-#line 1911 "frame/parser.Y"
+#line 1907 "frame/parser.Y"
     {fr->markerLineCmd((yyvsp[(1) - (7)].integer), Vector((yyvsp[(6) - (7)].vector)), Vector((yyvsp[(7) - (7)].vector)), 
 	    (Coord::CoordSystem)(yyvsp[(4) - (7)].integer), (Coord::SkyFrame)(yyvsp[(5) - (7)].integer));;}
     break;
 
   case 810:
-#line 1915 "frame/parser.Y"
+#line 1911 "frame/parser.Y"
     {fr->markerMoveCmd((yyvsp[(1) - (4)].integer), Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 811:
-#line 1916 "frame/parser.Y"
+#line 1912 "frame/parser.Y"
     {fr->markerFrontCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 812:
-#line 1917 "frame/parser.Y"
+#line 1913 "frame/parser.Y"
     {fr->markerBackCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 813:
-#line 1919 "frame/parser.Y"
+#line 1915 "frame/parser.Y"
     {fr->markerMoveToCmd((yyvsp[(1) - (6)].integer),Vector((yyvsp[(6) - (6)].vector)),(Coord::CoordSystem)(yyvsp[(4) - (6)].integer),(Coord::SkyFrame)(yyvsp[(5) - (6)].integer));;}
     break;
 
   case 814:
-#line 1922 "frame/parser.Y"
+#line 1918 "frame/parser.Y"
     {fr->markerPolygonResetCmd((yyvsp[(1) - (7)].integer), Vector((yyvsp[(4) - (7)].real),(yyvsp[(5) - (7)].real)),
 	    (Coord::CoordSystem)(yyvsp[(6) - (7)].integer), (Coord::DistFormat)(yyvsp[(7) - (7)].integer));;}
     break;
 
   case 815:
-#line 1925 "frame/parser.Y"
+#line 1921 "frame/parser.Y"
     {fr->markerSegmentResetCmd((yyvsp[(1) - (7)].integer), Vector((yyvsp[(4) - (7)].real),(yyvsp[(5) - (7)].real)),
 	    (Coord::CoordSystem)(yyvsp[(6) - (7)].integer), (Coord::DistFormat)(yyvsp[(7) - (7)].integer));;}
     break;
 
   case 816:
-#line 1928 "frame/parser.Y"
+#line 1924 "frame/parser.Y"
     {fr->markerPointShapeCmd((yyvsp[(1) - (4)].integer),(Point::PointShape)(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 817:
-#line 1929 "frame/parser.Y"
+#line 1925 "frame/parser.Y"
     {fr->markerPointSizeCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 818:
-#line 1931 "frame/parser.Y"
+#line 1927 "frame/parser.Y"
     {fr->markerPolygonFillCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 819:
-#line 1934 "frame/parser.Y"
+#line 1930 "frame/parser.Y"
     {fr->markerProjectionCmd((yyvsp[(1) - (9)].integer), Vector((yyvsp[(5) - (9)].vector)), Vector((yyvsp[(6) - (9)].vector)),
 	    (Coord::CoordSystem)(yyvsp[(3) - (9)].integer), (Coord::SkyFrame)(yyvsp[(4) - (9)].integer), (yyvsp[(7) - (9)].real),
 	    (Coord::CoordSystem)(yyvsp[(8) - (9)].integer), (Coord::DistFormat)(yyvsp[(9) - (9)].integer));;}
     break;
 
   case 820:
-#line 1938 "frame/parser.Y"
+#line 1934 "frame/parser.Y"
     {fr->markerPropertyCmd((yyvsp[(1) - (4)].integer),(yyvsp[(3) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 821:
-#line 1940 "frame/parser.Y"
+#line 1936 "frame/parser.Y"
     {fr->markerRotateBeginCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 822:
-#line 1941 "frame/parser.Y"
+#line 1937 "frame/parser.Y"
     {fr->markerRulerDistSpecCmd((yyvsp[(1) - (4)].integer), (yyvsp[(4) - (4)].str));;}
     break;
 
   case 823:
-#line 1943 "frame/parser.Y"
+#line 1939 "frame/parser.Y"
     {fr->markerRulerPointCmd((yyvsp[(1) - (7)].integer), Vector((yyvsp[(6) - (7)].vector)), Vector((yyvsp[(7) - (7)].vector)),
 	    (Coord::CoordSystem)(yyvsp[(4) - (7)].integer), (Coord::SkyFrame)(yyvsp[(5) - (7)].integer));;}
     break;
 
   case 824:
-#line 1946 "frame/parser.Y"
+#line 1942 "frame/parser.Y"
     {fr->markerRulerSystemCmd((yyvsp[(1) - (7)].integer), (Coord::CoordSystem)(yyvsp[(4) - (7)].integer), (Coord::SkyFrame)(yyvsp[(5) - (7)].integer),
 	    (Coord::CoordSystem)(yyvsp[(6) - (7)].integer), (Coord::DistFormat)(yyvsp[(7) - (7)].integer));;}
     break;
 
   case 825:
-#line 1949 "frame/parser.Y"
+#line 1945 "frame/parser.Y"
     {fr->markerSelectCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 826:
-#line 1950 "frame/parser.Y"
+#line 1946 "frame/parser.Y"
     {fr->markerSelectOnlyCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 827:
-#line 1952 "frame/parser.Y"
+#line 1948 "frame/parser.Y"
     {fr->markerTagCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 828:
-#line 1953 "frame/parser.Y"
+#line 1949 "frame/parser.Y"
     {fr->markerTextCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 829:
-#line 1954 "frame/parser.Y"
+#line 1950 "frame/parser.Y"
     {fr->markerTextRotateCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 830:
-#line 1956 "frame/parser.Y"
+#line 1952 "frame/parser.Y"
     {fr->markerUnhighliteCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 831:
-#line 1957 "frame/parser.Y"
+#line 1953 "frame/parser.Y"
     {fr->markerUnselectCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 832:
-#line 1959 "frame/parser.Y"
+#line 1955 "frame/parser.Y"
     {fr->markerVectorArrowCmd((yyvsp[(1) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 833:
-#line 1962 "frame/parser.Y"
+#line 1958 "frame/parser.Y"
     {fr->markerVectorCmd((yyvsp[(1) - (10)].integer), Vector((yyvsp[(6) - (10)].vector)), (Coord::CoordSystem)(yyvsp[(4) - (10)].integer), (Coord::SkyFrame)(yyvsp[(5) - (10)].integer),
 	    (yyvsp[(9) - (10)].real), (Coord::CoordSystem)(yyvsp[(7) - (10)].integer), (Coord::DistFormat)(yyvsp[(8) - (10)].integer), (yyvsp[(10) - (10)].real));;}
     break;
 
   case 834:
-#line 1965 "frame/parser.Y"
+#line 1961 "frame/parser.Y"
     {fr->markerLineWidthCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 835:
-#line 1967 "frame/parser.Y"
+#line 1963 "frame/parser.Y"
     {fr->markerKeyCmd();;}
     break;
 
   case 836:
-#line 1968 "frame/parser.Y"
+#line 1964 "frame/parser.Y"
     {fr->markerKeyCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 840:
-#line 1973 "frame/parser.Y"
+#line 1969 "frame/parser.Y"
     {fr->markerPreserveCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 841:
-#line 1974 "frame/parser.Y"
+#line 1970 "frame/parser.Y"
     {fr->markerPropertyCmd((yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 842:
-#line 1976 "frame/parser.Y"
+#line 1972 "frame/parser.Y"
     {fr->markerPropertyCmd((yyvsp[(2) - (5)].integer),(yyvsp[(3) - (5)].integer),Vector((yyvsp[(4) - (5)].real),(yyvsp[(5) - (5)].real)));;}
     break;
 
   case 843:
-#line 1978 "frame/parser.Y"
+#line 1974 "frame/parser.Y"
     {fr->markerRotateBeginCmd(Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 844:
-#line 1980 "frame/parser.Y"
+#line 1976 "frame/parser.Y"
     {fr->markerRotateMotionCmd(Vector((yyvsp[(3) - (5)].real),(yyvsp[(4) - (5)].real)),(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 845:
-#line 1981 "frame/parser.Y"
+#line 1977 "frame/parser.Y"
     {fr->markerRotateEndCmd();;}
     break;
 
   case 849:
-#line 1987 "frame/parser.Y"
+#line 1983 "frame/parser.Y"
     {fr->markerColorCmd((yyvsp[(1) - (3)].str),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 850:
-#line 1988 "frame/parser.Y"
+#line 1984 "frame/parser.Y"
     {fr->markerCopyCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 851:
-#line 1989 "frame/parser.Y"
+#line 1985 "frame/parser.Y"
     {fr->markerDeleteCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 852:
-#line 1990 "frame/parser.Y"
+#line 1986 "frame/parser.Y"
     {fr->markerCutCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 853:
-#line 1991 "frame/parser.Y"
+#line 1987 "frame/parser.Y"
     {fr->markerFontCmd((yyvsp[(1) - (3)].str),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 854:
-#line 1992 "frame/parser.Y"
+#line 1988 "frame/parser.Y"
     {fr->markerHighliteCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 855:
-#line 1993 "frame/parser.Y"
+#line 1989 "frame/parser.Y"
     {fr->markerHighliteOnlyCmd((yyvsp[(1) - (3)].str));;}
     break;
 
   case 856:
-#line 1994 "frame/parser.Y"
+#line 1990 "frame/parser.Y"
     {fr->markerMoveCmd((yyvsp[(1) - (4)].str),Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 857:
-#line 1995 "frame/parser.Y"
+#line 1991 "frame/parser.Y"
     {fr->markerFrontCmd((yyvsp[(1) - (3)].str));;}
     break;
 
   case 858:
-#line 1996 "frame/parser.Y"
+#line 1992 "frame/parser.Y"
     {fr->markerBackCmd((yyvsp[(1) - (3)].str));;}
     break;
 
   case 859:
-#line 1998 "frame/parser.Y"
+#line 1994 "frame/parser.Y"
     {fr->markerMoveToCmd((yyvsp[(1) - (6)].str),Vector((yyvsp[(6) - (6)].vector)),(Coord::CoordSystem)(yyvsp[(4) - (6)].integer),(Coord::SkyFrame)(yyvsp[(5) - (6)].integer));;}
     break;
 
   case 860:
-#line 2000 "frame/parser.Y"
+#line 1996 "frame/parser.Y"
     {fr->markerPropertyCmd((yyvsp[(1) - (4)].str),(yyvsp[(3) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 861:
-#line 2001 "frame/parser.Y"
+#line 1997 "frame/parser.Y"
     {fr->markerSelectCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 862:
-#line 2002 "frame/parser.Y"
+#line 1998 "frame/parser.Y"
     {fr->markerSelectOnlyCmd((yyvsp[(1) - (3)].str));;}
     break;
 
   case 863:
-#line 2003 "frame/parser.Y"
+#line 1999 "frame/parser.Y"
     {fr->markerUnhighliteCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 864:
-#line 2004 "frame/parser.Y"
+#line 2000 "frame/parser.Y"
     {fr->markerUnselectCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 865:
-#line 2006 "frame/parser.Y"
+#line 2002 "frame/parser.Y"
     {fr->markerTagEditCmd((yyvsp[(3) - (4)].str),(yyvsp[(4) - (4)].str));;}
     break;
 
   case 866:
-#line 2007 "frame/parser.Y"
+#line 2003 "frame/parser.Y"
     {fr->markerTagDeleteCmd((yyvsp[(3) - (3)].str));;}
     break;
 
   case 867:
-#line 2008 "frame/parser.Y"
+#line 2004 "frame/parser.Y"
     {fr->markerTagDeleteAllCmd();;}
     break;
 
   case 868:
-#line 2009 "frame/parser.Y"
+#line 2005 "frame/parser.Y"
     {fr->markerTagCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 869:
-#line 2010 "frame/parser.Y"
+#line 2006 "frame/parser.Y"
     {fr->markerTagUpdateCmd((yyvsp[(3) - (3)].str));;}
     break;
 
   case 870:
-#line 2012 "frame/parser.Y"
+#line 2008 "frame/parser.Y"
     {fr->markerPasteCmd();;}
     break;
 
   case 871:
-#line 2013 "frame/parser.Y"
+#line 2009 "frame/parser.Y"
     {fr->markerPasteCmd((Coord::CoordSystem)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 872:
-#line 2014 "frame/parser.Y"
+#line 2010 "frame/parser.Y"
     {fr->markerUndoCmd();;}
     break;
 
   case 873:
-#line 2015 "frame/parser.Y"
+#line 2011 "frame/parser.Y"
     {fr->markerUnhighliteAllCmd();;}
     break;
 
   case 874:
-#line 2016 "frame/parser.Y"
+#line 2012 "frame/parser.Y"
     {fr->markerUnselectAllCmd();;}
     break;
 
   case 875:
-#line 2017 "frame/parser.Y"
+#line 2013 "frame/parser.Y"
     {fr->markerLineWidthCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 876:
-#line 2020 "frame/parser.Y"
+#line 2016 "frame/parser.Y"
     {(yyval.integer) = CallBack::SELECTCB;;}
     break;
 
   case 877:
-#line 2021 "frame/parser.Y"
+#line 2017 "frame/parser.Y"
     {(yyval.integer) = CallBack::UNSELECTCB;;}
     break;
 
   case 878:
-#line 2022 "frame/parser.Y"
+#line 2018 "frame/parser.Y"
     {(yyval.integer) = CallBack::HIGHLITECB;;}
     break;
 
   case 879:
-#line 2023 "frame/parser.Y"
+#line 2019 "frame/parser.Y"
     {(yyval.integer) = CallBack::UNHIGHLITECB;;}
     break;
 
   case 880:
-#line 2024 "frame/parser.Y"
+#line 2020 "frame/parser.Y"
     {(yyval.integer) = CallBack::MOVEBEGINCB;;}
     break;
 
   case 881:
-#line 2025 "frame/parser.Y"
+#line 2021 "frame/parser.Y"
     {(yyval.integer) = CallBack::MOVECB;;}
     break;
 
   case 882:
-#line 2026 "frame/parser.Y"
+#line 2022 "frame/parser.Y"
     {(yyval.integer) = CallBack::MOVEENDCB;;}
     break;
 
   case 883:
-#line 2027 "frame/parser.Y"
+#line 2023 "frame/parser.Y"
     {(yyval.integer) = CallBack::EDITBEGINCB;;}
     break;
 
   case 884:
-#line 2028 "frame/parser.Y"
+#line 2024 "frame/parser.Y"
     {(yyval.integer) = CallBack::EDITCB;;}
     break;
 
   case 885:
-#line 2029 "frame/parser.Y"
+#line 2025 "frame/parser.Y"
     {(yyval.integer) = CallBack::EDITENDCB;;}
     break;
 
   case 886:
-#line 2030 "frame/parser.Y"
+#line 2026 "frame/parser.Y"
     {(yyval.integer) = CallBack::ROTATEBEGINCB;;}
     break;
 
   case 887:
-#line 2031 "frame/parser.Y"
+#line 2027 "frame/parser.Y"
     {(yyval.integer) = CallBack::ROTATECB;;}
     break;
 
   case 888:
-#line 2032 "frame/parser.Y"
+#line 2028 "frame/parser.Y"
     {(yyval.integer) = CallBack::ROTATEENDCB;;}
     break;
 
   case 889:
-#line 2033 "frame/parser.Y"
+#line 2029 "frame/parser.Y"
     {(yyval.integer) = CallBack::DELETECB;;}
     break;
 
   case 890:
-#line 2034 "frame/parser.Y"
+#line 2030 "frame/parser.Y"
     {(yyval.integer) = CallBack::TEXTCB;;}
     break;
 
   case 891:
-#line 2035 "frame/parser.Y"
+#line 2031 "frame/parser.Y"
     {(yyval.integer) = CallBack::COLORCB;;}
     break;
 
   case 892:
-#line 2036 "frame/parser.Y"
+#line 2032 "frame/parser.Y"
     {(yyval.integer) = CallBack::LINEWIDTHCB;;}
     break;
 
   case 893:
-#line 2037 "frame/parser.Y"
+#line 2033 "frame/parser.Y"
     {(yyval.integer) = CallBack::PROPERTYCB;;}
     break;
 
   case 894:
-#line 2038 "frame/parser.Y"
+#line 2034 "frame/parser.Y"
     {(yyval.integer) = CallBack::FONTCB;;}
     break;
 
   case 895:
-#line 2039 "frame/parser.Y"
+#line 2035 "frame/parser.Y"
     {(yyval.integer) = CallBack::KEYCB;;}
     break;
 
   case 896:
-#line 2040 "frame/parser.Y"
+#line 2036 "frame/parser.Y"
     {(yyval.integer) = CallBack::UPDATECB;;}
     break;
 
   case 897:
-#line 2043 "frame/parser.Y"
+#line 2039 "frame/parser.Y"
     {fr->markerCentroidCmd();;}
     break;
 
   case 898:
-#line 2044 "frame/parser.Y"
+#line 2040 "frame/parser.Y"
     {fr->markerCentroidCmd((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 899:
-#line 2045 "frame/parser.Y"
+#line 2041 "frame/parser.Y"
     {fr->markerCentroidAutoCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 900:
-#line 2046 "frame/parser.Y"
+#line 2042 "frame/parser.Y"
     {fr->markerCentroidRadiusCmd((yyvsp[(2) - (2)].real));;}
     break;
 
   case 901:
-#line 2047 "frame/parser.Y"
+#line 2043 "frame/parser.Y"
     {fr->markerCentroidIterationCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 902:
-#line 2049 "frame/parser.Y"
+#line 2045 "frame/parser.Y"
     {
 	  fr->markerCentroidIterationCmd((yyvsp[(2) - (3)].integer));
 	  fr->markerCentroidRadiusCmd((yyvsp[(3) - (3)].real));
@@ -9225,7 +9221,7 @@ yyreduce:
     break;
 
   case 903:
-#line 2059 "frame/parser.Y"
+#line 2055 "frame/parser.Y"
     {fr->createCircleCmd(fr->mapToRef(Vector((yyvsp[(2) - (5)].real),(yyvsp[(3) - (5)].real)),Coord::CANVAS),
 	    (yyvsp[(4) - (5)].real), 0,
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9233,7 +9229,7 @@ yyreduce:
     break;
 
   case 904:
-#line 2067 "frame/parser.Y"
+#line 2063 "frame/parser.Y"
     {fr->createEllipseCmd(fr->mapToRef(Vector((yyvsp[(2) - (7)].real),(yyvsp[(3) - (7)].real)),Coord::CANVAS),
 	    Vector((yyvsp[(4) - (7)].real),(yyvsp[(5) - (7)].real)),
             (yyvsp[(6) - (7)].real), 0,
@@ -9242,7 +9238,7 @@ yyreduce:
     break;
 
   case 905:
-#line 2076 "frame/parser.Y"
+#line 2072 "frame/parser.Y"
     {fr->createBoxCmd(fr->mapToRef(Vector((yyvsp[(2) - (7)].real),(yyvsp[(3) - (7)].real)),Coord::CANVAS),
 	    Vector((yyvsp[(4) - (7)].real),(yyvsp[(5) - (7)].real)),
             (yyvsp[(6) - (7)].real), 0,
@@ -9251,7 +9247,7 @@ yyreduce:
     break;
 
   case 906:
-#line 2084 "frame/parser.Y"
+#line 2080 "frame/parser.Y"
     {fr->createPolygonCmd(fr->mapToRef(Vector((yyvsp[(2) - (6)].real),(yyvsp[(3) - (6)].real)),Coord::CANVAS),
             Vector((yyvsp[(4) - (6)].real),(yyvsp[(5) - (6)].real)), 0,
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9259,7 +9255,7 @@ yyreduce:
     break;
 
   case 907:
-#line 2091 "frame/parser.Y"
+#line 2087 "frame/parser.Y"
     {fr->createSegmentCmd(fr->mapToRef(Vector((yyvsp[(2) - (6)].real),(yyvsp[(3) - (6)].real)),Coord::CANVAS),
 	    Vector((yyvsp[(4) - (6)].real),(yyvsp[(5) - (6)].real)),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9267,7 +9263,7 @@ yyreduce:
     break;
 
   case 908:
-#line 2098 "frame/parser.Y"
+#line 2094 "frame/parser.Y"
     {fr->createLineCmd(fr->mapToRef(Vector((yyvsp[(2) - (6)].real),(yyvsp[(3) - (6)].real)),Coord::CANVAS),
 	    fr->mapToRef(Vector((yyvsp[(4) - (6)].real),(yyvsp[(5) - (6)].real)),Coord::CANVAS),
 	    0, 0,
@@ -9276,7 +9272,7 @@ yyreduce:
     break;
 
   case 909:
-#line 2106 "frame/parser.Y"
+#line 2102 "frame/parser.Y"
     {fr->createVectCmd(fr->mapToRef(Vector((yyvsp[(2) - (6)].real),(yyvsp[(3) - (6)].real)),Coord::CANVAS),
 	    fr->mapToRef(Vector((yyvsp[(4) - (6)].real),(yyvsp[(5) - (6)].real)),Coord::CANVAS),
 	    1,
@@ -9285,7 +9281,7 @@ yyreduce:
     break;
 
   case 910:
-#line 2114 "frame/parser.Y"
+#line 2110 "frame/parser.Y"
     {fr->createTextCmd(fr->mapToRef(Vector((yyvsp[(2) - (5)].real),(yyvsp[(3) - (5)].real)),Coord::CANVAS),
 	    (yyvsp[(4) - (5)].real), 1,
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9293,7 +9289,7 @@ yyreduce:
     break;
 
   case 911:
-#line 2119 "frame/parser.Y"
+#line 2115 "frame/parser.Y"
     {fr->createPointCmd(fr->mapToRef(Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),Coord::CANVAS),
 	    Point::CIRCLE, (yyvsp[(5) - (6)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9301,7 +9297,7 @@ yyreduce:
     break;
 
   case 912:
-#line 2124 "frame/parser.Y"
+#line 2120 "frame/parser.Y"
     {fr->createPointCmd(fr->mapToRef(Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),Coord::CANVAS),
 	    Point::BOX, (yyvsp[(5) - (6)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9309,7 +9305,7 @@ yyreduce:
     break;
 
   case 913:
-#line 2129 "frame/parser.Y"
+#line 2125 "frame/parser.Y"
     {fr->createPointCmd(fr->mapToRef(Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),Coord::CANVAS),
 	    Point::DIAMOND, (yyvsp[(5) - (6)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9317,7 +9313,7 @@ yyreduce:
     break;
 
   case 914:
-#line 2134 "frame/parser.Y"
+#line 2130 "frame/parser.Y"
     {fr->createPointCmd(fr->mapToRef(Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),Coord::CANVAS),
 	    Point::CROSS, (yyvsp[(5) - (6)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9325,7 +9321,7 @@ yyreduce:
     break;
 
   case 915:
-#line 2139 "frame/parser.Y"
+#line 2135 "frame/parser.Y"
     {fr->createPointCmd(fr->mapToRef(Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),Coord::CANVAS),
 	    Point::EX, (yyvsp[(5) - (6)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9333,7 +9329,7 @@ yyreduce:
     break;
 
   case 916:
-#line 2144 "frame/parser.Y"
+#line 2140 "frame/parser.Y"
     {fr->createPointCmd(fr->mapToRef(Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),Coord::CANVAS),
 	    Point::ARROW, (yyvsp[(5) - (6)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9341,7 +9337,7 @@ yyreduce:
     break;
 
   case 917:
-#line 2149 "frame/parser.Y"
+#line 2145 "frame/parser.Y"
     {fr->createPointCmd(fr->mapToRef(Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),Coord::CANVAS),
 	    Point::BOXCIRCLE, (yyvsp[(5) - (6)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9349,7 +9345,7 @@ yyreduce:
     break;
 
   case 918:
-#line 2158 "frame/parser.Y"
+#line 2154 "frame/parser.Y"
     {fr->createRulerCmd(fr->mapToRef(Vector((yyvsp[(2) - (11)].real),(yyvsp[(3) - (11)].real)),Coord::CANVAS),
 	    fr->mapToRef(Vector((yyvsp[(4) - (11)].real),(yyvsp[(5) - (11)].real)),Coord::CANVAS),
             (Coord::CoordSystem)(yyvsp[(6) - (11)].integer), (Coord::SkyFrame)(yyvsp[(7) - (11)].integer), 
@@ -9359,7 +9355,7 @@ yyreduce:
     break;
 
   case 919:
-#line 2168 "frame/parser.Y"
+#line 2164 "frame/parser.Y"
     {fr->createCompassCmd(fr->mapToRef(Vector((yyvsp[(2) - (7)].real),(yyvsp[(3) - (7)].real)),Coord::CANVAS), 
 	    (yyvsp[(4) - (7)].real),
 	    "N", "E", 1, 1,
@@ -9369,7 +9365,7 @@ yyreduce:
     break;
 
   case 920:
-#line 2178 "frame/parser.Y"
+#line 2174 "frame/parser.Y"
     {fr->createProjectionCmd(fr->mapToRef(Vector((yyvsp[(2) - (7)].real),(yyvsp[(3) - (7)].real)),Coord::CANVAS),
 	    fr->mapToRef(Vector((yyvsp[(4) - (7)].real),(yyvsp[(5) - (7)].real)),Coord::CANVAS),
 	    (yyvsp[(6) - (7)].real),
@@ -9378,7 +9374,7 @@ yyreduce:
     break;
 
   case 921:
-#line 2187 "frame/parser.Y"
+#line 2183 "frame/parser.Y"
     {fr->createAnnulusCmd(fr->mapToRef(Vector((yyvsp[(2) - (7)].real),(yyvsp[(3) - (7)].real)),Coord::CANVAS),
 	    (yyvsp[(4) - (7)].real),(yyvsp[(5) - (7)].real),(yyvsp[(6) - (7)].integer),
 	    currentColor,currentDash,currentWidth,currentFont,
@@ -9386,7 +9382,7 @@ yyreduce:
     break;
 
   case 922:
-#line 2195 "frame/parser.Y"
+#line 2191 "frame/parser.Y"
     {fr->createEllipseAnnulusCmd(fr->mapToRef(Vector((yyvsp[(2) - (9)].real),(yyvsp[(3) - (9)].real)),Coord::CANVAS),
 	    Vector((yyvsp[(4) - (9)].real),(yyvsp[(5) - (9)].real)), 
 	    Vector((yyvsp[(6) - (9)].real),(yyvsp[(6) - (9)].real)*(yyvsp[(4) - (9)].real)/(yyvsp[(5) - (9)].real)),(yyvsp[(7) - (9)].integer),
@@ -9396,7 +9392,7 @@ yyreduce:
     break;
 
   case 923:
-#line 2205 "frame/parser.Y"
+#line 2201 "frame/parser.Y"
     {fr->createBoxAnnulusCmd(fr->mapToRef(Vector((yyvsp[(2) - (9)].real),(yyvsp[(3) - (9)].real)),Coord::CANVAS),
 	    Vector((yyvsp[(4) - (9)].real),(yyvsp[(5) - (9)].real)),Vector((yyvsp[(6) - (9)].real),(yyvsp[(6) - (9)].real)*(yyvsp[(4) - (9)].real)/(yyvsp[(5) - (9)].real)),(yyvsp[(7) - (9)].integer),
 	    (yyvsp[(8) - (9)].real),
@@ -9405,7 +9401,7 @@ yyreduce:
     break;
 
   case 924:
-#line 2215 "frame/parser.Y"
+#line 2211 "frame/parser.Y"
     {fr->createCpandaCmd(fr->mapToRef(Vector((yyvsp[(2) - (10)].real),(yyvsp[(3) - (10)].real)),Coord::CANVAS),
 	    (yyvsp[(4) - (10)].real),(yyvsp[(5) - (10)].real),(yyvsp[(6) - (10)].integer),
 	    (yyvsp[(7) - (10)].real),(yyvsp[(8) - (10)].real),(yyvsp[(9) - (10)].integer),
@@ -9414,7 +9410,7 @@ yyreduce:
     break;
 
   case 925:
-#line 2225 "frame/parser.Y"
+#line 2221 "frame/parser.Y"
     {fr->createEpandaCmd(fr->mapToRef(Vector((yyvsp[(2) - (12)].real),(yyvsp[(3) - (12)].real)),Coord::CANVAS),
 	    (yyvsp[(4) - (12)].real),(yyvsp[(5) - (12)].real),(yyvsp[(6) - (12)].integer),
 	    Vector((yyvsp[(7) - (12)].real),(yyvsp[(8) - (12)].real)),
@@ -9425,7 +9421,7 @@ yyreduce:
     break;
 
   case 926:
-#line 2237 "frame/parser.Y"
+#line 2233 "frame/parser.Y"
     {fr->createBpandaCmd(fr->mapToRef(Vector((yyvsp[(2) - (12)].real),(yyvsp[(3) - (12)].real)),Coord::CANVAS),
 	    (yyvsp[(4) - (12)].real),(yyvsp[(5) - (12)].real),(yyvsp[(6) - (12)].integer),
 	    Vector((yyvsp[(7) - (12)].real),(yyvsp[(8) - (12)].real)),
@@ -9436,24 +9432,24 @@ yyreduce:
     break;
 
   case 927:
-#line 2246 "frame/parser.Y"
+#line 2242 "frame/parser.Y"
     {fr->createCompositeCmd(
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);;}
     break;
 
   case 929:
-#line 2254 "frame/parser.Y"
+#line 2250 "frame/parser.Y"
     {fr->createTemplateCmd(fr->mapToRef(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)),Coord::CANVAS), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 930:
-#line 2256 "frame/parser.Y"
+#line 2252 "frame/parser.Y"
     {fr->createTemplateVarCmd(fr->mapToRef(Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)),Coord::CANVAS), (yyvsp[(2) - (4)].str));;}
     break;
 
   case 931:
-#line 2258 "frame/parser.Y"
+#line 2254 "frame/parser.Y"
     { 
 	    // backward compatibility
 	    fr->createTemplateVarCmd(fr->mapToRef(Vector((yyvsp[(1) - (4)].real),(yyvsp[(2) - (4)].real)),Coord::CANVAS), (yyvsp[(4) - (4)].str));
@@ -9461,22 +9457,22 @@ yyreduce:
     break;
 
   case 932:
-#line 2263 "frame/parser.Y"
+#line 2259 "frame/parser.Y"
     {fr->createTemplateCmd(Vector((yyvsp[(4) - (4)].vector)),(Coord::CoordSystem)(yyvsp[(2) - (4)].integer),(Coord::SkyFrame)(yyvsp[(3) - (4)].integer), (yyvsp[(1) - (4)].str));;}
     break;
 
   case 933:
-#line 2266 "frame/parser.Y"
+#line 2262 "frame/parser.Y"
     {fr->markerDeleteAllCmd(0);;}
     break;
 
   case 934:
-#line 2267 "frame/parser.Y"
+#line 2263 "frame/parser.Y"
     {fr->markerDeleteAllCmd(1);;}
     break;
 
   case 935:
-#line 2268 "frame/parser.Y"
+#line 2264 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->markerDeleteAllCmd(0);
@@ -9484,550 +9480,550 @@ yyreduce:
     break;
 
   case 936:
-#line 2275 "frame/parser.Y"
+#line 2271 "frame/parser.Y"
     {fr->markerEditBeginCmd(Vector((yyvsp[(2) - (4)].real),(yyvsp[(3) - (4)].real)),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 937:
-#line 2277 "frame/parser.Y"
+#line 2273 "frame/parser.Y"
     {fr->markerEditMotionCmd(Vector((yyvsp[(2) - (4)].real),(yyvsp[(3) - (4)].real)),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 938:
-#line 2278 "frame/parser.Y"
+#line 2274 "frame/parser.Y"
     {fr->markerEditEndCmd();;}
     break;
 
   case 939:
-#line 2281 "frame/parser.Y"
+#line 2277 "frame/parser.Y"
     {(yyval.integer) = Base::DS9;;}
     break;
 
   case 940:
-#line 2282 "frame/parser.Y"
+#line 2278 "frame/parser.Y"
     {(yyval.integer) = Base::XML;;}
     break;
 
   case 941:
-#line 2283 "frame/parser.Y"
+#line 2279 "frame/parser.Y"
     {(yyval.integer) = Base::CIAO;;}
     break;
 
   case 942:
-#line 2284 "frame/parser.Y"
+#line 2280 "frame/parser.Y"
     {(yyval.integer) = Base::SAOTNG;;}
     break;
 
   case 943:
-#line 2285 "frame/parser.Y"
+#line 2281 "frame/parser.Y"
     {(yyval.integer) = Base::SAOIMAGE;;}
     break;
 
   case 944:
-#line 2286 "frame/parser.Y"
+#line 2282 "frame/parser.Y"
     {(yyval.integer) = Base::PROS;;}
     break;
 
   case 945:
-#line 2287 "frame/parser.Y"
+#line 2283 "frame/parser.Y"
     {(yyval.integer) = Base::RAWXY;;}
     break;
 
   case 947:
-#line 2291 "frame/parser.Y"
+#line 2287 "frame/parser.Y"
     {fr->getMarkerColorCmd();;}
     break;
 
   case 948:
-#line 2292 "frame/parser.Y"
+#line 2288 "frame/parser.Y"
     {fr->getMarkerFontCmd();;}
     break;
 
   case 949:
-#line 2293 "frame/parser.Y"
+#line 2289 "frame/parser.Y"
     {fr->getMarkerEpsilonCmd();;}
     break;
 
   case 950:
-#line 2294 "frame/parser.Y"
+#line 2290 "frame/parser.Y"
     {fr->getMarkerHandleCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 951:
-#line 2295 "frame/parser.Y"
+#line 2291 "frame/parser.Y"
     {fr->getMarkerIdCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 952:
-#line 2298 "frame/parser.Y"
+#line 2294 "frame/parser.Y"
     {fr->getMarkerAnalysisPandaCmd((yyvsp[(1) - (8)].integer),(yyvsp[(4) - (8)].str),(yyvsp[(5) - (8)].str),(yyvsp[(6) - (8)].str),(Coord::CoordSystem)(yyvsp[(7) - (8)].integer),(yyvsp[(8) - (8)].integer));;}
     break;
 
   case 953:
-#line 2300 "frame/parser.Y"
+#line 2296 "frame/parser.Y"
     {fr->getMarkerAnalysisHistogramCmd((yyvsp[(1) - (6)].integer),(yyvsp[(4) - (6)].str),(yyvsp[(5) - (6)].str),(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 954:
-#line 2302 "frame/parser.Y"
+#line 2298 "frame/parser.Y"
     {fr->getMarkerAnalysisPlot2dCmd((yyvsp[(1) - (10)].integer),(yyvsp[(4) - (10)].str),(yyvsp[(5) - (10)].str),(yyvsp[(6) - (10)].str),(yyvsp[(7) - (10)].str),(Coord::CoordSystem)(yyvsp[(8) - (10)].integer), (Coord::SkyFrame)(yyvsp[(9) - (10)].integer), (Marker::AnalysisMethod)(yyvsp[(10) - (10)].integer));;}
     break;
 
   case 955:
-#line 2304 "frame/parser.Y"
+#line 2300 "frame/parser.Y"
     {fr->getMarkerAnalysisPlot3dCmd((yyvsp[(1) - (7)].integer),(yyvsp[(4) - (7)].str),(yyvsp[(5) - (7)].str),(Coord::CoordSystem)(yyvsp[(6) - (7)].integer), (Marker::AnalysisMethod)(yyvsp[(7) - (7)].integer));;}
     break;
 
   case 956:
-#line 2306 "frame/parser.Y"
+#line 2302 "frame/parser.Y"
     {fr->getMarkerAnalysisRadialCmd((yyvsp[(1) - (7)].integer),(yyvsp[(4) - (7)].str),(yyvsp[(5) - (7)].str),(yyvsp[(6) - (7)].str),(Coord::CoordSystem)(yyvsp[(7) - (7)].integer));;}
     break;
 
   case 957:
-#line 2308 "frame/parser.Y"
+#line 2304 "frame/parser.Y"
     {fr->getMarkerAnalysisStatsCmd((yyvsp[(1) - (5)].integer),(Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::SkyFrame)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 958:
-#line 2310 "frame/parser.Y"
+#line 2306 "frame/parser.Y"
     {fr->getMarkerIdAllCmd();;}
     break;
 
   case 959:
-#line 2311 "frame/parser.Y"
+#line 2307 "frame/parser.Y"
     {fr->getMarkerAngleCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 960:
-#line 2312 "frame/parser.Y"
+#line 2308 "frame/parser.Y"
     {fr->getMarkerAngleCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 961:
-#line 2314 "frame/parser.Y"
+#line 2310 "frame/parser.Y"
     {fr->getMarkerAngleCmd((yyvsp[(1) - (4)].integer),(Coord::CoordSystem)(yyvsp[(3) - (4)].integer), (Coord::SkyFrame)(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 962:
-#line 2316 "frame/parser.Y"
+#line 2312 "frame/parser.Y"
     {fr->getMarkerAnnulusRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 963:
-#line 2318 "frame/parser.Y"
+#line 2314 "frame/parser.Y"
     {fr->getMarkerBoxFillCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 964:
-#line 2320 "frame/parser.Y"
+#line 2316 "frame/parser.Y"
     {fr->getMarkerBoxAnnulusRadiusCmd((yyvsp[(1) - (5)].integer),(Coord::CoordSystem)(yyvsp[(4) - (5)].integer),(Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 965:
-#line 2322 "frame/parser.Y"
+#line 2318 "frame/parser.Y"
     {fr->getMarkerBoxRadiusCmd((yyvsp[(1) - (5)].integer),(Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 966:
-#line 2323 "frame/parser.Y"
+#line 2319 "frame/parser.Y"
     {fr->getMarkerBpandaAnglesCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 967:
-#line 2324 "frame/parser.Y"
+#line 2320 "frame/parser.Y"
     {fr->getMarkerBpandaAnglesCmd((yyvsp[(1) - (4)].integer));;}
     break;
 
   case 968:
-#line 2326 "frame/parser.Y"
+#line 2322 "frame/parser.Y"
     {fr->getMarkerBpandaAnglesCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::SkyFrame)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 969:
-#line 2328 "frame/parser.Y"
+#line 2324 "frame/parser.Y"
     {fr->getMarkerBpandaRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 970:
-#line 2331 "frame/parser.Y"
+#line 2327 "frame/parser.Y"
     {fr->getMarkerCenterCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(3) - (5)].integer), (Coord::SkyFrame)(yyvsp[(4) - (5)].integer), 
 	    (Coord::SkyFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 971:
-#line 2333 "frame/parser.Y"
+#line 2329 "frame/parser.Y"
     {fr->getMarkerCircleFillCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 972:
-#line 2335 "frame/parser.Y"
+#line 2331 "frame/parser.Y"
     {fr->getMarkerCircleRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 973:
-#line 2336 "frame/parser.Y"
+#line 2332 "frame/parser.Y"
     {fr->getMarkerColorCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 974:
-#line 2337 "frame/parser.Y"
+#line 2333 "frame/parser.Y"
     {fr->getMarkerCompassArrowCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 975:
-#line 2338 "frame/parser.Y"
+#line 2334 "frame/parser.Y"
     {fr->getMarkerCompassLabelCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 976:
-#line 2340 "frame/parser.Y"
+#line 2336 "frame/parser.Y"
     {fr->getMarkerCompassRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 977:
-#line 2341 "frame/parser.Y"
+#line 2337 "frame/parser.Y"
     {fr->getMarkerCompassSystemCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 978:
-#line 2342 "frame/parser.Y"
+#line 2338 "frame/parser.Y"
     {fr->getMarkerCompositeCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 979:
-#line 2343 "frame/parser.Y"
+#line 2339 "frame/parser.Y"
     {fr->getMarkerCpandaAnglesCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 980:
-#line 2344 "frame/parser.Y"
+#line 2340 "frame/parser.Y"
     {fr->getMarkerCpandaAnglesCmd((yyvsp[(1) - (4)].integer));;}
     break;
 
   case 981:
-#line 2346 "frame/parser.Y"
+#line 2342 "frame/parser.Y"
     {fr->getMarkerCpandaAnglesCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::SkyFrame)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 982:
-#line 2348 "frame/parser.Y"
+#line 2344 "frame/parser.Y"
     {fr->getMarkerCpandaRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 983:
-#line 2349 "frame/parser.Y"
+#line 2345 "frame/parser.Y"
     {fr->getMarkerEllipseFillCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 984:
-#line 2351 "frame/parser.Y"
+#line 2347 "frame/parser.Y"
     {fr->getMarkerEllipseRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 985:
-#line 2353 "frame/parser.Y"
+#line 2349 "frame/parser.Y"
     {fr->getMarkerEllipseAnnulusRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), 
 	    (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 986:
-#line 2355 "frame/parser.Y"
+#line 2351 "frame/parser.Y"
     {fr->getMarkerEpandaAnglesCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 987:
-#line 2356 "frame/parser.Y"
+#line 2352 "frame/parser.Y"
     {fr->getMarkerEpandaAnglesCmd((yyvsp[(1) - (4)].integer));;}
     break;
 
   case 988:
-#line 2358 "frame/parser.Y"
+#line 2354 "frame/parser.Y"
     {fr->getMarkerEpandaAnglesCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::SkyFrame)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 989:
-#line 2360 "frame/parser.Y"
+#line 2356 "frame/parser.Y"
     {fr->getMarkerEpandaRadiusCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 990:
-#line 2361 "frame/parser.Y"
+#line 2357 "frame/parser.Y"
     {fr->getMarkerFontCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 991:
-#line 2362 "frame/parser.Y"
+#line 2358 "frame/parser.Y"
     {fr->getMarkerHighlitedCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 992:
-#line 2363 "frame/parser.Y"
+#line 2359 "frame/parser.Y"
     {fr->getMarkerLineArrowCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 993:
-#line 2365 "frame/parser.Y"
+#line 2361 "frame/parser.Y"
     {fr->getMarkerLineLengthCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 994:
-#line 2367 "frame/parser.Y"
+#line 2363 "frame/parser.Y"
     {fr->getMarkerLineCmd((yyvsp[(1) - (6)].integer), (Coord::CoordSystem)(yyvsp[(4) - (6)].integer),
 	    (Coord::SkyFrame)(yyvsp[(5) - (6)].integer), (Coord::SkyFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 995:
-#line 2370 "frame/parser.Y"
+#line 2366 "frame/parser.Y"
     {fr->getMarkerMapLenFromRefCmd((yyvsp[(1) - (6)].integer), (yyvsp[(4) - (6)].real),
 	    (Coord::CoordSystem)(yyvsp[(5) - (6)].integer),(Coord::DistFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 996:
-#line 2373 "frame/parser.Y"
+#line 2369 "frame/parser.Y"
     {fr->getMarkerPolygonFillCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 997:
-#line 2374 "frame/parser.Y"
+#line 2370 "frame/parser.Y"
     {fr->getMarkerPointShapeCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 998:
-#line 2375 "frame/parser.Y"
+#line 2371 "frame/parser.Y"
     {fr->getMarkerPointSizeCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 999:
-#line 2377 "frame/parser.Y"
+#line 2373 "frame/parser.Y"
     {fr->getMarkerProjectionPointsCmd((yyvsp[(1) - (6)].integer), (Coord::CoordSystem)(yyvsp[(4) - (6)].integer),
 	    (Coord::SkyFrame)(yyvsp[(5) - (6)].integer), (Coord::SkyFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 1000:
-#line 2380 "frame/parser.Y"
+#line 2376 "frame/parser.Y"
     {fr->getMarkerProjectionLengthCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), 
 	    (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 1001:
-#line 2383 "frame/parser.Y"
+#line 2379 "frame/parser.Y"
     {fr->getMarkerProjectionWidthCmd((yyvsp[(1) - (5)].integer),(Coord::CoordSystem)(yyvsp[(4) - (5)].integer),(Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 1002:
-#line 2384 "frame/parser.Y"
+#line 2380 "frame/parser.Y"
     {fr->getMarkerPropertyCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 1003:
-#line 2385 "frame/parser.Y"
+#line 2381 "frame/parser.Y"
     {fr->getMarkerPropertyCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1004:
-#line 2386 "frame/parser.Y"
+#line 2382 "frame/parser.Y"
     {fr->getMarkerRulerDistSpecCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 1005:
-#line 2388 "frame/parser.Y"
+#line 2384 "frame/parser.Y"
     {fr->getMarkerRulerLengthCmd((yyvsp[(1) - (5)].integer),(Coord::CoordSystem)(yyvsp[(4) - (5)].integer),(Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 1006:
-#line 2390 "frame/parser.Y"
+#line 2386 "frame/parser.Y"
     {fr->getMarkerRulerPointCmd((yyvsp[(1) - (6)].integer), (Coord::CoordSystem)(yyvsp[(4) - (6)].integer),
 	    (Coord::SkyFrame)(yyvsp[(5) - (6)].integer), (Coord::SkyFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 1007:
-#line 2392 "frame/parser.Y"
+#line 2388 "frame/parser.Y"
     {fr->getMarkerRulerSystemCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 1008:
-#line 2393 "frame/parser.Y"
+#line 2389 "frame/parser.Y"
     {fr->getMarkerSelectedCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 1009:
-#line 2395 "frame/parser.Y"
+#line 2391 "frame/parser.Y"
     {fr->getMarkerTagCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 1010:
-#line 2396 "frame/parser.Y"
+#line 2392 "frame/parser.Y"
     {fr->getMarkerTagCmd((yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1011:
-#line 2397 "frame/parser.Y"
+#line 2393 "frame/parser.Y"
     {fr->getMarkerTextCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 1012:
-#line 2398 "frame/parser.Y"
+#line 2394 "frame/parser.Y"
     {fr->getMarkerTextRotateCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 1013:
-#line 2399 "frame/parser.Y"
+#line 2395 "frame/parser.Y"
     {fr->getMarkerTypeCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 1014:
-#line 2401 "frame/parser.Y"
+#line 2397 "frame/parser.Y"
     {fr->getMarkerVectorArrowCmd((yyvsp[(1) - (3)].integer));;}
     break;
 
   case 1015:
-#line 2403 "frame/parser.Y"
+#line 2399 "frame/parser.Y"
     {fr->getMarkerVectorLengthCmd((yyvsp[(1) - (5)].integer), (Coord::CoordSystem)(yyvsp[(4) - (5)].integer), (Coord::DistFormat)(yyvsp[(5) - (5)].integer));;}
     break;
 
   case 1016:
-#line 2405 "frame/parser.Y"
+#line 2401 "frame/parser.Y"
     {fr->getMarkerVectorCmd((yyvsp[(1) - (6)].integer), (Coord::CoordSystem)(yyvsp[(4) - (6)].integer),
 	    (Coord::SkyFrame)(yyvsp[(5) - (6)].integer), (Coord::SkyFormat)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 1017:
-#line 2407 "frame/parser.Y"
+#line 2403 "frame/parser.Y"
     {fr->getMarkerLineWidthCmd((yyvsp[(1) - (2)].integer));;}
     break;
 
   case 1019:
-#line 2409 "frame/parser.Y"
+#line 2405 "frame/parser.Y"
     {fr->getMarkerHighlitedNumberCmd();;}
     break;
 
   case 1020:
-#line 2410 "frame/parser.Y"
+#line 2406 "frame/parser.Y"
     {fr->getMarkerNumberCmd();;}
     break;
 
   case 1021:
-#line 2412 "frame/parser.Y"
+#line 2408 "frame/parser.Y"
     {fr->getMarkerPolygonSegmentCmd(Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 1022:
-#line 2414 "frame/parser.Y"
+#line 2410 "frame/parser.Y"
     {fr->getMarkerSegmentSegmentCmd(Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 1023:
-#line 2415 "frame/parser.Y"
+#line 2411 "frame/parser.Y"
     {fr->getMarkerPreserveCmd();;}
     break;
 
   case 1024:
-#line 2416 "frame/parser.Y"
+#line 2412 "frame/parser.Y"
     {fr->getMarkerPropertyCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1026:
-#line 2418 "frame/parser.Y"
+#line 2414 "frame/parser.Y"
     {fr->getMarkerSelectedNumberCmd();;}
     break;
 
   case 1028:
-#line 2422 "frame/parser.Y"
+#line 2418 "frame/parser.Y"
     {fr->getMarkerColorCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 1029:
-#line 2423 "frame/parser.Y"
+#line 2419 "frame/parser.Y"
     {fr->getMarkerFontCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 1030:
-#line 2424 "frame/parser.Y"
+#line 2420 "frame/parser.Y"
     {fr->getMarkerIdCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 1031:
-#line 2425 "frame/parser.Y"
+#line 2421 "frame/parser.Y"
     {fr->getMarkerPropertyCmd((yyvsp[(1) - (3)].str),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1032:
-#line 2426 "frame/parser.Y"
+#line 2422 "frame/parser.Y"
     {fr->getMarkerTagCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 1033:
-#line 2427 "frame/parser.Y"
+#line 2423 "frame/parser.Y"
     {fr->getMarkerTagNumberCmd((yyvsp[(1) - (3)].str));;}
     break;
 
   case 1034:
-#line 2429 "frame/parser.Y"
+#line 2425 "frame/parser.Y"
     {fr->getMarkerTagsCmd();;}
     break;
 
   case 1035:
-#line 2430 "frame/parser.Y"
+#line 2426 "frame/parser.Y"
     {fr->getMarkerTagDefaultNameCmd();;}
     break;
 
   case 1036:
-#line 2432 "frame/parser.Y"
+#line 2428 "frame/parser.Y"
     {fr->getMarkerLineWidthCmd();;}
     break;
 
   case 1037:
-#line 2435 "frame/parser.Y"
+#line 2431 "frame/parser.Y"
     {fr->getMarkerCentroidAutoCmd();;}
     break;
 
   case 1038:
-#line 2436 "frame/parser.Y"
+#line 2432 "frame/parser.Y"
     {fr->getMarkerCentroidRadiusCmd();;}
     break;
 
   case 1039:
-#line 2437 "frame/parser.Y"
+#line 2433 "frame/parser.Y"
     {fr->getMarkerCentroidIterationCmd();;}
     break;
 
   case 1040:
-#line 2438 "frame/parser.Y"
+#line 2434 "frame/parser.Y"
     {fr->getMarkerCentroidOptionCmd();;}
     break;
 
   case 1041:
-#line 2441 "frame/parser.Y"
+#line 2437 "frame/parser.Y"
     {fr->getMarkerHighlitedCmd();;}
     break;
 
   case 1042:
-#line 2442 "frame/parser.Y"
+#line 2438 "frame/parser.Y"
     {fr->getMarkerHighlitedCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1043:
-#line 2445 "frame/parser.Y"
+#line 2441 "frame/parser.Y"
     {fr->getMarkerSelectedCmd();;}
     break;
 
   case 1044:
-#line 2446 "frame/parser.Y"
+#line 2442 "frame/parser.Y"
     {fr->getMarkerSelectedCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1045:
-#line 2449 "frame/parser.Y"
+#line 2445 "frame/parser.Y"
     {fr->getMarkerShowCmd();;}
     break;
 
   case 1046:
-#line 2450 "frame/parser.Y"
+#line 2446 "frame/parser.Y"
     {fr->getMarkerShowTextCmd();;}
     break;
 
   case 1047:
-#line 2453 "frame/parser.Y"
+#line 2449 "frame/parser.Y"
     {
 	  strncpy(currentFont, "helvetica 10 normal roman", 32);
 	  strncpy(currentColor, "green", 16);
@@ -10042,12 +10038,12 @@ yyreduce:
     break;
 
   case 1048:
-#line 2466 "frame/parser.Y"
+#line 2462 "frame/parser.Y"
     {fr->markerLayerCmd(Base::USER);;}
     break;
 
   case 1049:
-#line 2467 "frame/parser.Y"
+#line 2463 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->markerLayerCmd(Base::USER);
@@ -10055,12 +10051,12 @@ yyreduce:
     break;
 
   case 1050:
-#line 2471 "frame/parser.Y"
+#line 2467 "frame/parser.Y"
     {fr->markerLayerCmd(Base::USER);;}
     break;
 
   case 1051:
-#line 2472 "frame/parser.Y"
+#line 2468 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->markerLayerCmd(Base::USER);
@@ -10068,297 +10064,297 @@ yyreduce:
     break;
 
   case 1052:
-#line 2476 "frame/parser.Y"
+#line 2472 "frame/parser.Y"
     {fr->markerLayerCmd(Base::CATALOG);;}
     break;
 
   case 1053:
-#line 2477 "frame/parser.Y"
+#line 2473 "frame/parser.Y"
     {fr->markerLayerCmd(Base::FOOTPRINT);;}
     break;
 
   case 1054:
-#line 2482 "frame/parser.Y"
+#line 2478 "frame/parser.Y"
     {fr->markerListCmd((Base::MarkerFormat)(yyvsp[(1) - (7)].integer),
 	    (Coord::CoordSystem)(yyvsp[(2) - (7)].integer), (Coord::SkyFrame)(yyvsp[(3) - (7)].integer), (Coord::SkyFormat)(yyvsp[(4) - (7)].integer), (yyvsp[(5) - (7)].integer), 0, propQMask, propQValue, taglist);;}
     break;
 
   case 1055:
-#line 2486 "frame/parser.Y"
+#line 2482 "frame/parser.Y"
     {fr->markerListCmd((Base::MarkerFormat)(yyvsp[(2) - (8)].integer), 
 	    (Coord::CoordSystem)(yyvsp[(3) - (8)].integer), (Coord::SkyFrame)(yyvsp[(4) - (8)].integer), (Coord::SkyFormat)(yyvsp[(5) - (8)].integer), (yyvsp[(6) - (8)].integer), 1, propQMask, propQValue, taglist);;}
     break;
 
   case 1056:
-#line 2491 "frame/parser.Y"
+#line 2487 "frame/parser.Y"
     {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].str),0,"green",Coord::PHYSICAL,Coord::FK5);;}
     break;
 
   case 1057:
-#line 2493 "frame/parser.Y"
+#line 2489 "frame/parser.Y"
     {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (6)].integer),(yyvsp[(2) - (6)].str),(yyvsp[(3) - (6)].integer),(yyvsp[(4) - (6)].str),
 	    (Coord::CoordSystem)(yyvsp[(5) - (6)].integer),(Coord::SkyFrame)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 1058:
-#line 2496 "frame/parser.Y"
+#line 2492 "frame/parser.Y"
     {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer),0,"green",Coord::PHYSICAL,Coord::FK5);;}
     break;
 
   case 1059:
-#line 2498 "frame/parser.Y"
+#line 2494 "frame/parser.Y"
     {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (6)].integer),(yyvsp[(2) - (6)].integer),(yyvsp[(3) - (6)].integer),(yyvsp[(4) - (6)].str),
 	    (Coord::CoordSystem)(yyvsp[(5) - (6)].integer),(Coord::SkyFrame)(yyvsp[(6) - (6)].integer));;}
     break;
 
   case 1060:
-#line 2501 "frame/parser.Y"
+#line 2497 "frame/parser.Y"
     {fr->markerLoadFitsCmd((yyvsp[(2) - (2)].str), "green");;}
     break;
 
   case 1061:
-#line 2503 "frame/parser.Y"
+#line 2499 "frame/parser.Y"
     {fr->markerLoadFitsCmd((yyvsp[(2) - (3)].str), (yyvsp[(3) - (3)].str));;}
     break;
 
   case 1062:
-#line 2506 "frame/parser.Y"
+#line 2502 "frame/parser.Y"
     {fr->markerMoveCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1063:
-#line 2507 "frame/parser.Y"
+#line 2503 "frame/parser.Y"
     {fr->markerFrontCmd();;}
     break;
 
   case 1064:
-#line 2508 "frame/parser.Y"
+#line 2504 "frame/parser.Y"
     {fr->markerBackCmd();;}
     break;
 
   case 1065:
-#line 2509 "frame/parser.Y"
+#line 2505 "frame/parser.Y"
     {fr->markerMoveBeginCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1066:
-#line 2510 "frame/parser.Y"
+#line 2506 "frame/parser.Y"
     {fr->markerMoveMotionCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1067:
-#line 2511 "frame/parser.Y"
+#line 2507 "frame/parser.Y"
     {fr->markerMoveEndCmd();;}
     break;
 
   case 1068:
-#line 2513 "frame/parser.Y"
+#line 2509 "frame/parser.Y"
     {fr->markerMoveToCmd(Vector((yyvsp[(4) - (4)].vector)), (Coord::CoordSystem)(yyvsp[(2) - (4)].integer), (Coord::SkyFrame)(yyvsp[(3) - (4)].integer));;}
     break;
 
   case 1071:
-#line 2520 "frame/parser.Y"
+#line 2516 "frame/parser.Y"
     {setProps(&currentProps,(yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1072:
-#line 2521 "frame/parser.Y"
+#line 2517 "frame/parser.Y"
     {strncpy(currentColor,(yyvsp[(3) - (3)].str),16);;}
     break;
 
   case 1073:
-#line 2522 "frame/parser.Y"
+#line 2518 "frame/parser.Y"
     {currentDash[0]=(yyvsp[(3) - (4)].integer);currentDash[1]=(yyvsp[(4) - (4)].integer);;}
     break;
 
   case 1074:
-#line 2523 "frame/parser.Y"
+#line 2519 "frame/parser.Y"
     {currentWidth = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 1075:
-#line 2524 "frame/parser.Y"
+#line 2520 "frame/parser.Y"
     {strncpy(currentFont,(yyvsp[(3) - (3)].str),32);;}
     break;
 
   case 1076:
-#line 2525 "frame/parser.Y"
+#line 2521 "frame/parser.Y"
     {strncpy(currentText,(yyvsp[(3) - (3)].str),80);;}
     break;
 
   case 1079:
-#line 2530 "frame/parser.Y"
+#line 2526 "frame/parser.Y"
     {(yyval.integer) = Marker::NONE;;}
     break;
 
   case 1080:
-#line 2531 "frame/parser.Y"
+#line 2527 "frame/parser.Y"
     {(yyval.integer) = Marker::SELECT;;}
     break;
 
   case 1081:
-#line 2532 "frame/parser.Y"
+#line 2528 "frame/parser.Y"
     {(yyval.integer) = Marker::HIGHLITE;;}
     break;
 
   case 1082:
-#line 2533 "frame/parser.Y"
+#line 2529 "frame/parser.Y"
     {(yyval.integer) = Marker::DASH;;}
     break;
 
   case 1083:
-#line 2534 "frame/parser.Y"
+#line 2530 "frame/parser.Y"
     {(yyval.integer) = Marker::FIXED;;}
     break;
 
   case 1084:
-#line 2535 "frame/parser.Y"
+#line 2531 "frame/parser.Y"
     {(yyval.integer) = Marker::EDIT;;}
     break;
 
   case 1085:
-#line 2536 "frame/parser.Y"
+#line 2532 "frame/parser.Y"
     {(yyval.integer) = Marker::MOVE;;}
     break;
 
   case 1086:
-#line 2537 "frame/parser.Y"
+#line 2533 "frame/parser.Y"
     {(yyval.integer) = Marker::ROTATE;;}
     break;
 
   case 1087:
-#line 2538 "frame/parser.Y"
+#line 2534 "frame/parser.Y"
     {(yyval.integer) = Marker::DELETE;;}
     break;
 
   case 1088:
-#line 2539 "frame/parser.Y"
+#line 2535 "frame/parser.Y"
     {(yyval.integer) = Marker::INCLUDE;;}
     break;
 
   case 1089:
-#line 2540 "frame/parser.Y"
+#line 2536 "frame/parser.Y"
     {(yyval.integer) = Marker::SOURCE;;}
     break;
 
   case 1092:
-#line 2547 "frame/parser.Y"
+#line 2543 "frame/parser.Y"
     {propQMask=0;propQValue=0;;}
     break;
 
   case 1093:
-#line 2548 "frame/parser.Y"
+#line 2544 "frame/parser.Y"
     {propQMask=0;propQValue=0;;}
     break;
 
   case 1095:
-#line 2552 "frame/parser.Y"
+#line 2548 "frame/parser.Y"
     {fr->markerSaveCmd((yyvsp[(1) - (6)].str), (Base::MarkerFormat)(yyvsp[(2) - (6)].integer), (Coord::CoordSystem)(yyvsp[(3) - (6)].integer), (Coord::SkyFrame)(yyvsp[(4) - (6)].integer), (Coord::SkyFormat)(yyvsp[(5) - (6)].integer), (yyvsp[(6) - (6)].integer), 0);;}
     break;
 
   case 1096:
-#line 2554 "frame/parser.Y"
+#line 2550 "frame/parser.Y"
     {fr->markerSaveCmd((yyvsp[(2) - (7)].str), (Base::MarkerFormat)(yyvsp[(3) - (7)].integer), (Coord::CoordSystem)(yyvsp[(4) - (7)].integer), (Coord::SkyFrame)(yyvsp[(5) - (7)].integer), (Coord::SkyFormat)(yyvsp[(6) - (7)].integer), (yyvsp[(7) - (7)].integer), 1);;}
     break;
 
   case 1097:
-#line 2555 "frame/parser.Y"
+#line 2551 "frame/parser.Y"
     {fr->markerSaveTemplateCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1098:
-#line 2558 "frame/parser.Y"
+#line 2554 "frame/parser.Y"
     {fr->markerSelectAllCmd();;}
     break;
 
   case 1099:
-#line 2559 "frame/parser.Y"
+#line 2555 "frame/parser.Y"
     {fr->markerSelectOnlyCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1100:
-#line 2560 "frame/parser.Y"
+#line 2556 "frame/parser.Y"
     {fr->markerSelectToggleCmd();;}
     break;
 
   case 1101:
-#line 2561 "frame/parser.Y"
+#line 2557 "frame/parser.Y"
     {fr->markerSelectToggleCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1102:
-#line 2564 "frame/parser.Y"
+#line 2560 "frame/parser.Y"
     {fr->markerShowCmd((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 1103:
-#line 2565 "frame/parser.Y"
+#line 2561 "frame/parser.Y"
     {fr->markerShowTextCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1106:
-#line 2573 "frame/parser.Y"
+#line 2569 "frame/parser.Y"
     {propQMask |= (yyvsp[(1) - (3)].integer); setProps(&propQValue,(yyvsp[(1) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1107:
-#line 2576 "frame/parser.Y"
+#line 2572 "frame/parser.Y"
     {taglist.deleteAll();;}
     break;
 
   case 1108:
-#line 2577 "frame/parser.Y"
+#line 2573 "frame/parser.Y"
     {taglist.deleteAll();;}
     break;
 
   case 1112:
-#line 2584 "frame/parser.Y"
+#line 2580 "frame/parser.Y"
     {taglist.append(new Tag((yyvsp[(3) - (3)].str)));;}
     break;
 
   case 1113:
-#line 2587 "frame/parser.Y"
+#line 2583 "frame/parser.Y"
     {cblist.append(
 	new CallBack(fr->getInterp(),(CallBack::Type)(yyvsp[(3) - (5)].integer),(yyvsp[(4) - (5)].str),(yyvsp[(5) - (5)].str)));;}
     break;
 
   case 1114:
-#line 2591 "frame/parser.Y"
+#line 2587 "frame/parser.Y"
     {fr->maskClearCmd();;}
     break;
 
   case 1115:
-#line 2592 "frame/parser.Y"
+#line 2588 "frame/parser.Y"
     {fr->maskColorCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1116:
-#line 2593 "frame/parser.Y"
+#line 2589 "frame/parser.Y"
     {fr->maskMarkCmd((FitsMask::MaskType)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1117:
-#line 2594 "frame/parser.Y"
+#line 2590 "frame/parser.Y"
     {fr->maskRangeCmd((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real));;}
     break;
 
   case 1118:
-#line 2595 "frame/parser.Y"
+#line 2591 "frame/parser.Y"
     {fr->maskSystemCmd((Coord::CoordSystem)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1119:
-#line 2596 "frame/parser.Y"
+#line 2592 "frame/parser.Y"
     {fr->maskTransparencyCmd((yyvsp[(2) - (2)].real));;}
     break;
 
   case 1120:
-#line 2597 "frame/parser.Y"
+#line 2593 "frame/parser.Y"
     {fr->maskBlendCmd((FitsMask::MaskBlend)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1121:
-#line 2598 "frame/parser.Y"
+#line 2594 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->maskMarkCmd((FitsMask::MaskType)(yyvsp[(2) - (2)].integer));
@@ -10366,37 +10362,37 @@ yyreduce:
     break;
 
   case 1122:
-#line 2604 "frame/parser.Y"
+#line 2600 "frame/parser.Y"
     {fr->orientCmd(Coord::XX);;}
     break;
 
   case 1123:
-#line 2605 "frame/parser.Y"
+#line 2601 "frame/parser.Y"
     {fr->orientCmd(Coord::YY);;}
     break;
 
   case 1124:
-#line 2606 "frame/parser.Y"
+#line 2602 "frame/parser.Y"
     {fr->orientCmd(Coord::XY);;}
     break;
 
   case 1125:
-#line 2607 "frame/parser.Y"
+#line 2603 "frame/parser.Y"
     {fr->orientCmd(Coord::NORMAL);;}
     break;
 
   case 1126:
-#line 2611 "frame/parser.Y"
+#line 2607 "frame/parser.Y"
     {fr->panCmd(Vector((yyvsp[(1) - (4)].real),(yyvsp[(2) - (4)].real)),Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 1127:
-#line 2612 "frame/parser.Y"
+#line 2608 "frame/parser.Y"
     {fr->panCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1128:
-#line 2614 "frame/parser.Y"
+#line 2610 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->panCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));
@@ -10404,27 +10400,27 @@ yyreduce:
     break;
 
   case 1129:
-#line 2619 "frame/parser.Y"
+#line 2615 "frame/parser.Y"
     {fr->panCmd(Vector((yyvsp[(3) - (3)].vector)), (Coord::CoordSystem)(yyvsp[(1) - (3)].integer), (Coord::SkyFrame)(yyvsp[(2) - (3)].integer));;}
     break;
 
   case 1131:
-#line 2621 "frame/parser.Y"
+#line 2617 "frame/parser.Y"
     {fr->panBBoxCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1133:
-#line 2623 "frame/parser.Y"
+#line 2619 "frame/parser.Y"
     {fr->panPreserveCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1134:
-#line 2626 "frame/parser.Y"
+#line 2622 "frame/parser.Y"
     {fr->panToCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1135:
-#line 2628 "frame/parser.Y"
+#line 2624 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->panToCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));
@@ -10432,32 +10428,32 @@ yyreduce:
     break;
 
   case 1136:
-#line 2633 "frame/parser.Y"
+#line 2629 "frame/parser.Y"
     {fr->panToCmd(Vector((yyvsp[(3) - (3)].vector)), (Coord::CoordSystem)(yyvsp[(1) - (3)].integer), (Coord::SkyFrame)(yyvsp[(2) - (3)].integer));;}
     break;
 
   case 1137:
-#line 2636 "frame/parser.Y"
+#line 2632 "frame/parser.Y"
     {fr->panBeginCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1138:
-#line 2637 "frame/parser.Y"
+#line 2633 "frame/parser.Y"
     {fr->panMotionCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1139:
-#line 2638 "frame/parser.Y"
+#line 2634 "frame/parser.Y"
     {fr->panEndCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1140:
-#line 2641 "frame/parser.Y"
+#line 2637 "frame/parser.Y"
     {fr->pannerCmd((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 1141:
-#line 2643 "frame/parser.Y"
+#line 2639 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->pannerCmd((Coord::CoordSystem)(yyvsp[(2) - (3)].integer),(Coord::SkyFrame)(yyvsp[(3) - (3)].integer));
@@ -10465,44 +10461,44 @@ yyreduce:
     break;
 
   case 1142:
-#line 2647 "frame/parser.Y"
+#line 2643 "frame/parser.Y"
     {fr->pannerCmd((yyvsp[(1) - (3)].str), (yyvsp[(2) - (3)].integer), (yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1143:
-#line 2648 "frame/parser.Y"
+#line 2644 "frame/parser.Y"
     {fr->updatePannerCmd();;}
     break;
 
   case 1144:
-#line 2652 "frame/parser.Y"
+#line 2648 "frame/parser.Y"
     {fr->psColorSpaceCmd((PSColorSpace)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1145:
-#line 2653 "frame/parser.Y"
+#line 2649 "frame/parser.Y"
     {fr->psLevelCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1146:
-#line 2654 "frame/parser.Y"
+#line 2650 "frame/parser.Y"
     {fr->psResolutionCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1147:
-#line 2655 "frame/parser.Y"
+#line 2651 "frame/parser.Y"
     {
 	  // backward compatibility with backup
 	;}
     break;
 
   case 1148:
-#line 2661 "frame/parser.Y"
+#line 2657 "frame/parser.Y"
     {fr->precCmd((yyvsp[(1) - (9)].integer),(yyvsp[(2) - (9)].integer),(yyvsp[(3) - (9)].integer),(yyvsp[(4) - (9)].integer),(yyvsp[(5) - (9)].integer),(yyvsp[(6) - (9)].integer),(yyvsp[(7) - (9)].integer),(yyvsp[(8) - (9)].integer),(yyvsp[(9) - (9)].integer));;}
     break;
 
   case 1149:
-#line 2662 "frame/parser.Y"
+#line 2658 "frame/parser.Y"
     {
 	  // backward compatibility with backup
 	  fr->precCmd((yyvsp[(1) - (6)].integer),(yyvsp[(2) - (6)].integer),(yyvsp[(3) - (6)].integer),(yyvsp[(4) - (6)].integer),(yyvsp[(5) - (6)].integer),(yyvsp[(6) - (6)].integer));
@@ -10510,337 +10506,337 @@ yyreduce:
     break;
 
   case 1150:
-#line 2668 "frame/parser.Y"
+#line 2664 "frame/parser.Y"
     {(yyval.integer) = BW;;}
     break;
 
   case 1151:
-#line 2669 "frame/parser.Y"
+#line 2665 "frame/parser.Y"
     {(yyval.integer) = GRAY;;}
     break;
 
   case 1152:
-#line 2670 "frame/parser.Y"
+#line 2666 "frame/parser.Y"
     {(yyval.integer) = RGB;;}
     break;
 
   case 1153:
-#line 2671 "frame/parser.Y"
+#line 2667 "frame/parser.Y"
     {(yyval.integer) = CMYK;;}
     break;
 
   case 1156:
-#line 2679 "frame/parser.Y"
+#line 2675 "frame/parser.Y"
     {fr->regionHighliteBeginCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1157:
-#line 2681 "frame/parser.Y"
+#line 2677 "frame/parser.Y"
     {fr->regionHighliteMotionCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1158:
-#line 2682 "frame/parser.Y"
+#line 2678 "frame/parser.Y"
     {fr->regionHighliteEndCmd();;}
     break;
 
   case 1159:
-#line 2683 "frame/parser.Y"
+#line 2679 "frame/parser.Y"
     {fr->regionHighliteShiftEndCmd();;}
     break;
 
   case 1160:
-#line 2687 "frame/parser.Y"
+#line 2683 "frame/parser.Y"
     {fr->regionSelectBeginCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1161:
-#line 2688 "frame/parser.Y"
+#line 2684 "frame/parser.Y"
     {fr->regionSelectMotionCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1162:
-#line 2689 "frame/parser.Y"
+#line 2685 "frame/parser.Y"
     {fr->regionSelectEndCmd();;}
     break;
 
   case 1163:
-#line 2690 "frame/parser.Y"
+#line 2686 "frame/parser.Y"
     {fr->regionSelectShiftEndCmd();;}
     break;
 
   case 1164:
-#line 2693 "frame/parser.Y"
+#line 2689 "frame/parser.Y"
     {(yyval.integer) = Frame3dBase::MIP;;}
     break;
 
   case 1165:
-#line 2694 "frame/parser.Y"
+#line 2690 "frame/parser.Y"
     {(yyval.integer) = Frame3dBase::AIP;;}
     break;
 
   case 1166:
-#line 2697 "frame/parser.Y"
+#line 2693 "frame/parser.Y"
     {(yyval.integer) = Frame3dBase::NONE;;}
     break;
 
   case 1167:
-#line 2698 "frame/parser.Y"
+#line 2694 "frame/parser.Y"
     {(yyval.integer) = Frame3dBase::AZIMUTH;;}
     break;
 
   case 1168:
-#line 2699 "frame/parser.Y"
+#line 2695 "frame/parser.Y"
     {(yyval.integer) = Frame3dBase::ELEVATION;;}
     break;
 
   case 1169:
-#line 2702 "frame/parser.Y"
+#line 2698 "frame/parser.Y"
     {fr->setRGBChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1170:
-#line 2703 "frame/parser.Y"
+#line 2699 "frame/parser.Y"
     {fr->setRGBSystemCmd((Coord::CoordSystem)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1171:
-#line 2704 "frame/parser.Y"
+#line 2700 "frame/parser.Y"
     {fr->setRGBViewCmd((yyvsp[(2) - (4)].integer),(yyvsp[(3) - (4)].integer),(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 1172:
-#line 2707 "frame/parser.Y"
+#line 2703 "frame/parser.Y"
     {fr->rotateCmd(zeroTWOPI(degToRad((yyvsp[(1) - (1)].real))));;}
     break;
 
   case 1173:
-#line 2708 "frame/parser.Y"
+#line 2704 "frame/parser.Y"
     {fr->rotateCmd(zeroTWOPI(degToRad((yyvsp[(1) - (2)].real))));;}
     break;
 
   case 1175:
-#line 2710 "frame/parser.Y"
+#line 2706 "frame/parser.Y"
     {fr->rotateToCmd(zeroTWOPI(degToRad((yyvsp[(2) - (2)].real))));;}
     break;
 
   case 1176:
-#line 2711 "frame/parser.Y"
+#line 2707 "frame/parser.Y"
     {fr->rotateToCmd(zeroTWOPI(degToRad((yyvsp[(2) - (3)].real))));;}
     break;
 
   case 1177:
-#line 2714 "frame/parser.Y"
+#line 2710 "frame/parser.Y"
     {fr->rotateBeginCmd();;}
     break;
 
   case 1178:
-#line 2715 "frame/parser.Y"
+#line 2711 "frame/parser.Y"
     {fr->rotateMotionCmd(zeroTWOPI(degToRad((yyvsp[(1) - (1)].real))));;}
     break;
 
   case 1179:
-#line 2716 "frame/parser.Y"
+#line 2712 "frame/parser.Y"
     {fr->rotateEndCmd();;}
     break;
 
   case 1184:
-#line 2723 "frame/parser.Y"
+#line 2719 "frame/parser.Y"
     {fr->savePhotoCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1185:
-#line 2727 "frame/parser.Y"
+#line 2723 "frame/parser.Y"
     {fr->saveArrayFileCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1186:
-#line 2729 "frame/parser.Y"
+#line 2725 "frame/parser.Y"
     {fr->saveArrayChannelCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1187:
-#line 2731 "frame/parser.Y"
+#line 2727 "frame/parser.Y"
     {fr->saveArraySocketCmd((yyvsp[(2) - (3)].integer), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1189:
-#line 2736 "frame/parser.Y"
+#line 2732 "frame/parser.Y"
     {fr->saveArrayRGBCubeFileCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1190:
-#line 2738 "frame/parser.Y"
+#line 2734 "frame/parser.Y"
     {fr->saveArrayRGBCubeChannelCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1191:
-#line 2740 "frame/parser.Y"
+#line 2736 "frame/parser.Y"
     {fr->saveArrayRGBCubeSocketCmd((yyvsp[(2) - (3)].integer), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1201:
-#line 2753 "frame/parser.Y"
+#line 2749 "frame/parser.Y"
     {fr->saveFitsFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1202:
-#line 2754 "frame/parser.Y"
+#line 2750 "frame/parser.Y"
     {fr->saveFitsChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1203:
-#line 2755 "frame/parser.Y"
+#line 2751 "frame/parser.Y"
     {fr->saveFitsSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1204:
-#line 2758 "frame/parser.Y"
+#line 2754 "frame/parser.Y"
     {fr->saveFitsTableFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1205:
-#line 2759 "frame/parser.Y"
+#line 2755 "frame/parser.Y"
     {fr->saveFitsTableChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1206:
-#line 2760 "frame/parser.Y"
+#line 2756 "frame/parser.Y"
     {fr->saveFitsTableSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1207:
-#line 2763 "frame/parser.Y"
+#line 2759 "frame/parser.Y"
     {fr->saveFitsSliceFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1208:
-#line 2764 "frame/parser.Y"
+#line 2760 "frame/parser.Y"
     {fr->saveFitsSliceChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1209:
-#line 2765 "frame/parser.Y"
+#line 2761 "frame/parser.Y"
     {fr->saveFitsSliceSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1210:
-#line 2768 "frame/parser.Y"
+#line 2764 "frame/parser.Y"
     {fr->saveFitsExtCubeFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1211:
-#line 2769 "frame/parser.Y"
+#line 2765 "frame/parser.Y"
     {fr->saveFitsExtCubeChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1212:
-#line 2770 "frame/parser.Y"
+#line 2766 "frame/parser.Y"
     {fr->saveFitsExtCubeSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1214:
-#line 2774 "frame/parser.Y"
+#line 2770 "frame/parser.Y"
     {fr->saveFitsMosaicFileCmd((yyvsp[(2) - (3)].str),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1215:
-#line 2775 "frame/parser.Y"
+#line 2771 "frame/parser.Y"
     {fr->saveFitsMosaicChannelCmd((yyvsp[(2) - (3)].str),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1216:
-#line 2776 "frame/parser.Y"
+#line 2772 "frame/parser.Y"
     {fr->saveFitsMosaicSocketCmd((yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1217:
-#line 2779 "frame/parser.Y"
+#line 2775 "frame/parser.Y"
     {fr->saveFitsMosaicImageFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1218:
-#line 2780 "frame/parser.Y"
+#line 2776 "frame/parser.Y"
     {fr->saveFitsMosaicImageChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1219:
-#line 2781 "frame/parser.Y"
+#line 2777 "frame/parser.Y"
     {fr->saveFitsMosaicImageSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1220:
-#line 2784 "frame/parser.Y"
+#line 2780 "frame/parser.Y"
     {fr->saveFitsRGBImageFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1221:
-#line 2785 "frame/parser.Y"
+#line 2781 "frame/parser.Y"
     {fr->saveFitsRGBImageChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1222:
-#line 2786 "frame/parser.Y"
+#line 2782 "frame/parser.Y"
     {fr->saveFitsRGBImageSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1223:
-#line 2789 "frame/parser.Y"
+#line 2785 "frame/parser.Y"
     {fr->saveFitsRGBCubeFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1224:
-#line 2790 "frame/parser.Y"
+#line 2786 "frame/parser.Y"
     {fr->saveFitsRGBCubeChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1225:
-#line 2791 "frame/parser.Y"
+#line 2787 "frame/parser.Y"
     {fr->saveFitsRGBCubeSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1226:
-#line 2794 "frame/parser.Y"
+#line 2790 "frame/parser.Y"
     {fr->saveFitsResampleFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1227:
-#line 2795 "frame/parser.Y"
+#line 2791 "frame/parser.Y"
     {fr->saveFitsResampleChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1228:
-#line 2796 "frame/parser.Y"
+#line 2792 "frame/parser.Y"
     {fr->saveFitsResampleSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1229:
-#line 2800 "frame/parser.Y"
+#line 2796 "frame/parser.Y"
     {fr->saveNRRDFileCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1230:
-#line 2802 "frame/parser.Y"
+#line 2798 "frame/parser.Y"
     {fr->saveNRRDChannelCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1231:
-#line 2804 "frame/parser.Y"
+#line 2800 "frame/parser.Y"
     {fr->saveNRRDSocketCmd((yyvsp[(2) - (3)].integer), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1232:
-#line 2808 "frame/parser.Y"
+#line 2804 "frame/parser.Y"
     {fr->saveENVIFileCmd((yyvsp[(2) - (4)].str), (yyvsp[(3) - (4)].str), (FitsFile::ArchType)(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 1233:
-#line 2812 "frame/parser.Y"
+#line 2808 "frame/parser.Y"
     {fr->smoothCmd((Context::SmoothFunction)(yyvsp[(1) - (6)].integer),(yyvsp[(2) - (6)].integer),(yyvsp[(3) - (6)].integer),(yyvsp[(4) - (6)].real),(yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real));;}
     break;
 
   case 1234:
-#line 2814 "frame/parser.Y"
+#line 2810 "frame/parser.Y"
     {
 	  // backward compatibility with backup
 	  fr->smoothCmd((Context::SmoothFunction)(yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer));
@@ -10848,122 +10844,122 @@ yyreduce:
     break;
 
   case 1235:
-#line 2818 "frame/parser.Y"
+#line 2814 "frame/parser.Y"
     {fr->smoothDeleteCmd();;}
     break;
 
   case 1236:
-#line 2821 "frame/parser.Y"
+#line 2817 "frame/parser.Y"
     {(yyval.integer) = Context::BOXCAR;;}
     break;
 
   case 1237:
-#line 2822 "frame/parser.Y"
+#line 2818 "frame/parser.Y"
     {(yyval.integer) = Context::TOPHAT;;}
     break;
 
   case 1238:
-#line 2823 "frame/parser.Y"
+#line 2819 "frame/parser.Y"
     {(yyval.integer) = Context::GAUSSIAN;;}
     break;
 
   case 1239:
-#line 2824 "frame/parser.Y"
+#line 2820 "frame/parser.Y"
     {(yyval.integer) = Context::ELLIPTIC;;}
     break;
 
   case 1240:
-#line 2827 "frame/parser.Y"
+#line 2823 "frame/parser.Y"
     {fr->updateFitsCmd(0);;}
     break;
 
   case 1241:
-#line 2829 "frame/parser.Y"
+#line 2825 "frame/parser.Y"
     {fr->updateFitsCmd((yyvsp[(1) - (5)].integer),BBox((yyvsp[(2) - (5)].real),(yyvsp[(3) - (5)].real),(yyvsp[(4) - (5)].real),(yyvsp[(5) - (5)].real)),0);;}
     break;
 
   case 1242:
-#line 2830 "frame/parser.Y"
+#line 2826 "frame/parser.Y"
     {fr->updateFitsCmd(1);;}
     break;
 
   case 1243:
-#line 2832 "frame/parser.Y"
+#line 2828 "frame/parser.Y"
     {fr->updateFitsCmd((yyvsp[(2) - (6)].integer),BBox((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real),(yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)),1);;}
     break;
 
   case 1245:
-#line 2836 "frame/parser.Y"
+#line 2832 "frame/parser.Y"
     {fr->sliceCmd(2,(yyvsp[(1) - (1)].integer));;}
     break;
 
   case 1246:
-#line 2837 "frame/parser.Y"
+#line 2833 "frame/parser.Y"
     {fr->sliceCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1247:
-#line 2838 "frame/parser.Y"
+#line 2834 "frame/parser.Y"
     {fr->sliceCmd((yyvsp[(1) - (2)].real), (Coord::CoordSystem)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1248:
-#line 2841 "frame/parser.Y"
+#line 2837 "frame/parser.Y"
     {fr->warpCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1249:
-#line 2842 "frame/parser.Y"
+#line 2838 "frame/parser.Y"
     {fr->warpToCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 1250:
-#line 2846 "frame/parser.Y"
+#line 2842 "frame/parser.Y"
     {fr->wcsCmd((Coord::CoordSystem)(yyvsp[(1) - (3)].integer), (Coord::SkyFrame)(yyvsp[(2) - (3)].integer), (Coord::SkyFormat)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1252:
-#line 2848 "frame/parser.Y"
+#line 2844 "frame/parser.Y"
     {fr->wcsResetCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1255:
-#line 2853 "frame/parser.Y"
+#line 2849 "frame/parser.Y"
     {fr->wcsAppendCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1256:
-#line 2854 "frame/parser.Y"
+#line 2850 "frame/parser.Y"
     {fr->wcsAppendCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 1257:
-#line 2855 "frame/parser.Y"
+#line 2851 "frame/parser.Y"
     {fr->wcsAppendTxtCmd((yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 1258:
-#line 2858 "frame/parser.Y"
+#line 2854 "frame/parser.Y"
     {fr->wcsReplaceCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1259:
-#line 2859 "frame/parser.Y"
+#line 2855 "frame/parser.Y"
     {fr->wcsReplaceCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 1260:
-#line 2860 "frame/parser.Y"
+#line 2856 "frame/parser.Y"
     {fr->wcsReplaceTxtCmd((yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 1261:
-#line 2863 "frame/parser.Y"
+#line 2859 "frame/parser.Y"
     {fr->wcsAlignCmd((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 1262:
-#line 2865 "frame/parser.Y"
+#line 2861 "frame/parser.Y"
     {
 	  // used by backup
 	  fr->wcsAlignCmd((yyvsp[(1) - (3)].integer), (Coord::CoordSystem)(yyvsp[(2) - (3)].integer), (Coord::SkyFrame)(yyvsp[(3) - (3)].integer));
@@ -10971,12 +10967,12 @@ yyreduce:
     break;
 
   case 1263:
-#line 2870 "frame/parser.Y"
+#line 2866 "frame/parser.Y"
     {fr->wcsAlignCmd((yyvsp[(1) - (4)].integer), (FitsImage*)(yyvsp[(2) - (4)].ptr), (Coord::CoordSystem)(yyvsp[(3) - (4)].integer), (Coord::SkyFrame)(yyvsp[(4) - (4)].integer));;}
     break;
 
   case 1264:
-#line 2873 "frame/parser.Y"
+#line 2869 "frame/parser.Y"
     {
 #ifdef __WIN32
 	  fr->win32PrintCmd();
@@ -10985,17 +10981,17 @@ yyreduce:
     break;
 
   case 1265:
-#line 2880 "frame/parser.Y"
+#line 2876 "frame/parser.Y"
     {fr->zoomCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1266:
-#line 2882 "frame/parser.Y"
+#line 2878 "frame/parser.Y"
     {fr->zoomAboutCmd(Vector((yyvsp[(1) - (5)].real),(yyvsp[(2) - (5)].real)),Vector((yyvsp[(4) - (5)].real),(yyvsp[(5) - (5)].real)));;}
     break;
 
   case 1267:
-#line 2884 "frame/parser.Y"
+#line 2880 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->zoomAboutCmd(Vector((yyvsp[(1) - (6)].real),(yyvsp[(2) - (6)].real)),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));
@@ -11003,32 +10999,32 @@ yyreduce:
     break;
 
   case 1268:
-#line 2889 "frame/parser.Y"
+#line 2885 "frame/parser.Y"
     {fr->zoomAboutCmd(Vector((yyvsp[(1) - (6)].real),(yyvsp[(2) - (6)].real)),Vector((yyvsp[(6) - (6)].vector)), (Coord::CoordSystem)(yyvsp[(4) - (6)].integer),(Coord::SkyFrame)(yyvsp[(5) - (6)].integer));;}
     break;
 
   case 1270:
-#line 2893 "frame/parser.Y"
+#line 2889 "frame/parser.Y"
     {fr->zoomToFitCmd(1);;}
     break;
 
   case 1271:
-#line 2894 "frame/parser.Y"
+#line 2890 "frame/parser.Y"
     {fr->zoomToFitCmd((yyvsp[(2) - (2)].real));;}
     break;
 
   case 1272:
-#line 2895 "frame/parser.Y"
+#line 2891 "frame/parser.Y"
     {fr->zoomToCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 1273:
-#line 2897 "frame/parser.Y"
+#line 2893 "frame/parser.Y"
     {fr->zoomToAboutCmd(Vector((yyvsp[(1) - (5)].real),(yyvsp[(2) - (5)].real)),Vector((yyvsp[(4) - (5)].real),(yyvsp[(5) - (5)].real)));;}
     break;
 
   case 1274:
-#line 2899 "frame/parser.Y"
+#line 2895 "frame/parser.Y"
     {
 	  // backward compatibility
 	  fr->zoomToAboutCmd(Vector((yyvsp[(1) - (6)].real),(yyvsp[(2) - (6)].real)),Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));
@@ -11036,14 +11032,14 @@ yyreduce:
     break;
 
   case 1275:
-#line 2904 "frame/parser.Y"
+#line 2900 "frame/parser.Y"
     {fr->zoomToAboutCmd(Vector((yyvsp[(1) - (6)].real),(yyvsp[(2) - (6)].real)), Vector((yyvsp[(6) - (6)].vector)),
 	    (Coord::CoordSystem)(yyvsp[(4) - (6)].integer), (Coord::SkyFrame)(yyvsp[(5) - (6)].integer));;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 11047 "frame/parser.C"
+#line 11043 "frame/parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -11257,7 +11253,7 @@ yyreturn:
 }
 
 
-#line 2908 "frame/parser.Y"
+#line 2904 "frame/parser.Y"
 
 
 static void setProps(unsigned short* props, unsigned short prop, int value)

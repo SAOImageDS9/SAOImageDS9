@@ -124,47 +124,6 @@ void Projection::renderPSGC(PSColorSpace mode)
   renderPSLineNoDash();
 }
 
-#ifdef MAC_OSX_TK
-
-void Projection::renderMACOSX()
-{
-  /*
-  renderMACOSXGC();
-
-  Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
-  Vector bb = parent->mapFromRef(p2,Coord::CANVAS);
-
-  macosxDrawLine(aa,bb);
-
-  if (width>0) {
-    renderMACOSXLineDash();
-
-    Matrix imm = bckMatrix();
-    Vector a = p1*imm;
-    Vector b = p2*imm;
-    Vector c = Vector(0,-width);
-
-    Vector ll = fwdMap(a,Coord::CANVAS);
-    Vector lr = fwdMap(b,Coord::CANVAS);
-    Vector ul = fwdMap(a+c,Coord::CANVAS);
-    Vector ur = fwdMap(b+c,Coord::CANVAS);
-
-    macosxDrawLine(lr,ur);
-    macosxDrawLine(ur,ul);
-    macosxDrawLine(ul,ll);
-  }
-  */
-}
-
-void Projection::renderMACOSXGC()
-{
-  /*
-  macosxColor(parent->getXColor(colorName));
-  renderMACOSXLineNoDash();
-  */
-}
-#endif
-
 #ifdef __WIN32
 #include <win32lib.h>
 

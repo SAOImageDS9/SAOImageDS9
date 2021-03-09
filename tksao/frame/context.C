@@ -653,31 +653,6 @@ void Context::contourX11(Pixmap pm, Coord::InternalSystem sys, const BBox& bbox)
   }
 }
 
-#ifdef MAC_OSX_TK
-void Context::contourMacOSX()
-{
-  if (!cfits)
-    return;
-  
-  // render back to front
-  // aux contours
-  if (hasAuxContour_) {
-    if (auxcontours_.tail())
-      do
-	auxcontours_.current()->macosx();
-      while (auxcontours_.previous());
-  }
-
-  if (hasContour_) {
-    List<ContourLevel>& cc = fvcontour_.lcontourlevel();
-    if (cc.head())
-      do
-	cc.current()->macosx();
-      while (cc.next());
-  }
-}
-#endif
-
 #ifdef __WIN32
 void Context::contourWin32()
 {

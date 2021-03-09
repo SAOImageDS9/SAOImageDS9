@@ -20,12 +20,6 @@ class Text : public Marker {
   void renderPSText(PSColorSpace) {}
   void renderPSInclude(PSColorSpace) {}
 
-#ifdef MAC_OSX_TK
-  void renderMACOSX();
-  void renderMACOSXText() {}
-  void renderMACOSXInclude() {}
-#endif
-
 #ifdef __WIN32
   void renderWIN32();
   void renderWIN32Text() {}

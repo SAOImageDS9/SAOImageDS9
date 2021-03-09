@@ -508,13 +508,6 @@ public:
 
   Vector zoom() {return zoom_;}
 
-#ifdef MAC_OSX_TK
-  void macosx();
-  void macosxCrosshair();
-  virtual void macosxGraphics() {}
-  void macosxImage(float, int, int, const Vector&, const Vector&);
-  void macosxMarkers(List<Marker>* ml);
-#endif
 #ifdef __WIN32
   void win32();
   void win32Crosshair();
@@ -1631,9 +1624,6 @@ public:
   void precCmd(int, int, int, int, int, int);
 
   // Print Commands
-#ifdef MAC_OSX_TK
-  void macosxPrintCmd();
-#endif
 #ifdef __WIN32
   void win32PrintCmd();
 #endif

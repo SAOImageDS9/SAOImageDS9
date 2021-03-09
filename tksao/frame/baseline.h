@@ -16,10 +16,6 @@ protected:
 
   void renderPSInclude(PSColorSpace) {}
 
-#ifdef MAC_OSX_TK
-  void renderMACOSXInclude() {}
-#endif
-
 #ifdef __WIN32
   void renderWIN32Include() {}
 #endif

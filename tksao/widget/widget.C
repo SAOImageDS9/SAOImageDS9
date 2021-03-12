@@ -522,9 +522,6 @@ void Widget::redraw()
 {
   Tk_CanvasEventuallyRedraw(canvas, options->item.x1, options->item.y1, 
 			    options->item.x2, options->item.y2);
-#ifdef MAC_OSX_TK
-  Tcl_DoOneEvent(TCL_IDLE_EVENTS);
-#endif
 }
 
 void Widget::redraw(BBox bb)
@@ -532,9 +529,6 @@ void Widget::redraw(BBox bb)
   // bb in canvas coords
   Tk_CanvasEventuallyRedraw(canvas, (int)bb.ll[0], (int)bb.ll[1], 
 			    (int)bb.ur[0]+1, (int)bb.ur[1]+1);
-#ifdef MAC_OSX_TK
-  Tcl_DoOneEvent(TCL_IDLE_EVENTS);
-#endif
 }
 
 void Widget::redrawNow()

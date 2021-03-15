@@ -5,6 +5,7 @@
 #include <tkInt.h>
 
 #include "widget.h"
+#include "util.h"
 
 // Tk Canvas Widget Functions Declaration
 
@@ -596,6 +597,17 @@ void Widget::updateBBox()
   options->item.y1 = originY;
   options->item.x2 = originX + options->width;
   options->item.y2 = originY + options->height;
+}
+
+int Widget::getColor(const char* str)
+{
+  XColor* cc = getXColor(str);
+  if (cc)
+    return cc->pixel;
+  else {
+    internalError("Invalid color, setting to white");
+    return getXColor("white")->pixel;
+  }
 }
 
 XColor* Widget::getXColor(const char* str)

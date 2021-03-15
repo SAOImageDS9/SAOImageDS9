@@ -164,7 +164,7 @@ class Widget {
   int getScreenNumber() {return screenNumber;}
   Tk_Canvas getCanvas() {return canvas;}
 
-  int getColor(const char* str) {return getXColor(str)->pixel;}
+  int getColor(const char*);
   XColor* getXColor(const char*);
 
   void warp(Vector&);

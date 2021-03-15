@@ -111,7 +111,7 @@ proc MarkerBaseColor {varname} {
     upvar #0 $varname var
     global $varname
 
-    $var(frame) marker $var(id) color $var(color)
+    $var(frame) marker $var(id) color "{$var(color)}"
 }
 
 proc MarkerBaseLineWidth {varname} {

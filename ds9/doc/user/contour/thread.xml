@@ -205,7 +205,7 @@
 	  To save the contours to a text file, choose "Save Contours"
 	  from the "File" menu of the "Contour Parameters" dialog.
 	  The contours are saved in a text file which can be loaded
-	  back into ds9 with the "Load Contours" menu item. 
+	  back into ds9 with the "Open Contours" menu item. 
 	</p>
 
 	<p>

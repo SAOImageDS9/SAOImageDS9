@@ -165,7 +165,7 @@ proc WCSDialog {} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {WCS}] -menu $mb.wcs
-    $mb add cascade -label [msgcat::mc {Extention}] -menu $mb.ext
+    $mb add cascade -label [msgcat::mc {Extension}] -menu $mb.ext
 
     ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
@@ -838,14 +838,14 @@ proc ConfigWCSDialogExtMenu {} {
     }
     
     if {$nn > 1} {
-	$iwcs(mb) entryconfig [msgcat::mc {Extention}] -state normal
+	$iwcs(mb) entryconfig [msgcat::mc {Extension}] -state normal
 
 	for {set ii 1} {$ii<=$nn} {incr ii} {
 	    $iwcs(mb).ext add radiobutton -label $item($ii) \
 	    -variable dwcs(ext) -value $val($ii) -command UpdateWCSVars
 	}
     } else {
-	$iwcs(mb) entryconfig [msgcat::mc {Extention}] -state disabled
+	$iwcs(mb) entryconfig [msgcat::mc {Extension}] -state disabled
     }
 }
 

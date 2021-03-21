@@ -54,7 +54,7 @@ int Magnifier::parse(istringstream& istr)
 void Magnifier::update()
 {
   needsUpdate = 1;
-  redrawNow();
+  redraw();
 }
 
 // Required Virtual Functions

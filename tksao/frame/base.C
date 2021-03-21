@@ -1382,8 +1382,7 @@ void Base::updateBlock(const Vector& vv)
 
   alignWCS();
   updateColorScale();
-  //  update(MATRIX);
-  updateNow(MATRIX);
+  update(MATRIX);
 
   // update markers call backs
   // wait til matrices have been updated so that any dialogs will print

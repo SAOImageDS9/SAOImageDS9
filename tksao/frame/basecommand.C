@@ -632,7 +632,6 @@ void Base::crosshairWarpCmd(const Vector& vv)
   Vector rr = crosshair*refToCanvas;
   rr += vv;
   crosshair = rr*canvasToRef;
-
   update(PIXMAP);
 }
 

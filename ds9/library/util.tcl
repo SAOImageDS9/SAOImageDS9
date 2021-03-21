@@ -1374,7 +1374,7 @@ proc MacOSPhotoFix {top xx yy} {
     return {}
 }
 
-proc DarwinPhotoRestore {top geom} {
+proc MacOSPhotoRestore {top geom} {
     global ds9
     global tcl_platform
 

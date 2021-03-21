@@ -349,8 +349,8 @@ proc ProcessCommand {argv argc} {
 	    -pow {set scale(type) pow; ChangeScale}
 	    -prefs {incr i; ProcessPrefsCmd argv i}
 	    -preserve {incr i; ProcessPreserveCmd argv i}
-	    -print {incr i; ProcessPrintCmd argv i}
-	    -psprint {incr i; ProcessPSPrintCmd argv i}
+	    -print -
+	    -psprint {incr i; ProcessPrintCmd argv i}
 	    -private {
 		#already processed
 	    }

@@ -420,36 +420,13 @@ proc ProcessPrintCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global ds9
-
-    switch $ds9(wm) {
- 	x11 -
- 	aqua -
-	win32 {ProcessPSPrintCmd var i}
-    }
-}
-
-proc ProcessSendPrintCmd {proc id param {sock {}} {fn {}}} {
-    global ds9
-
-    switch $ds9(wm) {
- 	x11 -
- 	aqua -
- 	win32 {ProcessSendPSPrintCmd $proc $id $param}
-    }
-}
-
-proc ProcessPSPrintCmd {varname iname} {
-    upvar $varname var
-    upvar $iname i
-
     ps::YY_FLUSH_BUFFER
     ps::yy_scan_string [lrange $var $i end]
     ps::yyparse
     incr i [expr $ps::yycnt-1]
 }
 
-proc ProcessSendPSPrintCmd {proc id param {sock {}} {fn {}}} {
+proc ProcessSendPrintCmd {proc id param {sock {}} {fn {}}} {
     global parse
     set parse(proc) $proc
     set parse(id) $id

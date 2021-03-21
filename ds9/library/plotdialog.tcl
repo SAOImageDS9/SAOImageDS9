@@ -651,7 +651,6 @@ proc PlotExportPhoto {varname fn format} {
     global $varname
     global iap
 
-    # for darwin only
     set geom [MacOSPhotoFix $var(top) 0 0]
 
     set rr [catch {image create photo -format window -data $var(top)} ph]
@@ -672,7 +671,7 @@ proc PlotExportPhoto {varname fn format} {
     image delete $ph
 
     # reset if needed
-    DarwinPhotoRestore $var(top) $geom
+    MacOSPhotoRestore $var(top) $geom
 }
 
 proc PlotUpdateMenus {varname} {

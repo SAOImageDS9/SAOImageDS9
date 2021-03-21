@@ -583,7 +583,7 @@ proc LayoutInfoPanelHorz {} {
     # also adjust layout.tcl CanvasDef
     switch $ds9(wm) {
 	x11 {set xx 42}
-	aqua {set xx 40}
+	aqua -
 	win32 {set xx 40}
     }
 

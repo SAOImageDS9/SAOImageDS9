@@ -33,7 +33,7 @@ proc CanvasDef {} {
 		default {set canvas(gap,bottom) 0}
 	    }
 	}
-	aqua {set canvas(gap,bottom) 14}
+	aqua -
 	win32 {set canvas(gap,bottom) 0}
     }
 }
@@ -238,12 +238,20 @@ proc Button3Canvas {x y} {
 }
 
 proc Motion3Canvas {x y} {
+    global ds9
+    
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "Motion3Canvas"
     }
 
     ColorbarMotion3 $x $y
+    # MacOS needs to be updated now
+    switch $ds9(wm) {
+	x11 {}
+	aqua {update idletasks}
+	win32 {}
+    }
 }
 
 proc Release3Canvas {x y} {

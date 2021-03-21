@@ -141,11 +141,11 @@ proc EnterPanner {x y} {
     }
 
     switch $ds9(wm) {
-	x11 -
-	aqua {
+	x11 {
 	    focus $ds9(panner)
 	    $ds9(panner) focus panner
 	}
+	aqua -
 	win32 {}
     }
 
@@ -166,11 +166,11 @@ proc LeavePanner {} {
 
     panner highlite off
     switch $ds9(wm) {
-	x11 -
-	aqua {
+	x11 {
 	    $ds9(panner) focus {}
 	    focus {}
 	}
+	aqua -
 	win32 {}
     }
 

@@ -226,16 +226,10 @@ proc SimpleTextDialog {varname title width height action pos txt
 	ThemeMenu $var(mb).file
 	$var(mb).file add command -label "[msgcat::mc {Save}]..." \
 	    -command "SimpleTextSave $varname" -accelerator "${ds9(ctrl)}S"
-	switch $ds9(wm) {
-	    x11 -
-	    aqua -
-	    win32 {
-		$var(mb).file add separator
-		$var(mb).file add command -label "[msgcat::mc {Print}]..." \
-		    -command "SimpleTextPrint $varname" \
-		    -accelerator "${ds9(ctrl)}P"
-	    }
-	}
+	$var(mb).file add separator
+	$var(mb).file add command -label "[msgcat::mc {Print}]..." \
+	    -command "SimpleTextPrint $varname" \
+	    -accelerator "${ds9(ctrl)}P"
 	$var(mb).file add separator
 	$var(mb).file add command -label [msgcat::mc {Close}] \
 	    -command "SimpleTextDestroy $varname" -accelerator "${ds9(ctrl)}W"
@@ -448,19 +442,6 @@ proc SimpleTextPrint {varname} {
     upvar #0 $varname var
     global $varname
 
-    global ds9
-
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {SimpleTextPSPrint $varname}
-    }
-}
-
-proc SimpleTextPSPrint {varname} {
-    upvar #0 $varname var
-    global $varname
-
     if {[PRPrintDialog]} { 
 	if {[catch {SimpleTextPostScript $varname} printError]} {
 	    Error "[msgcat::mc {An error has occurred while printing}] $printError"
@@ -487,19 +468,6 @@ proc SimpleTextPostScript {varname} {
     }
     puts -nonewline $ch [$var(text) get 1.0 end]
     close $ch
-}
-
-proc SimpleTextPageSetup {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {}
-    }
 }
 
 proc SimpleTextSave {varname} {

@@ -814,18 +814,6 @@ proc CATKey {which key} {
     set icat(key,update) {}
 }
 
-proc CATPageSetup {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {}
-    }
-}
-
 proc CATWCSMenuUpdate {varname} {
     upvar #0 $varname var
     global $varname

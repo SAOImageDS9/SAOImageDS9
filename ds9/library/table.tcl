@@ -814,19 +814,6 @@ proc TBLCmdFilterLoad {fn} {
 proc TBLPrint {varname} {
     upvar #0 $varname var
     global $varname
-    global $var(tbldb)
-
-    global ds9
-    switch $ds9(wm) {
-	x11 -
-	aqua -
-	win32 {TBLPSPrint $varname}
-    }	
-}
-
-proc TBLPSPrint {varname} {
-    upvar #0 $varname var
-    global $varname
 
     if {[PRPrintDialog]} { 
 	if {[catch {TBLPostScript $varname} printError]} {

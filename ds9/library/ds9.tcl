@@ -627,16 +627,6 @@ SourceInitFileDir {.ini}
 # do we have the correct prefs file?
 CheckPrefs
 
-# kludge for aqua. We need to trigger the trap to update buttons vars
-switch $ds9(wm) {
-    x11 -
-    win32 {}
-    aqua {
-	set current(display) $current(display)
-	set colorbar(map) $colorbar(map)
-    }
-}
-
 # start error monitor
 after $ds9(msg,timeout) [list ErrorTimer]
 
@@ -659,6 +649,7 @@ switch $ds9(wm) {
 	wm geometry $ds9(top) \
 	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
     }
+    aqua {}
     win32 {
         # everything must be realized
         update
@@ -672,9 +663,5 @@ switch $ds9(wm) {
 
 	# jump start keyevents for windows
 	event generate $ds9(canvas) <Tab> -x 0 -y 0
-    }
-    aqua {
-        # special, widgets need to be updated
-        RealizeDS9
     }
 }

@@ -457,8 +457,8 @@ proc CreateXPA {} {
 
     xpacmdadd $xpa psprint \
 	{} \
-	XPASendPSPrint {} {} \
-	XPARcvdPSPrint {} "fillbuf=false"
+	XPASendPrint {} {} \
+	XPARcvdPrint {} "fillbuf=false"
 
     xpacmdadd $xpa quit \
 	{} \
@@ -1640,7 +1640,7 @@ proc XPARcvdPrism {xpa cdata param buf len} {
 
 proc XPASendPSPrint {xpa cdata param} {
     InitError xpa
-    catch {ProcessSendPSPrintCmd xpasetbuf $xpa $param}
+    catch {ProcessSendPrintCmd xpasetbuf $xpa $param}
     XPACatchError $xpa
 }
 
@@ -1650,7 +1650,7 @@ proc XPARcvdPSPrint {xpa cdata param buf len} {
     catch {
 	if {[XPAIsLocal]} {
 	    set i 0
-	    ProcessPSPrintCmd param i
+	    ProcessPrintCmd param i
 	} else {
 	    Error [msgcat::mc {This function is not available.}]    
 	}

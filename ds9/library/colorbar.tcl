@@ -650,21 +650,8 @@ proc ColorbarSizeDialog {} {
     global colorbar
     global ds9
 
-    switch $ds9(wm) {
-	x11 -
-	win32 {
-	    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Size}] 10 colorbar(size)]} {
-		UpdateView
-	    }
-	}
-	aqua {
-	    # we have a race condition here. the main window needs focus
-	    # back from the dialog before UpdateView is run, otherwise,
-	    # our pretty blue buttons are not activated
-	    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Size}] 10 colorbar(size)]} {
-		after 100 UpdateView
-	    }
-	}
+    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Size}] 10 colorbar(size)]} {
+	UpdateView
     }
 }
 
@@ -673,21 +660,8 @@ proc TicksDialog {} {
 
     global ds9
 
-    switch $ds9(wm) {
-	x11 -
-	win32 {
-	    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Number of Ticks}] 10 colorbar(ticks)]} {
-		UpdateView
-	    }
-	}
-	aqua {
-	    # we have a race condition here. the main window needs focus
-	    # back from the dialog before UpdateView is run, otherwise,
-	    # our pretty blue buttons are not activated
-	    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Number of Ticks}] 10 colorbar(ticks)]} {
-		after 100 UpdateView
-	    }
-	}
+    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Number of Ticks}] 10 colorbar(ticks)]} {
+	UpdateView
     }
 }
 

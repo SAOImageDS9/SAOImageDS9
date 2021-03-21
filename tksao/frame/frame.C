@@ -1015,7 +1015,6 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
 
 void Frame::colormapEndCmd()
 {
-  update(BASE);
 }
 
 #endif

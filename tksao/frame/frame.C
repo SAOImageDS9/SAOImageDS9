@@ -1013,9 +1013,7 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
   updatePanner();
 }
 
-void Frame::colormapEndCmd()
-{
-}
+void Frame::colormapEndCmd() {}
 
 #endif
 

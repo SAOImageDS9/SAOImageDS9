@@ -10,20 +10,11 @@
 class TkMacosx {
  private:
   Tcl_Interp* interp;
-
-  int pmPrint(int, const char**);
-  int pmPrintBegin(int, const char**);
-  int pmPrintEnd();
-  int pmPrintText(int, const char**);
-  int pmPageSetup();
-
  public:
   TkMacosx(Tcl_Interp*);
   ~TkMacosx();
 
-  int pm(int, const char**);
   int sc(int, const char**);
-  int locale(int, const char**);
 };
 
 extern TkMacosx* tkmacosx;

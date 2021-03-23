@@ -13,6 +13,12 @@ FitsAlloc::FitsAlloc(const char* fn)
   if (!valid_)
     return;
 
+  // reset
+  valid_ =0;
+
+  if (!pName_)
+    return;
+
   // we need the 'b' for windows...
   if (!strncmp(pName_, "stdin", 5) || 
       !strncmp(pName_, "STDIN", 5) || 

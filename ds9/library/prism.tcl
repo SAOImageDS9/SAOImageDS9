@@ -67,7 +67,7 @@ proc PrismDialog {varname} {
     set var(yerr) {}
 
     set var(graph,ds,line,color) blue
-    set var(graph,ds,line,width) 1
+    set var(graph,ds,line,width) 0
     set var(graph,ds,line,dash) 0
     set var(graph,ds,line,shape,symbol) circle
     set var(graph,ds,line,shape,color) blue

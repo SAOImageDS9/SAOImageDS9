@@ -115,7 +115,7 @@ proc ProcessFitsCmd {varname iname sock fn} {
 
 proc FitsCmdLoad {param layer mode} {
     global parse
-    
+
     if {$parse(sock) != {}} {
 	# xpa
 	if {![LoadFitsSocket $parse(sock) $param $layer $mode]} {

@@ -4439,7 +4439,7 @@ void Base::markerLoadCmd(MarkerFormat fm, const char* fn,
 {
   useMarkerColor_ = use;
   if (markerColor_)
-    delete markerColor_;
+    delete [] markerColor_;
   markerColor_ = dupstr(color);
   xySystem_ = sys;
   xySky_ = sky;

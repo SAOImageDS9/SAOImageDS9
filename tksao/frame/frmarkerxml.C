@@ -130,13 +130,13 @@ void Base::xmlParse(istream& str)
   }
   for (int ii=0; ii<128; ii++) {
     if (unit[ii])
-      delete unit[ii];
+      free(unit[ii]);
     if (ref[ii])
-      delete ref[ii];
+      free(ref[ii]);
     if (axis[ii])
-      delete axis[ii];
+      free(axis[ii]);
     if (dir[ii])
-      delete dir[ii];
+      free(dir[ii]);
   }
 }
 

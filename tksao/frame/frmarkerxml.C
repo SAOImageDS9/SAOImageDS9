@@ -130,13 +130,13 @@ void Base::xmlParse(istream& str)
   }
   for (int ii=0; ii<128; ii++) {
     if (unit[ii])
-      free(unit[ii]);
+      xmlFree(unit[ii]);
     if (ref[ii])
-      free(ref[ii]);
+      xmlFree(ref[ii]);
     if (axis[ii])
-      free(axis[ii]);
+      xmlFree(axis[ii]);
     if (dir[ii])
-      free(dir[ii]);
+      xmlFree(dir[ii]);
   }
 }
 
@@ -245,7 +245,7 @@ void Base::xmlParseFIELD(void* rr, int* id, char** unit,
       (char*)xmlTextReaderGetAttribute(reader,(const xmlChar*)("DIR"));
 
   if (colname)
-    free(colname);
+    xmlFree(colname);
 }
 
 void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,

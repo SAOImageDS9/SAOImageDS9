@@ -5,6 +5,7 @@
 #include <fstream>
 #include "fdstream.hpp"
 #include <libxml/xmlreader.h>
+#include <libxml/xmlmemory.h>
 
 #include "util.h"
 #include "context.h"

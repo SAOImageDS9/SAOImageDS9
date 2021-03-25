@@ -297,6 +297,7 @@ proc WCSDialog {} {
 	}
 
 
+	if {0} {
 	# PVx_x
 	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<18} {incr mm} {
@@ -313,7 +314,9 @@ proc WCSDialog {} {
 	    }
 	}
     }
+    }
 
+    if {0} {
     # only in primary
     ttk::label $aa0.ta -text "A_ORDER"
     ttk::entry $aa0.a -textvariable dwcs(a_order) -width 14
@@ -364,7 +367,7 @@ proc WCSDialog {} {
 		-textvariable dwcs(b_${mm}_${nn}) -width 14
 	}
     }
-
+}
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] -command WCSApplyDialog
@@ -557,6 +560,7 @@ proc ConfigWCSDialog {{force {0}}} {
 	}
     }
 
+    if {0} {
     for {set ii 1} {$ii<=4} {incr ii} {
 	for {set mm 0} {$mm<18} {incr mm} {
 	    grid forget $pv00.tpv${ii}_${mm}${aa} $pv00.pv${ii}_${mm}${aa}
@@ -598,7 +602,7 @@ proc ConfigWCSDialog {{force {0}}} {
 	    grid forget $bp0.tb_${mm}_${nn} $bp0.b_${mm}_${nn}
 	}
     }
-
+    }
     # display new sys vars
     set dwcs(prev) $dwcs(system)
     set aa [string tolower [string range $dwcs(system) 3 3]]
@@ -695,6 +699,7 @@ proc ConfigWCSDialog {{force {0}}} {
     grid $base.tlatpole${aa} $base.latpole${aa} \
 	$base.tlonpole${aa} $base.lonpole${aa} -padx 2 -pady 2 -sticky w
 
+    if {0} {
     for {set mm 0} {$mm<18} {incr mm} {
 	grid $pv00.tpv1_${mm}${aa} $pv00.pv1_${mm}${aa} \
 	    $pv00.tpv2_${mm}${aa} $pv00.pv2_${mm}${aa} \
@@ -809,6 +814,7 @@ proc ConfigWCSDialog {{force {0}}} {
 		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
 	    }
 	}
+    }
     }
 }
 

@@ -5717,7 +5717,7 @@ case $system in
 	;;
     windows*)
 
-    vars="-I${prefix}/include/libxml2"
+    vars="-I${prefix}/include/libxml2 -DIN_LIBXML"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

@@ -258,7 +258,7 @@ case $system in
 	TEA_ADD_INCLUDES([-I/usr/local/include/libxml2])
 	;;
     windows*)
-	TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
+	TEA_ADD_INCLUDES([-I${prefix}/include/libxml2] -DIN_LIBXML)
 	;;
 esac
 

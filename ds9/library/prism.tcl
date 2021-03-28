@@ -1768,7 +1768,6 @@ proc PrismTableFits {varname} {
     starbase_colmap $t
 
     set nc [starbase_ncols $t]
-
     if {[expr $nc+1] > $iprism(mincols)} {
 	$var(tbl) configure -cols [expr $nc+1]
     } else {
@@ -1776,7 +1775,7 @@ proc PrismTableFits {varname} {
     }
 
     set nr [starbase_nrows $t]
-    if {$nr > $iprism(minrows)} {
+    if {[expr $nr+1] > $iprism(minrows)} {
 	$var(tbl) configure -rows [expr $nr+1]
     } else {
 	$var(tbl) configure -rows $iprism(minrows)

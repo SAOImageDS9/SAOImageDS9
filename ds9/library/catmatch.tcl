@@ -367,7 +367,6 @@ proc CATMatchAnd1and2 {varname1 varname2 rrname} {
 	lappend T(Header) "2_$ll"
     }
     set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
-    set T(Ndshs) [expr $T1(Ndshs)+$T2(Ndshs)]
     set T(H_1) $T(Header)
     set T(H_2) $T(Dashes)
     set T(HLines) 2
@@ -484,7 +483,6 @@ proc CATMatchAnd1only {varname1 varname2 rrname} {
    # required 
     set T(Header) $T1(Header)
     set T(Dashes) $T1(Dashes)
-    set T(Ndshs) $T1(Ndshs)
     set T(HLines) $T1(HLines)
     for {set ii 1} {$ii<=$T1(HLines)} {incr ii} {
 	set T(H_$ii) $T1(H_$ii)
@@ -572,7 +570,6 @@ proc CATMatchAnd2only {varname1 varname2 rrname} {
    # required 
     set T(Header) $T2(Header)
     set T(Dashes) $T2(Dashes)
-    set T(Ndshs) $T2(Ndshs)
     set T(HLines) $T2(HLines)
     for {set ii 1} {$ii<=$T2(HLines)} {incr ii} {
 	set T(H_$ii) $T2(H_$ii)
@@ -660,7 +657,6 @@ proc CATMatchNot {varname1 varname2 rrname} {
     # required 
     set T(Header) $T1(Header)
     set T(Dashes) $T1(Dashes)
-    set T(Ndshs) $T1(Ndshs)
     set T(HLines) $T1(HLines)
     for {set ii 1} {$ii<=$T1(HLines)} {incr ii} {
 	set T(H_$ii) $T1(H_$ii)

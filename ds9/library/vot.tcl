@@ -361,7 +361,6 @@ proc VOTElemStartCB {t name attlist args} {
 	    set T(H_$n) [join $T(Header)]
 
 	    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(H_$n) {-}]
-	    set T(Ndshs) [llength $T(Header)]
 
 	    incr ${t}(HLines)
 	    set n $T(HLines)

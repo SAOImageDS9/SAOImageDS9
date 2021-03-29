@@ -18,7 +18,6 @@ proc TBLFltSort {varname src dest} {
     set catdest(Header) $catsrc(Header)
     starbase_colmap catdest
 
-    set catdest(Ndshs) [llength $catdest(Header)]
     set catdest(Nrows) 0
     set catdest(HLines) $catsrc(HLines)
     set catdest(Dashes) $catsrc(Dashes)

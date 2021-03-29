@@ -242,7 +242,6 @@ proc CATCDSSrchVOTElemStartCB {t name attlist args} {
 	    set T(H_$n) "--------\t-----------"
 
 	    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(H_$n) {-}]
-	    set T(Ndshs) [llength $T(Header)]
 		
 	    starbase_colmap $t
 	}

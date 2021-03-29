@@ -81,7 +81,6 @@ proc TSVRead {t fn} {
 
 	# dashes
 	set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(H_$n) {-}]
-	set T(Ndshs) [llength $T(Dashes)]
 	starbase_colmap $t
 
 	# process table

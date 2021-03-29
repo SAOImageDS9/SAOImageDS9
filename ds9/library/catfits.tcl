@@ -51,7 +51,6 @@ proc FITSRead {t fn} {
     fitsy close
 
     set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
-    set T(Ndshs) [llength $T(Header)]
 
     incr ${t}(HLines)
     set n $T(HLines)

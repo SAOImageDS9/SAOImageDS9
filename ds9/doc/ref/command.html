@@ -361,7 +361,9 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogid&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [import rdb|sb|tsv|csv|fits &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [import rdb|tsv|fits &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [allcols]<br>
 &nbsp;&nbsp;&nbsp; [allrows]<br>
@@ -373,7 +375,6 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp; [dec &lt;col&gt;]<br>
 &nbsp;&nbsp;&nbsp; [edit yes|no]<br>
-&nbsp;&nbsp;&nbsp; [export sb|tsv &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [filter &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [filter load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [header]<br>
@@ -397,7 +398,6 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [samp]<br>
 &nbsp;&nbsp;&nbsp; [samp broadcast]<br>
 &nbsp;&nbsp;&nbsp; [samp send &lt;application&gt;]<br>
-&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [servercds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
@@ -818,10 +818,13 @@ fp</b></p>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>
+<br>
 &nbsp;&nbsp;&nbsp; [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [crosshair]<br>
 &nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
-&nbsp;&nbsp;&nbsp; [export sb|tsv &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [filter &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [filter load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
@@ -829,7 +832,6 @@ fp</b></p>
 &nbsp;&nbsp;&nbsp; [print]<br>
 &nbsp;&nbsp;&nbsp; [regions]<br>
 &nbsp;&nbsp;&nbsp; [retrieve]<br>
-&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
 &nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;]<br>
@@ -1739,7 +1741,10 @@ $ds9 -print resolution 96</tt>
 &nbsp;&nbsp;&nbsp;&nbsp; [open]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp;&nbsp; [import vot|xml|rdb|sb|tsv|csv &lt;filename&gt;]<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [import vot|rdb|tsv &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp;&nbsp; [export vot|rdb|tsv &lt;filename&gt;]<br>
+<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp;&nbsp; [ext &lt;int&gt;|&lt;extname&gt;]<br>
@@ -2076,14 +2081,16 @@ $ds9 -shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>
+<br>
 &nbsp;&nbsp;&nbsp; [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [crosshair]<br>
 &nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
-&nbsp;&nbsp;&nbsp; [export sb|tsv &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
 &nbsp;&nbsp;&nbsp; [print]<br>
 &nbsp;&nbsp;&nbsp; [retrieve]<br>
-&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
 &nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;]<br>
 &nbsp;&nbsp;&nbsp; [skyformat &lt;skyformat&gt;]<br>

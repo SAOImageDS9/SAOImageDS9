@@ -35,10 +35,11 @@
 %token XYEY_
 %token XYEXEY_
 
+%token VOT_
+%token XML_
+
 %%
 
-#include reader.trl
-#include writer.trl
 #include numeric.trl
 
 command : prism
@@ -97,6 +98,24 @@ colsxyz : 'x' {set _ $1}
  | 'Y' {set _ $1}
  | 'z' {set _ $1}
  | 'Z' {set _ $1}
+ ;
+
+reader : VOT_ {set _ VOTRead}
+ | XML_ {set _ VOTRead}
+ | RDB_ {set _ starbase_read}
+ | SB_ {set _ starbase_read}
+ | STARBASE_ {set _ starbase_read}
+ | CSV_ {set _ TSVRead}
+ | TSV_ {set _ TSVRead}
+ ;
+
+writer : VOT_ {set _ VOTWrite}
+ | XML_ {set _ VOTWrite}
+ | RDB_ {set _ starbase_write}
+ | SB_ {set _ starbase_write}
+ | STARBASE_ {set _ starbase_write}
+ | CSV_ {set _ TSVWrite}
+ | TSV_ {set _ TSVWrite}
  ;
 
 %%

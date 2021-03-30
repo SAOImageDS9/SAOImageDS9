@@ -36,6 +36,9 @@ xyex	    {return $XYEX_}
 xyey	    {return $XYEY_}
 xyexey	    {return $XYEXEY_}
 
+vot	    {return $VOT_}
+xml	    {return $XML_}
+
 #include reader.fin
 #include numeric.fin
 #include string.fin

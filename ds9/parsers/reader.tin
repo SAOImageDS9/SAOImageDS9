@@ -1,5 +1,3 @@
-%token VOT_
-%token XML_
 %token RDB_
 %token SB_
 %token STARBASE_

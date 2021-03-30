@@ -60,10 +60,13 @@ fp : site {FPCmdRetrieve $1}
  | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 FPOff}
  | CLOSE_ {ProcessCmdCVAR0 FPDestroy}
+
+ | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
+ | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
+
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 TBLCrosshair}
  | CURRENT_ site {FPCmdRef $2}
- | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | FILTER_ filter
 # backward compatibily
  | HIDE_ {ProcessCmdCVAR show 0 FPGenerate}
@@ -73,7 +76,6 @@ fp : site {FPCmdRetrieve $1}
  | RADIUS_ numeric rformat {TBLCmdSize $2 $3}
  | REGIONS_ {ProcessCmdCVAR0 FPGenerateRegions}
  | RETRIEVE_ {global cvarname; FPApply $cvarname 1}
- | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
  | SHOW_ yesno {ProcessCmdCVAR show $2 FPGenerate}
 # backward compatibily
  | SIZE_ numeric numeric rformat {TBLCmdSize [expr ($2+$3)/2.] $4}

@@ -41,13 +41,6 @@
 %token SKYVIEW_
 %token TGSSADR_
 
-%token XML_
-%token VOT_
-%token SB_
-%token STARBASE_
-%token CSV_
-%token TSV_
-
 %%
 
 #include writer.trl
@@ -64,15 +57,17 @@ sia : site {SIACmdRetrieve $1}
  | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 SIAOff}
  | CLOSE_ {ProcessCmdCVAR0 SIADestroy}
+
+ | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
+ | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
+
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 SIACrosshair}
  | CURRENT_ site {SIACmdRef $2}
- | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
  | RADIUS_ numeric rformat {TBLCmdSize $2 $3}
- | SAVE_ STRING_ {TBLCmdSave $2 VOTWrite}
 # backward compatibily
  | SIZE_ numeric numeric rformat {TBLCmdSize [expr ($2+$3)/2.] $4}
  | SKY_ skyframe {TBLCmdSkyframe $2}

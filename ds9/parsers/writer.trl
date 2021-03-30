@@ -1,6 +1,4 @@
-writer : XML_ {set _ VOTWrite}
- | VOT_ {set _ VOTWrite}
- | RDB_ {set _ starbase_write}
+writer : RDB_ {set _ starbase_write}
  | SB_ {set _ starbase_write}
  | STARBASE_ {set _ starbase_write}
  | CSV_ {set _ TSVWrite}

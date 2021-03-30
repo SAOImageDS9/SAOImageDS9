@@ -20,7 +20,6 @@ proc TBLFltSort {varname src dest} {
 
     set catdest(Nrows) 0
     set catdest(HLines) $catsrc(HLines)
-    set catdest(Dashes) $catsrc(Dashes)
 
     # optional
     if {[info exists catsrc(DataType)]} {

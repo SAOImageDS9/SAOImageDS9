@@ -361,16 +361,15 @@ proc CATMatchAnd1and2 {varname1 varname2 rrname} {
     set var(radius) {}
 
     # required 
+    set T(Nrows) 0
     set T(Header) $T1(Header)
     foreach ll $T2(Header) {
 	# make cols unique
 	lappend T(Header) "2_$ll"
     }
-    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
-    set T(H_1) $T(Header)
-    set T(H_2) $T(Dashes)
     set T(HLines) 2
-    set T(Nrows) 0
+    set T(H_1) $T(Header)
+    set T(H_2) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
     starbase_colmap T
 
     # optional
@@ -481,13 +480,12 @@ proc CATMatchAnd1only {varname1 varname2 rrname} {
     set var(radius) {}
 
    # required 
+    set T(Nrows) 0
     set T(Header) $T1(Header)
-    set T(Dashes) $T1(Dashes)
     set T(HLines) $T1(HLines)
     for {set ii 1} {$ii<=$T1(HLines)} {incr ii} {
 	set T(H_$ii) $T1(H_$ii)
     }
-    set T(Nrows) 0
     starbase_colmap T
 
     # optional
@@ -568,13 +566,12 @@ proc CATMatchAnd2only {varname1 varname2 rrname} {
     set var(radius) {}
 
    # required 
+    set T(Nrows) 0
     set T(Header) $T2(Header)
-    set T(Dashes) $T2(Dashes)
     set T(HLines) $T2(HLines)
     for {set ii 1} {$ii<=$T2(HLines)} {incr ii} {
 	set T(H_$ii) $T2(H_$ii)
     }
-    set T(Nrows) 0
     starbase_colmap T
 
     # optional
@@ -655,13 +652,12 @@ proc CATMatchNot {varname1 varname2 rrname} {
     set var(radius) {}
 
     # required 
+    set T(Nrows) 0
     set T(Header) $T1(Header)
-    set T(Dashes) $T1(Dashes)
     set T(HLines) $T1(HLines)
     for {set ii 1} {$ii<=$T1(HLines)} {incr ii} {
 	set T(H_$ii) $T1(H_$ii)
     }
-    set T(Nrows) 0
     starbase_colmap T
 
     # optional

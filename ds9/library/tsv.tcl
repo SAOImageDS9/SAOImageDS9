@@ -73,14 +73,10 @@ proc TSVRead {t fn} {
 	}
 
 	# process header
-	# cols
-	incr ${t}(HLines)
-	set n $T(HLines)
-	set T(H_$n) $line
-	set T(Header) [split $T(H_$n) $ss]
-
-	# dashes
-	set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(H_$n) {-}]
+	set T(Header) [split $line $ss]
+	set T(HLines) 2
+	set T(H_1) $T(Header)
+	set T(H_2) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
 	starbase_colmap $t
 
 	# process table

@@ -1758,14 +1758,19 @@ proc PrismTableFits {varname} {
 	return
     }
 
-    # init db
-    fitsy table $var(tbldb) true $var(start) $iprism(block)
+    set t $var(tbldb)
+    upvar #0 $t T
+    global $t
+
+    fitsy table $t true $var(start) $iprism(block)
     fitsy close
     
-    $var(tbl) configure -titlerows 2
-
-    set t $var(tbldb)
+    set T(HLines) 2
+    set T(H_1) $T(Header)
+    set T(H_2) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
     starbase_colmap $t
+
+    $var(tbl) configure -titlerows 2
 
     set nc [starbase_ncols $t]
     if {[expr $nc+1] > $iprism(mincols)} {

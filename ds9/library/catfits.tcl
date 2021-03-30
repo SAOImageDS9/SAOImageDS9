@@ -19,12 +19,6 @@ proc FITSRead {t fn} {
 	return
     }
 
-    # init db
-    set T(Header) {}
-    set T(HLines) 0
-    set T(Nrows) 0
-    set T(Ncols) 0
-
     set load mmapincr
     switch $ds9(wm) {
 	x11 -
@@ -50,14 +44,8 @@ proc FITSRead {t fn} {
     fitsy table $t false 0 10000
     fitsy close
 
-    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
-
-    incr ${t}(HLines)
-    set n $T(HLines)
-    set T(H_$n) $T(Header)
-    incr ${t}(HLines)
-    set n $T(HLines)
-    set T(H_$n) $T(Dashes)
-
+    set T(HLines) 2
+    set T(H_1) $T(Header)
+    set T(H_2) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
     starbase_colmap $t
 }

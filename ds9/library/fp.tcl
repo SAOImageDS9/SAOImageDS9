@@ -194,13 +194,14 @@ proc FPRegCXC {varname src dest} {
     upvar #0 $dest catdest
     global $dest
 
-    # create header
-    set catdest(Header) $catsrc(Header)
-    starbase_colmap catdest
-
+    # init db
     set catdest(Nrows) 0
+    set catdest(Header) $catsrc(Header)
     set catdest(HLines) $catsrc(HLines)
-    set catdest(Dashes) $catsrc(Dashes)
+    for {set ii 1} {$ii<=$catsrc(HLines)} {incr ii} {
+	set catdest(H_$ii) $catsrc(H_$ii)
+    }
+    starbase_colmap catdest
 
     # optional
     if {[info exists catsrc(DataType)]} {
@@ -229,13 +230,6 @@ proc FPRegCXC {varname src dest} {
     }
     if {[info exists catsrc(Description)]} {
 	set catdest(Description) $catsrc(Description)
-    }
-
-    for {set ii 1} {$ii<=$catsrc(HLines)} {incr ii} {
-	set catdest(H_$ii) $catsrc(H_$ii)
-    }
-    for {set jj 1} {$jj<=$catsrc(Ncols)} {incr jj} {
-	set catdest(0,$jj) $catsrc(0,$jj)
     }
 
     # data
@@ -282,13 +276,14 @@ proc FPRegHLA {varname src dest} {
     upvar #0 $dest catdest
     global $dest
 
-    # create header
-    set catdest(Header) $catsrc(Header)
-    starbase_colmap catdest
-
+    # init db
     set catdest(Nrows) 0
+    set catdest(Header) $catsrc(Header)
     set catdest(HLines) $catsrc(HLines)
-    set catdest(Dashes) $catsrc(Dashes)
+    for {set ii 1} {$ii<=$catsrc(HLines)} {incr ii} {
+	set catdest(H_$ii) $catsrc(H_$ii)
+    }
+    starbase_colmap catdest
 
     # optional
     if {[info exists catsrc(DataType)]} {
@@ -317,13 +312,6 @@ proc FPRegHLA {varname src dest} {
     }
     if {[info exists catsrc(Description)]} {
 	set catdest(Description) $catsrc(Description)
-    }
-
-    for {set ii 1} {$ii<=$catsrc(HLines)} {incr ii} {
-	set catdest(H_$ii) $catsrc(H_$ii)
-    }
-    for {set jj 1} {$jj<=$catsrc(Ncols)} {incr jj} {
-	set catdest(0,$jj) $catsrc(0,$jj)
     }
 
     # data

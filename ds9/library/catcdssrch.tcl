@@ -227,22 +227,10 @@ proc CATCDSSrchVOTElemStartCB {t name attlist args} {
 	VOTABLE {
 	    # init db
 	    set T(Nrows) 0
-	    set T(Ncols) 0
-	    set T(Header) {}
-	    set T(HLines) 0
-
-	    # create header
-	    incr ${t}(HLines)
-	    set n $T(HLines)
-	    set T(H_$n) "Resource\tDescription"
-	    set T(Header) [split $T(H_$n) "\t"]
-
-	    incr ${t}(HLines)
-	    set n $T(HLines)
-	    set T(H_$n) "--------\t-----------"
-
-	    set T(Dashes) [regsub -all {[A-Za-z0-9]} $T(H_$n) {-}]
-		
+	    set T(Header) "Resource\tDescription"
+	    set T(HLines) 2
+	    set T(H_1) $T(Header)
+	    set T(H_2) "--------\t-----------"
 	    starbase_colmap $t
 	}
 	RESOURCE {

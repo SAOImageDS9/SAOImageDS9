@@ -781,6 +781,7 @@ proc CATGetHeader {varname} {
 	return {}
     }
 
+    # last 2 lines are cols and dashes, ignore
     set hdr {}
     set nl [expr $T(HLines)-2]
     for {set ll 1} {$ll <= $nl} {incr ll} {

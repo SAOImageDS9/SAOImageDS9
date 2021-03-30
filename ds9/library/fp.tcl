@@ -68,13 +68,13 @@ proc FPLoad {varname url query} {
     TBLGetURL $varname $url $query
 }
 
-proc FPProcess {varname} {
+proc FPExec {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,fp)} {
-	puts stderr "FPProcess $varname"
+	puts stderr "FPExec $varname"
     }
 
     global tmpdb

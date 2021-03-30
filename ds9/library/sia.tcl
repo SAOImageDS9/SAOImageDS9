@@ -95,13 +95,13 @@ proc SIALoad {varname url query} {
     return
 }
 
-proc SIAProcess {varname} {
+proc SIAExec {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,sia)} {
-	puts stderr "SIAProcess $varname"
+	puts stderr "SIAExec $varname"
     }
 
     VOTParse $var(tbldb) $var(token)

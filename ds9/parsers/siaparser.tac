@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include reader.tin
 #include wcssys.tin
 #include skyframe.tin
 #include wcsformat.tin
@@ -49,6 +50,7 @@
 
 %%
 
+#include writer.trl
 #include wcssys.trl
 #include skyframe.trl
 #include wcsformat.trl
@@ -95,14 +97,6 @@ site : 2MASS_ {set _ 2mass}
  | SDSS_ {set _ sdss}
  | SKYVIEW_ {set _ skyview}
  | TGSSADR_ {set _ tgssadr}
- ;
-
-writer : XML_ {set _ VOTWrite}
- | VOT_ {set _ VOTWrite}
- | SB_ {set _ starbase_write}
- | STARBASE_ {set _ starbase_write}
- | CSV_ {set _ TSVWrite}
- | TSV_ {set _ TSVWrite}
  ;
 
 %%

@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include reader.tin
 #include yesno.tin
 #include fonts.tin
 #include wcssys.tin
@@ -36,7 +37,6 @@
 %token COORDINATE_
 %token CROSS_
 %token CROSSHAIR_
-%token CSV_
 %token CURRENT_
 %token DEC_
 %token DECR_
@@ -67,14 +67,12 @@
 %token PSYSTEM_
 %token RA_
 %token RADIUS_
-%token RDB_
 %token REGIONS_
 %token REMOVE_
 %token RETRIEVE_
 %token RETURN_
 %token SAMP_
 %token SAVE_
-%token SB_
 %token SEND_
 %token SERVER_
 %token SHAPE_
@@ -84,16 +82,12 @@
 %token SKY_
 %token SKYFORMAT_
 %token SORT_
-%token STARBASE_
 %token SYMBOL_
 %token SYSTEM_ 
 %token TEXT_
-%token TSV_
 %token UNIQUE_
 %token UNITS_
 %token UPDATE_
-%token VOT_
-%token XML_
 
 %token CDS_
 %token ADAC_
@@ -107,6 +101,8 @@
 
 %%
 
+#include reader.trl
+#include writer.trl
 #include yesno.trl
 #include fonts.trl
 #include wcssys.trl
@@ -131,7 +127,10 @@ catalog : NEW_ {CATTool}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
 # backward compatibility
  | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
+
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
+ | IMPORT_ FITS_ STRING_ {CatalogCmdLoad $3 FITSRead}
+ | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
 
  | ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
  | ALLROWS_ yesno {ProcessCmdCVAR allrows $2}
@@ -146,7 +145,6 @@ catalog : NEW_ {CATTool}
 # backward compatibility
  | CURRENT_ SAO_ {CatalogCmdRef sao}
  | EDIT_ yesno {ProcessCmdCVAR edit $2 CATEdit}
- | EXPORT_ writer STRING_ {TBLCmdSave $3 $2}
  | FILTER_ filter
  | HEADER_ {ProcessCmdCVAR0 CATHeader}
 # backward compatibilty
@@ -208,16 +206,6 @@ matchFunction : 1AND2_ {set _ 1and2}
 matchReturn : 1AND2_ {set _ 1and2}
  | 1ONLY_ {set _ 1only}
  | 2ONLY_ {set _ 2only}
- ;
-
-reader : XML_ {set _ VOTRead}
- | VOT_ {set _ VOTRead}
- | RDB_ {set _ starbase_read}
- | SB_ {set _ starbase_read}
- | STARBASE_ {set _ starbase_read}
- | CSV_ {set _ TSVRead}
- | TSV_ {set _ TSVRead}
- | FITS_ {set _ FITSRead}
  ;
 
 samp : {CatalogCmdSAMP}
@@ -290,15 +278,6 @@ symbolShape : CIRCLE_ {set _ circle}
  
 symbolCol : numeric {set _ $1}
  | STRING_ {set _ $1}
- ;
-
-writer : XML_ {set _ VOTWrite}
- | VOT_ {set _ VOTWrite}
- | RDB_ {set _ starbase_write}
- | SB_ {set _ starbase_write}
- | STARBASE_ {set _ starbase_write}
- | CSV_ {set _ TSVWrite}
- | TSV_ {set _ TSVWrite}
  ;
 
 %%

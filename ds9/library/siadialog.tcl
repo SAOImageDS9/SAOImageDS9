@@ -39,7 +39,7 @@ proc SIADialog {varname title url opts action} {
     ARInit $varname SIAServer
 
     # procs
-    set var(proc,process) SIAProcess
+    set var(proc,exec) SIAExec
     set var(proc,load) SIALoad
     set var(proc,error) SIAError
     set var(proc,done) SIADone

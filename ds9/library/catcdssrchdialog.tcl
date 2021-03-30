@@ -27,7 +27,7 @@ proc CATCDSSrchDialog {varname} {
     }
 
     # procs
-    set var(proc,process) CATCDSSrchProcess
+    set var(proc,exec) CATCDSSrchExec
     set var(proc,load) CATCDSSrchLoad
     set var(proc,error) ARError
 

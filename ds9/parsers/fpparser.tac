@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include reader.tin
 #include yesno.tin
 #include wcssys.tin
 #include skyframe.tin
@@ -42,15 +43,9 @@
 %token CXC_
 %token HLA_
 
-%token XML_
-%token VOT_
-%token SB_
-%token STARBASE_
-%token CSV_
-%token TSV_
-
 %%
 
+#include writer.trl
 #include yesno.trl
 #include wcssys.trl
 #include skyframe.trl
@@ -109,14 +104,6 @@ sort : STRING_ {ProcessCmdCVAR sort $1; ProcessCmdCVAR sort,dir "-increasing" FP
 
 sortDir : INCR_ {set _ "-increasing"}
  | DECR_ {set _ "-decreasing"}
- ;
-
-writer : XML_ {set _ VOTWrite}
- | VOT_ {set _ VOTWrite}
- | SB_ {set _ starbase_write}
- | STARBASE_ {set _ starbase_write}
- | CSV_ {set _ TSVWrite}
- | TSV_ {set _ TSVWrite}
  ;
 
 %%

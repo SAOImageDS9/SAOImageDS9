@@ -37,13 +37,7 @@ update	    {return $UPDATE_}
 cxc	    {return $CXC_}
 hla	    {return $HLA_}
 
-xml	    {return $XML_}
-vot	    {return $VOT_}
-sb	    {return $SB_}
-starbase    {return $STARBASE_}
-csv	    {return $CSV_}
-tsv	    {return $TSV_}
-
+#include reader.fin
 #include yesno.fin
 #include wcssys.fin
 #include skyframe.fin

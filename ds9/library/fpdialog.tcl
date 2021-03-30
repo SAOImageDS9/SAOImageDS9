@@ -39,8 +39,8 @@ proc FPDialog {varname title url instr format action} {
     ARInit $varname FPServer
 
     # procs
+    set var(proc,exec) FPExec
     set var(proc,load) FPLoad
-    set var(proc,process) FPProcess
     set var(proc,table) FPTable
     set var(proc,error) ARError
 

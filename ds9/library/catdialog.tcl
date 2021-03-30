@@ -46,7 +46,7 @@ proc CATDialog {varname format catalog title action} {
     ARInit $varname CATServer
 
     # procs
-    set var(proc,process) CATProcess
+    set var(proc,exec) CATExec
     set var(proc,load) CATLoad
     set var(proc,error) ARError
     set var(proc,table) CATTable

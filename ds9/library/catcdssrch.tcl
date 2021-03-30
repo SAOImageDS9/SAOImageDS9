@@ -37,18 +37,17 @@ proc CATCDSSrchLoad {varname url query} {
     return 
 }
 
-proc CATCDSSrchProcess {varname} {
+proc CATCDSSrchExec {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATCDSSrchProcess $varname"
+	puts stderr "CATCDSSrchExec $varname"
     }
 
     CATCDSSrchVOTParse $var(catdb) $var(token)
     ARDone $varname
-
     CATCDSSrchTable $varname
 }
 

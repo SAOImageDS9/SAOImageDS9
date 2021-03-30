@@ -131,18 +131,17 @@ proc CATLoad {varname url query} {
     return
 }
 
-proc CATProcess {varname} {
+proc CATExec {varname} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATProcess $varname"
+	puts stderr "CATExec $varname"
     }
 
     VOTParse $var(catdb) $var(token)
     ARDone $varname
-
     CATLoadDone $varname
 }
 
@@ -393,7 +392,7 @@ proc CATLoadFn {varname fn reader} {
 	return
     }
 
-    ARDone $varname
+    ARStatus $varname [msgcat::mc {Done}]
     CATLoadDone $varname
 }
 

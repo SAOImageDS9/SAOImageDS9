@@ -70,7 +70,7 @@ proc TBLGetURLFinish {varname token} {
 	200 -
 	203 -
 	404 -
-	503 {eval [list $var(proc,process) $varname]}
+	503 {eval [list $var(proc,exec) $varname]}
 
 	201 -
 	300 -
@@ -445,7 +445,6 @@ proc TBLSaveFn {varname fn writer} {
     }
 
     $writer $var(tbldb) $fn
-    ARDone $varname
 }
 
 # Sort

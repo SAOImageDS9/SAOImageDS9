@@ -442,7 +442,7 @@ proc CATMatchAnd1and2 {varname1 varname2 rrname} {
 	incr T(Nrows)
     }
 
-    ARDone $varname
+    ARStatus $varname [msgcat::mc {Done}]
     CATLoadDone $varname
 }
 
@@ -528,7 +528,7 @@ proc CATMatchAnd1only {varname1 varname2 rrname} {
 	incr T(Nrows)
     }
 
-    ARDone $varname
+    ARStatus $varname [msgcat::mc {Done}]
     CATLoadDone $varname
 }
 
@@ -614,7 +614,7 @@ proc CATMatchAnd2only {varname1 varname2 rrname} {
 	incr T(Nrows)
     }
 
-    ARDone $varname
+    ARStatus $varname [msgcat::mc {Done}]
     CATLoadDone $varname
 }
 
@@ -706,6 +706,6 @@ proc CATMatchNot {varname1 varname2 rrname} {
 	}
     }
 
-    ARDone $varname
+    ARStatus $varname [msgcat::mc {Done}]
     CATLoadDone $varname
 }

@@ -110,6 +110,7 @@ proc PrismDialog {varname} {
 	-command [list PrismLoadFile $varname] -accelerator "${ds9(ctrl)}O"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] -menu $mb.file.import
+    $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Image}] \
 	-command [list PrismImage $varname]
@@ -127,6 +128,15 @@ proc PrismDialog {varname} {
 	-command [list PrismImportRDBFile $varname]
     $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
 	-command [list PrismImportTSVFile $varname]
+
+    # Export
+    ThemeMenu $mb.file.export
+    $mb.file.export add command -label "[msgcat::mc {VOTable}]..." \
+	-command [list TBLSaveVOTFile $varname]
+    $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
+	-command [list TBLSaveRDBFile $varname]
+    $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
+	-command [list TBLSaveTSVFile $varname]
 
     ThemeMenu $mb.edit
     $mb.edit add command -label [msgcat::mc {Cut}] \

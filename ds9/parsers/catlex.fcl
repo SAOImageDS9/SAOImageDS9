@@ -31,7 +31,6 @@ condition   {return $CONDITION_}
 coordinate  {return $COORDINATE_}
 cross	    {return $CROSS_}
 crosshair   {return $CROSSHAIR_}
-csv	    {return $CSV_}
 current	    {return $CURRENT_}
 dec	    {return $DEC_}
 decr	    {return $DECR_}
@@ -62,14 +61,12 @@ psky	    {return $PSKY_}
 psystem	    {return $PSYSTEM_}
 ra	    {return $RA_}
 radius	    {return $RADIUS_}
-rdb	    {return $RDB_}
 regions	    {return $REGIONS_}
 remove	    {return $REMOVE_}
 retrieve    {return $RETRIEVE_}
 return	    {return $RETURN_}
 samp	    {return $SAMP_}
 save	    {return $SAVE_}
-sb	    {return $SB_}
 server	    {return $SERVER_}
 shape	    {return $SHAPE_}
 show	    {return $SHOW_}
@@ -78,16 +75,12 @@ size2	    {return $SIZE2_}
 sky	    {return $SKY_}
 skyformat   {return $SKYFORMAT_}
 sort	    {return $SORT_}
-starbase    {return $STARBASE_}
 symbol	    {return $SYMBOL_}
 system	    {return $SYSTEM_} 
 text	    {return $TEXT_}
-tsv	    {return $TSV_}
 unique	    {return $UNIQUE_}
 units	    {return $UNITS_}
 update	    {return $UPDATE_}
-vot	    {return $VOT_}
-xml	    {return $XML_}
 
 cds	    {return $CDS_}
 adac	    {return $ADAC_}
@@ -99,6 +92,7 @@ iucaa	    {return $IUCAA_}
 bejing	    {return $BEJING_}
 saao	    {return $SAAO_}
 
+#include reader.fin
 #include yesno.fin
 #include fonts.fin
 #include wcssys.fin

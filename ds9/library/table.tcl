@@ -444,7 +444,11 @@ proc TBLSaveFn {varname fn writer} {
 	return
     }
 
-    $writer $var(tbldb) $fn
+    if {[info exists var(offset)]} {
+	$writer $var(tbldb) $fn $var(offset)
+    } else {
+	$writer $var(tbldb) $fn
+    }
 }
 
 # Sort

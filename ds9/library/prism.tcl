@@ -48,6 +48,7 @@ proc PrismDialog {varname} {
     set var(fn) {}
     set var(rows) 0
     set var(type) fits
+    set var(offset) 0
     set var(load) mmapincr
     set var(ext) 0
     set var(extname) {}
@@ -597,6 +598,8 @@ proc PrismImportFn {varname fn reader} {
     $reader $var(tbldb) $fn
 
     $var(tbl) configure -titlerows 1
+    set var(offset) 0
+
     set nc [starbase_ncols $var(tbldb)]
     if {$nc > $iprism(mincols)} {
 	$var(tbl) configure -cols $nc
@@ -628,6 +631,8 @@ proc PrismImportFn {varname fn reader} {
 	set $var(tbldb)($ii,0) $ii
     }
 
+    $var(tbl) see 1,1
+
     # need this so that PrismExtCmd is invoked before next command
     update
     
@@ -650,6 +655,7 @@ proc PrismClear {varname} {
     set var(fn) {}
     set var(rows) 0
     set var(type) fits
+    set var(offset) 0
     set var(load) {}
     set var(ext) 0
     set var(extname) {}
@@ -1763,6 +1769,7 @@ proc PrismTableFits {varname} {
 
 	$var(tbl) configure -rows $iprism(minrows)
 	$var(tbl) configure -titlerows 1
+	set var(offset) 0
 
 	PrismDialogUpdate $varname
 	return
@@ -1781,6 +1788,7 @@ proc PrismTableFits {varname} {
     starbase_colmap $t
 
     $var(tbl) configure -titlerows 2
+    set var(offset) 1
 
     set nc [starbase_ncols $t]
     if {[expr $nc+1] > $iprism(mincols)} {
@@ -1804,6 +1812,9 @@ proc PrismTableFits {varname} {
     }
 
     $var(tbl) see 2,1
+
+    # need this so that PrismExtCmd is invoked before next command
+    update
 
     PrismDialogUpdate $varname
 }
@@ -2157,6 +2168,6 @@ proc PrismBackupAscii {varname ch fdir rdir} {
     set fn [file rootname [file tail $var(fn)]]
     append fn {.xml}
 
-    VOTWrite $var(tbldb) $fdir/$fn 
+    VOTWrite $var(tbldb) $fdir/$fn
     puts $ch "PrismImportFn $varname $rdir/$fn VOTRead"
 }

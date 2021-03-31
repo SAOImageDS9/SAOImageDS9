@@ -120,7 +120,7 @@ proc TSVRead {t fn} {
     }
 }
 
-proc TSVWrite {t fn} {
+proc TSVWrite {t fn {offset 0}} {
     upvar #0 $t T
     global $t
 
@@ -145,7 +145,7 @@ proc TSVWrite {t fn} {
     puts $fp "[lindex $T(Header) [expr $nc-1]]"
 
     # data
-    for {set rr 1} {$rr <= $nr} {incr rr} {
+    for {set rr [expr 1+$offset]} {$rr <= $nr} {incr rr} {
 	for {set cc 1} {$cc < $nc} {incr cc} {
 	    puts -nonewline $fp "$T($rr,$cc)\t"
 	}

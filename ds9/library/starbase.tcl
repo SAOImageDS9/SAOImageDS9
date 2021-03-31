@@ -27,7 +27,7 @@ proc starbase_ncols   { D } 	        { upvar $D data; return $data(Ncols) 	}
 proc starbase_get     { D row col }     { upvar $D data; return $data($row,$col) 	}
 proc starbase_set     { D row col val } { upvar $D data; set data($row,$col) $val; 	}
 proc starbase_colname { D num  }        { upvar $D data; return $data(0,$num) 	}
-#proc starbase_columns { D      }        { upvar $D data; return $data(Header)  }
+proc starbase_columns { D      }        { upvar $D data; return $data(Header)  }
 proc starbase_colnum  { D name }        { upvar $D data; return $data($name) 	}
 
 proc starbase_columns {t} {
@@ -141,34 +141,8 @@ proc starbase_colins { t name here } {
 
 proc starbase_header { h fp } {
 	upvar $h H
-	global starbase_line
 	set N 1
 
-    if { [info exists starbase_line] } {
-	set line $starbase_line
-	set n 1
-
-	set H(H_$n) $line
-	if { [regexp -- {^ *(-)+ *(\t *(-)+ *)*} $line] } break
-	if { $n >= 2 } {
-	    set ind [string first "\t" $H(H_[expr $n-1])]
-	    if { $ind >= 0 } {
-		set name [string range  $H(H_[expr $n-1]) 0 [expr $ind - 1]]
-		incr ind
-		set H(H_$name) [string range $H(H_[expr $n-1]) $ind end]
-		set H(N_$name) [expr $n-1]
-	    }
-#	    set l [split $H(H_[expr $n-1]) "\t"]
-#	    if { [llength $l] > 1 } {
-#		set name [lindex $l 0]
-#		set H(H_$name) [lrange $l 1 end]
-#		set H(N_$name) [expr $n-1]
-#	    }
-	}
-
-	unset starbase_line
-	set N 2
-    }
     for { set n $N } { [set eof [gets $fp line]] != -1 } { incr n } {
 	set H(H_$n) $line
 	if { [regexp -- {^ *(-)+ *(\t *(-)+ *)*} $line] } break
@@ -313,11 +287,6 @@ proc starbase_readfp { t fp } {
     set NCols [starbase_ncols T]
 
     for { set r 1 } { [gets $fp line] != -1 } { incr r } {
-	if { [string index $line 0] == "\f" } {
-	    global starbase_line
-	    set starbase_line [string range $line 1 end]
-	    break
-	}
 	set c 1
 	foreach val [split $line "\t"] {
 	    set T($r,$c) [string trim $val]
@@ -340,7 +309,7 @@ proc starbase_read { t file } {
     set T(filename) $file
 }
 
-proc starbase_writefp { t fp } {
+proc starbase_writefp { t fp {offset 0}} {
 	upvar $t T
 
     starbase_hdrput T $fp
@@ -351,7 +320,7 @@ proc starbase_writefp { t fp } {
 
     set nr $T(Nrows)
     set nc $T(Ncols)
-    for { set r 1 } { $r <= $nr } {  incr r } {
+    for { set r [expr 1+$offset] } { $r <= $nr } {  incr r } {
 	for { set c 1 } { $c < $nc } {  incr c } {
 	    if { [catch { set val $T($r,$c) }] } {
 		    set val ""
@@ -366,15 +335,15 @@ proc starbase_writefp { t fp } {
     }
 }
 
-proc starbase_write { t file } {
+proc starbase_write { t file {offset 0}} {
 	upvar $t T
 
     set fp [open $file w]
-    starbase_writefp T $fp
+    starbase_writefp T $fp $offset
     close $fp
 }
 
-proc starbase_write_ { t } {
+proc starbase_write_ { t {offset 0}} {
 	upvar $t T
 
     set rr {}
@@ -386,7 +355,7 @@ proc starbase_write_ { t } {
 
     set nr $T(Nrows)
     set nc $T(Ncols)
-    for { set r 1 } { $r <= $nr } {  incr r } {
+    for { set r [expr 1+$offset] } { $r <= $nr } {  incr r } {
 	for { set c 1 } { $c < $nc } {  incr c } {
 	    if { [catch { set val $T($r,$c) }] } {
 		    set val ""

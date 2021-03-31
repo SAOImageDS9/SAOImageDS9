@@ -73,7 +73,7 @@ proc VOTRead {t fn} {
     }
 }
 
-proc VOTWrite {t fn} {
+proc VOTWrite {t fn {offset 0}} {
     upvar #0 $t T
     global $t
 
@@ -169,7 +169,7 @@ proc VOTWrite {t fn} {
     puts $fp {<DATA>}
     puts $fp {<TABLEDATA>}
 
-    for {set rr 1} {$rr <= $nr} {incr rr} {
+    for {set rr [expr 1+$offset]} {$rr <= $nr} {incr rr} {
 	puts -nonewline $fp {<TR>}
 	for {set cc 1} {$cc <= $nc} {incr cc} {
 	    puts -nonewline $fp "<TD>[XMLQuote $T($rr,$cc)]</TD>"

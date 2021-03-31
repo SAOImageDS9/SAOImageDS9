@@ -1062,8 +1062,11 @@ proc CatalogCmdMatchParams {cat1 cat2} {
 }
 
 proc CatalogCmdSAMP {} {
-    global cvarname
     global samp
+    global cvarname
+    if {$cvarname == {}} {
+	return
+    }
 
     if {[info exists samp]} {
 	SAMPSendTableLoadVotable {} $cvarname
@@ -1073,8 +1076,11 @@ proc CatalogCmdSAMP {} {
 }
 
 proc CatalogCmdSAMPSend {name} {
-    global cvarname
     global samp
+    global cvarname
+    if {$cvarname == {}} {
+	return
+    }
 
     if {[info exists samp]} {
 	foreach arg $samp(apps,votable) {
@@ -1092,6 +1098,9 @@ proc CatalogCmdSAMPSend {name} {
 
 proc CatalogCmdSkyframe {skyframe} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     set cvar(sky) $skyframe
@@ -1100,6 +1109,9 @@ proc CatalogCmdSkyframe {skyframe} {
 
 proc CatalogCmdSystem {sys} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     set cvar(system) $sys
@@ -1108,6 +1120,9 @@ proc CatalogCmdSystem {sys} {
 
 proc CatalogCmdSymbol {col value} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -1118,6 +1133,9 @@ proc CatalogCmdSymbol {col value} {
 
 proc CatalogCmdSymbolFontStyle {value} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -1146,6 +1164,9 @@ proc CatalogCmdSymbolFontStyle {value} {
 
 proc CatalogCmdSymbolAdd {} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -1177,6 +1198,9 @@ proc CatalogCmdSymbolAdd {} {
 
 proc CatalogCmdSymbolRemove {} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -1186,6 +1210,9 @@ proc CatalogCmdSymbolRemove {} {
 
 proc CatalogCmdSymbolLoad {fn} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -1200,6 +1227,9 @@ proc CatalogCmdSymbolLoad {fn} {
 
 proc CatalogCmdSymbolSave {fn} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 

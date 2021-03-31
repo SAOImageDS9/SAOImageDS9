@@ -2047,6 +2047,9 @@ proc PrismCmdLoad {fn} {
 proc PrismCmdExt {ext} {
     global iprism
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     
     if {$ext >= 0 && $ext <= $cvar(extnum)} {
@@ -2062,6 +2065,9 @@ proc PrismCmdExt {ext} {
 proc PrismCmdExtName {extname} {
     global iprism
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     
     set ext [lsearch $cvar(extnames) $extname]

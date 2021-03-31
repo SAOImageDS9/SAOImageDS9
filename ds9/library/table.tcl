@@ -755,6 +755,9 @@ proc TBLEditDialogLoad {parent} {
 
 proc TBLCmdSave {fn writer} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
 
     if {$fn != {}} {
 	TBLSaveFn $cvarname $fn $writer
@@ -764,6 +767,9 @@ proc TBLCmdSave {fn writer} {
 
 proc TBLCmdCoord {xx yy sky} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     set cvar(x) $xx
@@ -773,6 +779,9 @@ proc TBLCmdCoord {xx yy sky} {
 
 proc TBLCmdSize {radius rformat} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     set cvar(radius) $radius
@@ -782,6 +791,9 @@ proc TBLCmdSize {radius rformat} {
 
 proc TBLCmdSkyframe {skyframe} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     set cvar(sky) $skyframe
@@ -790,6 +802,9 @@ proc TBLCmdSkyframe {skyframe} {
 
 proc TBLCmdSystem {sys} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     set cvar(system) $sys
@@ -798,6 +813,9 @@ proc TBLCmdSystem {sys} {
 
 proc TBLCmdFilterLoad {fn} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     if {$fn != {}} {

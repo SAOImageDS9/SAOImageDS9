@@ -820,6 +820,9 @@ proc ProcessWebCmd {varname iname} {
 
 proc WebCmdCheck {} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
 
     if {![info exists cvar(top)]} {
@@ -849,8 +852,6 @@ proc WebCmdRef {ref} {
 
 proc WebCmdNew {url {ww {hvweb}}} {
     global ihv
-    global cvarname
-    upvar #0 $cvarname cvar
 
     set ii [lsearch $ihv(windows) $ww]
     if {$ii>=0} {
@@ -878,6 +879,9 @@ proc WebCmdNew {url {ww {hvweb}}} {
 
 proc WebCmdClick {id} {
     global cvarname
+    if {$cvarname == {}} {
+	return
+    }
     upvar #0 $cvarname cvar
     
     if {![info exists cvar(widget)]} {

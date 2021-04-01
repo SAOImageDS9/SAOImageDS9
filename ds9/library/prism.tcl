@@ -277,7 +277,7 @@ proc PrismDialog {varname} {
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $var(tbl) tag configure title \
 	-fg [ThemeForeground] -bg [ThemeBackground] -bd 0
-    $prism(tbl) width 0 7
+    $var(tbl) width 0 8
     
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

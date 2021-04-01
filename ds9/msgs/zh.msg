@@ -305,7 +305,6 @@
 ::msgcat::mcset zh {Extension not found} 
 ::msgcat::mcset zh {Extensions} 
 ::msgcat::mcset zh {Extension} 
-::msgcat::mcset zh {Extention} 
 ::msgcat::mcset zh {Exterior Axes} 
 ::msgcat::mcset zh {Exterior Numerics} 
 ::msgcat::mcset zh {FAQ} 
@@ -373,7 +372,6 @@
 ::msgcat::mcset zh {Groups} 
 ::msgcat::mcset zh {HMS} 
 ::msgcat::mcset zh {HTTP} 
-::msgcat::mcset zh {Header Keywords} 
 ::msgcat::mcset zh {Header} 
 ::msgcat::mcset zh {Height} 
 ::msgcat::mcset zh {Help Desk} 

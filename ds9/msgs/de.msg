@@ -305,7 +305,6 @@
 ::msgcat::mcset de {Extension not found} 
 ::msgcat::mcset de {Extensions} 
 ::msgcat::mcset de {Extension} 
-::msgcat::mcset de {Extention} 
 ::msgcat::mcset de {Exterior Axes} [encoding convertfrom iso8859-1 {Äußere Achsen}]
 ::msgcat::mcset de {Exterior Numerics} [encoding convertfrom iso8859-1 {Äußere Ziffern}]
 ::msgcat::mcset de {FAQ} 
@@ -373,7 +372,6 @@
 ::msgcat::mcset de {Groups} {Gruppen}
 ::msgcat::mcset de {HMS} 
 ::msgcat::mcset de {HTTP} 
-::msgcat::mcset de {Header Keywords} 
 ::msgcat::mcset de {Header} {Dateikopf}
 ::msgcat::mcset de {Height} [encoding convertfrom iso8859-1 {Höhe}]
 ::msgcat::mcset de {Help Desk} {Hilfestelle}

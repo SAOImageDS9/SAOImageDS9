@@ -305,7 +305,6 @@
 ::msgcat::mcset ja {Extension not found} 
 ::msgcat::mcset ja {Extensions} 
 ::msgcat::mcset ja {Extension} 
-::msgcat::mcset ja {Extention} 
 ::msgcat::mcset ja {Exterior Axes} [encoding convertfrom euc-jp "\xbc\xb4\xa4\xf2\xb3\xb0\xc2\xa6\xa4\xcb"]
 ::msgcat::mcset ja {Exterior Numerics} [encoding convertfrom euc-jp "\xbf\xf4\xc3\xcd\xa4\xf2\xb3\xb0\xc2\xa6\xa4\xcb"]
 ::msgcat::mcset ja {FAQ} [encoding convertfrom euc-jp "\xa4\xe8\xa4\xaf\xa4\xa2\xa4\xeb\xbc\xc1\xcc\xe4\xa4\xc8\xc5\xfa\xa4\xa8"]
@@ -373,7 +372,6 @@
 ::msgcat::mcset ja {Groups} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7"]
 ::msgcat::mcset ja {HMS} 
 ::msgcat::mcset ja {HTTP} [encoding convertfrom euc-jp "\x48\x54\x54\x50"]
-::msgcat::mcset ja {Header Keywords} 
 ::msgcat::mcset ja {Header} [encoding convertfrom euc-jp "\xa5\xd8\xa5\xc3\xa5\xc0"]
 ::msgcat::mcset ja {Height} [encoding convertfrom euc-jp "\xb9\xe2\xa4\xb5"]
 ::msgcat::mcset ja {Help Desk} [encoding convertfrom euc-jp "\xa5\xd8\xa5\xeb\xa5\xd7\xa5\xc7\xa5\xb9\xa5\xaf"]

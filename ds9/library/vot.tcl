@@ -207,6 +207,9 @@ proc VOTCharCB {t data} {
 		    VOTABLE -
 		    RESOURCE -
 		    TABLE {
+			# don't save general description
+			# wait until FIELD
+			if {0} {
 			foreach ll [split [string trim $data] "\n"] {
 			    incr ${t}(HLines)
 			    set n $T(HLines)
@@ -215,6 +218,7 @@ proc VOTCharCB {t data} {
 			    } else {
 				set T(H_$n) "# $ll"
 			    }
+			}
 			}
 		    }
 		    FIELD {
@@ -290,10 +294,6 @@ proc VOTElemStartCB {t name attlist args} {
 	TABLEDATA {
 	    # ok, we now need to build the header
 	    starbase_colmap $t
-
-	    incr ${t}(HLines)
-	    set n $T(HLines)
-	    set T(H_$n) {}
 
 	    set nc $T(Ncols)
 	    for {set cc 1} {$cc <= $nc} {incr cc} {

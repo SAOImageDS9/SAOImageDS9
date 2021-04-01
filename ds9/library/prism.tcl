@@ -208,8 +208,7 @@ proc PrismDialog {varname} {
     bind $var(dir) <<TreeviewSelect>> [list PrismExtCmd $varname]
 
     # Header
-    set f [ttk::labelframe $p.header -padding {0 2} \
-	       -text [msgcat::mc {Header Keywords}]]
+    set f [ttk::labelframe $p.header -padding {0 2} -text [msgcat::mc {Header}]]
 
     set var(text) $f.text
     roText::roText $var(text)
@@ -600,21 +599,27 @@ proc PrismImportFn {varname fn reader} {
     $var(tbl) configure -titlerows 1
     set var(offset) 0
 
+    # starbase_ncols is just cols
+    # configure cols includes extra row
     set nc [starbase_ncols $var(tbldb)]
-    if {$nc > $iprism(mincols)} {
-	$var(tbl) configure -cols $nc
+    set cc [expr $nc+1]
+    if {$cc > $iprism(mincols)} {
+	$var(tbl) configure -cols $cc
     } else {
 	$var(tbl) configure -cols $iprism(mincols)
     }
 
+    # starbase_nrows is just rows
+    # configure rows includes all header
     set nr [starbase_nrows $var(tbldb)]
-    if {$nr > $iprism(minrows)} {
-	$var(tbl) configure -rows [expr $nr+1]
+    set cc [expr $nr+1]
+    if {$cc > $iprism(minrows)} {
+	$var(tbl) configure -rows $cc
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
     set var(rows) $nr
-
+    
     set info \
 	"[starbase_ncols $var(tbldb)] cols, [starbase_nrows $var(tbldb)] rows"
     $var(dir) insert {} end -id 0 -values [list [file tail $fn] "Table" "$info"]
@@ -1790,16 +1795,22 @@ proc PrismTableFits {varname} {
     $var(tbl) configure -titlerows 2
     set var(offset) 1
 
+    # starbase_ncols is just cols
+    # configure cols includes extra row
     set nc [starbase_ncols $t]
-    if {[expr $nc+1] > $iprism(mincols)} {
-	$var(tbl) configure -cols [expr $nc+1]
+    set cc [expr $nc+1]
+    if {$cc > $iprism(mincols)} {
+	$var(tbl) configure -cols $cc
     } else {
 	$var(tbl) configure -cols $iprism(mincols)
     }
 
+    # starbase_nrows includes 1 extra header
+    # configure rows includes all header
     set nr [starbase_nrows $t]
-    if {[expr $nr+1] > $iprism(minrows)} {
-	$var(tbl) configure -rows [expr $nr+1]
+    set cc [expr $nr-1+2]
+    if {$cc > $iprism(minrows)} {
+	$var(tbl) configure -rows $cc
     } else {
 	$var(tbl) configure -rows $iprism(minrows)
     }
@@ -1978,6 +1989,10 @@ proc PrismExtFitsCmd {varname} {
 proc PrismExtAsciiCmd {varname} {
     upvar #0 $varname var
     global $varname
+
+    # header
+    $var(text) delete 1.0 end
+    $var(text) insert end [TBLGetHeader $varname]
 }
 
 # Process Cmds

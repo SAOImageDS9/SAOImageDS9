@@ -305,7 +305,6 @@
 ::msgcat::mcset da {Extension not found} 
 ::msgcat::mcset da {Extensions} 
 ::msgcat::mcset da {Extension} 
-::msgcat::mcset da {Extention} 
 ::msgcat::mcset da {Exterior Axes} {Udvendige akser}
 ::msgcat::mcset da {Exterior Numerics} {Udvendige tal}
 ::msgcat::mcset da {FAQ} [encoding convertfrom iso8859-1 {Ofte Stillede Spørgsmål}]
@@ -373,7 +372,6 @@
 ::msgcat::mcset da {Groups} {Gupper}
 ::msgcat::mcset da {HMS} 
 ::msgcat::mcset da {HTTP} {HTTP}
-::msgcat::mcset da {Header Keywords} 
 ::msgcat::mcset da {Header} {Hovede}
 ::msgcat::mcset da {Height} [encoding convertfrom iso8859-1 {Højde}]
 ::msgcat::mcset da {Help Desk} [encoding convertfrom iso8859-1 {Hjælp}]

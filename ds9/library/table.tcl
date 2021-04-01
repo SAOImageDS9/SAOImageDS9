@@ -751,6 +751,27 @@ proc TBLEditDialogLoad {parent} {
     }
 }
 
+proc TBLGetHeader {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(tbldb)
+
+    set t $var(tbldb)
+    upvar #0 $t T
+
+    if {![TBLValidDB $var(tbldb)]} {
+	return {}
+    }
+
+    # last 2 lines are cols and dashes, ignore
+    set hdr {}
+    set nl [expr $T(HLines)-2]
+    for {set ll 1} {$ll <= $nl} {incr ll} {
+	append hdr "$T(H_$ll)\n"
+    }
+    return $hdr
+}
+
 # Cmd
 
 proc TBLCmdSave {fn writer} {

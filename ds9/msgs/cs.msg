@@ -305,7 +305,6 @@
 ::msgcat::mcset cs {Extension not found} 
 ::msgcat::mcset cs {Extensions} 
 ::msgcat::mcset cs {Extension} 
-::msgcat::mcset cs {Extention} 
 ::msgcat::mcset cs {Exterior Axes} 
 ::msgcat::mcset cs {Exterior Numerics} 
 ::msgcat::mcset cs {FAQ} 
@@ -373,7 +372,6 @@
 ::msgcat::mcset cs {Groups} [encoding convertfrom iso8859-2 {Skupiny}]
 ::msgcat::mcset cs {HMS} 
 ::msgcat::mcset cs {HTTP} 
-::msgcat::mcset cs {Header Keywords} 
 ::msgcat::mcset cs {Header} [encoding convertfrom iso8859-2 {Hlavièka}]
 ::msgcat::mcset cs {Height} [encoding convertfrom iso8859-2 {Vý¹ka}]
 ::msgcat::mcset cs {Help Desk} [encoding convertfrom iso8859-2 {Podpora}]

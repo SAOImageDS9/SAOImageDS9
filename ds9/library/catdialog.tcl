@@ -769,34 +769,13 @@ proc CATEdit {varname} {
     }
 }
 
-proc CATGetHeader {varname} {
-    upvar #0 $varname var
-    global $varname
-    global $var(tbldb)
-
-    set t $var(tbldb)
-    upvar #0 $t T
-
-    if {![TBLValidDB $var(tbldb)]} {
-	return {}
-    }
-
-    # last 2 lines are cols and dashes, ignore
-    set hdr {}
-    set nl [expr $T(HLines)-2]
-    for {set ll 1} {$ll <= $nl} {incr ll} {
-	append hdr "$T(H_$ll)\n"
-    }
-    return $hdr
-}
-
 proc CATHeader {varname} {
     upvar #0 $varname var
     global $varname
     global $var(tbldb)
 
     SimpleTextDialog ${varname}hdr "$var(title) [msgcat::mc {Header}]" \
-	80 20 insert top [CATGetHeader $varname]
+	80 20 insert top [TBLGetHeader $varname]
 }
 
 proc CATKey {which key} {

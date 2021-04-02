@@ -272,29 +272,6 @@ proc FinishLoad {} {
     UpdateDS9
 }
 
-proc IsLocalFile {fn} {
-    # strip any brackets
-    set aa [string first "\[" $fn]
-    if {$aa > 0} {
- 	set fn [string range $fn 0 [expr $aa-1]]
-    }
-    
-    if {![file exists $fn]} {
-	return 0
-    }
-    if {![file isfile $fn]} {
-	return 0
-    }
-    if {[file isdirectory $fn]} {
-	return 0
-    }
-    if {[file readable $fn]} {
-	return 1
-    } else {
-	return 0
-    }
-}
-
 proc ConvertFitsFile {} {
     foreach t {Stdin ExternalFits GzipFile BZip2File CompressFile} {
 	if {[$t]} {

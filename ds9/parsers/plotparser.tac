@@ -157,6 +157,7 @@ command : plot
 plot : line
  | LINE_ line
  | BAR_ bar
+# backward compatibility
  | SCATTER_ scatter
  | ERROR_ errorr
  | GUI_ {ProcessCmdCVAR0 PlotGUI}
@@ -228,6 +229,7 @@ plot : line
  | NEW_ NAME_ STRING_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdLine $4 $5 $6 $7}
  | NEW_ NAME_ STRING_ LINE_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdLine $5 $6 $7 $8}
  | NEW_ NAME_ STRING_ BAR_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdBar $5 $6 $7 $8}
+# backward compatibility
  | NEW_ NAME_ STRING_ SCATTER_ STRING_ STRING_ STRING_ dim {PlotCmdNew $3; PlotCmdScatter $5 $6 $7 $8}
  ;
 
@@ -315,6 +317,7 @@ bar : {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,bar,width $2}
  ;
 
+# backward compatibility
 # Scatter
 scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
  | OPEN_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
@@ -340,6 +343,7 @@ scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,fill $2}
  ;
 
+# backward compatibility
 scattersymbol : CIRCLE_ {set _ circle}
  | SQUARE_ {set _ square}
  | DIAMOND_ {set _ diamond}
@@ -422,6 +426,7 @@ mode : POINTER_ {set _ pointer}
 graph : {set _ line}
  | LINE_ {set _ line}
  | BAR_ {set _ bar}
+# backward compatibility
  | SCATTER_ {set _ scatter}
  ;
 

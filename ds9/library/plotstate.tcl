@@ -91,6 +91,7 @@ proc PlotDefState {} {
     set pap(graph,ds,bar,color) black
     set pap(graph,ds,bar,width) 1
 
+    # backward compatibility
     # Scatter
     set pap(graph,ds,scatter,symbol) circle
     set pap(graph,ds,scatter,color) black
@@ -220,6 +221,7 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,bar,color) $var(graph,ds,bar,color)
     set var($cc,$nn,bar,width) $var(graph,ds,bar,width)
 
+    # backward compatibility
     # Scatter
     set var($cc,$nn,scatter,symbol) $var(graph,ds,scatter,symbol)
     set var($cc,$nn,scatter,color) $var(graph,ds,scatter,color)
@@ -310,6 +312,7 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,bar,color) $var($cc,$nn,bar,color) 
     set var(graph,ds,bar,width) $var($cc,$nn,bar,width) 
     
+    # backward compatibility
     # Scatter
     set var(graph,ds,scatter,symbol) $var($cc,$nn,scatter,symbol) 
     set var(graph,ds,scatter,color) $var($cc,$nn,scatter,color)

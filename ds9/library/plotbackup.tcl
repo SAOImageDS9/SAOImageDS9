@@ -90,13 +90,8 @@ proc PlotBackupLoadFile {varname fn} {
     source $fn
 
     if {[info exist apca(version)]} {
-	switch $apca(version) {
-	    8.2 {
-		array set $varname [array get apca]
-		unset apca
-	    }
-	    8.3 {}
-	}
+	array set $varname [array get apca]
+	unset apca
 
 	$var(graph,proc,updateelement) $varname
 	PlotUpdateCanvas $varname

@@ -963,7 +963,10 @@ proc AnalysisPlotStdin {type w wtt result} {
 	switch $type {
 	    line {PlotLine $w $wtt $t $x $y $d $rr false}
 	    bar {PlotBar $w $wtt $t $x $y $d $rr false}
-	    scatter {PlotScatter $w $wtt $t $x $y $d $rr false}
+	    scatter {
+		# backward compatibility
+		PlotScatter $w $wtt $t $x $y $d $rr false
+	    }
 	}
     } else {
 	Error "[msgcat::mc {Error}] [string range $tt 0 40]"

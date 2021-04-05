@@ -135,7 +135,6 @@ proc PrefsDialogPlot {} {
 
     PlotPrefsLine $ff
     PlotPrefsBar $ff
-    PlotPrefsScatter $ff
 
     # Error
     set f [ttk::labelframe $ff.error -text [msgcat::mc {Errorbar}]]
@@ -161,8 +160,7 @@ proc PrefsDialogPlot {} {
     pack $w.plot.left.canvas $w.plot.left.graph \
 	-side top -fill both -expand true
     pack $w.plot.right.ds $w.plot.right.line $w.plot.right.bar \
-	$w.plot.right.scatter $w.plot.right.error \
-	-side top -fill both -expand true
+	$w.plot.right.error -side top -fill both -expand true
 
     pack $w.plot.left $w.plot.right \
 	-side left -fill both -expand true
@@ -293,6 +291,7 @@ proc PlotCmdBar {title xaxis yaxis dim} {
     PlotBar $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf) false
 }
 
+# backward compatibility
 proc PlotCmdScatter {title xaxis yaxis dim} {
     global parse
     PlotScatter $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf) false

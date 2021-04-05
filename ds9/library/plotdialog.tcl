@@ -156,8 +156,6 @@ proc PlotDialog {varname wtt {theme true}} {
 	-command [list PlotAddGraph $varname line]
     $var(mb).canvas.graph add command -label [msgcat::mc {Bar}] \
 	-command [list PlotAddGraph $varname bar]
-    $var(mb).canvas.graph add command -label [msgcat::mc {Scatter}] \
-	-command [list PlotAddGraph $varname scatter]
 
     ThemeMenu $var(mb).canvas.layout
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
@@ -277,6 +275,7 @@ proc PlotDialog {varname wtt {theme true}} {
 
     PlotLineMenus $varname
     PlotBarMenus $varname
+    # backward compatibility
     PlotScatterMenus $varname
 
     # GUI
@@ -758,6 +757,7 @@ proc PlotUpdateMenus {varname} {
 		-menu $var(mb).databar
 	}
 	scatter {
+	    # backward compatibility
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).datascatter
 	}

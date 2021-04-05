@@ -3638,292 +3638,292 @@ array set plot::rules {
 }
 
 array set plot::rules {
-  41,line 263
-  37,line 253
-  285,line 636
-  34,line 250
-  282,line 633
-  31,line 246
-  278,line 626
-  27,line 239
-  275,line 621
+  41,line 264
+  37,line 254
+  285,line 641
+  34,line 251
+  282,line 638
+  31,line 247
+  278,line 631
+  27,line 240
+  275,line 626
   24,line 236
-  272,line 618
+  272,line 623
   21,line 231
-  268,line 612
+  268,line 617
   17,line 224
-  265,line 605
+  265,line 610
   14,line 219
-  262,line 600
+  262,line 605
   11,line 214
-  258,line 594
-  255,line 589
-  252,line 586
-  248,line 578
-  245,line 573
-  242,line 568
-  238,line 561
+  258,line 599
+  255,line 594
+  252,line 591
+  248,line 583
+  245,line 578
+  242,line 573
+  238,line 566
   9,line 210
-  235,line 555
+  235,line 560
   6,line 206
-  232,line 552
+  232,line 557
   3,line 203
-  228,line 544
-  225,line 541
-  222,line 538
-  218,line 529
-  215,line 526
-  212,line 521
-  208,line 516
-  198,line 501
-  205,line 513
-  195,line 496
-  202,line 507
-  192,line 489
-  188,line 483
-  185,line 480
-  182,line 475
-  178,line 469
-  175,line 464
-  172,line 459
-  168,line 453
-  165,line 450
-  162,line 445
-  158,line 439
-  155,line 434
-  152,line 429
-  148,line 424
-  145,line 421
-  142,line 416
-  138,line 411
-  135,line 405
-  132,line 401
-  128,line 393
-  125,line 390
-  122,line 386
-  118,line 379
-  115,line 375
-  99,line 352
-  112,line 371
-  96,line 347
-  108,line 364
-  93,line 344
-  105,line 359
-  89,line 335
-  90,line 336
-  102,line 355
-  86,line 332
-  83,line 328
-  79,line 321
-  80,line 324
-  76,line 317
-  73,line 313
-  69,line 306
-  70,line 307
-  66,line 299
-  63,line 292
-  59,line 288
-  60,line 289
-  56,line 284
-  53,line 279
-  49,line 272
-  50,line 273
-  46,line 269
-  43,line 266
-  39,line 259
-  40,line 262
-  36,line 252
-  284,line 635
-  33,line 249
-  281,line 632
-  30,line 244
-  29,line 243
-  277,line 625
-  26,line 238
-  274,line 620
+  228,line 549
+  225,line 546
+  222,line 543
+  218,line 534
+  215,line 531
+  212,line 526
+  208,line 521
+  198,line 505
+  205,line 518
+  195,line 500
+  202,line 512
+  192,line 493
+  188,line 487
+  185,line 484
+  182,line 479
+  178,line 473
+  175,line 468
+  172,line 463
+  168,line 457
+  165,line 454
+  162,line 449
+  158,line 443
+  155,line 438
+  152,line 433
+  148,line 428
+  145,line 425
+  142,line 419
+  138,line 414
+  135,line 408
+  132,line 404
+  128,line 395
+  125,line 392
+  122,line 388
+  118,line 381
+  115,line 377
+  99,line 354
+  112,line 373
+  96,line 349
+  108,line 366
+  93,line 346
+  105,line 361
+  89,line 337
+  90,line 338
+  102,line 357
+  86,line 334
+  83,line 330
+  79,line 323
+  80,line 326
+  76,line 319
+  73,line 315
+  69,line 307
+  70,line 308
+  66,line 300
+  63,line 293
+  59,line 289
+  60,line 290
+  56,line 285
+  53,line 280
+  49,line 273
+  50,line 274
+  46,line 270
+  43,line 267
+  39,line 260
+  40,line 263
+  36,line 253
+  284,line 640
+  33,line 250
+  281,line 637
+  30,line 245
+  29,line 244
+  277,line 630
+  26,line 239
+  274,line 625
   23,line 235
-  271,line 615
+  271,line 620
   20,line 231
   19,line 228
-  267,line 609
+  267,line 614
   16,line 223
-  264,line 604
+  264,line 609
   13,line 218
-  261,line 599
+  261,line 604
   10,line 211
-  257,line 591
-  254,line 588
-  251,line 585
-  247,line 577
-  244,line 572
-  241,line 567
-  237,line 560
+  257,line 596
+  254,line 593
+  251,line 590
+  247,line 582
+  244,line 577
+  241,line 572
+  237,line 565
   8,line 209
-  234,line 554
+  234,line 559
   5,line 205
-  231,line 551
+  231,line 556
   2,line 202
-  227,line 543
-  224,line 540
-  221,line 535
-  217,line 528
-  214,line 523
-  211,line 520
-  207,line 515
-  197,line 500
-  204,line 509
-  194,line 493
-  201,line 506
-  191,line 488
-  187,line 482
-  184,line 477
-  181,line 474
-  177,line 466
-  174,line 463
-  171,line 458
-  167,line 452
-  164,line 449
-  161,line 444
-  157,line 436
-  154,line 433
-  151,line 427
-  147,line 423
-  144,line 418
-  141,line 415
-  137,line 409
-  134,line 404
-  131,line 400
-  127,line 392
-  124,line 389
-  121,line 385
-  117,line 378
-  114,line 374
-  98,line 351
-  111,line 367
-  95,line 346
-  107,line 363
-  92,line 341
-  104,line 357
-  88,line 334
-  101,line 354
-  85,line 331
-  82,line 327
-  78,line 320
-  75,line 316
-  72,line 309
-  68,line 305
-  65,line 296
-  62,line 291
-  58,line 287
-  55,line 283
-  52,line 277
-  48,line 271
-  45,line 268
-  42,line 265
-  38,line 256
-  35,line 251
-  283,line 634
-  32,line 248
-  280,line 631
-  279,line 627
-  28,line 242
-  276,line 624
-  25,line 237
-  273,line 619
+  227,line 548
+  224,line 545
+  221,line 540
+  217,line 533
+  214,line 528
+  211,line 525
+  207,line 520
+  197,line 504
+  204,line 514
+  194,line 497
+  201,line 511
+  191,line 492
+  187,line 486
+  184,line 481
+  181,line 478
+  177,line 470
+  174,line 467
+  171,line 462
+  167,line 456
+  164,line 453
+  161,line 448
+  157,line 440
+  154,line 437
+  151,line 431
+  147,line 427
+  144,line 421
+  141,line 418
+  137,line 412
+  134,line 407
+  131,line 403
+  127,line 394
+  124,line 391
+  121,line 387
+  117,line 380
+  114,line 376
+  98,line 353
+  111,line 369
+  95,line 348
+  107,line 365
+  92,line 343
+  104,line 359
+  88,line 336
+  101,line 356
+  85,line 333
+  82,line 329
+  78,line 322
+  75,line 318
+  72,line 311
+  68,line 306
+  65,line 297
+  62,line 292
+  58,line 288
+  55,line 284
+  52,line 278
+  48,line 272
+  45,line 269
+  42,line 266
+  38,line 257
+  35,line 252
+  283,line 639
+  32,line 249
+  280,line 636
+  279,line 632
+  28,line 243
+  276,line 629
+  25,line 238
+  273,line 624
   22,line 232
-  270,line 614
-  269,line 613
+  270,line 619
+  269,line 618
   18,line 227
-  266,line 608
+  266,line 613
   15,line 222
-  263,line 603
+  263,line 608
   12,line 215
-  260,line 598
-  259,line 595
-  256,line 590
-  253,line 587
-  250,line 584
-  249,line 579
-  246,line 576
-  243,line 569
-  240,line 566
-  239,line 562
-  236,line 558
+  260,line 603
+  259,line 600
+  256,line 595
+  253,line 592
+  250,line 589
+  249,line 584
+  246,line 581
+  243,line 574
+  240,line 571
+  239,line 567
+  236,line 563
   7,line 207
-  233,line 553
+  233,line 558
   4,line 204
-  230,line 548
-  229,line 547
+  230,line 553
+  229,line 552
   1,line 201
-  226,line 542
-  223,line 539
-  220,line 534
-  219,line 530
-  216,line 527
-  213,line 522
-  210,line 519
-  209,line 518
-  199,line 502
-  206,line 514
-  196,line 497
-  203,line 508
-  193,line 492
-  200,line 503
-  190,line 485
-  189,line 484
-  186,line 481
-  183,line 476
-  180,line 473
-  179,line 470
-  176,line 465
-  173,line 460
-  170,line 457
-  169,line 456
-  166,line 451
-  163,line 446
-  160,line 443
-  159,line 440
-  156,line 435
-  153,line 430
-  149,line 425
-  150,line 426
-  146,line 422
-  143,line 417
-  139,line 412
-  140,line 414
-  136,line 408
-  133,line 403
-  129,line 397
-  130,line 399
-  126,line 391
-  123,line 388
-  119,line 382
-  120,line 383
-  116,line 377
-  113,line 373
-  97,line 350
-  109,line 365
-  110,line 366
-  94,line 345
-  106,line 360
-  91,line 340
-  103,line 356
-  87,line 333
-  100,line 353
-  84,line 330
-  81,line 325
-  77,line 319
-  74,line 315
+  226,line 547
+  223,line 544
+  220,line 539
+  219,line 535
+  216,line 532
+  213,line 527
+  210,line 524
+  209,line 523
+  199,line 507
+  206,line 519
+  196,line 501
+  203,line 513
+  193,line 496
+  200,line 508
+  190,line 489
+  189,line 488
+  186,line 485
+  183,line 480
+  180,line 477
+  179,line 474
+  176,line 469
+  173,line 464
+  170,line 461
+  169,line 460
+  166,line 455
+  163,line 450
+  160,line 447
+  159,line 444
+  156,line 439
+  153,line 434
+  149,line 429
+  150,line 430
+  146,line 426
+  143,line 420
+  139,line 415
+  140,line 417
+  136,line 411
+  133,line 406
+  129,line 400
+  130,line 402
+  126,line 393
+  123,line 390
+  119,line 384
+  120,line 385
+  116,line 379
+  113,line 375
+  97,line 352
+  109,line 367
+  110,line 368
+  94,line 347
+  106,line 362
+  91,line 342
+  103,line 358
+  87,line 335
+  100,line 355
+  84,line 332
+  81,line 327
+  77,line 321
+  74,line 317
   21,e 1
-  71,line 308
-  67,line 301
-  64,line 295
-  61,line 290
-  57,line 285
-  54,line 281
-  51,line 276
-  47,line 270
-  44,line 267
+  71,line 310
+  67,line 302
+  64,line 296
+  61,line 291
+  57,line 286
+  54,line 282
+  51,line 277
+  47,line 271
+  44,line 268
 }
 
 array set plot::lr1_table {
@@ -4901,42 +4901,42 @@ array set plot::token_id_table {
   275,title integer
   448,t 1
   361,title SCROSS
-  454,line 637
+  454,line 642
   446,title {}
   274,t 0
-  451,line 617
-  447,line 597
+  451,line 622
+  447,line 602
   274,title ITALIC
   326,t 0
   359,title SCALE
   360,title SCATTER
-  444,line 575
+  444,line 580
   368,t 0
   445,title {}
-  441,line 557
+  441,line 562
   421,t 1
   273,title ROMAN
-  437,line 532
+  437,line 537
   358,title SAVE
-  434,line 505
+  434,line 510
   444,title {}
   288,t 0
-  431,line 491
+  431,line 495
   341,t 0
   272,title BOLD
-  427,line 468
+  427,line 472
   357,title ROW
   383,t 0
-  424,line 448
+  424,line 452
   Y,title {}
   443,title {}
-  421,line 432
+  421,line 436
   435,t 1
   271,title NORMAL
-  417,line 362
+  417,line 364
   261,t 0
   356,title RIGHT
-  414,line 312
+  414,line 314
   X,title {}
   313,t 0
   442,title {}
@@ -5063,7 +5063,7 @@ array set plot::token_id_table {
   274,line 25
   452,t 1
   428,title {}
-  Y,line 568
+  Y,line 573
   271,line 22
   277,t 0
   267,line 18
@@ -5101,18 +5101,18 @@ array set plot::token_id_table {
   422,title {}
   331,t 0
   373,t 0
-  453,line 630
+  453,line 635
   X,t 0
   335,title NAME
   425,t 1
-  450,line 611
-  449,line 607
+  450,line 616
+  449,line 612
   421,title {}
-  446,line 593
+  446,line 598
   303,t 0
   293,t 0
   257 YES_
-  443,line 571
+  443,line 576
   258 NO_
   259 ON_
   260 OFF_
@@ -5124,22 +5124,22 @@ array set plot::token_id_table {
   345,t 0
   419,title {}
   420,title {}
-  439,line 546
-  440,line 550
+  439,line 551
+  440,line 555
   265 FONTSLANT_
   266 FONTSTYLE_
   267 FONTWEIGHT_
   268 TIMES_
   270 COURIER_
   269 HELVETICA_
-  436,line 525
+  436,line 530
   271 NORMAL_
   387,t 0
   272 BOLD_
   273 ROMAN_
   274 ITALIC_
   275 INT_
-  433,line 499
+  433,line 503
   276 REAL_
   333,title MIN
   277 STRING_
@@ -5150,15 +5150,15 @@ array set plot::token_id_table {
   279 ADD_
   281 AUTO_
   418,title {}
-  429,line 479
-  430,line 487
+  429,line 483
+  430,line 491
   282 AXIS_
   283 BACKGROUND_
   265,t 0
   284 BACKUP_
   285 BAR_
   286 BORDER_
-  426,line 462
+  426,line 466
   287 BOTTOM_
   288 CAP_
   300 DATA_
@@ -5169,7 +5169,7 @@ array set plot::token_id_table {
   291 CLEAR_
   302 DELETE_
   292 CLOSE_
-  423,line 442
+  423,line 446
   303 DESTINATION_
   293 COLOR_
   332,title MAX
@@ -5184,8 +5184,8 @@ array set plot::token_id_table {
   297 CUBIC_
   307 ERROR_
   417,title {}
-  419,line 396
-  420,line 420
+  419,line 399
+  420,line 424
   298 CURRENT_
   308 EXPORT_
   299 DASH_
@@ -5195,7 +5195,7 @@ array set plot::token_id_table {
   312 FILL_
   313 FLIP_
   412,t 1
-  416,line 349
+  416,line 351
   314 FOREGROUND_
   315 FORMAT_
   316 GRAPH_
@@ -5427,7 +5427,7 @@ array set plot::token_id_table {
   389,t 0
   390,t 0
   400,t 0
-  y,line 567
+  y,line 572
   316,line 73
   442,t 1
   313,line 69
@@ -5466,7 +5466,7 @@ array set plot::token_id_table {
   273,line 24
   376,t 0
   317,title GRAY
-  X,line 566
+  X,line 571
   270,line 21
   269,line 20
   393,title PNG
@@ -5511,43 +5511,43 @@ array set plot::token_id_table {
   386,title XYEY
   297,t 0
   307,t 0
-  452,line 623
+  452,line 628
   349,t 0
   350,t 0
   299,title DASH
   309,title FAMILY
   310,title FILE
-  448,line 602
+  448,line 607
   385,title XYEX
   392,t 0
   402,t 0
-  445,line 583
+  445,line 588
   444,t 1
-  442,line 565
+  442,line 570
   298,title CURRENT
   270,t 0
   269,t 0
   308,title EXPORT
-  438,line 537
+  438,line 542
   384,title XY
   322,t 0
-  435,line 511
+  435,line 516
   364,t 0
-  432,line 495
+  432,line 499
   297,title CUBIC
   307,title ERROR
-  428,line 472
+  428,line 476
   416,t 1
   383,title ZOOM
-  425,line 455
-  422,line 438
+  425,line 459
+  422,line 442
   284,t 0
   296,title CROSS
   306,title EPS
-  418,line 370
+  418,line 372
   382,title WIDTH
   336,t 0
-  415,line 343
+  415,line 345
   378,t 0
   412,line 231
   295,title COMMAND
@@ -5630,7 +5630,7 @@ array set plot::token_id_table {
   318,line 75
   324,t 0
   372,title STEP
-  x,line 565
+  x,line 570
   315,line 72
   366,t 0
   312,line 68

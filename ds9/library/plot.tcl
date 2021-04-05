@@ -99,6 +99,7 @@ proc PlotAddGraph {varname type} {
 	    set var(graph,proc,button) PlotButton
 	}
 	scatter {
+	    # backward compatibility
 	    PlotScatterAddGraph $varname
 	    set var(graph,proc,updateelement) PlotScatterUpdateElement
 	    set var(graph,proc,highlite) PlotScatterHighliteElement

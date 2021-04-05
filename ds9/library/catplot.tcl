@@ -110,7 +110,7 @@ proc CATPlotGenerate {varname} {
 
     if {![PlotPing $vvarname]} {
 	PlotDialog $vvarname $var(title) true
-	PlotAddGraph $vvarname scatter
+	PlotAddGraph $vvarname line
 
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
@@ -123,6 +123,9 @@ proc CATPlotGenerate {varname} {
 	set vvar(graph,ds,ydata) $ydata
 	set vvar(graph,ds,xedata) $xedata
 	set vvar(graph,ds,yedata) $yedata
+	set vvar(graph,ds,line,width) 0
+	set vvar(graph,ds,line,shape,symbol) circle
+	set vvar(graph,ds,line,shape,color) black
 
 	PlotExternal $vvarname xyexey
     }

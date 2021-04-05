@@ -154,14 +154,12 @@ proc PlotGUICanvas {varname w} {
 	-command [list PlotAddGraph $varname line]
     ttk::button $f.bar -text [msgcat::mc {Add Bar Graph}] \
 	-command [list PlotAddGraph $varname bar]
-    ttk::button $f.scatter -text [msgcat::mc {Add Scatter Graph}] \
-	-command [list PlotAddGraph $varname scatter]
     ttk::button $f.delete -text [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
 
     grid $f.tselect $f.select -padx 2 -pady 2 -sticky w
     grid $f.line $f.bar -padx 2 -pady 2 -sticky w
-    grid $f.scatter $f.delete -padx 2 -pady 2 -sticky w
+    grid $f.delete -padx 2 -pady 2 -sticky w
 
     # Layout
     set g [ttk::labelframe $w.layout -text [msgcat::mc {Layout}]]
@@ -403,6 +401,7 @@ proc PlotGUIDataset {varname w} {
     set ff [ttk::frame $w.bar]
     PlotGUIBar $varname $ff
 
+    # backward compatibility
     set ff [ttk::frame $w.scatter]
     PlotGUIScatter $varname $ff
 }
@@ -416,12 +415,16 @@ proc PlotGUICurrentGraph {varname} {
 	
 	pack forget $w.line
 	pack forget $w.bar
+	# backward compatibility
 	pack forget $w.scatter
 
 	switch $var(graph,type) {
 	    line {pack $w.line}
 	    bar {pack $w.bar}
-	    scatter {pack $w.scatter}
+	    scatter {
+		# backward compatibility
+		pack $w.scatter
+	    }
 	}
     }
 }

@@ -162,8 +162,6 @@ proc AnalysisMainMenu {} {
 	-command PlotLineTool
     $ds9(mb).analysis.plot add command -label [msgcat::mc {Bar}] \
 	-command PlotBarTool
-    $ds9(mb).analysis.plot add command -label [msgcat::mc {Scatter}] \
-	-command PlotScatterTool
 }
 
 proc PrefsDialogAnalysisMenu {w} {

@@ -1716,17 +1716,17 @@ xyexey&nbsp;&nbsp;&nbsp; x,y coordinates with&nbsp; x and y errors<br></tt></blo
 <tt>Syntax:<br>
 <p>
 # create new empty plot window<br>
-plot [line|bar|scatter [&lt;ref&gt;]]<br>
-&nbsp;&nbsp;&nbsp; [line|bar|scatter [&lt;ref&gt;] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; xy|xyex|xyey|xyexey]<br>
+plot [line|bar [&lt;ref&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [line|bar [&lt;ref&gt;] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; xy|xyex|xyey|xyexey]<br>
 </p>
 <p>
 # create new plot from data file<br>
-plot [line|bar|scatter &lt;filename&gt; [&lt;ref&gt;] xy|xyex|xyey|xyexey]<br>
-&nbsp;&nbsp;&nbsp; [line|bar|scatter &lt;filename&gt; [&lt;ref&gt;] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; xy|xyex|xyey|xyexey]<br>
+plot [line|bar &lt;filename&gt; [&lt;ref&gt;] xy|xyex|xyey|xyexey]<br>
+&nbsp;&nbsp;&nbsp; [line|bar &lt;filename&gt; [&lt;ref&gt;] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; xy|xyex|xyey|xyexey]<br>
 </p>
 <p>
 # create new plot with data from stdin which includes title/dim headers<br>
-plot [line|bar|scatter [&lt;ref&gt;] stdin]<br>
+plot [line|bar [&lt;ref&gt;] stdin]<br>
 </p>
 <p>
 # load data into existing plot from stdin<br>
@@ -1740,7 +1740,7 @@ plot [gui]<br>
 &nbsp;&nbsp;&nbsp; [current &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp; [layout grid|row|column|strip]<br>
 &nbsp;&nbsp;&nbsp; [layout strip scale &lt;percent&gt;]<br>
-&nbsp;&nbsp;&nbsp; [add graph line|bar|scatter]<br>
+&nbsp;&nbsp;&nbsp; [add graph line|bar]<br>
 &nbsp;&nbsp;&nbsp; [current graph &lt;graph&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete graph]<br>
 &nbsp;&nbsp;&nbsp; [current dataset &lt;dataset&gt;]<br>
@@ -1812,12 +1812,6 @@ plot [bar border color &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [bar width &lt;value&gt;]<br>
 </p>
 <p>
-# scatter dataset<br>
-plot [scatter symbol circle|square|diamond|plus|splus|scross|triangle|arrow]<br>
-&nbsp;&nbsp;&nbsp; [scatter color &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [scatter fill yes|no]<br>
-</p>
-<p>
 # error bar<br>
 plot [error yes|no]<br>
 &nbsp;&nbsp;&nbsp; [error color &lt;value&gt;]<br>
@@ -1833,7 +1827,6 @@ $xpaget ds9 plot<br>
 # create new empty plot window<br>
 $xpaset -p ds9 plot line<br>
 $xpaset -p ds9 plot bar<br>
-$xpaset -p ds9 plot scatter<br>
 </p>
 <p>
 # create new plot from data file<br>
@@ -1865,7 +1858,7 @@ $xpaset -p ds9 plot save foo.dat<br>
 $xpaset -p ds9 plot current foo<br>
 $xpaset -p ds9 plot layout strip<br>
 $xpaset -p ds9 plot layout strip scale 30<br>
-$xpaset -p ds9 plot add graph scatter<br>
+$xpaset -p ds9 plot add graph bar<br>
 $xpaset -p ds9 plot current graph 1<br>
 $xpaset -p ds9 plot delete graph<br>
 $xpaset -p ds9 plot current dataset 1<br>
@@ -1969,15 +1962,6 @@ $xpaset -p ds9 plot bar border width 2<br>
 $xpaset -p ds9 plot bar fill no<br>
 $xpaset -p ds9 plot bar color red<br>
 $xpaset -p ds9 plot bar width 10<br>
-</p>
-<p>
-# scatter dataset<br>
-$xpaget ds9 plot scatter symbol<br>
-$xpaget ds9 plot scatter color<br>
-$xpaget ds9 plot scatter fill<br>
-$xpaset -p ds9 plot scatter symbol circle<br>
-$xpaset -p ds9 plot scatter color cyan<br>
-$xpaset -p ds9 plot scatter fill no<br>
 </p>
 <p>
 $xpaget ds9 plot error<br>

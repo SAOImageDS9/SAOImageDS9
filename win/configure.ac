@@ -73,6 +73,9 @@ AC_SUBST(OS)
 ARCH=$with_arch
 AC_SUBST(ARCH)
 
+prefix=$ac_pwd
+exec_prefix=$ac_pwd
+
 case $with_arch in
     win32 | WIN32 )
 	ENABLE64BIT=
@@ -83,13 +86,14 @@ case $with_arch in
 	TARGET=x86_64-w64-mingw32
 	;;
 esac
+XML2CONFIG=/usr/$TARGET/sys-root/mingw/bin/xml2-config
+XSLTCONFIG=/usr/$TARGET/sys-root/mingw/bin/xslt-config
+CORES=`grep -c ^processor /proc/cpuinfo`
+
+AC_SUBST(XML2CONFIG)
+AC_SUBST(XSLTCONFIG)
 AC_SUBST(ENABLE64BIT)
 AC_SUBST(TARGET)
-
-prefix=$ac_pwd
-exec_prefix=$ac_pwd
-
-CORES=`grep -c ^processor /proc/cpuinfo`
 AC_SUBST(CORES)
 
 #--------------------------------------------------------------------

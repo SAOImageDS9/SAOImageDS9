@@ -623,6 +623,8 @@ LIBOBJS
 CORES
 TARGET
 ENABLE64BIT
+XSLTCONFIG
+XML2CONFIG
 ARCH
 OS
 TCL_DBGX
@@ -6813,6 +6815,9 @@ OS="win"
 ARCH=$with_arch
 
 
+prefix=$ac_pwd
+exec_prefix=$ac_pwd
+
 case $with_arch in
     win32 | WIN32 )
 	ENABLE64BIT=
@@ -6823,13 +6828,14 @@ case $with_arch in
 	TARGET=x86_64-w64-mingw32
 	;;
 esac
-
-
-
-prefix=$ac_pwd
-exec_prefix=$ac_pwd
-
+XML2CONFIG=/usr/$TARGET/sys-root/mingw/bin/xml2-config
+XSLTCONFIG=/usr/$TARGET/sys-root/mingw/bin/xslt-config
 CORES=`grep -c ^processor /proc/cpuinfo`
+
+
+
+
+
 
 
 #--------------------------------------------------------------------

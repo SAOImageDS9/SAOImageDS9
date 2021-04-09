@@ -77,6 +77,9 @@ exec_prefix=$ac_pwd
 
 TEA_CONFIG_SYSTEM
 
+XML2CONFIG=`which xml2-config`
+XSLTCONFIG=`which xslt-config`
+
 case $system in
     Darwin* )
 	TKFLAGS="--disable-corefoundation"
@@ -102,6 +105,9 @@ case $system in
 	CORES=1
 	;;
 esac
+
+AC_SUBST(XML2CONFIG)
+AC_SUBST(XSLTCONFIG)
 AC_SUBST(SSLCONFIG)
 AC_SUBST(CORES)
 

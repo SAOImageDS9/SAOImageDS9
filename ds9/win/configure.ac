@@ -252,7 +252,6 @@ AC_ARG_WITH(xml2-config,
 LIBXML2_CONFIG=
 if test "x${with_xml2_config}" = "x" ; then
     for c in \
-	/Library/Frameworks/libxml.framework/Resources/Scripts/xml2-config \
 	${prefix}/bin/xml2-config \
 	/usr/bin/xml2-config \
 	/usr/local/bin/xml2-config

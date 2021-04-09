@@ -99,7 +99,7 @@ ds9/$(OS)/Makefile :
 	cd ds9/$(OS); \
 	./configure \
 	$(WITHTK) \
-  	--with-xml2-config=$XML2CONFIG \
+  	--with-xml2-config=$(XML2CONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -165,9 +165,8 @@ tclxml/Makefile :
 	cd tclxml; \
 	./configure \
 	$(WITHTCL) \
-  	--with-xml2-config=$XML2CONFIG \
-  	--with-xslt-config=$XSLTCONFIG \
-	$(TCLXMLFLAGS) \
+  	--with-xml2-config=$(XML2CONFIG) \
+  	--with-xslt-config=$(XSLTCONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -334,7 +333,7 @@ tksao/Makefile :
 	cd tksao; \
 	./configure \
 	$(WITHTK) \
-  	--with-xml2-config=$XML2CONFIG \
+  	--with-xml2-config=$(XML2CONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)

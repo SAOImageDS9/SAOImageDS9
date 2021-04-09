@@ -21,7 +21,7 @@ CONFIGFLAGS	=CC=$(TARGET)-gcc AR=$(TARGET)-ar
 
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
-TCLXMLFLAGS 	= --with-xml-static=yes
+#TCLXMLFLAGS 	= --with-xml-static=yes
 TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1"
 SSLCONFIG	= export CROSS_COMPILE=$(TARGET)-; ./Configure mingw64 shared no-asm
 

@@ -59,7 +59,7 @@ PKG_CFLAGS	= @PKG_CFLAGS@
 DEFS		= @DEFS@ $(PKG_CFLAGS)
 
 CPPFLAGS	= @CPPFLAGS@
-LIBS		= @PKG_LIBS@ @LIBS@
+LIBS		= @PKG_LIBS@ @LIBS@ @XML2_LIBS@
 CFLAGS		= @CFLAGS@
 CXXFLAGS	= @CXXFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
@@ -117,8 +117,9 @@ LLIBS	= \
 	$(libdir)/libast_pal.a \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
-	$(libdir)/libxpa.a \
-	$(libdir)/libxml2.a
+	$(libdir)/libxpa.a
+
+#	$(libdir)/libxml2.a
 
 PREQS	= \
 	$(APPDIR) \

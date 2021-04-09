@@ -620,6 +620,8 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+XML2_LIBS
+XML2_CFLAGS
 TCLSH_PROG
 VC_MANIFEST_EMBED_EXE
 VC_MANIFEST_EMBED_DLL
@@ -959,6 +961,7 @@ enable_rpath
 enable_wince
 with_celib
 enable_symbols
+with_xml2_config
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1628,6 +1631,7 @@ Optional Packages:
   --with-tkinclude        directory containing the public Tk header files
   --with-x                use the X Window System
   --with-celib=DIR        use Windows/CE support library from DIR
+  --with-xml2-config      the xml2-config configuration script
 
 Some influential environment variables:
   CC          C compiler command
@@ -11085,51 +11089,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for xmlInitParser in -lxml2" >&5
-$as_echo_n "checking for xmlInitParser in -lxml2... " >&6; }
-if ${ac_cv_lib_xml2_xmlInitParser+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lxml2  $LIBS"
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char xmlInitParser ();
-int
-main ()
-{
-return xmlInitParser ();
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"; then :
-  ac_cv_lib_xml2_xmlInitParser=yes
-else
-  ac_cv_lib_xml2_xmlInitParser=no
-fi
-rm -f core conftest.err conftest.$ac_objext \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_xml2_xmlInitParser" >&5
-$as_echo "$ac_cv_lib_xml2_xmlInitParser" >&6; }
-if test "x$ac_cv_lib_xml2_xmlInitParser" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_LIBXML2 1
-_ACEOF
-
-  LIBS="-lxml2 $LIBS"
-
-fi
-
+#AC_CHECK_LIB([xml2],[xmlInitParser])
 
 #--------------------------------------------------------------------
 # __CHANGE__
@@ -14780,6 +14740,48 @@ $as_echo "${TCLSH_PROG}" >&6; }
 
 
 #TEA_PROG_WISH
+
+#--------------------------------------------------------------------
+# Load libxml2 configuration
+#--------------------------------------------------------------------
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for xml2-config script" >&5
+$as_echo_n "checking for xml2-config script... " >&6; }
+
+
+# Check whether --with-xml2-config was given.
+if test "${with_xml2_config+set}" = set; then :
+  withval=$with_xml2_config; with_xml2_config=${withval}
+fi
+
+
+LIBXML2_CONFIG=
+if test "x${with_xml2_config}" = "x" ; then
+    for c in \
+	/Library/Frameworks/libxml.framework/Resources/Scripts/xml2-config \
+	${prefix}/bin/xml2-config \
+	/usr/bin/xml2-config \
+	/usr/local/bin/xml2-config
+    do
+	if test -x "$c" ; then
+	    LIBXML2_CONFIG="$c"
+	    break
+	fi
+    done
+else
+    LIBXML2_CONFIG="${with_xml2_config}"
+fi
+if test "x$LIBXML2_CONFIG" = "x" ; then
+    as_fn_error $? "unable to find xml2-config" "$LINENO" 5
+else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${LIBXML2_CONFIG}" >&5
+$as_echo "${LIBXML2_CONFIG}" >&6; }
+    XML2_CFLAGS=`${LIBXML2_CONFIG} --cflags`
+    XML2_LIBS="`${LIBXML2_CONFIG} --libs`"
+fi
+
+
+
 
 #--------------------------------------------------------------------
 # Setup a *Config.sh.in configuration file.

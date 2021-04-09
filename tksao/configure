@@ -629,6 +629,8 @@ tksao_STUB_LIB_SPEC
 tksao_BUILD_STUB_LIB_SPEC
 tksao_LIB_SPEC
 tksao_BUILD_LIB_SPEC
+XML2_LIBS
+XML2_CFLAGS
 WISH_PROG
 TCLSH_PROG
 VC_MANIFEST_EMBED_EXE
@@ -775,6 +777,7 @@ enable_rpath
 enable_wince
 with_celib
 enable_symbols
+with_xml2_config
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1422,6 +1425,7 @@ Optional Packages:
   --with-tkinclude        directory containing the public Tk header files
   --with-x                use the X Window System
   --with-celib=DIR        use Windows/CE support library from DIR
+  --with-xml2-config      the xml2-config configuration script
 
 Some influential environment variables:
   CC          C compiler command
@@ -5677,54 +5681,24 @@ $as_echo "$tcl_cv_sys_version" >&6; }
     system=$tcl_cv_sys_version
 
 
-case $system in
-    Darwin* )
-	devdir=`xcrun --show-sdk-path`
-
-    vars="-I${devdir}/usr/include/libxml2"
-    for i in $vars; do
-	PKG_INCLUDES="$PKG_INCLUDES $i"
-    done
-
-
-	;;
-    CYGWIN* )
-
-    vars="-I/usr/include/libxml2"
-    for i in $vars; do
-	PKG_INCLUDES="$PKG_INCLUDES $i"
-    done
-
-
-	;;
-    Linux* )
-
-    vars="-I/usr/include/libxml2"
-    for i in $vars; do
-	PKG_INCLUDES="$PKG_INCLUDES $i"
-    done
-
-
-	;;
-    FreeBSD* )
-
-    vars="-I/usr/local/include/libxml2"
-    for i in $vars; do
-	PKG_INCLUDES="$PKG_INCLUDES $i"
-    done
-
-
-	;;
-    windows*)
-
-    vars="-I${prefix}/include/libxml2 -DIN_LIBXML"
-    for i in $vars; do
-	PKG_INCLUDES="$PKG_INCLUDES $i"
-    done
-
-
-	;;
-esac
+#case $system in
+#    Darwin* )
+#	devdir=`xcrun --show-sdk-path`
+#	TEA_ADD_INCLUDES([-I${devdir}/usr/include/libxml2])
+#	;;
+#    CYGWIN* )
+#	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
+#	;;
+#    Linux* )
+#	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
+#	;;
+#    FreeBSD* )
+#	TEA_ADD_INCLUDES([-I/usr/local/include/libxml2])
+#	;;
+#    windows*)
+#	TEA_ADD_INCLUDES([-I${prefix}/include/libxml2] -DIN_LIBXML)
+#	;;
+#esac
 
 #CLEANFILES="$CLEANFILES pkgIndex.tcl"
 #if test "${TEA_PLATFORM}" = "windows" ; then
@@ -9468,6 +9442,48 @@ $as_echo_n "checking for wish... " >&6; }
     fi
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${WISH_PROG}" >&5
 $as_echo "${WISH_PROG}" >&6; }
+
+
+
+#--------------------------------------------------------------------
+# Load libxml2 configuration
+#--------------------------------------------------------------------
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for xml2-config script" >&5
+$as_echo_n "checking for xml2-config script... " >&6; }
+
+
+# Check whether --with-xml2-config was given.
+if test "${with_xml2_config+set}" = set; then :
+  withval=$with_xml2_config; with_xml2_config=${withval}
+fi
+
+
+LIBXML2_CONFIG=
+if test "x${with_xml2_config}" = "x" ; then
+    for c in \
+	/Library/Frameworks/libxml.framework/Resources/Scripts/xml2-config \
+	${prefix}/bin/xml2-config \
+	/usr/bin/xml2-config \
+	/usr/local/bin/xml2-config
+    do
+	if test -x "$c" ; then
+	    LIBXML2_CONFIG="$c"
+	    break
+	fi
+    done
+else
+    LIBXML2_CONFIG="${with_xml2_config}"
+fi
+if test "x$LIBXML2_CONFIG" = "x" ; then
+    as_fn_error $? "unable to find xml2-config" "$LINENO" 5
+else
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${LIBXML2_CONFIG}" >&5
+$as_echo "${LIBXML2_CONFIG}" >&6; }
+    XML2_CFLAGS=`${LIBXML2_CONFIG} --cflags`
+    XML2_LIBS="`${LIBXML2_CONFIG} --libs`"
+fi
+
 
 
 

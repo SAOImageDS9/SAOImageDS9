@@ -233,6 +233,9 @@ DLLs:
 	cp $(DLLDIR)/libgcc_s_s*-1.dll $(APPDIR)
 	cp $(DLLDIR)/libstdc++-6.dll $(APPDIR)
 	cp $(DLLDIR)/libxml2-2.dll $(APPDIR)
+	cp $(DLLDIR)/iconv.dll $(APPDIR)
+	cp $(DLLDIR)/zlib1.dll $(APPDIR)
+	cp $(DLLDIR)/liblzma-5.dll $(APPDIR)
 	cp $(DLLDIR)/libwinpthread-1.dll $(APPDIR)
 
 #--------------------------clean

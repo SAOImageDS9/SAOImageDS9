@@ -164,6 +164,8 @@ tclxml/Makefile :
 	cd tclxml; \
 	./configure \
 	$(WITHTCL) \
+  	--with-xml2-config=`which xml2-config` \
+  	--with-xslt-config=`which xslt-config` \
 	$(TCLXMLFLAGS) \
 	$(PREFIX) \
 	$(STD) \

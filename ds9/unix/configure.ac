@@ -160,7 +160,7 @@ case $system in
 esac
 
 AC_SUBST(system)
-AC_CHECK_LIB([xml2],[xmlInitParser])
+#AC_CHECK_LIB([xml2],[xmlInitParser])
 
 #--------------------------------------------------------------------
 # __CHANGE__
@@ -249,6 +249,43 @@ TEA_MAKE_LIB
 
 TEA_PROG_TCLSH
 #TEA_PROG_WISH
+
+#--------------------------------------------------------------------
+# Load libxml2 configuration
+#--------------------------------------------------------------------
+
+AC_MSG_CHECKING([for xml2-config script])
+
+AC_ARG_WITH(xml2-config,
+    [  --with-xml2-config      the xml2-config configuration script],
+    with_xml2_config=${withval})
+
+LIBXML2_CONFIG=
+if test "x${with_xml2_config}" = "x" ; then
+    for c in \
+	/Library/Frameworks/libxml.framework/Resources/Scripts/xml2-config \
+	${prefix}/bin/xml2-config \
+	/usr/bin/xml2-config \
+	/usr/local/bin/xml2-config
+    do
+	if test -x "$c" ; then
+	    LIBXML2_CONFIG="$c"
+	    break
+	fi
+    done
+else
+    LIBXML2_CONFIG="${with_xml2_config}"
+fi
+if test "x$LIBXML2_CONFIG" = "x" ; then
+    AC_MSG_ERROR([unable to find xml2-config])
+else
+    AC_MSG_RESULT([${LIBXML2_CONFIG}])
+    XML2_CFLAGS=`${LIBXML2_CONFIG} --cflags`
+    XML2_LIBS="`${LIBXML2_CONFIG} --libs`"
+fi
+
+AC_SUBST(XML2_CFLAGS)
+AC_SUBST(XML2_LIBS)
 
 #--------------------------------------------------------------------
 # Setup a *Config.sh.in configuration file.

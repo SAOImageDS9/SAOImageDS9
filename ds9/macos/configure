@@ -11089,8 +11089,6 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
 
-#AC_CHECK_LIB([xml2],[xmlInitParser])
-
 #--------------------------------------------------------------------
 # __CHANGE__
 #

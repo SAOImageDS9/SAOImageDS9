@@ -150,8 +150,6 @@ TEA_ADD_INCLUDES([-I${prefix}/tk8.6/macosx])
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
 
-#AC_CHECK_LIB([xml2],[xmlInitParser])
-
 #--------------------------------------------------------------------
 # __CHANGE__
 #

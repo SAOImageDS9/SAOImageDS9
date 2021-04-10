@@ -160,7 +160,6 @@ case $system in
 esac
 
 AC_SUBST(system)
-#AC_CHECK_LIB([xml2],[xmlInitParser])
 
 #--------------------------------------------------------------------
 # __CHANGE__

@@ -119,8 +119,6 @@ LLIBS	= \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a
 
-#	$(libdir)/libxml2.a
-
 PREQS	= \
 	$(APPDIR) \
 	$(APPDIR)/tcl$(TCL_VERSION) \

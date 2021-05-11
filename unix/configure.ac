@@ -85,7 +85,14 @@ case $system in
 	TKFLAGS="--disable-corefoundation"
 	AC_SUBST(TKFLAGS)
 
-	SSLCONFIG="./Configure darwin64-x86_64-cc"
+	case `arch` in
+	    i386)
+		SSLCONFIG="./Configure darwin64-x86_64-cc"
+	    ;;
+	    arm64)
+		SSLCONFIG="./Configure darwin64-arm64-cc"
+	    ;;
+	esac
 	CORES=`sysctl -n "hw.ncpu"`
 	;;
     CYGWIN* )

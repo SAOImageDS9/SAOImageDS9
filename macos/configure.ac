@@ -79,8 +79,18 @@ XML2CONFIG=`which xml2-config`
 XSLTCONFIG=`which xslt-config`
 CORES=`sysctl -n "hw.ncpu"`
 
+case `arch` in
+    i386)
+	SSLCONFIG="./Configure darwin64-x86_64-cc"
+    ;;
+    arm64)
+	SSLCONFIG="./Configure darwin64-arm64-cc"
+    ;;
+esac
+	
 AC_SUBST(XML2CONFIG)
 AC_SUBST(XSLTCONFIG)
+AC_SUBST(SSLCONFIG)
 AC_SUBST(CORES)
 
 #--------------------------------------------------------------------

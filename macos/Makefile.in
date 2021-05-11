@@ -11,11 +11,10 @@ mandir		= @mandir@
 
 OS		= @OS@
 ARCH		= @ARCH@
+SSLCONFIG	= @SSLCONFIG@
 JOBS		= @CORES@
 XML2CONFIG	= @XML2CONFIG@
 XSLTCONFIG	= @XSLTCONFIG@
-
-SSLCONFIG	= ./Configure darwin64-x86_64-cc
 
 include ./make.include
 

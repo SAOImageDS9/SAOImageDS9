@@ -21,6 +21,11 @@ static void crashHandler(int dummy) {
   siglongjmp(crashbuf, 1);
 }
 #define INTERP interp
+
+#ifdef NOSIGBUS
+#define SETSIGBUS
+#define CLEARSIGBUS
+#else
 #define SETSIGBUS \
   if (sigsetjmp(crashbuf, 1)) { \
     Tcl_SetVar2(INTERP, "ds9", "msg", "A SIGBUS or SIGSEGV error has been received.", TCL_GLOBAL_ONLY); \
@@ -37,7 +42,7 @@ static void crashHandler(int dummy) {
   } \
   sigaction(SIGSEGV, &osigsegv, NULL); \
   sigaction(SIGBUS, &osigbus, NULL);
-
+#endif
 #endif
 
 #endif

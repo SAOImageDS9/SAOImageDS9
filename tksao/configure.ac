@@ -225,7 +225,21 @@ widget/widget.C
 TEA_ADD_HEADERS([])
 TEA_ADD_INCLUDES([-I. -I./colorbar -I./frame -I./list -I./magnifier -I./panner -I./tkutil -I./widget -I${prefix}/include])
 TEA_ADD_LIBS([])
-TEA_ADD_CFLAGS([])
+case $system in
+    Darwin* )
+	case `arch` in
+	    arm64)
+		TEA_ADD_CFLAGS([-DNOSIGBUS])
+		;;
+	    *)
+		TEA_ADD_CFLAGS([])
+		;;
+	esac
+	;;
+    *)
+	TEA_ADD_CFLAGS([])
+	;;
+esac
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])
 
@@ -242,32 +256,6 @@ TEA_ADD_TCL_SOURCES([])
 #--------------------------------------------------------------------
 
 TEA_CONFIG_SYSTEM
-
-#case $system in
-#    Darwin* )
-#	devdir=`xcrun --show-sdk-path`
-#	TEA_ADD_INCLUDES([-I${devdir}/usr/include/libxml2])
-#	;;
-#    CYGWIN* )
-#	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
-#	;;
-#    Linux* )
-#	TEA_ADD_INCLUDES([-I/usr/include/libxml2])
-#	;;
-#    FreeBSD* )
-#	TEA_ADD_INCLUDES([-I/usr/local/include/libxml2])
-#	;;
-#    windows*)
-#	TEA_ADD_INCLUDES([-I${prefix}/include/libxml2] -DIN_LIBXML)
-#	;;
-#esac
-
-#CLEANFILES="$CLEANFILES pkgIndex.tcl"
-#if test "${TEA_PLATFORM}" = "windows" ; then
-#    TEA_ADD_INCLUDES([-I${prefix}/include/libxml2])
-#else
-#    TEA_ADD_INCLUDES([-I/usr/include/libxml2])
-#fi
 
 #--------------------------------------------------------------------
 # __CHANGE__

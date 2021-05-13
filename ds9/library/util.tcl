@@ -647,27 +647,8 @@ proc InitFilterCompiler {} {
     # if the user did not explicitly specify one ...
     if {![info exists env(FILTER_CC)]} {
 	switch -- $ds9(wm) {
-	    x11 {}
-	    aqua {
-		if {![file exists /usr/bin/gcc]} {
- 		    # pcc is hardwired to be installed in /tmp
- 		    set pccroot "/tmp/pcc"
- 		    set pcc "$pccroot/bin/pcc"
- 		    set tar "pcc-i386-snowleopard.tar.gz"
-		    
- 		    if {[file readable "$ds9(root)/$tar"]} {
- 			exec cp "$ds9(root)/$tar" "/tmp/$tar"
- 			exec tar xfPz "/tmp/$tar" -C /tmp
- 			exec rm -f "/tmp/$tar"
- 		    }
-		    
- 		    if {[file exists $pcc]} {
- 			set env(FILTER_CC) $pcc
- 			set env(FILTER_CFLAGS) "-isystem $pccroot/lib/pcc"
- 			set env(PATH) "$pccroot/bin:$env(PATH)"
- 		    }
-		}
-	    }
+	    x11 -
+	    aqua {}
 	    win32 {
 		set tcc [file join $ds9(root) tcc/tcc.exe]
  		if {[file exists $tcc]} {

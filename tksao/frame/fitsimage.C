@@ -3464,6 +3464,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
 
   // enable -TAB
   astSetI(chan,"TabOK",1);
+  astSetI(chan,"SipReplace",0);
   astPutChannelData(chan, this);
   astTableSource(chan, fits2TAB);
 

@@ -1,5 +1,0 @@
-[comment {--- Keywords shared among all the conversion packages ---}]
-[keywords [vset NAME]]
-[keywords {conversion}]
-[keywords {format conversion}]
-[keywords {serialization}]

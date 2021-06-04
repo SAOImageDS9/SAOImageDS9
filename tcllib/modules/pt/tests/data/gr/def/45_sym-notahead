@@ -1,4 +1,0 @@
-# An identifier is an alphanumeric string which is not a keyword.
-PEG a_pe_grammar (N)
-  N <- !("serial"!<alnum>) (<alpha> <alnum>+ !<alnum>);
-END;

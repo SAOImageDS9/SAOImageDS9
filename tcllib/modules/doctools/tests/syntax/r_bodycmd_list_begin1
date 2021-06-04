@@ -1,3 +1,0 @@
-Doctools Error in macro at line 1, column 0:
-[list_begin definitions]
---> (FmtError) Manpage error (bodycmd), "list_begin definitions" : Command not allowed outside of the body of the manpage.

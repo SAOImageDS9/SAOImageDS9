@@ -1,6 +1,0 @@
-pt::grammar::peg
-    start := /
-                 'a'
-                 'b'
-                 'c'
-    rules

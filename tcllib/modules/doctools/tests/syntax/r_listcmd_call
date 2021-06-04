@@ -1,3 +1,0 @@
-Doctools Error in macro at line 5, column 0:
-[call .command.]
---> (FmtError) Manpage error (listcmd), "call .command." : Command not allowed outside of a list.

@@ -1,4 +1,0 @@
-pt::grammar::peg {
-    rules {}
-    start {/ {t a} {t b} {t c}}
-}

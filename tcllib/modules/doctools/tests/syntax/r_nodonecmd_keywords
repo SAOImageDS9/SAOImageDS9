@@ -1,3 +1,0 @@
-Doctools Error in macro at line 4, column 0:
-[keywords .kw.]
---> (FmtError) Manpage error (nodonecmd), "keywords .kw." : Command not allowed after [manpage_end].

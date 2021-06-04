@@ -237,7 +237,7 @@ switch $ds9(wm) {
 	package require awclearlooks
 	package require awwinxpblue
 
-	# tkthemes- alot of these lacks full set of colors
+	# ttkthemes- alot of these lacks full set of colors
 #	package require ttk::theme::aquativo
 #	package require ttk::theme::black
 #	package require ttk::theme::blue

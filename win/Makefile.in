@@ -46,7 +46,7 @@ saods9	: dirs tcl tk \
 	util vector fitsy \
 	tcliis tls tclxml \
 	tkblt tclfitsy tktable tkimg \
-	tkmpeg tkagif tkhtml1 tkcon \
+	tkmpeg tksvg tkagif tkhtml1 tkcon \
 	tkwin \
 	tksao ds9
 

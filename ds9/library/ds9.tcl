@@ -230,9 +230,12 @@ switch $ds9(wm) {
 	package require colorutils
 	package require awdark
 	package require awlight
+	package require awarc
 	package require awblack
-#	package require awwinxpblue
 	package require awbreeze
+	package require awbreezedark
+	package require awclearlooks
+	package require awwinxpblue
 
 	# tkthemes- alot of these lacks full set of colors
 #	package require ttk::theme::aquativo

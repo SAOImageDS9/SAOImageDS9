@@ -1,0 +1,272 @@
+# pki.test - Copyright (c) 2010 Roy Keene, Andreas Kupries
+#
+# the test-values are taken from:
+#    ??
+
+# -------------------------------------------------------------------------
+
+source [file join \
+	[file dirname [file dirname [file join [pwd] [info script]]]] \
+	devtools testutilities.tcl]
+
+testsNeedTcl     8.5
+testsNeedTcltest 2
+
+support {
+    use asn/asn.tcl       asn
+    use base64/base64.tcl base64
+    use des/des.tcl       des
+    use math/bignum.tcl   math::bignum
+    use md5/md5x.tcl      md5         ;# md5 2.x!
+    use sha1/sha1.tcl     sha1
+    use sha1/sha256.tcl   sha256
+    use aes/aes.tcl       aes
+}
+testing {
+    useLocal pki.tcl pki
+}
+
+# -------------------------------------------------------------------------
+
+test rsa-parse-aeskey-1.0 {parse_key} -setup {
+    set privkey [asset-get test.key.aes]
+    set password "ARoseIsARoseIsARose"
+} -body {
+    dictsort [::pki::pkcs::parse_key $privkey $password]
+} -cleanup {
+    unset privkey password
+} -result [asset-get result/aes-key]
+
+test rsa-parse-deskey-1.0 {parse_key} -setup {
+    set privkey [asset-get test.key.des]
+    set password "ARoseIsARoseIsARose"
+} -body {
+    dictsort [::pki::pkcs::parse_key $privkey $password]
+} -cleanup {
+    unset privkey password
+} -result [asset-get result/des-key]
+
+test rsa-generate-csr-1.0 {csr} -setup {
+    set privkey [asset-get test.key.des]
+    set password "ARoseIsARoseIsARose"
+    set privkey [::pki::pkcs::parse_key $privkey $password]
+} -body {
+    ::pki::pkcs::create_csr $privkey \
+        [list C US ST Florida L Tampa O Tcllib OU RSA CN TestCert] 1
+} -cleanup {
+    unset privkey password
+} -result [asset-get result/des-csr]
+
+test rsa-parse-certv1-1.0 {parse_cert} -setup {
+    set pubkey [asset-get test-v1.crt]
+} -body {
+    dictsort [::pki::x509::parse_cert $pubkey]
+} -cleanup {
+    unset pubkey
+} -result [asset-get result/cert1]
+
+test rsa-parse-certv3-1.0 {parse_cert} -setup {
+    set pubkey [asset-get test-v3.crt]
+} -body {
+    dictsort [::pki::x509::parse_cert $pubkey]
+} -cleanup {
+    unset pubkey
+} -result [asset-get result/cert3]
+
+test rsa-parse-cacert-1.0 {parse_cert} -setup {
+    set pubkey [asset-get CA.crt]
+} -body {
+    dictsort [::pki::x509::parse_cert $pubkey]
+} -cleanup {
+    unset pubkey
+} -result [asset-get result/certCA]
+
+test rsa-generate-cert-1.0 {cert} -setup {
+    set privkey [asset-get test.key.des]
+    set cacert  [asset-get CA.crt]
+    set cakey   [asset-get CA.key]
+    set password "ARoseIsARoseIsARose"
+
+    set privkey [::pki::pkcs::parse_key $privkey $password]
+
+    array set ca_arr [::pki::pkcs::parse_key $cakey $password]
+    array set ca_arr [::pki::x509::parse_cert $cacert]
+    set ca [array get ca_arr]
+
+    set csr [::pki::pkcs::parse_csr \
+                 [::pki::pkcs::create_csr $privkey \
+                      [list C US ST Florida L Tampa O Tcllib OU RSA CN TestCert]]]
+} -body {
+    ::pki::x509::create_cert $csr $ca 20100809075203 1281340325 1596959525 0 "" 1
+} -cleanup {
+    unset privkey cakey cacert ca_arr ca password csr
+} -result [asset-get result/cert]
+
+test rsa-generate-cacert-1.0 {cert} -setup {
+    set privkey [asset-get test.key.des]
+    set cacert  [asset-get CA.crt]
+    set cakey   [asset-get CA.key]
+    set password "ARoseIsARoseIsARose"
+
+    set privkey [::pki::pkcs::parse_key $privkey $password]
+
+    array set ca_arr [::pki::pkcs::parse_key $cakey $password]
+    array set ca_arr [::pki::x509::parse_cert $cacert]
+    set ca [array get ca_arr]
+
+    set csr [::pki::pkcs::parse_csr \
+                 [::pki::pkcs::create_csr $privkey \
+                      [list C US ST Florida L Tampa O Tcllib OU RSA CN TestCert]]]
+} -body {
+    ::pki::x509::create_cert $csr $ca 20100809075203 1281340325 1596959525 1 "" 1
+} -cleanup {
+    unset privkey cakey cacert ca_arr ca password csr
+} -result [asset-get result/cert-b]
+
+test rsa-verify-certv1-1.0 {verify_cert} -setup {
+    set pubcert [asset-get test-v1.crt]
+    set cacert [asset-get CA.crt]
+    set pubcert [::pki::x509::parse_cert $pubcert]
+    set cacert [::pki::x509::parse_cert $cacert]
+} -body {
+    ::pki::x509::verify_cert $pubcert [list $cacert]
+} -cleanup {
+    unset pubcert cacert
+} -result {true}
+
+test rsa-verify-certv3-1.0 {verify_cert} -setup {
+    set pubcert [asset-get test-v3.crt]
+    set cacert [asset-get CA.crt]
+    set pubcert [::pki::x509::parse_cert $pubcert]
+    set cacert [::pki::x509::parse_cert $cacert]
+} -body {
+    ::pki::x509::verify_cert $pubcert [list $cacert]
+} -cleanup {
+    unset pubcert cacert
+} -result {true}
+
+test rsa-verify-badcertv1-1.0 {verify_cert} -setup {
+    set pubcert [asset-get test-v1.crt]
+    set cacert [asset-get test-v1.crt]
+    set pubcert [::pki::x509::parse_cert $pubcert]
+    set cacert [::pki::x509::parse_cert $cacert]
+} -body {
+    ::pki::x509::verify_cert $pubcert [list $cacert]
+} -cleanup {
+    unset pubcert cacert
+} -result {false}
+
+test rsa-verify-badcertv3-1.0 {verify_cert} -setup {
+    set pubcert [asset-get test-v3.crt]
+    set cacert [asset-get test-v3.crt]
+    set pubcert [::pki::x509::parse_cert $pubcert]
+    set cacert [::pki::x509::parse_cert $cacert]
+} -body {
+    ::pki::x509::verify_cert $pubcert [list $cacert]
+} -cleanup {
+    unset pubcert cacert
+} -result {false}
+
+test rsa-verify-badcertv3-2.0 {verify_cert} -setup {
+    set pubcert [asset-get test-v3.crt]
+    set cacert [asset-get CA.crt]
+    set pubcert [::pki::x509::parse_cert $pubcert]
+    set cacert [::pki::x509::parse_cert $cacert]
+
+    # Remove all extensions from CA cert
+    array set cacert_arr $cacert
+    set cacert_arr(extensions) ""
+    set cacert [array get cacert_arr]
+} -body {
+    ::pki::x509::verify_cert $pubcert [list $cacert]
+} -cleanup {
+    unset pubcert cacert
+} -result {false}
+
+test rsa-crypt-roundtrip-1.0 {encrypt, decrypt} -setup {
+    set data      "This is a test"
+    set password  "ARoseIsARoseIsARose"
+    set privkey [asset-get test.key.des]
+    set pubkey [asset-get test-v1.crt]
+
+    array set key [::pki::pkcs::parse_key $privkey $password]
+    array set key [::pki::x509::parse_cert $pubkey]
+    set keylist   [array get key]
+    unset password privkey pubkey key
+} -body {
+    set ciphertext [::pki::encrypt -binary -pub  -- $data       $keylist]
+    set plaintext  [::pki::decrypt -binary -priv -- $ciphertext $keylist]
+} -cleanup {
+    unset -nocomplain data ciphertext plaintext
+} -result {This is a test}
+
+test rsa-sign-verify-1.0 {sign, verify} -setup {
+    set data      "This is a test"
+    set password  "ARoseIsARoseIsARose"
+    set privkey [asset-get test.key.des]
+    set pubkey [asset-get test-v1.crt]
+
+    array set key [::pki::pkcs::parse_key $privkey $password]
+    array set key [::pki::x509::parse_cert $pubkey]
+    set keylist   [array get key]
+    unset password privkey pubkey key
+} -body {
+    set ciphertext [::pki::encrypt -binary -priv -- $data       $keylist]
+    set plaintext  [::pki::decrypt -binary -pub  -- $ciphertext $keylist]
+} -cleanup {
+    unset -nocomplain data ciphertext plaintext
+} -result {This is a test}
+
+
+foreach keylen {256 512 1024 2048} {
+    # Just one key for the whole round and its tests. Its possible to
+    # generate one for each test, but then we will really spend way to
+    # much effort on the setup of each test.
+    set key [::pki::rsa::generate $keylen]
+
+    test rsa-crypt-roundtrip-2.0.$keylen "encrypt, decrypt pub/priv for keylen $keylen" -body {
+        set plain    "Pub/priv test"
+        set cipher   [::pki::encrypt -binary -pub --  $plain  $key]
+        set uncipher [::pki::decrypt -binary -priv -- $cipher $key]
+
+        string equal $plain $uncipher
+    } -cleanup {
+        unset -nocomplain plain cipher uncipher
+    } -result 1
+
+    test rsa-crypt-roundtrip-2.1.$keylen "encrypt, decrypt priv/pub for keylen $keylen" -body {
+        set plain    "Priv/pub test"
+        set cipher   [::pki::encrypt -binary -priv -- $plain  $key]
+        set uncipher [::pki::decrypt -binary -pub  -- $cipher $key]
+
+        string equal $plain $uncipher
+    } -cleanup {
+        unset -nocomplain plain cipher uncipher
+    } -result 1
+
+    if {$keylen >= 512} {
+        foreach {i hash} {
+            0 md5
+            1 sha1
+            2 sha256
+        } {
+            test rsa-sign-verify-2.$i.$keylen "sign, verify $hash for keylen $keylen" -body {
+                set plain    "This message is so long, it will never fit into a key"
+                set signed   [::pki::sign   $plain  $key   $hash]
+                set verified [::pki::verify $signed $plain $key]
+            } -cleanup {
+                unset -nocomplain plain signed verified
+            } -result true
+        }
+    }
+
+    unset key
+}
+
+# -------------------------------------------------------------------------
+testsuiteCleanup
+return
+# Local variables:
+# mode: tcl
+# indent-tabs-mode: nil
+# End:

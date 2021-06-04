@@ -415,8 +415,8 @@ ast/ast.h :
 	$(MAKE) -C ast -j $(JOBS) libast_err.la
 	$(MAKE) -C ast -j $(JOBS) libast_pal.la
 	cp ast/ast.h $(includedir)/.
-	cp ast/grf.h $(includedir)/.
-	cp ast/grf3d.h $(includedir)/.
+	cp ast/src/grf.h $(includedir)/.
+	cp ast/src/grf3d.h $(includedir)/.
 	cp ast/.libs/libast.a $(libdir)/.
 	cp ast/.libs/libast_err.a $(libdir)/.
 	cp ast/.libs/libast_pal.a $(libdir)/.

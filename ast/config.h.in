@@ -44,14 +44,8 @@
 /* Define to 1 if the system has the type `long double'. */
 #undef HAVE_LONG_DOUBLE
 
-/* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
-
 /* The sscanf shows the non-ANSI behaviour reported by Bill Joye */
 #undef HAVE_NONANSI_SSCANF
-
-/* Define to 1 if the Fortran compiler supports the VAX %LOC extension */
-/*#undef HAVE_PERCENTLOC*/
 
 /* Use the starmem library for memory management */
 #undef HAVE_STAR_MEM_H
@@ -61,6 +55,9 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
@@ -132,7 +129,9 @@
 /* The size of `void*', as computed by sizeof. */
 #undef SIZEOF_VOIDP
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
 
 /* Type of Fortran CNF TRAIL argument */

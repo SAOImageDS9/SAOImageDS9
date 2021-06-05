@@ -799,7 +799,7 @@ proc AboutBox {} {
 
     # Param
     set f [ttk::frame $w.param]
-    canvas $f.c -background white -height 450 -width 500
+    canvas $f.c -background white -height 300 -width 500
     pack $f.c -fill both -expand true
     
     set ed(sun) [image create photo -format gif -file $ds9(root)/doc/sun.gif]

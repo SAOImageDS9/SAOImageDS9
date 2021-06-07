@@ -1,0 +1,45 @@
+# tksvgConfig.sh --
+#
+# This shell script (for sh) is generated automatically by tksvg's
+# configure script.  It will create shell variables for most of
+# the configuration options discovered by the configure script.
+# This script is intended to be included by the configure scripts
+# for tksvg extensions so that they don't have to figure this all
+# out for themselves.  This file does not duplicate information
+# already provided by tclConfig.sh, so you may need to use that
+# file in addition to this one.
+#
+# The information in this file is specific to a single platform.
+
+# tksvg's version number.
+tksvg_VERSION='@PACKAGE_VERSION@'
+
+# The name of the tksvg library (may be either a .a file or a shared library):
+tksvg_LIB_FILE=@PKG_LIB_FILE@
+
+# String to pass to linker to pick up the tksvg library from its
+# build directory.
+tksvg_BUILD_LIB_SPEC='@tksvg_BUILD_LIB_SPEC@'
+
+# String to pass to linker to pick up the tksvg library from its
+# installed directory.
+tksvg_LIB_SPEC='@tksvg_LIB_SPEC@'
+
+# The name of the tksvg stub library (a .a file):
+#tksvg_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
+
+# String to pass to linker to pick up the tksvg stub library from its
+# build directory.
+#tksvg_BUILD_STUB_LIB_SPEC='@tksvg_BUILD_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the tksvg stub library from its
+# installed directory.
+#tksvg_STUB_LIB_SPEC='@tksvg_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the tksvg stub library from its
+# build directory.
+#tksvg_BUILD_STUB_LIB_PATH='@tksvg_BUILD_STUB_LIB_PATH@'
+
+# String to pass to linker to pick up the tksvg stub library from its
+# installed directory.
+#tksvg_STUB_LIB_PATH='@tksvg_STUB_LIB_PATH@'

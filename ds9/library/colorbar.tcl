@@ -26,7 +26,7 @@ proc ColorbarDef {} {
 ]
 
     set icolorbar(matplotlib) 0
-    set icolorbar(matplotlib,fn) [list viridis.lut]
+    set icolorbar(matplotlib,fn) [list inferno.sao magma.sao plasma.sao viridis.sao]
 
     set icolorbar(cubehelix) 0
     set icolorbar(cubehelix,fn) [list ch05m151008.sao ch05m151010.sao ch05m151012.sao ch05m151410.sao ch05p151010.sao ch20m151010.sao - cubehelix0.sao cubehelix1.sao]

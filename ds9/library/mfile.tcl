@@ -37,8 +37,11 @@ proc FileMainMenu {} {
     $ds9(mb).file add command -label "[msgcat::mc {Restore}]..." \
 	-command RestoreDialog
     $ds9(mb).file add separator
-    $ds9(mb).file add command -label "[msgcat::mc {Display Header}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Header}] \
 	-command DisplayHeaderMenu 
+    $ds9(mb).file add command -label [msgcat::mc {Notes}] \
+	-command DisplayNotes 
+    $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {Preserve During Load}] \
 	-menu $ds9(mb).file.preserve
     $ds9(mb).file add separator
@@ -336,6 +339,7 @@ proc ButtonsFileDef {} {
 	file,backup 0
 	file,restore 0
 	file,header 1
+	file,notes 1
 	file,xpa,info 0
 	file,samp,image 0
 	file,samp,table 0
@@ -508,6 +512,8 @@ proc CreateButtonsFile {} {
 
     ButtonButton $ds9(buttons).file.header \
 	[string tolower [msgcat::mc {Header}]] DisplayHeaderMenu
+    ButtonButton $ds9(buttons).file.notes \
+	[string tolower [msgcat::mc {Notes}]] DisplayNotes
 
     ButtonButton $ds9(buttons).file.xpainfo \
 	[string tolower {XPA Info}] XPAInfo
@@ -590,6 +596,7 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.backup pbuttons(file,backup)
         $ds9(buttons).file.restore pbuttons(file,restore)
         $ds9(buttons).file.header pbuttons(file,header)
+        $ds9(buttons).file.notes pbuttons(file,notes)
         $ds9(buttons).file.xpainfo pbuttons(file,xpa,info)
         $ds9(buttons).file.sampimage pbuttons(file,samp,image)
         $ds9(buttons).file.samptable pbuttons(file,samp,table)
@@ -632,8 +639,10 @@ proc PrefsDialogButtonbarFile {f} {
     $m add checkbutton -label "[msgcat::mc {Restore}]..." \
 	-variable pbuttons(file,restore) -command {UpdateButtons buttons(file)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Display Header}]..." \
+    $m add checkbutton -label [msgcat::mc {Header}] \
 	-variable pbuttons(file,header) -command {UpdateButtons buttons(file)}
+    $m add checkbutton -label [msgcat::mc {Notes} \
+	-variable pbuttons(file,notes) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add cascade -label [msgcat::mc {XPA}] -menu $m.xpa
     $m add cascade -label [msgcat::mc {SAMP}] -menu $m.samp
@@ -1143,11 +1152,11 @@ proc UpdateFileMenuHeader {} {
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
-    $mm entryconfig "[msgcat::mc {Display Header}]..." -state disabled
+    $mm entryconfig [msgcat::mc {Header}] -state disabled
     $bb.header configure -state disabled
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
-	    $mm entryconfig "[msgcat::mc {Display Header}]..." -state normal
+	    $mm entryconfig [msgcat::mc {Header}] -state normal
 	    $bb.header configure -state normal
 	}
     }

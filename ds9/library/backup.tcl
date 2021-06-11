@@ -26,6 +26,9 @@ proc Backup {fn} {
 	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
     }
 
+    # EditText Dialogs
+    EditTextUpdateVar
+
     # Panner
     PannerBackup $ch
 
@@ -163,6 +166,12 @@ proc Restore {fn} {
     global istxt
     foreach varname $istxt(dialogs) {
 	SimpleTextDestroy $varname
+    }
+
+    # kill all edit text dialogs
+    global iedittxt
+    foreach varname $iedittxt(dialogs) {
+	EditTextDestroy $varname
     }
 
     # kill all cats
@@ -540,6 +549,10 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
 proc BackupGUI {ch} {
 
     # Basic
+
+    global ds9notes
+    puts $ch "global ds9notes"
+    puts $ch "set ds9notes \{$ds9notes\}"
 
     global pds9
     puts $ch "global pds9"

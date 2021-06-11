@@ -10,7 +10,6 @@
 ::msgcat::mcset de {Add Bar Graph} 
 ::msgcat::mcset de {Add Graph} 
 ::msgcat::mcset de {Add Line Graph} 
-::msgcat::mcset de {Add Scatter Graph} 
 ::msgcat::mcset de {Add} [encoding convertfrom iso8859-1 {Hinzufügen}]
 ::msgcat::mcset de {Advanced} {Erweitert}
 ::msgcat::mcset de {Align} {Ausrichten}
@@ -22,13 +21,10 @@
 ::msgcat::mcset de {An error has occurred during backup} 
 ::msgcat::mcset de {An error has occurred during restore} 
 ::msgcat::mcset de {An error has occurred invoking the Analysis task} {Beim Aufrufen des Analysetasks ist ein Fehler aufgetreten}
-::msgcat::mcset de {An error has occurred while creating image.} 
-::msgcat::mcset de {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset de {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset de {An error has occurred while creating} 
+::msgcat::mcset de {An error has occurred while loading} 
 ::msgcat::mcset de {An error has occurred while printing} {Beim Drucken ist ein Fehler aufgetreten}
-::msgcat::mcset de {An error has occurred while reading image.} 
 ::msgcat::mcset de {An error has occurred while saving} {Beim Speichern ist ein Fehler aufgetreten}
-::msgcat::mcset de {An error has occurred while writing image.} 
 ::msgcat::mcset de {An internal error has been detected} 
 ::msgcat::mcset de {Analysis Command Log} {Analysebefehlslog}
 ::msgcat::mcset de {Analysis Commands} 
@@ -251,7 +247,6 @@
 ::msgcat::mcset de {Dimension} 
 ::msgcat::mcset de {Direction} 
 ::msgcat::mcset de {Disconnect} 
-::msgcat::mcset de {Display Header} 
 ::msgcat::mcset de {Display Size} [encoding convertfrom iso8859-1 {Größe zeigen}]
 ::msgcat::mcset de {Dissolve} 
 ::msgcat::mcset de {Distance} 
@@ -613,6 +608,7 @@
 ::msgcat::mcset de {Not Found} 
 ::msgcat::mcset de {Not Supported} 
 ::msgcat::mcset de {Not valid export format} 
+::msgcat::mcset de {Notes} 
 ::msgcat::mcset de {Number of Samples} {Anzahl der Stichproben}
 ::msgcat::mcset de {Number of Threads} 
 ::msgcat::mcset de {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset de {Scan} {Abtastung}
 ::msgcat::mcset de {Scatter Dataset} 
 ::msgcat::mcset de {Scatter Plot Tool} 
-::msgcat::mcset de {Scatter} 
 ::msgcat::mcset de {Scope} {Anwendungsbereich}
 ::msgcat::mcset de {Screen} 
 ::msgcat::mcset de {Search for Catalogs} {Nach Katalogen suchen}

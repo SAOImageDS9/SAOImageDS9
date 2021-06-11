@@ -350,8 +350,8 @@ proc UpdateCurrentFrame {} {
 proc UpdateAllFrame {} {
     global ds9
 
-    foreach f $ds9(frames) {
-	UpdateFrame $f
+    foreach ff $ds9(frames) {
+	UpdateFrame $ff
     }
 }
 

@@ -1,0 +1,18 @@
+#tab notesparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+load	    {return $LOAD_}
+open	    {return $OPEN_}
+save	    {return $SAVE_}
+
+#include string.fin
+#include ws.fin
+
+%%

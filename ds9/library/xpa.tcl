@@ -380,6 +380,11 @@ proc CreateXPA {} {
 	XPASendNan {} {} \
 	XPARcvdNan {} {}
 
+    xpacmdadd $xpa notes \
+	{} \
+	XPASendNotes {} {} \
+	XPARcvdNotes {} {}
+
     xpacmdadd $xpa nrrd \
 	{} \
 	XPASendNRRD {} {} \
@@ -1416,6 +1421,19 @@ proc XPARcvdNan {xpa cdata param buf len} {
     XPADebug "XPARcvdNan" $param
     InitError xpa
     catch {set i 0; ProcessNanCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendNotes {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendNotesCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdNotes {xpa cdata param buf len} {
+    XPADebug "XPARcvdNotes" $param
+    InitError xpa
+    catch {set i 0; ProcessNotesCmd param i}
     XPACatchError $xpa
 }
 

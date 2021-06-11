@@ -10,7 +10,6 @@
 ::msgcat::mcset zh {Add Bar Graph} 
 ::msgcat::mcset zh {Add Graph} 
 ::msgcat::mcset zh {Add Line Graph} 
-::msgcat::mcset zh {Add Scatter Graph} 
 ::msgcat::mcset zh {Add} 
 ::msgcat::mcset zh {Advanced} 
 ::msgcat::mcset zh {Align} [encoding convertfrom big5 "\xB9\xEF \xBB\xF4 \xA4\xE8 \xA6\xEC"]
@@ -22,13 +21,10 @@
 ::msgcat::mcset zh {An error has occurred during backup} 
 ::msgcat::mcset zh {An error has occurred during restore} 
 ::msgcat::mcset zh {An error has occurred invoking the Analysis task} 
-::msgcat::mcset zh {An error has occurred while creating image.} 
-::msgcat::mcset zh {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset zh {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset zh {An error has occurred while creating} 
+::msgcat::mcset zh {An error has occurred while loading} 
 ::msgcat::mcset zh {An error has occurred while printing} 
-::msgcat::mcset zh {An error has occurred while reading image.} 
 ::msgcat::mcset zh {An error has occurred while saving} 
-::msgcat::mcset zh {An error has occurred while writing image.} 
 ::msgcat::mcset zh {An internal error has been detected} 
 ::msgcat::mcset zh {Analysis Command Log} 
 ::msgcat::mcset zh {Analysis Commands} 
@@ -251,7 +247,6 @@
 ::msgcat::mcset zh {Dimension} 
 ::msgcat::mcset zh {Direction} 
 ::msgcat::mcset zh {Disconnect} 
-::msgcat::mcset zh {Display Header} 
 ::msgcat::mcset zh {Display Size} 
 ::msgcat::mcset zh {Dissolve} [encoding convertfrom big5 "\xB8\xD1 \xB4\xB2"]
 ::msgcat::mcset zh {Distance} 
@@ -613,6 +608,7 @@
 ::msgcat::mcset zh {Not Found} 
 ::msgcat::mcset zh {Not Supported} 
 ::msgcat::mcset zh {Not valid export format} 
+::msgcat::mcset zh {Notes} 
 ::msgcat::mcset zh {Number of Samples} 
 ::msgcat::mcset zh {Number of Threads} 
 ::msgcat::mcset zh {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset zh {Scan} 
 ::msgcat::mcset zh {Scatter Dataset} 
 ::msgcat::mcset zh {Scatter Plot Tool} 
-::msgcat::mcset zh {Scatter} 
 ::msgcat::mcset zh {Scope} 
 ::msgcat::mcset zh {Screen} 
 ::msgcat::mcset zh {Search for Catalogs} 

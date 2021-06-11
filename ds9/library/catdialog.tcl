@@ -142,7 +142,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.file add command -label [msgcat::mc {Plot}] \
 	-command [list CATPlot $varname]
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Display Header}]..." \
+    $mb.file add command -label [msgcat::mc {Header}] \
 	-command [list CATHeader $varname]
     $mb.file add command -label [msgcat::mc {Acknowledgment}] \
 	-command [list CATAck $varname]
@@ -539,8 +539,7 @@ proc CATDialogUpdate {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Filter}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
-	$var(mb).file entryconfig "[msgcat::mc {Display Header}]..." \
-	    -state normal
+	$var(mb).file entryconfig [msgcat::mc {Header}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state normal
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state normal
 
@@ -551,8 +550,7 @@ proc CATDialogUpdate {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Filter}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state disabled
-	$var(mb).file entryconfig "[msgcat::mc {Display Header}]..." \
-	    -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Header}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state disabled
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state disabled
 

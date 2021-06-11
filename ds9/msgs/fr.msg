@@ -10,7 +10,6 @@
 ::msgcat::mcset fr {Add Bar Graph} 
 ::msgcat::mcset fr {Add Graph} 
 ::msgcat::mcset fr {Add Line Graph} 
-::msgcat::mcset fr {Add Scatter Graph} 
 ::msgcat::mcset fr {Add} {Ajouter}
 ::msgcat::mcset fr {Advanced} [encoding convertfrom iso8859-1 {Avancé}]
 ::msgcat::mcset fr {Align} {Aligner}
@@ -22,13 +21,10 @@
 ::msgcat::mcset fr {An error has occurred during backup} 
 ::msgcat::mcset fr {An error has occurred during restore} 
 ::msgcat::mcset fr {An error has occurred invoking the Analysis task} [encoding convertfrom iso8859-1 {Une erreur s'est produite en invoquant la tâche d'analyse}]
-::msgcat::mcset fr {An error has occurred while creating image.} 
-::msgcat::mcset fr {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset fr {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset fr {An error has occurred while creating} 
+::msgcat::mcset fr {An error has occurred while loading} 
 ::msgcat::mcset fr {An error has occurred while printing} {Une erreur s'est produite pendant l'impression}
-::msgcat::mcset fr {An error has occurred while reading image.} 
 ::msgcat::mcset fr {An error has occurred while saving} {Une erreur s'est produite pendant la sauvegarde}
-::msgcat::mcset fr {An error has occurred while writing image.} 
 ::msgcat::mcset fr {An internal error has been detected} 
 ::msgcat::mcset fr {Analysis Command Log} {Enregistrement des commandes d'analyse}
 ::msgcat::mcset fr {Analysis Commands} 
@@ -251,7 +247,6 @@
 ::msgcat::mcset fr {Dimension} {Dimention} 
 ::msgcat::mcset fr {Direction} 
 ::msgcat::mcset fr {Disconnect} 
-::msgcat::mcset fr {Display Header} 
 ::msgcat::mcset fr {Display Size} {Afficher la taille} 
 ::msgcat::mcset fr {Dissolve} 
 ::msgcat::mcset fr {Distance} 
@@ -613,6 +608,7 @@
 ::msgcat::mcset fr {Not Found} 
 ::msgcat::mcset fr {Not Supported} 
 ::msgcat::mcset fr {Not valid export format} 
+::msgcat::mcset fr {Notes} 
 ::msgcat::mcset fr {Number of Samples} [encoding convertfrom iso8859-1 {Nombre d'échantillons}]
 ::msgcat::mcset fr {Number of Threads} 
 ::msgcat::mcset fr {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset fr {Scan} 
 ::msgcat::mcset fr {Scatter Dataset} 
 ::msgcat::mcset fr {Scatter Plot Tool} 
-::msgcat::mcset fr {Scatter} 
 ::msgcat::mcset fr {Scope} 
 ::msgcat::mcset fr {Screen} 
 ::msgcat::mcset fr {Search for Catalogs} 

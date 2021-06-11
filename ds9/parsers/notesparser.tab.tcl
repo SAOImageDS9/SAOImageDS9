@@ -1,0 +1,5 @@
+set STRING_ 257
+set CLOSE_ 258
+set OPEN_ 259
+set LOAD_ 260
+set SAVE_ 261

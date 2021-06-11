@@ -1038,6 +1038,7 @@ proc SetDefaultTextFont {which} {
 
     if {$which} {
 	SimpleTextUpdateFont
+	EditTextUpdateFont
     }
 }
 

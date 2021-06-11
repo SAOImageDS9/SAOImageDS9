@@ -9,8 +9,6 @@ proc SaveImageDef {} {
 
     set saveimage(jpeg,quality) 75
     set saveimage(tiff,compress) none
-
-    set saveimage(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.}]
 }
 
 proc SaveImageDialog {format} {
@@ -98,7 +96,7 @@ proc SaveImagePhoto {fn format} {
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
 	MacOSPhotoRestore $ds9(top) $geom
-	Error $saveimage(error)
+	Error [msgcat::mc {An error has occurred while creating}]
 	return
     }
 

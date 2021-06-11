@@ -32,8 +32,6 @@ proc MovieDef {} {
     set movie(status) 0
     set movie(abort) 0
     set movie(first) 0
-
-    set movie(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.}]
 }
 
 proc MovieDialog {} {
@@ -404,7 +402,7 @@ proc MoviePhotoMPEG {} {
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
-	Error $movie(error)
+	Error [msgcat::mc {An error has occurred while creating}]
 	return $rr
     }
 
@@ -433,7 +431,7 @@ proc MoviePhotoGIF {} {
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
-	Error $movie(error)
+	Error [msgcat::mc {An error has occurred while creating}]
 	return $rr
     }
 

@@ -10,7 +10,6 @@
 ::msgcat::mcset cs {Add Bar Graph} 
 ::msgcat::mcset cs {Add Graph} 
 ::msgcat::mcset cs {Add Line Graph} 
-::msgcat::mcset cs {Add Scatter Graph} 
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
 ::msgcat::mcset cs {Align} [encoding convertfrom iso8859-2 {Zarovnat}]
@@ -22,13 +21,10 @@
 ::msgcat::mcset cs {An error has occurred during backup} [encoding convertfrom iso8859-2 {Chyba pøi poøizování zálohy}]
 ::msgcat::mcset cs {An error has occurred during restore} [encoding convertfrom iso8859-2 {Chyba pøi obnovì zálohy}]
 ::msgcat::mcset cs {An error has occurred invoking the Analysis task} [encoding convertfrom iso8859-2 {Chyba pøi spou¹tìní Analýzy}]
-::msgcat::mcset cs {An error has occurred while creating image.} [encoding convertfrom iso8859-2 {Chyba pøi vytváøení obrázku.}]
-::msgcat::mcset cs {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} [encoding convertfrom iso8859-2 {Chyba pøi vytváøení obrázku. Prosím ujistìte se ¾e okno s DS9tkou je ve vrchním levém rohu výchozí obrazovky a ¾e je celé viditelné.}]
-::msgcat::mcset cs {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset cs {An error has occurred while creating} 
+::msgcat::mcset cs {An error has occurred while loading} 
 ::msgcat::mcset cs {An error has occurred while printing} [encoding convertfrom iso8859-2 {Pøi tisku se vyskytla chyba}]
-::msgcat::mcset cs {An error has occurred while reading image.} [encoding convertfrom iso8859-2 {Chyba pøi ètení obrázku.}]
 ::msgcat::mcset cs {An error has occurred while saving} [encoding convertfrom iso8859-2 {Chyba pøi ukládání souboru}]
-::msgcat::mcset cs {An error has occurred while writing image.} 
 ::msgcat::mcset cs {An internal error has been detected} [encoding convertfrom iso8859-2 {Byla detekována vnitøní chyba programu}]
 ::msgcat::mcset cs {Analysis Command Log} [encoding convertfrom iso8859-2 {Poøizovat záznam analytických pøíkazù}]
 ::msgcat::mcset cs {Analysis Commands} [encoding convertfrom iso8859-2 {Analytické pøíkazy}]
@@ -251,7 +247,6 @@
 ::msgcat::mcset cs {Dimension} [encoding convertfrom iso8859-2 {Rozmìr}]
 ::msgcat::mcset cs {Direction} 
 ::msgcat::mcset cs {Disconnect} 
-::msgcat::mcset cs {Display Header} 
 ::msgcat::mcset cs {Display Size} [encoding convertfrom iso8859-2 {Velikost displeje}]
 ::msgcat::mcset cs {Dissolve} 
 ::msgcat::mcset cs {Distance} [encoding convertfrom iso8859-2 {Vzdálenost}]
@@ -613,6 +608,7 @@
 ::msgcat::mcset cs {Not Found} 
 ::msgcat::mcset cs {Not Supported} 
 ::msgcat::mcset cs {Not valid export format} 
+::msgcat::mcset cs {Notes} 
 ::msgcat::mcset cs {Number of Samples} 
 ::msgcat::mcset cs {Number of Threads} 
 ::msgcat::mcset cs {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset cs {Scan} 
 ::msgcat::mcset cs {Scatter Dataset} 
 ::msgcat::mcset cs {Scatter Plot Tool} 
-::msgcat::mcset cs {Scatter} 
 ::msgcat::mcset cs {Scope} 
 ::msgcat::mcset cs {Screen} 
 ::msgcat::mcset cs {Search for Catalogs} 

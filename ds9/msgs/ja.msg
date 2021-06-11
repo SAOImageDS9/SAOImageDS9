@@ -10,7 +10,6 @@
 ::msgcat::mcset ja {Add Bar Graph} 
 ::msgcat::mcset ja {Add Graph} 
 ::msgcat::mcset ja {Add Line Graph} 
-::msgcat::mcset ja {Add Scatter Graph} 
 ::msgcat::mcset ja {Add} [encoding convertfrom euc-jp "\xc4\xc9\xb2\xc3"]
 ::msgcat::mcset ja {Advanced} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9\xa4\xca\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Align} [encoding convertfrom euc-jp "\xc0\xb0\xce\xf3"]
@@ -22,13 +21,10 @@
 ::msgcat::mcset ja {An error has occurred during backup} 
 ::msgcat::mcset ja {An error has occurred during restore} 
 ::msgcat::mcset ja {An error has occurred invoking the Analysis task} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xbf\xa5\xb9\xa5\xaf\xa4\xce\xb5\xaf\xc6\xb0\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
-::msgcat::mcset ja {An error has occurred while creating image.} 
-::msgcat::mcset ja {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset ja {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset ja {An error has occurred while creating} 
+::msgcat::mcset ja {An error has occurred while loading} 
 ::msgcat::mcset ja {An error has occurred while printing} [encoding convertfrom euc-jp "\xb0\xf5\xba\xfe\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
-::msgcat::mcset ja {An error has occurred while reading image.} 
 ::msgcat::mcset ja {An error has occurred while saving} [encoding convertfrom euc-jp "\xca\xdd\xc2\xb8\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
-::msgcat::mcset ja {An error has occurred while writing image.} 
 ::msgcat::mcset ja {An internal error has been detected} 
 ::msgcat::mcset ja {Analysis Command Log} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xce\xb5\xad\xcf\xbf"]
 ::msgcat::mcset ja {Analysis Commands} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9"]
@@ -251,7 +247,6 @@
 ::msgcat::mcset ja {Dimension} [encoding convertfrom euc-jp "\xbc\xa1\xb8\xb5"]
 ::msgcat::mcset ja {Direction} 
 ::msgcat::mcset ja {Disconnect} [encoding convertfrom euc-jp "\xc0\xdc\xc2\xb3\xbd\xaa\xce\xbb"]
-::msgcat::mcset ja {Display Header} 
 ::msgcat::mcset ja {Display Size} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xa4\xa5\xba\xa4\xf2\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Dissolve} [encoding convertfrom euc-jp "\xca\xac\xb2\xf2"]
 ::msgcat::mcset ja {Distance} 
@@ -613,6 +608,7 @@
 ::msgcat::mcset ja {Not Found} 
 ::msgcat::mcset ja {Not Supported} 
 ::msgcat::mcset ja {Not valid export format} 
+::msgcat::mcset ja {Notes} 
 ::msgcat::mcset ja {Number of Samples} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xf3\xa5\xd7\xa5\xeb\xa4\xce\xbf\xf4"]
 ::msgcat::mcset ja {Number of Threads} 
 ::msgcat::mcset ja {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset ja {Scan} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xad\xa5\xe3\xa5\xf3"]
 ::msgcat::mcset ja {Scatter Dataset} 
 ::msgcat::mcset ja {Scatter Plot Tool} 
-::msgcat::mcset ja {Scatter} 
 ::msgcat::mcset ja {Scope} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xb3\xa1\xbc\xa5\xd7"]
 ::msgcat::mcset ja {Screen} 
 ::msgcat::mcset ja {Search for Catalogs} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xf2\xb8\xa1\xba\xf7"]

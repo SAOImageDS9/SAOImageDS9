@@ -10,7 +10,6 @@
 ::msgcat::mcset da {Add Bar Graph} 
 ::msgcat::mcset da {Add Graph} 
 ::msgcat::mcset da {Add Line Graph} 
-::msgcat::mcset da {Add Scatter Graph} 
 ::msgcat::mcset da {Add} [encoding convertfrom iso8859-1 {Tilføj}]
 ::msgcat::mcset da {Advanced} {Avanceret}
 ::msgcat::mcset da {Align} {Juster}
@@ -22,13 +21,10 @@
 ::msgcat::mcset da {An error has occurred during backup} 
 ::msgcat::mcset da {An error has occurred during restore} 
 ::msgcat::mcset da {An error has occurred invoking the Analysis task} [encoding convertfrom iso8859-1 {Fejl opstået ved kald til analyse program}]
-::msgcat::mcset da {An error has occurred while creating image.} 
-::msgcat::mcset da {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset da {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset da {An error has occurred while creating} 
+::msgcat::mcset da {An error has occurred while loading} 
 ::msgcat::mcset da {An error has occurred while printing} [encoding convertfrom iso8859-1 {Fejl opstået under udskrivning}]
-::msgcat::mcset da {An error has occurred while reading image.} 
 ::msgcat::mcset da {An error has occurred while saving} [encoding convertfrom iso8859-1 {Fejl opstået under gemning}]
-::msgcat::mcset da {An error has occurred while writing image.} 
 ::msgcat::mcset da {An internal error has been detected} 
 ::msgcat::mcset da {Analysis Command Log} {Analyse kommando logbog}
 ::msgcat::mcset da {Analysis Commands} [encoding convertfrom iso8859-1 {Analyse muligheder}]
@@ -251,7 +247,6 @@
 ::msgcat::mcset da {Dimension} {Dimension}
 ::msgcat::mcset da {Direction} 
 ::msgcat::mcset da {Disconnect} 
-::msgcat::mcset da {Display Header} 
 ::msgcat::mcset da {Display Size} [encoding convertfrom iso8859-1 {Vis størrelse}]
 ::msgcat::mcset da {Dissolve} [encoding convertfrom iso8859-1 {Opløs}]
 ::msgcat::mcset da {Distance} 
@@ -613,6 +608,7 @@
 ::msgcat::mcset da {Not Found} 
 ::msgcat::mcset da {Not Supported} 
 ::msgcat::mcset da {Not valid export format} 
+::msgcat::mcset da {Notes} 
 ::msgcat::mcset da {Number of Samples} {Antal}
 ::msgcat::mcset da {Number of Threads} 
 ::msgcat::mcset da {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset da {Scan} {skan}
 ::msgcat::mcset da {Scatter Dataset} 
 ::msgcat::mcset da {Scatter Plot Tool} 
-::msgcat::mcset da {Scatter} 
 ::msgcat::mcset da {Scope} [encoding convertfrom iso8859-1 {Gældende}]
 ::msgcat::mcset da {Screen} 
 ::msgcat::mcset da {Search for Catalogs} [encoding convertfrom iso8859-1 {søg efter kataloger}]

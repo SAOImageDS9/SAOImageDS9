@@ -377,6 +377,7 @@ MarkerDef
 MaskDef
 MinMaxDef
 MovieDef
+NotesDef
 NRESDef
 NVSSDef
 PannerDef
@@ -394,6 +395,7 @@ SaveImageDef
 ScaleDef
 SIADef
 SimpleTextDef
+EditTextDef
 SkyViewDef
 SmoothDef
 STSCIDef

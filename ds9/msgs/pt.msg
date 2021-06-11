@@ -10,7 +10,6 @@
 ::msgcat::mcset pt {Add Bar Graph} 
 ::msgcat::mcset pt {Add Graph} 
 ::msgcat::mcset pt {Add Line Graph} 
-::msgcat::mcset pt {Add Scatter Graph} 
 ::msgcat::mcset pt {Add} {Adicionar}
 ::msgcat::mcset pt {Advanced} [encoding convertfrom iso8859-1 {Avançado}]
 ::msgcat::mcset pt {Align} {Alinhar}
@@ -22,13 +21,10 @@
 ::msgcat::mcset pt {An error has occurred during backup} 
 ::msgcat::mcset pt {An error has occurred during restore} 
 ::msgcat::mcset pt {An error has occurred invoking the Analysis task}  [encoding convertfrom iso8859-1 {Um erro ocorreu ao chamar a tarefa de Análise}]
-::msgcat::mcset pt {An error has occurred while creating image.} 
-::msgcat::mcset pt {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset pt {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset pt {An error has occurred while creating} 
+::msgcat::mcset pt {An error has occurred while loading} 
 ::msgcat::mcset pt {An error has occurred while printing} {Um erro ocorreu ao imprimir}
-::msgcat::mcset pt {An error has occurred while reading image.} 
 ::msgcat::mcset pt {An error has occurred while saving} {Um erro ocorreu ao salvar}
-::msgcat::mcset pt {An error has occurred while writing image.} 
 ::msgcat::mcset pt {An internal error has been detected} 
 ::msgcat::mcset pt {Analysis Command Log} [encoding convertfrom iso8859-1 {Registro de Comandos de Análise}]
 ::msgcat::mcset pt {Analysis Commands} 
@@ -251,7 +247,6 @@
 ::msgcat::mcset pt {Dimension} [encoding convertfrom iso8859-1 {Dimensão}]
 ::msgcat::mcset pt {Direction} 
 ::msgcat::mcset pt {Disconnect} 
-::msgcat::mcset pt {Display Header} 
 ::msgcat::mcset pt {Display Size} {Mostar tamanho}
 ::msgcat::mcset pt {Dissolve} 
 ::msgcat::mcset pt {Distance} 
@@ -613,6 +608,7 @@
 ::msgcat::mcset pt {Not Found} 
 ::msgcat::mcset pt {Not Supported} 
 ::msgcat::mcset pt {Not valid export format} 
+::msgcat::mcset pt {Notes} 
 ::msgcat::mcset pt {Number of Samples} 
 ::msgcat::mcset pt {Number of Threads} 
 ::msgcat::mcset pt {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset pt {Scan} 
 ::msgcat::mcset pt {Scatter Dataset} 
 ::msgcat::mcset pt {Scatter Plot Tool} 
-::msgcat::mcset pt {Scatter} 
 ::msgcat::mcset pt {Scope} {Escopo}
 ::msgcat::mcset pt {Screen} 
 ::msgcat::mcset pt {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar Catálogos}]

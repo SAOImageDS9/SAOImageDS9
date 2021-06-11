@@ -309,6 +309,7 @@ proc ProcessCommand {argv argc} {
 		incr i
 		ProcessNanCmd argv i
 	    }
+	    -notes {incr i; ProcessNotesCmd argv i}
 	    -nrrd {set file(type) nrrd}
 	    -nvss {incr i; ProcessNVSSCmd argv i}
 	    -orient {incr i; ProcessOrientCmd argv i}

@@ -14,7 +14,6 @@ proc PlotDef {} {
 
     set iap(jpeg,quality) 75
     set iap(tiff,compress) none
-    set iap(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.}]
 
     PlotDefState
 }

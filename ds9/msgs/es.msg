@@ -10,7 +10,6 @@
 ::msgcat::mcset es {Add Bar Graph} 
 ::msgcat::mcset es {Add Graph} 
 ::msgcat::mcset es {Add Line Graph} 
-::msgcat::mcset es {Add Scatter Graph} 
 ::msgcat::mcset es {Add} {Agregar}
 ::msgcat::mcset es {Advanced} {Avanzado}
 ::msgcat::mcset es {Align} {Alinear}
@@ -22,13 +21,10 @@
 ::msgcat::mcset es {An error has occurred during backup} 
 ::msgcat::mcset es {An error has occurred during restore} 
 ::msgcat::mcset es {An error has occurred invoking the Analysis task} [encoding convertfrom iso8859-1 {Un error ha ocurrido mientras se invocaba la tarea de análisis}]
-::msgcat::mcset es {An error has occurred while creating image.} 
-::msgcat::mcset es {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset es {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
+::msgcat::mcset es {An error has occurred while creating} 
+::msgcat::mcset es {An error has occurred while loading} 
 ::msgcat::mcset es {An error has occurred while printing} {Un error ha ocurrido al imprimir}
-::msgcat::mcset es {An error has occurred while reading image.} 
 ::msgcat::mcset es {An error has occurred while saving} {Un error ha ocurrido al guardar}
-::msgcat::mcset es {An error has occurred while writing image.} 
 ::msgcat::mcset es {An internal error has been detected} 
 ::msgcat::mcset es {Analysis Command Log} [encoding convertfrom iso8859-1 {Log de instrucciones de análisis}]
 ::msgcat::mcset es {Analysis Commands} [encoding convertfrom iso8859-1 {Comandos de análisis}]
@@ -251,7 +247,6 @@
 ::msgcat::mcset es {Dimension} [encoding convertfrom iso8859-1 {Dimensión}]
 ::msgcat::mcset es {Direction} 
 ::msgcat::mcset es {Disconnect} 
-::msgcat::mcset es {Display Header} 
 ::msgcat::mcset es {Display Size} [encoding convertfrom iso8859-1 {Mostrar el tamaño}]
 ::msgcat::mcset es {Dissolve} {Disolver}
 ::msgcat::mcset es {Distance} 
@@ -613,6 +608,7 @@
 ::msgcat::mcset es {Not Found} 
 ::msgcat::mcset es {Not Supported} 
 ::msgcat::mcset es {Not valid export format} 
+::msgcat::mcset es {Notes} 
 ::msgcat::mcset es {Number of Samples} [encoding convertfrom iso8859-1 {Número de muestreos}]
 ::msgcat::mcset es {Number of Threads} 
 ::msgcat::mcset es {Number of Ticks} 
@@ -784,7 +780,6 @@
 ::msgcat::mcset es {Scan} {Escanear} 
 ::msgcat::mcset es {Scatter Dataset} 
 ::msgcat::mcset es {Scatter Plot Tool} 
-::msgcat::mcset es {Scatter} 
 ::msgcat::mcset es {Scope} {Alcance}
 ::msgcat::mcset es {Screen} 
 ::msgcat::mcset es {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar por catálogos}]

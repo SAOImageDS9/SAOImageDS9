@@ -112,6 +112,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    # backward compatibility prefs
 	    ProcessNanCmd param i
 	}
+	notes {ProcessNotesCmd param i}
 	nrrd {ProcessNRRDCmd param i {} $fn}
 	nvss {ProcessNVSSCmd param i}
 	orient {ProcessOrientCmd param i}
@@ -317,6 +318,7 @@ proc CommGet {proc id paramlist fn} {
 	    # backward compatibility prefs
 	    ProcessSendNanCmd $proc $id $param
 	}
+	notes {ProcessSendNotesCmd $proc $id $param}
 	nrrd {ProcessSendNRRDCmd $proc $id $param {} $fn}
 	nvss {ProcessSendNVSSCmd $proc $id $param}
 	orient {ProcessSendOrientCmd $proc $id $param}

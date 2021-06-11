@@ -18,13 +18,13 @@ proc ImportPhotoFile {fn mode} {
 
 	fconfigure stdin -translation binary -encoding binary
 	if {[catch {image create photo -data [read -nonewline stdin]} ph]} {
-	    Error [msgcat::mc {An error has occurred while reading image.}]
+	    Error [msgcat::mc {An error has occurred while loading}]
 	    return
 	}
 	set loadParam(file,name) stdin
     } else {
 	if {[catch {image create photo -file $fn} ph]} {
-	    Error [msgcat::mc {An error has occurred while reading image.}]
+	    Error [msgcat::mc {An error has occurred while loading}]
 	    return
 	}
 	set loadParam(file,name) $fn
@@ -47,7 +47,7 @@ proc ImportPhotoAlloc {path fn mode} {
     set loadParam(load,type) photo
 
     if {[catch {image create photo -file $path} ph]} {
-	Error [msgcat::mc {An error has occurred while reading image.}]
+	Error [msgcat::mc {An error has occurred while loading}]
 	return
     }
     set loadParam(file,name) $fn
@@ -71,7 +71,7 @@ proc ImportPhotoSocket {ch fn mode} {
 
     fconfigure $ch -translation binary -encoding binary
     if {[catch {image create photo -data [read $ch]} ph]} {
-	Error [msgcat::mc {An error has occurred while reading image.}]
+	Error [msgcat::mc {An error has occurred while loading}]
 	return 0
     }
     set loadParam(var,name) $ph
@@ -100,7 +100,7 @@ proc ExportPhotoFile {fn format opt} {
     }
 
     if {[catch {image create photo} ph]} {
-	Error [msgcat::mc {An error has occurred while creating image.}]
+	Error [msgcat::mc {An error has occurred while creating}]
 	return
     }
 
@@ -121,7 +121,7 @@ proc ExportPhotoFile {fn format opt} {
 	}
     }
     if {[catch {$ph write $fn -format $ff}]} {
-	Error [msgcat::mc {An error has occurred while writing image.}]
+	Error [msgcat::mc {An error has occurred while saving}]
     }
 
     image delete $ph
@@ -139,7 +139,7 @@ proc ExportPhotoSocket {ch format opt} {
     }
 
     if {[catch {image create photo} ph]} {
-	Error [msgcat::mc {An error has occurred while creating image.}]
+	Error [msgcat::mc {An error has occurred while creating}]
 	return
     }
 
@@ -162,7 +162,7 @@ proc ExportPhotoSocket {ch format opt} {
 	}
     }
     if {[catch {$ph data -format $ff} data]} {
-	Error [msgcat::mc {An error has occurred while writing image.}]
+	Error [msgcat::mc {An error has occurred while saving}]
 	return
     }
 

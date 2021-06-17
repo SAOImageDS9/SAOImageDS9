@@ -61,160 +61,222 @@ proc notes::unsetupvalues {numsyms} {
 }
 
 array set notes::table {
-  0:257 reduce
+  0:257 shift
   0:258 shift
   0:259 shift
   0:260 shift
-  2:257 reduce
-  5:0,target 0
+  2:257 shift
   0:261 shift
-  8:257,target 8
-  0:262 goto
-  4:257 shift
-  0:264 goto
-  3:257,target 7
+  8:257,target 14
+  9:0 accept
+  11:0 reduce
+  0:262 shift
+  4:257 reduce
+  0:263 shift
+  0:264 shift
+  3:257,target 8
   6:257 reduce
-  8:257 reduce
-  6:0,target 1
-  6:263 goto
-  2:0 reduce
+  0:265 goto
+  8:257 shift
+  15:257,target 16
+  0:267 goto
+  0:265,target 9
+  6:0,target 9
+  16:0,target 3
+  10:257,target 2
   6:0 reduce
-  0:264,target 6
-  6:257,target 2
-  1:257,target 6
-  7:0,target 7
+  0:264,target 8
+  6:257,target 9
+  10:266,target 15
+  1:257,target 5
+  12:0 reduce
   0:0,target 4
-  10:0,target 3
-  9:257,target 10
-  8:0,target 8
-  1:0,target 6
-  0:262,target 5
-  4:257,target 8
+  10:0,target 1
+  13:257,target 11
+  0:263,target 7
+  16:0 reduce
+  10:257 reduce
+  12:257 reduce
+  14:257 reduce
+  3:0 reduce
+  1:0,target 5
+  11:0,target 6
+  0:262,target 6
+  4:257,target 10
+  10:266 goto
   1:257 reduce
-  7:0 reduce
-  3:257 shift
-  0:261,target 4
-  2:0,target 5
-  7:257 reduce
-  9:257 shift
+  3:257 reduce
+  11:257,target 6
+  5:257 shift
+  13:0 reduce
+  9:0,target 0
+  0:261,target 5
+  7:257 shift
+  12:0,target 7
   0:0 reduce
-  7:257,target 7
-  0:259,target 2
-  0:260,target 3
-  2:257,target 5
-  6:263,target 9
-  8:0 reduce
+  7:257,target 13
+  0:259,target 3
+  0:260,target 4
+  2:257,target 11
+  4:0 reduce
+  14:257,target 12
+  3:0,target 8
+  13:0,target 11
   10:0 reduce
-  0:258,target 1
-  0:257,target 4
+  0:258,target 2
+  14:0 reduce
+  5:257,target 12
+  4:0,target 10
+  14:0,target 12
+  11:257 reduce
+  0:257,target 1
   1:0 reduce
-  5:0 accept
+  13:257 reduce
+  0:267,target 10
+  15:257 shift
+  12:257,target 7
 }
 
 array set notes::rules {
-  2,l 263
-  6,l 264
-  3,l 262
-  7,l 264
-  0,l 265
-  4,l 264
-  8,l 264
-  1,l 262
-  5,l 264
+  9,l 267
+  11,l 267
+  2,l 266
+  6,l 267
+  12,l 267
+  3,l 265
+  7,l 267
+  0,l 268
+  4,l 267
+  8,l 267
+  10,l 267
+  1,l 265
+  5,l 267
 }
 
 array set notes::rules {
   5,dc 1
   0,dc 1
-  8,dc 2
+  12,dc 2
+  8,dc 1
   3,dc 3
-  6,dc 1
+  10,dc 1
+  6,dc 2
   1,dc 1
+  9,dc 1
   4,dc 0
+  11,dc 2
   7,dc 2
   2,dc 0
 }
 
 array set notes::rules {
   2,e 1
-  7,line 26
-  4,line 23
-  1,line 19
-  6,line 25
-  3,line 20
-  8,line 27
-  5,line 24
-  2,line 19
+  7,line 29
+  10,line 33
+  4,line 26
+  1,line 22
+  9,line 32
+  12,line 35
+  6,line 28
+  3,line 23
+  8,line 31
+  11,line 34
+  5,line 27
+  2,line 22
 }
 
 array set notes::lr1_table {
-  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 257} 0} {5 {0 257} 0} {6 {0 257} 0} {7 {0 257} 0} {8 {0 257} 0}}
-  1 {{6 {0 257} 1}}
-  2 {{5 {0 257} 1}}
-  3 {{7 {0 257} 1}}
-  4 {{8 {0 257} 1}}
-  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {264 6}}
-  5 {{0 0 1}}
+  13,trans {}
+  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 257} 0} {5 {0 257} 0} {6 {0 257} 0} {7 {0 257} 0} {8 {0 257} 0} {9 {0 257} 0} {10 {0 257} 0} {11 {0 257} 0} {12 {0 257} 0}}
+  14,trans {}
+  1 {{5 {0 257} 1}}
+  15,trans {{257 16}}
+  2 {{6 {0 257} 1}}
+  16,trans {}
+  3 {{8 {0 257} 1}}
+  4 {{10 {0 257} 1}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {267 10}}
   1,trans {}
-  6 {{1 0 1} {3 0 1} {2 257 0}}
-  2,trans {}
-  7 {{7 {0 257} 2}}
-  3,trans {{257 7}}
-  4,trans {{257 8}}
-  8 {{8 {0 257} 2}}
-  10 {{3 0 3}}
-  9 {{3 0 2}}
-  5,trans {}
-  6,trans {{263 9}}
-  7,trans {}
-  8,trans {}
-  10,trans {}
-  9,trans {{257 10}}
+  5 {{7 {0 257} 1}}
+  2,trans {{257 11}}
+  6 {{9 {0 257} 1}}
+  3,trans {}
+  7 {{11 {0 257} 1}}
+  4,trans {}
+  8 {{12 {0 257} 1}}
+  5,trans {{257 12}}
+  9 {{0 0 1}}
+  10 {{1 0 1} {3 0 1} {2 257 0}}
+  6,trans {}
+  11 {{6 {0 257} 2}}
+  7,trans {{257 13}}
+  12 {{7 {0 257} 2}}
+  8,trans {{257 14}}
+  13 {{11 {0 257} 2}}
+  10,trans {{266 15}}
+  9,trans {}
+  14 {{12 {0 257} 2}}
+  11,trans {}
+  15 {{3 0 2}}
+  16 {{3 0 3}}
+  12,trans {}
 }
 
 array set notes::token_id_table {
-  264,line 22
-  262,title {}
-  0,t 0
-  0 {$}
-  263,title {}
-  264,title {}
-  error,t 0
-  error error
+  264,line 17
   265,title {}
-  258,line 11
   261,line 14
-  error,line 17
-  257 STRING_
   257,t 0
-  263,line 19
-  258 CLOSE_
-  258,t 0
-  error,title {}
-  260,t 0
-  260 LOAD_
-  259 OPEN_
-  259,t 0
-  265,line 28
-  261,t 0
-  261 SAVE_
-  262,t 1
-  262 command
   257,line 7
-  263,t 1
-  263 @PSEUDO1
-  264,t 1
-  264 notes
-  260,line 13
-  257,title string
+  262,t 0
+  259,title CLEAR
+  260,title CLOSE
+  266,t 1
+  264,title SAVE
+  error error
+  266,line 22
+  268,title {}
+  error,line 20
+  258,t 0
+  263,line 16
+  error,title {}
+  263,t 0
   259,line 12
+  260,line 13
+  258,title APPEND
+  267,t 1
+  263,title LOAD
+  268,line 36
+  267,title {}
+  257 STRING_
+  258 APPEND_
+  259,t 0
+  259 CLEAR_
+  260 CLOSE_
+  260,t 0
+  261 INSERT_
+  265,line 21
+  262 OPEN_
+  263 LOAD_
+  257,title string
+  264 SAVE_
+  264,t 0
+  265 command
+  262,line 15
+  266 @PSEUDO1
+  267 notes
+  268,t 1
+  268 start'
+  262,title OPEN
+  0 {$}
+  0,t 0
+  error,t 0
+  258,line 11
+  266,title {}
+  261,t 0
+  267,line 25
   265,t 1
-  265 start'
-  258,title CLOSE
-  262,line 18
-  260,title LOAD
-  259,title OPEN
-  261,title SAVE
+  261,title INSERT
 }
 
 proc notes::yyparse {} {
@@ -313,10 +375,14 @@ proc notes::yyparse {} {
                 switch -- $rule {
                     2 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
                     4 { DisplayNotes }
-                    5 { DisplayNotes }
-                    6 { EditTextDestroy notes }
-                    7 { NotesCmdLoad $2 }
-                    8 { NotesCmdSave $2 }
+                    5 { NotesCmdAppend $1 }
+                    6 { NotesCmdAppend $2 }
+                    7 { NotesCmdInsert $2 }
+                    8 { NotesCmdClear }
+                    9 { DisplayNotes }
+                    10 { EditTextDestroy notes }
+                    11 { NotesCmdLoad $2 }
+                    12 { NotesCmdSave $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

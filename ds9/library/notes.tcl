@@ -12,8 +12,6 @@ proc NotesDef {} {
 }
 
 proc DisplayNotes {} {
-    global pds9
-
     EditTextDialog notes Notes 80 20 ds9notes
 }
 
@@ -30,6 +28,27 @@ proc ProcessNotesCmd {varname iname} {
 proc ProcessSendNotesCmd {proc id param {sock {}} {fn {}}} {
     global ds9notes
     $proc $id "$ds9notes\n"
+}
+
+proc NotesCmdAppend {str} {
+    global ds9notes
+
+    append ds9notes "$str\n"
+    DisplayNotes
+}
+
+proc NotesCmdInsert {str} {
+    global ds9notes
+
+    set ds9notes "$str\n$ds9notes"
+    DisplayNotes
+}
+
+proc NotesCmdClear {} {
+    global ds9notes
+
+    set ds9notes {}
+    DisplayNotes
 }
 
 proc NotesCmdLoad {fn} {

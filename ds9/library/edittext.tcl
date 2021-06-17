@@ -126,8 +126,7 @@ proc EditTextDestroy {varname} {
 	set tvarname $var(tvarname)
 	upvar #0 $tvarname tvar
 	global $tvarname
-	set tvar [$var(text) get 1.0 end]
-
+	set tvar [$var(text) get 1.0 end-1c]
 	destroy $var(top)
 	destroy $var(mb)
     }

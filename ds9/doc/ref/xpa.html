@@ -62,6 +62,7 @@
 <a href="#movie">movie</a><br>
 <a href="#multiframe">multiframe</a><br>
 <a href="#nameserver">nameserver</a><br>
+<a href="#notes">notes</a><br>
 <a href="#nrrd">nrrd</a><br>
 <a href="#nvss">nvss</a><br>
 <a href="#orient">orient</a><br>
@@ -1600,6 +1601,28 @@ $xpaset -p ds9 nameserver pan<br>
 $xpaset -p ds9 nameserver crosshair<br>
 $xpaset -p ds9 nameserver open<br>
 $xpaset -p ds9 nameserver close</tt><br>
+<p><b><a name="notes" id="notes"></a>notes</b></p>
+<p>Display Notebook.<br></p>
+<tt>Syntax:<br>
+notes [&lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [append &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [insert &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 notes<br>
+<br>
+$xpaset -p ds9 notes {Hello World}<br>
+$xpaset -p ds9 notes append {Hello World}<br>
+$xpaset -p ds9 notes insert {Hello World}<br>
+$xpaset -p ds9 notes clear<br>
+$xpaset -p ds9 notes load foo.txt<br>
+$xpaset -p ds9 notes save foo.txt<br>
+$xpaset -p ds9 notes open<br>
+$xpaset -p ds9 notes close<br>
 <p><b><a name="nrrd" id="nrrd"></a>nrrd</b></p>
 <p>Load an NRRD (Nearly Raw Raster Data) file. Optional parameter: array endian.<br></p>
 <tt>Syntax:<br>

@@ -641,7 +641,7 @@ proc PrefsDialogButtonbarFile {f} {
     $m add separator
     $m add checkbutton -label [msgcat::mc {Header}] \
 	-variable pbuttons(file,header) -command {UpdateButtons buttons(file)}
-    $m add checkbutton -label [msgcat::mc {Notes} \
+    $m add checkbutton -label [msgcat::mc {Notes}] \
 	-variable pbuttons(file,notes) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add cascade -label [msgcat::mc {XPA}] -menu $m.xpa

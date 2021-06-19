@@ -654,7 +654,7 @@ proc PlotExportPhoto {varname fn format} {
 
     set rr [catch {image create photo -format window -data $var(top)} ph]
     if {$rr} {
-	Error [msgcat::mc {An error has occurred while creating]
+	Error [msgcat::mc {An error has occurred while creating}]
 	return
     }
 

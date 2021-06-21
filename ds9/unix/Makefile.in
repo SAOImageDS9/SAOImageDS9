@@ -172,7 +172,7 @@ debug	: ds9base ds9.zip
 else
 
 ds9	: ds9base ds9.zip
-	$(RM) ds9
+	$(RM) ds9 $(prefix)/bin/ds9 $(prefix)/bin/ds9.zip
 	strip ds9base
 	cp ds9base ds9
 	cp ds9 $(prefix)/bin/.
@@ -180,7 +180,7 @@ ds9	: ds9base ds9.zip
 #	cd $(prefix)/bin; codesign -s "$(ID)" ds9
 
 debug: ds9base ds9.zip
-	$(RM) ds9
+	$(RM) ds9 $(prefix)/bin/ds9 $(prefix)/bin/ds9.zip
 	cp ds9base ds9
 	cp ds9 $(prefix)/bin/.
 	cp ds9.zip $(prefix)/bin/.

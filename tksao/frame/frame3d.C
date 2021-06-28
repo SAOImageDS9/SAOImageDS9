@@ -967,9 +967,10 @@ void Frame3d::ibv3d(Vector3d uu, Matrix3d& mm, int ww, int hh,
 
 void Frame3d::reset()
 {
-  cmapID = 1;
-  bias = 0.5;
-  contrast = 1.0;
+  // don't change cmap
+  //  cmapID = 1;
+  //  bias = 0.5;
+  //  contrast = 1.0;
   keyContext->resetSecMode();
   keyContext->updateClip();
 

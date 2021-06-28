@@ -561,9 +561,10 @@ void Frame::pushPSMatrices(float scale, int width, int height)
 
 void Frame::reset()
 {
-  cmapID = 1;
-  bias = 0.5;
-  contrast = 1.0;
+  // don't change cmap
+  // cmapID = 1;
+  //  bias = 0.5;
+  //  contrast = 1.0;
   context->resetSecMode();
   context->updateClip();
   

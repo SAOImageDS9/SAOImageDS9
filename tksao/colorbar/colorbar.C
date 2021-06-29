@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2018
+// Copyright (C) 1999-2021
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -16,6 +16,9 @@
 Colorbar::Colorbar(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : ColorbarBase(i,c,item)
 {
+  cmapid_ =1;
+  ctagid_ =1;
+
   bias = .5;
   contrast = 1.0;
 
@@ -241,7 +244,7 @@ void Colorbar::getColorbarCmd()
 {
   if (cmaps.current()) {
     ostringstream str;
-    str << cmaps.current()->getID() << ' '
+    str << cmaps.current()->id() << ' '
       << bias << ' ' 
       << contrast << ' ' 
       << invert << ends;
@@ -255,7 +258,7 @@ void Colorbar::getColormapCmd()
 {
   if (cmaps.current()) {
     ostringstream str;
-    str << cmaps.current()->getID() << ' '
+    str << cmaps.current()->id() << ' '
 	<< bias << ' ' 
 	<< contrast << ' ' 
 	<< invert << ' '
@@ -271,8 +274,8 @@ void Colorbar::getColormapNameCmd(int id)
 {
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
-    if (ptr->getID() == id) {
-      Tcl_AppendResult(interp, (char*)ptr->getName(), NULL);
+    if (ptr->id() == id) {
+      Tcl_AppendResult(interp, (char*)ptr->name(), NULL);
       return;
     }
     ptr = ptr->next();
@@ -287,8 +290,8 @@ void Colorbar::getColormapFileNameCmd(int id)
 {
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
-    if (ptr->getID() == id) {
-      Tcl_AppendResult(interp, (char*)ptr->getFileName(), NULL);
+    if (ptr->id() == id) {
+      Tcl_AppendResult(interp, (char*)ptr->filename(), NULL);
       return;
     }
     ptr = ptr->next();
@@ -310,7 +313,7 @@ void Colorbar::getCurrentIDCmd()
 {
   if (cmaps.current()) {
     ostringstream str;
-    str << cmaps.current()->getID() << ends;
+    str << cmaps.current()->id() << ends;
     Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }
   else
@@ -320,7 +323,7 @@ void Colorbar::getCurrentIDCmd()
 void Colorbar::getCurrentNameCmd()
 {
   if (cmaps.current())
-    Tcl_AppendElement(interp, (char*)cmaps.current()->getName());
+    Tcl_AppendElement(interp, (char*)cmaps.current()->name());
   else
     result = TCL_ERROR;
 }
@@ -328,7 +331,7 @@ void Colorbar::getCurrentNameCmd()
 void Colorbar::getCurrentFileNameCmd()
 {
   if (cmaps.current())
-    Tcl_AppendElement(interp, (char*)cmaps.current()->getFileName());
+    Tcl_AppendElement(interp, (char*)cmaps.current()->filename());
   else
     result = TCL_ERROR;
 }
@@ -398,7 +401,7 @@ void Colorbar::listIDCmd()
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
     ostringstream str;
-    str << ptr->getID() << ends;
+    str << ptr->id() << ends;
     Tcl_AppendElement(interp, str.str().c_str());
 
     ptr = ptr->next();
@@ -409,7 +412,7 @@ void Colorbar::listNameCmd()
 {
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
-    Tcl_AppendElement(interp, (char*)ptr->getName());
+    Tcl_AppendElement(interp, (char*)ptr->name());
     ptr = ptr->next();
   }
 }
@@ -453,7 +456,7 @@ void Colorbar::mapCmd(char* which)
   char* a = toLower(which);
   cmaps.head();
   do {
-    char* b = toLower(cmaps.current()->getName());
+    char* b = toLower(cmaps.current()->name());
     if (!strcmp(a,b)) {
       reset();
       delete [] a;
@@ -474,7 +477,7 @@ void Colorbar::mapCmd(int id)
 {
   cmaps.head();
   do {
-    if (cmaps.current()->getID() == id) {
+    if (cmaps.current()->id() == id) {
       reset();
       return;
     }
@@ -498,7 +501,7 @@ void Colorbar::saveCmd(int id, const char* fn)
 {
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
-    if (ptr->getID() == id) {
+    if (ptr->id() == id) {
       if (!ptr->save(fn)) {
 	Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
 	result = TCL_ERROR;
@@ -516,7 +519,7 @@ void Colorbar::setColorbarCmd(int id, float b, float c, int i)
 {
   cmaps.head();
   while (cmaps.current()) {
-    if (cmaps.current()->getID() == id) {
+    if (cmaps.current()->id() == id) {
       bias = b;
       contrast = c;
       invert = i;

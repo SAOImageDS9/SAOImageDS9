@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2018
+// Copyright (C) 1999-2021
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -23,7 +23,11 @@ class Colorbar : public ColorbarBase {
 
  protected:
   List<ColorMapInfo> cmaps;
+  int cmapid_;
+
   List<ColorTag> ctags;
+  int ctagid_;
+
   float bias;
   float contrast;
 
@@ -53,6 +57,9 @@ class Colorbar : public ColorbarBase {
  public:
   Colorbar(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Colorbar();
+
+  int cmapid() {return cmapid_++;}
+  int ctagid() {return ctagid_++;}
 
   // commands
 

@@ -6,12 +6,10 @@
 #include "colortag.h"
 #include "colorbar.h"
 
-static int colorTagSeqID = 1;
-
 ColorTag::ColorTag(Colorbar* p, int b, int e, const char* clr) 
   : parent_(p), start_(b), stop_(e)
 {
-  id_ = colorTagSeqID++;
+  id_ = parent_->ctagid();
 
   colorname_ = dupstr(clr);
   color_ = parent_->getXColor(colorname_);

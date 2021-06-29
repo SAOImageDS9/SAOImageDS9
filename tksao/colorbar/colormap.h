@@ -23,9 +23,9 @@ class ColorMapInfo {
 protected:
   Colorbar* parent_;
 
-  int id;
-  char* name;
-  char* fileName;
+  int id_;
+  char* name_;
+  char* filename_;
   ColorMapInfo* next_;
   ColorMapInfo* previous_;
 
@@ -35,10 +35,10 @@ public:
 
   Colorbar* parent() {return parent_;}
 
-  const char* getName() {return name;}
-  int getID() {return id;}
+  int id() {return id_;}
+  const char* name() {return name_;}
+  const char* filename() {return filename_;}
   void setName(const char*);
-  const char* getFileName() {return fileName;}
   void setFileName(const char*);
   
   ColorMapInfo* next() 

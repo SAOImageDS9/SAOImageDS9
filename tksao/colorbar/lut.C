@@ -51,7 +51,7 @@ void LUTColorMap::newRGBColor(float r, float g, float b)
 
 int LUTColorMap::load()
 {
-  ifstream str(fileName);
+  ifstream str(filename_);
   if (!str)
     return 0;
   

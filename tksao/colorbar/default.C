@@ -9,8 +9,8 @@
 
 GreyColorMap::GreyColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("grey");
-  fileName = dupstr("grey.sao");
+  name_ = dupstr("grey");
+  filename_ = dupstr("grey.sao");
 
   red.append(new LIColor(0,0));
   red.append(new LIColor(1,1));
@@ -24,8 +24,8 @@ GreyColorMap::GreyColorMap(Colorbar* p) : SAOColorMap(p)
 
 RedColorMap::RedColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("red");
-  fileName = dupstr("red.sao");
+  name_ = dupstr("red");
+  filename_ = dupstr("red.sao");
 
   red.append(new LIColor(0,0));
   red.append(new LIColor(1,1));
@@ -39,8 +39,8 @@ RedColorMap::RedColorMap(Colorbar* p) : SAOColorMap(p)
 
 GreenColorMap::GreenColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("green");
-  fileName = dupstr("green.sao");
+  name_ = dupstr("green");
+  filename_ = dupstr("green.sao");
 
   red.append(new LIColor(0,0));
   red.append(new LIColor(0,0));
@@ -54,8 +54,8 @@ GreenColorMap::GreenColorMap(Colorbar* p) : SAOColorMap(p)
 
 BlueColorMap::BlueColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("blue");
-  fileName = dupstr("blue.sao");
+  name_ = dupstr("blue");
+  filename_ = dupstr("blue.sao");
 
   red.append(new LIColor(0,0));
   red.append(new LIColor(0,0));
@@ -69,8 +69,8 @@ BlueColorMap::BlueColorMap(Colorbar* p) : SAOColorMap(p)
 
 AColorMap::AColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("a");
-  fileName = dupstr("a.sao");
+  name_ = dupstr("a");
+  filename_ = dupstr("a.sao");
   
   red.append(new LIColor(0,0));
   red.append(new LIColor(.25,0));
@@ -93,8 +93,8 @@ AColorMap::AColorMap(Colorbar* p) : SAOColorMap(p)
 
 BColorMap::BColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("b");
-  fileName = dupstr("b.sao");
+  name_ = dupstr("b");
+  filename_ = dupstr("b.sao");
   
   red.append(new LIColor(0,0));
   red.append(new LIColor(.25,0));
@@ -115,8 +115,8 @@ BColorMap::BColorMap(Colorbar* p) : SAOColorMap(p)
 
 BBColorMap::BBColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("bb");
-  fileName = dupstr("bb.sao");
+  name_ = dupstr("bb");
+  filename_ = dupstr("bb.sao");
   
   red.append(new LIColor(0,0));
   red.append(new LIColor(.5,1));
@@ -134,8 +134,8 @@ BBColorMap::BBColorMap(Colorbar* p) : SAOColorMap(p)
 
 HEColorMap::HEColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("he");
-  fileName = dupstr("he.sao");
+  name_ = dupstr("he");
+  filename_ = dupstr("he.sao");
   
   red.append(new LIColor(0,0));
   red.append(new LIColor(.015,.5));
@@ -160,8 +160,8 @@ HEColorMap::HEColorMap(Colorbar* p) : SAOColorMap(p)
 
 I8ColorMap::I8ColorMap(Colorbar* p) : LUTColorMap(p)
 {
-  name = dupstr("i8");
-  fileName = dupstr("i8.lut");
+  name_ = dupstr("i8");
+  filename_ = dupstr("i8.lut");
 
   colors.append(new RGBColor(0,0,0));
   colors.append(new RGBColor(0,1,0));
@@ -175,8 +175,8 @@ I8ColorMap::I8ColorMap(Colorbar* p) : LUTColorMap(p)
 
 AIPSColorMap::AIPSColorMap(Colorbar* p) : LUTColorMap(p)
 {
-  name = dupstr("aips0");
-  fileName = dupstr("aips0.lut");
+  name_ = dupstr("aips0");
+  filename_ = dupstr("aips0.lut");
 
   colors.append(new RGBColor(.196,.196,.196));
   colors.append(new RGBColor(.475,.000,.608));
@@ -191,8 +191,8 @@ AIPSColorMap::AIPSColorMap(Colorbar* p) : LUTColorMap(p)
 
 HeatColorMap::HeatColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("heat");
-  fileName = dupstr("heat.sao");
+  name_ = dupstr("heat");
+  filename_ = dupstr("heat.sao");
 
   red.append(new LIColor(0,0));
   red.append(new LIColor(.34,1));
@@ -209,8 +209,8 @@ HeatColorMap::HeatColorMap(Colorbar* p) : SAOColorMap(p)
 
 CoolColorMap::CoolColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("cool");
-  fileName = dupstr("cool.sao");
+  name_ = dupstr("cool");
+  filename_ = dupstr("cool.sao");
 
   red.append(new LIColor(0,0));
   red.append(new LIColor(.29,0));
@@ -229,8 +229,8 @@ CoolColorMap::CoolColorMap(Colorbar* p) : SAOColorMap(p)
 
 RainbowColorMap::RainbowColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("rainbow");
-  fileName = dupstr("rainbow.sao");
+  name_ = dupstr("rainbow");
+  filename_ = dupstr("rainbow.sao");
 
   red.append(new LIColor(0,1));
   red.append(new LIColor(.2,0));
@@ -252,8 +252,8 @@ RainbowColorMap::RainbowColorMap(Colorbar* p) : SAOColorMap(p)
 
 StandardColorMap::StandardColorMap(Colorbar* p) : SAOColorMap(p)
 {
-  name = dupstr("standard");
-  fileName = dupstr("standard.sao");
+  name_ = dupstr("standard");
+  filename_ = dupstr("standard.sao");
 
   red.append(new LIColor(0,0));
   red.append(new LIColor(.333,.3));
@@ -279,8 +279,8 @@ StandardColorMap::StandardColorMap(Colorbar* p) : SAOColorMap(p)
 
 StaircaseColorMap::StaircaseColorMap(Colorbar* p) : LUTColorMap(p)
 {
-  name = dupstr("staircase");
-  fileName = dupstr("staircase.lut");
+  name_ = dupstr("staircase");
+  filename_ = dupstr("staircase.lut");
 
   for (int ii=1; ii<=5; ii++) {
     float kk = ii/5.;
@@ -300,8 +300,8 @@ StaircaseColorMap::StaircaseColorMap(Colorbar* p) : LUTColorMap(p)
 
 ColorColorMap::ColorColorMap(Colorbar* p) : LUTColorMap(p)
 {
-  name = dupstr("color");
-  fileName = dupstr("color.lut");
+  name_ = dupstr("color");
+  filename_ = dupstr("color.lut");
 
   colors.append(new RGBColor(0,0,0));
   colors.append(new RGBColor(0.18431, 0.18431, 0.18431));
@@ -323,8 +323,8 @@ ColorColorMap::ColorColorMap(Colorbar* p) : LUTColorMap(p)
 
 SLSColorMap::SLSColorMap(Colorbar* p) : LUTColorMap(p)
 {
-  name = dupstr("sls");
-  fileName = dupstr("sls.lut");
+  name_ = dupstr("sls");
+  filename_ = dupstr("sls.lut");
 
   colors.append(new RGBColor(0.000000, 0.000000, 0.000000));
   colors.append(new RGBColor(0.043442, 0.000000, 0.052883));
@@ -539,8 +539,8 @@ HSVColorMap::HSVColorMap(Colorbar* p) : LUTColorMap(p)
    * in the middle of the range.
    */
 
-  name = dupstr("hsv");
-  fileName = dupstr("hsv.lut");
+  name_ = dupstr("hsv");
+  filename_ = dupstr("hsv.lut");
   int size = 200;
 
   for (int i=0; i<size; i++) {

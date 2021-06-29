@@ -4,41 +4,41 @@
 
 #include "util.h"
 #include "colormap.h"
-
-static int squenceID = 1;
+#include "colorbar.h"
 
 // ColorMapInfo
 
 ColorMapInfo::ColorMapInfo(Colorbar* p) : parent_(p)
 {
-  id = squenceID++;
-  name =NULL;
-  fileName =NULL;
+  id_ = parent_->cmapid();
+
+  name_ =NULL;
+  filename_ =NULL;
   next_ =NULL;
   previous_ =NULL;
 }
 
 ColorMapInfo::~ColorMapInfo()
 {
-  if (name)
-    delete [] name;
+  if (name_)
+    delete [] name_;
 
-  if (fileName)
-    delete [] fileName;
+  if (filename_)
+    delete [] filename_;
 }
 
 void ColorMapInfo::setName(const char* n)
 {
-  if (name)
-    delete [] name;
+  if (name_)
+    delete [] name_;
 
-  name = dupstr(n);
+  name_ = dupstr(n);
 }
 
 void ColorMapInfo::setFileName(const char* n)
 {
-  if (fileName)
-    delete [] fileName;
+  if (filename_)
+    delete [] filename_;
 
-  fileName = dupstr(n);
+  filename_ = dupstr(n);
 }

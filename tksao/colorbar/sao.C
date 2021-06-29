@@ -60,7 +60,7 @@ void SAOColorMap::setChannel(ChannelType which)
 
 int SAOColorMap::load()
 {
-  ifstream str(fileName);
+  ifstream str(filename_);
   if (!str)
     return 0;
   

@@ -964,26 +964,16 @@
 ::msgcat::mcset zh {Zoom} [encoding convertfrom big5 "\xC1\x59 \xA9\xF1"]
 ::msgcat::mcset zh {already connected} 
 ::msgcat::mcset zh {and} 
-::msgcat::mcset zh {blue} [encoding convertfrom big5 "\xC2\xC5"]
 ::msgcat::mcset zh {b} 
-::msgcat::mcset zh {color} 
-::msgcat::mcset zh {cool} 
-::msgcat::mcset zh {green} [encoding convertfrom big5 "\xBA\xF1"]
-::msgcat::mcset zh {grey} [encoding convertfrom big5 "\xA6\xC7"]
 ::msgcat::mcset zh {g} 
 ::msgcat::mcset zh {h5utils} 
-::msgcat::mcset zh {heat} 
 ::msgcat::mcset zh {hundredths second} 
 ::msgcat::mcset zh {internal error} 
 ::msgcat::mcset zh {not connected} 
 ::msgcat::mcset zh {not} 
 ::msgcat::mcset zh {only} 
 ::msgcat::mcset zh {or center of data} 
-::msgcat::mcset zh {rainbow} 
-::msgcat::mcset zh {red} [encoding convertfrom big5 "\xAC\xF5"]
 ::msgcat::mcset zh {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset zh {r} 
-::msgcat::mcset zh {staircase} 
-::msgcat::mcset zh {standard} 
 ::msgcat::mcset zh {unable to locate HUB} 
 ::msgcat::mcset zh {x} 

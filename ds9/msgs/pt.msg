@@ -964,26 +964,16 @@
 ::msgcat::mcset pt {Zoom} {Fator}
 ::msgcat::mcset pt {already connected} 
 ::msgcat::mcset pt {and} 
-::msgcat::mcset pt {blue} 
 ::msgcat::mcset pt {b} 
-::msgcat::mcset pt {color} 
-::msgcat::mcset pt {cool} 
-::msgcat::mcset pt {green} 
-::msgcat::mcset pt {grey} 
 ::msgcat::mcset pt {g} 
 ::msgcat::mcset pt {h5utils} 
-::msgcat::mcset pt {heat} 
 ::msgcat::mcset pt {hundredths second} 
 ::msgcat::mcset pt {internal error} 
 ::msgcat::mcset pt {not connected} 
 ::msgcat::mcset pt {not} 
 ::msgcat::mcset pt {only} 
 ::msgcat::mcset pt {or center of data} {ou centro dos dados}
-::msgcat::mcset pt {rainbow} 
-::msgcat::mcset pt {red} 
 ::msgcat::mcset pt {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {colunas de dados foram descarregadas. Mais podem estar disponíveis. Você pode querer ajustar o máximo permitido}]
 ::msgcat::mcset pt {r} 
-::msgcat::mcset pt {staircase} 
-::msgcat::mcset pt {standard} 
 ::msgcat::mcset pt {unable to locate HUB} 
 ::msgcat::mcset pt {x} 

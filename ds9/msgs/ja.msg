@@ -964,26 +964,16 @@
 ::msgcat::mcset ja {Zoom} [encoding convertfrom euc-jp "\xa5\xba\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {already connected} 
 ::msgcat::mcset ja {and} 
-::msgcat::mcset ja {blue} 
 ::msgcat::mcset ja {b} 
-::msgcat::mcset ja {color} 
-::msgcat::mcset ja {cool} 
-::msgcat::mcset ja {green} 
-::msgcat::mcset ja {grey} 
 ::msgcat::mcset ja {g} 
 ::msgcat::mcset ja {h5utils} 
-::msgcat::mcset ja {heat} 
 ::msgcat::mcset ja {hundredths second} 
 ::msgcat::mcset ja {internal error} 
 ::msgcat::mcset ja {not connected} 
 ::msgcat::mcset ja {not} 
 ::msgcat::mcset ja {only} 
 ::msgcat::mcset ja {or center of data} [encoding convertfrom euc-jp "\xa4\xe2\xa4\xb7\xa4\xaf\xa4\xcf\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xce\xc3\xe6\xbf\xb4"]
-::msgcat::mcset ja {rainbow} 
-::msgcat::mcset ja {red} 
 ::msgcat::mcset ja {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom euc-jp "\xb9\xd4\xa4\xce\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xac\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb5\xa4\xec\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3\xa4\xb5\xa4\xe9\xa4\xcb\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb9\xa4\xeb\xbe\xec\xb9\xe7\xa4\xcf\xa1\xa2\xba\xc7\xc2\xe7\xb9\xd4\xbf\xf4\xa4\xf2\xc0\xdf\xc4\xea\xa4\xb7\xa4\xca\xa4\xaa\xa4\xb7\xa4\xc6\xa4\xaf\xa4\xc0\xa4\xb5\xa4\xa4\xa1\xa3"]
 ::msgcat::mcset ja {r} 
-::msgcat::mcset ja {staircase} 
-::msgcat::mcset ja {standard} 
 ::msgcat::mcset ja {unable to locate HUB} 
 ::msgcat::mcset ja {x} 

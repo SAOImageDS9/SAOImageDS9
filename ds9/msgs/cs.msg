@@ -964,26 +964,16 @@
 ::msgcat::mcset cs {Zoom} [encoding convertfrom iso8859-2 {Zvìt¹ení}]
 ::msgcat::mcset cs {already connected} 
 ::msgcat::mcset cs {and} 
-::msgcat::mcset cs {blue} [encoding convertfrom iso8859-2 {modrá}]
 ::msgcat::mcset cs {b} 
-::msgcat::mcset cs {color} [encoding convertfrom iso8859-2 {barva}]
-::msgcat::mcset cs {cool} [encoding convertfrom iso8859-2 {chlad}]
-::msgcat::mcset cs {green} [encoding convertfrom iso8859-2 {zelená}]
-::msgcat::mcset cs {grey} [encoding convertfrom iso8859-2 {¹edá}]
 ::msgcat::mcset cs {g} 
 ::msgcat::mcset cs {h5utils} 
-::msgcat::mcset cs {heat} [encoding convertfrom iso8859-2 {horko}]
 ::msgcat::mcset cs {hundredths second} 
 ::msgcat::mcset cs {internal error} 
 ::msgcat::mcset cs {not connected} 
 ::msgcat::mcset cs {not} 
 ::msgcat::mcset cs {only} 
 ::msgcat::mcset cs {or center of data} 
-::msgcat::mcset cs {rainbow} [encoding convertfrom iso8859-2 {duha}]
-::msgcat::mcset cs {red} [encoding convertfrom iso8859-2 {èervená}]
 ::msgcat::mcset cs {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-2 {øádkù dat. Více jich mù¾e být k dispozici. Zkuste zmìnit povolené maximum}]
 ::msgcat::mcset cs {r} 
-::msgcat::mcset cs {staircase} [encoding convertfrom iso8859-2 {schodi¹tì}]
-::msgcat::mcset cs {standard} 
 ::msgcat::mcset cs {unable to locate HUB} 
 ::msgcat::mcset cs {x} 

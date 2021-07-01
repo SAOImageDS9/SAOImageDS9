@@ -964,26 +964,16 @@
 ::msgcat::mcset es {Zoom} {Zoom}
 ::msgcat::mcset es {already connected} 
 ::msgcat::mcset es {and} 
-::msgcat::mcset es {blue} 
 ::msgcat::mcset es {b} 
-::msgcat::mcset es {color} 
-::msgcat::mcset es {cool} 
-::msgcat::mcset es {green} 
-::msgcat::mcset es {grey} {gris}
 ::msgcat::mcset es {g} 
 ::msgcat::mcset es {h5utils} 
-::msgcat::mcset es {heat} 
 ::msgcat::mcset es {hundredths second} 
 ::msgcat::mcset es {internal error} 
 ::msgcat::mcset es {not connected} 
 ::msgcat::mcset es {not} 
 ::msgcat::mcset es {only} 
 ::msgcat::mcset es {or center of data} {o centro de los datos}
-::msgcat::mcset es {rainbow} 
-::msgcat::mcset es {red} 
 ::msgcat::mcset es {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {Filas de datos transferidas. Puede que haya más disponibles. Quizá quiera ajustar el máximo permitido.}]
 ::msgcat::mcset es {r} 
-::msgcat::mcset es {staircase} 
-::msgcat::mcset es {standard} [encoding convertfrom iso8859-1 {estándar}]
 ::msgcat::mcset es {unable to locate HUB} 
 ::msgcat::mcset es {x} 

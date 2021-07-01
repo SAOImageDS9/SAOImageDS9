@@ -964,26 +964,16 @@
 ::msgcat::mcset da {Zoom} 
 ::msgcat::mcset da {already connected} 
 ::msgcat::mcset da {and} 
-::msgcat::mcset da {blue} 
 ::msgcat::mcset da {b} 
-::msgcat::mcset da {color} 
-::msgcat::mcset da {cool} 
-::msgcat::mcset da {green} 
-::msgcat::mcset da {grey} [encoding convertfrom iso8859-1 {grå}]
 ::msgcat::mcset da {g} 
 ::msgcat::mcset da {h5utils} 
-::msgcat::mcset da {heat} 
 ::msgcat::mcset da {hundredths second} 
 ::msgcat::mcset da {internal error} 
 ::msgcat::mcset da {not connected} 
 ::msgcat::mcset da {not} 
 ::msgcat::mcset da {only} 
 ::msgcat::mcset da {or center of data} {eller center for data}
-::msgcat::mcset da {rainbow} {regnbue}
-::msgcat::mcset da {red} 
 ::msgcat::mcset da {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {rækker af data er blevet hentet. Der kan være flere tilgængelige. Du bør måske ændre det maksimalt tilladte antal}]
 ::msgcat::mcset da {r} 
-::msgcat::mcset da {staircase} {trappe}
-::msgcat::mcset da {standard} 
 ::msgcat::mcset da {unable to locate HUB} 
 ::msgcat::mcset da {x} 

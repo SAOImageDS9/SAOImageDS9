@@ -964,26 +964,16 @@
 ::msgcat::mcset fr {Zoom} 
 ::msgcat::mcset fr {already connected} 
 ::msgcat::mcset fr {and} 
-::msgcat::mcset fr {blue} 
 ::msgcat::mcset fr {b} 
-::msgcat::mcset fr {color} 
-::msgcat::mcset fr {cool} 
-::msgcat::mcset fr {green} 
-::msgcat::mcset fr {grey} 
 ::msgcat::mcset fr {g} 
 ::msgcat::mcset fr {h5utils} 
-::msgcat::mcset fr {heat} 
 ::msgcat::mcset fr {hundredths second} 
 ::msgcat::mcset fr {internal error} 
 ::msgcat::mcset fr {not connected} 
 ::msgcat::mcset fr {not} 
 ::msgcat::mcset fr {only} 
 ::msgcat::mcset fr {or center of data} 
-::msgcat::mcset fr {rainbow} 
-::msgcat::mcset fr {red} 
 ::msgcat::mcset fr {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset fr {r} 
-::msgcat::mcset fr {staircase} 
-::msgcat::mcset fr {standard} 
 ::msgcat::mcset fr {unable to locate HUB} 
 ::msgcat::mcset fr {x} 

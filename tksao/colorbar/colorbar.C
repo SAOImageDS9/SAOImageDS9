@@ -302,6 +302,22 @@ void Colorbar::getColormapFileNameCmd(int id)
   result = TCL_ERROR;
 }
 
+void Colorbar::getColormapFileNameCmd(const char* str)
+{
+  ColorMapInfo* ptr = cmaps.begin();
+  while (ptr) {
+    if (!strcmp(ptr->name(),str)) {
+      Tcl_AppendResult(interp, (char*)ptr->filename(), NULL);
+      return;
+    }
+    ptr = ptr->next();
+  }
+
+  // if we got this far, we did not find it, bail out
+  Tcl_AppendResult(interp, " colormap not found.", NULL);
+  result = TCL_ERROR;
+}
+
 void Colorbar::getContrastCmd()
 {
   ostringstream str;
@@ -502,6 +518,24 @@ void Colorbar::saveCmd(int id, const char* fn)
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
     if (ptr->id() == id) {
+      if (!ptr->save(fn)) {
+	Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
+	result = TCL_ERROR;
+      }
+      return;
+    }
+    ptr = ptr->next();
+  }
+
+  Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
+  result = TCL_ERROR;
+}
+
+void Colorbar::saveCmd(const char* cmap, const char* fn)
+{
+  ColorMapInfo* ptr = cmaps.begin();
+  while (ptr) {
+    if (!strcmp(ptr->name(),cmap)) {
       if (!ptr->save(fn)) {
 	Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
 	result = TCL_ERROR;

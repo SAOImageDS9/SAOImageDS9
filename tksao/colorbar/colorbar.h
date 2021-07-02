@@ -69,6 +69,7 @@ class Colorbar : public ColorbarBase {
   void getColormapCmd();
   void getColormapNameCmd(int);
   void getColormapFileNameCmd(int);
+  void getColormapFileNameCmd(const char*);
   void getContrastCmd();
   void getCurrentFileNameCmd();
   void getCurrentIDCmd();
@@ -81,6 +82,7 @@ class Colorbar : public ColorbarBase {
   void mapCmd(int);
   void saveCmd(const char*);
   void saveCmd(int, const char*);
+  void saveCmd(const char*, const char*);
   void setColorbarCmd(int, float, float, int);
 
   void getTagCmd();

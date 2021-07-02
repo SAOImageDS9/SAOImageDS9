@@ -17,28 +17,14 @@ proc ColorbarDef {} {
     set icolorbar(vertical,width) 75
     set icolorbar(horizontal,height) 45
     set icolorbar(num) 1024
-    set icolorbar(start) $ds9(menu,start)
-    set icolorbar(end) 0
-    set icolorbar(count) 0
 
-    set icolorbar(h5) 0
-    set icolorbar(h5,fn) [list h5_autumn.sao h5_bluered.sao h5_bone.sao h5_cool.sao h5_copper.sao h5_dkbluered.sao h5_gray.sao h5_green.sao h5_hot.sao h5_hsv.sao h5_jet.sao h5_pink.sao h5_spring.sao h5_summer.sao h5_winter.sao h5_yarg.sao h5_yellow.sao
-]
-
-    set icolorbar(matplotlib) 0
-    set icolorbar(matplotlib,fn) [list inferno.lut magma.lut plasma.lut viridis.lut - twilight.lut - turbo.lut]
-
-    set icolorbar(cubehelix) 0
-    set icolorbar(cubehelix,fn) [list ch05m151008.sao ch05m151010.sao ch05m151012.sao ch05m151410.sao ch05p151010.sao ch20m151010.sao - cubehelix0.sao cubehelix1.sao]
-
-    set icolorbar(gist) 0
-    set icolorbar(gist,fn) [list gist_earth.sao gist_heat.sao gist_rainbow.sao gist_yarg.sao gist_gray.sao gist_ncar.sao gist_stern.sao]
-
-    set icolorbar(topo) 0
-    set icolorbar(topo,fn) [list tpglarf.sao tpglhcf.sao tpglhwf.sao tpglpof.sao tpglarm.sao tpglhcm.sao tpglhwm.sao tpglpom.sao]
-
-    set icolorbar(user) 0
-    set icolorbar(user,fn) {}
+    set icolorbar(default,cmaps) [list grey red green blue a b bb he i8 aips0 sls hsv heat cool rainbow standard staircase color]
+    set icolorbar(h5,cmaps) [list h5_autumn h5_bluered h5_bone h5_cool h5_copper h5_dkbluered h5_gray h5_green h5_hot h5_hsv h5_jet h5_pink h5_spring h5_summer h5_winter h5_yarg h5_yellow]
+    set icolorbar(matplotlib,cmaps) [list inferno magma plasma viridis twilight turbo]
+    set icolorbar(cubehelix,cmaps) [list ch05m151008 ch05m151010 ch05m151012 ch05m151410 ch05p151010 ch20m151010 cubehelix0 cubehelix1]
+    set icolorbar(gist,cmaps) [list gist_earth gist_heat gist_rainbow gist_yarg gist_gray gist_ncar gist_stern]
+    set icolorbar(topo,cmaps) [list tpglarf tpglhcf tpglhwf tpglpof tpglarm tpglhcm tpglhwm tpglpom]
+    set icolorbar(user,cmaps) {}
 
     set colorbar(lock) 0
     set colorbar(size) 20
@@ -74,6 +60,13 @@ proc CreateColorbar {} {
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
+    # preload external cmaps
+    CreateColorbarExternal h5 sao
+    CreateColorbarExternal matplotlib lut
+    CreateColorbarExternal cubehelix sao
+    CreateColorbarExternal gist sao
+    CreateColorbarExternal topo sao
+
     $ds9(canvas) bind colorbar <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind colorbar <Enter> [list ColorbarEnter %x %y]
     $ds9(canvas) bind colorbar <Leave> [list ColorbarLeave]
@@ -104,6 +97,22 @@ proc CreateColorbar {} {
     $ds9(canvas) bind colorbarrgb <Leave> [list ColorbarLeave]
 
     LayoutColorbar
+}
+
+proc CreateColorbarExternal {which ext} {
+    global ds9
+    global icolorbar
+
+    foreach cmap $icolorbar($which,cmaps) {
+	set fn $cmap.$ext
+	set ch [open "$ds9(root)/cmaps/$fn" r]
+
+	global vardata
+	set vardata [read $ch]
+	close $ch
+
+	colorbar load var "\{$fn\}" vardata
+    }
 }
 
 proc InitColorbar {} {
@@ -155,23 +164,22 @@ proc LoadColormapFile {fn} {
 	return
     }
     
-    set id [colorbar get id]
     set colorbar(map) [colorbar get name]
+    lappend icolorbar(user,cmaps) $colorbar(map)
 
     $ds9(mb).color.user add radiobutton \
 	-label "$colorbar(map)" \
 	-variable colorbar(map) \
-	-command [list ChangeColormapID $id]
+	-command [list ChangeColormapName $colorbar(map)]
 
     if {[winfo exists $icolorbar(top)]} {
 	$icolorbar(mb).colormap.user add radiobutton \
 	    -label "$colorbar(map)" \
 	    -variable colorbar(map) \
-	    -command [list ChangeColormapID $id]
+	    -command [list ChangeColormapName $colorbar(map)]
     }
-    incr icolorbar(count)
 
-    ChangeColormapID $id
+    ChangeColormapName $colorbar(map)
 }
 
 proc SaveColormap {} {
@@ -512,15 +520,14 @@ proc ColorbarRelease3 {x y} {
     UpdateColorDialog
 }
 
-proc ChangeColormapID {id} {
+proc ChangeColormapName {name} {
     global colorbar
-
     global current
-    
-    colorbar map $id
+
+    colorbar map $name
     if {$current(frame) != {} } {
 	$current(frame) colormap [colorbar get colormap]
-	set colorbar(map) [colorbar get name]
+	set colorbar(map) $name
 	set colorbar(invert) [colorbar get invert]
     }
     LockColorCurrent
@@ -832,29 +839,12 @@ proc ColormapDialog {} {
     ColorMenu $mb.color colorbar tag {}
 
     ThemeMenu $mb.colormap
-    ThemeMenu $mb.colormap.h5
-    ThemeMenu $mb.colormap.matplotlib
-    ThemeMenu $mb.colormap.cubehelix
-    ThemeMenu $mb.colormap.gist
-    ThemeMenu $mb.colormap.topo
-    ThemeMenu $mb.colormap.user
-
-    set id [colorbar list id]
-
-    ColormapCreateMenu id $mb.colormap \
-	0 $icolorbar(end)
-    ColormapCreateMenu id $mb.colormap.h5 \
-	$icolorbar(h5) $icolorbar(matplotlib)
-    ColormapCreateMenu id $mb.colormap.matplotlib \
-	$icolorbar(matplotlib) $icolorbar(cubehelix)
-    ColormapCreateMenu id $mb.colormap.cubehelix \
-	$icolorbar(cubehelix) $icolorbar(gist)
-    ColormapCreateMenu id $mb.colormap.gist \
-	$icolorbar(gist) $icolorbar(topo)
-    ColormapCreateMenu id $mb.colormap.topo \
-	$icolorbar(topo) $icolorbar(user)
-    ColormapCreateMenu id $mb.colormap.user \
-	$icolorbar(user) $icolorbar(count)
+    foreach cmap $icolorbar(default,cmaps) {
+	$mb.colormap add radiobutton \
+	    -label [msgcat::mc $cmap] \
+	    -variable colorbar(map) -value $cmap \
+	    -command "ChangeColormapName $cmap"
+    }
 
     $mb.colormap add separator
     $mb.colormap add cascade -label [msgcat::mc {h5utils}] \
@@ -868,7 +858,15 @@ proc ColormapDialog {} {
     $mb.colormap add cascade -label [msgcat::mc {Topographic}] \
 	-menu $mb.colormap.topo
     $mb.colormap add cascade -label [msgcat::mc {User}] \
-	-menu $mb.colormap.user
+	-menu $ds9(mb).color.user
+
+    ColormapDialogExternal h5
+    ColormapDialogExternal matplotlib
+    ColormapDialogExternal cubehelix
+    ColormapDialogExternal gist
+    ColormapDialogExternal topo
+    ColormapDialogExternal user
+
     $mb.colormap add separator
     $mb.colormap add checkbutton \
 	-label [msgcat::mc {Invert Colormap}] \
@@ -913,16 +911,18 @@ proc ColormapDialog {} {
     bind $w <<Close>> ColormapDestroyDialog
 }
 
-proc ColormapCreateMenu {varname which start stop} {
-    upvar $varname var
+proc ColormapDialogExternal {which} {
+    global colorbar
+    global icolorbar
 
-    for {set ii $start} {$ii<$stop} {incr ii} {
-	set jj [lindex $var $ii]
-	set name [colorbar get name $jj]
-	$which add radiobutton \
-	    -label [msgcat::mc $name] \
-	    -variable colorbar(map) -value $name \
-	    -command "ChangeColormapID $jj"
+    set mb $icolorbar(mb)
+    ThemeMenu $mb.colormap.$which
+
+    foreach cmap $icolorbar($which,cmaps) {
+	$mb.colormap.$which add radiobutton \
+	    -label [msgcat::mc $cmap] \
+	    -variable colorbar(map) -value $cmap \
+	    -command "ChangeColormapName $cmap"
     }
 }
 
@@ -1006,7 +1006,6 @@ proc UpdateColorDialog {} {
     if {[winfo exists $icolorbar(top)]} {
 	set dcolorbar(contrast) [$current(colorbar) get contrast]
 	set dcolorbar(bias) [$current(colorbar) get bias]
-	set end [expr $icolorbar(end)+$icolorbar(start)]
 
 	if {$current(frame) != {}} {
 	    switch -- [$current(frame) get type] {
@@ -1016,9 +1015,11 @@ proc UpdateColorDialog {} {
 			"[msgcat::mc {Open}]..." -state normal
 		    $icolorbar(mb).file entryconfig \
 			"[msgcat::mc {Save}]..." -state normal
-		    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
-			$icolorbar(mb).colormap entryconfig $ii -state normal
+
+		    foreach cmap $icolorbar(default,cmaps) {
+			$icolorbar(mb).colormap entryconfig $cmap -state normal
 		    }
+
 		    $icolorbar(mb).colormap entryconfig \
 			[msgcat::mc {h5utils}] -state normal
 		    $icolorbar(mb).colormap entryconfig \
@@ -1031,15 +1032,18 @@ proc UpdateColorDialog {} {
 			[msgcat::mc {Topographic}] -state normal
 		    $icolorbar(mb).colormap entryconfig \
 			[msgcat::mc {User}] -state normal
+
 		}
 		rgb {
 		    $icolorbar(mb).file entryconfig \
 			"[msgcat::mc {Open}]..." -state disabled
 		    $icolorbar(mb).file entryconfig \
 			"[msgcat::mc {Save}]..." -state disabled
-		    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
-			$icolorbar(mb).colormap entryconfig $ii -state disabled
+
+		    foreach cmap $icolorbar(default,cmaps) {
+			$icolorbar(mb).colormap entryconfig $cmap -state disabled
 		    }
+
 		    $icolorbar(mb).colormap entryconfig \
 			[msgcat::mc {h5utils}] -state disabled
 		    $icolorbar(mb).colormap entryconfig \
@@ -1059,9 +1063,11 @@ proc UpdateColorDialog {} {
 		"[msgcat::mc {Open}]..." -state normal
 	    $icolorbar(mb).file entryconfig \
 		"[msgcat::mc {Save}]..." -state normal
-	    for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
-		$icolorbar(mb).colormap entryconfig $ii -state normal
+
+	    foreach cmap $icolorbar(default,cmaps) {
+		$icolorbar(mb).colormap entryconfig $cmap -state normal
 	    }
+
 	    $icolorbar(mb).colormap entryconfig [msgcat::mc {h5utils}] \
 		-state normal
 	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Matplotlib}] \
@@ -1188,15 +1194,11 @@ proc ColorbarBackupCmaps {ch dir} {
 	catch {file delete -force $ff}
     }
 
-    # save any loaded cmaps
-    set id [colorbar list id]
-    if {$icolorbar(user)<[llength $id]} {
-	for {set ii $icolorbar(user)} {$ii<[llength $id]} {incr ii} {
-	    set which [lindex $id $ii]
-	    set nn [lindex [file split [colorbar get file name $which]] end]
-	    colorbar save $which \"[file join $dir $nn]\"
-	    puts $ch "LoadColormapFile \"[file join $rdir $nn]\""
-	}
+    # save any loaded user cmaps
+    foreach cmap $icolorbar(user,cmaps) {
+	set nn [lindex [file split [colorbar get file name $cmap]] end]
+	colorbar save $cmap \"[file join $dir $nn]\"
+	puts $ch "LoadColormapFile \"[file join $rdir $nn]\""
     }
 }
 
@@ -1222,29 +1224,21 @@ proc CmapCmd {item} {
     switch -- [$current(frame) get type] {
 	base -
 	3d {
-	    set cmap $item
+	    set cmap [string tolower $item]
 	    # common variants on spellings
-	    switch -- [string tolower $cmap] {
+	    switch -- $cmap {
 		gray {set cmap grey}
 	    }
 
-	    set id [colorbar list id]
-	    set found 0
-	    foreach ii $id {
-		set title [colorbar get name $ii]
-		if {[string equal -nocase $title $cmap]} {
-		    set colorbar(map) $title
-		    colorbar map "{$colorbar(map)}"
-		    $current(frame) colormap [colorbar get colormap]
-		    set colorbar(invert) [colorbar get invert]
-
-		    set found 1
-		    break
-		}
-	    }
-	    if {!$found} {
+	    if {[catch {colorbar map $cmap}]} {
 		Error "[msgcat::mc {Unknown Colormap}] $cmap"
+		set cmap grey
+		colorbar map $cmap
 	    }
+
+	    $current(frame) colormap [colorbar get colormap]
+	    set colorbar(map) $cmap
+	    set colorbar(invert) [colorbar get invert]
 	}
 	rgb {}
     }

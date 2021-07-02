@@ -158,6 +158,7 @@ get	: BIAS_ {cb->getBiasCmd();}
 	| CONTRAST_ {cb->getContrastCmd();}
 	| FILE_ NAME_ {cb->getCurrentFileNameCmd();}
 	| FILE_ NAME_ INT {cb->getColormapFileNameCmd($3);}
+	| FILE_ NAME_ STRING {cb->getColormapFileNameCmd($3);}
 	| HEIGHT_ {cb->getHeightCmd();}
 	| ID_ {cb->getCurrentIDCmd();}
 	| INVERT_ {cb->getInvertCmd();}
@@ -202,7 +203,9 @@ macosx	: PRINT_ {
 	}
 	;
 
-map	: STRING {cb->mapCmd($1);}
+map	: 'a' {cb->mapCmd("a");}
+        | 'b' {cb->mapCmd("b");}
+        | STRING {cb->mapCmd($1);}
 	| INT {cb->mapCmd($1);}
 	;
 
@@ -237,6 +240,7 @@ tagedit	: BEGIN_ INT INT STRING {cb->tagEditBeginCmd($2,$3,$4);}
 
 save	: STRING {cb->saveCmd($1);}
 	| INT STRING {cb->saveCmd($1,$2);}
+	| STRING STRING {cb->saveCmd($1,$2);}
 	;
 
 win32	: PRINT_ {

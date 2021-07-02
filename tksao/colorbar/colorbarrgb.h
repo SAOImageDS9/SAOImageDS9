@@ -43,6 +43,7 @@ public:
   void getColormapCmd();
   void getColormapNameCmd(int);
   void getColormapFileNameCmd(int);
+  void getColormapFileNameCmd(const char*);
   void getContrastCmd();
   void getCurrentFileNameCmd();
   void getCurrentIDCmd();

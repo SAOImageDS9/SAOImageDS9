@@ -6,43 +6,18 @@ package provide DS9 1.0
 
 # Menus
 
-# Default colormap names
-# [msgcat::mc {grey}]
-# [msgcat::mc {red}]
-# [msgcat::mc {green}]
-# [msgcat::mc {blue}]
-# [msgcat::mc {heat}]
-# [msgcat::mc {cool}]
-# [msgcat::mc {rainbow}]
-# [msgcat::mc {standard}]
-# [msgcat::mc {staircase}]
-# [msgcat::mc {color}]
-
 proc ColorMainMenu {} {
     global colorbar
     global icolorbar
     global ds9
 
     ThemeMenu $ds9(mb).color
-
-    set id [colorbar list id]
-    # base
-    foreach jj $id {
-	set name [colorbar get name $jj]
+    foreach cmap $icolorbar(default,cmaps) {
 	$ds9(mb).color add radiobutton \
-	    -label [msgcat::mc $name] \
-	    -variable colorbar(map) -value $name \
-	    -command "ChangeColormapID $jj"
-	incr icolorbar(count)
+	    -label [msgcat::mc $cmap] \
+	    -variable colorbar(map) -value $cmap \
+	    -command "ChangeColormapName $cmap"
     }
-
-    set icolorbar(end) $icolorbar(count)
-    set icolorbar(h5) $icolorbar(count)
-    set icolorbar(matplotlib) $icolorbar(count)
-    set icolorbar(cubehelix) $icolorbar(count)
-    set icolorbar(gist) $icolorbar(count)
-    set icolorbar(topo) $icolorbar(count)
-    set icolorbar(user) $icolorbar(count)
 
     $ds9(mb).color add separator
     $ds9(mb).color add cascade -label [msgcat::mc {h5utils}] \
@@ -57,6 +32,14 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.topo
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
+
+    ColorMainMenuExternal h5
+    ColorMainMenuExternal matplotlib
+    ColorMainMenuExternal cubehelix
+    ColorMainMenuExternal gist
+    ColorMainMenuExternal topo
+    ColorMainMenuExternal user
+
     $ds9(mb).color add separator
     $ds9(mb).color add checkbutton -label [msgcat::mc {Invert Colormap}] \
 	-variable colorbar(invert) -command InvertColorbar
@@ -68,13 +51,6 @@ proc ColorMainMenu {} {
     $ds9(mb).color add separator
     $ds9(mb).color add command -label "[msgcat::mc {Colormap Parameters}]..." \
 	-command ColormapDialog
-
-    ThemeMenu $ds9(mb).color.h5
-    ThemeMenu $ds9(mb).color.matplotlib
-    ThemeMenu $ds9(mb).color.cubehelix
-    ThemeMenu $ds9(mb).color.gist
-    ThemeMenu $ds9(mb).color.topo
-    ThemeMenu $ds9(mb).color.user
 
     ThemeMenu $ds9(mb).color.colorbar
     $ds9(mb).color.colorbar add cascade -label [msgcat::mc {Orientation}] \
@@ -113,41 +89,19 @@ proc ColorMainMenu {} {
 
     FontMenu $ds9(mb).color.colorbar.cb colorbar font font,size font,weight \
 	font,slant UpdateView
-
-    CreateExColorMenu h5
-    CreateExColorMenu matplotlib
-    CreateExColorMenu cubehelix
-    CreateExColorMenu gist
-    CreateExColorMenu topo
-    CreateExColorMenu user
 }
 
-proc CreateExColorMenu {which} {
+proc ColorMainMenuExternal {which} {
     global ds9
     global icolorbar
 
-    # save start location
-    set icolorbar($which) $icolorbar(count)
+    ThemeMenu $ds9(mb).color.$which
 
-    foreach fn $icolorbar($which,fn) {
-	if {[lindex $fn 0] == {-}} {
-	    $ds9(mb).color.$which add separator
-	} else {
-	    set ch [open "$ds9(root)/cmaps/$fn" r]
-	    global vardata 
-	    set vardata [read $ch]
-	    close $ch
-
-	    colorbar load var "\{$fn\}" vardata
-	    set id [colorbar get id]
-	    set map [colorbar get name]
-	    incr icolorbar(count)
-
-	    $ds9(mb).color.$which add radiobutton \
-		-label "$map" \
-		-variable colorbar(map) \
-		-command [list ChangeColormapID $id]
-	}
+    foreach cmap $icolorbar($which,cmaps) {
+	$ds9(mb).color.$which add radiobutton \
+	    -label [msgcat::mc $cmap] \
+	    -variable colorbar(map) -value $cmap \
+	    -command "ChangeColormapName $cmap"
     }
 }
 
@@ -166,14 +120,23 @@ proc PrefsDialogColorMenu {w} {
     set m $f.menu.menu
     ThemeMenu $m
 
-    set id [colorbar list id]
-    # base
-    for {set ii 0} {$ii<$icolorbar(end)} {incr ii} {
-	set jj [lindex $id $ii]
-	set name [colorbar get name $jj]
-	$m add radiobutton -label [msgcat::mc $name] \
-	    -variable pcolorbar(map) -value $name
+    foreach cmap $icolorbar(default,cmaps) {
+	$m add radiobutton -label [msgcat::mc $cmap] \
+	    -variable pcolorbar(map) -value $cmap
     }
+    
+    $m add separator
+    $m add cascade -label [msgcat::mc {h5utils}] -menu $m.h5
+    $m add cascade -label [msgcat::mc {Matplotlib}] -menu $m.matplotlib
+    $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
+    $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
+    $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
+
+    PrefsColorMenuExternal $m h5
+    PrefsColorMenuExternal $m matplotlib
+    PrefsColorMenuExternal $m cubehelix
+    PrefsColorMenuExternal $m gist
+    PrefsColorMenuExternal $m topo
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -212,10 +175,20 @@ proc PrefsDialogColorMenu {w} {
     pack $f -side top -fill both -expand true
 }
 
+proc PrefsColorMenuExternal {m which} {
+    global ds9
+    global icolorbar
+
+    ThemeMenu $m.$which
+
+    foreach cmap $icolorbar($which,cmaps) {
+	$m.$which add radiobutton -label [msgcat::mc $cmap] \
+	    -variable pcolorbar(map) -value $cmap
+    }
+}
+
 proc PrefsDialogColor {} {
     global dprefs
-    global colorbar
-    global icolorbar
     global pcolorbar
 
     set w $dprefs(tab)
@@ -246,28 +219,26 @@ proc PrefsDialogColor {} {
 proc ButtonsColorDef {} {
     global pbuttons
 
-    # we have a chicken or the egg problem
-    # the colorbar has not been defined yet, but we must define vars 
-    # before prefs are processed, so hard code all default cmaps
+    ButtonsColorDefExternal default
+    ButtonsColorDefExternal h5
+    ButtonsColorDefExternal matplotlib
+    ButtonsColorDefExternal cubehelix
+    ButtonsColorDefExternal gist
+    ButtonsColorDefExternal topo
+    
     array set pbuttons {
 	color,grey 1
-	color,red 0
-	color,green 0
-	color,blue 0
 	color,a 1
 	color,b 1
 	color,bb 1
 	color,he 1
 	color,i8 1
 	color,aips0 1
-	color,sls 0
-	color,hsv 0
 	color,heat 1
 	color,cool 1
 	color,rainbow 1
-	color,standard 0
-	color,staircase 0
-	color,color 0
+	color,viridis 1
+
 	color,invert 0
 	color,reset 0
 	color,horz 0
@@ -279,6 +250,15 @@ proc ButtonsColorDef {} {
     }
 }
 
+proc ButtonsColorDefExternal {which} {
+    global icolorbar
+    global pbuttons
+    
+    foreach cmap $icolorbar($which,cmaps) {
+	set pbuttons(color,$cmap) 0
+    }
+}
+
 proc CreateButtonsColor {} {
     global buttons
     global ds9
@@ -287,14 +267,13 @@ proc CreateButtonsColor {} {
 
     ttk::frame $ds9(buttons).color
 
-    set id [colorbar list id]
-    # base
-    for {set ii 0} {$ii<$icolorbar(end)} {incr ii} {
-	set jj [lindex $id $ii]
-	set name [colorbar get name $jj]
-	RadioButton $ds9(buttons).color.$name [msgcat::mc $name] \
-	    colorbar(map) $name "ChangeColormapID $jj"
-    }
+    set buttons(color) {}
+    CreateButtonsColorExternal default
+    CreateButtonsColorExternal h5
+    CreateButtonsColorExternal matplotlib
+    CreateButtonsColorExternal cubehelix
+    CreateButtonsColorExternal gist
+    CreateButtonsColorExternal topo
 
     CheckButton $ds9(buttons).color.invert \
 	[string tolower [msgcat::mc {Invert}]] colorbar(invert) InvertColorbar
@@ -319,15 +298,6 @@ proc CreateButtonsColor {} {
     ButtonButton $ds9(buttons).color.params \
 	[string tolower [msgcat::mc {Parameters}]] ColormapDialog
 
-    set buttons(color) {}
-    set id [colorbar list id]
-    # base
-    for {set ii 0} {$ii<$icolorbar(end)} {incr ii} {
-	set jj [lindex $id $ii]
-	set name [colorbar get name $jj]
-	append buttons(color) "$ds9(buttons).color.$name pbuttons(color,$name) "
-    }
-
     append buttons(color) "$ds9(buttons).color.invert pbuttons(color,invert) "
     append buttons(color) "$ds9(buttons).color.reset pbuttons(color,reset) "
     append buttons(color) "$ds9(buttons).color.horz pbuttons(color,horz) "
@@ -336,6 +306,20 @@ proc CreateButtonsColor {} {
     append buttons(color) "$ds9(buttons).color.numvalue pbuttons(color,numvalue) "
     append buttons(color) "$ds9(buttons).color.numspace pbuttons(color,numspace) "
     append buttons(color) "$ds9(buttons).color.params pbuttons(color,params) "
+}
+
+proc CreateButtonsColorExternal {which} {
+    global buttons
+    global icolorbar
+    global colorbar
+    global ds9
+    
+    foreach cmap $icolorbar($which,cmaps) {
+	RadioButton $ds9(buttons).color.$cmap [msgcat::mc $cmap] \
+	    colorbar(map) $cmap "ChangeColormapName $cmap"
+
+	append buttons(color) "$ds9(buttons).color.$cmap pbuttons(color,$cmap) "
+    }
 }
 
 proc PrefsDialogButtonbarColor {f} {
@@ -348,15 +332,24 @@ proc PrefsDialogButtonbarColor {f} {
     set m $f.menu
     ThemeMenu $m
 
-    set id [colorbar list id]
-    # base
-    for {set ii 0} {$ii<$icolorbar(end)} {incr ii} {
-	set jj [lindex $id $ii]
-	set name [colorbar get name $jj]
-	$m add checkbutton -label [msgcat::mc $name] \
-	    -variable pbuttons(color,$name) \
+    foreach cmap $icolorbar(default,cmaps) {
+	$m add checkbutton -label [msgcat::mc $cmap] \
+	    -variable pbuttons(color,$cmap) \
 	    -command {UpdateButtons buttons(color)}
     }
+
+    $m add separator
+    $m add cascade -label [msgcat::mc {h5utils}] -menu $m.h5
+    $m add cascade -label [msgcat::mc {Matplotlib}] -menu $m.matplotlib
+    $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
+    $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
+    $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
+
+    PrefsDialogButtonbarColorExternal $m h5
+    PrefsDialogButtonbarColorExternal $m matplotlib
+    PrefsDialogButtonbarColorExternal $m cubehelix
+    PrefsDialogButtonbarColorExternal $m gist
+    PrefsDialogButtonbarColorExternal $m topo
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -399,6 +392,19 @@ proc PrefsDialogButtonbarColor {f} {
 	-command {UpdateButtons buttons(color)}
 }
 
+proc PrefsDialogButtonbarColorExternal {m which} {
+    global ds9
+    global icolorbar
+
+    ThemeMenu $m.$which
+
+    foreach cmap $icolorbar($which,cmaps) {
+	$m.$which add checkbutton -label [msgcat::mc $cmap] \
+	    -variable pbuttons(color,$cmap) \
+	    -command {UpdateButtons buttons(color)}
+    }
+}
+
 # Support
 
 proc UpdateColorMenu {} {
@@ -412,16 +418,14 @@ proc UpdateColorMenu {} {
 	puts stderr "UpdateColorMenu"
     }
 
-    set end [expr $icolorbar(end)+$icolorbar(start)]
     if {$current(frame) != {}} {
 	switch [$current(frame) get type] {
 	    base -
 	    3d {
-		# menus
-		# base
-		for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
-		    $ds9(mb).color entryconfig $ii -state normal
+		foreach cmap $icolorbar(default,cmaps) {
+		    $ds9(mb).color entryconfig $cmap -state normal
 		}
+
 		$ds9(mb).color entryconfig [msgcat::mc {h5utils}] \
 		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] \
@@ -435,21 +439,18 @@ proc UpdateColorMenu {} {
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state normal
 
-		# buttons
-		set id [colorbar list id]
-		# base
-		for {set ii 0} {$ii<$icolorbar(end)} {incr ii} {
-		    set jj [lindex $id $ii]
-		    set name [colorbar get name $jj]
-		    $ds9(buttons).color.$name configure -state normal
-		}
+		UpdateColorMenuExternal default normal
+		UpdateColorMenuExternal h5 normal
+		UpdateColorMenuExternal matplotlib normal
+		UpdateColorMenuExternal cubehelix normal
+		UpdateColorMenuExternal gist normal
+		UpdateColorMenuExternal topo normal
 	    }
 	    rgb {
-		# menus
-		# base
-		for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
-		    $ds9(mb).color entryconfig $ii -state disabled
+		foreach cmap $icolorbar(default,cmaps) {
+		    $ds9(mb).color entryconfig $cmap -state disabled
 		}
+
 		$ds9(mb).color entryconfig [msgcat::mc {h5utils}] \
 		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] \
@@ -463,22 +464,19 @@ proc UpdateColorMenu {} {
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state disable
 
-		# buttons
-		set id [colorbar list id]
-		# base
-		for {set ii 0} {$ii<$icolorbar(end)} {incr ii} {
-		    set jj [lindex $id $ii]
-		    set name [colorbar get name $jj]
-		    $ds9(buttons).color.$name configure -state disabled
-		}
+		UpdateColorMenuExternal default disable
+		UpdateColorMenuExternal h5 disable
+		UpdateColorMenuExternal matplotlib disable
+		UpdateColorMenuExternal cubehelix disable
+		UpdateColorMenuExternal gist disable
+		UpdateColorMenuExternal topo disable
 	    }
 	}
     } else {
-	# menus
-	# base
-	for {set ii $icolorbar(start)} {$ii<$end} {incr ii} {
-	    $ds9(mb).color entryconfig $ii -state normal
+	foreach cmap $icolorbar(default,cmaps) {
+	    $ds9(mb).color entryconfig $cmap -state normal
 	}
+
 	$ds9(mb).color entryconfig [msgcat::mc {h5utils}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Cubehelix}] -state normal
@@ -486,13 +484,20 @@ proc UpdateColorMenu {} {
 	$ds9(mb).color entryconfig [msgcat::mc {Topographic}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {User}] -state normal
 
-	# buttons
-	set id [colorbar list id]
-	# base
-	for {set ii 0} {$ii<$icolorbar(end)} {incr ii} {
-	    set jj [lindex $id $ii]
-	    set name [colorbar get name $jj]
-	    $ds9(buttons).color.$name configure -state normal
-	}
+	UpdateColorMenuExternal default normal
+	UpdateColorMenuExternal h5 normal
+	UpdateColorMenuExternal matplotlib normal
+	UpdateColorMenuExternal cubehelix normal
+	UpdateColorMenuExternal gist normal
+	UpdateColorMenuExternal topo normal
+    }
+}
+
+proc UpdateColorMenuExternal {which state} {
+    global icolorbar
+    global ds9
+
+    foreach cmap $icolorbar($which,cmaps) {
+	$ds9(buttons).color.$cmap configure -state $state
     }
 }

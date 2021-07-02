@@ -345,7 +345,6 @@ AnalysisDef
 BinDef
 BlinkDef
 BlockDef
-ButtonsDef
 CanvasDef
 CATDef
 CATSymDef
@@ -407,6 +406,8 @@ VLSSDef
 VODef
 WCSDef
 ZScaleDef
+# do last
+ButtonsDef
 
 # let's start
 set ds9(init) 1

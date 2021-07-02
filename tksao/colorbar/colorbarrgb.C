@@ -266,6 +266,11 @@ void ColorbarRGB::getColormapFileNameCmd(int id)
   Tcl_AppendResult(interp, "rgb.rgb", NULL);
 }
 
+void ColorbarRGB::getColormapFileNameCmd(const char* str)
+{
+  Tcl_AppendResult(interp, "rgb.rgb", NULL);
+}
+
 void ColorbarRGB::getContrastCmd()
 {
   ostringstream str;

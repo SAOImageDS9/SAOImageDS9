@@ -1229,12 +1229,12 @@ void FitsImage::initWCS0(const Vector& pix)
 
   // CRPIX
   Vector cc = mapFromRef(pix, Coord::IMAGE, Coord::FK5);
-  hd->appendReal("CRPIX1", cc[1], 8, NULL);
-  hd->appendReal("CRPIX2", cc[0], 8, NULL);
+  hd->appendReal("CRPIX1", cc[1], 9, NULL);
+  hd->appendReal("CRPIX2", cc[0], 9, NULL);
 
   // CRVAL
-  hd->appendReal("CRVAL1", 0, 8, NULL);
-  hd->appendReal("CRVAL2", 0, 8, NULL);
+  hd->appendReal("CRVAL1", 0, 15, NULL);
+  hd->appendReal("CRVAL2", 0, 15, NULL);
 
   // CD
   double ss = getWCSSize(Coord::WCS);
@@ -1250,14 +1250,14 @@ void FitsImage::initWCS0(const Vector& pix)
     break;
   };
   Matrix mx = flip*Rotate(ang)*Scale(ss);
-  hd->appendReal("CD1_1", mx[0][0], 8, NULL);
-  hd->appendReal("CD1_2", mx[0][1], 8, NULL);
-  hd->appendReal("CD2_1", mx[1][0], 8, NULL);
-  hd->appendReal("CD2_2", mx[1][1], 8, NULL);
+  hd->appendReal("CD1_1", mx[0][0], 15, NULL);
+  hd->appendReal("CD1_2", mx[0][1], 15, NULL);
+  hd->appendReal("CD2_1", mx[1][0], 15, NULL);
+  hd->appendReal("CD2_2", mx[1][1], 15, NULL);
 
   // EPOCH, EQUINOX
-  hd->appendReal("EPOCH", 2000, 8, NULL);
-  hd->appendReal("EQUINOX", 2000, 8, NULL);
+  hd->appendReal("EPOCH", 2000, 9, NULL);
+  hd->appendReal("EQUINOX", 2000, 9, NULL);
   
   // RADESYS
   hd->appendString("RADESYS", "FK5", NULL);
@@ -3244,7 +3244,7 @@ void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::DEGREES:
       {
 	ostringstream str;
-	str << "d." << context_->parent_->precLenDeg_;
+	str << "d." << context_->parent_->precDeg_;
 
 	wcsFormat(ast_, wcsCelLon_[id], str.str().c_str());
 	wcsFormat(ast_, wcsCelLat_[id], str.str().c_str());

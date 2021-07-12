@@ -440,23 +440,23 @@ void FitsHPX::initHeader(FitsFile* fits)
     break;
   }
   float crpix2 = crpix1;
-  head_->appendReal("CRPIX1", crpix1, 8, "Coordinate reference pixel");
-  head_->appendReal("CRPIX2", crpix2, 8, "Coordinate reference pixel");
+  head_->appendReal("CRPIX1", crpix1, 9, "Coordinate reference pixel");
+  head_->appendReal("CRPIX2", crpix2, 9, "Coordinate reference pixel");
 
   // PCx_y
   float cos45 = sqrt(2.0) / 2.0;
   if (layout_ == EQUATOR) {
-    head_->appendReal("PC1_1",  cos45, 8, "Transformation matrix element");
-    head_->appendReal("PC1_2",  cos45, 8, "Transformation matrix element");
-    head_->appendReal("PC2_1", -cos45, 8, "Transformation matrix element");
-    head_->appendReal("PC2_2",  cos45, 8, "Transformation matrix element");
+    head_->appendReal("PC1_1",  cos45, 15, "Transformation matrix element");
+    head_->appendReal("PC1_2",  cos45, 15, "Transformation matrix element");
+    head_->appendReal("PC2_1", -cos45, 15, "Transformation matrix element");
+    head_->appendReal("PC2_2",  cos45, 15, "Transformation matrix element");
   }
 
   // CDELT1/2
   float cdelt1 = -90.0 / nside_ / sqrt(2.);
   float cdelt2 = -cdelt1;
-  head_->appendReal("CDELT1", cdelt1, 8, "[deg] Coordinate increment");
-  head_->appendReal("CDELT2", cdelt2, 8, "[deg] Coordinate increment");
+  head_->appendReal("CDELT1", cdelt1, 15, "[deg] Coordinate increment");
+  head_->appendReal("CDELT2", cdelt2, 15, "[deg] Coordinate increment");
 
   // CTYPE1/2
   const char* pcode;
@@ -535,12 +535,12 @@ void FitsHPX::initHeader(FitsFile* fits)
   {
     ostringstream comm;
     comm << "[deg] " << descr1 << " at the reference point" << ends;
-    head_->appendReal("CRVAL1", crval1, 8, comm.str().c_str());
+    head_->appendReal("CRVAL1", crval1, 15, comm.str().c_str());
   }
   {
     ostringstream comm;
     comm << "[deg] " << descr2 << " at the reference point" << ends;
-    head_->appendReal("CRVAL2", crval2, 8, comm.str().c_str());
+    head_->appendReal("CRVAL2", crval2, 15, comm.str().c_str());
   }
 
   // PV2_1/2
@@ -551,7 +551,7 @@ void FitsHPX::initHeader(FitsFile* fits)
     break;
   case NORTH:
   case SOUTH:
-    head_->appendReal("LONPOLE", 180., 8, "[deg] Native longitude of the celestial pole");
+    head_->appendReal("LONPOLE", 180., 9, "[deg] Native longitude of the celestial pole");
     break;
   }
 

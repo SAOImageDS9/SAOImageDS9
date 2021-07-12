@@ -124,18 +124,18 @@ FitsENVISMap::FitsENVISMap()
   if (pCRPIX3_ || pCRVAL3_ || pCDELT3_) {
     head_->appendString("CTYPE1","LINEAR", NULL);
     head_->appendReal("CRPIX1",1, 9, NULL);
-    head_->appendReal("CRVAL1",1, 9, NULL);
-    head_->appendReal("CDELT1",1, 9, NULL);
+    head_->appendReal("CRVAL1",1, 15, NULL);
+    head_->appendReal("CDELT1",1, 15, NULL);
 
     head_->appendString("CTYPE2","LINEAR", NULL);
     head_->appendReal("CRPIX2",1, 9, NULL);
-    head_->appendReal("CRVAL2",1, 9, NULL);
-    head_->appendReal("CDELT2",1, 9, NULL);
+    head_->appendReal("CRVAL2",1, 15, NULL);
+    head_->appendReal("CDELT2",1, 15, NULL);
 
     head_->appendString("CTYPE3","WAVELENGTH", NULL);
     head_->appendReal("CRPIX3",pCRPIX3_, 9, NULL);
-    head_->appendReal("CRVAL3",pCRVAL3_, 9, NULL);
-    head_->appendReal("CDELT3",pCDELT3_, 9, NULL);
+    head_->appendReal("CRVAL3",pCRVAL3_, 15, NULL);
+    head_->appendReal("CDELT3",pCDELT3_, 15, NULL);
   }
 
   // do we byteswap?

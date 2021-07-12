@@ -164,32 +164,32 @@ void FitsBlock::initLTMV(Vector& block)
     Translate(.5,.5);
 
   if (head_->find("LTV1"))
-    head_->setReal("LTV1", im.matrix(2,0), 8, "");
+    head_->setReal("LTV1", im.matrix(2,0), 9, "");
   else
-    head_->appendReal("LTV1", im.matrix(2,0), 8, "");
+    head_->appendReal("LTV1", im.matrix(2,0), 9, "");
 
   if (head_->find("LTV2"))
-    head_->setReal("LTV2", im.matrix(2,1), 8, "");
+    head_->setReal("LTV2", im.matrix(2,1), 9, "");
   else
-    head_->appendReal("LTV2", im.matrix(2,1), 8, "");
+    head_->appendReal("LTV2", im.matrix(2,1), 9, "");
 
   if (head_->find("LTM1_1"))
-    head_->setReal("LTM1_1", ltm11/block[0], 8, "");
+    head_->setReal("LTM1_1", ltm11/block[0], 9, "");
   else
-    head_->appendReal("LTM1_1", ltm11/block[0], 8, "");
+    head_->appendReal("LTM1_1", ltm11/block[0], 9, "");
 
   if (head_->find("LTM1_2"))
-    head_->setReal("LTM1_2", ltm12, 8, "");
+    head_->setReal("LTM1_2", ltm12, 9, "");
   else
-    head_->appendReal("LTM1_2", ltm12, 8, "");
+    head_->appendReal("LTM1_2", ltm12, 9, "");
 
   if (head_->find("LTM2_1"))
-    head_->setReal("LTM2_1", ltm21, 8, "");
+    head_->setReal("LTM2_1", ltm21, 9, "");
   else
-    head_->appendReal("LTM2_1", ltm21, 8, "");
+    head_->appendReal("LTM2_1", ltm21, 9, "");
 
   if (head_->find("LTM2_2"))
-    head_->setReal("LTM2_2", ltm22/block[1], 8, "");
+    head_->setReal("LTM2_2", ltm22/block[1], 9, "");
   else
-    head_->appendReal("LTM2_2", ltm22/block[1], 8, "");
+    head_->appendReal("LTM2_2", ltm22/block[1], 9, "");
 }

@@ -218,7 +218,7 @@ int FitsHist::initHeader(FitsFile* fits)
   // MJD-OBJ deprecated
   double rr = srcHead->getReal("MJD_OBS",0);
   if (rr)
-    head_->appendReal("MJD-OBS", rr, 10, NULL);
+    head_->appendReal("MJD-OBS", rr, 15, NULL);
 
   // we added cards
   head_->updateHDU();
@@ -442,12 +442,12 @@ void FitsHist::swap()
 
 void FitsHist::initLTMV(Matrix& m) 
 {
-  head_->appendReal("LTM1_1", m[0][0], 10, NULL);
-  head_->appendReal("LTM1_2", m[0][1], 10, NULL);
-  head_->appendReal("LTM2_1", m[1][0], 10, NULL);
-  head_->appendReal("LTM2_2", m[1][1], 10, NULL);
-  head_->appendReal("LTV1"  , m[2][0], 10, NULL);
-  head_->appendReal("LTV2"  , m[2][1], 10, NULL);
+  head_->appendReal("LTM1_1", m[0][0], 9, NULL);
+  head_->appendReal("LTM1_2", m[0][1], 9, NULL);
+  head_->appendReal("LTM2_1", m[1][0], 9, NULL);
+  head_->appendReal("LTM2_2", m[1][1], 9, NULL);
+  head_->appendReal("LTV1"  , m[2][0], 9, NULL);
+  head_->appendReal("LTV2"  , m[2][1], 9, NULL);
 }
 
 void FitsHist::mapWCSString(FitsHead* head, char* w, 
@@ -506,8 +506,8 @@ void FitsHist::mapWCSReal(FitsHead* head, const char* out, const char* in)
   istr << in << xcol_->index() << ends;
 
   if (head->find(istr.str().c_str())) {
-    float cc = head->getReal(istr.str().c_str(), 0);
-    head_->appendReal(out, cc, 10, NULL);
+    double cc = head->getReal(istr.str().c_str(), 0);
+    head_->appendReal(out, cc, 15, NULL);
   }
 }
 
@@ -518,8 +518,8 @@ void FitsHist::mapWCSReal(FitsHead* head, char* w,
   istr << in << xcol_->index() << w << ends;
 
   if (head->find(istr.str().c_str())) {
-    float cc = head->getReal(istr.str().c_str(), 0);
-    head_->appendReal(out, cc, 10, NULL);
+    double cc = head->getReal(istr.str().c_str(), 0);
+    head_->appendReal(out, cc, 15, NULL);
   }
 }
 
@@ -547,18 +547,18 @@ void FitsHist::mapWCSReal(FitsHead* head, char* w,
     ostr3 << out << "3" << w << ends;
 
   if (head->find(istr1.str().c_str()) || head->find(istr2.str().c_str())) {
-    float cc1 = head->getReal(istr1.str().c_str(),0);
-    float cc2 = head->getReal(istr2.str().c_str(),0);
+    double cc1 = head->getReal(istr1.str().c_str(),0);
+    double cc2 = head->getReal(istr2.str().c_str(),0);
     Vector cc = Vector(cc1,cc2) * mm;
 
-    head_->appendReal(ostr1.str().c_str(), cc[0], 10, NULL);
-    head_->appendReal(ostr2.str().c_str(), cc[1], 10, NULL);
+    head_->appendReal(ostr1.str().c_str(), cc[0], 15, NULL);
+    head_->appendReal(ostr2.str().c_str(), cc[1], 15, NULL);
   }
 
   if (zcol_) {
     if (head->find(istr3.str().c_str())) {
-      float cc3 = head->getReal(istr3.str().c_str(),0);
-      head_->appendReal(ostr3.str().c_str(), cc3, 10, NULL);
+      double cc3 = head->getReal(istr3.str().c_str(),0);
+      head_->appendReal(ostr3.str().c_str(), cc3, 15, NULL);
     }
   }
 }
@@ -583,17 +583,17 @@ void FitsHist::mapWCSMatrix(FitsHead* head, char* w,
       head->find(istr2.str().c_str()) ||
       head->find(istr3.str().c_str()) ||
       head->find(istr4.str().c_str())) {
-    float cc11 = head->getReal(istr1.str().c_str(), 0);
-    float cc12 = head->getReal(istr2.str().c_str(), 0);
-    float cc21 = head->getReal(istr3.str().c_str(), 0);
-    float cc22 = head->getReal(istr4.str().c_str(), 0);
+    double cc11 = head->getReal(istr1.str().c_str(), 0);
+    double cc12 = head->getReal(istr2.str().c_str(), 0);
+    double cc21 = head->getReal(istr3.str().c_str(), 0);
+    double cc22 = head->getReal(istr4.str().c_str(), 0);
     Matrix cc = Matrix(cc11*vv[0], cc12*vv[0], 
 		       cc21*vv[1], cc22*vv[1], 
 		       0, 0);
-    head_->appendReal(ostr1.str().c_str(), cc[0][0], 10, NULL);
-    head_->appendReal(ostr2.str().c_str(), cc[0][1], 10, NULL);
-    head_->appendReal(ostr3.str().c_str(), cc[1][0], 10, NULL);
-    head_->appendReal(ostr4.str().c_str(), cc[1][1], 10, NULL);
+    head_->appendReal(ostr1.str().c_str(), cc[0][0], 15, NULL);
+    head_->appendReal(ostr2.str().c_str(), cc[0][1], 15, NULL);
+    head_->appendReal(ostr3.str().c_str(), cc[1][0], 15, NULL);
+    head_->appendReal(ostr4.str().c_str(), cc[1][1], 15, NULL);
   }
 }
 
@@ -611,10 +611,10 @@ void FitsHist::mapWCSVector(FitsHead* head, char* w,
 
     if (head->find(istr1.str().c_str()) ||
 	head->find(istr2.str().c_str())) {
-      float cc1 = head->getReal(istr1.str().c_str(), 0);
-      float cc2 = head->getReal(istr2.str().c_str(), 0);
-      head_->appendReal(ostr1.str().c_str(), cc1, 10, NULL);
-      head_->appendReal(ostr2.str().c_str(), cc2, 10, NULL);
+      double cc1 = head->getReal(istr1.str().c_str(), 0);
+      double cc2 = head->getReal(istr2.str().c_str(), 0);
+      head_->appendReal(ostr1.str().c_str(), cc1, 15, NULL);
+      head_->appendReal(ostr2.str().c_str(), cc2, 15, NULL);
     }
   }
 }

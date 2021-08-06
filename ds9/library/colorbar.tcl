@@ -101,6 +101,7 @@ proc CreateColorbar {} {
 
 proc CreateColorbarExternal {which ext} {
     global ds9
+    global current
     global icolorbar
 
     foreach cmap $icolorbar($which,cmaps) {
@@ -523,9 +524,9 @@ proc ChangeColormapName {name} {
     global colorbar
     global current
 
-    colorbar map $name
+    $current(colorbar) map $name
     if {$current(frame) != {} } {
-	$current(frame) colormap [colorbar get colormap]
+	$current(frame) colormap [$current(colorbar) get colormap]
 	set colorbar(map) $name
 	set colorbar(invert) [colorbar get invert]
     }
@@ -702,7 +703,7 @@ proc SaveColorTag {} {
 	return
     }
 
-    if {[catch {colorbar tag save "\{$fn\}"} rr]} {
+    if {[catch {$current(colorbar) tag save "\{$fn\}"} rr]} {
 	Error $rr
 	return
     }
@@ -1228,15 +1229,15 @@ proc CmapCmd {item} {
 		gray {set cmap grey}
 	    }
 
-	    if {[catch {colorbar map $cmap}]} {
+	    if {[catch {$current(colorbar) map $cmap}]} {
 		Error "[msgcat::mc {Unknown Colormap}] $cmap"
 		set cmap grey
-		colorbar map $cmap
+		$current(colorbar) map $cmap
 	    }
 
-	    $current(frame) colormap [colorbar get colormap]
+	    $current(frame) colormap [$current(colorbar) get colormap]
 	    set colorbar(map) $cmap
-	    set colorbar(invert) [colorbar get invert]
+	    set colorbar(invert) [$current(colorbar) get invert]
 	}
 	rgb {}
     }

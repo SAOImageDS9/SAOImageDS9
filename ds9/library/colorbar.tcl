@@ -280,12 +280,12 @@ proc ColorbarMotion {x y} {
 	puts stderr "ColorbarMotion $x $y"
     }
 
-    switch -- $current(colorbar) {
-	colorbar {
-	    set infobox(value) [$current(colorbar) get value $x $y]
+    set vv [$current(colorbar) get value $x $y]
+    switch -- [$current(colorbar) get type] {
+	base {
+	    set infobox(value) $vv
 	}
-	colorbarrgb {
-	    set vv [$current(colorbar) get value $x $y]
+	rgb {
 	    switch -- $current(rgb) {
 		red {set infobox(value,red) $vv}
 		green {set infobox(value,green) $vv}

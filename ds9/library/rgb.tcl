@@ -74,11 +74,11 @@ proc RGBEvalLockColorbar {cmd} {
     if {$rgb(lock,colorbar) && [$current(frame) get type] == {rgb}} {
 	set ch $current(rgb)
 	foreach c {red green blue} {
-	    colorbarrgb rgb channel $c
+	    $current(colorbar) rgb channel $c
 	    eval $cmd
 	}
 	set current(rgb) $ch
-	colorbarrgb rgb channel $current(rgb)
+	$current(colorbar) rgb channel $current(rgb)
     } else {
 	eval $cmd
     }
@@ -89,7 +89,7 @@ proc RGBChannel {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) get type] == {rgb}} {
-	    colorbarrgb rgb channel $current(rgb)
+	    $current(colorbar) rgb channel $current(rgb)
 	}
 	$current(frame) rgb channel $current(rgb)
 	UpdateDS9

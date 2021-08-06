@@ -150,12 +150,12 @@ proc LayoutFrameInfoBox {which type} {
     switch -- $view(layout) {
 	horizontal {
 	    LayoutFrameInfoBoxHorzValue $which $type
-	    LayoutFrameInfoBoxHorzWCS $which $type
+	    LayoutFrameInfoBoxHorzWCS $which
 	    LayoutFrameInfoBoxHorzImage $which $type
 	}
 	vertical {
 	    LayoutFrameInfoBoxVertValue $which $type
-	    LayoutFrameInfoBoxVertWCS $which $type
+	    LayoutFrameInfoBoxVertWCS $which
 	    LayoutFrameInfoBoxVertImage $which $type
 	}
     }
@@ -193,7 +193,7 @@ proc LayoutFrameInfoBoxHorzValue {which type} {
     }
 }
 
-proc LayoutFrameInfoBoxHorzWCS {which type} {
+proc LayoutFrameInfoBoxHorzWCS {which} {
     global ds9
     global view
 
@@ -280,7 +280,7 @@ proc LayoutFrameInfoBoxVertValue {which type} {
     }
 }
 
-proc LayoutFrameInfoBoxVertWCS {which type} {
+proc LayoutFrameInfoBoxVertWCS {which} {
     global ds9
     global view
 

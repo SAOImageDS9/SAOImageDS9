@@ -184,17 +184,20 @@ proc LoadColormapFile {fn} {
 
 proc SaveColormap {} {
     global icolorbar
+    global current
 
-    FileLast colorbarfbox [colorbar get file name]
+    FileLast colorbarfbox [$current(colorbar) get file name]
     SaveColormapFile [SaveFileDialog colorbarfbox $icolorbar(top)]
 }
 
 proc SaveColormapFile {fn} {
+    global current
+    
     if {$fn == {}} {
 	return
     }
 
-    if {[catch {colorbar save "\{$fn\}"} rr]} {
+    if {[catch {$current(colorbar) save "\{$fn\}"} rr]} {
 	Error $rr
 	return
     }

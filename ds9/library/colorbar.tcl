@@ -541,7 +541,6 @@ proc MatchColorCurrent {} {
 proc MatchColor {which} {
     global ds9
     global current
-    global colorbar
 
     set tt [$which get type]
     foreach ff $ds9(frames) {
@@ -550,12 +549,12 @@ proc MatchColor {which} {
 		base -
 		3d {
 		    if {$tt != {rgb}} {
-			$ff colormap [colorbar get colormap]
+			$ff colormap [$current(colorbar) get colormap]
 		    }
 		}
 		rgb {
 		    if {$tt == {rgb}} {
-			$ff colormap [colorbarrgb get colormap]
+			$ff colormap [$current(colorbar) get colormap]
 		    }
 		}
 	    }

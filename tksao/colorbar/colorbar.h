@@ -74,6 +74,7 @@ class Colorbar : public ColorbarBase {
   void getCurrentFileNameCmd();
   void getCurrentIDCmd();
   void getCurrentNameCmd();
+  void getTypeCmd();
   void listIDCmd();
   void listNameCmd();
   void loadCmd(const char*, const char*);

@@ -84,6 +84,7 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token SHOW_
 %token TAG_
 %token TRUE_
+%token TYPE_
 %token VALUE_
 %token VAR_
 %token VERSION_
@@ -167,6 +168,7 @@ get	: BIAS_ {cb->getBiasCmd();}
 	| RGB_ CHANNEL_ {cb->getRGBChannelCmd();}
 	| VALUE_ INT INT {cb->getValueCmd($2,$3);}
 	| TAG_ getTag
+	| TYPE_ {cb->getTypeCmd();}
 	| WIDTH_ {cb->getWidthCmd();}
 	;
 

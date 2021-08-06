@@ -48,6 +48,7 @@ public:
   void getCurrentFileNameCmd();
   void getCurrentIDCmd();
   void getCurrentNameCmd();
+  void getTypeCmd();
   void setColorbarCmd(float, float, float, float, float, float, int);
   void getRGBChannelCmd();
   void setRGBChannelCmd(const char*);

@@ -88,14 +88,15 @@
      SHOW_ = 304,
      TAG_ = 305,
      TRUE_ = 306,
-     VALUE_ = 307,
-     VAR_ = 308,
-     VERSION_ = 309,
-     WIDTH_ = 310,
-     WIN32_ = 311,
-     WINDOW_ = 312,
-     Y_ = 313,
-     YES_ = 314
+     TYPE_ = 307,
+     VALUE_ = 308,
+     VAR_ = 309,
+     VERSION_ = 310,
+     WIDTH_ = 311,
+     WIN32_ = 312,
+     WINDOW_ = 313,
+     Y_ = 314,
+     YES_ = 315
    };
 #endif
 /* Tokens.  */
@@ -148,14 +149,15 @@
 #define SHOW_ 304
 #define TAG_ 305
 #define TRUE_ 306
-#define VALUE_ 307
-#define VAR_ 308
-#define VERSION_ 309
-#define WIDTH_ 310
-#define WIN32_ 311
-#define WINDOW_ 312
-#define Y_ 313
-#define YES_ 314
+#define TYPE_ 307
+#define VALUE_ 308
+#define VAR_ 309
+#define VERSION_ 310
+#define WIDTH_ 311
+#define WIN32_ 312
+#define WINDOW_ 313
+#define Y_ 314
+#define YES_ 315
 
 
 
@@ -171,7 +173,7 @@ typedef union YYSTYPE
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 175 "colorbar/parser.H"
+#line 177 "colorbar/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

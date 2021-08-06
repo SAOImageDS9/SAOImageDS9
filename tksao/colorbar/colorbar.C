@@ -406,6 +406,11 @@ void Colorbar::getTagCmd(int xx, int yy)
   }
 }
 
+void Colorbar::getTypeCmd()
+{
+  Tcl_AppendResult(interp, "base", NULL);
+}
+
 void Colorbar::getRGBChannelCmd()
 {
   Tcl_AppendResult(interp, "red", NULL);

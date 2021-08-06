@@ -73,6 +73,7 @@ save		{return SAVE_;}
 show		{return SHOW_;}
 tag		{return TAG_;}
 true		{return TRUE_;}
+type		{return TYPE_;}
 value		{return VALUE_;}
 var		{return VAR_;}
 version		{return VERSION_;}

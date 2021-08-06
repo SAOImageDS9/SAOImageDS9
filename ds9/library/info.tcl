@@ -139,30 +139,36 @@ proc CreateInfoPanel {} {
 	-textvariable infobox(angle) -anchor center
 }
 
-proc LayoutFrameInfoBox {which type} {
+proc LayoutFrameInfoBox {which} {
     global view
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "LayoutFrameInfoBox $which $type"
+	puts stderr "LayoutFrameInfoBox $which"
     }
 
     switch -- $view(layout) {
 	horizontal {
-	    LayoutFrameInfoBoxHorzValue $which $type
+	    LayoutFrameInfoBoxHorzValue $which
 	    LayoutFrameInfoBoxHorzWCS $which
-	    LayoutFrameInfoBoxHorzImage $which $type
+	    LayoutFrameInfoBoxHorzImage $which
 	}
 	vertical {
-	    LayoutFrameInfoBoxVertValue $which $type
+	    LayoutFrameInfoBoxVertValue $which
 	    LayoutFrameInfoBoxVertWCS $which
-	    LayoutFrameInfoBoxVertImage $which $type
+	    LayoutFrameInfoBoxVertImage $which
 	}
     }
 }
 
-proc LayoutFrameInfoBoxHorzValue {which type} {
+proc LayoutFrameInfoBoxHorzValue {which} {
     global ds9
+
+    if {$which != {}} {
+	set type [$which get type]
+    } else {
+	set type base
+    }
 
     switch -- $type {
 	base -
@@ -215,11 +221,17 @@ proc LayoutFrameInfoBoxHorzWCS {which} {
     }
 }
 
-proc LayoutFrameInfoBoxHorzImage {which type} {
+proc LayoutFrameInfoBoxHorzImage {which} {
     global ds9
     global view
 
-    switch $type {
+    if {$which != {}} {
+	set type [$which get type]
+    } else {
+	set type base
+    }
+
+    switch -- $type {
 	base -
 	rgb {
 	    if {$which != {} && $view(info,image)} {
@@ -248,8 +260,14 @@ proc LayoutFrameInfoBoxHorzImage {which type} {
     }
 }
 
-proc LayoutFrameInfoBoxVertValue {which type} {
+proc LayoutFrameInfoBoxVertValue {which} {
     global ds9
+
+    if {$which != {}} {
+	set type [$which get type]
+    } else {
+	set type base
+    }
 
     switch -- $type {
 	base -
@@ -301,11 +319,17 @@ proc LayoutFrameInfoBoxVertWCS {which} {
     }
 }
 
-proc LayoutFrameInfoBoxVertImage {which type} {
+proc LayoutFrameInfoBoxVertImage {which} {
     global ds9
     global view
 
-    switch $type {
+    if {$which != {}} {
+	set type [$which get type]
+    } else {
+	set type base
+    }
+
+    switch -- $type {
 	base -
 	rgb {
 	    if {$which != {} && $view(info,image)} {
@@ -342,7 +366,7 @@ proc EnterInfoBox {which} {
 	puts stderr "EnterInfoBox $which"
     }
 
-    LayoutFrameInfoBox $which [$which get type]
+    LayoutFrameInfoBox $which
     LayoutWCSInfoBox $which
 
     set infobox(frame) "[msgcat::mc {Frame}] [string range $which 5 end]"
@@ -815,7 +839,7 @@ proc LayoutInfoPanelHorz {} {
 	grid forget $ds9(info).imageYValue
     }
 
-    LayoutFrameInfoBox $current(frame) base
+    LayoutFrameInfoBox $current(frame)
 
     # frame, zoom, angle
     if {$view(info,frame)} {
@@ -1097,7 +1121,7 @@ proc LayoutInfoPanelVert {} {
 	grid forget $ds9(info).imageYValue
     }
 
-    LayoutFrameInfoBox $current(frame) base
+    LayoutFrameInfoBox $current(frame)
 
     # frame, zoom, angle
     if {$view(info,frame)} {

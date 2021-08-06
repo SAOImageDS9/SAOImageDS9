@@ -162,6 +162,7 @@ class ColorbarBase : public Widget {
   virtual void getCurrentIDCmd() =0;
   virtual void getCurrentNameCmd() =0;
   void getInvertCmd();
+  virtual void getTypeCmd() =0;
   void getNumericsCmd();
   virtual void getRGBChannelCmd() =0;
   void getValueCmd(int,int);

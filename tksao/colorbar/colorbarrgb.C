@@ -308,6 +308,11 @@ void ColorbarRGB::getRGBChannelCmd()
   }
 }
 
+void ColorbarRGB::getTypeCmd()
+{
+  Tcl_AppendResult(interp, "rgb", NULL);
+}
+
 void ColorbarRGB::setColorbarCmd(float rb, float gb, float bb, 
 				 float rc, float gc, float bc, int i)
 

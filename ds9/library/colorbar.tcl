@@ -44,11 +44,7 @@ proc ColorbarDef {} {
 }
 
 proc CreateColorbar {} {
-    global icolorbar
-
     global ds9
-    global canvas
-    global view
 
     $ds9(canvas) create colorbar$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -61,11 +57,11 @@ proc CreateColorbar {} {
 	-bg [ThemeTreeBackground]
 
     # preload external cmaps
-    CreateColorbarExternal h5 sao
-    CreateColorbarExternal matplotlib lut
-    CreateColorbarExternal cubehelix sao
-    CreateColorbarExternal gist sao
-    CreateColorbarExternal topo sao
+    CreateColorbarExternal colorbar h5 sao
+    CreateColorbarExternal colorbar matplotlib lut
+    CreateColorbarExternal colorbar cubehelix sao
+    CreateColorbarExternal colorbar gist sao
+    CreateColorbarExternal colorbar topo sao
 
     $ds9(canvas) bind colorbar <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind colorbar <Enter> [list ColorbarEnter %x %y]
@@ -99,7 +95,73 @@ proc CreateColorbar {} {
     LayoutColorbar
 }
 
-proc CreateColorbarExternal {which ext} {
+proc CreateColorbarBase {which} {
+    global ds9
+
+    set cb ${which}cb
+
+    $ds9(canvas) create colorbar$ds9(visual)$ds9(depth) \
+	-colors 2048 \
+	-tag $cb \
+	-command $cb \
+	-anchor nw \
+	-helvetica $ds9(helvetica) \
+	-courier $ds9(courier) \
+	-times $ds9(times) \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground]
+
+    return
+   # preload external cmaps
+    CreateColorbarExternal $cb h5 sao
+    CreateColorbarExternal $cb matplotlib lut
+    CreateColorbarExternal $cb cubehelix sao
+    CreateColorbarExternal $cb gist sao
+    CreateColorbarExternal $cb topo sao
+
+    $ds9(canvas) bind $cb <Motion> [list ColorbarMotion %x %y]
+    $ds9(canvas) bind $cb <Enter> [list ColorbarEnter %x %y]
+    $ds9(canvas) bind $cb <Leave> [list ColorbarLeave]
+
+    $ds9(canvas) bind $cb <Button-1> [list ColorbarButton1 %x %y]
+    $ds9(canvas) bind $cb <B1-Motion> [list ColorbarMotion1 %x %y]
+    $ds9(canvas) bind $cb <ButtonRelease-1> [list ColorbarRelease1 %x %y]
+    $ds9(canvas) bind $cb <Double-1> [list ColorbarDouble1 %x %y]
+    $ds9(canvas) bind $cb <Double-ButtonRelease-1> \
+	[list ColorbarDoubleRelease1 %x %y]
+
+    $ds9(canvas) bind $cb <Key> [list ColorbarKey %K %A %x %y]
+    $ds9(canvas) bind $cb <KeyRelease> \
+	[list ColorbarKeyRelease %K %A %x %y]
+
+#    LayoutColorbar
+}
+
+proc CreateColorbarRGB {which} {
+    global ds9
+
+    set cb ${which}cb
+
+    $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
+	-colors 2048 \
+	-tag $cb \
+	-command $cb \
+	-anchor nw \
+	-helvetica $ds9(helvetica) \
+	-courier $ds9(courier) \
+	-times $ds9(times) \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground]
+
+    return
+    $ds9(canvas) bind $cb <Motion> [list ColorbarMotion %x %y]
+    $ds9(canvas) bind $cb <Enter> [list ColorbarEnter %x %y]
+    $ds9(canvas) bind $cb <Leave> [list ColorbarLeave]
+
+#    LayoutColorbar
+}
+
+proc CreateColorbarExternal {cb which ext} {
     global ds9
     global current
     global icolorbar
@@ -112,7 +174,7 @@ proc CreateColorbarExternal {which ext} {
 	set vardata [read $ch]
 	close $ch
 
-	colorbar load var "\{$fn\}" vardata
+	$cb load var "\{$fn\}" vardata
     }
 }
 

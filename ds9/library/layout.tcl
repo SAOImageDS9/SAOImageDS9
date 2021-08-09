@@ -611,12 +611,12 @@ proc LayoutFrames {} {
     global colorbar
     
     # turn everything off
-    foreach f $ds9(frames) {
-	$f hide
-	$f highlite off
-	$f panner off
-	$f magnifier off
-	UnBindEventsFrame $f
+    foreach ff $ds9(frames) {
+	$ff hide
+	$ff highlite off
+	$ff panner off
+	$ff magnifier off
+	UnBindEventsFrame $ff
     }
 
     if {$ds9(active,num) > 0} {

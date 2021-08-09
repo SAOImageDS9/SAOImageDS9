@@ -95,16 +95,22 @@ proc CreateNameNumberFrame {which type} {
 	    $ds9(canvas) create frame$ds9(visual)$ds9(depth) \
 		-command $ds9(next)
 	    $ds9(next) colormap [colorbar get colormap]
+
+	    CreateColorbarBase $which
 	}
 	rgb {
 	    $ds9(canvas) create framergb$ds9(visual)$ds9(depth) \
 		-command $ds9(next)
 	    $ds9(next) colormap [colorbarrgb get colormap]
+
+	    CreateColorbarRGB $which
 	}
 	3d {
 	    $ds9(canvas) create frame3d$ds9(visual)$ds9(depth) \
 		-command $ds9(next)
 	    $ds9(next) colormap [colorbar get colormap]
+
+	    CreateColorbarBase $which
 	}
     }
 
@@ -322,6 +328,9 @@ proc DeleteFrame {which} {
 	set marker(copy) {}
     }
     
+    # delete canvas colorbar
+    $ds9(canvas) delete ${which}cb
+
     # delete canvas widget
     $ds9(canvas) delete $which
 

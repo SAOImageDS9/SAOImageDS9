@@ -172,7 +172,7 @@ proc InitColorbar {} {
     global current
 
     set current(colorbar) colorbar
-    colorbar map "{$colorbar(map)}"
+    colorbar map $colorbar(map)
     colorbar invert $colorbar(invert)
 }
 
@@ -183,10 +183,13 @@ proc ResetColormap {} {
     global rgb
 
     $current(colorbar) reset
+
+    set colorbar(map) [$current(colorbar) get name]
+    set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
-	set colorbar(invert) [$current(colorbar) get invert]
     }
+
     LockColorCurrent
     UpdateColorDialog
 }
@@ -370,7 +373,6 @@ proc ColorbarKey {K A xx yy} {
 		    $current(colorbar) tag delete $xx $yy
 		    if {$current(frame) != {}} {
 			$current(frame) colormap [$current(colorbar) get colormap]
-			$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 		    }
 		}
 	    }
@@ -441,7 +443,6 @@ proc ColorbarMotion1 {x y} {
 	    $current(colorbar) tag edit motion $x $y
 	    if {$current(frame) != {}} {
 		$current(frame) colormap [$current(colorbar) get colormap]
-		$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	    }
 	}
     }
@@ -474,7 +475,6 @@ proc ColorbarRelease1 {x y} {
 	    $current(colorbar) tag edit end $x $y
 	    if {$current(frame) != {}} {
 		$current(frame) colormap [$current(colorbar) get colormap]
-		$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	    }
 	}
     }
@@ -574,7 +574,8 @@ proc ChangeColormapName {name} {
     global current
 
     $current(colorbar) map $name
-    set colorbar(map) $name
+
+    set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
@@ -633,10 +634,10 @@ proc LockColor {which} {
 
 proc InvertColorbar {} {
     global colorbar
-
     global current
 
     $current(colorbar) invert $colorbar(invert)
+
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
@@ -697,8 +698,8 @@ proc UpdateColormapLevelMosaic {which x y sys} {
 }
 
 proc ColorFrameBackup {ch which} {
-    puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""
-    puts $ch "colorbar tag \"\{[$which get colorbar tag]\}\""
+#    puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""
+#    puts $ch "colorbar tag \"\{[$which get colorbar tag]\}\""
 }
 
 proc ColorbarSizeDialog {} {
@@ -738,7 +739,6 @@ proc LoadColorTag {fn} {
 	}
 	if {$current(frame) != {}} {
 	    $current(frame) colormap [$current(colorbar) get colormap]
-	    $current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	}
     }
 }
@@ -764,7 +764,6 @@ proc DeleteColorTag {} {
     $current(colorbar) tag delete
     if {$current(frame) != {}} {
 	$current(frame) colormap [$current(colorbar) get colormap]
-	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
     }
 }
 
@@ -821,7 +820,6 @@ proc ColorTagDialog {x y} {
 	$current(colorbar) tag $ed2(id) $ed2(start) $ed2(stop) $ed2(color)
 	if {$current(frame) != {}} {
 	    $current(frame) colormap [$current(colorbar) get colormap]
-	    $current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	}
     }
 
@@ -1238,27 +1236,24 @@ proc CmapCmd {item} {
     global current
     global colorbar
 
-    switch -- [$current(frame) get type] {
-	base -
-	3d {
-	    set cmap [string tolower $item]
-	    # common variants on spellings
-	    switch -- $cmap {
-		gray {set cmap grey}
-	    }
-
-	    if {[catch {$current(colorbar) map $cmap}]} {
-		Error "[msgcat::mc {Unknown Colormap}] $cmap"
-		set cmap grey
-		$current(colorbar) map $cmap
-	    }
-
-	    $current(frame) colormap [$current(colorbar) get colormap]
-	    set colorbar(map) $cmap
-	    set colorbar(invert) [$current(colorbar) get invert]
-	}
-	rgb {}
+    set cmap [string tolower $item]
+    # common variants on spellings
+    switch -- $cmap {
+	gray {set cmap grey}
     }
+
+    if {[catch {$current(colorbar) map $cmap}]} {
+	Error "[msgcat::mc {Unknown Colormap}] $cmap"
+	set cmap grey
+	$current(colorbar) map $cmap
+    }
+
+    set colorbar(map) [$current(colorbar) get name]
+    set colorbar(invert) [$current(colorbar) get invert]
+    if {$current(frame) != {}} {
+	$current(frame) colormap [$current(colorbar) get colormap]
+    }
+
     LockColorCurrent
     UpdateColorDialog
 }

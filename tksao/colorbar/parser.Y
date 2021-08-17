@@ -207,6 +207,7 @@ macosx	: PRINT_ {
 
 map	: 'a' {cb->mapCmd("a");}
         | 'b' {cb->mapCmd("b");}
+        | RGB_ {cb->mapCmd("rgb");}
         | STRING {cb->mapCmd($1);}
 	| INT {cb->mapCmd($1);}
 	;

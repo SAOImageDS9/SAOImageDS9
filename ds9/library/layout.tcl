@@ -650,9 +650,13 @@ proc LayoutFrames {} {
 	    blink {TileOne}
 	}
     } else {
+	set ds9(next) {}
+
 	set current(frame) {}
 	set current(colorbar) colorbar
-	set ds9(next) {}
+
+	set colorbar(map) [$current(colorbar) get name]
+	set colorbar(invert) [$current(colorbar) get invert]
 
 	# panner
 	if {$view(panner)} {
@@ -668,9 +672,6 @@ proc LayoutFrames {} {
 	LayoutColorbar colorbar
 	$current(colorbar) show
 	$ds9(canvas) raise $current(colorbar)
-
-	set colorbar(map) [$current(colorbar) get name]
-	set colorbar(invert) [$current(colorbar) get invert]
 
 	# update menus/dialogs
 	UpdateDS9

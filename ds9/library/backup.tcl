@@ -23,7 +23,7 @@ proc Backup {fn} {
     
     # update any tags
     if {$current(frame) != {}} {
-	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
+#	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
     }
 
     # EditText Dialogs

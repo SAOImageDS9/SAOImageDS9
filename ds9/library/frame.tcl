@@ -94,22 +94,16 @@ proc CreateNameNumberFrame {which type} {
 	base {
 	    $ds9(canvas) create frame$ds9(visual)$ds9(depth) \
 		-command $ds9(next)
-	    $ds9(next) colormap [colorbar get colormap]
-
 	    CreateColorbarBase $which
 	}
 	rgb {
 	    $ds9(canvas) create framergb$ds9(visual)$ds9(depth) \
 		-command $ds9(next)
-	    $ds9(next) colormap [colorbarrgb get colormap]
-
 	    CreateColorbarRGB $which
 	}
 	3d {
 	    $ds9(canvas) create frame3d$ds9(visual)$ds9(depth) \
 		-command $ds9(next)
-	    $ds9(next) colormap [colorbar get colormap]
-
 	    CreateColorbarBase $which
 	}
     }
@@ -255,12 +249,16 @@ proc CreateNameNumberFrame {which type} {
 
     UpdateFrameMenuItems
 
-    if {$current(frame) != {}} {
-	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
-    }
     set current(frame) $ds9(next)
+    set current(colorbar) ${current(frame)}cb
     set ds9(next) {}
+
     DisplayMode
+
+    $current(colorbar) map "{$colorbar(map)}"
+    $current(colorbar) invert $colorbar(invert)
+    $current(frame) colormap [$current(colorbar) get colormap]
+    $current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 }
 
 proc DeleteAllFramesMenu {} {
@@ -1677,8 +1675,10 @@ proc UpdateActiveFrames {} {
 	if {[lsearch $ds9(active) $current(frame)] == -1} {
 	    if {$ds9(next) != {}} {
 		set current(frame) $ds9(next)
+		set current(colorbar) ${current(frame)}cb
 	    } else {
 		set current(frame) [lindex $ds9(active) 0]
+		set current(colorbar) ${current(frame)}cb
 		set ds9(next) $current(frame)
 	    }
 	}
@@ -1727,11 +1727,9 @@ proc GotoFrame {} {
     }
 
     if {$current(frame) != $ds9(next)} {
-	if {$current(frame) != {}} {
-	    $current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
-	}
 	set current(frame) $ds9(next)
 	set ds9(next) {}
+
 	FrameToFront
     }
 }
@@ -1915,63 +1913,40 @@ proc FrameToFront {} {
     global current
     global view
     global colorbar
-    global blink
 
-    set which $current(frame)
+    set current(colorbar) ${current(frame)}cb
+    $current(colorbar) colorbar [$current(frame) get colorbar]
 
-    # process proper colorbar
-    switch -- [$which get type] {
-	base -
-	3d {
-	    if {$view(colorbar)} {
-		colorbar show
-	    } else {
-		colorbar hide
-	    }
-	    colorbarrgb hide
-	    set current(colorbar) colorbar
-
-	    colorbar colorbar [$which get colorbar]
-	    colorbar tag "\{[$which get colorbar tag]\}"
-	    set colorbar(map) [colorbar get name]
-
-	    $ds9(canvas) raise colorbar colorbarrgb
-	}
-	rgb {
-	    colorbar hide
-	    if {$view(colorbar)} {
-		colorbarrgb show
-	    } else {
-		colorbarrgb hide
-	    }
-	    set current(colorbar) colorbarrgb
-
-	    colorbarrgb colorbar [$which get colorbar]
-	    colorbarrgb rgb channel [$which get rgb channel]
-
-	    $ds9(canvas) raise colorbarrgb colorbar
-	}
+    switch -- [$current(colorbar) get type] {
+	base {set colorbar(map) [$current(colorbar) get name]}
+	rgb {$current(colorbar) rgb channel [$current(frame) get rgb channel]}
     }
     set colorbar(invert) [$current(colorbar) get invert]
 
-    $ds9(canvas) raise $which
+    $current(frame) show
+    $ds9(canvas) raise $current(frame)
+    if {$view(colorbar)} {
+	$current(colorbar) show
+	$ds9(canvas) raise $current(colorbar)
+    } else {
+	$current(colorbar) hide
+    }
 
-    $which show
     switch -- $ds9(display) {
 	single -
 	blink {
 	    if {!$ds9(freeze)} {
-		BindEventsFrame $which
+		BindEventsFrame $current(frame)
 	    }
 	}
-	tile {$which highlite on}
+	tile {$current(frame) highlite on}
     }
 
     if {$view(panner)} {
-	$which panner on
+	$current(frame) panner on
     }
 
-    UpdateGraphLayout $which
+    UpdateGraphLayout $current(frame)
     UpdateDS9
 }
 

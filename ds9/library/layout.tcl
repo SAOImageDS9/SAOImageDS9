@@ -157,12 +157,12 @@ proc ThemeConfigCanvas {w} {
     $w itemconfigure colorbar -fg [ThemeTreeForeground]
     $w itemconfigure colorbar -bg [ThemeTreeBackground]
 
-    $w itemconfigure colorbarrgb -fg [ThemeTreeForeground]
-    $w itemconfigure colorbarrgb -bg [ThemeTreeBackground]
-
     foreach ff $ds9(frames) {
 	$w itemconfigure $ff -fg [ThemeTreeForeground]
 	$w itemconfigure $ff -bg [ThemeTreeBackground]
+
+	$w itemconfigure ${ff}cb -fg [ThemeTreeForeground]
+	$w itemconfigure ${ff}cb -bg [ThemeTreeBackground]
     }
 
     # since graphs are created, but maybe not realized
@@ -368,7 +368,6 @@ proc LayoutView {} {
     LayoutInfoPanel
     LayoutButtons
     LayoutFrames
-    LayoutColorbar
 
     UpdateGraphLayout {}
 }
@@ -610,6 +609,9 @@ proc LayoutFrames {} {
     global view
     global colorbar
     
+    # turn off default colorbars
+    colorbar hide
+
     # turn everything off
     foreach ff $ds9(frames) {
 	$ff hide
@@ -617,6 +619,8 @@ proc LayoutFrames {} {
 	$ff panner off
 	$ff magnifier off
 	UnBindEventsFrame $ff
+
+	${ff}cb hide
     }
 
     if {$ds9(active,num) > 0} {
@@ -647,6 +651,7 @@ proc LayoutFrames {} {
 	}
     } else {
 	set current(frame) {}
+	set current(colorbar) colorbar
 	set ds9(next) {}
 
 	# panner
@@ -660,13 +665,12 @@ proc LayoutFrames {} {
 	}
 
 	# process proper colorbar
-	colorbar show
-	colorbarrgb hide
-	$ds9(canvas) raise colorbar colorbarrgb
+	LayoutColorbar colorbar
+	$current(colorbar) show
+	$ds9(canvas) raise $current(colorbar)
 
-	set current(colorbar) colorbar
-	set colorbar(map) [colorbar get name]
-	set colorbar(invert) [colorbar get invert]
+	set colorbar(map) [$current(colorbar) get name]
+	set colorbar(invert) [$current(colorbar) get invert]
 
 	# update menus/dialogs
 	UpdateDS9
@@ -691,6 +695,7 @@ proc TileOne {} {
 
     foreach ff $ds9(active) {
 	$ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
+	LayoutColorbar ${ff}cb
     }
 
     # only show the current frame
@@ -748,17 +753,15 @@ proc TileIt {ww hh xvar yvar nn} {
 	    if {!$ds9(freeze)} {
 		BindEventsFrame $ff
 	    }
+	    LayoutColorbar ${ff}cb
 	}
 	incr ii
     }
 
-    # if manual grid, current frame could be not included
-    if {$current(frame) != {}} {
-	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
-    }
     if {$ds9(active,num) > $nn} {
 	set current(frame) [lindex $ds9(active) 0]
     }
+
     FrameToFront
 }
 

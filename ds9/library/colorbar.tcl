@@ -78,21 +78,12 @@ proc CreateColorbar {} {
     $ds9(canvas) bind colorbar <KeyRelease> \
 	[list ColorbarKeyRelease %K %A %x %y]
 
-    $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
-	-colors 2048 \
-	-tag colorbarrgb \
-	-anchor nw \
-	-helvetica $ds9(helvetica) \
-	-courier $ds9(courier) \
-	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+    LayoutColorbar colorbar
+    colorbar hide
 
-    $ds9(canvas) bind colorbarrgb <Motion> [list ColorbarMotion %x %y]
-    $ds9(canvas) bind colorbarrgb <Enter> [list ColorbarEnter %x %y]
-    $ds9(canvas) bind colorbarrgb <Leave> [list ColorbarLeave]
-
-    LayoutColorbar
+    # just for backup backward compatibility
+    $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) -tag colorbarrgb
+    colorbarrgb hide
 }
 
 proc CreateColorbarBase {which} {
@@ -111,7 +102,6 @@ proc CreateColorbarBase {which} {
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
-    return
    # preload external cmaps
     CreateColorbarExternal $cb h5 sao
     CreateColorbarExternal $cb matplotlib lut
@@ -134,7 +124,7 @@ proc CreateColorbarBase {which} {
     $ds9(canvas) bind $cb <KeyRelease> \
 	[list ColorbarKeyRelease %K %A %x %y]
 
-#    LayoutColorbar
+    LayoutColorbar $cb
 }
 
 proc CreateColorbarRGB {which} {
@@ -153,12 +143,11 @@ proc CreateColorbarRGB {which} {
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
-    return
     $ds9(canvas) bind $cb <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind $cb <Enter> [list ColorbarEnter %x %y]
     $ds9(canvas) bind $cb <Leave> [list ColorbarLeave]
 
-#    LayoutColorbar
+    LayoutColorbar $cb
 }
 
 proc CreateColorbarExternal {cb which ext} {
@@ -180,13 +169,11 @@ proc CreateColorbarExternal {cb which ext} {
 
 proc InitColorbar {} {
     global colorbar
-
     global current
 
     set current(colorbar) colorbar
-
-    $current(colorbar) map "{$colorbar(map)}"
-    $current(colorbar) invert $colorbar(invert)
+    colorbar map "{$colorbar(map)}"
+    colorbar invert $colorbar(invert)
 }
 
 proc ResetColormap {} {
@@ -587,10 +574,10 @@ proc ChangeColormapName {name} {
     global current
 
     $current(colorbar) map $name
+    set colorbar(map) $name
+    set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
-	set colorbar(map) $name
-	set colorbar(invert) [colorbar get invert]
     }
     LockColorCurrent
     UpdateColorDialog
@@ -1145,24 +1132,12 @@ proc UpdateColorDialog {} {
     }
 }
 
-proc LayoutColorbar {} {
+proc LayoutColorbar {cb} {
     global colorbar
     global icolorbar
-
-    global ds9
     global canvas
 
-    colorbar configure \
-	-size $colorbar(size) \
-	-ticks $colorbar(ticks) \
-	-numerics $colorbar(numerics) \
-	-space $colorbar(space) \
-	-font $colorbar(font) \
-	-fontsize $colorbar(font,size) \
-	-fontweight $colorbar(font,weight) \
-	-fontslant $colorbar(font,slant)
-
-    colorbarrgb configure \
+    $cb configure \
 	-size $colorbar(size) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
@@ -1177,12 +1152,7 @@ proc LayoutColorbar {} {
 	    set xx 0
 	    set yy [expr $canvas(height) + $canvas(gap)]
 
-	    colorbar configure -x $xx -y $yy \
-		-width $canvas(width) \
-		-height $icolorbar(horizontal,height) \
-		-orientation 0
-
-	    colorbarrgb configure -x $xx -y $yy \
+	    $cb configure -x $xx -y $yy \
 		-width $canvas(width) \
 		-height $icolorbar(horizontal,height) \
 		-orientation 0
@@ -1191,12 +1161,7 @@ proc LayoutColorbar {} {
 	    set xx [expr $canvas(width) + $canvas(gap)]
 	    set yy 0
 
-	    colorbar configure -x $xx -y $yy \
-		-width $icolorbar(vertical,width) \
-		-height $canvas(height) \
-		-orientation 1
-
-	    colorbarrgb configure -x $xx -y $yy \
+	    $cb configure -x $xx -y $yy \
 		-width $icolorbar(vertical,width) \
 		-height $canvas(height) \
 		-orientation 1
@@ -1225,21 +1190,12 @@ proc ColorbarBackup {ch which} {
 }
 
 proc ColormapFrameBackup {ch which} {
-    switch -- [$which get type] {
-	base -
-	3d {
-	    puts $ch "set sav \[colorbar get colorbar\]"
-	    puts $ch "colorbar colorbar [$which get colorbar]"
-	    puts $ch "$which colormap \[colorbar get colormap\]"
-	    puts $ch "colorbar colorbar \$sav"
-	}
-	rgb {
-	    puts $ch "set sav \[colorbarrgb get colorbar\]"
-	    puts $ch "colorbarrgb colorbar [$which get colorbar]"
-	    puts $ch "$which colormap \[colorbarrgb get colormap\]"
-	    puts $ch "colorbarrgb colorbar \$sav"
-	}
-    }
+    set cb ${which}cb
+
+    puts $ch "set sav \[$cb get colorbar\]"
+    puts $ch "$cb colorbar [$which get colorbar]"
+    puts $ch "$which colormap \[$cb get colormap\]"
+    puts $ch "$cb colorbar \$sav"
 }
 
 proc ColorbarBackupCmaps {ch dir} {

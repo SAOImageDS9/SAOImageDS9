@@ -123,15 +123,15 @@ proc PostScript {} {
     colorbar postscript colorspace $ps(color)
     colorbar postscript resolution $res
 
-    colorbarrgb postscript level $ps(level)
-    colorbarrgb postscript colorspace $ps(color)
-    colorbarrgb postscript resolution $res
-
     # set frame specific postscript options
     foreach ff $ds9(frames) {
 	$ff postscript level $ps(level)
 	$ff postscript colorspace $ps(color)
 	$ff postscript resolution $res
+
+	${ff}cb postscript level $ps(level)
+	${ff}cb postscript colorspace $ps(color)
+	${ff}cb postscript resolution $res
     }
 
     # now invoke canvas postscript command
@@ -192,15 +192,15 @@ proc EPS {fn} {
     colorbar postscript colorspace $color
     colorbar postscript resolution $resolution
 
-    colorbarrgb postscript level $level
-    colorbarrgb postscript colorspace $color
-    colorbarrgb postscript resolution $resolution
-
     # set frame specific postscript options
     foreach ff $ds9(frames) {
 	$ff postscript level $level
 	$ff postscript colorspace $color
 	$ff postscript resolution $resolution
+
+	${ff}cb postscript level $level
+	${ff}cb postscript colorspace $color
+	${ff}cb postscript resolution $resolution
     }
 
     # now invoke canvas postscript command

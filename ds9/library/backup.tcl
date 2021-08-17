@@ -35,7 +35,6 @@ proc Backup {fn} {
     # Colorbar
     ColorbarBackupCmaps $ch $dir
     ColorbarBackup $ch colorbar
-    ColorbarBackup $ch colorbarrgb
 
     # Frames
     foreach ff $ds9(frames) {

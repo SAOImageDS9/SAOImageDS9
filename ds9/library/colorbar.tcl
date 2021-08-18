@@ -88,6 +88,7 @@ proc CreateColorbar {} {
 
 proc CreateColorbarBase {which} {
     global ds9
+    global colorbar
 
     set cb ${which}cb
 
@@ -124,11 +125,15 @@ proc CreateColorbarBase {which} {
     $ds9(canvas) bind $cb <KeyRelease> \
 	[list ColorbarKeyRelease %K %A %x %y]
 
+    $cb map $colorbar(map)
+    $cb invert $colorbar(invert)
+
     LayoutColorbar $cb
 }
 
 proc CreateColorbarRGB {which} {
     global ds9
+    global colorbar
 
     set cb ${which}cb
 
@@ -147,6 +152,8 @@ proc CreateColorbarRGB {which} {
     $ds9(canvas) bind $cb <Enter> [list ColorbarEnter %x %y]
     $ds9(canvas) bind $cb <Leave> [list ColorbarLeave]
 
+    $cb invert $colorbar(invert)
+
     LayoutColorbar $cb
 }
 
@@ -154,6 +161,7 @@ proc CreateColorbarExternal {cb which ext} {
     global ds9
     global current
     global icolorbar
+    global colorbar
 
     foreach cmap $icolorbar($which,cmaps) {
 	set fn $cmap.$ext
@@ -165,6 +173,9 @@ proc CreateColorbarExternal {cb which ext} {
 
 	$cb load var "\{$fn\}" vardata
     }
+
+    # reset the to current colormap
+    $cb map $colorbar(map)
 }
 
 proc InitColorbar {} {
@@ -580,6 +591,7 @@ proc ChangeColormapName {name} {
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
+
     LockColorCurrent
     UpdateColorDialog
 }
@@ -641,6 +653,7 @@ proc InvertColorbar {} {
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
+
     LockColorCurrent
     UpdateColorDialog
 }

@@ -250,14 +250,11 @@ proc CreateNameNumberFrame {which type} {
     UpdateFrameMenuItems
 
     set current(frame) $ds9(next)
-    set current(colorbar) ${current(frame)}cb
     set ds9(next) {}
 
-    DisplayMode
-
-    $current(colorbar) map $colorbar(map)
-    $current(colorbar) invert $colorbar(invert)
     $current(frame) colormap [$current(colorbar) get colormap]
+
+    DisplayMode
 }
 
 proc DeleteAllFramesMenu {} {
@@ -1917,7 +1914,6 @@ proc FrameToFront {} {
 
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
-    $current(colorbar) colorbar [$current(frame) get colorbar]
 
     $current(frame) show
     $ds9(canvas) raise $current(frame)

@@ -61,10 +61,10 @@ proc DS9Def {} {
     set ds9(graph,vert) {}
 
     set ds9(frames) {}
+    set ds9(seq) 1
     set ds9(active) {}
     set ds9(active,num) 0
     set ds9(lock) 0
-    set ds9(next,num) 1
     set ds9(last) {}
 
     set ds9(event,opendoc) {}

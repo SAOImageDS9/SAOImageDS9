@@ -98,7 +98,7 @@ proc LoadMultiFrameAlloc {path fn} {
 
 		if {$did} {
 		    DeleteCurrentFrame
-		    incr ds9(next,num) -1
+		    incr ds9(seq) -1
 		}
 		if {!$cnt} {
 		    Error "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"

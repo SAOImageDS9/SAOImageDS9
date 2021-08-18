@@ -23,17 +23,8 @@ proc Create3DFrame {} {
 proc CreateNamedFrame {type} {
     global ds9
 
-    # find the first open slot
-    set num $ds9(next,num)
-    while {1} {
-	set which "Frame$num"
- 	if {[lsearch $ds9(frames) $which]==-1} {
- 	    CreateNameNumberFrame $which $type
-	    set ds9(next,num) [expr $num+1]
- 	    return
- 	}
- 	incr num
-    }
+    CreateNameNumberFrame "Frame$ds9(seq)" $type
+    incr ds9(seq)
 }
 
 proc CreateGotoFrame {num type} {
@@ -43,7 +34,7 @@ proc CreateGotoFrame {num type} {
     set which "Frame$num"
     if {[lsearch $ds9(frames) $which]==-1} {
 	CreateNameNumberFrame $which $type
-	set ds9(next,num) [expr $num+1]
+	set ds9(seq) [expr $num+1]
     } else {
 	if {$active($which)==0} {
 	    set active($which) 1
@@ -277,7 +268,7 @@ proc DeleteAllFrames {} {
 	DeleteFrame $ff
     }
 
-    set ds9(next,num) 1
+    set ds9(seq) 1
 
     UpdateFrameMenuItems
     UpdateActiveFrames

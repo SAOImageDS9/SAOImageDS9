@@ -39,8 +39,7 @@ proc ExamineButtonBase {which x y} {
     set slice [$which get fits slice]
     
     # so the new frame will have all of the parent frame when created
-    set ds9(next) $which
-    GotoFrame
+    GotoFrame $which
 
     # create frame if needed
     switch -- $pexamine(mode) {
@@ -86,8 +85,7 @@ proc ExamineButtonBase {which x y} {
     }
 
     # back to original frame
-    set ds9(next) $which
-    GotoFrame
+    GotoFrame $which
 
     # update any dialogs
     UpdateDS9
@@ -119,8 +117,7 @@ proc ExamineButtonRGB {which x y} {
     }
 
     # so the new frame will have all of the parent frame when created
-    set ds9(next) $which
-    GotoFrame
+    GotoFrame $which
 
     # create frame if needed
     switch -- $pexamine(mode) {
@@ -184,8 +181,7 @@ proc ExamineButtonRGB {which x y} {
     $current(frame) rgb channel $channel
 
     # back to original frame
-    set ds9(next) $which
-    GotoFrame
+    GotoFrame $which
     $current(frame) rgb channel $channel
 
     # update any dialogs
@@ -213,8 +209,7 @@ proc ExamineButton3D {which x y} {
     set method [$current(frame) get 3d method]
 
     # so the new frame will have all of the parent frame when created
-    set ds9(next) $which
-    GotoFrame
+    GotoFrame $which
 
     # create frame if needed
     switch -- $pexamine(mode) {
@@ -264,8 +259,7 @@ proc ExamineButton3D {which x y} {
     $current(frame) 3d method $method
 
     # back to original frame
-    set ds9(next) $which
-    GotoFrame
+    GotoFrame $which
 
     # update any dialogs
     UpdateDS9

@@ -1192,10 +1192,10 @@ proc UpdateFrameMenuItems {} {
     }
 
     set cnt $ds9(menu,size,frame,goto)
-    foreach f $ds9(frames) {
-	set which "[msgcat::mc {Frame}] [string range $f 5 end]"
-	$ds9(mb).frame.goto add radiobutton -label $which \
-	    -variable ds9(next) -value $f -command GotoFrame
+    foreach ff $ds9(frames) {
+	$ds9(mb).frame.goto add command \
+	    -label "[msgcat::mc {Frame}] [string range $ff 5 end]" \
+	    -command [list GotoFrame $ff]
 
 	# wrap if needed
 	incr cnt
@@ -1211,16 +1211,17 @@ proc UpdateFrameMenuItems {} {
     }
 
     set cnt $ds9(menu,size,frame,active)
-    foreach f $ds9(frames) {
-	set which "[msgcat::mc {Frame}] [string range $f 5 end]"
-	$ds9(mb).frame.active add checkbutton -label $which \
-	    -variable active($f) -command UpdateActiveFrames
+    foreach ff $ds9(frames) {
+	$ds9(mb).frame.active add checkbutton \
+	    -label "[msgcat::mc {Frame}] [string range $ff 5 end]" \
+	    -variable active($ff) -command UpdateActiveFrames
 
 	# wrap if needed
 	incr cnt
 	if {$cnt>=$ds9(menu,size,wrap)} {
 	    set cnt 1
-	    $ds9(mb).frame.active entryconfig $which -columnbreak 1
+	    $ds9(mb).frame.active entryconfig \
+		"[msgcat::mc {Frame}] [string range $ff 5 end]" -columnbreak 1
 	}
     }
 }

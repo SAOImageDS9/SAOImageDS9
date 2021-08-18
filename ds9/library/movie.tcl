@@ -191,15 +191,13 @@ proc MovieFrame {} {
     set framesav $current(frame)
 
     foreach ff $ds9(active) {
-	set ds9(next) $ff
-	GotoFrame
+	GotoFrame $ff
 	if {[MoviePhoto]} {
 	    break
 	}
     }
 
-    set ds9(next) $framesav
-    GotoFrame
+    GotoFrame $framesav
 
     if {[info exists modesav]} {
 	set current(display) $modesav

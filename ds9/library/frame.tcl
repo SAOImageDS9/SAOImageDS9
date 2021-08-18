@@ -49,8 +49,7 @@ proc CreateGotoFrame {num type} {
 	    set active($which) 1
 	    UpdateActiveFrames
 	}
-	set ds9(next) $which
-	GotoFrame
+	GotoFrame $which
     }
 }
 
@@ -745,8 +744,7 @@ proc Button1Frame {which x y} {
 		set imarker(motion) none
 		set imarker(handle) -1
 
-		set ds9(next) $which
-		GotoFrame
+		GotoFrame $which
 	    }
 	}
 	pointer -
@@ -759,8 +757,7 @@ proc Button1Frame {which x y} {
 		set imarker(motion) none
 		set imarker(handle) -1
 
-		set ds9(next) $which
-		GotoFrame
+		GotoFrame $which
 	    }
 	}
 	crosshair {
@@ -793,8 +790,7 @@ proc Button1Frame {which x y} {
 		set imarker(motion) none
 		set imarker(handle) -1
 
-		set ds9(next) $which
-		GotoFrame
+		GotoFrame $which
 	    }
 	}
         footprint {
@@ -806,8 +802,7 @@ proc Button1Frame {which x y} {
                 set imarker(motion) none
                 set imarker(handle) -1
 
-                set ds9(next) $which
-                GotoFrame
+                GotoFrame $which
             }
         }
 	examine {ExamineButton $which $x $y}
@@ -1545,8 +1540,8 @@ proc UndoFrame {} {
 
 proc FirstFrame {} {
     global ds9
-    set ds9(next) [lindex $ds9(active) 0]
-    GotoFrame
+
+    GotoFrame [lindex $ds9(active) 0]
 }
 
 proc PrevFrame {} {
@@ -1555,11 +1550,10 @@ proc PrevFrame {} {
 
     set ii [lsearch $ds9(active) $current(frame)]
     if {$ii>0} {
-	set ds9(next) [lindex $ds9(active) [expr $ii-1]]
+	GotoFrame [lindex $ds9(active) [expr $ii-1]]
     } else {
-	set ds9(next) [lindex $ds9(active) [expr $ds9(active,num)-1]]
+	GotoFrame [lindex $ds9(active) [expr $ds9(active,num)-1]]
     }
-    GotoFrame
 }
 
 proc NextFrame {} {
@@ -1568,18 +1562,16 @@ proc NextFrame {} {
 
     set ii [lsearch $ds9(active) $current(frame)]
     if {$ii < [expr $ds9(active,num)-1]} {
-	set ds9(next) [lindex $ds9(active) [expr $ii+1]]
+	GotoFrame [lindex $ds9(active) [expr $ii+1]]
     } else {
-	set ds9(next) [lindex $ds9(active) 0]
+	GotoFrame [lindex $ds9(active) 0]
     }
-    GotoFrame
 }
 
 proc LastFrame {} {
     global ds9
 
-    set ds9(next) [lindex $ds9(active) [expr $ds9(active,num)-1]]
-    GotoFrame
+    GotoFrame [lindex $ds9(active) [expr $ds9(active,num)-1]]
 }
 
 proc MoveFirstFrame {} {
@@ -1653,16 +1645,15 @@ proc UpdateActiveFrames {} {
     set ds9(active) {}
     set ds9(active,num) 0
 
-    foreach f $ds9(frames) {
-	if {$active($f)} {
-	    lappend ds9(active) $f
+    foreach ff $ds9(frames) {
+	if {$active($ff)} {
+	    lappend ds9(active) $ff
 	    $ds9(mb).frame.goto entryconfig \
-		"[msgcat::mc {Frame}] [string range $f 5 end]" -state normal
+		"[msgcat::mc {Frame}] [string range $ff 5 end]" -state normal
 	} else {
 	    $ds9(mb).frame.goto entryconfig \
-		"[msgcat::mc {Frame}] [string range $f 5 end]" -state disabled
+		"[msgcat::mc {Frame}] [string range $ff 5 end]" -state disabled
 	}
-
     }
     set ds9(active,num) [llength $ds9(active)]
 
@@ -1703,12 +1694,12 @@ proc ActiveFrameNone {} {
     UpdateActiveFrames
 }
 
-proc GotoFrame {} {
+proc GotoFrame {which} {
     global ds9
     global current
     global active
 
-    if {$current(frame) != {} && $current(frame) != $ds9(next)} {
+    if {$current(frame) != {} && $current(frame) != $which} {
 	$current(frame) highlite off
 	$current(frame) panner off
 
@@ -1722,10 +1713,8 @@ proc GotoFrame {} {
 	}
     }
 
-    if {$current(frame) != $ds9(next)} {
-	set current(frame) $ds9(next)
-	set ds9(next) {}
-
+    if {$current(frame) != $which} {
+	set current(frame) $which
 	FrameToFront
     }
 }
@@ -1790,8 +1779,7 @@ proc BlinkTimer {} {
 	if {$iblink(index) >= $ds9(active,num)} {
 	    set iblink(index) 0
 	}
-	set ds9(next) [lindex $ds9(active) $iblink(index)]
-	GotoFrame
+	GotoFrame [lindex $ds9(active) $iblink(index)]
     }
 
     set iblink(id) [after $blink(interval) BlinkTimer]

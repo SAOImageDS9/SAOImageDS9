@@ -80,127 +80,124 @@ proc CreateNameNumberFrame {which type} {
     global threed
     global cube
 
-    set ds9(next) $which
-
     # update frame lists
-    lappend ds9(frames) $ds9(next)
-    lappend ds9(active) $ds9(next)
+    lappend ds9(frames) $which
+    lappend ds9(active) $which
     set ds9(active,num) [llength $ds9(active)]
-    set active($ds9(next)) 1
+    set active($which) 1
 
     # and create the frame
     switch -- $type {
 	base {
 	    $ds9(canvas) create frame$ds9(visual)$ds9(depth) \
-		-command $ds9(next)
+		-command $which
 	    CreateColorbarBase $which
 	}
 	rgb {
 	    $ds9(canvas) create framergb$ds9(visual)$ds9(depth) \
-		-command $ds9(next)
+		-command $which
 	    CreateColorbarRGB $which
 	}
 	3d {
 	    $ds9(canvas) create frame3d$ds9(visual)$ds9(depth) \
-		-command $ds9(next)
+		-command $which
 	    CreateColorbarBase $which
 	}
     }
 
-    $ds9(next) configure -x 0 -y 0 \
+    $which configure -x 0 -y 0 \
 	-anchor nw \
-	-tag $ds9(next) \
+	-tag $which \
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
-    $ds9(next) threads $ds9(threads)
+    $which threads $ds9(threads)
 
-    $ds9(next) panner 'panner' $ipanner(size) $ipanner(size)
-    $ds9(next) magnifier 'magnifier' $imagnifier(size) $imagnifier(size)
-    $ds9(next) magnifier zoom $pmagnifier(zoom)
-    $ds9(next) magnifier graphics $pmagnifier(region)
-    $ds9(next) magnifier cursor $pmagnifier(cursor)
+    $which panner 'panner' $ipanner(size) $ipanner(size)
+    $which magnifier 'magnifier' $imagnifier(size) $imagnifier(size)
+    $which magnifier zoom $pmagnifier(zoom)
+    $which magnifier graphics $pmagnifier(region)
+    $which magnifier cursor $pmagnifier(cursor)
 
-    $ds9(next) zoom to $current(zoom)
-    $ds9(next) rotate to $current(rotate)
-    $ds9(next) orient $current(orient)
-    $ds9(next) wcs align $current(align)
+    $which zoom to $current(zoom)
+    $which rotate to $current(rotate)
+    $which orient $current(orient)
+    $which wcs align $current(align)
 
-    $ds9(next) pan preserve $panzoom(preserve)
+    $which pan preserve $panzoom(preserve)
 
     # set so prefs (pwcs) will work
     # may cause other problems, but can't remember why
-    $ds9(next) wcs $wcs(system) $wcs(sky) $wcs(skyformat)
+    $which wcs $wcs(system) $wcs(sky) $wcs(skyformat)
 
-    $ds9(next) datasec $scale(datasec)
+    $which datasec $scale(datasec)
 
-    $ds9(next) precision $pds9(prec,linear) $pds9(prec,deg) \
+    $which precision $pds9(prec,linear) $pds9(prec,deg) \
 	$pds9(prec,hms) $pds9(prec,dms) \
 	$pds9(prec,len,linear) $pds9(prec,len,deg) \
 	$pds9(prec,len,arcmin) $pds9(prec,len,arcsec) \
 	$pds9(prec,angle)
     
-    $ds9(next) bg color $pds9(bg)
-    $ds9(next) bg color $pds9(bg,use)
-    $ds9(next) nan color $pds9(nan)
-    $ds9(next) highlite color blue
+    $which bg color $pds9(bg)
+    $which bg color $pds9(bg,use)
+    $which nan color $pds9(nan)
+    $which highlite color blue
 
-    $ds9(next) iraf align $pds9(iraf)
+    $which iraf align $pds9(iraf)
 
-    $ds9(next) marker epsilon $pmarker(epsilon)
-    $ds9(next) marker show $marker(show)
-    $ds9(next) marker show text $marker(show,text)
-    $ds9(next) marker centroid auto $marker(centroid,auto)
-    $ds9(next) marker centroid radius $marker(centroid,radius)
-    $ds9(next) marker centroid iteration $marker(centroid,iteration)
-    $ds9(next) marker preserve $marker(preserve)
+    $which marker epsilon $pmarker(epsilon)
+    $which marker show $marker(show)
+    $which marker show text $marker(show,text)
+    $which marker centroid auto $marker(centroid,auto)
+    $which marker centroid radius $marker(centroid,radius)
+    $which marker centroid iteration $marker(centroid,iteration)
+    $which marker preserve $marker(preserve)
 
     # Frame type items
-    switch -- [$ds9(next) get type] {
+    switch -- [$which get type] {
 	base {}
-	rgb {$ds9(next) rgb system $rgb(system)}
+	rgb {$which rgb system $rgb(system)}
 	3d {
-	    $ds9(next) 3d method $pthreed(method)
-	    $ds9(next) 3d background $pthreed(background)
-	    $ds9(next) 3d border $pthreed(border)
-	    $ds9(next) 3d border color $pthreed(border,color)
-	    $ds9(next) 3d compass $pthreed(compass)
-	    $ds9(next) 3d compass color $pthreed(compass,color)
-	    $ds9(next) 3d highlite $pthreed(highlite)
-	    $ds9(next) 3d highlite color $pthreed(highlite,color)
+	    $which 3d method $pthreed(method)
+	    $which 3d background $pthreed(background)
+	    $which 3d border $pthreed(border)
+	    $which 3d border color $pthreed(border,color)
+	    $which 3d compass $pthreed(compass)
+	    $which 3d compass color $pthreed(compass,color)
+	    $which 3d highlite $pthreed(highlite)
+	    $which 3d highlite color $pthreed(highlite,color)
 	}
     }
 
     # channel dependent items
-    switch -- [$ds9(next) get type] {
+    switch -- [$which get type] {
 	base -
 	3d {
-	    $ds9(next) colorscale $scale(type)
-	    $ds9(next) colorscale log $scale(log)
+	    $which colorscale $scale(type)
+	    $which colorscale log $scale(log)
 
-	    $ds9(next) clip scope $scale(scope)
-	    $ds9(next) clip mode $scale(mode)
-	    $ds9(next) clip minmax $minmax(sample) $minmax(mode)
-	    $ds9(next) clip user $scale(min) $scale(max)
-	    $ds9(next) clip zscale \
-		$zscale(contrast) $zscale(sample) $zscale(line)
+	    $which clip scope $scale(scope)
+	    $which clip mode $scale(mode)
+	    $which clip minmax $minmax(sample) $minmax(mode)
+	    $which clip user $scale(min) $scale(max)
+	    $which clip zscale $zscale(contrast) $zscale(sample) $zscale(line)
 
-	    $ds9(next) datasec $scale(datasec)
+	    $which datasec $scale(datasec)
 
-	    $ds9(next) bin function $bin(function)
-	    $ds9(next) bin factor to $bin(factor)
-	    $ds9(next) bin depth $bin(depth)
-	    $ds9(next) bin buffer size $bin(buffersize)
+	    $which bin function $bin(function)
+	    $which bin factor to $bin(factor)
+	    $which bin depth $bin(depth)
+	    $which bin buffer size $bin(buffersize)
 
-	    $ds9(next) block to $block(factor)
+	    $which block to $block(factor)
 	    
-	    $ds9(next) cube axes $cube(axes)
+	    $which cube axes $cube(axes)
 	    
 	    if {$smooth(view)} {
-		$ds9(next) smooth $smooth(function) \
+		$which smooth $smooth(function) \
 		    $smooth(radius) $smooth(radius,minor) \
 		    $smooth(sigma) $smooth(sigma,minor) \
 		    $smooth(angle)
@@ -208,49 +205,47 @@ proc CreateNameNumberFrame {which type} {
 	}
 	rgb {
 	    foreach c {red green blue} {
-		$ds9(next) rgb channel $c
+		$which rgb channel $c
 
-		$ds9(next) colorscale $scale(type)
-		$ds9(next) colorscale log $scale(log)
+		$which colorscale $scale(type)
+		$which colorscale log $scale(log)
 
-		$ds9(next) clip scope $scale(scope)
-		$ds9(next) clip mode $scale(mode)
-		$ds9(next) clip minmax $minmax(sample) $minmax(mode)
-		$ds9(next) clip user $scale(min) $scale(max)
-		$ds9(next) clip zscale \
+		$which clip scope $scale(scope)
+		$which clip mode $scale(mode)
+		$which clip minmax $minmax(sample) $minmax(mode)
+		$which clip user $scale(min) $scale(max)
+		$which clip zscale \
 		    $zscale(contrast) $zscale(sample) $zscale(line)
 
-		$ds9(next) datasec $scale(datasec)
+		$which datasec $scale(datasec)
 
-		$ds9(next) bin function $bin(function)
-		$ds9(next) bin factor to $bin(factor)
-		$ds9(next) bin depth $bin(depth)
-		$ds9(next) bin buffer size $bin(buffersize)
+		$which bin function $bin(function)
+		$which bin factor to $bin(factor)
+		$which bin depth $bin(depth)
+		$which bin buffer size $bin(buffersize)
 
-		$ds9(next) block to $block(factor)
+		$which block to $block(factor)
 
-		$ds9(next) cube axes $cube(axes)
+		$which cube axes $cube(axes)
 
 		if {$smooth(view)} {
-		    $ds9(next) smooth $smooth(function) \
+		    $which smooth $smooth(function) \
 			$smooth(radius) $smooth(radius,minor) \
 			$smooth(sigma) $smooth(sigma,minor) \
 			$smooth(angle)
 		}
 	    }
-	    $ds9(next) rgb channel red
+	    $which rgb channel red
 	}
     }
 
     switch $current(mode) {
-	crosshair {$ds9(next) crosshair on}
+	crosshair {$which crosshair on}
     }
 
     UpdateFrameMenuItems
 
-    set current(frame) $ds9(next)
-    set ds9(next) {}
-
+    set current(frame) $which
     $current(frame) colormap [$current(colorbar) get colormap]
 
     DisplayMode
@@ -330,12 +325,9 @@ proc DeleteFrame {which} {
     # setup for next frame
     set ii [lsearch $ds9(active) $which]
     if {$ii>0} {
-	set ds9(next) [lindex $ds9(active) [expr $ii-1]]
 	set ds9(active) [lreplace $ds9(active) $ii $ii]
 	set ds9(active,num) [llength $ds9(active)]
 	unset active($which)
-    } else {
-	set ds9(next) {}
     }
 
     # delete it from the frame list
@@ -1660,14 +1652,8 @@ proc UpdateActiveFrames {} {
     # New layout if needed
     if {$ds9(active,num) > 0} {
 	if {[lsearch $ds9(active) $current(frame)] == -1} {
-	    if {$ds9(next) != {}} {
-		set current(frame) $ds9(next)
-		set current(colorbar) ${current(frame)}cb
-	    } else {
-		set current(frame) [lindex $ds9(active) 0]
-		set current(colorbar) ${current(frame)}cb
-		set ds9(next) $current(frame)
-	    }
+	    set current(frame) [lindex $ds9(active) 0]
+	    set current(colorbar) ${current(frame)}cb
 	}
     }
 

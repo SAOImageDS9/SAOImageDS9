@@ -650,8 +650,6 @@ proc LayoutFrames {} {
 	    blink {TileOne}
 	}
     } else {
-	set ds9(next) {}
-
 	set current(frame) {}
 	set current(colorbar) colorbar
 

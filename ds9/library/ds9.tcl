@@ -64,7 +64,6 @@ proc DS9Def {} {
     set ds9(active) {}
     set ds9(active,num) 0
     set ds9(lock) 0
-    set ds9(next) {}
     set ds9(next,num) 1
     set ds9(last) {}
 

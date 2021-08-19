@@ -313,7 +313,16 @@ proc DeleteFrame {which} {
     # delete canvas widget
     $ds9(canvas) delete $which
 
-    # setup for next frame
+    # reset current(frame) if needed
+    if {$current(frame) == $which} {
+	set ii [lsearch $ds9(active) $which]
+	if {$ii>0} {
+	    set current(frame) [lindex $ds9(active) [expr $ii-1]]
+	    set current(colorbar) ${current(frame)}cb
+	}
+    }
+
+    # delete it from active list
     set ii [lsearch $ds9(active) $which]
     if {$ii>0} {
 	set ds9(active) [lreplace $ds9(active) $ii $ii]

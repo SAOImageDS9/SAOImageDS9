@@ -19,6 +19,7 @@ proc ColorbarDef {} {
     set icolorbar(num) 1024
 
     set icolorbar(default,cmaps) [list grey red green blue a b bb he i8 aips0 sls hsv heat cool rainbow standard staircase color]
+
     set icolorbar(h5,cmaps) [list h5_autumn h5_bluered h5_bone h5_cool h5_copper h5_dkbluered h5_gray h5_green h5_hot h5_hsv h5_jet h5_pink h5_spring h5_summer h5_winter h5_yarg h5_yellow]
     set icolorbar(matplotlib,cmaps) [list inferno magma plasma viridis twilight turbo]
     set icolorbar(cubehelix,cmaps) [list ch05m151008 ch05m151010 ch05m151012 ch05m151410 ch05p151010 ch20m151010 cubehelix0 cubehelix1]
@@ -223,27 +224,46 @@ proc LoadColormapFile {fn} {
 	return
     }
 
+    # first load into default cmap
+    set org [colorbar get name]
     if {[catch {colorbar load "\{$fn\}"} rr]} {
 	Error $rr
 	return
     }
-    
-    set colorbar(map) [colorbar get name]
-    lappend icolorbar(user,cmaps) $colorbar(map)
+    set cmap [colorbar get name]
+    lappend icolorbar(user,cmaps) $cmap
+    colorbar map $org
 
+    # now load into all current cmaps
+    foreach ff $ds9(frames) {
+	set cb ${ff}cb
+	switch [$cb get type] {
+	    base {
+		set org [$cb get name]
+		if {[catch {$cb load "\{$fn\}"} rr]} {
+		    Error $rr
+		    return
+		}
+		$cb map $org
+	    }
+	    rgb {}
+	}
+    }
+
+    # add to menu
     $ds9(mb).color.user add radiobutton \
-	-label "$colorbar(map)" \
+	-label $cmap \
 	-variable colorbar(map) \
-	-command [list ChangeColormapName $colorbar(map)]
+	-command [list ChangeColormapName $cmap]
 
     if {[winfo exists $icolorbar(top)]} {
 	$icolorbar(mb).colormap.user add radiobutton \
-	    -label "$colorbar(map)" \
+	    -label $cmap \
 	    -variable colorbar(map) \
-	    -command [list ChangeColormapName $colorbar(map)]
+	    -command [list ChangeColormapName $cmap]
     }
 
-    ChangeColormapName $colorbar(map)
+    ChangeColormapName $cmap
 }
 
 proc SaveColormap {} {
@@ -902,7 +922,7 @@ proc ColormapDialog {} {
 	$mb.colormap add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
-	    -command "ChangeColormapName $cmap"
+	    -command [list ChangeColormapName $cmap]
     }
 
     $mb.colormap add separator
@@ -981,7 +1001,7 @@ proc ColormapDialogExternal {which} {
 	$mb.colormap.$which add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
-	    -command "ChangeColormapName $cmap"
+	    -command [list ChangeColormapName $cmap]
     }
 }
 

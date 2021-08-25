@@ -16,7 +16,7 @@ proc ColorMainMenu {} {
 	$ds9(mb).color add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
-	    -command "ChangeColormapName $cmap"
+	    -command [list ChangeColormapName $cmap]
     }
 
     $ds9(mb).color add separator
@@ -101,7 +101,7 @@ proc ColorMainMenuExternal {which} {
 	$ds9(mb).color.$which add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
-	    -command "ChangeColormapName $cmap"
+	    -command [list ChangeColormapName $cmap]
     }
 }
 
@@ -316,7 +316,7 @@ proc CreateButtonsColorExternal {which} {
     
     foreach cmap $icolorbar($which,cmaps) {
 	RadioButton $ds9(buttons).color.$cmap [msgcat::mc $cmap] \
-	    colorbar(map) $cmap "ChangeColormapName $cmap"
+	    colorbar(map) $cmap [list ChangeColormapName $cmap]
 
 	append buttons(color) "$ds9(buttons).color.$cmap pbuttons(color,$cmap) "
     }

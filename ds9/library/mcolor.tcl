@@ -70,25 +70,25 @@ proc ColorMainMenu {} {
     ThemeMenu $ds9(mb).color.colorbar.orient
     $ds9(mb).color.colorbar.orient add radiobutton \
 	-label [msgcat::mc {Horizontal}] -variable colorbar(orientation) \
-	-value horizontal -command UpdateView
+	-value horizontal -command ColorbarUpdateView
     $ds9(mb).color.colorbar.orient add radiobutton \
 	-label [msgcat::mc {Vertical}] -variable colorbar(orientation) \
-	-value vertical -command UpdateView
+	-value vertical -command ColorbarUpdateView
 
     ThemeMenu $ds9(mb).color.colorbar.numerics
     $ds9(mb).color.colorbar.numerics add checkbutton \
 	-label [msgcat::mc {Show}] -variable colorbar(numerics) \
-	-command UpdateView
+	-command ColorbarUpdateView
     $ds9(mb).color.colorbar.numerics add separator
     $ds9(mb).color.colorbar.numerics add radiobutton \
 	-label [msgcat::mc {Space Equal Value}] -variable colorbar(space) \
-	-value 1 -command UpdateView
+	-value 1 -command ColorbarUpdateView
     $ds9(mb).color.colorbar.numerics add radiobutton \
 	-label [msgcat::mc {Space Equal Distance}] -variable colorbar(space) \
-	-value 0 -command UpdateView
+	-value 0 -command ColorbarUpdateView
 
     FontMenu $ds9(mb).color.colorbar.cb colorbar font font,size font,weight \
-	font,slant UpdateView
+	font,slant ColorbarUpdateView
 }
 
 proc ColorMainMenuExternal {which} {
@@ -281,19 +281,19 @@ proc CreateButtonsColor {} {
 	[string tolower [msgcat::mc {Reset}]] ResetColormap
     RadioButton $ds9(buttons).color.horz \
 	[string tolower [msgcat::mc {Horizontal}]] \
-	colorbar(orientation) horizontal UpdateView
+	colorbar(orientation) horizontal ColorbarUpdateView
     RadioButton $ds9(buttons).color.vert \
 	[string tolower [msgcat::mc {Vertical}]] \
-	colorbar(orientation) vertical UpdateView
+	colorbar(orientation) vertical ColorbarUpdateView
     CheckButton $ds9(buttons).color.numerics \
 	[string tolower [msgcat::mc {Numerics}]] \
-	colorbar(numerics) UpdateView
+	colorbar(numerics) ColorbarUpdateView
     RadioButton $ds9(buttons).color.numvalue \
 	[string tolower [msgcat::mc {Value}]] \
-	colorbar(space) 1 UpdateView
+	colorbar(space) 1 ColorbarUpdateView
     RadioButton $ds9(buttons).color.numspace \
 	[string tolower [msgcat::mc {Distance}]] \
-	colorbar(space) 0 UpdateView
+	colorbar(space) 0 ColorbarUpdateView
 
     ButtonButton $ds9(buttons).color.params \
 	[string tolower [msgcat::mc {Parameters}]] ColormapDialog

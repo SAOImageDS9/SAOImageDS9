@@ -46,11 +46,23 @@ proc ColorbarDef {} {
 
 proc CreateColorbar {} {
     global ds9
+    global colorbar
 
     $ds9(canvas) create colorbar$ds9(visual)$ds9(depth) \
 	-colors 2048 \
 	-tag colorbar \
 	-anchor nw \
+	\
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant) \
+	\
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
@@ -79,18 +91,30 @@ proc CreateColorbar {} {
     $ds9(canvas) bind colorbar <KeyRelease> \
 	[list ColorbarKeyRelease %K %A %x %y]
 
-    LayoutColorbar colorbar
+    # reset current map
+    colorbar map $colorbar(map)
+    colorbar invert $colorbar(invert)
     colorbar hide
 
     # just for backup backward compatibility
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) -tag colorbarrgb
+    colorbarrgb invert $colorbar(invert)
     colorbarrgb hide
+
+    LayoutColorbar colorbar
 }
 
 proc CreateColorbarBase {which} {
     global ds9
     global icolorbar
     global colorbar
+    global current
+
+    # save current colorbar params if appropriate
+    switch [$current(colorbar) get type] {
+	base {set sav [$current(colorbar) get colorbar]}
+	rgb {set sav [colorbar get colorbar]}
+    }
 
     set cb ${which}cb
 
@@ -99,11 +123,27 @@ proc CreateColorbarBase {which} {
 	-tag $cb \
 	-command $cb \
 	-anchor nw \
+	\
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant) \
+	\
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
+
+    switch $colorbar(orientation) {
+	horizontal {$cb configure -orientation 0}
+	vertical {$cb configure -orientation 1}
+    }
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
@@ -121,9 +161,6 @@ proc CreateColorbarBase {which} {
     CreateColorbarExternal $cb gist sao
     CreateColorbarExternal $cb topo sao
 
-    # reset the to current colormap
-    $cb map $colorbar(map)
-
     # bindings
     $ds9(canvas) bind $cb <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind $cb <Enter> [list ColorbarEnter %x %y]
@@ -140,16 +177,24 @@ proc CreateColorbarBase {which} {
     $ds9(canvas) bind $cb <KeyRelease> \
 	[list ColorbarKeyRelease %K %A %x %y]
 
-    $cb map $colorbar(map)
-    $cb invert $colorbar(invert)
-
+    # now init new colorbar to prev values
+    # must come after all cmaps have been defined
+    $cb colorbar $sav
+    
     LayoutColorbar $cb
 }
 
 proc CreateColorbarRGB {which} {
     global ds9
     global colorbar
+    global current
 
+    # save current colorbar params if appropriate
+    switch [$current(colorbar) get type] {
+	base {set sav [colorbarrgb get colorbar]}
+	rgb {set sav [$current(colorbar) get colorbar]}
+    }
+    
     set cb ${which}cb
 
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
@@ -157,6 +202,17 @@ proc CreateColorbarRGB {which} {
 	-tag $cb \
 	-command $cb \
 	-anchor nw \
+	\
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant) \
+	\
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
@@ -167,7 +223,8 @@ proc CreateColorbarRGB {which} {
     $ds9(canvas) bind $cb <Enter> [list ColorbarEnter %x %y]
     $ds9(canvas) bind $cb <Leave> [list ColorbarLeave]
 
-    $cb invert $colorbar(invert)
+    # now init new colorbar to prev values
+    $cb colorbar $sav
 
     LayoutColorbar $cb
 }
@@ -186,10 +243,8 @@ proc CreateColorbarExternal {cb which ext} {
 	close $ch
 
 	$cb load var "\{$fn\}" vardata
+	unset vardata
     }
-
-    # reset the to current colormap
-    $cb map $colorbar(map)
 }
 
 proc InitColorbar {} {
@@ -743,17 +798,12 @@ proc UpdateColormapLevelMosaic {which x y sys} {
     }
 }
 
-proc ColorFrameBackup {ch which} {
-#    puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""
-#    puts $ch "colorbar tag \"\{[$which get colorbar tag]\}\""
-}
-
 proc ColorbarSizeDialog {} {
     global colorbar
     global ds9
 
     if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Size}] 10 colorbar(size)]} {
-	UpdateView
+	ColorbarUpdateView
     }
 }
 
@@ -763,7 +813,7 @@ proc TicksDialog {} {
     global ds9
 
     if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Number of Ticks}] 10 colorbar(ticks)]} {
-	UpdateView
+	ColorbarUpdateView
     }
 }
 
@@ -1213,37 +1263,48 @@ proc LayoutColorbar {cb} {
     }
 }
 
-proc ColorbarBackup {ch which} {
+proc ColorbarUpdateView {} {
+    global ds9
     global colorbar
 
-    puts $ch "$which configure -size $colorbar(size)"
-    puts $ch "$which configure -ticks $colorbar(ticks)"
-    puts $ch "$which configure -numerics $colorbar(numerics)"
-    puts $ch "$which configure -space $colorbar(space)"
+    # update default colorbar
+    colorbar configure -size $colorbar(size)
+    colorbar configure -ticks $colorbar(ticks)
+    colorbar configure -numerics $colorbar(numerics)
+    colorbar configure -space $colorbar(space)
     switch $colorbar(orientation) {
-	horizontal {puts $ch "$which configure -orientation 0"}
-	vertical {puts $ch "$which configure -orientation 1"}
+	horizontal {colorbar configure -orientation 0}
+	vertical {colorbar configure -orientation 1}
     }
-    puts $ch "$which configure -font $colorbar(font)"
-    puts $ch "$which configure -fontsize $colorbar(font,size)"
-    puts $ch "$which configure -fontweight $colorbar(font,weight)"
-    puts $ch "$which configure -fontslant $colorbar(font,slant)"
+    colorbar configure -font $colorbar(font)
+    colorbar configure -fontsize $colorbar(font,size)
+    colorbar configure -fontweight $colorbar(font,weight)
+    colorbar configure -fontslant $colorbar(font,slant)
 
-    puts $ch "$which colorbar [$which get colorbar]"
-    puts $ch "$which tag \"\{[$which get tag]\}\""
+    # update all colorbars
+    foreach ff $ds9(frames) {
+	set cb ${ff}cb
+	
+	$cb configure -size $colorbar(size)
+	$cb configure -ticks $colorbar(ticks)
+	$cb configure -numerics $colorbar(numerics)
+	$cb configure -space $colorbar(space)
+	switch $colorbar(orientation) {
+	    horizontal {$cb configure -orientation 0}
+	    vertical {$cb configure -orientation 1}
+	}
+	$cb configure -font $colorbar(font)
+	$cb configure -fontsize $colorbar(font,size)
+	$cb configure -fontweight $colorbar(font,weight)
+	$cb configure -fontslant $colorbar(font,slant)
+    }
+
+    UpdateView
 }
 
-proc ColormapFrameBackup {ch which} {
-    set cb ${which}cb
-
-    puts $ch "set sav \[$cb get colorbar\]"
-    puts $ch "$cb colorbar [$which get colorbar]"
-    puts $ch "$which colormap \[$cb get colormap\]"
-    puts $ch "$cb colorbar \$sav"
-}
-
-proc ColorbarBackupCmaps {ch dir} {
+proc ColorbarBackup {ch dir} {
     global icolorbar
+    global colorbar
 
     set rdir "./[lindex [file split $dir] end]"
 
@@ -1261,6 +1322,33 @@ proc ColorbarBackupCmaps {ch dir} {
 	colorbar save $cmap \"[file join $dir $nn]\"
 	puts $ch "LoadColormapFile \"[file join $rdir $nn]\""
     }
+
+    # colorbar params
+    puts $ch "colorbar configure -size $colorbar(size)"
+    puts $ch "colorbar configure -ticks $colorbar(ticks)"
+    puts $ch "colorbar configure -numerics $colorbar(numerics)"
+    puts $ch "colorbar configure -space $colorbar(space)"
+    switch $colorbar(orientation) {
+	horizontal {puts $ch "colorbar configure -orientation 0"}
+	vertical {puts $ch "colorbar configure -orientation 1"}
+    }
+    puts $ch "colorbar configure -font $colorbar(font)"
+    puts $ch "colorbar configure -fontsize $colorbar(font,size)"
+    puts $ch "colorbar configure -fontweight $colorbar(font,weight)"
+    puts $ch "colorbar configure -fontslant $colorbar(font,slant)"
+}
+
+proc ColorbarFrameBackup {ch which} {
+    set cb ${which}cb
+
+#    puts $ch "set sav \[$cb get colorbar\]"
+
+    puts $ch "$cb colorbar [$which get colorbar]"
+    puts $ch "$which colormap \[$cb get colormap\]"
+    puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""
+    puts $ch "$cb tag \"\{[$which get colorbar tag]\}\""
+
+#    puts $ch "$cb colorbar \$sav"
 }
 
 # Process Cmds

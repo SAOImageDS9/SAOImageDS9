@@ -21,11 +21,6 @@ proc Backup {fn} {
 	return
     }
     
-    # update any tags
-    if {$current(frame) != {}} {
-#	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
-    }
-
     # EditText Dialogs
     EditTextUpdateVar
 
@@ -33,8 +28,7 @@ proc Backup {fn} {
     PannerBackup $ch
 
     # Colorbar
-    ColorbarBackupCmaps $ch $dir
-    ColorbarBackup $ch colorbar
+    ColorbarBackup $ch $dir
 
     # Frames
     foreach ff $ds9(frames) {
@@ -293,8 +287,7 @@ proc BackupFrame {ch which dir} {
     }
 
     MagnifierFrameBackup $ch $which
-    ColorFrameBackup $ch $which
-    ColormapFrameBackup $ch $which
+    ColorbarFrameBackup $ch $which
 
     DS9Backup $ch $which
     CubeBackup $ch $which

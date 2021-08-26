@@ -396,6 +396,7 @@ proc MarkerButton {which x y} {
 	    close $ch
 
 	    $which marker create template var vardata $x $y
+	    unset vardata
 	}
     }
 }

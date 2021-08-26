@@ -244,7 +244,11 @@ tagedit	: BEGIN_ INT INT STRING {cb->tagEditBeginCmd($2,$3,$4);}
 save	: STRING {cb->saveCmd($1);}
 	| INT STRING {cb->saveCmd($1,$2);}
 	| STRING STRING {cb->saveCmd($1,$2);}
+        | VAR_ saveVar
 	;
+
+saveVar : STRING STRING {cb->saveVarCmd($1,$2);}
+        ;
 
 win32	: PRINT_ {
 #ifdef _WIN32

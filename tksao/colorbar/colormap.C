@@ -42,3 +42,5 @@ void ColorMapInfo::setFileName(const char* n)
 
   filename_ = dupstr(n);
 }
+
+

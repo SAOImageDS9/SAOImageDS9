@@ -105,6 +105,16 @@ int LUTColorMap::save(const char* fn)
   return 1;
 }
 
+int LUTColorMap::saveVar(const char* var)
+{
+  ostringstream str;
+  str << *this;
+
+  Tcl_SetVar(parent_->getInterp(), var, str.str().c_str(),
+	     TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
+  return 1;
+}
+
 unsigned char LUTColorMap::getRedChar(int ii, int count)
 {
   int size = colors.count();

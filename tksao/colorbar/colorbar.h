@@ -84,6 +84,7 @@ class Colorbar : public ColorbarBase {
   void saveCmd(const char*);
   void saveCmd(int, const char*);
   void saveCmd(const char*, const char*);
+  void saveVarCmd(const char*, const char*);
   void setColorbarCmd(int, float, float, int);
 
   void getTagCmd();

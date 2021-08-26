@@ -54,6 +54,7 @@ public:
   virtual int load() =0;
   virtual int load(const char*) =0;
   virtual int save(const char*) =0;
+  virtual int saveVar(const char*) =0;
 
   virtual unsigned char getRedChar(int, int) =0;
   virtual unsigned char getGreenChar(int, int) =0;

@@ -107,10 +107,20 @@ int SAOColorMap::load(const char* var)
 
 int SAOColorMap::save(const char* fn)
 {
-  ofstream f(fn);
-  if (!f)
+  ofstream fstr(fn);
+  if (!fstr)
     return 0;
-  f << *this;
+  fstr << *this;
+  return 1;
+}
+
+int SAOColorMap::saveVar(const char* var)
+{
+  ostringstream str;
+  str << *this;
+
+  Tcl_SetVar(parent_->getInterp(), var, str.str().c_str(),
+	     TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
   return 1;
 }
 

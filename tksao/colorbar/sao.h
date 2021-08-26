@@ -66,6 +66,7 @@ public:
   int load();
   int load(const char* var);
   int save(const char*);
+  int saveVar(const char*);
 
   unsigned char getRedChar(int i, int c) {return getColorChar(i,c,&red);}
   unsigned char getGreenChar(int i, int c) {return getColorChar(i,c,&green);}

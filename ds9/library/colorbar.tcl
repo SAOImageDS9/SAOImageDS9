@@ -89,6 +89,7 @@ proc CreateColorbar {} {
 
 proc CreateColorbarBase {which} {
     global ds9
+    global icolorbar
     global colorbar
 
     set cb ${which}cb
@@ -104,13 +105,26 @@ proc CreateColorbarBase {which} {
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
-   # preload external cmaps
+    # preload any user
+    foreach cmap $icolorbar(user,cmaps) {
+	global vardata
+	set fn [colorbar get file name $cmap]
+	colorbar save var $cmap vardata
+	$cb load var $fn {} vardata
+	unset vardata
+    }
+
+    # preload external cmaps
     CreateColorbarExternal $cb h5 sao
     CreateColorbarExternal $cb matplotlib lut
     CreateColorbarExternal $cb cubehelix sao
     CreateColorbarExternal $cb gist sao
     CreateColorbarExternal $cb topo sao
 
+    # reset the to current colormap
+    $cb map $colorbar(map)
+
+    # bindings
     $ds9(canvas) bind $cb <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind $cb <Enter> [list ColorbarEnter %x %y]
     $ds9(canvas) bind $cb <Leave> [list ColorbarLeave]
@@ -160,7 +174,6 @@ proc CreateColorbarRGB {which} {
 
 proc CreateColorbarExternal {cb which ext} {
     global ds9
-    global current
     global icolorbar
     global colorbar
 

@@ -145,6 +145,13 @@ proc CreateColorbarBase {which} {
 	vertical {$cb configure -orientation 1}
     }
 
+    # preload external cmaps
+    CreateColorbarExternal $cb h5 sao
+    CreateColorbarExternal $cb matplotlib lut
+    CreateColorbarExternal $cb cubehelix sao
+    CreateColorbarExternal $cb gist sao
+    CreateColorbarExternal $cb topo sao
+
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
 	global vardata
@@ -153,13 +160,6 @@ proc CreateColorbarBase {which} {
 	$cb load var $fn {} vardata
 	unset vardata
     }
-
-    # preload external cmaps
-    CreateColorbarExternal $cb h5 sao
-    CreateColorbarExternal $cb matplotlib lut
-    CreateColorbarExternal $cb cubehelix sao
-    CreateColorbarExternal $cb gist sao
-    CreateColorbarExternal $cb topo sao
 
     # bindings
     $ds9(canvas) bind $cb <Motion> [list ColorbarMotion %x %y]
@@ -284,7 +284,6 @@ proc LoadColormap {} {
 proc LoadColormapFile {fn} {
     global colorbar
     global icolorbar
-
     global current
     global ds9
 
@@ -1342,7 +1341,6 @@ proc ColorbarFrameBackup {ch which} {
     set cb ${which}cb
 
 #    puts $ch "set sav \[$cb get colorbar\]"
-
     puts $ch "$cb colorbar [$which get colorbar]"
     puts $ch "$which colormap \[$cb get colormap\]"
     puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""

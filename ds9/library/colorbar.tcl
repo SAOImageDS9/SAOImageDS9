@@ -292,26 +292,32 @@ proc LoadColormapFile {fn} {
     }
 
     # first load into default cmap
-    set org [colorbar get name]
+    set orgName [colorbar get name]
+    set orgInvert [colorbar get invert]
+
     if {[catch {colorbar load "\{$fn\}"} rr]} {
 	Error $rr
 	return
     }
     set cmap [colorbar get name]
     lappend icolorbar(user,cmaps) $cmap
-    colorbar map $org
+
+    colorbar map $orgName
+    colorbar invert $orgInvert
 
     # now load into all current cmaps
     foreach ff $ds9(frames) {
 	set cb ${ff}cb
 	switch [$cb get type] {
 	    base {
-		set org [$cb get name]
+		set orgName [$cb get name]
+		set orgInvert [$cb get invert]
 		if {[catch {$cb load "\{$fn\}"} rr]} {
 		    Error $rr
 		    return
 		}
-		$cb map $org
+		$cb map $orgName
+		$cb invert $orgInvert
 	    }
 	    rgb {}
 	}
@@ -1340,13 +1346,10 @@ proc ColorbarBackup {ch dir} {
 proc ColorbarFrameBackup {ch which} {
     set cb ${which}cb
 
-#    puts $ch "set sav \[$cb get colorbar\]"
     puts $ch "$cb colorbar [$which get colorbar]"
     puts $ch "$which colormap \[$cb get colormap\]"
     puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""
     puts $ch "$cb tag \"\{[$which get colorbar tag]\}\""
-
-#    puts $ch "$cb colorbar \$sav"
 }
 
 # Process Cmds

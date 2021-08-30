@@ -239,6 +239,15 @@ proc Restore {fn} {
     # fix any prefs
     FixPrefs $vv
 
+    # for old backup sets with one colorbar,
+    #   make sure each colorbar has the correct info from its frame
+    if {$vv <= {8.3}} {
+      foreach ff $ds9(frames) {
+	set cb ${ff}cb
+	$cb colorbar [$ff get colorbar]
+      }
+    }
+
     # reset standard dialog
     switch $ds9(wm) {
 	x11 {set pds9(dialog) motif}

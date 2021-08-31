@@ -33,12 +33,13 @@ proc ColorMainMenu {} {
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
-    ColorMainMenuExternal h5
-    ColorMainMenuExternal matplotlib
-    ColorMainMenuExternal cubehelix
-    ColorMainMenuExternal gist
-    ColorMainMenuExternal topo
-    ColorMainMenuExternal user
+    ColorMainMenuExternal h5 h5
+    ColorMainMenuExternal matplotlib matplotlib
+    ColorMainMenuExternal matplotlib matplotlib2
+    ColorMainMenuExternal cubehelix cubehelix
+    ColorMainMenuExternal gist gist
+    ColorMainMenuExternal topo topo
+    ColorMainMenuExternal user user
 
     $ds9(mb).color add separator
     $ds9(mb).color add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -91,14 +92,14 @@ proc ColorMainMenu {} {
 	font,slant ColorbarUpdateView
 }
 
-proc ColorMainMenuExternal {which} {
+proc ColorMainMenuExternal {mm which} {
     global ds9
     global icolorbar
 
     ThemeMenu $ds9(mb).color.$which
 
     foreach cmap $icolorbar($which,cmaps) {
-	$ds9(mb).color.$which add radiobutton \
+	$ds9(mb).color.$mm add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
 	    -command [list ChangeColormapName $cmap]
@@ -132,11 +133,12 @@ proc PrefsDialogColorMenu {w} {
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
 
-    PrefsColorMenuExternal $m h5
-    PrefsColorMenuExternal $m matplotlib
-    PrefsColorMenuExternal $m cubehelix
-    PrefsColorMenuExternal $m gist
-    PrefsColorMenuExternal $m topo
+    PrefsColorMenuExternal $m h5 h5
+    PrefsColorMenuExternal $m matplotlib matplotlib
+    PrefsColorMenuExternal $m matplotlib matplotlib2
+    PrefsColorMenuExternal $m cubehelix cubehelix
+    PrefsColorMenuExternal $m gist gist
+    PrefsColorMenuExternal $m topo topo
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -175,14 +177,14 @@ proc PrefsDialogColorMenu {w} {
     pack $f -side top -fill both -expand true
 }
 
-proc PrefsColorMenuExternal {m which} {
+proc PrefsColorMenuExternal {m mm which} {
     global ds9
     global icolorbar
 
     ThemeMenu $m.$which
 
     foreach cmap $icolorbar($which,cmaps) {
-	$m.$which add radiobutton -label [msgcat::mc $cmap] \
+	$m.$mm add radiobutton -label [msgcat::mc $cmap] \
 	    -variable pcolorbar(map) -value $cmap
     }
 }
@@ -222,6 +224,7 @@ proc ButtonsColorDef {} {
     ButtonsColorDefExternal default
     ButtonsColorDefExternal h5
     ButtonsColorDefExternal matplotlib
+    ButtonsColorDefExternal matplotlib2
     ButtonsColorDefExternal cubehelix
     ButtonsColorDefExternal gist
     ButtonsColorDefExternal topo
@@ -271,6 +274,7 @@ proc CreateButtonsColor {} {
     CreateButtonsColorExternal default
     CreateButtonsColorExternal h5
     CreateButtonsColorExternal matplotlib
+    CreateButtonsColorExternal matplotlib2
     CreateButtonsColorExternal cubehelix
     CreateButtonsColorExternal gist
     CreateButtonsColorExternal topo
@@ -345,11 +349,12 @@ proc PrefsDialogButtonbarColor {f} {
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
 
-    PrefsDialogButtonbarColorExternal $m h5
-    PrefsDialogButtonbarColorExternal $m matplotlib
-    PrefsDialogButtonbarColorExternal $m cubehelix
-    PrefsDialogButtonbarColorExternal $m gist
-    PrefsDialogButtonbarColorExternal $m topo
+    PrefsDialogButtonbarColorExternal $m h5 h5
+    PrefsDialogButtonbarColorExternal $m matplotlib matplotlib
+    PrefsDialogButtonbarColorExternal $m matplotlib matplotlib2
+    PrefsDialogButtonbarColorExternal $m cubehelix cubehelix
+    PrefsDialogButtonbarColorExternal $m gist gist
+    PrefsDialogButtonbarColorExternal $m topo topo
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -392,14 +397,14 @@ proc PrefsDialogButtonbarColor {f} {
 	-command {UpdateButtons buttons(color)}
 }
 
-proc PrefsDialogButtonbarColorExternal {m which} {
+proc PrefsDialogButtonbarColorExternal {m mm which} {
     global ds9
     global icolorbar
 
     ThemeMenu $m.$which
 
     foreach cmap $icolorbar($which,cmaps) {
-	$m.$which add checkbutton -label [msgcat::mc $cmap] \
+	$m.$mm add checkbutton -label [msgcat::mc $cmap] \
 	    -variable pbuttons(color,$cmap) \
 	    -command {UpdateButtons buttons(color)}
     }

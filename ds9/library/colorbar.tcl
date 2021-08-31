@@ -21,7 +21,8 @@ proc ColorbarDef {} {
     set icolorbar(default,cmaps) [list grey red green blue a b bb he i8 aips0 sls hsv heat cool rainbow standard staircase color]
 
     set icolorbar(h5,cmaps) [list h5_autumn h5_bluered h5_bone h5_cool h5_copper h5_dkbluered h5_gray h5_green h5_hot h5_hsv h5_jet h5_pink h5_spring h5_summer h5_winter h5_yarg h5_yellow]
-    set icolorbar(matplotlib,cmaps) [list inferno magma plasma viridis twilight turbo]
+    set icolorbar(matplotlib,cmaps) [list viridis]
+    set icolorbar(matplotlib2,cmaps) [list inferno magma plasma twilight turbo]
     set icolorbar(cubehelix,cmaps) [list ch05m151008 ch05m151010 ch05m151012 ch05m151410 ch05p151010 ch20m151010 cubehelix0 cubehelix1]
     set icolorbar(gist,cmaps) [list gist_earth gist_heat gist_rainbow gist_yarg gist_gray gist_ncar gist_stern]
     set icolorbar(topo,cmaps) [list tpglarf tpglhcf tpglhwf tpglpof tpglarm tpglhcm tpglhwm tpglpom]
@@ -70,11 +71,13 @@ proc CreateColorbar {} {
 	-bg [ThemeTreeBackground]
 
     # preload external cmaps
+    # maintain same order for backward compatibility
     CreateColorbarExternal colorbar h5 sao
     CreateColorbarExternal colorbar matplotlib lut
     CreateColorbarExternal colorbar cubehelix sao
     CreateColorbarExternal colorbar gist sao
     CreateColorbarExternal colorbar topo sao
+    CreateColorbarExternal colorbar matplotlib2 lut
 
     $ds9(canvas) bind colorbar <Motion> [list ColorbarMotion %x %y]
     $ds9(canvas) bind colorbar <Enter> [list ColorbarEnter %x %y]
@@ -146,11 +149,13 @@ proc CreateColorbarBase {which} {
     }
 
     # preload external cmaps
+    # maintain same order for backward compatibility
     CreateColorbarExternal $cb h5 sao
     CreateColorbarExternal $cb matplotlib lut
     CreateColorbarExternal $cb cubehelix sao
     CreateColorbarExternal $cb gist sao
     CreateColorbarExternal $cb topo sao
+    CreateColorbarExternal $cb matplotlib2 lut
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
@@ -1007,12 +1012,13 @@ proc ColormapDialog {} {
     $mb.colormap add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
-    ColormapDialogExternal h5
-    ColormapDialogExternal matplotlib
-    ColormapDialogExternal cubehelix
-    ColormapDialogExternal gist
-    ColormapDialogExternal topo
-    ColormapDialogExternal user
+    ColormapDialogExternal h5 h5
+    ColormapDialogExternal matplotlib matplotlib
+    ColormapDialogExternal matplotlib matplotlib2
+    ColormapDialogExternal cubehelix cubehelix
+    ColormapDialogExternal gist gist
+    ColormapDialogExternal topo topo
+    ColormapDialogExternal user user
 
     $mb.colormap add separator
     $mb.colormap add checkbutton \
@@ -1058,7 +1064,7 @@ proc ColormapDialog {} {
     bind $w <<Close>> ColormapDestroyDialog
 }
 
-proc ColormapDialogExternal {which} {
+proc ColormapDialogExternal {mm which} {
     global colorbar
     global icolorbar
 
@@ -1066,7 +1072,7 @@ proc ColormapDialogExternal {which} {
     ThemeMenu $mb.colormap.$which
 
     foreach cmap $icolorbar($which,cmaps) {
-	$mb.colormap.$which add radiobutton \
+	$mb.colormap.$mm add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
 	    -command [list ChangeColormapName $cmap]

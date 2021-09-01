@@ -74,6 +74,7 @@ proc ViewDef {} {
     global pview
 
     set view(layout) horizontal
+    set view(multi) 1
     set view(info) 1
     set view(panner) 1
     set view(magnifier) 1

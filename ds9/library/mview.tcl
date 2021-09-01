@@ -15,6 +15,9 @@ proc ViewMainMenu {} {
     $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical Layout}] \
 	-variable view(layout) -value vertical -command {ViewVertCmd}
     $ds9(mb).view add separator
+    $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
+	-variable view(multi) -command UpdateView
+    $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Information Panel}] \
 	-variable view(info) -command UpdateView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Panner}] \
@@ -81,6 +84,9 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(layout) -value horizontal
     $m add radiobutton -label [msgcat::mc {Vertical Layout}] \
 	-variable pview(layout) -value vertical
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
+	-variable pview(multi)
     $m add separator
     $m add checkbutton -label [msgcat::mc {Information Panel}] \
 	-variable pview(info)
@@ -202,6 +208,7 @@ proc ButtonsViewDef {} {
     array set pbuttons {
 	view,horizontal 0
 	view,vertical 0
+	view,multi 0
 	view,info 1
 	view,panner 1
 	view,magnifier 1
@@ -236,6 +243,10 @@ proc CreateButtonsView {} {
     RadioButton $ds9(buttons).view.vertical \
 	[string tolower [msgcat::mc {Layout Vert}]] \
 	view(layout) vertical {ViewVertCmd}
+
+    CheckButton $ds9(buttons).view.multi \
+	[string tolower [msgcat::mc {Multi Colorbars}]] \
+	view(multi) UpdateView
 
     CheckButton $ds9(buttons).view.info \
 	[string tolower [msgcat::mc {Information}]] \
@@ -299,6 +310,7 @@ proc CreateButtonsView {} {
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)
         $ds9(buttons).view.vertical pbuttons(view,vertical)
+        $ds9(buttons).view.multi pbuttons(view,multi)
         $ds9(buttons).view.info pbuttons(view,info)
         $ds9(buttons).view.panner pbuttons(view,panner)
         $ds9(buttons).view.magnifier pbuttons(view,magnifier)
@@ -333,6 +345,10 @@ proc PrefsDialogButtonbarView {f} {
 	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Vertical Layout}] \
 	-variable pbuttons(view,vertical) \
+	-command {UpdateButtons buttons(view)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
+	-variable pbuttons(view,multi) \
 	-command {UpdateButtons buttons(view)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Information Panel}] \

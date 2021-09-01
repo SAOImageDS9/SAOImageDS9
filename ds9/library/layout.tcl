@@ -654,8 +654,8 @@ proc LayoutFrames {} {
 	set current(frame) {}
 	set current(colorbar) colorbar
 
-	set colorbar(map) [$current(colorbar) get name]
-	set colorbar(invert) [$current(colorbar) get invert]
+	set colorbar(map) [colorbar get name]
+	set colorbar(invert) [colorbar get invert]
 
 	# panner
 	if {$view(panner)} {
@@ -667,11 +667,13 @@ proc LayoutFrames {} {
 	    magnifier clear
 	}
 
-	# process proper colorbar
-	LayoutColorbar colorbar
-	$current(colorbar) show
-	$ds9(canvas) raise $current(colorbar)
-
+	# colorbar
+	if {$view(colorbar)} {
+	    LayoutColorbar colorbar
+	    colorbar show
+	    $ds9(canvas) raise colorbar
+	}
+	
 	# update menus/dialogs
 	UpdateDS9
     }

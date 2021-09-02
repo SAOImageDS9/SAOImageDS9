@@ -391,10 +391,9 @@ proc LayoutViewAdjust {varname} {
     set var(x) 0
     set var(y) 0
 
-    set cbh [expr $view(colorbar) && \
-		 [string equal $colorbar(orientation) {horizontal}]]
-    set cbv [expr $view(colorbar) && \
-		 [string equal $colorbar(orientation) {vertical}]]
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
@@ -708,17 +707,15 @@ proc TileRect {numx numy gap} {
     global icolorbar
 
     if {$view(multi)} {
-	switch -- $colorbar(orientation) {
-	    horizontal {
-		set wdiff 0
-		set hdiff $icolorbar(horizontal,height)
-	    }
-	    vertical {
-		set wdiff $icolorbar(vertical,width)
-		set hdiff 0
-	    }
+	if {!$colorbar(orientation)} {
+	    # horizontal
+	    set wdiff 0
+	    set hdiff $icolorbar(horizontal,height)
+	} else {
+	    # vertical
+	    set wdiff $icolorbar(vertical,width)
+	    set hdiff 0
 	}
-	
     } else {
 	set wdiff 0
 	set hdiff 0

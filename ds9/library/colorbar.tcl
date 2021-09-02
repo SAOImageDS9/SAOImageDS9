@@ -29,14 +29,16 @@ proc ColorbarDef {} {
     set icolorbar(user,cmaps) {}
 
     set colorbar(lock) 0
-    set colorbar(size) 20
-    set colorbar(ticks) 11
     set colorbar(map) grey
     set colorbar(invert) 0
+    set colorbar(tag) red
+
+    set colorbar(size) 20
+    set colorbar(ticks) 11
     set colorbar(numerics) 1
     set colorbar(space) 0
-    set colorbar(orientation) horizontal
-    set colorbar(tag) red
+    set colorbar(orientation) 0
+
     set colorbar(font) helvetica
     set colorbar(font,size) 9
     set colorbar(font,weight) normal
@@ -131,6 +133,7 @@ proc CreateColorbarBase {which} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation $colorbar(orientation) \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -142,11 +145,6 @@ proc CreateColorbarBase {which} {
 	-times $ds9(times) \
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
-
-    switch $colorbar(orientation) {
-	horizontal {$cb configure -orientation 0}
-	vertical {$cb configure -orientation 1}
-    }
 
     # preload external cmaps
     # maintain same order for backward compatibility
@@ -1247,28 +1245,27 @@ proc LayoutColorbarOne {cb} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation $colorbar(orientation) \
+	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
-    switch -- $colorbar(orientation) {
-	horizontal {
-	    $cb configure \
-		-x 0 \
-		-y [expr $canvas(height) + $canvas(gap)] \
-		-width $canvas(width) \
-		-height $icolorbar(horizontal,height) \
-		-orientation 0
-	}
-	vertical {
-	    $cb configure \
-		-x [expr $canvas(width) + $canvas(gap)] \
-		-y 0 \
-		-width $icolorbar(vertical,width) \
-		-height $canvas(height) \
-		-orientation 1
-	}
+    if {!$colorbar(orientation)} {
+	# horizontal
+	$cb configure \
+	    -x 0 \
+	    -y [expr $canvas(height) + $canvas(gap)] \
+	    -width $canvas(width) \
+	    -height $icolorbar(horizontal,height)
+    } else {
+	# vertical
+	$cb configure \
+	    -x [expr $canvas(width) + $canvas(gap)] \
+	    -y 0 \
+	    -width $icolorbar(vertical,width) \
+	    -height $canvas(height)
     }
 }
 
@@ -1282,28 +1279,27 @@ proc LayoutColorbarTile {cb xx yy ww hh} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation $colorbar(orientation) \
+	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
-    switch -- $colorbar(orientation) {
-	horizontal {
-	    $cb configure \
-		-x $xx \
-		-y [expr $yy + $hh + $canvas(gap)] \
-		-width $ww \
-		-height $icolorbar(horizontal,height) \
-		-orientation 0
-	}
-	vertical {
-	    $cb configure \
-		-x [expr $xx + $ww + $canvas(gap)] \
-		-y $yy \
-		-width [expr $ww + $icolorbar(vertical,width)] \
-		-height $hh \
-		-orientation 1
-	}
+    if {!$colorbar(orientation)} {
+	# horizontal
+	$cb configure \
+	    -x $xx \
+	    -y [expr $yy + $hh + $canvas(gap)] \
+	    -width $ww \
+	    -height $icolorbar(horizontal,height)
+    } else {
+	# vertical
+	$cb configure \
+	    -x [expr $xx + $ww + $canvas(gap)] \
+	    -y $yy \
+	    -width [expr $ww + $icolorbar(vertical,width)] \
+	    -height $hh
     }
 }
 
@@ -1312,35 +1308,33 @@ proc ColorbarUpdateView {} {
     global colorbar
 
     # update default colorbar
-    colorbar configure -size $colorbar(size)
-    colorbar configure -ticks $colorbar(ticks)
-    colorbar configure -numerics $colorbar(numerics)
-    colorbar configure -space $colorbar(space)
-    switch $colorbar(orientation) {
-	horizontal {colorbar configure -orientation 0}
-	vertical {colorbar configure -orientation 1}
-    }
-    colorbar configure -font $colorbar(font)
-    colorbar configure -fontsize $colorbar(font,size)
-    colorbar configure -fontweight $colorbar(font,weight)
-    colorbar configure -fontslant $colorbar(font,slant)
+    colorbar configure \
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	-orientation $colorbar(orientation) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant)
 
     # update all colorbars
     foreach ff $ds9(frames) {
 	set cb ${ff}cb
 	
-	$cb configure -size $colorbar(size)
-	$cb configure -ticks $colorbar(ticks)
-	$cb configure -numerics $colorbar(numerics)
-	$cb configure -space $colorbar(space)
-	switch $colorbar(orientation) {
-	    horizontal {$cb configure -orientation 0}
-	    vertical {$cb configure -orientation 1}
-	}
-	$cb configure -font $colorbar(font)
-	$cb configure -fontsize $colorbar(font,size)
-	$cb configure -fontweight $colorbar(font,weight)
-	$cb configure -fontslant $colorbar(font,slant)
+	$cb configure \
+	    -size $colorbar(size) \
+	    -ticks $colorbar(ticks) \
+	    -numerics $colorbar(numerics) \
+	    -space $colorbar(space) \
+	    -orientation $colorbar(orientation) \
+	    \
+	    -font $colorbar(font) \
+	    -fontsize $colorbar(font,size) \
+	    -fontweight $colorbar(font,weight) \
+	    -fontslant $colorbar(font,slant)
     }
 
     UpdateView
@@ -1372,10 +1366,8 @@ proc ColorbarBackup {ch dir} {
     puts $ch "colorbar configure -ticks $colorbar(ticks)"
     puts $ch "colorbar configure -numerics $colorbar(numerics)"
     puts $ch "colorbar configure -space $colorbar(space)"
-    switch $colorbar(orientation) {
-	horizontal {puts $ch "colorbar configure -orientation 0"}
-	vertical {puts $ch "colorbar configure -orientation 1"}
-    }
+    puts $ch "colorbar configure -orientation $colorbar(orientation)"
+
     puts $ch "colorbar configure -font $colorbar(font)"
     puts $ch "colorbar configure -fontsize $colorbar(font,size)"
     puts $ch "colorbar configure -fontweight $colorbar(font,weight)"

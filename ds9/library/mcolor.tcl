@@ -71,10 +71,10 @@ proc ColorMainMenu {} {
     ThemeMenu $ds9(mb).color.colorbar.orient
     $ds9(mb).color.colorbar.orient add radiobutton \
 	-label [msgcat::mc {Horizontal}] -variable colorbar(orientation) \
-	-value horizontal -command ColorbarUpdateView
+	-value 0 -command ColorbarUpdateView
     $ds9(mb).color.colorbar.orient add radiobutton \
 	-label [msgcat::mc {Vertical}] -variable colorbar(orientation) \
-	-value vertical -command ColorbarUpdateView
+	-value 1 -command ColorbarUpdateView
 
     ThemeMenu $ds9(mb).color.colorbar.numerics
     $ds9(mb).color.colorbar.numerics add checkbutton \
@@ -156,9 +156,9 @@ proc PrefsDialogColorMenu {w} {
 
     ThemeMenu $m.colorbar.orient
     $m.colorbar.orient add radiobutton -label [msgcat::mc {Horizontal}] \
-	-variable pcolorbar(orientation) -value horizontal
+	-variable pcolorbar(orientation) -value 0
     $m.colorbar.orient add radiobutton -label [msgcat::mc {Vertical}] \
-	-variable pcolorbar(orientation) -value vertical
+	-variable pcolorbar(orientation) -value 1
 
     ThemeMenu $m.colorbar.numerics
     $m.colorbar.numerics add checkbutton -label [msgcat::mc {Show}] \
@@ -285,10 +285,10 @@ proc CreateButtonsColor {} {
 	[string tolower [msgcat::mc {Reset}]] ResetColormap
     RadioButton $ds9(buttons).color.horz \
 	[string tolower [msgcat::mc {Horizontal}]] \
-	colorbar(orientation) horizontal ColorbarUpdateView
+	colorbar(orientation) 0 ColorbarUpdateView
     RadioButton $ds9(buttons).color.vert \
 	[string tolower [msgcat::mc {Vertical}]] \
-	colorbar(orientation) vertical ColorbarUpdateView
+	colorbar(orientation) 1 ColorbarUpdateView
     CheckButton $ds9(buttons).color.numerics \
 	[string tolower [msgcat::mc {Numerics}]] \
 	colorbar(numerics) ColorbarUpdateView

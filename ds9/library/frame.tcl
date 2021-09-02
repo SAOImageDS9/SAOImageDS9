@@ -1890,13 +1890,13 @@ proc FrameToFront {} {
     set colorbar(invert) [$current(colorbar) get invert]
 
     $current(frame) show
-    $ds9(canvas) raise $current(frame)
     if {$view(colorbar)} {
 	$current(colorbar) show
-	$ds9(canvas) raise $current(colorbar)
     } else {
 	$current(colorbar) hide
     }
+    $ds9(canvas) raise $current(frame)
+    $ds9(canvas) raise $current(colorbar)
 
     switch -- $ds9(display) {
 	single -

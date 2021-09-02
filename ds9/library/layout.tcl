@@ -261,8 +261,8 @@ proc Release3Canvas {x y} {
 proc UnBindEventsCanvas {} {
     global ds9
 
-    foreach f $ds9(active) {
-	UnBindEventsFrame $f
+    foreach ff $ds9(active) {
+	UnBindEventsFrame $ff
     }
 }
 
@@ -274,8 +274,8 @@ proc BindEventsCanvas {} {
 	single -
 	blink {BindEventsFrame $current(frame)}
 	tile {
-	    foreach f $ds9(active) {
-		BindEventsFrame $f
+	    foreach ff $ds9(active) {
+		BindEventsFrame $ff
 	    }
 	}
     }
@@ -757,17 +757,20 @@ proc TileIt {ww hh xvar yvar nn} {
 	if {$ii<$nn} {
 	    $ff configure -x $xx($ii) -y $yy($ii) \
 		-width $ww -height $hh -anchor nw
-	    $ff show
-	    $ds9(canvas) raise $ff
-	    if {!$ds9(freeze)} {
-		BindEventsFrame $ff
-	    }
 
+	    $ff show
 	    ${ff}cb show
+
+	    $ds9(canvas) raise $ff
+	    $ds9(canvas) raise ${ff}cb
 	    if {$view(multi)} {
 		LayoutColorbarTile ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	    } else {
 		LayoutColorbarOne ${ff}cb
+	    }
+
+	    if {!$ds9(freeze)} {
+		BindEventsFrame $ff
 	    }
 	}
 	incr ii

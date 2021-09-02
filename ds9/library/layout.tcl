@@ -392,9 +392,9 @@ proc LayoutViewAdjust {varname} {
     set var(y) 0
 
     set cbh [expr $view(colorbar) && \
-	     [string equal $colorbar(orientation) {horizontal}]]
+		 [string equal $colorbar(orientation) {horizontal}]]
     set cbv [expr $view(colorbar) && \
-	     [string equal $colorbar(orientation) {vertical}]]
+		 [string equal $colorbar(orientation) {vertical}]]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
@@ -424,11 +424,11 @@ proc LayoutViewAdjust {varname} {
     }
 
     if {$grh} {
-	incr var(y)  $igraph(size)
+	incr var(y) $igraph(size)
     }
 
     if {$grv} {
-	incr var(x)  $igraph(size)
+	incr var(x) $igraph(size)
     }
 
     # canvas gap
@@ -669,7 +669,7 @@ proc LayoutFrames {} {
 
 	# colorbar
 	if {$view(colorbar)} {
-	    LayoutColorbar colorbar
+	    LayoutColorbarOne colorbar
 	    colorbar show
 	    $ds9(canvas) raise colorbar
 	}
@@ -684,20 +684,16 @@ proc LayoutFrames {} {
 
 proc TileOne {} {
     global ds9
-    global view
-    global current
     global canvas
-    global colorbar
-
-    set ww $canvas(width)
-    set hh $canvas(height)
-
-    set xx 0
-    set yy 0
 
     foreach ff $ds9(active) {
-	$ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
-	LayoutColorbar ${ff}cb
+	$ff configure \
+	    -x 0 \
+	    -y 0 \
+	    -width $canvas(width) \
+	    -height $canvas(height) \
+	    -anchor nw
+	LayoutColorbarOne ${ff}cb
     }
 
     # only show the current frame
@@ -708,20 +704,36 @@ proc TileRect {numx numy gap} {
     global view
     global canvas
     global tile
+    global colorbar
+    global icolorbar
 
-    set ww $canvas(width)
-    set hh $canvas(height)
-
-    set w [expr int(($ww-$gap*($numx-1))/$numx)]
-    set h [expr int(($hh-$gap*($numy-1))/$numy)]
+    if {$view(multi)} {
+	switch -- $colorbar(orientation) {
+	    horizontal {
+		set wdiff 0
+		set hdiff $icolorbar(horizontal,height)
+	    }
+	    vertical {
+		set wdiff $icolorbar(vertical,width)
+		set hdiff 0
+	    }
+	}
+	
+    } else {
+	set wdiff 0
+	set hdiff 0
+    }
     
+    set ww [expr int(($canvas(width)-$gap*($numx-1))/$numx-$wdiff)]
+    set hh [expr int(($canvas(height)-$gap*($numy-1))/$numy-$hdiff)]
+
     switch $tile(grid,dir) {
 	x {
 	    for {set jj 0} {$jj<$numy} {incr jj} {
 		for {set ii 0} {$ii<$numx} {incr ii} {
 		    set nn [expr $jj*$numx + $ii]
-		    set x($nn) [expr ($w+$gap)*$ii]
-		    set y($nn) [expr ($h+$gap)*$jj]
+		    set xx($nn) [expr ($ww+$wdiff+$gap)*$ii]
+		    set yy($nn) [expr ($hh+$hdiff+$gap)*$jj]
 		}
 	    }
 	}
@@ -729,33 +741,41 @@ proc TileRect {numx numy gap} {
 	    for {set ii 0} {$ii<$numx} {incr ii} {
 		for {set jj 0} {$jj<$numy} {incr jj} {
 		    set nn [expr $ii*$numy + $jj]
-		    set x($nn) [expr ($w+$gap)*$ii]
-		    set y($nn) [expr ($h+$gap)*$jj]
+		    set xx($nn) [expr ($ww+$wdiff+$gap)*$ii]
+		    set yy($nn) [expr ($hh+$hdiff+$gap)*$jj]
 		}
 	    }
 	}
     }
 
-    TileIt $w $h x y [expr $numx*$numy]
+    TileIt $ww $hh xx yy [expr $numx*$numy]
 }
 
 proc TileIt {ww hh xvar yvar nn} {
-    upvar $xvar x
-    upvar $yvar y
     global ds9
     global current
+    global view
+
+    upvar $xvar xx
+    upvar $yvar yy
 
     set ii 0
     foreach ff $ds9(active) {
 	if {$ii<$nn} {
-	    $ff configure -x $x($ii) -y $y($ii) \
+	    $ff configure -x $xx($ii) -y $yy($ii) \
 		-width $ww -height $hh -anchor nw
 	    $ff show
 	    $ds9(canvas) raise $ff
 	    if {!$ds9(freeze)} {
 		BindEventsFrame $ff
 	    }
-	    LayoutColorbar ${ff}cb
+
+	    ${ff}cb show
+	    if {$view(multi)} {
+		LayoutColorbarTile ${ff}cb $xx($ii) $yy($ii) $ww $hh
+	    } else {
+		LayoutColorbarOne ${ff}cb
+	    }
 	}
 	incr ii
     }

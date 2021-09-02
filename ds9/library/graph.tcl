@@ -400,9 +400,9 @@ proc UpdateGraphLayout {which} {
     }
 
     set cbh [expr $view(colorbar) && \
-	     [string equal $colorbar(orientation) {horizontal}]]
+		 [string equal $colorbar(orientation) {horizontal}]]
     set cbv [expr $view(colorbar) && \
-	     [string equal $colorbar(orientation) {vertical}]]
+		 [string equal $colorbar(orientation) {vertical}]]
 
     if {$view(graph,horz)} {
 	set xx $frxx

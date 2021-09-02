@@ -104,7 +104,7 @@ proc CreateColorbar {} {
     colorbarrgb invert $colorbar(invert)
     colorbarrgb hide
 
-    LayoutColorbar colorbar
+    LayoutColorbarOne colorbar
 }
 
 proc CreateColorbarBase {which} {
@@ -186,7 +186,7 @@ proc CreateColorbarBase {which} {
     # must come after all cmaps have been defined
     $cb colorbar $sav
     
-    LayoutColorbar $cb
+    LayoutColorbarOne $cb
 }
 
 proc CreateColorbarRGB {which} {
@@ -231,7 +231,7 @@ proc CreateColorbarRGB {which} {
     # now init new colorbar to prev values
     $cb colorbar $sav
 
-    LayoutColorbar $cb
+    LayoutColorbarOne $cb
 }
 
 proc CreateColorbarExternal {cb which ext} {
@@ -1237,7 +1237,7 @@ proc UpdateColorDialog {} {
     }
 }
 
-proc LayoutColorbar {cb} {
+proc LayoutColorbarOne {cb} {
     global colorbar
     global icolorbar
     global canvas
@@ -1254,21 +1254,54 @@ proc LayoutColorbar {cb} {
 
     switch -- $colorbar(orientation) {
 	horizontal {
-	    set xx 0
-	    set yy [expr $canvas(height) + $canvas(gap)]
-
-	    $cb configure -x $xx -y $yy \
+	    $cb configure \
+		-x 0 \
+		-y [expr $canvas(height) + $canvas(gap)] \
 		-width $canvas(width) \
 		-height $icolorbar(horizontal,height) \
 		-orientation 0
 	}
 	vertical {
-	    set xx [expr $canvas(width) + $canvas(gap)]
-	    set yy 0
-
-	    $cb configure -x $xx -y $yy \
+	    $cb configure \
+		-x [expr $canvas(width) + $canvas(gap)] \
+		-y 0 \
 		-width $icolorbar(vertical,width) \
 		-height $canvas(height) \
+		-orientation 1
+	}
+    }
+}
+
+proc LayoutColorbarTile {cb xx yy ww hh} {
+    global colorbar
+    global icolorbar
+    global canvas
+
+    $cb configure \
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant)
+
+    switch -- $colorbar(orientation) {
+	horizontal {
+	    $cb configure \
+		-x $xx \
+		-y [expr $yy + $hh + $canvas(gap)] \
+		-width $ww \
+		-height $icolorbar(horizontal,height) \
+		-orientation 0
+	}
+	vertical {
+	    $cb configure \
+		-x [expr $xx + $ww + $canvas(gap)] \
+		-y $yy \
+		-width [expr $ww + $icolorbar(vertical,width)] \
+		-height $hh \
 		-orientation 1
 	}
     }

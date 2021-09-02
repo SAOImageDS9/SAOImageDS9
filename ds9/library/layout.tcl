@@ -110,7 +110,7 @@ proc CreateCanvas {} {
     global canvas
 
     LayoutViewAdjust diff
-    set ww [expr $canvas(width)+$diff(x)]
+    set ww [expr $canvas(width) +$diff(x)]
     set hh [expr $canvas(height)+$diff(y)]
 
     global debug
@@ -294,9 +294,7 @@ proc ConfigureView {} {
 
     # calculate ds9(canvas) size
     LayoutViewAdjust diff
-
-    # adjust window size
-    set canvas(width) [expr [winfo width $ds9(canvas)]-$diff(x)]
+    set canvas(width)  [expr [winfo width  $ds9(canvas)]-$diff(x)]
     set canvas(height) [expr [winfo height $ds9(canvas)]-$diff(y)]
 
     if {$debug(tcl,layout)} {
@@ -324,9 +322,7 @@ proc UpdateView {} {
 
     # calculate ds9(canvas) size
     LayoutViewAdjust diff
-
-    # adjust window size
-    set ww [expr $canvas(width)+$diff(x)]
+    set ww [expr $canvas(width) +$diff(x)]
     set hh [expr $canvas(height)+$diff(y)]
 
     # determine how much to change

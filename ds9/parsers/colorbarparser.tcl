@@ -879,8 +879,8 @@ proc colorbar::yyparse {} {
                     34 { ProcessCmdSet colorbar ticks $2 UpdateView }
                     35 { set _ 1 }
                     36 { set _ 0 }
-                    37 { set _ vertical }
-                    38 { set _ horizontal }
+                    37 { set _ 1 }
+                    38 { set _ 0 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

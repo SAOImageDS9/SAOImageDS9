@@ -350,7 +350,7 @@ proc colorbarsend::yyparse {} {
                 switch -- $rule {
                     1 { ProcessSendCmdYesNo view colorbar }
                     2 { ProcessSendCmdYesNo colorbar lock }
-                    3 { ProcessSendCmdGet colorbar orientation }
+                    3 { ColorbarSendCmdOrientation }
                     4 { ProcessSendCmdYesNo colorbar numerics }
                     5 { ColorbarSendCmdSpace }
                     6 { ProcessSendCmdGet colorbar font }

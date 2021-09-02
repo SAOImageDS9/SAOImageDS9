@@ -55,8 +55,8 @@ space : VALUE_ {set _ 1}
  | DISTANCE_ {set _ 0}
  ;
 
-orientation : VERTICAL_ {set _ vertical}
- | HORIZONTAL_ {set _ horizontal}
+orientation : VERTICAL_ {set _ 1}
+ | HORIZONTAL_ {set _ 0}
  ;
 
 %%

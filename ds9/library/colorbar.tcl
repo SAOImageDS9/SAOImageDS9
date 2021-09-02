@@ -1485,6 +1485,17 @@ proc ColorbarSendCmdContrastBias {} {
     }
 }
 
+proc ColorbarSendCmdOrientation {} {
+    global parse
+    global colorbar
+
+    if {!$colorbar(orientation)} {
+	$parse(proc) $parse(id) "horizontal\n"
+    } else {
+	$parse(proc) $parse(id) "vertical\n"
+    }
+}
+
 proc ColorbarSendCmdSpace {} {
     global parse
     global colorbar

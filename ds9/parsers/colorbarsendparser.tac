@@ -18,7 +18,7 @@
 
 colorbarsend : {ProcessSendCmdYesNo view colorbar}
  | LOCK_ {ProcessSendCmdYesNo colorbar lock}
- | ORIENTATION_ {ProcessSendCmdGet colorbar orientation}
+ | ORIENTATION_ {ColorbarSendCmdOrientation}
  | NUMERICS_ {ProcessSendCmdYesNo colorbar numerics}
  | SPACE_ {ColorbarSendCmdSpace}
  | FONT_ {ProcessSendCmdGet colorbar font}

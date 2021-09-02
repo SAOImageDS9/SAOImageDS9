@@ -1694,6 +1694,7 @@ proc GotoFrame {which} {
 	    single {
 		$current(frame) hide
 		UnBindEventsFrame $current(frame)
+		UnBindEventsColorbar $current(colorbar)
 	    }
 	    tile {}
 	}
@@ -1903,6 +1904,7 @@ proc FrameToFront {} {
 	blink {
 	    if {!$ds9(freeze)} {
 		BindEventsFrame $current(frame)
+		BindEventsColorbar $current(colorbar)
 	    }
 	}
 	tile {$current(frame) highlite on}

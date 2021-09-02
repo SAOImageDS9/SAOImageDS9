@@ -263,6 +263,7 @@ proc UnBindEventsCanvas {} {
 
     foreach ff $ds9(active) {
 	UnBindEventsFrame $ff
+	UnBindEventsColorbar ${ff}cb
     }
 }
 
@@ -272,10 +273,14 @@ proc BindEventsCanvas {} {
 
     switch -- $ds9(display) {
 	single -
-	blink {BindEventsFrame $current(frame)}
+	blink {
+	    BindEventsFrame $current(frame)
+	    BindEventsColorbar $current(colorbar)
+	}
 	tile {
 	    foreach ff $ds9(active) {
 		BindEventsFrame $ff
+		BindEventsColorbar ${ff}cb
 	    }
 	}
     }
@@ -615,6 +620,7 @@ proc LayoutFrames {} {
 	$ff panner off
 	$ff magnifier off
 	UnBindEventsFrame $ff
+	UnBindEventsColorbar ${ff}cb
 
 	${ff}cb hide
     }
@@ -771,6 +777,7 @@ proc TileIt {ww hh xvar yvar nn} {
 
 	    if {!$ds9(freeze)} {
 		BindEventsFrame $ff
+		BindEventsColorbar ${ff}cb
 	    }
 	}
 	incr ii

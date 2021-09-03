@@ -1342,7 +1342,7 @@ proc LayoutColorbarTile {cb xx yy ww hh} {
 	$cb configure \
 	    -x [expr $xx + $ww + $canvas(gap)] \
 	    -y $yy \
-	    -width [expr $ww + $icolorbar(vertical,width)] \
+	    -width $icolorbar(vertical,width) \
 	    -height $hh
     }
 }

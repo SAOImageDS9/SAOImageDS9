@@ -28,6 +28,10 @@ proc ColorbarDef {} {
     set icolorbar(topo,cmaps) [list tpglarf tpglhcf tpglhwf tpglpof tpglarm tpglhcm tpglhwm tpglpom]
     set icolorbar(user,cmaps) {}
 
+    # used for Color{Button|Motion|Release}3
+    set icolorbar(frame) {}
+    set icolorbar(colorbar) {}
+
     set colorbar(lock) 0
     set colorbar(map) grey
     set colorbar(invert) 0
@@ -448,8 +452,9 @@ proc ColorbarEnter {which x y} {
 	return
     }
 
+    set frame [string trimright $which cb]
     $ds9(canvas) focus $which
-    LayoutFrameInfoBox $current(frame)
+    LayoutFrameInfoBox $frame
 }
 
 proc ColorbarLeave {which} {
@@ -509,14 +514,15 @@ proc ColorbarKey {which K A xx yy} {
 	puts stderr "ColorbarKey $which $K $A $xx $yy"
     }
 
+    set frame [string trimright $which cb]
     switch -- $current(mode) {
 	colorbar {
 	    switch -- $K {
 		Delete -
 		BackSpace {
 		    $which tag delete $xx $yy
-		    if {$current(frame) != {}} {
-			$current(frame) colormap [$which get colormap]
+		    if {$frame != {}} {
+			$frame colormap [$which get colormap]
 		    }
 		}
 	    }
@@ -525,7 +531,6 @@ proc ColorbarKey {which K A xx yy} {
 }
 
 proc ColorbarKeyRelease {which K A xx yy} {
-    global current
     global ds9
 
     # MacOSX and Ubuntu returns bogus values in xx,yy
@@ -582,11 +587,12 @@ proc ColorbarMotion1 {which x y} {
 	return
     }
 
+    set frame [string trimright $which cb]
     switch -- $current(mode) {
 	colorbar {
 	    $which tag edit motion $x $y
-	    if {$current(frame) != {}} {
-		$current(frame) colormap [$which get colormap]
+	    if {$frame != {}} {
+		$frame colormap [$which get colormap]
 	    }
 	}
     }
@@ -614,11 +620,12 @@ proc ColorbarRelease1 {which x y} {
 	CursorTimer
     }
 
+    set frame [string trimright $which cb]
     switch -- $current(mode) {
 	colorbar {
 	    $which tag edit end $x $y
-	    if {$current(frame) != {}} {
-		$current(frame) colormap [$which get colormap]
+	    if {$frame != {}} {
+		$frame colormap [$which get colormap]
 	    }
 	}
     }
@@ -644,8 +651,6 @@ proc ColorbarDouble1 {which x y} {
 }
 
 proc ColorbarDoubleRelease1 {which x y} {
-    global current
-
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "ColorbarDoubleRelease1 $which $x $y"
@@ -666,10 +671,10 @@ proc ColorbarButton3 {x y} {
     }
 
     if {$current(frame) != {}} {
-	# we need to hold the current frame, since we may be blinking
-	set icolorbar(frame) $current(frame)
-	$icolorbar(frame) colormap begin
+	$current(frame) colormap begin
     }
+    set icolorbar(frame) $current(frame)
+    set icolorbar(colorbar) $current(colorbar)
 }
 
 proc ColorbarMotion3 {x y} {
@@ -684,10 +689,9 @@ proc ColorbarMotion3 {x y} {
     # Y sets contrast
     set contrast [expr double($y)/$canvas(height) * 10]
 
-    RGBEvalLockColorbar [list $current(colorbar) adjust $contrast $bias]
+    RGBEvalLockColorbar [list $icolorbar(colorbar) adjust $contrast $bias]
     if {$icolorbar(frame) != {}} {
-	# only update the current colorbar frame
-	$icolorbar(frame) colormap motion [$current(colorbar) get colormap]
+	$icolorbar(frame) colormap motion [$icolorbar(colorbar) get colormap]
     }
     UpdateColorDialog
 }
@@ -707,8 +711,10 @@ proc ColorbarRelease3 {x y} {
     # only update the current colorbar frame
     if {$icolorbar(frame) != {}} {
 	$icolorbar(frame) colormap end
-	set icolorbar(frame) {}
     }
+    set icolorbar(frame) {}
+    set icolorbar(colorbar) {}
+    
     LockColorCurrent
     UpdateColorDialog
 }

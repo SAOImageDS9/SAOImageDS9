@@ -768,7 +768,7 @@ void ColorbarBase::getInvertCmd()
     Tcl_AppendResult(interp, "0", NULL);
 }
 
-void ColorbarBase::getValueCmd(int x, int y)
+void ColorbarBase::getValueCmd(int xx, int yy)
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
@@ -777,11 +777,11 @@ void ColorbarBase::getValueCmd(int x, int y)
     ostringstream str;
     if (!opts->orientation) {
       // horizontal
-      id = (int)(x/float(options->width) * cnt);
+      id = (int)((xx-options->x) / float(options->width) * cnt);
     }
     else {
       // vertical
-      id = (int)((options->height -y)/float(options->height) * cnt);
+      id = (int)((options->height - (yy-options->y)) / float(options->height) * cnt);
     }
 
     if (id<0)

@@ -562,7 +562,6 @@ CreateGraphs
 wm colormapwindows . "$ds9(main) $ds9(canvas)"
 
 # Initialize the display
-InitColorbar
 InitPanner
 InitDialogBox
 

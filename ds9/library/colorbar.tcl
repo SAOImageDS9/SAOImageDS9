@@ -291,15 +291,6 @@ proc UnBindEventsColorbar {which} {
     }
 }
 
-proc InitColorbar {} {
-    global colorbar
-    global current
-
-    set current(colorbar) colorbar
-    colorbar map $colorbar(map)
-    colorbar invert $colorbar(invert)
-}
-
 proc ResetColormap {} {
     global colorbar
 

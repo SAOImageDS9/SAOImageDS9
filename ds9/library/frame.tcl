@@ -236,8 +236,11 @@ proc CreateNameNumberFrame {which type} {
 
     UpdateFrameMenuItems
 
+    # update frame colormap
+    $which colormap [${which}cb get colormap]
+
+    # set to current frame
     set current(frame) $which
-    $current(frame) colormap [$current(colorbar) get colormap]
 
     DisplayMode
 }

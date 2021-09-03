@@ -302,6 +302,7 @@ proc ResetColormap {} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
+	puts aa
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
     }
 
@@ -719,6 +720,7 @@ proc ChangeColormapName {name} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
+	puts bb
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 
@@ -781,6 +783,7 @@ proc InvertColorbar {} {
     $current(colorbar) invert $colorbar(invert)
 
     if {$current(frame) != {} } {
+	puts cc
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 
@@ -876,6 +879,7 @@ proc LoadColorTag {fn} {
 	    return
 	}
 	if {$current(frame) != {}} {
+	    puts dd
 	    $current(frame) colormap [$current(colorbar) get colormap]
 	}
     }
@@ -901,6 +905,7 @@ proc DeleteColorTag {} {
 
     $current(colorbar) tag delete
     if {$current(frame) != {}} {
+	puts ee
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 }
@@ -957,6 +962,7 @@ proc ColorTagDialog {x y} {
     if {$ed2(ok)} {
 	$current(colorbar) tag $ed2(id) $ed2(start) $ed2(stop) $ed2(color)
 	if {$current(frame) != {}} {
+	    puts ff
 	    $current(frame) colormap [$current(colorbar) get colormap]
 	}
     }
@@ -1130,6 +1136,7 @@ proc ApplyColormap {} {
 
     RGBEvalLockColorbar [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
     if {$current(frame) != {}} {
+	puts gg
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
 	LockColorCurrent
     }
@@ -1143,6 +1150,7 @@ proc BeginAdjustColormap {} {
 
     set icolorbar(adjustok) 1
     if {$current(frame) != {}} {
+	puts hh
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap begin]
     }
 }
@@ -1153,10 +1161,11 @@ proc AdjustColormap {} {
 
     global current
     global rgb
-
+    puts *
     if {[info exists icolorbar(adjustok)]} {
 	RGBEvalLockColorbar [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
 	if {$current(frame) != {}} {
+	    puts ii
 	    RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap motion [$current(colorbar) get colormap]]
 	}
     }
@@ -1171,6 +1180,7 @@ proc EndAdjustColormap {} {
     if {[info exists icolorbar(adjustok)]} {
 	unset icolorbar(adjustok)
 	if {$current(frame) != {}} {
+	    puts jj
 	    RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap end]
 	    LockColorCurrent
 	}
@@ -1451,6 +1461,7 @@ proc CmapCmd {item} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {}} {
+	puts kk
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 

@@ -98,7 +98,7 @@ proc CreateColorbar {} {
     LayoutColorbarOne colorbar
 }
 
-proc CreateColorbarBase {which} {
+proc CreateColorbarBase {frame} {
     global ds9
     global icolorbar
     global colorbar
@@ -110,12 +110,12 @@ proc CreateColorbarBase {which} {
 	rgb {set sav [colorbar get colorbar]}
     }
 
-    set cb ${which}cb
+    set which ${frame}cb
 
     $ds9(canvas) create colorbar$ds9(visual)$ds9(depth) \
 	-colors 2048 \
-	-tag $cb \
-	-command $cb \
+	-tag $which \
+	-command $which \
 	-anchor nw \
 	\
 	-size $colorbar(size) \
@@ -137,30 +137,30 @@ proc CreateColorbarBase {which} {
 
     # preload external cmaps
     # maintain same order for backward compatibility
-    CreateColorbarExternal $cb h5 sao
-    CreateColorbarExternal $cb matplotlib lut
-    CreateColorbarExternal $cb cubehelix sao
-    CreateColorbarExternal $cb gist sao
-    CreateColorbarExternal $cb topo sao
-    CreateColorbarExternal $cb matplotlib2 lut
+    CreateColorbarExternal $which h5 sao
+    CreateColorbarExternal $which matplotlib lut
+    CreateColorbarExternal $which cubehelix sao
+    CreateColorbarExternal $which gist sao
+    CreateColorbarExternal $which topo sao
+    CreateColorbarExternal $which matplotlib2 lut
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
 	global vardata
 	set fn [colorbar get file name $cmap]
 	colorbar save var $cmap vardata
-	$cb load var $fn {} vardata
+	$which load var $fn {} vardata
 	unset vardata
     }
 
     # now init new colorbar to prev values
     # must come after all cmaps have been defined
-    $cb colorbar $sav
+    $which colorbar $sav
     
-    LayoutColorbarOne $cb
+    LayoutColorbarOne $which
 }
 
-proc CreateColorbarRGB {which} {
+proc CreateColorbarRGB {frame} {
     global ds9
     global colorbar
     global current
@@ -171,12 +171,12 @@ proc CreateColorbarRGB {which} {
 	rgb {set sav [$current(colorbar) get colorbar]}
     }
     
-    set cb ${which}cb
+    set which ${frame}cb
 
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
 	-colors 2048 \
-	-tag $cb \
-	-command $cb \
+	-tag $which \
+	-command $which \
 	-anchor nw \
 	\
 	-size $colorbar(size) \
@@ -196,17 +196,17 @@ proc CreateColorbarRGB {which} {
 	-bg [ThemeTreeBackground]
 
     # now init new colorbar to prev values
-    $cb colorbar $sav
+    $which colorbar $sav
 
-    LayoutColorbarOne $cb
+    LayoutColorbarOne $which
 }
 
-proc CreateColorbarExternal {cb which ext} {
+proc CreateColorbarExternal {which frame ext} {
     global ds9
     global icolorbar
     global colorbar
 
-    foreach cmap $icolorbar($which,cmaps) {
+    foreach cmap $icolorbar($frame,cmaps) {
 	set fn $cmap.$ext
 	set ch [open "$ds9(root)/cmaps/$fn" r]
 
@@ -214,7 +214,7 @@ proc CreateColorbarExternal {cb which ext} {
 	set vardata [read $ch]
 	close $ch
 
-	$cb load var "\{$fn\}" vardata
+	$which load var "\{$fn\}" vardata
 	unset vardata
     }
 }

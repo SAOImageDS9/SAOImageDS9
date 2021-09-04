@@ -392,8 +392,8 @@ proc LayoutViewAdjust {varname} {
     set var(x) 0
     set var(y) 0
 
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set cbh [expr $view(colorbar) && !$colorbar(orientation) && ![LayoutMulti]]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation) && ![LayoutMulti]]
 
     set grh $view(graph,horz)
     set grv $view(graph,vert)
@@ -452,6 +452,22 @@ proc LayoutViewAdjust {varname} {
     global debug
     if {$debug(tcl,layout)} {
 	puts stderr "LayoutViewAdjust $var(x) $var(y)"
+    }
+}
+
+proc LayoutMulti {} {
+    global ds9
+    global view
+    global colorbar
+    
+    if {$ds9(active,num) > 0} {
+	switch -- $ds9(display) {
+	    single -
+	    blink {return 0}
+	    tile {return $view(multi)}
+	}
+    } else {
+	return 0
     }
 }
 
@@ -712,10 +728,10 @@ proc TileRect {numx numy gap} {
 	if {!$colorbar(orientation)} {
 	    # horizontal
 	    set wdiff 0
-	    set hdiff $icolorbar(horizontal,height)
+	    set hdiff $icolorbar(horizontal,height)-$canvas(gap)
 	} else {
 	    # vertical
-	    set wdiff $icolorbar(vertical,width)
+	    set wdiff $icolorbar(vertical,width)-$canvas(gap)
 	    set hdiff 0
 	}
     } else {
@@ -765,7 +781,9 @@ proc TileIt {ww hh xvar yvar nn} {
 		-width $ww -height $hh -anchor nw
 
 	    $ff show
-	    ${ff}cb show
+	    if {$view(colorbar)} {
+		${ff}cb show
+	    }
 
 	    $ds9(canvas) raise $ff
 	    $ds9(canvas) raise ${ff}cb

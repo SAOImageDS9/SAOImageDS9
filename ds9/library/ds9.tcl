@@ -575,7 +575,7 @@ if {$debug(tcl,idletasks)} {
 }
 update
 
-# layout
+# layout before first frame
 ConfigureView
 
 # our first frame
@@ -636,6 +636,9 @@ after $ds9(msg,timeout) [list ErrorTimer]
 
 # ok, we're done
 set ds9(init) 0
+
+# needed at end to properly layout after frames loaded
+ConfigureView
 
 # major kludges
 switch $ds9(wm) {

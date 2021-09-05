@@ -720,7 +720,7 @@ proc TileRect {numx numy gap} {
     global colorbar
     global icolorbar
 
-    if {$view(multi)} {
+    if {$view(multi) && $view(colorbar)} {
 	if {!$colorbar(orientation)} {
 	    # horizontal
 	    set wdiff 0

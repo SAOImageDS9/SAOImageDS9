@@ -56,7 +56,6 @@ proc DS9Def {} {
     set ds9(panner) {}
     set ds9(magnifier) {}
     set ds9(buttons) {}
-    set ds9(graph,sp) {}
     set ds9(graph,horz) {}
     set ds9(graph,vert) {}
 

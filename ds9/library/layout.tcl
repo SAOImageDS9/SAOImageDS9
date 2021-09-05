@@ -297,7 +297,7 @@ proc ConfigureView {} {
 	puts stderr "ConfigureView old $canvas(width) $canvas(height)"
     }
 
-    # calculate ds9(canvas) size
+    # calculate size
     LayoutViewAdjust diff
     set canvas(width)  [expr [winfo width  $ds9(canvas)]-$diff(x)]
     set canvas(height) [expr [winfo height $ds9(canvas)]-$diff(y)]
@@ -309,21 +309,17 @@ proc ConfigureView {} {
     LayoutView
 }
 
+# This procdure increases/decreases ds9(top) size to accommodate additional
+# elements such as colorbars
+
 proc UpdateView {} {
     global ds9
     global canvas
-
-    # note: assume canvas(width) and canvas(height) have been set to desired
-    # values.
 
     global debug
     if {$debug(tcl,layout)} {
 	puts stderr "UpdateView to $canvas(width) x $canvas(height)"
     }
-
-    # save current size
-    set wo [winfo width $ds9(top)]
-    set ho [winfo height $ds9(top)]
 
     # calculate ds9(canvas) size
     LayoutViewAdjust diff

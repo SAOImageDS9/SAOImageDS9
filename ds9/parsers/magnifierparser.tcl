@@ -504,7 +504,7 @@ proc magnifier::yyparse {} {
                     14 { ProcessCmdSet pmagnifier zoom $2 MagnifierZoom }
                     15 { ProcessCmdSet pmagnifier cursor $2 MagnifierCursor }
                     16 { ProcessCmdSet pmagnifier region $2 MagnifierRegion }
-                    17 { ProcessCmdSet view magnifier $1 UpdateView }
+                    17 { ProcessCmdSet view magnifier $1 LayoutView }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

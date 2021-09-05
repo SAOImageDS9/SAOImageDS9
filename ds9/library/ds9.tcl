@@ -575,12 +575,12 @@ if {$debug(tcl,idletasks)} {
 update
 
 # layout before first frame
-ConfigureView
+LayoutView
 
 # our first frame
 CreateFrame
 
-# do this last so we don't get an ConfigureView event
+# do this last so we don't get an LayoutView event
 InitCanvas
 
 # ok, ready to show the window
@@ -637,7 +637,7 @@ after $ds9(msg,timeout) [list ErrorTimer]
 set ds9(init) 0
 
 # needed at end to properly layout after frames loaded
-ConfigureView
+LayoutView
 
 # major kludges
 switch $ds9(wm) {

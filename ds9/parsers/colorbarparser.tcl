@@ -863,20 +863,20 @@ proc colorbar::yyparse {} {
                     16 { set _ bold }
                     17 { set _ italic }
                     19 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    21 { ProcessCmdSet view colorbar $1 UpdateView }
+                    21 { ProcessCmdSet view colorbar $1 LayoutView }
                     22 { MatchColorCurrent }
                     23 { ProcessCmdSet colorbar lock $2 LockColorCurrent }
-                    24 { ProcessCmdSet colorbar numerics $2 UpdateView }
-                    25 { ProcessCmdSet colorbar space $2 UpdateView }
-                    26 { ProcessCmdSet colorbar font $2 UpdateView }
-                    27 { ProcessCmdSet colorbar font,size $2 UpdateView }
-                    28 { ProcessCmdSet colorbar font,weight $2 UpdateView }
-                    29 { ProcessCmdSet colorbar font,slant $2 UpdateView }
-                    30 { ProcessCmdFontStyle colorbar font $2 UpdateView }
-                    31 { ProcessCmdSet colorbar orientation $1 UpdateView }
-                    32 { ProcessCmdSet colorbar orientation $2 UpdateView }
-                    33 { ProcessCmdSet colorbar size $2 UpdateView }
-                    34 { ProcessCmdSet colorbar ticks $2 UpdateView }
+                    24 { ProcessCmdSet colorbar numerics $2 LayoutView }
+                    25 { ProcessCmdSet colorbar space $2 LayoutView }
+                    26 { ProcessCmdSet colorbar font $2 LayoutView }
+                    27 { ProcessCmdSet colorbar font,size $2 LayoutView }
+                    28 { ProcessCmdSet colorbar font,weight $2 LayoutView }
+                    29 { ProcessCmdSet colorbar font,slant $2 LayoutView }
+                    30 { ProcessCmdFontStyle colorbar font $2 LayoutView }
+                    31 { ProcessCmdSet colorbar orientation $1 LayoutView }
+                    32 { ProcessCmdSet colorbar orientation $2 LayoutView }
+                    33 { ProcessCmdSet colorbar size $2 LayoutView }
+                    34 { ProcessCmdSet colorbar ticks $2 LayoutView }
                     35 { set _ 1 }
                     36 { set _ 0 }
                     37 { set _ 1 }

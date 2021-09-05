@@ -30,25 +30,25 @@ command : colorbar
  | colorbar {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-colorbar : yesno {ProcessCmdSet view colorbar $1 UpdateView}
+colorbar : yesno {ProcessCmdSet view colorbar $1 LayoutView}
  | MATCH_ {MatchColorCurrent}
  | LOCK_ yesno {ProcessCmdSet colorbar lock $2 LockColorCurrent}
 
- | NUMERICS_ yesno {ProcessCmdSet colorbar numerics $2 UpdateView}
- | SPACE_ space {ProcessCmdSet colorbar space $2 UpdateView}
- | FONT_ font {ProcessCmdSet colorbar font $2 UpdateView}
- | FONTSIZE_ INT_ {ProcessCmdSet colorbar font,size $2 UpdateView}
- | FONTWEIGHT_ fontWeight {ProcessCmdSet colorbar font,weight $2 UpdateView}
- | FONTSLANT_ fontSlant {ProcessCmdSet colorbar font,slant $2 UpdateView}
+ | NUMERICS_ yesno {ProcessCmdSet colorbar numerics $2 LayoutView}
+ | SPACE_ space {ProcessCmdSet colorbar space $2 LayoutView}
+ | FONT_ font {ProcessCmdSet colorbar font $2 LayoutView}
+ | FONTSIZE_ INT_ {ProcessCmdSet colorbar font,size $2 LayoutView}
+ | FONTWEIGHT_ fontWeight {ProcessCmdSet colorbar font,weight $2 LayoutView}
+ | FONTSLANT_ fontSlant {ProcessCmdSet colorbar font,slant $2 LayoutView}
 # backward compatibility
- | FONTSTYLE_ fontStyle {ProcessCmdFontStyle colorbar font $2 UpdateView}
+ | FONTSTYLE_ fontStyle {ProcessCmdFontStyle colorbar font $2 LayoutView}
 
- | orientation {ProcessCmdSet colorbar orientation $1 UpdateView}
+ | orientation {ProcessCmdSet colorbar orientation $1 LayoutView}
 # backward compatibility
- | ORIENTATION_ orientation {ProcessCmdSet colorbar orientation $2 UpdateView}
+ | ORIENTATION_ orientation {ProcessCmdSet colorbar orientation $2 LayoutView}
 
- | SIZE_ INT_ {ProcessCmdSet colorbar size $2 UpdateView}
- | TICKS_ INT_ {ProcessCmdSet colorbar ticks $2 UpdateView}
+ | SIZE_ INT_ {ProcessCmdSet colorbar size $2 LayoutView}
+ | TICKS_ INT_ {ProcessCmdSet colorbar ticks $2 LayoutView}
  ;
  
 space : VALUE_ {set _ 1}

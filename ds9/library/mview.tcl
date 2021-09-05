@@ -11,54 +11,54 @@ proc ViewMainMenu {} {
 
     ThemeMenu $ds9(mb).view
     $ds9(mb).view add radiobutton -label [msgcat::mc {Horizontal Layout}] \
-	-variable view(layout) -value horizontal -command {ViewHorzCmd}
+	-variable view(layout) -value horizontal -command {LayoutOrient}
     $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical Layout}] \
-	-variable view(layout) -value vertical -command {ViewVertCmd}
+	-variable view(layout) -value vertical -command {LayoutOrient}
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
-	-variable view(multi) -command UpdateView
+	-variable view(multi) -command LayoutView
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Information Panel}] \
-	-variable view(info) -command UpdateView
+	-variable view(info) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Panner}] \
-	-variable view(panner) -command UpdateView
+	-variable view(panner) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Magnifier}] \
-	-variable view(magnifier) -command UpdateView
+	-variable view(magnifier) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Buttons}] \
-	-variable view(buttons) -command UpdateView
+	-variable view(buttons) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Colorbar}] \
-	-variable view(colorbar) -command UpdateView
+	-variable view(colorbar) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Horizontal Graph}] \
-	-variable view(graph,horz) -command UpdateView
+	-variable view(graph,horz) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Vertical Graph}] \
-	-variable view(graph,vert) -command UpdateView
+	-variable view(graph,vert) -command LayoutView
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Filename}] \
-	-variable view(info,filename) -command UpdateView
+	-variable view(info,filename) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Object}] \
-	-variable view(info,object) -command UpdateView
+	-variable view(info,object) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Keyword}] \
-	-variable view(info,keyword) -command UpdateView
+	-variable view(info,keyword) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Min Max}] \
-	-variable view(info,minmax) -command UpdateView
+	-variable view(info,minmax) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Low High}] \
-	-variable view(info,lowhigh) -command UpdateView
+	-variable view(info,lowhigh) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Units}] \
-	-variable view(info,bunit) -command UpdateView
+	-variable view(info,bunit) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {WCS}] \
-	-variable view(info,wcs) -command UpdateView
+	-variable view(info,wcs) -command LayoutView
     $ds9(mb).view add cascade -label [msgcat::mc {Multiple WCS}] \
 	-menu $ds9(mb).view.mwcs
     $ds9(mb).view add checkbutton -label [msgcat::mc {Image}] \
-	-variable view(info,image) -command UpdateView
+	-variable view(info,image) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Physical}] \
-	-variable view(info,physical) -command UpdateView
+	-variable view(info,physical) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Amplifier}] \
-	-variable view(info,amplifier) -command UpdateView
+	-variable view(info,amplifier) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Detector}] \
-	-variable view(info,detector) -command UpdateView
+	-variable view(info,detector) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Frame Information}] \
-	-variable view(info,frame) -command UpdateView
+	-variable view(info,frame) -command LayoutView
 
     # View Info Panel WCS
     ThemeMenu $ds9(mb).view.mwcs
@@ -66,7 +66,7 @@ proc ViewMainMenu {} {
 	$ds9(mb).view.mwcs add checkbutton \
 	    -label "[msgcat::mc {WCS}] $l" \
 	    -variable "view(info,wcs$l)" \
-	    -command UpdateView
+	    -command LayoutView
     }
 }
 
@@ -239,73 +239,73 @@ proc CreateButtonsView {} {
 
     RadioButton $ds9(buttons).view.horizontal \
 	[string tolower [msgcat::mc {Layout Horz}]] \
-	view(layout) horizontal {ViewHorzCmd}
+	view(layout) horizontal {LayoutOrient}
     RadioButton $ds9(buttons).view.vertical \
 	[string tolower [msgcat::mc {Layout Vert}]] \
-	view(layout) vertical {ViewVertCmd}
+	view(layout) vertical {LayoutOrient}
 
     CheckButton $ds9(buttons).view.multi \
 	[string tolower [msgcat::mc {Multi Colorbars}]] \
-	view(multi) UpdateView
+	view(multi) LayoutView
 
     CheckButton $ds9(buttons).view.info \
 	[string tolower [msgcat::mc {Information}]] \
-	view(info) UpdateView
+	view(info) LayoutView
     CheckButton $ds9(buttons).view.panner \
 	[string tolower [msgcat::mc {Panner}]] \
-	view(panner) UpdateView
+	view(panner) LayoutView
     CheckButton $ds9(buttons).view.magnifier \
 	[string tolower [msgcat::mc {Magnifier}]] \
-	view(magnifier) UpdateView
+	view(magnifier) LayoutView
     CheckButton $ds9(buttons).view.buttons \
 	[string tolower [msgcat::mc {Buttons}]] \
-	view(buttons) UpdateView
+	view(buttons) LayoutView
     CheckButton $ds9(buttons).view.colorbar \
 	[string tolower [msgcat::mc {Colorbar}]] \
-	view(colorbar) UpdateView
+	view(colorbar) LayoutView
     CheckButton $ds9(buttons).view.graphhorz \
 	[string tolower [msgcat::mc {Graph Horz}]] \
-	view(graph,horz) UpdateView
+	view(graph,horz) LayoutView
     CheckButton $ds9(buttons).view.graphvert \
 	[string tolower [msgcat::mc {Graph Vert}]] \
-	view(graph,vert) UpdateView
+	view(graph,vert) LayoutView
 
     CheckButton $ds9(buttons).view.filename \
 	[string tolower [msgcat::mc {Filename}]] \
-	view(info,filename) UpdateView
+	view(info,filename) LayoutView
     CheckButton $ds9(buttons).view.object \
 	[string tolower [msgcat::mc {Object}]] \
-	view(info,object) UpdateView
+	view(info,object) LayoutView
     CheckButton $ds9(buttons).view.keyword \
 	[string tolower [msgcat::mc {Keyword}]] \
-	view(info,keyword) UpdateView
+	view(info,keyword) LayoutView
     CheckButton $ds9(buttons).view.minmax \
 	[string tolower [msgcat::mc {Min Max}]] \
-	view(info,minmax) UpdateView
+	view(info,minmax) LayoutView
     CheckButton $ds9(buttons).view.lowhigh \
 	[string tolower [msgcat::mc {Low High}]] \
-	view(info,lowhigh) UpdateView
+	view(info,lowhigh) LayoutView
     CheckButton $ds9(buttons).view.bunit \
 	[string tolower [msgcat::mc {Units}]] \
-	view(info,bunit) UpdateView
+	view(info,bunit) LayoutView
     CheckButton $ds9(buttons).view.wcs \
 	[string tolower [msgcat::mc {WCS}]] \
-	view(info,wcs) UpdateView
+	view(info,wcs) LayoutView
     CheckButton $ds9(buttons).view.image \
 	[string tolower [msgcat::mc {Image}]] \
-	view(info,image) UpdateView
+	view(info,image) LayoutView
     CheckButton $ds9(buttons).view.physical \
 	[string tolower [msgcat::mc {Physical}]] \
-	view(info,physical) UpdateView
+	view(info,physical) LayoutView
     CheckButton $ds9(buttons).view.amplifier \
 	[string tolower [msgcat::mc {Amplifier}]] \
-	view(info,amplifier) UpdateView
+	view(info,amplifier) LayoutView
     CheckButton $ds9(buttons).view.detector \
 	[string tolower [msgcat::mc {Detector}]] \
-	view(info,detector) UpdateView
+	view(info,detector) LayoutView
     CheckButton $ds9(buttons).view.frame \
 	[string tolower [msgcat::mc {Frame}]] \
-	view(info,frame) UpdateView
+	view(info,frame) LayoutView
 
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)

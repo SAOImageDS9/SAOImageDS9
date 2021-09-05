@@ -252,7 +252,7 @@ proc width::yyparse {} {
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
                     2 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    4 { ProcessCmdSet canvas width $1 UpdateView }
+                    4 { LayoutChangeWidth $1 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

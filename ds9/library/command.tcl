@@ -206,24 +206,24 @@ proc ProcessCommand {argv argc} {
 	    -horzgraph {
 		# backward compatibility
 		set view(graph,horz) 1
-		UpdateView
+		LayoutView
 	    }
 	    -nohorzgraph {
 		# backward compatibility
 		set view(graph,horz) 0
-		UpdateView
+		LayoutView
 	    }
 	    -iconify {incr i; ProcessIconifyCmd argv i}
 	    -iis {incr i; ProcessIISCmd argv i}
 	    -info {
 		# backward compatibility
 		set view(info) 1
-		UpdateView
+		LayoutView
 	    }
 	    -noinfo {
 		# backward compatibility
 		set view(info) 0
-		UpdateView
+		LayoutView
 	    }
 	    -invert {set colorbar(invert) 1; InvertColorbar}
 	    -jpg -
@@ -240,7 +240,7 @@ proc ProcessCommand {argv argc} {
 	    -nomagnifier {
 		# backward compatibility
 		set view(magnifier) 0
-		UpdateView
+		LayoutView
 	    }
 	    -mask {incr i; set file(layer) [ProcessMaskCmd argv i]}
 	    -nomask {set file(layer) {}}
@@ -320,12 +320,12 @@ proc ProcessCommand {argv argc} {
 	    -panner {
 		# backward compatibility
 		set view(panner) 1
-		UpdateView
+		LayoutView
 	    }
 	    -nopanner {
 		# backward compatibility
 		set view(panner) 0
-		UpdateView
+		LayoutView
 	    }
 	    -photo {
 		# backward compatibility
@@ -459,12 +459,12 @@ proc ProcessCommand {argv argc} {
 	    -vertgraph {
 		#backward compatibility
 		set view(graph,vert) 1
-		UpdateView
+		LayoutView
 	    }
 	    -novertgraph {
 		#backward compatibility
 		set view(graph,vert) 0
-		UpdateView
+		LayoutView
 	    }
 	    -view {incr i; ProcessViewCmd argv i}
 	    -visual {

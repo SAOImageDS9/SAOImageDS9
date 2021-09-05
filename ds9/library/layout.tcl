@@ -6,21 +6,14 @@ package provide DS9 1.0
 
 proc CanvasDef {} {
     global canvas
-    global icanvas
     global ds9
 
-    # also adjust info.tcl LayoutInfoPanelHorz
     switch $ds9(wm) {
-	x11 {set icanvas(horz,width) 738}
-	aqua {set icanvas(horz,width) 777}
-	win32 {set icanvas(horz,width) 740}
+	x11 {set canvas(width) 738}
+	aqua {set canvas(width) 777}
+	win32 {set canvas(width) 740}
     }
-
-    set icanvas(horz,height) 480
-    set icanvas(vert,width) 640
-    set icanvas(vert,height) 640
-    set canvas(width) $icanvas(horz,width)
-    set canvas(height) $icanvas(horz,height)
+    set canvas(height) 528
     set canvas(gap) 4
 
     switch $ds9(wm) {
@@ -109,17 +102,10 @@ proc CreateCanvas {} {
     global ds9
     global canvas
 
-    LayoutViewAdjust diff
-    set ww [expr $canvas(width) +$diff(x)]
-    set hh [expr $canvas(height)+$diff(y)]
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "CreateCanvas $canvas(width) $canvas(height) ${ww}x${hh}"
-    }
-
     set ds9(image) [ttk::frame $ds9(main).f]
-    set ds9(canvas) [canvas $ds9(image).c -width $ww -height $hh \
+    set ds9(canvas) [canvas $ds9(image).c \
+			 -width $canvas(width) \
+			 -height $canvas(height) \
 			 -highlightthickness 0 \
 			 -insertofftime 0 \
 			 -bg [ThemeTreeBackground] \
@@ -184,7 +170,7 @@ proc InitCanvas {} {
 	win32 {}
     }
 
-    bind $ds9(canvas) <Configure> [list ConfigureView]
+    bind $ds9(canvas) <Configure> [list LayoutView]
 
     # keyboard focus
     switch $ds9(wm) {
@@ -286,70 +272,6 @@ proc BindEventsCanvas {} {
     }
 }
 
-# view
-
-proc ConfigureView {} {
-    global ds9
-    global canvas
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "ConfigureView old $canvas(width) $canvas(height)"
-    }
-
-    # calculate size
-    LayoutViewAdjust diff
-    set canvas(width)  [expr [winfo width  $ds9(canvas)]-$diff(x)]
-    set canvas(height) [expr [winfo height $ds9(canvas)]-$diff(y)]
-
-    if {$debug(tcl,layout)} {
-	puts stderr "ConfigureView new $canvas(width) $canvas(height)"
-    }
-
-    LayoutView
-}
-
-# This procdure increases/decreases ds9(top) size to accommodate additional
-# elements such as colorbars
-
-proc UpdateView {} {
-    global ds9
-    global canvas
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "UpdateView to $canvas(width) x $canvas(height)"
-    }
-
-    # calculate ds9(canvas) size
-    LayoutViewAdjust diff
-    set ww [expr $canvas(width) +$diff(x)]
-    set hh [expr $canvas(height)+$diff(y)]
-
-    # determine how much to change
-    set wc [winfo width $ds9(canvas)]
-    set hc [winfo height $ds9(canvas)]
-
-    set wt [winfo width $ds9(top)]
-    set ht [winfo height $ds9(top)]
-    
-    if {$debug(tcl,layout)} {
-	puts stderr "UpdateView before ds9(top) $wt x $ht"
-    }
-
-    set w [expr $ww - $wc + $wt]
-    set h [expr $hh - $hc + $ht]
-
-    if {$debug(tcl,layout)} {
-	puts stderr "UpdateView after ds9(top) $w x $h"
-    }
-
-    # change window size
-    wm geometry $ds9(top) ${w}x${h}
-
-    LayoutView
-}
-
 proc LayoutView {} {
     global view
 
@@ -370,115 +292,13 @@ proc LayoutView {} {
     UpdateGraphLayout {}
 }
 
-proc LayoutViewAdjust {varname} {
-    upvar $varname var
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "LayoutViewAdjust"
-    }
-
-    global view
-    global colorbar
-    global icolorbar
-    global igraph
-    global canvas
-    global ds9
-
-    set var(x) 0
-    set var(y) 0
-
-    set cbh [expr $view(colorbar) && !$colorbar(orientation) && ![LayoutMulti]]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation) && ![LayoutMulti]]
-
-    set grh $view(graph,horz)
-    set grv $view(graph,vert)
-
-    if {$colorbar(numerics)} {
-	# ww horizontal: tickgap
-	set ww 12
-	# hh vertical: approx number of numerals to display
-	set hh 7
-
-	set icolorbar(horizontal,height) \
-	    [expr int($colorbar(size) + $colorbar(font,size)*$ds9(scaling)+$ww)]
-
-	set icolorbar(vertical,width) \
-	    [expr $colorbar(size) + $colorbar(font,size)*$hh]
-    } else {
- 	set icolorbar(horizontal,height) [expr $colorbar(size) +2]
- 	set icolorbar(vertical,width) [expr $colorbar(size) +2]
-    }
-
-    # basics
-    if {$cbh} {
-	incr var(y) $icolorbar(horizontal,height)
-    }
-
-    if {$cbv} {
-	incr var(x) $icolorbar(vertical,width)
-    }
-
-    if {$grh} {
-	incr var(y) $igraph(size)
-    }
-
-    if {$grv} {
-	incr var(x) $igraph(size)
-    }
-
-    # canvas gap
-    if {$cbh || $grh} {
-	incr var(y) $canvas(gap)
-    }
-
-    if {$cbv || $grv} {
-	incr var(x) $canvas(gap)
-    }
-
-    # graph gap
-    if {$grv && !$cbh} {
-	incr var(y) $igraph(gap,y)
-    }
-
-    if {$grh && !$cbv} {
-	incr var(x) $igraph(gap,x)
-    }
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "LayoutViewAdjust $var(x) $var(y)"
-    }
-}
-
-proc LayoutMulti {} {
-    global ds9
-    global view
-    global colorbar
-    
-    if {$ds9(active,num) > 0} {
-	switch -- $ds9(display) {
-	    single -
-	    blink {return 0}
-	    tile {return $view(multi)}
-	}
-    } else {
-	return 0
-    }
-}
-
 proc LayoutOrient {} {
     global ds9
-    global canvas
 
     global debug
     if {$debug(tcl,layout)} {
 	puts stderr "LayoutOrient"
     }
-
-    # save original canvas size
-    set ww $canvas(width)
-    set hh $canvas(height)
 
     # horizontal
     grid rowconfigure $ds9(main) 4 -weight 0
@@ -497,17 +317,7 @@ proc LayoutOrient {} {
     pack forget $ds9(panner)
     pack forget $ds9(magnifier)
 
-    UpdateView
-    global debug
-    if {$debug(tcl,idletasks)} {
-	puts stderr "LayoutOrient update"
-    }
-    update
-
-    # restore original canvas size
-    set canvas(width) $ww
-    set canvas(height) $hh
-    UpdateView
+    LayoutView
 }
 
 proc LayoutViewHorz {} {
@@ -698,13 +508,35 @@ proc LayoutFrames {} {
 proc TileOne {} {
     global ds9
     global canvas
+    global view
+    global colorbar
+
+    LayoutColorbarAdjust
+
+    if {$view(colorbar)} {
+	if {!$colorbar(orientation)} {
+	    # horizontal
+	    set wdiff 0
+	    set hdiff $colorbar(horizontal,height)-$canvas(gap)
+	} else {
+	    # vertical
+	    set wdiff $colorbar(vertical,width)-$canvas(gap)
+	    set hdiff 0
+	}
+    } else {
+	set wdiff 0
+	set hdiff 0
+    }
+
+    set ww [expr [winfo width  $ds9(canvas)] -$wdiff]
+    set hh [expr [winfo height $ds9(canvas)] -$hdiff]
 
     foreach ff $ds9(active) {
 	$ff configure \
 	    -x 0 \
 	    -y 0 \
-	    -width $canvas(width) \
-	    -height $canvas(height) \
+	    -width $ww \
+	    -height $hh \
 	    -anchor nw
 	LayoutColorbarOne ${ff}cb
     }
@@ -714,20 +546,22 @@ proc TileOne {} {
 }
 
 proc TileRect {numx numy gap} {
+    global ds9
     global view
     global canvas
     global tile
     global colorbar
-    global icolorbar
 
-    if {$view(multi) && $view(colorbar)} {
+    LayoutColorbarAdjust
+    
+    if {$view(colorbar)} {
 	if {!$colorbar(orientation)} {
 	    # horizontal
 	    set wdiff 0
-	    set hdiff $icolorbar(horizontal,height)-$canvas(gap)
+	    set hdiff $colorbar(horizontal,height)-$canvas(gap)
 	} else {
 	    # vertical
-	    set wdiff $icolorbar(vertical,width)-$canvas(gap)
+	    set wdiff $colorbar(vertical,width)-$canvas(gap)
 	    set hdiff 0
 	}
     } else {
@@ -735,8 +569,8 @@ proc TileRect {numx numy gap} {
 	set hdiff 0
     }
     
-    set ww [expr int(($canvas(width)-$gap*($numx-1))/$numx-$wdiff)]
-    set hh [expr int(($canvas(height)-$gap*($numy-1))/$numy-$hdiff)]
+    set ww [expr int(([winfo width  $ds9(canvas)]-$gap*($numx-1))/$numx-$wdiff)]
+    set hh [expr int(([winfo height $ds9(canvas)]-$gap*($numy-1))/$numy-$hdiff)]
 
     switch $tile(grid,dir) {
 	x {
@@ -804,15 +638,56 @@ proc TileIt {ww hh xvar yvar nn} {
     FrameToFront
 }
 
+proc LayoutChangeWidth {ww} {
+    global ds9
+
+    set cw [winfo width $ds9(canvas)]
+    set tw [winfo width $ds9(top)]
+    set th [winfo height $ds9(top)]
+    set dw $ww-$cw
+
+    # change window size
+    wm geometry $ds9(top) "[expr $tw+$dw]x${th}"
+    LayoutView
+}
+
+proc LayoutChangeHeight {hh} {
+    global ds9
+    
+    set ch [winfo height $ds9(canvas)]
+    set tw [winfo width $ds9(top)]
+    set th [winfo height $ds9(top)]
+    set dh $hh-$ch
+
+    # change window size
+    wm geometry $ds9(top) "${tw}x[expr $th+$dh]"
+    LayoutView
+}
+
+proc LayoutChangeSize {ww hh} {
+    global ds9
+    
+    set cw [winfo width $ds9(canvas)]
+    set ch [winfo height $ds9(canvas)]
+    set tw [winfo width $ds9(top)]
+    set th [winfo height $ds9(top)]
+    set dw $ww-$cw
+    set dh $hh-$ch
+
+    # change window size
+    wm geometry $ds9(top) "[expr $tw+$dw]x[expr $th+$dh]"
+    LayoutView
+}
+
 proc DisplayDefaultDialog {} {
-    global canvas
     global ed
+    global ds9
 
     set w {.defdpy}
 
     set ed(ok) 0
-    set ed(x) $canvas(width)
-    set ed(y) $canvas(height)
+    set ed(x) [winfo width $ds9(canvas)]
+    set ed(y) [winfo height $ds9(canvas)]
 
     DialogCreate $w [msgcat::mc {Display Size}] ed(ok)
 
@@ -848,32 +723,12 @@ proc DisplayDefaultDialog {} {
     destroy $w
 
     if {$ed(ok)} {
-	set canvas(width) $ed(x)
-	set canvas(height) $ed(y)
-	UpdateView
+	LayoutChangeSize $ed(x) $ed(y)
     }
 
     set rr $ed(ok)
     unset ed
     return $rr
-}
-
-proc ViewHorzCmd {} {
-    global canvas
-    global icanvas
-
-    set canvas(width) $icanvas(horz,width)
-    set canvas(height) $icanvas(horz,height)
-    LayoutOrient
-}
-
-proc ViewVertCmd {} {
-    global canvas
-    global icanvas
-
-    set canvas(width) $icanvas(vert,width)
-    set canvas(height) $icanvas(vert,height)
-    LayoutOrient
 }
 
 # Process Cmds
@@ -893,8 +748,8 @@ proc ProcessHeightCmd {varname iname} {
 }
 
 proc ProcessSendHeightCmd {proc id param {sock {}} {fn {}}} {
-    global canvas
-    $proc $id "$canvas(height)\n"
+    global ds9
+    $proc $id "[winfo height $ds9(canvas)]\n"
 }
 
 proc ProcessWidthCmd {varname iname} {
@@ -912,8 +767,8 @@ proc ProcessWidthCmd {varname iname} {
 }
 
 proc ProcessSendWidthCmd {proc id param {sock {}} {fn {}}} {
-    global canvas
-    $proc $id "$canvas(width)\n"
+    global ds9
+    $proc $id "[winfo width $ds9(canvas)\n"
 }
 
 proc ProcessViewCmd {varname iname} {

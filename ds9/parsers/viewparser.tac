@@ -45,38 +45,38 @@ command : view
 
 view : layout
  | LAYOUT_ layout
- | KEYVALUE_ STRING_ {ProcessCmdSet view info,keyvalue $2 UpdateView}
- | INFO_ yesno {ProcessCmdSet view info $2 UpdateView}
- | PANNER_ yesno {ProcessCmdSet view panner $2 UpdateView}
- | MAGNIFIER_ yesno {ProcessCmdSet view magnifier $2 UpdateView}
- | BUTTONS_ yesno {ProcessCmdSet view buttons $2 UpdateView}
- | COLORBAR_ yesno {ProcessCmdSet view colorbar $2 UpdateView}
+ | KEYVALUE_ STRING_ {ProcessCmdSet view info,keyvalue $2 LayoutView}
+ | INFO_ yesno {ProcessCmdSet view info $2 LayoutView}
+ | PANNER_ yesno {ProcessCmdSet view panner $2 LayoutView}
+ | MAGNIFIER_ yesno {ProcessCmdSet view magnifier $2 LayoutView}
+ | BUTTONS_ yesno {ProcessCmdSet view buttons $2 LayoutView}
+ | COLORBAR_ yesno {ProcessCmdSet view colorbar $2 LayoutView}
 
 # backward compatible
- | COLORBARNUMERICS_ yesno {ColorbarCmdSet numerics $2 UpdateView}
+ | COLORBARNUMERICS_ yesno {ColorbarCmdSet numerics $2 LayoutView}
 
- | GRAPH_ orient yesno {ProcessCmdSet view graph,$2 $3 UpdateView}
+ | GRAPH_ orient yesno {ProcessCmdSet view graph,$2 $3 LayoutView}
 
 # backward compatible
- | HORZGRAPH_ yesno {ProcessCmdSet view graph,horz $2 UpdateView}
- | VERTGRAPH_ yesno {ProcessCmdSet view graph,vert $2 UpdateView}
+ | HORZGRAPH_ yesno {ProcessCmdSet view graph,horz $2 LayoutView}
+ | VERTGRAPH_ yesno {ProcessCmdSet view graph,vert $2 LayoutView}
 
- | FILENAME_ yesno {ProcessCmdSet view info,filename $2 UpdateView}
- | OBJECT_ yesno {ProcessCmdSet view info,object $2 UpdateView}
- | KEYWORD_ yesno {ProcessCmdSet view info,keyword $2 UpdateView}
- | MINMAX_ yesno {ProcessCmdSet view info,minmax $2 UpdateView}
- | LOWHIGH_ yesno {ProcessCmdSet view info,lowhigh $2 UpdateView}
- | UNITS_ yesno {ProcessCmdSet view info,bunit $2 UpdateView}
- | coordsys yesno {ProcessCmdSet view info,$1 $2 UpdateView}
- | wcssys yesno {ProcessCmdSet view info,$1 $2 UpdateView}
- | FRAME_ yesno {ProcessCmdSet view info,frame $2 UpdateView}
+ | FILENAME_ yesno {ProcessCmdSet view info,filename $2 LayoutView}
+ | OBJECT_ yesno {ProcessCmdSet view info,object $2 LayoutView}
+ | KEYWORD_ yesno {ProcessCmdSet view info,keyword $2 LayoutView}
+ | MINMAX_ yesno {ProcessCmdSet view info,minmax $2 LayoutView}
+ | LOWHIGH_ yesno {ProcessCmdSet view info,lowhigh $2 LayoutView}
+ | UNITS_ yesno {ProcessCmdSet view info,bunit $2 LayoutView}
+ | coordsys yesno {ProcessCmdSet view info,$1 $2 LayoutView}
+ | wcssys yesno {ProcessCmdSet view info,$1 $2 LayoutView}
+ | FRAME_ yesno {ProcessCmdSet view info,frame $2 LayoutView}
  | RED_ yesno {ProcessCmdSet rgb red $2 RGBView}
  | GREEN_ yesno {ProcessCmdSet rgb green $2 RGBView}
  | BLUE_ yesno {ProcessCmdSet rgb blue $2 RGBView}
  ;
 
-layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal ViewHorzCmd}
- | VERTICAL_ {ProcessCmdSet view layout vertical ViewVertCmd}
+layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal LayoutView}
+ | VERTICAL_ {ProcessCmdSet view layout vertical LayoutView}
  ;
  
 orient : HORIZONTAL_ {set _ horz}

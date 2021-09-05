@@ -13,7 +13,7 @@ command : width
  | width {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-width : INT_ {ProcessCmdSet canvas width $1 UpdateView}
+width : INT_ {LayoutChangeWidth $1}
  ;
 
 %%

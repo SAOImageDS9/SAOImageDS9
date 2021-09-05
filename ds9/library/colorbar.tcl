@@ -5,18 +5,15 @@
 package provide DS9 1.0
 
 proc ColorbarDef {} {
+    global ds9
     global colorbar
     global icolorbar
     global pcolorbar
 
-    global ds9
+    set icolorbar(num) 1024
 
     set icolorbar(top) .clrbar
     set icolorbar(mb) .clrbarmb
-
-    set icolorbar(vertical,width) 75
-    set icolorbar(horizontal,height) 45
-    set icolorbar(num) 1024
 
     set icolorbar(default,cmaps) [list grey red green blue a b bb he i8 aips0 sls hsv heat cool rainbow standard staircase color]
 
@@ -49,6 +46,9 @@ proc ColorbarDef {} {
     set colorbar(font,slant) roman
 
     array set pcolorbar [array get colorbar]
+
+    set colorbar(vertical,width) 75
+    set colorbar(horizontal,height) 45
 }
 
 proc CreateColorbar {} {
@@ -302,7 +302,6 @@ proc ResetColormap {} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
-	puts aa
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
     }
 
@@ -651,9 +650,7 @@ proc ColorbarDoubleRelease1 {which x y} {
 
 proc ColorbarButton3 {x y} {
     global icolorbar
-
     global current
-    global rgb
     global icursor
 
     # turn off blinking cursor
@@ -669,17 +666,15 @@ proc ColorbarButton3 {x y} {
     set icolorbar(colorbar) $current(colorbar)
 }
 
-proc ColorbarMotion3 {x y} {
+proc ColorbarMotion3 {xx yy} {
+    global ds9
     global icolorbar
 
-    global current
-    global canvas
-
     # X sets bias
-    set bias [expr double($x)/$canvas(width)]
+    set bias [expr double($xx)/[winfo width $ds9(canvas)]]
 
     # Y sets contrast
-    set contrast [expr double($y)/$canvas(height) * 10]
+    set contrast [expr double($yy)/[winfo height $ds9(canvas)] * 10]
 
     RGBEvalLockColorbar [list $icolorbar(colorbar) adjust $contrast $bias]
     if {$icolorbar(frame) != {}} {
@@ -690,9 +685,6 @@ proc ColorbarMotion3 {x y} {
 
 proc ColorbarRelease3 {x y} {
     global icolorbar
-
-    global current
-    global rgb
     global icursor
 
     # and turn on blinking cursor if needed
@@ -720,7 +712,6 @@ proc ChangeColormapName {name} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
-	puts bb
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 
@@ -783,7 +774,6 @@ proc InvertColorbar {} {
     $current(colorbar) invert $colorbar(invert)
 
     if {$current(frame) != {} } {
-	puts cc
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 
@@ -879,7 +869,6 @@ proc LoadColorTag {fn} {
 	    return
 	}
 	if {$current(frame) != {}} {
-	    puts dd
 	    $current(frame) colormap [$current(colorbar) get colormap]
 	}
     }
@@ -905,7 +894,6 @@ proc DeleteColorTag {} {
 
     $current(colorbar) tag delete
     if {$current(frame) != {}} {
-	puts ee
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 }
@@ -962,7 +950,6 @@ proc ColorTagDialog {x y} {
     if {$ed2(ok)} {
 	$current(colorbar) tag $ed2(id) $ed2(start) $ed2(stop) $ed2(color)
 	if {$current(frame) != {}} {
-	    puts ff
 	    $current(frame) colormap [$current(colorbar) get colormap]
 	}
     }
@@ -1136,7 +1123,6 @@ proc ApplyColormap {} {
 
     RGBEvalLockColorbar [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
     if {$current(frame) != {}} {
-	puts gg
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
 	LockColorCurrent
     }
@@ -1150,7 +1136,6 @@ proc BeginAdjustColormap {} {
 
     set icolorbar(adjustok) 1
     if {$current(frame) != {}} {
-	puts hh
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap begin]
     }
 }
@@ -1161,11 +1146,9 @@ proc AdjustColormap {} {
 
     global current
     global rgb
-    puts *
     if {[info exists icolorbar(adjustok)]} {
 	RGBEvalLockColorbar [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
 	if {$current(frame) != {}} {
-	    puts ii
 	    RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap motion [$current(colorbar) get colormap]]
 	}
     }
@@ -1180,7 +1163,6 @@ proc EndAdjustColormap {} {
     if {[info exists icolorbar(adjustok)]} {
 	unset icolorbar(adjustok)
 	if {$current(frame) != {}} {
-	    puts jj
 	    RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap end]
 	    LockColorCurrent
 	}
@@ -1279,10 +1261,29 @@ proc UpdateColorDialog {} {
     }
 }
 
-proc LayoutColorbarOne {cb} {
+proc LayoutColorbarAdjust {} {
+    global ds9
     global colorbar
-    global icolorbar
-    global canvas
+    
+    if {$colorbar(numerics)} {
+	# ww horizontal: tickgap
+	set ww 12
+	# hh vertical: approx number of numerals to display
+	set hh 7
+
+	set colorbar(horizontal,height) \
+	    [expr int($colorbar(size) + $colorbar(font,size)*$ds9(scaling)+$ww)]
+	set colorbar(vertical,width) \
+	    [expr $colorbar(size) + $colorbar(font,size)*$hh]
+    } else {
+ 	set colorbar(horizontal,height) [expr $colorbar(size) +2]
+ 	set colorbar(vertical,width) [expr $colorbar(size) +2]
+    }
+}
+
+proc LayoutColorbarOne {cb} {
+    global ds9
+    global colorbar
 
     $cb configure \
 	-size $colorbar(size) \
@@ -1296,26 +1297,28 @@ proc LayoutColorbarOne {cb} {
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
+    set cw [winfo width  $ds9(canvas)]
+    set ch [winfo height $ds9(canvas)]
+
     if {!$colorbar(orientation)} {
 	# horizontal
 	$cb configure \
 	    -x 0 \
-	    -y [expr $canvas(height) + $canvas(gap)] \
-	    -width $canvas(width) \
-	    -height $icolorbar(horizontal,height)
-    } else {
+	    -y [expr $ch - $colorbar(horizontal,height)] \
+	    -width $cw \
+	    -height $colorbar(horizontal,height)
+	} else {
 	# vertical
 	$cb configure \
-	    -x [expr $canvas(width) + $canvas(gap)] \
+	    -x [expr $cw - $colorbar(vertical,width)] \
 	    -y 0 \
-	    -width $icolorbar(vertical,width) \
-	    -height $canvas(height)
+	    -width $colorbar(vertical,width) \
+	    -height $ch
     }
 }
 
 proc LayoutColorbarTile {cb xx yy ww hh} {
     global colorbar
-    global icolorbar
     global canvas
 
     $cb configure \
@@ -1336,13 +1339,13 @@ proc LayoutColorbarTile {cb xx yy ww hh} {
 	    -x $xx \
 	    -y [expr $yy + $hh + $canvas(gap)] \
 	    -width $ww \
-	    -height $icolorbar(horizontal,height)
+	    -height $colorbar(horizontal,height)
     } else {
 	# vertical
 	$cb configure \
 	    -x [expr $xx + $ww + $canvas(gap)] \
 	    -y $yy \
-	    -width $icolorbar(vertical,width) \
+	    -width $colorbar(vertical,width) \
 	    -height $hh
     }
 }
@@ -1381,7 +1384,7 @@ proc ColorbarUpdateView {} {
 	    -fontslant $colorbar(font,slant)
     }
 
-    UpdateView
+    LayoutView
 }
 
 proc ColorbarBackup {ch dir} {
@@ -1461,7 +1464,6 @@ proc CmapCmd {item} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {}} {
-	puts kk
 	$current(frame) colormap [$current(colorbar) get colormap]
     }
 

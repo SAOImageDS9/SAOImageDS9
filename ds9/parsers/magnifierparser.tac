@@ -27,7 +27,7 @@ magnifier : COLOR_ STRING_ {ProcessCmdSet pmagnifier color $2 MagnifierColor}
  | CURSOR_ yesno {ProcessCmdSet pmagnifier cursor $2 MagnifierCursor}
  | REGION_ yesno {ProcessCmdSet pmagnifier region $2 MagnifierRegion}
 # backward compatibility
- | yesno {ProcessCmdSet view magnifier $1 UpdateView}
+ | yesno {ProcessCmdSet view magnifier $1 LayoutView}
  ;
 
 %%

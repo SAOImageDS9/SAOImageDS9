@@ -2007,30 +2007,30 @@ proc view::yyparse {} {
                     37 { set _ wcsy }
                     38 { set _ wcsz }
                     40 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    44 { ProcessCmdSet view info,keyvalue $2 UpdateView }
-                    45 { ProcessCmdSet view info $2 UpdateView }
-                    46 { ProcessCmdSet view panner $2 UpdateView }
-                    47 { ProcessCmdSet view magnifier $2 UpdateView }
-                    48 { ProcessCmdSet view buttons $2 UpdateView }
-                    49 { ProcessCmdSet view colorbar $2 UpdateView }
-                    50 { ColorbarCmdSet numerics $2 UpdateView }
-                    51 { ProcessCmdSet view graph,$2 $3 UpdateView }
-                    52 { ProcessCmdSet view graph,horz $2 UpdateView }
-                    53 { ProcessCmdSet view graph,vert $2 UpdateView }
-                    54 { ProcessCmdSet view info,filename $2 UpdateView }
-                    55 { ProcessCmdSet view info,object $2 UpdateView }
-                    56 { ProcessCmdSet view info,keyword $2 UpdateView }
-                    57 { ProcessCmdSet view info,minmax $2 UpdateView }
-                    58 { ProcessCmdSet view info,lowhigh $2 UpdateView }
-                    59 { ProcessCmdSet view info,bunit $2 UpdateView }
-                    60 { ProcessCmdSet view info,$1 $2 UpdateView }
-                    61 { ProcessCmdSet view info,$1 $2 UpdateView }
-                    62 { ProcessCmdSet view info,frame $2 UpdateView }
+                    44 { ProcessCmdSet view info,keyvalue $2 LayoutView }
+                    45 { ProcessCmdSet view info $2 LayoutView }
+                    46 { ProcessCmdSet view panner $2 LayoutView }
+                    47 { ProcessCmdSet view magnifier $2 LayoutView }
+                    48 { ProcessCmdSet view buttons $2 LayoutView }
+                    49 { ProcessCmdSet view colorbar $2 LayoutView }
+                    50 { ColorbarCmdSet numerics $2 LayoutView }
+                    51 { ProcessCmdSet view graph,$2 $3 LayoutView }
+                    52 { ProcessCmdSet view graph,horz $2 LayoutView }
+                    53 { ProcessCmdSet view graph,vert $2 LayoutView }
+                    54 { ProcessCmdSet view info,filename $2 LayoutView }
+                    55 { ProcessCmdSet view info,object $2 LayoutView }
+                    56 { ProcessCmdSet view info,keyword $2 LayoutView }
+                    57 { ProcessCmdSet view info,minmax $2 LayoutView }
+                    58 { ProcessCmdSet view info,lowhigh $2 LayoutView }
+                    59 { ProcessCmdSet view info,bunit $2 LayoutView }
+                    60 { ProcessCmdSet view info,$1 $2 LayoutView }
+                    61 { ProcessCmdSet view info,$1 $2 LayoutView }
+                    62 { ProcessCmdSet view info,frame $2 LayoutView }
                     63 { ProcessCmdSet rgb red $2 RGBView }
                     64 { ProcessCmdSet rgb green $2 RGBView }
                     65 { ProcessCmdSet rgb blue $2 RGBView }
-                    66 { ProcessCmdSet view layout horizontal ViewHorzCmd }
-                    67 { ProcessCmdSet view layout vertical ViewVertCmd }
+                    66 { ProcessCmdSet view layout horizontal LayoutView }
+                    67 { ProcessCmdSet view layout vertical LayoutView }
                     68 { set _ horz }
                     69 { set _ vert }
                 }

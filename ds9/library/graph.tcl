@@ -52,7 +52,8 @@ proc CreateGraphs {} {
 
     # Horizontal Graph
     set ds9(graph,horz) [blt::graph $ds9(main).horz \
-			     -width $canvas(width) -height $igraph(size) \
+			     -width $canvas(width) \
+			     -height $igraph(size) \
 			     -takefocus 0 \
 			     -highlightthickness 0 \
 			     -font [font actual TkDefaultFont] \
@@ -100,7 +101,8 @@ proc CreateGraphs {} {
     # Vertical Graph
     set ds9(graph,vert) [blt::graph $ds9(main).vert \
 			     -invertxy yes \
-			     -width $igraph(size) -height $canvas(height) \
+			     -width $igraph(size) \
+			     -height $canvas(height) \
 			     -takefocus 0 \
 			     -highlightthickness 0 \
 			     -borderwidth 0 \
@@ -380,7 +382,6 @@ proc UpdateGraphLayout {which} {
     global canvas
     global view
     global colorbar
-    global icolorbar
 
     global debug
     if {$debug(tcl,layout)} {
@@ -407,7 +408,7 @@ proc UpdateGraphLayout {which} {
 	set yy [expr $canvas(height) + $canvas(gap)]
 
 	if {$cbh} {
-	    incr yy $icolorbar(horizontal,height)
+	    incr yy $colorbar(horizontal,height)
 	}
 	if {$view(graph,vert) && !$cbh} {
 	    incr yy $igraph(gap,y)
@@ -434,7 +435,7 @@ proc UpdateGraphLayout {which} {
 	set xx [expr $canvas(width) + $canvas(gap)]
 
 	if {$cbv} {
-	    incr xx $icolorbar(vertical,width)
+	    incr xx $colorbar(vertical,width)
 	}
 	if {$view(graph,horz) && !$cbv} {
 	    incr xx $igraph(gap,x)

@@ -13,7 +13,7 @@ command : height
  | height {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-height : INT_ {ProcessCmdSet canvas height $1 UpdateView}
+height : INT_ {LayoutChangeHeight $1}
  ;
 
 %%

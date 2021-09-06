@@ -26,6 +26,7 @@
 %token LOWHIGH_
 %token MAGNIFIER_
 %token MINMAX_
+%token MULTI_
 %token OBJECT_
 %token PANNER_
 %token RED_
@@ -45,6 +46,7 @@ command : view
 
 view : layout
  | LAYOUT_ layout
+ | MULTI_ yesno {ProcessCmdSet view multi $2 LayoutView}
  | KEYVALUE_ STRING_ {ProcessCmdSet view info,keyvalue $2 LayoutView}
  | INFO_ yesno {ProcessCmdSet view info $2 LayoutView}
  | PANNER_ yesno {ProcessCmdSet view panner $2 LayoutView}

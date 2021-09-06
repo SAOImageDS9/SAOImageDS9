@@ -22,6 +22,7 @@
 %token LOWHIGH_
 %token MAGNIFIER_
 %token MINMAX_
+%token MULTI_
 %token OBJECT_
 %token PANNER_
 %token UNITS_
@@ -35,6 +36,7 @@
 
 viewsend :
  | LAYOUT_ {ProcessSendCmdGet view layout}
+ | MULTI_ {ProcessSendCmdYesNo view multi}
  | KEYVALUE_ {ProcessSendCmdGet view info,keyvalue}
  | INFO_ {ProcessSendCmdYesNo view info}
  | PANNER_ {ProcessSendCmdYesNo view panner}

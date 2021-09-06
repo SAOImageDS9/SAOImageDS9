@@ -2754,6 +2754,7 @@ $xpaget ds9 version</tt>
 <p>Controls the GUI.</p>
 <tt>Syntax:<br>
 view&nbsp; [layout horizontal|vertical]<br>
+&nbsp;&nbsp;&nbsp; [multi yes|no]<br>
 &nbsp;&nbsp;&nbsp; [keyvalue &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [info yes|no]<br>
 &nbsp;&nbsp;&nbsp; [panner yes|no]<br>
@@ -2777,6 +2778,7 @@ view&nbsp; [layout horizontal|vertical]<br>
 &nbsp;<br>
 Example:<br>
 $xpaget ds9 view layout<br>
+$xpaget ds9 view multi<br>
 $xpaget ds9 view keyvalue<br>
 $xpaget ds9 view info<br>
 $xpaget ds9 view panner<br>
@@ -2796,6 +2798,7 @@ $xpaget ds9 view red<br>
 $xpaget ds9 view frame<br>
 <br>
 $xpaset -p ds9 view layout vertical<br>
+$xpaset -p ds9 view multi yes<br>
 $xpaset -p ds9 view keyvalue BITPIX<br>
 $xpaset -p ds9 view info yes<br>
 $xpaset -p ds9 view panner yes<br>

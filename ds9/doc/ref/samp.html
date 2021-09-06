@@ -2851,6 +2851,7 @@ version</tt>
 <p>Controls the GUI.</p>
 <tt>Syntax:<br>
 view [layout horizontal|vertical]<br>
+&nbsp;&nbsp;&nbsp; [multi yes|no]<br>
 &nbsp;&nbsp;&nbsp; [keyvalue &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [info yes|no]<br>
 &nbsp;&nbsp;&nbsp; [panner yes|no]<br>
@@ -2875,6 +2876,7 @@ view [layout horizontal|vertical]<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
 view layout<br>
+view multi<br>
 view keyvalue<br>
 view info<br>
 view panner<br>
@@ -2895,6 +2897,7 @@ view frame<br>
 <br>
 ds9.set(string cmd)<br>
 view layout vertical<br>
+view multi yes<br>
 view keyvalue BITPIX<br>
 view info yes<br>
 view panner yes<br>

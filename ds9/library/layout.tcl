@@ -454,12 +454,17 @@ proc LayoutFrames {} {
 	    single {TileOne}
 	    tile {
 		switch -- $tile(mode) {
-		    row {TileRect 1 $ds9(active,num) $tile(grid,gap)}
-		    column {TileRect $ds9(active,num) 1 $tile(grid,gap)}
+		    row {
+			TileRect 1 $ds9(active,num) $tile(grid,gap)
+		    }
+		    column {
+			TileRect $ds9(active,num) 1 $tile(grid,gap)
+		    }
 		    grid {
 			switch -- $tile(grid,mode) {
 			    automatic {
-				TileRect [expr int(sqrt($ds9(active,num)-1))+1] \
+				TileRect \
+				    [expr int(sqrt($ds9(active,num)-1))+1] \
 				    [expr int(sqrt($ds9(active,num))+.5)] \
 				    $tile(grid,gap)
 			    }
@@ -554,6 +559,7 @@ proc TileRect {numx numy gap} {
     global tile
     global colorbar
 
+    puts "$numx $numy"
     LayoutColorbarAdjust
     
     if {$view(colorbar)} {

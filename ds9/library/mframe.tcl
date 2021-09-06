@@ -1193,8 +1193,8 @@ proc UpdateFrameMenuItems {} {
 
     set cnt $ds9(menu,size,frame,goto)
     foreach ff $ds9(frames) {
-	$ds9(mb).frame.goto add command \
-	    -label "[msgcat::mc {Frame}] [string range $ff 5 end]" \
+	set which "[msgcat::mc {Frame}] [string range $ff 5 end]"
+	$ds9(mb).frame.goto add command -label $which \
 	    -command [list GotoFrame $ff]
 
 	# wrap if needed

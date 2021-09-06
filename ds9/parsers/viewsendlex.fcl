@@ -25,6 +25,7 @@ layout		{return $LAYOUT_}
 lowhigh		{return $LOWHIGH_}
 magnifier	{return $MAGNIFIER_}
 minmax		{return $MINMAX_}
+multi		{return $MULTI_}
 object		{return $OBJECT_}
 panner		{return $PANNER_}
 red		{return $RED_}

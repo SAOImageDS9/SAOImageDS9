@@ -783,12 +783,11 @@ proc InvertColorbar {} {
 
 proc UpdateColormapLevel {} {
     global icolorbar
-
     global current
 
     global debug
     if {$debug(tcl,update)} {
-	puts stderr "UpdateColormapLevel"
+	puts stderr "UpdateColormapLevel $current(frame)"
     }
 
     if {$current(frame) != {}} {

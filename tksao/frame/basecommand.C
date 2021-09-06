@@ -1066,12 +1066,11 @@ void Base::getColorbarTagCmd()
 
 void Base::getColorMapLevelCmd(int count)
 {
-  if (currentContext->cfits) {
+  if (currentContext->cfits)
     getColorMapLevelCmd(count, currentContext->cfits->low(),
 			currentContext->cfits->high(),
 			currentContext->colorScaleType(),
 			currentContext->expo());		
-  }
   else
     getColorMapLevelCmd(count, currentContext->low(), 
 			currentContext->high(),

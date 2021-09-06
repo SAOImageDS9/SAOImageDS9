@@ -173,6 +173,8 @@ proc ProcessLoad {{err 1}} {
 		       $loadParam(var,name) \{$loadParam(file,name)\}
 	    }
 	}
+	# be sure to update the colorbar levels, especially in tile mode
+	UpdateColormapLevel
     } rr]} {
 	if {$err} {
 	    Error "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"

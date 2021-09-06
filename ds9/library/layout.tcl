@@ -602,13 +602,8 @@ proc TileRect {numx numy} {
 	set hdiff 0
     }
     
-    if {$view(multi)} {
-	set ww [expr int(([winfo width  $ds9(canvas)]-$tile(grid,gap)*($numx-1))/$numx-$wdiff)]
-	set hh [expr int(([winfo height $ds9(canvas)]-$tile(grid,gap)*($numy-1))/$numy-$hdiff)]
-    } else {
-	set ww [expr int(([winfo width  $ds9(canvas)]-$tile(grid,gap)*($numx-1))/$numx-$wdiff)]
-	set hh [expr int(([winfo height $ds9(canvas)]-$tile(grid,gap)*($numy-1))/$numy-$hdiff)]
-    }
+    set ww [expr int(([winfo width  $ds9(canvas)]-$tile(grid,gap)*($numx-1))/$numx-$wdiff)]
+    set hh [expr int(([winfo height $ds9(canvas)]-$tile(grid,gap)*($numy-1))/$numy-$hdiff)]
 
     switch $tile(grid,dir) {
 	x {

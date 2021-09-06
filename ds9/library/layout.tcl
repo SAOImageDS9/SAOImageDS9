@@ -559,7 +559,6 @@ proc TileRect {numx numy gap} {
     global tile
     global colorbar
 
-    puts "$numx $numy"
     LayoutColorbarAdjust
     
     if {$view(colorbar)} {

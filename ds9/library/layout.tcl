@@ -580,6 +580,101 @@ proc TileOne {} {
 }
 
 proc TileRect {numx numy} {
+    global view
+
+    if {$view(colorbar)} {
+	if {$view(multi)} {
+	    TileRectMulti $numx $numy
+	} else {
+	    TileRectOne $numx $numy
+	}
+    } else {
+	TileRectNone $numx $numy
+    }
+}
+
+proc TileRectNone {numx numy} {
+    global ds9
+    global canvas
+    global tile
+    global colorbar
+    
+    set ww [expr int(([winfo width  $ds9(canvas)]-($tile(grid,gap)*($numx-1)))/$numx)]
+    set hh [expr int(([winfo height $ds9(canvas)]-($tile(grid,gap)*($numy-1)))/$numy)]
+
+    switch $tile(grid,dir) {
+	x {
+	    for {set jj 0} {$jj<$numy} {incr jj} {
+		for {set ii 0} {$ii<$numx} {incr ii} {
+		    set nn [expr $jj*$numx + $ii]
+		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+	y {
+	    for {set ii 0} {$ii<$numx} {incr ii} {
+		for {set jj 0} {$jj<$numy} {incr jj} {
+		    set nn [expr $ii*$numy + $jj]
+		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+    }
+
+    TileIt $ww $hh xx yy [expr $numx*$numy]
+}
+
+proc TileRectMulti {numx numy} {
+    global ds9
+    global canvas
+    global tile
+    global colorbar
+    
+    if {!$colorbar(orientation)} {
+	# horizontal
+	set wcb 0
+	set hcb [expr $colorbar(horizontal,height) + $canvas(gap)]
+    } else {
+	# vertical
+	set wcb [expr $colorbar(vertical,width) + $canvas(gap)]
+	set hcb 0
+    }
+    
+    set w1 [winfo width $ds9(canvas)]
+    set w2 [expr $w1-$tile(grid,gap)*($numx-1)-$wcb*$numx]
+    set ww [expr int($w2/$numx)]
+
+    set h1 [winfo height $ds9(canvas)]
+    set h2 [expr $h1-$tile(grid,gap)*($numy-1)-$hcb*$numy]
+    set hh [expr int($h2/$numy)]
+
+    switch $tile(grid,dir) {
+	x {
+	    for {set jj 0} {$jj<$numy} {incr jj} {
+		for {set ii 0} {$ii<$numx} {incr ii} {
+		    set nn [expr $jj*$numx + $ii]
+		    set xx($nn) [expr ($ww+$wcb+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$hcb+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+	y {
+	    for {set ii 0} {$ii<$numx} {incr ii} {
+		for {set jj 0} {$jj<$numy} {incr jj} {
+		    set nn [expr $ii*$numy + $jj]
+		    set xx($nn) [expr ($ww+$wcb+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$hcb+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+    }
+
+    TileIt $ww $hh xx yy [expr $numx*$numy]
+}
+
+proc TileRectOne {numx numy} {
     global ds9
     global view
     global canvas

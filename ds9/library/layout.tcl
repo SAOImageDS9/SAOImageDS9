@@ -434,7 +434,7 @@ proc LayoutFrames {} {
     global view
     global colorbar
     
-    # turn off default colorbars
+    # turn off default colorbar
     colorbar hide
 
     # turn everything off
@@ -449,66 +449,94 @@ proc LayoutFrames {} {
 	${ff}cb hide
     }
 
+    # be sure colorbar sizes are correct
+    LayoutColorbarAdjust
+
     if {$ds9(active,num) > 0} {
-	switch -- $ds9(display) {
-	    single {TileOne}
-	    tile {
-		switch -- $tile(mode) {
-		    row {
-			TileRect 1 $ds9(active,num) $tile(grid,gap)
-		    }
-		    column {
-			TileRect $ds9(active,num) 1 $tile(grid,gap)
-		    }
-		    grid {
-			switch -- $tile(grid,mode) {
-			    automatic {
-				TileRect \
-				    [expr int(sqrt($ds9(active,num)-1))+1] \
-				    [expr int(sqrt($ds9(active,num))+.5)] \
-				    $tile(grid,gap)
-			    }
-			    manual {
-				TileRect \
-				    $tile(grid,col) \
-				    $tile(grid,row) \
-				    $tile(grid,gap)
-			    }
-			}
-		    }
-		}
-	    }
-	    blink {TileOne}
-	}
+	LayoutFramesOneOrMore
     } else {
-	set current(frame) {}
-	set current(colorbar) colorbar
-
-	set colorbar(map) [colorbar get name]
-	set colorbar(invert) [colorbar get invert]
-
-	# panner
-	if {$view(panner)} {
-	    panner clear
-	}
-
-	# magnifier
-	if {$view(magnifier)} {
-	    magnifier clear
-	}
-
-	# colorbar
-	if {$view(colorbar)} {
-	    LayoutColorbarOne colorbar
-	    colorbar show
-	    $ds9(canvas) raise colorbar
-	}
-	
-	# update menus/dialogs
-	UpdateDS9
+	LayoutFramesNone
     }
 }
 
+proc LayoutFramesNone {} {
+    global ds9
+    global current
+    global colorbar
+    global view
+    
+    set current(frame) {}
+    set current(colorbar) colorbar
+
+    set colorbar(map) [colorbar get name]
+    set colorbar(invert) [colorbar get invert]
+
+    # panner
+    if {$view(panner)} {
+	panner clear
+    }
+
+    # magnifier
+    if {$view(magnifier)} {
+	magnifier clear
+    }
+
+    # colorbar
+    if {$view(colorbar)} {
+	LayoutColorbarOne colorbar
+	colorbar show
+	$ds9(canvas) raise colorbar
+    }
+    
+    # update menus/dialogs
+    UpdateDS9
+}
+
+proc LayoutFramesOneOrMore {} {
+    global ds9
+
+    switch -- $ds9(display) {
+	single {
+	    TileOne
+	}
+	tile {
+	    if {$ds9(active,num) > 1} {
+		LayoutFramesMore
+	    } else {
+		TileOne
+	    }
+	}
+	blink {
+	    TileOne
+	}
+    }
+}
+
+proc LayoutFramesMore {} {
+    global ds9
+    global tile
+
+    switch -- $tile(mode) {
+	row {
+	    TileRect 1 $ds9(active,num)
+	}
+	column {
+	    TileRect $ds9(active,num) 1
+	}
+	grid {
+	    switch -- $tile(grid,mode) {
+		automatic {
+		    TileRect \
+			[expr int(sqrt($ds9(active,num)-1))+1] \
+			[expr int(sqrt($ds9(active,num))+.5)]
+		}
+		manual {
+		    TileRect $tile(grid,col) $tile(grid,row)
+		}
+	    }
+	}
+    }
+}
 
 # This procedure is called when we have only 1 frames to display
 
@@ -518,7 +546,6 @@ proc TileOne {} {
     global view
     global colorbar
 
-    LayoutColorbarAdjust
 
     if {$view(colorbar)} {
 	if {!$colorbar(orientation)} {
@@ -552,14 +579,13 @@ proc TileOne {} {
     FrameToFront
 }
 
-proc TileRect {numx numy gap} {
+proc TileRect {numx numy} {
     global ds9
     global view
     global canvas
     global tile
     global colorbar
 
-    LayoutColorbarAdjust
     
     if {$view(colorbar)} {
 	if {!$colorbar(orientation)} {
@@ -576,16 +602,21 @@ proc TileRect {numx numy gap} {
 	set hdiff 0
     }
     
-    set ww [expr int(([winfo width  $ds9(canvas)]-$gap*($numx-1))/$numx-$wdiff)]
-    set hh [expr int(([winfo height $ds9(canvas)]-$gap*($numy-1))/$numy-$hdiff)]
+    if {$view(multi)} {
+	set ww [expr int(([winfo width  $ds9(canvas)]-$tile(grid,gap)*($numx-1))/$numx-$wdiff)]
+	set hh [expr int(([winfo height $ds9(canvas)]-$tile(grid,gap)*($numy-1))/$numy-$hdiff)]
+    } else {
+	set ww [expr int(([winfo width  $ds9(canvas)]-$tile(grid,gap)*($numx-1))/$numx-$wdiff)]
+	set hh [expr int(([winfo height $ds9(canvas)]-$tile(grid,gap)*($numy-1))/$numy-$hdiff)]
+    }
 
     switch $tile(grid,dir) {
 	x {
 	    for {set jj 0} {$jj<$numy} {incr jj} {
 		for {set ii 0} {$ii<$numx} {incr ii} {
 		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr ($ww+$wdiff+$gap)*$ii]
-		    set yy($nn) [expr ($hh+$hdiff+$gap)*$jj]
+		    set xx($nn) [expr ($ww+$wdiff+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$hdiff+$tile(grid,gap))*$jj]
 		}
 	    }
 	}
@@ -593,8 +624,8 @@ proc TileRect {numx numy gap} {
 	    for {set ii 0} {$ii<$numx} {incr ii} {
 		for {set jj 0} {$jj<$numy} {incr jj} {
 		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr ($ww+$wdiff+$gap)*$ii]
-		    set yy($nn) [expr ($hh+$hdiff+$gap)*$jj]
+		    set xx($nn) [expr ($ww+$wdiff+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$hdiff+$tile(grid,gap))*$jj]
 		}
 	    }
 	}

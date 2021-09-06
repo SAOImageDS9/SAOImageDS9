@@ -310,12 +310,14 @@ proc LayoutOrient {} {
 
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
-    grid forget $ds9(buttons)
-    grid forget $ds9(buttons,sep)
-    grid forget $ds9(image)
     pack forget $ds9(info)
     pack forget $ds9(panner)
     pack forget $ds9(magnifier)
+
+    grid forget $ds9(buttons)
+    grid forget $ds9(buttons,sep)
+
+    grid forget $ds9(image)
 
     LayoutView
 }

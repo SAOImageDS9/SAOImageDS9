@@ -636,9 +636,6 @@ after $ds9(msg,timeout) [list ErrorTimer]
 # ok, we're done
 set ds9(init) 0
 
-# needed at end to properly layout after frames loaded
-LayoutView
-
 # major kludges
 switch $ds9(wm) {
     x11 {
@@ -649,11 +646,9 @@ switch $ds9(wm) {
 	# could be changed in prefs or command line
 	ThemeChange
 
-	# lock down geometry at statup
-	# so unneeded configure events are not generated
-	# a problem with recent versions of linux
-	wm geometry $ds9(top) \
-	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
+       # lock down geometry at statup
+       # so no resize top window configure events are generated
+       wm geometry $ds9(top) "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
     }
     aqua {}
     win32 {

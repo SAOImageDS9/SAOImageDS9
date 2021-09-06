@@ -546,7 +546,6 @@ proc TileOne {} {
     global view
     global colorbar
 
-
     if {$view(colorbar)} {
 	if {!$colorbar(orientation)} {
 	    # horizontal

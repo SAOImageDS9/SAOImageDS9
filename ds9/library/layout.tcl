@@ -681,32 +681,31 @@ proc TileRectOne {numx numy} {
     global tile
     global colorbar
 
-    
-    if {$view(colorbar)} {
-	if {!$colorbar(orientation)} {
-	    # horizontal
-	    set wdiff 0
-	    set hdiff $colorbar(horizontal,height)-$canvas(gap)
-	} else {
-	    # vertical
-	    set wdiff $colorbar(vertical,width)-$canvas(gap)
-	    set hdiff 0
-	}
+    if {!$colorbar(orientation)} {
+	# horizontal
+	set wcb 0
+	set hcb [expr $colorbar(horizontal,height) + $canvas(gap)]
     } else {
-	set wdiff 0
-	set hdiff 0
+	# vertical
+	set wcb [expr $colorbar(vertical,width) + $canvas(gap)]
+	set hcb 0
     }
     
-    set ww [expr int(([winfo width  $ds9(canvas)]-$tile(grid,gap)*($numx-1))/$numx-$wdiff)]
-    set hh [expr int(([winfo height $ds9(canvas)]-$tile(grid,gap)*($numy-1))/$numy-$hdiff)]
+    set w1 [winfo width $ds9(canvas)]
+    set w2 [expr $w1-$tile(grid,gap)*($numx-1)-$wcb]
+    set ww [expr int($w2/$numx)]
+
+    set h1 [winfo height $ds9(canvas)]
+    set h2 [expr $h1-$tile(grid,gap)*($numy-1)-$hcb]
+    set hh [expr int($h2/$numy)]
 
     switch $tile(grid,dir) {
 	x {
 	    for {set jj 0} {$jj<$numy} {incr jj} {
 		for {set ii 0} {$ii<$numx} {incr ii} {
 		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr ($ww+$wdiff+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$hdiff+$tile(grid,gap))*$jj]
+		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
 		}
 	    }
 	}
@@ -714,8 +713,8 @@ proc TileRectOne {numx numy} {
 	    for {set ii 0} {$ii<$numx} {incr ii} {
 		for {set jj 0} {$jj<$numy} {incr jj} {
 		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr ($ww+$wdiff+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$hdiff+$tile(grid,gap))*$jj]
+		    set xx($nn) [expr ($ww+$wcb+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$hcb+$tile(grid,gap))*$jj]
 		}
 	    }
 	}

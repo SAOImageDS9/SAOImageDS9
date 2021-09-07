@@ -33,6 +33,9 @@ proc ViewMainMenu {} {
     $ds9(mb).view add checkbutton -label [msgcat::mc {Vertical Graph}] \
 	-variable view(graph,vert) -command LayoutFrames
     $ds9(mb).view add separator
+
+    # Need to use LayoutView as MacOS port will not update window properly
+    #   with LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Filename}] \
 	-variable view(info,filename) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Object}] \
@@ -270,6 +273,8 @@ proc CreateButtonsView {} {
 	[string tolower [msgcat::mc {Graph Vert}]] \
 	view(graph,vert) LayoutFrames
 
+    # Need to use LayoutView as MacOS port will not update window properly
+    #   with LayoutInfoPanel
     CheckButton $ds9(buttons).view.filename \
 	[string tolower [msgcat::mc {Filename}]] \
 	view(info,filename) LayoutView

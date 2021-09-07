@@ -272,26 +272,6 @@ proc BindEventsCanvas {} {
     }
 }
 
-proc LayoutView {} {
-    global view
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "LayoutView"
-    }
-
-    switch $view(layout) {
-	horizontal {LayoutViewHorz}
-	vertical {LayoutViewVert}
-    }
-
-    LayoutInfoPanel
-    LayoutButtons
-    LayoutFrames
-
-    UpdateGraphLayout {}
-}
-
 proc LayoutOrient {} {
     global ds9
 
@@ -317,6 +297,26 @@ proc LayoutOrient {} {
     LayoutView
 }
 
+proc LayoutView {} {
+    global view
+
+    global debug
+    if {$debug(tcl,layout)} {
+	puts stderr "LayoutView"
+    }
+
+    switch $view(layout) {
+	horizontal {LayoutViewHorz}
+	vertical {LayoutViewVert}
+    }
+
+    LayoutInfoPanel
+    LayoutButtons
+    LayoutFrames
+
+    UpdateGraphLayout {}
+}
+
 proc LayoutViewHorz {} {
     global ds9
     global current
@@ -326,14 +326,17 @@ proc LayoutViewHorz {} {
     grid rowconfigure $ds9(main) 4 -weight 1
     grid columnconfigure $ds9(main) 0 -weight 1
 
+    grid forget $ds9(panel)
+    grid forget $ds9(panel,sep)
+    grid forget $ds9(buttons)
+    grid forget $ds9(buttons,sep)
+    grid forget $ds9(image)
+
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
 	grid $ds9(panel) -row 0 -column 0 -sticky ew -columnspan 3
 	$ds9(panel,sep) configure -orient horizontal
 	grid $ds9(panel,sep) -row 1 -column 0 -sticky ew -columnspan 3
-    } else {
-	grid forget $ds9(panel)
-	grid forget $ds9(panel,sep)
     }
 
     if {$view(info)} {
@@ -363,9 +366,6 @@ proc LayoutViewHorz {} {
 	grid $ds9(buttons) -row 2 -sticky ew -columnspan 3
 	$ds9(buttons,sep) configure -orient horizontal
 	grid $ds9(buttons,sep) -row 3 -column 0 -sticky ew -columnspan 3
-    } else {
-	grid forget $ds9(buttons)
-	grid forget $ds9(buttons,sep)
     }
 
     # image
@@ -381,14 +381,17 @@ proc LayoutViewVert {} {
     grid rowconfigure $ds9(main) 0 -weight 1
     grid columnconfigure $ds9(main) 4 -weight 1
 
+    grid forget $ds9(panel)
+    grid forget $ds9(panel,sep)
+    grid forget $ds9(buttons)
+    grid forget $ds9(buttons,sep)
+    grid forget $ds9(image)
+    
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
 	grid $ds9(panel) -row 0 -column 0 -sticky ns
 	$ds9(panel,sep) configure -orient vertical
 	grid $ds9(panel,sep) -row 0 -column 1 -sticky ns
-    } else {
-	grid forget $ds9(panel)
-	grid forget $ds9(panel,sep)
     }
 
     if {$view(magnifier)} {
@@ -417,9 +420,6 @@ proc LayoutViewVert {} {
 	grid $ds9(buttons) -row 0 -column 2 -sticky ns
 	$ds9(buttons,sep) configure -orient vertical
 	grid $ds9(buttons,sep) -row 0 -column 3 -sticky ns
-    } else {
-	grid forget $ds9(buttons)
-	grid forget $ds9(buttons,sep)
     }
 
     # image

@@ -63,15 +63,15 @@ view : layout
  | HORZGRAPH_ yesno {ProcessCmdSet view graph,horz $2 LayoutFrames}
  | VERTGRAPH_ yesno {ProcessCmdSet view graph,vert $2 LayoutFrames}
 
- | FILENAME_ yesno {ProcessCmdSet view info,filename $2 LayoutView}
- | OBJECT_ yesno {ProcessCmdSet view info,object $2 LayoutView}
- | KEYWORD_ yesno {ProcessCmdSet view info,keyword $2 LayoutView}
- | MINMAX_ yesno {ProcessCmdSet view info,minmax $2 LayoutView}
- | LOWHIGH_ yesno {ProcessCmdSet view info,lowhigh $2 LayoutView}
- | UNITS_ yesno {ProcessCmdSet view info,bunit $2 LayoutView}
- | coordsys yesno {ProcessCmdSet view info,$1 $2 LayoutView}
- | wcssys yesno {ProcessCmdSet view info,$1 $2 LayoutView}
- | FRAME_ yesno {ProcessCmdSet view info,frame $2 LayoutView}
+ | FILENAME_ yesno {ProcessCmdSet view info,filename $2 LayoutInfoPanel}
+ | OBJECT_ yesno {ProcessCmdSet view info,object $2 LayoutInfoPanel}
+ | KEYWORD_ yesno {ProcessCmdSet view info,keyword $2 LayoutInfoPanel}
+ | MINMAX_ yesno {ProcessCmdSet view info,minmax $2 LayoutInfoPanel}
+ | LOWHIGH_ yesno {ProcessCmdSet view info,lowhigh $2 LayoutInfoPanel}
+ | UNITS_ yesno {ProcessCmdSet view info,bunit $2 LayoutInfoPanel}
+ | coordsys yesno {ProcessCmdSet view info,$1 $2 LayoutInfoPanel}
+ | wcssys yesno {ProcessCmdSet view info,$1 $2 LayoutInfoPanel}
+ | FRAME_ yesno {ProcessCmdSet view info,frame $2 LayoutInfoPanel}
  | RED_ yesno {ProcessCmdSet rgb red $2 RGBView}
  | GREEN_ yesno {ProcessCmdSet rgb green $2 RGBView}
  | BLUE_ yesno {ProcessCmdSet rgb blue $2 RGBView}

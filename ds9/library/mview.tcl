@@ -33,35 +33,32 @@ proc ViewMainMenu {} {
     $ds9(mb).view add checkbutton -label [msgcat::mc {Vertical Graph}] \
 	-variable view(graph,vert) -command LayoutFrames
     $ds9(mb).view add separator
-
-    # Need to use LayoutView as MacOS port will not update window properly
-    #   with LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Filename}] \
-	-variable view(info,filename) -command LayoutView
+	-variable view(info,filename) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Object}] \
-	-variable view(info,object) -command LayoutView
+	-variable view(info,object) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Keyword}] \
-	-variable view(info,keyword) -command LayoutView
+	-variable view(info,keyword) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Min Max}] \
-	-variable view(info,minmax) -command LayoutView
+	-variable view(info,minmax) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Low High}] \
-	-variable view(info,lowhigh) -command LayoutView
+	-variable view(info,lowhigh) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Units}] \
-	-variable view(info,bunit) -command LayoutView
+	-variable view(info,bunit) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {WCS}] \
-	-variable view(info,wcs) -command LayoutView
+	-variable view(info,wcs) -command LayoutInfoPanel
     $ds9(mb).view add cascade -label [msgcat::mc {Multiple WCS}] \
 	-menu $ds9(mb).view.mwcs
     $ds9(mb).view add checkbutton -label [msgcat::mc {Image}] \
-	-variable view(info,image) -command LayoutView
+	-variable view(info,image) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Physical}] \
-	-variable view(info,physical) -command LayoutView
+	-variable view(info,physical) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Amplifier}] \
-	-variable view(info,amplifier) -command LayoutView
+	-variable view(info,amplifier) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Detector}] \
-	-variable view(info,detector) -command LayoutView
+	-variable view(info,detector) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Frame Information}] \
-	-variable view(info,frame) -command LayoutView
+	-variable view(info,frame) -command LayoutInfoPanel
 
     # View Info Panel WCS
     ThemeMenu $ds9(mb).view.mwcs
@@ -69,7 +66,7 @@ proc ViewMainMenu {} {
 	$ds9(mb).view.mwcs add checkbutton \
 	    -label "[msgcat::mc {WCS}] $l" \
 	    -variable "view(info,wcs$l)" \
-	    -command LayoutView
+	    -command LayoutInfoPanel
     }
 }
 
@@ -272,45 +269,42 @@ proc CreateButtonsView {} {
     CheckButton $ds9(buttons).view.graphvert \
 	[string tolower [msgcat::mc {Graph Vert}]] \
 	view(graph,vert) LayoutFrames
-
-    # Need to use LayoutView as MacOS port will not update window properly
-    #   with LayoutInfoPanel
     CheckButton $ds9(buttons).view.filename \
 	[string tolower [msgcat::mc {Filename}]] \
-	view(info,filename) LayoutView
+	view(info,filename) LayoutInfoPanel
     CheckButton $ds9(buttons).view.object \
 	[string tolower [msgcat::mc {Object}]] \
-	view(info,object) LayoutView
+	view(info,object) LayoutInfoPanel
     CheckButton $ds9(buttons).view.keyword \
 	[string tolower [msgcat::mc {Keyword}]] \
-	view(info,keyword) LayoutView
+	view(info,keyword) LayoutInfoPanel
     CheckButton $ds9(buttons).view.minmax \
 	[string tolower [msgcat::mc {Min Max}]] \
-	view(info,minmax) LayoutView
+	view(info,minmax) LayoutInfoPanel
     CheckButton $ds9(buttons).view.lowhigh \
 	[string tolower [msgcat::mc {Low High}]] \
-	view(info,lowhigh) LayoutView
+	view(info,lowhigh) LayoutInfoPanel
     CheckButton $ds9(buttons).view.bunit \
 	[string tolower [msgcat::mc {Units}]] \
-	view(info,bunit) LayoutView
+	view(info,bunit) LayoutInfoPanel
     CheckButton $ds9(buttons).view.wcs \
 	[string tolower [msgcat::mc {WCS}]] \
-	view(info,wcs) LayoutView
+	view(info,wcs) LayoutInfoPanel
     CheckButton $ds9(buttons).view.image \
 	[string tolower [msgcat::mc {Image}]] \
-	view(info,image) LayoutView
+	view(info,image) LayoutInfoPanel
     CheckButton $ds9(buttons).view.physical \
 	[string tolower [msgcat::mc {Physical}]] \
-	view(info,physical) LayoutView
+	view(info,physical) LayoutInfoPanel
     CheckButton $ds9(buttons).view.amplifier \
 	[string tolower [msgcat::mc {Amplifier}]] \
-	view(info,amplifier) LayoutView
+	view(info,amplifier) LayoutInfoPanel
     CheckButton $ds9(buttons).view.detector \
 	[string tolower [msgcat::mc {Detector}]] \
-	view(info,detector) LayoutView
+	view(info,detector) LayoutInfoPanel
     CheckButton $ds9(buttons).view.frame \
 	[string tolower [msgcat::mc {Frame}]] \
-	view(info,frame) LayoutView
+	view(info,frame) LayoutInfoPanel
 
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)

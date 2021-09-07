@@ -34,31 +34,31 @@ proc ViewMainMenu {} {
 	-variable view(graph,vert) -command LayoutFrames
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Filename}] \
-	-variable view(info,filename) -command LayoutInfoPanel
+	-variable view(info,filename) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Object}] \
-	-variable view(info,object) -command LayoutInfoPanel
+	-variable view(info,object) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Keyword}] \
-	-variable view(info,keyword) -command LayoutInfoPanel
+	-variable view(info,keyword) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Min Max}] \
-	-variable view(info,minmax) -command LayoutInfoPanel
+	-variable view(info,minmax) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Low High}] \
-	-variable view(info,lowhigh) -command LayoutInfoPanel
+	-variable view(info,lowhigh) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Units}] \
-	-variable view(info,bunit) -command LayoutInfoPanel
+	-variable view(info,bunit) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {WCS}] \
-	-variable view(info,wcs) -command LayoutInfoPanel
+	-variable view(info,wcs) -command LayoutView
     $ds9(mb).view add cascade -label [msgcat::mc {Multiple WCS}] \
 	-menu $ds9(mb).view.mwcs
     $ds9(mb).view add checkbutton -label [msgcat::mc {Image}] \
-	-variable view(info,image) -command LayoutInfoPanel
+	-variable view(info,image) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Physical}] \
-	-variable view(info,physical) -command LayoutInfoPanel
+	-variable view(info,physical) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Amplifier}] \
-	-variable view(info,amplifier) -command LayoutInfoPanel
+	-variable view(info,amplifier) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Detector}] \
-	-variable view(info,detector) -command LayoutInfoPanel
+	-variable view(info,detector) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Frame Information}] \
-	-variable view(info,frame) -command LayoutInfoPanel
+	-variable view(info,frame) -command LayoutView
 
     # View Info Panel WCS
     ThemeMenu $ds9(mb).view.mwcs
@@ -66,7 +66,7 @@ proc ViewMainMenu {} {
 	$ds9(mb).view.mwcs add checkbutton \
 	    -label "[msgcat::mc {WCS}] $l" \
 	    -variable "view(info,wcs$l)" \
-	    -command LayoutInfoPanel
+	    -command LayoutView
     }
 }
 
@@ -272,40 +272,40 @@ proc CreateButtonsView {} {
 
     CheckButton $ds9(buttons).view.filename \
 	[string tolower [msgcat::mc {Filename}]] \
-	view(info,filename) LayoutInfoPanel
+	view(info,filename) LayoutView
     CheckButton $ds9(buttons).view.object \
 	[string tolower [msgcat::mc {Object}]] \
-	view(info,object) LayoutInfoPanel
+	view(info,object) LayoutView
     CheckButton $ds9(buttons).view.keyword \
 	[string tolower [msgcat::mc {Keyword}]] \
-	view(info,keyword) LayoutInfoPanel
+	view(info,keyword) LayoutView
     CheckButton $ds9(buttons).view.minmax \
 	[string tolower [msgcat::mc {Min Max}]] \
-	view(info,minmax) LayoutInfoPanel
+	view(info,minmax) LayoutView
     CheckButton $ds9(buttons).view.lowhigh \
 	[string tolower [msgcat::mc {Low High}]] \
-	view(info,lowhigh) LayoutInfoPanel
+	view(info,lowhigh) LayoutView
     CheckButton $ds9(buttons).view.bunit \
 	[string tolower [msgcat::mc {Units}]] \
-	view(info,bunit) LayoutInfoPanel
+	view(info,bunit) LayoutView
     CheckButton $ds9(buttons).view.wcs \
 	[string tolower [msgcat::mc {WCS}]] \
-	view(info,wcs) LayoutInfoPanel
+	view(info,wcs) LayoutView
     CheckButton $ds9(buttons).view.image \
 	[string tolower [msgcat::mc {Image}]] \
-	view(info,image) LayoutInfoPanel
+	view(info,image) LayoutView
     CheckButton $ds9(buttons).view.physical \
 	[string tolower [msgcat::mc {Physical}]] \
-	view(info,physical) LayoutInfoPanel
+	view(info,physical) LayoutView
     CheckButton $ds9(buttons).view.amplifier \
 	[string tolower [msgcat::mc {Amplifier}]] \
-	view(info,amplifier) LayoutInfoPanel
+	view(info,amplifier) LayoutView
     CheckButton $ds9(buttons).view.detector \
 	[string tolower [msgcat::mc {Detector}]] \
-	view(info,detector) LayoutInfoPanel
+	view(info,detector) LayoutView
     CheckButton $ds9(buttons).view.frame \
 	[string tolower [msgcat::mc {Frame}]] \
-	view(info,frame) LayoutInfoPanel
+	view(info,frame) LayoutView
 
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)

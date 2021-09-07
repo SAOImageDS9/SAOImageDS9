@@ -272,31 +272,6 @@ proc BindEventsCanvas {} {
     }
 }
 
-proc LayoutOrient {} {
-    global ds9
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "LayoutOrient"
-    }
-
-    # reset ds9(main) weight
-    # horizontal
-    grid rowconfigure $ds9(main) 4 -weight 0
-    grid columnconfigure $ds9(main) 0 -weight 0
-    # vertical
-    grid rowconfigure $ds9(main) 0 -weight 0
-    grid columnconfigure $ds9(main) 4 -weight 0
-
-    grid forget $ds9(panel)
-    grid forget $ds9(panel,sep)
-    grid forget $ds9(buttons)
-    grid forget $ds9(buttons,sep)
-    grid forget $ds9(image)
-
-    LayoutView
-}
-
 proc LayoutView {} {
     global view
 
@@ -325,12 +300,18 @@ proc LayoutViewHorz {} {
     # ds9(main) weight
     grid rowconfigure $ds9(main) 4 -weight 1
     grid columnconfigure $ds9(main) 0 -weight 1
+    grid rowconfigure $ds9(main) 0 -weight 0
+    grid columnconfigure $ds9(main) 4 -weight 0
 
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
     grid forget $ds9(buttons)
     grid forget $ds9(buttons,sep)
     grid forget $ds9(image)
+
+    pack forget $ds9(info)
+    pack forget $ds9(magnifier)
+    pack forget $ds9(panner)
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
@@ -342,14 +323,10 @@ proc LayoutViewHorz {} {
     if {$view(info)} {
 	pack $ds9(info) -side left -anchor nw -padx 2 -pady 2 \
 	    -fill x -expand true
-    } else {
-	pack forget $ds9(info)
     }
 
     if {$view(panner)} {
 	pack $ds9(panner) -side right -padx 2 -pady 2
-    } else {
-	pack forget $ds9(panner)
     }
 
     if {$view(magnifier)} {
@@ -357,8 +334,6 @@ proc LayoutViewHorz {} {
 	if {$view(panner)} {
 	    pack $ds9(magnifier) -before $ds9(panner)
 	}
-    } else {
-	pack forget $ds9(magnifier)
     }
 
     # buttons
@@ -378,6 +353,8 @@ proc LayoutViewVert {} {
     global view
 
     # ds9(main) weight
+    grid rowconfigure $ds9(main) 4 -weight 0
+    grid columnconfigure $ds9(main) 0 -weight 0
     grid rowconfigure $ds9(main) 0 -weight 1
     grid columnconfigure $ds9(main) 4 -weight 1
 
@@ -387,6 +364,10 @@ proc LayoutViewVert {} {
     grid forget $ds9(buttons,sep)
     grid forget $ds9(image)
     
+    pack forget $ds9(magnifier)
+    pack forget $ds9(info)
+    pack forget $ds9(panner)
+
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
 	grid $ds9(panel) -row 0 -column 0 -sticky ns
@@ -396,8 +377,6 @@ proc LayoutViewVert {} {
 
     if {$view(magnifier)} {
 	pack $ds9(magnifier) -side top -padx 2 -pady 2
-    } else {
-	pack forget $ds9(magnifier)
     }
 
     if {$view(info)} {
@@ -405,14 +384,10 @@ proc LayoutViewVert {} {
 	if {$view(magnifier)} {
 	    pack $ds9(info) -after $ds9(magnifier)
 	}
-    } else {
-	pack forget $ds9(info)
     }
 
     if {$view(panner)} {
 	pack $ds9(panner) -side bottom -padx 2 -pady 2
-    } else {
-	pack forget $ds9(panner)
     }
 
     # buttons

@@ -11,9 +11,9 @@ proc ViewMainMenu {} {
 
     ThemeMenu $ds9(mb).view
     $ds9(mb).view add radiobutton -label [msgcat::mc {Horizontal Layout}] \
-	-variable view(layout) -value horizontal -command {LayoutOrient}
+	-variable view(layout) -value horizontal -command LayoutView
     $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical Layout}] \
-	-variable view(layout) -value vertical -command {LayoutOrient}
+	-variable view(layout) -value vertical -command LayoutView
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
 	-variable view(multi) -command LayoutView
@@ -239,10 +239,10 @@ proc CreateButtonsView {} {
 
     RadioButton $ds9(buttons).view.horizontal \
 	[string tolower [msgcat::mc {Layout Horz}]] \
-	view(layout) horizontal {LayoutOrient}
+	view(layout) horizontal LayoutView
     RadioButton $ds9(buttons).view.vertical \
 	[string tolower [msgcat::mc {Layout Vert}]] \
-	view(layout) vertical {LayoutOrient}
+	view(layout) vertical LayoutView
 
     CheckButton $ds9(buttons).view.multi \
 	[string tolower [msgcat::mc {Multi Colorbars}]] \

@@ -260,7 +260,7 @@ proc Restore {fn} {
 
     # and update it
     UpdateGraphGrid
-    LayoutOrient
+    LayoutView
     UpdateActiveFrames
     ChangeMode
     UpdateDS9

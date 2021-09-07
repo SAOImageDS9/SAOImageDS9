@@ -2042,13 +2042,13 @@ proc view::yyparse {} {
                     37 { set _ wcsy }
                     38 { set _ wcsz }
                     40 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    44 { ProcessCmdSet view multi $2 LayoutView }
+                    44 { ProcessCmdSet view multi $2 LayoutFrames }
                     45 { ProcessCmdSet view info,keyvalue $2 LayoutView }
                     46 { ProcessCmdSet view info $2 LayoutView }
                     47 { ProcessCmdSet view panner $2 LayoutView }
                     48 { ProcessCmdSet view magnifier $2 LayoutView }
                     49 { ProcessCmdSet view buttons $2 LayoutView }
-                    50 { ProcessCmdSet view colorbar $2 LayoutView }
+                    50 { ProcessCmdSet view colorbar $2 LayoutFrames }
                     51 { ColorbarCmdSet numerics $2 LayoutView }
                     52 { ProcessCmdSet view graph,$2 $3 LayoutView }
                     53 { ProcessCmdSet view graph,horz $2 LayoutView }

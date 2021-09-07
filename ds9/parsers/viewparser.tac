@@ -46,13 +46,13 @@ command : view
 
 view : layout
  | LAYOUT_ layout
- | MULTI_ yesno {ProcessCmdSet view multi $2 LayoutView}
+ | MULTI_ yesno {ProcessCmdSet view multi $2 LayoutFrames}
  | KEYVALUE_ STRING_ {ProcessCmdSet view info,keyvalue $2 LayoutView}
  | INFO_ yesno {ProcessCmdSet view info $2 LayoutView}
  | PANNER_ yesno {ProcessCmdSet view panner $2 LayoutView}
  | MAGNIFIER_ yesno {ProcessCmdSet view magnifier $2 LayoutView}
  | BUTTONS_ yesno {ProcessCmdSet view buttons $2 LayoutView}
- | COLORBAR_ yesno {ProcessCmdSet view colorbar $2 LayoutView}
+ | COLORBAR_ yesno {ProcessCmdSet view colorbar $2 LayoutFrames}
 
 # backward compatible
  | COLORBARNUMERICS_ yesno {ColorbarCmdSet numerics $2 LayoutView}

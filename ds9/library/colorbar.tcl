@@ -1383,7 +1383,7 @@ proc ColorbarUpdateView {} {
 	    -fontslant $colorbar(font,slant)
     }
 
-    LayoutView
+    LayoutFrames
 }
 
 proc ColorbarBackup {ch dir} {

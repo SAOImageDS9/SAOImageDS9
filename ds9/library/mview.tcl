@@ -16,7 +16,7 @@ proc ViewMainMenu {} {
 	-variable view(layout) -value vertical -command LayoutView
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
-	-variable view(multi) -command LayoutView
+	-variable view(multi) -command LayoutFrames
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Information Panel}] \
 	-variable view(info) -command LayoutView
@@ -27,7 +27,7 @@ proc ViewMainMenu {} {
     $ds9(mb).view add checkbutton -label [msgcat::mc {Buttons}] \
 	-variable view(buttons) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Colorbar}] \
-	-variable view(colorbar) -command LayoutView
+	-variable view(colorbar) -command LayoutFrames
     $ds9(mb).view add checkbutton -label [msgcat::mc {Horizontal Graph}] \
 	-variable view(graph,horz) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Vertical Graph}] \
@@ -246,7 +246,7 @@ proc CreateButtonsView {} {
 
     CheckButton $ds9(buttons).view.multi \
 	[string tolower [msgcat::mc {Multi Colorbars}]] \
-	view(multi) LayoutView
+	view(multi) LayoutFrames
 
     CheckButton $ds9(buttons).view.info \
 	[string tolower [msgcat::mc {Information}]] \
@@ -262,7 +262,7 @@ proc CreateButtonsView {} {
 	view(buttons) LayoutView
     CheckButton $ds9(buttons).view.colorbar \
 	[string tolower [msgcat::mc {Colorbar}]] \
-	view(colorbar) LayoutView
+	view(colorbar) LayoutFrames
     CheckButton $ds9(buttons).view.graphhorz \
 	[string tolower [msgcat::mc {Graph Horz}]] \
 	view(graph,horz) LayoutView

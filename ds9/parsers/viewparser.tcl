@@ -2050,9 +2050,9 @@ proc view::yyparse {} {
                     49 { ProcessCmdSet view buttons $2 LayoutView }
                     50 { ProcessCmdSet view colorbar $2 LayoutFrames }
                     51 { ColorbarCmdSet numerics $2 LayoutFrames }
-                    52 { ProcessCmdSet view graph,$2 $3 LayoutView }
-                    53 { ProcessCmdSet view graph,horz $2 LayoutView }
-                    54 { ProcessCmdSet view graph,vert $2 LayoutView }
+                    52 { ProcessCmdSet view graph,$2 $3 LayoutFrames }
+                    53 { ProcessCmdSet view graph,horz $2 LayoutFrames }
+                    54 { ProcessCmdSet view graph,vert $2 LayoutFrames }
                     55 { ProcessCmdSet view info,filename $2 LayoutInfoPanel }
                     56 { ProcessCmdSet view info,object $2 LayoutInfoPanel }
                     57 { ProcessCmdSet view info,keyword $2 LayoutInfoPanel }

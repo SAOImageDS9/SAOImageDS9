@@ -2049,19 +2049,19 @@ proc view::yyparse {} {
                     48 { ProcessCmdSet view magnifier $2 LayoutView }
                     49 { ProcessCmdSet view buttons $2 LayoutView }
                     50 { ProcessCmdSet view colorbar $2 LayoutFrames }
-                    51 { ColorbarCmdSet numerics $2 LayoutView }
+                    51 { ColorbarCmdSet numerics $2 LayoutFrames }
                     52 { ProcessCmdSet view graph,$2 $3 LayoutView }
                     53 { ProcessCmdSet view graph,horz $2 LayoutView }
                     54 { ProcessCmdSet view graph,vert $2 LayoutView }
-                    55 { ProcessCmdSet view info,filename $2 LayoutView }
-                    56 { ProcessCmdSet view info,object $2 LayoutView }
-                    57 { ProcessCmdSet view info,keyword $2 LayoutView }
-                    58 { ProcessCmdSet view info,minmax $2 LayoutView }
-                    59 { ProcessCmdSet view info,lowhigh $2 LayoutView }
-                    60 { ProcessCmdSet view info,bunit $2 LayoutView }
-                    61 { ProcessCmdSet view info,$1 $2 LayoutView }
-                    62 { ProcessCmdSet view info,$1 $2 LayoutView }
-                    63 { ProcessCmdSet view info,frame $2 LayoutView }
+                    55 { ProcessCmdSet view info,filename $2 LayoutInfoPanel }
+                    56 { ProcessCmdSet view info,object $2 LayoutInfoPanel }
+                    57 { ProcessCmdSet view info,keyword $2 LayoutInfoPanel }
+                    58 { ProcessCmdSet view info,minmax $2 LayoutInfoPanel }
+                    59 { ProcessCmdSet view info,lowhigh $2 LayoutInfoPanel }
+                    60 { ProcessCmdSet view info,bunit $2 LayoutInfoPanel }
+                    61 { ProcessCmdSet view info,$1 $2 LayoutInfoPanel }
+                    62 { ProcessCmdSet view info,$1 $2 LayoutInfoPanel }
+                    63 { ProcessCmdSet view info,frame $2 LayoutInfoPanel }
                     64 { ProcessCmdSet rgb red $2 RGBView }
                     65 { ProcessCmdSet rgb green $2 RGBView }
                     66 { ProcessCmdSet rgb blue $2 RGBView }

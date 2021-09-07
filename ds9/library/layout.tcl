@@ -300,23 +300,18 @@ proc LayoutOrient {} {
 	puts stderr "LayoutOrient"
     }
 
+    # reset ds9(main) weight
     # horizontal
     grid rowconfigure $ds9(main) 4 -weight 0
     grid columnconfigure $ds9(main) 0 -weight 0
-
     # vertical
     grid rowconfigure $ds9(main) 0 -weight 0
     grid columnconfigure $ds9(main) 4 -weight 0
 
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
-    pack forget $ds9(info)
-    pack forget $ds9(panner)
-    pack forget $ds9(magnifier)
-
     grid forget $ds9(buttons)
     grid forget $ds9(buttons,sep)
-
     grid forget $ds9(image)
 
     LayoutView
@@ -327,10 +322,9 @@ proc LayoutViewHorz {} {
     global current
     global view
 
-    # canvas
+    # ds9(main) weight
     grid rowconfigure $ds9(main) 4 -weight 1
     grid columnconfigure $ds9(main) 0 -weight 1
-    grid $ds9(image) -row 4 -column 0 -sticky news
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
@@ -373,6 +367,9 @@ proc LayoutViewHorz {} {
 	grid forget $ds9(buttons)
 	grid forget $ds9(buttons,sep)
     }
+
+    # image
+    grid $ds9(image) -row 4 -column 0 -sticky news
 }
 
 proc LayoutViewVert {} {
@@ -380,10 +377,9 @@ proc LayoutViewVert {} {
     global current
     global view
 
-    # canvas
+    # ds9(main) weight
     grid rowconfigure $ds9(main) 0 -weight 1
     grid columnconfigure $ds9(main) 4 -weight 1
-    grid $ds9(image) -row 0 -column 4 -sticky news
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
@@ -425,6 +421,9 @@ proc LayoutViewVert {} {
 	grid forget $ds9(buttons)
 	grid forget $ds9(buttons,sep)
     }
+
+    # image
+    grid $ds9(image) -row 0 -column 4 -sticky news
 }
 
 proc LayoutFrames {} {

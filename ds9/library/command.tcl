@@ -203,6 +203,11 @@ proc ProcessCommand {argv argc} {
 	    -header {incr i; ProcessHeaderCmd argv i}
 	    -height {incr i; ProcessHeightCmd argv i}
 	    -histequ {set scale(type) histequ; ChangeScale}
+	    -horizontal {
+		#backward compatibility
+		set view(layout) horizontal
+		LayoutView
+	    }
 	    -horzgraph {
 		# backward compatibility
 		set view(graph,horz) 1
@@ -456,6 +461,11 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -url {set file(type) url}
 	    -update {incr i; ProcessUpdateCmd argv i}
+	    -vertical {
+		#backward compatibility
+		set view(layout) vertical
+		LayoutView
+	    }
 	    -vertgraph {
 		#backward compatibility
 		set view(graph,vert) 1

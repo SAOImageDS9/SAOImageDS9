@@ -57,11 +57,11 @@ view : layout
 # backward compatible
  | COLORBARNUMERICS_ yesno {ColorbarCmdSet numerics $2 LayoutFrames}
 
- | GRAPH_ orient yesno {ProcessCmdSet view graph,$2 $3 LayoutView}
+ | GRAPH_ orient yesno {ProcessCmdSet view graph,$2 $3 LayoutFrames}
 
 # backward compatible
- | HORZGRAPH_ yesno {ProcessCmdSet view graph,horz $2 LayoutView}
- | VERTGRAPH_ yesno {ProcessCmdSet view graph,vert $2 LayoutView}
+ | HORZGRAPH_ yesno {ProcessCmdSet view graph,horz $2 LayoutFrames}
+ | VERTGRAPH_ yesno {ProcessCmdSet view graph,vert $2 LayoutFrames}
 
  | FILENAME_ yesno {ProcessCmdSet view info,filename $2 LayoutInfoPanel}
  | OBJECT_ yesno {ProcessCmdSet view info,object $2 LayoutInfoPanel}

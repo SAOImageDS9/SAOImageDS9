@@ -29,9 +29,9 @@ proc ViewMainMenu {} {
     $ds9(mb).view add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable view(colorbar) -command LayoutFrames
     $ds9(mb).view add checkbutton -label [msgcat::mc {Horizontal Graph}] \
-	-variable view(graph,horz) -command LayoutView
+	-variable view(graph,horz) -command LayoutFrames
     $ds9(mb).view add checkbutton -label [msgcat::mc {Vertical Graph}] \
-	-variable view(graph,vert) -command LayoutView
+	-variable view(graph,vert) -command LayoutFrames
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Filename}] \
 	-variable view(info,filename) -command LayoutInfoPanel
@@ -265,10 +265,10 @@ proc CreateButtonsView {} {
 	view(colorbar) LayoutFrames
     CheckButton $ds9(buttons).view.graphhorz \
 	[string tolower [msgcat::mc {Graph Horz}]] \
-	view(graph,horz) LayoutView
+	view(graph,horz) LayoutFrames
     CheckButton $ds9(buttons).view.graphvert \
 	[string tolower [msgcat::mc {Graph Vert}]] \
-	view(graph,vert) LayoutView
+	view(graph,vert) LayoutFrames
 
     CheckButton $ds9(buttons).view.filename \
 	[string tolower [msgcat::mc {Filename}]] \

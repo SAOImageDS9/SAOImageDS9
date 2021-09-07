@@ -383,11 +383,6 @@ proc UpdateGraphLayout {which} {
     global view
     global colorbar
 
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "UpdateGraphLayout $which"
-    }
-
     if {$which != {}} {
 	set frww [$ds9(canvas) itemcget $which -width]
 	set frhh [$ds9(canvas) itemcget $which -height]

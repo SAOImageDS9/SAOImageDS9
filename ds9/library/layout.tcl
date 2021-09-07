@@ -288,8 +288,6 @@ proc LayoutView {} {
     LayoutInfoPanel
     LayoutButtons
     LayoutFrames
-
-    UpdateGraphLayout {}
 }
 
 proc LayoutViewHorz {} {

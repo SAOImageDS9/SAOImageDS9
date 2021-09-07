@@ -589,7 +589,6 @@ proc EnterFrame {which x y} {
     EnterInfoBox $which
     UpdateInfoBox $which $x $y canvas
     UpdatePixelTableDialog $which $x $y canvas
-    UpdateGraphLayout $which
     UpdateGraphAxis $which
     UpdateGraphData $which $x $y canvas
 
@@ -761,7 +760,6 @@ proc Button1Frame {which x y} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphLayout $which
 	    UpdateGraphAxis $which
 	    UpdateGraphData $which $x $y canvas
 	}
@@ -1917,7 +1915,6 @@ proc FrameToFront {} {
 	$current(frame) panner on
     }
 
-    UpdateGraphLayout $current(frame)
     UpdateDS9
 }
 

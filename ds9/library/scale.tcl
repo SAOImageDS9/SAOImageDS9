@@ -8,6 +8,7 @@ proc ScaleDef {} {
     global scale
     global iscale
     global pscale
+    global histX histY
 
     set iscale(top) .scale
     set iscale(mb) .scalemb
@@ -32,6 +33,8 @@ proc ScaleDef {} {
     set pscale(mode) $scale(mode)
     set pscale(scope) $scale(scope)
     set pscale(datasec) $scale(datasec)
+
+    blt::vector create histX histY
 }
 
 proc MinMaxDef {} {

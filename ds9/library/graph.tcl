@@ -26,11 +26,9 @@ proc GraphDef {} {
 
     global graphHorzX graphHorzY
     global graphVertX graphVertY
-    global histX histY
 
     blt::vector create graphHorzX graphHorzY
     blt::vector create graphVertX graphVertY
-    blt::vector create histX histY
 
     set graph(horz,grid) 1
     set graph(horz,log) false

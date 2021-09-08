@@ -866,7 +866,7 @@ proc ProcessWidthCmd {varname iname} {
 
 proc ProcessSendWidthCmd {proc id param {sock {}} {fn {}}} {
     global ds9
-    $proc $id "[winfo width $ds9(canvas)\n"
+    $proc $id "[winfo width $ds9(canvas)]\n"
 }
 
 proc ProcessViewCmd {varname iname} {

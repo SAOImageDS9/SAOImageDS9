@@ -8,7 +8,6 @@ proc ScaleDef {} {
     global scale
     global iscale
     global pscale
-    global histX histY
 
     set iscale(top) .scale
     set iscale(mb) .scalemb
@@ -33,8 +32,6 @@ proc ScaleDef {} {
     set pscale(mode) $scale(mode)
     set pscale(scope) $scale(scope)
     set pscale(datasec) $scale(datasec)
-
-    blt::vector create histX histY
 }
 
 proc MinMaxDef {} {
@@ -344,9 +341,10 @@ proc ScaleDialog {} {
 	-color [ThemeTreeForeground] \
 	-titlecolor [ThemeTreeForeground]
 
-    set dscale(xdata) histX
-    set dscale(ydata) histY
+    set dscale(xdata) scaleHistX
+    set dscale(ydata) scaleHistY
     blt::vector create $dscale(xdata) $dscale(ydata)
+
     $dscale(hist) element create bar1 \
 	-smooth step  \
 	-xdata $dscale(xdata) \

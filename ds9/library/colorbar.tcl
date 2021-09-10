@@ -1299,30 +1299,39 @@ proc LayoutColorbarOne {cb} {
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
+    set cbh [expr !$colorbar(orientation)]
+    set cbv $colorbar(orientation)
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
-    if {!$colorbar(orientation)} {
-	# horizontal
+    if {$cbh} {
 	set xx 0
 	set yy [expr [winfo height $ds9(canvas)] - $colorbar(horizontal,height)]
 	set ww [winfo width $ds9(canvas)]
 	set hh $colorbar(horizontal,height)
+    }
 
-	if {$grh} {
-	    incr yy -$igraph(size)
-	    incr ww -$igraph(gap,x)
-	}
-    } else {
-	# vertical
+    if {$cbv} {
 	set xx [expr [winfo width $ds9(canvas)] - $colorbar(vertical,width)]
 	set yy 0
 	set ww $colorbar(vertical,width)
 	set hh [winfo height $ds9(canvas)]
+    }
+
+    if {$grh && $cbh} {
+	incr yy -$igraph(size)
+	incr ww -$igraph(gap,x)
+    }
+    if {$grv && $cbh} {
+	incr ww -$igraph(size)
+    }
 	
-	if {$grh} {
-	    incr hh -[expr $igraph(size)+$canvas(gap)]
-	}
+    if {$grh && $cbv} {
+	incr hh -[expr $igraph(size)+$canvas(gap)]
+    }
+    if {$grv && $cbv} {
+	incr xx -[expr $igraph(size)+$canvas(gap)]
+	incr hh -$igraph(gap,y)
     }
 
     $cb configure -x $xx -y $yy -width $ww -height $hh

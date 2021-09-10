@@ -463,8 +463,8 @@ proc LayoutFramesNone {} {
     }
 
     # colorbar
+    LayoutColorbarOne colorbar
     if {$view(colorbar)} {
-	LayoutColorbarOne colorbar
 	colorbar show
 	$ds9(canvas) raise colorbar
     }
@@ -553,6 +553,7 @@ proc TileOne {} {
     if {$cbv} {
 	incr ww -[expr $colorbar(vertical,width)+$canvas(gap)]
     }
+
     if {$grh} {
 	incr hh -$igraph(size)
     }
@@ -562,9 +563,20 @@ proc TileOne {} {
     if {$grh && $cbv} {
 	incr hh -$canvas(gap)
     }
+
+    if {$grv} {
+	incr ww -$igraph(size)
+    }
+    if {$grv && $cbh} {
+    }
+    if {$grv && $cbv} {
+	incr ww -$canvas(gap)
+	incr hh -$igraph(gap,y)
+    }
     
     foreach ff $ds9(active) {
 	$ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
+
 	LayoutColorbarOne ${ff}cb
 	LayoutGraphOne $ff horz
 	LayoutGraphOne $ff vert
@@ -739,6 +751,7 @@ proc TileIt {ww hh xvar yvar nn} {
 
 	    $ds9(canvas) raise $ff
 	    $ds9(canvas) raise ${ff}cb
+
 	    if {$view(multi)} {
 		LayoutColorbarTile ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	    } else {

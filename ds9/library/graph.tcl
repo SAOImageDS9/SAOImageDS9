@@ -12,9 +12,6 @@ proc GraphDef {} {
     set igraph(top) .grph
     set igraph(mb) .grphmb
 
-    set igraph(horz,id) 0
-    set igraph(vert,id) 0
-
     set igraph(size) 150
     set igraph(gap,x) 50
     set igraph(gap,y) 25
@@ -24,11 +21,14 @@ proc GraphDef {} {
     set igraph(y,min) 1
     set igraph(y,max) 100
 
-    global graphHorzX graphHorzY
-    global graphVertX graphVertY
+#    set igraph(horz,id) 0
+#    set igraph(vert,id) 0
 
-    blt::vector create graphHorzX graphHorzY
-    blt::vector create graphVertX graphVertY
+#    global graphHorzX graphHorzY
+#    global graphVertX graphVertY
+
+#    blt::vector create graphHorzX graphHorzY
+#    blt::vector create graphVertX graphVertY
 
     set graph(horz,grid) 1
     set graph(horz,log) false
@@ -42,7 +42,134 @@ proc GraphDef {} {
     array set pgraph [array get graph]
 }
 
+proc GraphCreate {frame which} {
+    global ds9
+    global canvas
+    global igraph
+
+    set varname ${frame}gr
+    global $varname
+
+    switch $which {
+	horz {
+	    set hg [string tolower ${frame}hg]
+	    set ${varname}(horz) [blt::graph $ds9(main).$hg \
+				      -width $canvas(width) \
+				      -height $igraph(size) \
+				      -takefocus 0 \
+				      -highlightthickness 0 \
+				      -font [font actual TkDefaultFont] \
+				      -plotpadx 0 -plotpady 0 \
+				      -borderwidth 0 \
+				      -foreground [ThemeTreeForeground] \
+				      -background [ThemeTreeBackground] \
+				      -plotbackground [ThemeTreeBackground] \
+				     ]
+	    set ${varname}(horz,id) 0
+	}
+	vert {
+	    set vg [string tolower ${frame}vg]
+	    set ${varname}(vert) [blt::graph $ds9(main).$vg \
+				      -invertxy yes \
+				      -width $igraph(size) \
+				      -height $canvas(height) \
+				      -takefocus 0 \
+				      -highlightthickness 0 \
+				      -borderwidth 0 \
+				      -font [font actual TkDefaultFont] \
+				      -foreground [ThemeTreeForeground] \
+				      -background [ThemeTreeBackground] \
+				      -plotbackground [ThemeTreeBackground] \
+				     ]
+	    set ${varname}(vert,id) 0
+	}
+    }
+}
+
+proc GraphDelete {frame which} {
+    global ds9
+
+    set varname ${frame}gr
+    global $varname
+
+    if {[subst $${varname}($which,id)]} {
+	$ds9(canvas) delete [subst $${varname}($which,id)]
+	destroy [subst $${varname}($which)]
+	unset $varname
+    }
+}
+
+proc GraphShow {frame which xx yy} {
+    global ds9
+
+    set varname ${frame}gr
+    global $varname
+
+    if {![subst $${varname}($which,id)]} {
+	set ${varname}($which,id) [$ds9(canvas) create window $xx $yy \
+				       -window [subst $${varname}($which)] \
+				       -anchor nw]
+	$ds9(canvas) raise [subst $${varname}($which,id)]
+    }
+}
+
+proc GraphHide {frame which} {
+    global ds9
+
+    set varname ${frame}gr
+    global $varname
+
+    if {[subst $${varname}($which,id)]} {
+	$ds9(canvas) delete [subst $${varname}($which,id)]
+	set ${varname}($which,id) 0
+    }
+}
+
+proc LayoutGraphOne {frame which} {
+    global ds9
+    global canvas
+    global view
+    global colorbar
+    global igraph
+
+    return
+    set varname ${frame}gr
+    global $varname
+
+    set frww $canvas(width)
+    set frhh $canvas(height)
+    set frxx 0
+    set fryy 0
+
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+
+    switch $which {
+	horz {
+	    set xx $frxx
+	    set yy [expr $canvas(height) + $canvas(gap)]
+
+	    if {$cbh} {
+		incr yy $colorbar(horizontal,height)
+	    }
+	    if {$view(graph,vert) && !$cbh} {
+		incr yy $igraph(gap,y)
+	    }
+
+	    GraphShow $frame $which $xx $yy
+
+	    set ww [expr $frww+$igraph(gap,x)]
+	    [subst $${varname}(horz)] configure -width $ww
+	}
+	vert {
+	}
+    }
+}
+
+# ***
+
 proc CreateGraphs {} {
+    return
     global igraph
     
     global ds9
@@ -144,6 +271,7 @@ proc CreateGraphs {} {
 }
 
 proc ThemeConfigGraph {w} {
+    return
     # invoked from ThemeConfigCanvas
 
     $w configure -fg [ThemeTreeForeground] -bg [ThemeTreeBackground] \
@@ -159,6 +287,7 @@ proc ThemeConfigGraph {w} {
 }
 
 proc UpdateGraphFont {} {
+    return
     global ds9
 
     $ds9(graph,horz) y2axis configure -tickfont [font actual TkDefaultFont]
@@ -166,6 +295,7 @@ proc UpdateGraphFont {} {
 }
 
 proc UpdateGraphGrid {} {
+    return
     global graph
     global ds9
 
@@ -177,6 +307,7 @@ proc UpdateGraphGrid {} {
 }
 
 proc UpdateGraphAxis {which} {
+    return
     global ds9
     global view
     global graph
@@ -200,6 +331,7 @@ proc UpdateGraphAxis {which} {
 }
 
 proc UpdateGraphXAxisHV {which what vectorX} {
+    return
     global igraph
     global graphHorzX graphVertX
 
@@ -216,6 +348,7 @@ proc UpdateGraphXAxisHV {which what vectorX} {
 }
 
 proc UpdateGraphYAxisHV {which what vectorY log thick method} {
+    return
     global igraph
     global graphHorzY graphVertY
 
@@ -254,6 +387,7 @@ proc UpdateGraphYAxisHV {which what vectorY log thick method} {
 }
 
 proc ClearGraphData {} {
+    return
     global ds9
     global view
 
@@ -267,6 +401,7 @@ proc ClearGraphData {} {
 }
 
 proc UpdateGraphData {which x y sys} {
+    return
     global ds9
     global view
     global graph
@@ -300,6 +435,7 @@ proc UpdateGraphData {which x y sys} {
 }
 
 proc EnterGraph {which horz} {
+    return
     global current
 
     focus $which
@@ -332,6 +468,7 @@ proc EnterGraph {which horz} {
 }
 
 proc LeaveGraph {which} {
+    return
     focus {}
     $which crosshairs off
 
@@ -340,6 +477,7 @@ proc LeaveGraph {which} {
 }
 
 proc MotionGraph {which x y horz} {
+    return
     global current
 
     $which crosshairs configure -x $x -y $y
@@ -364,6 +502,7 @@ proc MotionGraph {which x y horz} {
 }
 
 proc ArrowKeyGraph {which x y horz} {
+    return
     set cx [$which crosshairs cget -x]
     set cy [$which crosshairs cget -y]
 
@@ -374,6 +513,7 @@ proc ArrowKeyGraph {which x y horz} {
 }
 
 proc UpdateGraphLayout {which} {
+    return
     global igraph
 
     global ds9
@@ -453,6 +593,7 @@ proc UpdateGraphLayout {which} {
 }
 
 proc GraphDialog {} {
+    return
     global igraph
     global graph
     global current
@@ -554,6 +695,7 @@ proc GraphDialog {} {
 }
 
 proc GraphApplyDialog {} {
+    return
     global ds9
     global igraph
     global graph
@@ -572,6 +714,7 @@ proc GraphApplyDialog {} {
 }
 
 proc GraphDestroyDialog {} {
+    return
     global igraph
     global dgraph
 

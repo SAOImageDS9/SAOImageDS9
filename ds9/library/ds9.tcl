@@ -56,8 +56,6 @@ proc DS9Def {} {
     set ds9(panner) {}
     set ds9(magnifier) {}
     set ds9(buttons) {}
-    set ds9(graph,horz) {}
-    set ds9(graph,vert) {}
 
     set ds9(frames) {}
     set ds9(seq) 1
@@ -555,7 +553,10 @@ CreateInfoPanel
 CreatePanner
 CreateMagnifier
 CreateButtons
-CreateGraphs
+
+# Create Graphs
+GraphCreate graph horz
+GraphCreate graph vert
 
 # Make sure that the wm knows when to swap in the colormap (if needed)
 wm colormapwindows . "$ds9(main) $ds9(canvas)"

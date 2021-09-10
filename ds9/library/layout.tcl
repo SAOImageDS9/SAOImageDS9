@@ -154,8 +154,8 @@ proc ThemeConfigCanvas {w} {
 
     # since graphs are created, but maybe not realized
     # must update manually
-    ThemeConfigGraph $ds9(graph,horz)
-    ThemeConfigGraph $ds9(graph,vert)
+#    ThemeConfigGraph $ds9(graph,horz)
+#    ThemeConfigGraph $ds9(graph,vert)
 }
 
 proc InitCanvas {} {
@@ -409,7 +409,11 @@ proc LayoutFrames {} {
     # turn off default colorbar
     colorbar hide
 
-    # turn everything off
+    # turn off default graphs
+    GraphHide graph horz
+    GraphHide graph vert
+
+    # all frames turn everything off
     foreach ff $ds9(frames) {
 	$ff hide
 	$ff highlite off
@@ -418,7 +422,12 @@ proc LayoutFrames {} {
 	UnBindEventsFrame $ff
 	UnBindEventsColorbar ${ff}cb
 
+	# colorbar
 	${ff}cb hide
+
+	# graphs
+	GraphHide $ff horz
+	GraphHide $ff vert
     }
 
     # be sure colorbar sizes are correct
@@ -460,6 +469,15 @@ proc LayoutFramesNone {} {
 	$ds9(canvas) raise colorbar
     }
     
+    # graphs
+    if {$view(graph,horz)} {
+	LayoutGraphOne graph horz
+    }
+
+    if {$view(graph,vert)} {
+	LayoutGraphOne graph vert
+    }
+
     # update menus/dialogs
     UpdateDS9
 }
@@ -517,33 +535,39 @@ proc TileOne {} {
     global canvas
     global view
     global colorbar
+    global igraph
 
-    if {$view(colorbar)} {
-	if {!$colorbar(orientation)} {
-	    # horizontal
-	    set wdiff 0
-	    set hdiff $colorbar(horizontal,height)-$canvas(gap)
-	} else {
-	    # vertical
-	    set wdiff $colorbar(vertical,width)-$canvas(gap)
-	    set hdiff 0
-	}
-    } else {
-	set wdiff 0
-	set hdiff 0
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set grh $view(graph,horz)
+    set grv $view(graph,vert)
+
+    set xx 0
+    set yy 0
+    set ww [winfo width  $ds9(canvas)]
+    set hh [winfo height $ds9(canvas)]
+
+    if {$cbh} {
+	incr hh -[expr $colorbar(horizontal,height)+$canvas(gap)]
     }
-
-    set ww [expr [winfo width  $ds9(canvas)] -$wdiff]
-    set hh [expr [winfo height $ds9(canvas)] -$hdiff]
-
+    if {$cbv} {
+	incr ww -[expr $colorbar(vertical,width)+$canvas(gap)]
+    }
+    if {$grh} {
+	incr hh -$igraph(size)
+    }
+    if {$grh && $cbh} {
+	incr ww -$igraph(gap,x)
+    }
+    if {$grh && $cbv} {
+	incr hh -$canvas(gap)
+    }
+    
     foreach ff $ds9(active) {
-	$ff configure \
-	    -x 0 \
-	    -y 0 \
-	    -width $ww \
-	    -height $hh \
-	    -anchor nw
+	$ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
 	LayoutColorbarOne ${ff}cb
+	LayoutGraphOne $ff horz
+	LayoutGraphOne $ff vert
     }
 
     # only show the current frame

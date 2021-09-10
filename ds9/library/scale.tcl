@@ -452,6 +452,7 @@ proc ScaleDestroyDialog {} {
 	destroy $iscale(top)
 	destroy $iscale(mb)
 	blt::vector destroy $dscale(xdata) $dscale(ydata)
+	destroy $dscale(hist)
 	unset dscale
     }
 }

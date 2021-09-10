@@ -95,7 +95,9 @@ proc CreateNameNumberFrame {which type} {
 	    CreateColorbarBase $which
 	}
     }
-
+    GraphCreate $which horz
+    GraphCreate $which vert
+    
     $which configure -x 0 -y 0 \
 	-anchor nw \
 	-tag $which \
@@ -312,6 +314,10 @@ proc DeleteFrame {which} {
     
     # delete canvas colorbar
     $ds9(canvas) delete ${which}cb
+
+    # delete canvas graphs
+    GraphDelete $which horz
+    GraphDelete $which vert
 
     # delete canvas widget
     $ds9(canvas) delete $which

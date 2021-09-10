@@ -1283,6 +1283,9 @@ proc LayoutColorbarAdjust {} {
 proc LayoutColorbarOne {cb} {
     global ds9
     global colorbar
+    global igraph
+    global view
+    global canvas
 
     $cb configure \
 	-size $colorbar(size) \
@@ -1296,24 +1299,33 @@ proc LayoutColorbarOne {cb} {
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
-    set cw [winfo width  $ds9(canvas)]
-    set ch [winfo height $ds9(canvas)]
+    set grh $view(graph,horz)
+    set grv $view(graph,vert)
 
     if {!$colorbar(orientation)} {
 	# horizontal
-	$cb configure \
-	    -x 0 \
-	    -y [expr $ch - $colorbar(horizontal,height)] \
-	    -width $cw \
-	    -height $colorbar(horizontal,height)
-	} else {
+	set xx 0
+	set yy [expr [winfo height $ds9(canvas)] - $colorbar(horizontal,height)]
+	set ww [winfo width $ds9(canvas)]
+	set hh $colorbar(horizontal,height)
+
+	if {$grh} {
+	    incr yy -$igraph(size)
+	    incr ww -$igraph(gap,x)
+	}
+    } else {
 	# vertical
-	$cb configure \
-	    -x [expr $cw - $colorbar(vertical,width)] \
-	    -y 0 \
-	    -width $colorbar(vertical,width) \
-	    -height $ch
+	set xx [expr [winfo width $ds9(canvas)] - $colorbar(vertical,width)]
+	set yy 0
+	set ww $colorbar(vertical,width)
+	set hh [winfo height $ds9(canvas)]
+	
+	if {$grh} {
+	    incr hh -[expr $igraph(size)+$canvas(gap)]
+	}
     }
+
+    $cb configure -x $xx -y $yy -width $ww -height $hh
 }
 
 proc LayoutColorbarTile {cb xx yy ww hh} {

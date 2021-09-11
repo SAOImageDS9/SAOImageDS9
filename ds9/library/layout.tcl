@@ -604,21 +604,18 @@ proc TileOne {} {
 
     # grh
     if {!$cbh && !$cbv && $grh && !$grv} {
-	# ok
 	incr hh -$igraph(size)
 	incr hh -$canvas(gap)
 	incr ww -$igraph(gap,x)
     }
     # grv
     if {!$cbh && !$cbv && !$grh && $grv} {
-	# ok
 	incr ww -$igraph(size)
 	incr ww -$canvas(gap)
 	incr hh -$igraph(gap,y)
     }
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
-	# ok
 	incr ww -$igraph(size)
 	incr ww -$canvas(gap)
 	incr ww -$igraph(gap,x)

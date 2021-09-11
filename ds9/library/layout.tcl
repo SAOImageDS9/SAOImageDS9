@@ -547,38 +547,84 @@ proc TileOne {} {
     set ww [winfo width  $ds9(canvas)]
     set hh [winfo height $ds9(canvas)]
 
-    if {$cbh} {
-	incr hh -[expr $colorbar(horizontal,height)+$canvas(gap)]
+    # cbh
+    if {$cbh && !$cbv && !$grh && !$grv} {
+	incr hh -$colorbar(horizontal,height)
+	incr hh -$canvas(gap)
     }
-    if {$cbv} {
-	incr ww -[expr $colorbar(vertical,width)+$canvas(gap)]
-    }
-
-    if {$grh} {
-	incr hh -[expr $igraph(size)+$canvas(gap)]
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
+	incr hh -$colorbar(horizontal,height)
+	incr hh -$canvas(gap)
+	incr hh -$igraph(size)
 	incr ww -$igraph(gap,x)
     }
-    if {$grv} {
-	incr ww -[expr $igraph(size)+$canvas(gap)]
+    # cbhgrv
+    if {$cbh && !$cbv && !$grh && $grv} {
+	incr hh -$colorbar(horizontal,height)
+	incr hh -$canvas(gap)
+	incr ww -$igraph(size)
+    }
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+	incr hh -$colorbar(horizontal,height)
+	incr hh -$canvas(gap)
+	incr hh -$igraph(size)
+	incr ww -$igraph(size)
+	incr ww -$igraph(gap,x)
+    }
+
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+	# ok
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+    }
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+	incr ww -$igraph(size)
+	incr hh -$igraph(gap,y)
+    }
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+	incr hh -$igraph(size)
+    }
+    # cbvgrhgrv
+    if {!$cbh && $cbv && $grh && $grv} {
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+	incr ww -$igraph(size)
+	incr hh -$igraph(size)
 	incr hh -$igraph(gap,y)
     }
 
-    if {$cbh && $grh} {
-	incr hh $canvas(gap)
+    # grh
+    if {!$cbh && !$cbv && $grh && !$grv} {
+	# ok
+	incr hh -$igraph(size)
+	incr hh -$canvas(gap)
+	incr ww -$igraph(gap,x)
     }
-    if {$cbh && $grv} {
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+	# ok
+	incr ww -$igraph(size)
+	incr ww -$canvas(gap)
+	incr hh -$igraph(gap,y)
     }
-    if {$cbh && $grh && $grv} {
-	incr hh $igraph(gap,y)
-    }
-
-    if {$cbv && $grh} {
-	incr ww $canvas(gap)
-    }
-    if {$cbv && $grv} {
-	incr ww $canvas(gap)
-    }
-    if {$cbv && $grh && $grv} {
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
+	# ok
+	incr ww -$igraph(size)
+	incr ww -$canvas(gap)
+	incr ww -$igraph(gap,x)
+	incr hh -$igraph(size)
+	incr hh -$canvas(gap)
+	incr hh -$igraph(gap,y)
     }
     
     foreach ff $ds9(active) {

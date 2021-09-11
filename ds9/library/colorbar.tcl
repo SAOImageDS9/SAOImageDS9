@@ -1317,25 +1317,36 @@ proc LayoutColorbarOne {cb} {
 	set hh [winfo height $ds9(canvas)]
     }
 
-    if {$cbh && $grh} {
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
 	incr yy -$igraph(size)
 	incr ww -$igraph(gap,x)
     }
-    if {$cbh && $grv} {
+    # cbhgrv
+    if {$cbh && !$cbv && !$grh && $grv} {
+	incr ww -$igraph(size)
     }
-    if {$cbh && $grh && $grv} {
-	incr ww -[expr $igraph(size)+$canvas(gap)]
-    }
-    
-    if {$cbv && $grh} {
-	incr yy -$igraph(size)
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+	incr ww -$igraph(size)
 	incr ww -$igraph(gap,x)
+	incr yy -$igraph(size)
     }
-    if {$cbv && $grv} {
+
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+	incr hh -$igraph(size)
+    }
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
 	incr xx -$igraph(size)
 	incr hh -$igraph(gap,y)
     }
-    if {$cbv && $grh && $grv} {
+    # cbvgrhgrv
+    if {!$cbh && $cbv && $grh && $grv} {
+	incr hh -$igraph(size)
+	incr hh -$igraph(gap,y)
+	incr xx -$igraph(size)
     }
 
     $cb configure -x $xx -y $yy -width $ww -height $hh

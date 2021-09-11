@@ -580,18 +580,18 @@ proc TileOne {} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
     }
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+	incr hh -$igraph(size)
+    }
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
 	incr ww -$igraph(size)
 	incr hh -$igraph(gap,y)
-    }
-    # cbvgrh
-    if {!$cbh && $cbv && $grh && !$grv} {
-	incr ww -$colorbar(vertical,width)
-	incr ww -$canvas(gap)
-	incr hh -$igraph(size)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {

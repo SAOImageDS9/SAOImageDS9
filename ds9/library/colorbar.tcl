@@ -1310,7 +1310,6 @@ proc LayoutColorbarOne {cb} {
 	set ww [winfo width $ds9(canvas)]
 	set hh $colorbar(horizontal,height)
     }
-
     if {$cbv} {
 	set xx [expr [winfo width $ds9(canvas)] - $colorbar(vertical,width)]
 	set yy 0
@@ -1318,20 +1317,25 @@ proc LayoutColorbarOne {cb} {
 	set hh [winfo height $ds9(canvas)]
     }
 
-    if {$grh && $cbh} {
+    if {$cbh && $grh} {
 	incr yy -$igraph(size)
 	incr ww -$igraph(gap,x)
     }
-    if {$grv && $cbh} {
-	incr ww -$igraph(size)
+    if {$cbh && $grv} {
     }
-	
-    if {$grh && $cbv} {
-	incr hh -[expr $igraph(size)+$canvas(gap)]
+    if {$cbh && $grh && $grv} {
+	incr ww -[expr $igraph(size)+$canvas(gap)]
     }
-    if {$grv && $cbv} {
-	incr xx -[expr $igraph(size)+$canvas(gap)]
+    
+    if {$cbv && $grh} {
+	incr yy -$igraph(size)
+	incr ww -$igraph(gap,x)
+    }
+    if {$cbv && $grv} {
+	incr xx -$igraph(size)
 	incr hh -$igraph(gap,y)
+    }
+    if {$cbv && $grh && $grv} {
     }
 
     $cb configure -x $xx -y $yy -width $ww -height $hh

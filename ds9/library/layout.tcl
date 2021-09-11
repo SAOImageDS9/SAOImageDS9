@@ -555,23 +555,30 @@ proc TileOne {} {
     }
 
     if {$grh} {
-	incr hh -$igraph(size)
-    }
-    if {$grh && $cbh} {
+	incr hh -[expr $igraph(size)+$canvas(gap)]
 	incr ww -$igraph(gap,x)
     }
-    if {$grh && $cbv} {
-	incr hh -$canvas(gap)
+    if {$grv} {
+	incr ww -[expr $igraph(size)+$canvas(gap)]
+	incr hh -$igraph(gap,y)
     }
 
-    if {$grv} {
-	incr ww -$igraph(size)
+    if {$cbh && $grh} {
+	incr hh $canvas(gap)
     }
-    if {$grv && $cbh} {
+    if {$cbh && $grv} {
     }
-    if {$grv && $cbv} {
-	incr ww -$canvas(gap)
-	incr hh -$igraph(gap,y)
+    if {$cbh && $grh && $grv} {
+	incr hh $igraph(gap,y)
+    }
+
+    if {$cbv && $grh} {
+	incr ww $canvas(gap)
+    }
+    if {$cbv && $grv} {
+	incr ww $canvas(gap)
+    }
+    if {$cbv && $grh && $grv} {
     }
     
     foreach ff $ds9(active) {

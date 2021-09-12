@@ -90,12 +90,16 @@ proc CreateColorbar {} {
     colorbar invert $colorbar(invert)
     colorbar hide
 
+    LayoutColorbar colorbar 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+
     # just for backup backward compatibility
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) -tag colorbarrgb
     colorbarrgb invert $colorbar(invert)
     colorbarrgb hide
 
-    LayoutColorbarOne colorbar
+    LayoutColorbar colorbarrgb 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 }
 
 proc CreateColorbarBase {frame} {
@@ -157,7 +161,8 @@ proc CreateColorbarBase {frame} {
     # must come after all cmaps have been defined
     $which colorbar $sav
     
-    LayoutColorbarOne $which
+    LayoutColorbar $which 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 }
 
 proc CreateColorbarRGB {frame} {
@@ -198,7 +203,8 @@ proc CreateColorbarRGB {frame} {
     # now init new colorbar to prev values
     $which colorbar $sav
 
-    LayoutColorbarOne $which
+    LayoutColorbar $which 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 }
 
 proc CreateColorbarExternal {which frame ext} {
@@ -1280,7 +1286,7 @@ proc LayoutColorbarAdjust {} {
     }
 }
 
-proc LayoutColorbarOne {cb} {
+proc LayoutColorbar {cb fx fy fw fh} {
     global ds9
     global colorbar
     global igraph
@@ -1305,16 +1311,16 @@ proc LayoutColorbarOne {cb} {
     set grv $view(graph,vert)
 
     if {$cbh} {
-	set xx 0
-	set yy [expr [winfo height $ds9(canvas)] - $colorbar(horizontal,height)]
-	set ww [winfo width $ds9(canvas)]
+	set xx $fx
+	set yy [expr $fh - $colorbar(horizontal,height)]
+	set ww $fw
 	set hh $colorbar(horizontal,height)
     }
     if {$cbv} {
-	set xx [expr [winfo width $ds9(canvas)] - $colorbar(vertical,width)]
-	set yy 0
+	set xx [expr $fw - $colorbar(vertical,width)]
+	set yy $fy
 	set ww $colorbar(vertical,width)
-	set hh [winfo height $ds9(canvas)]
+	set hh $fh
     }
 
     # cbhgrh
@@ -1350,39 +1356,6 @@ proc LayoutColorbarOne {cb} {
     }
 
     $cb configure -x $xx -y $yy -width $ww -height $hh
-}
-
-proc LayoutColorbarTile {cb xx yy ww hh} {
-    global colorbar
-    global canvas
-
-    $cb configure \
-	-size $colorbar(size) \
-	-ticks $colorbar(ticks) \
-	-numerics $colorbar(numerics) \
-	-space $colorbar(space) \
-	-orientation $colorbar(orientation) \
-	\
-	-font $colorbar(font) \
-	-fontsize $colorbar(font,size) \
-	-fontweight $colorbar(font,weight) \
-	-fontslant $colorbar(font,slant)
-
-    if {!$colorbar(orientation)} {
-	# horizontal
-	$cb configure \
-	    -x $xx \
-	    -y [expr $yy + $hh + $canvas(gap)] \
-	    -width $ww \
-	    -height $colorbar(horizontal,height)
-    } else {
-	# vertical
-	$cb configure \
-	    -x [expr $xx + $ww + $canvas(gap)] \
-	    -y $yy \
-	    -width $colorbar(vertical,width) \
-	    -height $hh
-    }
 }
 
 proc ColorbarUpdateView {} {

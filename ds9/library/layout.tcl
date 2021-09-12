@@ -463,7 +463,9 @@ proc LayoutFramesNone {} {
     }
 
     # colorbar
-    LayoutColorbarOne colorbar
+    LayoutColorbar colorbar 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+
     if {$view(colorbar)} {
 	colorbar show
 	$ds9(canvas) raise colorbar
@@ -487,17 +489,18 @@ proc LayoutFramesOneOrMore {} {
 
     switch -- $ds9(display) {
 	single {
-	    TileOne
+	    TileOne 0 0 [winfo width  $ds9(canvas)] [winfo height $ds9(canvas)]
 	}
 	tile {
 	    if {$ds9(active,num) > 1} {
 		LayoutFramesMore
 	    } else {
-		TileOne
+		TileOne 0 0 \
+		    [winfo width  $ds9(canvas)] [winfo height $ds9(canvas)]
 	    }
 	}
 	blink {
-	    TileOne
+	    TileOne 0 0 [winfo width  $ds9(canvas)] [winfo height $ds9(canvas)]
 	}
     }
 }
@@ -528,9 +531,7 @@ proc LayoutFramesMore {} {
     }
 }
 
-# This procedure is called when we have only 1 frames to display
-
-proc TileOne {} {
+proc TileOne {xx yy ww hh} {
     global ds9
     global canvas
     global view
@@ -541,11 +542,6 @@ proc TileOne {} {
     set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
-
-    set xx 0
-    set yy 0
-    set ww [winfo width  $ds9(canvas)]
-    set hh [winfo height $ds9(canvas)]
 
     # cbh
     if {$cbh && !$cbv && !$grh && !$grv} {
@@ -627,7 +623,9 @@ proc TileOne {} {
     foreach ff $ds9(active) {
 	$ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
 
-	LayoutColorbarOne ${ff}cb
+	LayoutColorbar ${ff}cb 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+
 	LayoutGraphOne $ff horz
 	LayoutGraphOne $ff vert
     }
@@ -639,7 +637,7 @@ proc TileOne {} {
 proc TileRect {numx numy} {
     global view
 
-    if {$view(colorbar)} {
+    if {$view(colorbar) || $view(graph,horz) || $view(graph,vert)} {
 	if {$view(multi)} {
 	    TileRectMulti $numx $numy
 	} else {
@@ -689,6 +687,11 @@ proc TileRectMulti {numx numy} {
     global tile
     global colorbar
     
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set grh $view(graph,horz)
+    set grv $view(graph,vert)
+
     if {!$colorbar(orientation)} {
 	# horizontal
 	set wcb 0
@@ -737,6 +740,11 @@ proc TileRectOne {numx numy} {
     global canvas
     global tile
     global colorbar
+
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set grh $view(graph,horz)
+    set grv $view(graph,vert)
 
     if {!$colorbar(orientation)} {
 	# horizontal
@@ -794,6 +802,10 @@ proc TileIt {ww hh xvar yvar nn} {
 	    $ff configure -x $xx($ii) -y $yy($ii) \
 		-width $ww -height $hh -anchor nw
 
+	    if {$view(multi)} {
+		LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
+	    }
+
 	    $ff show
 	    if {$view(colorbar)} {
 		${ff}cb show
@@ -801,12 +813,6 @@ proc TileIt {ww hh xvar yvar nn} {
 
 	    $ds9(canvas) raise $ff
 	    $ds9(canvas) raise ${ff}cb
-
-	    if {$view(multi)} {
-		LayoutColorbarTile ${ff}cb $xx($ii) $yy($ii) $ww $hh
-	    } else {
-		LayoutColorbarOne ${ff}cb
-	    }
 
 	    if {!$ds9(freeze)} {
 		BindEventsFrame $ff

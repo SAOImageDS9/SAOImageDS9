@@ -512,13 +512,17 @@ proc LayoutFrameOne {} {
     global ds9
     global view
 
+    set ww [winfo width $ds9(canvas)]
+    set hh [winfo height $ds9(canvas)]
+
     foreach ff $ds9(active) {
-	LayoutFrameSingle $ff 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	set fw $ww
+	set fh $hh
+	LayoutFrameAdjust fw fh
+	$ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
 
 	if {$view(colorbar)} {
-	    LayoutColorbar ${ff}cb 0 0 \
-		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	    LayoutColorbar ${ff}cb 0 0 $ww $hh
 	}
     }
 
@@ -610,7 +614,10 @@ proc TileRect {numx numy} {
 
     set ii 0
     foreach ff $ds9(active) {
-	LayoutFrameSingle $ff $xx($ii) $yy($ii) $ww $hh
+	set fw $ww
+	set fh $hh
+	LayoutFrameAdjust fw fh
+	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
 	$ff show
 
 	if {$view(colorbar)} {
@@ -778,11 +785,14 @@ proc TileRectNone {numx numy} {
     FrameToFront
 }
 
-proc LayoutFrameSingle {ff xx yy ww hh} {
+proc LayoutFrameAdjust {wvar hvar} {
     global canvas
     global view
     global colorbar
     global igraph
+
+    upvar $wvar ww
+    upvar $hvar hh
 
     set cbh [expr $view(colorbar) && !$colorbar(orientation)]
     set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
@@ -865,8 +875,6 @@ proc LayoutFrameSingle {ff xx yy ww hh} {
 	incr hh -$canvas(gap)
 	incr hh -$igraph(gap,y)
     }
-    
-    $ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
 }
 
 proc LayoutChangeWidth {ww} {

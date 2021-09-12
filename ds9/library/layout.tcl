@@ -463,10 +463,9 @@ proc LayoutFramesNone {} {
     }
 
     # colorbar
-    LayoutColorbar colorbar 0 0 \
-	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-
     if {$view(colorbar)} {
+	LayoutColorbar colorbar 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 	colorbar show
 	$ds9(canvas) raise colorbar
     }
@@ -489,23 +488,43 @@ proc LayoutFramesOneOrMore {} {
 
     switch -- $ds9(display) {
 	single {
-	    TileOne 0 0 [winfo width  $ds9(canvas)] [winfo height $ds9(canvas)]
+	    LayoutFrameOne
 	}
 	tile {
 	    if {$ds9(active,num) > 1} {
-		LayoutFramesMore
+		LayoutFrameMore
 	    } else {
-		TileOne 0 0 \
-		    [winfo width  $ds9(canvas)] [winfo height $ds9(canvas)]
+		LayoutFrameOne
 	    }
 	}
 	blink {
-	    TileOne 0 0 [winfo width  $ds9(canvas)] [winfo height $ds9(canvas)]
+	    LayoutFrameOne
 	}
     }
 }
 
-proc LayoutFramesMore {} {
+proc LayoutFrameOne {} {
+    CallStackTop
+    
+    global ds9
+
+    foreach ff $ds9(active) {
+	LayoutFrameSingleAll $ff 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+
+	if {$view(colorbar)} {
+	    LayoutColorbar ${ff}cb 0 0 \
+		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	}
+    }
+
+    # only show the current frame
+    FrameToFront
+}
+
+proc LayoutFrameMore {} {
+    CallStackTop
+    
     global ds9
     global tile
 
@@ -531,8 +550,65 @@ proc LayoutFramesMore {} {
     }
 }
 
-proc TileOne {xx yy ww hh} {
+proc TileRect {numx numy} {
+    CallStackTop
+    
     global ds9
+    global tile
+    global current
+    global view
+    
+    set ww [expr int(([winfo width  $ds9(canvas)]-($tile(grid,gap)*($numx-1)))/$numx)]
+    set hh [expr int(([winfo height $ds9(canvas)]-($tile(grid,gap)*($numy-1)))/$numy)]
+
+    switch $tile(grid,dir) {
+	x {
+	    for {set jj 0} {$jj<$numy} {incr jj} {
+		for {set ii 0} {$ii<$numx} {incr ii} {
+		    set nn [expr $jj*$numx + $ii]
+		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+	y {
+	    for {set ii 0} {$ii<$numx} {incr ii} {
+		for {set jj 0} {$jj<$numy} {incr jj} {
+		    set nn [expr $ii*$numy + $jj]
+		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+    }
+
+    set ii 0
+    foreach ff $ds9(active) {
+	LayoutFrameSingleAll $ff $xx($ii) $yy($ii) $ww $hh
+	$ff show
+
+	if {$view(colorbar)} {
+	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
+	    ${ff}cb show
+	}
+
+	$ds9(canvas) raise $ff
+	$ds9(canvas) raise ${ff}cb
+
+	if {!$ds9(freeze)} {
+	    BindEventsFrame $ff
+	    BindEventsColorbar ${ff}cb
+	}
+
+	incr ii
+    }
+
+    FrameToFront
+}
+
+proc LayoutFrameSingleAll {ff xx yy ww hh} {
+    CallStackTop
+    
     global canvas
     global view
     global colorbar
@@ -620,68 +696,39 @@ proc TileOne {xx yy ww hh} {
 	incr hh -$igraph(gap,y)
     }
     
-    foreach ff $ds9(active) {
-	$ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
-
-	LayoutColorbar ${ff}cb 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-
-	LayoutGraphOne $ff horz
-	LayoutGraphOne $ff vert
-    }
-
-    # only show the current frame
-    FrameToFront
+    puts "$ff $xx $yy $ww $hh"
+    $ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
 }
 
-proc TileRect {numx numy} {
-    global view
-
-    if {$view(colorbar) || $view(graph,horz) || $view(graph,vert)} {
-	if {$view(multi)} {
-	    TileRectMulti $numx $numy
-	} else {
-	    TileRectOne $numx $numy
-	}
-    } else {
-	TileRectNone $numx $numy
-    }
-}
-
-proc TileRectNone {numx numy} {
+proc LayoutChangeWidth {ww} {
     global ds9
-    global canvas
-    global tile
-    global colorbar
-    
-    set ww [expr int(([winfo width  $ds9(canvas)]-($tile(grid,gap)*($numx-1)))/$numx)]
-    set hh [expr int(([winfo height $ds9(canvas)]-($tile(grid,gap)*($numy-1)))/$numy)]
 
-    switch $tile(grid,dir) {
-	x {
-	    for {set jj 0} {$jj<$numy} {incr jj} {
-		for {set ii 0} {$ii<$numx} {incr ii} {
-		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-	y {
-	    for {set ii 0} {$ii<$numx} {incr ii} {
-		for {set jj 0} {$jj<$numy} {incr jj} {
-		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-    }
+    set cw [winfo width $ds9(canvas)]
+    set tw [winfo width $ds9(top)]
+    set th [winfo height $ds9(top)]
+    set dw $ww-$cw
 
-    TileIt $ww $hh xx yy [expr $numx*$numy]
+    # change window size
+    wm geometry $ds9(top) "[expr $tw+$dw]x${th}"
+    LayoutView
 }
 
-proc TileRectMulti {numx numy} {
+proc LayoutChangeHeight {hh} {
+    global ds9
+    
+    set ch [winfo height $ds9(canvas)]
+    set tw [winfo width $ds9(top)]
+    set th [winfo height $ds9(top)]
+    set dh $hh-$ch
+
+    # change window size
+    wm geometry $ds9(top) "${tw}x[expr $th+$dh]"
+    LayoutView
+}
+
+proc aTileRectMulti {numx numy} {
+    CallStackTop
+    
     global ds9
     global canvas
     global tile
@@ -731,10 +778,12 @@ proc TileRectMulti {numx numy} {
 	}
     }
 
-    TileIt $ww $hh xx yy [expr $numx*$numy]
+    aTileIt $ww $hh xx yy [expr $numx*$numy]
 }
 
-proc TileRectOne {numx numy} {
+proc aTileRectOne {numx numy} {
+    CallStackTop
+    
     global ds9
     global view
     global canvas
@@ -785,10 +834,12 @@ proc TileRectOne {numx numy} {
 	}
     }
 
-    TileIt $ww $hh xx yy [expr $numx*$numy]
+    aTileIt $ww $hh xx yy [expr $numx*$numy]
 }
 
-proc TileIt {ww hh xvar yvar nn} {
+proc aTileIt {ww hh xvar yvar nn} {
+    CallStackTop
+    
     global ds9
     global current
     global view
@@ -803,7 +854,9 @@ proc TileIt {ww hh xvar yvar nn} {
 		-width $ww -height $hh -anchor nw
 
 	    if {$view(multi)} {
-		LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
+		if {$view(colorbar)} {
+		    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
+		}
 	    }
 
 	    $ff show
@@ -827,32 +880,6 @@ proc TileIt {ww hh xvar yvar nn} {
     }
 
     FrameToFront
-}
-
-proc LayoutChangeWidth {ww} {
-    global ds9
-
-    set cw [winfo width $ds9(canvas)]
-    set tw [winfo width $ds9(top)]
-    set th [winfo height $ds9(top)]
-    set dw $ww-$cw
-
-    # change window size
-    wm geometry $ds9(top) "[expr $tw+$dw]x${th}"
-    LayoutView
-}
-
-proc LayoutChangeHeight {hh} {
-    global ds9
-    
-    set ch [winfo height $ds9(canvas)]
-    set tw [winfo width $ds9(top)]
-    set th [winfo height $ds9(top)]
-    set dh $hh-$ch
-
-    # change window size
-    wm geometry $ds9(top) "${tw}x[expr $th+$dh]"
-    LayoutView
 }
 
 proc LayoutChangeSize {ww hh} {

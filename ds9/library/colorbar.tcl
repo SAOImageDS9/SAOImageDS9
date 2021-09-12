@@ -1287,11 +1287,11 @@ proc LayoutColorbarAdjust {} {
 }
 
 proc LayoutColorbar {cb fx fy fw fh} {
-    global ds9
+    CallStackTop
+    
     global colorbar
     global igraph
     global view
-    global canvas
 
     $cb configure \
 	-size $colorbar(size) \
@@ -1312,12 +1312,12 @@ proc LayoutColorbar {cb fx fy fw fh} {
 
     if {$cbh} {
 	set xx $fx
-	set yy [expr $fh - $colorbar(horizontal,height)]
+	set yy [expr $fy + $fh - $colorbar(horizontal,height)]
 	set ww $fw
 	set hh $colorbar(horizontal,height)
     }
     if {$cbv} {
-	set xx [expr $fw - $colorbar(vertical,width)]
+	set xx [expr $fx + $fw - $colorbar(vertical,width)]
 	set yy $fy
 	set ww $colorbar(vertical,width)
 	set hh $fh
@@ -1355,6 +1355,7 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	incr xx -$igraph(size)
     }
 
+    puts "$cb $xx $yy $ww $hh"
     $cb configure -x $xx -y $yy -width $ww -height $hh
 }
 

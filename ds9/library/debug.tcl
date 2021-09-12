@@ -146,10 +146,14 @@ proc DumpURL {varname} {
     puts stderr "r(fragment)=$r(fragment)"
 }
 
-proc DumpCallStack {} {
+proc CallStack {} {
     for {set x [expr [info level]-1]} {$x>0} {incr x -1} {
 	puts stderr "$x: [info level $x]"
     }
+}
+
+proc CallStackTop {} {
+    puts stderr "[info level -1]"
 }
 
 proc DumpArray {varname} {

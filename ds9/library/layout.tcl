@@ -485,6 +485,7 @@ proc LayoutFramesNone {} {
 
 proc LayoutFramesOneOrMore {} {
     global ds9
+    global view
 
     switch -- $ds9(display) {
 	single {
@@ -492,7 +493,11 @@ proc LayoutFramesOneOrMore {} {
 	}
 	tile {
 	    if {$ds9(active,num) > 1} {
-		LayoutFrameMore
+		if {$view(multi)} {
+		    LayoutFrameMulti
+		} else {
+		    LayoutFrameNone
+		}
 	    } else {
 		LayoutFrameOne
 	    }
@@ -508,7 +513,7 @@ proc LayoutFrameOne {} {
     global view
 
     foreach ff $ds9(active) {
-	LayoutFrameSingleAll $ff 0 0 \
+	LayoutFrameSingle $ff 0 0 \
 	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 
 	if {$view(colorbar)} {
@@ -521,7 +526,7 @@ proc LayoutFrameOne {} {
     FrameToFront
 }
 
-proc LayoutFrameMore {} {
+proc LayoutFrameMulti {} {
     global ds9
     global tile
 
@@ -541,6 +546,32 @@ proc LayoutFrameMore {} {
 		}
 		manual {
 		    TileRect $tile(grid,col) $tile(grid,row)
+		}
+	    }
+	}
+    }
+}
+
+proc LayoutFrameNone {} {
+    global ds9
+    global tile
+
+    switch -- $tile(mode) {
+	row {
+	    TileRectNone 1 $ds9(active,num)
+	}
+	column {
+	    TileRectNone $ds9(active,num) 1
+	}
+	grid {
+	    switch -- $tile(grid,mode) {
+		automatic {
+		    TileRectNone \
+			[expr int(sqrt($ds9(active,num)-1))+1] \
+			[expr int(sqrt($ds9(active,num))+.5)]
+		}
+		manual {
+		    TileRectNone $tile(grid,col) $tile(grid,row)
 		}
 	    }
 	}
@@ -579,7 +610,7 @@ proc TileRect {numx numy} {
 
     set ii 0
     foreach ff $ds9(active) {
-	LayoutFrameSingleAll $ff $xx($ii) $yy($ii) $ww $hh
+	LayoutFrameSingle $ff $xx($ii) $yy($ii) $ww $hh
 	$ff show
 
 	if {$view(colorbar)} {
@@ -601,7 +632,153 @@ proc TileRect {numx numy} {
     FrameToFront
 }
 
-proc LayoutFrameSingleAll {ff xx yy ww hh} {
+proc TileRectNone {numx numy} {
+    global ds9
+    global tile
+    global current
+    global view
+    global colorbar
+    global canvas
+    global igraph
+    
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set grh $view(graph,horz)
+    set grv $view(graph,vert)
+
+    set fx 0
+    set fy 0
+    set fw [winfo width $ds9(canvas)]
+    set fh [winfo height $ds9(canvas)]
+    
+    # cbh
+    if {$cbh && !$cbv && !$grh && !$grv} {
+	incr fh -$colorbar(horizontal,height)
+	incr fh -$canvas(gap)
+    }
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
+	incr fh -$colorbar(horizontal,height)
+	incr fh -$canvas(gap)
+	incr fh -$igraph(size)
+	incr fw -$igraph(gap,x)
+    }
+    # cbhgrv
+    if {$cbh && !$cbv && !$grh && $grv} {
+	incr fh -$colorbar(horizontal,height)
+	incr fh -$canvas(gap)
+	incr fw -$igraph(size)
+    }
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+	incr fh -$colorbar(horizontal,height)
+	incr fh -$canvas(gap)
+	incr fh -$igraph(size)
+	incr fw -$igraph(size)
+	incr fw -$igraph(gap,x)
+    }
+
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+	# ok
+	incr fw -$colorbar(vertical,width)
+	incr fw -$canvas(gap)
+    }
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+	incr fw -$colorbar(vertical,width)
+	incr fw -$canvas(gap)
+	incr fh -$igraph(size)
+    }
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
+	incr fw -$colorbar(vertical,width)
+	incr fw -$canvas(gap)
+	incr fw -$igraph(size)
+	incr fh -$igraph(gap,y)
+    }
+    # cbvgrhgrv
+    if {!$cbh && $cbv && $grh && $grv} {
+	incr fw -$colorbar(vertical,width)
+	incr fw -$canvas(gap)
+	incr fw -$igraph(size)
+	incr fh -$igraph(size)
+	incr fh -$igraph(gap,y)
+    }
+
+    # grh
+    if {!$cbh && !$cbv && $grh && !$grv} {
+	incr fh -$igraph(size)
+	incr fh -$canvas(gap)
+	incr fw -$igraph(gap,x)
+    }
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+	incr fw -$igraph(size)
+	incr fw -$canvas(gap)
+	incr fh -$igraph(gap,y)
+    }
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
+	incr fw -$igraph(size)
+	incr fw -$canvas(gap)
+	incr fw -$igraph(gap,x)
+	incr fh -$igraph(size)
+	incr fh -$canvas(gap)
+	incr fh -$igraph(gap,y)
+    }
+
+    set ww [expr int(($fw-($tile(grid,gap)*($numx-1)))/$numx)]
+    set hh [expr int(($fh-($tile(grid,gap)*($numy-1)))/$numy)]
+
+    switch $tile(grid,dir) {
+	x {
+	    for {set jj 0} {$jj<$numy} {incr jj} {
+		for {set ii 0} {$ii<$numx} {incr ii} {
+		    set nn [expr $jj*$numx + $ii]
+		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+	y {
+	    for {set ii 0} {$ii<$numx} {incr ii} {
+		for {set jj 0} {$jj<$numy} {incr jj} {
+		    set nn [expr $ii*$numy + $jj]
+		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		}
+	    }
+	}
+    }
+
+    set ii 0
+    foreach ff $ds9(active) {
+	$ff configure -x $xx($ii) -y $yy($ii) \
+	    -width $ww -height $hh -anchor nw
+	$ff show
+	$ds9(canvas) raise $ff
+
+	if {!$ds9(freeze)} {
+	    BindEventsFrame $ff
+	    BindEventsColorbar ${ff}cb
+	}
+
+	incr ii
+    }
+
+    set current(colorbar) ${current(frame)}cb
+    if {$view(colorbar)} {
+	LayoutColorbar $current(colorbar) 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	$current(colorbar) show
+	$ds9(canvas) raise $current(colorbar)
+    }
+
+    FrameToFront
+}
+
+proc LayoutFrameSingle {ff xx yy ww hh} {
     global canvas
     global view
     global colorbar
@@ -716,156 +893,6 @@ proc LayoutChangeHeight {hh} {
     # change window size
     wm geometry $ds9(top) "${tw}x[expr $th+$dh]"
     LayoutView
-}
-
-proc aTileRectMulti {numx numy} {
-    global ds9
-    global canvas
-    global tile
-    global colorbar
-    
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
-    set grh $view(graph,horz)
-    set grv $view(graph,vert)
-
-    if {!$colorbar(orientation)} {
-	# horizontal
-	set wcb 0
-	set hcb [expr $colorbar(horizontal,height) + $canvas(gap)]
-    } else {
-	# vertical
-	set wcb [expr $colorbar(vertical,width) + $canvas(gap)]
-	set hcb 0
-    }
-    
-    set w1 [winfo width $ds9(canvas)]
-    set w2 [expr $w1-$tile(grid,gap)*($numx-1)-$wcb*$numx]
-    set ww [expr int($w2/$numx)]
-
-    set h1 [winfo height $ds9(canvas)]
-    set h2 [expr $h1-$tile(grid,gap)*($numy-1)-$hcb*$numy]
-    set hh [expr int($h2/$numy)]
-
-    switch $tile(grid,dir) {
-	x {
-	    for {set jj 0} {$jj<$numy} {incr jj} {
-		for {set ii 0} {$ii<$numx} {incr ii} {
-		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr ($ww+$wcb+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$hcb+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-	y {
-	    for {set ii 0} {$ii<$numx} {incr ii} {
-		for {set jj 0} {$jj<$numy} {incr jj} {
-		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr ($ww+$wcb+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$hcb+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-    }
-
-    aTileIt $ww $hh xx yy [expr $numx*$numy]
-}
-
-proc aTileRectOne {numx numy} {
-    global ds9
-    global view
-    global canvas
-    global tile
-    global colorbar
-
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
-    set grh $view(graph,horz)
-    set grv $view(graph,vert)
-
-    if {!$colorbar(orientation)} {
-	# horizontal
-	set wcb 0
-	set hcb [expr $colorbar(horizontal,height) + $canvas(gap)]
-    } else {
-	# vertical
-	set wcb [expr $colorbar(vertical,width) + $canvas(gap)]
-	set hcb 0
-    }
-    
-    set w1 [winfo width $ds9(canvas)]
-    set w2 [expr $w1-$tile(grid,gap)*($numx-1)-$wcb]
-    set ww [expr int($w2/$numx)]
-
-    set h1 [winfo height $ds9(canvas)]
-    set h2 [expr $h1-$tile(grid,gap)*($numy-1)-$hcb]
-    set hh [expr int($h2/$numy)]
-
-    switch $tile(grid,dir) {
-	x {
-	    for {set jj 0} {$jj<$numy} {incr jj} {
-		for {set ii 0} {$ii<$numx} {incr ii} {
-		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-	y {
-	    for {set ii 0} {$ii<$numx} {incr ii} {
-		for {set jj 0} {$jj<$numy} {incr jj} {
-		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr ($ww+$wcb+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$hcb+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-    }
-
-    aTileIt $ww $hh xx yy [expr $numx*$numy]
-}
-
-proc aTileIt {ww hh xvar yvar nn} {
-    global ds9
-    global current
-    global view
-
-    upvar $xvar xx
-    upvar $yvar yy
-
-    set ii 0
-    foreach ff $ds9(active) {
-	if {$ii<$nn} {
-	    $ff configure -x $xx($ii) -y $yy($ii) \
-		-width $ww -height $hh -anchor nw
-
-	    if {$view(multi)} {
-		if {$view(colorbar)} {
-		    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
-		}
-	    }
-
-	    $ff show
-	    if {$view(colorbar)} {
-		${ff}cb show
-	    }
-
-	    $ds9(canvas) raise $ff
-	    $ds9(canvas) raise ${ff}cb
-
-	    if {!$ds9(freeze)} {
-		BindEventsFrame $ff
-		BindEventsColorbar ${ff}cb
-	    }
-	}
-	incr ii
-    }
-
-    if {$ds9(active,num) > $nn} {
-	set current(frame) [lindex $ds9(active) 0]
-    }
-
-    FrameToFront
 }
 
 proc LayoutChangeSize {ww hh} {

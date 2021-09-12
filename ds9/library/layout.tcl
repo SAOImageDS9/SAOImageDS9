@@ -494,7 +494,7 @@ proc LayoutFramesOneOrMore {} {
 	tile {
 	    if {$ds9(active,num) > 1} {
 		if {$view(multi)} {
-		    LayoutFrameMulti
+		    LayoutFrame
 		} else {
 		    LayoutFrameNone
 		}
@@ -530,7 +530,7 @@ proc LayoutFrameOne {} {
     FrameToFront
 }
 
-proc LayoutFrameMulti {} {
+proc LayoutFrame {} {
     global ds9
     global tile
 

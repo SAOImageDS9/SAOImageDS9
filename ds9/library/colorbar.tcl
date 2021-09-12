@@ -1287,8 +1287,6 @@ proc LayoutColorbarAdjust {} {
 }
 
 proc LayoutColorbar {cb fx fy fw fh} {
-    CallStackTop
-    
     global colorbar
     global igraph
     global view
@@ -1355,7 +1353,6 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	incr xx -$igraph(size)
     }
 
-    puts "$cb $xx $yy $ww $hh"
     $cb configure -x $xx -y $yy -width $ww -height $hh
 }
 

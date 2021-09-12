@@ -504,9 +504,8 @@ proc LayoutFramesOneOrMore {} {
 }
 
 proc LayoutFrameOne {} {
-    CallStackTop
-    
     global ds9
+    global view
 
     foreach ff $ds9(active) {
 	LayoutFrameSingleAll $ff 0 0 \
@@ -523,8 +522,6 @@ proc LayoutFrameOne {} {
 }
 
 proc LayoutFrameMore {} {
-    CallStackTop
-    
     global ds9
     global tile
 
@@ -551,8 +548,6 @@ proc LayoutFrameMore {} {
 }
 
 proc TileRect {numx numy} {
-    CallStackTop
-    
     global ds9
     global tile
     global current
@@ -607,8 +602,6 @@ proc TileRect {numx numy} {
 }
 
 proc LayoutFrameSingleAll {ff xx yy ww hh} {
-    CallStackTop
-    
     global canvas
     global view
     global colorbar
@@ -696,7 +689,6 @@ proc LayoutFrameSingleAll {ff xx yy ww hh} {
 	incr hh -$igraph(gap,y)
     }
     
-    puts "$ff $xx $yy $ww $hh"
     $ff configure -x $xx -y $yy -width $ww -height $hh -anchor nw
 }
 
@@ -727,8 +719,6 @@ proc LayoutChangeHeight {hh} {
 }
 
 proc aTileRectMulti {numx numy} {
-    CallStackTop
-    
     global ds9
     global canvas
     global tile
@@ -782,8 +772,6 @@ proc aTileRectMulti {numx numy} {
 }
 
 proc aTileRectOne {numx numy} {
-    CallStackTop
-    
     global ds9
     global view
     global canvas
@@ -838,8 +826,6 @@ proc aTileRectOne {numx numy} {
 }
 
 proc aTileIt {ww hh xvar yvar nn} {
-    CallStackTop
-    
     global ds9
     global current
     global view

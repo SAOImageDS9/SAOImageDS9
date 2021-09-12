@@ -645,96 +645,11 @@ proc TileRectNone {numx numy} {
     global current
     global view
     global colorbar
-    global canvas
-    global igraph
     
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
-    set grh $view(graph,horz)
-    set grv $view(graph,vert)
-
-    set fx 0
-    set fy 0
     set fw [winfo width $ds9(canvas)]
     set fh [winfo height $ds9(canvas)]
+    LayoutFrameAdjust fw fh
     
-    # cbh
-    if {$cbh && !$cbv && !$grh && !$grv} {
-	incr fh -$colorbar(horizontal,height)
-	incr fh -$canvas(gap)
-    }
-    # cbhgrh
-    if {$cbh && !$cbv && $grh && !$grv} {
-	incr fh -$colorbar(horizontal,height)
-	incr fh -$canvas(gap)
-	incr fh -$igraph(size)
-	incr fw -$igraph(gap,x)
-    }
-    # cbhgrv
-    if {$cbh && !$cbv && !$grh && $grv} {
-	incr fh -$colorbar(horizontal,height)
-	incr fh -$canvas(gap)
-	incr fw -$igraph(size)
-    }
-    # cbhgrhgrv
-    if {$cbh && !$cbv && $grh && $grv} {
-	incr fh -$colorbar(horizontal,height)
-	incr fh -$canvas(gap)
-	incr fh -$igraph(size)
-	incr fw -$igraph(size)
-	incr fw -$igraph(gap,x)
-    }
-
-    # cbv
-    if {!$cbh && $cbv && !$grh && !$grv} {
-	# ok
-	incr fw -$colorbar(vertical,width)
-	incr fw -$canvas(gap)
-    }
-    # cbvgrh
-    if {!$cbh && $cbv && $grh && !$grv} {
-	incr fw -$colorbar(vertical,width)
-	incr fw -$canvas(gap)
-	incr fh -$igraph(size)
-    }
-    # cbvgrv
-    if {!$cbh && $cbv && !$grh && $grv} {
-	incr fw -$colorbar(vertical,width)
-	incr fw -$canvas(gap)
-	incr fw -$igraph(size)
-	incr fh -$igraph(gap,y)
-    }
-    # cbvgrhgrv
-    if {!$cbh && $cbv && $grh && $grv} {
-	incr fw -$colorbar(vertical,width)
-	incr fw -$canvas(gap)
-	incr fw -$igraph(size)
-	incr fh -$igraph(size)
-	incr fh -$igraph(gap,y)
-    }
-
-    # grh
-    if {!$cbh && !$cbv && $grh && !$grv} {
-	incr fh -$igraph(size)
-	incr fh -$canvas(gap)
-	incr fw -$igraph(gap,x)
-    }
-    # grv
-    if {!$cbh && !$cbv && !$grh && $grv} {
-	incr fw -$igraph(size)
-	incr fw -$canvas(gap)
-	incr fh -$igraph(gap,y)
-    }
-    # grhgrv
-    if {!$cbh && !$cbv && $grh && $grv} {
-	incr fw -$igraph(size)
-	incr fw -$canvas(gap)
-	incr fw -$igraph(gap,x)
-	incr fh -$igraph(size)
-	incr fh -$canvas(gap)
-	incr fh -$igraph(gap,y)
-    }
-
     set ww [expr int(($fw-($tile(grid,gap)*($numx-1)))/$numx)]
     set hh [expr int(($fh-($tile(grid,gap)*($numy-1)))/$numy)]
 

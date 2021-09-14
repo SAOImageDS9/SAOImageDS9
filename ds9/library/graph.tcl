@@ -42,7 +42,7 @@ proc GraphDef {} {
     array set pgraph [array get graph]
 }
 
-proc GraphCreate {frame which} {
+proc GraphsCreate {frame} {
     global ds9
     global canvas
     global igraph
@@ -50,53 +50,54 @@ proc GraphCreate {frame which} {
     set varname ${frame}gr
     global $varname
 
-    switch $which {
-	horz {
-	    set hg [string tolower ${frame}hg]
-	    set ${varname}(horz) [blt::graph $ds9(main).$hg \
-				      -width $canvas(width) \
-				      -height $igraph(size) \
-				      -takefocus 0 \
-				      -highlightthickness 0 \
-				      -font [font actual TkDefaultFont] \
-				      -plotpadx 0 -plotpady 0 \
-				      -borderwidth 0 \
-				      -foreground [ThemeTreeForeground] \
-				      -background [ThemeTreeBackground] \
-				      -plotbackground [ThemeTreeBackground] \
-				     ]
-	    set ${varname}(horz,id) 0
-	}
-	vert {
-	    set vg [string tolower ${frame}vg]
-	    set ${varname}(vert) [blt::graph $ds9(main).$vg \
-				      -invertxy yes \
-				      -width $igraph(size) \
-				      -height $canvas(height) \
-				      -takefocus 0 \
-				      -highlightthickness 0 \
-				      -borderwidth 0 \
-				      -font [font actual TkDefaultFont] \
-				      -foreground [ThemeTreeForeground] \
-				      -background [ThemeTreeBackground] \
-				      -plotbackground [ThemeTreeBackground] \
-				     ]
-	    set ${varname}(vert,id) 0
-	}
-    }
+    set hg [string tolower ${frame}grh]
+    set ${varname}(horz) [blt::graph $ds9(main).$hg \
+			      -width $canvas(width) \
+			      -height $igraph(size) \
+			      -takefocus 0 \
+			      -highlightthickness 0 \
+			      -font [font actual TkDefaultFont] \
+			      -plotpadx 0 -plotpady 0 \
+			      -borderwidth 0 \
+			      -foreground [ThemeTreeForeground] \
+			      -background [ThemeTreeBackground] \
+			      -plotbackground [ThemeTreeBackground] \
+			     ]
+    set ${varname}(horz,id) 0
+
+    set vg [string tolower ${frame}grv]
+    set ${varname}(vert) [blt::graph $ds9(main).$vg \
+			      -invertxy yes \
+			      -width $igraph(size) \
+			      -height $canvas(height) \
+			      -takefocus 0 \
+			      -highlightthickness 0 \
+			      -borderwidth 0 \
+			      -font [font actual TkDefaultFont] \
+			      -foreground [ThemeTreeForeground] \
+			      -background [ThemeTreeBackground] \
+			      -plotbackground [ThemeTreeBackground] \
+			     ]
+    set ${varname}(vert,id) 0
 }
 
-proc GraphDelete {frame which} {
+proc GraphsDelete {frame} {
     global ds9
 
     set varname ${frame}gr
     global $varname
 
-    if {[subst $${varname}($which,id)]} {
-	$ds9(canvas) delete [subst $${varname}($which,id)]
-	destroy [subst $${varname}($which)]
-	unset $varname
+    destroy [subst $${varname}(horz)]
+    if {[subst $${varname}(horz,id)]} {
+	$ds9(canvas) delete [subst $${varname}(horz,id)]
     }
+
+    destroy [subst $${varname}(vert)]
+    if {[subst $${varname}(vert,id)]} {
+	$ds9(canvas) delete [subst $${varname}(vert,id)]
+    }
+
+    unset $varname
 }
 
 proc GraphShow {frame which xx yy} {
@@ -125,48 +126,10 @@ proc GraphHide {frame which} {
     }
 }
 
-proc LayoutGraphOne {frame which} {
-    global ds9
-    global canvas
-    global view
-    global colorbar
-    global igraph
-
-    return
-    set varname ${frame}gr
-    global $varname
-
-    set frww $canvas(width)
-    set frhh $canvas(height)
-    set frxx 0
-    set fryy 0
-
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
-
-    switch $which {
-	horz {
-	    set xx $frxx
-	    set yy [expr $canvas(height) + $canvas(gap)]
-
-	    if {$cbh} {
-		incr yy $colorbar(horizontal,height)
-	    }
-	    if {$view(graph,vert) && !$cbh} {
-		incr yy $igraph(gap,y)
-	    }
-
-	    GraphShow $frame $which $xx $yy
-
-	    set ww [expr $frww+$igraph(gap,x)]
-	    [subst $${varname}(horz)] configure -width $ww
-	}
-	vert {
-	}
-    }
+proc LayoutGraph {frame which} {
 }
 
-# ***
+# ***OLD***
 
 proc CreateGraphs {} {
     return

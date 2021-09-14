@@ -161,6 +161,9 @@ proc CreateColorbarBase {frame} {
     # must come after all cmaps have been defined
     $which colorbar $sav
     
+    # enable events
+    BindEventsColorbar $which
+
     LayoutColorbar $which 0 0 \
 	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 }
@@ -202,6 +205,9 @@ proc CreateColorbarRGB {frame} {
 
     # now init new colorbar to prev values
     $which colorbar $sav
+
+    # enable events
+    BindEventsColorbar $which
 
     LayoutColorbar $which 0 0 \
 	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]

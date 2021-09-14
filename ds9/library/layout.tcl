@@ -419,8 +419,6 @@ proc LayoutFrames {} {
 	$ff highlite off
 	$ff panner off
 	$ff magnifier off
-	UnBindEventsFrame $ff
-	UnBindEventsColorbar ${ff}cb
 
 	# colorbar
 	${ff}cb hide
@@ -628,11 +626,6 @@ proc TileRect {numx numy} {
 	$ds9(canvas) raise $ff
 	$ds9(canvas) raise ${ff}cb
 
-	if {!$ds9(freeze)} {
-	    BindEventsFrame $ff
-	    BindEventsColorbar ${ff}cb
-	}
-
 	incr ii
     }
 
@@ -680,11 +673,6 @@ proc TileRectNone {numx numy} {
 	    -width $ww -height $hh -anchor nw
 	$ff show
 	$ds9(canvas) raise $ff
-
-	if {!$ds9(freeze)} {
-	    BindEventsFrame $ff
-	    BindEventsColorbar ${ff}cb
-	}
 
 	incr ii
     }

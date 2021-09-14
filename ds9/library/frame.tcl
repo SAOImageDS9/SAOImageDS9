@@ -95,8 +95,7 @@ proc CreateNameNumberFrame {which type} {
 	    CreateColorbarBase $which
 	}
     }
-    GraphCreate $which horz
-    GraphCreate $which vert
+    GraphsCreate $which
     
     $which configure -x 0 -y 0 \
 	-anchor nw \
@@ -232,6 +231,9 @@ proc CreateNameNumberFrame {which type} {
 	}
     }
 
+    # enable events
+    BindEventsFrame $which
+    
     switch $current(mode) {
 	crosshair {$which crosshair on}
     }
@@ -316,8 +318,7 @@ proc DeleteFrame {which} {
     $ds9(canvas) delete ${which}cb
 
     # delete canvas graphs
-    GraphDelete $which horz
-    GraphDelete $which vert
+    GraphsDelete $which
 
     # delete canvas widget
     $ds9(canvas) delete $which
@@ -1698,11 +1699,7 @@ proc GotoFrame {which} {
 
 	switch -- $ds9(display) {
 	    blink -
-	    single {
-		$current(frame) hide
-		UnBindEventsFrame $current(frame)
-		UnBindEventsColorbar $current(colorbar)
-	    }
+	    single {$current(frame) hide}
 	    tile {}
 	}
     }
@@ -1908,12 +1905,7 @@ proc FrameToFront {} {
 
     switch -- $ds9(display) {
 	single -
-	blink {
-	    if {!$ds9(freeze)} {
-		BindEventsFrame $current(frame)
-		BindEventsColorbar $current(colorbar)
-	    }
-	}
+	blink {}
 	tile {$current(frame) highlite on}
     }
 

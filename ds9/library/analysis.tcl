@@ -455,7 +455,7 @@ proc ProcessAnalysis {varname} {
 	}
     }
 
-    # events
+    # enable events
     UnBindEventsCanvas
     BindEventsCanvas
 

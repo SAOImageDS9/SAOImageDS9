@@ -554,9 +554,8 @@ CreatePanner
 CreateMagnifier
 CreateButtons
 
-# Create Graphs
-GraphCreate graph horz
-GraphCreate graph vert
+# Create default Graphs
+GraphsCreate graph
 
 # Make sure that the wm knows when to swap in the colormap (if needed)
 wm colormapwindows . "$ds9(main) $ds9(canvas)"

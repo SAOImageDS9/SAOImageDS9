@@ -282,7 +282,6 @@ proc DeleteAllFrames {} {
 
     ClearInfoBox
     PixelTableClearDialog
-    ClearGraphData
 }
 
 proc DeleteSingleFrame {which} {
@@ -292,7 +291,6 @@ proc DeleteSingleFrame {which} {
     UpdateActiveFrames
 
     PixelTableClearDialog
-    ClearGraphData
 }
 
 proc DeleteFrame {which} {
@@ -644,7 +642,7 @@ proc LeaveFrame {which} {
 	3d {
 	    LeaveInfoBox
 	    PixelTableClearDialog
-	    ClearGraphData
+	    ClearGraphData $which
 	}
 	crosshair {}
     }
@@ -1699,7 +1697,25 @@ proc GotoFrame {which} {
 
 	switch -- $ds9(display) {
 	    blink -
-	    single {$current(frame) hide}
+	    single {
+		set ff $current(frame)
+		# frame
+		$ff hide
+
+		# colorbar
+		if {$view(colorbar)} {
+		    $ds9(canvas) hide ${ff}cb
+		}
+
+		# graphs
+		if {$view(graph,horz)} {
+		    GraphHide $ff horz
+		}
+		if {$view(graph,vert)} {
+		    GraphHide $ff vert
+		}
+		
+	    }
 	    tile {}
 	}
     }
@@ -1800,7 +1816,7 @@ proc ResetFrame {which} {
 
 	RefreshInfoBox $which
 	PixelTableClearDialog
-	ClearGraphData
+	ClearGraphData $which
 
 	LockFrame $which
 	UpdatePanZoomDialog
@@ -1823,7 +1839,7 @@ proc ClearCurrentFrame {} {
 
     ClearInfoBox
     PixelTableClearDialog
-    ClearGraphData
+    ClearGraphData $which
 
     UpdateDS9
 }
@@ -1831,13 +1847,13 @@ proc ClearCurrentFrame {} {
 proc ClearAllFrame {} {
     global ds9
 
-    foreach f $ds9(frames) {
-	ClearFrame $f
+    foreach ff $ds9(frames) {
+	ClearFrame $ff
+	ClearGraphData $ff
     }
 
     ClearInfoBox
     PixelTableClearDialog
-    ClearGraphData
 
     UpdateDS9
 }
@@ -1894,14 +1910,23 @@ proc FrameToFront {} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
 
+    # frame
     $current(frame) show
+    $ds9(canvas) raise $current(frame)
+
+    # colorbar
     if {$view(colorbar)} {
 	$current(colorbar) show
-    } else {
-	$current(colorbar) hide
+	$ds9(canvas) raise $current(colorbar)
     }
-    $ds9(canvas) raise $current(frame)
-    $ds9(canvas) raise $current(colorbar)
+
+    # graphs
+    if {$view(graph,horz)} {
+	GraphShowRaise $current(frame) horz
+    }
+    if {$view(graph,vert)} {
+	GraphShowRaise $current(frame) vert
+    }
 
     switch -- $ds9(display) {
 	single -

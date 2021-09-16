@@ -150,12 +150,14 @@ proc ThemeConfigCanvas {w} {
 
 	$w itemconfigure ${ff}cb -fg [ThemeTreeForeground]
 	$w itemconfigure ${ff}cb -bg [ThemeTreeBackground]
-    }
 
-    # since graphs are created, but maybe not realized
-    # must update manually
-#    ThemeConfigGraph $ds9(graph,horz)
-#    ThemeConfigGraph $ds9(graph,vert)
+	# since graphs are created, but maybe not realized
+	# must update manually
+	set varname ${ff}gr
+	global $varname
+	ThemeConfigGraph [subst $${varname}(horz)]
+	ThemeConfigGraph [subst $${varname}(vert)]
+    }
 }
 
 proc InitCanvas {} {
@@ -250,6 +252,7 @@ proc UnBindEventsCanvas {} {
     foreach ff $ds9(active) {
 	UnBindEventsFrame $ff
 	UnBindEventsColorbar ${ff}cb
+	UnBindEventsGraphs $ff
     }
 }
 
@@ -262,11 +265,13 @@ proc BindEventsCanvas {} {
 	blink {
 	    BindEventsFrame $current(frame)
 	    BindEventsColorbar $current(colorbar)
+	    BindEventsGraphs $current(frame)
 	}
 	tile {
 	    foreach ff $ds9(active) {
 		BindEventsFrame $ff
 		BindEventsColorbar ${ff}cb
+		BindEventsGraph $ff
 	    }
 	}
     }
@@ -461,20 +466,21 @@ proc LayoutFramesNone {} {
     }
 
     # colorbar
+    LayoutColorbar colorbar 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
     if {$view(colorbar)} {
-	LayoutColorbar colorbar 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 	colorbar show
 	$ds9(canvas) raise colorbar
     }
     
     # graphs
+    LayoutGraphs graph 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
     if {$view(graph,horz)} {
-	LayoutGraphOne graph horz
+	GraphShowRaise graph horz
     }
-
     if {$view(graph,vert)} {
-	LayoutGraphOne graph vert
+	GraphShowRaise graph vert
     }
 
     # update menus/dialogs
@@ -516,12 +522,16 @@ proc LayoutFrameOne {} {
     foreach ff $ds9(active) {
 	set fw $ww
 	set fh $hh
+
+	# frame
 	LayoutFrameAdjust fw fh
 	$ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
 
-	if {$view(colorbar)} {
-	    LayoutColorbar ${ff}cb 0 0 $ww $hh
-	}
+	# colorbar
+	LayoutColorbar ${ff}cb 0 0 $ww $hh
+
+	# graphs
+	LayoutGraphs $ff 0 0 $ww $hh
     }
 
     # only show the current frame
@@ -614,17 +624,26 @@ proc TileRect {numx numy} {
     foreach ff $ds9(active) {
 	set fw $ww
 	set fh $hh
+
+	# frame
 	LayoutFrameAdjust fw fh
 	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
-	$ff show
 
+	# colorbar
+	LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	if {$view(colorbar)} {
-	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	    ${ff}cb show
+	    $ds9(canvas) raise ${ff}cb
 	}
 
-	$ds9(canvas) raise $ff
-	$ds9(canvas) raise ${ff}cb
+	# graphs
+	LayoutGraphs $ff $xx($ii) $yy($ii) $ww $hh
+	if {$view(graph,horz)} {
+	    GraphShowRaise $ff horz
+	}
+	if {$view(graph,vert)} {
+	    GraphShowRaise $ff vert
+	}
 
 	incr ii
     }
@@ -667,6 +686,7 @@ proc TileRectNone {numx numy} {
 	}
     }
 
+    # frames
     set ii 0
     foreach ff $ds9(active) {
 	$ff configure -x $xx($ii) -y $yy($ii) \
@@ -677,12 +697,22 @@ proc TileRectNone {numx numy} {
 	incr ii
     }
 
-    set current(colorbar) ${current(frame)}cb
+    # colorbar
+    set ff $current(frame)
+    LayoutColorbar ${ff}cb 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
     if {$view(colorbar)} {
-	LayoutColorbar $current(colorbar) 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	$current(colorbar) show
-	$ds9(canvas) raise $current(colorbar)
+	${ff}cb show
+	$ds9(canvas) raise ${ff}cb
+    }
+
+    # graphs
+    LayoutGraphs $ff 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+    if {$view(graph,horz)} {
+	GraphShowRaise $ff horz
+    }
+    if {$view(graph,vert)} {
+	GraphShowRaise $ff vert
     }
 
     FrameToFront
@@ -731,7 +761,6 @@ proc LayoutFrameAdjust {wvar hvar} {
 
     # cbv
     if {!$cbh && $cbv && !$grh && !$grv} {
-	# ok
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
     }

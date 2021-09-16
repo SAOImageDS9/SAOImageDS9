@@ -21,15 +21,6 @@ proc GraphDef {} {
     set igraph(y,min) 1
     set igraph(y,max) 100
 
-#    set igraph(horz,id) 0
-#    set igraph(vert,id) 0
-
-#    global graphHorzX graphHorzY
-#    global graphVertX graphVertY
-
-#    blt::vector create graphHorzX graphHorzY
-#    blt::vector create graphVertX graphVertY
-
     set graph(horz,grid) 1
     set graph(horz,log) false
     set graph(horz,thick) 1
@@ -50,35 +41,100 @@ proc GraphsCreate {frame} {
     set varname ${frame}gr
     global $varname
 
+    # horizontal
     set hg [string tolower ${frame}grh]
-    set ${varname}(horz) [blt::graph $ds9(main).$hg \
-			      -width $canvas(width) \
-			      -height $igraph(size) \
-			      -takefocus 0 \
-			      -highlightthickness 0 \
-			      -font [font actual TkDefaultFont] \
-			      -plotpadx 0 -plotpady 0 \
-			      -borderwidth 0 \
-			      -foreground [ThemeTreeForeground] \
-			      -background [ThemeTreeBackground] \
-			      -plotbackground [ThemeTreeBackground] \
-			     ]
-    set ${varname}(horz,id) 0
+    set horz [blt::graph $ds9(main).$hg \
+		  -width $canvas(width) \
+		  -height $igraph(size) \
+		  -takefocus 0 \
+		  -highlightthickness 0 \
+		  -font [font actual TkDefaultFont] \
+		  -plotpadx 0 -plotpady 0 \
+		  -borderwidth 0 \
+		  -foreground [ThemeTreeForeground] \
+		  -background [ThemeTreeBackground] \
+		  -plotbackground [ThemeTreeBackground] \
+		 ]
 
+    set xv [blt::vector create ${varname}grhx]
+    set yv [blt::vector create ${varname}grhy]
+
+    $horz legend configure -hide yes
+    $horz crosshairs configure -color green
+
+    $horz xaxis configure -hide no -showticks no -linewidth 0 \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+    $horz x2axis configure -hide yes \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+    $horz yaxis configure -hide yes \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+    $horz y2axis configure -hide no -bg [ThemeTreeBackground] \
+	-tickfont [font actual TkDefaultFont] \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+
+    $horz element create line1 -xdata $xv -ydata $yv \
+	-symbol none -color [ThemeTreeForeground]
+
+    # blt graph
+    set ${varname}(horz) $horz
+    # blt vectors
+    set ${varname}(horz,vect,xx) $xv
+    set ${varname}(horz,vect,yy) $yv
+    # canvas window id
+    set ${varname}(horz,id) 0
+    # canvas coords
+    set ${varname}(horz,xx) 0
+    set ${varname}(horz,yy) 0
+
+    # vertical
     set vg [string tolower ${frame}grv]
-    set ${varname}(vert) [blt::graph $ds9(main).$vg \
-			      -invertxy yes \
-			      -width $igraph(size) \
-			      -height $canvas(height) \
-			      -takefocus 0 \
-			      -highlightthickness 0 \
-			      -borderwidth 0 \
-			      -font [font actual TkDefaultFont] \
-			      -foreground [ThemeTreeForeground] \
-			      -background [ThemeTreeBackground] \
-			      -plotbackground [ThemeTreeBackground] \
-			     ]
+    set vert [blt::graph $ds9(main).$vg \
+		  -invertxy yes \
+		  -width $igraph(size) \
+		  -height $canvas(height) \
+		  -takefocus 0 \
+		  -highlightthickness 0 \
+		  -borderwidth 0 \
+		  -font [font actual TkDefaultFont] \
+		  -foreground [ThemeTreeForeground] \
+		  -background [ThemeTreeBackground] \
+		  -plotbackground [ThemeTreeBackground] \
+		 ]
+
+    set xv [blt::vector create ${varname}grvx]
+    set yv [blt::vector create ${varname}grvy]
+
+    $vert legend configure -hide yes
+    $vert crosshairs configure -color green
+
+    $vert xaxis configure -hide yes -descending yes \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+    $vert x2axis configure -hide no -descending yes 	\
+	-showticks no -linewidth 0 \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+
+    $vert yaxis configure -hide no -descending yes \
+	-tickfont [font actual TkDefaultFont] \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+    $vert y2axis configure -hide yes -descending yes \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+
+    $vert element create line1 -xdata $xv -ydata $yv \
+	-symbol none -color [ThemeTreeForeground]
+
+    # blt graph
+    set ${varname}(vert) $vert
+    # blt vectors
+    set ${varname}(vert,vect,xx) $xv
+    set ${varname}(vert,vect,yy) $yv
+    # canvas window id
     set ${varname}(vert,id) 0
+    # canvas coords
+    set ${varname}(vert,xx) 0
+    set ${varname}(vert,yy) 0
+
+    UpdateGraphGrid $frame
+    BindEventsGraphs $frame
 }
 
 proc GraphsDelete {frame} {
@@ -87,30 +143,204 @@ proc GraphsDelete {frame} {
     set varname ${frame}gr
     global $varname
 
-    destroy [subst $${varname}(horz)]
+    # horizontal
     if {[subst $${varname}(horz,id)]} {
 	$ds9(canvas) delete [subst $${varname}(horz,id)]
     }
+    destroy [subst $${varname}(horz)]
+    destroy [subst $${varname}(horz,vect,xx)]
+    destroy [subst $${varname}(horz,vect,yy)]
 
-    destroy [subst $${varname}(vert)]
+    # vertical
     if {[subst $${varname}(vert,id)]} {
 	$ds9(canvas) delete [subst $${varname}(vert,id)]
     }
+    destroy [subst $${varname}(vert)]
+    destroy [subst $${varname}(vert,vect,xx)]
+    destroy [subst $${varname}(vert,vect,yy)]
 
     unset $varname
 }
 
-proc GraphShow {frame which xx yy} {
+proc BindEventsGraphs {frame} {
+    global ds9
+    
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "BindEventsGraphs $frame"
+    }
+    
+    set varname ${frame}gr
+    global $varname
+
+    # horizontal
+    set horz [subst $${varname}(horz)]
+    bind $horz <Enter> [list EnterGraph $horz 1]
+    bind $horz <Leave> [list LeaveGraph $horz]
+    bind $horz <Button-1> [list MotionGraph $horz %x %y 1]
+    bind $horz <B1-Motion> [list MotionGraph $horz %x %y 1]
+    bind $horz <Up> [list ArrowKeyGraph $horz 0 -1 1]
+    bind $horz <Down> [list ArrowKeyGraph $horz 0 1 1]
+    bind $horz <Left> [list ArrowKeyGraph $horz -1 0 1]
+    bind $horz <Right> [list ArrowKeyGraph $horz 1 0 1]
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {bind $horz <<ThemeChanged>> {ThemeConfigGraph %W}}
+	aqua {}
+    }
+
+    # vertical
+    set vert [subst $${varname}(vert)]
+    bind $vert <Enter> [list EnterGraph $vert 0]
+    bind $vert <Leave> [list LeaveGraph $vert]
+    bind $vert <Button-1> [list MotionGraph $vert %x %y 0]
+    bind $vert <B1-Motion> [list MotionGraph $vert %x %y 0]
+    bind $vert <Up> [list ArrowKeyGraph $vert 0 -1 0]
+    bind $vert <Down> [list ArrowKeyGraph $vert 0 1 0]
+    bind $vert <Left> [list ArrowKeyGraph $vert -1 0 0]
+    bind $vert <Right> [list ArrowKeyGraph $vert 1 0 0]
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {bind $vert <<ThemeChanged>> {ThemeConfigGraph %W}}
+	aqua {}
+    }
+}
+
+proc UnBindEventsGraphs {frame} {
+    global ds9
+    
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "UnBindEventsGraphs $frame"
+    }
+
+    set varname ${frame}gr
+    global $varname
+
+    # horizontal
+    set horz [subst $${varname}(horz)]
+    bind $horz <Enter> {}
+    bind $horz <Leave> {}
+    bind $horz <Button-1> {}
+    bind $horz <B1-Motion> {}
+    bind $horz <Up> {}
+    bind $horz <Down> {}
+    bind $horz <Left> {}
+    bind $horz <Right> {}
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {bind $horz <<ThemeChanged>> {}}
+	aqua {}
+    }
+
+    # vertical
+    set vert [subst $${varname}(vert)]
+    bind $vert <Enter> {}
+    bind $vert <Leave> {}
+    bind $vert <Button-1> {}
+    bind $vert <B1-Motion> {}
+    bind $vert <Up> {}
+    bind $vert <Down> {}
+    bind $vert <Left> {}
+    bind $vert <Right> {}
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {bind $vert <<ThemeChanged>> {}}
+	aqua {}
+    }
+}
+
+proc LayoutGraphs {frame fx fy fw fh} {
+    global ds9
+    global colorbar
+    global view
+    global igraph
+    
+    set varname ${frame}gr
+    global $varname
+
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set grh $view(graph,horz)
+    set grv $view(graph,vert)
+
+    # cbh
+    if {$cbh && !$cbv && !$grh && !$grv} {
+    }
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
+    }
+    # cbhgrv
+    if {$cbh && !$cbv && !$grh && $grv} {
+    }
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+    }
+
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+    }
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+    }
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
+    }
+    # cbvgrhgrv
+    if {!$cbh && $cbv && $grh && $grv} {
+    }
+
+    # grh
+    if {!$cbh && !$cbv && $grh && !$grv} {
+	set xx $fx
+	set yy [expr $fy + $fh - $igraph(size)]
+	set ww $fw
+	set hh $igraph(size)
+
+	[subst $${varname}(horz)] configure -width $ww -height $hh
+	set ${varname}(horz,xx) $xx
+	set ${varname}(horz,yy) $yy
+    }
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+	set xx [expr $fx + $fw - $igraph(size)]
+	set yy $fy
+	set ww $igraph(size)
+	set hh $fh
+
+	[subst $${varname}(vert)] configure -width $ww -height $hh
+	set ${varname}(vert,xx) $xx
+	set ${varname}(vert,yy) $yy
+    }
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
+    }
+}
+
+proc GraphShowRaise {frame which} {
     global ds9
 
     set varname ${frame}gr
     global $varname
 
-    if {![subst $${varname}($which,id)]} {
+    set gr [subst $${varname}($which)]
+    set id [subst $${varname}($which,id)]
+    set xx [subst $${varname}($which,xx)]
+    set yy [subst $${varname}($which,yy)]
+
+    if {!$id} {
 	set ${varname}($which,id) [$ds9(canvas) create window $xx $yy \
-				       -window [subst $${varname}($which)] \
-				       -anchor nw]
-	$ds9(canvas) raise [subst $${varname}($which,id)]
+				       -window $gr -anchor nw]
+    } else {
+	$ds9(canvas) coords $gr $xx $yy
+    }
+
+    if {$id} {
+	$ds9(canvas) raise $id
     }
 }
 
@@ -120,121 +350,14 @@ proc GraphHide {frame which} {
     set varname ${frame}gr
     global $varname
 
-    if {[subst $${varname}($which,id)]} {
-	$ds9(canvas) delete [subst $${varname}($which,id)]
+    set id [subst $${varname}($which,id)]
+    if {$id} {
+	$ds9(canvas) delete $id
 	set ${varname}($which,id) 0
     }
 }
 
-proc LayoutGraph {frame which} {
-}
-
-# ***OLD***
-
-proc CreateGraphs {} {
-    return
-    global igraph
-    
-    global ds9
-    global canvas
-
-    # Horizontal Graph
-    set ds9(graph,horz) [blt::graph $ds9(main).horz \
-			     -width $canvas(width) \
-			     -height $igraph(size) \
-			     -takefocus 0 \
-			     -highlightthickness 0 \
-			     -font [font actual TkDefaultFont] \
-			     -plotpadx 0 -plotpady 0 \
- 			     -borderwidth 0 \
-			     -foreground [ThemeTreeForeground] \
-			     -background [ThemeTreeBackground] \
-			     -plotbackground [ThemeTreeBackground] \
-			    ]
-
-    $ds9(graph,horz) legend configure -hide yes
-    $ds9(graph,horz) crosshairs configure -color green
-
-    $ds9(graph,horz) xaxis configure -hide no -showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $ds9(graph,horz) x2axis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $ds9(graph,horz) yaxis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $ds9(graph,horz) y2axis configure -hide no -bg [ThemeTreeBackground] \
-	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-
-    $ds9(graph,horz) element create line1 \
-	-xdata graphHorzX -ydata graphHorzY -symbol none \
-	-color [ThemeTreeForeground]
-
-    bind $ds9(graph,horz) <Enter> [list EnterGraph $ds9(graph,horz) 1]
-    bind $ds9(graph,horz) <Leave> [list LeaveGraph $ds9(graph,horz)]
-    bind $ds9(graph,horz) <Button-1> \
-	[list MotionGraph $ds9(graph,horz) %x %y 1]
-    bind $ds9(graph,horz) <B1-Motion> \
-	[list MotionGraph $ds9(graph,horz) %x %y 1]
-    bind $ds9(graph,horz) <Up> [list ArrowKeyGraph $ds9(graph,horz) 0 -1 1]
-    bind $ds9(graph,horz) <Down> [list ArrowKeyGraph $ds9(graph,horz) 0 1 1]
-    bind $ds9(graph,horz) <Left> [list ArrowKeyGraph $ds9(graph,horz) -1 0 1]
-    bind $ds9(graph,horz) <Right> [list ArrowKeyGraph $ds9(graph,horz) 1 0 1]
-
-    switch $ds9(wm) {
-	x11 -
-	win32 {bind $ds9(graph,horz) <<ThemeChanged>> {ThemeConfigGraph %W}}
-	aqua {}
-    }
-
-    # Vertical Graph
-    set ds9(graph,vert) [blt::graph $ds9(main).vert \
-			     -invertxy yes \
-			     -width $igraph(size) \
-			     -height $canvas(height) \
-			     -takefocus 0 \
-			     -highlightthickness 0 \
-			     -borderwidth 0 \
-			     -font [font actual TkDefaultFont] \
-			     -foreground [ThemeTreeForeground] \
-			     -background [ThemeTreeBackground] \
-			     -plotbackground [ThemeTreeBackground] \
-			    ]
-
-    $ds9(graph,vert) legend configure -hide yes
-    $ds9(graph,vert) crosshairs configure -color green
-
-    $ds9(graph,vert) xaxis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $ds9(graph,vert) x2axis configure -hide no -descending yes 	\
-	-showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-
-    $ds9(graph,vert) yaxis configure -hide no -descending yes \
-	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $ds9(graph,vert) y2axis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-
-    $ds9(graph,vert) element create line1 \
-	-xdata graphVertX -ydata graphVertY -symbol none \
-	-color [ThemeTreeForeground]
-
-    bind $ds9(graph,vert) <Enter> [list EnterGraph $ds9(graph,vert) 0]
-    bind $ds9(graph,vert) <Leave> [list LeaveGraph $ds9(graph,vert)]
-    bind $ds9(graph,vert) <Button-1> \
-	[list MotionGraph $ds9(graph,vert) %x %y 0]
-    bind $ds9(graph,vert) <B1-Motion> \
-	[list MotionGraph $ds9(graph,vert) %x %y 0]
-    bind $ds9(graph,vert) <Up> [list ArrowKeyGraph $ds9(graph,vert) 0 -1 0]
-    bind $ds9(graph,vert) <Down> [list ArrowKeyGraph $ds9(graph,vert) 0 1 0]
-    bind $ds9(graph,vert) <Left> [list ArrowKeyGraph $ds9(graph,vert) -1 0 0]
-    bind $ds9(graph,vert) <Right> [list ArrowKeyGraph $ds9(graph,vert) 1 0 0]
-
-    UpdateGraphGrid
-}
-
 proc ThemeConfigGraph {w} {
-    return
     # invoked from ThemeConfigCanvas
 
     $w configure -fg [ThemeTreeForeground] -bg [ThemeTreeBackground] \
@@ -249,58 +372,148 @@ proc ThemeConfigGraph {w} {
     $w element configure line1 -color [ThemeTreeForeground]
 }
 
-proc UpdateGraphFont {} {
-    return
-    global ds9
+# Events
+proc EnterGraph {which horz} {
+    global current
 
-    $ds9(graph,horz) y2axis configure -tickfont [font actual TkDefaultFont]
-    $ds9(graph,vert) yaxis configure -tickfont [font actual TkDefaultFont]
+    focus $which
+    $which crosshairs on
+
+    if {$current(frame) != {}} {
+	switch $current(mode) {
+	    crosshair -
+	    analysis {
+
+		set xx [$which crosshairs cget -x]
+		set yy [$which crosshairs cget -y]
+
+		set coord [$current(frame) get crosshair canvas]
+		set XX [lindex $coord 0]
+		set YY [lindex $coord 1]
+
+		if {$horz} {
+		    EnterInfoBox $current(frame)
+		    UpdateInfoBox $current(frame) $xx $YY canvas
+		    UpdatePixelTableDialog $current(frame) $xx $YY canvas
+		} else {
+		    EnterInfoBox $current(frame)
+		    UpdateInfoBox $current(frame) $XX $yy canvas
+		    UpdatePixelTableDialog $current(frame) $XX $yy canvas
+		}
+	    }
+	}
+    }
 }
 
-proc UpdateGraphGrid {} {
-    return
+proc LeaveGraph {which} {
+    focus {}
+    $which crosshairs off
+
+    LeaveInfoBox
+    PixelTableClearDialog
+}
+
+proc MotionGraph {which xx yy horz} {
+    global current
+
+    $which crosshairs configure -x $xx -y $yy
+
+    if {$current(frame) != {}} {
+	switch $current(mode) {
+	    crosshair -
+	    analysis {
+		set coord [$current(frame) get crosshair canvas]
+		set XX [lindex $coord 0]
+		set YY [lindex $coord 1]
+		if {$horz} {
+		    UpdateInfoBox $current(frame) $xx $YY canvas
+		    UpdatePixelTableDialog $current(frame) $xx $YY canvas
+		} else {
+		    UpdateInfoBox $current(frame) $XX $yy canvas
+		    UpdatePixelTableDialog $current(frame) $XX $yy canvas
+		}
+	    }    
+	}
+    }
+}
+
+proc ArrowKeyGraph {which xx yy horz} {
+    set cx [$which crosshairs cget -x]
+    set cy [$which crosshairs cget -y]
+
+    set cx [expr $cx+$xx]
+    set cy [expr $cy+$yy]
+
+    MotionGraph $which $cx $cy $horz
+}
+
+# Update procs
+
+proc UpdateGraphFont {frame} {
+    set varname ${frame}gr
+    global $varname
+
+    ${varname}(horz) y2axis configure -tickfont [font actual TkDefaultFont]
+    ${varname}(vert) yaxis configure -tickfont [font actual TkDefaultFont]
+}
+
+proc UpdateGraphGrid {frame} {
     global graph
-    global ds9
 
-    $ds9(graph,horz) xaxis configure -grid $graph(horz,grid) -tickdefault 4
-    $ds9(graph,horz) y2axis configure -grid $graph(horz,grid)
+    set varname ${frame}gr
+    global $varname
+    
+    [subst $${varname}(horz)] xaxis configure \
+	-grid $graph(horz,grid) -tickdefault 4
+    [subst $${varname}(horz)] y2axis configure -grid $graph(horz,grid)
 
-    $ds9(graph,vert) x2axis configure -grid $graph(vert,grid)
-    $ds9(graph,vert) yaxis configure -grid $graph(vert,grid) -tickdefault 4
+    [subst $${varname}(vert)] yaxis configure \
+	-grid $graph(vert,grid) -tickdefault 4
+    [subst $${varname}(vert)] x2axis configure -grid $graph(vert,grid)
 }
 
-proc UpdateGraphAxis {which} {
+proc UpdateGraphAxis {frame} {
     return
     global ds9
     global view
     global graph
 
-    global debug
-    if {$debug(tcl,update)} {
-	puts stderr "UpdateGraphAxis"
-    }
+    set varname ${frame}gr
+    global $varname
 
     if {$view(graph,horz)} {
-	UpdateGraphXAxisHV $which $ds9(graph,horz) graphHorzX
-	UpdateGraphYAxisHV $which $ds9(graph,horz) graphHorzY \
+	set gr [subst $${varname}(horz)]
+	set xv [subst $${varname}(horz,vect,xx)]
+	set yv [subst $${varname}(horz,vect,yy)]
+
+	UpdateGraphXAxisHV $frame $gr $xv
+	UpdateGraphYAxisHV $frame $gr $yv \
 	    $graph(horz,log) $graph(horz,thick) $graph(horz,method)
     }
     
     if {$view(graph,vert)} {
-	UpdateGraphXAxisHV $which $ds9(graph,vert) graphVertX
-	UpdateGraphYAxisHV $which $ds9(graph,vert) graphVertY \
+	set gr [subst $${varname}(vert)]
+	set xv [subst $${varname}(vert,vect,xx)]
+	set yv [subst $${varname}(vert,vect,yy)]
+
+	UpdateGraphXAxisHV $frame $gr $xv
+	UpdateGraphYAxisHV $frame $gr $yv \
 	    $graph(vert,log) $graph(vert,thick) $graph(vert,method)
     }
 }
 
-proc UpdateGraphXAxisHV {which what vectorX} {
+proc UpdateGraphXAxisHV {frame what vectorX} {
     return
     global igraph
-    global graphHorzX graphVertX
 
-    if {$which != {}} {
-	set xMin [expr "$$vectorX\(min\)"]
-	set xMax [expr "$$vectorX\(max\)"]
+    set varname ${frame}gr
+    global $varname
+
+    if {$frame != {}} {
+#	set xMin [expr "$$vectorX\(min\)"]
+#	set xMax [expr "$$vectorX\(max\)"]
+	set xMin [$vectorX min]
+	set xMax [$vectorX max]
 
 	$what xaxis configure -min $xMin -max $xMax
 	$what x2axis configure -min $xMin -max $xMax
@@ -310,13 +523,15 @@ proc UpdateGraphXAxisHV {which what vectorX} {
     }
 }
 
-proc UpdateGraphYAxisHV {which what vectorY log thick method} {
+proc UpdateGraphYAxisHV {frame what vectorY log thick method} {
     return
     global igraph
-    global graphHorzY graphVertY
 
-    if {$which != {}} {
-	set minmax [$which get clip]
+    set varname ${frame}gr
+    global $varname
+
+    if {$frame != {}} {
+	set minmax [$frame get clip]
 	set yMin [lindex $minmax 0]
 	set yMax [lindex $minmax 1]
 
@@ -349,214 +564,60 @@ proc UpdateGraphYAxisHV {which what vectorY log thick method} {
     }
 }
 
-proc ClearGraphData {} {
+proc ClearGraphData {frame} {
     return
-    global ds9
     global view
 
+    set varname ${frame}gr
+    global $varname
+
     if {$view(graph,horz)} {
-	$ds9(graph,horz) element configure line1 -hide yes
+	${varname}(horz) element configure line1 -hide yes
     }    
 
     if {$view(graph,vert)} {
-	$ds9(graph,vert) element configure line1 -hide yes
+	${varname}(vert) element configure line1 -hide yes
     }
 }
 
-proc UpdateGraphData {which x y sys} {
+proc UpdateGraphData {frame xx yy sys} {
     return
     global ds9
     global view
     global graph
     global dgraph
 
-    global debug
-    if {$debug(tcl,update)} {
-	puts stderr "UpdateGraphData"
-    }
+    puts "UpdateGraphData $frame $xx $yy $sys"
+
+    set varname ${frame}gr
+    global $varname
 
     # save for later
-    set dgraph(frame) $which
-    set dgraph(x) $x
-    set dgraph(y) $y
+    set dgraph(frame) $frame
+    set dgraph(x) $xx
+    set dgraph(y) $yy
 
-    if {![$which has fits]} {
+    if {![$frame has fits]} {
 	return
     }
 
     if {$view(graph,horz)} {
-	$which get horizontal cut graphHorzX graphHorzY $x $y $sys \
-	    $graph(horz,thick) $graph(horz,method)
-	$ds9(graph,horz) element configure line1 -hide no
+	$frame get horizontal cut \
+	    ${varname}(horz,vect,xx) ${varname}(horz,vect,yy) \
+	    $xx $yy $sys $graph(horz,thick) $graph(horz,method)
+	${varname}(horz) element configure line1 -hide no
     }
 
     if {$view(graph,vert)} {
-	$which get vertical cut graphVertX graphVertY $x $y $sys \
-	    $graph(vert,thick) $graph(vert,method)
-	$ds9(graph,vert) element configure line1 -hide no
+	$frame get vertical cut \
+	    ${varname}(vert,vect,xx) ${varname}(vert,vect,yy) \
+	    $xx $yy $sys $graph(vert,thick) $graph(vert,method)
+	${varname}(vert) element configure line1 -hide no
     }
 }
 
-proc EnterGraph {which horz} {
-    return
-    global current
-
-    focus $which
-    $which crosshairs on
-
-    if {$current(frame) != {}} {
-	switch $current(mode) {
-	    crosshair -
-	    analysis {
-
-		set x [$which crosshairs cget -x]
-		set y [$which crosshairs cget -y]
-
-		set coord [$current(frame) get crosshair canvas]
-		set X [lindex $coord 0]
-		set Y [lindex $coord 1]
-
-		if {$horz} {
-		    EnterInfoBox $current(frame)
-		    UpdateInfoBox $current(frame) $x $Y canvas
-		    UpdatePixelTableDialog $current(frame) $x $Y canvas
-		} else {
-		    EnterInfoBox $current(frame)
-		    UpdateInfoBox $current(frame) $X $y canvas
-		    UpdatePixelTableDialog $current(frame) $X $y canvas
-		}
-	    }
-	}
-    }
-}
-
-proc LeaveGraph {which} {
-    return
-    focus {}
-    $which crosshairs off
-
-    LeaveInfoBox
-    PixelTableClearDialog
-}
-
-proc MotionGraph {which x y horz} {
-    return
-    global current
-
-    $which crosshairs configure -x $x -y $y
-
-    if {$current(frame) != {}} {
-	switch $current(mode) {
-	    crosshair -
-	    analysis {
-		set coord [$current(frame) get crosshair canvas]
-		set X [lindex $coord 0]
-		set Y [lindex $coord 1]
-		if {$horz} {
-		    UpdateInfoBox $current(frame) $x $Y canvas
-		    UpdatePixelTableDialog $current(frame) $x $Y canvas
-		} else {
-		    UpdateInfoBox $current(frame) $X $y canvas
-		    UpdatePixelTableDialog $current(frame) $X $y canvas
-		}
-	    }    
-	}
-    }
-}
-
-proc ArrowKeyGraph {which x y horz} {
-    return
-    set cx [$which crosshairs cget -x]
-    set cy [$which crosshairs cget -y]
-
-    set cx [expr $cx+$x]
-    set cy [expr $cy+$y]
-
-    MotionGraph $which $cx $cy $horz
-}
-
-proc UpdateGraphLayout {which} {
-    return
-    global igraph
-
-    global ds9
-    global canvas
-    global view
-    global colorbar
-
-    if {$which != {}} {
-	set frww [$ds9(canvas) itemcget $which -width]
-	set frhh [$ds9(canvas) itemcget $which -height]
-	set frxx [$ds9(canvas) itemcget $which -x]
-	set fryy [$ds9(canvas) itemcget $which -y]
-    } else {
-	set frww $canvas(width)
-	set frhh $canvas(height)
-	set frxx 0
-	set fryy 0
-    }
-
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
-
-    if {$view(graph,horz)} {
-	set xx $frxx
-	set yy [expr $canvas(height) + $canvas(gap)]
-
-	if {$cbh} {
-	    incr yy $colorbar(horizontal,height)
-	}
-	if {$view(graph,vert) && !$cbh} {
-	    incr yy $igraph(gap,y)
-	}
-
-	if {!$igraph(horz,id)} {
-	    set igraph(horz,id) [$ds9(canvas) create window $xx $yy \
-				    -window $ds9(graph,horz) -anchor nw]
-	} else {
-	    $ds9(canvas) coords $igraph(horz,id) $xx $yy
-	}
-
-	set ww [expr $frww+$igraph(gap,x)]
-	$ds9(graph,horz) configure -width $ww
-    } else {
-	if {$igraph(horz,id)} {
-	    $ds9(canvas) delete $igraph(horz,id)
-	    set igraph(horz,id) 0
-	}
-    }
-
-    if {$view(graph,vert)} {
-	set yy $fryy
-	set xx [expr $canvas(width) + $canvas(gap)]
-
-	if {$cbv} {
-	    incr xx $colorbar(vertical,width)
-	}
-	if {$view(graph,horz) && !$cbv} {
-	    incr xx $igraph(gap,x)
-	}
-
-	if {!$igraph(vert,id)} {
-	    set igraph(vert,id) [$ds9(canvas) create window $xx $yy \
-				    -window $ds9(graph,vert) -anchor nw]
-	} else {
-	    $ds9(canvas) coords $igraph(vert,id) $xx $yy
-	}
-
-	set hh [expr $frhh+$igraph(gap,y)]
-	$ds9(graph,vert) configure -height $hh
-
-    } else {
-	if {$igraph(vert,id)} {
-	    $ds9(canvas) delete $igraph(vert,id)
-	    set igraph(vert,id) 0
-	}
-    }
-}
-
+# Dialog
 proc GraphDialog {} {
-    return
     global igraph
     global graph
     global current
@@ -658,7 +719,6 @@ proc GraphDialog {} {
 }
 
 proc GraphApplyDialog {} {
-    return
     global ds9
     global igraph
     global graph
@@ -677,7 +737,6 @@ proc GraphApplyDialog {} {
 }
 
 proc GraphDestroyDialog {} {
-    return
     global igraph
     global dgraph
 
@@ -685,6 +744,89 @@ proc GraphDestroyDialog {} {
 	destroy $igraph(top)
 	destroy $igraph(mb)
 	unset dgraph
+    }
+}
+
+# old
+
+proc UpdateGraphLayout {frame} {
+    return
+    
+    global igraph
+
+    global ds9
+    global canvas
+    global view
+    global colorbar
+
+    if {$frame != {}} {
+	set frww [$ds9(canvas) itemcget $frame -width]
+	set frhh [$ds9(canvas) itemcget $frame -height]
+	set frxx [$ds9(canvas) itemcget $frame -x]
+	set fryy [$ds9(canvas) itemcget $frame -y]
+    } else {
+	set frww $canvas(width)
+	set frhh $canvas(height)
+	set frxx 0
+	set fryy 0
+    }
+
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+
+    if {$view(graph,horz)} {
+	set xx $frxx
+	set yy [expr $canvas(height) + $canvas(gap)]
+
+	if {$cbh} {
+	    incr yy $colorbar(horizontal,height)
+	}
+	if {$view(graph,vert) && !$cbh} {
+	    incr yy $igraph(gap,y)
+	}
+
+	if {!$igraph(horz,id)} {
+	    set igraph(horz,id) [$ds9(canvas) create window $xx $yy \
+				     -window ${varname}(horz) -anchor nw]
+	} else {
+	    $ds9(canvas) coords $igraph(horz,id) $xx $yy
+	}
+
+	set ww [expr $frww+$igraph(gap,x)]
+	${varname}(horz) configure -width $ww
+    } else {
+	if {$igraph(horz,id)} {
+	    $ds9(canvas) delete $igraph(horz,id)
+	    set igraph(horz,id) 0
+	}
+    }
+
+    if {$view(graph,vert)} {
+	set yy $fryy
+	set xx [expr $canvas(width) + $canvas(gap)]
+
+	if {$cbv} {
+	    incr xx $colorbar(vertical,width)
+	}
+	if {$view(graph,horz) && !$cbv} {
+	    incr xx $igraph(gap,x)
+	}
+
+	if {!$igraph(vert,id)} {
+	    set igraph(vert,id) [$ds9(canvas) create window $xx $yy \
+				     -window ${varname}(vert) -anchor nw]
+	} else {
+	    $ds9(canvas) coords $igraph(vert,id) $xx $yy
+	}
+
+	set hh [expr $frhh+$igraph(gap,y)]
+	${varname}(vert) configure -height $hh
+
+    } else {
+	if {$igraph(vert,id)} {
+	    $ds9(canvas) delete $igraph(vert,id)
+	    set igraph(vert,id) 0
+	}
     }
 }
 

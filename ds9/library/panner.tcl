@@ -176,7 +176,6 @@ proc LeavePanner {} {
 
     LeaveInfoBox
     PixelTableClearDialog
-    ClearGraphData
 }
 
 proc MotionPanner {x y} {

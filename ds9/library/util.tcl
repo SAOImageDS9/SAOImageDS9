@@ -921,7 +921,7 @@ proc ChangeMode {} {
 
     RefreshInfoBox $current(frame)
     PixelTableClearDialog
-    ClearGraphData
+    ClearGraphData $current(frame)
 
     switch -- $current(mode) {
 	none -

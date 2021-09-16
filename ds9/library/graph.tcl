@@ -263,39 +263,11 @@ proc LayoutGraphs {frame fx fy fw fh} {
     set varname ${frame}gr
     global $varname
 
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
-    # cbh
-    if {$cbh && !$cbv && !$grh && !$grv} {
-    }
-    # cbhgrh
-    if {$cbh && !$cbv && $grh && !$grv} {
-    }
-    # cbhgrv
-    if {$cbh && !$cbv && !$grh && $grv} {
-    }
-    # cbhgrhgrv
-    if {$cbh && !$cbv && $grh && $grv} {
-    }
-
-    # cbv
-    if {!$cbh && $cbv && !$grh && !$grv} {
-    }
-    # cbvgrh
-    if {!$cbh && $cbv && $grh && !$grv} {
-    }
-    # cbvgrv
-    if {!$cbh && $cbv && !$grh && $grv} {
-    }
-    # cbvgrhgrv
-    if {!$cbh && $cbv && $grh && $grv} {
-    }
-
     # grh
-    if {!$cbh && !$cbv && $grh && !$grv} {
+    if {$grh && !$grv} {
 	set xx $fx
 	set yy [expr $fy + $fh - $igraph(size)]
 	set ww $fw
@@ -306,7 +278,7 @@ proc LayoutGraphs {frame fx fy fw fh} {
 	set ${varname}(horz,yy) $yy
     }
     # grv
-    if {!$cbh && !$cbv && !$grh && $grv} {
+    if {!$grh && $grv} {
 	set xx [expr $fx + $fw - $igraph(size)]
 	set yy $fy
 	set ww $igraph(size)
@@ -317,7 +289,24 @@ proc LayoutGraphs {frame fx fy fw fh} {
 	set ${varname}(vert,yy) $yy
     }
     # grhgrv
-    if {!$cbh && !$cbv && $grh && $grv} {
+    if {$grh && $grv} {
+	set xx $fx
+	set yy [expr $fy + $fh - $igraph(size)]
+	set ww [expr $fw - $igraph(size)]
+	set hh $igraph(size)
+
+	[subst $${varname}(horz)] configure -width $ww -height $hh
+	set ${varname}(horz,xx) $xx
+	set ${varname}(horz,yy) $yy
+
+	set xx [expr $fx + $fw - $igraph(size)]
+	set yy $fy
+	set ww $igraph(size)
+	set hh [expr $fh - $igraph(size)]
+
+	[subst $${varname}(vert)] configure -width $ww -height $hh
+	set ${varname}(vert,xx) $xx
+	set ${varname}(vert,yy) $yy
     }
 }
 

@@ -255,6 +255,11 @@ proc UnBindEventsGraphs {frame} {
 }
 
 proc LayoutGraphs {frame fx fy fw fh} {
+    LayoutGraphHorz $frame $fx $fy $fw $fh
+    LayoutGraphVert $frame $fx $fy $fw $fh
+}
+
+proc LayoutGraphHorz {frame fx fy fw fh} {
     global ds9
     global colorbar
     global view
@@ -263,51 +268,103 @@ proc LayoutGraphs {frame fx fy fw fh} {
     set varname ${frame}gr
     global $varname
 
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
+    set xx $fx
+    set yy [expr $fy + $fh - $igraph(size)]
+    set ww $fw
+    set hh $igraph(size)
+
     # grh
     if {$grh && !$grv} {
-	set xx $fx
-	set yy [expr $fy + $fh - $igraph(size)]
-	set ww $fw
-	set hh $igraph(size)
-
-	[subst $${varname}(horz)] configure -width $ww -height $hh
-	set ${varname}(horz,xx) $xx
-	set ${varname}(horz,yy) $yy
-    }
-    # grv
-    if {!$grh && $grv} {
-	set xx [expr $fx + $fw - $igraph(size)]
-	set yy $fy
-	set ww $igraph(size)
-	set hh $fh
-
-	[subst $${varname}(vert)] configure -width $ww -height $hh
-	set ${varname}(vert,xx) $xx
-	set ${varname}(vert,yy) $yy
+	# ok
+	# default
     }
     # grhgrv
     if {$grh && $grv} {
-	set xx $fx
-	set yy [expr $fy + $fh - $igraph(size)]
-	set ww [expr $fw - $igraph(size)]
-	set hh $igraph(size)
-
-	[subst $${varname}(horz)] configure -width $ww -height $hh
-	set ${varname}(horz,xx) $xx
-	set ${varname}(horz,yy) $yy
-
-	set xx [expr $fx + $fw - $igraph(size)]
-	set yy $fy
-	set ww $igraph(size)
-	set hh [expr $fh - $igraph(size)]
-
-	[subst $${varname}(vert)] configure -width $ww -height $hh
-	set ${varname}(vert,xx) $xx
-	set ${varname}(vert,yy) $yy
+	# ok
+	incr ww -$igraph(size)
     }
+
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
+	# ok
+    }
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+	# ok
+    }
+
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+	incr ww -$igraph(gap,x)
+    }
+    # cbvgrhgrv
+    if {!$cbh && $cbv && $grh && $grv} {
+	incr ww -$igraph(gap,x)
+    }
+
+    [subst $${varname}(horz)] configure -width $ww -height $hh
+    set ${varname}(horz,xx) $xx
+    set ${varname}(horz,yy) $yy
+}
+
+proc LayoutGraphVert {frame fx fy fw fh} {
+    global ds9
+    global colorbar
+    global view
+    global igraph
+    
+    set varname ${frame}gr
+    global $varname
+
+    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set grh $view(graph,horz)
+    set grv $view(graph,vert)
+
+    set xx [expr $fx + $fw - $igraph(size)]
+    set yy $fy
+    set ww $igraph(size)
+    set hh $fh
+
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+	# default
+    }
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
+	incr hh -$igraph(size)
+    }
+
+    # cbhgrv
+    if {$cbh && !$cbv && !$grh && $grv} {
+	# ok
+	incr hh -$igraph(gap,y)
+    }
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+	# ok
+	incr hh -$igraph(gap,y)
+	incr hh -$igraph(size)
+    }
+
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
+	# ok
+    }
+    # cbvgrhgrv
+    if {!$cbh && $cbv && $grh && $grv} {
+	# ok
+	incr hh -$igraph(size)
+    }
+
+    [subst $${varname}(vert)] configure -width $ww -height $hh
+    set ${varname}(vert,xx) $xx
+    set ${varname}(vert,yy) $yy
 }
 
 proc GraphShowRaise {frame which} {

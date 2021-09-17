@@ -628,6 +628,8 @@ proc TileRect {numx numy} {
 	# frame
 	LayoutFrameAdjust fw fh
 	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
+	$ff show
+	$ds9(canvas) raise $ff
 
 	# colorbar
 	LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
@@ -962,3 +964,58 @@ proc ProcessSendViewCmd {proc id param {sock {}} {fn {}}} {
     viewsend::yyparse
 }
 
+if {0} {
+    # cbhcbvgrhgrv
+    if {$cbh && $cbv && $grh && $grv} {
+	# not possible
+    }
+    # cbhcbvgrh
+    if {$cbh && $cbv && $grh && !$grv} {
+	# not possible
+    }
+    # cbhcbvgrv
+    if {$cbh && $cbv && !$grh && $grv} {
+	# not possible
+    }
+    # cbhcbv
+    if {$cbh && $cbv && !$grh && !$grv} {
+	# not possible
+    }
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+    }
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
+    }
+    # cbhgrv
+    if {$cbh && !$cbv && !$grh && $grv} {
+    }
+    # cbh
+    if {$cbh && !$cbv && !$grh && !$grv} {
+    }
+
+    # cbvgrhgrv
+    if {!$cbh && $cbv && $grh && $grv} {
+    }
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+    }
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
+    }
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+    }
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
+    }
+    # grh
+    if {!$cbh && !$cbv && $grh && !$grv} {
+    }
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+    }
+    # 
+    if {!$cbh && !$cbv && !$grh && !$grv} {
+    }
+}

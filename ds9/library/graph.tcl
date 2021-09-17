@@ -278,26 +278,10 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     set ww $fw
     set hh $igraph(size)
 
-    # grh
-    if {$grh && !$grv} {
-	# ok
-	# default
-    }
     # grhgrv
     if {$grh && $grv} {
-	# ok
 	incr ww -$igraph(size)
     }
-
-    # cbhgrh
-    if {$cbh && !$cbv && $grh && !$grv} {
-	# ok
-    }
-    # cbhgrhgrv
-    if {$cbh && !$cbv && $grh && $grv} {
-	# ok
-    }
-
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
 	incr ww -$igraph(gap,x)
@@ -331,34 +315,21 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     set ww $igraph(size)
     set hh $fh
 
-    # grv
-    if {!$cbh && !$cbv && !$grh && $grv} {
-	# default
-    }
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr hh -$igraph(size)
     }
-
     # cbhgrv
     if {$cbh && !$cbv && !$grh && $grv} {
-	# ok
 	incr hh -$igraph(gap,y)
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
-	# ok
 	incr hh -$igraph(gap,y)
 	incr hh -$igraph(size)
     }
-
-    # cbvgrv
-    if {!$cbh && $cbv && !$grh && $grv} {
-	# ok
-    }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
-	# ok
 	incr hh -$igraph(size)
     }
 
@@ -633,8 +604,6 @@ proc UpdateGraphData {frame xx yy sys} {
     global graph
     global dgraph
 
-    puts "UpdateGraphData $frame $xx $yy $sys"
-
     set varname ${frame}gr
     global $varname
 
@@ -790,89 +759,6 @@ proc GraphDestroyDialog {} {
 	destroy $igraph(top)
 	destroy $igraph(mb)
 	unset dgraph
-    }
-}
-
-# old
-
-proc UpdateGraphLayout {frame} {
-    return
-    
-    global igraph
-
-    global ds9
-    global canvas
-    global view
-    global colorbar
-
-    if {$frame != {}} {
-	set frww [$ds9(canvas) itemcget $frame -width]
-	set frhh [$ds9(canvas) itemcget $frame -height]
-	set frxx [$ds9(canvas) itemcget $frame -x]
-	set fryy [$ds9(canvas) itemcget $frame -y]
-    } else {
-	set frww $canvas(width)
-	set frhh $canvas(height)
-	set frxx 0
-	set fryy 0
-    }
-
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
-
-    if {$view(graph,horz)} {
-	set xx $frxx
-	set yy [expr $canvas(height) + $canvas(gap)]
-
-	if {$cbh} {
-	    incr yy $colorbar(horizontal,height)
-	}
-	if {$view(graph,vert) && !$cbh} {
-	    incr yy $igraph(gap,y)
-	}
-
-	if {!$igraph(horz,id)} {
-	    set igraph(horz,id) [$ds9(canvas) create window $xx $yy \
-				     -window ${varname}(horz) -anchor nw]
-	} else {
-	    $ds9(canvas) coords $igraph(horz,id) $xx $yy
-	}
-
-	set ww [expr $frww+$igraph(gap,x)]
-	${varname}(horz) configure -width $ww
-    } else {
-	if {$igraph(horz,id)} {
-	    $ds9(canvas) delete $igraph(horz,id)
-	    set igraph(horz,id) 0
-	}
-    }
-
-    if {$view(graph,vert)} {
-	set yy $fryy
-	set xx [expr $canvas(width) + $canvas(gap)]
-
-	if {$cbv} {
-	    incr xx $colorbar(vertical,width)
-	}
-	if {$view(graph,horz) && !$cbv} {
-	    incr xx $igraph(gap,x)
-	}
-
-	if {!$igraph(vert,id)} {
-	    set igraph(vert,id) [$ds9(canvas) create window $xx $yy \
-				     -window ${varname}(vert) -anchor nw]
-	} else {
-	    $ds9(canvas) coords $igraph(vert,id) $xx $yy
-	}
-
-	set hh [expr $frhh+$igraph(gap,y)]
-	${varname}(vert) configure -height $hh
-
-    } else {
-	if {$igraph(vert,id)} {
-	    $ds9(canvas) delete $igraph(vert,id)
-	    set igraph(vert,id) 0
-	}
     }
 }
 

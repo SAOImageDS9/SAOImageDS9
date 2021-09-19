@@ -1722,6 +1722,26 @@ proc GotoFrame {which} {
 
     if {$current(frame) != $which} {
 	set current(frame) $which
+	set current(colorbar) ${current(frame)}cb
+
+	# frame
+	$current(frame) show
+	$ds9(canvas) raise $current(frame)
+
+	# colorbar
+	if {$view(colorbar)} {
+	    $current(colorbar) show
+	    $ds9(canvas) raise $current(colorbar)
+	}
+
+	# graphs
+	if {$view(graph,horz)} {
+	    GraphShow $current(frame) horz
+	}
+	if {$view(graph,vert)} {
+	    GraphShow $current(frame) vert
+	}
+
 	FrameToFront
     }
 }
@@ -1905,28 +1925,8 @@ proc FrameToFront {} {
     global view
     global colorbar
 
-    set current(colorbar) ${current(frame)}cb
-
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
-
-    # frame
-    $current(frame) show
-    $ds9(canvas) raise $current(frame)
-
-    # colorbar
-    if {$view(colorbar)} {
-	$current(colorbar) show
-	$ds9(canvas) raise $current(colorbar)
-    }
-
-    # graphs
-    if {$view(graph,horz)} {
-	GraphShow $current(frame) horz
-    }
-    if {$view(graph,vert)} {
-	GraphShow $current(frame) vert
-    }
 
     switch -- $ds9(display) {
 	single -

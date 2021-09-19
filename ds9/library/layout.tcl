@@ -544,7 +544,27 @@ proc LayoutFrameOne {} {
 	}
     }
 
-    # only show the current frame
+    global current
+    set current(colorbar) ${current(frame)}cb
+
+    # frame
+    $current(frame) show
+    $ds9(canvas) raise $current(frame)
+
+    # colorbar
+    if {$view(colorbar)} {
+	$current(colorbar) show
+	$ds9(canvas) raise $current(colorbar)
+    }
+
+    # graphs
+    if {$view(graph,horz)} {
+	GraphShow $current(frame) horz
+    }
+    if {$view(graph,vert)} {
+	GraphShow $current(frame) vert
+    }
+
     FrameToFront
 }
 
@@ -661,6 +681,27 @@ proc TileRect {numx numy} {
 	incr ii
     }
 
+    global current
+    set current(colorbar) ${current(frame)}cb
+
+    # frame
+    $current(frame) show
+    $ds9(canvas) raise $current(frame)
+
+    # colorbar
+    if {$view(colorbar)} {
+	$current(colorbar) show
+	$ds9(canvas) raise $current(colorbar)
+    }
+
+    # graphs
+    if {$view(graph,horz)} {
+	GraphShow $current(frame) horz
+    }
+    if {$view(graph,vert)} {
+	GraphShow $current(frame) vert
+    }
+
     FrameToFront
 }
 
@@ -730,6 +771,27 @@ proc TileRectNone {numx numy} {
 	LayoutGraphVert $ff 0 0 \
 	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 	GraphShow $ff vert
+    }
+
+    global current
+    set current(colorbar) ${current(frame)}cb
+
+    # frame
+    $current(frame) show
+    $ds9(canvas) raise $current(frame)
+
+    # colorbar
+    if {$view(colorbar)} {
+	$current(colorbar) show
+	$ds9(canvas) raise $current(colorbar)
+    }
+
+    # graphs
+    if {$view(graph,horz)} {
+	GraphShow $current(frame) horz
+    }
+    if {$view(graph,vert)} {
+	GraphShow $current(frame) vert
     }
 
     FrameToFront

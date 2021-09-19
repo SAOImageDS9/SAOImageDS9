@@ -12,11 +12,6 @@ proc GraphDef {} {
     set igraph(top) .grph
     set igraph(mb) .grphmb
 
-#    set igraph(gap,x) 50
-#    set igraph(gap,y) 25
-    set igraph(gap,x) 41
-    set igraph(gap,y) 23
-
     set igraph(x,min) 0
     set igraph(x,max) 1000
     set igraph(y,min) 1
@@ -271,8 +266,8 @@ proc LayoutGraphAdjust {} {
 
     set ff [$graphgr(horz) y2axis cget -tickfont]
 
-    # 7 chars
-    set xstr [font measure $ff "0000000"]
+    # 6 chars
+    set xstr [font measure $ff "000000"]
     set xtl [$graphgr(horz) y2axis cget -ticklength]
     set graph(horizontal,offset) [expr $xtl + $xstr ]
     global igraph

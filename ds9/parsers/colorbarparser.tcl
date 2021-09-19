@@ -863,20 +863,20 @@ proc colorbar::yyparse {} {
                     16 { set _ bold }
                     17 { set _ italic }
                     19 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    21 { ProcessCmdSet view colorbar $1 LayoutView }
+                    21 { ProcessCmdSet view colorbar $1 ColorbarUpdateView }
                     22 { MatchColorCurrent }
                     23 { ProcessCmdSet colorbar lock $2 LockColorCurrent }
-                    24 { ProcessCmdSet colorbar numerics $2 LayoutView }
-                    25 { ProcessCmdSet colorbar space $2 LayoutView }
-                    26 { ProcessCmdSet colorbar font $2 LayoutView }
-                    27 { ProcessCmdSet colorbar font,size $2 LayoutView }
-                    28 { ProcessCmdSet colorbar font,weight $2 LayoutView }
-                    29 { ProcessCmdSet colorbar font,slant $2 LayoutView }
-                    30 { ProcessCmdFontStyle colorbar font $2 LayoutView }
-                    31 { ProcessCmdSet colorbar orientation $1 LayoutView }
-                    32 { ProcessCmdSet colorbar orientation $2 LayoutView }
-                    33 { ProcessCmdSet colorbar size $2 LayoutView }
-                    34 { ProcessCmdSet colorbar ticks $2 LayoutView }
+                    24 { ProcessCmdSet colorbar numerics $2 ColorbarUpdateView }
+                    25 { ProcessCmdSet colorbar space $2 ColorbarUpdateView }
+                    26 { ProcessCmdSet colorbar font $2 ColorbarUpdateView }
+                    27 { ProcessCmdSet colorbar font,size $2 ColorbarUpdateView }
+                    28 { ProcessCmdSet colorbar font,weight $2 ColorbarUpdateView }
+                    29 { ProcessCmdSet colorbar font,slant $2 ColorbarUpdateView }
+                    30 { ProcessCmdFontStyle colorbar font $2 ColorbarUpdateView }
+                    31 { ProcessCmdSet colorbar orientation $1 ColorbarUpdateView }
+                    32 { ProcessCmdSet colorbar orientation $2 ColorbarUpdateView }
+                    33 { ProcessCmdSet colorbar size $2 ColorbarUpdateView }
+                    34 { ProcessCmdSet colorbar ticks $2 ColorbarUpdateView }
                     35 { set _ 1 }
                     36 { set _ 0 }
                     37 { set _ 1 }

@@ -1277,15 +1277,21 @@ proc LayoutColorbarAdjust {} {
     global colorbar
     
     if {$colorbar(numerics)} {
-	# ww horizontal: tickgap
-	set ww 12
-	# hh vertical: approx number of numerals to display
-	set hh 7
+	set font [$ds9(canvas) itemcget colorbar -font]
+	set fontsize [$ds9(canvas) itemcget colorbar -fontsize]
+	set fontslant [$ds9(canvas) itemcget colorbar -fontslant]
+	set ff "$font $fontsize $fontslant"
 
-	set colorbar(horizontal,height) \
-	    [expr int($colorbar(size) + $colorbar(font,size)*$ds9(scaling)+$ww)]
-	set colorbar(vertical,width) \
-	    [expr $colorbar(size) + $colorbar(font,size)*$hh]
+	# horizontal height
+	set ysp [font metrics $ff -linespace]
+	set ytl [$ds9(canvas) itemcget colorbar -ticks]
+	set colorbar(horizontal,height) [expr $colorbar(size) + $ytl + $ysp]
+
+	# vertical width
+	# 7 chars
+	set xstr [font measure $ff "0000000"]
+	set xtl [$ds9(canvas) itemcget colorbar -ticks]
+	set colorbar(vertical,width) [expr $colorbar(size) + $xtl + $xstr]
     } else {
  	set colorbar(horizontal,height) [expr $colorbar(size) +2]
  	set colorbar(vertical,width) [expr $colorbar(size) +2]
@@ -1295,6 +1301,7 @@ proc LayoutColorbarAdjust {} {
 proc LayoutColorbar {cb fx fy fw fh} {
     global colorbar
     global igraph
+    global graph
     global view
 
     $cb configure \
@@ -1327,36 +1334,51 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	set hh $fh
     }
 
+    # cbh
+    if {$cbh && !$cbv && !$grh && !$grv} {
+    }
     # cbhgrh
     if {$cbh && !$cbv && $grh && !$grv} {
-	incr yy -$igraph(size)
-	incr ww -$igraph(gap,x)
+	incr yy -$graph(size)
+	incr ww -$graph(horizontal,offset)
     }
     # cbhgrv
     if {$cbh && !$cbv && !$grh && $grv} {
-	incr ww -$igraph(size)
+	incr ww -$graph(size)
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
-	incr ww -$igraph(size)
-	incr ww -$igraph(gap,x)
-	incr yy -$igraph(size)
+	incr ww -$graph(size)
+	incr yy -$graph(size)
     }
 
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+    }
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
-	incr hh -$igraph(size)
+	incr hh -$graph(size)
     }
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
-	incr xx -$igraph(size)
-	incr hh -$igraph(gap,y)
+	incr xx -$graph(size)
+	incr hh -$graph(vertical,offset)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
-	incr hh -$igraph(size)
-	incr hh -$igraph(gap,y)
-	incr xx -$igraph(size)
+	incr hh -$graph(size)
+	incr hh -$graph(vertical,offset)
+	incr xx -$graph(size)
+    }
+
+    # grh
+    if {!$cbh && !$cbv && $grh && !$grv} {
+    }
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+    }
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
     }
 
     $cb configure -x $xx -y $yy -width $ww -height $hh

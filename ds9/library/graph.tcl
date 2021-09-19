@@ -12,15 +12,17 @@ proc GraphDef {} {
     set igraph(top) .grph
     set igraph(mb) .grphmb
 
-    set igraph(size) 150
-    set igraph(gap,x) 50
-    set igraph(gap,y) 25
+#    set igraph(gap,x) 50
+#    set igraph(gap,y) 25
+    set igraph(gap,x) 41
+    set igraph(gap,y) 23
 
     set igraph(x,min) 0
-    set igraph(x,max) 10
+    set igraph(x,max) 1000
     set igraph(y,min) 1
-    set igraph(y,max) 100
+    set igraph(y,max) 10000
 
+    set graph(size) 150
     set graph(horz,grid) 1
     set graph(horz,log) false
     set graph(horz,thick) 1
@@ -37,6 +39,7 @@ proc GraphsCreate {frame} {
     global ds9
     global canvas
     global igraph
+    global graph
 
     set varname ${frame}gr
     global $varname
@@ -45,12 +48,12 @@ proc GraphsCreate {frame} {
     set hg [string tolower ${frame}grh]
     set horz [blt::graph $ds9(main).$hg \
 		  -width $canvas(width) \
-		  -height $igraph(size) \
+		  -height $graph(size) \
 		  -takefocus 0 \
 		  -highlightthickness 0 \
 		  -font [font actual TkDefaultFont] \
 		  -plotpadx 0 -plotpady 0 \
-		  -borderwidth 0 \
+		  -plotborderwidth 0 \
 		  -foreground [ThemeTreeForeground] \
 		  -background [ThemeTreeBackground] \
 		  -plotbackground [ThemeTreeBackground] \
@@ -62,16 +65,20 @@ proc GraphsCreate {frame} {
     $horz legend configure -hide yes
     $horz crosshairs configure -color green
 
+    global igraph
     $horz xaxis configure -hide no -showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(x,min) -max $igraph(x,max)
     $horz x2axis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(x,min) -max $igraph(x,max)
     $horz yaxis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $horz y2axis configure -hide no -bg [ThemeTreeBackground] \
-	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(y,min) -max $igraph(y,max)
+    $horz y2axis configure -hide no -tickfont [font actual TkDefaultFont] \
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(y,min) -max $igraph(y,max)
+    
     $horz element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
 
@@ -90,11 +97,11 @@ proc GraphsCreate {frame} {
     set vg [string tolower ${frame}grv]
     set vert [blt::graph $ds9(main).$vg \
 		  -invertxy yes \
-		  -width $igraph(size) \
+		  -width $graph(size) \
 		  -height $canvas(height) \
 		  -takefocus 0 \
 		  -highlightthickness 0 \
-		  -borderwidth 0 \
+		  -plotborderwidth 0 \
 		  -font [font actual TkDefaultFont] \
 		  -foreground [ThemeTreeForeground] \
 		  -background [ThemeTreeBackground] \
@@ -108,16 +115,20 @@ proc GraphsCreate {frame} {
     $vert crosshairs configure -color green
 
     $vert xaxis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
-    $vert x2axis configure -hide no -descending yes 	\
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(x,min) -max $igraph(x,max)
+    $vert x2axis configure -hide no -descending yes \
 	-showticks no -linewidth 0 \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(x,min) -max $igraph(x,max)
 
     $vert yaxis configure -hide no -descending yes \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(y,min) -max $igraph(y,max)
     $vert y2axis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(y,min) -max $igraph(y,max)
 
     $vert element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -254,16 +265,28 @@ proc UnBindEventsGraphs {frame} {
     }
 }
 
-proc LayoutGraphs {frame fx fy fw fh} {
-    LayoutGraphHorz $frame $fx $fy $fw $fh
-    LayoutGraphVert $frame $fx $fy $fw $fh
+proc LayoutGraphAdjust {} {
+    global graph
+    global graphgr
+
+    set ff [$graphgr(horz) y2axis cget -tickfont]
+
+    # 7 chars
+    set xstr [font measure $ff "0000000"]
+    set xtl [$graphgr(horz) y2axis cget -ticklength]
+    set graph(horizontal,offset) [expr $xtl + $xstr ]
+    global igraph
+
+    set ytl [$graphgr(horz) xaxis cget -ticklength]
+    set ysp [font metrics $ff -linespace]
+    set graph(vertical,offset) [expr $ytl + $ysp + 5]
 }
 
 proc LayoutGraphHorz {frame fx fy fw fh} {
-    global ds9
     global colorbar
     global view
-    global igraph
+    global graph
+    global canvas
     
     set varname ${frame}gr
     global $varname
@@ -274,21 +297,48 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     set grv $view(graph,vert)
 
     set xx $fx
-    set yy [expr $fy + $fh - $igraph(size)]
+    set yy [expr $fy + $fh - $graph(size)]
     set ww $fw
-    set hh $igraph(size)
+    set hh $graph(size)
 
-    # grhgrv
-    if {$grh && $grv} {
-	incr ww -$igraph(size)
+    # cbh
+    if {$cbh && !$cbv && !$grh && !$grv} {
+    }
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
+    }
+    # cbhgrv
+    if {$cbh && !$cbv && !$grh && $grv} {
+    }
+    # cbhgrhgrv
+    if {$cbh && !$cbv && $grh && $grv} {
+	incr ww -$graph(size)
+    }
+
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
     }
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
-	incr ww -$igraph(gap,x)
+	incr ww -$graph(horizontal,offset)
+    }
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
-	incr ww -$igraph(gap,x)
+	incr ww -$graph(horizontal,offset)
+    }
+
+    # grh
+    if {!$cbh && !$cbv && $grh && !$grv} {
+    }
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+    }
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
+	incr ww -$graph(size)
     }
 
     [subst $${varname}(horz)] configure -width $ww -height $hh
@@ -297,10 +347,10 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 }
 
 proc LayoutGraphVert {frame fx fy fw fh} {
-    global ds9
     global colorbar
     global view
-    global igraph
+    global graph
+    global canvas
     
     set varname ${frame}gr
     global $varname
@@ -310,27 +360,52 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
-    set xx [expr $fx + $fw - $igraph(size)]
+    set xx [expr $fx + $fw - $graph(size)]
     set yy $fy
-    set ww $igraph(size)
+    set ww $graph(size)
     set hh $fh
 
-    # grhgrv
-    if {!$cbh && !$cbv && $grh && $grv} {
-	incr hh -$igraph(size)
+    # cbh
+    if {$cbh && !$cbv && !$grh && !$grv} {
+    }
+    # cbhgrh
+    if {$cbh && !$cbv && $grh && !$grv} {
     }
     # cbhgrv
     if {$cbh && !$cbv && !$grh && $grv} {
-	incr hh -$igraph(gap,y)
+	incr hh -$colorbar(horizontal,height)
+	incr hh -$canvas(gap)
+	incr hh $graph(vertical,offset)
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
-	incr hh -$igraph(gap,y)
-	incr hh -$igraph(size)
+	incr hh -$graph(vertical,offset)
+	incr hh -$graph(size)
+    }
+
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+    }
+    # cbvgrh
+    if {!$cbh && $cbv && $grh && !$grv} {
+    }
+    # cbvgrv
+    if {!$cbh && $cbv && !$grh && $grv} {
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
-	incr hh -$igraph(size)
+	incr hh -$graph(size)
+    }
+
+    # grh
+    if {!$cbh && !$cbv && $grh && !$grv} {
+    }
+    # grv
+    if {!$cbh && !$cbv && !$grh && $grv} {
+    }
+    # grhgrv
+    if {!$cbh && !$cbv && $grh && $grv} {
+	incr hh -$graph(size)
     }
 
     [subst $${varname}(vert)] configure -width $ww -height $hh
@@ -338,7 +413,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     set ${varname}(vert,yy) $yy
 }
 
-proc GraphShowRaise {frame which} {
+proc GraphShow {frame which} {
     global ds9
 
     set varname ${frame}gr

@@ -433,8 +433,9 @@ proc LayoutFrames {} {
 	GraphHide $ff vert
     }
 
-    # be sure colorbar sizes are correct
+    # be sure colorbar/graph sizes are correct
     LayoutColorbarAdjust
+    LayoutGraphAdjust
 
     if {$ds9(active,num) > 0} {
 	LayoutFramesOneOrMore
@@ -466,21 +467,23 @@ proc LayoutFramesNone {} {
     }
 
     # colorbar
-    LayoutColorbar colorbar 0 0 \
-	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
     if {$view(colorbar)} {
+	LayoutColorbar colorbar 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 	colorbar show
 	$ds9(canvas) raise colorbar
     }
     
     # graphs
-    LayoutGraphs graph 0 0 \
-	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
     if {$view(graph,horz)} {
-	GraphShowRaise graph horz
+	LayoutGraphHorz graph 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	GraphShow graph horz
     }
     if {$view(graph,vert)} {
-	GraphShowRaise graph vert
+	LayoutGraphVert graph 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	GraphShow graph vert
     }
 
     # update menus/dialogs
@@ -528,10 +531,17 @@ proc LayoutFrameOne {} {
 	$ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
 
 	# colorbar
-	LayoutColorbar ${ff}cb 0 0 $ww $hh
+	if {$view(colorbar)} {
+	    LayoutColorbar ${ff}cb 0 0 $ww $hh
+	}
 
 	# graphs
-	LayoutGraphs $ff 0 0 $ww $hh
+	if {$view(graph,horz)} {
+	    LayoutGraphHorz $ff 0 0 $ww $hh
+	}
+	if {$view(graph,vert)} {
+	    LayoutGraphVert $ff 0 0 $ww $hh
+	}
     }
 
     # only show the current frame
@@ -632,19 +642,20 @@ proc TileRect {numx numy} {
 	$ds9(canvas) raise $ff
 
 	# colorbar
-	LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	if {$view(colorbar)} {
+	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	    ${ff}cb show
 	    $ds9(canvas) raise ${ff}cb
 	}
 
 	# graphs
-	LayoutGraphs $ff $xx($ii) $yy($ii) $ww $hh
 	if {$view(graph,horz)} {
-	    GraphShowRaise $ff horz
+	    LayoutGraphHorz $ff $xx($ii) $yy($ii) $ww $hh
+	    GraphShow $ff horz
 	}
 	if {$view(graph,vert)} {
-	    GraphShowRaise $ff vert
+	    LayoutGraphVert $ff $xx($ii) $yy($ii) $ww $hh
+	    GraphShow $ff vert
 	}
 
 	incr ii
@@ -691,30 +702,34 @@ proc TileRectNone {numx numy} {
     # frames
     set ii 0
     foreach ff $ds9(active) {
-	$ff configure -x $xx($ii) -y $yy($ii) \
-	    -width $ww -height $hh -anchor nw
+	$ff configure -x $xx($ii) -y $yy($ii) -width $ww -height $hh -anchor nw
 	$ff show
 	$ds9(canvas) raise $ff
 
 	incr ii
     }
 
-    # colorbar
+    # set colorbar/graph for current frame
     set ff $current(frame)
-    LayoutColorbar ${ff}cb 0 0 \
-	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+
+    # colorbar
     if {$view(colorbar)} {
+	LayoutColorbar ${ff}cb 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 	${ff}cb show
 	$ds9(canvas) raise ${ff}cb
     }
 
     # graphs
-    LayoutGraphs $ff 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
     if {$view(graph,horz)} {
-	GraphShowRaise $ff horz
+	LayoutGraphHorz $ff 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	GraphShow $ff horz
     }
     if {$view(graph,vert)} {
-	GraphShowRaise $ff vert
+	LayoutGraphVert $ff 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	GraphShow $ff vert
     }
 
     FrameToFront
@@ -725,6 +740,7 @@ proc LayoutFrameAdjust {wvar hvar} {
     global view
     global colorbar
     global igraph
+    global graph
 
     upvar $wvar ww
     upvar $hvar hh
@@ -735,30 +751,32 @@ proc LayoutFrameAdjust {wvar hvar} {
     set grv $view(graph,vert)
 
     # cbh
+    # ok
     if {$cbh && !$cbv && !$grh && !$grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
     }
     # cbhgrh
+    # ok
     if {$cbh && !$cbv && $grh && !$grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
-	incr hh -$igraph(size)
-	incr ww -$igraph(gap,x)
+	incr hh -$graph(size)
+	incr ww -$graph(horizontal,offset)
     }
     # cbhgrv
+    # ok
     if {$cbh && !$cbv && !$grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
-	incr ww -$igraph(size)
+	incr ww -$graph(size)
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
-	incr hh -$igraph(size)
-	incr ww -$igraph(size)
-	incr ww -$igraph(gap,x)
+	incr hh -$graph(size)
+	incr ww -$graph(size)
     }
 
     # cbv
@@ -770,44 +788,45 @@ proc LayoutFrameAdjust {wvar hvar} {
     if {!$cbh && $cbv && $grh && !$grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
-	incr hh -$igraph(size)
+	incr hh -$graph(size)
     }
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
-	incr ww -$igraph(size)
-	incr hh -$igraph(gap,y)
+	incr ww -$graph(size)
+	incr hh -$graph(vertical,offset)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
-	incr ww -$igraph(size)
-	incr hh -$igraph(size)
-	incr hh -$igraph(gap,y)
+	incr ww -$graph(size)
+	incr hh -$graph(size)
+	incr hh -$graph(vertical,offset)
     }
 
     # grh
     if {!$cbh && !$cbv && $grh && !$grv} {
-	incr hh -$igraph(size)
+	incr hh -$graph(size)
 	incr hh -$canvas(gap)
-	incr ww -$igraph(gap,x)
+	incr ww -$graph(horizontal,offset)
     }
     # grv
+    # ok
     if {!$cbh && !$cbv && !$grh && $grv} {
-	incr ww -$igraph(size)
+	incr ww -$graph(size)
 	incr ww -$canvas(gap)
-	incr hh -$igraph(gap,y)
+	incr hh -$graph(vertical,offset)
     }
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
-	incr ww -$igraph(size)
+	incr ww -$graph(size)
 	incr ww -$canvas(gap)
-	incr ww -$igraph(gap,x)
-	incr hh -$igraph(size)
+	incr ww -$graph(horizontal,offset)
+	incr hh -$graph(size)
 	incr hh -$canvas(gap)
-	incr hh -$igraph(gap,y)
+	incr hh -$graph(vertical,offset)
     }
 }
 

@@ -1922,10 +1922,10 @@ proc FrameToFront {} {
 
     # graphs
     if {$view(graph,horz)} {
-	GraphShowRaise $current(frame) horz
+	GraphShow $current(frame) horz
     }
     if {$view(graph,vert)} {
-	GraphShowRaise $current(frame) vert
+	GraphShow $current(frame) vert
     }
 
     switch -- $ds9(display) {

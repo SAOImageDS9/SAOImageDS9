@@ -245,6 +245,7 @@ proc CreateNameNumberFrame {which type} {
 
     # set to current frame
     set current(frame) $which
+    set current(colorbar) ${which}cb
 
     DisplayMode
 }
@@ -1690,6 +1691,7 @@ proc GotoFrame {which} {
     global ds9
     global current
     global active
+    global view
 
     if {$current(frame) != {} && $current(frame) != $which} {
 	$current(frame) highlite off
@@ -1704,7 +1706,7 @@ proc GotoFrame {which} {
 
 		# colorbar
 		if {$view(colorbar)} {
-		    $ds9(canvas) hide ${ff}cb
+		    ${ff}cb hide
 		}
 
 		# graphs
@@ -1859,7 +1861,7 @@ proc ClearCurrentFrame {} {
 
     ClearInfoBox
     PixelTableClearDialog
-    ClearGraphData $which
+    ClearGraphData $current(frame)
 
     UpdateDS9
 }

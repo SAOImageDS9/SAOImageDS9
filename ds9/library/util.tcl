@@ -10,8 +10,8 @@ proc CurrentDef {} {
     global ds9
 
     set current(frame) {}
-    set current(ext) {}
     set current(colorbar) {}
+    set current(ext) {}
     set current(cursor) {}
     set current(rgb) red
 

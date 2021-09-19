@@ -33,7 +33,6 @@ proc GraphDef {} {
 proc GraphsCreate {frame} {
     global ds9
     global canvas
-    global igraph
     global graph
 
     set varname ${frame}gr
@@ -60,19 +59,14 @@ proc GraphsCreate {frame} {
     $horz legend configure -hide yes
     $horz crosshairs configure -color green
 
-    global igraph
     $horz xaxis configure -hide no -showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(x,min) -max $igraph(x,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     $horz x2axis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(x,min) -max $igraph(x,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     $horz yaxis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     $horz y2axis configure -hide no -tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     
     $horz element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -110,20 +104,16 @@ proc GraphsCreate {frame} {
     $vert crosshairs configure -color green
 
     $vert xaxis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(x,min) -max $igraph(x,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     $vert x2axis configure -hide no -descending yes \
 	-showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(x,min) -max $igraph(x,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
 
     $vert yaxis configure -hide no -descending yes \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     $vert y2axis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
 
     $vert element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -269,12 +259,11 @@ proc LayoutGraphAdjust {} {
     # 6 chars
     set xstr [font measure $ff "000000"]
     set xtl [$graphgr(horz) y2axis cget -ticklength]
-    set graph(horizontal,offset) [expr $xtl + $xstr ]
-    global igraph
+    set graph(horizontal,offset) [expr $xtl + $xstr + 4]
 
     set ytl [$graphgr(horz) xaxis cget -ticklength]
     set ysp [font metrics $ff -linespace]
-    set graph(vertical,offset) [expr $ytl + $ysp + 5]
+    set graph(vertical,offset) [expr $ytl + $ysp + 4]
 }
 
 proc LayoutGraphHorz {frame fx fy fw fh} {

@@ -822,6 +822,11 @@ proc LayoutFrameAdjust {wvar hvar} {
 	incr hh -$graph(size)
 	incr hh -$canvas(gap)
     }
+
+    # sanity check
+    if {$ww<0 || $hh<0} {
+ 	puts "LayoutFrame: bad $ww $hh"
+    }
 }
 
 proc LayoutChangeWidth {ww} {

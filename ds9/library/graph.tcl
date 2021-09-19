@@ -333,6 +333,11 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 	incr ww $graph(horizontal,offset)
     }
 
+    # sanity check
+    if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
+ 	puts "LayoutGraphHorz: bad $xx $yy $ww $hh"
+    }
+
     [subst $${varname}(horz)] configure -width $ww -height $hh
     set ${varname}(horz,xx) $xx
     set ${varname}(horz,yy) $yy
@@ -403,6 +408,11 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr hh -$graph(size)
 	incr hh $graph(vertical,offset)
+    }
+
+    # sanity check
+    if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
+ 	puts "LayoutGraphVert: bad $xx $yy $ww $hh"
     }
 
     [subst $${varname}(vert)] configure -width $ww -height $hh

@@ -1376,6 +1376,11 @@ proc LayoutColorbar {cb fx fy fw fh} {
     if {!$cbh && !$cbv && $grh && $grv} {
     }
 
+    # sanity check
+    if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
+ 	puts "LayoutColorbar: bad $xx $yy $ww $hh"
+    }
+
     $cb configure -x $xx -y $yy -width $ww -height $hh
 }
 

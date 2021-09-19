@@ -751,13 +751,17 @@ proc LayoutFrameAdjust {wvar hvar} {
     set grv $view(graph,vert)
 
     # cbh
-    # ok
     if {$cbh && !$cbv && !$grh && !$grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
     }
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+    }
+
     # cbhgrh
-    # ok
     if {$cbh && !$cbv && $grh && !$grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
@@ -765,7 +769,6 @@ proc LayoutFrameAdjust {wvar hvar} {
 	incr ww -$graph(horizontal,offset)
     }
     # cbhgrv
-    # ok
     if {$cbh && !$cbv && !$grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
@@ -779,11 +782,6 @@ proc LayoutFrameAdjust {wvar hvar} {
 	incr ww -$graph(size)
     }
 
-    # cbv
-    if {!$cbh && $cbv && !$grh && !$grv} {
-	incr ww -$colorbar(vertical,width)
-	incr ww -$canvas(gap)
-    }
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
 	incr ww -$colorbar(vertical,width)
@@ -803,7 +801,6 @@ proc LayoutFrameAdjust {wvar hvar} {
 	incr ww -$canvas(gap)
 	incr ww -$graph(size)
 	incr hh -$graph(size)
-	incr hh -$graph(vertical,offset)
     }
 
     # grh
@@ -813,7 +810,6 @@ proc LayoutFrameAdjust {wvar hvar} {
 	incr ww -$graph(horizontal,offset)
     }
     # grv
-    # ok
     if {!$cbh && !$cbv && !$grh && $grv} {
 	incr ww -$graph(size)
 	incr ww -$canvas(gap)
@@ -823,10 +819,8 @@ proc LayoutFrameAdjust {wvar hvar} {
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
 	incr ww -$canvas(gap)
-	incr ww -$graph(horizontal,offset)
 	incr hh -$graph(size)
 	incr hh -$canvas(gap)
-	incr hh -$graph(vertical,offset)
     }
 }
 

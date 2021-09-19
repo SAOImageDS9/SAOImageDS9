@@ -304,6 +304,10 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     # cbh
     if {$cbh && !$cbv && !$grh && !$grv} {
     }
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+    }
+
     # cbhgrh
     if {$cbh && !$cbv && $grh && !$grv} {
     }
@@ -313,21 +317,24 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
+	incr ww $graph(horizontal,offset)
     }
 
-    # cbv
-    if {!$cbh && $cbv && !$grh && !$grv} {
-    }
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
-	incr ww -$graph(horizontal,offset)
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+	incr ww $graph(horizontal,offset)
     }
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
-	incr ww -$graph(horizontal,offset)
+	incr ww -$colorbar(vertical,width)
+	incr ww -$canvas(gap)
+	incr ww -$graph(size)
+	incr ww $graph(horizontal,offset)
     }
 
     # grh
@@ -339,6 +346,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
+	incr ww $graph(horizontal,offset)
     }
 
     [subst $${varname}(horz)] configure -width $ww -height $hh
@@ -368,6 +376,10 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     # cbh
     if {$cbh && !$cbv && !$grh && !$grv} {
     }
+    # cbv
+    if {!$cbh && $cbv && !$grh && !$grv} {
+    }
+
     # cbhgrh
     if {$cbh && !$cbv && $grh && !$grv} {
     }
@@ -379,13 +391,12 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
-	incr hh -$graph(vertical,offset)
+	incr hh -$colorbar(horizontal,height)
+	incr hh -$canvas(gap)
 	incr hh -$graph(size)
+	incr hh $graph(vertical,offset)
     }
 
-    # cbv
-    if {!$cbh && $cbv && !$grh && !$grv} {
-    }
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
     }
@@ -395,6 +406,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
+	incr hh $graph(vertical,offset)
     }
 
     # grh
@@ -406,6 +418,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr hh -$graph(size)
+	incr hh $graph(vertical,offset)
     }
 
     [subst $${varname}(vert)] configure -width $ww -height $hh

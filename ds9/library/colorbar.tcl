@@ -1321,12 +1321,14 @@ proc LayoutColorbar {cb fx fy fw fh} {
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
+    # cbh
     if {$cbh} {
 	set xx $fx
 	set yy [expr $fy + $fh - $colorbar(horizontal,height)]
 	set ww $fw
 	set hh $colorbar(horizontal,height)
     }
+    # cbv
     if {$cbv} {
 	set xx [expr $fx + $fw - $colorbar(vertical,width)]
 	set yy $fy
@@ -1334,9 +1336,6 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	set hh $fh
     }
 
-    # cbh
-    if {$cbh && !$cbv && !$grh && !$grv} {
-    }
     # cbhgrh
     if {$cbh && !$cbv && $grh && !$grv} {
 	incr yy -$graph(size)
@@ -1352,9 +1351,6 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	incr yy -$graph(size)
     }
 
-    # cbv
-    if {!$cbh && $cbv && !$grh && !$grv} {
-    }
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
 	incr hh -$graph(size)
@@ -1367,7 +1363,6 @@ proc LayoutColorbar {cb fx fy fw fh} {
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	incr hh -$graph(vertical,offset)
 	incr xx -$graph(size)
     }
 

@@ -335,12 +335,14 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 
     # sanity check
     if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
- 	puts "LayoutGraphHorz: bad $xx $yy $ww $hh"
+	return 0
     }
 
     [subst $${varname}(horz)] configure -width $ww -height $hh
     set ${varname}(horz,xx) $xx
     set ${varname}(horz,yy) $yy
+
+    return 1
 }
 
 proc LayoutGraphVert {frame fx fy fw fh} {
@@ -412,12 +414,14 @@ proc LayoutGraphVert {frame fx fy fw fh} {
 
     # sanity check
     if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
- 	puts "LayoutGraphVert: bad $xx $yy $ww $hh"
+	return 0
     }
 
     [subst $${varname}(vert)] configure -width $ww -height $hh
     set ${varname}(vert,xx) $xx
     set ${varname}(vert,yy) $yy
+
+    return 1
 }
 
 proc GraphShow {frame which} {

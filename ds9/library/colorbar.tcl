@@ -54,6 +54,7 @@ proc ColorbarDef {} {
 proc CreateColorbar {} {
     global ds9
     global colorbar
+    global canvas
 
     $ds9(canvas) create colorbar$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -90,16 +91,14 @@ proc CreateColorbar {} {
     colorbar invert $colorbar(invert)
     colorbar hide
 
-    LayoutColorbar colorbar 0 0 \
-	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+    LayoutColorbar colorbar 0 0 $canvas(width) $canvas(height)
 
     # just for backup backward compatibility
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) -tag colorbarrgb
     colorbarrgb invert $colorbar(invert)
     colorbarrgb hide
 
-    LayoutColorbar colorbarrgb 0 0 \
-	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+    LayoutColorbar colorbarrgb 0 0 $canvas(width) $canvas(height)
 }
 
 proc CreateColorbarBase {frame} {
@@ -1378,10 +1377,11 @@ proc LayoutColorbar {cb fx fy fw fh} {
 
     # sanity check
     if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
- 	puts "LayoutColorbar: bad $xx $yy $ww $hh"
+	return 0
     }
 
     $cb configure -x $xx -y $yy -width $ww -height $hh
+    return 1
 }
 
 proc ColorbarUpdateView {} {

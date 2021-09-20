@@ -468,22 +468,22 @@ proc LayoutFramesNone {} {
 
     # colorbar
     if {$view(colorbar)} {
-	LayoutColorbar colorbar 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	colorbar show
-	$ds9(canvas) raise colorbar
+	if {[LayoutColorbar colorbar 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
+	    colorbar show
+	    $ds9(canvas) raise colorbar
+	}
     }
     
     # graphs
     if {$view(graph,horz)} {
-	LayoutGraphHorz graph 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	GraphShow graph horz
+	if {[LayoutGraphHorz graph 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
+	    GraphShow graph horz
+	}
     }
     if {$view(graph,vert)} {
-	LayoutGraphVert graph 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	GraphShow graph vert
+	if {[LayoutGraphVert graph 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
+	    GraphShow graph vert
+	}
     }
 
     # update menus/dialogs
@@ -529,8 +529,9 @@ proc LayoutFrameOne {} {
 	set fh $hh
 
 	# frame
-	LayoutFrameAdjust fw fh
-	$ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
+	if {[LayoutFrameAdjust fw fh]} {
+	    $ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
+	}
 
 	# colorbar
 	if {$view(colorbar)} {
@@ -552,16 +553,22 @@ proc LayoutFrameOne {} {
 
     # colorbar
     if {$view(colorbar)} {
-	$current(colorbar) show
-	$ds9(canvas) raise $current(colorbar)
+	if {[LayoutColorbar $current(colorbar) 0 0 $ww $hh]} {
+	    $current(colorbar) show
+	    $ds9(canvas) raise $current(colorbar)
+	}
     }
 
     # graphs
     if {$view(graph,horz)} {
-	GraphShow $current(frame) horz
+	if {[LayoutGraphHorz $current(frame) 0 0 $ww $hh]} {
+	    GraphShow $current(frame) horz
+	}
     }
     if {$view(graph,vert)} {
-	GraphShow $current(frame) vert
+	if {[LayoutGraphVert $current(frame) 0 0 $ww $hh]} {
+	    GraphShow $current(frame) vert
+	}
     }
 
     FrameToFront
@@ -656,10 +663,12 @@ proc TileRect {numx numy} {
 	set fh $hh
 
 	# frame
-	LayoutFrameAdjust fw fh
-	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
-	$ff show
-	$ds9(canvas) raise $ff
+	if {[LayoutFrameAdjust fw fh]} {
+	    $ff configure -x $xx($ii) -y $yy($ii) \
+		-width $fw -height $fh -anchor nw
+	    $ff show
+	    $ds9(canvas) raise $ff
+	}
 
 	# colorbar
 	if {$view(colorbar)} {
@@ -722,9 +731,13 @@ proc TileRectNone {numx numy} {
     # frames
     set ii 0
     foreach ff $ds9(active) {
-	$ff configure -x $xx($ii) -y $yy($ii) -width $ww -height $hh -anchor nw
-	$ff show
-	$ds9(canvas) raise $ff
+	# sanity check
+	if {$xx($ii)>=0 && $yy($ii)>=0 && $ww>=0 && $hh>=0} {
+	    $ff configure -x $xx($ii) -y $yy($ii) \
+		-width $ww -height $hh -anchor nw
+	    $ff show
+	    $ds9(canvas) raise $ff
+	}
 
 	incr ii
     }
@@ -845,8 +858,10 @@ proc LayoutFrameAdjust {wvar hvar} {
 
     # sanity check
     if {$ww<0 || $hh<0} {
- 	puts "LayoutFrame: bad $ww $hh"
+	return 0
     }
+
+    return 1
 }
 
 proc LayoutChangeWidth {ww} {

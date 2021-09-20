@@ -139,6 +139,7 @@ proc RestoreDialog {} {
 proc Restore {fn} {
     global ds9
     global pds9
+    global current
 
     if {[string length $fn] == 0} {
 	return
@@ -259,7 +260,7 @@ proc Restore {fn} {
     cd $cd
 
     # and update it
-    UpdateGraphGrid
+    UpdateGraphGrid $current(frame)
     LayoutView
     UpdateActiveFrames
     ChangeMode

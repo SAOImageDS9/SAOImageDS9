@@ -1021,10 +1021,13 @@ proc SetDefaultFont {which} {
 	global ifp
 
 	UpdateScaleDialogFont
-	UpdateGraphFont
 	TBLUpdateFont $icat(cats)
 	TBLUpdateFont $isia(sias)
 	TBLUpdateFont $ifp(fps)
+
+	foreach ff $ds9(frames) {
+	    UpdateGraphFont $ff
+	}
     }
 }
 

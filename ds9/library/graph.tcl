@@ -67,7 +67,8 @@ proc GraphsCreate {frame} {
     $horz crosshairs configure -color green
 
     $horz xaxis configure -hide no -showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-tickdefault 4
     $horz x2axis configure -hide yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     $horz yaxis configure -hide yes \
@@ -120,7 +121,8 @@ proc GraphsCreate {frame} {
 	-tickfont [font actual TkDefaultFont] \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
     $vert y2axis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-tickdefault 4
 
     $vert element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -136,7 +138,7 @@ proc GraphsCreate {frame} {
     set ${varname}(vert,xx) 0
     set ${varname}(vert,yy) 0
 
-    UpdateGraphGrid $frame
+    UpdateGraphsGrid
     BindEventsGraphs $frame
 }
 
@@ -557,23 +559,37 @@ proc UpdateGraphFont {frame} {
     set varname ${frame}gr
     global $varname
 
-    ${varname}(horz) y2axis configure -tickfont [font actual TkDefaultFont]
-    ${varname}(vert) yaxis configure -tickfont [font actual TkDefaultFont]
+    [subst $${varname}(horz)] y2axis configure \
+	-tickfont [font actual TkDefaultFont]
+    [subst $${varname}(horz)] yaxis configure \
+	-tickfont [font actual TkDefaultFont]
 }
 
-proc UpdateGraphGrid {frame} {
+proc UpdateGraphsGrid {} {
+    global ds9
+    
+    UpdateGraphGrid graph
+    foreach ff $ds9(frames) {
+	UpdateGraphGrid $ff
+    }
+}
+
+proc UpdateGraphGrid {ff} {
+    global ds9
     global graph
 
-    set varname ${frame}gr
+    set varname ${ff}gr
     global $varname
     
     [subst $${varname}(horz)] xaxis configure \
 	-grid $graph(horz,grid) -tickdefault 4
-    [subst $${varname}(horz)] y2axis configure -grid $graph(horz,grid)
+    [subst $${varname}(horz)] y2axis configure \
+	-grid $graph(horz,grid) -logscale $graph(horz,log)
 
     [subst $${varname}(vert)] yaxis configure \
 	-grid $graph(vert,grid) -tickdefault 4
-    [subst $${varname}(vert)] x2axis configure -grid $graph(vert,grid)
+    [subst $${varname}(vert)] x2axis configure \
+	-grid $graph(vert,grid) -logscale $graph(vert,log)
 }
 
 proc UpdateGraphAxis {frame} {
@@ -656,15 +672,11 @@ proc UpdateGraphYAxisHV {frame what vectorY log thick method} {
 	    average {}
 	}
 
-	$what yaxis configure -min $yMin -max $yMax \
-	    -logscale $log -tickdefault 4
-	$what y2axis configure -min $yMin -max $yMax \
-	    -logscale $log -tickdefault 4
+	$what yaxis configure -min $yMin -max $yMax
+	$what y2axis configure -min $yMin -max $yMax
     } else {
-	$what yaxis configure -min $igraph(y,min) -max $igraph(y,max) \
-	    -logscale $log -tickdefault 4
-	$what y2axis configure -min $igraph(y,min) -max $igraph(y,max) \
-	    -logscale $log -tickdefault 4
+	$what yaxis configure -min $igraph(y,min) -max $igraph(y,max)
+	$what y2axis configure -min $igraph(y,min) -max $igraph(y,max)
     }
 }
 
@@ -752,15 +764,12 @@ proc GraphDialog {} {
     set f [ttk::labelframe $w.horz -text [msgcat::mc {Horizontal}] -padding 2]
 
     ttk::checkbutton $f.hgrid -text [msgcat::mc {Show Grid}] \
-	-variable graph(horz,grid) \
-	-command UpdateGraphGrid
+	-variable graph(horz,grid) -command UpdateGraphsGrid
     ttk::label $f.htaxis -text [msgcat::mc {Axis}]
     ttk::radiobutton $f.hlaxis -text [msgcat::mc {Linear}] \
-	-variable graph(horz,log) -value false \
-	-command [list UpdateGraphAxis $current(frame)]
+	-variable graph(horz,log) -value false -command UpdateGraphsGrid
     ttk::radiobutton $f.hgaxis -text [msgcat::mc {Log}] \
-	-variable graph(horz,log) -value true \
-	-command [list UpdateGraphAxis $current(frame)]
+	-variable graph(horz,log) -value true -command UpdateGraphsGrid
     ttk::label $f.htthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.hthick -textvariable graph(horz,thick) -width 7
     ttk::label $f.htmethod -text [msgcat::mc {Method}]
@@ -780,15 +789,12 @@ proc GraphDialog {} {
     set f [ttk::labelframe $w.vert -text [msgcat::mc {Vertical}] -padding 2]
 
     ttk::checkbutton $f.vgrid -text [msgcat::mc {Show Grid}] \
-	-variable graph(vert,grid) \
-	-command UpdateGraphGrid
+	-variable graph(vert,grid) -command UpdateGraphsGrid
     ttk::label $f.vtaxis -text [msgcat::mc {Axis}]
     ttk::radiobutton $f.vlaxis -text [msgcat::mc {Linear}] \
-	-variable graph(vert,log) -value false \
-	-command [list UpdateGraphAxis $current(frame)]
+	-variable graph(vert,log) -value false -command UpdateGraphsGrid
     ttk::radiobutton $f.vgaxis -text [msgcat::mc {Log}] \
-	-variable graph(vert,log) -value true \
-	-command [list UpdateGraphAxis $current(frame)]
+	-variable graph(vert,log) -value true -command UpdateGraphsGrid
     ttk::label $f.vtthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.vthick -textvariable graph(vert,thick) -width 7
     ttk::label $f.vtmethod -text [msgcat::mc {Method}]

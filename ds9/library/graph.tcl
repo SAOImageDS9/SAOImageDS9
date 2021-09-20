@@ -12,16 +12,21 @@ proc GraphDef {} {
     set igraph(top) .grph
     set igraph(mb) .grphmb
 
+    set igraph(horz,margin) 100
     set igraph(x,min) 0
     set igraph(x,max) 1000
     set igraph(y,min) 1
     set igraph(y,max) 10000
 
     set graph(size) 150
+
+    set graph(horz,offset) $igraph(horz,margin)
     set graph(horz,grid) 1
     set graph(horz,log) false
     set graph(horz,thick) 1
     set graph(horz,method) average
+
+    set graph(vert,offset) 0
     set graph(vert,grid) 1
     set graph(vert,log) false
     set graph(vert,thick) 1
@@ -33,6 +38,7 @@ proc GraphDef {} {
 proc GraphsCreate {frame} {
     global ds9
     global canvas
+    global igraph
     global graph
 
     set varname ${frame}gr
@@ -51,6 +57,7 @@ proc GraphsCreate {frame} {
 		  -foreground [ThemeTreeForeground] \
 		  -background [ThemeTreeBackground] \
 		  -plotbackground [ThemeTreeBackground] \
+		  -rightmargin $igraph(horz,margin) \
 		 ]
 
     set xv [blt::vector create ${varname}grhx]
@@ -254,16 +261,10 @@ proc LayoutGraphAdjust {} {
     global graph
     global graphgr
 
-    set ff [$graphgr(horz) y2axis cget -tickfont]
-
-    # 6 chars
-    set xstr [font measure $ff "000000"]
-    set xtl [$graphgr(horz) y2axis cget -ticklength]
-    set graph(horizontal,offset) [expr $xtl + $xstr + 4]
-
-    set ytl [$graphgr(horz) xaxis cget -ticklength]
-    set ysp [font metrics $ff -linespace]
-    set graph(vertical,offset) [expr $ytl + $ysp + 4]
+    set ff [$graphgr(horz) xaxis cget -tickfont]
+    set tl [$graphgr(horz) xaxis cget -ticklength]
+    set sp [font metrics $ff -linespace]
+    set graph(vert,offset) [expr $tl + $sp + 4]
 }
 
 proc LayoutGraphHorz {frame fx fy fw fh} {
@@ -301,14 +302,14 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
-	incr ww $graph(horizontal,offset)
+	incr ww $graph(horz,offset)
     }
 
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
-	incr ww $graph(horizontal,offset)
+	incr ww $graph(horz,offset)
     }
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
@@ -318,7 +319,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
 	incr ww -$graph(size)
-	incr ww $graph(horizontal,offset)
+	incr ww $graph(horz,offset)
     }
 
     # grh
@@ -330,7 +331,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
-	incr ww $graph(horizontal,offset)
+	incr ww $graph(horz,offset)
     }
 
     # sanity check
@@ -378,14 +379,14 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     if {$cbh && !$cbv && !$grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
-	incr hh $graph(vertical,offset)
+	incr hh $graph(vert,offset)
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
 	incr hh -$graph(size)
-	incr hh $graph(vertical,offset)
+	incr hh $graph(vert,offset)
     }
 
     # cbvgrh
@@ -397,7 +398,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	incr hh $graph(vertical,offset)
+	incr hh $graph(vert,offset)
     }
 
     # grh
@@ -409,7 +410,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	incr hh $graph(vertical,offset)
+	incr hh $graph(vert,offset)
     }
 
     # sanity check

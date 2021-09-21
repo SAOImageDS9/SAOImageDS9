@@ -19,6 +19,7 @@ proc DebugDef {} {
     set debug(tcl,fp) 0
     set debug(tcl,samp) 0
     set debug(tcl,grid) 0
+    set debug(tcl,graph) 0
     set debug(tcl,restore) 0
     set debug(tcl,http) 0
     set debug(tcl,ftp) 0
@@ -88,6 +89,8 @@ proc DebugMenu {} {
 	-variable debug(tcl,samp)
     $ds9(mb).debug.tcl add checkbutton -label {Grid} \
 	-variable debug(tcl,grid)
+    $ds9(mb).debug.tcl add checkbutton -label {Graph} \
+	-variable debug(tcl,graph)
     $ds9(mb).debug.tcl add checkbutton -label {Restore} \
 	-variable debug(tcl,restore)
     $ds9(mb).debug.tcl add checkbutton -label {HTTP} \
@@ -189,6 +192,7 @@ proc ProcessDebugTclCmd {varname iname} {
 	fp {set debug(tcl,fp) 1}
 	samp {set debug(tcl,samp) 1}
 	grid {set debug(tcl,grid) 1}
+	graph {set debug(tcl,graph) 1}
 	restore {set debug(tcl,restore) 1}
 	http {set debug(tcl,http) 1}
 	ftp {set debug(tcl,ftp) 1}
@@ -268,6 +272,7 @@ proc ProcessDebugCmd {varname iname} {
 	fp -
 	samp -
 	grid -
+	graph -
 	restore -
 	http -
 	ftp -

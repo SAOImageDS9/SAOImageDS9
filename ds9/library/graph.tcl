@@ -13,10 +13,11 @@ proc GraphDef {} {
     set igraph(mb) .grphmb
 
     set igraph(horz,margin) 100
+    set igraph(tick,len) 4
     set igraph(x,min) 0
-    set igraph(x,max) 1000
+    set igraph(x,max) 100
     set igraph(y,min) 1
-    set igraph(y,max) 10000
+    set igraph(y,max) 100
 
     set graph(size) 150
 
@@ -68,13 +69,17 @@ proc GraphsCreate {frame} {
 
     $horz xaxis configure -hide no -showticks no -linewidth 0 \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-tickdefault 4
+	-tickdefault $igraph(tick,len) \
+	-min $igraph(x,min) -max $igraph(x,max) 
     $horz x2axis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(x,min) -max $igraph(x,max)
     $horz yaxis configure -hide yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(y,min) -max $igraph(y,max)
     $horz y2axis configure -hide no -tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(y,min) -max $igraph(y,max)
     
     $horz element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -112,17 +117,21 @@ proc GraphsCreate {frame} {
     $vert crosshairs configure -color green
 
     $vert xaxis configure -hide yes -descending yes \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(x,min) -max $igraph(x,max) 
     $vert x2axis configure -hide no -descending yes \
 	-showticks no -linewidth 0 \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(x,min) -max $igraph(x,max) 
 
     $vert yaxis configure -hide no -descending yes \
 	-tickfont [font actual TkDefaultFont] \
-	-bg [ThemeTreeBackground] -color [ThemeTreeForeground]
+	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-min $igraph(y,min) -max $igraph(y,max)
     $vert y2axis configure -hide yes -descending yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-tickdefault 4
+	-tickdefault $igraph(tick,len) \
+	-min $igraph(y,min) -max $igraph(y,max)
 
     $vert element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -439,6 +448,7 @@ proc GraphShow {frame which} {
     set yy [subst $${varname}($which,yy)]
 
     if {!$id} {
+	InitGraphData $frame
 	set ${varname}($which,id) [$ds9(canvas) create window $xx $yy \
 				       -window $gr -anchor nw]
     } else {
@@ -556,6 +566,11 @@ proc ArrowKeyGraph {which xx yy horz} {
 # Update procs
 
 proc UpdateGraphFont {frame} {
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphFont $frame"
+    }
+
     set varname ${frame}gr
     global $varname
 
@@ -574,29 +589,55 @@ proc UpdateGraphsGrid {} {
     }
 }
 
-proc UpdateGraphGrid {ff} {
+proc UpdateGraphGrid {frame} {
     global ds9
     global graph
 
-    set varname ${ff}gr
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphGrid $frame"
+    }
+
+    set varname ${frame}gr
     global $varname
     
-    [subst $${varname}(horz)] xaxis configure \
-	-grid $graph(horz,grid) -tickdefault 4
+    [subst $${varname}(horz)] xaxis configure -grid $graph(horz,grid)
     [subst $${varname}(horz)] y2axis configure \
 	-grid $graph(horz,grid) -logscale $graph(horz,log)
 
-    [subst $${varname}(vert)] yaxis configure \
-	-grid $graph(vert,grid) -tickdefault 4
+    [subst $${varname}(vert)] yaxis configure -grid $graph(vert,grid)
     [subst $${varname}(vert)] x2axis configure \
 	-grid $graph(vert,grid) -logscale $graph(vert,log)
 }
 
+proc UpdateGraphMethod {frame} {
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphMethod $frame"
+    }
+
+    UpdateGraphData $frame
+    UpdatGraphAxis $frame
+}
+
 proc UpdateGraphAxis {frame} {
-    return
-    global ds9
     global view
     global graph
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphAxis $frame"
+    }
+
+    # sanity check
+    if {$frame == {}} {
+	return
+    }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
 
     set varname ${frame}gr
     global $varname
@@ -609,6 +650,7 @@ proc UpdateGraphAxis {frame} {
 	UpdateGraphXAxisHV $frame $gr $xv
 	UpdateGraphYAxisHV $frame $gr $yv \
 	    $graph(horz,log) $graph(horz,thick) $graph(horz,method)
+	
     }
     
     if {$view(graph,vert)} {
@@ -622,87 +664,100 @@ proc UpdateGraphAxis {frame} {
     }
 }
 
-proc UpdateGraphXAxisHV {frame what vectorX} {
-    return
+proc UpdateGraphXAxisHV {frame which vx} {
     global igraph
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphXAxisHV $frame $which $vx"
+    }
 
     set varname ${frame}gr
     global $varname
 
-    if {$frame != {}} {
-#	set xMin [expr "$$vectorX\(min\)"]
-#	set xMax [expr "$$vectorX\(max\)"]
-	set xMin [$vectorX min]
-	set xMax [$vectorX max]
+    if {[$frame has fits]} {
+	set xmin [$vx min]
+	set xmax [$vx max]
 
-	$what xaxis configure -min $xMin -max $xMax
-	$what x2axis configure -min $xMin -max $xMax
+	$which xaxis configure -min $xmin -max $xmax
+	$which x2axis configure -min $xmin -max $xmax
     } else {
-	$what xaxis configure -min $igraph(x,min) -max $igraph(x,max)
-	$what x2axis configure -min $igraph(x,min) -max $igraph(x,max)
+	$which xaxis configure -min $igraph(x,min) -max $igraph(x,max)
+	$which x2axis configure -min $igraph(x,min) -max $igraph(x,max)
     }
 }
 
-proc UpdateGraphYAxisHV {frame what vectorY log thick method} {
-    return
+proc UpdateGraphYAxisHV {frame which vectorY log thick method} {
     global igraph
 
     set varname ${frame}gr
     global $varname
 
-    if {$frame != {}} {
+    if {[$frame has fits]} {
 	set minmax [$frame get clip]
-	set yMin [lindex $minmax 0]
-	set yMax [lindex $minmax 1]
+	set ymin [lindex $minmax 0]
+	set ymax [lindex $minmax 1]
 
 	# must use .eq. since "nan" is a legal double value
-	if {$yMin eq "nan" || $yMax eq "nan"} {
-	    set yMin 0
-	    set yMax 1
+	if {$ymin eq "nan" || $ymax eq "nan"} {
+	    set ymin 0
+	    set ymax 1
 	}
 
-	if {$yMin >= $yMax} {
-	    set yMax [expr $yMin + 1]
+	if {$ymin >= $ymax} {
+	    set ymax [expr $ymin + 1]
 	}
 
 	switch $method {
 	    sum {
-		set yMax [expr $yMax*$thick]
+		set ymax [expr $ymax*$thick]
 	    }
 	    average {}
 	}
 
-	$what yaxis configure -min $yMin -max $yMax
-	$what y2axis configure -min $yMin -max $yMax
+	$which yaxis configure -min $ymin -max $ymax
+	$which y2axis configure -min $ymin -max $ymax
     } else {
-	$what yaxis configure -min $igraph(y,min) -max $igraph(y,max)
-	$what y2axis configure -min $igraph(y,min) -max $igraph(y,max)
+	$which yaxis configure -min $igraph(y,min) -max $igraph(y,max)
+	$which y2axis configure -min $igraph(y,min) -max $igraph(y,max)
     }
 }
 
-proc ClearGraphData {frame} {
-    return
-    global view
+proc InitGraphData {frame} {
+    global ds9
 
-    set varname ${frame}gr
-    global $varname
-
-    if {$view(graph,horz)} {
-	${varname}(horz) element configure line1 -hide yes
-    }    
-
-    if {$view(graph,vert)} {
-	${varname}(vert) element configure line1 -hide yes
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "InitGraphData $frame" 
     }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
+    set xx [$ds9(canvas) itemcget $frame -x]
+    set yy [$ds9(canvas) itemcget $frame -y]
+
+    # we need xmin/xmax from screen
+    # we need ymin/ymax from data
+    UpdateGraphData $frame $xx $yy canvas
+    UpdateGraphAxis $frame
 }
 
 proc UpdateGraphData {frame xx yy sys} {
-    return
-    global ds9
     global view
     global graph
     global dgraph
 
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphData $frame $xx $yy $sys" 
+    }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
     set varname ${frame}gr
     global $varname
 
@@ -717,16 +772,42 @@ proc UpdateGraphData {frame xx yy sys} {
 
     if {$view(graph,horz)} {
 	$frame get horizontal cut \
-	    ${varname}(horz,vect,xx) ${varname}(horz,vect,yy) \
+	    [subst $${varname}(horz,vect,xx)] \
+	    [subst $${varname}(horz,vect,yy)] \
 	    $xx $yy $sys $graph(horz,thick) $graph(horz,method)
-	${varname}(horz) element configure line1 -hide no
+	[subst $${varname}(horz)] element configure line1 -hide no
     }
 
     if {$view(graph,vert)} {
 	$frame get vertical cut \
-	    ${varname}(vert,vect,xx) ${varname}(vert,vect,yy) \
+	    [subst $${varname}(vert,vect,xx)] \
+	    [subst $${varname}(vert,vect,yy)] \
 	    $xx $yy $sys $graph(vert,thick) $graph(vert,method)
-	${varname}(vert) element configure line1 -hide no
+	[subst $${varname}(vert)] element configure line1 -hide no
+    }
+}
+
+proc ClearGraphData {frame} {
+    global view
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "ClearGraphData $frame"
+    }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
+    set varname ${frame}gr
+    global $varname
+
+    if {$view(graph,horz)} {
+	[subst $${varname}(horz)] element configure line1 -hide yes
+    }
+
+    if {$view(graph,vert)} {
+	[subst $${varname}(vert)] element configure line1 -hide yes
     }
 }
 
@@ -775,10 +856,10 @@ proc GraphDialog {} {
     ttk::label $f.htmethod -text [msgcat::mc {Method}]
     ttk::radiobutton $f.hamethod -text [msgcat::mc {Average}] \
 	-variable graph(horz,method) -value average \
-	-command [list UpdateGraphAxis $current(frame)]
+	-command [list UpdateGraphMethod $current(frame)]
     ttk::radiobutton $f.hsmethod -text [msgcat::mc {Sum}] \
 	-variable graph(horz,method) -value sum \
-	-command [list UpdateGraphAxis $current(frame)]
+	-command [list UpdateGraphMethod $current(frame)]
 
     grid $f.hgrid -padx 2 -pady 2 -sticky w
     grid $f.htaxis $f.hlaxis $f.hgaxis -padx 2 -pady 2 -sticky w
@@ -800,10 +881,10 @@ proc GraphDialog {} {
     ttk::label $f.vtmethod -text [msgcat::mc {Method}]
     ttk::radiobutton $f.vamethod -text [msgcat::mc {Average}] \
 	-variable graph(vert,method) -value average \
-	-command [list UpdateGraphAxis $current(frame)]
+	-command [list UpdateGraphsMethod $current(frame)]
     ttk::radiobutton $f.vsmethod -text [msgcat::mc {Sum}] \
 	-variable graph(vert,method) -value sum \
-	-command [list UpdateGraphAxis $current(frame)]
+	-command [list UpdateGraphsMethod $current(frame)]
 
     grid $f.vgrid -padx 2 -pady 2 -sticky w
     grid $f.vtaxis $f.vlaxis $f.vgaxis -padx 2 -pady 2 -sticky w

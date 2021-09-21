@@ -267,6 +267,8 @@ proc LoadUpdate {} {
     if {[$current(frame) has fits cube]} {
 	CubeDialog
     }
+
+    InitGraphData $current(frame)
 }
 
 proc FinishLoad {} {

@@ -595,7 +595,6 @@ proc EnterFrame {which x y} {
     EnterInfoBox $which
     UpdateInfoBox $which $x $y canvas
     UpdatePixelTableDialog $which $x $y canvas
-    UpdateGraphAxis $which
     UpdateGraphData $which $x $y canvas
 
     if {$view(magnifier)} {
@@ -766,7 +765,6 @@ proc Button1Frame {which x y} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphAxis $which
 	    UpdateGraphData $which $x $y canvas
 	}
 	colorbar {ColorbarButton3 $x $y}
@@ -1848,7 +1846,7 @@ proc ResetFrame {which} {
 	UpdateZoomMenu
 	UpdateScaleMenu
 	UpdateScaleDialog
-	UpdateGraphAxis $which
+	InitGraphData $which
 
 	SAMPSendCoordPointAtSkyCmd $which
     }

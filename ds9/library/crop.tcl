@@ -74,7 +74,7 @@ proc UpdateCrop {which} {
     UpdateContourDialog
     UpdateScaleDialog
     GridUpdateZoom
-    UpdateGraphAxis $which
+    InitGraphData $which
     UpdateInfoBoxFrame $which
     UpdateMain
 }

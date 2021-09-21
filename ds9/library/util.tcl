@@ -116,8 +116,6 @@ proc UpdateDS9 {} {
     UpdateContourDialog
     UpdateGridDialog
 
-    UpdateGraphAxis $current(frame)
-
     RefreshInfoBox $current(frame)
     UpdateColormapLevel
     

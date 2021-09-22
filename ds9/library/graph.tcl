@@ -659,7 +659,6 @@ proc InitGraphData {frame which} {
     # we need xmin/xmax from screen
     # we need ymin/ymax from data
     UpdateGraphData $frame $which $xx $yy canvas
-    CallStack
     UpdateGraphAxisX $frame $which
     UpdateGraphAxisY $frame $which
 }

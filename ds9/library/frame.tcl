@@ -595,7 +595,7 @@ proc EnterFrame {which x y} {
     EnterInfoBox $which
     UpdateInfoBox $which $x $y canvas
     UpdatePixelTableDialog $which $x $y canvas
-    UpdateGraphData $which $x $y canvas
+    UpdateGraphsData $which $x $y canvas
 
     if {$view(magnifier)} {
 	# don't turn on the magnifier until we've finished the init process
@@ -642,7 +642,6 @@ proc LeaveFrame {which} {
 	3d {
 	    LeaveInfoBox
 	    PixelTableClearDialog
-	    ClearGraphData $which
 	}
 	crosshair {}
     }
@@ -699,7 +698,7 @@ proc DoMotion {which x y cursor1 cursor2} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphData $which $x $y canvas
+	    UpdateGraphsData $which $x $y canvas
 	}
 	none -
 	colorbar -
@@ -713,7 +712,7 @@ proc DoMotion {which x y cursor1 cursor2} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphData $which $x $y canvas
+	    UpdateGraphsData $which $x $y canvas
 	}
 	crosshair {}
     }
@@ -765,7 +764,7 @@ proc Button1Frame {which x y} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphData $which $x $y canvas
+	    UpdateGraphsData $which $x $y canvas
 	}
 	colorbar {ColorbarButton3 $x $y}
 	pan {
@@ -961,7 +960,7 @@ proc Motion1Frame {which x y} {
 
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphData $which $x $y canvas
+	    UpdateGraphsData $which $x $y canvas
 	}
 	crosshair {
 	    if {$ds9(b1)} {
@@ -970,7 +969,7 @@ proc Motion1Frame {which x y} {
 		UpdateColormapLevelMosaic $which $x $y canvas
 		UpdateInfoBox $which $x $y canvas
 		UpdatePixelTableDialog $which $x $y canvas
-		UpdateGraphData $which $x $y canvas
+		UpdateGraphsData $which $x $y canvas
 	    }
 	}
 	colorbar {
@@ -1007,7 +1006,7 @@ proc Motion1Frame {which x y} {
 
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphData $which $x $y canvas
+	    UpdateGraphsData $which $x $y canvas
 	}
         footprint {
             if {$which == $current(frame)} {
@@ -1016,7 +1015,7 @@ proc Motion1Frame {which x y} {
 
             UpdateInfoBox $which $x $y canvas
             UpdatePixelTableDialog $which $x $y canvas
-            UpdateGraphData $which $x $y canvas
+            UpdateGraphsData $which $x $y canvas
         }
 	examine {}
 	iexam {}
@@ -1060,7 +1059,7 @@ proc Release1Frame {which x y} {
 		UpdateColormapLevelMosaic $which $x $y canvas
 		UpdateInfoBox $which $x $y canvas
 		UpdatePixelTableDialog $which $x $y canvas
-		UpdateGraphData $which $x $y canvas
+		UpdateGraphsData $which $x $y canvas
 	    }
 	}
 	colorbar {
@@ -1836,7 +1835,6 @@ proc ResetFrame {which} {
 
 	RefreshInfoBox $which
 	PixelTableClearDialog
-	ClearGraphData $which
 
 	LockFrame $which
 	UpdatePanZoomDialog
@@ -1846,7 +1844,7 @@ proc ResetFrame {which} {
 	UpdateZoomMenu
 	UpdateScaleMenu
 	UpdateScaleDialog
-	InitGraphData $which
+	InitGraphsData $which
 
 	SAMPSendCoordPointAtSkyCmd $which
     }
@@ -1859,7 +1857,7 @@ proc ClearCurrentFrame {} {
 
     ClearInfoBox
     PixelTableClearDialog
-    ClearGraphData $current(frame)
+    ClearGraphsData $current(frame)
 
     UpdateDS9
 }
@@ -1869,7 +1867,7 @@ proc ClearAllFrame {} {
 
     foreach ff $ds9(frames) {
 	ClearFrame $ff
-	ClearGraphData $ff
+	ClearGraphsData $ff
     }
 
     ClearInfoBox

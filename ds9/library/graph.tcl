@@ -268,7 +268,7 @@ proc UnBindEventsGraphs {frame} {
     }
 }
 
-proc LayoutGraphAdjust {} {
+proc LayoutGraphsAdjust {} {
     global graph
     global graphgr
 
@@ -448,9 +448,9 @@ proc GraphShow {frame which} {
     set yy [subst $${varname}($which,yy)]
 
     if {!$id} {
-	InitGraphData $frame
 	set ${varname}($which,id) [$ds9(canvas) create window $xx $yy \
 				       -window $gr -anchor nw]
+	[subst $${varname}($which)] element configure line1 -hide no
     } else {
 	$ds9(canvas) coords $gr $xx $yy
     }
@@ -586,6 +586,7 @@ proc UpdateGraphsGrid {} {
     UpdateGraphGrid graph
     foreach ff $ds9(frames) {
 	UpdateGraphGrid $ff
+	UpdateGraphGrid $ff
     }
 }
 
@@ -616,17 +617,13 @@ proc UpdateGraphMethod {frame} {
 	puts "UpdateGraphMethod $frame"
     }
 
-    UpdateGraphData $frame
-    UpdatGraphAxis $frame
+    InitGraphsData $frame
 }
 
-proc UpdateGraphAxis {frame} {
-    global view
-    global graph
-
+proc InitGraphsData {frame} {
     global debug
     if {$debug(tcl,graph)} {
-	puts "UpdateGraphAxis $frame"
+	puts "InitGraphData $frame $which" 
     }
 
     # sanity check
@@ -639,59 +636,142 @@ proc UpdateGraphAxis {frame} {
 	return
     }
 
-    set varname ${frame}gr
-    global $varname
+    InitGraphData $frame horz
+    InitGraphData $frame vert
+}
+
+proc InitGraphData {frame which} {
+    global ds9
+    global current
+
+    switch $current(mode) {
+	crosshair {
+	    set coord [$frame get crosshair canvas]
+	    set xx [lindex $coord 0]
+	    set yy [lindex $coord 1]
+	}
+	default {
+	    set xx [$ds9(canvas) itemcget $frame -x]
+	    set yy [$ds9(canvas) itemcget $frame -y]
+	}
+    }
+
+    # we need xmin/xmax from screen
+    # we need ymin/ymax from data
+    UpdateGraphData $frame $which $xx $yy canvas
+    UpdateGraphAxisX $frame $which
+    UpdateGraphAxisY $frame $which
+}
+
+proc UpdateGraphsData {frame xx yy sys} {
+    global view
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphsData $frame $which $xx $yy $sys" 
+    }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
+
+    if {![$frame has fits]} {
+	return
+    }
 
     if {$view(graph,horz)} {
-	set gr [subst $${varname}(horz)]
-	set xv [subst $${varname}(horz,vect,xx)]
-	set yv [subst $${varname}(horz,vect,yy)]
-
-	UpdateGraphXAxisHV $frame $gr $xv
-	UpdateGraphYAxisHV $frame $gr $yv \
-	    $graph(horz,log) $graph(horz,thick) $graph(horz,method)
-	
+	UpdateGraphData $frame horz $xx $yy $sys
     }
-    
     if {$view(graph,vert)} {
-	set gr [subst $${varname}(vert)]
-	set xv [subst $${varname}(vert,vect,xx)]
-	set yv [subst $${varname}(vert,vect,yy)]
-
-	UpdateGraphXAxisHV $frame $gr $xv
-	UpdateGraphYAxisHV $frame $gr $yv \
-	    $graph(vert,log) $graph(vert,thick) $graph(vert,method)
+	UpdateGraphData $frame vert $xx $yy $sys
     }
 }
 
-proc UpdateGraphXAxisHV {frame which vx} {
+proc UpdateGraphData {frame which xx yy sys} {
+    global graph
+
+    set varname ${frame}gr
+    global $varname
+
+    switch $which {
+	horz {set key horizontal}
+	vert {set key vertical}
+    }
+
+    $frame get $key cut \
+	[subst $${varname}($which,vect,xx)] \
+	[subst $${varname}($which,vect,yy)] \
+	$xx $yy $sys $graph($which,thick) $graph($which,method)
+}
+
+proc ClearGraphsData {frame} {
+    global view
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "ClearGraphsData $frame"
+    }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
+
+    if {$view(graph,horz)} {
+	ClearGraphData $frame horz
+    }
+    if {$view(graph,vert)} {
+	ClearGraphData $frame vert
+    }
+}
+
+proc ClearGraphData {frame which} {
+    set varname ${frame}gr
+    global $varname
+
+    [subst $${varname}($which)] element configure line1 -hide yes
+}
+
+proc UpdateGraphAxisX {frame which} {
     global igraph
 
     global debug
     if {$debug(tcl,graph)} {
-	puts "UpdateGraphXAxisHV $frame $which $vx"
+	puts "UpdateGraphAxisX $frame $which"
     }
 
     set varname ${frame}gr
     global $varname
 
-    if {[$frame has fits]} {
-	set xmin [$vx min]
-	set xmax [$vx max]
+    set gr [subst $${varname}($which)]
+    set xv [subst $${varname}($which,vect,xx)]
 
-	$which xaxis configure -min $xmin -max $xmax
-	$which x2axis configure -min $xmin -max $xmax
+    if {[$frame has fits]} {
+	set xmin [$xv min]
+	set xmax [$xv max]
+
+	$gr xaxis configure -min $xmin -max $xmax
+	$gr x2axis configure -min $xmin -max $xmax
     } else {
-	$which xaxis configure -min $igraph(x,min) -max $igraph(x,max)
-	$which x2axis configure -min $igraph(x,min) -max $igraph(x,max)
+	$gr xaxis configure -min $igraph(x,min) -max $igraph(x,max)
+	$gr x2axis configure -min $igraph(x,min) -max $igraph(x,max)
     }
 }
 
-proc UpdateGraphYAxisHV {frame which vectorY log thick method} {
+proc UpdateGraphAxisY {frame which} {
     global igraph
+    global graph
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphAxisY $frame $which"
+    }
 
     set varname ${frame}gr
     global $varname
+
+    set gr [subst $${varname}($which)]
 
     if {[$frame has fits]} {
 	set minmax [$frame get clip]
@@ -708,106 +788,16 @@ proc UpdateGraphYAxisHV {frame which vectorY log thick method} {
 	    set ymax [expr $ymin + 1]
 	}
 
-	switch $method {
-	    sum {
-		set ymax [expr $ymax*$thick]
-	    }
+	switch $graph($which,method) {
+	    sum {set ymax [expr $ymax*$thick]}
 	    average {}
 	}
 
-	$which yaxis configure -min $ymin -max $ymax
-	$which y2axis configure -min $ymin -max $ymax
+	$gr yaxis configure -min $ymin -max $ymax
+	$gr y2axis configure -min $ymin -max $ymax
     } else {
-	$which yaxis configure -min $igraph(y,min) -max $igraph(y,max)
-	$which y2axis configure -min $igraph(y,min) -max $igraph(y,max)
-    }
-}
-
-proc InitGraphData {frame} {
-    global ds9
-
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "InitGraphData $frame" 
-    }
-
-    # don't process default graph
-    if {$frame == {graph}} {
-	return
-    }
-    set xx [$ds9(canvas) itemcget $frame -x]
-    set yy [$ds9(canvas) itemcget $frame -y]
-
-    # we need xmin/xmax from screen
-    # we need ymin/ymax from data
-    UpdateGraphData $frame $xx $yy canvas
-    UpdateGraphAxis $frame
-}
-
-proc UpdateGraphData {frame xx yy sys} {
-    global view
-    global graph
-    global dgraph
-
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "UpdateGraphData $frame $xx $yy $sys" 
-    }
-
-    # don't process default graph
-    if {$frame == {graph}} {
-	return
-    }
-    set varname ${frame}gr
-    global $varname
-
-    # save for later
-    set dgraph(frame) $frame
-    set dgraph(x) $xx
-    set dgraph(y) $yy
-
-    if {![$frame has fits]} {
-	return
-    }
-
-    if {$view(graph,horz)} {
-	$frame get horizontal cut \
-	    [subst $${varname}(horz,vect,xx)] \
-	    [subst $${varname}(horz,vect,yy)] \
-	    $xx $yy $sys $graph(horz,thick) $graph(horz,method)
-	[subst $${varname}(horz)] element configure line1 -hide no
-    }
-
-    if {$view(graph,vert)} {
-	$frame get vertical cut \
-	    [subst $${varname}(vert,vect,xx)] \
-	    [subst $${varname}(vert,vect,yy)] \
-	    $xx $yy $sys $graph(vert,thick) $graph(vert,method)
-	[subst $${varname}(vert)] element configure line1 -hide no
-    }
-}
-
-proc ClearGraphData {frame} {
-    global view
-
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "ClearGraphData $frame"
-    }
-
-    # don't process default graph
-    if {$frame == {graph}} {
-	return
-    }
-    set varname ${frame}gr
-    global $varname
-
-    if {$view(graph,horz)} {
-	[subst $${varname}(horz)] element configure line1 -hide yes
-    }
-
-    if {$view(graph,vert)} {
-	[subst $${varname}(vert)] element configure line1 -hide yes
+	$gr yaxis configure -min $igraph(y,min) -max $igraph(y,max)
+	$gr y2axis configure -min $igraph(y,min) -max $igraph(y,max)
     }
 }
 
@@ -908,31 +898,15 @@ proc GraphDialog {} {
 }
 
 proc GraphApplyDialog {} {
-    global ds9
-    global igraph
-    global graph
-    global dgraph
-    
-    if {[info exists dgraph]} {
-	if {$dgraph(frame) != {}} {
-	    set ii [lsearch $ds9(active) $dgraph(frame)]
-	    if {$ii>=0} {
-		UpdateGraphData $dgraph(frame) $dgraph(x) $dgraph(y) canvas
-	    } else {
-		set dgraph(frame) {}
-	    }
-	}
-    }
+#   UpdateGraphsData $dgraph(frame) $dgraph(x) $dgraph(y) canvas
 }
 
 proc GraphDestroyDialog {} {
     global igraph
-    global dgraph
 
     if {[winfo exists $igraph(top)]} {
 	destroy $igraph(top)
 	destroy $igraph(mb)
-	unset dgraph
     }
 }
 

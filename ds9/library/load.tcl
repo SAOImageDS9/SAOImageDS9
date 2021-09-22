@@ -268,7 +268,7 @@ proc LoadUpdate {} {
 	CubeDialog
     }
 
-    InitGraphData $current(frame)
+    InitGraphsData $current(frame)
 }
 
 proc FinishLoad {} {

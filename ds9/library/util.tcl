@@ -145,7 +145,7 @@ proc UpdateMain {} {
 		# just in case we have a mosaic
 		UpdateColormapLevelMosaic $current(frame) $x $y canvas
 		UpdatePixelTableDialog $current(frame) $x $y canvas
-		UpdateGraphData $current(frame) $x $y canvas
+		UpdateGraphsData $current(frame) $x $y canvas
 	    }
 	}
 	none -
@@ -919,7 +919,6 @@ proc ChangeMode {} {
 
     RefreshInfoBox $current(frame)
     PixelTableClearDialog
-    ClearGraphData $current(frame)
 
     switch -- $current(mode) {
 	none -

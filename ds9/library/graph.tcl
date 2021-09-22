@@ -668,7 +668,7 @@ proc UpdateGraphsData {frame xx yy sys} {
 
     global debug
     if {$debug(tcl,graph)} {
-	puts "UpdateGraphsData $frame $which $xx $yy $sys" 
+	puts "UpdateGraphsData $frame $xx $yy $sys" 
     }
 
     # don't process default graph

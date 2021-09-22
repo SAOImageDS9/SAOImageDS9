@@ -180,7 +180,7 @@ proc BindEventsGraphs {frame} {
     global ds9
     
     global debug
-    if {$debug(tcl,events)} {
+    if {$debug(tcl,graph)} {
 	puts stderr "BindEventsGraphs $frame"
     }
     
@@ -226,7 +226,7 @@ proc UnBindEventsGraphs {frame} {
     global ds9
     
     global debug
-    if {$debug(tcl,events)} {
+    if {$debug(tcl,graph)} {
 	puts stderr "UnBindEventsGraphs $frame"
     }
 
@@ -284,6 +284,11 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     global graph
     global canvas
     
+    global debug
+    if {$debug(tcl,graph)} {
+	puts stderr "LayoutGraphHorz $frame $fx $fy $fw $fh"
+    }
+
     set varname ${frame}gr
     global $varname
 
@@ -363,6 +368,11 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     global graph
     global canvas
     
+    global debug
+    if {$debug(tcl,graph)} {
+	puts stderr "LayoutGraphVert $frame $fx $fy $fw $fh"
+    }
+
     set varname ${frame}gr
     global $varname
 
@@ -450,7 +460,6 @@ proc GraphShow {frame which} {
     if {!$id} {
 	set ${varname}($which,id) [$ds9(canvas) create window $xx $yy \
 				       -window $gr -anchor nw]
-	[subst $${varname}($which)] element configure line1 -hide no
     } else {
 	$ds9(canvas) coords $gr $xx $yy
     }
@@ -565,12 +574,22 @@ proc ArrowKeyGraph {which xx yy horz} {
 
 # Update procs
 
-proc UpdateGraphFont {frame} {
+proc UpdateGraphsFont {} {
+    global ds9
+    
     global debug
     if {$debug(tcl,graph)} {
-	puts "UpdateGraphFont $frame"
+	puts "UpdateGraphsFont"
     }
 
+    UpdateGraphFont graph
+    foreach ff $ds9(frames) {
+	UpdateGraphFont $ff
+	UpdateGraphFont $ff
+    }
+}
+
+proc UpdateGraphFont {frame} {
     set varname ${frame}gr
     global $varname
 
@@ -578,11 +597,21 @@ proc UpdateGraphFont {frame} {
 	-tickfont [font actual TkDefaultFont]
     [subst $${varname}(horz)] yaxis configure \
 	-tickfont [font actual TkDefaultFont]
+
+    [subst $${varname}(vert)] y2axis configure \
+	-tickfont [font actual TkDefaultFont]
+    [subst $${varname}(vert)] yaxis configure \
+	-tickfont [font actual TkDefaultFont]
 }
 
 proc UpdateGraphsGrid {} {
     global ds9
     
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphsGrid"
+    }
+
     UpdateGraphGrid graph
     foreach ff $ds9(frames) {
 	UpdateGraphGrid $ff
@@ -593,11 +622,6 @@ proc UpdateGraphsGrid {} {
 proc UpdateGraphGrid {frame} {
     global ds9
     global graph
-
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "UpdateGraphGrid $frame"
-    }
 
     set varname ${frame}gr
     global $varname
@@ -611,13 +635,17 @@ proc UpdateGraphGrid {frame} {
 	-grid $graph(vert,grid) -logscale $graph(vert,log)
 }
 
-proc UpdateGraphMethod {frame} {
+proc ChangeGraphsData {} {
+    global ds9
+    
     global debug
     if {$debug(tcl,graph)} {
-	puts "UpdateGraphMethod $frame"
+	puts "ChangeGraphsData"
     }
 
-    InitGraphsData $frame
+    foreach ff $ds9(frames) {
+	InitGraphsData $ff
+    }
 }
 
 proc InitGraphsData {frame} {
@@ -643,6 +671,11 @@ proc InitGraphsData {frame} {
 proc InitGraphData {frame which} {
     global ds9
     global current
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "InitGraphData $frame $which" 
+    }
 
     switch $current(mode) {
 	crosshair {
@@ -691,6 +724,11 @@ proc UpdateGraphsData {frame xx yy sys} {
 proc UpdateGraphData {frame which xx yy sys} {
     global graph
 
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphData $frame $which $xx $yy $sys" 
+    }
+
     set varname ${frame}gr
     global $varname
 
@@ -703,6 +741,34 @@ proc UpdateGraphData {frame which xx yy sys} {
 	[subst $${varname}($which,vect,xx)] \
 	[subst $${varname}($which,vect,yy)] \
 	$xx $yy $sys $graph($which,thick) $graph($which,method)
+}
+
+proc ShowGraphsData {frame} {
+    global view
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "ShowGraphsData $frame"
+    }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
+
+    if {$view(graph,horz)} {
+	ShowGraphData $frame horz
+    }
+    if {$view(graph,vert)} {
+	ShowGraphData $frame vert
+    }
+}
+
+proc ShowGraphData {frame which} {
+    set varname ${frame}gr
+    global $varname
+
+    [subst $${varname}($which)] element configure line1 -hide no
 }
 
 proc ClearGraphsData {frame} {
@@ -789,7 +855,7 @@ proc UpdateGraphAxisY {frame which} {
 	}
 
 	switch $graph($which,method) {
-	    sum {set ymax [expr $ymax*$thick]}
+	    sum {set ymax [expr $ymax*$graph($which,thick)]}
 	    average {}
 	}
 
@@ -846,10 +912,10 @@ proc GraphDialog {} {
     ttk::label $f.htmethod -text [msgcat::mc {Method}]
     ttk::radiobutton $f.hamethod -text [msgcat::mc {Average}] \
 	-variable graph(horz,method) -value average \
-	-command [list UpdateGraphMethod $current(frame)]
+	-command [list InitGraphsData $current(frame)]
     ttk::radiobutton $f.hsmethod -text [msgcat::mc {Sum}] \
 	-variable graph(horz,method) -value sum \
-	-command [list UpdateGraphMethod $current(frame)]
+	-command [list InitGraphsData $current(frame)]
 
     grid $f.hgrid -padx 2 -pady 2 -sticky w
     grid $f.htaxis $f.hlaxis $f.hgaxis -padx 2 -pady 2 -sticky w
@@ -871,10 +937,10 @@ proc GraphDialog {} {
     ttk::label $f.vtmethod -text [msgcat::mc {Method}]
     ttk::radiobutton $f.vamethod -text [msgcat::mc {Average}] \
 	-variable graph(vert,method) -value average \
-	-command [list UpdateGraphsMethod $current(frame)]
+	-command ChangeGraphsData
     ttk::radiobutton $f.vsmethod -text [msgcat::mc {Sum}] \
 	-variable graph(vert,method) -value sum \
-	-command [list UpdateGraphsMethod $current(frame)]
+	-command ChangeGraphsData
 
     grid $f.vgrid -padx 2 -pady 2 -sticky w
     grid $f.vtaxis $f.vlaxis $f.vgaxis -padx 2 -pady 2 -sticky w
@@ -898,7 +964,7 @@ proc GraphDialog {} {
 }
 
 proc GraphApplyDialog {} {
-#   UpdateGraphsData $dgraph(frame) $dgraph(x) $dgraph(y) canvas
+    ChangeGraphsData
 }
 
 proc GraphDestroyDialog {} {

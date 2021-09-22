@@ -260,7 +260,6 @@ proc Restore {fn} {
     cd $cd
 
     # and update it
-    UpdateGraphsGrid
     LayoutView
     UpdateActiveFrames
     ChangeMode

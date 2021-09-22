@@ -595,6 +595,7 @@ proc EnterFrame {which x y} {
     EnterInfoBox $which
     UpdateInfoBox $which $x $y canvas
     UpdatePixelTableDialog $which $x $y canvas
+    ShowGraphsData $which
     UpdateGraphsData $which $x $y canvas
 
     if {$view(magnifier)} {
@@ -642,6 +643,7 @@ proc LeaveFrame {which} {
 	3d {
 	    LeaveInfoBox
 	    PixelTableClearDialog
+	    ClearGraphsData $which
 	}
 	crosshair {}
     }
@@ -1059,7 +1061,6 @@ proc Release1Frame {which x y} {
 		UpdateColormapLevelMosaic $which $x $y canvas
 		UpdateInfoBox $which $x $y canvas
 		UpdatePixelTableDialog $which $x $y canvas
-		UpdateGraphsData $which $x $y canvas
 	    }
 	}
 	colorbar {

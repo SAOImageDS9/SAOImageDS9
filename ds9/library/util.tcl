@@ -913,6 +913,12 @@ proc ChangeMode {} {
 	$ff marker catalog unhighlite all
 	$ff marker unselect all
 	$ff marker unhighlite all
+
+	switch $current(mode) {
+	    crosshair -
+	    analysis {}
+	    default {ClearGraphsData $ff}
+	}
     }
 
     UpdateRegionMenu
@@ -929,6 +935,7 @@ proc ChangeMode {} {
 	crosshair {
 	    foreach ff $ds9(frames) {
 		$ff crosshair on
+		ShowGraphsData $ff
 	    }
 	    SetCursor crosshair
 	}

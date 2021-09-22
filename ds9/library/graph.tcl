@@ -623,7 +623,7 @@ proc UpdateGraphMethod {frame} {
 proc InitGraphsData {frame} {
     global debug
     if {$debug(tcl,graph)} {
-	puts "InitGraphData $frame $which" 
+	puts "InitGraphsData $frame" 
     }
 
     # sanity check
@@ -659,6 +659,7 @@ proc InitGraphData {frame which} {
     # we need xmin/xmax from screen
     # we need ymin/ymax from data
     UpdateGraphData $frame $which $xx $yy canvas
+    CallStack
     UpdateGraphAxisX $frame $which
     UpdateGraphAxisY $frame $which
 }

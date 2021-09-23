@@ -1,0 +1,22 @@
+#tab graphparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close		{return $CLOSE_}
+grid		{return $GRID_}
+horz		{return $HORIZONTAL_}
+horizontal	{return $HORIZONTAL_}
+open		{return $OPEN_}
+vert		{return $VERTICAL_}
+vertical	{return $VERTICAL_}
+
+#include yesno.fin
+#include fonts.fin
+#include numeric.fin
+
+%%

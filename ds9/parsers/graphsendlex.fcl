@@ -1,0 +1,20 @@
+#tab graphsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+grid		{return $GRID_}
+horz		{return $HORIZONTAL_}
+horizontal	{return $HORIZONTAL_}
+size		{return $SIZE_}
+vert		{return $VERTICAL_}
+vertical	{return $VERTICAL_}
+
+#include font.fin
+#include ws.fin
+
+%%

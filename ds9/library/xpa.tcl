@@ -229,6 +229,11 @@ proc CreateXPA {} {
 	XPASendGIF {} {} \
 	XPARcvdGIF {} "fillbuf=false"
 
+    xpacmdadd $xpa graph \
+	{} \
+	XPASendGraph {} {} \
+	XPARcvdGraph {} "fillbuf=false"
+
     xpacmdadd $xpa grid \
 	{} \
 	XPASendGrid {} {} \
@@ -1117,6 +1122,19 @@ proc XPARcvdGIF {xpa cdata param buf len} {
 	    {Windows NT} {ProcessGIFCmd param i dummy {}}
 	}
     }
+    XPACatchError $xpa
+}
+
+proc XPASendGraph {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendGraphCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdGraph {xpa cdata param buf len} {
+    XPADebug "XPARcvdGraph" $param
+    InitError xpa
+    catch {set i 0; ProcessGraphCmd param i}
     XPACatchError $xpa
 }
 

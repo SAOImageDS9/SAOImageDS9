@@ -198,6 +198,7 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -gif {set file(type) gif}
 	    -green {set current(rgb) green; RGBChannel}
+	    -graph {incr i; ProcessGraphCmd argv i}
 	    -grid {incr i; ProcessGridCmd argv i}
 	    -nogrid {set grid(view) 0; GridUpdateCurrent}
 	    -header {incr i; ProcessHeaderCmd argv i}

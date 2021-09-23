@@ -982,3 +982,24 @@ proc GraphDestroyDialog {} {
     }
 }
 
+# Process Cmds
+
+proc ProcessGraphCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    graph::YY_FLUSH_BUFFER
+    graph::yy_scan_string [lrange $var $i end]
+    graph::yyparse
+    incr i [expr $graph::yycnt-1]
+}
+
+proc ProcessSendGraphCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    graphsend::YY_FLUSH_BUFFER
+    graphsend::yy_scan_string $param
+    graphsend::yyparse
+}

@@ -12,21 +12,20 @@ proc GraphDef {} {
     set igraph(top) .grph
     set igraph(mb) .grphmb
 
-    set igraph(horz,margin) 100
     set igraph(tick,len) 4
     set igraph(x,min) 0
     set igraph(x,max) 100
     set igraph(y,min) 1
     set igraph(y,max) 100
 
-    set graph(size) 150
-
-    set graph(horz,offset) $igraph(horz,margin)
+    set graph(horz,size) 150
+    set graph(horz,offset) 100
     set graph(horz,grid) 1
     set graph(horz,log) false
     set graph(horz,thick) 1
     set graph(horz,method) average
 
+    set graph(vert,size) 150
     set graph(vert,offset) 0
     set graph(vert,grid) 1
     set graph(vert,log) false
@@ -49,7 +48,7 @@ proc GraphsCreate {frame} {
     set hg [string tolower ${frame}grh]
     set horz [blt::graph $ds9(main).$hg \
 		  -width $canvas(width) \
-		  -height $graph(size) \
+		  -height $graph(horz,size) \
 		  -takefocus 0 \
 		  -highlightthickness 0 \
 		  -font [font actual TkDefaultFont] \
@@ -58,7 +57,7 @@ proc GraphsCreate {frame} {
 		  -foreground [ThemeTreeForeground] \
 		  -background [ThemeTreeBackground] \
 		  -plotbackground [ThemeTreeBackground] \
-		  -rightmargin $igraph(horz,margin) \
+		  -rightmargin $graph(horz,offset) \
 		 ]
 
     set xv [blt::vector create ${varname}grhx]
@@ -99,7 +98,7 @@ proc GraphsCreate {frame} {
     set vg [string tolower ${frame}grv]
     set vert [blt::graph $ds9(main).$vg \
 		  -invertxy yes \
-		  -width $graph(size) \
+		  -width $graph(vert,size) \
 		  -height $canvas(height) \
 		  -takefocus 0 \
 		  -highlightthickness 0 \
@@ -298,9 +297,9 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     set grv $view(graph,vert)
 
     set xx $fx
-    set yy [expr $fy + $fh - $graph(size)]
+    set yy [expr $fy + $fh - $graph(horz,size)]
     set ww $fw
-    set hh $graph(size)
+    set hh $graph(horz,size)
 
     # cbh
     if {$cbh && !$cbv && !$grh && !$grv} {
@@ -317,7 +316,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
-	incr ww -$graph(size)
+	incr ww -$graph(vert,size)
 	incr ww $graph(horz,offset)
     }
 
@@ -334,7 +333,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     if {!$cbh && $cbv && $grh && $grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
-	incr ww -$graph(size)
+	incr ww -$graph(vert,size)
 	incr ww $graph(horz,offset)
     }
 
@@ -346,7 +345,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     }
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
-	incr ww -$graph(size)
+	incr ww -$graph(vert,size)
 	incr ww $graph(horz,offset)
     }
 
@@ -381,9 +380,9 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
-    set xx [expr $fx + $fw - $graph(size)]
+    set xx [expr $fx + $fw - $graph(vert,size)]
     set yy $fy
-    set ww $graph(size)
+    set ww $graph(vert,size)
     set hh $fh
 
     # cbh
@@ -406,7 +405,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     if {$cbh && !$cbv && $grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
-	incr hh -$graph(size)
+	incr hh -$graph(horz,size)
 	incr hh $graph(vert,offset)
     }
 
@@ -418,7 +417,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
-	incr hh -$graph(size)
+	incr hh -$graph(horz,size)
 	incr hh $graph(vert,offset)
     }
 
@@ -430,7 +429,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     }
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
-	incr hh -$graph(size)
+	incr hh -$graph(horz,size)
 	incr hh $graph(vert,offset)
     }
 
@@ -907,6 +906,8 @@ proc GraphDialog {} {
 	-variable graph(horz,log) -value false -command UpdateGraphsGrid
     ttk::radiobutton $f.hgaxis -text [msgcat::mc {Log}] \
 	-variable graph(horz,log) -value true -command UpdateGraphsGrid
+    ttk::label $f.htsize -text [msgcat::mc {Size}]
+    ttk::entry $f.hsize -textvariable graph(horz,size) -width 7
     ttk::label $f.htthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.hthick -textvariable graph(horz,thick) -width 7
     ttk::label $f.htmethod -text [msgcat::mc {Method}]
@@ -932,6 +933,8 @@ proc GraphDialog {} {
 	-variable graph(vert,log) -value false -command UpdateGraphsGrid
     ttk::radiobutton $f.vgaxis -text [msgcat::mc {Log}] \
 	-variable graph(vert,log) -value true -command UpdateGraphsGrid
+    ttk::label $f.vtsize -text [msgcat::mc {Size}]
+    ttk::entry $f.vsize -textvariable graph(vert,size) -width 7
     ttk::label $f.vtthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.vthick -textvariable graph(vert,thick) -width 7
     ttk::label $f.vtmethod -text [msgcat::mc {Method}]

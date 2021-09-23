@@ -920,6 +920,7 @@ proc GraphDialog {} {
 
     grid $f.hgrid -padx 2 -pady 2 -sticky w
     grid $f.htaxis $f.hlaxis $f.hgaxis -padx 2 -pady 2 -sticky w
+    grid $f.htsize $f.hsize -padx 2 -pady 2 -sticky w
     grid $f.htthick $f.hthick -padx 2 -pady 2 -sticky w
     grid $f.htmethod $f.hamethod $f.hsmethod -padx 2 -pady 2 -sticky w
 
@@ -947,6 +948,7 @@ proc GraphDialog {} {
 
     grid $f.vgrid -padx 2 -pady 2 -sticky w
     grid $f.vtaxis $f.vlaxis $f.vgaxis -padx 2 -pady 2 -sticky w
+    grid $f.vtsize $f.vsize -padx 2 -pady 2 -sticky w
     grid $f.vtthick $f.vthick -padx 2 -pady 2 -sticky w
     grid $f.vtmethod $f.vamethod $f.vsmethod -padx 2 -pady 2 -sticky w
 
@@ -967,7 +969,8 @@ proc GraphDialog {} {
 }
 
 proc GraphApplyDialog {} {
-    ChangeGraphsData
+    # size changes layout
+    LayoutFrames
 }
 
 proc GraphDestroyDialog {} {

@@ -19,9 +19,9 @@ proc MarkerLoadDialog {} {
     set ed(color,default) $marker(color,default)
 
     set ed(frame) $current(frame)
-    set ed(system) $wcs(system)
-    set ed(sky) $wcs(sky)
-    set ed(skyformat) $wcs(skyformat)
+    set ed(system) $marker(system)
+    set ed(sky) $marker(sky)
+    set ed(skyformat) $marker(skyformat)
     AdjustCoordSystem ed system
 
     DialogCreate $w [msgcat::mc {Open Regions}] ed(ok)

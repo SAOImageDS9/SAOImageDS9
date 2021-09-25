@@ -6,7 +6,7 @@ package provide DS9 1.0
 
 proc AnalysisMainMenu {} {
     global ds9
-    global current
+    global graph
 
     # WARNING: this is a variable length menu. 
     # Be sure to update ds9(menu,size,analysis)
@@ -107,9 +107,9 @@ proc AnalysisMainMenu {} {
 	-label [msgcat::mc {Sum}] -variable graph(horz,method) \
 	-value sum -command UpdateGraphsMethod
 
-    FontMenu  $ds9(mb).analysis.horzgraph.font \
+    FontMenu $ds9(mb).analysis.horzgraph.font \
 	graph horz,font horz,font,size horz,font,weight horz,font,slant \
-	LayoutFrames
+	[list UpdateGraphsFont horz]
 
     ThemeMenu $ds9(mb).analysis.vertgraph
     $ds9(mb).analysis.vertgraph add checkbutton -label [msgcat::mc {Grid}] \
@@ -140,7 +140,7 @@ proc AnalysisMainMenu {} {
 
     FontMenu $ds9(mb).analysis.vertgraph.font \
 	graph vert,font vert,font,size vert,font,weight vert,font,slant \
-	LayoutFrames
+	[list UpdateGraphsFont vert]
 
     ThemeMenu $ds9(mb).analysis.block
     $ds9(mb).analysis.block add command -label [msgcat::mc {Block In}] \

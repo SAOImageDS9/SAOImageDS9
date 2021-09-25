@@ -84,7 +84,7 @@ proc GraphsCreate {frame} {
     $horz yaxis configure -hide yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
 	-min $igraph(y,min) -max $igraph(y,max)
-    $horz y2axis configure -hide no -tickfont [font actual TkDefaultFont] \
+    $horz y2axis configure -hide no \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
 	-min $igraph(y,min) -max $igraph(y,max)
     
@@ -132,7 +132,6 @@ proc GraphsCreate {frame} {
 	-min $igraph(x,min) -max $igraph(x,max) 
 
     $vert yaxis configure -hide no -descending yes \
-	-tickfont [font actual TkDefaultFont] \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
 	-min $igraph(y,min) -max $igraph(y,max)
     $vert y2axis configure -hide yes -descending yes \
@@ -154,7 +153,9 @@ proc GraphsCreate {frame} {
     set ${varname}(vert,xx) 0
     set ${varname}(vert,yy) 0
 
-    UpdateGraphsGrid
+    UpdateGraphGrid $frame
+    UpdateGraphFont $frame horz
+    UpdateGraphFont $frame vert
     BindEventsGraphs $frame
 }
 
@@ -581,7 +582,7 @@ proc ArrowKeyGraph {which xx yy horz} {
 
 # Update procs
 
-proc UpdateGraphsFont {} {
+proc UpdateGraphsFont {which} {
     global ds9
     
     global debug
@@ -589,25 +590,25 @@ proc UpdateGraphsFont {} {
 	puts "UpdateGraphsFont"
     }
 
-    UpdateGraphFont graph
+    UpdateGraphFont graph $which
     foreach ff $ds9(frames) {
-	UpdateGraphFont $ff
+	UpdateGraphFont $ff $which
     }
+
+#    LayoutFrames
 }
 
-proc UpdateGraphFont {frame} {
+proc UpdateGraphFont {frame which} {
+    global graph
+    global ds9
+
     set varname ${frame}gr
     global $varname
 
-    [subst $${varname}(horz)] y2axis configure \
-	-tickfont [font actual TkDefaultFont]
-    [subst $${varname}(horz)] yaxis configure \
-	-tickfont [font actual TkDefaultFont]
-
-    [subst $${varname}(vert)] y2axis configure \
-	-tickfont [font actual TkDefaultFont]
-    [subst $${varname}(vert)] yaxis configure \
-	-tickfont [font actual TkDefaultFont]
+    [subst $${varname}($which)] y2axis configure \
+	-tickfont "$ds9($graph($which,font)) $graph($which,font,size) $graph($which,font,weight) $graph($which,font,slant)"
+    [subst $${varname}($which)] yaxis configure \
+	-tickfont "$ds9($graph($which,font)) $graph($which,font,size) $graph($which,font,weight) $graph($which,font,slant)"
 }
 
 proc UpdateGraphsMethod {} {

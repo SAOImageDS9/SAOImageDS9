@@ -62,88 +62,125 @@ proc graphsend::unsetupvalues {numsyms} {
 
 array set graphsend::table {
   6:0 reduce
-  3:0,target 0
-  2:262,target 4
-  5:0,target 2
-  4:262,target 5
-  2:264,target 4
-  0:266,target 3
-  4:264,target 6
+  3:0,target 5
+  0:257 shift
+  7:0 reduce
+  0:264,target 7
+  0:258 shift
+  8:0 reduce
+  5:0,target 1
+  0:259 shift
+  10:0 accept
+  9:0 reduce
+  0:266,target 9
+  0:261 shift
+  7:0,target 7
+  0:262 shift
+  0:258,target 2
   0:263 shift
-  1:262 reduce
-  2:262 reduce
+  10:0,target 0
+  9:0,target 9
+  0:264 shift
+  0:261,target 4
+  2:0,target 3
   0:265 shift
-  1:264 reduce
-  4:262 shift
-  2:264 reduce
-  0:266 goto
-  0:263,target 1
-  1:262,target 3
+  0:266 shift
+  0:263,target 6
+  4:0,target 4
   0:267 goto
-  4:264 shift
-  1:264,target 3
-  0:265,target 2
-  6:0,target 1
-  0:267,target 4
-  3:0 accept
+  0:265,target 8
+  6:0,target 6
+  1:0 reduce
+  0:257,target 1
+  2:0 reduce
+  0:267,target 10
+  8:0,target 8
+  3:0 reduce
+  0:259,target 3
+  4:0 reduce
+  1:0,target 2
   5:0 reduce
+  0:262,target 5
 }
 
 array set graphsend::rules {
-  0,l 268
-  1,l 266
-  2,l 266
+  9,l 267
+  2,l 267
+  6,l 267
   3,l 267
+  7,l 267
+  0,l 268
   4,l 267
+  8,l 267
+  1,l 267
+  5,l 267
 }
 
 array set graphsend::rules {
+  5,dc 1
   0,dc 1
-  2,dc 2
-  4,dc 1
-  1,dc 2
+  8,dc 1
   3,dc 1
+  6,dc 1
+  1,dc 1
+  9,dc 1
+  4,dc 1
+  7,dc 1
+  2,dc 1
 }
 
 array set graphsend::rules {
-  2,line 24
-  4,line 28
-  1,line 23
-  3,line 27
+  7,line 30
+  4,line 27
+  1,line 24
+  9,line 32
+  6,line 29
+  3,line 26
+  8,line 31
+  5,line 28
+  2,line 25
 }
 
 array set graphsend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 {262 264} 0} {4 {262 264} 0}}
-  1 {{3 {262 264} 1}}
-  2 {{4 {262 264} 1}}
-  3 {{0 0 1}}
-  4 {{1 0 1} {2 0 1}}
-  0,trans {{263 1} {265 2} {266 3} {267 4}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0}}
+  1 {{2 0 1}}
+  2 {{3 0 1}}
+  3 {{5 0 1}}
+  4 {{4 0 1}}
+  0,trans {{257 1} {258 2} {259 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10}}
   1,trans {}
-  5 {{2 0 2}}
+  5 {{1 0 1}}
   2,trans {}
-  6 {{1 0 2}}
+  6 {{6 0 1}}
   3,trans {}
-  4,trans {{262 5} {264 6}}
+  7 {{7 0 1}}
+  4,trans {}
+  8 {{8 0 1}}
   5,trans {}
+  9 {{9 0 1}}
+  10 {{0 0 1}}
   6,trans {}
+  7,trans {}
+  8,trans {}
+  10,trans {}
+  9,trans {}
 }
 
 array set graphsend::token_id_table {
   264,line 17
-  265,title VERTICAL
+  265,title SIZE
   261,line 11
   257,t 0
   257,line 7
   262,t 0
   259,title FONTSLANT
   260,title FONTSTYLE
-  266,t 1
-  264,title SIZE
+  266,t 0
+  264,title METHOD
+  266,line 19
   error error
-  266,line 22
   268,title {}
-  error,line 21
+  error,line 22
   258,t 0
   263,line 16
   error,title {}
@@ -152,8 +189,8 @@ array set graphsend::token_id_table {
   260,line 10
   258,title FONTSIZE
   267,t 1
-  263,title HORIZONTAL
-  268,line 29
+  263,title LOG
+  268,line 33
   267,title {}
   257 FONT_
   258 FONTSIZE_
@@ -164,14 +201,14 @@ array set graphsend::token_id_table {
   261 FONTWEIGHT_
   265,line 18
   262 GRID_
-  263 HORIZONTAL_
+  263 LOG_
   257,title FONT
-  264 SIZE_
+  264 METHOD_
   264,t 0
-  265 VERTICAL_
+  265 SIZE_
   262,line 15
-  266 graphsend
-  267 type
+  266 THICKNESS_
+  267 graphsend
   268,t 1
   268 start'
   262,title GRID
@@ -179,9 +216,9 @@ array set graphsend::token_id_table {
   0,t 0
   error,t 0
   258,line 8
-  266,title {}
+  266,title THICKNESS
   261,t 0
-  267,line 26
+  267,line 23
   265,t 0
   261,title FONTWEIGHT
 }
@@ -280,9 +317,15 @@ proc graphsend::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
-                    2 { ProcessSendCmdYesNo graph $1,grid }
-                    3 { set _ horz }
-                    4 { set _ vert }
+                    1 { ProcessSendCmdYesNo graph grid }
+                    2 { ProcessSendCmdGet graph font }
+                    3 { ProcessSendCmdGet graph font,size }
+                    4 { ProcessSendCmdGet graph font,weight }
+                    5 { ProcessSendCmdGet graph font,slant }
+                    6 { ProcessSendCmdYesNo graph log }
+                    7 { ProcessSendCmdGet graph method }
+                    8 { ProcessSendCmdGet graph size }
+                    9 { ProcessSendCmdGet graph thick }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

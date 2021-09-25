@@ -9,11 +9,15 @@
 
 %start command
 
+%token AVERAGE_
 %token CLOSE_
 %token GRID_
-%token HORIZONTAL_
+%token LOG_
+%token METHOD_
 %token OPEN_
-%token VERTICAL_
+%token SIZE_
+%token SUM_
+%token THICKNESS_
 
 %%
 
@@ -27,11 +31,19 @@ command : graph
 
 graph : OPEN_ {GraphDialog}
  | CLOSE_ {GraphDestroyDialog}
- | type GRID_ yesno {ProcessCmdSet graph $1,grid $3 UpdateGraphsGrid}
+ | GRID_ yesno {ProcessCmdSet graph grid $2 UpdateGraphsGrid}
+ | LOG_ yesno {ProcessCmdSet graph log $2 UpdateGraphsGrid}
+ | METHOD_ method {ProcessCmdSet graph method $2 UpdateGraphsMethod}
+ | FONT_ font {ProcessCmdSet graph font $2 UpdateGraphsFont}
+ | FONTSIZE_ INT_ {ProcessCmdSet graph font,size $2 UpdateGraphsFont}
+ | FONTWEIGHT_ fontWeight {ProcessCmdSet graph font,weight $2 UpdateGraphsFont}
+ | FONTSLANT_ fontSlant {ProcessCmdSet graph font,slant $2 UpdateGraphsFont}
+ | SIZE_ INT_ {ProcessCmdSet graph size $2 LayoutFrames}
+ | THICKNESS_ INT_ {ProcessCmdSet graph thick InitGraphsDataCurrent}
  ;
 
-type : HORIZONTAL_ {set _ horz}
- | VERTICAL_ {set _ vert}
+method : AVERAGE_ {set _ average}
+ | SUM_ {set _ sum}
  ;
 
 %%

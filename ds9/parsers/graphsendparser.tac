@@ -7,18 +7,22 @@
 %start graphsend
 
 %token GRID_
-%token HORIZONTAL_
+%token LOG_
+%token METHOD_
 %token SIZE_
-%token VERTICAL_
+%token THICKNESS_
 
 %%
 
-graphsend : type SIZE_
- | type GRID_ {ProcessSendCmdYesNo graph $1,grid}
- ;
-
-type : HORIZONTAL_ {set _ horz}
- | VERTICAL_ {set _ vert}
+graphsend : GRID_ {ProcessSendCmdYesNo graph grid}
+ | FONT_ {ProcessSendCmdGet graph font}
+ | FONTSIZE_ {ProcessSendCmdGet graph font,size}
+ | FONTWEIGHT_ {ProcessSendCmdGet graph font,weight}
+ | FONTSLANT_ {ProcessSendCmdGet graph font,slant}
+ | LOG_ {ProcessSendCmdYesNo graph log}
+ | METHOD_ {ProcessSendCmdGet graph method}
+ | SIZE_ {ProcessSendCmdGet graph size}
+ | THICKNESS_ {ProcessSendCmdGet graph thick}
  ;
 
 %%

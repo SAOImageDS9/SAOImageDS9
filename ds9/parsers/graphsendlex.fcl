@@ -8,11 +8,10 @@
 %%
 
 grid		{return $GRID_}
-horz		{return $HORIZONTAL_}
-horizontal	{return $HORIZONTAL_}
+log		{return $LOG_}
+method		{return $METHOD_}
 size		{return $SIZE_}
-vert		{return $VERTICAL_}
-vertical	{return $VERTICAL_}
+thickness	{return $THICKNESS_}
 
 #include font.fin
 #include ws.fin

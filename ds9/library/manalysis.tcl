@@ -92,10 +92,10 @@ proc AnalysisMainMenu {} {
     ThemeMenu $ds9(mb).analysis.graph.axis
     $ds9(mb).analysis.graph.axis add radiobutton \
 	-label [msgcat::mc {Linear}] -variable graph(log) \
-	-value false -command UpdateGraphsGrid
+	-value 0 -command UpdateGraphsGrid
     $ds9(mb).analysis.graph.axis add radiobutton \
 	-label [msgcat::mc {Log}] -variable graph(log) \
-	-value true -command UpdateGraphsGrid
+	-value 1 -command UpdateGraphsGrid
 
     ThemeMenu $ds9(mb).analysis.graph.method
     $ds9(mb).analysis.graph.method add radiobutton \

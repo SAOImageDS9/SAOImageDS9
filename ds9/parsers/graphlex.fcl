@@ -7,16 +7,19 @@
 
 %%
 
+average		{return $AVERAGE_}
 close		{return $CLOSE_}
 grid		{return $GRID_}
-horz		{return $HORIZONTAL_}
-horizontal	{return $HORIZONTAL_}
+log		{return $LOG_}
+method		{return $METHOD_}
 open		{return $OPEN_}
-vert		{return $VERTICAL_}
-vertical	{return $VERTICAL_}
+size		{return $SIZE_}
+sum		{return $SUM_}
+thickness	{return $THICKNESS_}
 
 #include yesno.fin
 #include fonts.fin
-#include numeric.fin
+#include int.fin
+#include ws.fin
 
 %%

@@ -28,7 +28,7 @@ proc GraphDef {} {
 
     set graph(size) 150
     set graph(grid) 1
-    set graph(log) false
+    set graph(log) 0
     set graph(thick) 1
     set graph(method) average
 
@@ -617,7 +617,8 @@ proc UpdateGraphMethod {frame} {
     set varname ${frame}gr
     global $varname
     
-    InitGraphData $frame
+    InitGraphData $frame horz
+    InitGraphData $frame vert
 }
 
 proc UpdateGraphsGrid {} {
@@ -648,6 +649,14 @@ proc UpdateGraphGrid {frame} {
     [subst $${varname}(vert)] yaxis configure -grid $graph(grid) \
 	-logscale $graph(log)
     [subst $${varname}(vert)] x2axis configure -grid $graph(grid)
+}
+
+proc InitGraphsDataCurrent {} {
+    global current
+
+    if {$current(frame) != {}} {
+	InitGraphsData $current(frame)
+    }
 }
 
 proc InitGraphsData {frame} {

@@ -21,10 +21,8 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis add command \
 	-label "[msgcat::mc {Crosshair Parameters}]..." -command CrosshairDialog
     $ds9(mb).analysis add separator
-    $ds9(mb).analysis add cascade -label [msgcat::mc {Horizontal Graph}] \
-	-menu $ds9(mb).analysis.horzgraph
-    $ds9(mb).analysis add cascade -label [msgcat::mc {Vertical Graph}] \
-	-menu $ds9(mb).analysis.vertgraph
+    $ds9(mb).analysis add cascade -label [msgcat::mc {Graph}] \
+	-menu $ds9(mb).analysis.graph
     $ds9(mb).analysis add command -label "[msgcat::mc {Graph Parameters}]..." \
 	-command GraphDialog
     $ds9(mb).analysis add separator
@@ -80,67 +78,35 @@ proc AnalysisMainMenu {} {
 	-label [msgcat::mc {Clear Analysis Commands}] \
 	-command ClearAnalysisMenu
 
-    ThemeMenu $ds9(mb).analysis.horzgraph
-    $ds9(mb).analysis.horzgraph add checkbutton -label [msgcat::mc {Grid}] \
-	-variable graph(horz,grid) -command UpdateGraphsGrid
-    $ds9(mb).analysis.horzgraph add separator
-    $ds9(mb).analysis.horzgraph add cascade -label [msgcat::mc {Axis}] \
-	-menu $ds9(mb).analysis.horzgraph.axis
-    $ds9(mb).analysis.horzgraph add cascade -label [msgcat::mc {Method}] \
-	-menu $ds9(mb).analysis.horzgraph.method
-    $ds9(mb).analysis.horzgraph add cascade -label [msgcat::mc {Font}] \
-	-menu $ds9(mb).analysis.horzgraph.font
+    ThemeMenu $ds9(mb).analysis.graph
+    $ds9(mb).analysis.graph add checkbutton -label [msgcat::mc {Grid}] \
+	-variable graph(grid) -command UpdateGraphsGrid
+    $ds9(mb).analysis.graph add separator
+    $ds9(mb).analysis.graph add cascade -label [msgcat::mc {Axis}] \
+	-menu $ds9(mb).analysis.graph.axis
+    $ds9(mb).analysis.graph add cascade -label [msgcat::mc {Method}] \
+	-menu $ds9(mb).analysis.graph.method
+    $ds9(mb).analysis.graph add cascade -label [msgcat::mc {Font}] \
+	-menu $ds9(mb).analysis.graph.font
 
-    ThemeMenu $ds9(mb).analysis.horzgraph.axis
-    $ds9(mb).analysis.horzgraph.axis add radiobutton \
-	-label [msgcat::mc {Linear}] -variable graph(horz,log) \
+    ThemeMenu $ds9(mb).analysis.graph.axis
+    $ds9(mb).analysis.graph.axis add radiobutton \
+	-label [msgcat::mc {Linear}] -variable graph(log) \
 	-value false -command UpdateGraphsGrid
-    $ds9(mb).analysis.horzgraph.axis add radiobutton \
-	-label [msgcat::mc {Log}] -variable graph(horz,log) \
+    $ds9(mb).analysis.graph.axis add radiobutton \
+	-label [msgcat::mc {Log}] -variable graph(log) \
 	-value true -command UpdateGraphsGrid
 
-    ThemeMenu $ds9(mb).analysis.horzgraph.method
-    $ds9(mb).analysis.horzgraph.method add radiobutton \
-	-label [msgcat::mc {Average}] -variable graph(horz,method) \
+    ThemeMenu $ds9(mb).analysis.graph.method
+    $ds9(mb).analysis.graph.method add radiobutton \
+	-label [msgcat::mc {Average}] -variable graph(method) \
 	-value average -command UpdateGraphsMethod
-    $ds9(mb).analysis.horzgraph.method add radiobutton \
-	-label [msgcat::mc {Sum}] -variable graph(horz,method) \
+    $ds9(mb).analysis.graph.method add radiobutton \
+	-label [msgcat::mc {Sum}] -variable graph(method) \
 	-value sum -command UpdateGraphsMethod
 
-    FontMenu $ds9(mb).analysis.horzgraph.font \
-	graph horz,font horz,font,size horz,font,weight horz,font,slant \
-	[list UpdateGraphsFont horz]
-
-    ThemeMenu $ds9(mb).analysis.vertgraph
-    $ds9(mb).analysis.vertgraph add checkbutton -label [msgcat::mc {Grid}] \
-	-variable graph(vert,grid) -command UpdateGraphsGrid
-    $ds9(mb).analysis.vertgraph add separator
-    $ds9(mb).analysis.vertgraph add cascade -label [msgcat::mc {Axis}] \
-	-menu $ds9(mb).analysis.vertgraph.axis
-    $ds9(mb).analysis.vertgraph add cascade -label [msgcat::mc {Method}] \
-	-menu $ds9(mb).analysis.vertgraph.method
-    $ds9(mb).analysis.vertgraph add cascade -label [msgcat::mc {Font}] \
-	-menu $ds9(mb).analysis.vertgraph.font
-
-    ThemeMenu $ds9(mb).analysis.vertgraph.axis
-    $ds9(mb).analysis.vertgraph.axis add radiobutton \
-	-label [msgcat::mc {Linear}] -variable graph(vert,log) \
-	-value false -command UpdateGraphsGrid
-    $ds9(mb).analysis.vertgraph.axis add radiobutton \
-	-label [msgcat::mc {Log}] -variable graph(vert,log) \
-	-value true -command UpdateGraphsGrid
-
-    ThemeMenu $ds9(mb).analysis.vertgraph.method
-    $ds9(mb).analysis.vertgraph.method add radiobutton \
-	-label [msgcat::mc {Average}] -variable graph(vert,method) \
-	-value average -command UpdateGraphsMethod
-    $ds9(mb).analysis.vertgraph.method add radiobutton \
-	-label [msgcat::mc {Sum}] -variable graph(vert,method) \
-	-value sum -command UpdateGraphsMethod
-
-    FontMenu $ds9(mb).analysis.vertgraph.font \
-	graph vert,font vert,font,size vert,font,weight vert,font,slant \
-	[list UpdateGraphsFont vert]
+    FontMenu $ds9(mb).analysis.graph.font \
+	graph font font,size font,weight font,slant UpdateGraphsFont
 
     ThemeMenu $ds9(mb).analysis.block
     $ds9(mb).analysis.block add command -label [msgcat::mc {Block In}] \

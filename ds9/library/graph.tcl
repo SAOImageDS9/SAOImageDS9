@@ -18,27 +18,19 @@ proc GraphDef {} {
     set igraph(y,min) 1
     set igraph(y,max) 100
 
-    set graph(horz,size) 150
     set graph(horz,offset) 100
-    set graph(horz,grid) 1
-    set graph(horz,log) false
-    set graph(horz,thick) 1
-    set graph(horz,method) average
-    set graph(horz,font) helvetica
-    set graph(horz,font,size) 9
-    set graph(horz,font,weight) normal
-    set graph(horz,font,slant) roman
-
-    set graph(vert,size) 150
     set graph(vert,offset) 0
-    set graph(vert,grid) 1
-    set graph(vert,log) false
-    set graph(vert,thick) 1
-    set graph(vert,method) average
-    set graph(vert,font) helvetica
-    set graph(vert,font,size) 9
-    set graph(vert,font,weight) normal
-    set graph(vert,font,slant) roman
+
+    set graph(font) helvetica
+    set graph(font,size) 9
+    set graph(font,weight) normal
+    set graph(font,slant) roman
+
+    set graph(size) 150
+    set graph(grid) 1
+    set graph(log) false
+    set graph(thick) 1
+    set graph(method) average
 
     array set pgraph [array get graph]
 }
@@ -56,10 +48,9 @@ proc GraphsCreate {frame} {
     set hg [string tolower ${frame}grh]
     set horz [blt::graph $ds9(main).$hg \
 		  -width $canvas(width) \
-		  -height $graph(horz,size) \
+		  -height $graph(size) \
 		  -takefocus 0 \
 		  -highlightthickness 0 \
-		  -font [font actual TkDefaultFont] \
 		  -plotpadx 0 -plotpady 0 \
 		  -plotborderwidth 0 \
 		  -foreground [ThemeTreeForeground] \
@@ -106,12 +97,11 @@ proc GraphsCreate {frame} {
     set vg [string tolower ${frame}grv]
     set vert [blt::graph $ds9(main).$vg \
 		  -invertxy yes \
-		  -width $graph(vert,size) \
+		  -width $graph(size) \
 		  -height $canvas(height) \
 		  -takefocus 0 \
 		  -highlightthickness 0 \
 		  -plotborderwidth 0 \
-		  -font [font actual TkDefaultFont] \
 		  -foreground [ThemeTreeForeground] \
 		  -background [ThemeTreeBackground] \
 		  -plotbackground [ThemeTreeBackground] \
@@ -306,9 +296,9 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     set grv $view(graph,vert)
 
     set xx $fx
-    set yy [expr $fy + $fh - $graph(horz,size)]
+    set yy [expr $fy + $fh - $graph(size)]
     set ww $fw
-    set hh $graph(horz,size)
+    set hh $graph(size)
 
     # cbh
     if {$cbh && !$cbv && !$grh && !$grv} {
@@ -325,7 +315,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
-	incr ww -$graph(vert,size)
+	incr ww -$graph(size)
 	incr ww $graph(horz,offset)
     }
 
@@ -342,7 +332,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     if {!$cbh && $cbv && $grh && $grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
-	incr ww -$graph(vert,size)
+	incr ww -$graph(size)
 	incr ww $graph(horz,offset)
     }
 
@@ -354,7 +344,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     }
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
-	incr ww -$graph(vert,size)
+	incr ww -$graph(size)
 	incr ww $graph(horz,offset)
     }
 
@@ -389,9 +379,9 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
-    set xx [expr $fx + $fw - $graph(vert,size)]
+    set xx [expr $fx + $fw - $graph(size)]
     set yy $fy
-    set ww $graph(vert,size)
+    set ww $graph(size)
     set hh $fh
 
     # cbh
@@ -414,7 +404,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     if {$cbh && !$cbv && $grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
-	incr hh -$graph(horz,size)
+	incr hh -$graph(size)
 	incr hh $graph(vert,offset)
     }
 
@@ -426,7 +416,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
-	incr hh -$graph(horz,size)
+	incr hh -$graph(size)
 	incr hh $graph(vert,offset)
     }
 
@@ -438,7 +428,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     }
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
-	incr hh -$graph(horz,size)
+	incr hh -$graph(size)
 	incr hh $graph(vert,offset)
     }
 
@@ -582,7 +572,7 @@ proc ArrowKeyGraph {which xx yy horz} {
 
 # Update procs
 
-proc UpdateGraphsFont {which} {
+proc UpdateGraphsFont {} {
     global ds9
     
     global debug
@@ -590,12 +580,12 @@ proc UpdateGraphsFont {which} {
 	puts "UpdateGraphsFont"
     }
 
-    UpdateGraphFont graph $which
+    UpdateGraphFont graph horz
+    UpdateGraphFont graph vert
     foreach ff $ds9(frames) {
-	UpdateGraphFont $ff $which
+	UpdateGraphFont $ff horz
+	UpdateGraphFont $ff vert
     }
-
-#    LayoutFrames
 }
 
 proc UpdateGraphFont {frame which} {
@@ -605,10 +595,8 @@ proc UpdateGraphFont {frame which} {
     set varname ${frame}gr
     global $varname
 
-    [subst $${varname}($which)] y2axis configure \
-	-tickfont "$ds9($graph($which,font)) $graph($which,font,size) $graph($which,font,weight) $graph($which,font,slant)"
-    [subst $${varname}($which)] yaxis configure \
-	-tickfont "$ds9($graph($which,font)) $graph($which,font,size) $graph($which,font,weight) $graph($which,font,slant)"
+    [subst $${varname}($which)] y2axis configure -tickfont "$ds9($graph(font)) $graph(font,size) $graph(font,weight) $graph(font,slant)"
+    [subst $${varname}($which)] yaxis configure -tickfont "$ds9($graph(font)) $graph(font,size) $graph(font,weight) $graph(font,slant)"
 }
 
 proc UpdateGraphsMethod {} {
@@ -643,7 +631,6 @@ proc UpdateGraphsGrid {} {
     UpdateGraphGrid graph
     foreach ff $ds9(frames) {
 	UpdateGraphGrid $ff
-	UpdateGraphGrid $ff
     }
 }
 
@@ -654,13 +641,13 @@ proc UpdateGraphGrid {frame} {
     set varname ${frame}gr
     global $varname
     
-    [subst $${varname}(horz)] xaxis configure -grid $graph(horz,grid)
-    [subst $${varname}(horz)] y2axis configure \
-	-grid $graph(horz,grid) -logscale $graph(horz,log)
+    [subst $${varname}(horz)] xaxis configure -grid $graph(grid)
+    [subst $${varname}(horz)] y2axis configure -grid $graph(grid) \
+	-logscale $graph(log)
 
-    [subst $${varname}(vert)] yaxis configure -grid $graph(vert,grid)
-    [subst $${varname}(vert)] x2axis configure \
-	-grid $graph(vert,grid) -logscale $graph(vert,log)
+    [subst $${varname}(vert)] yaxis configure -grid $graph(grid) \
+	-logscale $graph(log)
+    [subst $${varname}(vert)] x2axis configure -grid $graph(grid)
 }
 
 proc InitGraphsData {frame} {
@@ -755,7 +742,7 @@ proc UpdateGraphData {frame which xx yy sys} {
     $frame get $key cut \
 	[subst $${varname}($which,vect,xx)] \
 	[subst $${varname}($which,vect,yy)] \
-	$xx $yy $sys $graph($which,thick) $graph($which,method)
+	$xx $yy $sys $graph(thick) $graph(method)
 }
 
 proc ShowGraphsData {frame} {
@@ -869,8 +856,8 @@ proc UpdateGraphAxisY {frame which} {
 	    set ymax [expr $ymin + 1]
 	}
 
-	switch $graph($which,method) {
-	    sum {set ymax [expr $ymax*$graph($which,thick)]}
+	switch $graph(method) {
+	    sum {set ymax [expr $ymax*$graph(thick)]}
 	    average {}
 	}
 
@@ -912,27 +899,15 @@ proc GraphDialog {} {
 
     EditMenu $mb igraph
 
-    # Horizontal
-    set f [ttk::labelframe $w.horz -text [msgcat::mc {Horizontal}] -padding 2]
+    set f [ttk::labelframe $w.gr -text [msgcat::mc {graph}] -padding 2]
 
-    ttk::label $f.htsize -text [msgcat::mc {Size}]
-    ttk::entry $f.hsize -textvariable graph(horz,size) -width 7
-    ttk::label $f.htthick -text [msgcat::mc {Thickness}]
-    ttk::entry $f.hthick -textvariable graph(horz,thick) -width 7
+    ttk::label $f.tsize -text [msgcat::mc {Size}]
+    ttk::entry $f.size -textvariable graph(size) -width 7
+    ttk::label $f.tthick -text [msgcat::mc {Thickness}]
+    ttk::entry $f.thick -textvariable graph(thick) -width 7
 
-    grid $f.htsize $f.hsize -padx 2 -pady 2 -sticky w
-    grid $f.htthick $f.hthick -padx 2 -pady 2 -sticky w
-
-    # Vertical
-    set f [ttk::labelframe $w.vert -text [msgcat::mc {Vertical}] -padding 2]
-
-    ttk::label $f.vtsize -text [msgcat::mc {Size}]
-    ttk::entry $f.vsize -textvariable graph(vert,size) -width 7
-    ttk::label $f.vtthick -text [msgcat::mc {Thickness}]
-    ttk::entry $f.vthick -textvariable graph(vert,thick) -width 7
-
-    grid $f.vtsize $f.vsize -padx 2 -pady 2 -sticky w
-    grid $f.vtthick $f.vthick -padx 2 -pady 2 -sticky w
+    grid $f.tsize $f.size -padx 2 -pady 2 -sticky w
+    grid $f.tthick $f.thick -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -941,8 +916,7 @@ proc GraphDialog {} {
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
-    grid $w.horz -sticky news
-    grid $w.vert -sticky news
+    grid $w.gr -sticky news
     grid $w.buttons - -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid columnconfigure $w 1 -weight 1

@@ -24,6 +24,10 @@ proc GraphDef {} {
     set graph(horz,log) false
     set graph(horz,thick) 1
     set graph(horz,method) average
+    set graph(horz,font) helvetica
+    set graph(horz,font,size) 9
+    set graph(horz,font,weight) normal
+    set graph(horz,font,slant) roman
 
     set graph(vert,size) 150
     set graph(vert,offset) 0
@@ -31,6 +35,10 @@ proc GraphDef {} {
     set graph(vert,log) false
     set graph(vert,thick) 1
     set graph(vert,method) average
+    set graph(vert,font) helvetica
+    set graph(vert,font,size) 9
+    set graph(vert,font,weight) normal
+    set graph(vert,font,slant) roman
 
     array set pgraph [array get graph]
 }
@@ -584,7 +592,6 @@ proc UpdateGraphsFont {} {
     UpdateGraphFont graph
     foreach ff $ds9(frames) {
 	UpdateGraphFont $ff
-	UpdateGraphFont $ff
     }
 }
 
@@ -601,6 +608,27 @@ proc UpdateGraphFont {frame} {
 	-tickfont [font actual TkDefaultFont]
     [subst $${varname}(vert)] yaxis configure \
 	-tickfont [font actual TkDefaultFont]
+}
+
+proc UpdateGraphsMethod {} {
+    global ds9
+    
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphsMethod"
+    }
+
+    UpdateGraphMethod graph
+    foreach ff $ds9(frames) {
+	UpdateGraphMethod $ff
+    }
+}
+
+proc UpdateGraphMethod {frame} {
+    set varname ${frame}gr
+    global $varname
+    
+    InitGraphData $frame
 }
 
 proc UpdateGraphsGrid {} {
@@ -632,19 +660,6 @@ proc UpdateGraphGrid {frame} {
     [subst $${varname}(vert)] yaxis configure -grid $graph(vert,grid)
     [subst $${varname}(vert)] x2axis configure \
 	-grid $graph(vert,grid) -logscale $graph(vert,log)
-}
-
-proc ChangeGraphsData {} {
-    global ds9
-    
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "ChangeGraphsData"
-    }
-
-    foreach ff $ds9(frames) {
-	InitGraphsData $ff
-    }
 }
 
 proc InitGraphsData {frame} {
@@ -899,58 +914,24 @@ proc GraphDialog {} {
     # Horizontal
     set f [ttk::labelframe $w.horz -text [msgcat::mc {Horizontal}] -padding 2]
 
-    ttk::checkbutton $f.hgrid -text [msgcat::mc {Show Grid}] \
-	-variable graph(horz,grid) -command UpdateGraphsGrid
-    ttk::label $f.htaxis -text [msgcat::mc {Axis}]
-    ttk::radiobutton $f.hlaxis -text [msgcat::mc {Linear}] \
-	-variable graph(horz,log) -value false -command UpdateGraphsGrid
-    ttk::radiobutton $f.hgaxis -text [msgcat::mc {Log}] \
-	-variable graph(horz,log) -value true -command UpdateGraphsGrid
     ttk::label $f.htsize -text [msgcat::mc {Size}]
     ttk::entry $f.hsize -textvariable graph(horz,size) -width 7
     ttk::label $f.htthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.hthick -textvariable graph(horz,thick) -width 7
-    ttk::label $f.htmethod -text [msgcat::mc {Method}]
-    ttk::radiobutton $f.hamethod -text [msgcat::mc {Average}] \
-	-variable graph(horz,method) -value average \
-	-command [list InitGraphsData $current(frame)]
-    ttk::radiobutton $f.hsmethod -text [msgcat::mc {Sum}] \
-	-variable graph(horz,method) -value sum \
-	-command [list InitGraphsData $current(frame)]
 
-    grid $f.hgrid -padx 2 -pady 2 -sticky w
-    grid $f.htaxis $f.hlaxis $f.hgaxis -padx 2 -pady 2 -sticky w
     grid $f.htsize $f.hsize -padx 2 -pady 2 -sticky w
     grid $f.htthick $f.hthick -padx 2 -pady 2 -sticky w
-    grid $f.htmethod $f.hamethod $f.hsmethod -padx 2 -pady 2 -sticky w
 
     # Vertical
     set f [ttk::labelframe $w.vert -text [msgcat::mc {Vertical}] -padding 2]
 
-    ttk::checkbutton $f.vgrid -text [msgcat::mc {Show Grid}] \
-	-variable graph(vert,grid) -command UpdateGraphsGrid
-    ttk::label $f.vtaxis -text [msgcat::mc {Axis}]
-    ttk::radiobutton $f.vlaxis -text [msgcat::mc {Linear}] \
-	-variable graph(vert,log) -value false -command UpdateGraphsGrid
-    ttk::radiobutton $f.vgaxis -text [msgcat::mc {Log}] \
-	-variable graph(vert,log) -value true -command UpdateGraphsGrid
     ttk::label $f.vtsize -text [msgcat::mc {Size}]
     ttk::entry $f.vsize -textvariable graph(vert,size) -width 7
     ttk::label $f.vtthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.vthick -textvariable graph(vert,thick) -width 7
-    ttk::label $f.vtmethod -text [msgcat::mc {Method}]
-    ttk::radiobutton $f.vamethod -text [msgcat::mc {Average}] \
-	-variable graph(vert,method) -value average \
-	-command ChangeGraphsData
-    ttk::radiobutton $f.vsmethod -text [msgcat::mc {Sum}] \
-	-variable graph(vert,method) -value sum \
-	-command ChangeGraphsData
 
-    grid $f.vgrid -padx 2 -pady 2 -sticky w
-    grid $f.vtaxis $f.vlaxis $f.vgaxis -padx 2 -pady 2 -sticky w
     grid $f.vtsize $f.vsize -padx 2 -pady 2 -sticky w
     grid $f.vtthick $f.vthick -padx 2 -pady 2 -sticky w
-    grid $f.vtmethod $f.vamethod $f.vsmethod -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $w.buttons]

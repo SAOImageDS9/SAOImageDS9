@@ -970,3 +970,50 @@ proc ProcessSendGraphCmd {proc id param {sock {}} {fn {}}} {
     graphsend::yy_scan_string $param
     graphsend::yyparse
 }
+
+proc PrefsDialogGraph {} {
+    global dprefs
+    global ds9
+    global pds9
+    global pmagnifier
+    global current
+    global pgraph
+
+    set w $dprefs(tab)
+
+    $dprefs(listbox) insert {} end -id [ttk::frame $w.graph] \
+	-text [msgcat::mc {Graphs}]
+
+    # Graph
+    set f [ttk::labelframe $w.graph.gr -text [msgcat::mc {Graph}]]
+
+    ttk::checkbutton $f.grid -text [msgcat::mc {Grid}] \
+	-variable pgraph(grid)
+    ttk::label $f.taxis -text [msgcat::mc {Axis}]
+    ttk::radiobutton $f.laxis -text [msgcat::mc {Linear}] \
+	-variable pgraph(log) -value 0
+    ttk::radiobutton $f.gaxis -text [msgcat::mc {Log}] \
+	-variable pgraph(log) -value 1
+    ttk::label $f.tmethod -text [msgcat::mc {Method}]
+    ttk::radiobutton $f.amethod -text [msgcat::mc {Average}] \
+	-variable pgraph(method) -value average
+    ttk::radiobutton $f.smethod -text [msgcat::mc {Sum}] \
+	-variable pgraph(method) -value sum
+    ttk::label $f.tfont -text [msgcat::mc {Font}]
+    ttk::label $f.tsize -text [msgcat::mc {Size}]
+    ttk::entry $f.size -textvariable pgraph(size) -width 7
+    ttk::label $f.tthick -text [msgcat::mc {Thickness}]
+    ttk::entry $f.thick -textvariable pgraph(thick) -width 7
+
+    FontMenuButton $f.font pgraph font font,size font,weight font,slant {}
+
+    grid $f.grid -padx 2 -pady 2 -sticky w
+    grid $f.taxis $f.laxis $f.gaxis -padx 2 -pady 2 -sticky w
+    grid $f.tmethod $f.amethod $f.smethod -padx 2 -pady 2 -sticky w
+    grid $f.tfont $f.font -padx 2 -pady 2 -sticky w
+    grid $f.tsize $f.size -padx 2 -pady 2 -sticky w
+    grid $f.tthick $f.thick -padx 2 -pady 2 -sticky w
+
+    pack $w.graph.gr -side top -fill both -expand true
+}
+

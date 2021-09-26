@@ -575,6 +575,8 @@
 ::msgcat::mcset ja {Movie} 
 ::msgcat::mcset ja {Muliple Extension Cube} 
 ::msgcat::mcset ja {Muliple Extension Frames} 
+::msgcat::mcset ja {Multi Colorbars} 
+::msgcat::mcset ja {Multiple Colorbars} 
 ::msgcat::mcset ja {Multiple Extension Cube} 
 ::msgcat::mcset ja {Multiple Extension Frames} 
 ::msgcat::mcset ja {Multiple WCS} [encoding convertfrom euc-jp "\xca\xa3\xbf\xf4\x57\x43\x53"]
@@ -799,7 +801,6 @@
 ::msgcat::mcset ja {Show All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show Command} 
 ::msgcat::mcset ja {Show Compass} 
-::msgcat::mcset ja {Show Grid} 
 ::msgcat::mcset ja {Show Legend} 
 ::msgcat::mcset ja {Show Text} [encoding convertfrom euc-jp "\xca\xb8\xbb\xfa\xa4\xf2\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show/Hide Frames} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xce\xc9\xbd\xbc\xa8\x2f\xc8\xf3\xc9\xbd\xbc\xa8"]
@@ -965,6 +966,7 @@
 ::msgcat::mcset ja {already connected} 
 ::msgcat::mcset ja {and} 
 ::msgcat::mcset ja {b} 
+::msgcat::mcset ja {graph} 
 ::msgcat::mcset ja {g} 
 ::msgcat::mcset ja {h5utils} 
 ::msgcat::mcset ja {hundredths second} 

@@ -575,6 +575,8 @@
 ::msgcat::mcset zh {Movie} 
 ::msgcat::mcset zh {Muliple Extension Cube} 
 ::msgcat::mcset zh {Muliple Extension Frames} 
+::msgcat::mcset zh {Multi Colorbars} 
+::msgcat::mcset zh {Multiple Colorbars} 
 ::msgcat::mcset zh {Multiple Extension Cube} 
 ::msgcat::mcset zh {Multiple Extension Frames} 
 ::msgcat::mcset zh {Multiple WCS} 
@@ -799,7 +801,6 @@
 ::msgcat::mcset zh {Show All} [encoding convertfrom big5 "\xC5\xE3 \xA5\xDC \xA5\xFE \xB3\xA1"]
 ::msgcat::mcset zh {Show Command} 
 ::msgcat::mcset zh {Show Compass} 
-::msgcat::mcset zh {Show Grid} 
 ::msgcat::mcset zh {Show Legend} 
 ::msgcat::mcset zh {Show Text} 
 ::msgcat::mcset zh {Show/Hide Frames} 
@@ -965,6 +966,7 @@
 ::msgcat::mcset zh {already connected} 
 ::msgcat::mcset zh {and} 
 ::msgcat::mcset zh {b} 
+::msgcat::mcset zh {graph} 
 ::msgcat::mcset zh {g} 
 ::msgcat::mcset zh {h5utils} 
 ::msgcat::mcset zh {hundredths second} 

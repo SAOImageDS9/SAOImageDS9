@@ -61,7 +61,6 @@ proc PrefsDialog {{which {}}} {
     PrefsDialogPanner
     PrefsDialogMagnifier
     PrefsDialog3d
-    PrefsDialogGraph
     PrefsDialogBin
     PrefsDialogZoom
     PrefsDialogScale
@@ -71,6 +70,7 @@ proc PrefsDialog {{which {}}} {
     PrefsDialogPanda
     PrefsDialogAnalysis
     PrefsDialogPixelTable
+    PrefsDialogGraph
     PrefsDialogContour
     PrefsDialogSmooth
     PrefsDialogCatalog

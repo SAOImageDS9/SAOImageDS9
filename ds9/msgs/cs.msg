@@ -575,6 +575,8 @@
 ::msgcat::mcset cs {Movie} 
 ::msgcat::mcset cs {Muliple Extension Cube} 
 ::msgcat::mcset cs {Muliple Extension Frames} 
+::msgcat::mcset cs {Multi Colorbars} 
+::msgcat::mcset cs {Multiple Colorbars} 
 ::msgcat::mcset cs {Multiple Extension Cube} 
 ::msgcat::mcset cs {Multiple Extension Frames} 
 ::msgcat::mcset cs {Multiple WCS} [encoding convertfrom iso8859-2 {Multi WCS}]
@@ -799,7 +801,6 @@
 ::msgcat::mcset cs {Show All} [encoding convertfrom iso8859-2 {Zobrazit v¹e}]
 ::msgcat::mcset cs {Show Command} 
 ::msgcat::mcset cs {Show Compass} 
-::msgcat::mcset cs {Show Grid} 
 ::msgcat::mcset cs {Show Legend} 
 ::msgcat::mcset cs {Show Text} 
 ::msgcat::mcset cs {Show/Hide Frames} [encoding convertfrom iso8859-2 {Zobrazit/skrýt snímky}]
@@ -965,6 +966,7 @@
 ::msgcat::mcset cs {already connected} 
 ::msgcat::mcset cs {and} 
 ::msgcat::mcset cs {b} 
+::msgcat::mcset cs {graph} 
 ::msgcat::mcset cs {g} 
 ::msgcat::mcset cs {h5utils} 
 ::msgcat::mcset cs {hundredths second} 

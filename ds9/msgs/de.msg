@@ -575,6 +575,8 @@
 ::msgcat::mcset de {Movie} 
 ::msgcat::mcset de {Muliple Extension Cube} 
 ::msgcat::mcset de {Muliple Extension Frames} 
+::msgcat::mcset de {Multi Colorbars} 
+::msgcat::mcset de {Multiple Colorbars} 
 ::msgcat::mcset de {Multiple Extension Cube} 
 ::msgcat::mcset de {Multiple Extension Frames} 
 ::msgcat::mcset de {Multiple WCS} {Mehrere WCS}
@@ -799,7 +801,6 @@
 ::msgcat::mcset de {Show All} {Alle zeigen}
 ::msgcat::mcset de {Show Command} 
 ::msgcat::mcset de {Show Compass} 
-::msgcat::mcset de {Show Grid} 
 ::msgcat::mcset de {Show Legend} 
 ::msgcat::mcset de {Show Text} 
 ::msgcat::mcset de {Show/Hide Frames} {Rahmen zeigen/verstecken}
@@ -965,6 +966,7 @@
 ::msgcat::mcset de {already connected} 
 ::msgcat::mcset de {and} 
 ::msgcat::mcset de {b} 
+::msgcat::mcset de {graph} 
 ::msgcat::mcset de {g} 
 ::msgcat::mcset de {h5utils} 
 ::msgcat::mcset de {hundredths second} 

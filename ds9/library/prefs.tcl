@@ -664,6 +664,11 @@ proc FixPrefs8.2to8.3 {} {
 	vertical {set colorbar(orientation) 1}
     }
 
+    FixVar pgraph(thick) pgraph(horz,thick)
+    FixVar pgraph(log) pgraph(horz,log)
+    FixVar pgraph(grid) pgraph(horz,grid)
+    FixVar pgraph(method) pgraph(horz,method)
+
     FixVar graph(thick) graph(horz,thick)
     FixVar graph(log) graph(horz,log)
     FixVar graph(grid) graph(horz,grid)

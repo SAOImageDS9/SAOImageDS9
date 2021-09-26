@@ -6,6 +6,7 @@ package provide DS9 1.0
 
 proc GraphDef {} {
     global igraph
+    global dgraph
     global pgraph
     global graph
 
@@ -18,8 +19,8 @@ proc GraphDef {} {
     set igraph(y,min) 1
     set igraph(y,max) 100
 
-    set graph(horz,offset) 100
-    set graph(vert,offset) 0
+    set dgraph(horz,offset) 100
+    set dgraph(vert,offset) 0
 
     set graph(font) helvetica
     set graph(font,size) 9
@@ -39,6 +40,7 @@ proc GraphsCreate {frame} {
     global ds9
     global canvas
     global igraph
+    global dgraph
     global graph
 
     set varname ${frame}gr
@@ -56,7 +58,7 @@ proc GraphsCreate {frame} {
 		  -foreground [ThemeTreeForeground] \
 		  -background [ThemeTreeBackground] \
 		  -plotbackground [ThemeTreeBackground] \
-		  -rightmargin $graph(horz,offset) \
+		  -rightmargin $dgraph(horz,offset) \
 		 ]
 
     set xv [blt::vector create ${varname}grhx]
@@ -267,18 +269,19 @@ proc UnBindEventsGraphs {frame} {
 }
 
 proc LayoutGraphsAdjust {} {
-    global graph
+    global dgraph
     global graphgr
 
     set ff [$graphgr(horz) xaxis cget -tickfont]
     set tl [$graphgr(horz) xaxis cget -ticklength]
     set sp [font metrics $ff -linespace]
-    set graph(vert,offset) [expr $tl + $sp + 4]
+    set dgraph(vert,offset) [expr $tl + $sp + 4]
 }
 
 proc LayoutGraphHorz {frame fx fy fw fh} {
     global colorbar
     global view
+    global dgraph
     global graph
     global canvas
     
@@ -316,14 +319,14 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
-	incr ww $graph(horz,offset)
+	incr ww $dgraph(horz,offset)
     }
 
     # cbvgrh
     if {!$cbh && $cbv && $grh && !$grv} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
-	incr ww $graph(horz,offset)
+	incr ww $dgraph(horz,offset)
     }
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
@@ -333,7 +336,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
 	incr ww -$graph(size)
-	incr ww $graph(horz,offset)
+	incr ww $dgraph(horz,offset)
     }
 
     # grh
@@ -345,7 +348,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
-	incr ww $graph(horz,offset)
+	incr ww $dgraph(horz,offset)
     }
 
     # sanity check
@@ -363,6 +366,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 proc LayoutGraphVert {frame fx fy fw fh} {
     global colorbar
     global view
+    global dgraph
     global graph
     global canvas
     
@@ -398,14 +402,14 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     if {$cbh && !$cbv && !$grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
-	incr hh $graph(vert,offset)
+	incr hh $dgraph(vert,offset)
     }
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr hh -$colorbar(horizontal,height)
 	incr hh -$canvas(gap)
 	incr hh -$graph(size)
-	incr hh $graph(vert,offset)
+	incr hh $dgraph(vert,offset)
     }
 
     # cbvgrh
@@ -417,7 +421,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	incr hh $graph(vert,offset)
+	incr hh $dgraph(vert,offset)
     }
 
     # grh
@@ -429,7 +433,7 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     # grhgrv
     if {!$cbh && !$cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	incr hh $graph(vert,offset)
+	incr hh $dgraph(vert,offset)
     }
 
     # sanity check

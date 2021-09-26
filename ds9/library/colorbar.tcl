@@ -1300,6 +1300,7 @@ proc LayoutColorbarAdjust {} {
 proc LayoutColorbar {cb fx fy fw fh} {
     global colorbar
     global igraph
+    global dgraph
     global graph
     global view
 
@@ -1338,7 +1339,7 @@ proc LayoutColorbar {cb fx fy fw fh} {
     # cbhgrh
     if {$cbh && !$cbv && $grh && !$grv} {
 	incr yy -$graph(size)
-	incr ww -$graph(horz,offset)
+	incr ww -$dgraph(horz,offset)
     }
     # cbhgrv
     if {$cbh && !$cbv && !$grh && $grv} {
@@ -1357,7 +1358,7 @@ proc LayoutColorbar {cb fx fy fw fh} {
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
 	incr xx -$graph(size)
-	incr hh -$graph(vert,offset)
+	incr hh -$dgraph(vert,offset)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {

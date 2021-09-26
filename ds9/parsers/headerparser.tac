@@ -16,7 +16,6 @@ command : header
  | header {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-
 header : display 
  | CLOSE_ close {CloseHeaderCmd $2}
  | SAVE_ save

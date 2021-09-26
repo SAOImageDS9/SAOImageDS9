@@ -61,138 +61,142 @@ proc graph::unsetupvalues {numsyms} {
 }
 
 array set graph::table {
-  32:277,target 26
+  5:276,target 22
   6:259,target 27
   6:260,target 28
   27:0 reduce
+  38:276 shift
   4:272,target 23
-  38:277 shift
+  37:276,target 31
   6:257 shift
   6:258 shift
   6:259 shift
   6:260 shift
-  21:277,target 31
   6:261 shift
   6:262 shift
   6:0,target 1
+  26:276,target 5
   7:262,target 30
   24:0 reduce
   6:257,target 25
-  17:277 reduce
-  33:0,target 34
-  8:285,target 34
+  17:276 reduce
+  15:276,target 9
+  33:0,target 32
   25:0,target 2
-  17:0,target 28
-  6:277 reduce
-  26:277 reduce
-  33:277,target 34
+  17:0,target 26
+  6:276 reduce
+  26:276 reduce
+  6:276,target 1
+  4:288,target 24
   7:259,target 27
   7:260,target 28
   10:275,target 36
   21:0 reduce
-  6:287 goto
-  22:277,target 11
-  35:277 reduce
+  38:276,target 39
+  6:286 goto
+  35:276 reduce
+  27:276,target 3
   7:257,target 25
   17:0 reduce
-  14:277 reduce
+  16:276,target 10
+  14:276 reduce
   3:273 shift
   3:274 shift
-  34:277,target 35
+  7:276,target 1
   11:275,target 37
-  37:0,target 33
+  23:276 reduce
+  37:0,target 31
   14:0 reduce
-  23:277 reduce
   29:0,target 4
   30:0,target 7
   22:0,target 11
   35:0 reduce
   14:0,target 8
-  23:277,target 12
   2:275,target 18
-  8:278,target 33
-  32:277 reduce
-  3:290 goto
+  28:276,target 6
+  32:276 reduce
+  3:289 goto
   9:0 reduce
+  17:276,target 26
   0:263 shift
   0:264 shift
   0:265 shift
   32:0 reduce
   0:267 shift
   11:275 shift
-  35:277,target 27
+  0:285,target 11
   1:268,target 14
   6:0 reduce
   0:264,target 2
-  24:277,target 30
+  0:278 shift
+  19:276 reduce
+  20:276 reduce
   0:279 shift
   0:280 shift
   7:0,target 1
-  19:277 reduce
-  20:277 reduce
   28:0 reduce
   0:281 shift
   0:282 shift
+  1:287,target 17
   0:283 shift
-  0:284 shift
-  13:277,target 21
-  0:286 shift
-  0:283,target 9
-  8:278 shift
-  34:0,target 35
-  28:277 reduce
+  29:276,target 4
+  30:276,target 7
+  0:285 shift
+  0:283,target 10
+  8:277 shift
+  6:286,target 31
+  28:276 reduce
+  34:0,target 33
+  18:276,target 27
   26:0,target 5
-  18:0,target 29
+  0:291 goto
+  18:0,target 27
   0:293 goto
-  8:285 shift
+  8:284 shift
   25:0 reduce
-  0:295 goto
-  37:277 reduce
+  37:276 reduce
   3:273,target 19
-  36:277,target 32
-  0:281,target 7
-  8:296 goto
-  25:277,target 2
+  9:276,target 21
+  0:281,target 8
+  8:294 goto
   22:0 reduce
-  13:294,target 38
-  16:277 reduce
-  14:277,target 8
-  5:277 reduce
-  25:277 reduce
-  5:277,target 24
-  3:290,target 21
+  16:276 reduce
+  31:276,target 23
+  7:286,target 32
+  0:278,target 5
+  5:276 reduce
+  19:276,target 13
+  20:276,target 14
+  25:276 reduce
+  3:289,target 21
   18:0 reduce
   6:261,target 29
   39:0 reduce
-  37:277,target 33
-  34:277 reduce
-  31:0,target 25
+  13:292,target 38
+  34:276 reduce
+  31:0,target 23
   23:0,target 12
   15:0,target 9
-  26:277,target 5
   15:0 reduce
+  32:276,target 24
   6:258,target 26
   36:0 reduce
   4:271,target 22
-  15:277,target 9
-  0:295,target 13
-  13:277 reduce
+  13:276 reduce
+  21:276,target 29
   2:275 shift
-  6:277,target 1
-  4:289,target 24
   7:261,target 29
   12:0 accept
-  22:277 reduce
-  38:277,target 39
+  22:276 reduce
   33:0 reduce
-  0:293,target 12
-  13:294 goto
-  27:277,target 3
-  31:277 reduce
+  0:293,target 13
+  8:284,target 34
+  13:292 goto
+  31:276 reduce
   7:0 reduce
+  33:276,target 32
   7:258,target 26
-  16:277,target 10
-  35:0,target 27
+  35:0,target 25
   29:0 reduce
   30:0 reduce
   27:0,target 3
@@ -201,115 +205,109 @@ array set graph::table {
   20:0,target 14
   7:258 shift
   12:0,target 0
+  22:276,target 11
+  0:291,target 12
   7:259 shift
   7:260 shift
   10:275 shift
   7:261 shift
   7:262 shift
-  7:277,target 1
+  18:276 reduce
   26:0 reduce
-  18:277 reduce
-  28:277,target 6
-  7:277 reduce
-  27:277 reduce
+  7:276 reduce
+  27:276 reduce
+  34:276,target 33
   0:267,target 4
-  17:277,target 28
   23:0 reduce
-  5:0,target 24
-  7:287 goto
-  36:277 reduce
-  0:286,target 11
+  7:286 goto
+  23:276,target 12
+  36:276 reduce
+  5:0,target 22
+  8:277,target 33
   1:270,target 16
   1:269,target 15
-  39:0,target 22
+  39:0,target 20
   0:265,target 3
-  32:0,target 26
-  24:0,target 30
+  32:0,target 24
+  24:0,target 28
   16:0,target 10
   19:0 reduce
   20:0 reduce
-  8:296,target 35
+  15:276 reduce
   4:271 shift
-  1:288,target 17
-  15:277 reduce
-  29:277,target 4
-  30:277,target 7
   4:272 shift
-  0:284,target 10
-  6:287,target 31
-  18:277,target 29
+  35:276,target 25
+  24:276 reduce
   0:263,target 1
-  24:277 reduce
   16:0 reduce
+  24:276,target 28
   37:0 reduce
+  8:294,target 35
   3:274,target 20
-  9:277,target 23
-  33:277 reduce
-  4:289 goto
-  0:282,target 8
-  9:0,target 23
+  33:276 reduce
+  4:288 goto
+  13:276,target 19
+  0:282,target 9
+  9:0,target 21
   13:0 reduce
-  31:277,target 25
   34:0 reduce
   1:268 shift
   1:270 shift
   1:269 shift
-  7:287,target 32
-  36:0,target 32
-  0:279,target 5
-  0:280,target 6
-  19:277,target 13
-  20:277,target 14
+  36:276,target 30
+  36:0,target 30
+  0:280,target 7
+  0:279,target 6
   28:0,target 6
-  21:0,target 31
-  13:0,target 20
+  21:0,target 29
+  13:0,target 18
+  25:276,target 2
+  21:276 reduce
   6:262,target 30
-  21:277 reduce
   31:0 reduce
-  9:277 reduce
-  1:288 goto
-  29:277 reduce
-  30:277 reduce
+  14:276,target 8
+  9:276 reduce
+  1:287 goto
+  29:276 reduce
+  30:276 reduce
   5:0 reduce
 }
 
 array set graph::rules {
-  9,l 288
-  11,l 289
-  32,l 295
-  6,l 287
-  28,l 295
-  3,l 287
-  25,l 295
-  0,l 297
+  9,l 287
+  11,l 288
+  32,l 294
+  6,l 286
+  28,l 293
+  3,l 286
+  25,l 293
+  0,l 295
   22,l 293
-  18,l 292
-  15,l 291
-  12,l 289
-  33,l 295
-  7,l 287
-  29,l 295
-  30,l 295
-  4,l 287
-  26,l 295
-  1,l 287
-  23,l 295
+  18,l 291
+  15,l 290
+  12,l 288
+  33,l 294
+  7,l 286
+  29,l 293
+  30,l 293
+  4,l 286
+  26,l 293
+  1,l 286
+  23,l 293
   19,l 292
-  20,l 293
-  16,l 291
-  13,l 290
-  34,l 296
-  8,l 288
-  10,l 288
-  31,l 295
-  5,l 287
-  27,l 295
-  2,l 287
-  24,l 295
-  21,l 294
-  17,l 291
-  14,l 290
-  35,l 296
+  20,l 291
+  16,l 290
+  13,l 289
+  8,l 287
+  10,l 287
+  31,l 293
+  5,l 286
+  27,l 293
+  2,l 286
+  24,l 293
+  21,l 293
+  17,l 290
+  14,l 289
 }
 
 array set graph::rules {
@@ -317,196 +315,190 @@ array set graph::rules {
   26,dc 2
   3,dc 1
   18,dc 1
-  33,dc 2
+  33,dc 1
   9,dc 1
   11,dc 1
   25,dc 2
   2,dc 1
   17,dc 1
-  32,dc 2
+  32,dc 1
   8,dc 1
   10,dc 1
-  24,dc 1
+  24,dc 2
   1,dc 0
   16,dc 1
   31,dc 2
   7,dc 1
-  23,dc 1
+  23,dc 2
   0,dc 1
   15,dc 1
   29,dc 2
   30,dc 2
   6,dc 1
-  22,dc 3
+  22,dc 1
   14,dc 1
   28,dc 2
   5,dc 1
-  21,dc 0
-  35,dc 1
+  21,dc 1
   13,dc 1
   27,dc 2
   4,dc 1
-  19,dc 1
-  20,dc 1
-  34,dc 1
+  19,dc 0
+  20,dc 3
 }
 
 array set graph::rules {
-  7,line 82
-  4,line 79
-  34,line 123
-  1,line 76
-  31,line 118
-  27,line 114
-  24,line 111
-  21,line 106
-  17,line 99
-  14,line 94
-  11,line 89
-  9,line 85
-  6,line 81
-  3,line 78
-  33,line 120
-  29,line 116
-  30,line 117
-  26,line 113
-  23,line 110
-  19,line 103
-  20,line 106
-  16,line 98
-  13,line 93
-  10,line 86
-  8,line 84
-  5,line 80
-  35,line 124
-  2,line 77
-  32,line 119
-  28,line 115
-  25,line 112
-  22,line 107
-  18,line 102
-  15,line 97
-  21,e 1
-  12,line 90
+  7,line 78
+  4,line 75
+  1,line 72
+  31,line 113
+  27,line 109
+  24,line 106
+  21,line 103
+  17,line 95
+  14,line 90
+  11,line 85
+  9,line 81
+  6,line 77
+  3,line 74
+  33,line 117
+  29,line 111
+  30,line 112
+  26,line 108
+  23,line 105
+  19,line 99
+  20,line 100
+  16,line 94
+  13,line 89
+  19,e 1
+  10,line 82
+  8,line 80
+  5,line 76
+  2,line 73
+  32,line 116
+  28,line 110
+  25,line 107
+  22,line 104
+  18,line 99
+  15,line 93
+  12,line 86
 }
 
 array set graph::lr1_table {
-  35 {{27 {0 277} 2}}
+  35 {{25 {0 276} 2}}
   14,trans {}
-  36 {{32 {0 277} 2}}
+  36 {{30 {0 276} 2}}
   33,trans {}
-  37 {{33 {0 277} 2}}
-  38 {{22 0 2}}
-  39 {{22 0 3}}
+  37 {{31 {0 276} 2}}
+  38 {{20 0 2}}
+  39 {{20 0 3}}
   18,trans {}
-  1,trans {{268 14} {269 15} {270 16} {288 17}}
+  1,trans {{268 14} {269 15} {270 16} {287 17}}
   37,trans {}
   23,trans {}
   5,trans {}
   27,trans {}
   9,trans {}
-  13,trans {{294 38}}
+  13,trans {{292 38}}
   32,trans {}
   17,trans {}
-  0,trans {{263 1} {264 2} {265 3} {267 4} {279 5} {280 6} {281 7} {282 8} {283 9} {284 10} {286 11} {293 12} {295 13}}
+  0,trans {{263 1} {264 2} {265 3} {267 4} {278 5} {279 6} {280 7} {281 8} {282 9} {283 10} {285 11} {291 12} {293 13}}
   36,trans {}
   22,trans {}
-  4,trans {{271 22} {272 23} {289 24}}
+  4,trans {{271 22} {272 23} {288 24}}
   26,trans {}
-  8,trans {{278 33} {285 34} {296 35}}
+  8,trans {{277 33} {284 34} {294 35}}
   12,trans {}
   31,trans {}
   16,trans {}
   35,trans {}
   21,trans {}
-  3,trans {{273 19} {274 20} {290 21}}
+  3,trans {{273 19} {274 20} {289 21}}
   39,trans {}
-  10 {{32 {0 277} 1}}
-  11 {{33 {0 277} 1}}
+  10 {{30 {0 276} 1}}
+  11 {{31 {0 276} 1}}
   25,trans {}
   12 {{0 0 1}}
-  7,trans {{257 25} {258 26} {259 27} {260 28} {261 29} {262 30} {287 32}}
-  13 {{20 0 1} {22 0 1} {21 277 0}}
-  14 {{8 {0 277} 1}}
+  7,trans {{257 25} {258 26} {259 27} {260 28} {261 29} {262 30} {286 32}}
+  13 {{18 0 1} {20 0 1} {19 276 0}}
+  14 {{8 {0 276} 1}}
   11,trans {{275 37}}
-  15 {{9 {0 277} 1}}
+  15 {{9 {0 276} 1}}
   30,trans {}
   29,trans {}
-  16 {{10 {0 277} 1}}
-  0 {{0 0 0} {20 0 0} {22 0 0} {23 {0 277} 0} {24 {0 277} 0} {25 {0 277} 0} {26 {0 277} 0} {27 {0 277} 0} {28 {0 277} 0} {29 {0 277} 0} {30 {0 277} 0} {31 {0 277} 0} {32 {0 277} 0} {33 {0 277} 0}}
-  17 {{28 {0 277} 2}}
-  1 {{28 {0 277} 1} {8 {0 277} 0} {9 {0 277} 0} {10 {0 277} 0}}
-  18 {{29 {0 277} 2}}
+  16 {{10 {0 276} 1}}
+  0 {{0 0 0} {18 0 0} {20 0 0} {21 {0 276} 0} {22 {0 276} 0} {23 {0 276} 0} {24 {0 276} 0} {25 {0 276} 0} {26 {0 276} 0} {27 {0 276} 0} {28 {0 276} 0} {29 {0 276} 0} {30 {0 276} 0} {31 {0 276} 0}}
+  17 {{26 {0 276} 2}}
+  1 {{26 {0 276} 1} {8 {0 276} 0} {9 {0 276} 0} {10 {0 276} 0}}
+  18 {{27 {0 276} 2}}
   15,trans {}
-  2 {{29 {0 277} 1}}
-  19 {{13 {0 277} 1}}
-  20 {{14 {0 277} 1}}
+  2 {{27 {0 276} 1}}
+  19 {{13 {0 276} 1}}
+  20 {{14 {0 276} 1}}
   34,trans {}
-  3 {{31 {0 277} 1} {13 {0 277} 0} {14 {0 277} 0}}
-  21 {{31 {0 277} 2}}
-  4 {{30 {0 277} 1} {11 {0 277} 0} {12 {0 277} 0}}
-  22 {{11 {0 277} 1}}
-  5 {{24 {0 277} 1}}
-  23 {{12 {0 277} 1}}
+  3 {{29 {0 276} 1} {13 {0 276} 0} {14 {0 276} 0}}
+  21 {{29 {0 276} 2}}
+  4 {{28 {0 276} 1} {11 {0 276} 0} {12 {0 276} 0}}
+  22 {{11 {0 276} 1}}
+  5 {{22 {0 276} 1}}
+  23 {{12 {0 276} 1}}
   20,trans {}
   19,trans {}
-  6 {{25 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  6 {{23 {0 276} 1} {1 {0 276} 0} {2 {0 276} 0} {3 {0 276} 0} {4 {0 276} 0} {5 {0 276} 0} {6 {0 276} 0} {7 {0 276} 0}}
   2,trans {{275 18}}
-  24 {{30 {0 277} 2}}
-  38,trans {{277 39}}
-  7 {{26 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  25 {{2 {0 277} 1}}
-  8 {{27 {0 277} 1} {34 {0 277} 0} {35 {0 277} 0}}
-  26 {{5 {0 277} 1}}
-  9 {{23 {0 277} 1}}
-  27 {{3 {0 277} 1}}
+  24 {{28 {0 276} 2}}
+  38,trans {{276 39}}
+  7 {{24 {0 276} 1} {1 {0 276} 0} {2 {0 276} 0} {3 {0 276} 0} {4 {0 276} 0} {5 {0 276} 0} {6 {0 276} 0} {7 {0 276} 0}}
+  25 {{2 {0 276} 1}}
+  8 {{25 {0 276} 1} {32 {0 276} 0} {33 {0 276} 0}}
+  26 {{5 {0 276} 1}}
+  9 {{21 {0 276} 1}}
+  27 {{3 {0 276} 1}}
   24,trans {}
-  28 {{6 {0 277} 1}}
-  6,trans {{257 25} {258 26} {259 27} {260 28} {261 29} {262 30} {287 31}}
-  29 {{4 {0 277} 1}}
-  30 {{7 {0 277} 1}}
-  31 {{25 {0 277} 2}}
-  32 {{26 {0 277} 2}}
+  28 {{6 {0 276} 1}}
+  6,trans {{257 25} {258 26} {259 27} {260 28} {261 29} {262 30} {286 31}}
+  29 {{4 {0 276} 1}}
+  30 {{7 {0 276} 1}}
+  31 {{23 {0 276} 2}}
+  32 {{24 {0 276} 2}}
   10,trans {{275 36}}
   28,trans {}
-  33 {{34 {0 277} 1}}
-  34 {{35 {0 277} 1}}
+  33 {{32 {0 276} 1}}
+  34 {{33 {0 276} 1}}
 }
 
 array set graph::token_id_table {
-  286,t 0
-  286 THICKNESS_
-  280,title GRID
-  279,title CLOSE
+  286,t 1
+  286 yesno
+  280,title LOG
+  279,title GRID
   264,line 15
-  292,line 101
-  287 yesno
+  292,line 99
+  287 font
   270,t 0
   269,t 0
-  288 font
-  290 fontSlant
-  289 fontWeight
-  276,line 28
+  288 fontWeight
+  290 fontStyle
+  289 fontSlant
+  276,line 29
   265,title FONTSLANT
   291,t 1
-  291 fontStyle
-  284,title SIZE
-  292 numeric
+  291 command
+  284,title SUM
+  292 @PSEUDO1
   274,t 0
   261,line 11
-  293 command
-  288,line 83
+  293 graph
+  288,line 84
   257,t 0
-  294 @PSEUDO1
+  294 method
   270,title COURIER
   269,title HELVETICA
   295,t 1
-  295 graph
+  295 start'
   288,title {}
   273,line 24
-  296 method
   278,t 0
-  297 start'
   257,line 7
   262,t 0
   285,line 41
@@ -515,31 +507,28 @@ array set graph::token_id_table {
   283,t 0
   270,line 21
   269,line 20
-  297,line 125
   259,title ON
   260,title OFF
   266,t 0
-  278,title AVERAGE
-  297,title {}
+  278,title CLOSE
   282,line 38
   287,t 1
   error error
   271,t 0
   264,title FONTSIZE
   266,line 17
-  294,line 106
-  283,title OPEN
+  294,line 115
+  283,title SIZE
   292,t 1
   278,line 34
-  error,line 74
+  error,line 70
   275,t 0
   268,title TIMES
   287,title {}
   258,t 0
   263,line 14
-  291,line 96
+  291,line 98
   error,title {}
-  296,t 1
   280,t 0
   279,t 0
   275,line 27
@@ -548,23 +537,21 @@ array set graph::token_id_table {
   263,t 0
   259,line 9
   260,line 10
-  287,line 75
+  287,line 79
   258,title NO
   284,t 0
-  277,title string
-  296,title {}
+  277,title AVERAGE
   272,line 23
   267,t 0
   263,title FONT
   288,t 1
   284,line 40
-  282,title METHOD
+  282,title OPEN
   272,t 0
   268,line 19
-  296,line 122
   267,title FONTWEIGHT
   293,t 1
-  286,title THICKNESS
+  286,title {}
   257 YES_
   281,line 37
   276,t 0
@@ -576,17 +563,16 @@ array set graph::token_id_table {
   272,title BOLD
   261 TRUE_
   265,line 16
-  297,t 1
-  293,line 105
+  293,line 102
   291,title {}
   262 FALSE_
   281,t 0
   263 FONT_
-  277,line 30
+  277,line 33
   257,title YES
   264 FONTSIZE_
   264,t 0
-  276,title float
+  276,title string
   265 FONTSLANT_
   295,title {}
   262,line 12
@@ -600,7 +586,7 @@ array set graph::token_id_table {
   262,title FALSE
   268 TIMES_
   268,t 0
-  281,title LOG
+  281,title METHOD
   274,line 25
   270 COURIER_
   269 HELVETICA_
@@ -610,39 +596,39 @@ array set graph::token_id_table {
   289,t 1
   272 BOLD_
   258,line 8
-  286,line 42
+  286,line 71
   273,t 0
   273 ROMAN_
   266,title FONTSTYLE
-  285,title SUM
+  285,title THICKNESS
   274 ITALIC_
   275 INT_
   271,line 22
   294,t 1
-  276 REAL_
+  276 STRING_
   277,t 0
-  277 STRING_
+  277 AVERAGE_
   271,title NORMAL
   290,title {}
   289,title {}
   283,line 39
-  278 AVERAGE_
+  278 CLOSE_
   261,t 0
-  280 GRID_
-  279 CLOSE_
-  281 LOG_
+  280 LOG_
+  279 GRID_
+  281 METHOD_
   267,line 18
-  295,line 109
+  295,line 118
   282,t 0
-  282 METHOD_
+  282 OPEN_
   275,title integer
   294,title {}
-  283 OPEN_
+  283 SIZE_
   265,t 0
-  284 SIZE_
+  284 SUM_
   280,line 36
   279,line 35
-  285 SUM_
+  285 THICKNESS_
   261,title TRUE
 }
 
@@ -757,22 +743,20 @@ proc graph::yyparse {} {
                     15 { set _ normal }
                     16 { set _ bold }
                     17 { set _ italic }
-                    18 { set _ $1 }
-                    19 { set _ $1 }
-                    21 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    23 { GraphDialog }
-                    24 { GraphDestroyDialog }
-                    25 { ProcessCmdSet graph grid $2 UpdateGraphsGrid }
-                    26 { ProcessCmdSet graph log $2 UpdateGraphsGrid }
-                    27 { ProcessCmdSet graph method $2 UpdateGraphsMethod }
-                    28 { ProcessCmdSet graph font $2 UpdateGraphsFont }
-                    29 { ProcessCmdSet graph font,size $2 UpdateGraphsFont }
-                    30 { ProcessCmdSet graph font,weight $2 UpdateGraphsFont }
-                    31 { ProcessCmdSet graph font,slant $2 UpdateGraphsFont }
-                    32 { ProcessCmdSet graph size $2 LayoutFrames }
-                    33 { ProcessCmdSet graph thick $2 LayoutFrames }
-                    34 { set _ average }
-                    35 { set _ sum }
+                    19 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
+                    21 { GraphDialog }
+                    22 { GraphDestroyDialog }
+                    23 { ProcessCmdSet graph grid $2 UpdateGraphsGrid }
+                    24 { ProcessCmdSet graph log $2 UpdateGraphsGrid }
+                    25 { ProcessCmdSet graph method $2 UpdateGraphsMethod }
+                    26 { ProcessCmdSet graph font $2 UpdateGraphsFont }
+                    27 { ProcessCmdSet graph font,size $2 UpdateGraphsFont }
+                    28 { ProcessCmdSet graph font,weight $2 UpdateGraphsFont }
+                    29 { ProcessCmdSet graph font,slant $2 UpdateGraphsFont }
+                    30 { ProcessCmdSet graph size $2 LayoutFrames }
+                    31 { ProcessCmdSet graph thick $2 LayoutFrames }
+                    32 { set _ average }
+                    33 { set _ sum }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

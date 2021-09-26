@@ -169,17 +169,17 @@ array set header::rules {
 
 array set header::rules {
   2,e 1
-  7,line 29
-  10,line 34
-  4,line 24
+  7,line 28
+  10,line 33
+  4,line 23
   1,line 19
-  9,line 33
-  12,line 38
-  6,line 26
+  9,line 32
+  12,line 37
+  6,line 25
   3,line 20
-  8,line 30
-  11,line 37
-  5,line 25
+  8,line 29
+  11,line 36
+  5,line 24
   2,line 19
 }
 
@@ -217,7 +217,7 @@ array set header::lr1_table {
 }
 
 array set header::token_id_table {
-  264,line 28
+  264,line 27
   265,title {}
   261,line 18
   257,t 0
@@ -228,10 +228,10 @@ array set header::token_id_table {
   266,t 1
   error error
   264,title {}
-  266,line 36
+  266,line 35
   error,line 17
   258,t 0
-  263,line 23
+  263,line 22
   error,title {}
   263,t 1
   259,line 13
@@ -247,7 +247,7 @@ array set header::token_id_table {
   260 SAVE_
   260,t 0
   261 command
-  265,line 32
+  265,line 31
   262 @PSEUDO1
   263 header
   257,title integer
@@ -264,7 +264,7 @@ array set header::token_id_table {
   258,line 9
   266,title {}
   261,t 1
-  267,line 39
+  267,line 38
   265,t 1
   261,title {}
 }

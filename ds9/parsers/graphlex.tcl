@@ -198,17 +198,16 @@ set BOLD_ 272
 set ROMAN_ 273
 set ITALIC_ 274
 set INT_ 275
-set REAL_ 276
-set STRING_ 277
-set AVERAGE_ 278
-set CLOSE_ 279
-set GRID_ 280
-set LOG_ 281
-set METHOD_ 282
-set OPEN_ 283
-set SIZE_ 284
-set SUM_ 285
-set THICKNESS_ 286
+set STRING_ 276
+set AVERAGE_ 277
+set CLOSE_ 278
+set GRID_ 279
+set LOG_ 280
+set METHOD_ 281
+set OPEN_ 282
+set SIZE_ 283
+set SUM_ 284
+set THICKNESS_ 285
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -426,19 +425,47 @@ set THICKNESS_ 286
             set yyleng [string length $yytext]
             set matched_rule 27
         }
-        # rule 28: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 28: \"[^\"]*\"
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 28
         }
-        # rule 29: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 29: \'[^\']*\'
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 29
+        }
+        # rule 30: \{[^\}]*\}
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 30
+        }
+        # rule 31: \S+\S+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 31
+        }
+        # rule 32: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 32
+        }
+        # rule 33: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 33
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -537,9 +564,21 @@ return $ITALIC_
 set yylval $yytext; return $INT_
             }
             28 {
-# ignore whitespace
+set yylval [string range $yytext 1 end-1]; return $STRING_
             }
             29 {
+set yylval [string range $yytext 1 end-1]; return $STRING_
+            }
+            30 {
+set yylval [string range $yytext 1 end-1]; return $STRING_
+            }
+            31 {
+set yylval $yytext; return $STRING_
+            }
+            32 {
+# ignore whitespace
+            }
+            33 {
 set yylval $yytext; return $yylval
             }
             default

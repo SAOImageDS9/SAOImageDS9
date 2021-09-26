@@ -4,7 +4,7 @@
 
 #include yesno.tin
 #include fonts.tin
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -23,7 +23,6 @@
 
 #include yesno.trl
 #include fonts.trl
-#include numeric.trl
 
 command : graph
  | graph {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_

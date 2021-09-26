@@ -42,6 +42,7 @@
 <a href="#footprint">footprint</a><br>
 <a href="#frame">frame</a><br>
 <a href="#gif">gif</a><br>
+<a href="#graph">graph</a><br>
 <a href="#grid">grid</a><br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
@@ -1084,10 +1085,46 @@ $xpaset -p ds9 gif slice foo.gif<br>
 $cat foo.gif | xpaset ds9 gif # not available windows<br>
 $cat foo.gif | xpaset ds9 gifnew # not available windows<br>
 $cat foo.gif | xpaset ds9 gifslice# not available windows</tt>
+<p><b><a name="graph" id="graph"></a>graph</b></p>
+<p>Controls horizontal and vertical cut graphs.</p>
+<tt>Syntax:<br>
+graph [grid yes|no]<br>
+&nbsp;&nbsp;&nbsp; [log yes|no]<br>
+&nbsp;&nbsp;&nbsp; [method average|sum]<br>
+&nbsp;&nbsp;&nbsp; [font times|helvetica|courier]<br>
+&nbsp;&nbsp;&nbsp; [fontsize &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fontweight normal|bold]<br>
+&nbsp;&nbsp;&nbsp; [fontslant roman|italic]<br>
+&nbsp;&nbsp;&nbsp; [size &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [thickness &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 graph grid<br>
+$xpaget ds9 graph log<br>
+$xpaget ds9 graph method<br>
+$xpaget ds9 graph font<br>
+$xpaget ds9 graph fontsize<br>
+$xpaget ds9 graph fontweight<br>
+$xpaget ds9 graph fontslant<br>
+$xpaget ds9 graph size<br>
+$xpaget ds9 graph thickness<br>
+<br>
+$xpaset -p ds9 graph grid yes<br>
+$xpaset -p ds9 graph log no<br>
+$xpaset -p ds9 graph method average<br>
+$xpaset -p ds9 graph font helvetica<br>
+$xpaset -p ds9 graph fontsize 9<br>
+$xpaset -p ds9 graph fontweight normal<br>
+$xpaset -p ds9 graph fontslant roman<br>
+$xpaset -p ds9 graph size 150<br>
+$xpaset -p ds9 graph thickness 1<br>
+$xpaset -p ds9 graph open<br>
+$xpaset -p ds9 graph close<br></tt>
 <p><b><a name="grid" id="grid"></a>grid</b></p>
 <p>Controls coordinate grid. For grid numeric format syntax,&nbsp; click <a href="grid.html#Format">here</a>.</p>
 <tt>Syntax:<br>
-grid&nbsp; []<br>
+grid []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [type analysis|publication]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>

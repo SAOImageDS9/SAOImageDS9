@@ -48,7 +48,8 @@
 <a href="#geometry">geometry</a><br>
 <a href="#gif">gif</a><br>
 <a href="#green">green</a><br>
-<a href="#geometry">grid</a><br>
+<a href="#graph">graph</a><br>
+<a href="#grid">grid</a><br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
 <a href="#help">help</a><br>
@@ -932,6 +933,32 @@ $ds9 -geometry 640x480</tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -green foo.fits</tt>
+<p><b><a name="graph" id="graph"></a>graph</b></p>
+<p>Controls horizontal and vertical cut graphs.</p>
+<tt>Syntax:<br>
+-graph [grid yes|no]<br>
+&nbsp;&nbsp;&nbsp; [log yes|no]<br>
+&nbsp;&nbsp;&nbsp; [method average|sum]<br>
+&nbsp;&nbsp;&nbsp; [font times|helvetica|courier]<br>
+&nbsp;&nbsp;&nbsp; [fontsize &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fontweight normal|bold]<br>
+&nbsp;&nbsp;&nbsp; [fontslant roman|italic]<br>
+&nbsp;&nbsp;&nbsp; [size &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [thickness &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -graph grid yes<br>
+$ds9 -graph log no<br>
+$ds9 -graph method average<br>
+$ds9 -graph font helvetica<br>
+$ds9 -graph fontsize 9<br>
+$ds9 -graph fontweight normal<br>
+$ds9 -graph fontslant roman<br>
+$ds9 -graph size 150<br>
+$ds9 -graph thickness 1<br>
+$ds9 -graph open<br>
+$ds9 -graph close<br></tt>
 <p><b><a name="grid" id="grid"></a>grid</b></p>
 <p>Controls coordinate grid. For grid numeric format syntax,&nbsp; click <a href="grid.html#Format">here</a>.</p>
 <tt>Syntax:<br>

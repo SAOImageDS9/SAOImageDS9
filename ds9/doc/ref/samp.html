@@ -62,6 +62,7 @@ ds9.set<br>
 <a href="#footprint">footprint</a><br>
 <a href="#frame">frame</a><br>
 <a href="#gif">gif</a><br>
+<a href="#graph">graph</a><br>
 <a href="#grid">grid</a><br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
@@ -1147,6 +1148,45 @@ ds9.set(string cmd)<br>
 gif foo.gif<br>
 gif new foo.gif<br>
 gif slice foo.gif<br></tt>
+
+<p><b><a name="graph" id="graph"></a>graph</b></p>
+<p>Controls horizontal and vertical cut graphs.</p>
+<tt>Syntax:<br>
+graph [grid yes|no]<br>
+&nbsp;&nbsp;&nbsp; [log yes|no]<br>
+&nbsp;&nbsp;&nbsp; [method average|sum]<br>
+&nbsp;&nbsp;&nbsp; [font times|helvetica|courier]<br>
+&nbsp;&nbsp;&nbsp; [fontsize &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fontweight normal|bold]<br>
+&nbsp;&nbsp;&nbsp; [fontslant roman|italic]<br>
+&nbsp;&nbsp;&nbsp; [size &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [thickness &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+graph grid<br>
+graph log<br>
+graph method<br>
+graph font<br>
+graph fontsize<br>
+graph fontweight<br>
+graph fontslant<br>
+graph size<br>
+graph thickness<br>
+<br>
+string value = ds9.get(string cmd)<br>
+graph grid yes<br>
+graph log no<br>
+graph method average<br>
+graph font helvetica<br>
+graph fontsize 9<br>
+graph fontweight normal<br>
+graph fontslant roman<br>
+graph size 150<br>
+graph thickness 1<br>
+graph open<br>
+graph close<br></tt>
 <p><b><a name="grid" id="grid"></a>grid</b></p>
 <p>Controls coordinate grid. For grid numeric format syntax,&nbsp; click <a href="grid.html#Format">here</a>.</p>
 <tt>Syntax:<br>

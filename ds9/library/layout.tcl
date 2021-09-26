@@ -252,28 +252,17 @@ proc UnBindEventsCanvas {} {
     foreach ff $ds9(active) {
 	UnBindEventsFrame $ff
 	UnBindEventsColorbar ${ff}cb
-	UnBindEventsGraphs $ff
+	UnBindEventsGraph $ff
     }
 }
 
 proc BindEventsCanvas {} {
     global ds9
-    global current
 
-    switch -- $ds9(display) {
-	single -
-	blink {
-	    BindEventsFrame $current(frame)
-	    BindEventsColorbar $current(colorbar)
-	    BindEventsGraphs $current(frame)
-	}
-	tile {
-	    foreach ff $ds9(active) {
-		BindEventsFrame $ff
-		BindEventsColorbar ${ff}cb
-		BindEventsGraph $ff
-	    }
-	}
+    foreach ff $ds9(active) {
+	BindEventsFrame $ff
+	BindEventsColorbar ${ff}cb
+	BindEventsGraph $ff
     }
 }
 

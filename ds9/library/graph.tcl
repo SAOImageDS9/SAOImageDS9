@@ -148,7 +148,7 @@ proc GraphsCreate {frame} {
     UpdateGraphGrid $frame
     UpdateGraphFont $frame horz
     UpdateGraphFont $frame vert
-    BindEventsGraphs $frame
+    BindEventsGraph $frame
 }
 
 proc GraphsDelete {frame} {
@@ -176,12 +176,12 @@ proc GraphsDelete {frame} {
     unset $varname
 }
 
-proc BindEventsGraphs {frame} {
+proc BindEventsGraph {frame} {
     global ds9
     
     global debug
     if {$debug(tcl,graph)} {
-	puts stderr "BindEventsGraphs $frame"
+	puts stderr "BindEventsGraph $frame"
     }
     
     set varname ${frame}gr
@@ -189,14 +189,15 @@ proc BindEventsGraphs {frame} {
 
     # horizontal
     set horz [subst $${varname}(horz)]
-    bind $horz <Enter> [list EnterGraph $horz 1]
-    bind $horz <Leave> [list LeaveGraph $horz]
-    bind $horz <Button-1> [list MotionGraph $horz %x %y 1]
-    bind $horz <B1-Motion> [list MotionGraph $horz %x %y 1]
-    bind $horz <Up> [list ArrowKeyGraph $horz 0 -1 1]
-    bind $horz <Down> [list ArrowKeyGraph $horz 0 1 1]
-    bind $horz <Left> [list ArrowKeyGraph $horz -1 0 1]
-    bind $horz <Right> [list ArrowKeyGraph $horz 1 0 1]
+    bind $horz <Enter> [list EnterGraph $frame horz]
+    bind $horz <Leave> [list LeaveGraph $frame horz]
+
+    bind $horz <Button-1> [list MotionGraph $frame %x %y horz]
+    bind $horz <B1-Motion> [list MotionGraph $frame %x %y horz]
+    bind $horz <Up> [list ArrowKeyGraph $frame 0 -1 horz]
+    bind $horz <Down> [list ArrowKeyGraph $frame 0 1 horz]
+    bind $horz <Left> [list ArrowKeyGraph $frame -1 0 horz]
+    bind $horz <Right> [list ArrowKeyGraph $frame 1 0 horz]
 
     switch $ds9(wm) {
 	x11 -
@@ -206,14 +207,14 @@ proc BindEventsGraphs {frame} {
 
     # vertical
     set vert [subst $${varname}(vert)]
-    bind $vert <Enter> [list EnterGraph $vert 0]
-    bind $vert <Leave> [list LeaveGraph $vert]
-    bind $vert <Button-1> [list MotionGraph $vert %x %y 0]
-    bind $vert <B1-Motion> [list MotionGraph $vert %x %y 0]
-    bind $vert <Up> [list ArrowKeyGraph $vert 0 -1 0]
-    bind $vert <Down> [list ArrowKeyGraph $vert 0 1 0]
-    bind $vert <Left> [list ArrowKeyGraph $vert -1 0 0]
-    bind $vert <Right> [list ArrowKeyGraph $vert 1 0 0]
+    bind $vert <Enter> [list EnterGraph $frame vert]
+    bind $vert <Leave> [list LeaveGraph $frame vert]
+    bind $vert <Button-1> [list MotionGraph $frame %x %y vert]
+    bind $vert <B1-Motion> [list MotionGraph $frame %x %y vert]
+    bind $vert <Up> [list ArrowKeyGraph $frame 0 -1 vert]
+    bind $vert <Down> [list ArrowKeyGraph $frame 0 1 vert]
+    bind $vert <Left> [list ArrowKeyGraph $frame -1 0 vert]
+    bind $vert <Right> [list ArrowKeyGraph $frame 1 0 vert]
 
     switch $ds9(wm) {
 	x11 -
@@ -222,12 +223,12 @@ proc BindEventsGraphs {frame} {
     }
 }
 
-proc UnBindEventsGraphs {frame} {
+proc UnBindEventsGraph {frame} {
     global ds9
     
     global debug
     if {$debug(tcl,graph)} {
-	puts stderr "UnBindEventsGraphs $frame"
+	puts stderr "UnBindEventsGraph $frame"
     }
 
     set varname ${frame}gr
@@ -500,78 +501,84 @@ proc ThemeConfigGraph {w} {
 }
 
 # Events
-proc EnterGraph {which horz} {
+proc EnterGraph {frame which} {
+    set varname ${frame}gr
+    global $varname
+
+    set gr [subst $${varname}($which)]
+    set xx [$gr crosshairs cget -x]
+    set yy [$gr crosshairs cget -y]
+
+    focus $gr
+    $gr crosshairs on
+
+    MotionGraph $frame $xx $yy $which
+}
+
+proc LeaveGraph {frame which} {
+    set varname ${frame}gr
+    global $varname
+
+    set gr [subst $${varname}($which)]
+
+    focus {}
+    $gr crosshairs off
+
+    LeaveInfoBox
+    PixelTableClearDialog
+}
+
+proc MotionGraph {frame xx yy which} {
     global current
 
-    focus $which
-    $which crosshairs on
+    set varname ${frame}gr
+    global $varname
 
-    if {$current(frame) != {}} {
-	switch $current(mode) {
-	    crosshair -
-	    analysis {
+    set gr [subst $${varname}($which)]
+    set x0 [subst $${varname}($which,xx)]
+    set y0 [subst $${varname}($which,yy)]
 
-		set xx [$which crosshairs cget -x]
-		set yy [$which crosshairs cget -y]
+    $gr crosshairs configure -x $xx -y $yy
 
-		set coord [$current(frame) get crosshair canvas]
-		set XX [lindex $coord 0]
-		set YY [lindex $coord 1]
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
 
-		if {$horz} {
-		    EnterInfoBox $current(frame)
-		    UpdateInfoBox $current(frame) $xx $YY canvas
-		    UpdatePixelTableDialog $current(frame) $xx $YY canvas
-		} else {
-		    EnterInfoBox $current(frame)
-		    UpdateInfoBox $current(frame) $XX $yy canvas
-		    UpdatePixelTableDialog $current(frame) $XX $yy canvas
+    switch $current(mode) {
+	crosshair -
+	analysis {
+	    set coord [$frame get crosshair canvas]
+	    set XX [lindex $coord 0]
+	    set YY [lindex $coord 1]
+
+	    set X0 [expr $xx+$x0]
+	    set Y0 [expr $yy+$y0]
+
+	    switch $which {
+		horz {
+		    UpdateInfoBox $frame $X0 $YY canvas
+		    UpdatePixelTableDialog $frame $X0 $YY canvas
+		}
+		vert {
+		    UpdateInfoBox $frame $XX $Y0 canvas
+		    UpdatePixelTableDialog $frame $XX $Y0 canvas
 		}
 	    }
 	}
     }
 }
 
-proc LeaveGraph {which} {
-    focus {}
-    $which crosshairs off
+proc ArrowKeyGraph {frame xx yy which} {
+    set varname ${frame}gr
+    global $varname
 
-    LeaveInfoBox
-    PixelTableClearDialog
-}
-
-proc MotionGraph {which xx yy horz} {
-    global current
-
-    $which crosshairs configure -x $xx -y $yy
-
-    if {$current(frame) != {}} {
-	switch $current(mode) {
-	    crosshair -
-	    analysis {
-		set coord [$current(frame) get crosshair canvas]
-		set XX [lindex $coord 0]
-		set YY [lindex $coord 1]
-		if {$horz} {
-		    UpdateInfoBox $current(frame) $xx $YY canvas
-		    UpdatePixelTableDialog $current(frame) $xx $YY canvas
-		} else {
-		    UpdateInfoBox $current(frame) $XX $yy canvas
-		    UpdatePixelTableDialog $current(frame) $XX $yy canvas
-		}
-	    }    
-	}
-    }
-}
-
-proc ArrowKeyGraph {which xx yy horz} {
-    set cx [$which crosshairs cget -x]
-    set cy [$which crosshairs cget -y]
-
+    set gr [subst $${varname}($which)]
+    set cx [$gr crosshairs cget -x]
+    set cy [$gr crosshairs cget -y]
     set cx [expr $cx+$xx]
     set cy [expr $cy+$yy]
-
-    MotionGraph $which $cx $cy $horz
+    MotionGraph $frame $cx $cy $which
 }
 
 # Update procs

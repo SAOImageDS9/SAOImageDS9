@@ -607,7 +607,8 @@ proc UpdateGraphsMethod {} {
 	puts "UpdateGraphsMethod"
     }
 
-    UpdateGraphMethod graph
+    # don't process default
+    # UpdateGraphMethod graph
     foreach ff $ds9(frames) {
 	UpdateGraphMethod $ff
     }
@@ -617,6 +618,11 @@ proc UpdateGraphMethod {frame} {
     set varname ${frame}gr
     global $varname
     
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
+
     InitGraphData $frame horz
     InitGraphData $frame vert
 }
@@ -649,14 +655,6 @@ proc UpdateGraphGrid {frame} {
     [subst $${varname}(vert)] yaxis configure -grid $graph(grid) \
 	-logscale $graph(log)
     [subst $${varname}(vert)] x2axis configure -grid $graph(grid)
-}
-
-proc InitGraphsDataCurrent {} {
-    global current
-
-    if {$current(frame) != {}} {
-	InitGraphsData $current(frame)
-    }
 }
 
 proc InitGraphsData {frame} {

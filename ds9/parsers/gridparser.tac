@@ -77,14 +77,6 @@ command : grid
  | grid {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-typegrid : ANALYSIS_ {set _ analysis}
- | PUBLICATION_ {set _ publication}
- ;
-
-interiortype : INTERIOR_ {set _ interior}
- | EXTERIOR_ {set _ exterior}
- ;
-
 grid : yesno {ProcessCmdSet grid view $1 GridUpdateCurrent}
  | OPEN_ {GridDialog}
  | CLOSE_ {GridDestroyDialog}
@@ -106,6 +98,14 @@ grid : yesno {ProcessCmdSet grid view $1 GridUpdateCurrent}
  | RESET_ {GridResetDialog}
  | LOAD_ STRING_ {FileLast gridfbox $2; GridLoad $2}
  | SAVE_ STRING_ {FileLast gridfbox $2; GridSave $2}
+ ;
+
+typegrid : ANALYSIS_ {set _ analysis}
+ | PUBLICATION_ {set _ publication}
+ ;
+
+interiortype : INTERIOR_ {set _ interior}
+ | EXTERIOR_ {set _ exterior}
  ;
 
 type : typegrid {ProcessCmdSet grid type $1}

@@ -39,7 +39,7 @@ graph : OPEN_ {GraphDialog}
  | FONTWEIGHT_ fontWeight {ProcessCmdSet graph font,weight $2 UpdateGraphsFont}
  | FONTSLANT_ fontSlant {ProcessCmdSet graph font,slant $2 UpdateGraphsFont}
  | SIZE_ INT_ {ProcessCmdSet graph size $2 LayoutFrames}
- | THICKNESS_ INT_ {ProcessCmdSet graph thick InitGraphsDataCurrent}
+ | THICKNESS_ INT_ {ProcessCmdSet graph thick $2 LayoutFrames}
  ;
 
 method : AVERAGE_ {set _ average}

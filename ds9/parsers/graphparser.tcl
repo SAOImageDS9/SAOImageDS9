@@ -770,7 +770,7 @@ proc graph::yyparse {} {
                     30 { ProcessCmdSet graph font,weight $2 UpdateGraphsFont }
                     31 { ProcessCmdSet graph font,slant $2 UpdateGraphsFont }
                     32 { ProcessCmdSet graph size $2 LayoutFrames }
-                    33 { ProcessCmdSet graph thick InitGraphsDataCurrent }
+                    33 { ProcessCmdSet graph thick $2 LayoutFrames }
                     34 { set _ average }
                     35 { set _ sum }
                 }

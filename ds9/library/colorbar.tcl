@@ -240,33 +240,40 @@ proc BindEventsColorbar {which} {
 	puts stderr "BindEventsColorbar $which"
     }
 
+    set frame [string trimright $which cb]
     switch [$which get type] {
 	base {
-	    $ds9(canvas) bind $which <Motion> [list ColorbarMotion $which %x %y]
-	    $ds9(canvas) bind $which <Enter> [list ColorbarEnter $which %x %y]
-	    $ds9(canvas) bind $which <Leave> [list ColorbarLeave $which]
+	    $ds9(canvas) bind $which <Enter> \
+		[list ColorbarEnter $frame $which %x %y]
+	    $ds9(canvas) bind $which <Motion> \
+		[list ColorbarMotion $frame $which %x %y]
+	    $ds9(canvas) bind $which <Leave> \
+		[list ColorbarLeave $frame $which]
 
 	    $ds9(canvas) bind $which <Button-1> \
-		[list ColorbarButton1 $which %x %y]
+		[list ColorbarButton1 $frame $which %x %y]
 	    $ds9(canvas) bind $which <B1-Motion> \
-		[list ColorbarMotion1 $which %x %y]
+		[list ColorbarMotion1 $frame $which %x %y]
 	    $ds9(canvas) bind $which <ButtonRelease-1> \
-		[list ColorbarRelease1 $which %x %y]
+		[list ColorbarRelease1 $frame $which %x %y]
 
 	    $ds9(canvas) bind $which <Double-1> \
-		[list ColorbarDouble1 $which %x %y]
+		[list ColorbarDouble1 $frame $which %x %y]
 	    $ds9(canvas) bind $which <Double-ButtonRelease-1> \
-		[list ColorbarDoubleRelease1 $which %x %y]
+		[list ColorbarDoubleRelease1 $frame $which %x %y]
 
 	    $ds9(canvas) bind $which <Key> \
-		[list ColorbarKey $which %K %A %x %y]
+		[list ColorbarKey $frame $which %K %A %x %y]
 	    $ds9(canvas) bind $which <KeyRelease> \
-		[list ColorbarKeyRelease $which %K %A %x %y]
+		[list ColorbarKeyRelease $frame $which %K %A %x %y]
 	}
 	rgb {
-	    $ds9(canvas) bind $which <Motion> [list ColorbarMotion $which %x %y]
-	    $ds9(canvas) bind $which <Enter> [list ColorbarEnter $which %x %y]
-	    $ds9(canvas) bind $which <Leave> [list ColorbarLeave $which]
+	    $ds9(canvas) bind $which <Enter> \
+		[list ColorbarEnter $frame $which %x %y]
+	    $ds9(canvas) bind $which <Motion> \
+		[list ColorbarMotion $frame $which %x %y]
+	    $ds9(canvas) bind $which <Leave> \
+		[list ColorbarLeave $frame $which]
 	}
     }
 }
@@ -439,13 +446,12 @@ proc SaveContrastBias {} {
     }
 }
 
-proc ColorbarEnter {which x y} {
-    global current
+proc ColorbarEnter {frame which x y} {
     global ds9
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarEnter $which $x $y"
+	puts stderr "ColorbarEnter $frame $which $x $y"
     }
 
     # check to see if this event was generated while processing other events
@@ -454,18 +460,16 @@ proc ColorbarEnter {which x y} {
 	return
     }
 
-    set frame [string trimright $which cb]
     $ds9(canvas) focus $which
     LayoutFrameInfoBox $frame
 }
 
-proc ColorbarLeave {which} {
-    global current
+proc ColorbarLeave {frame which} {
     global ds9
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarLeave $which"
+	puts stderr "ColorbarLeave $frame $which"
     }
 
     # check to see if this event was generated while processing other events
@@ -478,13 +482,13 @@ proc ColorbarLeave {which} {
     ClearInfoBoxCoords
 }
 
-proc ColorbarMotion {which x y} {
+proc ColorbarMotion {frame which x y} {
     global current
     global infobox
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarMotion $which $x $y"
+	puts stderr "ColorbarMotion $frame $which $x $y"
     }
 
     set vv [$which get value $x $y]
@@ -502,27 +506,30 @@ proc ColorbarMotion {which x y} {
     }
 }
 
-proc ColorbarKey {which K A xx yy} {
+proc ColorbarKey {frame which K A x y} {
     global current
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in xx,yy
+    # MacOSX and Ubuntu returns bogus values in x,y
     # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
+    set x [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
+    set y [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarKey $which $K $A $xx $yy"
+	puts stderr "ColorbarKey $frame $which $K $A $x $y"
     }
 
-    set frame [string trimright $which cb]
     switch -- $current(mode) {
 	colorbar {
 	    switch -- $K {
 		Delete -
 		BackSpace {
-		    $which tag delete $xx $yy
+		    set xx [$ds9(canvas) itemcget $which -x]
+		    set yy [$ds9(canvas) itemcget $which -y]
+		    set dx [expr $x-$xx]
+		    set dy [expr $y-$yy]
+		    $which tag delete $dx $dy
 		    if {$frame != {}} {
 			$frame colormap [$which get colormap]
 		    }
@@ -532,21 +539,21 @@ proc ColorbarKey {which K A xx yy} {
     }
 }
 
-proc ColorbarKeyRelease {which K A xx yy} {
+proc ColorbarKeyRelease {frame which K A x y} {
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in xx,yy
+    # MacOSX and Ubuntu returns bogus values in x,y
     # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
+    set x [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
+    set y [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarKeyRelease $which $K $A $xx $yy"
+	puts stderr "ColorbarKeyRelease $frame $which $K $A $x $y"
     }
 }
 
-proc ColorbarButton1 {which x y} {
+proc ColorbarButton1 {frame which x y} {
     global icolorbar
     global colorbar
     global ds9
@@ -555,7 +562,7 @@ proc ColorbarButton1 {which x y} {
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarButton1 $which $x $y"
+	puts stderr "ColorbarButton1 $frame $which $x $y"
     }
 
     # let others know that the mouse is down
@@ -569,18 +576,24 @@ proc ColorbarButton1 {which x y} {
 
     # are we on a tag? else create
     switch -- $current(mode) {
-	colorbar {$which tag edit begin $x $y $colorbar(tag)}
+	colorbar {
+	    set xx [$ds9(canvas) itemcget $which -x]
+	    set yy [$ds9(canvas) itemcget $which -y]
+	    set dx [expr $x-$xx]
+	    set dy [expr $y-$yy]
+	    $which tag edit begin $dx $dy  $colorbar(tag)
+	}
     }
 }
 
-proc ColorbarMotion1 {which x y} {
+proc ColorbarMotion1 {frame which x y} {
     global icolorbar
     global current
     global ds9
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarMotion1 $which $x $y"
+	puts stderr "ColorbarMotion1 $frame $which $x $y"
     }
 
     # abort if we are here by accident (such as a double click)
@@ -589,10 +602,13 @@ proc ColorbarMotion1 {which x y} {
 	return
     }
 
-    set frame [string trimright $which cb]
     switch -- $current(mode) {
 	colorbar {
-	    $which tag edit motion $x $y
+	    set xx [$ds9(canvas) itemcget $which -x]
+	    set yy [$ds9(canvas) itemcget $which -y]
+	    set dx [expr $x-$xx]
+	    set dy [expr $y-$yy]
+	    $which tag edit motion $dx $dy
 	    if {$frame != {}} {
 		$frame colormap [$which get colormap]
 	    }
@@ -600,7 +616,7 @@ proc ColorbarMotion1 {which x y} {
     }
 }
 
-proc ColorbarRelease1 {which x y} {
+proc ColorbarRelease1 {frame which x y} {
     global icolorbar
     global current
     global icursor
@@ -608,7 +624,7 @@ proc ColorbarRelease1 {which x y} {
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarRelease1 $which $x $y"
+	puts stderr "ColorbarRelease1 $frame $which $x $y"
     }
 
     # abort if we are here by accident (such as a double click)
@@ -622,10 +638,13 @@ proc ColorbarRelease1 {which x y} {
 	CursorTimer
     }
 
-    set frame [string trimright $which cb]
     switch -- $current(mode) {
 	colorbar {
-	    $which tag edit end $x $y
+	    set xx [$ds9(canvas) itemcget $which -x]
+	    set yy [$ds9(canvas) itemcget $which -y]
+	    set dx [expr $x-$xx]
+	    set dy [expr $y-$yy]
+	    $which tag edit end $dx $dy
 	    if {$frame != {}} {
 		$frame colormap [$which get colormap]
 	    }
@@ -639,23 +658,30 @@ proc ColorbarRelease1 {which x y} {
     set ds9(csb1) 0
 }
 
-proc ColorbarDouble1 {which x y} {
+proc ColorbarDouble1 {frame which x y} {
+    global ds9
     global current
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarDouble1 $which $x $y"
+	puts stderr "ColorbarDouble1 $frame $which $x $y"
     }
 
     switch -- $current(mode) {
-	colorbar {ColorTagDialog $x $y}
+	colorbar {
+	    set xx [$ds9(canvas) itemcget $which -x]
+	    set yy [$ds9(canvas) itemcget $which -y]
+	    set dx [expr $x-$xx]
+	    set dy [expr $y-$yy]
+	    ColorTagDialog $frame $which $dx $dy
+	}
     }
 }
 
-proc ColorbarDoubleRelease1 {which x y} {
+proc ColorbarDoubleRelease1 {frame which x y} {
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "ColorbarDoubleRelease1 $which $x $y"
+	puts stderr "ColorbarDoubleRelease1 $frame $which $x $y"
     }
 }
 
@@ -908,15 +934,14 @@ proc DeleteColorTag {} {
     }
 }
 
-proc ColorTagDialog {x y} {
+proc ColorTagDialog {frame which x y} {
     global ds9
-    global current
     global colorbar
     global ed2
 
     set w {.ctagd}
 
-    set rr [$current(colorbar) get tag $x $y]
+    set rr [$which get tag $x $y]
 
     set ed2(ok) 0
     set ed2(id) [lindex $rr 0]
@@ -958,9 +983,9 @@ proc ColorTagDialog {x y} {
     destroy $w
 
     if {$ed2(ok)} {
-	$current(colorbar) tag $ed2(id) $ed2(start) $ed2(stop) $ed2(color)
-	if {$current(frame) != {}} {
-	    $current(frame) colormap [$current(colorbar) get colormap]
+	$which tag $ed2(id) $ed2(start) $ed2(stop) $ed2(color)
+	if {$frame != {}} {
+	    $frame colormap [$which get colormap]
 	}
     }
 

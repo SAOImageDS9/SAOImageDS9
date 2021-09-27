@@ -774,6 +774,13 @@ proc UpdateGraphData {frame which xx yy sys} {
 	[subst $${varname}($which,vect,xx)] \
 	[subst $${varname}($which,vect,yy)] \
 	$xx $yy $sys $graph(thick) $graph(method)
+
+    set xv [subst $${varname}($which,vect,xx)]
+    set xmin [$xv min]
+    set xmax [$xv max]
+    set yv [subst $${varname}($which,vect,yy)]
+    set ymin [$yv min]
+    set ymax [$yv max]
 }
 
 proc ShowGraphsData {frame} {

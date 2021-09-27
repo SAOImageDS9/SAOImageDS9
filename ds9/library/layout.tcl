@@ -531,9 +531,11 @@ proc LayoutFrameOne {} {
 	# graphs
 	if {$view(graph,horz)} {
 	    LayoutGraphHorz $ff 0 0 $ww $hh
+	    InitGraphData $ff horz
 	}
 	if {$view(graph,vert)} {
 	    LayoutGraphVert $ff 0 0 $ww $hh
+	    InitGraphData $ff vert
     	}
     }
 
@@ -549,11 +551,9 @@ proc LayoutFrameOne {} {
 
     # graphs
     if {$view(graph,horz)} {
-	InitGraphData $current(frame) horz
 	GraphShow $current(frame) horz
     }
     if {$view(graph,vert)} {
-	InitGraphData $current(frame) vert
 	GraphShow $current(frame) vert
     }
 
@@ -733,11 +733,13 @@ proc TileRectNone {numx numy} {
 	if {$view(graph,horz)} {
 	    LayoutGraphHorz $ff 0 0 \
 		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	    InitGraphData $ff horz
 	}
 	
 	if {$view(graph,vert)} {
 	    LayoutGraphVert $ff 0 0 \
 		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	    InitGraphData $ff vert
 	}
 
 	incr ii
@@ -754,11 +756,9 @@ proc TileRectNone {numx numy} {
 
     # graphs
     if {$view(graph,horz)} {
-	InitGraphData $ff horz
 	GraphShow $ff horz
     }
     if {$view(graph,vert)} {
-	InitGraphData $ff vert
 	GraphShow $ff vert
     }
 

@@ -481,10 +481,8 @@ proc GraphShow {frame which} {
 	$ds9(canvas) coords $gr $xx $yy
     }
 
-    if {$id} {
-	# canvas raise has no affect on windows
-	raise $gr
-    }
+    # canvas raise has no affect on windows
+    raise $gr
 }
 
 proc GraphHide {frame which} {

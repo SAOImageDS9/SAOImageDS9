@@ -353,15 +353,22 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     }
 
     # sanity check
-    if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
-	return 0
+    if {$xx<0} {
+	set xx 0
+    }
+    if {$yy<0} {
+	set yy 0
+    }
+    if {$ww<0} {
+	set ww 1
+    }
+    if {$hh<0} {
+	set hh 1
     }
 
     [subst $${varname}(horz)] configure -width $ww -height $hh
     set ${varname}(horz,xx) $xx
     set ${varname}(horz,yy) $yy
-
-    return 1
 }
 
 proc LayoutGraphVert {frame fx fy fw fh} {
@@ -438,15 +445,22 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     }
 
     # sanity check
-    if {$xx<0 || $yy<0 || $ww<0 || $hh<0} {
-	return 0
+    if {$xx<0} {
+	set xx 0
+    }
+    if {$yy<0} {
+	set yy 0
+    }
+    if {$ww<0} {
+	set ww 1
+    }
+    if {$hh<0} {
+	set hh 1
     }
 
     [subst $${varname}(vert)] configure -width $ww -height $hh
     set ${varname}(vert,xx) $xx
     set ${varname}(vert,yy) $yy
-
-    return 1
 }
 
 proc GraphShow {frame which} {
@@ -468,7 +482,8 @@ proc GraphShow {frame which} {
     }
 
     if {$id} {
-	$ds9(canvas) raise $id
+	# canvas raise has no affect on windows
+	raise $gr
     }
 }
 
@@ -837,12 +852,17 @@ proc UpdateGraphAxisX {frame which} {
 	set xmin [$xv min]
 	set xmax [$xv max]
 
-	$gr xaxis configure -min $xmin -max $xmax
-	$gr x2axis configure -min $xmin -max $xmax
-    } else {
-	$gr xaxis configure -min $igraph(x,min) -max $igraph(x,max)
-	$gr x2axis configure -min $igraph(x,min) -max $igraph(x,max)
+	# sanity check
+	if {[expr $xmax-$xmin]>0} {
+	    $gr xaxis configure -min $xmin -max $xmax
+	    $gr x2axis configure -min $xmin -max $xmax
+	    return
+	}
     }
+    
+    # default
+    $gr xaxis configure -min $igraph(x,min) -max $igraph(x,max)
+    $gr x2axis configure -min $igraph(x,min) -max $igraph(x,max)
 }
 
 proc UpdateGraphAxisY {frame which} {

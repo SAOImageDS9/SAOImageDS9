@@ -465,16 +465,16 @@ proc LayoutFramesNone {} {
     
     # graphs
     if {$view(graph,horz)} {
-	if {[LayoutGraphHorz graph 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
-	    # no need to InitGraphsData
-	    GraphShow graph horz
-	}
+	LayoutGraphHorz graph 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	# no need to InitGraphData
+	GraphShow graph horz
     }
     if {$view(graph,vert)} {
-	if {[LayoutGraphVert graph 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
-	    # no need to InitGraphsData
-	    GraphShow graph vert
-	}
+	LayoutGraphVert graph 0 0 \
+	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	# no need to InitGraphData
+	GraphShow graph vert
     }
 
     # update menus/dialogs
@@ -520,9 +520,8 @@ proc LayoutFrameOne {} {
 	set fh $hh
 
 	# frame
-	if {[LayoutFrameAdjust fw fh]} {
-	    $ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
-	}
+	LayoutFrameAdjust fw fh
+	$ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
 
 	# colorbar
 	if {$view(colorbar)} {
@@ -531,15 +530,11 @@ proc LayoutFrameOne {} {
 
 	# graphs
 	if {$view(graph,horz)} {
-	    if {[LayoutGraphHorz $ff 0 0 $ww $hh]} {
-		InitGraphData $ff horz
-	    }
+	    LayoutGraphHorz $ff 0 0 $ww $hh
 	}
 	if {$view(graph,vert)} {
-	    if {[LayoutGraphVert $ff 0 0 $ww $hh]} {
-		InitGraphData $ff vert
-	    }
-	}
+	    LayoutGraphVert $ff 0 0 $ww $hh
+    	}
     }
 
     # frame
@@ -548,24 +543,18 @@ proc LayoutFrameOne {} {
 
     # colorbar
     if {$view(colorbar)} {
-	if {[LayoutColorbar $current(colorbar) 0 0 $ww $hh]} {
-	    $current(colorbar) show
-	    $ds9(canvas) raise $current(colorbar)
-	}
+	$current(colorbar) show
+	$ds9(canvas) raise $current(colorbar)
     }
 
     # graphs
     if {$view(graph,horz)} {
-	if {[LayoutGraphHorz $current(frame) 0 0 $ww $hh]} {
-	    InitGraphData $current(frame) horz
-	    GraphShow $current(frame) horz
-	}
+	InitGraphData $current(frame) horz
+	GraphShow $current(frame) horz
     }
     if {$view(graph,vert)} {
-	if {[LayoutGraphVert $current(frame) 0 0 $ww $hh]} {
-	    InitGraphData $current(frame) vert
-	    GraphShow $current(frame) vert
-	}
+	InitGraphData $current(frame) vert
+	GraphShow $current(frame) vert
     }
 
     FrameToFront
@@ -660,12 +649,10 @@ proc TileRect {numx numy} {
 	set fh $hh
 
 	# frame
-	if {[LayoutFrameAdjust fw fh]} {
-	    $ff configure -x $xx($ii) -y $yy($ii) \
-		-width $fw -height $fh -anchor nw
-	    $ff show
-	    $ds9(canvas) raise $ff
-	}
+	LayoutFrameAdjust fw fh
+	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
+	$ff show
+	$ds9(canvas) raise $ff
 
 	# colorbar
 	if {$view(colorbar)} {
@@ -676,16 +663,14 @@ proc TileRect {numx numy} {
 
 	# graphs
 	if {$view(graph,horz)} {
-	    if {[LayoutGraphHorz $ff $xx($ii) $yy($ii) $ww $hh]} {
-		InitGraphData $ff horz
-		GraphShow $ff horz
-	    }
+	    LayoutGraphHorz $ff $xx($ii) $yy($ii) $ww $hh
+	    InitGraphData $ff horz
+	    GraphShow $ff horz
 	}
 	if {$view(graph,vert)} {
-	    if {[LayoutGraphVert $ff $xx($ii) $yy($ii) $ww $hh]} {
-		InitGraphData $ff vert
-		GraphShow $ff vert
-	    }
+	    LayoutGraphVert $ff $xx($ii) $yy($ii) $ww $hh
+	    InitGraphData $ff vert
+	    GraphShow $ff vert
 	}
 
 	incr ii
@@ -740,6 +725,21 @@ proc TileRectNone {numx numy} {
 	    $ds9(canvas) raise $ff
 	}
 
+	if {$view(colorbar)} {
+	    LayoutColorbar ${ff}cb 0 0 \
+		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	}
+	
+	if {$view(graph,horz)} {
+	    LayoutGraphHorz $ff 0 0 \
+		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	}
+	
+	if {$view(graph,vert)} {
+	    LayoutGraphVert $ff 0 0 \
+		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+	}
+
 	incr ii
     }
 
@@ -748,24 +748,18 @@ proc TileRectNone {numx numy} {
 
     # colorbar
     if {$view(colorbar)} {
-	LayoutColorbar ${ff}cb 0 0 \
-	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 	${ff}cb show
 	$ds9(canvas) raise ${ff}cb
     }
 
     # graphs
     if {$view(graph,horz)} {
-	if {[LayoutGraphHorz $ff 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
-	    InitGraphData $ff horz
-	    GraphShow $ff horz
-	}
+	InitGraphData $ff horz
+	GraphShow $ff horz
     }
     if {$view(graph,vert)} {
-	if {[LayoutGraphVert $ff 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
-	    InitGraphData $ff vert
-	    GraphShow $ff vert
-	}
+	InitGraphData $ff vert
+	GraphShow $ff vert
     }
 
     FrameToFront
@@ -861,11 +855,12 @@ proc LayoutFrameAdjust {wvar hvar} {
     }
 
     # sanity check
-    if {$ww<0 || $hh<0} {
-	return 0
+    if {$ww<0} {
+	set ww 1
     }
-
-    return 1
+    if {$hh<0} {
+	set hh 1
+    }
 }
 
 proc LayoutChangeWidth {ww} {

@@ -216,34 +216,46 @@ proc InitCanvas {} {
 
 proc Button3Canvas {x y} {
     global ds9
+    global current
+
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "Button3Canvas"
     }
 
     set ds9(b3) 1
-    ColorbarButton3 $x $y
+    if {$current(frame) != {}} {
+	ColorbarButton3 $current(frame) $x $y
+    }
 }
 
 proc Motion3Canvas {x y} {
     global ds9
+    global current
+
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "Motion3Canvas"
     }
 
-    ColorbarMotion3 $x $y
+    if {$current(frame) != {}} {
+	ColorbarMotion3 $current(frame) $x $y
+    }
 }
 
 proc Release3Canvas {x y} {
     global ds9
+    global current
+
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "Release3Canvas"
     }
 
     set ds9(b3) 0
-    ColorbarRelease3 $x $y
+    if {$current(frame) != {}} {
+	ColorbarRelease3 $current(frame) $x $y
+    }
 }
 
 proc UnBindEventsCanvas {} {

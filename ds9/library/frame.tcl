@@ -768,7 +768,9 @@ proc Button1Frame {which x y} {
 	    UpdatePixelTableDialog $which $x $y canvas
 	    UpdateGraphsData $which $x $y canvas
 	}
-	colorbar {ColorbarButton3 $x $y}
+	colorbar {
+	    ColorbarButton3 $which $x $y
+	}
 	pan {
 	    PanButton $which $x $y
 	}
@@ -976,7 +978,7 @@ proc Motion1Frame {which x y} {
 	}
 	colorbar {
 	    if {$ds9(b1)} {
-		ColorbarMotion3 $x $y
+		ColorbarMotion3 $which $x $y
 	    }
 	}
 	pan {
@@ -1065,7 +1067,7 @@ proc Release1Frame {which x y} {
 	}
 	colorbar {
 	    if {$ds9(b1)} {
-		ColorbarRelease3 $x $y
+		ColorbarRelease3 $which $x $y
 	    }
 	}
 	pan {

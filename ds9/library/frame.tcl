@@ -777,7 +777,9 @@ proc Button1Frame {which x y} {
 	zoom {
 	    ZoomButton $which $x $y
 	}
-	rotate {RotateButton $which $x $y}
+	rotate {
+	    RotateButton $which $x $y
+	}
 	crop {
 	    CropButton $which $x $y
 	}
@@ -805,8 +807,12 @@ proc Button1Frame {which x y} {
                 GotoFrame $which
             }
         }
-	examine {ExamineButton $which $x $y}
-	iexam {IExamButton $which $x $y}
+	examine {
+	    ExamineButton $which $x $y
+	}
+	iexam {
+	    IExamButton $which $x $y
+	}
 	3d {}
     }
 }
@@ -834,7 +840,9 @@ proc ShiftButton1Frame {which x y} {
 	crosshair {}
 	colorbar {}
 	pan {}
-	zoom {ZoomShift $which}
+	zoom {
+	    ZoomShift $which
+	}
 	rotate -
 	crop {
 	    Crop3dButton $which $x $y 0
@@ -1142,7 +1150,9 @@ proc Double1Frame {which x y} {
 	footprint -
 	examine -
 	iexam {}
-	3d {3DDouble $which}
+	3d {
+	    3DDouble $which
+	}
 	    
     }
 }

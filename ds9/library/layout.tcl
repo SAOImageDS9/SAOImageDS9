@@ -26,7 +26,7 @@ proc CanvasDef {} {
 		default {set canvas(gap,bottom) 0}
 	    }
 	}
-	aqua  {set canvas(gap,bottom) 0}
+	aqua  {set canvas(gap,bottom) 14}
 	win32 {set canvas(gap,bottom) 0}
     }
 }

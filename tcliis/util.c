@@ -82,7 +82,7 @@ void get_fbconfig (register XimDataPtr xim)
 	if ((fname=getenv(FBCONFIG_ENV1)) || (fname=getenv(FBCONFIG_ENV2)))
 	    fp = fopen (fname, "r");
 	if (!fp && (fname = getenv ("HOME"))) {
-	    sprintf (lbuf, "%s/%s", fname, FBCONFIG_1);
+	    snprintf (lbuf, SZ_LINE, "%s/%s", fname, FBCONFIG_1);
 	    fp = fopen (fname = lbuf, "r");
 	    if (fp) {
 	      if (xim->imtoolrc)

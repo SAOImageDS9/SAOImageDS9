@@ -107,8 +107,8 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
     {
       short* obuf = new short[ocnt];
       if (fits_rdecomp_short(ibuf, icnt, (unsigned short*)obuf, ocnt, block_)) {
-	internalError("Fitsy++ rice bad inflate result");
-	return 0;
+	//	internalError("Fitsy++ rice bad inflate result");
+	//	return 0;
       }
       for (int kk=kkstart; kk<kkstop; kk++)
 	for (int jj=jjstart; jj<jjstop; jj++)

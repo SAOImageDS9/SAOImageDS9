@@ -1,0 +1,4 @@
+#!/bin/sh
+set -x
+
+funcnts $* | awk 'start==1{print $0};/^---- ------------ ---------$/{start=1}'

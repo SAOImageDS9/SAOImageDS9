@@ -1195,7 +1195,6 @@ extern const int nonzero_count[];
 	}
     }
     if (c < cend) {
-	  printf("BANG\n");
         ffpmsg("decompression warning: unused bytes at end of compressed buffer");
     }
     return 0;

@@ -38,6 +38,8 @@ The following modifications have been made to the original code:
 /*#include "fitsio2.h"*/
 #define LONGLONG long long
 #define DATA_DECOMPRESSION_ERR 0
+#define FFLOCK
+#define FFUNLOCK
 
 static void ffpmsg(const char* str) {}
 
@@ -68,7 +70,7 @@ static int dodecode(unsigned char *infile, int a[], int nx, int ny, unsigned cha
 static int dodecode64(unsigned char *infile, LONGLONG a[], int nx, int ny, unsigned char nbitplanes[3]);
 static int qtree_decode(unsigned char *infile, int a[], int n, int nqx, int nqy, int nbitplanes);
 static int qtree_decode64(unsigned char *infile, LONGLONG a[], int n, int nqx, int nqy, int nbitplanes);
-static void start_inputing_bits();
+static void start_inputing_bits(void);
 static int input_bit(unsigned char *infile);
 static int input_nbits(unsigned char *infile, int n);
 /*  make input_nybble a separate routine, for added effiency */
@@ -107,7 +109,10 @@ int stat;
 
 	/* decode the input array */
 
+        FFLOCK;  /* decode uses the nextchar global variable */
 	stat = decode(input, a, nx, ny, scale);
+        FFUNLOCK;
+
         *status = stat;
 	if (stat) return(*status);
 	
@@ -147,7 +152,10 @@ int fits_hdecompress64(unsigned char *input, int smooth, LONGLONG *a, int *ny, i
 
 	/* decode the input array */
 
+        FFLOCK;  /* decode uses the nextchar global variable */
 	stat = decode64(input, a, nx, ny, scale);
+        FFUNLOCK;
+
         *status = stat;
 	if (stat) return(*status);
 	
@@ -1048,7 +1056,7 @@ int  *scale;				 scale factor for digitization
 */
 {
 LONGLONG sumall;
-int nel, stat;
+int stat;
 unsigned char nbitplanes[3];
 char tmagic[2];
 
@@ -1071,8 +1079,6 @@ char tmagic[2];
 	*ny =readint(infile);				/* y size of image			*/
 	*scale=readint(infile);				/* scale factor for digitization	*/
 	
-	nel = (*nx) * (*ny);
-
 	/* sum of all pixels	*/
 	sumall=readlonglong(infile);
 	/* # bits in quadrants	*/
@@ -1095,7 +1101,7 @@ int  *nx,*ny;				 size of output array
 int  *scale;				 scale factor for digitization		
 */
 {
-int nel, stat;
+int stat;
 LONGLONG sumall;
 unsigned char nbitplanes[3];
 char tmagic[2];
@@ -1119,8 +1125,6 @@ char tmagic[2];
 	*ny =readint(infile);				/* y size of image			*/
 	*scale=readint(infile);				/* scale factor for digitization	*/
 	
-	nel = (*nx) * (*ny);
-
 	/* sum of all pixels	*/
 	sumall=readlonglong(infile);
 	/* # bits in quadrants	*/
@@ -1995,9 +1999,9 @@ qtree_bitins64(unsigned char a[], int nx, int ny, LONGLONG b[], int n, int bit)
 {
 int i, j, k;
 int s00;
-int plane_val;
+LONGLONG plane_val;
 
-	plane_val = 1 << bit;
+	plane_val = ((LONGLONG) 1) << bit;
 
 	/*
 	 * expand each 2x2 block
@@ -2279,13 +2283,11 @@ int plane_val;
 static void
 read_bdirect(unsigned char *infile, int a[], int n, int nqx, int nqy, unsigned char scratch[], int bit)
 {
-
-
 	/*
 	 * read bit image packed 4 pixels/nybble
 	 */
 /*
-        int i;
+int i;
 	for (i = 0; i < ((nqx+1)/2) * ((nqy+1)/2); i++) {
 		scratch[i] = input_nybble(infile);
 	}
@@ -2301,12 +2303,11 @@ read_bdirect(unsigned char *infile, int a[], int n, int nqx, int nqy, unsigned c
 static void
 read_bdirect64(unsigned char *infile, LONGLONG a[], int n, int nqx, int nqy, unsigned char scratch[], int bit)
 {
-
 	/*
 	 * read bit image packed 4 pixels/nybble
 	 */
 /*
-        int i;
+int i;
 	for (i = 0; i < ((nqx+1)/2) * ((nqy+1)/2); i++) {
 		scratch[i] = input_nybble(infile);
 	}
@@ -2475,7 +2476,7 @@ static int bits_to_go;			/* Number of bits still in buffer */
 /* INITIALIZE BIT INPUT */
 
 /*  ############################################################################  */
-static void start_inputing_bits()
+static void start_inputing_bits(void)
 {
 	/*
 	 * Buffer starts out with no bits in it

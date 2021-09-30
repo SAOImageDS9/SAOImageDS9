@@ -33,7 +33,7 @@ int pl_p2li (int *pxsrc, int xs, short *lldst, int npix)
     int ret_val, i__1, i__2, i__3;
 
     /* Local variables */
-    static int zero, v, x1, hi, ip, dv, xe, np, op, iz, nv, pv, nz;
+    int zero, v, x1, hi, ip, dv, xe, np, op, iz, nv = 0, pv, nz;
 
     /* Parameter adjustments */
     --lldst;
@@ -190,9 +190,9 @@ int pl_l2pi (short *ll_src, int xs, int *px_dst, int npix)
     int ret_val, i__1, i__2;
 
     /* Local variables */
-    static int data, sw0001, otop, i__, lllen, i1, i2, x1, x2, ip, xe, np,
+    int data, sw0001, otop, i__, lllen, i1, i2, x1, x2, ip, xe, np,
              op, pv, opcode, llfirt;
-    static int skipwd;
+    int skipwd;
 
     /* Parameter adjustments */
     --px_dst;

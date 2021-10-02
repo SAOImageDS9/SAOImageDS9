@@ -15,6 +15,7 @@ proc AnalysisDef {} {
     set ianalysis(menu,hmenu,count) 0
     set ianalysis(menu,hmenu) {}
     set ianalysis(bind,count) 0
+    set ianalysis(buttonbar,count) 0
     set ianalysis(param,count) 0
     set ianalysis(param,seq) 0
     set ianalysis(file) ".$ds9(app).ans"
@@ -117,6 +118,21 @@ proc ClearAnalysis {} {
 	unset ianalysis(param,$ii,count)
     }
     set ianalysis(param,count) 0
+
+    # clear buttonbar
+    DestroyButtonbarAnalysis
+
+    for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
+	for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
+	    unset ianalysis(buttonbar,$ii-$jj,button)
+	    unset ianalysis(buttonbar,$ii-$jj,item)
+	    unset ianalysis(buttonbar,$ii-$jj,template)
+	    unset ianalysis(buttonbar,$ii-$jj,cmd)
+	    unset ianalysis(buttonbar,$ii-$jj,inuse)
+	}
+	unset ianalysis(buttonbar,$ii,count)
+    }
+    set ianalysis(buttonbar,count) 0
 }
 
 proc InitAnalysisFile {} {
@@ -301,6 +317,20 @@ proc ProcessAnalysis {varname} {
 		    continue
 		}
 
+		# buttonbar
+		if {[lindex $line 0] == {buttonbar}} {
+		    set ii $ianalysis(buttonbar,count)
+		    set ianalysis(buttonbar,$ii,count) 0
+		    continue
+		}
+
+		# end buttonbar
+		if {[lindex $line 0] == {endbuttonbar}} {
+		    CreateButtonbarAnalysis
+		    continue
+		}
+
+		# separator
 		if {[lindex $line 0] == {---}} {
 		    $currentparent add separator
 		    continue
@@ -327,8 +357,7 @@ proc ProcessAnalysis {varname} {
 
 	    4 {
 		set cmd "$line"
-		if {$item != {} && $template != {} && 
-		    $type != {} && $cmd != {}} {
+		if {$item != {} && $template != {} && $type != {} && $cmd != {}} {
 		    switch -- [lindex $type 0] {
 			bind {
 			    set bb [lindex $type 1]
@@ -366,6 +395,17 @@ proc ProcessAnalysis {varname} {
 				-variable ianalysis(menu,$ii,inuse) \
 				-selectcolor green
 			    incr ianalysis(menu,count)
+			}
+			button {
+			    set ii $ianalysis(buttonbar,count)
+			    set jj $ianalysis(buttonbar,$ii,count)
+
+			    set ianalysis(buttonbar,$ii-$jj,button) {}
+			    set ianalysis(buttonbar,$ii-$jj,item) "$item"
+			    set ianalysis(buttonbar,$ii-$jj,template) "$template"
+			    set ianalysis(buttonbar,$ii-$jj,cmd) "$cmd"
+			    set ianalysis(buttonbar,$ii-$jj,inuse) 0
+			    incr ianalysis(buttonbar,$ii,count)
 			}
 			default {
 			    # something really wrong here, abort
@@ -442,8 +482,7 @@ proc ProcessAnalysis {varname} {
 
 	    6 {
 		# end help
-		if {[lindex $line 0] == {endhelp} ||
-		    [lindex $line 0] == {end}} {
+		if {[lindex $line 0] == {endhelp} || [lindex $line 0] == {end}} {
 		    incr ianalysis(menu,count)
 		    set state 1
 		    continue
@@ -460,6 +499,7 @@ proc ProcessAnalysis {varname} {
     BindEventsCanvas
 
     UpdateAnalysisMenu
+    UpdateAnalysisButtonbar
 
     return 1
 }
@@ -2026,7 +2066,7 @@ proc AnalysisSendCmd {} {
     global ianalysis
 
     for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
-	append result "\#$ii menu"
+	append result "menu [expr $ii+1]"
 	append result "\n$ianalysis(menu,$ii,item)"
 	append result "\n$ianalysis(menu,$ii,template)"
 	if {$ianalysis(menu,$ii,cmd) != {web}} {
@@ -2038,13 +2078,25 @@ proc AnalysisSendCmd {} {
 	}
 	append result "\n\n"
     }
+
     for {set ii 0} {$ii<$ianalysis(bind,count)} {incr ii} {
 	set key [string range $ianalysis(bind,$ii,item) 1 1]
-	append result "\#$ii bind"
+	append result "bind [expr $ii+1]"
 	append result "\nbind key $ianalysis(bind,$ii,item)"
 	append result "\n$ianalysis(bind,$ii,template)"
 	append result "\nbind $key"
 	append result "\n$ianalysis(bind,$ii,cmd)"
+	append result "\n\n"
+    }
+
+    for {set ii 0} {$ii<$ianalysis(buttonebar,count)} {incr ii} {
+	for {set jj 0} {$jj<$ianalysis(buttonebar,$ii,count)} {incr jj} {
+	    append result "buttonbar [expr $ii+1]"
+	    append result "\n$ianalysis(buttonbar,$ii-$jj,item)"
+	    append result "\n$ianalysis(buttonbar,$ii-$jj,template)"
+	    append result "\nbutton"
+	    append result "\n$ianalysis(buttonbar,$ii-$jj,cmd)"
+	}
 	append result "\n\n"
     }
 

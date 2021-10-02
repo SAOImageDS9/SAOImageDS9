@@ -409,6 +409,39 @@ proc UpdateAnalysisMenu {} {
     }
 }
 
+proc UpdateAnalysisButtonbar {} {
+    global ds9
+    global current
+    global ianalysis
+
+    global debug
+    if {$debug(tcl,update)} {
+	puts stderr "UpdateAnalysisButtonbar"
+    }
+
+    if {$current(frame) != {}} {
+	for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
+	    if {[$current(frame) has fits]} {
+		set fn [$current(frame) get fits file name 1]
+	    } else {
+		set fn {none}
+	    }
+
+	    for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
+		# disable by default
+		$ianalysis(buttonbar,$ii-$jj,button) configure -state disabled
+
+		foreach tt $ianalysis(buttonbar,$ii-$jj,template) {
+		    if {[regexp ".$tt" $fn]} {
+			$ianalysis(buttonbar,$ii-$jj,button) configure -state normal
+			break
+		    }
+		}
+	    }
+	}
+    }
+}
+
 proc PrefsDialogAnalysis {} {
     global dprefs
 

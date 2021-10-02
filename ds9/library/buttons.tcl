@@ -28,51 +28,72 @@ proc ButtonsDef {} {
 
 proc CreateButtons {} {
     global ds9
-    global buttons
 
     set ds9(buttons) [ttk::frame $ds9(main).buttons]
     set ds9(buttons,sep) [ttk::separator $ds9(main).sbuttons -orient horizontal]
 
-    set buttons(majorPrev) $ds9(buttons).file
-    set buttons(majorCurrent) $ds9(buttons).file
+    CreateButtonsMajor
+
+    CreateButtonsFile
+    CreateButtonsEdit
+    CreateButtonsView
+    CreateButtonsFrame
+    CreateButtonsBin
+    CreateButtonsZoom
+    CreateButtonsScale
+    CreateButtonsColor
+    CreateButtonsRegion
+    CreateButtonsWCS
+    CreateButtonsAnalysis
+    CreateButtonsHelp
+
+    LayoutButtons
+}
+
+proc CreateButtonsMajor {} {
+    global ds9
+    global buttons
+
+    set buttons(major,prev) $ds9(buttons).file
+    set buttons(major,current) $ds9(buttons).file
 
     ttk::frame $ds9(buttons).major
     RadioButton $ds9(buttons).major.file \
 	[string tolower [msgcat::mc {File}]] \
-	buttons(majorCurrent) $ds9(buttons).file MajorButton
+	buttons(major,current) $ds9(buttons).file MajorButton
     RadioButton $ds9(buttons).major.edit \
 	[string tolower [msgcat::mc {Edit}]] \
-	buttons(majorCurrent) $ds9(buttons).edit MajorButton
+	buttons(major,current) $ds9(buttons).edit MajorButton
     RadioButton $ds9(buttons).major.view \
 	[string tolower [msgcat::mc {View}]] \
-	buttons(majorCurrent) $ds9(buttons).view MajorButton
+	buttons(major,current) $ds9(buttons).view MajorButton
     RadioButton $ds9(buttons).major.frame \
 	[string tolower [msgcat::mc {Frame}]] \
-	buttons(majorCurrent) $ds9(buttons).frame MajorButton
+	buttons(major,current) $ds9(buttons).frame MajorButton
     RadioButton $ds9(buttons).major.bin \
 	[string tolower [msgcat::mc {Bin}]] \
-	buttons(majorCurrent) $ds9(buttons).bin MajorButton
+	buttons(major,current) $ds9(buttons).bin MajorButton
     RadioButton $ds9(buttons).major.zoom \
 	[string tolower [msgcat::mc {Zoom}]] \
-	buttons(majorCurrent) $ds9(buttons).zoom MajorButton
+	buttons(major,current) $ds9(buttons).zoom MajorButton
     RadioButton $ds9(buttons).major.scale \
 	[string tolower [msgcat::mc {Scale}]] \
-	buttons(majorCurrent) $ds9(buttons).scale MajorButton
+	buttons(major,current) $ds9(buttons).scale MajorButton
     RadioButton $ds9(buttons).major.color \
 	[string tolower [msgcat::mc {Color}]] \
-	buttons(majorCurrent) $ds9(buttons).color MajorButton
+	buttons(major,current) $ds9(buttons).color MajorButton
     RadioButton $ds9(buttons).major.region \
 	[string tolower [msgcat::mc {Region}]] \
-	buttons(majorCurrent) $ds9(buttons).region MajorButton
+	buttons(major,current) $ds9(buttons).region MajorButton
     RadioButton $ds9(buttons).major.wcs \
 	[string tolower [msgcat::mc {WCS}]] \
-	buttons(majorCurrent) $ds9(buttons).wcs MajorButton
+	buttons(major,current) $ds9(buttons).wcs MajorButton
     RadioButton $ds9(buttons).major.analysis \
 	[string tolower [msgcat::mc {Analysis}]] \
-	buttons(majorCurrent) $ds9(buttons).analysis MajorButton
+	buttons(major,current) $ds9(buttons).analysis MajorButton
     RadioButton $ds9(buttons).major.help \
 	[string tolower [msgcat::mc {Help}]] \
-	buttons(majorCurrent) $ds9(buttons).help MajorButton
+	buttons(major,current) $ds9(buttons).help MajorButton
 
     global pbuttons
     array set pbuttons {
@@ -104,21 +125,53 @@ proc CreateButtons {} {
         $ds9(buttons).major.analysis pbuttons(major,analysis)
         $ds9(buttons).major.help pbuttons(major,help)
     "
-    CreateButtonsFile
-    CreateButtonsEdit
-    CreateButtonsView
-    CreateButtonsFrame
-    CreateButtonsBin
-    CreateButtonsZoom
-    CreateButtonsScale
-    CreateButtonsColor
-    CreateButtonsRegion
-    CreateButtonsWCS
-    CreateButtonsAnalysis
-    CreateButtonsHelp
+}
 
+proc CreateButtonbarAnalysis {} {
+    global ds9
+    global buttons
+    global ianalysis
+    global pbuttons
+
+    set ii $ianalysis(buttonbar,count)
+    set buttons(major,ianalysis,$ii) [ttk::frame $ds9(buttons).ianalysis${ii}]
+    set buttons(ianalysis,$ii) {}
+    for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
+	set ianalysis(buttonbar,$ii-$jj,button) \
+	    $ds9(buttons).ianalysis${ii}.button${jj}
+	ButtonButton $ianalysis(buttonbar,$ii-$jj,button) \
+	    [string tolower $ianalysis(buttonbar,$ii-$jj,item)] \
+	    [list AnalysisTask $ii-$jj buttonbar]
+
+	set pbuttons(ianalysis,$ii,$jj) 1
+	lappend buttons(ianalysis,$ii) $ianalysis(buttonbar,$ii-$jj,button) \
+	    pbuttons(ianalysis,$ii,$jj)
+    }
+    incr ianalysis(buttonbar,count)
+
+    UpdateButtons buttons(ianalysis,$ii)
     LayoutButtons
 }
+
+proc DestroyButtonbarAnalysis {} {
+    global ds9
+    global buttons
+    global ianalysis
+    global pbuttons
+
+    for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
+	for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
+	    destroy $ianalysis(buttonbar,$ii-$jj,button)
+	    unset pbuttons(ianalysis,$ii,$jj)
+	}
+	pack forget $buttons(major,ianalysis,$ii)
+	destroy $buttons(major,ianalysis,$ii)
+	unset buttons(ianalysis,$ii)
+	unset buttons(major,ianalysis,$ii)
+    }
+}
+
+# basic button types
 
 proc ButtonButton {button text cmd} {
     ttk::button $button \
@@ -233,6 +286,8 @@ proc CheckButtonCB {button varname id op} {
     }
 }
 
+# Layout
+
 proc LayoutButtons {} {
     global ds9
     global buttons
@@ -267,22 +322,43 @@ proc LayoutButtons {} {
     UpdateButtons buttons(help)
 
     MajorButton
+    AnalysisButton
 }
 
 proc MajorButton {} {
     global buttons
     global view
 
-    pack forget $buttons(majorPrev)
+    pack forget $buttons(major,prev)
     switch $view(layout) {
 	horizontal {
-	    pack $buttons(majorCurrent) -side top -fill x -expand true
+	    pack $buttons(major,current) -side top -fill x -expand true
 	}
 	vertical {
-	    pack $buttons(majorCurrent) -side bottom -fill x -expand true -anchor s
+	    pack $buttons(major,current) -side bottom -fill x -expand true -anchor s
 	}
     }
-    set buttons(majorPrev) $buttons(majorCurrent)
+    set buttons(major,prev) $buttons(major,current)
+}
+
+proc AnalysisButton {} {
+    global buttons
+    global view
+    global ianalysis
+
+    for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
+	pack forget $buttons(major,ianalysis,$ii)
+	switch $view(layout) {
+	    horizontal {
+		pack $buttons(major,ianalysis,$ii) \
+		    -side bottom -fill x -expand true
+	    }
+	    vertical {
+		pack $buttons(major,ianalysis,$ii) \
+		    -side bottom -fill x -expand true -anchor s
+	    }
+	}
+    }
 }
 
 proc UpdateButtons {varname} {

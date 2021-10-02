@@ -89,6 +89,7 @@ proc UpdateDS9 {} {
     # wcs(system) set here
     UpdateWCSMenu 
     UpdateAnalysisMenu
+    UpdateAnalysisButtonbar
 
     UpdateMaskMenu
     UpdateContourMenu

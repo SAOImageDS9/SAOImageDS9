@@ -149,7 +149,6 @@ proc CreateButtonbarAnalysis {} {
     }
     incr ianalysis(buttonbar,count)
 
-    UpdateButtons buttons(ianalysis,$ii)
     LayoutButtons
 }
 
@@ -292,6 +291,7 @@ proc LayoutButtons {} {
     global ds9
     global buttons
     global view
+    global ianalysis
 
     pack forget $ds9(buttons).major
     switch $view(layout) {
@@ -321,6 +321,10 @@ proc LayoutButtons {} {
     UpdateButtons buttons(analysis)
     UpdateButtons buttons(help)
 
+    for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
+	UpdateButtons buttons(ianalysis,$ii)
+    }
+
     MajorButton
     AnalysisButton
 }
@@ -348,6 +352,7 @@ proc AnalysisButton {} {
 
     for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
 	pack forget $buttons(major,ianalysis,$ii)
+	grid forget $buttons(major,ianalysis,$ii)
 	switch $view(layout) {
 	    horizontal {
 		pack $buttons(major,ianalysis,$ii) \
@@ -355,7 +360,7 @@ proc AnalysisButton {} {
 	    }
 	    vertical {
 		pack $buttons(major,ianalysis,$ii) \
-		    -side bottom -fill x -expand true -anchor s
+		    -side bottom -fill x -expand true
 	    }
 	}
     }
@@ -378,8 +383,8 @@ proc ShowButton {which varname} {
 
     if {$var} {
  	switch $view(layout) {
- 	    horizontal {pack $which -side left -fill both -expand true}
- 	    vertical {pack $which -side top -fill both -expand true}
+	    horizontal {pack $which -side left -fill both -expand true}
+	    vertical {pack $which -side top -fill both -expand true}
  	}
     }
 }

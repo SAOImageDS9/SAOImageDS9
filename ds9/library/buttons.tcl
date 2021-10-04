@@ -137,7 +137,7 @@ proc CreateButtonbarAnalysis {} {
     global pbuttons
 
     set ii $ianalysis(buttonbar,count)
-    set buttons(major,ianalysis,$ii) [ttk::frame $ds9(buttons,aux).ianalysis${ii}]
+    set ds9(buttons,aux,$ii) [ttk::frame $ds9(buttons,aux).ianalysis${ii}]
     set buttons(ianalysis,$ii) {}
     for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
 	set ianalysis(buttonbar,$ii-$jj,button) \
@@ -166,8 +166,8 @@ proc DestroyButtonbarAnalysis {} {
 	    destroy $ianalysis(buttonbar,$ii-$jj,button)
 	    unset pbuttons(ianalysis,$ii,$jj)
 	}
-	destroy $buttons(major,ianalysis,$ii)
-	unset buttons(major,ianalysis,$ii)
+	destroy $ds9(buttons,aux,$ii)
+	unset ds9(buttons,aux,$ii)
 
 	unset buttons(ianalysis,$ii)
     }
@@ -369,18 +369,18 @@ proc MajorButton {} {
 }
 
 proc AnalysisButton {} {
-    global buttons
+    global ds9
     global view
     global ianalysis
 
     for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
-	pack forget $buttons(major,ianalysis,$ii)
+	pack forget $ds9(buttons,aux,$ii)
 	switch $view(layout) {
 	    horizontal {
-		pack $buttons(major,ianalysis,$ii) -side bottom -fill x -expand true
+		pack $ds9(buttons,aux,$ii) -side bottom -fill x -expand true
 	    }
 	    vertical {
-		pack $buttons(major,ianalysis,$ii) -side left -fill x -expand true -anchor n
+		pack $ds9(buttons,aux,$ii) -side left -fill x -expand true -anchor n
 	    }
 	}
     }

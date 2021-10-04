@@ -29,8 +29,11 @@ proc ButtonsDef {} {
 proc CreateButtons {} {
     global ds9
 
-    set ds9(buttons) [ttk::frame $ds9(main).buttons]
+    set ds9(buttons,frame) [ttk::frame $ds9(main).buttons]
     set ds9(buttons,sep) [ttk::separator $ds9(main).sbuttons -orient horizontal]
+
+    set ds9(buttons) [ttk::frame $ds9(main).buttons.main]
+    set ds9(buttons,aux) [ttk::frame $ds9(main).buttons.aux]
 
     CreateButtonsMajor
 
@@ -134,11 +137,11 @@ proc CreateButtonbarAnalysis {} {
     global pbuttons
 
     set ii $ianalysis(buttonbar,count)
-    set buttons(major,ianalysis,$ii) [ttk::frame $ds9(buttons).ianalysis${ii}]
+    set buttons(major,ianalysis,$ii) [ttk::frame $ds9(buttons,aux).ianalysis${ii}]
     set buttons(ianalysis,$ii) {}
     for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
 	set ianalysis(buttonbar,$ii-$jj,button) \
-	    $ds9(buttons).ianalysis${ii}.button${jj}
+	    $ds9(buttons,aux).ianalysis${ii}.button${jj}
 	ButtonButton $ianalysis(buttonbar,$ii-$jj,button) \
 	    [string tolower $ianalysis(buttonbar,$ii-$jj,item)] \
 	    [list AnalysisTask $ii-$jj buttonbar]
@@ -163,10 +166,10 @@ proc DestroyButtonbarAnalysis {} {
 	    destroy $ianalysis(buttonbar,$ii-$jj,button)
 	    unset pbuttons(ianalysis,$ii,$jj)
 	}
-	pack forget $buttons(major,ianalysis,$ii)
 	destroy $buttons(major,ianalysis,$ii)
-	unset buttons(ianalysis,$ii)
 	unset buttons(major,ianalysis,$ii)
+
+	unset buttons(ianalysis,$ii)
     }
 }
 
@@ -293,16 +296,36 @@ proc LayoutButtons {} {
     global view
     global ianalysis
 
+    pack forget $ds9(buttons)
+    pack forget $ds9(buttons,aux)
+
     pack forget $ds9(buttons).major
     switch $view(layout) {
 	horizontal {
 	    $ds9(buttons) configure -width 0
 	    pack propagate $ds9(buttons) on
+	    pack $ds9(buttons) -side top -fill both -expand true
+
+	    if {$ianalysis(buttonbar,count)>0} {
+		$ds9(buttons,aux) configure -width 0
+		pack propagate $ds9(buttons,aux) on
+		pack $ds9(buttons,aux) -side top -fill both -expand true
+	    }
+
 	    pack $ds9(buttons).major -side top -fill x -expand true
 	}
 	vertical {
-	    $ds9(buttons) configure -width 125
 	    pack propagate $ds9(buttons) off
+	    $ds9(buttons) configure -width 100
+	    pack $ds9(buttons) -side left -fill both -expand true
+
+	    if {$ianalysis(buttonbar,count)>0} {
+		$ds9(buttons,aux) configure \
+		    -width [expr 100*$ianalysis(buttonbar,count)]
+		pack propagate $ds9(buttons,aux) off
+		pack $ds9(buttons,aux) -side left -fill both -expand true
+	    }
+
 	    pack $ds9(buttons).major -side top -fill x -expand true -anchor n
 	}
     }
@@ -352,15 +375,12 @@ proc AnalysisButton {} {
 
     for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
 	pack forget $buttons(major,ianalysis,$ii)
-	grid forget $buttons(major,ianalysis,$ii)
 	switch $view(layout) {
 	    horizontal {
-		pack $buttons(major,ianalysis,$ii) \
-		    -side bottom -fill x -expand true
+		pack $buttons(major,ianalysis,$ii) -side bottom -fill x -expand true
 	    }
 	    vertical {
-		pack $buttons(major,ianalysis,$ii) \
-		    -side bottom -fill x -expand true
+		pack $buttons(major,ianalysis,$ii) -side left -fill x -expand true -anchor n
 	    }
 	}
     }

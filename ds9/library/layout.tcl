@@ -309,7 +309,7 @@ proc LayoutViewHorz {} {
 
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
-    grid forget $ds9(buttons)
+    grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
     grid forget $ds9(image)
 
@@ -342,7 +342,7 @@ proc LayoutViewHorz {} {
 
     # buttons
     if {$view(buttons)} {
-	grid $ds9(buttons) -row 2 -sticky ew -columnspan 3
+	grid $ds9(buttons,frame) -row 2 -sticky ew -columnspan 3
 	$ds9(buttons,sep) configure -orient horizontal
 	grid $ds9(buttons,sep) -row 3 -column 0 -sticky ew -columnspan 3
     }
@@ -364,7 +364,7 @@ proc LayoutViewVert {} {
 
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
-    grid forget $ds9(buttons)
+    grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
     grid forget $ds9(image)
     
@@ -396,7 +396,7 @@ proc LayoutViewVert {} {
 
     # buttons
     if {$view(buttons)} {
-	grid $ds9(buttons) -row 0 -column 2 -sticky ns
+	grid $ds9(buttons,frame) -row 0 -column 2 -sticky ns
 	$ds9(buttons,sep) configure -orient vertical
 	grid $ds9(buttons,sep) -row 0 -column 3 -sticky ns
     }

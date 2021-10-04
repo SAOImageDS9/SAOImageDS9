@@ -133,6 +133,8 @@ proc ClearAnalysis {} {
 	unset ianalysis(buttonbar,$ii,count)
     }
     set ianalysis(buttonbar,count) 0
+
+    LayoutView
 }
 
 proc InitAnalysisFile {} {

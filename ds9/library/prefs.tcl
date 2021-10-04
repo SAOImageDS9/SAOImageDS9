@@ -595,6 +595,8 @@ proc FixPrefs {version} {
 	    FixPrefs8.2to8.3
 	}
 	8.3 {
+	    # beta fix
+	    FixPrefs8.3to8.3
 	}
     }
 }
@@ -645,6 +647,20 @@ proc FixPrefsVarOld {} {
 	    }
 	}
 	aqua {}
+    }
+}
+
+proc FixPrefs8.3to8.3 {} {
+    global pcolorbar
+    switch $pcolorbar(orientation) {
+	horizontal {set pcolorbar(orientation) 0}
+	vertical {set pcolorbar(orientation) 1}
+    }
+
+    global colorbar
+    switch $colorbar(orientation) {
+	horizontal {set colorbar(orientation) 0}
+	vertical {set colorbar(orientation) 1}
     }
 }
 

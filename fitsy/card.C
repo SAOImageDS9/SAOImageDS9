@@ -109,7 +109,8 @@ FitsCard& FitsCard::setComplex(const char* name, double real, double img,
   memset(card_+8, ' ', FTY_CARDLEN-8);
 
   ostringstream str;
-  str << "= " << setw(20) << setprecision(prec) << real << img;
+  str << "= " << setw(20) << setprecision(prec)
+      << '(' << real << ',' << img << ')';
   if (comment)
     str << " / " << comment;
   memcpy(card_+8,str.str().c_str(),str.str().length());
@@ -200,9 +201,10 @@ void FitsCard::getComplex(double* r, double* i)
     ptr++;
   }
 
+  char dummy; // for '(' and ','
   string x(buf,FTY_CARDLEN-10);
   istringstream str(x);
-  str >> *r >> *i;
+  str >> dummy >> *r >> dummy >> *i >> dummy;
 }
 
 char* FitsCard::getString()

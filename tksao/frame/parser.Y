@@ -1028,8 +1028,7 @@ get	: BG_ COLOR_ {fr->getBgColorCmd();}
 	| GRID_ getGrid
 	| HIGHLITE_ COLOR_ {fr->getHighliteColorCmd();}
 	| HISTOGRAM_ STRING STRING INT {fr->getHistogramCmd($2,$3,$4);}
-	| HORIZONTAL_ CUT_ STRING STRING numeric numeric internalSystem INT cutMethod
-	{fr->getHorzCutCmd($3,$4,Vector($5,$6),(Coord::InternalSystem)$7,$8,(Base::CutMethod)$9);}
+	| HORIZONTAL_ CUT_ getHorzCut
 	| IIS_ getiis
 	| INFO_ getInfo
 	| IRAF_ ALIGN_ {fr->getIRAFAlignCmd();}
@@ -1049,11 +1048,22 @@ get	: BG_ COLOR_ {fr->getBgColorCmd();}
 	| TYPE_ {fr->getTypeCmd();}
 	| VALUE_ internalSystem numeric numeric
 	{fr->getValueCmd(Vector($3,$4),(Coord::InternalSystem)$2);}
-	| VERTICAL_ CUT_ STRING STRING numeric numeric internalSystem INT cutMethod
-	{fr->getVertCutCmd($3,$4,Vector($5,$6),(Coord::InternalSystem)$7,$8,(Base::CutMethod)$9);}
+        | VERTICAL_ CUT_ getVertCut
 	| WCS_ getWCS
 	| ZOOM_ {fr->getZoomCmd();}
 	;
+
+getHorzCut : STRING STRING numeric numeric internalSystem INT cutMethod
+	{fr->getHorzCutCmd($1,$2,Vector($3,$4),(Coord::InternalSystem)$5,$6,(Base::CutMethod)$7);}
+        | STRING STRING numeric numeric coordSystem skyFrame INT cutMethod
+	{fr->getHorzCutCmd($1,$2,Vector($3,$4),(Coord::CoordSystem)$5,(Coord::SkyFrame)$6,$7,(Base::CutMethod)$8);}
+        ;
+
+getVertCut : STRING STRING numeric numeric internalSystem INT cutMethod
+        {fr->getVertCutCmd($1,$2,Vector($3,$4),(Coord::InternalSystem)$5,$6,(Base::CutMethod)$7);}
+        | STRING STRING numeric numeric coordSystem skyFrame INT cutMethod
+        {fr->getVertCutCmd($1,$2,Vector($3,$4),(Coord::CoordSystem)$5,(Coord::SkyFrame)$6,$7,(Base::CutMethod)$8);}
+        ;
 
 getBin	: DEPTH_ {fr->getBinDepthCmd();}
 	| FACTOR_ {fr->getBinFactorCmd();}

@@ -1870,6 +1870,17 @@ void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv,
   bltCut(xx, yy, Coord::XX, mapToRef(vv,ref), thick, method);
 }
 
+void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv, 
+			 Coord::CoordSystem sys, Coord::SkyFrame sky,
+			 int thick, Base::CutMethod method)
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr)
+    return;
+
+  bltCut(xx, yy, Coord::XX, ptr->mapToRef(vv,sys,sky), thick, method);
+}
+
 void Base::getInfoCmd(char* var)
 {
   if (currentContext->cfits) {
@@ -2140,6 +2151,17 @@ void Base::getVertCutCmd(char* xx, char* yy, const Vector& vv,
 			 int thick, Base::CutMethod method)
 {
   bltCut(xx, yy, Coord::YY, mapToRef(vv,ref), thick, method);
+}
+
+void Base::getVertCutCmd(char* xx, char* yy, const Vector& vv,
+			 Coord::CoordSystem sys, Coord::SkyFrame sky,
+			 int thick, Base::CutMethod method)
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr)
+    return;
+
+  bltCut(xx, yy, Coord::YY, ptr->mapToRef(vv,sys,sky), thick, method);
 }
 
 void Base::getWCSCmd()

@@ -987,7 +987,13 @@ public:
   // Graph Commands
   void getHorzCutCmd(char*, char*, const Vector&, Coord::InternalSystem, 
 		     int, Base::CutMethod);
+  void getHorzCutCmd(char*, char*, const Vector&,
+		     Coord::CoordSystem, Coord::SkyFrame,
+		     int, Base::CutMethod);
   void getVertCutCmd(char*, char*, const Vector&, Coord::InternalSystem, 
+		     int, Base::CutMethod);
+  void getVertCutCmd(char*, char*, const Vector&,
+		     Coord::CoordSystem, Coord::SkyFrame,
 		     int, Base::CutMethod);
 
   // Grid Commands

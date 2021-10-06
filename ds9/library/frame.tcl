@@ -644,6 +644,7 @@ proc LeaveFrame {which} {
 	    LeaveInfoBox
 	    PixelTableClearDialog
 	    ClearGraphsData $which
+	    HideGraphsData $which
 	}
 	crosshair {}
     }
@@ -1857,7 +1858,7 @@ proc ResetFrame {which} {
 	UpdateZoomMenu
 	UpdateScaleMenu
 	UpdateScaleDialog
-	InitGraphsData $which
+	UpdateGraphsAxis $which
 
 	SAMPSendCoordPointAtSkyCmd $which
     }
@@ -1870,7 +1871,10 @@ proc ClearCurrentFrame {} {
 
     ClearInfoBox
     PixelTableClearDialog
+
+    # zero out data
     ClearGraphsData $current(frame)
+    HideGraphsData $current(frame)
 
     UpdateDS9
 }
@@ -1881,6 +1885,7 @@ proc ClearAllFrame {} {
     foreach ff $ds9(frames) {
 	ClearFrame $ff
 	ClearGraphsData $ff
+	HideGraphsData $ff
     }
 
     ClearInfoBox

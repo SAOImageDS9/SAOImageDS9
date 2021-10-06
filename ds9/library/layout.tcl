@@ -430,6 +430,7 @@ proc LayoutFrames {} {
 	${ff}cb hide
 
 	# graphs
+	ClearGraphsData $ff
 	GraphHide $ff horz
 	GraphHide $ff vert
     }
@@ -479,13 +480,11 @@ proc LayoutFramesNone {} {
     if {$view(graph,horz)} {
 	LayoutGraphHorz graph 0 0 \
 	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	# no need to InitGraphData
 	GraphShow graph horz
     }
     if {$view(graph,vert)} {
 	LayoutGraphVert graph 0 0 \
 	    [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	# no need to InitGraphData
 	GraphShow graph vert
     }
 
@@ -543,11 +542,11 @@ proc LayoutFrameOne {} {
 	# graphs
 	if {$view(graph,horz)} {
 	    LayoutGraphHorz $ff 0 0 $ww $hh
-	    InitGraphData $ff horz
+	    UpdateGraphAxis $ff horz
 	}
 	if {$view(graph,vert)} {
 	    LayoutGraphVert $ff 0 0 $ww $hh
-	    InitGraphData $ff vert
+	    UpdateGraphAxis $ff vert
     	}
     }
 
@@ -676,12 +675,12 @@ proc TileRect {numx numy} {
 	# graphs
 	if {$view(graph,horz)} {
 	    LayoutGraphHorz $ff $xx($ii) $yy($ii) $ww $hh
-	    InitGraphData $ff horz
+	    UpdateGraphAxis $ff horz
 	    GraphShow $ff horz
 	}
 	if {$view(graph,vert)} {
 	    LayoutGraphVert $ff $xx($ii) $yy($ii) $ww $hh
-	    InitGraphData $ff vert
+	    UpdateGraphAxis $ff vert
 	    GraphShow $ff vert
 	}
 
@@ -745,13 +744,13 @@ proc TileRectNone {numx numy} {
 	if {$view(graph,horz)} {
 	    LayoutGraphHorz $ff 0 0 \
 		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	    InitGraphData $ff horz
+	    UpdateGraphAxis $ff horz
 	}
 	
 	if {$view(graph,vert)} {
 	    LayoutGraphVert $ff 0 0 \
 		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
-	    InitGraphData $ff vert
+	    UpdateGraphAxis $ff vert
 	}
 
 	incr ii

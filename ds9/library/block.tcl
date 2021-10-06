@@ -66,7 +66,7 @@ proc UpdateBlock {} {
     UpdateContourScale
     UpdateContourDialog
     UpdateWCSDialog
-    InitGraphsData $current(frame)
+    UpdateGraphsAxis $current(frame)
     UpdateMain
 
     UpdateHeaderDialog
@@ -161,7 +161,7 @@ proc BlockApplyDialog {} {
 	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block to $block(factor)]
 
 	LockFrameCurrent
-	InitGraphsData $current(frame)
+	UpdateGraphsAxis $current(frame)
 	UpdateBlockDialog
 	RefreshInfoBox $current(frame)
     }

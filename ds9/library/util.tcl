@@ -915,11 +915,7 @@ proc ChangeMode {} {
 	$ff marker unselect all
 	$ff marker unhighlite all
 
-	switch $current(mode) {
-	    crosshair -
-	    analysis {}
-	    default {ClearGraphsData $ff}
-	}
+	HideGraphsData $ff
     }
 
     UpdateRegionMenu

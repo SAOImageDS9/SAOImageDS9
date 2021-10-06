@@ -14,9 +14,7 @@ proc GraphDef {} {
     set igraph(mb) .grphmb
 
     set igraph(tick,len) 4
-    set igraph(x,min) 0
     set igraph(x,max) 100
-    set igraph(y,min) 1
     set igraph(y,max) 100
 
     set dgraph(horz,offset) 100
@@ -70,16 +68,16 @@ proc GraphsCreate {frame} {
     $horz xaxis configure -hide no -showticks no -linewidth 0 \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
 	-tickdefault $igraph(tick,len) \
-	-min $igraph(x,min) -max $igraph(x,max) 
+	-min 0 -max $igraph(x,max) 
     $horz x2axis configure -hide yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(x,min) -max $igraph(x,max)
+	-min 0 -max $igraph(x,max)
     $horz yaxis configure -hide yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-min 1 -max $igraph(y,max)
     $horz y2axis configure -hide no \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-min 1 -max $igraph(y,max)
     
     $horz element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -117,19 +115,19 @@ proc GraphsCreate {frame} {
 
     $vert xaxis configure -hide yes -descending yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(x,min) -max $igraph(x,max) 
+	-min 0 -max $igraph(x,max) 
     $vert x2axis configure -hide no -descending yes \
 	-showticks no -linewidth 0 \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(x,min) -max $igraph(x,max) 
+	-min 0 -max $igraph(x,max) 
 
     $vert yaxis configure -hide no -descending yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-min 1 -max $igraph(y,max)
     $vert y2axis configure -hide yes -descending yes \
 	-bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
 	-tickdefault $igraph(tick,len) \
-	-min $igraph(y,min) -max $igraph(y,max)
+	-min 1 -max $igraph(y,max)
 
     $vert element create line1 -xdata $xv -ydata $yv \
 	-symbol none -color [ThemeTreeForeground]
@@ -647,8 +645,8 @@ proc UpdateGraphMethod {frame} {
 	return
     }
 
-    InitGraphData $frame horz
-    InitGraphData $frame vert
+    UpdateGraphAxis $frame horz
+    UpdateGraphAxis $frame vert
 }
 
 proc UpdateGraphsGrid {} {
@@ -681,10 +679,10 @@ proc UpdateGraphGrid {frame} {
     [subst $${varname}(vert)] x2axis configure -grid $graph(grid)
 }
 
-proc InitGraphsData {frame} {
+proc UpdateGraphsAxis {frame} {
     global debug
     if {$debug(tcl,graph)} {
-	puts "InitGraphsData $frame" 
+	puts "UpdateGraphsAxis $frame" 
     }
 
     # sanity check
@@ -697,36 +695,87 @@ proc InitGraphsData {frame} {
 	return
     }
 
-    InitGraphData $frame horz
-    InitGraphData $frame vert
+    UpdateGraphAxis $frame horz
+    UpdateGraphAxis $frame vert
 }
 
-proc InitGraphData {frame which} {
+proc UpdateGraphAxis {frame which} {
     global ds9
     global current
 
     global debug
     if {$debug(tcl,graph)} {
-	puts "InitGraphData $frame $which" 
+	puts "UpdateGraphAxis $frame $which" 
     }
 
-    switch $current(mode) {
-	crosshair {
-	    set coord [$frame get crosshair canvas]
-	    set xx [lindex $coord 0]
-	    set yy [lindex $coord 1]
-	}
-	default {
-	    set xx [$ds9(canvas) itemcget $frame -x]
-	    set yy [$ds9(canvas) itemcget $frame -y]
-	}
-    }
-
-    # we need xmin/xmax from screen
-    # we need ymin/ymax from data
-    UpdateGraphData $frame $which $xx $yy canvas
     UpdateGraphAxisX $frame $which
     UpdateGraphAxisY $frame $which
+}
+
+proc UpdateGraphAxisX {frame which} {
+    global ds9
+    global igraph
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphAxisX $frame $which"
+    }
+
+    set varname ${frame}gr
+    global $varname
+
+    set gr [subst $${varname}($which)]
+
+    if {[$frame has fits]} {
+	set xmax [$ds9(canvas) itemcget $frame -width]
+	$gr xaxis configure -min 0 -max $xmax
+	$gr x2axis configure -min 0 -max $xmax
+    } else {
+	$gr xaxis configure -min 0 -max $igraph(x,max)
+	$gr x2axis configure -min 0 -max $igraph(x,max)
+    }
+}
+
+proc UpdateGraphAxisY {frame which} {
+    global igraph
+    global graph
+
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphAxisY $frame $which"
+    }
+
+    set varname ${frame}gr
+    global $varname
+
+    set gr [subst $${varname}($which)]
+
+    if {[$frame has fits]} {
+	set minmax [$frame get minmax]
+	set ymin [lindex $minmax 0]
+	set ymax [lindex $minmax 1]
+
+	# must use .eq. since "nan" is a legal double value
+	if {$ymin eq "nan" || $ymax eq "nan"} {
+	    set ymin 0
+	    set ymax 1
+	}
+
+	if {$ymin >= $ymax} {
+	    set ymax [expr $ymin + 1]
+	}
+
+	switch $graph(method) {
+	    sum {set ymax [expr $ymax*$graph(thick)]}
+	    average {}
+	}
+
+	$gr yaxis configure -min $ymin -max $ymax
+	$gr y2axis configure -min $ymin -max $ymax
+    } else {
+	$gr yaxis configure -min 1 -max $igraph(y,max)
+	$gr y2axis configure -min 1 -max $igraph(y,max)
+    }
 }
 
 proc UpdateGraphsData {frame xx yy sys} {
@@ -776,6 +825,34 @@ proc UpdateGraphData {frame which xx yy sys} {
 	$xx $yy $sys $graph(thick) $graph(method)
 }
 
+proc ClearGraphsData {frame} {
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "ClearGraphsData $frame"
+    }
+
+    # don't process default graph
+    if {$frame == {graph}} {
+	return
+    }
+
+    ClearGraphData $frame horz
+    ClearGraphData $frame vert
+}
+
+proc ClearGraphData {frame which} {
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "ClearGraphData $frame $which"
+    }
+
+    set varname ${frame}gr
+    global $varname
+
+    set vv [subst $${varname}($which,vect,yy)]
+    $vv set [blt::vector expr "$vv*0"]
+}
+
 proc ShowGraphsData {frame} {
     global view
 
@@ -804,12 +881,12 @@ proc ShowGraphData {frame which} {
     [subst $${varname}($which)] element configure line1 -hide no
 }
 
-proc ClearGraphsData {frame} {
+proc HideGraphsData {frame} {
     global view
 
     global debug
     if {$debug(tcl,graph)} {
-	puts "ClearGraphsData $frame"
+	puts "HideGraphsData $frame"
     }
 
     # don't process default graph
@@ -818,91 +895,18 @@ proc ClearGraphsData {frame} {
     }
 
     if {$view(graph,horz)} {
-	ClearGraphData $frame horz
+	HideGraphData $frame horz
     }
     if {$view(graph,vert)} {
-	ClearGraphData $frame vert
+	HideGraphData $frame vert
     }
 }
 
-proc ClearGraphData {frame which} {
+proc HideGraphData {frame which} {
     set varname ${frame}gr
     global $varname
 
     [subst $${varname}($which)] element configure line1 -hide yes
-}
-
-proc UpdateGraphAxisX {frame which} {
-    global igraph
-
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "UpdateGraphAxisX $frame $which"
-    }
-
-    set varname ${frame}gr
-    global $varname
-
-    set gr [subst $${varname}($which)]
-    set xv [subst $${varname}($which,vect,xx)]
-
-    if {[$frame has fits]} {
-	set xmin [$xv min]
-	set xmax [$xv max]
-
-	# sanity check
-	if {[expr $xmax-$xmin]>0} {
-	    $gr xaxis configure -min $xmin -max $xmax
-	    $gr x2axis configure -min $xmin -max $xmax
-	    return
-	}
-    }
-    
-    # default
-    $gr xaxis configure -min $igraph(x,min) -max $igraph(x,max)
-    $gr x2axis configure -min $igraph(x,min) -max $igraph(x,max)
-}
-
-proc UpdateGraphAxisY {frame which} {
-    global igraph
-    global graph
-
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "UpdateGraphAxisY $frame $which"
-    }
-
-    set varname ${frame}gr
-    global $varname
-
-    set gr [subst $${varname}($which)]
-
-    if {[$frame has fits]} {
-	set minmax [$frame get clip]
-	set ymin [lindex $minmax 0]
-	set ymax [lindex $minmax 1]
-
-	# must use .eq. since "nan" is a legal double value
-	if {$ymin eq "nan" || $ymax eq "nan"} {
-	    set ymin 0
-	    set ymax 1
-	}
-
-	if {$ymin >= $ymax} {
-	    set ymax [expr $ymin + 1]
-	}
-
-	switch $graph(method) {
-	    sum {set ymax [expr $ymax*$graph(thick)]}
-	    average {}
-	}
-
-	$gr yaxis configure -min $ymin -max $ymax
-	$gr y2axis configure -min $ymin -max $ymax
-    } else {
-	$gr yaxis configure -min $igraph(y,min) -max $igraph(y,max)
-	$gr y2axis configure -min $igraph(y,min) -max $igraph(y,max)
-    }
 }
 
 # Dialog

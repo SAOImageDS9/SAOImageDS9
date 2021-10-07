@@ -430,7 +430,6 @@ proc LayoutFrames {} {
 	${ff}cb hide
 
 	# graphs
-	ClearGraphsData $ff
 	GraphHide $ff horz
 	GraphHide $ff vert
     }
@@ -443,6 +442,19 @@ proc LayoutFrames {} {
 	LayoutFramesOneOrMore
     } else {
 	LayoutFramesNone
+    }
+
+    # after all layed out, update data cut for graphs if needed
+    switch -- $current(mode) {
+	crosshair {
+	    if {$view(graph,horz) || $view(graph,vert)} {
+		update idletasks
+		foreach ff $ds9(active) {
+		    set vv [$ff get crosshair canvas]
+		    UpdateGraphsData $ff [lindex $vv 0] [lindex $vv 1] canvas
+		}
+	    }
+	}
     }
 }
 

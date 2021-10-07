@@ -781,6 +781,7 @@ proc UpdateGraphAxisY {frame which} {
 proc UpdateGraphsData {frame xx yy sys} {
     global view
 
+    puts "UpdateGraphsData $frame $xx $yy $sys" 
     global debug
     if {$debug(tcl,graph)} {
 	puts "UpdateGraphsData $frame $xx $yy $sys" 
@@ -825,34 +826,6 @@ proc UpdateGraphData {frame which xx yy sys} {
 	$xx $yy $sys $graph(thick) $graph(method)
 }
 
-proc ClearGraphsData {frame} {
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "ClearGraphsData $frame"
-    }
-
-    # don't process default graph
-    if {$frame == {graph}} {
-	return
-    }
-
-    ClearGraphData $frame horz
-    ClearGraphData $frame vert
-}
-
-proc ClearGraphData {frame which} {
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "ClearGraphData $frame $which"
-    }
-
-    set varname ${frame}gr
-    global $varname
-
-    set vv [subst $${varname}($which,vect,yy)]
-    $vv set [blt::vector expr "$vv*0"]
-}
-
 proc ShowGraphsData {frame} {
     global view
 
@@ -863,6 +836,10 @@ proc ShowGraphsData {frame} {
 
     # don't process default graph
     if {$frame == {graph}} {
+	return
+    }
+
+    if {![$frame has fits]} {
 	return
     }
 

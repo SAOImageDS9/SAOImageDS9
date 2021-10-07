@@ -560,7 +560,7 @@ proc EnterFrame {which x y} {
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "EnterFrame $which"
+	puts stderr "EnterFrame $which $x $y"
     }
 
     # check to see if this event was generated while processing other events
@@ -595,6 +595,7 @@ proc EnterFrame {which x y} {
     EnterInfoBox $which
     UpdateInfoBox $which $x $y canvas
     UpdatePixelTableDialog $which $x $y canvas
+
     ShowGraphsData $which
     UpdateGraphsData $which $x $y canvas
 
@@ -643,7 +644,6 @@ proc LeaveFrame {which} {
 	3d {
 	    LeaveInfoBox
 	    PixelTableClearDialog
-	    ClearGraphsData $which
 	    HideGraphsData $which
 	}
 	crosshair {}
@@ -1872,10 +1872,6 @@ proc ClearCurrentFrame {} {
     ClearInfoBox
     PixelTableClearDialog
 
-    # zero out data
-    ClearGraphsData $current(frame)
-    HideGraphsData $current(frame)
-
     UpdateDS9
 }
 
@@ -1884,8 +1880,6 @@ proc ClearAllFrame {} {
 
     foreach ff $ds9(frames) {
 	ClearFrame $ff
-	ClearGraphsData $ff
-	HideGraphsData $ff
     }
 
     ClearInfoBox
@@ -1931,6 +1925,10 @@ proc ClearFrame {which} {
 
     DestroyHeader $which
     $which clear
+
+    # after unload
+    HideGraphsData $which
+    UpdateGraphsAxis $which
 }
 
 # Private Procedures

@@ -617,8 +617,8 @@ proc UpdateGraphFont {frame which} {
     set varname ${frame}gr
     global $varname
 
-    [subst $${varname}($which)] y2axis configure -tickfont "{$ds9($graph(font))} $graph(font,size) $graph(font,weight) $graph(font,slant)"
-    [subst $${varname}($which)] yaxis configure -tickfont "{$ds9($graph(font))} $graph(font,size) $graph(font,weight) $graph(font,slant)"
+    [subst $${varname}($which)] y2axis configure -tickfont "$ds9($graph(font)) $graph(font,size) $graph(font,weight) $graph(font,slant)"
+    [subst $${varname}($which)] yaxis configure -tickfont "$ds9($graph(font)) $graph(font,size) $graph(font,weight) $graph(font,slant)"
 }
 
 proc UpdateGraphsMethod {} {

@@ -37,6 +37,7 @@ proc DS9Def {} {
 
     set ds9(helvetica) [font configure TkDefaultFont -family]
     set ds9(courier) [font configure TkFixedFont -family]
+    set ds9(courier) courier
     switch $ds9(wm) {
 	x11 {
 	    set ds9(times) serif
@@ -45,8 +46,14 @@ proc DS9Def {} {
 	    font configure TkCaptionFont -weight normal
 	    font configure TkHeadingFont -weight normal
 	}
-	aqua -
-	win32 {set ds9(times) times}
+	aqua {
+	    # bad system fonts returned by Mojave
+	    set ds9(helvetica) .AppleSystemUIFont
+	    set ds9(times) times
+	}	    
+	win32 {
+	    set ds9(times) times
+	}
     }
     set ds9(main) {}
     set ds9(image) {}

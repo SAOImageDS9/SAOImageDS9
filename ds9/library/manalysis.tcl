@@ -377,7 +377,7 @@ proc UpdateAnalysisMenu {} {
 	puts stderr "UpdateAnalysisMenu"
     }
 
-    if {$ds9(active,num) > 0} {
+    if {[llength $ds9(active)] > 0} {
 	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state normal
 	ConfigureButtons analysis normal
     } else {

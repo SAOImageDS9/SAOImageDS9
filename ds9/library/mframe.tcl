@@ -1048,7 +1048,7 @@ proc UpdateFrameMenu {} {
     $ds9(mb).frame entryconfig [msgcat::mc {New Frame RGB}] -state normal
     $ds9(buttons).frame.newrgb configure -state normal
 
-    if {$ds9(active,num) > 0} {
+    if {[llength $ds9(active)] > 0} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Delete Frame}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Delete All Frames}] -state normal
 

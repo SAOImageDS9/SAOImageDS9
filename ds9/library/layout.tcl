@@ -438,7 +438,7 @@ proc LayoutFrames {} {
     LayoutColorbarAdjust
     LayoutGraphsAdjust
 
-    if {$ds9(active,num) > 0} {
+    if {[llength $ds9(active)] > 0} {
 	LayoutFramesOneOrMore
     } else {
 	LayoutFramesNone
@@ -513,7 +513,7 @@ proc LayoutFramesOneOrMore {} {
 	    LayoutFrameOne
 	}
 	tile {
-	    if {$ds9(active,num) > 1} {
+	    if {[llength $ds9(active)] > 1} {
 		if {$view(multi)} {
 		    LayoutFrame
 		} else {
@@ -587,19 +587,19 @@ proc LayoutFrame {} {
     global ds9
     global tile
 
+    set num [llength $ds9(active)]
     switch -- $tile(mode) {
 	row {
-	    TileRect 1 $ds9(active,num)
+	    TileRect 1 $num
 	}
 	column {
-	    TileRect $ds9(active,num) 1
+	    TileRect $num 1
 	}
 	grid {
 	    switch -- $tile(grid,mode) {
 		automatic {
 		    TileRect \
-			[expr int(sqrt($ds9(active,num)-1))+1] \
-			[expr int(sqrt($ds9(active,num))+.5)]
+			[expr int(sqrt($num-1))+1] [expr int(sqrt($num)+.5)]
 		}
 		manual {
 		    TileRect $tile(grid,col) $tile(grid,row)
@@ -613,19 +613,19 @@ proc LayoutFrameNone {} {
     global ds9
     global tile
 
+    set num [llength $ds9(active)]
     switch -- $tile(mode) {
 	row {
-	    TileRectNone 1 $ds9(active,num)
+	    TileRectNone 1 $num
 	}
 	column {
-	    TileRectNone $ds9(active,num) 1
+	    TileRectNone $num 1
 	}
 	grid {
 	    switch -- $tile(grid,mode) {
 		automatic {
 		    TileRectNone \
-			[expr int(sqrt($ds9(active,num)-1))+1] \
-			[expr int(sqrt($ds9(active,num))+.5)]
+			[expr int(sqrt($num-1))+1] [expr int(sqrt($num)+.5)]
 		}
 		manual {
 		    TileRectNone $tile(grid,col) $tile(grid,row)

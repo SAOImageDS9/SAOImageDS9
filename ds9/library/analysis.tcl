@@ -2091,8 +2091,8 @@ proc AnalysisSendCmd {} {
 	append result "\n\n"
     }
 
-    for {set ii 0} {$ii<$ianalysis(buttonebar,count)} {incr ii} {
-	for {set jj 0} {$jj<$ianalysis(buttonebar,$ii,count)} {incr jj} {
+    for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
+	for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
 	    append result "buttonbar [expr $ii+1]"
 	    append result "\n$ianalysis(buttonbar,$ii-$jj,item)"
 	    append result "\n$ianalysis(buttonbar,$ii-$jj,template)"

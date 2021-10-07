@@ -74,7 +74,6 @@ proc CreateNameNumberFrame {which type} {
     # update frame lists
     lappend ds9(frames) $which
     lappend ds9(active) $which
-    set ds9(active,num) [llength $ds9(active)]
     set active($which) 1
 
     # and create the frame
@@ -335,7 +334,6 @@ proc DeleteFrame {which} {
     set ii [lsearch $ds9(active) $which]
     if {$ii>0} {
 	set ds9(active) [lreplace $ds9(active) $ii $ii]
-	set ds9(active,num) [llength $ds9(active)]
 	unset active($which)
     }
 
@@ -1562,7 +1560,7 @@ proc PrevFrame {} {
     if {$ii>0} {
 	GotoFrame [lindex $ds9(active) [expr $ii-1]]
     } else {
-	GotoFrame [lindex $ds9(active) [expr $ds9(active,num)-1]]
+	GotoFrame [lindex $ds9(active) [expr [llength $ds9(active)]-1]]
     }
 }
 
@@ -1571,7 +1569,7 @@ proc NextFrame {} {
     global current
 
     set ii [lsearch $ds9(active) $current(frame)]
-    if {$ii < [expr $ds9(active,num)-1]} {
+    if {$ii < [expr [llength $ds9(active)]-1]} {
 	GotoFrame [lindex $ds9(active) [expr $ii+1]]
     } else {
 	GotoFrame [lindex $ds9(active) 0]
@@ -1581,7 +1579,7 @@ proc NextFrame {} {
 proc LastFrame {} {
     global ds9
 
-    GotoFrame [lindex $ds9(active) [expr $ds9(active,num)-1]]
+    GotoFrame [lindex $ds9(active) [expr [llength $ds9(active)]-1]]
 }
 
 proc MoveFirstFrame {} {
@@ -1653,7 +1651,6 @@ proc UpdateActiveFrames {} {
 
     # reset active list
     set ds9(active) {}
-    set ds9(active,num) 0
 
     foreach ff $ds9(frames) {
 	if {$active($ff)} {
@@ -1665,10 +1662,9 @@ proc UpdateActiveFrames {} {
 		"[msgcat::mc {Frame}] [string range $ff 5 end]" -state disabled
 	}
     }
-    set ds9(active,num) [llength $ds9(active)]
 
     # New layout if needed
-    if {$ds9(active,num) > 0} {
+    if {[llength $ds9(active)] > 0} {
 	if {[lsearch $ds9(active) $current(frame)] == -1} {
 	    set current(frame) [lindex $ds9(active) 0]
 	    set current(colorbar) ${current(frame)}cb
@@ -1769,7 +1765,7 @@ proc DisplayMode {} {
     switch -- $current(display) {
 	single {set ds9(display) $current(display)}
 	tile {
-	    if {$ds9(active,num) > 1} {
+	    if {[llength $ds9(active)] > 1} {
 		set ds9(display) $current(display)
 	    } else {
 		switch -- $tile(grid,mode) {
@@ -1779,7 +1775,7 @@ proc DisplayMode {} {
 	    }
 	}
 	blink {
-	    if {$ds9(active,num) > 1} {
+	    if {[llength $ds9(active)] > 1} {
 		set ds9(display) $current(display)
 	    } else {
 		set ds9(display) single
@@ -1814,9 +1810,9 @@ proc BlinkTimer {} {
     global iblink
     global ds9
 
-    if {$ds9(active,num) > 0} {
+    if {[llength $ds9(active)] > 0} {
 	incr iblink(index)
-	if {$iblink(index) >= $ds9(active,num)} {
+	if {$iblink(index) >= [llength $ds9(active)]} {
 	    set iblink(index) 0
 	}
 	GotoFrame [lindex $ds9(active) $iblink(index)]

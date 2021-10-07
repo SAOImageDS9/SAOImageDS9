@@ -781,7 +781,6 @@ proc UpdateGraphAxisY {frame which} {
 proc UpdateGraphsData {frame xx yy sys} {
     global view
 
-    puts "UpdateGraphsData $frame $xx $yy $sys" 
     global debug
     if {$debug(tcl,graph)} {
 	puts "UpdateGraphsData $frame $xx $yy $sys" 

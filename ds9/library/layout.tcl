@@ -445,6 +445,7 @@ proc LayoutFrames {} {
     }
 
     # after all layed out, update data cut for graphs if needed
+    #  one problem- if single mode, non-current graphs are incorrectly updated
     switch -- $current(mode) {
 	crosshair {
 	    if {$view(graph,horz) || $view(graph,vert)} {

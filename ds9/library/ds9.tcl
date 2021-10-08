@@ -48,7 +48,7 @@ proc DS9Def {} {
 	}
 	aqua {
 	    # bad system fonts returned by Mojave
-	    set ds9(helvetica) .AppleSystemUIFont
+	    set ds9(helvetica) {.AppleSystemUIFont}
 	    set ds9(times) times
 	}	    
 	win32 {

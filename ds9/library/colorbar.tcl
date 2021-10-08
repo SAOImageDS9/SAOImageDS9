@@ -779,11 +779,13 @@ proc MatchColor {which} {
 		3d {
 		    if {$tt != {rgb}} {
 			$ff colormap [$cb get colormap]
+			${ff}cb colorbar [$ff get colorbar]
 		    }
 		}
 		rgb {
 		    if {$tt == {rgb}} {
 			$ff colormap [$cb get colormap]
+			${ff}cb colorbar [$ff get colorbar]
 		    }
 		}
 	    }

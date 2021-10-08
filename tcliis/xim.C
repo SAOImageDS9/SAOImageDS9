@@ -13,8 +13,11 @@ using namespace std;
 
 #include <tcl.h>
 
+// windows has conflict with typedef byte and <iostream>
 #ifdef __WIN32
+#define byte foo
 #include <Winsock2.h>
+#undef foo
 #endif
 
 #include "iistcl.h"

@@ -16,7 +16,15 @@ using namespace std;
 #ifndef HAVE_CONFIG_H
 #define HAVE_CONFIG_H 1
 #endif
+
+// windows has conflict with typedef byte and <iostream>
+#ifdef __WIN32
+#define byte foo
+#endif
 #include "filter.h"
+#ifdef __WIN32
+#undef foo
+#endif
 
 #ifdef __CYGWIN__
 // limit size, cygwin pipe to 64K / (4 args x 4 bytes)

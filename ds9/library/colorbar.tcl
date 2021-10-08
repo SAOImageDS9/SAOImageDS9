@@ -738,7 +738,7 @@ proc ColorbarRelease3 {frame x y} {
 
     $frame colormap end
     
-    LockColorCurrent
+    LockColor $frame
     UpdateColorDialog
 }
 
@@ -771,18 +771,19 @@ proc MatchColor {which} {
     global current
 
     set tt [$which get type]
+    set cb ${which}cb
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
 	    switch -- [$ff get type] {
 		base -
 		3d {
 		    if {$tt != {rgb}} {
-			$ff colormap [$current(colorbar) get colormap]
+			$ff colormap [$cb get colormap]
 		    }
 		}
 		rgb {
 		    if {$tt == {rgb}} {
-			$ff colormap [$current(colorbar) get colormap]
+			$ff colormap [$cb get colormap]
 		    }
 		}
 	    }

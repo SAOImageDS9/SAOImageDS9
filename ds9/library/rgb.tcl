@@ -66,19 +66,27 @@ proc RGBEvalLock {varname which cmd} {
     }
 }
 
-proc RGBEvalLockColorbar {cmd} {
+proc RGBEvalLockColorbarCurrent {cmd} {
+    global current
+    
+    RGBEvalLockColorbar $current(frame) $cmd
+}
+
+proc RGBEvalLockColorbar {which cmd} {
     global current
     global scale
     global rgb
 
-    if {$rgb(lock,colorbar) && [$current(frame) get type] == {rgb}} {
-	set ch $current(rgb)
-	foreach c {red green blue} {
-	    $current(colorbar) rgb channel $c
+    set cb ${which}cb
+    if {$rgb(lock,colorbar) && [$which get type] == {rgb}} {
+	set ch [$which get rgb channel]
+	foreach cc {red green blue} {
+	    $which rgb channel $cc
+	    $cb rgb channel $cc
 	    eval $cmd
 	}
-	set current(rgb) $ch
-	$current(colorbar) rgb channel $current(rgb)
+	$which rgb channel $ch
+	$cb rgb channel $ch
     } else {
 	eval $cmd
     }

@@ -720,7 +720,7 @@ proc ColorbarMotion3 {frame xx yy} {
     # Y sets contrast
     set contrast [expr double($yy)/[winfo height $ds9(canvas)] * 10]
 
-    RGBEvalLockColorbar [list $cb adjust $contrast $bias]
+    RGBEvalLockColorbar $frame [list $cb adjust $contrast $bias]
     $frame colormap motion [$cb get colormap]
     UpdateColorDialog
 }
@@ -1163,7 +1163,7 @@ proc ApplyColormap {} {
     global current
     global rgb
 
-    RGBEvalLockColorbar [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
+    RGBEvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
     if {$current(frame) != {}} {
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
 	LockColorCurrent
@@ -1189,7 +1189,7 @@ proc AdjustColormap {} {
     global current
     global rgb
     if {[info exists icolorbar(adjustok)]} {
-	RGBEvalLockColorbar [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
+	RGBEvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
 	if {$current(frame) != {}} {
 	    RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap motion [$current(colorbar) get colormap]]
 	}
@@ -1542,7 +1542,7 @@ proc CmapValueCmd {c b} {
     global current 
 
     if {$current(frame) != {}} {
-	RGBEvalLockColorbar [list $current(colorbar) adjust $c $b]
+	RGBEvalLockColorbarCurrent [list $current(colorbar) adjust $c $b]
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap begin]
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap motion [$current(colorbar) get colormap]]
 	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap end]

@@ -1314,7 +1314,12 @@ proc LayoutColorbarAdjust {} {
 	set ff "$font $fontsize $fontslant"
 
 	# horizontal height
-	set ysp [font metrics $ff -linespace]
+	switch $ds9(wm) {
+	    x11 -
+	    win32 {set scale 1}
+	    aqua {set scale 1.4}
+	}
+	set ysp [expr int([font metrics $ff -linespace]*$scale)]
 	set ytl [$ds9(canvas) itemcget colorbar -ticks]
 	set colorbar(horizontal,height) [expr $colorbar(size) + $ytl + $ysp]
 

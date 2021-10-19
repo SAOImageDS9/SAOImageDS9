@@ -60,14 +60,14 @@ Smithsonian Astrophysical Observatory"</string>
 	<string>SAOImageDS9</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>8.3rc</string>
 	<key>CFBundleSignature</key>
 	<string>DS9</string>
-	<key>CFBundleVersion</key>
+	<key>CFBundleShortVersionString</key>
 	<string>8.3rc</string>
 	<key>NSHighResolutionCapable</key>
 	<string>True</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright (C) 1999-2021</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.11.0</string>
 	<key>LSRequiresCarbon</key>

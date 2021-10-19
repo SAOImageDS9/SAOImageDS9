@@ -18,6 +18,7 @@ proc HelpDef {} {
     set help(ack) "$ds9(root)/doc/acknowledgment.html"
     set help(vo) "$ds9(root)/doc/ref/vo.html"
 
+    # remember to update macos/SAOImageDS9/Contents/Resources/Credits.html
     set help(authors) "William Joye (Smithsonian Astrophysical Observatory)\nEric Mandel (Smithsonian Astrophysical Observatory)\nSteve Murray (Smithsonian Astrophysical Observatory)\n"
     set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\nAuthors\n$help(authors)\nSAOImage DS9 development has been made possible by funding from NASA's Applied Information Systems Research Program, Chandra X-ray Science Center (CXC), and the High Energy Astrophysics Science Archive Center (HEASARC). Additional funding was provided by the JWST Mission office at Space Telescope Science Institute to improve capabilities for 3D data visualization."
 }

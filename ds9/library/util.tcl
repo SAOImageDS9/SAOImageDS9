@@ -786,6 +786,19 @@ proc CursorTimer {} {
 }
 
 proc AboutBox {} {
+    global ds9
+    global pds9
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {AboutBoxDefault}
+	aqua {
+	    ::tk::mac::standardAboutPanel
+	}
+    }
+}
+
+proc AboutBoxDefault {} {
     global help
     global ds9
     global ed

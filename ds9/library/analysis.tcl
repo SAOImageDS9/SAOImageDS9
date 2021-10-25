@@ -2115,6 +2115,13 @@ proc AnalysisSendCmdMessage {type txt} {
     ProcessSendCmdTxt [AnalysisMessage $type $txt]
 }
 
+proc AnalysisSendCmdFileDialog {which} {
+    switch $which {
+	open {ProcessSendCmdTxt [OpenFileDialog analysisparamfbox]}
+	save {ProcessSendCmdTxt [SaveFileDialog analysisparamfbox]}
+    }
+}
+
 proc AnalysisSendCmdTask {} {
     global ianalysis
 

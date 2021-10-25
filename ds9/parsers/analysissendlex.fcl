@@ -8,8 +8,11 @@
 %%
 
 entry		{return $ENTRY_}
+filedialog	{return $FILEDIALOG_}
 message		{return $MESSAGE_}
 mode		{return $MODE_}
+open		{return $OPEN_}
+save		{return $SAVE_}
 task		{return $TASK_}
 lock		{return $LOCK_}
 

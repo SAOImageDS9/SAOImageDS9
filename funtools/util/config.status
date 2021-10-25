@@ -734,6 +734,7 @@ D["HAVE_SNPRINTF"]=" 1"
 D["HAVE_FTELLO"]=" 1"
 D["HAVE_FSEEKO"]=" 1"
 D["HAVE_SETENV"]=" 1"
+D["HAVE_TCL"]=" 1"
   for (key in D) D_is_set[key] = 1
   FS = ""
 }

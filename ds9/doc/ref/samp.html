@@ -252,8 +252,9 @@ analysis [&lt;task number&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [clear][load &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [message ok|okcancel|yesno &lt;message&gt;]<br>
 &nbsp;&nbsp;&nbsp; [entry &lt;message&gt;]<br>
+&nbsp;&nbsp;&nbsp; [message ok|okcancel|yesno &lt;message&gt;]<br>
+&nbsp;&nbsp;&nbsp; [filedialog open|save]<br>
 &nbsp;&nbsp;&nbsp; [text]<br>
 &nbsp;<br>
 Example:<br>
@@ -261,7 +262,8 @@ string value = ds9.get(string cmd)<br>
 analysis<br>
 analysis task<br>
 analysis entry {Please enter something}<br>
-analysis entry okcancel {Hello World}<br>
+analysis message okcancel {Hello World}<br>
+analysis filedialog open<br>
 <br>
 ds9.set(string cmd)<br>
 analysis 0 # invoke first analysis task<br>

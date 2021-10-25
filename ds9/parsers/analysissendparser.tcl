@@ -61,179 +61,231 @@ proc analysissend::unsetupvalues {numsyms} {
 }
 
 array set analysissend::table {
-  6:0 accept
-  3:0,target 4
-  7:0 reduce
-  1:257 shift
+  3:268,target 14
   0:258 shift
-  5:0,target 6
-  2:257 reduce
   0:259 shift
   0:260 shift
-  8:257,target 8
-  2:264,target 9
-  0:266,target 6
+  5:0,target 6
   0:261 shift
-  7:0,target 2
-  1:257,target 7
-  0:262 shift
-  0:258,target 1
-  12:0 reduce
-  11:257,target 12
-  0:0,target 1
-  0:261,target 4
+  9:0 reduce
+  11:0 reduce
+  0:264 shift
+  2:262 shift
+  3:257,target 8
+  0:265 shift
   2:263 shift
-  12:0,target 3
-  8:257 reduce
-  2:264 shift
-  0:266 goto
-  10:257 reduce
-  9:257 reduce
-  4:0,target 5
-  2:265 shift
-  11:257 shift
-  2:263,target 8
+  3:267,target 13
+  15:257,target 16
+  0:265,target 6
+  2:263,target 10
+  0:269 goto
+  6:0,target 7
+  16:0,target 3
+  2:0 reduce
+  2:271 goto
+  3:266,target 12
+  6:0 reduce
+  0:264,target 5
+  2:262,target 9
+  1:257,target 8
+  7:0,target 0
+  0:0,target 1
+  10:0,target 14
+  13:257,target 10
+  16:0 reduce
+  2:271,target 11
+  12:257 reduce
+  14:257 reduce
+  8:0,target 2
+  11:0,target 5
+  1:257 shift
+  7:0 accept
+  3:257 reduce
+  9:0,target 13
+  0:261,target 4
+  2:0,target 12
   0:0 reduce
-  6:0,target 0
-  2:267 goto
-  10:257,target 10
-  9:257,target 9
-  2:265,target 10
-  3:0 reduce
-  2:257,target 7
-  0:259,target 2
+  3:266 shift
+  3:267 shift
   0:260,target 3
+  0:259,target 2
+  3:268 shift
+  0:269,target 7
+  3:270 goto
   4:0 reduce
-  2:267,target 11
+  14:257,target 11
+  8:0 reduce
+  10:0 reduce
+  0:258,target 1
+  3:270,target 15
+  4:0,target 4
+  13:257 reduce
+  15:257 shift
+  12:257,target 9
   5:0 reduce
-  0:262,target 5
 }
 
 array set analysissend::rules {
-  9,l 267
-  2,l 266
-  6,l 266
-  3,l 266
-  7,l 267
-  0,l 268
-  4,l 266
-  8,l 267
-  10,l 267
-  1,l 266
-  5,l 266
+  9,l 270
+  11,l 270
+  2,l 269
+  6,l 269
+  12,l 271
+  3,l 269
+  7,l 269
+  13,l 271
+  0,l 272
+  4,l 269
+  8,l 270
+  10,l 270
+  14,l 271
+  1,l 269
+  5,l 269
 }
 
 array set analysissend::rules {
-  5,dc 1
+  5,dc 2
   0,dc 1
-  8,dc 1
+  12,dc 0
+  8,dc 0
   3,dc 3
   10,dc 1
   6,dc 1
   1,dc 0
+  13,dc 1
   9,dc 1
   4,dc 1
-  7,dc 0
+  11,dc 1
+  7,dc 1
   2,dc 2
+  14,dc 1
 }
 
 array set analysissend::rules {
-  7,line 32
-  10,line 35
-  4,line 27
-  1,line 24
-  9,line 34
-  6,line 29
-  3,line 26
-  8,line 33
-  5,line 28
-  2,line 25
+  13,line 43
+  7,line 33
+  10,line 38
+  4,line 30
+  1,line 27
+  9,line 37
+  12,line 42
+  6,line 32
+  3,line 29
+  14,line 44
+  8,line 36
+  11,line 39
+  5,line 31
+  2,line 28
 }
 
 array set analysissend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0}}
+  13,trans {}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0}}
+  14,trans {}
   1 {{2 0 1}}
-  2 {{3 0 1} {7 257 0} {8 257 0} {9 257 0} {10 257 0}}
-  3 {{4 0 1}}
-  4 {{5 0 1}}
-  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {266 6}}
+  15,trans {{257 16}}
+  2 {{5 0 1} {12 0 0} {13 0 0} {14 0 0}}
+  16,trans {}
+  3 {{3 0 1} {8 257 0} {9 257 0} {10 257 0} {11 257 0}}
+  4 {{4 0 1}}
+  0,trans {{258 1} {259 2} {260 3} {261 4} {264 5} {265 6} {269 7}}
   5 {{6 0 1}}
-  1,trans {{257 7}}
-  2,trans {{263 8} {264 9} {265 10} {267 11}}
-  6 {{0 0 1}}
-  3,trans {}
-  7 {{2 0 2}}
+  1,trans {{257 8}}
+  2,trans {{262 9} {263 10} {271 11}}
+  6 {{7 0 1}}
+  3,trans {{266 12} {267 13} {268 14} {270 15}}
+  7 {{0 0 1}}
   4,trans {}
-  8 {{8 257 1}}
+  8 {{2 0 2}}
   5,trans {}
-  10 {{10 257 1}}
-  9 {{9 257 1}}
+  10 {{14 0 1}}
+  9 {{13 0 1}}
   6,trans {}
-  11 {{3 0 2}}
-  12 {{3 0 3}}
+  11 {{5 0 2}}
   7,trans {}
+  12 {{9 257 1}}
   8,trans {}
+  13 {{10 257 1}}
   10,trans {}
   9,trans {}
-  11,trans {{257 12}}
+  14 {{11 257 1}}
+  11,trans {}
+  15 {{3 0 2}}
+  16 {{3 0 3}}
   12,trans {}
 }
 
 array set analysissend::token_id_table {
-  264,line 18
-  265,title YESNO
+  264,line 17
+  270,t 1
+  269,t 1
+  265,title LOCK
   261,line 14
   257,t 0
+  270,title {}
+  269,title {}
   257,line 7
   262,t 0
-  259,title MESSAGE
-  260,title MODE
-  266,t 1
-  264,title OKCANCEL
+  270,line 35
+  269,line 26
+  259,title FILEDIALOG
+  260,title MESSAGE
+  266,t 0
+  271,t 1
   error error
-  266,line 23
-  268,title {}
-  error,line 22
+  264,title TASK
+  266,line 20
+  error,line 25
+  268,title YESNO
   258,t 0
-  263,line 17
+  263,line 16
   error,title {}
   263,t 0
   259,line 12
   260,line 13
   258,title ENTRY
-  267,t 1
-  263,title OK
-  268,line 36
-  267,title {}
+  272,line 45
+  267,t 0
+  263,title SAVE
+  272,t 1
+  268,line 22
+  267,title OKCANCEL
   257 STRING_
   258 ENTRY_
   259,t 0
-  259 MESSAGE_
-  260 MODE_
+  259 FILEDIALOG_
+  260 MESSAGE_
   260,t 0
-  261 TASK_
-  265,line 19
-  262 LOCK_
-  263 OK_
+  272,title {}
+  261 MODE_
+  265,line 18
+  262 OPEN_
+  263 SAVE_
   257,title string
-  264 OKCANCEL_
+  264 TASK_
   264,t 0
-  265 YESNO_
+  265 LOCK_
   262,line 15
-  266 analysissend
-  267 type
-  268,t 1
-  268 start'
-  262,title LOCK
-  0 {$}
+  266 OK_
+  267 OKCANCEL_
   0,t 0
+  0 {$}
+  262,title OPEN
+  268 YESNO_
+  268,t 0
+  270 type
+  269 analysissend
+  271 which
   error,t 0
+  272 start'
   258,line 11
-  266,title {}
+  266,title OK
+  271,line 41
+  271,title {}
   261,t 0
-  267,line 31
+  267,line 21
   265,t 0
-  261,title TASK
+  261,title MODE
 }
 
 proc analysissend::yyparse {} {
@@ -334,12 +386,16 @@ proc analysissend::yyparse {} {
                     2 { AnalysisSendCmdEntry $2 }
                     3 { AnalysisSendCmdMessage $2 $3 }
                     4 { ProcessSendCmdGet ime task }
-                    5 { AnalysisSendCmdTask }
-                    6 { ProcessSendCmdGet ime lock }
-                    7 { set _ ok }
+                    5 { AnalysisSendCmdFileDialog $2 }
+                    6 { AnalysisSendCmdTask }
+                    7 { ProcessSendCmdGet ime lock }
                     8 { set _ ok }
-                    9 { set _ okcancel }
-                    10 { set _ yesno }
+                    9 { set _ ok }
+                    10 { set _ okcancel }
+                    11 { set _ yesno }
+                    12 { set _ open }
+                    13 { set _ open }
+                    14 { set _ save }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

@@ -7,7 +7,7 @@ package provide DS9 1.0
 proc Toplevel {w mb style title proc} {
     global ds9
 
-    toplevel $w
+    toplevel $w -class [winfo class $ds9(top)]
 
     wm title $w $title
     wm iconname $w $title
@@ -37,7 +37,7 @@ proc Toplevel {w mb style title proc} {
 proc DialogCreate {w title varname} {
     global ds9
 
-    toplevel $w
+    toplevel $w -class [winfo class $ds9(top)]
     switch $ds9(wm) {
 	x11 -
 	win32 {}

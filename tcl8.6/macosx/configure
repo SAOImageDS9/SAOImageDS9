@@ -683,6 +683,7 @@ LD_SEARCH_FLAGS
 CC_SEARCH_FLAGS
 LDFLAGS_OPTIMIZE
 LDFLAGS_DEBUG
+CFLAGS_NOLTO
 CFLAGS_WARNING
 CFLAGS_OPTIMIZE
 CFLAGS_DEBUG
@@ -699,6 +700,7 @@ ZLIB_INCLUDE
 ZLIB_SRCS
 ZLIB_OBJS
 TCLSH_PROG
+SHARED_BUILD
 TCL_THREADS
 EGREP
 GREP
@@ -2377,7 +2379,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 TCL_VERSION=8.6
 TCL_MAJOR_VERSION=8
 TCL_MINOR_VERSION=6
-TCL_PATCH_LEVEL=".11"
+TCL_PATCH_LEVEL=".12"
 VERSION=${TCL_VERSION}
 
 EXTRA_INSTALL_BINARIES=${EXTRA_INSTALL_BINARIES:-"@:"}
@@ -4553,6 +4555,7 @@ $as_echo "#define STATIC_BUILD 1" >>confdefs.h
     fi
 
 
+
 #--------------------------------------------------------------------
 # Look for a native installed tclsh binary (if available)
 # If one cannot be found then use the binary we build (fails for
@@ -5650,7 +5653,7 @@ fi
 
 fi
 	    ;;
-	Linux*|GNU*|NetBSD-Debian)
+	Linux*|GNU*|NetBSD-Debian|DragonFly-*|FreeBSD-*)
 	    SHLIB_CFLAGS="-fPIC"
 	    SHLIB_SUFFIX=".so"
 
@@ -5664,6 +5667,19 @@ fi
 	    DL_OBJS="tclLoadDl.o"
 	    DL_LIBS="-ldl"
 	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
+
+	    case $system in
+	    DragonFly-*|FreeBSD-*)
+		if test "${TCL_THREADS}" = "1"; then :
+
+		    # The -pthread needs to go in the LDFLAGS, not LIBS
+		    LIBS=`echo $LIBS | sed s/-pthread//`
+		    CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+		    LDFLAGS="$LDFLAGS $PTHREAD_LIBS"
+fi
+	    ;;
+            esac
+
 	    if test $doRpath = yes; then :
 
 		CC_SEARCH_FLAGS='"-Wl,-rpath,${LIB_RUNTIME_DIR}"'
@@ -5813,36 +5829,6 @@ fi
 	    	LDFLAGS="$LDFLAGS -pthread"
 
 fi
-	    ;;
-	DragonFly-*|FreeBSD-*)
-	    # This configuration from FreeBSD Ports.
-	    SHLIB_CFLAGS="-fPIC"
-	    SHLIB_LD="${CC} -shared"
-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -Wl,-soname,\$@"
-	    SHLIB_SUFFIX=".so"
-	    DL_OBJS="tclLoadDl.o"
-	    DL_LIBS=""
-	    if test $doRpath = yes; then :
-
-		CC_SEARCH_FLAGS='"-Wl,-rpath,${LIB_RUNTIME_DIR}"'
-		LD_SEARCH_FLAGS='"-Wl,-rpath,${LIB_RUNTIME_DIR}"'
-fi
-	    if test "${TCL_THREADS}" = "1"; then :
-
-		# The -pthread needs to go in the LDFLAGS, not LIBS
-		LIBS=`echo $LIBS | sed s/-pthread//`
-		CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
-		LDFLAGS="$LDFLAGS $PTHREAD_LIBS"
-fi
-	    case $system in
-	    FreeBSD-3.*)
-		# Version numbers are dot-stripped by system policy.
-		TCL_TRIM_DOTS=`echo ${VERSION} | tr -d .`
-		UNSHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}.a'
-		SHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}.so'
-		TCL_LIB_VERSIONS_OK=nodots
-		;;
-	    esac
 	    ;;
 	Darwin-*)
 	    CFLAGS_OPTIMIZE="-Os"
@@ -6623,9 +6609,11 @@ fi
 	    AIX-*) ;;
 	    BSD/OS*) ;;
 	    CYGWIN_*|MINGW32_*|MSYS_*) ;;
-	    IRIX*) ;;
-	    NetBSD-*|DragonFly-*|FreeBSD-*|OpenBSD-*) ;;
+	    HP-UX*) ;;
 	    Darwin-*) ;;
+	    IRIX*) ;;
+	    NetBSD-*|OpenBSD-*) ;;
+	    OSF1-*) ;;
 	    SCO_SV-3.2*) ;;
 	    *) SHLIB_CFLAGS="-fPIC" ;;
 	esac
@@ -6740,10 +6728,44 @@ $as_echo "$tcl_cv_cast_to_union" >&6; }
 $as_echo "#define HAVE_CAST_TO_UNION 1" >>confdefs.h
 
 	fi
+	hold_cflags=$CFLAGS; CFLAGS="$CFLAGS -fno-lto"
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for working -fno-lto" >&5
+$as_echo_n "checking for working -fno-lto... " >&6; }
+if ${ac_cv_nolto+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  ac_cv_nolto=yes
+else
+  ac_cv_nolto=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_nolto" >&5
+$as_echo "$ac_cv_nolto" >&6; }
+	CFLAGS=$hold_cflags
+	if test "$ac_cv_nolto" = "yes" ; then
+	    CFLAGS_NOLTO="-fno-lto"
+	else
+	    CFLAGS_NOLTO=""
+	fi
 
     # FIXME: This subst was left in only because the TCL_DL_LIBS
     # entry in tclConfig.sh uses it. It is not clear why someone
     # would use TCL_DL_LIBS instead of TCL_LIBS.
+
 
 
 
@@ -8589,7 +8611,7 @@ else
 int
 main ()
 {
-struct tm tm; tm.tm_tzadj;
+struct tm tm; (void)tm.tm_tzadj;
   ;
   return 0;
 }

@@ -171,7 +171,7 @@ catalog : NEW_ {CATTool}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SORT_ sort
  | SYMBOL_ {ProcessCmdCVAR row 1} symbol
- | SYMBOL_ INT_ {CatalogCmdCat row $2} symbol
+ | SYMBOL_ INT_ {CatalogCmdCVAR row $2} symbol
  | SYSTEM_ wcssys {CatalogCmdSystem $2}
  | UPDATE_ {ProcessCmdCVAR0 TBLUpdate}
  | 'x' STRING_ {ProcessCmdCVAR colx $2 CATGenerate}

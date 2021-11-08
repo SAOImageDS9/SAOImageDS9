@@ -3791,7 +3791,7 @@ proc cat::yyparse {} {
                     113 { CatalogCmdSkyframe $2 }
                     114 { ProcessCmdCVAR skyformat $2 }
                     116 { ProcessCmdCVAR row 1 }
-                    118 { CatalogCmdCat row $2 }
+                    118 { CatalogCmdCVAR row $2 }
                     120 { CatalogCmdSystem $2 }
                     121 { ProcessCmdCVAR0 TBLUpdate }
                     122 { ProcessCmdCVAR colx $2 CATGenerate }

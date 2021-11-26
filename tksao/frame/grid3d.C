@@ -163,7 +163,7 @@ void Grid3d::doit(RenderMode rm)
   astGrid3dPtr = this;
   renderMode_ = rm;
 
-  AstPlot3D* plot = astPlot3D(frameSet, gbox, pbox, option_);
+  AstPlot3D* plot = astPlot3D(frameSet, gbox, pbox, option_, "");
   astGrid(plot);
 
   astEnd; // now, clean up memory
@@ -181,5 +181,5 @@ void Grid3d::matrixMap(void* frameSet, Matrix3d& mx, const char* str)
   AstShiftMap* sm = astShiftMap(3,tt,"");
   AstCmpMap* cmp = astCmpMap(mm,sm,1,"");
 
-  astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(3, str));
+  astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(3, str, ""));
 }

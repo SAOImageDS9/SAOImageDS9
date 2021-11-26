@@ -63,7 +63,7 @@ void wcsFormat(AstFrameSet* ast, int id, const char* format)
   }
   ostringstream str;
   str << "Format(" << id << ")=" << format << ends;
-  astSet(ast, str.str().c_str());
+  astSet(ast, str.str().c_str(), "");
 }
 
 Vector wcsTran(Context* context, AstFrameSet* ast,

@@ -197,7 +197,7 @@ int CBGrid::doit(RenderMode rm)
     pbox[3] = 0;
   }
 
-  plot = astPlot(frameSet, gbox, pbox, option_);
+  plot = astPlot(frameSet, gbox, pbox, option_, "");
 
   // and now create astGrid
   astGrid2dPtr = this;

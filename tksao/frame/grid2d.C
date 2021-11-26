@@ -164,7 +164,7 @@ void Grid2d::doit(RenderMode rm)
   // and now create astGrid
   astGrid2dPtr = this;
 
-  AstPlot* plot = astPlot(frameSet, gbox, pbox, option_);
+  AstPlot* plot = astPlot(frameSet, gbox, pbox, option_, "");
   astGrid(plot);
 
   astEnd; // now, clean up memory
@@ -181,5 +181,5 @@ void Grid2d::matrixMap(void* frameSet, Matrix& mx, const char* str)
   AstShiftMap* sm = astShiftMap(2, tt, "");
   AstCmpMap* cmp = astCmpMap(mm, sm, 1, "");
 
-  astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(2, str));
+  astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(2, str, ""));
 }

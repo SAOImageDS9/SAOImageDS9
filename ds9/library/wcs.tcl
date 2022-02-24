@@ -1238,6 +1238,9 @@ proc WCSCmdSaveFn {ext fn} {
     
     WCSToVar [$current(frame) get fits header wcs $ext]
     WCSSaveFile $fn
+
+    # reset in case of dialog active
+    UpdateWCSVars
 }
 
 proc ProcessSendWCSCmd {proc id param {sock {}} {fn {}}} {

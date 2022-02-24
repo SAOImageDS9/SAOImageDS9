@@ -44,7 +44,7 @@ wcs : OPEN_ {WCSDialog}
  | SKYFORMAT_ skyformat {ProcessCmdSet wcs skyformat $2 UpdateWCS}
  | ALIGN_ yesno {ProcessCmdSet current align $2 AlignWCSFrame}
  | LOAD_ STRING_ {WCSCmdLoadFn replace 1 $2}
- | SAVE_ STRING_ {WCSSaveFile $2}
+ | SAVE_ save
  | RESET_ {WCSCmdReset 1}
  # backward compatible
  | RESET_ INT_ {WCSCmdReset $2}
@@ -52,6 +52,10 @@ wcs : OPEN_ {WCSDialog}
  | REPLACE_ replace
  # backward compatible
  | APPEND_ append
+ ;
+
+save : STRING_ {WCSCmdSaveFn 1 $1}
+ | INT_ STRING_ {WCSCmdSaveFn $1 $2}
  ;
 
 replace : {WCSCmdLoad replace 1}

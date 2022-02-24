@@ -72,9 +72,10 @@ array set wcs::table {
   30:300,target 37
   29:300,target 36
   27:0 reduce
+  75:300,target 71
   47:267 shift
   47:268 shift
-  42:319 goto
+  42:320 goto
   48:0 reduce
   47:270 shift
   47:269 shift
@@ -89,9 +90,9 @@ array set wcs::table {
   69:0 reduce
   47:273 shift
   18:300,target 25
-  64:300,target 74
+  64:300,target 76
   47:274 shift
-  68:300 reduce
+  68:300 shift
   47:275 shift
   0:275,target 13
   6:0,target 13
@@ -99,8 +100,9 @@ array set wcs::table {
   38:299,target 60
   2:0 reduce
   47:277 shift
+  72:0,target 54
   47:278 shift
-  64:0,target 63
+  64:0,target 65
   47:280 shift
   47:279 shift
   56:0,target 6
@@ -115,6 +117,7 @@ array set wcs::table {
   9:300,target 16
   47:283 shift
   41:0,target 47
+  77:300 reduce
   47:284 shift
   33:0,target 40
   47:285 shift
@@ -129,23 +132,24 @@ array set wcs::table {
   10:0,target 17
   47:288 shift
   47:289 shift
-  46:315,target 70
+  46:315,target 72
   38:299 shift
   0:273,target 11
   47:288,target 26
   31:300,target 38
+  76:300,target 67
   17:300 reduce
   21:0 reduce
   47:267,target 5
   56:300 reduce
   42:0 reduce
-  38:320 goto
   0:302,target 38
   0:292,target 30
   19:300,target 26
   20:300,target 27
-  65:300,target 64
+  65:300,target 66
   63:0 reduce
+  38:321 goto
   6:300 reduce
   47:313 goto
   26:300 reduce
@@ -158,18 +162,19 @@ array set wcs::table {
   38:0 reduce
   35:300 reduce
   43:300,target 58
-  74:300 reduce
+  74:300 shift
   60:0 reduce
   59:0 reduce
   0:289,target 27
   0:290,target 28
   3:0,target 10
-  68:0,target 57
-  61:0,target 68
+  76:0,target 67
+  61:0,target 70
   53:0,target 2
   44:300 shift
   32:300,target 39
   0:268,target 6
+  77:300,target 63
   47:284,target 22
   45:296,target 34
   37:0,target 1
@@ -186,8 +191,10 @@ array set wcs::table {
   66:300,target 60
   56:0 reduce
   53:300 reduce
+  44:299 shift
   0:287,target 25
-  47:313,target 71
+  47:313,target 73
+  77:0 reduce
   3:300 reduce
   10:300,target 17
   55:300,target 3
@@ -201,10 +208,11 @@ array set wcs::table {
   45:294,target 32
   0:263 shift
   0:264 shift
+  44:319 goto
   32:0 reduce
   0:265 shift
   0:316,target 51
-  44:300,target 68
+  44:300,target 69
   0:266 shift
   0:267 shift
   1:300,target 8
@@ -215,9 +223,7 @@ array set wcs::table {
   0:269 shift
   0:271 shift
   0:285,target 23
-  74:0 reduce
   71:300 reduce
-  38:320,target 62
   0:272 shift
   33:300,target 40
   0:273 shift
@@ -247,13 +253,13 @@ array set wcs::table {
   0:281 shift
   37:262 shift
   0:282 shift
-  73:0,target 69
+  73:0,target 50
   50:0 reduce
   49:0 reduce
   42:299,target 64
   0:283 shift
   11:300 reduce
-  65:0,target 64
+  65:0,target 66
   0:284 shift
   57:0,target 4
   0:285 shift
@@ -266,7 +272,7 @@ array set wcs::table {
   0:286 shift
   11:300,target 18
   56:300,target 6
-  42:0,target 62
+  42:0,target 64
   0:287 shift
   34:0,target 41
   0:288 shift
@@ -314,7 +320,7 @@ array set wcs::table {
   0:315 goto
   0:316 goto
   23:300,target 30
-  68:300,target 57
+  68:300,target 77
   47:275,target 13
   0:318 goto
   22:0 reduce
@@ -323,6 +329,7 @@ array set wcs::table {
   43:0 reduce
   0:310,target 46
   0:309,target 45
+  76:300 reduce
   12:300,target 19
   64:0 reduce
   57:300,target 4
@@ -330,10 +337,11 @@ array set wcs::table {
   0:278,target 16
   4:0,target 11
   37:312 goto
+  77:0,target 63
   3:300,target 10
   18:0 reduce
-  70:0,target 54
-  69:0,target 52
+  70:0,target 57
+  69:0,target 62
   47:273,target 11
   16:300 reduce
   62:0,target 61
@@ -344,7 +352,7 @@ array set wcs::table {
   46:298 shift
   0:307,target 43
   0:297,target 35
-  38:0,target 66
+  38:0,target 68
   35:300,target 42
   61:0 reduce
   31:0,target 38
@@ -354,13 +362,14 @@ array set wcs::table {
   25:300 reduce
   0:276,target 14
   46:315 goto
-  45:314,target 69
+  45:314,target 71
   24:300,target 31
-  70:300,target 54
-  69:300,target 52
+  70:300,target 57
+  69:300,target 62
   64:300 shift
-  52:317,target 72
+  52:317,target 74
   15:0 reduce
+  44:299,target 68
   47:271,target 9
   36:0 reduce
   34:300 reduce
@@ -370,13 +379,14 @@ array set wcs::table {
   0:295,target 33
   57:0 reduce
   73:300 reduce
+  78:0 reduce
   0:274,target 12
   47:289,target 27
   43:300 reduce
   4:300,target 11
   12:0 reduce
   47:268,target 6
-  42:319,target 66
+  42:320,target 66
   33:0 reduce
   36:300,target 43
   13:300 reduce
@@ -390,8 +400,7 @@ array set wcs::table {
   1:0,target 8
   25:300,target 32
   2:300 reduce
-  74:0,target 65
-  71:300,target 50
+  71:300,target 52
   0:272,target 10
   66:0,target 60
   47:287,target 25
@@ -405,7 +414,7 @@ array set wcs::table {
   30:0 reduce
   29:0 reduce
   14:300,target 21
-  60:300,target 73
+  60:300,target 75
   59:300,target 55
   47:266,target 4
   27:0,target 34
@@ -416,6 +425,7 @@ array set wcs::table {
   31:300 reduce
   0:301,target 37
   0:291,target 29
+  72:0 reduce
   70:300 reduce
   69:300 reduce
   52:317 goto
@@ -432,9 +442,8 @@ array set wcs::table {
   47:264,target 2
   10:300 reduce
   0:288,target 26
-  68:0 reduce
   26:300,target 33
-  72:300,target 75
+  72:300,target 54
   48:300 reduce
   1:0 reduce
   0:267,target 5
@@ -442,23 +451,26 @@ array set wcs::table {
   45:295,target 33
   15:300,target 22
   18:300 reduce
-  61:300,target 68
+  61:300,target 70
   23:0 reduce
   57:300 reduce
   5:0,target 12
+  78:0,target 46
   7:300 reduce
-  71:0,target 50
+  71:0,target 52
   65:0 reduce
   50:300,target 53
   49:300,target 51
   0:286,target 24
   63:0,target 56
+  38:321,target 62
   27:300 reduce
   6:300,target 13
   55:0,target 3
   66:300 reduce
   46:297,target 35
   39:0,target 48
+  44:319,target 70
   32:0,target 39
   0:265,target 3
   47:281,target 19
@@ -471,8 +483,9 @@ array set wcs::table {
   36:300 reduce
   0:315,target 50
   41:0 reduce
+  75:300 reduce
   27:300,target 34
-  73:300,target 69
+  73:300,target 50
   62:0 reduce
   0:284,target 22
   45:290 shift
@@ -507,19 +520,20 @@ array set wcs::table {
   13:0 reduce
   47:276,target 14
   2:0,target 9
-  75:0,target 46
+  75:0,target 71
   34:0 reduce
   67:0,target 59
   28:300,target 35
   0:311,target 47
-  74:300,target 65
-  60:0,target 67
+  74:300,target 78
+  60:0,target 69
   59:0,target 55
   33:300 reduce
   55:0 reduce
   52:0,target 44
-  72:300 shift
+  72:300 reduce
   36:0,target 43
+  76:0 reduce
   37:260,target 56
   37:259,target 55
   28:0,target 35
@@ -558,14 +572,15 @@ array set wcs::rules {
   28,l 313
   50,l 318
   49,l 318
+  71,l 321
   3,l 312
   25,l 313
   46,l 316
   67,l 320
-  0,l 321
+  0,l 322
   22,l 313
   43,l 315
-  64,l 319
+  64,l 320
   18,l 313
   40,l 314
   39,l 314
@@ -583,11 +598,11 @@ array set wcs::rules {
   4,l 312
   26,l 313
   47,l 318
-  68,l 320
+  68,l 321
   1,l 312
   23,l 313
   44,l 316
-  65,l 319
+  65,l 320
   19,l 313
   20,l 313
   41,l 314
@@ -605,7 +620,8 @@ array set wcs::rules {
   5,l 312
   27,l 313
   48,l 318
-  69,l 320
+  70,l 321
+  69,l 321
   2,l 312
   24,l 313
   45,l 317
@@ -623,25 +639,26 @@ array set wcs::rules {
 }
 
 array set wcs::rules {
-  63,dc 1
+  63,dc 2
   12,dc 1
   26,dc 1
   3,dc 1
   41,dc 1
   55,dc 2
-  69,dc 2
+  70,dc 1
+  69,dc 1
   18,dc 1
   33,dc 1
   9,dc 1
   47,dc 1
-  62,dc 0
+  62,dc 1
   11,dc 1
   25,dc 1
   2,dc 1
   40,dc 1
   39,dc 1
   54,dc 2
-  68,dc 1
+  68,dc 0
   17,dc 1
   32,dc 1
   8,dc 1
@@ -652,7 +669,7 @@ array set wcs::rules {
   1,dc 0
   38,dc 1
   53,dc 1
-  67,dc 1
+  67,dc 2
   16,dc 1
   31,dc 1
   7,dc 1
@@ -663,7 +680,7 @@ array set wcs::rules {
   0,dc 1
   37,dc 1
   52,dc 2
-  66,dc 0
+  66,dc 1
   15,dc 1
   29,dc 1
   30,dc 1
@@ -673,7 +690,7 @@ array set wcs::rules {
   22,dc 1
   36,dc 1
   51,dc 1
-  65,dc 2
+  65,dc 1
   14,dc 1
   28,dc 1
   5,dc 1
@@ -683,12 +700,13 @@ array set wcs::rules {
   35,dc 1
   50,dc 2
   49,dc 1
-  64,dc 1
+  64,dc 0
   13,dc 1
   27,dc 1
   4,dc 1
   42,dc 1
   56,dc 2
+  71,dc 2
   19,dc 1
   20,dc 1
   34,dc 1
@@ -708,7 +726,8 @@ array set wcs::rules {
   21,line 143
   17,line 139
   14,line 136
-  69,line 204
+  70,line 207
+  69,line 206
   11,line 133
   66,line 201
   63,line 196
@@ -735,9 +754,9 @@ array set wcs::rules {
   20,line 142
   16,line 138
   13,line 135
-  68,line 203
+  68,line 205
   10,line 132
-  65,line 198
+  65,line 200
   62,line 195
   58,line 187
   55,line 183
@@ -757,9 +776,10 @@ array set wcs::rules {
   45,e 1
   18,line 140
   15,line 137
+  71,line 208
   12,line 134
   67,line 202
-  64,line 197
+  64,line 199
   61,line 192
   57,line 185
   54,line 182
@@ -775,8 +795,8 @@ array set wcs::lr1_table {
   36 {{43 {0 300} 1}}
   33,trans {}
   37 {{55 {0 300} 1} {1 {0 300} 0} {2 {0 300} 0} {3 {0 300} 0} {4 {0 300} 0} {5 {0 300} 0} {6 {0 300} 0} {7 {0 300} 0}}
-  52,trans {{317 72}}
-  38 {{61 {0 300} 1} {66 {0 300} 0} {67 {0 300} 0} {68 {0 300} 0} {69 {0 300} 0}}
+  52,trans {{317 74}}
+  38 {{61 {0 300} 1} {68 {0 300} 0} {69 {0 300} 0} {70 {0 300} 0} {71 {0 300} 0}}
   71,trans {}
   39 {{48 {0 300} 1}}
   40 {{56 {0 300} 1}}
@@ -784,15 +804,15 @@ array set wcs::lr1_table {
   1,trans {}
   41 {{47 {0 300} 1}}
   37,trans {{257 53} {258 54} {259 55} {260 56} {261 57} {262 58} {312 59}}
-  42 {{60 {0 300} 1} {62 {0 300} 0} {63 {0 300} 0} {64 {0 300} 0} {65 {0 300} 0}}
+  42 {{60 {0 300} 1} {64 {0 300} 0} {65 {0 300} 0} {66 {0 300} 0} {67 {0 300} 0}}
   56,trans {}
   43 {{58 {0 300} 1} {59 {0 300} 1}}
   75,trans {}
-  44 {{57 {0 300} 1}}
+  44 {{57 {0 300} 1} {62 {0 300} 0} {63 {0 300} 0}}
   23,trans {}
   5,trans {}
   45 {{52 {0 300} 1} {35 {0 300} 0} {36 {0 300} 0} {37 {0 300} 0} {38 {0 300} 0} {39 {0 300} 0} {40 {0 300} 0} {41 {0 300} 0}}
-  42,trans {{299 64} {300 65} {319 66}}
+  42,trans {{299 64} {300 65} {320 66}}
   46 {{54 {0 300} 1} {42 {0 300} 0} {43 {0 300} 0}}
   61,trans {}
   47 {{50 {0 300} 1} {8 {0 300} 0} {9 {0 300} 0} {10 {0 300} 0} {11 {0 300} 0} {12 {0 300} 0} {13 {0 300} 0} {14 {0 300} 0} {15 {0 300} 0} {16 {0 300} 0} {17 {0 300} 0} {18 {0 300} 0} {19 {0 300} 0} {20 {0 300} 0} {21 {0 300} 0} {22 {0 300} 0} {23 {0 300} 0} {24 {0 300} 0} {25 {0 300} 0} {26 {0 300} 0} {27 {0 300} 0} {28 {0 300} 0} {29 {0 300} 0} {30 {0 300} 0} {31 {0 300} 0} {32 {0 300} 0} {33 {0 300} 0} {34 {0 300} 0}}
@@ -801,7 +821,7 @@ array set wcs::lr1_table {
   9,trans {}
   50 {{53 {0 300} 1}}
   49 {{51 {0 300} 1}}
-  46,trans {{297 35} {298 36} {315 70}}
+  46,trans {{297 35} {298 36} {315 72}}
   51 {{0 0 1}}
   65,trans {}
   52 {{44 0 1} {46 0 1} {45 300 0}}
@@ -820,53 +840,58 @@ array set wcs::lr1_table {
   58 {{7 {0 300} 1}}
   36,trans {}
   55,trans {}
-  60 {{67 {0 300} 1} {69 {0 300} 1}}
+  60 {{69 {0 300} 1} {71 {0 300} 1}}
   59 {{55 {0 300} 2}}
-  74,trans {}
-  61 {{68 {0 300} 1}}
+  74,trans {{300 78}}
+  61 {{70 {0 300} 1}}
   62 {{61 {0 300} 2}}
   22,trans {}
   4,trans {}
   41,trans {}
   63 {{56 {0 300} 2}}
-  60,trans {{300 73}}
+  60,trans {{300 75}}
   59,trans {}
-  64 {{63 {0 300} 1} {65 {0 300} 1}}
-  65 {{64 {0 300} 1}}
+  64 {{65 {0 300} 1} {67 {0 300} 1}}
+  78,trans {}
+  65 {{66 {0 300} 1}}
   66 {{60 {0 300} 2}}
   26,trans {}
   8,trans {}
-  45,trans {{290 28} {291 29} {292 30} {293 31} {294 32} {295 33} {296 34} {314 69}}
+  45,trans {{290 28} {291 29} {292 30} {293 31} {294 32} {295 33} {296 34} {314 71}}
   67 {{59 {0 300} 2}}
-  64,trans {{300 74}}
-  68 {{57 {0 300} 2}}
-  70 {{54 {0 300} 2}}
-  69 {{52 {0 300} 2}}
+  64,trans {{300 76}}
+  68 {{63 {0 300} 1}}
+  70 {{57 {0 300} 2}}
+  69 {{62 {0 300} 1}}
   12,trans {}
-  71 {{50 {0 300} 2}}
+  71 {{52 {0 300} 2}}
   31,trans {}
-  72 {{46 0 2}}
   50,trans {}
   49,trans {}
-  68,trans {}
-  73 {{69 {0 300} 2}}
-  74 {{65 {0 300} 2}}
+  72 {{54 {0 300} 2}}
+  68,trans {{300 77}}
+  73 {{50 {0 300} 2}}
+  74 {{46 0 2}}
   16,trans {}
-  75 {{46 0 3}}
+  75 {{71 {0 300} 2}}
   35,trans {}
+  76 {{67 {0 300} 2}}
   54,trans {}
   73,trans {}
+  77 {{63 {0 300} 2}}
+  78 {{46 0 3}}
   21,trans {}
   3,trans {}
   40,trans {{300 63}}
   39,trans {}
   58,trans {}
   10 {{17 {0 300} 1}}
+  77,trans {}
   11 {{18 {0 300} 1}}
   25,trans {}
   7,trans {}
   12 {{19 {0 300} 1}}
-  44,trans {{300 68}}
+  44,trans {{299 68} {300 69} {319 70}}
   13 {{20 {0 300} 1}}
   63,trans {}
   14 {{21 {0 300} 1}}
@@ -891,7 +916,7 @@ array set wcs::lr1_table {
   53,trans {}
   4 {{11 {0 300} 1}}
   22 {{29 {0 300} 1}}
-  72,trans {{300 75}}
+  72,trans {}
   5 {{12 {0 300} 1}}
   23 {{30 {0 300} 1}}
   20,trans {}
@@ -899,12 +924,13 @@ array set wcs::lr1_table {
   2,trans {}
   6 {{13 {0 300} 1}}
   24 {{31 {0 300} 1}}
-  38,trans {{299 60} {300 61} {320 62}}
+  38,trans {{299 60} {300 61} {321 62}}
   7 {{14 {0 300} 1}}
   25 {{32 {0 300} 1}}
   57,trans {}
   8 {{15 {0 300} 1}}
   26 {{33 {0 300} 1}}
+  76,trans {}
   9 {{16 {0 300} 1}}
   27 {{34 {0 300} 1}}
   24,trans {}
@@ -919,7 +945,7 @@ array set wcs::lr1_table {
   32 {{39 {0 300} 1}}
   28,trans {}
   33 {{40 {0 300} 1}}
-  47,trans {{263 1} {264 2} {265 3} {266 4} {267 5} {268 6} {269 7} {270 8} {271 9} {272 10} {273 11} {274 12} {275 13} {276 14} {277 15} {278 16} {279 17} {280 18} {281 19} {282 20} {283 21} {284 22} {285 23} {286 24} {287 25} {288 26} {289 27} {313 71}}
+  47,trans {{263 1} {264 2} {265 3} {266 4} {267 5} {268 6} {269 7} {270 8} {271 9} {272 10} {273 11} {274 12} {275 13} {276 14} {277 15} {278 16} {279 17} {280 18} {281 19} {282 20} {283 21} {284 22} {285 23} {286 24} {287 25} {288 26} {289 27} {313 73}}
   34 {{41 {0 300} 1}}
 }
 
@@ -973,11 +999,12 @@ array set wcs::token_id_table {
   283,title WCST
   318 wcs
   312,title {}
-  320 append
-  319 replace
+  320 replace
+  319 save
   278,line 29
-  321 start'
+  321 append
   error,line 120
+  322 start'
   258,t 0
   275,line 26
   279,t 0
@@ -1005,7 +1032,7 @@ array set wcs::token_id_table {
   273,t 0
   294,t 0
   304,t 0
-  321,line 205
+  321,line 204
   317,line 171
   261,title TRUE
   279,title WCSP
@@ -1017,6 +1044,7 @@ array set wcs::token_id_table {
   314,line 157
   291,t 0
   301,t 0
+  322,t 1
   311,line 69
   307,line 65
   266,t 0
@@ -1070,7 +1098,8 @@ array set wcs::token_id_table {
   274,title WCSK
   293,title J2000
   303,title CLOSE
-  320,line 200
+  322,title {}
+  320,line 198
   319,line 194
   error error
   271,t 0
@@ -1139,6 +1168,7 @@ array set wcs::token_id_table {
   296,t 0
   260,line 10
   259,line 9
+  322,line 209
   272,t 0
   267,title WCSD
   257 YES_
@@ -1340,17 +1370,18 @@ proc wcs::yyparse {} {
                     54 { ProcessCmdSet wcs skyformat $2 UpdateWCS }
                     55 { ProcessCmdSet current align $2 AlignWCSFrame }
                     56 { WCSCmdLoadFn replace 1 $2 }
-                    57 { WCSSaveFile $2 }
                     58 { WCSCmdReset 1 }
                     59 { WCSCmdReset $2 }
-                    62 { WCSCmdLoad replace 1 }
-                    63 { WCSCmdLoad replace $1 }
-                    64 { WCSCmdLoadFn replace 1 $1 }
-                    65 { WCSCmdLoadFn replace $1 $2 }
-                    66 { WCSCmdLoad append 1 }
-                    67 { WCSCmdLoad append $1 }
-                    68 { WCSCmdLoadFn append 1 $1 }
-                    69 { WCSCmdLoadFn append $1 $2 }
+                    62 { WCSCmdSaveFn 1 $1 }
+                    63 { WCSCmdSaveFn $1 $2 }
+                    64 { WCSCmdLoad replace 1 }
+                    65 { WCSCmdLoad replace $1 }
+                    66 { WCSCmdLoadFn replace 1 $1 }
+                    67 { WCSCmdLoadFn replace $1 $2 }
+                    68 { WCSCmdLoad append 1 }
+                    69 { WCSCmdLoad append $1 }
+                    70 { WCSCmdLoadFn append 1 $1 }
+                    71 { WCSCmdLoadFn append $1 $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

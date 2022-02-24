@@ -1233,6 +1233,13 @@ proc WCSCmdLoadFn {cmd ext fn} {
     UpdateWCSDialog
 }
 
+proc WCSCmdSaveFn {ext fn} {
+    global current
+    
+    WCSToVar [$current(frame) get fits header wcs $ext]
+    WCSSaveFile $fn
+}
+
 proc ProcessSendWCSCmd {proc id param {sock {}} {fn {}}} {
     global parse
     set parse(proc) $proc
@@ -1258,4 +1265,3 @@ proc ProcessSendAlignCmd {proc id param {sock {}} {fn {}}} {
     global current
     $proc $id [ToYesNo $current(align)]
 }
-

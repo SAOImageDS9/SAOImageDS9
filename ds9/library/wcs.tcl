@@ -131,8 +131,7 @@ proc WCSBackup {ch which fdir rdir} {
 	set rfn $rdir/ds9.wcs
 
 	catch {file delete -force $fn}
-	WCSToVar [$which get fits header wcs 1]
-	WCSSaveFile $fn
+	WCSSaveFile $fn "[$which get fits header wcs 1]"
 	puts $ch "WCSLoadFile $rfn"
 	puts $ch "$which wcs replace text 1 \\\{\[WCSFromVar\]\\\}"
 	puts $ch "RealizeDS9"
@@ -608,20 +607,27 @@ proc WCSDestroyDialog {} {
 proc WCSSaveDialog {} {
     global iwcs
     global dwcs
+    global current
 
     set fn [SaveFileDialog wcsfbox $iwcs(top)]
-    if {$fn != {}} {
-	WCSSaveFile $fn
+    if {$fn == {}} {
+	return
+    }
+    
+    if {$current(frame) != {}} {
+	if {[$current(frame) has fits]} {
+	    WCSSaveFile $fn "[$current(frame) get fits header wcs $dwcs(ext)]"
+	}
     }
 }
 
 # used by backup
-proc WCSSaveFile {fn} {
+proc WCSSaveFile {fn wcs} {
     if {[catch {open $fn w} fp]} {
 	Error "[msgcat::mc {Unable to open file}] $fn: $fp"
 	return
     }
-    puts $fp [WCSFromVar]
+    puts $fp $wcs
     catch {close $fp}
 }
 
@@ -1236,11 +1242,11 @@ proc WCSCmdLoadFn {cmd ext fn} {
 proc WCSCmdSaveFn {ext fn} {
     global current
     
-    WCSToVar [$current(frame) get fits header wcs $ext]
-    WCSSaveFile $fn
-
-    # reset in case of dialog active
-    UpdateWCSVars
+    if {$current(frame) != {}} {
+	if {[$current(frame) has fits]} {
+	    WCSSaveFile $fn "[$current(frame) get fits header wcs $ext]"
+	}
+    }
 }
 
 proc ProcessSendWCSCmd {proc id param {sock {}} {fn {}}} {

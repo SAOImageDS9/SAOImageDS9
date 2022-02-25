@@ -1637,9 +1637,12 @@ void Base::getFitsHeaderWCSCmd(int which)
   // no primary
   FitsImage* rr = findAllFits(which);
   if (rr) {
+    rr->ast2Fits();
+    /*
     char* hh = rr->displayWCS();
     Tcl_AppendResult(interp, hh, NULL);
     delete [] hh;
+    */
   }
   else
     Tcl_AppendResult(interp, "", NULL);

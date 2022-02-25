@@ -1017,6 +1017,7 @@ char* FitsImage::displayPrimary()
   return display(fits_->primary());
 }
 
+/*
 char* FitsImage::displayWCS()
 {
   if (wcsAltHeader_)
@@ -1028,6 +1029,7 @@ char* FitsImage::displayWCS()
   else
     return display(image_->head());
 }
+*/
 
 FitsBound* FitsImage::getDataParams(FrScale::SecMode which)
 {
@@ -3519,7 +3521,39 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
     internalError("Warning: the WCS has no defined inverse. Some functionality may not be available.");
   
   astExport(frameSet);
+  astAnnul(chan);
   astEnd;
 
   return frameSet;
+}
+
+static ostringstream* barfoo =NULL;
+
+void ast2FitsSink(const char* line)
+{
+  if (barfoo)
+    *barfoo << line;
+}
+
+void FitsImage::ast2Fits()
+{
+  // we may have an error, just reset
+  astClearStatus;
+  astBegin;
+
+  ostringstream str;
+  barfoo = &str;
+  
+  // new fitschan
+  AstFitsChan* chan = astFitsChan(NULL, ast2FitsSink, "Encoding=FITS-WCS");
+  if (!astOK || chan == AST__NULL)
+    return;
+
+  astWrite(chan, ast_);
+
+  astAnnul(chan);
+  astEnd;
+
+  barfoo =NULL;
+  Tcl_AppendResult(interp_, str.str().c_str(), NULL);
 }

@@ -165,6 +165,7 @@ class FitsImage {
   int checkWCS(Vector&);
   int checkWCS(Vector3d&);
   AstFrameSet* fits2ast(FitsHead*);  
+  void ast2Fits();
 
   Vector mapLen(const Vector& v, const Matrix& mx);
 
@@ -520,7 +521,7 @@ class FitsImage {
   char* display(FitsHead*);
   char* displayHeader();
   char* displayPrimary();
-  char* displayWCS();
+  //  char* displayWCS();
   FitsHead* head() {return image_->head();}
   char* getKeyword(const char* key) {return fits_->getKeyword(key);}
   int findKeyword(const char* key) {return fits_->find(key);}

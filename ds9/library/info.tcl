@@ -81,13 +81,19 @@ proc CreateInfoPanel {} {
 	set infobox(wcs$ll,sys) "[msgcat::mc {WCS}] $ll"
 	ttk::label $ds9(info).wcsLabel$ll -textvariable infobox(wcs$ll,sys)
 
-	set infobox(wcs$ll,x,nm) [ttk::label $ds9(info).wcsXLabel$ll -text {}]
+	set infobox(wcs$ll,x,nm) \
+	    [ttk::label $ds9(info).wcsXLabel$ll -text {} -width 2 \
+		 -anchor center]
 	ttk::label $ds9(info).wcsXValue$ll -relief groove \
 	    -textvariable infobox(wcs$ll,x) -anchor center
-	set infobox(wcs$ll,y,nm) [ttk::label $ds9(info).wcsYLabel$ll -text {}]
+	set infobox(wcs$ll,y,nm) \
+	    [ttk::label $ds9(info).wcsYLabel$ll -text {} -width 2 \
+		 -anchor center]
 	ttk::label $ds9(info).wcsYValue$ll -relief groove \
 	    -textvariable infobox(wcs$ll,y) -anchor center
-	set infobox(wcs$ll,z,nm) [ttk::label $ds9(info).wcsZLabel$ll -text {}]
+	set infobox(wcs$ll,z,nm) \
+	    [ttk::label $ds9(info).wcsZLabel$ll -text {} -width 2 \
+		 -anchor center]
 	ttk::label $ds9(info).wcsZValue$ll -relief groove \
 	    -textvariable infobox(wcs$ll,z) -anchor center
     }
@@ -306,7 +312,7 @@ proc LayoutFrameInfoBoxVertWCS {which} {
 	if {$which != {} && $view(info,wcs$ll)} {
 	    if {[$which has wcs 3d wcs$ll]} {
 		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
-		    -column 0 -sticky w
+		    -column 0 -sticky ew
 		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
 		    -column 1 -padx 2
 		incr row
@@ -335,7 +341,7 @@ proc LayoutFrameInfoBoxVertImage {which} {
 	    if {$which != {} && $view(info,image)} {
 		if {[$which has fits cube]} {
 		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
-			-column 0 -sticky w
+			-column 0 -sticky ew
 		    grid $ds9(info).imageZValue -row $ds9(info,row,image) \
 			-column 1 -padx 2
 		} else {
@@ -348,7 +354,7 @@ proc LayoutFrameInfoBoxVertImage {which} {
 	3d {
 	    if {$view(info,image)} {
 		grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
-		    -column 0 -sticky w
+		    -column 0 -sticky ew
 		grid $ds9(info).imageZValue -row $ds9(info,row,image) \
 		    -column 1 -padx 2
 	    } else {
@@ -1011,10 +1017,10 @@ proc LayoutInfoPanelVert {} {
 	if {$view(info,wcs$ll)} {
 	    grid $ds9(info).wcsLabel$ll  -row $row -column 1 -sticky ew
 	    incr row
-	    grid $ds9(info).wcsXLabel$ll -row $row -column 0 -sticky e
+	    grid $ds9(info).wcsXLabel$ll -row $row -column 0 -sticky ew
 	    grid $ds9(info).wcsXValue$ll -row $row -column 1 -padx 2
 	    incr row
-	    grid $ds9(info).wcsYLabel$ll -row $row -column 0 -sticky e
+	    grid $ds9(info).wcsYLabel$ll -row $row -column 0 -sticky ew
 	    grid $ds9(info).wcsYValue$ll -row $row -column 1 -padx 2
 	    incr row
 	    set ds9(info,row,wcs$ll) $row

@@ -309,7 +309,7 @@ proc LayoutFrameInfoBoxVertWCS {which} {
 	if {$which != {} && $view(info,wcs$ll)} {
 	    if {[$which has wcs 3d wcs$ll]} {
 		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
-		    -column 0 -sticky e
+		    -column 0
 		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
 		    -column 1 -padx 2
 		incr row
@@ -923,10 +923,10 @@ proc LayoutInfoPanelVert {} {
 
 	grid $ds9(info).minTitle -row $row -column 1 -sticky w
 	incr row
-	grid $ds9(info).minXLabel -row $row -column 0 -sticky e
+	grid $ds9(info).minXLabel -row $row -column 0
 	grid $ds9(info).minXValue -row $row -column 1 -padx 2 -sticky w
 	incr row
-	grid $ds9(info).minYLabel -row $row -column 0 -sticky e
+	grid $ds9(info).minYLabel -row $row -column 0
 	grid $ds9(info).minYValue -row $row -column 1 -padx 2 -sticky w
 	incr row
 	grid $ds9(info).minValue -row $row -column 1 -padx 2 -sticky w
@@ -938,10 +938,10 @@ proc LayoutInfoPanelVert {} {
 
 	grid $ds9(info).maxTitle -row $row -column 1 -sticky w
 	incr row
-	grid $ds9(info).maxXLabel -row $row -column 0 -sticky e
+	grid $ds9(info).maxXLabel -row $row -column 0
 	grid $ds9(info).maxXValue -row $row -column 1 -padx 2 -sticky w
 	incr row
-	grid $ds9(info).maxYLabel -row $row -column 0 -sticky e
+	grid $ds9(info).maxYLabel -row $row -column 0
 	grid $ds9(info).maxYValue -row $row -column 1 -padx 2 -sticky w
 	incr row
 	grid $ds9(info).maxValue -row $row -column 1 -padx 2 -sticky w
@@ -949,12 +949,16 @@ proc LayoutInfoPanelVert {} {
     } else {
 	grid forget $ds9(info).minTitle
 	grid forget $ds9(info).minValue
+	grid forget $ds9(info).minXLabel
 	grid forget $ds9(info).minXValue
+	grid forget $ds9(info).minYLabel
 	grid forget $ds9(info).minYValue
 
 	grid forget $ds9(info).maxTitle
 	grid forget $ds9(info).maxValue
+	grid forget $ds9(info).maxXLabel
 	grid forget $ds9(info).maxXValue
+	grid forget $ds9(info).maxYLabel
 	grid forget $ds9(info).maxYValue
     }
 
@@ -1014,10 +1018,10 @@ proc LayoutInfoPanelVert {} {
 	if {$view(info,wcs$ll)} {
 	    grid $ds9(info).wcsLabel$ll  -row $row -column 1 -sticky ew
 	    incr row
-	    grid $ds9(info).wcsXLabel$ll -row $row -column 0 -sticky e
+	    grid $ds9(info).wcsXLabel$ll -row $row -column 0
 	    grid $ds9(info).wcsXValue$ll -row $row -column 1 -padx 2
 	    incr row
-	    grid $ds9(info).wcsYLabel$ll -row $row -column 0 -sticky e
+	    grid $ds9(info).wcsYLabel$ll -row $row -column 0
 	    grid $ds9(info).wcsYValue$ll -row $row -column 1 -padx 2
 	    incr row
 	    set ds9(info,row,wcs$ll) $row
@@ -1038,10 +1042,10 @@ proc LayoutInfoPanelVert {} {
 
 	grid $ds9(info).detectorTitle  -row $row -column 1 -sticky ew
 	incr row
-	grid $ds9(info).detectorXLabel -row $row -column 0 -sticky e
+	grid $ds9(info).detectorXLabel -row $row -column 0
 	grid $ds9(info).detectorXValue -row $row -column 1 -padx 2
 	incr row
-	grid $ds9(info).detectorYLabel -row $row -column 0 -sticky e
+	grid $ds9(info).detectorYLabel -row $row -column 0
 	grid $ds9(info).detectorYValue -row $row -column 1 -padx 2
 	incr row
 	set ds9(info,row,detector) $row
@@ -1061,10 +1065,10 @@ proc LayoutInfoPanelVert {} {
 
 	grid $ds9(info).amplifierTitle  -row $row -column 1 -sticky ew
 	incr row
-	grid $ds9(info).amplifierXLabel -row $row -column 0 -sticky e
+	grid $ds9(info).amplifierXLabel -row $row -column 0
 	grid $ds9(info).amplifierXValue -row $row -column 1 -padx 2
 	incr row
-	grid $ds9(info).amplifierYLabel -row $row -column 0 -sticky e
+	grid $ds9(info).amplifierYLabel -row $row -column 0
 	grid $ds9(info).amplifierYValue -row $row -column 1 -padx 2
 	incr row
 	set ds9(info,row,amplifier) $row
@@ -1084,10 +1088,10 @@ proc LayoutInfoPanelVert {} {
 
 	grid $ds9(info).physicalTitle  -row $row -column 1 -sticky ew
 	incr row
-	grid $ds9(info).physicalXLabel -row $row -column 0 -sticky e
+	grid $ds9(info).physicalXLabel -row $row -column 0
 	grid $ds9(info).physicalXValue -row $row -column 1 -padx 2
 	incr row
-	grid $ds9(info).physicalYLabel -row $row -column 0 -sticky e
+	grid $ds9(info).physicalYLabel -row $row -column 0
 	grid $ds9(info).physicalYValue -row $row -column 1 -padx 2
 	incr row
 	set ds9(info,row,physical) $row
@@ -1108,10 +1112,10 @@ proc LayoutInfoPanelVert {} {
 
 	grid $ds9(info).imageTitle  -row $row -column 1 -sticky ew
 	incr row
-	grid $ds9(info).imageXLabel -row $row -column 0 -sticky e
+	grid $ds9(info).imageXLabel -row $row -column 0
 	grid $ds9(info).imageXValue -row $row -column 1 -padx 2
 	incr row
-	grid $ds9(info).imageYLabel -row $row -column 0 -sticky e
+	grid $ds9(info).imageYLabel -row $row -column 0
 	grid $ds9(info).imageYValue -row $row -column 1 -padx 2
 	incr row
 	set ds9(info,row,image) $row
@@ -1133,10 +1137,10 @@ proc LayoutInfoPanelVert {} {
 
 	grid $ds9(info).frame -row $row -column 1 -sticky ew
 	incr row
-	grid $ds9(info).zoomtitle -row $row -column 0 -sticky e
+	grid $ds9(info).zoomtitle -row $row -column 0
 	grid $ds9(info).zoomValue -row $row -column 1 -padx 2
 	incr row
-	grid $ds9(info).angleTitle -row $row -column 0 -sticky e
+	grid $ds9(info).angleTitle -row $row -column 0
 	grid $ds9(info).angleValue -row $row -column 1 -padx 2
 	incr row
     } else {

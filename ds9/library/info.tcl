@@ -82,15 +82,15 @@ proc CreateInfoPanel {} {
 	ttk::label $ds9(info).wcsLabel$ll -textvariable infobox(wcs$ll,sys)
 
 	set infobox(wcs$ll,x,nm) \
-	    [ttk::label $ds9(info).wcsXLabel$ll -text {} -width 2 -anchor center]
+	    [ttk::label $ds9(info).wcsXLabel$ll -text {} -width 2]
 	ttk::label $ds9(info).wcsXValue$ll -relief groove \
 	    -textvariable infobox(wcs$ll,x) -anchor center
 	set infobox(wcs$ll,y,nm) \
-	    [ttk::label $ds9(info).wcsYLabel$ll -text {} -width 2 -anchor center]
+	    [ttk::label $ds9(info).wcsYLabel$ll -text {} -width 2]
 	ttk::label $ds9(info).wcsYValue$ll -relief groove \
 	    -textvariable infobox(wcs$ll,y) -anchor center
 	set infobox(wcs$ll,z,nm) \
-	    [ttk::label $ds9(info).wcsZLabel$ll -text {} -width 2 -anchor center]
+	    [ttk::label $ds9(info).wcsZLabel$ll -text {} -width 2]
 	ttk::label $ds9(info).wcsZValue$ll -relief groove \
 	    -textvariable infobox(wcs$ll,z) -anchor center
     }

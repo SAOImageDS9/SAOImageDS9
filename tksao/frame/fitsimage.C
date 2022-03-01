@@ -3532,7 +3532,7 @@ static ostringstream* barfoo =NULL;
 void ast2FitsSink(const char* line)
 {
   if (barfoo)
-    *barfoo << line;
+    *barfoo << line << endl;
 }
 
 void FitsImage::ast2Fits()

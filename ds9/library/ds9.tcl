@@ -515,10 +515,6 @@ if {$ds9(prefs)} {
     LoadPrefs
 }
 
-# set fonts
-SetDefaultFont false
-SetDefaultTextFont false
-
 # we need to set certain variables such as debug, title, language, xpa
 ProcessCommandLineSecond
 
@@ -615,6 +611,11 @@ if {$pds9(xpa)} {
 # and process any command line items
 # we want to see something before any fits files are loaded
 ProcessCommandLine
+
+# set fonts
+# fonts can be set in prefs, commandline, or via backup/restore
+SetDefaultFont false
+SetDefaultTextFont false
 
 # Initialize IIS
 # after command line options to set port/fifo/unix...

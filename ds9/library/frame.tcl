@@ -1297,7 +1297,7 @@ proc MouseWheelFrame {X Y dd} {
 
     set id [$ds9(canvas) find closest $X $Y]
     set which [lindex [$ds9(canvas) gettags $id] 0]
-    if {[string equal -length 5 {Frame} $which]} {
+    if {[regexp {Frame[0-9]+$} $which]} {
 	set orig [$ds9(canvas) coords $which]
 	set x [expr $X-int([lindex $orig 0])]
 	set y [expr $Y-int([lindex $orig 1])]

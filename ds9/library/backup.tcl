@@ -256,6 +256,12 @@ proc Restore {fn} {
 	win32 {set pds9(dialog) native}
     }
 
+    # for older backups, use canvas(width) canvas(height)
+    # to determine window size
+#    if {$vv <= {8.3}} {
+#	$ds9(canvas) configure -width $canvas(width) -height $canvas(height)
+#    }
+
     # return to start dir
     cd $cd
 
@@ -839,6 +845,11 @@ proc BackupGUI {ch} {
     global active
     puts $ch "global active"
     puts $ch "array set active \{ [array get active] \}"
+
+    # set window size
+    global ds9
+    puts $ch "global ds9"
+    puts $ch "wm geometry $ds9(top) [winfo width $ds9(top)]x[winfo height $ds9(top)]"
 }
 
 proc ProcessBackupCmd {varname iname} {

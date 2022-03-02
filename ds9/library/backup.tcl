@@ -246,6 +246,7 @@ proc Restore {fn} {
       foreach ff $ds9(frames) {
 	set cb ${ff}cb
 	$cb colorbar [$ff get colorbar]
+	set current(colorbar) ${current(frame)}cb
       }
     }
 
@@ -255,12 +256,6 @@ proc Restore {fn} {
 	aqua -
 	win32 {set pds9(dialog) native}
     }
-
-    # for older backups, use canvas(width) canvas(height)
-    # to determine window size
-#    if {$vv <= {8.3}} {
-#	$ds9(canvas) configure -width $canvas(width) -height $canvas(height)
-#    }
 
     # return to start dir
     cd $cd

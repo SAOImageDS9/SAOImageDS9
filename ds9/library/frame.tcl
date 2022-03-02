@@ -24,7 +24,6 @@ proc CreateNamedFrame {type} {
     global ds9
 
     CreateNameNumberFrame "Frame$ds9(seq)" $type
-    incr ds9(seq)
 }
 
 proc CreateGotoFrame {num type} {
@@ -33,8 +32,12 @@ proc CreateGotoFrame {num type} {
 
     set which "Frame$num"
     if {[lsearch $ds9(frames) $which]==-1} {
+	set sav $ds9(seq)
+	set ds9(seq) $num
 	CreateNameNumberFrame $which $type
-	set ds9(seq) [expr $num+1]
+	if {$ds9(seq) < $sav} {
+	    set ds9(seq) [expr $sav+1]
+	}
     } else {
 	if {$active($which)==0} {
 	    set active($which) 1
@@ -245,6 +248,9 @@ proc CreateNameNumberFrame {which type} {
     # set to current frame
     set current(frame) $which
     set current(colorbar) ${which}cb
+
+    # next sequence number
+    incr ds9(seq)
 
     DisplayMode
 }

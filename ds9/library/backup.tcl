@@ -256,14 +256,6 @@ proc Restore {fn} {
 	win32 {set pds9(dialog) native}
     }
 
-    # figure out how many frames created
-    # old backup scripts do not incr ds9(seq)	
-    set ss {}
-    foreach ff $ds9(frames) {
-	lappend ss [string range $ff 5 end]
-    }
-    set ds9(seq) [expr [tcl::mathfunc::max {*}$ss]+1]
-
     # return to start dir
     cd $cd
 

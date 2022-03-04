@@ -341,7 +341,7 @@ proc IISCursorKey {sym key xx yy} {
 	default {
 	    if {$key!={}} {
 		set num [string range $which end end]
-		set coord [$which get coordinates $xx $yy physical]
+		set coord [$which get coordinates $xx $yy image]
 		if {$coord == {}} {
 		    switch -- $key {
 			: -

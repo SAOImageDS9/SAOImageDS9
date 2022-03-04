@@ -50,7 +50,7 @@ proc DialogCreate {w title varname} {
     wm iconname $w "$title"
 
     upvar #0 varname var
-    wm protocol $w WM_DELETE_WINDOW "set $varname 1"
+    wm protocol $w WM_DELETE_WINDOW [list set $varname 1]
 
     DialogCenter $w
 }
@@ -77,7 +77,11 @@ proc DialogWait {w varname {focus {}}} {
     catch {grab $w}
     tkwait variable $varname
     catch {grab release $w}
-    focus $old
+
+    # parent window may have been closed
+    if {[winfo exists $old]} {
+	focus $old
+    }
 
     # reset errorInfo
     global errorInfo
@@ -138,7 +142,10 @@ proc EntryDialog {title message size varname} {
     destroy $mb
 
     if {$ed(ok)} {
-	set var $ed(text)
+	# parent window may have been closed
+	if {[info exists $varname]} {
+	    set var $ed(text)
+	}
     }
     
     set rr $ed(ok)

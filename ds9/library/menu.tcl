@@ -600,6 +600,10 @@ proc ColorMenuOther {varname color cmd} {
     global $varname
 
     if {[EntryDialog [msgcat::mc {Color}] [msgcat::mc {Enter Color}] 20 ${varname}($color)]} {
+	# we might have been closed while waiting
+	if {![info exists $varname]} {
+	    return
+	}
 	eval $cmd
     }
 }
@@ -665,6 +669,10 @@ proc FontMenuSize {varname size cmd} {
     global $varname
 
     if {[EntryDialog [msgcat::mc {Font Size}] [msgcat::mc {Enter Font Size}] 20 ${varname}($size)]} {
+	# we might have been closed while waiting
+	if {![info exists $varname]} {
+	    return
+	}
 	eval $cmd
     }
 }

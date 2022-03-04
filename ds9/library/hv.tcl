@@ -408,6 +408,10 @@ proc HVURLDialogCmd {varname} {
 
     set url "$var(url)"
     if {[EntryDialog [msgcat::mc {URL}] [msgcat::mc {Enter URL}] 80 url]} {
+	# we might have been closed while waiting
+	if {![info exists $varname]} {
+	    return
+	}
 	if {[string length $url] == 0} {
 	    return
 	}
@@ -558,6 +562,11 @@ proc HVFindCmd {varname} {
 
     set result "$var(search)"
     if {[EntryDialog [msgcat::mc {Search}] [msgcat::mc {Enter Search Expression}] 40 result]} {
+	# we might have been closed while waiting
+	if {![info exists $varname]} {
+	    return
+	}
+
 	set var(search) "$result"
 	set var(search,start) 0
 	$var(widget) selection clear

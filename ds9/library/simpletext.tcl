@@ -210,6 +210,11 @@ proc SimpleTextFind {varname} {
     $var(text) tag remove sel 1.0 end
     set result "$var(search)"
     if {[EntryDialog [msgcat::mc {Search}] [msgcat::mc {Enter Search Expression}] 40 result]} {
+	# we might have been closed while waiting
+	if {![info exists $varname]} {
+	    return
+	}
+
 	set var(search) "$result"
 	set start [$var(text) search -nocase -count ::roText::cnt \
 		       -regexp -- $result 1.0 end]

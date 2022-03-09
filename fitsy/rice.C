@@ -87,8 +87,8 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
     {
       char* obuf = new char[ocnt];
       if (fits_rdecomp_byte(ibuf, icnt, (unsigned char*)obuf, ocnt, block_)) {
-	internalError("Fitsy++ rice bad inflate result");
-	return 0;
+	//	internalError("Fitsy++ rice bad inflate result");
+	//	return 0;
       }
       for (int kk=kkstart; kk<kkstop; kk++)
 	for (int jj=jjstart; jj<jjstop; jj++)
@@ -127,8 +127,8 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
     {
       int* obuf = new int[ocnt];
       if (fits_rdecomp(ibuf, icnt, (unsigned int*)obuf, ocnt, block_)) {
-	internalError("Fitsy++ rice bad inflate result");
-	return 0;
+	//	internalError("Fitsy++ rice bad inflate result");
+	//	return 0;
       }
       for (int kk=kkstart; kk<kkstop; kk++)
 	for (int jj=jjstart; jj<jjstop; jj++)

@@ -857,6 +857,11 @@ XGetImage(
     int depth = 32, offset = 0, bitmap_pad = 0;
     unsigned int bytes_per_row, size, row, n, m;
 
+    // waj
+    imagePtr = MacOSScreenCapture(display,drawable,x,y,width,height,format);
+    if (imagePtr)
+	return imagePtr;
+
     if (format == ZPixmap) {
 	CGImageRef cgImage;
 	if (width == 0 || height == 0) {

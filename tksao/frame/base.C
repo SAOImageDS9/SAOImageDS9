@@ -1463,7 +1463,7 @@ void Base::updateMagnifier(const Vector& vv)
 
   // do this first
   updateMagnifierMatrices();
-  ximageToPixmapMagnifier();
+  ximageToPixmap(magnifierPixmap, magnifierXImage, Coord::MAGNIFIER);
 
   if (useMagnifierGraphics) {
     // render markers
@@ -1820,11 +1820,6 @@ void Base::ximageToPixmap(Pixmap pixmap, XImage* ximage,
 
   TkPutImage(NULL, 0, display, pixmap, widgetGC, ximage, 
 	     0, 0, 0, 0, ximage->width, ximage->height);
-}
-
-void Base::ximageToPixmapMagnifier()
-{
-  ximageToPixmap(magnifierPixmap, magnifierXImage, Coord::MAGNIFIER);
 }
 
 #ifdef __WIN32

@@ -1183,6 +1183,41 @@ void Frame3dBase::x11Highlite()
   x11Line(vv[3], vv[0], rr[3], threedGC, pixmap);
 }
 
+void Frame3dBase::updateMagnifier()
+{
+  updateMagnifier(magnifierCursor);
+}
+
+void Frame3dBase::updateMagnifier(const Vector& vv)
+{
+  if (!useMagnifier)
+    return;
+  
+  if (!doRender()) {
+    ostringstream str;
+    str << magnifierName << " clear";
+    Tcl_Eval(interp, str.str().c_str());
+    return;
+  }
+
+  // just in case
+  if (!(magnifierXImage && magnifierPixmap))
+    return;
+
+  // vv is in CANVAS coords
+  // save it, we may need it later
+  magnifierCursor = vv;
+
+  // do this first
+  updateMagnifierMatrices();
+  ximageToPixmapMagnifier();
+
+  // notify the magnifier widget
+  ostringstream str;
+  str << magnifierName << " update " << (void*)magnifierPixmap << ends;
+  Tcl_Eval(interp, str.str().c_str());
+}
+
 void Frame3dBase::ximageToPixmapMagnifier()
 {
   if (!basePixmap || !baseXImage || !magnifierPixmap || !magnifierXImage)

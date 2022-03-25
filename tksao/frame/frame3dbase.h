@@ -122,6 +122,8 @@ class Frame3dBase : public Base {
   void updatePannerMatrices();
   void updateMatrices();
   void updatePanner();
+  void updateMagnifier();
+  void updateMagnifier(const Vector&);
 
   void x11Ants3d();
   void x11Line(Vector, Vector, int, GC, Pixmap);

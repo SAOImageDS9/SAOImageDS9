@@ -467,8 +467,8 @@ public:
   void updateCBMarkers(List<Marker>*);
   virtual void updateColorScale() =0;
   virtual void updateGCs();
-  void updateMagnifier();
-  void updateMagnifier(const Vector&);
+  virtual void updateMagnifier();
+  virtual void updateMagnifier(const Vector&);
 
   virtual void updateMatrices();
   virtual void updateMagnifierMatrices();
@@ -504,7 +504,6 @@ public:
   double* xmlDistance(FitsImage*, const char*, int, Coord::CoordSystem, Coord::DistFormat);
   Vector* xmlDistance(FitsImage*, const char*, const char*, int, Coord::CoordSystem, Coord::DistFormat);
   void ximageToPixmap(Pixmap, XImage*, Coord::InternalSystem);
-  virtual void ximageToPixmapMagnifier();
 
   Vector zoom() {return zoom_;}
 

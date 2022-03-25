@@ -676,7 +676,8 @@ CreateCGImageFromDrawableRect(
     }
     if (cg_context) {
 	cg_image = CGBitmapContextCreateImage(cg_context);
-	CGContextRelease(cg_context);
+	// waj
+	// CGContextRelease(cg_context);
     }
     if (cg_image) {
 	result = CGImageCreateWithImageInRect(cg_image, image_rect);

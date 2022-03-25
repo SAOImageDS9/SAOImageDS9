@@ -512,7 +512,7 @@ proc UpdateInfoBoxFrame {which} {
 proc UpdateInfoBox {which x y sys} {
     global debug
     if {$debug(tcl,info)} {
-	puts stderr "UpdateInfoBox $which $sys"
+	puts stderr "UpdateInfoBox $which $x $y $sys"
     }
 
     global ds9

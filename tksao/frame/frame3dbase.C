@@ -1238,8 +1238,19 @@ void Frame3dBase::ximageToPixmapMagnifier()
       Vector vv = Vector(ii,jj)*mm;
 
       if (vv[0] >= 0 && vv[0] < zz[0] && vv[1] >= 0 && vv[1] < zz[1])
-	memcpy(dest, src + ((int)vv[1])*srcBytesPerLine + 
-	       ((int)vv[0])*bytesPerPixel, bytesPerPixel);
+	// kludge: don't know why this is needed
+#if (MAC_OSX_TK && __arm64__)
+	for (int kk=0; kk<4; kk++) {
+	  char* ss = src + ((int)vv[1])*srcBytesPerLine + ((int)vv[0])*bytesPerPixel;
+	  *(dest+0) = *(ss+3);
+	  *(dest+1) = *(ss+2);
+	  *(dest+2) = *(ss+1);
+	  *(dest+3) = *(ss+0);
+	}
+#else
+      memcpy(dest, src + ((int)vv[1])*srcBytesPerLine + 
+	     ((int)vv[0])*bytesPerPixel, bytesPerPixel);
+#endif
       else
 	memcpy(dest, bgTrueColor, bytesPerPixel);
     }

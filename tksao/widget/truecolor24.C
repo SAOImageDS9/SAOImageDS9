@@ -16,10 +16,6 @@ TrueColor24::TrueColor24(Visual* visual)
 #if MAC_OSX_TK
   // macos masks are plain wrong
   ax_ = 0xFF000000;
-  // *** waj ***
-  //  rx_ = 0x00FF0000;
-  //  gx_ = 0x0000FF00;
-  //  bx_ = 0x000000FF;
   rx_ = 0x000000FF;
   gx_ = 0x0000FF00;
   bx_ = 0x00FF0000;

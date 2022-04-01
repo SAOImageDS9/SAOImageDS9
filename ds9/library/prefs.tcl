@@ -471,6 +471,7 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	6.0 {
 	    FixPrefs6.0to6.1 
@@ -486,6 +487,7 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	6.1 -
 	6.1.1 -
@@ -502,6 +504,7 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	6.2 {
 	    FixPrefs6.2to7.0
@@ -515,6 +518,7 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	7.0 -
 	7.0.1 {
@@ -528,6 +532,7 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	7.1 {
 	    FixPrefs7.1to7.2
@@ -539,6 +544,7 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	7.2 {
 	    FixPrefs7.2to7.3
@@ -560,6 +566,7 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	7.4 {
 	    FixPrefs7.4to7.5
@@ -575,28 +582,36 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	7.6 {
 	    FixPrefs7.6to8.0
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	8.0 {
 	    FixPrefs8.0to8.1
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	8.1 {
 	    FixPrefs8.1to8.2
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	8.2 {
 	    FixPrefs8.2to8.3
+	    FixPrefs8.3to8.4
 	}
 	8.3 {
 	    # beta fix
 	    FixPrefs8.3to8.3
+	    FixPrefs8.3to8.4
+	}
+	8.4 {
 	}
     }
 }
@@ -647,6 +662,16 @@ proc FixPrefsVarOld {} {
 	    }
 	}
 	aqua {}
+    }
+}
+
+proc FixPrefs8.3to8.4 {} {
+    global ps
+    switch $ps(resolution) {
+       screen -
+       Screen -
+       SCREEN {set res 96}
+       default {set res $ps(resolution)}
     }
 }
 

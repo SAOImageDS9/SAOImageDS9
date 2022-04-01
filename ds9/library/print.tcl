@@ -110,14 +110,6 @@ proc PostScript {} {
 	}
     }
 
-    # resolution
-    switch $ps(resolution) {
-	screen -
-	Screen -
-	SCREEN {set res 96}
-	default {set res $ps(resolution)}
-    }
-
     # set color specific postscript options
     colorbar postscript level $ps(level)
     colorbar postscript colorspace $ps(color)
@@ -296,8 +288,6 @@ proc PSPrintDialog {which} {
     ttk::menubutton $m -textvariable ed(resolution) -menu $mm
     ThemeMenu $mm
     $mm add radiobutton -label "72" -variable ed(resolution) -value 72
-    $mm add radiobutton -label [msgcat::mc {Screen}] \
-	-variable ed(resolution) -value 96
     $mm add radiobutton -label "96" -variable ed(resolution) -value 96
     $mm add radiobutton -label "144" -variable ed(resolution) -value 144
     $mm add radiobutton -label "150" -variable ed(resolution) -value 150
@@ -396,8 +386,6 @@ proc PrefsDialogPrint {} {
     ttk::menubutton $m -textvariable pps(resolution) -menu $mm
     ThemeMenu $mm
     $mm add radiobutton -label "72" -variable pps(resolution) -value 72
-    $mm add radiobutton -label [msgcat::mc {Screen}] \
-	-variable pps(resolution) -value 96
     $mm add radiobutton -label "96" -variable pps(resolution) -value 96
     $mm add radiobutton -label "144" -variable pps(resolution) -value 144
     $mm add radiobutton -label "150" -variable pps(resolution) -value 150

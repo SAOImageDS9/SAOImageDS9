@@ -44,10 +44,10 @@ FitsHDU::FitsHDU(FitsHead* head)
   for(int i=0; i<naxes_; i++)
     naxis_[i] = head->getInteger(keycat("NAXIS",(i+1)), 0);
 
-  // NOTE: naxis_[1]=0 is legal
   // special case: 1D image
-  //  if (naxis_[0]>0 && naxis_[1]==0)
-  //    naxis_[1] = 1;
+  // NOTE: naxis_[1]=0 is legal 1D image, NAXES=1 NAXIS1=n
+  if (naxes_== 1 && naxis_[0]>0 && naxis_[1]==0)
+    naxis_[1] = 1;
 
   realbytes_ = 0;
   heapbytes_ = head->getInteger("PCOUNT",0);

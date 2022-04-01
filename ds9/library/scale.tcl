@@ -609,19 +609,19 @@ proc ScaleXAxisDialog {} {
 
     switch -- $scale(xaxis) { 
 	full {
-	    set width [expr abs(1.0*($dscale(minmax)-$dscale(minmin))/ \
-				    [$dscale(xdata) length])]
+	    set diff \
+		[expr ($dscale(minmax)-$dscale(minmin))/[$dscale(xdata) length]]
 
-	    $dscale(hist) xaxis configure \
-		-min [expr $dscale(minmin)-$width] \
-		-max [expr $dscale(minmax)+$width]
+	    if {[expr abs($diff)] > 0} {
+		set a [expr $dscale(minmin)-$diff]
+		set b [expr $dscale(minmax)+$diff]
+		$dscale(hist) xaxis configure -min $a -max $b
+	    }
 	}
 	current {
-	    set width [expr abs(1.0*($dscale(max)-$dscale(min))/ \
-				    [$dscale(xdata) length])]
+	    set diff [expr $dscale(max)-$dscale(min)]
 
-	    if {[expr abs($dscale(max)-$dscale(min)) > 0]} {
-		set diff [expr $dscale(max)-$dscale(min)]
+	    if {[expr abs($diff)] > 0} {
 		set per .10
 		set a [expr $dscale(min)-($diff*$per)]
 		set b [expr $dscale(max)+($diff*$per)]

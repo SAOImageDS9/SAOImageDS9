@@ -1511,6 +1511,10 @@ int Context::loadFinish()
 
   if (axesOrder_ != 123)
     reorderAxes();
+  else {
+    iparams.set(0,baxis_[2]);
+    cparams.set(0,baxis_[2]);
+  }
   
   for (int ii=0; ii<FTY_MAXAXES; ii++)
     slice_[ii] =1;

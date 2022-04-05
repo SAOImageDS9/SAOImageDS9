@@ -97,6 +97,19 @@ proc ChangeScaleMode {} {
     }
 }
 
+proc ChangeScaleModeDialog {} {
+    global scale
+
+    set mm $scale(mode)
+    if {![string is double $mm]} {
+	set mm 100
+    }
+    if {[EntryDialog [msgcat::mc {Scale Mode}] [msgcat::mc {Percentage}] 10 mm]} {
+	set scale(mode) $mm
+	ChangeScaleMode
+    }
+}
+
 proc ChangeScaleLimit {} {
     global current
     global scale
@@ -268,6 +281,9 @@ proc ScaleDialog {} {
 	-variable scale(mode) -command ChangeScaleMode -value zmax
     $mb.limit add radiobutton -label [msgcat::mc {User}] \
 	-variable scale(mode) -command ChangeScaleMode -value user
+    $mb.limit add separator
+    $mb.limit add command -label "[msgcat::mc {Other}]..." \
+	-command ChangeScaleModeDialog
 
     ThemeMenu $mb.scope 
     $mb.scope add radiobutton -label [msgcat::mc {Global}] \

@@ -27,7 +27,6 @@ proc ScaleMainMenu {} {
     $ds9(mb).scale add radiobutton \
 	-label [msgcat::mc {Histogram Equalization}] \
 	-variable scale(type) -command ChangeScale -value histequ
-    $ds9(mb).scale add separator
     $ds9(mb).scale add command -label "[msgcat::mc {Log Exponent}]..." \
 	-command ScaleLogDialog
     $ds9(mb).scale add separator
@@ -50,11 +49,13 @@ proc ScaleMainMenu {} {
     $ds9(mb).scale add radiobutton -label {90%} \
 	-variable scale(mode) -command ChangeScaleMode -value 90
     $ds9(mb).scale add radiobutton -label {ZScale} \
-	-variable scale(mode) 	-command ChangeScaleMode -value zscale
+	-variable scale(mode) -command ChangeScaleMode -value zscale
     $ds9(mb).scale add radiobutton -label {ZMax} \
 	-variable scale(mode) -command ChangeScaleMode -value zmax
     $ds9(mb).scale add radiobutton -label [msgcat::mc {User}] \
 	-variable scale(mode) -command ChangeScaleMode -value user
+    $ds9(mb).scale add command -label "[msgcat::mc {Other}]..." \
+	-command ChangeScaleModeDialog
     $ds9(mb).scale add separator
     $ds9(mb).scale add radiobutton -label [msgcat::mc {Global}] \
 	-variable scale(scope) -command ChangeScaleScope -value global
@@ -63,10 +64,10 @@ proc ScaleMainMenu {} {
     $ds9(mb).scale add separator
     $ds9(mb).scale add cascade -label [msgcat::mc {Min Max}] \
 	-menu $ds9(mb).scale.minmax
-    $ds9(mb).scale add command -label {ZScale...} -command ZScaleDialog
     $ds9(mb).scale add separator
     $ds9(mb).scale add checkbutton -label "[msgcat::mc {Use}] DATASEC" \
 	-variable scale(datasec) -command ChangeDATASEC
+    $ds9(mb).scale add command -label {ZScale...} -command ZScaleDialog
     $ds9(mb).scale add separator
     $ds9(mb).scale add command -label "[msgcat::mc {Scale Parameters}]..." \
 	-command ScaleDialog

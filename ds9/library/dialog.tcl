@@ -142,10 +142,7 @@ proc EntryDialog {title message size varname} {
     destroy $mb
 
     if {$ed(ok)} {
-	# parent window may have been closed
-	if {[info exists $varname]} {
-	    set var $ed(text)
-	}
+	set var $ed(text)
     }
     
     set rr $ed(ok)

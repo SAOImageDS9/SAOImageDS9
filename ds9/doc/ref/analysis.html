@@ -109,6 +109,13 @@ $depth</b></p>
 <br>
 <tt>Example:<br>
 &nbsp;&nbsp;&nbsp; echo "$entry(Enter something here)" | $text</tt>
+<p><b>$</b></p>
+<p>Substitute the full path name of the directory where analysis file found.</p>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $dir</tt><br>
+<br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$dir" | $text</tt>
 <p><b>$env</b></p>
 <p>Substitute the value of a shell environment variable.</p>
 <tt>Syntax:<br>
@@ -528,6 +535,11 @@ hmenu Test Basics<br>
 &nbsp;&nbsp;*.fits<br>
 &nbsp;&nbsp;menu<br>
 &nbsp;&nbsp;echo "$xcen $ycen" | $text<br>
+<br>
+&nbsp;&nbsp;Test $dir<br>
+&nbsp;&nbsp;*<br>
+&nbsp;&nbsp;menu<br>
+&nbsp;&nbsp;echo $dir | $text<br>
 <br>
 &nbsp;&nbsp;Test $env<br>
 &nbsp;&nbsp;*<br>

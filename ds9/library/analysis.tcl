@@ -47,7 +47,7 @@ proc ClearAnalysisMenu {} {
     if {$pds9(confirm)} {
 	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Clear External Analysis Commands?}]] != {ok}} {
 	    return
-	}
+ma	}
     }
     ClearAnalysis
 }
@@ -74,6 +74,7 @@ proc ClearAnalysis {} {
 
     for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
 	unset ianalysis(menu,$ii,parent)
+	unset ianalysis(menu,$ii,path)
 	unset ianalysis(menu,$ii,item)
 	unset ianalysis(menu,$ii,template)
 	unset ianalysis(menu,$ii,cmd)
@@ -91,6 +92,7 @@ proc ClearAnalysis {} {
 
     # clear bindings
     for {set ii 0} {$ii<$ianalysis(bind,count)} {incr ii} {
+	unset ianalysis(bind,$ii,path)
 	unset ianalysis(bind,$ii,item)
 	unset ianalysis(bind,$ii,template)
 	unset ianalysis(bind,$ii,cmd)
@@ -125,6 +127,7 @@ proc ClearAnalysis {} {
     for {set ii 0} {$ii<$ianalysis(buttonbar,count)} {incr ii} {
 	for {set jj 0} {$jj<$ianalysis(buttonbar,$ii,count)} {incr jj} {
 	    unset ianalysis(buttonbar,$ii-$jj,button)
+	    unset ianalysis(buttonbar,$ii-$jj,path)
 	    unset ianalysis(buttonbar,$ii-$jj,item)
 	    unset ianalysis(buttonbar,$ii-$jj,template)
 	    unset ianalysis(buttonbar,$ii-$jj,cmd)
@@ -199,7 +202,7 @@ proc ProcessAnalysisFile {fn} {
 	set data [read $ch]
 	close $ch
 
-	ProcessAnalysis data
+	ProcessAnalysis data [file normalize [file dirname $fn]]
 
 	# add directory to path
 	set env(PATH) "[file dirname $fn]:$env(PATH)"
@@ -208,7 +211,7 @@ proc ProcessAnalysisFile {fn} {
     }
 }
 
-proc ProcessAnalysis {varname} {
+proc ProcessAnalysis {varname path} {
     upvar $varname var
 
     global ds9
@@ -277,6 +280,7 @@ proc ProcessAnalysis {varname} {
 
 		    set ii $ianalysis(menu,count)
 		    set ianalysis(menu,$ii,parent) $currentparent
+		    set ianalysis(menu,$ii,path) $path
 		    set ianalysis(menu,$ii,item) $item
 		    set ianalysis(menu,$ii,template) {*}
 		    set ianalysis(menu,$ii,cmd) {help}
@@ -365,6 +369,7 @@ proc ProcessAnalysis {varname} {
 			    set bb [lindex $type 1]
 			    if {$bb != {}} {
 				set ii $ianalysis(bind,count)
+				set ianalysis(bind,$ii,path) $path
 				set ianalysis(bind,$ii,item) "<$bb>"
 				set ianalysis(bind,$ii,template) "$template"
 				set ianalysis(bind,$ii,cmd) "$cmd"
@@ -375,6 +380,7 @@ proc ProcessAnalysis {varname} {
 			web {
 			    set ii $ianalysis(menu,count)
 			    set ianalysis(menu,$ii,parent) $currentparent
+			    set ianalysis(menu,$ii,path) $path
 			    set ianalysis(menu,$ii,item) $item
 			    set ianalysis(menu,$ii,template) "$template"
 			    set ianalysis(menu,$ii,cmd) {web}
@@ -387,6 +393,7 @@ proc ProcessAnalysis {varname} {
 			menu {
 			    set ii $ianalysis(menu,count)
 			    set ianalysis(menu,$ii,parent) $currentparent
+			    set ianalysis(menu,$ii,path) $path
 			    set ianalysis(menu,$ii,item) "$item"
 			    set ianalysis(menu,$ii,template) "$template"
 			    set ianalysis(menu,$ii,cmd) "$cmd"
@@ -403,6 +410,7 @@ proc ProcessAnalysis {varname} {
 			    set jj $ianalysis(buttonbar,$ii,count)
 
 			    set ianalysis(buttonbar,$ii-$jj,button) {}
+			    set ianalysis(buttonbar,$ii-$jj,path) $path
 			    set ianalysis(buttonbar,$ii-$jj,item) "$item"
 			    set ianalysis(buttonbar,$ii-$jj,template) "$template"
 			    set ianalysis(buttonbar,$ii-$jj,cmd) "$cmd"
@@ -656,6 +664,9 @@ proc AnalysisWebDoit {i which frame x y sync} {
     # $regions
     ParseRegionMacro cmd $frame
 
+    # $path
+    ParseDirMacro cmd $ianalysis($which,$i,path)
+
     # $env
     ParseEnvMacro cmd
 
@@ -751,6 +762,9 @@ proc AnalysisTaskDoit {i which frame x y sync} {
 
     # $regions
     ParseRegionMacro cmd $frame
+
+    # $path
+    ParseDirMacro cmd $ianalysis($which,$i,path)
 
     # $env
     ParseEnvMacro cmd
@@ -1529,6 +1543,15 @@ proc SubstRegion {cmdname frame exp type prop sys sky format} {
     }
 }
 
+proc ParseDirMacro {cmdname path} {
+    upvar $cmdname cmd
+
+    set exp {\$dir}
+    if {[regexp $exp $cmd]} {
+	regsub -all $exp $cmd "$path" cmd
+    }
+}
+
 proc ParseEnvMacro {cmdname} {
     upvar $cmdname cmd
     global env
@@ -2046,7 +2069,7 @@ proc AnalysisCmdLoad {} {
     global parse
 
     if {$parse(buf) != {}} {
-	ProcessAnalysis parse(buf)
+	ProcessAnalysis parse(buf) {}
     } elseif {$parse(fn) != {}} {
 	ProcessAnalysisFile $parse(fn)
     }

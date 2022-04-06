@@ -661,6 +661,7 @@
 ::msgcat::mcset cs {Password} 
 ::msgcat::mcset cs {Paste Contours} 
 ::msgcat::mcset cs {Paste} [encoding convertfrom iso8859-2 {Vlo¾it}]
+::msgcat::mcset cs {Percentage} 
 ::msgcat::mcset cs {Physical} [encoding convertfrom iso8859-2 {Fyzické}]
 ::msgcat::mcset cs {Pixel Distribution} 
 ::msgcat::mcset cs {Pixel Size} 

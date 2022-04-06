@@ -661,6 +661,7 @@
 ::msgcat::mcset pt {Password} {Senha}
 ::msgcat::mcset pt {Paste Contours} {Colar Contornos}
 ::msgcat::mcset pt {Paste} {Colar}
+::msgcat::mcset pt {Percentage} 
 ::msgcat::mcset pt {Physical} [encoding convertfrom iso8859-1 {Físico}]
 ::msgcat::mcset pt {Pixel Distribution} [encoding convertfrom iso8859-1 {Distribuição de Pixels}]
 ::msgcat::mcset pt {Pixel Size} {Tamanho do Pixel}

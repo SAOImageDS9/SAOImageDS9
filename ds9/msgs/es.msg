@@ -661,6 +661,7 @@
 ::msgcat::mcset es {Password} [encoding convertfrom iso8859-1 {Contraseña}]
 ::msgcat::mcset es {Paste Contours} {Pegar contornos}
 ::msgcat::mcset es {Paste} {Pegar}
+::msgcat::mcset es {Percentage} 
 ::msgcat::mcset es {Physical} [encoding convertfrom iso8859-1 {Física}]
 ::msgcat::mcset es {Pixel Distribution} [encoding convertfrom iso8859-1 {Distribución por píxeles}]
 ::msgcat::mcset es {Pixel Size} [encoding convertfrom iso8859-1 {Tamaño del píxel}]

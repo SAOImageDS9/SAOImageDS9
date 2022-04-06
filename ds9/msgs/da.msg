@@ -661,6 +661,7 @@
 ::msgcat::mcset da {Password} {Kodeord}
 ::msgcat::mcset da {Paste Contours} {Indsæt konturer}
 ::msgcat::mcset da {Paste} [encoding convertfrom iso8859-1 {Sæt ind}]
+::msgcat::mcset da {Percentage} 
 ::msgcat::mcset da {Physical} {Fysisk}
 ::msgcat::mcset da {Pixel Distribution} {Pixelfordeling}
 ::msgcat::mcset da {Pixel Size} [encoding convertfrom iso8859-1 {Pixelstørrelse}]

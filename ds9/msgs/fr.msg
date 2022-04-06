@@ -661,6 +661,7 @@
 ::msgcat::mcset fr {Password} {Mot de passe}
 ::msgcat::mcset fr {Paste Contours} {Coller les contours}
 ::msgcat::mcset fr {Paste} {Coller}
+::msgcat::mcset fr {Percentage} 
 ::msgcat::mcset fr {Physical} {Physique}
 ::msgcat::mcset fr {Pixel Distribution} {Distribution des pixels}
 ::msgcat::mcset fr {Pixel Size} {Taille des pixels}

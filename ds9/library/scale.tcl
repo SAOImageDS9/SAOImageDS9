@@ -104,7 +104,7 @@ proc ChangeScaleModeDialog {} {
     if {![string is double $mm]} {
 	set mm 100
     }
-    if {[EntryDialog [msgcat::mc {Scale Mode}] [msgcat::mc {Percentage}] 10 mm]} {
+    if {[EntryDialog [msgcat::mc {Scale Mode}] [msgcat::mc {Percent}] 10 mm]} {
 	set scale(mode) $mm
 	ChangeScaleMode
     }

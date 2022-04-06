@@ -1,3 +1,4 @@
+# ::msgcat::mcset ja {Percentage} 
 ::msgcat::mcset ja {2D} 
 ::msgcat::mcset ja {3D View} 
 ::msgcat::mcset ja {3D} [encoding convertfrom euc-jp "\x33\xbc\xa1\xb8\xb5"]
@@ -661,7 +662,7 @@
 ::msgcat::mcset ja {Password} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xb9\xa5\xef\xa1\xbc\xa5\xc9"]
 ::msgcat::mcset ja {Paste Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xf2\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]
 ::msgcat::mcset ja {Paste} [encoding convertfrom euc-jp "\xc5\xbd\xa4\xea\xc9\xd5\xa4\xb1"]
-::msgcat::mcset ja {Percentage} 
+::msgcat::mcset ja {Percent} 
 ::msgcat::mcset ja {Physical} [encoding convertfrom euc-jp "\xca\xaa\xcd\xfd\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Pixel Distribution} [encoding convertfrom euc-jp "\xa5\xd4\xa5\xaf\xa5\xbb\xa5\xeb\xc9\xd1\xc5\xd9\xca\xac\xc9\xdb"]
 ::msgcat::mcset ja {Pixel Size} [encoding convertfrom euc-jp "\xa5\xd4\xa5\xaf\xa5\xbb\xa5\xeb\xa5\xb5\xa5\xa4\xa5\xba"]

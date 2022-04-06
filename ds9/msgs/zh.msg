@@ -1,3 +1,4 @@
+# ::msgcat::mcset zh {Percentage} 
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D View} 
 ::msgcat::mcset zh {3D} 
@@ -661,7 +662,7 @@
 ::msgcat::mcset zh {Password} 
 ::msgcat::mcset zh {Paste Contours} 
 ::msgcat::mcset zh {Paste} 
-::msgcat::mcset zh {Percentage} 
+::msgcat::mcset zh {Percent} 
 ::msgcat::mcset zh {Physical} 
 ::msgcat::mcset zh {Pixel Distribution} 
 ::msgcat::mcset zh {Pixel Size} 

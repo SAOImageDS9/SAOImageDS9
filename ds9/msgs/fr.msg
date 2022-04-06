@@ -1,3 +1,4 @@
+# ::msgcat::mcset fr {Percentage} 
 ::msgcat::mcset fr {2D} 
 ::msgcat::mcset fr {3D View} 
 ::msgcat::mcset fr {3D} 
@@ -661,7 +662,7 @@
 ::msgcat::mcset fr {Password} {Mot de passe}
 ::msgcat::mcset fr {Paste Contours} {Coller les contours}
 ::msgcat::mcset fr {Paste} {Coller}
-::msgcat::mcset fr {Percentage} 
+::msgcat::mcset fr {Percent} 
 ::msgcat::mcset fr {Physical} {Physique}
 ::msgcat::mcset fr {Pixel Distribution} {Distribution des pixels}
 ::msgcat::mcset fr {Pixel Size} {Taille des pixels}

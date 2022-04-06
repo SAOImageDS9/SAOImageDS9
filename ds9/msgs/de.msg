@@ -1,3 +1,4 @@
+# ::msgcat::mcset de {Percentage} 
 ::msgcat::mcset de {2D} 
 ::msgcat::mcset de {3D View} 
 ::msgcat::mcset de {3D} 
@@ -661,7 +662,7 @@
 ::msgcat::mcset de {Password} {Passwort}
 ::msgcat::mcset de {Paste Contours} [encoding convertfrom iso8859-1 {Konturen einfügen}]
 ::msgcat::mcset de {Paste} [encoding convertfrom iso8859-1 {Einfügen}]
-::msgcat::mcset de {Percentage} 
+::msgcat::mcset de {Percent} 
 ::msgcat::mcset de {Physical} {Physikalisch}
 ::msgcat::mcset de {Pixel Distribution} {Pixelverteilung}
 ::msgcat::mcset de {Pixel Size} [encoding convertfrom iso8859-1 {Pixelgröße}]

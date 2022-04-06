@@ -157,6 +157,14 @@ proc AnalysisParamReset {ii} {
 		    $ianalysis(param,$ii,$jj,$kk,menubutton) configure \
 			-text $ianalysis(param,$ii,$jj,$kk,value)
 		}
+		combobox {
+		    # default can contain the full menu 'aaa|bbb|ccc'
+		    # set last to first item
+		    set pp [split $ianalysis(param,$ii,$jj,$kk,default) |]
+		    set ianalysis(param,$ii,$jj,$kk,last) [lindex $pp 0]
+		    set ianalysis(param,$ii,$jj,$kk,value) \
+			$ianalysis(param,$ii,$jj,$kk,last)
+		}
 	    }
 	}
     }
@@ -242,6 +250,15 @@ proc AnalysisParamItem {f ii jj kk} {
 		    -command [list AnalysisParamMenu [lindex $pp $nn] $ii $jj $kk]
 	    }
 	}
+	combobox {
+	    set ianalysis(param,$ii,$jj,$kk,value) \
+		$ianalysis(param,$ii,$jj,$kk,last)
+
+	    ttk::combobox $f.a$ii-$jj-$kk \
+		-textvariable ianalysis(param,$ii,$jj,$kk,value) \
+		-values [split $ianalysis(param,$ii,$jj,$kk,default) |]
+	}
+
     }
 
     ttk::label $f.i$ii-$jj-$kk -text "$ianalysis(param,$ii,$jj,$kk,info)" \

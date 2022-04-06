@@ -322,16 +322,16 @@ $z<br></b></p>
 <p><b><a name="Parameters" id="Parameters"></a>Parameters</b></p>
 <p>The user may define his own macros or parameters to be evaluated before the command line is executed. To do this, the user defines a parameter segment that is referenced in the command line. Parameters maybe displayed in a notebook style via use of the 'tab' 'endtab' keywords. The parameter definition has the follow format:</p>
 <blockquote><tt>param &lt;name&gt;<br>
-&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|combobox|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
 &nbsp;&nbsp;...<br>
 endparam</tt></blockquote>
 <blockquote><tt>param &lt;name&gt;<br>
-&nbsp; tab &lt;text&gt;<br>
-&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+tab &lt;text&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|comboxbox|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
 &nbsp;&nbsp;...<br>
 endtab<br>
 tab &lt;text&gt;<br>
-&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
+&nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|combobox|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
 &nbsp;...<br>
 endtab<br>
 endparam</tt></blockquote>
@@ -357,8 +357,9 @@ $env<br></tt></blockquote>
 &nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
-&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
-&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
+&nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
+&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 endparam<br>
 <br>
 param bar<br>
@@ -367,10 +368,11 @@ param bar<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
 &nbsp;&nbsp;endtab<br>
 &nbsp;&nbsp;tab {Second Params}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 &nbsp;&nbsp;endtab<br>
 endparam<br>
 <br>
@@ -421,8 +423,9 @@ param foo<br>
 &nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
-&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
-&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
+&nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
+&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 endparam<br>
 <br>
 param bar<br>
@@ -431,10 +434,11 @@ param bar<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
 &nbsp;&nbsp;endtab<br>
 &nbsp;&nbsp;tab {Second Params}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var5 open {Variable 5} {default} {this is a open file dialog}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var6 save {Variable 6} {default} {this is a save file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 &nbsp;&nbsp;endtab<br>
 endparam<br>
 <br>

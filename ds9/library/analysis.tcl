@@ -464,7 +464,8 @@ proc ProcessAnalysis {varname} {
 		set ianalysis(param,$ii,$jj,$kk,menubutton) {}
 
 		switch $ianalysis(param,$ii,$jj,$kk,type) {
-		    menu {
+		    menu -
+		    combobox {
 			# default can contain the full menu 'aaa|bbb|ccc'
 			# set last to first item
 			set pp [split $ianalysis(param,$ii,$jj,$kk,default) |]

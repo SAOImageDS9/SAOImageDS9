@@ -15,6 +15,9 @@ proc Backup {fn} {
     global ds9
     global current
 
+    # really need this for geometrey
+    RealizeDS9
+
     set ch {}
     set dir {}
     if {![BackupPreamble $fn ch dir]} {

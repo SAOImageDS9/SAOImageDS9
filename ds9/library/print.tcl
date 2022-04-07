@@ -113,17 +113,17 @@ proc PostScript {} {
     # set color specific postscript options
     colorbar postscript level $ps(level)
     colorbar postscript colorspace $ps(color)
-    colorbar postscript resolution $res
+    colorbar postscript resolution $ps(resolution)
 
     # set frame specific postscript options
     foreach ff $ds9(frames) {
 	$ff postscript level $ps(level)
 	$ff postscript colorspace $ps(color)
-	$ff postscript resolution $res
+	$ff postscript resolution $ps(resolution)
 
 	${ff}cb postscript level $ps(level)
 	${ff}cb postscript colorspace $ps(color)
-	${ff}cb postscript resolution $res
+	${ff}cb postscript resolution $ps(resolution)
     }
 
     # now invoke canvas postscript command

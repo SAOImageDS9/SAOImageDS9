@@ -667,11 +667,12 @@ proc FixPrefsVarOld {} {
 
 proc FixPrefs8.3to8.4 {} {
     global ps
+
     switch $ps(resolution) {
-       screen -
-       Screen -
-       SCREEN {set res 96}
-       default {set res $ps(resolution)}
+	screen -
+	Screen -
+	SCREEN {set ps(resolution) 96}
+	default {}
     }
 }
 

@@ -355,6 +355,14 @@ proc LayoutButtons {} {
 proc MajorButton {} {
     global buttons
     global view
+    global ds9
+
+    # kluge: Aqua has a bug, avoid multiple <Configure> events
+    switch $ds9(wm) {
+	x11 {}
+	aqua {bind $ds9(canvas) <Configure> {}}
+	win32 {}
+    }
 
     pack forget $buttons(major,prev)
     switch $view(layout) {
@@ -366,6 +374,12 @@ proc MajorButton {} {
 	}
     }
     set buttons(major,prev) $buttons(major,current)
+
+    switch $ds9(wm) {
+	x11 {}
+	aqua {bind $ds9(canvas) <Configure> [list LayoutView]}
+	win32 {}
+    }
 }
 
 proc AnalysisButton {} {

@@ -357,7 +357,7 @@ proc MajorButton {} {
     global view
     global ds9
 
-    # kluge: Aqua has a bug, avoid multiple <Configure> events
+    # kludge: Aqua has a bug, avoid multiple <Configure> events
     switch $ds9(wm) {
 	x11 {}
 	aqua {bind $ds9(canvas) <Configure> {}}

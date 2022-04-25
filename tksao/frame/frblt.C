@@ -151,6 +151,8 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
   if (width==0)
     width =1;
 
+  double* marr = new double[width];
+
   // main loop
 
   SETSIGBUS
@@ -162,6 +164,8 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
     (*xc)[ii] = ii+1;
     (*yc)[ii] = 0;
     cnt[ii] = 0;
+
+    memset(marr,0,width*sizeof(double));
 
     for (int jj=0; jj<width; jj++) {
       Vector tt = p1 + ss*ii + uu*jj;
@@ -184,10 +188,11 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
 	  }
 
 	  // check for nan
-	  double dd = sptr->getValueDouble(zz);
-	  if (isfinite(dd)) {
-	    (*y)[ii] += dd;
+	  double val = sptr->getValueDouble(zz);
+	  if (isfinite(val)) {
+	    (*y)[ii] += val;
 	    cnt[ii]++;
+	    marr[jj] = val;
 	  }
 	  break;
 	}
@@ -201,14 +206,24 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
       }
       while (mosaic && sptr);
     }
+
+    switch (method) {
+    case Marker::AVERAGE:
+      if (cnt[ii]!=0)
+	(*y)[ii] /= cnt[ii];
+      break;
+    case Marker::SUM:
+      break;
+    case Marker::MEDIAN:
+      qsort((void*)marr,width,sizeof(double),dCompare);
+      (*y)[ii] = marr[int(width/2.)];
+      break;
+    }   
   }
   CLEARSIGBUS
 
-  // average if needed
-  if (method == Marker::AVERAGE)
-    for (long ii=0; ii<num; ii++)
-      if (isfinite((*y)[ii]) && cnt[ii]!=0)
-	(*y)[ii] /= cnt[ii];
+  if (marr)
+    delete [] marr;
 
   return num;
 }
@@ -301,6 +316,13 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
     }
   }
 
+  // median
+  int mcnt =0;
+  for (int nn=0; nn<ss; nn++)
+    if (msk[nn])
+      mcnt++;
+  double* marr = new double[mcnt];
+
   // main loop
   SETSIGBUS
     for (int kk=0; kk<srcd; kk++) {
@@ -309,8 +331,11 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
       Vector3d out = ptr->mapFromRef(dd,sys,Coord::FK5);
       (*x)[kk] = out[2];
 
+      memset(marr,0,mcnt*sizeof(double));
+
       bool* mptr=msk;
       long* iptr=idx;
+      int mm=0;
       for (int ll=0; ll<ss; ll++,mptr++,iptr++) {
 	if (*mptr) {
 	  double val =sjv[kk]->getValueDouble(*iptr);
@@ -318,17 +343,25 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
 	  if (isfinite(val)) {
 	    (*y)[kk] += val;
 	    cnt[kk]++;
+	    marr[mm++] = val;
 	  }
 	}
       }
+
+      switch (method) {
+      case Marker::AVERAGE:
+	if (cnt[kk]!=0)
+	  (*y)[kk] /= cnt[kk];
+	break;
+      case Marker::SUM:
+	break;
+      case Marker::MEDIAN:
+	qsort((void*)marr,mcnt,sizeof(double),dCompare);
+	(*y)[kk] = marr[int(mcnt/2.)];
+	break;
+      }   
     }
   CLEARSIGBUS
-
-  // average if needed
-  if (method == Marker::AVERAGE)
-    for (long kk=0; kk<srcd; kk++)
-      if (cnt[kk]!=0)
-	(*y)[kk] /= cnt[kk];
 
   if (cnt)
     delete [] cnt;
@@ -336,6 +369,8 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
     delete [] msk;
   if (idx)
     delete [] idx;
+  if (marr)
+    delete [] marr;
 
   return srcd;
 }

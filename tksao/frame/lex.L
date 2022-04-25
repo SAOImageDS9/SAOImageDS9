@@ -208,6 +208,7 @@ map		{return MAP_;}
 mark		{return MARK_;}
 marker		{return MARKER_;}
 mask		{return MASK_;}
+median          {return MEDIAN_;}
 message		{return MESSAGE_;}
 method		{return METHOD_;}
 minmax		{return MINMAX_;}

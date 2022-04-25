@@ -104,6 +104,9 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.graph.method add radiobutton \
 	-label [msgcat::mc {Sum}] -variable graph(method) \
 	-value sum -command UpdateGraphsMethod
+    $ds9(mb).analysis.graph.method add radiobutton \
+	-label [msgcat::mc {Median}] -variable graph(method) \
+	-value median -command UpdateGraphsMethod
 
     FontMenu $ds9(mb).analysis.graph.font \
 	graph font font,size font,weight font,slant UpdateGraphsFont

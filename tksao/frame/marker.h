@@ -44,7 +44,7 @@ public:
   enum HandleMode {HANDLES,NOHANDLES};
 
   enum AnalysisTask {STATS,PLOT2D,PLOT3D,RADIAL,PANDA,HISTOGRAM};
-  enum AnalysisMethod {SUM,AVERAGE};
+  enum AnalysisMethod {SUM,AVERAGE,MEDIAN};
 
  private:
   Vector* arrow2D(const Vector&, const Vector&, Coord::InternalSystem);

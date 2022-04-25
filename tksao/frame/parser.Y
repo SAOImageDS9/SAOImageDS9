@@ -291,6 +291,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token MARK_
 %token MARKER_
 %token MASK_
+%token MEDIAN_
 %token MESSAGE_
 %token METHOD_
 %token MINMAX_
@@ -741,6 +742,7 @@ analysisMethod: CPANDA_ {$$ = Marker::PANDA;}
 analysisParam : /* emtpy */ {$$ = Marker::AVERAGE;}
 	| AVERAGE_  {$$ = Marker::AVERAGE;}
 	| SUM_  {$$ = Marker::SUM;}
+        | MEDIAN_ {$$ = Marker::MEDIAN;}
 	;
 
 endian	: /* empty */ {$$ = FitsFile::NATIVE;}

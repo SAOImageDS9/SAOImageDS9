@@ -37,6 +37,10 @@ proc MarkerAnalysisPlot3dDialog {varname} {
 	-label [msgcat::mc {Sum}] \
 	-variable ${varname}(method) -value sum \
 	-command "MarkerAnalysisPlot3dMethod $varname"
+    $var(mb).analysis.method add radiobutton \
+	-label [msgcat::mc {Median}] \
+	-variable ${varname}(method) -value median \
+	-command "MarkerAnalysisPlot3dMethod $varname"
 }
 
 # support

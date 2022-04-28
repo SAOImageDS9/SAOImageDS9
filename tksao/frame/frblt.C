@@ -209,7 +209,7 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
 
     switch (method) {
     case Marker::AVERAGE:
-      if (cnt[ii]!=0)
+      if (cnt[ii])
 	(*y)[ii] /= cnt[ii];
       break;
     case Marker::SUM:
@@ -1045,12 +1045,16 @@ void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
   int mosaic = isMosaic();
   double prev = currentContext->low();
 
+  double* marr = new double[thick];
+
   // main loop
 
   SETSIGBUS
   for (int ii=0; ii<=size; ii++) {
     double vv =0;
     int cnt =0;
+
+    memset(marr,0,thick*sizeof(double));
 
     Vector img;
     int ww = thick/2;
@@ -1073,7 +1077,8 @@ void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
 
 	  if (isfinite(value)) {
 	    vv += value;
-	    cnt +=1;
+	    cnt++;
+	    marr[jj] = value;
 	  }
 	  break;
 	}
@@ -1102,9 +1107,14 @@ void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
     case Base::SUM:
       yy[2*ii +1] = prev = vv;
       break;
+    case Base::MEDIAN:
+      qsort((void*)marr,thick,sizeof(double),dCompare);
+      yy[2*ii +1] = prev = marr[int(thick/2.)];
     }
-      
   }
   CLEARSIGBUS
+
+  if (marr)
+    delete [] marr;
 }
 

@@ -130,7 +130,7 @@ public:
 		SHARE, SSHARE, SOCKET, SOCKETGZ, VAR, HIST, POST, PHOTO};
   enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC};
   enum LayerType {IMG, MASK};
-  enum CutMethod {SUM,AVERAGE};
+  enum CutMethod {SUM,AVERAGE,MEDIAN};
 
  private:
   InverseScale* inverseScale;

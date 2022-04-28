@@ -1004,6 +1004,8 @@ proc PrefsDialogGraph {} {
 	-variable pgraph(method) -value average
     ttk::radiobutton $f.smethod -text [msgcat::mc {Sum}] \
 	-variable pgraph(method) -value sum
+    ttk::radiobutton $f.mmethod -text [msgcat::mc {Median}] \
+	-variable pgraph(method) -value median
     ttk::label $f.tfont -text [msgcat::mc {Font}]
     ttk::label $f.tsize -text [msgcat::mc {Size}]
     ttk::entry $f.size -textvariable pgraph(size) -width 7
@@ -1014,7 +1016,7 @@ proc PrefsDialogGraph {} {
 
     grid $f.grid -padx 2 -pady 2 -sticky w
     grid $f.taxis $f.laxis $f.gaxis -padx 2 -pady 2 -sticky w
-    grid $f.tmethod $f.amethod $f.smethod -padx 2 -pady 2 -sticky w
+    grid $f.tmethod $f.amethod $f.smethod $f.mmethod -padx 2 -pady 2 -sticky w
     grid $f.tfont $f.font -padx 2 -pady 2 -sticky w
     grid $f.tsize $f.size -padx 2 -pady 2 -sticky w
     grid $f.tthick $f.thick -padx 2 -pady 2 -sticky w

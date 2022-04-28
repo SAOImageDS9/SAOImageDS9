@@ -1006,6 +1006,7 @@ cube    : AXES_ INT {fr->axesOrderCmd($2);}
 cutMethod : /* emtpy */ {$$ = Base::AVERAGE;}
 	| AVERAGE_  {$$ = Base::AVERAGE;}
 	| SUM_  {$$ = Base::SUM;}
+        | MEDIAN_ {$$ = Base::MEDIAN;}
 	;
 
 fitsy	: HAS_ EXT_ STRING {fr->fitsyHasExtCmd($3);}

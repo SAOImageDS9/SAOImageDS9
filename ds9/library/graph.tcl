@@ -905,6 +905,9 @@ proc GraphDialog {} {
     Toplevel $w $mb 6 [msgcat::mc {Graph Parameters}] GraphDestroyDialog
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    $mb add cascade -label [msgcat::mc {Axis}] -menu $mb.axis
+    $mb add cascade -label [msgcat::mc {Method}] -menu $mb.method
+    $mb add cascade -label [msgcat::mc {Font}] -menu $mb.font
 
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] \
@@ -915,13 +918,40 @@ proc GraphDialog {} {
 
     EditMenu $mb igraph
 
-    set f [ttk::labelframe $w.gr -text [msgcat::mc {graph}] -padding 2]
+    ThemeMenu $mb.axis
+    $mb.axis add radiobutton \
+	-label [msgcat::mc {Linear}] -variable graph(log) \
+	-value 0 -command UpdateGraphsGrid
+    $mb.axis add radiobutton \
+	-label [msgcat::mc {Log}] -variable graph(log) \
+	-value 1 -command UpdateGraphsGrid
 
+    ThemeMenu $mb.method
+    $mb.method add radiobutton \
+	-label [msgcat::mc {Average}] -variable graph(method) \
+	-value average -command UpdateGraphsMethod
+    $mb.method add radiobutton \
+	-label [msgcat::mc {Sum}] -variable graph(method) \
+	-value sum -command UpdateGraphsMethod
+    $mb.method add radiobutton \
+	-label [msgcat::mc {Median}] -variable graph(method) \
+	-value median -command UpdateGraphsMethod
+
+    FontMenu $mb.font \
+	graph font font,size font,weight font,slant UpdateGraphsFont
+
+    # Param
+    set f [ttk::frame $w.param]
+
+    ttk::checkbutton $f.grid -text [msgcat::mc {Grid}] \
+	-variable graph(grid) -command UpdateGraphsGrid
+    ttk::label $f.dummy -width 20
     ttk::label $f.tsize -text [msgcat::mc {Size}]
     ttk::entry $f.size -textvariable graph(size) -width 7
     ttk::label $f.tthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.thick -textvariable graph(thick) -width 7
 
+    grid $f.grid $f.dummy -padx 2 -pady 2 -sticky w
     grid $f.tsize $f.size -padx 2 -pady 2 -sticky w
     grid $f.tthick $f.thick -padx 2 -pady 2 -sticky w
 
@@ -932,10 +962,9 @@ proc GraphDialog {} {
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
-    grid $w.gr -sticky news
-    grid $w.buttons - -sticky ew
-    grid rowconfigure $w 0 -weight 1
-    grid columnconfigure $w 1 -weight 1
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
 
     bind $w <<Close>> GraphDestroyDialog
 }

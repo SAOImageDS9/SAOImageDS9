@@ -20,9 +20,6 @@ proc AnalysisMainMenu {} {
 	-command MaskDialog
     $ds9(mb).analysis add command \
 	-label "[msgcat::mc {Crosshair Parameters}]..." -command CrosshairDialog
-    $ds9(mb).analysis add separator
-    $ds9(mb).analysis add cascade -label [msgcat::mc {Graph}] \
-	-menu $ds9(mb).analysis.graph
     $ds9(mb).analysis add command -label "[msgcat::mc {Graph Parameters}]..." \
 	-command GraphDialog
     $ds9(mb).analysis add separator
@@ -77,39 +74,6 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis add command \
 	-label [msgcat::mc {Clear Analysis Commands}] \
 	-command ClearAnalysisMenu
-
-    ThemeMenu $ds9(mb).analysis.graph
-    $ds9(mb).analysis.graph add checkbutton -label [msgcat::mc {Grid}] \
-	-variable graph(grid) -command UpdateGraphsGrid
-    $ds9(mb).analysis.graph add separator
-    $ds9(mb).analysis.graph add cascade -label [msgcat::mc {Axis}] \
-	-menu $ds9(mb).analysis.graph.axis
-    $ds9(mb).analysis.graph add cascade -label [msgcat::mc {Method}] \
-	-menu $ds9(mb).analysis.graph.method
-    $ds9(mb).analysis.graph add cascade -label [msgcat::mc {Font}] \
-	-menu $ds9(mb).analysis.graph.font
-
-    ThemeMenu $ds9(mb).analysis.graph.axis
-    $ds9(mb).analysis.graph.axis add radiobutton \
-	-label [msgcat::mc {Linear}] -variable graph(log) \
-	-value 0 -command UpdateGraphsGrid
-    $ds9(mb).analysis.graph.axis add radiobutton \
-	-label [msgcat::mc {Log}] -variable graph(log) \
-	-value 1 -command UpdateGraphsGrid
-
-    ThemeMenu $ds9(mb).analysis.graph.method
-    $ds9(mb).analysis.graph.method add radiobutton \
-	-label [msgcat::mc {Average}] -variable graph(method) \
-	-value average -command UpdateGraphsMethod
-    $ds9(mb).analysis.graph.method add radiobutton \
-	-label [msgcat::mc {Sum}] -variable graph(method) \
-	-value sum -command UpdateGraphsMethod
-    $ds9(mb).analysis.graph.method add radiobutton \
-	-label [msgcat::mc {Median}] -variable graph(method) \
-	-value median -command UpdateGraphsMethod
-
-    FontMenu $ds9(mb).analysis.graph.font \
-	graph font font,size font,weight font,slant UpdateGraphsFont
 
     ThemeMenu $ds9(mb).analysis.block
     $ds9(mb).analysis.block add command -label [msgcat::mc {Block In}] \

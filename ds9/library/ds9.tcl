@@ -82,7 +82,7 @@ proc DS9Def {} {
     }
     set ds9(menu,size,frame,goto) [expr $ds9(menu,start)+0]
     set ds9(menu,size,frame,active) [expr $ds9(menu,start)+3]
-    set ds9(menu,size,analysis) [expr $ds9(menu,start)+36]
+    set ds9(menu,size,analysis) [expr $ds9(menu,start)+34]
     set ds9(menu,size,wrap) 20
 
     set ds9(display) single

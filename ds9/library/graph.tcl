@@ -727,7 +727,10 @@ proc UpdateGraphAxisX {frame which} {
     set gr [subst $${varname}($which)]
 
     if {[$frame has fits]} {
-	set xmax [$ds9(canvas) itemcget $frame -width]
+	switch $which {
+	    horz {set xmax [$ds9(canvas) itemcget $frame -width]}
+	    vert {set xmax [$ds9(canvas) itemcget $frame -height]}
+	}
 	$gr xaxis configure -min 0 -max $xmax
 	$gr x2axis configure -min 0 -max $xmax
     } else {
@@ -767,7 +770,8 @@ proc UpdateGraphAxisY {frame which} {
 
 	switch $graph(method) {
 	    sum {set ymax [expr $ymax*$graph(thick)]}
-	    average {}
+	    average -
+	    median {}
 	}
 
 	$gr yaxis configure -min $ymin -max $ymax

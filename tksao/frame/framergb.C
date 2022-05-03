@@ -106,9 +106,12 @@ void FrameRGB::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
     // and this the zoom
     Matrix mm = calcAlignWCS(ptr, keyContext->fits, sys,
 			     wcsSystem_, wcsSkyFrame_);
-    if (mm[0][0] != 0 && mm[1][1] !=0)
-      zoom_ *= (Vector(mm[0][0],mm[1][0]).length() +
-		Vector(mm[0][1],mm[1][1]).length())/2.;
+
+    // if no linear fit, we get all 0's
+    if (mm[0][0] != 0 && mm[1][1] !=0) {
+      Vector ff = Vector(Vector(mm[0][0],mm[1][0]).length(), Vector(mm[0][1],mm[1][1]).length());
+      zoom_ = Vector(zoom_[0]*ff[0], zoom_[1]*ff[1]);
+    }
   }
 
   updateRGBMatrices();

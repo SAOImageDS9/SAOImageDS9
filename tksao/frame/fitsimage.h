@@ -433,7 +433,7 @@ class FitsImage {
   const char* getWCSAxisSymbol(Coord::CoordSystem, int);
 
   double getWCSSize(Coord::CoordSystem);
-    double calcWCSSize(Coord::CoordSystem);
+  double calcWCSSize(Coord::CoordSystem);
 
   int hasWCS(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);

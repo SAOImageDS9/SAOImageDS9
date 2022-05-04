@@ -74,7 +74,7 @@ class FrameRGB : public FrameBase {
   virtual ~FrameRGB();
 
   void getColorbarCmd();
-  void getInfoCmd(const Vector&, Coord::InternalSystem, char*);
+  void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType);
   void getRGBChannelCmd();
   void getRGBSystemCmd();
   void getRGBViewCmd();

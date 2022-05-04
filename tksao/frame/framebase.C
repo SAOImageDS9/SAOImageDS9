@@ -37,7 +37,7 @@ FrameBase::~FrameBase()
 }
 
 void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
-			   char* var)
+			   char* var, Base::FileNameType type)
 {
   FitsBound* params;
   int mosaic;
@@ -54,7 +54,7 @@ void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   params = sptr->getDataParams(currentContext->secMode());
 
   if (!mosaic) {
-    Tcl_SetVar2(interp,var,"filename",(char*)sptr->getFileName(ROOTBASE),0);
+    Tcl_SetVar2(interp,var,"filename",(char*)sptr->getFileName(type),0);
     Tcl_SetVar2(interp,var,"object",(char*)sptr->objectKeyword(),0);
     Tcl_SetVar2(interp,var,"min",(char*)sptr->getMin(),0);
     Tcl_SetVar2(interp,var,"min,x",(char*)sptr->getMinX(),0);

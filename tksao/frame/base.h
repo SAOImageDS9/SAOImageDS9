@@ -1024,8 +1024,8 @@ public:
   void hasIISCmd();
 
   // Info Commands
-  void getInfoCmd(char*);
-  virtual void getInfoCmd(const Vector&, Coord::InternalSystem, char*) =0;
+  void getInfoCmd(char*, Base::FileNameType);
+  virtual void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType) =0;
   void getInfoClipCmd();
   void getValueCmd(const Vector&, Coord::InternalSystem);
 

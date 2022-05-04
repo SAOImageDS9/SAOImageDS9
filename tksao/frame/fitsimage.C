@@ -2520,6 +2520,7 @@ const char* FitsImage::updateFileNameBin(Base::FileNameType type)
       str << ends;
       fileName = dupstr(str.str().c_str());
     }
+    break;
   case Base::FULL:
     if (fullBaseFileName) {
       ostringstream str;

@@ -63,7 +63,7 @@ public:
 	       Grid::GridType, const char*, const char*);
 
   // Info Commands
-  void getInfoCmd(const Vector&, Coord::InternalSystem, char*);
+  void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType);
 
   // Fits Commands
   void saveFitsResample(OutFitsStream&);

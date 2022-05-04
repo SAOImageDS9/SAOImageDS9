@@ -1199,10 +1199,10 @@ getData	: coordSystem skyFrame coord numeric numeric STRING
 	    Vector($4,$5));}
 	;
 
-getInfo	: STRING {fr->getInfoCmd($1);}
+getInfo	: STRING fileNameType {fr->getInfoCmd($1, (Base::FileNameType)$2);}
 	| CLIP_ {fr->getInfoClipCmd();}
- 	| internalSystem numeric numeric STRING
-	{fr->getInfoCmd(Vector($2,$3), (Coord::InternalSystem)$1, $4);}
+ 	| internalSystem numeric numeric STRING fileNameType 
+	{fr->getInfoCmd(Vector($2,$3), (Coord::InternalSystem)$1, $4, (Base::FileNameType)$5);}
 	;
 
 getiis	: POINTER INT INT INT INT {fr->iisGetCmd((char*)$1,$2,$3,$4,$5);}

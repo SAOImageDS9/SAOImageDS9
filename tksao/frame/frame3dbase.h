@@ -160,7 +160,7 @@ class Frame3dBase : public Base {
   void clipScopeCmd(FrScale::ClipScope) {} // scope is always GLOBAL
 
   // Info Commands
-  void getInfoCmd(const Vector&, Coord::InternalSystem, char*);
+  void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType type);
 
   // Coordinate Commands
   void getCursorCmd(Coord::InternalSystem);

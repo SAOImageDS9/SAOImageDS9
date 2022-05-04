@@ -174,6 +174,8 @@ proc DS9Def {} {
     set pds9(language,name) [LanguageToName $pds9(language)]
     set pds9(language,dir) {}
 
+    set pds9(infobox,filenametype) {root base}
+
     set pds9(theme) default
 }
 

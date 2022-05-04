@@ -506,7 +506,8 @@ proc UpdateInfoBoxFrame {which} {
     }
 
     global infobox
-    $which get info infobox
+    global pds9
+    $which get info infobox $pds9(infobox,filenametype)
 }
 
 proc UpdateInfoBox {which x y sys} {
@@ -520,7 +521,7 @@ proc UpdateInfoBox {which x y sys} {
     global infobox
     global view
 
-    $which get info $sys $x $y infobox
+    $which get info $sys $x $y infobox $pds9(infobox,filenametype)
 
     set infobox(bunit) [$which get fits header keyword BUNIT]
     if {$view(info,keyvalue) != ""} {

@@ -823,9 +823,9 @@ void FrameRGB::getColorbarCmd()
 }
 
 void FrameRGB::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
-			  char* var)
+			  char* var, Base::FileNameType type)
 {
-  FrameBase::getInfoCmd(vv, ref, var);
+  FrameBase::getInfoCmd(vv, ref, var, type);
   if (!currentContext->cfits)
     return;
 

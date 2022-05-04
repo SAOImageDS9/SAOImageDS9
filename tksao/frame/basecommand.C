@@ -1884,10 +1884,10 @@ void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv,
   bltCut(xx, yy, Coord::XX, ptr->mapToRef(vv,sys,sky), thick, method);
 }
 
-void Base::getInfoCmd(char* var)
+void Base::getInfoCmd(char* var, Base::FileNameType type)
 {
   if (currentContext->cfits) {
-    Tcl_SetVar2(interp,var,"filename",(char*)currentContext->cfits->getFileName(ROOTBASE),0);
+    Tcl_SetVar2(interp,var,"filename",(char*)currentContext->cfits->getFileName(type),0);
     Tcl_SetVar2(interp,var,"object",
 		(char*)currentContext->cfits->objectKeyword(),0);
     Tcl_SetVar2(interp,var,"min",(char*)currentContext->cfits->getMin(),0);

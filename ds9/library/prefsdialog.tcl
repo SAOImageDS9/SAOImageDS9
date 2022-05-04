@@ -306,8 +306,28 @@ proc PrefsDialogGeneral {} {
     grid $f.center - -padx 2 -pady 2 -sticky w
     grid $f.all - -padx 2 -pady 2 -sticky w
 
+    # infobox
+    set f [ttk::labelframe $w.general.info -text [msgcat::mc {Info Box}]]
+
+    ttk::label $f.tinfo -text [msgcat::mc {Filename Format}]
+    ttk::menubutton $f.info -textvariable pds9(infobox,filenametype) \
+	-menu $f.info.menu
+
+    set m $f.info.menu
+    ThemeMenu $m
+    $m add radiobutton -label [msgcat::mc {root base}] \
+	-variable pds9(infobox,filenametype) -value {root base}
+    $m add radiobutton -label [msgcat::mc {full base}] \
+	-variable pds9(infobox,filenametype) -value {full base}
+    $m add radiobutton -label [msgcat::mc {root}] \
+	-variable pds9(infobox,filenametype) -value {root}
+    $m add radiobutton -label [msgcat::mc {full}] \
+	-variable pds9(infobox,filenametype) -value {full}
+
+    grid $f.tinfo $f.info -padx 2 -pady 2 -sticky w
+
     pack $w.general.misc $w.general.font $w.general.color $w.general.box \
-	-side top -fill both -expand true
+	$w.general.info -side top -fill both -expand true
 }
 
 proc PrefsDialogPrecision {} {

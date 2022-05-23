@@ -35,7 +35,9 @@ class Frame : public FrameBase {
   Coord::CoordSystem maskSystem;
 
  private:
-  unsigned char* alphaComposite(unsigned char*, unsigned char*, int, int);
+  unsigned char* alphaComposite(unsigned char*, unsigned char*,
+				int, int, float);
+  unsigned char* alphaCompositeMask(unsigned char*, unsigned char*, int, int);
   unsigned char* blendSourceMask(unsigned char*, unsigned char*,
 				 unsigned char*, int, int);
   unsigned char* blendScreenMask(unsigned char*, unsigned char*,

@@ -160,6 +160,7 @@ class Widget {
   Visual* getVisual() {return visual;}
   int getWidth() {return options->width;}
   int getHeight() {return options->height;}
+  char* getCmdName() {return options->cmdName;}
   int getDepth() {return depth;}
   int getScreenNumber() {return screenNumber;}
   Tk_Canvas getCanvas() {return canvas;}

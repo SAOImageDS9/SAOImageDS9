@@ -64,8 +64,29 @@ void Frame::alignWCS() {
   updateMaskMatrices();
 }
 
-unsigned char* Frame::alphaComposite(unsigned char* src, unsigned char* msk,
-				     int width, int height)
+unsigned char* Frame::alphaComposite(unsigned char* src1, unsigned char* src2,
+				     int width, int height, float alpha)
+{
+  unsigned char* s1ptr = src1; // 3 component
+  unsigned char* s2ptr = src2; // 3 component
+  float aa = 1-alpha;
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
+      s1ptr++;
+      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
+      s1ptr++;
+      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
+      s1ptr++;
+    }
+  }
+
+  return src1;
+}
+
+unsigned char* Frame::alphaCompositeMask(unsigned char* src, unsigned char* msk,
+					 int width, int height)
 {
   unsigned char* sptr = src; // 3 component
   unsigned char* mptr = msk; // 4 component
@@ -340,7 +361,7 @@ unsigned char* Frame::fillImage(int width, int height,
       {
 	FitsMask* mptr = mask.head();
 	unsigned char* msk = fillMask(mptr, width, height, sys);
-	alphaComposite(img,msk,width,height);
+	alphaCompositeMask(img,msk,width,height);
 	delete [] msk;
       }
       break;
@@ -379,7 +400,7 @@ unsigned char* Frame::fillImage(int width, int height,
 	  mptr = mptr->next();
 	}
 
-	alphaComposite(img,msk,width,height);
+	alphaCompositeMask(img,msk,width,height);
 	delete [] msk;
       }
       break;

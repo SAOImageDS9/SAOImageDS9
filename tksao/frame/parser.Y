@@ -223,6 +223,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token EQUATORIAL_
 %token ERASE_
 %token EXT_
+%token FADE_
 %token FACTOR_
 %token FALSE_
 %token FILE_
@@ -478,6 +479,7 @@ command : DEBUG_ debug
 	| CROSSHAIR_ crosshair
         | CUBE_ cube
 	| DATASEC_ yesno {fr->DATASECCmd($2);}
+        | FADE_ STRING numeric {fr->fadeCmd($2,$3);}
 	| FITSY_ fitsy
 	| GET_ get
 	| GRID_ grid

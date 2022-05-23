@@ -750,6 +750,9 @@ public:
 			Coord::SkyFrame, const Vector&, char*);
   void getDataValuesCmd(const Vector&, Coord::InternalSystem, const Vector&);
 
+  // Fade Commands
+  void fadeCmd(const char*, double);
+
   // Fits Commands
   void getBitpixCmd();
   void getFitsNAxesCmd();

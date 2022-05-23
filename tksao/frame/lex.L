@@ -141,6 +141,7 @@ equatorial      {return EQUATORIAL_;}
 erase		{return ERASE_;}
 ext		{return EXT_;}
 factor		{return FACTOR_;}
+fade            {return FADE_;}
 false		{return FALSE_;}
 file		{return FILE_;}
 fill            {return FILL_;}

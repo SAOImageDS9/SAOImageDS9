@@ -795,6 +795,11 @@ void Base::DATASECCmd(int which)
   }
 }
 
+void Base::fadeCmd(const char* frame, double transparency)
+{
+  //  cerr << options->cmdName << ':' << frame << '=' << transparency << endl;
+}
+
 void Base::fitsyHasExtCmd(const char* fn)
 {
   // verify that we have an ext specified

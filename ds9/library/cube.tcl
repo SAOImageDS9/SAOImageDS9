@@ -381,15 +381,13 @@ proc CubeDialog {} {
     EditMenu $mb icube
 
     ThemeMenu $mb.blink
-    $mb.blink add radiobutton -label "1/16 [msgcat::mc {Seconds}]" \
-	-variable blink(interval) -value 62
-    $mb.blink add radiobutton -label "1/8 [msgcat::mc {Seconds}]" \
+    $mb.blink add radiobutton -label ".125 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 125
-    $mb.blink add radiobutton -label "1/4 [msgcat::mc {Seconds}]" \
+    $mb.blink add radiobutton -label ".25 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 250
-    $mb.blink add radiobutton -label "1/2 [msgcat::mc {Seconds}]" \
+    $mb.blink add radiobutton -label ".5 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 500
-    $mb.blink add radiobutton -label "1 [msgcat::mc {Seconds}]" \
+    $mb.blink add radiobutton -label "1 [msgcat::mc {Second}]" \
 	-variable blink(interval) -value 1000
     $mb.blink add radiobutton -label "2  [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 2000

@@ -76,6 +76,7 @@ proc SaveImage {fn format} {
     # reset
     switch -- $ds9(display) {
 	single -
+	fade -
 	blink {}
 	tile {$current(frame) highlite on}
     }

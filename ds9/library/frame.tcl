@@ -1712,6 +1712,7 @@ proc GotoFrame {which} {
 
 	switch -- $ds9(display) {
 	    blink -
+	    fade -
 	    single {
 		set ff $current(frame)
 		# frame
@@ -1767,6 +1768,8 @@ proc DisplayMode {} {
     global tile
     global blink
     global iblink
+    global fade
+    global ifade
 
     switch -- $current(display) {
 	single {set ds9(display) $current(display)}
@@ -1780,6 +1783,7 @@ proc DisplayMode {} {
 		}
 	    }
 	}
+	fade -
 	blink {
 	    if {[llength $ds9(active)] > 1} {
 		set ds9(display) $current(display)
@@ -1799,13 +1803,45 @@ proc DisplayMode {} {
 		set iblink(index) -1
 	    }
 
+	    # turn off fade if on
+	    if {$ifade(id)>0} {
+		after cancel $ifade(id)
+		set ifade(id) 0
+		set ifade(index) -1
+		set ifade(next) -1
+		set ifade(transparency) 0
+	    }
+
 	    LayoutFrames
 	}
 	blink {
+	    # turn off fade if on
+	    if {$ifade(id)>0} {
+		after cancel $ifade(id)
+		set ifade(id) 0
+		set ifade(index) -1
+		set ifade(next) -1
+		set ifade(transparency) 0
+	    }
+
 	    # ignore if we are already blinking
 	    if {$iblink(id)==0} {
 		LayoutFrames
 		BlinkTimer
+	    }
+	}
+	fade {
+	    # turn off blink if on
+	    if {$iblink(id)>0} {
+		after cancel $iblink(id)
+		set iblink(id) 0
+		set iblink(index) -1
+	    }
+
+	    # ignore if we are already fadeing
+	    if {$ifade(id)==0} {
+		LayoutFrames
+		FadeTimer
 	    }
 	}
     }
@@ -1825,6 +1861,41 @@ proc BlinkTimer {} {
     }
 
     set iblink(id) [after $blink(interval) BlinkTimer]
+}
+
+proc FadeTimer {} {
+    global fade
+    global ifade
+    global ds9
+    global current
+
+    if {$ifade(next) == -1} {
+	# first time
+	set ifade(next) [expr $ifade(index)+1]
+	if {$ifade(next) >= [llength $ds9(active)]} {
+		set ifade(next) 0
+	}
+	set ifade(transparency) 0
+
+    } elseif {$ifade(transparency) == 100} {
+	# we are done with fading, goto next frame
+	if {[llength $ds9(active)] > 0} {
+	    incr ifade(index)
+	    if {$ifade(index) >= [llength $ds9(active)]} {
+		set ifade(index) 0
+	    }
+	    GotoFrame [lindex $ds9(active) $ifade(index)]
+	}
+	set ifade(next) -1
+
+    } else {
+	# fade
+	incr ifade(transparency) 10
+	$current(frame) fade \
+	    [lindex $ds9(active) $ifade(next)] $ifade(transparency)
+    }
+
+    set ifade(id) [after $fade(interval) FadeTimer]
 }
 
 proc ResetCurrentFrame {} {
@@ -1946,6 +2017,7 @@ proc FrameToFront {} {
 
     switch -- $ds9(display) {
 	single -
+	fade -
 	blink {}
 	tile {$current(frame) highlite on}
     }
@@ -2198,6 +2270,44 @@ proc BlinkSendCmdInterval {} {
     global blink
 
     $parse(proc) $parse(id) "[expr $blink(interval)/1000.]\n"
+}
+
+proc ProcessFadeCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    fade::YY_FLUSH_BUFFER
+    fade::yy_scan_string [lrange $var $i end]
+    fade::yyparse
+    incr i [expr $fade::yycnt-1]
+}
+
+proc ProcessSendFadeCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    fadesend::YY_FLUSH_BUFFER
+    fadesend::yy_scan_string $param
+    fadesend::yyparse
+}
+
+proc FadeSendCmd {} {
+    global parse
+    global current
+    
+    if {$current(display)=="fade"} {
+	$parse(proc) $parse(id) "yes\n"
+    } else {
+	$parse(proc) $parse(id) "no\n"
+    }
+}
+
+proc FadeSendCmdInterval {} {
+    global parse
+    global fade
+
+    $parse(proc) $parse(id) "[expr $fade(interval)/1000.]\n"
 }
 
 proc ProcessLockCmd {varname iname} {

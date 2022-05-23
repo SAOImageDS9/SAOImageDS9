@@ -44,6 +44,22 @@ proc BlinkDef {} {
     array set pblink [array get blink]
 }
 
+proc FadeDef {} {
+    global fade
+    global ifade
+    global pfade
+
+    set ifade(id) 0
+    set ifade(index) -1
+    set ifade(next) -1
+    set ifade(transparency) 0
+
+    set fade(blend) screen
+    set fade(interval) 1000
+
+    array set pfade [array get fade]
+}
+
 proc TileDef {} {
     global tile
     global itile
@@ -510,9 +526,9 @@ proc LayoutFramesOneOrMore {} {
     global view
 
     switch -- $ds9(display) {
-	single {
-	    LayoutFrameOne
-	}
+	fade -
+	blink -
+	single {LayoutFrameOne}
 	tile {
 	    if {[llength $ds9(active)] > 1} {
 		if {$view(multi)} {
@@ -523,9 +539,6 @@ proc LayoutFramesOneOrMore {} {
 	    } else {
 		LayoutFrameOne
 	    }
-	}
-	blink {
-	    LayoutFrameOne
 	}
     }
 }

@@ -36,6 +36,8 @@ proc FrameMainMenu {} {
 	-variable current(display) -value tile -command DisplayMode
     $ds9(mb).frame add radiobutton -label [msgcat::mc {Blink Frames}] \
 	-variable current(display) -value blink -command DisplayMode
+    $ds9(mb).frame add radiobutton -label [msgcat::mc {Fade Frames}] \
+	-variable current(display) -value fade -command DisplayMode
     $ds9(mb).frame add separator
     $ds9(mb).frame add cascade -label [msgcat::mc {Match}] \
 	-menu $ds9(mb).frame.match
@@ -259,6 +261,8 @@ proc FrameMainMenu {} {
 	-menu $ds9(mb).frame.params.tile
     $ds9(mb).frame.params add cascade -label [msgcat::mc {Blink Interval}] \
 	-menu $ds9(mb).frame.params.blink
+    $ds9(mb).frame.params add cascade -label [msgcat::mc {Fade Interval}] \
+	-menu $ds9(mb).frame.params.fade
     $ds9(mb).frame.params add command -label [msgcat::mc {Display Size}] \
 	-command DisplayDefaultDialog
 
@@ -275,19 +279,16 @@ proc FrameMainMenu {} {
 
     ThemeMenu $ds9(mb).frame.params.blink
     $ds9(mb).frame.params.blink add radiobutton \
-	-label "1/16 [msgcat::mc {Seconds}]" \
-	-variable blink(interval) -value 6
-    $ds9(mb).frame.params.blink add radiobutton \
-	-label "1/8 [msgcat::mc {Seconds}]" \
+	-label ".125 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 125
     $ds9(mb).frame.params.blink add radiobutton \
-	-label "1/4 [msgcat::mc {Seconds}]" \
+	-label ".25 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 250
     $ds9(mb).frame.params.blink add radiobutton \
-	-label "1/2 [msgcat::mc {Seconds}]" \
+	-label ".5 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 500
     $ds9(mb).frame.params.blink add radiobutton \
-	-label "1 [msgcat::mc {Seconds}]" \
+	-label "1 [msgcat::mc {Second}]" \
 	-variable blink(interval) -value 1000
     $ds9(mb).frame.params.blink add radiobutton \
 	-label "2  [msgcat::mc {Seconds}]" \
@@ -301,6 +302,23 @@ proc FrameMainMenu {} {
     $ds9(mb).frame.params.blink add radiobutton \
 	-label "16 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 16000
+
+    ThemeMenu $ds9(mb).frame.params.fade
+    $ds9(mb).frame.params.fade add radiobutton \
+	-label "1 [msgcat::mc {Second}]" \
+	-variable fade(interval) -value 1000
+    $ds9(mb).frame.params.fade add radiobutton \
+	-label "2  [msgcat::mc {Seconds}]" \
+	-variable fade(interval) -value 2000
+    $ds9(mb).frame.params.fade add radiobutton \
+	-label "4 [msgcat::mc {Seconds}]" \
+	-variable fade(interval) -value 4000
+    $ds9(mb).frame.params.fade add radiobutton \
+	-label "8 [msgcat::mc {Seconds}]" \
+	-variable fade(interval) -value 8000
+    $ds9(mb).frame.params.fade add radiobutton \
+	-label "16 [msgcat::mc {Seconds}]" \
+	-variable fade(interval) -value 16000
 }
 
 proc PrefsDialogFrameMenu {w} {
@@ -319,6 +337,8 @@ proc PrefsDialogFrameMenu {w} {
 	-variable pcurrent(display) -value tile
     $m add radiobutton -label [msgcat::mc {Blink Frames}] \
 	-variable pcurrent(display) -value blink
+    $m add radiobutton -label [msgcat::mc {Fade Frames}] \
+	-variable pcurrent(display) -value fade
     $m add separator
     $m add cascade -label [msgcat::mc {Frame Parameters}] \
 	-menu $m.params
@@ -328,6 +348,8 @@ proc PrefsDialogFrameMenu {w} {
 	-menu $m.params.tile
     $m.params add cascade -label [msgcat::mc {Blink Interval}] \
 	-menu $m.params.blink
+    $m.params add cascade -label [msgcat::mc {Fade Interval}] \
+	-menu $m.params.fade
 
     ThemeMenu $m.params.tile
     $m.params.tile add radiobutton -label [msgcat::mc {Grid}] \
@@ -344,7 +366,7 @@ proc PrefsDialogFrameMenu {w} {
 	-variable pblink(interval) -value 250
     $m.params.blink add radiobutton -label ".5 [msgcat::mc {Seconds}]" \
 	-variable pblink(interval) -value 500
-    $m.params.blink add radiobutton -label "1 [msgcat::mc {Seconds}]" \
+    $m.params.blink add radiobutton -label "1 [msgcat::mc {Second}]" \
 	-variable pblink(interval) -value 1000
     $m.params.blink add radiobutton -label "2  [msgcat::mc {Seconds}]" \
 	-variable pblink(interval) -value 2000
@@ -352,6 +374,20 @@ proc PrefsDialogFrameMenu {w} {
 	-variable pblink(interval) -value 4000
     $m.params.blink add radiobutton -label "8 [msgcat::mc {Seconds}]" \
 	-variable pblink(interval) -value 8000
+    $m.params.blink add radiobutton -label "16 [msgcat::mc {Seconds}]" \
+	-variable pblink(interval) -value 16000
+
+    ThemeMenu $m.params.fade
+    $m.params.fade add radiobutton -label "1 [msgcat::mc {Second}]" \
+	-variable pfade(interval) -value 1000
+    $m.params.fade add radiobutton -label "2  [msgcat::mc {Seconds}]" \
+	-variable pfade(interval) -value 2000
+    $m.params.fade add radiobutton -label "4 [msgcat::mc {Seconds}]" \
+	-variable pfade(interval) -value 4000
+    $m.params.fade add radiobutton -label "8 [msgcat::mc {Seconds}]" \
+	-variable pfade(interval) -value 8000
+    $m.params.fade add radiobutton -label "16 [msgcat::mc {Seconds}]" \
+	-variable pfade(interval) -value 16000
 
     pack $f -side top -fill both -expand true
 }
@@ -373,6 +409,7 @@ proc ButtonsFrameDef {} {
 	frame,single 1
 	frame,tile 1
 	frame,blink 1
+	frame,fade 1
 
 	frame,match,bin 0
 	frame,match,axes 0
@@ -484,6 +521,9 @@ proc CreateButtonsFrame {} {
     RadioButton $ds9(buttons).frame.blink \
 	[string tolower [msgcat::mc {Blink}]] \
 	current(display) blink DisplayMode
+    RadioButton $ds9(buttons).frame.fade \
+	[string tolower [msgcat::mc {Fade}]] \
+	current(display) fade DisplayMode
 
     ButtonButton $ds9(buttons).frame.matchbin \
 	[string tolower [msgcat::mc {Match Bin}]] MatchBinCurrent
@@ -677,6 +717,7 @@ proc CreateButtonsFrame {} {
         $ds9(buttons).frame.single pbuttons(frame,single)
         $ds9(buttons).frame.tile pbuttons(frame,tile)
         $ds9(buttons).frame.blink pbuttons(frame,blink)
+        $ds9(buttons).frame.fade pbuttons(frame,fade)
 
         $ds9(buttons).frame.matchbin pbuttons(frame,match,bin)
         $ds9(buttons).frame.matchaxes pbuttons(frame,match,axes)
@@ -787,6 +828,8 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,tile) -command {UpdateButtons buttons(frame)}
     $m add checkbutton -label [msgcat::mc {Blink Frames}] \
 	-variable pbuttons(frame,blink) -command {UpdateButtons buttons(frame)}
+    $m add checkbutton -label [msgcat::mc {Fade Frames}] \
+	-variable pbuttons(frame,fade) -command {UpdateButtons buttons(frame)}
     $m add separator
     $m add cascade -label [msgcat::mc {Match}] -menu $m.match
     $m add cascade -label [msgcat::mc {Lock}] -menu $m.lock
@@ -1059,6 +1102,7 @@ proc UpdateFrameMenu {} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state normal
+	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state normal
 
 	$ds9(mb).frame entryconfig [msgcat::mc {Match}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Lock}] -state normal
@@ -1080,6 +1124,7 @@ proc UpdateFrameMenu {} {
 	$ds9(buttons).frame.single configure -state normal
 	$ds9(buttons).frame.tile configure -state normal
 	$ds9(buttons).frame.blink configure -state normal
+	$ds9(buttons).frame.fade configure -state normal
 
 	$ds9(buttons).frame.movefirst configure -state normal
 	$ds9(buttons).frame.moveprev configure -state normal
@@ -1101,6 +1146,7 @@ proc UpdateFrameMenu {} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state disabled
 
 	$ds9(mb).frame entryconfig [msgcat::mc {Match}] -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {Lock}] -state disabled
@@ -1122,6 +1168,7 @@ proc UpdateFrameMenu {} {
 	$ds9(buttons).frame.single configure -state disabled
 	$ds9(buttons).frame.tile configure -state disabled
 	$ds9(buttons).frame.blink configure -state disabled
+	$ds9(buttons).frame.fade configure -state disabled
 
 	$ds9(buttons).frame.movefirst configure -state disabled
 	$ds9(buttons).frame.moveprev configure -state disabled

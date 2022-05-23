@@ -173,6 +173,7 @@ proc ProcessCommand {argv argc} {
 	    -export {incr i; ProcessExportCmd argv i}
 	    -exit -
 	    -quit {ProcessQuitCmd argv i}
+	    -fade {incr i; ProcessFadeCmd argv i}
 	    -frame {incr i; ProcessFrameCmd argv i}
 	    -fifo {
 		incr i

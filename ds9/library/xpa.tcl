@@ -199,6 +199,11 @@ proc CreateXPA {} {
 	{} {} {} \
 	XPARcvdExport {} "fillbuf=false"
  
+    xpacmdadd $xpa fade \
+	{} \
+	XPASendFade {} {} \
+	XPARcvdFade {} "fillbuf=false"
+
     xpacmdadd $xpa file \
 	{} \
 	XPASendFile {} {} \
@@ -1030,6 +1035,19 @@ proc XPARcvdExport {xpa cdata param buf len} {
     XPADebug "XPARcvdExport" $param
     InitError xpa
     catch {set i 0; ProcessExportCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendFade {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendFadeCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdFade {xpa cdata param buf len} {
+    XPADebug "XPARcvdFade" $param
+    InitError xpa
+    catch {set i 0; ProcessFadeCmd param i}
     XPACatchError $xpa
 }
 

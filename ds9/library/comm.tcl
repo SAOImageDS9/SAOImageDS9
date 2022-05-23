@@ -58,6 +58,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	dssstsci {ProcessSTSCICmd param i}
 	envi {ProcessENVICmd param i {} $fn}
 	export {ProcessExportCmd param i}
+	fade {ProcessFadeCmd param i}
 	file {ProcessFileCmd param i {} {} {}}
 	fits {ProcessFitsCmd param i {} $fn}
 	frame {ProcessFrameCmd param i}
@@ -269,6 +270,7 @@ proc CommGet {proc id paramlist fn} {
 	envi {}
 	exit {}
 	export {}
+	fade {ProcessSendFadeCmd $proc $id $param}
 	file {ProcessSendFileCmd $proc $id $param}
 	fits {ProcessSendFitsCmd $proc $id $param {} $fn}
 	frame {ProcessSendFrameCmd $proc $id $param}

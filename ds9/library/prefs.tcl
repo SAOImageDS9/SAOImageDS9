@@ -213,6 +213,13 @@ proc SavePrefs {} {
     puts $ch "array set pblink \{ [array get pblink] \}"
     puts $ch {array set blink [array get pblink]}
 
+    global fade
+    global pfade
+    puts $ch "global fade"
+    puts $ch "global pfade"
+    puts $ch "array set pfade \{ [array get pfade] \}"
+    puts $ch {array set fade [array get pfade]}
+
     global tile
     global ptile
     puts $ch "global tile"

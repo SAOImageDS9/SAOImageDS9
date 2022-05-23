@@ -645,6 +645,13 @@ proc BackupGUI {ch} {
     puts $ch "global pblink"
     puts $ch "array set pblink \{ [array get pblink] \}"
 
+    global fade
+    puts $ch "global fade"
+    puts $ch "array set fade \{ [array get fade] \}"
+    global pfade
+    puts $ch "global pfade"
+    puts $ch "array set pfade \{ [array get pfade] \}"
+
     global tile
     puts $ch "global tile"
     puts $ch "array set tile \{ [array get tile] \}"

@@ -366,6 +366,7 @@ DebugDef
 ESODef
 ExamineDef
 ExportDef
+FadeDef
 FPDef
 GraphDef
 GridDef

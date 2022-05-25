@@ -80,7 +80,8 @@ proc GraphsCreate {frame} {
 	-min 1 -max $igraph(y,max)
     
     $horz element create line1 -xdata $xv -ydata $yv \
-	-symbol none -color [ThemeTreeForeground]
+	-symbol none -color [ThemeTreeForeground] \
+	-mapy y2
 
     # blt graph
     set ${varname}(horz) $horz

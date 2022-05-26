@@ -139,6 +139,7 @@ PREQS	= \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
+	$(LIBDIR)/tooltip \
 	$(LIBDIR)/awthemes \
 	$(LIBDIR)/ttkthemes \
 	$(LIBDIR)/scidthemes \

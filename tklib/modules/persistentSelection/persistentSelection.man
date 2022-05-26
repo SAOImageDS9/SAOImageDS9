@@ -1,0 +1,209 @@
+[comment {-*- tcl -*- persistentSelection manpage}]
+[manpage_begin persistentSelection n 1.0]
+[moddesc   {Enhanced PRIMARY selection}]
+[titledesc {Enhanced PRIMARY selection}]
+[require Tcl 8.5]
+[require Tk 8.5]
+[require persistentSelection [opt 1.0]]
+[description]
+
+Consider a [package Tk] widget that sets its [option -exportselection] option to boolean [const true], thereby exporting its selection.  When the selection in the widget is canceled, by default [package Tk] also cancels the [const PRIMARY] selection.  In this situation, an attempt to read the [const PRIMARY] selection, e.g. by a [const <<PasteSelection>>] event, will fail.
+
+[para]
+The [package persistentSelection] package offers more convenient behavior.  It will sustain as the [const PRIMARY] selection the last non-empty value set by any [package Tk] widget that it monitors, as long as the [const PRIMARY] selection is not claimed by another process, or by a widget that it does not monitor.
+
+[para]
+The [package persistentSelection] package works by binding to the [const <<Selection>>] event on the widgets of interest, and using this binding to monitor any change of the selection in the widget.  Its commands are confined to the namespace [namespace ::persistentSelection].
+
+[section COMMANDS]
+
+[list_begin definitions]
+
+
+[call [cmd persistentSelection::fixText]]
+
+Call this command once to resolve problems with [syscmd [widget text]] widgets that use the default [const Text] bindtag (rather than [const Ntext]).  See [sectref {Text widgets}] for an explanation.
+
+[para]
+The command adjusts some [const Text] bindings to generate [const <<Selection>>] events; and it re-orders calls to the [syscmd [widget text]] widget [cmd tag] command in the private command [cmd ::tk::TextSelectTo], so that this command cooperates better with [package persistentSelection].
+
+[para]
+These adjustments are needed only to older versions of [package Tk].  The command [cmd persistentSelection::fixText] has no effect on sufficiently recent releases.  It can safely be called for any version of [package Tk].
+
+[call [cmd persistentSelection::getClassicPrimarySel] [opt [arg displayOf]] [opt [arg withOthers]]]
+
+[list_begin itemized]
+[item] [arg displayOf] - a [package Tk] window path on the display to be interrogated (optional, default {[const .]})
+[item] [arg withOthers] - whether to return the [const PRIMARY] selection if it is owned by another process or interpreter (optional, boolean, default [const false])
+[list_end]
+
+A command to return the classic (non-persistent) form of the [const PRIMARY] selection.  If the selection does not exist, or is sustained only by [package persistentSelection], the command returns the empty string.
+
+
+[call [cmd persistentSelection::getPrimarySel] [opt [arg displayOf]]]
+[list_begin itemized]
+[item] [arg displayOf] - a [package Tk] window on the display to be interrogated (optional, default {[const .]})
+[list_end]
+
+A command to return the value of the [const PRIMARY] selection.  If the selection does not exist, the command returns the empty string.  The usual [package Tk] commands are perfectly valid, but they raise an error if the selection does not exist.
+
+[call [cmd persistentSelection::report] [arg type] [arg pathName]]
+
+[list_begin itemized]
+[item] [arg type] - (value [const text] or [const entry]) classification of the widget whose selection has changed
+[item] [arg pathName] - the [package Tk] window path of the widget whose selection has changed
+[list_end]
+
+To make package [package persistentSelection] monitor a widget, this command must be bound to the [const <<Selection>>] event on that widget.  The command records changes in the widget's selection, and uses the information to sustain a non-empty [const PRIMARY] selection on each display.
+
+[list_end]
+
+
+[section USAGE]
+[subsection {Script requirements}]
+
+For each widget that will be monitored by [package persistentSelection], the command [cmd persistentSelection::report] must be bound to event [const <<Selection>>] in one of the widget's binding tags.
+
+[para]
+For example, the developer may wish to use [package persistentSelection] with every [syscmd [widget text]] and [syscmd [widget entryPlus]] widget in an application: this can be achieved by adding the [const <<Selection>>] binding to the [const Text] and [const EntryPlus] bindtags.  See [sectref EXAMPLES].
+
+[para]
+If [package persistentSelection] is not required for all widgets of a particular class, the binding can be added to per-widget bindtags.  See [sectref EXAMPLES].
+
+[subsection {Widget requirements}]
+To be capable of being monitored by [package persistentSelection], a widget must satisfy three conditions:
+[list_begin itemized]
+
+[item] It must have an [option -exportselection] option that allows it to export its selection to the [const PRIMARY] selection.
+
+[item] It must generate a [const <<Selection>>] event whenever its selection changes.
+
+[item] its bindings to other events should be suitable - specifically, in versions of [package Tk] older than [const 8.6.6], a GUI event that extends or reduces the selection from one non-empty value to another should not use an intermediate state that has an empty selection, because this confuses [package persistentStore].
+
+[list_end]
+
+[para]
+The [package Tk] and [const Ttk] widgets that can export their selection are [syscmd [widget text]], [syscmd [widget entry]], [syscmd [widget listbox]], [syscmd [widget spinbox]], [syscmd [widget ttk::entry]], [syscmd [widget ttk::spinbox]], and [syscmd [widget ttk::combobox]].
+
+[subsection {Text widgets}]
+In versions of [package Tk] older than [const 8.6.9], the [syscmd [widget text]] widget does not generate [const <<Selection>>] events in a few "corner cases" in which its selection changes.  These omissions can be corrected by changes to the [const Text] bindings, in order to satisfy the second condition of [sectref {Widget requirements}].
+
+[para]
+In addition, versions of [package Tk] older than [const 8.6.6] process selection events slightly differently from newer versions, and in combination with the [const Text] bindings this confuses [package persistentStore].  If an upgrade to the current version of [const Tcl/Tk] is not feasible, this problem can be resolved by making a slight modification to the widget bindings, in order to satisfy the third condition of [sectref {Widget requirements}].
+
+[para]
+Either the script should call the command [cmd persistentSelection::fixText] to adjust the [const Text] bindings and the commands that they call; or the widget can use the [const Ntext] binding tag (for [package ntext] version 1.0 or above) instead of the default [const Text] bindtag.
+
+[para]
+In either case, the argument [arg type] supplied to command [cmd persistentSelection::report] should have the value [const text].
+
+[subsection {Entry, spinbox, ttk::entry, ttk::spinbox, and ttk::combobox widgets}]
+The [syscmd [widget entry]], [syscmd [widget spinbox]], [syscmd [widget ttk::entry]], [syscmd [widget ttk::spinbox]], and [syscmd [widget ttk::combobox]] widgets do not generate a [const <<Selection>>] event when their selection changes, and therefore require modification.
+
+[para]
+The package [package widgetPlus] provides [package snit] wrappers [syscmd [widget widgetPlus::entryPlus]], [syscmd [widget widgetPlus::spinboxPlus]], [syscmd [widget widgetPlus::ttkEntryPlus]], [syscmd [widget widgetPlus::ttkSpinboxPlus]], and [syscmd [widget widgetPlus::ttkComboboxPlus]] respectively.  Each [package widgetPlus] widget generates the required [const <<Selection>>] events.
+
+[para]
+In all these cases, the argument [arg type] supplied to command [cmd persistentSelection::report] should have the value [const entry].  This argument determines how [package persistentSelection] will inspect the widget's selection, and the commands that do so are the same for all these widgets.
+
+[subsection {Listbox widgets}]
+A similar wrapper has not been created for the [syscmd [widget listbox]] widget, which has the complication of permitting multiple selections.
+
+[section {TO DO}]
+
+[list_begin itemized]
+
+[item] Test on a system with multiple displays.
+
+[list_end]
+
+[section BUGS]
+
+This version of [package persistentSelection] is intended to be compatible with all releases of [package Tk] 8.5 and 8.6, and with the branches [emph core-8-5-branch], [emph core-8-6-branch], [emph revised_text], and [emph trunk] in the source code repository for [package Tk].  Any incompatibility with any of these versions, for any [package Tk] windowing system, should be reported as a bug. Please report such in the category [emph persistentSelection] of the [uri http://core.tcl.tk/tklib/reportlist {Tklib Trackers}].
+
+[section EXAMPLES]
+
+Each example uses [package persistentSelection] to retain the last non-empty value of the selection in certain widgets.  Each example also includes the creation of sample widgets.
+
+[para]
+
+Monitor all [syscmd [widget entryPlus]] widgets.
+
+[example {
+package require widgetPlus
+widgetPlus::entryPlus .ep
+pack .ep
+ 
+package require persistentSelection
+bind EntryPlus <<Selection>> {::persistentSelection::report entry %W}
+}]
+
+
+Monitor all [syscmd [widget text]] widgets that use the default [const Text] bindings.
+
+[example {
+text .t
+pack .t
+ 
+package require persistentSelection
+::persistentSelection::fixText
+bind Text <<Selection>> {::persistentSelection::report text %W}
+}]
+
+
+Monitor all [syscmd [widget text]] widgets that use the default [const Text] bindings, and all [syscmd [widget entryPlus]] widgets.
+
+[example {
+text .t
+pack .t
+ 
+package require widgetPlus
+widgetPlus::entryPlus .ep
+pack .ep
+ 
+package require persistentSelection
+::persistentSelection::fixText
+bind Text <<Selection>> {::persistentSelection::report text %W}
+bind EntryPlus <<Selection>> {::persistentSelection::report entry %W}
+}]
+
+
+Monitor all [syscmd [widget text]] widgets that use [const Ntext] bindings.
+
+[example {
+text .t
+pack .t
+ 
+package require ntext
+bindtags .t {.t Ntext . all}
+ 
+package require persistentSelection
+bind Ntext <<Selection>> {::persistentSelection::report text %W}
+}]
+
+
+Monitor a single [syscmd [widget entryPlus]] widget [const .ep]
+
+[example {
+package require widgetPlus
+widgetPlus::entryPlus .ep
+pack .ep
+ 
+package require persistentSelection
+bind .ep <<Selection>> {::persistentSelection::report entry %W}
+}]
+
+
+Monitor a single [syscmd [widget text]] widget [const .t]
+
+[example {
+text .t
+pack .t
+ 
+package require persistentSelection
+bind .t <<Selection>> {::persistentSelection::report text %W}
+}]
+
+
+[see_also widgetPlus text ntext bindtags]
+[manpage_end]

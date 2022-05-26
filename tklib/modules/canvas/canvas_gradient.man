@@ -1,0 +1,113 @@
+[comment {-*- tcl -*- doctools manpage}]
+[comment {- -- ---- -------- ---------------- -------------------------------}]
+[manpage_begin canvas::gradient n 0.2]
+[keywords background]
+[keywords canvas]
+[keywords {color gradient}]
+[keywords gradients]
+[keywords image]
+[keywords {widget background}]
+[moddesc   {Variations on a canvas}]
+[copyright {2013 Jarek Lewandowski, MaxJarek}]
+[copyright {Origin http://wiki.tcl.tk/6100}]
+[copyright {Origin http://wiki.tcl.tk/37242}]
+[copyright {Origin http://wiki.tcl.tk/9079}]
+[titledesc {Canvas with a gradient background}]
+[require Tcl 8.5]
+[require Tk 8.5]
+[require canvas::gradient [opt 0.2]]
+[description]
+
+This package provides a command to set background gradients on canvases.
+
+[para] [emph NOTE!] This package reserves the canvas tag
+[const {canvas::gradient}] for its use.
+
+[comment {- -- ---- -------- ---------------- -------------------------------}]
+[section API]
+
+[list_begin definitions]
+[call [cmd ::canvas::gradient] [arg pathName] [opt options]...]
+
+Creates a background gradient on the canvas [arg pathName].
+An existing gradient is replaced by the new definition.
+
+[para] The set of available options is decribed below, in
+section [sectref Options].
+
+[list_end]
+
+[comment {- -- ---- -------- ---------------- -------------------------------}]
+[subsection Options]
+
+[list_begin options]
+[opt_def -direction [arg direction]]
+
+The value for this option specifies the [arg direction] of the gradient.
+If not specified the system defaults to [const x], a horizontal gradient.
+The package supports five directions:
+
+[list_begin definitions]
+[def [const x]]
+  for a horizontal gradient (default).
+  Color changes along the x-axis,
+  with the start color at the left.
+
+[def [const y]]
+  for a vertical gradient.
+  Color changes along the y-axis,
+  with the start color at the top.
+
+[def [const d1]]
+  for a diagonal gradient from left+top to bottom+right.
+  Color changes along the diagonal.
+  with the start color at left+top.
+
+[def [const d2]]
+  for a diagonal gradient from left+bottom to top+right.
+  Color changes along the diagonal.
+  with the start color at left+bottom.
+
+[def [const r]]
+  for a radial gradient around the center of the viewport
+  Color changes from the center outward,
+  with the start color at the center.
+
+[list_end]
+
+[opt_def -color1 [arg color]]
+
+The value for this option specifies the starting color of the gradient.
+If not specified it defaults to [const red].
+
+[opt_def -color2 [arg color]]
+
+The value for this option specifies the ending color of the gradient.
+If not specified it defaults to [const green].
+
+[opt_def -type [arg type]]
+
+The value for this option specifies how the gradient is calculated.
+The package currently supports on ly one method, which is the
+default, naturally:
+
+[list_begin definitions]
+[def [const linear]]
+for linear interpolation between the start and end colors (default).
+[list_end]
+[list_end]
+
+[comment {- -- ---- -------- ---------------- -------------------------------}]
+[section Example]
+
+[example {
+	package require canvas::gradient
+	canvas .c
+	canvas::gradient .c -direction x -color1 yellow -color2 blue
+	pack .c -fill both -expand 1
+}]
+
+[comment {- -- ---- -------- ---------------- -------------------------------}]
+[vset CATEGORY canvas]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

@@ -1,0 +1,82 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin canvas::track::lines n [vset VERSION]]
+[keywords canvas]
+[keywords crosshair]
+[keywords rubberband]
+[keywords tracking]
+[moddesc   {Variations on a canvas}]
+[titledesc {Manage a group of rubber band lines}]
+[require Tcl 8.5]
+[require Tk 8.5]
+[require canvas::tag [opt [vset VERSION]]]
+[description]
+
+This package provides a utility class managing the drawing of set of semi-crosshair (rubberband) lines.
+
+[section {Class API}]
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::track] [method lines] [arg objectName] [arg canvas]]
+
+This, the class command, creates and configures a new instance of the
+tracker, named [arg objectName]. The instance will be
+connected to the specified [arg canvas] widget.
+
+[para] The result of the command is the fully qualified name of the
+instance command.
+
+[list_end]
+
+[section {Instance API}]
+
+Instances of this class provide the following API:
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method destroy]]
+
+This method destroys the instance and releases all its
+internal resources.
+
+[para] This operation does destroy the items representing the
+tracked lines. It does not destroy the attached canvas.
+
+[para] The result of the method is an empty string.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method start] [arg current] [arg p]...]
+
+This method starts the tracking of a set of lines, one line per
+point [arg p], which specifies the destination end-point of each
+line. All lines will have [arg current] as a common end-point.
+
+[para] Note that a previously tracked set of lines is removed.
+
+[para] The result of the method is an empty string.
+
+[para] Each point is specified through a 2-element list containing its
+x- and y-coordinates, in this order.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method move] [arg current]]
+
+This method updates the shared end-point of all rubberbands and redraws
+them.
+
+[para] The result of the method is an empty string.
+
+[para] The point is specified through a 2-element list containing its
+x- and y-coordinates, in this order.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method done]]
+
+This method ends the tracking of the current set of lines and removes
+them from the canvas.
+
+[list_end]
+[vset CATEGORY canvas]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

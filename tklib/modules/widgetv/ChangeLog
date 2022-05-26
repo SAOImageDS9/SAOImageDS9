@@ -1,0 +1,20 @@
+2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.7 ========================
+	* 
+
+2013-03-25  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.6 ========================
+	* 
+
+2012-08-28  Andreas Kupries  <andreask@activestate.com>
+
+	* widget_validator.man: New file, documentation.
+	* validator.tcl: Added argument check to method validate.
+
+2012-08-27  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	* initial release v0.1

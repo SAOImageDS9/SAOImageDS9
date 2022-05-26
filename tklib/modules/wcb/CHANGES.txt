@@ -1,0 +1,217 @@
+What is new in Wcb 3.6?
+-----------------------
+
+1. Adapted to some changes in future Tcl and Tk releases (for example,
+   made sure that it works with Tcl 9.0 and Tk 8.7).
+
+2. Updated the demo-scripts and the documentation.
+
+What was new in Wcb 3.5?
+------------------------
+
+1. Support for the tile treeview widget.
+
+2. Minor performance improvements.
+
+3. Improved and updated the documentation.
+
+What was new in Wcb 3.4?
+------------------------
+
+The only changes contained in this release are related to the package
+mechanism, needed for a better teacup support (thanks to Oliver Bienert
+and Andreas Kupries for discussions on this subject).
+
+What was new in Wcb 3.3?
+------------------------
+
+The only changes contained in this release are a few adaptations made
+necessary by submitting the package for inclusion in tklib (thanks to
+Stuart Cassoff for his proposal and valuable assistance).
+
+What was new in Wcb 3.2?
+------------------------
+
+1. Support for the new tile spinbox widget, introduced in Tk version
+   8.6 and tile version 0.8.3.
+
+2. Callback support for the new "replace" text widget subcommand,
+   introduced in Tk 8.6.
+
+3. New utility procedure "postDeleteEntryText" for Tk entry, tile entry,
+   BWidget Entry, Tk spinbox, tile spinbox, and tile combobox widgets.
+
+4. Updated the demo scripts "listboxtest1.tcl" and "listboxtest2.tcl" to
+   work with Tk versions 8.5 and above.
+
+What was new in Wcb 3.1?
+------------------------
+
+1. Support for the tile entry and combobox widgets.
+
+2. Support for the ctext widget by George Peter Staplin (thanks to
+   Kenneth Green for his proposal).
+
+3. Minor improvements in the documentation.
+
+What was new in Wcb 3.0?
+------------------------
+
+1. Callback support for the new tablelist commands "activatecell",
+   "cellselection set", and "cellselection clear", introduced in
+   Tablelist version 3.5.
+
+2. Minor improvements in the code and documentation.
+
+What was new in Wcb 2.9?
+------------------------
+
+1. Applied a patch proposed (in a slightly different form) by Mats
+   Bengtsson that works around a bug in the "info script" command on
+   the Macintosh.
+
+2. The code and the documentation now explicitly mention the support
+   for the Entry widget from the BWidget package.  Everything that
+   refers to entry widgets is valid for BWidget Entry widgets, too.
+
+3. A new demo script showing how widget callbacks can be combined with
+   the undo mechanism for text widgets.
+
+4. Improvements in the demo scripts and documentation.
+
+What was new in Wcb 2.8?
+------------------------
+
+1. The before/after-selset and before/after-selclear callbacks are now
+   supported for text widgets, too (where they refer to the "tag add
+   sel" and "tag remove sel" operations).
+
+2. The demo script "texttest.tcl" now also shows how to use a before-
+   selset callback for protecting a range of characters in a text
+   widget from being selected.
+
+3. Minor improvements in the code, demo scripts, and documentation.
+
+4. The distribution file "wcb2_8.zip" for Windows now includes the
+   "wcb2.8" directory, hence it is no longer necessary to create this
+   folder before unpacking the distribution file.
+
+What was new in Wcb 2.7?
+------------------------
+
+1. Fixed a bug in the private procedure "textWidgetCmd" (thanks to
+   Brian Theado for his bug report).
+
+2. Extended the private procedure "cleanup", to improve the support
+   for tablelist widgets (thanks to Juri Shimon for his bug report).
+
+3. Extended the "How to use it?" section of the tutorial "wcb.html".
+
+What was new in Wcb 2.6?
+------------------------
+
+1. Fixed a bug introduced in version 2.5 in the private procedure
+   "processCmd" (thanks to Juri Shimon for his bug report).
+
+2. Added the before-insert callbacks "checkStrForRegExp" and
+   "checkStrsForRegExp".
+
+3. Internationalized the sample before-insert callbacks
+   "checkStrFor*" and "checkStrsFor*" for Tk versions 8.1 or higher.
+
+4. The text widget callbacks "checkStrsFor*" now accept also "\n"
+   characters.
+
+What was new in Wcb 2.5?
+------------------------
+
+1. New "pathname" command to query the path name of the widget
+   corresponding to a Tcl command name (this was kindly suggested by
+   Bastien Chevreux).
+
+2. Improved the implementations of the "cancel", "extend", and
+   "replace" commands, as well as of the private procedure
+   "processCmd", to make sure that the data used by different widgets
+   won't intermix (thanks to Leslie Brooks for his bug report).
+
+3. Improved the parsing of configuration and command options.
+
+What was new in Wcb 2.4?
+------------------------
+
+1. A callback is now considered empty if and only if it is an empty
+   *string*, not an empty *list*, like in earlier versions.  This is
+   better because the "llength" command, used in earlier versions,
+   doesn't work if its argument is not a well-formed list.
+
+2. The command reference has been moved from the file "wcb.html" into
+   "wcbRef.html", which is also included in the documentation of the
+   Mentry package.
+
+3. Further improvements in the documentation.
+
+What was new in Wcb 2.3?
+------------------------
+
+1. The "changeEntryText" command now returns the value 0 if the
+   attempted change gets canceled by some before-delete or before-
+   insert callback, and 1 otherwise.  (This was kindly suggested by
+   Aryeh Koenigsberg.)
+
+2. Support for the new Tk core spinbox widget if Tk version 8.4 or
+   higher is being used.  Everything that refers to entry widgets is
+   valid for spinbox widgets, too.
+
+3. Support for the new tablelist widget (see http://www.nemethi.de).
+   Everything that refers to listbox widgets is valid for tablelist
+   widgets, too.
+
+4. Minor improvements in the code and documentation.
+
+What was new in Wcb 2.2?
+------------------------
+
+1. The demo script "texttest.tcl" now uses a before- instead of after-
+   motion callback to keep track of the position of the insertion
+   cursor.  The manual file "wcb.html" explains the reason for this
+   change.
+
+2. Minor improvements in the documentation.
+
+What was new in Wcb 2.1?
+------------------------
+
+1. Fixed a bug in the procedure "cbprepend", introduced in version 2.0.
+
+2. Included a new demo script using an activate callback for a listbox.
+   This new example is also discussed in the manual file "wcb.html".
+
+3. Minor improvements in the code and documentation.
+
+What was new in Wcb 2.0?
+------------------------
+
+1. To load the package, you can now pass either "Wcb" or "wcb" to the
+   "package require" command (earlier versions only supported the
+   package name "Wcb").
+
+2. The current version 2.0 contains the new basic procedures "cbappend",
+   "cbprepend", and "canceled", the new utility procedure
+   "changeEntryText", and the new before-insert callback
+   "checkEntryForUInt".
+
+3. Several significant improvements have been made in the code, with the
+   purpose to save resources and make the implementation more straight-
+   forward.
+
+4. In case of an error, the new Tcl procedure corresponding to a widget
+   with registered callbacks now outputs exactly the same error message
+   and sets the "errorInfo" variable to the same value as the original
+   Tcl command associated with the widget.  That is, the behavior of a
+   widget in case of an error is now the same, whether it has callbacks
+   or not.
+
+5. The demo script "texttest.tcl" now also shows how to keep track of
+   the position of the insertion cursor by using an after-motion
+   callback.
+

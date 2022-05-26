@@ -1,0 +1,240 @@
+[vset VERSION 0.1]
+[comment {-*- tcl -*- doctools manpage}]
+[manpage_begin canvas::edit::polyline n [vset VERSION]]
+[keywords canvas]
+[keywords editing]
+[keywords polyline]
+[moddesc   {Variations on a canvas}]
+[titledesc {Editing a polyline on a canvas}]
+[require Tcl 8.5]
+[require Tk 8.5]
+[require canvas::edit::points [opt 0.1]]
+[require canvas::edit::polyline [opt [vset VERSION]]]
+[description]
+
+This package provides a class whose instances handle editing a single
+poly-line on a canvas. Instances can be configured with regard to the
+visual appearance (regular, and highlighted) of the markers denoting
+the line's vertices. Note that instances do not store the edited
+polyline themselves, but delegate this to a configurable object.
+
+[section {Class API}]
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::edit] [method polyline] [arg objectName] [arg canvas] [arg options]...]
+
+This, the class command, creates and configures a new instance of a
+polyline editor, named [arg objectName]. The instance will be
+connected to the specified [arg canvas] widget.
+
+[para] The result of the command is the fully qualified name of the
+instance command.
+
+[para] The options accepted here, and their values, are explained in
+the section [sectref Options].
+
+[list_end]
+
+[section {Instance API}]
+
+Instances of the polyline editors provide the following API:
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method destroy]]
+
+This method destroys the polyline editor and releases all its
+internal resources.
+
+[para] Note that this operation does not destroy the items the editor
+managed on the attached canvas, nor the canvas itself.
+
+[para] The result of the method is an empty string.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method enable]]
+
+This method activates editing of the polyline on the canvas. This
+is the default after instance creation. A call is ignored if the
+editor is already active.
+
+[para] The result of the method is an empty string.
+
+[para] The complementary method is [method disable]. The interogatory
+method for the current state is [method active].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method disable]]
+
+This method disables editing of the polyline on the canvas. A call
+is ignored if the editor is already disabled.
+
+[para] The result of the method is an empty string.
+
+[para] The complementary method is [method enable]. The interogatory
+method for the current state is [method active].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method active]]
+
+This method queries the editor state.
+
+[para] The result of the method is a boolean value, [const true] if
+the editor is active, and [const false] otherwise, i.e. disabled.
+
+[para] The methods to change the state are [method enable] and
+[method disable].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method add] [arg x] [arg y]]
+
+This method programmatically adds a vertex at the specified location to the line.
+
+[para] The result of the method is an empty string.
+
+[para] Note that this method goes through the whole set of callbacks
+invoked when the user interactively creates a vertex, i.e.
+[option -create-cmd], and, more importantly, [option -data-cmd].
+
+[para] One important difference however. The new vertex is always added
+at the end of the line, whereas interactive creation uses heuristics
+to splice it into the line at a suitable location.
+
+[para] This is the method through which to load the vertices of a
+pre-existing line into an editor instance.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method clear]]
+
+This method programmatically removes all vertices from the editor,
+essentially removing the whole line.
+
+[para] The result of the method is an empty string.
+
+[para] Note that this method goes through the same callbacks invoked
+when the user interactively removes a vertex, i.e. [option -data-cmd].
+
+[list_end]
+
+[section Options]
+
+The class command accepts the following options
+
+[list_begin options]
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -tag [arg string]]
+
+The value of this option is the name of the canvas tag with which to
+identify all items of all vertices managed by the editor.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to [const POLYLINE]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -create-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke
+when it has to create a new vertex.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to a command which will create a
+black-bordered blue circle of radius 3 centered on the location of the
+new point.
+
+[para] The signature of this command prefix is
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd createCmd] [arg canvas] [arg x] [arg y]]
+
+The result of the command prefix [emph must] be a list of the canvas
+items it created to represent the marker. Note here that the visual
+representation of a "vertex" may consist of multiple canvas items in
+an arbitrary shape.
+
+[para] The returned list of items is allowed to be empty, and such is
+taken as signal that the callback vetoed the creation of the vertex.
+
+[list_end]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -highlight-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke
+when it has to (un)highlight a vertex.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to a command which will re-color
+the item to highlight in red (and restores the color for
+unhighlighting).
+
+[para] The two signatures of this command prefix are
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd highlightCmd] [method on] [arg canvas] [arg item]]
+
+[para] This method of the command prefix has to perform whatever is
+needed to highlight the vertex the [arg item] is a part of (remember
+the note above about points allowed to be constructed from multiple
+canvas items).
+
+[para] The result of the command can be anything and will be passed as
+is as argument [arg state] to the [method off] method.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd highlightCmd] [method off] [arg canvas] [arg state]]
+
+[para] This method is invoked to unhighlight a vertex described by the
+[arg state], which is the unchanged result of the [method on] method
+of the command prefix. The result of this method is ignored.
+
+[para] Note any interaction between dragging and highlighting of
+vertices is handled within the editor, and that the callback bears no
+responsibility for doing such.
+
+[list_end]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -data-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke
+when the line was edited in some way (vertex added, removed,
+moved). This is how the editor delegates the actual storage of the
+line information to an outside object.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to an empty string and is ignored
+by the editor, i.e. not invoked.
+
+[para] The signature of this command prefix is
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd dataCmd] [arg editorObj] [arg coordinates]]
+
+This callback is invoked when the line was changed either interactively,
+or programmatically.
+
+See instance method [method add] for the latter.
+
+[para] The [arg editorObj] identifies the instance invoking the
+callback, whereas [arg coordinates] is a list of vertex locations,
+with each location a pair of x- and y-coordinates.
+
+[para] The result of this method is ignored.
+
+[list_end][comment callback-signatures]
+[list_end][comment options]
+[vset CATEGORY canvas]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

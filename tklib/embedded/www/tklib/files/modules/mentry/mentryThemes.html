@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Commands Related to Tile Themes</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="mentry, theme, tile">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div align="center">
+    <h1>Commands Related to Tile Themes</h1>
+
+    <h2>For Mentry Version 3.10</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+
+    <li><a href="#setTheme">The <code><b>mentry::setTheme</b></code>
+    Command</a></li>
+
+    <li><a href="#getCurrentTheme">The
+    <code><b>mentry::getCurrentTheme</b></code> Command</a></li>
+
+    <li><a href="#getThemes">The <code><b>mentry::getThemes</b></code>
+    Command</a></li>
+
+    <li><a href="#setThemeDefaults">The
+    <code><b>mentry::setThemeDefaults</b></code> Command</a></li>
+  </ul>
+
+  <div align="center">
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="overview">Overview</h2>
+
+  <p>The commands described in this reference page should only be invoked when
+  using the package Mentry_tile.&nbsp; They enable you to set and query the
+  current theme, to retrieve a list of the available themes, and to make sure
+  that your widgets will have a theme-specific appearance.</p>
+
+  <div align="center">
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="setTheme">The <code><b>mentry::setTheme</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::setTheme</code> &ndash; Set the current theme</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::setTheme</b> <i>theme</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command sets the current theme to <code><i>theme</i></code>,
+    loading it if necessary.&nbsp; It is simply an alias for
+    <code><b>ttk::setTheme</b></code> or <code><b>tile::setTheme</b></code>,
+    depending on the tile version loaded into the interpreter.&nbsp; (The
+    <code><b>tile::setTheme</b></code> command was renamed to
+    <code><b>ttk::setTheme</b></code> in tile version 0.8.)</dd>
+
+    <dd class="tm">Being just an alias for a tile library procedure, the
+    <code><b>mentry::setTheme</b></code> command does exactly the same as the
+    original one: It loads the package implementing the given theme if needed,
+    sets the theme to the specified one, and saves the latter in the variable
+    <code><b>ttk::currentTheme</b></code> or
+    <code><b>tile::currentTheme</b></code>, depending on the current tile
+    version.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, theme, tile</dd>
+  </dl>
+
+  <div align="center">
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getCurrentTheme">The <code><b>mentry::getCurrentTheme</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::getCurrentTheme</code> &ndash; Get the current theme</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::getCurrentTheme</b>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command returns the value of the variable
+    <code><b>ttk::currentTheme</b></code> or
+    <code><b>tile::currentTheme</b></code>, depending on the tile version
+    loaded into the interpreter.&nbsp; (The namespace containing the variable
+    <code><b>currentTheme</b></code> was changed in tile version 0.8 from
+    <code><b>tile</b></code> to <code><b>ttk</b></code>.)</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, theme, tile</dd>
+  </dl>
+
+  <div align="center">
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getThemes">The <code><b>mentry::getThemes</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::getThemes</code> &ndash; Get the themes registered in the
+    package database</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::getThemes</b>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command returns a list of the themes registered in the package
+    database.&nbsp; It is simply an alias for <code><b>ttk::themes</b></code>
+    or <code><b>tile::availableThemes</b></code>, depending on the tile version
+    loaded into the interpreter.&nbsp; (The
+    <code><b>tile::availableThemes</b></code> command was renamed to
+    <code><b>ttk::themes</b></code> in tile version 0.8.)</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, theme, tile</dd>
+  </dl>
+
+  <div align="center">
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="setThemeDefaults">The <code><b>mentry::setThemeDefaults</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::setThemeDefaults</code> &ndash; Set theme-specific
+    default values of some mentry configuration options</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::setThemeDefaults</b>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command populates the array
+    <code><b>mentry::themeDefaults</b></code> with theme-specific default
+    values of a series of Mentry configuration options.&nbsp; The array names
+    are the command-line names of the options, and the corresponding array
+    values are the default values of these configuration options for the
+    currently set tile theme.</dd>
+
+    <dd class="tm">The options whose names and values are written into the
+    array <code><b>mentry::themeDefaults</b></code> are:
+    <code><b>-background</b></code>, <code><b>-foreground</b></code>, and
+    <code><b>-font</b></code>.&nbsp; In addition, the command sets some other
+    array elements to theme-specific default values, needed for internal
+    purposes, like updating the background and foreground colors of the label
+    components of a mentry widget in <code><b>disabled</b></code> or
+    <code><b>readonly</b></code> state; the corresponding array names are:
+    <code><b>-disabledbackground</b></code>,
+    <code><b>-disabledforeground</b></code>, and
+    <code><b>-readonlybackground</b></code>.&nbsp; Finally, the array values
+    associated with the names <code><b>-selectbackground</b></code>,
+    <code><b>-selectforeground</b></code>, and
+    <code><b>-selectborderwidth</b></code> are not used by Mentry_tile, but
+    might prove useful for other purposes, as described below.</dd>
+
+    <dd class="tm">The <code><b>mentry::setThemeDefaults</b></code> command is
+    invoked by Mentry_tile automatically whenever a mentry widget is createad
+    or the <code><b>&lt;&lt;ThemeChanged&gt;&gt;</b></code> virtual event is
+    received by a mentry widget.&nbsp; In the latter case, the widget is
+    reconfigured, using the new default values of those options that were not
+    set explicitly to values different from the corresponding defaults.</dd>
+
+    <dd class="tm">Besides being used by the Mentry_tile code, this command can
+    also be invoked in Tcl scripts, still before creating any tile-based mentry
+    widget.&nbsp; By calling it explicitly and using the values written by it
+    into the array <code><b>mentry::themeDefaults</b></code>, you can make sure
+    that classical Tk widgets, e.g., text, will have a theme-specific
+    appearance, just like the tile widgets.&nbsp; For example, you can add some
+    common configuration options to the option database as follows:</dd>
+
+    <dd>
+      <blockquote>
+        <pre>
+mentry::setThemeDefaults
+option add *Text.background   $mentry::themeDefaults(-background)
+option add *Text.foreground   $mentry::themeDefaults(-foreground)
+option add *Font              $mentry::themeDefaults(-font)
+option add *selectBackground  $mentry::themeDefaults(-selectbackground)
+option add *selectForeground  $mentry::themeDefaults(-selectforeground)
+option add *selectBorderWidth $mentry::themeDefaults(-selectborderwidth)
+</pre>
+      </blockquote>
+    </dd>
+
+    <dt><b>KEYWORDS</b></dt>
+
+    <dd>mentry, theme, tile</dd>
+  </dl>
+
+  <div align="center">
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

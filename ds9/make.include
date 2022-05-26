@@ -87,6 +87,11 @@ $(LIBDIR)/textutil: $(prefix)/tcllib/modules/textutil
 $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 	cp -prf $? "$@"
 
+#--------------------------tklib
+
+$(LIBDIR)/tooltip: $(prefix)/tklib/modules/tooltip
+	cp -prf $? "$@"
+
 #--------------------------distclean
 
 .PHONY	: distclean parsersclean parsersdistclean

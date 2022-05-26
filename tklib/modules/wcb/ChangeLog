@@ -1,0 +1,61 @@
+2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.7 ========================
+	* 
+
+2018-10-08  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl: Bumped the version number to 3.6; adapted to some changes in
+	  future Tcl and Tk releases (TIP 278, independent Tcl and Tk versions);
+	  updated the copyright information.
+
+	* COPYRIGHT.txt: Bumped the version number to 3.6.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* doc/*.png: Updated the screenshots.
+
+	* scripts/*.tcl: Adapted to TIP 278; updated the copyright information.
+
+	* scripts/tclIndex: Newly generated.
+
+	* ../../examples/wcb/*.tcl: Various updates.
+
+2014-02-16  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                Bumped the version number to 3.5.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* ../../examples/*.tcl:
+
+	* scripts/*.tcl: Support for the tile treeview widget; minor
+	  performance improvements.
+
+	* scripts/tclIndex: Newly generated.
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* doc/*.html: Updated to reflect the changes; numerous improvements.
+
+	* doc/stylesheet.css: Added stylesheet file.
+
+2013-03-25  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.6 ========================
+	* 
+
+2011-03-13  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl: Minor changes related to the package mechanism, for better
+	  teacup support; bumped the version number to 3.4.
+
+	* *.txt:        Bumped the version number to 3.4.
+	* doc/wcb.html:
+
+2010-12-07  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Added wcb to tklib.

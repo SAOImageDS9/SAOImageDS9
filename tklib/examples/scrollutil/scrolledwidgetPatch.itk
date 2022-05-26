@@ -1,0 +1,48 @@
+#==============================================================================
+# Patch for the iwidgets distribution file scrolledwidget.itk.  It replaces the
+# Tk core scrollbars with ttk::scrollbar widgets.
+#
+# Copyright (c) 2019-2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+#==============================================================================
+
+itcl::body iwidgets::Scrolledwidget::constructor {args} {
+    #
+    # Turn off the borderwidth on the hull
+    # and save off the interior for later use
+    #
+    component hull configure -borderwidth 0
+    set _interior $itk_interior
+
+    #
+    # Check if the scrollbars need mapping upon a configure event
+    #
+    bind $_interior <Configure> [itcl::code $this _configureEvent]
+
+    #
+    # Turn off propagation in the containing shell
+    #
+    if {[grid propagate $_interior]} {
+        grid propagate $_interior no
+    }
+
+    #
+    # Create the vertical scrollbar
+    #
+    itk_component add vertsb {
+        ttk::scrollbar $itk_interior.vertsb -orient vertical
+    } {}
+
+    #
+    # Create the horizontal scrollbar
+    #
+    itk_component add horizsb {
+        ttk::scrollbar $itk_interior.horizsb -orient horizontal
+    } {}
+
+    #
+    # Initialize the widget based on the command line options
+    #
+    eval itk_initialize $args
+}
+
+itcl::configbody iwidgets::Scrolledwidget::sbwidth {}

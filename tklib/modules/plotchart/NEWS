@@ -1,0 +1,194 @@
+PLOTCHART 2.0
+-------------
+
+* Note *
+This is an alpha release of Plotchart 2.0 - see below.
+I release this version now, so that you can experiment with it.
+
+Get it from the CVS repository at http://tcllib.sf.net
+* End note *
+
+
+Plotchart is a Tcl-only package for producing xy-plots, barcharts
+and other popular types of graphical presentations. It aims at
+being easy to use and therefore mainly provides high-level commands
+to create an empty plot and commands to add the data you want to
+present.
+
+Here is a simple but typical example of how to create a plot
+and fill it with data:
+
+    package require Plotchart
+
+    canvas .c -background white -width 400 -height 200
+    pack   .c -fill both
+
+    #
+    # Create the plot with its x- and y-axes
+    #
+    set s [::Plotchart::createXYPlot .c {0.0 100.0 10.0} {0.0 100.0 20.0}]
+
+    foreach {x y} {0.0 32.0 10.0 50.0 25.0 60.0 78.0 11.0 } {
+        $s plot series1 $x $y
+    }
+
+    $s title "Data series"
+
+Before version 2.0 all plots and charts were created on a dedicated
+canvas. The dimensions of the area for the axes of an xy-plot were
+derived from the entire size of the canvas, similarly for barcharts,
+piecharts and all other types. One of the innovations in version 2.0
+is that you can combine various plots and charts in one canvas.
+Another one is that you now have the possibility to define styles
+for the plots and charts to create a consistent look.
+
+Version 2.0 also defines several new plot and chart types, among
+others a "table" chart that allows you to present the data in a
+combined textual and graphical way.
+
+Plotchart 2.0 was developed by Arjen Markus and Torsten Berg
+with contributions from various people.
+
+What's new?
+-----------
+New commands:
+
+createTableChart:
+    Create a so-called table chart. With a table chart you can
+    combine tabular information with graphics
+
+createSpiralPie:
+    A variant on an ordinary piechart, where the radius is used
+    to show the size of an entry, rather than the angle.
+
+clearcanvas:
+    Remove all data from a given canvas but leave the axes and
+    other elements intact.
+
+plotstyle:
+    Define or load a style for the plots to be created. A style
+    consists of specific values for the various options used to
+    create a plot or chart.
+
+plotmethod:
+    Add a new subcommand for a given plot/chart type. This
+    subcommand is implemented via a user-defined procedure.
+
+
+New subcommands:
+
+$anyplot canvas:
+    Return the alias for the canvas holding the plot. Useful for coordinate
+    transformations.
+
+$anyplot removefromcanvas:
+    Remove an entry from the legend.
+
+$xyplot plotlist
+    Plot a large series of data in one go, rather than each
+    data point individually.
+
+$xyplot object (or drawobject)
+$piechart object
+$barchart object
+$stripchart object
+$boxplot
+    Plot an object (rectangle, circle, ...) in an xy-plot,
+    a barchart or a piechart using the plot's/chart's coordinate system.
+
+$xyplot legendisolines
+$xyplot legendshades
+    Add the class values for an isoline or contour plot to
+    the legend.
+
+$xyplot getplotarea
+    Return the area (in pixels) reserved for the data.
+
+$piechart colours
+    Set the colours to be used in a piechart (independent
+    from the style).
+
+$histogram plotcumulative
+    Plot the data on top of the previous series.
+
+
+New options:
+
+For boxplots:
+    -whisher, -whiskerwidth, -mediancolour, -medianwidth (appearance of the "whisker")
+    An optional argument for specifying the orientation
+
+For symbols:
+    -radius (size of all symbols)
+
+For histograms:
+    -style (style for drawing the data)
+
+For right axes:
+    -ylabels (what labels to use along the axis)
+
+For legends:
+    -type rectangle (meant for objects)
+    An optional argument to the "legend" subcommand: the distance between entries
+
+For the saveplot subcommand:
+    -plotregion (save what is visible or the entire canvas)
+
+For gridlines:
+    The dash pattern of the lines as an optional argument
+
+For several plot and chart types:
+    -box         Defines the part of the canvas that is reserved for the plot/chart
+    -axesbox     Defines this part using the coordinate system of an existing plot
+    -unit        Defines the size of a piechart's pie
+    -reference   Defines the position of a piechart wrt an existing plot
+
+For piecharts and spiral charts:
+    Options for the circle segments: -outlinewidth, -outline,
+    Options for the data: -shownumbers, -placement, -sorted, -shownumbers,
+        -format, -formatright
+
+For dots in an xy-plot:
+    3D effect enabled via "$p dotconfig -3deffect 1"
+
+For the text and labels along axes:
+    The render option for the plotting style of a plot/chart with numerical
+    axes can be set to "text", in which case superscript and subscript are
+    possible.
+
+For horizontal barcharts:
+    -transposecoordinates  Make the y-coordinate the primary coordinate (effects the object submethod)
+                           (makes it easy to switch from vertical to horizontal barcharts if you have
+                           custom methods)
+
+Improvements and bugfixes:
+
+- Method coordsToPixel now automatically handles the various coordinate systems
+
+- Vertical text along the axis can be configured properly
+
+- Proper configuration for logarithmic axes (no new command required)
+
+- Improved colour computation for isolines and shades
+
+
+Incompatibilities:
+
+- The coordsToPixel command and related commands need the _alias name_ for the canvas,
+  as there can be more than one plot or chart in a canvas. This is returned via the
+  new "$plot canvas" subcommand.
+
+- The default colour for the gridlines in polar plots has been changed to grey instead
+  of black, as the black lines were too conspicuous
+
+
+Known bugs and quirks:
+
+- Some geometric computations concerning the margins for the plot area are
+  off by one pixel. This is noticeable in the "demographic.tcl" example.
+
+- The titles for individual plots are positioned with respect to the first plot.
+
+- Not all plot and chart types support yet the -box and -axesbox or similar options.
+
+- The documentation is not complete yet.

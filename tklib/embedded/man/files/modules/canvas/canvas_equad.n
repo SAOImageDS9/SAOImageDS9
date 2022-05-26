@@ -1,0 +1,499 @@
+'\"
+'\" Generated from file 'canvas_equad\&.man' by tcllib/doctools with format 'nroff'
+'\"
+.TH "canvas::edit::quadrilateral" n 0\&.1 tklib "Variations on a canvas"
+.\" The -*- nroff -*- definitions below are for supplemental macros used
+.\" in Tcl/Tk manual entries.
+.\"
+.\" .AP type name in/out ?indent?
+.\"	Start paragraph describing an argument to a library procedure.
+.\"	type is type of argument (int, etc.), in/out is either "in", "out",
+.\"	or "in/out" to describe whether procedure reads or modifies arg,
+.\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+.\"	needed;  use .AS below instead)
+.\"
+.\" .AS ?type? ?name?
+.\"	Give maximum sizes of arguments for setting tab stops.  Type and
+.\"	name are examples of largest possible arguments that will be passed
+.\"	to .AP later.  If args are omitted, default tab stops are used.
+.\"
+.\" .BS
+.\"	Start box enclosure.  From here until next .BE, everything will be
+.\"	enclosed in one large box.
+.\"
+.\" .BE
+.\"	End of box enclosure.
+.\"
+.\" .CS
+.\"	Begin code excerpt.
+.\"
+.\" .CE
+.\"	End code excerpt.
+.\"
+.\" .VS ?version? ?br?
+.\"	Begin vertical sidebar, for use in marking newly-changed parts
+.\"	of man pages.  The first argument is ignored and used for recording
+.\"	the version when the .VS was added, so that the sidebars can be
+.\"	found and removed when they reach a certain age.  If another argument
+.\"	is present, then a line break is forced before starting the sidebar.
+.\"
+.\" .VE
+.\"	End of vertical sidebar.
+.\"
+.\" .DS
+.\"	Begin an indented unfilled display.
+.\"
+.\" .DE
+.\"	End of indented unfilled display.
+.\"
+.\" .SO ?manpage?
+.\"	Start of list of standard options for a Tk widget. The manpage
+.\"	argument defines where to look up the standard options; if
+.\"	omitted, defaults to "options". The options follow on successive
+.\"	lines, in three columns separated by tabs.
+.\"
+.\" .SE
+.\"	End of list of standard options for a Tk widget.
+.\"
+.\" .OP cmdName dbName dbClass
+.\"	Start of description of a specific option.  cmdName gives the
+.\"	option's name as specified in the class command, dbName gives
+.\"	the option's name in the option database, and dbClass gives
+.\"	the option's class in the option database.
+.\"
+.\" .UL arg1 arg2
+.\"	Print arg1 underlined, then print arg2 normally.
+.\"
+.\" .QW arg1 ?arg2?
+.\"	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+.\"
+.\" .PQ arg1 ?arg2?
+.\"	Print an open parenthesis, arg1 in quotes, then arg2 normally
+.\"	(for trailing punctuation) and then a closing parenthesis.
+.\"
+.\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+.\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1 \\fI\\$2\\fP (\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+.\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+.\"	# BS - start boxed text
+.\"	# ^y = starting y location
+.\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+.\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+.\"	# VS - start vertical sidebar
+.\"	# ^Y = starting y location
+.\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+.\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+.\"	# Special macro to handle page bottom:  finish off current
+.\"	# box/sidebar if in box/sidebar mode, then invoked standard
+.\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+.\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+.\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+.\"	# SO - start of list of standard options
+.de SO
+'ie '\\$1'' .ds So \\fBoptions\\fR
+'el .ds So \\fB\\$1\\fR
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 5.5c 11c
+.ft B
+..
+.\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\*(So manual entry for details on the standard options.
+..
+.\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+.\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+.\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.\"	# UL - underline word
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.\"	# QW - apply quotation marks to word
+.de QW
+.ie '\\*(lq'"' ``\\$1''\\$2
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\$2
+..
+.\"	# PQ - apply parens and quotation marks to word
+.de PQ
+.ie '\\*(lq'"' (``\\$1''\\$2)\\$3
+.\"" fix emacs highlighting
+.el (\\*(lq\\$1\\*(rq\\$2)\\$3
+..
+.\"	# QR - quoted range
+.de QR
+.ie '\\*(lq'"' ``\\$1''\\-``\\$2''\\$3
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\-\\*(lq\\$2\\*(rq\\$3
+..
+.\"	# MT - "empty" string
+.de MT
+.QW ""
+..
+.BS
+.SH NAME
+canvas::edit::quadrilateral \- Editing a quadrilateral on a canvas
+.SH SYNOPSIS
+package require \fBTcl  8\&.5\fR
+.sp
+package require \fBTk  8\&.5\fR
+.sp
+package require \fBcanvas::edit::points  ?0\&.1?\fR
+.sp
+package require \fBcanvas::edit::quadrilateral  ?0\&.1?\fR
+.sp
+\fB::canvas::edit\fR \fBquadrilateral\fR \fIobjectName\fR \fIcanvas\fR \fIoptions\fR\&.\&.\&.
+.sp
+\fBobjectName\fR \fBdestroy\fR
+.sp
+\fBobjectName\fR \fBenable\fR
+.sp
+\fBobjectName\fR \fBdisable\fR
+.sp
+\fBobjectName\fR \fBactive\fR
+.sp
+\fBobjectName\fR \fBadd\fR \fIx\fR \fIy\fR
+.sp
+\fBobjectName\fR \fBclear\fR
+.sp
+\fBcreateCmd\fR \fIcanvas\fR \fIx\fR \fIy\fR
+.sp
+\fBhighlightCmd\fR \fBon\fR \fIcanvas\fR \fIitem\fR
+.sp
+\fBhighlightCmd\fR \fBoff\fR \fIcanvas\fR \fIstate\fR
+.sp
+\fBdataCmd\fR \fIeditorObj\fR \fIcoordinates\fR
+.sp
+.BE
+.SH DESCRIPTION
+This package provides a class whose instances handle the editing of a
+quadrilateral on a canvas\&. Instances can be configured with regard to
+the visual appearance (regular, and highlighted) of vertex
+markers\&. Note that instances do not store the edited quadrilateral
+themselves, but delegate this to a configurable object\&.
+.SH "CLASS API"
+.TP
+\fB::canvas::edit\fR \fBquadrilateral\fR \fIobjectName\fR \fIcanvas\fR \fIoptions\fR\&.\&.\&.
+This, the class command, creates and configures a new instance of a
+quadrilateral editor, named \fIobjectName\fR\&. The instance will be
+connected to the specified \fIcanvas\fR widget\&.
+.sp
+The result of the command is the fully qualified name of the
+instance command\&.
+.sp
+The options accepted here, and their values, are explained in
+the section \fBOptions\fR\&.
+.PP
+.SH "INSTANCE API"
+Instances of the quadrilateral editors provide the following API:
+.TP
+\fBobjectName\fR \fBdestroy\fR
+This method destroys the quadrilateral editor and releases all its
+internal resources\&.
+.sp
+Note that this operation does not destroy the items the editor
+managed on the attached canvas, nor the canvas itself\&.
+.sp
+The result of the method is an empty string\&.
+.TP
+\fBobjectName\fR \fBenable\fR
+This method activates editing of the quadrilateral on the canvas\&. This
+is the default after instance creation\&. A call is ignored if the
+editor is already active\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+The complementary method is \fBdisable\fR\&. The interogatory
+method for the current state is \fBactive\fR\&.
+.TP
+\fBobjectName\fR \fBdisable\fR
+This method disables editing of the quadrilateral on the canvas\&. A call
+is ignored if the editor is already disabled\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+The complementary method is \fBenable\fR\&. The interogatory
+method for the current state is \fBactive\fR\&.
+.TP
+\fBobjectName\fR \fBactive\fR
+This method queries the editor state\&.
+.sp
+The result of the method is a boolean value, \fBtrue\fR if
+the editor is active, and \fBfalse\fR otherwise, i\&.e\&. disabled\&.
+.sp
+The methods to change the state are \fBenable\fR and
+\fBdisable\fR\&.
+.TP
+\fBobjectName\fR \fBadd\fR \fIx\fR \fIy\fR
+This method programmatically adds a vertex at the specified location
+to the quadrilateral\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+Note that this method goes through the whole set of callbacks
+invoked when the user interactively creates a vertex, i\&.e\&.
+\fB-create-cmd\fR, and, more importantly, \fB-data-cmd\fR\&.
+.sp
+This is the method through which to load the vertices of a
+pre-existing quadrilateral into an editor instance\&.
+.sp
+Note that at most 4 vertices can be specified, and at least 4
+must be specified for the quadrilateral to be complete\&.
+.TP
+\fBobjectName\fR \fBclear\fR
+This method programmatically unset the quadrilateral in the editor\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+Note that this method goes through the same callback invoked
+when the user interactively removes a vertex, i\&.e\&. \fB-data-cmd\fR\&.
+.PP
+.SH OPTIONS
+The class command accepts the following options
+.TP
+\fB-convex\fR \fIboolean\fR
+The value of this option is a boolean flag\&. When the flag is set the
+editor will accept only convex quadrilaterals and reject all
+operations which would result in a violation of convexity\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+If not specified it defaults to \fBfalse\fR, i\&.e\&. acceptance
+of any quadrilateral\&.
+.TP
+\fB-tag\fR \fIstring\fR
+The value of this option is the name of the canvas tag with which to
+identify all items of all quadrilateral managed by the editor\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+If not specified it defaults to \fBQUADRILATERAL\fR
+.TP
+\fB-create-cmd\fR \fIcommand-prefix\fR
+The value of this option is a command prefix the editor will invoke
+when it has to create a new vertex\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+If not specified it defaults to a command which will create a
+black-bordered blue circle of radius 3 centered on the location of the
+new point\&.
+.sp
+The signature of this command prefix is
+.RS
+.TP
+\fBcreateCmd\fR \fIcanvas\fR \fIx\fR \fIy\fR
+The result of the command prefix \fImust\fR be a list of the canvas
+items it created to represent the marker\&. Note here that the visual
+representation of a "vertex" may consist of multiple canvas items in an
+arbitrary shape\&.
+.RE
+.TP
+\fB-highlight-cmd\fR \fIcommand-prefix\fR
+The value of this option is a command prefix the editor will invoke
+when it has to (un)highlight a vertex\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+If not specified it defaults to a command which will re-color
+the item to highlight in red (and restores the color for
+unhighlighting)\&.
+.sp
+The two signatures of this command prefix are
+.RS
+.TP
+\fBhighlightCmd\fR \fBon\fR \fIcanvas\fR \fIitem\fR
+.sp
+This method of the command prefix has to perform whatever is
+needed to highlight the vertex the \fIitem\fR is a part of (remember
+the note above about quadrilateral allowed to be constructed from multiple
+canvas items)\&.
+.sp
+The result of the command can be anything and will be passed as
+is as argument \fIstate\fR to the \fBoff\fR method\&.
+.TP
+\fBhighlightCmd\fR \fBoff\fR \fIcanvas\fR \fIstate\fR
+.sp
+This method is invoked to unhighlight a vertex described by the
+\fIstate\fR, which is the unchanged result of the \fBon\fR method
+of the command prefix\&. The result of this method is ignored\&.
+.sp
+Note any interaction between dragging and highlighting of
+quadrilateral is handled within the editor, and that the callback bears no
+responsibility for doing such\&.
+.RE
+.TP
+\fB-data-cmd\fR \fIcommand-prefix\fR
+The value of this option is a command prefix the editor will invoke
+when the quadrilateral was edited in some way\&. This is how the editor
+delegates the actual storage of quadrilateral information to an
+outside object\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+If not specified it defaults to an empty string and is ignored
+by the editor, i\&.e\&. not invoked\&.
+.sp
+The signatures of this command prefix are
+.RS
+.TP
+\fBdataCmd\fR \fIeditorObj\fR \fIcoordinates\fR
+This callback is invoked when the quarilateral was changed either
+interactively, or programmatically\&.
+See instance method \fBadd\fR for the latter\&.
+.sp
+The \fIeditorObj\fR identifies the instance invoking the
+callback, whereas \fIcoordinates\fR is a list of vertex locations,
+with each location a pair of x- and y-coordinates\&.
+.sp
+The result of this method is ignored\&.
+.RE
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+This document, and the package it describes, will undoubtedly contain
+bugs and other problems\&.
+Please report such in the category \fIcanvas\fR of the
+\fITklib Trackers\fR [http://core\&.tcl\&.tk/tklib/reportlist]\&.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation\&.
+.SH KEYWORDS
+canvas, concave, convex, editing, non-convex, quadrilateral

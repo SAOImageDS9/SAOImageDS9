@@ -1,0 +1,128 @@
+What is new in Scrollutil 1.5?
+------------------------------
+
+1. On Windows and X11, Scrollutil now automatically creates mouse wheel
+   event class bindings for the Tk core scrollbar widget, which are
+   missing on these platforms when using a Tk version earlier than 8.6.
+
+2. Added a demo script showing how the scrollarea widget circumvents the
+   potential shimmering effect in connection with text widgets.
+
+3. Improved the handling of the case that the scrollbar lock prevented a
+   scrollbar of a scrollarea widget from being unmapped (thanks to Paul
+   Obermeier for his bug report).
+
+4. Several improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.4?
+-------------------------------
+
+1. Added the commands "scrollutil::getscrollarea" and
+   "scrollutil::getscrollsync", designed to query the scrollarea and
+   scrollsync, respectively containing a given widget.
+
+2. Added the command "scrollutil::addMouseWheelSupport", which can be
+   used, e.g., to add mouse wheel support to canvas widgets (thanks to
+   Julian H J Loaring for his proposal) and to restore the "old-school"
+   mouse wheel event handling for text widgets, which performs scrolling
+   by lines and characters rather than pixels.
+
+3. Scrollutil now automatically creates mouse wheel event class bindings
+   for the ttk::scrollbar widget (thanks to Harald Oehlmann for his
+   proposal and discussions on this subject).
+
+4. If a widget that is embedded into a scrollarea is passed to
+   "scrollutil::adaptWheelEventHandling", then this command gets
+   automatically invoked for the scrollbars of that scrollarea, too.
+
+5. Added the missing pieces of code related to the bindings for
+   horizontal scrolling with the aid of mouse buttons 6 and 7 in Tk
+   8.7.a3 or later on X11.
+
+6. Several improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.3?
+-------------------------------
+
+1. The scrollarea widget of the Scrollutil_tile package now uses
+   ttk::scrollbar widgets on Mac OS X, too, provided that the Tk release
+   is 8.6.10 or later.
+
+2. Improvements related to the scrollsync widget.
+
+3. Added the "scan" scrollableframe subcommand, along with mouse event
+   bindings invoking the latter.
+
+4. Significantly improved the handling of the "-width", "-height",
+   "-borderwidth", and "-highlightthickness" scrollableframe options.
+   The reference manual now explicitly mentions that the "-width" and
+   "-height" options set the widget's *inner* dimensions, excluding the
+   border and highlight rectangle (if any).
+
+5. The mouse wheel event handling now supports nested scrollable widget
+   containers.
+   
+6. When computing the number of units for "(x|y)view scroll" within the
+   bindings for mouse wheel events, the rounding now works the same for
+   both positive and negative delta values, just like in Tk 8.6.10 and
+   later.
+   
+7. For Tk 8.7.a3 and above on X11, the mouse wheel event handling now
+   includes bindings for horizontal scrolling with the aid of the
+   (virtual) mouse buttons 6 and 7, which correspond to left/right
+   tilting the scroll wheel of a mouse having one or two additional
+   (thumb) buttons.
+
+8. Numerous improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.2?
+-------------------------------
+
+1. Added the scrollableframe widget, designed as a lightweight,
+   theme-able, and full-featured replacement for BWidget ScrollableFrame
+   and iwidgets::scrolledframe (thanks to Harald Oehlmann for his
+   proposal).
+
+2. Added two demo scripts for the new scrollableframe widget.
+
+3. Significant improvements related to the scrollarea and scrollsync
+   widgets (thanks to Paul Obermeier for his valuable feedback and
+   testing).
+
+4. Scrollutil no longer creates aliases in the "::tk" namespace for Tk
+   commands for which that namespace already contains a command of the
+   same name.
+
+5. Numerous further improvements in the code, demo scripts, and
+   documentation.
+
+What was new in Scrollutil 1.1?
+-------------------------------
+
+1. Added the scrollsync widget, designed for scrolling several widgets
+   simultaneously (thanks to Paul Obermeier for his proposal and
+   testing).
+
+2. Added two demo scripts for the new scrollsync widget.
+
+3. The scrollarea widget now supports the "-takefocus" standard option
+   (thanks to Harald Oehlmann for his proposal).
+
+4. The scrollarea "setwidget" subcommand now returns the path name of
+   the previously embedded widget.
+
+5. The mouse wheel event handling now restricts the search for the
+   registered scrollable widget container that is an ascendant of the
+   widget under the pointer to the widget containers within the same
+   toplevel (thanks to Harald Oehlmann for his valuable feedback).
+
+6. Several further improvements in the code, demo scripts, and
+   documentation.
+
+What was new in Scrollutil 1.0?
+-------------------------------
+
+This is the first release.  Thanks to Michael Niehren for discussions on
+mouse wheel event handling in scrollable widget containers, as well as
+to Paul Obermeier and Thomas Grausgruber for testing the scrollarea
+widget.

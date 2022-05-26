@@ -1,0 +1,37 @@
+[comment {-*- tcl -*- doctools manpage}]
+[manpage_begin notifywindow n 1.0]
+[copyright {2015 Kevin Walzer/WordTech Communications LLC <kw@codebykevin.com>}]
+[keywords tk]
+[keywords alert]
+[keywords notification]
+[moddesc {notifywindow}]
+[titledesc {Provides unobtrusive window for alerts/notifications from Tk applications}]
+[require tk]
+[require notifywindow]
+
+[description]
+This package provides a low-key, unobtrusive window for alerts and notifications from Tk applications that briefly appears in the upper-right hand corner of the screen. Modeled after the "Growl" framework on Mac OS X, the window fades in and out on platforms that support such effects, and appears and disappears on other platforms. 
+
+[list_begin definitions]
+
+[call [cmd ::notifywindow::notifywindow] [arg msg] [arg img]]
+
+Posts the toplevel notification window with the "msg" string, which should not exceed 40 characters, and an optional image, which should be 16x16 pixels. 
+
+[call [cmd ::notifywindow::demo]]
+
+Simple demo that illustrates how the package works.
+
+[list_end]
+
+[section ACKNOWLEDGMENTS]
+
+notifywindow was inspired by the Growl notification package for Mac OS X, but shares no code with that project whatsoever. 
+[vset CATEGORY notifywindow]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]
+
+
+
+
+

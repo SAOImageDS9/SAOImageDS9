@@ -1866,10 +1866,12 @@ proc BlinkTimer {} {
 proc FadeTimer {} {
     global fade
     global ifade
+    global blink
     global ds9
     global current
 
     if {$ifade(next) == -1} {
+#	puts "first"
 	# first time
 	set ifade(next) [expr $ifade(index)+1]
 	if {$ifade(next) >= [llength $ds9(active)]} {
@@ -1877,7 +1879,9 @@ proc FadeTimer {} {
 	}
 	set ifade(transparency) 0
 
-    } elseif {$ifade(transparency) == 100} {
+	set ifade(id) [after [expr int($fade(interval)/$fade(steps))] FadeTimer]
+    } elseif {$ifade(transparency) >= 100} {
+#	puts "hold"
 	# we are done with fading, goto next frame
 	if {[llength $ds9(active)] > 0} {
 	    incr ifade(index)
@@ -1888,14 +1892,17 @@ proc FadeTimer {} {
 	}
 	set ifade(next) -1
 
+	# now hold for blink(interval) before fading again
+	set ifade(id) [after $blink(interval) FadeTimer]
     } else {
 	# fade
-	incr ifade(transparency) 10
+	incr ifade(transparency) [expr int(100./$fade(steps))]
+#	puts "fade $ifade(transparency)"
 	$current(frame) fade \
 	    [lindex $ds9(active) $ifade(next)] $ifade(transparency)
-    }
 
-    set ifade(id) [after $fade(interval) FadeTimer]
+	set ifade(id) [after [expr int($fade(interval)/$fade(steps))] FadeTimer]
+    }
 }
 
 proc ResetCurrentFrame {} {

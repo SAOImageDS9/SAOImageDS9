@@ -218,6 +218,8 @@ package require base64
 package require ftp
 package require math::fuzzy
 
+package require tooltip
+
 package require tkcon
 package require Tkblt
 package require Tls

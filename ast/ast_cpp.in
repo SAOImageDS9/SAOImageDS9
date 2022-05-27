@@ -1,0 +1,15 @@
+
+# Replacement for the C pre-processor command "cpp" which is not
+# always available. This uses the compiler command "cc" to do the same
+# thing.  Also, this reads from standard input (which "cc" won't do).
+#
+# The name of the CPP processor is substituted in by the ./configure script,
+# based on the result of the AC_PROG_CPP test.
+#
+#  The first (and only) argument for this script should be the path to
+#  the directory containing the header files. This is passed to the C 
+#  pre-processor using the -I option.
+
+cat >/tmp/ast_cpp_$$.c
+@CPP@ /tmp/ast_cpp_$$.c -I$1
+rm -f /tmp/ast_cpp_$$.c

@@ -394,7 +394,7 @@ fitsy/Makefile :
 
 #-------------------------- ast
 
-ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs/libast_pal.a
+ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs/libast_pal.a ast/.libs/libast_cminpack.a
 
 ast/Makefile :
 	@echo ""
@@ -415,12 +415,14 @@ ast/ast.h :
 	$(MAKE) -C ast -j $(JOBS) libast.la
 	$(MAKE) -C ast -j $(JOBS) libast_err.la
 	$(MAKE) -C ast -j $(JOBS) libast_pal.la
+	$(MAKE) -C ast -j $(JOBS) libast_cminpack.la
 	cp ast/ast.h $(includedir)/.
 	cp ast/src/grf.h $(includedir)/.
 	cp ast/src/grf3d.h $(includedir)/.
 	cp ast/.libs/libast.a $(libdir)/.
 	cp ast/.libs/libast_err.a $(libdir)/.
 	cp ast/.libs/libast_pal.a $(libdir)/.
+	cp ast/.libs/libast_cminpack.a $(libdir)/.
 
 ast/.libs/libast.a :
 	@echo ""
@@ -441,6 +443,12 @@ ast/.libs/libast_pal.a :
 	@echo "*** $@ ***"
 	$(MAKE) -C ast -j $(JOBS) libast_pal.la
 	cp ast/.libs/libast_pal.a $(libdir)/.
+
+ast/.libs/libast_cminpack.a :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C ast -j $(JOBS) libast_cminpack.la
+	cp ast/.libs/libast_cminpack.a $(libdir)/.
 
 #-------------------------- funtools
 

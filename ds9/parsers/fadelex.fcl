@@ -1,0 +1,17 @@
+#tab fadeparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+interval    {return $INTERVAL_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+#include ws.fin
+
+%%

@@ -121,6 +121,7 @@ LLIBS	= \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
+	$(libdir)/libast_cminpack.a \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a

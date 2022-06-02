@@ -72,6 +72,7 @@ class Frame : public FrameBase {
   Frame(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Frame();
 
+  void fadeCmd(void*, double);
   void maskClearCmd();
 
   void getMaskCountCmd();

@@ -751,7 +751,7 @@ public:
   void getDataValuesCmd(const Vector&, Coord::InternalSystem, const Vector&);
 
   // Fade Commands
-  void fadeCmd(void*, double);
+  virtual void fadeCmd(void*, double) {}
 
   // Fits Commands
   void getBitpixCmd();

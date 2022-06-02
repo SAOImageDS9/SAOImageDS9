@@ -669,6 +669,12 @@ void Frame::unloadFits()
 
 // Commands
 
+void Frame::fadeCmd(void* ptr, double transparency)
+{
+  Frame* next = (Frame*)ptr;
+  cerr << options->cmdName << ':' << next->options->cmdName << '=' << transparency << endl;
+}
+
 void Frame::getMaskColorCmd()
 {
   Tcl_AppendResult(interp, maskColorName, NULL);

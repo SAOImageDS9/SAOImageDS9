@@ -1808,7 +1808,6 @@ proc DisplayMode {} {
 		after cancel $ifade(id)
 		set ifade(id) 0
 		set ifade(index) -1
-		set ifade(next) -1
 		set ifade(transparency) 0
 	    }
 
@@ -1820,7 +1819,6 @@ proc DisplayMode {} {
 		after cancel $ifade(id)
 		set ifade(id) 0
 		set ifade(index) -1
-		set ifade(next) -1
 		set ifade(transparency) 0
 	    }
 
@@ -1870,38 +1868,41 @@ proc FadeTimer {} {
     global ds9
     global current
 
-    if {$ifade(next) == -1} {
-#	puts "first"
-	# first time
-	set ifade(next) [expr $ifade(index)+1]
-	if {$ifade(next) >= [llength $ds9(active)]} {
-		set ifade(next) 0
-	}
-	set ifade(transparency) 0
+    # set fixed update
+    set interval 200
 
-	set ifade(id) [after [expr int($fade(interval)/$fade(steps))] FadeTimer]
-    } elseif {$ifade(transparency) >= 100} {
-#	puts "hold"
-	# we are done with fading, goto next frame
+    if {$ifade(index) == -1} {
 	if {[llength $ds9(active)] > 0} {
+	    # first time
+	    set ifade(index) [lsearch $ds9(active) $current(frame)]
 	    incr ifade(index)
 	    if {$ifade(index) >= [llength $ds9(active)]} {
 		set ifade(index) 0
 	    }
+	}
+	set ifade(transparency) 0
+	set ifade(id) [after $interval FadeTimer]
+
+    } elseif {$ifade(transparency) >= 100} {
+	# we are done with fading, goto next frame
+	if {[llength $ds9(active)] > 0} {
 	    GotoFrame [lindex $ds9(active) $ifade(index)]
 	}
-	set ifade(next) -1
 
 	# now hold for blink(interval) before fading again
+	set ifade(index) -1
 	set ifade(id) [after $blink(interval) FadeTimer]
+
     } else {
 	# fade
-	incr ifade(transparency) [expr int(100./$fade(steps))]
-#	puts "fade $ifade(transparency)"
-	$current(frame) fade \
-	    [lindex $ds9(active) $ifade(next)] $ifade(transparency)
-
-	set ifade(id) [after [expr int($fade(interval)/$fade(steps))] FadeTimer]
+	if {[llength $ds9(active)] > 0} {
+	    set tt [expr 100./($fade(interval)/1000.*5.)]
+	    set ifade(transparency) [expr $ifade(transparency)+$tt]
+	    $current(frame) fade \
+		[lindex $ds9(active) $ifade(index)] $ifade(transparency)
+	}
+	
+	set ifade(id) [after $interval FadeTimer]
     }
 }
 

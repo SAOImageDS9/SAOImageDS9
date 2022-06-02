@@ -428,7 +428,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  12
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  50
+#define YYNRULES  51
 /* YYNRULES -- Number of states.  */
 #define YYNSTATES  93
 
@@ -482,9 +482,9 @@ static const yytype_uint8 yyprhs[] =
        0,     0,     3,     6,     9,    11,    14,    18,    21,    23,
       26,    29,    31,    33,    36,    38,    42,    46,    48,    50,
       52,    54,    56,    58,    60,    62,    64,    66,    68,    70,
-      72,    74,    76,    78,    80,    82,    84,    87,    89,    91,
-      95,    99,   103,   107,   109,   119,   123,   127,   132,   139,
-     144
+      72,    74,    76,    77,    79,    81,    83,    85,    88,    90,
+      92,    96,   100,   104,   108,   110,   120,   124,   128,   133,
+     140,   145
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
@@ -497,14 +497,14 @@ static const yytype_int8 yyrhs[] =
       39,    -1,    33,     9,    41,    -1,     4,    -1,     3,    -1,
       23,    -1,    22,    -1,     3,    -1,    36,    -1,    35,    -1,
       23,    -1,    28,    -1,    21,    -1,    20,    -1,    22,    -1,
-      12,    -1,    23,    -1,    22,    -1,     6,    -1,    14,    -1,
-      27,    -1,    34,    -1,    39,    39,    -1,    22,    -1,    23,
-      -1,     7,    39,    39,    -1,    19,    39,    39,    -1,    11,
-      39,    39,    -1,    29,    39,    39,    -1,     5,    -1,     6,
-      39,    39,    39,    39,    39,    39,    39,    39,    -1,    17,
-       9,    47,    -1,    33,     9,    48,    -1,    39,    39,    39,
-      39,    -1,    39,    39,    39,    39,    39,    39,    -1,    39,
-      39,    39,    39,    -1,    18,    -1
+      12,    -1,    23,    -1,    22,    -1,    -1,     6,    -1,    14,
+      -1,    27,    -1,    34,    -1,    39,    39,    -1,    22,    -1,
+      23,    -1,     7,    39,    39,    -1,    19,    39,    39,    -1,
+      11,    39,    39,    -1,    29,    39,    39,    -1,     5,    -1,
+       6,    39,    39,    39,    39,    39,    39,    39,    39,    -1,
+      17,     9,    47,    -1,    33,     9,    48,    -1,    39,    39,
+      39,    39,    -1,    39,    39,    39,    39,    39,    39,    -1,
+      39,    39,    39,    39,    -1,    18,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
@@ -513,9 +513,9 @@ static const yytype_uint8 yyrline[] =
        0,    72,    72,    73,    74,    75,    76,    77,    78,    79,
       80,    81,    82,    83,    84,    85,    86,    89,    90,    93,
       94,    97,    99,   100,   101,   102,   104,   105,   106,   107,
-     110,   111,   114,   115,   116,   117,   120,   121,   122,   125,
-     126,   127,   128,   131,   132,   136,   137,   140,   142,   147,
-     149
+     110,   111,   114,   115,   116,   117,   118,   121,   122,   123,
+     126,   127,   128,   129,   132,   133,   137,   138,   141,   143,
+     148,   150
 };
 #endif
 
@@ -552,9 +552,9 @@ static const yytype_uint8 yyr1[] =
        0,    37,    38,    38,    38,    38,    38,    38,    38,    38,
       38,    38,    38,    38,    38,    38,    38,    39,    39,    40,
       40,    41,    41,    41,    41,    41,    41,    41,    41,    41,
-      42,    42,    43,    43,    43,    43,    44,    44,    44,    45,
-      45,    45,    45,    46,    46,    46,    46,    47,    47,    48,
-      48
+      42,    42,    43,    43,    43,    43,    43,    44,    44,    44,
+      45,    45,    45,    45,    46,    46,    46,    46,    47,    47,
+      48,    48
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -563,9 +563,9 @@ static const yytype_uint8 yyr2[] =
        0,     2,     2,     2,     1,     2,     3,     2,     1,     2,
        2,     1,     1,     2,     1,     3,     3,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     2,     1,     1,     3,
-       3,     3,     3,     1,     9,     3,     3,     4,     6,     4,
-       1
+       1,     1,     0,     1,     1,     1,     1,     2,     1,     1,
+       3,     3,     3,     3,     1,     9,     3,     3,     4,     6,
+       4,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -573,16 +573,16 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     4,     0,     0,     0,     8,     0,     0,     0,
+       0,     0,     4,     0,     0,    32,     8,     0,     0,     0,
       11,    12,     0,    14,     0,     0,     0,    31,    30,     3,
       21,    29,    27,    26,    28,    24,    25,    23,    22,     5,
-      20,    19,     2,    32,    33,    34,    35,     7,    18,    17,
-      37,    38,     0,     9,     0,     0,     0,     0,     0,    10,
-      43,     0,     0,     0,    13,     0,     0,     1,    36,     6,
-       0,     0,     0,     0,     0,     0,     0,    15,    16,    39,
-      41,    40,    42,     0,     0,    45,    50,     0,    46,     0,
-       0,     0,     0,     0,     0,     0,    47,    49,     0,     0,
-       0,    48,    44
+      20,    19,     2,    33,    34,    35,    36,     7,    18,    17,
+      38,    39,     0,     9,     0,     0,     0,     0,     0,    10,
+      44,     0,     0,     0,    13,     0,     0,     1,    37,     6,
+       0,     0,     0,     0,     0,     0,     0,    15,    16,    40,
+      42,    41,    43,     0,     0,    46,    51,     0,    47,     0,
+       0,     0,     0,     0,     0,     0,    48,    50,     0,     0,
+       0,    49,    45
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -1615,94 +1615,99 @@ yyreduce:
 
   case 32:
 #line 114 "panner/parser.Y"
-    {pn->getBBoxCmd();;}
+    {pn->getCmd();;}
     break;
 
   case 33:
 #line 115 "panner/parser.Y"
-    {pn->getHeightCmd();;}
+    {pn->getBBoxCmd();;}
     break;
 
   case 34:
 #line 116 "panner/parser.Y"
-    {pn->getSizeCmd();;}
+    {pn->getHeightCmd();;}
     break;
 
   case 35:
 #line 117 "panner/parser.Y"
-    {pn->getWidthCmd();;}
+    {pn->getSizeCmd();;}
     break;
 
   case 36:
-#line 120 "panner/parser.Y"
-    {pn->highLiteCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
+#line 118 "panner/parser.Y"
+    {pn->getWidthCmd();;}
     break;
 
   case 37:
 #line 121 "panner/parser.Y"
-    {pn->highLiteCmd(0);;}
+    {pn->highLiteCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 38:
 #line 122 "panner/parser.Y"
-    {pn->highLiteCmd(1);;}
+    {pn->highLiteCmd(0);;}
     break;
 
   case 39:
-#line 125 "panner/parser.Y"
-    {pn->panBeginCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
+#line 123 "panner/parser.Y"
+    {pn->highLiteCmd(1);;}
     break;
 
   case 40:
 #line 126 "panner/parser.Y"
-    {pn->panMotionCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
+    {pn->panBeginCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 41:
 #line 127 "panner/parser.Y"
-    {pn->panEndCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
+    {pn->panMotionCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 42:
 #line 128 "panner/parser.Y"
-    {pn->panToCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
+    {pn->panEndCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 43:
-#line 131 "panner/parser.Y"
-    {pn->updateCmd((yyvsp[(1) - (1)].ptr));;}
+#line 129 "panner/parser.Y"
+    {pn->panToCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 44:
-#line 134 "panner/parser.Y"
+#line 132 "panner/parser.Y"
+    {pn->updateCmd((yyvsp[(1) - (1)].ptr));;}
+    break;
+
+  case 45:
+#line 135 "panner/parser.Y"
     {pn->updateBBoxCmd(Vector((yyvsp[(2) - (9)].real),(yyvsp[(3) - (9)].real)),Vector((yyvsp[(4) - (9)].real),(yyvsp[(5) - (9)].real)),
 	    Vector((yyvsp[(6) - (9)].real),(yyvsp[(7) - (9)].real)),Vector((yyvsp[(8) - (9)].real),(yyvsp[(9) - (9)].real)));;}
     break;
 
-  case 47:
-#line 141 "panner/parser.Y"
+  case 48:
+#line 142 "panner/parser.Y"
     {pn->updateImageCompassCmd(Vector((yyvsp[(1) - (4)].real),(yyvsp[(2) - (4)].real)),Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
-  case 48:
-#line 143 "panner/parser.Y"
+  case 49:
+#line 144 "panner/parser.Y"
     {pn->updateImageCompassCmd(Vector((yyvsp[(1) - (6)].real),(yyvsp[(2) - (6)].real)), Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),
 	   Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
-  case 49:
-#line 148 "panner/parser.Y"
+  case 50:
+#line 149 "panner/parser.Y"
     {pn->updateWCSCompassCmd(Vector((yyvsp[(1) - (4)].real),(yyvsp[(2) - (4)].real)),Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
-  case 50:
-#line 149 "panner/parser.Y"
+  case 51:
+#line 150 "panner/parser.Y"
     {pn->updateWCSCompassCmd();;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1706 "panner/parser.C"
+#line 1711 "panner/parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1916,7 +1921,7 @@ yyreturn:
 }
 
 
-#line 152 "panner/parser.Y"
+#line 153 "panner/parser.Y"
 
 
 

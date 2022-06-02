@@ -192,6 +192,7 @@ class Widget {
   virtual void dcharsProc(int first, int last) {}
 
   // Subcommand Functions
+  void getCmd();
   int configCmd(int, const char**); // configure command
   void getHeightCmd();              // return height of widget
   void getWidthCmd();               // return width of widget

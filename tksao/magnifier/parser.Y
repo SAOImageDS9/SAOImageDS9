@@ -67,7 +67,8 @@ debug	: ON_ {yydebug=1;}
 	| OFF_ {yydebug=0;}
 	;
 
-get	: BBOX_ {mg->getBBoxCmd();}
+get	: /* empty */ {mg->getCmd();}
+        | BBOX_ {mg->getBBoxCmd();}
 	| HEIGHT_ {mg->getHeightCmd();}
 	| WIDTH_ {mg->getWidthCmd();}
 	;

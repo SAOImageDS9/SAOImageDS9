@@ -1872,8 +1872,8 @@ proc FadeTimer {} {
     set interval 200
 
     if {$ifade(index) == -1} {
+	# first time
 	if {[llength $ds9(active)] > 0} {
-	    # first time
 	    set ifade(index) [lsearch $ds9(active) $current(frame)]
 	    incr ifade(index)
 	    if {$ifade(index) >= [llength $ds9(active)]} {
@@ -1884,7 +1884,8 @@ proc FadeTimer {} {
 	set ifade(id) [after $interval FadeTimer]
 
     } elseif {$ifade(transparency) >= 100} {
-	# we are done with fading, goto next frame
+	# goto next frame
+	#   we are done with fading
 	if {[llength $ds9(active)] > 0} {
 	    GotoFrame [lindex $ds9(active) $ifade(index)]
 	}
@@ -1898,8 +1899,8 @@ proc FadeTimer {} {
 	if {[llength $ds9(active)] > 0} {
 	    set tt [expr 100./($fade(interval)/1000.*5.)]
 	    set ifade(transparency) [expr $ifade(transparency)+$tt]
-	    $current(frame) fade \
-		[lindex $ds9(active) $ifade(index)] $ifade(transparency)
+	    set next [lindex $ds9(active) $ifade(index)]
+	    $current(frame) fade [$next get] $ifade(transparency)
 	}
 	
 	set ifade(id) [after $interval FadeTimer]

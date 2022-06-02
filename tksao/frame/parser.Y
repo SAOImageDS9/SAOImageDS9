@@ -479,7 +479,7 @@ command : DEBUG_ debug
 	| CROSSHAIR_ crosshair
         | CUBE_ cube
 	| DATASEC_ yesno {fr->DATASECCmd($2);}
-        | FADE_ STRING numeric {fr->fadeCmd($2,$3);}
+        | FADE_ POINTER numeric {fr->fadeCmd((void*)$2,$3);}
 	| FITSY_ fitsy
 	| GET_ get
 	| GRID_ grid
@@ -1014,7 +1014,8 @@ cutMethod : /* emtpy */ {$$ = Base::AVERAGE;}
 fitsy	: HAS_ EXT_ STRING {fr->fitsyHasExtCmd($3);}
 	;
 
-get	: BG_ COLOR_ {fr->getBgColorCmd();}
+get	: /* empty */ {fr->getCmd();}
+        | BG_ COLOR_ {fr->getBgColorCmd();}
 	| BIN_ getBin
         | BLOCK_ getBlock
 	| CLIP_ getClip

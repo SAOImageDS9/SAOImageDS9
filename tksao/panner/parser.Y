@@ -111,7 +111,8 @@ bbox	: ON_ {pn->setBBoxCmd(1);}
 	| OFF_ {pn->setBBoxCmd(0);}
 	;
 
-get	: BBOX_ {pn->getBBoxCmd();}
+get	: /* empty */ {pn->getCmd();}
+        | BBOX_ {pn->getBBoxCmd();}
 	| HEIGHT_ {pn->getHeightCmd();}
 	| SIZE_ {pn->getSizeCmd();}
 	| WIDTH_ {pn->getWidthCmd();}

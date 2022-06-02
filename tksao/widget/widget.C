@@ -384,6 +384,13 @@ void Widget::translateProc(double deltaX, double deltaY)
 
 // Subcommand Functions
 
+void Widget::getCmd()
+{
+  ostringstream str;
+  str << this << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
 int Widget::configCmd(int argc, const char** argv)
 {
   switch (argc) {

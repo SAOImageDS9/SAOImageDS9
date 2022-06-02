@@ -153,7 +153,8 @@ colormaplevel : /* empty */ {cb->setColormapLevelCmd();}
 	| INT POINTER {cb->setColormapLevelCmd($1, (double*)$2);}
 	;
 
-get	: BIAS_ {cb->getBiasCmd();}
+get	: /* empty */ {cb->getCmd();}
+        | BIAS_ {cb->getBiasCmd();}
 	| COLORBAR_ {cb->getColorbarCmd();}
 	| COLORMAP_ {cb->getColormapCmd();}
 	| CONTRAST_ {cb->getContrastCmd();}

@@ -195,12 +195,12 @@ array set fade::rules {
   10,line 51
   4,line 43
   1,line 38
-  15,line 58
+  15,line 59
   9,line 51
   12,line 55
   6,line 45
   3,line 40
-  14,line 57
+  14,line 58
   10,e 1
   8,line 48
   11,line 52
@@ -254,7 +254,7 @@ array set fade::token_id_table {
   257,t 0
   270,title {}
   269,title {}
-  273,line 59
+  273,line 60
   257,line 7
   262,t 0
   270,line 50
@@ -428,7 +428,7 @@ proc fade::yyparse {} {
                     12 { ProcessCmdSet current display fade DisplayMode }
                     13 { ProcessCmdSet current display fade DisplayMode }
                     14 { ProcessCmdSet current display single DisplayMode }
-                    15 { ProcessCmdSet fade interval [expr int($2*1000)] DisplayMode }
+                    15 { ProcessCmdSet fade interval [expr int($2*1000/2)] DisplayMode }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

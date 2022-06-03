@@ -379,7 +379,7 @@ proc EnterInfoBox {which} {
     set z1 [lindex $z 0]
     set z2 [lindex $z 1]
     if {$z1 != $z2} {
-	set infobox(zoom) "$z1  $z2"
+	set infobox(zoom) $z
     } else {
 	set infobox(zoom) $z1
     }

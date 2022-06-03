@@ -1878,7 +1878,7 @@ proc FadeTimer {} {
     global current
 
     # set fixed update
-    set step 125
+    set step 25
 
     if {[llength $ds9(active)] == 0} {
 	return
@@ -1898,10 +1898,9 @@ proc FadeTimer {} {
     # fade
     set next [lindex $ds9(active) $ifade(index)]
     $current(frame) fade [$next get] $ifade(alpha)
-#    puts $ifade(alpha)
     
     # next time thru
-    incr ifade(alpha) [expr int(100.*$step/$fade(interval))]
+    set ifade(alpha) [expr $ifade(alpha)+(100.*$step/$fade(interval))]
 
     if {$ifade(alpha) >= 100} {
 	$current(frame) fade clear
@@ -2324,7 +2323,8 @@ proc FadeSendCmdInterval {} {
     global parse
     global fade
 
-    $parse(proc) $parse(id) "[expr $fade(interval)/1000.]\n"
+    # times are doubled
+    $parse(proc) $parse(id) "[expr $fade(interval)/1000.*2]\n"
 }
 
 proc ProcessLockCmd {varname iname} {

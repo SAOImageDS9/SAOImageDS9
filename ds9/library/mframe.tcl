@@ -303,22 +303,20 @@ proc FrameMainMenu {} {
 	-label "16 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 16000
 
+    # times are doubled
     ThemeMenu $ds9(mb).frame.params.fade
     $ds9(mb).frame.params.fade add radiobutton \
-	-label "1 [msgcat::mc {Second}]" \
-	-variable fade(interval) -value 1000
+	-label "1  [msgcat::mc {Second}]" \
+	-variable fade(interval) -value 500
     $ds9(mb).frame.params.fade add radiobutton \
 	-label "2  [msgcat::mc {Seconds}]" \
-	-variable fade(interval) -value 2000
+	-variable fade(interval) -value 1000
     $ds9(mb).frame.params.fade add radiobutton \
 	-label "4 [msgcat::mc {Seconds}]" \
-	-variable fade(interval) -value 4000
+	-variable fade(interval) -value 2000
     $ds9(mb).frame.params.fade add radiobutton \
 	-label "8 [msgcat::mc {Seconds}]" \
-	-variable fade(interval) -value 8000
-    $ds9(mb).frame.params.fade add radiobutton \
-	-label "16 [msgcat::mc {Seconds}]" \
-	-variable fade(interval) -value 16000
+	-variable fade(interval) -value 4000
 }
 
 proc PrefsDialogFrameMenu {w} {
@@ -377,17 +375,16 @@ proc PrefsDialogFrameMenu {w} {
     $m.params.blink add radiobutton -label "16 [msgcat::mc {Seconds}]" \
 	-variable pblink(interval) -value 16000
 
+    # times are doubled
     ThemeMenu $m.params.fade
-    $m.params.fade add radiobutton -label "1 [msgcat::mc {Second}]" \
-	-variable pfade(interval) -value 1000
+    $m.params.fade add radiobutton -label "1  [msgcat::mc {Second}]" \
+	-variable pfade(interval) -value 500
     $m.params.fade add radiobutton -label "2  [msgcat::mc {Seconds}]" \
-	-variable pfade(interval) -value 2000
+	-variable pfade(interval) -value 1000
     $m.params.fade add radiobutton -label "4 [msgcat::mc {Seconds}]" \
-	-variable pfade(interval) -value 4000
+	-variable pfade(interval) -value 2000
     $m.params.fade add radiobutton -label "8 [msgcat::mc {Seconds}]" \
-	-variable pfade(interval) -value 8000
-    $m.params.fade add radiobutton -label "16 [msgcat::mc {Seconds}]" \
-	-variable pfade(interval) -value 16000
+	-variable pfade(interval) -value 4000
 
     pack $f -side top -fill both -expand true
 }

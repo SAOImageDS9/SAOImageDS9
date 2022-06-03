@@ -22,7 +22,8 @@ command : fade
 fade : {ProcessCmdSet current display fade DisplayMode}
  | yes {ProcessCmdSet current display fade DisplayMode}
  | no {ProcessCmdSet current display single DisplayMode}
- | INTERVAL_ numeric {ProcessCmdSet fade interval [expr int($2*1000)] DisplayMode}
+ # times are doubled
+ | INTERVAL_ numeric {ProcessCmdSet fade interval [expr int($2*1000/2)] DisplayMode}
  ;
 
 %%

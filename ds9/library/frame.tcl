@@ -1893,25 +1893,24 @@ proc FadeTimer {} {
 	}
 
 	set ifade(alpha) 0
-	set ifade(id) [after $step FadeTimer]
+    }
+    
+    # fade
+    set next [lindex $ds9(active) $ifade(index)]
+    $current(frame) fade [$next get] $ifade(alpha)
+
+    # next time thru
+    incr ifade(alpha) [expr int(100.*$step/$fade(interval))]
+
+    if {$ifade(alpha) >= 100} {
+	$current(frame) fade clear
+	GotoFrame [lindex $ds9(active) $ifade(index)]
+
+	# now hold for blink(interval) before fading again
+	set ifade(index) -1
+	set ifade(id) [after $blink(interval) FadeTimer]
     } else {
-	# fade
-	set next [lindex $ds9(active) $ifade(index)]
-	$current(frame) fade [$next get] $ifade(alpha)
-
-	# next time thru
-	incr ifade(alpha) [expr int(100.*$step/$fade(interval))]
-
-	if {$ifade(alpha) >= 100} {
-	    $current(frame) fade clear
-	    GotoFrame [lindex $ds9(active) $ifade(index)]
-
-	    # now hold for blink(interval) before fading again
-	    set ifade(index) -1
-	    set ifade(id) [after $blink(interval) FadeTimer]
-	} else {
-	    set ifade(id) [after $step FadeTimer]
-	}
+	set ifade(id) [after $step FadeTimer]
     }
 }
 

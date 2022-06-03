@@ -1675,6 +1675,9 @@ proc UpdateActiveFrames {} {
 	    set current(frame) [lindex $ds9(active) 0]
 	    set current(colorbar) ${current(frame)}cb
 	}
+    } else {
+	set current(frame) {}
+	set current(colorbar) {}
     }
 
     DisplayMode
@@ -1809,7 +1812,9 @@ proc DisplayMode {} {
 		set ifade(id) 0
 		set ifade(index) -1
 		set ifade(alpha) 0
-		$current(frame) fade clear
+		if {$current(frame) != {}} {
+		    $current(frame) fade clear
+		}
 	    }
 
 	    LayoutFrames
@@ -1821,7 +1826,9 @@ proc DisplayMode {} {
 		set ifade(id) 0
 		set ifade(index) -1
 		set ifade(alpha) 0
-		$current(frame) fade clear
+		if {$current(frame) != {}} {
+		    $current(frame) fade clear
+		}
 	    }
 
 	    # ignore if we are already blinking
@@ -1871,7 +1878,7 @@ proc FadeTimer {} {
     global current
 
     # set fixed update
-    set interval 50
+    set interval 25
 
     if {[llength $ds9(active)] == 0} {
 	return

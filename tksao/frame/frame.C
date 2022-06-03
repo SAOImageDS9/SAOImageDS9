@@ -39,6 +39,9 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   maskLow = 0;
   maskHigh = 0;
   maskSystem = Coord::WCS;
+
+  fadeImg =NULL;
+  fadeAlpha =0;
 }
 
 Frame::~Frame()
@@ -57,6 +60,9 @@ Frame::~Frame()
 
   if (maskColorName)
     delete [] maskColorName;
+
+  if (fadeImg)
+    delete [] fadeImg;
 }
 
 void Frame::alignWCS() {
@@ -243,7 +249,7 @@ unsigned char* Frame::blendLightenMask(unsigned char* dest,
   return dest;
 }
 
-unsigned char* Frame::fillImage(int width, int height, 
+unsigned char* Frame::fillImage(int width, int height,
 				Coord::InternalSystem sys)
 {
   // img
@@ -405,6 +411,10 @@ unsigned char* Frame::fillImage(int width, int height,
       }
       break;
     }
+
+    if (fadeImg && sys == Coord::WIDGET)
+      alphaComposite(img,fadeImg,width,height,fadeAlpha);
+
   }
 
   return img;
@@ -669,10 +679,36 @@ void Frame::unloadFits()
 
 // Commands
 
-void Frame::fadeCmd(void* ptr, double transparency)
+void Frame::fadeCmd(void* ptr, float alpha)
 {
-  Frame* next = (Frame*)ptr;
-  cerr << options->cmdName << ':' << next->options->cmdName << '=' << transparency << endl;
+  // alpha is 0 to 100
+  // fadeAlpha is 0 to 1
+  fadeAlpha = alpha/100.;
+
+  if (fadeImg)
+    delete [] fadeImg;
+  fadeImg =NULL;
+  
+  if (fadeAlpha >= 1) {
+    // we are done
+    fadeAlpha =0;
+    return;
+  }
+  
+  // be sure we have current matrices
+  ((Frame*)ptr)->updateMatrices();
+  fadeImg = ((Frame*)ptr)->fillImage(options->width, options->height,
+				     Coord::WIDGET);
+
+  update(BASE);
+}
+
+void Frame::fadeClearCmd()
+{
+  if (fadeImg)
+    delete [] fadeImg;
+  fadeImg =NULL;
+  fadeAlpha =0;
 }
 
 void Frame::getMaskColorCmd()

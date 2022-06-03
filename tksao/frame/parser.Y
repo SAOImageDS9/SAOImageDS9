@@ -479,7 +479,7 @@ command : DEBUG_ debug
 	| CROSSHAIR_ crosshair
         | CUBE_ cube
 	| DATASEC_ yesno {fr->DATASECCmd($2);}
-        | FADE_ POINTER numeric {fr->fadeCmd((void*)$2,$3);}
+        | FADE_ fade
 	| FITSY_ fitsy
 	| GET_ get
 	| GRID_ grid
@@ -1010,6 +1010,10 @@ cutMethod : /* emtpy */ {$$ = Base::AVERAGE;}
 	| SUM_  {$$ = Base::SUM;}
         | MEDIAN_ {$$ = Base::MEDIAN;}
 	;
+
+fade    : POINTER numeric {fr->fadeCmd((void*)$1,$2);}
+        | CLEAR_ {fr->fadeClearCmd();}
+        ;
 
 fitsy	: HAS_ EXT_ STRING {fr->fitsyHasExtCmd($3);}
 	;

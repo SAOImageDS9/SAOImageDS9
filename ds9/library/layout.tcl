@@ -51,10 +51,10 @@ proc FadeDef {} {
 
     set ifade(id) 0
     set ifade(index) -1
-    set ifade(transparency) 0
+    set ifade(alpha) 0
 
     set fade(blend) screen
-    set fade(interval) 1000
+    set fade(interval) 4000
 
     array set pfade [array get fade]
 }

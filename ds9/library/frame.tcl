@@ -1808,7 +1808,8 @@ proc DisplayMode {} {
 		after cancel $ifade(id)
 		set ifade(id) 0
 		set ifade(index) -1
-		set ifade(transparency) 0
+		set ifade(alpha) 0
+		$current(frame) fade clear
 	    }
 
 	    LayoutFrames
@@ -1819,7 +1820,8 @@ proc DisplayMode {} {
 		after cancel $ifade(id)
 		set ifade(id) 0
 		set ifade(index) -1
-		set ifade(transparency) 0
+		set ifade(alpha) 0
+		$current(frame) fade clear
 	    }
 
 	    # ignore if we are already blinking
@@ -1869,41 +1871,42 @@ proc FadeTimer {} {
     global current
 
     # set fixed update
-    set interval 200
+    set interval 50
+
+    if {[llength $ds9(active)] == 0} {
+	return
+    }
 
     if {$ifade(index) == -1} {
 	# first time
-	if {[llength $ds9(active)] > 0} {
-	    set ifade(index) [lsearch $ds9(active) $current(frame)]
-	    incr ifade(index)
-	    if {$ifade(index) >= [llength $ds9(active)]} {
-		set ifade(index) 0
-	    }
+	set ifade(index) [lsearch $ds9(active) $current(frame)]
+	incr ifade(index)
+	if {$ifade(index) >= [llength $ds9(active)]} {
+	    set ifade(index) 0
 	}
-	set ifade(transparency) 0
+
+	set ifade(alpha) 0
 	set ifade(id) [after $interval FadeTimer]
-
-    } elseif {$ifade(transparency) >= 100} {
-	# goto next frame
-	#   we are done with fading
-	if {[llength $ds9(active)] > 0} {
-	    GotoFrame [lindex $ds9(active) $ifade(index)]
-	}
-
-	# now hold for blink(interval) before fading again
-	set ifade(index) -1
-	set ifade(id) [after $blink(interval) FadeTimer]
-
     } else {
 	# fade
-	if {[llength $ds9(active)] > 0} {
-	    set tt [expr 100./($fade(interval)/1000.*5.)]
-	    set ifade(transparency) [expr $ifade(transparency)+$tt]
-	    set next [lindex $ds9(active) $ifade(index)]
-	    $current(frame) fade [$next get] $ifade(transparency)
+	set next [lindex $ds9(active) $ifade(index)]
+	$current(frame) fade [$next get] $ifade(alpha)
+
+	# next time thru
+	set tt [expr 100./($fade(interval)/1000.*5.)]
+	set ifade(alpha) [expr $ifade(alpha)+$tt]
+
+	if {$ifade(alpha) >= 100} {
+	    # one last time
+	    $current(frame) fade [$next get] $ifade(alpha)
+	    GotoFrame [lindex $ds9(active) $ifade(index)]
+
+	    # now hold for blink(interval) before fading again
+	    set ifade(index) -1
+	    set ifade(id) [after $blink(interval) FadeTimer]
+	} else {
+	    set ifade(id) [after $interval FadeTimer]
 	}
-	
-	set ifade(id) [after $interval FadeTimer]
     }
 }
 

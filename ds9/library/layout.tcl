@@ -54,8 +54,7 @@ proc FadeDef {} {
     set ifade(alpha) 0
 
     set fade(blend) screen
-    # times are doubled
-    set fade(interval) 2000
+    set fade(interval) 1000
 
     array set pfade [array get fade]
 }

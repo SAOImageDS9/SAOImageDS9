@@ -1898,7 +1898,8 @@ proc FadeTimer {} {
     # fade
     set next [lindex $ds9(active) $ifade(index)]
     $current(frame) fade [$next get] $ifade(alpha)
-
+#    puts $ifade(alpha)
+    
     # next time thru
     incr ifade(alpha) [expr int(100.*$step/$fade(interval))]
 

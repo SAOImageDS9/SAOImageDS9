@@ -39,7 +39,7 @@ proc BlinkDef {} {
     set iblink(id) 0
     set iblink(index) -1
 
-    set blink(interval) 500
+    set blink(interval) 1000
 
     array set pblink [array get blink]
 }
@@ -54,7 +54,7 @@ proc FadeDef {} {
     set ifade(alpha) 0
 
     set fade(blend) screen
-    set fade(interval) 1000
+    set fade(interval) 2000
 
     array set pfade [array get fade]
 }

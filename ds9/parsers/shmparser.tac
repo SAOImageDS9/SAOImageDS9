@@ -74,7 +74,8 @@ shm : key INT_ {MultiLoad; ShmCmdSet shared fits {} $1 $2 {}}
  | SRGBCUBE_ key STRING_ INT_ filename {MultiLoadRGB; ShmCmdSet sshared fits {rgb cube} $2 $4 $5 $3}
  ;
 
-key : KEY_ {set _ key}
+key : {set _ key}
+ | KEY_ {set _ key}
  | SHMID_ {set _ shmid}
  ;
 

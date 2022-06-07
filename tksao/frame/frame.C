@@ -387,11 +387,11 @@ unsigned char* Frame::fillImage(int width, int height,
       }
       break;
     }
+  }
 
+  if (img)
     if (fadeImg && sys == Coord::WIDGET)
       alphaComposite(img,fadeImg,width,height,fadeAlpha);
-
-  }
 
   return img;
 }

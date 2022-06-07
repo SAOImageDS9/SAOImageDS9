@@ -15,6 +15,9 @@
 FrameBase::FrameBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 : Base(i, c, item)
 {
+  fadeImg =NULL;
+  fadeAlpha =0;
+
 #ifndef MAC_OSX_TK
   colormapXM = NULL;
   colormapPM = 0;
@@ -392,4 +395,59 @@ void FrameBase::x11MagnifierCursor(const Vector& vv)
     XSetForeground(display, widgetGC, getColor("black"));
     XDrawLines(display, magnifierPixmap, widgetGC, pts, 5, CoordModeOrigin);
 }
+
+unsigned char* FrameBase::alphaComposite(unsigned char* src1,
+					 unsigned char* src2,
+					 int width, int height, float alpha)
+{
+  unsigned char* s1ptr = src1; // 3 component
+  unsigned char* s2ptr = src2; // 3 component
+  float aa = 1-alpha;
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
+      s1ptr++;
+      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
+      s1ptr++;
+      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
+      s1ptr++;
+    }
+  }
+
+  return src1;
+}
+
+void FrameBase::fadeCmd(void* ptr, float alpha)
+{
+  // alpha is 0 to 100
+  // fadeAlpha is 0 to 1
+  fadeAlpha = alpha/100.;
+
+  if (fadeImg)
+    delete [] fadeImg;
+  fadeImg =NULL;
+  
+  if (fadeAlpha >= 1) {
+    // we are done
+    fadeAlpha =0;
+    return;
+  }
+  
+  // be sure we have current matrices
+  ((FrameBase*)ptr)->updateMatrices();
+  fadeImg = ((FrameBase*)ptr)->fillImage(options->width, options->height,
+					 Coord::WIDGET);
+
+  update(BASE);
+}
+
+void FrameBase::fadeClearCmd()
+{
+  if (fadeImg)
+    delete [] fadeImg;
+  fadeImg =NULL;
+  fadeAlpha =0;
+}
+
 

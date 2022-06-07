@@ -248,6 +248,10 @@ unsigned char* FrameRGB::fillImage(int width, int height,
   // clean up
   delete [] mk;
 
+  if (img)
+    if (fadeImg && sys == Coord::WIDGET)
+      alphaComposite(img,fadeImg,width,height,fadeAlpha);
+
   return img;
 }
 

@@ -34,12 +34,7 @@ class Frame : public FrameBase {
   double maskHigh;
   Coord::CoordSystem maskSystem;
 
-  unsigned char* fadeImg;
-  float fadeAlpha;
-
  private:
-  unsigned char* alphaComposite(unsigned char*, unsigned char*,
-				int, int, float);
   unsigned char* alphaCompositeMask(unsigned char*, unsigned char*, int, int);
   unsigned char* blendSourceMask(unsigned char*, unsigned char*,
 				 unsigned char*, int, int);
@@ -74,9 +69,6 @@ class Frame : public FrameBase {
  public:
   Frame(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Frame();
-
-  void fadeCmd(void*, float);
-  void fadeClearCmd();
 
   void maskClearCmd();
 

@@ -39,9 +39,6 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   maskLow = 0;
   maskHigh = 0;
   maskSystem = Coord::WCS;
-
-  fadeImg =NULL;
-  fadeAlpha =0;
 }
 
 Frame::~Frame()
@@ -68,27 +65,6 @@ Frame::~Frame()
 void Frame::alignWCS() {
   Base::alignWCS();
   updateMaskMatrices();
-}
-
-unsigned char* Frame::alphaComposite(unsigned char* src1, unsigned char* src2,
-				     int width, int height, float alpha)
-{
-  unsigned char* s1ptr = src1; // 3 component
-  unsigned char* s2ptr = src2; // 3 component
-  float aa = 1-alpha;
-
-  for (int jj=0; jj<height; jj++) {
-    for (int ii=0; ii<width; ii++) {
-      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
-      s1ptr++;
-      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
-      s1ptr++;
-      *s1ptr = (*s1ptr*aa) + (*s2ptr++ *alpha);
-      s1ptr++;
-    }
-  }
-
-  return src1;
 }
 
 unsigned char* Frame::alphaCompositeMask(unsigned char* src, unsigned char* msk,
@@ -678,38 +654,6 @@ void Frame::unloadFits()
 }
 
 // Commands
-
-void Frame::fadeCmd(void* ptr, float alpha)
-{
-  // alpha is 0 to 100
-  // fadeAlpha is 0 to 1
-  fadeAlpha = alpha/100.;
-
-  if (fadeImg)
-    delete [] fadeImg;
-  fadeImg =NULL;
-  
-  if (fadeAlpha >= 1) {
-    // we are done
-    fadeAlpha =0;
-    return;
-  }
-  
-  // be sure we have current matrices
-  ((Frame*)ptr)->updateMatrices();
-  fadeImg = ((Frame*)ptr)->fillImage(options->width, options->height,
-				     Coord::WIDGET);
-
-  update(BASE);
-}
-
-void Frame::fadeClearCmd()
-{
-  if (fadeImg)
-    delete [] fadeImg;
-  fadeImg =NULL;
-  fadeAlpha =0;
-}
 
 void Frame::getMaskColorCmd()
 {

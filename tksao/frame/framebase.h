@@ -15,6 +15,9 @@ protected:
 
   Vector iisLastCursor;      // iis cursor state info
 				  
+  unsigned char* fadeImg;
+  float fadeAlpha;
+
  private:
   void coordToTclArray(FitsImage*, const Vector&, Coord::CoordSystem, 
 		       const char*, const char*);
@@ -24,6 +27,8 @@ protected:
   void getInfoWCS(char*, Vector&, FitsImage*);
 
 protected:
+  unsigned char* alphaComposite(unsigned char*, unsigned char*,
+				int, int, float);
   double calcZoomPanner();
   void cancelDetach() {};
 
@@ -64,6 +69,10 @@ public:
 
   // Info Commands
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType);
+
+  // Fade Commands
+  void fadeCmd(void*, float);
+  void fadeClearCmd();
 
   // Fits Commands
   void saveFitsResample(OutFitsStream&);

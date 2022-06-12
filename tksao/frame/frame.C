@@ -228,6 +228,10 @@ unsigned char* Frame::blendLightenMask(unsigned char* dest,
 unsigned char* Frame::fillImage(int width, int height,
 				Coord::InternalSystem sys)
 {
+  // just in case
+  if (!colorScale)
+    return NULL;
+
   // img
   XColor* bgColor = useBgColor? getXColor(bgColourName) :
     ((WidgetOptions*)options)->bgColor;

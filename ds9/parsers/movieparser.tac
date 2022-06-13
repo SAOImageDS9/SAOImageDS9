@@ -39,20 +39,18 @@ command : movie
  | movie {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-movie : STRING_ {ProcessCmdSet4 movie action frame type gif delay 0 trans blink; MovieCreate $1}
-
- | action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4}
+movie : action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4}
  | action type INT_ trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay $3 trans $4; MovieCreate $5}
 
- | 3D_ type trans STRING_
-   {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
- | 3D_ type INT_ trans STRING_
-   {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
+ | 3D_ type STRING_
+   {ProcessCmdSet3 movie action 3d type $2 delay 0; MovieCreate $3}
+ | 3D_ type INT_ STRING_
+   {ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4}
 
- | 3D_ type trans STRING_ 3dopts
-   {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
- | 3D_ type INT_ trans STRING_ 3dopts
-   {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
+ | 3D_ type STRING_ 3dopts
+   {ProcessCmdSet3 movie action 3d type $2 delay 0; MovieCreate $3}
+ | 3D_ type INT_ STRING_ 3dopts
+   {ProcessCmdSet4 movie action 3d type $2 delay $3; MovieCreate $4}
  ;
 
 action : {set _ frame}

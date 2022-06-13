@@ -11,9 +11,11 @@
 %token AZ_
 %token AZFROM_
 %token AZTO_
+%token BLINK_
 %token EL_
 %token ELFROM_
 %token ELTO_
+%token FADE_
 %token FRAME_
 %token FROM_
 %token GIF_
@@ -37,32 +39,31 @@ command : movie
  | movie {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-movie : STRING_
-   {ProcessCmdSet2 movie action slice type [ExtToFormat $1]; MovieCreate $1}
- | action STRING_
-   {ProcessCmdSet2 movie action $1 type [ExtToFormat $2]; MovieCreate $2}
- | action type STRING_ {ProcessCmdSet2 movie action $1 type $2; MovieCreate $3}
- | action type INT_ STRING_ {ProcessCmdSet3 movie action $1 type $2 delay $3; MovieCreate $4}
+movie : action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4}
+ | action type INT_ trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay $3 trans $4; MovieCreate $5}
 
- | 3D_ STRING_
-   {ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2}
- | 3D_ type STRING_ {ProcessCmdSet2 movie action 3d type $2; MovieCreate $3}
- | 3D_ type INT_ STRING_ {ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4}
+ | 3D_ type trans STRING_ {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
+ | 3D_ type INT_ trans STRING_ {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
 
- | 3D_ STRING_ opts
-   {ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2}
- | 3D_ type STRING_ opts
-   {ProcessCmdSet2 movie action 3d type $2; MovieCreate $3}
- | 3D_ type INT_ STRING_ opts
-   {ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4}
+ | 3D_ type trans STRING_ opts
+   {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
+ | 3D_ type INT_ trans STRING_ opts
+   {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
  ;
 
-action : FRAME_ {set _ frame}
+action : {set _ frame}
+ | FRAME_ {set _ frame}
  | SLICE_ {set _ slice}
  ;
 
-type : MPEG_ {set _ mpeg}
+type : {set _ gif}
  | GIF_ {set _ gif}
+ | MPEG_ {set _ mpeg}
+ ;
+
+trans : {set _ blink}
+ | BLINK_ {set _ blink}
+ | FADE_ {set _ fade}
  ;
 
 opts : opts opt

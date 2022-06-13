@@ -11,9 +11,11 @@
 az	    {return $AZ_}
 azfrom	    {return $AZFROM_}
 azto	    {return $AZTO_}
+blink	    {return $BLINK_}
 el	    {return $EL_}
 elfrom	    {return $ELFROM_}
 elto	    {return $ELTO_}
+fade	    {return $FADE_}
 frame	    {return $FRAME_}
 from	    {return $FROM_}
 gif	    {return $GIF_}

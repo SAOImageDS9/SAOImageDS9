@@ -16,6 +16,7 @@ proc MovieDef {} {
     set movie(type) gif
     set movie(action) slice
     set movie(delay) 0
+    set movie(trans) blink
 
     set movie(num) 24
     set movie(az,from) 45
@@ -48,6 +49,7 @@ proc MovieDialog {} {
     set ed(type) $movie(type)
     set ed(action) $movie(action)
     set ed(delay) $movie(delay)
+    set ed(trans) $movie(trans)
 
     DialogCreate $w [msgcat::mc {Create Movie}] ed(ok)
 
@@ -56,9 +58,9 @@ proc MovieDialog {} {
 
     ttk::label $f.title -text [msgcat::mc {Type}]
     ttk::radiobutton $f.mpeg -text {MPEG} \
-	-variable ed(type) -value mpeg
+	-variable ed(type) -value mpeg -command [list MovieDialogUpdate $w]
     ttk::radiobutton $f.gif -text {Animated Gif} \
-	-variable ed(type) -value gif
+	-variable ed(type) -value gif -command [list MovieDialogUpdate $w]
 
     grid $f.mpeg -padx 2 -pady 2 -sticky w
     grid $f.gif -padx 2 -pady 2 -sticky w
@@ -68,23 +70,26 @@ proc MovieDialog {} {
 
     ttk::label $f.title -text [msgcat::mc {Format}]
     ttk::radiobutton $f.frame -text {Frames Movie} \
-	-variable ed(action) -value frame
+	-variable ed(action) -value frame -command [list MovieDialogUpdate $w]
     ttk::radiobutton $f.slice -text {Slice Movie} \
-	-variable ed(action) -value slice
+	-variable ed(action) -value slice -command [list MovieDialogUpdate $w]
     ttk::radiobutton $f.3d -text {3D Movie} \
-	-variable ed(action) -value 3d
+	-variable ed(action) -value 3d -command [list MovieDialogUpdate $w]
 
     grid $f.slice -padx 2 -pady 2 -sticky w
     grid $f.frame -padx 2 -pady 2 -sticky w
     grid $f.3d -padx 2 -pady 2 -sticky w
 
-    switch [$current(frame) get type] {
-	base -
-	rgb {$f.3d configure -state disabled}
-	3d {$f.3d configure -state normal}
-    }
+    # Transition
+    set f [ttk::labelframe $w.trans -text [msgcat::mc {Transition}]]
+    ttk::radiobutton $f.blink -text [msgcat::mc {Blink}] \
+	-variable ed(trans) -value blink -command [list MovieDialogUpdate $w]
+    ttk::radiobutton $f.fade -text [msgcat::mc {Fade}] \
+	-variable ed(trans) -value fade -command [list MovieDialogUpdate $w]
 
-    # Param
+    grid $f.blink $f.fade -padx 2 -pady 2 -sticky w
+
+    # Delay
     set f [ttk::labelframe $w.delay -text [msgcat::mc {Delay}]]
 
     ttk::entry $f.delay -textvariable ed(delay) -width 7
@@ -104,11 +109,14 @@ proc MovieDialog {} {
     # Fini
     grid $w.type -sticky news
     grid $w.param -sticky news
+    grid $w.trans -sticky news
     grid $w.delay -sticky news
     grid $w.buttons -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
+
+    MovieDialogUpdate $w
 
     DialogWait $w ed(ok)
     destroy $w
@@ -117,6 +125,7 @@ proc MovieDialog {} {
 	set movie(action) $ed(action)
 	set movie(type) $ed(type)
 	set movie(delay) $ed(delay)
+	set movie(trans) $ed(trans)
 	
 	switch $movie(type) {
 	    mpeg {set fn [SaveFileDialog mpegfbox]}
@@ -140,6 +149,42 @@ proc MovieDialog {} {
     set rr $ed(ok)
     unset ed
     return $rr
+}
+
+proc MovieDialogUpdate {w} {
+    global ed
+    global current
+
+    set f $w.param
+    switch [$current(frame) get type] {
+	base -
+	rgb {$f.3d configure -state disabled}
+	3d {$f.3d configure -state normal}
+    }
+
+    set f $w.delay
+    switch $ed(type) {
+	mpeg {$f.delay configure -state disabled}
+	gif {
+	    switch $ed(trans) {
+		blink {$f.delay configure -state normal}
+		fade {$f.delay configure -state disabled}
+	    }
+	}
+    }
+
+    set f $w.trans
+    switch $ed(action) {
+	slice -
+	3d {
+	    $f.blink configure -state disabled
+	    $f.fade configure -state disabled
+	}
+	frame {
+	    $f.blink configure -state normal
+	    $f.fade configure -state normal
+	}
+    }
 }
 
 proc MovieCreate {fn} {
@@ -178,6 +223,7 @@ proc MovieFrame {} {
     global ds9
     global current
     global movie
+    global fade
 
     # we need single mode
     if {$ds9(display) != {single}} {
@@ -190,10 +236,45 @@ proc MovieFrame {} {
     set movie(first) 1
     set framesav $current(frame)
 
-    foreach ff $ds9(active) {
-	GotoFrame $ff
-	if {[MoviePhoto]} {
-	    break
+    switch $movie(trans) {
+	fade {
+	    set index 0
+	    foreach ff $ds9(active) {
+		GotoFrame $ff
+
+		incr index
+		if {$index >= [llength $ds9(active)]} {
+		    set index 0
+		}
+		set next [lindex $ds9(active) $index]
+		set alpha 0
+		while {$alpha<100} {
+		    switch [$next get type] {
+			base -
+			rgb {
+			    $ff fade [$next get] $alpha
+			    if {[MoviePhoto]} {
+				break
+			    }
+			    set alpha [expr $alpha+(100.*$fade(step)/($fade(interval)/2.))]
+			}
+			3d {}
+		    }
+		}
+		$ff fade clear
+		GotoFrame $next
+		if {[MoviePhoto]} {
+		    break
+		}
+	    }
+	}
+	blink {
+	    foreach ff $ds9(active) {
+		GotoFrame $ff
+		if {[MoviePhoto]} {
+		    break
+		}
+	    }
 	}
     }
 
@@ -434,8 +515,12 @@ proc MoviePhotoGIF {} {
     }
 
     if {$movie(first)} {
-	agif create $movie(fn) [image width $ph] [image height $ph] \
-	    $movie(delay)
+	set dd $movie(delay)
+	switch {$movie(trans)} {
+	    blink {}
+	    fade {set dd 0}
+	}
+	agif create $movie(fn) [image width $ph] [image height $ph] $dd
 	set movie(first) 0
     }
     agif add $ph

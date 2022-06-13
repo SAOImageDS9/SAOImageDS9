@@ -1886,7 +1886,7 @@ proc FadeTimer {} {
     global current
 
     # set fixed update
-    set step 25
+    set fade(step) 25
 
     if {[llength $ds9(active)] == 0} {
 	return
@@ -1911,7 +1911,7 @@ proc FadeTimer {} {
 	    $current(frame) fade [$next get] $ifade(alpha)
 	    
 	    # next time thru
-	    set ifade(alpha) [expr $ifade(alpha)+(100.*$step/($fade(interval)/2.))]
+	    set ifade(alpha) [expr $ifade(alpha)+(100.*$fade(step)/($fade(interval)/2.))]
 
 	    if {$ifade(alpha) >= 100} {
 		$current(frame) fade clear
@@ -1921,7 +1921,7 @@ proc FadeTimer {} {
 		set ifade(index) -1
 		set ifade(id) [after $blink(interval) FadeTimer]
 	    } else {
-		set ifade(id) [after $step FadeTimer]
+		set ifade(id) [after $fade(step) FadeTimer]
 	    }
 	}
 	3d {

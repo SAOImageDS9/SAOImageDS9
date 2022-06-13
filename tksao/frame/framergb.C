@@ -124,9 +124,13 @@ int FrameRGB::doRender()
 	  (context[2].fits&&view[2]));
 }
 
-unsigned char* FrameRGB::fillImage(int width, int height, 
+unsigned char* FrameRGB::fillImage(int width, int height,
 				   Coord::InternalSystem sys)
 {
+  // we need a colorScale before we can render
+  if (!validColorScale())
+    return NULL;
+
   // img
   unsigned char* img = new unsigned char[width*height*3];
   memset(img,0,width*height*3);

@@ -228,8 +228,8 @@ unsigned char* Frame::blendLightenMask(unsigned char* dest,
 unsigned char* Frame::fillImage(int width, int height,
 				Coord::InternalSystem sys)
 {
-  // just in case
-  if (!colorScale)
+  // we need a colorScale before we can render
+  if (!validColorScale())
     return NULL;
 
   // img

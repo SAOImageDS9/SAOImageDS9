@@ -1845,8 +1845,16 @@ proc DisplayMode {} {
 		set iblink(index) -1
 	    }
 
-	    # ignore if we are already fadeing
+	    # ignore if we are already fading
 	    if {$ifade(id)==0} {
+		# this is such a kludge
+		#   we need all the frames released before, so colorScales
+		#   are defined
+		if {$ds9(init)} {
+		    set ds9(display) tile
+		    RealizeDS9
+		    set ds9(display) fade
+		}
 		LayoutFrames
 		FadeTimer
 	    }

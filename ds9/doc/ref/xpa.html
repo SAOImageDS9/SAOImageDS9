@@ -1613,13 +1613,13 @@ $cat foo.fits | xpaset ds9 mosaicimage wcs mask<br></tt>
 <p><b><a name="movie" id="movie"></a>movie<br></b></p>
 <p>Create a movie from snap shots of the DS9 window. A <tt>slice</tt> movie cycles though all slices of a cube. A <tt>frame</tt> movie cycles through all active frames. A <tt>3d</tt> movie cycles through specified viewing angles. The default action is <tt>slice</tt>. Movie types are either <tt>MPEG</tt> or <tt>Animated GIF</tt>, with default <tt>MPEG</tt>. Optional parameters for <tt>3d</tt>: number of frames, azimuth from/to, elevation from/to, slice from/to, oscillate/repeat times.</p>
 <tt>Syntax:<br>
-movie [slice|frame] [mpeg|gif [&lt;delay&gt;]] &lt;filename&gt;<br>
-movie 3d [mpeg|gif [&lt;delay&gt;]] &lt;filename&gt; [number|az from|az to|el from|el to|slice from|slice to|zoom from|zoom to|oscillate|repeat &lt;#&gt;]<br>
+movie [slice|frame] [mpeg|gif &lt;delay&gt; blink|fade] &lt;filename&gt;<br>
+movie 3d [mpeg|gif &lt;delay&gt;] &lt;filename&gt; [number|az from|az to|el from|el to|slice from|slice to|zoom from|zoom to|oscillate|repeat &lt;#&gt;]<br>
 &nbsp;<br>
 Example:<br>
 $xpaset -p ds9 movie slice mpeg ds9.mpg<br>
 $xpaset -p ds9 movie frame gif ds9.gif<br>
-$xpaset -p ds9 movie frame gif 100 ds9.gif<br>
+$xpaset -p ds9 movie frame gif 100 fade ds9.gif<br>
 $xpaset -p ds9 movie 3d mpeg ds9.mpg number 10 az from -60 az to 60 oscillate 1<br></tt>
 <p><b><a name="multiframe" id="multiframe"></a>multiframe</b></p>
 <p>Load FITS multiple extension file as multiple images.<br></p>

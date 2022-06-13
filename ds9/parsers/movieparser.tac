@@ -39,15 +39,19 @@ command : movie
  | movie {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-movie : action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4}
+movie : STRING_ {ProcessCmdSet4 movie action frame type gif delay 0 trans blink; MovieCreate $1}
+
+ | action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4}
  | action type INT_ trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay $3 trans $4; MovieCreate $5}
 
- | 3D_ type trans STRING_ {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
- | 3D_ type INT_ trans STRING_ {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
-
- | 3D_ type trans STRING_ opts
+ | 3D_ type trans STRING_
    {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
- | 3D_ type INT_ trans STRING_ opts
+ | 3D_ type INT_ trans STRING_
+   {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
+
+ | 3D_ type trans STRING_ 3dopts
+   {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
+ | 3D_ type INT_ trans STRING_ 3dopts
    {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
  ;
 
@@ -66,11 +70,11 @@ trans : {set _ blink}
  | FADE_ {set _ fade}
  ;
 
-opts : opts opt
- | opt
+3dopts : 3dopts 3dopt
+ | 3dopt
  ;
 
-opt : NUMBER_ INT_ {ProcessCmdSet movie num $2}
+3dopt : NUMBER_ INT_ {ProcessCmdSet movie num $2}
  | AZ_ FROM_ numeric {ProcessCmdSet movie az,from $3}
  | AZ_ TO_ numeric {ProcessCmdSet movie az,to $3}
  | EL_ FROM_ numeric {ProcessCmdSet movie el,from $3}
@@ -79,10 +83,8 @@ opt : NUMBER_ INT_ {ProcessCmdSet movie num $2}
  | SLICE_ TO_ INT_ {ProcessCmdSet movie sl,to $3}
  | ZOOM_ FROM_ INT_ {ProcessCmdSet movie zm,from $3}
  | ZOOM_ TO_ INT_ {ProcessCmdSet movie zm,to $3}
- | OSCILLATE_ INT_
-   {ProcessCmdSet movie repeat oscillate; ProcessCmdSet movie repeat,num $2}
- | REPEAT_ INT_
-   {ProcessCmdSet movie repeat repeat; ProcessCmdSet movie repeat,num $2}
+ | OSCILLATE_ INT_ {ProcessCmdSet2 movie repeat oscillate repeat,num $2}
+ | REPEAT_ INT_ {ProcessCmdSet2 movie repeat repeat repeat,num $2}
 # backward compatibility
  | AZFROM_ numeric {ProcessCmdSet movie az,from $2}
  | AZTO_ numeric {ProcessCmdSet movie az,to $2}

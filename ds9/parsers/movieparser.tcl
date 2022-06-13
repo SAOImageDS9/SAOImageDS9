@@ -61,532 +61,615 @@ proc movie::unsetupvalues {numsyms} {
 }
 
 array set movie::table {
-  6:259,target 15
-  56:257 shift
+  21:290 goto
+  21:291 goto
+  6:259,target 4
   63:266,target 41
-  9:289 goto
+  56:259 reduce
   48:0 reduce
-  59:274,target 39
+  56:261 reduce
+  56:262 reduce
+  60:274,target 40
   26:257 shift
+  56:263 reduce
+  59:274,target 39
   26:258 shift
-  45:263,target 1
   61:257,target 72
+  56:265 reduce
+  56:266 reduce
+  56:267 reduce
+  56:282,target 34
   72:276,target 31
-  64:0,target 21
-  54:273,target 32
+  73:259,target 32
+  64:0,target 42
+  56:273 reduce
+  24:267,target 30
+  54:273,target 24
+  56:274 reduce
   70:267,target 29
   69:267,target 28
-  39:262,target 25
-  40:262,target 22
-  9:268,target 14
-  51:281,target 36
+  40:262,target 26
+  56:275 reduce
+  56:276 reduce
+  56:277 reduce
+  21:275,target 33
+  9:268,target 18
+  56:278 reduce
   66:275,target 25
-  36:270,target 60
+  56:280 reduce
+  56:281 reduce
+  56:282 reduce
   7:259,target 16
-  64:266,target 21
+  64:266,target 42
+  21:0 reduce
   26:283 goto
-  45:280,target 1
-  46:263,target 2
+  46:263,target 1
   63:0 reduce
-  58:265,target 38
-  62:259 reduce
-  39:278,target 35
-  40:278,target 22
-  62:261 reduce
+  62:257,target 73
+  73:276,target 32
+  62:257 shift
+  40:278,target 36
   55:273,target 33
   71:267,target 30
-  62:262 reduce
-  62:263 reduce
+  41:262,target 23
   32:257 shift
-  62:265 reduce
   52:281,target 37
   67:275,target 26
-  62:266 reduce
-  62:267 reduce
-  20:266,target 28
+  37:270,target 61
   8:259,target 17
-  65:266,target 24
-  62:273 reduce
-  62:274 reduce
-  62:275 reduce
-  62:276 reduce
-  46:280,target 2
-  62:277 reduce
-  62:274,target 40
-  62:278 reduce
-  47:263,target 34
-  62:280 reduce
-  62:281 reduce
-  62:282 reduce
-  58:282,target 38
+  65:266,target 22
+  46:280,target 1
+  47:263,target 2
+  60:265,target 40
   59:265,target 39
+  10:289,target 16
+  41:278,target 23
+  56:273,target 34
   72:267,target 31
-  42:262,target 25
-  23:275,target 32
-  53:281,target 23
+  53:281,target 38
   68:275,target 27
+  21:266,target 29
   9:259,target 18
   67:259 reduce
   66:266,target 25
   67:261 reduce
   67:262 reduce
   67:263 reduce
-  37:257 shift
-  47:280,target 34
+  47:280,target 2
   63:274,target 41
   67:265 reduce
   48:263,target 35
   67:266 reduce
   67:267 reduce
+  60:282,target 40
+  49:0 reduce
   59:282,target 39
-  11:289,target 18
   67:273 reduce
   67:274 reduce
-  42:278,target 35
   67:275 reduce
+  37:270 shift
+  73:267,target 32
   67:276 reduce
+  43:262,target 26
   67:277 reduce
   67:278 reduce
   67:280 reduce
-  54:281,target 32
+  24:275,target 33
+  54:281,target 24
   70:275,target 29
   69:275,target 28
   67:281 reduce
+  10:264,target 14
   67:282 reduce
-  25:258,target 46
+  37:279 shift
   67:266,target 26
   48:280,target 35
-  64:274,target 21
-  22:0 reduce
-  62:265,target 40
+  64:274,target 42
+  49:263,target 36
   12:289,target 19
+  73:259 reduce
   64:0 reduce
-  58:273,target 38
-  43:257 shift
-  43:258 shift
+  73:261 reduce
+  43:278,target 36
+  73:262 reduce
+  73:263 reduce
+  73:265 reduce
+  43:259 reduce
+  73:266 reduce
+  43:261 shift
   55:281,target 33
+  73:267 reduce
   71:275,target 30
-  11:264,target 13
-  0:257,target 12
-  26:258,target 46
+  0:257,target 13
+  43:262 shift
+  26:258,target 47
+  43:263 shift
   13:259 reduce
-  54:0,target 32
-  23:266,target 28
+  43:265 shift
+  54:0,target 24
+  43:266 shift
+  73:273 reduce
+  43:267 shift
+  73:274 reduce
   68:266,target 27
-  23:0,target 9
+  73:275 reduce
+  13:264 shift
   2:257 reduce
-  20:274,target 31
-  65:274,target 24
-  51:263,target 36
+  23:0,target 7
+  73:276 reduce
+  73:277 reduce
+  2:259 reduce
+  49:280,target 36
+  73:278 reduce
+  65:274,target 22
+  43:273 shift
+  73:280 reduce
+  13:268 shift
+  43:274 shift
+  73:281 reduce
+  43:275 shift
+  73:282 reduce
   2:264 reduce
-  62:282,target 40
+  43:276 shift
+  43:277 shift
+  43:278 shift
   63:265,target 41
+  43:280 shift
+  13:289,target 20
   2:268 reduce
-  2:271 reduce
-  43:283 goto
+  43:281 shift
+  43:282 shift
+  2:271 shift
+  60:273,target 40
+  2:272 shift
   59:273,target 39
-  2:272 reduce
-  45:262,target 1
+  56:281,target 34
   72:275,target 31
-  12:264,target 13
-  1:257,target 15
+  12:264,target 14
+  27:258,target 47
+  43:291 goto
+  13:289 goto
+  24:266,target 29
   70:266,target 29
   69:266,target 28
-  39:261,target 24
-  40:261,target 22
-  20:291,target 40
-  51:280,target 36
+  40:261,target 25
+  21:274,target 32
   66:274,target 25
+  2:288 goto
   48:259 reduce
   48:261 reduce
   52:263,target 37
   48:262 reduce
   48:263 reduce
   63:282,target 41
-  18:259 shift
+  18:259 reduce
   48:265 reduce
-  51:0,target 36
-  64:265,target 21
+  64:265,target 42
   48:266 reduce
   48:267 reduce
-  20:0,target 8
+  18:264 shift
   7:257 reduce
-  45:278,target 1
-  51:0 reduce
   7:259 reduce
-  46:262,target 2
+  46:262,target 1
   48:273 reduce
+  18:268 shift
   48:274 reduce
   48:275 reduce
+  73:275,target 32
+  13:264,target 14
   7:264 reduce
-  2:257,target 13
+  2:257,target 16
   48:276 reduce
-  28:258,target 46
   48:277 reduce
   48:278 reduce
   48:280 reduce
   7:268 reduce
-  39:277,target 34
-  40:277,target 22
+  40:277,target 35
   48:281 reduce
   48:282 reduce
   71:266,target 30
+  7:271 shift
+  41:261,target 23
+  21:291,target 41
+  7:272 shift
   52:280,target 37
   67:274,target 26
-  53:263,target 23
-  64:282,target 21
-  20:265,target 27
-  65:265,target 24
+  53:263,target 38
+  64:282,target 42
+  65:265,target 22
+  18:289 goto
   23:0 reduce
-  46:278,target 2
-  62:273,target 40
-  5:0,target 3
-  47:262,target 34
+  46:278,target 1
+  5:0,target 0
+  47:262,target 2
+  7:288 goto
   54:259 reduce
   54:261 reduce
   65:0 reduce
   54:262 reduce
-  58:281,target 38
   3:257,target 14
   54:263 reduce
-  29:258,target 46
-  47:0,target 34
+  29:258,target 47
+  30:258,target 47
+  24:259 reduce
+  47:0,target 2
   54:265 reduce
-  25:283,target 47
+  24:261 shift
   54:266 reduce
+  24:262 shift
+  41:277,target 23
   54:267 reduce
+  24:263 shift
   72:266,target 31
-  16:0,target 5
-  42:261,target 24
-  23:274,target 31
-  53:280,target 23
+  24:265 shift
+  24:266 shift
+  24:267 shift
+  53:280,target 38
   54:273 reduce
   68:274,target 27
   54:274 reduce
-  24:270 shift
-  54:263,target 32
+  54:263,target 24
   54:275 reduce
   54:276 reduce
-  20:282,target 38
   54:277 reduce
-  65:282,target 24
+  65:282,target 22
+  24:273 shift
   54:278 reduce
+  21:265,target 28
+  24:274 shift
   54:280 reduce
   66:265,target 25
+  24:275 shift
   54:281 reduce
+  24:276 shift
   54:282 reduce
-  47:278,target 34
+  24:277 shift
+  24:278 shift
+  47:278,target 2
   63:273,target 41
-  24:279 shift
+  24:280 shift
+  24:281 shift
   48:262,target 35
+  24:282 shift
+  60:281,target 40
   59:281,target 39
+  4:257,target 15
   26:283,target 48
-  42:277,target 34
-  60:257 shift
-  23:291,target 40
-  54:280,target 32
+  24:290 goto
+  24:291 goto
+  73:266,target 32
+  43:261,target 25
+  24:274,target 32
+  54:280,target 24
   59:259 reduce
+  60:259 reduce
   70:274,target 29
   69:274,target 28
+  60:261 reduce
   59:261 reduce
-  25:257,target 45
+  60:262 reduce
   55:263,target 33
   59:262 reduce
+  60:263 reduce
   29:257 shift
   30:257 shift
   59:263 reduce
+  21:282,target 39
   29:258 shift
+  30:258 shift
   66:282,target 25
+  60:265 reduce
   59:265 reduce
+  60:266 reduce
   59:266 reduce
   67:265,target 26
+  60:267 reduce
   59:267 reduce
-  17:289,target 21
   48:278,target 35
-  64:273,target 21
+  64:273,target 42
+  60:273 reduce
+  49:262,target 36
   59:273 reduce
+  60:274 reduce
   59:274 reduce
+  60:275 reduce
   59:275 reduce
+  60:276 reduce
   59:276 reduce
+  60:277 reduce
   59:277 reduce
-  59:278 reduce
+  60:278 reduce
   52:0 reduce
+  59:278 reduce
+  60:280 reduce
   59:280 reduce
+  60:281 reduce
+  27:283,target 49
   59:281 reduce
+  60:282 reduce
+  43:277,target 35
   59:282 reduce
+  24:291,target 41
   55:280,target 33
   71:274,target 30
   29:283 goto
-  26:257,target 45
+  30:283 goto
+  26:257,target 46
+  56:263,target 34
   67:282,target 26
-  23:265,target 27
   68:265,target 27
-  20:273,target 30
-  65:273,target 24
+  18:289,target 22
+  49:278,target 36
+  65:273,target 22
   65:259 reduce
-  51:262,target 36
   72:0,target 31
   65:261 reduce
   65:262 reduce
   65:263 reduce
-  62:281,target 40
+  24:0 reduce
   35:257 shift
-  17:264,target 13
-  6:257,target 15
   65:265 reduce
-  41:0,target 7
+  41:0,target 23
   65:266 reduce
   65:267 reduce
-  28:283,target 51
   66:0 reduce
-  45:261,target 1
   65:273 reduce
   65:274 reduce
+  56:280,target 34
   72:274,target 31
   65:275 reduce
   65:276 reduce
+  27:257,target 46
   65:277 reduce
   65:278 reduce
-  23:282,target 38
   68:282,target 27
   65:280 reduce
   65:281 reduce
+  24:265,target 28
   70:265,target 29
   69:265,target 28
   65:282 reduce
-  39:259,target 10
-  40:259,target 22
-  20:290,target 39
-  51:278,target 36
+  40:259,target 11
+  21:273,target 31
   66:273,target 25
   52:262,target 37
   63:281,target 41
+  18:264,target 14
   7:257,target 16
   29:283,target 52
-  45:277,target 1
-  46:261,target 2
+  30:283,target 53
+  46:261,target 1
   71:259 reduce
   71:261 reduce
   68:0,target 27
+  73:274,target 32
   71:262 reduce
   71:263 reduce
-  28:257,target 45
-  58:263,target 38
   71:265 reduce
+  24:282,target 39
   41:259 reduce
   71:266 reduce
   70:282,target 29
   69:282,target 28
-  39:276,target 33
-  40:276,target 22
+  40:276,target 34
+  41:261 reduce
   71:267 reduce
+  41:262 reduce
   71:265,target 30
-  11:257 shift
-  41:259,target 7
-  11:259 reduce
+  41:259,target 23
+  41:263 reduce
+  21:290,target 40
+  11:259 shift
+  41:265 reduce
+  41:266 reduce
   52:278,target 37
   71:273 reduce
   67:273,target 26
+  41:267 reduce
   71:274 reduce
-  53:262,target 23
+  53:262,target 38
   71:275 reduce
-  11:264 shift
   0:257 reduce
   71:276 reduce
   71:277 reduce
-  64:281,target 21
+  64:281,target 42
   0:260 shift
+  0:259 shift
   71:278 reduce
   8:257,target 17
+  41:273 reduce
   71:280 reduce
-  11:268 shift
+  41:274 reduce
   71:281 reduce
+  41:275 reduce
   71:282 reduce
   0:264 reduce
-  46:277,target 2
-  47:261,target 34
+  41:276 reduce
+  41:277 reduce
+  46:277,target 1
+  41:278 reduce
+  41:280 reduce
+  47:261,target 2
   0:268 reduce
+  41:281 reduce
   53:0 reduce
   0:269 shift
+  41:282 reduce
   0:271 reduce
-  58:280,target 38
   0:272 reduce
+  60:263,target 40
+  29:257,target 46
+  30:257,target 46
   59:263,target 39
-  29:257,target 45
-  30:257,target 53
   71:282,target 30
-  0:264,target 12
+  0:264,target 13
   0:276 shift
+  41:276,target 23
   72:265,target 31
-  42:259,target 11
-  23:273,target 30
-  53:278,target 23
+  42:259,target 8
+  53:278,target 38
   68:273,target 27
-  11:289 goto
-  65:0,target 24
+  65:0,target 22
   0:284 goto
-  54:262,target 32
-  20:281,target 37
+  54:262,target 24
   0:286 goto
-  65:281,target 24
+  65:281,target 22
   0:287 goto
-  9:257,target 12
+  9:257,target 18
   46:259 reduce
   46:261 reduce
   46:262 reduce
   46:263 reduce
-  47:277,target 34
+  47:277,target 2
+  16:259 shift
   46:265 reduce
   46:266 reduce
   48:261,target 35
   46:267 reduce
+  60:280,target 40
   59:280,target 39
   67:0 reduce
-  5:259 reduce
   31:257,target 54
   46:273 reduce
   46:274 reduce
   72:282,target 31
-  1:264,target 15
-  42:276,target 33
   46:275 reduce
   46:276 reduce
+  73:265,target 32
+  43:259,target 12
   46:277 reduce
-  23:290,target 42
   46:278 reduce
   46:280 reduce
+  24:273,target 31
   46:281 reduce
-  54:278,target 32
+  54:278,target 24
   70:273,target 29
   69:273,target 28
-  39:267,target 29
-  40:267,target 22
+  40:267,target 30
   46:282 reduce
   55:262,target 33
+  21:281,target 38
   66:281,target 25
   48:277,target 35
-  62:0,target 40
-  5:285 goto
-  39:0 reduce
+  49:261,target 36
   40:0 reduce
-  62:263,target 40
   32:257,target 55
   52:259 reduce
   52:261 reduce
-  2:264,target 13
+  73:282,target 32
+  2:264,target 16
+  43:276,target 34
   52:262 reduce
   52:263 reduce
-  22:259 reduce
+  22:259 shift
+  24:290,target 43
   52:265 reduce
   52:266 reduce
   52:267 reduce
   55:278,target 33
   71:273,target 30
+  41:267,target 23
+  56:262,target 34
   67:281,target 26
   52:273 reduce
   52:274 reduce
   52:275 reduce
   52:276 reduce
   52:277 reduce
+  49:277,target 36
   52:278 reduce
   52:280 reduce
-  51:261,target 36
   52:281 reduce
   52:282 reduce
-  62:280,target 40
   63:263,target 41
+  33:257,target 56
   54:0 reduce
   3:264,target 14
-  45:259,target 1
-  0:272,target 12
+  0:272,target 13
+  56:278,target 34
   72:273,target 31
-  42:267,target 29
-  58:0,target 38
   57:257 shift
-  23:281,target 37
   68:281,target 27
-  51:277,target 36
+  27:257 shift
+  27:258 shift
   52:261,target 37
   63:280,target 41
-  64:263,target 21
-  34:257,target 58
-  27:270 shift
-  45:276,target 1
-  46:259,target 2
+  64:263,target 42
+  4:264,target 15
+  46:259,target 1
   68:0 reduce
-  1:272,target 8
-  58:262,target 38
-  27:279 shift
+  73:273,target 32
+  1:0 reduce
+  43:267,target 30
+  24:281,target 38
   70:281,target 29
   69:281,target 28
-  39:275,target 32
-  40:275,target 22
+  40:275,target 33
+  27:283 goto
   52:277,target 37
-  53:261,target 23
+  53:261,target 38
   55:0,target 33
-  64:280,target 21
-  20:263,target 26
-  65:263,target 24
+  64:280,target 42
+  65:263,target 22
   63:259 reduce
+  24:0,target 10
   35:257,target 59
   63:261 reduce
   63:262 reduce
   63:263 reduce
-  46:276,target 2
+  33:257 shift
+  46:276,target 1
   41:0 reduce
   63:265 reduce
-  1:288,target 9
-  47:259,target 34
+  47:259,target 2
   63:266 reduce
   63:267 reduce
-  2:272,target 13
-  58:278,target 38
+  2:272,target 9
+  60:262,target 40
   59:262,target 39
   63:273 reduce
   71:281,target 30
   63:274 reduce
+  41:275,target 23
   63:275 reduce
-  33:270 shift
   63:276 reduce
   63:277 reduce
   63:278 reduce
   63:280 reduce
-  53:277,target 23
+  53:277,target 38
   63:281 reduce
   63:282 reduce
-  54:261,target 32
-  20:280,target 36
-  65:280,target 24
-  33:279 shift
+  54:261,target 24
+  65:280,target 22
+  21:263,target 27
   66:263,target 25
-  6:264,target 15
-  47:276,target 34
+  36:257,target 60
+  47:276,target 2
+  2:288,target 10
   48:259,target 35
   3:272,target 14
-  59:278,target 39
+  60:278,target 40
   52:0,target 37
   55:0 reduce
-  45:267,target 1
+  59:278,target 39
   68:259 reduce
+  21:0,target 9
   72:281,target 31
   68:261 reduce
-  42:275,target 32
   68:262 reduce
   68:263 reduce
   38:257 shift
-  43:258,target 46
   68:265 reduce
   68:266 reduce
-  54:277,target 32
+  54:277,target 24
   68:267 reduce
-  39:266,target 28
-  40:266,target 22
+  40:266,target 29
   55:261,target 33
+  21:280,target 37
   66:280,target 25
   68:273 reduce
   68:274 reduce
   67:263,target 26
-  37:257,target 62
   68:275 reduce
   68:276 reduce
   68:277 reduce
@@ -594,214 +677,212 @@ array set movie::table {
   48:276,target 35
   68:278 reduce
   68:280 reduce
+  49:259,target 36
   68:281 reduce
   68:282 reduce
-  46:267,target 2
-  62:262,target 40
+  4:272,target 15
+  46:267,target 1
   70:0 reduce
   69:0 reduce
-  44:258,target 46
+  73:281,target 32
+  43:275,target 33
+  6:0,target 3
+  44:258,target 47
   55:277,target 33
-  9:289,target 15
+  41:266,target 23
   48:0,target 35
+  56:261,target 34
   67:280,target 26
-  23:263,target 26
+  17:0,target 5
   68:263,target 27
   38:257,target 63
   44:257 shift
   8:264,target 17
   44:258 shift
-  51:259,target 36
-  62:278,target 40
+  49:276,target 36
   14:259 reduce
-  47:267,target 34
+  47:267,target 2
   63:262,target 41
   42:0 reduce
   3:257 reduce
-  0:271,target 12
+  45:258,target 47
+  0:271,target 13
+  56:277,target 34
   3:264 reduce
-  42:266,target 28
-  23:280,target 36
   68:280,target 27
   3:268 reduce
+  24:263,target 27
   70:263,target 29
   69:263,target 28
   3:271 reduce
+  39:257,target 64
   44:283 goto
   3:272 reduce
-  9:264,target 13
-  51:276,target 36
+  9:264,target 18
   52:259,target 37
-  6:272,target 8
-  45:0,target 1
   63:278,target 41
   48:267,target 35
-  64:262,target 21
-  45:275,target 1
-  49:257 shift
+  64:262,target 42
   50:257 shift
-  0:287,target 6
-  49:258 shift
+  56:0 reduce
+  0:287,target 7
   50:258 shift
-  1:271,target 7
-  58:261,target 38
-  20:259 reduce
+  49:259 reduce
+  49:261 reduce
+  49:262 reduce
+  43:266,target 29
+  49:263 reduce
+  20:259 shift
   19:259 shift
-  20:261 shift
-  24:279,target 44
+  49:265 reduce
+  24:280,target 37
+  49:266 reduce
   70:280,target 29
   69:280,target 28
-  20:262 shift
-  39:274,target 31
-  40:274,target 22
-  20:263 shift
+  10:268,target 15
+  40:274,target 32
+  49:267 reduce
   71:263,target 30
   8:257 reduce
-  20:265 shift
-  20:266 shift
   8:259 reduce
-  20:267 shift
+  49:273 reduce
   52:276,target 37
-  6:288,target 11
-  53:259,target 23
+  49:274 reduce
+  49:275 reduce
+  53:259,target 38
   8:264 reduce
-  64:278,target 21
-  20:273 shift
-  20:262,target 25
-  20:274 shift
-  65:262,target 24
-  20:275 shift
+  49:276 reduce
+  7:272,target 9
+  49:277 reduce
+  64:278,target 42
+  49:278 reduce
+  49:267,target 36
+  49:280 reduce
+  65:262,target 22
   8:268 reduce
-  20:276 shift
-  20:277 shift
-  49:283 goto
+  49:281 reduce
+  49:282 reduce
   50:283 goto
-  20:278 shift
-  46:275,target 2
-  20:280 shift
-  20:281 shift
-  20:282 shift
-  2:271,target 13
-  43:283,target 65
+  46:275,target 1
+  73:0,target 32
+  2:271,target 8
   71:0 reduce
-  58:277,target 38
-  42:0,target 11
+  42:0,target 8
+  60:261,target 40
   59:261,target 39
-  39:291,target 64
+  40:291,target 65
+  25:279,target 45
   71:280,target 30
-  20:290 goto
-  11:268,target 14
-  20:291 goto
+  41:274,target 23
   72:263,target 31
-  53:276,target 23
+  53:276,target 38
   55:259 reduce
   55:261 reduce
-  54:259,target 32
+  7:288,target 12
+  54:259,target 24
   55:262 reduce
-  25:257 shift
   55:263 reduce
-  20:278,target 35
-  25:258 shift
-  65:278,target 24
+  65:278,target 22
   55:265 reduce
-  51:267,target 36
+  21:262,target 26
   55:266 reduce
   66:262,target 25
   55:267 reduce
-  47:275,target 34
+  47:275,target 2
   55:273 reduce
+  43:0 reduce
   55:274 reduce
   3:271,target 14
+  25:270 shift
   44:283,target 66
   55:275 reduce
-  59:277,target 39
+  60:277,target 40
   55:276 reduce
-  45:266,target 1
+  59:277,target 39
   55:277 reduce
   55:278 reduce
   55:280 reduce
   55:281 reduce
   72:280,target 31
-  12:268,target 14
-  42:274,target 31
+  12:268,target 15
   55:282 reduce
-  43:257,target 45
+  73:263,target 32
+  25:279 shift
   70:0,target 29
   69:0,target 28
-  54:276,target 32
-  10:259,target 16
-  25:283 goto
-  39:265,target 27
-  40:265,target 22
+  54:276,target 24
+  10:259,target 19
+  40:265,target 28
   55:259,target 33
+  21:278,target 36
   66:278,target 25
   52:267,target 37
   67:262,target 26
   61:257 shift
   48:275,target 35
-  49:258,target 46
-  50:258,target 46
+  50:258,target 47
+  4:271,target 15
+  45:283,target 67
   31:257 shift
-  46:266,target 2
-  62:261,target 40
-  42:291,target 64
-  27:279,target 50
-  44:257,target 45
-  39:282,target 38
-  40:282,target 22
+  46:266,target 1
+  73:280,target 32
+  13:268,target 15
+  43:274,target 32
+  44:257,target 46
+  40:282,target 39
   55:276,target 33
-  11:259,target 18
+  11:259,target 17
+  41:265,target 23
+  56:259,target 34
   67:278,target 26
-  23:262,target 25
-  53:267,target 23
+  53:267,target 38
   68:262,target 27
+  49:275,target 36
   66:0,target 25
-  62:277,target 40
-  47:266,target 34
+  51:258,target 47
+  47:266,target 2
   63:261,target 41
+  43:291,target 65
+  28:279,target 51
   72:0 reduce
+  45:257,target 46
   66:259 reduce
-  4:0 accept
-  0:269,target 2
+  0:269,target 3
+  41:282,target 23
   66:261 reduce
+  56:276,target 34
   66:262 reduce
-  12:259,target 18
-  42:265,target 27
+  12:259,target 19
   66:263 reduce
+  36:257 shift
   66:265 reduce
-  23:278,target 35
   68:278,target 27
   66:266 reduce
   66:267 reduce
-  54:267,target 32
+  24:262,target 26
+  54:267,target 24
   70:262,target 29
   69:262,target 28
-  51:275,target 36
   66:273 reduce
   66:274 reduce
   66:275 reduce
-  36:270 shift
   66:276 reduce
-  6:271,target 7
   66:277 reduce
   63:277,target 41
   66:278 reduce
   48:266,target 35
   66:280 reduce
-  64:261,target 21
+  64:261,target 42
   66:281 reduce
   66:282 reduce
-  45:274,target 1
-  0:286,target 5
-  36:279 shift
+  0:286,target 6
   63:0,target 41
-  42:282,target 38
   13:259,target 19
-  58:259,target 38
+  43:265,target 28
+  24:278,target 36
   70:278,target 29
   69:278,target 28
-  39:273,target 30
-  40:273,target 22
+  40:273,target 31
   55:267,target 33
   71:262,target 30
   52:275,target 37
@@ -809,258 +890,202 @@ array set movie::table {
   72:261 reduce
   72:262 reduce
   72:263 reduce
-  64:277,target 21
+  7:271,target 8
+  64:277,target 42
   72:265 reduce
-  20:261,target 24
   42:259 reduce
+  49:266,target 36
   72:266 reduce
-  65:261,target 24
-  16:0 reduce
-  42:261 shift
+  65:261,target 22
   72:267 reduce
-  42:262 shift
-  42:263 shift
-  46:274,target 2
+  12:257 shift
+  46:274,target 1
   12:259 reduce
-  42:265 shift
-  42:266 shift
   72:273 reduce
-  42:267 shift
-  58:0 reduce
   72:274 reduce
+  43:282,target 39
   72:275 reduce
   12:264 shift
-  1:257 reduce
-  58:276,target 38
   72:276 reduce
   14:259,target 20
   72:277 reduce
+  60:259,target 40
   1:259 reduce
   59:259,target 39
   72:278 reduce
-  42:273 shift
   72:280 reduce
   12:268 shift
-  42:274 shift
   72:281 reduce
   71:278,target 30
-  42:275 shift
+  41:273,target 23
   72:282 reduce
-  1:264 reduce
-  42:276 shift
+  56:267,target 34
   72:262,target 31
-  42:277 shift
-  42:278 shift
-  42:280 shift
-  1:268 reduce
-  42:281 shift
-  53:275,target 23
+  53:275,target 38
   59:0,target 39
-  42:282 shift
-  1:271 shift
-  1:272 shift
-  20:277,target 34
-  49:283,target 67
+  60:0,target 40
   50:283,target 68
-  65:277,target 24
-  51:266,target 36
+  65:277,target 22
+  21:261,target 25
   66:261,target 25
-  42:291 goto
-  17:268,target 14
-  47:274,target 34
+  47:274,target 2
   12:289 goto
+  60:276,target 40
   59:276,target 39
-  15:259,target 20
-  45:265,target 1
-  1:288 goto
+  15:259,target 21
+  73:0 reduce
   47:259 reduce
   47:261 reduce
   72:278,target 31
-  5:0 reduce
-  42:273,target 30
+  5:0 accept
   47:262 reduce
   47:263 reduce
-  17:259 reduce
+  73:262,target 32
   47:265 reduce
   47:266 reduce
-  24:270,target 43
   47:267 reduce
-  54:275,target 32
-  17:264 shift
-  6:257 reduce
+  54:275,target 24
+  21:277,target 35
   6:259 reduce
+  51:283,target 69
   66:277,target 25
   47:273 reduce
-  17:268 shift
   47:274 reduce
   52:266,target 37
   67:261,target 26
   47:275 reduce
-  6:264 reduce
   47:276 reduce
-  33:279,target 57
   47:277 reduce
+  18:268,target 15
   47:278 reduce
   48:274,target 35
   47:280 reduce
-  6:268 reduce
   47:281 reduce
-  49:257,target 45
-  50:257,target 45
+  50:257,target 46
+  56:0,target 34
   47:282 reduce
-  6:271 shift
-  45:282,target 1
-  6:272 shift
-  45:0 reduce
-  46:265,target 2
-  62:259,target 40
-  58:267,target 38
-  39:281,target 37
-  40:281,target 22
-  17:289 goto
+  16:259,target 21
+  46:265,target 1
+  73:278,target 32
+  43:273,target 31
+  40:281,target 38
+  25:270,target 44
   55:275,target 33
+  6:285 goto
   67:277,target 26
-  6:288 goto
   53:259 reduce
-  23:261,target 24
   53:261 reduce
-  53:266,target 23
+  53:266,target 38
   68:261,target 27
   53:262 reduce
   53:263 reduce
+  34:279,target 58
   23:259 reduce
+  49:274,target 36
   53:265 reduce
-  23:261 shift
   53:266 reduce
-  23:262 shift
+  51:257,target 46
   53:267 reduce
-  23:263 shift
-  46:282,target 2
-  62:276,target 40
-  23:265 shift
-  17:259,target 18
-  23:266 shift
-  47:265,target 34
+  17:0 reduce
+  46:282,target 1
+  47:265,target 2
   63:259,target 41
-  23:267 shift
   53:273 reduce
   53:274 reduce
   53:275 reduce
   59:0 reduce
+  60:0 reduce
   53:276 reduce
-  59:267,target 39
+  60:267,target 40
   53:277 reduce
-  23:273 shift
+  59:267,target 39
   53:278 reduce
-  23:274 shift
   53:280 reduce
-  0:268,target 12
-  23:275 shift
-  53:0,target 23
+  0:268,target 13
+  41:281,target 23
+  53:0,target 38
   53:281 reduce
-  23:276 shift
   53:282 reduce
-  23:277 shift
-  23:278 shift
-  22:0,target 6
-  23:280 shift
-  23:277,target 34
-  23:281 shift
+  56:275,target 34
   68:277,target 27
-  23:282 shift
-  54:266,target 32
+  24:261,target 25
+  54:266,target 24
   70:261,target 29
   69:261,target 28
-  51:274,target 36
-  23:290 goto
-  23:291 goto
-  47:282,target 34
+  47:282,target 2
   63:276,target 41
-  18:259,target 22
+  58:257 shift
+  18:259,target 19
   48:265,target 35
-  64:259,target 21
-  58:259 reduce
-  58:261 reduce
-  58:262 reduce
-  28:257 shift
-  45:273,target 1
-  58:263 reduce
-  28:258 shift
-  58:265 reduce
-  58:266 reduce
-  1:268,target 15
-  42:281,target 37
-  58:267 reduce
-  27:270,target 49
-  58:273 reduce
+  64:259,target 42
+  6:0 reduce
+  24:277,target 35
   70:277,target 29
   69:277,target 28
-  58:274 reduce
+  28:270 shift
   55:266,target 33
-  58:275 reduce
   71:261,target 30
-  58:276 reduce
-  58:277 reduce
-  36:279,target 61
-  58:278 reduce
   52:274,target 37
-  58:280 reduce
-  58:281 reduce
-  58:282 reduce
+  49:0,target 36
   48:282,target 35
-  64:276,target 21
-  20:259,target 8
+  64:276,target 42
+  28:279 shift
+  20:259,target 24
   19:259,target 23
-  65:259,target 24
-  28:283 goto
-  46:273,target 2
-  62:267,target 40
+  49:265,target 36
+  65:259,target 22
+  46:273,target 1
   46:0 reduce
-  2:268,target 13
-  58:275,target 38
+  2:268,target 16
+  43:281,target 38
+  28:270,target 50
   64:259 reduce
   71:277,target 30
   64:261 reduce
-  0:260,target 1
+  0:260,target 2
+  0:259,target 1
   64:262 reduce
+  56:266,target 34
   72:261,target 31
   64:263 reduce
-  34:257 shift
   64:265 reduce
+  37:279,target 62
   64:266 reduce
-  53:274,target 23
+  53:274,target 38
   64:267 reduce
-  20:276,target 33
-  65:276,target 24
+  49:282,target 36
+  65:276,target 22
   64:273 reduce
-  21:259,target 41
-  51:265,target 36
+  21:259,target 9
   66:259,target 25
   64:274 reduce
-  4:0,target 0
   64:275 reduce
+  34:270 shift
   64:276 reduce
   64:277 reduce
-  47:273,target 34
+  47:273,target 2
   64:278 reduce
   63:267,target 41
   64:280 reduce
   64:281 reduce
-  46:0,target 2
+  46:0,target 1
   64:282 reduce
   3:268,target 14
+  60:275,target 40
   59:275,target 39
-  0:276,target 3
+  34:279 shift
+  0:276,target 4
   72:277,target 31
-  1:259,target 15
-  54:274,target 32
-  39:263,target 26
-  40:263,target 22
-  51:282,target 36
+  1:259,target 6
+  73:261,target 32
+  54:274,target 24
+  10:257,target 13
+  40:263,target 27
+  21:276,target 34
   66:276,target 25
   70:259 reduce
   69:259 reduce
-  22:259,target 6
+  22:259,target 42
   52:265,target 37
   70:261 reduce
   69:261 reduce
@@ -1069,168 +1094,149 @@ array set movie::table {
   69:262 reduce
   70:263 reduce
   69:263 reduce
+  39:257 shift
   48:273,target 35
   70:265 reduce
   69:265 reduce
-  64:267,target 21
-  39:259 reduce
+  64:267,target 42
   40:259 reduce
   70:266 reduce
   69:266 reduce
-  39:261 shift
-  40:261 reduce
+  40:261 shift
   70:267 reduce
   69:267 reduce
-  39:262 shift
-  40:262 reduce
-  39:263 shift
-  40:263 reduce
-  45:281,target 1
-  10:259 shift
-  39:265 shift
-  40:265 reduce
-  39:266 shift
-  40:266 reduce
+  40:262 shift
+  10:257 shift
+  4:268,target 15
+  40:263 shift
+  10:259 reduce
+  40:265 shift
+  40:266 shift
   70:273 reduce
   69:273 reduce
-  39:267 shift
-  40:267 reduce
+  40:267 shift
   70:274 reduce
   69:274 reduce
+  1:0,target 6
+  73:277,target 32
   70:275 reduce
   69:275 reduce
+  10:264 shift
+  2:259,target 16
   70:276 reduce
   69:276 reduce
-  58:266,target 38
   70:277 reduce
   69:277 reduce
   70:278 reduce
   69:278 reduce
-  39:273 shift
-  40:273 reduce
+  40:273 shift
   70:280 reduce
   69:280 reduce
-  39:280,target 36
-  39:274 shift
-  40:274 reduce
-  40:280,target 22
+  10:268 shift
+  40:280,target 37
+  40:274 shift
   70:281 reduce
   69:281 reduce
-  39:275 shift
-  40:275 reduce
+  40:275 shift
+  43:0,target 12
   55:274,target 33
   70:282 reduce
   69:282 reduce
-  11:257,target 17
-  39:276 shift
-  40:276 reduce
-  39:277 shift
-  40:277 reduce
-  56:257,target 69
-  39:278 shift
-  40:278 reduce
-  39:280 shift
-  40:280 reduce
+  40:276 shift
+  41:263,target 23
+  40:277 shift
+  40:278 shift
+  40:280 shift
   52:282,target 37
   67:276,target 26
-  39:281 shift
-  40:281 reduce
-  23:259,target 9
-  39:282 shift
-  40:282 reduce
-  53:265,target 23
+  40:281 shift
+  23:259,target 7
+  40:282 shift
+  53:265,target 38
   68:259,target 27
-  20:267,target 29
-  65:267,target 24
-  39:291 goto
-  46:281,target 2
-  62:275,target 40
+  49:273,target 36
+  65:267,target 22
+  40:291 goto
+  46:281,target 1
   47:0 reduce
+  10:289 goto
+  60:266,target 40
+  45:257 shift
   59:266,target 39
-  45:259 reduce
-  45:261 reduce
-  45:262 reduce
-  42:263,target 26
-  45:263 reduce
+  45:258 shift
+  41:280,target 23
+  56:274,target 34
+  12:257,target 18
   57:257,target 70
-  15:259 shift
-  45:265 reduce
-  23:276,target 33
-  45:266 reduce
-  53:282,target 23
+  15:259 reduce
+  53:282,target 38
   68:276,target 27
-  45:267 reduce
-  54:265,target 32
+  24:259,target 10
+  54:265,target 24
   70:259,target 29
   69:259,target 28
+  4:257 reduce
   71:0,target 30
-  45:273 reduce
-  51:273,target 36
+  21:267,target 30
   66:267,target 25
-  45:274 reduce
-  5:285,target 10
-  39:0,target 10
-  40:0,target 22
-  45:275 reduce
-  45:276 reduce
-  6:268,target 15
-  45:277 reduce
-  47:281,target 34
+  40:0,target 11
+  4:264 reduce
+  47:281,target 2
   63:275,target 41
-  20:0 reduce
-  33:270,target 56
-  45:278 reduce
-  45:280 reduce
-  45:281 reduce
-  45:282 reduce
-  62:0 reduce
-  0:284,target 4
-  42:280,target 36
-  54:282,target 32
+  4:268 reduce
+  4:271 reduce
+  45:283 goto
+  4:272 reduce
+  0:284,target 5
+  43:263,target 27
+  58:257,target 71
+  24:276,target 34
+  54:282,target 24
   70:276,target 29
   69:276,target 28
   55:265,target 33
   71:259,target 30
-  51:259 reduce
+  51:257 shift
+  51:258 shift
   52:273,target 37
   67:267,target 26
-  51:261 reduce
-  51:262 reduce
-  51:263 reduce
+  6:285,target 11
   7:268,target 16
   48:281,target 35
-  64:275,target 21
-  21:259 shift
-  51:265 reduce
-  51:266 reduce
-  51:267 reduce
-  9:257 shift
+  64:275,target 42
+  21:259 reduce
+  34:270,target 57
+  21:261 shift
+  21:262 shift
+  21:263 shift
+  9:257 reduce
   67:0,target 26
-  5:259,target 4
-  62:266,target 40
+  21:265 shift
+  21:266 shift
   9:259 reduce
-  51:273 reduce
-  51:274 reduce
-  51:275 reduce
-  9:264 shift
-  51:276 reduce
-  58:274,target 38
-  51:277 reduce
-  60:257,target 71
-  51:278 reduce
-  51:280 reduce
-  9:268 shift
-  51:281 reduce
+  21:267 shift
+  43:280,target 37
+  9:264 reduce
+  21:273 shift
+  21:274 shift
+  21:275 shift
+  9:268 reduce
   55:282,target 33
   71:276,target 30
-  51:282 reduce
+  21:276 shift
+  21:277 shift
+  51:283 goto
+  56:265,target 34
   72:259,target 31
-  23:267,target 29
-  53:273,target 23
+  21:278 shift
+  21:280 shift
+  21:281 shift
+  21:282 shift
+  53:273,target 38
   68:267,target 27
-  20:275,target 32
   8:268,target 17
-  65:275,target 24
+  49:281,target 36
+  65:275,target 22
 }
 
 array set movie::rules {
@@ -1243,12 +1249,12 @@ array set movie::rules {
   25,l 291
   0,l 292
   22,l 290
-  18,l 289
+  18,l 288
   40,l 291
   39,l 291
-  15,l 288
+  15,l 287
   36,l 291
-  12,l 287
+  12,l 286
   33,l 291
   7,l 286
   29,l 291
@@ -1256,7 +1262,7 @@ array set movie::rules {
   4,l 285
   26,l 291
   1,l 283
-  23,l 291
+  23,l 290
   19,l 289
   20,l 289
   41,l 291
@@ -1271,7 +1277,8 @@ array set movie::rules {
   27,l 291
   2,l 283
   24,l 291
-  21,l 290
+  21,l 289
+  42,l 291
   17,l 288
   38,l 291
   14,l 287
@@ -1279,242 +1286,246 @@ array set movie::rules {
 }
 
 array set movie::rules {
-  12,dc 0
+  12,dc 6
   26,dc 3
   3,dc 1
   41,dc 2
-  18,dc 0
+  18,dc 1
   33,dc 2
-  9,dc 5
-  11,dc 6
+  9,dc 4
+  11,dc 5
   25,dc 3
   2,dc 1
   40,dc 2
   39,dc 2
   17,dc 1
-  32,dc 2
-  8,dc 4
+  32,dc 3
+  8,dc 5
   10,dc 5
-  24,dc 3
+  24,dc 2
   1,dc 1
   38,dc 2
-  16,dc 1
+  16,dc 0
   31,dc 3
-  7,dc 5
-  23,dc 2
+  7,dc 4
+  23,dc 1
   0,dc 1
   37,dc 2
-  15,dc 0
+  15,dc 1
   29,dc 3
   30,dc 3
-  6,dc 4
-  22,dc 1
+  6,dc 1
+  22,dc 2
   36,dc 2
   14,dc 1
   28,dc 3
   5,dc 3
-  21,dc 2
+  21,dc 1
   35,dc 2
-  13,dc 1
+  13,dc 0
   27,dc 3
   4,dc 0
-  19,dc 1
+  42,dc 2
+  19,dc 0
   20,dc 1
   34,dc 2
 }
 
 array set movie::rules {
-  41,line 104
+  41,line 105
   7,line 54
-  37,line 100
+  37,line 101
   4,line 48
-  34,line 97
+  34,line 98
   1,line 44
-  31,line 91
-  27,line 87
-  24,line 84
-  21,line 79
-  17,line 71
-  14,line 66
-  11,line 61
-  9,line 57
-  40,line 103
-  39,line 102
-  6,line 52
-  36,line 99
+  31,line 94
+  27,line 90
+  24,line 87
+  21,line 80
+  17,line 74
+  14,line 69
+  11,line 63
+  9,line 58
+  40,line 104
+  39,line 103
+  6,line 53
+  36,line 100
   3,line 48
   33,line 96
   4,e 1
-  29,line 89
-  30,line 90
-  26,line 86
-  23,line 83
-  19,line 75
-  20,line 76
-  16,line 70
-  13,line 65
-  10,line 59
-  8,line 55
-  38,line 101
+  29,line 92
+  30,line 93
+  26,line 89
+  23,line 84
+  19,line 78
+  20,line 79
+  16,line 73
+  13,line 68
+  10,line 61
+  42,line 106
+  8,line 56
+  38,line 102
   5,line 49
-  35,line 98
+  35,line 99
   2,line 45
-  32,line 93
-  28,line 88
-  25,line 85
-  22,line 80
-  18,line 74
-  15,line 69
-  12,line 64
+  32,line 95
+  28,line 91
+  25,line 88
+  22,line 83
+  18,line 75
+  15,line 70
+  12,line 65
 }
 
 array set movie::lr1_table {
   66,trans {}
   35 {{39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
-  36 {{30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  36 {{40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   14,trans {}
-  33,trans {{270 56} {279 57}}
-  37 {{40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  33,trans {{257 56}}
+  37 {{31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   52,trans {}
   38 {{41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   71,trans {}
-  40 {{22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
-  39 {{10 {0 259} 5} {21 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  41 {{7 {0 259} 5}}
-  1,trans {{271 7} {272 8} {288 9}}
-  18,trans {{259 22}}
-  37,trans {{257 62}}
-  42 {{11 {0 259} 6} {21 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  56,trans {{257 69}}
-  43 {{24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
+  40 {{11 {0 259} 5} {22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {42 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
+  39 {{42 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  41 {{23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  1,trans {}
+  18,trans {{264 14} {268 15} {289 22}}
+  37,trans {{270 61} {279 62}}
+  42 {{8 {0 259} 5}}
+  56,trans {}
+  43 {{12 {0 259} 6} {22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {42 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
   44 {{25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  45 {{1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
-  23,trans {{261 24} {262 25} {263 26} {265 27} {266 28} {267 29} {273 30} {274 31} {275 32} {276 33} {277 34} {278 35} {280 36} {281 37} {282 38} {290 42} {291 40}}
-  5,trans {{285 10}}
-  42,trans {{261 24} {262 25} {263 26} {265 27} {266 28} {267 29} {273 30} {274 31} {275 32} {276 33} {277 34} {278 35} {280 36} {281 37} {282 38} {291 64}}
-  46 {{2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  45 {{26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
+  23,trans {}
+  5,trans {}
+  42,trans {}
+  46 {{1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   61,trans {{257 72}}
-  47 {{34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  47 {{2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   48 {{35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  27,trans {{270 49} {279 50}}
   50 {{27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  49 {{26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  9,trans {{257 12} {264 13} {268 14} {289 15}}
+  27,trans {{257 46} {258 47} {283 49}}
+  49 {{36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  9,trans {}
   46,trans {}
-  51 {{36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  51 {{28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
   65,trans {}
   52 {{37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  53 {{23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  13,trans {}
+  53 {{38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  13,trans {{264 14} {268 15} {289 20}}
   32,trans {{257 55}}
-  54 {{32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  51,trans {}
+  54 {{24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  51,trans {{257 46} {258 47} {283 69}}
   55 {{33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
   70,trans {}
   69,trans {}
-  56 {{28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  56 {{34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
   57 {{29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  0,trans {{260 1} {269 2} {276 3} {284 4} {286 5} {287 6}}
-  17,trans {{264 13} {268 14} {289 21}}
-  36,trans {{270 60} {279 61}}
-  58 {{38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  0,trans {{259 1} {260 2} {269 3} {276 4} {284 5} {286 6} {287 7}}
+  17,trans {}
+  36,trans {{257 60}}
+  58 {{30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
   55,trans {}
-  60 {{30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  60 {{40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
   59 {{39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
   61 {{31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  62 {{40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  22,trans {}
+  62 {{32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  22,trans {{259 42}}
   4,trans {}
   41,trans {}
   63 {{41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  60,trans {{257 71}}
+  60,trans {}
   59,trans {}
-  64 {{21 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
-  65 {{24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
+  64 {{42 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
+  65 {{22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 2}}
   66 {{25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
-  26,trans {{257 45} {258 46} {283 48}}
+  26,trans {{257 46} {258 47} {283 48}}
   8,trans {}
+  45,trans {{257 46} {258 47} {283 67}}
   67 {{26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
-  45,trans {}
   64,trans {}
   68 {{27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
   70 {{29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
   69 {{28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
-  12,trans {{264 13} {268 14} {289 19}}
+  12,trans {{257 18} {264 14} {268 15} {289 19}}
   71 {{30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
   31,trans {{257 54}}
   72 {{31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
-  50,trans {{257 45} {258 46} {283 68}}
-  49,trans {{257 45} {258 46} {283 67}}
+  50,trans {{257 46} {258 47} {283 68}}
+  49,trans {}
   68,trans {}
-  16,trans {}
+  73 {{32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 3}}
+  16,trans {{259 21}}
   35,trans {{257 59}}
   54,trans {}
-  21,trans {{259 41}}
+  73,trans {}
+  21,trans {{261 25} {262 26} {263 27} {265 28} {266 29} {267 30} {273 31} {274 32} {275 33} {276 34} {277 35} {278 36} {280 37} {281 38} {282 39} {290 40} {291 41}}
   3,trans {}
-  40,trans {}
-  39,trans {{261 24} {262 25} {263 26} {265 27} {266 28} {267 29} {273 30} {274 31} {275 32} {276 33} {277 34} {278 35} {280 36} {281 37} {282 38} {291 64}}
-  58,trans {}
-  10 {{5 0 2}}
-  11 {{6 {0 259} 2} {7 {0 259} 2} {18 259 0} {19 259 0} {20 259 0}}
-  25,trans {{257 45} {258 46} {283 47}}
-  7,trans {}
-  12 {{9 {0 259} 3} {11 {0 259} 3} {18 259 0} {19 259 0} {20 259 0}}
-  44,trans {{257 45} {258 46} {283 66}}
-  13 {{19 259 1}}
+  40,trans {{261 25} {262 26} {263 27} {265 28} {266 29} {267 30} {273 31} {274 32} {275 33} {276 34} {277 35} {278 36} {280 37} {281 38} {282 39} {291 65}}
+  39,trans {{257 64}}
+  58,trans {{257 71}}
+  10 {{9 {0 259} 2} {10 {0 259} 2} {11 {0 259} 2} {12 {0 259} 2} {19 259 0} {20 259 0} {21 259 0}}
+  11 {{5 0 2}}
+  25,trans {{270 44} {279 45}}
+  12 {{7 {0 259} 2} {8 {0 259} 2} {19 259 0} {20 259 0} {21 259 0}}
+  7,trans {{271 8} {272 9} {288 12}}
+  44,trans {{257 46} {258 47} {283 66}}
+  13 {{10 {0 259} 3} {12 {0 259} 3} {19 259 0} {20 259 0} {21 259 0}}
   63,trans {}
   14 {{20 259 1}}
-  15 {{8 {0 259} 3} {10 {0 259} 3}}
-  11,trans {{257 17} {264 13} {268 14} {289 18}}
-  30,trans {{257 53}}
-  29,trans {{257 45} {258 46} {283 52}}
-  16 {{5 0 3}}
+  15 {{21 259 1}}
+  11,trans {{259 17}}
+  30,trans {{257 46} {258 47} {283 53}}
+  29,trans {{257 46} {258 47} {283 52}}
+  16 {{9 {0 259} 3} {11 {0 259} 3}}
   48,trans {}
-  0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {10 {0 259} 0} {11 {0 259} 0} {12 {257 264 268 271 272} 0} {13 {257 264 268 271 272} 0} {14 {257 264 268 271 272} 0}}
-  17 {{7 {0 259} 3} {18 259 0} {19 259 0} {20 259 0}}
+  0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {10 {0 259} 0} {11 {0 259} 0} {12 {0 259} 0} {13 {257 264 268 271 272} 0} {14 {257 264 268 271 272} 0} {15 {257 264 268 271 272} 0}}
+  17 {{5 0 3}}
   67,trans {}
-  1 {{8 {0 259} 1} {9 {0 259} 1} {10 {0 259} 1} {11 {0 259} 1} {15 {257 259 264 268} 0} {16 {257 259 264 268} 0} {17 {257 259 264 268} 0}}
-  18 {{6 {0 259} 3}}
-  2 {{13 {257 264 268 271 272} 1}}
-  19 {{9 {0 259} 4} {11 {0 259} 4}}
-  20 {{8 {0 259} 4} {10 {0 259} 4} {21 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  15,trans {{259 20}}
-  34,trans {{257 58}}
+  1 {{6 {0 259} 1}}
+  18 {{8 {0 259} 3} {19 259 0} {20 259 0} {21 259 0}}
+  2 {{9 {0 259} 1} {10 {0 259} 1} {11 {0 259} 1} {12 {0 259} 1} {16 {257 259 264 268} 0} {17 {257 259 264 268} 0} {18 {257 259 264 268} 0}}
+  19 {{7 {0 259} 3}}
+  20 {{10 {0 259} 4} {12 {0 259} 4}}
+  15,trans {}
+  34,trans {{270 57} {279 58}}
   3 {{14 {257 264 268 271 272} 1}}
-  21 {{7 {0 259} 4}}
+  21 {{9 {0 259} 4} {11 {0 259} 4} {22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {42 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
   53,trans {}
-  4 {{0 0 1}}
-  22 {{6 {0 259} 4}}
+  4 {{15 {257 264 268 271 272} 1}}
+  22 {{8 {0 259} 4}}
   72,trans {}
-  5 {{3 0 1} {5 0 1} {4 259 0}}
-  23 {{9 {0 259} 5} {11 {0 259} 5} {21 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  20,trans {{261 24} {262 25} {263 26} {265 27} {266 28} {267 29} {273 30} {274 31} {275 32} {276 33} {277 34} {278 35} {280 36} {281 37} {282 38} {290 39} {291 40}}
-  6 {{6 {0 259} 1} {7 {0 259} 1} {15 {257 259 264 268} 0} {16 {257 259 264 268} 0} {17 {257 259 264 268} 0}}
-  2,trans {}
+  5 {{0 0 1}}
+  23 {{7 {0 259} 4}}
+  6 {{3 0 1} {5 0 1} {4 259 0}}
+  2,trans {{271 8} {272 9} {288 10}}
   19,trans {{259 23}}
-  24 {{24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  24 {{10 {0 259} 5} {12 {0 259} 5} {22 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {31 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {39 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {40 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {41 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {42 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
+  20,trans {{259 24}}
   38,trans {{257 63}}
-  7 {{16 {257 259 264 268} 1}}
-  25 {{34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
+  7 {{7 {0 259} 1} {8 {0 259} 1} {16 {257 259 264 268} 0} {17 {257 259 264 268} 0} {18 {257 259 264 268} 0}}
+  25 {{25 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   57,trans {{257 70}}
   8 {{17 {257 259 264 268} 1}}
   26 {{35 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  9 {{8 {0 259} 2} {9 {0 259} 2} {10 {0 259} 2} {11 {0 259} 2} {18 259 0} {19 259 0} {20 259 0}}
-  27 {{26 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
-  24,trans {{270 43} {279 44}}
-  28 {{36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  6,trans {{271 7} {272 8} {288 11}}
-  43,trans {{257 45} {258 46} {283 65}}
-  30 {{23 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  27 {{36 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
+  9 {{18 {257 259 264 268} 1}}
+  24,trans {{261 25} {262 26} {263 27} {265 28} {266 29} {267 30} {273 31} {274 32} {275 33} {276 34} {277 35} {278 36} {280 37} {281 38} {282 39} {290 43} {291 41}}
+  28 {{27 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  6,trans {{285 11}}
+  43,trans {{261 25} {262 26} {263 27} {265 28} {266 29} {267 30} {273 31} {274 32} {275 33} {276 34} {277 35} {278 36} {280 37} {281 38} {282 39} {291 65}}
+  30 {{38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
   29 {{37 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {1 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0} {2 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 0}}
-  62,trans {}
-  31 {{32 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  62,trans {{257 73}}
+  31 {{24 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   32 {{33 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
-  10,trans {{259 16}}
-  28,trans {{257 45} {258 46} {283 51}}
-  33 {{28 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  10,trans {{257 13} {264 14} {268 15} {289 16}}
+  28,trans {{270 50} {279 51}}
+  33 {{34 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
   47,trans {}
-  34 {{38 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
+  34 {{29 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1} {30 {0 259 261 262 263 265 266 267 273 274 275 276 277 278 280 281 282} 1}}
 }
 
 array set movie::token_id_table {
@@ -1523,22 +1534,22 @@ array set movie::token_id_table {
   280,title ZOOM
   279,title TO
   264,line 18
-  292,line 105
+  292,line 107
   287 action
   270,t 0
   269,t 0
   288 type
-  290 opts
+  290 3dopts
   289 trans
   276,line 30
   265,title EL
   291,t 1
-  291 opt
+  291 3dopt
   284,title {}
   292 start'
   274,t 0
   261,line 15
-  288,line 68
+  288,line 72
   257,t 0
   270,title FROM
   269,title FRAME
@@ -1571,7 +1582,7 @@ array set movie::token_id_table {
   287,title {}
   258,t 0
   263,line 17
-  291,line 82
+  291,line 86
   error,title {}
   280,t 0
   279,t 0
@@ -1581,7 +1592,7 @@ array set movie::token_id_table {
   263,t 0
   259,line 10
   260,line 14
-  287,line 63
+  287,line 67
   258,title float
   284,t 1
   277,title SLFROM
@@ -1618,8 +1629,8 @@ array set movie::token_id_table {
   265 EL_
   262,line 16
   266 ELFROM_
-  290,line 78
-  289,line 73
+  290,line 82
+  289,line 77
   285,t 1
   267 ELTO_
   0,t 0
@@ -1767,40 +1778,41 @@ proc movie::yyparse {} {
                     1 { set _ $1 }
                     2 { set _ $1 }
                     4 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    6 { ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4 }
-                    7 { ProcessCmdSet4 movie action $1 type $2 delay $3 trans $4; MovieCreate $5 }
-                    8 { ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4 }
-                    9 { ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5 }
-                    10 { ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4 }
-                    11 { ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5 }
-                    12 { set _ frame }
+                    6 { ProcessCmdSet4 movie action frame type gif delay 0 trans blink; MovieCreate $1 }
+                    7 { ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4 }
+                    8 { ProcessCmdSet4 movie action $1 type $2 delay $3 trans $4; MovieCreate $5 }
+                    9 { ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4 }
+                    10 { ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5 }
+                    11 { ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4 }
+                    12 { ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5 }
                     13 { set _ frame }
-                    14 { set _ slice }
-                    15 { set _ gif }
+                    14 { set _ frame }
+                    15 { set _ slice }
                     16 { set _ gif }
-                    17 { set _ mpeg }
-                    18 { set _ blink }
+                    17 { set _ gif }
+                    18 { set _ mpeg }
                     19 { set _ blink }
-                    20 { set _ fade }
-                    23 { ProcessCmdSet movie num $2 }
-                    24 { ProcessCmdSet movie az,from $3 }
-                    25 { ProcessCmdSet movie az,to $3 }
-                    26 { ProcessCmdSet movie el,from $3 }
-                    27 { ProcessCmdSet movie el,to $3 }
-                    28 { ProcessCmdSet movie sl,from $3 }
-                    29 { ProcessCmdSet movie sl,to $3 }
-                    30 { ProcessCmdSet movie zm,from $3 }
-                    31 { ProcessCmdSet movie zm,to $3 }
-                    32 { ProcessCmdSet movie repeat oscillate; ProcessCmdSet movie repeat,num $2 }
-                    33 { ProcessCmdSet movie repeat repeat; ProcessCmdSet movie repeat,num $2 }
-                    34 { ProcessCmdSet movie az,from $2 }
-                    35 { ProcessCmdSet movie az,to $2 }
-                    36 { ProcessCmdSet movie el,from $2 }
-                    37 { ProcessCmdSet movie el,to $2 }
-                    38 { ProcessCmdSet movie sl,from $2 }
-                    39 { ProcessCmdSet movie sl,to $2 }
-                    40 { ProcessCmdSet movie zm,from $2 }
-                    41 { ProcessCmdSet movie zm,to $2 }
+                    20 { set _ blink }
+                    21 { set _ fade }
+                    24 { ProcessCmdSet movie num $2 }
+                    25 { ProcessCmdSet movie az,from $3 }
+                    26 { ProcessCmdSet movie az,to $3 }
+                    27 { ProcessCmdSet movie el,from $3 }
+                    28 { ProcessCmdSet movie el,to $3 }
+                    29 { ProcessCmdSet movie sl,from $3 }
+                    30 { ProcessCmdSet movie sl,to $3 }
+                    31 { ProcessCmdSet movie zm,from $3 }
+                    32 { ProcessCmdSet movie zm,to $3 }
+                    33 { ProcessCmdSet2 movie repeat oscillate repeat,num $2 }
+                    34 { ProcessCmdSet2 movie repeat repeat repeat,num $2 }
+                    35 { ProcessCmdSet movie az,from $2 }
+                    36 { ProcessCmdSet movie az,to $2 }
+                    37 { ProcessCmdSet movie el,from $2 }
+                    38 { ProcessCmdSet movie el,to $2 }
+                    39 { ProcessCmdSet movie sl,from $2 }
+                    40 { ProcessCmdSet movie sl,to $2 }
+                    41 { ProcessCmdSet movie zm,from $2 }
+                    42 { ProcessCmdSet movie zm,to $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

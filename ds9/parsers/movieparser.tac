@@ -42,18 +42,12 @@ command : movie
 movie : action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 0 trans $3; MovieCreate $4}
  | action type INT_ trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay $3 trans $4; MovieCreate $5}
 
- | 3D_ type trans STRING_ {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
- | 3D_ type INT_ trans STRING_ {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
-
- | 3D_ type trans STRING_ opts
-   {ProcessCmdSet4 movie action 3d type $2 delay 0 trans $3; MovieCreate $4}
- | 3D_ type INT_ trans STRING_ opts
-   {ProcessCmdSet4 movie action 3d type $2 delay $3 trans $4; MovieCreate $5}
  ;
 
 action : {set _ frame}
  | FRAME_ {set _ frame}
  | SLICE_ {set _ slice}
+ | 3D_ {set _ 3d}
  ;
 
 type : {set _ gif}

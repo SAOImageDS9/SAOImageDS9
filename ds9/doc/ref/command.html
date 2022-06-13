@@ -40,6 +40,7 @@
 <a href="#envi">envi</a><br>
 <a href="#exit">exit</a><br>
 <a href="#export">export</a><br>
+<a href="#fade">fade</a><br>
 <a href="#fifo">fifo</a><br>
 <a href="#fifo_only">fifo_only</a><br>
 <a href="#fits">fits</a><br>
@@ -788,6 +789,17 @@ $ds9 -export envi foo.hdr foo.bsq little<br>
 $ds9 -export tiff foo.tiff jpeg<br>
 $ds9 -export jpeg foo.jpeg 75<br>
 $ds9 -export png foo.png</tt><br>
+<p><b><a name="fade" id="fade"></a>fade</b></p>
+<p>Fade mode parameters. Interval is in seconds.</p>
+<tt>Syntax:<br>
+-fade []<br>
+&nbsp;&nbsp;&nbsp; [yes|no]<br>
+&nbsp;&nbsp;&nbsp; [interval &lt;value&gt;]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -fade<br>
+$ds9 -fade yes<br>
+$ds9 -fade interval 2</tt><br>
 <p><b><a name="fifo" id="fifo"></a>fifo</b></p>
 <p>Set the name of the IRAF input and output fifos. The default is /dev/imt1. These fifos are used by IRAF to communicate with DS9.</p>
 <tt>Syntax:<br>

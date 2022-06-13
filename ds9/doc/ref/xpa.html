@@ -37,6 +37,7 @@
 <a href="#envi">envi</a><br>
 <a href="#exit">exit</a><br>
 <a href="#export">export</a><br>
+<a href="#fade">fade</a><br>
 <a href="#file">file</a><br>
 <a href="#fits">fits</a><br>
 <a href="#footprint">footprint</a><br>
@@ -889,6 +890,20 @@ $xpaset -p ds9 export envi foo.hdr foo.bsq little<br>
 $xpaset -p ds9 export tiff foo.tiff jpeg<br>
 $xpaset -p ds9 export jpeg foo.jpeg 75<br>
 $xpaset -p ds9 export png foo.png</tt><br>
+<p><b><a name="fade" id="fade"></a>fade</b></p>
+<p>Fade mode parameters. Interval is in seconds.<br></p>
+<tt>Syntax:<br>
+fade []<br>
+&nbsp;&nbsp;&nbsp; [yes|no]<br>
+&nbsp;&nbsp;&nbsp; [interval &lt;value&gt;]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 fade<br>
+$xpaget ds9 fade interval<br>
+<br>
+$xpaset -p ds9 fade<br>
+$xpaset -p ds9 fade yes<br>
+$xpaset -p ds9 fade interval 2</tt><br>
 <p><b><a name="file" id="file"></a>file</b></p>
 <p>Query currently loaded file information.</p>
 <tt>Syntax:<br>

@@ -1758,7 +1758,7 @@ proc movie::yyparse {} {
                     8 { ProcessCmdSet3 movie action 3d type $2 delay 0; MovieCreate $3 }
                     9 { ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4 }
                     10 { ProcessCmdSet3 movie action 3d type $2 delay 0; MovieCreate $3 }
-                    11 { ProcessCmdSet4 movie action 3d type $2 delay $3; MovieCreate $4 }
+                    11 { ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4 }
                     12 { set _ frame }
                     13 { set _ frame }
                     14 { set _ slice }

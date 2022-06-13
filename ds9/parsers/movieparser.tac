@@ -50,7 +50,7 @@ movie : action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 
  | 3D_ type STRING_ 3dopts
    {ProcessCmdSet3 movie action 3d type $2 delay 0; MovieCreate $3}
  | 3D_ type INT_ STRING_ 3dopts
-   {ProcessCmdSet4 movie action 3d type $2 delay $3; MovieCreate $4}
+   {ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4}
  ;
 
 action : {set _ frame}

@@ -736,6 +736,23 @@ proc Sex2D {str} {
     return [expr $sign * (abs($degree)+($min/60.)+($sec/(60.*60.)))]
 }
 
+proc WarpCursor {which x y} {
+    global ds9
+
+    $which warp $x $y
+    # major kludge: macos warp does not generate motion event
+    switch $ds9(wm) {
+	x11 -
+	win32 {}
+	aqua {
+	    set foo [$which query cursor]
+	    set xx [expr [lindex $foo 0]+$x]
+	    set yy [expr [lindex $foo 1]+$y]
+	    event generate $ds9(canvas) <Motion> -x $xx -y $yy
+	}
+    }
+}
+
 proc SetCursor {cursor} {
     global ds9
     global iis
@@ -1539,7 +1556,7 @@ proc CursorCmd {x y} {
     }
 
     switch -- $current(mode) {
-	none {$current(frame) warp $x $y}
+	none {WarpCursor $current(frame) $x $y}
 	pointer -
 	region -
 	catalog -

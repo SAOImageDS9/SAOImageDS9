@@ -1352,13 +1352,13 @@ proc KeyFrame {which K A xx yy} {
 		minus {CubePrev}
 
 		Up -
-		k {$which warp 0 -1}
+		k {WarpCursor $which 0 -1}
 		Down -
-		j {$which warp 0 1}
+		j {WarpCursor $which 0 1}
 		Left -
-		h {$which warp -1 0}
+		h {WarpCursor $which -1 0}
 		Right -
-		l {$which warp 1 0}
+		l {WarpCursor $which 1 0}
 
 		z {Zoom 2 2}
 		Z {Zoom .5 .5}

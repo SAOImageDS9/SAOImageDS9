@@ -333,10 +333,10 @@ proc IISCursorKey {sym key xx yy} {
     set iis(y) $yy
 
     switch -- $sym {
-	Up {$which warp 0 -1}
-	Down {$which warp 0 1}
-	Left {$which warp -1 0}
-	Right {$which warp 1 0}
+	Up {WarpCursor $which 0 -1}
+	Down {WarpCursor $which 0 1}
+	Left {WarpCursor $which -1 0}
+	Right {WarpCursor $which 1 0}
 
 	default {
 	    if {$key!={}} {

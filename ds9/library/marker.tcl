@@ -280,8 +280,9 @@ proc MarkerCursor {which x y handleCursor overCursor} {
 
 proc MarkerArrowKey {which x y} {
     global current
+    global ds9
 
-    $which warp $x $y
+    WarpCursor $which $x $y
     $which marker $current(mode) move $x $y
 }
 

@@ -554,18 +554,26 @@ XClearWindow(
     return Success;
 }
 
+// waj
 int
 XWarpPointer(
-    TCL_UNUSED(Display *),
-    TCL_UNUSED(Window),
-    TCL_UNUSED(Window),
-    TCL_UNUSED(int),
-    TCL_UNUSED(int),
-    TCL_UNUSED(unsigned int),
-    TCL_UNUSED(unsigned int),
-    TCL_UNUSED(int),
-    TCL_UNUSED(int))
+    Display *display,
+    Window src_w,
+    Window dest_w,
+    int src_x,
+    int src_y,
+    unsigned int src_width,
+    unsigned int src_height,
+    int dest_x,
+    int dest_y)
 {
+    CGPoint pt;
+    int x, y;
+    XQueryPointer(display, NULL, NULL, NULL, &x, &y, NULL, NULL, NULL);
+    pt.x = x + dest_x;
+    pt.y = y + dest_y;
+    CGWarpMouseCursorPosition(pt);
+
     return Success;
 }
 

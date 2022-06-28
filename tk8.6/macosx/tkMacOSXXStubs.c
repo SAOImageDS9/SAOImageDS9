@@ -567,11 +567,15 @@ XWarpPointer(
     int dest_x,
     int dest_y)
 {
+    int xx, yy;
+    if (dest_w)
+	Tk_GetRootCoords(Tk_IdToWindow(display,dest_w), &xx, &yy);
+    else
+	XQueryPointer(display, dest_w, NULL, NULL, &xx, &yy, NULL, NULL, NULL);
+
     CGPoint pt;
-    int x, y;
-    XQueryPointer(display, NULL, NULL, NULL, &x, &y, NULL, NULL, NULL);
-    pt.x = x + dest_x;
-    pt.y = y + dest_y;
+    pt.x = xx + dest_x;
+    pt.y = yy + dest_y;
     CGWarpMouseCursorPosition(pt);
 
     return Success;

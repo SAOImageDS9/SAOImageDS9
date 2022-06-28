@@ -313,14 +313,13 @@ You can check the acls for an XPA server using xpaget:<br>
 </ol>
 </li>
 </ol>
-<p>Once these two setup steps are performed, you should be able to send commands to DS9 and receive data from DS9. You can look at the <a href="http://hea-www.harvard.edu/saord/xpa/acl.html">xpaacl man page</a> for more information.</p>
+<p>Once these two setup steps are performed, you should be able to send commands to DS9 and receive data from DS9.</p>
 <p><b>I have a laptop, that most of the time, is connected to a network. DS9 runs fine. However, when I'm not connected to a network and I start DS9, it hangs. What's going on?</b></p>
 <p>&nbsp;DS9 uses XPA for interprocess communication. When DS9 starts, XPA initializes itself. XPA uses either IP sockets or UNIX sockets, based if your machine is configured to connect to the internet. In the case where your machine is configured for the internet, but you are not currently connected, XPA gets very confused. So, you can define a shell variable, XPA_METHOD, that tells XPA which method to use.</p>
 <p>The following is from the XPA documentation:</p>
 <blockquote>
 <p><tt>Determines the socket connection method used by this session of XPA. The choices are: inet (to use INET or Internet-based sockets) and local (unix) (to use UNIX sockets). The default is INET. Using the inet method will allow access from other machines (subject to access controls) but using local will not. Local is most useful for private access and when the machine in question is not connected to the Internet</tt></p>
 </blockquote>
-<p>More information is available on XPA shell variables at: <a href="http://hea-www.harvard.edu/RD/xpa/env.html">The XPA Environment</a><br></p>
 </blockquote>
 </blockquote>
 <blockquote>

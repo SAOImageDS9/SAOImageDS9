@@ -139,7 +139,7 @@ proc PanRelease {which x y} {
 		    set cc [$which get cursor canvas]
 		    set xx [expr int([lindex $cc 0])]
 		    set yy [expr int([lindex $cc 1])]
-		    $which warp to $xx $yy
+		    WarpToCursor $which $xx $yy
 		    set ipanzoom(last) "$xx $yy"
 
 		    set z [$current(frame) get zoom]

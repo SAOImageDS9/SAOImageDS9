@@ -753,6 +753,23 @@ proc WarpCursor {which x y} {
     }
 }
 
+proc WarpToCursor {which x y} {
+    global ds9
+
+    $which warp to $x $y
+    # major kludge: macos warp does not generate motion event
+    switch $ds9(wm) {
+	x11 -
+	win32 {}
+	aqua {
+	    set foo [$which query cursor]
+	    set xx [lindex $foo 0]
+	    set yy [lindex $foo 1]
+	    event generate $ds9(canvas) <Motion> -x $xx -y $yy
+	}
+    }
+}
+
 proc SetCursor {cursor} {
     global ds9
     global iis

@@ -8,6 +8,7 @@
 %%
 
 all	    {return $ALL_}
+analysis    {return $ANALYSIS_}
 at	    {return $AT_}
 auto	    {return $AUTO_}
 autocentroid {return $AUTOCENTROID_}
@@ -29,6 +30,7 @@ edit	    {return $EDIT_}
 epsilon	    {return $EPSILON_}
 exclude	    {return $EXCLUDE_}
 file	    {return $FILE_}
+first	    {return $FIRST_}
 fixed	    {return $FIXED_}
 font	    {return $FONT_}
 format	    {return $FORMAT_}
@@ -39,6 +41,7 @@ groups	    {return $GROUPS_}
 include	    {return $INCLUDE_}
 invert	    {return $INVERT_}
 iteration   {return $ITERATION_}
+last	    {return $LAST_}
 list	    {return $LIST_}
 load	    {return $LOAD_}
 move	    {return $MOVE_}
@@ -47,6 +50,7 @@ movefront   {return $MOVEFRONT_}
 new	    {return $NEW_}
 nl	    {return $NL_}
 none	    {return $NONE_}
+open	    {return $OPEN_}
 paste	    {return $PASTE_}
 property    {return $PROPERTY_}
 radius	    {return $RADIUS_}
@@ -100,6 +104,12 @@ diamond	    {return $DIAMOND_}
 cross	    {return $CROSS_}
 arrow	    {return $ARROW_}
 boxcircle   {return $BOXCIRCLE_}
+
+histogram   {return $HISTOGRAM_}
+plot2d      {return $PLOT2D_}
+plot2d      {return $PLOT3D_}
+radial      {return $RADIAL_}
+stats	    {return $STATS_}
 
 -format	    {return $MFORMAT_}
 -system	    {return $MSYSTEM_}

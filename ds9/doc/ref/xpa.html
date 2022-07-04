@@ -2203,7 +2203,6 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [centroid]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;&nbsp;&nbsp; [move front|back]<br>
 &nbsp;&nbsp;&nbsp; [select all|none|invert|first|last]<br>
 &nbsp;&nbsp;&nbsp; [delete [select]]<br>
@@ -2217,14 +2216,13 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [color &amp;ltcolor&gt;]<br>
 &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
-&nbsp;&nbsp;&nbsp; [include|exclude|source|background]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
+&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
 &nbsp;&nbsp;&nbsp; [composite]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt; at &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
 &nbsp;&nbsp;&nbsp; [savetemplate &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [groups]<br>
 &nbsp;&nbsp;&nbsp; [group new]<br>
 &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; new]<br>
 &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; update]<br>
@@ -2242,6 +2240,9 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [cut]<br>
 &nbsp;&nbsp;&nbsp; [paste image|physical|wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [undo]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;&nbsp;&nbsp; [include|exclude|source|background|selected]<br>
+&nbsp;&nbsp;&nbsp; [groups]<br>
 &nbsp;&nbsp;&nbsp; [-format ds9|ciao|saotng|saoimage|pros|xy]<br>
 &nbsp;&nbsp;&nbsp; [-system image|physical|wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [-sky fk4|fk5|icrs|galactic|ecliptic]<br>
@@ -2261,7 +2262,6 @@ $xpaget ds9 region showtext<br>
 $xpaget ds9 region centroid auto<br>
 $xpaget ds9 region centroid radius<br>
 $xpaget ds9 region centroid iteration<br>
-$xpaget ds9 region selected<br>
 $xpaget ds9 region format<br>
 $xpaget ds9 region system<br>
 $xpaget ds9 region sky<br>
@@ -2308,7 +2308,6 @@ $xpaset -p ds9 region centroid<br>
 $xpaset -p ds9 region centroid auto yes<br>
 $xpaset -p ds9 region centroid radius 10<br>
 $xpaset -p ds9 region centroid iteration 20<br>
-$xpaset -p ds9 region info<br>
 $xpaset -p ds9 region move back<br>
 $xpaset -p ds9 region move front<br>
 $xpaset -p ds9 region select all<br>
@@ -2330,6 +2329,9 @@ $xpaset -p ds9 region width 3<br>
 $xpaset -p ds9 region edit yes<br>
 $xpaset -p ds9 region include<br>
 $xpaset -p ds9 region command '{circle 100 100 20 # color=red}'<br>
+$xpaset -p ds9 region analysis stats
+$xpaset -p ds9 region analysis stats close
+$xpaset -p ds9 region analysis histogram save
 $xpaset -p ds9 region composite<br>
 $xpaset -p ds9 region dissolve<br>
 $xpaset -p ds9 region template foo.tpl<br>
@@ -2352,6 +2354,8 @@ $xpaset -p ds9 region copy<br>
 $xpaset -p ds9 region cut<br>
 $xpaset -p ds9 region paste wcs<br>
 $xpaset -p ds9 region undo<br></tt>
+$xpaset -p ds9 region open<br>
+$xpaset -p ds9 region close<br>
 <p><b><a name="restore" id="restore"></a>restore</b></p>
 <p>Restore DS9 to a previous state from a backup save set.</p>
 <tt>Syntax:<br>

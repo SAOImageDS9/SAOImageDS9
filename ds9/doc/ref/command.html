@@ -1843,7 +1843,6 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [centroid]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;&nbsp;&nbsp; [move front|back]<br>
 &nbsp;&nbsp;&nbsp; [select all|none|all|first|last]<br>
 &nbsp;&nbsp;&nbsp; [delete [select]]<br>
@@ -1859,6 +1858,7 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [include|exclude|source|background]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
+&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
 &nbsp;&nbsp;&nbsp; [composite]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
@@ -1881,6 +1881,7 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [cut]<br>
 &nbsp;&nbsp;&nbsp; [paste image|physical|wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [undo]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -region foo.reg<br>
@@ -1902,7 +1903,6 @@ $ds9 -region centroid<br>
 $ds9 -region centroid auto yes<br>
 $ds9 -region centroid radius 10<br>
 $ds9 -region centroid iteration 20<br>
-$ds9 -region info<br>
 $ds9 -region move back<br>
 $ds9 -region move front<br>
 $ds9 -region select all<br>
@@ -1924,6 +1924,9 @@ $ds9 -region width 3<br>
 $ds9 -region edit yes<br>
 $ds9 -region include<br>
 $ds9 -region command "circle 100 100 20 # color=red"<br>
+$ds9 -region analysis stats
+$ds9 -region analysis stats close
+$ds9 -region analysis histogram save
 $ds9 -region composite<br>
 $ds9 -region dissolve<br>
 $ds9 -region template foo.tpl<br>
@@ -1946,6 +1949,8 @@ $ds9 -region copy<br>
 $ds9 -region cut<br>
 $ds9 -region paste wcs<br>
 $ds9 -region undo<br></tt>
+$ds9 -region open<br>
+$ds9 -region close<br>
 <p><b><a name="red" id="red"></a>red</b></p>
 <p>For RGB frames, sets the current color channel to red.</p>
 <tt>Syntax:<br>

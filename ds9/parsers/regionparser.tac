@@ -13,6 +13,7 @@
 %start command
 
 %token ALL_
+%token ANALYSIS_
 %token AT_
 %token AUTO_
 %token AUTOCENTROID_
@@ -33,6 +34,7 @@
 %token EPSILON_
 %token EXCLUDE_
 %token FILE_
+%token FIRST_
 %token FIXED_
 %token FONT_
 %token FORMAT_
@@ -43,6 +45,7 @@
 %token INCLUDE_
 %token INVERT_
 %token ITERATION_
+%token LAST_
 %token LIST_
 %token LOAD_
 %token MOVE_
@@ -51,6 +54,7 @@
 %token NEW_
 %token NL_
 %token NONE_
+%token OPEN_
 %token PASTE_
 %token PROPERTY_
 %token RADIUS_
@@ -105,6 +109,12 @@
 %token ARROW_
 %token BOXCIRCLE_
 
+%token HISTOGRAM_
+%token PLOT2D_
+%token PLOT3D_
+%token RADIAL_
+%token STATS_
+
 %token MFORMAT_
 %token MSYSTEM_
 %token MSKY_
@@ -124,6 +134,10 @@ command : region
 
 region : {RegionCmdLoad}
  | props {RegionCmdLoad}
+ | open {RegionCmdOpen}
+ | CLOSE_ {RegionCmdClose}
+ | ANALYSIS_ analysisTask {RegionCmdAnalysis $2 open}
+ | ANALYSIS_ analysisTask analysisAction {RegionCmdAnalysis $2 $3}
  | STRING_ {RegionCmdLoadFn $1}
  | STRING_ props {RegionCmdLoadFn $1}
  | LOAD_ loadall STRING_ {RegionCmdLoadFn $3 $2}
@@ -137,7 +151,6 @@ region : {RegionCmdLoad}
  | CENTROID_ centroid
 # backward compatibility
  | AUTOCENTROID_ yesno {ProcessCmdSet marker centroid,auto $2 MarkerCentroidAuto}
- | GETINFO_ {MarkerInfo}
  | MOVE_ move
 # backward compatibility
  | MOVEFRONT_ {MarkerFront}
@@ -201,6 +214,24 @@ prop : MFORMAT_ format {ProcessCmdSet marker load,format $2}
  | MSKY_ skyframe {ProcessCmdSet marker load,sky $2}
  ;
 
+open :  OPEN_
+# backward compatibility
+ | GETINFO_
+ ;
+
+analysisTask : HISTOGRAM_ {set _ histogram}
+ | PANDA_ {set _ panda}
+ | PLOT2D_ {set _ plot2d}
+ | PLOT3D_ {set _ plot3d}
+ | RADIAL_ {set _ radial}
+ | STATS_ {set _ stats}
+ ;
+
+analysisAction : open {set _ open}
+ | CLOSE_ {set _ close}
+ | SAVE_ {set _ save}
+ ;
+
 loadall : {set _ 0}
  | ALL_ {set _ 1}
  ;
@@ -234,6 +265,8 @@ move : FRONT_ {MarkerFront}
 select : ALL_ {MarkerSelectAll}
  | NONE_ {MarkerUnselectAll}
  | INVERT_ {MarkerSelectInvert}
+ | LAST_ {MarkerSelectLast}
+ | FIRST_ {MarkerSelectFirst}
 # backward compatibility
  | GROUP_ STRING_ {ProcessCmdSet marker tag $2; RegionCmdGroup select}
  ;

@@ -297,13 +297,20 @@ proc SimpleTextSaveFile {varname} {
 
     set filename [SaveFileDialog textfbox $var(top)]
     if {$filename != {}} {
-	if {[catch {set ch [open "$filename" w]}]} {
-	    Error [msgcat::mc {An error has occurred while saving}]
-	    return
-	}
-	puts -nonewline $ch [$var(text) get 1.0 end]
-	close $ch
+	SimpleTextSaveFileName $varname $filename
     }
+}
+
+proc SimpleTextSaveFileName {varname filename} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[catch {set ch [open "$filename" w]}]} {
+	Error [msgcat::mc {An error has occurred while saving}]
+	return
+    }
+    puts -nonewline $ch [$var(text) get 1.0 end]
+    close $ch
 }
 
 # read only text widget, idea and code by emiliano and ccbbaa, tested: tcl/tk8.6, linux - version 20191217-0

@@ -58,7 +58,6 @@ proc MarkerDef {} {
 
     set marker(copy) {}
     set marker(copy,system) {}
-    set marker(maxdialog) 48
     set marker(load) current
 
     set marker(system) physical
@@ -983,6 +982,26 @@ proc MarkerSelectInvert {} {
     UpdateEditMenu
 }
 
+proc MarkerSelectLast {} {
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) marker select last
+    }
+
+    UpdateEditMenu
+}
+
+proc MarkerSelectFirst {} {
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) marker select first
+    }
+
+    UpdateEditMenu
+}
+
 proc MarkerDelete {select} {
     global pds9
 
@@ -1240,21 +1259,21 @@ proc MarkerInfo {} {
     global marker
     global pds9
 
-    if {$current(frame) != {}} {
-	set ll [$current(frame) get marker select]
-	if {$ll != {}} {
-	    set ii 0
-	    foreach dd $ll {
-		incr ii
-		if {$ii > $marker(maxdialog)} {
-		    return
-		}
-		MarkerDialog $current(frame) $dd
-	    }
-	} else {
-	    if {$pds9(confirm)} {
-		tk_messageBox -type ok -icon info -message [msgcat::mc {Please Select a Region}]
-	    }
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+    
+    set ll [$current(frame) get marker select]
+    if {$ll != {}} {
+	foreach id $ll {
+	    MarkerDialog $current(frame) $id
+	}
+    } else {
+	if {$pds9(confirm)} {
+	    tk_messageBox -type ok -icon info -message [msgcat::mc {Please Select a Region}]
 	}
     }
 }
@@ -1621,6 +1640,217 @@ proc RegionCmdCommand {cmd} {
     }
 
     $current(frame) marker command $marker(format) "\{$cmd\}"
+}
+
+proc RegionCmdOpen {} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+    
+    set ll [$current(frame) get marker select]
+    if {$ll != {}} {
+	foreach id $ll {
+	    MarkerDialog $current(frame) $id
+	}
+    }
+}
+
+proc RegionCmdClose {} {
+    global current
+    global imarker
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    foreach id [$current(frame) get marker select] {
+	set varname ${imarker(prefix,dialog)}${id}${current(frame)}
+	global $varname
+	upvar #0 $varname var
+
+	if {[info exists var(proc,close)]} {
+	    eval "$var(proc,close) $varname"
+	}
+    }
+}
+
+proc RegionCmdAnalysis {task action} {
+    global current
+    global imarker
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    foreach id [$current(frame) get marker select] {
+	set varname ${imarker(prefix,dialog)}${id}${current(frame)}
+	global $varname
+	upvar #0 $varname var
+
+	MarkerDialog $frame $id
+	switch $task {
+	    histogram {
+		switch $action {
+		    open {
+			set var(histogram) 1
+			MarkerAnalysisHistogramCmd $varname
+		    }
+		    close {
+			set var(histogram) 0
+			MarkerAnalysisHistogramCmd $varname
+			eval "$var(proc,close) $varname"
+		    }
+		    save {
+			set var(histogram) 1
+			MarkerAnalysisHistogramCmd $varname
+
+			set vvarname ${imarker(prefix,histogram)}${id}${current(frame)}
+			upvar #0 $vvarname vvar
+			global $vvarname
+
+			set filename "${current(frame)}.${id}.histogram.png"
+			PlotExport $vvarname $filename png
+		    }
+		}
+	    }
+	    panda {
+		switch $action {
+		    none -
+		    open {
+			set var(panda) 1
+			MarkerAnalysisPandaCmd $varname
+		    }
+		    close {
+			set var(panda) 0
+			MarkerAnalysisPandaCmd $varname
+			eval "$var(proc,close) $varname"
+		    }
+		    save {
+			set var(panda) 1
+			MarkerAnalysisPandaCmd $varname
+
+			set vvarname ${imarker(prefix,panda)}${id}${current(frame)}
+			upvar #0 $vvarname vvar
+			global $vvarname
+
+			set filename "${current(frame)}.${id}.panda.png"
+			PlotExport $vvarname $filename png
+		    }
+		}
+	    }
+	    plot2d {
+		switch $action {
+		    none -
+		    open {
+			set var(plot2d) 1
+			MarkerAnalysisPlot2dCmd $varname
+		    }
+		    close {
+			set var(plot2d) 0
+			MarkerAnalysisPlot2dCmd $varname
+			eval "$var(proc,close) $varname"
+		    }
+		    save {
+			set var(plot2d) 1
+			MarkerAnalysisPlot2dCmd $varname
+
+			set vvarname ${imarker(prefix,plot2d)}${id}${current(frame)}
+			upvar #0 $vvarname vvar
+			global $vvarname
+
+			set filename "${current(frame)}.${id}.plot2d.png"
+			PlotExport $vvarname $filename png
+		    }
+		}
+	    }
+	    plot3d {
+		switch $action {
+		    none -
+		    open {
+			set var(plot3d) 1
+			MarkerAnalysisPlot3dCmd $varname
+		    }
+		    close {
+			set var(plot3d) 0
+			MarkerAnalysisPlot3dCmd $varname
+			eval "$var(proc,close) $varname"
+		    }
+		    save {
+			set var(plot3d) 1
+			MarkerAnalysisPlot3dCmd $varname
+
+			set vvarname ${imarker(prefix,plot3d)}${id}${current(frame)}
+			upvar #0 $vvarname vvar
+			global $vvarname
+
+			set filename "${current(frame)}.${id}.plot3d.png"
+			PlotExport $vvarname $filename png
+		    }
+		}
+	    }
+	    radial {
+		switch $action {
+		    none -
+		    open {
+			set var(radial) 1
+			MarkerAnalysisRadialCmd $varname
+		    }
+		    close {
+			set var(radial) 0
+			MarkerAnalysisRadialCmd $varname
+			eval "$var(proc,close) $varname"
+		    }
+		    save {
+			set var(radial) 1
+			MarkerAnalysisRadialCmd $varname
+
+			set vvarname ${imarker(prefix,radial)}${id}${current(frame)}
+			upvar #0 $vvarname vvar
+			global $vvarname
+
+			set filename "${current(frame)}.${id}.radial.png"
+			PlotExport $vvarname $filename png
+		    }
+		}
+	    }
+	    stats {
+		switch $action {
+		    none -
+		    open {
+			set var(stats) 1
+			MarkerAnalysisStatsCmd $varname
+		    }
+		    close {
+			set var(stats) 0
+			MarkerAnalysisStatsCmd $varname
+			eval "$var(proc,close) $varname"
+		    }
+		    save {
+			set var(stats) 1
+			MarkerAnalysisStatsCmd $varname
+
+			set vvarname ${imarker(prefix,stats)}${id}${current(frame)}
+			upvar #0 $vvarname vvar
+			global $vvarname
+
+			set filename "${current(frame)}.${id}.stats.txt"
+			SimpleTextSaveFileName $vvarname $filename
+		    }
+		}
+	    }
+	}
+    }
 }
 
 proc ProcessSendRegionsCmd {proc id param sock fn} {

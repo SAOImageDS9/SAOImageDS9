@@ -2307,7 +2307,6 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [centroid]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;&nbsp;&nbsp; [move front|back]<br>
 &nbsp;&nbsp;&nbsp; [select all|none|invert|first|last]<br>
 &nbsp;&nbsp;&nbsp; [delete [select]]<br>
@@ -2321,14 +2320,13 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [color &amp;ltcolor&gt;]<br>
 &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
-&nbsp;&nbsp;&nbsp; [include|exclude|source|background]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
+&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
 &nbsp;&nbsp;&nbsp; [composite]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt; at &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
 &nbsp;&nbsp;&nbsp; [savetemplate &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [groups]<br>
 &nbsp;&nbsp;&nbsp; [group new]<br>
 &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; new]<br>
 &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; update]<br>
@@ -2346,7 +2344,9 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [cut]<br>
 &nbsp;&nbsp;&nbsp; [paste image|physical|wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [undo]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;&nbsp;&nbsp; [include|exclude|source|background|selected]<br>
+&nbsp;&nbsp;&nbsp; [groups]<br>
 &nbsp;&nbsp;&nbsp; [-format ds9|ciao|saotng|saoimage|pros|xy]<br>
 &nbsp;&nbsp;&nbsp; [-system image|physical|wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [-sky fk4|fk5|icrs|galactic|ecliptic]<br>
@@ -2368,7 +2368,6 @@ region centroid<br>
 region centroid auto<br>
 region centroid radius<br>
 region centroid iteration<br>
-region selected<br>
 region format<br>
 region system<br>
 region sky<br>
@@ -2426,6 +2425,9 @@ region width 3<br>
 region edit yes<br>
 region include<br>
 region command "circle 100 100 20 # color=red"<br>
+region analysis stats
+region analysis stats close
+region analysis histograme save
 region composite<br>
 region dissolve<br>
 region template foo.tpl<br>

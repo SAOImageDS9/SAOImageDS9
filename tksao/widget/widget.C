@@ -629,7 +629,7 @@ XColor* Widget::getXColor(const char* str)
   return cc;
 };
 
-#if !(_WIN32 || MAC_OSX_TK)
+#ifndef _WIN32
 void Widget::warp(Vector& vv)
 {
   XWarpPointer(display, None, None, 0, 0, 0, 0, vv[0], vv[1]);
@@ -640,28 +640,8 @@ void Widget::warpTo(Vector& vv)
   XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
 }
 
-int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
-			      XRectangle* rects, int n, int order)
-{
-  return XSetClipRectangles(d, gc, x, y, rects, n, order);
-}
-#endif
+#else
 
-#ifdef MAC_OSX_TK
-
-void Widget::warp(Vector& vv)
-{
-  XWarpPointer(display, None, None, 0, 0, 0, 0, vv[0], vv[1]);
-}
-
-void Widget::warpTo(Vector& vv)
-{
-  XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
-}
-
-#endif
-
-#ifdef _WIN32
 void Widget::warp(Vector& vv)
 {
   Window root, child;
@@ -682,7 +662,15 @@ void Widget::warpTo(Vector& vv)
 }
 #endif
 
-#if (_WIN32 || MAC_OSX_TK)
+#if !(_WIN32 || MAC_OSX_TK)
+int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
+			      XRectangle* rects, int n, int order)
+{
+  return XSetClipRectangles(d, gc, x, y, rects, n, order);
+}
+
+#else
+
 #include <tkInt.h>
 
 int Widget::setClipRectangles(Display *d, GC gc, int x, int y,

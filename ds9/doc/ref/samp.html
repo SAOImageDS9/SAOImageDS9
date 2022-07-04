@@ -100,7 +100,7 @@ ds9.set<br>
 <a href="#prism">prism</a><br>
 <a href="#exit">quit</a><br>
 <a href="#raise">raise</a><br>
-<a href="#regions">regions</a><br>
+<a href="#region">region</a><br>
 <a href="#restore">restore</a><br>
 <a href="#rgb">rgb</a><br>
 <a href="#rgbarray">rgbarray</a><br>
@@ -2294,10 +2294,10 @@ raise<br>
 Example:<br>
 ds9.set(string cmd)<br>
 raise</tt>
-<p><b><a name="regions" id="regions"></a>regions</b></p>
+<p><b><a name="region" id="region"></a>region</b></p>
 <p>Controls regions in the current frame.</p>
 <tt>Syntax:<br>
-regions&nbsp;[&lt;filename&gt;]<br>
+region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [save [select] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [list [close|select]]<br>
@@ -2307,9 +2307,9 @@ regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [centroid]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [getinfo]<br>
+&nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;&nbsp;&nbsp; [move front|back]<br>
-&nbsp;&nbsp;&nbsp; [select all|none|invert]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|invert|first|last]<br>
 &nbsp;&nbsp;&nbsp; [delete [select]]<br>
 &nbsp;&nbsp;&nbsp; [delete load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [format ds9|xml|ciao|saotng|saoimage|pros|xy]<br>
@@ -2358,94 +2358,96 @@ regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;<br>
 Example:<br>
 string url = ds9.get(string cmd)<br>
-regions<br>
-regions -format ds9 -system wcs -sky fk5 -skyformat sexagesimal -prop edit 1 -group foo<br>
+region<br>
+region -format ds9 -system wcs -sky fk5 -skyformat sexagesimal -prop edit 1 -group foo<br>
 string value = ds9.get(string cmd)<br>
-regions epsilon<br>
-regions show<br>
-regions showtext<br>
-regions centroid<br>
-regions centroid auto<br>
-regions centroid radius<br>
-regions centroid iteration<br>
-regions selected<br>
-regions format<br>
-regions system<br>
-regions sky<br>
-regions skyformat<br>
-regions strip<br>
-regions shape<br>
-regions color<br>
-regions width<br>
-regions source<br>
-regions background<br>
-regions include<br>
-regions exclude<br>
-regions selected<br>
-regions groups<br>
+region epsilon<br>
+region show<br>
+region showtext<br>
+region centroid<br>
+region centroid auto<br>
+region centroid radius<br>
+region centroid iteration<br>
+region selected<br>
+region format<br>
+region system<br>
+region sky<br>
+region skyformat<br>
+region strip<br>
+region shape<br>
+region color<br>
+region width<br>
+region source<br>
+region background<br>
+region include<br>
+region exclude<br>
+region selected<br>
+region groups<br>
 <br>
 ds9.set(string cmd)<br>
-regions foo.reg<br>
-regions -format ciao bar.reg # load as ciao format<br>
-regions foo.fits # FITS regions files do not need a format specification<br>
-regions load foo.reg # load foo.reg into current frame<br>
-regions load all foo.reg # load foo.reg into all frames<br>
-regions load *.reg# expand *.reg and load into current frame<br>
-regions load all *.reg # expand *.reg and load into all frames<br>
-regions save foo.reg<br>
-regions save select foo.reg<br>
-regions list<br>
-regions list select<br>
-regions list close<br>
-regions epsilon 5<br>
-regions show yes<br>
-regions showtext no<br>
-regions centroid<br>
-regions centroid auto yes<br>
-regions centroid radius 10<br>
-regions centroid iteration 20<br>
-regions getinfo<br>
-regions move back<br>
-regions move front<br>
-regions select all<br>
-regions select none<br>
-regions select invert<br>
-regions delete<br>
-regions delete select<br>
-regions delete load foo.reg<br>
-regions format ds9<br>
-regions system wcs<br>
-regions sky fk5<br>
-regions skyformat degrees<br>
-regions strip yes<br>
-regions shape ellipse<br>
-regions color red<br>
-regions width 3<br>
-regions edit yes<br>
-regions include<br>
-regions command "circle 100 100 20 # color=red"<br>
-regions composite<br>
-regions dissolve<br>
-regions template foo.tpl<br>
-regions template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
-regions savetemplate foo.tpl<br>
-regions group new<br>
-regions group foo new<br>
-regions group foo update<br>
-regions group foo select<br>
-regions group foo color red<br>
-regions group foo copy<br>
-regions group foo delete<br>
-regions group foo cut<br>
-regions group foo font 'times 14 bold'<br>
-regions group foo move 100 100<br>
-regions group foo movefront<br>
-regions group foo moveback<br>
-regions group foo property delete no<br>
-regions copy<br>
-regions cut<br>
-regions paste wcs<br>
-regions undo<br></tt>
+region foo.reg<br>
+region -format ciao bar.reg # load as ciao format<br>
+region foo.fits # FITS region files do not need a format specification<br>
+region load foo.reg # load foo.reg into current frame<br>
+region load all foo.reg # load foo.reg into all frames<br>
+region load *.reg# expand *.reg and load into current frame<br>
+region load all *.reg # expand *.reg and load into all frames<br>
+region save foo.reg<br>
+region save select foo.reg<br>
+region list<br>
+region list select<br>
+region list close<br>
+region epsilon 5<br>
+region show yes<br>
+region showtext no<br>
+region centroid<br>
+region centroid auto yes<br>
+region centroid radius 10<br>
+region centroid iteration 20<br>
+region info<br>
+region move back<br>
+region move front<br>
+region select all<br>
+region select none<br>
+region select invert<br>
+region select first<br>
+region select last<br>
+region delete<br>
+region delete select<br>
+region delete load foo.reg<br>
+region format ds9<br>
+region system wcs<br>
+region sky fk5<br>
+region skyformat degrees<br>
+region strip yes<br>
+region shape ellipse<br>
+region color red<br>
+region width 3<br>
+region edit yes<br>
+region include<br>
+region command "circle 100 100 20 # color=red"<br>
+region composite<br>
+region dissolve<br>
+region template foo.tpl<br>
+region template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
+region savetemplate foo.tpl<br>
+region group new<br>
+region group foo new<br>
+region group foo update<br>
+region group foo select<br>
+region group foo color red<br>
+region group foo copy<br>
+region group foo delete<br>
+region group foo cut<br>
+region group foo font 'times 14 bold'<br>
+region group foo move 100 100<br>
+region group foo movefront<br>
+region group foo moveback<br>
+region group foo property delete no<br>
+region copy<br>
+region cut<br>
+region paste wcs<br>
+region undo<br></tt>
 <p><b><a name="restore" id="restore"></a>restore</b></p>
 <p>Restore DS9 to a previous state from a backup save set.</p>
 <tt>Syntax:<br>

@@ -96,7 +96,7 @@
 <a href="#pow">pow</a><br>
 <a href="#exit">quit</a><br>
 <a href="#raise">raise</a><br>
-<a href="#regions">regions</a><br>
+<a href="#region">region</a><br>
 <a href="#red">red</a><br>
 <a href="#restore">restore</a><br>
 <a href="#rgb">rgb</a><br>
@@ -1830,10 +1830,10 @@ $ds9 -prism plot RAWX RAWY PHA PHI xyexey<br></tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -raise<br></tt>
-<p><b><a name="regions" id="regions"></a>regions</b></p>
+<p><b><a name="region" id="region"></a>region</b></p>
 <p>Controls regions in the current frame.</p>
 <tt>Syntax:<br>
--regions [&lt;filename&gt;]<br>
+-region [&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [save [select] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [list [close|select]]<br>
@@ -1843,9 +1843,9 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [centroid]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [getinfo]<br>
+&nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;&nbsp;&nbsp; [move front|back]<br>
-&nbsp;&nbsp;&nbsp; [select all|none|all]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|all|first|last]<br>
 &nbsp;&nbsp;&nbsp; [delete [select]]<br>
 &nbsp;&nbsp;&nbsp; [delete load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [format ds9|xml|ciao|saotng|saoimage|pros|xy]<br>
@@ -1883,67 +1883,69 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [undo]<br>
 &nbsp;<br>
 Example:<br>
-$ds9 -regions foo.reg<br>
-$ds9 -regions -format ciao bar.reg # load as ciao format<br>
-$ds9 -regions foo.fits # FITS regions files do not need a format specification<br>
-$ds9 -regions load foo.reg # load foo.reg into current frame<br>
-$ds9 -regions load all foo.reg # load foo.reg into all frames<br>
-$ds9 -regions load '*.reg'# expand *.reg and load into current frame<br>
-$ds9 -regions load all '*.reg' # expand *.reg and load into all frames<br>
-$ds9 -regions save foo.reg<br>
-$ds9 -regions save select foo.reg<br>
-$ds9 -regions list<br>
-$ds9 -regions list select<br>
-$ds9 -regions list close<br>
-$ds9 -regions epsilon 5<br>
-$ds9 -regions show yes<br>
-$ds9 -regions showtext no<br>
-$ds9 -regions centroid<br>
-$ds9 -regions centroid auto yes<br>
-$ds9 -regions centroid radius 10<br>
-$ds9 -regions centroid iteration 20<br>
-$ds9 -regions getinfo<br>
-$ds9 -regions move back<br>
-$ds9 -regions move front<br>
-$ds9 -regions select all<br>
-$ds9 -regions select none<br>
-$ds9 -regions select invert<br>
-$ds9 -regions delete<br>
-$ds9 -regions delete select<br>
-$ds9 -regions delete load foo.reg<br>
-$ds9 -regions format ds9<br>
-$ds9 -regions system wcs<br>
-$ds9 -regions sky fk5<br>
-$ds9 -regions skyformat degrees<br>
-$ds9 -regions strip yes<br>
-$ds9 -regions shape ellipse<br>
-$ds9 -regions color red<br>
-$ds9 -regions width 3<br>
-$ds9 -regions edit yes<br>
-$ds9 -regions include<br>
-$ds9 -regions command "circle 100 100 20 # color=red"<br>
-$ds9 -regions composite<br>
-$ds9 -regions dissolve<br>
-$ds9 -regions template foo.tpl<br>
-$ds9 -regions template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
-$ds9 -regions savetemplate foo.tpl<br>
-$ds9 -regions group new<br>
-$ds9 -regions group foo new<br>
-$ds9 -regions group foo update<br>
-$ds9 -regions group foo select<br>
-$ds9 -regions group foo color red<br>
-$ds9 -regions group foo copy<br>
-$ds9 -regions group foo delete<br>
-$ds9 -regions group foo cut<br>
-$ds9 -regions group foo font 'times 14 bold'<br>
-$ds9 -regions group foo move 100 100<br>
-$ds9 -regions group foo movefront<br>
-$ds9 -regions group foo moveback<br>
-$ds9 -regions group foo property delete no<br>
-$ds9 -regions copy<br>
-$ds9 -regions cut<br>
-$ds9 -regions paste wcs<br>
-$ds9 -regions undo<br></tt>
+$ds9 -region foo.reg<br>
+$ds9 -region -format ciao bar.reg # load as ciao format<br>
+$ds9 -region foo.fits # FITS region files do not need a format specification<br>
+$ds9 -region load foo.reg # load foo.reg into current frame<br>
+$ds9 -region load all foo.reg # load foo.reg into all frames<br>
+$ds9 -region load '*.reg'# expand *.reg and load into current frame<br>
+$ds9 -region load all '*.reg' # expand *.reg and load into all frames<br>
+$ds9 -region save foo.reg<br>
+$ds9 -region save select foo.reg<br>
+$ds9 -region list<br>
+$ds9 -region list select<br>
+$ds9 -region list close<br>
+$ds9 -region epsilon 5<br>
+$ds9 -region show yes<br>
+$ds9 -region showtext no<br>
+$ds9 -region centroid<br>
+$ds9 -region centroid auto yes<br>
+$ds9 -region centroid radius 10<br>
+$ds9 -region centroid iteration 20<br>
+$ds9 -region info<br>
+$ds9 -region move back<br>
+$ds9 -region move front<br>
+$ds9 -region select all<br>
+$ds9 -region select none<br>
+$ds9 -region select invert<br>
+$ds9 -region select first<br>
+$ds9 -region select last<br>
+$ds9 -region delete<br>
+$ds9 -region delete select<br>
+$ds9 -region delete load foo.reg<br>
+$ds9 -region format ds9<br>
+$ds9 -region system wcs<br>
+$ds9 -region sky fk5<br>
+$ds9 -region skyformat degrees<br>
+$ds9 -region strip yes<br>
+$ds9 -region shape ellipse<br>
+$ds9 -region color red<br>
+$ds9 -region width 3<br>
+$ds9 -region edit yes<br>
+$ds9 -region include<br>
+$ds9 -region command "circle 100 100 20 # color=red"<br>
+$ds9 -region composite<br>
+$ds9 -region dissolve<br>
+$ds9 -region template foo.tpl<br>
+$ds9 -region template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
+$ds9 -region savetemplate foo.tpl<br>
+$ds9 -region group new<br>
+$ds9 -region group foo new<br>
+$ds9 -region group foo update<br>
+$ds9 -region group foo select<br>
+$ds9 -region group foo color red<br>
+$ds9 -region group foo copy<br>
+$ds9 -region group foo delete<br>
+$ds9 -region group foo cut<br>
+$ds9 -region group foo font 'times 14 bold'<br>
+$ds9 -region group foo move 100 100<br>
+$ds9 -region group foo movefront<br>
+$ds9 -region group foo moveback<br>
+$ds9 -region group foo property delete no<br>
+$ds9 -region copy<br>
+$ds9 -region cut<br>
+$ds9 -region paste wcs<br>
+$ds9 -region undo<br></tt>
 <p><b><a name="red" id="red"></a>red</b></p>
 <p>For RGB frames, sets the current color channel to red.</p>
 <tt>Syntax:<br>

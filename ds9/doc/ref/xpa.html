@@ -80,7 +80,7 @@
 <a href="#prism">prism</a><br>
 <a href="#exit">quit</a><br>
 <a href="#raise">raise</a><br>
-<a href="#regions">regions</a><br>
+<a href="#region">region</a><br>
 <a href="#restore">restore</a><br>
 <a href="#rgb">rgb</a><br>
 <a href="#rgbarray">rgbarray</a><br>
@@ -2190,10 +2190,10 @@ raise<br>
 &nbsp;<br>
 Example:<br>
 $xpaset -p ds9 raise</tt>
-<p><b><a name="regions" id="regions"></a>regions</b></p>
+<p><b><a name="region" id="region"></a>region</b></p>
 <p>Controls regions in the current frame.</p>
 <tt>Syntax:<br>
-regions&nbsp;[&lt;filename&gt;]<br>
+region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [save [select] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [list [select|close]]<br>
@@ -2203,9 +2203,9 @@ regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [centroid]<br>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [getinfo]<br>
+&nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;&nbsp;&nbsp; [move front|back]<br>
-&nbsp;&nbsp;&nbsp; [select all|none|invert]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|invert|first|last]<br>
 &nbsp;&nbsp;&nbsp; [delete [select]]<br>
 &nbsp;&nbsp;&nbsp; [delete load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [format ds9|xml|ciao|saotng|saoimage|pros|xy]<br>
@@ -2253,103 +2253,105 @@ regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [-wcs yes|no]<br>
 &nbsp;<br>
 Example:<br>
-$xpaget ds9 regions<br>
-$xpaget ds9 regions -format ds9 -system wcs -sky fk5 -skyformat sexagesimal -prop edit 1 -group foo<br>
-$xpaget ds9 regions epsilon<br>
-$xpaget ds9 regions show<br>
-$xpaget ds9 regions showtext<br>
-$xpaget ds9 regions centroid auto<br>
-$xpaget ds9 regions centroid radius<br>
-$xpaget ds9 regions centroid iteration<br>
-$xpaget ds9 regions selected<br>
-$xpaget ds9 regions format<br>
-$xpaget ds9 regions system<br>
-$xpaget ds9 regions sky<br>
-$xpaget ds9 regions skyformat<br>
-$xpaget ds9 regions strip<br>
-$xpaget ds9 regions shape<br>
-$xpaget ds9 regions color<br>
-$xpaget ds9 regions width<br>
-$xpaget ds9 regions source<br>
-$xpaget ds9 regions background<br>
-$xpaget ds9 regions include<br>
-$xpaget ds9 regions exclude<br>
-$xpaget ds9 regions selected<br>
-$xpaget ds9 regions groups<br>
+$xpaget ds9 region<br>
+$xpaget ds9 region -format ds9 -system wcs -sky fk5 -skyformat sexagesimal -prop edit 1 -group foo<br>
+$xpaget ds9 region epsilon<br>
+$xpaget ds9 region show<br>
+$xpaget ds9 region showtext<br>
+$xpaget ds9 region centroid auto<br>
+$xpaget ds9 region centroid radius<br>
+$xpaget ds9 region centroid iteration<br>
+$xpaget ds9 region selected<br>
+$xpaget ds9 region format<br>
+$xpaget ds9 region system<br>
+$xpaget ds9 region sky<br>
+$xpaget ds9 region skyformat<br>
+$xpaget ds9 region strip<br>
+$xpaget ds9 region shape<br>
+$xpaget ds9 region color<br>
+$xpaget ds9 region width<br>
+$xpaget ds9 region source<br>
+$xpaget ds9 region background<br>
+$xpaget ds9 region include<br>
+$xpaget ds9 region exclude<br>
+$xpaget ds9 region selected<br>
+$xpaget ds9 region groups<br>
 <br>
-$cat foo.reg | xpaset ds9 regions -format xy -system wcs -sky fk5<br>
-$cat bar.reg | xpaset ds9 regions -format ds9<br>
-$echo "image; circle 100 100 20" | xpaset ds9 regions<br>
-$echo "image; circle 100 100 20" | xpaset ds9 regions<br>
-$echo "fk5; circle 13:29:55 47:11:50 .5'" | xpaset ds9 regions<br>
-$echo "physical; ellipse 100 100 20 40" | xpaset ds9 regions<br>
-$echo "box 100 100 20 40 25" | xpaset ds9 regions<br>
-$echo "image; line 100 100 200 400" | xpaset ds9 regions<br>
-$echo "physical; ruler 200 300 200 400" | xpaset ds9 regions<br>
-$echo "image; text 100 100 # text={Hello, World}" | xpaset ds9 regions<br>
-$echo "fk4; boxcircle point 13:29:55 47:11:50" | xpaset ds9 regions<br>
+$cat foo.reg | xpaset ds9 region -format xy -system wcs -sky fk5<br>
+$cat bar.reg | xpaset ds9 region -format ds9<br>
+$echo "image; circle 100 100 20" | xpaset ds9 region<br>
+$echo "image; circle 100 100 20" | xpaset ds9 region<br>
+$echo "fk5; circle 13:29:55 47:11:50 .5'" | xpaset ds9 region<br>
+$echo "physical; ellipse 100 100 20 40" | xpaset ds9 region<br>
+$echo "box 100 100 20 40 25" | xpaset ds9 region<br>
+$echo "image; line 100 100 200 400" | xpaset ds9 region<br>
+$echo "physical; ruler 200 300 200 400" | xpaset ds9 region<br>
+$echo "image; text 100 100 # text={Hello, World}" | xpaset ds9 region<br>
+$echo "fk4; boxcircle point 13:29:55 47:11:50" | xpaset ds9 region<br>
 <br>
-$xpaset -p ds9 regions foo.reg<br>
-$xpaset -p ds9 regions -format ciao bar.reg # load as ciao format<br>
-$xpaset -p ds9 regions foo.fits # FITS regions files do not need a format specification<br>
-$xpaset -p ds9 regions load foo.reg # load foo.reg into current frame<br>
-$xpaset -p ds9 regions load all foo.reg # load foo.reg into all frames<br>
-$xpaset -p ds9 regions load '*.reg'# expand *.reg and load into current frame<br>
-$xpaset -p ds9 regions load all '*.reg' # expand *.reg and load into all frames<br>
-$xpaset -p ds9 regions save foo.reg<br>
-$xpaset -p ds9 regions save select foo.reg<br>
-$xpaset -p ds9 regions list<br>
-$xpaset -p ds9 regions list select<br>
-$xpaset -p ds9 regions list close<br>
-$xpaset -p ds9 regions epsilon 5<br>
-$xpaset -p ds9 regions show yes<br>
-$xpaset -p ds9 regions showtext no<br>
-$xpaset -p ds9 regions centroid<br>
-$xpaset -p ds9 regions centroid auto yes<br>
-$xpaset -p ds9 regions centroid radius 10<br>
-$xpaset -p ds9 regions centroid iteration 20<br>
-$xpaset -p ds9 regions getinfo<br>
-$xpaset -p ds9 regions move back<br>
-$xpaset -p ds9 regions move front<br>
-$xpaset -p ds9 regions select all<br>
-$xpaset -p ds9 regions select none<br>
-$xpaset -p ds9 regions select invert<br>
-$xpaset -p ds9 regions delete<br>
-$xpaset -p ds9 regions delete select<br>
-$xpaset -p ds9 regions delete load foo.reg<br>
-$xpaset -p ds9 regions format ds9<br>
-$xpaset -p ds9 regions system wcs<br>
-$xpaset -p ds9 regions sky fk5<br>
-$xpaset -p ds9 regions skyformat degrees<br>
-$xpaset -p ds9 regions strip yes<br>
-$xpaset -p ds9 regions shape ellipse<br>
-$xpaset -p ds9 regions color red<br>
-$xpaset -p ds9 regions width 3<br>
-$xpaset -p ds9 regions edit yes<br>
-$xpaset -p ds9 regions include<br>
-$xpaset -p ds9 regions command '{circle 100 100 20 # color=red}'<br>
-$xpaset -p ds9 regions composite<br>
-$xpaset -p ds9 regions dissolve<br>
-$xpaset -p ds9 regions template foo.tpl<br>
-$xpaset -p ds9 regions template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
-$xpaset -p ds9 regions savetemplate foo.tpl<br>
-$xpaset -p ds9 regions group new<br>
-$xpaset -p ds9 regions group foo new<br>
-$xpaset -p ds9 regions group foo update<br>
-$xpaset -p ds9 regions group foo select<br>
-$xpaset -p ds9 regions group foo color red<br>
-$xpaset -p ds9 regions group foo copy<br>
-$xpaset -p ds9 regions group foo delete<br>
-$xpaset -p ds9 regions group foo cut<br>
-$xpaset -p ds9 regions group foo font {times 14 bold}<br>
-$xpaset -p ds9 regions group foo move 100 100<br>
-$xpaset -p ds9 regions group foo movefront<br>
-$xpaset -p ds9 regions group foo moveback<br>
-$xpaset -p ds9 regions group foo property delete no<br>
-$xpaset -p ds9 regions copy<br>
-$xpaset -p ds9 regions cut<br>
-$xpaset -p ds9 regions paste wcs<br>
-$xpaset -p ds9 regions undo<br></tt>
+$xpaset -p ds9 region foo.reg<br>
+$xpaset -p ds9 region -format ciao bar.reg # load as ciao format<br>
+$xpaset -p ds9 region foo.fits # FITS region files do not need a format specification<br>
+$xpaset -p ds9 region load foo.reg # load foo.reg into current frame<br>
+$xpaset -p ds9 region load all foo.reg # load foo.reg into all frames<br>
+$xpaset -p ds9 region load '*.reg'# expand *.reg and load into current frame<br>
+$xpaset -p ds9 region load all '*.reg' # expand *.reg and load into all frames<br>
+$xpaset -p ds9 region save foo.reg<br>
+$xpaset -p ds9 region save select foo.reg<br>
+$xpaset -p ds9 region list<br>
+$xpaset -p ds9 region list select<br>
+$xpaset -p ds9 region list close<br>
+$xpaset -p ds9 region epsilon 5<br>
+$xpaset -p ds9 region show yes<br>
+$xpaset -p ds9 region showtext no<br>
+$xpaset -p ds9 region centroid<br>
+$xpaset -p ds9 region centroid auto yes<br>
+$xpaset -p ds9 region centroid radius 10<br>
+$xpaset -p ds9 region centroid iteration 20<br>
+$xpaset -p ds9 region info<br>
+$xpaset -p ds9 region move back<br>
+$xpaset -p ds9 region move front<br>
+$xpaset -p ds9 region select all<br>
+$xpaset -p ds9 region select none<br>
+$xpaset -p ds9 region select invert<br>
+$xpaset -p ds9 region select first<br>
+$xpaset -p ds9 region select last<br>
+$xpaset -p ds9 region delete<br>
+$xpaset -p ds9 region delete select<br>
+$xpaset -p ds9 region delete load foo.reg<br>
+$xpaset -p ds9 region format ds9<br>
+$xpaset -p ds9 region system wcs<br>
+$xpaset -p ds9 region sky fk5<br>
+$xpaset -p ds9 region skyformat degrees<br>
+$xpaset -p ds9 region strip yes<br>
+$xpaset -p ds9 region shape ellipse<br>
+$xpaset -p ds9 region color red<br>
+$xpaset -p ds9 region width 3<br>
+$xpaset -p ds9 region edit yes<br>
+$xpaset -p ds9 region include<br>
+$xpaset -p ds9 region command '{circle 100 100 20 # color=red}'<br>
+$xpaset -p ds9 region composite<br>
+$xpaset -p ds9 region dissolve<br>
+$xpaset -p ds9 region template foo.tpl<br>
+$xpaset -p ds9 region template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
+$xpaset -p ds9 region savetemplate foo.tpl<br>
+$xpaset -p ds9 region group new<br>
+$xpaset -p ds9 region group foo new<br>
+$xpaset -p ds9 region group foo update<br>
+$xpaset -p ds9 region group foo select<br>
+$xpaset -p ds9 region group foo color red<br>
+$xpaset -p ds9 region group foo copy<br>
+$xpaset -p ds9 region group foo delete<br>
+$xpaset -p ds9 region group foo cut<br>
+$xpaset -p ds9 region group foo font {times 14 bold}<br>
+$xpaset -p ds9 region group foo move 100 100<br>
+$xpaset -p ds9 region group foo movefront<br>
+$xpaset -p ds9 region group foo moveback<br>
+$xpaset -p ds9 region group foo property delete no<br>
+$xpaset -p ds9 region copy<br>
+$xpaset -p ds9 region cut<br>
+$xpaset -p ds9 region paste wcs<br>
+$xpaset -p ds9 region undo<br></tt>
 <p><b><a name="restore" id="restore"></a>restore</b></p>
 <p>Restore DS9 to a previous state from a backup save set.</p>
 <tt>Syntax:<br>

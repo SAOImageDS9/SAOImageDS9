@@ -99,8 +99,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> endian
 %type <integer> renderMethod
 %type <integer> renderBackground
+%type <integer> analysisTask
 %type <integer> analysisMethod
-%type <integer> analysisParam
 %type <integer> cutMethod
 
 %token <real> REAL
@@ -229,6 +229,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token FILE_
 %token FILL_
 %token FILTER_
+%token FIRST_
 %token FIT_
 %token FITS_
 %token FITSY_
@@ -274,6 +275,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token KEY_
 %token KEYWORD_
 %token LABEL_
+%token LAST_
 %token LENGTH_
 %token LEVEL_
 %token LIGHTEN_
@@ -524,8 +526,7 @@ numeric	: REAL {$$=$1;}
 	| INT {$$=$1;}
 	;
 
-debug	: ON_ {yydebug=1;}
-        | OFF_ {yydebug=0;}
+debug	: yesno {yydebug=$1;}
 	| MOSAIC_ yesno {DebugMosaic=$2;}
 	| PARSER_ yesno {yydebug=$2;}
 	| PERF_ yesno {DebugPerf=$2;}
@@ -733,7 +734,7 @@ pointSize: /* empty */ {$$ = POINTSIZE;}
 	| INT {$$ = $1;}
 	;
 
-analysisMethod: CPANDA_ {$$ = Marker::PANDA;}
+analysisTask: CPANDA_ {$$ = Marker::PANDA;}
         | HISTOGRAM_ {$$ = Marker::HISTOGRAM;}
 	| PLOT2D_ {$$ = Marker::PLOT2D;}
 	| PLOT3D_ {$$ = Marker::PLOT3D;}
@@ -741,7 +742,7 @@ analysisMethod: CPANDA_ {$$ = Marker::PANDA;}
 	| STATS_ {$$ = Marker::STATS;}
 	;
 
-analysisParam : /* emtpy */ {$$ = Marker::AVERAGE;}
+analysisMethod : /* emtpy */ {$$ = Marker::AVERAGE;}
 	| AVERAGE_  {$$ = Marker::AVERAGE;}
 	| SUM_  {$$ = Marker::SUM;}
         | MEDIAN_ {$$ = Marker::MEDIAN;}
@@ -1775,7 +1776,7 @@ marker	: CENTROID_ markerCentroid
 	| HIGHLITE_ TOGGLE_ numeric numeric
 	{fr->markerHighliteToggleCmd(Vector($3,$4));}
 
-	| INT ANALYSIS_ analysisMethod yesno
+	| INT ANALYSIS_ analysisTask yesno
 	{fr->markerAnalysisCmd($1, (Marker::AnalysisTask)$3, $4);}
 
 	| INT ANGLE_ angle {fr->markerAngleCmd($1,$3);}
@@ -2314,9 +2315,9 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerAnalysisPandaCmd($1,$4,$5,$6,(Coord::CoordSystem)$7,$8);}
         | INT ANALYSIS_ HISTOGRAM_ STRING STRING INT
 	{fr->getMarkerAnalysisHistogramCmd($1,$4,$5,$6);}
-	| INT ANALYSIS_ PLOT2D_ STRING STRING STRING STRING coordSystem skyFrame analysisParam
+	| INT ANALYSIS_ PLOT2D_ STRING STRING STRING STRING coordSystem skyFrame analysisMethod
 	{fr->getMarkerAnalysisPlot2dCmd($1,$4,$5,$6,$7,(Coord::CoordSystem)$8, (Coord::SkyFrame)$9, (Marker::AnalysisMethod)$10);}
-	| INT ANALYSIS_ PLOT3D_ STRING STRING coordSystem analysisParam
+	| INT ANALYSIS_ PLOT3D_ STRING STRING coordSystem analysisMethod
 	{fr->getMarkerAnalysisPlot3dCmd($1,$4,$5,(Coord::CoordSystem)$6, (Marker::AnalysisMethod)$7);}
 	| INT ANALYSIS_ RADIAL_ STRING STRING STRING coordSystem
 	{fr->getMarkerAnalysisRadialCmd($1,$4,$5,$6,(Coord::CoordSystem)$7);}
@@ -2575,6 +2576,8 @@ markerSelect : ALL_ {fr->markerSelectAllCmd();}
 	| ONLY_ numeric numeric {fr->markerSelectOnlyCmd(Vector($2,$3));}
 	| TOGGLE_ {fr->markerSelectToggleCmd();}
 	| TOGGLE_ numeric numeric {fr->markerSelectToggleCmd(Vector($2,$3));}
+        | FIRST_ {fr->markerSelectFirstCmd();}
+	| LAST_ {fr->markerSelectLastCmd();}
 	;
 
 markerShow : yesno {fr->markerShowCmd($1);}

@@ -1544,6 +1544,8 @@ void Base::getMarkerFontCmd()
 
 void Base::getMarkerFontCmd(const char* tag)
 {
+  // return first found
+
   Marker* mm=markers->head();
   while (mm) {
     if (mm->hasTag(tag)) {
@@ -1865,7 +1867,7 @@ void Base::getMarkerPropertyCmd(unsigned short which)
 
 void Base::getMarkerPropertyCmd(const char* tag, unsigned short which)
 {
-  // return first selected found
+  // return first found
 
   Marker* mm=markers->head();
   while (mm) {
@@ -5507,6 +5509,24 @@ void Base::markerSelectAllCmd()
       update(PIXMAP, mm->getBBox());
     }
     mm=mm->next();
+  }
+}
+
+void Base::markerSelectFirstCmd()
+{
+  Marker* mm=markers->head();
+  if (mm && mm->canSelect()) {
+    mm->select();
+    update(PIXMAP, mm->getBBox());
+  }
+}
+
+void Base::markerSelectLastCmd()
+{
+  Marker* mm=markers->tail();
+  if (mm && mm->canSelect()) {
+    mm->select();
+    update(PIXMAP, mm->getBBox());
   }
 }
 

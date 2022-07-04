@@ -146,6 +146,7 @@ false		{return FALSE_;}
 file		{return FILE_;}
 fill            {return FILL_;}
 filter		{return FILTER_;}
+first           {return FIRST_;}
 fit		{return FIT_;}
 fits		{return FITS_;}
 fitsy		{return FITSY_;}
@@ -191,6 +192,7 @@ j2000		{return J2000_;}
 key		{return KEY_;}
 keyword		{return KEYWORD_;}
 label		{return LABEL_;}
+last            {return LAST_;}
 length		{return LENGTH_;}
 level		{return LEVEL_;}
 lighten         {return LIGHTEN_;}

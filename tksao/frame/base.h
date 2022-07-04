@@ -1516,6 +1516,8 @@ public:
   void markerSegmentDeleteVertexCmd(int, int);
   void markerSegmentResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerSelectAllCmd();
+  void markerSelectFirstCmd();
+  void markerSelectLastCmd();
   void markerSelectCmd(int); // not used
   void markerSelectCmd(const char*);
   void markerSelectToggleCmd();

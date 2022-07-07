@@ -1693,14 +1693,25 @@ proc RegionCmdAnalysis {task action} {
 	return
     }
 
-    foreach id [$current(frame) get marker select] {
-	set varname ${imarker(prefix,dialog)}${id}${current(frame)}
+    set frame $current(frame)
+
+    foreach id [$frame get marker select] {
+	set varname ${imarker(prefix,dialog)}${id}${frame}
 	global $varname
 	upvar #0 $varname var
 
-	MarkerDialog $frame $id
 	switch $task {
 	    histogram {
+		# check for region type
+		switch [$frame get marker $id type] {
+		    circle -
+		    ellipse -
+		    box -
+		    polygon {}
+		    default {continue}
+		}
+		MarkerDialog $frame $id
+
 		switch $action {
 		    open {
 			set var(histogram) 1
@@ -1715,16 +1726,25 @@ proc RegionCmdAnalysis {task action} {
 			set var(histogram) 1
 			MarkerAnalysisHistogramCmd $varname
 
-			set vvarname ${imarker(prefix,histogram)}${id}${current(frame)}
+			set vvarname ${imarker(prefix,histogram)}${id}${frame}
 			upvar #0 $vvarname vvar
 			global $vvarname
 
-			set filename "${current(frame)}.${id}.histogram.png"
+			set filename "${frame}.${id}.histogram.png"
 			PlotExport $vvarname $filename png
 		    }
 		}
 	    }
 	    panda {
+		# check for region type
+		switch [$frame get marker $id type] {
+		    panda -
+		    epanda -
+		    bpanda {}
+		    default {continue}
+		}
+		MarkerDialog $frame $id
+
 		switch $action {
 		    none -
 		    open {
@@ -1740,16 +1760,25 @@ proc RegionCmdAnalysis {task action} {
 			set var(panda) 1
 			MarkerAnalysisPandaCmd $varname
 
-			set vvarname ${imarker(prefix,panda)}${id}${current(frame)}
+			set vvarname ${imarker(prefix,panda)}${id}${frame}
 			upvar #0 $vvarname vvar
 			global $vvarname
 
-			set filename "${current(frame)}.${id}.panda.png"
+			set filename "${frame}.${id}.panda.png"
 			PlotExport $vvarname $filename png
 		    }
 		}
 	    }
 	    plot2d {
+		# check for region type
+		switch [$frame get marker $id type] {
+		    line -
+		    projection -
+		    vector {}
+		    default {continue}
+		}
+		MarkerDialog $frame $id
+
 		switch $action {
 		    none -
 		    open {
@@ -1765,16 +1794,27 @@ proc RegionCmdAnalysis {task action} {
 			set var(plot2d) 1
 			MarkerAnalysisPlot2dCmd $varname
 
-			set vvarname ${imarker(prefix,plot2d)}${id}${current(frame)}
+			set vvarname ${imarker(prefix,plot2d)}${id}${frame}
 			upvar #0 $vvarname vvar
 			global $vvarname
 
-			set filename "${current(frame)}.${id}.plot2d.png"
+			set filename "${frame}.${id}.plot2d.png"
 			PlotExport $vvarname $filename png
 		    }
 		}
 	    }
 	    plot3d {
+		# check for region type
+		switch [$frame get marker $id type] {
+		    circle -
+		    ellipse -
+		    box -
+		    polygon -
+		    point {}
+		    default {continue}
+		}
+		MarkerDialog $frame $id
+
 		switch $action {
 		    none -
 		    open {
@@ -1790,16 +1830,25 @@ proc RegionCmdAnalysis {task action} {
 			set var(plot3d) 1
 			MarkerAnalysisPlot3dCmd $varname
 
-			set vvarname ${imarker(prefix,plot3d)}${id}${current(frame)}
+			set vvarname ${imarker(prefix,plot3d)}${id}${frame}
 			upvar #0 $vvarname vvar
 			global $vvarname
 
-			set filename "${current(frame)}.${id}.plot3d.png"
+			set filename "${frame}.${id}.plot3d.png"
 			PlotExport $vvarname $filename png
 		    }
 		}
 	    }
 	    radial {
+		# check for region type
+		switch [$frame get marker $id type] {
+		    annulus -
+		    ellipseannulus -
+		    boxannulus {}
+		    default {continue}
+		}
+		MarkerDialog $frame $id
+
 		switch $action {
 		    none -
 		    open {
@@ -1815,16 +1864,32 @@ proc RegionCmdAnalysis {task action} {
 			set var(radial) 1
 			MarkerAnalysisRadialCmd $varname
 
-			set vvarname ${imarker(prefix,radial)}${id}${current(frame)}
+			set vvarname ${imarker(prefix,radial)}${id}${frame}
 			upvar #0 $vvarname vvar
 			global $vvarname
 
-			set filename "${current(frame)}.${id}.radial.png"
+			set filename "${frame}.${id}.radial.png"
 			PlotExport $vvarname $filename png
 		    }
 		}
 	    }
 	    stats {
+		# check for region type
+		switch [$frame get marker $id type] {
+		    circle -
+		    ellipse -
+		    box -
+		    polygon -
+		    annulus -
+		    ellipseannulus -
+		    boxannulus -
+		    panda -
+		    epanda -
+		    bpanda {}
+		    default {continue}
+		}
+		MarkerDialog $frame $id
+
 		switch $action {
 		    none -
 		    open {
@@ -1840,11 +1905,11 @@ proc RegionCmdAnalysis {task action} {
 			set var(stats) 1
 			MarkerAnalysisStatsCmd $varname
 
-			set vvarname ${imarker(prefix,stats)}${id}${current(frame)}
+			set vvarname ${imarker(prefix,stats)}${id}${frame}
 			upvar #0 $vvarname vvar
 			global $vvarname
 
-			set filename "${current(frame)}.${id}.stats.txt"
+			set filename "${frame}.${id}.stats.txt"
 			SimpleTextSaveFileName $vvarname $filename
 		    }
 		}

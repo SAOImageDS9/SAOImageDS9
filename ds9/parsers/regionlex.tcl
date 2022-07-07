@@ -1029,8 +1029,8 @@ set MSKY_ 406
             set yyleng [string length $yytext]
             set matched_rule 96
         }
-        # rule 97: plot2d
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(plot2d)} $yy_current_buffer match] > 0 && \
+        # rule 97: plot3d
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(plot3d)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]

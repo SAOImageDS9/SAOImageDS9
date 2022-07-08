@@ -170,7 +170,7 @@ typedef union YYSTYPE
   float real;
   int integer;
   char str[CBBUFSIZE];
-  void* ptr;
+  unsigned long ptr;
 }
 /* Line 1529 of yacc.c.  */
 #line 177 "colorbar/parser.H"

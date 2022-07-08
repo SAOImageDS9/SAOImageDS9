@@ -3525,7 +3525,7 @@ case 356:
 YY_RULE_SETUP
 #line 394 "frame/lex.L"
 { // Pointer
-		  frlval->ptr = (void*)strtoul(yytext,NULL,16);
+		  frlval->ptr = (unsigned long)strtoul(yytext,NULL,16);
 		  return POINTER;
 		}
 	YY_BREAK

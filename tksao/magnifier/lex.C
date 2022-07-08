@@ -796,7 +796,7 @@ case 21:
 YY_RULE_SETUP
 #line 53 "magnifier/lex.L"
 { // Pointer
-		  mglval->ptr = (void*)strtoul(yytext,NULL,16);
+		  mglval->ptr = (unsigned long)strtoul(yytext,NULL,16);
 		  return POINTER;
 		}
 	YY_BREAK

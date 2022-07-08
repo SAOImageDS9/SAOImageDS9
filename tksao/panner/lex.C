@@ -920,7 +920,7 @@ case 35:
 YY_RULE_SETUP
 #line 72 "panner/lex.L"
 { // Pointer
-		  pnlval->ptr = (void*)strtoul(yytext,NULL,16);
+		  pnlval->ptr = (unsigned long)strtoul(yytext,NULL,16);
 		  return POINTER;
 		}
 	YY_BREAK

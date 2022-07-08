@@ -30,7 +30,7 @@ public:
 
   void crosshairCmd(int);
   void getBBoxCmd();
-  void updateCmd(void*);
+  void updateCmd(unsigned long);
 };
 
 #endif

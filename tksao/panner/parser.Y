@@ -24,7 +24,7 @@ extern void pnerror(Panner*, pnFlexLexer*, const char*);
 %union {
   float real;
   int integer;
-  void* ptr;
+  unsigned long ptr;
   char str[1024];
 }
 

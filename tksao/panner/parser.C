@@ -189,7 +189,7 @@ typedef union YYSTYPE
 {
   float real;
   int integer;
-  void* ptr;
+  unsigned long ptr;
   char str[1024];
 }
 /* Line 193 of yacc.c.  */

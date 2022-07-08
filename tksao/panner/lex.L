@@ -70,7 +70,7 @@ yes		{return YES_;}
 		}
 
 0[xX][0-9a-fA-F]+ { // Pointer
-		  pnlval->ptr = (void*)strtoul(yytext,NULL,16);
+		  pnlval->ptr = (unsigned long)strtoul(yytext,NULL,16);
 		  return POINTER;
 		}
 

@@ -105,7 +105,7 @@ void Magnifier::getBBoxCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);  
 }
 
-void Magnifier::updateCmd(void* pp)
+void Magnifier::updateCmd(unsigned long pp)
 {
   thumbnail = (Pixmap)pp;
   update();

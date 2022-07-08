@@ -392,7 +392,7 @@ zoom		{return ZOOM_;}
 		}
 
 0[xX][0-9a-fA-F]+ { // Pointer
-		  frlval->ptr = (void*)strtoul(yytext,NULL,16);
+		  frlval->ptr = (unsigned long)strtoul(yytext,NULL,16);
 		  return POINTER;
 		}
 

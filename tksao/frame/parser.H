@@ -763,7 +763,7 @@ typedef union YYSTYPE
 #define FRBUFSIZE 4096
   char chr;
   char str[FRBUFSIZE];
-  void* ptr;
+  unsigned long ptr;
   int integer;
   double real;
   double vector[3];

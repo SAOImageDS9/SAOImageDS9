@@ -95,7 +95,7 @@ yes		{return YES_;}
 		}
 
 0[xX][0-9a-fA-F]+ { // Pointer
-		  cblval->ptr = (void*)strtoul(yytext,NULL,16);
+		  cblval->ptr = (unsigned long)strtoul(yytext,NULL,16);
 		  return POINTER;
 		}
 

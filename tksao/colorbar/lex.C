@@ -1155,7 +1155,7 @@ case 61:
 YY_RULE_SETUP
 #line 97 "colorbar/lex.L"
 { // Pointer
-		  cblval->ptr = (void*)strtoul(yytext,NULL,16);
+		  cblval->ptr = (unsigned long)strtoul(yytext,NULL,16);
 		  return POINTER;
 		}
 	YY_BREAK

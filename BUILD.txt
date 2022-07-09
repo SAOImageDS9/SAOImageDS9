@@ -78,3 +78,8 @@ Additional Linux notes:
    % zypper install libXft-devel
    % zypper install tcl-devel
    % zypper install tk-devel
+
+*** Ubuntu
+   sudo apt install libz-dev
+   sudo apt install libxml2-dev
+   sudo apt install xslt-dev

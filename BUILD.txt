@@ -40,7 +40,7 @@ requires cygwin with mingw compilers
 % make
 
 Additional Linux notes: 
-*** CentOS
+*** CentOS/Fedora
    % sudo yum install automake
    % sudo yum install autoconf
    % sudo yum install libX11-devel
@@ -50,27 +50,10 @@ Additional Linux notes:
    % sudo yum install libXft-devel
    % sudo yum install tcl-devel
    % sudo yum install tk-devel
-   
-*** Fedora
-   % sudo yum install automake
-   % sudo yum install autoconf
-   % sudo yum install libX11-devel
-   % sudo yum install zlib-devel
-   % sudo yum install libxml2-devel
-   % sudo yum install libxslt-devel
-   % sudo yum install libXft-devel
-   % sudo yum install tcl-devel
-   % sudo yum install tk-devel
-
-   % sudo yum install make
-   % sudo yum install gcc-c++
    
 *** OpenSUSE
-   % zypper install make
    % zypper install automake
    % zypper install autoconf
-   % zypper install gcc
-   % zypper install gcc-c++
    % zypper install libX11-devel
    % zypper install zlib-devel
    % zypper install libxml2-devel
@@ -78,3 +61,28 @@ Additional Linux notes:
    % zypper install libXft-devel
    % zypper install tcl-devel
    % zypper install tk-devel
+
+*** Ubuntu
+    % sudo apt-get install automake
+    % sudo apt-get install autoconf
+    % sudo apt-get install libx11-dev
+    % sudo apt-get install zlib1g-dev
+    % sudo apt-get install libxml2-dev
+    % sudo apt-get install libxslt1-dev
+    % sudo apt-get install libxft-dev
+
+    % sudo apt-get install zip
+    % sudo apt-get install tcl8.6-dev
+    % sudo apt-get install tk8.6-dev
+
+*** Debian
+    % apt-get install automake
+    % apt-get install autoconf
+    % apt-get install libx11-dev
+    % apt-get install zlib1g-dev
+    % apt-get install libxml2-dev
+    % apt-get install libxslt1-dev
+    % apt-get install libxft-dev
+    % apt-get install zip
+    % apt-get install tcl8.6-dev
+    % apt-get install tk8.6-dev

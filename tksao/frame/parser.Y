@@ -498,6 +498,7 @@ command : DEBUG_ debug
 	| MARKER_ markerLayer marker
 	| MASK_ mask
 	| NAN_ COLOR_ STRING {fr->nanColorCmd($3);}
+	| NAN_ COLOR_ GRAY_ {fr->nanColorCmd("gray");}
 	| ORIENT_ orient
 	| PAN_ pan
 	| PANNER_ panner

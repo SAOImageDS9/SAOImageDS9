@@ -582,8 +582,9 @@ void Frame::reset()
   Base::reset();
 }
 
-void Frame::updateColorCells(unsigned char* cells, int cnt)
+void Frame::updateColorCells(int cnt)
 {
+  unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
@@ -758,15 +759,14 @@ void Frame::maskBlendCmd(FitsMask::MaskBlend bl)
   update(BASE);
 }
 
-void Frame::colormapCmd(int id, float b, float c, int i, 
-				 unsigned char* cells, int cnt)
+void Frame::colormapCmd(int id, float b, float c, int i, int cnt)
 {
   cmapID = id;
   bias = b;
   contrast = c;
   invert = i;
 
-  updateColorCells(cells, cnt);
+  updateColorCells(cnt);
   updateColorScale();
   update(BASE);
 }
@@ -898,8 +898,7 @@ void Frame::colormapBeginCmd()
   CLEARSIGBUS
 }
 
-void Frame::colormapMotionCmd(int id, float b, float c, int i, 
-				       unsigned char* cells, int cnt)
+void Frame::colormapMotionCmd(int id, float b, float c, int i, int cnt)
 {
   // we need a colorScale before we can render
   if (!validColorScale())
@@ -915,7 +914,7 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
   contrast = c;
   invert = i;
 
-  updateColorCells(cells, cnt);
+  updateColorCells(cnt);
   updateColorScale();
 
   // if we have no data, stop now
@@ -1001,8 +1000,7 @@ void Frame::colormapEndCmd()
 
 void Frame::colormapBeginCmd() {}
 
-void Frame::colormapMotionCmd(int id, float b, float c, int i,
-			      unsigned char* cells, int cnt)
+void Frame::colormapMotionCmd(int id, float b, float c, int i, int cnt)
 {
   // we need a colorScale before we can render
   if (!validColorScale())
@@ -1018,7 +1016,7 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
   contrast = c;
   invert = i;
 
-  updateColorCells(cells, cnt);
+  updateColorCells(cnt);
   updateColorScale();
 
   update(BASE);
@@ -1071,19 +1069,20 @@ void Frame::iisEraseCmd()
     ((FitsImageIIS*)context->cfits)->iisErase();
 }
 
-void Frame::iisGetCmd(char* dest, int xx, int yy, int dx, int dy)
+void Frame::iisGetCmd(int xx, int yy, int dx, int dy)
 {
   if (context->cfits) {
     char* buf = ((FitsImageIIS*)context->cfits)->iisGet(xx,yy,dx,dy);
-    memcpy(dest, buf, dx*dy);
+    memcpy((char*)iisptr_, buf, dx*dy);
     delete [] buf;
   }
 }
 
-void Frame::iisSetCmd(const char* src, int xx, int yy, int dx, int dy)
+void Frame::iisSetCmd(int xx, int yy, int dx, int dy)
 {
   if (context->cfits)
-    ((FitsImageIIS*)context->cfits)->iisSet(src, xx, yy, dx, dy);
+    ((FitsImageIIS*)context->cfits)->iisSet((const char*)iisptr_,
+					    xx, yy, dx, dy);
 }
 
 void Frame::iisWCSCmd(const Matrix& mx, const Vector& z, int zt)

@@ -418,8 +418,10 @@ unsigned char* FrameBase::alphaComposite(unsigned char* src1,
   return src1;
 }
 
-void FrameBase::fadeCmd(void* ptr, float alpha)
+void FrameBase::fadeCmd(float alpha)
 {
+  FrameBase* ptr = (FrameBase*)frameptr_;
+
   // alpha is 0 to 100
   // fadeAlpha is 0 to 1
   fadeAlpha = alpha/100.;
@@ -435,9 +437,8 @@ void FrameBase::fadeCmd(void* ptr, float alpha)
   }
   
   // be sure we have current matrices
-  ((FrameBase*)ptr)->updateMatrices();
-  fadeImg = ((FrameBase*)ptr)->fillImage(options->width, options->height,
-					 Coord::WIDGET);
+  ptr->updateMatrices();
+  fadeImg = ptr->fillImage(options->width, options->height, Coord::WIDGET);
 
   update(BASE);
 }

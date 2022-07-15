@@ -62,7 +62,7 @@ class FrameRGB : public FrameBase {
   void loadDone(int);
 
   unsigned char* fillImage(int, int, Coord::InternalSystem);
-  void updateColorCells(unsigned char*, int);
+  void updateColorCells(int);
   void updateColorScale();
   void unloadAllFits();
 
@@ -80,17 +80,15 @@ class FrameRGB : public FrameBase {
   void getRGBViewCmd();
   void getTypeCmd();
 
-  void colormapCmd(float, float, float, float, float, float, int,
-		   unsigned char*, int);
+  void colormapCmd(float, float, float, float, float, float, int, int);
   void colormapBeginCmd();
   void colormapEndCmd();
-  void colormapMotionCmd(float, float, float, float, float, float, int,
-			 unsigned char*, int);
+  void colormapMotionCmd(float, float, float, float, float, float, int, int);
 
   void iisCmd(int, int) {}
   void iisEraseCmd() {}
-  void iisGetCmd(char*, int, int, int, int) {}
-  void iisSetCmd(const char*, int, int, int, int) {}
+  void iisGetCmd(int, int, int, int) {}
+  void iisSetCmd(int, int, int, int) {}
   void iisWCSCmd(const Matrix&, const Vector&, int) {}
 
   void loadPhotoCmd(const char*, const char*);

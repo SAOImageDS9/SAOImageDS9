@@ -654,14 +654,14 @@ public:
 
   // Colormap Commands
   void colorbarTagCmd(const char*);
-  virtual void colormapCmd(int, float, float, int, unsigned char*, int) {}
+  virtual void colormapCmd(int, float, float, int, int) {}
   virtual void colormapCmd(float, float, float, float, float, float, int,
-			   unsigned char*, int) {}
+			   int) {}
   virtual void colormapBeginCmd() {}
   virtual void colormapEndCmd() {}
-  virtual void colormapMotionCmd(int, float, float, int, unsigned char*, int) {}
+  virtual void colormapMotionCmd(int, float, float, int, int) {}
   virtual void colormapMotionCmd(float, float, float, float, float, float, int,
-				 unsigned char*, int) {}
+				 int) {}
   virtual void getColorbarCmd() =0;
   void getColorbarTagCmd();
 
@@ -751,7 +751,7 @@ public:
   void getDataValuesCmd(const Vector&, Coord::InternalSystem, const Vector&);
 
   // Fade Commands
-  virtual void fadeCmd(void*, float) {}
+  virtual void fadeCmd(float) {}
   virtual void fadeClearCmd() {}
 
   // Fits Commands
@@ -1012,13 +1012,13 @@ public:
   virtual void iisCmd(int, int) {}
   virtual void iisCursorModeCmd(int) {}
   virtual void iisEraseCmd() {}
-  virtual void iisGetCmd(char*, int, int, int, int) {}
+  virtual void iisGetCmd(int, int, int, int) {}
   virtual void iisGetCursorCmd() {}
   virtual void iisGetFileNameCmd() {}
   virtual void iisGetFileNameCmd(int) {}
   virtual void iisGetFileNameCmd(const Vector&) {}
   virtual void iisMessageCmd(const char*) {}
-  virtual void iisSetCmd(const char*, int, int, int, int) {}
+  virtual void iisSetCmd(int, int, int, int) {}
   virtual void iisSetCursorCmd(const Vector&, Coord::InternalSystem) {}
   virtual void iisSetCursorCmd(const Vector&, Coord::CoordSystem) {}
   virtual void iisSetFileNameCmd(const char*) {}
@@ -1608,7 +1608,7 @@ public:
   void wcsAlignCmd(int);
   // used by backup
   void wcsAlignCmd(int, Coord::CoordSystem, Coord::SkyFrame);
-  void wcsAlignCmd(int, FitsImage*, Coord::CoordSystem, Coord::SkyFrame);
+  void wcsAlign2Cmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void zoomCmd(const Vector&);
   void zoomToCmd(const Vector&);
   virtual void zoomAboutCmd(const Vector&, const Vector&) =0;

@@ -245,6 +245,7 @@ void ColorbarRGB::getColormapCmd()
 {
   // use fixed so that the frame parser will not be confused with an int
   // as the first number
+  cellsptr_ = colorCells;
   ostringstream str;
   str << "rgb " << setiosflags(ios::fixed);
   for (int i=0; i<3; i++)
@@ -252,7 +253,7 @@ void ColorbarRGB::getColormapCmd()
   for (int i=0; i<3; i++)
     str << contrast[i] << ' ';
   str << invert << ' ';
-  str << (unsigned short*)colorCells << ' ' << colorCount << ends;
+  str << colorCount << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 

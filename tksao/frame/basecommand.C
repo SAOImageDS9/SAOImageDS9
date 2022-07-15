@@ -2183,12 +2183,11 @@ void Base::getWCSAlignPointerCmd()
 {
   ostringstream str;
   if (keyContext->fits)
-    str << (unsigned short*)keyContext->fits << ends;
+    fitsimageptr_ = keyContext->fits;
   else
-    str << (unsigned short*)NULL << ends;
+    fitsimageptr_ = NULL;
 
   Tcl_AppendResult(interp, (wcsAlign_ ? "1" : "0"), " ", 
-		   str.str().c_str(), " ",
 		   coord.coordSystemStr(wcsSystem_), " ",
 		   coord.skyFrameStr(wcsSkyFrame_), NULL);
 }
@@ -3028,13 +3027,12 @@ void Base::wcsAlignCmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
   update(MATRIX);
 }
 
-void Base::wcsAlignCmd(int which, FitsImage* ptr, Coord::CoordSystem sys, 
-		       Coord::SkyFrame sky)
+void Base::wcsAlign2Cmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   wcsAlign_ = which;
   wcsSkyFrame_ = sky;
 
-  alignWCS(ptr, sys);
+  alignWCS((FitsImage*)fitsimageptr_, sys);
   update(MATRIX);
 }
 

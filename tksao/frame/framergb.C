@@ -338,11 +338,12 @@ void FrameRGB::setBinCursor()
       context[ii].fits->setBinCursor(cursor);
 }
 
-void FrameRGB::updateColorCells(unsigned char* cells, int cnt)
+void FrameRGB::updateColorCells(int cnt)
 {
   if (DebugRGB) 
     cerr << "updateColorCells" << endl;
 
+  unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
@@ -498,8 +499,7 @@ void FrameRGB::unloadFits()
 // Commands
 
 void FrameRGB::colormapCmd(float rb, float gb, float bb, 
-			   float rc, float gc, float bc, int i,
-			   unsigned char* cells, int cnt)
+			   float rc, float gc, float bc, int i, int cnt)
 {
   bias[0] = rb;
   bias[1] = gb;
@@ -509,7 +509,7 @@ void FrameRGB::colormapCmd(float rb, float gb, float bb,
   contrast[2] = bc;
   invert = i;
 
-  updateColorCells(cells, cnt);
+  updateColorCells(cnt);
   updateColorScale();
   update(BASE);
 }
@@ -646,8 +646,7 @@ void FrameRGB::colormapBeginCmd()
 }
 
 void FrameRGB::colormapMotionCmd(float rb, float gb, float bb, 
-				 float rc, float gc, float bc, int i,
-				 unsigned char* cells, int cnt)
+				 float rc, float gc, float bc, int i, int cnt)
 {
   // we need a colorScale before we can render
   if (!validColorScale())
@@ -668,7 +667,7 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
   contrast[2] = bc;
   invert = i;
 
-  updateColorCells(cells, cnt);
+  updateColorCells(cnt);
   updateColorScale();
 
   // special case
@@ -780,8 +779,7 @@ void FrameRGB::colormapEndCmd()
 void FrameRGB::colormapBeginCmd() {}
 
 void FrameRGB::colormapMotionCmd(float rb, float gb, float bb, 
-				 float rc, float gc, float bc, int i,
-				 unsigned char* cells, int cnt)
+				 float rc, float gc, float bc, int i, int cnt)
 {
   // we need a colorScale before we can render
   if (!validColorScale())
@@ -802,7 +800,7 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
   contrast[2] = bc;
   invert = i;
 
-  updateColorCells(cells, cnt);
+  updateColorCells(cnt);
   updateColorScale();
 
   update(BASE);

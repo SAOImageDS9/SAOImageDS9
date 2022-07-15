@@ -26,7 +26,11 @@ using namespace std;
 
 class Attribute;
 
-extern float psScale;
+// exchange pointer between widgets
+extern void* cellsptr_;
+extern void* frameptr_;
+extern void* fitsimageptr_;
+extern void* iisptr_;
 
 // General Defines
 

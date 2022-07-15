@@ -391,11 +391,6 @@ zoom		{return ZOOM_;}
 		  return REAL;
 		}
 
-0[xX][0-9a-fA-F]+ { // Pointer
-		  frlval->ptr = (unsigned long)strtoul(yytext,NULL,16);
-		  return POINTER;
-		}
-
 [+-]?{D}+"."?d |
 [+-]?{D}*"."{D}+d { // degrees
 		  yytext[yyleng-1] = '\0';

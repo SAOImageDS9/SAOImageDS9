@@ -7,6 +7,12 @@
 #include "widget.h"
 #include "util.h"
 
+// exchange pointer between widgets
+void* cellsptr_ =NULL;
+void* frameptr_ =NULL;
+void* fitsimageptr_ =NULL;
+void* iisptr_ =NULL;
+
 // Tk Canvas Widget Functions Declaration
 
 int WidgetConfigProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
@@ -386,9 +392,7 @@ void Widget::translateProc(double deltaX, double deltaY)
 
 void Widget::getCmd()
 {
-  ostringstream str;
-  str << this << ends;
-  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+  frameptr_ = this;
 }
 
 int Widget::configCmd(int argc, const char** argv)

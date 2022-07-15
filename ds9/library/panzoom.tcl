@@ -644,7 +644,7 @@ proc MatchFrame {which sys} {
 			    $ff rotate to $rotate
 			    $ff orient $orient
 
-			    $ff wcs align $align
+			    $ff wcs align to $align
 			}
 		    }
 		}

@@ -106,7 +106,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token <real> REAL
 %token <integer> INT
 %token <str> STRING
-%token <ptr> POINTER
 
 %token <real> ANGDEGREE
 %token <real> ANGRADIAN
@@ -888,19 +887,19 @@ clipZScale: numeric INT INT {fr->clipZScaleCmd($1,$2,$3);}
         }
 	;
 
-colormap : INT numeric numeric INT POINTER INT 
-        {fr->colormapCmd($1, $2, $3, $4, (unsigned char*)$5, $6);}
-	| RGB_ numeric numeric numeric numeric numeric numeric INT POINTER INT
-	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,(unsigned char*)$9,$10);}
+colormap : INT numeric numeric INT INT 
+        {fr->colormapCmd($1, $2, $3, $4, $5);}
+	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 	| BEGIN_ {fr->colormapBeginCmd();}
 	| MOTION_ colormapMotion
 	| END_ {fr->colormapEndCmd();}
 	;
 
-colormapMotion: INT numeric numeric INT POINTER INT
-	{fr->colormapMotionCmd($1, $2, $3, $4, (unsigned char*)$5, $6);}
-	| RGB_ numeric numeric numeric numeric numeric numeric INT POINTER INT
-	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,(unsigned char*)$9,$10);}
+colormapMotion: INT numeric numeric INT INT
+	{fr->colormapMotionCmd($1, $2, $3, $4, $5);}
+	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 
 colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
 	| LOG_ numeric {fr->colorScaleLogCmd($2);}
@@ -1013,7 +1012,7 @@ cutMethod : /* emtpy */ {$$ = Base::AVERAGE;}
         | MEDIAN_ {$$ = Base::MEDIAN;}
 	;
 
-fade    : POINTER numeric {fr->fadeCmd((void*)$1,$2);}
+fade    : numeric {fr->fadeCmd($1);}
         | CLEAR_ {fr->fadeClearCmd();}
         ;
 
@@ -1214,7 +1213,7 @@ getInfo	: STRING fileNameType {fr->getInfoCmd($1, (Base::FileNameType)$2);}
 	{fr->getInfoCmd(Vector($2,$3), (Coord::InternalSystem)$1, $4, (Base::FileNameType)$5);}
 	;
 
-getiis	: POINTER INT INT INT INT {fr->iisGetCmd((char*)$1,$2,$3,$4,$5);}
+getiis	: INT INT INT INT {fr->iisGetCmd($1,$2,$3,$4);}
 	| CURSOR_ {fr->iisGetCursorCmd();}
 	| FILE_ NAME_ getIISFileName
 	;
@@ -1410,8 +1409,8 @@ iis	: NEW_ INT INT {fr->iisCmd($2,$3);}
 	| MESSAGE_ STRING {fr->iisMessageCmd($2);}
 	| CURSOR_ iiscursor
 	| SET_ FILE_ NAME_ iisSetFileName
-	| SET_ POINTER INT INT INT INT
-	{fr->iisSetCmd((const char*)$2,$3,$4,$5,$6);}
+	| SET_ INT INT INT INT
+	{fr->iisSetCmd($2,$3,$4,$5);}
 	| UPDATE_ {fr->iisUpdateCmd();}
 	| WCS_ numeric numeric numeric numeric 
 	  numeric numeric numeric numeric INT
@@ -2886,8 +2885,8 @@ wcsAlign : INT {fr->wcsAlignCmd($1);}
 	  // used by backup
 	  fr->wcsAlignCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);
 	}
-	| INT POINTER wcsSystem skyFrame
-	{fr->wcsAlignCmd($1, (FitsImage*)$2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
+	| TO_ INT wcsSystem skyFrame
+	{fr->wcsAlign2Cmd($2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
 	;
 
 win32	: PRINT_ {

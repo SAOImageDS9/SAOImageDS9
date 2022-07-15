@@ -71,7 +71,7 @@ public:
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType);
 
   // Fade Commands
-  void fadeCmd(void*, float);
+  void fadeCmd(float);
   void fadeClearCmd();
 
   // Fits Commands

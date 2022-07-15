@@ -83,7 +83,7 @@ class Frame3d : public Frame3dBase {
 
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
 
-  void updateColorCells(unsigned char*, int);
+  void updateColorCells(int);
   int validColorScale() {return colorScale ? 1 : 0;}
 
  public:
@@ -99,11 +99,10 @@ class Frame3d : public Frame3dBase {
   void getRGBViewCmd();
   void getTypeCmd();
 
-  void colormapCmd(int, float, float, int, unsigned char*, int);
+  void colormapCmd(int, float, float, int, int);
   void colormapEndCmd();
-  void colormapMotionCmd(int id, float b, float c, int i, 
-			 unsigned char* cells, int cnt)
-  {colormapCmd(id, b, c, i, cells, cnt);}
+  void colormapMotionCmd(int id, float b, float c, int i, int cnt)
+  {colormapCmd(id, b, c, i, cnt);}
 
   void savePhotoCmd(const char*);
 };

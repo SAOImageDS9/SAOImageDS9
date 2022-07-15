@@ -977,8 +977,9 @@ void Frame3d::reset()
   Base::reset();
 }
 
-void Frame3d::updateColorCells(unsigned char* cells, int cnt)
+void Frame3d::updateColorCells(int cnt)
 {
+  unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
@@ -1069,15 +1070,14 @@ void Frame3d::unloadFits()
 
 // Commands
 
-void Frame3d::colormapCmd(int id, float b, float c, int i, 
-				   unsigned char* cells, int cnt)
+void Frame3d::colormapCmd(int id, float b, float c, int i, int cnt)
 {
   cmapID = id;
   bias = b;
   contrast = c;
   invert = i;
 
-  updateColorCells(cells, cnt);
+  updateColorCells(cnt);
   updateColorScale();
   update(BASE);
 }

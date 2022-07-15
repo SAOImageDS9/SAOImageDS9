@@ -62,7 +62,7 @@ class Frame : public FrameBase {
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
   unsigned char* fillMask(FitsMask*, int, int,  Coord::InternalSystem);
   int validColorScale() {return colorScale ? 1 : 0;}
-  void updateColorCells(unsigned char*, int);
+  void updateColorCells(int);
   void updateMaskMatrices();
   void loadDone(int);
 
@@ -88,9 +88,9 @@ class Frame : public FrameBase {
   void maskTransparencyCmd(float);
   void maskBlendCmd(FitsMask::MaskBlend bb);
 
-  void colormapCmd(int, float, float, int, unsigned char*, int);
+  void colormapCmd(int, float, float, int, int);
   void colormapBeginCmd();
-  void colormapMotionCmd(int, float, float, int, unsigned char*, int);
+  void colormapMotionCmd(int, float, float, int, int);
   void colormapEndCmd();
 
   void getColorbarCmd();
@@ -101,8 +101,8 @@ class Frame : public FrameBase {
 
   void iisCmd(int, int);
   void iisEraseCmd();
-  void iisGetCmd(char*, int, int, int, int);
-  void iisSetCmd(const char*, int, int, int, int);
+  void iisGetCmd(int, int, int, int);
+  void iisSetCmd(int, int, int, int);
   void iisWCSCmd(const Matrix&, const Vector&, int);
 
   void savePhotoCmd(const char*);

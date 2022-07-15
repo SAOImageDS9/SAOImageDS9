@@ -257,12 +257,12 @@ void Colorbar::getColorbarCmd()
 void Colorbar::getColormapCmd()
 {
   if (cmaps.current()) {
+    cellsptr_ = colorCells;
     ostringstream str;
     str << cmaps.current()->id() << ' '
 	<< bias << ' ' 
 	<< contrast << ' ' 
 	<< invert << ' '
-	<< (unsigned short*)colorCells << ' '
 	<< colorCount << ends;
     Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }

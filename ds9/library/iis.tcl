@@ -128,17 +128,17 @@ proc IISMessageCmd {message} {
     RefreshInfoBox $current(frame)
 }
 
-proc IISWritePixelsCmd {which ptr x y dx dy} {
+proc IISWritePixelsCmd {which x y dx dy} {
     global debug
     if {$debug(iis)} {
 #	puts stderr "IISWritePixelsCmd: $which $x $y $dx $dy"
     }
 
-    Frame$which iis set $ptr $x $y $dx $dy
+    Frame$which iis set $x $y $dx $dy
     IISResetTimer $which
 }
 
-proc IISReadPixelsCmd {which ptr x y dx dy} {
+proc IISReadPixelsCmd {which x y dx dy} {
     global current
 
     global debug
@@ -147,9 +147,9 @@ proc IISReadPixelsCmd {which ptr x y dx dy} {
     }
 
     if {$which > 0} {
-	Frame$which get iis $ptr $x $y $dx $dy
+	Frame$which get iis $x $y $dx $dy
     } else {
-	$current(frame) get iis $ptr $x $y $dx $dy
+	$current(frame) get iis $x $y $dx $dy
     }
 #    IISResetTimer $which
 }

@@ -186,7 +186,7 @@ class ColorbarBase : public Widget {
   virtual void setColorbarCmd(int, float, float, int) {}
   virtual void setColorbarCmd(float, float, float, float, float, float, int) {}
   void setColormapLevelCmd();
-  void setColormapLevelCmd(int, double*);
+  void setColormapLevelCmd(int);
   virtual void setColormapWindowCmd(char*) {}
   virtual void setRGBChannelCmd(const char*) {}
 

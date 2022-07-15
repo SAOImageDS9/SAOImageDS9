@@ -12,6 +12,7 @@ void* cellsptr_ =NULL;
 void* frameptr_ =NULL;
 void* fitsimageptr_ =NULL;
 void* iisptr_ =NULL;
+void* colormaplevelptr_ =NULL;
 
 // Tk Canvas Widget Functions Declaration
 

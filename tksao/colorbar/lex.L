@@ -94,11 +94,6 @@ yes		{return YES_;}
 		  return REAL;
 		}
 
-0[xX][0-9a-fA-F]+ { // Pointer
-		  cblval->ptr = (unsigned long)strtoul(yytext,NULL,16);
-		  return POINTER;
-		}
-
 \"[^\"\n]*\" | 
 \'[^\'\n]*\'	{ // Quoted String
 		  int ll = (yyleng-2)<(CBBUFSIZE-1) ? (yyleng-2):(CBBUFSIZE-1);

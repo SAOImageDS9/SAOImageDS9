@@ -37,7 +37,6 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token <integer> INT
 %token <real> REAL
 %token <str> STRING
-%token <ptr> POINTER
 
 %token ADJUST_
 %token BEGIN_
@@ -150,7 +149,7 @@ colormap: LEVEL_ colormaplevel
 	;
 
 colormaplevel : /* empty */ {cb->setColormapLevelCmd();}
-	| INT POINTER {cb->setColormapLevelCmd($1, (double*)$2);}
+	| INT {cb->setColormapLevelCmd($1);}
 	;
 
 get	: /* empty */ {cb->getCmd();}

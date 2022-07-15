@@ -813,8 +813,10 @@ void ColorbarBase::setColormapLevelCmd()
   redraw();
 }
 
-void ColorbarBase::setColormapLevelCmd(int cc, double* ff)
+void ColorbarBase::setColormapLevelCmd(int cc)
 {
+  double* ff = (double*)colormaplevelptr_;
+
   // check for the same
   if (cnt == cc) {
     int same = 1;

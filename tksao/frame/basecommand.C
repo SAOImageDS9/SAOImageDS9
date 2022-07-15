@@ -1137,8 +1137,9 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
   }
 
   if (inverseScale) {
+    colormaplevelptr_ = inverseScale->level();
     ostringstream str;
-    str << inverseScale->size() << ' ' << inverseScale->level() << ends;
+    str << inverseScale->size() << ends;
     Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }
 }

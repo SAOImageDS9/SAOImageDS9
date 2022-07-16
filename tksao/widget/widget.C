@@ -11,7 +11,6 @@
 void* cellsptr_ =NULL;
 void* frameptr_ =NULL;
 void* fitsimageptr_ =NULL;
-void* iisptr_ =NULL;
 void* colormaplevelptr_ =NULL;
 void* magnifierptr_ =NULL;
 void* pannerptr_ =NULL;

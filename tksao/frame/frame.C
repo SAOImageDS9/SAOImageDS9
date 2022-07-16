@@ -11,6 +11,10 @@
 
 #include "sigbus.h"
 
+// defined in tcliis
+// used to pass pointers
+extern void* iisptr_;
+
 // Frame Member Functions
 
 Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 

@@ -30,7 +30,6 @@ class Attribute;
 extern void* cellsptr_;
 extern void* frameptr_;
 extern void* fitsimageptr_;
-extern void* iisptr_;
 extern void* colormaplevelptr_;
 extern void* magnifierptr_;
 extern void* pannerptr_;

@@ -950,8 +950,9 @@ void Frame3dBase::updatePanner()
     x11Border(Coord::PANNER, FrScale::IMGSEC, pannerGC, pannerPixmap);
   }
 
+  pannerptr_ = (void*)pannerPixmap;
   ostringstream str;
-  str << pannerName << " update " << (void*)pannerPixmap << ';';
+  str << pannerName << " update;";
 
   // calculate bbox
   Vector ll = Vector(0,0) * widgetToPanner3d;

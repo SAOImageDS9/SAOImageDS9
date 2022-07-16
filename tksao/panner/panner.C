@@ -219,9 +219,15 @@ void Panner::setBBoxCmd(int w)
   update();
 }
 
-void Panner::updateCmd(unsigned long pp)
+void Panner::updateCmd()
 {
-  thumbnail = (Pixmap)pp;
+  thumbnail = (Pixmap)pannerptr_;
+  update();
+}
+
+void Panner::clearCmd()
+{
+  thumbnail = (Pixmap)0;
   update();
 }
 

@@ -63,7 +63,8 @@ class Panner : public Widget {
   void panEndCmd(const Vector&);
   void setCompassCmd(int);
   void setBBoxCmd(int);
-  void updateCmd(unsigned long);
+  void updateCmd();
+  void clearCmd();
   void updateBBoxCmd(const Vector&, const Vector&, 
 		     const Vector&, const Vector&);
   void updateImageCompassCmd(Vector, Vector);

@@ -41,75 +41,73 @@
    enum yytokentype {
      INT = 258,
      REAL = 259,
-     POINTER = 260,
-     BBOX_ = 261,
-     BEGIN_ = 262,
-     CLEAR_ = 263,
-     COMPASS_ = 264,
-     DEBUG_ = 265,
-     END_ = 266,
-     FALSE_ = 267,
-     GET_ = 268,
-     HEIGHT_ = 269,
-     HIDE_ = 270,
-     HIGHLITE_ = 271,
-     IMAGE_ = 272,
-     INVALID_ = 273,
-     MOTION_ = 274,
-     N_ = 275,
-     NO_ = 276,
-     OFF_ = 277,
-     ON_ = 278,
-     PAN_ = 279,
-     RESET_ = 280,
-     SHOW_ = 281,
-     SIZE_ = 282,
-     TRUE_ = 283,
-     TO_ = 284,
-     UPDATE_ = 285,
-     VERSION_ = 286,
-     WARP_ = 287,
-     WCS_ = 288,
-     WIDTH_ = 289,
-     Y_ = 290,
-     YES_ = 291
+     BBOX_ = 260,
+     BEGIN_ = 261,
+     CLEAR_ = 262,
+     COMPASS_ = 263,
+     DEBUG_ = 264,
+     END_ = 265,
+     FALSE_ = 266,
+     GET_ = 267,
+     HEIGHT_ = 268,
+     HIDE_ = 269,
+     HIGHLITE_ = 270,
+     IMAGE_ = 271,
+     INVALID_ = 272,
+     MOTION_ = 273,
+     N_ = 274,
+     NO_ = 275,
+     OFF_ = 276,
+     ON_ = 277,
+     PAN_ = 278,
+     RESET_ = 279,
+     SHOW_ = 280,
+     SIZE_ = 281,
+     TRUE_ = 282,
+     TO_ = 283,
+     UPDATE_ = 284,
+     VERSION_ = 285,
+     WARP_ = 286,
+     WCS_ = 287,
+     WIDTH_ = 288,
+     Y_ = 289,
+     YES_ = 290
    };
 #endif
 /* Tokens.  */
 #define INT 258
 #define REAL 259
-#define POINTER 260
-#define BBOX_ 261
-#define BEGIN_ 262
-#define CLEAR_ 263
-#define COMPASS_ 264
-#define DEBUG_ 265
-#define END_ 266
-#define FALSE_ 267
-#define GET_ 268
-#define HEIGHT_ 269
-#define HIDE_ 270
-#define HIGHLITE_ 271
-#define IMAGE_ 272
-#define INVALID_ 273
-#define MOTION_ 274
-#define N_ 275
-#define NO_ 276
-#define OFF_ 277
-#define ON_ 278
-#define PAN_ 279
-#define RESET_ 280
-#define SHOW_ 281
-#define SIZE_ 282
-#define TRUE_ 283
-#define TO_ 284
-#define UPDATE_ 285
-#define VERSION_ 286
-#define WARP_ 287
-#define WCS_ 288
-#define WIDTH_ 289
-#define Y_ 290
-#define YES_ 291
+#define BBOX_ 260
+#define BEGIN_ 261
+#define CLEAR_ 262
+#define COMPASS_ 263
+#define DEBUG_ 264
+#define END_ 265
+#define FALSE_ 266
+#define GET_ 267
+#define HEIGHT_ 268
+#define HIDE_ 269
+#define HIGHLITE_ 270
+#define IMAGE_ 271
+#define INVALID_ 272
+#define MOTION_ 273
+#define N_ 274
+#define NO_ 275
+#define OFF_ 276
+#define ON_ 277
+#define PAN_ 278
+#define RESET_ 279
+#define SHOW_ 280
+#define SIZE_ 281
+#define TRUE_ 282
+#define TO_ 283
+#define UPDATE_ 284
+#define VERSION_ 285
+#define WARP_ 286
+#define WCS_ 287
+#define WIDTH_ 288
+#define Y_ 289
+#define YES_ 290
 
 
 
@@ -124,7 +122,7 @@ typedef union YYSTYPE
   char str[1024];
 }
 /* Line 1529 of yacc.c.  */
-#line 128 "panner/parser.H"
+#line 126 "panner/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

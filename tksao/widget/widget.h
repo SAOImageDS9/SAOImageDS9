@@ -33,6 +33,7 @@ extern void* fitsimageptr_;
 extern void* iisptr_;
 extern void* colormaplevelptr_;
 extern void* magnifierptr_;
+extern void* pannerptr_;
 
 // General Defines
 

@@ -14,6 +14,7 @@ void* fitsimageptr_ =NULL;
 void* iisptr_ =NULL;
 void* colormaplevelptr_ =NULL;
 void* magnifierptr_ =NULL;
+void* pannerptr_ =NULL;
 
 // Tk Canvas Widget Functions Declaration
 

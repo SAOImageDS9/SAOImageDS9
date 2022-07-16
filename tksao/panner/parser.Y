@@ -33,7 +33,6 @@ extern void pnerror(Panner*, pnFlexLexer*, const char*);
 
 %token <integer> INT
 %token <real> REAL
-%token <ptr> POINTER
 
 %token BBOX_
 %token BEGIN_
@@ -71,7 +70,7 @@ extern void pnerror(Panner*, pnFlexLexer*, const char*);
 
 command : DEBUG_ debug
 	| BBOX_ bbox
-	| CLEAR_ {pn->updateCmd(0);}
+	| CLEAR_ {pn->clearCmd();}
 	| COMPASS_ yesno {pn->setCompassCmd($2);}
 	| IMAGE_ COMPASS_ yesno {pn->setCompassCmd($3);}
 	| GET_ get
@@ -129,7 +128,7 @@ pan	: BEGIN_ numeric numeric {pn->panBeginCmd(Vector($2,$3));}
 	| TO_ numeric numeric {pn->panToCmd(Vector($2,$3));}
 	;
 
-update	: POINTER {pn->updateCmd($1);}
+update	: {pn->updateCmd();}
 	| BBOX_ numeric numeric numeric numeric 
 	    numeric numeric numeric numeric 
 	  {pn->updateBBoxCmd(Vector($2,$3),Vector($4,$5),

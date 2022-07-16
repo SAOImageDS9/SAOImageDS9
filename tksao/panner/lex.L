@@ -69,11 +69,6 @@ yes		{return YES_;}
 		  return REAL;
 		}
 
-0[xX][0-9a-fA-F]+ { // Pointer
-		  pnlval->ptr = (unsigned long)strtoul(yytext,NULL,16);
-		  return POINTER;
-		}
-
 [ \t]+		{ // White Spaces
 		} 
 

@@ -13,7 +13,8 @@ using namespace std;
 
 #include <tcl.h>
 
-#include widget.h
+// used to pass pointer
+void* iisptr_ =NULL;
 
 // windows has conflict with typedef byte and <iostream>
 #ifdef __WIN32

@@ -40,50 +40,48 @@
       know about them.  */
    enum yytokentype {
      INT = 258,
-     POINTER = 259,
-     BBOX_ = 260,
-     CLEAR_ = 261,
-     DEBUG_ = 262,
-     FALSE_ = 263,
-     GET_ = 264,
-     HEIGHT_ = 265,
-     HIDE_ = 266,
-     OFF_ = 267,
-     ON_ = 268,
-     N_ = 269,
-     NO_ = 270,
-     RESET_ = 271,
-     SHOW_ = 272,
-     TRUE_ = 273,
-     UPDATE_ = 274,
-     VERSION_ = 275,
-     WIDTH_ = 276,
-     Y_ = 277,
-     YES_ = 278
+     BBOX_ = 259,
+     CLEAR_ = 260,
+     DEBUG_ = 261,
+     FALSE_ = 262,
+     GET_ = 263,
+     HEIGHT_ = 264,
+     HIDE_ = 265,
+     OFF_ = 266,
+     ON_ = 267,
+     N_ = 268,
+     NO_ = 269,
+     RESET_ = 270,
+     SHOW_ = 271,
+     TRUE_ = 272,
+     UPDATE_ = 273,
+     VERSION_ = 274,
+     WIDTH_ = 275,
+     Y_ = 276,
+     YES_ = 277
    };
 #endif
 /* Tokens.  */
 #define INT 258
-#define POINTER 259
-#define BBOX_ 260
-#define CLEAR_ 261
-#define DEBUG_ 262
-#define FALSE_ 263
-#define GET_ 264
-#define HEIGHT_ 265
-#define HIDE_ 266
-#define OFF_ 267
-#define ON_ 268
-#define N_ 269
-#define NO_ 270
-#define RESET_ 271
-#define SHOW_ 272
-#define TRUE_ 273
-#define UPDATE_ 274
-#define VERSION_ 275
-#define WIDTH_ 276
-#define Y_ 277
-#define YES_ 278
+#define BBOX_ 259
+#define CLEAR_ 260
+#define DEBUG_ 261
+#define FALSE_ 262
+#define GET_ 263
+#define HEIGHT_ 264
+#define HIDE_ 265
+#define OFF_ 266
+#define ON_ 267
+#define N_ 268
+#define NO_ 269
+#define RESET_ 270
+#define SHOW_ 271
+#define TRUE_ 272
+#define UPDATE_ 273
+#define VERSION_ 274
+#define WIDTH_ 275
+#define Y_ 276
+#define YES_ 277
 
 
 
@@ -98,7 +96,7 @@ typedef union YYSTYPE
   char str[1024];
 }
 /* Line 1529 of yacc.c.  */
-#line 102 "magnifier/parser.H"
+#line 100 "magnifier/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

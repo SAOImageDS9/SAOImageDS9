@@ -75,50 +75,48 @@
       know about them.  */
    enum yytokentype {
      INT = 258,
-     POINTER = 259,
-     BBOX_ = 260,
-     CLEAR_ = 261,
-     DEBUG_ = 262,
-     FALSE_ = 263,
-     GET_ = 264,
-     HEIGHT_ = 265,
-     HIDE_ = 266,
-     OFF_ = 267,
-     ON_ = 268,
-     N_ = 269,
-     NO_ = 270,
-     RESET_ = 271,
-     SHOW_ = 272,
-     TRUE_ = 273,
-     UPDATE_ = 274,
-     VERSION_ = 275,
-     WIDTH_ = 276,
-     Y_ = 277,
-     YES_ = 278
+     BBOX_ = 259,
+     CLEAR_ = 260,
+     DEBUG_ = 261,
+     FALSE_ = 262,
+     GET_ = 263,
+     HEIGHT_ = 264,
+     HIDE_ = 265,
+     OFF_ = 266,
+     ON_ = 267,
+     N_ = 268,
+     NO_ = 269,
+     RESET_ = 270,
+     SHOW_ = 271,
+     TRUE_ = 272,
+     UPDATE_ = 273,
+     VERSION_ = 274,
+     WIDTH_ = 275,
+     Y_ = 276,
+     YES_ = 277
    };
 #endif
 /* Tokens.  */
 #define INT 258
-#define POINTER 259
-#define BBOX_ 260
-#define CLEAR_ 261
-#define DEBUG_ 262
-#define FALSE_ 263
-#define GET_ 264
-#define HEIGHT_ 265
-#define HIDE_ 266
-#define OFF_ 267
-#define ON_ 268
-#define N_ 269
-#define NO_ 270
-#define RESET_ 271
-#define SHOW_ 272
-#define TRUE_ 273
-#define UPDATE_ 274
-#define VERSION_ 275
-#define WIDTH_ 276
-#define Y_ 277
-#define YES_ 278
+#define BBOX_ 259
+#define CLEAR_ 260
+#define DEBUG_ 261
+#define FALSE_ 262
+#define GET_ 263
+#define HEIGHT_ 264
+#define HIDE_ 265
+#define OFF_ 266
+#define ON_ 267
+#define N_ 268
+#define NO_ 269
+#define RESET_ 270
+#define SHOW_ 271
+#define TRUE_ 272
+#define UPDATE_ 273
+#define VERSION_ 274
+#define WIDTH_ 275
+#define Y_ 276
+#define YES_ 277
 
 
 
@@ -167,7 +165,7 @@ typedef union YYSTYPE
   char str[1024];
 }
 /* Line 193 of yacc.c.  */
-#line 171 "magnifier/parser.C"
+#line 169 "magnifier/parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -180,7 +178,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 184 "magnifier/parser.C"
+#line 182 "magnifier/parser.C"
 
 #ifdef short
 # undef short
@@ -393,22 +391,22 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  18
+#define YYFINAL  17
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   21
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  24
+#define YYNTOKENS  23
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  15
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  19
+#define YYNSTATES  18
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   278
+#define YYMAXUTOK   277
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -443,7 +441,7 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18,    19,    20,    21,    22,    23
+      15,    16,    17,    18,    19,    20,    21,    22
 };
 
 #if YYDEBUG
@@ -451,24 +449,24 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     6,     8,    11,    13,    15,    17,    20,
-      22,    24,    26,    27,    29,    31
+       0,     0,     3,     6,     8,    11,    13,    15,    17,    19,
+      21,    23,    25,    26,    28,    30
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      25,     0,    -1,     7,    26,    -1,     6,    -1,     9,    27,
-      -1,    11,    -1,    16,    -1,    17,    -1,    19,     4,    -1,
-      20,    -1,    13,    -1,    12,    -1,    -1,     5,    -1,    10,
-      -1,    21,    -1
+      24,     0,    -1,     6,    25,    -1,     5,    -1,     8,    26,
+      -1,    10,    -1,    15,    -1,    16,    -1,    18,    -1,    19,
+      -1,    12,    -1,    11,    -1,    -1,     4,    -1,     9,    -1,
+      20,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    56,    56,    57,    58,    59,    60,    61,    62,    63,
-      66,    67,    70,    71,    72,    73
+       0,    55,    55,    56,    57,    58,    59,    60,    61,    62,
+      65,    66,    69,    70,    71,    72
 };
 #endif
 
@@ -477,9 +475,9 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "INT", "POINTER", "BBOX_", "CLEAR_",
-  "DEBUG_", "FALSE_", "GET_", "HEIGHT_", "HIDE_", "OFF_", "ON_", "N_",
-  "NO_", "RESET_", "SHOW_", "TRUE_", "UPDATE_", "VERSION_", "WIDTH_", "Y_",
+  "$end", "error", "$undefined", "INT", "BBOX_", "CLEAR_", "DEBUG_",
+  "FALSE_", "GET_", "HEIGHT_", "HIDE_", "OFF_", "ON_", "N_", "NO_",
+  "RESET_", "SHOW_", "TRUE_", "UPDATE_", "VERSION_", "WIDTH_", "Y_",
   "YES_", "$accept", "command", "debug", "get", 0
 };
 #endif
@@ -491,21 +489,21 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278
+     275,   276,   277
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    24,    25,    25,    25,    25,    25,    25,    25,    25,
-      26,    26,    27,    27,    27,    27
+       0,    23,    24,    24,    24,    24,    24,    24,    24,    24,
+      25,    25,    26,    26,    26,    26
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     2,     1,     2,     1,     1,     1,     2,     1,
+       0,     2,     2,     1,     2,     1,     1,     1,     1,     1,
        1,     1,     0,     1,     1,     1
 };
 
@@ -514,8 +512,8 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     3,     0,    12,     5,     6,     7,     0,     9,     0,
-      11,    10,     2,    13,    14,    15,     4,     8,     1
+       0,     3,     0,    12,     5,     6,     7,     8,     9,     0,
+      11,    10,     2,    13,    14,    15,     4,     1
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -526,17 +524,17 @@ static const yytype_int8 yydefgoto[] =
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -12
+#define YYPACT_NINF -11
 static const yytype_int8 yypact[] =
 {
-       1,   -12,   -11,    -5,   -12,   -12,   -12,    -1,   -12,     4,
-     -12,   -12,   -12,   -12,   -12,   -12,   -12,   -12,   -12
+       2,   -11,   -10,    -4,   -11,   -11,   -11,   -11,   -11,     3,
+     -11,   -11,   -11,   -11,   -11,   -11,   -11,   -11
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -12,   -12,   -12,   -12
+     -11,   -11,   -11,   -11
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -546,24 +544,24 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      13,    10,    11,    17,    18,    14,     0,     1,     2,     0,
+      13,    10,    11,    17,     0,    14,     0,     1,     2,     0,
        3,     0,     4,     0,     0,     0,    15,     5,     6,     0,
        7,     8
 };
 
 static const yytype_int8 yycheck[] =
 {
-       5,    12,    13,     4,     0,    10,    -1,     6,     7,    -1,
-       9,    -1,    11,    -1,    -1,    -1,    21,    16,    17,    -1,
-      19,    20
+       4,    11,    12,     0,    -1,     9,    -1,     5,     6,    -1,
+       8,    -1,    10,    -1,    -1,    -1,    20,    15,    16,    -1,
+      18,    19
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     6,     7,     9,    11,    16,    17,    19,    20,    25,
-      12,    13,    26,     5,    10,    21,    27,     4,     0
+       0,     5,     6,     8,    10,    15,    16,    18,    19,    24,
+      11,    12,    25,     4,     9,    20,    26,     0
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1391,68 +1389,68 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 57 "magnifier/parser.Y"
-    {mg->updateCmd(0);;}
+#line 56 "magnifier/parser.Y"
+    {mg->clearCmd();;}
     break;
 
   case 5:
-#line 59 "magnifier/parser.Y"
+#line 58 "magnifier/parser.Y"
     {mg->hideCmd();;}
     break;
 
   case 6:
-#line 60 "magnifier/parser.Y"
+#line 59 "magnifier/parser.Y"
     {mg->resetCmd();;}
     break;
 
   case 7:
-#line 61 "magnifier/parser.Y"
+#line 60 "magnifier/parser.Y"
     {mg->showCmd();;}
     break;
 
   case 8:
-#line 62 "magnifier/parser.Y"
-    {mg->updateCmd((yyvsp[(2) - (2)].ptr));;}
+#line 61 "magnifier/parser.Y"
+    {mg->updateCmd();;}
     break;
 
   case 9:
-#line 63 "magnifier/parser.Y"
+#line 62 "magnifier/parser.Y"
     {mg->msg("Magnifier 1.0");;}
     break;
 
   case 10:
-#line 66 "magnifier/parser.Y"
+#line 65 "magnifier/parser.Y"
     {yydebug=1;;}
     break;
 
   case 11:
-#line 67 "magnifier/parser.Y"
+#line 66 "magnifier/parser.Y"
     {yydebug=0;;}
     break;
 
   case 12:
-#line 70 "magnifier/parser.Y"
+#line 69 "magnifier/parser.Y"
     {mg->getCmd();;}
     break;
 
   case 13:
-#line 71 "magnifier/parser.Y"
+#line 70 "magnifier/parser.Y"
     {mg->getBBoxCmd();;}
     break;
 
   case 14:
-#line 72 "magnifier/parser.Y"
+#line 71 "magnifier/parser.Y"
     {mg->getHeightCmd();;}
     break;
 
   case 15:
-#line 73 "magnifier/parser.Y"
+#line 72 "magnifier/parser.Y"
     {mg->getWidthCmd();;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1456 "magnifier/parser.C"
+#line 1454 "magnifier/parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1666,7 +1664,7 @@ yyreturn:
 }
 
 
-#line 76 "magnifier/parser.Y"
+#line 75 "magnifier/parser.Y"
 
 
 

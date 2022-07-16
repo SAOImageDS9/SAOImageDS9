@@ -29,7 +29,6 @@ extern void mgerror(Magnifier*, mgFlexLexer*, const char*);
 }
 
 %token <integer> INT
-%token <ptr> POINTER
 
 %token BBOX_
 %token CLEAR_
@@ -54,12 +53,12 @@ extern void mgerror(Magnifier*, mgFlexLexer*, const char*);
 %%
 
 command : DEBUG_ debug
-	| CLEAR_ {mg->updateCmd(0);}
+	| CLEAR_ {mg->clearCmd();}
 	| GET_ get
 	| HIDE_ {mg->hideCmd();}
 	| RESET_ {mg->resetCmd();}
 	| SHOW_ {mg->showCmd();}
-	| UPDATE_ POINTER {mg->updateCmd($2);}
+	| UPDATE_ {mg->updateCmd();}
 	| VERSION_ {mg->msg("Magnifier 1.0");}
 	;
 

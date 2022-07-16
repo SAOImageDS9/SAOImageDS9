@@ -1502,8 +1502,9 @@ void Base::updateMagnifier(const Vector& vv)
     x11MagnifierCursor(vv);
 
   // notify the magnifier widget
+  magnifierptr_ = (void*)magnifierPixmap;
   ostringstream str;
-  str << magnifierName << " update " << (void*)magnifierPixmap << ends;
+  str << magnifierName << " update" << ends;
   Tcl_Eval(interp, str.str().c_str());
 }
 

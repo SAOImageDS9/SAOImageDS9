@@ -1213,8 +1213,9 @@ void Frame3dBase::updateMagnifier(const Vector& vv)
   ximageToPixmapMagnifier();
 
   // notify the magnifier widget
+  magnifierptr_ = (void*)magnifierPixmap;
   ostringstream str;
-  str << magnifierName << " update " << (void*)magnifierPixmap << ends;
+  str << magnifierName << " update" << ends;
   Tcl_Eval(interp, str.str().c_str());
 }
 

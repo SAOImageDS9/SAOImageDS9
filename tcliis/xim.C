@@ -13,6 +13,8 @@ using namespace std;
 
 #include <tcl.h>
 
+#include widget.h
+
 // windows has conflict with typedef byte and <iostream>
 #ifdef __WIN32
 #define byte foo
@@ -275,8 +277,9 @@ void xim_wcs(int frame, float a, float b, float c, float d,
 void GtWritePixels(void* gt, int frame, void* pixels, int bits,
 		   int xx, int yy, int dx, int dy)
 {
+  iisptr_ = pixels;
   ostringstream str;
-  str << "IISWritePixelsCmd " << frame << ' ' << pixels << ' ' 
+  str << "IISWritePixelsCmd " << ' ' << frame << ' ' 
       << xx << ' ' << yy << ' ' << dx << ' ' << dy << ends;
   iis->eval((char*)str.str().c_str());
 
@@ -287,8 +290,9 @@ void GtWritePixels(void* gt, int frame, void* pixels, int bits,
 void GtReadPixels(void* gt, int frame, void* pixels, int nbits, 
 		  int xx, int yy, int dx, int dy)
 {
+  iisptr_ = pixels;
   ostringstream str;
-  str << "IISReadPixelsCmd " << frame << ' ' << pixels << ' ' 
+  str << "IISReadPixelsCmd " << ' ' << frame << ' ' 
       << xx << ' ' << yy << ' ' << dx << ' ' << dy << ends;
   iis->eval((char*)str.str().c_str());
 

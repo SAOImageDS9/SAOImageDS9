@@ -7,6 +7,7 @@
 
 %%
 
+alternative	{return $ALTERNATIVE_}
 blue		{return $BLUE_}
 buttons		{return $BUTTONS_}
 colorbar	{return $COLORBAR_}

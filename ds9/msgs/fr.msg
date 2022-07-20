@@ -1,4 +1,3 @@
-# ::msgcat::mcset fr {Percentage} 
 ::msgcat::mcset fr {2D} 
 ::msgcat::mcset fr {3D View} 
 ::msgcat::mcset fr {3D} 
@@ -17,6 +16,7 @@
 ::msgcat::mcset fr {All Columns} {Toutes les colonnes}
 ::msgcat::mcset fr {All Rows} [encoding convertfrom iso8859-1 {Toutes les rangées}]
 ::msgcat::mcset fr {All} {Tous}
+::msgcat::mcset fr {Alternative Layout} 
 ::msgcat::mcset fr {Always save files during Backup} 
 ::msgcat::mcset fr {Amplifier} {Amplificateur}
 ::msgcat::mcset fr {An error has occurred during backup} 
@@ -309,8 +309,12 @@
 ::msgcat::mcset fr {FK5} 
 ::msgcat::mcset fr {FP} 
 ::msgcat::mcset fr {Factor} 
+::msgcat::mcset fr {Fade Frames} 
+::msgcat::mcset fr {Fade Interval} 
+::msgcat::mcset fr {Fade} 
 ::msgcat::mcset fr {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-1 {Fichier non trouvé, ou impossible d'utiliser le type MIME des données FITS}]
 ::msgcat::mcset fr {File not found} 
+::msgcat::mcset fr {Filename Format} 
 ::msgcat::mcset fr {Filename} {NomDuFichier} 
 ::msgcat::mcset fr {File} {Fichier}
 ::msgcat::mcset fr {Fill} 
@@ -402,6 +406,7 @@
 ::msgcat::mcset fr {Import} 
 ::msgcat::mcset fr {Include} {Inclure}
 ::msgcat::mcset fr {Increase} {Augmenter}
+::msgcat::mcset fr {Info Box} 
 ::msgcat::mcset fr {Information Panel} {Panneau de reseignement}
 ::msgcat::mcset fr {Information} {Reseignement}
 ::msgcat::mcset fr {Initialize XPA} {Initialiser XPA}
@@ -432,6 +437,7 @@
 ::msgcat::mcset fr {Last Block} 
 ::msgcat::mcset fr {Last Frame} [encoding convertfrom iso8859-1 {Dernière fenêtre}]
 ::msgcat::mcset fr {Last} {Dernier}
+::msgcat::mcset fr {Layout Alt} 
 ::msgcat::mcset fr {Layout Horz} 
 ::msgcat::mcset fr {Layout Vert} 
 ::msgcat::mcset fr {Layout} 
@@ -543,6 +549,7 @@
 ::msgcat::mcset fr {Max Rows} [encoding convertfrom iso8859-1 {Maximum de rangées}]
 ::msgcat::mcset fr {Maximum} 
 ::msgcat::mcset fr {Max} {Maximum}
+::msgcat::mcset fr {Median} 
 ::msgcat::mcset fr {Menus and Buttons} 
 ::msgcat::mcset fr {Menu} 
 ::msgcat::mcset fr {Message Log} 
@@ -788,6 +795,7 @@
 ::msgcat::mcset fr {Screen} 
 ::msgcat::mcset fr {Search for Catalogs} 
 ::msgcat::mcset fr {Seconds} 
+::msgcat::mcset fr {Second} 
 ::msgcat::mcset fr {Segment} 
 ::msgcat::mcset fr {Select All} 
 ::msgcat::mcset fr {Select Coordinate System } 
@@ -872,6 +880,7 @@
 ::msgcat::mcset fr {Topographic} 
 ::msgcat::mcset fr {Top} 
 ::msgcat::mcset fr {To} 
+::msgcat::mcset fr {Transition} 
 ::msgcat::mcset fr {Transparency} 
 ::msgcat::mcset fr {Triangle} 
 ::msgcat::mcset fr {Type} 
@@ -968,7 +977,8 @@
 ::msgcat::mcset fr {already connected} 
 ::msgcat::mcset fr {and} 
 ::msgcat::mcset fr {b} 
-::msgcat::mcset fr {graph} 
+::msgcat::mcset fr {full base} 
+::msgcat::mcset fr {full} 
 ::msgcat::mcset fr {g} 
 ::msgcat::mcset fr {h5utils} 
 ::msgcat::mcset fr {hundredths second} 
@@ -977,6 +987,8 @@
 ::msgcat::mcset fr {not} 
 ::msgcat::mcset fr {only} 
 ::msgcat::mcset fr {or center of data} 
+::msgcat::mcset fr {root base} 
+::msgcat::mcset fr {root} 
 ::msgcat::mcset fr {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset fr {r} 
 ::msgcat::mcset fr {unable to locate HUB} 

@@ -305,6 +305,7 @@ proc LayoutView {} {
     switch $view(layout) {
 	horizontal {LayoutViewHorz}
 	vertical {LayoutViewVert}
+	alt {LayoutViewAlt}
     }
 
     LayoutInfoPanel
@@ -317,11 +318,15 @@ proc LayoutViewHorz {} {
     global current
     global view
 
+    # reset weights
+    grid rowconfigure $ds9(main) 0 -weight 0
+    grid columnconfigure $ds9(main) 0 -weight 0
+    grid rowconfigure $ds9(main) 4 -weight 0
+    grid columnconfigure $ds9(main) 4 -weight 0
+
     # ds9(main) weight
     grid rowconfigure $ds9(main) 4 -weight 1
     grid columnconfigure $ds9(main) 0 -weight 1
-    grid rowconfigure $ds9(main) 0 -weight 0
-    grid columnconfigure $ds9(main) 4 -weight 0
 
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
@@ -372,9 +377,13 @@ proc LayoutViewVert {} {
     global current
     global view
 
-    # ds9(main) weight
-    grid rowconfigure $ds9(main) 4 -weight 0
+    # reset weights
+    grid rowconfigure $ds9(main) 0 -weight 0
     grid columnconfigure $ds9(main) 0 -weight 0
+    grid rowconfigure $ds9(main) 4 -weight 0
+    grid columnconfigure $ds9(main) 4 -weight 0
+
+    # ds9(main) weight
     grid rowconfigure $ds9(main) 0 -weight 1
     grid columnconfigure $ds9(main) 4 -weight 1
 
@@ -419,6 +428,64 @@ proc LayoutViewVert {} {
 
     # image
     grid $ds9(image) -row 0 -column 4 -sticky news
+}
+
+proc LayoutViewAlt {} {
+    global ds9
+    global current
+    global view
+
+    # reset weights
+    grid rowconfigure $ds9(main) 0 -weight 0
+    grid columnconfigure $ds9(main) 0 -weight 0
+    grid rowconfigure $ds9(main) 4 -weight 0
+    grid columnconfigure $ds9(main) 4 -weight 0
+
+    # ds9(main) weight
+    grid rowconfigure $ds9(main) 0 -weight 1
+    grid columnconfigure $ds9(main) 0 -weight 1
+
+    grid forget $ds9(panel)
+    grid forget $ds9(panel,sep)
+    grid forget $ds9(buttons,frame)
+    grid forget $ds9(buttons,sep)
+    grid forget $ds9(image)
+    
+    pack forget $ds9(magnifier)
+    pack forget $ds9(info)
+    pack forget $ds9(panner)
+
+    # info panel
+    if {$view(info) || $view(magnifier) || $view(panner)} {
+	$ds9(panel,sep) configure -orient vertical
+	grid $ds9(panel,sep) -row 0 -column 1 -sticky ns
+	grid $ds9(panel) -row 0 -column 2 -sticky ns
+    }
+
+    if {$view(magnifier)} {
+	pack $ds9(magnifier) -side top -padx 2 -pady 2
+    }
+
+    if {$view(info)} {
+	pack $ds9(info) -side top -padx 2 -pady 2 -fill y -expand true
+	if {$view(magnifier)} {
+	    pack $ds9(info) -after $ds9(magnifier)
+	}
+    }
+
+    if {$view(panner)} {
+	pack $ds9(panner) -side bottom -padx 2 -pady 2
+    }
+
+    # buttons
+    if {$view(buttons)} {
+	$ds9(buttons,sep) configure -orient vertical
+	grid $ds9(buttons,sep) -row 0 -column 3 -sticky ns
+	grid $ds9(buttons,frame) -row 0 -column 4 -sticky ns
+    }
+
+    # image
+    grid $ds9(image) -row 0 -column 0 -sticky news
 }
 
 proc LayoutFrames {} {

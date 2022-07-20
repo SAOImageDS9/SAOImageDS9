@@ -14,6 +14,8 @@ proc ViewMainMenu {} {
 	-variable view(layout) -value horizontal -command LayoutView
     $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical Layout}] \
 	-variable view(layout) -value vertical -command LayoutView
+    $ds9(mb).view add radiobutton -label [msgcat::mc {Alternative Layout}] \
+	-variable view(layout) -value alt -command LayoutView
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
 	-variable view(multi) -command LayoutFrames
@@ -84,6 +86,8 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(layout) -value horizontal
     $m add radiobutton -label [msgcat::mc {Vertical Layout}] \
 	-variable pview(layout) -value vertical
+    $m add radiobutton -label [msgcat::mc {Alternative Layout}] \
+	-variable pview(layout) -value alt
     $m add separator
     $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
 	-variable pview(multi)
@@ -146,6 +150,7 @@ proc ButtonsViewDef {} {
     array set pbuttons {
 	view,horizontal 0
 	view,vertical 0
+	view,alt 0
 	view,multi 0
 	view,info 1
 	view,panner 1
@@ -181,6 +186,9 @@ proc CreateButtonsView {} {
     RadioButton $ds9(buttons).view.vertical \
 	[string tolower [msgcat::mc {Layout Vert}]] \
 	view(layout) vertical LayoutView
+    RadioButton $ds9(buttons).view.alt \
+	[string tolower [msgcat::mc {Layout Alt}]] \
+	view(layout) alt LayoutView
 
     CheckButton $ds9(buttons).view.multi \
 	[string tolower [msgcat::mc {Multi Colorbars}]] \
@@ -247,6 +255,7 @@ proc CreateButtonsView {} {
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)
         $ds9(buttons).view.vertical pbuttons(view,vertical)
+        $ds9(buttons).view.alt pbuttons(view,alt)
         $ds9(buttons).view.multi pbuttons(view,multi)
         $ds9(buttons).view.info pbuttons(view,info)
         $ds9(buttons).view.panner pbuttons(view,panner)
@@ -282,6 +291,9 @@ proc PrefsDialogButtonbarView {f} {
 	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Vertical Layout}] \
 	-variable pbuttons(view,vertical) \
+	-command {UpdateButtons buttons(view)}
+    $m add checkbutton -label [msgcat::mc {Alternative Layout}] \
+	-variable pbuttons(view,alt) \
 	-command {UpdateButtons buttons(view)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \

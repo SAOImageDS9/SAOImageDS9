@@ -1,4 +1,3 @@
-# ::msgcat::mcset es {Percentage} 
 ::msgcat::mcset es {2D} 
 ::msgcat::mcset es {3D View} 
 ::msgcat::mcset es {3D} 
@@ -17,6 +16,7 @@
 ::msgcat::mcset es {All Columns} {Todas las columnas}
 ::msgcat::mcset es {All Rows} {Todas las filas}
 ::msgcat::mcset es {All} {Todas}
+::msgcat::mcset es {Alternative Layout} 
 ::msgcat::mcset es {Always save files during Backup} 
 ::msgcat::mcset es {Amplifier} {Amplificador}
 ::msgcat::mcset es {An error has occurred during backup} 
@@ -309,8 +309,12 @@
 ::msgcat::mcset es {FK5} 
 ::msgcat::mcset es {FP} 
 ::msgcat::mcset es {Factor} 
+::msgcat::mcset es {Fade Frames} 
+::msgcat::mcset es {Fade Interval} 
+::msgcat::mcset es {Fade} 
 ::msgcat::mcset es {File not Found or Unable to load FITS data MIME type} {Fichero no hallado o incapaz de cargar datos FITS de tipo MIME}
 ::msgcat::mcset es {File not found} 
+::msgcat::mcset es {Filename Format} 
 ::msgcat::mcset es {Filename} {Nombre del fichero}
 ::msgcat::mcset es {File} {Fichero}
 ::msgcat::mcset es {Fill} 
@@ -402,6 +406,7 @@
 ::msgcat::mcset es {Import} 
 ::msgcat::mcset es {Include} {Incluir}
 ::msgcat::mcset es {Increase} {Aumento}
+::msgcat::mcset es {Info Box} 
 ::msgcat::mcset es {Information Panel} [encoding convertfrom iso8859-1 {Panel de información}]
 ::msgcat::mcset es {Information} [encoding convertfrom iso8859-1 {Información}] 
 ::msgcat::mcset es {Initialize XPA} {Inicializar XPA}
@@ -432,6 +437,7 @@
 ::msgcat::mcset es {Last Block} 
 ::msgcat::mcset es {Last Frame} [encoding convertfrom iso8859-1 {Último marco}]
 ::msgcat::mcset es {Last} [encoding convertfrom iso8859-1 {Último}]
+::msgcat::mcset es {Layout Alt} 
 ::msgcat::mcset es {Layout Horz} 
 ::msgcat::mcset es {Layout Vert} 
 ::msgcat::mcset es {Layout} 
@@ -543,6 +549,7 @@
 ::msgcat::mcset es {Max Rows} [encoding convertfrom iso8859-1 {Máx filas}] 
 ::msgcat::mcset es {Maximum} 
 ::msgcat::mcset es {Max} [encoding convertfrom iso8859-1 {Máx}]
+::msgcat::mcset es {Median} 
 ::msgcat::mcset es {Menus and Buttons} 
 ::msgcat::mcset es {Menu} 
 ::msgcat::mcset es {Message Log} 
@@ -788,6 +795,7 @@
 ::msgcat::mcset es {Screen} 
 ::msgcat::mcset es {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar por catálogos}]
 ::msgcat::mcset es {Seconds} {Segundos}
+::msgcat::mcset es {Second} 
 ::msgcat::mcset es {Segment} 
 ::msgcat::mcset es {Select All} {Seleccionar todos}
 ::msgcat::mcset es {Select Coordinate System } {Seleccionar el sistema de coordenadas}
@@ -872,6 +880,7 @@
 ::msgcat::mcset es {Topographic} 
 ::msgcat::mcset es {Top} 
 ::msgcat::mcset es {To} {A} 
+::msgcat::mcset es {Transition} 
 ::msgcat::mcset es {Transparency} 
 ::msgcat::mcset es {Triangle} 
 ::msgcat::mcset es {Type} {Clase} 
@@ -968,7 +977,8 @@
 ::msgcat::mcset es {already connected} 
 ::msgcat::mcset es {and} 
 ::msgcat::mcset es {b} 
-::msgcat::mcset es {graph} 
+::msgcat::mcset es {full base} 
+::msgcat::mcset es {full} 
 ::msgcat::mcset es {g} 
 ::msgcat::mcset es {h5utils} 
 ::msgcat::mcset es {hundredths second} 
@@ -977,6 +987,8 @@
 ::msgcat::mcset es {not} 
 ::msgcat::mcset es {only} 
 ::msgcat::mcset es {or center of data} {o centro de los datos}
+::msgcat::mcset es {root base} 
+::msgcat::mcset es {root} 
 ::msgcat::mcset es {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {Filas de datos transferidas. Puede que haya más disponibles. Quizá quiera ajustar el máximo permitido.}]
 ::msgcat::mcset es {r} 
 ::msgcat::mcset es {unable to locate HUB} 

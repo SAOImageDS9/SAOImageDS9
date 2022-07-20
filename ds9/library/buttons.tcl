@@ -328,6 +328,20 @@ proc LayoutButtons {} {
 
 	    pack $ds9(buttons).major -side top -fill x -expand true -anchor n
 	}
+	alt {
+	    pack propagate $ds9(buttons) off
+	    $ds9(buttons) configure -width 100
+	    pack $ds9(buttons) -side left -fill both -expand true
+
+	    if {$ianalysis(buttonbar,count)>0} {
+		$ds9(buttons,aux) configure \
+		    -width [expr 100*$ianalysis(buttonbar,count)]
+		pack propagate $ds9(buttons,aux) off
+		pack $ds9(buttons,aux) -side left -fill both -expand true
+	    }
+
+	    pack $ds9(buttons).major -side top -fill x -expand true -anchor n
+	}
     }
 
     UpdateButtons buttons(major)
@@ -372,6 +386,9 @@ proc MajorButton {} {
 	vertical {
 	    pack $buttons(major,current) -side bottom -fill x -expand true -anchor s
 	}
+	alt {
+	    pack $buttons(major,current) -side bottom -fill x -expand true -anchor s
+	}
     }
     set buttons(major,prev) $buttons(major,current)
 
@@ -394,6 +411,9 @@ proc AnalysisButton {} {
 		pack $ds9(buttons,aux,$ii) -side bottom -fill x -expand true
 	    }
 	    vertical {
+		pack $ds9(buttons,aux,$ii) -side left -fill x -expand true -anchor n
+	    }
+	    alt {
 		pack $ds9(buttons,aux,$ii) -side left -fill x -expand true -anchor n
 	    }
 	}
@@ -419,6 +439,7 @@ proc ShowButton {which varname} {
  	switch $view(layout) {
 	    horizontal {pack $which -side left -fill both -expand true}
 	    vertical {pack $which -side top -fill both -expand true}
+	    alt {pack $which -side top -fill both -expand true}
  	}
     }
 }

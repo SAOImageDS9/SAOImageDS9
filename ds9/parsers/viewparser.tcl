@@ -61,12 +61,12 @@ proc view::unsetupvalues {numsyms} {
 }
 
 array set view::table {
-  76:294,target 65
+  76:294,target 1
   56:257 shift
   6:259,target 13
   6:260,target 13
   56:258 shift
-  33:261,target 65
+  33:261,target 66
   56:260 shift
   56:259 shift
   56:261 shift
@@ -77,27 +77,25 @@ array set view::table {
   26:258 reduce
   26:259 reduce
   26:260 reduce
-  95:0,target 41
+  95:0,target 52
   0:275,target 13
   26:261 reduce
   91:0 reduce
   26:262 reduce
-  51:319 goto
+  51:320 goto
   1:258,target 8
   27:259,target 34
   27:260,target 34
-  73:260,target 69
-  73:259,target 69
-  64:0,target 6
+  64:0,target 3
   33:0,target 1
-  39:262,target 66
+  40:262,target 67
   22:258,target 29
-  32:294,target 1
-  77:294,target 53
+  32:294,target 69
+  77:294,target 65
   7:259,target 14
   7:260,target 14
   21:0 reduce
-  34:261,target 65
+  34:261,target 66
   86:294 reduce
   0:292,target 30
   0:302,target 39
@@ -109,22 +107,15 @@ array set view::table {
   28:260,target 35
   74:260,target 70
   74:259,target 70
-  41:262,target 66
-  32:257 shift
-  32:258 shift
-  32:259 shift
-  32:260 shift
-  92:0,target 62
-  32:261 shift
+  92:0,target 61
   23:258,target 30
-  32:262 shift
-  56:319 goto
+  56:320 goto
   33:294,target 1
-  78:294,target 46
-  61:0,target 2
+  78:294,target 53
+  61:0,target 42
   8:259,target 15
   8:260,target 15
-  35:261,target 65
+  35:261,target 66
   29:0,target 36
   30:0,target 37
   0:318,target 55
@@ -136,27 +127,27 @@ array set view::table {
   29:260,target 36
   30:259,target 37
   30:260,target 37
-  75:260,target 64
-  75:259,target 63
+  75:260,target 71
+  75:259,target 71
   0:266,target 4
   9:0 reduce
   92:294 reduce
-  42:262,target 66
+  42:262,target 67
   62:294 reduce
   24:258,target 31
   34:294,target 1
-  80:294,target 57
-  79:294,target 45
+  80:294,target 45
+  79:294,target 46
   9:259,target 16
   9:260,target 16
   32:294 reduce
-  36:261,target 65
+  36:261,target 66
   37:257 shift
   37:258 shift
   18:257,target 25
   37:259 shift
   37:260 shift
-  88:0,target 64
+  88:0,target 47
   37:261 shift
   37:262 shift
   50:0 reduce
@@ -165,73 +156,75 @@ array set view::table {
   57:0,target 1
   31:259,target 38
   31:260,target 38
+  76:260,target 65
+  76:259,target 64
   0:283,target 21
-  32:319 goto
   92:0 reduce
   26:0,target 33
+  43:262,target 67
   25:258,target 32
   35:294,target 1
-  81:294,target 43
-  37:261,target 65
+  81:294,target 57
+  37:261,target 66
   19:257,target 26
   20:257,target 27
   67:294 reduce
   22:0 reduce
   5:258,target 12
-  0:310,target 47
-  0:299,target 36
   0:309,target 46
-  73:257 reduce
-  32:259,target 63
-  32:260,target 64
-  73:258 reduce
+  0:299,target 36
+  0:310,target 47
   37:294 reduce
-  73:260 reduce
-  73:259 reduce
   64:0 reduce
-  73:261 reduce
-  73:262 reduce
-  44:262,target 66
-  85:0,target 44
+  43:257 shift
+  43:258 shift
+  43:259 shift
+  43:260 shift
+  85:0,target 58
+  43:261 shift
+  43:262 shift
   13:257 reduce
   26:258,target 33
   13:258 reduce
   36:294,target 1
-  82:294,target 59
-  54:0,target 68
+  82:294,target 43
+  54:0,target 1
   13:259 reduce
   13:260 reduce
   13:261 reduce
   13:262 reduce
-  37:319 goto
+  37:320 goto
+  38:261,target 66
   2:257 reduce
   23:0,target 30
   2:258 reduce
   2:260 reduce
   2:259 reduce
   2:261 reduce
-  75:319,target 94
   2:262 reduce
   21:257,target 28
+  0:326,target 61
   6:258,target 13
-  33:259,target 63
-  33:260,target 64
+  33:259,target 64
+  33:260,target 65
   36:0 reduce
+  45:262,target 67
   78:0 reduce
   0:274,target 12
+  73:294 reduce
   1:257,target 8
   27:258,target 34
-  73:258,target 69
   37:294,target 1
-  83:294,target 48
-  43:294 shift
-  39:261,target 65
+  83:294,target 59
+  43:294 reduce
+  40:261,target 66
   48:257 shift
   48:258 shift
   8:0,target 15
   48:260 shift
   48:259 shift
-  82:0,target 59
+  82:0,target 43
+  76:320,target 95
   48:261 shift
   22:257,target 29
   48:262 shift
@@ -242,15 +235,15 @@ array set view::table {
   18:259 reduce
   18:260 reduce
   18:261 reduce
-  34:259,target 63
-  34:260,target 64
+  34:259,target 64
+  34:260,target 65
   18:262 reduce
+  43:320 goto
   7:257 reduce
   19:0,target 26
   20:0,target 27
   51:0 reduce
   7:258 reduce
-  46:262,target 66
   0:291,target 29
   0:301,target 38
   7:259 reduce
@@ -258,60 +251,69 @@ array set view::table {
   7:261 reduce
   7:262 reduce
   2:257,target 9
+  93:0 reduce
   28:258,target 35
   74:258,target 70
-  84:294,target 58
-  41:261,target 65
-  32:319,target 67
+  38:294,target 1
+  84:294,target 48
   78:294 reduce
   23:257,target 30
   8:258,target 15
   48:294 reduce
-  35:259,target 63
-  35:260,target 64
+  35:259,target 64
+  35:260,target 65
   23:0 reduce
   0:317,target 54
-  47:262,target 66
+  54:257 shift
+  54:258 shift
+  47:262,target 67
   5:0,target 12
-  78:0,target 46
+  54:260 shift
+  54:259 shift
+  78:0,target 53
+  54:261 shift
   65:0 reduce
+  54:262 shift
   3:257,target 10
   24:257 reduce
   24:258 reduce
   29:258,target 36
   30:258,target 37
-  75:258,target 62
-  47:0,target 1
+  75:258,target 71
   24:259 reduce
   24:260 reduce
-  39:294,target 1
-  40:294,target 67
-  85:294,target 44
+  39:304,target 74
+  40:294,target 1
+  47:0,target 1
+  85:294,target 58
   24:261 reduce
   0:265,target 3
   24:262 reduce
-  48:319 goto
+  48:320 goto
   16:0,target 23
-  42:261,target 65
-  33:319,target 68
+  42:261,target 66
+  33:320,target 68
   24:257,target 31
   9:258,target 16
-  36:259,target 63
-  36:260,target 64
-  48:262,target 66
+  36:259,target 64
+  36:260,target 65
+  46:295,target 32
+  48:262,target 67
   37:0 reduce
   84:294 reduce
   4:257,target 11
   31:258,target 38
+  76:258,target 63
   0:282,target 20
-  41:294,target 1
-  86:294,target 56
+  41:294,target 67
+  86:294,target 44
   80:0 reduce
   79:0 reduce
   54:294 reduce
+  43:261,target 66
   2:0,target 9
-  75:0,target 1
-  34:319,target 69
+  75:0,target 71
+  34:320,target 69
   25:257,target 32
   29:257 reduce
   30:257 reduce
@@ -321,101 +323,93 @@ array set view::table {
   29:260 reduce
   30:259 reduce
   30:260 reduce
-  44:0,target 1
   29:261 reduce
   30:261 reduce
   29:262 reduce
   30:262 reduce
-  37:259,target 63
-  37:260,target 64
+  37:259,target 64
+  37:260,target 65
+  54:320 goto
   13:0,target 20
   10:0 reduce
-  50:262,target 66
-  49:262,target 66
+  50:262,target 67
+  49:262,target 67
   5:257,target 12
-  0:308,target 45
   0:298,target 35
+  0:308,target 45
   52:0 reduce
-  32:258,target 62
   42:294,target 1
-  87:294,target 47
-  44:261,target 65
-  94:0 reduce
+  87:294,target 56
   90:294 reduce
   89:294 reduce
-  35:319,target 70
+  35:320,target 70
   26:257,target 33
   60:294 reduce
-  59:294 reduce
-  51:262,target 66
-  72:0,target 63
+  38:259,target 64
+  38:260,target 65
+  60:324,target 94
+  51:262,target 67
+  72:0,target 55
   0:325,target 60
   24:0 reduce
   35:257 shift
   6:257,target 13
   35:258 shift
-  33:258,target 62
+  33:258,target 63
   35:259 shift
   35:260 shift
-  41:0,target 1
+  41:0,target 67
   35:261 shift
-  43:294,target 79
-  88:294,target 64
+  43:294,target 1
+  88:294,target 47
   35:262 shift
   66:0 reduce
   10:0,target 17
-  59:323 goto
+  45:261,target 66
+  60:324 goto
   0:273,target 11
-  36:319,target 71
+  36:320,target 71
   27:257,target 34
-  73:257,target 69
-  39:259,target 63
-  39:260,target 64
-  52:262,target 66
+  40:259,target 64
+  40:260,target 65
+  52:262,target 67
+  95:294 reduce
   7:257,target 14
-  34:258,target 62
+  34:258,target 63
   65:294 reduce
-  44:294,target 1
-  90:294,target 54
-  89:294,target 60
+  44:294,target 80
+  90:294,target 60
+  89:294,target 64
+  38:0 reduce
   0:290,target 28
   0:289,target 27
   0:300,target 37
-  46:261,target 65
   35:294 reduce
   81:0 reduce
-  68:0,target 49
-  37:319,target 72
+  68:0,target 66
+  37:320,target 72
   28:257,target 35
-  41:257 shift
   74:257,target 70
-  38:303,target 73
-  41:258 shift
   37:0,target 1
-  41:259 shift
-  41:260 shift
-  41:261 shift
-  41:262 shift
   11:257 reduce
-  41:259,target 63
-  41:260,target 64
   11:258 reduce
   11:259 reduce
   11:260 reduce
   11:261 reduce
   11:262 reduce
-  53:262,target 66
-  35:319 goto
+  53:262,target 67
+  35:320 goto
   8:257,target 15
   11:0 reduce
-  35:258,target 62
+  35:258,target 63
   0:263 shift
-  91:294,target 61
+  45:294,target 1
+  91:294,target 54
   0:264 shift
   0:265 shift
   0:316,target 53
   0:266 shift
-  47:261,target 65
+  47:261,target 66
   0:267 shift
   53:0 reduce
   0:268 shift
@@ -423,10 +417,11 @@ array set view::table {
   0:269 shift
   0:271 shift
   0:272 shift
+  38:320,target 73
   0:273 shift
   29:257,target 36
   30:257,target 37
-  75:257,target 61
+  75:257,target 71
   0:274 shift
   95:0 reduce
   0:275 shift
@@ -435,36 +430,38 @@ array set view::table {
   0:264,target 2
   0:277 shift
   0:278 shift
-  42:259,target 63
-  42:260,target 64
+  42:259,target 64
+  42:260,target 65
+  96:0,target 41
   0:280 shift
   0:279 shift
+  76:257 shift
   0:281 shift
+  76:258 shift
   0:282 shift
   41:294 reduce
+  76:260 shift
+  76:259 shift
   0:283 shift
-  65:0,target 4
+  76:261 shift
+  65:0,target 6
+  54:262,target 67
   0:284 shift
+  76:262 shift
   0:285 shift
   0:286 shift
-  46:257 shift
   0:287 shift
-  46:258 shift
   0:288 shift
   9:257,target 16
   34:0,target 1
-  46:259 shift
-  46:260 shift
   0:290 shift
   0:289 shift
   0:300 shift
-  36:258,target 62
-  46:261 shift
-  46:262 shift
+  36:258,target 63
   0:291 shift
   0:301 shift
-  46:294,target 1
-  92:294,target 62
+  46:304,target 41
+  92:294,target 61
   0:292 shift
   0:302 shift
   16:257 reduce
@@ -475,29 +472,29 @@ array set view::table {
   16:259 reduce
   16:260 reduce
   25:0 reduce
-  48:261,target 65
+  48:261,target 66
   0:295 shift
   0:305 shift
   16:261 reduce
-  0:306 shift
   0:296 shift
+  0:306 shift
   16:262 reduce
-  0:297 shift
   0:307 shift
-  41:319 goto
+  0:297 shift
   5:257 reduce
-  0:308 shift
   0:298 shift
+  0:308 shift
   5:258 reduce
-  0:310 shift
-  0:299 shift
   0:309 shift
-  39:319,target 76
+  0:299 shift
+  0:310 shift
+  40:320,target 77
   67:0 reduce
   5:260 reduce
   5:259 reduce
   0:311 shift
   31:257,target 38
+  76:257,target 62
   5:261 reduce
   0:281,target 19
   0:312 shift
@@ -506,65 +503,68 @@ array set view::table {
   0:314 shift
   0:315 shift
   0:316 shift
+  43:259,target 64
+  43:260,target 65
   0:317 shift
   0:318 shift
-  0:320 goto
+  0:319 shift
   0:321 goto
   10:262,target 17
-  55:262,target 66
   0:322 goto
-  0:324 goto
+  0:323 goto
   0:325 goto
+  0:326 goto
   76:294 reduce
-  37:258,target 62
+  37:258,target 63
   47:294,target 1
-  93:294,target 95
-  50:261,target 65
-  49:261,target 65
-  46:294 reduce
-  62:0,target 5
-  39:0 reduce
+  93:294,target 62
+  93:0,target 62
+  50:261,target 66
+  49:261,target 66
+  46:304 shift
+  46:295 shift
+  62:0,target 2
   40:0 reduce
   52:257 shift
-  0:297,target 34
   0:307,target 44
-  41:319,target 77
+  0:297,target 34
   52:258 shift
-  32:257,target 61
   52:260 shift
   52:259 shift
   31:0,target 38
   52:261 shift
   52:262 shift
   82:0 reduce
+  76:320 goto
   22:257 reduce
   22:258 reduce
-  44:259,target 63
-  44:260,target 64
   22:259 reduce
   22:260 reduce
   22:261 reduce
   22:262 reduce
+  46:318 shift
   11:262,target 18
-  46:319 goto
-  56:262,target 66
+  56:262,target 67
+  38:258,target 63
+  46:326 goto
   48:294,target 1
-  94:294,target 52
-  59:323,target 93
-  51:261,target 65
+  94:294,target 96
+  51:261,target 66
   12:0 reduce
-  0:324,target 59
-  42:319,target 78
-  33:257,target 61
+  42:320,target 78
+  33:257,target 62
   82:294 reduce
   54:0 reduce
-  90:0,target 54
-  89:0,target 60
+  90:0,target 60
+  89:0,target 64
+  45:259,target 64
+  45:260,target 65
   52:294 reduce
   0:272,target 10
-  58:0,target 0
+  96:0 reduce
+  58:0,target 1
   12:262,target 19
-  57:262,target 66
+  57:262,target 67
   57:257 shift
   57:258 shift
   57:260 shift
@@ -572,141 +572,143 @@ array set view::table {
   27:0,target 34
   57:261 shift
   57:262 shift
-  39:258,target 62
+  40:258,target 63
   50:294,target 1
   49:294,target 1
   27:257 reduce
+  95:294,target 52
   27:258 reduce
   27:259 reduce
   27:260 reduce
   27:261 reduce
-  52:261,target 65
+  52:261,target 66
   27:262 reduce
-  52:319 goto
+  52:320 goto
+  43:320,target 79
   26:0 reduce
-  34:257,target 61
-  46:260,target 64
+  34:257,target 62
+  39:327,target 76
   0:288,target 26
-  46:259,target 63
   68:0 reduce
   1:0 reduce
   13:262,target 20
+  58:262,target 67
   87:294 reduce
-  41:258,target 62
   51:294,target 1
-  86:0,target 56
+  86:0,target 44
   57:294 reduce
-  53:261,target 65
-  55:0,target 1
-  44:319,target 80
+  53:261,target 66
+  55:0,target 68
   24:0,target 31
-  35:257,target 61
-  45:303,target 40
+  35:257,target 62
   0:315,target 52
   33:257 shift
   33:258 shift
   41:0 reduce
-  47:260,target 64
-  47:259,target 63
+  47:260,target 65
+  47:259,target 64
   33:259 shift
   33:260 shift
   33:261 shift
   33:262 shift
-  57:319 goto
+  57:320 goto
   14:262,target 21
   83:0 reduce
   0:263,target 1
-  42:258,target 62
+  42:258,target 63
   52:294,target 1
-  36:257,target 61
-  93:294 shift
+  54:261,target 66
+  45:320,target 81
+  36:257,target 62
+  93:294 reduce
   9:0,target 16
   13:0 reduce
-  83:0,target 48
-  48:260,target 64
-  48:259,target 63
+  83:0,target 59
+  48:260,target 65
+  48:259,target 64
   63:294 reduce
   55:0 reduce
   52:0,target 1
   15:262,target 22
+  39:318,target 75
   0:280,target 18
   0:279,target 17
   33:294 reduce
   21:0,target 28
+  38:257 shift
+  43:258,target 63
   53:294,target 1
+  38:258 shift
+  38:259 shift
+  38:260 shift
+  38:261 shift
   10:261,target 17
-  55:261,target 65
-  46:319,target 82
-  33:319 goto
-  37:257,target 61
-  50:260,target 64
-  50:259,target 63
-  49:260,target 64
-  49:259,target 63
+  38:262 shift
+  33:320 goto
+  37:257,target 62
+  50:260,target 65
+  50:259,target 64
+  49:260,target 65
+  49:259,target 64
   27:0 reduce
-  0:306,target 43
   0:296,target 33
+  0:306,target 43
   16:262,target 23
   70:0 reduce
   69:0 reduce
   6:0,target 13
   2:0 reduce
-  44:258,target 62
-  80:0,target 57
-  79:0,target 45
-  54:294,target 68
+  80:0,target 45
+  79:0,target 46
+  54:294,target 1
   68:294 reduce
   11:261,target 18
-  56:261,target 65
+  56:261,target 66
   48:0,target 1
   74:257 reduce
-  38:303 shift
   74:258 reduce
+  38:294 reduce
   74:260 reduce
   74:259 reduce
-  47:319,target 83
   17:0,target 24
+  47:320,target 83
   74:261 reduce
+  38:257,target 62
   74:262 reduce
-  44:257 shift
-  44:258 shift
-  44:259 shift
-  44:260 shift
-  51:260,target 64
-  51:259,target 63
-  44:261 shift
-  44:262 shift
+  51:260,target 65
+  51:259,target 64
+  0:323,target 59
   14:257 reduce
   14:258 reduce
   14:259 reduce
   14:260 reduce
   17:262,target 24
   14:261 reduce
-  38:317 shift
   42:0 reduce
   14:262 reduce
+  38:320 goto
   3:257 reduce
-  38:326,target 75
   3:258 reduce
   3:260 reduce
   3:259 reduce
+  45:258,target 63
   84:0 reduce
-  55:294,target 1
+  55:294,target 68
   3:261 reduce
   3:262 reduce
   0:271,target 9
-  38:326 goto
   12:261,target 19
-  57:261,target 65
-  48:319,target 84
-  39:257,target 61
+  57:261,target 66
+  48:320,target 84
+  40:257,target 62
   3:0,target 10
-  76:0,target 65
-  52:260,target 64
-  52:259,target 63
+  76:0,target 1
+  52:260,target 65
+  52:259,target 64
+  45:0,target 1
   14:0 reduce
   18:262,target 25
-  44:294 reduce
+  44:294 shift
   14:0,target 21
   56:0 reduce
   50:257 shift
@@ -714,7 +716,6 @@ array set view::table {
   50:258 shift
   49:258 shift
   0:287,target 25
-  46:258,target 62
   56:294,target 1
   50:260 shift
   50:259 shift
@@ -727,6 +728,7 @@ array set view::table {
   13:261,target 20
   19:257 reduce
   20:257 reduce
+  58:261,target 66
   19:258 reduce
   20:258 reduce
   19:259 reduce
@@ -737,43 +739,36 @@ array set view::table {
   20:261 reduce
   19:262 reduce
   20:262 reduce
-  50:319,target 86
-  49:319,target 85
-  44:319 goto
+  50:320,target 86
+  49:320,target 85
   8:257 reduce
-  41:257,target 61
   8:258 reduce
   8:259 reduce
   8:260 reduce
   8:261 reduce
   8:262 reduce
-  53:260,target 64
-  53:259,target 63
+  53:260,target 65
+  53:259,target 64
   19:262,target 26
   20:262,target 27
   28:0 reduce
   0:314,target 51
-  73:0,target 69
-  47:258,target 62
+  73:0,target 63
+  47:258,target 63
   57:294,target 1
   80:294 reduce
   79:294 reduce
   71:0 reduce
   14:261,target 21
-  38:317,target 74
   42:0,target 1
   3:0 reduce
   50:294 reduce
   49:294 reduce
   11:0,target 18
-  51:319,target 87
-  42:257,target 61
-  55:257 shift
-  55:258 shift
-  55:260 shift
-  55:259 shift
-  55:261 shift
-  55:262 shift
+  51:320,target 87
+  42:257,target 62
+  54:260,target 65
+  54:259,target 64
   25:257 reduce
   25:258 reduce
   25:259 reduce
@@ -781,28 +776,30 @@ array set view::table {
   21:262,target 28
   25:261 reduce
   25:262 reduce
-  50:319 goto
-  49:319 goto
-  48:258,target 62
+  50:320 goto
+  49:320 goto
+  48:258,target 63
+  58:294,target 1
+  43:0 reduce
   15:261,target 22
   0:278,target 16
   85:0 reduce
   1:262,target 8
-  52:319,target 88
-  70:0,target 51
-  69:0,target 50
+  52:320,target 88
+  43:257,target 62
+  70:0,target 50
+  69:0,target 49
   85:294 reduce
   10:259,target 17
   10:260,target 17
-  55:260,target 64
-  55:259,target 63
+  38:0,target 1
   55:294 reduce
   22:262,target 29
+  46:318,target 55
   15:0 reduce
-  50:258,target 62
-  49:258,target 62
-  60:294,target 42
-  59:294,target 40
+  50:258,target 63
+  49:258,target 63
+  60:294,target 40
   31:257 reduce
   0:295,target 32
   0:305,target 42
@@ -813,19 +810,17 @@ array set view::table {
   31:260 reduce
   31:261 reduce
   31:262 reduce
-  55:319 goto
   2:262,target 9
-  53:319,target 89
-  44:257,target 61
+  53:320,target 89
   11:259,target 18
   11:260,target 18
-  56:260,target 64
-  56:259,target 63
+  56:260,target 65
+  56:259,target 64
   23:262,target 30
-  66:0,target 7
-  51:258,target 62
+  66:0,target 4
+  51:258,target 63
   91:294 reduce
-  61:294,target 2
+  61:294,target 42
   0:322,target 58
   29:0 reduce
   30:0 reduce
@@ -834,13 +829,15 @@ array set view::table {
   61:294 reduce
   3:262,target 10
   72:0 reduce
+  54:320,target 90
+  45:257,target 62
   4:0 reduce
   0:270,target 8
   0:269,target 7
   12:259,target 19
   12:260,target 19
-  57:260,target 64
-  57:259,target 63
+  57:260,target 65
+  57:259,target 64
   36:257 shift
   36:258 shift
   36:259 shift
@@ -848,25 +845,24 @@ array set view::table {
   36:261 shift
   24:262,target 31
   36:262 shift
-  52:258,target 62
-  62:294,target 5
+  52:258,target 63
+  62:294,target 2
   18:261,target 25
-  94:0,target 52
-  44:0 reduce
   4:262,target 11
-  55:319,target 90
   0:286,target 24
-  46:257,target 61
-  63:0,target 3
+  63:0,target 5
   86:0 reduce
   13:259,target 20
   13:260,target 20
-  32:0,target 1
+  58:260,target 65
+  58:259,target 64
+  32:0,target 69
   66:294 reduce
   25:262,target 32
   36:294 reduce
-  53:258,target 62
-  63:294,target 3
+  46:326,target 82
+  53:258,target 63
+  63:294,target 5
   42:257 shift
   42:258 shift
   19:261,target 26
@@ -877,17 +873,17 @@ array set view::table {
   42:261 shift
   42:262 shift
   12:257 reduce
-  5:262,target 12
   0:313,target 50
+  5:262,target 12
   12:258 reduce
-  56:319,target 91
+  56:320,target 91
   12:259 reduce
   12:260 reduce
-  47:257,target 61
+  47:257,target 62
   12:261 reduce
-  58:0 accept
+  58:0 reduce
   12:262 reduce
-  36:319 goto
+  36:320 goto
   1:257 reduce
   1:258 reduce
   14:259,target 21
@@ -896,23 +892,23 @@ array set view::table {
   1:259 reduce
   1:261 reduce
   1:262 reduce
-  91:0,target 61
+  91:0,target 54
   26:262,target 33
-  60:0,target 42
-  59:0,target 39
-  64:294,target 6
+  60:0,target 39
+  59:0,target 0
+  54:258,target 63
+  64:294,target 3
   28:0,target 35
   21:261,target 28
-  45:317,target 54
   72:294 reduce
   6:262,target 13
-  57:319,target 92
+  57:320,target 92
   31:0 reduce
-  48:257,target 61
+  48:257,target 62
   42:294 reduce
-  47:257 shift
   15:259,target 22
   15:260,target 22
+  47:257 shift
   73:0 reduce
   47:258 shift
   47:260 shift
@@ -924,28 +920,28 @@ array set view::table {
   1:261,target 8
   17:257 reduce
   27:262,target 34
-  73:262,target 69
   17:258 reduce
   17:259 reduce
   17:260 reduce
   17:261 reduce
   17:262 reduce
   10:258,target 17
-  42:319 goto
-  55:258,target 62
+  42:320 goto
   6:257 reduce
-  65:294,target 4
+  65:294,target 6
   6:258 reduce
   6:259 reduce
   6:260 reduce
   6:261 reduce
   6:262 reduce
   22:261,target 29
-  87:0,target 47
+  87:0,target 56
   7:262,target 14
+  58:320,target 93
   56:0,target 1
-  50:257,target 61
-  49:257,target 61
+  50:257,target 62
+  49:257,target 62
+  45:0 reduce
   0:304,target 41
   16:259,target 23
   16:260,target 23
@@ -957,8 +953,8 @@ array set view::table {
   74:262,target 70
   47:294 reduce
   11:258,target 18
-  56:258,target 62
-  66:294,target 7
+  56:258,target 63
+  66:294,target 4
   53:257 shift
   53:258 shift
   53:260 shift
@@ -972,55 +968,62 @@ array set view::table {
   23:259 reduce
   23:260 reduce
   23:261 reduce
-  51:257,target 61
+  51:257,target 62
   23:262 reduce
-  47:319 goto
   17:0 reduce
+  47:320 goto
   0:321,target 57
   17:259,target 24
   17:260,target 24
   60:0 reduce
-  59:0 reduce
-  84:0,target 58
+  59:0 accept
+  84:0,target 48
   3:261,target 10
   29:262,target 36
   30:262,target 37
-  75:262,target 66
+  75:262,target 71
   53:0,target 1
   0:268,target 6
   12:258,target 19
-  57:258,target 62
-  67:294,target 66
+  57:258,target 63
+  67:294,target 7
   22:0,target 29
   83:294 reduce
   24:261,target 31
   9:262,target 16
-  45:325,target 81
   53:294 reduce
-  52:257,target 61
+  52:257,target 62
+  58:257 shift
+  58:258 shift
   18:259,target 25
   18:260,target 25
+  58:260 shift
+  58:259 shift
   32:0 reduce
+  58:261 shift
+  58:262 shift
   4:261,target 11
   28:257 reduce
   28:258 reduce
   31:262,target 38
+  76:262,target 67
   0:285,target 23
   28:259 reduce
   28:260 reduce
   74:0 reduce
   28:261 reduce
   28:262 reduce
-  53:319 goto
+  53:320 goto
   6:0 reduce
   13:258,target 20
-  68:294,target 49
+  58:258,target 63
+  68:294,target 66
   7:0,target 14
   25:261,target 32
-  81:0,target 43
+  81:0,target 57
   50:0,target 1
   49:0,target 1
-  53:257,target 61
+  53:257,target 62
   18:0,target 25
   19:259,target 26
   19:260,target 26
@@ -1029,12 +1032,11 @@ array set view::table {
   88:294 reduce
   5:261,target 12
   0:312,target 49
-  32:262,target 66
-  46:0 reduce
+  58:294 reduce
   14:258,target 21
   88:0 reduce
-  70:294,target 51
-  69:294,target 50
+  70:294,target 50
+  69:294,target 49
   26:261,target 33
   34:257 shift
   34:258 shift
@@ -1042,39 +1044,38 @@ array set view::table {
   34:260 shift
   34:261 shift
   34:262 shift
+  58:320 goto
+  54:257,target 62
   21:259,target 28
   21:260,target 28
   4:0,target 11
-  77:0,target 53
+  77:0,target 65
   18:0 reduce
   6:261,target 13
-  33:262,target 66
-  46:0,target 1
+  33:262,target 67
   61:0 reduce
   15:258,target 22
   15:0,target 22
-  71:294,target 55
+  71:294,target 51
   0:276,target 14
-  94:294 reduce
+  94:294 shift
   1:260,target 8
   1:259,target 8
   27:261,target 34
-  73:261,target 69
   64:294 reduce
   10:257,target 17
-  55:257,target 61
   34:294 reduce
   22:259,target 29
   22:260,target 29
-  39:257 shift
+  40:257 shift
   7:261,target 14
-  39:258 shift
-  34:262,target 66
-  39:259 shift
-  39:260 shift
-  39:261 shift
+  40:258 shift
+  34:262,target 67
+  40:259 shift
+  40:260 shift
+  40:261 shift
   33:0 reduce
-  39:262 shift
+  40:262 shift
   10:257 reduce
   10:258 reduce
   0:293,target 31
@@ -1083,67 +1084,76 @@ array set view::table {
   10:260 reduce
   16:258,target 23
   10:261 reduce
-  72:294,target 63
+  72:294,target 55
   10:262 reduce
   75:0 reduce
   1:0,target 8
-  34:319 goto
+  34:320 goto
   2:260,target 9
   2:259,target 9
   74:0,target 70
   28:261,target 35
   74:261,target 70
   7:0 reduce
+  43:0,target 1
   11:257,target 18
-  56:257,target 61
+  56:257,target 62
   12:0,target 19
   23:259,target 30
   23:260,target 30
   8:261,target 15
-  35:262,target 66
+  35:262,target 67
   70:294 reduce
   69:294 reduce
-  0:320,target 56
-  75:257 shift
+  0:319,target 56
+  75:257 reduce
   17:258,target 24
-  75:258 shift
-  47:0 reduce
-  39:294 reduce
+  75:258 reduce
+  39:304 shift
   40:294 reduce
-  75:260 shift
-  75:259 shift
-  75:261 shift
-  75:262 shift
+  47:0 reduce
+  75:260 reduce
+  75:259 reduce
+  73:294,target 63
+  75:261 reduce
+  75:262 reduce
   3:260,target 10
   3:259,target 10
   29:261,target 36
   30:261,target 37
-  75:261,target 65
+  45:257 shift
+  75:261,target 71
+  45:258 shift
   90:0 reduce
   89:0 reduce
+  45:259 shift
+  45:260 shift
   0:267,target 5
+  45:261 shift
+  45:262 shift
   12:257,target 19
   15:257 reduce
-  57:257,target 61
+  57:257,target 62
   15:258 reduce
   15:259 reduce
   15:260 reduce
   15:261 reduce
   15:262 reduce
+  39:318 shift
   24:259,target 31
   24:260,target 31
-  39:319 goto
+  40:320 goto
   4:257 reduce
-  71:0,target 55
+  71:0,target 51
   4:258 reduce
   4:260 reduce
   4:259 reduce
   4:261 reduce
   9:261,target 16
   4:262 reduce
-  36:262,target 66
-  39:0,target 1
-  40:0,target 67
+  36:262,target 67
+  40:0,target 1
+  39:327 goto
   19:0 reduce
   20:0 reduce
   18:258,target 25
@@ -1151,10 +1161,11 @@ array set view::table {
   4:259,target 11
   62:0 reduce
   31:261,target 38
+  76:261,target 66
   0:284,target 22
-  75:294 reduce
   13:257,target 20
-  45:303 shift
+  58:257,target 62
+  45:294 reduce
   25:259,target 32
   25:260,target 32
   51:257 shift
@@ -1162,9 +1173,8 @@ array set view::table {
   51:260 shift
   51:259 shift
   51:261 shift
-  37:262,target 66
+  37:262,target 67
   51:262 shift
-  75:319 goto
   21:257 reduce
   21:258 reduce
   21:259 reduce
@@ -1172,22 +1182,19 @@ array set view::table {
   19:258,target 26
   20:258,target 27
   21:261 reduce
-  45:317 shift
   21:262 reduce
-  75:294,target 1
+  45:320 goto
   9:257 reduce
   34:0 reduce
-  67:0,target 66
+  67:0,target 7
   5:260,target 12
   5:259,target 12
   0:311,target 48
   9:258 reduce
   9:259 reduce
   9:260 reduce
-  32:261,target 65
   9:261 reduce
   9:262 reduce
-  45:325 goto
   36:0,target 1
   76:0 reduce
   14:257,target 21
@@ -1195,82 +1202,84 @@ array set view::table {
   26:259,target 33
   26:260,target 33
   81:294 reduce
+  38:262,target 67
   51:294 reduce
   21:258,target 28
 }
 
 array set view::rules {
-  9,l 320
-  11,l 320
-  32,l 321
-  53,l 324
-  6,l 319
-  28,l 321
-  50,l 324
-  49,l 324
-  3,l 319
-  25,l 321
-  46,l 324
-  67,l 325
-  0,l 327
-  22,l 321
-  43,l 324
-  64,l 324
-  18,l 321
-  40,l 323
-  39,l 322
-  61,l 324
-  15,l 321
-  36,l 321
-  57,l 324
-  12,l 321
-  33,l 321
-  54,l 324
-  7,l 319
-  29,l 321
-  30,l 321
-  51,l 324
-  4,l 319
-  26,l 321
-  47,l 324
-  68,l 325
-  1,l 319
-  23,l 321
-  44,l 324
-  65,l 324
-  19,l 321
-  20,l 321
-  41,l 322
-  62,l 324
-  16,l 321
-  37,l 321
-  58,l 324
-  13,l 321
-  34,l 321
-  55,l 324
-  8,l 320
-  10,l 320
-  31,l 321
-  52,l 324
-  5,l 319
-  27,l 321
-  48,l 324
-  70,l 326
+  9,l 321
+  11,l 321
+  32,l 322
+  53,l 325
+  6,l 320
+  28,l 322
+  50,l 325
+  49,l 325
+  71,l 327
+  3,l 320
+  25,l 322
+  46,l 325
+  67,l 326
+  0,l 328
+  22,l 322
+  43,l 325
+  64,l 325
+  18,l 322
+  40,l 324
+  39,l 323
+  61,l 325
+  15,l 322
+  36,l 322
+  57,l 325
+  12,l 322
+  33,l 322
+  54,l 325
+  7,l 320
+  29,l 322
+  30,l 322
+  51,l 325
+  4,l 320
+  26,l 322
+  47,l 325
+  68,l 326
+  1,l 320
+  23,l 322
+  44,l 325
+  65,l 325
+  19,l 322
+  20,l 322
+  41,l 323
+  62,l 325
+  16,l 322
+  37,l 322
+  58,l 325
+  13,l 322
+  34,l 322
+  55,l 325
+  8,l 321
+  10,l 321
+  31,l 322
+  52,l 325
+  5,l 320
+  27,l 322
+  48,l 325
+  70,l 327
   69,l 326
-  2,l 319
-  24,l 321
-  45,l 324
-  66,l 324
-  21,l 321
-  42,l 324
-  63,l 324
-  17,l 321
-  38,l 321
-  60,l 324
-  59,l 324
-  14,l 321
-  35,l 321
-  56,l 324
+  2,l 320
+  24,l 322
+  45,l 325
+  66,l 325
+  21,l 322
+  42,l 325
+  63,l 325
+  17,l 322
+  38,l 322
+  60,l 325
+  59,l 325
+  14,l 322
+  35,l 322
+  56,l 325
 }
 
 array set view::rules {
@@ -1341,6 +1350,7 @@ array set view::rules {
   4,dc 1
   42,dc 1
   56,dc 2
+  71,dc 1
   19,dc 1
   20,dc 1
   34,dc 1
@@ -1348,236 +1358,239 @@ array set view::rules {
 }
 
 array set view::rules {
-  41,line 163
-  7,line 126
-  37,line 158
-  4,line 123
-  34,line 155
-  1,line 120
-  31,line 152
-  27,line 148
-  24,line 145
-  21,line 142
-  17,line 138
-  14,line 135
-  70,line 204
-  69,line 203
-  11,line 131
-  66,line 196
-  63,line 193
+  41,line 164
+  7,line 127
+  37,line 159
+  4,line 124
+  34,line 156
+  1,line 121
+  31,line 153
+  27,line 149
+  24,line 146
+  21,line 143
+  17,line 139
+  14,line 136
+  70,line 205
+  69,line 202
+  11,line 132
+  66,line 197
+  63,line 194
   40,e 1
-  60,line 190
-  59,line 189
-  56,line 186
-  53,line 182
-  50,line 176
-  49,line 173
-  46,line 170
-  43,line 167
-  9,line 129
-  40,line 162
-  39,line 162
-  6,line 125
-  36,line 157
-  3,line 122
-  33,line 154
-  29,line 150
-  30,line 151
-  26,line 147
-  23,line 144
-  19,line 140
-  20,line 141
-  16,line 137
-  13,line 134
-  68,line 200
-  10,line 130
-  65,line 195
-  62,line 192
-  58,line 188
-  55,line 185
-  52,line 181
-  48,line 172
-  45,line 169
-  42,line 166
-  8,line 128
-  38,line 159
-  5,line 124
-  35,line 156
-  2,line 121
-  32,line 153
-  28,line 149
-  25,line 146
-  22,line 143
-  18,line 139
-  15,line 136
-  12,line 133
-  67,line 199
-  64,line 194
-  61,line 191
-  57,line 187
-  54,line 184
-  51,line 178
-  47,line 171
-  44,line 168
+  60,line 191
+  59,line 190
+  56,line 187
+  53,line 183
+  50,line 177
+  49,line 174
+  46,line 171
+  43,line 168
+  9,line 130
+  40,line 163
+  39,line 163
+  6,line 126
+  36,line 158
+  3,line 123
+  33,line 155
+  29,line 151
+  30,line 152
+  26,line 148
+  23,line 145
+  19,line 141
+  20,line 142
+  16,line 138
+  13,line 135
+  68,line 201
+  10,line 131
+  65,line 196
+  62,line 193
+  58,line 189
+  55,line 186
+  52,line 182
+  48,line 173
+  45,line 170
+  42,line 167
+  8,line 129
+  38,line 160
+  5,line 125
+  35,line 157
+  2,line 122
+  32,line 154
+  28,line 150
+  25,line 147
+  22,line 144
+  18,line 140
+  15,line 137
+  71,line 206
+  12,line 134
+  67,line 200
+  64,line 195
+  61,line 192
+  57,line 188
+  54,line 185
+  51,line 179
+  47,line 172
+  44,line 169
 }
 
 array set view::lr1_table {
-  35 {{51 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  35 {{50 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
   66,trans {}
-  36 {{55 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  36 {{51 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
   85,trans {}
-  37 {{63 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  38 {{52 {0 294} 1} {69 {0 257 258 259 260 261 262} 0} {70 {0 257 258 259 260 261 262} 0}}
-  40 {{67 {0 294} 1}}
-  39 {{65 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  41 {{53 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  42 {{46 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  43 {{45 {0 294} 1}}
-  44 {{57 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  45 {{43 {0 294} 1} {67 {0 294} 0} {68 {0 294} 0}}
-  46 {{59 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  47 {{48 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  48 {{58 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  49 {{44 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  50 {{56 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  37 {{55 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  38 {{63 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  40 {{65 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  39 {{52 {0 294} 1} {70 {0 257 258 259 260 261 262} 0} {71 {0 257 258 259 260 261 262} 0}}
+  41 {{67 {0 294} 1}}
+  42 {{53 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  43 {{46 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  44 {{45 {0 294} 1}}
+  45 {{57 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  46 {{43 {0 294} 1} {67 {0 294} 0} {68 {0 294} 0} {69 {0 294} 0}}
+  47 {{59 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  48 {{48 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  49 {{58 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  50 {{44 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
   27,trans {}
-  51 {{47 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  46,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 82}}
-  52 {{64 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  51 {{56 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  46,trans {{295 32} {304 41} {318 55} {326 82}}
+  52 {{47 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
   65,trans {}
-  53 {{60 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  53 {{64 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
   84,trans {}
-  54 {{68 {0 294} 1}}
-  55 {{54 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  56 {{61 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  57 {{62 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  58 {{0 0 1}}
-  59 {{39 0 1} {41 0 1} {40 294 0}}
-  60 {{42 {0 294} 1}}
-  61 {{2 {0 294} 1}}
-  62 {{5 {0 294} 1}}
-  63 {{3 {0 294} 1}}
-  64 {{6 {0 294} 1}}
-  65 {{4 {0 294} 1}}
+  54 {{60 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  55 {{68 {0 294} 1}}
+  56 {{54 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  57 {{61 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  58 {{62 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  59 {{0 0 1}}
+  60 {{39 0 1} {41 0 1} {40 294 0}}
+  61 {{42 {0 294} 1}}
+  62 {{2 {0 294} 1}}
+  63 {{5 {0 294} 1}}
+  64 {{3 {0 294} 1}}
+  65 {{6 {0 294} 1}}
   26,trans {}
-  66 {{7 {0 294} 1}}
-  67 {{66 {0 294} 2}}
-  45,trans {{303 40} {317 54} {325 81}}
-  68 {{49 {0 294} 2}}
+  66 {{4 {0 294} 1}}
+  67 {{7 {0 294} 1}}
+  45,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 81}}
+  68 {{66 {0 294} 2}}
   64,trans {}
-  69 {{50 {0 294} 2}}
-  70 {{51 {0 294} 2}}
+  69 {{49 {0 294} 2}}
+  70 {{50 {0 294} 2}}
   83,trans {}
-  71 {{55 {0 294} 2}}
-  72 {{63 {0 294} 2}}
-  73 {{69 {0 257 258 259 260 261 262} 1}}
+  71 {{51 {0 294} 2}}
+  72 {{55 {0 294} 2}}
+  73 {{63 {0 294} 2}}
   74 {{70 {0 257 258 259 260 261 262} 1}}
-  75 {{52 {0 294} 2} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  76 {{65 {0 294} 2}}
-  77 {{53 {0 294} 2}}
-  78 {{46 {0 294} 2}}
-  79 {{45 {0 294} 2}}
-  80 {{57 {0 294} 2}}
-  81 {{43 {0 294} 2}}
-  82 {{59 {0 294} 2}}
+  75 {{71 {0 257 258 259 260 261 262} 1}}
+  76 {{52 {0 294} 2} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  77 {{65 {0 294} 2}}
+  78 {{53 {0 294} 2}}
+  79 {{46 {0 294} 2}}
+  80 {{45 {0 294} 2}}
+  81 {{57 {0 294} 2}}
+  82 {{43 {0 294} 2}}
   25,trans {}
-  83 {{48 {0 294} 2}}
-  44,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 80}}
-  84 {{58 {0 294} 2}}
-  85 {{44 {0 294} 2}}
+  83 {{59 {0 294} 2}}
+  44,trans {{294 80}}
+  84 {{48 {0 294} 2}}
+  85 {{58 {0 294} 2}}
   63,trans {}
-  86 {{56 {0 294} 2}}
+  86 {{44 {0 294} 2}}
   82,trans {}
-  87 {{47 {0 294} 2}}
-  0 {{0 0 0} {39 0 0} {41 0 0} {42 {0 294} 0} {43 {0 294} 0} {44 {0 294} 0} {45 {0 294} 0} {46 {0 294} 0} {47 {0 294} 0} {48 {0 294} 0} {49 {0 294} 0} {50 {0 294} 0} {51 {0 294} 0} {52 {0 294} 0} {53 {0 294} 0} {54 {0 294} 0} {55 {0 294} 0} {56 {0 294} 0} {57 {0 294} 0} {58 {0 294} 0} {59 {0 294} 0} {60 {0 294} 0} {61 {0 294} 0} {62 {0 294} 0} {63 {0 294} 0} {64 {0 294} 0} {65 {0 294} 0} {66 {0 294} 0} {67 {0 294} 0} {68 {0 294} 0} {8 {0 257 258 259 260 261 262} 0} {9 {0 257 258 259 260 261 262} 0} {10 {0 257 258 259 260 261 262} 0} {11 {0 257 258 259 260 261 262} 0} {12 {0 257 258 259 260 261 262} 0} {13 {0 257 258 259 260 261 262} 0} {14 {0 257 258 259 260 261 262} 0} {15 {0 257 258 259 260 261 262} 0} {16 {0 257 258 259 260 261 262} 0} {17 {0 257 258 259 260 261 262} 0} {18 {0 257 258 259 260 261 262} 0} {19 {0 257 258 259 260 261 262} 0} {20 {0 257 258 259 260 261 262} 0} {21 {0 257 258 259 260 261 262} 0} {22 {0 257 258 259 260 261 262} 0} {23 {0 257 258 259 260 261 262} 0} {24 {0 257 258 259 260 261 262} 0} {25 {0 257 258 259 260 261 262} 0} {26 {0 257 258 259 260 261 262} 0} {27 {0 257 258 259 260 261 262} 0} {28 {0 257 258 259 260 261 262} 0} {29 {0 257 258 259 260 261 262} 0} {30 {0 257 258 259 260 261 262} 0} {31 {0 257 258 259 260 261 262} 0} {32 {0 257 258 259 260 261 262} 0} {33 {0 257 258 259 260 261 262} 0} {34 {0 257 258 259 260 261 262} 0} {35 {0 257 258 259 260 261 262} 0} {36 {0 257 258 259 260 261 262} 0} {37 {0 257 258 259 260 261 262} 0} {38 {0 257 258 259 260 261 262} 0}}
-  88 {{64 {0 294} 2}}
+  87 {{56 {0 294} 2}}
+  0 {{0 0 0} {39 0 0} {41 0 0} {42 {0 294} 0} {43 {0 294} 0} {44 {0 294} 0} {45 {0 294} 0} {46 {0 294} 0} {47 {0 294} 0} {48 {0 294} 0} {49 {0 294} 0} {50 {0 294} 0} {51 {0 294} 0} {52 {0 294} 0} {53 {0 294} 0} {54 {0 294} 0} {55 {0 294} 0} {56 {0 294} 0} {57 {0 294} 0} {58 {0 294} 0} {59 {0 294} 0} {60 {0 294} 0} {61 {0 294} 0} {62 {0 294} 0} {63 {0 294} 0} {64 {0 294} 0} {65 {0 294} 0} {66 {0 294} 0} {67 {0 294} 0} {68 {0 294} 0} {69 {0 294} 0} {8 {0 257 258 259 260 261 262} 0} {9 {0 257 258 259 260 261 262} 0} {10 {0 257 258 259 260 261 262} 0} {11 {0 257 258 259 260 261 262} 0} {12 {0 257 258 259 260 261 262} 0} {13 {0 257 258 259 260 261 262} 0} {14 {0 257 258 259 260 261 262} 0} {15 {0 257 258 259 260 261 262} 0} {16 {0 257 258 259 260 261 262} 0} {17 {0 257 258 259 260 261 262} 0} {18 {0 257 258 259 260 261 262} 0} {19 {0 257 258 259 260 261 262} 0} {20 {0 257 258 259 260 261 262} 0} {21 {0 257 258 259 260 261 262} 0} {22 {0 257 258 259 260 261 262} 0} {23 {0 257 258 259 260 261 262} 0} {24 {0 257 258 259 260 261 262} 0} {25 {0 257 258 259 260 261 262} 0} {26 {0 257 258 259 260 261 262} 0} {27 {0 257 258 259 260 261 262} 0} {28 {0 257 258 259 260 261 262} 0} {29 {0 257 258 259 260 261 262} 0} {30 {0 257 258 259 260 261 262} 0} {31 {0 257 258 259 260 261 262} 0} {32 {0 257 258 259 260 261 262} 0} {33 {0 257 258 259 260 261 262} 0} {34 {0 257 258 259 260 261 262} 0} {35 {0 257 258 259 260 261 262} 0} {36 {0 257 258 259 260 261 262} 0} {37 {0 257 258 259 260 261 262} 0} {38 {0 257 258 259 260 261 262} 0}}
+  88 {{47 {0 294} 2}}
   1 {{8 {0 257 258 259 260 261 262} 1}}
-  89 {{60 {0 294} 2}}
-  90 {{54 {0 294} 2}}
+  89 {{64 {0 294} 2}}
+  90 {{60 {0 294} 2}}
   2 {{9 {0 257 258 259 260 261 262} 1}}
-  91 {{61 {0 294} 2}}
+  91 {{54 {0 294} 2}}
   3 {{10 {0 257 258 259 260 261 262} 1}}
-  92 {{62 {0 294} 2}}
+  92 {{61 {0 294} 2}}
   4 {{11 {0 257 258 259 260 261 262} 1}}
-  93 {{41 0 2}}
+  93 {{62 {0 294} 2}}
   5 {{12 {0 257 258 259 260 261 262} 1}}
-  94 {{52 {0 294} 3}}
+  94 {{41 0 2}}
   6 {{13 {0 257 258 259 260 261 262} 1}}
-  95 {{41 0 3}}
+  95 {{52 {0 294} 3}}
   7 {{14 {0 257 258 259 260 261 262} 1}}
+  96 {{41 0 3}}
   8 {{15 {0 257 258 259 260 261 262} 1}}
   9 {{16 {0 257 258 259 260 261 262} 1}}
   24,trans {}
-  43,trans {{294 79}}
+  43,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 79}}
   62,trans {}
   81,trans {}
   23,trans {}
-  42,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 78}}
+  42,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 78}}
   61,trans {}
   79,trans {}
   80,trans {}
   9,trans {}
   22,trans {}
-  41,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 77}}
-  59,trans {{323 93}}
-  60,trans {}
+  41,trans {}
+  59,trans {}
+  60,trans {{324 94}}
   78,trans {}
   8,trans {}
   21,trans {}
-  39,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 76}}
-  40,trans {}
-  58,trans {}
+  39,trans {{304 74} {318 75} {327 76}}
+  40,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 77}}
+  58,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 93}}
   77,trans {}
+  96,trans {}
   7,trans {}
   19,trans {}
   20,trans {}
-  38,trans {{303 73} {317 74} {326 75}}
-  57,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 92}}
-  76,trans {}
-  6,trans {}
+  38,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 73}}
+  57,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 92}}
+  76,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 95}}
   95,trans {}
+  6,trans {}
   18,trans {}
-  37,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 72}}
-  56,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 91}}
-  75,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 94}}
+  37,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 72}}
+  56,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 91}}
+  75,trans {}
   5,trans {}
-  94,trans {}
+  94,trans {{294 96}}
   17,trans {}
-  36,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 71}}
-  55,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 90}}
+  36,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 71}}
+  55,trans {}
   74,trans {}
   4,trans {}
-  93,trans {{294 95}}
+  93,trans {}
   16,trans {}
-  35,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 70}}
-  54,trans {}
+  35,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 70}}
+  54,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 90}}
   73,trans {}
   3,trans {}
   92,trans {}
   15,trans {}
-  34,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 69}}
-  53,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 89}}
+  34,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 69}}
+  53,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 89}}
   72,trans {}
   2,trans {}
   91,trans {}
   14,trans {}
-  33,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 68}}
-  52,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 88}}
+  33,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 68}}
+  52,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 88}}
   71,trans {}
   1,trans {}
   89,trans {}
   90,trans {}
   13,trans {}
-  32,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 67}}
-  51,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 87}}
+  32,trans {}
+  51,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 87}}
   69,trans {}
   70,trans {}
-  0,trans {{263 1} {264 2} {265 3} {266 4} {267 5} {268 6} {269 7} {270 8} {271 9} {272 10} {273 11} {274 12} {275 13} {276 14} {277 15} {278 16} {279 17} {280 18} {281 19} {282 20} {283 21} {284 22} {285 23} {286 24} {287 25} {288 26} {289 27} {290 28} {291 29} {292 30} {293 31} {295 32} {296 33} {297 34} {298 35} {299 36} {300 37} {301 38} {302 39} {303 40} {304 41} {305 42} {306 43} {307 44} {308 45} {309 46} {310 47} {311 48} {312 49} {313 50} {314 51} {315 52} {316 53} {317 54} {318 55} {320 56} {321 57} {322 58} {324 59} {325 60}}
+  0,trans {{263 1} {264 2} {265 3} {266 4} {267 5} {268 6} {269 7} {270 8} {271 9} {272 10} {273 11} {274 12} {275 13} {276 14} {277 15} {278 16} {279 17} {280 18} {281 19} {282 20} {283 21} {284 22} {285 23} {286 24} {287 25} {288 26} {289 27} {290 28} {291 29} {292 30} {293 31} {295 32} {296 33} {297 34} {298 35} {299 36} {300 37} {301 38} {302 39} {303 40} {304 41} {305 42} {306 43} {307 44} {308 45} {309 46} {310 47} {311 48} {312 49} {313 50} {314 51} {315 52} {316 53} {317 54} {318 55} {319 56} {321 57} {322 58} {323 59} {325 60} {326 61}}
   88,trans {}
   12,trans {}
   31,trans {}
-  49,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 85}}
-  50,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 86}}
+  49,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 85}}
+  50,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 86}}
   68,trans {}
   87,trans {}
   10 {{17 {0 257 258 259 260 261 262} 1}}
@@ -1591,7 +1604,7 @@ array set view::lr1_table {
   29,trans {}
   30,trans {}
   17 {{24 {0 257 258 259 260 261 262} 1}}
-  48,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 84}}
+  48,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 84}}
   18 {{25 {0 257 258 259 260 261 262} 1}}
   67,trans {}
   20 {{27 {0 257 258 259 260 261 262} 1}}
@@ -1608,12 +1621,12 @@ array set view::lr1_table {
   30 {{37 {0 257 258 259 260 261 262} 1}}
   29 {{36 {0 257 258 259 260 261 262} 1}}
   31 {{38 {0 257 258 259 260 261 262} 1}}
-  32 {{66 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  32 {{69 {0 294} 1}}
   10,trans {}
-  33 {{49 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  33 {{66 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
   28,trans {}
-  34 {{50 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
-  47,trans {{257 61} {258 62} {259 63} {260 64} {261 65} {262 66} {319 83}}
+  34 {{49 {0 294} 1} {1 {0 294} 0} {2 {0 294} 0} {3 {0 294} 0} {4 {0 294} 0} {5 {0 294} 0} {6 {0 294} 0} {7 {0 294} 0}}
+  47,trans {{257 62} {258 63} {259 64} {260 65} {261 66} {262 67} {320 83}}
 }
 
 array set view::token_id_table {
@@ -1627,95 +1640,98 @@ array set view::token_id_table {
   265,title AMPLIFIER
   289 WCSV_
   290 WCSW_
-  300 FRAME_
+  300 FILENAME_
   284,title WCSQ
   291 WCSX_
-  301 GRAPH_
-  313,title OBJECT
+  301 FRAME_
+  313,title MULTI
   292 WCSY_
-  302 GREEN_
+  302 GRAPH_
   288,line 40
   293 WCSZ_
-  303 HORIZONTAL_
+  303 GREEN_
   294 STRING_
-  304 HORZGRAPH_
-  305 INFO_
-  295 BLUE_
-  306 KEYVALUE_
-  296 BUTTONS_
-  307 KEYWORD_
+  304 HORIZONTAL_
+  305 HORZGRAPH_
+  295 ALTERNATIVE_
+  306 INFO_
+  296 BLUE_
+  307 KEYVALUE_
   262,t 0
-  297 COLORBAR_
-  308 LAYOUT_
+  297 BUTTONS_
+  308 KEYWORD_
   285,line 37
-  298 COLORBARNUMERICS_
-  310 MAGNIFIER_
-  309 LOWHIGH_
-  299 FILENAME_
-  311 MINMAX_
+  298 COLORBAR_
+  310 LOWHIGH_
+  309 LAYOUT_
+  299 COLORBARNUMERICS_
+  311 MAGNIFIER_
   283,t 0
-  312 MULTI_
-  313 OBJECT_
+  312 MINMAX_
+  313 MULTI_
   314,t 0
-  314 PANNER_
+  314 OBJECT_
   282,line 34
-  315 RED_
-  316 UNITS_
+  315 PANNER_
+  316 RED_
   264,title PHYSICAL
-  317 VERTICAL_
+  317 UNITS_
   283,title WCSP
-  318 VERTGRAPH_
-  312,title MULTI
-  320 coordsys
-  319 yesno
+  318 VERTICAL_
+  312,title MINMAX
+  320 yesno
+  319 VERTGRAPH_
   278,line 30
-  321 wcssys
-  error,line 118
-  322 command
+  321 coordsys
+  error,line 119
+  322 wcssys
   258,t 0
-  323 @PSEUDO1
-  324 view
-  325 layout
+  323 command
+  324 @PSEUDO1
+  325 view
   275,line 27
   279,t 0
   280,t 0
-  326 orient
-  327 start'
+  326 layout
+  327 orient
+  328 start'
   311,t 0
   272,line 24
   263,title IMAGE
   282,title WCSO
-  311,title MINMAX
+  311,title MAGNIFIER
   268,line 20
   276,t 0
   265,line 16
   307,t 0
   297,t 0
+  328,t 1
   262,line 12
-  327,line 205
+  327,line 204
   0,t 0
   0 {$}
   262,title FALSE
   281,title WCSN
   error,t 0
-  310,title MAGNIFIER
-  309,title LOWHIGH
-  299,title FILENAME
+  310,title LOWHIGH
+  309,title LAYOUT
+  299,title COLORBARNUMERICS
+  328,title {}
   258,line 8
   273,t 0
-  324,line 165
+  324,line 163
   294,t 0
   304,t 0
   325,t 1
-  321,line 132
+  321,line 128
   317,line 73
   261,title TRUE
   279,title WCSL
   280,title WCSM
-  308,title LAYOUT
+  308,title KEYWORD
   269,t 0
   270,t 0
-  298,title COLORBARNUMERICS
+  298,title COLORBAR
   327,title {}
   314,line 70
   291,t 0
@@ -1728,8 +1744,8 @@ array set view::token_id_table {
   259,title ON
   297,line 53
   278,title WCSK
-  307,title KEYWORD
-  297,title COLORBAR
+  307,title KEYVALUE
+  297,title BUTTONS
   326,title {}
   287,t 0
   294,line 47
@@ -1743,8 +1759,8 @@ array set view::token_id_table {
   287,line 39
   277,title WCSJ
   284,t 0
-  306,title KEYVALUE
-  296,title BUTTONS
+  306,title INFO
+  296,title BLUE
   325,title {}
   315,t 0
   284,line 36
@@ -1756,8 +1772,8 @@ array set view::token_id_table {
   277,line 29
   276,title WCSI
   312,t 0
-  305,title INFO
-  295,title BLUE
+  305,title HORZGRAPH
+  295,title ALTERNATIVE
   324,title {}
   274,line 26
   271,line 23
@@ -1767,12 +1783,12 @@ array set view::token_id_table {
   298,t 0
   275,title WCSH
   294,title string
-  304,title HORZGRAPH
+  304,title HORIZONTAL
   323,title {}
   264,line 15
   261,line 11
   274,t 0
-  326,line 202
+  326,line 199
   305,t 0
   295,t 0
   257,line 7
@@ -1780,10 +1796,10 @@ array set view::token_id_table {
   274,title WCSG
   323,line 162
   293,title WCSZ
-  303,title HORIZONTAL
+  303,title GREEN
   322,title {}
-  320,line 127
-  319,line 119
+  320,line 120
+  319,line 75
   error error
   271,t 0
   292,t 0
@@ -1793,7 +1809,7 @@ array set view::token_id_table {
   273,title WCSF
   313,line 69
   292,title WCSY
-  302,title GREEN
+  302,title GRAPH
   321,title {}
   267,t 0
   310,line 66
@@ -1801,16 +1817,16 @@ array set view::token_id_table {
   299,line 55
   288,t 0
   320,t 1
-  319,t 1
+  319,t 0
   306,line 62
   296,line 52
   272,title WCSE
   291,title WCSX
   293,line 45
-  301,title GRAPH
+  301,title FRAME
   303,line 59
   320,title {}
-  319,title {}
+  319,title VERTGRAPH
   264,t 0
   285,t 0
   289,line 41
@@ -1823,8 +1839,8 @@ array set view::token_id_table {
   283,line 35
   289,title WCSV
   290,title WCSW
-  300,title FRAME
-  318,title VERTGRAPH
+  300,title FILENAME
+  318,title VERTICAL
   282,t 0
   279,line 31
   280,line 32
@@ -1835,7 +1851,7 @@ array set view::token_id_table {
   270,title WCSC
   273,line 25
   288,title WCSU
-  317,title VERTICAL
+  317,title UNITS
   278,t 0
   310,t 0
   309,t 0
@@ -1847,21 +1863,22 @@ array set view::token_id_table {
   275,t 0
   263,line 14
   287,title WCST
-  316,title UNITS
+  316,title RED
+  328,line 207
   306,t 0
   296,t 0
   327,t 1
   260,line 10
   259,line 9
-  325,line 198
-  322,line 161
+  325,line 166
+  322,line 133
   272,t 0
   267,title WCS
   257 YES_
   286,title WCSS
   293,t 0
   303,t 0
-  315,title RED
+  315,title PANNER
   258 NO_
   318,line 74
   260 OFF_
@@ -1890,7 +1907,7 @@ array set view::token_id_table {
   274 WCSG_
   285,title WCSR
   321,t 1
-  314,title PANNER
+  314,title OBJECT
   275 WCSH_
   308,line 64
   276 WCSI_
@@ -2067,8 +2084,9 @@ proc view::yyparse {} {
                     66 { ProcessCmdSet rgb blue $2 RGBView }
                     67 { ProcessCmdSet view layout horizontal LayoutView }
                     68 { ProcessCmdSet view layout vertical LayoutView }
-                    69 { set _ horz }
-                    70 { set _ vert }
+                    69 { ProcessCmdSet view layout alt LayoutView }
+                    70 { set _ horz }
+                    71 { set _ vert }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

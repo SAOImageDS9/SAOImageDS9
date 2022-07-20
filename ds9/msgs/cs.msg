@@ -1,4 +1,3 @@
-# ::msgcat::mcset cs {Percentage} 
 ::msgcat::mcset cs {2D} 
 ::msgcat::mcset cs {3D View} 
 ::msgcat::mcset cs {3D} 
@@ -17,6 +16,7 @@
 ::msgcat::mcset cs {All Columns} [encoding convertfrom iso8859-2 {V¹echny sloupce}]
 ::msgcat::mcset cs {All Rows} [encoding convertfrom iso8859-2 {V¹echny øádky}]
 ::msgcat::mcset cs {All} [encoding convertfrom iso8859-2 {V¹e}]
+::msgcat::mcset cs {Alternative Layout} 
 ::msgcat::mcset cs {Always save files during Backup} [encoding convertfrom iso8859-2 {V¾dy ulo¾it soubory pøi zálohování}]
 ::msgcat::mcset cs {Amplifier} [encoding convertfrom iso8859-2 {Zesilovaè}]
 ::msgcat::mcset cs {An error has occurred during backup} [encoding convertfrom iso8859-2 {Chyba pøi poøizování zálohy}]
@@ -309,8 +309,12 @@
 ::msgcat::mcset cs {FK5} 
 ::msgcat::mcset cs {FP} 
 ::msgcat::mcset cs {Factor} [encoding convertfrom iso8859-2 {Faktor}]
+::msgcat::mcset cs {Fade Frames} 
+::msgcat::mcset cs {Fade Interval} 
+::msgcat::mcset cs {Fade} 
 ::msgcat::mcset cs {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-2 {Soubor nenalezen nebo není mo¾né nahrát daný FITS MIME typ}]
 ::msgcat::mcset cs {File not found} 
+::msgcat::mcset cs {Filename Format} 
 ::msgcat::mcset cs {Filename} [encoding convertfrom iso8859-2 {Název souboru}]
 ::msgcat::mcset cs {File} [encoding convertfrom iso8859-2 {Soubor}]
 ::msgcat::mcset cs {Fill} 
@@ -402,6 +406,7 @@
 ::msgcat::mcset cs {Import} 
 ::msgcat::mcset cs {Include} 
 ::msgcat::mcset cs {Increase} 
+::msgcat::mcset cs {Info Box} 
 ::msgcat::mcset cs {Information Panel} [encoding convertfrom iso8859-2 {Informaèní panel}]
 ::msgcat::mcset cs {Information} [encoding convertfrom iso8859-2 {Detaily}]
 ::msgcat::mcset cs {Initialize XPA} 
@@ -432,6 +437,7 @@
 ::msgcat::mcset cs {Last Block} 
 ::msgcat::mcset cs {Last Frame} [encoding convertfrom iso8859-2 {Poslední snímek}]
 ::msgcat::mcset cs {Last} [encoding convertfrom iso8859-2 {Poslední}]
+::msgcat::mcset cs {Layout Alt} 
 ::msgcat::mcset cs {Layout Horz} 
 ::msgcat::mcset cs {Layout Vert} 
 ::msgcat::mcset cs {Layout} [encoding convertfrom iso8859-2 {Rozvr¾ení}]
@@ -543,6 +549,7 @@
 ::msgcat::mcset cs {Max Rows} 
 ::msgcat::mcset cs {Maximum} 
 ::msgcat::mcset cs {Max} 
+::msgcat::mcset cs {Median} 
 ::msgcat::mcset cs {Menus and Buttons} 
 ::msgcat::mcset cs {Menu} [encoding convertfrom iso8859-2 {Nabídka}]
 ::msgcat::mcset cs {Message Log} 
@@ -788,6 +795,7 @@
 ::msgcat::mcset cs {Screen} 
 ::msgcat::mcset cs {Search for Catalogs} 
 ::msgcat::mcset cs {Seconds} 
+::msgcat::mcset cs {Second} 
 ::msgcat::mcset cs {Segment} 
 ::msgcat::mcset cs {Select All} [encoding convertfrom iso8859-2 {Vybrat v¹echny}]
 ::msgcat::mcset cs {Select Coordinate System } 
@@ -872,6 +880,7 @@
 ::msgcat::mcset cs {Topographic} 
 ::msgcat::mcset cs {Top} 
 ::msgcat::mcset cs {To} 
+::msgcat::mcset cs {Transition} 
 ::msgcat::mcset cs {Transparency} 
 ::msgcat::mcset cs {Triangle} 
 ::msgcat::mcset cs {Type} 
@@ -968,7 +977,8 @@
 ::msgcat::mcset cs {already connected} 
 ::msgcat::mcset cs {and} 
 ::msgcat::mcset cs {b} 
-::msgcat::mcset cs {graph} 
+::msgcat::mcset cs {full base} 
+::msgcat::mcset cs {full} 
 ::msgcat::mcset cs {g} 
 ::msgcat::mcset cs {h5utils} 
 ::msgcat::mcset cs {hundredths second} 
@@ -977,6 +987,8 @@
 ::msgcat::mcset cs {not} 
 ::msgcat::mcset cs {only} 
 ::msgcat::mcset cs {or center of data} 
+::msgcat::mcset cs {root base} 
+::msgcat::mcset cs {root} 
 ::msgcat::mcset cs {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-2 {øádkù dat. Více jich mù¾e být k dispozici. Zkuste zmìnit povolené maximum}]
 ::msgcat::mcset cs {r} 
 ::msgcat::mcset cs {unable to locate HUB} 

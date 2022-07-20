@@ -1,4 +1,3 @@
-# ::msgcat::mcset da {Percentage} 
 ::msgcat::mcset da {2D} 
 ::msgcat::mcset da {3D View} 
 ::msgcat::mcset da {3D} 
@@ -17,6 +16,7 @@
 ::msgcat::mcset da {All Columns} {Alle søjler}
 ::msgcat::mcset da {All Rows} [encoding convertfrom iso8859-1 {Alle rækker}]
 ::msgcat::mcset da {All} {Alle}
+::msgcat::mcset da {Alternative Layout} 
 ::msgcat::mcset da {Always save files during Backup} 
 ::msgcat::mcset da {Amplifier} [encoding convertfrom iso8859-1 {Forstærker}]
 ::msgcat::mcset da {An error has occurred during backup} 
@@ -309,8 +309,12 @@
 ::msgcat::mcset da {FK5} 
 ::msgcat::mcset da {FP} 
 ::msgcat::mcset da {Factor} 
+::msgcat::mcset da {Fade Frames} 
+::msgcat::mcset da {Fade Interval} 
+::msgcat::mcset da {Fade} 
 ::msgcat::mcset da {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-1 {Filen blev ikke fundet, eller det var ikke muligt at åbne FITS data MIME filtype}]
 ::msgcat::mcset da {File not found} 
+::msgcat::mcset da {Filename Format} 
 ::msgcat::mcset da {Filename} {Filnavn}
 ::msgcat::mcset da {File} {Fil}
 ::msgcat::mcset da {Fill} 
@@ -402,6 +406,7 @@
 ::msgcat::mcset da {Import} 
 ::msgcat::mcset da {Include} {Inkluder}
 ::msgcat::mcset da {Increase} [encoding convertfrom iso8859-1 {Forøg}]
+::msgcat::mcset da {Info Box} 
 ::msgcat::mcset da {Information Panel} {Informations panel}
 ::msgcat::mcset da {Information} {Information}
 ::msgcat::mcset da {Initialize XPA} {Initialiser XPA}
@@ -432,6 +437,7 @@
 ::msgcat::mcset da {Last Block} 
 ::msgcat::mcset da {Last Frame} {Sidste ramme}
 ::msgcat::mcset da {Last} {Sidste}
+::msgcat::mcset da {Layout Alt} 
 ::msgcat::mcset da {Layout Horz} 
 ::msgcat::mcset da {Layout Vert} 
 ::msgcat::mcset da {Layout} 
@@ -543,6 +549,7 @@
 ::msgcat::mcset da {Max Rows} {Maks antal rækker}
 ::msgcat::mcset da {Maximum} 
 ::msgcat::mcset da {Max} {Maks}
+::msgcat::mcset da {Median} 
 ::msgcat::mcset da {Menus and Buttons} 
 ::msgcat::mcset da {Menu} 
 ::msgcat::mcset da {Message Log} 
@@ -788,6 +795,7 @@
 ::msgcat::mcset da {Screen} 
 ::msgcat::mcset da {Search for Catalogs} [encoding convertfrom iso8859-1 {søg efter kataloger}]
 ::msgcat::mcset da {Seconds} {Sekunder}
+::msgcat::mcset da {Second} 
 ::msgcat::mcset da {Segment} 
 ::msgcat::mcset da {Select All} [encoding convertfrom iso8859-1 {Vælg alle}]
 ::msgcat::mcset da {Select Coordinate System } [encoding convertfrom iso8859-1 {vælg koordinat system}]
@@ -872,6 +880,7 @@
 ::msgcat::mcset da {Topographic} 
 ::msgcat::mcset da {Top} 
 ::msgcat::mcset da {To} {Til}
+::msgcat::mcset da {Transition} 
 ::msgcat::mcset da {Transparency} 
 ::msgcat::mcset da {Triangle} 
 ::msgcat::mcset da {Type} 
@@ -968,7 +977,8 @@
 ::msgcat::mcset da {already connected} 
 ::msgcat::mcset da {and} 
 ::msgcat::mcset da {b} 
-::msgcat::mcset da {graph} 
+::msgcat::mcset da {full base} 
+::msgcat::mcset da {full} 
 ::msgcat::mcset da {g} 
 ::msgcat::mcset da {h5utils} 
 ::msgcat::mcset da {hundredths second} 
@@ -977,6 +987,8 @@
 ::msgcat::mcset da {not} 
 ::msgcat::mcset da {only} 
 ::msgcat::mcset da {or center of data} {eller center for data}
+::msgcat::mcset da {root base} 
+::msgcat::mcset da {root} 
 ::msgcat::mcset da {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {rækker af data er blevet hentet. Der kan være flere tilgængelige. Du bør måske ændre det maksimalt tilladte antal}]
 ::msgcat::mcset da {r} 
 ::msgcat::mcset da {unable to locate HUB} 

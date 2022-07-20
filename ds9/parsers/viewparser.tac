@@ -9,6 +9,7 @@
 
 %start command
 
+%token ALTERNATIVE_
 %token BLUE_
 %token BUTTONS_
 %token COLORBAR_
@@ -79,6 +80,7 @@ view : layout
 
 layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal LayoutView}
  | VERTICAL_ {ProcessCmdSet view layout vertical LayoutView}
+ | ALTERNATIVE_ {ProcessCmdSet view layout alt LayoutView}
  ;
  
 orient : HORIZONTAL_ {set _ horz}

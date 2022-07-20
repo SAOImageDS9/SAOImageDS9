@@ -161,6 +161,11 @@ proc LayoutFrameInfoBox {which} {
 	    LayoutFrameInfoBoxVertWCS $which
 	    LayoutFrameInfoBoxVertImage $which
 	}
+	alt {
+	    LayoutFrameInfoBoxAltValue $which
+	    LayoutFrameInfoBoxAltWCS $which
+	    LayoutFrameInfoBoxAltImage $which
+	}
     }
 }
 
@@ -323,6 +328,104 @@ proc LayoutFrameInfoBoxVertWCS {which} {
 }
 
 proc LayoutFrameInfoBoxVertImage {which} {
+    global ds9
+    global view
+
+    if {$which != {}} {
+	set type [$which get type]
+    } else {
+	set type base
+    }
+
+    switch -- $type {
+	base -
+	rgb {
+	    if {$which != {} && $view(info,image)} {
+		if {[$which has fits cube]} {
+		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
+			-column 0 -sticky e
+		    grid $ds9(info).imageZValue -row $ds9(info,row,image) \
+			-column 1 -padx 2
+		} else {
+		    grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
+		}
+	    } else {
+		grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
+	    }
+	}
+	3d {
+	    if {$view(info,image)} {
+		grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
+		    -column 0 -sticky e
+		grid $ds9(info).imageZValue -row $ds9(info,row,image) \
+		    -column 1 -padx 2
+	    } else {
+		grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
+	    }
+	}
+    }
+}
+
+proc LayoutFrameInfoBoxAltValue {which} {
+    global ds9
+
+    if {$which != {}} {
+	set type [$which get type]
+    } else {
+	set type base
+    }
+
+    switch -- $type {
+	base -
+	3d {
+	    grid forget $ds9(info).valueRTitle $ds9(info).valueR \
+		$ds9(info).valueGTitle $ds9(info).valueG \
+		$ds9(info).valueBTitle $ds9(info).valueB
+
+	    grid $ds9(info).value -row $ds9(info,row,value) \
+		-column 1 -padx 2 -sticky w
+	}
+	rgb {
+	    grid forget $ds9(info).value
+
+	    grid $ds9(info).valueRTitle -row $ds9(info,row,value,red) \
+		-column 0 -sticky w
+	    grid $ds9(info).valueR -row $ds9(info,row,value,red) \
+		-column 1 -padx 2 -sticky w
+	    grid $ds9(info).valueGTitle -row $ds9(info,row,value,green) \
+		-column 0 -sticky w
+	    grid $ds9(info).valueG -row $ds9(info,row,value,green) \
+		-column 1 -padx 2 -sticky w
+	    grid $ds9(info).valueBTitle -row $ds9(info,row,value,blue) \
+		-column 0 -sticky w
+	    grid $ds9(info).valueB -row $ds9(info,row,value,blue) \
+		-column 1 -padx 2 -sticky w
+	}
+    }
+}
+
+proc LayoutFrameInfoBoxAltWCS {which} {
+    global ds9
+    global view
+
+    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+	if {$which != {} && $view(info,wcs$ll)} {
+	    if {[$which has wcs 3d wcs$ll]} {
+		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
+		    -column 0
+		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
+		    -column 1 -padx 2
+		incr row
+	    } else {
+		grid forget $ds9(info).wcsZLabel$ll $ds9(info).wcsZValue$ll
+	    }
+	} else {
+	    grid forget $ds9(info).wcsZLabel$ll $ds9(info).wcsZValue$ll
+	}
+    }
+}
+
+proc LayoutFrameInfoBoxAltImage {which} {
     global ds9
     global view
 
@@ -596,8 +699,9 @@ proc LayoutInfoPanel {} {
 
     # layout
     switch $view(layout) {
-	vertical {LayoutInfoPanelVert}
 	horizontal {LayoutInfoPanelHorz}
+	vertical {LayoutInfoPanelVert}
+	alt {LayoutInfoPanelAlt}
     }
 }
 
@@ -869,6 +973,298 @@ proc LayoutInfoPanelHorz {} {
 }
 
 proc LayoutInfoPanelVert {} {
+    global ds9
+    global view
+    global current
+
+    set ww 13
+    set row 0
+
+    # filename
+    if {$view(info,filename)} {
+	$ds9(info).fileValue configure -width $ww
+
+	grid $ds9(info).fileTitle -row $row -column 1 -sticky w
+	incr row
+	grid $ds9(info).fileValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+    } else {
+	grid forget $ds9(info).fileTitle
+	grid forget $ds9(info).fileValue
+    }
+
+    # object
+    if {$view(info,object)} {
+	$ds9(info).objValue configure -width $ww
+
+	grid $ds9(info).objTitle -row $row -column 1 -sticky w
+	incr row
+	grid $ds9(info).objValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+    } else {
+	grid forget $ds9(info).objTitle
+	grid forget $ds9(info).objValue
+    }
+
+    # keyword
+    if {$view(info,keyword)} {
+	$ds9(info).keyWord configure -width $ww
+	$ds9(info).keyValue configure -width $ww
+
+	grid $ds9(info).keyWord -row $row -column 1 -sticky w
+	incr row
+	grid $ds9(info).keyValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+    } else {
+	grid forget $ds9(info).keyWord
+	grid forget $ds9(info).keyValue
+    }
+
+    # minmax
+    if {$view(info,minmax)} {
+	$ds9(info).minValue configure -width $ww
+	$ds9(info).minXValue configure -width $ww
+	$ds9(info).minYValue configure -width $ww
+
+	grid $ds9(info).minTitle -row $row -column 1 -sticky w
+	incr row
+	grid $ds9(info).minXLabel -row $row -column 0
+	grid $ds9(info).minXValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+	grid $ds9(info).minYLabel -row $row -column 0
+	grid $ds9(info).minYValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+	grid $ds9(info).minValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+
+	$ds9(info).maxXValue configure -width $ww
+	$ds9(info).maxValue configure -width $ww
+	$ds9(info).maxYValue configure -width $ww
+
+	grid $ds9(info).maxTitle -row $row -column 1 -sticky w
+	incr row
+	grid $ds9(info).maxXLabel -row $row -column 0
+	grid $ds9(info).maxXValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+	grid $ds9(info).maxYLabel -row $row -column 0
+	grid $ds9(info).maxYValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+	grid $ds9(info).maxValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+    } else {
+	grid forget $ds9(info).minTitle
+	grid forget $ds9(info).minValue
+	grid forget $ds9(info).minXLabel
+	grid forget $ds9(info).minXValue
+	grid forget $ds9(info).minYLabel
+	grid forget $ds9(info).minYValue
+
+	grid forget $ds9(info).maxTitle
+	grid forget $ds9(info).maxValue
+	grid forget $ds9(info).maxXLabel
+	grid forget $ds9(info).maxXValue
+	grid forget $ds9(info).maxYLabel
+	grid forget $ds9(info).maxYValue
+    }
+
+    # lowhigh
+    if {$view(info,lowhigh)} {
+	$ds9(info).lowValue configure -width $ww
+	$ds9(info).highValue configure -width $ww
+
+	grid $ds9(info).lowhighTitle -row $row -column 1 -sticky w
+	incr row
+	grid $ds9(info).lowValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+	grid $ds9(info).highValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+    } else {
+	grid forget $ds9(info).lowhighTitle
+	grid forget $ds9(info).lowValue
+	grid forget $ds9(info).highValue
+    }
+
+    # value
+    $ds9(info).value configure -width $ww
+    $ds9(info).valueR configure -width $ww
+    $ds9(info).valueG configure -width $ww
+    $ds9(info).valueB configure -width $ww
+
+    grid $ds9(info).valueTitle -row $row -column 1 -sticky w
+    incr row
+    set ds9(info,row,value) $row
+    set ds9(info,row,value,red) $row
+    incr row
+    set ds9(info,row,value,green) $row
+    incr row
+    set ds9(info,row,value,blue) $row
+    incr row
+    
+    # units
+    if {$view(info,bunit)} {
+	$ds9(info).bunitValue configure -width $ww
+
+	grid $ds9(info).bunitTitle -row $row -column 1 -sticky w
+	incr row
+	grid $ds9(info).bunitValue -row $row -column 1 -padx 2 -sticky w
+	incr row
+    } else {
+	grid forget $ds9(info).bunitTitle
+	grid forget $ds9(info).bunitValue
+    }
+
+    # wcs
+    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+	$ds9(info).wcsLabel$ll  configure -width $ww
+	$ds9(info).wcsXValue$ll configure -width $ww
+	$ds9(info).wcsYValue$ll configure -width $ww
+	$ds9(info).wcsZValue$ll configure -width $ww
+
+	if {$view(info,wcs$ll)} {
+	    grid $ds9(info).wcsLabel$ll  -row $row -column 1 -sticky ew
+	    incr row
+	    grid $ds9(info).wcsXLabel$ll -row $row -column 0
+	    grid $ds9(info).wcsXValue$ll -row $row -column 1 -padx 2
+	    incr row
+	    grid $ds9(info).wcsYLabel$ll -row $row -column 0
+	    grid $ds9(info).wcsYValue$ll -row $row -column 1 -padx 2
+	    incr row
+	    set ds9(info,row,wcs$ll) $row
+	    incr row
+	} else {
+	    grid forget $ds9(info).wcsLabel$ll
+	    grid forget $ds9(info).wcsXLabel$ll
+	    grid forget $ds9(info).wcsXValue$ll
+	    grid forget $ds9(info).wcsYLabel$ll
+	    grid forget $ds9(info).wcsYValue$ll
+	}
+    }
+
+    # detector
+    if {$view(info,detector)} {
+	$ds9(info).detectorXValue configure -width $ww
+	$ds9(info).detectorYValue configure -width $ww
+
+	grid $ds9(info).detectorTitle  -row $row -column 1 -sticky ew
+	incr row
+	grid $ds9(info).detectorXLabel -row $row -column 0
+	grid $ds9(info).detectorXValue -row $row -column 1 -padx 2
+	incr row
+	grid $ds9(info).detectorYLabel -row $row -column 0
+	grid $ds9(info).detectorYValue -row $row -column 1 -padx 2
+	incr row
+	set ds9(info,row,detector) $row
+	incr row
+    } else {
+	grid forget $ds9(info).detectorTitle
+	grid forget $ds9(info).detectorXLabel
+	grid forget $ds9(info).detectorXValue
+	grid forget $ds9(info).detectorYLabel
+	grid forget $ds9(info).detectorYValue
+    }
+
+    # amplifier
+    if {$view(info,amplifier)} {
+	$ds9(info).amplifierXValue configure -width $ww
+	$ds9(info).amplifierYValue configure -width $ww
+
+	grid $ds9(info).amplifierTitle  -row $row -column 1 -sticky ew
+	incr row
+	grid $ds9(info).amplifierXLabel -row $row -column 0
+	grid $ds9(info).amplifierXValue -row $row -column 1 -padx 2
+	incr row
+	grid $ds9(info).amplifierYLabel -row $row -column 0
+	grid $ds9(info).amplifierYValue -row $row -column 1 -padx 2
+	incr row
+	set ds9(info,row,amplifier) $row
+	incr row
+    } else {
+	grid forget $ds9(info).amplifierTitle
+	grid forget $ds9(info).amplifierXLabel
+	grid forget $ds9(info).amplifierXValue
+	grid forget $ds9(info).amplifierYLabel
+	grid forget $ds9(info).amplifierYValue
+    }
+
+    # physical
+    if {$view(info,physical)} {
+	$ds9(info).physicalXValue configure -width $ww
+	$ds9(info).physicalYValue configure -width $ww 
+
+	grid $ds9(info).physicalTitle  -row $row -column 1 -sticky ew
+	incr row
+	grid $ds9(info).physicalXLabel -row $row -column 0
+	grid $ds9(info).physicalXValue -row $row -column 1 -padx 2
+	incr row
+	grid $ds9(info).physicalYLabel -row $row -column 0
+	grid $ds9(info).physicalYValue -row $row -column 1 -padx 2
+	incr row
+	set ds9(info,row,physical) $row
+	incr row
+    } else {
+	grid forget $ds9(info).physicalTitle
+	grid forget $ds9(info).physicalXLabel
+	grid forget $ds9(info).physicalXValue
+	grid forget $ds9(info).physicalYLabel
+	grid forget $ds9(info).physicalYValue
+    }
+
+    # image
+    if {$view(info,image)} {
+	$ds9(info).imageXValue configure -width $ww 
+	$ds9(info).imageYValue configure -width $ww
+	$ds9(info).imageZValue configure -width $ww
+
+	grid $ds9(info).imageTitle  -row $row -column 1 -sticky ew
+	incr row
+	grid $ds9(info).imageXLabel -row $row -column 0
+	grid $ds9(info).imageXValue -row $row -column 1 -padx 2
+	incr row
+	grid $ds9(info).imageYLabel -row $row -column 0
+	grid $ds9(info).imageYValue -row $row -column 1 -padx 2
+	incr row
+	set ds9(info,row,image) $row
+	incr row
+    } else {
+	grid forget $ds9(info).imageTitle
+	grid forget $ds9(info).imageXLabel
+	grid forget $ds9(info).imageXValue
+	grid forget $ds9(info).imageYLabel
+	grid forget $ds9(info).imageYValue
+    }
+
+    LayoutFrameInfoBox $current(frame)
+
+    # frame, zoom, angle
+    if {$view(info,frame)} {
+	$ds9(info).zoomValue configure -width $ww
+	$ds9(info).angleValue configure -width $ww
+
+	grid $ds9(info).frame -row $row -column 1 -sticky ew
+	incr row
+	grid $ds9(info).zoomtitle -row $row -column 0
+	grid $ds9(info).zoomValue -row $row -column 1 -padx 2
+	incr row
+	grid $ds9(info).angleTitle -row $row -column 0
+	grid $ds9(info).angleValue -row $row -column 1 -padx 2
+	incr row
+    } else {
+	grid forget $ds9(info).frame
+	grid forget $ds9(info).zoomtitle
+	grid forget $ds9(info).zoomValue
+	grid forget $ds9(info).angleTitle
+	grid forget $ds9(info).angleValue
+    }
+
+    # dummy
+    global ds9
+    set ds9(row) $row
+
+    grid $ds9(info).dummy -row $row -column 1
+    grid rowconfigure $ds9(info) $row -weight 1
+}
+
+proc LayoutInfoPanelAlt {} {
     global ds9
     global view
     global current

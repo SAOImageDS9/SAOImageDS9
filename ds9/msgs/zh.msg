@@ -1,4 +1,3 @@
-# ::msgcat::mcset zh {Percentage} 
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D View} 
 ::msgcat::mcset zh {3D} 
@@ -17,6 +16,7 @@
 ::msgcat::mcset zh {All Columns} 
 ::msgcat::mcset zh {All Rows} 
 ::msgcat::mcset zh {All} 
+::msgcat::mcset zh {Alternative Layout} 
 ::msgcat::mcset zh {Always save files during Backup} 
 ::msgcat::mcset zh {Amplifier} 
 ::msgcat::mcset zh {An error has occurred during backup} 
@@ -309,8 +309,12 @@
 ::msgcat::mcset zh {FK5} 
 ::msgcat::mcset zh {FP} 
 ::msgcat::mcset zh {Factor} 
+::msgcat::mcset zh {Fade Frames} 
+::msgcat::mcset zh {Fade Interval} 
+::msgcat::mcset zh {Fade} 
 ::msgcat::mcset zh {File not Found or Unable to load FITS data MIME type} 
 ::msgcat::mcset zh {File not found} 
+::msgcat::mcset zh {Filename Format} 
 ::msgcat::mcset zh {Filename} [encoding convertfrom big5 "\xC0\xC9 \xAE\xD7 \xA6\x57 \xBA\xD9"]
 ::msgcat::mcset zh {File} [encoding convertfrom big5 "\xC0\xC9 \xAE\xD7"]
 ::msgcat::mcset zh {Fill} 
@@ -402,6 +406,7 @@
 ::msgcat::mcset zh {Import} 
 ::msgcat::mcset zh {Include} 
 ::msgcat::mcset zh {Increase} 
+::msgcat::mcset zh {Info Box} 
 ::msgcat::mcset zh {Information Panel} [encoding convertfrom big5 "\xB8\xEA \xB0\x54 \xA6\x43"]
 ::msgcat::mcset zh {Information} [encoding convertfrom big5 "\xB8\xEA \xB0\x54"]
 ::msgcat::mcset zh {Initialize XPA} 
@@ -432,6 +437,7 @@
 ::msgcat::mcset zh {Last Block} 
 ::msgcat::mcset zh {Last Frame} [encoding convertfrom big5 "\xB3\xCC \xA9\xB3 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Last} 
+::msgcat::mcset zh {Layout Alt} 
 ::msgcat::mcset zh {Layout Horz} 
 ::msgcat::mcset zh {Layout Vert} 
 ::msgcat::mcset zh {Layout} 
@@ -543,6 +549,7 @@
 ::msgcat::mcset zh {Max Rows} 
 ::msgcat::mcset zh {Maximum} 
 ::msgcat::mcset zh {Max} 
+::msgcat::mcset zh {Median} 
 ::msgcat::mcset zh {Menus and Buttons} 
 ::msgcat::mcset zh {Menu} 
 ::msgcat::mcset zh {Message Log} 
@@ -788,6 +795,7 @@
 ::msgcat::mcset zh {Screen} 
 ::msgcat::mcset zh {Search for Catalogs} 
 ::msgcat::mcset zh {Seconds} 
+::msgcat::mcset zh {Second} 
 ::msgcat::mcset zh {Segment} 
 ::msgcat::mcset zh {Select All} [encoding convertfrom big5 "\xBF\xEF \xA8\xFA \xA5\xFE \xB3\xA1"]
 ::msgcat::mcset zh {Select Coordinate System } 
@@ -872,6 +880,7 @@
 ::msgcat::mcset zh {Topographic} 
 ::msgcat::mcset zh {Top} 
 ::msgcat::mcset zh {To} 
+::msgcat::mcset zh {Transition} 
 ::msgcat::mcset zh {Transparency} 
 ::msgcat::mcset zh {Triangle} 
 ::msgcat::mcset zh {Type} 
@@ -968,7 +977,8 @@
 ::msgcat::mcset zh {already connected} 
 ::msgcat::mcset zh {and} 
 ::msgcat::mcset zh {b} 
-::msgcat::mcset zh {graph} 
+::msgcat::mcset zh {full base} 
+::msgcat::mcset zh {full} 
 ::msgcat::mcset zh {g} 
 ::msgcat::mcset zh {h5utils} 
 ::msgcat::mcset zh {hundredths second} 
@@ -977,6 +987,8 @@
 ::msgcat::mcset zh {not} 
 ::msgcat::mcset zh {only} 
 ::msgcat::mcset zh {or center of data} 
+::msgcat::mcset zh {root base} 
+::msgcat::mcset zh {root} 
 ::msgcat::mcset zh {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset zh {r} 
 ::msgcat::mcset zh {unable to locate HUB} 

@@ -1,4 +1,3 @@
-# ::msgcat::mcset ja {Percentage} 
 ::msgcat::mcset ja {2D} 
 ::msgcat::mcset ja {3D View} 
 ::msgcat::mcset ja {3D} [encoding convertfrom euc-jp "\x33\xbc\xa1\xb8\xb5"]
@@ -17,6 +16,7 @@
 ::msgcat::mcset ja {All Columns} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xce\xf3"]
 ::msgcat::mcset ja {All Rows} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xb9\xd4"]
 ::msgcat::mcset ja {All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6"]
+::msgcat::mcset ja {Alternative Layout} 
 ::msgcat::mcset ja {Always save files during Backup} 
 ::msgcat::mcset ja {Amplifier} [encoding convertfrom euc-jp "\xc1\xfd\xc9\xfd\xb4\xef\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {An error has occurred during backup} 
@@ -309,8 +309,12 @@
 ::msgcat::mcset ja {FK5} 
 ::msgcat::mcset ja {FP} 
 ::msgcat::mcset ja {Factor} 
+::msgcat::mcset ja {Fade Frames} 
+::msgcat::mcset ja {Fade Interval} 
+::msgcat::mcset ja {Fade} 
 ::msgcat::mcset ja {File not Found or Unable to load FITS data MIME type} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xac\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3\xa4\xde\xa4\xbf\xa4\xcf\xa1\xa2\x46\x49\x54\x53\x20\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xac\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {File not found} 
+::msgcat::mcset ja {Filename Format} 
 ::msgcat::mcset ja {Filename} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xcc\xbe"]
 ::msgcat::mcset ja {File} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb"]
 ::msgcat::mcset ja {Fill} 
@@ -402,6 +406,7 @@
 ::msgcat::mcset ja {Import} 
 ::msgcat::mcset ja {Include} [encoding convertfrom euc-jp "\xc6\xe2\xc2\xa6"]
 ::msgcat::mcset ja {Increase} [encoding convertfrom euc-jp "\xbe\xba\xbd\xe7"]
+::msgcat::mcset ja {Info Box} 
 ::msgcat::mcset ja {Information Panel} [encoding convertfrom euc-jp "\xbe\xf0\xca\xf3\xa5\xd1\xa5\xcd\xa5\xeb"]
 ::msgcat::mcset ja {Information} [encoding convertfrom euc-jp "\xbe\xf0\xca\xf3"]
 ::msgcat::mcset ja {Initialize XPA} [encoding convertfrom euc-jp "\x58\x50\x41\x20\xa4\xf2\xbd\xe9\xb4\xfc\xb2\xbd"]
@@ -432,6 +437,7 @@
 ::msgcat::mcset ja {Last Block} 
 ::msgcat::mcset ja {Last Frame} [encoding convertfrom euc-jp "\xba\xc7\xb8\xe5\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {Last} [encoding convertfrom euc-jp "\xba\xc7\xb8\xe5"]
+::msgcat::mcset ja {Layout Alt} 
 ::msgcat::mcset ja {Layout Horz} [encoding convertfrom euc-jp "\xb2\xa3\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Layout Vert} [encoding convertfrom euc-jp "\xbd\xc4\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Layout} 
@@ -543,6 +549,7 @@
 ::msgcat::mcset ja {Max Rows} [encoding convertfrom euc-jp "\xba\xc7\xc2\xe7\xb9\xd4\xbf\xf4"]
 ::msgcat::mcset ja {Maximum} 
 ::msgcat::mcset ja {Max} [encoding convertfrom euc-jp "\xba\xc7\xc2\xe7"]
+::msgcat::mcset ja {Median} 
 ::msgcat::mcset ja {Menus and Buttons} 
 ::msgcat::mcset ja {Menu} [encoding convertfrom euc-jp "\xa5\xe1\xa5\xcb\xa5\xe5\xa1\xbc"]
 ::msgcat::mcset ja {Message Log} [encoding convertfrom euc-jp "\xa5\xe1\xa5\xc3\xa5\xbb\xa1\xbc\xa5\xb8\xa4\xce\xb5\xad\xcf\xbf"]
@@ -788,6 +795,7 @@
 ::msgcat::mcset ja {Screen} 
 ::msgcat::mcset ja {Search for Catalogs} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xf2\xb8\xa1\xba\xf7"]
 ::msgcat::mcset ja {Seconds} [encoding convertfrom euc-jp "\xc9\xc3"]
+::msgcat::mcset ja {Second} 
 ::msgcat::mcset ja {Segment} 
 ::msgcat::mcset ja {Select All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xc1\xaa\xc2\xf2"]
 ::msgcat::mcset ja {Select Coordinate System } [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xb7\xcf\xa4\xf2\xc1\xaa\xc2\xf2"]
@@ -872,6 +880,7 @@
 ::msgcat::mcset ja {Topographic} 
 ::msgcat::mcset ja {Top} 
 ::msgcat::mcset ja {To} 
+::msgcat::mcset ja {Transition} 
 ::msgcat::mcset ja {Transparency} [encoding convertfrom euc-jp "\xc6\xa9\xcc\xc0"]
 ::msgcat::mcset ja {Triangle} 
 ::msgcat::mcset ja {Type} [encoding convertfrom euc-jp "\xbc\xef\xce\xe0"]
@@ -968,7 +977,8 @@
 ::msgcat::mcset ja {already connected} 
 ::msgcat::mcset ja {and} 
 ::msgcat::mcset ja {b} 
-::msgcat::mcset ja {graph} 
+::msgcat::mcset ja {full base} 
+::msgcat::mcset ja {full} 
 ::msgcat::mcset ja {g} 
 ::msgcat::mcset ja {h5utils} 
 ::msgcat::mcset ja {hundredths second} 
@@ -977,6 +987,8 @@
 ::msgcat::mcset ja {not} 
 ::msgcat::mcset ja {only} 
 ::msgcat::mcset ja {or center of data} [encoding convertfrom euc-jp "\xa4\xe2\xa4\xb7\xa4\xaf\xa4\xcf\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xce\xc3\xe6\xbf\xb4"]
+::msgcat::mcset ja {root base} 
+::msgcat::mcset ja {root} 
 ::msgcat::mcset ja {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom euc-jp "\xb9\xd4\xa4\xce\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xac\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb5\xa4\xec\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3\xa4\xb5\xa4\xe9\xa4\xcb\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb9\xa4\xeb\xbe\xec\xb9\xe7\xa4\xcf\xa1\xa2\xba\xc7\xc2\xe7\xb9\xd4\xbf\xf4\xa4\xf2\xc0\xdf\xc4\xea\xa4\xb7\xa4\xca\xa4\xaa\xa4\xb7\xa4\xc6\xa4\xaf\xa4\xc0\xa4\xb5\xa4\xa4\xa1\xa3"]
 ::msgcat::mcset ja {r} 
 ::msgcat::mcset ja {unable to locate HUB} 

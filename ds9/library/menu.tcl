@@ -729,7 +729,9 @@ proc IconMenuButtonCmd {mb icon varname id value cmd} {
     
     $mb configure -image $icon
     set ${varname}($id) $value
-    eval $cmd
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 # Prefs

@@ -5,18 +5,35 @@
 package provide DS9 1.0
 
 proc CreateIcons {} {
+    CreateIconsLeft
+    CreateIconsTop
+    CreateIconsBottom
+}
+
+proc CreateIconsTop {} {
     global ds9
-    global icons
-    
-    # top
+
     set ds9(icons,top) [ttk::frame $ds9(main).iconstop]
     set ds9(icons,top,sep) \
 	[ttk::separator $ds9(main).iconstopsep -orient horizontal]
+}
 
-    # left
+proc CreateIconsLeft {} {
+    global ds9
+    
     set ds9(icons,left) [ttk::frame $ds9(main).iconsleft]
     set ds9(icons,left,sep) \
 	[ttk::separator $ds9(main).iconsleftsep -orient vertical]
+
+    CreateIconsLeftEdit
+    CreateIconsLeftShape
+}
+
+proc CreateIconsLeftEdit {} {
+    global ds9
+    global icons
+    
+    set mb $ds9(icons,left).edit
 
     set icons(edit,none) \
 	[image create photo -file "$ds9(root)/icons/ui/edit_none.png"]
@@ -43,10 +60,8 @@ proc CreateIcons {} {
     set icons(edit,3d) \
 	[image create photo -file "$ds9(root)/icons/ui/edit_3d.png" ]
 
-    set mb $ds9(icons,left).edit
-
-    ttk::menubutton $mb -menu $mb.m -text "Edit Mode" \
-	-direction right -image $icons(edit,none) -takefocus 0
+    ttk::menubutton $mb -menu $mb.m -direction right -takefocus 0 \
+	-image $icons(edit,none)
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
@@ -63,11 +78,48 @@ proc CreateIcons {} {
     IconMenuButtonItem $mb $icons(edit,examine) current mode examine ChangeMode
     IconMenuButtonItem $mb $icons(edit,3d) current mode 3d ChangeMode
 
-    pack $ds9(icons,left).edit -side top -fill x
+    pack $mb -side top -fill x
+}
 
-    # bottom
+proc CreateIconsLeftShape {} {
+    global ds9
+    global icons
+    
+    set mb $ds9(icons,left).shape
+
+    set icons(shape,circle) \
+	[image create photo -file "$ds9(root)/icons/ui/circle.png"]
+    set icons(shape,annulus) \
+	[image create photo -file "$ds9(root)/icons/ui/annulus.png"]
+    set icons(shape,ellipse) \
+	[image create photo -file "$ds9(root)/icons/ui/ellipse.png"]
+    set icons(shape,box) \
+	[image create photo -file "$ds9(root)/icons/ui/box.png"]
+    set icons(shape,polygon) \
+	[image create photo -file "$ds9(root)/icons/ui/poly.png"]
+    set icons(shape,text) \
+	[image create photo -file "$ds9(root)/icons/ui/text.png"]
+
+    ttk::menubutton $mb -menu $mb.m -direction right \
+	-image $icons(shape,circle) -takefocus 0
+
+    ThemeMenu $mb.m
+    $mb.m configure -tearoff 0
+    IconMenuButtonItem $mb $icons(shape,circle) marker shape circle {}
+    IconMenuButtonItem $mb $icons(shape,annulus) marker shape annulus {}
+    IconMenuButtonItem $mb $icons(shape,ellipse) marker shape ellipse {}
+    IconMenuButtonItem $mb $icons(shape,box) marker shape box {}
+    IconMenuButtonItem $mb $icons(shape,polygon) marker shape polygon {}
+    IconMenuButtonItem $mb $icons(shape,text) marker shape text {}
+
+    pack $mb -side top -fill x
+}
+
+proc CreateIconsBottom {} {
+    global ds9
+    
     set ds9(icons,bottom) [ttk::frame $ds9(main).iconsbottom]
     set ds9(icons,bottom,sep) \
 	[ttk::separator $ds9(main).iconsbottomsep -orient horizontal]
-
 }
+

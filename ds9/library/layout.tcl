@@ -321,6 +321,8 @@ proc LayoutViewHorz {} {
     # reset weights
     grid rowconfigure $ds9(main) 0 -weight 0
     grid columnconfigure $ds9(main) 0 -weight 0
+    grid rowconfigure $ds9(main) 2 -weight 0
+    grid columnconfigure $ds9(main) 2 -weight 0
     grid rowconfigure $ds9(main) 4 -weight 0
     grid columnconfigure $ds9(main) 4 -weight 0
 
@@ -328,11 +330,17 @@ proc LayoutViewHorz {} {
     grid rowconfigure $ds9(main) 4 -weight 1
     grid columnconfigure $ds9(main) 0 -weight 1
 
+    grid forget $ds9(image)
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
     grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
-    grid forget $ds9(image)
+    grid forget $ds9(icons,top)
+    grid forget $ds9(icons,top,sep)
+    grid forget $ds9(icons,left)
+    grid forget $ds9(icons,left,sep)
+    grid forget $ds9(icons,bottom)
+    grid forget $ds9(icons,bottom,sep)
 
     pack forget $ds9(info)
     pack forget $ds9(magnifier)
@@ -340,9 +348,9 @@ proc LayoutViewHorz {} {
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
-	grid $ds9(panel) -row 0 -column 0 -sticky ew -columnspan 3
+	grid $ds9(panel) -row 0 -column 0 -sticky ew
 	$ds9(panel,sep) configure -orient horizontal
-	grid $ds9(panel,sep) -row 1 -column 0 -sticky ew -columnspan 3
+	grid $ds9(panel,sep) -row 1 -column 0 -sticky ew
     }
 
     if {$view(info)} {
@@ -380,6 +388,8 @@ proc LayoutViewVert {} {
     # reset weights
     grid rowconfigure $ds9(main) 0 -weight 0
     grid columnconfigure $ds9(main) 0 -weight 0
+    grid rowconfigure $ds9(main) 2 -weight 0
+    grid columnconfigure $ds9(main) 2 -weight 0
     grid rowconfigure $ds9(main) 4 -weight 0
     grid columnconfigure $ds9(main) 4 -weight 0
 
@@ -387,11 +397,17 @@ proc LayoutViewVert {} {
     grid rowconfigure $ds9(main) 0 -weight 1
     grid columnconfigure $ds9(main) 4 -weight 1
 
+    grid forget $ds9(image)
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
     grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
-    grid forget $ds9(image)
+    grid forget $ds9(icons,top)
+    grid forget $ds9(icons,top,sep)
+    grid forget $ds9(icons,left)
+    grid forget $ds9(icons,left,sep)
+    grid forget $ds9(icons,bottom)
+    grid forget $ds9(icons,bottom,sep)
     
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
@@ -438,18 +454,26 @@ proc LayoutViewAlt {} {
     # reset weights
     grid rowconfigure $ds9(main) 0 -weight 0
     grid columnconfigure $ds9(main) 0 -weight 0
+    grid rowconfigure $ds9(main) 2 -weight 0
+    grid columnconfigure $ds9(main) 2 -weight 0
     grid rowconfigure $ds9(main) 4 -weight 0
     grid columnconfigure $ds9(main) 4 -weight 0
 
     # ds9(main) weight
-    grid rowconfigure $ds9(main) 0 -weight 1
-    grid columnconfigure $ds9(main) 0 -weight 1
+    grid rowconfigure $ds9(main) 2 -weight 1
+    grid columnconfigure $ds9(main) 2 -weight 1
 
+    grid forget $ds9(image)
     grid forget $ds9(panel)
     grid forget $ds9(panel,sep)
     grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
-    grid forget $ds9(image)
+    grid forget $ds9(icons,top)
+    grid forget $ds9(icons,top,sep)
+    grid forget $ds9(icons,left)
+    grid forget $ds9(icons,left,sep)
+    grid forget $ds9(icons,bottom)
+    grid forget $ds9(icons,bottom,sep)
     
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
@@ -458,8 +482,8 @@ proc LayoutViewAlt {} {
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
 	$ds9(panel,sep) configure -orient vertical
-	grid $ds9(panel,sep) -row 0 -column 1 -sticky ns
-	grid $ds9(panel) -row 0 -column 2 -sticky ns
+	grid $ds9(panel,sep) -row 2 -column 3 -sticky ns
+	grid $ds9(panel) -row 2 -column 4 -sticky ns
     }
 
     if {$view(magnifier)} {
@@ -480,12 +504,18 @@ proc LayoutViewAlt {} {
     # buttons
     if {$view(buttons)} {
 	$ds9(buttons,sep) configure -orient vertical
-	grid $ds9(buttons,sep) -row 0 -column 3 -sticky ns
-	grid $ds9(buttons,frame) -row 0 -column 4 -sticky ns
+	grid $ds9(buttons,sep) -row 2 -column 5 -sticky ns
+	grid $ds9(buttons,frame) -row 2 -column 6 -sticky ns
     }
 
     # image
-    grid $ds9(image) -row 0 -column 0 -sticky news
+    grid $ds9(image) -row 2 -column 2 -sticky news
+
+    # icons
+    grid $ds9(icons,top) -row 0 -column 0 -sticky ew -columnspan 7
+    grid $ds9(icons,top,sep) -row 1 -column 0 -sticky ew -columnspan 7
+    grid $ds9(icons,left) -row 2 -column 0 -sticky ew
+    grid $ds9(icons,left,sep) -row 2 -column 1 -sticky ns
 }
 
 proc LayoutFrames {} {

@@ -421,8 +421,8 @@ proc PrefsDialogRegion {} {
     grid $f.ititle $f.iteration $f.rtitle $f.radius -padx 2 -pady 2 -sticky w
     # Plots
     set f [ttk::labelframe $w.region.plot -text [msgcat::mc {Auto Plot}]]
-    ttk::checkbutton $f.2d -text [msgcat::mc {2D}] -variable pmarker(plot2d)
-    ttk::checkbutton $f.3d -text [msgcat::mc {3D}] -variable pmarker(plot3d)
+    ttk::checkbutton $f.2d -text [msgcat::mc {2d}] -variable pmarker(plot2d)
+    ttk::checkbutton $f.3d -text [msgcat::mc {3d}] -variable pmarker(plot3d)
     ttk::checkbutton $f.stats -text [msgcat::mc {Statistics}] \
 	-variable pmarker(stats)
 

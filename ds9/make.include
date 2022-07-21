@@ -44,6 +44,9 @@ $(LIBDIR)/cmaps : $(prefix)/ds9/cmaps
 $(LIBDIR)/template : $(prefix)/ds9/template
 	cp -prf $? "$@"
 
+$(LIBDIR)/icons : $(prefix)/ds9/icons
+	cp -prf $? "$@"
+
 #--------------------------tls
 
 $(LIBDIR)/tls	: $(prefix)/tls/tls.tcl

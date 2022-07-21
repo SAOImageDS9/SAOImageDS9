@@ -64,7 +64,7 @@ proc FrameMainMenu {} {
 	-command CubeDialog
     $ds9(mb).frame add command -label "[msgcat::mc {RGB}]..." \
 	-command RGBDialog
-    $ds9(mb).frame add command -label "[msgcat::mc {3D}]..." \
+    $ds9(mb).frame add command -label "[msgcat::mc {3d}]..." \
 	-command 3DDialog
     $ds9(mb).frame add separator
     $ds9(mb).frame add cascade -label [msgcat::mc {Frame Parameters}] \
@@ -94,7 +94,7 @@ proc FrameMainMenu {} {
 	-command MatchBlockCurrent
     $ds9(mb).frame.match add command -label [msgcat::mc {Smooth}] \
 	-command MatchSmoothCurrent
-    $ds9(mb).frame.match add command -label [msgcat::mc {3D View}] \
+    $ds9(mb).frame.match add command -label [msgcat::mc {3d}] \
 	-command Match3DCurrent
 
     ThemeMenu $ds9(mb).frame.match.frame
@@ -167,7 +167,7 @@ proc FrameMainMenu {} {
 	-variable block(lock) -command {LockBlockCurrent}
     $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {Smooth}] \
 	-variable smooth(lock) -command {LockSmoothCurrent}
-    $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {3D View}] \
+    $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {3d}] \
 	-variable threed(lock) -command {Lock3DCurrent}
 
     ThemeMenu $ds9(mb).frame.lock.frame
@@ -495,7 +495,7 @@ proc CreateButtonsFrame {} {
     ButtonButton $ds9(buttons).frame.newrgb \
 	[string tolower [msgcat::mc {RGB}]] CreateRGBFrame
     ButtonButton $ds9(buttons).frame.new3d \
-	[string tolower [msgcat::mc {3D}]] Create3DFrame
+	[string tolower [msgcat::mc {3d}]] Create3DFrame
 
     ButtonButton $ds9(buttons).frame.delete \
 	[string tolower [msgcat::mc {Delete}]] DeleteCurrentFrame
@@ -697,7 +697,7 @@ proc CreateButtonsFrame {} {
     ButtonButton $ds9(buttons).frame.rgb \
 	[string tolower "[msgcat::mc {RGB}]..."] RGBDialog
     ButtonButton $ds9(buttons).frame.3d \
-	[string tolower "[msgcat::mc {3D}]..."] 3DDialog
+	[string tolower "[msgcat::mc {3d}]..."] 3DDialog
 
     ButtonButton $ds9(buttons).frame.size \
 	[string tolower [msgcat::mc {Size}]] DisplayDefaultDialog
@@ -846,7 +846,7 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,cube) -command {UpdateButtons buttons(frame)}
     $m add checkbutton -label "[msgcat::mc {RGB}]..." \
 	-variable pbuttons(frame,rgb) -command {UpdateButtons buttons(frame)}
-    $m add checkbutton -label "[msgcat::mc {3D}]..." \
+    $m add checkbutton -label "[msgcat::mc {3d}]..." \
 	-variable pbuttons(frame,3d) -command {UpdateButtons buttons(frame)}
     $m add separator
     $m add cascade -label [msgcat::mc {Frame Parameters}] -menu $m.params
@@ -1187,7 +1187,7 @@ proc UpdateFrameMenu {} {
 	    base {
 		$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
 		    -state disabled
-		$ds9(mb).frame entryconfig "[msgcat::mc {3D}]..." \
+		$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..." \
 		    -state normal
 		$ds9(buttons).frame.rgb configure -state disabled
 		$ds9(buttons).frame.3d configure -state normal
@@ -1195,7 +1195,7 @@ proc UpdateFrameMenu {} {
 	    rgb {
 		$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
 		    -state normal
-		$ds9(mb).frame entryconfig "[msgcat::mc {3D}]..." \
+		$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..." \
 		    -state disabled
 		$ds9(buttons).frame.rgb configure -state normal
 		$ds9(buttons).frame.3d configure -state disabled
@@ -1203,7 +1203,7 @@ proc UpdateFrameMenu {} {
 	    3d {
 		$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
 		    -state disabled
-		$ds9(mb).frame entryconfig "[msgcat::mc {3D}]..."  \
+		$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..."  \
 		    -state normal
 		$ds9(buttons).frame.rgb configure -state disabled
 		$ds9(buttons).frame.3d configure -state normal
@@ -1214,7 +1214,7 @@ proc UpdateFrameMenu {} {
 	    -state disabled
 	$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
 	    -state disabled
-	$ds9(mb).frame entryconfig "[msgcat::mc {3D}]..." \
+	$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..." \
 	    -state disabled
 	$ds9(buttons).frame.cube configure -state disabled
 	$ds9(buttons).frame.rgb configure -state disabled

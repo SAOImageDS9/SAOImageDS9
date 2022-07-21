@@ -715,6 +715,23 @@ proc WidthDashMenuButton {w varname width dash cmd1 cmd2} {
     WidthDashMenu $w.menu $varname $width $dash $cmd1 $cmd2
 }
 
+# icons
+
+proc IconMenuButtonItem {mb icon varname id value cmd} {
+    $mb.m add command -label [msgcat::mc [string totitle $value]] \
+	-compound left -image $icon \
+	-command [list IconMenuButtonCmd $mb $icon $varname $id $value $cmd]
+}
+
+proc IconMenuButtonCmd {mb icon varname id value cmd} {
+    upvar #0 $varname var
+    global $varname
+    
+    $mb configure -image $icon
+    set ${varname}($id) $value
+    eval $cmd
+}
+
 # Prefs
 proc PrefsDialogMenu {} {
     global dprefs

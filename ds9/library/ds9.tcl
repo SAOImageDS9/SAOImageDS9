@@ -55,14 +55,6 @@ proc DS9Def {} {
 	    set ds9(times) times
 	}
     }
-    set ds9(main) {}
-    set ds9(image) {}
-    set ds9(canvas) {}
-    set ds9(panel) {}
-    set ds9(info) {}
-    set ds9(panner) {}
-    set ds9(magnifier) {}
-    set ds9(buttons) {}
 
     set ds9(frames) {}
     set ds9(seq) 1
@@ -560,10 +552,11 @@ CreateColorbar
 
 # Create other parts of the display
 CreateMenuBar
-CreateInfoPanel
+CreatePanel
 CreatePanner
 CreateMagnifier
 CreateButtons
+CreateIcons
 
 # Create default Graphs
 GraphsCreate graph

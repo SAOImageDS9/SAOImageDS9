@@ -1,6 +1,5 @@
-::msgcat::mcset pt {2D} 
-::msgcat::mcset pt {3D View} 
-::msgcat::mcset pt {3D} 
+::msgcat::mcset pt {2d} 
+::msgcat::mcset pt {3d} 
 ::msgcat::mcset pt {A postscript generation error has occurred} {Um erro ocorreu ao gerar o postscript}
 ::msgcat::mcset pt {AIP} 
 ::msgcat::mcset pt {Abort} 

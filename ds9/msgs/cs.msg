@@ -1,6 +1,5 @@
-::msgcat::mcset cs {2D} 
-::msgcat::mcset cs {3D View} 
-::msgcat::mcset cs {3D} 
+::msgcat::mcset cs {2d} 
+::msgcat::mcset cs {3d} 
 ::msgcat::mcset cs {A postscript generation error has occurred} [encoding convertfrom iso8859-2 {Chyba pøi generování postscriptu}]
 ::msgcat::mcset cs {AIP} 
 ::msgcat::mcset cs {Abort} [encoding convertfrom iso8859-2 {Pøeru¹it}]

@@ -132,6 +132,7 @@ PREQS	= \
 	$(LIBDIR)/doc \
 	$(LIBDIR)/cmaps \
 	$(LIBDIR)/template \
+	$(LIBDIR)/icons \
 	$(LIBDIR)/tls \
 	$(LIBDIR)/tkblt \
 	$(LIBDIR)/tkcon \

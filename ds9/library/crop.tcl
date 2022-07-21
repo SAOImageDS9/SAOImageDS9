@@ -130,7 +130,7 @@ proc CropDialog {} {
     set dcrop(db) $f.size 
     DistMenuButton $dcrop(db) crop dcoord 1 dformat UpdateCropDialog
 
-    ttk::label $f.rtitle -text [msgcat::mc {3D}]
+    ttk::label $f.rtitle -text [msgcat::mc {3d}]
     ttk::entry $f.from -textvariable dcrop(zmin) -width 14
     ttk::entry $f.to -textvariable dcrop(zmax) -width 14
     set dcrop(rb) $f.range

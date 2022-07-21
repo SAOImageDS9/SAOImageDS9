@@ -47,7 +47,7 @@ proc 3DDialog {} {
     set w $ithreed(top)
     set mb $ithreed(mb)
 
-    Toplevel $w $mb 6 [msgcat::mc {3D}] 3DDestroyDialog
+    Toplevel $w $mb 6 [msgcat::mc {3d}] 3DDestroyDialog
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {Render}] -menu $mb.render
@@ -443,7 +443,7 @@ proc PrefsDialog3d {} {
     set w $dprefs(tab)
 
     $dprefs(listbox) insert {} end -id [ttk::frame $w.threed] \
-	-text [msgcat::mc {3D}]
+	-text [msgcat::mc {3d}]
 
     set f [ttk::labelframe $w.threed.misc -text [msgcat::mc {Render}]]
     ttk::label $f.tmethod -text [msgcat::mc {Method}]

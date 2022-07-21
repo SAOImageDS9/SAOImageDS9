@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc CreateInfoPanel {} {
+proc CreatePanel {} {
     global ds9
     global pds9
     global view

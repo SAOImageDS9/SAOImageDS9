@@ -1,6 +1,5 @@
-::msgcat::mcset ja {2D} 
-::msgcat::mcset ja {3D View} 
-::msgcat::mcset ja {3D} [encoding convertfrom euc-jp "\x33\xbc\xa1\xb8\xb5"]
+::msgcat::mcset ja {2d} 
+::msgcat::mcset ja {3d} 
 ::msgcat::mcset ja {A postscript generation error has occurred} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xba\xee\xc0\xae\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {AIP} 
 ::msgcat::mcset ja {Abort} 

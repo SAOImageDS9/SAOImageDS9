@@ -1,6 +1,5 @@
-::msgcat::mcset zh {2D} 
-::msgcat::mcset zh {3D View} 
-::msgcat::mcset zh {3D} 
+::msgcat::mcset zh {2d} 
+::msgcat::mcset zh {3d} 
 ::msgcat::mcset zh {A postscript generation error has occurred} 
 ::msgcat::mcset zh {AIP} 
 ::msgcat::mcset zh {Abort} 

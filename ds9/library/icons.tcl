@@ -26,7 +26,8 @@ proc CreateIconsLeft {} {
 	[ttk::separator $ds9(main).iconsleftsep -orient vertical]
 
     CreateIconsLeftEdit
-    CreateIconsLeftShape
+    CreateIconsLeftMarkerShape
+    CreateIconsLeftMarkerLineWidth
 }
 
 proc CreateIconsLeftEdit {} {
@@ -81,36 +82,64 @@ proc CreateIconsLeftEdit {} {
     pack $mb -side top -fill x
 }
 
-proc CreateIconsLeftShape {} {
+proc CreateIconsLeftMarkerShape {} {
     global ds9
     global icons
     
-    set mb $ds9(icons,left).shape
+    set mb $ds9(icons,left).markershape
 
-    set icons(shape,circle) \
+    set icons(marker,shape,circle) \
 	[image create photo -file "$ds9(root)/icons/ui/circle.png"]
-    set icons(shape,annulus) \
+    set icons(marker,shape,annulus) \
 	[image create photo -file "$ds9(root)/icons/ui/annulus.png"]
-    set icons(shape,ellipse) \
+    set icons(marker,shape,ellipse) \
 	[image create photo -file "$ds9(root)/icons/ui/ellipse.png"]
-    set icons(shape,box) \
+    set icons(marker,shape,box) \
 	[image create photo -file "$ds9(root)/icons/ui/box.png"]
-    set icons(shape,polygon) \
+    set icons(marker,shape,polygon) \
 	[image create photo -file "$ds9(root)/icons/ui/poly.png"]
-    set icons(shape,text) \
+    set icons(marker,shape,text) \
 	[image create photo -file "$ds9(root)/icons/ui/text.png"]
 
     ttk::menubutton $mb -menu $mb.m -direction right \
-	-image $icons(shape,circle) -takefocus 0
+	-image $icons(marker,shape,circle) -takefocus 0
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
-    IconMenuButtonItem $mb $icons(shape,circle) marker shape circle {}
-    IconMenuButtonItem $mb $icons(shape,annulus) marker shape annulus {}
-    IconMenuButtonItem $mb $icons(shape,ellipse) marker shape ellipse {}
-    IconMenuButtonItem $mb $icons(shape,box) marker shape box {}
-    IconMenuButtonItem $mb $icons(shape,polygon) marker shape polygon {}
-    IconMenuButtonItem $mb $icons(shape,text) marker shape text {}
+    IconMenuButtonItem $mb $icons(marker,shape,circle) marker shape circle {}
+    IconMenuButtonItem $mb $icons(marker,shape,annulus) marker shape annulus {}
+    IconMenuButtonItem $mb $icons(marker,shape,ellipse) marker shape ellipse {}
+    IconMenuButtonItem $mb $icons(marker,shape,box) marker shape box {}
+    IconMenuButtonItem $mb $icons(marker,shape,polygon) marker shape polygon {}
+    IconMenuButtonItem $mb $icons(marker,shape,text) marker shape text {}
+
+    pack $mb -side top -fill x
+}
+
+proc CreateIconsLeftMarkerLineWidth {} {
+    global ds9
+    global icons
+    
+    set mb $ds9(icons,left).markerlinewidth
+
+    set icons(marker,width,1) \
+	[image create photo -file "$ds9(root)/icons/ui/lw1.png"]
+    set icons(marker,width,2) \
+	[image create photo -file "$ds9(root)/icons/ui/lw2.png"]
+    set icons(marker,width,3) \
+	[image create photo -file "$ds9(root)/icons/ui/lw3.png"]
+    set icons(marker,width,4) \
+	[image create photo -file "$ds9(root)/icons/ui/lw4.png"]
+
+    ttk::menubutton $mb -menu $mb.m -direction right \
+	-image $icons(marker,width,1) -takefocus 0
+
+    ThemeMenu $mb.m
+    $mb.m configure -tearoff 0
+    IconMenuButtonItem $mb $icons(marker,width,1) marker width 1 {}
+    IconMenuButtonItem $mb $icons(marker,width,2) marker width 2 {}
+    IconMenuButtonItem $mb $icons(marker,width,3) marker width 3 {}
+    IconMenuButtonItem $mb $icons(marker,width,4) marker width 4 {}
 
     pack $mb -side top -fill x
 }

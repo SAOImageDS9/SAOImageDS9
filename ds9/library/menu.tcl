@@ -717,7 +717,21 @@ proc WidthDashMenuButton {w varname width dash cmd1 cmd2} {
 
 # icons
 
-proc IconMenuButtonItem {mb icon varname id value cmd} {
+proc IconButtonToggleCmd {varname id cmd} {
+    upvar #0 $varname var
+    global $varname
+
+    if {$var($id) == 0 } {
+        set var($id) 1
+    } else {
+        set var($id) 0
+    }
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc IconMenuButton {mb icon varname id value cmd} {
     $mb.m add command -label [msgcat::mc [string totitle $value]] \
 	-compound left -image $icon \
 	-command [list IconMenuButtonCmd $mb $icon $varname $id $value $cmd]

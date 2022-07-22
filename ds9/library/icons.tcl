@@ -56,6 +56,7 @@ proc CreateIconsLeft {} {
 
     ttk::menubutton $mb -menu $mb.m -direction right -takefocus 0 \
 	-image $icons(edit,none)
+    tooltip::tooltip $mb "Edit Mode"
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
@@ -92,6 +93,7 @@ proc CreateIconsLeft {} {
 
     ttk::menubutton $mb -menu $mb.m -direction right \
 	-image $icons(marker,shape,circle) -takefocus 0
+    tooltip::tooltip $mb "Region Shape"
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
@@ -118,14 +120,77 @@ proc CreateIconsLeft {} {
 
     ttk::button $mb.info -takefocus 0 -image $icons(marker,info) \
 	-command MarkerInfo
+    tooltip::tooltip $mb.info "Get Region Info"
+
     ttk::button $mb.list -takefocus 0 -image $icons(marker,list) \
 	-command [list MarkerList {}]
+    tooltip::tooltip $mb.list "List Region"
+
     ttk::button $mb.open -takefocus 0 -image $icons(marker,open) \
 	-command MarkerLoad
+    tooltip::tooltip $mb.open "Open Region File"
+
     ttk::button $mb.save -takefocus 0 -image $icons(marker,save) \
 	-command [list MarkerSave {}]
+    tooltip::tooltip $mb.save "Save Region File"
 
     pack $mb.info $mb.list $mb.open $mb.save -side top -fill x
+
+    # Color
+    set mb $ds9(icons,left).color
+
+    set x11 \
+	[list \
+	     "red" "floralwhite" "mistyrose" "seashell" "snow" "linen" "oldlace" \
+	     "whitesmoke" "gainsboro" "lightgray" "dimgray" "green" "bisque" \
+	     "blanchedalmond" "papayawhip" "antiquewhite" "rosybrown" "moccasin" \
+	     "navajowhite" "peachpuff" "wheat" "tan" "blue" "darksalmon" "lightcoral" \
+	     "burlywood" "lightsalmon" "indianred2" "salmon" "sandybrown" "indianred" \
+	     "coral" "tomato" "cyan" "peru" "brown" "sienna" "chocolate" "goldenrod" \
+	     "saddlebrown" "darkgoldenrod" "darkorange" "orangered" "ivory" "magenta" \
+	     "lightyellow" "beige" "cornsilk" "lemonchiffon" "lightgoldenrodyellow" \
+	     "palegoldenrod" "khaki" "lightgoldenrod" "darkkhaki" "darkolivegreen" \
+	     "yellow" "greenyellow" "yellowgreen" "olivedrab" "gold" "honeydew" \
+	     "darkseagreen" "palegreen" "limegreen" "forestgreen" "chartreuse" \
+	     "black" "lawngreen" "darkgreen" "mintcream" "aquamarine" "turquoise" \
+	     "seagreen" "lightseagreen" "springgreen" "aliceblue" "azure" "white" \
+	     "lightcyan" "lightblue" "powderblue" "lightsteelblue" "lightslategray" \
+	     "slategray" "paleturquoise" "lightskyblue" "skyblue" "cadetblue" "grey" \
+	     "darkslategray" "cornflowerblue" "steelblue" "royalblue" "dodgerblue" \
+	     "deepskyblue" "darkturquoise" "ghostwhite" "lavender" "lightslateblue" \
+	     "orange" "slateblue" "darkslateblue" "midnightblue" "mediumblue" \
+	     "navyblue" "thistle" "plum" "orchid" "blueviolet" "purple" "violet" \
+	     "darkorchid" "darkviolet" "lavenderblush" "pink" "lightpink" \
+	     "palevioletred" "hotpink" "maroon" "violetred" "deeppink" \
+	    ]
+
+    set clricons {}
+    foreach clr $x11 {
+	image create photo icons(color,$clr) \
+	    -file "$ds9(root)/icons/ui/colors/$clr.png" 
+      lappend clricons icons(color,$clr)
+    }
+
+    ttk::menubutton $mb -menu $mb.m -direction right \
+	-image [lindex $clricons 11] -takefocus 0
+    tooltip::tooltip $mb "Region Color"
+
+    ThemeMenu $mb.m
+    $mb.m configure -tearoff 0
+
+    for {set ii 0} {$ii < [llength $clricons]} {incr ii} {
+        if {[expr $ii % 11] == 0} {
+            set newcol 1
+        } else {
+            set newcol 0
+        }
+
+	IconMenuButton $mb [lindex $clricons $ii] marker color \
+	    [lindex $x11 $ii] MarkerColor
+	$mb.m entryconfigure $ii -columnbreak $newcol -hidemargin 1 
+    }
+
+    pack $mb -side top -fill x
 
     # Line Width
     set mb $ds9(icons,left).markerlinewidth
@@ -141,6 +206,7 @@ proc CreateIconsLeft {} {
 
     ttk::menubutton $mb -menu $mb.m -direction right \
 	-image $icons(marker,width,1) -takefocus 0
+    tooltip::tooltip $mb "Region Line Width"
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
@@ -154,25 +220,33 @@ proc CreateIconsLeft {} {
     # Src/Bg/Back/Forward
     set mb $ds9(icons,left)
 
-    set icons(marker,srcbkg) \
+    set icons(marker,src) \
 	[image create photo -file "$ds9(root)/icons/ui/srcbkg.png"]
-    set icons(marker,incexl) \
+    set icons(marker,include) \
 	[image create photo -file "$ds9(root)/icons/ui/incexl.png"]
     set icons(marker,back) \
 	[image create photo -file "$ds9(root)/icons/ui/back.png"]
     set icons(marker,front) \
 	[image create photo -file "$ds9(root)/icons/ui/front.png"]
 
-    ttk::button $mb.srcbkg -takefocus 0 -image $icons(marker,srcbkg) -command \
+    ttk::button $mb.src -takefocus 0 -image $icons(marker,src) -command \
 	[list IconButtonToggleCmd marker source [list MarkerProp source]]
-    ttk::button $mb.incexl -takefocus 0 -image $icons(marker,incexl) -command \
+    tooltip::tooltip $mb.src "Toggle Source/Background"
+
+    ttk::button $mb.include -takefocus 0 -image $icons(marker,include) \
+	-command \
 	[list IconButtonToggleCmd marker include [list MarkerProp include]]
+    tooltip::tooltip $mb.include "Toggle Include/Exclude"
+
     ttk::button $mb.back -takefocus 0 -image $icons(marker,back) \
 	-command MarkerBack
+    tooltip::tooltip $mb.back "Send to Back"
+
     ttk::button $mb.front -takefocus 0 -image $icons(marker,front) \
 	-command MarkerFront
+    tooltip::tooltip $mb.front "Bring to Front"
 
-    pack $mb.srcbkg $mb.incexl $mb.back $mb.front -side top -fill x
+    pack $mb.src $mb.include $mb.back $mb.front -side top -fill x
 
     # Composite/Group
     set mb $ds9(icons,left)
@@ -186,10 +260,15 @@ proc CreateIconsLeft {} {
 
     ttk::button $mb.composite -takefocus 0 -image $icons(marker,composite) \
 	-command CompositeCreate
+    tooltip::tooltip $mb.composite "Create Composite Region"
+
     ttk::button $mb.dissolve -takefocus 0 -image $icons(marker,dissolve) \
 	-command CompositeDelete
+    tooltip::tooltip $mb.dissolve "Dissolve Composite Region"
+
     ttk::button $mb.group -takefocus 0 -image $icons(marker,group) \
 	-command GroupCreate
+    tooltip::tooltip $mb.group "Tag New Region Group"
 
     pack $mb.composite $mb.dissolve $mb.group -side top -fill x
 }

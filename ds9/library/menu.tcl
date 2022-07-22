@@ -732,8 +732,7 @@ proc IconButtonToggleCmd {varname id cmd} {
 }
 
 proc IconMenuButton {mb icon varname id value cmd} {
-    $mb.m add command -label [msgcat::mc [string totitle $value]] \
-	-compound left -image $icon \
+    $mb.m add command -compound left -image $icon \
 	-command [list IconMenuButtonCmd $mb $icon $varname $id $value $cmd]
 }
 

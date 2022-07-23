@@ -109,6 +109,7 @@
 ::msgcat::mcset ja {BoxCircle} 
 ::msgcat::mcset ja {Boxcar} [encoding convertfrom euc-jp "\xa5\xdc\xa5\xc3\xa5\xaf\xa5\xb9\xa5\xab\xa1\xbc"]
 ::msgcat::mcset ja {Box} [encoding convertfrom euc-jp "\xbb\xcd\xb3\xd1\xb7\xc1"]
+::msgcat::mcset ja {Bring to Front} 
 ::msgcat::mcset ja {Broadcast} 
 ::msgcat::mcset ja {Browser} 
 ::msgcat::mcset ja {Browse} [encoding convertfrom euc-jp "\xbb\xb2\xbe\xc8"]
@@ -182,6 +183,7 @@
 ::msgcat::mcset ja {Copy Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xf2\xa5\xb3\xa5\xd4\xa1\xbc"]
 ::msgcat::mcset ja {Copy to Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xcb\xa5\xb3\xa5\xd4\xa1\xbc"]
 ::msgcat::mcset ja {Copy} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xd4\xa1\xbc"]
+::msgcat::mcset ja {Create Composite Region} 
 ::msgcat::mcset ja {Create Movie} 
 ::msgcat::mcset ja {Create New Frame on Download} [encoding convertfrom euc-jp "\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xbb\xfe\xa4\xcb\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xba\xee\xc0\xae"]
 ::msgcat::mcset ja {Create} [encoding convertfrom euc-jp "\xba\xee\xc0\xae"]
@@ -248,6 +250,7 @@
 ::msgcat::mcset ja {Direction} 
 ::msgcat::mcset ja {Disconnect} [encoding convertfrom euc-jp "\xc0\xdc\xc2\xb3\xbd\xaa\xce\xbb"]
 ::msgcat::mcset ja {Display Size} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xa4\xa5\xba\xa4\xf2\xc9\xbd\xbc\xa8"]
+::msgcat::mcset ja {Dissolve Composite Region} 
 ::msgcat::mcset ja {Dissolve} [encoding convertfrom euc-jp "\xca\xac\xb2\xf2"]
 ::msgcat::mcset ja {Distance} 
 ::msgcat::mcset ja {Done} 
@@ -259,6 +262,7 @@
 ::msgcat::mcset ja {East} [encoding convertfrom euc-jp "\xc5\xec"]
 ::msgcat::mcset ja {Ecliptic} [encoding convertfrom euc-jp "\xb2\xab\xc6\xbb\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Edit Group Name} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xcc\xbe\xa4\xf2\xca\xd1\xb9\xb9"]
+::msgcat::mcset ja {Edit Mode} 
 ::msgcat::mcset ja {Edit} [encoding convertfrom euc-jp "\xca\xd4\xbd\xb8"]
 ::msgcat::mcset ja {Elevation} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9"]
 ::msgcat::mcset ja {Ellipse Panda} [encoding convertfrom euc-jp "\xc9\xf4\xca\xac\xc2\xca\xb1\xdf"]
@@ -352,6 +356,7 @@
 ::msgcat::mcset ja {Generate} [encoding convertfrom euc-jp "\xc0\xb8\xc0\xae"]
 ::msgcat::mcset ja {Generating Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xba\xee\xc0\xae\xc3\xe6"]
 ::msgcat::mcset ja {Get Information} [encoding convertfrom euc-jp "\xbe\xf0\xca\xf3\xa4\xf2\xbc\xe8\xc6\xc0"]
+::msgcat::mcset ja {Get Region Info} 
 ::msgcat::mcset ja {Gist} 
 ::msgcat::mcset ja {Global Properties} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xed\xa1\xbc\xa5\xd0\xa5\xeb\xa5\xd7\xa5\xed\xa5\xd1\xa5\xc6\xa5\xa3"]
 ::msgcat::mcset ja {Global} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xed\xa1\xbc\xa5\xd0\xa5\xeb"]
@@ -457,6 +462,7 @@
 ::msgcat::mcset ja {Line} [encoding convertfrom euc-jp "\xc0\xfe"]
 ::msgcat::mcset ja {List Data} 
 ::msgcat::mcset ja {List Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xce\xf3\xb5\xf3"]
+::msgcat::mcset ja {List Region} 
 ::msgcat::mcset ja {List Selected Regions} 
 ::msgcat::mcset ja {List Select} 
 ::msgcat::mcset ja {List} [encoding convertfrom euc-jp "\xce\xf3\xb5\xf3"]
@@ -636,6 +642,7 @@
 ::msgcat::mcset ja {Open Mosaic WFPC2} 
 ::msgcat::mcset ja {Open RGB Cube} 
 ::msgcat::mcset ja {Open RGB Image} 
+::msgcat::mcset ja {Open Region File} 
 ::msgcat::mcset ja {Open Regions} 
 ::msgcat::mcset ja {Open Slice} 
 ::msgcat::mcset ja {Open TCL Console} [encoding convertfrom euc-jp "\x54\x43\x4c\x20\xa5\xb3\xa5\xf3\xa5\xbd\xa1\xbc\xa5\xeb\xa4\xf2\xb3\xab\xa4\xaf"]
@@ -732,7 +739,10 @@
 ::msgcat::mcset ja {Reference} [encoding convertfrom euc-jp "\xa5\xea\xa5\xd5\xa5\xa1\xa5\xec\xa5\xf3\xa5\xb9"]
 ::msgcat::mcset ja {Refresh Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xba\xc6\xc9\xc1\xb2\xe8"]
 ::msgcat::mcset ja {Refresh} [encoding convertfrom euc-jp "\xba\xc6\xc9\xc1\xb2\xe8"]
+::msgcat::mcset ja {Region Color} 
+::msgcat::mcset ja {Region Line Width} 
 ::msgcat::mcset ja {Region Parameters} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xce\xc0\xdf\xc4\xea"]
+::msgcat::mcset ja {Region Shape} 
 ::msgcat::mcset ja {Region} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8"]
 ::msgcat::mcset ja {Release Notes} [encoding convertfrom euc-jp "\xa5\xea\xa5\xea\xa1\xbc\xa5\xb9\xa5\xce\xa1\xbc\xa5\xc8"]
 ::msgcat::mcset ja {Release} [encoding convertfrom euc-jp "\xa5\xea\xa5\xea\xa1\xbc\xa5\xb9"]
@@ -777,6 +787,7 @@
 ::msgcat::mcset ja {Save Mosaic WCS} 
 ::msgcat::mcset ja {Save RGB Cube} 
 ::msgcat::mcset ja {Save RGB Image} 
+::msgcat::mcset ja {Save Region File} 
 ::msgcat::mcset ja {Save Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Selected Regions} 
 ::msgcat::mcset ja {Save Select} 
@@ -802,6 +813,7 @@
 ::msgcat::mcset ja {Select Datatset} 
 ::msgcat::mcset ja {Select Graph} 
 ::msgcat::mcset ja {Select None} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xa4\xf2\xb2\xf2\xbd\xfc"]
+::msgcat::mcset ja {Send to Back} 
 ::msgcat::mcset ja {Send} [encoding convertfrom euc-jp "\xc1\xf7\xbf\xae"]
 ::msgcat::mcset ja {Server} [encoding convertfrom euc-jp "\xa5\xb5\xa1\xbc\xa5\xd0\xa1\xbc"]
 ::msgcat::mcset ja {Sexagesimal} [encoding convertfrom euc-jp "\xbb\xfe\xca\xac\xc9\xc3"]
@@ -860,6 +872,7 @@
 ::msgcat::mcset ja {Table} 
 ::msgcat::mcset ja {Tabloid} [encoding convertfrom euc-jp "\xa5\xbf\xa5\xd6\xa5\xed\xa5\xa4\xa5\xc9"]
 ::msgcat::mcset ja {Tag Color} 
+::msgcat::mcset ja {Tag New Region Group} 
 ::msgcat::mcset ja {Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1"]
 ::msgcat::mcset ja {Text} [encoding convertfrom euc-jp "\xca\xb8\xbb\xfa"]
 ::msgcat::mcset ja {Theme} 
@@ -875,6 +888,8 @@
 ::msgcat::mcset ja {Times} 
 ::msgcat::mcset ja {Titles} 
 ::msgcat::mcset ja {Title} [encoding convertfrom euc-jp "\xa5\xbf\xa5\xa4\xa5\xc8\xa5\xeb"]
+::msgcat::mcset ja {Toggle Include/Exclude} 
+::msgcat::mcset ja {Toggle Source/Background} 
 ::msgcat::mcset ja {Tophat} [encoding convertfrom euc-jp "\xa5\xc8\xa5\xc3\xa5\xd7\xa5\xcf\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Topographic} 
 ::msgcat::mcset ja {Top} 

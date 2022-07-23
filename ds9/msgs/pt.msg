@@ -109,6 +109,7 @@
 ::msgcat::mcset pt {BoxCircle} 
 ::msgcat::mcset pt {Boxcar} 
 ::msgcat::mcset pt {Box} {Caixa}
+::msgcat::mcset pt {Bring to Front} 
 ::msgcat::mcset pt {Broadcast} 
 ::msgcat::mcset pt {Browser} 
 ::msgcat::mcset pt {Browse} {Navegar}
@@ -182,6 +183,7 @@
 ::msgcat::mcset pt {Copy Contours} {Copiar Contornos}
 ::msgcat::mcset pt {Copy to Regions} [encoding convertfrom iso8859-1 {Copiar para Regiões}]
 ::msgcat::mcset pt {Copy} {Copiar}
+::msgcat::mcset pt {Create Composite Region} 
 ::msgcat::mcset pt {Create Movie} 
 ::msgcat::mcset pt {Create New Frame on Download} {Criar novo Frame ao carregar}
 ::msgcat::mcset pt {Create} 
@@ -248,6 +250,7 @@
 ::msgcat::mcset pt {Direction} 
 ::msgcat::mcset pt {Disconnect} 
 ::msgcat::mcset pt {Display Size} {Mostar tamanho}
+::msgcat::mcset pt {Dissolve Composite Region} 
 ::msgcat::mcset pt {Dissolve} 
 ::msgcat::mcset pt {Distance} 
 ::msgcat::mcset pt {Done} 
@@ -259,6 +262,7 @@
 ::msgcat::mcset pt {East} {Leste}
 ::msgcat::mcset pt {Ecliptic} {Ecliptico}
 ::msgcat::mcset pt {Edit Group Name} {Editar nome do Grupo} 
+::msgcat::mcset pt {Edit Mode} 
 ::msgcat::mcset pt {Edit} {Editar}
 ::msgcat::mcset pt {Elevation} 
 ::msgcat::mcset pt {Ellipse Panda} 
@@ -352,6 +356,7 @@
 ::msgcat::mcset pt {Generate} {Gerar}
 ::msgcat::mcset pt {Generating Regions} [encoding convertfrom iso8859-1 {Gerando regiões}]
 ::msgcat::mcset pt {Get Information} [encoding convertfrom iso8859-1 {Obter informações}]
+::msgcat::mcset pt {Get Region Info} 
 ::msgcat::mcset pt {Gist} 
 ::msgcat::mcset pt {Global Properties} 
 ::msgcat::mcset pt {Global} 
@@ -457,6 +462,7 @@
 ::msgcat::mcset pt {Line} {Linha}
 ::msgcat::mcset pt {List Data} 
 ::msgcat::mcset pt {List Regions} [encoding convertfrom iso8859-1 {Listar Regiões}]
+::msgcat::mcset pt {List Region} 
 ::msgcat::mcset pt {List Selected Regions} 
 ::msgcat::mcset pt {List Select} 
 ::msgcat::mcset pt {List} {Listar}
@@ -636,6 +642,7 @@
 ::msgcat::mcset pt {Open Mosaic WFPC2} 
 ::msgcat::mcset pt {Open RGB Cube} 
 ::msgcat::mcset pt {Open RGB Image} 
+::msgcat::mcset pt {Open Region File} 
 ::msgcat::mcset pt {Open Regions} 
 ::msgcat::mcset pt {Open Slice} 
 ::msgcat::mcset pt {Open TCL Console} 
@@ -732,7 +739,10 @@
 ::msgcat::mcset pt {Reference} [encoding convertfrom iso8859-1 {Referência}]
 ::msgcat::mcset pt {Refresh Frame} {Recarregar Frame}
 ::msgcat::mcset pt {Refresh} 
+::msgcat::mcset pt {Region Color} 
+::msgcat::mcset pt {Region Line Width} 
 ::msgcat::mcset pt {Region Parameters} 
+::msgcat::mcset pt {Region Shape} 
 ::msgcat::mcset pt {Region} [encoding convertfrom iso8859-1 {Região}]
 ::msgcat::mcset pt {Release Notes} [encoding convertfrom iso8859-1 {Notas das Versão}]
 ::msgcat::mcset pt {Release} [encoding convertfrom iso8859-1 {Versão}]
@@ -777,6 +787,7 @@
 ::msgcat::mcset pt {Save Mosaic WCS} 
 ::msgcat::mcset pt {Save RGB Cube} 
 ::msgcat::mcset pt {Save RGB Image} 
+::msgcat::mcset pt {Save Region File} 
 ::msgcat::mcset pt {Save Regions} [encoding convertfrom iso8859-1 {Salvar Regiões}]
 ::msgcat::mcset pt {Save Selected Regions} 
 ::msgcat::mcset pt {Save Select} 
@@ -802,6 +813,7 @@
 ::msgcat::mcset pt {Select Datatset} 
 ::msgcat::mcset pt {Select Graph} 
 ::msgcat::mcset pt {Select None} {Selecionar Nada}
+::msgcat::mcset pt {Send to Back} 
 ::msgcat::mcset pt {Send} 
 ::msgcat::mcset pt {Server} {Servidor}
 ::msgcat::mcset pt {Sexagesimal} 
@@ -860,6 +872,7 @@
 ::msgcat::mcset pt {Table} 
 ::msgcat::mcset pt {Tabloid} [encoding convertfrom iso8859-1 {Tablóide}]
 ::msgcat::mcset pt {Tag Color} 
+::msgcat::mcset pt {Tag New Region Group} 
 ::msgcat::mcset pt {Template} 
 ::msgcat::mcset pt {Text} {Texto}
 ::msgcat::mcset pt {Theme} 
@@ -875,6 +888,8 @@
 ::msgcat::mcset pt {Times} 
 ::msgcat::mcset pt {Titles} 
 ::msgcat::mcset pt {Title} [encoding convertfrom iso8859-1 {Título}]
+::msgcat::mcset pt {Toggle Include/Exclude} 
+::msgcat::mcset pt {Toggle Source/Background} 
 ::msgcat::mcset pt {Tophat} 
 ::msgcat::mcset pt {Topographic} 
 ::msgcat::mcset pt {Top} 

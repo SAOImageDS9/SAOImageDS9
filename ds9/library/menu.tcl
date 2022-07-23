@@ -733,18 +733,25 @@ proc IconButtonToggleCmd {varname id cmd} {
 
 proc IconMenuButton {mb icon varname id value cmd} {
     $mb.m add command -compound left -image $icon \
-	-command [list IconMenuButtonCmd $mb $icon $varname $id $value $cmd]
+	-command [list IconMenuButtonCmd $varname $id $value $cmd]
 }
 
-proc IconMenuButtonCmd {mb icon varname id value cmd} {
+proc IconMenuButtonCmd {varname id value cmd} {
     upvar #0 $varname var
     global $varname
     
-    $mb configure -image $icon
     set ${varname}($id) $value
     if {$cmd != {}} {
 	eval $cmd
     }
+}
+
+proc IconMenuButtonSync {mb varname id op} {
+    upvar #0 $varname var
+    global $varname
+    global icons
+    
+    $mb configure -image $icons(${varname}${id},$var($id))
 }
 
 # Prefs

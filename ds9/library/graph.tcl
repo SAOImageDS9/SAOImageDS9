@@ -557,7 +557,7 @@ proc MotionGraph {frame xx yy which} {
 	return
     }
 
-    switch $current(mode) {
+    switch -- $current(mode) {
 	crosshair -
 	analysis {
 	    set coord [$frame get crosshair canvas]

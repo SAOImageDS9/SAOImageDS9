@@ -109,6 +109,7 @@
 ::msgcat::mcset zh {BoxCircle} 
 ::msgcat::mcset zh {Boxcar} 
 ::msgcat::mcset zh {Box} [encoding convertfrom big5 "\xA4\xE8 \xA7\xCE"]
+::msgcat::mcset zh {Bring to Front} 
 ::msgcat::mcset zh {Broadcast} 
 ::msgcat::mcset zh {Browser} 
 ::msgcat::mcset zh {Browse} 
@@ -182,6 +183,7 @@
 ::msgcat::mcset zh {Copy Contours} 
 ::msgcat::mcset zh {Copy to Regions} 
 ::msgcat::mcset zh {Copy} 
+::msgcat::mcset zh {Create Composite Region} 
 ::msgcat::mcset zh {Create Movie} 
 ::msgcat::mcset zh {Create New Frame on Download} 
 ::msgcat::mcset zh {Create} [encoding convertfrom big5 "\xBB\x73 \xB3\x79"]
@@ -248,6 +250,7 @@
 ::msgcat::mcset zh {Direction} 
 ::msgcat::mcset zh {Disconnect} 
 ::msgcat::mcset zh {Display Size} 
+::msgcat::mcset zh {Dissolve Composite Region} 
 ::msgcat::mcset zh {Dissolve} [encoding convertfrom big5 "\xB8\xD1 \xB4\xB2"]
 ::msgcat::mcset zh {Distance} 
 ::msgcat::mcset zh {Done} 
@@ -259,6 +262,7 @@
 ::msgcat::mcset zh {East} 
 ::msgcat::mcset zh {Ecliptic} 
 ::msgcat::mcset zh {Edit Group Name} 
+::msgcat::mcset zh {Edit Mode} 
 ::msgcat::mcset zh {Edit} [encoding convertfrom big5 "\xBD\x73 \xBF\xE8"]
 ::msgcat::mcset zh {Elevation} 
 ::msgcat::mcset zh {Ellipse Panda} 
@@ -352,6 +356,7 @@
 ::msgcat::mcset zh {Generate} 
 ::msgcat::mcset zh {Generating Regions} 
 ::msgcat::mcset zh {Get Information} [encoding convertfrom big5 "\xB8\xFC \xA4\x4A \xB0\x54 \xAE\xA7"]
+::msgcat::mcset zh {Get Region Info} 
 ::msgcat::mcset zh {Gist} 
 ::msgcat::mcset zh {Global Properties} 
 ::msgcat::mcset zh {Global} 
@@ -457,6 +462,7 @@
 ::msgcat::mcset zh {Line} [encoding convertfrom big5 "\xAA\xBD \xBD\x75"]
 ::msgcat::mcset zh {List Data} 
 ::msgcat::mcset zh {List Regions} [encoding convertfrom big5 "\xA6\x43 \xA5\x58 \xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {List Region} 
 ::msgcat::mcset zh {List Selected Regions} 
 ::msgcat::mcset zh {List Select} 
 ::msgcat::mcset zh {List} 
@@ -636,6 +642,7 @@
 ::msgcat::mcset zh {Open Mosaic WFPC2} 
 ::msgcat::mcset zh {Open RGB Cube} 
 ::msgcat::mcset zh {Open RGB Image} 
+::msgcat::mcset zh {Open Region File} 
 ::msgcat::mcset zh {Open Regions} 
 ::msgcat::mcset zh {Open Slice} 
 ::msgcat::mcset zh {Open TCL Console} 
@@ -732,7 +739,10 @@
 ::msgcat::mcset zh {Reference} 
 ::msgcat::mcset zh {Refresh Frame} [encoding convertfrom big5 "\xAD\xAB \xB7\x73 \xBE\xE3 \xB2\x7A \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Refresh} 
+::msgcat::mcset zh {Region Color} 
+::msgcat::mcset zh {Region Line Width} 
 ::msgcat::mcset zh {Region Parameters} [encoding convertfrom big5 "\xB0\xCF \xB0\xEC \xB0\xD1\xBC\xC6"]
+::msgcat::mcset zh {Region Shape} 
 ::msgcat::mcset zh {Region} [encoding convertfrom big5 "\xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Release Notes} 
 ::msgcat::mcset zh {Release} 
@@ -777,6 +787,7 @@
 ::msgcat::mcset zh {Save Mosaic WCS} 
 ::msgcat::mcset zh {Save RGB Cube} 
 ::msgcat::mcset zh {Save RGB Image} 
+::msgcat::mcset zh {Save Region File} 
 ::msgcat::mcset zh {Save Regions} [encoding convertfrom big5 "\xC0\x78 \xA6\x73 \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Save Selected Regions} 
 ::msgcat::mcset zh {Save Select} 
@@ -802,6 +813,7 @@
 ::msgcat::mcset zh {Select Datatset} 
 ::msgcat::mcset zh {Select Graph} 
 ::msgcat::mcset zh {Select None} [encoding convertfrom big5 "\xA8\xFA \xAE\xF8 \xBF\xEF \xA8\xFA"]
+::msgcat::mcset zh {Send to Back} 
 ::msgcat::mcset zh {Send} 
 ::msgcat::mcset zh {Server} 
 ::msgcat::mcset zh {Sexagesimal} 
@@ -860,6 +872,7 @@
 ::msgcat::mcset zh {Table} 
 ::msgcat::mcset zh {Tabloid} 
 ::msgcat::mcset zh {Tag Color} 
+::msgcat::mcset zh {Tag New Region Group} 
 ::msgcat::mcset zh {Template} [encoding convertfrom big5 "\xBC\xCB \xA5\xBB"]
 ::msgcat::mcset zh {Text} [encoding convertfrom big5 "\xA4\xE5 \xA6\x72"]
 ::msgcat::mcset zh {Theme} 
@@ -875,6 +888,8 @@
 ::msgcat::mcset zh {Times} 
 ::msgcat::mcset zh {Titles} 
 ::msgcat::mcset zh {Title} 
+::msgcat::mcset zh {Toggle Include/Exclude} 
+::msgcat::mcset zh {Toggle Source/Background} 
 ::msgcat::mcset zh {Tophat} 
 ::msgcat::mcset zh {Topographic} 
 ::msgcat::mcset zh {Top} 

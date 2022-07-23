@@ -109,6 +109,7 @@
 ::msgcat::mcset fr {BoxCircle} 
 ::msgcat::mcset fr {Boxcar} 
 ::msgcat::mcset fr {Box} [encoding convertfrom iso8859-1 {Boîte}]
+::msgcat::mcset fr {Bring to Front} 
 ::msgcat::mcset fr {Broadcast} 
 ::msgcat::mcset fr {Browser} 
 ::msgcat::mcset fr {Browse} {Parcourir}
@@ -182,6 +183,7 @@
 ::msgcat::mcset fr {Copy Contours} {Copier les contours}
 ::msgcat::mcset fr {Copy to Regions} [encoding convertfrom iso8859-1 {Copier vers Régions}]
 ::msgcat::mcset fr {Copy} {Copier}
+::msgcat::mcset fr {Create Composite Region} 
 ::msgcat::mcset fr {Create Movie} 
 ::msgcat::mcset fr {Create New Frame on Download} [encoding convertfrom iso8859-1 {Créer une nouvelle fenêtre au téléchargement}]
 ::msgcat::mcset fr {Create} 
@@ -248,6 +250,7 @@
 ::msgcat::mcset fr {Direction} 
 ::msgcat::mcset fr {Disconnect} 
 ::msgcat::mcset fr {Display Size} {Afficher la taille} 
+::msgcat::mcset fr {Dissolve Composite Region} 
 ::msgcat::mcset fr {Dissolve} 
 ::msgcat::mcset fr {Distance} 
 ::msgcat::mcset fr {Done} 
@@ -259,6 +262,7 @@
 ::msgcat::mcset fr {East} {Est} 
 ::msgcat::mcset fr {Ecliptic} {Ecliptiques} 
 ::msgcat::mcset fr {Edit Group Name} {Editer le nom du groupe} 
+::msgcat::mcset fr {Edit Mode} {Mode édition}
 ::msgcat::mcset fr {Edit} [encoding convertfrom iso8859-1 {Édition}]
 ::msgcat::mcset fr {Elevation} 
 ::msgcat::mcset fr {Ellipse Panda} {Ellipse Panda} 
@@ -352,6 +356,7 @@
 ::msgcat::mcset fr {Generate} [encoding convertfrom iso8859-1 {Générer}]
 ::msgcat::mcset fr {Generating Regions} [encoding convertfrom iso8859-1 {Création des régions}]
 ::msgcat::mcset fr {Get Information} [encoding convertfrom iso8859-1 {Récuperer l'information}]
+::msgcat::mcset fr {Get Region Info} 
 ::msgcat::mcset fr {Gist} 
 ::msgcat::mcset fr {Global Properties} 
 ::msgcat::mcset fr {Global} {Global} 
@@ -457,6 +462,7 @@
 ::msgcat::mcset fr {Line} {Ligne}
 ::msgcat::mcset fr {List Data} 
 ::msgcat::mcset fr {List Regions} [encoding convertfrom iso8859-1 {Énumérer les régions}]
+::msgcat::mcset fr {List Region} 
 ::msgcat::mcset fr {List Selected Regions} 
 ::msgcat::mcset fr {List Select} 
 ::msgcat::mcset fr {List} [encoding convertfrom iso8859-1 {Énumérer}]
@@ -636,6 +642,7 @@
 ::msgcat::mcset fr {Open Mosaic WFPC2} 
 ::msgcat::mcset fr {Open RGB Cube} 
 ::msgcat::mcset fr {Open RGB Image} 
+::msgcat::mcset fr {Open Region File} 
 ::msgcat::mcset fr {Open Regions} 
 ::msgcat::mcset fr {Open Slice} 
 ::msgcat::mcset fr {Open TCL Console} 
@@ -732,7 +739,10 @@
 ::msgcat::mcset fr {Reference} 
 ::msgcat::mcset fr {Refresh Frame} 
 ::msgcat::mcset fr {Refresh} 
+::msgcat::mcset fr {Region Color} 
+::msgcat::mcset fr {Region Line Width} 
 ::msgcat::mcset fr {Region Parameters} 
+::msgcat::mcset fr {Region Shape} 
 ::msgcat::mcset fr {Region} [encoding convertfrom iso8859-1 {Région}]
 ::msgcat::mcset fr {Release Notes} 
 ::msgcat::mcset fr {Release} 
@@ -777,6 +787,7 @@
 ::msgcat::mcset fr {Save Mosaic WCS} 
 ::msgcat::mcset fr {Save RGB Cube} 
 ::msgcat::mcset fr {Save RGB Image} 
+::msgcat::mcset fr {Save Region File} 
 ::msgcat::mcset fr {Save Regions} 
 ::msgcat::mcset fr {Save Selected Regions} 
 ::msgcat::mcset fr {Save Select} 
@@ -802,6 +813,7 @@
 ::msgcat::mcset fr {Select Datatset} 
 ::msgcat::mcset fr {Select Graph} 
 ::msgcat::mcset fr {Select None} 
+::msgcat::mcset fr {Send to Back} 
 ::msgcat::mcset fr {Send} 
 ::msgcat::mcset fr {Server} 
 ::msgcat::mcset fr {Sexagesimal} 
@@ -860,6 +872,7 @@
 ::msgcat::mcset fr {Table} 
 ::msgcat::mcset fr {Tabloid} 
 ::msgcat::mcset fr {Tag Color} 
+::msgcat::mcset fr {Tag New Region Group} 
 ::msgcat::mcset fr {Template} 
 ::msgcat::mcset fr {Text} {Texte}
 ::msgcat::mcset fr {Theme} 
@@ -875,6 +888,8 @@
 ::msgcat::mcset fr {Times} 
 ::msgcat::mcset fr {Titles} 
 ::msgcat::mcset fr {Title} 
+::msgcat::mcset fr {Toggle Include/Exclude} 
+::msgcat::mcset fr {Toggle Source/Background} 
 ::msgcat::mcset fr {Tophat} 
 ::msgcat::mcset fr {Topographic} 
 ::msgcat::mcset fr {Top} 

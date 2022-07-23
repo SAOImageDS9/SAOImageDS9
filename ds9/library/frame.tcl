@@ -236,7 +236,7 @@ proc CreateNameNumberFrame {which type} {
     # enable events
     BindEventsFrame $which
     
-    switch $current(mode) {
+    switch -- $current(mode) {
 	crosshair {$which crosshair on}
     }
 

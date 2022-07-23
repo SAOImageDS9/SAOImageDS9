@@ -109,6 +109,7 @@
 ::msgcat::mcset da {BoxCircle} 
 ::msgcat::mcset da {Boxcar} {Kvadratisk kernel}
 ::msgcat::mcset da {Box} {Kasse}
+::msgcat::mcset da {Bring to Front} 
 ::msgcat::mcset da {Broadcast} 
 ::msgcat::mcset da {Browser} 
 ::msgcat::mcset da {Browse} 
@@ -182,6 +183,7 @@
 ::msgcat::mcset da {Copy Contours} {Kopier konturer}
 ::msgcat::mcset da {Copy to Regions} {kopier til regioner}
 ::msgcat::mcset da {Copy} {Kopier} 
+::msgcat::mcset da {Create Composite Region} 
 ::msgcat::mcset da {Create Movie} 
 ::msgcat::mcset da {Create New Frame on Download} {Dan en ny ramme under hentning}
 ::msgcat::mcset da {Create} 
@@ -248,6 +250,7 @@
 ::msgcat::mcset da {Direction} 
 ::msgcat::mcset da {Disconnect} 
 ::msgcat::mcset da {Display Size} [encoding convertfrom iso8859-1 {Vis størrelse}]
+::msgcat::mcset da {Dissolve Composite Region} 
 ::msgcat::mcset da {Dissolve} [encoding convertfrom iso8859-1 {Opløs}]
 ::msgcat::mcset da {Distance} 
 ::msgcat::mcset da {Done} 
@@ -259,6 +262,7 @@
 ::msgcat::mcset da {East} [encoding convertfrom iso8859-1 {Øst}]
 ::msgcat::mcset da {Ecliptic} {Ekliptisk}
 ::msgcat::mcset da {Edit Group Name} {Rediger gruppe navn}
+::msgcat::mcset da {Edit Mode} 
 ::msgcat::mcset da {Edit} {Rediger}
 ::msgcat::mcset da {Elevation} {Stigning}
 ::msgcat::mcset da {Ellipse Panda} {Ellipse Panda} 
@@ -352,6 +356,7 @@
 ::msgcat::mcset da {Generate} {Opret}
 ::msgcat::mcset da {Generating Regions} [encoding convertfrom iso8859-1 {danner områder}]
 ::msgcat::mcset da {Get Information} {Hent information}
+::msgcat::mcset da {Get Region Info} 
 ::msgcat::mcset da {Gist} 
 ::msgcat::mcset da {Global Properties} 
 ::msgcat::mcset da {Global} {Global}
@@ -457,6 +462,7 @@
 ::msgcat::mcset da {Line} {Linie}
 ::msgcat::mcset da {List Data} 
 ::msgcat::mcset da {List Regions} [encoding convertfrom iso8859-1 {Vis områder}]
+::msgcat::mcset da {List Region} 
 ::msgcat::mcset da {List Selected Regions} 
 ::msgcat::mcset da {List Select} 
 ::msgcat::mcset da {List} {Liste}
@@ -636,6 +642,7 @@
 ::msgcat::mcset da {Open Mosaic WFPC2} 
 ::msgcat::mcset da {Open RGB Cube} 
 ::msgcat::mcset da {Open RGB Image} 
+::msgcat::mcset da {Open Region File} 
 ::msgcat::mcset da {Open Regions} 
 ::msgcat::mcset da {Open Slice} 
 ::msgcat::mcset da {Open TCL Console} [encoding convertfrom iso8859-1 {Åben TCL konsol}]
@@ -732,7 +739,10 @@
 ::msgcat::mcset da {Reference} 
 ::msgcat::mcset da {Refresh Frame} {Opdater ramme}
 ::msgcat::mcset da {Refresh} {Opdater}
+::msgcat::mcset da {Region Color} 
+::msgcat::mcset da {Region Line Width} 
 ::msgcat::mcset da {Region Parameters} 
+::msgcat::mcset da {Region Shape} 
 ::msgcat::mcset da {Region} [encoding convertfrom iso8859-1 {Område}]
 ::msgcat::mcset da {Release Notes} {Frigvelsesnoter}
 ::msgcat::mcset da {Release} {Frigivelsesnoter}
@@ -777,6 +787,7 @@
 ::msgcat::mcset da {Save Mosaic WCS} 
 ::msgcat::mcset da {Save RGB Cube} 
 ::msgcat::mcset da {Save RGB Image} 
+::msgcat::mcset da {Save Region File} 
 ::msgcat::mcset da {Save Regions} [encoding convertfrom iso8859-1 {Gem områder}]
 ::msgcat::mcset da {Save Selected Regions} 
 ::msgcat::mcset da {Save Select} 
@@ -802,6 +813,7 @@
 ::msgcat::mcset da {Select Datatset} 
 ::msgcat::mcset da {Select Graph} 
 ::msgcat::mcset da {Select None} [encoding convertfrom iso8859-1 {Vælg ingen}]
+::msgcat::mcset da {Send to Back} 
 ::msgcat::mcset da {Send} 
 ::msgcat::mcset da {Server} {Server}
 ::msgcat::mcset da {Sexagesimal} 
@@ -860,6 +872,7 @@
 ::msgcat::mcset da {Table} 
 ::msgcat::mcset da {Tabloid} 
 ::msgcat::mcset da {Tag Color} 
+::msgcat::mcset da {Tag New Region Group} 
 ::msgcat::mcset da {Template} 
 ::msgcat::mcset da {Text} {Tekst}
 ::msgcat::mcset da {Theme} 
@@ -875,6 +888,8 @@
 ::msgcat::mcset da {Times} 
 ::msgcat::mcset da {Titles} 
 ::msgcat::mcset da {Title} {Titel}
+::msgcat::mcset da {Toggle Include/Exclude} 
+::msgcat::mcset da {Toggle Source/Background} 
 ::msgcat::mcset da {Tophat} 
 ::msgcat::mcset da {Topographic} 
 ::msgcat::mcset da {Top} 

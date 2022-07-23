@@ -109,6 +109,7 @@
 ::msgcat::mcset cs {BoxCircle} 
 ::msgcat::mcset cs {Boxcar} 
 ::msgcat::mcset cs {Box} [encoding convertfrom iso8859-2 {Obdélník}]
+::msgcat::mcset cs {Bring to Front} 
 ::msgcat::mcset cs {Broadcast} 
 ::msgcat::mcset cs {Browser} [encoding convertfrom iso8859-2 {Prohlí¾eè}]
 ::msgcat::mcset cs {Browse} [encoding convertfrom iso8859-2 {Prohlí¾et}]
@@ -182,6 +183,7 @@
 ::msgcat::mcset cs {Copy Contours} 
 ::msgcat::mcset cs {Copy to Regions} [encoding convertfrom iso8859-2 {Kopíruj do oblastí}]
 ::msgcat::mcset cs {Copy} [encoding convertfrom iso8859-2 {Kopíruj}]
+::msgcat::mcset cs {Create Composite Region} 
 ::msgcat::mcset cs {Create Movie} [encoding convertfrom iso8859-2 {Vytvoøit video}]
 ::msgcat::mcset cs {Create New Frame on Download} 
 ::msgcat::mcset cs {Create} [encoding convertfrom iso8859-2 {Vytvoøit}]
@@ -248,6 +250,7 @@
 ::msgcat::mcset cs {Direction} 
 ::msgcat::mcset cs {Disconnect} 
 ::msgcat::mcset cs {Display Size} [encoding convertfrom iso8859-2 {Velikost displeje}]
+::msgcat::mcset cs {Dissolve Composite Region} 
 ::msgcat::mcset cs {Dissolve} 
 ::msgcat::mcset cs {Distance} [encoding convertfrom iso8859-2 {Vzdálenost}]
 ::msgcat::mcset cs {Done} 
@@ -259,6 +262,7 @@
 ::msgcat::mcset cs {East} [encoding convertfrom iso8859-2 {Východ}]
 ::msgcat::mcset cs {Ecliptic} [encoding convertfrom iso8859-2 {Ekliptikální}]
 ::msgcat::mcset cs {Edit Group Name} 
+::msgcat::mcset cs {Edit Mode} 
 ::msgcat::mcset cs {Edit} [encoding convertfrom iso8859-2 {Úpravy}]
 ::msgcat::mcset cs {Elevation} 
 ::msgcat::mcset cs {Ellipse Panda} 
@@ -352,6 +356,7 @@
 ::msgcat::mcset cs {Generate} [encoding convertfrom iso8859-2 {Vygeneruj}]
 ::msgcat::mcset cs {Generating Regions} 
 ::msgcat::mcset cs {Get Information} [encoding convertfrom iso8859-2 {Získej informace}]
+::msgcat::mcset cs {Get Region Info} 
 ::msgcat::mcset cs {Gist} 
 ::msgcat::mcset cs {Global Properties} 
 ::msgcat::mcset cs {Global} 
@@ -457,6 +462,7 @@
 ::msgcat::mcset cs {Line} 
 ::msgcat::mcset cs {List Data} 
 ::msgcat::mcset cs {List Regions} [encoding convertfrom iso8859-2 {Seznam oblastí}]
+::msgcat::mcset cs {List Region} 
 ::msgcat::mcset cs {List Selected Regions} 
 ::msgcat::mcset cs {List Select} 
 ::msgcat::mcset cs {List} [encoding convertfrom iso8859-2 {Seznam}]
@@ -636,6 +642,7 @@
 ::msgcat::mcset cs {Open Mosaic WFPC2} 
 ::msgcat::mcset cs {Open RGB Cube} 
 ::msgcat::mcset cs {Open RGB Image} 
+::msgcat::mcset cs {Open Region File} 
 ::msgcat::mcset cs {Open Regions} 
 ::msgcat::mcset cs {Open Slice} 
 ::msgcat::mcset cs {Open TCL Console} [encoding convertfrom iso8859-2 {Otevøít konzoly TCL}]
@@ -732,7 +739,10 @@
 ::msgcat::mcset cs {Reference} 
 ::msgcat::mcset cs {Refresh Frame} [encoding convertfrom iso8859-2 {Obnov snímek}]
 ::msgcat::mcset cs {Refresh} 
+::msgcat::mcset cs {Region Color} 
+::msgcat::mcset cs {Region Line Width} 
 ::msgcat::mcset cs {Region Parameters} [encoding convertfrom iso8859-2 {Parametry oblastí}]
+::msgcat::mcset cs {Region Shape} 
 ::msgcat::mcset cs {Region} [encoding convertfrom iso8859-2 {Oblasti}]
 ::msgcat::mcset cs {Release Notes} [encoding convertfrom iso8859-2 {Informace o vydání}]
 ::msgcat::mcset cs {Release} 
@@ -777,6 +787,7 @@
 ::msgcat::mcset cs {Save Mosaic WCS} 
 ::msgcat::mcset cs {Save RGB Cube} 
 ::msgcat::mcset cs {Save RGB Image} 
+::msgcat::mcset cs {Save Region File} 
 ::msgcat::mcset cs {Save Regions} [encoding convertfrom iso8859-2 {Ulo¾it oblasti}]
 ::msgcat::mcset cs {Save Selected Regions} 
 ::msgcat::mcset cs {Save Select} 
@@ -802,6 +813,7 @@
 ::msgcat::mcset cs {Select Datatset} 
 ::msgcat::mcset cs {Select Graph} 
 ::msgcat::mcset cs {Select None} [encoding convertfrom iso8859-2 {Zru¹it výbìr}]
+::msgcat::mcset cs {Send to Back} 
 ::msgcat::mcset cs {Send} 
 ::msgcat::mcset cs {Server} 
 ::msgcat::mcset cs {Sexagesimal} [encoding convertfrom iso8859-2 {©edesátkové}]
@@ -860,6 +872,7 @@
 ::msgcat::mcset cs {Table} 
 ::msgcat::mcset cs {Tabloid} 
 ::msgcat::mcset cs {Tag Color} 
+::msgcat::mcset cs {Tag New Region Group} 
 ::msgcat::mcset cs {Template} [encoding convertfrom iso8859-2 {©ablona}]
 ::msgcat::mcset cs {Text} 
 ::msgcat::mcset cs {Theme} 
@@ -875,6 +888,8 @@
 ::msgcat::mcset cs {Times} 
 ::msgcat::mcset cs {Titles} 
 ::msgcat::mcset cs {Title} 
+::msgcat::mcset cs {Toggle Include/Exclude} 
+::msgcat::mcset cs {Toggle Source/Background} 
 ::msgcat::mcset cs {Tophat} 
 ::msgcat::mcset cs {Topographic} 
 ::msgcat::mcset cs {Top} 

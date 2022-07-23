@@ -749,11 +749,14 @@ proc IconMenuButtonCmd {varname id value cmd} {
 }
 
 proc IconMenuButtonSync {mb varname id op} {
-    upvar #0 $varname var
     global $varname
     global icons
     
-    $mb configure -image $icons(${varname}${id},$var($id))
+    if {[info exists icons(${varname}${id},[set ${varname}($id)])]} {
+	$mb configure -image $icons(${varname}${id},[set ${varname}($id)])
+    } else {
+	$mb configure -image $icons(${varname}${id},default)
+    }
 }
 
 # Prefs

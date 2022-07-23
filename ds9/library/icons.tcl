@@ -51,11 +51,10 @@ proc CreateIconsLeft {} {
 	[image create photo -file "$ds9(root)/icons/ui/edit_footprint.png" ]
     set icons(currentmode,examine) \
 	[image create photo -file "$ds9(root)/icons/ui/edit_examine.png" ]
-    # special case
-    set icons(currentmode,iexam) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_examine.png" ]
     set icons(currentmode,3d) \
 	[image create photo -file "$ds9(root)/icons/ui/edit_3d.png" ]
+    # special case
+    set icons(currentmode,default) $icons(currentmode,examine)
 
     global current
     ttk::menubutton $mb -menu $mb.m -direction right -takefocus 0 \
@@ -181,6 +180,8 @@ proc CreateIconsLeft {} {
 	set icons(markercolor,$clr) \
 	    [image create photo -file "$ds9(root)/icons/ui/colors/$clr.png"]
     }
+    # special case
+    set icons(markercolor,default) $icons(markercolor,black)
 
     global marker
     ttk::menubutton $mb -menu $mb.m -direction right \
@@ -217,6 +218,9 @@ proc CreateIconsLeft {} {
 	[image create photo -file "$ds9(root)/icons/ui/lw3.png"]
     set icons(markerwidth,4) \
 	[image create photo -file "$ds9(root)/icons/ui/lw4.png"]
+    # special case
+    set icons(markerwidth,default) $icons(markerwidth,1)
+
 
     global marker
     ttk::menubutton $mb -menu $mb.m -direction right \

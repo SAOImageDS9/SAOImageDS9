@@ -731,8 +731,10 @@ proc IconButtonToggleCmd {varname id cmd} {
     }
 }
 
-proc IconMenuButton {mb icon varname id value cmd} {
-    $mb.m add command -compound left -image $icon \
+proc IconMenuButton {mb varname id value cmd} {
+    global icons
+
+    $mb.m add command -compound left -image $icons(${varname}${id},$value) \
 	-command [list IconMenuButtonCmd $varname $id $value $cmd]
 }
 

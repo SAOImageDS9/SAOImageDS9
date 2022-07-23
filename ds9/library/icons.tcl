@@ -64,18 +64,18 @@ proc CreateIconsLeft {} {
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
-    IconMenuButton $mb $icons(currentmode,none) current mode none ChangeMode
-    IconMenuButton $mb $icons(currentmode,region) current mode region ChangeMode
-    IconMenuButton $mb $icons(currentmode,crosshair) current mode crosshair ChangeMode
-    IconMenuButton $mb $icons(currentmode,colorbar) current mode colorbar ChangeMode
-    IconMenuButton $mb $icons(currentmode,pan) current mode pan ChangeMode
-    IconMenuButton $mb $icons(currentmode,zoom) current mode zoom ChangeMode
-    IconMenuButton $mb $icons(currentmode,rotate) current mode rotate ChangeMode
-    IconMenuButton $mb $icons(currentmode,crop) current mode crop ChangeMode
-    IconMenuButton $mb $icons(currentmode,catalog) current mode catalog ChangeMode
-    IconMenuButton $mb $icons(currentmode,footprint) current mode footprint ChangeMode
-    IconMenuButton $mb $icons(currentmode,examine) current mode examine ChangeMode
-    IconMenuButton $mb $icons(currentmode,3d) current mode 3d ChangeMode
+    IconMenuButton $mb current mode none ChangeMode
+    IconMenuButton $mb current mode region ChangeMode
+    IconMenuButton $mb current mode crosshair ChangeMode
+    IconMenuButton $mb current mode colorbar ChangeMode
+    IconMenuButton $mb current mode pan ChangeMode
+    IconMenuButton $mb current mode zoom ChangeMode
+    IconMenuButton $mb current mode rotate ChangeMode
+    IconMenuButton $mb current mode crop ChangeMode
+    IconMenuButton $mb current mode catalog ChangeMode
+    IconMenuButton $mb current mode footprint ChangeMode
+    IconMenuButton $mb current mode examine ChangeMode
+    IconMenuButton $mb current mode 3d ChangeMode
 
     pack $mb -side top -fill x
     
@@ -108,12 +108,12 @@ proc CreateIconsLeft {} {
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
-    IconMenuButton $mb $icons(markershape,circle) marker shape circle {}
-    IconMenuButton $mb $icons(markershape,annulus) marker shape annulus {}
-    IconMenuButton $mb $icons(markershape,ellipse) marker shape ellipse {}
-    IconMenuButton $mb $icons(markershape,box) marker shape box {}
-    IconMenuButton $mb $icons(markershape,polygon) marker shape polygon {}
-    IconMenuButton $mb $icons(markershape,text) marker shape text {}
+    IconMenuButton $mb marker shape circle {}
+    IconMenuButton $mb marker shape annulus {}
+    IconMenuButton $mb marker shape ellipse {}
+    IconMenuButton $mb marker shape box {}
+    IconMenuButton $mb marker shape polygon {}
+    IconMenuButton $mb marker shape text {}
 
     pack $mb -side top -fill x
 
@@ -197,8 +197,7 @@ proc CreateIconsLeft {} {
             set newcol 0
         }
 
-	IconMenuButton $mb $icons(markercolor,[lindex $clrs $ii]) \
-	    marker color [lindex $clrs $ii] MarkerColor
+	IconMenuButton $mb marker color [lindex $clrs $ii] MarkerColor
 	$mb.m entryconfigure $ii -columnbreak $newcol -hidemargin 1 
     }
 
@@ -226,10 +225,10 @@ proc CreateIconsLeft {} {
 
     ThemeMenu $mb.m
     $mb.m configure -tearoff 0
-    IconMenuButton $mb $icons(markerwidth,1) marker width 1 MarkerWidth
-    IconMenuButton $mb $icons(markerwidth,2) marker width 2 MarkerWidth
-    IconMenuButton $mb $icons(markerwidth,3) marker width 3 MarkerWidth
-    IconMenuButton $mb $icons(markerwidth,4) marker width 4 MarkerWidth
+    IconMenuButton $mb marker width 1 MarkerWidth
+    IconMenuButton $mb marker width 2 MarkerWidth
+    IconMenuButton $mb marker width 3 MarkerWidth
+    IconMenuButton $mb marker width 4 MarkerWidth
 
     pack $mb -side top -fill x
 

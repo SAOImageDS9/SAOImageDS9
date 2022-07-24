@@ -7,7 +7,6 @@
 
 %%
 
-alternative	{return $ALTERNATIVE_}
 blue		{return $BLUE_}
 buttons		{return $BUTTONS_}
 colorbar	{return $COLORBAR_}
@@ -29,7 +28,9 @@ minmax		{return $MINMAX_}
 multi		{return $MULTI_}
 object		{return $OBJECT_}
 panner		{return $PANNER_}
+park		{return $PARK_}
 red		{return $RED_}
+south		{return $SOUTH_}
 units		{return $UNITS_}
 vert		{return $VERTICAL_}
 vertical	{return $VERTICAL_}

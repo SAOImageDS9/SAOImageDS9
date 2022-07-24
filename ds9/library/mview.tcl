@@ -10,15 +10,8 @@ proc ViewMainMenu {} {
     global ds9
 
     ThemeMenu $ds9(mb).view
-    $ds9(mb).view add radiobutton -label [msgcat::mc {Horizontal Layout}] \
-	-variable view(layout) -value horizontal -command LayoutView
-    $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical Layout}] \
-	-variable view(layout) -value vertical -command LayoutView
-    $ds9(mb).view add radiobutton -label [msgcat::mc {Alternative Layout}] \
-	-variable view(layout) -value alt -command LayoutView
-    $ds9(mb).view add separator
-    $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
-	-variable view(multi) -command LayoutFrames
+    $ds9(mb).view add cascade -label [msgcat::mc {Layout}] \
+	-menu $ds9(mb).view.layout
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Information Panel}] \
 	-variable view(info) -command LayoutView
@@ -61,6 +54,18 @@ proc ViewMainMenu {} {
 	-variable view(info,detector) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Frame Information}] \
 	-variable view(info,frame) -command LayoutInfoPanel
+    $ds9(mb).view add separator
+    $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
+	-variable view(multi) -command LayoutFrames
+
+    # Layout
+    ThemeMenu $ds9(mb).view.layout
+    $ds9(mb).view.layout add radiobutton -label [msgcat::mc {Horizontal}] \
+	-variable view(layout) -value horizontal -command LayoutView
+    $ds9(mb).view.layout add radiobutton -label [msgcat::mc {Vertical}] \
+	-variable view(layout) -value vertical -command LayoutView
+    $ds9(mb).view.layout add radiobutton -label [msgcat::mc {South Park}] \
+	-variable view(layout) -value alt -command LayoutView
 
     # View Info Panel WCS
     ThemeMenu $ds9(mb).view.mwcs
@@ -82,15 +87,7 @@ proc PrefsDialogViewMenu {w} {
 
     set m $f.menu.menu
     ThemeMenu $m
-    $m add radiobutton -label [msgcat::mc {Horizontal Layout}] \
-	-variable pview(layout) -value horizontal
-    $m add radiobutton -label [msgcat::mc {Vertical Layout}] \
-	-variable pview(layout) -value vertical
-    $m add radiobutton -label [msgcat::mc {Alternative Layout}] \
-	-variable pview(layout) -value alt
-    $m add separator
-    $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
-	-variable pview(multi)
+    $m add cascade -label [msgcat::mc {Layout}] -menu $m.layout
     $m add separator
     $m add checkbutton -label [msgcat::mc {Information Panel}] \
 	-variable pview(info)
@@ -132,7 +129,20 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(info,detector)
     $m add checkbutton -label  [msgcat::mc {Frame Information}]\
 	-variable pview(info,frame)
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
+	-variable pview(multi)
 
+    # Layout
+    ThemeMenu $m.layout
+    $m.layout add radiobutton -label [msgcat::mc {Horizontal}] \
+	-variable pview(layout) -value horizontal
+    $m.layout add radiobutton -label [msgcat::mc {Vertical}] \
+	-variable pview(layout) -value vertical
+    $m.layout add radiobutton -label [msgcat::mc {South Park}] \
+	-variable pview(layout) -value alt
+
+    # WCS
     ThemeMenu $m.wcs
     foreach l {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	$m.wcs add checkbutton -label "[msgcat::mc {WCS}] $l" \

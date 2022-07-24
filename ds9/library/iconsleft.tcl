@@ -161,28 +161,28 @@ proc CreateIconsLeftMarkerColor {} {
     set mb $ds9(icons,left).color
 
     set clrs [list \
-    "red" "floralwhite" "mistyrose" "seashell" "snow" "linen" "oldlace" \
-    "whitesmoke" "gainsboro" "lightgray" "dimgray" "green" "bisque" \
-    "blanchedalmond" "papayawhip" "antiquewhite" "rosybrown" "moccasin" \
-    "navajowhite" "peachpuff" "wheat" "tan" "blue" "darksalmon" "lightcoral" \
-    "burlywood" "lightsalmon" "indianred2" "salmon" "sandybrown" "indianred" \
-    "coral" "tomato" "cyan" "peru" "brown" "sienna" "chocolate" "goldenrod" \
-    "saddlebrown" "darkgoldenrod" "darkorange" "orangered" "ivory" "magenta" \
-    "lightyellow" "beige" "cornsilk" "lemonchiffon" "lightgoldenrodyellow" \
-    "palegoldenrod" "khaki" "lightgoldenrod" "darkkhaki" "darkolivegreen" \
-    "yellow" "greenyellow" "yellowgreen" "olivedrab" "gold" "honeydew" \
-    "darkseagreen" "palegreen" "limegreen" "forestgreen" "chartreuse" \
-    "black" "lawngreen" "darkgreen" "mintcream" "aquamarine" "turquoise" \
-    "seagreen" "lightseagreen" "springgreen" "aliceblue" "azure" "white" \
-    "lightcyan" "lightblue" "powderblue" "lightsteelblue" "lightslategray" \
-    "slategray" "paleturquoise" "lightskyblue" "skyblue" "cadetblue" "grey" \
-    "darkslategray" "cornflowerblue" "steelblue" "royalblue" "dodgerblue" \
-    "deepskyblue" "darkturquoise" "ghostwhite" "lavender" "lightslateblue" \
-    "orange" "slateblue" "darkslateblue" "midnightblue" "mediumblue" \
-    "navyblue" "thistle" "plum" "orchid" "blueviolet" "purple" "violet" \
-    "darkorchid" "darkviolet" "lavenderblush" "pink" "lightpink" \
-    "palevioletred" "hotpink" "maroon" "violetred" "deeppink" \
-		      ]
+		  red floralwhite mistyrose seashell snow linen oldlace \
+		  whitesmoke gainsboro lightgray dimgray green bisque \
+		  blanchedalmond papayawhip antiquewhite rosybrown moccasin \
+		  navajowhite peachpuff wheat tan blue darksalmon lightcoral \
+		  burlywood lightsalmon indianred2 salmon sandybrown indianred \
+		  coral tomato cyan peru brown sienna chocolate goldenrod \
+		  saddlebrown darkgoldenrod darkorange orangered ivory magenta \
+		  lightyellow beige cornsilk lemonchiffon lightgoldenrodyellow \
+		  palegoldenrod khaki lightgoldenrod darkkhaki darkolivegreen \
+		  yellow greenyellow yellowgreen olivedrab gold honeydew \
+		  darkseagreen palegreen limegreen forestgreen chartreuse \
+		  black lawngreen darkgreen mintcream aquamarine turquoise \
+		  seagreen lightseagreen springgreen aliceblue azure white \
+		  lightcyan lightblue powderblue lightsteelblue lightslategray \
+		  slategray paleturquoise lightskyblue skyblue cadetblue grey \
+		  darkslategray cornflowerblue steelblue royalblue dodgerblue \
+		  deepskyblue darkturquoise ghostwhite lavender lightslateblue \
+		  orange slateblue darkslateblue midnightblue mediumblue \
+		  navyblue thistle plum orchid blueviolet purple violet \
+		  darkorchid darkviolet lavenderblush pink lightpink \
+		  palevioletred hotpink maroon violetred deeppink \
+		 ]
 
     foreach clr $clrs {
 	set icons(markercolor,$clr) \

@@ -12,6 +12,7 @@ proc CreateIconsTop {} {
 	[ttk::separator $ds9(main).iconstopsep -orient horizontal]
 
     CreateIconsTopFile
+    CreateIconsTopColorMap
 }
 
 proc CreateIconsTopFile {} {
@@ -66,3 +67,40 @@ proc CreateIconsTopFile {} {
     pack $mb.open $mb.saveeps $mb.savepng $mb.print $mb.backup \
 	$mb.prism $mb.notes -side left -fill x
 }
+
+proc CreateIconsTopColorMap {} {
+
+    global ds9
+    global icons
+
+    set mb $ds9(icons,top).colormap
+
+    set luts [list a aips0 b bb blue color cool green grey he heat hsv i8 \
+		  rainbow red sls staircase standard \
+		 ]
+
+    foreach lut $luts {
+	set icons(lut,$lut) \
+	    [image create photo -file "$ds9(root)/icons/lut/ds9/$lut.png"]
+    }
+    # special case
+    set icons(lut,default) \
+	[image create photo -file "$ds9(root)/icons/lut/unknown.png"]
+
+    ttk::menubutton $mb -menu $mb.m \
+	-image $icons(lut,$colorbar(map)) -takefocus 0
+    tooltip::tooltip $mb [msgcat::mc {Colormaps}]
+
+    ThemeMenu $mb.m
+    $mb.m configure -tearoff 0
+
+    foreach lut $luts {
+	IconMenuButton $mb colorbar map $lut [list ChangeColormapName $lut]
+    }
+
+    pack $mb -side left -fill x
+
+    trace add variable colorbar(map) write [list IconMenuButtonSync $mb]
+}
+
+

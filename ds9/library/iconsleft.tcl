@@ -12,7 +12,20 @@ proc CreateIconsLeft {} {
     set ds9(icons,left,sep) \
 	[ttk::separator $ds9(main).iconsleftsep -orient vertical]
 
-    # Edit
+    CreateIconsLeftMode
+    CreateIconsLeftMarkerShape
+    CreateIconsLeftMarkerInfo
+    CreateIconsLeftMarkerColor
+    CreateIconsLeftMarkerLineWidth
+    CreateIconsLeftMarkerSrc
+    CreateIconsLeftMarkerComposite
+}
+
+proc CreateIconsLeftMode {} {
+    global ds9
+    global icons
+    global current
+
     set mb $ds9(icons,left).mode
 
     set icons(currentmode,none) \
@@ -42,7 +55,6 @@ proc CreateIconsLeft {} {
     # special case
     set icons(currentmode,default) $icons(currentmode,examine)
 
-    global current
     ttk::menubutton $mb -menu $mb.m -direction right -takefocus 0 \
 	-image $icons(currentmode,$current(mode))
     tooltip::tooltip $mb [msgcat::mc {Edit Mode}]
@@ -64,10 +76,14 @@ proc CreateIconsLeft {} {
 
     pack $mb -side top -fill x
     
-    global current
     trace add variable current(mode) write [list IconMenuButtonSync $mb]
+}
 
-    # Shape
+proc CreateIconsLeftMarkerShape {} {
+    global ds9
+    global icons
+    global marker
+
     set mb $ds9(icons,left).markershape
 
     set icons(markershape,circle) \
@@ -86,7 +102,6 @@ proc CreateIconsLeft {} {
     set icons(markershape,default) \
 	[image create photo -file "$ds9(root)/icons/ui/region_other.png"]
 
-    global marker
     ttk::menubutton $mb -menu $mb.m -direction right \
 	-image $icons(markershape,$marker(shape)) -takefocus 0
     tooltip::tooltip $mb [msgcat::mc {Region Shape}]
@@ -102,10 +117,13 @@ proc CreateIconsLeft {} {
 
     pack $mb -side top -fill x
 
-    global marker
     trace add variable marker(shape) write [list IconMenuButtonSync $mb]
+}
 
-    # Info,List,Open,Save
+proc CreateIconsLeftMarkerInfo {} {
+    global ds9
+    global icons
+
     set mb $ds9(icons,left)
 
     set icons(marker,info) \
@@ -134,8 +152,13 @@ proc CreateIconsLeft {} {
     tooltip::tooltip $mb.save [msgcat::mc {Save Region File}]
 
     pack $mb.info $mb.list $mb.open $mb.save -side top -fill x
+}
 
-    # Color
+proc CreateIconsLeftMarkerColor {} {
+    global ds9
+    global icons
+    global marker
+
     set mb $ds9(icons,left).color
 
     set clrs [list \
@@ -169,7 +192,6 @@ proc CreateIconsLeft {} {
     # special case
     set icons(markercolor,default) $icons(markercolor,black)
 
-    global marker
     ttk::menubutton $mb -menu $mb.m -direction right \
 	-image $icons(markercolor,$marker(color)) -takefocus 0
     tooltip::tooltip $mb [msgcat::mc {Region Color}]
@@ -190,10 +212,14 @@ proc CreateIconsLeft {} {
 
     pack $mb -side top -fill x
 
-    global marker
     trace add variable marker(color) write [list IconMenuButtonSync $mb]
+}
 
-    # Line Width
+proc CreateIconsLeftMarkerLineWidth {} {
+    global ds9
+    global icons
+    global marker
+
     set mb $ds9(icons,left).markerlinewidth
 
     set icons(markerwidth,1) \
@@ -207,8 +233,6 @@ proc CreateIconsLeft {} {
     # special case
     set icons(markerwidth,default) $icons(markerwidth,1)
 
-
-    global marker
     ttk::menubutton $mb -menu $mb.m -direction right \
 	-image $icons(markerwidth,$marker(width)) -takefocus 0
     tooltip::tooltip $mb [msgcat::mc {Region Line Width}]
@@ -222,10 +246,13 @@ proc CreateIconsLeft {} {
 
     pack $mb -side top -fill x
 
-    global marker
     trace add variable marker(width) write [list IconMenuButtonSync $mb]
+}
 
-    # Src/Bg/Back/Forward
+proc CreateIconsLeftMarkerSrc {} {
+    global ds9
+    global icons
+
     set mb $ds9(icons,left)
 
     set icons(marker,src) \
@@ -255,8 +282,12 @@ proc CreateIconsLeft {} {
     tooltip::tooltip $mb.front [msgcat::mc {Bring to Front}]
 
     pack $mb.src $mb.include $mb.back $mb.front -side top -fill x
+}
 
-    # Composite/Group
+proc CreateIconsLeftMarkerComposite {} {
+    global ds9
+    global icons
+
     set mb $ds9(icons,left)
 
     set icons(marker,composite) \

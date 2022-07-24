@@ -14,11 +14,7 @@ proc IconButtonToggleCmd {varname id cmd} {
     upvar #0 $varname var
     global $varname
 
-    if {$var($id) == 0 } {
-        set var($id) 1
-    } else {
-        set var($id) 0
-    }
+    set var($id) [expr !$var($id)]
     if {$cmd != {}} {
 	eval $cmd
     }

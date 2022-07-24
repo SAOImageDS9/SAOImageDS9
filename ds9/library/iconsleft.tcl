@@ -6,7 +6,6 @@ package provide DS9 1.0
 
 proc CreateIconsLeft {} {
     global ds9
-    global icons
     
     set ds9(icons,left) [ttk::frame $ds9(main).iconsleft]
     set ds9(icons,left,sep) \

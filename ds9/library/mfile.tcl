@@ -40,7 +40,7 @@ proc FileMainMenu {} {
     $ds9(mb).file add command -label [msgcat::mc {Header}] \
 	-command DisplayHeaderMenu 
     $ds9(mb).file add command -label [msgcat::mc {Notes}] \
-	-command DisplayNotes 
+	-command DisplayNotes
     $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {Preserve During Load}] \
 	-menu $ds9(mb).file.preserve

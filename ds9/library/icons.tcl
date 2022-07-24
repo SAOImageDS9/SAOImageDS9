@@ -41,7 +41,7 @@ proc IconMenuButtonCmd {varname id value cmd} {
     }
 }
 
-proc IconMenuButtonSync {mb varname id op} {
+proc IconMenuButtonCB {mb varname id op} {
     global $varname
     global icons
     

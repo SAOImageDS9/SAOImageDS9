@@ -75,7 +75,7 @@ proc CreateIconsLeftMode {} {
 
     pack $mb -side top -fill x
     
-    trace add variable current(mode) write [list IconMenuButtonSync $mb]
+    trace add variable current(mode) write [list IconMenuButtonCB $mb]
 }
 
 proc CreateIconsLeftMarkerShape {} {
@@ -116,7 +116,7 @@ proc CreateIconsLeftMarkerShape {} {
 
     pack $mb -side top -fill x
 
-    trace add variable marker(shape) write [list IconMenuButtonSync $mb]
+    trace add variable marker(shape) write [list IconMenuButtonCB $mb]
 }
 
 proc CreateIconsLeftMarkerInfo {} {
@@ -211,7 +211,7 @@ proc CreateIconsLeftMarkerColor {} {
 
     pack $mb -side top -fill x
 
-    trace add variable marker(color) write [list IconMenuButtonSync $mb]
+    trace add variable marker(color) write [list IconMenuButtonCB $mb]
 }
 
 proc CreateIconsLeftMarkerLineWidth {} {
@@ -245,7 +245,7 @@ proc CreateIconsLeftMarkerLineWidth {} {
 
     pack $mb -side top -fill x
 
-    trace add variable marker(width) write [list IconMenuButtonSync $mb]
+    trace add variable marker(width) write [list IconMenuButtonCB $mb]
 }
 
 proc CreateIconsLeftMarkerSrc {} {

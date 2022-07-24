@@ -194,8 +194,7 @@ proc RadioButton {button text varname value cmd} {
 
     # setup trace on $varname, so that all buttons that use this variable
     # will be updated when the variable is changed
-    uplevel #0 trace variable $varname w \
-	[list "RadioButtonCB $button \{$value\}"]
+    trace variable $varname w [list "RadioButtonCB $button \{$value\}"]
 
     # setup <Map> event so that anytime the button is redrawn,
     # it is updated
@@ -210,7 +209,7 @@ proc CheckButton {button text varname cmd} {
 	-takefocus 0 \
 	-command "CheckButtonSim $button $varname \{$cmd\}"
 
-    uplevel #0 trace variable $varname w [list "CheckButtonCB $button"]
+    trace variable $varname w [list "CheckButtonCB $button"]
 
     bind $button <Map> "ButtonMap %W $varname"
 }

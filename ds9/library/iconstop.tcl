@@ -105,12 +105,13 @@ proc CreateIconsTopColormap {} {
 
     pack $mb -side left -fill x
 
-    trace add variable colorbar(map) write [list IconMenuButtonSync $mb]
+    trace add variable colorbar(map) write [list IconMenuButtonCB $mb]
 }
 
 proc CreateIconsTopInvert {} {
     global ds9
     global icons
+    global colorbar
 
     set mb $ds9(icons,top)
 
@@ -118,7 +119,7 @@ proc CreateIconsTopInvert {} {
 	[image create photo -file "$ds9(root)/icons/ui/colorbar_reverse.png"]
 
     ttk::button $mb.invert -takefocus 0 -image $icons(colorbar,invert) \
-	-command InvertColorbar
+	-command [list IconButtonToggleCmd colorbar invert InvertColorbar]
     tooltip::tooltip $mb.invert [msgcat::mc {Invert Colormap}]
 
     pack $mb.invert -side left -fill x

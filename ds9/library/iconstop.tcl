@@ -69,9 +69,9 @@ proc CreateIconsTopFile {} {
 }
 
 proc CreateIconsTopColorMap {} {
-
     global ds9
     global icons
+    global colorbar
 
     set mb $ds9(icons,top).colormap
 
@@ -80,15 +80,19 @@ proc CreateIconsTopColorMap {} {
 		 ]
 
     foreach lut $luts {
-	set icons(lut,$lut) \
-	    [image create photo -file "$ds9(root)/icons/lut/ds9/$lut.png"]
+	set foo [image create photo -file "$ds9(root)/icons/lut/ds9/$lut.png"]
+	set icons(colorbarmap,$lut) [image create photo -width 200 -height 16]
+	$icons(colorbarmap,$lut) copy $foo -zoom 2
+	image delete $foo
     }
     # special case
-    set icons(lut,default) \
-	[image create photo -file "$ds9(root)/icons/lut/unknown.png"]
+    set foo [image create photo -file "$ds9(root)/icons/lut/unknown.png"]
+    set icons(colorbarmap,default) [image create photo 	-width 200 -height 16]
+    $icons(colorbarmap,default) copy $foo -zoom 2
+    image delete $foo
 
     ttk::menubutton $mb -menu $mb.m \
-	-image $icons(lut,$colorbar(map)) -takefocus 0
+	-image $icons(colorbarmap,$colorbar(map)) -takefocus 0
     tooltip::tooltip $mb [msgcat::mc {Colormaps}]
 
     ThemeMenu $mb.m

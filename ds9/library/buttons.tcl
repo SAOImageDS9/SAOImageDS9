@@ -190,11 +190,11 @@ proc RadioButton {button text varname value cmd} {
 	-text $text \
 	-width -1 \
 	-takefocus 0 \
-	-command "RadioButtonSim $button $varname \{$value\} \{$cmd\}"
+	-command "RadioButtonCmd $varname \{$value\} \{$cmd\}"
 
     # setup trace on $varname, so that all buttons that use this variable
     # will be updated when the variable is changed
-    trace variable $varname w [list "RadioButtonCB $button \{$value\}"]
+    trace add variable $varname write [list RadioButtonCB $button \{$value\}]
 
     # setup <Map> event so that anytime the button is redrawn,
     # it is updated
@@ -207,9 +207,9 @@ proc CheckButton {button text varname cmd} {
 	-text $text \
 	-width -1 \
 	-takefocus 0 \
-	-command "CheckButtonSim $button $varname \{$cmd\}"
+	-command "CheckButtonCmd $varname \{$cmd\}"
 
-    trace variable $varname w [list "CheckButtonCB $button"]
+    trace add variable $varname write [list CheckButtonCB $button]
 
     bind $button <Map> "ButtonMap %W $varname"
 }
@@ -222,7 +222,7 @@ proc ButtonMap {button varname} {
     after 10 [list set $varname $vv]
 }
 
-proc RadioButtonSim {button varname value cmd} {
+proc RadioButtonCmd {varname value cmd} {
     uplevel #0 [list set $varname $value]
     eval $cmd
 }
@@ -254,8 +254,9 @@ proc RadioButtonCB {button value varname id op} {
     }
 }
 
-proc CheckButtonSim {button varname cmd} {
+proc CheckButtonCmd {varname cmd} {
     upvar #0 $varname var
+#    puts "CheckButtonCmd: $varname"
     uplevel #0 [list set $varname [expr !$var]]
     eval $cmd
 }
@@ -264,6 +265,7 @@ proc CheckButtonCB {button varname id op} {
     upvar #0 $varname var
     global $varname
 
+#    puts "CheckButtonCB: $varname $id"
     global ds9
 
     if {[$button cget -state] != {disabled}} {

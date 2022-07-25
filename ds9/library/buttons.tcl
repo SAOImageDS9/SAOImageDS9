@@ -201,19 +201,6 @@ proc RadioButton {button text varname value cmd} {
     bind $button <Map> "ButtonMap %W $varname"
 }
 
-proc CheckButton {button text varname cmd} {
-    ttk::button $button \
-	-class TButtonBar \
-	-text $text \
-	-width -1 \
-	-takefocus 0 \
-	-command "CheckButtonCmd $varname \{$cmd\}"
-
-    trace add variable $varname write [list CheckButtonCB $button]
-
-    bind $button <Map> "ButtonMap %W $varname"
-}
-
 proc ButtonMap {button varname} {
     upvar #0 $varname var
     set vv $var
@@ -254,24 +241,42 @@ proc RadioButtonCB {button value varname id op} {
     }
 }
 
-proc CheckButtonCmd {varname cmd} {
-    upvar #0 $varname var
-#    puts "CheckButtonCmd: $varname"
-    uplevel #0 [list set $varname [expr !$var]]
-    eval $cmd
+# Check Button
+
+proc CheckButton {button text varname id cmd} {
+    global $varname
+    
+    ttk::button $button \
+	-class TButtonBar \
+	-text $text \
+	-width -1 \
+	-takefocus 0 \
+	-command [list CheckButtonCmd $varname $id $cmd]
+
+    trace add variable ${varname}($id) write [list CheckButtonCB $button]
+    CheckButtonCB $button $varname $id write
+
+#    bind $button <Map> "ButtonMap %W $varname"
 }
 
-proc CheckButtonCB {button varname id op} {
+proc CheckButtonCmd {varname id cmd} {
     upvar #0 $varname var
     global $varname
 
-#    puts "CheckButtonCB: $varname $id"
+    set ${varname}($id) [expr !$var($id)]
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc CheckButtonCB {button varname id op} {
+    global $varname
     global ds9
 
     if {[$button cget -state] != {disabled}} {
 	switch $ds9(wm) {
 	    x11 {
-		if {$var($id)} {
+		if {[set ${varname}($id)]} {
 		    $button configure -state active
 		} else {
 		    $button configure -state normal
@@ -279,7 +284,7 @@ proc CheckButtonCB {button varname id op} {
 	    }
 	    aqua -
 	    win32 {
-		if {$var($id)} {
+		if {[set ${varname}($id)]} {
 		    $button configure -default active
 		} else {
 		    $button configure -default normal

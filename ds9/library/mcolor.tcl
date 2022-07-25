@@ -280,7 +280,7 @@ proc CreateButtonsColor {} {
     CreateButtonsColorExternal topo
 
     CheckButton $ds9(buttons).color.invert \
-	[string tolower [msgcat::mc {Invert}]] colorbar(invert) InvertColorbar
+	[string tolower [msgcat::mc {Invert}]] colorbar invert InvertColorbar
     ButtonButton $ds9(buttons).color.reset \
 	[string tolower [msgcat::mc {Reset}]] ResetColormap
     RadioButton $ds9(buttons).color.horz \
@@ -291,7 +291,7 @@ proc CreateButtonsColor {} {
 	colorbar(orientation) 1 ColorbarUpdateView
     CheckButton $ds9(buttons).color.numerics \
 	[string tolower [msgcat::mc {Numerics}]] \
-	colorbar(numerics) ColorbarUpdateView
+	colorbar numerics ColorbarUpdateView
     RadioButton $ds9(buttons).color.numvalue \
 	[string tolower [msgcat::mc {Value}]] \
 	colorbar(space) 1 ColorbarUpdateView

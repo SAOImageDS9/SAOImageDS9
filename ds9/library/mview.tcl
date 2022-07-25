@@ -202,65 +202,65 @@ proc CreateButtonsView {} {
 
     CheckButton $ds9(buttons).view.multi \
 	[string tolower [msgcat::mc {Multi Colorbars}]] \
-	view(multi) LayoutFrames
+	view multi LayoutFrames
 
     CheckButton $ds9(buttons).view.info \
 	[string tolower [msgcat::mc {Information}]] \
-	view(info) LayoutView
+	view info LayoutView
     CheckButton $ds9(buttons).view.panner \
 	[string tolower [msgcat::mc {Panner}]] \
-	view(panner) LayoutView
+	view panner LayoutView
     CheckButton $ds9(buttons).view.magnifier \
 	[string tolower [msgcat::mc {Magnifier}]] \
-	view(magnifier) LayoutView
+	view magnifier LayoutView
     CheckButton $ds9(buttons).view.buttons \
 	[string tolower [msgcat::mc {Buttons}]] \
-	view(buttons) LayoutView
+	view buttons LayoutView
     CheckButton $ds9(buttons).view.colorbar \
 	[string tolower [msgcat::mc {Colorbar}]] \
-	view(colorbar) LayoutFrames
+	view colorbar LayoutFrames
     CheckButton $ds9(buttons).view.graphhorz \
 	[string tolower [msgcat::mc {Graph Horz}]] \
-	view(graph,horz) LayoutFrames
+	view graph,horz LayoutFrames
     CheckButton $ds9(buttons).view.graphvert \
 	[string tolower [msgcat::mc {Graph Vert}]] \
-	view(graph,vert) LayoutFrames
+	view graph,vert LayoutFrames
     CheckButton $ds9(buttons).view.filename \
 	[string tolower [msgcat::mc {Filename}]] \
-	view(info,filename) LayoutInfoPanel
+	view info,filename LayoutInfoPanel
     CheckButton $ds9(buttons).view.object \
 	[string tolower [msgcat::mc {Object}]] \
-	view(info,object) LayoutInfoPanel
+	view info,object LayoutInfoPanel
     CheckButton $ds9(buttons).view.keyword \
 	[string tolower [msgcat::mc {Keyword}]] \
-	view(info,keyword) LayoutInfoPanel
+	view info,keyword LayoutInfoPanel
     CheckButton $ds9(buttons).view.minmax \
 	[string tolower [msgcat::mc {Min Max}]] \
-	view(info,minmax) LayoutInfoPanel
+	view info,minmax LayoutInfoPanel
     CheckButton $ds9(buttons).view.lowhigh \
 	[string tolower [msgcat::mc {Low High}]] \
-	view(info,lowhigh) LayoutInfoPanel
+	view info,lowhigh LayoutInfoPanel
     CheckButton $ds9(buttons).view.bunit \
 	[string tolower [msgcat::mc {Units}]] \
-	view(info,bunit) LayoutInfoPanel
+	view info,bunit LayoutInfoPanel
     CheckButton $ds9(buttons).view.wcs \
 	[string tolower [msgcat::mc {WCS}]] \
-	view(info,wcs) LayoutInfoPanel
+	view info,wcs LayoutInfoPanel
     CheckButton $ds9(buttons).view.image \
 	[string tolower [msgcat::mc {Image}]] \
-	view(info,image) LayoutInfoPanel
+	view info,image LayoutInfoPanel
     CheckButton $ds9(buttons).view.physical \
 	[string tolower [msgcat::mc {Physical}]] \
-	view(info,physical) LayoutInfoPanel
+	view info,physical LayoutInfoPanel
     CheckButton $ds9(buttons).view.amplifier \
 	[string tolower [msgcat::mc {Amplifier}]] \
-	view(info,amplifier) LayoutInfoPanel
+	view info,amplifier LayoutInfoPanel
     CheckButton $ds9(buttons).view.detector \
 	[string tolower [msgcat::mc {Detector}]] \
-	view(info,detector) LayoutInfoPanel
+	view info,detector LayoutInfoPanel
     CheckButton $ds9(buttons).view.frame \
 	[string tolower [msgcat::mc {Frame}]] \
-	view(info,frame) LayoutInfoPanel
+	view info,frame LayoutInfoPanel
 
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)

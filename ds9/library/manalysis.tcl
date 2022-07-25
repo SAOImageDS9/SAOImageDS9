@@ -233,10 +233,10 @@ proc CreateButtonsAnalysis {} {
 
     CheckButton $ds9(buttons).analysis.contours \
 	[string tolower [msgcat::mc {Contours}]] \
-	contour(view) UpdateContour
+	contour view UpdateContour
     CheckButton $ds9(buttons).analysis.grid \
 	[string tolower [msgcat::mc {Grid}]] \
-	grid(view) GridUpdateCurrent
+	grid view GridUpdateCurrent
 
     ButtonButton $ds9(buttons).analysis.bin \
 	[string tolower [msgcat::mc {Block In}]] {Block .5 .5}
@@ -265,7 +265,7 @@ proc CreateButtonsAnalysis {} {
 
     CheckButton $ds9(buttons).analysis.smooth \
 	[string tolower [msgcat::mc {Smooth}]] \
-	smooth(view) SmoothUpdate
+	smooth view SmoothUpdate
 
     set buttons(analysis) "
         $ds9(buttons).analysis.contours pbuttons(analysis,contours)

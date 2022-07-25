@@ -845,13 +845,13 @@ proc CreateButtonsRegion {} {
 
     CheckButton $ds9(buttons).region.show \
 	[string tolower [msgcat::mc {Show}]] \
-	marker(show) MarkerShow
+	marker show MarkerShow
     CheckButton $ds9(buttons).region.showtext \
 	[string tolower [msgcat::mc {Show Text}]] \
-	marker(show,text) MarkerShowText
+	marker show,text MarkerShowText
     CheckButton $ds9(buttons).region.autocentroid \
 	[string tolower [msgcat::mc {Auto Centroid}]] \
-	marker(centroid,auto) MarkerCentroidAuto
+	marker centroid,auto MarkerCentroidAuto
 
     set buttons(region) "
         $ds9(buttons).region.info pbuttons(region,info)

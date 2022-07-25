@@ -592,20 +592,21 @@ proc CreateButtonsFrame {} {
 	{MatchCubeCurrent image}
 
     CheckButton $ds9(buttons).frame.lockbin \
-	[string tolower [msgcat::mc {Lock Bin}]] bin(lock) LockBinCurrent
+	[string tolower [msgcat::mc {Lock Bin}]] bin lock LockBinCurrent
     CheckButton $ds9(buttons).frame.lockaxes \
 	[string tolower [msgcat::mc {Lock Axes}]] \
-	cube(lock,axes) LockAxesCurrent
+	cube lock,axes LockAxesCurrent
     CheckButton $ds9(buttons).frame.lockscale \
-	[string tolower [msgcat::mc {Lock Scale}]] scale(lock) LockScaleCurrent
+	[string tolower [msgcat::mc {Lock Scale}]] scale lock LockScaleCurrent
     CheckButton $ds9(buttons).frame.lockscalelimits \
 	[string tolower [msgcat::mc {Lock Limits}]] \
-	scale(lock,limits) LockScaleLimitsCurrent
+	scale lock,limits LockScaleLimitsCurrent
     CheckButton $ds9(buttons).frame.lockcolor \
-	[string tolower [msgcat::mc {Lock Color}]] color(lock) LockColorCurrent
+	[string tolower [msgcat::mc {Lock Color}]] \
+	colorbar lock LockColorCurrent
     CheckButton $ds9(buttons).frame.locksmooth \
 	[string tolower [msgcat::mc {Lock Smooth}]] \
-	smooth(lock) LockSmoothCurrent
+	smooth lock LockSmoothCurrent
 
     RadioButton $ds9(buttons).frame.lockframenone \
 	[string tolower [msgcat::mc {Lock Frame None}]] \

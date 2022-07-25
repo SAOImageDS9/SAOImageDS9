@@ -286,7 +286,7 @@ proc CreateButtonsScale {} {
 	scale(scope) local ChangeScaleScope
 
     CheckButton $ds9(buttons).scale.datasec {datasec} \
-	scale(datasec) ChangeDATASEC
+	scale datasec ChangeDATASEC
 
     ButtonButton $ds9(buttons).scale.params \
 	[string tolower [msgcat::mc {Parameters}]] ScaleDialog

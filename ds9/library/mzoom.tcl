@@ -212,7 +212,7 @@ proc CreateButtonsZoom {} {
     ButtonButton $ds9(buttons).zoom.center \
 	[string tolower [msgcat::mc {Center}]] CenterCurrentFrame
     CheckButton $ds9(buttons).zoom.align \
-	[msgcat::mc {Align}] current(align) AlignWCSFrame
+	[msgcat::mc {Align}] current align AlignWCSFrame
 
     ButtonButton $ds9(buttons).zoom.in \
 	[string tolower [msgcat::mc {Zoom In}]] {Zoom 2 2}

@@ -254,9 +254,8 @@ proc CheckButton {button text varname id cmd} {
 	-command [list CheckButtonCmd $varname $id $cmd]
 
     trace add variable ${varname}($id) write [list CheckButtonCB $button]
+    # set the proper state
     CheckButtonCB $button $varname $id write
-
-#    bind $button <Map> "ButtonMap %W $varname"
 }
 
 proc CheckButtonCmd {varname id cmd} {

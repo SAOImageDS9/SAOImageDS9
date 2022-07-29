@@ -192,13 +192,13 @@ proc CreateButtonsView {} {
 
     RadioButton $ds9(buttons).view.horizontal \
 	[string tolower [msgcat::mc {Layout Horz}]] \
-	view(layout) horizontal LayoutView
+	view layout horizontal LayoutView
     RadioButton $ds9(buttons).view.vertical \
 	[string tolower [msgcat::mc {Layout Vert}]] \
-	view(layout) vertical LayoutView
+	view layout vertical LayoutView
     RadioButton $ds9(buttons).view.alt \
 	[string tolower [msgcat::mc {Layout Alt}]] \
-	view(layout) alt LayoutView
+	view layout alt LayoutView
 
     CheckButton $ds9(buttons).view.multi \
 	[string tolower [msgcat::mc {Multi Colorbars}]] \

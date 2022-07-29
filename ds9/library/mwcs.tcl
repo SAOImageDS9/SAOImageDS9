@@ -86,23 +86,23 @@ proc CreateButtonsWCS {} {
     ttk::frame $ds9(buttons).wcs
 
     RadioButton $ds9(buttons).wcs.fk4 {fk4} \
-	wcs(sky) fk4 UpdateWCS
+	wcs sky fk4 UpdateWCS
     RadioButton $ds9(buttons).wcs.fk5 {fk5} \
-	wcs(sky) fk5 UpdateWCS
+	wcs sky fk5 UpdateWCS
     RadioButton $ds9(buttons).wcs.icrs \
 	[string tolower [msgcat::mc {ICRS}]] \
-	wcs(sky) icrs UpdateWCS
+	wcs sky icrs UpdateWCS
     RadioButton $ds9(buttons).wcs.galactic \
 	[string tolower [msgcat::mc {Galactic}]] \
-	wcs(sky) galactic UpdateWCS
+	wcs sky galactic UpdateWCS
     RadioButton $ds9(buttons).wcs.ecliptic \
 	[string tolower [msgcat::mc {Ecliptic}]] \
-	wcs(sky) ecliptic UpdateWCS
+	wcs sky ecliptic UpdateWCS
     RadioButton $ds9(buttons).wcs.degrees \
 	[string tolower [msgcat::mc {Degrees}]] \
-	wcs(skyformat) degrees UpdateWCS
+	wcs skyformat degrees UpdateWCS
     RadioButton $ds9(buttons).wcs.sexagesimal {sexagesimal} \
-	wcs(skyformat) sexagesimal UpdateWCS
+	wcs skyformat sexagesimal UpdateWCS
 
     set buttons(wcs) "
         $ds9(buttons).wcs.fk4 pbuttons(wcs,fk4)

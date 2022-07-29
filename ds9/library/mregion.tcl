@@ -742,58 +742,58 @@ proc CreateButtonsRegion {} {
 
     RadioButton $ds9(buttons).region.circle \
 	[string tolower [msgcat::mc {Circle}]] \
-	marker(shape) circle {}
+	marker shape circle {}
     RadioButton $ds9(buttons).region.ellipse \
 	[string tolower [msgcat::mc {Ellipse}]] \
-	marker(shape) ellipse {}
+	marker shape ellipse {}
     RadioButton $ds9(buttons).region.box \
 	[string tolower [msgcat::mc {Box}]] \
-	marker(shape) box {}
+	marker shape box {}
     RadioButton $ds9(buttons).region.polygon \
 	[string tolower [msgcat::mc {Polygon}]] \
-	marker(shape) polygon {}
+	marker shape polygon {}
     RadioButton $ds9(buttons).region.line \
 	[string tolower [msgcat::mc {Line}]] \
-	marker(shape) line {}
+	marker shape line {}
     RadioButton $ds9(buttons).region.vector \
 	[string tolower [msgcat::mc {Vector}]] \
-	marker(shape) vector {}
+	marker shape vector {}
     RadioButton $ds9(buttons).region.projection \
 	[string tolower [msgcat::mc {Projection}]] \
-	marker(shape) projection {}
+	marker shape projection {}
     RadioButton $ds9(buttons).region.segment \
 	[string tolower [msgcat::mc {Segment}]] \
-	marker(shape) segment {}
+	marker shape segment {}
     RadioButton $ds9(buttons).region.text \
 	[string tolower [msgcat::mc {Text}]] \
-	marker(shape) text {}
+	marker shape text {}
     RadioButton $ds9(buttons).region.point \
 	[string tolower [msgcat::mc {Point}]] \
-	marker(shape) {circle point} {}
+	marker shape {circle point} {}
     RadioButton $ds9(buttons).region.ruler \
 	[string tolower [msgcat::mc {Ruler}]] \
-	marker(shape) ruler {}
+	marker shape ruler {}
     RadioButton $ds9(buttons).region.compass \
 	[string tolower [msgcat::mc {Compass}]] \
-	marker(shape) compass {}
+	marker shape compass {}
     RadioButton $ds9(buttons).region.annulus \
 	[string tolower [msgcat::mc {Annulus}]] \
-	marker(shape) annulus {}
+	marker shape annulus {}
     RadioButton $ds9(buttons).region.ellipseannulus \
 	[string tolower [msgcat::mc {Elliptical Annulus}]] \
-	marker(shape) ellipseannulus {}
+	marker shape ellipseannulus {}
     RadioButton $ds9(buttons).region.boxannulus \
 	[string tolower [msgcat::mc {Box Annulus}]] \
-	marker(shape) boxannulus {}
+	marker shape boxannulus {}
     RadioButton $ds9(buttons).region.panda \
 	[string tolower [msgcat::mc {Panda}]] \
-	marker(shape) panda {}
+	marker shape panda {}
     RadioButton $ds9(buttons).region.epanda \
 	[string tolower [msgcat::mc {Ellipse Panda}]] \
-	marker(shape) epanda {}
+	marker shape epanda {}
     RadioButton $ds9(buttons).region.bpanda \
 	[string tolower [msgcat::mc {Box Panda}]] \
-	marker(shape) bpanda {}
+	marker shape bpanda {}
 
     ButtonButton $ds9(buttons).region.create \
 	[string tolower [msgcat::mc {Composite}]] CompositeCreate

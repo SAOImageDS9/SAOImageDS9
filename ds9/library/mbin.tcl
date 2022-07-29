@@ -165,10 +165,10 @@ proc CreateButtonsBin {} {
 
     RadioButton $ds9(buttons).bin.average \
 	[string tolower [msgcat::mc {Average}]] \
-	bin(function) average ChangeBinFunction
+	bin function average ChangeBinFunction
     RadioButton $ds9(buttons).bin.sum \
 	[string tolower [msgcat::mc {Sum}]] \
-	bin(function) sum ChangeBinFunction
+	bin function sum ChangeBinFunction
 
     ButtonButton $ds9(buttons).bin.in \
 	[string tolower [msgcat::mc {Bin In}]] {Bin .5 .5}
@@ -179,46 +179,46 @@ proc CreateButtonsBin {} {
 
     RadioButton $ds9(buttons).bin.1 \
 	"[string tolower [msgcat::mc {Bin}]] 1" \
-	bin(factor) {1 1} ChangeBinFactor
+	bin factor {1 1} ChangeBinFactor
     RadioButton $ds9(buttons).bin.2 \
 	"[string tolower [msgcat::mc {Bin}]] 2" \
-	bin(factor) {2 2} ChangeBinFactor
+	bin factor {2 2} ChangeBinFactor
     RadioButton $ds9(buttons).bin.4 \
 	"[string tolower [msgcat::mc {Bin}]] 4" \
-	bin(factor) {4 4} ChangeBinFactor
+	bin factor {4 4} ChangeBinFactor
     RadioButton $ds9(buttons).bin.8 \
 	"[string tolower [msgcat::mc {Bin}]] 8" \
-	bin(factor) {8 8} ChangeBinFactor
+	bin factor {8 8} ChangeBinFactor
     RadioButton $ds9(buttons).bin.16 \
 	"[string tolower [msgcat::mc {Bin}]] 16" \
-	bin(factor) {16 16} ChangeBinFactor
+	bin factor {16 16} ChangeBinFactor
     RadioButton $ds9(buttons).bin.32 \
 	"[string tolower [msgcat::mc {Bin}]] 32" \
-	bin(factor) {32 32} ChangeBinFactor
+	bin factor {32 32} ChangeBinFactor
     RadioButton $ds9(buttons).bin.64 \
 	"[string tolower [msgcat::mc {Bin}]] 64" \
-	bin(factor) {64 64} ChangeBinFactor
+	bin factor {64 64} ChangeBinFactor
     RadioButton $ds9(buttons).bin.128 \
 	"[string tolower [msgcat::mc {Bin}]] 128" \
-	bin(factor) {128 128} ChangeBinFactor
+	bin factor {128 128} ChangeBinFactor
     RadioButton $ds9(buttons).bin.256 \
 	"[string tolower [msgcat::mc {Bin}]] 256" \
-	bin(factor) {256 256} ChangeBinFactor
+	bin factor {256 256} ChangeBinFactor
 
     RadioButton $ds9(buttons).bin.128x {128x128} \
-	bin(buffersize) 128 ChangeBinBufferSize 
+	bin buffersize 128 ChangeBinBufferSize 
     RadioButton $ds9(buttons).bin.256x {256x256} \
-	bin(buffersize) 256 ChangeBinBufferSize 
+	bin buffersize 256 ChangeBinBufferSize 
     RadioButton $ds9(buttons).bin.512x {512x512} \
-	bin(buffersize) 512 ChangeBinBufferSize 
+	bin buffersize 512 ChangeBinBufferSize 
     RadioButton $ds9(buttons).bin.1024x {1024x1024} \
-	bin(buffersize) 1024 ChangeBinBufferSize 
+	bin buffersize 1024 ChangeBinBufferSize 
     RadioButton $ds9(buttons).bin.2048x {2048x2048} \
-	bin(buffersize) 2048 ChangeBinBufferSize 
+	bin buffersize 2048 ChangeBinBufferSize 
     RadioButton $ds9(buttons).bin.4096x {4096x4096} \
-	bin(buffersize) 4096 ChangeBinBufferSize 
+	bin buffersize 4096 ChangeBinBufferSize 
     RadioButton $ds9(buttons).bin.8192x {8192x8192} \
-	bin(buffersize) 8192 ChangeBinBufferSize
+	bin buffersize 8192 ChangeBinBufferSize
 
     ButtonButton $ds9(buttons).bin.params \
 	[string tolower [msgcat::mc {Parameters}]] BinDialog

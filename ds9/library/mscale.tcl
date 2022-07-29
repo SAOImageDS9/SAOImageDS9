@@ -236,54 +236,62 @@ proc CreateButtonsScale {} {
     ttk::frame $ds9(buttons).scale
     RadioButton $ds9(buttons).scale.linear \
 	[string tolower [msgcat::mc {Linear}]] \
-	scale(type) linear ChangeScale
+	scale type linear ChangeScale
     RadioButton $ds9(buttons).scale.log \
 	[string tolower [msgcat::mc {Log}]] \
-	scale(type) log ChangeScale
+	scale type log ChangeScale
     RadioButton $ds9(buttons).scale.pow \
 	[string tolower [msgcat::mc {Power}]] \
-	scale(type) pow ChangeScale
+	scale type pow ChangeScale
     RadioButton $ds9(buttons).scale.sqrt \
 	[string tolower [msgcat::mc {Sqrt}]] \
-	scale(type) sqrt ChangeScale
+	scale type sqrt ChangeScale
     RadioButton $ds9(buttons).scale.squared \
 	[string tolower [msgcat::mc {Squared}]] \
-	scale(type) squared ChangeScale
+	scale type squared ChangeScale
     RadioButton $ds9(buttons).scale.asinh \
 	[string tolower {ASINH}] \
-	scale(type) asinh ChangeScale
+	scale type asinh ChangeScale
     RadioButton $ds9(buttons).scale.sinh \
 	[string tolower {SINH}] \
-	scale(type) sinh ChangeScale
+	scale type sinh ChangeScale
     RadioButton $ds9(buttons).scale.hist \
 	[string tolower [msgcat::mc {Histogram}]] \
-	scale(type) histequ ChangeScale
+	scale type histequ ChangeScale
 
     RadioButton $ds9(buttons).scale.minmax \
 	[string tolower [msgcat::mc {Min Max}]] \
-	scale(mode) minmax ChangeScaleMode
-    RadioButton $ds9(buttons).scale.995 {99.5%} scale(mode) 99.5 ChangeScaleMode
-    RadioButton $ds9(buttons).scale.99 {99%} scale(mode) 99 ChangeScaleMode
-    RadioButton $ds9(buttons).scale.98 {98%} scale(mode) 98 ChangeScaleMode
-    RadioButton $ds9(buttons).scale.97 {97%} scale(mode) 97 ChangeScaleMode
-    RadioButton $ds9(buttons).scale.96 {96%} scale(mode) 96 ChangeScaleMode
-    RadioButton $ds9(buttons).scale.95 {95%} scale(mode) 95 ChangeScaleMode
-    RadioButton $ds9(buttons).scale.925 {92.5%} scale(mode) 92.5 ChangeScaleMode
-    RadioButton $ds9(buttons).scale.90 {90%} scale(mode) 90 ChangeScaleMode
+	scale mode minmax ChangeScaleMode
+    RadioButton $ds9(buttons).scale.995 {99.5%} \
+	scale mode 99.5 ChangeScaleMode
+    RadioButton $ds9(buttons).scale.99 {99%} \
+	scale mode 99 ChangeScaleMode
+    RadioButton $ds9(buttons).scale.98 {98%} \
+	scale mode 98 ChangeScaleMode
+    RadioButton $ds9(buttons).scale.97 {97%} \
+	scale mode 97 ChangeScaleMode
+    RadioButton $ds9(buttons).scale.96 {96%} \
+	scale mode 96 ChangeScaleMode
+    RadioButton $ds9(buttons).scale.95 {95%} \
+	scale mode 95 ChangeScaleMode
+    RadioButton $ds9(buttons).scale.925 {92.5%} \
+	scale mode 92.5 ChangeScaleMode
+    RadioButton $ds9(buttons).scale.90 {90%} \
+	scale mode 90 ChangeScaleMode
     RadioButton $ds9(buttons).scale.zscale {zscale} \
-	scale(mode) zscale ChangeScaleMode
+	scale mode zscale ChangeScaleMode
     RadioButton $ds9(buttons).scale.zmax {zmax} \
-	scale(mode) zmax ChangeScaleMode
+	scale mode zmax ChangeScaleMode
     RadioButton $ds9(buttons).scale.user \
 	[string tolower [msgcat::mc {User}]] \
-	scale(mode) user ChangeScaleMode
+	scale mode user ChangeScaleMode
 
     RadioButton $ds9(buttons).scale.global \
 	[string tolower [msgcat::mc {Global}]] \
-	scale(scope) global ChangeScaleScope
+	scale scope global ChangeScaleScope
     RadioButton $ds9(buttons).scale.local \
 	[string tolower [msgcat::mc {Local}]] \
-	scale(scope) local ChangeScaleScope
+	scale scope local ChangeScaleScope
 
     CheckButton $ds9(buttons).scale.datasec {datasec} \
 	scale datasec ChangeDATASEC

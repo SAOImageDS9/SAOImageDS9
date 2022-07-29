@@ -511,16 +511,16 @@ proc CreateButtonsFrame {} {
 
     RadioButton $ds9(buttons).frame.single \
 	[string tolower [msgcat::mc {Single}]] \
-	current(display) single DisplayMode
+	current display single DisplayMode
     RadioButton $ds9(buttons).frame.tile \
 	[string tolower [msgcat::mc {Tile}]] \
-	current(display) tile DisplayMode
+	current display tile DisplayMode
     RadioButton $ds9(buttons).frame.blink \
 	[string tolower [msgcat::mc {Blink}]] \
-	current(display) blink DisplayMode
+	current display blink DisplayMode
     RadioButton $ds9(buttons).frame.fade \
 	[string tolower [msgcat::mc {Fade}]] \
-	current(display) fade DisplayMode
+	current display fade DisplayMode
 
     ButtonButton $ds9(buttons).frame.matchbin \
 	[string tolower [msgcat::mc {Match Bin}]] MatchBinCurrent
@@ -610,70 +610,70 @@ proc CreateButtonsFrame {} {
 
     RadioButton $ds9(buttons).frame.lockframenone \
 	[string tolower [msgcat::mc {Lock Frame None}]] \
-	panzoom(lock) none LockFrameCurrent
+	panzoom lock none LockFrameCurrent
     RadioButton $ds9(buttons).frame.lockframewcs \
 	[string tolower [msgcat::mc {Lock Frame WCS}]] \
-	panzoom(lock) wcs LockFrameCurrent
+	panzoom lock wcs LockFrameCurrent
     RadioButton $ds9(buttons).frame.lockframeimage \
 	[string tolower [msgcat::mc {Lock Frame Image}]] \
-	panzoom(lock) image LockFrameCurrent
+	panzoom lock image LockFrameCurrent
     RadioButton $ds9(buttons).frame.lockframephysical \
 	[string tolower [msgcat::mc {Lock Frame Physical}]] \
-	panzoom(lock) physical LockFrameCurrent
+	panzoom lock physical LockFrameCurrent
     RadioButton $ds9(buttons).frame.lockframedetector \
 	[string tolower [msgcat::mc {Lock Frame Detector}]] \
-	panzoom(lock) detector LockFrameCurrent
+	panzoom lock detector LockFrameCurrent
     RadioButton $ds9(buttons).frame.lockframeamplifier \
 	[string tolower [msgcat::mc {Lock Frame Amplifier}]] \
-	panzoom(lock) amplifier LockFrameCurrent
+	panzoom lock amplifier LockFrameCurrent
 
     RadioButton $ds9(buttons).frame.lockcrosshairnone \
 	[string tolower [msgcat::mc {Lock Crosshair None}]] \
-	crosshair(lock) none LockCrosshairCurrent
+	crosshair lock none LockCrosshairCurrent
     RadioButton $ds9(buttons).frame.lockcrosshairwcs \
 	[string tolower [msgcat::mc {Lock Crosshair WCS}]] \
-	crosshair(lock) wcs LockCrosshairCurrent
+	crosshair lock wcs LockCrosshairCurrent
     RadioButton $ds9(buttons).frame.lockcrosshairimage \
 	[string tolower [msgcat::mc {Lock Crosshair Image}]] \
-	crosshair(lock) image LockCrosshairCurrent
+	crosshair lock image LockCrosshairCurrent
     RadioButton $ds9(buttons).frame.lockcrosshairphysical \
 	[string tolower [msgcat::mc {Lock Crosshair Physical}]] \
-	crosshair(lock) physical LockCrosshairCurrent
+	crosshair lock physical LockCrosshairCurrent
     RadioButton $ds9(buttons).frame.lockcrosshairdetector \
 	[string tolower [msgcat::mc {Lock Crosshair Detector}]] \
-	crosshair(lock) detector LockCrosshairCurrent
+	crosshair lock detector LockCrosshairCurrent
     RadioButton $ds9(buttons).frame.lockcrosshairamplifier \
 	[string tolower [msgcat::mc {Lock Crosshair Amplifier}]] \
-	crosshair(lock) amplifier LockCrosshairCurrent
+	crosshair lock amplifier LockCrosshairCurrent
 
     RadioButton $ds9(buttons).frame.lockcropnone \
 	[string tolower [msgcat::mc {Lock Crop None}]] \
-	crop(lock) none LockCropCurrent
+	crop lock none LockCropCurrent
     RadioButton $ds9(buttons).frame.lockcropwcs \
 	[string tolower [msgcat::mc {Lock Crop WCS}]] \
-	crop(lock) wcs LockCropCurrent
+	crop lock wcs LockCropCurrent
     RadioButton $ds9(buttons).frame.lockcropimage \
 	[string tolower [msgcat::mc {Lock Crop Image}]] \
-	crop(lock) image LockCropCurrent
+	crop lock image LockCropCurrent
     RadioButton $ds9(buttons).frame.lockcropphysical \
 	[string tolower [msgcat::mc {Lock Crop Physical}]] \
-	crop(lock) physical LockCropCurrent
+	crop lock physical LockCropCurrent
     RadioButton $ds9(buttons).frame.lockcropdetector \
 	[string tolower [msgcat::mc {Lock Crop Detector}]] \
-	crop(lock) detector LockCropCurrent
+	crop lock detector LockCropCurrent
     RadioButton $ds9(buttons).frame.lockcropamplifier \
 	[string tolower [msgcat::mc {Lock Crop Amplifier}]] \
-	crop(lock) amplifier LockCropCurrent
+	crop lock amplifier LockCropCurrent
 
     RadioButton $ds9(buttons).frame.lockcubenone \
 	[string tolower [msgcat::mc {Lock Slice None}]] \
-	cube(lock) none LockCubeCurrent
+	cube lock none LockCubeCurrent
     RadioButton $ds9(buttons).frame.lockcubewcs \
 	[string tolower [msgcat::mc {Lock Slice WCS}]] \
-	cube(lock) wcs LockCubeCurrent
+	cube lock wcs LockCubeCurrent
     RadioButton $ds9(buttons).frame.lockcubeimage \
 	[string tolower [msgcat::mc {Lock Slice Image}]] \
-	cube(lock) image LockCubeCurrent
+	cube lock image LockCubeCurrent
 
     ButtonButton $ds9(buttons).frame.movefirst \
 	[string tolower [msgcat::mc {Move First}]] MoveFirstFrame
@@ -1086,9 +1086,6 @@ proc UpdateFrameMenu {} {
 	puts stderr "UpdateFrameMenu"
     }
 
-    $ds9(mb).frame entryconfig [msgcat::mc {New Frame RGB}] -state normal
-    $ds9(buttons).frame.newrgb configure -state normal
-
     if {[llength $ds9(active)] > 0} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Delete Frame}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Delete All Frames}] -state normal
@@ -1097,10 +1094,10 @@ proc UpdateFrameMenu {} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Reset Frame}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Refresh Frame}] -state normal
 
-	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state normal
-	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state normal
-	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state normal
-	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state normal
+#	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state normal
+#	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state normal
+#	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state normal
+#	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state normal
 
 	$ds9(mb).frame entryconfig [msgcat::mc {Match}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Lock}] -state normal
@@ -1119,10 +1116,10 @@ proc UpdateFrameMenu {} {
 	$ds9(buttons).frame.reset configure -state normal
 	$ds9(buttons).frame.refresh configure -state normal
 
-	$ds9(buttons).frame.single configure -state normal
-	$ds9(buttons).frame.tile configure -state normal
-	$ds9(buttons).frame.blink configure -state normal
-	$ds9(buttons).frame.fade configure -state normal
+#	$ds9(buttons).frame.single configure -state normal
+#	$ds9(buttons).frame.tile configure -state normal
+#	$ds9(buttons).frame.blink configure -state normal
+#	$ds9(buttons).frame.fade configure -state normal
 
 	$ds9(buttons).frame.movefirst configure -state normal
 	$ds9(buttons).frame.moveprev configure -state normal
@@ -1141,10 +1138,10 @@ proc UpdateFrameMenu {} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Reset Frame}] -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {Refresh Frame}] -state disabled
 
-	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state disabled
-	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state disabled
-	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state disabled
-	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state disabled
+#	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state disabled
+#	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state disabled
+#	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state disabled
+#	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state disabled
 
 	$ds9(mb).frame entryconfig [msgcat::mc {Match}] -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {Lock}] -state disabled
@@ -1163,10 +1160,10 @@ proc UpdateFrameMenu {} {
 	$ds9(buttons).frame.reset configure -state disabled
 	$ds9(buttons).frame.refresh configure -state disabled
 
-	$ds9(buttons).frame.single configure -state disabled
-	$ds9(buttons).frame.tile configure -state disabled
-	$ds9(buttons).frame.blink configure -state disabled
-	$ds9(buttons).frame.fade configure -state disabled
+#	$ds9(buttons).frame.single configure -state disabled
+#	$ds9(buttons).frame.tile configure -state disabled
+#	$ds9(buttons).frame.blink configure -state disabled
+#	$ds9(buttons).frame.fade configure -state disabled
 
 	$ds9(buttons).frame.movefirst configure -state disabled
 	$ds9(buttons).frame.moveprev configure -state disabled

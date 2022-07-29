@@ -159,40 +159,40 @@ proc CreateButtonsEdit {} {
 
     RadioButton $ds9(buttons).edit.none \
 	[string tolower [msgcat::mc {None}]] \
-	current(mode) none ChangeMode
+	current mode none ChangeMode
     RadioButton $ds9(buttons).edit.region \
 	[string tolower [msgcat::mc {Region}]] \
-	current(mode) region ChangeMode
+	current mode region ChangeMode
     RadioButton $ds9(buttons).edit.crosshair \
 	[string tolower [msgcat::mc {Cross}]] \
-	current(mode) crosshair ChangeMode
+	current mode crosshair ChangeMode
     RadioButton $ds9(buttons).edit.colorbar \
 	[string tolower [msgcat::mc {Colorbar}]] \
-	current(mode) colorbar ChangeMode
+	current mode colorbar ChangeMode
     RadioButton $ds9(buttons).edit.pan \
 	[string tolower [msgcat::mc {Pan}]] \
-	current(mode) pan ChangeMode
+	current mode pan ChangeMode
     RadioButton $ds9(buttons).edit.zoom \
 	[string tolower [msgcat::mc {Zoom}]] \
-	current(mode) zoom ChangeMode
+	current mode zoom ChangeMode
     RadioButton $ds9(buttons).edit.rotate \
 	[string tolower [msgcat::mc {Rotate}]] \
-	current(mode) rotate ChangeMode
+	current mode rotate ChangeMode
     RadioButton $ds9(buttons).edit.crop \
 	[string tolower [msgcat::mc {Crop}]] \
-	current(mode) crop ChangeMode
+	current mode crop ChangeMode
     RadioButton $ds9(buttons).edit.catalog \
 	[string tolower [msgcat::mc {Cat}]] \
-	current(mode) catalog ChangeMode
+	current mode catalog ChangeMode
     RadioButton $ds9(buttons).edit.footprint \
         [string tolower [msgcat::mc {FP}]] \
-        current(mode) footprint ChangeMode
+        current mode footprint ChangeMode
     RadioButton $ds9(buttons).edit.examine \
 	[string tolower [msgcat::mc {Exam}]] \
-	current(mode) examine ChangeMode
+	current mode examine ChangeMode
     RadioButton $ds9(buttons).edit.3d \
 	[string tolower [msgcat::mc {3d}]] \
-	current(mode) 3d ChangeMode
+	current mode 3d ChangeMode
 
     ButtonButton $ds9(buttons).edit.prefs \
 	[string tolower [msgcat::mc {Preferences}]] PrefsDialog

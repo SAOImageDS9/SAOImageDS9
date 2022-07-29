@@ -222,49 +222,56 @@ proc CreateButtonsZoom {} {
 	[string tolower [msgcat::mc {Zoom Fit}]] ZoomToFit
     RadioButton $ds9(buttons).zoom.i32 \
  	"[string tolower [msgcat::mc {Zoom}]] 1/32" \
-	current(zoom) {0.03125 0.03125} ChangeZoom
+	current zoom {0.03125 0.03125} ChangeZoom
     RadioButton $ds9(buttons).zoom.i16 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/16" \
-	current(zoom) {0.0625 0.0625} ChangeZoom
+	current zoom {0.0625 0.0625} ChangeZoom
     RadioButton $ds9(buttons).zoom.i8 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/8" \
-	current(zoom) {0.125 0.125} ChangeZoom
+	current zoom {0.125 0.125} ChangeZoom
     RadioButton $ds9(buttons).zoom.i4 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/4" \
-	current(zoom) {0.25 0.25} ChangeZoom
+	current zoom {0.25 0.25} ChangeZoom
     RadioButton $ds9(buttons).zoom.i2 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/2" \
-	current(zoom) {0.5 0.5} ChangeZoom
+	current zoom {0.5 0.5} ChangeZoom
     RadioButton $ds9(buttons).zoom.1 \
 	"[string tolower [msgcat::mc {Zoom}]] 1" \
-	current(zoom) {1 1} ChangeZoom
+	current zoom {1 1} ChangeZoom
     RadioButton $ds9(buttons).zoom.2 \
 	"[string tolower [msgcat::mc {Zoom}]] 2" \
-	current(zoom) {2 2} ChangeZoom
+	current zoom {2 2} ChangeZoom
     RadioButton $ds9(buttons).zoom.4 \
 	"[string tolower [msgcat::mc {Zoom}]] 4" \
-	current(zoom) {4 4} ChangeZoom
+	current zoom {4 4} ChangeZoom
     RadioButton $ds9(buttons).zoom.8 \
 	"[string tolower [msgcat::mc {Zoom}]] 8" \
-	current(zoom) {8 8} ChangeZoom
+	current zoom {8 8} ChangeZoom
     RadioButton $ds9(buttons).zoom.16 \
 	"[string tolower [msgcat::mc {Zoom}]] 16" \
-	current(zoom) {16 16} ChangeZoom
+	current zoom {16 16} ChangeZoom
     RadioButton $ds9(buttons).zoom.32 \
  	"[string tolower [msgcat::mc {Zoom}]] 32" \
- 	current(zoom) {32 32} ChangeZoom
+ 	current zoom {32 32} ChangeZoom
 
     RadioButton $ds9(buttons).zoom.none \
 	[string tolower [msgcat::mc {None}]] \
-	current(orient) none ChangeOrient
-    RadioButton $ds9(buttons).zoom.x {x} current(orient) x ChangeOrient
-    RadioButton $ds9(buttons).zoom.y {y} current(orient) y ChangeOrient
-    RadioButton $ds9(buttons).zoom.xy {xy} current(orient) xy ChangeOrient
+	current orient none ChangeOrient
+    RadioButton $ds9(buttons).zoom.x {x} \
+	current orient x ChangeOrient
+    RadioButton $ds9(buttons).zoom.y {y} \
+	current orient y ChangeOrient
+    RadioButton $ds9(buttons).zoom.xy {xy} \
+	current orient xy ChangeOrient
 
-    RadioButton $ds9(buttons).zoom.0 {0} current(rotate) 0 ChangeRotate
-    RadioButton $ds9(buttons).zoom.90 {90} current(rotate) 90 ChangeRotate
-    RadioButton $ds9(buttons).zoom.180 {180} current(rotate) 180 ChangeRotate
-    RadioButton $ds9(buttons).zoom.270 {270} current(rotate) 270 ChangeRotate
+    RadioButton $ds9(buttons).zoom.0 {0} \
+	current rotate 0 ChangeRotate
+    RadioButton $ds9(buttons).zoom.90 {90} \
+	current rotate 90 ChangeRotate
+    RadioButton $ds9(buttons).zoom.180 {180} \
+	current rotate 180 ChangeRotate
+    RadioButton $ds9(buttons).zoom.270 {270} \
+	current rotate 270 ChangeRotate
 
     ButtonButton $ds9(buttons).zoom.crop \
 	[string tolower [msgcat::mc {Crop}]] CropDialog

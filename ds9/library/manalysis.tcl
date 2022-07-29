@@ -246,22 +246,22 @@ proc CreateButtonsAnalysis {} {
 	[string tolower [msgcat::mc {Block Fit}]] BlockToFit
     RadioButton $ds9(buttons).analysis.b1 \
 	"[string tolower [msgcat::mc {Block}]] 1" \
-	block(factor) {1 1} ChangeBlock
+	block factor {1 1} ChangeBlock
     RadioButton $ds9(buttons).analysis.b2 \
 	"[string tolower [msgcat::mc {Block}]] 2" \
-	block(factor) {2 2} ChangeBlock
+	block factor {2 2} ChangeBlock
     RadioButton $ds9(buttons).analysis.b4 \
 	"[string tolower [msgcat::mc {Block}]] 4" \
-	block(factor) {4 4} ChangeBlock
+	block factor {4 4} ChangeBlock
     RadioButton $ds9(buttons).analysis.b8 \
 	"[string tolower [msgcat::mc {Block}]] 8" \
-	block(factor) {8 8} ChangeBlock
+	block factor {8 8} ChangeBlock
     RadioButton $ds9(buttons).analysis.b16 \
 	"[string tolower [msgcat::mc {Block}]] 16" \
-	block(factor) {16 16} ChangeBlock
+	block factor {16 16} ChangeBlock
     RadioButton $ds9(buttons).analysis.b32 \
 	"[string tolower [msgcat::mc {Block}]] 32" \
-	block(factor) {32 32} ChangeBlock
+	block factor {32 32} ChangeBlock
 
     CheckButton $ds9(buttons).analysis.smooth \
 	[string tolower [msgcat::mc {Smooth}]] \

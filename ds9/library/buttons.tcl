@@ -63,40 +63,40 @@ proc CreateButtonsMajor {} {
     ttk::frame $ds9(buttons).major
     RadioButton $ds9(buttons).major.file \
 	[string tolower [msgcat::mc {File}]] \
-	buttons(major,current) $ds9(buttons).file MajorButton
+	buttons major,current $ds9(buttons).file MajorButton
     RadioButton $ds9(buttons).major.edit \
 	[string tolower [msgcat::mc {Edit}]] \
-	buttons(major,current) $ds9(buttons).edit MajorButton
+	buttons major,current $ds9(buttons).edit MajorButton
     RadioButton $ds9(buttons).major.view \
 	[string tolower [msgcat::mc {View}]] \
-	buttons(major,current) $ds9(buttons).view MajorButton
+	buttons major,current $ds9(buttons).view MajorButton
     RadioButton $ds9(buttons).major.frame \
 	[string tolower [msgcat::mc {Frame}]] \
-	buttons(major,current) $ds9(buttons).frame MajorButton
+	buttons major,current $ds9(buttons).frame MajorButton
     RadioButton $ds9(buttons).major.bin \
 	[string tolower [msgcat::mc {Bin}]] \
-	buttons(major,current) $ds9(buttons).bin MajorButton
+	buttons major,current $ds9(buttons).bin MajorButton
     RadioButton $ds9(buttons).major.zoom \
 	[string tolower [msgcat::mc {Zoom}]] \
-	buttons(major,current) $ds9(buttons).zoom MajorButton
+	buttons major,current $ds9(buttons).zoom MajorButton
     RadioButton $ds9(buttons).major.scale \
 	[string tolower [msgcat::mc {Scale}]] \
-	buttons(major,current) $ds9(buttons).scale MajorButton
+	buttons major,current $ds9(buttons).scale MajorButton
     RadioButton $ds9(buttons).major.color \
 	[string tolower [msgcat::mc {Color}]] \
-	buttons(major,current) $ds9(buttons).color MajorButton
+	buttons major,current $ds9(buttons).color MajorButton
     RadioButton $ds9(buttons).major.region \
 	[string tolower [msgcat::mc {Region}]] \
-	buttons(major,current) $ds9(buttons).region MajorButton
+	buttons major,current $ds9(buttons).region MajorButton
     RadioButton $ds9(buttons).major.wcs \
 	[string tolower [msgcat::mc {WCS}]] \
-	buttons(major,current) $ds9(buttons).wcs MajorButton
+	buttons major,current $ds9(buttons).wcs MajorButton
     RadioButton $ds9(buttons).major.analysis \
 	[string tolower [msgcat::mc {Analysis}]] \
-	buttons(major,current) $ds9(buttons).analysis MajorButton
+	buttons major,current $ds9(buttons).analysis MajorButton
     RadioButton $ds9(buttons).major.help \
 	[string tolower [msgcat::mc {Help}]] \
-	buttons(major,current) $ds9(buttons).help MajorButton
+	buttons major,current $ds9(buttons).help MajorButton
 
     global pbuttons
     array set pbuttons {
@@ -184,59 +184,43 @@ proc ButtonButton {button text cmd} {
 	-takefocus 0
 }
 
-proc RadioButton {button text varname value cmd} {
+# Radio Button
+
+proc RadioButton {button text varname id value cmd} {
+    upvar #0 $varname var
+    global $varname
+
     ttk::button $button \
 	-class TButtonBar \
 	-text $text \
 	-width -1 \
 	-takefocus 0 \
-	-command "RadioButtonCmd $varname \{$value\} \{$cmd\}"
+	-command [list RadioButtonCmd $varname $id $value $cmd]
 
-    # setup trace on $varname, so that all buttons that use this variable
-    # will be updated when the variable is changed
-    trace add variable $varname write [list RadioButtonCB $button \{$value\}]
-
-    # setup <Map> event so that anytime the button is redrawn,
-    # it is updated
-    bind $button <Map> "ButtonMap %W $varname"
+    trace add variable ${varname}($id) write [list RadioButtonCB $button $value]
+    # set the proper state
+    RadioButtonCB $button $value $varname $id write
 }
 
-proc ButtonMap {button varname} {
+proc RadioButtonCmd {varname id value cmd} {
     upvar #0 $varname var
-    set vv $var
+    global $varname
 
-    # delay slightly, I don't know why this is needed
-    after 10 [list set $varname $vv]
-}
-
-proc RadioButtonCmd {varname value cmd} {
-    uplevel #0 [list set $varname $value]
-    eval $cmd
+    set ${varname}($id) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc RadioButtonCB {button value varname id op} {
     upvar #0 $varname var
     global $varname
 
-    global ds9
-
     if {[$button cget -state] != {disabled}} {
-	switch $ds9(wm) {
-	    x11 {
-		if {$var($id) == $value} {
-		    $button configure -state active
-		} else {
-		    $button configure -state normal
-		}
-	    }
-	    aqua -
-	    win32 {
-		if {$var($id) == $value} {
-		    $button configure -default active
-		} else {
-		    $button configure -default normal
-		}
-	    }
+	if {$var($id) == $value} {
+	    $button configure -state active
+	} else {
+	    $button configure -state normal
 	}
     }
 }
@@ -270,25 +254,12 @@ proc CheckButtonCmd {varname id cmd} {
 
 proc CheckButtonCB {button varname id op} {
     global $varname
-    global ds9
 
     if {[$button cget -state] != {disabled}} {
-	switch $ds9(wm) {
-	    x11 {
-		if {[set ${varname}($id)]} {
-		    $button configure -state active
-		} else {
-		    $button configure -state normal
-		}
-	    }
-	    aqua -
-	    win32 {
-		if {[set ${varname}($id)]} {
-		    $button configure -default active
-		} else {
-		    $button configure -default normal
-		}
-	    }
+	if {[set ${varname}($id)]} {
+	    $button configure -state active
+	} else {
+	    $button configure -state normal
 	}
     }
 }

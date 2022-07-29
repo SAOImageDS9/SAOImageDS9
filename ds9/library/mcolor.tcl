@@ -285,19 +285,19 @@ proc CreateButtonsColor {} {
 	[string tolower [msgcat::mc {Reset}]] ResetColormap
     RadioButton $ds9(buttons).color.horz \
 	[string tolower [msgcat::mc {Horizontal}]] \
-	colorbar(orientation) 0 ColorbarUpdateView
+	colorbar orientation 0 ColorbarUpdateView
     RadioButton $ds9(buttons).color.vert \
 	[string tolower [msgcat::mc {Vertical}]] \
-	colorbar(orientation) 1 ColorbarUpdateView
+	colorbar orientation 1 ColorbarUpdateView
     CheckButton $ds9(buttons).color.numerics \
 	[string tolower [msgcat::mc {Numerics}]] \
 	colorbar numerics ColorbarUpdateView
     RadioButton $ds9(buttons).color.numvalue \
 	[string tolower [msgcat::mc {Value}]] \
-	colorbar(space) 1 ColorbarUpdateView
+	colorbar space 1 ColorbarUpdateView
     RadioButton $ds9(buttons).color.numspace \
 	[string tolower [msgcat::mc {Distance}]] \
-	colorbar(space) 0 ColorbarUpdateView
+	colorbar space 0 ColorbarUpdateView
 
     ButtonButton $ds9(buttons).color.params \
 	[string tolower [msgcat::mc {Parameters}]] ColormapDialog
@@ -320,7 +320,7 @@ proc CreateButtonsColorExternal {which} {
     
     foreach cmap $icolorbar($which,cmaps) {
 	RadioButton $ds9(buttons).color.$cmap [msgcat::mc $cmap] \
-	    colorbar(map) $cmap [list ChangeColormapName $cmap]
+	    colorbar map $cmap [list ChangeColormapName $cmap]
 
 	append buttons(color) "$ds9(buttons).color.$cmap pbuttons(color,$cmap) "
     }
@@ -444,12 +444,12 @@ proc UpdateColorMenu {} {
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state normal
 
-		UpdateColorMenuExternal default normal
-		UpdateColorMenuExternal h5 normal
-		UpdateColorMenuExternal matplotlib normal
-		UpdateColorMenuExternal cubehelix normal
-		UpdateColorMenuExternal gist normal
-		UpdateColorMenuExternal topo normal
+		UpdateColorButtonExternal default normal
+		UpdateColorButtonExternal h5 normal
+		UpdateColorButtonExternal matplotlib normal
+		UpdateColorButtonExternal cubehelix normal
+		UpdateColorButtonExternal gist normal
+		UpdateColorButtonExternal topo normal
 	    }
 	    rgb {
 		foreach cmap $icolorbar(default,cmaps) {
@@ -469,12 +469,12 @@ proc UpdateColorMenu {} {
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state disable
 
-		UpdateColorMenuExternal default disable
-		UpdateColorMenuExternal h5 disable
-		UpdateColorMenuExternal matplotlib disable
-		UpdateColorMenuExternal cubehelix disable
-		UpdateColorMenuExternal gist disable
-		UpdateColorMenuExternal topo disable
+		UpdateColorButtonExternal default disable
+		UpdateColorButtonExternal h5 disable
+		UpdateColorButtonExternal matplotlib disable
+		UpdateColorButtonExternal cubehelix disable
+		UpdateColorButtonExternal gist disable
+		UpdateColorButtonExternal topo disable
 	    }
 	}
     } else {
@@ -489,20 +489,30 @@ proc UpdateColorMenu {} {
 	$ds9(mb).color entryconfig [msgcat::mc {Topographic}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {User}] -state normal
 
-	UpdateColorMenuExternal default normal
-	UpdateColorMenuExternal h5 normal
-	UpdateColorMenuExternal matplotlib normal
-	UpdateColorMenuExternal cubehelix normal
-	UpdateColorMenuExternal gist normal
-	UpdateColorMenuExternal topo normal
+	UpdateColorButtonExternal default normal
+	UpdateColorButtonExternal h5 normal
+	UpdateColorButtonExternal matplotlib normal
+	UpdateColorButtonExternal cubehelix normal
+	UpdateColorButtonExternal gist normal
+	UpdateColorButtonExternal topo normal
     }
 }
 
-proc UpdateColorMenuExternal {which state} {
+proc UpdateColorButtonExternal {which state} {
     global icolorbar
+    global colorbar
     global ds9
 
     foreach cmap $icolorbar($which,cmaps) {
-	$ds9(buttons).color.$cmap configure -state $state
+	switch $state {
+	    normal {
+		if {$colorbar(map) == $cmap} {
+		    $ds9(buttons).color.$cmap configure -state active
+		} else {
+		    $ds9(buttons).color.$cmap configure -state normal
+		}
+	    }
+	    disable {$ds9(buttons).color.$cmap configure -state disable}
+	}
     }
 }

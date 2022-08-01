@@ -512,7 +512,9 @@ proc UpdateColorButtonExternal {which state} {
 		    $ds9(buttons).color.$cmap configure -state normal
 		}
 	    }
-	    disable {$ds9(buttons).color.$cmap configure -state disable}
+	    disable {
+		$ds9(buttons).color.$cmap configure -state disable
+	    }
 	}
     }
 }

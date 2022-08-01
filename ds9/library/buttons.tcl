@@ -216,11 +216,25 @@ proc RadioButtonCB {button value varname id op} {
     upvar #0 $varname var
     global $varname
 
+    global ds9
+
     if {[$button cget -state] != {disabled}} {
-	if {$var($id) == $value} {
-	    $button configure -state active
-	} else {
-	    $button configure -state normal
+	switch $ds9(wm) {
+	    x11 {
+		if {$var($id) == $value} {
+		    $button configure -state active
+		} else {
+		    $button configure -state normal
+		}
+	    }
+	    aqua -
+	    win32 {
+		if {$var($id) == $value} {
+		    $button configure -default active
+		} else {
+		    $button configure -default normal
+		}
+	    }
 	}
     }
 }
@@ -255,11 +269,25 @@ proc CheckButtonCmd {varname id cmd} {
 proc CheckButtonCB {button varname id op} {
     global $varname
 
+    global ds9
+
     if {[$button cget -state] != {disabled}} {
-	if {[set ${varname}($id)]} {
-	    $button configure -state active
-	} else {
-	    $button configure -state normal
+	switch $ds9(wm) {
+	    x11 {
+		if {[set ${varname}($id)]} {
+		    $button configure -state active
+		} else {
+		    $button configure -state normal
+		}
+	    }
+	    aqua -
+	    win32 {
+		if {[set ${varname}($id)]} {
+		    $button configure -default active
+		} else {
+		    $button configure -default normal
+		}
+	    }
 	}
     }
 }

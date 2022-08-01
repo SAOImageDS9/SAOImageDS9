@@ -1260,7 +1260,8 @@ proc UpdateColorDialog {} {
 			"[msgcat::mc {Save}]..." -state disabled
 
 		    foreach cmap $icolorbar(default,cmaps) {
-			$icolorbar(mb).colormap entryconfig $cmap -state disabled
+			$icolorbar(mb).colormap entryconfig $cmap \
+			    -state disabled
 		    }
 
 		    $icolorbar(mb).colormap entryconfig \

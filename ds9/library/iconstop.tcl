@@ -14,6 +14,8 @@ proc CreateIconsTop {} {
     CreateIconsTopFile
     CreateIconsTopColormap
     CreateIconsTopInvert
+    CreateIconsTopScale
+    CreateIconsTopScaleDialog
 }
 
 proc CreateIconsTopFile {} {
@@ -118,11 +120,58 @@ proc CreateIconsTopInvert {} {
     set icons(colorbar,invert) \
 	[image create photo -file "$ds9(root)/icons/ui/colorbar_reverse.png"]
 
-    ttk::button $mb.invert -takefocus 0 -image $icons(colorbar,invert) \
+    ttk::button $mb.colorbarinvert -takefocus 0 -image $icons(colorbar,invert) \
 	-command [list IconButtonToggleCmd colorbar invert InvertColorbar]
-    tooltip::tooltip $mb.invert [msgcat::mc {Invert Colormap}]
+    tooltip::tooltip $mb.colorbarinvert [msgcat::mc {Invert Colormap}]
 
-    pack $mb.invert -side left -fill x
+    pack $mb.colorbarinvert -side left -fill x
 }
 
+proc CreateIconsTopScale {} {
+    global ds9
+    global icons
+    global scale
 
+    set mb $ds9(icons,top).scale
+
+    set icons(scaletype,log) \
+	[image create photo -file "$ds9(root)/icons/ui/log.png"]
+    set icons(scaletype,linear) \
+	[image create photo -file "$ds9(root)/icons/ui/lin.png"]
+    set icons(scaletype,pow) \
+	[image create photo -file "$ds9(root)/icons/ui/pow.png"]
+    # special case
+    set icons(scaletype,default) \
+	[image create photo -file "$ds9(root)/icons/ui/scale_other.png"]
+
+    ttk::menubutton $mb -menu $mb.m -direction right -takefocus 0 \
+	-image $icons(scaletype,$scale(type))
+    tooltip::tooltip $mb [msgcat::mc {Scaling Option}]
+
+    ThemeMenu $mb.m
+    $mb.m configure -tearoff 0
+    IconMenuButton $mb scale type log ChangeScale
+    IconMenuButton $mb scale type linear ChangeScale
+    IconMenuButton $mb scale type pow ChangeScale
+
+    pack $mb -side left -fill x
+    
+    trace add variable scale(type) write [list IconMenuButtonCB $mb]
+}
+
+proc CreateIconsTopScaleDialog {} {
+    global ds9
+    global icons
+    global scale
+
+    set mb $ds9(icons,top)
+
+    set icons(scale,dialog) \
+	[image create photo -file "$ds9(root)/icons/ui/scale_limits.png"]
+
+    ttk::button $mb.scaledialog -takefocus 0 -image $icons(scale,dialog) \
+	-command ScaleDialog
+    tooltip::tooltip $mb.scaledialog [msgcat::mc {Scaling Parameters}]
+
+    pack $mb.scaledialog -side left -fill x
+}

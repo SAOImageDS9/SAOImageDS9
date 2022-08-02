@@ -9,6 +9,7 @@
 
 %start command
 
+%token ADVANCED_
 %token BLUE_
 %token BUTTONS_
 %token COLORBAR_
@@ -29,9 +30,7 @@
 %token MULTI_
 %token OBJECT_
 %token PANNER_
-%token PARK_
 %token RED_
-%token SOUTH_
 %token UNITS_
 %token VERTICAL_
 %token VERTGRAPH_
@@ -81,7 +80,7 @@ view : layout
 
 layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal LayoutView}
  | VERTICAL_ {ProcessCmdSet view layout vertical LayoutView}
- | SOUTH_ PARK_ {ProcessCmdSet view layout alt LayoutView}
+ | ADVANCED_ {ProcessCmdSet view layout alt LayoutView}
  ;
  
 orient : HORIZONTAL_ {set _ horz}

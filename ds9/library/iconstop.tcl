@@ -11,11 +11,13 @@ proc CreateIconsTop {} {
     set ds9(icons,top,sep) \
 	[ttk::separator $ds9(main).iconstopsep -orient horizontal]
 
+    CreateIconsTopQuit
     CreateIconsTopFile
     CreateIconsTopColormap
     CreateIconsTopInvert
     CreateIconsTopScale
     CreateIconsTopScaleDialog
+    CreateIconsTopAnalysis
 }
 
 proc CreateIconsTopFile {} {
@@ -113,7 +115,6 @@ proc CreateIconsTopColormap {} {
 proc CreateIconsTopInvert {} {
     global ds9
     global icons
-    global colorbar
 
     set mb $ds9(icons,top)
 
@@ -162,7 +163,6 @@ proc CreateIconsTopScale {} {
 proc CreateIconsTopScaleDialog {} {
     global ds9
     global icons
-    global scale
 
     set mb $ds9(icons,top)
 
@@ -175,3 +175,53 @@ proc CreateIconsTopScaleDialog {} {
 
     pack $mb.scaledialog -side left -fill x
 }
+
+proc CreateIconsTopAnalysis {} {
+    global ds9
+    global icons
+
+    set mb $ds9(icons,top)
+
+    set icons(analysis,smooth) \
+	[image create photo -file "$ds9(root)/icons/ui/smooth.png"]
+    set icons(analysis,contour) \
+	[image create photo -file "$ds9(root)/icons/ui/contour.png"]
+    set icons(analysis,match) \
+	[image create photo -file "$ds9(root)/icons/ui/match.png"]
+    set icons(analysis,grid) \
+	[image create photo -file "$ds9(root)/icons/ui/coord_grid.png"]
+
+    ttk::button $mb.smooth -takefocus 0 -image $icons(analysis,smooth) \
+	-command [list IconButtonToggleCmd smooth view SmoothUpdate]
+    tooltip::tooltip $mb.smooth [msgcat::mc {Toggle Smooth}]
+
+    ttk::button $mb.contour -takefocus 0 -image $icons(analysis,contour) \
+	-command [list IconButtonToggleCmd contour view UpdateContour]
+    tooltip::tooltip $mb.contour [msgcat::mc {Toggle Contour}]
+
+    ttk::button $mb.match -takefocus 0 -image $icons(analysis,match) \
+	-command [list MatchFrameCurrent wcs]
+    tooltip::tooltip $mb.match [msgcat::mc {Match Frames on WCS}]
+
+    ttk::button $mb.grid -takefocus 0 -image $icons(analysis,grid) \
+	-command [list IconButtonToggleCmd grid view GridUpdateCurrent]
+    tooltip::tooltip $mb.grid [msgcat::mc {Toggle Coordinate Grid}]
+
+    pack $mb.smooth $mb.contour $mb.match $mb.grid -side left -fill x
+}
+
+proc CreateIconsTopQuit {} {
+    global ds9
+    global icons
+
+    set mb $ds9(icons,top)
+
+    set icons(quit) \
+	[image create photo -file "$ds9(root)/icons/ui/quit.png"]
+
+    ttk::button $mb.quit -takefocus 0 -image $icons(quit) -command QuitDS9
+    tooltip::tooltip $mb.quit [msgcat::mc {Exit}]
+
+    pack $mb.quit -side right
+}
+

@@ -524,6 +524,8 @@ proc LayoutViewAdvanced {} {
     grid $ds9(icons,top,sep) -row 1 -column 0 -sticky ew -columnspan 7
     grid $ds9(icons,left) -row 2 -column 0 -sticky ns
     grid $ds9(icons,left,sep) -row 2 -column 1 -sticky ns
+    grid $ds9(icons,bottom,sep) -row 3 -column 0 -sticky ew -columnspan 7
+    grid $ds9(icons,bottom) -row 4 -column 0 -sticky ew -columnspan 7
 }
 
 proc LayoutFrames {} {

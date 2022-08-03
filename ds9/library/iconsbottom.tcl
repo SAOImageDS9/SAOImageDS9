@@ -133,36 +133,36 @@ proc CreateIconsBottomFrame {} {
     # special case, should not be used
     set icons(currentdisplay,default) $icons(currentdisplay,single)
 
-    ttk::button $mb.frameadd -takefocus 0 -image $icons(frame,add) \
+    ttk::button $mb.add -takefocus 0 -image $icons(frame,add) \
 	-command CreateFrame
-    tooltip::tooltip $mb.frameadd [msgcat::mc {Add New Frame}]
+    tooltip::tooltip $mb.add [msgcat::mc {Add New Frame}]
 
-    ttk::button $mb.framedel -takefocus 0 -image $icons(frame,del) \
+    ttk::button $mb.del -takefocus 0 -image $icons(frame,del) \
 	-command DeleteCurrentFrame
-    tooltip::tooltip $mb.framedel [msgcat::mc {Delete Frame}]
+    tooltip::tooltip $mb.del [msgcat::mc {Delete Frame}]
 
-    ttk::button $mb.framefirst -takefocus 0 -image $icons(frame,first) \
+    ttk::button $mb.first -takefocus 0 -image $icons(frame,first) \
 	-command FirstFrame
-    tooltip::tooltip $mb.framefirst [msgcat::mc {Goto First Frame}]
+    tooltip::tooltip $mb.first [msgcat::mc {Goto First Frame}]
 
-    ttk::button $mb.frameprev -takefocus 0 -image $icons(frame,prev) \
+    ttk::button $mb.prev -takefocus 0 -image $icons(frame,prev) \
 	-command PrevFrame
-    tooltip::tooltip $mb.frameprev [msgcat::mc {Goto Previous Frame}]
+    tooltip::tooltip $mb.prev [msgcat::mc {Goto Previous Frame}]
 
-    ttk::menubutton $mb.framelayout -menu $mb.framelayout.m \
+    ttk::menubutton $mb.layout -menu $mb.layout.m \
 	-direction above -takefocus 0 \
 	-image $icons(currentdisplay,$current(display))
-    tooltip::tooltip $mb [msgcat::mc {Frame Layout}]
+    tooltip::tooltip $mb.layout [msgcat::mc {Frame Layout}]
 
-    ttk::button $mb.framenext -takefocus 0 -image $icons(frame,next) \
+    ttk::button $mb.next -takefocus 0 -image $icons(frame,next) \
 	-command NextFrame
-    tooltip::tooltip $mb.framenext [msgcat::mc {Goto Next Frame}]
+    tooltip::tooltip $mb.next [msgcat::mc {Goto Next Frame}]
 
-    ttk::button $mb.framelast -takefocus 0 -image $icons(frame,last) \
+    ttk::button $mb.last -takefocus 0 -image $icons(frame,last) \
 	-command LastFrame
-    tooltip::tooltip $mb.framelast [msgcat::mc {Goto Last Frame}]
+    tooltip::tooltip $mb.last [msgcat::mc {Goto Last Frame}]
 
-    set mbb $mb.framelayout
+    set mbb $mb.layout
 
     ThemeMenu $mbb.m
     $mbb.m configure -tearoff 0
@@ -173,8 +173,8 @@ proc CreateIconsBottomFrame {} {
 
     trace add variable current(display) write [list IconMenuButtonCB $mbb]
 
-    pack $mb.frameadd $mb.framedel $mb.framefirst $mb.frameprev \
-	$mb.framelayout $mb.framenext $mb.framelast -side left -fill x
+    pack $mb.add $mb.del $mb.first $mb.prev $mb.layout $mb.next $mb.last \
+	-side left -fill x
 }
 
 proc CreateIconsBottomView {} {

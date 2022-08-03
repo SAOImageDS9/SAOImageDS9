@@ -16,7 +16,6 @@ proc CreateIconsTop {} {
     CreateIconsTopColormap
     CreateIconsTopInvert
     CreateIconsTopScale
-    CreateIconsTopScaleDialog
     CreateIconsTopAnalysis
 }
 
@@ -133,7 +132,10 @@ proc CreateIconsTopScale {} {
     global icons
     global scale
 
-    set mb $ds9(icons,top).scale
+    set mb $ds9(icons,top)
+
+    set icons(scale,dialog) \
+	[image create photo -file "$ds9(root)/icons/ui/scale_limits.png"]
 
     set icons(scaletype,log) \
 	[image create photo -file "$ds9(root)/icons/ui/log.png"]
@@ -145,35 +147,25 @@ proc CreateIconsTopScale {} {
     set icons(scaletype,default) \
 	[image create photo -file "$ds9(root)/icons/ui/scale_other.png"]
 
-    ttk::menubutton $mb -menu $mb.m -direction right -takefocus 0 \
+    ttk::menubutton $mb.scale -menu $mb.scale.m -direction right -takefocus 0 \
 	-image $icons(scaletype,$scale(type))
-    tooltip::tooltip $mb [msgcat::mc {Scaling Option}]
-
-    ThemeMenu $mb.m
-    $mb.m configure -tearoff 0
-    IconMenuButton $mb scale type log ChangeScale
-    IconMenuButton $mb scale type linear ChangeScale
-    IconMenuButton $mb scale type pow ChangeScale
-
-    pack $mb -side left -fill x
-    
-    trace add variable scale(type) write [list IconMenuButtonCB $mb]
-}
-
-proc CreateIconsTopScaleDialog {} {
-    global ds9
-    global icons
-
-    set mb $ds9(icons,top)
-
-    set icons(scale,dialog) \
-	[image create photo -file "$ds9(root)/icons/ui/scale_limits.png"]
+    tooltip::tooltip $mb.scale [msgcat::mc {Scaling Option}]
 
     ttk::button $mb.scaledialog -takefocus 0 -image $icons(scale,dialog) \
 	-command ScaleDialog
     tooltip::tooltip $mb.scaledialog [msgcat::mc {Scaling Parameters}]
 
-    pack $mb.scaledialog -side left -fill x
+    set mbb $ds9(icons,top).scale
+
+    ThemeMenu $mbb.m
+    $mbb.m configure -tearoff 0
+    IconMenuButton $mbb scale type log ChangeScale
+    IconMenuButton $mbb scale type linear ChangeScale
+    IconMenuButton $mbb scale type pow ChangeScale
+
+    trace add variable scale(type) write [list IconMenuButtonCB $mbb]
+
+    pack $mb.scale $mb.scaledialog -side left -fill x
 }
 
 proc CreateIconsTopAnalysis {} {

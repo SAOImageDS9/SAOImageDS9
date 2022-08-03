@@ -4,18 +4,12 @@
 
 package provide DS9 1.0
 
-proc CreatePanel {} {
+proc CreateInfoPanel {} {
     global ds9
-    global pds9
     global view
     global infobox
 
-    # Panel Frame
-    set ds9(panel) [ttk::frame $ds9(main).panel]
-    set ds9(panel,sep) [ttk::separator $ds9(main).spanel -orient horizontal]
-
-    # Info
-    set ds9(info) [ttk::frame $ds9(panel).info]
+    set ds9(info) [ttk::frame $ds9(header).info]
     ttk::frame $ds9(info).dummy
 
     ttk::label $ds9(info).fileTitle -text [msgcat::mc {File}]

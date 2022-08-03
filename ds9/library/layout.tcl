@@ -4,6 +4,14 @@
 
 package provide DS9 1.0
 
+proc CreateHeader {} {
+    global ds9
+
+    # Panel Frame
+    set ds9(header) [ttk::frame $ds9(main).header]
+    set ds9(header,sep) [ttk::separator $ds9(main).sheader -orient horizontal]
+}
+
 proc CanvasDef {} {
     global canvas
     global ds9
@@ -331,8 +339,8 @@ proc LayoutViewHorz {} {
     grid columnconfigure $ds9(main) 0 -weight 1
 
     grid forget $ds9(image)
-    grid forget $ds9(panel)
-    grid forget $ds9(panel,sep)
+    grid forget $ds9(header)
+    grid forget $ds9(header,sep)
     grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
     grid forget $ds9(icons,top)
@@ -342,15 +350,15 @@ proc LayoutViewHorz {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
 
-    pack forget $ds9(info)
-    pack forget $ds9(magnifier)
     pack forget $ds9(panner)
+    pack forget $ds9(magnifier)
+    pack forget $ds9(info)
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
-	grid $ds9(panel) -row 0 -column 0 -sticky ew
-	$ds9(panel,sep) configure -orient horizontal
-	grid $ds9(panel,sep) -row 1 -column 0 -sticky ew
+	grid $ds9(header) -row 0 -column 0 -sticky ew
+	$ds9(header,sep) configure -orient horizontal
+	grid $ds9(header,sep) -row 1 -column 0 -sticky ew
     }
 
     if {$view(info)} {
@@ -398,8 +406,8 @@ proc LayoutViewVert {} {
     grid columnconfigure $ds9(main) 4 -weight 1
 
     grid forget $ds9(image)
-    grid forget $ds9(panel)
-    grid forget $ds9(panel,sep)
+    grid forget $ds9(header)
+    grid forget $ds9(header,sep)
     grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
     grid forget $ds9(icons,top)
@@ -409,15 +417,15 @@ proc LayoutViewVert {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
     
+    pack forget $ds9(panner)
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
-    pack forget $ds9(panner)
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
-	grid $ds9(panel) -row 0 -column 0 -sticky ns
-	$ds9(panel,sep) configure -orient vertical
-	grid $ds9(panel,sep) -row 0 -column 1 -sticky ns
+	grid $ds9(header) -row 0 -column 0 -sticky ns
+	$ds9(header,sep) configure -orient vertical
+	grid $ds9(header,sep) -row 0 -column 1 -sticky ns
     }
 
     if {$view(magnifier)} {
@@ -464,8 +472,8 @@ proc LayoutViewAdvanced {} {
     grid columnconfigure $ds9(main) 2 -weight 1
 
     grid forget $ds9(image)
-    grid forget $ds9(panel)
-    grid forget $ds9(panel,sep)
+    grid forget $ds9(header)
+    grid forget $ds9(header,sep)
     grid forget $ds9(buttons,frame)
     grid forget $ds9(buttons,sep)
     grid forget $ds9(icons,top)
@@ -475,15 +483,15 @@ proc LayoutViewAdvanced {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
     
+    pack forget $ds9(panner)
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
-    pack forget $ds9(panner)
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
-	$ds9(panel,sep) configure -orient vertical
-	grid $ds9(panel,sep) -row 2 -column 3 -sticky ns
-	grid $ds9(panel) -row 2 -column 4 -sticky ns
+	$ds9(header,sep) configure -orient vertical
+	grid $ds9(header,sep) -row 2 -column 3 -sticky ns
+	grid $ds9(header) -row 2 -column 4 -sticky ns
     }
 
     if {$view(magnifier)} {

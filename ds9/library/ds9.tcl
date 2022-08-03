@@ -552,9 +552,10 @@ CreateColorbar
 
 # Create other parts of the display
 CreateMenuBar
-CreatePanel
+CreateHeader
 CreatePanner
 CreateMagnifier
+CreateInfoPanel
 CreateButtons
 CreateIcons
 

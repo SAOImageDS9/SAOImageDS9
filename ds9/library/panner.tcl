@@ -8,7 +8,7 @@ proc CreatePanner {} {
     global ipanner
     global ds9
 
-    set ds9(panner) [canvas $ds9(panel).pan -width $ipanner(size) \
+    set ds9(panner) [canvas $ds9(header).pan -width $ipanner(size) \
 			 -height $ipanner(size) \
 			 -relief groove \
 			 -borderwidth 2 \

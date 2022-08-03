@@ -103,7 +103,7 @@ proc CreateIconsLeftMarkerShape {} {
     set icons(markershape,default) \
 	[image create photo -file "$ds9(root)/icons/ui/region_other.png"]
 
-    set mbb $mb.markershape
+    set mbb $mb.shape
 
     ttk::menubutton $mbb -menu $mbb.m -direction right \
 	-image $icons(markershape,$marker(shape)) -takefocus 0
@@ -238,7 +238,7 @@ proc CreateIconsLeftMarkerLineWidth {} {
     # special case
     set icons(markerwidth,default) $icons(markerwidth,1)
 
-    set mbb $mb.markerlinewidth
+    set mbb $mb.width
 
     ttk::menubutton $mbb -menu $mbb.m -direction right \
 	-image $icons(markerwidth,$marker(width)) -takefocus 0

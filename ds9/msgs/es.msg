@@ -9,6 +9,7 @@
 ::msgcat::mcset es {Add Bar Graph} 
 ::msgcat::mcset es {Add Graph} 
 ::msgcat::mcset es {Add Line Graph} 
+::msgcat::mcset es {Add New Frame} 
 ::msgcat::mcset es {Add} {Agregar}
 ::msgcat::mcset es {Advanced Layout} 
 ::msgcat::mcset es {Advanced} {Avanzado}
@@ -217,6 +218,9 @@
 ::msgcat::mcset es {Dataset Name} 
 ::msgcat::mcset es {Dataset} {Conjunto de datos}
 ::msgcat::mcset es {Data} 
+::msgcat::mcset es {Decrease Bin} 
+::msgcat::mcset es {Decrease Block} 
+::msgcat::mcset es {Decrease Zoom} 
 ::msgcat::mcset es {Decrease} [encoding convertfrom iso8859-1 {Disminución}]
 ::msgcat::mcset es {Default All Files} 
 ::msgcat::mcset es {Default Format} 
@@ -342,6 +346,7 @@
 ::msgcat::mcset es {Forward} {Hacia adelante}
 ::msgcat::mcset es {Found} {Hallado}
 ::msgcat::mcset es {Frame Information} [encoding convertfrom iso8859-1 {Información del marco}]
+::msgcat::mcset es {Frame Layout} 
 ::msgcat::mcset es {Frame Parameters} 
 ::msgcat::mcset es {Frames} 
 ::msgcat::mcset es {Frame} {Marco}
@@ -362,7 +367,11 @@
 ::msgcat::mcset es {Gist} 
 ::msgcat::mcset es {Global Properties} 
 ::msgcat::mcset es {Global} 
+::msgcat::mcset es {Goto First Frame} 
 ::msgcat::mcset es {Goto Frame} 
+::msgcat::mcset es {Goto Last Frame} 
+::msgcat::mcset es {Goto Next Frame} 
+::msgcat::mcset es {Goto Previous Frame} 
 ::msgcat::mcset es {Goto Row} 
 ::msgcat::mcset es {Goto} 
 ::msgcat::mcset es {Graph Horz} 
@@ -411,6 +420,9 @@
 ::msgcat::mcset es {Import TIFF} 
 ::msgcat::mcset es {Import} 
 ::msgcat::mcset es {Include} {Incluir}
+::msgcat::mcset es {Increase Bin} 
+::msgcat::mcset es {Increase Block} 
+::msgcat::mcset es {Increase Zoom} 
 ::msgcat::mcset es {Increase} {Aumento}
 ::msgcat::mcset es {Info Box} 
 ::msgcat::mcset es {Information Panel} [encoding convertfrom iso8859-1 {Panel de información}]
@@ -822,6 +834,9 @@
 ::msgcat::mcset es {Send to Back} 
 ::msgcat::mcset es {Send} 
 ::msgcat::mcset es {Server} {Servidor}
+::msgcat::mcset es {Set Bin to 1} 
+::msgcat::mcset es {Set Block to 1} 
+::msgcat::mcset es {Set Zoom to 1} 
 ::msgcat::mcset es {Sexagesimal} 
 ::msgcat::mcset es {Shadow} 
 ::msgcat::mcset es {Shape} {Forma}
@@ -894,11 +909,14 @@
 ::msgcat::mcset es {Times} 
 ::msgcat::mcset es {Titles} 
 ::msgcat::mcset es {Title} [encoding convertfrom iso8859-1 {Título}]
+::msgcat::mcset es {Toggle Colorbar} 
 ::msgcat::mcset es {Toggle Contour} 
 ::msgcat::mcset es {Toggle Coordinate Grid} 
+::msgcat::mcset es {Toggle Horizontal Graph} 
 ::msgcat::mcset es {Toggle Include/Exclude} 
 ::msgcat::mcset es {Toggle Smooth} 
 ::msgcat::mcset es {Toggle Source/Background} 
+::msgcat::mcset es {Toggle Vertical Graph} 
 ::msgcat::mcset es {Tophat} 
 ::msgcat::mcset es {Topographic} 
 ::msgcat::mcset es {Top} 

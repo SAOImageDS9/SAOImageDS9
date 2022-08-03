@@ -9,6 +9,7 @@
 ::msgcat::mcset zh {Add Bar Graph} 
 ::msgcat::mcset zh {Add Graph} 
 ::msgcat::mcset zh {Add Line Graph} 
+::msgcat::mcset zh {Add New Frame} 
 ::msgcat::mcset zh {Add} 
 ::msgcat::mcset zh {Advanced Layout} 
 ::msgcat::mcset zh {Advanced} 
@@ -217,6 +218,9 @@
 ::msgcat::mcset zh {Dataset Name} 
 ::msgcat::mcset zh {Dataset} 
 ::msgcat::mcset zh {Data} 
+::msgcat::mcset zh {Decrease Bin} 
+::msgcat::mcset zh {Decrease Block} 
+::msgcat::mcset zh {Decrease Zoom} 
 ::msgcat::mcset zh {Decrease} 
 ::msgcat::mcset zh {Default All Files} 
 ::msgcat::mcset zh {Default Format} 
@@ -342,6 +346,7 @@
 ::msgcat::mcset zh {Forward} 
 ::msgcat::mcset zh {Found} 
 ::msgcat::mcset zh {Frame Information} [encoding convertfrom big5 "\xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1 \xB8\xEA \xB0\x54"]
+::msgcat::mcset zh {Frame Layout} 
 ::msgcat::mcset zh {Frame Parameters} [encoding convertfrom big5 "\xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Frames} 
 ::msgcat::mcset zh {Frame} [encoding convertfrom big5 "\xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
@@ -362,7 +367,11 @@
 ::msgcat::mcset zh {Gist} 
 ::msgcat::mcset zh {Global Properties} 
 ::msgcat::mcset zh {Global} 
+::msgcat::mcset zh {Goto First Frame} 
 ::msgcat::mcset zh {Goto Frame} [encoding convertfrom big5 "\xA8\xEC \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
+::msgcat::mcset zh {Goto Last Frame} 
+::msgcat::mcset zh {Goto Next Frame} 
+::msgcat::mcset zh {Goto Previous Frame} 
 ::msgcat::mcset zh {Goto Row} 
 ::msgcat::mcset zh {Goto} 
 ::msgcat::mcset zh {Graph Horz} 
@@ -411,6 +420,9 @@
 ::msgcat::mcset zh {Import TIFF} 
 ::msgcat::mcset zh {Import} 
 ::msgcat::mcset zh {Include} 
+::msgcat::mcset zh {Increase Bin} 
+::msgcat::mcset zh {Increase Block} 
+::msgcat::mcset zh {Increase Zoom} 
 ::msgcat::mcset zh {Increase} 
 ::msgcat::mcset zh {Info Box} 
 ::msgcat::mcset zh {Information Panel} [encoding convertfrom big5 "\xB8\xEA \xB0\x54 \xA6\x43"]
@@ -822,6 +834,9 @@
 ::msgcat::mcset zh {Send to Back} 
 ::msgcat::mcset zh {Send} 
 ::msgcat::mcset zh {Server} 
+::msgcat::mcset zh {Set Bin to 1} 
+::msgcat::mcset zh {Set Block to 1} 
+::msgcat::mcset zh {Set Zoom to 1} 
 ::msgcat::mcset zh {Sexagesimal} 
 ::msgcat::mcset zh {Shadow} 
 ::msgcat::mcset zh {Shape} [encoding convertfrom big5 "\xA7\xCE \xAA\xAC"]
@@ -894,11 +909,14 @@
 ::msgcat::mcset zh {Times} 
 ::msgcat::mcset zh {Titles} 
 ::msgcat::mcset zh {Title} 
+::msgcat::mcset zh {Toggle Colorbar} 
 ::msgcat::mcset zh {Toggle Contour} 
 ::msgcat::mcset zh {Toggle Coordinate Grid} 
+::msgcat::mcset zh {Toggle Horizontal Graph} 
 ::msgcat::mcset zh {Toggle Include/Exclude} 
 ::msgcat::mcset zh {Toggle Smooth} 
 ::msgcat::mcset zh {Toggle Source/Background} 
+::msgcat::mcset zh {Toggle Vertical Graph} 
 ::msgcat::mcset zh {Tophat} 
 ::msgcat::mcset zh {Topographic} 
 ::msgcat::mcset zh {Top} 

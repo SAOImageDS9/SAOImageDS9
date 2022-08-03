@@ -9,6 +9,7 @@
 ::msgcat::mcset cs {Add Bar Graph} 
 ::msgcat::mcset cs {Add Graph} 
 ::msgcat::mcset cs {Add Line Graph} 
+::msgcat::mcset cs {Add New Frame} 
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
 ::msgcat::mcset cs {Advanced Layout} 
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
@@ -217,6 +218,9 @@
 ::msgcat::mcset cs {Dataset Name} 
 ::msgcat::mcset cs {Dataset} [encoding convertfrom iso8859-2 {Soubor dat}]
 ::msgcat::mcset cs {Data} 
+::msgcat::mcset cs {Decrease Bin} 
+::msgcat::mcset cs {Decrease Block} 
+::msgcat::mcset cs {Decrease Zoom} 
 ::msgcat::mcset cs {Decrease} [encoding convertfrom iso8859-2 {Zmen¹it}]
 ::msgcat::mcset cs {Default All Files} [encoding convertfrom iso8859-2 {Vychozí pro v¹echny soubory}]
 ::msgcat::mcset cs {Default Format} 
@@ -342,6 +346,7 @@
 ::msgcat::mcset cs {Forward} [encoding convertfrom iso8859-2 {Vpøed}]
 ::msgcat::mcset cs {Found} [encoding convertfrom iso8859-2 {Nalezeno}]
 ::msgcat::mcset cs {Frame Information} [encoding convertfrom iso8859-2 {Informace o snímku}]
+::msgcat::mcset cs {Frame Layout} 
 ::msgcat::mcset cs {Frame Parameters} [encoding convertfrom iso8859-2 {Parametry snímku}]
 ::msgcat::mcset cs {Frames} [encoding convertfrom iso8859-2 {Snímky}]
 ::msgcat::mcset cs {Frame} [encoding convertfrom iso8859-2 {Snímek}]
@@ -362,7 +367,11 @@
 ::msgcat::mcset cs {Gist} 
 ::msgcat::mcset cs {Global Properties} 
 ::msgcat::mcset cs {Global} 
+::msgcat::mcset cs {Goto First Frame} 
 ::msgcat::mcset cs {Goto Frame} [encoding convertfrom iso8859-2 {Bì¾ na snímek}]
+::msgcat::mcset cs {Goto Last Frame} 
+::msgcat::mcset cs {Goto Next Frame} 
+::msgcat::mcset cs {Goto Previous Frame} 
 ::msgcat::mcset cs {Goto Row} 
 ::msgcat::mcset cs {Goto} 
 ::msgcat::mcset cs {Graph Horz} 
@@ -411,6 +420,9 @@
 ::msgcat::mcset cs {Import TIFF} 
 ::msgcat::mcset cs {Import} 
 ::msgcat::mcset cs {Include} 
+::msgcat::mcset cs {Increase Bin} 
+::msgcat::mcset cs {Increase Block} 
+::msgcat::mcset cs {Increase Zoom} 
 ::msgcat::mcset cs {Increase} 
 ::msgcat::mcset cs {Info Box} 
 ::msgcat::mcset cs {Information Panel} [encoding convertfrom iso8859-2 {Informaèní panel}]
@@ -822,6 +834,9 @@
 ::msgcat::mcset cs {Send to Back} 
 ::msgcat::mcset cs {Send} 
 ::msgcat::mcset cs {Server} 
+::msgcat::mcset cs {Set Bin to 1} 
+::msgcat::mcset cs {Set Block to 1} 
+::msgcat::mcset cs {Set Zoom to 1} 
 ::msgcat::mcset cs {Sexagesimal} [encoding convertfrom iso8859-2 {©edesátkové}]
 ::msgcat::mcset cs {Shadow} 
 ::msgcat::mcset cs {Shape} [encoding convertfrom iso8859-2 {Tvar}]
@@ -894,11 +909,14 @@
 ::msgcat::mcset cs {Times} 
 ::msgcat::mcset cs {Titles} 
 ::msgcat::mcset cs {Title} 
+::msgcat::mcset cs {Toggle Colorbar} 
 ::msgcat::mcset cs {Toggle Contour} 
 ::msgcat::mcset cs {Toggle Coordinate Grid} 
+::msgcat::mcset cs {Toggle Horizontal Graph} 
 ::msgcat::mcset cs {Toggle Include/Exclude} 
 ::msgcat::mcset cs {Toggle Smooth} 
 ::msgcat::mcset cs {Toggle Source/Background} 
+::msgcat::mcset cs {Toggle Vertical Graph} 
 ::msgcat::mcset cs {Tophat} 
 ::msgcat::mcset cs {Topographic} 
 ::msgcat::mcset cs {Top} 

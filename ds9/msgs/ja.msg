@@ -9,6 +9,7 @@
 ::msgcat::mcset ja {Add Bar Graph} 
 ::msgcat::mcset ja {Add Graph} 
 ::msgcat::mcset ja {Add Line Graph} 
+::msgcat::mcset ja {Add New Frame} 
 ::msgcat::mcset ja {Add} [encoding convertfrom euc-jp "\xc4\xc9\xb2\xc3"]
 ::msgcat::mcset ja {Advanced Layout} 
 ::msgcat::mcset ja {Advanced} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9\xa4\xca\xc0\xdf\xc4\xea"]
@@ -217,6 +218,9 @@
 ::msgcat::mcset ja {Dataset Name} 
 ::msgcat::mcset ja {Dataset} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa5\xbb\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Data} 
+::msgcat::mcset ja {Decrease Bin} 
+::msgcat::mcset ja {Decrease Block} 
+::msgcat::mcset ja {Decrease Zoom} 
 ::msgcat::mcset ja {Decrease} [encoding convertfrom euc-jp "\xb9\xdf\xbd\xe7"]
 ::msgcat::mcset ja {Default All Files} 
 ::msgcat::mcset ja {Default Format} 
@@ -342,6 +346,7 @@
 ::msgcat::mcset ja {Forward} [encoding convertfrom euc-jp "\xbc\xa1"]
 ::msgcat::mcset ja {Found} 
 ::msgcat::mcset ja {Frame Information} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xce\xbe\xf0\xca\xf3"]
+::msgcat::mcset ja {Frame Layout} 
 ::msgcat::mcset ja {Frame Parameters} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Frames} 
 ::msgcat::mcset ja {Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
@@ -362,7 +367,11 @@
 ::msgcat::mcset ja {Gist} 
 ::msgcat::mcset ja {Global Properties} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xed\xa1\xbc\xa5\xd0\xa5\xeb\xa5\xd7\xa5\xed\xa5\xd1\xa5\xc6\xa5\xa3"]
 ::msgcat::mcset ja {Global} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xed\xa1\xbc\xa5\xd0\xa5\xeb"]
+::msgcat::mcset ja {Goto First Frame} 
 ::msgcat::mcset ja {Goto Frame} [encoding convertfrom euc-jp "\xbb\xd8\xc4\xea\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xb0\xdc\xc6\xb0"]
+::msgcat::mcset ja {Goto Last Frame} 
+::msgcat::mcset ja {Goto Next Frame} 
+::msgcat::mcset ja {Goto Previous Frame} 
 ::msgcat::mcset ja {Goto Row} 
 ::msgcat::mcset ja {Goto} 
 ::msgcat::mcset ja {Graph Horz} [encoding convertfrom euc-jp "\xb2\xa3\xc3\xc7\xcc\xcc\xbf\xde"]
@@ -411,6 +420,9 @@
 ::msgcat::mcset ja {Import TIFF} 
 ::msgcat::mcset ja {Import} 
 ::msgcat::mcset ja {Include} [encoding convertfrom euc-jp "\xc6\xe2\xc2\xa6"]
+::msgcat::mcset ja {Increase Bin} 
+::msgcat::mcset ja {Increase Block} 
+::msgcat::mcset ja {Increase Zoom} 
 ::msgcat::mcset ja {Increase} [encoding convertfrom euc-jp "\xbe\xba\xbd\xe7"]
 ::msgcat::mcset ja {Info Box} 
 ::msgcat::mcset ja {Information Panel} [encoding convertfrom euc-jp "\xbe\xf0\xca\xf3\xa5\xd1\xa5\xcd\xa5\xeb"]
@@ -822,6 +834,9 @@
 ::msgcat::mcset ja {Send to Back} 
 ::msgcat::mcset ja {Send} [encoding convertfrom euc-jp "\xc1\xf7\xbf\xae"]
 ::msgcat::mcset ja {Server} [encoding convertfrom euc-jp "\xa5\xb5\xa1\xbc\xa5\xd0\xa1\xbc"]
+::msgcat::mcset ja {Set Bin to 1} 
+::msgcat::mcset ja {Set Block to 1} 
+::msgcat::mcset ja {Set Zoom to 1} 
 ::msgcat::mcset ja {Sexagesimal} [encoding convertfrom euc-jp "\xbb\xfe\xca\xac\xc9\xc3"]
 ::msgcat::mcset ja {Shadow} 
 ::msgcat::mcset ja {Shape} [encoding convertfrom euc-jp "\xb7\xc1"]
@@ -894,11 +909,14 @@
 ::msgcat::mcset ja {Times} 
 ::msgcat::mcset ja {Titles} 
 ::msgcat::mcset ja {Title} [encoding convertfrom euc-jp "\xa5\xbf\xa5\xa4\xa5\xc8\xa5\xeb"]
+::msgcat::mcset ja {Toggle Colorbar} 
 ::msgcat::mcset ja {Toggle Contour} 
 ::msgcat::mcset ja {Toggle Coordinate Grid} 
+::msgcat::mcset ja {Toggle Horizontal Graph} 
 ::msgcat::mcset ja {Toggle Include/Exclude} 
 ::msgcat::mcset ja {Toggle Smooth} 
 ::msgcat::mcset ja {Toggle Source/Background} 
+::msgcat::mcset ja {Toggle Vertical Graph} 
 ::msgcat::mcset ja {Tophat} [encoding convertfrom euc-jp "\xa5\xc8\xa5\xc3\xa5\xd7\xa5\xcf\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Topographic} 
 ::msgcat::mcset ja {Top} 

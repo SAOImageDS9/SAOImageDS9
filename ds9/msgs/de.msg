@@ -9,6 +9,7 @@
 ::msgcat::mcset de {Add Bar Graph} 
 ::msgcat::mcset de {Add Graph} 
 ::msgcat::mcset de {Add Line Graph} 
+::msgcat::mcset de {Add New Frame} 
 ::msgcat::mcset de {Add} [encoding convertfrom iso8859-1 {Hinzufügen}]
 ::msgcat::mcset de {Advanced Layout} 
 ::msgcat::mcset de {Advanced} {Erweitert}
@@ -217,6 +218,9 @@
 ::msgcat::mcset de {Dataset Name} 
 ::msgcat::mcset de {Dataset} {Datensatz}
 ::msgcat::mcset de {Data} 
+::msgcat::mcset de {Decrease Bin} 
+::msgcat::mcset de {Decrease Block} 
+::msgcat::mcset de {Decrease Zoom} 
 ::msgcat::mcset de {Decrease} {Absteigend}
 ::msgcat::mcset de {Default All Files} 
 ::msgcat::mcset de {Default Format} 
@@ -342,6 +346,7 @@
 ::msgcat::mcset de {Forward} [encoding convertfrom iso8859-1 {Vorwärts}]
 ::msgcat::mcset de {Found} {Gefunden}
 ::msgcat::mcset de {Frame Information} {Rahmeninformation}
+::msgcat::mcset de {Frame Layout} 
 ::msgcat::mcset de {Frame Parameters} 
 ::msgcat::mcset de {Frames} 
 ::msgcat::mcset de {Frame} {Rahmen}
@@ -362,7 +367,11 @@
 ::msgcat::mcset de {Gist} 
 ::msgcat::mcset de {Global Properties} 
 ::msgcat::mcset de {Global} 
+::msgcat::mcset de {Goto First Frame} 
 ::msgcat::mcset de {Goto Frame} 
+::msgcat::mcset de {Goto Last Frame} 
+::msgcat::mcset de {Goto Next Frame} 
+::msgcat::mcset de {Goto Previous Frame} 
 ::msgcat::mcset de {Goto Row} 
 ::msgcat::mcset de {Goto} 
 ::msgcat::mcset de {Graph Horz} 
@@ -411,6 +420,9 @@
 ::msgcat::mcset de {Import TIFF} 
 ::msgcat::mcset de {Import} 
 ::msgcat::mcset de {Include} {Einschliessen}
+::msgcat::mcset de {Increase Bin} 
+::msgcat::mcset de {Increase Block} 
+::msgcat::mcset de {Increase Zoom} 
 ::msgcat::mcset de {Increase} {Aufsteigend}
 ::msgcat::mcset de {Info Box} 
 ::msgcat::mcset de {Information Panel} {Informationsfeld}
@@ -822,6 +834,9 @@
 ::msgcat::mcset de {Send to Back} 
 ::msgcat::mcset de {Send} 
 ::msgcat::mcset de {Server} 
+::msgcat::mcset de {Set Bin to 1} 
+::msgcat::mcset de {Set Block to 1} 
+::msgcat::mcset de {Set Zoom to 1} 
 ::msgcat::mcset de {Sexagesimal} 
 ::msgcat::mcset de {Shadow} 
 ::msgcat::mcset de {Shape} {Form}
@@ -894,11 +909,14 @@
 ::msgcat::mcset de {Times} 
 ::msgcat::mcset de {Titles} 
 ::msgcat::mcset de {Title} {Titel}
+::msgcat::mcset de {Toggle Colorbar} 
 ::msgcat::mcset de {Toggle Contour} 
 ::msgcat::mcset de {Toggle Coordinate Grid} 
+::msgcat::mcset de {Toggle Horizontal Graph} 
 ::msgcat::mcset de {Toggle Include/Exclude} 
 ::msgcat::mcset de {Toggle Smooth} 
 ::msgcat::mcset de {Toggle Source/Background} 
+::msgcat::mcset de {Toggle Vertical Graph} 
 ::msgcat::mcset de {Tophat} 
 ::msgcat::mcset de {Topographic} 
 ::msgcat::mcset de {Top} 

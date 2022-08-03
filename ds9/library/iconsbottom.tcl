@@ -15,6 +15,7 @@ proc CreateIconsBottom {} {
     CreateIconsBottomBlock
     CreateIconsBottomZoom
     CreateIconsBottomFrame
+    CreateIconsBottomView
 }
 
 proc CreateIconsBottomBin {} {
@@ -148,3 +149,32 @@ proc CreateIconsBottomFrame {} {
     pack $mb.framefirst $mb.frameprev $mb.framenext $mb.framelast \
 	-side left -fill x
 }
+
+proc CreateIconsBottomView {} {
+    global ds9
+    global icons
+
+    set mb $ds9(icons,left)
+
+    set icons(view,vertgraph) \
+	[image create photo -file "$ds9(root)/icons/ui/view_vertical.png"]
+    set icons(view,horzgraph) \
+	[image create photo -file "$ds9(root)/icons/ui/view_horizontal.png"]
+    set icons(view,colorbar) \
+	[image create photo -file "$ds9(root)/icons/ui/view_colorbar.png"]
+
+    ttk::button $mb.vertgraph -takefocus 0 -image $icons(view,vertgraph) \
+	-command [list IconButtonToggleCmd view graph,vert LayoutFrames]
+    tooltip::tooltip $mb.vertgraph [msgcat::mc {Toggle Vertical Graph}]
+
+    ttk::button $mb.horzgraph -takefocus 0 -image $icons(view,horzgraph) \
+	-command [list IconButtonToggleCmd view graph,horz LayoutFrames]
+    tooltip::tooltip $mb.vertgraph [msgcat::mc {Toggle Horizontal Graph}]
+
+    ttk::button $mb.colorbar -takefocus 0 -image $icons(view,colorbar) \
+	-command [list IconButtonToggleCmd view graph,colorbar LayoutFrames]
+    tooltip::tooltip $mb.vertgraph [msgcat::mc {Toggle Colorbar}]
+
+    pack $mb.vertgraph $mb.horzgraph $mb.colorbar -side top -fill x
+}
+

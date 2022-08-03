@@ -14,7 +14,6 @@ proc CreateIconsTop {} {
     CreateIconsTopQuit
     CreateIconsTopFile
     CreateIconsTopColormap
-    CreateIconsTopInvert
     CreateIconsTopScale
     CreateIconsTopAnalysis
 }
@@ -77,7 +76,10 @@ proc CreateIconsTopColormap {} {
     global icons
     global colorbar
 
-    set mb $ds9(icons,top).colormap
+    set mb $ds9(icons,top)
+
+    set icons(colorbar,invert) \
+	[image create photo -file "$ds9(root)/icons/ui/colorbar_reverse.png"]
 
     set luts [list a aips0 b bb blue color cool green grey he heat hsv i8 \
 		  rainbow red sls staircase standard \
@@ -95,36 +97,27 @@ proc CreateIconsTopColormap {} {
     $icons(colorbarmap,default) copy $foo -zoom 2
     image delete $foo
 
-    ttk::menubutton $mb -menu $mb.m \
+    ttk::menubutton $mb.colormap -menu $mb.colormap.m \
 	-image $icons(colorbarmap,$colorbar(map)) -takefocus 0
-    tooltip::tooltip $mb [msgcat::mc {Colormaps}]
+    tooltip::tooltip $mb.colormap [msgcat::mc {Colormaps}]
 
-    ThemeMenu $mb.m
-    $mb.m configure -tearoff 0
+    ttk::button $mb.invert -takefocus 0 -image $icons(colorbar,invert) \
+	-command [list IconButtonToggleCmd colorbar invert InvertColorbar]
+    tooltip::tooltip $mb.invert [msgcat::mc {Invert Colormap}]
+
+    set mbb $mb.colormap
+
+    ThemeMenu $mbb.m
+    $mbb.m configure -tearoff 0
 
     foreach lut $luts {
-	IconMenuButton $mb colorbar map $lut [list ChangeColormapName $lut]
+	IconMenuButton $mbb colorbar map $lut [list ChangeColormapName $lut]
     }
 
-    pack $mb -side left -fill x
+    trace add variable colorbar(map) write [list IconMenuButtonCB $mbb]
 
-    trace add variable colorbar(map) write [list IconMenuButtonCB $mb]
-}
+    pack $mb.colormap $mb.invert -side left -fill x
 
-proc CreateIconsTopInvert {} {
-    global ds9
-    global icons
-
-    set mb $ds9(icons,top)
-
-    set icons(colorbar,invert) \
-	[image create photo -file "$ds9(root)/icons/ui/colorbar_reverse.png"]
-
-    ttk::button $mb.colorbarinvert -takefocus 0 -image $icons(colorbar,invert) \
-	-command [list IconButtonToggleCmd colorbar invert InvertColorbar]
-    tooltip::tooltip $mb.colorbarinvert [msgcat::mc {Invert Colormap}]
-
-    pack $mb.colorbarinvert -side left -fill x
 }
 
 proc CreateIconsTopScale {} {
@@ -155,7 +148,7 @@ proc CreateIconsTopScale {} {
 	-command ScaleDialog
     tooltip::tooltip $mb.scaledialog [msgcat::mc {Scaling Parameters}]
 
-    set mbb $ds9(icons,top).scale
+    set mbb $mb.scale
 
     ThemeMenu $mbb.m
     $mbb.m configure -tearoff 0

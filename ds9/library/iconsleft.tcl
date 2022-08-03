@@ -25,7 +25,7 @@ proc CreateIconsLeftMode {} {
     global icons
     global current
 
-    set mb $ds9(icons,left).mode
+    set mb $ds9(icons,left)
 
     set icons(currentmode,none) \
 	[image create photo -file "$ds9(root)/icons/ui/edit_none.png"]
@@ -54,28 +54,30 @@ proc CreateIconsLeftMode {} {
     # special case
     set icons(currentmode,default) $icons(currentmode,examine)
 
-    ttk::menubutton $mb -menu $mb.m -direction right -takefocus 0 \
+    set mbb $mb.mode
+
+    ttk::menubutton $mbb -menu $mbb.m -direction right -takefocus 0 \
 	-image $icons(currentmode,$current(mode))
-    tooltip::tooltip $mb [msgcat::mc {Edit Mode}]
+    tooltip::tooltip $mbb [msgcat::mc {Edit Mode}]
 
-    ThemeMenu $mb.m
-    $mb.m configure -tearoff 0
-    IconMenuButton $mb current mode none ChangeMode
-    IconMenuButton $mb current mode region ChangeMode
-    IconMenuButton $mb current mode crosshair ChangeMode
-    IconMenuButton $mb current mode colorbar ChangeMode
-    IconMenuButton $mb current mode pan ChangeMode
-    IconMenuButton $mb current mode zoom ChangeMode
-    IconMenuButton $mb current mode rotate ChangeMode
-    IconMenuButton $mb current mode crop ChangeMode
-    IconMenuButton $mb current mode catalog ChangeMode
-    IconMenuButton $mb current mode footprint ChangeMode
-    IconMenuButton $mb current mode examine ChangeMode
-    IconMenuButton $mb current mode 3d ChangeMode
+    ThemeMenu $mbb.m
+    $mbb.m configure -tearoff 0
+    IconMenuButton $mbb current mode none ChangeMode
+    IconMenuButton $mbb current mode region ChangeMode
+    IconMenuButton $mbb current mode crosshair ChangeMode
+    IconMenuButton $mbb current mode colorbar ChangeMode
+    IconMenuButton $mbb current mode pan ChangeMode
+    IconMenuButton $mbb current mode zoom ChangeMode
+    IconMenuButton $mbb current mode rotate ChangeMode
+    IconMenuButton $mbb current mode crop ChangeMode
+    IconMenuButton $mbb current mode catalog ChangeMode
+    IconMenuButton $mbb current mode footprint ChangeMode
+    IconMenuButton $mbb current mode examine ChangeMode
+    IconMenuButton $mbb current mode 3d ChangeMode
 
-    pack $mb -side top -fill x
-    
-    trace add variable current(mode) write [list IconMenuButtonCB $mb]
+    trace add variable current(mode) write [list IconMenuButtonCB $mbb]
+
+    pack $mbb -side top -fill x
 }
 
 proc CreateIconsLeftMarkerShape {} {
@@ -83,7 +85,7 @@ proc CreateIconsLeftMarkerShape {} {
     global icons
     global marker
 
-    set mb $ds9(icons,left).markershape
+    set mb $ds9(icons,left)
 
     set icons(markershape,circle) \
 	[image create photo -file "$ds9(root)/icons/ui/circle.png"]
@@ -101,22 +103,24 @@ proc CreateIconsLeftMarkerShape {} {
     set icons(markershape,default) \
 	[image create photo -file "$ds9(root)/icons/ui/region_other.png"]
 
-    ttk::menubutton $mb -menu $mb.m -direction right \
+    set mbb $mb.markershape
+
+    ttk::menubutton $mbb -menu $mbb.m -direction right \
 	-image $icons(markershape,$marker(shape)) -takefocus 0
-    tooltip::tooltip $mb [msgcat::mc {Region Shape}]
+    tooltip::tooltip $mbb [msgcat::mc {Region Shape}]
 
-    ThemeMenu $mb.m
-    $mb.m configure -tearoff 0
-    IconMenuButton $mb marker shape circle {}
-    IconMenuButton $mb marker shape annulus {}
-    IconMenuButton $mb marker shape ellipse {}
-    IconMenuButton $mb marker shape box {}
-    IconMenuButton $mb marker shape polygon {}
-    IconMenuButton $mb marker shape text {}
+    ThemeMenu $mbb.m
+    $mbb.m configure -tearoff 0
+    IconMenuButton $mbb marker shape circle {}
+    IconMenuButton $mbb marker shape annulus {}
+    IconMenuButton $mbb marker shape ellipse {}
+    IconMenuButton $mbb marker shape box {}
+    IconMenuButton $mbb marker shape polygon {}
+    IconMenuButton $mbb marker shape text {}
 
-    pack $mb -side top -fill x
+    trace add variable marker(shape) write [list IconMenuButtonCB $mbb]
 
-    trace add variable marker(shape) write [list IconMenuButtonCB $mb]
+    pack $mbb -side top -fill x
 }
 
 proc CreateIconsLeftMarkerInfo {} {
@@ -158,7 +162,7 @@ proc CreateIconsLeftMarkerColor {} {
     global icons
     global marker
 
-    set mb $ds9(icons,left).color
+    set mb $ds9(icons,left)
 
     set clrs [list \
 		  red floralwhite mistyrose seashell snow linen oldlace \
@@ -191,12 +195,14 @@ proc CreateIconsLeftMarkerColor {} {
     # special case
     set icons(markercolor,default) $icons(markercolor,black)
 
-    ttk::menubutton $mb -menu $mb.m -direction right \
-	-image $icons(markercolor,$marker(color)) -takefocus 0
-    tooltip::tooltip $mb [msgcat::mc {Region Color}]
+    set mbb $mb.color
 
-    ThemeMenu $mb.m
-    $mb.m configure -tearoff 0
+    ttk::menubutton $mbb -menu $mbb.m -direction right \
+	-image $icons(markercolor,$marker(color)) -takefocus 0
+    tooltip::tooltip $mbb [msgcat::mc {Region Color}]
+
+    ThemeMenu $mbb.m
+    $mbb.m configure -tearoff 0
 
     for {set ii 0} {$ii < [llength $clrs]} {incr ii} {
         if {[expr $ii % 11] == 0} {
@@ -205,13 +211,13 @@ proc CreateIconsLeftMarkerColor {} {
             set newcol 0
         }
 
-	IconMenuButton $mb marker color [lindex $clrs $ii] MarkerColor
-	$mb.m entryconfigure $ii -columnbreak $newcol -hidemargin 1 
+	IconMenuButton $mbb marker color [lindex $clrs $ii] MarkerColor
+	$mbb.m entryconfigure $ii -columnbreak $newcol -hidemargin 1 
     }
 
-    pack $mb -side top -fill x
+    trace add variable marker(color) write [list IconMenuButtonCB $mbb]
 
-    trace add variable marker(color) write [list IconMenuButtonCB $mb]
+    pack $mbb -side top -fill x
 }
 
 proc CreateIconsLeftMarkerLineWidth {} {
@@ -219,7 +225,7 @@ proc CreateIconsLeftMarkerLineWidth {} {
     global icons
     global marker
 
-    set mb $ds9(icons,left).markerlinewidth
+    set mb $ds9(icons,left)
 
     set icons(markerwidth,1) \
 	[image create photo -file "$ds9(root)/icons/ui/lw1.png"]
@@ -232,20 +238,22 @@ proc CreateIconsLeftMarkerLineWidth {} {
     # special case
     set icons(markerwidth,default) $icons(markerwidth,1)
 
-    ttk::menubutton $mb -menu $mb.m -direction right \
+    set mbb $mb.markerlinewidth
+
+    ttk::menubutton $mbb -menu $mbb.m -direction right \
 	-image $icons(markerwidth,$marker(width)) -takefocus 0
-    tooltip::tooltip $mb [msgcat::mc {Region Line Width}]
+    tooltip::tooltip $mbb [msgcat::mc {Region Line Width}]
 
-    ThemeMenu $mb.m
-    $mb.m configure -tearoff 0
-    IconMenuButton $mb marker width 1 MarkerWidth
-    IconMenuButton $mb marker width 2 MarkerWidth
-    IconMenuButton $mb marker width 3 MarkerWidth
-    IconMenuButton $mb marker width 4 MarkerWidth
+    ThemeMenu $mbb.m
+    $mbb.m configure -tearoff 0
+    IconMenuButton $mbb marker width 1 MarkerWidth
+    IconMenuButton $mbb marker width 2 MarkerWidth
+    IconMenuButton $mbb marker width 3 MarkerWidth
+    IconMenuButton $mbb marker width 4 MarkerWidth
 
-    pack $mb -side top -fill x
+    trace add variable marker(width) write [list IconMenuButtonCB $mbb]
 
-    trace add variable marker(width) write [list IconMenuButtonCB $mb]
+    pack $mbb -side top -fill x
 }
 
 proc CreateIconsLeftMarkerSrc {} {

@@ -102,4 +102,49 @@ proc CreateIconsBottomZoom {} {
 }
 
 proc CreateIconsBottomFrame {} {
+    global ds9
+    global icons
+
+    set mb $ds9(icons,bottom)
+
+    set icons(frame,add) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_add.png"]
+    set icons(frame,del) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_del.png"]
+    set icons(frame,first) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_first.png"]
+    set icons(frame,prev) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_prev.png"]
+    set icons(frame,next) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_next.png"]
+    set icons(frame,last) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_last.png"]
+
+    ttk::button $mb.frameadd -takefocus 0 -image $icons(frame,add) \
+	-command CreateFrame
+    tooltip::tooltip $mb.frameadd [msgcat::mc {Add New Frame}]
+
+    ttk::button $mb.framedel -takefocus 0 -image $icons(frame,del) \
+	-command DeleteCurrentFrame
+    tooltip::tooltip $mb.framedel [msgcat::mc {Delete Frame}]
+
+    ttk::button $mb.framefirst -takefocus 0 -image $icons(frame,first) \
+	-command FirstFrame
+    tooltip::tooltip $mb.framefirst [msgcat::mc {Goto First Frame}]
+
+    ttk::button $mb.frameprev -takefocus 0 -image $icons(frame,prev) \
+	-command PrevFrame
+    tooltip::tooltip $mb.frameprev [msgcat::mc {Goto Previous Frame}]
+
+    ttk::button $mb.framenext -takefocus 0 -image $icons(frame,next) \
+	-command NextFrame
+    tooltip::tooltip $mb.framenext [msgcat::mc {Goto Next Frame}]
+
+    ttk::button $mb.framelast -takefocus 0 -image $icons(frame,last) \
+	-command LastFrame
+    tooltip::tooltip $mb.framelast [msgcat::mc {Goto Last Frame}]
+
+    pack $mb.frameadd $mb.framedel -side left -fill x
+    pack $mb.framefirst $mb.frameprev $mb.framenext $mb.framelast \
+	-side left -fill x
 }

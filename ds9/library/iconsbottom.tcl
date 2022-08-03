@@ -154,7 +154,7 @@ proc CreateIconsBottomView {} {
     global ds9
     global icons
 
-    set mb $ds9(icons,left)
+    set mb $ds9(icons,bottom)
 
     set icons(view,vertgraph) \
 	[image create photo -file "$ds9(root)/icons/ui/view_vertical.png"]
@@ -169,12 +169,12 @@ proc CreateIconsBottomView {} {
 
     ttk::button $mb.horzgraph -takefocus 0 -image $icons(view,horzgraph) \
 	-command [list IconButtonToggleCmd view graph,horz LayoutFrames]
-    tooltip::tooltip $mb.vertgraph [msgcat::mc {Toggle Horizontal Graph}]
+    tooltip::tooltip $mb.horzgraph [msgcat::mc {Toggle Horizontal Graph}]
 
     ttk::button $mb.colorbar -takefocus 0 -image $icons(view,colorbar) \
-	-command [list IconButtonToggleCmd view graph,colorbar LayoutFrames]
-    tooltip::tooltip $mb.vertgraph [msgcat::mc {Toggle Colorbar}]
+	-command [list IconButtonToggleCmd view colorbar LayoutFrames]
+    tooltip::tooltip $mb.colorbar [msgcat::mc {Toggle Colorbar}]
 
-    pack $mb.vertgraph $mb.horzgraph $mb.colorbar -side top -fill x
+    pack $mb.vertgraph $mb.horzgraph $mb.colorbar -side left -fill x
 }
 

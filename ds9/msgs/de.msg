@@ -10,12 +10,12 @@
 ::msgcat::mcset de {Add Graph} 
 ::msgcat::mcset de {Add Line Graph} 
 ::msgcat::mcset de {Add} [encoding convertfrom iso8859-1 {Hinzufügen}]
+::msgcat::mcset de {Advanced Layout} 
 ::msgcat::mcset de {Advanced} {Erweitert}
 ::msgcat::mcset de {Align} {Ausrichten}
 ::msgcat::mcset de {All Columns} {Alle spalten}
 ::msgcat::mcset de {All Rows} {Alle zeilen}
 ::msgcat::mcset de {All} {Alles}
-::msgcat::mcset de {Alternative Layout} 
 ::msgcat::mcset de {Always save files during Backup} 
 ::msgcat::mcset de {Amplifier} [encoding convertfrom iso8859-1 {Verstärker}]
 ::msgcat::mcset de {An error has occurred during backup} 
@@ -151,6 +151,7 @@
 ::msgcat::mcset de {Colorbar Size} 
 ::msgcat::mcset de {Colorbar} {Farbbalken}
 ::msgcat::mcset de {Colormap Parameters} {Farbpalettenparameter}
+::msgcat::mcset de {Colormaps} 
 ::msgcat::mcset de {Colormap} 
 ::msgcat::mcset de {Color} {Farbe}
 ::msgcat::mcset de {Columns} {Spalten}
@@ -315,6 +316,7 @@
 ::msgcat::mcset de {Fade Frames} 
 ::msgcat::mcset de {Fade Interval} 
 ::msgcat::mcset de {Fade} 
+::msgcat::mcset de {File Open} 
 ::msgcat::mcset de {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-1 {Datei nicht gefunden oder nicht möglich FITS-Daten MIME-Type zu laden}]
 ::msgcat::mcset de {File not found} 
 ::msgcat::mcset de {Filename Format} 
@@ -441,9 +443,6 @@
 ::msgcat::mcset de {Last Block} 
 ::msgcat::mcset de {Last Frame} {Letzter rahmen}
 ::msgcat::mcset de {Last} {Letzter}
-::msgcat::mcset de {Layout Alt} 
-::msgcat::mcset de {Layout Horz} 
-::msgcat::mcset de {Layout Vert} 
 ::msgcat::mcset de {Layout} 
 ::msgcat::mcset de {Left} 
 ::msgcat::mcset de {Legal} 
@@ -543,6 +542,7 @@
 ::msgcat::mcset de {Match Frame Image} 
 ::msgcat::mcset de {Match Frame Physical} 
 ::msgcat::mcset de {Match Frame WCS} 
+::msgcat::mcset de {Match Frames on WCS} 
 ::msgcat::mcset de {Match Limits} 
 ::msgcat::mcset de {Match Scale} 
 ::msgcat::mcset de {Match Slice Image} 
@@ -640,6 +640,8 @@
 ::msgcat::mcset de {Open Mosaic WCS Seg} 
 ::msgcat::mcset de {Open Mosaic WCS} 
 ::msgcat::mcset de {Open Mosaic WFPC2} 
+::msgcat::mcset de {Open Notepad} 
+::msgcat::mcset de {Open Prism} 
 ::msgcat::mcset de {Open RGB Cube} 
 ::msgcat::mcset de {Open RGB Image} 
 ::msgcat::mcset de {Open Region File} 
@@ -793,11 +795,15 @@
 ::msgcat::mcset de {Save Select} 
 ::msgcat::mcset de {Save Slice} 
 ::msgcat::mcset de {Save Template} {Vorlage speichern}
+::msgcat::mcset de {Save as EPS} 
+::msgcat::mcset de {Save as PNG} 
 ::msgcat::mcset de {Save as} 
 ::msgcat::mcset de {Save} {Speichern}
 ::msgcat::mcset de {Scale Parameters} {Skalierungsparameter}
 ::msgcat::mcset de {Scale and Limits} 
 ::msgcat::mcset de {Scale} {Skalierung}
+::msgcat::mcset de {Scaling Option} 
+::msgcat::mcset de {Scaling Parameters} 
 ::msgcat::mcset de {Scan} {Abtastung}
 ::msgcat::mcset de {Scatter Dataset} 
 ::msgcat::mcset de {Scatter Plot Tool} 
@@ -888,7 +894,10 @@
 ::msgcat::mcset de {Times} 
 ::msgcat::mcset de {Titles} 
 ::msgcat::mcset de {Title} {Titel}
+::msgcat::mcset de {Toggle Contour} 
+::msgcat::mcset de {Toggle Coordinate Grid} 
 ::msgcat::mcset de {Toggle Include/Exclude} 
+::msgcat::mcset de {Toggle Smooth} 
 ::msgcat::mcset de {Toggle Source/Background} 
 ::msgcat::mcset de {Tophat} 
 ::msgcat::mcset de {Topographic} 

@@ -139,6 +139,11 @@ proc ProcessCommand {argv argc} {
 	    -analysis {incr i; ProcessAnalysisCmd argv i {} {}}
 	    -array {set file(type) array}
 	    -asinh {set scale(type) asinh; ChangeScale}
+	    -advanced {
+		#backward compatibility
+		set view(layout) advanced
+		LayoutView
+	    }
 	    -bg -
 	    -background {
 		# backward compatibility prefs

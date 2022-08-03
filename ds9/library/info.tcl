@@ -161,10 +161,10 @@ proc LayoutFrameInfoBox {which} {
 	    LayoutFrameInfoBoxVertWCS $which
 	    LayoutFrameInfoBoxVertImage $which
 	}
-	alt {
-	    LayoutFrameInfoBoxAltValue $which
-	    LayoutFrameInfoBoxAltWCS $which
-	    LayoutFrameInfoBoxAltImage $which
+	advanced {
+	    LayoutFrameInfoBoxAdvancedValue $which
+	    LayoutFrameInfoBoxAdvancedWCS $which
+	    LayoutFrameInfoBoxAdvancedImage $which
 	}
     }
 }
@@ -366,7 +366,7 @@ proc LayoutFrameInfoBoxVertImage {which} {
     }
 }
 
-proc LayoutFrameInfoBoxAltValue {which} {
+proc LayoutFrameInfoBoxAdvancedValue {which} {
     global ds9
 
     if {$which != {}} {
@@ -404,7 +404,7 @@ proc LayoutFrameInfoBoxAltValue {which} {
     }
 }
 
-proc LayoutFrameInfoBoxAltWCS {which} {
+proc LayoutFrameInfoBoxAdvancedWCS {which} {
     global ds9
     global view
 
@@ -425,7 +425,7 @@ proc LayoutFrameInfoBoxAltWCS {which} {
     }
 }
 
-proc LayoutFrameInfoBoxAltImage {which} {
+proc LayoutFrameInfoBoxAdvancedImage {which} {
     global ds9
     global view
 
@@ -701,7 +701,7 @@ proc LayoutInfoPanel {} {
     switch $view(layout) {
 	horizontal {LayoutInfoPanelHorz}
 	vertical {LayoutInfoPanelVert}
-	alt {LayoutInfoPanelAlt}
+	advanced {LayoutInfoPanelAdvanced}
     }
 }
 
@@ -1264,7 +1264,7 @@ proc LayoutInfoPanelVert {} {
     grid rowconfigure $ds9(info) $row -weight 1
 }
 
-proc LayoutInfoPanelAlt {} {
+proc LayoutInfoPanelAdvanced {} {
     global ds9
     global view
     global current

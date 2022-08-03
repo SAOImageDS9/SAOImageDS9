@@ -10,12 +10,12 @@
 ::msgcat::mcset cs {Add Graph} 
 ::msgcat::mcset cs {Add Line Graph} 
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
+::msgcat::mcset cs {Advanced Layout} 
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
 ::msgcat::mcset cs {Align} [encoding convertfrom iso8859-2 {Zarovnat}]
 ::msgcat::mcset cs {All Columns} [encoding convertfrom iso8859-2 {V¹echny sloupce}]
 ::msgcat::mcset cs {All Rows} [encoding convertfrom iso8859-2 {V¹echny øádky}]
 ::msgcat::mcset cs {All} [encoding convertfrom iso8859-2 {V¹e}]
-::msgcat::mcset cs {Alternative Layout} 
 ::msgcat::mcset cs {Always save files during Backup} [encoding convertfrom iso8859-2 {V¾dy ulo¾it soubory pøi zálohování}]
 ::msgcat::mcset cs {Amplifier} [encoding convertfrom iso8859-2 {Zesilovaè}]
 ::msgcat::mcset cs {An error has occurred during backup} [encoding convertfrom iso8859-2 {Chyba pøi poøizování zálohy}]
@@ -151,6 +151,7 @@
 ::msgcat::mcset cs {Colorbar Size} [encoding convertfrom iso8859-2 {Velikost colorbaru}]
 ::msgcat::mcset cs {Colorbar} [encoding convertfrom iso8859-2 {©kálování barev}]
 ::msgcat::mcset cs {Colormap Parameters} 
+::msgcat::mcset cs {Colormaps} 
 ::msgcat::mcset cs {Colormap} 
 ::msgcat::mcset cs {Color} [encoding convertfrom iso8859-2 {Barva}]
 ::msgcat::mcset cs {Columns} [encoding convertfrom iso8859-2 {Sloupce}]
@@ -315,6 +316,7 @@
 ::msgcat::mcset cs {Fade Frames} 
 ::msgcat::mcset cs {Fade Interval} 
 ::msgcat::mcset cs {Fade} 
+::msgcat::mcset cs {File Open} 
 ::msgcat::mcset cs {File not Found or Unable to load FITS data MIME type} [encoding convertfrom iso8859-2 {Soubor nenalezen nebo není mo¾né nahrát daný FITS MIME typ}]
 ::msgcat::mcset cs {File not found} 
 ::msgcat::mcset cs {Filename Format} 
@@ -441,9 +443,6 @@
 ::msgcat::mcset cs {Last Block} 
 ::msgcat::mcset cs {Last Frame} [encoding convertfrom iso8859-2 {Poslední snímek}]
 ::msgcat::mcset cs {Last} [encoding convertfrom iso8859-2 {Poslední}]
-::msgcat::mcset cs {Layout Alt} 
-::msgcat::mcset cs {Layout Horz} 
-::msgcat::mcset cs {Layout Vert} 
 ::msgcat::mcset cs {Layout} [encoding convertfrom iso8859-2 {Rozvr¾ení}]
 ::msgcat::mcset cs {Left} [encoding convertfrom iso8859-2 {Vlevo}]
 ::msgcat::mcset cs {Legal} 
@@ -543,6 +542,7 @@
 ::msgcat::mcset cs {Match Frame Image} 
 ::msgcat::mcset cs {Match Frame Physical} 
 ::msgcat::mcset cs {Match Frame WCS} 
+::msgcat::mcset cs {Match Frames on WCS} 
 ::msgcat::mcset cs {Match Limits} 
 ::msgcat::mcset cs {Match Scale} [encoding convertfrom iso8859-2 {Zarovnat ¹kálování}]
 ::msgcat::mcset cs {Match Slice Image} 
@@ -640,6 +640,8 @@
 ::msgcat::mcset cs {Open Mosaic WCS Seg} 
 ::msgcat::mcset cs {Open Mosaic WCS} 
 ::msgcat::mcset cs {Open Mosaic WFPC2} 
+::msgcat::mcset cs {Open Notepad} 
+::msgcat::mcset cs {Open Prism} 
 ::msgcat::mcset cs {Open RGB Cube} 
 ::msgcat::mcset cs {Open RGB Image} 
 ::msgcat::mcset cs {Open Region File} 
@@ -793,11 +795,15 @@
 ::msgcat::mcset cs {Save Select} 
 ::msgcat::mcset cs {Save Slice} 
 ::msgcat::mcset cs {Save Template} [encoding convertfrom iso8859-2 {Ulo¾it ¹ablony}]
+::msgcat::mcset cs {Save as EPS} 
+::msgcat::mcset cs {Save as PNG} 
 ::msgcat::mcset cs {Save as} 
 ::msgcat::mcset cs {Save} [encoding convertfrom iso8859-2 {Ulo¾it}]
 ::msgcat::mcset cs {Scale Parameters} [encoding convertfrom iso8859-2 {Parametry ¹kálování}]
 ::msgcat::mcset cs {Scale and Limits} 
 ::msgcat::mcset cs {Scale} [encoding convertfrom iso8859-2 {©kálování}]
+::msgcat::mcset cs {Scaling Option} 
+::msgcat::mcset cs {Scaling Parameters} 
 ::msgcat::mcset cs {Scan} 
 ::msgcat::mcset cs {Scatter Dataset} 
 ::msgcat::mcset cs {Scatter Plot Tool} 
@@ -888,7 +894,10 @@
 ::msgcat::mcset cs {Times} 
 ::msgcat::mcset cs {Titles} 
 ::msgcat::mcset cs {Title} 
+::msgcat::mcset cs {Toggle Contour} 
+::msgcat::mcset cs {Toggle Coordinate Grid} 
 ::msgcat::mcset cs {Toggle Include/Exclude} 
+::msgcat::mcset cs {Toggle Smooth} 
 ::msgcat::mcset cs {Toggle Source/Background} 
 ::msgcat::mcset cs {Tophat} 
 ::msgcat::mcset cs {Topographic} 

@@ -305,7 +305,7 @@ proc LayoutView {} {
     switch $view(layout) {
 	horizontal {LayoutViewHorz}
 	vertical {LayoutViewVert}
-	alt {LayoutViewAlt}
+	advanced {LayoutViewAdvanced}
     }
 
     LayoutInfoPanel
@@ -446,7 +446,7 @@ proc LayoutViewVert {} {
     grid $ds9(image) -row 0 -column 4 -sticky news
 }
 
-proc LayoutViewAlt {} {
+proc LayoutViewAdvanced {} {
     global ds9
     global current
     global view

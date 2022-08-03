@@ -15,7 +15,7 @@ proc ViewMainMenu {} {
     $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical}] \
 	-variable view(layout) -value vertical -command LayoutView
     $ds9(mb).view add radiobutton -label [msgcat::mc {Advanced}] \
-	-variable view(layout) -value alt -command LayoutView
+	-variable view(layout) -value advanced -command LayoutView
     $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Information Panel}] \
 	-variable view(info) -command LayoutView
@@ -86,8 +86,8 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(layout) -value horizontal
     $m add radiobutton -label [msgcat::mc {Vertical}] \
 	-variable pview(layout) -value vertical
-    $m add radiobutton -label [msgcat::mc {South Park}] \
-	-variable pview(layout) -value alt
+    $m add radiobutton -label [msgcat::mc {Advanced}] \
+	-variable pview(layout) -value advanced
     $m add separator
     $m add checkbutton -label [msgcat::mc {Information Panel}] \
 	-variable pview(info)
@@ -151,7 +151,7 @@ proc ButtonsViewDef {} {
     array set pbuttons {
 	view,horizontal 0
 	view,vertical 0
-	view,alt 0
+	view,advanced 0
 	view,multi 0
 	view,info 1
 	view,panner 1
@@ -182,14 +182,14 @@ proc CreateButtonsView {} {
     ttk::frame $ds9(buttons).view
 
     RadioButton $ds9(buttons).view.horizontal \
-	[string tolower [msgcat::mc {Layout Horz}]] \
+	[string tolower [msgcat::mc {Horizontal}]] \
 	view layout horizontal LayoutView
     RadioButton $ds9(buttons).view.vertical \
-	[string tolower [msgcat::mc {Layout Vert}]] \
+	[string tolower [msgcat::mc {Vertical}]] \
 	view layout vertical LayoutView
-    RadioButton $ds9(buttons).view.alt \
-	[string tolower [msgcat::mc {Layout Alt}]] \
-	view layout alt LayoutView
+    RadioButton $ds9(buttons).view.advanced \
+	[string tolower [msgcat::mc {Advanced}]] \
+	view layout advanced LayoutView
 
     CheckButton $ds9(buttons).view.multi \
 	[string tolower [msgcat::mc {Multi Colorbars}]] \
@@ -256,7 +256,7 @@ proc CreateButtonsView {} {
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)
         $ds9(buttons).view.vertical pbuttons(view,vertical)
-        $ds9(buttons).view.alt pbuttons(view,alt)
+        $ds9(buttons).view.advanced pbuttons(view,advanced)
         $ds9(buttons).view.multi pbuttons(view,multi)
         $ds9(buttons).view.info pbuttons(view,info)
         $ds9(buttons).view.panner pbuttons(view,panner)
@@ -293,8 +293,8 @@ proc PrefsDialogButtonbarView {f} {
     $m add checkbutton -label [msgcat::mc {Vertical Layout}] \
 	-variable pbuttons(view,vertical) \
 	-command {UpdateButtons buttons(view)}
-    $m add checkbutton -label [msgcat::mc {Alternative Layout}] \
-	-variable pbuttons(view,alt) \
+    $m add checkbutton -label [msgcat::mc {Advanced Layout}] \
+	-variable pbuttons(view,advanced) \
 	-command {UpdateButtons buttons(view)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \

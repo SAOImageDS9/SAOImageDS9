@@ -10,12 +10,12 @@
 ::msgcat::mcset ja {Add Graph} 
 ::msgcat::mcset ja {Add Line Graph} 
 ::msgcat::mcset ja {Add} [encoding convertfrom euc-jp "\xc4\xc9\xb2\xc3"]
+::msgcat::mcset ja {Advanced Layout} 
 ::msgcat::mcset ja {Advanced} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9\xa4\xca\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Align} [encoding convertfrom euc-jp "\xc0\xb0\xce\xf3"]
 ::msgcat::mcset ja {All Columns} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xce\xf3"]
 ::msgcat::mcset ja {All Rows} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xb9\xd4"]
 ::msgcat::mcset ja {All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6"]
-::msgcat::mcset ja {Alternative Layout} 
 ::msgcat::mcset ja {Always save files during Backup} 
 ::msgcat::mcset ja {Amplifier} [encoding convertfrom euc-jp "\xc1\xfd\xc9\xfd\xb4\xef\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {An error has occurred during backup} 
@@ -151,6 +151,7 @@
 ::msgcat::mcset ja {Colorbar Size} 
 ::msgcat::mcset ja {Colorbar} [encoding convertfrom euc-jp "\xc7\xdb\xbf\xa7\xcb\xc0"]
 ::msgcat::mcset ja {Colormap Parameters} [encoding convertfrom euc-jp "\xbf\xa7\xc4\xb4\xa4\xce\xc0\xdf\xc4\xea"]
+::msgcat::mcset ja {Colormaps} 
 ::msgcat::mcset ja {Colormap} [encoding convertfrom euc-jp "\xbf\xa7\xc4\xb4"]
 ::msgcat::mcset ja {Color} [encoding convertfrom euc-jp "\xbf\xa7"]
 ::msgcat::mcset ja {Columns} [encoding convertfrom euc-jp "\xce\xf3"]
@@ -315,6 +316,7 @@
 ::msgcat::mcset ja {Fade Frames} 
 ::msgcat::mcset ja {Fade Interval} 
 ::msgcat::mcset ja {Fade} 
+::msgcat::mcset ja {File Open} 
 ::msgcat::mcset ja {File not Found or Unable to load FITS data MIME type} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xac\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3\xa4\xde\xa4\xbf\xa4\xcf\xa1\xa2\x46\x49\x54\x53\x20\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xac\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {File not found} 
 ::msgcat::mcset ja {Filename Format} 
@@ -441,9 +443,6 @@
 ::msgcat::mcset ja {Last Block} 
 ::msgcat::mcset ja {Last Frame} [encoding convertfrom euc-jp "\xba\xc7\xb8\xe5\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {Last} [encoding convertfrom euc-jp "\xba\xc7\xb8\xe5"]
-::msgcat::mcset ja {Layout Alt} 
-::msgcat::mcset ja {Layout Horz} [encoding convertfrom euc-jp "\xb2\xa3\xc7\xdb\xc3\xd6"]
-::msgcat::mcset ja {Layout Vert} [encoding convertfrom euc-jp "\xbd\xc4\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Layout} 
 ::msgcat::mcset ja {Left} 
 ::msgcat::mcset ja {Legal} [encoding convertfrom euc-jp "\xa5\xea\xa1\xbc\xa5\xac\xa5\xeb"]
@@ -543,6 +542,7 @@
 ::msgcat::mcset ja {Match Frame Image} 
 ::msgcat::mcset ja {Match Frame Physical} 
 ::msgcat::mcset ja {Match Frame WCS} 
+::msgcat::mcset ja {Match Frames on WCS} 
 ::msgcat::mcset ja {Match Limits} 
 ::msgcat::mcset ja {Match Scale} 
 ::msgcat::mcset ja {Match Slice Image} 
@@ -640,6 +640,8 @@
 ::msgcat::mcset ja {Open Mosaic WCS Seg} 
 ::msgcat::mcset ja {Open Mosaic WCS} 
 ::msgcat::mcset ja {Open Mosaic WFPC2} 
+::msgcat::mcset ja {Open Notepad} 
+::msgcat::mcset ja {Open Prism} 
 ::msgcat::mcset ja {Open RGB Cube} 
 ::msgcat::mcset ja {Open RGB Image} 
 ::msgcat::mcset ja {Open Region File} 
@@ -793,11 +795,15 @@
 ::msgcat::mcset ja {Save Select} 
 ::msgcat::mcset ja {Save Slice} 
 ::msgcat::mcset ja {Save Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1\xa4\xf2\xca\xdd\xc2\xb8"]
+::msgcat::mcset ja {Save as EPS} 
+::msgcat::mcset ja {Save as PNG} 
 ::msgcat::mcset ja {Save as} 
 ::msgcat::mcset ja {Save} [encoding convertfrom euc-jp "\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Scale Parameters} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xb1\xa1\xbc\xa5\xeb\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Scale and Limits} 
 ::msgcat::mcset ja {Scale} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xb1\xa1\xbc\xa5\xeb"]
+::msgcat::mcset ja {Scaling Option} 
+::msgcat::mcset ja {Scaling Parameters} 
 ::msgcat::mcset ja {Scan} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xad\xa5\xe3\xa5\xf3"]
 ::msgcat::mcset ja {Scatter Dataset} 
 ::msgcat::mcset ja {Scatter Plot Tool} 
@@ -888,7 +894,10 @@
 ::msgcat::mcset ja {Times} 
 ::msgcat::mcset ja {Titles} 
 ::msgcat::mcset ja {Title} [encoding convertfrom euc-jp "\xa5\xbf\xa5\xa4\xa5\xc8\xa5\xeb"]
+::msgcat::mcset ja {Toggle Contour} 
+::msgcat::mcset ja {Toggle Coordinate Grid} 
 ::msgcat::mcset ja {Toggle Include/Exclude} 
+::msgcat::mcset ja {Toggle Smooth} 
 ::msgcat::mcset ja {Toggle Source/Background} 
 ::msgcat::mcset ja {Tophat} [encoding convertfrom euc-jp "\xa5\xc8\xa5\xc3\xa5\xd7\xa5\xcf\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Topographic} 

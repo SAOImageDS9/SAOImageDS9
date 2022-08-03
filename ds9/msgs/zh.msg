@@ -10,12 +10,12 @@
 ::msgcat::mcset zh {Add Graph} 
 ::msgcat::mcset zh {Add Line Graph} 
 ::msgcat::mcset zh {Add} 
+::msgcat::mcset zh {Advanced Layout} 
 ::msgcat::mcset zh {Advanced} 
 ::msgcat::mcset zh {Align} [encoding convertfrom big5 "\xB9\xEF \xBB\xF4 \xA4\xE8 \xA6\xEC"]
 ::msgcat::mcset zh {All Columns} 
 ::msgcat::mcset zh {All Rows} 
 ::msgcat::mcset zh {All} 
-::msgcat::mcset zh {Alternative Layout} 
 ::msgcat::mcset zh {Always save files during Backup} 
 ::msgcat::mcset zh {Amplifier} 
 ::msgcat::mcset zh {An error has occurred during backup} 
@@ -151,6 +151,7 @@
 ::msgcat::mcset zh {Colorbar Size} 
 ::msgcat::mcset zh {Colorbar} [encoding convertfrom big5 "\xA6\xE2 \xB6\xA5 \xB9\xCF \xA8\xD2"]
 ::msgcat::mcset zh {Colormap Parameters} [encoding convertfrom big5 "\xC3\x43 \xA6\xE2 \xB0\xD1 \xBC\xC6"]
+::msgcat::mcset zh {Colormaps} 
 ::msgcat::mcset zh {Colormap} 
 ::msgcat::mcset zh {Color} [encoding convertfrom big5 "\xC3\x43 \xA6\xE2"]
 ::msgcat::mcset zh {Columns} [encoding convertfrom big5 "\xA4\xE8 \xA6\xEC"]
@@ -315,6 +316,7 @@
 ::msgcat::mcset zh {Fade Frames} 
 ::msgcat::mcset zh {Fade Interval} 
 ::msgcat::mcset zh {Fade} 
+::msgcat::mcset zh {File Open} 
 ::msgcat::mcset zh {File not Found or Unable to load FITS data MIME type} 
 ::msgcat::mcset zh {File not found} 
 ::msgcat::mcset zh {Filename Format} 
@@ -441,9 +443,6 @@
 ::msgcat::mcset zh {Last Block} 
 ::msgcat::mcset zh {Last Frame} [encoding convertfrom big5 "\xB3\xCC \xA9\xB3 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Last} 
-::msgcat::mcset zh {Layout Alt} 
-::msgcat::mcset zh {Layout Horz} 
-::msgcat::mcset zh {Layout Vert} 
 ::msgcat::mcset zh {Layout} 
 ::msgcat::mcset zh {Left} 
 ::msgcat::mcset zh {Legal} 
@@ -543,6 +542,7 @@
 ::msgcat::mcset zh {Match Frame Image} 
 ::msgcat::mcset zh {Match Frame Physical} 
 ::msgcat::mcset zh {Match Frame WCS} 
+::msgcat::mcset zh {Match Frames on WCS} 
 ::msgcat::mcset zh {Match Limits} 
 ::msgcat::mcset zh {Match Scale} 
 ::msgcat::mcset zh {Match Slice Image} 
@@ -640,6 +640,8 @@
 ::msgcat::mcset zh {Open Mosaic WCS Seg} 
 ::msgcat::mcset zh {Open Mosaic WCS} 
 ::msgcat::mcset zh {Open Mosaic WFPC2} 
+::msgcat::mcset zh {Open Notepad} 
+::msgcat::mcset zh {Open Prism} 
 ::msgcat::mcset zh {Open RGB Cube} 
 ::msgcat::mcset zh {Open RGB Image} 
 ::msgcat::mcset zh {Open Region File} 
@@ -793,11 +795,15 @@
 ::msgcat::mcset zh {Save Select} 
 ::msgcat::mcset zh {Save Slice} 
 ::msgcat::mcset zh {Save Template} 
+::msgcat::mcset zh {Save as EPS} 
+::msgcat::mcset zh {Save as PNG} 
 ::msgcat::mcset zh {Save as} 
 ::msgcat::mcset zh {Save} [encoding convertfrom big5 "\xC0\x78 \xA6\x73"]
 ::msgcat::mcset zh {Scale Parameters} [encoding convertfrom big5 "\xA6\xE2 \xB6\xA5 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Scale and Limits} 
 ::msgcat::mcset zh {Scale} [encoding convertfrom big5 "\xA6\xE2 \xB6\xA5"]
+::msgcat::mcset zh {Scaling Option} 
+::msgcat::mcset zh {Scaling Parameters} 
 ::msgcat::mcset zh {Scan} 
 ::msgcat::mcset zh {Scatter Dataset} 
 ::msgcat::mcset zh {Scatter Plot Tool} 
@@ -888,7 +894,10 @@
 ::msgcat::mcset zh {Times} 
 ::msgcat::mcset zh {Titles} 
 ::msgcat::mcset zh {Title} 
+::msgcat::mcset zh {Toggle Contour} 
+::msgcat::mcset zh {Toggle Coordinate Grid} 
 ::msgcat::mcset zh {Toggle Include/Exclude} 
+::msgcat::mcset zh {Toggle Smooth} 
 ::msgcat::mcset zh {Toggle Source/Background} 
 ::msgcat::mcset zh {Tophat} 
 ::msgcat::mcset zh {Topographic} 

@@ -105,6 +105,7 @@ proc CreateIconsBottomZoom {} {
 proc CreateIconsBottomFrame {} {
     global ds9
     global icons
+    global current
 
     set mb $ds9(icons,bottom)
 
@@ -120,6 +121,17 @@ proc CreateIconsBottomFrame {} {
 	[image create photo -file "$ds9(root)/icons/ui/frame_next.png"]
     set icons(frame,last) \
 	[image create photo -file "$ds9(root)/icons/ui/frame_last.png"]
+
+    set icons(currentdisplay,single) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_single.png"]
+    set icons(currentdisplay,tile) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_tile.png"]
+    set icons(currentdisplay,blink) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_blink.png"]
+    set icons(currentdisplay,fade) \
+	[image create photo -file "$ds9(root)/icons/ui/frame_fade.png"]
+    # special case, should not be used
+    set icons(currentdisplay,default) $icons(currentdisplay,single)
 
     ttk::button $mb.frameadd -takefocus 0 -image $icons(frame,add) \
 	-command CreateFrame
@@ -137,6 +149,11 @@ proc CreateIconsBottomFrame {} {
 	-command PrevFrame
     tooltip::tooltip $mb.frameprev [msgcat::mc {Goto Previous Frame}]
 
+    ttk::menubutton $mb.framelayout -menu $mb.framelayout.m \
+	-direction above -takefocus 0 \
+	-image $icons(currentdisplay,$current(display))
+    tooltip::tooltip $mb [msgcat::mc {Frame Layout}]
+
     ttk::button $mb.framenext -takefocus 0 -image $icons(frame,next) \
 	-command NextFrame
     tooltip::tooltip $mb.framenext [msgcat::mc {Goto Next Frame}]
@@ -145,9 +162,19 @@ proc CreateIconsBottomFrame {} {
 	-command LastFrame
     tooltip::tooltip $mb.framelast [msgcat::mc {Goto Last Frame}]
 
-    pack $mb.frameadd $mb.framedel -side left -fill x
-    pack $mb.framefirst $mb.frameprev $mb.framenext $mb.framelast \
-	-side left -fill x
+    set mbb $mb.framelayout
+
+    ThemeMenu $mbb.m
+    $mbb.m configure -tearoff 0
+    IconMenuButton $mbb current display single DisplayMode
+    IconMenuButton $mbb current display tile DisplayMode
+    IconMenuButton $mbb current display blink DisplayMode
+    IconMenuButton $mbb current display fade DisplayMode
+
+    trace add variable current(display) write [list IconMenuButtonCB $mbb]
+
+    pack $mb.frameadd $mb.framedel $mb.framefirst $mb.frameprev \
+	$mb.framelayout $mb.framenext $mb.framelast -side left -fill x
 }
 
 proc CreateIconsBottomView {} {

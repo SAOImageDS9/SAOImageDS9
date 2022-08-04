@@ -20,51 +20,35 @@ proc CreateIconsTop {} {
 
 proc CreateIconsTopFile {} {
     global ds9
-    global icons
 
     set mb $ds9(icons,top)
 
-    set icons(file,open) \
-	[image create photo -file "$ds9(root)/icons/ui/file_open.png"]
-    set icons(file,saveeps) \
-	[image create photo -file "$ds9(root)/icons/ui/save_as_eps.png"]
-    set icons(file,savepng) \
-	[image create photo -file "$ds9(root)/icons/ui/save_as_png.png"]
-    set icons(file,print) \
-	[image create photo -file "$ds9(root)/icons/ui/print.png"]
-    set icons(file,backup) \
-	[image create photo -file "$ds9(root)/icons/ui/backup.png"]
-    set icons(file,prism) \
-	[image create photo -file "$ds9(root)/icons/ui/prism.png"]
-    set icons(file,notes) \
-	[image create photo -file "$ds9(root)/icons/ui/notes.png"]
-
-    ttk::button $mb.open -takefocus 0 -image $icons(file,open) \
-	-command [list OpenDialog fits]
+    ttk::button $mb.open -takefocus 0 -command [list OpenDialog fits] \
+	-image [image create photo -file "$ds9(root)/icons/ui/file_open.png"]
     tooltip::tooltip $mb.open [msgcat::mc {File Open}]
 
-    ttk::button $mb.saveeps -takefocus 0 -image $icons(file,saveeps) \
-	-command [list SaveImageDialog eps]
+    ttk::button $mb.saveeps -takefocus 0 -command [list SaveImageDialog eps] \
+	-image [image create photo -file "$ds9(root)/icons/ui/save_as_eps.png"]
     tooltip::tooltip $mb.saveeps [msgcat::mc {Save as EPS}]
 
-    ttk::button $mb.savepng -takefocus 0 -image $icons(file,savepng) \
-	-command [list SaveImageDialog png]
+    ttk::button $mb.savepng -takefocus 0 -command [list SaveImageDialog png] \
+	-image [image create photo -file "$ds9(root)/icons/ui/save_as_png.png"]
     tooltip::tooltip $mb.savepng [msgcat::mc {Save as PNG}]
 
-    ttk::button $mb.print -takefocus 0 -image $icons(file,print) \
-	-command PSPrint
+    ttk::button $mb.print -takefocus 0 -command PSPrint \
+	-image [image create photo -file "$ds9(root)/icons/ui/print.png"]
     tooltip::tooltip $mb.print [msgcat::mc {Print}]
 
-    ttk::button $mb.backup -takefocus 0 -image $icons(file,backup) \
-	-command BackupDialog
+    ttk::button $mb.backup -takefocus 0 -command BackupDialog \
+	-image [image create photo -file "$ds9(root)/icons/ui/backup.png"]
     tooltip::tooltip $mb.backup [msgcat::mc {Backup}]
 
-    ttk::button $mb.prism -takefocus 0 -image $icons(file,prism) \
-	-command [list PrismDialogLoad prism]
+    ttk::button $mb.prism -takefocus 0 -command [list PrismDialogLoad prism] \
+	-image [image create photo -file "$ds9(root)/icons/ui/prism.png"]
     tooltip::tooltip $mb.prism [msgcat::mc {Open Prism}]
 
-    ttk::button $mb.notes -takefocus 0 -image $icons(file,notes) \
-	-command DisplayNotes
+    ttk::button $mb.notes -takefocus 0 -command DisplayNotes \
+	-image [image create photo -file "$ds9(root)/icons/ui/notes.png"]
     tooltip::tooltip $mb.notes [msgcat::mc {Open Notepad}]
 
     pack $mb.open $mb.saveeps $mb.savepng $mb.print $mb.backup \
@@ -77,9 +61,6 @@ proc CreateIconsTopColormap {} {
     global colorbar
 
     set mb $ds9(icons,top)
-
-    set icons(colorbar,invert) \
-	[image create photo -file "$ds9(root)/icons/ui/colorbar_reverse.png"]
 
     set luts [list a aips0 b bb blue color cool green grey he heat hsv i8 \
 		  rainbow red sls staircase standard \
@@ -101,8 +82,10 @@ proc CreateIconsTopColormap {} {
 	-image $icons(colorbarmap,$colorbar(map)) -takefocus 0
     tooltip::tooltip $mb.colormap [msgcat::mc {Colormaps}]
 
-    ttk::button $mb.invert -takefocus 0 -image $icons(colorbar,invert) \
-	-command [list IconButtonToggleCmd colorbar invert InvertColorbar]
+    ttk::button $mb.invert -takefocus 0 \
+	-command [list IconButtonToggleCmd colorbar invert InvertColorbar] \
+	-image \
+	[image create photo -file "$ds9(root)/icons/ui/colorbar_reverse.png"]
     tooltip::tooltip $mb.invert [msgcat::mc {Invert Colormap}]
 
     set mbb $mb.colormap
@@ -127,9 +110,6 @@ proc CreateIconsTopScale {} {
 
     set mb $ds9(icons,top)
 
-    set icons(scale,dialog) \
-	[image create photo -file "$ds9(root)/icons/ui/scale_limits.png"]
-
     set icons(scaletype,log) \
 	[image create photo -file "$ds9(root)/icons/ui/log.png"]
     set icons(scaletype,linear) \
@@ -144,8 +124,8 @@ proc CreateIconsTopScale {} {
 	-image $icons(scaletype,$scale(type))
     tooltip::tooltip $mb.scale [msgcat::mc {Scaling Option}]
 
-    ttk::button $mb.scaledialog -takefocus 0 -image $icons(scale,dialog) \
-	-command ScaleDialog
+    ttk::button $mb.scaledialog -takefocus 0 -command ScaleDialog \
+	-image [image create photo -file "$ds9(root)/icons/ui/scale_limits.png"]
     tooltip::tooltip $mb.scaledialog [msgcat::mc {Scaling Parameters}]
 
     set mbb $mb.scale
@@ -167,29 +147,24 @@ proc CreateIconsTopAnalysis {} {
 
     set mb $ds9(icons,top)
 
-    set icons(analysis,smooth) \
-	[image create photo -file "$ds9(root)/icons/ui/smooth.png"]
-    set icons(analysis,contour) \
-	[image create photo -file "$ds9(root)/icons/ui/contour.png"]
-    set icons(analysis,match) \
-	[image create photo -file "$ds9(root)/icons/ui/match.png"]
-    set icons(analysis,grid) \
-	[image create photo -file "$ds9(root)/icons/ui/coord_grid.png"]
-
-    ttk::button $mb.smooth -takefocus 0 -image $icons(analysis,smooth) \
-	-command [list IconButtonToggleCmd smooth view SmoothUpdate]
+    ttk::button $mb.smooth -takefocus 0 \
+	-command [list IconButtonToggleCmd smooth view SmoothUpdate] \
+	-image [image create photo -file "$ds9(root)/icons/ui/smooth.png"]
     tooltip::tooltip $mb.smooth [msgcat::mc {Toggle Smooth}]
 
-    ttk::button $mb.contour -takefocus 0 -image $icons(analysis,contour) \
-	-command [list IconButtonToggleCmd contour view UpdateContour]
+    ttk::button $mb.contour -takefocus 0 \
+	-command [list IconButtonToggleCmd contour view UpdateContour] \
+	-image [image create photo -file "$ds9(root)/icons/ui/contour.png"]
     tooltip::tooltip $mb.contour [msgcat::mc {Toggle Contour}]
 
-    ttk::button $mb.match -takefocus 0 -image $icons(analysis,match) \
-	-command [list MatchFrameCurrent wcs]
+    ttk::button $mb.match -takefocus 0 \
+	-command [list MatchFrameCurrent wcs] \
+	-image [image create photo -file "$ds9(root)/icons/ui/match.png"]
     tooltip::tooltip $mb.match [msgcat::mc {Match Frames on WCS}]
 
-    ttk::button $mb.grid -takefocus 0 -image $icons(analysis,grid) \
-	-command [list IconButtonToggleCmd grid view GridUpdateCurrent]
+    ttk::button $mb.grid -takefocus 0 \
+	-command [list IconButtonToggleCmd grid view GridUpdateCurrent] \
+	-image [image create photo -file "$ds9(root)/icons/ui/coord_grid.png"]
     tooltip::tooltip $mb.grid [msgcat::mc {Toggle Coordinate Grid}]
 
     pack $mb.smooth $mb.contour $mb.match $mb.grid -side left -fill x
@@ -201,10 +176,8 @@ proc CreateIconsTopQuit {} {
 
     set mb $ds9(icons,top)
 
-    set icons(quit) \
-	[image create photo -file "$ds9(root)/icons/ui/quit.png"]
-
-    ttk::button $mb.quit -takefocus 0 -image $icons(quit) -command QuitDS9
+    ttk::button $mb.quit -takefocus 0 -command QuitDS9 \
+	-image [image create photo -file "$ds9(root)/icons/ui/quit.png"]
     tooltip::tooltip $mb.quit [msgcat::mc {Exit}]
 
     pack $mb.quit -side right

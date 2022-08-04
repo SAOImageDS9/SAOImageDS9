@@ -553,11 +553,12 @@ CreateColorbar
 # Create other parts of the display
 CreateMenuBar
 CreateHeader
+# come before panner/magnifer
+CreateIcons
+CreateInfoPanel
 CreatePanner
 CreateMagnifier
-CreateInfoPanel
 CreateButtons
-CreateIcons
 
 # Create default Graphs
 GraphsCreate graph

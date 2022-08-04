@@ -6,20 +6,24 @@ package provide DS9 1.0
 
 proc CreateMagnifier {} {
     global imagnifier
+    global pmagnifier
     global ds9
 
-    set ds9(magnifier) [canvas $ds9(header).mag \
-			    -width $imagnifier(size) \
-			    -height $imagnifier(size) \
-			    -relief groove \
-			    -borderwidth 2 \
-			    -highlightthickness 0 \
-			    -insertofftime 0 \
-			    -takefocus 0 \
-			    -bg [ThemeTreeBackground] \
-			   ]
+    set ds9(magnifier) [ttk::frame $ds9(header).magnifier]
 
-    $ds9(magnifier) create magnifier$ds9(visual) \
+    set ds9(magnifier,canvas) \
+	[canvas $ds9(magnifier).canvas \
+	     -width $imagnifier(size) \
+	     -height $imagnifier(size) \
+	     -relief groove \
+	     -borderwidth 2 \
+	     -highlightthickness 0 \
+	     -insertofftime 0 \
+	     -takefocus 0 \
+	     -bg [ThemeTreeBackground] \
+	    ]
+
+    $ds9(magnifier,canvas) create magnifier$ds9(visual) \
 	-width $imagnifier(size) \
 	-height $imagnifier(size) \
 	-command magnifier \
@@ -30,9 +34,25 @@ proc CreateMagnifier {} {
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
+    set ds9(magnifier,minus) \
+	[ttk::button $ds9(magnifier).minus -takefocus 0 -text {-} -width 4 \
+	     -command [list ChangeMagnifierZoom .5]]
+    tooltip::tooltip $ds9(magnifier).minus [msgcat::mc {Decrease Magnification}]
+
+    set ds9(magnifier,plus) \
+	[ttk::button $ds9(magnifier).plus -takefocus 0 -text {+} -width 4 \
+	     -command [list ChangeMagnifierZoom 2.]]
+    tooltip::tooltip $ds9(magnifier).plus [msgcat::mc {Increase Magnification}]
+
+    pack $ds9(magnifier,canvas) -side top
+    pack $ds9(magnifier,minus) -side left
+    pack $ds9(magnifier,plus) -side left
+    
     switch $ds9(wm) {
 	x11 -
-	win32 {bind $ds9(magnifier) <<ThemeChanged>> {ThemeConfigMagnifier %W}}
+	win32 {
+	    bind $ds9(magnifier,canvas) <<ThemeChanged>> {ThemeConfigMagnifier %W}
+	}
 	aqua {}
     }
 }
@@ -89,6 +109,16 @@ proc MagnifierCursor {} {
     
     foreach ff $ds9(frames) {
 	$ff magnifier cursor $pmagnifier(cursor)
+    }
+}
+
+proc ChangeMagnifierZoom {mm} {
+    global pmagnifier
+    global ds9
+
+    set pmagnifier(zoom) [expr $pmagnifier(zoom)*$mm]
+    foreach ff $ds9(frames) {
+	$ff magnifier zoom $pmagnifier(zoom)
     }
 }
 

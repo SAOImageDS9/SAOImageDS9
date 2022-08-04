@@ -353,7 +353,8 @@ proc LayoutViewHorz {} {
     pack forget $ds9(panner)
     pack forget $ds9(panner,align)
     pack forget $ds9(panner,center)
-    pack forget $ds9(magnifier)
+    pack forget $ds9(magnifier,plus)
+    pack forget $ds9(magnifier,minus)
     pack forget $ds9(info)
 
     # info panel
@@ -423,6 +424,8 @@ proc LayoutViewVert {} {
     pack forget $ds9(panner,align)
     pack forget $ds9(panner,center)
     pack forget $ds9(magnifier)
+    pack forget $ds9(magnifier,plus)
+    pack forget $ds9(magnifier,minus)
     pack forget $ds9(info)
 
     # info panel
@@ -491,6 +494,8 @@ proc LayoutViewAdvanced {} {
     pack forget $ds9(panner,align)
     pack forget $ds9(panner,center)
     pack forget $ds9(magnifier)
+    pack forget $ds9(magnifier,plus)
+    pack forget $ds9(magnifier,minus)
     pack forget $ds9(info)
 
     # info panel
@@ -501,13 +506,15 @@ proc LayoutViewAdvanced {} {
     }
 
     if {$view(panner)} {
+	pack $ds9(panner) -side top -padx 2 -pady 2
 	pack $ds9(panner,align) -side left
 	pack $ds9(panner,center) -side left
-	pack $ds9(panner) -side top -padx 2 -pady 2
     }
 
     if {$view(magnifier)} {
 	pack $ds9(magnifier) -side top -padx 2 -pady 2
+	pack $ds9(magnifier,minus) -side left
+	pack $ds9(magnifier,plus) -side left
     }
 
     if {$view(info)} {

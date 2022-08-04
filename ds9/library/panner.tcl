@@ -8,10 +8,11 @@ proc CreatePanner {} {
     global ipanner
     global ds9
 
-    set ds9(panner) [ttk::frame $ds9(header).pan]
+    set ds9(panner) [ttk::frame $ds9(header).panner]
 
     set ds9(panner,canvas) \
-	[canvas $ds9(panner).canvas -width $ipanner(size) \
+	[canvas $ds9(panner).canvas \
+	     -width $ipanner(size) \
 	     -height $ipanner(size) \
 	     -relief groove \
 	     -borderwidth 2 \
@@ -35,15 +36,13 @@ proc CreatePanner {} {
     set ds9(panner,align) \
 	[ttk::button $ds9(panner).align -takefocus 0 \
 	     -command [list IconMenuButtonCmd current rotate 0 ChangeRotate] \
-	     -image \
-	     [image create photo -file "$ds9(root)/icons/ui/north_up.png"] \
-	     ]
+	     -image [image create photo -file "$ds9(icons,ui)/north_up.png"]]
     tooltip::tooltip $ds9(panner).align [msgcat::mc {Align North Up}]
 
     set ds9(panner,center) \
 	[ttk::button $ds9(panner).center -takefocus 0 \
 	     -command CenterCurrentFrame \
-	     -image [image create photo -file "$ds9(root)/icons/ui/center.png"]]
+	     -image [image create photo -file "$ds9(icons,ui)/center.png"]]
     tooltip::tooltip $ds9(panner).center [msgcat::mc {Pan to Center}]
 
     pack $ds9(panner,canvas) -side top
@@ -52,7 +51,9 @@ proc CreatePanner {} {
 
     switch $ds9(wm) {
 	x11 -
-	win32 {bind $ds9(panner,canvas) <<ThemeChanged>> {ThemeConfigPanner %W}}
+	win32 {
+	    bind $ds9(panner,canvas) <<ThemeChanged>> {ThemeConfigPanner %W}
+	}
 	aqua {}
     }
 }

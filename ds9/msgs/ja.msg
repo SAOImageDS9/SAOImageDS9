@@ -13,6 +13,7 @@
 ::msgcat::mcset ja {Add} [encoding convertfrom euc-jp "\xc4\xc9\xb2\xc3"]
 ::msgcat::mcset ja {Advanced Layout} 
 ::msgcat::mcset ja {Advanced} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9\xa4\xca\xc0\xdf\xc4\xea"]
+::msgcat::mcset ja {Align North Up} 
 ::msgcat::mcset ja {Align} [encoding convertfrom euc-jp "\xc0\xb0\xce\xf3"]
 ::msgcat::mcset ja {All Columns} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xce\xf3"]
 ::msgcat::mcset ja {All Rows} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xb9\xd4"]
@@ -220,6 +221,7 @@
 ::msgcat::mcset ja {Data} 
 ::msgcat::mcset ja {Decrease Bin} 
 ::msgcat::mcset ja {Decrease Block} 
+::msgcat::mcset ja {Decrease Magnification} 
 ::msgcat::mcset ja {Decrease Zoom} 
 ::msgcat::mcset ja {Decrease} [encoding convertfrom euc-jp "\xb9\xdf\xbd\xe7"]
 ::msgcat::mcset ja {Default All Files} 
@@ -402,6 +404,7 @@
 ::msgcat::mcset ja {Horizontal} 
 ::msgcat::mcset ja {IAU Location Code} 
 ::msgcat::mcset ja {ICRS} [encoding convertfrom euc-jp "\xb9\xf1\xba\xdd\xc5\xb7\xca\xb8\xbd\xe0\xb5\xf2\xb7\xcf"]
+::msgcat::mcset ja {Icons} 
 ::msgcat::mcset ja {Identification} [encoding convertfrom euc-jp "\xc6\xb1\xc4\xea"]
 ::msgcat::mcset ja {If} [encoding convertfrom euc-jp "\xa4\xe2\xa4\xb7"]
 ::msgcat::mcset ja {Image Servers} 
@@ -422,6 +425,7 @@
 ::msgcat::mcset ja {Include} [encoding convertfrom euc-jp "\xc6\xe2\xc2\xa6"]
 ::msgcat::mcset ja {Increase Bin} 
 ::msgcat::mcset ja {Increase Block} 
+::msgcat::mcset ja {Increase Magnification} 
 ::msgcat::mcset ja {Increase Zoom} 
 ::msgcat::mcset ja {Increase} [encoding convertfrom euc-jp "\xbe\xba\xbd\xe7"]
 ::msgcat::mcset ja {Info Box} 
@@ -682,6 +686,7 @@
 ::msgcat::mcset ja {Pan Zoom Rotate Parameters} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xf3\xa1\xa6\xa5\xba\xa1\xbc\xa5\xe0\xa1\xa6\xb2\xf3\xc5\xbe\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Pan Zoom} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xf3\xa1\xa6\xa5\xba\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {Pan then Zoom} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xf3\xa4\xce\xa4\xc1\xa5\xba\xa1\xbc\xa5\xe0"]
+::msgcat::mcset ja {Pan to Center} 
 ::msgcat::mcset ja {Panda} [encoding convertfrom euc-jp "\xc9\xf4\xca\xac\xb1\xdf"]
 ::msgcat::mcset ja {Panner} [encoding convertfrom euc-jp "\xc1\xb4\xc2\xce\xbf\xde"]
 ::msgcat::mcset ja {Pan} [encoding convertfrom euc-jp "\xa5\xd1\xa5\xf3"]

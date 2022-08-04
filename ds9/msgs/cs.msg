@@ -13,6 +13,7 @@
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
 ::msgcat::mcset cs {Advanced Layout} 
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
+::msgcat::mcset cs {Align North Up} 
 ::msgcat::mcset cs {Align} [encoding convertfrom iso8859-2 {Zarovnat}]
 ::msgcat::mcset cs {All Columns} [encoding convertfrom iso8859-2 {V¹echny sloupce}]
 ::msgcat::mcset cs {All Rows} [encoding convertfrom iso8859-2 {V¹echny øádky}]
@@ -220,6 +221,7 @@
 ::msgcat::mcset cs {Data} 
 ::msgcat::mcset cs {Decrease Bin} 
 ::msgcat::mcset cs {Decrease Block} 
+::msgcat::mcset cs {Decrease Magnification} 
 ::msgcat::mcset cs {Decrease Zoom} 
 ::msgcat::mcset cs {Decrease} [encoding convertfrom iso8859-2 {Zmen¹it}]
 ::msgcat::mcset cs {Default All Files} [encoding convertfrom iso8859-2 {Vychozí pro v¹echny soubory}]
@@ -402,6 +404,7 @@
 ::msgcat::mcset cs {Horizontal} 
 ::msgcat::mcset cs {IAU Location Code} 
 ::msgcat::mcset cs {ICRS} 
+::msgcat::mcset cs {Icons} 
 ::msgcat::mcset cs {Identification} 
 ::msgcat::mcset cs {If} 
 ::msgcat::mcset cs {Image Servers} 
@@ -422,6 +425,7 @@
 ::msgcat::mcset cs {Include} 
 ::msgcat::mcset cs {Increase Bin} 
 ::msgcat::mcset cs {Increase Block} 
+::msgcat::mcset cs {Increase Magnification} 
 ::msgcat::mcset cs {Increase Zoom} 
 ::msgcat::mcset cs {Increase} 
 ::msgcat::mcset cs {Info Box} 
@@ -682,6 +686,7 @@
 ::msgcat::mcset cs {Pan Zoom Rotate Parameters} [encoding convertfrom iso8859-2 {Parametry prohlí¾ení a zvìt¹ení}]
 ::msgcat::mcset cs {Pan Zoom} 
 ::msgcat::mcset cs {Pan then Zoom} 
+::msgcat::mcset cs {Pan to Center} 
 ::msgcat::mcset cs {Panda} 
 ::msgcat::mcset cs {Panner} [encoding convertfrom iso8859-2 {Náhled snímku}]
 ::msgcat::mcset cs {Pan} [encoding convertfrom iso8859-2 {Posun}] 

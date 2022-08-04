@@ -13,6 +13,7 @@
 ::msgcat::mcset zh {Add} 
 ::msgcat::mcset zh {Advanced Layout} 
 ::msgcat::mcset zh {Advanced} 
+::msgcat::mcset zh {Align North Up} 
 ::msgcat::mcset zh {Align} [encoding convertfrom big5 "\xB9\xEF \xBB\xF4 \xA4\xE8 \xA6\xEC"]
 ::msgcat::mcset zh {All Columns} 
 ::msgcat::mcset zh {All Rows} 
@@ -220,6 +221,7 @@
 ::msgcat::mcset zh {Data} 
 ::msgcat::mcset zh {Decrease Bin} 
 ::msgcat::mcset zh {Decrease Block} 
+::msgcat::mcset zh {Decrease Magnification} 
 ::msgcat::mcset zh {Decrease Zoom} 
 ::msgcat::mcset zh {Decrease} 
 ::msgcat::mcset zh {Default All Files} 
@@ -402,6 +404,7 @@
 ::msgcat::mcset zh {Horizontal} [encoding convertfrom big5 "\xA4\xF4 \xA5\xAD"]
 ::msgcat::mcset zh {IAU Location Code} 
 ::msgcat::mcset zh {ICRS} 
+::msgcat::mcset zh {Icons} 
 ::msgcat::mcset zh {Identification} 
 ::msgcat::mcset zh {If} 
 ::msgcat::mcset zh {Image Servers} 
@@ -422,6 +425,7 @@
 ::msgcat::mcset zh {Include} 
 ::msgcat::mcset zh {Increase Bin} 
 ::msgcat::mcset zh {Increase Block} 
+::msgcat::mcset zh {Increase Magnification} 
 ::msgcat::mcset zh {Increase Zoom} 
 ::msgcat::mcset zh {Increase} 
 ::msgcat::mcset zh {Info Box} 
@@ -682,6 +686,7 @@
 ::msgcat::mcset zh {Pan Zoom Rotate Parameters} [encoding convertfrom big5 "\xC1\x59 \xA9\xF1 \xB1\xDB \xC2\xE0 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Pan Zoom} 
 ::msgcat::mcset zh {Pan then Zoom} 
+::msgcat::mcset zh {Pan to Center} 
 ::msgcat::mcset zh {Panda} 
 ::msgcat::mcset zh {Panner} [encoding convertfrom big5 "\xC1\x59 \xB9\xCF"]
 ::msgcat::mcset zh {Pan} 

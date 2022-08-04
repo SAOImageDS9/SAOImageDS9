@@ -13,6 +13,7 @@
 ::msgcat::mcset da {Add} [encoding convertfrom iso8859-1 {Tilføj}]
 ::msgcat::mcset da {Advanced Layout} 
 ::msgcat::mcset da {Advanced} {Avanceret}
+::msgcat::mcset da {Align North Up} 
 ::msgcat::mcset da {Align} {Juster}
 ::msgcat::mcset da {All Columns} {Alle søjler}
 ::msgcat::mcset da {All Rows} [encoding convertfrom iso8859-1 {Alle rækker}]
@@ -220,6 +221,7 @@
 ::msgcat::mcset da {Data} 
 ::msgcat::mcset da {Decrease Bin} 
 ::msgcat::mcset da {Decrease Block} 
+::msgcat::mcset da {Decrease Magnification} 
 ::msgcat::mcset da {Decrease Zoom} 
 ::msgcat::mcset da {Decrease} {Aftag}
 ::msgcat::mcset da {Default All Files} 
@@ -402,6 +404,7 @@
 ::msgcat::mcset da {Horizontal} 
 ::msgcat::mcset da {IAU Location Code} 
 ::msgcat::mcset da {ICRS} 
+::msgcat::mcset da {Icons} 
 ::msgcat::mcset da {Identification} {Identifikation}
 ::msgcat::mcset da {If} {Hvis}
 ::msgcat::mcset da {Image Servers} 
@@ -422,6 +425,7 @@
 ::msgcat::mcset da {Include} {Inkluder}
 ::msgcat::mcset da {Increase Bin} 
 ::msgcat::mcset da {Increase Block} 
+::msgcat::mcset da {Increase Magnification} 
 ::msgcat::mcset da {Increase Zoom} 
 ::msgcat::mcset da {Increase} [encoding convertfrom iso8859-1 {Forøg}]
 ::msgcat::mcset da {Info Box} 
@@ -682,6 +686,7 @@
 ::msgcat::mcset da {Pan Zoom Rotate Parameters} [encoding convertfrom iso8859-1 {Flyt Zoom Rotér parametre}]
 ::msgcat::mcset da {Pan Zoom} {Flyt Zoom}
 ::msgcat::mcset da {Pan then Zoom} {Flyt og derefter zoom}
+::msgcat::mcset da {Pan to Center} 
 ::msgcat::mcset da {Panda} 
 ::msgcat::mcset da {Panner} {Oversigtskort}
 ::msgcat::mcset da {Pan} {Flyt}

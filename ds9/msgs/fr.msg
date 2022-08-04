@@ -13,6 +13,7 @@
 ::msgcat::mcset fr {Add} {Ajouter}
 ::msgcat::mcset fr {Advanced Layout} 
 ::msgcat::mcset fr {Advanced} [encoding convertfrom iso8859-1 {Avancé}]
+::msgcat::mcset fr {Align North Up} 
 ::msgcat::mcset fr {Align} {Aligner}
 ::msgcat::mcset fr {All Columns} {Toutes les colonnes}
 ::msgcat::mcset fr {All Rows} [encoding convertfrom iso8859-1 {Toutes les rangées}]
@@ -220,6 +221,7 @@
 ::msgcat::mcset fr {Data} 
 ::msgcat::mcset fr {Decrease Bin} 
 ::msgcat::mcset fr {Decrease Block} 
+::msgcat::mcset fr {Decrease Magnification} 
 ::msgcat::mcset fr {Decrease Zoom} 
 ::msgcat::mcset fr {Decrease} {Diminuer} 
 ::msgcat::mcset fr {Default All Files} 
@@ -402,6 +404,7 @@
 ::msgcat::mcset fr {Horizontal} 
 ::msgcat::mcset fr {IAU Location Code} 
 ::msgcat::mcset fr {ICRS} 
+::msgcat::mcset fr {Icons} 
 ::msgcat::mcset fr {Identification} 
 ::msgcat::mcset fr {If} {Si}
 ::msgcat::mcset fr {Image Servers} 
@@ -422,6 +425,7 @@
 ::msgcat::mcset fr {Include} {Inclure}
 ::msgcat::mcset fr {Increase Bin} 
 ::msgcat::mcset fr {Increase Block} 
+::msgcat::mcset fr {Increase Magnification} 
 ::msgcat::mcset fr {Increase Zoom} 
 ::msgcat::mcset fr {Increase} {Augmenter}
 ::msgcat::mcset fr {Info Box} 
@@ -682,6 +686,7 @@
 ::msgcat::mcset fr {Pan Zoom Rotate Parameters} 
 ::msgcat::mcset fr {Pan Zoom} 
 ::msgcat::mcset fr {Pan then Zoom} 
+::msgcat::mcset fr {Pan to Center} 
 ::msgcat::mcset fr {Panda} 
 ::msgcat::mcset fr {Panner} 
 ::msgcat::mcset fr {Pan} 

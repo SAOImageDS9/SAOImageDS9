@@ -63,8 +63,7 @@ proc CreateIconsTopColormap {} {
     set mb $ds9(icons,top)
 
     set luts [list a aips0 b bb blue color cool green grey he heat hsv i8 \
-		  rainbow red sls staircase standard \
-		 ]
+		  rainbow red sls staircase standard]
 
     foreach lut $luts {
 	set foo [image create photo -file "$ds9(icons,lut)/ds9/$lut.png"]
@@ -88,16 +87,15 @@ proc CreateIconsTopColormap {} {
 	[image create photo -file "$ds9(icons,ui)/colorbar_reverse.png"]
     tooltip::tooltip $mb.invert [msgcat::mc {Invert Colormap}]
 
-    set mbb $mb.colormap
-
-    ThemeMenu $mbb.m
-    $mbb.m configure -tearoff 0
+    ThemeMenu $mb.colormap.m
+    $mb.colormap.m configure -tearoff 0
 
     foreach lut $luts {
-	IconMenuButton $mbb colorbar map $lut [list ChangeColormapName $lut]
+	IconMenuButton $mb.colormap colorbar map $lut \
+	    [list ChangeColormapName $lut]
     }
 
-    trace add variable colorbar(map) write [list IconMenuButtonCB $mbb]
+    trace add variable colorbar(map) write [list IconMenuButtonCB $mb.colormap]
 
     pack $mb.colormap $mb.invert -side left -fill x
 
@@ -128,15 +126,13 @@ proc CreateIconsTopScale {} {
 	-image [image create photo -file "$ds9(icons,ui)/scale_limits.png"]
     tooltip::tooltip $mb.scaledialog [msgcat::mc {Scaling Parameters}]
 
-    set mbb $mb.scale
+    ThemeMenu $mb.scale.m
+    $mb.scale.m configure -tearoff 0
+    IconMenuButton $mb.scale scale type log ChangeScale
+    IconMenuButton $mb.scale scale type linear ChangeScale
+    IconMenuButton $mb.scale scale type pow ChangeScale
 
-    ThemeMenu $mbb.m
-    $mbb.m configure -tearoff 0
-    IconMenuButton $mbb scale type log ChangeScale
-    IconMenuButton $mbb scale type linear ChangeScale
-    IconMenuButton $mbb scale type pow ChangeScale
-
-    trace add variable scale(type) write [list IconMenuButtonCB $mbb]
+    trace add variable scale(type) write [list IconMenuButtonCB $mb.scale]
 
     pack $mb.scale $mb.scaledialog -side left -fill x
 }

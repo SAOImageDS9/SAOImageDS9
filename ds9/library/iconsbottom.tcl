@@ -130,16 +130,14 @@ proc CreateIconsBottomFrame {} {
 	-image [image create photo -file "$ds9(icons,ui)/frame_last.png"]
     tooltip::tooltip $mb.last [msgcat::mc {Goto Last Frame}]
 
-    set mbb $mb.layout
+    ThemeMenu $mb.layout.m
+    $mb.layout.m configure -tearoff 0
+    IconMenuButton $mb.layout current display single DisplayMode
+    IconMenuButton $mb.layout current display tile DisplayMode
+    IconMenuButton $mb.layout current display blink DisplayMode
+    IconMenuButton $mb.layout current display fade DisplayMode
 
-    ThemeMenu $mbb.m
-    $mbb.m configure -tearoff 0
-    IconMenuButton $mbb current display single DisplayMode
-    IconMenuButton $mbb current display tile DisplayMode
-    IconMenuButton $mbb current display blink DisplayMode
-    IconMenuButton $mbb current display fade DisplayMode
-
-    trace add variable current(display) write [list IconMenuButtonCB $mbb]
+    trace add variable current(display) write [list IconMenuButtonCB $mb.layout]
 
     pack $mb.add $mb.del $mb.first $mb.prev $mb.layout $mb.next $mb.last \
 	-side left -fill x

@@ -15,6 +15,7 @@
 %token GRAPH_
 %token HORIZONTAL_
 %token HORZGRAPH_
+%token ICONS_
 %token INFO_
 %token KEYWORD_
 %token KEYVALUE_
@@ -42,6 +43,7 @@ viewsend :
  | PANNER_ {ProcessSendCmdYesNo view panner}
  | MAGNIFIER_ {ProcessSendCmdYesNo view magnifier}
  | BUTTONS_ {ProcessSendCmdYesNo view buttons}
+ | ICONS_ {ProcessSendCmdYesNo view icons}
  | COLORBAR_ {ProcessSendCmdYesNo view colorbar}
 # backward compatibility
  | COLORBARNUMERICS_ {ProcessSendCmdYesNo colorbar numerics}

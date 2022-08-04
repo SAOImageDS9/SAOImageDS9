@@ -25,6 +25,8 @@ proc ViewMainMenu {} {
 	-variable view(magnifier) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Buttons}] \
 	-variable view(buttons) -command LayoutView
+    $ds9(mb).view add checkbutton -label [msgcat::mc {Icons}] \
+	-variable view(icons) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable view(colorbar) -command LayoutFrames
     $ds9(mb).view add checkbutton -label [msgcat::mc {Horizontal Graph}] \
@@ -97,6 +99,8 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(magnifier)
     $m add checkbutton -label [msgcat::mc {Buttons}] \
 	-variable pview(buttons)
+    $m add checkbutton -label [msgcat::mc {Icons}] \
+	-variable pview(icons)
     $m add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable pview(colorbar)
     $m add checkbutton -label [msgcat::mc {Horizontal Graph}] \
@@ -340,4 +344,19 @@ proc PrefsDialogButtonbarView {f} {
 	-variable pbuttons(view,detector) -command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Frame Information}] \
 	-variable pbuttons(view,frame) -command {UpdateButtons buttons(view)}
+}
+
+proc UpdateViewMenu {} {
+    global ds9
+    global view
+
+    switch $view(layout) {
+	horizontal -
+	vertical {
+	    $ds9(mb).view entryconfig [msgcat::mc {Icons}] -state disabled
+	}
+	advanced {
+	    $ds9(mb).view entryconfig [msgcat::mc {Icons}] -state normal
+	}
+    }
 }

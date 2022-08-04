@@ -96,6 +96,7 @@ proc ViewDef {} {
     set view(panner) 1
     set view(magnifier) 1
     set view(buttons) 1
+    set view(icons) 1
     set view(colorbar) 1
     set view(graph,horz) 0
     set view(graph,vert) 0
@@ -319,6 +320,8 @@ proc LayoutView {} {
     LayoutInfoPanel
     LayoutButtons
     LayoutFrames
+
+    UpdateViewMenu
 }
 
 proc LayoutViewHorz {} {
@@ -507,14 +510,18 @@ proc LayoutViewAdvanced {} {
 
     if {$view(panner)} {
 	pack $ds9(panner) -side top -padx 2 -pady 2
-	pack $ds9(panner,align) -side left
-	pack $ds9(panner,center) -side left
+	if {$view(icons)} {
+	    pack $ds9(panner,align) -side left
+	    pack $ds9(panner,center) -side left
+	}
     }
 
     if {$view(magnifier)} {
 	pack $ds9(magnifier) -side top -padx 2 -pady 2
-	pack $ds9(magnifier,minus) -side left
-	pack $ds9(magnifier,plus) -side left
+	if {$view(icons)} {
+	    pack $ds9(magnifier,minus) -side left
+	    pack $ds9(magnifier,plus) -side left
+	}
     }
 
     if {$view(info)} {
@@ -531,16 +538,18 @@ proc LayoutViewAdvanced {} {
 	grid $ds9(buttons,frame) -row 2 -column 6 -sticky ns
     }
 
+    # icons
+    if {$view(icons)} {
+	grid $ds9(icons,top) -row 0 -column 0 -sticky ew -columnspan 7
+	grid $ds9(icons,top,sep) -row 1 -column 0 -sticky ew -columnspan 7
+	grid $ds9(icons,left) -row 2 -column 0 -sticky ns
+	grid $ds9(icons,left,sep) -row 2 -column 1 -sticky ns
+	grid $ds9(icons,bottom,sep) -row 3 -column 0 -sticky ew -columnspan 7
+	grid $ds9(icons,bottom) -row 4 -column 0 -sticky ew -columnspan 7
+    }
+    
     # image
     grid $ds9(image) -row 2 -column 2 -sticky news
-
-    # icons
-    grid $ds9(icons,top) -row 0 -column 0 -sticky ew -columnspan 7
-    grid $ds9(icons,top,sep) -row 1 -column 0 -sticky ew -columnspan 7
-    grid $ds9(icons,left) -row 2 -column 0 -sticky ns
-    grid $ds9(icons,left,sep) -row 2 -column 1 -sticky ns
-    grid $ds9(icons,bottom,sep) -row 3 -column 0 -sticky ew -columnspan 7
-    grid $ds9(icons,bottom) -row 4 -column 0 -sticky ew -columnspan 7
 }
 
 proc LayoutFrames {} {

@@ -20,6 +20,7 @@
 %token GREEN_
 %token HORIZONTAL_
 %token HORZGRAPH_
+%token ICONS_
 %token INFO_
 %token KEYVALUE_
 %token KEYWORD_
@@ -53,6 +54,7 @@ view : layout
  | PANNER_ yesno {ProcessCmdSet view panner $2 LayoutView}
  | MAGNIFIER_ yesno {ProcessCmdSet view magnifier $2 LayoutView}
  | BUTTONS_ yesno {ProcessCmdSet view buttons $2 LayoutView}
+ | ICONS_ yesno {ProcessCmdSet view icons $2 LayoutView}
  | COLORBAR_ yesno {ProcessCmdSet view colorbar $2 LayoutFrames}
 
 # backward compatible
@@ -80,7 +82,7 @@ view : layout
 
 layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal LayoutView}
  | VERTICAL_ {ProcessCmdSet view layout vertical LayoutView}
- | ADVANCED_ {ProcessCmdSet view layout alt LayoutView}
+ | ADVANCED_ {ProcessCmdSet view layout advanced LayoutView}
  ;
  
 orient : HORIZONTAL_ {set _ horz}

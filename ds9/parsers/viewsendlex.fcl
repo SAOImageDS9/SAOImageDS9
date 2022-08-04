@@ -18,6 +18,7 @@ green		{return $GREEN_}
 horz		{return $HORIZONTAL_}
 horizontal	{return $HORIZONTAL_}
 horzgraph	{return $HORZGRAPH_}
+icons		{return $ICONS_}
 info		{return $INFO_}
 keyvalue	{return $KEYVALUE_}
 keyword		{return $KEYWORD_}

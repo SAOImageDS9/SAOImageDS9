@@ -8,10 +8,10 @@ proc CreatePanner {} {
     global ipanner
     global ds9
 
-    set ds9(panner,panel) [ttk::frame $ds9(header).pan]
+    set ds9(panner) [ttk::frame $ds9(header).pan]
 
     set ds9(panner,canvas) \
-	[canvas $ds9(panner,panel).pan -width $ipanner(size) \
+	[canvas $ds9(panner).canvas -width $ipanner(size) \
 	     -height $ipanner(size) \
 	     -relief groove \
 	     -borderwidth 2 \
@@ -32,23 +32,23 @@ proc CreatePanner {} {
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
-    ttk::button $ds9(panner,panel).align -takefocus 0 \
-        -command [list IconMenuButtonCmd current rotate 0 ChangeRotate] \
-        -image [image create photo -file "$ds9(root)/icons/ui/north_up.png"] 
-    tooltip::tooltip $ds9(panner,panel).align [msgcat::mc {Align North Up}]
+    set ds9(panner,align) \
+	[ttk::button $ds9(panner).align -takefocus 0 \
+	     -command [list IconMenuButtonCmd current rotate 0 ChangeRotate] \
+	     -image \
+	     [image create photo -file "$ds9(root)/icons/ui/north_up.png"] \
+	     ]
+    tooltip::tooltip $ds9(panner).align [msgcat::mc {Align North Up}]
 
-    ttk::button $ds9(panner,panel).center -takefocus 0 \
-        -command CenterCurrentFrame \
-        -image [image create photo -file "$ds9(root)/icons/ui/center.png"] 
-    tooltip::tooltip $ds9(panner,panel).center [msgcat::mc {Pan to Center}]
+    set ds9(panner,center) \
+	[ttk::button $ds9(panner).center -takefocus 0 \
+	     -command CenterCurrentFrame \
+	     -image [image create photo -file "$ds9(root)/icons/ui/center.png"]]
+    tooltip::tooltip $ds9(panner).center [msgcat::mc {Pan to Center}]
 
     pack $ds9(panner,canvas) -side top
-    pack $ds9(panner,panel).align -side left
-    pack $ds9(panner,panel).center -side left
-
-#    grid $ds9(panner,canvas) -columnspan 2
-#    grid $ds9(panner,panel).align -row 1 -side right
-#    grid $ds9(panner,panel).center -row 1 -side left
+    pack $ds9(panner,align) -side left
+    pack $ds9(panner,center) -side left
 
     switch $ds9(wm) {
 	x11 -

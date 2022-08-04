@@ -350,9 +350,9 @@ proc LayoutViewHorz {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
 
-    pack forget $ds9(panner,panel)
-    pack forget $ds9(panner,panel).align
-    pack forget $ds9(panner,panel).center
+    pack forget $ds9(panner)
+    pack forget $ds9(panner,align)
+    pack forget $ds9(panner,center)
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
 
@@ -369,13 +369,13 @@ proc LayoutViewHorz {} {
     }
 
     if {$view(panner)} {
-	pack $ds9(panner,panel) -side right -padx 2 -pady 2
+	pack $ds9(panner) -side right -padx 2 -pady 2
     }
 
     if {$view(magnifier)} {
 	pack $ds9(magnifier) -side right -padx 2 -pady 2
 	if {$view(panner)} {
-	    pack $ds9(magnifier) -before $ds9(panner,panel)
+	    pack $ds9(magnifier) -before $ds9(panner)
 	}
     }
 
@@ -419,9 +419,9 @@ proc LayoutViewVert {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
     
-    pack forget $ds9(panner,panel)
-    pack forget $ds9(panner,panel).align
-    pack forget $ds9(panner,panel).center
+    pack forget $ds9(panner)
+    pack forget $ds9(panner,align)
+    pack forget $ds9(panner,center)
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
 
@@ -444,7 +444,7 @@ proc LayoutViewVert {} {
     }
 
     if {$view(panner)} {
-	pack $ds9(panner,panel) -side bottom -padx 2 -pady 2
+	pack $ds9(panner) -side bottom -padx 2 -pady 2
     }
 
     # buttons
@@ -487,9 +487,9 @@ proc LayoutViewAdvanced {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
     
-    pack forget $ds9(panner,panel)
-    pack forget $ds9(panner,panel).align
-    pack forget $ds9(panner,panel).center
+    pack forget $ds9(panner)
+    pack forget $ds9(panner,align)
+    pack forget $ds9(panner,center)
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
 
@@ -501,9 +501,9 @@ proc LayoutViewAdvanced {} {
     }
 
     if {$view(panner)} {
-	pack $ds9(panner,panel).align -side left
-	pack $ds9(panner,panel).center -side left
-	pack $ds9(panner,panel) -side top -padx 2 -pady 2
+	pack $ds9(panner,align) -side left
+	pack $ds9(panner,center) -side left
+	pack $ds9(panner) -side top -padx 2 -pady 2
     }
 
     if {$view(magnifier)} {

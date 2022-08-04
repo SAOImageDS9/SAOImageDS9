@@ -8,17 +8,20 @@ proc CreatePanner {} {
     global ipanner
     global ds9
 
-    set ds9(panner) [canvas $ds9(header).pan -width $ipanner(size) \
-			 -height $ipanner(size) \
-			 -relief groove \
-			 -borderwidth 2 \
-			 -highlightthickness 0 \
-			 -insertofftime 0 \
-			 -takefocus 0 \
-			 -bg [ThemeTreeBackground] \
-			]
+    set ds9(panner,panel) [ttk::frame $ds9(header).pan]
 
-    $ds9(panner) create panner$ds9(visual) \
+    set ds9(panner,canvas) \
+	[canvas $ds9(panner,panel).pan -width $ipanner(size) \
+	     -height $ipanner(size) \
+	     -relief groove \
+	     -borderwidth 2 \
+	     -highlightthickness 0 \
+	     -insertofftime 0 \
+	     -takefocus 0 \
+	     -bg [ThemeTreeBackground] \
+	    ]
+
+    $ds9(panner,canvas) create panner$ds9(visual) \
 	-width $ipanner(size) \
 	-height $ipanner(size) \
 	-command panner \
@@ -29,9 +32,27 @@ proc CreatePanner {} {
 	-fg [ThemeTreeForeground] \
 	-bg [ThemeTreeBackground]
 
+    ttk::button $ds9(panner,panel).align -takefocus 0 \
+        -command [list IconMenuButtonCmd current rotate 0 ChangeRotate] \
+        -image [image create photo -file "$ds9(root)/icons/ui/north_up.png"] 
+    tooltip::tooltip $ds9(panner,panel).align [msgcat::mc {Align North Up}]
+
+    ttk::button $ds9(panner,panel).center -takefocus 0 \
+        -command CenterCurrentFrame \
+        -image [image create photo -file "$ds9(root)/icons/ui/center.png"] 
+    tooltip::tooltip $ds9(panner,panel).center [msgcat::mc {Pan to Center}]
+
+    pack $ds9(panner,canvas) -side top
+    pack $ds9(panner,panel).align -side left
+    pack $ds9(panner,panel).center -side left
+
+#    grid $ds9(panner,canvas) -columnspan 2
+#    grid $ds9(panner,panel).align -row 1 -side right
+#    grid $ds9(panner,panel).center -row 1 -side left
+
     switch $ds9(wm) {
 	x11 -
-	win32 {bind $ds9(panner) <<ThemeChanged>> {ThemeConfigPanner %W}}
+	win32 {bind $ds9(panner,canvas) <<ThemeChanged>> {ThemeConfigPanner %W}}
 	aqua {}
     }
 }
@@ -58,11 +79,11 @@ proc InitPanner {} {
     # other bindings
     BindEventsPanner
 
-    bind $ds9(panner) <Tab> [list NextFrame]
-    bind $ds9(panner) <Shift-Tab> [list PrevFrame]
+    bind $ds9(panner,canvas) <Tab> [list NextFrame]
+    bind $ds9(panner,canvas) <Shift-Tab> [list PrevFrame]
 
     switch $ds9(wm) {
-	x11 {bind $ds9(panner) <ISO_Left_Tab> [list PrevFrame]} 
+	x11 {bind $ds9(panner,canvas) <ISO_Left_Tab> [list PrevFrame]} 
 	aqua -
 	win32 {}
     }
@@ -70,8 +91,8 @@ proc InitPanner {} {
     switch $ds9(wm) {
 	x11 -
 	aqua {
-	    bind $ds9(panner) <Enter> [list focus $ds9(panner)]
-	    bind $ds9(panner) <Leave> [list focus {}]
+	    bind $ds9(panner,canvas) <Enter> [list focus $ds9(panner,canvas)]
+	    bind $ds9(panner,canvas) <Leave> [list focus {}]
 	}
 	win32 {}
     }
@@ -83,52 +104,52 @@ proc InitPanner {} {
 proc BindEventsPanner {} {
     global ds9
 
-    $ds9(panner) bind panner <Enter> [list EnterPanner %x %y]
-    $ds9(panner) bind panner <Leave> [list LeavePanner]
-    $ds9(panner) bind panner <Motion> [list MotionPanner %x %y]
-    $ds9(panner) bind panner <Button-1> [list Button1Panner %x %y]
-    $ds9(panner) bind panner <B1-Motion> [list Motion1Panner %x %y]
-    $ds9(panner) bind panner <ButtonRelease-1> [list Release1Panner %x %y]
+    $ds9(panner,canvas) bind panner <Enter> [list EnterPanner %x %y]
+    $ds9(panner,canvas) bind panner <Leave> [list LeavePanner]
+    $ds9(panner,canvas) bind panner <Motion> [list MotionPanner %x %y]
+    $ds9(panner,canvas) bind panner <Button-1> [list Button1Panner %x %y]
+    $ds9(panner,canvas) bind panner <B1-Motion> [list Motion1Panner %x %y]
+    $ds9(panner,canvas) bind panner <ButtonRelease-1> [list Release1Panner %x %y]
 
     switch $ds9(wm) {
 	x11 -
 	win32 {
-	    $ds9(panner) bind panner <ButtonRelease-2> \
+	    $ds9(panner,canvas) bind panner <ButtonRelease-2> \
 		[list Release2Panner %x %y]
 	} 
 	aqua {
-	    $ds9(panner) bind panner <ButtonRelease-3> \
+	    $ds9(panner,canvas) bind panner <ButtonRelease-3> \
 		[list Release2Panner %x %y]
 	}
     }
 
 
-    $ds9(panner) bind panner <Up> [list ArrowKeyPanner 0 -1]
-    $ds9(panner) bind panner <Down> [list ArrowKeyPanner 0 1]
-    $ds9(panner) bind panner <Left> [list ArrowKeyPanner -1 0]
-    $ds9(panner) bind panner <Right> [list ArrowKeyPanner 1 0]
+    $ds9(panner,canvas) bind panner <Up> [list ArrowKeyPanner 0 -1]
+    $ds9(panner,canvas) bind panner <Down> [list ArrowKeyPanner 0 1]
+    $ds9(panner,canvas) bind panner <Left> [list ArrowKeyPanner -1 0]
+    $ds9(panner,canvas) bind panner <Right> [list ArrowKeyPanner 1 0]
 }
 
 proc UnBindEventsPanner {} {
     global ds9
 
-    $ds9(panner) bind panner <Enter> {}
-    $ds9(panner) bind panner <Leave> {}
-    $ds9(panner) bind panner <Motion> {}
-    $ds9(panner) bind panner <Button-1> {}
-    $ds9(panner) bind panner <B1-Motion> {}
-    $ds9(panner) bind panner <ButtonRelease-1> {}
+    $ds9(panner,canvas) bind panner <Enter> {}
+    $ds9(panner,canvas) bind panner <Leave> {}
+    $ds9(panner,canvas) bind panner <Motion> {}
+    $ds9(panner,canvas) bind panner <Button-1> {}
+    $ds9(panner,canvas) bind panner <B1-Motion> {}
+    $ds9(panner,canvas) bind panner <ButtonRelease-1> {}
 
     switch $ds9(wm) {
 	x11 -
-	win32 {$ds9(panner) bind panner <ButtonRelease-2> {}} 
-	aqua {$ds9(panner) bind panner <ButtonRelease-3> {}}
+	win32 {$ds9(panner,canvas) bind panner <ButtonRelease-2> {}} 
+	aqua {$ds9(panner,canvas) bind panner <ButtonRelease-3> {}}
     }
 
-    $ds9(panner) bind panner <Up> {}
-    $ds9(panner) bind panner <Down> {}
-    $ds9(panner) bind panner <Left> {}
-    $ds9(panner) bind panner <Right> {}
+    $ds9(panner,canvas) bind panner <Up> {}
+    $ds9(panner,canvas) bind panner <Down> {}
+    $ds9(panner,canvas) bind panner <Left> {}
+    $ds9(panner,canvas) bind panner <Right> {}
 }
 
 proc EnterPanner {x y} {
@@ -142,8 +163,8 @@ proc EnterPanner {x y} {
 
     switch $ds9(wm) {
 	x11 {
-	    focus $ds9(panner)
-	    $ds9(panner) focus panner
+	    focus $ds9(panner,canvas)
+	    $ds9(panner,canvas) focus panner
 	}
 	aqua -
 	win32 {}
@@ -167,7 +188,7 @@ proc LeavePanner {} {
     panner highlite off
     switch $ds9(wm) {
 	x11 {
-	    $ds9(panner) focus {}
+	    $ds9(panner,canvas) focus {}
 	    focus {}
 	}
 	aqua -

@@ -28,29 +28,29 @@ proc CreateIconsLeftMode {} {
     set mb $ds9(icons,left)
 
     set icons(currentmode,none) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_none.png"]
+	[image create photo -file "$ds9(icons,ui)/edit_none.png"]
     set icons(currentmode,region) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_region.png"]
+	[image create photo -file "$ds9(icons,ui)/edit_region.png"]
     set icons(currentmode,crosshair) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_crosshair.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_crosshair.png" ]
     set icons(currentmode,colorbar) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_colorbar.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_colorbar.png" ]
     set icons(currentmode,pan) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_pan.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_pan.png" ]
     set icons(currentmode,zoom) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_zoom.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_zoom.png" ]
     set icons(currentmode,rotate) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_rotate.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_rotate.png" ]
     set icons(currentmode,crop) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_crop.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_crop.png" ]
     set icons(currentmode,catalog) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_catalog.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_catalog.png" ]
     set icons(currentmode,footprint) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_footprint.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_footprint.png" ]
     set icons(currentmode,examine) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_examine.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_examine.png" ]
     set icons(currentmode,3d) \
-	[image create photo -file "$ds9(root)/icons/ui/edit_3d.png" ]
+	[image create photo -file "$ds9(icons,ui)/edit_3d.png" ]
     # special case
     set icons(currentmode,default) $icons(currentmode,examine)
 
@@ -88,20 +88,20 @@ proc CreateIconsLeftMarkerShape {} {
     set mb $ds9(icons,left)
 
     set icons(markershape,circle) \
-	[image create photo -file "$ds9(root)/icons/ui/circle.png"]
+	[image create photo -file "$ds9(icons,ui)/circle.png"]
     set icons(markershape,annulus) \
-	[image create photo -file "$ds9(root)/icons/ui/annulus.png"]
+	[image create photo -file "$ds9(icons,ui)/annulus.png"]
     set icons(markershape,ellipse) \
-	[image create photo -file "$ds9(root)/icons/ui/ellipse.png"]
+	[image create photo -file "$ds9(icons,ui)/ellipse.png"]
     set icons(markershape,box) \
-	[image create photo -file "$ds9(root)/icons/ui/box.png"]
+	[image create photo -file "$ds9(icons,ui)/box.png"]
     set icons(markershape,polygon) \
-	[image create photo -file "$ds9(root)/icons/ui/poly.png"]
+	[image create photo -file "$ds9(icons,ui)/poly.png"]
     set icons(markershape,text) \
-	[image create photo -file "$ds9(root)/icons/ui/text.png"]
+	[image create photo -file "$ds9(icons,ui)/text.png"]
     # special case
     set icons(markershape,default) \
-	[image create photo -file "$ds9(root)/icons/ui/region_other.png"]
+	[image create photo -file "$ds9(icons,ui)/region_other.png"]
 
     set mbb $mb.shape
 
@@ -129,19 +129,19 @@ proc CreateIconsLeftMarkerInfo {} {
     set mb $ds9(icons,left)
 
     ttk::button $mb.info -takefocus 0 -command MarkerInfo \
-	-image [image create photo -file "$ds9(root)/icons/ui/region_info.png"]
+	-image [image create photo -file "$ds9(icons,ui)/region_info.png"]
     tooltip::tooltip $mb.info [msgcat::mc {Get Region Info}]
 
     ttk::button $mb.list -takefocus 0 -command [list MarkerList {}] \
-	-image [image create photo -file "$ds9(root)/icons/ui/region_list.png"]
+	-image [image create photo -file "$ds9(icons,ui)/region_list.png"]
     tooltip::tooltip $mb.list [msgcat::mc {List Region}]
 
     ttk::button $mb.open -takefocus 0 -command MarkerLoad \
-	-image [image create photo -file "$ds9(root)/icons/ui/region_open.png"]
+	-image [image create photo -file "$ds9(icons,ui)/region_open.png"]
     tooltip::tooltip $mb.open [msgcat::mc {Open Region File}]
 
     ttk::button $mb.save -takefocus 0 -command [list MarkerSave {}] \
-	-image [image create photo -file "$ds9(root)/icons/ui/region_save.png"]
+	-image [image create photo -file "$ds9(icons,ui)/region_save.png"]
     tooltip::tooltip $mb.save [msgcat::mc {Save Region File}]
 
     pack $mb.info $mb.list $mb.open $mb.save -side top -fill x
@@ -180,7 +180,7 @@ proc CreateIconsLeftMarkerColor {} {
 
     foreach clr $clrs {
 	set icons(markercolor,$clr) \
-	    [image create photo -file "$ds9(root)/icons/ui/colors/$clr.png"]
+	    [image create photo -file "$ds9(icons,ui)/colors/$clr.png"]
     }
     # special case
     set icons(markercolor,default) $icons(markercolor,black)
@@ -218,13 +218,13 @@ proc CreateIconsLeftMarkerLineWidth {} {
     set mb $ds9(icons,left)
 
     set icons(markerwidth,1) \
-	[image create photo -file "$ds9(root)/icons/ui/lw1.png"]
+	[image create photo -file "$ds9(icons,ui)/lw1.png"]
     set icons(markerwidth,2) \
-	[image create photo -file "$ds9(root)/icons/ui/lw2.png"]
+	[image create photo -file "$ds9(icons,ui)/lw2.png"]
     set icons(markerwidth,3) \
-	[image create photo -file "$ds9(root)/icons/ui/lw3.png"]
+	[image create photo -file "$ds9(icons,ui)/lw3.png"]
     set icons(markerwidth,4) \
-	[image create photo -file "$ds9(root)/icons/ui/lw4.png"]
+	[image create photo -file "$ds9(icons,ui)/lw4.png"]
     # special case
     set icons(markerwidth,default) $icons(markerwidth,1)
 
@@ -254,21 +254,21 @@ proc CreateIconsLeftMarkerSrc {} {
     ttk::button $mb.src -takefocus 0 \
 	-command \
 	[list IconButtonToggleCmd marker source [list MarkerProp source]] \
-	-image [image create photo -file "$ds9(root)/icons/ui/srcbkg.png"]
+	-image [image create photo -file "$ds9(icons,ui)/srcbkg.png"]
     tooltip::tooltip $mb.src [msgcat::mc {Toggle Source/Background}]
 
     ttk::button $mb.include -takefocus 0 \
 	-command \
 	[list IconButtonToggleCmd marker include [list MarkerProp include]] \
-	-image [image create photo -file "$ds9(root)/icons/ui/incexl.png"]
+	-image [image create photo -file "$ds9(icons,ui)/incexl.png"]
     tooltip::tooltip $mb.include [msgcat::mc {Toggle Include/Exclude}]
 
     ttk::button $mb.back -takefocus 0 -command MarkerBack \
-	-image [image create photo -file "$ds9(root)/icons/ui/back.png"]
+	-image [image create photo -file "$ds9(icons,ui)/back.png"]
     tooltip::tooltip $mb.back [msgcat::mc {Send to Back}]
 
     ttk::button $mb.front -takefocus 0 -command MarkerFront \
-	-image [image create photo -file "$ds9(root)/icons/ui/front.png"]
+	-image [image create photo -file "$ds9(icons,ui)/front.png"]
     tooltip::tooltip $mb.front [msgcat::mc {Bring to Front}]
 
     pack $mb.src $mb.include $mb.back $mb.front -side top -fill x
@@ -280,15 +280,15 @@ proc CreateIconsLeftMarkerComposite {} {
     set mb $ds9(icons,left)
 
     ttk::button $mb.composite -takefocus 0 -command CompositeCreate \
-	-image [image create photo -file "$ds9(root)/icons/ui/region_compose.png"]
+	-image [image create photo -file "$ds9(icons,ui)/region_compose.png"]
     tooltip::tooltip $mb.composite [msgcat::mc {Create Composite Region}]
 
     ttk::button $mb.dissolve -takefocus 0 -command CompositeDelete \
-	-image [image create photo -file "$ds9(root)/icons/ui/region_dissolve.png"]
+	-image [image create photo -file "$ds9(icons,ui)/region_dissolve.png"]
     tooltip::tooltip $mb.dissolve [msgcat::mc {Dissolve Composite Region}]
 
     ttk::button $mb.group -takefocus 0 -command GroupCreate \
-	-image [image create photo -file "$ds9(root)/icons/ui/region_group.png"]
+	-image [image create photo -file "$ds9(icons,ui)/region_group.png"]
     tooltip::tooltip $mb.group [msgcat::mc {Tag New Region Group}]
 
     pack $mb.composite $mb.dissolve $mb.group -side top -fill x

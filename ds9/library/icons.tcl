@@ -5,6 +5,11 @@
 package provide DS9 1.0
 
 proc CreateIcons {} {
+    global ds9
+
+    set ds9(icons,ui) $ds9(root)/icons/ui
+    set ds9(icons,lut) $ds9(root)/icons/lut
+    
     CreateIconsLeft
     CreateIconsTop
     CreateIconsBottom

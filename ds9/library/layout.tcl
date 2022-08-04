@@ -350,7 +350,9 @@ proc LayoutViewHorz {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
 
-    pack forget $ds9(panner)
+    pack forget $ds9(panner,panel)
+    pack forget $ds9(panner,panel).align
+    pack forget $ds9(panner,panel).center
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
 
@@ -367,13 +369,13 @@ proc LayoutViewHorz {} {
     }
 
     if {$view(panner)} {
-	pack $ds9(panner) -side right -padx 2 -pady 2
+	pack $ds9(panner,panel) -side right -padx 2 -pady 2
     }
 
     if {$view(magnifier)} {
 	pack $ds9(magnifier) -side right -padx 2 -pady 2
 	if {$view(panner)} {
-	    pack $ds9(magnifier) -before $ds9(panner)
+	    pack $ds9(magnifier) -before $ds9(panner,panel)
 	}
     }
 
@@ -417,7 +419,9 @@ proc LayoutViewVert {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
     
-    pack forget $ds9(panner)
+    pack forget $ds9(panner,panel)
+    pack forget $ds9(panner,panel).align
+    pack forget $ds9(panner,panel).center
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
 
@@ -440,7 +444,7 @@ proc LayoutViewVert {} {
     }
 
     if {$view(panner)} {
-	pack $ds9(panner) -side bottom -padx 2 -pady 2
+	pack $ds9(panner,panel) -side bottom -padx 2 -pady 2
     }
 
     # buttons
@@ -483,7 +487,9 @@ proc LayoutViewAdvanced {} {
     grid forget $ds9(icons,bottom)
     grid forget $ds9(icons,bottom,sep)
     
-    pack forget $ds9(panner)
+    pack forget $ds9(panner,panel)
+    pack forget $ds9(panner,panel).align
+    pack forget $ds9(panner,panel).center
     pack forget $ds9(magnifier)
     pack forget $ds9(info)
 
@@ -494,19 +500,21 @@ proc LayoutViewAdvanced {} {
 	grid $ds9(header) -row 2 -column 4 -sticky ns
     }
 
+    if {$view(panner)} {
+	pack $ds9(panner,panel).align -side left
+	pack $ds9(panner,panel).center -side left
+	pack $ds9(panner,panel) -side top -padx 2 -pady 2
+    }
+
     if {$view(magnifier)} {
 	pack $ds9(magnifier) -side top -padx 2 -pady 2
     }
 
     if {$view(info)} {
-	pack $ds9(info) -side top -padx 2 -pady 2 -fill y -expand true
+	pack $ds9(info) -side bottom -padx 2 -pady 2 -fill y -expand true
 	if {$view(magnifier)} {
 	    pack $ds9(info) -after $ds9(magnifier)
 	}
-    }
-
-    if {$view(panner)} {
-	pack $ds9(panner) -side bottom -padx 2 -pady 2
     }
 
     # buttons

@@ -8,6 +8,7 @@
 %%
 
 advanced	{return $ADVANCED_}
+basic		{return $BASIC_}
 blue		{return $BLUE_}
 buttons		{return $BUTTONS_}
 colorbar	{return $COLORBAR_}

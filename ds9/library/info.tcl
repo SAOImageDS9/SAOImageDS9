@@ -155,6 +155,7 @@ proc LayoutFrameInfoBox {which} {
 	    LayoutFrameInfoBoxVertWCS $which
 	    LayoutFrameInfoBoxVertImage $which
 	}
+	basic {}
 	advanced {
 	    LayoutFrameInfoBoxAdvancedValue $which
 	    LayoutFrameInfoBoxAdvancedWCS $which
@@ -695,6 +696,7 @@ proc LayoutInfoPanel {} {
     switch $view(layout) {
 	horizontal {LayoutInfoPanelHorz}
 	vertical {LayoutInfoPanelVert}
+	basic {}
 	advanced {LayoutInfoPanelAdvanced}
     }
 }

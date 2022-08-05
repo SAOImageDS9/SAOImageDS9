@@ -14,6 +14,8 @@ proc ViewMainMenu {} {
 	-variable view(layout) -value horizontal -command LayoutView
     $ds9(mb).view add radiobutton -label [msgcat::mc {Vertical}] \
 	-variable view(layout) -value vertical -command LayoutView
+    $ds9(mb).view add radiobutton -label [msgcat::mc {Basic}] \
+	-variable view(layout) -value basic -command LayoutView
     $ds9(mb).view add radiobutton -label [msgcat::mc {Advanced}] \
 	-variable view(layout) -value advanced -command LayoutView
     $ds9(mb).view add separator
@@ -27,8 +29,11 @@ proc ViewMainMenu {} {
 	-variable view(buttons) -command LayoutView
     $ds9(mb).view add checkbutton -label [msgcat::mc {Icons}] \
 	-variable view(icons) -command LayoutView
+    $ds9(mb).view add separator
     $ds9(mb).view add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable view(colorbar) -command LayoutFrames
+    $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
+	-variable view(multi) -command LayoutFrames
     $ds9(mb).view add checkbutton -label [msgcat::mc {Horizontal Graph}] \
 	-variable view(graph,horz) -command LayoutFrames
     $ds9(mb).view add checkbutton -label [msgcat::mc {Vertical Graph}] \
@@ -60,9 +65,6 @@ proc ViewMainMenu {} {
 	-variable view(info,detector) -command LayoutInfoPanel
     $ds9(mb).view add checkbutton -label [msgcat::mc {Frame Information}] \
 	-variable view(info,frame) -command LayoutInfoPanel
-    $ds9(mb).view add separator
-    $ds9(mb).view add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
-	-variable view(multi) -command LayoutFrames
 
     # View Info Panel WCS
     ThemeMenu $ds9(mb).view.mwcs
@@ -88,6 +90,8 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(layout) -value horizontal
     $m add radiobutton -label [msgcat::mc {Vertical}] \
 	-variable pview(layout) -value vertical
+    $m add radiobutton -label [msgcat::mc {Basic}] \
+	-variable pview(layout) -value basic
     $m add radiobutton -label [msgcat::mc {Advanced}] \
 	-variable pview(layout) -value advanced
     $m add separator
@@ -101,8 +105,11 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(buttons)
     $m add checkbutton -label [msgcat::mc {Icons}] \
 	-variable pview(icons)
+    $m add separator
     $m add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable pview(colorbar)
+    $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
+	-variable pview(multi)
     $m add checkbutton -label [msgcat::mc {Horizontal Graph}] \
 	-variable pview(graph,horz)
     $m add checkbutton -label [msgcat::mc {Vertical Graph}] \
@@ -133,9 +140,6 @@ proc PrefsDialogViewMenu {w} {
 	-variable pview(info,detector)
     $m add checkbutton -label  [msgcat::mc {Frame Information}]\
 	-variable pview(info,frame)
-    $m add separator
-    $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
-	-variable pview(multi)
 
     # WCS
     ThemeMenu $m.wcs
@@ -155,15 +159,20 @@ proc ButtonsViewDef {} {
     array set pbuttons {
 	view,horizontal 0
 	view,vertical 0
+	view,basic 0
 	view,advanced 0
-	view,multi 0
+
 	view,info 1
 	view,panner 1
 	view,magnifier 1
 	view,buttons 1
+	view,icons 1
+
 	view,colorbar 1
+	view,multi 0
 	view,graphhorz 1
 	view,graphvert 1
+
 	view,filename 0
 	view,object 0
 	view,minmax 0
@@ -191,13 +200,12 @@ proc CreateButtonsView {} {
     RadioButton $ds9(buttons).view.vertical \
 	[string tolower [msgcat::mc {Vertical}]] \
 	view layout vertical LayoutView
+    RadioButton $ds9(buttons).view.basic \
+	[string tolower [msgcat::mc {Basic}]] \
+	view layout basic LayoutView
     RadioButton $ds9(buttons).view.advanced \
 	[string tolower [msgcat::mc {Advanced}]] \
 	view layout advanced LayoutView
-
-    CheckButton $ds9(buttons).view.multi \
-	[string tolower [msgcat::mc {Multi Colorbars}]] \
-	view multi LayoutFrames
 
     CheckButton $ds9(buttons).view.info \
 	[string tolower [msgcat::mc {Information}]] \
@@ -211,15 +219,23 @@ proc CreateButtonsView {} {
     CheckButton $ds9(buttons).view.buttons \
 	[string tolower [msgcat::mc {Buttons}]] \
 	view buttons LayoutView
+    CheckButton $ds9(buttons).view.icons \
+	[string tolower [msgcat::mc {Icons}]] \
+	view icons LayoutView
+
     CheckButton $ds9(buttons).view.colorbar \
 	[string tolower [msgcat::mc {Colorbar}]] \
 	view colorbar LayoutFrames
+    CheckButton $ds9(buttons).view.multi \
+	[string tolower [msgcat::mc {Multi Colorbars}]] \
+	view multi LayoutFrames
     CheckButton $ds9(buttons).view.graphhorz \
 	[string tolower [msgcat::mc {Graph Horz}]] \
 	view graph,horz LayoutFrames
     CheckButton $ds9(buttons).view.graphvert \
 	[string tolower [msgcat::mc {Graph Vert}]] \
 	view graph,vert LayoutFrames
+
     CheckButton $ds9(buttons).view.filename \
 	[string tolower [msgcat::mc {Filename}]] \
 	view info,filename LayoutInfoPanel
@@ -260,15 +276,20 @@ proc CreateButtonsView {} {
     set buttons(view) "
         $ds9(buttons).view.horizontal pbuttons(view,horizontal)
         $ds9(buttons).view.vertical pbuttons(view,vertical)
+        $ds9(buttons).view.basic pbuttons(view,basic)
         $ds9(buttons).view.advanced pbuttons(view,advanced)
-        $ds9(buttons).view.multi pbuttons(view,multi)
+
         $ds9(buttons).view.info pbuttons(view,info)
         $ds9(buttons).view.panner pbuttons(view,panner)
         $ds9(buttons).view.magnifier pbuttons(view,magnifier)
         $ds9(buttons).view.buttons pbuttons(view,buttons)
+        $ds9(buttons).view.icons pbuttons(view,icons)
+
         $ds9(buttons).view.colorbar pbuttons(view,colorbar)
+        $ds9(buttons).view.multi pbuttons(view,multi)
         $ds9(buttons).view.graphhorz pbuttons(view,graphhorz)
         $ds9(buttons).view.graphvert pbuttons(view,graphvert)
+
         $ds9(buttons).view.filename pbuttons(view,filename)
         $ds9(buttons).view.object pbuttons(view,object)
         $ds9(buttons).view.minmax pbuttons(view,minmax)
@@ -297,24 +318,35 @@ proc PrefsDialogButtonbarView {f} {
     $m add checkbutton -label [msgcat::mc {Vertical Layout}] \
 	-variable pbuttons(view,vertical) \
 	-command {UpdateButtons buttons(view)}
+    $m add checkbutton -label [msgcat::mc {Basic Layout}] \
+	-variable pbuttons(view,basic) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Advanced Layout}] \
 	-variable pbuttons(view,advanced) \
 	-command {UpdateButtons buttons(view)}
     $m add separator
+    $m add checkbutton -label [msgcat::mc {Information Panel}] \
+	-variable pbuttons(view,info) \
+	-command {UpdateButtons buttons(view)}
+    $m add checkbutton -label [msgcat::mc {Panner}] \
+	-variable pbuttons(view,panner) \
+	-command {UpdateButtons buttons(view)}
+    $m add checkbutton -label [msgcat::mc {Magnifier}] \
+	-variable pbuttons(view,magnifier) \
+	-command {UpdateButtons buttons(view)}
+    $m add checkbutton -label [msgcat::mc {Buttons}] \
+	-variable pbuttons(view,buttons) \
+	-command {UpdateButtons buttons(view)}
+    $m add checkbutton -label [msgcat::mc {Icons}] \
+	-variable pbuttons(view,icons) \
+	-command {UpdateButtons buttons(view)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Colorbar}] \
+	-variable pbuttons(view,colorbar) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Multiple Colorbars}] \
 	-variable pbuttons(view,multi) \
 	-command {UpdateButtons buttons(view)}
-    $m add separator
-    $m add checkbutton -label [msgcat::mc {Information Panel}] \
-	-variable pbuttons(view,info) -command {UpdateButtons buttons(view)}
-    $m add checkbutton -label [msgcat::mc {Panner}] \
-	-variable pbuttons(view,panner) -command {UpdateButtons buttons(view)}
-    $m add checkbutton -label [msgcat::mc {Magnifier}] \
-	-variable pbuttons(view,magnifier) -command {UpdateButtons buttons(view)}
-    $m add checkbutton -label [msgcat::mc {Buttons}] \
-	-variable pbuttons(view,buttons) -command {UpdateButtons buttons(view)}
-    $m add checkbutton -label [msgcat::mc {Colorbar}] \
-	-variable pbuttons(view,colorbar) -command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Horizontal Graph}] \
 	-variable pbuttons(view,graphhorz) \
 	-command {UpdateButtons buttons(view)}
@@ -323,40 +355,69 @@ proc PrefsDialogButtonbarView {f} {
 	-command {UpdateButtons buttons(view)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Filename}] \
-	-variable pbuttons(view,filename) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,filename) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Object}] \
-	-variable pbuttons(view,object) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,object) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Min Max}] \
-	-variable pbuttons(view,minmax) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,minmax) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Low High}] \
-	-variable pbuttons(view,lowhigh) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,lowhigh) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Unists}] \
-	-variable pbuttons(view,bunit) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,bunit) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {WCS}] \
-	-variable pbuttons(view,wcs) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,wcs) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Image}] \
-	-variable pbuttons(view,image) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,image) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Physical}] \
-	-variable pbuttons(view,physical) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,physical) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Amplifier}] \
-	-variable pbuttons(view,amplifier) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,amplifier) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Detector}] \
-	-variable pbuttons(view,detector) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,detector) \
+	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {Frame Information}] \
-	-variable pbuttons(view,frame) -command {UpdateButtons buttons(view)}
+	-variable pbuttons(view,frame) \
+	-command {UpdateButtons buttons(view)}
 }
 
 proc UpdateViewMenu {} {
     global ds9
     global view
 
+    set menus {{Information Panel} Panner Magnifier Buttons Icons Filename \
+		   Object Keyword {Min Max} {Low High} Units \
+		   WCS {Multiple WCS} Image \
+		   Physical Amplifier Detector {Frame Information}}
+
     switch $view(layout) {
 	horizontal -
 	vertical {
+	    foreach mm $menus {
+		$ds9(mb).view entryconfig [msgcat::mc "$mm"] -state normal
+	    }
 	    $ds9(mb).view entryconfig [msgcat::mc {Icons}] -state disabled
+	    $ds9(buttons).view.icons configure -state disabled
+	}
+	basic {
+	    foreach mm $menus {
+		$ds9(mb).view entryconfig [msgcat::mc "$mm"] -state disabled
+	    }
+	    # no buttons
 	}
 	advanced {
-	    $ds9(mb).view entryconfig [msgcat::mc {Icons}] -state normal
+	    foreach mm $menus {
+		$ds9(mb).view entryconfig [msgcat::mc "$mm"] -state normal
+	    }
+	    $ds9(buttons).view.icons configure -state normal
 	}
     }
 }

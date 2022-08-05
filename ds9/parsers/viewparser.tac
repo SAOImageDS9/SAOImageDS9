@@ -10,6 +10,7 @@
 %start command
 
 %token ADVANCED_
+%token BASIC_
 %token BLUE_
 %token BUTTONS_
 %token COLORBAR_
@@ -82,6 +83,7 @@ view : layout
 
 layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal LayoutView}
  | VERTICAL_ {ProcessCmdSet view layout vertical LayoutView}
+ | BASIC_  {ProcessCmdSet view layout basic LayoutView}
  | ADVANCED_ {ProcessCmdSet view layout advanced LayoutView}
  ;
  

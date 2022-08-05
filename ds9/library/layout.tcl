@@ -49,8 +49,7 @@ proc BlinkDef {} {
 
     set blink(interval) 1000
 
-    array set pblink [array get blink]
-}
+    array set pblink [array get blink]}
 
 proc FadeDef {} {
     global fade
@@ -311,9 +310,11 @@ proc LayoutView {} {
 	puts stderr "LayoutView"
     }
 
+    LayoutViewInit
     switch $view(layout) {
 	horizontal {LayoutViewHorz}
 	vertical {LayoutViewVert}
+	basic {LayoutViewBasic}
 	advanced {LayoutViewAdvanced}
     }
 
@@ -324,10 +325,8 @@ proc LayoutView {} {
     UpdateViewMenu
 }
 
-proc LayoutViewHorz {} {
+proc LayoutViewInit {} {
     global ds9
-    global current
-    global view
 
     # reset weights
     grid rowconfigure $ds9(main) 0 -weight 0
@@ -336,10 +335,6 @@ proc LayoutViewHorz {} {
     grid columnconfigure $ds9(main) 2 -weight 0
     grid rowconfigure $ds9(main) 4 -weight 0
     grid columnconfigure $ds9(main) 4 -weight 0
-
-    # ds9(main) weight
-    grid rowconfigure $ds9(main) 4 -weight 1
-    grid columnconfigure $ds9(main) 0 -weight 1
 
     grid forget $ds9(image)
     grid forget $ds9(header)
@@ -356,9 +351,19 @@ proc LayoutViewHorz {} {
     pack forget $ds9(panner)
     pack forget $ds9(panner,align)
     pack forget $ds9(panner,center)
+    pack forget $ds9(magnifier)
     pack forget $ds9(magnifier,plus)
     pack forget $ds9(magnifier,minus)
     pack forget $ds9(info)
+}
+
+proc LayoutViewHorz {} {
+    global ds9
+    global view
+
+    # ds9(main) weight
+    grid rowconfigure $ds9(main) 4 -weight 1
+    grid columnconfigure $ds9(main) 0 -weight 1
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
@@ -396,40 +401,11 @@ proc LayoutViewHorz {} {
 
 proc LayoutViewVert {} {
     global ds9
-    global current
     global view
-
-    # reset weights
-    grid rowconfigure $ds9(main) 0 -weight 0
-    grid columnconfigure $ds9(main) 0 -weight 0
-    grid rowconfigure $ds9(main) 2 -weight 0
-    grid columnconfigure $ds9(main) 2 -weight 0
-    grid rowconfigure $ds9(main) 4 -weight 0
-    grid columnconfigure $ds9(main) 4 -weight 0
 
     # ds9(main) weight
     grid rowconfigure $ds9(main) 0 -weight 1
     grid columnconfigure $ds9(main) 4 -weight 1
-
-    grid forget $ds9(image)
-    grid forget $ds9(header)
-    grid forget $ds9(header,sep)
-    grid forget $ds9(buttons,frame)
-    grid forget $ds9(buttons,sep)
-    grid forget $ds9(icons,top)
-    grid forget $ds9(icons,top,sep)
-    grid forget $ds9(icons,left)
-    grid forget $ds9(icons,left,sep)
-    grid forget $ds9(icons,bottom)
-    grid forget $ds9(icons,bottom,sep)
-    
-    pack forget $ds9(panner)
-    pack forget $ds9(panner,align)
-    pack forget $ds9(panner,center)
-    pack forget $ds9(magnifier)
-    pack forget $ds9(magnifier,plus)
-    pack forget $ds9(magnifier,minus)
-    pack forget $ds9(info)
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {
@@ -464,42 +440,25 @@ proc LayoutViewVert {} {
     grid $ds9(image) -row 0 -column 4 -sticky news
 }
 
-proc LayoutViewAdvanced {} {
+proc LayoutViewBasic {} {
     global ds9
-    global current
     global view
 
-    # reset weights
-    grid rowconfigure $ds9(main) 0 -weight 0
-    grid columnconfigure $ds9(main) 0 -weight 0
-    grid rowconfigure $ds9(main) 2 -weight 0
-    grid columnconfigure $ds9(main) 2 -weight 0
-    grid rowconfigure $ds9(main) 4 -weight 0
-    grid columnconfigure $ds9(main) 4 -weight 0
+    # ds9(main) weight
+    grid rowconfigure $ds9(main) 0 -weight 1
+    grid columnconfigure $ds9(main) 0 -weight 1
+
+    # image
+    grid $ds9(image) -row 0 -column 0 -sticky news
+}
+
+proc LayoutViewAdvanced {} {
+    global ds9
+    global view
 
     # ds9(main) weight
     grid rowconfigure $ds9(main) 2 -weight 1
     grid columnconfigure $ds9(main) 2 -weight 1
-
-    grid forget $ds9(image)
-    grid forget $ds9(header)
-    grid forget $ds9(header,sep)
-    grid forget $ds9(buttons,frame)
-    grid forget $ds9(buttons,sep)
-    grid forget $ds9(icons,top)
-    grid forget $ds9(icons,top,sep)
-    grid forget $ds9(icons,left)
-    grid forget $ds9(icons,left,sep)
-    grid forget $ds9(icons,bottom)
-    grid forget $ds9(icons,bottom,sep)
-    
-    pack forget $ds9(panner)
-    pack forget $ds9(panner,align)
-    pack forget $ds9(panner,center)
-    pack forget $ds9(magnifier)
-    pack forget $ds9(magnifier,plus)
-    pack forget $ds9(magnifier,minus)
-    pack forget $ds9(info)
 
     # info panel
     if {$view(info) || $view(magnifier) || $view(panner)} {

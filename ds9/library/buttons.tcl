@@ -332,6 +332,7 @@ proc LayoutButtons {} {
 
 	    pack $ds9(buttons).major -side top -fill x -expand true -anchor n
 	}
+	basic {}
 	advanced {
 	    pack propagate $ds9(buttons) off
 	    $ds9(buttons) configure -width 100
@@ -390,6 +391,7 @@ proc MajorButton {} {
 	vertical {
 	    pack $buttons(major,current) -side bottom -fill x -expand true -anchor s
 	}
+	basic {}
 	advanced {
 	    pack $buttons(major,current) -side bottom -fill x -expand true -anchor s
 	}
@@ -417,6 +419,7 @@ proc AnalysisButton {} {
 	    vertical {
 		pack $ds9(buttons,aux,$ii) -side left -fill x -expand true -anchor n
 	    }
+	    basic {}
 	    advanced {
 		pack $ds9(buttons,aux,$ii) -side left -fill x -expand true -anchor n
 	    }
@@ -443,6 +446,7 @@ proc ShowButton {which varname} {
  	switch $view(layout) {
 	    horizontal {pack $which -side left -fill both -expand true}
 	    vertical {pack $which -side top -fill both -expand true}
+	    basic {}
 	    advanced {pack $which -side top -fill both -expand true}
  	}
     }

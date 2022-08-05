@@ -152,6 +152,11 @@ proc ProcessCommand {argv argc} {
 		ProcessBgCmd argv i
 	    }
 	    -backup {incr i; ProcessBackupCmd argv i}
+	    -basic {
+		#backward compatibility
+		set view(layout) basic
+		LayoutView
+	    }
 	    -bin {incr i; ProcessBinCmd argv i}
 	    -block {incr i; ProcessBlockCmd argv i}
 	    -blink {incr i; ProcessBlinkCmd argv i}

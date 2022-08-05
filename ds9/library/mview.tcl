@@ -406,6 +406,7 @@ proc UpdateViewMenu {} {
 	    }
 	    $ds9(mb).view entryconfig [msgcat::mc {Icons}] -state disabled
 	    $ds9(buttons).view.icons configure -state disabled
+	    CheckButtonCB $ds9(buttons).view.icons view icons write
 	}
 	basic {
 	    foreach mm $menus {
@@ -418,6 +419,7 @@ proc UpdateViewMenu {} {
 		$ds9(mb).view entryconfig [msgcat::mc "$mm"] -state normal
 	    }
 	    $ds9(buttons).view.icons configure -state normal
+	    CheckButtonCB $ds9(buttons).view.icons view icons write
 	}
     }
 }

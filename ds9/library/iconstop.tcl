@@ -91,7 +91,7 @@ proc CreateIconsTopColormap {} {
     $mb.colormap.m configure -tearoff 0
 
     foreach lut $luts {
-	IconMenuButton $mb.colormap colorbar map $lut \
+	IconMenuButton $mb.colormap {} colorbar map $lut \
 	    [list ChangeColormapName $lut]
     }
 
@@ -128,9 +128,9 @@ proc CreateIconsTopScale {} {
 
     ThemeMenu $mb.scale.m
     $mb.scale.m configure -tearoff 0
-    IconMenuButton $mb.scale scale type log ChangeScale
-    IconMenuButton $mb.scale scale type linear ChangeScale
-    IconMenuButton $mb.scale scale type pow ChangeScale
+    IconMenuButton $mb.scale [msgcat::mc {Log}] scale type log ChangeScale
+    IconMenuButton $mb.scale [msgcat::mc {Linear}] scale type linear ChangeScale
+    IconMenuButton $mb.scale [msgcat::mc {Power}] scale type pow ChangeScale
 
     trace add variable scale(type) write [list IconMenuButtonCB $mb.scale]
 

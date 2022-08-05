@@ -132,10 +132,14 @@ proc CreateIconsBottomFrame {} {
 
     ThemeMenu $mb.layout.m
     $mb.layout.m configure -tearoff 0
-    IconMenuButton $mb.layout current display single DisplayMode
-    IconMenuButton $mb.layout current display tile DisplayMode
-    IconMenuButton $mb.layout current display blink DisplayMode
-    IconMenuButton $mb.layout current display fade DisplayMode
+    IconMenuButton $mb.layout [msgcat::mc {Single}] \
+	current display single DisplayMode
+    IconMenuButton $mb.layout [msgcat::mc {Tile}] \
+	current display tile DisplayMode
+    IconMenuButton $mb.layout [msgcat::mc {Blink}] \
+	current display blink DisplayMode
+    IconMenuButton $mb.layout [msgcat::mc {Fade}] \
+	current display fade DisplayMode
 
     trace add variable current(display) write [list IconMenuButtonCB $mb.layout]
 

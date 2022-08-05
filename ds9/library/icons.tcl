@@ -25,11 +25,19 @@ proc IconButtonToggleCmd {varname id cmd} {
     }
 }
 
-proc IconMenuButton {mb varname id value cmd} {
+proc IconMenuButton {mb txt varname id value cmd} {
     global icons
 
-    $mb.m add command -compound left -image $icons(${varname}${id},$value) \
-	-command [list IconMenuButtonCmd $varname $id $value $cmd]
+    if {$txt != {}} {
+	$mb.m add command -compound left \
+	    -image $icons(${varname}${id},$value) \
+	    -label $txt \
+	    -command [list IconMenuButtonCmd $varname $id $value $cmd]
+    } else {
+	$mb.m add command -compound left \
+	    -image $icons(${varname}${id},$value) \
+	    -command [list IconMenuButtonCmd $varname $id $value $cmd]
+    }
 }
 
 proc IconMenuButtonCmd {varname id value cmd} {

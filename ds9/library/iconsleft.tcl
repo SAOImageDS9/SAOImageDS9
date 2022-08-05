@@ -60,18 +60,30 @@ proc CreateIconsLeftMode {} {
 
     ThemeMenu $mb.mode.m
     $mb.mode.m configure -tearoff 0
-    IconMenuButton $mb.mode current mode none ChangeMode
-    IconMenuButton $mb.mode current mode region ChangeMode
-    IconMenuButton $mb.mode current mode crosshair ChangeMode
-    IconMenuButton $mb.mode current mode colorbar ChangeMode
-    IconMenuButton $mb.mode current mode pan ChangeMode
-    IconMenuButton $mb.mode current mode zoom ChangeMode
-    IconMenuButton $mb.mode current mode rotate ChangeMode
-    IconMenuButton $mb.mode current mode crop ChangeMode
-    IconMenuButton $mb.mode current mode catalog ChangeMode
-    IconMenuButton $mb.mode current mode footprint ChangeMode
-    IconMenuButton $mb.mode current mode examine ChangeMode
-    IconMenuButton $mb.mode current mode 3d ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {None}] \
+	current mode none ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Region}] \
+	current mode region ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Crosshair}] \
+	current mode crosshair ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Colorbar}] \
+	current mode colorbar ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Pan}] \
+	current mode pan ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Zoom}] \
+	current mode zoom ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Rotate}] \
+	current mode rotate ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Crop}] \
+	current mode crop ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Catalog}] \
+	current mode catalog ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Footprint}] \
+	current mode footprint ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Examine}] \
+	current mode examine ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {3D}] \
+	current mode 3d ChangeMode
 
     trace add variable current(mode) write [list IconMenuButtonCB $mb.mode]
 
@@ -109,12 +121,12 @@ proc CreateIconsLeftMarkerShape {} {
 
     ThemeMenu $mb.shape.m
     $mb.shape.m configure -tearoff 0
-    IconMenuButton $mb.shape marker shape circle {}
-    IconMenuButton $mb.shape marker shape annulus {}
-    IconMenuButton $mb.shape marker shape ellipse {}
-    IconMenuButton $mb.shape marker shape box {}
-    IconMenuButton $mb.shape marker shape polygon {}
-    IconMenuButton $mb.shape marker shape text {}
+    IconMenuButton $mb.shape [msgcat::mc {Circle}] marker shape circle {}
+    IconMenuButton $mb.shape [msgcat::mc {Annulus}] marker shape annulus {}
+    IconMenuButton $mb.shape [msgcat::mc {Ellipse}] marker shape ellipse {}
+    IconMenuButton $mb.shape [msgcat::mc {Box}] marker shape box {}
+    IconMenuButton $mb.shape [msgcat::mc {Polygon}] marker shape polygon {}
+    IconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
 
     trace add variable marker(shape) write [list IconMenuButtonCB $mb.shape]
 
@@ -199,7 +211,7 @@ proc CreateIconsLeftMarkerColor {} {
             set newcol 0
         }
 
-	IconMenuButton $mb.color marker color [lindex $clrs $ii] MarkerColor
+	IconMenuButton $mb.color {} marker color [lindex $clrs $ii] MarkerColor
 	$mb.color.m entryconfigure $ii -columnbreak $newcol -hidemargin 1 
     }
 
@@ -232,10 +244,10 @@ proc CreateIconsLeftMarkerLineWidth {} {
 
     ThemeMenu $mb.width.m
     $mb.width.m configure -tearoff 0
-    IconMenuButton $mb.width marker width 1 MarkerWidth
-    IconMenuButton $mb.width marker width 2 MarkerWidth
-    IconMenuButton $mb.width marker width 3 MarkerWidth
-    IconMenuButton $mb.width marker width 4 MarkerWidth
+    IconMenuButton $mb.width 1 marker width 1 MarkerWidth
+    IconMenuButton $mb.width 2 marker width 2 MarkerWidth
+    IconMenuButton $mb.width 3 marker width 3 MarkerWidth
+    IconMenuButton $mb.width 4 marker width 4 MarkerWidth
 
     trace add variable marker(width) write [list IconMenuButtonCB $mb.width]
 

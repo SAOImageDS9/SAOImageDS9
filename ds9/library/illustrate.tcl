@@ -24,6 +24,8 @@ proc IllustrateDef {} {
     set pillustrate(ellipse,radius2) 20
     set pillustrate(box,radius1) 80
     set pillustrate(box,radius2) 40
+    set pillustrate(polygon,width) 20
+    set pillustrate(polygon,height) 20
 }
 
 proc BindEventsIllustrate {} {
@@ -137,6 +139,7 @@ proc IllustrateMotion {xx yy} {
 proc IllustrateButton {xx yy} {
     global ds9
     global illustrate
+    global pillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
@@ -145,9 +148,47 @@ proc IllustrateButton {xx yy} {
 
     switch $illustrate(mode) {
 	pointer {}
-	circle {}
-	ellispe {}
-	box {}
+	circle {
+	    set rr $pillustrate(circle,radius)
+	    $ds9(canvas) create oval \
+		[expr $xx-$rr] [expr $yy-$rr] \
+		[expr $xx+$rr] [expr $yy+$rr]\
+		-outline $illustrate(color) \
+		-fill $illustrate(color) \
+		-width $illustrate(width)
+	}
+	ellipse {
+	    set rr1 $pillustrate(ellipse,radius1)
+	    set rr2 $pillustrate(ellipse,radius2)
+	    $ds9(canvas) create oval \
+		[expr $xx-$rr1] [expr $yy-$rr2] \
+		[expr $xx+$rr1] [expr $yy+$rr2]\
+		-outline $illustrate(color) \
+		-fill $illustrate(color) \
+		-width $illustrate(width)
+	}
+	box {
+	    set rr1 [expr $pillustrate(box,radius1)/2]
+	    set rr2 [expr $pillustrate(box,radius2)/2]
+	    $ds9(canvas) create rectangle \
+		[expr $xx-$rr1] [expr $yy-$rr2] \
+		[expr $xx+$rr1] [expr $yy+$rr2]\
+		-outline $illustrate(color) \
+		-fill $illustrate(color) \
+		-width $illustrate(width)
+	}
+	polygon {
+	    set rr1 $pillustrate(polygon,width)
+	    set rr2 $pillustrate(polygon,height)
+	    $ds9(canvas) create polygon \
+		[expr $xx-$rr1] [expr $yy-$rr2] \
+		[expr $xx+$rr1] [expr $yy-$rr2] \
+		[expr $xx+$rr1] [expr $yy+$rr2]\
+		[expr $xx-$rr1] [expr $yy+$rr2]\
+		-outline $illustrate(color) \
+		-fill $illustrate(color) \
+		-width $illustrate(width)
+	}
 	line {}
 	text {
 	    set txt {Text}

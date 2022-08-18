@@ -30,7 +30,6 @@ proc MarkerDef {} {
     set marker(shape) circle
     set marker(color) green
     set marker(color,default) 0
-    set marker(dashlist) {8 3}
     set marker(width) 1
     set marker(dash) 0
     set marker(fixed) 0

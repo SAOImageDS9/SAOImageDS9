@@ -11,7 +11,10 @@ proc IllustrateDef {} {
     set illustrate(mode) pointer
 
     set illustrate(color) green
+    set illustrate(color,fill) green
+    set illustrate(fill) 1
     set illustrate(width) 1
+    set illustrate(dash) 0
     set illustrate(font) helvetica
     set illustrate(font,size) 12
     set illustrate(font,weight) normal
@@ -146,6 +149,16 @@ proc IllustrateButton {xx yy} {
 	puts "IllustrateButton [$ds9(canvas) find closest $xx $yy 1]"
     }
 
+    if {$illustrate(fill)} {
+	set fill $illustrate(color,fill)
+    } else {
+	set fill {}
+    }
+    if {$illustrate(dash)} {
+	set dash {8 3}
+    } else {
+	set dash {}
+    }
     switch $illustrate(mode) {
 	pointer {}
 	circle {
@@ -154,8 +167,9 @@ proc IllustrateButton {xx yy} {
 		[expr $xx-$rr] [expr $yy-$rr] \
 		[expr $xx+$rr] [expr $yy+$rr]\
 		-outline $illustrate(color) \
-		-fill $illustrate(color) \
-		-width $illustrate(width)
+		-fill $fill \
+		-width $illustrate(width) \
+		-dash $dash
 	}
 	ellipse {
 	    set rr1 $pillustrate(ellipse,radius1)
@@ -164,8 +178,9 @@ proc IllustrateButton {xx yy} {
 		[expr $xx-$rr1] [expr $yy-$rr2] \
 		[expr $xx+$rr1] [expr $yy+$rr2]\
 		-outline $illustrate(color) \
-		-fill $illustrate(color) \
-		-width $illustrate(width)
+		-fill $fill \
+		-width $illustrate(width) \
+		-dash $dash
 	}
 	box {
 	    set rr1 [expr $pillustrate(box,radius1)/2]
@@ -174,8 +189,9 @@ proc IllustrateButton {xx yy} {
 		[expr $xx-$rr1] [expr $yy-$rr2] \
 		[expr $xx+$rr1] [expr $yy+$rr2]\
 		-outline $illustrate(color) \
-		-fill $illustrate(color) \
-		-width $illustrate(width)
+		-fill $fill \
+		-width $illustrate(width) \
+		-dash $dash
 	}
 	polygon {
 	    set rr1 $pillustrate(polygon,width)
@@ -186,8 +202,9 @@ proc IllustrateButton {xx yy} {
 		[expr $xx+$rr1] [expr $yy+$rr2]\
 		[expr $xx-$rr1] [expr $yy+$rr2]\
 		-outline $illustrate(color) \
-		-fill $illustrate(color) \
-		-width $illustrate(width)
+		-fill $fill \
+		-width $illustrate(width) \
+		-dash $dash
 	}
 	line {}
 	text {

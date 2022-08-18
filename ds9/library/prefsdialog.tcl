@@ -68,6 +68,7 @@ proc PrefsDialog {{which {}}} {
     PrefsDialogRegion
     PrefsDialogAnnulus
     PrefsDialogPanda
+    PrefsDialogIllustrate
     PrefsDialogAnalysis
     PrefsDialogPixelTable
     PrefsDialogGraph

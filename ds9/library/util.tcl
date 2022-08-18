@@ -971,17 +971,11 @@ proc ChangeMode {} {
     RefreshInfoBox $current(frame)
     PixelTableClearDialog
 
-    IllustrateDestroyDialog
     UnBindEventsCanvas
     UnBindEventsIllustrate
     switch -- $current(mode) {
-	illustrate {
-	    BindEventsIllustrate
-	    IllustrateDialog
-	}
-	default {
-	    BindEventsCanvas
-	}
+	illustrate {BindEventsIllustrate}
+	default {BindEventsCanvas}
     }
 
     switch -- $current(mode) {

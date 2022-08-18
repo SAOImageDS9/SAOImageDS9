@@ -6,70 +6,24 @@ package provide DS9 1.0
 
 proc IllustrateDef {} {
     global illustrate
+    global pillustrate
 
-    set illustrate(top) .illustrate
     set illustrate(mode) pointer
 
-    set illustrate(text,color) green
-    set illustrate(text,font,family) helvetica
-    set illustrate(text,font,size) 12
-    set illustrate(text,font,weight) normal
-    set illustrate(text,font,slant) roman
-}
+    set illustrate(color) green
+    set illustrate(width) 1
+    set illustrate(font) helvetica
+    set illustrate(font,size) 12
+    set illustrate(font,weight) normal
+    set illustrate(font,slant) roman
 
-proc IllustrateDialog {} {
-    global illustrate
+    array set pillustrate [array get illustrate]
 
-    # see if we already have a window visible
-    if {[winfo exists $illustrate(top)]} {
-	raise $illustrate(top)
-	return
-    }
-
-    # create the window
-    set w $illustrate(top)
-
-    Toplevel $w {} 6 [msgcat::mc {Illustrate}] IllustrateDestroyDialog
-
-    bind $w <<Close>> IllustrateDestroyDialog
-
-    RadioButton $w.pointer [msgcat::mc {Pointer}] illustrate mode pointer {}
-    RadioButton $w.circle [msgcat::mc {Circle}] illustrate mode circle {}
-    RadioButton $w.ellipse [msgcat::mc {Ellipse}] illustrate mode ellipse {}
-    RadioButton $w.box [msgcat::mc {Box}] illustrate mode box {}
-    RadioButton $w.line [msgcat::mc {Line}] illustrate mode line {}
-    RadioButton $w.text [msgcat::mc {Text}] illustrate mode text {}
-    
-    ButtonButton $w.front [msgcat::mc {Front}] {}
-    ButtonButton $w.prev [msgcat::mc {Previous}] {}
-    ButtonButton $w.next [msgcat::mc {Next}] {}
-    ButtonButton $w.back [msgcat::mc {Back}] {}
-
-    ttk::menubutton $w.textcolor \
-	-textvariable illustrate(text,color) \
-	-menu $w.textcolor.m
-
-    ColorMenu $w.textcolor.m illustrate text,color {}
-
-    ttk::menubutton $w.textfont \
-	-textvariable illustrate(text,font,family) \
-	-menu $w.textfont.m
-
-    FontMenu $w.textfont.m illustrate \
-	text,font,family text,font,size text,font,weight text,font,slant {}
-
-    pack $w.pointer $w.circle $w.ellipse $w.box $w.line $w.text \
-	$w.front $w.prev $w.next $w.back \
-	$w.textcolor $w.textfont \
-	-side top -fill both -expand true
-}
-
-proc IllustrateDestroyDialog {} {
-    global illustrate
-
-    if {[winfo exists $illustrate(top)]} {
-	destroy $illustrate(top)
-    }
+    set pillustrate(circle,radius) 20
+    set pillustrate(ellipse,radius1) 40
+    set pillustrate(ellipse,radius2) 20
+    set pillustrate(box,radius1) 80
+    set pillustrate(box,radius2) 40
 }
 
 proc BindEventsIllustrate {} {
@@ -197,11 +151,11 @@ proc IllustrateButton {xx yy} {
 	line {}
 	text {
 	    set txt {Text}
-	    if {[EntryDialog [msgcat::mc {Text}] [msgcat::mc {Enter Text}] 20 txt]} {
+	    if {[EntryDialog [msgcat::mc {Text}] [msgcat::mc {Enter Text}] 40 txt]} {
 		if {$txt != {}} {
 		    $ds9(canvas) create text $xx $yy -text $txt \
-			-fill $illustrate(text,color) \
-			-font "{$illustrate(text,font,family)} $illustrate(text,font,size) $illustrate(text,font,weight) $illustrate(text,font,slant)"
+			-fill $illustrate(color) \
+			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"
 		}
 	    }
 	}

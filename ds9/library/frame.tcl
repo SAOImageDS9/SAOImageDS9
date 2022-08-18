@@ -593,7 +593,8 @@ proc EnterFrame {which x y} {
 	colorbar -
 	examine -
 	iexam -
-	3d {}
+	3d -
+	illustrate {}
     }
 
     EnterInfoBox $which
@@ -650,7 +651,8 @@ proc LeaveFrame {which} {
 	    PixelTableClearDialog
 	    HideGraphsData $which
 	}
-	crosshair {}
+	crosshair -
+	illustrate {}
     }
 
     $which magnifier off
@@ -721,7 +723,8 @@ proc DoMotion {which x y cursor1 cursor2} {
 	    UpdatePixelTableDialog $which $x $y canvas
 	    UpdateGraphsData $which $x $y canvas
 	}
-	crosshair {}
+	crosshair -
+	illustrate {}
     }
 
     UpdateMagnifier $which $x $y
@@ -818,7 +821,8 @@ proc Button1Frame {which x y} {
 	iexam {
 	    IExamButton $which $x $y
 	}
-	3d {}
+	3d -
+	illustrate {}
     }
 }
 
@@ -862,9 +866,10 @@ proc ShiftButton1Frame {which x y} {
                 FPShift $which $x $y
             }
         }
-	examine {}
-	iexam {}
-	3d {}
+	examine -
+	iexam -
+	3d -
+	illustrate {}
     }
 }
 
@@ -905,9 +910,10 @@ proc ControlButton1Frame {which x y} {
 	crop {
 	    Crop3dButton $which $x $y 1
 	}
-	examine {}
-	iexam {}
-	3d {}
+	examine -
+	iexam -
+	3d -
+	illustrate {}
     }
 }
 
@@ -948,7 +954,8 @@ proc ControlShiftButton1Frame {which x y} {
 	crop -
 	examine -
 	iexam -
-	3d {}
+	3d -
+	illustrate {}
     }
 }
 
@@ -1041,6 +1048,7 @@ proc Motion1Frame {which x y} {
 		3DMotion $which $x $y
 	    }
 	}
+	illustrate {}
     }
 
     UpdateMagnifier $which $x $y
@@ -1115,9 +1123,10 @@ proc Release1Frame {which x y} {
                 FPRelease $which $x $y
             }
         }
-	examine {}
-	iexam {}
-	3d {}
+	examine -
+	iexam -
+	3d -
+	illustrate {}
     }
 
     # let others know that the mouse is up
@@ -1158,7 +1167,7 @@ proc Double1Frame {which x y} {
 	3d {
 	    3DDouble $which
 	}
-	    
+	illustrate {}
     }
 }
 
@@ -1184,7 +1193,8 @@ proc DoubleRelease1Frame {which x y} {
 	footprint -
 	examine -
 	iexam -
-	3d {}
+	3d -
+	illustrate {}
     }
 
     UpdateEditMenu
@@ -1481,6 +1491,7 @@ proc KeyFrame {which K A xx yy} {
 		Z {Zoom .5 .5}
 	    }
 	}
+	illustrate {}
     }
 
     # since most modes do zoom

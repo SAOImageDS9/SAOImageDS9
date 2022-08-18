@@ -592,6 +592,7 @@ proc RefreshInfoBox {which} {
 		EnterInfoBox $which
 		UpdateInfoBoxFrame $which
 	    }
+	    illustrate {}
 	}
     }
     return

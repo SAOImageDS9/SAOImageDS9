@@ -236,7 +236,7 @@ proc IISCursorModeCmd {state} {
 	    }
 	} else {
 	    bind $ds9(canvas) <Key> {}
-	    bind $ds9(canvas) <f> {ToggleBindEvents}
+	    bind $ds9(canvas) <f> {ToggleFreeze}
 	    BindEventsFrameKey $which
 
 	    set icursor(timer,abort) 1

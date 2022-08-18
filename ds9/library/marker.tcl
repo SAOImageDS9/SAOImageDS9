@@ -648,7 +648,7 @@ proc MarkerCreateShape {which x y} {
 	segment {append cmd " .001 .001"}
 	text {
 	    set txt "Region"
-	    set r [EntryDialog "Text Region" "Enter Text:" 40 txt]
+	    set r [EntryDialog [msgcat::mc {Text}] [msgcat::mc {Enter Text}] 40 txt]
 	    if {$r == 1 && $txt != {}} {
 		append cmd " 0 text = \{\{$txt\}\}"
 	    } else {

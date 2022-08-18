@@ -14,22 +14,24 @@ proc Toplevel {w mb style title proc} {
     wm group $w $ds9(top)
     wm protocol $w WM_DELETE_WINDOW $proc
 
-    # we need this first, before the configure command
-    ThemeMenu $mb
+    if {$mb != {}} {
+	# we need this first, before the configure command
+	ThemeMenu $mb
 
-    switch $ds9(wm) {
-	x11 -
-	win32 {}
-	aqua {
-	    AppleMenu $mb
-	    switch $style {
-		6 {::tk::unsupported::MacWindowStyle style $w document "closeBox collapseBox"}
-		7 {::tk::unsupported::MacWindowStyle style $w document "closeBox fullZoom collapseBox resizable"}
+	switch $ds9(wm) {
+	    x11 -
+	    win32 {}
+	    aqua {
+		AppleMenu $mb
+		switch $style {
+		    6 {::tk::unsupported::MacWindowStyle style $w document "closeBox collapseBox"}
+		    7 {::tk::unsupported::MacWindowStyle style $w document "closeBox fullZoom collapseBox resizable"}
+		}
 	    }
 	}
-    }
 
-    $w configure -menu $mb
+	$w configure -menu $mb
+    }
 
     DialogCenter $w
 }

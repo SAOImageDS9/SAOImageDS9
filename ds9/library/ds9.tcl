@@ -370,6 +370,7 @@ HTTPDef
 HVDef
 IExamDef
 IISDef
+IllustrateDef
 MagnifierDef
 MarkerDef
 MaskDef

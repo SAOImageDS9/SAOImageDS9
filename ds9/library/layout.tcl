@@ -187,6 +187,14 @@ proc ThemeConfigCanvas {w} {
 proc InitCanvas {} {
     global ds9
 
+    # must wait until now
+    bind $ds9(canvas) <Configure> [list LayoutView]
+    BindEventsCanvas
+}
+
+proc BindEventsCanvas {} {
+    global ds9
+
     # Bindings
     bind $ds9(canvas) <Tab> [list NextFrame]
     bind $ds9(canvas) <Shift-Tab> [list PrevFrame]
@@ -196,7 +204,10 @@ proc InitCanvas {} {
 	win32 {}
     }
 
-    bind $ds9(canvas) <Configure> [list LayoutView]
+    # iis
+    bind $ds9(canvas) <Key> {}
+    # freeze
+    bind $ds9(canvas) <f> {ToggleFreeze}
 
     # keyboard focus
     switch $ds9(wm) {
@@ -233,9 +244,60 @@ proc InitCanvas {} {
 	    bind $ds9(canvas) <Command-ButtonRelease-1> {Release3Canvas %x %y}
 	}
     }
+}
 
+proc UnBindEventsCanvas {} {
+    global ds9
+
+    # Bindings
+    bind $ds9(canvas) <Tab> {}
+    bind $ds9(canvas) <Shift-Tab> {}
+    switch $ds9(wm) {
+	x11 {bind $ds9(canvas) <ISO_Left_Tab> {}}
+	aqua -
+	win32 {}
+    }
+
+    # iis
+    bind $ds9(canvas) <Key> {}
     # freeze
-    bind $ds9(canvas) <f> {ToggleBindEvents}
+    bind $ds9(canvas) <f> {}
+
+    # keyboard focus
+    switch $ds9(wm) {
+	x11 -
+	aqua {
+	    bind $ds9(canvas) <Enter> {}
+	    bind $ds9(canvas) <Leave> {}
+	}
+	win32 {}
+    }
+    switch $ds9(wm) {
+	x11 {}
+	aqua -
+	win32 {bind $ds9(canvas) <MouseWheel> {}}
+    }
+
+    # backward compatible bindings
+    switch $ds9(wm) {
+	x11 -
+	win32 {
+	    bind $ds9(canvas) <Button-3> {}
+	    bind $ds9(canvas) <B3-Motion> {}
+	    bind $ds9(canvas) <ButtonRelease-3> {}
+	} 
+	aqua {
+	    # swap button-2 and button-3 on the mighty mouse
+	    bind $ds9(canvas) <Button-2> {}
+	    bind $ds9(canvas) <B2-Motion> {}
+	    bind $ds9(canvas) <ButtonRelease-2> {}
+
+	    # x11 command key emulation
+	    bind $ds9(canvas) <Command-Button-1> {}
+	    bind $ds9(canvas) <Command-B1-Motion> {}
+	    bind $ds9(canvas) <Command-ButtonRelease-1> {}
+	}
+    }
 }
 
 proc Button3Canvas {x y} {
@@ -282,7 +344,7 @@ proc Release3Canvas {x y} {
     }
 }
 
-proc UnBindEventsCanvas {} {
+proc UnBindEventsCanvasItems {} {
     global ds9
 
     foreach ff $ds9(active) {
@@ -292,7 +354,7 @@ proc UnBindEventsCanvas {} {
     }
 }
 
-proc BindEventsCanvas {} {
+proc BindEventsCanvasItems {} {
     global ds9
 
     foreach ff $ds9(active) {

@@ -506,8 +506,8 @@ proc ProcessAnalysis {varname path} {
     }
 
     # enable events
-    UnBindEventsCanvas
-    BindEventsCanvas
+    UnBindEventsCanvasItems
+    BindEventsCanvasItems
 
     UpdateAnalysisMenu
     UpdateAnalysisButtonbar

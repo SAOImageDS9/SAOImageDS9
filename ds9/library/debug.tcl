@@ -8,6 +8,7 @@ proc DebugDef {} {
     global debug
 
     set debug(tcl,events) 0
+    set debug(tcl,illustrate) 0
     set debug(tcl,update) 0
     set debug(tcl,idletasks) 0
     set debug(tcl,layout) 0
@@ -67,6 +68,8 @@ proc DebugMenu {} {
     ThemeMenu $ds9(mb).debug.tcl
     $ds9(mb).debug.tcl add checkbutton -label {Events} \
 	-variable debug(tcl,events)
+    $ds9(mb).debug.tcl add checkbutton -label {Illustration} \
+	-variable debug(tcl,illustrate)
     $ds9(mb).debug.tcl add checkbutton -label {Update} \
 	-variable debug(tcl,update)
     $ds9(mb).debug.tcl add checkbutton -label {Idletasks} \
@@ -181,6 +184,7 @@ proc ProcessDebugTclCmd {varname iname} {
     global debug
     switch -- [string tolower [lindex $var $i]] {
 	events {set debug(tcl,events) 1}
+	illustrate {set debug(tcl,illustrate) 1}
 	update {set debug(tcl,update) 1}
 	idletasks {set debug(tcl,idletasks) 1}
 	layout {set debug(tcl,layout) 1}
@@ -260,6 +264,7 @@ proc ProcessDebugCmd {varname iname} {
 	}
 
 	events -
+	illustrate -
 	update -
 	idletasks -
 	layout -

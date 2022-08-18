@@ -47,6 +47,8 @@ proc EditMainMenu {} {
 	-variable current(mode) -value examine -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {3d}] \
 	-variable current(mode) -value 3d -command ChangeMode
+    $ds9(mb).edit add radiobutton -label [msgcat::mc {Illustration}] \
+	-variable current(mode) -value illustrate -command ChangeMode
 
     switch $ds9(wm) {
 	x11 -
@@ -111,6 +113,8 @@ proc PrefsDialogEditMenu {w} {
 	-variable pcurrent(mode) -value examine
     $m add radiobutton -label [msgcat::mc {3d}] \
 	-variable pcurrent(mode) -value 3d
+    $m add radiobutton -label [msgcat::mc {Illustration}] \
+	-variable pcurrent(mode) -value illustrate
 
     pack $f -side top -fill both -expand true
 }
@@ -137,6 +141,7 @@ proc ButtonsEditDef {} {
 	edit,footprint 1
 	edit,examine 1
 	edit,3d 1
+	edit,illustrate 1
 	edit,prefs 0
     }
 }
@@ -193,6 +198,9 @@ proc CreateButtonsEdit {} {
     RadioButton $ds9(buttons).edit.3d \
 	[string tolower [msgcat::mc {3d}]] \
 	current mode 3d ChangeMode
+    RadioButton $ds9(buttons).edit.illustrate \
+	[string tolower [msgcat::mc {Illustration}]] \
+	current mode illustrate ChangeMode
 
     ButtonButton $ds9(buttons).edit.prefs \
 	[string tolower [msgcat::mc {Preferences}]] PrefsDialog
@@ -214,6 +222,7 @@ proc CreateButtonsEdit {} {
         $ds9(buttons).edit.footprint pbuttons(edit,footprint)                   
         $ds9(buttons).edit.examine pbuttons(edit,examine)
         $ds9(buttons).edit.3d pbuttons(edit,3d)
+        $ds9(buttons).edit.illustrate pbuttons(edit,illustrate)
         $ds9(buttons).edit.prefs pbuttons(edit,prefs)
     "
 }
@@ -228,42 +237,62 @@ proc PrefsDialogButtonbarEdit {f} {
     set m $f.menu
     ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Undo}] \
-	-variable pbuttons(edit,undo) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,undo) \
+	-command {UpdateButtons buttons(edit)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Cut}] \
-	-variable pbuttons(edit,cut) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,cut) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Copy}] \
-	-variable pbuttons(edit,copy) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,copy) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Paste}] \
-	-variable pbuttons(edit,paste) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,paste) \
+	-command {UpdateButtons buttons(edit)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {None}] \
-	-variable pbuttons(edit,none) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,none) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Region}] \
-	-variable pbuttons(edit,region) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,region) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Crosshair}] \
-	-variable pbuttons(edit,crosshair) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,crosshair) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Colorbar}] \
-	-variable pbuttons(edit,colorbar) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,colorbar) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Pan}] \
-	-variable pbuttons(edit,pan) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,pan) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Zoom}] \
-	-variable pbuttons(edit,zoom) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,zoom) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Rotate}] \
-	-variable pbuttons(edit,rotate) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,rotate) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Crop}] \
-	-variable pbuttons(edit,crop) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,crop) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Catalog}] \
-	-variable pbuttons(edit,catalog) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,catalog) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Footprint}] \
-	-variable pbuttons(edit,footprint) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,footprint) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Examine}] \
-	-variable pbuttons(edit,examine) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,examine) \
+	-command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {3d}] \
-	-variable pbuttons(edit,3d) -command {UpdateButtons buttons(3d)}
+	-variable pbuttons(edit,3d) \
+	-command {UpdateButtons buttons(3d)}
+    $m add checkbutton -label [msgcat::mc {Illustration}] \
+	-variable pbuttons(edit,illustrate) \
+	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Preferences}] \
-	-variable pbuttons(edit,prefs) -command {UpdateButtons buttons(edit)}
+	-variable pbuttons(edit,prefs) \
+	-command {UpdateButtons buttons(edit)}
 }
 
 # Support
@@ -334,5 +363,6 @@ proc UpdateEditMenu {} {
 	examine -
 	iexam -
 	3d {$ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled}
+	illustrate {}
     }
 }

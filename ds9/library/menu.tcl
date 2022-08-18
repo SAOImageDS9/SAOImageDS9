@@ -736,6 +736,7 @@ proc PrefsDialogMenu {} {
     PrefsDialogColorMenu $w.menu
     PrefsDialogRegionMenu $w.menu
     PrefsDialogWCSMenu $w.menu
+    PrefsDialogIllustrateMenu $w.menu
     PrefsDialogAnalysisMenu $w.menu
     PrefsDialogHelpMenu $w.menu
 }

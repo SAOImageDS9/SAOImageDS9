@@ -146,7 +146,22 @@ proc PrefsDialogIllustrate {} {
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.radius2 $f.unit2 -padx 2 -pady 2 -sticky w
 
+    # Polygon
+    set f [ttk::labelframe $w.illustrate.polygon -text [msgcat::mc {Polygon}]]
+
+    ttk::label $f.title -text "Width"
+    ttk::entry $f.width -textvariable pmarker(polygon,width) -width 10 
+    ttk::label $f.unit -text [msgcat::mc {Image}]
+    
+    ttk::label $f.title2 -text "Height"
+    ttk::entry $f.height -textvariable pmarker(polygon,height) -width 10 
+    ttk::label $f.unit2 -text [msgcat::mc {Image}]
+
+    grid $f.title $f.width $f.unit -padx 2 -pady 2 -sticky w
+    grid $f.title2 $f.height $f.unit2 -padx 2 -pady 2 -sticky w
+
     pack $w.illustrate.circle $w.illustrate.ellipse $w.illustrate.box \
+	$w.illustrate.polygon \
 	-side top -fill both -expand true
 }
 
@@ -166,7 +181,7 @@ proc ButtonsIllustrateDef {} {
 	illustrate,back 1
 	illustrate,all 1
 	illustrate,none 1
-	illustrate,invert 0
+	illustrate,invert 1
 	illustrate,delete 1
     }
 }
@@ -233,6 +248,66 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.invert pbuttons(illustrate,invert)
         $ds9(buttons).illustrate.delete pbuttons(illustrate,delete)
     "
+}
+
+proc PrefsDialogButtonbarIllustrate {f} {
+    global buttons
+    global pbuttons
+
+    ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
+    
+    set m $f.menu
+    ThemeMenu $m
+    $m add checkbutton -label "[msgcat::mc {Get Information}]..." \
+	-variable pbuttons(illustrate,info) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add separator
+    $m add cascade -label [msgcat::mc {Mode}] -menu $m.mode
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Move to Front}] \
+	-variable pbuttons(illustrate,front) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add checkbutton -label [msgcat::mc {Move to Back}] \
+	-variable pbuttons(illustrate,back) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Select All}] \
+	-variable pbuttons(illustrate,all) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add checkbutton -label [msgcat::mc {Select None}] \
+	-variable pbuttons(illustrate,none) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add checkbutton -label [msgcat::mc {Invert Selection}] \
+	-variable pbuttons(illustrate,invert) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Delete}] \
+	-variable pbuttons(illustrate,delete) \
+	-command {UpdateButtons buttons(illustrate)}
+
+    ThemeMenu $m.mode
+    $m.mode add checkbutton -label [msgcat::mc {Pointer}] \
+	-variable pbuttons(illustrate,pointer) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m.mode add checkbutton -label [msgcat::mc {Circle}] \
+	-variable pbuttons(illustrate,circle) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m.mode add checkbutton -label [msgcat::mc {Ellipse}] \
+	-variable pbuttons(illustrate,ellipse) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m.mode add checkbutton -label [msgcat::mc {Box}] \
+	-variable pbuttons(illustrate,box) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m.mode add checkbutton -label [msgcat::mc {Polygon}] \
+	-variable pbuttons(illustrate,polygon) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m.mode add separator
+    $m.mode add checkbutton -label [msgcat::mc {Line}] \
+	-variable pbuttons(illustrate,line) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m.mode add checkbutton -label [msgcat::mc {Text}] \
+	-variable pbuttons(illustrate,text) \
+	-command {UpdateButtons buttons(illustrate)}
 }
 
 

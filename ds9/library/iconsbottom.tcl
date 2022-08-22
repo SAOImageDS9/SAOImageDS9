@@ -77,7 +77,7 @@ proc CreateIconsBottomZoom {} {
     tooltip::tooltip $mb.zoomone [msgcat::mc {Set Zoom to 1}]
 
     ttk::button $mb.zoomdecrease -takefocus 0 -command [list Zoom .5 .5] \
-	-image [image create photo -file "$ds9(icons,ui)/zoom_plus.png"]
+	-image [image create photo -file "$ds9(icons,ui)/zoom_minus.png"]
     tooltip::tooltip $mb.zoomdecrease [msgcat::mc {Decrease Zoom}]
 
     pack $mb.zoomincrease $mb.zoomone $mb.zoomdecrease -side left -fill x

@@ -17,6 +17,8 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Mode}] \
 	-menu $ds9(mb).illustrate.mode
     $ds9(mb).illustrate add separator
+    $ds9(mb).illustrate add cascade -label [msgcat::mc {Shape}] \
+	-menu $ds9(mb).illustrate.shape
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Color}] \
 	-menu $ds9(mb).illustrate.color
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Width}] \
@@ -41,18 +43,22 @@ proc IllustrateMainMenu {} {
     ThemeMenu $ds9(mb).illustrate.mode
     $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Pointer}] \
 	-variable illustrate(mode) -value pointer
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Circle}] \
-	-variable illustrate(mode) -value circle
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Ellipse}] \
-	-variable illustrate(mode) -value ellipse
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Box}] \
-	-variable illustrate(mode) -value box
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Polygon}] \
-	-variable illustrate(mode) -value polygon
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Line}] \
-	-variable illustrate(mode) -value line
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Text}] \
-	-variable illustrate(mode) -value text
+    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Graphics}] \
+	-variable illustrate(graphics) -value graphics
+
+    ThemeMenu $ds9(mb).illustrate.shape
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Circle}] \
+	-variable illustrate(shape) -value circle
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Ellipse}] \
+	-variable illustrate(shape) -value ellipse
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Box}] \
+	-variable illustrate(shape) -value box
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Polygon}] \
+	-variable illustrate(shape) -value polygon
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Line}] \
+	-variable illustrate(shape) -value line
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Text}] \
+	-variable illustrate(shape) -value text
 
     ColorMenu $ds9(mb).illustrate.color illustrate color {}
     ColorMenu $ds9(mb).illustrate.fillcolor illustrate color,fill {}
@@ -72,8 +78,9 @@ proc PrefsDialogIllustrateMenu {w} {
 
     set m $f.menu.menu
     ThemeMenu $m
-    $m add cascade -label [msgcat::mc {Mode}] -menu $m.mode
+    $m add cascade -label [msgcat::mc {Shape}] -menu $m.mode
     $m add separator
+    $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add cascade -label [msgcat::mc {Color}] -menu $m.color
     $m add cascade -label [msgcat::mc {Width}] -menu $m.width
     $m add cascade -label [msgcat::mc {Font}] -menu $m.font
@@ -82,18 +89,22 @@ proc PrefsDialogIllustrateMenu {w} {
     ThemeMenu $m.mode
     $m.mode add radiobutton -label [msgcat::mc {Pointer}] \
 	-variable pillustrate(mode) -value pointer
-    $m.mode add radiobutton -label [msgcat::mc {Circle}] \
-	-variable pillustrate(mode) -value circle
-    $m.mode add radiobutton -label [msgcat::mc {Ellipse}] \
-	-variable pillustrate(mode) -value ellipse
-    $m.mode add radiobutton -label [msgcat::mc {Box}] \
-	-variable pillustrate(mode) -value box
-    $m.mode add radiobutton -label [msgcat::mc {Polygon}] \
-	-variable pillustrate(mode) -value polygon
-    $m.mode add radiobutton -label [msgcat::mc {Line}] \
-	-variable pillustrate(mode) -value line
-    $m.mode add radiobutton -label [msgcat::mc {Text}] \
-	-variable pillustrate(mode) -value text
+    $m.mode add radiobutton -label [msgcat::mc {Graphics}] \
+	-variable pillustrate(mode) -value graphics
+
+    ThemeMenu $m.shape
+    $m.shape add radiobutton -label [msgcat::mc {Circle}] \
+	-variable pillustrate(shape) -value circle
+    $m.shape add radiobutton -label [msgcat::mc {Ellipse}] \
+	-variable pillustrate(shape) -value ellipse
+    $m.shape add radiobutton -label [msgcat::mc {Box}] \
+	-variable pillustrate(shape) -value box
+    $m.shape add radiobutton -label [msgcat::mc {Polygon}] \
+	-variable pillustrate(shape) -value polygon
+    $m.shape add radiobutton -label [msgcat::mc {Line}] \
+	-variable pillustrate(shape) -value line
+    $m.shape add radiobutton -label [msgcat::mc {Text}] \
+	-variable pillustrate(shape) -value text
 
     ColorMenu $m.color pillustrate color {}
     ColorMenu $m.fillcolor pillustrate color,fill {}
@@ -173,6 +184,7 @@ proc ButtonsIllustrateDef {} {
     array set pbuttons {
 	illustrate,info 1
 	illustrate,pointer 1
+	illustrate,graphics 1
 	illustrate,circle 1
 	illustrate,ellipse 1
 	illustrate,box 1
@@ -201,24 +213,28 @@ proc CreateButtonsIllustrate {} {
     RadioButton $ds9(buttons).illustrate.pointer \
 	[string tolower [msgcat::mc {Pointer}]] \
 	illustrate mode pointer {}
+    RadioButton $ds9(buttons).illustrate.graphics \
+	[string tolower [msgcat::mc {Graphics}]] \
+	illustrate mode graphics {}
+
     RadioButton $ds9(buttons).illustrate.circle \
 	[string tolower [msgcat::mc {Circle}]] \
-	illustrate mode circle {}
+	illustrate shape circle {}
     RadioButton $ds9(buttons).illustrate.ellipse \
 	[string tolower [msgcat::mc {Ellipse}]] \
-	illustrate mode ellipse {}
+	illustrate shape ellipse {}
     RadioButton $ds9(buttons).illustrate.box \
 	[string tolower [msgcat::mc {Box}]] \
-	illustrate mode box {}
+	illustrate shape box {}
     RadioButton $ds9(buttons).illustrate.polygon \
 	[string tolower [msgcat::mc {Polygon}]] \
-	illustrate mode polygon {}
+	illustrate shape polygon {}
     RadioButton $ds9(buttons).illustrate.line \
 	[string tolower [msgcat::mc {Line}]] \
-	illustrate mode line {}
+	illustrate shape line {}
     RadioButton $ds9(buttons).illustrate.text \
 	[string tolower [msgcat::mc {Text}]] \
-	illustrate mode text {}
+	illustrate shape text {}
 
     CheckButton $ds9(buttons).illustrate.fill \
 	[string tolower [msgcat::mc {Fill}]] \
@@ -242,6 +258,7 @@ proc CreateButtonsIllustrate {} {
     set buttons(illustrate) "
         $ds9(buttons).illustrate.info pbuttons(illustrate,info)
         $ds9(buttons).illustrate.pointer pbuttons(illustrate,pointer)
+        $ds9(buttons).illustrate.graphics pbuttons(illustrate,graphics)
         $ds9(buttons).illustrate.circle pbuttons(illustrate,circle)
         $ds9(buttons).illustrate.ellipse pbuttons(illustrate,ellipse)
         $ds9(buttons).illustrate.box pbuttons(illustrate,box)
@@ -272,6 +289,8 @@ proc PrefsDialogButtonbarIllustrate {f} {
     $m add separator
     $m add cascade -label [msgcat::mc {Mode}] -menu $m.mode
     $m add separator
+    $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
+    $m add separator
     $m add checkbutton -label [msgcat::mc {Fill}] \
 	-variable pbuttons(illustrate,fill) \
 	-command {UpdateButtons buttons(illustrate)}
@@ -301,23 +320,27 @@ proc PrefsDialogButtonbarIllustrate {f} {
     $m.mode add checkbutton -label [msgcat::mc {Pointer}] \
 	-variable pbuttons(illustrate,pointer) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m.mode add checkbutton -label [msgcat::mc {Circle}] \
+    $m.mode add checkbutton -label [msgcat::mc {Graphics}] \
+	-variable pbuttons(illustrate,graphics) \
+	-command {UpdateButtons buttons(illustrate)}
+
+    ThemeMenu $m.shape
+    $m.shape add checkbutton -label [msgcat::mc {Circle}] \
 	-variable pbuttons(illustrate,circle) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m.mode add checkbutton -label [msgcat::mc {Ellipse}] \
+    $m.shape add checkbutton -label [msgcat::mc {Ellipse}] \
 	-variable pbuttons(illustrate,ellipse) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m.mode add checkbutton -label [msgcat::mc {Box}] \
+    $m.shape add checkbutton -label [msgcat::mc {Box}] \
 	-variable pbuttons(illustrate,box) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m.mode add checkbutton -label [msgcat::mc {Polygon}] \
+    $m.shape add checkbutton -label [msgcat::mc {Polygon}] \
 	-variable pbuttons(illustrate,polygon) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m.mode add separator
-    $m.mode add checkbutton -label [msgcat::mc {Line}] \
+    $m.shape add checkbutton -label [msgcat::mc {Line}] \
 	-variable pbuttons(illustrate,line) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m.mode add checkbutton -label [msgcat::mc {Text}] \
+    $m.shape add checkbutton -label [msgcat::mc {Text}] \
 	-variable pbuttons(illustrate,text) \
 	-command {UpdateButtons buttons(illustrate)}
 }

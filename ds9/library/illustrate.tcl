@@ -10,9 +10,10 @@ proc IllustrateDef {} {
 
     set illustrate(mode) pointer
 
+    set illustrate(shape) circle
     set illustrate(color) green
     set illustrate(color,fill) green
-    set illustrate(fill) 1
+    set illustrate(fill) 0
     set illustrate(width) 1
     set illustrate(dash) 0
     set illustrate(font) helvetica
@@ -142,12 +143,22 @@ proc IllustrateMotion {xx yy} {
 proc IllustrateButton {xx yy} {
     global ds9
     global illustrate
-    global pillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButton [$ds9(canvas) find closest $xx $yy 1]"
     }
+
+    switch $illustrate(mode) {
+	pointer {IllustrateButtonPointer $xx $yy}
+	graphics {IllustrateButtonGraphics $xx $yy}
+    }
+}
+
+proc IllustrateButtonGraphics {xx yy} {
+    global ds9
+    global illustrate
+    global pillustrate
 
     if {$illustrate(fill)} {
 	set fill $illustrate(color,fill)
@@ -159,7 +170,8 @@ proc IllustrateButton {xx yy} {
     } else {
 	set dash {}
     }
-    switch $illustrate(mode) {
+
+    switch $illustrate(shape) {
 	pointer {}
 	circle {
 	    set rr $pillustrate(circle,radius)

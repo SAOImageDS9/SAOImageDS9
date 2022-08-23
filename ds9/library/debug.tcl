@@ -68,7 +68,7 @@ proc DebugMenu {} {
     ThemeMenu $ds9(mb).debug.tcl
     $ds9(mb).debug.tcl add checkbutton -label {Events} \
 	-variable debug(tcl,events)
-    $ds9(mb).debug.tcl add checkbutton -label {Illustration} \
+    $ds9(mb).debug.tcl add checkbutton -label {Illustrate} \
 	-variable debug(tcl,illustrate)
     $ds9(mb).debug.tcl add checkbutton -label {Update} \
 	-variable debug(tcl,update)

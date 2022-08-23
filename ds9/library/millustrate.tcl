@@ -11,11 +11,10 @@ proc IllustrateMainMenu {} {
     global illustrate
 
     ThemeMenu $ds9(mb).illustrate
-    $ds9(mb).illustrate add command -label "[msgcat::mc {Get Information}]..." \
-	-command {}
-    $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add cascade -label [msgcat::mc {Mode}] \
-	-menu $ds9(mb).illustrate.mode
+    $ds9(mb).illustrate add radiobutton -label [msgcat::mc {Pointer}] \
+	-variable illustrate(mode) -value pointer
+    $ds9(mb).illustrate add radiobutton -label [msgcat::mc {Graphics}] \
+	-variable illustrate(graphics) -value graphics
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Shape}] \
 	-menu $ds9(mb).illustrate.shape
@@ -39,12 +38,6 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add command -label [msgcat::mc {Invert Selection}]
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete}]
-
-    ThemeMenu $ds9(mb).illustrate.mode
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Pointer}] \
-	-variable illustrate(mode) -value pointer
-    $ds9(mb).illustrate.mode add radiobutton -label [msgcat::mc {Graphics}] \
-	-variable illustrate(graphics) -value graphics
 
     ThemeMenu $ds9(mb).illustrate.shape
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Circle}] \
@@ -78,19 +71,16 @@ proc PrefsDialogIllustrateMenu {w} {
 
     set m $f.menu.menu
     ThemeMenu $m
-    $m add cascade -label [msgcat::mc {Shape}] -menu $m.mode
+    $m add radiobutton -label [msgcat::mc {Pointer}] \
+	-variable pillustrate(mode) -value pointer
+    $m add radiobutton -label [msgcat::mc {Graphics}] \
+	-variable pillustrate(mode) -value graphics
     $m add separator
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add cascade -label [msgcat::mc {Color}] -menu $m.color
     $m add cascade -label [msgcat::mc {Width}] -menu $m.width
     $m add cascade -label [msgcat::mc {Font}] -menu $m.font
     $m add cascade -label [msgcat::mc {Fill Color}] -menu $m.fillcolor
-
-    ThemeMenu $m.mode
-    $m.mode add radiobutton -label [msgcat::mc {Pointer}] \
-	-variable pillustrate(mode) -value pointer
-    $m.mode add radiobutton -label [msgcat::mc {Graphics}] \
-	-variable pillustrate(mode) -value graphics
 
     ThemeMenu $m.shape
     $m.shape add radiobutton -label [msgcat::mc {Circle}] \
@@ -182,7 +172,6 @@ proc ButtonsIllustrateDef {} {
     global pbuttons
 
     array set pbuttons {
-	illustrate,info 1
 	illustrate,pointer 1
 	illustrate,graphics 1
 	illustrate,circle 1
@@ -206,9 +195,6 @@ proc CreateButtonsIllustrate {} {
     global ds9
 
     ttk::frame $ds9(buttons).illustrate
-
-    ButtonButton $ds9(buttons).illustrate.info \
-	[string tolower [msgcat::mc {Information}]] {}
 
     RadioButton $ds9(buttons).illustrate.pointer \
 	[string tolower [msgcat::mc {Pointer}]] \
@@ -256,7 +242,6 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Delete}]] {}
 
     set buttons(illustrate) "
-        $ds9(buttons).illustrate.info pbuttons(illustrate,info)
         $ds9(buttons).illustrate.pointer pbuttons(illustrate,pointer)
         $ds9(buttons).illustrate.graphics pbuttons(illustrate,graphics)
         $ds9(buttons).illustrate.circle pbuttons(illustrate,circle)
@@ -283,11 +268,12 @@ proc PrefsDialogButtonbarIllustrate {f} {
     
     set m $f.menu
     ThemeMenu $m
-    $m add checkbutton -label "[msgcat::mc {Get Information}]..." \
-	-variable pbuttons(illustrate,info) \
+    $m add checkbutton -label [msgcat::mc {Pointer}] \
+	-variable pbuttons(illustrate,pointer) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m add separator
-    $m add cascade -label [msgcat::mc {Mode}] -menu $m.mode
+    $m add checkbutton -label [msgcat::mc {Graphics}] \
+	-variable pbuttons(illustrate,graphics) \
+	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add separator
@@ -314,14 +300,6 @@ proc PrefsDialogButtonbarIllustrate {f} {
     $m add separator
     $m add checkbutton -label [msgcat::mc {Delete}] \
 	-variable pbuttons(illustrate,delete) \
-	-command {UpdateButtons buttons(illustrate)}
-
-    ThemeMenu $m.mode
-    $m.mode add checkbutton -label [msgcat::mc {Pointer}] \
-	-variable pbuttons(illustrate,pointer) \
-	-command {UpdateButtons buttons(illustrate)}
-    $m.mode add checkbutton -label [msgcat::mc {Graphics}] \
-	-variable pbuttons(illustrate,graphics) \
 	-command {UpdateButtons buttons(illustrate)}
 
     ThemeMenu $m.shape

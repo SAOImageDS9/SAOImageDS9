@@ -323,4 +323,24 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-command {UpdateButtons buttons(illustrate)}
 }
 
+proc UpdateIllustrateMenu {} {
+    global ds9
+    global current
+
+    global debug
+    if {$debug(tcl,update)} {
+	puts stderr "UpdateIllustrateMenu"
+    }
+
+    switch -- $current(mode) {
+	illustrate {
+	    $ds9(mb) entryconfig [msgcat::mc {Illustrate}] -state normal
+	    ConfigureButtons illustrate normal
+	}
+	default {
+	    $ds9(mb) entryconfig [msgcat::mc {Illustrate}] -state disabled
+	    ConfigureButtons illustrate disabled
+	}
+    }
+}
 

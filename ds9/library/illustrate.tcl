@@ -6,7 +6,11 @@ package provide DS9 1.0
 
 proc IllustrateDef {} {
     global illustrate
+    global iillustrate
     global pillustrate
+
+    set iillustrate(selected) {}
+    set iillustrate(motion) none
 
     set illustrate(mode) pointer
 
@@ -20,8 +24,6 @@ proc IllustrateDef {} {
     set illustrate(font,size) 12
     set illustrate(font,weight) normal
     set illustrate(font,slant) roman
-
-    set illustrate(selected) {}
 
     array set pillustrate [array get illustrate]
 
@@ -108,9 +110,30 @@ proc UnBindEventsIllustrate {} {
 
     bind $ds9(canvas) <Key> {}
     bind $ds9(canvas) <KeyRelease> {}
+}
+
+proc IllustrateModeBegin {} {
+    global iillustrate
+
+    set iillustrate(selected) {}
+    set iillustrate(motion) none
 
     IllustrateGraphicUnhighliteAll
-    set illustrate(selected) {}
+
+    BindEventsIllustrate
+    UpdateIllustrateMenu
+}
+
+proc IllustrateModeEnd {} {
+    global iillustrate
+
+    set iillustrate(selected) {}
+    set iillustrate(motion) none
+
+    IllustrateGraphicUnhighliteAll
+
+    UnBindEventsIllustrate
+    UpdateIllustrateMenu
 }
 
 proc IllustrateEnter {} {
@@ -164,34 +187,45 @@ proc IllustrateButtonPointer {xx yy} {
 }
 
 proc IllustrateButtonGraphic {xx yy} {
-    global ds9
     global illustrate
-    global pillustrate
+    global iillustrate
 
     # see if we are on a handle
     set id [IllustrateGraphicFind handle $xx $yy]
     if {$id != {}} {
-	puts "handle $id"
 	return
     }
 
+    # segment of polygon
+    
     # see if we are on a graphic
     set id [IllustrateGraphicFind top $xx $yy]
     if {$id != {}} {
 	IllustrateGraphicUnhighliteAll
 	IllustrateGraphicHighlite $id
-	set illustrate(selected) $id
-	puts "select: $id"
+	set iillustrate(selected) $id
+	set iillustrate(motion) beginMove
 	return
     }
 
     # create new graphic
     IllustrateGraphicUnhighliteAll
-    if {$illustrate(selected) != {}} {
-	set illustrate(selected) {}
-	puts "unselect"
+    if {$iillustrate(selected) != {}} {
+	set iillustrate(selected) {}
+	set iillustrate(motion) none
 	return
     }
+
+    set iilustrate(motion) none
+
+    IllustrateCreateGraphic $xx $yy
+}
+
+proc IllustrateCreateGraphic {xx yy} {
+    global ds9
+    global illustrate
+    global iillustrate
+    global pillustrate
 
     if {$illustrate(fill)} {
 	set fill $illustrate(color,fill)
@@ -267,21 +301,74 @@ proc IllustrateButtonGraphic {xx yy} {
 proc IllustrateButtonMotion {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButtonMotion"
+    }
+
+    switch -- $iillustrate(motion) {
+	none {}
+
+	beginCreate -
+	create {
+	}
+
+	beginMove -
+	move {
+	    puts "$xx $yy"
+	    set iilustrate(motion) move
+	}
+
+	beginEdit -
+	edit {
+	}
+
+	beginRotate -
+	rotate {
+	}
+
+	region -
+	shiftregion {
+	}
     }
 }
 
 proc IllustrateButtonRelease {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButtonRelease"
     }
+
+    switch -- $iillustrate(motion) {
+	none {}
+
+	beginCreate -
+	create {
+	}
+
+	beginMove -
+	move {
+	}
+
+	beginEdit -
+	edit {
+	}
+
+	beginRotate -
+	rotate {
+	}
+
+	region -
+	shiftregion {
+	}
+    }
+    set iilustrate(motion) none
 }
 
 proc IllustrateKey {K A xx yy} {

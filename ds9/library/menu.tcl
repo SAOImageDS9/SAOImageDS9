@@ -26,7 +26,9 @@ proc CreateMenuBar {} {
     $ds9(mb) add cascade -label [msgcat::mc {Color}] -menu $ds9(mb).color
     $ds9(mb) add cascade -label [msgcat::mc {Region}] -menu $ds9(mb).region
     $ds9(mb) add cascade -label [msgcat::mc {WCS}] -menu $ds9(mb).wcs
-    $ds9(mb) add cascade -label [msgcat::mc {Illustrate}] -menu $ds9(mb).illustrate
+    # on purpose
+    $ds9(mb) add cascade -label [msgcat::mc {Illustrate}] \
+	-menu $ds9(mb).illustrate -state disabled
     $ds9(mb) add cascade -label [msgcat::mc {Analysis}] -menu $ds9(mb).analysis
 
     FileMainMenu

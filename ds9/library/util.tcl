@@ -17,6 +17,7 @@ proc CurrentDef {} {
 
     set current(display) single
     set current(mode) none
+    set current(mode,illustrate) 0
     set current(zoom) {1 1}
     set current(rotate) 0
     set current(orient) none
@@ -88,7 +89,6 @@ proc UpdateDS9 {} {
     UpdateRegionMenu
     # wcs(system) set here
     UpdateWCSMenu 
-    UpdateIllustrateMenu
     UpdateAnalysisMenu
     UpdateAnalysisButtonbar
 
@@ -968,17 +968,25 @@ proc ChangeMode {} {
     }
 
     UpdateRegionMenu
-    UpdateIllustrateMenu
 
     RefreshInfoBox $current(frame)
     PixelTableClearDialog
 
-    # events
-    UnBindEventsCanvas
-    UnBindEventsIllustrate
+    # illustrate
+    if {$current(mode,illustrate)} {
+	set current(mode,illustrate) 0
+
+	IllustrateModeEnd
+	BindEventsCanvas
+    }
+
     switch -- $current(mode) {
-	illustrate {BindEventsIllustrate}
-	default {BindEventsCanvas}
+	illustrate {
+	    set current(mode,illustrate) 1
+	    UnBindEventsCanvas
+	    IllustrateModeBegin
+	}
+	default {}
     }
 
     # cursor

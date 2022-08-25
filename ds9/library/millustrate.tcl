@@ -335,11 +335,9 @@ proc UpdateIllustrateMenu {} {
     switch -- $current(mode) {
 	illustrate {
 	    $ds9(mb) entryconfig [msgcat::mc {Illustrate}] -state normal
-	    ConfigureButtons illustrate normal
 	}
 	default {
 	    $ds9(mb) entryconfig [msgcat::mc {Illustrate}] -state disabled
-	    ConfigureButtons illustrate disabled
 	}
     }
 }

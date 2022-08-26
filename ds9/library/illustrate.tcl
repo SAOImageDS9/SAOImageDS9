@@ -12,7 +12,7 @@ proc IllustrateDef {} {
     set iillustrate(selected) {}
     set iillustrate(motion) none
 
-    set illustrate(mode) pointer
+    set illustrate(mode) graphics
 
     set illustrate(shape) circle
     set illustrate(color) cyan
@@ -187,6 +187,7 @@ proc IllustrateButtonPointer {xx yy} {
 }
 
 proc IllustrateButtonGraphic {xx yy} {
+    global ds9
     global illustrate
     global iillustrate
 
@@ -203,8 +204,18 @@ proc IllustrateButtonGraphic {xx yy} {
     if {$id != {}} {
 	IllustrateGraphicUnhighliteAll
 	IllustrateGraphicHighlite $id
-	set iillustrate(selected) $id
+
+	set coords [$ds9(canvas) coords $id]
+	set color [$ds9(canvas) itemcget $id -outline]
+	set fill [$ds9(canvas) itemcget $id -fill]
+	set dash [$ds9(canvas) itemcget $id -dash]
+
+	set iillustrate(selected) [list [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]]
+
+	set iillustrate(selected,xx) $xx
+	set iillustrate(selected,yy) $yy
 	set iillustrate(motion) beginMove
+
 	return
     }
 
@@ -219,6 +230,156 @@ proc IllustrateButtonGraphic {xx yy} {
     set iilustrate(motion) none
 
     IllustrateCreateGraphic $xx $yy
+}
+
+proc IllustrateButtonMotion {xx yy} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    global debug
+    if {$debug(tcl,illustrate)} {
+	puts "IllustrateButtonMotion"
+    }
+
+    switch -- $iillustrate(motion) {
+	none {}
+
+	beginCreate -
+	create {
+	}
+
+	beginMove {
+	    set dx [expr $xx-$iillustrate(selected,xx)]
+	    set dy [expr $yy-$iillustrate(selected,yy)]
+
+	    if {$dx==0 && $dy==0} {
+		return
+	    }
+
+	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(selected) {
+		$ds9(canvas) itemconfigure $id \
+		    -outline white \
+		    -fill {} \
+		    -dash {8 3}
+	    }
+	}
+	set iillustrate(motion) move
+    }
+    move {
+	foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(selected) {
+	    set dx [expr $xx-$iillustrate(selected,xx)]
+	    set dy [expr $yy-$iillustrate(selected,yy)]
+
+	    puts "$dx $dy"
+
+	    set nx1 [expr $dx+$x1]
+	    set ny1 [expr $dy+$y1]
+	    set nx2 [expr $dx+$x2]
+	    set ny2 [expr $dy+$y2]
+
+	    $ds9(canvas) coords $id $nx1 $ny1 $nx2 $ny2
+	}
+    }
+
+    beginEdit -
+    edit {
+    }
+
+    beginRotate -
+    rotate {
+    }
+
+    region -
+    shiftregion {
+    }
+}
+}
+
+proc IllustrateButtonRelease {xx yy} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    global debug
+    if {$debug(tcl,illustrate)} {
+	puts "IllustrateButtonRelease"
+    }
+
+    switch -- $iillustrate(motion) {
+	none {}
+
+	beginCreate -
+	create {
+	}
+
+	beginMove {}
+	move {
+	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(selected) {
+		$ds9(canvas) itemconfigure $id \
+		    -outline $color \
+		    -fill $fill \
+		    -dash $dash
+	    }
+	}
+
+	beginEdit -
+	edit {
+	}
+
+	beginRotate -
+	rotate {
+	}
+
+	region -
+	shiftregion {
+	}
+    }
+    set iilustrate(motion) none
+}
+
+proc IllustrateKey {K A xx yy} {
+    global ds9
+    global illustrate
+
+    # MacOSX and maybe Ubuntu returns bogus values in xx,yy
+    # calculate our own values
+    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
+    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
+
+    global debug
+    if {$debug(tcl,illustrate)} {
+	puts "IllustrateKey $K $A $xx $yy"
+    }
+
+    switch -- $K {
+	Delete -
+	BackSpace {}
+
+	Up -
+	k {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]}
+	Down -
+	j {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy+1]}
+	Left -
+	h {event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx-1] -y $yy}
+	Right -
+	l {event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx+1] -y $yy}
+    }
+}
+
+proc IllustrateKeyRelease {K A xx yy} {
+    global ds9
+    global illustrate
+
+    # MacOSX and Ubuntu returns bogus values in xx,yy
+    # calculate our own values
+    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
+    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
+
+    global debug
+    if {$debug(tcl,illustrate)} {
+	puts "IllustrateKeyRelease $K $A $xx $yy"
+    }
 }
 
 proc IllustrateCreateGraphic {xx yy} {
@@ -295,123 +456,6 @@ proc IllustrateCreateGraphic {xx yy} {
 		}
 	    }
 	}
-    }
-}
-
-proc IllustrateButtonMotion {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
-
-    global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonMotion"
-    }
-
-    switch -- $iillustrate(motion) {
-	none {}
-
-	beginCreate -
-	create {
-	}
-
-	beginMove -
-	move {
-	    puts "$xx $yy"
-	    set iilustrate(motion) move
-	}
-
-	beginEdit -
-	edit {
-	}
-
-	beginRotate -
-	rotate {
-	}
-
-	region -
-	shiftregion {
-	}
-    }
-}
-
-proc IllustrateButtonRelease {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
-
-    global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonRelease"
-    }
-
-    switch -- $iillustrate(motion) {
-	none {}
-
-	beginCreate -
-	create {
-	}
-
-	beginMove -
-	move {
-	}
-
-	beginEdit -
-	edit {
-	}
-
-	beginRotate -
-	rotate {
-	}
-
-	region -
-	shiftregion {
-	}
-    }
-    set iilustrate(motion) none
-}
-
-proc IllustrateKey {K A xx yy} {
-    global ds9
-    global illustrate
-
-    # MacOSX and maybe Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
-    global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateKey $K $A $xx $yy"
-    }
-
-    switch -- $K {
-	Delete -
-	BackSpace {}
-
-	Up -
-	k {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]}
-	Down -
-	j {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy+1]}
-	Left -
-	h {event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx-1] -y $yy}
-	Right -
-	l {event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx+1] -y $yy}
-    }
-}
-
-proc IllustrateKeyRelease {K A xx yy} {
-    global ds9
-    global illustrate
-
-    # MacOSX and Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
-    global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateKeyRelease $K $A $xx $yy"
     }
 }
 

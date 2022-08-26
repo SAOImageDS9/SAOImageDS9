@@ -685,6 +685,30 @@ proc FontMenuButton {w varname font size weight slant cmd} {
     FontMenu $w.menu $varname $font $size $weight $slant $cmd
 }
 
+# WidthMenu
+proc WidthMenu {w varname width cmd} {
+    upvar #0 $varname var
+    global $varname
+
+    ThemeMenu $w
+    $w add radiobutton -label {1} -variable ${varname}($width) \
+	-value 1 -command $cmd
+    $w add radiobutton -label {2} -variable ${varname}($width) \
+	-value 2 -command $cmd
+    $w add radiobutton -label {3} -variable ${varname}($width) \
+	-value 3 -command $cmd
+    $w add radiobutton -label {4} -variable ${varname}($width) \
+	-value 4 -command $cmd
+}
+
+proc WidthMenuButton {w varname width dash cmd} {
+    upvar #0 $varname var
+    global $varname
+    
+    ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
+    WidthMenu $w.menu $varname $width $cmd
+}
+
 # WidthDashMenu
 proc WidthDashMenu {w varname width dash cmd1 cmd2} {
     upvar #0 $varname var
@@ -699,12 +723,9 @@ proc WidthDashMenu {w varname width dash cmd1 cmd2} {
 	-value 3 -command $cmd1
     $w add radiobutton -label {4} -variable ${varname}($width) \
 	-value 4 -command $cmd1
-
-    if {$dash != {}} {
-	$w add separator
-	$w add checkbutton -label [msgcat::mc {Dash}] \
-	    -variable ${varname}($dash) -command $cmd2
-    }
+    $w add separator
+    $w add checkbutton -label [msgcat::mc {Dash}] \
+	-variable ${varname}($dash) -command $cmd2
 }
 
 proc WidthDashMenuButton {w varname width dash cmd1 cmd2} {
@@ -713,6 +734,36 @@ proc WidthDashMenuButton {w varname width dash cmd1 cmd2} {
     
     ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
     WidthDashMenu $w.menu $varname $width $dash $cmd1 $cmd2
+}
+
+# WidthDashFillMenu
+proc WidthDashFillMenu {w varname width dash fill cmd1 cmd2 cmd3} {
+    upvar #0 $varname var
+    global $varname
+
+    ThemeMenu $w
+    $w add radiobutton -label {1} -variable ${varname}($width) \
+	-value 1 -command $cmd1
+    $w add radiobutton -label {2} -variable ${varname}($width) \
+	-value 2 -command $cmd1
+    $w add radiobutton -label {3} -variable ${varname}($width) \
+	-value 3 -command $cmd1
+    $w add radiobutton -label {4} -variable ${varname}($width) \
+	-value 4 -command $cmd1
+    $w add separator
+    $w add checkbutton -label [msgcat::mc {Dash}] \
+	-variable ${varname}($dash) -command $cmd2
+    $w add separator
+    $w add checkbutton -label [msgcat::mc {Fill}] \
+	-variable ${varname}($fill) -command $cmd3
+}
+
+proc WidthDashFillMenuButton {w varname width dash fill cmd1 cmd2 cmd3} {
+    upvar #0 $varname var
+    global $varname
+    
+    ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
+    WidthDashFillMenu $w.menu $varname $width $dash $fill $cmd1 $cmd2 $cmd3
 }
 
 # Prefs

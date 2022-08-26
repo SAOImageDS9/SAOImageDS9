@@ -32,8 +32,8 @@ proc BoxDialog {varname} {
     MarkerBaseCenterDialog $varname
 
     # menu
-    $var(mb).width add separator
-    $var(mb).width add checkbutton -label [msgcat::mc {Fill}] \
+    $var(mb).color add separator
+    $var(mb).color add checkbutton -label [msgcat::mc {Fill}] \
 	-variable ${varname}(fill) -command [list BoxFill $varname]
 
     # analysis

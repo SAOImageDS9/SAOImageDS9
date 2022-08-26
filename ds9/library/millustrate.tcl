@@ -18,17 +18,13 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Shape}] \
 	-menu $ds9(mb).illustrate.shape
+    $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Color}] \
 	-menu $ds9(mb).illustrate.color
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Width}] \
 	-menu $ds9(mb).illustrate.width
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Font}] \
 	-menu $ds9(mb).illustrate.font
-    $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add checkbutton -label [msgcat::mc {Fill}] \
-	-variable illustrate(fill)
-    $ds9(mb).illustrate add cascade -label [msgcat::mc {Fill Color}] \
-	-menu $ds9(mb).illustrate.fillcolor
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Move to Front}]
     $ds9(mb).illustrate add command -label [msgcat::mc {Move to Back}]
@@ -53,12 +49,12 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable illustrate(shape) -value text
 
-    ColorMenu $ds9(mb).illustrate.color illustrate color {}
-    ColorMenu $ds9(mb).illustrate.fillcolor illustrate color,fill {}
+    ColorMenu $ds9(mb).illustrate.color illustrate color \
+	IllustrateUpdateGraphic
     WidthDashMenu $ds9(mb).illustrate.width illustrate width dash \
-	{} {}
+	IllustrateUpdateGraphic IllustrateUpdateGraphic
     FontMenu $ds9(mb).illustrate.font illustrate font font,size font,weight \
-	font,slant {}
+	font,slant IllustrateUpdateGraphic
 }
 
 proc PrefsDialogIllustrateMenu {w} {
@@ -77,10 +73,10 @@ proc PrefsDialogIllustrateMenu {w} {
 	-variable pillustrate(mode) -value graphics
     $m add separator
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
+    $m add separator
     $m add cascade -label [msgcat::mc {Color}] -menu $m.color
     $m add cascade -label [msgcat::mc {Width}] -menu $m.width
     $m add cascade -label [msgcat::mc {Font}] -menu $m.font
-    $m add cascade -label [msgcat::mc {Fill Color}] -menu $m.fillcolor
 
     ThemeMenu $m.shape
     $m.shape add radiobutton -label [msgcat::mc {Circle}] \
@@ -97,7 +93,6 @@ proc PrefsDialogIllustrateMenu {w} {
 	-variable pillustrate(shape) -value text
 
     ColorMenu $m.color pillustrate color {}
-    ColorMenu $m.fillcolor pillustrate color,fill {}
     WidthDashMenu $m.width pillustrate width dash {} {}
     FontMenu $m.font pillustrate font font,size font,weight font,slant {}
 
@@ -180,7 +175,6 @@ proc ButtonsIllustrateDef {} {
 	illustrate,polygon 1
 	illustrate,line 1
 	illustrate,text 1
-	illustrate,fill 1
 	illustrate,front 1
 	illustrate,back 1
 	illustrate,all 1
@@ -222,10 +216,6 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Text}]] \
 	illustrate shape text {}
 
-    CheckButton $ds9(buttons).illustrate.fill \
-	[string tolower [msgcat::mc {Fill}]] \
-	illustrate fill {}
-
     ButtonButton $ds9(buttons).illustrate.front \
 	[string tolower [msgcat::mc {Front}]] {}
     ButtonButton $ds9(buttons).illustrate.back \
@@ -251,7 +241,6 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.line pbuttons(illustrate,line)
         $ds9(buttons).illustrate.text pbuttons(illustrate,text)
         $ds9(buttons).illustrate.front pbuttons(illustrate,front)
-        $ds9(buttons).illustrate.fill pbuttons(illustrate,fill)
         $ds9(buttons).illustrate.back pbuttons(illustrate,back)
         $ds9(buttons).illustrate.all pbuttons(illustrate,all)
         $ds9(buttons).illustrate.none pbuttons(illustrate,none)
@@ -276,10 +265,6 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
-    $m add separator
-    $m add checkbutton -label [msgcat::mc {Fill}] \
-	-variable pbuttons(illustrate,fill) \
-	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Move to Front}] \
 	-variable pbuttons(illustrate,front) \

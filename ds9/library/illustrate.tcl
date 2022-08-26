@@ -192,7 +192,7 @@ proc IllustrateButtonGraphic {xx yy} {
     global iillustrate
 
     # see if we are on a handle
-    set id [IllustrateGraphicFind handle $xx $yy]
+    set id [IllustrateFindGraphic handle $xx $yy]
     if {$id != {}} {
 	return
     }
@@ -200,7 +200,7 @@ proc IllustrateButtonGraphic {xx yy} {
     # segment of polygon
     
     # see if we are on a graphic
-    set id [IllustrateGraphicFind top $xx $yy]
+    set id [IllustrateFindGraphic top $xx $yy]
     if {$id != {}} {
 	IllustrateGraphicUnhighliteAll
 	IllustrateGraphicHighlite $id
@@ -210,7 +210,7 @@ proc IllustrateButtonGraphic {xx yy} {
 	set fill [$ds9(canvas) itemcget $id -fill]
 	set dash [$ds9(canvas) itemcget $id -dash]
 
-	set iillustrate(selected) [list [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]]
+	set iillustrate(selected) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
 
 	set iillustrate(selected,xx) $xx
 	set iillustrate(selected,yy) $yy
@@ -263,37 +263,34 @@ proc IllustrateButtonMotion {xx yy} {
 		    -fill {} \
 		    -dash {8 3}
 	    }
+	    set iillustrate(motion) move
 	}
-	set iillustrate(motion) move
-    }
-    move {
-	foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(selected) {
-	    set dx [expr $xx-$iillustrate(selected,xx)]
-	    set dy [expr $yy-$iillustrate(selected,yy)]
+	move {
+	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(selected) {
+		set dx [expr $xx-$iillustrate(selected,xx)]
+		set dy [expr $yy-$iillustrate(selected,yy)]
 
-	    puts "$dx $dy"
+		set nx1 [expr $dx+$x1]
+		set ny1 [expr $dy+$y1]
+		set nx2 [expr $dx+$x2]
+		set ny2 [expr $dy+$y2]
 
-	    set nx1 [expr $dx+$x1]
-	    set ny1 [expr $dy+$y1]
-	    set nx2 [expr $dx+$x2]
-	    set ny2 [expr $dy+$y2]
+		$ds9(canvas) coords $id $nx1 $ny1 $nx2 $ny2
+	    }
+	}
 
-	    $ds9(canvas) coords $id $nx1 $ny1 $nx2 $ny2
+	beginEdit -
+	edit {
+	}
+
+	beginRotate -
+	rotate {
+	}
+
+	region -
+	shiftregion {
 	}
     }
-
-    beginEdit -
-    edit {
-    }
-
-    beginRotate -
-    rotate {
-    }
-
-    region -
-    shiftregion {
-    }
-}
 }
 
 proc IllustrateButtonRelease {xx yy} {
@@ -407,7 +404,8 @@ proc IllustrateCreateGraphic {xx yy} {
 	    $ds9(canvas) create oval \
 		[expr $xx-$rr] [expr $yy-$rr] \
 		[expr $xx+$rr] [expr $yy+$rr]\
-		-outline $color -fill $fill \
+		-outline $color \
+		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash -tags top
 	}
@@ -417,7 +415,8 @@ proc IllustrateCreateGraphic {xx yy} {
 	    $ds9(canvas) create oval \
 		[expr $xx-$rr1] [expr $yy-$rr2] \
 		[expr $xx+$rr1] [expr $yy+$rr2]\
-		-outline $color -fill $fill \
+		-outline $color \
+		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash -tags top
 	}
@@ -427,7 +426,8 @@ proc IllustrateCreateGraphic {xx yy} {
 	    $ds9(canvas) create rectangle \
 		[expr $xx-$rr1] [expr $yy-$rr2] \
 		[expr $xx+$rr1] [expr $yy+$rr2]\
-		-outline $color -fill $fill \
+		-outline $color \
+		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash -tags top
 	}
@@ -439,7 +439,8 @@ proc IllustrateCreateGraphic {xx yy} {
 		[expr $xx+$rr1] [expr $yy-$rr2] \
 		[expr $xx+$rr1] [expr $yy+$rr2]\
 		[expr $xx-$rr1] [expr $yy+$rr2]\
-		-outline $color	-fill $fill \
+		-outline $color	\
+		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash -tags top
 	}
@@ -459,7 +460,35 @@ proc IllustrateCreateGraphic {xx yy} {
     }
 }
 
-proc IllustrateGraphicFind {tag xx yy} {
+proc IllustrateUpdateGraphic {} {
+    global ds9
+    global illustrate
+    global iillustrate
+    
+    if {$illustrate(fill)} {
+	set fill $illustrate(color,fill)
+	set color $illustrate(color,fill)
+    } else {
+	set fill {}
+	set color $illustrate(color)
+    }
+    if {$illustrate(dash)} {
+	set dash {8 3}
+    } else {
+	set dash {}
+    }
+
+    puts "$color : $fill : $dash"
+    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(selected) {
+	$ds9(canvas) itemconfigure $id \
+	    -outline $color \
+	    -fill $fill \
+	    -width $illustrate(width) \
+	    -dash $dash 
+    }
+}
+
+proc IllustrateFindGraphic {tag xx yy} {
     global ds9
 
     set found {}

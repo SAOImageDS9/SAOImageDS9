@@ -116,8 +116,8 @@ proc PlotLineMenus {varname} {
 
     ColorMenu $var(mb).dataline.error.color $varname graph,ds,error,color \
 	[list PlotLineUpdateElement $varname]
-    WidthDashMenu $var(mb).dataline.error.width $varname \
-	graph,ds,error,width {} [list PlotLineUpdateElement $varname] {}
+    WidthMenu $var(mb).dataline.error.width $varname \
+	graph,ds,error,width [list PlotLineUpdateElement $varname]
 }
 
 proc PlotLineWidthMenu {w varname cmd} {

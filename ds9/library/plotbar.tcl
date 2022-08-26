@@ -101,8 +101,8 @@ proc PlotBarMenus {varname} {
 
     ColorMenu $var(mb).databar.error.color $varname graph,ds,error,color \
 	[list PlotBarUpdateElement $varname]
-    WidthDashMenu $var(mb).databar.error.width $varname graph,ds,error,width \
-	{} [list PlotBarUpdateElement $varname] {}
+    WidthMenu $var(mb).databar.error.width $varname graph,ds,error,width \
+	[list PlotBarUpdateElement $varname]
 }
 
 proc PlotBarWidthDialog {varname} {

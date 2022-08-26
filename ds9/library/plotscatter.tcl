@@ -90,8 +90,8 @@ proc PlotScatterMenus {varname} {
 
     ColorMenu $var(mb).datascatter.error.color $varname \
 	graph,ds,error,color [list PlotScatterUpdateElement $varname]
-    WidthDashMenu $var(mb).datascatter.error.width $varname \
-	graph,ds,error,width {} [list PlotScatterUpdateElement $varname] {}
+    WidthMenu $var(mb).datascatter.error.width $varname \
+	graph,ds,error,width [list PlotScatterUpdateElement $varname]
 }
 
 proc PlotScatterShapeMenu {w var cmd} {

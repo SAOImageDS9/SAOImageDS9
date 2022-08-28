@@ -65,9 +65,9 @@ proc BindEventsIllustrate {} {
     bind $ds9(canvas) <B1-Motion> {IllustrateButtonMotion %x %y}
     bind $ds9(canvas) <ButtonRelease-1> {IllustrateButtonRelease %x %y}
 
-    bind $ds9(canvas) <Shift-Button-1> {}
-    bind $ds9(canvas) <Shift-B1-Motion> {}
-    bind $ds9(canvas) <Shift-ButtonRelease-1> {}
+    bind $ds9(canvas) <Shift-Button-1> {IllustrateShiftButton %x %y}
+    bind $ds9(canvas) <Shift-B1-Motion> {IllustrateShiftButtonMotion %x %y}
+    bind $ds9(canvas) <Shift-ButtonRelease-1> {IllustrateShiftButtonRelease %x %y}
 
     bind $ds9(canvas) <Key> {IllustrateKey %K %A %x %y}
     bind $ds9(canvas) <KeyRelease> {IllustrateKeyRelease %K %A %x %y}
@@ -157,6 +157,8 @@ proc IllustrateLeave {} {
     focus {}
 }
 
+# Motion
+
 proc IllustrateMotion {xx yy} {
     global ds9
     global illustrate
@@ -167,22 +169,21 @@ proc IllustrateMotion {xx yy} {
     }
 }
 
+# Button
+
 proc IllustrateButton {xx yy} {
     global ds9
     global illustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
-	puts "IllustrateButton [$ds9(canvas) find closest $xx $yy 1]"
+	puts "IllustrateButton $xx $yy"
     }
 
     switch $illustrate(mode) {
-	pointer {IllustrateButtonPointer $xx $yy}
+	pointer {}
 	graphics {IllustrateButtonGraphic $xx $yy}
     }
-}
-
-proc IllustrateButtonPointer {xx yy} {
 }
 
 proc IllustrateButtonGraphic {xx yy} {
@@ -234,12 +235,22 @@ proc IllustrateButtonGraphic {xx yy} {
 proc IllustrateButtonMotion {xx yy} {
     global ds9
     global illustrate
-    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonMotion"
+	puts "IllustrateButtonMotion $xx $yy"
     }
+
+    switch $illustrate(mode) {
+	pointer {}
+	graphics {IllustrateButtonMotionGraphic $xx $yy}
+    }
+}
+
+proc IllustrateButtonMotionGraphic {xx yy} {
+    global ds9
+    global illustrate
+    global iillustrate
 
     switch -- $iillustrate(motion) {
 	none {}
@@ -331,12 +342,22 @@ proc IllustrateButtonMotion {xx yy} {
 proc IllustrateButtonRelease {xx yy} {
     global ds9
     global illustrate
-    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonRelease"
+	puts "IllustrateButtonRelease $xx $yy"
     }
+
+    switch $illustrate(mode) {
+	pointer {}
+	graphics {IllustrateButtonReleaseGraphic $xx $yy}
+    }
+}
+
+proc IllustrateButtonReleaseGraphic {xx yy} {
+    global ds9
+    global illustrate
+    global iillustrate
 
     switch -- $iillustrate(motion) {
 	none {}
@@ -377,6 +398,55 @@ proc IllustrateButtonRelease {xx yy} {
     }
     set iilustrate(motion) none
 }
+
+# Shift Button
+
+proc IllustrateShiftButton {xx yy} {
+    global ds9
+    global illustrate
+
+    global debug
+    if {$debug(tcl,illustrate)} {
+	puts "IllustrateShiftButton $xx $yy"
+    }
+
+    switch $illustrate(mode) {
+	pointer {}
+	graphics {}
+    }
+}
+
+proc IllustrateShiftButtonMotion {xx yy} {
+    global ds9
+    global illustrate
+
+    global debug
+    if {$debug(tcl,illustrate)} {
+	puts "IllustrateShiftButtonMotion"
+    }
+
+    switch $illustrate(mode) {
+	pointer {}
+	graphics {}
+    }
+}
+
+proc IllustrateShiftButtonRelease {xx yy} {
+    global ds9
+    global illustrate
+
+    global debug
+    if {$debug(tcl,illustrate)} {
+	puts "IllustrateShiftButtonRelease"
+    }
+
+    switch $illustrate(mode) {
+	pointer {}
+	graphics {}
+    }
+}
+
+# Key
 
 proc IllustrateKey {K A xx yy} {
     global ds9
@@ -627,18 +697,7 @@ proc IllustrateFindGraphic {tag xx yy} {
     # check to see if found item is a graphic
     if {$found != {}} {
 	if {[lsearch [$ds9(canvas) gettags $found] $tag] == -1} {
-	    puts "$tag not found"
 	    set found {}
-	}
-	if {0} {
-	switch [$ds9(canvas) type $found] {
-	    oval -
-	    polygon -
-	    rectangle -
-	    line -
-	    text {}
-	    default {set found {}}
-	}
 	}
     }
 

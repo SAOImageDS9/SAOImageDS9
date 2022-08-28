@@ -49,8 +49,8 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable illustrate(shape) -value text
 
-    ColorMenu $ds9(mb).illustrate.color illustrate color \
-	IllustrateUpdateGraphic
+    ColorFillMenu $ds9(mb).illustrate.color illustrate color fill \
+	IllustrateUpdateGraphic IllustrateUpdateGraphic
     WidthDashMenu $ds9(mb).illustrate.width illustrate width dash \
 	IllustrateUpdateGraphic IllustrateUpdateGraphic
     FontMenu $ds9(mb).illustrate.font illustrate font font,size font,weight \

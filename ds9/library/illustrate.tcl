@@ -199,7 +199,7 @@ proc IllustrateButtonGraphic {xx yy} {
     # segment of polygon
     
     # see if we are on a graphic
-    set id [IllustrateFindGraphic top $xx $yy]
+    set id [IllustrateFindGraphic graphic $xx $yy]
     if {$id != {}} {
 	IllustrateGraphicUnhighliteAll
 	IllustrateGraphicHighlite $id
@@ -209,7 +209,7 @@ proc IllustrateButtonGraphic {xx yy} {
 	set fill [$ds9(canvas) itemcget $id -fill]
 	set dash [$ds9(canvas) itemcget $id -dash]
 
-	set iillustrate(selection) [list [list $id [lindex $coords 0] [lindex $coords 1] $color $fill $dash]]
+	set iillustrate(selection) [list [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]]
 
 	set iillustrate(selection,xx) $xx
 	set iillustrate(selection,yy) $yy
@@ -257,7 +257,7 @@ proc IllustrateButtonMotion {xx yy} {
 	    }
 
 	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 color fill dash} $gr {
+		foreach {id x1 y1 x2 y2 color fill dash} $gr {
 		    # graphic
 		    $ds9(canvas) itemconfigure $id \
 			-outline white \
@@ -265,7 +265,7 @@ proc IllustrateButtonMotion {xx yy} {
 			-dash {8 3}
 
 		    # handles
-		    foreach hh [$ds9(canvas) find withtag h${id}] {
+		    foreach hh [$ds9(canvas) find withtag gr${id}] {
 			$ds9(canvas) itemconfigure $hh -state hidden
 		    }
 		}
@@ -274,7 +274,7 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	move {
 	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 color fill dash} $gr {
+		foreach {id x1 y1 x2 y2 color fill dash} $gr {
 		    set dx [expr $xx-$iillustrate(selection,xx)]
 		    set dy [expr $yy-$iillustrate(selection,yy)]
 
@@ -284,8 +284,32 @@ proc IllustrateButtonMotion {xx yy} {
 		    $ds9(canvas) moveto $id $nx1 $ny1
 
 		    # handles
-		    foreach hh [$ds9(canvas) find withtag h${id}] {
-		    }
+		    set rr 2
+		    set bbox [$ds9(canvas) bbox $id]
+		    set bbx1 [lindex $bbox 0]
+		    set bby1 [lindex $bbox 1]
+		    set bbx2 [lindex $bbox 2]
+		    set bby2 [lindex $bbox 3]
+
+		    set hh [$ds9(canvas) find withtag "gr${id} && h1"]
+		    $ds9(canvas) coords $hh \
+			[expr $bbx1-$rr] [expr $bby1-$rr] \
+			[expr $bbx1+$rr] [expr $bby1+$rr]
+
+		    set hh [$ds9(canvas) find withtag "gr${id} && h2"]
+		    $ds9(canvas) coords $hh \
+			[expr $bbx2-$rr] [expr $bby1-$rr] \
+			[expr $bbx2+$rr] [expr $bby1+$rr]\
+
+		    set hh [$ds9(canvas) find withtag "gr${id} && h3"]
+		    $ds9(canvas) coords $hh \
+			[expr $bbx2-$rr] [expr $bby2-$rr] \
+			[expr $bbx2+$rr] [expr $bby2+$rr]\
+
+		    set hh [$ds9(canvas) find withtag "gr${id} && h4"]
+		    $ds9(canvas) coords $hh \
+			[expr $bbx1-$rr] [expr $bby2-$rr] \
+			[expr $bbx1+$rr] [expr $bby2+$rr]\
 		}
 	    }
 	}
@@ -324,7 +348,7 @@ proc IllustrateButtonRelease {xx yy} {
 	beginMove {}
 	move {
 	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 color fill dash} $gr {
+		foreach {id x1 y1 x2 y2 color fill dash} $gr {
 		    # graphic
 		    $ds9(canvas) itemconfigure $id \
 			-outline $color \
@@ -332,7 +356,7 @@ proc IllustrateButtonRelease {xx yy} {
 			-dash $dash
 
 		    # handles
-		    foreach hh [$ds9(canvas) find withtag h${id}] {
+		    foreach hh [$ds9(canvas) find withtag gr${id}] {
 			$ds9(canvas) itemconfigure $hh -state normal
 		    }
 		}
@@ -425,7 +449,7 @@ proc IllustrateCreateGraphic {xx yy} {
 			-outline $illustrate(color) \
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash -tags top]
+			-dash $dash -tags graphic]
 	}
 	ellipse {
 	    set rr1 $pillustrate(ellipse,radius1)
@@ -436,7 +460,7 @@ proc IllustrateCreateGraphic {xx yy} {
 			-outline $illustrate(color) \
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash -tags top]
+			-dash $dash -tags graphic]
 	}
 	box {
 	    set rr1 [expr $pillustrate(box,radius1)/2]
@@ -447,7 +471,7 @@ proc IllustrateCreateGraphic {xx yy} {
 			-outline $illustrate(color) \
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash -tags top]
+			-dash $dash -tags graphic]
 	}
 	polygon {
 	    set rr1 $pillustrate(polygon,width)
@@ -460,7 +484,7 @@ proc IllustrateCreateGraphic {xx yy} {
 			-outline $illustrate(color)	\
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash -tags top]
+			-dash $dash -tags graphic]
 	}
 	line {}
 	text {
@@ -470,7 +494,7 @@ proc IllustrateCreateGraphic {xx yy} {
 		    set id [$ds9(canvas) create text $xx $yy -text $txt \
 				-fill $illustrate(color) \
 				-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)" \
-				-tags top]
+				-tags graphic]
 
 		}
 	    }
@@ -484,45 +508,46 @@ proc IllustrateCreateGraphic {xx yy} {
 proc IllustrateCreateGraphicHandle {id} {
     global ds9
 
+    set rr 2
+
     set color [$ds9(canvas) itemcget $id -outline]
     set bbox [$ds9(canvas) bbox $id]
 
-    set rr 2
-    set x1 [lindex $bbox 0]
-    set y1 [lindex $bbox 1]
-    set x2 [lindex $bbox 2]
-    set y2 [lindex $bbox 3]
+    set bbx1 [lindex $bbox 0]
+    set bby1 [lindex $bbox 1]
+    set bbx2 [lindex $bbox 2]
+    set bby2 [lindex $bbox 3]
 
     set h1 [$ds9(canvas) create rectangle \
-		[expr $x1-$rr] [expr $y1-$rr] \
-		[expr $x1+$rr] [expr $y1+$rr]\
+		[expr $bbx1-$rr] [expr $bby1-$rr] \
+		[expr $bbx1+$rr] [expr $bby1+$rr]\
 		-outline $color -fill $color \
 		-state hidden \
-		-tags handle -tags h${id}]
+		-tags [list handle gr${id} h1]]
     $ds9(canvas) raise $h1 $id
 
     set h2 [$ds9(canvas) create rectangle \
-		[expr $x2-$rr] [expr $y1-$rr] \
-		[expr $x2+$rr] [expr $y1+$rr]\
+		[expr $bbx2-$rr] [expr $bby1-$rr] \
+		[expr $bbx2+$rr] [expr $bby1+$rr]\
 		-outline $color -fill $color \
 		-state hidden \
-		-tags handle -tags h${id}]
+		-tags [list handle gr${id} h2]]
     $ds9(canvas) raise $h2 $id
 
     set h3 [$ds9(canvas) create rectangle \
-		[expr $x2-$rr] [expr $y2-$rr] \
-		[expr $x2+$rr] [expr $y2+$rr]\
+		[expr $bbx2-$rr] [expr $bby2-$rr] \
+		[expr $bbx2+$rr] [expr $bby2+$rr]\
 		-outline $color -fill $color \
 		-state hidden \
-		-tags handle -tags h${id}]
+		-tags [list handle gr${id} h3]]
     $ds9(canvas) raise $h3 $id
     
     set h4 [$ds9(canvas) create rectangle \
-		[expr $x1-$rr] [expr $y2-$rr] \
-		[expr $x1+$rr] [expr $y2+$rr]\
+		[expr $bbx1-$rr] [expr $bby2-$rr] \
+		[expr $bbx1+$rr] [expr $bby2+$rr]\
 		-outline $color -fill $color \
 		-state hidden \
-		-tags handle -tags h${id}]
+		-tags [list handle gr${id} h4]]
     $ds9(canvas) raise $h4 $id
 }
 
@@ -546,7 +571,7 @@ proc IllustrateUpdateGraphic {} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {id x1 y1 ocolor ofill odash} $gr {
+	foreach {id x1 y1 x2 y2 ocolor ofill odash} $gr {
 	    # graphic
 	    $ds9(canvas) itemconfigure $id \
 		-outline $color \
@@ -555,13 +580,13 @@ proc IllustrateUpdateGraphic {} {
 		-dash $dash
 	    
 	    # handles
-	    foreach hh [$ds9(canvas) find withtag h${id}] {
+	    foreach hh [$ds9(canvas) find withtag gr${id}] {
 		$ds9(canvas) itemconfigure $hh -outline $color -fill $color
 	    }
 
 	    # update selection list
 	    lappend iillustrate(selection) \
-		[list $id $x1 $y1 $color $fill $dash]
+		[list $id $x1 $y1 $x2 $y2 $color $fill $dash]
 	}
     }
 }
@@ -625,7 +650,7 @@ proc IllustrateGraphicUnhighliteAll {} {
 proc IllustrateGraphicHighlite {id} {
     global ds9
 
-    foreach hh [$ds9(canvas) find withtag h${id}] {
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state normal
     }
 }

@@ -615,7 +615,7 @@ proc IllustrateFindGraphic {tag xx yy} {
     }
 
     set found [$ds9(canvas) find closest $xx $yy 1]
-
+    puts ":$found:$index:"
     foreach gr $index {
 	foreach {id fill} $gr {
 	    if {$fill == {}} {

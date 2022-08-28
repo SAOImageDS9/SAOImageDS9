@@ -219,9 +219,11 @@ proc IllustrateButtonGraphic {xx yy} {
     
     # segment of polygon
     
+    IllustrateDumpAll
     # see if we are on a graphic
     set id [IllustrateFindGraphic graphic $xx $yy]
     if {$id != {}} {
+	puts $id
 	IllustrateGraphicUnhighliteAll
 	IllustrateGraphicHighlite $id
 

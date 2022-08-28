@@ -214,16 +214,15 @@ proc IllustrateButtonGraphic {xx yy} {
     # see if we are on a handle
     set id [IllustrateFindGraphic handle $xx $yy]
     if {$id != {}} {
+	set iillustrate(motion) none
 	return
     }
     
     # segment of polygon
     
-    IllustrateDumpAll
     # see if we are on a graphic
     set id [IllustrateFindGraphic graphic $xx $yy]
     if {$id != {}} {
-	puts $id
 	IllustrateGraphicUnhighliteAll
 	IllustrateGraphicHighlite $id
 
@@ -249,9 +248,9 @@ proc IllustrateButtonGraphic {xx yy} {
 	return
     }
 
-    set iilustrate(motion) none
-
     IllustrateCreateGraphic $xx $yy
+    set iillustrate(selection) {}
+    set iillustrate(motion) none
 }
 
 proc IllustrateButtonMotion {xx yy} {
@@ -418,7 +417,8 @@ proc IllustrateButtonReleaseGraphic {xx yy} {
 	shiftregion {
 	}
     }
-    set iilustrate(motion) none
+
+    set iillustrate(motion) none
 }
 
 # Shift Button

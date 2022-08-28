@@ -195,7 +195,7 @@ proc IllustrateButtonGraphic {xx yy} {
     if {$id != {}} {
 	return
     }
-
+    
     # segment of polygon
     
     # see if we are on a graphic
@@ -613,9 +613,9 @@ proc IllustrateFindGraphic {tag xx yy} {
 	    default {}
 	}
     }
-
+    
     set found [$ds9(canvas) find closest $xx $yy 1]
-    puts ":$found:$index:"
+
     foreach gr $index {
 	foreach {id fill} $gr {
 	    if {$fill == {}} {
@@ -626,6 +626,11 @@ proc IllustrateFindGraphic {tag xx yy} {
 
     # check to see if found item is a graphic
     if {$found != {}} {
+	if {[lsearch [$ds9(canvas) gettags $found] $tag] == -1} {
+	    puts "$tag not found"
+	    set found {}
+	}
+	if {0} {
 	switch [$ds9(canvas) type $found] {
 	    oval -
 	    polygon -
@@ -633,6 +638,7 @@ proc IllustrateFindGraphic {tag xx yy} {
 	    line -
 	    text {}
 	    default {set found {}}
+	}
 	}
     }
 
@@ -655,3 +661,10 @@ proc IllustrateGraphicHighlite {id} {
     }
 }
 
+proc IllustrateDumpAll {} {
+    global ds9
+    
+    foreach id [$ds9(canvas) find all] {
+	puts "$id: [$ds9(canvas) gettags $id]"
+    }
+}

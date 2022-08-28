@@ -35,6 +35,8 @@ proc IllustrateDef {} {
     set pillustrate(polygon,height) 20
 }
 
+# Events
+
 proc BindEventsIllustrate {} {
     global ds9
 
@@ -111,6 +113,8 @@ proc UnBindEventsIllustrate {} {
     bind $ds9(canvas) <KeyRelease> {}
 }
 
+# Mode
+
 proc IllustrateModeBegin {} {
     global iillustrate
 
@@ -134,6 +138,8 @@ proc IllustrateModeEnd {} {
     UnBindEventsIllustrate
     UpdateIllustrateMenu
 }
+
+# Enter/Leave
 
 proc IllustrateEnter {} {
     global ds9
@@ -166,6 +172,20 @@ proc IllustrateMotion {xx yy} {
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateMotion"
+    }
+
+    switch $illustrate(mode) {
+	pointer {}
+	graphics {IllustrateMotionGraphic $xx $yy}
+    }
+}
+
+proc IllustrateMotionGraphic {xx yy} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    if {[llength $iillustrate(selection)]} {
     }
 }
 
@@ -221,7 +241,7 @@ proc IllustrateButtonGraphic {xx yy} {
 
     # create new graphic
     IllustrateGraphicUnhighliteAll
-    if {$iillustrate(selection) != {}} {
+    if {[llength $iillustrate(selection)]} {
 	set iillustrate(selection) {}
 	set iillustrate(motion) none
 	return
@@ -491,6 +511,8 @@ proc IllustrateKeyRelease {K A xx yy} {
 	puts "IllustrateKeyRelease $K $A $xx $yy"
     }
 }
+
+# Graphics
 
 proc IllustrateCreateGraphic {xx yy} {
     global ds9

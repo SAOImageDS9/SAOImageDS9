@@ -10,8 +10,6 @@ proc IllustrateDef {} {
     global pillustrate
 
     set iillustrate(selection) {}
-    set iillustrate(motion) none
-    set iillustrate(ants) {}
 
     set illustrate(shape) circle
     set illustrate(color) cyan
@@ -117,10 +115,7 @@ proc UnBindEventsIllustrate {} {
 proc IllustrateModeBegin {} {
     global iillustrate
 
-    set iillustrate(selection) {}
-    set iillustrate(motion) none
-
-    IllustrateGraphicUnhighliteAll
+    IllustrateUnselectAll
 
     BindEventsIllustrate
     UpdateIllustrateMenu
@@ -129,10 +124,7 @@ proc IllustrateModeBegin {} {
 proc IllustrateModeEnd {} {
     global iillustrate
 
-    set iillustrate(selection) {}
-    set iillustrate(motion) none
-
-    IllustrateGraphicUnhighliteAll
+    IllustrateUnselectAll
 
     UnBindEventsIllustrate
     UpdateIllustrateMenu
@@ -188,10 +180,13 @@ proc IllustrateButton {xx yy} {
 	puts "IllustrateButton $xx $yy"
     }
 
+    set iillustrate(motion) none
+    set iillustrate(motion,xx) {}
+    set iillustrate(motion,yy) {}
+
     # see if we are on a handle
     set id [IllustrateFindGraphic handle $xx $yy]
     if {$id != {}} {
-	set iillustrate(motion) none
 	return
     }
     
@@ -200,32 +195,26 @@ proc IllustrateButton {xx yy} {
     # see if we are on a graphic
     set id [IllustrateFindGraphic graphic $xx $yy]
     if {$id != {}} {
-	IllustrateGraphicUnhighliteAll
-	IllustrateGraphicHighlite $id
-
-	set coords [$ds9(canvas) coords $id]
-	set color [$ds9(canvas) itemcget $id -outline]
-	set fill [$ds9(canvas) itemcget $id -fill]
-	set dash [$ds9(canvas) itemcget $id -dash]
-
-	set iillustrate(selection) [list [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]]
-
 	set iillustrate(motion) beginMove
 
+	# if selected, don't do anything
+	if {[IllustrateIsSelected $id]} {
+	    return
+	}
+
+	# if not selected, select it, unselect all others
+	IllustrateUnselectAll
+	IllustrateAddSelect $id
 	return
-    }
+    }	
 
     # create new graphic
-    IllustrateGraphicUnhighliteAll
     if {[llength $iillustrate(selection)]} {
-	set iillustrate(selection) {}
-	set iillustrate(motion) none
+	IllustrateUnselectAll
 	return
     }
 
     IllustrateCreateGraphic $xx $yy
-    set iillustrate(selection) {}
-    set iillustrate(motion) none
 }
 
 proc IllustrateButtonMotion {xx yy} {
@@ -354,9 +343,6 @@ proc IllustrateButtonRelease {xx yy} {
 		    }
 		}
 	    }
-	    set iillustrate(motion) none
-	    set iillustrate(motion,xx) {}
-	    set iillustrate(motion,yy) {}
 	}
 
 	beginEdit -
@@ -372,7 +358,9 @@ proc IllustrateButtonRelease {xx yy} {
 	}
     }
 
-    set iillustrate(motion) none
+    unset iillustrate(motion)
+    unset iillustrate(motion,xx)
+    unset iillustrate(motion,yy)
 }
 
 # Shift Button
@@ -387,6 +375,8 @@ proc IllustrateShiftButton {xx yy} {
 	puts "IllustrateShiftButton $xx $yy"
     }
 
+    IllustrateUnselectAll
+    
     set iillustrate(ants) [$ds9(canvas) create rectangle \
 			      $xx $yy $xx $yy \
 			      -outline white \
@@ -424,19 +414,13 @@ proc IllustrateShiftButtonRelease {xx yy} {
 
     set ll [$ds9(canvas) find enclosed \
 		$iillustrate(ants,xx) $iillustrate(ants,yy) $xx $yy]
-
-    set iillustrate(selection) {}
     foreach id $ll {
-	IllustrateGraphicHighlite $id
-
-	set coords [$ds9(canvas) coords $id]
-	set color [$ds9(canvas) itemcget $id -outline]
-	set fill [$ds9(canvas) itemcget $id -fill]
-	set dash [$ds9(canvas) itemcget $id -dash]
-	lappend iillustrate(selection) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
+	IllustrateAddSelect $id
     }
 
-    set iillustrate(ants) {}
+    unset iillustrate(ants)
+    unset iillustrate(ants,xx)
+    unset iillustrate(ants,yy)
 }
 
 # Key
@@ -714,20 +698,48 @@ proc IllustrateFindGraphic {tag xx yy} {
     return $found
 }
 
-proc IllustrateGraphicUnhighliteAll {} {
+proc IllustrateIsSelected {which} {
     global ds9
-
-    foreach id [$ds9(canvas) find withtag {handle}] {
-	$ds9(canvas) itemconfigure $id -state hidden
+    global illustrate
+    global iillustrate
+    
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    if {$id == $which} {
+		return 1
+	    }
+	}
     }
+    return 0
 }
 
-proc IllustrateGraphicHighlite {id} {
+proc IllustrateAddSelect {id} {
     global ds9
+    global illustrate
+    global iillustrate
 
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state normal
     }
+
+    set coords [$ds9(canvas) coords $id]
+    set color [$ds9(canvas) itemcget $id -outline]
+    set fill [$ds9(canvas) itemcget $id -fill]
+    set dash [$ds9(canvas) itemcget $id -dash]
+
+    lappend iillustrate(selection) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
+
+}
+
+proc IllustrateUnselectAll {} {
+    global ds9
+    global illustrate
+    global iillustrate
+    
+    foreach id [$ds9(canvas) find withtag {handle}] {
+	$ds9(canvas) itemconfigure $id -state hidden
+    }
+    set iillustrate(selection) {}
 }
 
 proc IllustrateDumpAll {} {

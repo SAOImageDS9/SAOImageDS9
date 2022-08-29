@@ -11,11 +11,6 @@ proc IllustrateMainMenu {} {
     global illustrate
 
     ThemeMenu $ds9(mb).illustrate
-    $ds9(mb).illustrate add radiobutton -label [msgcat::mc {Pointer}] \
-	-variable illustrate(mode) -value pointer
-    $ds9(mb).illustrate add radiobutton -label [msgcat::mc {Graphics}] \
-	-variable illustrate(graphics) -value graphics
-    $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Shape}] \
 	-menu $ds9(mb).illustrate.shape
     $ds9(mb).illustrate add separator
@@ -67,11 +62,6 @@ proc PrefsDialogIllustrateMenu {w} {
 
     set m $f.menu.menu
     ThemeMenu $m
-    $m add radiobutton -label [msgcat::mc {Pointer}] \
-	-variable pillustrate(mode) -value pointer
-    $m add radiobutton -label [msgcat::mc {Graphics}] \
-	-variable pillustrate(mode) -value graphics
-    $m add separator
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add separator
     $m add cascade -label [msgcat::mc {Color}] -menu $m.color
@@ -167,8 +157,6 @@ proc ButtonsIllustrateDef {} {
     global pbuttons
 
     array set pbuttons {
-	illustrate,pointer 1
-	illustrate,graphics 1
 	illustrate,circle 1
 	illustrate,ellipse 1
 	illustrate,box 1
@@ -189,13 +177,6 @@ proc CreateButtonsIllustrate {} {
     global ds9
 
     ttk::frame $ds9(buttons).illustrate
-
-    RadioButton $ds9(buttons).illustrate.pointer \
-	[string tolower [msgcat::mc {Pointer}]] \
-	illustrate mode pointer {}
-    RadioButton $ds9(buttons).illustrate.graphics \
-	[string tolower [msgcat::mc {Graphics}]] \
-	illustrate mode graphics {}
 
     RadioButton $ds9(buttons).illustrate.circle \
 	[string tolower [msgcat::mc {Circle}]] \
@@ -232,8 +213,6 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Delete}]] {}
 
     set buttons(illustrate) "
-        $ds9(buttons).illustrate.pointer pbuttons(illustrate,pointer)
-        $ds9(buttons).illustrate.graphics pbuttons(illustrate,graphics)
         $ds9(buttons).illustrate.circle pbuttons(illustrate,circle)
         $ds9(buttons).illustrate.ellipse pbuttons(illustrate,ellipse)
         $ds9(buttons).illustrate.box pbuttons(illustrate,box)
@@ -257,13 +236,6 @@ proc PrefsDialogButtonbarIllustrate {f} {
     
     set m $f.menu
     ThemeMenu $m
-    $m add checkbutton -label [msgcat::mc {Pointer}] \
-	-variable pbuttons(illustrate,pointer) \
-	-command {UpdateButtons buttons(illustrate)}
-    $m add checkbutton -label [msgcat::mc {Graphics}] \
-	-variable pbuttons(illustrate,graphics) \
-	-command {UpdateButtons buttons(illustrate)}
-    $m add separator
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add separator
     $m add checkbutton -label [msgcat::mc {Move to Front}] \

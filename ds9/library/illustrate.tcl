@@ -11,8 +11,7 @@ proc IllustrateDef {} {
 
     set iillustrate(selection) {}
     set iillustrate(motion) none
-
-    set illustrate(mode) graphics
+    set iillustrate(ants) {}
 
     set illustrate(shape) circle
     set illustrate(color) cyan
@@ -168,25 +167,13 @@ proc IllustrateLeave {} {
 proc IllustrateMotion {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
     
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateMotion"
     }
 
-    switch $illustrate(mode) {
-	pointer {}
-	graphics {IllustrateMotionGraphic $xx $yy}
-    }
-}
-
-proc IllustrateMotionGraphic {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
-
-    if {[llength $iillustrate(selection)]} {
-    }
 }
 
 # Button
@@ -194,22 +181,12 @@ proc IllustrateMotionGraphic {xx yy} {
 proc IllustrateButton {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButton $xx $yy"
     }
-
-    switch $illustrate(mode) {
-	pointer {}
-	graphics {IllustrateButtonGraphic $xx $yy}
-    }
-}
-
-proc IllustrateButtonGraphic {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
 
     # see if we are on a handle
     set id [IllustrateFindGraphic handle $xx $yy]
@@ -233,8 +210,6 @@ proc IllustrateButtonGraphic {xx yy} {
 
 	set iillustrate(selection) [list [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]]
 
-	set iillustrate(selection,xx) $xx
-	set iillustrate(selection,yy) $yy
 	set iillustrate(motion) beginMove
 
 	return
@@ -256,22 +231,12 @@ proc IllustrateButtonGraphic {xx yy} {
 proc IllustrateButtonMotion {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonMotion $xx $yy"
+	puts "IllustrateButtonMotion $iillustrate(motion) $xx $yy"
     }
-
-    switch $illustrate(mode) {
-	pointer {}
-	graphics {IllustrateButtonMotionGraphic $xx $yy}
-    }
-}
-
-proc IllustrateButtonMotionGraphic {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
 
     switch -- $iillustrate(motion) {
 	none {}
@@ -281,12 +246,8 @@ proc IllustrateButtonMotionGraphic {xx yy} {
 	}
 
 	beginMove {
-	    set dx [expr $xx-$iillustrate(selection,xx)]
-	    set dy [expr $yy-$iillustrate(selection,yy)]
-
-	    if {$dx==0 && $dy==0} {
-		return
-	    }
+	    set iillustrate(motion,xx) $xx
+	    set iillustrate(motion,yy) $yy
 
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
@@ -307,8 +268,8 @@ proc IllustrateButtonMotionGraphic {xx yy} {
 	move {
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    set dx [expr $xx-$iillustrate(selection,xx)]
-		    set dy [expr $yy-$iillustrate(selection,yy)]
+		    set dx [expr $xx-$iillustrate(motion,xx)]
+		    set dy [expr $yy-$iillustrate(motion,yy)]
 
 		    # graphic
 		    set nx1 [expr $dx+$x1]
@@ -363,22 +324,12 @@ proc IllustrateButtonMotionGraphic {xx yy} {
 proc IllustrateButtonRelease {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButtonRelease $xx $yy"
     }
-
-    switch $illustrate(mode) {
-	pointer {}
-	graphics {IllustrateButtonReleaseGraphic $xx $yy}
-    }
-}
-
-proc IllustrateButtonReleaseGraphic {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
 
     switch -- $iillustrate(motion) {
 	none {}
@@ -403,6 +354,9 @@ proc IllustrateButtonReleaseGraphic {xx yy} {
 		    }
 		}
 	    }
+	    set iillustrate(motion) none
+	    set iillustrate(motion,xx) {}
+	    set iillustrate(motion,yy) {}
 	}
 
 	beginEdit -
@@ -426,46 +380,63 @@ proc IllustrateButtonReleaseGraphic {xx yy} {
 proc IllustrateShiftButton {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateShiftButton $xx $yy"
     }
 
-    switch $illustrate(mode) {
-	pointer {}
-	graphics {}
-    }
+    set iillustrate(ants) [$ds9(canvas) create rectangle \
+			      $xx $yy $xx $yy \
+			      -outline white \
+			      -dash {8 3} -tags ants]
+    set iillustrate(ants,xx) $xx
+    set iillustrate(ants,yy) $yy
 }
 
 proc IllustrateShiftButtonMotion {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateShiftButtonMotion"
     }
 
-    switch $illustrate(mode) {
-	pointer {}
-	graphics {}
-    }
+    $ds9(canvas) coords $iillustrate(ants) \
+	$iillustrate(ants,xx) $iillustrate(ants,yy) \
+	$xx $yy
 }
 
 proc IllustrateShiftButtonRelease {xx yy} {
     global ds9
     global illustrate
+    global iillustrate
 
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateShiftButtonRelease"
     }
 
-    switch $illustrate(mode) {
-	pointer {}
-	graphics {}
+    $ds9(canvas) delete $iillustrate(ants)
+
+    set ll [$ds9(canvas) find enclosed \
+		$iillustrate(ants,xx) $iillustrate(ants,yy) $xx $yy]
+
+    set iillustrate(selection) {}
+    foreach id $ll {
+	IllustrateGraphicHighlite $id
+
+	set coords [$ds9(canvas) coords $id]
+	set color [$ds9(canvas) itemcget $id -outline]
+	set fill [$ds9(canvas) itemcget $id -fill]
+	set dash [$ds9(canvas) itemcget $id -dash]
+	lappend iillustrate(selection) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
     }
+
+    set iillustrate(ants) {}
 }
 
 # Key
@@ -667,12 +638,27 @@ proc IllustrateUpdateGraphic {} {
     foreach gr $old {
 	foreach {id x1 y1 x2 y2 ocolor ofill odash} $gr {
 	    # graphic
-	    $ds9(canvas) itemconfigure $id \
-		-outline $color \
-		-fill $fill \
-		-width $illustrate(width) \
-		-dash $dash
-	    
+	    switch [$ds9(canvas) type $id] {
+		oval -
+		polygon -
+		rectangle {
+		    $ds9(canvas) itemconfigure $id \
+			-outline $color \
+			-fill $fill \
+			-width $illustrate(width) \
+			-dash $dash
+		}
+		line {
+		}
+		text {
+		    $ds9(canvas) itemconfigure $id \
+			-fill $fill \
+			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"
+
+		}
+		default {}
+	    }
+	
 	    # handles
 	    foreach hh [$ds9(canvas) find withtag gr${id}] {
 		$ds9(canvas) itemconfigure $hh -outline $color -fill $color

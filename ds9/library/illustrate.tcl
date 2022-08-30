@@ -439,7 +439,7 @@ proc IllustrateKey {K A xx yy} {
 
     switch -- $K {
 	Delete -
-	BackSpace {}
+	BackSpace {IllustrateDeleteSelection}
 
 	Up -
 	k {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]}
@@ -747,7 +747,24 @@ proc IllustrateAddSelection {id} {
     set dash [$ds9(canvas) itemcget $id -dash]
 
     lappend iillustrate(selection) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
+}
 
+proc IllustrateDeleteSelection {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    # handles
+	    foreach hh [$ds9(canvas) find withtag gr${id}] {
+		$ds9(canvas) delete $hh
+	    }
+	    # graphic
+	    $ds9(canvas) delete $id
+	}
+    }
+    set iillustrate(selection) {}
 }
 
 proc IllustrateUnselect {id} {

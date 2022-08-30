@@ -65,8 +65,6 @@ proc BindEventsIllustrate {} {
     bind $ds9(canvas) <ButtonRelease-1> {IllustrateButtonRelease %x %y}
 
     bind $ds9(canvas) <Shift-Button-1> {IllustrateShiftButton %x %y}
-    bind $ds9(canvas) <Shift-B1-Motion> {IllustrateShiftButtonMotion %x %y}
-    bind $ds9(canvas) <Shift-ButtonRelease-1> {IllustrateShiftButtonRelease %x %y}
 
     bind $ds9(canvas) <Key> {IllustrateKey %K %A %x %y}
     bind $ds9(canvas) <KeyRelease> {IllustrateKeyRelease %K %A %x %y}
@@ -103,8 +101,6 @@ proc UnBindEventsIllustrate {} {
     bind $ds9(canvas) <ButtonRelease-1> {}
 
     bind $ds9(canvas) <Shift-Button-1> {}
-    bind $ds9(canvas) <Shift-B1-Motion> {}
-    bind $ds9(canvas) <Shift-ButtonRelease-1> {}
 
     bind $ds9(canvas) <Key> {}
     bind $ds9(canvas) <KeyRelease> {}
@@ -292,7 +288,7 @@ proc IllustrateButtonMotion {xx yy} {
 		    $ds9(canvas) coords $hh \
 			[expr $bbx1-$rr] [expr $bby2-$rr] \
 			[expr $bbx1+$rr] [expr $bby2+$rr]\
-		}
+		    }
 	    }
 	}
 
@@ -304,8 +300,10 @@ proc IllustrateButtonMotion {xx yy} {
 	rotate {
 	}
 
-	region -
 	shiftregion {
+	    $ds9(canvas) coords $iillustrate(ants) \
+		$iillustrate(motion,xx) $iillustrate(motion,yy) \
+		$xx $yy
 	}
     }
 }
@@ -353,8 +351,16 @@ proc IllustrateButtonRelease {xx yy} {
 	rotate {
 	}
 
-	region -
 	shiftregion {
+	    $ds9(canvas) delete $iillustrate(ants)
+
+	    set ll [$ds9(canvas) find enclosed \
+			$iillustrate(motion,xx) $iillustrate(motion,yy) $xx $yy]
+	    foreach id $ll {
+		IllustrateAddSelect $id
+	    }
+
+	    unset iillustrate(ants)
 	}
     }
 
@@ -375,52 +381,40 @@ proc IllustrateShiftButton {xx yy} {
 	puts "IllustrateShiftButton $xx $yy"
     }
 
+    set iillustrate(motion,xx) $xx
+    set iillustrate(motion,yy) $yy
+
+    # if on handle, start rotate
+    set id [IllustrateFindGraphic handle $xx $yy]
+    if {$id != {}} {
+	set iillustrate(motion) beginRotate
+	return
+    }
+
+    # if on graphic, add to selection, start move
+    set id [IllustrateFindGraphic graphic $xx $yy]
+    if {$id != {}} {
+	# if selected, unselect
+	if {[IllustrateIsSelected $id]} {
+	    IllustrateUnselect $id
+	    set iillustrate(motion) none
+	    return
+	}
+
+	# if not selected, add to selection
+	IllustrateAddSelect $id
+	set iillustrate(motion) beginMove
+	return
+    }	
+
+    # otherwise, dancing ants
     IllustrateUnselectAll
     
     set iillustrate(ants) [$ds9(canvas) create rectangle \
-			      $xx $yy $xx $yy \
-			      -outline white \
-			      -dash {8 3} -tags ants]
-    set iillustrate(ants,xx) $xx
-    set iillustrate(ants,yy) $yy
-}
-
-proc IllustrateShiftButtonMotion {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
-
-    global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateShiftButtonMotion"
-    }
-
-    $ds9(canvas) coords $iillustrate(ants) \
-	$iillustrate(ants,xx) $iillustrate(ants,yy) \
-	$xx $yy
-}
-
-proc IllustrateShiftButtonRelease {xx yy} {
-    global ds9
-    global illustrate
-    global iillustrate
-
-    global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateShiftButtonRelease"
-    }
-
-    $ds9(canvas) delete $iillustrate(ants)
-
-    set ll [$ds9(canvas) find enclosed \
-		$iillustrate(ants,xx) $iillustrate(ants,yy) $xx $yy]
-    foreach id $ll {
-	IllustrateAddSelect $id
-    }
-
-    unset iillustrate(ants)
-    unset iillustrate(ants,xx)
-    unset iillustrate(ants,yy)
+			       $xx $yy $xx $yy \
+			       -outline white \
+			       -dash {8 3} -tags ants]
+    set iillustrate(motion) shiftregion
 }
 
 # Key
@@ -642,7 +636,7 @@ proc IllustrateUpdateGraphic {} {
 		}
 		default {}
 	    }
-	
+	    
 	    # handles
 	    foreach hh [$ds9(canvas) find withtag gr${id}] {
 		$ds9(canvas) itemconfigure $hh -outline $color -fill $color
@@ -698,14 +692,14 @@ proc IllustrateFindGraphic {tag xx yy} {
     return $found
 }
 
-proc IllustrateIsSelected {which} {
+proc IllustrateIsSelected {id} {
     global ds9
     global illustrate
     global iillustrate
     
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	    if {$id == $which} {
+	foreach {idd x1 y1 x2 y2 color fill dash} $gr {
+	    if {$id == $idd} {
 		return 1
 	    }
 	}
@@ -729,6 +723,26 @@ proc IllustrateAddSelect {id} {
 
     lappend iillustrate(selection) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
 
+}
+
+proc IllustrateUnselect {id} {
+    global ds9
+    global illustrate
+    global iillustrate
+    
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -state hidden
+    }
+    
+    set old $iillustrate(selection)
+    set iillustrate(selection) {}
+    foreach gr $old {
+	foreach {idd x1 y1 x2 y2 color fill dash} $gr {
+	    if {$id != $idd} {
+		lappend iillustrate(selection) $gr
+	    }
+	}
+    }
 }
 
 proc IllustrateUnselectAll {} {

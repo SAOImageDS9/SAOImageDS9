@@ -200,7 +200,7 @@ proc IllustrateButton {xx yy} {
 
 	# if not selected, select it, unselect all others
 	IllustrateUnselectAll
-	IllustrateAddSelect $id
+	IllustrateAddSelection $id
 	return
     }	
 
@@ -341,6 +341,8 @@ proc IllustrateButtonRelease {xx yy} {
 		    }
 		}
 	    }
+
+	    IllustrateUpdateSelection
 	}
 
 	beginEdit -
@@ -357,7 +359,7 @@ proc IllustrateButtonRelease {xx yy} {
 	    set ll [$ds9(canvas) find enclosed \
 			$iillustrate(motion,xx) $iillustrate(motion,yy) $xx $yy]
 	    foreach id $ll {
-		IllustrateAddSelect $id
+		IllustrateAddSelection $id
 	    }
 
 	    unset iillustrate(ants)
@@ -381,8 +383,10 @@ proc IllustrateShiftButton {xx yy} {
 	puts "IllustrateShiftButton $xx $yy"
     }
 
+    set iillustrate(motion) none
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy
+
 
     # if on handle, start rotate
     set id [IllustrateFindGraphic handle $xx $yy]
@@ -402,7 +406,7 @@ proc IllustrateShiftButton {xx yy} {
 	}
 
 	# if not selected, add to selection
-	IllustrateAddSelect $id
+	IllustrateAddSelection $id
 	set iillustrate(motion) beginMove
 	return
     }	
@@ -692,6 +696,8 @@ proc IllustrateFindGraphic {tag xx yy} {
     return $found
 }
 
+# Current Selection
+
 proc IllustrateIsSelected {id} {
     global ds9
     global illustrate
@@ -707,7 +713,26 @@ proc IllustrateIsSelected {id} {
     return 0
 }
 
-proc IllustrateAddSelect {id} {
+proc IllustrateUpdateSelection {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    set old $iillustrate(selection)
+    set iillustrate(selection) {}
+    foreach gr $old {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    set coords [$ds9(canvas) coords $id]
+	    set color [$ds9(canvas) itemcget $id -outline]
+	    set fill [$ds9(canvas) itemcget $id -fill]
+	    set dash [$ds9(canvas) itemcget $id -dash]
+
+	    lappend iillustrate(selection) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
+	}
+    }
+}
+
+proc IllustrateAddSelection {id} {
     global ds9
     global illustrate
     global iillustrate
@@ -755,6 +780,8 @@ proc IllustrateUnselectAll {} {
     }
     set iillustrate(selection) {}
 }
+
+# Util
 
 proc IllustrateDumpAll {} {
     global ds9

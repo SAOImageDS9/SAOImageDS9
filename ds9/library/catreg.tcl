@@ -60,7 +60,7 @@ proc CATReg {varname row interactive resultname} {
     # process prologue
     append result "# Region file format: DS9 version 4.0\n"
 
-    # for speed...
+    # for speed
     # tbldb
     set nrows [starbase_nrows $var(tbldb)]
     set cols [starbase_columns $var(tbldb)]
@@ -91,7 +91,7 @@ proc CATReg {varname row interactive resultname} {
     set snunits [starbase_colnum $var(symdb) units]
     set snangle [starbase_colnum $var(symdb) angle]
 
-    # for each row in the table ...
+    # for each row in the table
     if {[string is integer -strict $row]} {
 	set start $row
 	set end $row

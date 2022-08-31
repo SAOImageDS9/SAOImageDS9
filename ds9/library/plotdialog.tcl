@@ -173,7 +173,7 @@ proc PlotDialog {varname wtt {theme true}} {
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add separator
     $var(mb).canvas.layout add command \
-	-label "[msgcat::mc {Strip Parameters}]..." \
+	-label [msgcat::mc {Strip Parameters}] \
 	-command [list PlotStripDialog $varname]
 
     FontMenu $var(mb).canvas.title \
@@ -223,9 +223,9 @@ proc PlotDialog {varname wtt {theme true}} {
     $var(mb).graph add cascade -label [msgcat::mc {Y Axis}] \
 	-menu $var(mb).graph.yaxis
     $var(mb).graph add separator
-    $var(mb).graph add command -label "[msgcat::mc {Axes Range}]..." \
+    $var(mb).graph add command -label [msgcat::mc {Axes Range}] \
 	-command [list PlotRangeDialog $varname]
-    $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
+    $var(mb).graph add command -label [msgcat::mc {Titles}] \
 	-command [list PlotGraphTitleDialog $varname]
 
     ThemeMenu $var(mb).graph.select

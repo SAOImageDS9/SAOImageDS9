@@ -65,7 +65,7 @@ proc SimpleTextDialog {varname title width height action pos txt
 	$var(mb).edit add command -label [msgcat::mc {Select None}] \
 	    -command "SimpleTextSelectNone $varname"
 	$var(mb).edit add separator
-	$var(mb).edit add command -label "[msgcat::mc {Find}]..." \
+	$var(mb).edit add command -label [msgcat::mc {Find}] \
 	    -command "SimpleTextFind $varname" -accelerator "${ds9(ctrl)}F"
 	$var(mb).edit add command -label [msgcat::mc {Find Next}] \
 	    -command "SimpleTextFindNext $varname" -accelerator "${ds9(ctrl)}G"

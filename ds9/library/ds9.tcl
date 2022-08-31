@@ -622,7 +622,7 @@ SetDefaultFont true
 SetDefaultTextFont true
 
 # Initialize IIS
-# after command line options to set port/fifo/unix...
+# after command line options to set port/fifo/unix
 catch {IISInit}
 
 # any os events received?

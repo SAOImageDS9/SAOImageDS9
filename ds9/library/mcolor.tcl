@@ -50,7 +50,7 @@ proc ColorMainMenu {} {
     $ds9(mb).color add cascade -label [msgcat::mc {Colorbar}] \
 	-menu $ds9(mb).color.colorbar
     $ds9(mb).color add separator
-    $ds9(mb).color add command -label "[msgcat::mc {Colormap Parameters}]..." \
+    $ds9(mb).color add command -label [msgcat::mc {Colormap Parameters}] \
 	-command ColormapDialog
 
     ThemeMenu $ds9(mb).color.colorbar
@@ -62,10 +62,10 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.colorbar.cb 
     $ds9(mb).color.colorbar add separator
     $ds9(mb).color.colorbar add command \
-	-label "[msgcat::mc {Size}]..." \
+	-label [msgcat::mc {Size}] \
 	-command ColorbarSizeDialog
     $ds9(mb).color.colorbar add command \
-	-label "[msgcat::mc {Number of Ticks}]..." \
+	-label [msgcat::mc {Number of Ticks}] \
 	-command TicksDialog
 
     ThemeMenu $ds9(mb).color.colorbar.orient
@@ -366,7 +366,7 @@ proc PrefsDialogButtonbarColor {f} {
     $m add separator
     $m add cascade -label [msgcat::mc {Colorbar}] -menu $m.colorbar
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Colormap Parameters}]..." \
+    $m add checkbutton -label [msgcat::mc {Colormap Parameters}] \
 	-variable pbuttons(color,params) \
 	-command {UpdateButtons buttons(color)}
 

@@ -1035,7 +1035,7 @@ proc ColormapDialog {} {
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command ApplyColormap
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Download Colormap}]..." \
+    $mb.file add command -label [msgcat::mc {Download Colormap}] \
 	-command {HV cpt CPT-CITY http://soliton.vm.bytemark.co.uk/pub/cpt-city}
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Load Contrast/Bias}]..."\
@@ -1047,7 +1047,7 @@ proc ColormapDialog {} {
 	-command OpenColorTag
     $mb.file add command -label "[msgcat::mc {Save Color Tags}]..." \
 	-command SaveColorTag
-    $mb.file add command -label "[msgcat::mc {Delete Color Tags}]..." \
+    $mb.file add command -label [msgcat::mc {Delete Color Tags}] \
 	-command DeleteColorTag
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \

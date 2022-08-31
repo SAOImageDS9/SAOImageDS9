@@ -313,7 +313,7 @@ proc BackupFrame {ch which dir} {
     WCSBackup $ch $which $fdir $rdir
 
     # ok, at this point, we must realize the frame, so that all matrices
-    # are valid for pan/zoom/crosshair/markers etc...
+    # are valid for pan/zoom/crosshair/markers etc
     puts $ch "update"
 
     PanZoomBackup $ch $which

@@ -99,7 +99,7 @@ proc HV {varname title url {init {}} {sync 0} {save 0}} {
 	$mb.edit add command -label [msgcat::mc {Paste}] \
 	    -state disabled -accelerator "${ds9(ctrl)}V"
 	$mb.edit add separator
-	$mb.edit add command -label "[msgcat::mc {Find}]..." \
+	$mb.edit add command -label [msgcat::mc {Find}]" \
 	    -command "HVFindCmd $varname" -accelerator "${ds9(ctrl)}F"
 	$mb.edit add command -label [msgcat::mc {Find Next}] \
 	    -command "HVFindNextCmd $varname" -accelerator "${ds9(ctrl)}G"

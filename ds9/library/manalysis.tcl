@@ -11,37 +11,37 @@ proc AnalysisMainMenu {} {
     # WARNING: this is a variable length menu. 
     # Be sure to update ds9(menu,size,analysis)
     ThemeMenu $ds9(mb).analysis
-    $ds9(mb).analysis add command -label "[msgcat::mc {Pixel Table}]..." \
+    $ds9(mb).analysis add command -label [msgcat::mc {Pixel Table}] \
 	-command PixelTableDialog 
-    $ds9(mb).analysis add command -label "[msgcat::mc {Name Resolution}]..." \
+    $ds9(mb).analysis add command -label [msgcat::mc {Name Resolution}] \
 	-command NRESDialog
     $ds9(mb).analysis add separator
-    $ds9(mb).analysis add command -label "[msgcat::mc {Mask Parameters}]..." \
+    $ds9(mb).analysis add command -label [msgcat::mc {Mask Parameters}] \
 	-command MaskDialog
     $ds9(mb).analysis add command \
-	-label "[msgcat::mc {Crosshair Parameters}]..." -command CrosshairDialog
-    $ds9(mb).analysis add command -label "[msgcat::mc {Graph Parameters}]..." \
+	-label [msgcat::mc {Crosshair Parameters}] -command CrosshairDialog
+    $ds9(mb).analysis add command -label [msgcat::mc {Graph Parameters}] \
 	-command GraphDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add checkbutton -label [msgcat::mc {Contours}] \
 	-variable contour(view) -command UpdateContour
-    $ds9(mb).analysis add command -label "[msgcat::mc {Contour Parameters}]..."\
+    $ds9(mb).analysis add command -label [msgcat::mc {Contour Parameters}] \
 	-command ContourDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add checkbutton -label [msgcat::mc {Coordinate Grid}] \
 	-variable grid(view) -command GridUpdateCurrent
     $ds9(mb).analysis add command \
-	-label "[msgcat::mc {Coordinate Grid Parameters}]..." \
+	-label [msgcat::mc {Coordinate Grid Parameters}] \
 	-command GridDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add cascade -label [msgcat::mc {Block}] \
 	-menu $ds9(mb).analysis.block
-    $ds9(mb).analysis add command -label "[msgcat::mc {Block Parameters}]..."\
+    $ds9(mb).analysis add command -label [msgcat::mc {Block Parameters}] \
 	-command BlockDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add checkbutton -label [msgcat::mc {Smooth}] \
 	-variable smooth(view) -command SmoothUpdate
-    $ds9(mb).analysis add command -label "[msgcat::mc {Smooth Parameters}]..." \
+    $ds9(mb).analysis add command -label [msgcat::mc {Smooth Parameters}] \
 	-command SmoothDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add cascade -label [msgcat::mc {Image Servers}] \
@@ -59,9 +59,8 @@ proc AnalysisMainMenu {} {
 	-menu $ds9(mb).analysis.plot
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add command \
-	-label "[msgcat::mc {Virtual Observatory}]..."\
-	-command VODialog
-    $ds9(mb).analysis add command -label "[msgcat::mc {Web Browser}]..." \
+	-label [msgcat::mc {Virtual Observatory}] -command VODialog
+    $ds9(mb).analysis add command -label [msgcat::mc {Web Browser}] \
 	-command {HV web Web {}}
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add checkbutton \
@@ -123,8 +122,6 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.arch add command \
 	-label {Chandra Public Archive by Cone Search} \
 	-command CXCPublicConeSearch
-#    $ds9(mb).analysis.arch add command \
-#	-label {Chandra Public Archive by FTP} -command HVArchChandraFTP
 
     $ds9(mb).analysis.arch add separator
     SIAAnalysisMenu $ds9(mb).analysis.arch

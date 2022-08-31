@@ -75,7 +75,7 @@ proc UpdateDS9 {} {
 
     global debug
     if {$debug(tcl,update)} {
-	puts stderr "UpdateDS9 begin..."
+	puts stderr "UpdateDS9 begin"
     }
 
     UpdateFileMenu
@@ -121,7 +121,7 @@ proc UpdateDS9 {} {
     UpdateColormapLevel
     
     if {$debug(tcl,update)} {
-	puts stderr "UpdateDS9 end...\n"
+	puts stderr "UpdateDS9 end\n"
     }
 }
 
@@ -643,7 +643,7 @@ proc InitFilterCompiler {} {
     global env
     global argv0
 
-    # if the user did not explicitly specify one ...
+    # if the user did not explicitly specify one
     if {![info exists env(FILTER_CC)]} {
 	switch -- $ds9(wm) {
 	    x11 -

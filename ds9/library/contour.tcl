@@ -184,7 +184,7 @@ proc ContourDialog {} {
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Copy Contours}] \
 	-command ContourCCopyDialog
-    $mb.file add command -label "[msgcat::mc {Paste Contours}]..." \
+    $mb.file add command -label [msgcat::mc {Paste Contours}] \
 	-command ContourCPasteDialog
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Load Contour Levels}]..." \
@@ -228,7 +228,7 @@ proc ContourDialog {} {
 	-label [msgcat::mc {Histogram Equalization}] \
 	-variable contour(scale) -value histequ
     $mb.scale add separator
-    $mb.scale add command -label "[msgcat::mc {Log Exponent}]..." \
+    $mb.scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ContourLogDialog
 
     ThemeMenu $mb.limit

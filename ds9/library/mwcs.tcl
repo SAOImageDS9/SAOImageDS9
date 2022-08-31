@@ -12,7 +12,7 @@ proc WCSMainMenu {} {
 
     CoordMenu $ds9(mb).wcs wcs system 0 sky skyformat UpdateWCS
     $ds9(mb).wcs add separator
-    $ds9(mb).wcs add command -label "[msgcat::mc {WCS Parameters}]..." \
+    $ds9(mb).wcs add command -label [msgcat::mc {WCS Parameters}] \
 	-command WCSDialog
 }
 

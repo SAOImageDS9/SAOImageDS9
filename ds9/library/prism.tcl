@@ -152,7 +152,7 @@ proc PrismDialog {varname} {
     $mb.edit add command -label [msgcat::mc {Select None}] \
 	-command [list SimpleTextSelectNone $varname]
     $mb.edit add separator
-    $mb.edit add command -label "[msgcat::mc {Find}]..." \
+    $mb.edit add command -label [msgcat::mc {Find}] \
 	-command "SimpleTextFind $varname" -accelerator "${ds9(ctrl)}F"
     $mb.edit add command -label [msgcat::mc {Find Next}] \
 	-command "SimpleTextFindNext $varname" -accelerator "${ds9(ctrl)}G"
@@ -172,7 +172,7 @@ proc PrismDialog {varname} {
     $mb.table add command -label [msgcat::mc {Last Block}] \
 	-command [list PrismTableLast $varname]
     $mb.table add separator
-    $mb.table add command -label "[msgcat::mc {Goto Row}]..." \
+    $mb.table add command -label [msgcat::mc {Goto Row}] \
 	-command [list PrismTableGotoQuery $varname]
 
     # Param
@@ -383,7 +383,7 @@ proc PrismDialogUpdate {varname} {
     $var(mb).table entryconfig [msgcat::mc {Next Block}] -state disabled
     $var(mb).table entryconfig [msgcat::mc {Previous Block}] -state disabled
     $var(mb).table entryconfig [msgcat::mc {Last Block}] -state disabled
-    $var(mb).table entryconfig "[msgcat::mc {Goto Row}]..." -state disabled
+    $var(mb).table entryconfig [msgcat::mc {Goto Row}] -state disabled
 
     $bb.clear configure -state disabled
     $bb.image configure -state disabled
@@ -396,7 +396,7 @@ proc PrismDialogUpdate {varname} {
     }
 
     $var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
-    $var(mb).table entryconfig "[msgcat::mc {Goto Row}]..." -state normal
+    $var(mb).table entryconfig [msgcat::mc {Goto Row}] -state normal
     $bb.clear configure -state normal
 
     switch $var(type) {

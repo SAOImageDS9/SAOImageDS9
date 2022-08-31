@@ -226,12 +226,12 @@ proc UpdateMaskMenu {} {
     switch -- [$current(frame) get type] {
 	base {
 	    $ds9(mb).analysis entryconfig \
-		"[msgcat::mc {Mask Parameters}]..." -state normal
+		[msgcat::mc {Mask Parameters}] -state normal
 	}
 	3d -
 	rgb {
 	    $ds9(mb).analysis entryconfig \
-		"[msgcat::mc {Mask Parameters}]..." -state disabled
+		[msgcat::mc {Mask Parameters}] -state disabled
 	}
     }
 }

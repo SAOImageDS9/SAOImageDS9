@@ -27,7 +27,7 @@ proc ScaleMainMenu {} {
     $ds9(mb).scale add radiobutton \
 	-label [msgcat::mc {Histogram Equalization}] \
 	-variable scale(type) -command ChangeScale -value histequ
-    $ds9(mb).scale add command -label "[msgcat::mc {Log Exponent}]..." \
+    $ds9(mb).scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ScaleLogDialog
     $ds9(mb).scale add separator
     $ds9(mb).scale add radiobutton -label [msgcat::mc {Min Max}] \
@@ -54,7 +54,7 @@ proc ScaleMainMenu {} {
 	-variable scale(mode) -command ChangeScaleMode -value zmax
     $ds9(mb).scale add radiobutton -label [msgcat::mc {User}] \
 	-variable scale(mode) -command ChangeScaleMode -value user
-    $ds9(mb).scale add command -label "[msgcat::mc {Other}]..." \
+    $ds9(mb).scale add command -label [msgcat::mc {Other}] \
 	-command ChangeScaleModeDialog
     $ds9(mb).scale add separator
     $ds9(mb).scale add radiobutton -label [msgcat::mc {Global}] \
@@ -67,9 +67,9 @@ proc ScaleMainMenu {} {
     $ds9(mb).scale add separator
     $ds9(mb).scale add checkbutton -label "[msgcat::mc {Use}] DATASEC" \
 	-variable scale(datasec) -command ChangeDATASEC
-    $ds9(mb).scale add command -label {ZScale...} -command ZScaleDialog
+    $ds9(mb).scale add command -label {ZScale} -command ZScaleDialog
     $ds9(mb).scale add separator
-    $ds9(mb).scale add command -label "[msgcat::mc {Scale Parameters}]..." \
+    $ds9(mb).scale add command -label [msgcat::mc {Scale Parameters}] \
 	-command ScaleDialog
 
     ThemeMenu $ds9(mb).scale.minmax
@@ -83,7 +83,7 @@ proc ScaleMainMenu {} {
 	-variable minmax(mode) -value irafmin -command ChangeMinMax
     $ds9(mb).scale.minmax add separator
     $ds9(mb).scale.minmax add command \
-	-label "[msgcat::mc {Sample Parameters}]..." -command MinMaxDialog
+	-label [msgcat::mc {Sample Parameters}] -command MinMaxDialog
 }
 
 proc PrefsDialogScaleMenu {w} {
@@ -385,7 +385,7 @@ proc PrefsDialogButtonbarScale {f} {
     $m add checkbutton -label "[msgcat::mc {Use}] DATASEC" \
 	-variable pbuttons(scale,datasec) -command {UpdateButtons buttons(scale)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Scale Parameters}]..." \
+    $m add checkbutton -label [msgcat::mc {Scale Parameters}] \
 	-variable pbuttons(scale,params) -command {UpdateButtons buttons(scale)}
 }
 

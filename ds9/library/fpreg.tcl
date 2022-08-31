@@ -26,7 +26,7 @@ proc FPReg {varname interactive resultname} {
     # system
     append result "wcs; fk5\n"
 
-    # for each row in the table ...
+    # for each row in the table
     for {set ii 1} {$ii <= $nrows} {incr ii} {
 
 	# col

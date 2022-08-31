@@ -581,7 +581,7 @@ proc ::tk::dialog::file::Update {w} {
     }
 
     # Turn on the busy cursor. BUG?? We haven't disabled X events, though,
-    # so the user may still click and cause havoc ...
+    # so the user may still click and cause havoc
     #
     set entCursor [$data(ent) cget -cursor]
     set dlgCursor [$w         cget -cursor]
@@ -694,7 +694,7 @@ proc ::tk::dialog::file::SetFilter {w type} {
 	    set data(-defaultextension) \
 		    [string trimleft [lindex $data(filter) $index] "*"]
 	} else {
-	    # Couldn't find anything!  Reset to a safe default...
+	    # Couldn't find anything!  Reset to a safe default
 	    set data(-defaultextension) ""
 	}
     }
@@ -1180,7 +1180,7 @@ proc ::tk::dialog::file::GlobFiltered {dir type {overrideFilter 0}} {
 	# We have a catch because we might have a really bad pattern (e.g.,
 	# with an unbalanced brace); even [glob -nocomplain] doesn't like it.
 	# Using a catch ensures that it just means we match nothing instead of
-	# throwing a nasty error at the user...
+	# throwing a nasty error at the user
 	foreach f [glob {*}$opts -- {*}$patterns] {
 	    if {$f eq "." || $f eq ".."} {
 		continue

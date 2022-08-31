@@ -24,7 +24,7 @@ proc FileMainMenu {} {
     $ds9(mb).file add cascade -label [msgcat::mc {Export}] \
 	-menu $ds9(mb).file.export
     $ds9(mb).file add separator
-    $ds9(mb).file add command -label "[msgcat::mc {Prism}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Prism}] \
 	-command [list PrismDialogLoad prism]
     $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {Save Image}] \
@@ -50,9 +50,9 @@ proc FileMainMenu {} {
     $ds9(mb).file add cascade -label [msgcat::mc {SAMP}] \
 	-menu $ds9(mb).file.samp
     $ds9(mb).file add separator
-    $ds9(mb).file add command -label "[msgcat::mc {Open TCL Console}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Open TCL Console}] \
 	-command OpenConsole
-    $ds9(mb).file add command -label "[msgcat::mc {Source TCL}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Source TCL}] \
 	-command OpenSource
     $ds9(mb).file add separator
     $ds9(mb).file add command -label "[msgcat::mc {Page Setup}]..." \
@@ -107,7 +107,7 @@ proc FileMainMenu {} {
 	-command [list OpenDialog mosaicimagewfpc2]
     $ds9(mb).file.open add separator
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {URL}]..." \
+	-label [msgcat::mc {URL}] \
 	-command [list OpenURLFits]
 
     # File Save Menu
@@ -233,7 +233,7 @@ proc FileMainMenu {} {
     $ds9(mb).file.samp.table add separator
 
     ThemeMenu $ds9(mb).file.xpa
-    $ds9(mb).file.xpa add command -label "[msgcat::mc {Information}]..." \
+    $ds9(mb).file.xpa add command -label [msgcat::mc {Information}] \
 	-command XPAInfo
     $ds9(mb).file.xpa add separator
     $ds9(mb).file.xpa add command -label [msgcat::mc {Connect}] \
@@ -647,9 +647,9 @@ proc PrefsDialogButtonbarFile {f} {
     $m add cascade -label [msgcat::mc {XPA}] -menu $m.xpa
     $m add cascade -label [msgcat::mc {SAMP}] -menu $m.samp
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Open TCL Console}]..." \
+    $m add checkbutton -label [msgcat::mc {Open TCL Console}] \
 	-variable pbuttons(file,console) -command {UpdateButtons buttons(file)}
-    $m add checkbutton -label "[msgcat::mc {Source TCL}]..." \
+    $m add checkbutton -label [msgcat::mc {Source TCL}] \
 	-variable pbuttons(file,tcl) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add checkbutton \
@@ -862,7 +862,7 @@ proc PrefsDialogButtonbarFile {f} {
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.xpa
-    $m.xpa add checkbutton -label "[msgcat::mc {Information}]..." \
+    $m.xpa add checkbutton -label [msgcat::mc {Information}] \
 	-variable pbuttons(file,xpa,info) \
 	-command {UpdateButtons buttons(file)}
 
@@ -1172,10 +1172,10 @@ proc UpdateFileMenuXPA {} {
     set bb $ds9(buttons).file
 
     if {[info exists xpa]} {
-	$mm.xpa entryconfig "[msgcat::mc {Information}]..." -state normal
+	$mm.xpa entryconfig [msgcat::mc {Information}] -state normal
 	$mm.xpa entryconfig [msgcat::mc {Disconnect}] -state normal
     } else {
-	$mm.xpa entryconfig "[msgcat::mc {Information}]..." -state disabled
+	$mm.xpa entryconfig [msgcat::mc {Information}] -state disabled
 	$mm.xpa entryconfig [msgcat::mc {Disconnect}] -state disabled
     }
 }

@@ -223,7 +223,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.symbol add cascade -label [msgcat::mc {Width}] -menu $mb.symbol.width
     $mb.symbol add cascade -label [msgcat::mc {Font}] -menu $mb.symbol.font
     $mb.symbol add separator
-    $mb.symbol add command -label "[msgcat::mc {Advanced}]..." \
+    $mb.symbol add command -label [msgcat::mc {Advanced}] \
 	-command [list CATSymDialog $varname]
 
     ThemeMenu $mb.symbol.shape

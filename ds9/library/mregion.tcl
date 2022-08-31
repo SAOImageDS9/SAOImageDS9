@@ -44,11 +44,11 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label "[msgcat::mc {Groups}]..." \
 	-command GroupDialog
     $ds9(mb).region add separator
-    $ds9(mb).region add command -label [msgcat::mc {Select All}] \
+    $ds9(mb).region add command -label [msgcat::mc {All}] \
 	-command MarkerSelectAll -accelerator "${ds9(ctrl)}A"
-    $ds9(mb).region add command -label [msgcat::mc {Select None}] \
+    $ds9(mb).region add command -label [msgcat::mc {None}] \
 	-command MarkerUnselectAll -accelerator "${ds9(shiftctrl)}A"
-    $ds9(mb).region add command -label [msgcat::mc {Invert Selection}] \
+    $ds9(mb).region add command -label [msgcat::mc {Invert}] \
 	-command MarkerSelectInvert
     $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Save Selection}] \
@@ -934,13 +934,13 @@ proc PrefsDialogButtonbarRegion {f} {
 	-variable pbuttons(region,group) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
-    $m add checkbutton -label [msgcat::mc {Select All}] \
+    $m add checkbutton -label [msgcat::mc {All}] \
 	-variable pbuttons(region,all) \
 	-command {UpdateButtons buttons(region)}
-    $m add checkbutton -label [msgcat::mc {Select None}] \
+    $m add checkbutton -label [msgcat::mc {None}] \
 	-variable pbuttons(region,none) \
 	-command {UpdateButtons buttons(region)}
-    $m add checkbutton -label [msgcat::mc {Invert Selection}] \
+    $m add checkbutton -label [msgcat::mc {Invert}] \
 	-variable pbuttons(region,invert) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
@@ -1151,9 +1151,10 @@ proc UpdateRegionMenu {} {
 	    $mm entryconfig [msgcat::mc {New Group}] -state normal
 	    $mm entryconfig "[msgcat::mc {Groups}]..." -state normal
 
-	    $mm entryconfig [msgcat::mc {Select All}] -state normal
-	    $mm entryconfig [msgcat::mc {Select None}] -state normal
-	    $mm entryconfig [msgcat::mc {Invert Selection}] -state normal
+	    $mm entryconfig [msgcat::mc {All}] -state normal
+	    $mm entryconfig [msgcat::mc {None}] -state normal
+	    $mm entryconfig [msgcat::mc {Invert}] -state normal
+
 	    $mm entryconfig [msgcat::mc {Delete Selection}] -state normal
 
 	    $mm entryconfig "[msgcat::mc {Open}]..." -state normal

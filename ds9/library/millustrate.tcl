@@ -28,6 +28,8 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add command -label [msgcat::mc {Select None}]
     $ds9(mb).illustrate add command -label [msgcat::mc {Invert Selection}]
     $ds9(mb).illustrate add separator
+    $ds9(mb).illustrate add command -label [msgcat::mc {Delete Selection}]
+    $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete}]
 
     ThemeMenu $ds9(mb).illustrate.shape
@@ -168,6 +170,7 @@ proc ButtonsIllustrateDef {} {
 	illustrate,all 1
 	illustrate,none 1
 	illustrate,invert 1
+	illustrate,deleteselect 1
 	illustrate,delete 1
     }
 }
@@ -209,6 +212,9 @@ proc CreateButtonsIllustrate {} {
     ButtonButton $ds9(buttons).illustrate.invert \
 	[string tolower [msgcat::mc {Invert}]] {}
 
+    ButtonButton $ds9(buttons).illustrate.deleteselect \
+	[string tolower [msgcat::mc {Delete Selection}]] {}
+
     ButtonButton $ds9(buttons).illustrate.delete \
 	[string tolower [msgcat::mc {Delete}]] {}
 
@@ -224,6 +230,7 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.all pbuttons(illustrate,all)
         $ds9(buttons).illustrate.none pbuttons(illustrate,none)
         $ds9(buttons).illustrate.invert pbuttons(illustrate,invert)
+        $ds9(buttons).illustrate.delete pbuttons(illustrate,deleteselect)
         $ds9(buttons).illustrate.delete pbuttons(illustrate,delete)
     "
 }
@@ -253,6 +260,10 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-command {UpdateButtons buttons(illustrate)}
     $m add checkbutton -label [msgcat::mc {Invert Selection}] \
 	-variable pbuttons(illustrate,invert) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Delete Selection}] \
+	-variable pbuttons(illustrate,deleteselect) \
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Delete}] \

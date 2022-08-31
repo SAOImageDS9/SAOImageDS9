@@ -54,7 +54,7 @@ proc EditMainMenu {} {
 	x11 -
 	win32 {
 	    $ds9(mb).edit add separator
-	    $ds9(mb).edit add command -label "[msgcat::mc {Preferences}]..." \
+	    $ds9(mb).edit add command -label [msgcat::mc {Preferences}] \
 		-command PrefsDialog -accelerator "${ds9(ctrl)},"
 
 	}

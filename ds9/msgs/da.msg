@@ -237,17 +237,17 @@
 ::msgcat::mcset da {Delete All Frames} {Slet alle rammer}
 ::msgcat::mcset da {Delete All Groups?} {Slet alle grupper?}
 ::msgcat::mcset da {Delete All Groups} {Slet alle grupper}
+::msgcat::mcset da {Delete All Load} 
+::msgcat::mcset da {Delete All and Open} 
 ::msgcat::mcset da {Delete All} {Slet alt}
 ::msgcat::mcset da {Delete Color Tags} 
 ::msgcat::mcset da {Delete Dataset} 
 ::msgcat::mcset da {Delete Frame} {Slet denne ramme}
 ::msgcat::mcset da {Delete Graph} 
 ::msgcat::mcset da {Delete Group} {Slet gruppe}
-::msgcat::mcset da {Delete Load} 
 ::msgcat::mcset da {Delete Regions?} 
 ::msgcat::mcset da {Delete Selection} 
 ::msgcat::mcset da {Delete Select} 
-::msgcat::mcset da {Delete and Open} 
 ::msgcat::mcset da {Delete} {Slet} 
 ::msgcat::mcset da {Depth} {Dybde}
 ::msgcat::mcset da {Detector} {Detektor}

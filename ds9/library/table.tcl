@@ -518,9 +518,9 @@ proc TBLEditDialog {varname which db} {
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command [list TBLEditDialogLoad $w]
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command [list TBLEditDialogSave $w]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \

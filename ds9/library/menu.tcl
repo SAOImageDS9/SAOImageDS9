@@ -595,7 +595,7 @@ proc ColorMenu {w varname color cmd} {
     $w add radiobutton -label [msgcat::mc {Yellow}] \
 	-variable ${varname}($color) -value yellow -command $cmd
     $w add separator
-    $w add command -label "[msgcat::mc {Other Color}]..." \
+    $w add command -label [msgcat::mc {Other Color}] \
 	-command [list ColorMenuOther $varname $color $cmd]
 }
 
@@ -643,7 +643,7 @@ proc ColorFillMenu {w varname color fill cmd1 cmd2} {
     $w add radiobutton -label [msgcat::mc {Yellow}] \
 	-variable ${varname}($color) -value yellow -command $cmd1
     $w add separator
-    $w add command -label "[msgcat::mc {Other Color}]..." \
+    $w add command -label [msgcat::mc {Other Color}] \
 	-command [list ColorMenuOther $varname $color $cmd1]
     $w add separator
     $w add checkbutton -label [msgcat::mc {Fill}] \
@@ -692,7 +692,7 @@ proc FontMenu {w varname font size weight slant cmd} {
     $w add radiobutton -label {72} -variable ${varname}($size) \
 	-value 72 -command $cmd
     $w add separator
-    $w add command -label "[msgcat::mc {Other Font Size}]..." \
+    $w add command -label [msgcat::mc {Other Font Size}] \
 	-command [list FontMenuSize $varname $size $cmd]
     $w add separator
     $w add radiobutton -label [msgcat::mc {Normal}] \

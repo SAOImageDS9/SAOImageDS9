@@ -56,7 +56,7 @@ proc BinMainMenu {} {
     $ds9(mb).bin add radiobutton -label {8192x8192} \
 	-variable bin(buffersize) -value 8192 -command ChangeBinBufferSize
     $ds9(mb).bin add separator
-    $ds9(mb).bin add command -label "[msgcat::mc {Binning Parameters}]..." \
+    $ds9(mb).bin add command -label [msgcat::mc {Binning Parameters}] \
 	-command BinDialog
 }
 
@@ -303,7 +303,7 @@ proc PrefsDialogButtonbarBin {f} {
     $m add checkbutton -label {8192x8192} \
 	-variable pbuttons(bin,8192x) -command {UpdateButtons buttons(bin)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Binning Parameters}]..." \
+    $m add checkbutton -label [msgcat::mc {Binning Parameters}] \
 	-variable pbuttons(bin,params) -command {UpdateButtons buttons(bin)}
 }
 

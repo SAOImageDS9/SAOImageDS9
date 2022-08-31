@@ -39,12 +39,12 @@ proc EditTextDialog {varname title width height tvarname} {
 
 	$var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
 	ThemeMenu $var(mb).file
-	$var(mb).file add command -label "[msgcat::mc {Open}]..." \
+	$var(mb).file add command -label [msgcat::mc {Open}] \
 	    -command "EditTextLoadFile $varname" -accelerator "${ds9(ctrl)}O"
-	$var(mb).file add command -label "[msgcat::mc {Save}]..." \
+	$var(mb).file add command -label [msgcat::mc {Save}] \
 	    -command "SimpleTextSaveFile $varname" -accelerator "${ds9(ctrl)}S"
 	$var(mb).file add separator
-	$var(mb).file add command -label "[msgcat::mc {Print}]..." \
+	$var(mb).file add command -label [msgcat::mc {Print}] \
 	    -command "SimpleTextPrint $varname" \
 	    -accelerator "${ds9(ctrl)}P"
 	$var(mb).file add separator
@@ -67,7 +67,7 @@ proc EditTextDialog {varname title width height tvarname} {
 	$var(mb).edit add command -label [msgcat::mc {Select None}] \
 	    -command "SimpleTextSelectNone $varname"
 	$var(mb).edit add separator
-	$var(mb).edit add command -label "[msgcat::mc {Find}]..." \
+	$var(mb).edit add command -label [msgcat::mc {Find}]" \
 	    -command "SimpleTextFind $varname" -accelerator "${ds9(ctrl)}F"
 	$var(mb).edit add command -label [msgcat::mc {Find Next}] \
 	    -command "SimpleTextFindNext $varname" -accelerator "${ds9(ctrl)}G"

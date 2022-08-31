@@ -63,11 +63,11 @@ proc ZoomMainMenu {} {
     $ds9(mb).zoom add radiobutton -label "270 [msgcat::mc {Degrees}]" \
 	-variable current(rotate) -value 270 -command ChangeRotate
     $ds9(mb).zoom add separator
-    $ds9(mb).zoom add command -label "[msgcat::mc {Crop Parameters}]..." \
+    $ds9(mb).zoom add command -label [msgcat::mc {Crop Parameters}] \
 	-command CropDialog
     $ds9(mb).zoom add separator
     $ds9(mb).zoom add command \
-	-label "[msgcat::mc {Pan Zoom Rotate Parameters}]..." \
+	-label [msgcat::mc {Pan Zoom Rotate Parameters}] \
 	-command PanZoomDialog
 
     bind $ds9(top) <<ZoomIn>> [list Zoom 2 2]
@@ -373,10 +373,10 @@ proc PrefsDialogButtonbarZoom {f} {
     $m add checkbutton -label "270 [msgcat::mc {Degrees}]" \
 	-variable pbuttons(zoom,270) -command {UpdateButtons buttons(zoom)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Crop Parameters}]..." \
+    $m add checkbutton -label [msgcat::mc {Crop Parameters}] \
 	-variable pbuttons(zoom,crop) -command {UpdateButtons buttons(zoom)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Pan Zoom Rotate Parameters}]..." \
+    $m add checkbutton -label [msgcat::mc {Pan Zoom Rotate Parameters}] \
 	-variable pbuttons(zoom,params) -command {UpdateButtons buttons(zoom)}
 }
 

@@ -237,17 +237,17 @@
 ::msgcat::mcset es {Delete All Frames} {Borrar todos los marcos}
 ::msgcat::mcset es {Delete All Groups?} [encoding convertfrom iso8859-1 {¿Borrar todos los grupos?}]
 ::msgcat::mcset es {Delete All Groups} {Borrar todos los grupos}
+::msgcat::mcset es {Delete All Load} 
+::msgcat::mcset es {Delete All and Open} 
 ::msgcat::mcset es {Delete All} 
 ::msgcat::mcset es {Delete Color Tags} 
 ::msgcat::mcset es {Delete Dataset} 
 ::msgcat::mcset es {Delete Frame} {Borrar marco}
 ::msgcat::mcset es {Delete Graph} 
 ::msgcat::mcset es {Delete Group} {Borrar grupo}
-::msgcat::mcset es {Delete Load} 
 ::msgcat::mcset es {Delete Regions?} 
 ::msgcat::mcset es {Delete Selection} 
 ::msgcat::mcset es {Delete Select} 
-::msgcat::mcset es {Delete and Open} 
 ::msgcat::mcset es {Delete} {Borrar}
 ::msgcat::mcset es {Depth} {Profundidad}
 ::msgcat::mcset es {Detector} 

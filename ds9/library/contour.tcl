@@ -170,9 +170,9 @@ proc ContourDialog {} {
     $mb add cascade -label [msgcat::mc {Method}] -menu $mb.method
 
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command ContourLoadDialog -accelerator "${ds9(ctrl)}O"
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command ContourSaveDialog -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \
@@ -184,12 +184,12 @@ proc ContourDialog {} {
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Copy Contours}] \
 	-command ContourCCopyDialog
-    $mb.file add command -label "[msgcat::mc {Paste Contours}]..." \
+    $mb.file add command -label [msgcat::mc {Paste Contours}] \
 	-command ContourCPasteDialog
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load Contour Levels}]..." \
+    $mb.file add command -label [msgcat::mc {Load Contour Levels}] \
 	-command ContourLoadLevels
-    $mb.file add command -label "[msgcat::mc {Save Contour Levels}]..." \
+    $mb.file add command -label [msgcat::mc {Save Contour Levels}] \
 	-command ContourSaveLevels
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Convert to Polygons}] \
@@ -228,7 +228,7 @@ proc ContourDialog {} {
 	-label [msgcat::mc {Histogram Equalization}] \
 	-variable contour(scale) -value histequ
     $mb.scale add separator
-    $mb.scale add command -label "[msgcat::mc {Log Exponent}]..." \
+    $mb.scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ContourLogDialog
 
     ThemeMenu $mb.limit

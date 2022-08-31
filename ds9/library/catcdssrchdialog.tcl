@@ -63,9 +63,9 @@ proc CATCDSSrchDialog {varname} {
     # file
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command "CATCDSSrchLoadFile $varname" -accelerator "${ds9(ctrl)}O"
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command "CATCDSSrchSaveFile $varname" -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Retrieve}] \

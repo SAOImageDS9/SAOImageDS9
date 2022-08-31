@@ -49,8 +49,7 @@ proc HelpMainMenu {} {
 	x11 -
 	win32 {
 	    $ds9(mb).help add separator
-	    $ds9(mb).help add command \
-		-label "[msgcat::mc {About SAOImageDS9}]..." \
+	    $ds9(mb).help add command -label [msgcat::mc {About SAOImageDS9}] \
 		-command AboutBox
 	}
 	aqua {}
@@ -148,6 +147,6 @@ proc PrefsDialogButtonbarHelp {f} {
     $m add checkbutton -label [msgcat::mc {Acknowledgment}] \
 	-variable pbuttons(help,ack) -command {UpdateButtons buttons(help)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {About SAOImageDS9}]..." \
+    $m add checkbutton -label [msgcat::mc {About SAOImageDS9}] \
 	-variable pbuttons(help,about) -command {UpdateButtons buttons(help)}
 }

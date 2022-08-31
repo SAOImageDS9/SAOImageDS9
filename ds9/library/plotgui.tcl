@@ -31,9 +31,9 @@ proc PlotGUI {varname} {
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command [list PlotGUIApply $varname]
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load Data}]..." \
+    $mb.file add command -label [msgcat::mc {Load Data}] \
 	-command [list PlotLoadData $varname]
-    $mb.file add command -label "[msgcat::mc {Save Data}]..." \
+    $mb.file add command -label [msgcat::mc {Save Data}] \
 	-command [list PlotSaveData $varname]
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Export}] \
@@ -44,15 +44,15 @@ proc PlotGUI {varname} {
     $mb.file add command -label [msgcat::mc {List Data}] \
        -command "set ${varname}(list) 1; PlotList $varname"
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Backup}]..." \
+    $mb.file add command -label [msgcat::mc {Backup}] \
 	-command [list PlotBackupDialog $varname]
-    $mb.file add command -label "[msgcat::mc {Restore}]..." \
+    $mb.file add command -label [msgcat::mc {Restore}] \
 	-command [list PlotRestoreDialog $varname]
     $mb.file add separator
     $mb.file add command \
-	-label "[msgcat::mc {Page Setup}]..." \
+	-label [msgcat::mc {Page Setup}] \
 	-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
-    $mb.file add command -label "[msgcat::mc {Print}]..." \
+    $mb.file add command -label [msgcat::mc {Print}] \
 	-command [list PlotPSPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \

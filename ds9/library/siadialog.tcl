@@ -75,7 +75,7 @@ proc SIADialog {varname title url opts action} {
 
     # file
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Export}] -menu $mb.file.export
@@ -96,7 +96,7 @@ proc SIADialog {varname title url opts action} {
 	-label [msgcat::mc {Update from Current Crosshair}] \
 	-command [list SIACrosshair $varname]
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Print}]..." \
+    $mb.file add command -label [msgcat::mc {Print}] \
 	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
@@ -104,9 +104,9 @@ proc SIADialog {varname title url opts action} {
 
     # Export
     ThemeMenu $mb.file.export
-    $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
+    $mb.file.export add command -label [msgcat::mc {Starbase}] \
 	-command [list TBLSaveRDBFile $varname]
-    $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
+    $mb.file.export add command -label [msgcat::mc {Tab-Separated-Value}] \
 	-command [list TBLSaveTSVFile $varname]
 
     # edit
@@ -414,12 +414,12 @@ proc SIADialogUpdate {varname} {
     # do we have a db?
     if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
-	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state normal
+	$var(mb).file entryconfig [msgcat::mc {Print}] -state normal
 
 	$var(top).buttons.clear configure -state normal
     } else {
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
-	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Print}] -state disabled
 
 	$var(top).buttons.clear configure -state disabled
     }

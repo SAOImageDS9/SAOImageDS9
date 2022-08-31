@@ -60,11 +60,11 @@ proc FrameMainMenu {} {
     $ds9(mb).frame add command -label [msgcat::mc {Last Frame}] \
 	-command LastFrame
     $ds9(mb).frame add separator
-    $ds9(mb).frame add command -label "[msgcat::mc {Cube}]..." \
+    $ds9(mb).frame add command -label [msgcat::mc {Cube}] \
 	-command CubeDialog
-    $ds9(mb).frame add command -label "[msgcat::mc {RGB}]..." \
+    $ds9(mb).frame add command -label [msgcat::mc {RGB}] \
 	-command RGBDialog
-    $ds9(mb).frame add command -label "[msgcat::mc {3d}]..." \
+    $ds9(mb).frame add command -label [msgcat::mc {3d}] \
 	-command 3DDialog
     $ds9(mb).frame add separator
     $ds9(mb).frame add cascade -label [msgcat::mc {Frame Parameters}] \
@@ -275,7 +275,7 @@ proc FrameMainMenu {} {
 	-variable tile(mode) -value row -command DisplayMode
     $ds9(mb).frame.params.tile add separator
     $ds9(mb).frame.params.tile add command \
-	-label "[msgcat::mc {Tile Parameters}]..." -command TileDialog
+	-label [msgcat::mc {Tile Parameters}] -command TileDialog
 
     ThemeMenu $ds9(mb).frame.params.blink
     $ds9(mb).frame.params.blink add radiobutton \
@@ -694,11 +694,11 @@ proc CreateButtonsFrame {} {
 	[string tolower [msgcat::mc {Last}]] LastFrame
 
     ButtonButton $ds9(buttons).frame.cube \
-	[string tolower "[msgcat::mc {Cube}]..."] CubeDialog
+	[string tolower [msgcat::mc {Cube}]] CubeDialog
     ButtonButton $ds9(buttons).frame.rgb \
-	[string tolower "[msgcat::mc {RGB}]..."] RGBDialog
+	[string tolower [msgcat::mc {RGB}]] RGBDialog
     ButtonButton $ds9(buttons).frame.3d \
-	[string tolower "[msgcat::mc {3d}]..."] 3DDialog
+	[string tolower [msgcat::mc {3d}]] 3DDialog
 
     ButtonButton $ds9(buttons).frame.size \
 	[string tolower [msgcat::mc {Size}]] DisplayDefaultDialog
@@ -843,11 +843,11 @@ proc PrefsDialogButtonbarFrame {f} {
     $m add checkbutton -label [msgcat::mc {Last Frame}] \
 	-variable pbuttons(frame,last) -command {UpdateButtons buttons(frame)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Cube}]..." \
+    $m add checkbutton -label [msgcat::mc {Cube}] \
 	-variable pbuttons(frame,cube) -command {UpdateButtons buttons(frame)}
-    $m add checkbutton -label "[msgcat::mc {RGB}]..." \
+    $m add checkbutton -label [msgcat::mc {RGB}] \
 	-variable pbuttons(frame,rgb) -command {UpdateButtons buttons(frame)}
-    $m add checkbutton -label "[msgcat::mc {3d}]..." \
+    $m add checkbutton -label [msgcat::mc {3d}] \
 	-variable pbuttons(frame,3d) -command {UpdateButtons buttons(frame)}
     $m add separator
     $m add cascade -label [msgcat::mc {Frame Parameters}] -menu $m.params
@@ -1177,42 +1177,42 @@ proc UpdateFrameMenu {} {
     }
 
     if {$current(frame) != {}} {
-	$ds9(mb).frame entryconfig "[msgcat::mc {Cube}]..." \
+	$ds9(mb).frame entryconfig [msgcat::mc {Cube}] \
 	    -state normal
 	$ds9(buttons).frame.cube configure -state normal
 
 	switch -- [$current(frame) get type] {
 	    base {
-		$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
+		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
 		    -state disabled
-		$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..." \
+		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
 		    -state normal
 		$ds9(buttons).frame.rgb configure -state disabled
 		$ds9(buttons).frame.3d configure -state normal
 	    }
 	    rgb {
-		$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
+		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
 		    -state normal
-		$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..." \
+		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
 		    -state disabled
 		$ds9(buttons).frame.rgb configure -state normal
 		$ds9(buttons).frame.3d configure -state disabled
 	    }
 	    3d {
-		$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
+		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
 		    -state disabled
-		$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..."  \
+		$ds9(mb).frame entryconfig [msgcat::mc {3d}]  \
 		    -state normal
 		$ds9(buttons).frame.rgb configure -state disabled
 		$ds9(buttons).frame.3d configure -state normal
 	    }
 	}
     } else {
-	$ds9(mb).frame entryconfig "[msgcat::mc {Cube}]..." \
+	$ds9(mb).frame entryconfig [msgcat::mc {Cube}] \
 	    -state disabled
-	$ds9(mb).frame entryconfig "[msgcat::mc {RGB}]..." \
+	$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
 	    -state disabled
-	$ds9(mb).frame entryconfig "[msgcat::mc {3d}]..." \
+	$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
 	    -state disabled
 	$ds9(buttons).frame.cube configure -state disabled
 	$ds9(buttons).frame.rgb configure -state disabled

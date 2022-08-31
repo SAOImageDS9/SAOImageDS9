@@ -251,7 +251,7 @@ proc ScaleDialog {} {
     $mb.scale add radiobutton -label [msgcat::mc {Histogram Equalization}] \
 	-variable scale(type) -command ChangeScale -value histequ
     $mb.scale add separator
-    $mb.scale add command -label "[msgcat::mc {Log Exponent}]..." \
+    $mb.scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ScaleLogDialog
 
     ThemeMenu $mb.limit
@@ -282,7 +282,7 @@ proc ScaleDialog {} {
     $mb.limit add radiobutton -label [msgcat::mc {User}] \
 	-variable scale(mode) -command ChangeScaleMode -value user
     $mb.limit add separator
-    $mb.limit add command -label "[msgcat::mc {Other}]..." \
+    $mb.limit add command -label [msgcat::mc {Other}] \
 	-command ChangeScaleModeDialog
 
     ThemeMenu $mb.scope 
@@ -301,14 +301,14 @@ proc ScaleDialog {} {
     $mb.minmax add radiobutton -label {IRAF-MIN IRAF-MAX} \
 	-variable minmax(mode) -value irafmin -command ChangeMinMax
     $mb.minmax add separator
-    $mb.minmax add command -label "[msgcat::mc {Sample Parameters}]..." \
+    $mb.minmax add command -label [msgcat::mc {Sample Parameters}] \
 	-command MinMaxDialog
 
     ThemeMenu $mb.param 
     $mb.param add checkbutton -label "[msgcat::mc {Use}] DATASEC" \
 	-variable scale(datasec) -command ChangeDATASEC
     $mb.param add separator
-    $mb.param add command -label {ZScale...} -command ZScaleDialog
+    $mb.param add command -label {ZScale} -command ZScaleDialog
 
     ThemeMenu $mb.graph 
     $mb.graph add radiobutton -label [msgcat::mc {Linear}] \

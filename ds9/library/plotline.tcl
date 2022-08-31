@@ -46,7 +46,7 @@ proc PlotLineMenus {varname} {
     $var(mb).dataline add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).dataline add command -label "[msgcat::mc {Name}]..." \
+    $var(mb).dataline add command -label [msgcat::mc {Name}] \
 	-command [list DatasetNameDialog $varname]
     $var(mb).dataline add separator
     $var(mb).dataline add cascade -label [msgcat::mc {Color}] \

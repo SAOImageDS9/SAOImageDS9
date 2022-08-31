@@ -237,17 +237,17 @@
 ::msgcat::mcset cs {Delete All Frames} [encoding convertfrom iso8859-2 {Smazat v¹echny snímky}]
 ::msgcat::mcset cs {Delete All Groups?} [encoding convertfrom iso8859-2 {Smazat v¹echny skupiny?}]
 ::msgcat::mcset cs {Delete All Groups} [encoding convertfrom iso8859-2 {Smazat v¹echny skupiny}]
+::msgcat::mcset cs {Delete All Load} 
+::msgcat::mcset cs {Delete All and Open} 
 ::msgcat::mcset cs {Delete All} [encoding convertfrom iso8859-2 {Smazat v¹e}]
 ::msgcat::mcset cs {Delete Color Tags} 
 ::msgcat::mcset cs {Delete Dataset} 
 ::msgcat::mcset cs {Delete Frame} [encoding convertfrom iso8859-2 {Smazat snímek}]
 ::msgcat::mcset cs {Delete Graph} 
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
-::msgcat::mcset cs {Delete Load} 
 ::msgcat::mcset cs {Delete Regions?} 
 ::msgcat::mcset cs {Delete Selection} 
 ::msgcat::mcset cs {Delete Select} 
-::msgcat::mcset cs {Delete and Open} 
 ::msgcat::mcset cs {Delete} [encoding convertfrom iso8859-2 {Smazat}]
 ::msgcat::mcset cs {Depth} [encoding convertfrom iso8859-2 {Hloubka}]
 ::msgcat::mcset cs {Detector} [encoding convertfrom iso8859-2 {Detektor}]

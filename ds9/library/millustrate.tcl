@@ -24,19 +24,24 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add command -label [msgcat::mc {Move to Front}]
     $ds9(mb).illustrate add command -label [msgcat::mc {Move to Back}]
     $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add command -label [msgcat::mc {All}]
-    $ds9(mb).illustrate add command -label [msgcat::mc {None}]
-    $ds9(mb).illustrate add command -label [msgcat::mc {Invert}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {All}] \
+	-command IllustrateSelectAll
+    $ds9(mb).illustrate add command -label [msgcat::mc {None}] \
+	-command IllustrateSelectNone
+    $ds9(mb).illustrate add command -label [msgcat::mc {Invert}] \
+	-command IllustrateInvertSelect
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Save Selection}]
     $ds9(mb).illustrate add command -label [msgcat::mc {List Selection}]
-    $ds9(mb).illustrate add command -label [msgcat::mc {Delete Selection}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {Delete Selection}] \
+	-command IllustrateDeleteSelect
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label "[msgcat::mc {Open}]..."
     $ds9(mb).illustrate add command -label "[msgcat::mc {Save}]..."
     $ds9(mb).illustrate add command -label "[msgcat::mc {List}]..."
     $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add command -label [msgcat::mc {Delete}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {Delete All}] \
+	-command IllustrateDeleteAll
 
     ThemeMenu $ds9(mb).illustrate.shape
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Circle}] \
@@ -165,12 +170,12 @@ proc ButtonsIllustrateDef {} {
     global pbuttons
 
     array set pbuttons {
-	illustrate,circle 1
-	illustrate,ellipse 1
-	illustrate,box 1
-	illustrate,polygon 1
-	illustrate,line 1
-	illustrate,text 1
+	illustrate,circle 0
+	illustrate,ellipse 0
+	illustrate,box 0
+	illustrate,polygon 0
+	illustrate,line 0
+	illustrate,text 0
 	illustrate,front 1
 	illustrate,back 1
 	illustrate,all 1
@@ -217,18 +222,18 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Back}]] {}
 
     ButtonButton $ds9(buttons).illustrate.all \
-	[string tolower [msgcat::mc {All}]] {}
+	[string tolower [msgcat::mc {All}]] IllustrateSelectAll
     ButtonButton $ds9(buttons).illustrate.none \
-	[string tolower [msgcat::mc {None}]] {}
+	[string tolower [msgcat::mc {None}]] IllustrateSelectNone
     ButtonButton $ds9(buttons).illustrate.invert \
-	[string tolower [msgcat::mc {Invert}]] {}
+	[string tolower [msgcat::mc {Invert}]] IllustrateInvertSelect
 
     ButtonButton $ds9(buttons).illustrate.saveselect \
 	[string tolower [msgcat::mc {Save Select}]] {}
     ButtonButton $ds9(buttons).illustrate.listselect \
 	[string tolower [msgcat::mc {List Select}]] {}
     ButtonButton $ds9(buttons).illustrate.deleteselect \
-	[string tolower [msgcat::mc {Delete Select}]] {}
+	[string tolower [msgcat::mc {Delete Select}]] IllustrateDeleteSelect
 
     ButtonButton $ds9(buttons).illustrate.load \
 	[string tolower [msgcat::mc {Open}]] {}
@@ -238,7 +243,7 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {List}]] {}
 
     ButtonButton $ds9(buttons).illustrate.delete \
-	[string tolower [msgcat::mc {Delete}]] {}
+	[string tolower [msgcat::mc {Delete All}]] IllustrateDeleteAll
 
     set buttons(illustrate) "
         $ds9(buttons).illustrate.circle pbuttons(illustrate,circle)
@@ -254,7 +259,7 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.invert pbuttons(illustrate,invert)
         $ds9(buttons).illustrate.saveselect pbuttons(illustrate,saveselect)
         $ds9(buttons).illustrate.listselect pbuttons(illustrate,listselect)
-        $ds9(buttons).illustrate.delete pbuttons(illustrate,deleteselect)
+        $ds9(buttons).illustrate.deleteselect pbuttons(illustrate,deleteselect)
         $ds9(buttons).illustrate.load pbuttons(illustrate,load)
         $ds9(buttons).illustrate.save pbuttons(illustrate,save)
         $ds9(buttons).illustrate.list pbuttons(illustrate,list)
@@ -309,7 +314,7 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-variable pbuttons(illustrate,list) \
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator
-    $m add checkbutton -label [msgcat::mc {Delete}] \
+    $m add checkbutton -label [msgcat::mc {Delete All}] \
 	-variable pbuttons(illustrate,delete) \
 	-command {UpdateButtons buttons(illustrate)}
 

@@ -286,6 +286,7 @@
 ::msgcat::mcset da {Enter Font Size} 
 ::msgcat::mcset da {Enter Group Name} {Indtast gruppenavn}
 ::msgcat::mcset da {Enter Search Expression} [encoding convertfrom iso8859-1 {Angiv søgeudtryk}]
+::msgcat::mcset da {Enter Text} 
 ::msgcat::mcset da {Enter URL} 
 ::msgcat::mcset da {Entry} 
 ::msgcat::mcset da {Equal Area} {Samme areal}
@@ -409,6 +410,7 @@
 ::msgcat::mcset da {Icons} 
 ::msgcat::mcset da {Identification} {Identifikation}
 ::msgcat::mcset da {If} {Hvis}
+::msgcat::mcset da {Illustrate} 
 ::msgcat::mcset da {Image Servers} 
 ::msgcat::mcset da {Image} {Billed}
 ::msgcat::mcset da {Import Array} 

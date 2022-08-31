@@ -286,6 +286,7 @@
 ::msgcat::mcset zh {Enter Font Size} 
 ::msgcat::mcset zh {Enter Group Name} 
 ::msgcat::mcset zh {Enter Search Expression} 
+::msgcat::mcset zh {Enter Text} 
 ::msgcat::mcset zh {Enter URL} 
 ::msgcat::mcset zh {Entry} 
 ::msgcat::mcset zh {Equal Area} 
@@ -409,6 +410,7 @@
 ::msgcat::mcset zh {Icons} 
 ::msgcat::mcset zh {Identification} 
 ::msgcat::mcset zh {If} 
+::msgcat::mcset zh {Illustrate} 
 ::msgcat::mcset zh {Image Servers} 
 ::msgcat::mcset zh {Image} 
 ::msgcat::mcset zh {Import Array} 

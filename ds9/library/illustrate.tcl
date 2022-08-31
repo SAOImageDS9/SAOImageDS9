@@ -111,7 +111,7 @@ proc UnBindEventsIllustrate {} {
 proc IllustrateModeBegin {} {
     global iillustrate
 
-    IllustrateUnselectAll
+    IllustrateSelectNone
 
     BindEventsIllustrate
     UpdateIllustrateMenu
@@ -120,7 +120,7 @@ proc IllustrateModeBegin {} {
 proc IllustrateModeEnd {} {
     global iillustrate
 
-    IllustrateUnselectAll
+    IllustrateSelectNone
 
     UnBindEventsIllustrate
     UpdateIllustrateMenu
@@ -199,14 +199,14 @@ proc IllustrateButton {xx yy} {
 	}
 
 	# if not selected, select it, unselect all others
-	IllustrateUnselectAll
-	IllustrateAddSelection $id
+	IllustrateSelectNone
+	IllustrateAddSelect $id
 	return
     }	
 
     # create new graphic
     if {[llength $iillustrate(selection)]} {
-	IllustrateUnselectAll
+	IllustrateSelectNone
 	return
     }
 
@@ -342,7 +342,7 @@ proc IllustrateButtonRelease {xx yy} {
 		}
 	    }
 
-	    IllustrateUpdateSelection
+	    IllustrateUpdateSelect
 	}
 
 	beginEdit -
@@ -359,7 +359,7 @@ proc IllustrateButtonRelease {xx yy} {
 	    set ll [$ds9(canvas) find enclosed \
 			$iillustrate(motion,xx) $iillustrate(motion,yy) $xx $yy]
 	    foreach id $ll {
-		IllustrateAddSelection $id
+		IllustrateAddSelect $id
 	    }
 
 	    unset iillustrate(ants)
@@ -406,13 +406,13 @@ proc IllustrateShiftButton {xx yy} {
 	}
 
 	# if not selected, add to selection
-	IllustrateAddSelection $id
+	IllustrateAddSelect $id
 	set iillustrate(motion) beginMove
 	return
     }	
 
     # otherwise, dancing ants
-    IllustrateUnselectAll
+    IllustrateSelectNone
     
     set iillustrate(ants) [$ds9(canvas) create rectangle \
 			       $xx $yy $xx $yy \
@@ -439,7 +439,7 @@ proc IllustrateKey {K A xx yy} {
 
     switch -- $K {
 	Delete -
-	BackSpace {IllustrateDeleteSelection}
+	BackSpace {IllustrateDeleteSelect}
 
 	Up -
 	k {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]}
@@ -598,6 +598,31 @@ proc IllustrateCreateGraphicHandle {id} {
     $ds9(canvas) raise $h4 $id
 }
 
+proc IllustrateDelete {id} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    # handles
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) delete $hh
+    }
+
+    # graphic
+    $ds9(canvas) delete $id
+
+    # update selection
+    set old $iillustrate(selection)
+    set iillustrate(selection) {}
+    foreach gr $old {
+	foreach {idd x1 y1 x2 y2 color fill dash} $gr {
+	    if {$id != $idd} {
+		lappend iillustrate(selection) $gr
+	    }
+	}
+    }
+}
+
 proc IllustrateUpdateGraphic {} {
     global ds9
     global illustrate
@@ -653,6 +678,8 @@ proc IllustrateUpdateGraphic {} {
     }
 }
 
+# Find
+
 proc IllustrateFindGraphic {tag xx yy} {
     global ds9
 
@@ -696,7 +723,83 @@ proc IllustrateFindGraphic {tag xx yy} {
     return $found
 }
 
-# Current Selection
+# Commands
+
+proc IllustrateDeleteSelect {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    # handles
+	    foreach hh [$ds9(canvas) find withtag gr${id}] {
+		$ds9(canvas) delete $hh
+	    }
+
+	    # graphic
+	    $ds9(canvas) delete $id
+	}
+    }
+
+    set iillustrate(selection) {}
+}
+
+proc IllustrateDeleteAll {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    # graphic
+    foreach id [$ds9(canvas) find withtag {graphic}] {
+	$ds9(canvas) delete $id
+    }
+
+    # handles
+    foreach id [$ds9(canvas) find withtag {handle}] {
+	$ds9(canvas) delete $id
+    }
+
+    set iillustrate(selection) {}
+}
+
+proc IllustrateSelectAll {} {
+    global ds9
+    global illustrate
+    global iillustrate
+    
+    foreach id [$ds9(canvas) find withtag {graphic}] {
+	IllustrateAddSelect $id
+    }
+}
+
+proc IllustrateSelectNone {} {
+    global ds9
+    global illustrate
+    global iillustrate
+    
+    foreach id [$ds9(canvas) find withtag {handle}] {
+	$ds9(canvas) itemconfigure $id -state hidden
+    }
+    set iillustrate(selection) {}
+}
+
+proc IllustrateInvertSelect {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    set ll [$ds9(canvas) find withtag {graphic}]
+    foreach id $ll {
+	if {[IllustrateIsSelected $id]} {
+	    IllustrateUnselect $id
+	} else {
+	    IllustrateAddSelect $id
+	}
+    }
+}
+
+# Selection
 
 proc IllustrateIsSelected {id} {
     global ds9
@@ -713,7 +816,7 @@ proc IllustrateIsSelected {id} {
     return 0
 }
 
-proc IllustrateUpdateSelection {} {
+proc IllustrateUpdateSelect {} {
     global ds9
     global illustrate
     global iillustrate
@@ -732,7 +835,7 @@ proc IllustrateUpdateSelection {} {
     }
 }
 
-proc IllustrateAddSelection {id} {
+proc IllustrateAddSelect {id} {
     global ds9
     global illustrate
     global iillustrate
@@ -747,24 +850,6 @@ proc IllustrateAddSelection {id} {
     set dash [$ds9(canvas) itemcget $id -dash]
 
     lappend iillustrate(selection) [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
-}
-
-proc IllustrateDeleteSelection {} {
-    global ds9
-    global illustrate
-    global iillustrate
-
-    foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	    # handles
-	    foreach hh [$ds9(canvas) find withtag gr${id}] {
-		$ds9(canvas) delete $hh
-	    }
-	    # graphic
-	    $ds9(canvas) delete $id
-	}
-    }
-    set iillustrate(selection) {}
 }
 
 proc IllustrateUnselect {id} {
@@ -785,17 +870,6 @@ proc IllustrateUnselect {id} {
 	    }
 	}
     }
-}
-
-proc IllustrateUnselectAll {} {
-    global ds9
-    global illustrate
-    global iillustrate
-    
-    foreach id [$ds9(canvas) find withtag {handle}] {
-	$ds9(canvas) itemconfigure $id -state hidden
-    }
-    set iillustrate(selection) {}
 }
 
 # Util

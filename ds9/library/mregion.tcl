@@ -1207,9 +1207,10 @@ proc UpdateRegionMenu {} {
 	    $mm entryconfig [msgcat::mc {New Group}] -state disabled
 	    $mm entryconfig "[msgcat::mc {Groups}]..." -state disabled
 
-	    $mm entryconfig [msgcat::mc {Select All}] -state disabled
-	    $mm entryconfig [msgcat::mc {Select None}] -state disabled
-	    $mm entryconfig [msgcat::mc {Invert Selection}] -state disabled
+	    $mm entryconfig [msgcat::mc {All}] -state disabled
+	    $mm entryconfig [msgcat::mc {None}] -state disabled
+	    $mm entryconfig [msgcat::mc {Invert}] -state disabled
+
 	    $mm entryconfig [msgcat::mc {Delete Selection}] -state disabled
 
 	    $mm entryconfig "[msgcat::mc {Open}]..." -state disabled

@@ -1,4 +1,5 @@
 ::msgcat::mcset fr {2d} 
+::msgcat::mcset fr {3D} 
 ::msgcat::mcset fr {3d} 
 ::msgcat::mcset fr {A postscript generation error has occurred}  [encoding convertfrom iso8859-1 {Une erreur de génération de postscript s'est produite}]
 ::msgcat::mcset fr {AIP} 
@@ -76,6 +77,8 @@
 ::msgcat::mcset fr {Bar Plot Tool} 
 ::msgcat::mcset fr {Bar Width} 
 ::msgcat::mcset fr {Bar} 
+::msgcat::mcset fr {Basic Layout} 
+::msgcat::mcset fr {Basic} 
 ::msgcat::mcset fr {Behavior} 
 ::msgcat::mcset fr {Bias} {Biais}
 ::msgcat::mcset fr {Bin 3rd Column} [encoding convertfrom iso8859-1 {3ème colonne de bin}]
@@ -242,10 +245,9 @@
 ::msgcat::mcset fr {Delete Group} {Supprimer le groupe} 
 ::msgcat::mcset fr {Delete Load} 
 ::msgcat::mcset fr {Delete Regions?} 
-::msgcat::mcset fr {Delete Regions} 
-::msgcat::mcset fr {Delete Selected Regions} [encoding convertfrom iso8859-1 {Supprimer les régions séléctionnées}]
+::msgcat::mcset fr {Delete Selection} 
 ::msgcat::mcset fr {Delete Select} 
-::msgcat::mcset fr {Delete and Open Regions} 
+::msgcat::mcset fr {Delete and Open} 
 ::msgcat::mcset fr {Delete} {Supprimer} 
 ::msgcat::mcset fr {Depth} {Profondeur} 
 ::msgcat::mcset fr {Detector} {Detecteur} 
@@ -443,7 +445,6 @@
 ::msgcat::mcset fr {Invalid WCS} 
 ::msgcat::mcset fr {Invalid formated multipart/mixed mime type message} {Message invalide de genre mixte/multipart}
 ::msgcat::mcset fr {Invert Colormap} {Plan de couleur inverti}
-::msgcat::mcset fr {Invert Selection} {Selection inverti}
 ::msgcat::mcset fr {Invert} {Invertir}
 ::msgcat::mcset fr {Italic} {Italique}
 ::msgcat::mcset fr {Items Found} [encoding convertfrom iso8859-1 {Articles trouvés}]
@@ -478,7 +479,7 @@
 ::msgcat::mcset fr {List Data} 
 ::msgcat::mcset fr {List Regions} [encoding convertfrom iso8859-1 {Énumérer les régions}]
 ::msgcat::mcset fr {List Region} 
-::msgcat::mcset fr {List Selected Regions} 
+::msgcat::mcset fr {List Selection} 
 ::msgcat::mcset fr {List Select} 
 ::msgcat::mcset fr {List} [encoding convertfrom iso8859-1 {Énumérer}]
 ::msgcat::mcset fr {Load Analysis Commands} {Charger le commandes d'analyse}
@@ -808,7 +809,7 @@
 ::msgcat::mcset fr {Save RGB Image} 
 ::msgcat::mcset fr {Save Region File} 
 ::msgcat::mcset fr {Save Regions} 
-::msgcat::mcset fr {Save Selected Regions} 
+::msgcat::mcset fr {Save Selection} 
 ::msgcat::mcset fr {Save Select} 
 ::msgcat::mcset fr {Save Slice} 
 ::msgcat::mcset fr {Save Template} 

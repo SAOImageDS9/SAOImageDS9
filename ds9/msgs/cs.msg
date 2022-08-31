@@ -1,4 +1,5 @@
 ::msgcat::mcset cs {2d} 
+::msgcat::mcset cs {3D} 
 ::msgcat::mcset cs {3d} 
 ::msgcat::mcset cs {A postscript generation error has occurred} [encoding convertfrom iso8859-2 {Chyba pøi generování postscriptu}]
 ::msgcat::mcset cs {AIP} 
@@ -76,6 +77,8 @@
 ::msgcat::mcset cs {Bar Plot Tool} 
 ::msgcat::mcset cs {Bar Width} 
 ::msgcat::mcset cs {Bar} 
+::msgcat::mcset cs {Basic Layout} 
+::msgcat::mcset cs {Basic} 
 ::msgcat::mcset cs {Behavior} 
 ::msgcat::mcset cs {Bias} 
 ::msgcat::mcset cs {Bin 3rd Column} [encoding convertfrom iso8859-2 {Binuj tøetí sloupec}]
@@ -242,10 +245,9 @@
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
 ::msgcat::mcset cs {Delete Load} 
 ::msgcat::mcset cs {Delete Regions?} 
-::msgcat::mcset cs {Delete Regions} 
-::msgcat::mcset cs {Delete Selected Regions} [encoding convertfrom iso8859-2 {Smazat vybrané oblasti}]
+::msgcat::mcset cs {Delete Selection} 
 ::msgcat::mcset cs {Delete Select} 
-::msgcat::mcset cs {Delete and Open Regions} 
+::msgcat::mcset cs {Delete and Open} 
 ::msgcat::mcset cs {Delete} [encoding convertfrom iso8859-2 {Smazat}]
 ::msgcat::mcset cs {Depth} [encoding convertfrom iso8859-2 {Hloubka}]
 ::msgcat::mcset cs {Detector} [encoding convertfrom iso8859-2 {Detektor}]
@@ -443,7 +445,6 @@
 ::msgcat::mcset cs {Invalid WCS} 
 ::msgcat::mcset cs {Invalid formated multipart/mixed mime type message} 
 ::msgcat::mcset cs {Invert Colormap} 
-::msgcat::mcset cs {Invert Selection} [encoding convertfrom iso8859-2 {Vybrat doplnìk}]
 ::msgcat::mcset cs {Invert} [encoding convertfrom iso8859-2 {Pøeklopit}]
 ::msgcat::mcset cs {Italic} [encoding convertfrom iso8859-2 {Kurzíva}]
 ::msgcat::mcset cs {Items Found} 
@@ -478,7 +479,7 @@
 ::msgcat::mcset cs {List Data} 
 ::msgcat::mcset cs {List Regions} [encoding convertfrom iso8859-2 {Seznam oblastí}]
 ::msgcat::mcset cs {List Region} 
-::msgcat::mcset cs {List Selected Regions} 
+::msgcat::mcset cs {List Selection} 
 ::msgcat::mcset cs {List Select} 
 ::msgcat::mcset cs {List} [encoding convertfrom iso8859-2 {Seznam}]
 ::msgcat::mcset cs {Load Analysis Commands} [encoding convertfrom iso8859-2 {Nahrát analytické pøíkazy}]
@@ -808,7 +809,7 @@
 ::msgcat::mcset cs {Save RGB Image} 
 ::msgcat::mcset cs {Save Region File} 
 ::msgcat::mcset cs {Save Regions} [encoding convertfrom iso8859-2 {Ulo¾it oblasti}]
-::msgcat::mcset cs {Save Selected Regions} 
+::msgcat::mcset cs {Save Selection} 
 ::msgcat::mcset cs {Save Select} 
 ::msgcat::mcset cs {Save Slice} 
 ::msgcat::mcset cs {Save Template} [encoding convertfrom iso8859-2 {Ulo¾it ¹ablony}]

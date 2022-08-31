@@ -57,9 +57,9 @@ proc PlotDialog {varname wtt {theme true}} {
 
     # File
     ThemeMenu $var(mb).file
-    $var(mb).file add command -label "[msgcat::mc {Load Data}]..." \
+    $var(mb).file add command -label [msgcat::mc {Load Data}] \
 	-command [list PlotLoadData $varname]
-    $var(mb).file add command -label "[msgcat::mc {Save Data}]..." \
+    $var(mb).file add command -label [msgcat::mc {Save Data}] \
 	-command [list PlotSaveData $varname]
     $var(mb).file add separator
     $var(mb).file add cascade -label [msgcat::mc {Export}] \
@@ -70,15 +70,15 @@ proc PlotDialog {varname wtt {theme true}} {
     $var(mb).file add command -label [msgcat::mc {List Data}] \
        -command "set ${varname}(list) 1; PlotList $varname"
     $var(mb).file add separator
-    $var(mb).file add command -label "[msgcat::mc {Backup}]..." \
+    $var(mb).file add command -label [msgcat::mc {Backup}] \
 	-command [list PlotBackupDialog $varname]
-    $var(mb).file add command -label "[msgcat::mc {Restore}]..." \
+    $var(mb).file add command -label [msgcat::mc {Restore}] \
 	-command [list PlotRestoreDialog $varname]
     $var(mb).file add separator
     $var(mb).file add command \
-	-label "[msgcat::mc {Page Setup}]..." \
+	-label [msgcat::mc {Page Setup}] \
 	-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
-    $var(mb).file add command -label "[msgcat::mc {Print}]..." \
+    $var(mb).file add command -label [msgcat::mc {Print}] \
 	-command [list PlotPSPrint $varname] -accelerator "${ds9(ctrl)}P"
 
     $var(mb).file add separator
@@ -86,15 +86,15 @@ proc PlotDialog {varname wtt {theme true}} {
 	-command [list PlotDestroy $varname] -accelerator "${ds9(ctrl)}W"
 
     ThemeMenu $var(mb).file.export
-    $var(mb).file.export add command -label {EPS...} \
+    $var(mb).file.export add command -label {EPS} \
 	-command [list PlotExportDialog $varname eps]
-    $var(mb).file.export add command -label {GIF...} \
+    $var(mb).file.export add command -label {GIF} \
 	-command [list PlotExportDialog $varname gif]
-    $var(mb).file.export add command -label {TIFF...} \
+    $var(mb).file.export add command -label {TIFF} \
 	-command [list PlotExportDialog $varname tiff]
-    $var(mb).file.export add command -label {JPEG...} \
+    $var(mb).file.export add command -label {JPEG} \
 	-command [list PlotExportDialog $varname jpeg]
-    $var(mb).file.export add command -label {PNG...} \
+    $var(mb).file.export add command -label {PNG} \
 	-command [list PlotExportDialog $varname png]
 
     ThemeMenu $var(mb).edit
@@ -679,9 +679,9 @@ proc PlotUpdateMenus {varname} {
 
     # File
     if {$var(graph,ds,xdata) != {}} {
-	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
+	$var(mb).file entryconfig [msgcat::mc {Save Data}] -state normal
     } else {
-	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Save Data}] -state disabled
     }
 
     # Canvas

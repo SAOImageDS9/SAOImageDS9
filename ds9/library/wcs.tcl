@@ -166,9 +166,9 @@ proc WCSDialog {} {
     $mb add cascade -label [msgcat::mc {Extension}] -menu $mb.ext
 
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command WCSLoadDialog -accelerator "${ds9(ctrl)}O"
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command WCSSaveDialog -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] -command WCSApplyDialog

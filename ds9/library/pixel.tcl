@@ -54,7 +54,7 @@ proc PixelTableDialog {} {
     $mb add cascade -label [msgcat::mc {Size}] -menu $mb.size
 
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command PixelTableSaveDialog -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \

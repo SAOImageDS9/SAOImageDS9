@@ -68,7 +68,7 @@ proc AnalysisMainMenu {} {
 	-variable panalysis(log)
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add command \
-	-label "[msgcat::mc {Load Analysis Commands}]..." \
+	-label [msgcat::mc {Load Analysis Commands}] \
 	-command OpenAnalysisMenu
     $ds9(mb).analysis add command \
 	-label [msgcat::mc {Clear Analysis Commands}] \

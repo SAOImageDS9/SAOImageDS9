@@ -123,20 +123,20 @@ proc PrismDialog {varname} {
 
     # Import
     ThemeMenu $mb.file.import
-    $mb.file.import add command -label "[msgcat::mc {VOTable}]..." \
+    $mb.file.import add command -label [msgcat::mc {VOTable}] \
 	-command [list PrismImportVOTFile $varname]
-    $mb.file.import add command -label "[msgcat::mc {Starbase}]..." \
+    $mb.file.import add command -label [msgcat::mc {Starbase}] \
 	-command [list PrismImportRDBFile $varname]
-    $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
+    $mb.file.import add command -label [msgcat::mc {Tab-Separated-Value}] \
 	-command [list PrismImportTSVFile $varname]
 
     # Export
     ThemeMenu $mb.file.export
-    $mb.file.export add command -label "[msgcat::mc {VOTable}]..." \
+    $mb.file.export add command -label [msgcat::mc {VOTable}] \
 	-command [list TBLSaveVOTFile $varname]
-    $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
+    $mb.file.export add command -label [msgcat::mc {Starbase}] \
 	-command [list TBLSaveRDBFile $varname]
-    $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
+    $mb.file.export add command -label [msgcat::mc {Tab-Separated-Value}] \
 	-command [list TBLSaveTSVFile $varname]
 
     ThemeMenu $mb.edit

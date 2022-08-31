@@ -308,7 +308,7 @@ proc ScaleDialog {} {
     $mb.param add checkbutton -label "[msgcat::mc {Use}] DATASEC" \
 	-variable scale(datasec) -command ChangeDATASEC
     $mb.param add separator
-    $mb.param add command -label {ZScale...} -command ZScaleDialog
+    $mb.param add command -label {ZScale} -command ZScaleDialog
 
     ThemeMenu $mb.graph 
     $mb.graph add radiobutton -label [msgcat::mc {Linear}] \

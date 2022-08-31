@@ -237,17 +237,17 @@
 ::msgcat::mcset fr {Delete All Frames} [encoding convertfrom iso8859-1 {Supprimer toutes les fenêtres}] 
 ::msgcat::mcset fr {Delete All Groups?} {Supprimer tous les groupes ?} 
 ::msgcat::mcset fr {Delete All Groups} {Supprimer tous les groupes} 
+::msgcat::mcset fr {Delete All Load} 
+::msgcat::mcset fr {Delete All and Open} 
 ::msgcat::mcset fr {Delete All} 
 ::msgcat::mcset fr {Delete Color Tags} 
 ::msgcat::mcset fr {Delete Dataset} 
 ::msgcat::mcset fr {Delete Frame} [encoding convertfrom iso8859-1 {Supprimer la fenêtre}]
 ::msgcat::mcset fr {Delete Graph} 
 ::msgcat::mcset fr {Delete Group} {Supprimer le groupe} 
-::msgcat::mcset fr {Delete Load} 
 ::msgcat::mcset fr {Delete Regions?} 
 ::msgcat::mcset fr {Delete Selection} 
 ::msgcat::mcset fr {Delete Select} 
-::msgcat::mcset fr {Delete and Open} 
 ::msgcat::mcset fr {Delete} {Supprimer} 
 ::msgcat::mcset fr {Depth} {Profondeur} 
 ::msgcat::mcset fr {Detector} {Detecteur} 

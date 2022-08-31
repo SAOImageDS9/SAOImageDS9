@@ -237,17 +237,17 @@
 ::msgcat::mcset pt {Delete All Frames} {Apagar todos Frames}
 ::msgcat::mcset pt {Delete All Groups?} {Apagar todos os grupos?}
 ::msgcat::mcset pt {Delete All Groups} {Apagar todos os grupos}
+::msgcat::mcset pt {Delete All Load} 
+::msgcat::mcset pt {Delete All and Open} 
 ::msgcat::mcset pt {Delete All} 
 ::msgcat::mcset pt {Delete Color Tags} 
 ::msgcat::mcset pt {Delete Dataset} 
 ::msgcat::mcset pt {Delete Frame} {Apague o Frame}
 ::msgcat::mcset pt {Delete Graph} 
 ::msgcat::mcset pt {Delete Group} {Apague o Grupo}
-::msgcat::mcset pt {Delete Load} 
 ::msgcat::mcset pt {Delete Regions?} 
 ::msgcat::mcset pt {Delete Selection} 
 ::msgcat::mcset pt {Delete Select} 
-::msgcat::mcset pt {Delete and Open} 
 ::msgcat::mcset pt {Delete} {Apagar}
 ::msgcat::mcset pt {Depth} {Profundidade}
 ::msgcat::mcset pt {Detector} 

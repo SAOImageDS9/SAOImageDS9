@@ -237,17 +237,17 @@
 ::msgcat::mcset zh {Delete All Frames} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xA9\xD2 \xA6\xB3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Delete All Groups?} 
 ::msgcat::mcset zh {Delete All Groups} 
+::msgcat::mcset zh {Delete All Load} 
+::msgcat::mcset zh {Delete All and Open} 
 ::msgcat::mcset zh {Delete All} 
 ::msgcat::mcset zh {Delete Color Tags} 
 ::msgcat::mcset zh {Delete Dataset} 
 ::msgcat::mcset zh {Delete Frame} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Delete Graph} 
 ::msgcat::mcset zh {Delete Group} 
-::msgcat::mcset zh {Delete Load} 
 ::msgcat::mcset zh {Delete Regions?} 
 ::msgcat::mcset zh {Delete Selection} 
 ::msgcat::mcset zh {Delete Select} 
-::msgcat::mcset zh {Delete and Open} 
 ::msgcat::mcset zh {Delete} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3"]
 ::msgcat::mcset zh {Depth} 
 ::msgcat::mcset zh {Detector} 

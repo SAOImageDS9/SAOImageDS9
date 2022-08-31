@@ -237,17 +237,17 @@
 ::msgcat::mcset ja {Delete All Frames} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete All Groups?} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee\xa4\xb7\xa4\xde\xa4\xb9\xa4\xab\x3f"]
 ::msgcat::mcset ja {Delete All Groups} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
+::msgcat::mcset ja {Delete All Load} 
+::msgcat::mcset ja {Delete All and Open} 
 ::msgcat::mcset ja {Delete All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Color Tags} 
 ::msgcat::mcset ja {Delete Dataset} 
 ::msgcat::mcset ja {Delete Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Graph} 
 ::msgcat::mcset ja {Delete Group} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
-::msgcat::mcset ja {Delete Load} 
 ::msgcat::mcset ja {Delete Regions?} 
 ::msgcat::mcset ja {Delete Selection} 
 ::msgcat::mcset ja {Delete Select} 
-::msgcat::mcset ja {Delete and Open} 
 ::msgcat::mcset ja {Delete} [encoding convertfrom euc-jp "\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Depth} [encoding convertfrom euc-jp "\xbf\xbc\xa4\xb5"]
 ::msgcat::mcset ja {Detector} [encoding convertfrom euc-jp "\xb8\xa1\xbd\xd0\xb4\xef\xba\xc2\xc9\xb8"]

@@ -115,9 +115,9 @@ proc CATDialog {varname format catalog title action} {
 
     # file
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command [list CATLoadVOTFile $varname] -accelerator "${ds9(ctrl)}O"
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command [list TBLSaveVOTFile $varname] -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] -menu $mb.file.import
@@ -156,7 +156,7 @@ proc CATDialog {varname format catalog title action} {
 	$mb.file add command -label [msgcat::mc {Copy to Regions}] \
 	-command [list CATGenerateRegions $varname]
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Print}]..." \
+    $mb.file add command -label [msgcat::mc {Print}] \
 	-command [list TBLPrint $varname] -accelerator "${ds9(ctrl)}P"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
@@ -164,18 +164,18 @@ proc CATDialog {varname format catalog title action} {
 
     # Import
     ThemeMenu $mb.file.import
-    $mb.file.import add command -label "[msgcat::mc {Starbase}]..." \
+    $mb.file.import add command -label [msgcat::mc {Starbase}] \
 	-command [list CATLoadRDBFile $varname]
-    $mb.file.import add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
+    $mb.file.import add command -label [msgcat::mc {Tab-Separated-Value}] \
 	-command [list CATLoadTSVFile $varname]
-    $mb.file.import add command -label "[msgcat::mc {FITS}]..." \
+    $mb.file.import add command -label [msgcat::mc {FITS}] \
 	-command [list CATLoadFITSFile $varname]
 
     # Export
     ThemeMenu $mb.file.export
-    $mb.file.export add command -label "[msgcat::mc {Starbase}]..." \
+    $mb.file.export add command -label [msgcat::mc {Starbase}] \
 	-command [list TBLSaveRDBFile $varname]
-    $mb.file.export add command -label "[msgcat::mc {Tab-Separated-Value}]..." \
+    $mb.file.export add command -label [msgcat::mc {Tab-Separated-Value}] \
 	-command [list TBLSaveTSVFile $varname]
 
     # SAMP
@@ -541,7 +541,7 @@ proc CATDialogUpdate {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Header}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state normal
-	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state normal
+	$var(mb).file entryconfig [msgcat::mc {Print}] -state normal
 
 	$var(top).buttons.filter configure -state normal
 	$var(top).buttons.clear configure -state normal
@@ -552,7 +552,7 @@ proc CATDialogUpdate {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Header}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state disabled
-	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Print}] -state disabled
 
 	$var(top).buttons.filter configure -state disabled
 	$var(top).buttons.clear configure -state disabled

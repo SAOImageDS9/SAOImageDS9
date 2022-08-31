@@ -81,9 +81,9 @@ proc CATSymDialog {parent} {
 
     # menu
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command "CATSymLoad $varname" -accelerator "${ds9(ctrl)}O"
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command "CATSymSave $varname" -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \

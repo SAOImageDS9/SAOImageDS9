@@ -1027,9 +1027,9 @@ proc ColormapDialog {} {
     $mb add cascade -label [msgcat::mc {Color}] -menu $mb.color
 
     ThemeMenu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label [msgcat::mc {Open}] \
 	-command LoadColormap -accelerator "${ds9(ctrl)}O"
-    $mb.file add command -label "[msgcat::mc {Save}]..." \
+    $mb.file add command -label [msgcat::mc {Save}] \
 	-command SaveColormap -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \
@@ -1038,14 +1038,14 @@ proc ColormapDialog {} {
     $mb.file add command -label [msgcat::mc {Download Colormap}] \
 	-command {HV cpt CPT-CITY http://soliton.vm.bytemark.co.uk/pub/cpt-city}
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load Contrast/Bias}]..."\
+    $mb.file add command -label [msgcat::mc {Load Contrast/Bias}]\
 	-command LoadContrastBias
-    $mb.file add command -label "[msgcat::mc {Save Contrast/Bias}]..." \
+    $mb.file add command -label [msgcat::mc {Save Contrast/Bias}] \
 	-command SaveContrastBias
     $mb.file add separator
-    $mb.file add command -label "[msgcat::mc {Load Color Tags}]..."\
+    $mb.file add command -label [msgcat::mc {Load Color Tags}]\
 	-command OpenColorTag
-    $mb.file add command -label "[msgcat::mc {Save Color Tags}]..." \
+    $mb.file add command -label [msgcat::mc {Save Color Tags}] \
 	-command SaveColorTag
     $mb.file add command -label [msgcat::mc {Delete Color Tags}] \
 	-command DeleteColorTag
@@ -1231,9 +1231,9 @@ proc UpdateColorDialog {} {
 		base -
 		3d {
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Open}]..." -state normal
+			[msgcat::mc {Open}] -state normal
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Save}]..." -state normal
+			[msgcat::mc {Save}] -state normal
 
 		    foreach cmap $icolorbar(default,cmaps) {
 			$icolorbar(mb).colormap entryconfig $cmap -state normal
@@ -1255,9 +1255,9 @@ proc UpdateColorDialog {} {
 		}
 		rgb {
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Open}]..." -state disabled
+			[msgcat::mc {Open}] -state disabled
 		    $icolorbar(mb).file entryconfig \
-			"[msgcat::mc {Save}]..." -state disabled
+			[msgcat::mc {Save}] -state disabled
 
 		    foreach cmap $icolorbar(default,cmaps) {
 			$icolorbar(mb).colormap entryconfig $cmap \
@@ -1280,9 +1280,9 @@ proc UpdateColorDialog {} {
 	    }
 	} else {
 	    $icolorbar(mb).file entryconfig \
-		"[msgcat::mc {Open}]..." -state normal
+		[msgcat::mc {Open}] -state normal
 	    $icolorbar(mb).file entryconfig \
-		"[msgcat::mc {Save}]..." -state normal
+		[msgcat::mc {Save}] -state normal
 
 	    foreach cmap $icolorbar(default,cmaps) {
 		$icolorbar(mb).colormap entryconfig $cmap -state normal

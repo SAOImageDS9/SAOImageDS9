@@ -10,11 +10,11 @@ proc FileMainMenu {} {
     global ds9
 
     ThemeMenu $ds9(mb).file 
-    $ds9(mb).file add command -label "[msgcat::mc {Open}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Open}] \
 	-command [list OpenDialog fits] -accelerator "${ds9(ctrl)}O"
     $ds9(mb).file add cascade -label [msgcat::mc {Open as}] \
 	-menu $ds9(mb).file.open
-    $ds9(mb).file add command -label "[msgcat::mc {Save}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Save}] \
 	-command [list SaveDialog fits] -accelerator "${ds9(ctrl)}S"
     $ds9(mb).file add cascade -label [msgcat::mc {Save as}] \
 	-menu $ds9(mb).file.save
@@ -29,12 +29,12 @@ proc FileMainMenu {} {
     $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {Save Image}] \
 	-menu $ds9(mb).file.saveimage
-    $ds9(mb).file add command -label "[msgcat::mc {Create Movie}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Create Movie}] \
 	-command MovieDialog
     $ds9(mb).file add separator
-    $ds9(mb).file add command -label "[msgcat::mc {Backup}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Backup}] \
 	-command BackupDialog
-    $ds9(mb).file add command -label "[msgcat::mc {Restore}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Restore}] \
 	-command RestoreDialog
     $ds9(mb).file add separator
     $ds9(mb).file add command -label [msgcat::mc {Header}] \
@@ -55,9 +55,9 @@ proc FileMainMenu {} {
     $ds9(mb).file add command -label [msgcat::mc {Source TCL}] \
 	-command OpenSource
     $ds9(mb).file add separator
-    $ds9(mb).file add command -label "[msgcat::mc {Page Setup}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Page Setup}] \
 	-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
-    $ds9(mb).file add command -label "[msgcat::mc {Print}]..." \
+    $ds9(mb).file add command -label [msgcat::mc {Print}] \
 	-command PSPrint -accelerator "${ds9(ctrl)}P"
 
     switch $ds9(wm) {
@@ -73,37 +73,37 @@ proc FileMainMenu {} {
 
     # File Open Menu
     ThemeMenu $ds9(mb).file.open
-    $ds9(mb).file.open add command -label "[msgcat::mc {Slice}]..." \
+    $ds9(mb).file.open add command -label [msgcat::mc {Slice}] \
 	-command [list OpenDialog fits {} slice]
     $ds9(mb).file.open add separator
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {RGB Image}]..." \
+	-label [msgcat::mc {RGB Image}] \
 	-command [list OpenDialog rgbimage]
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {RGB Cube}]..."\
+	-label [msgcat::mc {RGB Cube}]\
 	-command [list OpenDialog rgbcube]
     $ds9(mb).file.open add separator
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {Multiple Extension Cube}]..." \
+	-label [msgcat::mc {Multiple Extension Cube}] \
 	-command [list OpenDialog mecube]
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {Multiple Extension Frames}]..." \
+	-label [msgcat::mc {Multiple Extension Frames}] \
 	-command [list OpenDialog multiframe]
     $ds9(mb).file.open add separator
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {Mosaic WCS}]..." \
+	-label [msgcat::mc {Mosaic WCS}] \
 	-command [list OpenDialog mosaicimagewcs]
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+	-label [msgcat::mc {Mosaic WCS Segment}] \
 	-command [list OpenDialog mosaicwcs]
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {Mosaic IRAF}]..." \
+	-label [msgcat::mc {Mosaic IRAF}] \
 	-command [list OpenDialog mosaicimageiraf]
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {Mosaic IRAF Segment}]..." \
+	-label [msgcat::mc {Mosaic IRAF Segment}] \
 	-command [list OpenDialog mosaiciraf]
     $ds9(mb).file.open add command \
-	-label "[msgcat::mc {Mosaic WFPC2}]..." \
+	-label [msgcat::mc {Mosaic WFPC2}] \
 	-command [list OpenDialog mosaicimagewfpc2]
     $ds9(mb).file.open add separator
     $ds9(mb).file.open add command \
@@ -112,25 +112,25 @@ proc FileMainMenu {} {
 
     # File Save Menu
     ThemeMenu $ds9(mb).file.save
-    $ds9(mb).file.save add command -label "[msgcat::mc {Slice}]..." \
+    $ds9(mb).file.save add command -label [msgcat::mc {Slice}] \
 	-command [list SaveDialog slice]
     $ds9(mb).file.save add separator
     $ds9(mb).file.save add command \
-	-label "[msgcat::mc {RGB Image}]..." \
+	-label [msgcat::mc {RGB Image}] \
 	-command [list SaveDialog rgbimage]
     $ds9(mb).file.save add command \
-	-label "[msgcat::mc {RGB Cube}]..."\
+	-label [msgcat::mc {RGB Cube}]\
 	-command [list SaveDialog rgbcube]
     $ds9(mb).file.save add separator
     $ds9(mb).file.save add command \
-	-label "[msgcat::mc {Multiple Extension Cube}]..." \
+	-label [msgcat::mc {Multiple Extension Cube}] \
 	-command [list SaveDialog mecube]
     $ds9(mb).file.save add separator
     $ds9(mb).file.save add command \
-	-label "[msgcat::mc {Mosaic WCS}]..." \
+	-label [msgcat::mc {Mosaic WCS}] \
 	-command [list SaveDialog mosaicimagewcs]
     $ds9(mb).file.save add command \
-	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+	-label [msgcat::mc {Mosaic WCS Segment}] \
 	-command [list SaveDialog mosaicwcs]
 
     # File Import Menu
@@ -138,70 +138,70 @@ proc FileMainMenu {} {
     $ds9(mb).file.import add cascade -label [msgcat::mc {Slice}] \
 	-menu $ds9(mb).file.import.slice
     $ds9(mb).file.import add separator
-    $ds9(mb).file.import add command -label "[msgcat::mc {Array}]..." \
+    $ds9(mb).file.import add command -label [msgcat::mc {Array}] \
 	-command [list ImportDialog array]
-    $ds9(mb).file.import add command -label {NRRD...} \
+    $ds9(mb).file.import add command -label {NRRD} \
 	-command [list ImportDialog nrrd]
-    $ds9(mb).file.import add command -label {ENVI...} \
+    $ds9(mb).file.import add command -label {ENVI} \
 	-command [list ImportDialog envi]
     $ds9(mb).file.import add separator
-    $ds9(mb).file.import add command -label "[msgcat::mc {RGB Array}]..." \
+    $ds9(mb).file.import add command -label [msgcat::mc {RGB Array}] \
 	-command [list ImportDialog rgbarray]
     $ds9(mb).file.import add separator
-    $ds9(mb).file.import add command -label {GIF...} \
+    $ds9(mb).file.import add command -label {GIF} \
 	-command [list ImportDialog gif]
-    $ds9(mb).file.import add command -label {TIFF...} \
+    $ds9(mb).file.import add command -label {TIFF} \
 	-command [list ImportDialog tiff]
-    $ds9(mb).file.import add command -label {JPEG...} \
+    $ds9(mb).file.import add command -label {JPEG} \
 	-command [list ImportDialog jpeg]
-    $ds9(mb).file.import add command -label {PNG...} \
+    $ds9(mb).file.import add command -label {PNG} \
 	-command [list ImportDialog png]
 
     # File Import Slice Menu
     ThemeMenu $ds9(mb).file.import.slice
-    $ds9(mb).file.import.slice add command -label {GIF...} \
+    $ds9(mb).file.import.slice add command -label {GIF} \
 	-command [list ImportDialog gif {} slice]
-    $ds9(mb).file.import.slice add command -label {TIFF...} \
+    $ds9(mb).file.import.slice add command -label {TIFF} \
 	-command [list ImportDialog tiff {} slice]
-    $ds9(mb).file.import.slice add command -label {JPEG...} \
+    $ds9(mb).file.import.slice add command -label {JPEG} \
 	-command [list ImportDialog jpeg {} slice]
-    $ds9(mb).file.import.slice add command -label {PNG...} \
+    $ds9(mb).file.import.slice add command -label {PNG} \
 	-command [list ImportDialog png {} slice]
 
     # File Export Menu
     ThemeMenu $ds9(mb).file.export
-    $ds9(mb).file.export add command -label "[msgcat::mc {Array}]..." \
+    $ds9(mb).file.export add command -label [msgcat::mc {Array}] \
 	-command [list ExportDialog array]
-    $ds9(mb).file.export add command -label {NRRD...} \
+    $ds9(mb).file.export add command -label {NRRD} \
 	-command [list ExportDialog nrrd]
-    $ds9(mb).file.export add command -label {ENVI...} \
+    $ds9(mb).file.export add command -label {ENVI} \
 	-command [list ExportDialog envi]
     $ds9(mb).file.export add separator
-    $ds9(mb).file.export add command -label "[msgcat::mc {RGB Array}]..." \
+    $ds9(mb).file.export add command -label [msgcat::mc {RGB Array}] \
 	-command [list ExportDialog rgbarray]
     $ds9(mb).file.export add separator
-    $ds9(mb).file.export add command -label {GIF...} \
+    $ds9(mb).file.export add command -label {GIF} \
 	-command [list ExportDialog gif]
-    $ds9(mb).file.export add command -label {TIFF...} \
+    $ds9(mb).file.export add command -label {TIFF} \
 	-command [list ExportDialog tiff]
-    $ds9(mb).file.export add command -label {JPEG...} \
+    $ds9(mb).file.export add command -label {JPEG} \
 	-command [list ExportDialog jpeg]
-    $ds9(mb).file.export add command -label {PNG...} \
+    $ds9(mb).file.export add command -label {PNG} \
 	-command [list ExportDialog png]
 
     # File Saveimage Menu
     ThemeMenu $ds9(mb).file.saveimage
-    $ds9(mb).file.saveimage add command -label {FITS...} \
+    $ds9(mb).file.saveimage add command -label {FITS} \
 	-command [list SaveImageDialog fits]
-    $ds9(mb).file.saveimage add command -label {EPS...} \
+    $ds9(mb).file.saveimage add command -label {EPS} \
 	-command [list SaveImageDialog eps]
-    $ds9(mb).file.saveimage add command -label {GIF...} \
+    $ds9(mb).file.saveimage add command -label {GIF} \
 	-command [list SaveImageDialog gif]
-    $ds9(mb).file.saveimage add command -label {TIFF...} \
+    $ds9(mb).file.saveimage add command -label {TIFF} \
 	-command [list SaveImageDialog tiff]
-    $ds9(mb).file.saveimage add command -label {JPEG...} \
+    $ds9(mb).file.saveimage add command -label {JPEG} \
 	-command [list SaveImageDialog jpeg]
-    $ds9(mb).file.saveimage add command -label {PNG...} \
+    $ds9(mb).file.saveimage add command -label {PNG} \
 	-command [list SaveImageDialog png]
 
     # File Preserve Menu
@@ -619,11 +619,11 @@ proc PrefsDialogButtonbarFile {f} {
     
     set m $f.menu
     ThemeMenu $m
-    $m add checkbutton -label "[msgcat::mc {Open}]..." \
+    $m add checkbutton -label [msgcat::mc {Open}] \
 	-variable pbuttons(file,open) -command {UpdateButtons buttons(file)}
     $m add cascade -label [msgcat::mc {Open as}] -menu $m.open
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Save}]..." \
+    $m add checkbutton -label [msgcat::mc {Save}] \
 	-variable pbuttons(file,save) -command {UpdateButtons buttons(file)}
     $m add cascade -label [msgcat::mc {Save as}] -menu $m.save
     $m add separator
@@ -631,12 +631,12 @@ proc PrefsDialogButtonbarFile {f} {
     $m add cascade -label [msgcat::mc {Export}] -menu $m.export
     $m add separator
     $m add cascade -label [msgcat::mc {Save Image}] -menu $m.saveimage
-    $m add checkbutton -label "[msgcat::mc {Create Movie}]..." \
+    $m add checkbutton -label [msgcat::mc {Create Movie}] \
 	-variable pbuttons(file,movie) -command {UpdateButtons buttons(file)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Backup}]..." \
+    $m add checkbutton -label [msgcat::mc {Backup}] \
 	-variable pbuttons(file,backup) -command {UpdateButtons buttons(file)}
-    $m add checkbutton -label "[msgcat::mc {Restore}]..." \
+    $m add checkbutton -label [msgcat::mc {Restore}] \
 	-variable pbuttons(file,restore) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Header}] \
@@ -653,11 +653,11 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,tcl) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add checkbutton \
-	-label "[msgcat::mc {Page Setup}]..." \
+	-label [msgcat::mc {Page Setup}] \
 	-variable pbuttons(file,page) \
 	-command {UpdateButtons buttons(file)}
     $m add checkbutton \
-	-label "[msgcat::mc {Print}]..." \
+	-label [msgcat::mc {Print}] \
 	-variable pbuttons(file,print) \
 	-command {UpdateButtons buttons(file)}
     $m add separator
@@ -666,80 +666,80 @@ proc PrefsDialogButtonbarFile {f} {
 
     ThemeMenu $m.open
     $m.open add checkbutton \
-	-label "[msgcat::mc {Slice}]..." \
+	-label [msgcat::mc {Slice}] \
 	-variable pbuttons(file,open,slice) \
 	-command {UpdateButtons buttons(file)}
     $m.open add separator
     $m.open add checkbutton \
-	-label "[msgcat::mc {RGB Image}]..." \
+	-label [msgcat::mc {RGB Image}] \
 	-variable pbuttons(file,open,rgb,image) \
 	-command {UpdateButtons buttons(file)}
     $m.open add checkbutton \
-	-label "[msgcat::mc {RGB Cube}]..." \
+	-label [msgcat::mc {RGB Cube}] \
 	-variable pbuttons(file,open,rgb,cube) \
 	-command {UpdateButtons buttons(file)}
     $m.open add separator
     $m.open add checkbutton \
-	-label "[msgcat::mc {Muliple Extension Cube}]..." \
+	-label [msgcat::mc {Muliple Extension Cube}] \
 	-variable pbuttons(file,open,me,cube) \
 	-command {UpdateButtons buttons(file)}
     $m.open add checkbutton \
-	-label "[msgcat::mc {Muliple Extension Frames}]..." \
+	-label [msgcat::mc {Muliple Extension Frames}] \
 	-variable pbuttons(file,open,me,frames) \
 	-command {UpdateButtons buttons(file)}
     $m.open add separator
     $m.open add checkbutton \
-	-label "[msgcat::mc {Mosaic WCS}]..." \
+	-label [msgcat::mc {Mosaic WCS}] \
 	-variable pbuttons(file,open,mosaic,wcs) \
 	-command {UpdateButtons buttons(file)}
     $m.open add checkbutton \
-	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+	-label [msgcat::mc {Mosaic WCS Segment}] \
 	-variable pbuttons(file,open,mosaic,wcs,seg) \
 	-command {UpdateButtons buttons(file)}
     $m.open add checkbutton \
-	-label "[msgcat::mc {Mosaic IRAF}]..." \
+	-label [msgcat::mc {Mosaic IRAF}] \
 	-variable pbuttons(file,open,mosaic,iraf) \
 	-command {UpdateButtons buttons(file)}
     $m.open add checkbutton \
-	-label "[msgcat::mc {Mosaic IRAF Segment}]..." \
+	-label [msgcat::mc {Mosaic IRAF Segment}] \
 	-variable pbuttons(file,open,mosaic,iraf,seg) \
 	-command {UpdateButtons buttons(file)}
     $m.open add checkbutton \
-	-label "[msgcat::mc {Mosaic WFPC2}]..." \
+	-label [msgcat::mc {Mosaic WFPC2}] \
 	-variable pbuttons(file,open,mosaic,wfpc2) \
 	-command {UpdateButtons buttons(file)}
     $m.open add separator
     $m.open add checkbutton \
-	-label "[msgcat::mc {URL}]..." \
+	-label [msgcat::mc {URL}] \
 	-variable pbuttons(file,open,url) \
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.save
     $m.save add checkbutton \
-	-label "[msgcat::mc {Slice}]..." \
+	-label [msgcat::mc {Slice}] \
 	-variable pbuttons(file,save,slice) \
 	-command {UpdateButtons buttons(file)}
     $m.save add separator
     $m.save add checkbutton \
-	-label "[msgcat::mc {RGB Image}]..." \
+	-label [msgcat::mc {RGB Image}] \
 	-variable pbuttons(file,save,rgb,image) \
 	-command {UpdateButtons buttons(file)}
     $m.save add checkbutton \
-	-label "[msgcat::mc {RGB Cube}]..." \
+	-label [msgcat::mc {RGB Cube}] \
 	-variable pbuttons(file,save,rgb,cube) \
 	-command {UpdateButtons buttons(file)}
     $m.save add separator
     $m.save add checkbutton \
-	-label "[msgcat::mc {Muliple Extension Cube}]..." \
+	-label [msgcat::mc {Muliple Extension Cube}] \
 	-variable pbuttons(file,save,me,cube) \
 	-command {UpdateButtons buttons(file)}
     $m.save add separator
     $m.save add checkbutton \
-	-label "[msgcat::mc {Mosaic WCS}]..." \
+	-label [msgcat::mc {Mosaic WCS}] \
 	-variable pbuttons(file,save,mosaic,wcs) \
 	-command {UpdateButtons buttons(file)}
     $m.save add checkbutton \
-	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+	-label [msgcat::mc {Mosaic WCS Segment}] \
 	-variable pbuttons(file,save,mosaic,wcs,seg) \
 	-command {UpdateButtons buttons(file)}
 
@@ -747,117 +747,117 @@ proc PrefsDialogButtonbarFile {f} {
     $m.import add cascade -label [msgcat::mc {Slice}] -menu $m.import.slice
     $m.import add separator
     $m.import add checkbutton \
-	-label "[msgcat::mc {Array}]..." \
+	-label [msgcat::mc {Array}] \
 	-variable pbuttons(file,import,array) \
 	-command {UpdateButtons buttons(file)}
     $m.import add checkbutton \
-	-label "[msgcat::mc {NRRD}]..." \
+	-label [msgcat::mc {NRRD}] \
 	-variable pbuttons(file,import,nrrd) \
 	-command {UpdateButtons buttons(file)}
     $m.import add checkbutton \
-	-label "[msgcat::mc {ENVI}]..." \
+	-label [msgcat::mc {ENVI}] \
 	-variable pbuttons(file,import,envi) \
 	-command {UpdateButtons buttons(file)}
     $m.import add separator
     $m.import add checkbutton \
-	-label "[msgcat::mc {RGB Array}]..." \
+	-label [msgcat::mc {RGB Array}] \
 	-variable pbuttons(file,import,rgbarray) \
 	-command {UpdateButtons buttons(file)}
     $m.import add separator
     $m.import add checkbutton \
-	-label "[msgcat::mc {GIF}]..." \
+	-label [msgcat::mc {GIF}] \
 	-variable pbuttons(file,import,gif) \
 	-command {UpdateButtons buttons(file)}
     $m.import add checkbutton \
-	-label "[msgcat::mc {TIFF}]..." \
+	-label [msgcat::mc {TIFF}] \
 	-variable pbuttons(file,import,tiff) \
 	-command {UpdateButtons buttons(file)}
     $m.import add checkbutton \
-	-label "[msgcat::mc {JPEG}]..." \
+	-label [msgcat::mc {JPEG}] \
 	-variable pbuttons(file,import,jpeg) \
 	-command {UpdateButtons buttons(file)}
     $m.import add checkbutton \
-	-label "[msgcat::mc {PNG}]..." \
+	-label [msgcat::mc {PNG}] \
 	-variable pbuttons(file,import,png) \
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.import.slice
     $m.import.slice add checkbutton \
-	-label "[msgcat::mc {GIF}]..." \
+	-label [msgcat::mc {GIF}] \
 	-variable pbuttons(file,import,slice,gif) \
 	-command {UpdateButtons buttons(file)}
     $m.import.slice add checkbutton \
-	-label "[msgcat::mc {TIFF}]..." \
+	-label [msgcat::mc {TIFF}] \
 	-variable pbuttons(file,import,slice,tiff) \
 	-command {UpdateButtons buttons(file)}
     $m.import.slice add checkbutton \
-	-label "[msgcat::mc {JPEG}]..." \
+	-label [msgcat::mc {JPEG}] \
 	-variable pbuttons(file,import,slice,jpeg) \
 	-command {UpdateButtons buttons(file)}
     $m.import.slice add checkbutton \
-	-label "[msgcat::mc {PNG}]..." \
+	-label [msgcat::mc {PNG}] \
 	-variable pbuttons(file,import,slice,png) \
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.export
     $m.export add checkbutton \
-	-label "[msgcat::mc {Array}]..." \
+	-label [msgcat::mc {Array}] \
 	-variable pbuttons(file,export,array) \
 	-command {UpdateButtons buttons(file)}
     $m.export add checkbutton \
-	-label "[msgcat::mc {NRRD}]..." \
+	-label [msgcat::mc {NRRD}] \
 	-variable pbuttons(file,export,nrrd) \
 	-command {UpdateButtons buttons(file)}
     $m.export add checkbutton \
-	-label "[msgcat::mc {ENVI}]..." \
+	-label [msgcat::mc {ENVI}] \
 	-variable pbuttons(file,export,envi) \
 	-command {UpdateButtons buttons(file)}
     $m.export add separator
     $m.export add checkbutton \
-	-label "[msgcat::mc {RGB Array}]..." \
+	-label [msgcat::mc {RGB Array}] \
 	-variable pbuttons(file,export,rgbarray) \
 	-command {UpdateButtons buttons(file)}
     $m.export add separator
     $m.export add checkbutton \
-	-label "[msgcat::mc {GIF}]..." \
+	-label [msgcat::mc {GIF}] \
 	-variable pbuttons(file,export,gif) \
 	-command {UpdateButtons buttons(file)}
     $m.export add checkbutton \
-	-label "[msgcat::mc {TIFF}]..." \
+	-label [msgcat::mc {TIFF}] \
 	-variable pbuttons(file,export,tiff) \
 	-command {UpdateButtons buttons(file)}
     $m.export add checkbutton \
-	-label "[msgcat::mc {JPEG}]..." \
+	-label [msgcat::mc {JPEG}] \
 	-variable pbuttons(file,export,jpeg) \
 	-command {UpdateButtons buttons(file)}
     $m.export add checkbutton \
-	-label "[msgcat::mc {PNG}]..." \
+	-label [msgcat::mc {PNG}] \
 	-variable pbuttons(file,export,png) \
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.saveimage
     $m.saveimage add checkbutton \
-	-label "[msgcat::mc {FITS}]..." \
+	-label [msgcat::mc {FITS}] \
 	-variable pbuttons(file,saveimage,fits) \
 	-command {UpdateButtons buttons(file)}
     $m.saveimage add checkbutton \
-	-label "[msgcat::mc {EPS}]..." \
+	-label [msgcat::mc {EPS}] \
 	-variable pbuttons(file,saveimage,eps) \
 	-command {UpdateButtons buttons(file)}
     $m.saveimage add checkbutton \
-	-label "[msgcat::mc {GIF}]..." \
+	-label [msgcat::mc {GIF}] \
 	-variable pbuttons(file,saveimage,gif) \
 	-command {UpdateButtons buttons(file)}
     $m.saveimage add checkbutton \
-	-label "[msgcat::mc {TIFF}]..." \
+	-label [msgcat::mc {TIFF}] \
 	-variable pbuttons(file,saveimage,tiff) \
 	-command {UpdateButtons buttons(file)}
     $m.saveimage add checkbutton \
-	-label "[msgcat::mc {JPEG}]..." \
+	-label [msgcat::mc {JPEG}] \
 	-variable pbuttons(file,saveimage,jpeg) \
 	-command {UpdateButtons buttons(file)}
     $m.saveimage add checkbutton \
-	-label "[msgcat::mc {PNG}]..." \
+	-label [msgcat::mc {PNG}] \
 	-variable pbuttons(file,saveimage,png) \
 	-command {UpdateButtons buttons(file)}
 
@@ -901,7 +901,7 @@ proc UpdateFileMenuOpen {} {
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
-    $mm entryconfig "[msgcat::mc {Open}]..." -state disabled
+    $mm entryconfig [msgcat::mc {Open}] -state disabled
     $mm entryconfig [msgcat::mc {Open as}] -state disabled
 
     $bb.open configure -state disabled
@@ -921,7 +921,7 @@ proc UpdateFileMenuOpen {} {
 	return
     }
 
-    $mm entryconfig "[msgcat::mc {Open}]..." -state normal
+    $mm entryconfig [msgcat::mc {Open}] -state normal
     $mm entryconfig [msgcat::mc {Open as}] -state normal
 
     $bb.open configure -state normal
@@ -937,20 +937,20 @@ proc UpdateFileMenuOpen {} {
 
     switch -- [$current(frame) get type] {
 	base {
-	    $mm.open entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
-	    $mm.open entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $mm.open entryconfig [msgcat::mc {RGB Image}] -state disabled
+	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state disabled
 	    $bb.openrgbimage configure -state disabled
 	    $bb.openrgbcube configure -state disabled
 	}
 	rgb {
-	    $mm.open entryconfig "[msgcat::mc {RGB Image}]..." -state normal
-	    $mm.open entryconfig "[msgcat::mc {RGB Cube}]..." -state normal
+	    $mm.open entryconfig [msgcat::mc {RGB Image}] -state normal
+	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state normal
 	    $bb.openrgbimage configure -state normal
 	    $bb.openrgbcube configure -state normal
 	}
 	3d {
-	    $mm.open entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
-	    $mm.open entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $mm.open entryconfig [msgcat::mc {RGB Image}] -state disabled
+	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state disabled
 	    $bb.openrgbimage configure -state disabled
 	    $bb.openrgbcube configure -state disabled
 	}
@@ -965,7 +965,7 @@ proc UpdateFileMenuSave {} {
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
-    $mm entryconfig "[msgcat::mc {Save}]..." -state disabled
+    $mm entryconfig [msgcat::mc {Save}] -state disabled
     $mm entryconfig [msgcat::mc {Save as}] -state disabled
 
     $bb.save configure -state disabled
@@ -984,7 +984,7 @@ proc UpdateFileMenuSave {} {
 	return
     }
 
-    $mm entryconfig "[msgcat::mc {Save}]..." -state normal
+    $mm entryconfig [msgcat::mc {Save}] -state normal
     $mm entryconfig [msgcat::mc {Save as}] -state normal
 
     $bb.save configure -state normal
@@ -992,14 +992,14 @@ proc UpdateFileMenuSave {} {
     $bb.savemecube configure -state normal
 
     if {[$current(frame) has fits mosaic]} {
-	$mm.save entryconfig "[msgcat::mc {Mosaic WCS}]..." -state normal
-	$mm.save entryconfig "[msgcat::mc {Mosaic WCS Segment}]..." \
+	$mm.save entryconfig [msgcat::mc {Mosaic WCS}] -state normal
+	$mm.save entryconfig [msgcat::mc {Mosaic WCS Segment}] \
 	    -state normal
 	$bb.savemosaicwcs configure -state normal
 	$bb.savemosaicwcsseg configure -state normal
     } else {
-	$mm.save entryconfig "[msgcat::mc {Mosaic WCS}]..." -state disabled
-	$mm.save entryconfig "[msgcat::mc {Mosaic WCS Segment}]..." \
+	$mm.save entryconfig [msgcat::mc {Mosaic WCS}] -state disabled
+	$mm.save entryconfig [msgcat::mc {Mosaic WCS Segment}] \
 	    -state disabled
 	$bb.savemosaicwcs configure -state disabled
 	$bb.savemosaicwcsseg configure -state disabled
@@ -1007,20 +1007,20 @@ proc UpdateFileMenuSave {} {
 
     switch -- [$current(frame) get type] {
 	base {
-	    $mm.save entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
-	    $mm.save entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $mm.save entryconfig [msgcat::mc {RGB Image}] -state disabled
+	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state disabled
 	    $bb.savergbimage configure -state disabled
 	    $bb.savergbcube configure -state disabled
 	}
 	rgb {
-	    $mm.save entryconfig "[msgcat::mc {RGB Image}]..." -state normal
-	    $mm.save entryconfig "[msgcat::mc {RGB Cube}]..." -state normal
+	    $mm.save entryconfig [msgcat::mc {RGB Image}] -state normal
+	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state normal
 	    $bb.savergbimage configure -state normal
 	    $bb.savergbcube configure -state normal
 	}
 	3d {
-	    $mm.save entryconfig "[msgcat::mc {RGB Image}]..." -state disabled
-	    $mm.save entryconfig "[msgcat::mc {RGB Cube}]..." -state disabled
+	    $mm.save entryconfig [msgcat::mc {RGB Image}] -state disabled
+	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state disabled
 	    $bb.savergbimage configure -state disabled
 	    $bb.savergbcube configure -state disabled
 	}
@@ -1040,15 +1040,15 @@ proc UpdateFileMenuImport {} {
 	switch -- [$current(frame) get type] {
 	    base {
 		$mm.import entryconfig \
-		    "[msgcat::mc {RGB Array}]..." -state disabled
+		    [msgcat::mc {RGB Array}] -state disabled
 	    }
 	    rgb {
 		$mm.import entryconfig \
-		    "[msgcat::mc {RGB Array}]..." -state normal
+		    [msgcat::mc {RGB Array}] -state normal
 	    }
 	    3d {
 		$mm.import entryconfig \
-		    "[msgcat::mc {RGB Array}]..." -state disabled
+		    [msgcat::mc {RGB Array}] -state disabled
 	    }
 	}
     }
@@ -1086,16 +1086,16 @@ proc UpdateFileMenuExport {} {
 	    switch -- [$current(frame) get type] {
 		base {
 		    $mm.export entryconfig \
-			"[msgcat::mc {RGB Array}]..." -state disabled
+			[msgcat::mc {RGB Array}] -state disabled
 		    $bb.exportrgbarray configure -state disabled
 		}
 		rgb {
 		    $mm.export entryconfig \
-			"[msgcat::mc {RGB Array}]..." -state normal
+			[msgcat::mc {RGB Array}] -state normal
 		}
 		3d {
 		    $mm.export entryconfig \
-			"[msgcat::mc {RGB Array}]..." -state disabled
+			[msgcat::mc {RGB Array}] -state disabled
 		    $bb.exportrgbarray configure -state disabled
 		}
 	    }
@@ -1137,10 +1137,10 @@ proc UpdateFileMenuMovie {} {
     set bb $ds9(buttons).file
 
     if {$current(frame) != {}} {
-	$mm entryconfig "[msgcat::mc {Create Movie}]..." -state normal
+	$mm entryconfig [msgcat::mc {Create Movie}] -state normal
 	$bb.movie configure -state normal
     } else {
-	$mm entryconfig "[msgcat::mc {Create Movie}]..." -state disabled
+	$mm entryconfig [msgcat::mc {Create Movie}] -state disabled
 	$bb.movie configure -state disabled
     }
 }

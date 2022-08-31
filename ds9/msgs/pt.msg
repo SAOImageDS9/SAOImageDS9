@@ -1,4 +1,5 @@
 ::msgcat::mcset pt {2d} 
+::msgcat::mcset pt {3D} 
 ::msgcat::mcset pt {3d} 
 ::msgcat::mcset pt {A postscript generation error has occurred} {Um erro ocorreu ao gerar o postscript}
 ::msgcat::mcset pt {AIP} 
@@ -76,6 +77,8 @@
 ::msgcat::mcset pt {Bar Plot Tool} 
 ::msgcat::mcset pt {Bar Width} 
 ::msgcat::mcset pt {Bar} 
+::msgcat::mcset pt {Basic Layout} 
+::msgcat::mcset pt {Basic} 
 ::msgcat::mcset pt {Behavior} 
 ::msgcat::mcset pt {Bias} 
 ::msgcat::mcset pt {Bin 3rd Column} {Bin terceira coluna}
@@ -242,10 +245,9 @@
 ::msgcat::mcset pt {Delete Group} {Apague o Grupo}
 ::msgcat::mcset pt {Delete Load} 
 ::msgcat::mcset pt {Delete Regions?} 
-::msgcat::mcset pt {Delete Regions} 
-::msgcat::mcset pt {Delete Selected Regions} [encoding convertfrom iso8859-1 {Apagar Regiões Selecionadas}]
+::msgcat::mcset pt {Delete Selection} 
 ::msgcat::mcset pt {Delete Select} 
-::msgcat::mcset pt {Delete and Open Regions} 
+::msgcat::mcset pt {Delete and Open} 
 ::msgcat::mcset pt {Delete} {Apagar}
 ::msgcat::mcset pt {Depth} {Profundidade}
 ::msgcat::mcset pt {Detector} 
@@ -443,7 +445,6 @@
 ::msgcat::mcset pt {Invalid WCS} 
 ::msgcat::mcset pt {Invalid formated multipart/mixed mime type message} [encoding convertfrom iso8859-1 {Mensagem tipo MIME multiparte/mista em formato inválido}]
 ::msgcat::mcset pt {Invert Colormap} {Inverter mapa de cores}
-::msgcat::mcset pt {Invert Selection} [encoding convertfrom iso8859-1 {Inverter Seleção}]
 ::msgcat::mcset pt {Invert} {Inverter}
 ::msgcat::mcset pt {Italic} [encoding convertfrom iso8859-1 {Itálico}]
 ::msgcat::mcset pt {Items Found} [encoding convertfrom iso8859-1 {Ítens Encontrados}]
@@ -478,7 +479,7 @@
 ::msgcat::mcset pt {List Data} 
 ::msgcat::mcset pt {List Regions} [encoding convertfrom iso8859-1 {Listar Regiões}]
 ::msgcat::mcset pt {List Region} 
-::msgcat::mcset pt {List Selected Regions} 
+::msgcat::mcset pt {List Selection} 
 ::msgcat::mcset pt {List Select} 
 ::msgcat::mcset pt {List} {Listar}
 ::msgcat::mcset pt {Load Analysis Commands} [encoding convertfrom iso8859-1 {Ler Comandos de Análise}]
@@ -808,7 +809,7 @@
 ::msgcat::mcset pt {Save RGB Image} 
 ::msgcat::mcset pt {Save Region File} 
 ::msgcat::mcset pt {Save Regions} [encoding convertfrom iso8859-1 {Salvar Regiões}]
-::msgcat::mcset pt {Save Selected Regions} 
+::msgcat::mcset pt {Save Selection} 
 ::msgcat::mcset pt {Save Select} 
 ::msgcat::mcset pt {Save Slice} 
 ::msgcat::mcset pt {Save Template} 

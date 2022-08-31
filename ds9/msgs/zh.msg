@@ -1,4 +1,5 @@
 ::msgcat::mcset zh {2d} 
+::msgcat::mcset zh {3D} 
 ::msgcat::mcset zh {3d} 
 ::msgcat::mcset zh {A postscript generation error has occurred} 
 ::msgcat::mcset zh {AIP} 
@@ -76,6 +77,8 @@
 ::msgcat::mcset zh {Bar Plot Tool} 
 ::msgcat::mcset zh {Bar Width} 
 ::msgcat::mcset zh {Bar} 
+::msgcat::mcset zh {Basic Layout} 
+::msgcat::mcset zh {Basic} 
 ::msgcat::mcset zh {Behavior} 
 ::msgcat::mcset zh {Bias} 
 ::msgcat::mcset zh {Bin 3rd Column} 
@@ -242,10 +245,9 @@
 ::msgcat::mcset zh {Delete Group} 
 ::msgcat::mcset zh {Delete Load} 
 ::msgcat::mcset zh {Delete Regions?} 
-::msgcat::mcset zh {Delete Regions} 
-::msgcat::mcset zh {Delete Selected Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBF\xEF \xA8\xFA \xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {Delete Selection} 
 ::msgcat::mcset zh {Delete Select} 
-::msgcat::mcset zh {Delete and Open Regions} 
+::msgcat::mcset zh {Delete and Open} 
 ::msgcat::mcset zh {Delete} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3"]
 ::msgcat::mcset zh {Depth} 
 ::msgcat::mcset zh {Detector} 
@@ -443,7 +445,6 @@
 ::msgcat::mcset zh {Invalid WCS} 
 ::msgcat::mcset zh {Invalid formated multipart/mixed mime type message} 
 ::msgcat::mcset zh {Invert Colormap} [encoding convertfrom big5 "\xA6\xE2 \xB1\x6D \xA4\xCF \xA6\x56"]
-::msgcat::mcset zh {Invert Selection} [encoding convertfrom big5 "\xA4\xCF \xA6\x56 \xBF\xEF \xA8\xFA"]
 ::msgcat::mcset zh {Invert} 
 ::msgcat::mcset zh {Italic} 
 ::msgcat::mcset zh {Items Found} 
@@ -478,7 +479,7 @@
 ::msgcat::mcset zh {List Data} 
 ::msgcat::mcset zh {List Regions} [encoding convertfrom big5 "\xA6\x43 \xA5\x58 \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {List Region} 
-::msgcat::mcset zh {List Selected Regions} 
+::msgcat::mcset zh {List Selection} 
 ::msgcat::mcset zh {List Select} 
 ::msgcat::mcset zh {List} 
 ::msgcat::mcset zh {Load Analysis Commands} 
@@ -808,7 +809,7 @@
 ::msgcat::mcset zh {Save RGB Image} 
 ::msgcat::mcset zh {Save Region File} 
 ::msgcat::mcset zh {Save Regions} [encoding convertfrom big5 "\xC0\x78 \xA6\x73 \xB0\xCF \xB0\xEC"]
-::msgcat::mcset zh {Save Selected Regions} 
+::msgcat::mcset zh {Save Selection} 
 ::msgcat::mcset zh {Save Select} 
 ::msgcat::mcset zh {Save Slice} 
 ::msgcat::mcset zh {Save Template} 

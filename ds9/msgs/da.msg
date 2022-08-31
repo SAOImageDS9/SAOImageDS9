@@ -1,4 +1,5 @@
 ::msgcat::mcset da {2d} 
+::msgcat::mcset da {3D} 
 ::msgcat::mcset da {3d} 
 ::msgcat::mcset da {A postscript generation error has occurred} [encoding convertfrom iso8859-1 {En fejl er opstået under postscript generering}]
 ::msgcat::mcset da {AIP} 
@@ -76,6 +77,8 @@
 ::msgcat::mcset da {Bar Plot Tool} 
 ::msgcat::mcset da {Bar Width} 
 ::msgcat::mcset da {Bar} 
+::msgcat::mcset da {Basic Layout} 
+::msgcat::mcset da {Basic} 
 ::msgcat::mcset da {Behavior} 
 ::msgcat::mcset da {Bias} {Bias}
 ::msgcat::mcset da {Bin 3rd Column} [encoding convertfrom iso8859-1 {Bin 3dje søjle}]
@@ -242,10 +245,9 @@
 ::msgcat::mcset da {Delete Group} {Slet gruppe}
 ::msgcat::mcset da {Delete Load} 
 ::msgcat::mcset da {Delete Regions?} 
-::msgcat::mcset da {Delete Regions} 
-::msgcat::mcset da {Delete Selected Regions} [encoding convertfrom iso8859-1 {Slet valgte områder}]
+::msgcat::mcset da {Delete Selection} 
 ::msgcat::mcset da {Delete Select} 
-::msgcat::mcset da {Delete and Open Regions} 
+::msgcat::mcset da {Delete and Open} 
 ::msgcat::mcset da {Delete} {Slet} 
 ::msgcat::mcset da {Depth} {Dybde}
 ::msgcat::mcset da {Detector} {Detektor}
@@ -443,7 +445,6 @@
 ::msgcat::mcset da {Invalid WCS} 
 ::msgcat::mcset da {Invalid formated multipart/mixed mime type message} {Forkert formatteret opdelt eller blandet mime type meddelelse}
 ::msgcat::mcset da {Invert Colormap} {Vend farvetabel}
-::msgcat::mcset da {Invert Selection} {Inverter valg}
 ::msgcat::mcset da {Invert} {Inverter}
 ::msgcat::mcset da {Italic} {Kursiv}
 ::msgcat::mcset da {Items Found} {Emner fundet}
@@ -478,7 +479,7 @@
 ::msgcat::mcset da {List Data} 
 ::msgcat::mcset da {List Regions} [encoding convertfrom iso8859-1 {Vis områder}]
 ::msgcat::mcset da {List Region} 
-::msgcat::mcset da {List Selected Regions} 
+::msgcat::mcset da {List Selection} 
 ::msgcat::mcset da {List Select} 
 ::msgcat::mcset da {List} {Liste}
 ::msgcat::mcset da {Load Analysis Commands} [encoding convertfrom iso8859-1 {Indlæs analyse funktioner}]
@@ -808,7 +809,7 @@
 ::msgcat::mcset da {Save RGB Image} 
 ::msgcat::mcset da {Save Region File} 
 ::msgcat::mcset da {Save Regions} [encoding convertfrom iso8859-1 {Gem områder}]
-::msgcat::mcset da {Save Selected Regions} 
+::msgcat::mcset da {Save Selection} 
 ::msgcat::mcset da {Save Select} 
 ::msgcat::mcset da {Save Slice} 
 ::msgcat::mcset da {Save Template} {Gem skabelon}

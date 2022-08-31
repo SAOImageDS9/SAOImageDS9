@@ -1,4 +1,5 @@
 ::msgcat::mcset es {2d} 
+::msgcat::mcset es {3D} 
 ::msgcat::mcset es {3d} 
 ::msgcat::mcset es {A postscript generation error has occurred} [encoding convertfrom iso8859-1 {Un error ha ocurrido en la generación del fichero postscript}]
 ::msgcat::mcset es {AIP} 
@@ -76,6 +77,8 @@
 ::msgcat::mcset es {Bar Plot Tool} 
 ::msgcat::mcset es {Bar Width} 
 ::msgcat::mcset es {Bar} 
+::msgcat::mcset es {Basic Layout} 
+::msgcat::mcset es {Basic} 
 ::msgcat::mcset es {Behavior} 
 ::msgcat::mcset es {Bias} 
 ::msgcat::mcset es {Bin 3rd Column} {Bin tercera columna} 
@@ -242,10 +245,9 @@
 ::msgcat::mcset es {Delete Group} {Borrar grupo}
 ::msgcat::mcset es {Delete Load} 
 ::msgcat::mcset es {Delete Regions?} 
-::msgcat::mcset es {Delete Regions} 
-::msgcat::mcset es {Delete Selected Regions} {Borrar regiones seleccionadas}
+::msgcat::mcset es {Delete Selection} 
 ::msgcat::mcset es {Delete Select} 
-::msgcat::mcset es {Delete and Open Regions} 
+::msgcat::mcset es {Delete and Open} 
 ::msgcat::mcset es {Delete} {Borrar}
 ::msgcat::mcset es {Depth} {Profundidad}
 ::msgcat::mcset es {Detector} 
@@ -443,7 +445,6 @@
 ::msgcat::mcset es {Invalid WCS} 
 ::msgcat::mcset es {Invalid formated multipart/mixed mime type message} 
 ::msgcat::mcset es {Invert Colormap} {Invertir mapa de colores}
-::msgcat::mcset es {Invert Selection} [encoding convertfrom iso8859-1 {Invertir selección}]
 ::msgcat::mcset es {Invert} {Invertir}
 ::msgcat::mcset es {Italic} [encoding convertfrom iso8859-1 {Itálica}]
 ::msgcat::mcset es {Items Found} [encoding convertfrom iso8859-1 {Artículos hallados}]
@@ -478,7 +479,7 @@
 ::msgcat::mcset es {List Data} 
 ::msgcat::mcset es {List Regions} {Listar regiones}
 ::msgcat::mcset es {List Region} 
-::msgcat::mcset es {List Selected Regions} 
+::msgcat::mcset es {List Selection} 
 ::msgcat::mcset es {List Select} 
 ::msgcat::mcset es {List} {Listar}
 ::msgcat::mcset es {Load Analysis Commands} [encoding convertfrom iso8859-1 {Cargar las instrucciones de análisis}]
@@ -808,7 +809,7 @@
 ::msgcat::mcset es {Save RGB Image} 
 ::msgcat::mcset es {Save Region File} 
 ::msgcat::mcset es {Save Regions} {Guardar regiones}
-::msgcat::mcset es {Save Selected Regions} 
+::msgcat::mcset es {Save Selection} 
 ::msgcat::mcset es {Save Select} 
 ::msgcat::mcset es {Save Slice} 
 ::msgcat::mcset es {Save Template} {Guardar modelo}

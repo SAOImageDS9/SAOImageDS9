@@ -1,4 +1,5 @@
 ::msgcat::mcset ja {2d} 
+::msgcat::mcset ja {3D} 
 ::msgcat::mcset ja {3d} 
 ::msgcat::mcset ja {A postscript generation error has occurred} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xba\xee\xc0\xae\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {AIP} 
@@ -76,6 +77,8 @@
 ::msgcat::mcset ja {Bar Plot Tool} 
 ::msgcat::mcset ja {Bar Width} 
 ::msgcat::mcset ja {Bar} 
+::msgcat::mcset ja {Basic Layout} 
+::msgcat::mcset ja {Basic} 
 ::msgcat::mcset ja {Behavior} 
 ::msgcat::mcset ja {Bias} [encoding convertfrom euc-jp "\xa5\xd0\xa5\xa4\xa5\xa2\xa5\xb9"]
 ::msgcat::mcset ja {Bin 3rd Column} [encoding convertfrom euc-jp "\xc2\xe8\xa3\xb3\xa4\xce\xce\xf3\xa4\xf2\xa5\xd3\xa5\xf3\xa4\xde\xa4\xc8\xa4\xe1"]
@@ -242,10 +245,9 @@
 ::msgcat::mcset ja {Delete Group} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Load} 
 ::msgcat::mcset ja {Delete Regions?} 
-::msgcat::mcset ja {Delete Regions} 
-::msgcat::mcset ja {Delete Selected Regions} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xa4\xb7\xa4\xbf\xce\xce\xb0\xe8\xa4\xf2\xba\xef\xbd\xfc"]
+::msgcat::mcset ja {Delete Selection} 
 ::msgcat::mcset ja {Delete Select} 
-::msgcat::mcset ja {Delete and Open Regions} 
+::msgcat::mcset ja {Delete and Open} 
 ::msgcat::mcset ja {Delete} [encoding convertfrom euc-jp "\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Depth} [encoding convertfrom euc-jp "\xbf\xbc\xa4\xb5"]
 ::msgcat::mcset ja {Detector} [encoding convertfrom euc-jp "\xb8\xa1\xbd\xd0\xb4\xef\xba\xc2\xc9\xb8"]
@@ -443,7 +445,6 @@
 ::msgcat::mcset ja {Invalid WCS} 
 ::msgcat::mcset ja {Invalid formated multipart/mixed mime type message} 
 ::msgcat::mcset ja {Invert Colormap} [encoding convertfrom euc-jp "\xbf\xa7\xc4\xb4\xa4\xf2\xc8\xbf\xc5\xbe"]
-::msgcat::mcset ja {Invert Selection} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xa4\xf2\xc8\xbf\xc5\xbe"]
 ::msgcat::mcset ja {Invert} [encoding convertfrom euc-jp "\xc8\xbf\xc5\xbe"]
 ::msgcat::mcset ja {Italic} [encoding convertfrom euc-jp "\xa5\xa4\xa5\xbf\xa5\xea\xa5\xc3\xa5\xaf"]
 ::msgcat::mcset ja {Items Found} 
@@ -478,7 +479,7 @@
 ::msgcat::mcset ja {List Data} 
 ::msgcat::mcset ja {List Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xce\xf3\xb5\xf3"]
 ::msgcat::mcset ja {List Region} 
-::msgcat::mcset ja {List Selected Regions} 
+::msgcat::mcset ja {List Selection} 
 ::msgcat::mcset ja {List Select} 
 ::msgcat::mcset ja {List} [encoding convertfrom euc-jp "\xce\xf3\xb5\xf3"]
 ::msgcat::mcset ja {Load Analysis Commands} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
@@ -808,7 +809,7 @@
 ::msgcat::mcset ja {Save RGB Image} 
 ::msgcat::mcset ja {Save Region File} 
 ::msgcat::mcset ja {Save Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xca\xdd\xc2\xb8"]
-::msgcat::mcset ja {Save Selected Regions} 
+::msgcat::mcset ja {Save Selection} 
 ::msgcat::mcset ja {Save Select} 
 ::msgcat::mcset ja {Save Slice} 
 ::msgcat::mcset ja {Save Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1\xa4\xf2\xca\xdd\xc2\xb8"]

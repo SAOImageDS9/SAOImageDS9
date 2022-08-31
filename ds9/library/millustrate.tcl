@@ -21,8 +21,10 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Font}] \
 	-menu $ds9(mb).illustrate.font
     $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Front}]
-    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Back}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Front}] \
+	-command IllustrateMoveFront
+    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Back}] \
+	-command IllustrateMoveBack
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {All}] \
 	-command IllustrateSelectAll
@@ -217,9 +219,9 @@ proc CreateButtonsIllustrate {} {
 	illustrate shape text {}
 
     ButtonButton $ds9(buttons).illustrate.front \
-	[string tolower [msgcat::mc {Front}]] {}
+	[string tolower [msgcat::mc {Front}]] IllustrateMoveFront
     ButtonButton $ds9(buttons).illustrate.back \
-	[string tolower [msgcat::mc {Back}]] {}
+	[string tolower [msgcat::mc {Back}]] IllustrateMoveBack
 
     ButtonButton $ds9(buttons).illustrate.all \
 	[string tolower [msgcat::mc {All}]] IllustrateSelectAll

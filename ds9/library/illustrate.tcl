@@ -725,6 +725,56 @@ proc IllustrateFindGraphic {tag xx yy} {
 
 # Commands
 
+proc IllustrateMoveFront {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    set ll [$ds9(canvas) find withtag {graphic}]
+    set top [lindex $ll end]
+
+    # graphic
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    if {$id != $top} {
+		$ds9(canvas) raise $id $top
+	    }
+	}
+    }
+    
+    # now sort out the handles
+    foreach id [$ds9(canvas) find withtag {graphic}] {
+	foreach hh [$ds9(canvas) find withtag gr${id}] {
+	    $ds9(canvas) raise $hh $id
+	}
+    }
+}
+
+proc IllustrateMoveBack {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    set ll [$ds9(canvas) find withtag {graphic}]
+    set bottom [lindex $ll 0]
+
+    # graphic
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    if {$id != $bottom} {
+		$ds9(canvas) lower $id $bottom
+	    }
+	}
+    }
+    
+    # now sort out the handles
+    foreach id [$ds9(canvas) find withtag {graphic}] {
+	foreach hh [$ds9(canvas) find withtag gr${id}] {
+	    $ds9(canvas) raise $hh $id
+	}
+    }
+}
+
 proc IllustrateDeleteSelect {} {
     global ds9
     global illustrate

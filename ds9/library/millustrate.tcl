@@ -36,9 +36,9 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete Selection}] \
 	-command IllustrateDeleteSelect
     $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add command -label "[msgcat::mc {Open}]..."
-    $ds9(mb).illustrate add command -label "[msgcat::mc {Save}]..."
-    $ds9(mb).illustrate add command -label "[msgcat::mc {List}]..."
+    $ds9(mb).illustrate add command -label [msgcat::mc {Open}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {Save}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {List}]
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete All}] \
 	-command IllustrateDeleteAll
@@ -304,13 +304,13 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-variable pbuttons(illustrate,deleteselect) \
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Open}]..." \
+    $m add checkbutton -label [msgcat::mc {Open}] \
 	-variable pbuttons(illustrate,load) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m add checkbutton -label "[msgcat::mc {Save}]..." \
+    $m add checkbutton -label [msgcat::mc {Save}] \
 	-variable pbuttons(illustrate,save) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m add checkbutton -label "[msgcat::mc {List}]..." \
+    $m add checkbutton -label [msgcat::mc {List}] \
 	-variable pbuttons(illustrate,list) \
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator

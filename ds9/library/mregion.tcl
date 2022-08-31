@@ -58,17 +58,16 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Delete Selection}] \
 	-command [list MarkerDelete select]
     $ds9(mb).region add separator
-    $ds9(mb).region add command -label "[msgcat::mc {Open Regions}]..." \
+    $ds9(mb).region add command -label "[msgcat::mc {Open}]..." \
 	-command MarkerLoad
-    $ds9(mb).region add command -label "[msgcat::mc {Save Regions}]..." \
+    $ds9(mb).region add command -label "[msgcat::mc {Save}]..." \
 	-command [list MarkerSave {}]
-    $ds9(mb).region add command -label "[msgcat::mc {List Regions}]..." \
+    $ds9(mb).region add command -label "[msgcat::mc {List}]..." \
 	-command [list MarkerList {}]
-    $ds9(mb).region add command -label [msgcat::mc {Delete Regions}] \
-	-command [list MarkerDelete {}]
     $ds9(mb).region add separator
-    $ds9(mb).region add command \
-	-label "[msgcat::mc {Delete and Open Regions}]..." \
+    $ds9(mb).region add command -label [msgcat::mc {Delete}] \
+	-command [list MarkerDelete {}]
+    $ds9(mb).region add command -label "[msgcat::mc {Delete and Open}]..." \
 	-command MarkerDeleteLoad
     $ds9(mb).region add separator
     $ds9(mb).region add cascade -label [msgcat::mc {Region Parameters}] \
@@ -825,13 +824,13 @@ proc CreateButtonsRegion {} {
 	[string tolower [msgcat::mc {Invert}]] MarkerSelectInvert
 
     ButtonButton $ds9(buttons).region.saveselect \
-	[string tolower [msgcat::mc {Save Selection}]] \
+	[string tolower [msgcat::mc {Save Select}]] \
 	[list MarkerSave select]
     ButtonButton $ds9(buttons).region.listselect \
-	[string tolower [msgcat::mc {List Selection}]] \
+	[string tolower [msgcat::mc {List Select}]] \
 	[list MarkerList select]
     ButtonButton $ds9(buttons).region.deleteselect \
-	[string tolower [msgcat::mc {Delete Selection}]] \
+	[string tolower [msgcat::mc {Delete Select}]] \
 	[list MarkerDelete select]
 
     ButtonButton $ds9(buttons).region.load \
@@ -955,20 +954,20 @@ proc PrefsDialogButtonbarRegion {f} {
 	-variable pbuttons(region,deleteselect) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {Open Regions}]..." \
+    $m add checkbutton -label "[msgcat::mc {Open}]..." \
 	-variable pbuttons(region,load) \
 	-command {UpdateButtons buttons(region)}
-    $m add checkbutton -label "[msgcat::mc {Save Regions}]..." \
+    $m add checkbutton -label "[msgcat::mc {Save}]..." \
 	-variable pbuttons(region,save) \
 	-command {UpdateButtons buttons(region)}
-    $m add checkbutton -label "[msgcat::mc {List Regions}]..." \
+    $m add checkbutton -label "[msgcat::mc {List}]..." \
 	-variable pbuttons(region,list) \
 	-command {UpdateButtons buttons(region)}
-    $m add checkbutton -label [msgcat::mc {Delete Regions}] \
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Delete}] \
 	-variable pbuttons(region,delete) \
 	-command {UpdateButtons buttons(region)}
-    $m add separator
-    $m add checkbutton -label "[msgcat::mc {Delete and Open Regions}]..." \
+    $m add checkbutton -label "[msgcat::mc {Delete and Open}]..." \
 	-variable pbuttons(region,deleteload) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
@@ -1157,13 +1156,12 @@ proc UpdateRegionMenu {} {
 	    $mm entryconfig [msgcat::mc {Invert Selection}] -state normal
 	    $mm entryconfig [msgcat::mc {Delete Selection}] -state normal
 
-	    $mm entryconfig "[msgcat::mc {Open Regions}]..." -state normal
-	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state normal
-	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state normal
-	    $mm entryconfig [msgcat::mc {Delete Regions}] -state normal
+	    $mm entryconfig "[msgcat::mc {Open}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {Save}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {List}]..." -state normal
 
-	    $mm entryconfig "[msgcat::mc {Delete and Open Regions}]..." \
-		-state normal
+	    $mm entryconfig [msgcat::mc {Delete}] -state normal
+	    $mm entryconfig "[msgcat::mc {Delete and Open}]..." -state normal
 
 	    $bb.info configure -state normal
 
@@ -1213,12 +1211,12 @@ proc UpdateRegionMenu {} {
 	    $mm entryconfig [msgcat::mc {Invert Selection}] -state disabled
 	    $mm entryconfig [msgcat::mc {Delete Selection}] -state disabled
 
-	    $mm entryconfig "[msgcat::mc {Open Regions}]..." -state disabled
-	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state disabled
-	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state disabled
-	    $mm entryconfig [msgcat::mc {Delete Regions}] -state disabled
+	    $mm entryconfig "[msgcat::mc {Open}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {Save}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {List}]..." -state disabled
 
-	    $mm entryconfig "[msgcat::mc {Delete and Open Regions}]..." -state disabled
+	    $mm entryconfig [msgcat::mc {Delete}] -state disabled
+	    $mm entryconfig "[msgcat::mc {Delete and Open}]..." -state disabled
 
 	    $bb.info configure -state disabled
 

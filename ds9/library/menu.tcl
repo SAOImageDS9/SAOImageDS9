@@ -646,7 +646,7 @@ proc ColorFillMenu {w varname color fill cmd1 cmd2} {
 	-variable ${varname}($fill) -command $cmd2
 }
 
-proc ColorMenuButton {w varname color fill cmd1 cmd2} {
+proc ColorFillMenuButton {w varname color fill cmd1 cmd2} {
     upvar #0 $varname var
     global $varname
     

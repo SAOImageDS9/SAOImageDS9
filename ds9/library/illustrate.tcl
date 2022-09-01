@@ -109,8 +109,6 @@ proc UnBindEventsIllustrate {} {
 # Mode
 
 proc IllustrateModeBegin {} {
-    global iillustrate
-
     IllustrateSelectNone
 
     BindEventsIllustrate
@@ -118,8 +116,6 @@ proc IllustrateModeBegin {} {
 }
 
 proc IllustrateModeEnd {} {
-    global iillustrate
-
     IllustrateSelectNone
 
     UnBindEventsIllustrate
@@ -161,7 +157,6 @@ proc IllustrateMotion {xx yy} {
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateMotion"
     }
-
 }
 
 # Button
@@ -183,6 +178,13 @@ proc IllustrateButton {xx yy} {
     # see if we are on a handle
     set id [IllustrateFindGraphic handle $xx $yy]
     if {$id != {}} {
+	if {[regexp {gr([0-9]+)} [$ds9(canvas) gettags $id] foo gr]} {
+	    set iillustrate(handle,id) $id
+	    set iillustrate(handle,graphic,id) $gr
+	    set iillustrate(motion) beginEdit
+	} else {
+	    # should not happen
+	}
 	return
     }
     
@@ -236,16 +238,7 @@ proc IllustrateButtonMotion {xx yy} {
 
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    # graphic
-		    $ds9(canvas) itemconfigure $id \
-			-outline white \
-			-fill {} \
-			-dash {8 3}
-
-		    # handles
-		    foreach hh [$ds9(canvas) find withtag gr${id}] {
-			$ds9(canvas) itemconfigure $hh -state hidden
-		    }
+		    IllustrateGraphicAntsOn $id
 		}
 	    }
 	    set iillustrate(motion) move
@@ -261,39 +254,64 @@ proc IllustrateButtonMotion {xx yy} {
 		    set ny1 [expr $dy+$y1]
 		    $ds9(canvas) moveto $id $nx1 $ny1
 
-		    # handles
-		    set rr 2
-		    set bbox [$ds9(canvas) bbox $id]
-		    set bbx1 [lindex $bbox 0]
-		    set bby1 [lindex $bbox 1]
-		    set bbx2 [lindex $bbox 2]
-		    set bby2 [lindex $bbox 3]
-
-		    set hh [$ds9(canvas) find withtag "gr${id} && h1"]
-		    $ds9(canvas) coords $hh \
-			[expr $bbx1-$rr] [expr $bby1-$rr] \
-			[expr $bbx1+$rr] [expr $bby1+$rr]
-
-		    set hh [$ds9(canvas) find withtag "gr${id} && h2"]
-		    $ds9(canvas) coords $hh \
-			[expr $bbx2-$rr] [expr $bby1-$rr] \
-			[expr $bbx2+$rr] [expr $bby1+$rr]\
-
-		    set hh [$ds9(canvas) find withtag "gr${id} && h3"]
-		    $ds9(canvas) coords $hh \
-			[expr $bbx2-$rr] [expr $bby2-$rr] \
-			[expr $bbx2+$rr] [expr $bby2+$rr]\
-
-		    set hh [$ds9(canvas) find withtag "gr${id} && h4"]
-		    $ds9(canvas) coords $hh \
-			[expr $bbx1-$rr] [expr $bby2-$rr] \
-			[expr $bbx1+$rr] [expr $bby2+$rr]\
-		    }
+		    IllustrateUpdateHandlesCoords $id
+		}
 	    }
 	}
 
-	beginEdit -
+	beginEdit {
+	    set iillustrate(motion,xx) $xx
+	    set iillustrate(motion,yy) $yy
+
+	    foreach gr $iillustrate(selection) {
+		foreach {id x1 y1 x2 y2 color fill dash} $gr {
+		    if {$id == $iillustrate(handle,graphic,id)} {
+			IllustrateGraphicAntsOn $id
+			break
+		    }
+		}
+	    }
+
+	    # find handle number
+	    set tags [$ds9(canvas) gettags $iillustrate(handle,id)]
+	    if {[regexp {h([0-9]+)} $tags foo hh]} {
+		set iillustrate(handle,num) $hh
+		set iillustrate(motion) edit
+	    } else {
+		# should not happen
+	    }
+	}
 	edit {
+	    set dx [expr $xx-$iillustrate(motion,xx)]
+	    set dy [expr $yy-$iillustrate(motion,yy)]
+
+	    foreach gr $iillustrate(selection) {
+		foreach {id x1 y1 x2 y2 color fill dash} $gr {
+		    if {$id != $iillustrate(handle,graphic,id)} {
+			continue
+		    }
+
+		    # resize
+		    switch $iillustrate(handle,num) {
+			0 {
+			    # should not happen
+			}
+			1 {
+			    $ds9(canvas) coords $id $xx $yy $x2 $y2
+			}
+			2 {
+			    $ds9(canvas) coords $id $x1 $yy $xx $y2
+			}
+			3 {
+			    $ds9(canvas) coords $id $x1 $y1 $xx $yy
+			}
+			4 {
+			    $ds9(canvas) coords $id $xx $y1 $x2 $yy
+			}
+			default {}
+		    }
+		}
+	    }
 	}
 
 	beginRotate -
@@ -329,24 +347,27 @@ proc IllustrateButtonRelease {xx yy} {
 	move {
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    # graphic
-		    $ds9(canvas) itemconfigure $id \
-			-outline $color \
-			-fill $fill \
-			-dash $dash
-
-		    # handles
-		    foreach hh [$ds9(canvas) find withtag gr${id}] {
-			$ds9(canvas) itemconfigure $hh -state normal
-		    }
+		    IllustrateGraphicAntsOff $id $color $fill $dash
 		}
 	    }
 
-	    IllustrateUpdateSelect
+	    IllustrateUpdateSelectionCoords
 	}
 
 	beginEdit -
 	edit {
+	    foreach gr $iillustrate(selection) {
+		foreach {id x1 y1 x2 y2 color fill dash} $gr {
+		    if {$id == $iillustrate(handle,graphic,id)} {
+			IllustrateGraphicAntsOff $id $color $fill $dash
+			IllustrateUpdateHandlesCoords $id
+			IllustrateUpdateSelectionCoords
+		    }
+		}
+	    }
+
+	    unset iillustrate(handle,id)
+	    unset iillustrate(handle,graphic,id)
 	}
 
 	beginRotate -
@@ -866,7 +887,7 @@ proc IllustrateIsSelected {id} {
     return 0
 }
 
-proc IllustrateUpdateSelect {} {
+proc IllustrateUpdateSelectionCoords {} {
     global ds9
     global illustrate
     global iillustrate
@@ -923,6 +944,71 @@ proc IllustrateUnselect {id} {
 }
 
 # Util
+
+proc IllustrateGraphicAntsOn {id} {
+
+
+    global ds9
+
+    # graphic
+    $ds9(canvas) itemconfigure $id \
+	-outline white \
+	-fill {} \
+	-dash {8 3}
+
+    # handles
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -state hidden
+    }
+}
+
+proc IllustrateGraphicAntsOff {id color fill dash} {
+    global ds9
+
+    # graphic
+    $ds9(canvas) itemconfigure $id \
+	-outline $color \
+	-fill $fill \
+	-dash $dash
+
+    # handles
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -state normal
+    }
+}
+
+proc IllustrateUpdateHandlesCoords {id} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    set rr 2
+    set bbox [$ds9(canvas) bbox $id]
+    set bbx1 [lindex $bbox 0]
+    set bby1 [lindex $bbox 1]
+    set bbx2 [lindex $bbox 2]
+    set bby2 [lindex $bbox 3]
+
+    set hh [$ds9(canvas) find withtag "gr${id} && h1"]
+    $ds9(canvas) coords $hh \
+	[expr $bbx1-$rr] [expr $bby1-$rr] \
+	[expr $bbx1+$rr] [expr $bby1+$rr]
+
+    set hh [$ds9(canvas) find withtag "gr${id} && h2"]
+    $ds9(canvas) coords $hh \
+	[expr $bbx2-$rr] [expr $bby1-$rr] \
+	[expr $bbx2+$rr] [expr $bby1+$rr]
+
+    set hh [$ds9(canvas) find withtag "gr${id} && h3"]
+    $ds9(canvas) coords $hh \
+	[expr $bbx2-$rr] [expr $bby2-$rr] \
+	[expr $bbx2+$rr] [expr $bby2+$rr]
+
+    set hh [$ds9(canvas) find withtag "gr${id} && h4"]
+    $ds9(canvas) coords $hh \
+	[expr $bbx1-$rr] [expr $bby2-$rr] \
+	[expr $bbx1+$rr] [expr $bby2+$rr]
+}
 
 proc IllustrateDumpAll {} {
     global ds9

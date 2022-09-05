@@ -45,3 +45,33 @@ proc IllustrateDefaultOval {id} {
 	[expr $xx+$rr1] [expr $yy+$rr2]
 
 }
+
+proc IllustrateOvalEdit {gr xx yy} {
+    global ds9
+    global iillustrate
+
+    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	switch $iillustrate(handle) {
+	    1 {
+		switch $iillustrate(oval) {
+		    circle {
+			$ds9(canvas) coords $id $xx $xx $x2 $y2
+		    }
+		    ellipse {
+			$ds9(canvas) coords $id $xx $yy $x2 $y2
+		    }
+		}
+	    }
+	    2 {
+		$ds9(canvas) coords $id $x1 $yy $xx $y2
+	    }
+	    3 {
+		$ds9(canvas) coords $id $x1 $y1 $xx $yy
+	    }
+	    4 {
+		$ds9(canvas) coords $id $xx $y1 $x2 $yy
+	    }
+	}
+    }
+}
+

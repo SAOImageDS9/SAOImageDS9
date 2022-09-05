@@ -127,8 +127,8 @@ proc IllustrateUpdateGraphic {} {
 	    # graphic
 	    switch [$ds9(canvas) type $id] {
 		oval -
-		polygon -
-		rectangle {
+		rectangle -
+		polygon {
 		    $ds9(canvas) itemconfigure $id \
 			-outline $illustrate(color) \
 			-fill $fill \
@@ -174,8 +174,8 @@ proc IllustrateFindGraphic {tag xx yy} {
     foreach id [$ds9(canvas) find withtag $tag] {
 	switch [$ds9(canvas) type $id] {
 	    oval -
-	    polygon -
-	    rectangle {
+	    rectangle -
+	    polygon {
 		# is fill on?
 		set fill [$ds9(canvas) itemcget $id -fill]
 		lappend index [list $id $fill]
@@ -345,27 +345,6 @@ proc IllustrateBaseUpdateHandleCoords {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateBaseEdit {gr xx yy} {
-    global ds9
-
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	switch $iillustrate(handle) {
-	    1 {
-		$ds9(canvas) coords $id $xx $yy $x2 $y2
-	    }
-	    2 {
-		$ds9(canvas) coords $id $x1 $yy $xx $y2
-	    }
-	    3 {
-		$ds9(canvas) coords $id $x1 $y1 $xx $yy
-	    }
-	    4 {
-		$ds9(canvas) coords $id $xx $y1 $x2 $yy
-	    }
-	}
-    }
-}
-
 # Util
 
 proc IllustrateSaveGraphic {id} {
@@ -374,8 +353,8 @@ proc IllustrateSaveGraphic {id} {
     set coords [$ds9(canvas) coords $id]
     switch [$ds9(canvas) type $id] {
 	oval -
-	polygon -
-	rectangle {
+	rectangle -
+	polygon {
 	    set color [$ds9(canvas) itemcget $id -outline]
 	    set fill [$ds9(canvas) itemcget $id -fill]
 	    set dash [$ds9(canvas) itemcget $id -dash]
@@ -400,8 +379,8 @@ proc IllustrateGraphicAntsOn {id} {
     # graphic
     switch [$ds9(canvas) type $id] {
 	oval -
-	polygon -
-	rectangle {
+	rectangle -
+	polygon {
 	    $ds9(canvas) itemconfigure $id \
 		-outline white \
 		-fill {} \
@@ -425,8 +404,8 @@ proc IllustrateGraphicAntsOff {id color fill dash} {
     # graphic
     switch [$ds9(canvas) type $id] {
 	oval -
-	polygon -
-	rectangle {
+	rectangle -
+	polygon {
 	    $ds9(canvas) itemconfigure $id \
 		-outline $color \
 		-fill $fill \

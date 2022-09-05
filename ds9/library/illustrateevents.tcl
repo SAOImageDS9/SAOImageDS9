@@ -120,7 +120,6 @@ proc IllustrateButton {xx yy} {
     global illustrate
     global iillustrate
 
-    puts "IllustrateButton $xx $yy"
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButton $xx $yy"
@@ -132,8 +131,8 @@ proc IllustrateButton {xx yy} {
     set iillustrate(edit) {}
     set iillustrate(oval) circle
     set iillustrate(motion) none
-    set iillustrate(motion,xx) {}
-    set iillustrate(motion,yy) {}
+    set iillustrate(motion,xx) $xx
+    set iillustrate(motion,yy) $yy
 
     # see if we are on a handle
     set hid [IllustrateFindGraphic handle $xx $yy]
@@ -181,12 +180,16 @@ proc IllustrateButton {xx yy} {
     set iillustrate(id) [IllustrateCreateGraphic $xx $yy]
     switch [$ds9(canvas) type $iillustrate(id)] {
 	oval -
-	ellipse -
 	rectangle -
-	polygon -
-	text {set iillustrate(handle) 1}
-	line {set iillustrate(handle) 2}
+	polygon {
+	    set iillustrate(handle) 1
+	}
+	line {
+	    set iillustrate(handle) 2
+	}
+	text {}
     }
+
     set iillustrate(edit) [IllustrateSaveGraphic $iillustrate(id)]
     set iillustrate(motion) beginCreate
 }
@@ -205,18 +208,14 @@ proc IllustrateButtonMotion {xx yy} {
 	none {}
 
 	beginCreate {
-	    set iillustrate(motion,xx) $xx
-	    set iillustrate(motion,yy) $yy
-	    set iillustrate(motion) create
-
 	    IllustrateGraphicAntsOn $iillustrate(id)
 	    IllustrateHandleOff $iillustrate(id)
+	    set iillustrate(motion) create
 	}
 	create {
 	    switch [$ds9(canvas) type $iillustrate(id)] {
 		oval -
-		ellipse -
-		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
+		rectangle {IllustrateRectangleEdit $iillustrate(edit) $xx $yy}
 		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
 		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
 		text {}
@@ -224,9 +223,6 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 
 	beginMove {
-	    set iillustrate(motion,xx) $xx
-	    set iillustrate(motion,yy) $yy
-
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
 		    IllustrateGraphicAntsOn $id
@@ -250,18 +246,14 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 
 	beginEdit {
-	    set iillustrate(motion,xx) $xx
-	    set iillustrate(motion,yy) $yy
-	    set iillustrate(motion) edit
-
 	    IllustrateGraphicAntsOn $iillustrate(id)
 	    IllustrateHandleOff $iillustrate(id)
+	    set iillustrate(motion) edit
 	}
 	edit {
 	    switch [$ds9(canvas) type $iillustrate(id)] {
-		oval -
-		ellipse -
-		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
+		oval {IllustrateOvalEdit $iillustrate(edit) $xx $yy}
+		rectangle {IllustrateRectangleEdit $iillustrate(edit) $xx $yy}
 		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
 		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
 		text {}
@@ -281,7 +273,6 @@ proc IllustrateButtonRelease {xx yy} {
     global illustrate
     global iillustrate
 
-    puts "IllustrateButtonRelease $iillustrate(motion) $xx $yy"
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButtonRelease $iillustrate(motion) $xx $yy"
@@ -305,8 +296,8 @@ proc IllustrateButtonRelease {xx yy} {
 		IllustrateHandleOff $id
 		switch [$ds9(canvas) type $id] {
 		    oval -
-		    polygon -
 		    rectangle -
+		    polygon -
 		    text {IllustrateBaseUpdateHandleCoords $id}
 		    line {IllustrateLineUpdateHandleCoords $id}
 		}
@@ -331,8 +322,8 @@ proc IllustrateButtonRelease {xx yy} {
 		IllustrateHandleOff $id
 		switch [$ds9(canvas) type $id] {
 		    oval -
-		    polygon -
 		    rectangle -
+		    polygon -
 		    text {IllustrateBaseUpdateHandleCoords $id}
 		    line {IllustrateLineUpdateHandleCoords $id}
 		}
@@ -348,8 +339,8 @@ proc IllustrateButtonRelease {xx yy} {
 		    IllustrateHandleOn $id
 		    switch [$ds9(canvas) type $id] {
 			oval -
-			polygon -
 			rectangle -
+			polygon -
 			text {IllustrateBaseUpdateHandleCoords $id}
 			line {IllustrateLineUpdateHandleCoords $id}
 		    }
@@ -366,8 +357,8 @@ proc IllustrateButtonRelease {xx yy} {
 		IllustrateHandleOn $id
 		switch [$ds9(canvas) type $id] {
 		    oval -
-		    polygon -
 		    rectangle -
+		    polygon -
 		    text {IllustrateBaseUpdateHandleCoords $id}
 		    line {IllustrateLineUpdateHandleCoords $id}
 		}
@@ -408,11 +399,11 @@ proc IllustrateShiftButton {xx yy} {
 
     set iillustrate(id) -1
     set iillustrate(ants) -1
-    set iillustarte(edit) {}
+    set iillustrate(edit) {}
     set iillustrate(oval) circle
     set iillustrate(motion) none
-    set iillustrate(motion,xx) {}
-    set iillustrate(motion,yy) {}
+    set iillustrate(motion,xx) $xx
+    set iillustrate(motion,yy) $yy
 
     # if on graphic, add to selection, start move
     set id [IllustrateFindGraphic graphic $xx $yy]
@@ -437,6 +428,7 @@ proc IllustrateShiftButton {xx yy} {
 			       $xx $yy $xx $yy \
 			       -outline white \
 			       -dash {8 3} -tags ants]
+
     set iillustrate(motion) shiftregion
 }
 

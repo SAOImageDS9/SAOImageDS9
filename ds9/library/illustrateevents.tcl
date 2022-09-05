@@ -120,24 +120,35 @@ proc IllustrateButton {xx yy} {
     global illustrate
     global iillustrate
 
+    puts "IllustrateButton $xx $yy"
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateButton $xx $yy"
     }
 
+    set iillustrate(id) -1
+    set iillustrate(handle) -1
+    set iillustrate(ants) -1
+    set iillustrate(edit) {}
+    set iillustrate(oval) circle
     set iillustrate(motion) none
     set iillustrate(motion,xx) {}
     set iillustrate(motion,yy) {}
 
     # see if we are on a handle
-    set id [IllustrateFindGraphic handle $xx $yy]
-    if {$id != {}} {
-	if {[regexp {gr([0-9]+)} [$ds9(canvas) gettags $id] foo gr]} {
-	    set iillustrate(handle,id) $id
-	    set iillustrate(handle,graphic,id) $gr
+    set hid [IllustrateFindGraphic handle $xx $yy]
+    if {$hid != {}} {
+	# find handle number
+	set tags [$ds9(canvas) gettags $hid]
+	if {[regexp {h([0-9]+)} $tags foo num]} {
+	    set iillustrate(handle) $num
+	}
+
+	# find graphic id
+	if {[regexp {gr([0-9]+)} [$ds9(canvas) gettags $hid] foo id]} {
+	    set iillustrate(id) $id
+	    set iillustrate(edit) [IllustrateSaveGraphic $iillustrate(id)]
 	    set iillustrate(motion) beginEdit
-	} else {
-	    # should not happen
 	}
 	return
     }
@@ -160,13 +171,24 @@ proc IllustrateButton {xx yy} {
 	return
     }	
 
-    # create new graphic
+    # if something selected, unselect
     if {[llength $iillustrate(selection)]} {
 	IllustrateSelectNone
 	return
     }
 
-    IllustrateCreateGraphic $xx $yy
+    # else, create new graphic
+    set iillustrate(id) [IllustrateCreateGraphic $xx $yy]
+    switch [$ds9(canvas) type $iillustrate(id)] {
+	oval -
+	ellipse -
+	rectangle -
+	polygon -
+	text {set iillustrate(handle) 1}
+	line {set iillustrate(handle) 2}
+    }
+    set iillustrate(edit) [IllustrateSaveGraphic $iillustrate(id)]
+    set iillustrate(motion) beginCreate
 }
 
 proc IllustrateButtonMotion {xx yy} {
@@ -182,8 +204,23 @@ proc IllustrateButtonMotion {xx yy} {
     switch -- $iillustrate(motion) {
 	none {}
 
-	beginCreate -
+	beginCreate {
+	    set iillustrate(motion,xx) $xx
+	    set iillustrate(motion,yy) $yy
+	    set iillustrate(motion) create
+
+	    IllustrateGraphicAntsOn $iillustrate(id)
+	    IllustrateHandleOff $iillustrate(id)
+	}
 	create {
+	    switch [$ds9(canvas) type $iillustrate(id)] {
+		oval -
+		ellipse -
+		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
+		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
+		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
+		text {}
+	    }
 	}
 
 	beginMove {
@@ -193,6 +230,7 @@ proc IllustrateButtonMotion {xx yy} {
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
 		    IllustrateGraphicAntsOn $id
+		    IllustrateHandleOff $id
 		}
 	    }
 	    set iillustrate(motion) move
@@ -207,8 +245,6 @@ proc IllustrateButtonMotion {xx yy} {
 		    set nx1 [expr $dx+$x1]
 		    set ny1 [expr $dy+$y1]
 		    $ds9(canvas) moveto $id $nx1 $ny1
-
-		    IllustrateUpdateHandlesCoords $id
 		}
 	    }
 	}
@@ -216,60 +252,20 @@ proc IllustrateButtonMotion {xx yy} {
 	beginEdit {
 	    set iillustrate(motion,xx) $xx
 	    set iillustrate(motion,yy) $yy
+	    set iillustrate(motion) edit
 
-	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    if {$id == $iillustrate(handle,graphic,id)} {
-			IllustrateGraphicAntsOn $id
-			break
-		    }
-		}
-	    }
-
-	    # find handle number
-	    set tags [$ds9(canvas) gettags $iillustrate(handle,id)]
-	    if {[regexp {h([0-9]+)} $tags foo hh]} {
-		set iillustrate(handle,num) $hh
-		set iillustrate(motion) edit
-	    } else {
-		# should not happen
-	    }
+	    IllustrateGraphicAntsOn $iillustrate(id)
+	    IllustrateHandleOff $iillustrate(id)
 	}
 	edit {
-	    set dx [expr $xx-$iillustrate(motion,xx)]
-	    set dy [expr $yy-$iillustrate(motion,yy)]
-
-	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    if {$id != $iillustrate(handle,graphic,id)} {
-			continue
-		    }
-
-		    # resize
-		    switch $iillustrate(handle,num) {
-			0 {
-			    # should not happen
-			}
-			1 {
-			    $ds9(canvas) coords $id $xx $yy $x2 $y2
-			}
-			2 {
-			    $ds9(canvas) coords $id $x1 $yy $xx $y2
-			}
-			3 {
-			    $ds9(canvas) coords $id $x1 $y1 $xx $yy
-			}
-			4 {
-			    $ds9(canvas) coords $id $xx $y1 $x2 $yy
-			}
-			default {}
-		    }
-		}
+	    switch [$ds9(canvas) type $iillustrate(id)] {
+		oval -
+		ellipse -
+		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
+		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
+		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
+		text {}
 	    }
-	}
-
-	beginRotate -
-	rotate {
 	}
 
 	shiftregion {
@@ -285,47 +281,97 @@ proc IllustrateButtonRelease {xx yy} {
     global illustrate
     global iillustrate
 
+    puts "IllustrateButtonRelease $iillustrate(motion) $xx $yy"
     global debug
     if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonRelease $xx $yy"
+	puts "IllustrateButtonRelease $iillustrate(motion) $xx $yy"
     }
 
     switch -- $iillustrate(motion) {
 	none {}
 
-	beginCreate -
-	create {
-	}
+	beginCreate {
+	    # the user has just clicked, so resize to make visible or delete
+	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
+		IllustrateGraphicAntsOff $id $color $fill $dash
+		switch [$ds9(canvas) type $id] {
+		    oval {IllustrateDefaultOval $id}
+		    rectangle {IllustrateDefaultRectangle $id}
+		    polygon {IllustrateDefaultPolygon $id}
+		    line {IllustrateDeleteGraphic $id}
+		    text {}
+		}
 
+		IllustrateHandleOff $id
+		switch [$ds9(canvas) type $id] {
+		    oval -
+		    polygon -
+		    rectangle -
+		    text {IllustrateBaseUpdateHandleCoords $id}
+		    line {IllustrateLineUpdateHandleCoords $id}
+		}
+	    }
+	}
+	create {
+	    # determine if this is an accident and just create the default
+	    set dx [expr $xx-$iillustrate(motion,xx)]
+	    set dy [expr $yy-$iillustrate(motion,yy)]
+	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
+		IllustrateGraphicAntsOff $id $color $fill $dash
+		if {[expr sqrt($dx*$dx + $dy*$dy)]<2} {
+		    switch [$ds9(canvas) type $id] {
+			oval {IllustrateDefaultOval $id}
+			rectangle {IllustrateDefaultRectangle $id}
+			polygon {IllustrateDefaultPolygon $id}
+			line {IllustrateDeleteGraphic $id}
+			text {}
+		    }
+		}
+
+		IllustrateHandleOff $id
+		switch [$ds9(canvas) type $id] {
+		    oval -
+		    polygon -
+		    rectangle -
+		    text {IllustrateBaseUpdateHandleCoords $id}
+		    line {IllustrateLineUpdateHandleCoords $id}
+		}
+	    }
+	}
+	
 	beginMove {}
 	move {
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
 		    IllustrateGraphicAntsOff $id $color $fill $dash
+
+		    IllustrateHandleOn $id
+		    switch [$ds9(canvas) type $id] {
+			oval -
+			polygon -
+			rectangle -
+			text {IllustrateBaseUpdateHandleCoords $id}
+			line {IllustrateLineUpdateHandleCoords $id}
+		    }
 		}
 	    }
-
-	    IllustrateUpdateSelectionCoords
+	    IllustrateUpdateSelection
 	}
 
 	beginEdit -
 	edit {
-	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    if {$id == $iillustrate(handle,graphic,id)} {
-			IllustrateGraphicAntsOff $id $color $fill $dash
-			IllustrateUpdateHandlesCoords $id
-			IllustrateUpdateSelectionCoords
-		    }
+	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
+		IllustrateGraphicAntsOff $id $color $fill $dash
+
+		IllustrateHandleOn $id
+		switch [$ds9(canvas) type $id] {
+		    oval -
+		    polygon -
+		    rectangle -
+		    text {IllustrateBaseUpdateHandleCoords $id}
+		    line {IllustrateLineUpdateHandleCoords $id}
 		}
 	    }
-
-	    unset iillustrate(handle,id)
-	    unset iillustrate(handle,graphic,id)
-	}
-
-	beginRotate -
-	rotate {
 	}
 
 	shiftregion {
@@ -336,11 +382,13 @@ proc IllustrateButtonRelease {xx yy} {
 	    foreach id $ll {
 		IllustrateAddSelect $id
 	    }
-
-	    unset iillustrate(ants)
 	}
     }
 
+    unset iillustrate(id)
+    unset iillustrate(ants)
+    unset iillustrate(edit)
+    unset iillustrate(oval)
     unset iillustrate(motion)
     unset iillustrate(motion,xx)
     unset iillustrate(motion,yy)
@@ -358,17 +406,13 @@ proc IllustrateShiftButton {xx yy} {
 	puts "IllustrateShiftButton $xx $yy"
     }
 
+    set iillustrate(id) -1
+    set iillustrate(ants) -1
+    set iillustarte(edit) {}
+    set iillustrate(oval) circle
     set iillustrate(motion) none
-    set iillustrate(motion,xx) $xx
-    set iillustrate(motion,yy) $yy
-
-
-    # if on handle, start rotate
-    set id [IllustrateFindGraphic handle $xx $yy]
-    if {$id != {}} {
-	set iillustrate(motion) beginRotate
-	return
-    }
+    set iillustrate(motion,xx) {}
+    set iillustrate(motion,yy) {}
 
     # if on graphic, add to selection, start move
     set id [IllustrateFindGraphic graphic $xx $yy]

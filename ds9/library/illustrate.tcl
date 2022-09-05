@@ -64,14 +64,8 @@ proc IllustrateCreateGraphic {xx yy} {
     }
 
     switch $illustrate(shape) {
-	circle {
-	    set iillustrate(oval) circle
-	    return [IllustrateCreateCircle $xx $yy $fill $dash]
-	}
-	ellipse {
-	    set iillustrate(oval) ellipse
-	    return [IllustrateCreateEllipse $xx $yy $fill $dash]
-	}
+	circle {return [IllustrateCreateCircle $xx $yy $fill $dash]}
+	ellipse {return [IllustrateCreateEllipse $xx $yy $fill $dash]}
 	box {return [IllustrateCreateBox $xx $yy $fill $dash]}
 	polygon {return [IllustrateCreatePolygon $xx $yy $fill $dash]}
 	line {return [IllustrateCreateLine $xx $yy $dash]}
@@ -345,6 +339,20 @@ proc IllustrateBaseUpdateHandleCoords {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 }
 
+proc IllustrateBaseEdit {gr xx yy} {
+    global ds9
+    global iillustrate
+
+    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	switch $iillustrate(handle) {
+	    1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
+	    2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}
+	    3 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
+	    4 {$ds9(canvas) coords $id $xx $y1 $x2 $yy}
+	}
+    }
+}
+
 # Util
 
 proc IllustrateSaveGraphic {id} {
@@ -436,6 +444,28 @@ proc IllustrateHandleOff {id} {
 
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state hidden
+    }
+}
+
+proc IllustrateGetType {id} {
+    global ds9
+    
+    set tags [$ds9(canvas) gettags $id]
+    if {[lsearch $tags circle] != -1} {
+	return circle
+    } elseif {[lsearch $tags ellipse] != -1} {
+	return ellipse
+    } elseif {[lsearch $tags box] != -1} {
+	return box
+    } elseif {[lsearch $tags polygon] != -1} {
+	return polygon
+    } elseif {[lsearch $tags line] != -1} {
+	return line
+    } elseif {[lsearch $tags text] != -1} {
+	return text
+    } else {
+	# should not be here
+	return circle
     }
 }
 

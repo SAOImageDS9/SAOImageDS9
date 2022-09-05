@@ -129,7 +129,6 @@ proc IllustrateButton {xx yy} {
     set iillustrate(handle) -1
     set iillustrate(ants) -1
     set iillustrate(edit) {}
-    set iillustrate(oval) circle
     set iillustrate(motion) none
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy
@@ -214,8 +213,8 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	create {
 	    switch [$ds9(canvas) type $iillustrate(id)] {
-		oval -
-		rectangle {IllustrateRectangleEdit $iillustrate(edit) $xx $yy}
+		oval {IllustrateOvalEdit $iillustrate(edit) $xx $yy}
+		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
 		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
 		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
 		text {}
@@ -253,7 +252,7 @@ proc IllustrateButtonMotion {xx yy} {
 	edit {
 	    switch [$ds9(canvas) type $iillustrate(id)] {
 		oval {IllustrateOvalEdit $iillustrate(edit) $xx $yy}
-		rectangle {IllustrateRectangleEdit $iillustrate(edit) $xx $yy}
+		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
 		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
 		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
 		text {}
@@ -379,7 +378,6 @@ proc IllustrateButtonRelease {xx yy} {
     unset iillustrate(id)
     unset iillustrate(ants)
     unset iillustrate(edit)
-    unset iillustrate(oval)
     unset iillustrate(motion)
     unset iillustrate(motion,xx)
     unset iillustrate(motion,yy)
@@ -400,7 +398,6 @@ proc IllustrateShiftButton {xx yy} {
     set iillustrate(id) -1
     set iillustrate(ants) -1
     set iillustrate(edit) {}
-    set iillustrate(oval) circle
     set iillustrate(motion) none
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy

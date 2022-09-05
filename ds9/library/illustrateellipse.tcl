@@ -14,7 +14,7 @@ proc IllustrateCreateEllipse {xx yy fill dash} {
 		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash \
-		-tags graphic]
+		-tags {ellipse graphic}]
 
     IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id
@@ -29,7 +29,8 @@ proc IllustrateDefaultOval {id} {
     set coords [$ds9(canvas) coords $id]
     set xx [lindex $coords 0]
     set yy [lindex $coords 1]
-    switch $iillustrate(oval) {
+    
+    switch [IllustrateGetType $id] {
 	circle {
 	    set rr1 $pillustrate(circle,radius)
 	    set rr2 $pillustrate(circle,radius)
@@ -51,25 +52,27 @@ proc IllustrateOvalEdit {gr xx yy} {
     global iillustrate
 
     foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	switch $iillustrate(handle) {
-	    1 {
-		switch $iillustrate(oval) {
-		    circle {
-			$ds9(canvas) coords $id $xx $xx $x2 $y2
+	switch [IllustrateGetType $id] {
+	    ellipse {IllustrateBaseEdit $gr $xx $yy}
+	    circle {
+		switch $iillustrate(handle) {
+		    1 {
+			set dx [expr $xx-$x1]
+			set dy [expr $yy-$y1]
+			set dd [expr sqrt($dx*$dx+$dy*$dy)]
+			$ds9(canvas) coords $id \
+			    [expr $x1+$dd] [expr $y1+$dd] $x2 $y2
 		    }
-		    ellipse {
-			$ds9(canvas) coords $id $xx $yy $x2 $y2
+		    2 {
+			$ds9(canvas) coords $id $x1 $yy $xx $y2
+		    }
+		    3 {
+			$ds9(canvas) coords $id $x1 $y1 $xx $yy
+		    }
+		    4 {
+			$ds9(canvas) coords $id $xx $y1 $x2 $yy
 		    }
 		}
-	    }
-	    2 {
-		$ds9(canvas) coords $id $x1 $yy $xx $y2
-	    }
-	    3 {
-		$ds9(canvas) coords $id $x1 $y1 $xx $yy
-	    }
-	    4 {
-		$ds9(canvas) coords $id $xx $y1 $x2 $yy
 	    }
 	}
     }

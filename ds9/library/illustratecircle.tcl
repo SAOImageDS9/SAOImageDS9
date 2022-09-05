@@ -14,7 +14,7 @@ proc IllustrateCreateCircle {xx yy fill dash} {
 		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash \
-		-tags graphic]
+		-tags {circle graphic}]
 
     IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id

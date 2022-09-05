@@ -16,7 +16,7 @@ proc IllustrateCreateText {xx yy} {
 			-text $txt \
 			-fill $illustrate(color) \
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)" \
-			-tags graphic]
+			-tags {text graphic}]
 
 	}
     }

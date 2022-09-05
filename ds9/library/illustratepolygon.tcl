@@ -14,7 +14,7 @@ proc IllustrateCreatePolygon {xx yy fill dash} {
 		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash \
-		-tags graphic]
+		-tags {polygon graphic}]
 
     IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id

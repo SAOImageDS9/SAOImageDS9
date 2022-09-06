@@ -11,15 +11,13 @@ proc IllustrateDef {} {
 
     set iillustrate(selection) {}
 
-#    set illustrate(shape) circle
-    set illustrate(shape) text
+    set illustrate(shape) circle
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
     set illustrate(dash) 0
     set illustrate(font) helvetica
-#    set illustrate(font,size) 12
-    set illustrate(font,size) 72
+    set illustrate(font,size) 12
     set illustrate(font,weight) normal
     set illustrate(font,slant) roman
 

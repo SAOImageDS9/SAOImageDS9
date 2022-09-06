@@ -11,16 +11,12 @@ proc IllustrateCreateText {xx yy} {
     set txt {Text}
     if {[EntryDialog [msgcat::mc {Text}] [msgcat::mc {Enter Text}] 40 txt]} {
 	if {$txt != {}} {
-	    puts "Text at:$xx $yy"
 	    set id [$ds9(canvas) create text \
 			$xx $yy \
 			-text $txt \
 			-fill $illustrate(color) \
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)" \
 			-tags {text graphic}]
-
-	    puts "coords:[$ds9(canvas) coords $id]"
-	    puts "bbox:[$ds9(canvas) bbox $id]"
 	}
     }
 

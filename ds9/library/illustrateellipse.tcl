@@ -73,7 +73,7 @@ proc IllustrateOvalEdit {gr xx yy} {
 			set dy [expr ($yy-$y2)]
 		    }
 		}
-		set dd [expr ($dx+$dy)/4]
+		set dd [expr ($dx+$dy)/2]
 		$ds9(canvas) coords $id \
 		    [expr $x1-$dd] [expr $y1-$dd] \
 		    [expr $x2+$dd] [expr $y2+$dd]

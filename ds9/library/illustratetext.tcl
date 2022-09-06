@@ -32,6 +32,7 @@ proc IllustrateTextMove {gr xx yy} {
     global ds9
     global iillustrate
 
+    puts $gr
     foreach {id x1 y1 x2 y2 color fill dash} $gr {
 	set bbox [$ds9(canvas) bbox $id]
 	set bbx1 [lindex $bbox 0]
@@ -41,6 +42,9 @@ proc IllustrateTextMove {gr xx yy} {
 
 	set cx [expr ($bbx2-$bbx1)/2]
 	set cy [expr ($bby2-$bby1)/2]
+
+#	set ccx [expr ($x2-$x1)/2]
+#	set ccy [expr ($y2-$y1)/2]
 
 	set dx [expr $xx-$iillustrate(motion,xx)]
 	set dy [expr $yy-$iillustrate(motion,yy)]

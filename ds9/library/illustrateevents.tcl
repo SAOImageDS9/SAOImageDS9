@@ -236,9 +236,9 @@ proc IllustrateButtonMotion {xx yy} {
 		    switch [$ds9(canvas) type $id] {
 			oval -
 			rectangle -
-			polygon -
-			text {IllustrateBaseMove $gr $xx $yy}
+			polygon {IllustrateBaseMove $gr $xx $yy}
 			line {IllustrateLineMove $gr $xx $yy}
+			text {IllustrateTextMove $gr $xx $yy}
 		    }
 		}
 	    }

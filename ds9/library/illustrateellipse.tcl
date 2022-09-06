@@ -41,9 +41,12 @@ proc IllustrateDefaultOval {id} {
 	}
     }
     
+    puts "circle at:[$ds9(canvas) coords $id]"
     $ds9(canvas) coords $id \
 	[expr $xx-$rr1] [expr $yy-$rr2] \
 	[expr $xx+$rr1] [expr $yy+$rr2]
+    puts "coords:[$ds9(canvas) coords $id]"
+    puts "bbox:[$ds9(canvas) bbox $id]"
 
 }
 

@@ -11,13 +11,15 @@ proc IllustrateDef {} {
 
     set iillustrate(selection) {}
 
-    set illustrate(shape) circle
+#    set illustrate(shape) circle
+    set illustrate(shape) text
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
     set illustrate(dash) 0
     set illustrate(font) helvetica
-    set illustrate(font,size) 12
+#    set illustrate(font,size) 12
+    set illustrate(font,size) 72
     set illustrate(font,weight) normal
     set illustrate(font,slant) roman
 
@@ -139,7 +141,7 @@ proc IllustrateUpdateGraphic {} {
 		    $ds9(canvas) itemconfigure $id \
 			-fill $illustrate(color) \
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"
-
+		    #waj update handle location
 		}
 	    }
 	    

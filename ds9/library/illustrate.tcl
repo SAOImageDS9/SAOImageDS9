@@ -417,27 +417,29 @@ proc IllustrateGraphicAntsOn {id} {
     }
 }
 
-proc IllustrateGraphicAntsOff {id color fill dash} {
+proc IllustrateGraphicAntsOff {gr} {
     global ds9
 
     # graphic
-    switch [$ds9(canvas) type $id] {
-	oval -
-	rectangle -
-	polygon {
-	    $ds9(canvas) itemconfigure $id \
-		-outline $color \
-		-fill $fill \
-		-dash $dash
-	}
-	line {
-	    $ds9(canvas) itemconfigure $id \
-		-fill $fill \
-		-dash $dash
-	}
-	text {
-	    $ds9(canvas) itemconfigure $id \
-		-fill $fill
+    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	switch [$ds9(canvas) type $id] {
+	    oval -
+	    rectangle -
+	    polygon {
+		$ds9(canvas) itemconfigure $id \
+		    -outline $color \
+		    -fill $fill \
+		    -dash $dash
+	    }
+	    line {
+		$ds9(canvas) itemconfigure $id \
+		    -fill $fill \
+		    -dash $dash
+	    }
+	    text {
+		$ds9(canvas) itemconfigure $id \
+		    -fill $fill
+	    }
 	}
     }
 }

@@ -17,11 +17,12 @@ proc IllustrateCreateText {xx yy} {
 			-fill $illustrate(color) \
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)" \
 			-tags {text graphic}]
+
+	    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -fill]
+	    return $id
 	}
     }
-
-    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -fill]
-    return $id
+    return -1
 }
 
 proc IllustrateTextMove {gr xx yy} {

@@ -177,20 +177,18 @@ proc IllustrateButton {xx yy} {
 
     # else, create new graphic
     set iillustrate(id) [IllustrateCreateGraphic $xx $yy]
-    switch [$ds9(canvas) type $iillustrate(id)] {
-	oval -
-	rectangle -
-	polygon {
-	    set iillustrate(handle) 1
+    if {$iillustrate(id) != -1} {
+	switch [$ds9(canvas) type $iillustrate(id)] {
+	    oval -
+	    rectangle -
+	    polygon {set iillustrate(handle) 1}
+	    line {set iillustrate(handle) 2}
+	    text {}
 	}
-	line {
-	    set iillustrate(handle) 2
-	}
-	text {}
-    }
 
-    set iillustrate(edit) [IllustrateSaveGraphic $iillustrate(id)]
-    set iillustrate(motion) beginCreate
+	set iillustrate(edit) [IllustrateSaveGraphic $iillustrate(id)]
+	set iillustrate(motion) beginCreate
+    }
 }
 
 proc IllustrateButtonMotion {xx yy} {
@@ -282,8 +280,8 @@ proc IllustrateButtonRelease {xx yy} {
 
 	beginCreate {
 	    # the user has just clicked, so resize to make visible or delete
+	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
-		IllustrateGraphicAntsOff $id $color $fill $dash
 		switch [$ds9(canvas) type $id] {
 		    oval {IllustrateDefaultOval $id}
 		    rectangle {IllustrateDefaultRectangle $id}
@@ -306,8 +304,8 @@ proc IllustrateButtonRelease {xx yy} {
 	    # determine if this is an accident and just create the default
 	    set dx [expr $xx-$iillustrate(motion,xx)]
 	    set dy [expr $yy-$iillustrate(motion,yy)]
+	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
-		IllustrateGraphicAntsOff $id $color $fill $dash
 		if {[expr sqrt($dx*$dx + $dy*$dy)]<2} {
 		    switch [$ds9(canvas) type $id] {
 			oval {IllustrateDefaultOval $id}
@@ -332,9 +330,8 @@ proc IllustrateButtonRelease {xx yy} {
 	beginMove {}
 	move {
 	    foreach gr $iillustrate(selection) {
+		IllustrateGraphicAntsOff $gr
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    IllustrateGraphicAntsOff $id $color $fill $dash
-
 		    IllustrateHandleOn $id
 		    switch [$ds9(canvas) type $id] {
 			oval -
@@ -350,9 +347,8 @@ proc IllustrateButtonRelease {xx yy} {
 
 	beginEdit -
 	edit {
+	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
-		IllustrateGraphicAntsOff $id $color $fill $dash
-
 		IllustrateHandleOn $id
 		switch [$ds9(canvas) type $id] {
 		    oval -

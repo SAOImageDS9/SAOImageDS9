@@ -339,6 +339,18 @@ proc IllustrateBaseUpdateHandleCoords {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 }
 
+proc IllustrateBaseMove {gr xx yy} {
+    global ds9
+    global iillustrate
+
+    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	set dx [expr $xx-$iillustrate(motion,xx)]
+	set dy [expr $yy-$iillustrate(motion,yy)]
+
+	$ds9(canvas) moveto $id [expr $dx+$x1] [expr $dy+$y1]
+    }
+}
+
 proc IllustrateBaseEdit {gr xx yy} {
     global ds9
     global iillustrate

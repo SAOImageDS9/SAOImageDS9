@@ -233,13 +233,13 @@ proc IllustrateButtonMotion {xx yy} {
 	move {
 	    foreach gr $iillustrate(selection) {
 		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    set dx [expr $xx-$iillustrate(motion,xx)]
-		    set dy [expr $yy-$iillustrate(motion,yy)]
-
-		    # graphic
-		    set nx1 [expr $dx+$x1]
-		    set ny1 [expr $dy+$y1]
-		    $ds9(canvas) moveto $id $nx1 $ny1
+		    switch [$ds9(canvas) type $id] {
+			oval -
+			rectangle -
+			polygon -
+			text {IllustrateBaseMove $gr $xx $yy}
+			line {IllustrateLineMove $gr $xx $yy}
+		    }
 		}
 	    }
 	}

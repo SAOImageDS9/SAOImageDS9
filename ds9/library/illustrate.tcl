@@ -139,7 +139,7 @@ proc IllustrateUpdateGraphic {} {
 		    $ds9(canvas) itemconfigure $id \
 			-fill $illustrate(color) \
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"
-		    #waj update handle location
+		    IllustrateBaseUpdateHandleCoords $id
 		}
 	    }
 	    
@@ -150,8 +150,7 @@ proc IllustrateUpdateGraphic {} {
 	    }
 
 	    # update selection list
-	    lappend iillustrate(selection) \
-		[list $id $x1 $y1 $x2 $y2 $illustrate(color) $fill $dash]
+	    lappend iillustrate(selection) [IllustrateSaveGraphic $id]
 	}
     }
 }

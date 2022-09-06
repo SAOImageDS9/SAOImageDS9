@@ -59,40 +59,24 @@ proc IllustrateOvalEdit {gr xx yy} {
 		    1 {
 			set dx [expr ($x1-$xx)]
 			set dy [expr ($y1-$yy)]
-			set dd [expr ($dx+$dy)/4]
-			$ds9(canvas) coords $id \
-			    [expr $x1-$dd] [expr $y1-$dd] \
-			    [expr $x2+$dd] [expr $y2+$dd]
-#			$ds9(canvas) coords $id $xx $yy $x2 $y2
 		    }
 		    2 {
 			set dx [expr ($xx-$x2)]
 			set dy [expr ($y1-$yy)]
-			set dd [expr ($dx+$dy)/4]
-			$ds9(canvas) coords $id \
-			    [expr $x1-$dd] [expr $y1-$dd] \
-			    [expr $x2+$dd] [expr $y2+$dd]
-#			$ds9(canvas) coords $id $x1 $yy $xx $y2
 		    }
 		    3 {
 			set dx [expr ($xx-$x2)]
 			set dy [expr ($yy-$y2)]
-			set dd [expr ($dx+$dy)/4]
-			$ds9(canvas) coords $id \
-			    [expr $x1-$dd] [expr $y1-$dd] \
-			    [expr $x2+$dd] [expr $y2+$dd]
-#			$ds9(canvas) coords $id $x1 $y1 $xx $yy
 		    }
 		    4 {
 			set dx [expr ($x1-$xx)]
 			set dy [expr ($yy-$y2)]
-			set dd [expr ($dx+$dy)/4]
-			$ds9(canvas) coords $id \
-			    [expr $x1-$dd] [expr $y1-$dd] \
-			    [expr $x2+$dd] [expr $y2+$dd]
-#			$ds9(canvas) coords $id $xx $y1 $x2 $yy
 		    }
 		}
+		set dd [expr ($dx+$dy)/4]
+		$ds9(canvas) coords $id \
+		    [expr $x1-$dd] [expr $y1-$dd] \
+		    [expr $x2+$dd] [expr $y2+$dd]
 	    }
 	}
     }

@@ -362,6 +362,7 @@ proc IllustrateButtonRelease {xx yy} {
 		    line {IllustrateLineUpdateHandleCoords $id}
 		}
 	    }
+	    IllustrateUpdateSelection
 	}
 
 	shiftregion {

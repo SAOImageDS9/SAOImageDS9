@@ -1051,28 +1051,28 @@ public:
   // Marker Commands
   // Basic Regions
   void createCircleCmd(const Vector&, 
-		       double, int,
+		       double,
 		       const char*, int*, int, const char*, 
 		       const char*, unsigned short, const char*,
 		       const List<Tag>&, const List<CallBack>& cb);
   void createEllipseCmd(const Vector&, 
 			const Vector&, 
-			double, int,
+			double,
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);
   void createBoxCmd(const Vector&, 
 		    const Vector&, 
-		    double, int,
+		    double,
 		    const char*, int*, int, const char*, 
 		    const char*, unsigned short, const char*,
 		    const List<Tag>&, const List<CallBack>& cb);
   void createPolygonCmd(const Vector&, 
-			const Vector&, int,
+			const Vector&,
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);
-  void createPolygonCmd(const List<Vertex>&, int,
+  void createPolygonCmd(const List<Vertex>&,
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);

@@ -200,21 +200,21 @@ void xyerror(Base* fr, xyFlexLexer* ll, const char* m)
 
 // Basic Regions
 void Base::createCircleCmd(const Vector& center, 
-			   double radius, int fill,
+			   double radius,
 			   const char* color, int* dash, 
 			   int width, const char* font,
 			   const char* text, unsigned short prop, 
 			   const char* comment, 
 			   const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Circle(this, center, radius, fill,
+  createMarker(new Circle(this, center, radius,
 			  color, dash, width, font, text, 
 			  prop, comment, tag, cb));
 }
 
 void Base::createEllipseCmd(const Vector& center, 
 			    const Vector& radius,
-			    double angle, int fill,
+			    double angle,
 			    const char* color, int* dash, 
 			    int width, const char* font,
 			    const char* text, unsigned short prop,
@@ -222,46 +222,46 @@ void Base::createEllipseCmd(const Vector& center,
 			    const List<Tag>& tag,const List<CallBack>& cb)
 
 {
-  createMarker(new Ellipse(this,center, radius, angle, fill,
+  createMarker(new Ellipse(this,center, radius, angle,
 			   color, dash, width, font, text, 
 			   prop, comment, tag, cb));
 }
 
 void Base::createBoxCmd(const Vector& center, 
 			const Vector& size, 
-			double angle, int fill,
+			double angle,
 			const char* color, int* dash, 
 			int width, const char* font,
 			const char* text, unsigned short prop,
 			const char* comment, 
 			const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Box(this, center, size, angle, fill,
+  createMarker(new Box(this, center, size, angle,
 		       color, dash, width, font, text, 
 		       prop, comment, tag, cb));
 }
 
 void Base::createPolygonCmd(const Vector& center, 
-			    const Vector& bb, int fill,
+			    const Vector& bb,
 			    const char* color, int* dash, 
 			    int width, const char* font,
 			    const char* text, unsigned short prop,
 			    const char* comment, 
 			    const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Polygon(this, center, bb, fill,
+  createMarker(new Polygon(this, center, bb,
 			   color, dash, width, font, text, 
 			   prop, comment, tag, cb));
 }
 
-void Base::createPolygonCmd(const List<Vertex>& list, int fill,
+void Base::createPolygonCmd(const List<Vertex>& list,
 			    const char* color, int* dash, 
 			    int width, const char* font,
 			    const char* text, unsigned short prop,
 			    const char* comment, 
 			    const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Polygon(this, list, fill,
+  createMarker(new Polygon(this, list,
 			   color, dash, width, font, text, 
 			   prop, comment, tag, cb));
 }
@@ -284,7 +284,6 @@ void Base::contourCreatePolygon(List<ContourLevel>& cl)
   dl[0] = 8;
   dl[1] = 3;
   char font[] = "helvetica 10 normal roman";
-  int fill =0;
   char text[] = "";
   unsigned short defaultProps = Marker::SELECT | Marker::HIGHLITE |
     Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
@@ -306,7 +305,7 @@ void Base::contourCreatePolygon(List<ContourLevel>& cl)
       while (cc.current()) {
 	List<Vertex>& vv = cc.current()->lvertex();
 	if (!vv.isEmpty())
-	  createMarker(new Polygon(this, vv, fill, color, dl, width, font,
+	  createMarker(new Polygon(this, vv, color, dl, width, font,
 				   text, prop, NULL, tag, cb));
 	cc.next();
       }
@@ -1483,55 +1482,6 @@ void Base::getMarkerEpsilonCmd()
   ostringstream str;
   str << markerEpsilon << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
-}
-
-void Base::getMarkerFillCmd()
-{
-  // return first found
-
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->isSelected()) {
-      if (mm->getFill())
-	Tcl_AppendResult(interp, "1", NULL);
-      else
-	Tcl_AppendResult(interp, "0", NULL);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerFillCmd(const char* tag)
-{
-  // return first found
-
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->hasTag(tag)) {
-      if (mm->getFill())
-	Tcl_AppendResult(interp, "1", NULL);
-      else
-	Tcl_AppendResult(interp, "0", NULL);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerFillCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->getFill())
-	Tcl_AppendResult(interp, "1", NULL);
-      else
-	Tcl_AppendResult(interp, "0", NULL);
-      return;
-    }
-    mm=mm->next();
-  }
 }
 
 void Base::getMarkerFontCmd()
@@ -3930,45 +3880,6 @@ void Base::markerEpandaEditCmd(int id,
   result = TCL_ERROR;
 }
 
-void Base::markerFillCmd(int ff)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->isSelected()) {
-      mm->fill(ff);
-      update(PIXMAP, mm->getAllBBox());
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::markerFillCmd(const char* tag, int ff)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->hasTag(tag)) {
-      mm->fill(ff);
-      update(PIXMAP, mm->getAllBBox());
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::markerFillCmd(int id, int ff)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      mm->fill(ff);
-      update(PIXMAP, mm->getAllBBox());
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
 void Base::markerHighliteAllCmd()
 {
   Marker* mm=markers->head();
@@ -4560,7 +4471,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
     if (!strncmp(s2, "CIRCLE", 6) && r) {
       Vector rr(r->value(ptr),0);
       createCircleCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
-		      keyContext->fits->mapLenToRef(rr[0], Coord::PHYSICAL), 0,
+		      keyContext->fits->mapLenToRef(rr[0], Coord::PHYSICAL),
 		      color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -4579,7 +4490,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   zeroTWOPI(degToRad(ang->value(ptr))), 0,
+		   zeroTWOPI(degToRad(ang->value(ptr))),
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -4588,7 +4499,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   0, 0,
+		   0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -4596,7 +4507,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   zeroTWOPI(degToRad(ang->value(ptr))), 0,
+		   zeroTWOPI(degToRad(ang->value(ptr))),
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
     }
     else if (!strncmp(s2, "RECTAN", 6)) {
@@ -4608,7 +4519,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
 
       createBoxCmd(keyContext->fits->mapToRef(c,Coord::PHYSICAL), 
 		   keyContext->fits->mapLenToRef(d,Coord::PHYSICAL), 
-		   0, 0,
+		   0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
     }
 
@@ -4621,7 +4532,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
 
       createBoxCmd(keyContext->fits->mapToRef(c,Coord::PHYSICAL), 
 		   keyContext->fits->mapLenToRef(d,Coord::PHYSICAL), 
-		   zeroTWOPI(degToRad(ang->value(ptr))), 0,
+		   zeroTWOPI(degToRad(ang->value(ptr))),
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
     }
 
@@ -4629,7 +4540,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createEllipseCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		       keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL),
-		       zeroTWOPI(degToRad(ang->value(ptr))), 0,
+		       zeroTWOPI(degToRad(ang->value(ptr))),
 		       color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -4694,7 +4605,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
       }
 
       if (!list.isEmpty())
-	createPolygonCmd(list, 0, color, dash, width, font, text, props, NULL, 
+	createPolygonCmd(list, color, dash, width, font, text, props, NULL, 
 			 taglist,cblist);
     }
 
@@ -5051,6 +4962,7 @@ void Base::markerPropertyCmd(unsigned short prop, int value)
   while (mm) {
     if (mm->isSelected()) {
       if (prop == Marker::DASH ||
+	  prop == Marker::FILL || 
 	  prop == Marker::FIXED || 
 	  prop == Marker::INCLUDE || 
 	  prop == Marker::SOURCE) {
@@ -5095,6 +5007,7 @@ void Base::markerPropertyCmd(unsigned short prop, int value, const Vector& v)
   while (mm) {
     if (mm->isIn(v)) {
       if (prop == Marker::DASH ||
+	  prop == Marker::FILL || 
 	  prop == Marker::FIXED || 
 	  prop == Marker::INCLUDE || 
 	  prop == Marker::SOURCE) {
@@ -5116,6 +5029,7 @@ void Base::markerPropertyCmd(int id, unsigned short prop, int value)
   while (mm) {
     if (mm->getId() == id) {
       if (prop == Marker::DASH ||
+	  prop == Marker::FILL || 
 	  prop == Marker::FIXED || 
 	  prop == Marker::INCLUDE || 
 	  prop == Marker::SOURCE) {

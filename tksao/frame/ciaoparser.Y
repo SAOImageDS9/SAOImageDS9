@@ -29,7 +29,6 @@ extern void ciaoerror(Base*, ciaoFlexLexer*, const char*);
 
 static char color[32];
 static int dash[] = {8,3};
-static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
 static const char *text = "";
 static unsigned short props;
@@ -234,18 +233,18 @@ shape	: ANNULUS_ bp coord sp value sp value
 	}
 	| BOX_ bp coord sp vvalue
 	{
-	  fr->createBoxCmd(Vector($3), $5, 0, fill_,
+	  fr->createBoxCmd(Vector($3), $5, 0,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
 	}
 	| BOX_ rotbox
         | CIRCLE_ bp coord sp value
 	{
-	  fr->createCircleCmd(Vector($3), $5, fill_,
+	  fr->createCircleCmd(Vector($3), $5,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
 	}
         | ELLIPSE_ bp coord sp vvalue sp angle
 	{
-	  fr->createEllipseCmd(Vector($3), Vector($5), $7, fill_,
+	  fr->createEllipseCmd(Vector($3), Vector($5), $7,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
 	}
         | FIELD_ bp {/* not supported */}
@@ -261,14 +260,14 @@ shape	: ANNULUS_ bp coord sp value sp value
 	}
 	| POLYGON_ {polylist.deleteAll();} bp polyNodes
 	{
-	  fr->createPolygonCmd(polylist, fill_,
+	  fr->createPolygonCmd(polylist,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
 	} 
         | RECTANGLE_ bp coord sp coord
 	{ 
 	  Vector cc = (Vector($5)-Vector($3))/2.+Vector($3);
 	  Vector wh = Vector($5)-Vector($3);
-	  fr->createBoxCmd(cc, wh, 0, fill_,
+	  fr->createBoxCmd(cc, wh, 0,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
 	}
         | REGION_ bp {/* not supported */}
@@ -278,7 +277,7 @@ shape	: ANNULUS_ bp coord sp value sp value
 
 rotbox  : bp coord sp vvalue sp angle
 	{
-	  fr->createBoxCmd(Vector($2), Vector($4), $6, fill_,
+	  fr->createBoxCmd(Vector($2), Vector($4), $6,
 	  color,dash,1,font,text,props,NULL,taglist,cblist);
 	}
         ;

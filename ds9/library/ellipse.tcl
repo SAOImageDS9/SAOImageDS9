@@ -21,7 +21,6 @@ proc EllipseDialog {varname} {
     set var(dcoord) [lindex $rr 0]
     set var(dformat) $pmarker(dformat)
     AdjustCoordSystem $varname dcoord
-    set var(fill) [$var(frame) get marker $var(id) fill]
 
     # procs
     set var(proc,apply) EllipseApply
@@ -30,11 +29,6 @@ proc EllipseDialog {varname} {
 
     # base
     MarkerBaseCenterDialog $varname
-
-    # menu
-    $var(mb).color add separator
-    $var(mb).color add checkbutton -label [msgcat::mc {Fill}] \
-	-variable ${varname}(fill) -command [list MarkerBaseFill $varname]
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis

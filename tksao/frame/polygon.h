@@ -11,9 +11,6 @@
 
 class Polygon : public BasePolygon {
  protected:
-  int fill_;
-
- protected:
   int isInRef(const Vector& v);
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   void renderPS(PSColorSpace);
@@ -23,14 +20,14 @@ class Polygon : public BasePolygon {
 
 public:
   Polygon(Base* p, const Vector& ctr,
-	  const Vector& b, int fill);
+	  const Vector& b);
   Polygon(Base* p, const Vector& ctr,
-	  const Vector& b, int fill,
+	  const Vector& b,
 	  const char* clr, int* dsh,
 	  int wth, const char* fnt, const char* txt,
 	  unsigned short prop, const char* cmt,
 	  const List<Tag>& tg, const List<CallBack>& cb);
-  Polygon(Base* p, const List<Vertex>& v, int fill,
+  Polygon(Base* p, const List<Vertex>& v,
 	  const char* clr, int* dsh,
 	  int wth, const char* fnt, const char* txt,
 	  unsigned short prop, const char* cmt,
@@ -38,9 +35,6 @@ public:
   Polygon(const Polygon& a);
 
   Marker* dup() {return new Polygon(*this);}
-
-  void fill(int ff) {fill_ = ff;}
-  int getFill() {return fill_;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

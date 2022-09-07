@@ -6,39 +6,34 @@
 #include "fitsimage.h"
 
 Polygon::Polygon(const Polygon& a) : BasePolygon(a)
-{
-  fill_ = a.fill_;
-}
+{}
 
-Polygon::Polygon(Base* p, const Vector& ctr, const Vector& b, int fill)
+Polygon::Polygon(Base* p, const Vector& ctr, const Vector& b)
   : BasePolygon(p,ctr,b)
 {
-  fill_ = fill;
   strcpy(type_, "polygon");
   reset(b);
 }
 
 Polygon::Polygon(Base* p, const Vector& ctr,
-		 const Vector& b, int fill,
+		 const Vector& b,
 		 const char* clr, int* dsh,
 		 int wth, const char* fnt, const char* txt,
 		 unsigned short prop, const char* cmt,
 		 const List<Tag>& tg, const List<CallBack>& cb)
   : BasePolygon(p, ctr, b, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
 {
-  fill_ = fill;
   strcpy(type_, "polygon");
   reset(b);
 }
 
-Polygon::Polygon(Base* p, const List<Vertex>& v, int fill,
+Polygon::Polygon(Base* p, const List<Vertex>& v,
 		 const char* clr, int* dsh,
 		 int wth, const char* fnt, const char* txt,
 		 unsigned short prop, const char* cmt,
 		 const List<Tag>& tg, const List<CallBack>& cb)
   : BasePolygon(p, v, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
 {
-  fill_ = fill;
   strcpy(type_, "polygon");
 
   // check to see if the first and last node are the same
@@ -63,7 +58,7 @@ void Polygon::renderX(Drawable drawable, Coord::InternalSystem sys,
       vertex.head();
   }
 
-  if (fill_ && mode == SRC)
+  if (isFill() && mode == SRC)
     XFillPolygon(display, drawable, lgc, pp, cnt, Complex, CoordModeOrigin);
   else
     XDrawLines(display, drawable, lgc, pp, cnt, CoordModeOrigin);
@@ -88,7 +83,7 @@ void Polygon::renderPS(PSColorSpace mode)
   }
 
   str << "closepath ";
-  if (fill_)
+  if (isFill())
     str << "fill" << endl << ends;
   else
     str << "stroke" << endl << ends;
@@ -111,7 +106,7 @@ void Polygon::renderWIN32()
     vertex.next();
   }
 
-  if (fill_)
+  if (isFill())
     win32FillPolygon(vv,cnt);
   else
     win32DrawLines(vv,cnt);
@@ -367,10 +362,7 @@ void Polygon::listPost(ostream& str, int conj, int strip)
     if (conj)
       str << " ||";
 
-    if (fill_)
-      str << " # fill=" << fill_;
-
-    listProperties(str, !fill_);
+    listProperties(str, 1);
   }
   else {
     if (conj)
@@ -397,9 +389,6 @@ void Polygon::listXML(ostream& str, Coord::CoordSystem sys,
   while (vertex.next());
   XMLRowPoint(ptr,sys,sky,format,vv,vertex.count());
   delete [] vv;
-
-  if (fill_)
-    XMLRow(XMLPARAM,fill_);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

@@ -9,9 +9,6 @@
 
 class Circle : public BaseEllipse {
  protected:
-  int fill_;
-
- protected:
   void renderXArcDraw(Drawable, GC, Vector&, Vector&, int, int, RenderMode);
   void renderXBezierDraw(Drawable, GC, RenderMode);
 
@@ -22,9 +19,9 @@ class Circle : public BaseEllipse {
 #endif
 
 public:
-  Circle(Base* p, const Vector& ctr, double r, int fill);
+  Circle(Base* p, const Vector& ctr, double r);
   Circle(Base* p, const Vector& ctr,
-	 double r, int fill,
+	 double r,
 	 const char* clr, int *dsh,
 	 int wth, const char* fnt, const char* txt, 
 	 unsigned short prop, const char* cmt,
@@ -37,9 +34,6 @@ public:
   void rotateBegin() {}
   void rotate(const Vector& v, int h) {}
   void rotateEnd() {}
-
-  void fill(int ff) {fill_ = ff;}
-  int getFill() {return fill_;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

@@ -47,7 +47,9 @@ proc MarkerBaseDialog {varname} {
     MarkerBaseMenu $varname
     MarkerBaseFileMenu $varname
     EditMenu $var(mb) $varname
-    ColorMenu $var(mb).color $varname color [list MarkerBaseColor $varname]
+    ColorFillMenu $var(mb).color $varname color fill \
+	[list MarkerBaseColor $varname] \
+	[list MarkerBaseProperty $varname fill]
     WidthDashMenu $var(mb).width $varname linewidth dash \
 	[list MarkerBaseLineWidth $varname] \
 	[list MarkerBaseProperty $varname dash]
@@ -112,13 +114,6 @@ proc MarkerBaseColor {varname} {
     global $varname
 
     $var(frame) marker $var(id) color "{$var(color)}"
-}
-
-proc MarkerBaseFill {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    $var(frame) marker $var(id) fill $var(fill)
 }
 
 proc MarkerBaseLineWidth {varname} {
@@ -215,6 +210,7 @@ proc MarkerBasePropertyCB {varname {dummy {}}} {
     }
 
     set var(dash) [$var(frame) get marker $var(id) property dash]
+    set var(fill) [$var(frame) get marker $var(id) property fill]
     set var(fixed) [$var(frame) get marker $var(id) property fixed]
     set var(edit) [$var(frame) get marker $var(id) property edit]
     set var(move) [$var(frame) get marker $var(id) property move]

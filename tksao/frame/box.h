@@ -9,9 +9,6 @@
 
 class Box : public BaseBox {
  protected:
-  int fill_;
-
- protected:
   void renderXDraw(Drawable, GC, XPoint*, RenderMode);
   void renderPSDraw(int);
 
@@ -20,10 +17,10 @@ class Box : public BaseBox {
 #endif
 
 public:
-  Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill);
+  Box(Base* p, const Vector& ctr, const Vector& seg, double ang);
   Box(Base* p, const Vector& ctr, 
       const Vector& seg,
-      double ang, int fill,
+      double ang,
       const char* clr, int* dsh,
       int wth, const char* fnt, const char* txt,
       unsigned short prop, const char* cmt, 
@@ -34,9 +31,6 @@ public:
   void editBegin(int);
   void edit(const Vector&, int);
   void editEnd();
-
-  void fill(int ff) {fill_ = ff;}
-  int getFill() {return fill_;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

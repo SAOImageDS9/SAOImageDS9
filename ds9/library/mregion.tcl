@@ -148,7 +148,8 @@ proc RegionMainMenu {} {
     $ds9(mb).region.template add command -label [msgcat::mc {Save}] \
 	-command SaveAsTemplateMarker
 
-    ColorFillMenu $ds9(mb).region.color marker color fill MarkerColor MarkerFill
+    ColorFillMenu $ds9(mb).region.color marker color fill \
+	MarkerColor [list MarkerProp fill]
     WidthDashMenu $ds9(mb).region.width marker width dash \
 	MarkerWidth [list MarkerProp dash]
 
@@ -292,7 +293,7 @@ proc PrefsDialogRegionMenu {w} {
     $m.shape.point add radiobutton -label [msgcat::mc {BoxCircle}]\
 	-variable pmarker(shape) -value {boxcircle point}
 
-    ColorMenu $m.color pmarker color {}
+    ColorFillMenu $m.color pmarker color fill {} {}
     WidthDashMenu $m.width pmarker width dash {} {}
 
     ThemeMenu $m.properties
@@ -1095,6 +1096,8 @@ proc UpdateRegionMenu {} {
 			[$current(frame) get marker width]
 		    set marker(dash) \
 			[$current(frame) get marker property dash]
+		    set marker(fill) \
+			[$current(frame) get marker property fill]
 		    set marker(fixed) \
 			[$current(frame) get marker property fixed]
 		    set marker(edit) \
@@ -1121,6 +1124,7 @@ proc UpdateRegionMenu {} {
 		    set marker(color) $pmarker(color)
 		    set marker(width) $pmarker(width) 
 		    set marker(dash) $pmarker(dash) 
+		    set marker(fill) $pmarker(fill) 
 		    set marker(fixed) $pmarker(fixed) 
 		    set marker(edit) $pmarker(edit) 
 		    set marker(move) $pmarker(move) 

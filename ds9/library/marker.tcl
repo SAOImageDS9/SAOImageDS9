@@ -30,10 +30,10 @@ proc MarkerDef {} {
     set marker(shape) circle
     set marker(color) green
     set marker(color,default) 0
-    set marker(fill) 0
     set marker(dashlist) {8 3}
     set marker(width) 1
     set marker(dash) 0
+    set marker(fill) 0
     set marker(fixed) 0
     set marker(edit) 1
     set marker(move) 1
@@ -670,6 +670,7 @@ proc MarkerCreateShape {which x y} {
     append cmd " width = $marker(width)"
     append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
     append cmd " dash = $marker(dash)"
+    append cmd " fill = $marker(fill)"
     append cmd " fixed = $marker(fixed)"
     append cmd " edit = $marker(edit)"
     append cmd " move = $marker(move)"
@@ -1042,15 +1043,6 @@ proc MarkerColor {} {
     }
 }
 
-proc MarkerFill {} {
-    global current
-    global marker
-    
-    if {$current(frame) != {}} {
-	$current(frame) marker fill $marker(fill)
-    }
-}
-
 proc MarkerWidth {} {
     global current
     global marker
@@ -1417,6 +1409,7 @@ proc CompositeCreate {} {
 	append cmd " width = $marker(width)"
 	append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
 	append cmd " dash = $marker(dash)"
+	append cmd " fill = $marker(fill)"
 	append cmd " edit = $marker(edit)"
 	append cmd " move = $marker(move)"
 	append cmd " rotate = $marker(rotate)"

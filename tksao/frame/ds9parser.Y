@@ -59,9 +59,6 @@ static char localText[80];
 
 static char localComment[80];
 
-static int globalFill;
-static int localFill;
-
 static int globalLine1;
 static int localLine1;
 static int globalLine2;
@@ -573,6 +570,7 @@ skyDist : DEGREES_ {$$=Coord::DEGREE;}
 property : SELECT_ {$$ = Marker::SELECT;}
 	| HIGHLITE_ {$$ = Marker::HIGHLITE;}
 	| DASH_ {$$ = Marker::DASH;}
+	| FILL_ {$$ = Marker::FILL;}
 	| FIXED_ {$$ = Marker::FIXED;}
 	| EDIT_ {$$ = Marker::EDIT;}
 	| MOVE_  {$$ = Marker::MOVE;}
@@ -640,6 +638,11 @@ globalProperty : property '=' yesno
 	  setProps(&globalProps,Marker::DASH,1);
 	  setProps(&localProps,Marker::DASH,1);
 	}
+	| FILL_
+	{
+	  setProps(&globalProps,Marker::FILL,1);
+	  setProps(&localProps,Marker::FILL,1);
+	}
 	| SOURCE_
 	{
 	  setProps(&globalProps,Marker::SOURCE,1);
@@ -655,10 +658,6 @@ globalProperty : property '=' yesno
 	{
 	  globalPoint = localPoint = $3;
 	  globalPointSize = localPointSize = $4;
-	}
-        | FILL_ '=' INT
-	{
-	  globalFill = localFill = $3;
 	}
 	| LINE_ '=' INT INT 
 	{
@@ -790,7 +789,6 @@ initGlobal:{
 	  strcpy(globalText,"");
 
 	  // unique properties
-	  globalFill = 0;
 	  globalLine1 = 0;
 	  globalLine2 = 0;
 	  globalVector = 1;
@@ -837,12 +835,12 @@ localProperty : property '=' yesno {setProps(&localProps,$1,$3);}
 	| CALLBACK_ '=' callBack STRING STRING {cblist.append(
 	    new CallBack(fr->getInterp(),(CallBack::Type)$3,$4,$5));}
 	| DASH_ {setProps(&localProps,Marker::DASH,1);}
+        | FILL_ {setProps(&localProps,Marker::FILL,1);}
 	| SOURCE_ {setProps(&localProps,Marker::SOURCE,1);}
 	| BACKGROUND_ {setProps(&localProps,Marker::SOURCE,0);}
 
 	| POINT_ '=' pointShape {localPoint = $3;}
 	| POINT_ '=' pointShape INT {localPoint = $3; localPointSize = $4;}
-        | FILL_ '=' INT {localFill=$3;}
 	| LINE_ '=' INT INT {localLine1=$3; localLine2=$4;}
 	| VECTOR_ '=' INT {localVector=$3;}
 	| COMPOSITE_ '=' INT {localComposite=$3;}
@@ -991,7 +989,6 @@ initLocal : {
 	  cblist.deleteAll();
 
 	  // unique properties
-	  localFill = globalFill;
 	  localLine1 = globalLine1;
 	  localLine2 = globalLine2;
 	  localVector = globalVector;
@@ -1083,7 +1080,7 @@ nonshape : VECTOR_ bp coord sp value sp angle ep conjunction nonshapeComment
 	{
 	  // backward compatibility
 	  fr->createCircleCmd(Vector($3),
-	  $5, localFill,
+	  $5,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1099,7 +1096,7 @@ nonshape : VECTOR_ bp coord sp value sp angle ep conjunction nonshapeComment
 shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	{
 	  fr->createCircleCmd(Vector($3),
-	  $5, localFill,
+	  $5,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1107,7 +1104,7 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	{
 	  // backwards compatibility
 	  fr->createCircleCmd(Vector($3),
-          $5, localFill,
+          $5,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1130,7 +1127,7 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 
 	  fr->createEllipseCmd(Vector($3),
 	  Vector($5),
-	  $7, localFill,
+	  $7,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1153,7 +1150,7 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 
 	  fr->createBoxCmd(Vector($3),
 	  Vector($5),
-	  $7, localFill,
+	  $7,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1162,14 +1159,14 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	  // backwards compatibility
 	  fr->createBoxCmd(Vector($3),
 	  Vector($5),
-	  $7, localFill,
+	  $7,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
 	| POLYGON_ {polylist.deleteAll();} bp polyNodes ep conjunction 
 	    shapeComment
 	{
-	  fr->createPolygonCmd(polylist, localFill,
+	  fr->createPolygonCmd(polylist,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}

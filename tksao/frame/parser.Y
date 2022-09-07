@@ -35,7 +35,6 @@ static unsigned short defaultProps = Marker::SELECT | Marker::HIGHLITE |
 		Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
 		Marker::DELETE | Marker::INCLUDE | Marker::SOURCE;
 static unsigned short currentProps;
-static int currentFill;
 static char currentColor[16];
 static int currentWidth;
 static int currentDash[2];
@@ -1769,7 +1768,6 @@ marker	: CENTROID_ markerCentroid
         | DELETE_ markerDelete
 	| EDIT_ markerEdit
         | EPSILON_ INT {fr->markerEpsilonCmd($2);}
-	| FILL_ yesno {fr->markerFillCmd($2);}
 	| FONT_ STRING {fr->markerFontCmd($2);}
 
 	| HIGHLITE_ ALL_ {fr->markerHighliteAllCmd();}
@@ -1918,7 +1916,6 @@ marker	: CENTROID_ markerCentroid
 	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7,
 	    (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 
-	| INT FILL_ yesno {fr->markerFillCmd($1,$3);}
 	| INT FONT_ STRING {fr->markerFontCmd($1,$3);}
 	| INT HIGHLITE_ {fr->markerHighliteCmd($1);}
 	| INT HIGHLITE_ ONLY_{fr->markerHighliteOnlyCmd($1);}
@@ -2004,7 +2001,6 @@ marker	: CENTROID_ markerCentroid
 	| STRING COPY_ {fr->markerCopyCmd($1);}
 	| STRING DELETE_ {fr->markerDeleteCmd($1);}
 	| STRING CUT_ {fr->markerCutCmd($1);}
-	| STRING FILL_ yesno {fr->markerFillCmd($1,$3);}
 	| STRING FONT_ STRING {fr->markerFontCmd($1,$3);}
 	| STRING HIGHLITE_ {fr->markerHighliteCmd($1);}
 	| STRING HIGHLITE_ ONLY_ {fr->markerHighliteOnlyCmd($1);}
@@ -2074,7 +2070,7 @@ markerCreate :
 	    numeric 
 	    markerProperties
 	{fr->createCircleCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
-	    $4, currentFill,
+	    $4,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| ELLIPSE_ numeric numeric 
@@ -2083,7 +2079,7 @@ markerCreate :
 	    markerProperties
 	{fr->createEllipseCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    Vector($4,$5),
-            $6, currentFill,
+            $6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| BOX_ numeric numeric 
@@ -2092,14 +2088,14 @@ markerCreate :
 	    markerProperties
 	{fr->createBoxCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    Vector($4,$5),
-            $6, currentFill,
+            $6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| POLYGON_ numeric numeric 
 	    numeric numeric 
 	    markerProperties
 	{fr->createPolygonCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
-            Vector($4,$5), currentFill,
+            Vector($4,$5),
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| SEGMENT_ numeric numeric 
@@ -2308,7 +2304,6 @@ markerGet : CENTROID_ markerGetCentroid
 	| COLOR_ {fr->getMarkerColorCmd();}
 	| FONT_ {fr->getMarkerFontCmd();}
         | EPSILON_ {fr->getMarkerEpsilonCmd();}
-	| FILL_ {fr->getMarkerFillCmd();}
 	| HANDLE_ numeric numeric {fr->getMarkerHandleCmd(Vector($2,$3));}
 	| ID_ numeric numeric {fr->getMarkerIdCmd(Vector($2,$3));}
 
@@ -2374,7 +2369,6 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT EPANDA_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerEpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 
-	| INT FILL_ {fr->getMarkerFillCmd($1);}
 	| INT FONT_ {fr->getMarkerFontCmd($1);}
 	| INT HIGHLITE_ {fr->getMarkerHighlitedCmd($1);}
 	| INT LINE_ ARROW_ {fr->getMarkerLineArrowCmd($1);}
@@ -2436,7 +2430,6 @@ markerGet : CENTROID_ markerGetCentroid
 	| SHOW_ markerGetShow
 
 	| STRING COLOR_ {fr->getMarkerColorCmd($1);}
-	| STRING FILL_ {fr->getMarkerFillCmd($1);}
 	| STRING FONT_ {fr->getMarkerFontCmd($1);}
 	| STRING ID_ {fr->getMarkerIdCmd($1);}
 	| STRING PROPERTY_ markerProperty {fr->getMarkerPropertyCmd($1,$3);}
@@ -2470,7 +2463,6 @@ markerGetShow : /* empty */ {fr->getMarkerShowCmd();}
 markerInitProp : {
 	  strncpy(currentFont, "helvetica 10 normal roman", 32);
 	  strncpy(currentColor, "green", 16);
-	  currentFill = 0;
 	  currentDash[0] = 8;
 	  currentDash[1] = 3;
 	  currentWidth = 1;
@@ -2537,7 +2529,6 @@ markerProps : markerProps markerProp
 
 markerProp : markerProperty '=' yesno {setProps(&currentProps,$1,$3);}
 	| COLOR_ '=' STRING {strncpy(currentColor,$3,16);}
-        | FILL_ '=' INT {currentFill = $3;}
 	| DASHLIST_ '=' INT INT {currentDash[0]=$3;currentDash[1]=$4;}
 	| WIDTH_ '=' INT {currentWidth = $3;}
 	| FONT_ '=' STRING {strncpy(currentFont,$3,32);}
@@ -2557,6 +2548,7 @@ markerProperty : NONE_ {$$ = Marker::NONE;}
 	| DELETE_ {$$ = Marker::DELETE;}
 	| INCLUDE_ {$$ = Marker::INCLUDE;}
 	| SOURCE_ {$$ = Marker::SOURCE;}
+        | FILL_ {$$ = Marker::FILL;}
 	;
 
 markerProperties : /* empty */ markerInitProp

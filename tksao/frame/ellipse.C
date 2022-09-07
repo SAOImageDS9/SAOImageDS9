@@ -6,19 +6,15 @@
 #include "fitsimage.h"
 
 Ellipse::Ellipse(const Ellipse& a) : BaseEllipse(a)
-{
-  fill_ = a.fill_;
-}
+{}
 
-Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, 
-		 double ang, int fill)
+Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang)
   : BaseEllipse(p, ctr, ang)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
   annuli_[0] = r;
 
-  fill_ = fill;
   strcpy(type_,"ellipse");
   numHandle = 4;
 
@@ -26,7 +22,7 @@ Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r,
 }
 
 Ellipse::Ellipse(Base* p, const Vector& ctr,
-		 const Vector& r, double ang, int fill,
+		 const Vector& r, double ang,
 		 const char* clr, int* dsh, 
 		 int wth, const char* fnt, const char* txt, 
 		 unsigned short prop, const char* cmt, 
@@ -37,7 +33,6 @@ Ellipse::Ellipse(Base* p, const Vector& ctr,
   annuli_ = new Vector[1];
   annuli_[0] = r;
 
-  fill_ = fill;
   strcpy(type_,"ellipse");
   numHandle = 4;
 
@@ -48,7 +43,7 @@ void Ellipse::renderXArcDraw(Drawable drawable, GC lgc,
 				Vector& st, Vector& size,
 				int a1, int aa, RenderMode mode)
 {
-  if (fill_ && mode == SRC)
+  if (isFill() && mode == SRC)
     XFillArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
   else
     XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
@@ -56,7 +51,7 @@ void Ellipse::renderXArcDraw(Drawable drawable, GC lgc,
 
 void Ellipse::renderXBezierDraw(Drawable drawable, GC lgc, RenderMode mode)
 {
-  if (fill_ && mode == SRC)
+  if (isFill() && mode == SRC)
     XFillPolygon(display, drawable, lgc, xpoint_, xpointNum_, Convex, CoordModeOrigin);
   else if ((properties & SOURCE) && !(properties & DASH))
     XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);
@@ -66,7 +61,7 @@ void Ellipse::renderXBezierDraw(Drawable drawable, GC lgc, RenderMode mode)
 
 void Ellipse::renderPSDraw()
 {
-  if (fill_)
+  if (isFill())
     BaseEllipse::renderPSFill();
   else
     BaseEllipse::renderPSDraw();
@@ -77,7 +72,7 @@ void Ellipse::renderPSDraw()
 
 void Ellipse::renderWIN32Draw()
 {
-  if (fill_)
+  if (isFill())
     win32Fill();
   else
     win32Stroke();
@@ -249,10 +244,7 @@ void Ellipse::listPost(ostream& str, int conj, int strip)
     if (conj)
       str << " ||";
 
-    if (fill_)
-      str << " # fill=" << fill_;
-
-    listProperties(str, !fill_);
+    listProperties(str, 1);
   }
   else {
     if (conj)
@@ -273,8 +265,6 @@ void Ellipse::listXML(ostream& str, Coord::CoordSystem sys,
   XMLRowCenter(ptr,sys,sky,format);
   XMLRowRadius(ptr,sys,annuli_[0]);
   XMLRowAng(sys,sky);
-  if (fill_)
-    XMLRow(XMLPARAM,fill_);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

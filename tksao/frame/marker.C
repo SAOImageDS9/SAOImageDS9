@@ -1341,6 +1341,7 @@ void Marker::listProperties(ostream& str, int hash)
       !(properties&SELECT) ||
       !(properties&HIGHLITE) ||
       (properties&DASH) ||
+      (properties&FILL) ||
       (properties&FIXED) ||
       !(properties&EDIT) ||
       !(properties&MOVE) ||
@@ -1360,6 +1361,9 @@ void Marker::listProperties(ostream& str, int hash)
 
 void Marker::listProps(ostream& str)
 {
+  if (properties&FILL)
+    str << " fill=1";
+
   if (strncmp("green",colorName,5))
     str << " color=" << colorName;
 
@@ -1588,6 +1592,7 @@ void Marker::XMLRowProps(FitsImage* ptr, Coord::CoordSystem sys)
   XMLRowProp(XMLINCLUDE,INCLUDE);
   XMLRowProp(XMLSOURCE,SOURCE);
   XMLRowProp(XMLDASH,DASH);
+  XMLRowProp(XMLFILL,FILL);
 
   // dashlist
   {

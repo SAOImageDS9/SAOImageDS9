@@ -39,7 +39,8 @@ public:
   // Dash-- render with dashed line
   // Hide-- hidden marker
   enum Property {NONE=0, SELECT=1, HIGHLITE=2, EDIT=4, MOVE=8, ROTATE=16, 
-		 DELETE=32, FIXED=64, INCLUDE=128, SOURCE=256, DASH=512};
+		 DELETE=32, FIXED=64, INCLUDE=128, SOURCE=256,
+		 DASH=512, FILL=1024};
   enum RenderMode {SRC,XOR};
   enum HandleMode {HANDLES,NOHANDLES};
 
@@ -282,6 +283,9 @@ protected:
 
   void key();
 
+  virtual void fill(int ff) {}
+  virtual int getFill() {return 0;}
+
   void setColor(const char*);
   const char* getColorName() {return colorName;}
 
@@ -316,6 +320,8 @@ protected:
   int canRotate() {return (properties & ROTATE) ? 1:0;}
   int canDelete() {return (properties & DELETE) ? 1:0;}
   int isFixed() {return (properties & FIXED) ? 1:0;}
+  int isDash() {return (properties & DASH) ? 1:0;}
+  int isFill() {return (properties & FILL) ? 1:0;}
   void setProperty(unsigned short, int);
   int getProperty(unsigned short);
   unsigned short getProperty() {return properties;}

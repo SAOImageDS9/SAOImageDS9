@@ -29,7 +29,6 @@ extern void xyerror(Base*, xyFlexLexer*, const char*);
 
 static char color[32];
 static int dash[] = {8,3};
-//static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
 static const char *text = "";
 

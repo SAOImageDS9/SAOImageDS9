@@ -1790,7 +1790,6 @@ marker	: CENTROID_ markerCentroid
 	| INT ANNULUS_ RADIUS_ STRING coordSystem skyDist
 	{fr->markerAnnulusRadiusCmd($1, $4,(Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 
-	| INT BOX_ FILL_ yesno {fr->markerBoxFillCmd($1,$4);}
 	| INT BOXANNULUS_ RADIUS_ numeric numeric numeric INT 
 	    coordSystem skyDist
 	{fr->markerBoxAnnulusRadiusCmd($1, Vector($4, $5), 
@@ -1820,7 +1819,6 @@ marker	: CENTROID_ markerCentroid
 
 	| INT CALLBACK_ markerCallBack STRING STRING
 	{fr->markerCallBackCmd($1,(CallBack::Type)$3,$4,$5);}
-	| INT CIRCLE_ FILL_ yesno {fr->markerCircleFillCmd($1,$4);}
 	| INT CIRCLE_ RADIUS_ numeric coordSystem skyDist
 	{fr->markerCircleRadiusCmd($1, $4, (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
 	| INT COLOR_ STRING {fr->markerColorCmd($1,$3);}
@@ -1890,7 +1888,6 @@ marker	: CENTROID_ markerCentroid
 	| INT DELETE_ TAG_ INT {fr->markerDeleteTagCmd($1,$4);}
 
 	| INT EDIT_ BEGIN_ INT {fr->markerEditBeginCmd($1,$4);}
-	| INT ELLIPSE_ FILL_ yesno {fr->markerEllipseFillCmd($1,$4);}
 	| INT ELLIPSE_ RADIUS_ numeric numeric coordSystem skyDist
 	{fr->markerEllipseRadiusCmd($1, Vector($4, $5),
 	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
@@ -1945,7 +1942,6 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerPointShapeCmd($1,(Point::PointShape)$4);}
 	| INT POINT_ SIZE_ INT {fr->markerPointSizeCmd($1,$4);}
 
-	| INT POLYGON_ FILL_ yesno {fr->markerPolygonFillCmd($1,$4);}
 	| INT PROJECTION_ coordSystem skyFrame coord coord numeric
 	    coordSystem skyDist
 	{fr->markerProjectionCmd($1, Vector($5), Vector($6),
@@ -2074,7 +2070,7 @@ markerCreate :
 	    numeric 
 	    markerProperties
 	{fr->createCircleCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
-	    $4, 0,
+	    $4,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| ELLIPSE_ numeric numeric 
@@ -2083,7 +2079,7 @@ markerCreate :
 	    markerProperties
 	{fr->createEllipseCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    Vector($4,$5),
-            $6, 0,
+            $6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| BOX_ numeric numeric 
@@ -2092,14 +2088,14 @@ markerCreate :
 	    markerProperties
 	{fr->createBoxCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    Vector($4,$5),
-            $6, 0,
+            $6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| POLYGON_ numeric numeric 
 	    numeric numeric 
 	    markerProperties
 	{fr->createPolygonCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
-            Vector($4,$5), 0,
+            Vector($4,$5),
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| SEGMENT_ numeric numeric 
@@ -2332,7 +2328,6 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT ANNULUS_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerAnnulusRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 
-	| INT BOX_ FILL_ {fr->getMarkerBoxFillCmd($1);}
 	| INT BOXANNULUS_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerBoxAnnulusRadiusCmd($1,(Coord::CoordSystem)$4,(Coord::DistFormat)$5);}
 	| INT BOX_ RADIUS_ coordSystem skyDist
@@ -2347,7 +2342,6 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT CENTER_ coordSystem skyFrame skyFormat 
 	{fr->getMarkerCenterCmd($1, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, 
 	    (Coord::SkyFormat)$5);}
-	| INT CIRCLE_ FILL_ {fr->getMarkerCircleFillCmd($1);}
 	| INT CIRCLE_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerCircleRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT COLOR_ {fr->getMarkerColorCmd($1);}
@@ -2363,7 +2357,6 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerCpandaAnglesCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT CPANDA_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerCpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
-	| INT ELLIPSE_ FILL_ {fr->getMarkerEllipseFillCmd($1);}
 	| INT ELLIPSE_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerEllipseRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT ELLIPSEANNULUS_ RADIUS_ coordSystem skyDist
@@ -2375,6 +2368,7 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerEpandaAnglesCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT EPANDA_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerEpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
+
 	| INT FONT_ {fr->getMarkerFontCmd($1);}
 	| INT HIGHLITE_ {fr->getMarkerHighlitedCmd($1);}
 	| INT LINE_ ARROW_ {fr->getMarkerLineArrowCmd($1);}
@@ -2387,7 +2381,6 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerMapLenFromRefCmd($1, $4,
 	    (Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 
-	| INT POLYGON_ FILL_ {fr->getMarkerPolygonFillCmd($1);}
 	| INT POINT_ SHAPE_ {fr->getMarkerPointShapeCmd($1);}
 	| INT POINT_ SIZE_ {fr->getMarkerPointSizeCmd($1);}
 	| INT PROJECTION_ POINT_ coordSystem skyFrame skyFormat
@@ -2555,6 +2548,7 @@ markerProperty : NONE_ {$$ = Marker::NONE;}
 	| DELETE_ {$$ = Marker::DELETE;}
 	| INCLUDE_ {$$ = Marker::INCLUDE;}
 	| SOURCE_ {$$ = Marker::SOURCE;}
+        | FILL_ {$$ = Marker::FILL;}
 	;
 
 markerProperties : /* empty */ markerInitProp

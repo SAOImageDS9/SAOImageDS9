@@ -6,18 +6,15 @@
 #include "fitsimage.h"
 
 Box::Box(const Box& a) : BaseBox(a)
-{
-  fill_ = a.fill_;
-}
+{}
 
-Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill)
+Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang)
   : BaseBox(p, ctr, ang)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
   annuli_[0] = seg;
 
-  fill_ = fill;
   strcpy(type_,"box");
   numHandle = 4;
 
@@ -26,7 +23,7 @@ Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill)
 
 Box::Box(Base* p, const Vector& ctr, 
 	 const Vector& seg, 
-	 double ang, int fill,
+	 double ang,
 	 const char* clr, int* dsh, 
 	 int wth, const char* fnt, const char* txt,
 	 unsigned short prop, const char* cmt, 
@@ -37,7 +34,6 @@ Box::Box(Base* p, const Vector& ctr,
   annuli_ = new Vector[1];
   annuli_[0] = seg;
 
-  fill_ = fill;
   strcpy(type_,"box");
   numHandle = 4;
 
@@ -46,7 +42,7 @@ Box::Box(Base* p, const Vector& ctr,
 
 void Box::renderXDraw(Drawable drawable, GC lgc, XPoint* pp, RenderMode mode)
 {
-  if (fill_ && mode == SRC)
+  if (isFill() && mode == SRC)
     XFillPolygon(display, drawable, lgc, pp, numPoints_, Convex, 
 		 CoordModeOrigin);
   else
@@ -55,7 +51,7 @@ void Box::renderXDraw(Drawable drawable, GC lgc, XPoint* pp, RenderMode mode)
 
 void Box::renderPSDraw(int ii)
 {
-  if (fill_)
+  if (isFill())
     BaseBox::renderPSFillDraw(ii);
   else
     BaseBox::renderPSDraw(ii);
@@ -66,7 +62,7 @@ void Box::renderPSDraw(int ii)
 
 void Box::renderWIN32Draw(Vector* vv)
 {
-  if (fill_)
+  if (isFill())
     win32FillPolygon(vv, numPoints_);
   else
     win32DrawLines(vv, numPoints_);
@@ -288,10 +284,7 @@ void Box::listPost(ostream& str, int conj, int strip)
     if (conj)
       str << " ||";
 
-    if (fill_)
-      str << " # fill=" << fill_;
-
-    listProperties(str, !fill_);
+    listProperties(str, 1);
   }
   else {
     if (conj)
@@ -312,8 +305,6 @@ void Box::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   XMLRowCenter(ptr,sys,sky,format);
   XMLRowRadius(ptr,sys,annuli_[0]);
   XMLRowAng(sys,sky);
-  if (fill_)
-    XMLRow(XMLPARAM,fill_);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

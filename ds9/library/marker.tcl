@@ -32,6 +32,7 @@ proc MarkerDef {} {
     set marker(color,default) 0
     set marker(width) 1
     set marker(dash) 0
+    set marker(fill) 0
     set marker(fixed) 0
     set marker(edit) 1
     set marker(move) 1
@@ -631,16 +632,16 @@ proc MarkerCreateShape {which x y} {
 
     set cmd "$which marker create $marker(shape) $x $y"
     switch -- $marker(shape) {
-	circle {append cmd " 0"}
+	circle {append cmd " 0 fill = $marker(fill)"}
 	annulus {append cmd " .001 .002 $pmarker(annulus,annuli)"}
 	panda {append cmd " $pmarker(panda,ang1) $pmarker(panda,ang2) $pmarker(panda,angnum) .001 .002 $pmarker(panda,annuli)"}
-	ellipse {append cmd " 0 0"}
+	ellipse {append cmd " 0 0 fill = $marker(fill)"}
 	ellipseannulus {append cmd " .001 .001 .002 $pmarker(ellipseannulus,annuli)"}
 	epanda {append cmd " $pmarker(epanda,ang1) $pmarker(epanda,ang2) $pmarker(epanda,angnum) .001 .001 .002 $pmarker(epanda,annuli)"}
-	box {append cmd " 0 0"}
+	box {append cmd " 0 0 fill = $marker(fill)"}
 	boxannulus {append cmd " .002 .002 .004 $pmarker(boxannulus,annuli)"}
 	bpanda {append cmd " $pmarker(bpanda,ang1) $pmarker(bpanda,ang2) $pmarker(bpanda,angnum) .001 .001 .002 $pmarker(bpanda,annuli)"}
-	polygon {append cmd " .001 .001"}
+	polygon {append cmd " .001 .001 fill = $marker(fill)"}
 	line {append cmd " $x $y"}
 	vector {append cmd " $x $y"}
 	projection {append cmd " $x $y $pmarker(projection,thick) "}
@@ -668,6 +669,7 @@ proc MarkerCreateShape {which x y} {
     append cmd " width = $marker(width)"
     append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
     append cmd " dash = $marker(dash)"
+    append cmd " fill = $marker(fill)"
     append cmd " fixed = $marker(fixed)"
     append cmd " edit = $marker(edit)"
     append cmd " move = $marker(move)"
@@ -1406,6 +1408,7 @@ proc CompositeCreate {} {
 	append cmd " width = $marker(width)"
 	append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
 	append cmd " dash = $marker(dash)"
+	append cmd " fill = $marker(fill)"
 	append cmd " edit = $marker(edit)"
 	append cmd " move = $marker(move)"
 	append cmd " rotate = $marker(rotate)"

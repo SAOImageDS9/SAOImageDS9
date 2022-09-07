@@ -9,9 +9,6 @@
 
 class Ellipse : public BaseEllipse {
  protected:
-  int fill_;
-
- protected:
   void renderXArcDraw(Drawable, GC, Vector&, Vector&, int, int, RenderMode);
   void renderXBezierDraw(Drawable, GC, RenderMode);
 
@@ -22,9 +19,9 @@ class Ellipse : public BaseEllipse {
 #endif
 
 public:
-  Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang, int fill);
+  Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang);
   Ellipse(Base* p, const Vector& ctr,
-	  const Vector& r, double ang, int fill,
+	  const Vector& r, double ang,
 	  const char* clr, int* dsh,
 	  int wth, const char* fnt, const char* txt, 
 	  unsigned short prop, const char* cmt, 
@@ -33,9 +30,6 @@ public:
 
   virtual Marker* dup() {return new Ellipse(*this);}
   void edit(const Vector&, int);
-
-  void fill(int ff) {fill_ = ff;}
-  int getFill() {return fill_;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

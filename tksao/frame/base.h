@@ -1051,28 +1051,28 @@ public:
   // Marker Commands
   // Basic Regions
   void createCircleCmd(const Vector&, 
-		       double, int,
+		       double,
 		       const char*, int*, int, const char*, 
 		       const char*, unsigned short, const char*,
 		       const List<Tag>&, const List<CallBack>& cb);
   void createEllipseCmd(const Vector&, 
 			const Vector&, 
-			double, int,
+			double,
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);
   void createBoxCmd(const Vector&, 
 		    const Vector&, 
-		    double, int,
+		    double,
 		    const char*, int*, int, const char*, 
 		    const char*, unsigned short, const char*,
 		    const List<Tag>&, const List<CallBack>& cb);
   void createPolygonCmd(const Vector&, 
-			const Vector&, int,
+			const Vector&,
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);
-  void createPolygonCmd(const List<Vertex>&, int,
+  void createPolygonCmd(const List<Vertex>&,
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);
@@ -1248,7 +1248,6 @@ public:
   void getMarkerAngleCmd(int);
   void getMarkerAngleCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void getMarkerAnnulusRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
-  void getMarkerBoxFillCmd(int);
   void getMarkerBoxAnnulusRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerBoxRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerBpandaAnglesCmd(int);
@@ -1259,7 +1258,6 @@ public:
   void getMarkerCentroidRadiusCmd();
   void getMarkerCentroidIterationCmd();
   void getMarkerCentroidOptionCmd();
-  void getMarkerCircleFillCmd(int);
   void getMarkerCircleRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerColorCmd();
   void getMarkerColorCmd(const char*);
@@ -1272,13 +1270,17 @@ public:
   void getMarkerCpandaAnglesCmd(int);
   void getMarkerCpandaAnglesCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void getMarkerCpandaRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
-  void getMarkerEllipseFillCmd(int);
   void getMarkerEllipseRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerEllipseAnnulusRadiusCmd(int, Coord::CoordSystem,Coord::DistFormat);
   void getMarkerEpandaAnglesCmd(int);
   void getMarkerEpandaAnglesCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void getMarkerEpandaRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerEpsilonCmd();
+
+  void getMarkerFillCmd();
+  void getMarkerFillCmd(const char*);
+  void getMarkerFillCmd(int);
+
   void getMarkerFontCmd();
   void getMarkerFontCmd(const char*);
   void getMarkerFontCmd(int);
@@ -1294,7 +1296,6 @@ public:
   void getMarkerNumberCmd();
   void getMarkerPointShapeCmd(int);
   void getMarkerPointSizeCmd(int);
-  void getMarkerPolygonFillCmd(int);
   void getMarkerPolygonSegmentCmd(const Vector&);
   void getMarkerPreserveCmd();
   void getMarkerProjectionPointsCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
@@ -1352,7 +1353,6 @@ public:
   void markerBackCmd();
   void markerBackCmd(const char*);
   void markerBackCmd(int);
-  void markerBoxFillCmd(int, int);
   void markerBoxAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
 				 Coord::CoordSystem, Coord::DistFormat);
   void markerBoxAnnulusRadiusCmd(int, const char*, Coord::CoordSystem, Coord::DistFormat);
@@ -1378,7 +1378,6 @@ public:
   void markerCentroidAutoCmd(int);
   void markerCentroidRadiusCmd(float);
   void markerCentroidIterationCmd(int);
-  void markerCircleFillCmd(int, int);
   void markerCircleRadiusCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void markerColorCmd(const char*);
   void markerColorCmd(const char*, const char*);
@@ -1418,7 +1417,6 @@ public:
   void markerEditBeginCmd(const Vector&, int);
   void markerEditMotionCmd(const Vector&, int);
   void markerEditEndCmd();
-  void markerEllipseFillCmd(int, int);
   void markerEllipseRadiusCmd(int, const Vector&,
 			      Coord::CoordSystem, Coord::DistFormat);
   void markerEllipseAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
@@ -1439,6 +1437,10 @@ public:
 			   Coord::CoordSystem, Coord::SkyFrame,
 			   Coord::CoordSystem, Coord::DistFormat);
   void markerEpsilonCmd(int ee) {markerEpsilon = ee;}
+
+  void markerFillCmd(int);
+  void markerFillCmd(const char*, int);
+  void markerFillCmd(int, int);
 
   void markerFontCmd(const char*);
   void markerFontCmd(const char*, const char*);
@@ -1487,7 +1489,6 @@ public:
   void markerPasteCmd(Coord::CoordSystem);
   void markerPointShapeCmd(int, Point::PointShape);
   void markerPointSizeCmd(int, int);
-  void markerPolygonFillCmd(int, int);
   void markerPolygonCreateVertexCmd(int, int, const Vector&);
   void markerPolygonDeleteVertexCmd(int, int);
   void markerPolygonResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);

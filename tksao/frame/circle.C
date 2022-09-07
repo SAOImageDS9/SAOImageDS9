@@ -6,18 +6,15 @@
 #include "fitsimage.h"
 
 Circle::Circle(const Circle& a) : BaseEllipse(a)
-{
-  fill_ = a.fill_;
-}
+{}
 
-Circle::Circle(Base* p, const Vector& ctr, double r, int fill)
+Circle::Circle(Base* p, const Vector& ctr, double r)
   : BaseEllipse(p, ctr, 0)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
   annuli_[0] = Vector(r,r);
 
-  fill_ = fill;
   strcpy(type_, "circle");
   numHandle = 4;
 
@@ -25,7 +22,7 @@ Circle::Circle(Base* p, const Vector& ctr, double r, int fill)
 }
 
 Circle::Circle(Base* p, const Vector& ctr,
-	       double r, int fill,
+	       double r,
 	       const char* clr, int* dsh, 
 	       int wth, const char* fnt, const char* txt, 
 	       unsigned short prop, const char* cmt,
@@ -36,7 +33,6 @@ Circle::Circle(Base* p, const Vector& ctr,
   annuli_ = new Vector[numAnnuli_];
   annuli_[0] = Vector(r,r);
 
-  fill_ = fill;
   strcpy(type_, "circle");
   numHandle = 4;
 
@@ -60,7 +56,7 @@ void Circle::renderXArcDraw(Drawable drawable, GC lgc,
 			       Vector& st, Vector& size,
 			       int a1, int aa, RenderMode mode)
 {
-  if (fill_ && mode == SRC)
+  if (isFill() && mode == SRC)
     XFillArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
   else
     XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
@@ -68,7 +64,7 @@ void Circle::renderXArcDraw(Drawable drawable, GC lgc,
 
 void Circle::renderXBezierDraw(Drawable drawable, GC lgc, RenderMode mode)
 {
-  if (fill_ && mode == SRC)
+  if (isFill() && mode == SRC)
     XFillPolygon(display, drawable, lgc, xpoint_, xpointNum_, Convex, CoordModeOrigin);
   else if ((properties & SOURCE) && !(properties & DASH))
     XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);
@@ -78,7 +74,7 @@ void Circle::renderXBezierDraw(Drawable drawable, GC lgc, RenderMode mode)
 
 void Circle::renderPSDraw()
 {
-  if (fill_)
+  if (isFill())
     BaseEllipse::renderPSFill();
   else
     BaseEllipse::renderPSDraw();
@@ -89,7 +85,7 @@ void Circle::renderPSDraw()
 
 void Circle::renderWIN32Draw()
 {
-  if (fill_)
+  if (isFill())
     win32Fill();
   else
     win32Stroke();
@@ -226,10 +222,7 @@ void Circle::listPost(ostream& str, int conj, int strip)
     if (conj)
       str << " ||";
 
-    if (fill_)
-      str << " # fill=" << fill_;
-
-    listProperties(str, !fill_);
+    listProperties(str, 1);
   }
   else {
     if (conj)
@@ -249,8 +242,6 @@ void Circle::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
   XMLRowCenter(ptr,sys,sky,format);
   XMLRowRadiusX(ptr,sys,annuli_[0]);
-  if (fill_)
-    XMLRow(XMLPARAM,fill_);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

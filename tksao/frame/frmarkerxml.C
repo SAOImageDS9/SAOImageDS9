@@ -202,6 +202,8 @@ void Base::xmlParseFIELD(void* rr, int* id, char** unit,
     id[colcnt] = XMLINCLUDE;
   else if (STRCMP(colname,"source",6))
     id[colcnt] = XMLSOURCE;
+  else if (STRCMP(colname,"fill",4))
+    id[colcnt] = XMLFILL;
   else if (STRCMP(colname,"dash",4))
     id[colcnt] = XMLDASH;
   else if (STRCMP(colname,"dashlist",8))
@@ -507,6 +509,9 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
       case XMLSOURCE:
 	xmlSetProps(&props, Marker::SOURCE, cols[ii]);
 	break;
+      case XMLFILL:
+	xmlSetProps(&props, Marker::FILL, cols[ii]);
+	break;
       case XMLDASH:
 	xmlSetProps(&props, Marker::DASH, cols[ii]);
 	break;
@@ -575,56 +580,38 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   // Basic Regions
   if (STRCMP(shape, "circle", 6)) {
     // will also capture circle3d
-    int fill =0;
-    if (param) 
-      fill = atoi(param);
     createCircleCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		    ptr->mapLenToRef(atof(r), rsys, rdist), fill,
+		    ptr->mapLenToRef(atof(r), rsys, rdist),
 		    color, dash, width, font, text, props, comment, 
 		    taglist, cblist);
   }
   else if (STRCMP(shape, "ellipse", 7)) {
-    int fill =0;
-    if (param) 
-      fill = atoi(param);
     createEllipseCmd(xmlPoint(ptr, x, y, sys, sky, format),
 		     ptr->mapLenToRef(Vector(atof(r),atof(r2)), rsys, rdist),
 		     xmlAngle(ang, angsign, angoffset, angformat, sys, sky),
-		     fill,
 		     color, dash, width, font, text, props, comment, 
 		     taglist, cblist);
   }
   else if (STRCMP(shape, "box", 3) || STRCMP(shape, "rotbox", 6)) {
-    int fill =0;
-    if (param) 
-      fill = atoi(param);
     createBoxCmd(xmlPoint(ptr, x, y, sys, sky, format),
 		 ptr->mapLenToRef(Vector(atof(r),atof(r2)), rsys, rdist),
 		 xmlAngle(ang, angsign, angoffset, angformat, sys, sky),
-		 fill,
 		 color, dash, width, font, text, props, comment, 
 		 taglist, cblist);
   }
   else if (STRCMP(shape, "rectang", 6) || STRCMP(shape, "rotrec", 6)) {
-    int fill =0;
-    if (param) 
-      fill = atoi(param);
     Vector v1 = xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 0);
     Vector v2 = xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 1);
     Vector d = v2-v1;
     Vector c = d/2 + v1;
     createBoxCmd(c,d,
 		 xmlAngle(ang, angsign, angoffset, angformat, sys, sky),
-		 fill,
 		 color, dash, width, font, text, props, comment, 
 		 taglist, cblist);
   }
   else if (STRCMP(shape, "polygon", 7)) {
-    int fill =0;
-    if (param) 
-      fill = atoi(param);
     List<Vertex>* list = xmlVertex(ptr, xv, yv, vsys, vsky, vformat);
-    createPolygonCmd(*list, fill,
+    createPolygonCmd(*list,
 		     color, dash, width, font, text, props, comment, 
 		     taglist, cblist);
     if (list)
@@ -1158,6 +1145,7 @@ void Base::markerListXMLHeader(ostream& str, Coord::CoordSystem sys,
   str << "<FIELD ID=\"fixed\" name=\"fixed\" datatype=\"boolean\"/>" << endl;
   str << "<FIELD ID=\"include\" name=\"include\" datatype=\"boolean\"/>" << endl;
   str << "<FIELD ID=\"source\" name=\"source\" datatype=\"boolean\"/>" << endl;
+  str << "<FIELD ID=\"fill\" name=\"fill\" datatype=\"boolean\"/>" << endl;
   str << "<FIELD ID=\"dash\" name=\"dash\" datatype=\"boolean\"/>" << endl;
   str << "<FIELD ID=\"dashlist\" name=\"dashlist\" datatype=\"char\" arraysize=\"*\"/>" << endl;
   str << "<FIELD ID=\"tag\" name=\"tag\" datatype=\"char\" arraysize=\"*\"/>" << endl;

@@ -34,7 +34,6 @@ static unsigned short localProps;
 
 static char color[32];
 static int dash[] = {8,3};
-static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
 static const char *text = "";
 
@@ -189,7 +188,7 @@ include	: /* empty */ {setProps(&localProps, Marker::INCLUDE, 1);}
 	;
 
 shape	: CIRCLE_ bp coord sp value ep shapeComment
-        {fr->createCircleCmd(Vector($3), $5, fill_,
+        {fr->createCircleCmd(Vector($3), $5,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);}
 	| ANNULUS_ bp coord sp value sp value ep shapeComment
 	{fr->createAnnulusCmd(Vector($3),
@@ -221,7 +220,7 @@ shape	: CIRCLE_ bp coord sp value ep shapeComment
 	  strncpy(aComment,localComment,80);
 	  aProps = localProps;
 
-	  fr->createEllipseCmd(Vector($3), Vector($5), $7, fill_,
+	  fr->createEllipseCmd(Vector($3), Vector($5), $7,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);
 	}
 	| ELLIPSE_ bp coord sp vvalue sp optangle ep '&' '!' 
@@ -242,11 +241,11 @@ shape	: CIRCLE_ bp coord sp value ep shapeComment
 	  strncpy(aComment,localComment,80);
 	  aProps = localProps;
 
-	  fr->createBoxCmd(Vector($3), Vector($5), $7, fill_,
+	  fr->createBoxCmd(Vector($3), Vector($5), $7,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);
 	}
 	| ROTBOX_ bp coord sp vvalue sp optangle ep shapeComment
-	{fr->createBoxCmd(Vector($3), Vector($5), $7, fill_,
+	{fr->createBoxCmd(Vector($3), Vector($5), $7,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);}
 	| BOX_ bp coord sp vvalue sp optangle ep '&' '!' 
 	  BOX_ bp coord sp vvalue sp optangle ep
@@ -260,7 +259,7 @@ shape	: CIRCLE_ bp coord sp value ep shapeComment
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);}
 
 	| POLYGON_ {polylist.deleteAll();} bp polyNodes ep shapeComment
-	{fr->createPolygonCmd(polylist, fill_,
+	{fr->createPolygonCmd(polylist,
 	      color,dash,1,font,text,localProps,localComment,taglist,cblist);} 
 	;
 

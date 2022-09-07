@@ -175,7 +175,6 @@ static unsigned short localProps;
 
 static char color[32];
 static int dash[] ={8,3};
-static int fill_ =0;
 static const char *font = "helvetica 10 normal roman";
 static const char *text = "";
 
@@ -219,7 +218,7 @@ static Coord::SkyFrame checkWCSSky();
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 66 "frame/prosparser.Y"
+#line 65 "frame/prosparser.Y"
 {
 #define PROSBUFSIZE 2048
   double real;
@@ -228,7 +227,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 193 of yacc.c.  */
-#line 232 "frame/prosparser.C"
+#line 231 "frame/prosparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -241,7 +240,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 245 "frame/prosparser.C"
+#line 244 "frame/prosparser.C"
 
 #ifdef short
 # undef short
@@ -565,16 +564,16 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   126,   126,   126,   133,   134,   137,   138,   139,   140,
-     140,   141,   141,   142,   143,   146,   147,   148,   151,   152,
-     155,   156,   159,   160,   163,   164,   167,   168,   171,   172,
-     175,   176,   177,   180,   181,   182,   183,   186,   193,   200,
-     207,   216,   219,   222,   225,   228,   241,   249,   257,   264,
-     274,   275,   278,   279,   280,   281,   282,   285,   286,   289,
-     300,   312,   313,   314,   318,   321,   325,   325,   334,   339,
-     353,   360,   374,   377,   384,   388,   388,   393,   394,   397,
-     400,   401,   404,   408,   435,   436,   436,   439,   439,   442,
-     443,   443
+       0,   125,   125,   125,   132,   133,   136,   137,   138,   139,
+     139,   140,   140,   141,   142,   145,   146,   147,   150,   151,
+     154,   155,   158,   159,   162,   163,   166,   167,   170,   171,
+     174,   175,   176,   179,   180,   181,   182,   185,   192,   199,
+     206,   215,   218,   221,   224,   227,   240,   248,   256,   263,
+     273,   274,   277,   278,   279,   280,   281,   284,   285,   288,
+     299,   311,   312,   313,   317,   320,   324,   324,   333,   338,
+     352,   359,   373,   376,   383,   387,   387,   392,   393,   396,
+     399,   400,   403,   407,   434,   435,   435,   438,   438,   441,
+     442,   442
 };
 #endif
 
@@ -1621,7 +1620,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 126 "frame/prosparser.Y"
+#line 125 "frame/prosparser.Y"
     {
   strcpy(color, fr->markerColor());
   globalSystem = fr->xySystem(); 
@@ -1630,92 +1629,92 @@ yyreduce:
     break;
 
   case 8:
-#line 139 "frame/prosparser.Y"
+#line 138 "frame/prosparser.Y"
     {cerr << "PROS" << endl;;}
     break;
 
   case 9:
-#line 140 "frame/prosparser.Y"
+#line 139 "frame/prosparser.Y"
     {globalSystem = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 11:
-#line 141 "frame/prosparser.Y"
+#line 140 "frame/prosparser.Y"
     {globalSystem = Coord::WCS; globalSky = (Coord::SkyFrame)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 17:
-#line 148 "frame/prosparser.Y"
+#line 147 "frame/prosparser.Y"
     {YYACCEPT;;}
     break;
 
   case 18:
-#line 151 "frame/prosparser.Y"
+#line 150 "frame/prosparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 19:
-#line 152 "frame/prosparser.Y"
+#line 151 "frame/prosparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 20:
-#line 155 "frame/prosparser.Y"
+#line 154 "frame/prosparser.Y"
     {yydebug=1;;}
     break;
 
   case 21:
-#line 156 "frame/prosparser.Y"
+#line 155 "frame/prosparser.Y"
     {yydebug=0;;}
     break;
 
   case 28:
-#line 171 "frame/prosparser.Y"
+#line 170 "frame/prosparser.Y"
     {(yyval.real) = 0;;}
     break;
 
   case 29:
-#line 172 "frame/prosparser.Y"
+#line 171 "frame/prosparser.Y"
     {(yyval.real) = (yyvsp[(1) - (1)].real);;}
     break;
 
   case 30:
-#line 175 "frame/prosparser.Y"
+#line 174 "frame/prosparser.Y"
     {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 31:
-#line 176 "frame/prosparser.Y"
+#line 175 "frame/prosparser.Y"
     {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 32:
-#line 177 "frame/prosparser.Y"
+#line 176 "frame/prosparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 33:
-#line 180 "frame/prosparser.Y"
+#line 179 "frame/prosparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), Coord::IMAGE);;}
     break;
 
   case 34:
-#line 181 "frame/prosparser.Y"
+#line 180 "frame/prosparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), checkWCSSystem(), Coord::DEGREE);;}
     break;
 
   case 35:
-#line 182 "frame/prosparser.Y"
+#line 181 "frame/prosparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), checkWCSSystem(), Coord::ARCMIN);;}
     break;
 
   case 36:
-#line 183 "frame/prosparser.Y"
+#line 182 "frame/prosparser.Y"
     {(yyval.real) = FITSPTR->mapLenToRef((yyvsp[(1) - (1)].real), checkWCSSystem(), Coord::ARCSEC);;}
     break;
 
   case 37:
-#line 187 "frame/prosparser.Y"
+#line 186 "frame/prosparser.Y"
     {
 	  Vector r = FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), Coord::IMAGE);
 	  (yyval.vector)[0] = r[0];
@@ -1725,7 +1724,7 @@ yyreduce:
     break;
 
   case 38:
-#line 194 "frame/prosparser.Y"
+#line 193 "frame/prosparser.Y"
     {
 	  Vector r=FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),checkWCSSystem(),Coord::DEGREE);
 	  (yyval.vector)[0] = r[0];
@@ -1735,7 +1734,7 @@ yyreduce:
     break;
 
   case 39:
-#line 201 "frame/prosparser.Y"
+#line 200 "frame/prosparser.Y"
     {
 	  Vector r=FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),checkWCSSystem(),Coord::ARCMIN);
 	  (yyval.vector)[0] = r[0];
@@ -1745,7 +1744,7 @@ yyreduce:
     break;
 
   case 40:
-#line 208 "frame/prosparser.Y"
+#line 207 "frame/prosparser.Y"
     {
 	  Vector r=FITSPTR->mapLenToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),checkWCSSystem(),Coord::ARCSEC);
 	  (yyval.vector)[0] = r[0];
@@ -1755,27 +1754,27 @@ yyreduce:
     break;
 
   case 41:
-#line 216 "frame/prosparser.Y"
+#line 215 "frame/prosparser.Y"
     {(yyval.integer) = (yyvsp[(3) - (3)].integer);;}
     break;
 
   case 42:
-#line 219 "frame/prosparser.Y"
+#line 218 "frame/prosparser.Y"
     {(yyval.real) = parseSEXStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 43:
-#line 222 "frame/prosparser.Y"
+#line 221 "frame/prosparser.Y"
     {(yyval.real) = parseHMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 44:
-#line 225 "frame/prosparser.Y"
+#line 224 "frame/prosparser.Y"
     {(yyval.real) = parseDMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 45:
-#line 229 "frame/prosparser.Y"
+#line 228 "frame/prosparser.Y"
     {
 	  Vector r;
 	  Coord::CoordSystem sys = checkWCSSystem();
@@ -1791,7 +1790,7 @@ yyreduce:
     break;
 
   case 46:
-#line 242 "frame/prosparser.Y"
+#line 241 "frame/prosparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	  checkWCSSystem(), checkWCSSky());
@@ -1802,7 +1801,7 @@ yyreduce:
     break;
 
   case 47:
-#line 250 "frame/prosparser.Y"
+#line 249 "frame/prosparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	  checkWCSSystem(), checkWCSSky());
@@ -1813,7 +1812,7 @@ yyreduce:
     break;
 
   case 48:
-#line 258 "frame/prosparser.Y"
+#line 257 "frame/prosparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)), localSystem, localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1823,7 +1822,7 @@ yyreduce:
     break;
 
   case 49:
-#line 265 "frame/prosparser.Y"
+#line 264 "frame/prosparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),
 	    checkWCSSystem(), checkWCSSky());
@@ -1834,52 +1833,52 @@ yyreduce:
     break;
 
   case 50:
-#line 274 "frame/prosparser.Y"
+#line 273 "frame/prosparser.Y"
     {(yyval.integer) = Coord::IMAGE;;}
     break;
 
   case 51:
-#line 275 "frame/prosparser.Y"
+#line 274 "frame/prosparser.Y"
     {(yyval.integer) = Coord::PHYSICAL;;}
     break;
 
   case 52:
-#line 278 "frame/prosparser.Y"
+#line 277 "frame/prosparser.Y"
     {(yyval.integer) = (yyvsp[(2) - (2)].integer);;}
     break;
 
   case 53:
-#line 279 "frame/prosparser.Y"
+#line 278 "frame/prosparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
   case 54:
-#line 280 "frame/prosparser.Y"
+#line 279 "frame/prosparser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
   case 55:
-#line 281 "frame/prosparser.Y"
+#line 280 "frame/prosparser.Y"
     {(yyval.integer) = Coord::GALACTIC;;}
     break;
 
   case 56:
-#line 282 "frame/prosparser.Y"
+#line 281 "frame/prosparser.Y"
     {(yyval.integer) = Coord::ECLIPTIC;;}
     break;
 
   case 57:
-#line 285 "frame/prosparser.Y"
+#line 284 "frame/prosparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
   case 58:
-#line 286 "frame/prosparser.Y"
+#line 285 "frame/prosparser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
   case 59:
-#line 289 "frame/prosparser.Y"
+#line 288 "frame/prosparser.Y"
     {
 	  // global properties
 	  globalSystem = Coord::IMAGE;
@@ -1892,7 +1891,7 @@ yyreduce:
     break;
 
   case 60:
-#line 300 "frame/prosparser.Y"
+#line 299 "frame/prosparser.Y"
     {
 	  // reset maperr flag
 	  maperr =0;
@@ -1906,40 +1905,40 @@ yyreduce:
     break;
 
   case 61:
-#line 312 "frame/prosparser.Y"
+#line 311 "frame/prosparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 1);;}
     break;
 
   case 62:
-#line 313 "frame/prosparser.Y"
+#line 312 "frame/prosparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 1);;}
     break;
 
   case 63:
-#line 314 "frame/prosparser.Y"
+#line 313 "frame/prosparser.Y"
     {setProps(&localProps, Marker::INCLUDE, 0);;}
     break;
 
   case 64:
-#line 319 "frame/prosparser.Y"
-    {fr->createCircleCmd(Vector((yyvsp[(3) - (7)].vector)), (yyvsp[(5) - (7)].real), fill_,
+#line 318 "frame/prosparser.Y"
+    {fr->createCircleCmd(Vector((yyvsp[(3) - (7)].vector)), (yyvsp[(5) - (7)].real),
 	     color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 65:
-#line 322 "frame/prosparser.Y"
+#line 321 "frame/prosparser.Y"
     {fr->createAnnulusCmd(Vector((yyvsp[(3) - (9)].vector)),
 	    (yyvsp[(5) - (9)].real),(yyvsp[(7) - (9)].real),1,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 66:
-#line 325 "frame/prosparser.Y"
+#line 324 "frame/prosparser.Y"
     {aNum=2;;}
     break;
 
   case 67:
-#line 327 "frame/prosparser.Y"
+#line 326 "frame/prosparser.Y"
     {
 	  aAnnuli[0] = (yyvsp[(5) - (12)].real);
 	  aAnnuli[1] = (yyvsp[(7) - (12)].real);
@@ -1950,14 +1949,14 @@ yyreduce:
     break;
 
   case 68:
-#line 335 "frame/prosparser.Y"
+#line 334 "frame/prosparser.Y"
     {fr->createAnnulusCmd(Vector((yyvsp[(3) - (11)].vector)),
 	    (yyvsp[(5) - (11)].real),(yyvsp[(7) - (11)].real),(yyvsp[(9) - (11)].integer),
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 69:
-#line 340 "frame/prosparser.Y"
+#line 339 "frame/prosparser.Y"
     {
 	  // for ellipse annulus
 	  aStatus = 1;
@@ -1968,13 +1967,13 @@ yyreduce:
 	  strncpy(aComment,localComment,80);
 	  aProps = localProps;
 
-	  fr->createEllipseCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real), fill_,
+	  fr->createEllipseCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real),
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);
 	;}
     break;
 
   case 70:
-#line 355 "frame/prosparser.Y"
+#line 354 "frame/prosparser.Y"
     {	
 	  aStatus = 2;
 	  aVector[aNum++] = Vector((yyvsp[(5) - (18)].vector));
@@ -1982,7 +1981,7 @@ yyreduce:
     break;
 
   case 71:
-#line 361 "frame/prosparser.Y"
+#line 360 "frame/prosparser.Y"
     {
 	  // for box annulus
 	  aStatus = 3;
@@ -1993,19 +1992,19 @@ yyreduce:
 	  strncpy(aComment,localComment,80);
 	  aProps = localProps;
 
-	  fr->createBoxCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real), fill_,
+	  fr->createBoxCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real),
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);
 	;}
     break;
 
   case 72:
-#line 375 "frame/prosparser.Y"
-    {fr->createBoxCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real), fill_,
+#line 374 "frame/prosparser.Y"
+    {fr->createBoxCmd(Vector((yyvsp[(3) - (9)].vector)), Vector((yyvsp[(5) - (9)].vector)), (yyvsp[(7) - (9)].real),
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 73:
-#line 379 "frame/prosparser.Y"
+#line 378 "frame/prosparser.Y"
     {	
 	  aStatus = 4;
 	  aVector[aNum++] = Vector((yyvsp[(5) - (18)].vector));
@@ -2013,34 +2012,34 @@ yyreduce:
     break;
 
   case 74:
-#line 385 "frame/prosparser.Y"
+#line 384 "frame/prosparser.Y"
     {fr->createPointCmd(Vector((yyvsp[(3) - (5)].vector)), Point::BOXCIRCLE, POINTSIZE, 
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 75:
-#line 388 "frame/prosparser.Y"
+#line 387 "frame/prosparser.Y"
     {polylist.deleteAll();;}
     break;
 
   case 76:
-#line 389 "frame/prosparser.Y"
-    {fr->createPolygonCmd(polylist, fill_,
+#line 388 "frame/prosparser.Y"
+    {fr->createPolygonCmd(polylist,
 	    color,dash,1,font,text,localProps,localComment,taglist,cblist);;}
     break;
 
   case 79:
-#line 397 "frame/prosparser.Y"
+#line 396 "frame/prosparser.Y"
     {polylist.append(new Vertex((yyvsp[(1) - (1)].vector)));;}
     break;
 
   case 82:
-#line 404 "frame/prosparser.Y"
+#line 403 "frame/prosparser.Y"
     {aAnnuli[aNum++] = (yyvsp[(1) - (1)].real);;}
     break;
 
   case 83:
-#line 408 "frame/prosparser.Y"
+#line 407 "frame/prosparser.Y"
     {
 	  switch (aStatus) {
 	  case 0: // do nothing
@@ -2069,28 +2068,28 @@ yyreduce:
     break;
 
   case 85:
-#line 436 "frame/prosparser.Y"
+#line 435 "frame/prosparser.Y"
     {DISCARD_(1);;}
     break;
 
   case 87:
-#line 439 "frame/prosparser.Y"
+#line 438 "frame/prosparser.Y"
     {DISCARD_(1);;}
     break;
 
   case 90:
-#line 443 "frame/prosparser.Y"
+#line 442 "frame/prosparser.Y"
     {DISCARD_(0);;}
     break;
 
   case 91:
-#line 444 "frame/prosparser.Y"
+#line 443 "frame/prosparser.Y"
     {strncpy(localComment,(yyvsp[(3) - (4)].str),80);;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 2094 "frame/prosparser.C"
+#line 2093 "frame/prosparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2304,7 +2303,7 @@ yyreturn:
 }
 
 
-#line 447 "frame/prosparser.Y"
+#line 446 "frame/prosparser.Y"
 
 
 static void setProps(unsigned short* props, unsigned short prop, int value)

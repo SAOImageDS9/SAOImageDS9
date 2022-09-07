@@ -148,7 +148,7 @@ proc RegionMainMenu {} {
     $ds9(mb).region.template add command -label [msgcat::mc {Save}] \
 	-command SaveAsTemplateMarker
 
-    ColorMenu $ds9(mb).region.color marker color MarkerColor
+    ColorFillMenu $ds9(mb).region.color marker color fill MarkerColor MarkerFill
     WidthDashMenu $ds9(mb).region.width marker width dash \
 	MarkerWidth [list MarkerProp dash]
 

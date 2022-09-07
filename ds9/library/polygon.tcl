@@ -15,7 +15,7 @@ proc PolygonDialog {varname} {
     }
 
     # variables
-    set var(fill) [$var(frame) get marker $var(id) polygon fill]
+    set var(fill) [$var(frame) get marker $var(id) fill]
 
     # procs
     set var(proc,apply) PolygonApply
@@ -28,7 +28,7 @@ proc PolygonDialog {varname} {
     # menu
     $var(mb).color add separator
     $var(mb).color add checkbutton -label [msgcat::mc {Fill}] \
-	-variable ${varname}(fill) -command [list PolygonFill $varname]
+	-variable ${varname}(fill) -command [list MarkerBaseFill $varname]
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
@@ -71,15 +71,6 @@ proc PolygonApply {varname} {
 
     MarkerBaseCenterRotate $varname
     MarkerBaseCenterApply $varname
-}
-
-# support
-
-proc PolygonFill {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    $var(frame) marker $var(id) polygon fill $var(fill)
 }
 
 # callbacks

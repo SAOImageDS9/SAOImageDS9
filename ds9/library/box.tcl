@@ -21,7 +21,7 @@ proc BoxDialog {varname} {
     set var(dcoord) [lindex $rr 0]
     set var(dformat) $pmarker(dformat)
     AdjustCoordSystem $varname dcoord
-    set var(fill) [$var(frame) get marker $var(id) box fill]
+    set var(fill) [$var(frame) get marker $var(id) fill]
 
     # procs
     set var(proc,apply) BoxApply
@@ -34,7 +34,7 @@ proc BoxDialog {varname} {
     # menu
     $var(mb).color add separator
     $var(mb).color add checkbutton -label [msgcat::mc {Fill}] \
-	-variable ${varname}(fill) -command [list BoxFill $varname]
+	-variable ${varname}(fill) -command [list MarkerBaseFill $varname]
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
@@ -96,15 +96,6 @@ proc BoxApply {varname} {
 
     MarkerBaseCenterRotate $varname
     MarkerBaseCenterApply $varname
-}
-
-# support
-
-proc BoxFill {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    $var(frame) marker $var(id) box fill $var(fill)
 }
 
 # callbacks

@@ -1044,21 +1044,6 @@ void Base::getMarkerAnnulusRadiusCmd(int id, Coord::CoordSystem sys,
   }
 }
 
-void Base::getMarkerBoxFillCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (((Box*)mm)->getFill())
-	Tcl_AppendResult(interp, "1", NULL);
-      else
-	Tcl_AppendResult(interp, "0", NULL);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
 void Base::getMarkerBoxAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
 					Coord::DistFormat dist)
 {
@@ -1174,21 +1159,6 @@ void Base::getMarkerCenterCmd(int id, Coord::CoordSystem sys,
     if (mm->getId() == id) {
       Vector cc= mm->getCenter();
       printFromRef(findFits(sys,cc), cc, sys, sky, format);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerCircleFillCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (((Circle*)mm)->getFill())
-	Tcl_AppendResult(interp, "1", NULL);
-      else
-	Tcl_AppendResult(interp, "0", NULL);
       return;
     }
     mm=mm->next();
@@ -1401,21 +1371,6 @@ void Base::getMarkerCompositeCmd(int id)
   }
 }
 
-void Base::getMarkerEllipseFillCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (((Ellipse*)mm)->getFill())
-	Tcl_AppendResult(interp, "1", NULL);
-      else
-	Tcl_AppendResult(interp, "0", NULL);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
 void Base::getMarkerEllipseRadiusCmd(int id, Coord::CoordSystem sys, 
 				     Coord::DistFormat dist)
 {
@@ -1528,6 +1483,55 @@ void Base::getMarkerEpsilonCmd()
   ostringstream str;
   str << markerEpsilon << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Base::getMarkerFillCmd()
+{
+  // return first found
+
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->isSelected()) {
+      if (mm->getFill())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerFillCmd(const char* tag)
+{
+  // return first found
+
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->hasTag(tag)) {
+      if (mm->getFill())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerFillCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->getFill())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
 }
 
 void Base::getMarkerFontCmd()
@@ -1745,21 +1749,6 @@ void Base::getMarkerPointSizeCmd(int id)
   while (mm) {
     if (mm->getId() == id) {
       printInteger(((Point*)mm)->size());
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerPolygonFillCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (((Polygon*)mm)->getFill())
-	Tcl_AppendResult(interp, "1", NULL);
-      else
-	Tcl_AppendResult(interp, "0", NULL);
       return;
     }
     mm=mm->next();
@@ -2647,23 +2636,6 @@ void Base::markerBackCmd(int id)
   }
 }
 
-void Base::markerBoxFillCmd(int id, int ff)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	((Box*)(mm))->fill(ff);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
 void Base::markerBoxAnnulusRadiusCmd(int id, const Vector& inner,
 				     const Vector& outer, int num,
 				     Coord::CoordSystem sys,
@@ -3032,23 +3004,6 @@ void Base::markerCentroidRadiusCmd(float rad)
 void Base::markerCentroidIterationCmd(int iter)
 {
   centroidIteration = iter;
-}
-
-void Base::markerCircleFillCmd(int id, int ff)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	((Circle*)(mm))->fill(ff);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
 }
 
 void Base::markerCircleRadiusCmd(int id, double radius, Coord::CoordSystem sys,
@@ -3684,23 +3639,6 @@ void Base::markerEditEndCmd()
   update(PIXMAP);
 }
 
-void Base::markerEllipseFillCmd(int id, int ff)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	((Ellipse*)(mm))->fill(ff);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
 void Base::markerEllipseRadiusCmd(int id, const Vector& radius, 
 				  Coord::CoordSystem sys, Coord::DistFormat dist)
 {
@@ -3984,6 +3922,45 @@ void Base::markerEpandaEditCmd(int id,
 	((Epanda*)mm)->setAnglesAnnuli(angles,acnt,radii,rcnt);
 	update(PIXMAP, mm->getAllBBox());
       }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
+void Base::markerFillCmd(int ff)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->isSelected()) {
+      mm->fill(ff);
+      update(PIXMAP, mm->getAllBBox());
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::markerFillCmd(const char* tag, int ff)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->hasTag(tag)) {
+      mm->fill(ff);
+      update(PIXMAP, mm->getAllBBox());
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::markerFillCmd(int id, int ff)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      mm->fill(ff);
+      update(PIXMAP, mm->getAllBBox());
       return;
     }
     mm=mm->next();
@@ -4968,23 +4945,6 @@ void Base::markerPointSizeCmd(int id, int size)
 	// it may shrink
 	update(PIXMAP, mm->getAllBBox());
 	((Point*)mm)->setSize(size);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerPolygonFillCmd(int id, int ff)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	((Polygon*)(mm))->fill(ff);
 	update(PIXMAP, mm->getAllBBox());
       }
       return;

@@ -37,5 +37,5 @@ proc IllustrateDefaultPolygon {id} {
 	[expr $xx-$rr1] [expr $yy+$rr2]
 }
 
-proc IllustratePolygonEdit {gr} {
+proc IllustrateEditPolygon {gr} {
 }

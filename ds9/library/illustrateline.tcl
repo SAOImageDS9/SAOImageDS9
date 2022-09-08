@@ -49,7 +49,7 @@ proc IllustrateLineCreateHandles {id} {
     $ds9(canvas) raise $h2 $id
 }
 
-proc IllustrateLineUpdateHandleCoords {id} {
+proc IllustrateUpdateHandleCoordsLine {id} {
     global ds9
     global illustrate
     global iillustrate
@@ -72,7 +72,7 @@ proc IllustrateLineUpdateHandleCoords {id} {
 	[expr $bbx2+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateLineMove {gr xx yy} {
+proc IllustrateMoveToLine {gr xx yy} {
     global ds9
     global iillustrate
 
@@ -95,7 +95,10 @@ proc IllustrateLineMove {gr xx yy} {
     }
 }
 
-proc IllustrateLineEdit {gr xx yy} {
+proc IllustrateMoveLine {gr dx dy} {
+}
+
+proc IllustrateEditLine {gr xx yy} {
     global ds9
     global iillustrate
     

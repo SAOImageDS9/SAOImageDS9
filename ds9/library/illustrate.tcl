@@ -139,7 +139,7 @@ proc IllustrateUpdateGraphic {} {
 		    $ds9(canvas) itemconfigure $id \
 			-fill $illustrate(color) \
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"
-		    IllustrateBaseUpdateHandleCoords $id
+		    IllustrateUpdateHandleCoordsBase $id
 		}
 	    }
 	    
@@ -200,6 +200,50 @@ proc IllustrateFindGraphic {tag xx yy} {
     return $found
 }
 
+proc IllustrateFindHandleNumber {hid} {
+    global ds9
+
+    set tags [$ds9(canvas) gettags $hid]
+    if {[regexp {h([0-9]+)} $tags foo num]} {
+	return $num
+    } else {
+	return 0
+    }
+}
+
+proc IllustrateFindGraphicFromHandle {hid} {
+    global ds9
+
+    set tags [$ds9(canvas) gettags $hid]
+    if {[regexp {gr([0-9]+)} $tags foo id]} {
+	return $id
+    } else {
+	return 0
+    }
+}
+
+proc IllustrateFindGraphicType {id} {
+    global ds9
+    
+    set tags [$ds9(canvas) gettags $id]
+    if {[lsearch $tags circle] != -1} {
+	return circle
+    } elseif {[lsearch $tags ellipse] != -1} {
+	return ellipse
+    } elseif {[lsearch $tags box] != -1} {
+	return box
+    } elseif {[lsearch $tags polygon] != -1} {
+	return polygon
+    } elseif {[lsearch $tags line] != -1} {
+	return line
+    } elseif {[lsearch $tags text] != -1} {
+	return text
+    } else {
+	# should not be here
+	return circle
+    }
+}
+
 # Selection
 
 proc IllustrateIsSelected {id} {
@@ -230,7 +274,7 @@ proc IllustrateUpdateSelection {} {
     }
 }
 
-proc IllustrateAddSelect {id} {
+proc IllustrateAddToSelection {id} {
     global ds9
     global iillustrate
 
@@ -255,6 +299,29 @@ proc IllustrateUnselect {id} {
 	foreach {idd x1 y1 x2 y2 color fill dash} $gr {
 	    if {$id != $idd} {
 		lappend iillustrate(selection) $gr
+	    }
+	}
+    }
+}
+
+proc IllustrateMoveSelection {dx dy} {
+    global ds9
+    global iillustrate
+
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    switch [$ds9(canvas) type $id] {
+		oval -
+		rectangle -
+		polygon -
+		text {
+		    IllustrateMoveBase $gr $dx $dy
+		    IllustrateUpdateHandleCoordsBase $id
+		}
+		line {
+		    IllustrateMoveBase $gr $dx $dy
+		    IllustrateUpdateHandleCoordsLine $id
+		}
 	    }
 	}
     }
@@ -305,7 +372,7 @@ proc IllustrateBaseCreateHandles {id color} {
     $ds9(canvas) raise $h4 $id
 }
 
-proc IllustrateBaseUpdateHandleCoords {id} {
+proc IllustrateUpdateHandleCoordsBase {id} {
     global ds9
     global illustrate
     global iillustrate
@@ -338,7 +405,7 @@ proc IllustrateBaseUpdateHandleCoords {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateBaseMove {gr xx yy} {
+proc IllustrateMoveToBase {gr xx yy} {
     global ds9
     global iillustrate
 
@@ -350,7 +417,16 @@ proc IllustrateBaseMove {gr xx yy} {
     }
 }
 
-proc IllustrateBaseEdit {gr xx yy} {
+proc IllustrateMoveBase {gr dx dy} {
+    global ds9
+    global iillustrate
+
+    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	$ds9(canvas) move $id $dx $dy
+    }
+}
+
+proc IllustrateEditBase {gr xx yy} {
     global ds9
     global iillustrate
 
@@ -457,28 +533,6 @@ proc IllustrateHandleOff {id} {
 
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state hidden
-    }
-}
-
-proc IllustrateGetType {id} {
-    global ds9
-    
-    set tags [$ds9(canvas) gettags $id]
-    if {[lsearch $tags circle] != -1} {
-	return circle
-    } elseif {[lsearch $tags ellipse] != -1} {
-	return ellipse
-    } elseif {[lsearch $tags box] != -1} {
-	return box
-    } elseif {[lsearch $tags polygon] != -1} {
-	return polygon
-    } elseif {[lsearch $tags line] != -1} {
-	return line
-    } elseif {[lsearch $tags text] != -1} {
-	return text
-    } else {
-	# should not be here
-	return circle
     }
 }
 

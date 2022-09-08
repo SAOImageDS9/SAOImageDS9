@@ -30,7 +30,7 @@ proc IllustrateDefaultOval {id} {
     set xx [lindex $coords 0]
     set yy [lindex $coords 1]
     
-    switch [IllustrateGetType $id] {
+    switch [IllustrateFindGraphicType $id] {
 	circle {
 	    set rr1 $pillustrate(circle,radius)
 	    set rr2 $pillustrate(circle,radius)
@@ -46,13 +46,13 @@ proc IllustrateDefaultOval {id} {
 	[expr $xx+$rr1] [expr $yy+$rr2]
 }
 
-proc IllustrateOvalEdit {gr xx yy} {
+proc IllustrateEditOval {gr xx yy} {
     global ds9
     global iillustrate
 
     foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	switch [IllustrateGetType $id] {
-	    ellipse {IllustrateBaseEdit $gr $xx $yy}
+	switch [IllustrateFindGraphicType $id] {
+	    ellipse {IllustrateEditBase $gr $xx $yy}
 	    circle {
 		switch $iillustrate(handle) {
 		    1 {

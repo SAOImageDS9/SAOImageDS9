@@ -25,7 +25,7 @@ proc IllustrateCreateText {xx yy} {
     return -1
 }
 
-proc IllustrateTextMove {gr xx yy} {
+proc IllustrateMoveToText {gr xx yy} {
     global ds9
     global iillustrate
 
@@ -44,4 +44,7 @@ proc IllustrateTextMove {gr xx yy} {
 
 	$ds9(canvas) moveto $id [expr $dx+$x1-$cx] [expr $dy+$y1-$cy]
     }
+}
+
+proc IllustrateMoveText {gr dx dy} {
 }

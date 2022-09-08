@@ -98,7 +98,7 @@ proc IllustrateSelectAll {} {
     global iillustrate
     
     foreach id [$ds9(canvas) find withtag {graphic}] {
-	IllustrateAddSelect $id
+	IllustrateAddToSelection $id
     }
 }
 
@@ -123,7 +123,7 @@ proc IllustrateInvertSelect {} {
 	if {[IllustrateIsSelected $id]} {
 	    IllustrateUnselect $id
 	} else {
-	    IllustrateAddSelect $id
+	    IllustrateAddToSelection $id
 	}
     }
 }

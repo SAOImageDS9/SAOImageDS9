@@ -104,20 +104,47 @@ proc IllustrateLeave {} {
 
 proc IllustrateMotion {xx yy} {
     global ds9
-    global illustrate
-    global iillustrate
     
     global debug
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateMotion"
     }
+
+    # see if we are on a handle
+    set hid [IllustrateFindGraphic handle $xx $yy]
+    if {$hid != {}} {
+	set hh [IllustrateFindHandleNumber $hid]
+	if {$hh} {
+	    if {$hh < 5} {
+		# edit handle
+		SetCursor sizing
+	    } else { 
+		# polygon vertex
+		SetCursor dotbox
+	    }
+	    return
+	}
+    }
+
+    # segement of a polygon
+
+    # see if we are on a graphic
+    set id [IllustrateFindGraphic graphic $xx $yy]
+    if {$id != {}} {
+	if {[IllustrateIsSelected $id]} {
+	    SetCursor fleur
+	    return
+	}
+    }
+
+    # else, set no cursor
+    SetCursor {}
 }
 
 # Button
 
 proc IllustrateButton {xx yy} {
     global ds9
-    global illustrate
     global iillustrate
 
     global debug
@@ -136,16 +163,15 @@ proc IllustrateButton {xx yy} {
     # see if we are on a handle
     set hid [IllustrateFindGraphic handle $xx $yy]
     if {$hid != {}} {
-	# find handle number
-	set tags [$ds9(canvas) gettags $hid]
-	if {[regexp {h([0-9]+)} $tags foo num]} {
-	    set iillustrate(handle) $num
+	set hh [IllustrateFindHandleNumber $hid]
+	if {$hh} {
+	    set iillustrate(handle) $hh
 	}
 
-	# find graphic id
-	if {[regexp {gr([0-9]+)} [$ds9(canvas) gettags $hid] foo id]} {
+	set id [IllustrateFindGraphFromHandle $hid]
+	if {$id} {
 	    set iillustrate(id) $id
-	    set iillustrate(edit) [IllustrateSaveGraphic $iillustrate(id)]
+	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
 	}
 	return
@@ -165,7 +191,7 @@ proc IllustrateButton {xx yy} {
 
 	# if not selected, select it, unselect all others
 	IllustrateSelectNone
-	IllustrateAddSelect $id
+	IllustrateAddToSelection $id
 	return
     }	
 
@@ -193,7 +219,6 @@ proc IllustrateButton {xx yy} {
 
 proc IllustrateButtonMotion {xx yy} {
     global ds9
-    global illustrate
     global iillustrate
 
     global debug
@@ -211,10 +236,10 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	create {
 	    switch [$ds9(canvas) type $iillustrate(id)] {
-		oval {IllustrateOvalEdit $iillustrate(edit) $xx $yy}
-		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
-		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
-		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
+		oval {IllustrateEditOval $iillustrate(edit) $xx $yy}
+		rectangle {IllustrateEditBase $iillustrate(edit) $xx $yy}
+		polygon {IllustrateEditPolygon $iillustrate(edit) $xx $yy}
+		line {IllustrateEditLine $iillustrate(edit) $xx $yy}
 		text {}
 	    }
 	}
@@ -234,9 +259,9 @@ proc IllustrateButtonMotion {xx yy} {
 		    switch [$ds9(canvas) type $id] {
 			oval -
 			rectangle -
-			polygon {IllustrateBaseMove $gr $xx $yy}
-			line {IllustrateLineMove $gr $xx $yy}
-			text {IllustrateTextMove $gr $xx $yy}
+			polygon {IllustrateMoveToBase $gr $xx $yy}
+			line {IllustrateMoveToLine $gr $xx $yy}
+			text {IllustrateMoveToText $gr $xx $yy}
 		    }
 		}
 	    }
@@ -249,10 +274,10 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	edit {
 	    switch [$ds9(canvas) type $iillustrate(id)] {
-		oval {IllustrateOvalEdit $iillustrate(edit) $xx $yy}
-		rectangle {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
-		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
-		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
+		oval {IllustrateEditOval $iillustrate(edit) $xx $yy}
+		rectangle {IllustrateEditBase $iillustrate(edit) $xx $yy}
+		polygon {IllustrateEditPolygon $iillustrate(edit) $xx $yy}
+		line {IllustrateEditLine $iillustrate(edit) $xx $yy}
 		text {}
 	    }
 	}
@@ -267,7 +292,6 @@ proc IllustrateButtonMotion {xx yy} {
 
 proc IllustrateButtonRelease {xx yy} {
     global ds9
-    global illustrate
     global iillustrate
 
     global debug
@@ -295,8 +319,8 @@ proc IllustrateButtonRelease {xx yy} {
 		    oval -
 		    rectangle -
 		    polygon -
-		    text {IllustrateBaseUpdateHandleCoords $id}
-		    line {IllustrateLineUpdateHandleCoords $id}
+		    text {IllustrateUpdateHandleCoordsBase $id}
+		    line {IllustrateUpdateHandleCoordsLine $id}
 		}
 	    }
 	}
@@ -321,8 +345,8 @@ proc IllustrateButtonRelease {xx yy} {
 		    oval -
 		    rectangle -
 		    polygon -
-		    text {IllustrateBaseUpdateHandleCoords $id}
-		    line {IllustrateLineUpdateHandleCoords $id}
+		    text {IllustrateUpdateHandleCoordsBase $id}
+		    line {IllustrateUpdateHandleCoordsLine $id}
 		}
 	    }
 	}
@@ -337,8 +361,8 @@ proc IllustrateButtonRelease {xx yy} {
 			oval -
 			rectangle -
 			polygon -
-			text {IllustrateBaseUpdateHandleCoords $id}
-			line {IllustrateLineUpdateHandleCoords $id}
+			text {IllustrateUpdateHandleCoordsBase $id}
+			line {IllustrateUpdateHandleCoordsLine $id}
 		    }
 		}
 	    }
@@ -354,8 +378,8 @@ proc IllustrateButtonRelease {xx yy} {
 		    oval -
 		    rectangle -
 		    polygon -
-		    text {IllustrateBaseUpdateHandleCoords $id}
-		    line {IllustrateLineUpdateHandleCoords $id}
+		    text {IllustrateUpdateHandleCoordsBase $id}
+		    line {IllustrateUpdateHandleCoordsLine $id}
 		}
 	    }
 	    IllustrateUpdateSelection
@@ -367,7 +391,7 @@ proc IllustrateButtonRelease {xx yy} {
 	    set ll [$ds9(canvas) find enclosed \
 			$iillustrate(motion,xx) $iillustrate(motion,yy) $xx $yy]
 	    foreach id $ll {
-		IllustrateAddSelect $id
+		IllustrateAddToSelection $id
 	    }
 	}
     }
@@ -384,7 +408,6 @@ proc IllustrateButtonRelease {xx yy} {
 
 proc IllustrateShiftButton {xx yy} {
     global ds9
-    global illustrate
     global iillustrate
 
     global debug
@@ -410,7 +433,7 @@ proc IllustrateShiftButton {xx yy} {
 	}
 
 	# if not selected, add to selection
-	IllustrateAddSelect $id
+	IllustrateAddToSelection $id
 	set iillustrate(motion) beginMove
 	return
     }	
@@ -430,7 +453,6 @@ proc IllustrateShiftButton {xx yy} {
 
 proc IllustrateKey {K A xx yy} {
     global ds9
-    global illustrate
 
     # MacOSX and maybe Ubuntu returns bogus values in xx,yy
     # calculate our own values
@@ -447,19 +469,30 @@ proc IllustrateKey {K A xx yy} {
 	BackSpace {IllustrateDeleteSelect}
 
 	Up -
-	k {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]}
+	k {
+	    event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]
+	    IllustrateMoveSelection 0 -1
+	}
 	Down -
-	j {event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy+1]}
+	j {
+	    event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy+1]
+	    IllustrateMoveSelection 0 1
+	}
 	Left -
-	h {event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx-1] -y $yy}
+	h {
+	    event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx-1] -y $yy
+	    IllustrateMoveSelection -1 0
+	}
 	Right -
-	l {event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx+1] -y $yy}
+	l {
+	    event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx+1] -y $yy
+	    IllustrateMoveSelection 1 0
+	}
     }
 }
 
 proc IllustrateKeyRelease {K A xx yy} {
     global ds9
-    global illustrate
 
     # MacOSX and Ubuntu returns bogus values in xx,yy
     # calculate our own values

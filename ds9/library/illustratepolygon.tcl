@@ -160,10 +160,28 @@ proc IllustrateUpdateHandleCoordsPolygon {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 
     # nodes
+
+    set cnt 0
+    foreach {xx yy} [$ds9(canvas) coords $id] {
+	incr cnt
+	set nid [$ds9(canvas) find withtag "gr${id} && n${cnt}"]
+	$ds9(canvas) coords $nid \
+	    [expr $xx-$rr] [expr $yy-$rr] \
+	    [expr $xx+$rr] [expr $yy+$rr]
+    }
+}
+
+proc IllustarteDeleteNodesPolygon {id} {
+    global ds9
+
+    foreach nid [$ds9(canvas) find withtag "gr${id} && node"] {
+	$ds9(canvs) delete $nid
+    }
 }
 
 proc IllustrateEditPolygon {gr xx yy} {
     global ds9
+    global iillustrate
     
     foreach {id x1 y1 x2 y2 color fill dash} $gr {
 	if {$iillustrate(handle)} {

@@ -157,11 +157,9 @@ proc IllustrateUpdateGraphic {} {
 
 # Find
 
-proc IllustrateFindGraphic {tag xx yy} {
+proc IllustrateFind {tag xx yy} {
     global ds9
 
-    set found {}
-    
     # must turn on fill for 'find closest' to work
     set index {}
     foreach id [$ds9(canvas) find withtag $tag] {
@@ -176,11 +174,13 @@ proc IllustrateFindGraphic {tag xx yy} {
 		    $ds9(canvas) itemconfigure $id -fill black
 		}
 	    }
-	    default {}
 	}
     }
     
     set found [$ds9(canvas) find closest $xx $yy 1]
+    if {$found == {}} {
+	set found 0
+    }
 
     foreach gr $index {
 	foreach {id fill} $gr {
@@ -190,10 +190,10 @@ proc IllustrateFindGraphic {tag xx yy} {
 	}
     }
 
-    # check to see if found item is a graphic
-    if {$found != {}} {
+    # check to see if found item has tag
+    if {$found} {
 	if {[lsearch [$ds9(canvas) gettags $found] $tag] == -1} {
-	    set found {}
+	    set found 0
 	}
     }
 
@@ -313,10 +313,13 @@ proc IllustrateMoveSelection {dx dy} {
 	    switch [$ds9(canvas) type $id] {
 		oval -
 		rectangle -
-		polygon -
 		text {
 		    IllustrateMoveBase $gr $dx $dy
 		    IllustrateUpdateHandleCoordsBase $id
+		}
+		polygon {
+		    IllustrateMoveBase $gr $dx $dy
+		    IllustrateUpdateHandleCoordsPolygon $id
 		}
 		line {
 		    IllustrateMoveBase $gr $dx $dy

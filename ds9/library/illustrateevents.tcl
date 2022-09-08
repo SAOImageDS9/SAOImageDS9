@@ -111,26 +111,20 @@ proc IllustrateMotion {xx yy} {
     }
 
     # see if we are on a handle
-    set hid [IllustrateFindGraphic handle $xx $yy]
-    if {$hid != {}} {
-	set hh [IllustrateFindHandleNumber $hid]
-	if {$hh} {
-	    if {$hh < 5} {
-		# edit handle
-		SetCursor sizing
-	    } else { 
-		# polygon vertex
-		SetCursor dotbox
-	    }
-	    return
-	}
+    if {[IllustrateFind handle $xx $yy]} {
+	SetCursor sizing
+	return
     }
 
     # segement of a polygon
+    if {[IllustrateFind node $xx $yy]} {
+	SetCursor dotbox
+	return
+    }
 
     # see if we are on a graphic
-    set id [IllustrateFindGraphic graphic $xx $yy]
-    if {$id != {}} {
+    set id [IllustrateFind graphic $xx $yy]
+    if {$id} {
 	if {[IllustrateIsSelected $id]} {
 	    SetCursor fleur
 	    return
@@ -152,17 +146,18 @@ proc IllustrateButton {xx yy} {
 	puts "IllustrateButton $xx $yy"
     }
 
-    set iillustrate(id) -1
-    set iillustrate(handle) -1
-    set iillustrate(ants) -1
+    set iillustrate(id) 0
+    set iillustrate(handle) 0
+    set iillustrate(node) 0
+    set iillustrate(ants) 0
     set iillustrate(edit) {}
     set iillustrate(motion) none
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy
 
     # see if we are on a handle
-    set hid [IllustrateFindGraphic handle $xx $yy]
-    if {$hid != {}} {
+    set hid [IllustrateFind handle $xx $yy]
+    if {$hid} {
 	set hh [IllustrateFindHandleNumber $hid]
 	if {$hh} {
 	    set iillustrate(handle) $hh
@@ -177,11 +172,26 @@ proc IllustrateButton {xx yy} {
 	return
     }
     
-    # segment of polygon
+    # see if we are on a polygon node
+    set nid [IllustrateFind node $xx $yy]
+    if {$nid} {
+	set nn [IllustrateFindNodeNumberPolygon $nid]
+	if {$nn} {
+	    set iillustrate(node) $nn
+	}
+
+	set id [IllustrateFindGraphicFromNodePolygon $nid]
+	if {$id} {
+	    set iillustrate(id) $id
+	    set iillustrate(edit) [IllustrateSaveGraphic $id]
+	    set iillustrate(motion) beginEdit
+	}
+	return
+    }
     
     # see if we are on a graphic
-    set id [IllustrateFindGraphic graphic $xx $yy]
-    if {$id != {}} {
+    set id [IllustrateFind graphic $xx $yy]
+    if {$id} {
 	set iillustrate(motion) beginMove
 
 	# if selected, don't do anything
@@ -203,7 +213,7 @@ proc IllustrateButton {xx yy} {
 
     # else, create new graphic
     set iillustrate(id) [IllustrateCreateGraphic $xx $yy]
-    if {$iillustrate(id) != -1} {
+    if {$iillustrate(id)} {
 	switch [$ds9(canvas) type $iillustrate(id)] {
 	    oval -
 	    rectangle -
@@ -318,8 +328,8 @@ proc IllustrateButtonRelease {xx yy} {
 		switch [$ds9(canvas) type $id] {
 		    oval -
 		    rectangle -
-		    polygon -
 		    text {IllustrateUpdateHandleCoordsBase $id}
+		    polygon {IllustrateUpdateHandleCoordsPolygon $id}
 		    line {IllustrateUpdateHandleCoordsLine $id}
 		}
 	    }
@@ -344,8 +354,8 @@ proc IllustrateButtonRelease {xx yy} {
 		switch [$ds9(canvas) type $id] {
 		    oval -
 		    rectangle -
-		    polygon -
 		    text {IllustrateUpdateHandleCoordsBase $id}
+		    polygon {IllustrateUpdateHandleCoordsPolygon $id}
 		    line {IllustrateUpdateHandleCoordsLine $id}
 		}
 	    }
@@ -360,8 +370,8 @@ proc IllustrateButtonRelease {xx yy} {
 		    switch [$ds9(canvas) type $id] {
 			oval -
 			rectangle -
-			polygon -
 			text {IllustrateUpdateHandleCoordsBase $id}
+			polygon {IllustrateUpdateHandleCoordsPolygon $id}
 			line {IllustrateUpdateHandleCoordsLine $id}
 		    }
 		}
@@ -377,8 +387,8 @@ proc IllustrateButtonRelease {xx yy} {
 		switch [$ds9(canvas) type $id] {
 		    oval -
 		    rectangle -
-		    polygon -
 		    text {IllustrateUpdateHandleCoordsBase $id}
+		    polygon {IllustrateUpdateHandleCoordsPolygon $id}
 		    line {IllustrateUpdateHandleCoordsLine $id}
 		}
 	    }
@@ -397,6 +407,8 @@ proc IllustrateButtonRelease {xx yy} {
     }
 
     unset iillustrate(id)
+    unset iillustrate(handle)
+    unset iillustrate(node)
     unset iillustrate(ants)
     unset iillustrate(edit)
     unset iillustrate(motion)
@@ -415,16 +427,18 @@ proc IllustrateShiftButton {xx yy} {
 	puts "IllustrateShiftButton $xx $yy"
     }
 
-    set iillustrate(id) -1
-    set iillustrate(ants) -1
+    set iillustrate(id) 0
+    set iillustrate(ants) 0
+    set iillustrate(handle) 0
+    set iillustrate(node) 0
     set iillustrate(edit) {}
     set iillustrate(motion) none
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy
 
     # if on graphic, add to selection, start move
-    set id [IllustrateFindGraphic graphic $xx $yy]
-    if {$id != {}} {
+    set id [IllustrateFind graphic $xx $yy]
+    if {$id} {
 	# if selected, unselect
 	if {[IllustrateIsSelected $id]} {
 	    IllustrateUnselect $id

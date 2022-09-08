@@ -22,7 +22,7 @@ proc IllustrateCreateText {xx yy} {
 	    return $id
 	}
     }
-    return -1
+    return 0
 }
 
 proc IllustrateMoveToText {gr xx yy} {

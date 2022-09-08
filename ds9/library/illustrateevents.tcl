@@ -168,7 +168,7 @@ proc IllustrateButton {xx yy} {
 	    set iillustrate(handle) $hh
 	}
 
-	set id [IllustrateFindGraphFromHandle $hid]
+	set id [IllustrateFindGraphicFromHandle $hid]
 	if {$id} {
 	    set iillustrate(id) $id
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]

@@ -16,7 +16,7 @@ proc IllustrateCreateEllipse {xx yy fill dash} {
 		-dash $dash \
 		-tags {ellipse graphic}]
 
-    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
+    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
     return $id
 }
 

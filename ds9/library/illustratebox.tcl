@@ -18,7 +18,7 @@ proc IllustrateCreateBox {xx yy fill dash} {
 		-dash $dash \
 		-tags {box graphic}]
 
-    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
+    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
     return $id
 }
 

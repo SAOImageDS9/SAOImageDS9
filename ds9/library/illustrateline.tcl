@@ -15,11 +15,11 @@ proc IllustrateCreateLine {xx yy dash} {
 		-dash $dash \
 		-tags {line graphic}]
 
-    IllustrateLineCreateHandles $id
+    IllustrateCreateHandlesLine $id
     return $id
 }
 
-proc IllustrateLineCreateHandles {id} {
+proc IllustrateCreateHandlesLine {id} {
     global ds9
 
     set rr 2
@@ -93,9 +93,6 @@ proc IllustrateMoveToLine {gr xx yy} {
 	
 	$ds9(canvas) moveto $id [expr $dx+$wx] [expr $dy+$wy]
     }
-}
-
-proc IllustrateMoveLine {gr dx dy} {
 }
 
 proc IllustrateEditLine {gr xx yy} {

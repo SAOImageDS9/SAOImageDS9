@@ -329,7 +329,7 @@ proc IllustrateMoveSelection {dx dy} {
 
 # Base
 
-proc IllustrateBaseCreateHandles {id color} {
+proc IllustrateCreateHandlesBase {id color} {
     global ds9
 
     set rr 2

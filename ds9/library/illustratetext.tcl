@@ -18,7 +18,7 @@ proc IllustrateCreateText {xx yy} {
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)" \
 			-tags {text graphic}]
 
-	    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -fill]
+	    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -fill]
 	    return $id
 	}
     }
@@ -44,7 +44,4 @@ proc IllustrateMoveToText {gr xx yy} {
 
 	$ds9(canvas) moveto $id [expr $dx+$x1-$cx] [expr $dy+$y1-$cy]
     }
-}
-
-proc IllustrateMoveText {gr dx dy} {
 }

@@ -509,7 +509,7 @@ proc MarkerRelease {which x y} {
 	    # determine if this is an accident and just create the default
 	    set diffx [expr $x-$imarker(x)]
 	    set diffy [expr $y-$imarker(y)]
-	    if {[expr sqrt($diffx*$diffx + $diffy*$diffy)]<2} {
+	    if {[expr sqrt($diffx*$diffx + $diffy*$diffy)]<4} {
 		MarkerDefault $which
 	    }
 

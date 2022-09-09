@@ -336,7 +336,7 @@ proc IllustrateButtonRelease {xx yy} {
 	    set dy [expr $yy-$iillustrate(motion,yy)]
 	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
-		if {[expr sqrt($dx*$dx + $dy*$dy)]<2} {
+		if {[expr sqrt($dx*$dx + $dy*$dy)]<4} {
 		    switch [$ds9(canvas) type $id] {
 			oval {IllustrateDefaultOval $id}
 			rectangle {IllustrateDefaultRectangle $id}

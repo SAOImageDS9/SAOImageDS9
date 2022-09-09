@@ -7,10 +7,17 @@ package provide DS9 1.0
 proc IllustrateCreatePolygon {xx yy fill dash} {
     global ds9
     global illustrate
+    global pillustrate
+
+    set rr1 $pillustrate(polygon,width)
+    set rr2 $pillustrate(polygon,height)
 
     set id [$ds9(canvas) create polygon \
-		$xx $yy $xx $yy $xx $yy $xx $yy \
-		-outline $illustrate(color)	\
+		[expr $xx-$rr1] [expr $yy-$rr2] \
+		[expr $xx+$rr1] [expr $yy-$rr2] \
+		[expr $xx+$rr1] [expr $yy+$rr2]\
+		[expr $xx-$rr1] [expr $yy+$rr2] \
+		-outline $illustrate(color) \
 		-fill $fill \
 		-width $illustrate(width) \
 		-dash $dash \
@@ -27,6 +34,7 @@ proc IllustrateDefaultPolygon {id} {
     set coords [$ds9(canvas) coords $id]
     set xx [lindex $coords 0]
     set yy [lindex $coords 1]
+
     set rr1 $pillustrate(polygon,width)
     set rr2 $pillustrate(polygon,height)
 
@@ -85,42 +93,17 @@ proc IllustrateCreateHandlesPolygon {id color} {
 
     # nodes
 
-    set bbx1 [lindex $bbox 0]
-    set bby1 [lindex $bbox 1]
-    set bbx2 [lindex $bbox 2]
-    set bby2 [lindex $bbox 3]
-
-    set n1 [$ds9(canvas) create rectangle \
-		[expr $bbx1-$rr] [expr $bby1-$rr] \
-		[expr $bbx1+$rr] [expr $bby1+$rr]\
-		-outline $color -fill $color \
-		-state hidden \
-		-tags [list node gr${id} n1]]
-    $ds9(canvas) raise $n1 $id
-
-    set n2 [$ds9(canvas) create rectangle \
-		[expr $bbx2-$rr] [expr $bby1-$rr] \
-		[expr $bbx2+$rr] [expr $bby1+$rr]\
-		-outline $color -fill $color \
-		-state hidden \
-		-tags [list node gr${id} n2]]
-    $ds9(canvas) raise $n2 $id
-
-    set n3 [$ds9(canvas) create rectangle \
-		[expr $bbx2-$rr] [expr $bby2-$rr] \
-		[expr $bbx2+$rr] [expr $bby2+$rr]\
-		-outline $color -fill $color \
-		-state hidden \
-		-tags [list node gr${id} n3]]
-    $ds9(canvas) raise $n3 $id
-    
-    set n4 [$ds9(canvas) create rectangle \
-		[expr $bbx1-$rr] [expr $bby2-$rr] \
-		[expr $bbx1+$rr] [expr $bby2+$rr]\
-		-outline $color -fill $color \
-		-state hidden \
-		-tags [list node gr${id} n4]]
-    $ds9(canvas) raise $n4 $id
+    set cnt 0
+    foreach {xx yy} [$ds9(canvas) coords $id] {
+	incr cnt
+	set nn [$ds9(canvas) create rectangle \
+		    [expr $xx-$rr] [expr $yy-$rr] \
+		    [expr $xx+$rr] [expr $yy+$rr]\
+		    -outline $color -fill $color \
+		    -state hidden \
+		    -tags [list node gr${id} n${cnt}]]
+	$ds9(canvas) raise $nn $id
+    }
 }
 
 proc IllustrateUpdateHandleCoordsPolygon {id} {
@@ -213,21 +196,18 @@ proc IllustrateEditPolygon {gr xx yy} {
 	    $ds9(canvas) scale $id $xc $yc $sc $sc
 
 	} elseif {$iillustrate(node)} {
+	    set ll {}
+	    set cnt 0
+	    set nn [IllustrateFindNodeNumber $iillustrate(node)]
+	    foreach {cxx cyy} [$ds9(canvas) coords $id] {
+		incr cnt
+		if {$cnt == $nn} {
+		    lappend ll $xx $yy
+		} else {
+		    lappend ll $cxx $cyy
+		}
+	    }
+	    $ds9(canvas) coords $id $ll
 	}
     }
-}
-
-proc IllustrateFindNodeNumberPolygon {nid} {
-    global ds9
-
-    set tags [$ds9(canvas) gettags $nid]
-    if {[regexp {n([0-9]+)} $tags foo num]} {
-	return $num
-    } else {
-	return 0
-    }
-}
-
-proc IllustrateFindGraphicFromNodePolygon {nid} {
-    return [IllustrateFindGraphicFromHandle $nid]a
 }

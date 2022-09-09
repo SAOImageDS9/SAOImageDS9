@@ -11,7 +11,7 @@ proc IllustrateDef {} {
 
     set iillustrate(selection) {}
 
-    set illustrate(shape) circle
+    set illustrate(shape) polygon
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
@@ -220,6 +220,21 @@ proc IllustrateFindGraphicFromHandle {hid} {
     } else {
 	return 0
     }
+}
+
+proc IllustrateFindNodeNumber {nid} {
+    global ds9
+
+    set tags [$ds9(canvas) gettags $nid]
+    if {[regexp {n([0-9]+)} $tags foo num]} {
+	return $num
+    } else {
+	return 0
+    }
+}
+
+proc IllustrateFindGraphicFromNode {nid} {
+    return [IllustrateFindGraphicFromHandle $nid]
 }
 
 proc IllustrateFindGraphicType {id} {

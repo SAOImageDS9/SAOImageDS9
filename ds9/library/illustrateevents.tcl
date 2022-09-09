@@ -175,12 +175,8 @@ proc IllustrateButton {xx yy} {
     # see if we are on a polygon node
     set nid [IllustrateFind node $xx $yy]
     if {$nid} {
-	set nn [IllustrateFindNodeNumberPolygon $nid]
-	if {$nn} {
-	    set iillustrate(node) $nn
-	}
-
-	set id [IllustrateFindGraphicFromNodePolygon $nid]
+	set iillustrate(node) $nid
+	set id [IllustrateFindGraphicFromNode $nid]
 	if {$id} {
 	    set iillustrate(id) $id
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
@@ -319,7 +315,7 @@ proc IllustrateButtonRelease {xx yy} {
 		switch [$ds9(canvas) type $id] {
 		    oval {IllustrateDefaultOval $id}
 		    rectangle {IllustrateDefaultRectangle $id}
-		    polygon {IllustrateDefaultPolygon $id}
+		    polygon {}
 		    line {IllustrateDeleteGraphic $id}
 		    text {}
 		}

@@ -101,7 +101,7 @@ proc IllustrateCreateHandlesPolygon {id color} {
 		    [expr $xx+$rr] [expr $yy+$rr]\
 		    -outline $color -fill $color \
 		    -state hidden \
-		    -tags [list node gr${id} n${cnt}]]
+		    -tags [list node gr${id}]]
 	$ds9(canvas) raise $nn $id
     }
 }
@@ -145,12 +145,13 @@ proc IllustrateUpdateHandleCoordsPolygon {id} {
     # nodes
 
     set cnt 0
+    set nlist [lreverse [$ds9(canvas) find withtag "gr${id} && node"]]
     foreach {xx yy} [$ds9(canvas) coords $id] {
-	incr cnt
-	set nid [$ds9(canvas) find withtag "gr${id} && n${cnt}"]
+	set nid [expr [lindex $nlist $cnt]]
 	$ds9(canvas) coords $nid \
 	    [expr $xx-$rr] [expr $yy-$rr] \
 	    [expr $xx+$rr] [expr $yy+$rr]
+	incr cnt
     }
 }
 
@@ -196,9 +197,10 @@ proc IllustrateEditPolygon {gr xx yy} {
 	    $ds9(canvas) scale $id $xc $yc $sc $sc
 
 	} elseif {$iillustrate(node)} {
+	    set nlist [lreverse [$ds9(canvas) find withtag "gr${id} && node"]]
+	    set nn [expr [lsearch $nlist $iillustrate(node)]+1]
 	    set ll {}
 	    set cnt 0
-	    set nn [IllustrateFindNodeNumber $iillustrate(node)]
 	    foreach {cxx cyy} [$ds9(canvas) coords $id] {
 		incr cnt
 		if {$cnt == $nn} {
@@ -218,15 +220,18 @@ proc IllustrateDeleteNode {nid} {
     set ll {}
     set cnt 0
     set id [IllustrateFindGraphicFromNode $nid]
-    set nn [IllustrateFindNodeNumber $nid]
-    if {$id} {
-	foreach {cxx cyy} [$ds9(canvas) coords $id] {
-	    incr cnt
-	    if {$cnt != $nn} {
-		lappend ll $cxx $cyy
+    set nlist [lreverse [$ds9(canvas) find withtag "gr${id} && node"]]
+    if {[llength $nlist] > 3} {
+	set nn [expr [lsearch $nlist $nid]+1]
+	if {$id} {
+	    foreach {cxx cyy} [$ds9(canvas) coords $id] {
+		incr cnt
+		if {$cnt != $nn} {
+		    lappend ll $cxx $cyy
+		}
 	    }
+	    $ds9(canvas) coords $id $ll
 	}
-	$ds9(canvas) coords $id $ll
+	$ds9(canvas) delete $nid
     }
-    $ds9(canvas) delete $nid
 }

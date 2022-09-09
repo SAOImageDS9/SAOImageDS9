@@ -222,17 +222,6 @@ proc IllustrateFindGraphicFromHandle {hid} {
     }
 }
 
-proc IllustrateFindNodeNumber {nid} {
-    global ds9
-
-    set tags [$ds9(canvas) gettags $nid]
-    if {[regexp {n([0-9]+)} $tags foo num]} {
-	return $num
-    } else {
-	return 0
-    }
-}
-
 proc IllustrateFindGraphicFromNode {nid} {
     return [IllustrateFindGraphicFromHandle $nid]
 }

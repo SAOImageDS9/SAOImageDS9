@@ -171,14 +171,6 @@ proc IllustrateUpdateHandleCoordsPolygon {id} {
     }
 }
 
-proc IllustarteDeleteNodesPolygon {id} {
-    global ds9
-
-    foreach nid [$ds9(canvas) find withtag "gr${id} && node"] {
-	$ds9(canvs) delete $nid
-    }
-}
-
 proc IllustrateEditPolygon {gr xx yy} {
     global ds9
     global iillustrate

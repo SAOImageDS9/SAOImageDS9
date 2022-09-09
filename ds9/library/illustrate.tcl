@@ -78,7 +78,7 @@ proc IllustrateDeleteGraphic {id} {
     global illustrate
     global iillustrate
 
-    # handles
+    # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) delete $hh
     }
@@ -143,7 +143,7 @@ proc IllustrateUpdateGraphic {} {
 		}
 	    }
 	    
-	    # handles
+	    # handles/nodes
 	    foreach hh [$ds9(canvas) find withtag gr${id}] {
 		$ds9(canvas) itemconfigure $hh \
 		    -outline $illustrate(color) -fill $illustrate(color)
@@ -278,6 +278,7 @@ proc IllustrateAddToSelection {id} {
     global ds9
     global iillustrate
 
+    # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state normal
     }
@@ -289,6 +290,7 @@ proc IllustrateUnselect {id} {
     global ds9
     global iillustrate
     
+    # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state hidden
     }
@@ -534,6 +536,7 @@ proc IllustrateGraphicAntsOff {gr} {
 proc IllustrateHandleOn {id} {
     global ds9
 
+    # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state normal
     }
@@ -542,6 +545,7 @@ proc IllustrateHandleOn {id} {
 proc IllustrateHandleOff {id} {
     global ds9
 
+    # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
 	$ds9(canvas) itemconfigure $hh -state hidden
     }

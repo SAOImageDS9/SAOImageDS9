@@ -23,6 +23,7 @@ proc IllustrateMoveFront {} {
     
     # now sort out the handles
     foreach id [$ds9(canvas) find withtag {graphic}] {
+	# handles/nodes
 	foreach hh [$ds9(canvas) find withtag gr${id}] {
 	    $ds9(canvas) raise $hh $id
 	}
@@ -48,6 +49,7 @@ proc IllustrateMoveBack {} {
     
     # now sort out the handles
     foreach id [$ds9(canvas) find withtag {graphic}] {
+	# handles/nodes
 	foreach hh [$ds9(canvas) find withtag gr${id}] {
 	    $ds9(canvas) raise $hh $id
 	}
@@ -61,7 +63,7 @@ proc IllustrateDeleteSelect {} {
 
     foreach gr $iillustrate(selection) {
 	foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	    # handles
+	    # handles/nodes
 	    foreach hh [$ds9(canvas) find withtag gr${id}] {
 		$ds9(canvas) delete $hh
 	    }
@@ -79,14 +81,12 @@ proc IllustrateDeleteAll {} {
     global illustrate
     global iillustrate
 
-    # graphic
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	$ds9(canvas) delete $id
-    }
-
-    # handles
-    foreach id [$ds9(canvas) find withtag {handle}] {
-	$ds9(canvas) delete $id
+	# handles/nodes
+	foreach hid [$ds9(canvas) find withtag gr${id}] {
+	    $ds9(canvas) delete $hid
+	}
     }
 
     set iillustrate(selection) {}
@@ -107,7 +107,12 @@ proc IllustrateSelectNone {} {
     global illustrate
     global iillustrate
     
+    # handles
     foreach id [$ds9(canvas) find withtag {handle}] {
+	$ds9(canvas) itemconfigure $id -state hidden
+    }
+    # nodes
+    foreach id [$ds9(canvas) find withtag {node}] {
 	$ds9(canvas) itemconfigure $id -state hidden
     }
     set iillustrate(selection) {}

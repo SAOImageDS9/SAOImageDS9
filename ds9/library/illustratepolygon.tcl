@@ -185,12 +185,41 @@ proc IllustrateEditPolygon {gr xx yy} {
     
     foreach {id x1 y1 x2 y2 color fill dash} $gr {
 	if {$iillustrate(handle)} {
+	    set bbox [$ds9(canvas) bbox $id]
+	    
+	    set bbx1 [lindex $bbox 0]
+	    set bby1 [lindex $bbox 1]
+	    set bbx2 [lindex $bbox 2]
+	    set bby2 [lindex $bbox 3]
+
+	    set xc [expr double($bbx2-$bbx1)/2+$bbx1]
+	    set yc [expr double($bby2-$bby1)/2+$bby1]
+
 	    switch $iillustrate(handle) {
-		1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
-		2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}
-		3 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
-		4 {$ds9(canvas) coords $id $xx $y1 $x2 $yy}
+		1 {
+		    set aa [expr abs(double($bbx1)/double($xx))]
+		    set bb [expr abs(double($bby1)/double($yy))]
+		}
+		2 {
+		    set aa [expr abs(double($xx)/double($bbx2))]
+		    set bb [expr abs(double($bby1)/double($yy))]
+		}
+		3 {
+		    set aa [expr abs(double($xx)/double($bbx2))]
+		    set bb [expr abs(double($yy)/double($bby2))]
+		}
+		4 {
+		    set aa [expr abs(double($bbx1)/double($xx))]
+		    set bb [expr abs(double($yy)/double($bby2))]
+		}
 	    }
+	    if {$aa > $bb} {
+		set sc $aa
+	    } else {
+		set sc $bb
+	    }
+	    $ds9(canvas) scale $id $xc $yc $sc $sc
+
 	} elseif {$iillustrate(node)} {
 	}
     }

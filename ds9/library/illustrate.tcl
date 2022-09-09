@@ -449,26 +449,34 @@ proc IllustrateSaveGraphic {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
+    set bbox [$ds9(canvas) bbox $id]
     switch [$ds9(canvas) type $id] {
 	oval -
-	rectangle -
+	rectangle {
+	    set color [$ds9(canvas) itemcget $id -outline]
+	    set fill [$ds9(canvas) itemcget $id -fill]
+	    set dash [$ds9(canvas) itemcget $id -dash]
+	    return [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
+	}
 	polygon {
 	    set color [$ds9(canvas) itemcget $id -outline]
 	    set fill [$ds9(canvas) itemcget $id -fill]
 	    set dash [$ds9(canvas) itemcget $id -dash]
+	    return [list $id [lindex $bbox 0] [lindex $bbox 1] [lindex $bbox 2] [lindex $bbox 3] $color $fill $dash]
 	}
 	line {
 	    set color {}
 	    set fill [$ds9(canvas) itemcget $id -fill]
 	    set dash [$ds9(canvas) itemcget $id -dash]
+	    return [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
 	}
 	text {
 	    set color {}
 	    set fill [$ds9(canvas) itemcget $id -fill]
 	    set dash {}
+	    return [list $id [lindex $coords 0] [lindex $coords 1] {} {}  $color $fill $dash]
 	}
     }
-    return [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
 }
 
 proc IllustrateGraphicAntsOn {id} {

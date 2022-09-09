@@ -211,3 +211,22 @@ proc IllustrateEditPolygon {gr xx yy} {
 	}
     }
 }
+
+proc IllustrateDeleteNode {nid} {
+    global ds9
+
+    set ll {}
+    set cnt 0
+    set id [IllustrateFindGraphicFromNode $nid]
+    set nn [IllustrateFindNodeNumber $nid]
+    if {$id} {
+	foreach {cxx cyy} [$ds9(canvas) coords $id] {
+	    incr cnt
+	    if {$cnt != $nn} {
+		lappend ll $cxx $cyy
+	    }
+	}
+	$ds9(canvas) coords $id $ll
+    }
+    $ds9(canvas) delete $nid
+}

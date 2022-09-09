@@ -476,7 +476,15 @@ proc IllustrateKey {K A xx yy} {
 
     switch -- $K {
 	Delete -
-	BackSpace {IllustrateDeleteSelect}
+	BackSpace {
+	    # see if we are on a polygon node
+	    set nid [IllustrateFind node $xx $yy]
+	    if {$nid} {
+		IllustrateDeleteNode $nid
+	    } else {
+		IllustrateDeleteSelect
+	    }
+	}
 
 	Up -
 	k {

@@ -185,6 +185,17 @@ proc IllustrateButton {xx yy} {
 	return
     }
     
+    # see if we are on a segment of polygon
+    set cnt 0
+    set id [IllustrateFindSegment $xx $yy cnt]
+    if {$id} {
+	set nid [IllustrateCreateNode $id $cnt $xx $yy]
+	set iillustrate(node) $nid
+	set iillustrate(edit) [IllustrateSaveGraphic $id]
+	set iillustrate(motion) beginEdit
+	return
+    }
+
     # see if we are on a graphic
     set id [IllustrateFind graphic $xx $yy]
     if {$id} {

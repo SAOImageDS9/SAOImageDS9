@@ -151,6 +151,7 @@ proc IllustrateUpdateHandleCoordsPolygon {id} {
 	$ds9(canvas) coords $nid \
 	    [expr $xx-$rr] [expr $yy-$rr] \
 	    [expr $xx+$rr] [expr $yy+$rr]
+	$ds9(canvas) raise $nid $id
 	incr cnt
     }
 }
@@ -234,4 +235,78 @@ proc IllustrateDeleteNode {nid} {
 	}
 	$ds9(canvas) delete $nid
     }
+}
+
+proc IllustrateFindSegment {xx yy varname} {
+    upvar $varname var
+    global ds9
+
+    set id [IllustrateFind graphic $xx $yy]
+    if {$id} {
+	switch [IllustrateFindGraphicType $id] {
+	    polygon {
+		set cnt 0
+		set coords [$ds9(canvas) coords $id]
+		set ll [llength $coords]
+		set l1x [lindex $coords [expr $ll-2]]
+		set l1y [lindex $coords [expr $ll-1]]
+		foreach {cxx cyy} $coords {
+		    incr cnt
+		    
+		    set l2x $cxx
+		    set l2y $cyy
+		    
+		    # find angle
+		    set tx [expr $l2x-$l1x]
+		    set ty [expr $l2y-$l1y]
+		    set aa [expr atan2($ty,$tx)]
+
+		    # end
+		    set ex [expr $l2x*cos($aa)+$l2y*sin($aa)]
+		    set ey [expr -$l2x*sin($aa)+$l2y*cos($aa)]
+
+		    # node
+		    set vx [expr $xx*cos($aa)+$yy*sin($aa)]
+		    set vy [expr -$xx*sin($aa)+$yy*cos($aa)]
+
+		    if {$vx>0 && $vx<$ex && $vy>-1 && $vy<1} {
+			set var $cnt
+			return $id
+		    }
+
+		    # next set
+		    set lx1 $l2x
+		    set ly1 $l2y
+		}
+	    }
+	}
+    }
+
+    return 0
+}
+
+proc IllustrateCreateNode {id num xx yy} {
+    global ds9
+
+    set nid 0
+    set color [$ds9(canvas) itemcget $id -color]
+    set rr 2
+    set ll {}
+    set cnt 0
+    foreach {cxx cyy} [$ds9(canvas) coords $id] {
+	incr cnt
+	if {$cnt == $num} {
+	    set nid [$ds9(canvas) create rectangle \
+			 [expr $xx-$rr] [expr $yy-$rr] \
+			 [expr $xx+$rr] [expr $yy+$rr]\
+			 -outline $color -fill $color \
+			 -state hidden \
+			 -tags [list node gr${id}]]
+	    append ll "$xx $yy"
+	}
+	append ll "$cxx $cyy"
+    }
+    $ds9(canvas) coords $id $ll
+    IllustrateUpdateHandleCoordsPolygon $id
+    return $nid
 }

@@ -106,7 +106,7 @@ proc IllustrateCreateHandlesPolygon {id color} {
     }
 }
 
-proc IllustrateUpdateHandleCoordsPolygon {id} {
+proc IllustrateUpdateHandlePolygon {id} {
     global ds9
     global illustrate
     global iillustrate
@@ -145,7 +145,7 @@ proc IllustrateUpdateHandleCoordsPolygon {id} {
     # nodes
 
     set cnt 0
-    set nlist [lreverse [$ds9(canvas) find withtag "gr${id} && node"]]
+    set nlist [$ds9(canvas) find withtag "gr${id} && node"]
     foreach {xx yy} [$ds9(canvas) coords $id] {
 	set nid [expr [lindex $nlist $cnt]]
 	$ds9(canvas) coords $nid \
@@ -234,6 +234,7 @@ proc IllustrateDeleteNode {nid} {
 	    $ds9(canvas) coords $id $ll
 	}
 	$ds9(canvas) delete $nid
+	IllustrateUpdateHandlePolygon $id
     }
 }
 
@@ -252,31 +253,36 @@ proc IllustrateFindSegment {xx yy varname} {
 		set l1y [lindex $coords [expr $ll-1]]
 		foreach {cxx cyy} $coords {
 		    incr cnt
-		    
 		    set l2x $cxx
 		    set l2y $cyy
 		    
-		    # find angle
+		    # translate l2
 		    set tx [expr $l2x-$l1x]
 		    set ty [expr $l2y-$l1y]
+
+		    # find angle
 		    set aa [expr atan2($ty,$tx)]
 
 		    # end
-		    set ex [expr $l2x*cos($aa)+$l2y*sin($aa)]
-		    set ey [expr -$l2x*sin($aa)+$l2y*cos($aa)]
+		    set ex [expr $tx*cos($aa)+$ty*sin($aa)]
+		    set ey [expr -$tx*sin($aa)+$ty*cos($aa)]
+
+		    # translate node
+		    set nx [expr $xx-$l1x]
+		    set ny [expr $yy-$l1y]
 
 		    # node
-		    set vx [expr $xx*cos($aa)+$yy*sin($aa)]
-		    set vy [expr -$xx*sin($aa)+$yy*cos($aa)]
+		    set vx [expr $nx*cos($aa)+$ny*sin($aa)]
+		    set vy [expr -$nx*sin($aa)+$ny*cos($aa)]
 
-		    if {$vx>0 && $vx<$ex && $vy>-1 && $vy<1} {
+		    if {$vx>0 && $vx<$ex && $vy>-2 && $vy<2} {
 			set var $cnt
 			return $id
 		    }
 
 		    # next set
-		    set lx1 $l2x
-		    set ly1 $l2y
+		    set l1x $l2x
+		    set l1y $l2y
 		}
 	    }
 	}
@@ -289,7 +295,7 @@ proc IllustrateCreateNode {id num xx yy} {
     global ds9
 
     set nid 0
-    set color [$ds9(canvas) itemcget $id -color]
+    set color [$ds9(canvas) itemcget $id -outline]
     set rr 2
     set ll {}
     set cnt 0
@@ -302,11 +308,10 @@ proc IllustrateCreateNode {id num xx yy} {
 			 -outline $color -fill $color \
 			 -state hidden \
 			 -tags [list node gr${id}]]
-	    append ll "$xx $yy"
+	    lappend ll $xx $yy
 	}
-	append ll "$cxx $cyy"
+	lappend ll $cxx $cyy
     }
     $ds9(canvas) coords $id $ll
-    IllustrateUpdateHandleCoordsPolygon $id
-    return $nid
+    IllustrateUpdateHandlePolygon $id
 }

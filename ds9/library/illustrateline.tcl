@@ -49,7 +49,7 @@ proc IllustrateCreateHandlesLine {id} {
     $ds9(canvas) raise $h2 $id
 }
 
-proc IllustrateUpdateHandleCoordsLine {id} {
+proc IllustrateUpdateHandleLine {id} {
     global ds9
     global illustrate
     global iillustrate

@@ -116,10 +116,20 @@ proc IllustrateMotion {xx yy} {
 	return
     }
 
-    # segement of a polygon
+    # node of a polygon
     if {[IllustrateFind node $xx $yy]} {
 	SetCursor dotbox
 	return
+    }
+
+    # segment of polygon
+    set cnt 0
+    set id [IllustrateFindSegment $xx $yy cnt]
+    if {$id} {
+	if {[IllustrateIsSelected $id]} {
+	    SetCursor draped_box
+	    return
+	}
     }
 
     # see if we are on a graphic
@@ -175,25 +185,29 @@ proc IllustrateButton {xx yy} {
     # see if we are on a polygon node
     set nid [IllustrateFind node $xx $yy]
     if {$nid} {
-	set iillustrate(node) $nid
 	set id [IllustrateFindGraphicFromNode $nid]
 	if {$id} {
+	    set iillustrate(node) $nid
 	    set iillustrate(id) $id
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
+	    return
 	}
-	return
     }
     
     # see if we are on a segment of polygon
     set cnt 0
     set id [IllustrateFindSegment $xx $yy cnt]
     if {$id} {
-	set nid [IllustrateCreateNode $id $cnt $xx $yy]
-	set iillustrate(node) $nid
-	set iillustrate(edit) [IllustrateSaveGraphic $id]
-	set iillustrate(motion) beginEdit
-	return
+	IllustrateCreateNode $id $cnt $xx $yy
+	set nid [IllustrateFind node $xx $yy]
+	if {$nid} {
+	    set iillustrate(node) $nid
+	    set iillustrate(id) $id
+	    set iillustrate(edit) [IllustrateSaveGraphic $id]
+	    set iillustrate(motion) beginEdit
+	    return
+	}
     }
 
     # see if we are on a graphic
@@ -335,9 +349,9 @@ proc IllustrateButtonRelease {xx yy} {
 		switch [$ds9(canvas) type $id] {
 		    oval -
 		    rectangle -
-		    text {IllustrateUpdateHandleCoordsBase $id}
-		    polygon {IllustrateUpdateHandleCoordsPolygon $id}
-		    line {IllustrateUpdateHandleCoordsLine $id}
+		    text {IllustrateUpdateHandleBase $id}
+		    polygon {IllustrateUpdateHandlePolygon $id}
+		    line {IllustrateUpdateHandleLine $id}
 		}
 	    }
 	}
@@ -361,9 +375,9 @@ proc IllustrateButtonRelease {xx yy} {
 		switch [$ds9(canvas) type $id] {
 		    oval -
 		    rectangle -
-		    text {IllustrateUpdateHandleCoordsBase $id}
-		    polygon {IllustrateUpdateHandleCoordsPolygon $id}
-		    line {IllustrateUpdateHandleCoordsLine $id}
+		    text {IllustrateUpdateHandleBase $id}
+		    polygon {IllustrateUpdateHandlePolygon $id}
+		    line {IllustrateUpdateHandleLine $id}
 		}
 	    }
 	}
@@ -377,9 +391,9 @@ proc IllustrateButtonRelease {xx yy} {
 		    switch [$ds9(canvas) type $id] {
 			oval -
 			rectangle -
-			text {IllustrateUpdateHandleCoordsBase $id}
-			polygon {IllustrateUpdateHandleCoordsPolygon $id}
-			line {IllustrateUpdateHandleCoordsLine $id}
+			text {IllustrateUpdateHandleBase $id}
+			polygon {IllustrateUpdateHandlePolygon $id}
+			line {IllustrateUpdateHandleLine $id}
 		    }
 		}
 	    }
@@ -394,9 +408,9 @@ proc IllustrateButtonRelease {xx yy} {
 		switch [$ds9(canvas) type $id] {
 		    oval -
 		    rectangle -
-		    text {IllustrateUpdateHandleCoordsBase $id}
-		    polygon {IllustrateUpdateHandleCoordsPolygon $id}
-		    line {IllustrateUpdateHandleCoordsLine $id}
+		    text {IllustrateUpdateHandleBase $id}
+		    polygon {IllustrateUpdateHandlePolygon $id}
+		    line {IllustrateUpdateHandleLine $id}
 		}
 	    }
 	    IllustrateUpdateSelection

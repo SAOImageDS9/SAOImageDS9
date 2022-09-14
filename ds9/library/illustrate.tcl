@@ -11,7 +11,7 @@ proc IllustrateDef {} {
 
     set iillustrate(selection) {}
 
-    set illustrate(shape) polygon
+    set illustrate(shape) circle
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
@@ -139,7 +139,7 @@ proc IllustrateUpdateGraphic {} {
 		    $ds9(canvas) itemconfigure $id \
 			-fill $illustrate(color) \
 			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"
-		    IllustrateUpdateHandleCoordsBase $id
+		    IllustrateUpdateHandleBase $id
 		}
 	    }
 	    
@@ -321,15 +321,15 @@ proc IllustrateMoveSelection {dx dy} {
 		rectangle -
 		text {
 		    IllustrateMoveBase $gr $dx $dy
-		    IllustrateUpdateHandleCoordsBase $id
+		    IllustrateUpdateHandleBase $id
 		}
 		polygon {
 		    IllustrateMoveBase $gr $dx $dy
-		    IllustrateUpdateHandleCoordsPolygon $id
+		    IllustrateUpdateHandlePolygon $id
 		}
 		line {
 		    IllustrateMoveBase $gr $dx $dy
-		    IllustrateUpdateHandleCoordsLine $id
+		    IllustrateUpdateHandleLine $id
 		}
 	    }
 	}
@@ -381,7 +381,7 @@ proc IllustrateCreateHandlesBase {id color} {
     $ds9(canvas) raise $h4 $id
 }
 
-proc IllustrateUpdateHandleCoordsBase {id} {
+proc IllustrateUpdateHandleBase {id} {
     global ds9
     global illustrate
     global iillustrate

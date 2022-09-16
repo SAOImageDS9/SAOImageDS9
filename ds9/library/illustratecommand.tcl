@@ -4,6 +4,8 @@
 
 package provide DS9 1.0
 
+# Move
+
 proc IllustrateMoveFront {} {
     global ds9
     global illustrate
@@ -56,6 +58,8 @@ proc IllustrateMoveBack {} {
     }
 }
 
+# Delete
+
 proc IllustrateDeleteSelect {} {
     global ds9
     global illustrate
@@ -91,6 +95,8 @@ proc IllustrateDeleteAll {} {
 
     set iillustrate(selection) {}
 }
+
+# Select
 
 proc IllustrateSelectAll {} {
     global ds9
@@ -131,4 +137,111 @@ proc IllustrateInvertSelect {} {
 	    IllustrateAddToSelection $id
 	}
     }
+}
+
+# Save
+
+proc IllustrateListHeader {} {
+    set rr {}
+    append rr  "# Region file format: DS9 version 4.2\n"
+    append rr "global color=cyan fill=0 dashlist=8 3 width=1 font=\"helvetica 10 normal roman\" dash=0\n"
+    append rr "image\n"
+}
+
+proc IllustrateSave {ch id} {
+    switch [IllustrateFindGraphicType $id] {
+	circle {puts $ch "[IllustrateListCircle $id]\n"}
+	ellipse {puts $ch "[IllustrateListEllipse $id]\n"}
+	box {puts $ch "[IllustrateListbox $id]\n"}
+	polygon {puts $ch "[IllustrateListPolygon $id]\n"}
+	line {puts $ch "[IllustrateListLine $id]\n"}
+	text {puts $ch "[IllustrateListPolygon $id]\n"}
+    }
+}
+
+proc IllustrateSaveSelect {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    set fn [SaveFileDialog markerfbox]
+    if {$fn == {}} {
+	return
+    }
+
+    if {[catch {set ch [open $fn w]}]} {
+	return
+    }
+
+    puts $ch [IllustrateListHeader]
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    IllustrateSave $ch $id
+	}
+    }
+
+    close $ch
+}
+
+proc IllustrateSaveAll {} {
+    global ds9
+    
+    set fn [SaveFileDialog markerfbox]
+    if {$fn == {}} {
+	return
+    }
+
+    if {[catch {set ch [open $fn w]}]} {
+	return
+    }
+
+    puts $ch [IllustrateListHeader]
+    foreach id [$ds9(canvas) find withtag {graphic}] {
+	IllustrateSave $ch $id
+    }
+
+    close $ch
+}
+
+# List
+
+proc IllustrateList {varname id} {
+    upvar $varname var
+
+    switch [IllustrateFindGraphicType $id] {
+	circle {append var "[IllustrateListCircle $id]\n"}
+	ellipse {append var "[IllustrateListEllipse $id]\n"}
+	box {append var "[IllustrateListbox $id]\n"}
+	polygon {append var "[IllustrateListPolygon $id]\n"}
+	line {append var "[IllustrateListLine $id]\n"}
+	text {append var "[IllustrateListPolygon $id]\n"}
+    }
+}
+
+proc IllustdrateListSelect {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    set rr [IllustrateListHeader]
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    IllustrateList rr $id
+	}
+    }
+
+    SimpleTextDialog illustratetxt [msgcat::mc {Illustrate}] \
+	80 20 insert top $rr
+}
+
+proc IllustrateListAll {} {
+    global ds9
+    
+    set rr [IllustrateListHeader]
+    foreach id [$ds9(canvas) find withtag {graphic}] {
+	IllustrateList rr $id
+    }
+    
+    SimpleTextDialog illustratetxt [msgcat::mc {Illustrate}] \
+	80 20 insert top $rr
 }

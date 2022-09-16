@@ -81,3 +81,5 @@ proc IllustrateEditOval {gr xx yy} {
     }
 }
 
+proc IllustrateListEllipse {id} {
+}

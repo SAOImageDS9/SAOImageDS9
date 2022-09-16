@@ -33,14 +33,18 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add command -label [msgcat::mc {Invert}] \
 	-command IllustrateInvertSelect
     $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add command -label [msgcat::mc {Save Selection}]
-    $ds9(mb).illustrate add command -label [msgcat::mc {List Selection}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {Save Selection}] \
+	-command IllustrateSaveSelect
+    $ds9(mb).illustrate add command -label [msgcat::mc {List Selection}] \
+	-command IllustrateListSelect
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete Selection}] \
 	-command IllustrateDeleteSelect
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Open}]
-    $ds9(mb).illustrate add command -label [msgcat::mc {Save}]
-    $ds9(mb).illustrate add command -label [msgcat::mc {List}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {Save}] \
+	-command IllustrateSaveAll
+    $ds9(mb).illustrate add command -label [msgcat::mc {List}] \
+	-command IllustrateListAll
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete All}] \
 	-command IllustrateDeleteAll

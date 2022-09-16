@@ -266,8 +266,9 @@ proc IllustrateButtonMotion {xx yy} {
 	    set iillustrate(motion) create
 	}
 	create {
-	    switch [$ds9(canvas) type $iillustrate(id)] {
-		oval {IllustrateEditOval $iillustrate(edit) $xx $yy}
+	    switch [IllustrateFindGraphicType $iillustrate(id)] {
+		circle {IllustrateEditCircle $iillustrate(edit) $xx $yy}
+		ellipse -
 		rectangle {IllustrateEditBase $iillustrate(edit) $xx $yy}
 		polygon {IllustrateEditPolygon $iillustrate(edit) $xx $yy}
 		line {IllustrateEditLine $iillustrate(edit) $xx $yy}
@@ -304,8 +305,9 @@ proc IllustrateButtonMotion {xx yy} {
 	    set iillustrate(motion) edit
 	}
 	edit {
-	    switch [$ds9(canvas) type $iillustrate(id)] {
-		oval {IllustrateEditOval $iillustrate(edit) $xx $yy}
+	    switch [IllustrateFindGraphicType $iillustrate(id)] {
+		circle {IllustrateEditCircle $iillustrate(edit) $xx $yy}
+		ellipse -
 		rectangle {IllustrateEditBase $iillustrate(edit) $xx $yy}
 		polygon {IllustrateEditPolygon $iillustrate(edit) $xx $yy}
 		line {IllustrateEditLine $iillustrate(edit) $xx $yy}
@@ -337,8 +339,9 @@ proc IllustrateButtonRelease {xx yy} {
 	    # the user has just clicked, so resize to make visible or delete
 	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
-		switch [$ds9(canvas) type $id] {
-		    oval {IllustrateDefaultOval $id}
+		switch [IllustrateFindGraphicType $id] {
+		    circle {IllustrateDefaultCircle $id}
+		    ellipse {IllustrateDefaultEllipse $id}
 		    rectangle {IllustrateDefaultRectangle $id}
 		    polygon {}
 		    line {IllustrateDeleteGraphic $id}
@@ -346,8 +349,9 @@ proc IllustrateButtonRelease {xx yy} {
 		}
 
 		IllustrateHandleOff $id
-		switch [$ds9(canvas) type $id] {
-		    oval -
+		switch [IllustrateFindGraphicType $id] {
+		    circle -
+		    ellipse -
 		    rectangle -
 		    text {IllustrateUpdateHandleBase $id}
 		    polygon {IllustrateUpdateHandlePolygon $id}
@@ -362,8 +366,9 @@ proc IllustrateButtonRelease {xx yy} {
 	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
 		if {[expr sqrt($dx*$dx + $dy*$dy)]<4} {
-		    switch [$ds9(canvas) type $id] {
-			oval {IllustrateDefaultOval $id}
+		    switch [IllustrateFindGraphicType $id] {
+			circle {IllustrateDefaultCircle $id}
+			ellipse {IllustrateDefaultEllipse $id}
 			rectangle {IllustrateDefaultRectangle $id}
 			polygon {IllustrateDefaultPolygon $id}
 			line {IllustrateDeleteGraphic $id}
@@ -372,8 +377,9 @@ proc IllustrateButtonRelease {xx yy} {
 		}
 
 		IllustrateHandleOff $id
-		switch [$ds9(canvas) type $id] {
-		    oval -
+		switch [IllustrateFindGraphicType $id] {
+		    circle -
+		    ellipse -
 		    rectangle -
 		    text {IllustrateUpdateHandleBase $id}
 		    polygon {IllustrateUpdateHandlePolygon $id}

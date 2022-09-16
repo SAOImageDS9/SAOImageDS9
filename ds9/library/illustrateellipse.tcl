@@ -20,66 +20,66 @@ proc IllustrateCreateEllipse {xx yy fill dash} {
     return $id
 }
 
-# both circle and ellipse come here
-proc IllustrateDefaultOval {id} {
+proc IllustrateDefaultEllipse {id} {
     global ds9
-    global iillustrate
     global pillustrate
 
     set coords [$ds9(canvas) coords $id]
     set xx [lindex $coords 0]
     set yy [lindex $coords 1]
     
-    switch [IllustrateFindGraphicType $id] {
-	circle {
-	    set rr1 $pillustrate(circle,radius)
-	    set rr2 $pillustrate(circle,radius)
-	}
-	ellipse {
-	    set rr1 $pillustrate(ellipse,radius1)
-	    set rr2 $pillustrate(ellipse,radius2)
-	}
-    }
+    set rr1 $pillustrate(ellipse,radius1)
+    set rr2 $pillustrate(ellipse,radius2)
     
     $ds9(canvas) coords $id \
 	[expr $xx-$rr1] [expr $yy-$rr2] \
 	[expr $xx+$rr1] [expr $yy+$rr2]
 }
 
-proc IllustrateEditOval {gr xx yy} {
+proc IllustrateListEllipse {id} {
     global ds9
-    global iillustrate
 
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	switch [IllustrateFindGraphicType $id] {
-	    ellipse {IllustrateEditBase $gr $xx $yy}
-	    circle {
-		switch $iillustrate(handle) {
-		    1 {
-			set dx [expr ($x1-$xx)]
-			set dy [expr ($y1-$yy)]
-		    }
-		    2 {
-			set dx [expr ($xx-$x2)]
-			set dy [expr ($y1-$yy)]
-		    }
-		    3 {
-			set dx [expr ($xx-$x2)]
-			set dy [expr ($yy-$y2)]
-		    }
-		    4 {
-			set dx [expr ($x1-$xx)]
-			set dy [expr ($yy-$y2)]
-		    }
-		}
-		set dd [expr ($dx+$dy)/2]
-		$ds9(canvas) coords $id \
-		    [expr $x1-$dd] [expr $y1-$dd] \
-		    [expr $x2+$dd] [expr $y2+$dd]
-	    }
+    set coords [$ds9(canvas) coords $id]
+    set color [$ds9(canvas) itemcget $id -outline]
+    if {[$ds9(canvas) itemcget $id -fill] != {}} {
+	set fill 1
+    } else {
+	set fill 0
+    }
+    set width [$ds9(canvas) itemcget $id -width]
+    if {[$ds9(canvas) itemcget $id -dash] != {}} {
+	set dash 1
+    } else {
+	set dash 0
+    }
+    
+    set x1 [lindex $coords 0]
+    set y1 [lindex $coords 1]
+    set x2 [lindex $coords 2]
+    set y2 [lindex $coords 3]
+
+    set xc [expr ($x2-$x1)/2.+$x1]
+    set yc [expr ($y2-$y1)/2.+$y1]
+    set r1 [expr ($x2-$x1)/2.]
+    set r2 [expr ($y2-$y1)/2.]
+    
+    set rr "ellispe $xc $yc $r1 $r2"
+
+    if {$dash || $fill || $color != {cyan} || $width != 1} {
+	append rr " # "
+	if {$color != {cyan}} {
+	    append rr "color=$color "
+	}
+	if {$fill} {
+	    append rr "fill=1 "
+	}
+	if {$width != 1} {
+	    append rr "width=1 "
+	}
+	if {$dash} {
+	    append rr "dash=1 "
 	}
     }
-}
 
-proc IllustrateListEllipse {id} {
+    return $rr
 }

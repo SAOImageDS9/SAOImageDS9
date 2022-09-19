@@ -119,9 +119,10 @@ proc IllustrateUpdateGraphic {} {
     foreach gr $old {
 	foreach {id x1 y1 x2 y2 ocolor ofill odash} $gr {
 	    # graphic
-	    switch [$ds9(canvas) type $id] {
-		oval -
-		rectangle -
+	    switch [IllustrateGetType $id] {
+		circle -
+		ellipse -
+		box -
 		polygon {
 		    $ds9(canvas) itemconfigure $id \
 			-outline $illustrate(color) \
@@ -163,9 +164,10 @@ proc IllustrateFind {tag xx yy} {
     # must turn on fill for 'find closest' to work
     set index {}
     foreach id [$ds9(canvas) find withtag $tag] {
-	switch [$ds9(canvas) type $id] {
-	    oval -
-	    rectangle -
+	switch [IllustrateGetType $id] {
+	    circle -
+	    ellipse -
+	    box -
 	    polygon {
 		# is fill on?
 		set fill [$ds9(canvas) itemcget $id -fill]
@@ -226,7 +228,7 @@ proc IllustrateFindGraphicFromNode {nid} {
     return [IllustrateFindGraphicFromHandle $nid]
 }
 
-proc IllustrateFindGraphicType {id} {
+proc IllustrateGetType {id} {
     global ds9
     
     set tags [$ds9(canvas) gettags $id]
@@ -316,9 +318,10 @@ proc IllustrateMoveSelection {dx dy} {
 
     foreach gr $iillustrate(selection) {
 	foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	    switch [$ds9(canvas) type $id] {
-		oval -
-		rectangle -
+	    switch [IllustrateGetType $id] {
+		circle -
+		ellipse -
+		box -
 		text {
 		    IllustrateMoveBase $gr $dx $dy
 		    IllustrateUpdateHandleBase $id
@@ -456,9 +459,10 @@ proc IllustrateSaveGraphic {id} {
 
     set coords [$ds9(canvas) coords $id]
     set bbox [$ds9(canvas) bbox $id]
-    switch [$ds9(canvas) type $id] {
-	oval -
-	rectangle {
+    switch [IllustrateGetType $id] {
+	circle -
+	ellipse -
+	box {
 	    set color [$ds9(canvas) itemcget $id -outline]
 	    set fill [$ds9(canvas) itemcget $id -fill]
 	    set dash [$ds9(canvas) itemcget $id -dash]
@@ -489,9 +493,10 @@ proc IllustrateGraphicAntsOn {id} {
     global ds9
 
     # graphic
-    switch [$ds9(canvas) type $id] {
-	oval -
-	rectangle -
+    switch [IllustrateGetType $id] {
+	circle -
+	ellipse -
+	box -
 	polygon {
 	    $ds9(canvas) itemconfigure $id \
 		-outline white \
@@ -515,9 +520,10 @@ proc IllustrateGraphicAntsOff {gr} {
 
     # graphic
     foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	switch [$ds9(canvas) type $id] {
-	    oval -
-	    rectangle -
+	switch [IllustrateGetType $id] {
+	    circle -
+	    ellipse -
+	    box -
 	    polygon {
 		$ds9(canvas) itemconfigure $id \
 		    -outline $color \

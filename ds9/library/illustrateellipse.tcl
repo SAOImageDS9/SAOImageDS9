@@ -66,18 +66,18 @@ proc IllustrateListEllipse {id} {
     set rr "ellispe $xc $yc $r1 $r2"
 
     if {$dash || $fill || $color != {cyan} || $width != 1} {
-	append rr " # "
+	append rr " #"
 	if {$color != {cyan}} {
-	    append rr "color=$color "
+	    append rr " color=$color"
 	}
 	if {$fill} {
-	    append rr "fill=1 "
+	    append rr " fill=1"
 	}
 	if {$width != 1} {
-	    append rr "width=1 "
+	    append rr " width=1"
 	}
 	if {$dash} {
-	    append rr "dash=1 "
+	    append rr " dash=1"
 	}
     }
 

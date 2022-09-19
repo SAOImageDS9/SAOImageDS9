@@ -25,6 +25,27 @@ proc IllustrateCreateText {xx yy} {
     return 0
 }
 
+proc IllustrateListText {id} {
+    global ds9
+
+    set coords [$ds9(canvas) coords $id]
+    set color [$ds9(canvas) itemcget $id -fill]
+    set font [$ds9(canvas) itemcget $id -font]
+    set txt [$ds9(canvas) itemcget $id -text]
+    
+    set rr "text $coords # text=\"$txt\""
+
+    if {$color != {cyan}} {
+	append rr " color=$color"
+    }
+
+    if {$font != "\{helvetica\} 12 normal roman"} {
+	append rr " font=\"$font\""
+    }
+
+    return $rr
+}
+
 proc IllustrateMoveToText {gr xx yy} {
     global ds9
     global iillustrate

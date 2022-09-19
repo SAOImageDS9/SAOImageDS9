@@ -149,13 +149,13 @@ proc IllustrateListHeader {} {
 }
 
 proc IllustrateSave {ch id} {
-    switch [IllustrateFindGraphicType $id] {
+    switch [IllustrateGetType $id] {
 	circle {puts $ch "[IllustrateListCircle $id]\n"}
 	ellipse {puts $ch "[IllustrateListEllipse $id]\n"}
-	box {puts $ch "[IllustrateListbox $id]\n"}
+	box {puts $ch "[IllustrateListBox $id]\n"}
 	polygon {puts $ch "[IllustrateListPolygon $id]\n"}
 	line {puts $ch "[IllustrateListLine $id]\n"}
-	text {puts $ch "[IllustrateListPolygon $id]\n"}
+	text {puts $ch "[IllustrateListText $id]\n"}
     }
 }
 
@@ -208,13 +208,13 @@ proc IllustrateSaveAll {} {
 proc IllustrateList {varname id} {
     upvar $varname var
 
-    switch [IllustrateFindGraphicType $id] {
+    switch [IllustrateGetType $id] {
 	circle {append var "[IllustrateListCircle $id]\n"}
 	ellipse {append var "[IllustrateListEllipse $id]\n"}
-	box {append var "[IllustrateListbox $id]\n"}
+	box {append var "[IllustrateListBox $id]\n"}
 	polygon {append var "[IllustrateListPolygon $id]\n"}
 	line {append var "[IllustrateListLine $id]\n"}
-	text {append var "[IllustrateListPolygon $id]\n"}
+	text {append var "[IllustrateListText $id]\n"}
     }
 }
 

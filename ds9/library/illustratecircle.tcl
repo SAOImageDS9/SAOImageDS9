@@ -20,34 +20,19 @@ proc IllustrateCreateCircle {xx yy fill dash} {
     return $id
 }
 
-proc IllustrateEditCircle {gr xx yy} {
+proc IllustrateDefaultCircle {id} {
     global ds9
-    global iillustrate
+    global pillustrate
 
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	switch $iillustrate(handle) {
-	    1 {
-		set dx [expr ($x1-$xx)]
-		set dy [expr ($y1-$yy)]
-	    }
-	    2 {
-		set dx [expr ($xx-$x2)]
-		set dy [expr ($y1-$yy)]
-	    }
-	    3 {
-		set dx [expr ($xx-$x2)]
-		set dy [expr ($yy-$y2)]
-	    }
-	    4 {
-		set dx [expr ($x1-$xx)]
-		set dy [expr ($yy-$y2)]
-	    }
-	}
-	set dd [expr ($dx+$dy)/2]
-	$ds9(canvas) coords $id \
-	    [expr $x1-$dd] [expr $y1-$dd] \
-	    [expr $x2+$dd] [expr $y2+$dd]
-    }
+    set coords [$ds9(canvas) coords $id]
+    set xx [lindex $coords 0]
+    set yy [lindex $coords 1]
+    
+    set rr $pillustrate(circle,radius)
+    
+    $ds9(canvas) coords $id \
+	[expr $xx-$rr] [expr $yy-$rr] \
+	[expr $xx+$rr] [expr $yy+$rr]
 }
 
 proc IllustrateListCircle {id} {
@@ -79,37 +64,51 @@ proc IllustrateListCircle {id} {
     set rr "circle $xc $yc $ra"
 
     if {$dash || $fill || $color != {cyan} || $width != 1} {
-	append rr " # "
+	append rr " #"
 	if {$color != {cyan}} {
-	    append rr "color=$color "
+	    append rr " color=$color"
 	}
 	if {$fill} {
-	    append rr "fill=1 "
+	    append rr " fill=1"
 	}
 	if {$width != 1} {
-	    append rr "width=1 "
+	    append rr " width=1"
 	}
 	if {$dash} {
-	    append rr "dash=1 "
+	    append rr " dash=1"
 	}
     }
 
     return $rr
 }
 
-# both circle and ellipse come here
-proc IllustrateDefaultCircle {id} {
+proc IllustrateEditCircle {gr xx yy} {
     global ds9
-    global pillustrate
+    global iillustrate
 
-    set coords [$ds9(canvas) coords $id]
-    set xx [lindex $coords 0]
-    set yy [lindex $coords 1]
-    
-    set rr $pillustrate(circle,radius)
-    
-    $ds9(canvas) coords $id \
-	[expr $xx-$rr] [expr $yy-$rr] \
-	[expr $xx+$rr] [expr $yy+$rr]
+    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	switch $iillustrate(handle) {
+	    1 {
+		set dx [expr ($x1-$xx)]
+		set dy [expr ($y1-$yy)]
+	    }
+	    2 {
+		set dx [expr ($xx-$x2)]
+		set dy [expr ($y1-$yy)]
+	    }
+	    3 {
+		set dx [expr ($xx-$x2)]
+		set dy [expr ($yy-$y2)]
+	    }
+	    4 {
+		set dx [expr ($x1-$xx)]
+		set dy [expr ($yy-$y2)]
+	    }
+	}
+	set dd [expr ($dx+$dy)/2]
+	$ds9(canvas) coords $id \
+	    [expr $x1-$dd] [expr $y1-$dd] \
+	    [expr $x2+$dd] [expr $y2+$dd]
+    }
 }
 

@@ -1,0 +1,37 @@
+#tab illustrateparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+debug		{return $DEBUG_}
+version		{return $VERSION_}
+global		{return $GLOBAL_}
+
+color		{return $COLOR_}
+width 		{return $WIDTH_}
+fill		{return $FILL_}
+dash		{return $DASH_}
+font		{return $FONT_}
+
+circle		{return $CIRCLE_}
+ellipse		{return $ELLIPSE_}
+box		{return $BOX_}
+rectangle	{return $BOX_}
+polygon		{return $POLYGON_}
+line		{return $LINE_}
+text		{return $TEXT_}
+
+wcs		{return $WCS_}
+
+#include coordsys.fin
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+#include ws.fin
+
+%%

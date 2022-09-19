@@ -7,6 +7,7 @@
 
 %%
 
+\#		{return $HASH_}
 debug		{return $DEBUG_}
 version		{return $VERSION_}
 global		{return $GLOBAL_}

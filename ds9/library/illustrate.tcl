@@ -64,7 +64,7 @@ proc IllustrateCreateGraphic {xx yy} {
     }
 
     switch $illustrate(shape) {
-	circle {return [IllustrateCreateCircle $xx $yy $fill $dash]}
+	circle {return [IllustrateCreateCircle $xx $yy 0 $illustrate(color) $fill $illustrate(width) $dash]}
 	ellipse {return [IllustrateCreateEllipse $xx $yy $fill $dash]}
 	box {return [IllustrateCreateBox $xx $yy $fill $dash]}
 	polygon {return [IllustrateCreatePolygon $xx $yy $fill $dash]}

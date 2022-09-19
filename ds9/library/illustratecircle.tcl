@@ -4,15 +4,20 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateCircle {xx yy fill dash} {
+proc IllustrateCreateCircle {xx yy rr color fill width dash} {
     global ds9
     global illustrate
 
+    set x1 [expr $xx-$rr]
+    set y1 [expr $yy-$rr]
+    set x2 [expr $xx+$rr]
+    set y2 [expr $yy+$rr]
+
     set id [$ds9(canvas) create oval \
-		$xx $yy $xx $yy \
-		-outline $illustrate(color) \
+		$x1 $y1 $x2 $y2 \
+		-outline $color \
 		-fill $fill \
-		-width $illustrate(width) \
+		-width $width \
 		-dash $dash \
 		-tags {circle graphic}]
 

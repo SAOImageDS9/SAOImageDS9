@@ -17,6 +17,7 @@
 
 %start commands
 
+%token HASH_
 %token DEBUG_
 %token VERSION_
 %token GLOBAL_
@@ -79,7 +80,7 @@ localProperty : COLOR_ STRING_ {set localColor $2}
 initLocal: {set localColor $globalColor; set localWidth $globalWidth; set localFill $globalFill; set localDash $globalDash; set localFont $globalFont; set localText $globalText}
  ;
 
-shape : CIRCLE_ numeric numeric numeric comment {}
+shape : CIRCLE_ numeric numeric numeric comment {IllustrateCreateCircle $2 $3 $4 $localColor $localFill $localWidth $localDash}
  | ELLIPSE_ numeric numeric numeric numeric comment {}
  | BOX_ numeric numeric numeric numeric comment {}
  | POLYGON_ {set coords {}} coords comment {}
@@ -94,7 +95,7 @@ coords : coords coord
 coord : numeric numeric {lappend coords $1 $2}
  ;
 
-comment : local
+comment : HASH_ local
  ;
 
 coordSystem : IMAGE_

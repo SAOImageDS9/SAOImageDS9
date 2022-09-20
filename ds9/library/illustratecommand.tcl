@@ -153,8 +153,8 @@ proc IllustrateLoad {} {
 	return
     }
 
-    set illustrate::yyin $ch
-    illustrate::yyparse
+    set illustratereg::yyin $ch
+    illustratereg::yyparse
 
     close $ch
 }

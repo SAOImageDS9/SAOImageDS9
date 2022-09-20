@@ -233,6 +233,7 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -iconify {incr i; ProcessIconifyCmd argv i}
 	    -iis {incr i; ProcessIISCmd argv i}
+	    -illustrate {incr i; ProcessIllustrateCmd argv i}
 	    -info {
 		# backward compatibility
 		set view(info) 1

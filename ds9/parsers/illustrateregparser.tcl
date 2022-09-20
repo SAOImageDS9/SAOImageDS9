@@ -13,7 +13,7 @@ package provide DS9 1.0
 # author's license.  See http://mini.net/tcl/taccle for other details.
 ######
 
-namespace eval illustrate {
+namespace eval illustratereg {
     variable yylval {}
     variable table
     variable rules
@@ -25,31 +25,31 @@ namespace eval illustrate {
     namespace export yylex
 }
 
-proc illustrate::YYABORT {} {
+proc illustratereg::YYABORT {} {
     return -code return 1
 }
 
-proc illustrate::YYACCEPT {} {
+proc illustratereg::YYACCEPT {} {
     return -code return 0
 }
 
-proc illustrate::YYERROR {} {
+proc illustratereg::YYERROR {} {
     variable yyerr
     set yyerr 1
 }
 
-proc illustrate::yyclearin {} {
+proc illustratereg::yyclearin {} {
     variable token
     variable yycnt
     set token {}
     incr yycnt -1
 }
 
-proc illustrate::yyerror {s} {
+proc illustratereg::yyerror {s} {
     puts stderr $s
 }
 
-proc illustrate::setupvalues {stack pointer numsyms} {
+proc illustratereg::setupvalues {stack pointer numsyms} {
     upvar 1 1 y
     set y {}
     for {set i 1} {$i <= $numsyms} {incr i} {
@@ -59,14 +59,14 @@ proc illustrate::setupvalues {stack pointer numsyms} {
     }
 }
 
-proc illustrate::unsetupvalues {numsyms} {
+proc illustratereg::unsetupvalues {numsyms} {
     for {set i 1} {$i <= $numsyms} {incr i} {
         upvar 1 $i y
         unset y
     }
 }
 
-array set illustrate::table {
+array set illustratereg::table {
   1:271,target 1
   3:289 goto
   9:272,target 4
@@ -165,7 +165,7 @@ array set illustrate::table {
   1:261,target 5
 }
 
-array set illustrate::rules {
+array set illustratereg::rules {
   9,l 287
   11,l 288
   32,l 294
@@ -219,7 +219,7 @@ array set illustrate::rules {
   35,l 296
 }
 
-array set illustrate::rules {
+array set illustratereg::rules {
   12,dc 2
   26,dc 2
   3,dc 1
@@ -273,7 +273,7 @@ array set illustrate::rules {
   48,dc 1
 }
 
-array set illustrate::rules {
+array set illustratereg::rules {
   41,line 126
   7,line 74
   37,line 123
@@ -327,7 +327,7 @@ array set illustrate::rules {
   44,line 133
 }
 
-array set illustrate::lr1_table {
+array set illustratereg::lr1_table {
   0 {{0 0 0} {10 {0 271 272} 0} {11 {0 271 272} 0} {12 {0 271 272} 0} {13 {0 271 272} 0}}
   1 {{12 {0 271 272} 1} {1 {0 271 272} 0} {2 {0 271 272} 0} {3 {0 271 272} 0} {4 {0 271 272} 0} {5 {0 271 272} 0} {6 {0 271 272} 0} {7 {0 271 272} 0}}
   2 {{13 {0 271 272} 1}}
@@ -356,7 +356,7 @@ array set illustrate::lr1_table {
   12,trans {}
 }
 
-array set illustrate::token_id_table {
+array set illustratereg::token_id_table {
   286,t 1
   286 yesno
   280,title ELLIPSE
@@ -549,7 +549,7 @@ array set illustrate::token_id_table {
   261,title YES
 }
 
-proc illustrate::yyparse {} {
+proc illustratereg::yyparse {} {
     variable yylval
     variable table
     variable rules

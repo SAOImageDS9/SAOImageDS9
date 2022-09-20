@@ -1,4 +1,4 @@
-#tab illustrateparser.tab.tcl
+#tab illustrateregparser.tab.tcl
 
 %{
 %}

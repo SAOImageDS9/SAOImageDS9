@@ -46,8 +46,11 @@ commands : commands command
  | command
  ;
 
-command : DEBUG_
+command : DEBUG_ yesno
  | VERSION_ {puts "DS9 Regions File 4.2"}
+ ;
+
+commandd : DEBUG_ yesno
  | GLOBAL_ global
  | coordSystem
  | initLocal shape

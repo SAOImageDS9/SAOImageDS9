@@ -40,7 +40,8 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete Selection}] \
 	-command IllustrateDeleteSelect
     $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add command -label [msgcat::mc {Open}]
+    $ds9(mb).illustrate add command -label [msgcat::mc {Open}] \
+	-command IllustrateLoad
     $ds9(mb).illustrate add command -label [msgcat::mc {Save}] \
 	-command IllustrateSaveAll
     $ds9(mb).illustrate add command -label [msgcat::mc {List}] \

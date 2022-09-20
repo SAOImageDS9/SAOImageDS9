@@ -568,3 +568,16 @@ proc IllustrateDumpAll {} {
 	puts "$id: [$ds9(canvas) gettags $id]"
     }
 }
+
+# Process Cmds
+
+proc ProcessIllustrateCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    illustrate::YY_FLUSH_BUFFER
+    illustrate::yy_scan_string [lrange $var $i end]
+    illustrate::yyparse
+    incr i [expr $illustrate::yycnt-1]
+}
+

@@ -139,6 +139,26 @@ proc IllustrateInvertSelect {} {
     }
 }
 
+# Load
+
+proc IllustrateLoad {} {
+    global ds9
+    
+    set fn [OpenFileDialog markerfbox]
+    if {$fn == {}} {
+	return
+    }
+
+    if {[catch {set ch [open $fn r]}]} {
+	return
+    }
+
+    set illustrate::yyin $ch
+    illustrate::yyparse
+
+    close $ch
+}
+
 # Save
 
 proc IllustrateListHeader {} {

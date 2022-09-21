@@ -70,24 +70,27 @@ array set illustratesend::table {
   8:0 reduce
   5:0,target 2
   0:259 shift
-  10:0 accept
+  10:0 reduce
   9:0 reduce
-  0:261 shift
   0:266,target 9
+  0:261 shift
+  11:0 accept
   7:0,target 3
   0:258,target 2
   0:262 shift
+  0:268,target 11
   0:263 shift
-  10:0,target 0
-  9:0,target 4
+  10:0,target 4
+  9:0,target 10
   0:261,target 4
   0:264 shift
   2:0,target 7
   0:265 shift
-  0:263,target 6
   0:266 shift
+  0:263,target 6
   4:0,target 8
-  0:267 goto
+  0:267 shift
+  0:268 goto
   0:265,target 8
   6:0,target 5
   1:0 reduce
@@ -99,21 +102,23 @@ array set illustratesend::table {
   0:259,target 3
   4:0 reduce
   1:0,target 6
+  11:0,target 0
   5:0 reduce
   0:262,target 5
 }
 
 array set illustratesend::rules {
-  9,l 267
-  2,l 267
-  6,l 267
-  3,l 267
-  7,l 267
-  0,l 268
-  4,l 267
-  8,l 267
-  1,l 267
-  5,l 267
+  9,l 268
+  2,l 268
+  6,l 268
+  3,l 268
+  7,l 268
+  0,l 269
+  4,l 268
+  8,l 268
+  10,l 268
+  1,l 268
+  5,l 268
 }
 
 array set illustratesend::rules {
@@ -121,6 +126,7 @@ array set illustratesend::rules {
   0,dc 1
   8,dc 1
   3,dc 1
+  10,dc 1
   6,dc 1
   1,dc 1
   9,dc 1
@@ -130,24 +136,25 @@ array set illustratesend::rules {
 }
 
 array set illustratesend::rules {
-  7,line 30
-  4,line 27
-  1,line 24
-  9,line 32
-  6,line 29
-  3,line 26
-  8,line 31
-  5,line 28
-  2,line 25
+  7,line 31
+  10,line 34
+  4,line 28
+  1,line 25
+  9,line 33
+  6,line 30
+  3,line 27
+  8,line 32
+  5,line 29
+  2,line 26
 }
 
 array set illustratesend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0}}
   1 {{6 0 1}}
   2 {{7 0 1}}
   3 {{9 0 1}}
+  0,trans {{257 1} {258 2} {259 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11}}
   4 {{8 0 1}}
-  0,trans {{257 1} {258 2} {259 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10}}
   1,trans {}
   5 {{2 0 1}}
   2,trans {}
@@ -157,22 +164,27 @@ array set illustratesend::lr1_table {
   4,trans {}
   8 {{1 0 1}}
   5,trans {}
-  9 {{4 0 1}}
-  10 {{0 0 1}}
+  9 {{10 0 1}}
+  10 {{4 0 1}}
   6,trans {}
+  11 {{0 0 1}}
   7,trans {}
   8,trans {}
   10,trans {}
   9,trans {}
+  11,trans {}
 }
 
 array set illustratesend::token_id_table {
   264,line 17
+  269,t 1
   265,title SHAPE
   261,line 11
   257,t 0
+  269,title {}
   257,line 7
   262,t 0
+  269,line 35
   259,title FONTSLANT
   260,title FONTSTYLE
   266,t 0
@@ -180,7 +192,7 @@ array set illustratesend::token_id_table {
   266,line 19
   error error
   268,title {}
-  error,line 22
+  error,line 23
   258,t 0
   263,line 16
   error,title {}
@@ -188,10 +200,10 @@ array set illustratesend::token_id_table {
   259,line 9
   260,line 10
   258,title FONTSIZE
-  267,t 1
+  267,t 0
   263,title DASH
-  268,line 33
-  267,title {}
+  268,line 24
+  267,title WIDTH
   257 FONT_
   258 FONTSIZE_
   259,t 0
@@ -207,18 +219,19 @@ array set illustratesend::token_id_table {
   264,t 0
   265 SHAPE_
   262,line 15
-  266 WIDTH_
-  267 illustratesend
+  266 SHOW_
+  267 WIDTH_
   268,t 1
-  268 start'
+  268 illustratesend
   262,title COLOR
   0 {$}
   0,t 0
+  269 start'
   error,t 0
   258,line 8
-  266,title WIDTH
+  266,title SHOW
   261,t 0
-  267,line 23
+  267,line 20
   265,t 0
   261,title FONTWEIGHT
 }
@@ -322,10 +335,11 @@ proc illustratesend::yyparse {} {
                     3 { ProcessSendCmdYesNo illustrate fill }
                     4 { ProcessSendCmdGet illustrate width }
                     5 { ProcessSendCmdYesNo illustrate dash }
-                    6 { ProcessSendCmdGet colorbar font }
-                    7 { ProcessSendCmdGet colorbar font,size }
-                    8 { ProcessSendCmdGet colorbar font,weight }
-                    9 { ProcessSendCmdGet colorbar font,slant }
+                    6 { ProcessSendCmdGet illustrate font }
+                    7 { ProcessSendCmdGet illustrate font,size }
+                    8 { ProcessSendCmdGet illustrate font,weight }
+                    9 { ProcessSendCmdGet illustrate font,slant }
+                    10 { ProcessSendCmdGet illustrate show }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

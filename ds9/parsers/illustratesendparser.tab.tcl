@@ -7,4 +7,5 @@ set COLOR_ 262
 set DASH_ 263
 set FILL_ 264
 set SHAPE_ 265
-set WIDTH_ 266
+set SHOW_ 266
+set WIDTH_ 267

@@ -4,6 +4,34 @@
 
 package provide DS9 1.0
 
+# Show
+
+proc IllustrateShow {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    if {$illustrate(show)} {
+	# turn on all graphics
+	foreach id [$ds9(canvas) find withtag graphic] {
+	    $ds9(canvas) itemconfigure $id -state normal
+	}
+
+	# turn on handles/nodes of selection
+	foreach gr $iillustrate(selection) {
+	    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+		foreach hh [$ds9(canvas) find withtag gr${id}] {
+		    $ds9(canvas) itemconfigure $hh -state normal
+		}
+	    }
+	}
+    } else {
+	foreach id [$ds9(canvas) find withtag "graphic || handle || node"] {
+	    $ds9(canvas) itemconfigure $id -state hidden
+	}
+    }
+}
+
 # Move
 
 proc IllustrateMoveFront {} {
@@ -144,7 +172,11 @@ proc IllustrateInvertSelect {} {
 proc IllustrateLoad {} {
     global ds9
     
-    set fn [OpenFileDialog markerfbox]
+    IllustrateLoadFn [OpenFileDialog markerfbox]
+    
+}
+
+proc IllustrateLoadFn {fn} {
     if {$fn == {}} {
 	return
     }

@@ -11,6 +11,7 @@ proc IllustrateDef {} {
 
     set iillustrate(selection) {}
 
+    set illustrate(show) 1
     set illustrate(shape) circle
     set illustrate(color) cyan
     set illustrate(fill) 0

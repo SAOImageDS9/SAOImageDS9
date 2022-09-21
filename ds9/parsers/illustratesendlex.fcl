@@ -10,6 +10,7 @@
 color		{return COLOR_}
 dash		{return DASH_}
 shape		{return SHAPE_}
+show		{return SHOW_}
 width		{return WIDTH_}
 
 #include font.fin

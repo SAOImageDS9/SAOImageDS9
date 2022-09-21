@@ -10,6 +10,7 @@
 %token DASH_
 %token FILL_
 %token SHAPE_
+%token SHOW_
 %token WIDTH_
 
 %%
@@ -19,10 +20,11 @@ illustratesend : SHAPE_ {ProcessSendCmdGet illustrate shape}
  | FILL_ {ProcessSendCmdYesNo illustrate fill}
  | WIDTH_ {ProcessSendCmdGet illustrate width}
  | DASH_ {ProcessSendCmdYesNo illustrate dash}
- | FONT_ {ProcessSendCmdGet colorbar font}
- | FONTSIZE_ {ProcessSendCmdGet colorbar font,size}
- | FONTWEIGHT_ {ProcessSendCmdGet colorbar font,weight}
- | FONTSLANT_ {ProcessSendCmdGet colorbar font,slant}
+ | FONT_ {ProcessSendCmdGet illustrate font}
+ | FONTSIZE_ {ProcessSendCmdGet illustrate font,size}
+ | FONTWEIGHT_ {ProcessSendCmdGet illustrate font,weight}
+ | FONTSLANT_ {ProcessSendCmdGet illustrate font,slant}
+ | SHOW_ {ProcessSendCmdGet illustrate show}
  ;
 
 %%

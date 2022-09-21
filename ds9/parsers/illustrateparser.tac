@@ -12,18 +12,21 @@
 %token ALL_
 %token BACK_
 %token COLOR_
+%token CLOSE_
 %token DASH_
 %token DELETE_
 %token FILL_
 %token FRONT_
 %token INVERT_
 %token LIST_
+%token LOAD_
 %token MOVE_
 %token NONE_
 %token OPEN_
 %token SAVE_
 %token SELECT_
 %token SHAPE_
+%token SHOW_
 %token WIDTH_
 
 %token CIRCLE_
@@ -63,7 +66,8 @@ illustrate : SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
  | SAVE_ save
  | LIST_ list
  | DELETE_ delete
- | OPEN_
+ | LOAD_ STRING_ {IllustrateLoadFilename $2}
+ | SHOW_ yesno {ProcessCmdSet illustrate show $2 IllustrateShow}
  ;
 
 shape : CIRCLE_ {set _ circle}
@@ -86,6 +90,7 @@ save : {IllustrateSaveAll}
 list : {IllustrateListAll}
  | SELECT_ {IllustrateListSelect}
  | ALL_ {IllustrateListAll}
+ | CLOSE_ {SimpleTextDestroy illustratetxt}
  ;
 
 delete : {IllustrateDeleteAll}

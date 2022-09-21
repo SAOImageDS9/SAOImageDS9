@@ -49,6 +49,9 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Delete All}] \
 	-command IllustrateDeleteAll
+    $ds9(mb).illustrate add separator
+    $ds9(mb).illustrate add checkbutton -label [msgcat::mc {Show}] \
+	-variable illustrate(show) -command {IllustrateShow}
 
     ThemeMenu $ds9(mb).illustrate.shape
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Circle}] \
@@ -87,6 +90,8 @@ proc PrefsDialogIllustrateMenu {w} {
     $m add cascade -label [msgcat::mc {Color}] -menu $m.color
     $m add cascade -label [msgcat::mc {Width}] -menu $m.width
     $m add cascade -label [msgcat::mc {Font}] -menu $m.font
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Show}] -variable pillustrate(show)
 
     ThemeMenu $m.shape
     $m.shape add radiobutton -label [msgcat::mc {Circle}] \
@@ -195,6 +200,7 @@ proc ButtonsIllustrateDef {} {
 	illustrate,save 1
 	illustrate,list 1
 	illustrate,delete 1
+	illustrate,show 0
     }
 }
 
@@ -252,6 +258,10 @@ proc CreateButtonsIllustrate {} {
     ButtonButton $ds9(buttons).illustrate.delete \
 	[string tolower [msgcat::mc {Delete All}]] IllustrateDeleteAll
 
+    CheckButton $ds9(buttons).illustrate.show \
+	[string tolower [msgcat::mc {Show}]] \
+	illustrate show IllustrateShow
+
     set buttons(illustrate) "
         $ds9(buttons).illustrate.circle pbuttons(illustrate,circle)
         $ds9(buttons).illustrate.ellipse pbuttons(illustrate,ellipse)
@@ -271,6 +281,7 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.save pbuttons(illustrate,save)
         $ds9(buttons).illustrate.list pbuttons(illustrate,list)
         $ds9(buttons).illustrate.delete pbuttons(illustrate,delete)
+        $ds9(buttons).illustrate.show pbuttons(illustrate,show)
     "
 }
 
@@ -323,6 +334,10 @@ proc PrefsDialogButtonbarIllustrate {f} {
     $m add separator
     $m add checkbutton -label [msgcat::mc {Delete All}] \
 	-variable pbuttons(illustrate,delete) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Show}] \
+	-variable pbuttons(illustrate,show) \
 	-command {UpdateButtons buttons(illustrate)}
 
     ThemeMenu $m.shape

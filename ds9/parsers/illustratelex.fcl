@@ -7,12 +7,12 @@
 
 %%
 
-about		{return $ABOUT_}
 all		{return ALL_}
 back		{return BACK_}
 color		{return COLOR_}
 dash		{return DASH_}
 delete		{return DELETE_}
+fill		{return FILL_}
 front		{return FRONT_}
 invert		{return INVERT_}
 list		{return LIST_}
@@ -31,6 +31,7 @@ polygon		{return POLYGON_}
 line		{return LINE_}
 text		{return TEXT_}
 
+#include fonts.fin
 #include yesno.fin
 #include numeric.fin
 #include string.fin

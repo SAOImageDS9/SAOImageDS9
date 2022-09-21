@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include fonts.tin
 #include yesno.tin
 #include numeric.tin
 #include string.tin
@@ -13,6 +14,7 @@
 %token COLOR_
 %token DASH_
 %token DELETE_
+%token FILL_
 %token FRONT_
 %token INVERT_
 %token LIST_
@@ -33,6 +35,7 @@
 
 %%
 
+#include fonts.trl
 #include yesno.trl
 #include numeric.trl
 
@@ -45,6 +48,14 @@ illustrate : SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
  | FILL_ yesno {ProcessCmdSet illustrate fill $2 IllustrateUpdateGraphic}
  | WIDTH_ INT_ {ProcessCmdSet illustrate width $2 IllustrateUpdateGraphic}
  | DASH_ yesno {ProcessCmdSet illustrate dash $2 IllustrateUpdateGraphic}
+ | FONT_ font {ProcessCmdSet illustrate font $2 IllustrateUpdateGraphic}
+ | FONTSIZE_ INT_
+   {ProcessCmdSet illustrate font,size $2 IllustrateUpdateGraphic}
+ | FONTWEIGHT_ fontWeight 
+   {ProcessCmdSet illustrate font,weight $2 IllustrateUpdateGraphic}
+ | FONTSLANT_ fontSlant 
+   {ProcessCmdSet illustrate font,slant $2 IllustrateUpdateGraphic}
+
  | MOVE_ move
  | ALL_ {IllustrateSelectAll}
  | NONE_ {IllustrateSelectNone}

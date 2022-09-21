@@ -1,0 +1,18 @@
+#tab illustratesendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+color		{return COLOR_}
+dash		{return DASH_}
+shape		{return SHAPE_}
+width		{return WIDTH_}
+
+#include font.fin
+#include ws.fin
+
+%%

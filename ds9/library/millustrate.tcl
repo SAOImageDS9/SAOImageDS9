@@ -21,17 +21,21 @@ proc IllustrateMainMenu {} {
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Font}] \
 	-menu $ds9(mb).illustrate.font
     $ds9(mb).illustrate add separator
-    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Front}] \
-	-command IllustrateMoveFront
-    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Back}] \
-	-command IllustrateMoveBack
-    $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {All}] \
 	-command IllustrateSelectAll
     $ds9(mb).illustrate add command -label [msgcat::mc {None}] \
 	-command IllustrateSelectNone
     $ds9(mb).illustrate add command -label [msgcat::mc {Invert}] \
 	-command IllustrateInvertSelect
+    $ds9(mb).illustrate add command -label [msgcat::mc {Front}] \
+	-command IllustrateSelectFront
+    $ds9(mb).illustrate add command -label [msgcat::mc {Back}] \
+	-command IllustrateSelectBack
+    $ds9(mb).illustrate add separator
+    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Front}] \
+	-command IllustrateMoveFront
+    $ds9(mb).illustrate add command -label [msgcat::mc {Move to Back}] \
+	-command IllustrateMoveBack
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {Save Selection}] \
 	-command IllustrateSaveSelect
@@ -188,11 +192,13 @@ proc ButtonsIllustrateDef {} {
 	illustrate,polygon 0
 	illustrate,line 0
 	illustrate,text 0
-	illustrate,front 1
-	illustrate,back 1
 	illustrate,all 1
 	illustrate,none 1
 	illustrate,invert 1
+	illustrate,front 1
+	illustrate,back 1
+	illustrate,move,front 1
+	illustrate,move,back 1
 	illustrate,saveselect 0
 	illustrate,listselect 0
 	illustrate,deleteselect 0
@@ -229,17 +235,21 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Text}]] \
 	illustrate shape text {}
 
-    ButtonButton $ds9(buttons).illustrate.front \
-	[string tolower [msgcat::mc {Front}]] IllustrateMoveFront
-    ButtonButton $ds9(buttons).illustrate.back \
-	[string tolower [msgcat::mc {Back}]] IllustrateMoveBack
-
     ButtonButton $ds9(buttons).illustrate.all \
 	[string tolower [msgcat::mc {All}]] IllustrateSelectAll
     ButtonButton $ds9(buttons).illustrate.none \
 	[string tolower [msgcat::mc {None}]] IllustrateSelectNone
     ButtonButton $ds9(buttons).illustrate.invert \
 	[string tolower [msgcat::mc {Invert}]] IllustrateInvertSelect
+    ButtonButton $ds9(buttons).illustrate.front \
+	[string tolower [msgcat::mc {Front}]] IllustrateSelectFront
+    ButtonButton $ds9(buttons).illustrate.back \
+	[string tolower [msgcat::mc {Back}]] IllustrateSelectBack
+
+    ButtonButton $ds9(buttons).illustrate.movefront \
+	[string tolower [msgcat::mc {Move Front}]] IllustrateMoveFront
+    ButtonButton $ds9(buttons).illustrate.moveback \
+	[string tolower [msgcat::mc {Move Back}]] IllustrateMoveBack
 
     ButtonButton $ds9(buttons).illustrate.saveselect \
 	[string tolower [msgcat::mc {Save Select}]] {}
@@ -269,11 +279,13 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.polygon pbuttons(illustrate,polygon)
         $ds9(buttons).illustrate.line pbuttons(illustrate,line)
         $ds9(buttons).illustrate.text pbuttons(illustrate,text)
-        $ds9(buttons).illustrate.front pbuttons(illustrate,front)
-        $ds9(buttons).illustrate.back pbuttons(illustrate,back)
         $ds9(buttons).illustrate.all pbuttons(illustrate,all)
         $ds9(buttons).illustrate.none pbuttons(illustrate,none)
         $ds9(buttons).illustrate.invert pbuttons(illustrate,invert)
+        $ds9(buttons).illustrate.front pbuttons(illustrate,front)
+        $ds9(buttons).illustrate.back pbuttons(illustrate,back)
+        $ds9(buttons).illustrate.movefront pbuttons(illustrate,move,front)
+        $ds9(buttons).illustrate.moveback pbuttons(illustrate,move,back)
         $ds9(buttons).illustrate.saveselect pbuttons(illustrate,saveselect)
         $ds9(buttons).illustrate.listselect pbuttons(illustrate,listselect)
         $ds9(buttons).illustrate.deleteselect pbuttons(illustrate,deleteselect)
@@ -295,13 +307,6 @@ proc PrefsDialogButtonbarIllustrate {f} {
     ThemeMenu $m
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add separator
-    $m add checkbutton -label [msgcat::mc {Move to Front}] \
-	-variable pbuttons(illustrate,front) \
-	-command {UpdateButtons buttons(illustrate)}
-    $m add checkbutton -label [msgcat::mc {Move to Back}] \
-	-variable pbuttons(illustrate,back) \
-	-command {UpdateButtons buttons(illustrate)}
-    $m add separator
     $m add checkbutton -label [msgcat::mc {All}] \
 	-variable pbuttons(illustrate,all) \
 	-command {UpdateButtons buttons(illustrate)}
@@ -310,6 +315,19 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-command {UpdateButtons buttons(illustrate)}
     $m add checkbutton -label [msgcat::mc {Invert}] \
 	-variable pbuttons(illustrate,invert) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add checkbutton -label [msgcat::mc {Front}] \
+	-variable pbuttons(illustrate,front) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add checkbutton -label [msgcat::mc {Back}] \
+	-variable pbuttons(illustrate,back) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Move to Front}] \
+	-variable pbuttons(illustrate,move,front) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add checkbutton -label [msgcat::mc {Move to Back}] \
+	-variable pbuttons(illustrate,move,back) \
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Save Selection}] \

@@ -8,7 +8,6 @@ package provide DS9 1.0
 
 proc IllustrateShow {} {
     global ds9
-    global illustrate
     global iillustrate
 
     if {$illustrate(show)} {
@@ -36,7 +35,6 @@ proc IllustrateShow {} {
 
 proc IllustrateMoveFront {} {
     global ds9
-    global illustrate
     global iillustrate
 
     set ll [$ds9(canvas) find withtag {graphic}]
@@ -62,7 +60,6 @@ proc IllustrateMoveFront {} {
 
 proc IllustrateMoveBack {} {
     global ds9
-    global illustrate
     global iillustrate
 
     set ll [$ds9(canvas) find withtag {graphic}]
@@ -90,7 +87,6 @@ proc IllustrateMoveBack {} {
 
 proc IllustrateDeleteSelect {} {
     global ds9
-    global illustrate
     global iillustrate
 
     foreach gr $iillustrate(selection) {
@@ -110,7 +106,6 @@ proc IllustrateDeleteSelect {} {
 
 proc IllustrateDeleteAll {} {
     global ds9
-    global illustrate
     global iillustrate
 
     foreach id [$ds9(canvas) find withtag {graphic}] {
@@ -128,8 +123,6 @@ proc IllustrateDeleteAll {} {
 
 proc IllustrateSelectAll {} {
     global ds9
-    global illustrate
-    global iillustrate
     
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	IllustrateAddToSelection $id
@@ -138,7 +131,6 @@ proc IllustrateSelectAll {} {
 
 proc IllustrateSelectNone {} {
     global ds9
-    global illustrate
     global iillustrate
     
     # handles
@@ -154,8 +146,6 @@ proc IllustrateSelectNone {} {
 
 proc IllustrateInvertSelect {} {
     global ds9
-    global illustrate
-    global iillustrate
 
     set ll [$ds9(canvas) find withtag {graphic}]
     foreach id $ll {
@@ -165,6 +155,22 @@ proc IllustrateInvertSelect {} {
 	    IllustrateAddToSelection $id
 	}
     }
+}
+
+proc IllustrateSelectFront {} {
+    global ds9
+
+    IllustrateSelectNone
+    set id [lindex [$ds9(canvas) find withtag {graphic}] end]
+    IllustrateAddToSelection $id
+}
+
+proc IllustrateSelectBack {} {
+    global ds9
+
+    IllustrateSelectNone
+    set id [lindex [$ds9(canvas) find withtag {graphic}] 0]
+    IllustrateAddToSelection $id
 }
 
 # Load
@@ -213,7 +219,6 @@ proc IllustrateSave {ch id} {
 
 proc IllustrateSaveSelect {} {
     global ds9
-    global illustrate
     global iillustrate
 
     set fn [SaveFileDialog markerfbox]
@@ -272,7 +277,6 @@ proc IllustrateList {varname id} {
 
 proc IllustdrateListSelect {} {
     global ds9
-    global illustrate
     global iillustrate
 
     set rr [IllustrateListHeader]

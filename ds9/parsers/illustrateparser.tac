@@ -60,9 +60,7 @@ illustrate : SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
    {ProcessCmdSet illustrate font,slant $2 IllustrateUpdateGraphic}
 
  | MOVE_ move
- | ALL_ {IllustrateSelectAll}
- | NONE_ {IllustrateSelectNone}
- | INVERT_ {IllustrateInvertSelect}
+ | SELECT_ select
  | SAVE_ save
  | LIST_ list
  | DELETE_ delete
@@ -82,6 +80,13 @@ move : FRONT_ {IllustrateMoveFront}
  | BACK_ {IllustrateMoveBack}
  ;
 
+select : ALL_ {IllustrateSelectAll}
+ | NONE_ {IllustrateSelectNone}
+ | INVERT_ {IllustrateInvertSelect}
+ | FRONT_ {IllustrateSelectFront}
+ | BACK_ {IllustrateSelectBack}
+ ;
+ 
 save : {IllustrateSaveAll}
  | SELECT_ {IllustrateSaveSelect}
  | ALL_ {IllustrateSaveAll}

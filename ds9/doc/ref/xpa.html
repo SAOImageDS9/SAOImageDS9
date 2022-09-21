@@ -50,6 +50,7 @@
 <a href="#iconify">iconify</a><br>
 <a href="#iexam">iexam</a><br>
 <a href="#iis">iis</a><br>
+<a href="#illustrate">illustrate</a><br>
 <a href="#jpeg">jpeg</a><br>
 <a href="#lock">lock</a><br>
 <a href="#lower">lower</a><br>
@@ -1397,6 +1398,68 @@ $xpaget ds9 iis filename 4<br>
 <br>
 $xpaset -p ds9 iis filename foo.fits<br>
 $xpaset -p ds9 iis filename bar.fits 4</tt><br>
+<p><b><a name="illustrate" id="illustrate"></a>illustrate</b></p>
+<p>Controls illustrations.</p>
+<tt>Syntax:<br>
+illustrate&nbsp;[&lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save [select|all] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [list [select|all]]<br>
+&nbsp;&nbsp;&nbsp; [move front|back]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|invert|first|last]<br>
+&nbsp;&nbsp;&nbsp; [delete [select|all]]<br>
+&nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
+&nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fill yes|no]<br>
+&nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
+&nbsp;&nbsp;&nbsp; [dash yes|no]<br>
+&nbsp;&nbsp;&nbsp; [command &lt;region command&gt;]<br>
+&nbsp;&nbsp;&nbsp; [copy]<br>
+&nbsp;&nbsp;&nbsp; [cut]<br>
+&nbsp;&nbsp;&nbsp; [paste]<br>
+&nbsp;&nbsp;&nbsp; [undo]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 illustrate<br>
+$xpaget ds9 illustrate show<br>
+$xpaget ds9 illustrate shape<br>
+$xpaget ds9 illustrate color<br>
+$xpaget ds9 illustrate fill<br>
+$xpaget ds9 illustrate width<br>
+$xpaget ds9 illustrate dash<br>
+<br>
+$cat foo.reg | xpaset ds9 illustrate<br>
+$echo "circle 100 100 20" | xpaset ds9 illustrate<br>
+<br>
+$xpaset -p ds9 illustrate foo.reg<br>
+$xpaset -p ds9 illustrate load foo.reg # load foo.reg into current frame<br>
+$xpaset -p ds9 illustrate save foo.reg<br>
+$xpaset -p ds9 illustrate save select foo.reg<br>
+$xpaset -p ds9 illustrate list<br>
+$xpaset -p ds9 illustrate list select<br>
+$xpaset -p ds9 illustrate list close<br>
+$xpaset -p ds9 illustrate show yes<br>
+$xpaset -p ds9 illustrate move back<br>
+$xpaset -p ds9 illustrate move front<br>
+$xpaset -p ds9 illustrate select all<br>
+$xpaset -p ds9 illustrate select none<br>
+$xpaset -p ds9 illustrate select invert<br>
+$xpaset -p ds9 illustrate select first<br>
+$xpaset -p ds9 illustrate select last<br>
+$xpaset -p ds9 illustrate delete<br>
+$xpaset -p ds9 illustrate delete select<br>
+$xpaset -p ds9 illustrate color red<br>
+$xpaset -p ds9 illustrate fill yes<br>
+$xpaset -p ds9 illustrate width 3<br>
+$xpaset -p ds9 illustrate dash no<br>
+$xpaset -p ds9 illustrate command 'circle 100 100 20 # color=red'<br>
+$xpaset -p ds9 illustrate copy<br>
+$xpaset -p ds9 illustrate cut<br>
+$xpaset -p ds9 illustrate paste <br>
+$xpaset -p ds9 illustrate undo<br>
+$xpaset -p ds9 illustrate open<br>
+$xpaset -p ds9 illustrate close<br></tt>
 <p><b><a name="jpeg" id="jpeg"></a>jpeg</b></p>
 <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg</tt> quality (1-100)</p>
 <tt>Syntax:<br>
@@ -2213,7 +2276,7 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [skyformat degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [strip yes|no]<br>
 &nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
-&nbsp;&nbsp;&nbsp; [color &amp;ltcolor&gt;]<br>
+&nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
@@ -2329,9 +2392,9 @@ $xpaset -p ds9 region width 3<br>
 $xpaset -p ds9 region edit yes<br>
 $xpaset -p ds9 region include<br>
 $xpaset -p ds9 region command '{circle 100 100 20 # color=red}'<br>
-$xpaset -p ds9 region analysis stats
-$xpaset -p ds9 region analysis stats close
-$xpaset -p ds9 region analysis histogram save
+$xpaset -p ds9 region analysis stats<br>
+$xpaset -p ds9 region analysis stats close<br>
+$xpaset -p ds9 region analysis histogram save<br>
 $xpaset -p ds9 region composite<br>
 $xpaset -p ds9 region dissolve<br>
 $xpaset -p ds9 region template foo.tpl<br>
@@ -2353,9 +2416,9 @@ $xpaset -p ds9 region group foo property delete no<br>
 $xpaset -p ds9 region copy<br>
 $xpaset -p ds9 region cut<br>
 $xpaset -p ds9 region paste wcs<br>
-$xpaset -p ds9 region undo<br></tt>
+$xpaset -p ds9 region undo<br>
 $xpaset -p ds9 region open<br>
-$xpaset -p ds9 region close<br>
+$xpaset -p ds9 region close<br></tt>
 <p><b><a name="restore" id="restore"></a>restore</b></p>
 <p>Restore DS9 to a previous state from a backup save set.</p>
 <tt>Syntax:<br>

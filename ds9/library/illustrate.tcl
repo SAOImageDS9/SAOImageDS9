@@ -581,3 +581,12 @@ proc ProcessIllustrateCmd {varname iname} {
     incr i [expr $illustrate::yycnt-1]
 }
 
+proc ProcessSendIllustrateCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    illustratesend::YY_FLUSH_BUFFER
+    illustratesend::yy_scan_string $param
+    illustratesend::yyparse
+}

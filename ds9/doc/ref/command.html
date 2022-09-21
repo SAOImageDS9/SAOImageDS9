@@ -59,6 +59,7 @@
 <a href="#inet_only">inet_only</a><br>
 <a href="#invert">invert</a><br>
 <a href="#iis">iis</a><br>
+<a href="#illustrate">illustrate</a><br>
 <a href="#jpeg">jpeg</a><br>
 <a href="#language">language</a><br>
 <a href="#linear">linear</a><br>
@@ -1168,6 +1169,58 @@ $ds9 -invert<br></tt>
 Example:<br>
 $ds9 -iis filename foo.fits<br>
 $ds9 -iis filename bar.fits 4</tt><br>
+
+<p><b><a name="illustrate" id="illustrate"></a>illustrate</b></p>
+<p>Controls illustrations.</p>
+<tt>Syntax:<br>
+-illustrate&nbsp;[&lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save [select|all] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [list [select|all]]<br>
+&nbsp;&nbsp;&nbsp; [move front|back]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|invert|first|last]<br>
+&nbsp;&nbsp;&nbsp; [delete [select|all]]<br>
+&nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
+&nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fill yes|no]<br>
+&nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
+&nbsp;&nbsp;&nbsp; [dash yes|no]<br>
+&nbsp;&nbsp;&nbsp; [command &lt;region command&gt;]<br>
+&nbsp;&nbsp;&nbsp; [copy]<br>
+&nbsp;&nbsp;&nbsp; [cut]<br>
+&nbsp;&nbsp;&nbsp; [paste]<br>
+&nbsp;&nbsp;&nbsp; [undo]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -illustrate foo.reg<br>
+$ds9 -illustrate load foo.reg # load foo.reg into current frame<br>
+$ds9 -illustrate save foo.reg<br>
+$ds9 -illustrate save select foo.reg<br>
+$ds9 -illustrate list<br>
+$ds9 -illustrate list select<br>
+$ds9 -illustrate list close<br>
+$ds9 -illustrate show yes<br>
+$ds9 -illustrate move back<br>
+$ds9 -illustrate move front<br>
+$ds9 -illustrate select all<br>
+$ds9 -illustrate select none<br>
+$ds9 -illustrate select invert<br>
+$ds9 -illustrate select first<br>
+$ds9 -illustrate select last<br>
+$ds9 -illustrate delete<br>
+$ds9 -illustrate delete select<br>
+$ds9 -illustrate color red<br>
+$ds9 -illustrate fill yes<br>
+$ds9 -illustrate width 3<br>
+$ds9 -illustrate dash no<br>
+$ds9 -illustrate command "circle 100 100 20 # color=red"<br>
+$ds9 -illustrate copy<br>
+$ds9 -illustrate cut<br>
+$ds9 -illustrate paste <br>
+$ds9 -illustrate undo<br>
+$ds9 -illustrate open<br>
+$ds9 -illustrate close<br></tt>
 <p><b><a name="jpeg" id="jpeg"></a>jpeg</b></p>
 <p>Load JPEG image into current frame.</p>
 <tt>Syntax:<br>

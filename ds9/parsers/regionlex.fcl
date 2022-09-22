@@ -20,8 +20,6 @@ color	    {return $COLOR_}
 colour	    {return $COLOR_}
 command	    {return $COMMAND_}
 composite   {return $COMPOSITE_}
-copy	    {return $COPY_}
-cut	    {return $CUT_}
 delete	    {return $DELETE_}
 deleteall   {return $DELETEALL_}
 delim	    {return $DELIM_}
@@ -51,7 +49,6 @@ new	    {return $NEW_}
 nl	    {return $NL_}
 none	    {return $NONE_}
 open	    {return $OPEN_}
-paste	    {return $PASTE_}
 property    {return $PROPERTY_}
 radius	    {return $RADIUS_}
 rotate	    {return $ROTATE_}
@@ -70,7 +67,6 @@ source	    {return $SOURCE_}
 strip	    {return $STRIP_}
 system	    {return $SYSTEM_}
 template    {return $TEMPLATE_}
-undo	    {return $UNDO_}
 update	    {return $UPDATE_}
 width	    {return $WIDTH_}
 
@@ -115,6 +111,7 @@ stats	    {return $STATS_}
 -system	    {return $MSYSTEM_}
 -sky	    {return $MSKY_}
 
+#include cutpaste.fin
 #include yesno.fin
 #include coordsys.fin
 #include wcssys.fin

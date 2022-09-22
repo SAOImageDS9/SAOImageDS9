@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include cutpaste.tin
 #include fonts.tin
 #include yesno.tin
 #include numeric.tin
@@ -23,6 +24,7 @@
 %token MOVE_
 %token NONE_
 %token OPEN_
+%token PASTE_
 %token SAVE_
 %token SELECT_
 %token SHAPE_
@@ -66,6 +68,11 @@ illustrate : SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
  | DELETE_ delete
  | LOAD_ STRING_ {IllustrateLoadFilename $2}
  | SHOW_ yesno {ProcessCmdSet illustrate show $2 IllustrateShow}
+
+ | UNDO_ {IllustrateUndo}
+ | CUT_ {IllustrateCut}
+ | COPY_ {IllustrateCopy}
+ | PASTE_ {IllustratePaste}
  ;
 
 shape : CIRCLE_ {set _ circle}

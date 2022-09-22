@@ -179,52 +179,56 @@ proc illustrate::yylex {} {
     variable done_
     variable state_table_
 
-set FONT_ 257
-set FONTSIZE_ 258
-set FONTSLANT_ 259
-set FONTSTYLE_ 260
-set FONTWEIGHT_ 261
-set TIMES_ 262
-set HELVETICA_ 263
-set COURIER_ 264
-set NORMAL_ 265
-set BOLD_ 266
-set ROMAN_ 267
-set ITALIC_ 268
-set YES_ 269
-set NO_ 270
-set ON_ 271
-set OFF_ 272
-set TRUE_ 273
-set FALSE_ 274
-set INT_ 275
-set REAL_ 276
-set STRING_ 277
-set ALL_ 278
-set BACK_ 279
-set COLOR_ 280
-set CLOSE_ 281
-set DASH_ 282
-set DELETE_ 283
-set FILL_ 284
-set FRONT_ 285
-set INVERT_ 286
-set LIST_ 287
-set LOAD_ 288
-set MOVE_ 289
-set NONE_ 290
-set OPEN_ 291
-set SAVE_ 292
-set SELECT_ 293
-set SHAPE_ 294
-set SHOW_ 295
-set WIDTH_ 296
-set CIRCLE_ 297
-set ELLIPSE_ 298
-set BOX_ 299
-set POLYGON_ 300
-set LINE_ 301
-set TEXT_ 302
+set CUT_ 257
+set COPY_ 258
+set PASTE_ 259
+set UNDO_ 260
+set FONT_ 261
+set FONTSIZE_ 262
+set FONTSLANT_ 263
+set FONTSTYLE_ 264
+set FONTWEIGHT_ 265
+set TIMES_ 266
+set HELVETICA_ 267
+set COURIER_ 268
+set NORMAL_ 269
+set BOLD_ 270
+set ROMAN_ 271
+set ITALIC_ 272
+set YES_ 273
+set NO_ 274
+set ON_ 275
+set OFF_ 276
+set TRUE_ 277
+set FALSE_ 278
+set INT_ 279
+set REAL_ 280
+set STRING_ 281
+set ALL_ 282
+set BACK_ 283
+set COLOR_ 284
+set CLOSE_ 285
+set DASH_ 286
+set DELETE_ 287
+set FILL_ 288
+set FRONT_ 289
+set INVERT_ 290
+set LIST_ 291
+set LOAD_ 292
+set MOVE_ 293
+set NONE_ 294
+set OPEN_ 295
+set SAVE_ 296
+set SELECT_ 297
+set SHAPE_ 298
+set SHOW_ 299
+set WIDTH_ 300
+set CIRCLE_ 301
+set ELLIPSE_ 302
+set BOX_ 303
+set POLYGON_ 304
+set LINE_ 305
+set TEXT_ 306
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -421,194 +425,222 @@ set TEXT_ 302
             set yyleng [string length $yytext]
             set matched_rule 24
         }
-        # rule 25: font
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(font)} $yy_current_buffer match] > 0 && \
+        # rule 25: undo
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(undo)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 25
         }
-        # rule 26: fontsize
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontsize)} $yy_current_buffer match] > 0 && \
+        # rule 26: cut
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(cut)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 26
         }
-        # rule 27: fontslant
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontslant)} $yy_current_buffer match] > 0 && \
+        # rule 27: copy
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(copy)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 27
         }
-        # rule 28: fontstyle
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontstyle)} $yy_current_buffer match] > 0 && \
+        # rule 28: paste
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(paste)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 28
         }
-        # rule 29: fontweight
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontweight)} $yy_current_buffer match] > 0 && \
+        # rule 29: font
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(font)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 29
         }
-        # rule 30: times
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(times)} $yy_current_buffer match] > 0 && \
+        # rule 30: fontsize
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontsize)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 30
         }
-        # rule 31: helvetica
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(helvetica)} $yy_current_buffer match] > 0 && \
+        # rule 31: fontslant
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontslant)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 31
         }
-        # rule 32: courier
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(courier)} $yy_current_buffer match] > 0 && \
+        # rule 32: fontstyle
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontstyle)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 32
         }
-        # rule 33: normal
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(normal)} $yy_current_buffer match] > 0 && \
+        # rule 33: fontweight
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(fontweight)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 33
         }
-        # rule 34: bold
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(bold)} $yy_current_buffer match] > 0 && \
+        # rule 34: times
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(times)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 34
         }
-        # rule 35: roman
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(roman)} $yy_current_buffer match] > 0 && \
+        # rule 35: helvetica
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(helvetica)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 35
         }
-        # rule 36: italic
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(italic)} $yy_current_buffer match] > 0 && \
+        # rule 36: courier
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(courier)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 36
         }
-        # rule 37: yes
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(yes)} $yy_current_buffer match] > 0 && \
+        # rule 37: normal
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(normal)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 37
         }
-        # rule 38: no
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(no)} $yy_current_buffer match] > 0 && \
+        # rule 38: bold
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(bold)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 38
         }
-        # rule 39: on
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(on)} $yy_current_buffer match] > 0 && \
+        # rule 39: roman
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(roman)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 39
         }
-        # rule 40: off
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(off)} $yy_current_buffer match] > 0 && \
+        # rule 40: italic
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(italic)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 40
         }
-        # rule 41: true
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(true)} $yy_current_buffer match] > 0 && \
+        # rule 41: yes
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(yes)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 41
         }
-        # rule 42: false
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(false)} $yy_current_buffer match] > 0 && \
+        # rule 42: no
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(no)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 42
         }
-        # rule 43: [+-]?{D}+
-        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+)} $yy_current_buffer match] > 0 && \
+        # rule 43: on
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(on)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 43
         }
-        # rule 44: [+-]?{D}+\.?({E})?
-        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+\.?(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
+        # rule 44: off
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(off)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 44
         }
-        # rule 45: [+-]?{D}*\.{D}+({E})?
-        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])*\.([0-9])+(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
+        # rule 45: true
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(true)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 45
         }
-        # rule 46: \"[^\"]*\"
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
+        # rule 46: false
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(false)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 46
         }
-        # rule 47: \'[^\']*\'
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
+        # rule 47: [+-]?{D}+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 47
         }
-        # rule 48: \{[^\}]*\}
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
+        # rule 48: [+-]?{D}+\.?({E})?
+        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+\.?(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 48
         }
-        # rule 49: \S+\S+
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
+        # rule 49: [+-]?{D}*\.{D}+({E})?
+        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])*\.([0-9])+(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 49
         }
-        # rule 50: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 50: \"[^\"]*\"
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 50
         }
-        # rule 51: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 51: \'[^\']*\'
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 51
+        }
+        # rule 52: \{[^\}]*\}
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 52
+        }
+        # rule 53: \S+\S+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 53
+        }
+        # rule 54: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 54
+        }
+        # rule 55: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 55
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -623,157 +655,169 @@ set TEXT_ 302
         set numlines [expr {[llength [split $yytext "\n"]] - 1}]
         switch -- $matched_rule {
             0 {
-return ALL_
+return $ALL_
             }
             1 {
-return BACK_
+return $BACK_
             }
             2 {
-return COLOR_
+return $COLOR_
             }
             3 {
-return CLOSE_
+return $CLOSE_
             }
             4 {
-return DASH_
+return $DASH_
             }
             5 {
-return DELETE_
+return $DELETE_
             }
             6 {
-return FILL_
+return $FILL_
             }
             7 {
-return FRONT_
+return $FRONT_
             }
             8 {
-return INVERT_
+return $INVERT_
             }
             9 {
-return LIST_
+return $LIST_
             }
             10 {
-return LOAD_
+return $LOAD_
             }
             11 {
-return MOVE_
+return $MOVE_
             }
             12 {
-return NONE_
+return $NONE_
             }
             13 {
-return OPEN_
+return $OPEN_
             }
             14 {
-return SAVE_
+return $SAVE_
             }
             15 {
-return SELECTION_
+return $SELECTION_
             }
             16 {
-return SHAPE_
+return $SHAPE_
             }
             17 {
-return SHOW_
+return $SHOW_
             }
             18 {
-return WIDTH_
+return $WIDTH_
             }
             19 {
-return CIRCLE_
+return $CIRCLE_
             }
             20 {
-return ELLIPSE_
+return $ELLIPSE_
             }
             21 {
-return BOX_
+return $BOX_
             }
             22 {
-return POLYGON_
+return $POLYGON_
             }
             23 {
-return LINE_
+return $LINE_
             }
             24 {
-return TEXT_
+return $TEXT_
             }
             25 {
-return $FONT_
+return $UNDO_
             }
             26 {
-return $FONTSIZE_
+return $CUT_
             }
             27 {
-return $FONTSLANT_
+return $COPY_
             }
             28 {
-return $FONTSTYLE_
+return $PASTE_
             }
             29 {
-return $FONTWEIGHT_
+return $FONT_
             }
             30 {
-return $TIMES_
+return $FONTSIZE_
             }
             31 {
-return $HELVETICA_
+return $FONTSLANT_
             }
             32 {
-return $COURIER_
+return $FONTSTYLE_
             }
             33 {
-return $NORMAL_
+return $FONTWEIGHT_
             }
             34 {
-return $BOLD_
+return $TIMES_
             }
             35 {
-return $ROMAN_
+return $HELVETICA_
             }
             36 {
-return $ITALIC_
+return $COURIER_
             }
             37 {
-return $YES_
+return $NORMAL_
             }
             38 {
-return $NO_
+return $BOLD_
             }
             39 {
-return $ON_
+return $ROMAN_
             }
             40 {
-return $OFF_
+return $ITALIC_
             }
             41 {
-return $TRUE_
+return $YES_
             }
             42 {
-return $FALSE_
+return $NO_
             }
             43 {
-set yylval $yytext; return $INT_
+return $ON_
             }
-            44 -
+            44 {
+return $OFF_
+            }
             45 {
-set yylval $yytext; return $REAL_
+return $TRUE_
             }
             46 {
-set yylval [string range $yytext 1 end-1]; return $STRING_
+return $FALSE_
             }
             47 {
-set yylval [string range $yytext 1 end-1]; return $STRING_
+set yylval $yytext; return $INT_
             }
-            48 {
-set yylval [string range $yytext 1 end-1]; return $STRING_
-            }
+            48 -
             49 {
-set yylval $yytext; return $STRING_
+set yylval $yytext; return $REAL_
             }
             50 {
-# ignore whitespace
+set yylval [string range $yytext 1 end-1]; return $STRING_
             }
             51 {
+set yylval [string range $yytext 1 end-1]; return $STRING_
+            }
+            52 {
+set yylval [string range $yytext 1 end-1]; return $STRING_
+            }
+            53 {
+set yylval $yytext; return $STRING_
+            }
+            54 {
+# ignore whitespace
+            }
+            55 {
 set yylval $yytext; return $yylval
             }
             default

@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include cutpaste.tin
 #include yesno.tin
 #include coordsys.tin
 #include wcssys.tin
@@ -24,8 +25,6 @@
 %token COLOR_
 %token COMMAND_
 %token COMPOSITE_
-%token COPY_
-%token CUT_
 %token DELETE_
 %token DELETEALL_
 %token DELIM_
@@ -55,7 +54,6 @@
 %token NL_
 %token NONE_
 %token OPEN_
-%token PASTE_
 %token PROPERTY_
 %token RADIUS_
 %token ROTATE_
@@ -74,7 +72,6 @@
 %token STRIP_
 %token SYSTEM_
 %token TEMPLATE_
-%token UNDO_
 %token UPDATE_
 %token WIDTH_
 
@@ -187,19 +184,23 @@ region : {RegionCmdLoad}
  | BACKGROUND_ {ProcessCmdSet marker source 0 [list MarkerProp source]}
  | GROUPS_ group
  | GROUP_ group
- | COPY_ {MarkerCopy}
- | CUT_ {MarkerCut}
- | PASTE_ {ProcessCmdSet marker paste,system wcs MarkerPaste}
- | PASTE_ coordsys {ProcessCmdSet marker paste,system $2 MarkerPaste}
- | PASTE_ wcssys {ProcessCmdSet marker paste,system $2 MarkerPaste}
-# backward compatibility
- | PASTE_ skyframe {ProcessCmdSet marker paste,system wcs MarkerPaste}
- | UNDO_ {MarkerUndo}
  | COMPOSITE_ {CompositeCreate}
  | DISSOLVE_ {CompositeDelete}
  | TEMPLATE_ template
  | SAVETEMPLATE_ STRING_ {RegionCmdTemplateSave $2}
  | COMMAND_ STRING_ {RegionCmdCommand $2}
+
+ | UNDO_ {MarkerUndo}
+ | CUT_ {MarkerCut}
+ | COPY_ {MarkerCopy}
+ | PASTE_ paste
+ ;
+
+paste : {ProcessCmdSet marker paste,system wcs MarkerPaste}
+ | coordsys {ProcessCmdSet marker paste,system $1 MarkerPaste}
+ | wcssys {ProcessCmdSet marker paste,system $1 MarkerPaste}
+# backward compatibility
+ | skyframe {ProcessCmdSet marker paste,system wcs MarkerPaste}
  ;
 
 props : props prop

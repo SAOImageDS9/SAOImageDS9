@@ -1533,6 +1533,7 @@ proc CopyFrame {} {
     switch -- $current(mode) {
 	pointer -
 	region {MarkerCopy}
+	illustrate {IllustrateCopy}
     }
 }
 
@@ -1542,6 +1543,7 @@ proc CutFrame {} {
     switch -- $current(mode) {
 	pointer -
 	region {MarkerCut}
+	illustrate {IllustrateCut}
     }
 }
 
@@ -1551,6 +1553,7 @@ proc PasteFrame {} {
     switch -- $current(mode) {
 	pointer -
 	region {MarkerPaste}
+	illustrate {IllustratePaste}
     }
 }
 
@@ -1560,6 +1563,7 @@ proc UndoFrame {} {
     switch -- $current(mode) {
 	pointer -
 	region {MarkerUndo}
+	illustrate {IllustrateUndo}
     }
 }
 

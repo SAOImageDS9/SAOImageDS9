@@ -300,7 +300,6 @@ proc PrefsDialogButtonbarEdit {f} {
 proc UpdateEditMenu {} {
     global ds9
     global current
-    global marker
 
     global debug
     if {$debug(tcl,update)} {
@@ -310,6 +309,8 @@ proc UpdateEditMenu {} {
     switch -- $current(mode) {
 	pointer -
 	region {
+	    global marker
+
 	    if {$current(frame) != {}} {
 		set l [$current(frame) has marker undo]
 		if {$l != {}} {
@@ -362,7 +363,30 @@ proc UpdateEditMenu {} {
 	footprint -
 	examine -
 	iexam -
-	3d {$ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled}
-	illustrate {}
+	3d {
+	    $ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled
+	    $ds9(mb).edit entryconfig [msgcat::mc {Cut}] -state disabled
+	    $ds9(mb).edit entryconfig [msgcat::mc {Copy}] -state disabled
+	    $ds9(mb).edit entryconfig [msgcat::mc {Paste}] -state disabled
+	}
+	illustrate {
+	    global iillustrate
+
+	    $ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled
+
+	    if {$iillustrate(selection) != {}} {
+		$ds9(mb).edit entryconfig [msgcat::mc {Cut}] -state normal
+		$ds9(mb).edit entryconfig [msgcat::mc {Copy}] -state normal
+	    } else {
+		$ds9(mb).edit entryconfig [msgcat::mc {Cut}] -state disabled
+		$ds9(mb).edit entryconfig [msgcat::mc {Copy}] -state disabled
+	    }
+
+	    if {$iillustrate(clipboard) != {} } {
+		$ds9(mb).edit entryconfig [msgcat::mc {Paste}] -state normal
+	    } else {
+		$ds9(mb).edit entryconfig [msgcat::mc {Paste}] -state disabled
+	    }
+	}
     }
 }

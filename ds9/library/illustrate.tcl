@@ -10,6 +10,7 @@ proc IllustrateDef {} {
     global pillustrate
 
     set iillustrate(selection) {}
+    set iillustrate(clipboard) {}
 
     set illustrate(show) 1
     set illustrate(shape) circle

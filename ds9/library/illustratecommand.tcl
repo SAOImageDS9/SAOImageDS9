@@ -173,6 +173,80 @@ proc IllustrateSelectBack {} {
     IllustrateAddToSelection $id
 }
 
+# Undo/Copy/Cut/Paste
+
+proc IllustrateUndo {} {
+    UpdateEditMenu
+}
+
+proc IllustrateCut {} {
+    global iillustrate
+
+    set iillustrate(clipboard) {}
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    switch [IllustrateGetType $id] {
+		circle {lappend iillustrate(clipboard) [IllustrateCopyCircle $id]}
+		ellipse {lappend iillustrate(clipboard) [IllustrateCopyEllipse $id]}
+		box {lappend iillustrate(clipboard) [IllustrateCopyBox $id]}
+		polygon  {lappend iillustrate(clipboard) [IllustrateCopyPolygon $id]}
+		line {lappend iillustrate(clipboard) [IllustrateCopyLine $id]}
+		text {lappend iillustrate(clipboard) [IllustrateCopyText $id]}
+	    }
+	    IllustrateDeleteGraphic $id
+	}
+    }
+
+    UpdateEditMenu
+}
+
+proc IllustrateCopy {} {
+    global iillustrate
+    
+    set iillustrate(clipboard) {}
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    switch [IllustrateGetType $id] {
+		circle {lappend iillustrate(clipboard) \
+			    [IllustrateCopyCircle $id]}
+		ellipse {lappend iillustrate(clipboard) \
+			     [IllustrateCopyEllipse $id]}
+		box  {lappend iillustrate(clipboard) \
+			  [IllustrateCopyBox $id]}
+		polygon  {lappend iillustrate(clipboard) \
+			      [IllustrateCopyPolygon $id]}
+		line  {lappend iillustrate(clipboard) \
+			   [IllustrateCopyLine $id]}
+		text  {lappend iillustrate(clipboard) \
+			   [IllustrateCopyText $id]}
+	    }
+	}
+    }
+
+    UpdateEditMenu
+}
+
+proc IllustratePaste {} {
+    global iillustrate
+
+    IllustrateSelectNone
+    foreach gr $iillustrate(clipboard) {
+	foreach {type param} $gr {
+	    switch $type {
+		circle {set id [IllustrateDupCircle $param]}
+		ellipse {set id [IllustrateDupEllispe $param]}
+		box {set id [IllustrateDupBox $param]}
+		polygon {set id [IllustrateDupPolygon $param]}
+		line {set id [IllustrateDupLine $param]}
+		text {set id [IllustrateDupText $param]}
+	    }
+	    IllustrateAddToSelection $id
+	}
+    }
+
+    UpdateEditMenu
+}
+
 # Load
 
 proc IllustrateLoad {} {

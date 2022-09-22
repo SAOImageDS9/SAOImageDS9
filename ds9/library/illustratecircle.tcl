@@ -25,6 +25,39 @@ proc IllustrateCreateCircle {xx yy rr color fill width dash} {
     return $id
 }
 
+proc IllustrateCopyCircle {id} {
+    global ds9
+    
+    set coords [$ds9(canvas) coords $id]
+    set color [$ds9(canvas) itemcget $id -outline]
+    set fill [$ds9(canvas) itemcget $id -fill]
+    set width [$ds9(canvas) itemcget $id -width]
+    set dash [$ds9(canvas) itemcget $id -dash]
+
+    return [list circle [list $coords $color $fill $width $dash]]
+}
+
+proc IllustrateDupCircle {rr} {
+    global ds9
+    
+    set coords [lindex $rr 0]
+    set color [lindex $rr 1]
+    set fill [lindex $rr 2]
+    set width [lindex $rr 3]
+    set dash [lindex $rr 4]
+
+    set id [$ds9(canvas) create oval \
+		$coords \
+		-outline $color \
+		-fill $fill \
+		-width $width \
+		-dash $dash \
+		-tags {circle graphic}]
+
+    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
+    return $id
+}
+
 proc IllustrateDefaultCircle {id} {
     global ds9
     global pillustrate

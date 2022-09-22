@@ -445,6 +445,9 @@ proc IllustrateButtonRelease {xx yy} {
     unset iillustrate(motion)
     unset iillustrate(motion,xx)
     unset iillustrate(motion,yy)
+
+    # for undo/cut/copy/paste
+    UpdateEditMenu
 }
 
 # Shift Button
@@ -556,4 +559,7 @@ proc IllustrateKeyRelease {K A xx yy} {
     if {$debug(tcl,illustrate)} {
 	puts "IllustrateKeyRelease $K $A $xx $yy"
     }
+
+    # for undo/cut/copy/paste
+    UpdateEditMenu
 }

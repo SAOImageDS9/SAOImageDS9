@@ -1,0 +1,4 @@
+%token CUT_
+%token COPY_
+%token PASTE_
+%token UNDO_

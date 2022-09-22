@@ -343,6 +343,46 @@ proc IllustrateMoveSelection {dx dy} {
 
 # Base
 
+proc IllustrateCopyBase {id type} {
+    global ds9
+    
+    set coords [$ds9(canvas) coords $id]
+    set color [$ds9(canvas) itemcget $id -outline]
+    set fill [$ds9(canvas) itemcget $id -fill]
+    set width [$ds9(canvas) itemcget $id -width]
+    set dash [$ds9(canvas) itemcget $id -dash]
+
+    return [list $type [list $coords $color $fill $width $dash]]
+}
+
+proc IllustrateDupBase {type param} {
+    global ds9
+    
+    set coords [lindex $param 0]
+    set color [lindex $param 1]
+    set fill [lindex $param 2]
+    set width [lindex $param 3]
+    set dash [lindex $param 4]
+
+    switch $type {
+	circle -
+	ellipse {set tt oval}
+	box {set tt rectangle}
+    }
+
+    set id [$ds9(canvas) create $tt \
+		$coords \
+		-outline $color \
+		-fill $fill \
+		-width $width \
+		-dash $dash \
+		-tags [list $type graphic]
+	    ]
+
+    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
+    return $id
+}
+
 proc IllustrateCreateHandlesBase {id color} {
     global ds9
 

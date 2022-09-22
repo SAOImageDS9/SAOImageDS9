@@ -27,6 +27,28 @@ proc IllustrateCreatePolygon {xx yy fill dash} {
     return $id
 }
 
+proc IllustrateDupPolygon {param} {
+    global ds9
+    
+    set coords [lindex $param 0]
+    set color [lindex $param 1]
+    set fill [lindex $param 2]
+    set width [lindex $param 3]
+    set dash [lindex $param 4]
+
+    set id [$ds9(canvas) create polygon \
+		$coords \
+		-outline $color \
+		-fill $fill \
+		-width $width \
+		-dash $dash \
+		-tags [list polygon graphic]
+	    ]
+
+    IllustrateCreateHandlesPolygon $id [$ds9(canvas) itemcget $id -outline]
+    return $id
+}
+
 proc IllustrateDefaultPolygon {id} {
     global ds9
     global pillustrate

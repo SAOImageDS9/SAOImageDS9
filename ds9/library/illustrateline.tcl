@@ -19,6 +19,38 @@ proc IllustrateCreateLine {xx yy dash} {
     return $id
 }
 
+proc IllustrateCopyLine {id} {
+    global ds9
+    
+    set coords [$ds9(canvas) coords $id]
+    set fill [$ds9(canvas) itemcget $id -fill]
+    set width [$ds9(canvas) itemcget $id -width]
+    set dash [$ds9(canvas) itemcget $id -dash]
+
+    return [list line [list $coords $fill $width $dash]]
+}
+
+proc IllustrateDupLine {param} {
+    global ds9
+    
+    set coords [lindex $param 0]
+    set fill [lindex $param 1]
+    set width [lindex $param 2]
+    set dash [lindex $param 3]
+
+    set id [$ds9(canvas) create line \
+		$coords \
+		-outline $color \
+		-fill $fill \
+		-width $width \
+		-dash $dash \
+		-tags {line graphic}]
+	    ]
+
+    IllustrateCreateHandlesLine $id
+    return $id
+}
+
 proc IllustrateListLine {id} {
     global ds9
 

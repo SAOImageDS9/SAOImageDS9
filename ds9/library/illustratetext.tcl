@@ -80,24 +80,3 @@ proc IllustrateListText {id} {
 
     return $rr
 }
-
-proc IllustrateMoveToText {gr xx yy} {
-    global ds9
-    global iillustrate
-
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	set bbox [$ds9(canvas) bbox $id]
-	set bbx1 [lindex $bbox 0]
-	set bby1 [lindex $bbox 1]
-	set bbx2 [lindex $bbox 2]
-	set bby2 [lindex $bbox 3]
-
-	set cx [expr ($bbx2-$bbx1)/2]
-	set cy [expr ($bby2-$bby1)/2]
-
-	set dx [expr $xx-$iillustrate(motion,xx)]
-	set dy [expr $yy-$iillustrate(motion,yy)]
-
-	$ds9(canvas) moveto $id [expr $dx+$x1-$cx] [expr $dy+$y1-$cy]
-    }
-}

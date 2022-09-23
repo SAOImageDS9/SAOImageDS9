@@ -291,17 +291,14 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	move {
 	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 x2 y2 color fill dash} $gr {
-		    switch [IllustrateGetType $id] {
-			circle -
-			ellipse -
-			box -
-			polygon {IllustrateMoveToBase $gr $xx $yy}
-			line {IllustrateMoveToLine $gr $xx $yy}
-			text {IllustrateMoveToText $gr $xx $yy}
-		    }
+		foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
+		    set dx [expr $xx-$iillustrate(motion,xx)]
+		    set dy [expr $yy-$iillustrate(motion,yy)]
+		    $ds9(canvas) move $id $dx $dy
 		}
 	    }
+	    set iillustrate(motion,xx) $xx
+	    set iillustrate(motion,yy) $yy
 	}
 
 	beginEdit {

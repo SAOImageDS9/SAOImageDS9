@@ -134,34 +134,16 @@ proc IllustrateUpdateHandleLine {id} {
 	[expr $bbx2+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateMoveToLine {gr xx yy} {
-    global ds9
-    global iillustrate
-
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	set dx [expr $xx-$iillustrate(motion,xx)]
-	set dy [expr $yy-$iillustrate(motion,yy)]
-
-	if {$x1<$x2} {
-	    set wx $x1
-	} else {
-	    set wx $x2
-	}
-	if {$y1<$y2} {
-	    set wy $y1
-	} else {
-	    set wy $y2
-	}
-	
-	$ds9(canvas) moveto $id [expr $dx+$wx] [expr $dy+$wy]
-    }
-}
-
 proc IllustrateEditLine {gr xx yy} {
     global ds9
     global iillustrate
     
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+    foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
+	set coords [$ds9(canvas) coords $id]
+	set x1 [lindex $coords 0]
+	set y1 [lindex $coords 1]
+	set x2 [lindex $coords 2]
+	set y2 [lindex $coords 3]
 	switch $iillustrate(handle) {
 	    1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
 	    2 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}

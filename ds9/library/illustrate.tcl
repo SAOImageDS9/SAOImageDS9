@@ -320,21 +320,21 @@ proc IllustrateMoveSelection {dx dy} {
     global iillustrate
 
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
 	    switch [IllustrateGetType $id] {
 		circle -
 		ellipse -
 		box -
 		text {
-		    IllustrateMoveBase $gr $dx $dy
+		    $ds9(canvas) move $id $dx $dy
 		    IllustrateUpdateHandleBase $id
 		}
 		polygon {
-		    IllustrateMoveBase $gr $dx $dy
+		    $ds9(canvas) move $id $dx $dy
 		    IllustrateUpdateHandlePolygon $id
 		}
 		line {
-		    IllustrateMoveBase $gr $dx $dy
+		    $ds9(canvas) move $id $dx $dy
 		    IllustrateUpdateHandleLine $id
 		}
 	    }
@@ -460,32 +460,16 @@ proc IllustrateUpdateHandleBase {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateMoveToBase {gr xx yy} {
-    global ds9
-    global iillustrate
-
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	set dx [expr $xx-$iillustrate(motion,xx)]
-	set dy [expr $yy-$iillustrate(motion,yy)]
-
-	$ds9(canvas) moveto $id [expr $dx+$x1] [expr $dy+$y1]
-    }
-}
-
-proc IllustrateMoveBase {gr dx dy} {
-    global ds9
-    global iillustrate
-
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
-	$ds9(canvas) move $id $dx $dy
-    }
-}
-
 proc IllustrateEditBase {gr xx yy} {
     global ds9
     global iillustrate
 
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+    foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
+	set coords [$ds9(canvas) coords $id]
+	set x1 [lindex $coords 0]
+	set y1 [lindex $coords 1]
+	set x2 [lindex $coords 2]
+	set y2 [lindex $coords 3]
 	switch $iillustrate(handle) {
 	    1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
 	    2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}

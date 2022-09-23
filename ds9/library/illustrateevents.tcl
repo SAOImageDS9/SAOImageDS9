@@ -175,6 +175,7 @@ proc IllustrateButton {xx yy} {
 
 	set id [IllustrateFindGraphicFromHandle $hid]
 	if {$id} {
+	    IllustrateSaveUndo
 	    set iillustrate(id) $id
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
@@ -187,6 +188,7 @@ proc IllustrateButton {xx yy} {
     if {$nid} {
 	set id [IllustrateFindGraphicFromNode $nid]
 	if {$id} {
+	    IllustrateSaveUndo
 	    set iillustrate(node) $nid
 	    set iillustrate(id) $id
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
@@ -202,6 +204,7 @@ proc IllustrateButton {xx yy} {
 	IllustrateCreateNode $id $cnt $xx $yy
 	set nid [IllustrateFind node $xx $yy]
 	if {$nid} {
+	    IllustrateSaveUndo
 	    set iillustrate(node) $nid
 	    set iillustrate(id) $id
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
@@ -515,6 +518,7 @@ proc IllustrateKey {K A xx yy} {
     switch -- $K {
 	Delete -
 	BackSpace {
+	    IllustrateSaveUndo
 	    # see if we are on a polygon node
 	    set nid [IllustrateFind node $xx $yy]
 	    if {$nid} {
@@ -526,21 +530,25 @@ proc IllustrateKey {K A xx yy} {
 
 	Up -
 	k {
+	    IllustrateSaveUndo
 	    event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]
 	    IllustrateMoveSelection 0 -1
 	}
 	Down -
 	j {
+	    IllustrateSaveUndo
 	    event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy+1]
 	    IllustrateMoveSelection 0 1
 	}
 	Left -
 	h {
+	    IllustrateSaveUndo
 	    event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx-1] -y $yy
 	    IllustrateMoveSelection -1 0
 	}
 	Right -
 	l {
+	    IllustrateSaveUndo
 	    event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx+1] -y $yy
 	    IllustrateMoveSelection 1 0
 	}

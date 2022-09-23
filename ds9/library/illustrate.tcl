@@ -11,6 +11,7 @@ proc IllustrateDef {} {
 
     set iillustrate(selection) {}
     set iillustrate(clipboard) {}
+    set iillustrate(undo) {}
 
     set illustrate(show) 1
     set illustrate(shape) circle
@@ -495,6 +496,29 @@ proc IllustrateEditBase {gr xx yy} {
 }
 
 # Util
+
+proc IllustrateSaveUndo {} {
+    global ds9
+    global iillustrate
+
+    set iillustrate(undo) {}
+    foreach gr $iillustrate(selection) {
+	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    set type [IllustrateGetType $id]
+	    switch $type {
+		circle -
+		ellipse -
+		box  -
+		polygon {lappend iillustrate(undo) \
+			     [IllustrateCopyBase $id $type]}
+		line {lappend iillustrate(undo) [IllustrateCopyLine $id]}
+		text {lappend iillustrate(undo) [IllustrateCopyText $id]}
+	    }
+	}
+    }
+
+    UpdateEditMenu
+}
 
 proc IllustrateSaveGraphic {id} {
     global ds9

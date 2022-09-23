@@ -18,7 +18,7 @@ proc IllustrateShow {} {
 
 	# turn on handles/nodes of selection
 	foreach gr $iillustrate(selection) {
-	    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	    foreach {id color fill dash} $gr {
 		foreach hh [$ds9(canvas) find withtag gr${id}] {
 		    $ds9(canvas) itemconfigure $hh -state normal
 		}
@@ -42,7 +42,7 @@ proc IllustrateMoveFront {} {
 
     # graphic
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    if {$id != $top} {
 		$ds9(canvas) raise $id $top
 	    }
@@ -67,7 +67,7 @@ proc IllustrateMoveBack {} {
 
     # graphic
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    if {$id != $bottom} {
 		$ds9(canvas) lower $id $bottom
 	    }
@@ -90,7 +90,7 @@ proc IllustrateDeleteSelect {} {
     global iillustrate
 
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    # handles/nodes
 	    foreach hh [$ds9(canvas) find withtag gr${id}] {
 		$ds9(canvas) delete $hh
@@ -184,7 +184,7 @@ proc IllustrateCut {} {
 
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    set type [IllustrateGetType $id]
 	    switch $type {
 		circle -
@@ -207,7 +207,7 @@ proc IllustrateCopy {} {
     
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    set type [IllustrateGetType $id]
 	    switch $type {
 		circle -
@@ -304,7 +304,7 @@ proc IllustrateSaveSelect {} {
 
     puts $ch [IllustrateListHeader]
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    IllustrateSave $ch $id
 	}
     }
@@ -353,7 +353,7 @@ proc IllustdrateListSelect {} {
 
     set rr [IllustrateListHeader]
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    IllustrateList rr $id
 	}
     }

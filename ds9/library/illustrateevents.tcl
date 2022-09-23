@@ -282,7 +282,7 @@ proc IllustrateButtonMotion {xx yy} {
 
 	beginMove {
 	    foreach gr $iillustrate(selection) {
-		foreach {id x1 y1 x2 y2 color fill dash} $gr {
+		foreach {id color fill dash} $gr {
 		    IllustrateGraphicAntsOn $id
 		    IllustrateHandleOff $id
 		}
@@ -291,7 +291,7 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	move {
 	    foreach gr $iillustrate(selection) {
-		foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
+		foreach {id color fill dash} $gr {
 		    set dx [expr $xx-$iillustrate(motion,xx)]
 		    set dy [expr $yy-$iillustrate(motion,yy)]
 		    $ds9(canvas) move $id $dx $dy
@@ -340,7 +340,7 @@ proc IllustrateButtonRelease {xx yy} {
 	beginCreate {
 	    # the user has just clicked, so resize to make visible or delete
 	    IllustrateGraphicAntsOff $iillustrate(edit)
-	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
+	    foreach {id color fill dash} $iillustrate(edit) {
 		switch [IllustrateGetType $id] {
 		    circle {IllustrateDefaultCircle $id}
 		    ellipse {IllustrateDefaultEllipse $id}
@@ -366,7 +366,7 @@ proc IllustrateButtonRelease {xx yy} {
 	    set dx [expr $xx-$iillustrate(motion,xx)]
 	    set dy [expr $yy-$iillustrate(motion,yy)]
 	    IllustrateGraphicAntsOff $iillustrate(edit)
-	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
+	    foreach {id color fill dash} $iillustrate(edit) {
 		if {[expr sqrt($dx*$dx + $dy*$dy)]<4} {
 		    switch [IllustrateGetType $id] {
 			circle {IllustrateDefaultCircle $id}
@@ -394,7 +394,7 @@ proc IllustrateButtonRelease {xx yy} {
 	move {
 	    foreach gr $iillustrate(selection) {
 		IllustrateGraphicAntsOff $gr
-		foreach {id x1 y1 x2 y2 color fill dash} $gr {
+		foreach {id color fill dash} $gr {
 		    IllustrateHandleOn $id
 		    switch [IllustrateGetType $id] {
 			circle -
@@ -412,7 +412,7 @@ proc IllustrateButtonRelease {xx yy} {
 	beginEdit -
 	edit {
 	    IllustrateGraphicAntsOff $iillustrate(edit)
-	    foreach {id x1 y1 x2 y2 color fill dash} $iillustrate(edit) {
+	    foreach {id color fill dash} $iillustrate(edit) {
 		IllustrateHandleOn $id
 		switch [IllustrateGetType $id] {
 		    circle -

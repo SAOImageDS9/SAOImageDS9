@@ -138,7 +138,7 @@ proc IllustrateEditLine {gr xx yy} {
     global ds9
     global iillustrate
     
-    foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
+    foreach {id color fill dash} $gr {
 	set coords [$ds9(canvas) coords $id]
 	set x1 [lindex $coords 0]
 	set y1 [lindex $coords 1]

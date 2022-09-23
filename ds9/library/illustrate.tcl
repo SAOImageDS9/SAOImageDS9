@@ -93,7 +93,7 @@ proc IllustrateDeleteGraphic {id} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {idd x1 y1 x2 y2 color fill dash} $gr {
+	foreach {idd color fill dash} $gr {
 	    if {$id != $idd} {
 		lappend iillustrate(selection) $gr
 	    }
@@ -261,7 +261,7 @@ proc IllustrateIsSelected {id} {
     global iillustrate
     
     foreach gr $iillustrate(selection) {
-	foreach {idd x1 y1 x2 y2 color fill dash} $gr {
+	foreach {idd color fill dash} $gr {
 	    if {$id == $idd} {
 		return 1
 	    }
@@ -277,7 +277,7 @@ proc IllustrateUpdateSelection {} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    lappend iillustrate(selection) [IllustrateSaveGraphic $id]
 	}
     }
@@ -307,7 +307,7 @@ proc IllustrateUnselect {id} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {idd x1 y1 x2 y2 color fill dash} $gr {
+	foreach {idd color fill dash} $gr {
 	    if {$id != $idd} {
 		lappend iillustrate(selection) $gr
 	    }
@@ -320,7 +320,7 @@ proc IllustrateMoveSelection {dx dy} {
     global iillustrate
 
     foreach gr $iillustrate(selection) {
-	foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    switch [IllustrateGetType $id] {
 		circle -
 		ellipse -
@@ -464,7 +464,7 @@ proc IllustrateEditBase {gr xx yy} {
     global ds9
     global iillustrate
 
-    foreach {id ox1 oy1 ox2 oy2 color fill dash} $gr {
+    foreach {id color fill dash} $gr {
 	set coords [$ds9(canvas) coords $id]
 	set x1 [lindex $coords 0]
 	set y1 [lindex $coords 1]
@@ -487,7 +487,7 @@ proc IllustrateSaveUndo {} {
 
     set iillustrate(undo) {}
     foreach gr $iillustrate(selection) {
-	foreach {id x1 y1 x2 y2 color fill dash} $gr {
+	foreach {id color fill dash} $gr {
 	    set type [IllustrateGetType $id]
 	    switch $type {
 		circle -
@@ -507,36 +507,11 @@ proc IllustrateSaveUndo {} {
 proc IllustrateSaveGraphic {id} {
     global ds9
 
-    set coords [$ds9(canvas) coords $id]
-    set bbox [$ds9(canvas) bbox $id]
-    switch [IllustrateGetType $id] {
-	circle -
-	ellipse -
-	box {
-	    set color [$ds9(canvas) itemcget $id -outline]
-	    set fill [$ds9(canvas) itemcget $id -fill]
-	    set dash [$ds9(canvas) itemcget $id -dash]
-	    return [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
-	}
-	polygon {
-	    set color [$ds9(canvas) itemcget $id -outline]
-	    set fill [$ds9(canvas) itemcget $id -fill]
-	    set dash [$ds9(canvas) itemcget $id -dash]
-	    return [list $id [lindex $bbox 0] [lindex $bbox 1] [lindex $bbox 2] [lindex $bbox 3] $color $fill $dash]
-	}
-	line {
-	    set color {}
-	    set fill [$ds9(canvas) itemcget $id -fill]
-	    set dash [$ds9(canvas) itemcget $id -dash]
-	    return [list $id [lindex $coords 0] [lindex $coords 1] [lindex $coords 2] [lindex $coords 3] $color $fill $dash]
-	}
-	text {
-	    set color {}
-	    set fill [$ds9(canvas) itemcget $id -fill]
-	    set dash {}
-	    return [list $id [lindex $coords 0] [lindex $coords 1] {} {}  $color $fill $dash]
-	}
-    }
+    set color [$ds9(canvas) itemcget $id -outline]
+    set fill [$ds9(canvas) itemcget $id -fill]
+    set dash [$ds9(canvas) itemcget $id -dash]
+
+    return [list $id $color $fill $dash]
 }
 
 proc IllustrateGraphicAntsOn {id} {
@@ -569,7 +544,7 @@ proc IllustrateGraphicAntsOff {gr} {
     global ds9
 
     # graphic
-    foreach {id x1 y1 x2 y2 color fill dash} $gr {
+    foreach {id color fill dash} $gr {
 	switch [IllustrateGetType $id] {
 	    circle -
 	    ellipse -

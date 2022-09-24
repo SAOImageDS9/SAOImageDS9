@@ -181,7 +181,13 @@ proc IllustrateUndo {} {
 
     foreach {cmd ll} $iillustrate(undo) {
 	switch $cmd {
-	    create {}
+	    create {
+		foreach item $ll {
+		    foreach {id graphic} $item {
+			IllustrateDeleteGraphic $id
+		    }
+		}
+	    }
 	    edit -
 	    selectedit {
 		foreach item $ll {
@@ -192,8 +198,8 @@ proc IllustrateUndo {} {
 				ellipse -
 				box -
 				polygon {IllustrateSetBase $id $param}
-				line {IllustratesetSetLine $id $param}
-				text {IllustratesetSetText $id $param}
+				line {IllustrateSetLine $id $param}
+				text {IllustrateSetText $id $param}
 			    }
 			}
 		    }

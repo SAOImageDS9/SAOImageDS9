@@ -243,6 +243,7 @@ proc IllustrateButton {xx yy} {
     # else, create new graphic
     set iillustrate(id) [IllustrateCreateGraphic $xx $yy]
     if {$iillustrate(id)} {
+	IllustrateSaveUndo create $iillustrate(id)
 	switch [IllustrateGetType $iillustrate(id)] {
 	    circle -
 	    ellipse -
@@ -347,22 +348,24 @@ proc IllustrateButtonRelease {xx yy} {
 	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    foreach {id color fill dash} $iillustrate(edit) {
 		switch [IllustrateGetType $id] {
-		    circle {IllustrateDefaultCircle $id}
-		    ellipse {IllustrateDefaultEllipse $id}
-		    box {IllustrateDefaultBox $id}
-		    polygon {}
+		    circle {
+			IllustrateDefaultCircle $id
+			IllustrateUpdateHandleBase $id
+		    }
+		    ellipse {
+			IllustrateDefaultEllipse $id
+			IllustrateUpdateHandleBase $id
+		    }
+		    box {
+			IllustrateDefaultBox $id
+			IllustrateUpdateHandleBase $id
+		    }
+		    polygon {
+			IllustrateDefaultPolygon $id
+			IllustrateUpdateHandlePolygon $id
+		    }
 		    line {IllustrateDeleteGraphic $id}
 		    text {}
-		}
-
-		IllustrateHandleOff $id
-		switch [IllustrateGetType $id] {
-		    circle -
-		    ellipse -
-		    box -
-		    text {IllustrateUpdateHandleBase $id}
-		    polygon {IllustrateUpdateHandlePolygon $id}
-		    line {IllustrateUpdateHandleLine $id}
 		}
 	    }
 	}
@@ -374,10 +377,22 @@ proc IllustrateButtonRelease {xx yy} {
 	    foreach {id color fill dash} $iillustrate(edit) {
 		if {[expr sqrt($dx*$dx + $dy*$dy)]<4} {
 		    switch [IllustrateGetType $id] {
-			circle {IllustrateDefaultCircle $id}
-			ellipse {IllustrateDefaultEllipse $id}
-			box {IllustrateDefaultBox $id}
-			polygon {IllustrateDefaultPolygon $id}
+			circle {
+			    IllustrateDefaultCircle $id
+			    IllustrateUpdateHandleBase $id
+			}
+			ellipse {
+			    IllustrateDefaultEllipse $id
+			    IllustrateUpdateHandleBase $id
+			}
+			box {
+			    IllustrateDefaultBox $id
+			    IllustrateUpdateHandleBase $id
+			}
+			polygon {
+			    IllustrateDefaultPolygon $id
+			    IllustrateUpdateHandlePolygon $id
+			}
 			line {IllustrateDeleteGraphic $id}
 			text {}
 		    }
@@ -524,7 +539,7 @@ proc IllustrateKey {K A xx yy} {
 	    set nid [IllustrateFind node $xx $yy]
 	    if {$nid} {
 		set id [IllustrateFindGraphicFromNode $nid]
-		IllustrateSaveUndo $id
+		IllustrateSaveUndo edit $id
 		IllustrateDeleteNode $nid
 	    } else {
 		IllustrateSaveUndo selectdelete {}

@@ -506,7 +506,7 @@ proc IllustrateSaveUndo {undo id} {
 
     set ll {}
     switch $undo {
-	create {}
+	create -
 	edit {
 	    switch [IllustrateGetType $id] {
 		circle -
@@ -541,9 +541,26 @@ proc IllustrateSaveUndo {undo id} {
 proc IllustrateSaveGraphic {id} {
     global ds9
 
-    set color [$ds9(canvas) itemcget $id -outline]
-    set fill [$ds9(canvas) itemcget $id -fill]
-    set dash [$ds9(canvas) itemcget $id -dash]
+    switch [IllustrateGetType $id] {
+	circle -
+	ellipse -
+	box -
+	polygon {
+	    set color [$ds9(canvas) itemcget $id -outline]
+	    set fill [$ds9(canvas) itemcget $id -fill]
+	    set dash [$ds9(canvas) itemcget $id -dash]
+	}
+	line {
+	    set color {}
+	    set fill [$ds9(canvas) itemcget $id -fill]
+	    set dash [$ds9(canvas) itemcget $id -dash]
+	}
+	text {
+	    set color {}
+	    set fill [$ds9(canvas) itemcget $id -fill]
+	    set dash {}
+	}
+    }
 
     return [list $id $color $fill $dash]
 }

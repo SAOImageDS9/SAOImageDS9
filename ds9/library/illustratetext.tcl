@@ -40,6 +40,24 @@ proc IllustrateCopyText {id} {
     return [list text [list $coords $fill $font $txt]]
 }
 
+proc IllustrateSetText {id param} {
+    global ds9
+    
+    foreach {coords fill font txt} $param {
+	$ds9(canvas) coords $id $coords
+	$ds9(canvas) itemconfigure $id -fill $fill
+	$ds9(canvas) itemconfigure $id -font $font
+	$ds9(canvas) itemconfigure $id -text $txt
+    }
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $fill -fill $fill
+    }
+
+    IllustrateUpdateHandleBase $id
+}
+
 proc IllustrateDupText {param} {
     global ds9
     

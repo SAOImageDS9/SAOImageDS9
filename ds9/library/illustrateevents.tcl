@@ -175,8 +175,9 @@ proc IllustrateButton {xx yy} {
 
 	set id [IllustrateFindGraphicFromHandle $hid]
 	if {$id} {
-	    IllustrateSaveUndo
+	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
+
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
 	}
@@ -188,9 +189,10 @@ proc IllustrateButton {xx yy} {
     if {$nid} {
 	set id [IllustrateFindGraphicFromNode $nid]
 	if {$id} {
-	    IllustrateSaveUndo
-	    set iillustrate(node) $nid
+	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
+
+	    set iillustrate(node) $nid
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
 	    return
@@ -204,9 +206,10 @@ proc IllustrateButton {xx yy} {
 	IllustrateCreateNode $id $cnt $xx $yy
 	set nid [IllustrateFind node $xx $yy]
 	if {$nid} {
-	    IllustrateSaveUndo
-	    set iillustrate(node) $nid
+	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
+
+	    set iillustrate(node) $nid
 	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
 	    return
@@ -220,12 +223,14 @@ proc IllustrateButton {xx yy} {
 
 	# if selected, don't do anything
 	if {[IllustrateIsSelected $id]} {
+	    IllustrateSaveUndo selectedit {}
 	    return
 	}
 
 	# if not selected, select it, unselect all others
 	IllustrateSelectNone
 	IllustrateAddToSelection $id
+	IllustrateSaveUndo selectedit {}
 	return
     }	
 
@@ -515,37 +520,39 @@ proc IllustrateKey {K A xx yy} {
     switch -- $K {
 	Delete -
 	BackSpace {
-	    IllustrateSaveUndo
 	    # see if we are on a polygon node
 	    set nid [IllustrateFind node $xx $yy]
 	    if {$nid} {
+		set id [IllustrateFindGraphicFromNode $nid]
+		IllustrateSaveUndo $id
 		IllustrateDeleteNode $nid
 	    } else {
+		IllustrateSaveUndo selectdelete {}
 		IllustrateDeleteSelect
 	    }
 	}
 
 	Up -
 	k {
-	    IllustrateSaveUndo
+	    IllustrateSaveUndo selectedit {}
 	    event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy-1]
 	    IllustrateMoveSelection 0 -1
 	}
 	Down -
 	j {
-	    IllustrateSaveUndo
+	    IllustrateSaveUndo selectedit {}
 	    event generate $ds9(canvas) <Motion> -warp 1 -x $xx -y [expr $yy+1]
 	    IllustrateMoveSelection 0 1
 	}
 	Left -
 	h {
-	    IllustrateSaveUndo
+	    IllustrateSaveUndo selectedit {}
 	    event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx-1] -y $yy
 	    IllustrateMoveSelection -1 0
 	}
 	Right -
 	l {
-	    IllustrateSaveUndo
+	    IllustrateSaveUndo selectedit {}
 	    event generate $ds9(canvas) <Motion> -warp 1 -x [expr $xx+1] -y $yy
 	    IllustrateMoveSelection 1 0
 	}

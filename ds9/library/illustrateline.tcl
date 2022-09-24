@@ -30,24 +30,38 @@ proc IllustrateCopyLine {id} {
     return [list line [list $coords $fill $width $dash]]
 }
 
+proc IllustrateSetLine {id param} {
+    global ds9
+
+    foreach {coords fill width dash} $param {
+	$ds9(canvas) coords $id $coords
+	$ds9(canvas) itemconfigure $id -fill $fill
+	$ds9(canvas) itemconfigure $id -width $width
+	$ds9(canvas) itemconfigure $id -dash $dash
+    }
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $fill -fill $fill
+    }
+
+    IllustrateUpdateHandleLine $id
+}
+
 proc IllustrateDupLine {param} {
     global ds9
     
-    set coords [lindex $param 0]
-    set fill [lindex $param 1]
-    set width [lindex $param 2]
-    set dash [lindex $param 3]
-
-    set id [$ds9(canvas) create line \
-		$coords \
-		-outline $color \
-		-fill $fill \
-		-width $width \
-		-dash $dash \
-		-tags {line graphic}]
-	    ]
-
+    foreach {coords fill width dash} $param {
+	set id [$ds9(canvas) create line \
+		    $coords \
+		    -outline $color \
+		    -fill $fill \
+		    -width $width \
+		    -dash $dash \
+		    -tags {line graphic}]
+    }
     IllustrateCreateHandlesLine $id
+
     return $id
 }
 

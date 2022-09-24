@@ -106,6 +106,8 @@ proc IllustrateUpdateGraphic {} {
     global illustrate
     global iillustrate
     
+    IllustrateSaveUndo selectedit {}
+
     if {$illustrate(fill)} {
 	set fill $illustrate(color)
     } else {
@@ -120,7 +122,7 @@ proc IllustrateUpdateGraphic {} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {id x1 y1 x2 y2 ocolor ofill odash} $gr {
+	foreach {id ocolor ofill odash} $gr {
 	    # graphic
 	    switch [IllustrateGetType $id] {
 		circle -
@@ -344,8 +346,10 @@ proc IllustrateMoveSelection {dx dy} {
 
 # Base
 
-proc IllustrateCopyBase {id type} {
+proc IllustrateCopyBase {id} {
     global ds9
+    
+    set type [IllustrateGetType $id]
     
     set coords [$ds9(canvas) coords $id]
     set color [$ds9(canvas) itemcget $id -outline]
@@ -356,31 +360,46 @@ proc IllustrateCopyBase {id type} {
     return [list $type [list $coords $color $fill $width $dash]]
 }
 
+proc IllustrateSetBase {id param} {
+    global ds9
+    
+    foreach {coords color fill width dash} $param {
+	$ds9(canvas) coords $id $coords
+	$ds9(canvas) itemconfigure $id -outline $color
+	$ds9(canvas) itemconfigure $id -fill $fill
+	$ds9(canvas) itemconfigure $id -width $width
+	$ds9(canvas) itemconfigure $id -dash $dash
+    }
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
+    }
+
+    IllustrateUpdateHandleBase $id
+}
+
 proc IllustrateDupBase {type param} {
     global ds9
     
-    set coords [lindex $param 0]
-    set color [lindex $param 1]
-    set fill [lindex $param 2]
-    set width [lindex $param 3]
-    set dash [lindex $param 4]
-
     switch $type {
 	circle -
 	ellipse {set tt oval}
 	box {set tt rectangle}
     }
 
-    set id [$ds9(canvas) create $tt \
-		$coords \
-		-outline $color \
-		-fill $fill \
-		-width $width \
-		-dash $dash \
-		-tags [list $type graphic]
-	    ]
-
+    foreach {coords color fill width dash} $param {
+	set id [$ds9(canvas) create $tt \
+		    $coords \
+		    -outline $color \
+		    -fill $fill \
+		    -width $width \
+		    -dash $dash \
+		    -tags [list $type graphic]
+	       ]
+    }
     IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
+
     return $id
 }
 
@@ -481,25 +500,40 @@ proc IllustrateEditBase {gr xx yy} {
 
 # Util
 
-proc IllustrateSaveUndo {} {
+proc IllustrateSaveUndo {undo id} {
     global ds9
     global iillustrate
 
-    set iillustrate(undo) {}
-    foreach gr $iillustrate(selection) {
-	foreach {id color fill dash} $gr {
-	    set type [IllustrateGetType $id]
-	    switch $type {
+    set ll {}
+    switch $undo {
+	create {}
+	edit {
+	    switch [IllustrateGetType $id] {
 		circle -
 		ellipse -
 		box  -
-		polygon {lappend iillustrate(undo) \
-			     [IllustrateCopyBase $id $type]}
-		line {lappend iillustrate(undo) [IllustrateCopyLine $id]}
-		text {lappend iillustrate(undo) [IllustrateCopyText $id]}
+		polygon {lappend ll [list $id [IllustrateCopyBase $id]]}
+		line {lappend ll [list $id [IllustrateCopyLine $id]]}
+		text {lappend ll [list $id [IllustrateCopyText $id]]}
+	    }
+	}
+	selectedit -
+	selectdelete {
+	    foreach gr $iillustrate(selection) {
+		foreach {id color fill dash} $gr {
+		    switch [IllustrateGetType $id] {
+			circle -
+			ellipse -
+			box  -
+			polygon {lappend ll [list $id [IllustrateCopyBase $id]]}
+			line {lappend ll [list $id [IllustrateCopyLine $id]]}
+			text {lappend ll [list $id [IllustrateCopyText $id]]}
+		    }
+		}
 	    }
 	}
     }
+    set iillustrate(undo) [list $undo $ll]
 
     UpdateEditMenu
 }

@@ -372,7 +372,11 @@ proc UpdateEditMenu {} {
 	illustrate {
 	    global iillustrate
 
-	    $ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled
+	    if {$iillustrate(undo) != {}} {
+		$ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state normal
+	    } else {
+		$ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled
+	    }
 
 	    if {$iillustrate(selection) != {}} {
 		$ds9(mb).edit entryconfig [msgcat::mc {Cut}] -state normal

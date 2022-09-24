@@ -176,6 +176,51 @@ proc IllustrateSelectBack {} {
 # Undo/Copy/Cut/Paste
 
 proc IllustrateUndo {} {
+    global ds9
+    global iillustrate
+
+    foreach {cmd ll} $iillustrate(undo) {
+	switch $cmd {
+	    create {}
+	    edit -
+	    selectedit {
+		foreach item $ll {
+		    foreach {id graphic} $item {
+			foreach {type param} $graphic {
+			    switch $type {
+				circle -
+				ellipse -
+				box -
+				polygon {IllustrateSetBase $id $param}
+				line {IllustratesetSetLine $id $param}
+				text {IllustratesetSetText $id $param}
+			    }
+			}
+		    }
+		}
+	    }
+	    selectdelete {
+		foreach item $ll {
+		    foreach {id graphic} $item {
+			foreach {type param} $graphic {
+			    switch $type {
+				circle -
+				ellipse -
+				box {set id [IllustrateDupBase $type $param]}
+				polygon {set id [IllustrateDupPolygon $param]}
+				line {set id [IllustrateDupLine $param]}
+				text {set id [IllustrateDupText $param]}
+			    }
+			    IllustrateAddToSelection $id
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+    set iillustrate(undo) {}
+
     UpdateEditMenu
 }
 
@@ -185,13 +230,13 @@ proc IllustrateCut {} {
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
 	foreach {id color fill dash} $gr {
-	    set type [IllustrateGetType $id]
-	    switch $type {
+	    switch [IllustrateGetType $id] {
 		circle -
 		ellipse -
 		box -
-		polygon {lappend iillustrate(clipboard) \
-			     [IllustrateCopyBase $id $type]}
+		polygon {
+		    lappend iillustrate(clipboard) [IllustrateCopyBase $id]
+		}
 		line {lappend iillustrate(clipboard) [IllustrateCopyLine $id]}
 		text {lappend iillustrate(clipboard) [IllustrateCopyText $id]}
 	    }
@@ -208,13 +253,13 @@ proc IllustrateCopy {} {
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
 	foreach {id color fill dash} $gr {
-	    set type [IllustrateGetType $id]
-	    switch $type {
+	    switch [IllustrateGetType $id] {
 		circle -
 		ellipse -
 		box  -
-		polygon {lappend iillustrate(clipboard) \
-			     [IllustrateCopyBase $id $type]}
+		polygon {
+		    lappend iillustrate(clipboard) [IllustrateCopyBase $id]
+		}
 		line {lappend iillustrate(clipboard) [IllustrateCopyLine $id]}
 		text {lappend iillustrate(clipboard) [IllustrateCopyText $id]}
 	    }
@@ -228,8 +273,8 @@ proc IllustratePaste {} {
     global iillustrate
 
     IllustrateSelectNone
-    foreach gr $iillustrate(clipboard) {
-	foreach {type param} $gr {
+    foreach graphic $iillustrate(clipboard) {
+	foreach {type param} $graphic {
 	    switch $type {
 		circle -
 		ellipse -

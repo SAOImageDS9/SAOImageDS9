@@ -58,10 +58,10 @@ proc IllustrateListEllipse {id} {
     set x2 [lindex $coords 2]
     set y2 [lindex $coords 3]
 
-    set xc [expr ($x2-$x1)/2.+$x1]
-    set yc [expr ($y2-$y1)/2.+$y1]
-    set r1 [expr ($x2-$x1)/2.]
-    set r2 [expr ($y2-$y1)/2.]
+    set xc [expr ($x2-$x1)/2+$x1]
+    set yc [expr ($y2-$y1)/2+$y1]
+    set r1 [expr ($x2-$x1)/2]
+    set r2 [expr ($y2-$y1)/2]
     
     set rr "ellispe $xc $yc $r1 $r2"
 

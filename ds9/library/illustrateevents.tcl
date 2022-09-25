@@ -439,7 +439,10 @@ proc IllustrateButtonRelease {xx yy} {
 		    ellipse -
 		    box -
 		    text {IllustrateUpdateHandleBase $id}
-		    polygon {IllustrateUpdateHandlePolygon $id}
+		    polygon {
+			IllustrateCleanupPolygon $id
+			IllustrateUpdateHandlePolygon $id
+		    }
 		    line {IllustrateUpdateHandleLine $id}
 		}
 	    }

@@ -255,6 +255,7 @@ proc IllustrateEditPolygon {gr xx yy} {
 	    } else {
 		set sc $bb
 	    }
+
 	    $ds9(canvas) scale $id $xc $yc $sc $sc
 
 	} elseif {$iillustrate(node)} {
@@ -273,6 +274,17 @@ proc IllustrateEditPolygon {gr xx yy} {
 	    $ds9(canvas) coords $id $ll
 	}
     }
+}
+
+proc IllustrateCleanupPolygon {id} {
+    global ds9
+
+    # int() coords
+    set ll {}
+    foreach {cx cy} [$ds9(canvas) coords $id] {
+	lappend ll [expr int($cx)] [expr int($cy)]
+    }
+    $ds9(canvas) coords $id $ll
 }
 
 proc IllustrateDeleteNode {nid} {

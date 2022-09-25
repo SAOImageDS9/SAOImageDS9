@@ -217,23 +217,17 @@ proc CreateButtonsIllustrate {} {
     ttk::frame $ds9(buttons).illustrate
 
     RadioButton $ds9(buttons).illustrate.circle \
-	[string tolower [msgcat::mc {Circle}]] \
-	illustrate shape circle {}
+	[string tolower [msgcat::mc {Circle}]] illustrate shape circle {}
     RadioButton $ds9(buttons).illustrate.ellipse \
-	[string tolower [msgcat::mc {Ellipse}]] \
-	illustrate shape ellipse {}
+	[string tolower [msgcat::mc {Ellipse}]] illustrate shape ellipse {}
     RadioButton $ds9(buttons).illustrate.box \
-	[string tolower [msgcat::mc {Box}]] \
-	illustrate shape box {}
+	[string tolower [msgcat::mc {Box}]] illustrate shape box {}
     RadioButton $ds9(buttons).illustrate.polygon \
-	[string tolower [msgcat::mc {Polygon}]] \
-	illustrate shape polygon {}
+	[string tolower [msgcat::mc {Polygon}]] illustrate shape polygon {}
     RadioButton $ds9(buttons).illustrate.line \
-	[string tolower [msgcat::mc {Line}]] \
-	illustrate shape line {}
+	[string tolower [msgcat::mc {Line}]] illustrate shape line {}
     RadioButton $ds9(buttons).illustrate.text \
-	[string tolower [msgcat::mc {Text}]] \
-	illustrate shape text {}
+	[string tolower [msgcat::mc {Text}]] illustrate shape text {}
 
     ButtonButton $ds9(buttons).illustrate.all \
 	[string tolower [msgcat::mc {All}]] IllustrateSelectAll
@@ -252,25 +246,24 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Move Back}]] IllustrateMoveBack
 
     ButtonButton $ds9(buttons).illustrate.saveselect \
-	[string tolower [msgcat::mc {Save Select}]] {}
+	[string tolower [msgcat::mc {Save Select}]] IllustrateSaveSelect
     ButtonButton $ds9(buttons).illustrate.listselect \
-	[string tolower [msgcat::mc {List Select}]] {}
+	[string tolower [msgcat::mc {List Select}]] IllustrateListSelect
     ButtonButton $ds9(buttons).illustrate.deleteselect \
 	[string tolower [msgcat::mc {Delete Select}]] IllustrateDeleteSelect
 
     ButtonButton $ds9(buttons).illustrate.load \
-	[string tolower [msgcat::mc {Open}]] {}
+	[string tolower [msgcat::mc {Open}]] IllustrateLoad
     ButtonButton $ds9(buttons).illustrate.save \
-	[string tolower [msgcat::mc {Save}]] {}
+	[string tolower [msgcat::mc {Save}]] IllustrateSaveAll
     ButtonButton $ds9(buttons).illustrate.list \
-	[string tolower [msgcat::mc {List}]] {}
+	[string tolower [msgcat::mc {List}]] IllustrateListAll
 
     ButtonButton $ds9(buttons).illustrate.delete \
 	[string tolower [msgcat::mc {Delete All}]] IllustrateDeleteAll
 
     CheckButton $ds9(buttons).illustrate.show \
-	[string tolower [msgcat::mc {Show}]] \
-	illustrate show IllustrateShow
+	[string tolower [msgcat::mc {Show}]] illustrate show IllustrateShow
 
     set buttons(illustrate) "
         $ds9(buttons).illustrate.circle pbuttons(illustrate,circle)

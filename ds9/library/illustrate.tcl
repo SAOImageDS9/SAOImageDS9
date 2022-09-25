@@ -637,7 +637,7 @@ proc IllustrateHandleOff {id} {
     }
 }
 
-proc IllustrateDumpAll {} {
+proc IllustrateDump {} {
     global ds9
     
     foreach id [$ds9(canvas) find all] {

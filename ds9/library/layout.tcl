@@ -364,6 +364,17 @@ proc BindEventsCanvasItems {} {
     }
 }
 
+proc LayoutRaise {id} {
+    global ds9
+
+    set ll [$ds9(canvas) find withtag {graphic}]
+    if {$ll != {}} {
+	$ds9(canvas) lower $id [lindex $ll 0]
+    } else {
+	$ds9(canvas) raise $id
+    }
+}
+
 proc LayoutView {} {
     global view
 
@@ -653,7 +664,8 @@ proc LayoutFramesNone {} {
     if {$view(colorbar)} {
 	if {[LayoutColorbar colorbar 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
 	    colorbar show
-	    $ds9(canvas) raise colorbar
+	    LayoutRaise colorbar
+#	    $ds9(canvas) raise colorbar
 	}
     }
     
@@ -730,12 +742,14 @@ proc LayoutFrameOne {} {
 
     # frame
     $current(frame) show
-    $ds9(canvas) raise $current(frame)
+    LayoutRaise $current(frame)
+#    $ds9(canvas) raise $current(frame)
 
     # colorbar
     if {$view(colorbar)} {
 	$current(colorbar) show
-	$ds9(canvas) raise $current(colorbar)
+	LayoutRaise $current(colorbar)
+#	$ds9(canvas) raise $current(colorbar)
     }
 
     # graphs
@@ -841,13 +855,15 @@ proc TileRect {numx numy} {
 	LayoutFrameAdjust fw fh
 	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
 	$ff show
-	$ds9(canvas) raise $ff
+	LayoutRaise $ff
+#	$ds9(canvas) raise $ff
 
 	# colorbar
 	if {$view(colorbar)} {
 	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	    ${ff}cb show
-	    $ds9(canvas) raise ${ff}cb
+	    LayoutRaise ${ff}cb
+#	    $ds9(canvas) raise ${ff}cb
 	}
 
 	# graphs
@@ -911,7 +927,8 @@ proc TileRectNone {numx numy} {
 	    $ff configure -x $xx($ii) -y $yy($ii) \
 		-width $ww -height $hh -anchor nw
 	    $ff show
-	    $ds9(canvas) raise $ff
+	    LayoutRaise $ff
+#	    $ds9(canvas) raise $ff
 	}
 
 	if {$view(colorbar)} {
@@ -940,7 +957,8 @@ proc TileRectNone {numx numy} {
     # colorbar
     if {$view(colorbar)} {
 	${ff}cb show
-	$ds9(canvas) raise ${ff}cb
+	LayoutRaise ${ff}cb
+#	$ds9(canvas) raise ${ff}cb
     }
 
     # graphs

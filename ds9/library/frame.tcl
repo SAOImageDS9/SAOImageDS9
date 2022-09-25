@@ -1760,12 +1760,14 @@ proc GotoFrame {which} {
 
 	# frame
 	$current(frame) show
-	$ds9(canvas) raise $current(frame)
+	LayoutRaise $current(frame)
+#	$ds9(canvas) raise $current(frame)
 
 	# colorbar
 	if {$view(colorbar)} {
 	    $current(colorbar) show
-	    $ds9(canvas) raise $current(colorbar)
+	    LayoutRaise $current(colorbar)
+#	    $ds9(canvas) raise $current(colorbar)
 	}
 
 	# graphs

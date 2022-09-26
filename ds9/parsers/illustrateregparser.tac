@@ -36,7 +36,7 @@
 #include yesno.trl
 #include numeric.trl
 
-start : commands
+start : {initGlobal} commands
  ;
 
 commands : commands command
@@ -45,41 +45,32 @@ commands : commands command
 
 command : DEBUG_ yesno
  | VERSION_ {puts "DS9 Regions File 4.2"}
- | shape
+ | GLOBAL_ global
+ | {initLocal} shape 
  ;
 
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep
- {IllustrateCreateCircle $3 $5 $7 red 0 1 0}
+ {IllustrateCreateCircle $3 $5 $7 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
  | ELLIPSE_ bp numeric sp numeric sp numeric sp numeric bp
- {IllustrateCreateEllipse $3 $5 $7 $9 red 0 1 0}
+ {IllustrateCreateEllipse $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
  | BOX_ bp numeric sp numeric sp numeric sp numeric bp
- {IllustrateCreateBox $3 $5 $7 $9 red 0 1 0}
+ {IllustrateCreateBox $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
  | POLYGON_ bp numeric sp numeric sp numeric sp numeric bp
- {IllustrateCreatePolygon $3 $5 $7 $9 red 0 1 0}
+ {IllustrateCreatePolygon $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp
- {IllustrateCreateLine $3 $5 $7 $9 red 1 0}
+ {IllustrateCreateLine $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localWidth $illustratereg::localDash}
  | TEXT_ bp numeric sp numeric bp STRING_
- {IllustrateCreateText $3 $5 $7 red helvetica 12 normal roman}
+ {IllustrateCreateText $3 $5 $7 $illustratereg::localColor helvetica 12 normal roman}
  ;
 
 global : global globalProperty
  | globalProperty
  ;
 
-globalProperty : COLOR_ STRING_ {set globalColor $2}
- | WIDTH_ INT_ {set globalWidth $2}
- | FILL_ yesno {set globalFill $2}
- | DASH_ yesno {set globalDash $2}
- ;
-
-local : local localProperty
- | localProperty
- ;
-
-localProperty : COLOR_ STRING_ {set localColor $2}
- | WIDTH_ INT_ {set localWidth $2}
- | FILL_ yesno {set localFill $2}
- | DASH_ yesno {set localDash $2}
+globalProperty : COLOR_ STRING_ {set illustratereg::globalColor $2}
+ | FILL_ yesno {set illustratereg::globalFill $2}
+ | WIDTH_ INT_ {set illustratereg::globalWidth $2}
+ | DASH_ yesno {set illustratereg::globalDash $2}
  ;
 
 sp :
@@ -102,3 +93,30 @@ coordSystem : IMAGE_
  ;
 
 %%
+
+namespace eval illustratereg {
+     variable globalColor cyan
+     variable globalFill 0
+     variable globalWidth 1
+     variable globalDash 0
+
+     variable localColor
+     variable localFill
+     variable localWidth
+     variable localDash
+}
+
+proc illustratereg::initGlobal {} {
+}
+
+proc illustratereg::initLocal {} {
+     variable globalColor
+     variable globalFill
+     variable globalWidth
+     variable globalDash
+
+     variable localColor $globalColor
+     variable localFill $globalFill
+     variable localWidth $globalWidth
+     variable localDash $globalDash
+}

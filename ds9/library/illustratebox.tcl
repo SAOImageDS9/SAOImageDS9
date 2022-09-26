@@ -4,18 +4,27 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateBox {xx yy fill dash} {
+proc IllustrateCreateBox {xx yy rr1 rr2 color fill width dash} {
     global ds9
-    global illustrate
-    global iillustrate
-    global pillustrate
+
+    if {$fill} {
+	set fillcolor $color
+    } else {
+	set fillcolor {}
+    }
+    if {$dash} {
+	set dashlist {8 3}
+    } else {
+	set dashlist {}
+    }
 
     set id [$ds9(canvas) create rectangle \
-		$xx $yy $xx $yy \
-		-outline $illustrate(color) \
-		-fill $fill \
-		-width $illustrate(width) \
-		-dash $dash \
+		[expr $xx-$rr1] [expr $yy-$rr2] \
+		[expr $xx+$rr1] [expr $yy+$rr2] \
+		-outline $color \
+		-fill $fillcolor \
+		-width $width \
+		-dash $dashlist \
 		-tags {box graphic}]
 
     IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]

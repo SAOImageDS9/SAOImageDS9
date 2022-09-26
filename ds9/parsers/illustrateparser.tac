@@ -66,7 +66,7 @@ illustrate : SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
  | SAVE_ save
  | LIST_ list
  | DELETE_ delete
- | LOAD_ STRING_ {IllustrateLoadFilename $2}
+ | LOAD_ STRING_ {IllustrateLoadFn $2}
  | SHOW_ yesno {ProcessCmdSet illustrate show $2 IllustrateShow}
 
  | UNDO_ {IllustrateUndo}

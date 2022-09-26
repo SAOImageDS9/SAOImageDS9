@@ -1,10 +1,4 @@
 %{
-	set globalColor cyan
-	set globalFill 0
-	set globalDash 0
-	set globalWidth 1
-	set globalFont "helvetica 12 normal roman"
-	set globalText {}
 %}
 
 #include def.tin
@@ -15,7 +9,7 @@
 #include numeric.tin
 #include string.tin
 
-%start commands
+%start start
 
 %token HASH_
 %token DEBUG_
@@ -42,18 +36,30 @@
 #include yesno.trl
 #include numeric.trl
 
+start : commands
+ ;
+
 commands : commands command
  | command
  ;
 
 command : DEBUG_ yesno
  | VERSION_ {puts "DS9 Regions File 4.2"}
+ | shape
  ;
 
-commandd : DEBUG_ yesno
- | GLOBAL_ global
- | coordSystem
- | initLocal shape
+shape : CIRCLE_ bp numeric sp numeric sp numeric ep
+ {IllustrateCreateCircle $3 $5 $7 red 0 1 0}
+ | ELLIPSE_ bp numeric sp numeric sp numeric sp numeric bp
+ {IllustrateCreateEllipse $3 $5 $7 $9 red 0 1 0}
+ | BOX_ bp numeric sp numeric sp numeric sp numeric bp
+ {IllustrateCreateBox $3 $5 $7 $9 red 0 1 0}
+ | POLYGON_ bp numeric sp numeric sp numeric sp numeric bp
+ {IllustrateCreatePolygon $3 $5 $7 $9 red 0 1 0}
+ | LINE_ bp numeric sp numeric sp numeric sp numeric bp
+ {IllustrateCreateLine $3 $5 $7 $9 red 1 0}
+ | TEXT_ bp numeric sp numeric bp STRING_
+ {IllustrateCreateText $3 $5 $7 red helvetica 12 normal roman}
  ;
 
 global : global globalProperty
@@ -64,8 +70,6 @@ globalProperty : COLOR_ STRING_ {set globalColor $2}
  | WIDTH_ INT_ {set globalWidth $2}
  | FILL_ yesno {set globalFill $2}
  | DASH_ yesno {set globalDash $2}
- | FONT_ STRING_ {set globalFont $2}
- | TEXT_ STRING_ {set globalText $2}
  ;
 
 local : local localProperty
@@ -76,29 +80,18 @@ localProperty : COLOR_ STRING_ {set localColor $2}
  | WIDTH_ INT_ {set localWidth $2}
  | FILL_ yesno {set localFill $2}
  | DASH_ yesno {set localDash $2}
- | FONT_ STRING_ {set localFont $2}
- | TEXT_ STRING_ {set localText $2}
  ;
 
-initLocal: {set localColor $globalColor; set localWidth $globalWidth; set localFill $globalFill; set localDash $globalDash; set localFont $globalFont; set localText $globalText}
+sp :
+ | ','
  ;
 
-shape : CIRCLE_ numeric numeric numeric comment {IllustrateCreateCircle $2 $3 $4 $localColor $localFill $localWidth $localDash}
- | ELLIPSE_ numeric numeric numeric numeric comment {}
- | BOX_ numeric numeric numeric numeric comment {}
- | POLYGON_ {set coords {}} coords comment {}
- | LINE_ numeric numeric numeric numeric comment {}
- | TEXT_ numeric numeric comment {}
+bp :
+ | '('
  ;
-
-coords : coords coord
- | coord
- ;
-
-coord : numeric numeric {lappend coords $1 $2}
- ;
-
-comment : HASH_ local
+ 
+ep :
+ | ')'
  ;
 
 coordSystem : IMAGE_

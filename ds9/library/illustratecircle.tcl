@@ -6,19 +6,25 @@ package provide DS9 1.0
 
 proc IllustrateCreateCircle {xx yy rr color fill width dash} {
     global ds9
-    global illustrate
 
-    set x1 [expr $xx-$rr]
-    set y1 [expr $yy-$rr]
-    set x2 [expr $xx+$rr]
-    set y2 [expr $yy+$rr]
+    if {$fill} {
+	set fillcolor $color
+    } else {
+	set fillcolor {}
+    }
+    if {$dash} {
+	set dashlist {8 3}
+    } else {
+	set dashlist {}
+    }
 
     set id [$ds9(canvas) create oval \
-		$x1 $y1 $x2 $y2 \
+		[expr $xx-$rr] [expr $yy-$rr] \
+		[expr $xx+$rr] [expr $yy+$rr] \
 		-outline $color \
-		-fill $fill \
+		-fill $fillcolor \
 		-width $width \
-		-dash $dash \
+		-dash $dashlist \
 		-tags {circle graphic}]
 
     IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]

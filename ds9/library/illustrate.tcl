@@ -53,26 +53,50 @@ proc IllustrateModeEnd {} {
 
 proc IllustrateCreateGraphic {xx yy} {
     global illustrate
-    global iillustrate
-
-    if {$illustrate(fill)} {
-	set fill $illustrate(color)
-    } else {
-	set fill {}
-    }
-    if {$illustrate(dash)} {
-	set dash {8 3}
-    } else {
-	set dash {}
-    }
+    global pillustrate
 
     switch $illustrate(shape) {
-	circle {return [IllustrateCreateCircle $xx $yy 0 $illustrate(color) $fill $illustrate(width) $dash]}
-	ellipse {return [IllustrateCreateEllipse $xx $yy $fill $dash]}
-	box {return [IllustrateCreateBox $xx $yy $fill $dash]}
-	polygon {return [IllustrateCreatePolygon $xx $yy $fill $dash]}
-	line {return [IllustrateCreateLine $xx $yy $dash]}
-	text {return [IllustrateCreateText $xx $yy]}
+	circle {
+	    return [IllustrateCreateCircle $xx $yy 0 \
+			$illustrate(color) $illustrate(fill) \
+			$illustrate(width) $illustrate(dash)]
+	}
+	ellipse {
+	    return [IllustrateCreateEllipse $xx $yy 0 0 \
+			$illustrate(color) $illustrate(fill) \
+			$illustrate(width) $illustrate(dash)]
+	}
+	box {
+	    return [IllustrateCreateBox $xx $yy 0 0 \
+			$illustrate(color) $illustrate(fill) \
+			$illustrate(width) $illustrate(dash)]
+	}
+	polygon {
+	    return [IllustrateCreatePolygon $xx $yy \
+			$pillustrate(polygon,width) \
+			$pillustrate(polygon,height) \
+			$illustrate(color) $illustrate(fill) \
+			$illustrate(width) $illustrate(dash)]
+	}
+	line {
+	    return [IllustrateCreateLine $xx $yy $xx $yy \
+			$illustrate(color) \
+			$illustrate(width) $illustrate(dash)]
+	}
+	text {
+	    set txt {Text}
+	    if {![EntryDialog [msgcat::mc {Text}] \
+		      [msgcat::mc {Enter Text}] 40 txt]} {
+		return 0
+	    }
+	    if {$txt == {}} {
+		return 0
+	    }
+	    return [IllustrateCreateText $xx $yy $txt \
+			$illustrate(color) \
+			$illustrate(font) $illustrate(font,size) \
+			$illustrate(font,weight) $illustrate(font,slant)]
+	}
     }
 }
 

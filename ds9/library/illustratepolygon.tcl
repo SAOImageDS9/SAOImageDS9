@@ -4,23 +4,29 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreatePolygon {xx yy fill dash} {
+proc IllustrateCreatePolygon {xx yy rr1 rr2 color fill width dash} {
     global ds9
-    global illustrate
-    global pillustrate
 
-    set rr1 $pillustrate(polygon,width)
-    set rr2 $pillustrate(polygon,height)
+    if {$fill} {
+	set fillcolor $color
+    } else {
+	set fillcolor {}
+    }
+    if {$dash} {
+	set dashlist {8 3}
+    } else {
+	set dashlist {}
+    }
 
     set id [$ds9(canvas) create polygon \
 		[expr $xx-$rr1] [expr $yy-$rr2] \
 		[expr $xx+$rr1] [expr $yy-$rr2] \
 		[expr $xx+$rr1] [expr $yy+$rr2]\
 		[expr $xx-$rr1] [expr $yy+$rr2] \
-		-outline $illustrate(color) \
-		-fill $fill \
-		-width $illustrate(width) \
-		-dash $dash \
+		-outline $color \
+		-fill $fillcolor \
+		-width $width \
+		-dash $dashlist \
 		-tags {polygon graphic}]
 
     IllustrateCreateHandlesPolygon $id [$ds9(canvas) itemcget $id -outline]

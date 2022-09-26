@@ -4,15 +4,20 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateLine {xx yy dash} {
+proc IllustrateCreateLine {x1 y1 x2 y2 color width dash} {
     global ds9
-    global illustrate
+
+    if {$dash} {
+	set dashlist {8 3}
+    } else {
+	set dashlist {}
+    }
 
     set id [$ds9(canvas) create line \
-		$xx $yy $xx $yy \
-		-fill $illustrate(color) \
-		-width $illustrate(width) \
-		-dash $dash \
+		$x1 $y1 $x2 $y2 \
+		-fill $color \
+		-width $width \
+		-dash $dashlist \
 		-tags {line graphic}]
 
     IllustrateCreateHandlesLine $id
@@ -23,19 +28,19 @@ proc IllustrateCopyLine {id} {
     global ds9
     
     set coords [$ds9(canvas) coords $id]
-    set fill [$ds9(canvas) itemcget $id -fill]
+    set color [$ds9(canvas) itemcget $id -fill]
     set width [$ds9(canvas) itemcget $id -width]
     set dash [$ds9(canvas) itemcget $id -dash]
 
-    return [list line [list $coords $fill $width $dash]]
+    return [list line [list $coords $color $width $dash]]
 }
 
 proc IllustrateSetLine {id param} {
     global ds9
 
-    foreach {coords fill width dash} $param {
+    foreach {coords color width dash} $param {
 	$ds9(canvas) coords $id $coords
-	$ds9(canvas) itemconfigure $id -fill $fill
+	$ds9(canvas) itemconfigure $id -fill $color
 	$ds9(canvas) itemconfigure $id -width $width
 	$ds9(canvas) itemconfigure $id -dash $dash
     }
@@ -51,11 +56,10 @@ proc IllustrateSetLine {id param} {
 proc IllustrateDupLine {param} {
     global ds9
     
-    foreach {coords fill width dash} $param {
+    foreach {coords color width dash} $param {
 	set id [$ds9(canvas) create line \
 		    $coords \
-		    -outline $color \
-		    -fill $fill \
+		    -fill $color \
 		    -width $width \
 		    -dash $dash \
 		    -tags {line graphic}]

@@ -1231,7 +1231,7 @@ proc illustrate::yyparse {} {
                     29 { ProcessCmdSet illustrate font,size $2 IllustrateUpdateGraphic }
                     30 { ProcessCmdSet illustrate font,weight $2 IllustrateUpdateGraphic }
                     31 { ProcessCmdSet illustrate font,slant $2 IllustrateUpdateGraphic }
-                    37 { IllustrateLoadFilename $2 }
+                    37 { IllustrateLoadFn $2 }
                     38 { ProcessCmdSet illustrate show $2 IllustrateShow }
                     39 { IllustrateUndo }
                     40 { IllustrateCut }

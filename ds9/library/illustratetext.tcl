@@ -7,7 +7,6 @@ package provide DS9 1.0
 proc IllustrateCreateText {xx yy txt color font} {
     global ds9
 
-    puts "b:$font"
     set id [$ds9(canvas) create text \
 		$xx $yy \
 		-text $txt \
@@ -15,7 +14,6 @@ proc IllustrateCreateText {xx yy txt color font} {
 		-font $font \
 		-tags {text graphic}
 	   ]
-    puts "a:[$ds9(canvas) itemcget $id -font]"
 
     IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -fill]
     return $id

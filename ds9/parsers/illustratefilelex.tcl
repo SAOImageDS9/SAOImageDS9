@@ -7,7 +7,7 @@ package provide DS9 1.0
 # author's license.  See http://mini.net/tcl/fickle for other details.
 ######
 
-namespace eval illustratereg {
+namespace eval illustratefile {
     variable yylval
 
     variable yytext {}
@@ -27,7 +27,7 @@ namespace eval illustratereg {
 # (default, stdout), which may be redefined by the user simply by
 # assigning it to some other channel.
 #   -- from the flex(1) man page
-proc illustratereg::ECHO {{s ""}} {
+proc illustratefile::ECHO {{s ""}} {
     variable yytext
     variable yyout
 
@@ -42,7 +42,7 @@ proc illustratereg::ECHO {{s ""}} {
 # next time the scanner attempts to match a token, it will first
 # refill the buffer using YY_INPUT.
 #   -- from the flex(1) man page
-proc illustratereg::YY_FLUSH_BUFFER {} {
+proc illustratefile::YY_FLUSH_BUFFER {} {
     variable yy_current_buffer
     variable index_
     variable done_
@@ -58,7 +58,7 @@ proc illustratereg::YY_FLUSH_BUFFER {} {
 # as an argument thus throws away the current input buffer and
 # continues scanning the same input file.
 #   -- from the flex(1) man page
-proc illustratereg::yyrestart {new_file} {
+proc illustratefile::yyrestart {new_file} {
     variable yyin
 
     set yyin $new_file
@@ -73,7 +73,7 @@ proc illustratereg::yyrestart {new_file} {
 # constant YY_NULL (0 on Unix systems) to indicate EOF.  The default
 # YY_INPUT reads from the global file-pointer "yyin".
 #   -- from the flex(1) man page
-proc illustratereg::YY_INPUT {buf result max_size} {
+proc illustratefile::YY_INPUT {buf result max_size} {
     variable yyin
 
     upvar $result ret_val
@@ -91,7 +91,7 @@ proc illustratereg::YY_INPUT {buf result max_size} {
 # strings instead of files.  Note that switching input sources does
 # not change the start condition.
 #   -- from the flex(1) man page
-proc illustratereg::yy_scan_string {str} {
+proc illustratefile::yy_scan_string {str} {
     variable yy_current_buffer
     variable yyin
 
@@ -102,7 +102,7 @@ proc illustratereg::yy_scan_string {str} {
 # unput(c) puts the character c back onto the input stream.  It will
 # be the next character scanned.
 #   -- from the flex(1) man page
-proc illustratereg::unput {c} {
+proc illustratefile::unput {c} {
     variable yy_current_buffer
     variable index_
 
@@ -116,7 +116,7 @@ proc illustratereg::unput {c} {
 # looks for the next match.  yytext and yyleng are adjusted
 # appropriately.
 #   -- from the flex(1) man page
-proc illustratereg::yyless {n} {
+proc illustratefile::yyless {n} {
     variable yy_current_buffer
     variable index_
     variable yytext
@@ -131,7 +131,7 @@ proc illustratereg::yyless {n} {
 
 # input() reads the next character from the input stream.
 #   -- from the flex(1) man page
-proc illustratereg::input {} {
+proc illustratefile::input {} {
     variable yy_current_buffer
     variable index_
     variable done_
@@ -166,7 +166,7 @@ proc illustratereg::input {} {
 # reaches an end-of-file (at which point it returns the value 0) or
 # one of its actions executes a return statement.
 #   -- from the flex(1) man page
-proc illustratereg::yylex {} {
+proc illustratefile::yylex {} {
     variable yylval
 
     variable yytext

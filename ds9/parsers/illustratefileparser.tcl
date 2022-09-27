@@ -7,7 +7,7 @@ package provide DS9 1.0
 # author's license.  See http://mini.net/tcl/taccle for other details.
 ######
 
-namespace eval illustratereg {
+namespace eval illustratefile {
     variable yylval {}
     variable table
     variable rules
@@ -19,31 +19,31 @@ namespace eval illustratereg {
     namespace export yylex
 }
 
-proc illustratereg::YYABORT {} {
+proc illustratefile::YYABORT {} {
     return -code return 1
 }
 
-proc illustratereg::YYACCEPT {} {
+proc illustratefile::YYACCEPT {} {
     return -code return 0
 }
 
-proc illustratereg::YYERROR {} {
+proc illustratefile::YYERROR {} {
     variable yyerr
     set yyerr 1
 }
 
-proc illustratereg::yyclearin {} {
+proc illustratefile::yyclearin {} {
     variable token
     variable yycnt
     set token {}
     incr yycnt -1
 }
 
-proc illustratereg::yyerror {s} {
+proc illustratefile::yyerror {s} {
     puts stderr $s
 }
 
-proc illustratereg::setupvalues {stack pointer numsyms} {
+proc illustratefile::setupvalues {stack pointer numsyms} {
     upvar 1 1 y
     set y {}
     for {set i 1} {$i <= $numsyms} {incr i} {
@@ -53,14 +53,14 @@ proc illustratereg::setupvalues {stack pointer numsyms} {
     }
 }
 
-proc illustratereg::unsetupvalues {numsyms} {
+proc illustratefile::unsetupvalues {numsyms} {
     for {set i 1} {$i <= $numsyms} {incr i} {
         upvar 1 $i y
         unset y
     }
 }
 
-array set illustratereg::table {
+array set illustratefile::table {
   122:266,target 24
   122:0,target 24
   32:277,target 47
@@ -2441,7 +2441,7 @@ array set illustratereg::table {
   51:264,target 9
 }
 
-array set illustratereg::rules {
+array set illustratefile::rules {
   9,l 282
   11,l 283
   32,l 291
@@ -2496,7 +2496,7 @@ array set illustratereg::rules {
   35,l 291
 }
 
-array set illustratereg::rules {
+array set illustratefile::rules {
   12,dc 2
   26,dc 11
   3,dc 1
@@ -2551,7 +2551,7 @@ array set illustratereg::rules {
   48,dc 0
 }
 
-array set illustratereg::rules {
+array set illustratefile::rules {
   41,line 120
   7,line 61
   37,line 114
@@ -2607,7 +2607,7 @@ array set illustratereg::rules {
   44,line 125
 }
 
-array set illustratereg::lr1_table {
+array set illustratefile::lr1_table {
   35 {{20 {0 266 267 268 274 275 276 277 278 279 280} 2} {8 {, 263 264 265} 0} {9 {, 263 264 265} 0}}
   66,trans {{263 72} {264 73} {282 74}}
   36 {{21 {0 266 267 268 274 275 276 277 278 279 280} 2} {8 {, 263 264 265} 0} {9 {, 263 264 265} 0}}
@@ -2890,7 +2890,7 @@ array set illustratereg::lr1_table {
   47,trans {}
 }
 
-array set illustratereg::token_id_table {
+array set illustratefile::token_id_table {
   ,,line 125
   286,t 1
   286 command
@@ -3083,7 +3083,7 @@ array set illustratereg::token_id_table {
   261,title TRUE
 }
 
-proc illustratereg::yyparse {} {
+proc illustratefile::yyparse {} {
     variable yylval
     variable table
     variable rules
@@ -3189,23 +3189,23 @@ proc illustratereg::yyparse {} {
                     10 { initGlobal }
                     14 { puts "DS9 Illustrate File 1.0" }
                     16 { initLocal }
-                    20 { IllustrateCreateCircle $3 $5 $7 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash }
-                    21 { IllustrateCreateEllipse $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash }
-                    22 { IllustrateCreateBox $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash }
-                    23 { IllustrateCreatePolygon $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash }
-                    24 { IllustrateCreateLine $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localWidth $illustratereg::localDash }
-                    25 { IllustrateCreateText $3 $5 $7 $illustratereg::localColor $illustratereg::localFont }
-                    26 { IllustrateCreateText $3 $5 $10 $illustratereg::localColor $illustratereg::localFont }
-                    32 { set illustratereg::globalColor $3 }
-                    33 { set illustratereg::globalFill $3 }
-                    34 { set illustratereg::globalWidth $3 }
-                    35 { set illustratereg::globalDash $3 }
-                    36 { set illustratereg::globalFont $3 }
-                    39 { set illustratereg::localColor $3 }
-                    40 { set illustratereg::localFill $3 }
-                    41 { set illustratereg::localWidth $3 }
-                    42 { set illustratereg::localDash $3 }
-                    43 { set illustratereg::localFont $3 }
+                    20 { IllustrateCreateCircle $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash }
+                    21 { IllustrateCreateEllipse $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash }
+                    22 { IllustrateCreateBox $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash }
+                    23 { IllustrateCreatePolygon $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash }
+                    24 { IllustrateCreateLine $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash }
+                    25 { IllustrateCreateText $3 $5 $7 $illustratefile::localColor $illustratefile::localFont }
+                    26 { IllustrateCreateText $3 $5 $10 $illustratefile::localColor $illustratefile::localFont }
+                    32 { set illustratefile::globalColor $3 }
+                    33 { set illustratefile::globalFill $3 }
+                    34 { set illustratefile::globalWidth $3 }
+                    35 { set illustratefile::globalDash $3 }
+                    36 { set illustratefile::globalFont $3 }
+                    39 { set illustratefile::localColor $3 }
+                    40 { set illustratefile::localFill $3 }
+                    41 { set illustratefile::localWidth $3 }
+                    42 { set illustratefile::localDash $3 }
+                    43 { set illustratefile::localFont $3 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule
@@ -3235,7 +3235,7 @@ proc illustratereg::yyparse {} {
 # end autogenerated taccle functions
 ######
 
-namespace eval illustratereg {
+namespace eval illustratefile {
      variable globalColor
      variable globalFill
      variable globalWidth
@@ -3249,7 +3249,7 @@ namespace eval illustratereg {
      variable localFont
 }
 
-proc illustratereg::initGlobal {} {
+proc illustratefile::initGlobal {} {
      variable globalColor cyan
      variable globalFill 0
      variable globalWidth 1
@@ -3257,7 +3257,7 @@ proc illustratereg::initGlobal {} {
      variable globalFont "helvetica 12 normal roman"
 }
 
-proc illustratereg::initLocal {} {
+proc illustratefile::initLocal {} {
      variable globalColor
      variable globalFill
      variable globalWidth

@@ -49,19 +49,19 @@ command : VERSION_ {puts "DS9 Illustrate File 1.0"}
  ;
 
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
- {IllustrateCreateCircle $3 $5 $7 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
+ {IllustrateCreateCircle $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
  | ELLIPSE_ bp numeric sp numeric sp numeric sp numeric bp comment
- {IllustrateCreateEllipse $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
+ {IllustrateCreateEllipse $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
  | BOX_ bp numeric sp numeric sp numeric sp numeric bp comment
- {IllustrateCreateBox $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
+ {IllustrateCreateBox $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
  | POLYGON_ bp numeric sp numeric sp numeric sp numeric bp comment
- {IllustrateCreatePolygon $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
+ {IllustrateCreatePolygon $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
- {IllustrateCreateLine $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localWidth $illustratereg::localDash}
+ {IllustrateCreateLine $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash}
  | TEXT_ bp numeric sp numeric sp STRING_ bp comment
- {IllustrateCreateText $3 $5 $7 $illustratereg::localColor $illustratereg::localFont}
+ {IllustrateCreateText $3 $5 $7 $illustratefile::localColor $illustratefile::localFont}
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
- {IllustrateCreateText $3 $5 $10 $illustratereg::localColor $illustratereg::localFont}
+ {IllustrateCreateText $3 $5 $10 $illustratefile::localColor $illustratefile::localFont}
  ;
 
 comment :
@@ -73,22 +73,22 @@ global : global globalProperty
  | globalProperty
  ;
 
-globalProperty : COLOR_ eq STRING_ {set illustratereg::globalColor $3}
- | FILL_ eq yesno {set illustratereg::globalFill $3}
- | WIDTH_ eq INT_ {set illustratereg::globalWidth $3}
- | DASH_ eq yesno {set illustratereg::globalDash $3}
- | FONT_ eq STRING_ {set illustratereg::globalFont $3}
+globalProperty : COLOR_ eq STRING_ {set illustratefile::globalColor $3}
+ | FILL_ eq yesno {set illustratefile::globalFill $3}
+ | WIDTH_ eq INT_ {set illustratefile::globalWidth $3}
+ | DASH_ eq yesno {set illustratefile::globalDash $3}
+ | FONT_ eq STRING_ {set illustratefile::globalFont $3}
  ;
 
 local : local localProperty
  | localProperty
  ;
 
-localProperty : COLOR_ eq STRING_ {set illustratereg::localColor $3}
- | FILL_ eq yesno {set illustratereg::localFill $3}
- | WIDTH_ eq INT_ {set illustratereg::localWidth $3}
- | DASH_ eq yesno {set illustratereg::localDash $3}
- | FONT_ eq STRING_ {set illustratereg::localFont $3}
+localProperty : COLOR_ eq STRING_ {set illustratefile::localColor $3}
+ | FILL_ eq yesno {set illustratefile::localFill $3}
+ | WIDTH_ eq INT_ {set illustratefile::localWidth $3}
+ | DASH_ eq yesno {set illustratefile::localDash $3}
+ | FONT_ eq STRING_ {set illustratefile::localFont $3}
  ;
 
 sp :
@@ -109,7 +109,7 @@ eq :
  
 %%
 
-namespace eval illustratereg {
+namespace eval illustratefile {
      variable globalColor
      variable globalFill
      variable globalWidth
@@ -123,7 +123,7 @@ namespace eval illustratereg {
      variable localFont
 }
 
-proc illustratereg::initGlobal {} {
+proc illustratefile::initGlobal {} {
      variable globalColor cyan
      variable globalFill 0
      variable globalWidth 1
@@ -131,7 +131,7 @@ proc illustratereg::initGlobal {} {
      variable globalFont "helvetica 12 normal roman"
 }
 
-proc illustratereg::initLocal {} {
+proc illustratefile::initLocal {} {
      variable globalColor
      variable globalFill
      variable globalWidth

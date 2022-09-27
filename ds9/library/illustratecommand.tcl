@@ -314,8 +314,8 @@ proc IllustrateLoadFn {fn} {
 	return
     }
 
-    set illustratereg::yyin $ch
-    illustratereg::yyparse
+    set illustratefile::yyin $ch
+    illustratefile::yyparse
 
     close $ch
     FileLast illustratefbox $fn

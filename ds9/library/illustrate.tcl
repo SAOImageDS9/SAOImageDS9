@@ -521,6 +521,42 @@ proc IllustrateEditBase {gr xx yy} {
     }
 }
 
+proc IllustrateListPropsBase {id} {
+    global ds9
+    
+    set color [$ds9(canvas) itemcget $id -outline]
+    if {[$ds9(canvas) itemcget $id -fill] != {}} {
+	set fill 1
+    } else {
+	set fill 0
+    }
+    set width [$ds9(canvas) itemcget $id -width]
+    if {[$ds9(canvas) itemcget $id -dash] != {}} {
+	set dash 1
+    } else {
+	set dash 0
+    }
+
+    set rr {}
+    if {$color != {cyan} || $fill || $width != 1 || $dash} {
+	append rr " #"
+	if {$color != {cyan}} {
+	    append rr " color = $color"
+	}
+	if {$fill} {
+	    append rr " fill = yes"
+	}
+	if {$width != 1} {
+	    append rr " width = $width"
+	}
+	if {$dash} {
+	    append rr " dash = yes "
+	}
+    }
+
+    return $rr
+}
+
 # Util
 
 proc IllustrateSaveUndo {undo id} {

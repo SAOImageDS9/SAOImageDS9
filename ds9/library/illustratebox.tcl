@@ -50,18 +50,6 @@ proc IllustrateListBox {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
-    set color [$ds9(canvas) itemcget $id -outline]
-    if {[$ds9(canvas) itemcget $id -fill] != {}} {
-	set fill 1
-    } else {
-	set fill 0
-    }
-    set width [$ds9(canvas) itemcget $id -width]
-    if {[$ds9(canvas) itemcget $id -dash] != {}} {
-	set dash 1
-    } else {
-	set dash 0
-    }
     
     set x1 [lindex $coords 0]
     set y1 [lindex $coords 1]
@@ -73,24 +61,6 @@ proc IllustrateListBox {id} {
     set r1 [expr ($x2-$x1)]
     set r2 [expr ($y2-$y1)]
     
-    set rr "box $xc $yc $r1 $r2"
-
-    if {$dash || $fill || $color != {cyan} || $width != 1} {
-	append rr " #"
-	if {$color != {cyan}} {
-	    append rr " color=$color"
-	}
-	if {$fill} {
-	    append rr " fill=1"
-	}
-	if {$width != 1} {
-	    append rr " width=1"
-	}
-	if {$dash} {
-	    append rr " dash=1"
-	}
-    }
-
-    return $rr
+    return "box $xc $yc $r1 $r2 [IllustrateListPropsBase $id]"
 }
 

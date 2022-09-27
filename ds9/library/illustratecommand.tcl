@@ -326,7 +326,7 @@ proc IllustrateLoadFn {fn} {
 proc IllustrateListHeader {} {
     set rr {}
     append rr  "# Illustrate file format: DS9 version 1.0\n"
-    append rr "global color=cyan fill=0 width=1 dash=1 font=\"helvetica 10 normal roman\"\n"
+    append rr "global color=cyan fill=0 width=1 dash=1 font=\"helvetica 12 normal roman\"\n"
 }
 
 proc IllustrateSave {ch id} {

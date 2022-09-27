@@ -128,7 +128,7 @@ proc illustratereg::initGlobal {} {
      variable globalFill 0
      variable globalWidth 1
      variable globalDash 0
-     variable globalFont "helvetica 12 roman normal"
+     variable globalFont "helvetica 12 normal roman"
 }
 
 proc illustratereg::initLocal {} {

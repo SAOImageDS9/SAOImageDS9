@@ -58,8 +58,8 @@ proc IllustrateListBox {id} {
 
     set xc [expr ($x2-$x1)/2+$x1]
     set yc [expr ($y2-$y1)/2+$y1]
-    set r1 [expr ($x2-$x1)]
-    set r2 [expr ($y2-$y1)]
+    set r1 [expr ($x2-$x1)/2]
+    set r2 [expr ($y2-$y1)/2]
     
     return "box $xc $yc $r1 $r2 [IllustrateListPropsBase $id]"
 }

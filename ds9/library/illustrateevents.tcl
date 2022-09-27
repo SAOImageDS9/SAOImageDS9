@@ -273,14 +273,18 @@ proc IllustrateButtonMotion {xx yy} {
 	beginCreate {
 	    IllustrateGraphicAntsOn $iillustrate(id)
 	    IllustrateHandleOff $iillustrate(id)
-	    set iillustrate(motion) create
+	    switch [IllustrateGetType $iillustrate(id)] {
+		polygon -
+		text {}
+		default {set iillustrate(motion) create}
+	    }
 	}
 	create {
 	    switch [IllustrateGetType $iillustrate(id)] {
 		circle {IllustrateEditCircle $iillustrate(edit) $xx $yy}
 		ellipse -
 		box {IllustrateEditBase $iillustrate(edit) $xx $yy}
-		polygon {IllustrateEditPolygon $iillustrate(edit) $xx $yy}
+		polygon {}
 		line {IllustrateEditLine $iillustrate(edit) $xx $yy}
 		text {}
 	    }
@@ -389,10 +393,7 @@ proc IllustrateButtonRelease {xx yy} {
 			    IllustrateDefaultBox $id
 			    IllustrateUpdateHandleBase $id
 			}
-			polygon {
-			    IllustrateDefaultPolygon $id
-			    IllustrateUpdateHandlePolygon $id
-			}
+			polygon {}
 			line {IllustrateDeleteGraphic $id}
 			text {}
 		    }

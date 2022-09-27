@@ -14,7 +14,7 @@ proc IllustrateDef {} {
     set iillustrate(undo) {}
 
     set illustrate(show) 1
-    set illustrate(shape) circle
+    set illustrate(shape) polygon
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
@@ -76,9 +76,8 @@ proc IllustrateCreateGraphic {xx yy} {
 			$illustrate(dash) $illustrate(dashlist)]
 	}
 	polygon {
-	    return [IllustrateCreatePolygon $xx $yy \
-			$pillustrate(polygon,width) \
-			$pillustrate(polygon,height) \
+	    return [IllustrateCreatePolygon \
+			[list $xx $yy $xx $yy $xx $yy $xx $yy] \
 			$illustrate(color) $illustrate(fill) \
 			$illustrate(width) \
 			$illustrate(dash) $illustrate(dashlist)]

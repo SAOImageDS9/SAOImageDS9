@@ -83,16 +83,16 @@ proc IllustrateListLine {id} {
     
     set rr "line $coords"
 
-    if {$dash || $color != {cyan} || $width != 1} {
+    if {$color != {cyan} || $width != 1 || $dash} {
 	append rr " #"
 	if {$color != {cyan}} {
-	    append rr " color=$color"
+	    append rr " color = $color"
 	}
 	if {$width != 1} {
-	    append rr " width=1"
+	    append rr " width = $width"
 	}
 	if {$dash} {
-	    append rr " dash=1"
+	    append rr " dash = yes"
 	}
     }
 

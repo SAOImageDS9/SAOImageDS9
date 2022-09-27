@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreatePolygon {xx yy rr1 rr2 color fill width dash dashlist} {
+proc IllustrateCreatePolygon {coords color fill width dash dashlist} {
     global ds9
 
     if {$fill} {
@@ -19,10 +19,7 @@ proc IllustrateCreatePolygon {xx yy rr1 rr2 color fill width dash dashlist} {
     }
 
     set id [$ds9(canvas) create polygon \
-		[expr $xx-$rr1] [expr $yy-$rr2] \
-		[expr $xx+$rr1] [expr $yy-$rr2] \
-		[expr $xx+$rr1] [expr $yy+$rr2]\
-		[expr $xx-$rr1] [expr $yy+$rr2] \
+		$coords \
 		-outline $color \
 		-fill $fillcolor \
 		-width $width \
@@ -198,7 +195,6 @@ proc IllustrateEditPolygon {gr xx yy} {
     foreach {id color fill dash} $gr {
 	if {$iillustrate(handle)} {
 	    set bbox [$ds9(canvas) bbox $id]
-	    
 	    set bbx1 [lindex $bbox 0]
 	    set bby1 [lindex $bbox 1]
 	    set bbx2 [lindex $bbox 2]
@@ -230,7 +226,6 @@ proc IllustrateEditPolygon {gr xx yy} {
 	    } else {
 		set sc $bb
 	    }
-
 	    $ds9(canvas) scale $id $xc $yc $sc $sc
 
 	} elseif {$iillustrate(node)} {

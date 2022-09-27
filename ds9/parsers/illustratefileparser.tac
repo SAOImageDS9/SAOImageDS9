@@ -55,7 +55,7 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateCreateEllipse $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | BOX_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateCreateBox $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
- | POLYGON_ bp numeric sp numeric sp numeric sp numeric bp comment
+ | POLYGON_ bp coords {puts $coords} bp comment
  {IllustrateCreatePolygon $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateCreateLine $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
@@ -63,6 +63,14 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateCreateText $3 $5 $7 $illustratefile::localColor $illustratefile::localFont}
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
  {IllustrateCreateText $3 $5 $10 $illustratefile::localColor $illustratefile::localFont}
+ ;
+
+coords : coord {set _ $1} coords
+ | coord {set _ $1"}
+ ;
+
+coord : numeric sp numeric {set _ "$1 $3"}
+ |
  ;
 
 comment :

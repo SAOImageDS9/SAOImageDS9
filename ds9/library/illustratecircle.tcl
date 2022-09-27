@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateCircle {xx yy rr color fill width dash} {
+proc IllustrateCreateCircle {xx yy rr color fill width dash dashlist} {
     global ds9
 
     if {$fill} {
@@ -13,7 +13,7 @@ proc IllustrateCreateCircle {xx yy rr color fill width dash} {
 	set fillcolor {}
     }
     if {$dash} {
-	set dashlist {8 3}
+	set dashlist $dashlist
     } else {
 	set dashlist {}
     }

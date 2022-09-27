@@ -19,6 +19,7 @@ proc IllustrateDef {} {
     set illustrate(fill) 0
     set illustrate(width) 1
     set illustrate(dash) 0
+    set illustrate(dashlist) {8 3}
     set illustrate(font) helvetica
     set illustrate(font,size) 12
     set illustrate(font,weight) normal
@@ -59,29 +60,34 @@ proc IllustrateCreateGraphic {xx yy} {
 	circle {
 	    return [IllustrateCreateCircle $xx $yy 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) \
+			$illustrate(dash) $illustrate(dashlist)]
 	}
 	ellipse {
 	    return [IllustrateCreateEllipse $xx $yy 0 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) $illustrate(dash) $illustrate(dash)]
+			$illustrate(dash) $illustrate(dashlist)]
 	}
 	box {
 	    return [IllustrateCreateBox $xx $yy 0 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) \
+			$illustrate(dash) $illustrate(dashlist)]
 	}
 	polygon {
 	    return [IllustrateCreatePolygon $xx $yy \
 			$pillustrate(polygon,width) \
 			$pillustrate(polygon,height) \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) \
+			$illustrate(dash) $illustrate(dashlist)]
 	}
 	line {
 	    return [IllustrateCreateLine $xx $yy $xx $yy \
 			$illustrate(color) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) \
+			$illustrate(dash) $illustrate(dashlist)]
 	}
 	text {
 	    set txt {Text}
@@ -137,7 +143,7 @@ proc IllustrateUpdateGraphic {} {
 	set fill {}
     }
     if {$illustrate(dash)} {
-	set dash {8 3}
+	set dash $illustrate(dashlist)
     } else {
 	set dash {}
     }

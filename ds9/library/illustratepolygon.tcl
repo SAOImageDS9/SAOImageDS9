@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreatePolygon {xx yy rr1 rr2 color fill width dash} {
+proc IllustrateCreatePolygon {xx yy rr1 rr2 color fill width dash dashlist} {
     global ds9
 
     if {$fill} {
@@ -13,7 +13,7 @@ proc IllustrateCreatePolygon {xx yy rr1 rr2 color fill width dash} {
 	set fillcolor {}
     }
     if {$dash} {
-	set dashlist {8 3}
+	set dashlist $dashlist
     } else {
 	set dashlist {}
     }

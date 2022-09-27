@@ -326,17 +326,17 @@ proc IllustrateLoadFn {fn} {
 proc IllustrateListHeader {} {
     set rr {}
     append rr  "# Illustrate file format: DS9 version 1.0\n"
-    append rr "global color=cyan fill=0 width=1 dash=1 font=\"helvetica 12 normal roman\"\n"
+    append rr "global color = cyan fill = no width = 1 dash = no dashlist = {8 3} font = \"helvetica 12 normal roman\""
 }
 
 proc IllustrateSave {ch id} {
     switch [IllustrateGetType $id] {
-	circle {puts $ch "[IllustrateListCircle $id]\n"}
-	ellipse {puts $ch "[IllustrateListEllipse $id]\n"}
-	box {puts $ch "[IllustrateListBox $id]\n"}
-	polygon {puts $ch "[IllustrateListPolygon $id]\n"}
-	line {puts $ch "[IllustrateListLine $id]\n"}
-	text {puts $ch "[IllustrateListText $id]\n"}
+	circle {puts $ch [IllustrateListCircle $id]}
+	ellipse {puts $ch [IllustrateListEllipse $id]}
+	box {puts $ch [IllustrateListBox $id]}
+	polygon {puts $ch [IllustrateListPolygon $id]}
+	line {puts $ch [IllustrateListLine $id]}
+	text {puts $ch [IllustrateListText $id]}
     }
 }
 
@@ -404,7 +404,7 @@ proc IllustdrateListSelect {} {
     global ds9
     global iillustrate
 
-    set rr [IllustrateListHeader]
+    set rr "[IllustrateListHeader]\n"
     foreach gr $iillustrate(selection) {
 	foreach {id color fill dash} $gr {
 	    IllustrateList rr $id
@@ -418,7 +418,7 @@ proc IllustdrateListSelect {} {
 proc IllustrateListAll {} {
     global ds9
     
-    set rr [IllustrateListHeader]
+    set rr "[IllustrateListHeader]\n"
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	IllustrateList rr $id
     }

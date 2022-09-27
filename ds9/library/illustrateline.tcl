@@ -4,11 +4,11 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateLine {x1 y1 x2 y2 color width dash} {
+proc IllustrateCreateLine {x1 y1 x2 y2 color width dash dashlist} {
     global ds9
 
     if {$dash} {
-	set dashlist {8 3}
+	set dashlist $dashlist
     } else {
 	set dashlist {}
     }

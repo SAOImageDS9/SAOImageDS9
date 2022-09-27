@@ -94,8 +94,7 @@ proc IllustrateCreateGraphic {xx yy} {
 	    }
 	    return [IllustrateCreateText $xx $yy $txt \
 			$illustrate(color) \
-			$illustrate(font) $illustrate(font,size) \
-			$illustrate(font,weight) $illustrate(font,slant)]
+			"$illustrate(font) $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"]
 	}
     }
 }

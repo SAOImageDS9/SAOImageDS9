@@ -8,7 +8,6 @@
 %%
 
 \#		{return $HASH_}
-debug		{return $DEBUG_}
 version		{return $VERSION_}
 global		{return $GLOBAL_}
 
@@ -26,9 +25,7 @@ polygon		{return $POLYGON_}
 line		{return $LINE_}
 text		{return $TEXT_}
 
-wcs		{return $WCS_}
-
-#include coordsys.fin
+image		{return $IMAGE_}
 
 #include yesno.fin
 #include numeric.fin

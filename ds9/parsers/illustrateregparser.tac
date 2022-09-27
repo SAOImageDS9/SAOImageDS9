@@ -3,8 +3,6 @@
 
 #include def.tin
 
-#include coordsys.tin
-
 #include yesno.tin
 #include numeric.tin
 #include string.tin
@@ -12,7 +10,6 @@
 %start start
 
 %token HASH_
-%token DEBUG_
 %token VERSION_
 %token GLOBAL_
 
@@ -29,7 +26,7 @@
 %token LINE_
 %token TEXT_
 
-%token WCS_
+%token IMAGE_
 
 %%
 
@@ -43,10 +40,12 @@ commands : commands command
  | command
  ;
 
-command : DEBUG_ yesno
- | VERSION_ {puts "DS9 Regions File 4.2"}
+command : VERSION_ {puts "DS9 Illustrate File 1.0"}
  | GLOBAL_ global
  | {initLocal} shape
+
+ | HASH_
+ | IMAGE_
  ;
 
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
@@ -59,11 +58,14 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateCreatePolygon $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localFill $illustratereg::localWidth $illustratereg::localDash}
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateCreateLine $3 $5 $7 $9 $illustratereg::localColor $illustratereg::localWidth $illustratereg::localDash}
- | TEXT_ bp numeric sp numeric bp STRING_ comment
- {IllustrateCreateText $3 $5 $7 $illustratereg::localColor helvetica 12 normal roman}
+ | TEXT_ bp numeric sp numeric sp STRING_ bp comment
+ {IllustrateCreateText $3 $5 $7 $illustratereg::localColor $illustratereg::localFont}
+ | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
+ {IllustrateCreateText $3 $5 $10 $illustratereg::localColor $illustratereg::localFont}
  ;
 
 comment :
+ | HASH_ 
  | HASH_ local
  ;
 
@@ -75,6 +77,7 @@ globalProperty : COLOR_ eq STRING_ {set illustratereg::globalColor $3}
  | FILL_ eq yesno {set illustratereg::globalFill $3}
  | WIDTH_ eq INT_ {set illustratereg::globalWidth $3}
  | DASH_ eq yesno {set illustratereg::globalDash $3}
+ | FONT_ eq STRING_ {set illustratereg::globalFont $3}
  ;
 
 local : local localProperty
@@ -85,6 +88,7 @@ localProperty : COLOR_ eq STRING_ {set illustratereg::localColor $3}
  | FILL_ eq yesno {set illustratereg::localFill $3}
  | WIDTH_ eq INT_ {set illustratereg::localWidth $3}
  | DASH_ eq yesno {set illustratereg::localDash $3}
+ | FONT_ eq STRING_ {set illustratereg::localFont $3}
  ;
 
 sp :
@@ -103,28 +107,28 @@ eq :
  | '='
  ;
  
-coordSystem : IMAGE_
- | PHYSICAL_
- | DETECTOR_
- | AMPLIFIER_
- | WCS_
- ;
-
 %%
 
 namespace eval illustratereg {
-     variable globalColor cyan
-     variable globalFill 0
-     variable globalWidth 1
-     variable globalDash 0
+     variable globalColor
+     variable globalFill
+     variable globalWidth
+     variable globalDash
+     variable globalFont
 
      variable localColor
      variable localFill
      variable localWidth
      variable localDash
+     variable localFont
 }
 
 proc illustratereg::initGlobal {} {
+     variable globalColor cyan
+     variable globalFill 0
+     variable globalWidth 1
+     variable globalDash 0
+     variable globalFont "helvetica 12 roman normal"
 }
 
 proc illustratereg::initLocal {} {
@@ -132,9 +136,11 @@ proc illustratereg::initLocal {} {
      variable globalFill
      variable globalWidth
      variable globalDash
+     variable globalFont
 
      variable localColor $globalColor
      variable localFill $globalFill
      variable localWidth $globalWidth
      variable localDash $globalDash
+     variable localFont $globalFont
 }

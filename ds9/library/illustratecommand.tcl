@@ -301,7 +301,7 @@ proc IllustratePaste {} {
 proc IllustrateLoad {} {
     global ds9
     
-    IllustrateLoadFn [OpenFileDialog markerfbox]
+    IllustrateLoadFn [OpenFileDialog illustratefbox]
     
 }
 
@@ -318,15 +318,15 @@ proc IllustrateLoadFn {fn} {
     illustratereg::yyparse
 
     close $ch
+    FileLast illustratefbox $fn
 }
 
 # Save
 
 proc IllustrateListHeader {} {
     set rr {}
-    append rr  "# Region file format: DS9 version 4.2\n"
-    append rr "global color=cyan fill=0 dashlist=8 3 width=1 font=\"helvetica 10 normal roman\" dash=0\n"
-    append rr "image\n"
+    append rr  "# Illustrate file format: DS9 version 1.0\n"
+    append rr "global color=cyan fill=0 width=1 dash=1 font=\"helvetica 10 normal roman\"\n"
 }
 
 proc IllustrateSave {ch id} {
@@ -344,7 +344,7 @@ proc IllustrateSaveSelect {} {
     global ds9
     global iillustrate
 
-    set fn [SaveFileDialog markerfbox]
+    set fn [SaveFileDialog illustratefbox]
     if {$fn == {}} {
 	return
     }
@@ -361,12 +361,13 @@ proc IllustrateSaveSelect {} {
     }
 
     close $ch
+    FileLast illustratefbox $fn
 }
 
 proc IllustrateSaveAll {} {
     global ds9
     
-    set fn [SaveFileDialog markerfbox]
+    set fn [SaveFileDialog illustratefbox]
     if {$fn == {}} {
 	return
     }
@@ -381,6 +382,7 @@ proc IllustrateSaveAll {} {
     }
 
     close $ch
+    FileLast illustratefbox $fn
 }
 
 # List

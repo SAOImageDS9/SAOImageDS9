@@ -4,14 +4,14 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateText {xx yy txt color font size weight slant} {
+proc IllustrateCreateText {xx yy txt color font} {
     global ds9
 
     set id [$ds9(canvas) create text \
 		$xx $yy \
 		-text $txt \
 		-fill $color \
-		-font "$font $size $weight $slant" \
+		-font $font \
 		-tags {text graphic}
 	   ]
 

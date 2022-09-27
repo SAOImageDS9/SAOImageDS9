@@ -14,7 +14,7 @@ proc IllustrateDef {} {
     set iillustrate(undo) {}
 
     set illustrate(show) 1
-    set illustrate(shape) polygon
+    set illustrate(shape) box
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
@@ -517,6 +517,7 @@ proc IllustrateEditBase {gr xx yy} {
 	set y1 [lindex $coords 1]
 	set x2 [lindex $coords 2]
 	set y2 [lindex $coords 3]
+
 	switch $iillustrate(handle) {
 	    1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
 	    2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}

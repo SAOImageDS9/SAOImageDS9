@@ -68,6 +68,7 @@ illustrate : {IllustrateCmdLoad}
  | SAVE_ save
  | LIST_ list
  | DELETE_ delete
+ | STRING_ {IllustrateLoadFn $1}
  | LOAD_ STRING_ {IllustrateLoadFn $2}
  | SHOW_ yesno {ProcessCmdSet illustrate show $2 IllustrateShow}
  | COMMAND_ STRING_ {IllustrateCmdCommand $2}

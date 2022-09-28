@@ -537,14 +537,18 @@ proc IllustrateListPropsBase {id} {
 	set fill 0
     }
     set width [$ds9(canvas) itemcget $id -width]
-    if {[$ds9(canvas) itemcget $id -dash] != {}} {
+
+    set dashlist [$ds9(canvas) itemcget $id -dash]
+    if {$dashlist != {}} {
 	set dash 1
     } else {
 	set dash 0
     }
 
     set rr {}
-    if {$color != {cyan} || $fill || $width != 1 || $dash} {
+    if {$color != {cyan} || $fill || $width != 1 ||
+	$dash || $dashlist != {8 3}} {
+
 	append rr " #"
 	if {$color != {cyan}} {
 	    append rr " color = $color"
@@ -557,6 +561,10 @@ proc IllustrateListPropsBase {id} {
 	}
 	if {$dash} {
 	    append rr " dash = yes "
+	}
+
+	if {$dashlist != {8 3}} {
+	    append rr " dashlist = {8 3}"
 	}
     }
 

@@ -55,8 +55,8 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateCreateEllipse $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | BOX_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateCreateBox $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
- | POLYGON_ bp coords {puts $coords} bp comment
- {IllustrateCreatePolygon $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
+ | POLYGON_ bp coords bp comment
+ {IllustrateCreatePolygon $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateCreateLine $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | TEXT_ bp numeric sp numeric sp STRING_ bp comment
@@ -65,11 +65,11 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateCreateText $3 $5 $10 $illustratefile::localColor $illustratefile::localFont}
  ;
 
-coords : coord {set _ $1} coords
- | coord {set _ $1"}
+coords : coords coord
+ | coord
  ;
 
-coord : numeric sp numeric {set _ "$1 $3"}
+coord : numeric sp numeric {lappend illustratefile::coords $1 $3}
  |
  ;
 
@@ -119,8 +119,14 @@ eq :
  | '='
  ;
  
-discard : STRING_ discard
- | STRING_
+discard : discard anything
+ | anything
+ ;
+
+anything : STRING_
+ | numeric
+ | VERSION_
+ | IMAGE_
  ;
 
 %%
@@ -158,6 +164,7 @@ proc illustratefile::initLocal {} {
      variable globalDashList
      variable globalFont
 
+     variable coords {}
      variable localColor $globalColor
      variable localFill $globalFill
      variable localWidth $globalWidth

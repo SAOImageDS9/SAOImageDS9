@@ -314,6 +314,7 @@ proc IllustrateLoadFn {fn} {
 	return
     }
 
+    illustratefile::YY_FLUSH_BUFFER
     set illustratefile::yyin $ch
     illustratefile::yyparse
 

@@ -75,7 +75,9 @@ proc IllustrateListLine {id} {
     set coords [$ds9(canvas) coords $id]
     set color [$ds9(canvas) itemcget $id -fill]
     set width [$ds9(canvas) itemcget $id -width]
-    if {[$ds9(canvas) itemcget $id -dash] != {}} {
+
+    set dashlist [$ds9(canvas) itemcget $id -dash]
+    if {$dashlist != {}} {
 	set dash 1
     } else {
 	set dash 0
@@ -83,7 +85,9 @@ proc IllustrateListLine {id} {
     
     set rr "line $coords"
 
-    if {$color != {cyan} || $width != 1 || $dash} {
+    if {$color != {cyan} || $width != 1 ||
+	$dash || $dashlist != {8 3}} {
+
 	append rr " #"
 	if {$color != {cyan}} {
 	    append rr " color = $color"
@@ -93,6 +97,9 @@ proc IllustrateListLine {id} {
 	}
 	if {$dash} {
 	    append rr " dash = yes"
+	}
+	if {$dashlist != {8 3}} {
+	    append rr " dashlist = {8 3}"
 	}
     }
 

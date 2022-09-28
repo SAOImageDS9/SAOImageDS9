@@ -9,6 +9,8 @@ proc IllustrateDef {} {
     global iillustrate
     global pillustrate
 
+    set iillustrate(prefix,dialog) {ill}
+
     set iillustrate(selection) {}
     set iillustrate(clipboard) {}
     set iillustrate(undo) {}
@@ -776,4 +778,30 @@ proc IllustrateCmdSend {} {
     }
 
     ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) {.seg} $rr
+}
+
+proc IllustrateCmdOpen {} {
+    global iillustrate
+    
+    foreach gr $iillustrate(selection) {
+	foreach {id color fill dash} $gr {
+	    IllustrateDialog $id
+	}
+    }
+}
+
+proc IllustrateCmdOpen {} {
+    global iillustrate
+    
+    foreach gr $iillustrate(selection) {
+	foreach {id color fill dash} $gr {
+	    set varname ${iillustrate(prefix,dialog)}${id}
+	    global $varname
+	    upvar #0 $varname var
+
+	    if {[info exists var(proc,close)]} {
+		eval "$var(proc,close) $varname"
+	    }
+	}
+    }
 }

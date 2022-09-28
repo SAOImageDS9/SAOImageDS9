@@ -50,7 +50,6 @@ proc IllustrateListCircle {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
-    
     set x1 [lindex $coords 0]
     set y1 [lindex $coords 1]
     set x2 [lindex $coords 2]
@@ -98,3 +97,212 @@ proc IllustrateEditCircle {gr xx yy} {
     }
 }
 
+proc IllustrateCircleDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+    
+    global ds9
+
+    # see if we already have a header window visible
+    if {[winfo exists $var(top)]} {
+	raise $var(top)
+	return
+    }
+
+    # procs
+    set var(proc,apply) IllustrateCircleApply
+    set var(proc,close) IllustrateCircleClose
+    set var(proc,deleteCB) IllustrateCircleDeleteCB
+    set var(proc,editCB) IllustrateCircleEditCB
+
+    # base
+
+    # variables
+    set var(xc) 0
+    set var(yc) 0
+    set var(rr) 0
+
+    # window
+    Toplevel $var(top) $var(mb) 6 [msgcat::mc "Circle"] \
+	"$var(proc,close) $varname"
+
+    # IllustrateBaseMenu $varname
+    $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
+    $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
+    $var(mb) add cascade -label [msgcat::mc {Color}] -menu $var(mb).color
+    $var(mb) add cascade -label [msgcat::mc {Width}] -menu $var(mb).width
+
+    # IllustrateBaseFileMenu $varname
+    ThemeMenu $var(mb).file
+    $var(mb).file add command -label [msgcat::mc {Apply}] \
+	-command "$var(proc,apply) $varname"
+    $var(mb).file add separator
+    $var(mb).file add command -label [msgcat::mc {Close}] \
+	-command "$var(proc,close) $varname" -accelerator "${ds9(ctrl)}W"
+    bind $var(top) <<Close>> [list $var(proc,close) $varname]
+
+    EditMenu $var(mb) $varname
+    ColorFillMenu $var(mb).color $varname color fill \
+	[list IllustrateCircleUpdate $varname] \
+	[list IllustrateCircleUpdate $varname]
+    WidthDashMenu $var(mb).width $varname width dash \
+	[list IllustrateCircleUpdate $varname] \
+	[list IllustrateCircleUpdate $varname]
+
+    set f $var(top).param
+
+    # Param
+    set f [ttk::frame $var(top).param]
+    ttk::label $f.tid -text [msgcat::mc {Number}]
+    ttk::label $f.id -text "$var(id)"
+    grid $f.tid $f.id -padx 2 -pady 2 -sticky w
+
+    # Center
+    ttk::label $f.tcenter -text [msgcat::mc {Center}]
+    ttk::entry $f.centerx -textvariable ${varname}(xc) -width 13
+    ttk::entry $f.centery -textvariable ${varname}(yc) -width 13
+    grid $f.tcenter $f.centerx $f.centery -padx 2 -pady 2 -sticky w
+
+    ttk::label $f.tradius -text [msgcat::mc {Radius}]
+    ttk::entry $f.radius -textvariable ${varname}(rr) -width 13 
+    grid $f.tradius $f.radius -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $var(top).buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] \
+	-command "$var(proc,apply) $varname"
+    ttk::button $f.close -text [msgcat::mc {Close}] \
+	-command "$var(proc,close) $varname"
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
+
+    bind $var(top) <Return> "$var(proc,apply) $varname"
+
+    # Fini
+    ttk::separator $var(top).sep -orient horizontal
+    pack $var(top).buttons $var(top).sep -side bottom -fill x
+    pack $var(top).param -side top -fill both -expand true
+
+    # init
+    IllustrateCircleEditCB $varname
+    IllustrateCircleColorCB $varname
+    IllustrateCircleWidthCB $varname
+    puts [array get $varname]
+}
+
+proc IllustrateCircleClose {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    IllustrateCircleDeleteCB $varname
+    unset $varname
+}
+
+proc IllustrateCircleApply {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    
+    if {$var(xc) != {} && $var(yc) != {} && $var(rr) != {}} {
+	set xc $var(xc)
+	set yc $var(yc)
+	set rr $var(rr)
+
+	$ds9(canvas) coords $var(id) \
+	    [expr $xc-$rr] [expr $yc-$rr] \
+	    [expr $xc+$rr] [expr $yc+$rr]
+
+	IllustrateUpdateHandleBase $var(id)
+    }
+}
+
+proc IllustrateCircleUpdate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    global illustrate
+    
+    set id $var(id)
+    
+    if {$var(fill)} {
+	set fill $var(color)
+    } else {
+	set fill {}
+    }
+    if {$var(dash)} {
+	set dash $illustrate(dashlist)
+    } else {
+	set dash {}
+    }
+
+    $ds9(canvas) itemconfigure $var(id) \
+	-outline $var(color) \
+	-fill $fill \
+	-width $var(width) \
+	-dash $dash
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $var(color) -fill $var(color)
+    }
+}
+
+# callbacks
+
+proc IllustrateCircleDeleteCB {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # destroy the window and menubar
+    if {[winfo exists $var(top)]} {
+	destroy $var(top)
+	destroy $var(mb)
+    }
+}
+
+proc IllustrateCircleEditCB {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+
+    set coords [$ds9(canvas) coords $var(id)]
+    set x1 [lindex $coords 0]
+    set y1 [lindex $coords 1]
+    set x2 [lindex $coords 2]
+    set y2 [lindex $coords 3]
+
+    set var(xc) [expr ($x2-$x1)/2+$x1]
+    set var(yc) [expr ($y2-$y1)/2+$y1]
+    set var(rr) [expr ($x2-$x1)/2]
+}
+
+proc IllustrateCircleColorCB {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+
+    set var(color) [$ds9(canvas) itemcget $var(id) -outline]
+    if {[$ds9(canvas) itemcget $var(id) -fill] != {}} {
+	set var(fill) 1
+    } else {
+	set var(fill) 0
+    }
+}
+
+proc IllustrateCircleWidthCB {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    
+    set var(width) [expr int([$ds9(canvas) itemcget $var(id) -width])]
+    set var(dashlist) [$ds9(canvas) itemcget $var(id) -dash]
+    if {$var(dashlist) != {}} {
+	set var(dash) 1
+    } else {
+	set var(dash) 0
+    }
+}

@@ -50,6 +50,9 @@ command : illustrate
  ;
 
 illustrate : {IllustrateCmdLoad}
+ | OPEN_ {IllustrateCmdOpen}
+ | CLOSE_ {IllustrateCmdClose}
+
  | SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
  | COLOR_ STRING_ {ProcessCmdSet illustrate color $2 IllustrateUpdateGraphic}
  | FILL_ yesno {ProcessCmdSet illustrate fill $2 IllustrateUpdateGraphic}

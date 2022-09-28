@@ -11,6 +11,9 @@ proc IllustrateMainMenu {} {
     global illustrate
 
     ThemeMenu $ds9(mb).illustrate
+    $ds9(mb).illustrate add command -label [msgcat::mc {Get Information}] \
+	-command IllustrateGetInfo
+    $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Shape}] \
 	-menu $ds9(mb).illustrate.shape
     $ds9(mb).illustrate add separator

@@ -4,6 +4,47 @@
 
 package provide DS9 1.0
 
+# Get Inof
+
+proc IllustrateGetInfo {} {
+    global pds9
+    global iillustrate
+
+    if {[llength $iillustrate(selection)] == 0} {
+	if {$pds9(confirm)} {
+	    tk_messageBox -type ok -icon info -message [msgcat::mc {Please Select a Region}]
+	}
+	return
+    }
+
+    foreach gr $iillustrate(selection) {
+	foreach {id color fill dash} $gr {
+	    IllustrateDialog $id
+	}
+    }
+}
+
+proc IllustrateDialog {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    set var(id) $id
+    set var(top) ".${varname}"
+    set var(mb) ".${varname}mb"
+
+    switch [IllustrateGetType $id] {
+	circle {IllustrateCircleDialog $varname}
+	ellipse {IllustrateEllipseDialog $varname}
+	box {IllustrateBoxDialog $varname}
+	polygon {IllustratePolygonDialog $varname}
+	line {IllustrateLineDialog $varname}
+	text {IllustrateTextDialog $varname}
+    }
+}
+
 # Show
 
 proc IllustrateShow {} {

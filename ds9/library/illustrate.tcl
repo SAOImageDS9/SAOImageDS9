@@ -738,6 +738,9 @@ proc ProcessSendIllustrateCmd {proc id param {sock {}} {fn {}}} {
     global parse
     set parse(proc) $proc
     set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
+    puts "a:[array get parse]"
 
     illustratesend::YY_FLUSH_BUFFER
     illustratesend::yy_scan_string $param
@@ -762,3 +765,15 @@ proc IllustrateCmdCommand {cmd} {
     illustratefile::yy_scan_string $cmd
     illustratefile::yyparse
  }
+
+proc IllustrateCmdSend {} {
+    global ds9
+    global parse
+    puts "b:[array get parse]"
+    set rr "[IllustrateListHeader]\n"
+    foreach id [$ds9(canvas) find withtag {graphic}] {
+	IllustrateList rr $id
+    }
+
+    ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) {.seg} $rr
+}

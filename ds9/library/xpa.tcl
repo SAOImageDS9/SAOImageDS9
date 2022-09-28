@@ -1229,7 +1229,7 @@ proc XPARcvdIIS {xpa cdata param buf len} {
 
 proc XPASendIllustrate {xpa cdata param} {
     InitError xpa
-    catch {ProcessSendIllustrateCmd xpasetbuf $xpa $param}
+    catch {ProcessSendIllustrateCmd xpasetbuf $xpa $param {} {}}
     XPACatchError $xpa
 }
 

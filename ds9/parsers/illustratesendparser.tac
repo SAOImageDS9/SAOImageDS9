@@ -15,7 +15,8 @@
 
 %%
 
-illustratesend : SHAPE_ {ProcessSendCmdGet illustrate shape}
+illustratesend : {IllustrateCmdSend}
+ | SHAPE_ {ProcessSendCmdGet illustrate shape}
  | COLOR_ {ProcessSendCmdGet illustrate color}
  | FILL_ {ProcessSendCmdYesNo illustrate fill}
  | WIDTH_ {ProcessSendCmdGet illustrate width}

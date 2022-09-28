@@ -1236,7 +1236,7 @@ proc XPASendIllustrate {xpa cdata param} {
 proc XPARcvdIllustrate {xpa cdata param buf len} {
     XPADebug "XPARcvdIllustrate" $param
     InitError xpa
-    catch {set i 0; ProcessIllustrateCmd param i}
+    catch {set i 0; ProcessIllustrateCmd param i [xparec $xpa datachan] {}}
     XPACatchError $xpa
 }
 

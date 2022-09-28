@@ -9,8 +9,9 @@
 
 all		{return $ALL_}
 back		{return $BACK_}
-color		{return $COLOR_}
 close		{return $CLOSE_}
+color		{return $COLOR_}
+command		{return $COMMAND_}
 dash		{return $DASH_}
 delete		{return $DELETE_}
 fill		{return $FILL_}

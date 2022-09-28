@@ -720,9 +720,13 @@ proc IllustrateDump {} {
 
 # Process Cmds
 
-proc ProcessIllustrateCmd {varname iname} {
+proc ProcessIllustrateCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
+
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
     illustrate::YY_FLUSH_BUFFER
     illustrate::yy_scan_string [lrange $var $i end]
@@ -739,3 +743,22 @@ proc ProcessSendIllustrateCmd {proc id param {sock {}} {fn {}}} {
     illustratesend::yy_scan_string $param
     illustratesend::yyparse
 }
+
+proc IllustrateCmdLoad {} {
+    global parse
+
+    if {$parse(sock) != {}} {
+	illustratefile::YY_FLUSH_BUFFER
+	illustratefile::yy_scan_string [read $parse(sock)]
+	illustratefile::yyparse
+	close $parse(sock)
+    } elseif {$parse(fn) != {}} {
+	IllustrateLoadFn $parse(fn)
+    }
+}
+
+proc IllustrateCmdCommand {cmd} {
+    illustratefile::YY_FLUSH_BUFFER
+    illustratefile::yy_scan_string $cmd
+    illustratefile::yyparse
+ }

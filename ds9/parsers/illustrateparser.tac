@@ -12,8 +12,9 @@
 
 %token ALL_
 %token BACK_
-%token COLOR_
 %token CLOSE_
+%token COLOR_
+%token COMMAND_
 %token DASH_
 %token DELETE_
 %token FILL_
@@ -48,7 +49,8 @@ command : illustrate
  | illustrate {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-illustrate : SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
+illustrate : {IllustrateCmdLoad}
+ | SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
  | COLOR_ STRING_ {ProcessCmdSet illustrate color $2 IllustrateUpdateGraphic}
  | FILL_ yesno {ProcessCmdSet illustrate fill $2 IllustrateUpdateGraphic}
  | WIDTH_ INT_ {ProcessCmdSet illustrate width $2 IllustrateUpdateGraphic}
@@ -68,6 +70,7 @@ illustrate : SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
  | DELETE_ delete
  | LOAD_ STRING_ {IllustrateLoadFn $2}
  | SHOW_ yesno {ProcessCmdSet illustrate show $2 IllustrateShow}
+ | COMMAND_ STRING_ {IllustrateCmdCommand $2}
 
  | UNDO_ {IllustrateUndo}
  | CUT_ {IllustrateCut}

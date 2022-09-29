@@ -134,13 +134,7 @@ proc IllustrateDeleteSelect {} {
 
     foreach gr $iillustrate(selection) {
 	foreach {id color fill dash} $gr {
-	    # handles/nodes
-	    foreach hh [$ds9(canvas) find withtag gr${id}] {
-		$ds9(canvas) delete $hh
-	    }
-
-	    # graphic
-	    $ds9(canvas) delete $id
+	    IllustrateDeleteGraphic $id
 	}
     }
 
@@ -152,11 +146,7 @@ proc IllustrateDeleteAll {} {
     global iillustrate
 
     foreach id [$ds9(canvas) find withtag {graphic}] {
-	$ds9(canvas) delete $id
-	# handles/nodes
-	foreach hid [$ds9(canvas) find withtag gr${id}] {
-	    $ds9(canvas) delete $hid
-	}
+	IllustrateDeleteGraphic $id
     }
 
     set iillustrate(selection) {}
@@ -227,7 +217,7 @@ proc IllustrateUndo {} {
 	    create {
 		foreach item $ll {
 		    foreach {id graphic} $item {
-			IllustrateDeleteGraphic $id
+			IllustrateDeleteGraphicOne $id
 		    }
 		}
 	    }
@@ -289,7 +279,7 @@ proc IllustrateCut {} {
 		line {lappend iillustrate(clipboard) [IllustrateLineCopy $id]}
 		text {lappend iillustrate(clipboard) [IllustrateTextCopy $id]}
 	    }
-	    IllustrateDeleteGraphic $id
+	    IllustrateDeleteGraphicOne $id
 	}
     }
 

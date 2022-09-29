@@ -382,7 +382,7 @@ proc IllustrateButtonRelease {xx yy} {
 			IllustratePolygonDefault $id
 			IllustratePolygonUpdateHandle $id
 		    }
-		    line {IllustrateDeleteGraphic $id}
+		    line {IllustrateDeleteGraphicOne $id}
 		    text {}
 		}
 	    }
@@ -408,7 +408,7 @@ proc IllustrateButtonRelease {xx yy} {
 			    IllustrateBaseUpdateHandle $id
 			}
 			polygon {}
-			line {IllustrateDeleteGraphic $id}
+			line {IllustrateDeleteGraphicOne $id}
 			text {}
 		    }
 		}

@@ -262,12 +262,30 @@ proc IllustrateCircleUpdate {varname} {
 
 # callbacks
 
+proc IllustrateCircleDeleteCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    IllustrateCircleClose $varname
+}
+
 proc IllustrateCircleEditCB {id} {
     global iillustrate
 
     set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
     upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
 
     global ds9
 
@@ -288,6 +306,10 @@ proc IllustrateCirclePropsCB {id} {
     set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
     upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
 
     global ds9
 

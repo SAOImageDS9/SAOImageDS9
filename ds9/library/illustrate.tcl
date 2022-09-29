@@ -108,8 +108,16 @@ proc IllustrateCreateGraphic {xx yy} {
 
 proc IllustrateDeleteGraphic {id} {
     global ds9
-    global illustrate
-    global iillustrate
+
+    # dialogs
+    switch [IllustrateGetType $id] {
+	circle {IllustrateCircleDeleteCB $id}
+	ellipse {}
+	box {}
+	polygon {}
+	line {}
+	text {}
+    }
 
     # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
@@ -118,6 +126,13 @@ proc IllustrateDeleteGraphic {id} {
 
     # graphic
     $ds9(canvas) delete $id
+}
+
+proc IllustrateDeleteGraphicOne {id} {
+    global ds9
+    global iillustrate
+
+    IllustrateDeleteGraphic $id
 
     # update selection
     set old $iillustrate(selection)

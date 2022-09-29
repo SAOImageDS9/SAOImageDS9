@@ -67,7 +67,7 @@ proc IllustrateCircleEdit {gr xx yy} {
     global ds9
     global iillustrate
 
-    foreach {id color fill dash} $gr {
+    foreach {id color fillcolor dashlist} $gr {
 	set coords [$ds9(canvas) coords $id]
 	set x1 [lindex $coords 0]
 	set y1 [lindex $coords 1]
@@ -97,6 +97,8 @@ proc IllustrateCircleEdit {gr xx yy} {
 	    [expr $x2+$dd] [expr $y2+$dd]
     }
 }
+
+# Dialog
 
 proc IllustrateCircleDialog {id} {
     global iillustrate

@@ -193,7 +193,7 @@ proc IllustratePolygonEdit {gr xx yy} {
     global ds9
     global iillustrate
     
-    foreach {id color fill dash} $gr {
+    foreach {id color fillcolor dashlist} $gr {
 	if {$iillustrate(handle)} {
 	    set bbox [$ds9(canvas) bbox $id]
 	    set bbx1 [lindex $bbox 0]

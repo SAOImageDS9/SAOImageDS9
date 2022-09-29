@@ -298,7 +298,7 @@ proc IllustrateButtonMotion {xx yy} {
 
 	beginMove {
 	    foreach gr $iillustrate(selection) {
-		foreach {id color fill dash} $gr {
+		foreach {id color fillcolor dashlist} $gr {
 		    IllustrateGraphicAntsOn $id
 		    IllustrateHandleOff $id
 		}
@@ -307,7 +307,7 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	move {
 	    foreach gr $iillustrate(selection) {
-		foreach {id color fill dash} $gr {
+		foreach {id color fillcolor dashlist} $gr {
 		    set dx [expr $xx-$iillustrate(motion,xx)]
 		    set dy [expr $yy-$iillustrate(motion,yy)]
 		    $ds9(canvas) move $id $dx $dy
@@ -364,7 +364,7 @@ proc IllustrateButtonRelease {xx yy} {
 	beginCreate {
 	    # the user has just clicked, so resize to make visible or delete
 	    IllustrateGraphicAntsOff $iillustrate(edit)
-	    foreach {id color fill dash} $iillustrate(edit) {
+	    foreach {id color fillcolor dashlist} $iillustrate(edit) {
 		switch [IllustrateGetType $id] {
 		    circle {
 			IllustrateCircleDefault $id
@@ -392,7 +392,7 @@ proc IllustrateButtonRelease {xx yy} {
 	    set dx [expr $xx-$iillustrate(motion,xx)]
 	    set dy [expr $yy-$iillustrate(motion,yy)]
 	    IllustrateGraphicAntsOff $iillustrate(edit)
-	    foreach {id color fill dash} $iillustrate(edit) {
+	    foreach {id color fillcolor dashlist} $iillustrate(edit) {
 		if {[expr sqrt($dx*$dx + $dy*$dy)]<4} {
 		    switch [IllustrateGetType $id] {
 			circle {
@@ -429,7 +429,7 @@ proc IllustrateButtonRelease {xx yy} {
 	move {
 	    foreach gr $iillustrate(selection) {
 		IllustrateGraphicAntsOff $gr
-		foreach {id color fill dash} $gr {
+		foreach {id color fillcolor dashlist} $gr {
 		    IllustrateHandleOn $id
 		    switch [IllustrateGetType $id] {
 			circle {
@@ -460,7 +460,7 @@ proc IllustrateButtonRelease {xx yy} {
 	beginEdit -
 	edit {
 	    IllustrateGraphicAntsOff $iillustrate(edit)
-	    foreach {id color fill dash} $iillustrate(edit) {
+	    foreach {id color fillcolor dashlist} $iillustrate(edit) {
 		IllustrateHandleOn $id
 		switch [IllustrateGetType $id] {
 		    circle -

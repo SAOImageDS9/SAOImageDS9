@@ -141,7 +141,7 @@ proc IllustrateBaseEdit {gr xx yy} {
     global ds9
     global iillustrate
 
-    foreach {id color fill dash} $gr {
+    foreach {id color fillcolor dashlist} $gr {
 	set coords [$ds9(canvas) coords $id]
 	set x1 [lindex $coords 0]
 	set y1 [lindex $coords 1]
@@ -155,6 +155,40 @@ proc IllustrateBaseEdit {gr xx yy} {
 	    4 {$ds9(canvas) coords $id $xx $y1 $x2 $yy}
 	}
     }
+}
+
+proc IllustrateBaseUpdateColor {id color fill} {
+    global ds9
+    
+    if {$fill} {
+	set fillcolor $color
+    } else {
+	set fillcolor {}
+    }
+
+    $ds9(canvas) itemconfigure $id \
+	-outline $color \
+	-fill $fillcolor
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
+    }
+}
+
+proc IllustrateBaseUpdateWidth {id width dash} {
+    global ds9
+    global illustrate
+    
+    if {$dash} {
+	set dashlist $illustrate(dashlist)
+    } else {
+	set dashlist {}
+    }
+
+    $ds9(canvas) itemconfigure $id \
+	-width $width \
+	-dash $dashlist
 }
 
 proc IllustrateBaseListProps {id} {

@@ -21,8 +21,6 @@ proc IllustrateMainMenu {} {
 	-menu $ds9(mb).illustrate.color
     $ds9(mb).illustrate add cascade -label [msgcat::mc {Width}] \
 	-menu $ds9(mb).illustrate.width
-    $ds9(mb).illustrate add cascade -label [msgcat::mc {Font}] \
-	-menu $ds9(mb).illustrate.font
     $ds9(mb).illustrate add separator
     $ds9(mb).illustrate add command -label [msgcat::mc {All}] \
 	-command IllustrateSelectAll
@@ -75,11 +73,9 @@ proc IllustrateMainMenu {} {
 	-variable illustrate(shape) -value text
 
     ColorFillMenu $ds9(mb).illustrate.color illustrate color fill \
-	IllustrateUpdateGraphic IllustrateUpdateGraphic
+	IllustrateUpdateColor IllustrateUpdateColor
     WidthDashMenu $ds9(mb).illustrate.width illustrate width dash \
-	IllustrateUpdateGraphic IllustrateUpdateGraphic
-    FontMenu $ds9(mb).illustrate.font illustrate font font,size font,weight \
-	font,slant IllustrateUpdateGraphic
+	IllustrateUpdateWidth IllustrateUpdateWidth
 }
 
 proc PrefsDialogIllustrateMenu {w} {
@@ -96,7 +92,6 @@ proc PrefsDialogIllustrateMenu {w} {
     $m add separator
     $m add cascade -label [msgcat::mc {Color}] -menu $m.color
     $m add cascade -label [msgcat::mc {Width}] -menu $m.width
-    $m add cascade -label [msgcat::mc {Font}] -menu $m.font
     $m add separator
     $m add checkbutton -label [msgcat::mc {Show}] -variable pillustrate(show)
 
@@ -116,7 +111,6 @@ proc PrefsDialogIllustrateMenu {w} {
 
     ColorMenu $m.color pillustrate color {}
     WidthDashMenu $m.width pillustrate width dash {} {}
-    FontMenu $m.font pillustrate font font,size font,weight font,slant {}
 
     pack $f -side top -fill both -expand true
 }

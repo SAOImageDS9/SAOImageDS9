@@ -133,7 +133,7 @@ proc IllustrateDeleteGraphicOne {id} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {idd color fill dash} $gr {
+	foreach {idd color fillcolor dashlist} $gr {
 	    if {$id != $idd} {
 		lappend iillustrate(selection) $gr
 	    }
@@ -141,79 +141,86 @@ proc IllustrateDeleteGraphicOne {id} {
     }
 }
 
-proc IllustrateUpdateGraphic {} {
+proc IllustrateUpdateColor {} {
     global ds9
     global illustrate
     global iillustrate
     
     IllustrateSaveUndo selectedit {}
 
-    if {$illustrate(fill)} {
-	set fill $illustrate(color)
-    } else {
-	set fill {}
+    set old $iillustrate(selection)
+    set iillustrate(selection) {}
+    foreach gr $old {
+	foreach {id color fillcolor dashlist} $gr {
+	    switch [IllustrateGetType $id] {
+		circle {
+		    IllustrateBaseUpdateColor $id \
+			$illustrate(color) $illustrate(fill)
+		    IllustrateCirclePropsCB $id
+		}
+		ellipse {
+		    IllustrateBaseUpdateColor $id \
+			$illustrate(color) $illustrate(fill)
+		}
+		box {
+		    IllustrateBaseUpdateColor $id \
+			$illustrate(color) $illustrate(fill)
+		}
+		polygon {
+		    IllustrateBaseUpdateColor $id \
+			$illustrate(color) $illustrate(fill)
+		}
+		line {
+		    IllustrateLineUpdateColor $id \
+			$illustrate(color)
+		}
+		text {
+		    IllustrateTextUpdateColor $id \
+			$illustrate(color)
+		}
+	    }
+            # update selection list
+            lappend iillustrate(selection) [IllustrateSaveGraphic $id]
+	}
     }
-    if {$illustrate(dash)} {
-	set dashlist $illustrate(dashlist)
-    } else {
-	set dashlist {}
-    }
+}
+
+proc IllustrateUpdateWidth {} {
+    global ds9
+    global illustrate
+    global iillustrate
+    
+    IllustrateSaveUndo selectedit {}
 
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {id ocolor ofill odash} $gr {
+	foreach {id color fillcolor dashlist} $gr {
 	    # graphic
 	    switch [IllustrateGetType $id] {
 		circle {
-		    $ds9(canvas) itemconfigure $id \
-			-outline $illustrate(color) \
-			-fill $fill \
-			-width $illustrate(width) \
-			-dash $dashlist
+		    IllustrateBaseUpdateWidth $id \
+			$illustrate(width) $illustrate(dash)
 		    IllustrateCirclePropsCB $id
 		}
 		ellipse {
-		    $ds9(canvas) itemconfigure $id \
-			-outline $illustrate(color) \
-			-fill $fill \
-			-width $illustrate(width) \
-			-dash $dashlist
+		    IllustrateBaseUpdateWidth $id \
+			$illustrate(width) $illustrate(dash)
 		}
 		box {
-		    $ds9(canvas) itemconfigure $id \
-			-outline $illustrate(color) \
-			-fill $fill \
-			-width $illustrate(width) \
-			-dash $dashlist
+		    IllustrateBaseUpdateWidth $id \
+			$illustrate(width) $illustrate(dash)
 		}
 		polygon {
-		    $ds9(canvas) itemconfigure $id \
-			-outline $illustrate(color) \
-			-fill $fill \
-			-width $illustrate(width) \
-			-dash $dashlist
+		    IllustrateBaseUpdateWidth $id \
+			$illustrate(width) $illustrate(dash)
 		}
 		line {
-		    $ds9(canvas) itemconfigure $id \
-			-fill $illustrate(color) \
-			-width $illustrate(width) \
-			-dash $dashlist
+		    IllustrateLineUpdateWidth $id \
+			$illustrate(width) $illustrate(dash)
 		}
-		text {
-		    $ds9(canvas) itemconfigure $id \
-			-fill $illustrate(color) \
-			-font "{$illustrate(font)} $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"
-		    IllustrateBaseUpdateHandle $id
-		}
+		text {}
 	    }
-	    
-	    # handles/nodes
-	    foreach hh [$ds9(canvas) find withtag gr${id}] {
-		$ds9(canvas) itemconfigure $hh \
-		    -outline $illustrate(color) -fill $illustrate(color)
-	    }
-
 	    # update selection list
 	    lappend iillustrate(selection) [IllustrateSaveGraphic $id]
 	}
@@ -322,7 +329,7 @@ proc IllustrateIsSelected {id} {
     global iillustrate
     
     foreach gr $iillustrate(selection) {
-	foreach {idd color fill dash} $gr {
+	foreach {idd color fillcolor dashlist} $gr {
 	    if {$id == $idd} {
 		return 1
 	    }
@@ -338,7 +345,7 @@ proc IllustrateUpdateSelection {} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {id color fill dash} $gr {
+	foreach {id color fillcolor dashlist} $gr {
 	    lappend iillustrate(selection) [IllustrateSaveGraphic $id]
 	}
     }
@@ -368,7 +375,7 @@ proc IllustrateUnselect {id} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {idd color fill dash} $gr {
+	foreach {idd color fillcolor dashlist} $gr {
 	    if {$id != $idd} {
 		lappend iillustrate(selection) $gr
 	    }
@@ -381,7 +388,7 @@ proc IllustrateMoveSelection {dx dy} {
     global iillustrate
 
     foreach gr $iillustrate(selection) {
-	foreach {id color fill dash} $gr {
+	foreach {id color fillcolor dashlist} $gr {
 	    switch [IllustrateGetType $id] {
 		circle -
 		ellipse -
@@ -425,7 +432,7 @@ proc IllustrateSaveUndo {undo id} {
 	selectedit -
 	selectdelete {
 	    foreach gr $iillustrate(selection) {
-		foreach {id color fill dash} $gr {
+		foreach {id color fillcolor dashlist} $gr {
 		    switch [IllustrateGetType $id] {
 			circle -
 			ellipse -
@@ -500,7 +507,7 @@ proc IllustrateGraphicAntsOff {gr} {
     global ds9
 
     # graphic
-    foreach {id color fill dash} $gr {
+    foreach {id color fillcolor dashlist} $gr {
 	switch [IllustrateGetType $id] {
 	    circle -
 	    ellipse -
@@ -508,17 +515,17 @@ proc IllustrateGraphicAntsOff {gr} {
 	    polygon {
 		$ds9(canvas) itemconfigure $id \
 		    -outline $color \
-		    -fill $fill \
-		    -dash $dash
+		    -fill $fillcolor \
+		    -dash $dashlist
 	    }
 	    line {
 		$ds9(canvas) itemconfigure $id \
-		    -fill $fill \
-		    -dash $dash
+		    -fill $fillcolor \
+		    -dash $dashlist
 	    }
 	    text {
 		$ds9(canvas) itemconfigure $id \
-		    -fill $fill
+		    -fill $fillcolor
 	    }
 	}
     }
@@ -614,7 +621,7 @@ proc IllustrateCmdOpen {} {
     global iillustrate
     
     foreach gr $iillustrate(selection) {
-	foreach {id color fill dash} $gr {
+	foreach {id color fillcolor dashlist} $gr {
 	    IllustrateDialog $id
 	}
     }
@@ -624,7 +631,7 @@ proc IllustrateCmdOpen {} {
     global iillustrate
     
     foreach gr $iillustrate(selection) {
-	foreach {id color fill dash} $gr {
+	foreach {id color fillcolor dashlist} $gr {
 	    IllustrateDialogClose $id
 	}
     }

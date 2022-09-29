@@ -4,8 +4,9 @@
 
 package provide DS9 1.0
 
-proc IllustrateCircleCreate {xx yy rr color fill width dash dashlist} {
+proc IllustrateCircleCreate {xx yy rr color fill width dash} {
     global ds9
+    global illustrate
 
     if {$fill} {
 	set fillcolor $color
@@ -13,7 +14,7 @@ proc IllustrateCircleCreate {xx yy rr color fill width dash dashlist} {
 	set fillcolor {}
     }
     if {$dash} {
-	set dashlist $dashlist
+	set dashlist $illustrate(dashlist)
     } else {
 	set dashlist {}
     }
@@ -243,16 +244,16 @@ proc IllustrateCircleUpdate {varname} {
 	set fill {}
     }
     if {$var(dash)} {
-	set dash $illustrate(dashlist)
+	set dashlist $illustrate(dashlist)
     } else {
-	set dash {}
+	set dashlist {}
     }
 
     $ds9(canvas) itemconfigure $var(id) \
 	-outline $var(color) \
 	-fill $fill \
 	-width $var(width) \
-	-dash $dash
+	-dash $dashlist
 
     # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
@@ -321,8 +322,7 @@ proc IllustrateCirclePropsCB {id} {
     }
 
     set var(width) [expr int([$ds9(canvas) itemcget $var(id) -width])]
-    set var(dashlist) [$ds9(canvas) itemcget $var(id) -dash]
-    if {$var(dashlist) != {}} {
+    if {[$ds9(canvas) itemcget $var(id) -dash] != {}} {
 	set var(dash) 1
     } else {
 	set var(dash) 0

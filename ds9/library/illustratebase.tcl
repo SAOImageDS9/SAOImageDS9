@@ -176,8 +176,7 @@ proc IllustrateBaseListProps {id} {
     }
 
     set rr {}
-    if {$color != {cyan} || $fill || $width != 1 ||
-	$dash || $dashlist != {8 3}} {
+    if {$color != {cyan} || $fill || $width != 1 || $dash} {
 
 	append rr " #"
 	if {$color != {cyan}} {
@@ -191,10 +190,6 @@ proc IllustrateBaseListProps {id} {
 	}
 	if {$dash} {
 	    append rr " dash = yes "
-	}
-
-	if {$dashlist != {8 3}} {
-	    append rr " dashlist = {8 3}"
 	}
     }
 

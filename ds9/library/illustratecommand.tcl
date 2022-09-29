@@ -360,7 +360,7 @@ proc IllustrateLoadFn {fn} {
 proc IllustrateListHeader {} {
     set rr {}
     append rr  "# Illustrate file format: DS9 version 1.0\n"
-    append rr "global color = cyan fill = no width = 1 dash = no dashlist = {8 3} font = \"helvetica 12 normal roman\""
+    append rr "global color = cyan fill = no width = 1 dash = no font = \"helvetica 12 normal roman\""
 }
 
 proc IllustrateSave {ch id} {

@@ -62,33 +62,28 @@ proc IllustrateCreateGraphic {xx yy} {
 	circle {
 	    return [IllustrateCircleCreate $xx $yy 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) \
-			$illustrate(dash) $illustrate(dashlist)]
+			$illustrate(width) $illustrate(dash)]
 	}
 	ellipse {
 	    return [IllustrateEllipseCreate $xx $yy 0 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash) $illustrate(dash)]
-			$illustrate(dash) $illustrate(dashlist)]
+			$illustrate(width) $illustrate(dash)]
 	}
 	box {
 	    return [IllustrateBoxCreate $xx $yy 0 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) \
-			$illustrate(dash) $illustrate(dashlist)]
+			$illustrate(width) $illustrate(dash)]
 	}
 	polygon {
 	    return [IllustratePolygonCreate \
 			[list $xx $yy $xx $yy $xx $yy $xx $yy] \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) \
-			$illustrate(dash) $illustrate(dashlist)]
+			$illustrate(width) $illustrate(dash)]
 	}
 	line {
 	    return [IllustrateLineCreate $xx $yy $xx $yy \
 			$illustrate(color) \
-			$illustrate(width) \
-			$illustrate(dash) $illustrate(dashlist)]
+			$illustrate(width) $illustrate(dash)]
 	}
 	text {
 	    set txt {Text}
@@ -159,9 +154,9 @@ proc IllustrateUpdateGraphic {} {
 	set fill {}
     }
     if {$illustrate(dash)} {
-	set dash $illustrate(dashlist)
+	set dashlist $illustrate(dashlist)
     } else {
-	set dash {}
+	set dashlist {}
     }
 
     set old $iillustrate(selection)
@@ -175,7 +170,7 @@ proc IllustrateUpdateGraphic {} {
 			-outline $illustrate(color) \
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash
+			-dash $dashlist
 		    IllustrateCirclePropsCB $id
 		}
 		ellipse {
@@ -183,27 +178,27 @@ proc IllustrateUpdateGraphic {} {
 			-outline $illustrate(color) \
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash
+			-dash $dashlist
 		}
 		box {
 		    $ds9(canvas) itemconfigure $id \
 			-outline $illustrate(color) \
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash
+			-dash $dashlist
 		}
 		polygon {
 		    $ds9(canvas) itemconfigure $id \
 			-outline $illustrate(color) \
 			-fill $fill \
 			-width $illustrate(width) \
-			-dash $dash
+			-dash $dashlist
 		}
 		line {
 		    $ds9(canvas) itemconfigure $id \
 			-fill $illustrate(color) \
 			-width $illustrate(width) \
-			-dash $dash
+			-dash $dashlist
 		}
 		text {
 		    $ds9(canvas) itemconfigure $id \

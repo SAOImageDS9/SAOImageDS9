@@ -4,11 +4,12 @@
 
 package provide DS9 1.0
 
-proc IllustrateLineCreate {x1 y1 x2 y2 color width dash dashlist} {
+proc IllustrateLineCreate {x1 y1 x2 y2 color width dash} {
     global ds9
+    global illustrate
 
     if {$dash} {
-	set dashlist $dashlist
+	set dashlist $illustrate(dashlist)
     } else {
 	set dashlist {}
     }
@@ -76,8 +77,7 @@ proc IllustrateLineList {id} {
     set color [$ds9(canvas) itemcget $id -fill]
     set width [$ds9(canvas) itemcget $id -width]
 
-    set dashlist [$ds9(canvas) itemcget $id -dash]
-    if {$dashlist != {}} {
+    if {[$ds9(canvas) itemcget $id -dash] != {}} {
 	set dash 1
     } else {
 	set dash 0
@@ -85,8 +85,7 @@ proc IllustrateLineList {id} {
     
     set rr "line $coords"
 
-    if {$color != {cyan} || $width != 1 ||
-	$dash || $dashlist != {8 3}} {
+    if {$color != {cyan} || $width != 1 || $dash} {
 
 	append rr " #"
 	if {$color != {cyan}} {
@@ -97,9 +96,6 @@ proc IllustrateLineList {id} {
 	}
 	if {$dash} {
 	    append rr " dash = yes"
-	}
-	if {$dashlist != {8 3}} {
-	    append rr " dashlist = {8 3}"
 	}
     }
 

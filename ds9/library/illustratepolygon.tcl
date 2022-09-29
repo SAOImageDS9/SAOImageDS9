@@ -4,8 +4,9 @@
 
 package provide DS9 1.0
 
-proc IllustratePolygonCreate {coords color fill width dash dashlist} {
+proc IllustratePolygonCreate {coords color fill width dash} {
     global ds9
+    global illustrate
 
     if {$fill} {
 	set fillcolor $color
@@ -13,7 +14,7 @@ proc IllustratePolygonCreate {coords color fill width dash dashlist} {
 	set fillcolor {}
     }
     if {$dash} {
-	set dashlist $dashlist
+	set dashlist $illustrate(dashlist)
     } else {
 	set dashlist {}
     }

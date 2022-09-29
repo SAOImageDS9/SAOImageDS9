@@ -189,61 +189,59 @@ proc IllustratePolygonUpdateHandle {id} {
     }
 }
 
-proc IllustratePolygonEdit {gr xx yy} {
+proc IllustratePolygonEdit {id xx yy} {
     global ds9
     global iillustrate
     
-    foreach {id color fillcolor dashlist} $gr {
-	if {$iillustrate(handle)} {
-	    set bbox [$ds9(canvas) bbox $id]
-	    set bbx1 [lindex $bbox 0]
-	    set bby1 [lindex $bbox 1]
-	    set bbx2 [lindex $bbox 2]
-	    set bby2 [lindex $bbox 3]
+    if {$iillustrate(handle)} {
+	set bbox [$ds9(canvas) bbox $id]
+	set bbx1 [lindex $bbox 0]
+	set bby1 [lindex $bbox 1]
+	set bbx2 [lindex $bbox 2]
+	set bby2 [lindex $bbox 3]
 
-	    set xc [expr double($bbx2-$bbx1)/2+$bbx1]
-	    set yc [expr double($bby2-$bby1)/2+$bby1]
+	set xc [expr double($bbx2-$bbx1)/2+$bbx1]
+	set yc [expr double($bby2-$bby1)/2+$bby1]
 
-	    switch $iillustrate(handle) {
-		1 {
-		    set aa [expr abs(double($bbx1)/double($xx))]
-		    set bb [expr abs(double($bby1)/double($yy))]
-		}
-		2 {
-		    set aa [expr abs(double($xx)/double($bbx2))]
-		    set bb [expr abs(double($bby1)/double($yy))]
-		}
-		3 {
-		    set aa [expr abs(double($xx)/double($bbx2))]
-		    set bb [expr abs(double($yy)/double($bby2))]
-		}
-		4 {
-		    set aa [expr abs(double($bbx1)/double($xx))]
-		    set bb [expr abs(double($yy)/double($bby2))]
-		}
+	switch $iillustrate(handle) {
+	    1 {
+		set aa [expr abs(double($bbx1)/double($xx))]
+		set bb [expr abs(double($bby1)/double($yy))]
 	    }
-	    if {$aa > $bb} {
-		set sc $aa
-	    } else {
-		set sc $bb
+	    2 {
+		set aa [expr abs(double($xx)/double($bbx2))]
+		set bb [expr abs(double($bby1)/double($yy))]
 	    }
-	    $ds9(canvas) scale $id $xc $yc $sc $sc
-
-	} elseif {$iillustrate(node)} {
-	    set nlist [lreverse [$ds9(canvas) find withtag "gr${id} && node"]]
-	    set nn [expr [lsearch $nlist $iillustrate(node)]+1]
-	    set ll {}
-	    set cnt 0
-	    foreach {cxx cyy} [$ds9(canvas) coords $id] {
-		incr cnt
-		if {$cnt == $nn} {
-		    lappend ll $xx $yy
-		} else {
-		    lappend ll $cxx $cyy
-		}
+	    3 {
+		set aa [expr abs(double($xx)/double($bbx2))]
+		set bb [expr abs(double($yy)/double($bby2))]
 	    }
-	    $ds9(canvas) coords $id $ll
+	    4 {
+		set aa [expr abs(double($bbx1)/double($xx))]
+		set bb [expr abs(double($yy)/double($bby2))]
+	    }
 	}
+	if {$aa > $bb} {
+	    set sc $aa
+	} else {
+	    set sc $bb
+	}
+	$ds9(canvas) scale $id $xc $yc $sc $sc
+
+    } elseif {$iillustrate(node)} {
+	set nlist [lreverse [$ds9(canvas) find withtag "gr${id} && node"]]
+	set nn [expr [lsearch $nlist $iillustrate(node)]+1]
+	set ll {}
+	set cnt 0
+	foreach {cxx cyy} [$ds9(canvas) coords $id] {
+	    incr cnt
+	    if {$cnt == $nn} {
+		lappend ll $xx $yy
+	    } else {
+		lappend ll $cxx $cyy
+	    }
+	}
+	$ds9(canvas) coords $id $ll
     }
 }
 

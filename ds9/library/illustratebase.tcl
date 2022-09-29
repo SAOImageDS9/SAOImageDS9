@@ -137,23 +137,21 @@ proc IllustrateBaseUpdateHandle {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateBaseEdit {gr xx yy} {
+proc IllustrateBaseEdit {id xx yy} {
     global ds9
     global iillustrate
 
-    foreach {id color fillcolor dashlist} $gr {
-	set coords [$ds9(canvas) coords $id]
-	set x1 [lindex $coords 0]
-	set y1 [lindex $coords 1]
-	set x2 [lindex $coords 2]
-	set y2 [lindex $coords 3]
+    set coords [$ds9(canvas) coords $id]
+    set x1 [lindex $coords 0]
+    set y1 [lindex $coords 1]
+    set x2 [lindex $coords 2]
+    set y2 [lindex $coords 3]
 
-	switch $iillustrate(handle) {
-	    1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
-	    2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}
-	    3 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
-	    4 {$ds9(canvas) coords $id $xx $y1 $x2 $yy}
-	}
+    switch $iillustrate(handle) {
+	1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
+	2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}
+	3 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
+	4 {$ds9(canvas) coords $id $xx $y1 $x2 $yy}
     }
 }
 

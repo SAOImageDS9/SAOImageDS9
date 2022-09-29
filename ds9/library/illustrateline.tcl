@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateLine {x1 y1 x2 y2 color width dash dashlist} {
+proc IllustrateLineCreate {x1 y1 x2 y2 color width dash dashlist} {
     global ds9
 
     if {$dash} {
@@ -20,11 +20,11 @@ proc IllustrateCreateLine {x1 y1 x2 y2 color width dash dashlist} {
 		-dash $dashlist \
 		-tags {line graphic}]
 
-    IllustrateCreateHandlesLine $id
+    IllustrateLineCreateHandles $id
     return $id
 }
 
-proc IllustrateCopyLine {id} {
+proc IllustrateLineCopy {id} {
     global ds9
     
     set coords [$ds9(canvas) coords $id]
@@ -35,7 +35,7 @@ proc IllustrateCopyLine {id} {
     return [list line [list $coords $color $width $dash]]
 }
 
-proc IllustrateSetLine {id param} {
+proc IllustrateLineSet {id param} {
     global ds9
 
     foreach {coords color width dash} $param {
@@ -50,10 +50,10 @@ proc IllustrateSetLine {id param} {
 	$ds9(canvas) itemconfigure $hh -outline $fill -fill $fill
     }
 
-    IllustrateUpdateHandleLine $id
+    IllustrateLineUpdateHandle $id
 }
 
-proc IllustrateDupLine {param} {
+proc IllustrateLineDup {param} {
     global ds9
     
     foreach {coords color width dash} $param {
@@ -64,12 +64,12 @@ proc IllustrateDupLine {param} {
 		    -dash $dash \
 		    -tags {line graphic}]
     }
-    IllustrateCreateHandlesLine $id
+    IllustrateLineCreateHandles $id
 
     return $id
 }
 
-proc IllustrateListLine {id} {
+proc IllustrateLineList {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
@@ -106,7 +106,7 @@ proc IllustrateListLine {id} {
     return $rr
 }
 
-proc IllustrateCreateHandlesLine {id} {
+proc IllustrateLineCreateHandles {id} {
     global ds9
 
     set rr 2
@@ -136,7 +136,7 @@ proc IllustrateCreateHandlesLine {id} {
     $ds9(canvas) raise $h2 $id
 }
 
-proc IllustrateUpdateHandleLine {id} {
+proc IllustrateLineUpdateHandle {id} {
     global ds9
     global illustrate
     global iillustrate
@@ -159,7 +159,7 @@ proc IllustrateUpdateHandleLine {id} {
 	[expr $bbx2+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateEditLine {gr xx yy} {
+proc IllustrateLineEdit {gr xx yy} {
     global ds9
     global iillustrate
     

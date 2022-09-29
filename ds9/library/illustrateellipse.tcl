@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateEllipse {xx yy rr1 rr2 color fill width dash dashlist} {
+proc IllustrateEllipseCreate {xx yy rr1 rr2 color fill width dash dashlist} {
     global ds9
 
     if {$fill} {
@@ -27,11 +27,11 @@ proc IllustrateCreateEllipse {xx yy rr1 rr2 color fill width dash dashlist} {
 		-dash $dashlist \
 		-tags {ellipse graphic}]
 
-    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
+    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id
 }
 
-proc IllustrateDefaultEllipse {id} {
+proc IllustrateEllipseDefault {id} {
     global ds9
     global pillustrate
 
@@ -47,7 +47,7 @@ proc IllustrateDefaultEllipse {id} {
 	[expr $xx+$rr1] [expr $yy+$rr2]
 }
 
-proc IllustrateListEllipse {id} {
+proc IllustrateEllipseList {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
@@ -62,5 +62,5 @@ proc IllustrateListEllipse {id} {
     set r1 [expr ($x2-$x1)/2]
     set r2 [expr ($y2-$y1)/2]
     
-    return "ellipse $xc $yc $r1 $r2 [IllustrateListPropsBase $id]"
+    return "ellipse $xc $yc $r1 $r2 [IllustrateBaseListProps $id]"
 }

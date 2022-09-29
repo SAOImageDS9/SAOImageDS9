@@ -50,19 +50,19 @@ command : VERSION_ {puts "DS9 Illustrate File 1.0"}
  ;
 
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
- {IllustrateCreateCircle $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
+ {IllustrateCircleCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | ELLIPSE_ bp numeric sp numeric sp numeric sp numeric bp comment
- {IllustrateCreateEllipse $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
+ {IllustrateEllipseCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | BOX_ bp numeric sp numeric sp numeric sp numeric bp comment
- {IllustrateCreateBox $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
+ {IllustrateBoxCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | POLYGON_ bp coords bp comment
- {IllustrateCreatePolygon $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
+ {IllustratePolygonCreate $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
- {IllustrateCreateLine $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
+ {IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList}
  | TEXT_ bp numeric sp numeric sp STRING_ bp comment
- {IllustrateCreateText $3 $5 $7 $illustratefile::localColor $illustratefile::localFont}
+ {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont}
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
- {IllustrateCreateText $3 $5 $10 $illustratefile::localColor $illustratefile::localFont}
+ {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont}
  ;
 
 coords : coords coord

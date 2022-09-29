@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateText {xx yy txt color font} {
+proc IllustrateTextCreate {xx yy txt color font} {
     global ds9
 
     set id [$ds9(canvas) create text \
@@ -15,11 +15,11 @@ proc IllustrateCreateText {xx yy txt color font} {
 		-tags {text graphic}
 	   ]
 
-    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -fill]
+    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -fill]
     return $id
 }
 
-proc IllustrateCopyText {id} {
+proc IllustrateTextCopy {id} {
     global ds9
     
     set coords [$ds9(canvas) coords $id]
@@ -30,7 +30,7 @@ proc IllustrateCopyText {id} {
     return [list text [list $coords $txt $color $font]]
 }
 
-proc IllustrateSetText {id param} {
+proc IllustrateTextSet {id param} {
     global ds9
     
     foreach {coords txt color font} $param {
@@ -45,10 +45,10 @@ proc IllustrateSetText {id param} {
 	$ds9(canvas) itemconfigure $hh -outline $fill -fill $fill
     }
 
-    IllustrateUpdateHandleBase $id
+    IllustrateBaseUpdateHandle $id
 }
 
-proc IllustrateDupText {param} {
+proc IllustrateTextDup {param} {
     global ds9
     
     foreach {coords txt color font} $param {
@@ -61,11 +61,11 @@ proc IllustrateDupText {param} {
 	       ]
     }
 
-    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -fill]
+    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -fill]
     return $id
 }
 
-proc IllustrateListText {id} {
+proc IllustrateTextList {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]

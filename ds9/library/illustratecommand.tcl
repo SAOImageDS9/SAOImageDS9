@@ -49,6 +49,7 @@ proc IllustrateDialog {id} {
 
 proc IllustrateShow {} {
     global ds9
+    global illustrate
     global iillustrate
 
     if {$illustrate(show)} {
@@ -238,9 +239,9 @@ proc IllustrateUndo {} {
 				circle -
 				ellipse -
 				box -
-				polygon {IllustrateSetBase $id $param}
-				line {IllustrateSetLine $id $param}
-				text {IllustrateSetText $id $param}
+				polygon {IllustrateBaseSet $id $param}
+				line {IllustrateLineSet $id $param}
+				text {IllustrateTextSet $id $param}
 			    }
 			}
 		    }
@@ -253,10 +254,10 @@ proc IllustrateUndo {} {
 			    switch $type {
 				circle -
 				ellipse -
-				box {set id [IllustrateDupBase $type $param]}
-				polygon {set id [IllustrateDupPolygon $param]}
-				line {set id [IllustrateDupLine $param]}
-				text {set id [IllustrateDupText $param]}
+				box {set id [IllustrateBaseDup $type $param]}
+				polygon {set id [IllustratePolygonDup $param]}
+				line {set id [IllustrateLineDup $param]}
+				text {set id [IllustrateTextDup $param]}
 			    }
 			    IllustrateAddToSelection $id
 			}
@@ -282,10 +283,10 @@ proc IllustrateCut {} {
 		ellipse -
 		box -
 		polygon {
-		    lappend iillustrate(clipboard) [IllustrateCopyBase $id]
+		    lappend iillustrate(clipboard) [IllustrateBaseCopy $id]
 		}
-		line {lappend iillustrate(clipboard) [IllustrateCopyLine $id]}
-		text {lappend iillustrate(clipboard) [IllustrateCopyText $id]}
+		line {lappend iillustrate(clipboard) [IllustrateLineCopy $id]}
+		text {lappend iillustrate(clipboard) [IllustrateTextCopy $id]}
 	    }
 	    IllustrateDeleteGraphic $id
 	}
@@ -305,10 +306,10 @@ proc IllustrateCopy {} {
 		ellipse -
 		box  -
 		polygon {
-		    lappend iillustrate(clipboard) [IllustrateCopyBase $id]
+		    lappend iillustrate(clipboard) [IllustrateBaseCopy $id]
 		}
-		line {lappend iillustrate(clipboard) [IllustrateCopyLine $id]}
-		text {lappend iillustrate(clipboard) [IllustrateCopyText $id]}
+		line {lappend iillustrate(clipboard) [IllustrateLineCopy $id]}
+		text {lappend iillustrate(clipboard) [IllustrateTextCopy $id]}
 	    }
 	}
     }
@@ -325,10 +326,10 @@ proc IllustratePaste {} {
 	    switch $type {
 		circle -
 		ellipse -
-		box {set id [IllustrateDupBase $type $param]}
-		polygon {set id [IllustrateDupPolygon $param]}
-		line {set id [IllustrateDupLine $param]}
-		text {set id [IllustrateDupText $param]}
+		box {set id [IllustrateBaseDup $type $param]}
+		polygon {set id [IllustratePolygonDup $param]}
+		line {set id [IllustrateLineDup $param]}
+		text {set id [IllustrateTextDup $param]}
 	    }
 	    IllustrateAddToSelection $id
 	}
@@ -373,12 +374,12 @@ proc IllustrateListHeader {} {
 
 proc IllustrateSave {ch id} {
     switch [IllustrateGetType $id] {
-	circle {puts $ch [IllustrateListCircle $id]}
-	ellipse {puts $ch [IllustrateListEllipse $id]}
-	box {puts $ch [IllustrateListBox $id]}
-	polygon {puts $ch [IllustrateListPolygon $id]}
-	line {puts $ch [IllustrateListLine $id]}
-	text {puts $ch [IllustrateListText $id]}
+	circle {puts $ch [IllustrateCircleList $id]}
+	ellipse {puts $ch [IllustrateEllipseList $id]}
+	box {puts $ch [IllustrateBoxList $id]}
+	polygon {puts $ch [IllustratePolygonList $id]}
+	line {puts $ch [IllustrateLineList $id]}
+	text {puts $ch [IllustrateTextList $id]}
     }
 }
 
@@ -433,12 +434,12 @@ proc IllustrateList {varname id} {
     upvar $varname var
 
     switch [IllustrateGetType $id] {
-	circle {append var "[IllustrateListCircle $id]\n"}
-	ellipse {append var "[IllustrateListEllipse $id]\n"}
-	box {append var "[IllustrateListBox $id]\n"}
-	polygon {append var "[IllustrateListPolygon $id]\n"}
-	line {append var "[IllustrateListLine $id]\n"}
-	text {append var "[IllustrateListText $id]\n"}
+	circle {append var "[IllustrateCircleList $id]\n"}
+	ellipse {append var "[IllustrateEllipseList $id]\n"}
+	box {append var "[IllustrateBoxList $id]\n"}
+	polygon {append var "[IllustratePolygonList $id]\n"}
+	line {append var "[IllustrateLineList $id]\n"}
+	text {append var "[IllustrateTextList $id]\n"}
     }
 }
 

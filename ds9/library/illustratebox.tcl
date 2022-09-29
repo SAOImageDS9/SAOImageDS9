@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateBox {xx yy rr1 rr2 color fill width dash dashlist} {
+proc IllustrateBoxCreate {xx yy rr1 rr2 color fill width dash dashlist} {
     global ds9
 
     if {$fill} {
@@ -27,11 +27,11 @@ proc IllustrateCreateBox {xx yy rr1 rr2 color fill width dash dashlist} {
 		-dash $dashlist \
 		-tags {box graphic}]
 
-    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
+    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id
 }
 
-proc IllustrateDefaultBox {id} {
+proc IllustrateBoxDefault {id} {
     global ds9
     global pillustrate
     
@@ -46,7 +46,7 @@ proc IllustrateDefaultBox {id} {
 		[expr $xx+$rr1] [expr $yy+$rr2]
 }
 
-proc IllustrateListBox {id} {
+proc IllustrateBoxList {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
@@ -61,6 +61,6 @@ proc IllustrateListBox {id} {
     set r1 [expr ($x2-$x1)/2]
     set r2 [expr ($y2-$y1)/2]
     
-    return "box $xc $yc $r1 $r2 [IllustrateListPropsBase $id]"
+    return "box $xc $yc $r1 $r2 [IllustrateBaseListProps $id]"
 }
 

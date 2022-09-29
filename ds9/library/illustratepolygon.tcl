@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreatePolygon {coords color fill width dash dashlist} {
+proc IllustratePolygonCreate {coords color fill width dash dashlist} {
     global ds9
 
     if {$fill} {
@@ -26,11 +26,11 @@ proc IllustrateCreatePolygon {coords color fill width dash dashlist} {
 		-dash $dashlist \
 		-tags {polygon graphic}]
 
-    IllustrateCreateHandlesPolygon $id [$ds9(canvas) itemcget $id -outline]
+    IllustratePolygonCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id
 }
 
-proc IllustrateDupPolygon {param} {
+proc IllustratePolygonDup {param} {
     global ds9
     
     set coords [lindex $param 0]
@@ -48,11 +48,11 @@ proc IllustrateDupPolygon {param} {
 		-tags [list polygon graphic]
 	    ]
 
-    IllustrateCreateHandlesPolygon $id [$ds9(canvas) itemcget $id -outline]
+    IllustratePolygonCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id
 }
 
-proc IllustrateDefaultPolygon {id} {
+proc IllustratePolygonDefault {id} {
     global ds9
     global pillustrate
     
@@ -70,14 +70,14 @@ proc IllustrateDefaultPolygon {id} {
 	[expr $xx-$rr1] [expr $yy+$rr2]
 }
 
-proc IllustrateListPolygon {id} {
+proc IllustratePolygonList {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
-    return "polygon $coords [IllustrateListPropsBase $id]"
+    return "polygon $coords [IllustrateBaseListProps $id]"
 }
 
-proc IllustrateCreateHandlesPolygon {id color} {
+proc IllustratePolygonCreateHandles {id color} {
     global ds9
 
     set ss 4
@@ -138,7 +138,7 @@ proc IllustrateCreateHandlesPolygon {id color} {
     }
 }
 
-proc IllustrateUpdateHandlePolygon {id} {
+proc IllustratePolygonUpdateHandle {id} {
     global ds9
     global illustrate
     global iillustrate
@@ -188,7 +188,7 @@ proc IllustrateUpdateHandlePolygon {id} {
     }
 }
 
-proc IllustrateEditPolygon {gr xx yy} {
+proc IllustratePolygonEdit {gr xx yy} {
     global ds9
     global iillustrate
     
@@ -246,7 +246,7 @@ proc IllustrateEditPolygon {gr xx yy} {
     }
 }
 
-proc IllustrateCleanupPolygon {id} {
+proc IllustratePolygonCleanup {id} {
     global ds9
 
     # int() coords
@@ -257,7 +257,7 @@ proc IllustrateCleanupPolygon {id} {
     $ds9(canvas) coords $id $ll
 }
 
-proc IllustrateDeleteNode {nid} {
+proc IllustratePolygonDeleteNode {nid} {
     global ds9
 
     set ll {}
@@ -276,11 +276,11 @@ proc IllustrateDeleteNode {nid} {
 	    $ds9(canvas) coords $id $ll
 	}
 	$ds9(canvas) delete $nid
-	IllustrateUpdateHandlePolygon $id
+	IllustratePolygonUpdateHandle $id
     }
 }
 
-proc IllustrateFindSegment {xx yy varname} {
+proc IllustratePolygonFindSegment {xx yy varname} {
     upvar $varname var
     global ds9
 
@@ -333,7 +333,7 @@ proc IllustrateFindSegment {xx yy varname} {
     return 0
 }
 
-proc IllustrateCreateNode {id num xx yy} {
+proc IllustratePolygonCreateNode {id num xx yy} {
     global ds9
 
     set nid 0
@@ -355,5 +355,5 @@ proc IllustrateCreateNode {id num xx yy} {
 	lappend ll $cxx $cyy
     }
     $ds9(canvas) coords $id $ll
-    IllustrateUpdateHandlePolygon $id
+    IllustratePolygonUpdateHandle $id
 }

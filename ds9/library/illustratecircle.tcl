@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateCreateCircle {xx yy rr color fill width dash dashlist} {
+proc IllustrateCircleCreate {xx yy rr color fill width dash dashlist} {
     global ds9
 
     if {$fill} {
@@ -27,11 +27,11 @@ proc IllustrateCreateCircle {xx yy rr color fill width dash dashlist} {
 		-dash $dashlist \
 		-tags {circle graphic}]
 
-    IllustrateCreateHandlesBase $id [$ds9(canvas) itemcget $id -outline]
+    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id
 }
 
-proc IllustrateDefaultCircle {id} {
+proc IllustrateCircleDefault {id} {
     global ds9
     global pillustrate
 
@@ -46,7 +46,7 @@ proc IllustrateDefaultCircle {id} {
 	[expr $xx+$rr] [expr $yy+$rr]
 }
 
-proc IllustrateListCircle {id} {
+proc IllustrateCircleList {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
@@ -59,10 +59,10 @@ proc IllustrateListCircle {id} {
     set yc [expr ($y2-$y1)/2+$y1]
     set ra [expr ($x2-$x1)/2]
     
-    return "circle $xc $yc $ra [IllustrateListPropsBase $id]"
+    return "circle $xc $yc $ra [IllustrateBaseListProps $id]"
 }
 
-proc IllustrateEditCircle {gr xx yy} {
+proc IllustrateCircleEdit {gr xx yy} {
     global ds9
     global iillustrate
 
@@ -186,14 +186,17 @@ proc IllustrateCircleDialog {varname} {
     IllustrateCircleEditCB $varname
     IllustrateCircleColorCB $varname
     IllustrateCircleWidthCB $varname
-    puts [array get $varname]
 }
 
 proc IllustrateCircleClose {varname} {
     upvar #0 $varname var
     global $varname
 
-    IllustrateCircleDeleteCB $varname
+    # destroy the window and menubar
+    if {[winfo exists $var(top)]} {
+	destroy $var(top)
+	destroy $var(mb)
+    }
     unset $varname
 }
 
@@ -212,7 +215,7 @@ proc IllustrateCircleApply {varname} {
 	    [expr $xc-$rr] [expr $yc-$rr] \
 	    [expr $xc+$rr] [expr $yc+$rr]
 
-	IllustrateUpdateHandleBase $var(id)
+	IllustrateBaseUpdateHandle $var(id)
     }
 }
 
@@ -254,11 +257,7 @@ proc IllustrateCircleDeleteCB {varname} {
     upvar #0 $varname var
     global $varname
 
-    # destroy the window and menubar
-    if {[winfo exists $var(top)]} {
-	destroy $var(top)
-	destroy $var(mb)
-    }
+    IllustrateCircleClose $varname
 }
 
 proc IllustrateCircleEditCB {varname} {

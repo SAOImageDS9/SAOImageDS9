@@ -3788,13 +3788,13 @@ proc illustratefile::yyparse {} {
                     10 { initGlobal }
                     14 { puts "DS9 Illustrate File 1.0" }
                     16 { initLocal }
-                    20 { IllustrateCreateCircle $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
-                    21 { IllustrateCreateEllipse $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
-                    22 { IllustrateCreateBox $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
-                    23 { IllustrateCreatePolygon $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
-                    24 { IllustrateCreateLine $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
-                    25 { IllustrateCreateText $3 $5 $7 $illustratefile::localColor $illustratefile::localFont }
-                    26 { IllustrateCreateText $3 $5 $10 $illustratefile::localColor $illustratefile::localFont }
+                    20 { IllustrateCircleCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
+                    21 { IllustrateEllipseCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
+                    22 { IllustrateBoxCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
+                    23 { IllustratePolygonCreate $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
+                    24 { IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localDashList }
+                    25 { IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont }
+                    26 { IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont }
                     29 { lappend illustratefile::coords $1 $3 }
                     37 { set illustratefile::globalColor $3 }
                     38 { set illustratefile::globalFill $3 }

@@ -124,7 +124,7 @@ proc IllustrateMotion {xx yy} {
 
     # segment of polygon
     set cnt 0
-    set id [IllustrateFindSegment $xx $yy cnt]
+    set id [IllustratePolygonFindSegment $xx $yy cnt]
     if {$id} {
 	if {[IllustrateIsSelected $id]} {
 	    SetCursor draped_box
@@ -201,9 +201,9 @@ proc IllustrateButton {xx yy} {
     
     # see if we are on a segment of polygon
     set cnt 0
-    set id [IllustrateFindSegment $xx $yy cnt]
+    set id [IllustratePolygonFindSegment $xx $yy cnt]
     if {$id} {
-	IllustrateCreateNode $id $cnt $xx $yy
+	IllustratePolygonCreateNode $id $cnt $xx $yy
 	set nid [IllustrateFind node $xx $yy]
 	if {$nid} {
 	    IllustrateSaveUndo edit $id
@@ -281,11 +281,17 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	create {
 	    switch [IllustrateGetType $iillustrate(id)] {
-		circle {IllustrateEditCircle $iillustrate(edit) $xx $yy}
+		circle {
+		    IllustrateCircleEdit $iillustrate(edit) $xx $yy
+		}
 		ellipse -
-		box {IllustrateEditBase $iillustrate(edit) $xx $yy}
+		box {
+		    IllustrateBaseEdit $iillustrate(edit) $xx $yy
+		}
 		polygon {}
-		line {IllustrateEditLine $iillustrate(edit) $xx $yy}
+		line {
+		    IllustrateLineEdit $iillustrate(edit) $xx $yy
+		}
 		text {}
 	    }
 	}
@@ -318,11 +324,11 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	edit {
 	    switch [IllustrateGetType $iillustrate(id)] {
-		circle {IllustrateEditCircle $iillustrate(edit) $xx $yy}
+		circle {IllustrateCircleEdit $iillustrate(edit) $xx $yy}
 		ellipse -
-		box {IllustrateEditBase $iillustrate(edit) $xx $yy}
-		polygon {IllustrateEditPolygon $iillustrate(edit) $xx $yy}
-		line {IllustrateEditLine $iillustrate(edit) $xx $yy}
+		box {IllustrateBaseEdit $iillustrate(edit) $xx $yy}
+		polygon {IllustratePolygonEdit $iillustrate(edit) $xx $yy}
+		line {IllustrateLineEdit $iillustrate(edit) $xx $yy}
 		text {}
 	    }
 	}
@@ -353,20 +359,20 @@ proc IllustrateButtonRelease {xx yy} {
 	    foreach {id color fill dash} $iillustrate(edit) {
 		switch [IllustrateGetType $id] {
 		    circle {
-			IllustrateDefaultCircle $id
-			IllustrateUpdateHandleBase $id
+			IllustrateCircleDefault $id
+			IllustrateBaseUpdateHandle $id
 		    }
 		    ellipse {
-			IllustrateDefaultEllipse $id
-			IllustrateUpdateHandleBase $id
+			IllustrateEllipseDefault $id
+			IllustrateBaseUpdateHandle $id
 		    }
 		    box {
-			IllustrateDefaultBox $id
-			IllustrateUpdateHandleBase $id
+			IllustrateBoxDefault $id
+			IllustrateBaseUpdateHandle $id
 		    }
 		    polygon {
-			IllustrateDefaultPolygon $id
-			IllustrateUpdateHandlePolygon $id
+			IllustratePolygonDefault $id
+			IllustratePolygonUpdateHandle $id
 		    }
 		    line {IllustrateDeleteGraphic $id}
 		    text {}
@@ -382,16 +388,16 @@ proc IllustrateButtonRelease {xx yy} {
 		if {[expr sqrt($dx*$dx + $dy*$dy)]<4} {
 		    switch [IllustrateGetType $id] {
 			circle {
-			    IllustrateDefaultCircle $id
-			    IllustrateUpdateHandleBase $id
+			    IllustrateCircleDefault $id
+			    IllustrateBaseUpdateHandle $id
 			}
 			ellipse {
-			    IllustrateDefaultEllipse $id
-			    IllustrateUpdateHandleBase $id
+			    IllustrateEllipseDefault $id
+			    IllustrateBaseUpdateHandle $id
 			}
 			box {
-			    IllustrateDefaultBox $id
-			    IllustrateUpdateHandleBase $id
+			    IllustrateBoxDefault $id
+			    IllustrateBaseUpdateHandle $id
 			}
 			polygon {}
 			line {IllustrateDeleteGraphic $id}
@@ -404,9 +410,9 @@ proc IllustrateButtonRelease {xx yy} {
 		    circle -
 		    ellipse -
 		    box -
-		    text {IllustrateUpdateHandleBase $id}
-		    polygon {IllustrateUpdateHandlePolygon $id}
-		    line {IllustrateUpdateHandleLine $id}
+		    text {IllustrateBaseUpdateHandle $id}
+		    polygon {IllustratePolygonUpdateHandle $id}
+		    line {IllustrateLineUpdateHandle $id}
 		}
 	    }
 	}
@@ -421,9 +427,9 @@ proc IllustrateButtonRelease {xx yy} {
 			circle -
 			ellipse -
 			box -
-			text {IllustrateUpdateHandleBase $id}
-			polygon {IllustrateUpdateHandlePolygon $id}
-			line {IllustrateUpdateHandleLine $id}
+			text {IllustrateBaseUpdateHandle $id}
+			polygon {IllustratePolygonUpdateHandle $id}
+			line {IllustrateLineUpdateHandle $id}
 		    }
 		}
 	    }
@@ -439,12 +445,12 @@ proc IllustrateButtonRelease {xx yy} {
 		    circle -
 		    ellipse -
 		    box -
-		    text {IllustrateUpdateHandleBase $id}
+		    text {IllustrateBaseUpdateHandle $id}
 		    polygon {
-			IllustrateCleanupPolygon $id
-			IllustrateUpdateHandlePolygon $id
+			IllustratePolygonCleanup $id
+			IllustratePolygonUpdateHandle $id
 		    }
-		    line {IllustrateUpdateHandleLine $id}
+		    line {IllustrateLineUpdateHandle $id}
 		}
 	    }
 	    IllustrateUpdateSelection
@@ -544,7 +550,7 @@ proc IllustrateKey {K A xx yy} {
 	    if {$nid} {
 		set id [IllustrateFindGraphicFromNode $nid]
 		IllustrateSaveUndo edit $id
-		IllustrateDeleteNode $nid
+		IllustratePolygonDeleteNode $nid
 	    } else {
 		IllustrateSaveUndo selectdelete {}
 		IllustrateDeleteSelect

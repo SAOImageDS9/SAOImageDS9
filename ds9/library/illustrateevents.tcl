@@ -470,8 +470,8 @@ proc IllustrateButtonRelease {xx yy} {
 		}
 		line {IllustrateLineUpdateHandle $id}
 	    }
+	    IllustrateUpdateSelection
 	}
-	IllustrateUpdateSelection
 
 	shiftregion {
 	    $ds9(canvas) delete $iillustrate(ants)

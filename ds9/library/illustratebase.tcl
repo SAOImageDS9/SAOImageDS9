@@ -4,6 +4,16 @@
 
 package provide DS9 1.0
 
+proc IllustrateBaseSave {id} {
+    global ds9
+
+    set color [$ds9(canvas) itemcget $id -outline]
+    set fillcolor [$ds9(canvas) itemcget $id -fill]
+    set dashlist [$ds9(canvas) itemcget $id -dash]
+
+    return [list $id $color $fillcolor $dashlist]
+}
+
 proc IllustrateBaseCopy {id} {
     global ds9
     

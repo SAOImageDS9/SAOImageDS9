@@ -451,30 +451,14 @@ proc IllustrateSaveUndo {undo id} {
 }
 
 proc IllustrateSaveGraphic {id} {
-    global ds9
-
     switch [IllustrateGetType $id] {
 	circle -
 	ellipse -
 	box -
-	polygon {
-	    set color [$ds9(canvas) itemcget $id -outline]
-	    set fill [$ds9(canvas) itemcget $id -fill]
-	    set dash [$ds9(canvas) itemcget $id -dash]
-	}
-	line {
-	    set color {}
-	    set fill [$ds9(canvas) itemcget $id -fill]
-	    set dash [$ds9(canvas) itemcget $id -dash]
-	}
-	text {
-	    set color {}
-	    set fill [$ds9(canvas) itemcget $id -fill]
-	    set dash {}
-	}
+	polygon {return [IllustrateBaseSave $id]}
+	line {return [IllustrateLineSave $id]}
+	text {return [IllustrateTextSave $id]}
     }
-
-    return [list $id $color $fill $dash]
 }
 
 proc IllustrateGraphicAntsOn {id} {
@@ -603,7 +587,7 @@ proc IllustrateCmdCommand {cmd} {
     illustratefile::YY_FLUSH_BUFFER
     illustratefile::yy_scan_string $cmd
     illustratefile::yyparse
- }
+}
 
 proc IllustrateCmdSend {} {
     global ds9

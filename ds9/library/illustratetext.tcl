@@ -19,6 +19,14 @@ proc IllustrateTextCreate {xx yy txt color font} {
     return $id
 }
 
+proc IllustrateTextSave {id} {
+    global ds9
+
+    set fillcolor [$ds9(canvas) itemcget $id -fill]
+
+    return [list $id {} $fillcolor {}]
+}
+
 proc IllustrateTextCopy {id} {
     global ds9
     

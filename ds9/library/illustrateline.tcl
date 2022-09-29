@@ -25,6 +25,15 @@ proc IllustrateLineCreate {x1 y1 x2 y2 color width dash} {
     return $id
 }
 
+proc IllustrateLineSave {id} {
+    global ds9
+
+    set fillcolor [$ds9(canvas) itemcget $id -fill]
+    set dashlist [$ds9(canvas) itemcget $id -dash]
+
+    return [list $id {} $fillcolor $dashlist]
+}
+
 proc IllustrateLineCopy {id} {
     global ds9
     

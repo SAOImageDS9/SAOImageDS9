@@ -238,3 +238,22 @@ proc IllustrateBaseListProps {id} {
     return $rr
 }
 
+proc IllustrateBaseAntsOn {id} {
+    global ds9
+
+    $ds9(canvas) itemconfigure $id \
+	-outline white \
+	-fill {} \
+	-dash {8 3}
+}
+
+proc IllustrateBaseAntsOff {gr} {
+    global ds9
+
+    foreach {id color fillcolor dashlist} $gr {
+	$ds9(canvas) itemconfigure $id \
+	    -outline $color \
+	    -fill $fillcolor \
+	    -dash $dashlist
+    }
+}

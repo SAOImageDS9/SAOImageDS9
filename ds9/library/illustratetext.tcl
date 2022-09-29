@@ -122,3 +122,19 @@ proc IllustrateTextList {id} {
     
     return $rr
 }
+
+proc IllustrateTextAntsOn {id} {
+    global ds9
+
+    $ds9(canvas) itemconfigure $id \
+	-fill white
+}
+
+proc IllustrateTextAntsOff {gr} {
+    global ds9
+
+    foreach {id color fillcolor dashlist} $gr {
+	$ds9(canvas) itemconfigure $id \
+	    -fill $fillcolor
+    }
+}

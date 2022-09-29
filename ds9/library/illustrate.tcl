@@ -462,55 +462,25 @@ proc IllustrateSaveGraphic {id} {
 }
 
 proc IllustrateGraphicAntsOn {id} {
-    global ds9
-
-    # graphic
     switch [IllustrateGetType $id] {
 	circle -
 	ellipse -
 	box -
-	polygon {
-	    $ds9(canvas) itemconfigure $id \
-		-outline white \
-		-fill {} \
-		-dash {8 3}
-	}
-	line {
-	    $ds9(canvas) itemconfigure $id \
-		-fill white \
-		-dash {8 3}
-	}
-	text {
-	    $ds9(canvas) itemconfigure $id \
-		-fill white
-	}
+	polygon {IllustrateBaseAntsOn $id}
+	line {IllustrateLineAntsOn $id}
+	text {IllustrateTextAntsOn $id}
     }
 }
 
 proc IllustrateGraphicAntsOff {gr} {
-    global ds9
-
-    # graphic
     foreach {id color fillcolor dashlist} $gr {
 	switch [IllustrateGetType $id] {
 	    circle -
 	    ellipse -
 	    box -
-	    polygon {
-		$ds9(canvas) itemconfigure $id \
-		    -outline $color \
-		    -fill $fillcolor \
-		    -dash $dashlist
-	    }
-	    line {
-		$ds9(canvas) itemconfigure $id \
-		    -fill $fillcolor \
-		    -dash $dashlist
-	    }
-	    text {
-		$ds9(canvas) itemconfigure $id \
-		    -fill $fillcolor
-	    }
+	    polygon {IllustrateBaseAntsOff $gr}
+	    line {IllustrateLineAntsOff $gr}
+	    text {IllustrateTextAntsOff $gr}
 	}
     }
 }

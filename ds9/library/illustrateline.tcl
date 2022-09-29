@@ -205,3 +205,21 @@ proc IllustrateLineEdit {id xx yy} {
 	2 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
     }
 }
+
+proc IllustrateLineAntsOn {id} {
+    global ds9
+    
+    $ds9(canvas) itemconfigure $id \
+	-fill white \
+	-dash {8 3}
+}
+
+proc IllustrateLineAntsOff {gr} {
+    global ds9
+
+    foreach {id color fillcolor dashlist} $gr {
+	$ds9(canvas) itemconfigure $id \
+	    -fill $fillcolor \
+	    -dash $dashlist
+    }
+}

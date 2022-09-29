@@ -25,23 +25,24 @@ proc IllustrateGetInfo {} {
 }
 
 proc IllustrateDialog {id} {
-    global iillustrate
-
-    set varname ${iillustrate(prefix,dialog)}${id}
-    global $varname
-    upvar #0 $varname var
-
-    set var(id) $id
-    set var(top) ".${varname}"
-    set var(mb) ".${varname}mb"
-
     switch [IllustrateGetType $id] {
-	circle {IllustrateCircleDialog $varname}
-	ellipse {IllustrateEllipseDialog $varname}
-	box {IllustrateBoxDialog $varname}
-	polygon {IllustratePolygonDialog $varname}
-	line {IllustrateLineDialog $varname}
-	text {IllustrateTextDialog $varname}
+	circle {IllustrateCircleDialog $id}
+	ellipse {}
+	box {}
+	polygon {}
+	line {}
+	text {}
+    }
+}
+
+proc IllustrateDialogClose {id} {
+    switch [IllustrateGetType $id] {
+	circle {IllustrateCircleDialogClose $id}
+	ellipse {}
+	box {}
+	polygon {}
+	line {}
+	text {}
     }
 }
 

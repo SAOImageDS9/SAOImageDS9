@@ -311,6 +311,14 @@ proc IllustrateButtonMotion {xx yy} {
 		    set dx [expr $xx-$iillustrate(motion,xx)]
 		    set dy [expr $yy-$iillustrate(motion,yy)]
 		    $ds9(canvas) move $id $dx $dy
+		    switch [IllustrateGetType $id] {
+			circle {IllustrateCircleEditCB $id}
+			ellipse {}
+			box {}
+			polygon {}
+			line {}
+			text {}
+		    }
 		}
 	    }
 	    set iillustrate(motion,xx) $xx
@@ -424,12 +432,25 @@ proc IllustrateButtonRelease {xx yy} {
 		foreach {id color fill dash} $gr {
 		    IllustrateHandleOn $id
 		    switch [IllustrateGetType $id] {
-			circle -
-			ellipse -
-			box -
-			text {IllustrateBaseUpdateHandle $id}
-			polygon {IllustratePolygonUpdateHandle $id}
-			line {IllustrateLineUpdateHandle $id}
+			circle {
+			    IllustrateCircleEditCB $id
+			    IllustrateBaseUpdateHandle $id
+			}
+			ellipse {
+			    IllustrateBaseUpdateHandle $id
+			}
+			box {
+			    IllustrateBaseUpdateHandle $id
+			}
+			text {
+			    IllustrateBaseUpdateHandle $id
+			}
+			polygon {
+			    IllustratePolygonUpdateHandle $id
+			}
+			line {
+			    IllustrateLineUpdateHandle $id
+			}
 		    }
 		}
 	    }

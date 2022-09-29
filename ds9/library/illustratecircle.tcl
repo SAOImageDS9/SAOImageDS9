@@ -97,25 +97,24 @@ proc IllustrateCircleEdit {gr xx yy} {
     }
 }
 
-proc IllustrateCircleDialog {varname} {
-    upvar #0 $varname var
+proc IllustrateCircleDialog {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
-    
+    upvar #0 $varname var
+
     global ds9
+
+    set var(id) $id
+    set var(top) ".${varname}"
+    set var(mb) ".${varname}mb"
 
     # see if we already have a header window visible
     if {[winfo exists $var(top)]} {
 	raise $var(top)
 	return
     }
-
-    # procs
-    set var(proc,apply) IllustrateCircleApply
-    set var(proc,close) IllustrateCircleClose
-    set var(proc,deleteCB) IllustrateCircleDeleteCB
-    set var(proc,editCB) IllustrateCircleEditCB
-
-    # base
 
     # variables
     set var(xc) 0
@@ -124,7 +123,7 @@ proc IllustrateCircleDialog {varname} {
 
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc "Circle"] \
-	"$var(proc,close) $varname"
+	[list IllustrateCircleClose $varname]
 
     # IllustrateBaseMenu $varname
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
@@ -135,11 +134,12 @@ proc IllustrateCircleDialog {varname} {
     # IllustrateBaseFileMenu $varname
     ThemeMenu $var(mb).file
     $var(mb).file add command -label [msgcat::mc {Apply}] \
-	-command "$var(proc,apply) $varname"
+	-command [list IllustrateCircleApply $varname]
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
-	-command "$var(proc,close) $varname" -accelerator "${ds9(ctrl)}W"
-    bind $var(top) <<Close>> [list $var(proc,close) $varname]
+	-command [list IllustrateCircleClose $varname] \
+	-accelerator "${ds9(ctrl)}W"
+    bind $var(top) <<Close>> [list IllustrateCircleClose $varname]
 
     EditMenu $var(mb) $varname
     ColorFillMenu $var(mb).color $varname color fill \
@@ -170,12 +170,12 @@ proc IllustrateCircleDialog {varname} {
     # Buttons
     set f [ttk::frame $var(top).buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
-	-command "$var(proc,apply) $varname"
+	-command [list IllustrateCircleApply $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command "$var(proc,close) $varname"
+	-command [list IllustrateCircleClose $varname]
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
-    bind $var(top) <Return> "$var(proc,apply) $varname"
+    bind $var(top) <Return> [list IllustrateCircleApply $varname]
 
     # Fini
     ttk::separator $var(top).sep -orient horizontal
@@ -183,9 +183,18 @@ proc IllustrateCircleDialog {varname} {
     pack $var(top).param -side top -fill both -expand true
 
     # init
-    IllustrateCircleEditCB $varname
-    IllustrateCircleColorCB $varname
-    IllustrateCircleWidthCB $varname
+    IllustrateCircleEditCB $var(id)
+    IllustrateCirclePropsCB $var(id)
+}
+
+proc IllustrateCircleDialogClose {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    IllustrateCircleClose $varname
 }
 
 proc IllustrateCircleClose {varname} {
@@ -253,16 +262,12 @@ proc IllustrateCircleUpdate {varname} {
 
 # callbacks
 
-proc IllustrateCircleDeleteCB {varname} {
-    upvar #0 $varname var
-    global $varname
+proc IllustrateCircleEditCB {id} {
+    global iillustrate
 
-    IllustrateCircleClose $varname
-}
-
-proc IllustrateCircleEditCB {varname} {
-    upvar #0 $varname var
+    set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
+    upvar #0 $varname var
 
     global ds9
 
@@ -277,9 +282,12 @@ proc IllustrateCircleEditCB {varname} {
     set var(rr) [expr ($x2-$x1)/2]
 }
 
-proc IllustrateCircleColorCB {varname} {
-    upvar #0 $varname var
+proc IllustrateCirclePropsCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
+    upvar #0 $varname var
 
     global ds9
 
@@ -289,14 +297,7 @@ proc IllustrateCircleColorCB {varname} {
     } else {
 	set var(fill) 0
     }
-}
 
-proc IllustrateCircleWidthCB {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-    
     set var(width) [expr int([$ds9(canvas) itemcget $var(id) -width])]
     set var(dashlist) [$ds9(canvas) itemcget $var(id) -dash]
     if {$var(dashlist) != {}} {

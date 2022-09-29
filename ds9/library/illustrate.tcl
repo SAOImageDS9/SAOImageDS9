@@ -155,9 +155,28 @@ proc IllustrateUpdateGraphic {} {
 	foreach {id ocolor ofill odash} $gr {
 	    # graphic
 	    switch [IllustrateGetType $id] {
-		circle -
-		ellipse -
-		box -
+		circle {
+		    $ds9(canvas) itemconfigure $id \
+			-outline $illustrate(color) \
+			-fill $fill \
+			-width $illustrate(width) \
+			-dash $dash
+		    IllustrateCirclePropsCB $id
+		}
+		ellipse {
+		    $ds9(canvas) itemconfigure $id \
+			-outline $illustrate(color) \
+			-fill $fill \
+			-width $illustrate(width) \
+			-dash $dash
+		}
+		box {
+		    $ds9(canvas) itemconfigure $id \
+			-outline $illustrate(color) \
+			-fill $fill \
+			-width $illustrate(width) \
+			-dash $dash
+		}
 		polygon {
 		    $ds9(canvas) itemconfigure $id \
 			-outline $illustrate(color) \
@@ -596,13 +615,7 @@ proc IllustrateCmdOpen {} {
     
     foreach gr $iillustrate(selection) {
 	foreach {id color fill dash} $gr {
-	    set varname ${iillustrate(prefix,dialog)}${id}
-	    global $varname
-	    upvar #0 $varname var
-
-	    if {[info exists var(proc,close)]} {
-		eval "$var(proc,close) $varname"
-	    }
+	    IllustrateDialogClose $id
 	}
     }
 }

@@ -79,7 +79,7 @@ proc IllustrateLineDup {param} {
     return $id
 }
 
-proc IllustrateLineUpdateColor {id color} {
+proc IllustrateLineColor {id color} {
     global ds9
     
     $ds9(canvas) itemconfigure $id \
@@ -91,7 +91,7 @@ proc IllustrateLineUpdateColor {id color} {
     }
 }
 
-proc IllustrateLineUpdateWidth {id width dash} {
+proc IllustrateLineWidth {id width dash} {
     global ds9
     global illustrate
     

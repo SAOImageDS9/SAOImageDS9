@@ -165,7 +165,7 @@ proc IllustrateBaseEdit {id xx yy} {
     }
 }
 
-proc IllustrateBaseUpdateColor {id color fill} {
+proc IllustrateBaseColor {id color fill} {
     global ds9
     
     if {$fill} {
@@ -184,7 +184,7 @@ proc IllustrateBaseUpdateColor {id color fill} {
     }
 }
 
-proc IllustrateBaseUpdateWidth {id width dash} {
+proc IllustrateBaseWidth {id width dash} {
     global ds9
     global illustrate
     
@@ -256,4 +256,71 @@ proc IllustrateBaseAntsOff {gr} {
 	    -fill $fillcolor \
 	    -dash $dashlist
     }
+}
+
+# Dialog
+
+proc IllustrateBaseDialog {varname} {
+    global ds9
+
+    # window
+    Toplevel $var(top) $var(mb) 6 [msgcat::mc "Circle"] \
+	[list $var(proc,close) $varname]
+
+    # IllustrateBaseMenu $varname
+    $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
+    $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
+    $var(mb) add cascade -label [msgcat::mc {Color}] -menu $var(mb).color
+    $var(mb) add cascade -label [msgcat::mc {Width}] -menu $var(mb).width
+
+    # IllustrateBaseFileMenu $varname
+    ThemeMenu $var(mb).file
+    $var(mb).file add command -label [msgcat::mc {Apply}] \
+	-command [list $var(proc,apply) $varname]
+    $var(mb).file add separator
+    $var(mb).file add command -label [msgcat::mc {Close}] \
+	-command [list $var(proc,close) $varname] \
+	-accelerator "${ds9(ctrl)}W"
+    bind $var(top) <<Close>> [list $var(proc,close) $varname]
+
+    EditMenu $var(mb) $varname
+    ColorFillMenu $var(mb).color $varname color fill \
+	[list $var(proc,color) $varname] \
+	[list $var(proc,color) $varname]
+    WidthDashMenu $var(mb).width $varname width dash \
+	[list $var(proc,width) $varname] \
+	[list $var(proc,width) $varname]
+
+    set f $var(top).param
+
+    # Param
+    set f [ttk::frame $var(top).param]
+    ttk::label $f.tid -text [msgcat::mc {Number}]
+    ttk::label $f.id -text "$var(id)"
+    grid $f.tid $f.id -padx 2 -pady 2 -sticky w
+
+    # Center
+    ttk::label $f.tcenter -text [msgcat::mc {Center}]
+    ttk::entry $f.centerx -textvariable ${varname}(xc) -width 13
+    ttk::entry $f.centery -textvariable ${varname}(yc) -width 13
+    grid $f.tcenter $f.centerx $f.centery -padx 2 -pady 2 -sticky w
+
+    ttk::label $f.tradius -text [msgcat::mc {Radius}]
+    ttk::entry $f.radius -textvariable ${varname}(rr) -width 13 
+    grid $f.tradius $f.radius -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $var(top).buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] \
+	-command [list $var(proc,apply) $varname]
+    ttk::button $f.close -text [msgcat::mc {Close}] \
+	-command [list $var(proc,close) $varname]
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
+
+    bind $var(top) <Return> [list $var(proc,apply) $varname]
+
+    # Fini
+    ttk::separator $var(top).sep -orient horizontal
+    pack $var(top).buttons $var(top).sep -side bottom -fill x
+    pack $var(top).param -side top -fill both -expand true
 }

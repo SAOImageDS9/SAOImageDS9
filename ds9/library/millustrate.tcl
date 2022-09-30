@@ -73,9 +73,9 @@ proc IllustrateMainMenu {} {
 	-variable illustrate(shape) -value text
 
     ColorFillMenu $ds9(mb).illustrate.color illustrate color fill \
-	IllustrateUpdateColor IllustrateUpdateColor
+	IllustrateColor IllustrateColor
     WidthDashMenu $ds9(mb).illustrate.width illustrate width dash \
-	IllustrateUpdateWidth IllustrateUpdateWidth
+	IllustrateWidth IllustrateWidth
 }
 
 proc PrefsDialogIllustrateMenu {w} {

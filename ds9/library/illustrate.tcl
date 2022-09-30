@@ -141,7 +141,7 @@ proc IllustrateDeleteGraphicOne {id} {
     }
 }
 
-proc IllustrateUpdateColor {} {
+proc IllustrateColor {} {
     global ds9
     global illustrate
     global iillustrate
@@ -154,28 +154,28 @@ proc IllustrateUpdateColor {} {
 	foreach {id color fillcolor dashlist} $gr {
 	    switch [IllustrateGetType $id] {
 		circle {
-		    IllustrateBaseUpdateColor $id \
+		    IllustrateBaseColor $id \
 			$illustrate(color) $illustrate(fill)
 		    IllustrateCirclePropsCB $id
 		}
 		ellipse {
-		    IllustrateBaseUpdateColor $id \
+		    IllustrateBaseColor $id \
 			$illustrate(color) $illustrate(fill)
 		}
 		box {
-		    IllustrateBaseUpdateColor $id \
+		    IllustrateBaseColor $id \
 			$illustrate(color) $illustrate(fill)
 		}
 		polygon {
-		    IllustrateBaseUpdateColor $id \
+		    IllustrateBaseColor $id \
 			$illustrate(color) $illustrate(fill)
 		}
 		line {
-		    IllustrateLineUpdateColor $id \
+		    IllustrateLineColor $id \
 			$illustrate(color)
 		}
 		text {
-		    IllustrateTextUpdateColor $id \
+		    IllustrateTextColor $id \
 			$illustrate(color)
 		}
 	    }
@@ -185,7 +185,7 @@ proc IllustrateUpdateColor {} {
     }
 }
 
-proc IllustrateUpdateWidth {} {
+proc IllustrateWidth {} {
     global ds9
     global illustrate
     global iillustrate
@@ -199,24 +199,24 @@ proc IllustrateUpdateWidth {} {
 	    # graphic
 	    switch [IllustrateGetType $id] {
 		circle {
-		    IllustrateBaseUpdateWidth $id \
+		    IllustrateBaseWidth $id \
 			$illustrate(width) $illustrate(dash)
 		    IllustrateCirclePropsCB $id
 		}
 		ellipse {
-		    IllustrateBaseUpdateWidth $id \
+		    IllustrateBaseWidth $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		box {
-		    IllustrateBaseUpdateWidth $id \
+		    IllustrateBaseWidth $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		polygon {
-		    IllustrateBaseUpdateWidth $id \
+		    IllustrateBaseWidth $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		line {
-		    IllustrateLineUpdateWidth $id \
+		    IllustrateLineWidth $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		text {}

@@ -124,9 +124,17 @@ proc IllustrateCircleDialog {id} {
     set var(yc) 0
     set var(rr) 0
 
+    # proc
+    set var(proc,close) IllustrateCircleClose
+    set var(proc,apply) IllustrateCircleApply
+    set var(proc,color) IllustrateCircleColor
+    set var(proc,width) IllustrateCircleWidth
+    
+#    IllustrateBaseDialog $varname
+    
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc "Circle"] \
-	[list IllustrateCircleClose $varname]
+	[list $var(proc,close) $varname]
 
     # IllustrateBaseMenu $varname
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
@@ -137,20 +145,18 @@ proc IllustrateCircleDialog {id} {
     # IllustrateBaseFileMenu $varname
     ThemeMenu $var(mb).file
     $var(mb).file add command -label [msgcat::mc {Apply}] \
-	-command [list IllustrateCircleApply $varname]
+	-command [list $var(proc,apply) $varname]
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
-	-command [list IllustrateCircleClose $varname] \
+	-command [list $var(proc,close) $varname] \
 	-accelerator "${ds9(ctrl)}W"
-    bind $var(top) <<Close>> [list IllustrateCircleClose $varname]
+    bind $var(top) <<Close>> [list $var(proc,close) $varname]
 
     EditMenu $var(mb) $varname
     ColorFillMenu $var(mb).color $varname color fill \
-	[list IllustrateCircleUpdate $varname] \
-	[list IllustrateCircleUpdate $varname]
+	[list $var(proc,color) $varname] [list $var(proc,color) $varname]
     WidthDashMenu $var(mb).width $varname width dash \
-	[list IllustrateCircleUpdate $varname] \
-	[list IllustrateCircleUpdate $varname]
+	[list $var(proc,width) $varname] [list $var(proc,width) $varname]
 
     set f $var(top).param
 
@@ -173,12 +179,12 @@ proc IllustrateCircleDialog {id} {
     # Buttons
     set f [ttk::frame $var(top).buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
-	-command [list IllustrateCircleApply $varname]
+	-command [list $var(proc,apply) $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command [list IllustrateCircleClose $varname]
+	-command [list $var(proc,close) $varname]
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
-    bind $var(top) <Return> [list IllustrateCircleApply $varname]
+    bind $var(top) <Return> [list $var(proc,apply) $varname]
 
     # Fini
     ttk::separator $var(top).sep -orient horizontal
@@ -231,36 +237,18 @@ proc IllustrateCircleApply {varname} {
     }
 }
 
-proc IllustrateCircleUpdate {varname} {
+proc IllustrateCircleColor {varname} {
     upvar #0 $varname var
     global $varname
 
-    global ds9
-    global illustrate
-    
-    set id $var(id)
-    
-    if {$var(fill)} {
-	set fill $var(color)
-    } else {
-	set fill {}
-    }
-    if {$var(dash)} {
-	set dashlist $illustrate(dashlist)
-    } else {
-	set dashlist {}
-    }
+    IllustrateBaseColor $var(id) $var(color) $var(fill)
+}
 
-    $ds9(canvas) itemconfigure $var(id) \
-	-outline $var(color) \
-	-fill $fill \
-	-width $var(width) \
-	-dash $dashlist
+proc IllustrateCircleWidth {varname} {
+    upvar #0 $varname var
+    global $varname
 
-    # handles/nodes
-    foreach hh [$ds9(canvas) find withtag gr${id}] {
-	$ds9(canvas) itemconfigure $hh -outline $var(color) -fill $var(color)
-    }
+    IllustrateBaseWidth $var(id) $var(width) $var(dash)
 }
 
 # callbacks

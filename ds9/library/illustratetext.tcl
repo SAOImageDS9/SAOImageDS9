@@ -73,7 +73,7 @@ proc IllustrateTextDup {param} {
     return $id
 }
 
-proc IllustrateTextUpdateColor {id color} {
+proc IllustrateTextColor {id color} {
     global ds9
     
     $ds9(canvas) itemconfigure $id \
@@ -85,18 +85,14 @@ proc IllustrateTextUpdateColor {id color} {
     }
 }
 
-proc IllustrateTextUpdateProps {id color font} {
+proc IllustrateTextFont {id font} {
     global ds9
     global illustrate
     
     $ds9(canvas) itemconfigure $id \
-	-fill $color \
 	-font $font
 
-    # handles/nodes
-    foreach hh [$ds9(canvas) find withtag gr${id}] {
-	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
-    }
+    IllustrateBaseUpdateHandle $id
 }
 
 proc IllustrateTextList {id} {

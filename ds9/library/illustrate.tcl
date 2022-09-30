@@ -156,19 +156,22 @@ proc IllustrateColor {} {
 		circle {
 		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
-		    IllustrateCirclePropsCB $id
+		    IllustrateBaseColorCB $id
 		}
 		ellipse {
 		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
+		    IllustrateBaseColorCB $id
 		}
 		box {
 		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
+		    IllustrateBaseColorCB $id
 		}
 		polygon {
 		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
+		    IllustrateBaseColorCB $id
 		}
 		line {
 		    IllustrateLineColorSet $id \
@@ -201,19 +204,22 @@ proc IllustrateWidth {} {
 		circle {
 		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
-		    IllustrateCirclePropsCB $id
+		    IllustrateBaseWidthCB $id
 		}
 		ellipse {
 		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
+		    IllustrateBaseWidthCB $id
 		}
 		box {
 		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
+		    IllustrateBaseWidthCB $id
 		}
 		polygon {
 		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
+		    IllustrateBaseWidthCB $id
 		}
 		line {
 		    IllustrateLineWidthSet $id \

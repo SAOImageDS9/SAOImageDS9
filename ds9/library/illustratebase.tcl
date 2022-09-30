@@ -380,5 +380,46 @@ proc IllustrateBaseDeleteCB {id} {
     IllustrateBaseClose $varname
 }
 
+proc IllustrateBaseColorCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    global ds9
+
+    set var(color) [$ds9(canvas) itemcget $var(id) -outline]
+    if {[$ds9(canvas) itemcget $var(id) -fill] != {}} {
+	set var(fill) 1
+    } else {
+	set var(fill) 0
+    }
+}
+
+proc IllustrateBaseWidthCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    global ds9
+
+    set var(width) [expr int([$ds9(canvas) itemcget $var(id) -width])]
+    if {[$ds9(canvas) itemcget $var(id) -dash] != {}} {
+	set var(dash) 1
+    } else {
+	set var(dash) 0
+    }
+}
 
 

@@ -238,9 +238,9 @@ proc IllustrateButton {xx yy} {
     if {$id} {
 	IllustrateSaveUndo create $id
 	switch [IllustrateGetType $id] {
-	    circle -
-	    ellipse -
-	    box -
+	    circle {set iillustrate(handle) 1}
+	    ellipse {set iillustrate(handle) 3}
+	    box {set iillustrate(handle) 3}
 	    polygon {set iillustrate(handle) 1}
 	    line {set iillustrate(handle) 2}
 	    text {}

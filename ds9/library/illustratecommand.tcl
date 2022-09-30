@@ -27,9 +27,9 @@ proc IllustrateGetInfo {} {
 proc IllustrateDialog {id} {
     switch [IllustrateGetType $id] {
 	circle {IllustrateCircleDialog $id}
-	ellipse {}
-	box {}
-	polygon {}
+	ellipse {IllustrateEllipseDialog $id}
+	box {IllustrateBoxDialog $id}
+	polygon {IllustratePolygonDialog $id}
 	line {}
 	text {}
     }
@@ -37,10 +37,10 @@ proc IllustrateDialog {id} {
 
 proc IllustrateDialogClose {id} {
     switch [IllustrateGetType $id] {
-	circle {IllustrateCircleDialogClose $id}
-	ellipse {}
-	box {}
-	polygon {}
+	circle -
+	ellipse -
+	box -
+	polygon {IllustrateBaseDialogClose $id}
 	line {}
 	text {}
     }

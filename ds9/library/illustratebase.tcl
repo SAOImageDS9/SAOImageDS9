@@ -234,6 +234,10 @@ proc IllustrateBaseDialog {varname} {
 
     set type [string totitle [IllustrateGetType $var(id)]]
     
+    # variables
+    set var(xc) 0
+    set var(yc) 0
+
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc "$type"] \
 	[list $var(proc,close) $varname]
@@ -288,6 +292,16 @@ proc IllustrateBaseDialog {varname} {
     ttk::separator $var(top).sep -orient horizontal
     pack $var(top).buttons $var(top).sep -side bottom -fill x
     pack $var(top).param -side top -fill both -expand true
+}
+
+proc IllustrateBaseDialogClose {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    IllustrateBaseClose $varname
 }
 
 proc IllustrateBaseClose {varname} {
@@ -348,6 +362,22 @@ proc IllustrateBaseWidthSet {id width dash} {
     $ds9(canvas) itemconfigure $id \
 	-width $width \
 	-dash $dashlist
+}
+
+# Callbacks
+
+proc IllustrateBaseDeleteCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    IllustrateBaseClose $varname
 }
 
 

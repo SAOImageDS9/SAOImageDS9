@@ -120,8 +120,6 @@ proc IllustrateCircleDialog {id} {
     }
 
     # variables
-    set var(xc) 0
-    set var(yc) 0
     set var(rr) 0
 
     # proc
@@ -141,16 +139,6 @@ proc IllustrateCircleDialog {id} {
     # init
     IllustrateCircleEditCB $var(id)
     IllustrateCirclePropsCB $var(id)
-}
-
-proc IllustrateCircleDialogClose {id} {
-    global iillustrate
-
-    set varname ${iillustrate(prefix,dialog)}${id}
-    global $varname
-    upvar #0 $varname var
-
-    IllustrateCircleClose $varname
 }
 
 proc IllustrateCircleApply {varname} {
@@ -173,20 +161,6 @@ proc IllustrateCircleApply {varname} {
 }
 
 # callbacks
-
-proc IllustrateCircleDeleteCB {id} {
-    global iillustrate
-
-    set varname ${iillustrate(prefix,dialog)}${id}
-    global $varname
-    upvar #0 $varname var
-
-    if {![info exists $varname]} {
-	return
-    }
-
-    IllustrateCircleClose $varname
-}
 
 proc IllustrateCircleEditCB {id} {
     global iillustrate

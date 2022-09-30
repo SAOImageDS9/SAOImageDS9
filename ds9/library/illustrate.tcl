@@ -106,10 +106,10 @@ proc IllustrateDeleteGraphic {id} {
 
     # dialogs
     switch [IllustrateGetType $id] {
-	circle {IllustrateCircleDeleteCB $id}
-	ellipse {}
-	box {}
-	polygon {}
+	circle -
+	ellipse -
+	box -
+	polygon {IllustrateBaseDeleteCB $id}
 	line {}
 	text {}
     }

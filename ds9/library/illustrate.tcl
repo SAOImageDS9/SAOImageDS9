@@ -154,28 +154,28 @@ proc IllustrateColor {} {
 	foreach {id color fillcolor dashlist} $gr {
 	    switch [IllustrateGetType $id] {
 		circle {
-		    IllustrateBaseColor $id \
+		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
 		    IllustrateCirclePropsCB $id
 		}
 		ellipse {
-		    IllustrateBaseColor $id \
+		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
 		}
 		box {
-		    IllustrateBaseColor $id \
+		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
 		}
 		polygon {
-		    IllustrateBaseColor $id \
+		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
 		}
 		line {
-		    IllustrateLineColor $id \
+		    IllustrateLineColorSet $id \
 			$illustrate(color)
 		}
 		text {
-		    IllustrateTextColor $id \
+		    IllustrateTextColorSet $id \
 			$illustrate(color)
 		}
 	    }
@@ -199,24 +199,24 @@ proc IllustrateWidth {} {
 	    # graphic
 	    switch [IllustrateGetType $id] {
 		circle {
-		    IllustrateBaseWidth $id \
+		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
 		    IllustrateCirclePropsCB $id
 		}
 		ellipse {
-		    IllustrateBaseWidth $id \
+		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		box {
-		    IllustrateBaseWidth $id \
+		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		polygon {
-		    IllustrateBaseWidth $id \
+		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		line {
-		    IllustrateLineWidth $id \
+		    IllustrateLineWidthSet $id \
 			$illustrate(width) $illustrate(dash)
 		}
 		text {}

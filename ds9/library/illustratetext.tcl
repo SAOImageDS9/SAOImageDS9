@@ -73,28 +73,6 @@ proc IllustrateTextDup {param} {
     return $id
 }
 
-proc IllustrateTextColor {id color} {
-    global ds9
-    
-    $ds9(canvas) itemconfigure $id \
-	-fill $color
-
-    # handles/nodes
-    foreach hh [$ds9(canvas) find withtag gr${id}] {
-	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
-    }
-}
-
-proc IllustrateTextFont {id font} {
-    global ds9
-    global illustrate
-    
-    $ds9(canvas) itemconfigure $id \
-	-font $font
-
-    IllustrateBaseUpdateHandle $id
-}
-
 proc IllustrateTextList {id} {
     global ds9
 
@@ -134,3 +112,28 @@ proc IllustrateTextAntsOff {gr} {
 	    -fill $fillcolor
     }
 }
+
+# Dialog
+
+proc IllustrateTextColorSet {id color} {
+    global ds9
+    
+    $ds9(canvas) itemconfigure $id \
+	-fill $color
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
+    }
+}
+
+proc IllustrateTextFontSet {id font} {
+    global ds9
+    global illustrate
+    
+    $ds9(canvas) itemconfigure $id \
+	-font $font
+
+    IllustrateBaseUpdateHandle $id
+}
+

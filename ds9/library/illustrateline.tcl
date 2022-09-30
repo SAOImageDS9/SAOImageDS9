@@ -79,33 +79,6 @@ proc IllustrateLineDup {param} {
     return $id
 }
 
-proc IllustrateLineColor {id color} {
-    global ds9
-    
-    $ds9(canvas) itemconfigure $id \
-	-fill $color
-
-    # handles/nodes
-    foreach hh [$ds9(canvas) find withtag gr${id}] {
-	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
-    }
-}
-
-proc IllustrateLineWidth {id width dash} {
-    global ds9
-    global illustrate
-    
-    if {$dash} {
-	set dashlist $illustrate(dashlist)
-    } else {
-	set dashlist {}
-    }
-
-    $ds9(canvas) itemconfigure $id \
-	-width $width \
-	-dash $dashlist
-}
-
 proc IllustrateLineList {id} {
     global ds9
 
@@ -223,3 +196,33 @@ proc IllustrateLineAntsOff {gr} {
 	    -dash $dashlist
     }
 }
+
+# Dialog
+
+proc IllustrateLineColorSet {id color} {
+    global ds9
+    
+    $ds9(canvas) itemconfigure $id \
+	-fill $color
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
+    }
+}
+
+proc IllustrateLineWidthSet {id width dash} {
+    global ds9
+    global illustrate
+    
+    if {$dash} {
+	set dashlist $illustrate(dashlist)
+    } else {
+	set dashlist {}
+    }
+
+    $ds9(canvas) itemconfigure $id \
+	-width $width \
+	-dash $dashlist
+}
+

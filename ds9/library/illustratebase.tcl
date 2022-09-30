@@ -165,40 +165,6 @@ proc IllustrateBaseEdit {id xx yy} {
     }
 }
 
-proc IllustrateBaseColor {id color fill} {
-    global ds9
-    
-    if {$fill} {
-	set fillcolor $color
-    } else {
-	set fillcolor {}
-    }
-
-    $ds9(canvas) itemconfigure $id \
-	-outline $color \
-	-fill $fillcolor
-
-    # handles/nodes
-    foreach hh [$ds9(canvas) find withtag gr${id}] {
-	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
-    }
-}
-
-proc IllustrateBaseWidth {id width dash} {
-    global ds9
-    global illustrate
-    
-    if {$dash} {
-	set dashlist $illustrate(dashlist)
-    } else {
-	set dashlist {}
-    }
-
-    $ds9(canvas) itemconfigure $id \
-	-width $width \
-	-dash $dashlist
-}
-
 proc IllustrateBaseListProps {id} {
     global ds9
     
@@ -261,19 +227,22 @@ proc IllustrateBaseAntsOff {gr} {
 # Dialog
 
 proc IllustrateBaseDialog {varname} {
+    global $varname
+    upvar #0 $varname var
+
     global ds9
 
+    set type [string totitle [IllustrateGetType $var(id)]]
+    
     # window
-    Toplevel $var(top) $var(mb) 6 [msgcat::mc "Circle"] \
+    Toplevel $var(top) $var(mb) 6 [msgcat::mc "$type"] \
 	[list $var(proc,close) $varname]
 
-    # IllustrateBaseMenu $varname
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
     $var(mb) add cascade -label [msgcat::mc {Color}] -menu $var(mb).color
     $var(mb) add cascade -label [msgcat::mc {Width}] -menu $var(mb).width
 
-    # IllustrateBaseFileMenu $varname
     ThemeMenu $var(mb).file
     $var(mb).file add command -label [msgcat::mc {Apply}] \
 	-command [list $var(proc,apply) $varname]
@@ -305,10 +274,6 @@ proc IllustrateBaseDialog {varname} {
     ttk::entry $f.centery -textvariable ${varname}(yc) -width 13
     grid $f.tcenter $f.centerx $f.centery -padx 2 -pady 2 -sticky w
 
-    ttk::label $f.tradius -text [msgcat::mc {Radius}]
-    ttk::entry $f.radius -textvariable ${varname}(rr) -width 13 
-    grid $f.tradius $f.radius -padx 2 -pady 2 -sticky w
-
     # Buttons
     set f [ttk::frame $var(top).buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
@@ -324,3 +289,66 @@ proc IllustrateBaseDialog {varname} {
     pack $var(top).buttons $var(top).sep -side bottom -fill x
     pack $var(top).param -side top -fill both -expand true
 }
+
+proc IllustrateBaseClose {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # destroy the window and menubar
+    if {[winfo exists $var(top)]} {
+	destroy $var(top)
+	destroy $var(mb)
+    }
+    unset $varname
+}
+
+proc IllustrateBaseColor {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    IllustrateBaseColorSet $var(id) $var(color) $var(fill)
+}
+
+proc IllustrateBaseColorSet {id color fill} {
+    global ds9
+    
+    if {$fill} {
+	set fillcolor $color
+    } else {
+	set fillcolor {}
+    }
+
+    $ds9(canvas) itemconfigure $id \
+	-outline $color \
+	-fill $fillcolor
+
+    # handles/nodes
+    foreach hh [$ds9(canvas) find withtag gr${id}] {
+	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
+    }
+}
+
+proc IllustrateBaseWidth {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    IllustrateBaseWidthSet $var(id) $var(width) $var(dash)
+}
+
+proc IllustrateBaseWidthSet {id width dash} {
+    global ds9
+    global illustrate
+    
+    if {$dash} {
+	set dashlist $illustrate(dashlist)
+    } else {
+	set dashlist {}
+    }
+
+    $ds9(canvas) itemconfigure $id \
+	-width $width \
+	-dash $dashlist
+}
+
+
+

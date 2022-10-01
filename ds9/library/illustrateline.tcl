@@ -173,6 +173,7 @@ proc IllustrateLineEdit {id xx yy} {
     set y1 [lindex $coords 1]
     set x2 [lindex $coords 2]
     set y2 [lindex $coords 3]
+
     switch $iillustrate(handle) {
 	1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
 	2 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}

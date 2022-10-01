@@ -160,6 +160,7 @@ proc IllustrateButton {xx yy} {
     set iillustrate(handle) 0
     set iillustrate(node) 0
     set iillustrate(ants) 0
+    set iillustrate(edit) {}
     set iillustrate(motion) none
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy
@@ -176,6 +177,7 @@ proc IllustrateButton {xx yy} {
 	if {$id} {
 	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
+	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
 	}
 	return
@@ -189,6 +191,7 @@ proc IllustrateButton {xx yy} {
 	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
 	    set iillustrate(node) $nid
+	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
 	    return
 	}
@@ -204,6 +207,7 @@ proc IllustrateButton {xx yy} {
 	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
 	    set iillustrate(node) $nid
+	    set iillustrate(edit) [IllustrateSaveGraphic $id]
 	    set iillustrate(motion) beginEdit
 	    return
 	}
@@ -246,6 +250,7 @@ proc IllustrateButton {xx yy} {
 	    text {}
 	}
 	set iillustrate(id) $id
+	set iillustrate(edit) [IllustrateSaveGraphic $id]
 	set iillustrate(motion) beginCreate
     }
 }
@@ -264,7 +269,7 @@ proc IllustrateButtonMotion {xx yy} {
 	none {}
 
 	beginCreate {
-	    IllustrateGraphicAntsOn [IllustrateSaveGraphic $id]
+	    IllustrateGraphicAntsOn $id
 	    IllustrateHandleOff $id
 	    switch [IllustrateGetType $id] {
 		polygon -
@@ -274,17 +279,11 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	create {
 	    switch [IllustrateGetType $id] {
-		circle {
-		    IllustrateCircleEdit $id $xx $yy
-		}
-		ellipse -
-		box {
-		    IllustrateBaseEdit $id $xx $yy
-		}
+		circle {IllustrateCircleEdit $id $xx $yy}
+		ellipse {IllustrateEllipseEdit $id $xx $yy}
+		box {IllustrateBoxEdit $id $xx $yy}
 		polygon {}
-		line {
-		    IllustrateLineEdit $id $xx $yy
-		}
+		line {}
 		text {}
 	    }
 	}
@@ -306,8 +305,8 @@ proc IllustrateButtonMotion {xx yy} {
 		    $ds9(canvas) move $id $dx $dy
 		    switch [IllustrateGetType $id] {
 			circle {IllustrateCircleEditCB $id}
-			ellipse {}
-			box {}
+			ellipse {IllustrateEllipseEditCB $id}
+			box {IllustrateBoxEditCB $id}
 			polygon {}
 			line {}
 			text {}
@@ -327,17 +326,18 @@ proc IllustrateButtonMotion {xx yy} {
 	    switch [IllustrateGetType $id] {
 		circle {
 		    IllustrateCircleEdit $id $xx $yy
+		    IllustrateCircleEditCB $id
 		}
-		ellipse -
+		ellipse {
+		    IllustrateEllipseEdit $id $xx $yy
+		    IllustrateEllipseEditCB $id
+		}
 		box {
-		    IllustrateBaseEdit $id $xx $yy
+		    IllustrateBoxEdit $id $xx $yy
+		    IllustrateBoxEditCB $id
 		}
-		polygon {
-		    IllustratePolygonEdit $id $xx $yy
-		}
-		line {
-		    IllustrateLineEdit $id $xx $yy
-		}
+		polygon {}
+		line {}
 		text {}
 	    }
 	}
@@ -365,7 +365,7 @@ proc IllustrateButtonRelease {xx yy} {
 
 	beginCreate {
 	    # the user has just clicked, so resize to make visible or delete
-	    IllustrateGraphicAntsOff [IllustrateSaveGraphic $id]
+	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    switch [IllustrateGetType $id] {
 		circle {
 		    IllustrateCircleDefault $id
@@ -391,7 +391,7 @@ proc IllustrateButtonRelease {xx yy} {
 	    # determine if this is an accident and just create the default
 	    set dx [expr $xx-$iillustrate(motion,xx)]
 	    set dy [expr $yy-$iillustrate(motion,yy)]
-	    IllustrateGraphicAntsOff [IllustrateSaveGraphic $id]
+	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    if {[expr sqrt($dx*$dx + $dy*$dy)]<4} {
 		switch [IllustrateGetType $id] {
 		    circle {
@@ -435,9 +435,11 @@ proc IllustrateButtonRelease {xx yy} {
 			    IllustrateBaseUpdateHandle $id
 			}
 			ellipse {
+			    IllustrateEllipseEditCB $id
 			    IllustrateBaseUpdateHandle $id
 			}
 			box {
+			    IllustrateBoxEditCB $id
 			    IllustrateBaseUpdateHandle $id
 			}
 			text {
@@ -457,7 +459,7 @@ proc IllustrateButtonRelease {xx yy} {
 
 	beginEdit -
 	edit {
-	    IllustrateGraphicAntsOff [IllustrateSaveGraphic $id]
+	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    IllustrateHandleOn $id
 	    switch [IllustrateGetType $id] {
 		circle -
@@ -488,6 +490,7 @@ proc IllustrateButtonRelease {xx yy} {
     unset iillustrate(handle)
     unset iillustrate(node)
     unset iillustrate(ants)
+    unset iillustrate(edit)
     unset iillustrate(motion)
     unset iillustrate(motion,xx)
     unset iillustrate(motion,yy)
@@ -508,9 +511,10 @@ proc IllustrateShiftButton {xx yy} {
     }
 
     set iillustrate(id) 0
-    set iillustrate(ants) 0
     set iillustrate(handle) 0
     set iillustrate(node) 0
+    set iillustrate(ants) 0
+    set iillustrate(edit) {}
     set iillustrate(motion) none
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy

@@ -147,24 +147,6 @@ proc IllustrateBaseUpdateHandle {id} {
 	[expr $bbx1+$rr] [expr $bby2+$rr]
 }
 
-proc IllustrateBaseEdit {id xx yy} {
-    global ds9
-    global iillustrate
-
-    set coords [$ds9(canvas) coords $id]
-    set x1 [lindex $coords 0]
-    set y1 [lindex $coords 1]
-    set x2 [lindex $coords 2]
-    set y2 [lindex $coords 3]
-
-    switch $iillustrate(handle) {
-	1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
-	2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}
-	3 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
-	4 {$ds9(canvas) coords $id $xx $y1 $x2 $yy}
-    }
-}
-
 proc IllustrateBaseListProps {id} {
     global ds9
     
@@ -240,7 +222,7 @@ proc IllustrateBaseDialog {varname} {
 
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc "$type"] \
-	[list $var(proc,close) $varname]
+	[list IllustrateBaseClose $varname]
 
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
@@ -252,17 +234,15 @@ proc IllustrateBaseDialog {varname} {
 	-command [list $var(proc,apply) $varname]
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
-	-command [list $var(proc,close) $varname] \
+	-command [list IllustrateBaseClose $varname] \
 	-accelerator "${ds9(ctrl)}W"
-    bind $var(top) <<Close>> [list $var(proc,close) $varname]
+    bind $var(top) <<Close>> [list IllustrateBaseClose $varname]
 
     EditMenu $var(mb) $varname
     ColorFillMenu $var(mb).color $varname color fill \
-	[list $var(proc,color) $varname] \
-	[list $var(proc,color) $varname]
+	[list IllustrateBaseColor $varname] [list IllustrateBaseColor $varname]
     WidthDashMenu $var(mb).width $varname width dash \
-	[list $var(proc,width) $varname] \
-	[list $var(proc,width) $varname]
+	[list IllustrateBaseWidth $varname] [list IllustrateBaseWidth $varname]
 
     set f $var(top).param
 
@@ -283,7 +263,7 @@ proc IllustrateBaseDialog {varname} {
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
 	-command [list $var(proc,apply) $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command [list $var(proc,close) $varname]
+	-command [list IllustrateBaseClose $varname]
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     bind $var(top) <Return> [list $var(proc,apply) $varname]

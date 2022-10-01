@@ -123,10 +123,7 @@ proc IllustrateCircleDialog {id} {
     set var(rr) 0
 
     # proc
-    set var(proc,close) IllustrateBaseClose
     set var(proc,apply) IllustrateCircleApply
-    set var(proc,color) IllustrateBaseColor
-    set var(proc,width) IllustrateBaseWidth
     
     IllustrateBaseDialog $varname
     

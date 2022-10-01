@@ -8,7 +8,7 @@ proc IllustrateBindEvents {} {
     global ds9
 
     global debug
-    if {$debug(tcl,illustrate)} {
+    if {$debug(tcl,events)} {
 	puts stderr "IllustrateBindEvents"
     }
 
@@ -31,10 +31,13 @@ proc IllustrateBindEvents {} {
     bind $ds9(canvas) <Motion> {IllustrateMotion %x %y}
 
     bind $ds9(canvas) <Button-1> {IllustrateButton %x %y}
+    bind $ds9(canvas) <Shift-Button-1> {IllustrateShiftButton %x %y}
     bind $ds9(canvas) <B1-Motion> {IllustrateButtonMotion %x %y}
     bind $ds9(canvas) <ButtonRelease-1> {IllustrateButtonRelease %x %y}
 
-    bind $ds9(canvas) <Shift-Button-1> {IllustrateShiftButton %x %y}
+    bind $ds9(canvas) <Double-1> {IllustrateDoubleButton %x %y}
+    bind $ds9(canvas) <Double-ButtonRelease-1> \
+	{IllustrateDoubleReleaseButton %x %y}
 
     bind $ds9(canvas) <Key> {IllustrateKey %K %A %x %y}
     bind $ds9(canvas) <KeyRelease> {IllustrateKeyRelease %K %A %x %y}
@@ -44,7 +47,7 @@ proc IllustrateUnBindEvents {} {
     global ds9
 
     global debug
-    if {$debug(tcl,illustrate)} {
+    if {$debug(tcl,events)} {
 	puts stderr "IllustrateUnBindEvents"
     }
 
@@ -67,10 +70,12 @@ proc IllustrateUnBindEvents {} {
     bind $ds9(canvas) <Motion> {}
 
     bind $ds9(canvas) <Button-1> {}
+    bind $ds9(canvas) <Shift-Button-1> {}
     bind $ds9(canvas) <B1-Motion> {}
     bind $ds9(canvas) <ButtonRelease-1> {}
 
-    bind $ds9(canvas) <Shift-Button-1> {}
+    bind $ds9(canvas) <Double-1> {}
+    bind $ds9(canvas) <Double-ButtonRelease-1> {}
 
     bind $ds9(canvas) <Key> {}
     bind $ds9(canvas) <KeyRelease> {}
@@ -82,8 +87,13 @@ proc IllustrateEnter {} {
     global ds9
     
     global debug
-    if {$debug(tcl,illustrate)} {
+    if {$debug(tcl,events)} {
 	puts stderr "IllustrateEnter"
+    }
+
+    # check to see if this event was generated while processing other events
+    if {$ds9(b1) || $ds9(sb1)} {
+	return
     }
 
     focus $ds9(canvas)
@@ -93,8 +103,13 @@ proc IllustrateLeave {} {
     global ds9
 
     global debug
-    if {$debug(tcl,illustrate)} {
+    if {$debug(tcl,events)} {
 	puts stderr "IllustrateLeave"
+    }
+
+    # check to see if this event was generated while processing other events
+    if {$ds9(b1) || $ds9(sb1)} {
+	return
     }
 
     focus {}
@@ -106,7 +121,7 @@ proc IllustrateMotion {xx yy} {
     global ds9
     
     global debug
-    if {$debug(tcl,illustrate)} {
+    if {$debug(tcl,events)} {
 	puts "IllustrateMotion"
     }
 
@@ -151,9 +166,12 @@ proc IllustrateButton {xx yy} {
     global ds9
     global iillustrate
 
+    # let others know that the mouse is down
+    set ds9(b1) 1
+
     global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateButton $xx $yy"
+    if {$debug(tcl,events)} {
+	puts "IllustrateButton $xx $yy $ds9(b1) $ds9(sb1)"
     }
 
     set iillustrate(id) 0
@@ -255,13 +273,66 @@ proc IllustrateButton {xx yy} {
     }
 }
 
+proc IllustrateShiftButton {xx yy} {
+    global ds9
+    global iillustrate
+
+    # let others know that the mouse is down
+    set ds9(sb1) 1
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts "IllustrateShiftButton $xx $yy $ds9(b1) $ds9(sb1)"
+    }
+
+    set iillustrate(id) 0
+    set iillustrate(handle) 0
+    set iillustrate(node) 0
+    set iillustrate(ants) 0
+    set iillustrate(edit) {}
+    set iillustrate(motion) none
+    set iillustrate(motion,xx) $xx
+    set iillustrate(motion,yy) $yy
+
+    # if on graphic, add to selection, start move
+    set id [IllustrateFind graphic $xx $yy]
+    if {$id} {
+	# if selected, unselect
+	if {[IllustrateIsSelected $id]} {
+	    IllustrateUnselect $id
+	    set iillustrate(motion) none
+	    return
+	}
+
+	# if not selected, add to selection
+	IllustrateAddToSelection $id
+	set iillustrate(motion) beginMove
+	return
+    }	
+
+    # otherwise, dancing ants
+    IllustrateSelectNone
+    
+    set iillustrate(ants) [$ds9(canvas) create rectangle \
+			       $xx $yy $xx $yy \
+			       -outline white \
+			       -dash {8 3} -tags ants]
+
+    set iillustrate(motion) shiftregion
+}
+
 proc IllustrateButtonMotion {xx yy} {
     global ds9
     global iillustrate
 
     global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonMotion $iillustrate(motion) $xx $yy"
+    if {$debug(tcl,events)} {
+	puts "IllustrateButtonMotion $iillustrate(motion) $xx $yy $ds9(b1) $ds9(sb1)"
+    }
+
+    # abort if we are here by accident (such as a double click)
+    if {($ds9(b1) == 0) && ($ds9(sb1) == 0)} {
+	return
     }
 
     set id $iillustrate(id)
@@ -355,8 +426,13 @@ proc IllustrateButtonRelease {xx yy} {
     global iillustrate
 
     global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateButtonRelease $iillustrate(motion) $xx $yy"
+    if {$debug(tcl,events)} {
+	puts "IllustrateButtonRelease $iillustrate(motion) $xx $yy $ds9(b1) $ds9(sb1)"
+    }
+
+    # abort if we are here by accident (such as a double click)
+    if {($ds9(b1) == 0) && ($ds9(sb1) == 0)} {
+	return
     }
 
     set id $iillustrate(id)
@@ -495,55 +571,41 @@ proc IllustrateButtonRelease {xx yy} {
     unset iillustrate(motion,xx)
     unset iillustrate(motion,yy)
 
+    # let others know that the mouse is up
+    set ds9(b1) 0
+    set ds9(sb1) 0
+
     # for undo/cut/copy/paste
     UpdateEditMenu
 }
 
-# Shift Button
+# Double Button
 
-proc IllustrateShiftButton {xx yy} {
+proc IllustrateDoubleButton {xx yy} {
     global ds9
     global iillustrate
 
     global debug
-    if {$debug(tcl,illustrate)} {
-	puts "IllustrateShiftButton $xx $yy"
+    if {$debug(tcl,events)} {
+	puts "IllustrateDoubleButton $xx $yy"
     }
 
-    set iillustrate(id) 0
-    set iillustrate(handle) 0
-    set iillustrate(node) 0
-    set iillustrate(ants) 0
-    set iillustrate(edit) {}
-    set iillustrate(motion) none
-    set iillustrate(motion,xx) $xx
-    set iillustrate(motion,yy) $yy
-
-    # if on graphic, add to selection, start move
+    # see if we are on a graphic
     set id [IllustrateFind graphic $xx $yy]
     if {$id} {
-	# if selected, unselect
-	if {[IllustrateIsSelected $id]} {
-	    IllustrateUnselect $id
-	    set iillustrate(motion) none
-	    return
-	}
+	IllustrateDialog $id
+    }
+}
 
-	# if not selected, add to selection
-	IllustrateAddToSelection $id
-	set iillustrate(motion) beginMove
-	return
-    }	
+proc IllustrateDoubleReleaseButton {xx yy} {
+    global ds9
+    global iillustrate
 
-    # otherwise, dancing ants
-    IllustrateSelectNone
-    
-    set iillustrate(ants) [$ds9(canvas) create rectangle \
-			       $xx $yy $xx $yy \
-			       -outline white \
-			       -dash {8 3} -tags ants]
+    global debug
+    if {$debug(tcl,events)} {
+	puts "IllustrateDoubleReleaseButton $xx $yy"
+    }
 
-    set iillustrate(motion) shiftregion
 }
 
 # Key
@@ -557,7 +619,7 @@ proc IllustrateKey {K A xx yy} {
     set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
 
     global debug
-    if {$debug(tcl,illustrate)} {
+    if {$debug(tcl,events)} {
 	puts "IllustrateKey $K $A $xx $yy"
     }
 
@@ -612,7 +674,7 @@ proc IllustrateKeyRelease {K A xx yy} {
     set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
 
     global debug
-    if {$debug(tcl,illustrate)} {
+    if {$debug(tcl,events)} {
 	puts "IllustrateKeyRelease $K $A $xx $yy"
     }
 

@@ -979,12 +979,14 @@ proc ChangeMode {} {
 
 	IllustrateModeEnd
 	BindEventsCanvas
+	BindEventsCanvasItems
     }
 
     switch -- $current(mode) {
 	illustrate {
 	    set current(mode,illustrate) 1
 	    UnBindEventsCanvas
+	    UnBindEventsCanvasItems
 	    IllustrateModeBegin
 	}
 	default {}

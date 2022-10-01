@@ -735,13 +735,13 @@ proc Button1Frame {which x y} {
     global current
     global imarker
 
-    global debug
-    if {$debug(tcl,events)} {
-	puts stderr "Button1Frame $which"
-    }
-
     # let others know that the mouse is down
     set ds9(b1) 1
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "Button1Frame $which $ds9(b1) $ds9(sb1) $ds9(cb1)"
+    }
 
     switch -- $current(mode) {
 	none {
@@ -830,13 +830,13 @@ proc ShiftButton1Frame {which x y} {
     global ds9
     global current
 
-    global debug
-    if {$debug(tcl,events)} {
-	puts stderr "ShiftButton1Frame $which"
-    }
-
     # let others know that the mouse is down
     set ds9(sb1) 1
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "ShiftButton1Frame $which $ds9(b1) $ds9(sb1) $ds9(cb1)"
+    }
 
     switch -- $current(mode) {
 	none {}

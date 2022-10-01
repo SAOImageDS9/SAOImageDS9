@@ -587,7 +587,7 @@ proc IllustrateCmdOpen {} {
     }
 }
 
-proc IllustrateCmdOpen {} {
+proc IllustrateCmdClose {} {
     global iillustrate
     
     foreach gr $iillustrate(selection) {

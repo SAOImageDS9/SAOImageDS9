@@ -173,7 +173,7 @@ proc IllustrateCircleEditCB {id} {
 
     global ds9
 
-    set coords [$ds9(canvas) coords $var(id)]
+    set coords [$ds9(canvas) coords $id]
     set x1 [lindex $coords 0]
     set y1 [lindex $coords 1]
     set x2 [lindex $coords 2]

@@ -139,7 +139,7 @@ proc IllustrateTextDialog {id} {
     set var(txt) {}
 
     # window
-    Toplevel $var(top) $var(mb) 6 [msgcat::mc "$type"] \
+    Toplevel $var(top) $var(mb) 6 [msgcat::mc {Text}] \
 	[list IllustrateBaseClose $varname]
 
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
@@ -264,12 +264,7 @@ proc IllustrateTextColorCB {id} {
 
     global ds9
 
-    set var(color) [$ds9(canvas) itemcget $var(id) -outline]
-    if {[$ds9(canvas) itemcget $var(id) -fill] != {}} {
-	set var(fill) 1
-    } else {
-	set var(fill) 0
-    }
+    set var(color) [$ds9(canvas) itemcget $var(id) -fill]
 }
 
 proc IllustrateTextFontCB {id} {

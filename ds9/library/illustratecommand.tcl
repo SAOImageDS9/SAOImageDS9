@@ -30,8 +30,8 @@ proc IllustrateDialog {id} {
 	ellipse {IllustrateEllipseDialog $id}
 	box {IllustrateBoxDialog $id}
 	polygon {IllustratePolygonDialog $id}
-	line {}
-	text {}
+	line {IllustrateLineDialog $id}
+	text {IllustrateTextDialog $id}
     }
 }
 
@@ -41,8 +41,8 @@ proc IllustrateDialogClose {id} {
 	ellipse -
 	box -
 	polygon {IllustrateBaseDialogClose $id}
-	line {}
-	text {}
+	line {IllustrateLineDialogClose $id}
+	text {IllustrateTextDialogClose $id}
     }
 }
 

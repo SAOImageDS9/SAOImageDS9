@@ -16,7 +16,7 @@ proc IllustrateDef {} {
     set iillustrate(undo) {}
 
     set illustrate(show) 1
-    set illustrate(shape) circle
+    set illustrate(shape) line
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
@@ -113,7 +113,7 @@ proc IllustrateCreateGraphic {xx yy} {
 			$illustrate(font) \
 			$illustrate(font,size) \
 			$illustrate(font,weight) \
-			$illustrate(font,slant)
+			$illustrate(font,slant)]
 	}
     }
 }
@@ -213,29 +213,14 @@ proc IllustrateWidth {} {
 	foreach {id color fillcolor dashlist} $gr {
 	    # graphic
 	    switch [IllustrateGetType $id] {
-		circle {
-		    IllustrateBaseWidthSet $id \
-			$illustrate(width) $illustrate(dash)
-		    IllustrateBaseWidthCB $id
-		}
-		ellipse {
-		    IllustrateBaseWidthSet $id \
-			$illustrate(width) $illustrate(dash)
-		    IllustrateBaseWidthCB $id
-		}
-		box {
-		    IllustrateBaseWidthSet $id \
-			$illustrate(width) $illustrate(dash)
-		    IllustrateBaseWidthCB $id
-		}
-		polygon {
-		    IllustrateBaseWidthSet $id \
-			$illustrate(width) $illustrate(dash)
-		    IllustrateBaseWidthCB $id
-		}
+		circle -
+		ellipse -
+		box -
+		polygon -
 		line {
-		    IllustrateLineWidthSet $id \
+		    IllustrateBaseWidthSet $id \
 			$illustrate(width) $illustrate(dash)
+		    IllustrateBaseWidthCB $id
 		}
 		text {}
 	    }

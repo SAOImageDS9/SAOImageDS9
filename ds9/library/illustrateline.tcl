@@ -200,6 +200,100 @@ proc IllustrateLineAntsOff {gr} {
 
 # Dialog
 
+proc IllustrateLineDialog {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    global ds9
+
+    set var(id) $id
+    set var(top) ".${varname}"
+    set var(mb) ".${varname}mb"
+
+    # see if we already have a header window visible
+    if {[winfo exists $var(top)]} {
+	raise $var(top)
+	return
+    }
+
+    # variables
+    set var(x1) 0
+    set var(y1) 0
+    set var(x2) 0
+    set ver(y2) 0
+
+    # window
+    Toplevel $var(top) $var(mb) 6 [msgcat::mc {Line}] \
+	[list IllustrateBaseClose $varname]
+
+    $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
+    $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
+    $var(mb) add cascade -label [msgcat::mc {Color}] -menu $var(mb).color
+    $var(mb) add cascade -label [msgcat::mc {Width}] -menu $var(mb).width
+
+    ThemeMenu $var(mb).file
+    $var(mb).file add command -label [msgcat::mc {Apply}] \
+	-command [list IllustrateLineApply $varname]
+    $var(mb).file add separator
+    $var(mb).file add command -label [msgcat::mc {Close}] \
+	-command [list IllustrateBaseClose $varname] \
+	-accelerator "${ds9(ctrl)}W"
+    bind $var(top) <<Close>> [list IllustrateBaseClose $varname]
+
+    EditMenu $var(mb) $varname
+    ColorMenu $var(mb).color $varname color \
+	[list IllustrateLineColor $varname]
+    WidthDashMenu $var(mb).width $varname width dash \
+	[list IllustrateBaseWidth $varname] [list IllustrateBaseWidth $varname]
+
+    set f $var(top).param
+
+    # Param
+    set f [ttk::frame $var(top).param]
+    ttk::label $f.tid -text [msgcat::mc {Number}]
+    ttk::label $f.id -text "$var(id)"
+    grid $f.tid $f.id -padx 2 -pady 2 -sticky w
+
+    # Center
+    ttk::label $f.ttitle -text [msgcat::mc {Points}]
+    ttk::entry $f.x1 -textvariable ${varname}(x1) -width 13
+    ttk::entry $f.y1 -textvariable ${varname}(y1) -width 13
+    ttk::entry $f.x2 -textvariable ${varname}(x2) -width 13
+    ttk::entry $f.y2 -textvariable ${varname}(y2) -width 13
+    grid $f.ttitle $f.x1 $f.y1 -padx 2 -pady 2 -sticky w
+    grid x $f.x2 $f.y2 -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $var(top).buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] \
+	-command [list IllustrateLineApply $varname]
+    ttk::button $f.close -text [msgcat::mc {Close}] \
+	-command [list IllustrateBaseClose $varname]
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
+
+    bind $var(top) <Return> [list IllustrateLineApply $varname]
+
+    # Fini
+    ttk::separator $var(top).sep -orient horizontal
+    pack $var(top).buttons $var(top).sep -side bottom -fill x
+    pack $var(top).param -side top -fill both -expand true
+    
+    # init
+    IllustrateLineEditCB $var(id)
+    IllustrateLineColorCB $var(id)
+    IllustrateBaseWidthCB $var(id)
+}
+
+proc IllustrateLineColor {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    IllustrateLineColorSet $var(id) $var(color)
+}
+
 proc IllustrateLineColorSet {id color} {
     global ds9
     
@@ -212,18 +306,57 @@ proc IllustrateLineColorSet {id color} {
     }
 }
 
-proc IllustrateLineWidthSet {id width dash} {
+proc IllustrateLineApply {varname} {
+    upvar #0 $varname var
+    global $varname
+
     global ds9
-    global illustrate
     
-    if {$dash} {
-	set dashlist $illustrate(dashlist)
-    } else {
-	set dashlist {}
+    if {$var(x1) != {} && $var(y1) != {} &&
+	$var(x2) != {} && $var(y2) != {}} {
+
+	$ds9(canvas) coords $var(id) \
+	    $var(x1) $var(y1) $var(x2) $var(y2)
+
+	IllustrateBaseUpdateHandle $var(id)
+    }
+}
+
+# callbacks
+
+proc IllustrateLineEditCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
     }
 
-    $ds9(canvas) itemconfigure $id \
-	-width $width \
-	-dash $dashlist
+    global ds9
+
+    set coords [$ds9(canvas) coords $id]
+    set var(x1) [lindex $coords 0]
+    set var(y1) [lindex $coords 1]
+    set var(x2) [lindex $coords 2]
+    set var(y2) [lindex $coords 3]
+}
+
+proc IllustrateLineColorCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    global ds9
+
+    set var(color) [$ds9(canvas) itemcget $var(id) -fill]
 }
 

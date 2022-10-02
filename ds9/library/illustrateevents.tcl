@@ -343,8 +343,7 @@ proc IllustrateButtonMotion {xx yy} {
 	    IllustrateGraphicAntsOn $id
 	    IllustrateHandleOff $id
 	    switch [IllustrateGetType $id] {
-		polygon -
-		text {}
+		polygon {}
 		default {set iillustrate(motion) create}
 	    }
 	}
@@ -354,7 +353,7 @@ proc IllustrateButtonMotion {xx yy} {
 		ellipse {IllustrateEllipseEdit $id $xx $yy}
 		box {IllustrateBoxEdit $id $xx $yy}
 		polygon {}
-		line {}
+		line {IllustrateLineEdit $id $xx $yy}
 		text {}
 	    }
 	}
@@ -378,9 +377,9 @@ proc IllustrateButtonMotion {xx yy} {
 			circle {IllustrateCircleEditCB $id}
 			ellipse {IllustrateEllipseEditCB $id}
 			box {IllustrateBoxEditCB $id}
-			polygon {}
-			line {}
-			text {}
+			polygon {IllustratePolygonEditCB $id}
+			line {IllustrateLineEditCB $id}
+			text {IllustrateTextEditCB $id}
 		    }
 		}
 	    }
@@ -408,7 +407,10 @@ proc IllustrateButtonMotion {xx yy} {
 		    IllustrateBoxEditCB $id
 		}
 		polygon {}
-		line {}
+		line {
+		    IllustrateLineEdit $id $xx $yy
+		    IllustrateLineEditCB $id
+		}
 		text {}
 	    }
 	}
@@ -482,20 +484,26 @@ proc IllustrateButtonRelease {xx yy} {
 			IllustrateBoxDefault $id
 			IllustrateBaseUpdateHandle $id
 		    }
-		    polygon {}
-		    line {IllustrateDeleteGraphicOne $id}
+		    polygon {
+			IllustratePolygonDefault $id
+			IllustratePolygonUpdateHandle $id
+		    }
+		    line {
+			IllustrateDeleteGraphicOne $id
+			return
+		    }
 		    text {}
 		}
 	    }
 
 	    IllustrateHandleOff $id
 	    switch [IllustrateGetType $id] {
-		circle -
-		ellipse -
-		box -
-		text {IllustrateBaseUpdateHandle $id}
+		circle {IllustrateBaseUpdateHandle $id}
+		ellipse {IllustrateBaseUpdateHandle $id}
+		box {IllustrateBaseUpdateHandle $id}
 		polygon {IllustratePolygonUpdateHandle $id}
 		line {IllustrateLineUpdateHandle $id}
+		text {IllustrateBaseUpdateHandle $id}
 	    }
 	}
 	
@@ -518,14 +526,17 @@ proc IllustrateButtonRelease {xx yy} {
 			    IllustrateBoxEditCB $id
 			    IllustrateBaseUpdateHandle $id
 			}
-			text {
-			    IllustrateBaseUpdateHandle $id
-			}
 			polygon {
+			    IllustratePolygonEditCB $id
 			    IllustratePolygonUpdateHandle $id
 			}
 			line {
+			    IllustrateLineEditCB $id
 			    IllustrateLineUpdateHandle $id
+			}
+			text {
+			    IllustrateTextEditCB $id
+			    IllustrateBaseUpdateHandle $id
 			}
 		    }
 		}
@@ -538,15 +549,15 @@ proc IllustrateButtonRelease {xx yy} {
 	    IllustrateGraphicAntsOff $iillustrate(edit)
 	    IllustrateHandleOn $id
 	    switch [IllustrateGetType $id] {
-		circle -
-		ellipse -
-		box -
-		text {IllustrateBaseUpdateHandle $id}
+		circle {IllustrateBaseUpdateHandle $id}
+		ellipse {IllustrateBaseUpdateHandle $id}
+		box {IllustrateBaseUpdateHandle $id}
 		polygon {
 		    IllustratePolygonCleanup $id
 		    IllustratePolygonUpdateHandle $id
 		}
 		line {IllustrateLineUpdateHandle $id}
+		text {IllustrateBaseUpdateHandle $id}
 	    }
 	    IllustrateUpdateSelection
 	}

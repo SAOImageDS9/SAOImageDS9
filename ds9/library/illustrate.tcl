@@ -41,12 +41,26 @@ proc IllustrateDef {} {
 # Mode
 
 proc IllustrateModeBegin {} {
+    global ds9
+    
+    # state
+    foreach id [$ds9(canvas) find withtag "graphic || handle || node"] {
+	$ds9(canvas) itemconfigure $id -state normal
+    }
+
     IllustrateSelectNone
     IllustrateBindEvents
     UpdateIllustrateMenu
 }
 
 proc IllustrateModeEnd {} {
+    global ds9
+    
+    # state
+    foreach id [$ds9(canvas) find withtag "graphic || handle || node"] {
+	$ds9(canvas) itemconfigure $id -state disabled
+    }
+
     IllustrateSelectNone
     IllustrateUnBindEvents
     UpdateIllustrateMenu
@@ -96,7 +110,10 @@ proc IllustrateCreateGraphic {xx yy} {
 	    }
 	    return [IllustrateTextCreate $xx $yy $txt \
 			$illustrate(color) \
-			"$illustrate(font) $illustrate(font,size) $illustrate(font,weight) $illustrate(font,slant)"]
+			$illustrate(font) \
+			$illustrate(font,size) \
+			$illustrate(font,weight) \
+			$illustrate(font,slant)
 	}
     }
 }
@@ -105,14 +122,7 @@ proc IllustrateDeleteGraphic {id} {
     global ds9
 
     # dialogs
-    switch [IllustrateGetType $id] {
-	circle -
-	ellipse -
-	box -
-	polygon {IllustrateBaseDeleteCB $id}
-	line {}
-	text {}
-    }
+    IllustrateBaseDeleteCB $id
 
     # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
@@ -176,10 +186,12 @@ proc IllustrateColor {} {
 		line {
 		    IllustrateLineColorSet $id \
 			$illustrate(color)
+		    IllustrateLineColorCB $id
 		}
 		text {
 		    IllustrateTextColorSet $id \
 			$illustrate(color)
+		    IllustrateTextColorCB $id
 		}
 	    }
             # update selection list

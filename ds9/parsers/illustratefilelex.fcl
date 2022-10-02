@@ -15,7 +15,6 @@ color		{return $COLOR_}
 width 		{return $WIDTH_}
 fill		{return $FILL_}
 dash		{return $DASH_}
-font		{return $FONT_}
 
 circle		{return $CIRCLE_}
 ellipse		{return $ELLIPSE_}
@@ -27,6 +26,7 @@ text		{return $TEXT_}
 
 image		{return $IMAGE_}
 
+#include fonts.fin
 #include yesno.fin
 #include numeric.fin
 #include string.fin

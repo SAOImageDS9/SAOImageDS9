@@ -3,6 +3,7 @@
 
 #include def.tin
 
+#include fonts.tin
 #include yesno.tin
 #include numeric.tin
 #include string.tin
@@ -17,7 +18,6 @@
 %token WIDTH_
 %token FILL_
 %token DASH_
-%token FONT_
 
 %token CIRCLE_
 %token ELLIPSE_
@@ -30,6 +30,7 @@
 
 %%
 
+#include fonts.trl
 #include yesno.trl
 #include numeric.trl
 
@@ -59,9 +60,9 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash}
  | TEXT_ bp numeric sp numeric sp STRING_ bp comment
- {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont}
+ {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant}
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
- {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont}
+ {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant}
  ;
 
 coords : coords coord
@@ -86,7 +87,10 @@ globalProperty : COLOR_ eq STRING_ {set illustratefile::globalColor $3}
  | FILL_ eq yesno {set illustratefile::globalFill $3}
  | WIDTH_ eq INT_ {set illustratefile::globalWidth $3}
  | DASH_ eq yesno {set illustratefile::globalDash $3}
- | FONT_ eq STRING_ {set illustratefile::globalFont $3}
+ | FONT_ eq font {set illustratefile::globalFont $3}
+ | FONTSIZE_ eq INT_ {set illustratefile::globalFontSize $3}
+ | FONTWEIGHT_ eq fontWeight {set illustratefile::globalFontWeight $3}
+ | FONTSLANT_ eq fontSlant {set illustratefile::globalFontSlant $3}
  ;
 
 local : local localProperty
@@ -97,7 +101,10 @@ localProperty : COLOR_ eq STRING_ {set illustratefile::localColor $3}
  | FILL_ eq yesno {set illustratefile::localFill $3}
  | WIDTH_ eq INT_ {set illustratefile::localWidth $3}
  | DASH_ eq yesno {set illustratefile::localDash $3}
- | FONT_ eq STRING_ {set illustratefile::localFont $3}
+ | FONT_ eq font {set illustratefile::localFont $3}
+ | FONTSIZE_ eq INT_ {set illustratefile::localFontSize $3}
+ | FONTWEIGHT_ eq fontWeight {set illustratefile::localFontWeight $3}
+ | FONTSLANT_ eq fontSlant {set illustratefile::localFontSlant $3}
  ;
 
 sp :
@@ -134,12 +141,18 @@ namespace eval illustratefile {
      variable globalWidth
      variable globalDash
      variable globalFont
+     variable globalFontSize
+     variable globalFontWeight
+     variable globalFontSlant
 
      variable localColor
      variable localFill
      variable localWidth
      variable localDash
      variable localFont
+     variable localFontSize
+     variable localFontWeight
+     variable localFontSlant
 }
 
 proc illustratefile::initGlobal {} {
@@ -147,7 +160,10 @@ proc illustratefile::initGlobal {} {
      variable globalFill 0
      variable globalWidth 1
      variable globalDash 0
-     variable globalFont "helvetica 12 normal roman"
+     variable globalFont helvetica
+     variable globalFontSize 12
+     variable globalFontWeight normal
+     variable globalFontSlant roman
 }
 
 proc illustratefile::initLocal {} {
@@ -156,6 +172,9 @@ proc illustratefile::initLocal {} {
      variable globalWidth
      variable globalDash
      variable globalFont
+     variable globalFontSize
+     variable globalFontWeight
+     variable globalFontSlant
 
      variable coords {}
      variable localColor $globalColor
@@ -163,4 +182,7 @@ proc illustratefile::initLocal {} {
      variable localWidth $globalWidth
      variable localDash $globalDash
      variable localFont $globalFont
+     variable localFontSize $globalFontSize
+     variable localFontWeight $globalFontWeight
+     variable localFontSlant $globalFontSlant
 }

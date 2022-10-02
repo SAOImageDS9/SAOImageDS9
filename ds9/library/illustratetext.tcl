@@ -4,14 +4,14 @@
 
 package provide DS9 1.0
 
-proc IllustrateTextCreate {xx yy txt color font} {
+proc IllustrateTextCreate {xx yy txt color font fontsize fontweight fontslant} {
     global ds9
 
     set id [$ds9(canvas) create text \
 		$xx $yy \
 		-text $txt \
 		-fill $color \
-		-font $font \
+		-font "$font $fontsize $fontweight $fontslant" \
 		-tags {text graphic}
 	   ]
 
@@ -115,6 +115,94 @@ proc IllustrateTextAntsOff {gr} {
 
 # Dialog
 
+proc IllustrateTextDialog {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    global ds9
+
+    set var(id) $id
+    set var(top) ".${varname}"
+    set var(mb) ".${varname}mb"
+
+    # see if we already have a header window visible
+    if {[winfo exists $var(top)]} {
+	raise $var(top)
+	return
+    }
+
+    # variables
+    set var(font) {}
+    set var(txt) {}
+
+    # window
+    Toplevel $var(top) $var(mb) 6 [msgcat::mc "$type"] \
+	[list IllustrateBaseClose $varname]
+
+    $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
+    $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
+    $var(mb) add cascade -label [msgcat::mc {Color}] -menu $var(mb).color
+    $var(mb) add cascade -label [msgcat::mc {Font}] -menu $var(mb).font
+
+    ThemeMenu $var(mb).file
+    $var(mb).file add command -label [msgcat::mc {Apply}] \
+	-command [list IllustrateTextApply $varname]
+    $var(mb).file add separator
+    $var(mb).file add command -label [msgcat::mc {Close}] \
+	-command [list IllustrateBaseClose $varname] \
+	-accelerator "${ds9(ctrl)}W"
+    bind $var(top) <<Close>> [list IllustrateBaseClose $varname]
+
+    EditMenu $var(mb) $varname
+    ColorFillMenu $var(mb).color $varname color fill \
+	[list IllustrateTextColor $varname] [list IllustrateTextColor $varname]
+    FontMenu $var(mb).font $varname font size weight slant \
+	[list IllustrateTextFont $varname]
+
+    set f $var(top).param
+
+    # Param
+    set f [ttk::frame $var(top).param]
+    ttk::label $f.tid -text [msgcat::mc {Number}]
+    ttk::label $f.id -text "$var(id)"
+    grid $f.tid $f.id -padx 2 -pady 2 -sticky w
+
+    # Center
+    ttk::label $f.tcenter -text [msgcat::mc {Center}]
+    ttk::entry $f.centerx -textvariable ${varname}(xc) -width 13
+    ttk::entry $f.centery -textvariable ${varname}(yc) -width 13
+    grid $f.tcenter $f.centerx $f.centery -padx 2 -pady 2 -sticky w
+
+    # Text
+    set f $var(top).param
+    ttk::label $f.ttxt -text [msgcat::mc {Text}]
+    ttk::entry $f.txt -textvariable ${varname}(txt) -width 40
+    grid $f.ttxt $f.txt -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $var(top).buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] \
+	-command [list IllustrateTextApply $varname]
+    ttk::button $f.close -text [msgcat::mc {Close}] \
+	-command [list IllustrateBaseClose $varname]
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
+
+    bind $var(top) <Return> [list IllustrateTextApply $varname]
+
+    # Fini
+    ttk::separator $var(top).sep -orient horizontal
+    pack $var(top).buttons $var(top).sep -side bottom -fill x
+    pack $var(top).param -side top -fill both -expand true
+    
+    # init
+    IllustrateTextEditCB $var(id)
+    IllustrateTextColorCB $var(id)
+    IllustrateTextFontCB $var(id)
+}
+
 proc IllustrateTextColorSet {id color} {
     global ds9
     
@@ -127,13 +215,80 @@ proc IllustrateTextColorSet {id color} {
     }
 }
 
-proc IllustrateTextFontSet {id font} {
+proc IllustrateTextColor {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    IllustrateTextColorSet $var(id) $var(color) $var(fill)
+}
+
+proc IllustrateTextFont {varname} {
+    upvar #0 $varname var
+    global $varname
+
     global ds9
-    global illustrate
     
     $ds9(canvas) itemconfigure $id \
 	-font $font
 
     IllustrateBaseUpdateHandle $id
+}
+
+proc IllustrateTextApply {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    
+    if {$var(xc) != {} && $var(yc) != {}} {
+	$ds9(canvas) coords $var(id) $var(xc) $var(yc)
+	
+	$ds9(canvas) itemconfigure $var(id) -text $var(txt)
+
+	IllustrateBaseUpdateHandle $var(id)
+    }
+}
+
+# callbacks
+
+proc IllustrateTextColorCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    global ds9
+
+    set var(color) [$ds9(canvas) itemcget $var(id) -outline]
+    if {[$ds9(canvas) itemcget $var(id) -fill] != {}} {
+	set var(fill) 1
+    } else {
+	set var(fill) 0
+    }
+}
+
+proc IllustrateTextFontCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    global ds9
+
+    set rr $ds9(canvas) itemcget $var(id) -font
+    set var(font) [lindex $rr 0]
+    set var(font,size) [lindex $rr 1]
+    set var(weight) [lindex $rr 2]
+    set var(slant) [lindex $rr 3]
 }
 

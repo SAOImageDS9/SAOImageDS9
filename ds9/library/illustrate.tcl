@@ -158,26 +158,12 @@ proc IllustrateColor {} {
     
     IllustrateSaveUndo selectedit {}
 
-    set old $iillustrate(selection)
-    set iillustrate(selection) {}
-    foreach gr $old {
-	foreach {id color fillcolor dashlist} $gr {
+    foreach gr $iillustrate(selection) {
+	foreach {id color fillcolor width dashlist} $gr {
 	    switch [IllustrateGetType $id] {
-		circle {
-		    IllustrateBaseColorSet $id \
-			$illustrate(color) $illustrate(fill)
-		    IllustrateBaseColorCB $id
-		}
-		ellipse {
-		    IllustrateBaseColorSet $id \
-			$illustrate(color) $illustrate(fill)
-		    IllustrateBaseColorCB $id
-		}
-		box {
-		    IllustrateBaseColorSet $id \
-			$illustrate(color) $illustrate(fill)
-		    IllustrateBaseColorCB $id
-		}
+		circle -
+		ellipse -
+		box -
 		polygon {
 		    IllustrateBaseColorSet $id \
 			$illustrate(color) $illustrate(fill)
@@ -194,10 +180,9 @@ proc IllustrateColor {} {
 		    IllustrateTextColorCB $id
 		}
 	    }
-            # update selection list
-            lappend iillustrate(selection) [IllustrateSave $id]
 	}
     }
+    IllustrateUpdateSelection
 }
 
 proc IllustrateWidth {} {
@@ -207,10 +192,8 @@ proc IllustrateWidth {} {
     
     IllustrateSaveUndo selectedit {}
 
-    set old $iillustrate(selection)
-    set iillustrate(selection) {}
-    foreach gr $old {
-	foreach {id color fillcolor dashlist} $gr {
+    foreach gr $iillustrate(selection) {
+	foreach {id color fillcolor width dashlist} $gr {
 	    # graphic
 	    switch [IllustrateGetType $id] {
 		circle -
@@ -224,10 +207,9 @@ proc IllustrateWidth {} {
 		}
 		text {}
 	    }
-	    # update selection list
-	    lappend iillustrate(selection) [IllustrateSave $id]
 	}
     }
+    IllustrateUpdateSelection
 }
 
 # Find
@@ -326,7 +308,7 @@ proc IllustrateUpdateSelection {} {
     set old $iillustrate(selection)
     set iillustrate(selection) {}
     foreach gr $old {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    lappend iillustrate(selection) [IllustrateSave $id]
 	}
     }
@@ -377,7 +359,7 @@ proc IllustrateSaveUndo {undo id} {
 	selectedit -
 	selectdelete {
 	    foreach gr $iillustrate(selection) {
-		foreach {id color fillcolor dashlist} $gr {
+		foreach {id color fillcolor width dashlist} $gr {
 		    lappend ll [list $id [IllustrateCopy $id]]
 		}
 	    }
@@ -478,7 +460,7 @@ proc IllustrateCmdOpen {} {
     global iillustrate
     
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    IllustrateDialog $id
 	}
     }
@@ -488,7 +470,7 @@ proc IllustrateCmdClose {} {
     global iillustrate
     
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    IllustrateDialogClose $id
 	}
     }

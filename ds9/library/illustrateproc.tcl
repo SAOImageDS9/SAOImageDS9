@@ -83,9 +83,9 @@ proc IllustrateList {id} {
 
 proc IllustrateAntsOn {id} {
     switch [IllustrateGetType $id] {
-	circle {IllustrateBaseAntsOn $id}
-	ellipse {IllustrateBaseAntsOn $id}
-	box {IllustrateBaseAntsOn $id}
+	circle -
+	ellipse -
+	box -
 	polygon {IllustrateBaseAntsOn $id}
 	line {IllustrateLineAntsOn $id}
 	text {IllustrateTextAntsOn $id}
@@ -93,11 +93,11 @@ proc IllustrateAntsOn {id} {
 }
 
 proc IllustrateAntsOff {gr} {
-    foreach {id color fillcolor dashlist} $gr {
+    foreach {id color fillcolor width dashlist} $gr {
 	switch [IllustrateGetType $id] {
-	    circle {IllustrateBaseAntsOff $gr}
-	    ellipse {IllustrateBaseAntsOff $gr}
-	    box {IllustrateBaseAntsOff $gr}
+	    circle -
+	    ellipse -
+	    box -
 	    polygon {IllustrateBaseAntsOff $gr}
 	    line {IllustrateLineAntsOff $gr}
 	    text {IllustrateTextAntsOff $gr}
@@ -129,8 +129,8 @@ proc IllustrateEditCB {id} {
 
 proc IllustrateUpdateHandle {id} {
     switch [IllustrateGetType $id] {
-	circle {IllustrateBaseUpdateHandle $id}
-	ellipse {IllustrateBaseUpdateHandle $id}
+	circle -
+	ellipse -
 	box {IllustrateBaseUpdateHandle $id}
 	polygon {IllustratePolygonUpdateHandle $id}
 	line {IllustrateLineUpdateHandle $id}
@@ -151,9 +151,9 @@ proc IllustrateDialog {id} {
 
 proc IllustrateDialogClose {id} {
     switch [IllustrateGetType $id] {
-	circle {IllustrateBaseDialogClose $id}
-	ellipse {IllustrateBaseDialogClose $id}
-	box {IllustrateBaseDialogClose $id}
+	circle -
+	ellipse -
+	box -
 	polygon {IllustrateBaseDialogClose $id}
 	line {IllustrateLineDialogClose $id}
 	text {IllustrateTextDialogClose $id}

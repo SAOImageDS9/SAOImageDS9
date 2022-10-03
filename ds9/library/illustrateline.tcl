@@ -59,9 +59,10 @@ proc IllustrateLineSave {id} {
     global ds9
 
     set fillcolor [$ds9(canvas) itemcget $id -fill]
+    set width [$ds9(canvas) itemcget $id -width]
     set dashlist [$ds9(canvas) itemcget $id -dash]
 
-    return [list $id {} $fillcolor $dashlist]
+    return [list $id {} $fillcolor $width $dashlist]
 }
 
 proc IllustrateLineCopy {id} {
@@ -199,13 +200,14 @@ proc IllustrateLineAntsOn {id} {
     
     $ds9(canvas) itemconfigure $id \
 	-fill white \
+	-width 1 \
 	-dash {8 3}
 }
 
 proc IllustrateLineAntsOff {gr} {
     global ds9
 
-    foreach {id color fillcolor dashlist} $gr {
+    foreach {id color fillcolor width dashlist} $gr {
 	$ds9(canvas) itemconfigure $id \
 	    -fill $fillcolor \
 	    -dash $dashlist
@@ -306,6 +308,7 @@ proc IllustrateLineColor {varname} {
     global $varname
 
     IllustrateLineColorSet $var(id) $var(color)
+    IllustrateUpdateSelection
 }
 
 proc IllustrateLineColorSet {id color} {

@@ -44,7 +44,7 @@ proc IllustrateTextSave {id} {
 
     set fillcolor [$ds9(canvas) itemcget $id -fill]
 
-    return [list $id {} $fillcolor {}]
+    return [list $id {} $fillcolor {} {}]
 }
 
 proc IllustrateTextCopy {id} {
@@ -126,7 +126,7 @@ proc IllustrateTextAntsOn {id} {
 proc IllustrateTextAntsOff {gr} {
     global ds9
 
-    foreach {id color fillcolor dashlist} $gr {
+    foreach {id color fillcolor width dashlist} $gr {
 	$ds9(canvas) itemconfigure $id \
 	    -fill $fillcolor
     }
@@ -239,6 +239,7 @@ proc IllustrateTextColor {varname} {
     global $varname
 
     IllustrateTextColorSet $var(id) $var(color) $var(fill)
+    IllustrateUpdateSelection
 }
 
 proc IllustrateTextFont {varname} {

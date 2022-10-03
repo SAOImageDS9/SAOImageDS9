@@ -9,9 +9,10 @@ proc IllustrateBaseSave {id} {
 
     set color [$ds9(canvas) itemcget $id -outline]
     set fillcolor [$ds9(canvas) itemcget $id -fill]
+    set width [$ds9(canvas) itemcget $id -width]
     set dashlist [$ds9(canvas) itemcget $id -dash]
 
-    return [list $id $color $fillcolor $dashlist]
+    return [list $id $color $fillcolor $width $dashlist]
 }
 
 proc IllustrateBaseCopy {id} {
@@ -192,16 +193,18 @@ proc IllustrateBaseAntsOn {id} {
     $ds9(canvas) itemconfigure $id \
 	-outline white \
 	-fill {} \
+	-width 1 \
 	-dash {8 3}
 }
 
 proc IllustrateBaseAntsOff {gr} {
     global ds9
 
-    foreach {id color fillcolor dashlist} $gr {
+    foreach {id color fillcolor width dashlist} $gr {
 	$ds9(canvas) itemconfigure $id \
 	    -outline $color \
 	    -fill $fillcolor \
+	    -width $width \
 	    -dash $dashlist
     }
 }
@@ -301,6 +304,7 @@ proc IllustrateBaseColor {varname} {
     global $varname
 
     IllustrateBaseColorSet $var(id) $var(color) $var(fill)
+    IllustrateUpdateSelection
 }
 
 proc IllustrateBaseColorSet {id color fill} {
@@ -327,6 +331,7 @@ proc IllustrateBaseWidth {varname} {
     global $varname
 
     IllustrateBaseWidthSet $var(id) $var(width) $var(dash)
+    IllustrateUpdateSelection
 }
 
 proc IllustrateBaseWidthSet {id width dash} {
@@ -342,6 +347,8 @@ proc IllustrateBaseWidthSet {id width dash} {
     $ds9(canvas) itemconfigure $id \
 	-width $width \
 	-dash $dashlist
+
+    IllustrateUpdateSelection
 }
 
 # Callbacks

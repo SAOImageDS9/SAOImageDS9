@@ -18,7 +18,7 @@ proc IllustrateGetInfo {} {
     }
 
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    IllustrateDialog $id
 	}
     }
@@ -39,7 +39,7 @@ proc IllustrateShow {} {
 
 	# turn on handles/nodes of selection
 	foreach gr $iillustrate(selection) {
-	    foreach {id color fillcolor dashlist} $gr {
+	    foreach {id color fillcolor width dashlist} $gr {
 		foreach hh [$ds9(canvas) find withtag gr${id}] {
 		    $ds9(canvas) itemconfigure $hh -state normal
 		}
@@ -63,7 +63,7 @@ proc IllustrateMoveFront {} {
 
     # graphic
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    if {$id != $top} {
 		$ds9(canvas) raise $id $top
 	    }
@@ -88,7 +88,7 @@ proc IllustrateMoveBack {} {
 
     # graphic
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    if {$id != $bottom} {
 		$ds9(canvas) lower $id $bottom
 	    }
@@ -111,7 +111,7 @@ proc IllustrateDeleteSelect {} {
     global iillustrate
 
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    IllustrateDeleteGraphic $id
 	}
     }
@@ -239,7 +239,7 @@ proc IllustrateCut {} {
 
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    lappend iillustrate(clipboard) [IllustrateCopy $id]
 	    IllustrateDeleteGraphicOne $id
 	}
@@ -253,7 +253,7 @@ proc IllustrateMenuCopy {} {
     
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    lappend iillustrate(clipboard) [IllustrateCopy $id]
 	}
     }
@@ -325,7 +325,7 @@ proc IllustrateSaveSelectFn {fn} {
 
     puts $ch [IllustrateListHeader]
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    puts $ch [IllustrateList $id]
 	}
     }
@@ -366,7 +366,7 @@ proc IllustdrateListSelect {} {
 
     set rr "[IllustrateListHeader]\n"
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
+	foreach {id color fillcolor width dashlist} $gr {
 	    append rr "[IllustrateList $id]\n"
 	}
     }

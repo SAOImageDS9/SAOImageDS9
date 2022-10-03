@@ -19,6 +19,26 @@ proc IllustrateTextCreate {xx yy txt color font fontsize fontweight fontslant} {
     return $id
 }
 
+proc IllustrateTextDefault {id} {
+}
+
+proc IllustrateTextDup {param} {
+    global ds9
+    
+    foreach {coords txt color font} $param {
+	set id [$ds9(canvas) create text \
+		    $coords \
+		    -text $txt \
+		    -fill $color \
+		    -font $font \
+		    -tags {text graphic}
+	       ]
+    }
+
+    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -fill]
+    return $id
+}
+
 proc IllustrateTextSave {id} {
     global ds9
 
@@ -56,41 +76,40 @@ proc IllustrateTextSet {id param} {
     IllustrateBaseUpdateHandle $id
 }
 
-proc IllustrateTextDup {param} {
-    global ds9
-    
-    foreach {coords txt color font} $param {
-	set id [$ds9(canvas) create text \
-		    $coords \
-		    -text $txt \
-		    -fill $color \
-		    -font $font \
-		    -tags {text graphic}
-	       ]
-    }
-
-    IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -fill]
-    return $id
-}
-
 proc IllustrateTextList {id} {
     global ds9
 
     set coords [$ds9(canvas) coords $id]
     set color [$ds9(canvas) itemcget $id -fill]
-    set font [$ds9(canvas) itemcget $id -font]
+    set ff [$ds9(canvas) itemcget $id -font]
     set txt [$ds9(canvas) itemcget $id -text]
+
+    set font [lindex $ff 0]
+    set fontsize [lindex $ff 1]
+    set fontweight [lindex $ff 2]
+    set fontslant [lindex $ff 3]
 
     set rr "text $coords \"$txt\""
 
-    if {$color != {cyan} || $font != "helvetica 12 normal roman"} {
+    if {$color != {cyan} ||
+	$font != {helvetica} || $fontsize != 12 ||
+	$fontweight != {normal} || $fontslant != {roman} } {
+
 	append rr " #"
 	if {$color != {cyan}} {
 	    append rr " color = $color"
 	}
-
-	if {$font != "helvetica 12 normal roman"} {
-	    append rr " font = \"$font\""
+	if {$font != {helvetica}} {
+	    append rr " font = $font"
+	}
+	if {$fontsize != 12} {
+	    append rr " fontsize = $fontsize"
+	}
+	if {$fontweight != {normal}} {
+	    append rr " fontweight = $fontweight"
+	}
+	if {$fontslant != {roman}} {
+	    append rr " fontslant = $fontslant"
 	}
     }
     
@@ -250,6 +269,9 @@ proc IllustrateTextApply {varname} {
 }
 
 # callbacks
+
+proc IllustrateTextEditCB {id} {
+}
 
 proc IllustrateTextColorCB {id} {
     global iillustrate

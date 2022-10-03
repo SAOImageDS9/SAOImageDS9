@@ -77,13 +77,15 @@ array set illustrate::table {
   69:0 reduce
   27:281,target 1
   18:290,target 57
-  73:281,target 53
-  77:281 shift
+  73:281,target 52
+  77:281 reduce
   2:0 reduce
-  72:0,target 52
-  64:0,target 59
+  80:0,target 62
+  79:0,target 63
+  72:0,target 51
+  64:0,target 60
   16:281,target 64
-  62:281,target 56
+  62:281,target 37
   56:0,target 55
   47:281 reduce
   48:0,target 69
@@ -111,29 +113,28 @@ array set illustrate::table {
   15:274,target 41
   28:281,target 2
   0:292,target 16
-  74:281,target 26
+  74:281,target 53
   63:0 reduce
   35:281 reduce
   74:281 reduce
   17:281,target 55
-  63:281,target 60
-  22:306,target 72
+  63:281,target 56
+  22:306,target 73
   44:281 reduce
   38:0 reduce
   52:281,target 67
-  60:0 reduce
   59:0 reduce
   0:300,target 23
   0:289,target 15
   3:0,target 47
-  76:0,target 29
+  76:0,target 42
   14:281 reduce
-  68:0,target 48
+  81:0 reduce
+  68:0,target 36
   26:315 goto
   23:273 shift
   14:282 shift
   18:283,target 56
-  61:0,target 37
   23:274 shift
   53:281 reduce
   53:0,target 65
@@ -147,7 +148,7 @@ array set illustrate::table {
   30:0,target 31
   29:0,target 3
   23:278 shift
-  22:304,target 70
+  22:304,target 71
   3:281 reduce
   5:267,target 28
   8:309,target 37
@@ -157,14 +158,15 @@ array set illustrate::table {
   14:0,target 68
   30:281,target 31
   29:281,target 3
-  21:290,target 64
-  75:281,target 42
+  21:290,target 65
+  75:281,target 26
   62:281 reduce
   56:0 reduce
   0:287,target 13
+  77:0 reduce
   0:257 shift
   0:258 shift
-  64:281,target 59
+  64:281,target 60
   32:281 reduce
   0:260 shift
   0:259 shift
@@ -173,9 +175,9 @@ array set illustrate::table {
   9:0 reduce
   0:262 shift
   71:281 reduce
-  24:279,target 76
+  24:279,target 77
   0:263 shift
-  22:302,target 68
+  22:302,target 69
   32:0 reduce
   0:265 shift
   0:316,target 26
@@ -185,6 +187,8 @@ array set illustrate::table {
   53:0 reduce
   41:281 reduce
   0:285,target 11
+  80:281 reduce
+  79:281 reduce
   74:0 reduce
   23:312 goto
   42:281,target 13
@@ -197,19 +201,20 @@ array set illustrate::table {
   8:270 shift
   31:281,target 32
   28:0 reduce
-  76:281,target 29
+  76:281,target 42
   0:314,target 25
   0:0,target 23
   0:281 shift
-  26:315,target 77
+  81:0,target 22
+  26:315,target 78
   23:273,target 40
   14:282,target 47
-  73:0,target 53
+  73:0,target 52
   50:0 reduce
   49:0 reduce
   19:281 reduce
-  20:281 reduce
-  65:0,target 58
+  20:281 shift
+  65:0,target 59
   0:284 shift
   20:282 shift
   57:0,target 54
@@ -221,8 +226,8 @@ array set illustrate::table {
   49:0,target 39
   0:286 shift
   19:281,target 24
-  20:281,target 61
-  65:281,target 58
+  20:281,target 59
+  65:281,target 59
   42:0,target 13
   0:287 shift
   34:0,target 34
@@ -243,7 +248,7 @@ array set illustrate::table {
   0:296 shift
   46:0 reduce
   0:297 shift
-  21:283,target 63
+  21:283,target 64
   0:298 shift
   0:299 shift
   67:0 reduce
@@ -261,7 +266,7 @@ array set illustrate::table {
   0:259,target 3
   5:266 shift
   14:298,target 48
-  77:281,target 78
+  77:281,target 29
   5:267 shift
   8:309 goto
   46:281 reduce
@@ -269,7 +274,7 @@ array set illustrate::table {
   43:0 reduce
   0:299,target 22
   20:320 goto
-  66:281,target 57
+  66:281,target 58
   64:0 reduce
   16:281 reduce
   5:308,target 30
@@ -283,10 +288,11 @@ array set illustrate::table {
   10:281,target 25
   55:281,target 41
   16:284,target 52
+  77:0,target 29
   0:257,target 1
-  70:0,target 50
-  69:0,target 49
-  62:0,target 56
+  70:0,target 49
+  69:0,target 48
+  62:0,target 37
   54:0,target 38
   40:0 reduce
   39:0 reduce
@@ -295,7 +301,6 @@ array set illustrate::table {
   0:297,target 20
   44:281,target 14
   38:0,target 27
-  61:0 reduce
   31:0,target 32
   1:281,target 45
   23:0,target 11
@@ -304,6 +309,7 @@ array set illustrate::table {
   16:298 shift
   6:279,target 31
   33:281,target 7
+  78:281,target 81
   73:281 reduce
   15:0 reduce
   16:282,target 51
@@ -314,56 +320,56 @@ array set illustrate::table {
   15:277,target 44
   43:281 reduce
   13:275 shift
-  67:281,target 36
+  67:281,target 57
   13:276 shift
   57:0 reduce
   13:277 shift
   13:278 shift
   16:321 goto
-  78:0 reduce
   13:281 reduce
   11:281,target 38
   56:281,target 55
   52:281 reduce
   2:281 reduce
   33:0 reduce
-  21:295,target 66
+  21:295,target 67
   45:281,target 17
   15:275,target 42
   2:281,target 46
   54:0 reduce
   0:293,target 17
-  61:281 reduce
+  61:281 shift
   75:0 reduce
   1:0,target 45
   34:281,target 34
   16:298,target 53
-  74:0,target 26
-  23:312,target 75
-  66:0,target 57
+  80:281,target 62
+  79:281,target 63
+  74:0,target 53
+  23:312,target 76
+  66:0,target 58
   31:281 reduce
   58:0,target 35
   51:0,target 66
-  22:307,target 73
+  22:307,target 74
   22:302 shift
   70:281 reduce
   69:281 reduce
   43:0,target 16
   22:303 shift
   13:312 goto
-  20:320,target 61
+  20:320,target 62
   35:0,target 4
   30:0 reduce
   29:0 reduce
   23:281,target 11
   22:304 shift
-  68:281,target 48
+  68:281,target 36
   27:0,target 1
   22:305 shift
   22:306 shift
   15:273,target 40
   19:0,target 24
-  20:0,target 61
   51:0 reduce
   22:307 shift
   40:281 reduce
@@ -371,11 +377,12 @@ array set illustrate::table {
   0:301,target 24
   72:0 reduce
   12:281,target 39
+  78:281 shift
   57:281,target 54
   4:0 reduce
   10:281 reduce
   48:281 reduce
-  22:305,target 71
+  22:305,target 72
   22:317 goto
   46:281,target 30
   26:0 reduce
@@ -383,8 +390,8 @@ array set illustrate::table {
   23:278,target 45
   3:281,target 47
   7:271 shift
-  21:291,target 65
   7:272 shift
+  21:291,target 66
   47:0 reduce
   0:288,target 14
   68:0 reduce
@@ -392,25 +399,24 @@ array set illustrate::table {
   18:283 shift
   57:281 reduce
   1:0 reduce
-  21:319,target 67
+  21:319,target 68
   27:281 reduce
   18:290 shift
-  70:281,target 50
-  69:281,target 49
+  70:281,target 49
+  69:281,target 48
   23:0 reduce
-  22:303,target 69
+  22:303,target 70
   13:312,target 46
   5:266,target 27
   66:281 reduce
   23:276,target 43
   44:0 reduce
-  78:0,target 22
   13:281,target 11
-  71:0,target 51
+  71:0,target 50
   65:0 reduce
   58:281,target 35
   0:286,target 12
-  63:0,target 60
+  63:0,target 56
   36:281 reduce
   55:0,target 41
   47:0,target 70
@@ -424,7 +430,6 @@ array set illustrate::table {
   15:273 shift
   16:0,target 64
   19:0 reduce
-  20:0 reduce
   7:310 goto
   15:274 shift
   45:281 reduce
@@ -441,10 +446,10 @@ array set illustrate::table {
   16:321,target 54
   0:284,target 10
   15:281 reduce
-  20:282,target 59
+  20:282,target 60
   54:281 reduce
   7:271,target 32
-  71:281,target 51
+  71:281,target 50
   0:263,target 7
   4:281 reduce
   16:0 reduce
@@ -452,30 +457,31 @@ array set illustrate::table {
   37:0 reduce
   14:281,target 68
   63:281 reduce
-  60:281,target 62
-  59:281,target 63
+  60:281,target 79
+  59:281,target 61
   58:0 reduce
   13:276,target 43
+  80:0 reduce
+  79:0 reduce
   33:281 reduce
   48:281,target 69
-  22:317,target 74
+  22:317,target 75
   72:281 reduce
   0:261,target 5
   9:0,target 40
   13:0 reduce
   15:312 goto
   2:0,target 46
-  75:0,target 42
+  75:0,target 26
   34:0 reduce
-  67:0,target 36
+  67:0,target 57
   37:281,target 33
-  20:298,target 60
-  60:0,target 62
-  59:0,target 63
+  20:298,target 61
+  59:0,target 61
   42:281 reduce
   55:0 reduce
   52:0,target 67
-  21:282,target 62
+  21:282,target 63
   44:0,target 14
   36:0,target 5
   13:274,target 41
@@ -483,7 +489,7 @@ array set illustrate::table {
   28:0,target 2
   26:281,target 21
   12:281 shift
-  72:281,target 52
+  72:281,target 51
   13:0,target 11
   15:312,target 50
   51:281 reduce
@@ -492,12 +498,12 @@ array set illustrate::table {
   31:0 reduce
   1:281 reduce
   15:281,target 11
-  61:281,target 37
+  61:281,target 80
   0:298,target 21
   52:0 reduce
   21:282 shift
   21:283 shift
-  60:281 reduce
+  60:281 shift
   59:281 reduce
   73:0 reduce
   50:281,target 28
@@ -580,7 +586,7 @@ array set illustrate::rules {
 }
 
 array set illustrate::rules {
-  63,dc 1
+  63,dc 2
   12,dc 1
   26,dc 2
   3,dc 1
@@ -592,7 +598,7 @@ array set illustrate::rules {
   33,dc 2
   9,dc 1
   47,dc 1
-  62,dc 1
+  62,dc 2
   11,dc 0
   25,dc 1
   2,dc 1
@@ -604,7 +610,7 @@ array set illustrate::rules {
   32,dc 2
   8,dc 1
   46,dc 1
-  61,dc 0
+  61,dc 1
   10,dc 1
   24,dc 1
   1,dc 1
@@ -748,13 +754,15 @@ array set illustrate::lr1_table {
   43 {{16 {0 281} 1}}
   75,trans {}
   44 {{14 {0 281} 1}}
-  23,trans {{273 40} {274 41} {275 42} {276 43} {277 44} {278 45} {312 75}}
+  23,trans {{273 40} {274 41} {275 42} {276 43} {277 44} {278 45} {312 76}}
   45 {{17 {0 281} 1}}
   5,trans {{266 27} {267 28} {268 29} {308 30}}
   42,trans {}
   46 {{30 {0 281} 2}}
-  61,trans {}
+  61,trans {{281 80}}
   47 {{70 {0 281} 1}}
+  80,trans {}
+  79,trans {}
   48 {{69 {0 281} 1}}
   27,trans {}
   50 {{28 {0 281} 2}}
@@ -779,53 +787,56 @@ array set illustrate::lr1_table {
   36,trans {}
   58 {{35 {0 281} 2}}
   55,trans {}
-  60 {{62 {0 281} 1}}
-  59 {{63 {0 281} 1}}
+  60 {{63 {0 281} 1}}
+  59 {{61 {0 281} 1}}
   74,trans {}
-  61 {{37 {0 281} 2}}
-  22,trans {{302 68} {303 69} {304 70} {305 71} {306 72} {307 73} {317 74}}
-  62 {{56 {0 281} 1}}
+  61 {{62 {0 281} 1}}
+  22,trans {{302 69} {303 70} {304 71} {305 72} {306 73} {307 74} {317 75}}
+  62 {{37 {0 281} 2}}
   4,trans {}
   41,trans {}
-  63 {{60 {0 281} 1}}
-  60,trans {}
+  63 {{56 {0 281} 1}}
+  60,trans {{281 79}}
   59,trans {}
-  64 {{59 {0 281} 1}}
-  78,trans {}
-  65 {{58 {0 281} 1}}
-  26,trans {{315 77}}
-  66 {{57 {0 281} 1}}
+  64 {{60 {0 281} 1}}
+  78,trans {{281 81}}
+  65 {{59 {0 281} 1}}
+  26,trans {{315 78}}
+  66 {{58 {0 281} 1}}
   8,trans {{269 35} {270 36} {309 37}}
   45,trans {}
-  67 {{36 {0 281} 2}}
+  67 {{57 {0 281} 1}}
   64,trans {}
-  68 {{48 {0 281} 1}}
-  70 {{50 {0 281} 1}}
-  69 {{49 {0 281} 1}}
+  68 {{36 {0 281} 2}}
+  70 {{49 {0 281} 1}}
+  69 {{48 {0 281} 1}}
   12,trans {{281 39}}
   31,trans {}
-  71 {{51 {0 281} 1}}
+  71 {{50 {0 281} 1}}
   50,trans {}
   49,trans {}
-  72 {{52 {0 281} 1}}
+  72 {{51 {0 281} 1}}
   68,trans {}
-  73 {{53 {0 281} 1}}
-  74 {{26 {0 281} 2}}
+  73 {{52 {0 281} 1}}
+  74 {{53 {0 281} 1}}
   16,trans {{282 51} {284 52} {298 53} {321 54}}
   35,trans {}
-  75 {{42 {0 281} 2}}
+  75 {{26 {0 281} 2}}
   54,trans {}
-  76 {{29 {0 281} 2}}
+  76 {{42 {0 281} 2}}
   73,trans {}
-  77 {{22 0 2}}
-  78 {{22 0 3}}
-  21,trans {{282 62} {283 63} {290 64} {291 65} {295 66} {319 67}}
+  77 {{29 {0 281} 2}}
+  78 {{22 0 2}}
+  21,trans {{282 63} {283 64} {290 65} {291 66} {295 67} {319 68}}
   3,trans {}
+  80 {{62 {0 281} 2}}
+  79 {{63 {0 281} 2}}
   40,trans {}
   39,trans {}
+  81 {{22 0 3}}
   58,trans {}
   10 {{25 {0 281} 1}}
-  77,trans {{281 78}}
+  77,trans {}
   11 {{27 {0 281} 1}}
   25,trans {}
   12 {{43 {0 281} 1}}
@@ -858,7 +869,7 @@ array set illustrate::lr1_table {
   72,trans {}
   5 {{31 {0 281} 1} {1 {0 281} 0} {2 {0 281} 0} {3 {0 281} 0}}
   23 {{42 {0 281} 1} {11 {0 281} 0} {12 {0 281} 0} {13 {0 281} 0} {14 {0 281} 0} {15 {0 281} 0} {16 {0 281} 0} {17 {0 281} 0}}
-  20,trans {{282 59} {298 60} {320 61}}
+  20,trans {{281 59} {282 60} {298 61} {320 62}}
   19,trans {}
   6 {{32 {0 281} 1}}
   24 {{29 {0 281} 1}}
@@ -872,7 +883,7 @@ array set illustrate::lr1_table {
   76,trans {}
   9 {{40 {0 281} 1}}
   27 {{1 {0 281} 1}}
-  24,trans {{279 76}}
+  24,trans {{279 77}}
   28 {{2 {0 281} 1}}
   6,trans {{279 31}}
   43,trans {}
@@ -880,6 +891,7 @@ array set illustrate::lr1_table {
   30 {{31 {0 281} 2}}
   62,trans {}
   31 {{32 {0 281} 2}}
+  81,trans {}
   10,trans {}
   32 {{6 {0 281} 1}}
   28,trans {}
@@ -1312,9 +1324,9 @@ proc illustrate::yyparse {} {
                     58 { IllustrateInvertSelect }
                     59 { IllustrateSelectFront }
                     60 { IllustrateSelectBack }
-                    61 { IllustrateSaveAll }
-                    62 { IllustrateSaveSelect }
-                    63 { IllustrateSaveAll }
+                    61 { IllustrateSaveAllFn $1 }
+                    62 { IllustrateSaveSelect $2 }
+                    63 { IllustrateSaveAll $2 }
                     64 { IllustrateListAll }
                     65 { IllustrateListSelect }
                     66 { IllustrateListAll }

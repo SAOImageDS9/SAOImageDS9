@@ -59,8 +59,8 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustratePolygonCreate $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash}
- | TEXT_ bp numeric sp numeric sp STRING_ bp comment
- {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant}
+ | TEXT_ bp numeric sp numeric sp STRING_ ep comment
+ {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant} comment
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
  {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant}
  ;
@@ -74,7 +74,6 @@ coord : numeric sp numeric {lappend illustratefile::coords $1 $3}
  ;
 
 comment :
- | HASH_ 
  | HASH_ discard
  | HASH_ local
  ;

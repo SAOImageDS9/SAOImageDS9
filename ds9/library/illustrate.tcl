@@ -16,7 +16,7 @@ proc IllustrateDef {} {
     set iillustrate(undo) {}
 
     set illustrate(show) 1
-    set illustrate(shape) line
+    set illustrate(shape) circle
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
@@ -195,7 +195,7 @@ proc IllustrateColor {} {
 		}
 	    }
             # update selection list
-            lappend iillustrate(selection) [IllustrateSaveGraphic $id]
+            lappend iillustrate(selection) [IllustrateSave $id]
 	}
     }
 }
@@ -225,7 +225,7 @@ proc IllustrateWidth {} {
 		text {}
 	    }
 	    # update selection list
-	    lappend iillustrate(selection) [IllustrateSaveGraphic $id]
+	    lappend iillustrate(selection) [IllustrateSave $id]
 	}
     }
 }
@@ -302,28 +302,6 @@ proc IllustrateFindGraphicFromNode {nid} {
     return [IllustrateFindGraphicFromHandle $nid]
 }
 
-proc IllustrateGetType {id} {
-    global ds9
-    
-    set tags [$ds9(canvas) gettags $id]
-    if {[lsearch $tags circle] != -1} {
-	return circle
-    } elseif {[lsearch $tags ellipse] != -1} {
-	return ellipse
-    } elseif {[lsearch $tags box] != -1} {
-	return box
-    } elseif {[lsearch $tags polygon] != -1} {
-	return polygon
-    } elseif {[lsearch $tags line] != -1} {
-	return line
-    } elseif {[lsearch $tags text] != -1} {
-	return text
-    } else {
-	# should not be here
-	return circle
-    }
-}
-
 # Selection
 
 proc IllustrateIsSelected {id} {
@@ -349,7 +327,7 @@ proc IllustrateUpdateSelection {} {
     set iillustrate(selection) {}
     foreach gr $old {
 	foreach {id color fillcolor dashlist} $gr {
-	    lappend iillustrate(selection) [IllustrateSaveGraphic $id]
+	    lappend iillustrate(selection) [IllustrateSave $id]
 	}
     }
 }
@@ -363,7 +341,7 @@ proc IllustrateAddToSelection {id} {
 	$ds9(canvas) itemconfigure $hh -state normal
     }
 
-    lappend iillustrate(selection) [IllustrateSaveGraphic $id]
+    lappend iillustrate(selection) [IllustrateSave $id]
 }
 
 proc IllustrateUnselect {id} {
@@ -386,33 +364,6 @@ proc IllustrateUnselect {id} {
     }
 }
 
-proc IllustrateMoveSelection {dx dy} {
-    global ds9
-    global iillustrate
-
-    foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor dashlist} $gr {
-	    switch [IllustrateGetType $id] {
-		circle -
-		ellipse -
-		box -
-		text {
-		    $ds9(canvas) move $id $dx $dy
-		    IllustrateBaseUpdateHandle $id
-		}
-		polygon {
-		    $ds9(canvas) move $id $dx $dy
-		    IllustratePolygonUpdateHandle $id
-		}
-		line {
-		    $ds9(canvas) move $id $dx $dy
-		    IllustrateLineUpdateHandle $id
-		}
-	    }
-	}
-    }
-}
-
 # Util
 
 proc IllustrateSaveUndo {undo id} {
@@ -422,28 +373,12 @@ proc IllustrateSaveUndo {undo id} {
     set ll {}
     switch $undo {
 	create -
-	edit {
-	    switch [IllustrateGetType $id] {
-		circle -
-		ellipse -
-		box  -
-		polygon {lappend ll [list $id [IllustrateBaseCopy $id]]}
-		line {lappend ll [list $id [IllustrateLineCopy $id]]}
-		text {lappend ll [list $id [IllustrateTextCopy $id]]}
-	    }
-	}
+	edit {lappend ll [list $id [IllustrateCopy $id]]}
 	selectedit -
 	selectdelete {
 	    foreach gr $iillustrate(selection) {
 		foreach {id color fillcolor dashlist} $gr {
-		    switch [IllustrateGetType $id] {
-			circle -
-			ellipse -
-			box  -
-			polygon {lappend ll [list $id [IllustrateBaseCopy $id]]}
-			line {lappend ll [list $id [IllustrateLineCopy $id]]}
-			text {lappend ll [list $id [IllustrateTextCopy $id]]}
-		    }
+		    lappend ll [list $id [IllustrateCopy $id]]
 		}
 	    }
 	}
@@ -451,41 +386,6 @@ proc IllustrateSaveUndo {undo id} {
     set iillustrate(undo) [list $undo $ll]
 
     UpdateEditMenu
-}
-
-proc IllustrateSaveGraphic {id} {
-    switch [IllustrateGetType $id] {
-	circle -
-	ellipse -
-	box -
-	polygon {return [IllustrateBaseSave $id]}
-	line {return [IllustrateLineSave $id]}
-	text {return [IllustrateTextSave $id]}
-    }
-}
-
-proc IllustrateGraphicAntsOn {id} {
-    switch [IllustrateGetType $id] {
-	circle -
-	ellipse -
-	box -
-	polygon {IllustrateBaseAntsOn $id}
-	line {IllustrateLineAntsOn $id}
-	text {IllustrateTextAntsOn $id}
-    }
-}
-
-proc IllustrateGraphicAntsOff {gr} {
-    foreach {id color fillcolor dashlist} $gr {
-	switch [IllustrateGetType $id] {
-	    circle -
-	    ellipse -
-	    box -
-	    polygon {IllustrateBaseAntsOff $gr}
-	    line {IllustrateLineAntsOff $gr}
-	    text {IllustrateTextAntsOff $gr}
-	}
-    }
 }
 
 proc IllustrateHandleOn {id} {

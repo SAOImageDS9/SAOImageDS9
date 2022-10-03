@@ -25,6 +25,36 @@ proc IllustrateLineCreate {x1 y1 x2 y2 color width dash} {
     return $id
 }
 
+proc IllustrateLineDefault {id} {
+    global ds9
+
+    set coords [$ds9(canvas) coords $id]
+    set x1 [lindex $coords 0]
+    set y1 [lindex $coords 1]
+    set x2 [lindex $coords 2]
+    set y2 [lindex $coords 3]
+
+    $ds9(canvas) coords $id $x1 $y1 [expr $x2+100] $y2
+
+    IllustrateLineUpdateHandle $id
+}
+
+proc IllustrateLineDup {param} {
+    global ds9
+    
+    foreach {coords color width dash} $param {
+	set id [$ds9(canvas) create line \
+		    $coords \
+		    -fill $color \
+		    -width $width \
+		    -dash $dash \
+		    -tags {line graphic}]
+    }
+    IllustrateLineCreateHandles $id
+
+    return $id
+}
+
 proc IllustrateLineSave {id} {
     global ds9
 
@@ -61,22 +91,6 @@ proc IllustrateLineSet {id param} {
     }
 
     IllustrateLineUpdateHandle $id
-}
-
-proc IllustrateLineDup {param} {
-    global ds9
-    
-    foreach {coords color width dash} $param {
-	set id [$ds9(canvas) create line \
-		    $coords \
-		    -fill $color \
-		    -width $width \
-		    -dash $dash \
-		    -tags {line graphic}]
-    }
-    IllustrateLineCreateHandles $id
-
-    return $id
 }
 
 proc IllustrateLineList {id} {
@@ -133,8 +147,8 @@ proc IllustrateLineCreateHandles {id} {
     $ds9(canvas) raise $h1 $id
 
     set h2 [$ds9(canvas) create rectangle \
-		[expr $bbx2-$rr] [expr $bby1-$rr] \
-		[expr $bbx2+$rr] [expr $bby1+$rr]\
+		[expr $bbx2-$rr] [expr $bby2-$rr] \
+		[expr $bbx2+$rr] [expr $bby2+$rr]\
 		-outline $color -fill $color \
 		-state hidden \
 		-tags [list handle gr${id} h2]]
@@ -318,7 +332,7 @@ proc IllustrateLineApply {varname} {
 	$ds9(canvas) coords $var(id) \
 	    $var(x1) $var(y1) $var(x2) $var(y2)
 
-	IllustrateBaseUpdateHandle $var(id)
+	IllustrateLineUpdateHandle $var(id)
     }
 }
 

@@ -47,6 +47,8 @@ proc IllustrateCircleDefault {id} {
 	[expr $xx+$rr] [expr $yy+$rr]
 }
 
+# BaseDup
+
 proc IllustrateCircleList {id} {
     global ds9
 

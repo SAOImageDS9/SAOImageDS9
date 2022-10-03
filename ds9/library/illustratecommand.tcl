@@ -24,28 +24,6 @@ proc IllustrateGetInfo {} {
     }
 }
 
-proc IllustrateDialog {id} {
-    switch [IllustrateGetType $id] {
-	circle {IllustrateCircleDialog $id}
-	ellipse {IllustrateEllipseDialog $id}
-	box {IllustrateBoxDialog $id}
-	polygon {IllustratePolygonDialog $id}
-	line {IllustrateLineDialog $id}
-	text {IllustrateTextDialog $id}
-    }
-}
-
-proc IllustrateDialogClose {id} {
-    switch [IllustrateGetType $id] {
-	circle -
-	ellipse -
-	box -
-	polygon {IllustrateBaseDialogClose $id}
-	line {IllustrateLineDialogClose $id}
-	text {IllustrateTextDialogClose $id}
-    }
-}
-
 # Show
 
 proc IllustrateShow {} {
@@ -242,14 +220,7 @@ proc IllustrateUndo {} {
 		foreach item $ll {
 		    foreach {id graphic} $item {
 			foreach {type param} $graphic {
-			    switch $type {
-				circle -
-				ellipse -
-				box {set id [IllustrateBaseDup $type $param]}
-				polygon {set id [IllustratePolygonDup $param]}
-				line {set id [IllustrateLineDup $param]}
-				text {set id [IllustrateTextDup $param]}
-			    }
+			    set id [IllustrateDup $type $param]
 			    IllustrateAddToSelection $id
 			}
 		    }
@@ -269,16 +240,7 @@ proc IllustrateCut {} {
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
 	foreach {id color fillcolor dashlist} $gr {
-	    switch [IllustrateGetType $id] {
-		circle -
-		ellipse -
-		box -
-		polygon {
-		    lappend iillustrate(clipboard) [IllustrateBaseCopy $id]
-		}
-		line {lappend iillustrate(clipboard) [IllustrateLineCopy $id]}
-		text {lappend iillustrate(clipboard) [IllustrateTextCopy $id]}
-	    }
+	    lappend iillustrate(clipboard) [IllustrateCopy $id]
 	    IllustrateDeleteGraphicOne $id
 	}
     }
@@ -286,22 +248,13 @@ proc IllustrateCut {} {
     UpdateEditMenu
 }
 
-proc IllustrateCopy {} {
+proc IllustrateMenuCopy {} {
     global iillustrate
     
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
 	foreach {id color fillcolor dashlist} $gr {
-	    switch [IllustrateGetType $id] {
-		circle -
-		ellipse -
-		box  -
-		polygon {
-		    lappend iillustrate(clipboard) [IllustrateBaseCopy $id]
-		}
-		line {lappend iillustrate(clipboard) [IllustrateLineCopy $id]}
-		text {lappend iillustrate(clipboard) [IllustrateTextCopy $id]}
-	    }
+	    lappend iillustrate(clipboard) [IllustrateCopy $id]
 	}
     }
 
@@ -314,14 +267,7 @@ proc IllustratePaste {} {
     IllustrateSelectNone
     foreach graphic $iillustrate(clipboard) {
 	foreach {type param} $graphic {
-	    switch $type {
-		circle -
-		ellipse -
-		box {set id [IllustrateBaseDup $type $param]}
-		polygon {set id [IllustratePolygonDup $param]}
-		line {set id [IllustrateLineDup $param]}
-		text {set id [IllustrateTextDup $param]}
-	    }
+	    set id [IllustrateDup $type $param]
 	    IllustrateAddToSelection $id
 	}
     }
@@ -332,10 +278,7 @@ proc IllustratePaste {} {
 # Load
 
 proc IllustrateLoad {} {
-    global ds9
-    
     IllustrateLoadFn [OpenFileDialog illustratefbox]
-    
 }
 
 proc IllustrateLoadFn {fn} {
@@ -344,6 +287,7 @@ proc IllustrateLoadFn {fn} {
     }
 
     if {[catch {set ch [open $fn r]}]} {
+	Error "[msgcat::mc {Unable to open file}] $fn"
 	return
     }
 
@@ -359,26 +303,18 @@ proc IllustrateLoadFn {fn} {
 
 proc IllustrateListHeader {} {
     set rr {}
-    append rr  "# Illustrate file format: DS9 version 1.0\n"
-    append rr "global color = cyan fill = no width = 1 dash = no font = \"helvetica 12 normal roman\""
-}
-
-proc IllustrateSave {ch id} {
-    switch [IllustrateGetType $id] {
-	circle {puts $ch [IllustrateCircleList $id]}
-	ellipse {puts $ch [IllustrateEllipseList $id]}
-	box {puts $ch [IllustrateBoxList $id]}
-	polygon {puts $ch [IllustratePolygonList $id]}
-	line {puts $ch [IllustrateLineList $id]}
-	text {puts $ch [IllustrateTextList $id]}
-    }
+    append rr "# Illustrate file format: DS9 version 1.0\n"
+    append rr "global color = cyan fill = no width = 1 dash = no\n"
+    append rr "global font = helvetica fontsize = 12 fontweight = normal fontslant = roman"
 }
 
 proc IllustrateSaveSelect {} {
-    global ds9
+    IllustrateSaveSelectFn [SaveFileDialog illustratefbox]
+}
+    
+proc IllustrateSaveSelectFn {fn} {
     global iillustrate
 
-    set fn [SaveFileDialog illustratefbox]
     if {$fn == {}} {
 	return
     }
@@ -390,7 +326,7 @@ proc IllustrateSaveSelect {} {
     puts $ch [IllustrateListHeader]
     foreach gr $iillustrate(selection) {
 	foreach {id color fillcolor dashlist} $gr {
-	    IllustrateSave $ch $id
+	    puts $ch [IllustrateList $id]
 	}
     }
 
@@ -399,9 +335,12 @@ proc IllustrateSaveSelect {} {
 }
 
 proc IllustrateSaveAll {} {
+    IllustrateSaveAllFn [SaveFileDialog illustratefbox]
+}
+
+proc IllustrateSaveAllFn {fn} {
     global ds9
     
-    set fn [SaveFileDialog illustratefbox]
     if {$fn == {}} {
 	return
     }
@@ -412,7 +351,7 @@ proc IllustrateSaveAll {} {
 
     puts $ch [IllustrateListHeader]
     foreach id [$ds9(canvas) find withtag {graphic}] {
-	IllustrateSave $ch $id
+	puts $ch [IllustrateList $id]
     }
 
     close $ch
@@ -421,19 +360,6 @@ proc IllustrateSaveAll {} {
 
 # List
 
-proc IllustrateList {varname id} {
-    upvar $varname var
-
-    switch [IllustrateGetType $id] {
-	circle {append var "[IllustrateCircleList $id]\n"}
-	ellipse {append var "[IllustrateEllipseList $id]\n"}
-	box {append var "[IllustrateBoxList $id]\n"}
-	polygon {append var "[IllustratePolygonList $id]\n"}
-	line {append var "[IllustrateLineList $id]\n"}
-	text {append var "[IllustrateTextList $id]\n"}
-    }
-}
-
 proc IllustdrateListSelect {} {
     global ds9
     global iillustrate
@@ -441,7 +367,7 @@ proc IllustdrateListSelect {} {
     set rr "[IllustrateListHeader]\n"
     foreach gr $iillustrate(selection) {
 	foreach {id color fillcolor dashlist} $gr {
-	    IllustrateList rr $id
+	    append rr "[IllustrateList $id]\n"
 	}
     }
 
@@ -454,7 +380,7 @@ proc IllustrateListAll {} {
     
     set rr "[IllustrateListHeader]\n"
     foreach id [$ds9(canvas) find withtag {graphic}] {
-	IllustrateList rr $id
+	append rr "[IllustrateList $id]\n"
     }
     
     SimpleTextDialog illustratetxt [msgcat::mc {Illustrate}] \

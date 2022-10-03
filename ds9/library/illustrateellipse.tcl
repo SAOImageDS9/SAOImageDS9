@@ -48,6 +48,8 @@ proc IllustrateEllipseDefault {id} {
 	[expr $xx+$rr1] [expr $yy+$rr2]
 }
 
+# BaseDup
+
 proc IllustrateEllipseEdit {id xx yy} {
     global ds9
     global iillustrate

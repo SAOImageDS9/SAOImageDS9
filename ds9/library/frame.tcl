@@ -1533,7 +1533,7 @@ proc CopyFrame {} {
     switch -- $current(mode) {
 	pointer -
 	region {MarkerCopy}
-	illustrate {IllustrateCopy}
+	illustrate {IllustrateMenuCopy}
     }
 }
 

@@ -47,6 +47,8 @@ proc IllustrateBoxDefault {id} {
 		[expr $xx+$rr1] [expr $yy+$rr2]
 }
 
+# BaseDup
+
 proc IllustrateBoxEdit {id xx yy} {
     global ds9
     global iillustrate

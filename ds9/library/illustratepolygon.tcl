@@ -31,6 +31,24 @@ proc IllustratePolygonCreate {coords color fill width dash} {
     return $id
 }
 
+proc IllustratePolygonDefault {id} {
+    global ds9
+    global pillustrate
+    
+    set coords [$ds9(canvas) coords $id]
+    set xx [lindex $coords 0]
+    set yy [lindex $coords 1]
+
+    set rr1 $pillustrate(polygon,width)
+    set rr2 $pillustrate(polygon,height)
+
+    $ds9(canvas) coords $id \
+	[expr $xx-$rr1] [expr $yy-$rr2] \
+	[expr $xx+$rr1] [expr $yy-$rr2] \
+	[expr $xx+$rr1] [expr $yy+$rr2]\
+	[expr $xx-$rr1] [expr $yy+$rr2]
+}
+
 proc IllustratePolygonDup {param} {
     global ds9
     
@@ -51,24 +69,6 @@ proc IllustratePolygonDup {param} {
 
     IllustratePolygonCreateHandles $id [$ds9(canvas) itemcget $id -outline]
     return $id
-}
-
-proc IllustratePolygonDefault {id} {
-    global ds9
-    global pillustrate
-    
-    set coords [$ds9(canvas) coords $id]
-    set xx [lindex $coords 0]
-    set yy [lindex $coords 1]
-
-    set rr1 $pillustrate(polygon,width)
-    set rr2 $pillustrate(polygon,height)
-
-    $ds9(canvas) coords $id \
-	[expr $xx-$rr1] [expr $yy-$rr2] \
-	[expr $xx+$rr1] [expr $yy-$rr2] \
-	[expr $xx+$rr1] [expr $yy+$rr2]\
-	[expr $xx-$rr1] [expr $yy+$rr2]
 }
 
 proc IllustratePolygonList {id} {
@@ -356,3 +356,74 @@ proc IllustratePolygonCreateNode {id num xx yy} {
     $ds9(canvas) coords $id $ll
     IllustratePolygonUpdateHandle $id
 }
+
+# Dialog
+
+proc IllustratePolygonDialog {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    global ds9
+
+    set var(id) $id
+    set var(top) ".${varname}"
+    set var(mb) ".${varname}mb"
+
+    # see if we already have a header window visible
+    if {[winfo exists $var(top)]} {
+	raise $var(top)
+	return
+    }
+
+    # proc
+    set var(proc,apply) IllustratePolygonApply
+
+    IllustrateBaseDialog $varname
+    
+    # init
+    IllustratePolygonEditCB $var(id)
+    IllustrateBaseColorCB $var(id)
+    IllustrateBaseWidthCB $var(id)
+}
+
+proc IllustratePolygonApply {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    
+    if {$var(xc) != {} && $var(yc) != {}} {
+	$ds9(canvas) moveto $var(id) $var(xc) $var(yc)
+	IllustratePolygonUpdateHandle $var(id)
+    }
+}
+
+# callbacks
+
+proc IllustratePolygonEditCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    global ds9
+
+    set coords [$ds9(canvas) coords $id]
+    set x1 [lindex $coords 0]
+    set y1 [lindex $coords 1]
+    set x2 [lindex $coords 2]
+    set y2 [lindex $coords 3]
+
+    set var(xc) [expr ($x2-$x1)/2+$x1]
+    set var(yc) [expr ($y2-$y1)/2+$y1]
+}
+
+

@@ -101,9 +101,9 @@ select : ALL_ {IllustrateSelectAll}
  | BACK_ {IllustrateSelectBack}
  ;
  
-save : {IllustrateSaveAll}
- | SELECT_ {IllustrateSaveSelect}
- | ALL_ {IllustrateSaveAll}
+save : STRING_ {IllustrateSaveAllFn $1}
+ | SELECT_ STRING_ {IllustrateSaveSelect $2}
+ | ALL_ STRING_ {IllustrateSaveAll $2}
  ;
 
 list : {IllustrateListAll}

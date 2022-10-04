@@ -19,7 +19,6 @@ proc IllustratePolygonCreate {coords color fill width dash} {
 	set dashlist {}
     }
 
-    puts $coords
     set id [$ds9(canvas) create polygon \
 		$coords \
 		-outline $color \
@@ -81,39 +80,38 @@ proc IllustratePolygonCreateHandles {id color} {
     foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
 
     set h1 [$ds9(canvas) create rectangle \
-		[expr $bbx1-$rr] [expr $bby1-$rr] \
-		[expr $bbx1+$rr] [expr $bby1+$rr]\
+		[expr $bbx1-$rr-$ss] [expr $bby1-$rr-$ss] \
+		[expr $bbx1+$rr-$ss] [expr $bby1+$rr-$ss]\
 		-outline $color -fill $color \
 		-state hidden \
 		-tags [list handle gr${id} h1]]
     $ds9(canvas) raise $h1 $id
 
     set h2 [$ds9(canvas) create rectangle \
-		[expr $bbx2-$rr] [expr $bby1-$rr] \
-		[expr $bbx2+$rr] [expr $bby1+$rr]\
+		[expr $bbx2-$rr+$ss] [expr $bby1-$rr-$ss] \
+		[expr $bbx2+$rr+$ss] [expr $bby1+$rr-$ss]\
 		-outline $color -fill $color \
 		-state hidden \
 		-tags [list handle gr${id} h2]]
     $ds9(canvas) raise $h2 $id
 
     set h3 [$ds9(canvas) create rectangle \
-		[expr $bbx2-$rr] [expr $bby2-$rr] \
-		[expr $bbx2+$rr] [expr $bby2+$rr]\
+		[expr $bbx2-$rr+$ss] [expr $bby2-$rr+$ss] \
+		[expr $bbx2+$rr+$ss] [expr $bby2+$rr+$ss]\
 		-outline $color -fill $color \
 		-state hidden \
 		-tags [list handle gr${id} h3]]
     $ds9(canvas) raise $h3 $id
     
     set h4 [$ds9(canvas) create rectangle \
-		[expr $bbx1-$rr] [expr $bby2-$rr] \
-		[expr $bbx1+$rr] [expr $bby2+$rr]\
+		[expr $bbx1-$rr-$ss] [expr $bby2-$rr+$ss] \
+		[expr $bbx1+$rr-$ss] [expr $bby2+$rr+$ss]\
 		-outline $color -fill $color \
 		-state hidden \
 		-tags [list handle gr${id} h4]]
     $ds9(canvas) raise $h4 $id
 
     # nodes
-
     set cnt 0
     foreach {xx yy} [$ds9(canvas) coords $id] {
 	incr cnt
@@ -140,26 +138,25 @@ proc IllustratePolygonUpdateHandle {id} {
 
     set hh [$ds9(canvas) find withtag "gr${id} && h1"]
     $ds9(canvas) coords $hh \
-	[expr $bbx1-$rr] [expr $bby1-$rr] \
-	[expr $bbx1+$rr] [expr $bby1+$rr]
+	[expr $bbx1-$rr-$ss] [expr $bby1-$rr-$ss] \
+	[expr $bbx1+$rr-$ss] [expr $bby1+$rr-$ss]\
 
     set hh [$ds9(canvas) find withtag "gr${id} && h2"]
     $ds9(canvas) coords $hh \
-	[expr $bbx2-$rr] [expr $bby1-$rr] \
-	[expr $bbx2+$rr] [expr $bby1+$rr]
+	[expr $bbx2-$rr+$ss] [expr $bby1-$rr-$ss] \
+	[expr $bbx2+$rr+$ss] [expr $bby1+$rr-$ss]\
 
     set hh [$ds9(canvas) find withtag "gr${id} && h3"]
     $ds9(canvas) coords $hh \
-	[expr $bbx2-$rr] [expr $bby2-$rr] \
-	[expr $bbx2+$rr] [expr $bby2+$rr]
+	[expr $bbx2-$rr+$ss] [expr $bby2-$rr+$ss] \
+	[expr $bbx2+$rr+$ss] [expr $bby2+$rr+$ss]\
 
     set hh [$ds9(canvas) find withtag "gr${id} && h4"]
     $ds9(canvas) coords $hh \
-	[expr $bbx1-$rr] [expr $bby2-$rr] \
-	[expr $bbx1+$rr] [expr $bby2+$rr]
+	[expr $bbx1-$rr-$ss] [expr $bby2-$rr+$ss] \
+	[expr $bbx1+$rr-$ss] [expr $bby2+$rr+$ss]\
 
     # nodes
-
     set cnt 0
     set nlist [$ds9(canvas) find withtag "gr${id} && node"]
     foreach {xx yy} [$ds9(canvas) coords $id] {

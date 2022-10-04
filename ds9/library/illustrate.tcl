@@ -16,7 +16,7 @@ proc IllustrateDef {} {
     set iillustrate(undo) {}
 
     set illustrate(show) 1
-    set illustrate(shape) text
+    set illustrate(shape) circle
 
     # common
     set illustrate(color) cyan

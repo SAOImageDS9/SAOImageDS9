@@ -76,12 +76,9 @@ proc IllustrateBaseCreateHandles {id color} {
     global ds9
 
     set rr 2
-    set bbox [$ds9(canvas) bbox $id]
-    set bbx1 [lindex $bbox 0]
-    set bby1 [lindex $bbox 1]
-    set bbx2 [lindex $bbox 2]
-    set bby2 [lindex $bbox 3]
 
+    foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
+    
     set h1 [$ds9(canvas) create rectangle \
 		[expr $bbx1-$rr] [expr $bby1-$rr] \
 		[expr $bbx1+$rr] [expr $bby1+$rr]\
@@ -121,11 +118,7 @@ proc IllustrateBaseUpdateHandle {id} {
     global iillustrate
 
     set rr 2
-    set bbox [$ds9(canvas) bbox $id]
-    set bbx1 [lindex $bbox 0]
-    set bby1 [lindex $bbox 1]
-    set bbx2 [lindex $bbox 2]
-    set bby2 [lindex $bbox 3]
+    foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
 
     set hh [$ds9(canvas) find withtag "gr${id} && h1"]
     $ds9(canvas) coords $hh \

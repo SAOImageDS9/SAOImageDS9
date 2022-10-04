@@ -41,8 +41,6 @@ proc IllustrateLineDefault {id} {
 
     foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     $ds9(canvas) coords $id $x1 $y1 [expr $x2+100] $y2
-
-    IllustrateLineUpdateHandle $id
 }
 
 proc IllustrateLineDup {param} {

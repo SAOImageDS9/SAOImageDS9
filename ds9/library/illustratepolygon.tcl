@@ -19,6 +19,7 @@ proc IllustratePolygonCreate {coords color fill width dash} {
 	set dashlist {}
     }
 
+    puts $coords
     set id [$ds9(canvas) create polygon \
 		$coords \
 		-outline $color \
@@ -49,12 +50,7 @@ proc IllustratePolygonDefault {id} {
 proc IllustratePolygonDup {param} {
     global ds9
     
-    set coords [lindex $param 0]
-    set color [lindex $param 1]
-    set fill [lindex $param 2]
-    set width [lindex $param 3]
-    set dash [lindex $param 4]
-
+    foreach {coords color fill width dash} $param {}
     set id [$ds9(canvas) create polygon \
 		$coords \
 		-outline $color \
@@ -138,14 +134,9 @@ proc IllustratePolygonUpdateHandle {id} {
 
     set ss 4
     set rr 2
-    set bbox [$ds9(canvas) bbox $id]
 
     # default handles
-
-    set bbx1 [expr [lindex $bbox 0]-$ss]
-    set bby1 [expr [lindex $bbox 1]-$ss]
-    set bbx2 [expr [lindex $bbox 2]+$ss]
-    set bby2 [expr [lindex $bbox 3]+$ss]
+    foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
 
     set hh [$ds9(canvas) find withtag "gr${id} && h1"]
     $ds9(canvas) coords $hh \
@@ -186,12 +177,7 @@ proc IllustratePolygonEdit {id xx yy} {
     global iillustrate
     
     if {$iillustrate(handle)} {
-	set bbox [$ds9(canvas) bbox $id]
-	set bbx1 [lindex $bbox 0]
-	set bby1 [lindex $bbox 1]
-	set bbx2 [lindex $bbox 2]
-	set bby2 [lindex $bbox 3]
-
+	foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
 	set xc [expr double($bbx2-$bbx1)/2+$bbx1]
 	set yc [expr double($bby2-$bby1)/2+$bby1]
 

@@ -375,6 +375,11 @@ proc IllustrateSaveUndo {undo id} {
 		}
 	    }
 	}
+	deleteall {
+	    foreach id [$ds9(canvas) find withtag {graphic}] {
+		lappend ll [list $id [IllustrateCopy $id]]
+	    }
+	}
     }
     set iillustrate(undo) [list $undo $ll]
     UpdateEditMenu

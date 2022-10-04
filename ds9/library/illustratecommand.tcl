@@ -125,7 +125,7 @@ proc IllustrateDeleteAll {} {
     global ds9
     global iillustrate
 
-    IllustrateSaveUndo selectdelete {}
+    IllustrateSaveUndo deleteall {}
 
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	IllustrateDeleteGraphic $id
@@ -220,7 +220,8 @@ proc IllustrateUndo {} {
 		    }
 		}
 	    }
-	    selectdelete {
+	    selectdelete -
+	    deleteall {
 		foreach item $ll {
 		    foreach {id graphic} $item {
 			foreach {type param} $graphic {

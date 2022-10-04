@@ -35,10 +35,7 @@ proc IllustratePolygonDefault {id} {
     global ds9
     global pillustrate
     
-    set coords [$ds9(canvas) coords $id]
-    set xx [lindex $coords 0]
-    set yy [lindex $coords 1]
-
+    foreach {xx yy} [$ds9(canvas) coords $id] {}
     set rr1 $pillustrate(polygon,width)
     set rr2 $pillustrate(polygon,height)
 
@@ -83,14 +80,9 @@ proc IllustratePolygonCreateHandles {id color} {
 
     set ss 4
     set rr 2
-    set bbox [$ds9(canvas) bbox $id]
 
     # default handles
-    
-    set bbx1 [expr [lindex $bbox 0]-$ss]
-    set bby1 [expr [lindex $bbox 1]-$ss]
-    set bbx2 [expr [lindex $bbox 2]+$ss]
-    set bby2 [expr [lindex $bbox 3]+$ss]
+    foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
 
     set h1 [$ds9(canvas) create rectangle \
 		[expr $bbx1-$rr] [expr $bby1-$rr] \

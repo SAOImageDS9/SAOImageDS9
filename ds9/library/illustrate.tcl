@@ -396,6 +396,15 @@ proc IllustrateDump {} {
     }
 }
 
+proc IllustrateBackup {ch dir} {
+    global ds9
+
+    if {[$ds9(canvas) find withtag {graphic}]>0} {
+	IllustrateSaveAllFn $dir/ds9.seg
+	puts $ch "IllustrateLoadFn $dir/ds9.seg"
+    }
+}
+
 # Process Cmds
 
 proc ProcessIllustrateCmd {varname iname sock fn} {

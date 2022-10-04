@@ -33,6 +33,9 @@ proc Backup {fn} {
     # Colorbar
     ColorbarBackup $ch $dir
 
+    # Illustrate
+    IllustrateBackup $ch $dir
+
     # Frames
     foreach ff $ds9(frames) {
 	if {![$ff has iis]} {

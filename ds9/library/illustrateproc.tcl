@@ -127,6 +127,28 @@ proc IllustrateEditCB {id} {
     }
 }
 
+proc IllustrateRotate {id xx yy} {
+    switch [IllustrateGetType $id] {
+	circle -
+	ellipse -
+	box -
+	polygon -
+	line {}
+	text {IllustrateTextRotate $id $xx $yy}
+    }
+}
+
+proc IllustrateRotateCB {id} {
+    switch [IllustrateGetType $id] {
+	circle -
+	ellipse -
+	box -
+	polygon -
+	line {}
+	text {IllustrateTextRotateCB $id}
+    }
+}
+
 proc IllustrateUpdateHandle {id} {
     switch [IllustrateGetType $id] {
 	circle -

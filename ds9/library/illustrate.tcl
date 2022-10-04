@@ -123,6 +123,7 @@ proc IllustrateCreateGraphic {xx yy} {
 			$illustrate(font,size) \
 			$illustrate(font,weight) \
 			$illustrate(font,slant)\
+			0 \
 		       ]
 	}
     }

@@ -223,7 +223,7 @@ proc IllustrateTextDialog {id} {
     
     # init
     IllustrateTextEditCB $var(id)
-    IllustrateTextAngleCB $var(id)
+    IllustrateTextRotateCB $var(id)
     IllustrateTextColorCB $var(id)
     IllustrateTextTextCB $var(id)
     IllustrateTextFontCB $var(id)
@@ -281,8 +281,39 @@ proc IllustrateTextEdit {id xx yy} {
     $ds9(canvas) coords $xx $yy
 }
 
-proc IllustrateTextAngle {id angle} {
+proc IllustrateTextRotate {id xx yy} {
     global ds9
+    global iillustrate
+
+    foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
+    set xc [expr ($bbx2-$bbx1)/2.+$bbx1]
+    set yc [expr ($bby2-$bby1)/2.+$bby1]
+
+    set dx [expr $xx-$xc]
+    set dy [expr $yy-$yc]
+    set aa [expr -atan2($dy,$dx)*180./3.1415]
+
+    switch $iillustrate(handle) {
+	1 {
+	    set bx [expr $bbx1-$xc]
+	    set by [expr $bby1-$yc]
+	}
+	2 {
+	    set bx [expr $bbx2-$xc]
+	    set by [expr $bby1-$yc]
+	}
+	3 {
+	    set bx [expr $bbx2-$xc]
+	    set by [expr $bby2-$yc]
+	}
+	4 {
+	    set bx [expr $bbx1-$xc]
+	    set by [expr $bby2-$yc]
+	}
+    }
+    set bb [expr -atan2($by,$bx)*180./3.1415]
+    
+    set angle [expr $aa-$bb]
     
     $ds9(canvas) itemconfigure $id -angle $angle
 }
@@ -308,7 +339,7 @@ proc IllustrateTextEditCB {id} {
     }
 }
 
-proc IllustrateTextAngleCB {id} {
+proc IllustrateTextRotateCB {id} {
     global iillustrate
 
     set varname ${iillustrate(prefix,dialog)}${id}

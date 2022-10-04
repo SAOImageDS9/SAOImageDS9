@@ -29,6 +29,7 @@ proc IllustrateBindEvents {} {
     }
 
     bind $ds9(canvas) <Motion> {IllustrateMotion %x %y}
+    bind $ds9(canvas) <Shift-Motion> {IllustrateShiftMotion %x %y}
 
     bind $ds9(canvas) <Button-1> {IllustrateButton %x %y}
     bind $ds9(canvas) <Shift-Button-1> {IllustrateShiftButton %x %y}
@@ -68,6 +69,7 @@ proc IllustrateUnBindEvents {} {
     }
 
     bind $ds9(canvas) <Motion> {}
+    bind $ds9(canvas) <Shift-Motion> {}
 
     bind $ds9(canvas) <Button-1> {}
     bind $ds9(canvas) <Shift-Button-1> {}
@@ -125,9 +127,26 @@ proc IllustrateMotion {xx yy} {
 	puts "IllustrateMotion"
     }
 
+    IllustrateDoMotion $xx $yy sizing
+}
+
+proc IllustrateShiftMotion {xx yy} {
+    global ds9
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts "IllustrateShiftMotion"
+    }
+
+    IllustrateDoMotion $xx $yy exchange
+}
+
+proc IllustrateDoMotion {xx yy cursor} {
+    global ds9
+
     # see if we are on a handle
     if {[IllustrateFind handle $xx $yy]} {
-	SetCursor sizing
+	SetCursor $cursor
 	return
     }
 
@@ -294,6 +313,24 @@ proc IllustrateShiftButton {xx yy} {
     set iillustrate(motion,xx) $xx
     set iillustrate(motion,yy) $yy
 
+    # see if we are on a handle
+    set hid [IllustrateFind handle $xx $yy]
+    if {$hid} {
+	set hh [IllustrateFindHandleNumber $hid]
+	if {$hh} {
+	    set iillustrate(handle) $hh
+	}
+
+	set id [IllustrateFindGraphicFromHandle $hid]
+	if {$id} {
+	    IllustrateSaveUndo edit $id
+	    set iillustrate(id) $id
+	    set iillustrate(edit) [IllustrateSave $id]
+	    set iillustrate(motion) beginRotate
+	}
+	return
+    }
+
     # if on graphic, add to selection, start move
     set id [IllustrateFind graphic $xx $yy]
     if {$id} {
@@ -383,6 +420,16 @@ proc IllustrateButtonMotion {xx yy} {
 	    IllustrateEditCB $id
 	}
 
+	beginRotate {
+	    IllustrateAntsOn $id
+	    IllustrateHandleOff $id
+	    set iillustrate(motion) rotate
+	}
+	rotate {
+	    IllustrateRotate $id $xx $yy
+	    IllustrateRotateCB $id
+	}
+
 	shiftregion {
 	    $ds9(canvas) coords $iillustrate(ants) \
 		$iillustrate(motion,xx) $iillustrate(motion,yy) \
@@ -447,6 +494,13 @@ proc IllustrateButtonRelease {xx yy} {
 	    IllustrateHandleOn $id
 	    IllustrateUpdateHandle $id
 	    IllustrateUpdateSelection
+	}
+
+	beginRotate -
+	rotate {
+	    IllustrateAntsOff $iillustrate(edit)
+	    IllustrateHandleOn $id
+	    IllustrateUpdateHandle $id
 	}
 
 	shiftregion {

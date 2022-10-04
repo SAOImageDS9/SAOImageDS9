@@ -119,16 +119,14 @@ proc IllustrateTextList {id} {
 proc IllustrateTextAntsOn {id} {
     global ds9
 
-    $ds9(canvas) itemconfigure $id \
-	-fill white
+    $ds9(canvas) itemconfigure $id -fill white
 }
 
 proc IllustrateTextAntsOff {gr} {
     global ds9
 
     foreach {id color fillcolor width dashlist} $gr {
-	$ds9(canvas) itemconfigure $id \
-	    -fill $fillcolor
+	$ds9(canvas) itemconfigure $id -fill $fillcolor
     }
 }
 
@@ -178,7 +176,7 @@ proc IllustrateTextDialog {id} {
     EditMenu $var(mb) $varname
     ColorFillMenu $var(mb).color $varname color fill \
 	[list IllustrateTextColor $varname] [list IllustrateTextColor $varname]
-    FontMenu $var(mb).font $varname font size weight slant \
+    FontMenu $var(mb).font $varname font font,size font,weight font,slant \
 	[list IllustrateTextFont $varname]
 
     set f $var(top).param
@@ -225,8 +223,7 @@ proc IllustrateTextDialog {id} {
 proc IllustrateTextColorSet {id color} {
     global ds9
     
-    $ds9(canvas) itemconfigure $id \
-	-fill $color
+    $ds9(canvas) itemconfigure $id -fill $color
 
     # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
@@ -238,7 +235,7 @@ proc IllustrateTextColor {varname} {
     upvar #0 $varname var
     global $varname
 
-    IllustrateTextColorSet $var(id) $var(color) $var(fill)
+    IllustrateTextColorSet $var(id) $var(color)
     IllustrateUpdateSelection
 }
 
@@ -248,10 +245,10 @@ proc IllustrateTextFont {varname} {
 
     global ds9
     
-    $ds9(canvas) itemconfigure $id \
-	-font $font
+    $ds9(canvas) itemconfigure $var(id) \
+	-font "$var(font) $var(font,size) $var(font,weight) $var(font,slant)"
 
-    IllustrateBaseUpdateHandle $id
+    IllustrateBaseUpdateHandle $var(id)
 }
 
 proc IllustrateTextApply {varname} {
@@ -262,16 +259,37 @@ proc IllustrateTextApply {varname} {
     
     if {$var(xc) != {} && $var(yc) != {}} {
 	$ds9(canvas) coords $var(id) $var(xc) $var(yc)
-	
 	$ds9(canvas) itemconfigure $var(id) -text $var(txt)
 
 	IllustrateBaseUpdateHandle $var(id)
     }
 }
 
+proc IllustrateTextEdit {id xx yy} {
+    global ds9
+    
+    $ds9(canvas) coords $xx $yy
+}
+
 # callbacks
 
 proc IllustrateTextEditCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+    
+    global ds9
+
+    foreach {xc yc} [$ds9(canvas) coords $var(id)] {
+	set var(xc) $xc
+	set var(yc) $yc
+    }
 }
 
 proc IllustrateTextColorCB {id} {
@@ -302,11 +320,13 @@ proc IllustrateTextFontCB {id} {
     }
 
     global ds9
-
-    set rr $ds9(canvas) itemcget $var(id) -font
-    set var(font) [lindex $rr 0]
-    set var(font,size) [lindex $rr 1]
-    set var(weight) [lindex $rr 2]
-    set var(slant) [lindex $rr 3]
+   
+    foreach {font fontsize fontweight fontslant} \
+	[$ds9(canvas) itemcget $var(id) -font] {
+	    set var(font) $font
+	    set var(font,size) $fontsize
+	    set var(font,weight) $fontweight
+	    set var(font,slant) $fontslant
+	}
 }
 

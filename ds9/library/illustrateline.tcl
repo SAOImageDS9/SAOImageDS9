@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateLineCreate {x1 y1 x2 y2 color width dash} {
+proc IllustrateLineCreate {x1 y1 x2 y2 color width dash left right} {
     global ds9
     global illustrate
 
@@ -14,11 +14,22 @@ proc IllustrateLineCreate {x1 y1 x2 y2 color width dash} {
 	set dashlist {}
     }
 
+    if {$left && !$right} {
+	set arrow first
+    } elseif {!$left && $right} {
+	set arrow last
+    } elseif {$left && $right} {
+	set arrow both
+    } else {
+	set arrow none
+    }
+
     set id [$ds9(canvas) create line \
 		$x1 $y1 $x2 $y2 \
 		-fill $color \
 		-width $width \
 		-dash $dashlist \
+		-arrow $arrow \
 		-tags {line graphic}]
 
     IllustrateLineCreateHandles $id
@@ -42,12 +53,13 @@ proc IllustrateLineDefault {id} {
 proc IllustrateLineDup {param} {
     global ds9
     
-    foreach {coords color width dash} $param {
+    foreach {coords color width dash arrow} $param {
 	set id [$ds9(canvas) create line \
 		    $coords \
 		    -fill $color \
 		    -width $width \
 		    -dash $dash \
+		    -arrow $arrow \
 		    -tags {line graphic}]
     }
     IllustrateLineCreateHandles $id
@@ -72,18 +84,20 @@ proc IllustrateLineCopy {id} {
     set color [$ds9(canvas) itemcget $id -fill]
     set width [$ds9(canvas) itemcget $id -width]
     set dash [$ds9(canvas) itemcget $id -dash]
+    set arrow [$ds9(canvas) itemcget $id -arrow]
 
-    return [list line [list $coords $color $width $dash]]
+    return [list line [list $coords $color $width $dash $arrow]]
 }
 
 proc IllustrateLineSet {id param} {
     global ds9
 
-    foreach {coords color width dash} $param {
+    foreach {coords color width dash arrow} $param {
 	$ds9(canvas) coords $id $coords
 	$ds9(canvas) itemconfigure $id -fill $color
 	$ds9(canvas) itemconfigure $id -width $width
 	$ds9(canvas) itemconfigure $id -dash $dash
+	$ds9(canvas) itemconfigure $id -arrow $arrow
     }
 
     # handles/nodes
@@ -100,6 +114,7 @@ proc IllustrateLineList {id} {
     set coords [$ds9(canvas) coords $id]
     set color [$ds9(canvas) itemcget $id -fill]
     set width [$ds9(canvas) itemcget $id -width]
+    set arrow [$ds9(canvas) itemcget $id -arrow]
 
     if {[$ds9(canvas) itemcget $id -dash] != {}} {
 	set dash 1
@@ -109,7 +124,7 @@ proc IllustrateLineList {id} {
     
     set rr "line $coords"
 
-    if {$color != {cyan} || $width != 1 || $dash} {
+    if {$color != {cyan} || $width != 1 || $dash || $arrow != {none}} {
 
 	append rr " #"
 	if {$color != {cyan}} {
@@ -120,6 +135,15 @@ proc IllustrateLineList {id} {
 	}
 	if {$dash} {
 	    append rr " dash = yes"
+	}
+	if {$arrow == {first}} {
+	    append rr " line = 1 0"
+	}
+	if {$arrow == {last}} {
+	    append rr " line = 0 1"
+	}
+	if {$arrow == {both}} {
+	    append rr " line = 1 1"
 	}
     }
 
@@ -217,6 +241,7 @@ proc IllustrateLineAntsOff {gr} {
 # Dialog
 
 proc IllustrateLineDialog {id} {
+    global illustrate
     global iillustrate
 
     set varname ${iillustrate(prefix,dialog)}${id}
@@ -239,7 +264,9 @@ proc IllustrateLineDialog {id} {
     set var(x1) 0
     set var(y1) 0
     set var(x2) 0
-    set ver(y2) 0
+    set var(y2) 0
+    set var(line,left) $illustrate(line,left)
+    set var(line,right) $illustrate(line,right)
 
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc {Line}] \
@@ -279,8 +306,16 @@ proc IllustrateLineDialog {id} {
     ttk::entry $f.y1 -textvariable ${varname}(y1) -width 13
     ttk::entry $f.x2 -textvariable ${varname}(x2) -width 13
     ttk::entry $f.y2 -textvariable ${varname}(y2) -width 13
+    ttk::label $f.tarrow -text [msgcat::mc {Arrow}]
+    ttk::checkbutton $f.left -variable ${varname}(line,left) \
+	-text [msgcat::mc {Left}] \
+	-command [list IllustrateLineArrow $varname]
+    ttk::checkbutton $f.right -variable ${varname}(line,right) \
+	-text [msgcat::mc {Right}] \
+	-command [list IllustrateLineArrow $varname]
     grid $f.ttitle $f.x1 $f.y1 -padx 2 -pady 2 -sticky w
     grid x $f.x2 $f.y2 -padx 2 -pady 2 -sticky w
+    grid $f.tarrow $f.left $f.right -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $var(top).buttons]
@@ -301,6 +336,7 @@ proc IllustrateLineDialog {id} {
     IllustrateLineEditCB $var(id)
     IllustrateLineColorCB $var(id)
     IllustrateBaseWidthCB $var(id)
+    IllustrateLineArrowCB $var(id)
 }
 
 proc IllustrateLineColor {varname} {
@@ -339,6 +375,25 @@ proc IllustrateLineApply {varname} {
     }
 }
 
+proc IllustrateLineArrow {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    
+    if {$var(line,left) && !$var(line,right)} {
+	set arrow first
+    } elseif {!$var(line,left) && $var(line,right)} {
+	set arrow last
+    } elseif {$var(line,left) && $var(line,right)} {
+	set arrow both
+    } else {
+	set arrow none
+    }
+
+    $ds9(canvas) itemconfigure $var(id) -arrow $arrow
+}
+
 # callbacks
 
 proc IllustrateLineEditCB {id} {
@@ -374,6 +429,39 @@ proc IllustrateLineColorCB {id} {
 
     global ds9
 
-    set var(color) [$ds9(canvas) itemcget $var(id) -fill]
+    set var(color) [$ds9(canvas) itemcget $id -fill]
 }
 
+proc IllustrateLineArrowCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+
+    global ds9
+
+    set arrow [$ds9(canvas) itemcget $id -arrow]
+    switch $arrow {
+	none {
+	    set var(line,left) 0
+	    set var(line,right) 0
+	}
+	first {
+	    set var(line,left) 1
+	    set var(line,right) 0
+	}
+	last {
+	    set var(line,left) 0
+	    set var(line,right) 1
+	}
+	both {
+	    set var(line,left) 1
+	    set var(line,right) 1
+	}
+    }
+}

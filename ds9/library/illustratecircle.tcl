@@ -65,39 +65,37 @@ proc IllustrateCircleList {id} {
     return "circle $xc $yc $ra [IllustrateBaseListProps $id]"
 }
 
-proc IllustrateCircleEdit {gr xx yy} {
+proc IllustrateCircleEdit {id xx yy} {
     global ds9
     global iillustrate
 
-    foreach {id color fillcolor width dashlist} $gr {
-	set coords [$ds9(canvas) coords $id]
-	set x1 [lindex $coords 0]
-	set y1 [lindex $coords 1]
-	set x2 [lindex $coords 2]
-	set y2 [lindex $coords 3]
-	switch $iillustrate(handle) {
-	    1 {
-		set dx [expr ($x1-$xx)]
-		set dy [expr ($y1-$yy)]
-	    }
-	    2 {
-		set dx [expr ($xx-$x2)]
-		set dy [expr ($y1-$yy)]
-	    }
-	    3 {
-		set dx [expr ($xx-$x2)]
-		set dy [expr ($yy-$y2)]
-	    }
-	    4 {
-		set dx [expr ($x1-$xx)]
-		set dy [expr ($yy-$y2)]
-	    }
+    set coords [$ds9(canvas) coords $id]
+    set x1 [lindex $coords 0]
+    set y1 [lindex $coords 1]
+    set x2 [lindex $coords 2]
+    set y2 [lindex $coords 3]
+    switch $iillustrate(handle) {
+	1 {
+	    set dx [expr ($x1-$xx)]
+	    set dy [expr ($y1-$yy)]
 	}
-	set dd [expr ($dx+$dy)/2]
-	$ds9(canvas) coords $id \
-	    [expr $x1-$dd] [expr $y1-$dd] \
-	    [expr $x2+$dd] [expr $y2+$dd]
+	2 {
+	    set dx [expr ($xx-$x2)]
+	    set dy [expr ($y1-$yy)]
+	}
+	3 {
+	    set dx [expr ($xx-$x2)]
+	    set dy [expr ($yy-$y2)]
+	}
+	4 {
+	    set dx [expr ($x1-$xx)]
+	    set dy [expr ($yy-$y2)]
+	}
     }
+    set dd [expr ($dx+$dy)/2]
+    $ds9(canvas) coords $id \
+	[expr $x1-$dd] [expr $y1-$dd] \
+	[expr $x2+$dd] [expr $y2+$dd]
 }
 
 # Dialog

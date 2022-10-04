@@ -17,11 +17,20 @@ proc IllustrateDef {} {
 
     set illustrate(show) 1
     set illustrate(shape) circle
+
+    # common
     set illustrate(color) cyan
     set illustrate(fill) 0
     set illustrate(width) 1
     set illustrate(dash) 0
     set illustrate(dashlist) {8 3}
+
+    # line
+    set illustrate(line,left) 0
+    set illustrate(line,right) 0
+
+    # text
+    set illustrate(text) {Text}
     set illustrate(font) helvetica
     set illustrate(font,size) 12
     set illustrate(font,weight) normal
@@ -76,44 +85,44 @@ proc IllustrateCreateGraphic {xx yy} {
 	circle {
 	    return [IllustrateCircleCreate $xx $yy 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) $illustrate(dash)\
+		       ]
 	}
 	ellipse {
 	    return [IllustrateEllipseCreate $xx $yy 0 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) $illustrate(dash)\
+		       ]
 	}
 	box {
 	    return [IllustrateBoxCreate $xx $yy 0 0 \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) $illustrate(dash)\
+		       ]
 	}
 	polygon {
 	    return [IllustratePolygonCreate \
 			[list $xx $yy $xx $yy $xx $yy $xx $yy] \
 			$illustrate(color) $illustrate(fill) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) $illustrate(dash)\
+		       ]
 	}
 	line {
 	    return [IllustrateLineCreate $xx $yy $xx $yy \
 			$illustrate(color) \
-			$illustrate(width) $illustrate(dash)]
+			$illustrate(width) $illustrate(dash) \
+			$illustrate(line,left) $illustrate(line,right) \
+		       ]
 	}
 	text {
-	    set txt {Text}
-	    if {![EntryDialog [msgcat::mc {Text}] \
-		      [msgcat::mc {Enter Text}] 40 txt]} {
-		return 0
-	    }
-	    if {$txt == {}} {
-		return 0
-	    }
-	    return [IllustrateTextCreate $xx $yy $txt \
+	    return [IllustrateTextCreate $xx $yy \
+			$illustrate(text) \
 			$illustrate(color) \
 			$illustrate(font) \
 			$illustrate(font,size) \
 			$illustrate(font,weight) \
-			$illustrate(font,slant)]
+			$illustrate(font,slant)\
+		       ]
 	}
     }
 }

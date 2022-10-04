@@ -176,17 +176,17 @@ proc IllustrateColor {} {
 		ellipse -
 		box -
 		polygon {
-		    IllustrateBaseColorSet $id \
+		    IllustrateBaseColor $id \
 			$illustrate(color) $illustrate(fill)
 		    IllustrateBaseColorCB $id
 		}
 		line {
-		    IllustrateLineColorSet $id \
+		    IllustrateLineColor $id \
 			$illustrate(color)
 		    IllustrateLineColorCB $id
 		}
 		text {
-		    IllustrateTextColorSet $id \
+		    IllustrateTextColor $id \
 			$illustrate(color)
 		    IllustrateTextColorCB $id
 		}

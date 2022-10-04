@@ -236,7 +236,8 @@ proc IllustrateBaseDialog {varname} {
 
     EditMenu $var(mb) $varname
     ColorFillMenu $var(mb).color $varname color fill \
-	[list IllustrateBaseColor $varname] [list IllustrateBaseColor $varname]
+	[list IllustrateBaseColorVar $varname] \
+	[list IllustrateBaseColorVar $varname]
     WidthDashMenu $var(mb).width $varname width dash \
 	[list IllustrateBaseWidth $varname] [list IllustrateBaseWidth $varname]
 
@@ -292,15 +293,15 @@ proc IllustrateBaseClose {varname} {
     unset $varname
 }
 
-proc IllustrateBaseColor {varname} {
+proc IllustrateBaseColorVar {varname} {
     upvar #0 $varname var
     global $varname
 
-    IllustrateBaseColorSet $var(id) $var(color) $var(fill)
+    IllustrateBaseColor $var(id) $var(color) $var(fill)
     IllustrateUpdateSelection
 }
 
-proc IllustrateBaseColorSet {id color fill} {
+proc IllustrateBaseColor {id color fill} {
     global ds9
     
     if {$fill} {

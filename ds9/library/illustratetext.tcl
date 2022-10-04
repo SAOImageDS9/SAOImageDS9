@@ -180,7 +180,8 @@ proc IllustrateTextDialog {id} {
 
     EditMenu $var(mb) $varname
     ColorFillMenu $var(mb).color $varname color fill \
-	[list IllustrateTextColor $varname] [list IllustrateTextColor $varname]
+	[list IllustrateTextColorVar $varname] \
+	[list IllustrateTextColorVar $varname]
     FontMenu $var(mb).font $varname font font,size font,weight font,slant \
 	[list IllustrateTextFont $varname]
 
@@ -232,7 +233,7 @@ proc IllustrateTextDialog {id} {
     IllustrateTextFontCB $var(id)
 }
 
-proc IllustrateTextColorSet {id color} {
+proc IllustrateTextColor {id color} {
     global ds9
     
     $ds9(canvas) itemconfigure $id -fill $color
@@ -243,11 +244,11 @@ proc IllustrateTextColorSet {id color} {
     }
 }
 
-proc IllustrateTextColor {varname} {
+proc IllustrateTextColorVar {varname} {
     upvar #0 $varname var
     global $varname
 
-    IllustrateTextColorSet $var(id) $var(color)
+    IllustrateTextColor $var(id) $var(color)
     IllustrateUpdateSelection
 }
 

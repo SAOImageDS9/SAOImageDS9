@@ -269,7 +269,7 @@ proc IllustrateLineDialog {id} {
 
     EditMenu $var(mb) $varname
     ColorMenu $var(mb).color $varname color \
-	[list IllustrateLineColor $varname]
+	[list IllustrateLineColorVar $varname]
     WidthDashMenu $var(mb).width $varname width dash \
 	[list IllustrateBaseWidth $varname] [list IllustrateBaseWidth $varname]
 
@@ -320,15 +320,15 @@ proc IllustrateLineDialog {id} {
     IllustrateLineArrowCB $var(id)
 }
 
-proc IllustrateLineColor {varname} {
+proc IllustrateLineColorVar {varname} {
     upvar #0 $varname var
     global $varname
 
-    IllustrateLineColorSet $var(id) $var(color)
+    IllustrateLineColor $var(id) $var(color)
     IllustrateUpdateSelection
 }
 
-proc IllustrateLineColorSet {id color} {
+proc IllustrateLineColor {id color} {
     global ds9
     
     $ds9(canvas) itemconfigure $id \

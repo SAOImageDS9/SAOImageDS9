@@ -197,7 +197,7 @@ proc IllustrateTextDialog {id} {
     set f $var(top).param
     ttk::label $f.ttxt -text [msgcat::mc {Text}]
     ttk::entry $f.txt -textvariable ${varname}(txt) -width 40
-    grid $f.ttxt $f.txt -padx 2 -pady 2 -sticky w
+    grid $f.ttxt $f.txt - -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $var(top).buttons]
@@ -217,6 +217,7 @@ proc IllustrateTextDialog {id} {
     # init
     IllustrateTextEditCB $var(id)
     IllustrateTextColorCB $var(id)
+    IllustrateTextTextCB $var(id)
     IllustrateTextFontCB $var(id)
 }
 
@@ -308,16 +309,24 @@ proc IllustrateTextColorCB {id} {
     set var(color) [$ds9(canvas) itemcget $var(id) -fill]
 }
 
-proc IllustrateTextFontCB {id} {
+proc IllustrateTextTextCB {id} {
     global iillustrate
 
     set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
     upvar #0 $varname var
 
-    if {![info exists $varname]} {
-	return
-    }
+    global ds9
+   
+    set var(txt) [$ds9(canvas) itemcget $id -text]
+}
+
+proc IllustrateTextFontCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
 
     global ds9
    

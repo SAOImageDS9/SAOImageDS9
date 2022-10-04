@@ -14,6 +14,7 @@
 %token VERSION_
 %token GLOBAL_
 
+%token ANGLE_
 %token COLOR_
 %token WIDTH_
 %token FILL_
@@ -60,9 +61,9 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localLine1 $illustratefile::localLine2}
  | TEXT_ bp numeric sp numeric sp STRING_ ep comment
- {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant} comment
+ {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle} comment
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
- {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant}
+ {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle}
  ;
 
 coords : coords coord
@@ -93,6 +94,7 @@ globalProperty : COLOR_ eq STRING_ {set illustratefile::globalColor $3}
  | FONTSLANT_ eq fontSlant {set illustratefile::globalFontSlant $3}
  | LINE_ eq INT_ INT_
  {set illustratefile::globalLine1 $3; set illustratefile::globalLine2 $4;}
+ | ANGLE_ eq numeric {set illustratefile::globalAngle $3}
  ;
 
 local : local localProperty
@@ -110,6 +112,7 @@ localProperty : COLOR_ eq STRING_ {set illustratefile::localColor $3}
  | FONTSLANT_ eq fontSlant {set illustratefile::localFontSlant $3}
  | LINE_ eq INT_ INT_
  {set illustratefile::localLine1 $3; set illustratefile::localLine2 $4;}
+ | ANGLE_ eq numeric {set illustratefile::localAngle $3}
  ;
 
 sp :
@@ -152,6 +155,7 @@ namespace eval illustratefile {
      variable globalFontSlant
      variable globalLine1
      variable globalLine2
+     variable globalAngle
 
      variable localColor
      variable localFill
@@ -164,6 +168,7 @@ namespace eval illustratefile {
      variable localFontSlant
      variable localLine1
      variable localLine2
+     variable localAngle
 }
 
 proc illustratefile::initGlobal {} {
@@ -178,6 +183,7 @@ proc illustratefile::initGlobal {} {
      variable globalFontSlant roman
      variable globalLine1 0
      variable globalLine2 0
+     variable globalAngle 0
 }
 
 proc illustratefile::initLocal {} {
@@ -194,6 +200,7 @@ proc illustratefile::initLocal {} {
      variable globalFontSlant
      variable globalLine1
      variable globalLine2
+     variable globalAngle
 
      variable localColor $globalColor
      variable localFill $globalFill
@@ -206,4 +213,5 @@ proc illustratefile::initLocal {} {
      variable localFontSlant $globalFontSlant
      variable localLine1 $globalLine1
      variable localLine2 $globalLine2
+     variable localAngle $globalAngle
 }

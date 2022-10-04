@@ -11,6 +11,7 @@
 version		{return $VERSION_}
 global		{return $GLOBAL_}
 
+angle           {return $ANGLE_}
 color		{return $COLOR_}
 width 		{return $WIDTH_}
 fill		{return $FILL_}

@@ -265,8 +265,8 @@ proc IllustrateLineDialog {id} {
     set var(y1) 0
     set var(x2) 0
     set var(y2) 0
-    set var(line,left) $illustrate(line,left)
-    set var(line,right) $illustrate(line,right)
+    set var(arrow,left) $illustrate(arrow,left)
+    set var(arrow,right) $illustrate(arrow,right)
 
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc {Line}] \
@@ -307,10 +307,10 @@ proc IllustrateLineDialog {id} {
     ttk::entry $f.x2 -textvariable ${varname}(x2) -width 13
     ttk::entry $f.y2 -textvariable ${varname}(y2) -width 13
     ttk::label $f.tarrow -text [msgcat::mc {Arrow}]
-    ttk::checkbutton $f.left -variable ${varname}(line,left) \
+    ttk::checkbutton $f.left -variable ${varname}(arrow,left) \
 	-text [msgcat::mc {Left}] \
 	-command [list IllustrateLineArrow $varname]
-    ttk::checkbutton $f.right -variable ${varname}(line,right) \
+    ttk::checkbutton $f.right -variable ${varname}(arrow,right) \
 	-text [msgcat::mc {Right}] \
 	-command [list IllustrateLineArrow $varname]
     grid $f.ttitle $f.x1 $f.y1 -padx 2 -pady 2 -sticky w
@@ -381,11 +381,11 @@ proc IllustrateLineArrow {varname} {
 
     global ds9
     
-    if {$var(line,left) && !$var(line,right)} {
+    if {$var(arrow,left) && !$var(arrow,right)} {
 	set arrow first
-    } elseif {!$var(line,left) && $var(line,right)} {
+    } elseif {!$var(arrow,left) && $var(arrow,right)} {
 	set arrow last
-    } elseif {$var(line,left) && $var(line,right)} {
+    } elseif {$var(arrow,left) && $var(arrow,right)} {
 	set arrow both
     } else {
 	set arrow none
@@ -448,20 +448,20 @@ proc IllustrateLineArrowCB {id} {
     set arrow [$ds9(canvas) itemcget $id -arrow]
     switch $arrow {
 	none {
-	    set var(line,left) 0
-	    set var(line,right) 0
+	    set var(arrow,left) 0
+	    set var(arrow,right) 0
 	}
 	first {
-	    set var(line,left) 1
-	    set var(line,right) 0
+	    set var(arrow,left) 1
+	    set var(arrow,right) 0
 	}
 	last {
-	    set var(line,left) 0
-	    set var(line,right) 1
+	    set var(arrow,left) 0
+	    set var(arrow,right) 1
 	}
 	both {
-	    set var(line,left) 1
-	    set var(line,right) 1
+	    set var(arrow,left) 1
+	    set var(arrow,right) 1
 	}
     }
 }

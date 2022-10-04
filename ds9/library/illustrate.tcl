@@ -26,11 +26,12 @@ proc IllustrateDef {} {
     set illustrate(dashlist) {8 3}
 
     # line
-    set illustrate(line,left) 0
-    set illustrate(line,right) 0
+    set illustrate(arrow,left) 0
+    set illustrate(arrow,right) 0
 
     # text
     set illustrate(text) {Text}
+    set illustrate(angle) 0
     set illustrate(font) helvetica
     set illustrate(font,size) 12
     set illustrate(font,weight) normal
@@ -111,7 +112,7 @@ proc IllustrateCreateGraphic {xx yy} {
 	    return [IllustrateLineCreate $xx $yy $xx $yy \
 			$illustrate(color) \
 			$illustrate(width) $illustrate(dash) \
-			$illustrate(line,left) $illustrate(line,right) \
+			$illustrate(arrow,left) $illustrate(arrow,right) \
 		       ]
 	}
 	text {

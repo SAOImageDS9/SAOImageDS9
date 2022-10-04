@@ -4,7 +4,8 @@
 
 package provide DS9 1.0
 
-proc IllustrateTextCreate {xx yy txt color font fontsize fontweight fontslant} {
+proc IllustrateTextCreate {xx yy txt color \
+			       font fontsize fontweight fontslant angle} {
     global ds9
 
     set id [$ds9(canvas) create text \
@@ -12,6 +13,7 @@ proc IllustrateTextCreate {xx yy txt color font fontsize fontweight fontslant} {
 		-text $txt \
 		-fill $color \
 		-font "$font $fontsize $fontweight $fontslant" \
+		-angle $angle \
 		-tags {text graphic}
 	   ]
 
@@ -81,19 +83,16 @@ proc IllustrateTextList {id} {
 
     set coords [$ds9(canvas) coords $id]
     set color [$ds9(canvas) itemcget $id -fill]
-    set ff [$ds9(canvas) itemcget $id -font]
     set txt [$ds9(canvas) itemcget $id -text]
-
-    set font [lindex $ff 0]
-    set fontsize [lindex $ff 1]
-    set fontweight [lindex $ff 2]
-    set fontslant [lindex $ff 3]
+    set angle [$ds9(canvas) itemcget $id -angle]
+    foreach {font fontsize fontweight fontslant} \
+	[$ds9(canvas) itemcget $id -font] {}
 
     set rr "text $coords \"$txt\""
 
     if {$color != {cyan} ||
 	$font != {helvetica} || $fontsize != 12 ||
-	$fontweight != {normal} || $fontslant != {roman} } {
+	$fontweight != {normal} || $fontslant != {roman} || $angle != 0} {
 
 	append rr " #"
 	if {$color != {cyan}} {
@@ -110,6 +109,9 @@ proc IllustrateTextList {id} {
 	}
 	if {$fontslant != {roman}} {
 	    append rr " fontslant = $fontslant"
+	}
+	if {$angle != 0} {
+	    append rr " angle = $angle"
 	}
     }
     
@@ -193,6 +195,11 @@ proc IllustrateTextDialog {id} {
     ttk::entry $f.centery -textvariable ${varname}(yc) -width 13
     grid $f.tcenter $f.centerx $f.centery -padx 2 -pady 2 -sticky w
 
+    # Angle
+    ttk::label $f.tangle -text [msgcat::mc {Angle}]
+    ttk::entry $f.angle -textvariable ${varname}(angle) -width 13
+    grid $f.tangle $f.angle -padx 2 -pady 2 -sticky w
+    
     # Text
     set f $var(top).param
     ttk::label $f.ttxt -text [msgcat::mc {Text}]
@@ -216,6 +223,7 @@ proc IllustrateTextDialog {id} {
     
     # init
     IllustrateTextEditCB $var(id)
+    IllustrateTextAngleCB $var(id)
     IllustrateTextColorCB $var(id)
     IllustrateTextTextCB $var(id)
     IllustrateTextFontCB $var(id)
@@ -260,6 +268,7 @@ proc IllustrateTextApply {varname} {
     
     if {$var(xc) != {} && $var(yc) != {}} {
 	$ds9(canvas) coords $var(id) $var(xc) $var(yc)
+	$ds9(canvas) itemconfigure $var(id) -angle $var(angle)
 	$ds9(canvas) itemconfigure $var(id) -text $var(txt)
 
 	IllustrateBaseUpdateHandle $var(id)
@@ -270,6 +279,12 @@ proc IllustrateTextEdit {id xx yy} {
     global ds9
     
     $ds9(canvas) coords $xx $yy
+}
+
+proc IllustrateTextAngle {id angle} {
+    global ds9
+    
+    $ds9(canvas) itemconfigure $id -angle $angle
 }
 
 # callbacks
@@ -287,10 +302,26 @@ proc IllustrateTextEditCB {id} {
     
     global ds9
 
-    foreach {xc yc} [$ds9(canvas) coords $var(id)] {
+    foreach {xc yc} [$ds9(canvas) coords $id] {
 	set var(xc) $xc
 	set var(yc) $yc
     }
+}
+
+proc IllustrateTextAngleCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    if {![info exists $varname]} {
+	return
+    }
+    
+    global ds9
+
+    set var(angle) [$ds9(canvas) itemcget $id -angle]
 }
 
 proc IllustrateTextColorCB {id} {
@@ -306,7 +337,7 @@ proc IllustrateTextColorCB {id} {
 
     global ds9
 
-    set var(color) [$ds9(canvas) itemcget $var(id) -fill]
+    set var(color) [$ds9(canvas) itemcget $id -fill]
 }
 
 proc IllustrateTextTextCB {id} {
@@ -331,7 +362,7 @@ proc IllustrateTextFontCB {id} {
     global ds9
    
     foreach {font fontsize fontweight fontslant} \
-	[$ds9(canvas) itemcget $var(id) -font] {
+	[$ds9(canvas) itemcget $id -font] {
 	    set var(font) $font
 	    set var(font,size) $fontsize
 	    set var(font,weight) $fontweight

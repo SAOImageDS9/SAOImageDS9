@@ -396,7 +396,18 @@ proc IllustratePolygonApply {varname} {
     global ds9
     
     if {$var(xc) != {} && $var(yc) != {}} {
-	$ds9(canvas) moveto $var(id) $var(xc) $var(yc)
+	set xc $var(xc)
+	set yc $var(yc)
+
+	set bbox [$ds9(canvas) bbox $var(id)]
+	foreach {bbx1 bby1 bbx2 bby2} $bbox {
+	    set dx [expr ($bbx2-$bbx1)/2.]
+	    set dy [expr ($bby2-$bby1)/2.]
+	}
+	set x1 [expr $xc-$dx]
+	set y1 [expr $yc-$dy]
+
+	$ds9(canvas) moveto $var(id) $x1 $y1
 	IllustratePolygonUpdateHandle $var(id)
     }
 }
@@ -415,15 +426,13 @@ proc IllustratePolygonEditCB {id} {
     }
 
     global ds9
-
-    set coords [$ds9(canvas) coords $id]
-    set x1 [lindex $coords 0]
-    set y1 [lindex $coords 1]
-    set x2 [lindex $coords 2]
-    set y2 [lindex $coords 3]
-
-    set var(xc) [expr ($x2-$x1)/2+$x1]
-    set var(yc) [expr ($y2-$y1)/2+$y1]
+    
+    set bbox [$ds9(canvas) bbox $var(id)]
+    foreach {bbx1 bby1 bbx2 bby2} $bbox {
+	set var(xc) [expr ($bbx2-$bbx1)/2. + $bbx1]
+	set var(yc) [expr ($bby2-$bby1)/2. + $bby1]
+    }
 }
+
 
 

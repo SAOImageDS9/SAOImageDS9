@@ -36,10 +36,7 @@ proc IllustrateCircleDefault {id} {
     global ds9
     global pillustrate
 
-    set coords [$ds9(canvas) coords $id]
-    set xx [lindex $coords 0]
-    set yy [lindex $coords 1]
-    
+    foreach {xx yy} [$ds9(canvas) coords $id] {}
     set rr $pillustrate(circle,radius)
     
     $ds9(canvas) coords $id \
@@ -52,12 +49,7 @@ proc IllustrateCircleDefault {id} {
 proc IllustrateCircleList {id} {
     global ds9
 
-    set coords [$ds9(canvas) coords $id]
-    set x1 [lindex $coords 0]
-    set y1 [lindex $coords 1]
-    set x2 [lindex $coords 2]
-    set y2 [lindex $coords 3]
-
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     set xc [expr ($x2-$x1)/2+$x1]
     set yc [expr ($y2-$y1)/2+$y1]
     set ra [expr ($x2-$x1)/2]
@@ -69,11 +61,7 @@ proc IllustrateCircleEdit {id xx yy} {
     global ds9
     global iillustrate
 
-    set coords [$ds9(canvas) coords $id]
-    set x1 [lindex $coords 0]
-    set y1 [lindex $coords 1]
-    set x2 [lindex $coords 2]
-    set y2 [lindex $coords 3]
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     switch $iillustrate(handle) {
 	1 {
 	    set dx [expr ($x1-$xx)]
@@ -173,12 +161,7 @@ proc IllustrateCircleEditCB {id} {
 
     global ds9
 
-    set coords [$ds9(canvas) coords $id]
-    set x1 [lindex $coords 0]
-    set y1 [lindex $coords 1]
-    set x2 [lindex $coords 2]
-    set y2 [lindex $coords 3]
-
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     set var(xc) [expr ($x2-$x1)/2+$x1]
     set var(yc) [expr ($y2-$y1)/2+$y1]
     set var(rr) [expr ($x2-$x1)/2]

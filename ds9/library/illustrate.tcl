@@ -377,7 +377,6 @@ proc IllustrateSaveUndo {undo id} {
 	}
     }
     set iillustrate(undo) [list $undo $ll]
-
     UpdateEditMenu
 }
 

@@ -110,6 +110,8 @@ proc IllustrateDeleteSelect {} {
     global ds9
     global iillustrate
 
+    IllustrateSaveUndo selectdelete {}
+
     foreach gr $iillustrate(selection) {
 	foreach {id color fillcolor width dashlist} $gr {
 	    IllustrateDeleteGraphic $id
@@ -122,6 +124,8 @@ proc IllustrateDeleteSelect {} {
 proc IllustrateDeleteAll {} {
     global ds9
     global iillustrate
+
+    IllustrateSaveUndo selectdelete {}
 
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	IllustrateDeleteGraphic $id

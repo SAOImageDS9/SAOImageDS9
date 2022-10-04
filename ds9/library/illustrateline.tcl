@@ -39,12 +39,7 @@ proc IllustrateLineCreate {x1 y1 x2 y2 color width dash left right} {
 proc IllustrateLineDefault {id} {
     global ds9
 
-    set coords [$ds9(canvas) coords $id]
-    set x1 [lindex $coords 0]
-    set y1 [lindex $coords 1]
-    set x2 [lindex $coords 2]
-    set y2 [lindex $coords 3]
-
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     $ds9(canvas) coords $id $x1 $y1 [expr $x2+100] $y2
 
     IllustrateLineUpdateHandle $id
@@ -156,24 +151,19 @@ proc IllustrateLineCreateHandles {id} {
     set rr 2
 
     set color [$ds9(canvas) itemcget $id -fill]
-    set bbox [$ds9(canvas) coords $id]
-
-    set bbx1 [lindex $bbox 0]
-    set bby1 [lindex $bbox 1]
-    set bbx2 [lindex $bbox 2]
-    set bby2 [lindex $bbox 3]
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
 
     set h1 [$ds9(canvas) create rectangle \
-		[expr $bbx1-$rr] [expr $bby1-$rr] \
-		[expr $bbx1+$rr] [expr $bby1+$rr]\
+		[expr $x1-$rr] [expr $y1-$rr] \
+		[expr $x1+$rr] [expr $y1+$rr]\
 		-outline $color -fill $color \
 		-state hidden \
 		-tags [list handle gr${id} h1]]
     $ds9(canvas) raise $h1 $id
 
     set h2 [$ds9(canvas) create rectangle \
-		[expr $bbx2-$rr] [expr $bby2-$rr] \
-		[expr $bbx2+$rr] [expr $bby2+$rr]\
+		[expr $x2-$rr] [expr $y2-$rr] \
+		[expr $x2+$rr] [expr $y2+$rr]\
 		-outline $color -fill $color \
 		-state hidden \
 		-tags [list handle gr${id} h2]]
@@ -186,33 +176,24 @@ proc IllustrateLineUpdateHandle {id} {
     global iillustrate
 
     set rr 2
-    set bbox [$ds9(canvas) coords $id]
-    set bbx1 [lindex $bbox 0]
-    set bby1 [lindex $bbox 1]
-    set bbx2 [lindex $bbox 2]
-    set bby2 [lindex $bbox 3]
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
 
     set hh [$ds9(canvas) find withtag "gr${id} && h1"]
     $ds9(canvas) coords $hh \
-	[expr $bbx1-$rr] [expr $bby1-$rr] \
-	[expr $bbx1+$rr] [expr $bby1+$rr]
+	[expr $x1-$rr] [expr $y1-$rr] \
+	[expr $x1+$rr] [expr $y1+$rr]
 
     set hh [$ds9(canvas) find withtag "gr${id} && h2"]
     $ds9(canvas) coords $hh \
-	[expr $bbx2-$rr] [expr $bby2-$rr] \
-	[expr $bbx2+$rr] [expr $bby2+$rr]
+	[expr $x2-$rr] [expr $y2-$rr] \
+	[expr $x2+$rr] [expr $y2+$rr]
 }
 
 proc IllustrateLineEdit {id xx yy} {
     global ds9
     global iillustrate
     
-    set coords [$ds9(canvas) coords $id]
-    set x1 [lindex $coords 0]
-    set y1 [lindex $coords 1]
-    set x2 [lindex $coords 2]
-    set y2 [lindex $coords 3]
-
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     switch $iillustrate(handle) {
 	1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
 	2 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
@@ -409,11 +390,11 @@ proc IllustrateLineEditCB {id} {
 
     global ds9
 
-    set coords [$ds9(canvas) coords $id]
-    set var(x1) [lindex $coords 0]
-    set var(y1) [lindex $coords 1]
-    set var(x2) [lindex $coords 2]
-    set var(y2) [lindex $coords 3]
+    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
+    set var(x1) $x1
+    set var(y1) $y1
+    set var(x2) $x2
+    set var(y2) $y2
 }
 
 proc IllustrateLineColorCB {id} {

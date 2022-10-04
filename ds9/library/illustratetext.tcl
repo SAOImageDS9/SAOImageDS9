@@ -27,12 +27,13 @@ proc IllustrateTextDefault {id} {
 proc IllustrateTextDup {param} {
     global ds9
     
-    foreach {coords txt color font} $param {
+    foreach {coords txt color font angle} $param {
 	set id [$ds9(canvas) create text \
 		    $coords \
 		    -text $txt \
 		    -fill $color \
 		    -font $font \
+		    -angle $angle \
 		    -tags {text graphic}
 	       ]
     }
@@ -56,18 +57,20 @@ proc IllustrateTextCopy {id} {
     set txt [$ds9(canvas) itemcget $id -text]
     set color [$ds9(canvas) itemcget $id -fill]
     set font [$ds9(canvas) itemcget $id -font]
+    set angle [$ds9(canvas) itemcget $id -angle]
 
-    return [list text [list $coords $txt $color $font]]
+    return [list text [list $coords $txt $color $font $angle]]
 }
 
 proc IllustrateTextSet {id param} {
     global ds9
     
-    foreach {coords txt color font} $param {
+    foreach {coords txt color font angle} $param {
 	$ds9(canvas) coords $id $coords
 	$ds9(canvas) itemconfigure $id -text $txt
 	$ds9(canvas) itemconfigure $id -fill $color
 	$ds9(canvas) itemconfigure $id -font $font
+	$ds9(canvas) itemconfigure $id -angle $angle
     }
 
     # handles/nodes

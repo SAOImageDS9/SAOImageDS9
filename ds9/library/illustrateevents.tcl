@@ -585,7 +585,6 @@ proc IllustrateKey {K A xx yy} {
 		IllustrateSaveUndo edit $id
 		IllustratePolygonDeleteNode $nid
 	    } else {
-		IllustrateSaveUndo selectdelete {}
 		IllustrateDeleteSelect
 	    }
 	}

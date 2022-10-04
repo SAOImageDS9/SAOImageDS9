@@ -41,7 +41,7 @@ proc IllustrateDup {type param} {
     switch $type {
 	circle {return [IllustrateBaseDup $type $param]}
 	ellipse {return [IllustrateBaseDup $type $param]}
-	box {return[IllustrateBaseDup $type $param]}
+	box {return [IllustrateBaseDup $type $param]}
 	polygon {return [IllustratePolygonDup $param]}
 	line {return [IllustrateLineDup $param]}
 	text {return [IllustrateTextDup $param]}

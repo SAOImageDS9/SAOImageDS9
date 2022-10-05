@@ -93,7 +93,7 @@ proc IllustrateTextList {id} {
     foreach {font fontsize fontweight fontslant} \
 	[$ds9(canvas) itemcget $id -font] {}
 
-    set rr "text $coords \"$txt\""
+    set rr "text $coords \"[string map [list "\n" "\\n"] $txt]\""
 
     if {$color != {cyan} ||
 	$font != {helvetica} || $fontsize != 12 ||

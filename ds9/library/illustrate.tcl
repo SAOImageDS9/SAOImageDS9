@@ -16,7 +16,7 @@ proc IllustrateDef {} {
     set iillustrate(undo) {}
 
     set illustrate(show) 1
-    set illustrate(shape) circle
+    set illustrate(shape) text
 
     # common
     set illustrate(color) cyan
@@ -30,8 +30,9 @@ proc IllustrateDef {} {
     set illustrate(arrow,right) 0
 
     # text
-    set illustrate(text) {Text}
+    set illustrate(text) [format "Text\nMore Text"]
     set illustrate(angle) 0
+    set illustrate(justify) left
     set illustrate(font) helvetica
     set illustrate(font,size) 12
     set illustrate(font,weight) normal
@@ -123,7 +124,8 @@ proc IllustrateCreateGraphic {xx yy} {
 			$illustrate(font,size) \
 			$illustrate(font,weight) \
 			$illustrate(font,slant)\
-			0 \
+			$illustrate(angle) \
+			$illustrate(justify) \
 		       ]
 	}
     }

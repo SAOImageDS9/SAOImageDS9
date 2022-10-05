@@ -5,15 +5,16 @@
 package provide DS9 1.0
 
 proc IllustrateTextCreate {xx yy txt color \
-			       font fontsize fontweight fontslant angle} {
+			       font fontsize fontweight fontslant \
+			       angle justify} {
     global ds9
-
     set id [$ds9(canvas) create text \
 		$xx $yy \
-		-text $txt \
+		-text [string map [list "\\n" "\n"] $txt] \
 		-fill $color \
 		-font "$font $fontsize $fontweight $fontslant" \
 		-angle $angle \
+		-justify $justify \
 		-tags {text graphic}
 	   ]
 
@@ -88,6 +89,7 @@ proc IllustrateTextList {id} {
     set color [$ds9(canvas) itemcget $id -fill]
     set txt [$ds9(canvas) itemcget $id -text]
     set angle [$ds9(canvas) itemcget $id -angle]
+    set justify [$ds9(canvas) itemcget $id -justify]
     foreach {font fontsize fontweight fontslant} \
 	[$ds9(canvas) itemcget $id -font] {}
 
@@ -95,7 +97,8 @@ proc IllustrateTextList {id} {
 
     if {$color != {cyan} ||
 	$font != {helvetica} || $fontsize != 12 ||
-	$fontweight != {normal} || $fontslant != {roman} || $angle != 0} {
+	$fontweight != {normal} || $fontslant != {roman} ||
+	$angle != 0 || $justify != {left}} {
 
 	append rr " #"
 	if {$color != {cyan}} {
@@ -115,6 +118,9 @@ proc IllustrateTextList {id} {
 	}
 	if {$angle != 0} {
 	    append rr " angle = $angle"
+	}
+	if {$justify != {left}} {
+	    append rr " justify = $justify"
 	}
     }
     
@@ -156,27 +162,24 @@ proc IllustrateTextDialog {id} {
 	return
     }
 
-    # variables
-    set var(font) {}
-    set var(txt) {}
-
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc {Text}] \
-	[list IllustrateBaseClose $varname]
+	[list IllustrateTextClose $varname]
 
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
     $var(mb) add cascade -label [msgcat::mc {Color}] -menu $var(mb).color
     $var(mb) add cascade -label [msgcat::mc {Font}] -menu $var(mb).font
+    $var(mb) add cascade -label [msgcat::mc {Justify}] -menu $var(mb).justify
 
     ThemeMenu $var(mb).file
     $var(mb).file add command -label [msgcat::mc {Apply}] \
 	-command [list IllustrateTextApply $varname]
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
-	-command [list IllustrateBaseClose $varname] \
+	-command [list IllustrateTextClose $varname] \
 	-accelerator "${ds9(ctrl)}W"
-    bind $var(top) <<Close>> [list IllustrateBaseClose $varname]
+    bind $var(top) <<Close>> [list IllustrateTextClose $varname]
 
     EditMenu $var(mb) $varname
     ColorFillMenu $var(mb).color $varname color fill \
@@ -184,6 +187,17 @@ proc IllustrateTextDialog {id} {
 	[list IllustrateTextColorVar $varname]
     FontMenu $var(mb).font $varname font font,size font,weight font,slant \
 	[list IllustrateTextFont $varname]
+
+    ThemeMenu $var(mb).justify
+    $var(mb).justify add radiobutton -label [msgcat::mc {Left}] \
+	-variable ${varname}(justify) -value left \
+	-command [list IllustrateTextJustify $varname]
+    $var(mb).justify add radiobutton -label [msgcat::mc {Center}] \
+	-variable ${varname}(justify) -value center \
+	-command [list IllustrateTextJustify $varname]
+    $var(mb).justify add radiobutton -label [msgcat::mc {Right}] \
+	-variable ${varname}(justify) -value right \
+	-command [list IllustrateTextJustify $varname]
 
     set f $var(top).param
 
@@ -205,32 +219,86 @@ proc IllustrateTextDialog {id} {
     grid $f.tangle $f.angle -padx 2 -pady 2 -sticky w
     
     # Text
-    set f $var(top).param
-    ttk::label $f.ttxt -text [msgcat::mc {Text}]
-    ttk::entry $f.txt -textvariable ${varname}(txt) -width 40
-    grid $f.ttxt $f.txt - -padx 2 -pady 2 -sticky w
+    set f [ttk::frame $var(top).txt]
+    set height 10
+    set width 80
+
+    set var(text) [text $f.text]
+    $var(text) configure \
+	-height $height \
+	-width $width \
+	-wrap none \
+	-yscrollcommand [list $f.yscroll set] \
+	-xscrollcommand [list $f.xscroll set] \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground] \
+	-state normal
+
+    ttk::scrollbar $f.yscroll \
+	-command [list roText::$var(text) yview] -orient vertical
+    ttk::scrollbar $f.xscroll \
+	-command [list roText::$var(text) xview] -orient horizontal
+
+    grid $var(text) $f.yscroll -sticky news
+    grid $f.xscroll -stick news
+    grid rowconfigure $f 0 -weight 1
+    grid columnconfigure $f 0 -weight 1
+
+#    ttk::label $f.ttxt -text [msgcat::mc {Text}]
+#    ttk::entry $f.txt -textvariable ${varname}(txt) -width 40
+#    grid $f.ttxt $f.txt - -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $var(top).buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
 	-command [list IllustrateTextApply $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
-	-command [list IllustrateBaseClose $varname]
+	-command [list IllustrateTextClose $varname]
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
-    bind $var(top) <Return> [list IllustrateTextApply $varname]
+#    bind $var(top) <Return> [list IllustrateTextApply $varname]
 
     # Fini
     ttk::separator $var(top).sep -orient horizontal
     pack $var(top).buttons $var(top).sep -side bottom -fill x
     pack $var(top).param -side top -fill both -expand true
+    pack $var(top).txt -side bottom -fill both -expand true
     
     # init
-    IllustrateTextEditCB $var(id)
-    IllustrateTextRotateCB $var(id)
-    IllustrateTextColorCB $var(id)
-    IllustrateTextTextCB $var(id)
-    IllustrateTextFontCB $var(id)
+    IllustrateTextEditCB $id
+    IllustrateTextRotateCB $id
+    IllustrateTextColorCB $id
+    IllustrateTextTextCB $id
+    IllustrateTextFontCB $id 
+    IllustrateTextJustifyCB $id
+
+    $var(text) delete 1.0 end
+    $var(text) insert end $var(txt)
+    $var(text) see end
+}
+
+proc IllustrateTextDialogClose {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    IllustrateTextClose $varname
+}
+
+proc IllustrateTextClose {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(txt) [$var(text) get 1.0 end-1c]
+
+    # destroy the window and menubar
+    if {[winfo exists $var(top)]} {
+	destroy $var(top)
+	destroy $var(mb)
+    }
+    unset $varname
 }
 
 proc IllustrateTextColor {id color} {
@@ -257,11 +325,18 @@ proc IllustrateTextFont {varname} {
     global $varname
 
     global ds9
-    
     $ds9(canvas) itemconfigure $var(id) \
 	-font "$var(font) $var(font,size) $var(font,weight) $var(font,slant)"
 
     IllustrateBaseUpdateHandle $var(id)
+}
+
+proc IllustrateTextJustify {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    $ds9(canvas) itemconfigure $var(id) -justify $var(justify)
 }
 
 proc IllustrateTextApply {varname} {
@@ -270,10 +345,14 @@ proc IllustrateTextApply {varname} {
 
     global ds9
     
-    if {$var(xc) != {} && $var(yc) != {}} {
-	$ds9(canvas) coords $var(id) $var(xc) $var(yc)
+    set var(txt) [$var(text) get 1.0 end-1c]
+    $ds9(canvas) itemconfigure $var(id) -text $var(txt)
+    
+    if {$var(angle) != {}} {
 	$ds9(canvas) itemconfigure $var(id) -angle $var(angle)
-	$ds9(canvas) itemconfigure $var(id) -text $var(txt)
+    }
+    if {$var(xc) != {} && $var(yc) != {} && $var(angle) != {}} {
+	$ds9(canvas) coords $var(id) $var(xc) $var(yc)
 
 	IllustrateBaseUpdateHandle $var(id)
     }
@@ -336,7 +415,6 @@ proc IllustrateTextEditCB {id} {
     }
     
     global ds9
-
     foreach {xc yc} [$ds9(canvas) coords $id] {
 	set var(xc) $xc
 	set var(yc) $yc
@@ -355,7 +433,6 @@ proc IllustrateTextRotateCB {id} {
     }
     
     global ds9
-
     set var(angle) [$ds9(canvas) itemcget $id -angle]
 }
 
@@ -371,7 +448,6 @@ proc IllustrateTextColorCB {id} {
     }
 
     global ds9
-
     set var(color) [$ds9(canvas) itemcget $id -fill]
 }
 
@@ -383,7 +459,6 @@ proc IllustrateTextTextCB {id} {
     upvar #0 $varname var
 
     global ds9
-   
     set var(txt) [$ds9(canvas) itemcget $id -text]
 }
 
@@ -395,7 +470,6 @@ proc IllustrateTextFontCB {id} {
     upvar #0 $varname var
 
     global ds9
-   
     foreach {font fontsize fontweight fontslant} \
 	[$ds9(canvas) itemcget $id -font] {
 	    set var(font) $font
@@ -403,5 +477,16 @@ proc IllustrateTextFontCB {id} {
 	    set var(font,weight) $fontweight
 	    set var(font,slant) $fontslant
 	}
+}
+
+proc IllustrateTextJustifyCB {id} {
+    global iillustrate
+
+    set varname ${iillustrate(prefix,dialog)}${id}
+    global $varname
+    upvar #0 $varname var
+
+    global ds9
+    set var(justify) [$ds9(canvas) itemcget $id -justify]
 }
 

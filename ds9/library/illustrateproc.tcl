@@ -176,8 +176,8 @@ proc IllustrateDialogClose {id} {
 	circle -
 	ellipse -
 	box -
-	polygon {IllustrateBaseDialogClose $id}
-	line {IllustrateLineDialogClose $id}
+	polygon -
+	line {IllustrateBaseDialogClose $id}
 	text {IllustrateTextDialogClose $id}
     }
 }

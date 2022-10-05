@@ -19,6 +19,7 @@
 %token WIDTH_
 %token FILL_
 %token DASH_
+%token JUSTIFY_
 
 %token CIRCLE_
 %token ELLIPSE_
@@ -26,6 +27,10 @@
 %token POLYGON_
 %token LINE_
 %token TEXT_
+
+%token LEFT_
+%token CENTER_
+%token RIGHT_
 
 %token IMAGE_
 
@@ -61,9 +66,9 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
  {IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localLine1 $illustratefile::localLine2}
  | TEXT_ bp numeric sp numeric sp STRING_ ep comment
- {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle} comment
+ {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify} comment
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
- {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle}
+ {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify}
  ;
 
 coords : coords coord
@@ -95,6 +100,7 @@ globalProperty : COLOR_ eq STRING_ {set illustratefile::globalColor $3}
  | LINE_ eq INT_ INT_
  {set illustratefile::globalLine1 $3; set illustratefile::globalLine2 $4;}
  | ANGLE_ eq numeric {set illustratefile::globalAngle $3}
+ | JUSTIFY_ eq justify {set illustratefile::globalJustify $3}
  ;
 
 local : local localProperty
@@ -113,6 +119,7 @@ localProperty : COLOR_ eq STRING_ {set illustratefile::localColor $3}
  | LINE_ eq INT_ INT_
  {set illustratefile::localLine1 $3; set illustratefile::localLine2 $4;}
  | ANGLE_ eq numeric {set illustratefile::localAngle $3}
+ | JUSTIFY_ eq justify {set illustratefile::localJustify $3}
  ;
 
 sp :
@@ -131,6 +138,11 @@ eq :
  | '='
  ;
  
+justify : LEFT_ {set _ left}
+ | CENTER_ {set _ center}
+ | RIGHT_ {set _ right}
+ ;
+
 discard : discard anything
  | anything
  ;
@@ -169,6 +181,7 @@ namespace eval illustratefile {
      variable localLine1
      variable localLine2
      variable localAngle
+     variable localJustify
 }
 
 proc illustratefile::initGlobal {} {
@@ -184,6 +197,7 @@ proc illustratefile::initGlobal {} {
      variable globalLine1 0
      variable globalLine2 0
      variable globalAngle 0
+     variable globalJustify left
 }
 
 proc illustratefile::initLocal {} {
@@ -201,6 +215,7 @@ proc illustratefile::initLocal {} {
      variable globalLine1
      variable globalLine2
      variable globalAngle
+     variable globalJustify
 
      variable localColor $globalColor
      variable localFill $globalFill
@@ -214,4 +229,5 @@ proc illustratefile::initLocal {} {
      variable localLine1 $globalLine1
      variable localLine2 $globalLine2
      variable localAngle $globalAngle
+     variable localJustify $globalJustify
 }

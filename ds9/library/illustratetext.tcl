@@ -176,12 +176,31 @@ proc IllustrateTextDialog {id} {
     $var(mb).file add command -label [msgcat::mc {Apply}] \
 	-command [list IllustrateTextApply $varname]
     $var(mb).file add separator
+    $var(mb).file add command -label [msgcat::mc {Open}] \
+	-command "EditTextLoadFile $varname" -accelerator "${ds9(ctrl)}O"
+    $var(mb).file add command -label [msgcat::mc {Save}] \
+	-command "SimpleTextSaveFile $varname" -accelerator "${ds9(ctrl)}S"
+    $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
 	-command [list IllustrateTextClose $varname] \
 	-accelerator "${ds9(ctrl)}W"
     bind $var(top) <<Close>> [list IllustrateTextClose $varname]
 
-    EditMenu $var(mb) $varname
+    ThemeMenu $var(mb).edit
+    $var(mb).edit add command -label [msgcat::mc {Cut}] \
+	-command "SimpleTextCut $varname" -accelerator "${ds9(ctrl)}X"
+    $var(mb).edit add command -label [msgcat::mc {Copy}] \
+	-command "SimpleTextCopy $varname" -accelerator "${ds9(ctrl)}C"
+    $var(mb).edit add command -label [msgcat::mc {Paste}] \
+	-command "EditTextPaste $varname" -accelerator "${ds9(ctrl)}V"
+    $var(mb).edit add command -label [msgcat::mc {Clear}] \
+	-command "EditTextClear $varname"
+    $var(mb).edit add separator
+    $var(mb).edit add command -label [msgcat::mc {Select All}] \
+	-command "SimpleTextSelectAll $varname"
+    $var(mb).edit add command -label [msgcat::mc {Select None}] \
+	-command "SimpleTextSelectNone $varname"
+
     ColorFillMenu $var(mb).color $varname color fill \
 	[list IllustrateTextColorVar $varname] \
 	[list IllustrateTextColorVar $varname]

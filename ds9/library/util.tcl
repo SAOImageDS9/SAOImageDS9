@@ -447,7 +447,6 @@ proc ProcessSendCmdSend {ext cmd} {
 }
 
 proc ProcessSend {proc id sock fn ext rr} {
-    puts ":$proc:$id:$sock:$fn:$ext:"
     if {$fn != {}} {
 	append fn $ext
 	set ch [open $fn w]

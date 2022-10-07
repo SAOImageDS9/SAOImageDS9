@@ -286,6 +286,7 @@
 ::msgcat::mcset cs {Enter Font Size} 
 ::msgcat::mcset cs {Enter Group Name} 
 ::msgcat::mcset cs {Enter Search Expression} 
+::msgcat::mcset cs {Enter Text} 
 ::msgcat::mcset cs {Enter URL} 
 ::msgcat::mcset cs {Entry} 
 ::msgcat::mcset cs {Equal Area} 
@@ -409,6 +410,7 @@
 ::msgcat::mcset cs {Icons} 
 ::msgcat::mcset cs {Identification} 
 ::msgcat::mcset cs {If} 
+::msgcat::mcset cs {Illustrate} 
 ::msgcat::mcset cs {Image Servers} 
 ::msgcat::mcset cs {Image} [encoding convertfrom iso8859-2 {Obrázek}]
 ::msgcat::mcset cs {Import Array} 

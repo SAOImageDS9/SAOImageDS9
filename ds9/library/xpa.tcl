@@ -269,6 +269,11 @@ proc CreateXPA {} {
 	XPASendIIS {} {} \
 	XPARcvdIIS {} "fillbuf=false"
 
+    xpacmdadd $xpa illustrate \
+	{} \
+	XPASendIllustrate {} {} \
+	XPARcvdIllustrate {} "fillbuf=false"
+
     # backward compatibility
     xpacmdadd $xpa imexam \
 	{} \
@@ -1219,6 +1224,19 @@ proc XPARcvdIIS {xpa cdata param buf len} {
     XPADebug "XPARcvdIIS" $param
     InitError xpa
     catch {set i 0; ProcessIISCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendIllustrate {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendIllustrateCmd xpasetbuf $xpa $param {} {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdIllustrate {xpa cdata param buf len} {
+    XPADebug "XPARcvdIllustrate" $param
+    InitError xpa
+    catch {set i 0; ProcessIllustrateCmd param i [xparec $xpa datachan] {}}
     XPACatchError $xpa
 }
 

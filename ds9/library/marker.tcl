@@ -30,7 +30,6 @@ proc MarkerDef {} {
     set marker(shape) circle
     set marker(color) green
     set marker(color,default) 0
-    set marker(dashlist) {8 3}
     set marker(width) 1
     set marker(dash) 0
     set marker(fill) 0
@@ -510,7 +509,7 @@ proc MarkerRelease {which x y} {
 	    # determine if this is an accident and just create the default
 	    set diffx [expr $x-$imarker(x)]
 	    set diffy [expr $y-$imarker(y)]
-	    if {[expr sqrt($diffx*$diffx + $diffy*$diffy)]<2} {
+	    if {[expr sqrt($diffx*$diffx + $diffy*$diffy)]<4} {
 		MarkerDefault $which
 	    }
 
@@ -649,7 +648,7 @@ proc MarkerCreateShape {which x y} {
 	segment {append cmd " .001 .001"}
 	text {
 	    set txt "Region"
-	    set r [EntryDialog "Text Region" "Enter Text:" 40 txt]
+	    set r [EntryDialog [msgcat::mc {Text}] [msgcat::mc {Enter Text}] 40 txt]
 	    if {$r == 1 && $txt != {}} {
 		append cmd " 0 text = \{\{$txt\}\}"
 	    } else {

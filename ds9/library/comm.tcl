@@ -73,6 +73,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	iexam -
 	imexam {}
 	iis {ProcessIISCmd param i}
+	illustrate {ProcessIllustrateCmd param i {} $fn}
 	jpg -
 	jpeg {ProcessJPEGCmd param i {} $fn}
 	lock {ProcessLockCmd param i}

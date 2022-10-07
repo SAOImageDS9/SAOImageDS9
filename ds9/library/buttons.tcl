@@ -22,6 +22,7 @@ proc ButtonsDef {} {
     ButtonsColorDef
     ButtonsRegionDef
     ButtonsWCSDef
+    ButtonsIllustrateDef
     ButtonsAnalysisDef
     ButtonsHelpDef
 }
@@ -47,6 +48,7 @@ proc CreateButtons {} {
     CreateButtonsColor
     CreateButtonsRegion
     CreateButtonsWCS
+    CreateButtonsIllustrate
     CreateButtonsAnalysis
     CreateButtonsHelp
 
@@ -91,6 +93,9 @@ proc CreateButtonsMajor {} {
     RadioButton $ds9(buttons).major.wcs \
 	[string tolower [msgcat::mc {WCS}]] \
 	buttons major,current $ds9(buttons).wcs MajorButton
+    RadioButton $ds9(buttons).major.illustrate \
+	[string tolower [msgcat::mc {Illustrate}]] \
+	buttons major,current $ds9(buttons).illustrate MajorButton
     RadioButton $ds9(buttons).major.analysis \
 	[string tolower [msgcat::mc {Analysis}]] \
 	buttons major,current $ds9(buttons).analysis MajorButton
@@ -110,6 +115,7 @@ proc CreateButtonsMajor {} {
 	major,color 1
 	major,region 1
 	major,wcs 1
+	major,illustrate 1
 	major,analysis 1
 	major,help 1
     }
@@ -125,6 +131,7 @@ proc CreateButtonsMajor {} {
         $ds9(buttons).major.color pbuttons(major,color)
         $ds9(buttons).major.region pbuttons(major,region)
         $ds9(buttons).major.wcs pbuttons(major,wcs)
+        $ds9(buttons).major.illustrate pbuttons(major,illustrate)
         $ds9(buttons).major.analysis pbuttons(major,analysis)
         $ds9(buttons).major.help pbuttons(major,help)
     "
@@ -360,6 +367,7 @@ proc LayoutButtons {} {
     UpdateButtons buttons(color)
     UpdateButtons buttons(region)
     UpdateButtons buttons(wcs)
+    UpdateButtons buttons(illustrate)
     UpdateButtons buttons(analysis)
     UpdateButtons buttons(help)
 

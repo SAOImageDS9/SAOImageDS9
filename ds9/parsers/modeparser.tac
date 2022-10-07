@@ -19,6 +19,7 @@
 %token FOOTPRINT_
 %token EXAMINE_
 %token 3D_
+%token ILLUSTRATE_
 
 %%
 
@@ -41,6 +42,7 @@ item : NONE_ {set _ none}
  | FOOTPRINT_ {set _ footprint}
  | EXAMINE_ {set _ examine}
  | 3D_ {set _ 3d}
+ | ILLUSTRATE_ {set _ illustrate}
 # backward compatibilty
  | POINTER_ {set _ region}
  ;

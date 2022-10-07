@@ -202,6 +202,7 @@ int Polygon::getSegment(const Vector& v)
     Vector l1 = parent->mapFromRef(v1,Coord::CANVAS);
     Vector l2 = parent->mapFromRef(v2,Coord::CANVAS);
     double a = (l2-l1).angle();
+    
     Matrix mx = Translate(-l1) * FlipY() * Rotate(-a); 
     Vector end = l2*mx;
     Vector vv = v*mx;

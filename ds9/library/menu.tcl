@@ -26,6 +26,9 @@ proc CreateMenuBar {} {
     $ds9(mb) add cascade -label [msgcat::mc {Color}] -menu $ds9(mb).color
     $ds9(mb) add cascade -label [msgcat::mc {Region}] -menu $ds9(mb).region
     $ds9(mb) add cascade -label [msgcat::mc {WCS}] -menu $ds9(mb).wcs
+    # on purpose
+    $ds9(mb) add cascade -label [msgcat::mc {Illustrate}] \
+	-menu $ds9(mb).illustrate -state disabled
     $ds9(mb) add cascade -label [msgcat::mc {Analysis}] -menu $ds9(mb).analysis
 
     FileMainMenu
@@ -38,6 +41,7 @@ proc CreateMenuBar {} {
     ColorMainMenu
     RegionMainMenu
     WCSMainMenu
+    IllustrateMainMenu
     AnalysisMainMenu
     HelpMainMenu
 
@@ -793,6 +797,7 @@ proc PrefsDialogMenu {} {
     PrefsDialogColorMenu $w.menu
     PrefsDialogRegionMenu $w.menu
     PrefsDialogWCSMenu $w.menu
+    PrefsDialogIllustrateMenu $w.menu
     PrefsDialogAnalysisMenu $w.menu
     PrefsDialogHelpMenu $w.menu
 }

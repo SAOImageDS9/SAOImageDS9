@@ -260,6 +260,7 @@ proc ProcessDebugCmd {varname iname} {
 	}
 
 	events -
+	illustrate -
 	update -
 	idletasks -
 	layout -

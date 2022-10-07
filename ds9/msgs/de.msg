@@ -286,6 +286,7 @@
 ::msgcat::mcset de {Enter Font Size} 
 ::msgcat::mcset de {Enter Group Name} {Gruppenname eingeben}
 ::msgcat::mcset de {Enter Search Expression} 
+::msgcat::mcset de {Enter Text} 
 ::msgcat::mcset de {Enter URL} 
 ::msgcat::mcset de {Entry} 
 ::msgcat::mcset de {Equal Area} [encoding convertfrom iso8859-1 {Gleiche Fläche}]
@@ -409,6 +410,7 @@
 ::msgcat::mcset de {Icons} 
 ::msgcat::mcset de {Identification} {Kennzeichnung}
 ::msgcat::mcset de {If} {Wenn}
+::msgcat::mcset de {Illustrate} 
 ::msgcat::mcset de {Image Servers} 
 ::msgcat::mcset de {Image} {Bild}
 ::msgcat::mcset de {Import Array} 

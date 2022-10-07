@@ -1,0 +1,4 @@
+undo		{return $UNDO_}
+cut		{return $CUT_}
+copy		{return $COPY_}
+paste		{return $PASTE_}

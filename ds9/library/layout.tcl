@@ -187,6 +187,14 @@ proc ThemeConfigCanvas {w} {
 proc InitCanvas {} {
     global ds9
 
+    # must wait until now
+    bind $ds9(canvas) <Configure> [list LayoutView]
+    BindEventsCanvas
+}
+
+proc BindEventsCanvas {} {
+    global ds9
+
     # Bindings
     bind $ds9(canvas) <Tab> [list NextFrame]
     bind $ds9(canvas) <Shift-Tab> [list PrevFrame]
@@ -196,7 +204,10 @@ proc InitCanvas {} {
 	win32 {}
     }
 
-    bind $ds9(canvas) <Configure> [list LayoutView]
+    # iis
+    bind $ds9(canvas) <Key> {}
+    # freeze
+    bind $ds9(canvas) <f> {ToggleFreeze}
 
     # keyboard focus
     switch $ds9(wm) {
@@ -233,9 +244,60 @@ proc InitCanvas {} {
 	    bind $ds9(canvas) <Command-ButtonRelease-1> {Release3Canvas %x %y}
 	}
     }
+}
 
+proc UnBindEventsCanvas {} {
+    global ds9
+
+    # Bindings
+    bind $ds9(canvas) <Tab> {}
+    bind $ds9(canvas) <Shift-Tab> {}
+    switch $ds9(wm) {
+	x11 {bind $ds9(canvas) <ISO_Left_Tab> {}}
+	aqua -
+	win32 {}
+    }
+
+    # iis
+    bind $ds9(canvas) <Key> {}
     # freeze
-    bind $ds9(canvas) <f> {ToggleBindEvents}
+    bind $ds9(canvas) <f> {}
+
+    # keyboard focus
+    switch $ds9(wm) {
+	x11 -
+	aqua {
+	    bind $ds9(canvas) <Enter> {}
+	    bind $ds9(canvas) <Leave> {}
+	}
+	win32 {}
+    }
+    switch $ds9(wm) {
+	x11 {}
+	aqua -
+	win32 {bind $ds9(canvas) <MouseWheel> {}}
+    }
+
+    # backward compatible bindings
+    switch $ds9(wm) {
+	x11 -
+	win32 {
+	    bind $ds9(canvas) <Button-3> {}
+	    bind $ds9(canvas) <B3-Motion> {}
+	    bind $ds9(canvas) <ButtonRelease-3> {}
+	} 
+	aqua {
+	    # swap button-2 and button-3 on the mighty mouse
+	    bind $ds9(canvas) <Button-2> {}
+	    bind $ds9(canvas) <B2-Motion> {}
+	    bind $ds9(canvas) <ButtonRelease-2> {}
+
+	    # x11 command key emulation
+	    bind $ds9(canvas) <Command-Button-1> {}
+	    bind $ds9(canvas) <Command-B1-Motion> {}
+	    bind $ds9(canvas) <Command-ButtonRelease-1> {}
+	}
+    }
 }
 
 proc Button3Canvas {x y} {
@@ -282,7 +344,7 @@ proc Release3Canvas {x y} {
     }
 }
 
-proc UnBindEventsCanvas {} {
+proc UnBindEventsCanvasItems {} {
     global ds9
 
     foreach ff $ds9(active) {
@@ -292,13 +354,24 @@ proc UnBindEventsCanvas {} {
     }
 }
 
-proc BindEventsCanvas {} {
+proc BindEventsCanvasItems {} {
     global ds9
 
     foreach ff $ds9(active) {
 	BindEventsFrame $ff
 	BindEventsColorbar ${ff}cb
 	BindEventsGraph $ff
+    }
+}
+
+proc LayoutRaise {id} {
+    global ds9
+
+    set ll [$ds9(canvas) find withtag {graphic}]
+    if {$ll != {}} {
+	$ds9(canvas) lower $id [lindex $ll 0]
+    } else {
+	$ds9(canvas) raise $id
     }
 }
 
@@ -591,7 +664,8 @@ proc LayoutFramesNone {} {
     if {$view(colorbar)} {
 	if {[LayoutColorbar colorbar 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
 	    colorbar show
-	    $ds9(canvas) raise colorbar
+	    LayoutRaise colorbar
+#	    $ds9(canvas) raise colorbar
 	}
     }
     
@@ -668,12 +742,14 @@ proc LayoutFrameOne {} {
 
     # frame
     $current(frame) show
-    $ds9(canvas) raise $current(frame)
+    LayoutRaise $current(frame)
+#    $ds9(canvas) raise $current(frame)
 
     # colorbar
     if {$view(colorbar)} {
 	$current(colorbar) show
-	$ds9(canvas) raise $current(colorbar)
+	LayoutRaise $current(colorbar)
+#	$ds9(canvas) raise $current(colorbar)
     }
 
     # graphs
@@ -779,13 +855,15 @@ proc TileRect {numx numy} {
 	LayoutFrameAdjust fw fh
 	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
 	$ff show
-	$ds9(canvas) raise $ff
+	LayoutRaise $ff
+#	$ds9(canvas) raise $ff
 
 	# colorbar
 	if {$view(colorbar)} {
 	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	    ${ff}cb show
-	    $ds9(canvas) raise ${ff}cb
+	    LayoutRaise ${ff}cb
+#	    $ds9(canvas) raise ${ff}cb
 	}
 
 	# graphs
@@ -849,7 +927,8 @@ proc TileRectNone {numx numy} {
 	    $ff configure -x $xx($ii) -y $yy($ii) \
 		-width $ww -height $hh -anchor nw
 	    $ff show
-	    $ds9(canvas) raise $ff
+	    LayoutRaise $ff
+#	    $ds9(canvas) raise $ff
 	}
 
 	if {$view(colorbar)} {
@@ -878,7 +957,8 @@ proc TileRectNone {numx numy} {
     # colorbar
     if {$view(colorbar)} {
 	${ff}cb show
-	$ds9(canvas) raise ${ff}cb
+	LayoutRaise ${ff}cb
+#	$ds9(canvas) raise ${ff}cb
     }
 
     # graphs

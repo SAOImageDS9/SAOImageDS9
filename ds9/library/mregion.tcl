@@ -466,6 +466,20 @@ proc PrefsDialogRegion {} {
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.radius2 $f.unit2 -padx 2 -pady 2 -sticky w
 
+    # Polygon
+    set f [ttk::labelframe $w.region.polygon -text [msgcat::mc {Polygon}]]
+
+    ttk::label $f.title -text "Width"
+    ttk::entry $f.width -textvariable pmarker(polygon,width) -width 10 
+    ttk::label $f.unit -text [msgcat::mc {Image}]
+    
+    ttk::label $f.title2 -text "Height"
+    ttk::entry $f.height -textvariable pmarker(polygon,height) -width 10 
+    ttk::label $f.unit2 -text [msgcat::mc {Image}]
+
+    grid $f.title $f.width $f.unit -padx 2 -pady 2 -sticky w
+    grid $f.title2 $f.height $f.unit2 -padx 2 -pady 2 -sticky w
+
     # Projection
     set f [ttk::labelframe $w.region.projection -text [msgcat::mc {Projection}]]
 
@@ -487,7 +501,7 @@ proc PrefsDialogRegion {} {
     pack $w.region.format $w.region.dformat $w.region.epsilon \
 	$w.region.centroid $w.region.plot \
 	$w.region.circle $w.region.ellipse \
-	$w.region.box $w.region.projection $w.region.point \
+	$w.region.box $w.region.polygon $w.region.projection $w.region.point \
 	-side top -fill both -expand true
 }
 

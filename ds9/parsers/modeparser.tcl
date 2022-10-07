@@ -61,127 +61,134 @@ proc mode::unsetupvalues {numsyms} {
 }
 
 array set mode::table {
-  17:257 shift
+  17:257 reduce
+  16:273,target 18
   0:258 shift
   5:0,target 8
   0:260 shift
   0:259 shift
   2:257 reduce
-  15:0,target 1
+  15:0,target 0
   9:0 reduce
   8:257,target 11
   0:261 shift
   0:266,target 9
   11:0 reduce
-  0:262 shift
   4:257 reduce
+  0:262 shift
   0:263 shift
   6:257 reduce
   0:264 shift
   3:257,target 6
   0:265 shift
-  15:0 reduce
+  15:0 accept
   8:257 reduce
   0:266 shift
-  15:257,target 2
   0:267 shift
   0:265,target 8
   0:268 shift
-  15:272 goto
   6:0,target 9
+  0:275,target 17
   0:269 shift
   0:270 shift
-  16:0,target 4
+  19:0 reduce
+  16:0,target 1
   10:257,target 13
-  0:271 goto
+  0:271 shift
   2:0 reduce
-  0:273 goto
+  0:272 goto
   0:274 goto
   6:0 reduce
+  0:275 goto
   6:257,target 9
   0:264,target 7
   0:274,target 16
+  18:257,target 19
   7:0,target 10
   1:257,target 5
+  17:0,target 4
   12:0 reduce
   10:0,target 13
   13:257,target 16
   0:263,target 6
   16:0 reduce
   10:257 reduce
-  0:273,target 15
   12:257 reduce
   9:257,target 12
+  14:257 reduce
   8:0,target 11
   3:0 reduce
-  18:0,target 3
   1:0,target 5
   16:257 reduce
   11:0,target 14
   4:257,target 7
   0:262,target 5
+  0:272,target 15
+  18:257 shift
   7:0 reduce
   1:257 reduce
-  16:257,target 4
+  16:257,target 2
   3:257 reduce
   11:257,target 14
   5:257 reduce
   13:0 reduce
   9:0,target 12
   0:261,target 4
+  19:0,target 3
   7:257 reduce
   0:271,target 14
-  2:0,target 17
+  2:0,target 18
   12:0,target 15
   9:257 reduce
+  17:0 reduce
   7:257,target 10
+  16:273 goto
   0:260,target 3
   0:259,target 2
-  2:257,target 17
-  15:272,target 17
+  2:257,target 18
   0:269,target 12
   0:270,target 13
   4:0 reduce
+  14:257,target 17
   3:0,target 6
   13:0,target 16
   8:0 reduce
   10:0 reduce
   0:258,target 1
   0:268,target 11
-  14:0 accept
+  14:0 reduce
   5:257,target 8
   4:0,target 7
-  14:0,target 0
+  14:0,target 17
   11:257 reduce
-  18:0 reduce
-  17:257,target 18
+  17:257,target 4
   1:0 reduce
   13:257 reduce
   0:267,target 10
-  15:257 reduce
   12:257,target 15
   5:0 reduce
 }
 
 array set mode::rules {
-  9,l 274
-  11,l 274
-  15,l 274
-  2,l 272
-  6,l 274
-  12,l 274
-  16,l 274
-  3,l 271
-  7,l 274
-  13,l 274
-  0,l 275
-  17,l 274
-  4,l 273
-  8,l 274
-  10,l 274
-  14,l 274
-  1,l 271
-  5,l 274
+  9,l 275
+  11,l 275
+  15,l 275
+  2,l 273
+  6,l 275
+  12,l 275
+  16,l 275
+  3,l 272
+  7,l 275
+  13,l 275
+  0,l 276
+  17,l 275
+  4,l 274
+  8,l 275
+  10,l 275
+  14,l 275
+  18,l 275
+  1,l 272
+  5,l 275
 }
 
 array set mode::rules {
@@ -194,6 +201,7 @@ array set mode::rules {
   15,dc 1
   10,dc 1
   6,dc 1
+  18,dc 1
   1,dc 1
   13,dc 1
   9,dc 1
@@ -206,43 +214,46 @@ array set mode::rules {
 }
 
 array set mode::rules {
-  13,line 43
+  13,line 44
   2,e 1
-  7,line 37
-  10,line 40
-  4,line 32
-  1,line 28
-  15,line 45
-  9,line 39
-  12,line 42
-  6,line 36
-  3,line 29
-  17,line 48
-  14,line 44
-  8,line 38
-  11,line 41
-  5,line 35
-  2,line 28
+  7,line 38
+  10,line 41
+  4,line 33
+  18,line 50
+  1,line 29
+  15,line 46
+  9,line 40
+  12,line 43
+  6,line 37
+  3,line 30
+  17,line 49
+  14,line 45
+  8,line 39
+  11,line 42
+  5,line 36
+  2,line 29
   16,line 47
 }
 
 array set mode::lr1_table {
-  17 {{3 0 2}}
   13,trans {}
-  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 257} 0} {5 {0 257} 0} {6 {0 257} 0} {7 {0 257} 0} {8 {0 257} 0} {9 {0 257} 0} {10 {0 257} 0} {11 {0 257} 0} {12 {0 257} 0} {13 {0 257} 0} {14 {0 257} 0} {15 {0 257} 0} {16 {0 257} 0} {17 {0 257} 0}}
-  18 {{3 0 3}}
+  17 {{4 {0 257} 1}}
+  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 257} 0} {5 {0 257} 0} {6 {0 257} 0} {7 {0 257} 0} {8 {0 257} 0} {9 {0 257} 0} {10 {0 257} 0} {11 {0 257} 0} {12 {0 257} 0} {13 {0 257} 0} {14 {0 257} 0} {15 {0 257} 0} {16 {0 257} 0} {17 {0 257} 0} {18 {0 257} 0}}
+  18 {{3 0 2}}
   14,trans {}
   1 {{5 {0 257} 1}}
-  15,trans {{272 17}}
-  2 {{17 {0 257} 1}}
-  16,trans {}
+  19 {{3 0 3}}
+  15,trans {}
+  2 {{18 {0 257} 1}}
+  16,trans {{273 18}}
   3 {{6 {0 257} 1}}
-  17,trans {{257 18}}
-  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11} {269 12} {270 13} {271 14} {273 15} {274 16}}
+  17,trans {}
+  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11} {269 12} {270 13} {271 14} {272 15} {274 16} {275 17}}
   4 {{7 {0 257} 1}}
-  18,trans {}
+  18,trans {{257 19}}
   1,trans {}
   5 {{8 {0 257} 1}}
+  19,trans {}
   2,trans {}
   6 {{9 {0 257} 1}}
   3,trans {}
@@ -260,24 +271,25 @@ array set mode::lr1_table {
   13 {{16 {0 257} 1}}
   10,trans {}
   9,trans {}
-  14 {{0 0 1}}
+  14 {{17 {0 257} 1}}
   11,trans {}
-  15 {{1 0 1} {3 0 1} {2 257 0}}
+  15 {{0 0 1}}
   12,trans {}
-  16 {{4 {0 257} 1}}
+  16 {{1 0 1} {3 0 1} {2 257 0}}
 }
 
 array set mode::token_id_table {
   264,line 17
   270,t 0
   269,t 0
+  276,line 51
   265,title ROTATE
   274,t 1
   261,line 14
   257,t 0
   270,title 3D
   269,title EXAMINE
-  273,line 31
+  273,line 29
   257,line 7
   262,t 0
   274,title {}
@@ -286,17 +298,17 @@ array set mode::token_id_table {
   259,title POINTER
   260,title REGION
   266,t 0
-  271,t 1
   error error
+  271,t 0
   264,title ZOOM
   266,line 19
   275,t 1
-  error,line 26
+  error,line 27
   268,title FOOTPRINT
   258,t 0
   263,line 16
   error,title {}
-  275,line 49
+  275,line 35
   273,title {}
   263,t 0
   259,line 12
@@ -309,6 +321,7 @@ array set mode::token_id_table {
   268,line 21
   267,title CATALOG
   257 STRING_
+  276,t 1
   258 NONE_
   259,t 0
   259 POINTER_
@@ -322,6 +335,7 @@ array set mode::token_id_table {
   257,title string
   264 ZOOM_
   264,t 0
+  276,title {}
   265 ROTATE_
   262,line 15
   266 CROP_
@@ -331,20 +345,21 @@ array set mode::token_id_table {
   262,title COLORBAR
   268 FOOTPRINT_
   268,t 0
-  274,line 34
+  274,line 32
   270 3D_
   269 EXAMINE_
-  271 command
   error,t 0
-  272 @PSEUDO1
+  271 ILLUSTRATE_
+  272 command
   258,line 11
   273,t 1
-  273 mode
+  273 @PSEUDO1
   266,title CROP
-  274 item
-  275 start'
-  271,line 27
-  271,title {}
+  274 mode
+  275 item
+  271,line 24
+  276 start'
+  271,title ILLUSTRATE
   261,t 0
   267,line 20
   275,title {}
@@ -460,7 +475,8 @@ proc mode::yyparse {} {
                     14 { set _ footprint }
                     15 { set _ examine }
                     16 { set _ 3d }
-                    17 { set _ region }
+                    17 { set _ illustrate }
+                    18 { set _ region }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

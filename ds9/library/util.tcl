@@ -17,6 +17,7 @@ proc CurrentDef {} {
 
     set current(display) single
     set current(mode) none
+    set current(mode,illustrate) 0
     set current(zoom) {1 1}
     set current(rotate) 0
     set current(orient) none
@@ -161,7 +162,8 @@ proc UpdateMain {} {
 	crop -
 	examine -
 	iexam -
-	3d {}
+	3d -
+	illustrate {}
     }
 }
 
@@ -937,16 +939,16 @@ proc OpenConsole {} {
     }
 }
 
-proc ToggleBindEvents {} {
+proc ToggleFreeze {} {
     global ds9
 
     if {$ds9(freeze)} {
 	set ds9(freeze) 0
-	BindEventsCanvas
+	BindEventsCanvasItems
 	BindEventsPanner
     } else {
 	set ds9(freeze) 1
-	UnBindEventsCanvas
+	UnBindEventsCanvasItems
 	UnBindEventsPanner
     }
 }
@@ -970,6 +972,26 @@ proc ChangeMode {} {
     RefreshInfoBox $current(frame)
     PixelTableClearDialog
 
+    # illustrate
+    if {$current(mode,illustrate)} {
+	set current(mode,illustrate) 0
+
+	IllustrateModeEnd
+	BindEventsCanvas
+	BindEventsCanvasItems
+    }
+
+    switch -- $current(mode) {
+	illustrate {
+	    set current(mode,illustrate) 1
+	    UnBindEventsCanvas
+	    UnBindEventsCanvasItems
+	    IllustrateModeBegin
+	}
+	default {}
+    }
+
+    # cursor
     switch -- $current(mode) {
 	none -
 	pointer -
@@ -990,7 +1012,8 @@ proc ChangeMode {} {
 	crop {SetCursor {}}
 	examine {SetCursor target}
 	iexam {}
-	3d {SetCursor {}}
+	3d -
+	illustrate {SetCursor {}}
     }
 }
 
@@ -1586,7 +1609,8 @@ proc CursorCmd {x y} {
 	crop -
 	examine -
 	iexam -
-	3d {}
+	3d -
+	illustrate {}
     }
 }
 

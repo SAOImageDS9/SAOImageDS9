@@ -183,6 +183,13 @@ proc InitDialogBox {} {
 			       [list {XML} {*.xml}] \
 			      ]
 
+    global illustratefbox
+    set illustratefbox(file) {ds9.seg}
+    set illustratefbox(dir) {}
+    set illustratefbox(types) [list \
+			       [list {REG} {*.seg}] \
+			      ]
+
     global templatefbox
     set templatefbox(file) {ds9.tpl}
     set templatefbox(dir) {}

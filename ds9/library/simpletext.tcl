@@ -52,7 +52,8 @@ proc SimpleTextDialog {varname title width height action pos txt
 
 	$var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
 	ThemeMenu $var(mb).edit
-	$var(mb).edit add command -label [msgcat::mc {Cut}] \-state disabled -accelerator "${ds9(ctrl)}X"
+	$var(mb).edit add command -label [msgcat::mc {Cut}] \
+	    -state disabled -accelerator "${ds9(ctrl)}X"
 #	$var(mb).edit add command -label [msgcat::mc {Cut}] -command "SimpleTextCut $varname" -accelerator "${ds9(ctrl)}X"
 	$var(mb).edit add command -label [msgcat::mc {Copy}] \
 	    -command "SimpleTextCopy $varname" -accelerator "${ds9(ctrl)}C"

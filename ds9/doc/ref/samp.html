@@ -70,6 +70,7 @@ ds9.set<br>
 <a href="#iconify">iconify</a><br>
 <a href="#iexam">iexam</a><br>
 <a href="#iis">iis</a><br>
+<a href="#illustrate">illustrate</a><br>
 <a href="#jpeg">jpeg</a><br>
 <a href="#lock">lock</a><br>
 <a href="#lower">lower</a><br>
@@ -1474,6 +1475,67 @@ iis filename 4<br>
 ds9.set(string cmd)<br>
 iis filename foo.fits<br>
 iis filename bar.fits 4</tt><br>
+<p><b><a name="illustrate" id="illustrate"></a>illustrate</b></p>
+<p>Controls illustrations.</p>
+<tt>Syntax:<br>
+illustrate&nbsp;[&lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save [select|all] &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [list [select|all]]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|invert|front|back]<br>
+&nbsp;&nbsp;&nbsp; [move front|back]<br>
+&nbsp;&nbsp;&nbsp; [delete [select|all]]<br>
+&nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
+&nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fill yes|no]<br>
+&nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
+&nbsp;&nbsp;&nbsp; [dash yes|no]<br>
+&nbsp;&nbsp;&nbsp; [command &lt;region command&gt;]<br>
+&nbsp;&nbsp;&nbsp; [copy]<br>
+&nbsp;&nbsp;&nbsp; [cut]<br>
+&nbsp;&nbsp;&nbsp; [paste]<br>
+&nbsp;&nbsp;&nbsp; [undo]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+illustrate<br>
+illustrate show<br>
+illustrate shape<br>
+illustrate color<br>
+illustrate fill<br>
+illustrate width<br>
+illustrate dash<br>
+<br>
+ds9.set(string cmd)<br>
+illustrate foo.reg<br>
+illustrate load foo.reg # load foo.reg into current frame<br>
+illustrate save foo.reg<br>
+illustrate save select foo.reg<br>
+illustrate list<br>
+illustrate list select<br>
+illustrate list close<br>
+illustrate show yes<br>
+illustrate select all<br>
+illustrate select none<br>
+illustrate select invert<br>
+illustrate select front<br>
+illustrate select back<br>
+illustrate move back<br>
+illustrate move front<br>
+illustrate delete<br>
+illustrate delete select<br>
+illustrate color red<br>
+illustrate fill yes<br>
+illustrate width 3<br>
+illustrate dash no<br>
+illustrate command "circle 100 100 20 # color=red"<br>
+illustrate copy<br>
+illustrate cut<br>
+illustrate paste <br>
+illustrate undo<br>
+illustrate open<br>
+illustrate close<br></tt>
 <p><b><a name="jpeg" id="jpeg"></a>jpeg</b></p>
 <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg</tt> quality (1-100)</p>
 <tt>Syntax:<br>

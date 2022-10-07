@@ -286,6 +286,7 @@
 ::msgcat::mcset ja {Enter Font Size} 
 ::msgcat::mcset ja {Enter Group Name} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xcc\xbe\xa4\xf2\xc6\xfe\xce\xcf"]
 ::msgcat::mcset ja {Enter Search Expression} [encoding convertfrom euc-jp "\xb8\xa1\xba\xf7\xbe\xf2\xb7\xef\xa4\xf2\xc6\xfe\xce\xcf"]
+::msgcat::mcset ja {Enter Text} 
 ::msgcat::mcset ja {Enter URL} 
 ::msgcat::mcset ja {Entry} 
 ::msgcat::mcset ja {Equal Area} [encoding convertfrom euc-jp "\xc5\xf9\xcc\xcc\xc0\xd1"]
@@ -409,6 +410,7 @@
 ::msgcat::mcset ja {Icons} 
 ::msgcat::mcset ja {Identification} [encoding convertfrom euc-jp "\xc6\xb1\xc4\xea"]
 ::msgcat::mcset ja {If} [encoding convertfrom euc-jp "\xa4\xe2\xa4\xb7"]
+::msgcat::mcset ja {Illustrate} 
 ::msgcat::mcset ja {Image Servers} 
 ::msgcat::mcset ja {Image} [encoding convertfrom euc-jp "\xcf\xc0\xcd\xfd\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Import Array} 

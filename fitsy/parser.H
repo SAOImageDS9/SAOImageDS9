@@ -118,7 +118,7 @@ typedef union YYSTYPE
 {
   float real;
   int integer;
-  char str[256];
+  char str[2048];
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */

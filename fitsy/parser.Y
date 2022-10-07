@@ -32,7 +32,7 @@ extern void ffArray(int);
 %union {
   float real;
   int integer;
-  char str[256];
+  char str[2048];
   void* ptr;
 }
 

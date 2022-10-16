@@ -51,7 +51,6 @@ command : VERSION_ {puts "DS9 Illustrate File 1.0"}
  | {initLocal} shape
 
  | HASH_ discard
- | IMAGE_
  ;
 
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
@@ -68,7 +67,7 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify} comment
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
  {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify}
- | IMAGE_ bp numeric sp numeric sp STRING_ bp bare {IllustdrateImageCreate $3 $5 $7}
+ | IMAGE_ bp numeric sp numeric sp STRING_ ep bare {IllustrateImageCreate $3 $5 $7}
  ;
 
 coords : coords coord

@@ -18,6 +18,9 @@ proc IllustrateImageCreate {xx yy fn} {
 		-image $ph \
 		-tags {image graphic}]
 
+    # save fn
+    set iillustrate(image,$id) $fn
+
     IllustrateBaseCreateHandles $id white
     return $id
 }
@@ -27,8 +30,9 @@ proc IllustrateImageDefault {id} {
 
 proc IllustrateImageDup {param} {
     global ds9
+    global iillustrate
     
-    foreach {coords ph} $param {
+    foreach {coords ph fn} $param {
 	set new [image create photo]
 	$new copy $ph
 
@@ -43,6 +47,7 @@ proc IllustrateImageDup {param} {
 		    -tags {image graphic}]
     }
 
+    set iillustrate(image,$id) $fn
     IllustrateBaseCreateHandles $id white
     return $id
 }
@@ -55,19 +60,20 @@ proc IllustrateImageSaveSelect {id} {
 
 proc IllustrateImageCopy {id} {
     global ds9
+    global iillustrate
 
     set coords [$ds9(canvas) coords $id]
     set ph [$ds9(canvas) itemcget $id -image]
+    set fn $iillustrate(image,$id)
 
-    return [list image [list $coords $ph]]
+    return [list image [list $coords $ph $fn]]
 }
 
 proc IllustrateImageSet {id param} {
     global ds9
 
-    foreach {coords ph} $param {
+    foreach {coords ph fn} $param {
 	$ds9(canvas) coords $id $coords
-#	$ds9(canvas) itemconfigure $id -image $ph
     }
 
     # handles/nodes
@@ -80,11 +86,12 @@ proc IllustrateImageSet {id param} {
 
 proc IllustrateImageList {id} {
     global ds9
+    global iillustrate
 
     set coords [$ds9(canvas) coords $id]
-    set ph [$ds9(canvas) itemcget $id -image]
+    set fn $iillustrate(image,$id)
 
-    set rr "image $coords"
+    set rr "image $coords \"$fn\""
 
     return $rr
 }
@@ -156,15 +163,20 @@ proc IllustrateImageDialog {id} {
     ttk::entry $f.yy -textvariable ${varname}(yy) -width 13
     grid $f.ttitle $f.xx $f.yy -padx 2 -pady 2 -sticky w
 
+    # Center
+    ttk::label $f.tfn -text [msgcat::mc {Filename}]
+    ttk::entry $f.fn -textvariable iillustrate(image,$var(id)) -width 40
+    ttk::button $f.bfn -text [msgcat::mc {Browse}] \
+	-command [list IllustrateImageFilename $varname]
+    grid $f.tfn $f.fn - $f.bfn -padx 2 -pady 2 -sticky w
+
     # Buttons
     set f [ttk::frame $var(top).buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
 	-command [list IllustrateImageApply $varname]
-    ttk::button $f.fn -text [msgcat::mc {Select Image}] \
-	-command [list IllustrateImageFilename $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list IllustrateBaseClose $varname]
-    pack $f.apply $f.fn $f.close -side left -expand true -padx 2 -pady 4
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     bind $var(top) <Return> [list IllustrateImageApply $varname]
 
@@ -197,6 +209,7 @@ proc IllustrateImageFilename {varname} {
     global $varname
 
     global ds9
+    global iillustrate
 
     set fn [OpenFileDialog photofbox]
     if {$fn == {}} {
@@ -208,9 +221,12 @@ proc IllustrateImageFilename {varname} {
 	return
     }
 
+    set iillustrate(image,$var(id)) $fn
     set old [$ds9(canvas) itemcget $var(id) -image]
     $ds9(canvas) itemconfigure $var(id) -image $ph
     image delete $old
+
+    IllustrateBaseUpdateHandle $var(id)
 }
 
 
@@ -238,7 +254,9 @@ proc IllustrateImageDeleteCB {id} {
     global iillustrate
     global ds9
 
-# we need a better clean up method, just ignore for now
+    unset iillustrate(image,$id)
+
+#    we need a better clean up method, just ignore for now
 #    set ph [$ds9(canvas) itemcget $id -image]
 #    image delete $ph
 }

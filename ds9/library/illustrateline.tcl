@@ -46,7 +46,7 @@ proc IllustrateLineDefault {id} {
 proc IllustrateLineDup {param} {
     global ds9
     
-    foreach {coords color width dash arrow} $param {
+    foreach {coords color width dash arrow ph} $param {
 	set id [$ds9(canvas) create line \
 		    $coords \
 		    -fill $color \
@@ -60,7 +60,7 @@ proc IllustrateLineDup {param} {
     return $id
 }
 
-proc IllustrateLineSave {id} {
+proc IllustrateLineSaveSelect {id} {
     global ds9
 
     set fillcolor [$ds9(canvas) itemcget $id -fill]
@@ -85,7 +85,7 @@ proc IllustrateLineCopy {id} {
 proc IllustrateLineSet {id param} {
     global ds9
 
-    foreach {coords color width dash arrow} $param {
+    foreach {coords color width dash arrow ph} $param {
 	$ds9(canvas) coords $id $coords
 	$ds9(canvas) itemconfigure $id -fill $color
 	$ds9(canvas) itemconfigure $id -width $width

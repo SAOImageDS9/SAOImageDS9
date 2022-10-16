@@ -49,3 +49,4 @@ set BOX_ 304
 set POLYGON_ 305
 set LINE_ 306
 set TEXT_ 307
+set IMAGE_ 308

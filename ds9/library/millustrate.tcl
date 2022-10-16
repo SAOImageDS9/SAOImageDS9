@@ -71,6 +71,8 @@ proc IllustrateMainMenu {} {
 	-variable illustrate(shape) -value line
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable illustrate(shape) -value text
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Image}] \
+	-variable illustrate(shape) -value image
 
     ColorFillMenu $ds9(mb).illustrate.color illustrate color fill \
 	IllustrateColor IllustrateColor

@@ -34,7 +34,7 @@ set BOX_ 289
 set POLYGON_ 290
 set LINE_ 291
 set TEXT_ 292
-set LEFT_ 293
-set CENTER_ 294
-set RIGHT_ 295
-set IMAGE_ 296
+set IMAGE_ 293
+set LEFT_ 294
+set CENTER_ 295
+set RIGHT_ 296

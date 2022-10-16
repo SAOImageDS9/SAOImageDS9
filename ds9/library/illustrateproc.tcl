@@ -20,6 +20,8 @@ proc IllustrateGetType {id} {
 	return line
     } elseif {[lsearch $tags text] != -1} {
 	return text
+    } elseif {[lsearch $tags image] != -1} {
+	return image
     } else {
 	# should not be here
 	return circle
@@ -34,9 +36,11 @@ proc IllustrateDefault {id} {
 	polygon {IllustratePolygonDefault $id}
 	line {IllustrateLineDefault $id}
 	text {IllustrateTextDefault $id}
+	image {IllustrateImageDefault $id}
     }
 }
 
+# use for undo/paste
 proc IllustrateDup {type param} {
     switch $type {
 	circle {return [IllustrateBaseDup $type $param]}
@@ -45,9 +49,24 @@ proc IllustrateDup {type param} {
 	polygon {return [IllustratePolygonDup $param]}
 	line {return [IllustrateLineDup $param]}
 	text {return [IllustrateTextDup $param]}
+	image {return [IllustrateImageDup $param]}
     }
 }
 
+# for undo
+proc IllustrateSet {id param} {
+    switch [IllustrateGetType $id] {
+	circle -
+	ellipse -
+	box -
+	polygon {IllustrateBaseSet $id $param}
+	line {IllustrateLineSet $id $param}
+	text {IllustrateTextSet $id $param}
+	image {IllustrateImageSet $id $param}
+    }
+}
+
+# for undo/cut/copy
 proc IllustrateCopy {id} {
     switch [IllustrateGetType $id] {
 	circle {return [IllustrateBaseCopy $id]}
@@ -56,17 +75,19 @@ proc IllustrateCopy {id} {
 	polygon {return [IllustrateBaseCopy $id]}
 	line {return [IllustrateLineCopy $id]}
 	text {return [IllustrateTextCopy $id]}
+	image {return [IllustrateImageCopy $id]}
     }
 }
 
-proc IllustrateSave {id} {
+proc IllustrateSaveSelect {id} {
     switch [IllustrateGetType $id] {
-	circle {return [IllustrateBaseSave $id]}
-	ellipse {return [IllustrateBaseSave $id]}
-	box {return [IllustrateBaseSave $id]}
-	polygon {return [IllustrateBaseSave $id]}
-	line {return [IllustrateLineSave $id]}
-	text {return [IllustrateTextSave $id]}
+	circle {return [IllustrateBaseSaveSelect $id]}
+	ellipse {return [IllustrateBaseSaveSelect $id]}
+	box {return [IllustrateBaseSaveSelect $id]}
+	polygon {return [IllustrateBaseSaveSelect $id]}
+	line {return [IllustrateLineSaveSelect $id]}
+	text {return [IllustrateTextSaveSelect $id]}
+	image {return [IllustrateImageSaveSelect $id]}
     }
 }
 
@@ -78,6 +99,7 @@ proc IllustrateList {id} {
 	polygon {return [IllustratePolygonList $id]}
 	line {return [IllustrateLineList $id]}
 	text {return [IllustrateTextList $id]}
+	image {return [IllustrateImageList $id]}
     }
 }
 
@@ -89,6 +111,7 @@ proc IllustrateAntsOn {id} {
 	polygon {IllustrateBaseAntsOn $id}
 	line {IllustrateLineAntsOn $id}
 	text {IllustrateTextAntsOn $id}
+	image {IllustrateImageAntsOn $id}
     }
 }
 
@@ -101,6 +124,7 @@ proc IllustrateAntsOff {gr} {
 	    polygon {IllustrateBaseAntsOff $gr}
 	    line {IllustrateLineAntsOff $gr}
 	    text {IllustrateTextAntsOff $gr}
+	    image {IllustrateImageAntsOff $gr}
 	}
     }
 }
@@ -113,6 +137,19 @@ proc IllustrateEdit {id xx yy} {
 	polygon {IllustratePolygonEdit $id $xx $yy}
 	line {IllustrateLineEdit $id $xx $yy}
 	text {IllustrateTextEdit $id $xx $yy}
+	image {IllustrateImageEdit $id $xx $yy}
+    }
+}
+
+proc IllustrateDeleteCB {id} {
+    switch [IllustrateGetType $id] {
+	circle -
+	ellipse -
+	box -
+	polygon -
+	line -
+	text {IllustrateBaseDeleteCB $id}
+	image {IllustrateImageDeleteCB $id}
     }
 }
 
@@ -124,6 +161,7 @@ proc IllustrateEditCB {id} {
 	polygon {IllustratePolygonEditCB $id}
 	line {IllustrateLineEditCB $id}
 	text {IllustrateTextEditCB $id}
+	image {IllustrateImageEditCB $id}
     }
 }
 
@@ -135,6 +173,7 @@ proc IllustrateRotate {id xx yy} {
 	polygon -
 	line {}
 	text {IllustrateTextRotate $id $xx $yy}
+	image {}
     }
 }
 
@@ -146,6 +185,7 @@ proc IllustrateRotateCB {id} {
 	polygon -
 	line {}
 	text {IllustrateTextRotateCB $id}
+	image {}
     }
 }
 
@@ -156,7 +196,8 @@ proc IllustrateUpdateHandle {id} {
 	box {IllustrateBaseUpdateHandle $id}
 	polygon {IllustratePolygonUpdateHandle $id}
 	line {IllustrateLineUpdateHandle $id}
-	text {IllustrateBaseUpdateHandle $id}
+	text -
+	image {IllustrateBaseUpdateHandle $id}
     }
 }
 
@@ -168,6 +209,7 @@ proc IllustrateDialog {id} {
 	polygon {IllustratePolygonDialog $id}
 	line {IllustrateLineDialog $id}
 	text {IllustrateTextDialog $id}
+	image {IllustrateImageDialog $id}
     }
 }
 
@@ -179,5 +221,6 @@ proc IllustrateDialogClose {id} {
 	polygon -
 	line {IllustrateBaseDialogClose $id}
 	text {IllustrateTextDialogClose $id}
+	image {IllustrateImageDialogClose $id}
     }
 }

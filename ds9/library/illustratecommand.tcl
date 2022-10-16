@@ -208,14 +208,7 @@ proc IllustrateUndo {} {
 		foreach item $ll {
 		    foreach {id graphic} $item {
 			foreach {type param} $graphic {
-			    switch $type {
-				circle -
-				ellipse -
-				box -
-				polygon {IllustrateBaseSet $id $param}
-				line {IllustrateLineSet $id $param}
-				text {IllustrateTextSet $id $param}
-			    }
+			    IllustrateSet $id $param
 			}
 		    }
 		}
@@ -225,8 +218,8 @@ proc IllustrateUndo {} {
 		foreach item $ll {
 		    foreach {id graphic} $item {
 			foreach {type param} $graphic {
-			    set id [IllustrateDup $type $param]
-			    IllustrateAddToSelection $id
+			    set new [IllustrateDup $type $param]
+			    IllustrateAddToSelection $new
 			}
 		    }
 		}
@@ -272,8 +265,8 @@ proc IllustratePaste {} {
     IllustrateSelectNone
     foreach graphic $iillustrate(clipboard) {
 	foreach {type param} $graphic {
-	    set id [IllustrateDup $type $param]
-	    IllustrateAddToSelection $id
+	    set new [IllustrateDup $type $param]
+	    IllustrateAddToSelection $new
 	}
     }
 

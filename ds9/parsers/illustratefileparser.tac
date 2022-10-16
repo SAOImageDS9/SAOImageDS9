@@ -27,12 +27,11 @@
 %token POLYGON_
 %token LINE_
 %token TEXT_
+%token IMAGE_
 
 %token LEFT_
 %token CENTER_
 %token RIGHT_
-
-%token IMAGE_
 
 %%
 
@@ -69,6 +68,7 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify} comment
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
  {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify}
+ | IMAGE_ bp numeric sp numeric sp STRING_ bp bare {IllustdrateImageCreate $3 $5 $7}
  ;
 
 coords : coords coord
@@ -82,6 +82,10 @@ coord : numeric sp numeric {lappend illustratefile::coords $1 $3}
 comment :
  | HASH_ discard
  | HASH_ local
+ ;
+
+bare :
+ | HASH_ discard
  ;
 
 global : global globalProperty
@@ -150,7 +154,6 @@ discard : discard anything
 anything : STRING_
  | numeric
  | VERSION_
- | IMAGE_
  ;
 
 %%

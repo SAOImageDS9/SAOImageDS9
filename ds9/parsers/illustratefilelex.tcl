@@ -215,10 +215,10 @@ set BOX_ 289
 set POLYGON_ 290
 set LINE_ 291
 set TEXT_ 292
-set LEFT_ 293
-set CENTER_ 294
-set RIGHT_ 295
-set IMAGE_ 296
+set IMAGE_ 293
+set LEFT_ 294
+set CENTER_ 295
+set RIGHT_ 296
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -352,29 +352,29 @@ set IMAGE_ 296
             set yyleng [string length $yytext]
             set matched_rule 15
         }
-        # rule 16: left
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(left)} $yy_current_buffer match] > 0 && \
+        # rule 16: image
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(image)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 16
         }
-        # rule 17: center
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(center)} $yy_current_buffer match] > 0 && \
+        # rule 17: left
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(left)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 17
         }
-        # rule 18: right
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(right)} $yy_current_buffer match] > 0 && \
+        # rule 18: center
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(center)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 18
         }
-        # rule 19: image
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(image)} $yy_current_buffer match] > 0 && \
+        # rule 19: right
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(right)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
@@ -630,16 +630,16 @@ return $LINE_
 return $TEXT_
             }
             16 {
-return $LEFT_
+return $IMAGE_
             }
             17 {
-return $CENTER_
+return $LEFT_
             }
             18 {
-return $RIGHT_
+return $CENTER_
             }
             19 {
-return $IMAGE_
+return $RIGHT_
             }
             20 {
 return $FONT_

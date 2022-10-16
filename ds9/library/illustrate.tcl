@@ -8,6 +8,7 @@ proc IllustrateDef {} {
     global illustrate
     global iillustrate
     global pillustrate
+    global ds9
 
     set iillustrate(prefix,dialog) {ill}
 
@@ -37,6 +38,9 @@ proc IllustrateDef {} {
     set illustrate(font,size) 12
     set illustrate(font,weight) normal
     set illustrate(font,slant) roman
+
+    # image
+    set illustrate(fn) "$ds9(root)/doc/sun.gif"
 
     array set pillustrate [array get illustrate]
 
@@ -128,6 +132,11 @@ proc IllustrateCreateGraphic {xx yy} {
 			$illustrate(justify) \
 		       ]
 	}
+	image {
+	    return [IllustrateImageCreate $xx $yy \
+			$illustrate(fn) \
+		       ]
+	}
     }
 }
 
@@ -135,7 +144,7 @@ proc IllustrateDeleteGraphic {id} {
     global ds9
 
     # dialogs
-    IllustrateBaseDeleteCB $id
+    IllustrateDeleteCB $id
 
     # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
@@ -322,7 +331,7 @@ proc IllustrateUpdateSelection {} {
     set iillustrate(selection) {}
     foreach gr $old {
 	foreach {id color fillcolor width dashlist} $gr {
-	    lappend iillustrate(selection) [IllustrateSave $id]
+	    lappend iillustrate(selection) [IllustrateSaveSelect $id]
 	}
     }
 }
@@ -336,7 +345,7 @@ proc IllustrateAddToSelection {id} {
 	$ds9(canvas) itemconfigure $hh -state normal
     }
 
-    lappend iillustrate(selection) [IllustrateSave $id]
+    lappend iillustrate(selection) [IllustrateSaveSelect $id]
 }
 
 proc IllustrateUnselect {id} {

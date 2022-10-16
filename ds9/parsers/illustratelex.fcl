@@ -34,6 +34,7 @@ box		{return $BOX_}
 polygon		{return $POLYGON_}
 line		{return $LINE_}
 text		{return $TEXT_}
+image		{return $IMAGE_}
 
 #include cutpaste.fin
 #include fonts.fin

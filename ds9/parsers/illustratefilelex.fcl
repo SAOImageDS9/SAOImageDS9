@@ -25,12 +25,11 @@ rectangle	{return $BOX_}
 polygon		{return $POLYGON_}
 line		{return $LINE_}
 text		{return $TEXT_}
+image		{return $IMAGE_}
 
 left		{return $LEFT_}
 center		{return $CENTER_}
 right		{return $RIGHT_}
-
-image		{return $IMAGE_}
 
 #include fonts.fin
 #include yesno.fin

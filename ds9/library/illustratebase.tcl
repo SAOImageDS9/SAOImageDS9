@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateBaseSave {id} {
+proc IllustrateBaseSaveSelect {id} {
     global ds9
 
     set color [$ds9(canvas) itemcget $id -outline]

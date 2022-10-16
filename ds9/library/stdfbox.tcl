@@ -98,6 +98,18 @@ proc InitDialogBox {} {
 			      [list {ENVI2} {*.bsq}] \
 			      [list {ENVI2} {*.cube}] \
 			     ]
+    global photofbox
+    set photofbox(file) {ds9.png}
+    set photofbox(dir) {}
+    set photofbox(types) [list \
+			    [list {GIF} {*.gif}] \
+			    [list {JPEG} {*.jpeg}] \
+			    [list {JPEG} {*.jpg}] \
+			    [list {TIFF} {*.tiff}] \
+			    [list {TIFF} {*.tif}] \
+			    [list {PNG} {*.png}] \
+			   ]
+
     global giffbox
     set giffbox(file) {ds9.gif}
     set giffbox(dir) {}

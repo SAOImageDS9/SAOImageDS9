@@ -221,6 +221,6 @@ proc IllustrateDialogClose {id} {
 	polygon -
 	line {IllustrateBaseDialogClose $id}
 	text {IllustrateTextDialogClose $id}
-	image {IllustrateImageDialogClose $id}
+	image {IllustrateBaseDialogClose $id}
     }
 }

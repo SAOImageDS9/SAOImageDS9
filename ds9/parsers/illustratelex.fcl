@@ -37,7 +37,6 @@ text		{return $TEXT_}
 image		{return $IMAGE_}
 
 #include cutpaste.fin
-#include fonts.fin
 #include yesno.fin
 #include numeric.fin
 #include string.fin

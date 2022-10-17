@@ -138,7 +138,9 @@ proc IllustrateDeleteAll {} {
 
 proc IllustrateSelectAll {} {
     global ds9
+    global iillustrate
     
+    set iillustrate(selection) {}
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	IllustrateAddToSelection $id
     }

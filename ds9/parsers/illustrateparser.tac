@@ -3,7 +3,6 @@
 #include def.tin
 
 #include cutpaste.tin
-#include fonts.tin
 #include yesno.tin
 #include numeric.tin
 #include string.tin
@@ -25,7 +24,6 @@
 %token MOVE_
 %token NONE_
 %token OPEN_
-%token PASTE_
 %token SAVE_
 %token SELECT_
 %token SHAPE_
@@ -42,7 +40,6 @@
 
 %%
 
-#include fonts.trl
 #include yesno.trl
 #include numeric.trl
 
@@ -55,17 +52,10 @@ illustrate : {IllustrateCmdLoad}
  | CLOSE_ {IllustrateCmdClose}
 
  | SHAPE_ shape {ProcessCmdSet illustrate shape $2 {}}
- | COLOR_ STRING_ {ProcessCmdSet illustrate color $2 IllustrateUpdateGraphic}
- | FILL_ yesno {ProcessCmdSet illustrate fill $2 IllustrateUpdateGraphic}
- | WIDTH_ INT_ {ProcessCmdSet illustrate width $2 IllustrateUpdateGraphic}
- | DASH_ yesno {ProcessCmdSet illustrate dash $2 IllustrateUpdateGraphic}
- | FONT_ font {ProcessCmdSet illustrate font $2 IllustrateUpdateGraphic}
- | FONTSIZE_ INT_
-   {ProcessCmdSet illustrate font,size $2 IllustrateUpdateGraphic}
- | FONTWEIGHT_ fontWeight 
-   {ProcessCmdSet illustrate font,weight $2 IllustrateUpdateGraphic}
- | FONTSLANT_ fontSlant 
-   {ProcessCmdSet illustrate font,slant $2 IllustrateUpdateGraphic}
+ | COLOR_ STRING_ {ProcessCmdSet illustrate color $2 IllustrateColor}
+ | FILL_ yesno {ProcessCmdSet illustrate fill $2 IllustrateColor}
+ | WIDTH_ INT_ {ProcessCmdSet illustrate width $2 IllustrateWidth}
+ | DASH_ yesno {ProcessCmdSet illustrate dash $2 IllustrateWidth}
 
  | MOVE_ move
  | SELECT_ select
@@ -79,7 +69,7 @@ illustrate : {IllustrateCmdLoad}
 
  | UNDO_ {IllustrateUndo}
  | CUT_ {IllustrateCut}
- | COPY_ {IllustrateCopy}
+ | COPY_ {IllustrateMenuCopy}
  | PASTE_ {IllustratePaste}
  ;
 
@@ -104,7 +94,7 @@ select : ALL_ {IllustrateSelectAll}
  ;
  
 save : STRING_ {IllustrateSaveAllFn $1}
- | SELECT_ STRING_ {IllustrateSaveSelect $2}
+ | SELECT_ STRING_ {IllustrateSaveSelectFn $2}
  | ALL_ STRING_ {IllustrateSaveAll $2}
  ;
 

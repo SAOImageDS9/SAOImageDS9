@@ -1325,8 +1325,8 @@ proc LayoutColorbarAdjust {} {
 	set colorbar(horizontal,height) [expr $colorbar(size) + $ytl + $ysp]
 
 	# vertical width
-	# 6 chars
-	set xstr [font measure $ff "000000"]
+	# 9 chars
+	set xstr [font measure $ff "000000000"]
 	set xtl [$ds9(canvas) itemcget colorbar -ticks]
 	set colorbar(vertical,width) [expr $colorbar(size) + $xtl + $xstr]
     } else {

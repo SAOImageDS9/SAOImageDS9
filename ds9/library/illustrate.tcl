@@ -424,10 +424,42 @@ proc IllustrateDump {} {
 
 proc IllustrateBackup {ch dir} {
     global ds9
+    global iillustrate
 
     if {[$ds9(canvas) find withtag {graphic}]>0} {
-	IllustrateSaveAllFn $dir/ds9.seg
-	puts $ch "IllustrateLoadFn $dir/ds9.seg"
+	# prep
+	set fn $dir/ds9.seg
+	if {[catch {set ff [open $fn w]}]} {
+	    return
+	}
+
+	# look for 'image' graphics
+	set rr "[IllustrateListHeader]\n"
+	foreach id [$ds9(canvas) find withtag {graphic}] {
+	    set ll [IllustrateList $id]
+	    switch [IllustrateGetType $id] {
+		image {
+		    # new image filename and save
+		    set ext [file ext [lindex $ll 3]]
+		    set imgfn "image${id}${ext}"
+		    set ph [$ds9(canvas) itemcget $id -image]
+		    $ph write $dir/$imgfn
+		    
+		    # swap out for new filename
+		    append rr "[lindex $ll 0] "
+		    append rr "[lindex $ll 1] "
+		    append rr "[lindex $ll 2] "
+		    append rr "$dir/$imgfn\n"
+		}
+		default {
+		    append rr "$ll\n"
+		}
+	    }
+	}
+	puts $ff $rr
+	close $ff
+	
+	puts $ch "IllustrateLoadFn $fn"
     }
 }
 

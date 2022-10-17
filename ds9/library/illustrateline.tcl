@@ -60,7 +60,7 @@ proc IllustrateLineDup {param} {
     return $id
 }
 
-proc IllustrateLineSaveSelect {id} {
+proc IllustrateLineSaveSelection {id} {
     global ds9
 
     set fillcolor [$ds9(canvas) itemcget $id -fill]

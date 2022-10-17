@@ -364,8 +364,8 @@ set IMAGE_ 308
             set yyleng [string length $yytext]
             set matched_rule 15
         }
-        # rule 16: selection
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(selection)} $yy_current_buffer match] > 0 && \
+        # rule 16: select
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(select)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
@@ -719,7 +719,7 @@ return $OPEN_
 return $SAVE_
             }
             16 {
-return $SELECTION_
+return $SELECT_
             }
             17 {
 return $SHAPE_

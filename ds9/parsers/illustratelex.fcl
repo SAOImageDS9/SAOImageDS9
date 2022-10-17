@@ -23,7 +23,7 @@ move		{return $MOVE_}
 none		{return $NONE_}
 open		{return $OPEN_}
 save		{return $SAVE_}
-selection	{return $SELECTION_}
+select		{return $SELECT_}
 shape		{return $SHAPE_}
 show		{return $SHOW_}
 width		{return $WIDTH_}

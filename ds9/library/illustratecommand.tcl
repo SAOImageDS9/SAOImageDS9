@@ -358,7 +358,7 @@ proc IllustrateSaveAllFn {fn} {
 
 # List
 
-proc IllustdrateListSelect {} {
+proc IllustrateListSelect {} {
     global ds9
     global iillustrate
 

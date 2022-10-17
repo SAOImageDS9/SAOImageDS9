@@ -331,7 +331,7 @@ proc IllustrateUpdateSelection {} {
     set iillustrate(selection) {}
     foreach gr $old {
 	foreach {id color fillcolor width dashlist} $gr {
-	    lappend iillustrate(selection) [IllustrateSaveSelect $id]
+	    lappend iillustrate(selection) [IllustrateSaveSelection $id]
 	}
     }
 }
@@ -345,7 +345,7 @@ proc IllustrateAddToSelection {id} {
 	$ds9(canvas) itemconfigure $hh -state normal
     }
 
-    lappend iillustrate(selection) [IllustrateSaveSelect $id]
+    lappend iillustrate(selection) [IllustrateSaveSelection $id]
 }
 
 proc IllustrateUnselect {id} {

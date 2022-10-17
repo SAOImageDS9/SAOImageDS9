@@ -79,15 +79,15 @@ proc IllustrateCopy {id} {
     }
 }
 
-proc IllustrateSaveSelect {id} {
+proc IllustrateSaveSelection {id} {
     switch [IllustrateGetType $id] {
-	circle {return [IllustrateBaseSaveSelect $id]}
-	ellipse {return [IllustrateBaseSaveSelect $id]}
-	box {return [IllustrateBaseSaveSelect $id]}
-	polygon {return [IllustrateBaseSaveSelect $id]}
-	line {return [IllustrateLineSaveSelect $id]}
-	text {return [IllustrateTextSaveSelect $id]}
-	image {return [IllustrateImageSaveSelect $id]}
+	circle {return [IllustrateBaseSaveSelection $id]}
+	ellipse {return [IllustrateBaseSaveSelection $id]}
+	box {return [IllustrateBaseSaveSelection $id]}
+	polygon {return [IllustrateBaseSaveSelection $id]}
+	line {return [IllustrateLineSaveSelection $id]}
+	text {return [IllustrateTextSaveSelection $id]}
+	image {return [IllustrateImageSaveSelection $id]}
     }
 }
 

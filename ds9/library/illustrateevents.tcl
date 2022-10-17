@@ -214,7 +214,7 @@ proc IllustrateButton {xx yy} {
 	if {$id} {
 	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
-	    set iillustrate(edit) [IllustrateSaveSelect $id]
+	    set iillustrate(edit) [IllustrateSaveSelection $id]
 	    set iillustrate(motion) beginEdit
 	}
 	return
@@ -228,7 +228,7 @@ proc IllustrateButton {xx yy} {
 	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
 	    set iillustrate(node) $nid
-	    set iillustrate(edit) [IllustrateSaveSelect $id]
+	    set iillustrate(edit) [IllustrateSaveSelection $id]
 	    set iillustrate(motion) beginEdit
 	    return
 	}
@@ -244,7 +244,7 @@ proc IllustrateButton {xx yy} {
 	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
 	    set iillustrate(node) $nid
-	    set iillustrate(edit) [IllustrateSaveSelect $id]
+	    set iillustrate(edit) [IllustrateSaveSelection $id]
 	    set iillustrate(motion) beginEdit
 	    return
 	}
@@ -287,7 +287,7 @@ proc IllustrateButton {xx yy} {
 	    text {}
 	}
 	set iillustrate(id) $id
-	set iillustrate(edit) [IllustrateSaveSelect $id]
+	set iillustrate(edit) [IllustrateSaveSelection $id]
 	set iillustrate(motion) beginCreate
     }
 }
@@ -325,7 +325,7 @@ proc IllustrateShiftButton {xx yy} {
 	if {$id} {
 	    IllustrateSaveUndo edit $id
 	    set iillustrate(id) $id
-	    set iillustrate(edit) [IllustrateSaveSelect $id]
+	    set iillustrate(edit) [IllustrateSaveSelection $id]
 	    set iillustrate(motion) beginRotate
 	}
 	return

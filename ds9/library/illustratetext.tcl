@@ -43,7 +43,7 @@ proc IllustrateTextDup {param} {
     return $id
 }
 
-proc IllustrateTextSaveSelect {id} {
+proc IllustrateTextSaveSelection {id} {
     global ds9
 
     set fillcolor [$ds9(canvas) itemcget $id -fill]

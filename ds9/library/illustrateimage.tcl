@@ -52,7 +52,7 @@ proc IllustrateImageDup {param} {
     return $id
 }
 
-proc IllustrateImageSaveSelect {id} {
+proc IllustrateImageSaveSelection {id} {
     global ds9
 
     return [list $id {} {} {} {}]

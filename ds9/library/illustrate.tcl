@@ -17,7 +17,7 @@ proc IllustrateDef {} {
     set iillustrate(undo) {}
 
     set illustrate(show) 1
-    set illustrate(shape) text
+    set illustrate(shape) circle
 
     # common
     set illustrate(color) cyan
@@ -485,7 +485,6 @@ proc ProcessSendIllustrateCmd {proc id param {sock {}} {fn {}}} {
     set parse(id) $id
     set parse(sock) $sock
     set parse(fn) $fn
-    puts "a:[array get parse]"
 
     illustratesend::YY_FLUSH_BUFFER
     illustratesend::yy_scan_string $param
@@ -514,7 +513,7 @@ proc IllustrateCmdCommand {cmd} {
 proc IllustrateCmdSend {} {
     global ds9
     global parse
-    puts "b:[array get parse]"
+
     set rr "[IllustrateListHeader]\n"
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	IllustrateList rr $id

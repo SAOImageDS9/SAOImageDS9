@@ -7,13 +7,13 @@
 
 %%
 
-color		{return COLOR_}
-dash		{return DASH_}
-shape		{return SHAPE_}
-show		{return SHOW_}
-width		{return WIDTH_}
+color		{return $COLOR_}
+fill		{return $FILL_}
+dash		{return $DASH_}
+shape		{return $SHAPE_}
+show		{return $SHOW_}
+width		{return $WIDTH_}
 
-#include font.fin
 #include ws.fin
 
 %%

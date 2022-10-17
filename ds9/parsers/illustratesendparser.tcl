@@ -62,183 +62,127 @@ proc illustratesend::unsetupvalues {numsyms} {
 
 array set illustratesend::table {
   6:0 reduce
-  3:0,target 10
+  3:0,target 4
   0:257 shift
-  7:0 reduce
+  7:0 accept
   0:258 shift
-  0:264,target 7
-  8:0 reduce
-  5:0,target 3
+  5:0,target 7
+  0:260 shift
   0:259 shift
-  10:0 reduce
-  9:0 reduce
-  0:266,target 9
   0:261 shift
-  11:0 accept
-  7:0,target 4
+  7:0,target 0
   0:258,target 2
   0:262 shift
-  0:263 shift
-  0:268,target 11
+  0:263 goto
   0:0,target 1
-  10:0,target 5
-  9:0,target 11
-  0:261,target 4
-  0:264 shift
-  2:0,target 8
-  0:265 shift
-  0:266 shift
-  0:263,target 6
-  4:0,target 9
-  0:267 shift
-  0:268 goto
+  0:261,target 5
+  2:0,target 6
+  0:263,target 7
+  4:0,target 2
   0:0 reduce
-  0:265,target 8
-  6:0,target 6
+  6:0,target 5
   1:0 reduce
   0:257,target 1
   2:0 reduce
-  0:267,target 10
-  8:0,target 2
   3:0 reduce
+  0:260,target 4
   0:259,target 3
   4:0 reduce
-  1:0,target 7
-  11:0,target 0
+  1:0,target 3
   5:0 reduce
-  0:262,target 5
+  0:262,target 6
 }
 
 array set illustratesend::rules {
-  9,l 268
-  11,l 268
-  2,l 268
-  6,l 268
-  3,l 268
-  7,l 268
-  0,l 269
-  4,l 268
-  8,l 268
-  10,l 268
-  1,l 268
-  5,l 268
+  0,l 264
+  1,l 263
+  2,l 263
+  3,l 263
+  4,l 263
+  5,l 263
+  6,l 263
+  7,l 263
 }
 
 array set illustratesend::rules {
   5,dc 1
+  7,dc 1
   0,dc 1
-  8,dc 1
-  3,dc 1
-  10,dc 1
+  2,dc 1
+  4,dc 1
   6,dc 1
   1,dc 0
-  9,dc 1
-  4,dc 1
-  11,dc 1
-  7,dc 1
-  2,dc 1
+  3,dc 1
 }
 
 array set illustratesend::rules {
-  7,line 31
-  10,line 34
-  4,line 28
-  1,line 25
-  9,line 33
-  6,line 30
-  3,line 27
-  8,line 32
-  11,line 35
-  5,line 29
-  2,line 26
+  5,line 22
+  7,line 24
+  2,line 19
+  4,line 21
+  6,line 23
+  1,line 18
+  3,line 20
 }
 
 array set illustratesend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0}}
-  1 {{7 0 1}}
-  2 {{8 0 1}}
-  3 {{10 0 1}}
-  0,trans {{257 1} {258 2} {259 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11}}
-  4 {{9 0 1}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0}}
+  1 {{3 0 1}}
+  2 {{6 0 1}}
+  3 {{4 0 1}}
+  4 {{2 0 1}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7}}
+  5 {{7 0 1}}
   1,trans {}
-  5 {{3 0 1}}
+  6 {{5 0 1}}
   2,trans {}
-  6 {{6 0 1}}
+  7 {{0 0 1}}
   3,trans {}
-  7 {{4 0 1}}
   4,trans {}
-  8 {{2 0 1}}
   5,trans {}
-  9 {{11 0 1}}
-  10 {{5 0 1}}
   6,trans {}
-  11 {{0 0 1}}
   7,trans {}
-  8,trans {}
-  10,trans {}
-  9,trans {}
-  11,trans {}
 }
 
 array set illustratesend::token_id_table {
-  264,line 17
-  269,t 1
-  265,title SHAPE
-  261,line 11
-  257,t 0
-  269,title {}
-  257,line 7
-  262,t 0
-  269,line 36
-  259,title FONTSLANT
-  260,title FONTSTYLE
-  266,t 0
-  264,title FILL
-  266,line 19
-  error error
-  268,title {}
-  error,line 23
-  258,t 0
-  263,line 16
-  error,title {}
-  263,t 0
-  259,line 9
-  260,line 10
-  258,title FONTSIZE
-  267,t 0
-  263,title DASH
-  268,line 24
-  267,title WIDTH
-  257 FONT_
-  258 FONTSIZE_
-  259,t 0
-  259 FONTSLANT_
-  260 FONTSTYLE_
-  260,t 0
-  261 FONTWEIGHT_
-  265,line 18
-  262 COLOR_
-  263 DASH_
-  257,title FONT
-  264 FILL_
-  264,t 0
-  265 SHAPE_
-  262,line 15
-  266 SHOW_
-  267 WIDTH_
-  268,t 1
-  268 illustratesend
-  262,title COLOR
-  0 {$}
+  264,line 25
   0,t 0
-  269 start'
+  0 {$}
+  262,title WIDTH
+  263,title {}
+  264,title {}
   error,t 0
-  258,line 8
-  266,title SHOW
+  error error
+  258,line 9
+  261,line 12
+  error,line 16
+  257 COLOR_
+  257,t 0
+  263,line 17
+  258 DASH_
+  258,t 0
+  error,title {}
+  260,t 0
+  260 SHAPE_
+  259 FILL_
+  259,t 0
   261,t 0
-  267,line 20
-  265,t 0
-  261,title FONTWEIGHT
+  261 SHOW_
+  262,t 0
+  262 WIDTH_
+  257,line 8
+  263,t 1
+  263 illustratesend
+  264,t 1
+  264 start'
+  260,line 11
+  257,title COLOR
+  259,line 10
+  258,title DASH
+  262,line 13
+  260,title SHAPE
+  259,title FILL
+  261,title SHOW
 }
 
 proc illustratesend::yyparse {} {
@@ -341,11 +285,7 @@ proc illustratesend::yyparse {} {
                     4 { ProcessSendCmdYesNo illustrate fill }
                     5 { ProcessSendCmdGet illustrate width }
                     6 { ProcessSendCmdYesNo illustrate dash }
-                    7 { ProcessSendCmdGet illustrate font }
-                    8 { ProcessSendCmdGet illustrate font,size }
-                    9 { ProcessSendCmdGet illustrate font,weight }
-                    10 { ProcessSendCmdGet illustrate font,slant }
-                    11 { ProcessSendCmdGet illustrate show }
+                    7 { ProcessSendCmdYesNo illustrate show }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

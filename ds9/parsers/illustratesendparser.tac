@@ -2,8 +2,6 @@
 %}
 #include def.tin
 
-#include font.tin
-
 %start illustratesend
 
 %token COLOR_
@@ -21,11 +19,7 @@ illustratesend : {IllustrateCmdSend}
  | FILL_ {ProcessSendCmdYesNo illustrate fill}
  | WIDTH_ {ProcessSendCmdGet illustrate width}
  | DASH_ {ProcessSendCmdYesNo illustrate dash}
- | FONT_ {ProcessSendCmdGet illustrate font}
- | FONTSIZE_ {ProcessSendCmdGet illustrate font,size}
- | FONTWEIGHT_ {ProcessSendCmdGet illustrate font,weight}
- | FONTSLANT_ {ProcessSendCmdGet illustrate font,slant}
- | SHOW_ {ProcessSendCmdGet illustrate show}
+ | SHOW_ {ProcessSendCmdYesNo illustrate show}
  ;
 
 %%

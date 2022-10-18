@@ -142,7 +142,7 @@ proc CreateIconsLeftMarkerInfo {} {
 	-image [image create photo -file "$ds9(icons,ui)/region_info.png"]
     tooltip::tooltip $mb.info [msgcat::mc {Get Region Info}]
 
-    ttk::button $mb.list -takefocus 0 -command [list MarkerList {}] \
+    ttk::button $mb.list -takefocus 0 -command MarkerListAll \
 	-image [image create photo -file "$ds9(icons,ui)/region_list.png"]
     tooltip::tooltip $mb.list [msgcat::mc {List Region}]
 

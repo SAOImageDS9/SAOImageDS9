@@ -1066,7 +1066,7 @@ proc MarkerFont {} {
     }
 }
 
-proc MarkerList {select} {
+proc MarkerListAll {} {
     global current
     global marker
 
@@ -1079,7 +1079,25 @@ proc MarkerList {select} {
 
     if {[MarkerSaveDialog [msgcat::mc {List Regions}]]} {
 	SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
-	    [$current(frame) marker list $select \
+	    [$current(frame) marker list $marker(format) $marker(system) \
+		 $marker(sky) $marker(skyformat) $marker(strip)]
+    }
+}
+
+proc MarkerListSelect {} {
+    global current
+    global marker
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    if {[MarkerSaveDialog [msgcat::mc {List Regions}]]} {
+	SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
+	    [$current(frame) marker list select \
 		 $marker(format) $marker(system) \
 		 $marker(sky) $marker(skyformat) $marker(strip)]
     }
@@ -1522,7 +1540,7 @@ proc RegionCmdSave {fn select} {
     FileLast markerfbox $fn
 }
 
-proc RegionCmdList {select} {
+proc RegionCmdListAll {} {
     global marker
     global current
 
@@ -1534,7 +1552,23 @@ proc RegionCmdList {select} {
     }
 
     SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
-	[$current(frame) marker list $select $marker(format) $marker(system) \
+	[$current(frame) marker list $marker(format) $marker(system) \
+	     $marker(sky) $marker(skyformat) $marker(strip)]
+}
+
+proc RegionCmdListSelect {} {
+    global marker
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
+	[$current(frame) marker list select $marker(format) $marker(system) \
 	     $marker(sky) $marker(skyformat) $marker(strip)]
 }
 

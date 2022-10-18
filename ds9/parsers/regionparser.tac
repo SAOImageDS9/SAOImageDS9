@@ -241,8 +241,9 @@ save : STRING_ {RegionCmdSave $1 {}}
  | SELECT_ STRING_ {RegionCmdSave $2 select}
  ;
 
-list : {RegionCmdList {}}
- | SELECT_ {RegionCmdList select}
+list : {RegionCmdListAll}
+ | ALL_ {RegionCmdListAll}
+ | SELECT_ {RegionCmdListSelect}
  | CLOSE_ {SimpleTextDestroy markertxt}
  ;
 

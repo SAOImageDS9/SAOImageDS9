@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include font.tin
 #include yesno.tin
 #include coordsys.tin
 #include wcssys.tin
@@ -87,6 +88,11 @@ regionsend : {RegionSendCmd}
  | FILL_ {ProcessSendCmdYesNo marker fill}
  | WIDTH_ {ProcessSendCmdGet marker width}
  | DASH_ {ProcessSendCmdYesNo marker dash}
+
+ | FONT_ {ProcessSendCmdGet marker font}
+ | FONTSIZE_ {ProcessSendCmdGet marker font,size}
+ | FONTWEIGHT_ {ProcessSendCmdGet marker font,weight}
+ | FONTSLANT_ {ProcessSendCmdGet marker font,slant}
 
  | GROUP_ {ProcessSendCmdCurrent "get marker tag all"}
  | GROUPS_ {ProcessSendCmdCurrent "get marker tag all"}

@@ -113,6 +113,7 @@ stats	    {return $STATS_}
 -system	    {return $MSYSTEM_}
 -sky	    {return $MSKY_}
 
+#include fonts.fin
 #include cutpaste.fin
 #include yesno.fin
 #include coordsys.fin

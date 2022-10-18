@@ -53,6 +53,7 @@ xy	    {return $XY_}
 -prop	    {return $MPROP_}
 -group	    {return $MGROUP_}
 
+#include font.fin
 #include yesno.fin
 #include coordsys.fin
 #include wcssys.fin

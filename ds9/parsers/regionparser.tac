@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include fonts.tin
 #include cutpaste.tin
 #include yesno.tin
 #include coordsys.tin
@@ -37,7 +38,6 @@
 %token FILL_
 %token FIRST_
 %token FIXED_
-%token FONT_
 %token FORMAT_
 %token FRONT_
 %token GETINFO_
@@ -120,6 +120,7 @@
 
 %%
 
+#include fonts.trl
 #include yesno.trl
 #include coordsys.trl
 #include wcssys.trl
@@ -179,6 +180,11 @@ region : {RegionCmdLoad}
  | FILL_ yesno {ProcessCmdSet marker fill $2 MarkerColor}
  | WIDTH_ INT_ {ProcessCmdSet marker width $2 MarkerWidth}
  | DASH_ yesno {ProcessCmdSet marker dash $2 MarkerWidth}
+
+ | FONT_ font {ProcessCmdSet marker font $2 MarkerFont}
+ | FONTSIZE_ INT_ {ProcessCmdSet marker font,size $2 MarkerFont}
+ | FONTWEIGHT_ fontWeight {ProcessCmdSet marker font,weight $2 MarkerFont}
+ | FONTSLANT_ fontSlant {ProcessCmdSet marker font,slant $2 MarkerFont}
 
  | FIXED_ yesno {ProcessCmdSet marker fixed $2 [list MarkerProp fixed]}
  | EDIT_ yesno {ProcessCmdSet marker edit $2 [list MarkerProp edit]}

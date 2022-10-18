@@ -160,7 +160,7 @@ region : {RegionCmdLoad}
  | SELECTNONE_ {MarkerSelectNone}
  | DELETE_ delete
 # backward compatibility
- | DELETEALL_ {MarkerDeleteSelect {}}
+ | DELETEALL_ {MarkerDeleteAll}
  | FORMAT_ format {ProcessCmdSet marker format $2}
  | SYSTEM_ coordsys {ProcessCmdSet marker system $2}
  | SYSTEM_ wcssys {ProcessCmdSet marker system $2}
@@ -246,11 +246,10 @@ list : {RegionCmdList {}}
  | CLOSE_ {SimpleTextDestroy markertxt}
  ;
 
-delete : {MarkerDeleteSelect {}}
- | SELECT_ {MarkerDeleteSelect select}
-# backward compatibility
- | ALL_ {MarkerDeleteSelect {}}
- | LOAD_ STRING_ {MarkerDeleteSelect {}; RegionCmdLoadFn $2}
+delete : {MarkerDeleteAll}
+ | ALL_ {MarkerDeleteAll}
+ | SELECT_ {MarkerDeleteSelect}
+ | LOAD_ STRING_ {MarkerDeleteAll; RegionCmdLoadFn $2}
  ;
 
 centroid : {MarkerCentroid}

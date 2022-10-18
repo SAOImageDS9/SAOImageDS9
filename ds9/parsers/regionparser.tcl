@@ -117,7 +117,7 @@ array set region::table {
   68:405,target 18
   14:343,target 122
   49:307,target 205
-  121:309,target 139
+  121:309,target 138
   65:302,target 15
   166:309,target 73
   51:281,target 72
@@ -240,7 +240,7 @@ array set region::table {
   117:308 shift
   71:405,target 21
   62:301 reduce
-  123:309,target 138
+  123:309,target 139
   67:302,target 17
   62:302 reduce
   146:0,target 136
@@ -916,7 +916,7 @@ array set region::table {
   156:309 reduce
   76:404,target 26
   53:0 accept
-  123:0,target 138
+  123:0,target 139
   73:301,target 23
   37:336,target 162
   229:308,target 220
@@ -1927,7 +1927,7 @@ array set region::table {
   151:309,target 145
   206:309,target 114
   196:309,target 46
-  121:0,target 139
+  121:0,target 138
   51:275,target 66
   0:338,target 27
   46:309,target 1
@@ -3336,31 +3336,31 @@ array set region::rules {
   6,line 237
   3,line 234
   51,e 1
-  218,line 516
-  215,line 513
-  212,line 510
-  208,line 504
-  198,line 492
-  205,line 501
-  195,line 488
-  202,line 498
-  192,line 485
-  188,line 477
-  185,line 474
-  182,line 471
-  178,line 465
-  175,line 462
-  172,line 459
-  168,line 455
-  165,line 452
-  162,line 449
-  158,line 443
-  155,line 440
-  152,line 434
-  148,line 428
-  145,line 423
-  142,line 418
-  138,line 412
+  218,line 515
+  215,line 512
+  212,line 509
+  208,line 503
+  198,line 491
+  205,line 500
+  195,line 487
+  202,line 497
+  192,line 484
+  188,line 476
+  185,line 473
+  182,line 470
+  178,line 464
+  175,line 461
+  172,line 458
+  168,line 454
+  165,line 451
+  162,line 448
+  158,line 442
+  155,line 439
+  152,line 433
+  148,line 427
+  145,line 422
+  142,line 417
+  138,line 411
   135,line 406
   132,line 401
   128,line 393
@@ -3411,31 +3411,31 @@ array set region::rules {
   8,line 240
   5,line 236
   2,line 233
-  217,line 515
-  214,line 512
+  217,line 514
+  214,line 511
   198,e 1
-  211,line 507
-  207,line 503
-  197,line 492
-  204,line 500
-  194,line 487
-  201,line 497
-  191,line 482
-  187,line 476
-  184,line 473
-  181,line 470
-  177,line 464
-  174,line 461
-  171,line 458
-  167,line 454
-  164,line 451
-  161,line 446
-  157,line 442
-  154,line 437
-  151,line 432
-  147,line 427
-  144,line 420
-  141,line 417
+  211,line 506
+  207,line 502
+  197,line 491
+  204,line 499
+  194,line 486
+  201,line 496
+  191,line 481
+  187,line 475
+  184,line 472
+  181,line 469
+  177,line 463
+  174,line 460
+  171,line 457
+  167,line 453
+  164,line 450
+  161,line 445
+  157,line 441
+  154,line 436
+  151,line 431
+  147,line 426
+  144,line 419
+  141,line 416
   137,line 410
   134,line 405
   131,line 398
@@ -3478,39 +3478,39 @@ array set region::rules {
   7,line 238
   4,line 235
   1,line 232
-  219,line 517
-  216,line 514
-  213,line 511
-  210,line 506
-  209,line 505
-  199,line 493
-  206,line 502
-  196,line 489
-  203,line 499
-  193,line 486
-  200,line 496
-  190,line 481
-  189,line 478
-  186,line 475
-  183,line 472
-  180,line 467
-  179,line 466
-  176,line 463
-  173,line 460
-  170,line 457
-  169,line 456
-  166,line 453
-  163,line 450
-  160,line 445
-  159,line 444
-  156,line 441
-  153,line 436
-  149,line 429
-  150,line 430
-  146,line 424
-  143,line 419
-  139,line 413
-  140,line 414
+  219,line 516
+  216,line 513
+  213,line 510
+  210,line 505
+  209,line 504
+  199,line 492
+  206,line 501
+  196,line 488
+  203,line 498
+  193,line 485
+  200,line 495
+  190,line 480
+  189,line 477
+  186,line 474
+  183,line 471
+  180,line 466
+  179,line 465
+  176,line 462
+  173,line 459
+  170,line 456
+  169,line 455
+  166,line 452
+  163,line 449
+  160,line 444
+  159,line 443
+  156,line 440
+  153,line 435
+  149,line 428
+  150,line 429
+  146,line 423
+  143,line 418
+  139,line 412
+  140,line 413
   136,line 407
   133,line 402
   129,line 394
@@ -3841,11 +3841,11 @@ array set region::lr1_table {
   119 {{87 {0 309} 2}}
   120 {{103 {0 309} 2}}
   233,trans {}
-  121 {{139 {0 309} 1}}
+  121 {{138 {0 309} 1}}
   252,trans {}
   122 {{140 {0 309} 1}}
   271,trans {}
-  123 {{138 {0 309} 1}}
+  123 {{139 {0 309} 1}}
   19,trans {{307 130}}
   20,trans {}
   300,trans {}
@@ -4227,7 +4227,7 @@ array set region::lr1_table {
 }
 
 array set region::token_id_table {
-  426,line 416
+  426,line 415
   286 WCSO_
   286,t 0
   287 WCSP_
@@ -4458,7 +4458,7 @@ array set region::token_id_table {
   370 WIDTH_
   369 UPDATE_
   327,title EPSILON
-  438,line 518
+  438,line 517
   388,t 0
   371 DS9_
   346,title MOVEFRONT
@@ -4478,7 +4478,7 @@ array set region::token_id_table {
   432,title {}
   375 PROS_
   322,t 0
-  435,line 492
+  435,line 491
   376 SAOIMAGE_
   377 XY_
   311,line 71
@@ -4488,7 +4488,7 @@ array set region::token_id_table {
   379 ELLIPSE_
   366,line 126
   381 POLYGON_
-  432,line 480
+  432,line 479
   382 POINT_
   364,t 0
   383 LINE_
@@ -4507,7 +4507,7 @@ array set region::token_id_table {
   386 RULER_
   326,title EDIT
   287,t 0
-  428,line 426
+  428,line 425
   387 COMPASS_
   345,title MOVEBACK
   416,t 1
@@ -4717,7 +4717,7 @@ array set region::token_id_table {
   421,t 1
   372,line 133
   323,t 0
-  437,line 509
+  437,line 508
   273,title WCSB
   344,t 0
   313,line 73
@@ -4729,7 +4729,7 @@ array set region::token_id_table {
   339,title INVERT
   365,t 0
   358,title SELECTALL
-  434,line 491
+  434,line 490
   377,title XY
   267,t 0
   406,title MSKY
@@ -4741,7 +4741,7 @@ array set region::token_id_table {
   386,t 0
   365,line 125
   288,t 0
-  431,line 469
+  431,line 468
   417,t 1
   320,t 0
   319,t 0
@@ -4750,7 +4750,7 @@ array set region::token_id_table {
   438,t 1
   362,line 122
   341,t 0
-  427,line 422
+  427,line 421
   272,title WCSA
   291,title WCST
   293,line 46
@@ -4828,7 +4828,7 @@ array set region::token_id_table {
   407,t 1
   397,t 0
   355,title SAVETEMPLATE
-  X,line 474
+  X,line 473
   404,line 169
   394,line 156
   374,title SAOTNG
@@ -4904,7 +4904,7 @@ array set region::token_id_table {
   401,title PLOT3D
   391,title BOXANNULUS
   263 ON_
-  x,line 475
+  x,line 474
   420,title {}
   419,title {}
   345,t 0
@@ -4918,7 +4918,7 @@ array set region::token_id_table {
   267 IMAGE_
   268,t 0
   268 PHYSICAL_
-  436,line 495
+  436,line 494
   269 AMPLIFIER_
   270 DETECTOR_
   387,t 0
@@ -4934,7 +4934,7 @@ array set region::token_id_table {
   418,t 1
   274 WCSC_
   285,title WCSN
-  433,line 484
+  433,line 483
   321,t 0
   314,title AUTOCENTROID
   275 WCSD_
@@ -4954,8 +4954,8 @@ array set region::token_id_table {
   389,title ANNULUS
   279 WCSH_
   280 WCSI_
-  430,line 448
-  429,line 439
+  430,line 447
+  429,line 438
   418,title {}
   281 WCSJ_
   437,title {}
@@ -5133,7 +5133,7 @@ proc region::yyparse {} {
                     72 { MarkerBack }
                     74 { MarkerSelectAll }
                     75 { MarkerSelectNone }
-                    77 { MarkerDeleteSelect {} }
+                    77 { MarkerDeleteAll }
                     78 { ProcessCmdSet marker format $2 }
                     79 { ProcessCmdSet marker system $2 }
                     80 { ProcessCmdSet marker system $2 }
@@ -5185,10 +5185,10 @@ proc region::yyparse {} {
                     134 { RegionCmdList {} }
                     135 { RegionCmdList select }
                     136 { SimpleTextDestroy markertxt }
-                    137 { MarkerDeleteSelect {} }
-                    138 { MarkerDeleteSelect select }
-                    139 { MarkerDeleteSelect {} }
-                    140 { MarkerDeleteSelect {}; RegionCmdLoadFn $2 }
+                    137 { MarkerDeleteAll }
+                    138 { MarkerDeleteAll }
+                    139 { MarkerDeleteSelect }
+                    140 { MarkerDeleteAll; RegionCmdLoadFn $2 }
                     141 { MarkerCentroid }
                     142 { ProcessCmdSet marker centroid,auto $2 MarkerCentroidAuto }
                     143 { ProcessCmdSet marker centroid,radius $2 MarkerCentroidRadius }

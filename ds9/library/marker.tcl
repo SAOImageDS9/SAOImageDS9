@@ -1003,24 +1003,22 @@ proc MarkerSelectBack {} {
     UpdateEditMenu
 }
 
-proc MarkerDelete {select} {
-    global pds9
+proc MarkerDeleteAll {} {
+    global current
 
-    if {$pds9(confirm)} {
-	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Delete Regions?}]] != {ok}} {
-	    return 0
-	}
+    if {$current(frame) != {}} {
+	$current(frame) marker delete
+	UpdateGroupDialog
     }
 
-    MarkerDeleteSelect $select
     return 1
 }
 
-proc MarkerDeleteSelect {select} {
+proc MarkerDeleteSelect {} {
     global current
     
     if {$current(frame) != {}} {
-	$current(frame) marker delete $select
+	$current(frame) marker delete select
 	UpdateGroupDialog
     }
 
@@ -1028,9 +1026,8 @@ proc MarkerDeleteSelect {select} {
 }
 
 proc MarkerDeleteLoad {} {
-    if {[MarkerDelete {}]} {
-	MarkerLoad
-    }
+    MarkerDeleteAll
+    MarkerLoad
 }
 
 proc MarkerColor {} {

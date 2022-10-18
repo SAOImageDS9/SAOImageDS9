@@ -105,8 +105,8 @@ list : {IllustrateListAll}
  ;
 
 delete : {IllustrateDeleteAll}
- | SELECT_ {IllustrateDeleteSelect}
  | ALL_ {IllustrateDeleteAll}
+ | SELECT_ {IllustrateDeleteSelect}
  ;
 
 %%

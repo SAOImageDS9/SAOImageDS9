@@ -86,7 +86,7 @@ array set illustrate::table {
   6:269 reduce
   41:0,target 42
   4:269,target 30
-  33:0,target 56
+  33:0,target 57
   26:269 reduce
   17:278 shift
   25:0,target 2
@@ -324,7 +324,7 @@ array set illustrate::table {
   17:279,target 51
   26:0 reduce
   7:269 shift
-  32:269,target 57
+  32:269,target 56
   10:286 shift
   27:269 reduce
   47:0 reduce
@@ -362,11 +362,11 @@ array set illustrate::table {
   40:0,target 27
   39:0,target 24
   15:269 reduce
-  32:0,target 57
+  32:0,target 56
   19:263,target 27
   24:0,target 29
   54:269 reduce
-  33:269,target 56
+  33:269,target 57
   19:0 reduce
   41:0 reduce
   4:269 reduce
@@ -757,10 +757,10 @@ array set illustrate::lr1_table {
   30 {{7 {0 269} 1}}
   62,trans {}
   31 {{20 {0 269} 2}}
-  32 {{57 {0 269} 1}}
+  32 {{56 {0 269} 1}}
   10,trans {{270 32} {286 33} {307 34}}
   28,trans {}
-  33 {{56 {0 269} 1}}
+  33 {{57 {0 269} 1}}
   47,trans {}
   34 {{25 {0 269} 2}}
 }
@@ -1124,8 +1124,8 @@ proc illustrate::yyparse {} {
                     53 { IllustrateListAll }
                     54 { SimpleTextDestroy illustratetxt }
                     55 { IllustrateDeleteAll }
-                    56 { IllustrateDeleteSelect }
-                    57 { IllustrateDeleteAll }
+                    56 { IllustrateDeleteAll }
+                    57 { IllustrateDeleteSelect }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

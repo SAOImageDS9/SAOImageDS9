@@ -25,6 +25,7 @@
 %token COLOR_
 %token COMMAND_
 %token COMPOSITE_
+%token DASH_
 %token DELETE_
 %token DELETEALL_
 %token DELIM_
@@ -33,6 +34,7 @@
 %token EPSILON_
 %token EXCLUDE_
 %token FILE_
+%token FILL_
 %token FIRST_
 %token FIXED_
 %token FONT_
@@ -171,9 +173,13 @@ region : {RegionCmdLoad}
  | STRIP_ yesno {ProcessCmdSet marker strip $2}
 # backward compatibility
  | DELIM_ delim {ProcessCmdSet marker strip $2}
+
  | SHAPE_ shape {ProcessCmdSet marker shape $2}
  | COLOR_ STRING_ {ProcessCmdSet marker color $2 MarkerColor}
+ | FILL_ yesno {ProcessCmdSet marker fill $2 MarkerColor}
  | WIDTH_ INT_ {ProcessCmdSet marker width $2 MarkerWidth}
+ | DASH_ yesno {ProcessCmdSet marker dash $2 MarkerWidth}
+
  | FIXED_ yesno {ProcessCmdSet marker fixed $2 [list MarkerProp fixed]}
  | EDIT_ yesno {ProcessCmdSet marker edit $2 [list MarkerProp edit]}
  | ROTATE_ yesno {ProcessCmdSet marker rotate $2 [list MarkerProp rotate]}
@@ -182,10 +188,13 @@ region : {RegionCmdLoad}
  | EXCLUDE_ {ProcessCmdSet marker include 0 [list MarkerProp include]}
  | SOURCE_ {ProcessCmdSet marker source 1 [list MarkerProp source]}
  | BACKGROUND_ {ProcessCmdSet marker source 0 [list MarkerProp source]}
+
  | GROUPS_ group
  | GROUP_ group
+
  | COMPOSITE_ {CompositeCreate}
  | DISSOLVE_ {CompositeDelete}
+
  | TEMPLATE_ template
  | SAVETEMPLATE_ STRING_ {RegionCmdTemplateSave $2}
  | COMMAND_ STRING_ {RegionCmdCommand $2}

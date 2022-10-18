@@ -20,6 +20,7 @@ color	    {return $COLOR_}
 colour	    {return $COLOR_}
 command	    {return $COMMAND_}
 composite   {return $COMPOSITE_}
+dash	    {return $DASH_}
 delete	    {return $DELETE_}
 deleteall   {return $DELETEALL_}
 delim	    {return $DELIM_}
@@ -28,6 +29,7 @@ edit	    {return $EDIT_}
 epsilon	    {return $EPSILON_}
 exclude	    {return $EXCLUDE_}
 file	    {return $FILE_}
+fill	    {return $FILL_}
 first	    {return $FIRST_}
 fixed	    {return $FIXED_}
 font	    {return $FONT_}

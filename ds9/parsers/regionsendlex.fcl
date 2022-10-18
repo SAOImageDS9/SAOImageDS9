@@ -13,9 +13,11 @@ background  {return $BACKGROUND_}
 centroid    {return $CENTROID_}
 color	    {return $COLOR_}
 colour	    {return $COLOR_}
+dash	    {return $DASH_}
 delim	    {return $DELIM_}
 epsilon	    {return $EPSILON_}
 exclude	    {return $EXCLUDE_}
+fill	    {return $FILL_}
 format	    {return $FORMAT_}
 group	    {return $GROUP_}
 groups	    {return $GROUPS_}

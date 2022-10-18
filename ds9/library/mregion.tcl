@@ -1108,12 +1108,19 @@ proc UpdateRegionMenu {} {
 		if {[$current(frame) get marker select number] == 1} {
 		    set marker(color) \
 			[$current(frame) get marker color]
+		    set marker(fill) \
+			[$current(frame) get marker property fill]
 		    set marker(width) \
 			[$current(frame) get marker width]
 		    set marker(dash) \
 			[$current(frame) get marker property dash]
-		    set marker(fill) \
-			[$current(frame) get marker property fill]
+
+		    set f [$current(frame) get marker font]
+		    set marker(font) [lindex $f 0]
+		    set marker(font,size) [lindex $f 1]
+		    set marker(font,weight) [lindex $f 2]
+		    set marker(font,slant) [lindex $f 3]
+
 		    set marker(fixed) \
 			[$current(frame) get marker property fixed]
 		    set marker(edit) \
@@ -1129,18 +1136,18 @@ proc UpdateRegionMenu {} {
 		    set marker(source) \
 			[$current(frame) get marker property source]
 
-		    set f [$current(frame) get marker font]
-
-		    set marker(font) [lindex $f 0]
-		    set marker(font,size) [lindex $f 1]
-		    set marker(font,weight) [lindex $f 2]
-		    set marker(font,slant) [lindex $f 3]
 		} else {
 		    # defaults
 		    set marker(color) $pmarker(color)
+		    set marker(fill) $pmarker(fill) 
 		    set marker(width) $pmarker(width) 
 		    set marker(dash) $pmarker(dash) 
-		    set marker(fill) $pmarker(fill) 
+
+		    set marker(font) $pmarker(font) 
+		    set marker(font,size) $pmarker(font,size) 
+		    set marker(font,weight) $pmarker(font,weight) 
+		    set marker(font,slant) $pmarker(font,slant) 
+
 		    set marker(fixed) $pmarker(fixed) 
 		    set marker(edit) $pmarker(edit) 
 		    set marker(move) $pmarker(move) 
@@ -1148,11 +1155,6 @@ proc UpdateRegionMenu {} {
 		    set marker(delete) $pmarker(delete) 
 		    set marker(include) $pmarker(include) 
 		    set marker(source) $pmarker(source) 
-
-		    set marker(font) $pmarker(font) 
-		    set marker(font,size) $pmarker(font,size) 
-		    set marker(font,weight) $pmarker(font,weight) 
-		    set marker(font,slant) $pmarker(font,slant) 
 		}
 	    }
 	}

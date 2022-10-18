@@ -1906,8 +1906,10 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [skyformat degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [strip yes|no]<br>
 &nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
-&nbsp;&nbsp;&nbsp; [color &lt;color&gt;<br>
+&nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fill yes|no];<br>
 &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
+&nbsp;&nbsp;&nbsp; [dash yes|no]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [include|exclude|source|background]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
@@ -1973,7 +1975,9 @@ $ds9 -region skyformat degrees<br>
 $ds9 -region strip yes<br>
 $ds9 -region shape ellipse<br>
 $ds9 -region color red<br>
+$ds9 -region fill yes<br>
 $ds9 -region width 3<br>
+$ds9 -region dash yes<br>
 $ds9 -region edit yes<br>
 $ds9 -region include<br>
 $ds9 -region command "circle 100 100 20 # color=red"<br>

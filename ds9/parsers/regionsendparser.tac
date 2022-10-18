@@ -17,9 +17,11 @@
 %token BACKGROUND_
 %token CENTROID_
 %token COLOR_
+%token DASH_
 %token DELIM_
 %token EPSILON_
 %token EXCLUDE_
+%token FILL_
 %token FORMAT_
 %token GROUP_
 %token GROUPS_
@@ -79,9 +81,13 @@ regionsend : {RegionSendCmd}
  | STRIP_ {ProcessSendCmdYesNo marker strip}
 # backward compatibility
  | DELIM_ {}
+
  | SHAPE_ {ProcessSendCmdGet marker shape}
  | COLOR_ {ProcessSendCmdGet marker color}
+ | FILL_ {ProcessSendCmdYesNo marker fill}
  | WIDTH_ {ProcessSendCmdGet marker width}
+ | DASH_ {ProcessSendCmdYesNo marker dash}
+
  | GROUP_ {ProcessSendCmdCurrent "get marker tag all"}
  | GROUPS_ {ProcessSendCmdCurrent "get marker tag all"}
  ;

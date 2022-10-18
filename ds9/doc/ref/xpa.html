@@ -2277,7 +2277,9 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [strip yes|no]<br>
 &nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
 &nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [fill yes|no]<br>
 &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
+&nbsp;&nbsp;&nbsp; [dash yes|no]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
 &nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
@@ -2332,7 +2334,9 @@ $xpaget ds9 region skyformat<br>
 $xpaget ds9 region strip<br>
 $xpaget ds9 region shape<br>
 $xpaget ds9 region color<br>
+$xpaget ds9 region fill<br>
 $xpaget ds9 region width<br>
+$xpaget ds9 region dash<br>
 $xpaget ds9 region source<br>
 $xpaget ds9 region background<br>
 $xpaget ds9 region include<br>
@@ -2388,7 +2392,9 @@ $xpaset -p ds9 region skyformat degrees<br>
 $xpaset -p ds9 region strip yes<br>
 $xpaset -p ds9 region shape ellipse<br>
 $xpaset -p ds9 region color red<br>
+$xpaset -p ds9 region fill yes<br>
 $xpaset -p ds9 region width 3<br>
+$xpaset -p ds9 region dash yes<br>
 $xpaset -p ds9 region edit yes<br>
 $xpaset -p ds9 region include<br>
 $xpaset -p ds9 region command {circle 100 100 20}<br>

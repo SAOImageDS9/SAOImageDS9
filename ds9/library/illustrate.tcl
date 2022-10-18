@@ -40,7 +40,7 @@ proc IllustrateDef {} {
     set illustrate(font,slant) roman
 
     # image
-    set illustrate(fn) "$ds9(root)/doc/sun.gif"
+    set illustrate(fn) "$ds9(root)/doc/sun.png"
 
     array set pillustrate [array get illustrate]
 

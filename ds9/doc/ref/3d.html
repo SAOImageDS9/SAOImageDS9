@@ -7,7 +7,7 @@
 <title>3D</title>
 </head>
 <body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" height="98" align="middle"> 3-D Frames<br></h3>
+<h3><img alt="" src="../sun.png" align="middle"> 3-D Frames<br></h3>
 <blockquote>
 <p>Previous versions of DS9 would allow users to load 3-D data into the traditional 2-D frames, and would allow users to step through successive z-dimension pixel slices of the data cube. To visualize the 3-D data in DS9 v. 7.0, a new module, encompassed by the new <tt>Frame 3D</tt> option, allows users to load and view data cubes in multiple dimensions.<br></p>
 <p>The new module implements a simple ray-trace algorithm. For each pixel on the screen, a ray is projected back into the view volume, based on the current viewing parameters, returning a data value if the ray intersects the FITS data cube. To determine the value returned, there are 2 methods available, Maximum Intensity Projection (MIP) and Average Intensity Projection (AIP). MIP returns the maximum value encountered, AIP returns an average of all values encountered. At this point, normal DS9 operations are applied, such as scaling, clipping and applying a color map.<br></p>

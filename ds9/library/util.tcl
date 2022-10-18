@@ -850,7 +850,7 @@ proc AboutBoxDefault {} {
     canvas $f.c -background white -height 300 -width 500
     pack $f.c -fill both -expand true
     
-    set ed(sun) [image create photo -format gif -file $ds9(root)/doc/sun.gif]
+    set ed(sun) [image create photo -file $ds9(root)/doc/sun.png]
     
     $f.c create image 0 0 -image $ed(sun) -anchor nw
     $f.c create text 120 22 -text $help(about) -anchor nw -width 350

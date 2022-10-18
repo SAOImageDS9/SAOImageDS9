@@ -82,7 +82,7 @@ proc SAMPConnect {{verbose 1}} {
     catch {unset sampmap}
     set sampmap(samp.name) {string "SAOImageDS9"}
     set sampmap(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
-    set sampmap(samp.icon.url) {string "http://ds9.si.edu/doc/sun.gif"}
+    set sampmap(samp.icon.url) {string "http://ds9.si.edu/doc/sun.png"}
     set sampmap(samp.documentation.url) {string "http://ds9.si.edu/doc/ref/index.html"}
 
     set sampmap(home.page) {string "http://ds9.si.edu/"}

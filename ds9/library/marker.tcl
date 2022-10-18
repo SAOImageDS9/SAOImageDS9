@@ -1103,6 +1103,52 @@ proc MarkerListSelect {} {
     }
 }
 
+proc MarkerSaveAll {} {
+    global current
+    global marker
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    set filename [SaveFileDialog markerfbox]
+    if {$filename == {}} {
+	return
+    }
+
+    if {[MarkerSaveDialog [msgcat::mc {Save Regions}]]} {
+	$current(frame) marker save "\{$filename\}" \
+	    $marker(format) $marker(system) $marker(sky) \
+	    $marker(skyformat) $marker(strip)
+    }
+}
+
+proc MarkerSaveSelect {} {
+    global current
+    global marker
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    set filename [SaveFileDialog markerfbox]
+    if {$filename == {}} {
+	return
+    }
+
+    if {[MarkerSaveDialog [msgcat::mc {Save Regions}]]} {
+	$current(frame) marker save select "\{$filename\}" \
+	    $marker(format) $marker(system) $marker(sky) \
+	    $marker(skyformat) $marker(strip)
+    }
+}
+
 proc MarkerLoad {} {
     global ds9
     global current
@@ -1245,29 +1291,6 @@ proc MarkerLoadFile {filename which format sys sky} {
     }
     FileLast markerfbox $filename
     UpdateGroupDialog
-}
-
-proc MarkerSave {select} {
-    global current
-    global marker
-
-    if {$current(frame) == {}} {
-	return
-    }
-    if {![$current(frame) has fits]} {
-	return
-    }
-
-    set filename [SaveFileDialog markerfbox]
-    if {$filename == {}} {
-	return
-    }
-
-    if {[MarkerSaveDialog [msgcat::mc {Save Regions}]]} {
-	$current(frame) marker save $select "\{$filename\}" \
-	    $marker(format) $marker(system) $marker(sky) \
-	    $marker(skyformat) $marker(strip)
-    }
 }
 
 proc MarkerInfo {} {
@@ -1524,7 +1547,7 @@ proc RegionCmdLoadFn {fn {all {0}}} {
 	$marker(load,format) $marker(load,system) $marker(load,sky)
 }
 
-proc RegionCmdSave {fn select} {
+proc RegionCmdSaveAll {fn} {
     global marker
     global current
 
@@ -1534,8 +1557,30 @@ proc RegionCmdSave {fn select} {
     if {![$current(frame) has fits]} {
 	return
     }
+    if {$fn == {}} {
+	return
+    }
 
-    $current(frame) marker save $select $fn $marker(format) \
+    $current(frame) marker save $fn $marker(format) \
+	$marker(system) $marker(sky) $marker(skyformat) $marker(strip)
+    FileLast markerfbox $fn
+}
+
+proc RegionCmdSaveSelect {fn} {
+    global marker
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+    if {$fn == {}} {
+	return
+    }
+
+    $current(frame) marker save select $fn $marker(format) \
 	$marker(system) $marker(sky) $marker(skyformat) $marker(strip)
     FileLast markerfbox $fn
 }

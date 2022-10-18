@@ -237,8 +237,9 @@ loadall : {set _ 0}
  | ALL_ {set _ 1}
  ;
 
-save : STRING_ {RegionCmdSave $1 {}}
- | SELECT_ STRING_ {RegionCmdSave $2 select}
+save : STRING_ {RegionCmdSaveAll $1}
+ | ALL_ STRING_ {RegionCmdSaveAll $2}
+ | SELECT_ STRING_ {RegionCmdSaveSelect $2}
  ;
 
 list : {RegionCmdListAll}

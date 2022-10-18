@@ -286,6 +286,7 @@ proc CommGet {proc id paramlist fn} {
 	iexam -
 	imexam {ProcessSendIExamCmd $proc $id $param}
 	iis {ProcessSendIISCmd $proc $id $param}
+	illustrate {ProcessSendIllustrateCmd $proc $id $param}
 	jpg -
 	jpeg {ProcessSendJPEGCmd $proc $id $param {} $fn}
 	lock {ProcessSendLockCmd $proc $id $param}

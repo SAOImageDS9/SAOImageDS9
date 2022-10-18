@@ -116,7 +116,7 @@ proc IllustrateAntsOn {id} {
 }
 
 proc IllustrateAntsOff {gr} {
-    foreach {id color fillcolor width dashlist} $gr {
+    foreach {id color fill width dash} $gr {
 	switch [IllustrateGetType $id] {
 	    circle -
 	    ellipse -

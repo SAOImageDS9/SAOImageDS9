@@ -340,7 +340,6 @@ proc IllustrateShiftButton {xx yy} {
 	    set iillustrate(motion) none
 	    return
 	}
-
 	# if not selected, add to selection
 	IllustrateAddToSelection $id
 	set iillustrate(motion) beginMove
@@ -390,7 +389,7 @@ proc IllustrateButtonMotion {xx yy} {
 
 	beginMove {
 	    foreach gr $iillustrate(selection) {
-		foreach {id color fillcolor width dashlist} $gr {
+		foreach {id color fill width dash} $gr {
 		    IllustrateAntsOn $id
 		    IllustrateHandleOff $id
 		}
@@ -399,7 +398,7 @@ proc IllustrateButtonMotion {xx yy} {
 	}
 	move {
 	    foreach gr $iillustrate(selection) {
-		foreach {id color fillcolor width dashlist} $gr {
+		foreach {id color fill width dash} $gr {
 		    set dx [expr $xx-$iillustrate(motion,xx)]
 		    set dy [expr $yy-$iillustrate(motion,yy)]
 		    $ds9(canvas) move $id $dx $dy
@@ -479,7 +478,7 @@ proc IllustrateButtonRelease {xx yy} {
 	move {
 	    foreach gr $iillustrate(selection) {
 		IllustrateAntsOff $gr
-		foreach {id color fillcolor width dashlist} $gr {
+		foreach {id color fill width dash} $gr {
 		    IllustrateHandleOn $id
 		    IllustrateUpdateHandle $id
 		    IllustrateEditCB $id
@@ -640,7 +639,7 @@ proc IllustrateMoveSelection {dx dy} {
     global iillustrate
 
     foreach gr $iillustrate(selection) {
-	foreach {id color fillcolor width dashlist} $gr {
+	foreach {id color fill width dash} $gr {
 	    $ds9(canvas) move $id $dx $dy
 	    IllustrateEditCB $id
 	    IllustrateUpdateHandle $id

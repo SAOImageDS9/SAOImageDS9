@@ -193,12 +193,12 @@ proc IllustrateBaseAntsOn {id} {
 proc IllustrateBaseAntsOff {gr} {
     global ds9
 
-    foreach {id color fillcolor width dashlist} $gr {
+    foreach {id color fill width dash} $gr {
 	$ds9(canvas) itemconfigure $id \
 	    -outline $color \
-	    -fill $fillcolor \
+	    -fill $fill \
 	    -width $width \
-	    -dash $dashlist
+	    -dash $dash
     }
 }
 

@@ -136,8 +136,8 @@ proc IllustrateTextAntsOn {id} {
 proc IllustrateTextAntsOff {gr} {
     global ds9
 
-    foreach {id color fillcolor width dashlist} $gr {
-	$ds9(canvas) itemconfigure $id -fill $fillcolor
+    foreach {id color fill width dash} $gr {
+	$ds9(canvas) itemconfigure $id -fill $fill
     }
 }
 

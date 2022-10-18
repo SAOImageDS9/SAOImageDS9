@@ -646,19 +646,11 @@ proc MarkerCreateShape {which x y} {
 	polygon {append cmd " .001 .001"}
 	line {append cmd " $x $y"}
 	vector {append cmd " $x $y"}
-	projection {append cmd " $x $y $pmarker(projection,thick) "}
+	projection {append cmd " $x $y $pmarker(projection,thick)"}
 	segment {append cmd " .001 .001"}
-	text {
-	    set txt "Region"
-	    set r [EntryDialog [msgcat::mc {Text}] [msgcat::mc {Enter Text}] 40 txt]
-	    if {$r == 1 && $txt != {}} {
-		append cmd " 0 text = \{\{$txt\}\}"
-	    } else {
-		return
-	    }
-	}
+	text {append cmd " 0 text = \{\{Region\}\}"}
 	ruler {append cmd " $x $y $ed(system) $ed(sky) $ed(system) $ed(dformat) ''"}
-	compass {append cmd " 15 $ed(system) $ed(sky) "}
+	compass {append cmd " 15 $ed(system) $ed(sky)"}
 	{circle point} -
 	{box point} -
 	{diamond point} -

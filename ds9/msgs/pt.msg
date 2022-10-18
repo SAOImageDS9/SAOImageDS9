@@ -453,6 +453,7 @@
 ::msgcat::mcset pt {Iteration} 
 ::msgcat::mcset pt {JPEG Quality Factor} {Fator de qualidade JPEG}
 ::msgcat::mcset pt {JPEG} 
+::msgcat::mcset pt {Justify} 
 ::msgcat::mcset pt {Keep-Alive} 
 ::msgcat::mcset pt {Keyword} 
 ::msgcat::mcset pt {Labels} {Legendas}
@@ -601,6 +602,7 @@
 ::msgcat::mcset pt {Move First} 
 ::msgcat::mcset pt {Move Forward} 
 ::msgcat::mcset pt {Move Frame} 
+::msgcat::mcset pt {Move Front} 
 ::msgcat::mcset pt {Move Last} 
 ::msgcat::mcset pt {Move to Back} [encoding convertfrom iso8859-1 {Move para trás}]
 ::msgcat::mcset pt {Move to Front} {Mover para frente}

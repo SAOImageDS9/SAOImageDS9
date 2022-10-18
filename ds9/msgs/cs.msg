@@ -453,6 +453,7 @@
 ::msgcat::mcset cs {Iteration} 
 ::msgcat::mcset cs {JPEG Quality Factor} [encoding convertfrom iso8859-2 {Kvalita JPEGu}]
 ::msgcat::mcset cs {JPEG} 
+::msgcat::mcset cs {Justify} 
 ::msgcat::mcset cs {Keep-Alive} 
 ::msgcat::mcset cs {Keyword} 
 ::msgcat::mcset cs {Labels} [encoding convertfrom iso8859-2 {Oznaèení}]
@@ -601,6 +602,7 @@
 ::msgcat::mcset cs {Move First} 
 ::msgcat::mcset cs {Move Forward} 
 ::msgcat::mcset cs {Move Frame} [encoding convertfrom iso8859-2 {Pøesunout snímek}]
+::msgcat::mcset cs {Move Front} 
 ::msgcat::mcset cs {Move Last} 
 ::msgcat::mcset cs {Move to Back} [encoding convertfrom iso8859-2 {Pøesunout vzad}]
 ::msgcat::mcset cs {Move to Front} [encoding convertfrom iso8859-2 {Pøesunout vpøed}]

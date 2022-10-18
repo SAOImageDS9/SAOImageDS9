@@ -963,7 +963,7 @@ proc MarkerSelectAll {} {
     UpdateEditMenu
 }
 
-proc MarkerUnselectAll {} {
+proc MarkerSelectNone {} {
     global current
     
     if {$current(frame) != {}} {
@@ -983,21 +983,21 @@ proc MarkerSelectInvert {} {
     UpdateEditMenu
 }
 
-proc MarkerSelectLast {} {
+proc MarkerSelectFront {} {
     global current
 
     if {$current(frame) != {}} {
-	$current(frame) marker select last
+	$current(frame) marker select first
     }
 
     UpdateEditMenu
 }
 
-proc MarkerSelectFirst {} {
+proc MarkerSelectBack {} {
     global current
 
     if {$current(frame) != {}} {
-	$current(frame) marker select first
+	$current(frame) marker select last
     }
 
     UpdateEditMenu

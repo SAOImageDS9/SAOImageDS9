@@ -157,7 +157,7 @@ region : {RegionCmdLoad}
 # backward compatibility
  | SELECTALL_ {MarkerSelectAll}
 # backward compatibility
- | SELECTNONE_ {MarkerUnSelectAll}
+ | SELECTNONE_ {MarkerSelectNone}
  | DELETE_ delete
 # backward compatibility
  | DELETEALL_ {MarkerDeleteSelect {}}
@@ -264,9 +264,13 @@ move : FRONT_ {MarkerFront}
  ;
  
 select : ALL_ {MarkerSelectAll}
- | NONE_ {MarkerUnselectAll}
+ | NONE_ {MarkerSelectNone}
  | INVERT_ {MarkerSelectInvert}
+ | FRONT_ {MarkerSelectFront}
+ | BACK_ {MarkerSelectBack}
+# backward compatibility
  | LAST_ {MarkerSelectLast}
+# backward compatibility
  | FIRST_ {MarkerSelectFirst}
 # backward compatibility
  | GROUP_ STRING_ {ProcessCmdSet marker tag $2; RegionCmdGroup select}

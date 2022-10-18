@@ -453,6 +453,7 @@
 ::msgcat::mcset ja {Iteration} [encoding convertfrom euc-jp "\xb7\xab\xa4\xea\xca\xd6\xa4\xb7"]
 ::msgcat::mcset ja {JPEG Quality Factor} [encoding convertfrom euc-jp "\x4a\x50\x45\x47\xa4\xce\xc9\xca\xbc\xc1"]
 ::msgcat::mcset ja {JPEG} 
+::msgcat::mcset ja {Justify} 
 ::msgcat::mcset ja {Keep-Alive} 
 ::msgcat::mcset ja {Keyword} 
 ::msgcat::mcset ja {Labels} [encoding convertfrom euc-jp "\xa5\xe9\xa5\xd9\xa5\xeb"]
@@ -601,6 +602,7 @@
 ::msgcat::mcset ja {Move First} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9\xa4\xcb\xb0\xdc\xc6\xb0"]
 ::msgcat::mcset ja {Move Forward} [encoding convertfrom euc-jp "\xbc\xa1\xa4\xcb\xb0\xdc\xc6\xb0"]
 ::msgcat::mcset ja {Move Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xb0\xdc\xc6\xb0"]
+::msgcat::mcset ja {Move Front} 
 ::msgcat::mcset ja {Move Last} [encoding convertfrom euc-jp "\xba\xc7\xb8\xe5\xa4\xcb\xb0\xdc\xc6\xb0"]
 ::msgcat::mcset ja {Move to Back} [encoding convertfrom euc-jp "\xc7\xd8\xcc\xcc\xa4\xcb\xb0\xdc\xc6\xb0"]
 ::msgcat::mcset ja {Move to Front} [encoding convertfrom euc-jp "\xc1\xb0\xcc\xcc\xa4\xcb\xb0\xdc\xc6\xb0"]

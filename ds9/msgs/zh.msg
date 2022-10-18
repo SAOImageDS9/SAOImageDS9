@@ -453,6 +453,7 @@
 ::msgcat::mcset zh {Iteration} 
 ::msgcat::mcset zh {JPEG Quality Factor} 
 ::msgcat::mcset zh {JPEG} 
+::msgcat::mcset zh {Justify} 
 ::msgcat::mcset zh {Keep-Alive} 
 ::msgcat::mcset zh {Keyword} 
 ::msgcat::mcset zh {Labels} 
@@ -601,6 +602,7 @@
 ::msgcat::mcset zh {Move First} 
 ::msgcat::mcset zh {Move Forward} 
 ::msgcat::mcset zh {Move Frame} [encoding convertfrom big5 "\xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1 \xB6\xB6 \xA7\xC7"]
+::msgcat::mcset zh {Move Front} 
 ::msgcat::mcset zh {Move Last} 
 ::msgcat::mcset zh {Move to Back} 
 ::msgcat::mcset zh {Move to Front} 

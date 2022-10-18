@@ -34,10 +34,6 @@ proc RegionMainMenu {} {
     $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Centroid}] \
 	-command MarkerCentroid
-    $ds9(mb).region add command -label [msgcat::mc {Move to Front}] \
-	-command MarkerFront
-    $ds9(mb).region add command -label [msgcat::mc {Move to Back}] \
-	-command MarkerBack
     $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {New Group}] \
 	-command GroupCreate
@@ -47,9 +43,18 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {All}] \
 	-command MarkerSelectAll -accelerator "${ds9(ctrl)}A"
     $ds9(mb).region add command -label [msgcat::mc {None}] \
-	-command MarkerUnselectAll -accelerator "${ds9(shiftctrl)}A"
+	-command MarkerSelectNone -accelerator "${ds9(shiftctrl)}A"
     $ds9(mb).region add command -label [msgcat::mc {Invert}] \
 	-command MarkerSelectInvert
+    $ds9(mb).region add command -label [msgcat::mc {Front}] \
+	-command MarkerSelectFront
+    $ds9(mb).region add command -label [msgcat::mc {Back}] \
+	-command MarkerSelectBack
+    $ds9(mb).region add separator
+    $ds9(mb).region add command -label [msgcat::mc {Move to Front}] \
+	-command MarkerFront
+    $ds9(mb).region add command -label [msgcat::mc {Move to Back}] \
+	-command MarkerBack
     $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Save Selection}] \
 	-command [list MarkerSave select]
@@ -212,7 +217,7 @@ proc RegionMainMenu {} {
 
     # Bindings
     bind $ds9(top) <<SelectAll>> MarkerSelectAll
-    bind $ds9(top) <<SelectNone>> MarkerUnselectAll
+    bind $ds9(top) <<SelectNone>> MarkerSelectNone
 }
 
 proc PrefsDialogRegionMenu {w} {
@@ -834,7 +839,7 @@ proc CreateButtonsRegion {} {
     ButtonButton $ds9(buttons).region.all \
 	[string tolower [msgcat::mc {All}]] MarkerSelectAll
     ButtonButton $ds9(buttons).region.none \
-	[string tolower [msgcat::mc {None}]] MarkerUnselectAll
+	[string tolower [msgcat::mc {None}]] MarkerSelectNone
     ButtonButton $ds9(buttons).region.invert \
 	[string tolower [msgcat::mc {Invert}]] MarkerSelectInvert
 

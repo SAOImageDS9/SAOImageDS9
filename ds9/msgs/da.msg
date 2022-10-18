@@ -453,6 +453,7 @@
 ::msgcat::mcset da {Iteration} 
 ::msgcat::mcset da {JPEG Quality Factor} {JPEG kvalitetsfaktor}
 ::msgcat::mcset da {JPEG} 
+::msgcat::mcset da {Justify} 
 ::msgcat::mcset da {Keep-Alive} 
 ::msgcat::mcset da {Keyword} 
 ::msgcat::mcset da {Labels} {Etiketter}
@@ -601,6 +602,7 @@
 ::msgcat::mcset da {Move First} {flyt forrest}
 ::msgcat::mcset da {Move Forward} {flyt frem}
 ::msgcat::mcset da {Move Frame} 
+::msgcat::mcset da {Move Front} 
 ::msgcat::mcset da {Move Last} {flyt sidst}
 ::msgcat::mcset da {Move to Back} {Bag}
 ::msgcat::mcset da {Move to Front} {Foran}

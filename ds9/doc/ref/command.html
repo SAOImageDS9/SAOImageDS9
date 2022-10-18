@@ -1897,7 +1897,7 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [centroid auto yes|no]<br>
 &nbsp;&nbsp;&nbsp; [centroid radius &lt;value&gt;|iteration &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [move front|back]<br>
-&nbsp;&nbsp;&nbsp; [select all|none|all|first|last]<br>
+&nbsp;&nbsp;&nbsp; [select all|none|all|front|back]<br>
 &nbsp;&nbsp;&nbsp; [delete [select]]<br>
 &nbsp;&nbsp;&nbsp; [delete load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [format ds9|xml|ciao|saotng|saoimage|pros|xy]<br>
@@ -1961,8 +1961,8 @@ $ds9 -region move front<br>
 $ds9 -region select all<br>
 $ds9 -region select none<br>
 $ds9 -region select invert<br>
-$ds9 -region select first<br>
-$ds9 -region select last<br>
+$ds9 -region select front<br>
+$ds9 -region select back<br>
 $ds9 -region delete<br>
 $ds9 -region delete select<br>
 $ds9 -region delete load foo.reg<br>

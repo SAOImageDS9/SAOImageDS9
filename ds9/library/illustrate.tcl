@@ -426,6 +426,7 @@ proc IllustrateBackup {ch dir} {
     global ds9
     global iillustrate
 
+    set rdir "./[lindex [file split $dir] end]"
     if {[$ds9(canvas) find withtag {graphic}]>0} {
 	# prep
 	set fn $dir/ds9.seg
@@ -449,7 +450,7 @@ proc IllustrateBackup {ch dir} {
 		    append rr "[lindex $ll 0] "
 		    append rr "[lindex $ll 1] "
 		    append rr "[lindex $ll 2] "
-		    append rr "$dir/$imgfn\n"
+		    append rr "$rdir/$imgfn\n"
 		}
 		default {
 		    append rr "$ll\n"

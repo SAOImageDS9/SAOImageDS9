@@ -793,6 +793,8 @@ proc MatchScale {which} {
 		[list $ff clip minmax $mmsample $mmmode]
 	    RGBEvalLock rgb(lock,scale) $ff \
 		[list $ff clip zscale $zscontrast $zssample $zsline]
+
+	    UpdateColormapLevelFrame $ff
 	}
     }
 }
@@ -824,6 +826,8 @@ proc MatchScaleLimits {which} {
 	    [list $ff clip minmax $mmsample $mmmode]
 	RGBEvalLock rgb(lock,scalelimits) $ff \
 	    [list $ff clip zscale $zscontrast $zssample $zsline]
+
+	UpdateColormapLevelFrame $ff
     }
 }
 

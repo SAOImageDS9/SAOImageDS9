@@ -840,6 +840,18 @@ proc UpdateColormapLevel {} {
     }
 }
 
+proc UpdateColormapLevelFrame {frame} {
+    global icolorbar
+
+    global debug
+    if {$debug(tcl,update)} {
+	puts stderr "UpdateColormapLevelFrame $frame"
+    }
+
+    set cb ${frame}cb
+    $cb colormap level [$frame get colormap level $icolorbar(num)]
+}
+
 proc UpdateColormapLevelMosaic {which x y sys} {
     global icolorbar
 

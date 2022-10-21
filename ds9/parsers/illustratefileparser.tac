@@ -93,7 +93,7 @@ global : global globalProperty
 
 globalProperty : COLOR_ eq STRING_ {set illustratefile::globalColor $3}
  | FILL_ eq yesno {set illustratefile::globalFill $3}
- | WIDTH_ eq INT_ {set illustratefile::globalWidth $3}
+ | WIDTH_ eq numeric {set illustratefile::globalWidth $3}
  | DASH_ eq yesno {set illustratefile::globalDash $3}
 
  | FONT_ eq font {set illustratefile::globalFont $3}
@@ -112,7 +112,7 @@ local : local localProperty
 
 localProperty : COLOR_ eq STRING_ {set illustratefile::localColor $3}
  | FILL_ eq yesno {set illustratefile::localFill $3}
- | WIDTH_ eq INT_ {set illustratefile::localWidth $3}
+ | WIDTH_ eq numeric {set illustratefile::localWidth $3}
  | DASH_ eq yesno {set illustratefile::localDash $3}
 
  | FONT_ eq font {set illustratefile::localFont $3}

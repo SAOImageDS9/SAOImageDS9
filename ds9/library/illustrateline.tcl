@@ -124,7 +124,7 @@ proc IllustrateLineList {id} {
 	    append rr " color = $color"
 	}
 	if {$width != 1} {
-	    append rr " width = [expr int($width)]"
+	    append rr " width = $width)"
 	}
 	if {$dash} {
 	    append rr " dash = yes"

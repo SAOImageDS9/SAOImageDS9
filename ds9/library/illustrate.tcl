@@ -65,7 +65,6 @@ proc IllustrateModeBegin {} {
 
     IllustrateSelectNone
     IllustrateBindEvents
-    UpdateIllustrateMenu
 }
 
 proc IllustrateModeEnd {} {
@@ -78,7 +77,6 @@ proc IllustrateModeEnd {} {
 
     IllustrateSelectNone
     IllustrateUnBindEvents
-    UpdateIllustrateMenu
 }
 
 # Graphics

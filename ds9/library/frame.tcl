@@ -240,7 +240,9 @@ proc CreateNameNumberFrame {which type} {
 	crosshair {$which crosshair on}
     }
 
+    # menus
     UpdateFrameMenuItems
+    UpdateRegionMenu
 
     # update frame colormap
     $which colormap [${which}cb get colormap]

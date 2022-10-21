@@ -1090,192 +1090,92 @@ proc UpdateRegionMenu {} {
     set mm $ds9(mb).region
     set bb $ds9(buttons).region
 
-    if {$current(frame) != {}} {
-	$ds9(mb) entryconfig [msgcat::mc {Region}] -state normal
-	ConfigureButtons region normal
-
-	set marker(show) [$current(frame) get marker show]
-	set marker(show,text) [$current(frame) get marker show text]
-	set marker(centroid,auto) [$current(frame) get marker centroid auto]
-	set marker(centroid,radius) [$current(frame) get marker centroid radius]
-	set marker(centroid,iteration) \
-	    [$current(frame) get marker centroid iteration]
-	set marker(preserve) [$current(frame) get marker preserve]
-
-	switch -- $current(mode) {
-	    pointer -
-	    region {
-		if {[$current(frame) get marker select number] == 1} {
-		    set marker(color) \
-			[$current(frame) get marker color]
-		    set marker(fill) \
-			[$current(frame) get marker property fill]
-		    set marker(width) \
-			[$current(frame) get marker width]
-		    set marker(dash) \
-			[$current(frame) get marker property dash]
-
-		    set f [$current(frame) get marker font]
-		    set marker(font) [lindex $f 0]
-		    set marker(font,size) [lindex $f 1]
-		    set marker(font,weight) [lindex $f 2]
-		    set marker(font,slant) [lindex $f 3]
-
-		    set marker(fixed) \
-			[$current(frame) get marker property fixed]
-		    set marker(edit) \
-			[$current(frame) get marker property edit]
-		    set marker(move) \
-			[$current(frame) get marker property move]
-		    set marker(rotate) \
-			[$current(frame) get marker property rotate]
-		    set marker(delete) \
-			[$current(frame) get marker property delete]
-		    set marker(include) \
-			[$current(frame) get marker property include]
-		    set marker(source) \
-			[$current(frame) get marker property source]
-
-		} else {
-		    # defaults
-		    set marker(color) $pmarker(color)
-		    set marker(fill) $pmarker(fill) 
-		    set marker(width) $pmarker(width) 
-		    set marker(dash) $pmarker(dash) 
-
-		    set marker(font) $pmarker(font) 
-		    set marker(font,size) $pmarker(font,size) 
-		    set marker(font,weight) $pmarker(font,weight) 
-		    set marker(font,slant) $pmarker(font,slant) 
-
-		    set marker(fixed) $pmarker(fixed) 
-		    set marker(edit) $pmarker(edit) 
-		    set marker(move) $pmarker(move) 
-		    set marker(rotate) $pmarker(rotate) 
-		    set marker(delete) $pmarker(delete) 
-		    set marker(include) $pmarker(include) 
-		    set marker(source) $pmarker(source) 
-		}
-	    }
+    switch -- $current(mode) {
+	illustrate {
+	    $ds9(mb) entryconfig [msgcat::mc {Region}] -state disabled
+	    ConfigureButtons region disabled
+	    return
 	}
-
-	if {[$current(frame) has fits]} {
-	    $mm entryconfig [msgcat::mc {Get Information}] -state normal
-
-	    $mm entryconfig [msgcat::mc {Composite Region}] -state normal
-	    $mm entryconfig [msgcat::mc {Instrument FOV}] -state normal
-	    $mm entryconfig [msgcat::mc {Template}] -state normal
-
-	    $mm entryconfig [msgcat::mc {Centroid}] -state normal
-	    $mm entryconfig [msgcat::mc {Move to Front}] -state normal
-	    $mm entryconfig [msgcat::mc {Move to Back}] -state normal
-
-	    $mm entryconfig [msgcat::mc {New Group}] -state normal
-	    $mm entryconfig [msgcat::mc {Groups}] -state normal
-
-	    $mm entryconfig [msgcat::mc {All}] -state normal
-	    $mm entryconfig [msgcat::mc {None}] -state normal
-	    $mm entryconfig [msgcat::mc {Invert}] -state normal
-
-	    $mm entryconfig [msgcat::mc {Delete Selection}] -state normal
-
-	    $mm entryconfig [msgcat::mc {Open}] -state normal
-	    $mm entryconfig [msgcat::mc {Save}] -state normal
-	    $mm entryconfig [msgcat::mc {List}] -state normal
-
-	    $mm entryconfig [msgcat::mc {Delete All}] -state normal
-	    $mm entryconfig [msgcat::mc {Delete All and Open}] \
-		-state normal
-
-	    $bb.info configure -state normal
-
-	    $bb.create configure -state normal
-	    $bb.dissolve configure -state normal
-
-	    $bb.loadtemplate configure -state normal
-	    $bb.savetemplate configure -state normal
-
-	    $bb.centroid configure -state normal
-	    $bb.front configure -state normal
-	    $bb.back configure -state normal
-
-	    $bb.newgroup configure -state normal
-	    $bb.group configure -state normal
-
-	    $bb.all configure -state normal
-	    $bb.none configure -state normal
-	    $bb.invert configure -state normal
-
-	    $bb.saveselect configure -state normal
-	    $bb.listselect configure -state normal
-	    $bb.deleteselect configure -state normal
-
-	    $bb.load configure -state normal
-	    $bb.save configure -state normal
-	    $bb.list configure -state normal
-	    $bb.delete configure -state normal
-
-	    $bb.deleteload configure -state normal
-	} else {
-	    $mm entryconfig [msgcat::mc {Get Information}] -state disabled
-
-	    $mm entryconfig [msgcat::mc {Composite Region}] -state disabled
-	    $mm entryconfig [msgcat::mc {Instrument FOV}] -state disabled
-	    $mm entryconfig [msgcat::mc {Template}] -state disabled
-
-	    $mm entryconfig [msgcat::mc {Centroid}] -state disabled
-	    $mm entryconfig [msgcat::mc {Move to Front}] -state disabled
-	    $mm entryconfig [msgcat::mc {Move to Back}] -state disabled
-
-	    $mm entryconfig [msgcat::mc {New Group}] -state disabled
-	    $mm entryconfig [msgcat::mc {Groups}] -state disabled
-
-	    $mm entryconfig [msgcat::mc {All}] -state disabled
-	    $mm entryconfig [msgcat::mc {None}] -state disabled
-	    $mm entryconfig [msgcat::mc {Invert}] -state disabled
-
-	    $mm entryconfig [msgcat::mc {Delete Selection}] -state disabled
-
-	    $mm entryconfig [msgcat::mc {Open}] -state disabled
-	    $mm entryconfig [msgcat::mc {Save}] -state disabled
-	    $mm entryconfig [msgcat::mc {List}] -state disabled
-
-	    $mm entryconfig [msgcat::mc {Delete All}] -state disabled
-	    $mm entryconfig [msgcat::mc {Delete All and Open}] \
-		-state disabled
-
-	    $bb.info configure -state disabled
-
-	    $bb.create configure -state disabled
-	    $bb.dissolve configure -state disabled
-
-	    $bb.loadtemplate configure -state disabled
-	    $bb.savetemplate configure -state disabled
-
-	    $bb.centroid configure -state disabled
-	    $bb.front configure -state disabled
-	    $bb.back configure -state disabled
-
-	    $bb.newgroup configure -state disabled
-	    $bb.group configure -state disabled
-
-	    $bb.all configure -state disabled
-	    $bb.none configure -state disabled
-	    $bb.invert configure -state disabled
-
-	    $bb.saveselect configure -state disabled
-	    $bb.listselect configure -state disabled
-	    $bb.deleteselect configure -state disabled
-
-	    $bb.load configure -state disabled
-	    $bb.save configure -state disabled
-	    $bb.list configure -state disabled
-	    $bb.delete configure -state disabled
-
-	    $bb.deleteload configure -state disabled
+	default {
+	    $ds9(mb) entryconfig [msgcat::mc {Region}] -state normal
+	    ConfigureButtons region normal
 	}
-    } else {
+    }
+
+    if {$current(frame) == {}} {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state disabled
 	ConfigureButtons region disabled
+	return
+    }
+    
+    if {![$current(frame) has fits]} {
+	$ds9(mb) entryconfig [msgcat::mc {Region}] -state disabled
+	ConfigureButtons region disabled
+	return
+    }
+    
+    set marker(show) [$current(frame) get marker show]
+    set marker(show,text) [$current(frame) get marker show text]
+    set marker(centroid,auto) [$current(frame) get marker centroid auto]
+    set marker(centroid,radius) [$current(frame) get marker centroid radius]
+    set marker(centroid,iteration) \
+	[$current(frame) get marker centroid iteration]
+    set marker(preserve) [$current(frame) get marker preserve]
+
+    switch -- $current(mode) {
+	pointer -
+	region {
+	    if {[$current(frame) get marker select number] == 1} {
+		set marker(color) \
+		    [$current(frame) get marker color]
+		set marker(fill) \
+		    [$current(frame) get marker property fill]
+		set marker(width) \
+		    [$current(frame) get marker width]
+		set marker(dash) \
+		    [$current(frame) get marker property dash]
+
+		set f [$current(frame) get marker font]
+		set marker(font) [lindex $f 0]
+		set marker(font,size) [lindex $f 1]
+		set marker(font,weight) [lindex $f 2]
+		set marker(font,slant) [lindex $f 3]
+
+		set marker(fixed) \
+		    [$current(frame) get marker property fixed]
+		set marker(edit) \
+		    [$current(frame) get marker property edit]
+		set marker(move) \
+		    [$current(frame) get marker property move]
+		set marker(rotate) \
+		    [$current(frame) get marker property rotate]
+		set marker(delete) \
+		    [$current(frame) get marker property delete]
+		set marker(include) \
+		    [$current(frame) get marker property include]
+		set marker(source) \
+		    [$current(frame) get marker property source]
+
+	    } else {
+		# defaults
+		set marker(color) $pmarker(color)
+		set marker(fill) $pmarker(fill) 
+		set marker(width) $pmarker(width) 
+		set marker(dash) $pmarker(dash) 
+
+		set marker(font) $pmarker(font) 
+		set marker(font,size) $pmarker(font,size) 
+		set marker(font,weight) $pmarker(font,weight) 
+		set marker(font,slant) $pmarker(font,slant) 
+
+		set marker(fixed) $pmarker(fixed) 
+		set marker(edit) $pmarker(edit) 
+		set marker(move) $pmarker(move) 
+		set marker(rotate) $pmarker(rotate) 
+		set marker(delete) $pmarker(delete) 
+		set marker(include) $pmarker(include) 
+		set marker(source) $pmarker(source) 
+	    }
+	}
     }
 }

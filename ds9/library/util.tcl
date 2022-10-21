@@ -89,6 +89,7 @@ proc UpdateDS9 {} {
     UpdateRegionMenu
     # wcs(system) set here
     UpdateWCSMenu 
+    UpdateIllustrateMenu
     UpdateAnalysisMenu
     UpdateAnalysisButtonbar
 
@@ -968,6 +969,7 @@ proc ChangeMode {} {
     }
 
     UpdateRegionMenu
+    UpdateIllustrateMenu
 
     RefreshInfoBox $current(frame)
     PixelTableClearDialog

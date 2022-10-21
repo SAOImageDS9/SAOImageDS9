@@ -196,8 +196,8 @@ proc ButtonsIllustrateDef {} {
 	illustrate,invert 1
 	illustrate,front 1
 	illustrate,back 1
-	illustrate,move,front 1
-	illustrate,move,back 1
+	illustrate,movefront 1
+	illustrate,moveback 1
 	illustrate,saveselect 0
 	illustrate,listselect 0
 	illustrate,deleteselect 0
@@ -276,8 +276,8 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.invert pbuttons(illustrate,invert)
         $ds9(buttons).illustrate.front pbuttons(illustrate,front)
         $ds9(buttons).illustrate.back pbuttons(illustrate,back)
-        $ds9(buttons).illustrate.movefront pbuttons(illustrate,move,front)
-        $ds9(buttons).illustrate.moveback pbuttons(illustrate,move,back)
+        $ds9(buttons).illustrate.movefront pbuttons(illustrate,movefront)
+        $ds9(buttons).illustrate.moveback pbuttons(illustrate,moveback)
         $ds9(buttons).illustrate.saveselect pbuttons(illustrate,saveselect)
         $ds9(buttons).illustrate.listselect pbuttons(illustrate,listselect)
         $ds9(buttons).illustrate.deleteselect pbuttons(illustrate,deleteselect)
@@ -316,10 +316,10 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Move to Front}] \
-	-variable pbuttons(illustrate,move,front) \
+	-variable pbuttons(illustrate,movefront) \
 	-command {UpdateButtons buttons(illustrate)}
     $m add checkbutton -label [msgcat::mc {Move to Back}] \
-	-variable pbuttons(illustrate,move,back) \
+	-variable pbuttons(illustrate,moveback) \
 	-command {UpdateButtons buttons(illustrate)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Save Selection}] \
@@ -383,9 +383,11 @@ proc UpdateIllustrateMenu {} {
     switch -- $current(mode) {
 	illustrate {
 	    $ds9(mb) entryconfig [msgcat::mc {Illustrate}] -state normal
+	    ConfigureButtons illustrate normal
 	}
 	default {
 	    $ds9(mb) entryconfig [msgcat::mc {Illustrate}] -state disabled
+	    ConfigureButtons illustrate disabled
 	}
     }
 }

@@ -283,6 +283,16 @@ proc PlotLineUpdateElement {varname} {
 	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
+
+    $var(graph) pen configure active \
+	-color red \
+	-symbol $var(graph,ds,line,shape,symbol) \
+	-linewidth 0 \
+	-pixels 5 \
+	-showerrorbars $show \
+	-errorbarcolor $errorcolor \
+	-errorbarwidth $var(graph,ds,error,width) \
+	-errorbarcap $cap
 }
 
 
@@ -322,6 +332,52 @@ proc PlotPrefsLine {w} {
     grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
 	-padx 2 -pady 2 -sticky w
     grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky w
+}
+
+proc PlotLineButton {varname cc nn xx yy} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[llength $var($cc,dss)] == 0} {
+	return
+    }
+
+    if {$var(callback) == {}} {
+	return
+    }
+
+    set rr [$var($cc,graph) element closest $xx $yy]
+    set elem [lindex $rr 1]
+    set row [lindex $rr 3]
+
+    if {$elem != {}} {
+	if {$row != {}} {
+	    $var($cc,graph) element deactivate $elem
+	    $var($cc,graph) element activate $elem $row
+	    # rows start at 1
+	    eval "$var(callback) [expr $row+1] $cc"
+	} else {
+	    $var($cc,graph) element deactivate $elem
+	    eval "$var(callback) {} $cc"
+	}
+    }
+}
+
+proc PlotLineHighliteElement {varname cc nn rowlist} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[llength $var($cc,dss)] == 0} {
+	return
+    }
+
+    if {$var($cc,$nn,show)} {
+	$var($cc,graph) element deactivate $nn
+	if {$rowlist != {}} {
+	    # can have multiple rows
+	    eval "$var($cc,graph) element activate $nn $rowlist"
+	}
+    }
 }
 
 proc PlotGUILine {varname w} {

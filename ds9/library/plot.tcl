@@ -88,8 +88,8 @@ proc PlotAddGraph {varname type} {
 	line {
 	    PlotLineAddGraph $varname
 	    set var(graph,proc,updateelement) PlotLineUpdateElement
-	    set var(graph,proc,highlite) PlotHighliteElement
-	    set var(graph,proc,button) PlotButton
+	    set var(graph,proc,highlite) PlotLineHighliteElement
+	    set var(graph,proc,button) PlotLineButton
 	}
 	bar {
 	    PlotBarAddGraph $varname

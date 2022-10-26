@@ -185,6 +185,7 @@ proc ButtonsIllustrateDef {} {
     global pbuttons
 
     array set pbuttons {
+	illustrate,info 1
 	illustrate,circle 0
 	illustrate,ellipse 0
 	illustrate,box 0
@@ -214,6 +215,9 @@ proc CreateButtonsIllustrate {} {
     global ds9
 
     ttk::frame $ds9(buttons).illustrate
+
+    ButtonButton $ds9(buttons).illustrate.info \
+	[string tolower [msgcat::mc {Information}]] IllustrateGetInfo
 
     RadioButton $ds9(buttons).illustrate.circle \
 	[string tolower [msgcat::mc {Circle}]] illustrate shape circle {}
@@ -265,6 +269,7 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Show}]] illustrate show IllustrateShow
 
     set buttons(illustrate) "
+        $ds9(buttons).illustrate.info pbuttons(illustrate,info)
         $ds9(buttons).illustrate.circle pbuttons(illustrate,circle)
         $ds9(buttons).illustrate.ellipse pbuttons(illustrate,ellipse)
         $ds9(buttons).illustrate.box pbuttons(illustrate,box)
@@ -297,6 +302,10 @@ proc PrefsDialogButtonbarIllustrate {f} {
     
     set m $f.menu
     ThemeMenu $m
+    $m add checkbutton -label [msgcat::mc {Get Information}] \
+	-variable pbuttons(illustrate,info) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m add separator
     $m add cascade -label [msgcat::mc {Shape}] -menu $m.shape
     $m add separator
     $m add checkbutton -label [msgcat::mc {All}] \

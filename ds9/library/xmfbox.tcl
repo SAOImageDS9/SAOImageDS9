@@ -116,7 +116,7 @@ proc ::tk::MotifFDialog_Create {dataName type argList} {
     # the dialog transient if the parent is viewable.
 
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
-	wm transient $w $data(-parent)
+#	wm transient $w $data(-parent)
     }
 
     MotifFDialog_FileTypes $w

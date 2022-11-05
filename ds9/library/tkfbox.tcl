@@ -151,7 +151,7 @@ proc ::tk::dialog::file:: {type args} {
     # transient if the parent is viewable.
 
     if {[winfo viewable [winfo toplevel $data(-parent)]]} {
-	wm transient $w $data(-parent)
+#	wm transient $w $data(-parent)
     }
 
     # Add traces on the selectPath variable

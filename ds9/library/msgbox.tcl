@@ -14,7 +14,7 @@ package provide DS9 1.0
 # Ensure existence of ::tk::dialog namespace
 #
 namespace eval ::tk::dialog {}
-puts BANG
+
 image create bitmap ::tk::dialog::b1 -foreground black \
 -data "#define b1_width 32\n#define b1_height 32
 static unsigned char q1_bits[] = {
@@ -265,26 +265,20 @@ proc ::tk::MessageBox {args} {
     # "grab"bed windows.  So only make the message box transient if the parent
     # is viewable.
     #
-    puts OK
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Darwin {
 		set vv [lindex [split $tcl_platform(osVersion) {.}] 0]
 		if {$vv > 21} {
-		    puts YES
 		    # ventura
 		    raise $w $data(-parent)
 		} else {
-		    puts NO
-		    # monterey
+		    # monterey and previous
 		    wm transient $w $data(-parent)
 		}
 	    }
-	    default {
-		puts NONO
-		wm transient $w $data(-parent)
-	    }
+	    default {wm transient $w $data(-parent)}
 	}
     }
 

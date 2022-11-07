@@ -150,26 +150,20 @@ proc ::tk::dialog::file:: {type args} {
     # this can hang the entire application.  Therefore we only make the dialog
     # transient if the parent is viewable.
 
-    puts OK
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Darwin {
 		set vv [lindex [split $tcl_platform(osVersion) {.}] 0]
 		if {$vv > 21} {
-		    puts YES
 		    # ventura
 		    raise $w $data(-parent)
 		} else {
-		    puts NO
-		    # monterey
+		    # monterey and previous
 		    wm transient $w $data(-parent)
 		}
 	    }
-	    default {
-		puts NONO
-		wm transient $w $data(-parent)
-	    }
+	    default {wm transient $w $data(-parent)}
 	}
     }
 

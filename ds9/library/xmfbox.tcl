@@ -115,6 +115,7 @@ proc ::tk::MotifFDialog_Create {dataName type argList} {
     # window, this can hang the entire application.  Therefore we only make
     # the dialog transient if the parent is viewable.
 
+    puts OK
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
 	global tcl_platform
 	switch $tcl_platform(os) {
@@ -130,7 +131,10 @@ proc ::tk::MotifFDialog_Create {dataName type argList} {
 		    wm transient $w $data(-parent)
 		}
 	    }
-	    default {wm transient $w $data(-parent)}
+	    default {
+		puts NONO
+		wm transient $w $data(-parent)
+	    }
 	}
     }
 

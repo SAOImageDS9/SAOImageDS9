@@ -265,6 +265,7 @@ proc ::tk::MessageBox {args} {
     # "grab"bed windows.  So only make the message box transient if the parent
     # is viewable.
     #
+    puts OK
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
 	global tcl_platform
 	switch $tcl_platform(os) {
@@ -280,7 +281,10 @@ proc ::tk::MessageBox {args} {
 		    wm transient $w $data(-parent)
 		}
 	    }
-	    default {wm transient $w $data(-parent)}
+	    default {
+		puts NONO
+		wm transient $w $data(-parent)
+	    }
 	}
     }
 

@@ -150,7 +150,8 @@ proc ::tk::dialog::file:: {type args} {
     # this can hang the entire application.  Therefore we only make the dialog
     # transient if the parent is viewable.
 
-    if {[winfo viewable [winfo toplevel $data(-parent)]]} {
+    puts OK
+    if {[winfo viewable [winfo toplevel $data(-parent)]] } {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Darwin {
@@ -165,7 +166,10 @@ proc ::tk::dialog::file:: {type args} {
 		    wm transient $w $data(-parent)
 		}
 	    }
-	    default {wm transient $w $data(-parent)}
+	    default {
+		puts NONO
+		wm transient $w $data(-parent)
+	    }
 	}
     }
 

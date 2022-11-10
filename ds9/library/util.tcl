@@ -1076,6 +1076,10 @@ proc SetDefaultFont {which} {
 	-size $pds9(font,size) -weight $pds9(font,weight) \
 	-slant $pds9(font,slant)
 
+    font configure TkTextFont -family $ds9($pds9(font)) \
+	-size $pds9(font,size) -weight $pds9(font,weight) \
+	-slant $pds9(font,slant)
+
     switch $ds9(wm) {
 	x11 {
 	    font configure TkMenuFont -family $ds9($pds9(font)) \

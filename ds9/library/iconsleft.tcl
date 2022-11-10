@@ -150,7 +150,7 @@ proc CreateIconsLeftMarkerInfo {} {
 	-image [image create photo -file "$ds9(icons,ui)/region_open.png"]
     tooltip::tooltip $mb.open [msgcat::mc {Open Region File}]
 
-    ttk::button $mb.save -takefocus 0 -command [list MarkerSave {}] \
+    ttk::button $mb.save -takefocus 0 -command MarkerSaveAll \
 	-image [image create photo -file "$ds9(icons,ui)/region_save.png"]
     tooltip::tooltip $mb.save [msgcat::mc {Save Region File}]
 

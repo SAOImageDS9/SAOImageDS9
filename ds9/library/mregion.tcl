@@ -57,7 +57,7 @@ proc RegionMainMenu {} {
 	-command MarkerBack
     $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Save Selection}] \
-	-command [list MarkerSave select]
+	-command MarkerSaveSelect
     $ds9(mb).region add command -label [msgcat::mc {List Selection}] \
 	-command MarkerListSelect
     $ds9(mb).region add command -label [msgcat::mc {Delete Selection}] \
@@ -66,7 +66,7 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Open}] \
 	-command MarkerLoad
     $ds9(mb).region add command -label [msgcat::mc {Save}] \
-	-command [list MarkerSave {}]
+	-command MarkerSaveAll
     $ds9(mb).region add command -label [msgcat::mc {List}] \
 	-command MarkerListAll
     $ds9(mb).region add separator
@@ -844,8 +844,7 @@ proc CreateButtonsRegion {} {
 	[string tolower [msgcat::mc {Invert}]] MarkerSelectInvert
 
     ButtonButton $ds9(buttons).region.saveselect \
-	[string tolower [msgcat::mc {Save Select}]] \
-	[list MarkerSave select]
+	[string tolower [msgcat::mc {Save Select}]] MarkerSaveSelect
     ButtonButton $ds9(buttons).region.listselect \
 	[string tolower [msgcat::mc {List Select}]] MarkerListSelect
     ButtonButton $ds9(buttons).region.deleteselect \
@@ -854,7 +853,7 @@ proc CreateButtonsRegion {} {
     ButtonButton $ds9(buttons).region.load \
 	[string tolower [msgcat::mc {Open}]] MarkerLoad
     ButtonButton $ds9(buttons).region.save \
-	[string tolower [msgcat::mc {Save}]] [list MarkerSave {}]
+	[string tolower [msgcat::mc {Save}]] MarkerSaveAll
     ButtonButton $ds9(buttons).region.list \
 	[string tolower [msgcat::mc {List}]] MarkerListAll
     ButtonButton $ds9(buttons).region.delete \

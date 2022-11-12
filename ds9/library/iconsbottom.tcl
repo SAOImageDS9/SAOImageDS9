@@ -118,8 +118,8 @@ proc CreateIconsBottomFrame {} {
     tooltip::tooltip $mb.prev [msgcat::mc {Goto Previous Frame}]
 
     ttk::menubutton $mb.layout -menu $mb.layout.m \
-	-direction above -takefocus 0 \
-	-image $icons(currentdisplay,$current(display))
+	-direction above -takefocus 0 
+#	-image $icons(currentdisplay,$current(display))
     tooltip::tooltip $mb.layout [msgcat::mc {Frame Layout}]
 
     ttk::button $mb.next -takefocus 0 -command NextFrame \
@@ -142,6 +142,7 @@ proc CreateIconsBottomFrame {} {
 	current display fade DisplayMode
 
     trace add variable current(display) write [list IconMenuButtonCB $mb.layout]
+    IconMenuButtonCB $mb.layout current display write
 
     pack $mb.add $mb.del $mb.first $mb.prev $mb.layout $mb.next $mb.last \
 	-side left -fill x

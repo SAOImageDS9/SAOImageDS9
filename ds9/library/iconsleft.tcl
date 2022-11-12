@@ -54,8 +54,8 @@ proc CreateIconsLeftMode {} {
     # special case
     set icons(currentmode,default) $icons(currentmode,examine)
 
-    ttk::menubutton $mb.mode -menu $mb.mode.m -direction right -takefocus 0 \
-	-image $icons(currentmode,$current(mode))
+    ttk::menubutton $mb.mode -menu $mb.mode.m -direction right -takefocus 0
+#	-image $icons(currentmode,$current(mode))
     tooltip::tooltip $mb.mode [msgcat::mc {Edit Mode}]
 
     ThemeMenu $mb.mode.m
@@ -86,6 +86,7 @@ proc CreateIconsLeftMode {} {
 	current mode 3d ChangeMode
 
     trace add variable current(mode) write [list IconMenuButtonCB $mb.mode]
+    IconMenuButtonCB $mb.mode current mode write
 
     pack $mb.mode -side top -fill x
 }
@@ -115,8 +116,8 @@ proc CreateIconsLeftMarkerShape {} {
 
     set mb.shape $mb.shape
 
-    ttk::menubutton $mb.shape -menu $mb.shape.m -direction right \
-	-image $icons(markershape,$marker(shape)) -takefocus 0
+    ttk::menubutton $mb.shape -menu $mb.shape.m -direction right -takefocus 0
+#	-image $icons(markershape,$marker(shape))
     tooltip::tooltip $mb.shape [msgcat::mc {Region Shape}]
 
     ThemeMenu $mb.shape.m
@@ -129,6 +130,7 @@ proc CreateIconsLeftMarkerShape {} {
     IconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
 
     trace add variable marker(shape) write [list IconMenuButtonCB $mb.shape]
+    IconMenuButtonCB $mb.shape marker shape write
 
     pack $mb.shape -side top -fill x
 }
@@ -197,8 +199,8 @@ proc CreateIconsLeftMarkerColor {} {
 
     set mb.color $mb.color
 
-    ttk::menubutton $mb.color -menu $mb.color.m -direction right \
-	-image $icons(markercolor,$marker(color)) -takefocus 0
+    ttk::menubutton $mb.color -menu $mb.color.m -direction right -takefocus 0
+#	-image $icons(markercolor,$marker(color)) 
     tooltip::tooltip $mb.color [msgcat::mc {Region Color}]
 
     ThemeMenu $mb.color.m
@@ -216,6 +218,7 @@ proc CreateIconsLeftMarkerColor {} {
     }
 
     trace add variable marker(color) write [list IconMenuButtonCB $mb.color]
+    IconMenuButtonCB $mb.color marker color write
 
     pack $mb.color -side top -fill x
 }
@@ -238,8 +241,8 @@ proc CreateIconsLeftMarkerLineWidth {} {
     # special case
     set icons(markerwidth,default) $icons(markerwidth,1)
 
-    ttk::menubutton $mb.width -menu $mb.width.m -direction right \
-	-image $icons(markerwidth,$marker(width)) -takefocus 0
+    ttk::menubutton $mb.width -menu $mb.width.m -direction right -takefocus 0
+#	-image $icons(markerwidth,$marker(width)) 
     tooltip::tooltip $mb.width [msgcat::mc {Region Line Width}]
 
     ThemeMenu $mb.width.m
@@ -250,6 +253,7 @@ proc CreateIconsLeftMarkerLineWidth {} {
     IconMenuButton $mb.width 4 marker width 4 MarkerWidth
 
     trace add variable marker(width) write [list IconMenuButtonCB $mb.width]
+    IconMenuButtonCB $mb.width marker width write
 
     pack $mb.width -side top -fill x
 }

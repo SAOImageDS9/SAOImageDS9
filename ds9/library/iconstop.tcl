@@ -77,8 +77,8 @@ proc CreateIconsTopColormap {} {
     $icons(colorbarmap,default) copy $foo -zoom 2
     image delete $foo
 
-    ttk::menubutton $mb.colormap -menu $mb.colormap.m \
-	-image $icons(colorbarmap,$colorbar(map)) -takefocus 0
+    ttk::menubutton $mb.colormap -menu $mb.colormap.m -takefocus 0
+#	-image $icons(colorbarmap,$colorbar(map)) 
     tooltip::tooltip $mb.colormap [msgcat::mc {Colormaps}]
 
     ttk::button $mb.invert -takefocus 0 \
@@ -96,6 +96,7 @@ proc CreateIconsTopColormap {} {
     }
 
     trace add variable colorbar(map) write [list IconMenuButtonCB $mb.colormap]
+    IconMenuButtonCB $mb.colormap colorbar map write
 
     pack $mb.colormap $mb.invert -side left -fill x
 
@@ -118,8 +119,8 @@ proc CreateIconsTopScale {} {
     set icons(scaletype,default) \
 	[image create photo -file "$ds9(icons,ui)/scale_other.png"]
 
-    ttk::menubutton $mb.scale -menu $mb.scale.m -direction right -takefocus 0 \
-	-image $icons(scaletype,$scale(type))
+    ttk::menubutton $mb.scale -menu $mb.scale.m -direction right -takefocus 0
+#	-image $icons(scaletype,$scale(type))
     tooltip::tooltip $mb.scale [msgcat::mc {Scaling Option}]
 
     ttk::button $mb.scaledialog -takefocus 0 -command ScaleDialog \
@@ -133,6 +134,7 @@ proc CreateIconsTopScale {} {
     IconMenuButton $mb.scale [msgcat::mc {Power}] scale type pow ChangeScale
 
     trace add variable scale(type) write [list IconMenuButtonCB $mb.scale]
+    IconMenuButtonCB $mb.scale scale type write
 
     pack $mb.scale $mb.scaledialog -side left -fill x
 }

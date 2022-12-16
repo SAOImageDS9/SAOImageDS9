@@ -743,7 +743,7 @@ proc WidthMenu {w varname width cmd} {
 	-value 4 -command $cmd
 }
 
-proc WidthMenuButton {w varname width dash cmd} {
+proc WidthMenuButton {w varname width cmd} {
     upvar #0 $varname var
     global $varname
     

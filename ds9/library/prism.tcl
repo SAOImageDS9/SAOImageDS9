@@ -793,7 +793,7 @@ proc PrismPlot {varname} {
     ColorMenuButton $f.error ed graph,ds,error,color {}
 
     ttk::label $f.terrorwidth -text [msgcat::mc {Width}]
-    WidtMenuButton $f.errorwidth ed graph,ds,error,width {}
+    WidthMenuButton $f.errorwidth ed graph,ds,error,width {}
 
     grid $f.theme - -padx 2 -pady 2 -sticky ew
     grid $f.tcolor $f.color $f.twidth $f.width \

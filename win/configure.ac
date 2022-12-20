@@ -65,7 +65,7 @@ TEA_ENABLE_SYMBOLS
 
 #--------------------------------------------------------------------
 
-AC_ARG_WITH([arch],AC_HELP_STRING([--with-arch],[build name]),[],[with_arch=unknown])
+AC_ARG_WITH([arch],AS_HELP_STRING([--with-arch],[build name]),[],[with_arch=unknown])
 
 OS="win"
 AC_SUBST(OS)

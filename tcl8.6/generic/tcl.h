@@ -464,14 +464,14 @@ typedef unsigned TCL_WIDE_INT_TYPE	Tcl_WideUInt;
 #   endif /* _MSC_VER < 1400 */
 #elif defined(__CYGWIN__)
     typedef struct {
-	dev_t st_dev;
+	unsigned st_dev;
 	unsigned short st_ino;
 	unsigned short st_mode;
 	short st_nlink;
 	short st_uid;
 	short st_gid;
 	/* Here is a 2-byte gap */
-	dev_t st_rdev;
+	insigned st_rdev;
 	/* Here is a 4-byte gap */
 	long long st_size;
 	struct {long tv_sec;} st_atim;

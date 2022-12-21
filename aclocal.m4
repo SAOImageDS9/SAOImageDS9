@@ -96,7 +96,7 @@ Please specify its location with --with-ssl-dir])
 	SSL_LIB_DIR=${SSL_DIR}/lib
 	SSL_INCLUDE_DIR=${SSL_DIR}/include
 	if test ! -f "${SSL_INCLUDE_DIR}/openssl/opensslv.h"; then
-	    AC_ERROR([bad ssl-dir: cannot find openssl/opensslv.h under ${SSL_INCLUDE_DIR}])
+	    AC_MSG_ERROR([bad ssl-dir: cannot find openssl/opensslv.h under ${SSL_INCLUDE_DIR}])
 	fi
     else
 	#--------------------------------------------------------------------
@@ -126,7 +126,7 @@ Please specify its location with --with-ssl-dir])
 	SSL_LIB_DIR=${SSL_DIR}/${PLATFORM}/library/lib
 	SSL_INCLUDE_DIR=${SSL_DIR}/${PLATFORM}/library/include
 	if test ! -f "${SSL_INCLUDE_DIR}/crypto.h"; then
-	    AC_ERROR([bad ssl-dir: cannot find crypto.h under ${SSL_INCLUDE_DIR}])
+	    AC_MSG_ERROR([bad ssl-dir: cannot find crypto.h under ${SSL_INCLUDE_DIR}])
 	fi
     fi
 

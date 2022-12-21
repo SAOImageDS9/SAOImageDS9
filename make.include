@@ -3,24 +3,24 @@
 # tcllib 1.20
 # tklib .7
 
-# tksvg 0.7
+# tksvg 0.7.2
 # awthemes 10.3.0
 # ttkthemes 3.2.2
 # scidthemes 0.9.3
 
 # tclfitsy 1.0
 # tcliis 1.0
-# tclsignal 1.4.4.1
+# tclsignal 1.4.5
 # tclxml 3.2
-# tclzipfs 1.0
-# tls 1.6.7
-# tkblt 3.2
-# tkcon 2.7.10
-# tkhtml1 1.0
+# tclzipfs 1.0.1
+# tls 1.6.7.5
+# tkblt 3.2.23
+# tkcon 2.7.11
+# tkhtml1 1.0.11
 # tkimg 1.4.13
-# tkmpeg 1.0
-# tkagif 1.0
-# tktable 2.10
+# tkmpeg 1.0.10
+# tkagif 1.0.5
+# tktable 2.10.8
 
 # ast 9.2.8
 # funtools 1.4.8

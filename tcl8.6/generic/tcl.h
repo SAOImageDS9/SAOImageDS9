@@ -471,7 +471,7 @@ typedef unsigned TCL_WIDE_INT_TYPE	Tcl_WideUInt;
 	short st_uid;
 	short st_gid;
 	/* Here is a 2-byte gap */
-	insigned st_rdev;
+	unsigned st_rdev;
 	/* Here is a 4-byte gap */
 	long long st_size;
 	struct {long tv_sec;} st_atim;

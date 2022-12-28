@@ -85,9 +85,9 @@ proc ::tk::MotifFDialog_Create {dataName type argList} {
     MotifFDialog_Config $dataName $type $argList
 
     if {$data(-parent) eq "."} {
-        set w .$dataName
+	set w .$dataName
     } else {
-        set w $data(-parent).$dataName
+	set w $data(-parent).$dataName
     }
 
     # (re)create the dialog box if necessary
@@ -116,20 +116,7 @@ proc ::tk::MotifFDialog_Create {dataName type argList} {
     # the dialog transient if the parent is viewable.
 
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
-	global tcl_platform
-	switch $tcl_platform(os) {
-	    Darwin {
-		set vv [lindex [split $tcl_platform(osVersion) {.}] 0]
-		if {$vv > 21} {
-		    # ventura
-		    raise $w $data(-parent)
-		} else {
-		    # monterey and previous
-		    wm transient $w $data(-parent)
-		}
-	    }
-	    default {wm transient $w $data(-parent)}
-	}
+	wm transient $w $data(-parent)
     }
 
     MotifFDialog_FileTypes $w
@@ -343,8 +330,8 @@ proc ::tk::MotifFDialog_BuildUI {w} {
     # Create the dialog toplevel and internal frames.
     #
     toplevel $w -class TkMotifFDialog
-    set top [ttk::frame $w.top -relief raised -borderwidth 1]
-    set bot [ttk::frame $w.bot -relief raised -borderwidth 1]
+    set top [ttk::frame $w.top -relief raised -bd 1]
+    set bot [ttk::frame $w.bot -relief raised -bd 1]
 
     pack $w.bot -side bottom -fill x
     pack $w.top -side top -expand yes -fill both
@@ -568,7 +555,7 @@ proc ::tk::MotifFDialog_Update {w} {
 
     $data(fEnt) delete 0 end
     $data(fEnt) insert 0 \
-            [::tk::dialog::file::JoinFile $data(selectPath) $data(filter)]
+	    [::tk::dialog::file::JoinFile $data(selectPath) $data(filter)]
     $data(sEnt) delete 0 end
     $data(sEnt) insert 0 [::tk::dialog::file::JoinFile $data(selectPath) \
 	    $data(selectFile)]
@@ -623,15 +610,15 @@ proc ::tk::MotifFDialog_LoadFiles {w} {
 	if {[file isdir ./$f]} {
 	    lappend dlist $f
 	} else {
-            foreach pat $data(filter) {
-                if {[string match $pat $f]} {
+	    foreach pat $data(filter) {
+		if {[string match $pat $f]} {
 		    if {[string match .* $f]} {
 			incr top
 		    }
 		    lappend flist $f
-                    break
+		    break
 		}
-            }
+	    }
 	}
     }
 #    eval [list $data(dList) insert end] [lsort -dictionary $dlist]
@@ -746,11 +733,9 @@ proc ::tk::MotifFDialog_ActivateDList {w} {
 
     if {$subdir ne ".."} {
 #	$data(dList) selection set 0
-#	$data(dList) selection set [lindex [$data(dList) children {}] 0]
 #	$data(dList) activate 0
     } else {
 #	$data(dList) selection set 1
-#	$data(dList) selection set [lindex [$data(dList) children {}] 1]
 #	$data(dList) activate 1
     }
 }
@@ -967,10 +952,10 @@ proc ::tk::MotifFDialog_CancelCmd {w} {
 }
 
 proc ::tk::ListBoxKeyAccel_Set {w} {
-#    bind Listbox <Any-KeyPress> ""
+#    bind Listbox <Any-Key> ""
     bind Treeview <Any-KeyPress> ""
     bind $w <Destroy> [list tk::ListBoxKeyAccel_Unset $w]
-    bind $w <Any-KeyPress> [list tk::ListBoxKeyAccel_Key $w %A]
+    bind $w <Any-Key> [list tk::ListBoxKeyAccel_Key $w %A]
 }
 
 proc ::tk::ListBoxKeyAccel_Unset {w} {

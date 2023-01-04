@@ -36,7 +36,6 @@ proc DS9Def {} {
     }
 
     set ds9(helvetica) [font configure TkDefaultFont -family]
-    set ds9(courier) [font configure TkFixedFont -family]
     set ds9(courier) courier
     switch $ds9(wm) {
 	x11 {

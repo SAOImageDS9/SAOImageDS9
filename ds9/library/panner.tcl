@@ -18,7 +18,6 @@ proc CreatePanner {} {
 	     -borderwidth 2 \
 	     -highlightthickness 0 \
 	     -insertofftime 0 \
-	     -takefocus 0 \
 	     -bg [ThemeTreeBackground] \
 	    ]
 
@@ -125,10 +124,9 @@ proc BindEventsPanner {} {
     }
 
 
-    $ds9(panner,canvas) bind panner <Up> [list ArrowKeyPanner 0 -1]
-    $ds9(panner,canvas) bind panner <Down> [list ArrowKeyPanner 0 1]
-    $ds9(panner,canvas) bind panner <Left> [list ArrowKeyPanner -1 0]
-    $ds9(panner,canvas) bind panner <Right> [list ArrowKeyPanner 1 0]
+    $ds9(panner,canvas) bind panner <Key> [list KeyPanner panner %K %A %x %y]
+    $ds9(panner,canvas) bind panner <KeyRelease> \
+	[list KeyReleasePanner panner %K %A %x %y]
 }
 
 proc UnBindEventsPanner {} {
@@ -147,10 +145,8 @@ proc UnBindEventsPanner {} {
 	aqua {$ds9(panner,canvas) bind panner <ButtonRelease-3> {}}
     }
 
-    $ds9(panner,canvas) bind panner <Up> {}
-    $ds9(panner,canvas) bind panner <Down> {}
-    $ds9(panner,canvas) bind panner <Left> {}
-    $ds9(panner,canvas) bind panner <Right> {}
+    $ds9(panner,canvas) bind panner <Key> {}
+    $ds9(panner,canvas) bind panner <KeyRelease> {}
 }
 
 proc EnterPanner {x y} {
@@ -162,14 +158,7 @@ proc EnterPanner {x y} {
 	puts stderr "EnterPanner"
     }
 
-    switch $ds9(wm) {
-	x11 {
-	    focus $ds9(panner,canvas)
-	    $ds9(panner,canvas) focus panner
-	}
-	aqua -
-	win32 {}
-    }
+    $ds9(panner,canvas) focus panner
 
     if {$current(frame) != {}} {
 	EnterInfoBox $current(frame)
@@ -187,14 +176,7 @@ proc LeavePanner {} {
     }
 
     panner highlite off
-    switch $ds9(wm) {
-	x11 {
-	    $ds9(panner,canvas) focus {}
-	    focus {}
-	}
-	aqua -
-	win32 {}
-    }
+    $ds9(panner,canvas) focus {}
 
     LeaveInfoBox
     PixelTableClearDialog
@@ -287,10 +269,83 @@ proc Release2Panner {x y} {
     }
 }
 
-proc ArrowKeyPanner {x y} {
+proc KeyPanner {which K A xx yy} {
+    global ds9
     global current
 
-    panner warp $x $y
+    # MacOSX and maybe Ubuntu returns bogus values in xx,yy
+    # calculate our own values
+    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
+    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "KeyPanner $which $K $A $xx $yy"
+    }
+
+    # MacOS can sometime gerate a ?? modifier keyevent
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L} ||
+	$K == {??}} {
+	set ds9(modifier) 1
+	return
+    }
+
+    if {$ds9(modifier)} {
+	return
+    }
+
+    switch -- $K {
+	Up -
+	k {PannerArrowKey $which 0 -1}
+	Down -
+	j {PannerArrowKey $which 0 1}
+	Left -
+	h {PannerArrowKey $which -1 0}
+	Right -
+	l {PannerArrowKey $which 1 0}
+    }
+}
+
+proc KeyReleasePanner {which K A xx yy} {
+    global ds9
+
+    # MacOSX and Ubuntu returns bogus values in xx,yy
+    # calculate our own values
+    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
+    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "KeyReleasePanner $which $K $A $xx $yy"
+    }
+
+    # MacOS can sometime gerate a ?? modifier keyevent
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L} ||
+	$K == {??}} {
+	set ds9(modifier) 0
+    }
+}
+
+proc PannerArrowKey {which x y} {
+    global current
+    global ds9
+
+#    $which warp $x $y
+    WarpCursor $ds9(panner,canvas) $which $x $y
     SAMPSendCoordPointAtSkyCmd $current(frame)
 }
 

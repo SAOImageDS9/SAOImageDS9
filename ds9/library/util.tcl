@@ -739,7 +739,7 @@ proc Sex2D {str} {
     return [expr $sign * (abs($degree)+($min/60.)+($sec/(60.*60.)))]
 }
 
-proc WarpCursor {which x y} {
+proc WarpCursor {canvas which x y} {
     global ds9
 
     $which warp $x $y
@@ -751,7 +751,7 @@ proc WarpCursor {which x y} {
 	    set foo [$which query cursor]
 	    set xx [expr [lindex $foo 0]+$x]
 	    set yy [expr [lindex $foo 1]+$y]
-	    event generate $ds9(canvas) <Motion> -x $xx -y $yy
+	    event generate $canvas <Motion> -x $xx -y $yy
 	}
     }
 }
@@ -1596,13 +1596,14 @@ proc ProcessCursorCmd {varname iname} {
 
 proc CursorCmd {x y} {
     global current
+    global ds9
 
     if {$current(frame) == {}} {
 	return
     }
 
     switch -- $current(mode) {
-	none {WarpCursor $current(frame) $x $y}
+	none {WarpCursor $ds9(canvas) $current(frame) $x $y}
 	pointer -
 	region -
 	catalog -

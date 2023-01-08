@@ -316,10 +316,12 @@ proc KeyPanner {which K A xx yy} {
 proc KeyReleasePanner {which K A xx yy} {
     global ds9
 
+    puts "b: $xx $yy"
     # MacOSX and Ubuntu returns bogus values in xx,yy
     # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
+    set xx [expr {[winfo pointerx $ds9(panner,canvas)] - [winfo rootx $ds9(panner,canvas)]}]
+    set yy [expr {[winfo pointery $ds9(panner,canvas)] - [winfo rooty $ds9(panner,canvas)]}]
+    puts "a: $xx $yy"
 
     global debug
     if {$debug(tcl,events)} {

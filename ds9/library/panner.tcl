@@ -278,7 +278,6 @@ proc KeyPanner {which K A xx yy} {
 	puts stderr "KeyPanner $which $K $A $xx $yy"
     }
 
-    # MacOS can sometime gerate a ?? modifier keyevent
     if {$K == {Control_R} ||
 	$K == {Control_L} ||
 	$K == {Meta_R} ||
@@ -286,10 +285,8 @@ proc KeyPanner {which K A xx yy} {
 	$K == {Alt_R} ||
 	$K == {Alt_L} ||
 	$K == {Super_R} ||
-	$K == {Super_L} ||
-	$K == {??}} {
+	$K == {Super_L}} {
 	set ds9(modifier) 1
-	return
     }
 
     if {$ds9(modifier)} {
@@ -316,7 +313,6 @@ proc KeyReleasePanner {which K A xx yy} {
 	puts stderr "KeyReleasePanner $which $K $A $xx $yy"
     }
 
-    # MacOS can sometime gerate a ?? modifier keyevent
     if {$K == {Control_R} ||
 	$K == {Control_L} ||
 	$K == {Meta_R} ||
@@ -324,8 +320,7 @@ proc KeyReleasePanner {which K A xx yy} {
 	$K == {Alt_R} ||
 	$K == {Alt_L} ||
 	$K == {Super_R} ||
-	$K == {Super_L} ||
-	$K == {??}} {
+	$K == {Super_L}} {
 	set ds9(modifier) 0
     }
 }

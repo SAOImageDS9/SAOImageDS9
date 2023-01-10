@@ -508,6 +508,21 @@ proc ColorbarKey {frame K A x y} {
 	puts stderr "ColorbarKey $frame $K $A $x $y"
     }
 
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 1
+    }
+
+    if {$ds9(modifier)} {
+	return
+    }
+
     set cb ${frame}cb
 
     switch -- $current(mode) {
@@ -535,6 +550,17 @@ proc ColorbarKeyRelease {frame K A x y} {
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "ColorbarKeyRelease $frame $K $A $x $y"
+    }
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 0
     }
 
     set cb ${frame}cb

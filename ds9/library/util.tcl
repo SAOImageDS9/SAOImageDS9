@@ -743,10 +743,10 @@ proc WarpCursor {canvas which x y} {
     global ds9
 
     $which warp $x $y
-    # major kludge: macos warp does not generate motion event
+    # major kludge: warp does not generate motion event
     switch $ds9(wm) {
-	x11 -
-	win32 {}
+	x11 {}
+	win32 -
 	aqua {
 	    set foo [$which query cursor]
 	    set xx [expr [lindex $foo 0]+$x]
@@ -760,10 +760,10 @@ proc WarpToCursor {which x y} {
     global ds9
 
     $which warp to $x $y
-    # major kludge: macos warp does not generate motion event
+    # major kludge: warp does not generate motion event
     switch $ds9(wm) {
-	x11 -
-	win32 {}
+	x11 {}
+	win32 -
 	aqua {
 	    set foo [$which query cursor]
 	    set xx [lindex $foo 0]

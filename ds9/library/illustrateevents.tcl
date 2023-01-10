@@ -569,6 +569,21 @@ proc IllustrateKey {K A xx yy} {
 	puts "IllustrateKey $K $A $xx $yy"
     }
 
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 1
+    }
+
+    if {$ds9(modifier)} {
+	return
+    }
+
     switch -- $K {
 	Delete -
 	BackSpace {
@@ -616,6 +631,17 @@ proc IllustrateKeyRelease {K A xx yy} {
     global debug
     if {$debug(tcl,events)} {
 	puts "IllustrateKeyRelease $K $A $xx $yy"
+    }
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 0
     }
 
     # for undo/cut/copy/paste

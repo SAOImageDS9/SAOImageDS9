@@ -564,11 +564,6 @@ proc IllustrateDoubleReleaseButton {xx yy} {
 proc IllustrateKey {K A xx yy} {
     global ds9
 
-    # MacOSX and maybe Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts "IllustrateKey $K $A $xx $yy"
@@ -617,11 +612,6 @@ proc IllustrateKey {K A xx yy} {
 
 proc IllustrateKeyRelease {K A xx yy} {
     global ds9
-
-    # MacOSX and Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
 
     global debug
     if {$debug(tcl,events)} {

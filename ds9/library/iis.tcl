@@ -314,11 +314,6 @@ proc IISCursorKey {sym key xx yy} {
     global iis
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(iis)} {
 	puts stderr "IISCursorKey: $sym $key $xx $yy"

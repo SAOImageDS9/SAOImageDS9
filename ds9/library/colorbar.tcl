@@ -503,11 +503,6 @@ proc ColorbarKey {frame K A x y} {
     global current
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in x,y
-    # calculate our own values
-    set x [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set y [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "ColorbarKey $frame $K $A $x $y"
@@ -536,11 +531,6 @@ proc ColorbarKey {frame K A x y} {
 
 proc ColorbarKeyRelease {frame K A x y} {
     global ds9
-
-    # MacOSX and Ubuntu returns bogus values in x,y
-    # calculate our own values
-    set x [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set y [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
 
     global debug
     if {$debug(tcl,events)} {

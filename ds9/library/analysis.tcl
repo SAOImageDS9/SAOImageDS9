@@ -602,11 +602,6 @@ proc AnalysisTask {i which {frame {}} {x 0} {y 0} {sync 0}} {
     global current
     global ds9
 
-    # MacOSX and maybe Ubuntu returns bogus values in x,y
-    # calculate our own values
-    set x [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set y [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     if {$frame == {}} {
 	set frame $current(frame)
     }

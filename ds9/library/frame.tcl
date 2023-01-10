@@ -1342,6 +1342,7 @@ proc KeyFrame {which K A xx yy} {
 	$K == {Super_L} ||
 	$K == {??}} {
 	set ds9(modifier) 1
+	puts "KEY $K"
 	return
     }
 
@@ -1514,6 +1515,7 @@ proc KeyReleaseFrame {which K A xx yy} {
 	$K == {Super_L} ||
 	$K == {??}} {
 	set ds9(modifier) 0
+	puts "RELEASE $K"
     }
 }
 

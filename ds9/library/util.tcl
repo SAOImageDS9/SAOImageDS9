@@ -743,6 +743,7 @@ proc WarpCursor {canvas which x y} {
     global ds9
 
     $which warp $x $y
+    return
     # major kludge: macos warp does not generate motion event
     switch $ds9(wm) {
 	x11 -

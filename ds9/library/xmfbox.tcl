@@ -116,7 +116,20 @@ proc ::tk::MotifFDialog_Create {dataName type argList} {
     # the dialog transient if the parent is viewable.
 
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
-	wm transient $w $data(-parent)
+	global tcl_platform
+	switch $tcl_platform(os) {
+	    Darwin {
+		set vv [lindex [split $tcl_platform(osVersion) {.}] 0]
+		if {$vv > 21} {
+		    # ventura
+		    raise $w $data(-parent)
+		} else {
+		    # monterey and previous
+		    wm transient $w $data(-parent)
+		}
+	    }
+	    default {wm transient $w $data(-parent)}
+	}
     }
 
     MotifFDialog_FileTypes $w
@@ -330,8 +343,8 @@ proc ::tk::MotifFDialog_BuildUI {w} {
     # Create the dialog toplevel and internal frames.
     #
     toplevel $w -class TkMotifFDialog
-    set top [ttk::frame $w.top -relief raised -bd 1]
-    set bot [ttk::frame $w.bot -relief raised -bd 1]
+    set top [ttk::frame $w.top -relief raised -borderwidth 1]
+    set bot [ttk::frame $w.bot -relief raised -borderwidth 1]
 
     pack $w.bot -side bottom -fill x
     pack $w.top -side top -expand yes -fill both

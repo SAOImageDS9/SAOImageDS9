@@ -16,6 +16,9 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
 
+package provide DS9 1.0
+namespace eval ::tk::msgcat {}
+
 namespace eval ::tk::dialog {}
 namespace eval ::tk::dialog::file {
     namespace import -force ::tk::msgcat::*
@@ -147,8 +150,21 @@ proc ::tk::dialog::file:: {type args} {
     # this can hang the entire application.  Therefore we only make the dialog
     # transient if the parent is viewable.
 
-    if {[winfo viewable [winfo toplevel $data(-parent)]]} {
-	wm transient $w $data(-parent)
+    if {[winfo viewable [winfo toplevel $data(-parent)]] } {
+	global tcl_platform
+	switch $tcl_platform(os) {
+	    Darwin {
+		set vv [lindex [split $tcl_platform(osVersion) {.}] 0]
+		if {$vv > 21} {
+		    # ventura
+		    raise $w $data(-parent)
+		} else {
+		    # monterey and previous
+		    wm transient $w $data(-parent)
+		}
+	    }
+	    default {wm transient $w $data(-parent)}
+	}
     }
 
     # Add traces on the selectPath variable

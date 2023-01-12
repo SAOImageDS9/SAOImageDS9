@@ -329,7 +329,6 @@ proc PannerArrowKey {which x y} {
     global current
     global ds9
 
-#    $which warp $x $y
     WarpCursor $ds9(panner,canvas) $which $x $y
     SAMPSendCoordPointAtSkyCmd $current(frame)
 }

@@ -88,14 +88,8 @@ proc InitPanner {} {
 	win32 {}
     }
 
-    switch $ds9(wm) {
-	x11 -
-	aqua {
-	    bind $ds9(panner,canvas) <Enter> [list focus $ds9(panner,canvas)]
-	    bind $ds9(panner,canvas) <Leave> [list focus {}]
-	}
-	win32 {}
-    }
+    bind $ds9(panner,canvas) <Enter> [list focus $ds9(panner,canvas)]
+    bind $ds9(panner,canvas) <Leave> [list focus {}]
 
     # compass
     panner compass $ppanner(compass)

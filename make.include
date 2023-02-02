@@ -9,7 +9,6 @@
 # scidthemes 0.9.3
 
 # tclfitsy 1.0
-# tcliis 1.0
 # tclsignal 1.4.5
 # tclxml 3.2
 # tclzipfs 1.0.1
@@ -71,7 +70,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tcliis tclxml tclzipfs tls xpa
+.PHONY	: all dirs ds9 tclxml tclzipfs tls xpa
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
 .PHONY	: util vector fitsy ast funtools openssl
 
@@ -131,23 +130,6 @@ tclfitsy/Makefile :
 	@echo ""
 	@echo "*** $@ ***"
 	cd tclfitsy; \
-	./configure \
-	$(WITHTCL) \
-	$(PREFIX) \
-	$(STD) \
-	$(CACHE)
-
-#-------------------------- tcliis
-
-tcliis	: tcliis/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tcliis -j $(JOBS) install
-
-tcliis/Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd tcliis; \
 	./configure \
 	$(WITHTCL) \
 	$(PREFIX) \
@@ -550,7 +532,7 @@ scrub :
 
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean ds9parsersclean localclean
-.PHONY	: opensslclean tcliisclean 
+.PHONY	: opensslclean
 .PHONY	: tclxmlclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
@@ -560,7 +542,6 @@ scrub :
 
 clean	: tclclean tkclean \
 	opensslclean \
-	tcliisclean \
 	tlsclean tclxmlclean xpaclean \
 	tkbltclean tclfitsy tkconclean tktableclean tkimgclean \
 	tkmpegclean tksvgclean tkagifclean tkhtml1clean \
@@ -596,11 +577,6 @@ tclfitsyclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclfitsy clean
-
-tcliisclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tcliis clean
 
 tclxmlclean:
 	@echo ""
@@ -690,7 +666,7 @@ xpaclean :
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
-.PHONY	: openssldistclean tcliisdistclean 
+.PHONY	: openssldistclean
 .PHONY	: tclxmldistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean 
@@ -700,7 +676,7 @@ xpaclean :
 .PHONY	: tksaodistclean
 
 distclean : tcldistclean tkdistclean \
-	  openssldistclean tcliisdistclean \
+	  openssldistclean \
 	  tclsignaldistclean \
 	  tlsdistclean tclxmldistclean xpadistclean \
 	  tkbltdistclean tclfitsydistclean tktabledistclean \
@@ -745,12 +721,6 @@ tclfitsydistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tclfitsy distclean
 	rm -f tclfitsy/tclfitsyConfig.sh
-
-tcliisdistclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tcliis distclean
-	rm -f tcliis/tcliisConfig.sh
 
 tclxmldistclean:
 	@echo ""

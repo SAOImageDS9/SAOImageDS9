@@ -13,9 +13,9 @@ proc DS9Def {} {
     }
 
     # Must be major,minor
-    set ds9(version) {8.4}
+    set ds9(version) {8.5}
     # For display purposes only
-    set ds9(version,display) {8.4.1}
+    set ds9(version,display) {8.5b1}
 
     set ds9(visual) {}
     set ds9(depth) 8
@@ -36,7 +36,6 @@ proc DS9Def {} {
     }
 
     set ds9(helvetica) [font configure TkDefaultFont -family]
-    set ds9(courier) [font configure TkFixedFont -family]
     set ds9(courier) courier
     switch $ds9(wm) {
 	x11 {

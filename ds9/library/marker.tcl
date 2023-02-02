@@ -283,7 +283,7 @@ proc MarkerArrowKey {which x y} {
     global current
     global ds9
 
-    WarpCursor $which $x $y
+    WarpCursor $ds9(canvas) $which $x $y
     $which marker $current(mode) move $x $y
 }
 

@@ -29,6 +29,7 @@ bbox		{return BBOX_;}
 begin		{return BEGIN_;}
 clear		{return CLEAR_;}
 compass		{return COMPASS_;}
+cursor		{return CURSOR_;}
 debug		{return DEBUG_;}
 end		{return END_;}
 false		{return FALSE_;}
@@ -44,6 +45,7 @@ no		{return NO_;}
 off		{return OFF_;}
 on		{return ON_;}
 pan		{return PAN_;}
+query           {return QUERY_;}
 reset		{return RESET_;}
 show		{return SHOW_;}
 size		{return SIZE_;}

@@ -38,6 +38,7 @@ extern void pnerror(Panner*, pnFlexLexer*, const char*);
 %token BEGIN_
 %token CLEAR_
 %token COMPASS_
+%token CURSOR_
 %token DEBUG_
 %token END_
 %token FALSE_
@@ -53,6 +54,7 @@ extern void pnerror(Panner*, pnFlexLexer*, const char*);
 %token OFF_
 %token ON_
 %token PAN_
+%token QUERY_
 %token RESET_
 %token SHOW_
 %token SIZE_
@@ -77,6 +79,7 @@ command : DEBUG_ debug
 	| HIDE_ {pn->hideCmd();}
 	| HIGHLITE_ highLite
 	| PAN_ pan
+	| QUERY_ CURSOR_ {pn->queryCursorCmd();}
 	| RESET_ {pn->resetCmd();}
 	| SHOW_ {pn->showCmd();}
 	| UPDATE_ update

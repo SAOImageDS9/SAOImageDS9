@@ -503,14 +503,24 @@ proc ColorbarKey {frame K A x y} {
     global current
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in x,y
-    # calculate our own values
-    set x [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set y [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "ColorbarKey $frame $K $A $x $y"
+    }
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 1
+    }
+
+    if {$ds9(modifier)} {
+	return
     }
 
     set cb ${frame}cb
@@ -537,14 +547,20 @@ proc ColorbarKey {frame K A x y} {
 proc ColorbarKeyRelease {frame K A x y} {
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in x,y
-    # calculate our own values
-    set x [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set y [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "ColorbarKeyRelease $frame $K $A $x $y"
+    }
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 0
     }
 
     set cb ${frame}cb

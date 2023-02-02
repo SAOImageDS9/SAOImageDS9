@@ -45,33 +45,35 @@
      BEGIN_ = 261,
      CLEAR_ = 262,
      COMPASS_ = 263,
-     DEBUG_ = 264,
-     END_ = 265,
-     FALSE_ = 266,
-     GET_ = 267,
-     HEIGHT_ = 268,
-     HIDE_ = 269,
-     HIGHLITE_ = 270,
-     IMAGE_ = 271,
-     INVALID_ = 272,
-     MOTION_ = 273,
-     N_ = 274,
-     NO_ = 275,
-     OFF_ = 276,
-     ON_ = 277,
-     PAN_ = 278,
-     RESET_ = 279,
-     SHOW_ = 280,
-     SIZE_ = 281,
-     TRUE_ = 282,
-     TO_ = 283,
-     UPDATE_ = 284,
-     VERSION_ = 285,
-     WARP_ = 286,
-     WCS_ = 287,
-     WIDTH_ = 288,
-     Y_ = 289,
-     YES_ = 290
+     CURSOR_ = 264,
+     DEBUG_ = 265,
+     END_ = 266,
+     FALSE_ = 267,
+     GET_ = 268,
+     HEIGHT_ = 269,
+     HIDE_ = 270,
+     HIGHLITE_ = 271,
+     IMAGE_ = 272,
+     INVALID_ = 273,
+     MOTION_ = 274,
+     N_ = 275,
+     NO_ = 276,
+     OFF_ = 277,
+     ON_ = 278,
+     PAN_ = 279,
+     QUERY_ = 280,
+     RESET_ = 281,
+     SHOW_ = 282,
+     SIZE_ = 283,
+     TRUE_ = 284,
+     TO_ = 285,
+     UPDATE_ = 286,
+     VERSION_ = 287,
+     WARP_ = 288,
+     WCS_ = 289,
+     WIDTH_ = 290,
+     Y_ = 291,
+     YES_ = 292
    };
 #endif
 /* Tokens.  */
@@ -81,33 +83,35 @@
 #define BEGIN_ 261
 #define CLEAR_ 262
 #define COMPASS_ 263
-#define DEBUG_ 264
-#define END_ 265
-#define FALSE_ 266
-#define GET_ 267
-#define HEIGHT_ 268
-#define HIDE_ 269
-#define HIGHLITE_ 270
-#define IMAGE_ 271
-#define INVALID_ 272
-#define MOTION_ 273
-#define N_ 274
-#define NO_ 275
-#define OFF_ 276
-#define ON_ 277
-#define PAN_ 278
-#define RESET_ 279
-#define SHOW_ 280
-#define SIZE_ 281
-#define TRUE_ 282
-#define TO_ 283
-#define UPDATE_ 284
-#define VERSION_ 285
-#define WARP_ 286
-#define WCS_ 287
-#define WIDTH_ 288
-#define Y_ 289
-#define YES_ 290
+#define CURSOR_ 264
+#define DEBUG_ 265
+#define END_ 266
+#define FALSE_ 267
+#define GET_ 268
+#define HEIGHT_ 269
+#define HIDE_ 270
+#define HIGHLITE_ 271
+#define IMAGE_ 272
+#define INVALID_ 273
+#define MOTION_ 274
+#define N_ 275
+#define NO_ 276
+#define OFF_ 277
+#define ON_ 278
+#define PAN_ 279
+#define QUERY_ 280
+#define RESET_ 281
+#define SHOW_ 282
+#define SIZE_ 283
+#define TRUE_ 284
+#define TO_ 285
+#define UPDATE_ 286
+#define VERSION_ 287
+#define WARP_ 288
+#define WCS_ 289
+#define WIDTH_ 290
+#define Y_ 291
+#define YES_ 292
 
 
 
@@ -122,7 +126,7 @@ typedef union YYSTYPE
   char str[1024];
 }
 /* Line 1529 of yacc.c.  */
-#line 126 "panner/parser.H"
+#line 130 "panner/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

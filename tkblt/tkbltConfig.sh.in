@@ -26,20 +26,20 @@ tkblt_BUILD_LIB_SPEC='@tkblt_BUILD_LIB_SPEC@'
 tkblt_LIB_SPEC='@tkblt_LIB_SPEC@'
 
 # The name of the tkblt stub library (a .a file):
-tkblt_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
+#tkblt_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
 
 # String to pass to linker to pick up the tkblt stub library from its
 # build directory.
-tkblt_BUILD_STUB_LIB_SPEC='@tkblt_BUILD_STUB_LIB_SPEC@'
+#tkblt_BUILD_STUB_LIB_SPEC='@tkblt_BUILD_STUB_LIB_SPEC@'
 
 # String to pass to linker to pick up the tkblt stub library from its
 # installed directory.
-tkblt_STUB_LIB_SPEC='@tkblt_STUB_LIB_SPEC@'
+#tkblt_STUB_LIB_SPEC='@tkblt_STUB_LIB_SPEC@'
 
 # String to pass to linker to pick up the tkblt stub library from its
 # build directory.
-tkblt_BUILD_STUB_LIB_PATH='@tkblt_BUILD_STUB_LIB_PATH@'
+#tkblt_BUILD_STUB_LIB_PATH='@tkblt_BUILD_STUB_LIB_PATH@'
 
 # String to pass to linker to pick up the tkblt stub library from its
 # installed directory.
-tkblt_STUB_LIB_PATH='@tkblt_STUB_LIB_PATH@'
+#tkblt_STUB_LIB_PATH='@tkblt_STUB_LIB_PATH@'

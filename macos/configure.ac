@@ -19,7 +19,7 @@ dnl	to configure the system for the local environment.
 # so that we create the export library with the dll.
 #-----------------------------------------------------------------------
 
-AC_INIT([saods9], [8.4])
+AC_INIT([saods9], [8.5])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
@@ -64,7 +64,7 @@ TEA_ENABLE_SYMBOLS
 
 #--------------------------------------------------------------------
 
-AC_ARG_WITH([arch],AC_HELP_STRING([--with-arch],[build name]),[],[with_arch=unknown])
+AC_ARG_WITH([arch],AS_HELP_STRING([--with-arch],[build name]),[],[with_arch=unknown])
 
 OS="macos"
 AC_SUBST(OS)

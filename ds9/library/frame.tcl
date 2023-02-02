@@ -1326,17 +1326,11 @@ proc KeyFrame {which K A xx yy} {
     global ds9
     global current
 
-    # MacOSX and maybe Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "KeyFrame $which $K $A $xx $yy"
     }
 
-    # MacOS can sometime gerate a ?? modifier keyevent
     if {$K == {Control_R} ||
 	$K == {Control_L} ||
 	$K == {Meta_R} ||
@@ -1344,10 +1338,8 @@ proc KeyFrame {which K A xx yy} {
 	$K == {Alt_R} ||
 	$K == {Alt_L} ||
 	$K == {Super_R} ||
-	$K == {Super_L} ||
-	$K == {??}} {
+	$K == {Super_L}} {
 	set ds9(modifier) 1
-	return
     }
 
     if {$ds9(modifier)} {
@@ -1364,13 +1356,13 @@ proc KeyFrame {which K A xx yy} {
 		minus {CubePrev}
 
 		Up -
-		k {WarpCursor $which 0 -1}
+		k {WarpCursor $ds9(canvas) $which 0 -1}
 		Down -
-		j {WarpCursor $which 0 1}
+		j {WarpCursor $ds9(canvas) $which 0 1}
 		Left -
-		h {WarpCursor $which -1 0}
+		h {WarpCursor $ds9(canvas) $which -1 0}
 		Right -
-		l {WarpCursor $which 1 0}
+		l {WarpCursor $ds9(canvas) $which 1 0}
 
 		z {Zoom 2 2}
 		Z {Zoom .5 .5}
@@ -1503,17 +1495,11 @@ proc KeyFrame {which K A xx yy} {
 proc KeyReleaseFrame {which K A xx yy} {
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "KeyReleaseFrame $which $K $A $xx $yy"
     }
 
-    # MacOS can sometime gerate a ?? modifier keyevent
     if {$K == {Control_R} ||
 	$K == {Control_L} ||
 	$K == {Meta_R} ||
@@ -1521,8 +1507,7 @@ proc KeyReleaseFrame {which K A xx yy} {
 	$K == {Alt_R} ||
 	$K == {Alt_L} ||
 	$K == {Super_R} ||
-	$K == {Super_L} ||
-	$K == {??}} {
+	$K == {Super_L}} {
 	set ds9(modifier) 0
     }
 }

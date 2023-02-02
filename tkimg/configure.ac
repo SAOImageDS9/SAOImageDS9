@@ -4,7 +4,7 @@ dnl	to configure the system for the local environment.
 
 AC_INIT([Img],[1.4.13])
 
-TEA_INIT([3.9])
+TEA_INIT()
 
 AC_CONFIG_AUX_DIR(tclconfig)
 
@@ -19,6 +19,10 @@ AC_CONFIG_AUX_DIR(tclconfig)
 
 TEA_PATH_TCLCONFIG
 TEA_LOAD_TCLCONFIG
+
+#--------------------------------------------------------------------
+# Load the tkConfig.sh file if necessary (Tk extension)
+#--------------------------------------------------------------------
 
 TEA_PATH_TKCONFIG
 TEA_LOAD_TKCONFIG
@@ -135,7 +139,16 @@ TEA_CONFIG_SUBDIR(raw,        [--with-tkimg=`pwd`/base --disable-option-checking
 TEA_CONFIG_SUBDIR(flir,       [--with-tkimg=`pwd`/base --disable-option-checking])
 
 #--------------------------------------------------------------------
-#	Finally
+# Specify files to substitute AC variables in. You may alternatively
+# have a special pkgIndex.tcl.in or other files which require
+# substituting the AC variables in. Include these here.
 #--------------------------------------------------------------------
 
-AC_OUTPUT(Makefile)
+AC_CONFIG_FILES([Makefile])
+
+#--------------------------------------------------------------------
+# Finally, substitute all of the various values into the files
+# specified with AC_CONFIG_FILES.
+#--------------------------------------------------------------------
+
+AC_OUTPUT()

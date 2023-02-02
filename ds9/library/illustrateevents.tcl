@@ -564,14 +564,24 @@ proc IllustrateDoubleReleaseButton {xx yy} {
 proc IllustrateKey {K A xx yy} {
     global ds9
 
-    # MacOSX and maybe Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts "IllustrateKey $K $A $xx $yy"
+    }
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 1
+    }
+
+    if {$ds9(modifier)} {
+	return
     }
 
     switch -- $K {
@@ -618,14 +628,20 @@ proc IllustrateKey {K A xx yy} {
 proc IllustrateKeyRelease {K A xx yy} {
     global ds9
 
-    # MacOSX and Ubuntu returns bogus values in xx,yy
-    # calculate our own values
-    set xx [expr {[winfo pointerx $ds9(canvas)] - [winfo rootx $ds9(canvas)]}]
-    set yy [expr {[winfo pointery $ds9(canvas)] - [winfo rooty $ds9(canvas)]}]
-
     global debug
     if {$debug(tcl,events)} {
 	puts "IllustrateKeyRelease $K $A $xx $yy"
+    }
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 0
     }
 
     # for undo/cut/copy/paste

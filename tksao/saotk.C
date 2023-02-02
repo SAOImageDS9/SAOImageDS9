@@ -28,7 +28,7 @@ extern int PannerTrueColor_Init(Tcl_Interp*);
 
 extern int MagnifierTrueColor_Init(Tcl_Interp*);
 
-extern int Tcliis_Init(Tcl_Interp* interp);
+extern "C" int IIS_Init(Tcl_Interp*);
 
 extern "C" {
   int Tksao_Init(Tcl_Interp* interp);
@@ -83,7 +83,7 @@ int Tksao_Init(Tcl_Interp* interp) {
   if (ColorbarRGBTrueColor24_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
 
-  if (Tcliis_Init(interp) == TCL_ERROR)
+  if (IIS_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
 
   // dummy command 

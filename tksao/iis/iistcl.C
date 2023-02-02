@@ -18,9 +18,10 @@ extern "C" {
 #include "iis.h"
 #include "xim.h"
 
-  int Tcliis_Init(Tcl_Interp* interp);
+  int IIS_Init(Tcl_Interp* interp);
   int TcliisCmd(ClientData data, Tcl_Interp *interp, int argc, 
-	     const char* argv[]);
+		const char* argv[]);
+
 }
 
 IIS* iis=NULL;
@@ -42,7 +43,7 @@ static char* dupstr(const char* str)
   return copy;
 }
 
-int Tcliis_Init(Tcl_Interp* interp) {
+int IIS_Init(Tcl_Interp* interp) {
 
   if (IISDebug)
     cerr << "Iis_Init()" << endl;

@@ -197,6 +197,10 @@ frame/vect.C
 frame/wcsast.C
 frame/xylex.C
 frame/xyparser.C
+iis/iistcl.C
+iis/xim.C
+iis/iis.c
+iis/util.c
 list/list.C
 magnifier/lex.C
 magnifier/magnifier.C
@@ -243,6 +247,10 @@ esac
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])
 
+# Needed to compile open_unix
+if test "${TEA_PLATFORM}" != "windows" ; then
+AC_CHECK_HEADERS(sys/un.h)
+fi
 #--------------------------------------------------------------------
 # __CHANGE__
 #

@@ -6254,6 +6254,7 @@ fi
 
     vars="
 saotk.C
+util.C
 colorbar/cbgrid.C
 colorbar/colorbar.C
 colorbar/colorbarbase.C

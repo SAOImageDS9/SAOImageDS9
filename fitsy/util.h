@@ -17,5 +17,7 @@ extern char* dupstr(const char*);
 extern char* trim(const char*);
 extern char* toLower(const char*);
 extern char* toUpper(const char*);
+extern char* toConstLower(const char*);
+extern char* toConstUpper(const char*);
 
 #endif

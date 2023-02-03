@@ -6374,6 +6374,10 @@ frame/vect.C
 frame/wcsast.C
 frame/xylex.C
 frame/xyparser.C
+iis/iistcl.C
+iis/xim.C
+iis/iis.c
+iis/util.c
 list/list.C
 magnifier/lex.C
 magnifier/magnifier.C
@@ -6521,6 +6525,16 @@ esac
 
 
 
+# Needed to compile open_unix
+if test "${TEA_PLATFORM}" != "windows" ; then
+ac_fn_c_check_header_compile "$LINENO" "sys/un.h" "ac_cv_header_sys_un_h" "$ac_includes_default"
+if test "x$ac_cv_header_sys_un_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_SYS_UN_H 1" >>confdefs.h
+
+fi
+
+fi
 #--------------------------------------------------------------------
 # __CHANGE__
 #

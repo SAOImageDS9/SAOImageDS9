@@ -29,7 +29,6 @@ tkimgjpeg_LIB_SPEC= @tkimgjpeg_LIB_SPEC@
 tkimgtiff_LIB_SPEC= @tkimgtiff_LIB_SPEC@
 tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 
-tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclfitsy_LIB_SPEC= @tclfitsy_LIB_SPEC@
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
 
@@ -85,7 +84,6 @@ empty:=
 space:=$(empty) $(empty)
 
 SPECS	= \
-	$(tcliis_LIB_SPEC) \
 	$(tclfitsy_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
 	$(tls_LIB_SPEC) \

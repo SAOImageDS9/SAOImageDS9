@@ -12,6 +12,7 @@ using namespace std;
 
 #include <tcl.h>
 
+#include "util.h"
 #include "iistcl.h"
 
 extern "C" {
@@ -29,19 +30,6 @@ IIS* iis=NULL;
 // Debug
 
 int IISDebug= 0;
-
-static char* dupstr(const char* str)
-{
-  char* copy;
-  if (str) {
-    copy=new char[strlen(str)+1];
-    strcpy(copy,str);
-  }
-  else
-    copy=NULL;
-
-  return copy;
-}
 
 int IIS_Init(Tcl_Interp* interp) {
 

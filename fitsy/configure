@@ -6245,6 +6245,7 @@ fi
 
 
     vars="
+		   util.C
 		   alloc.C
 		   allocgz.C
 		   analysis.C
@@ -6330,6 +6331,7 @@ fi
 
 
     vars="
+		   util.h
 		   alloc.h
 		   allocgz.h
 		   analysis.h

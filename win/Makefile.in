@@ -43,7 +43,7 @@ DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 saods9	: dirs tcl tk \
 	openssl \
 	xpa funtools ast \
-	util vector fitsy \
+	vector fitsy \
 	tls tclxml \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tksvg tkagif tkhtml1 tkcon \

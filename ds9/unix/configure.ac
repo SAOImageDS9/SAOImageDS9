@@ -49,9 +49,6 @@ TEA_LOAD_TKCONFIG
 # Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
-TEA_PATH_CONFIG(util)
-TEA_LOAD_CONFIG(util)
-
 TEA_PATH_CONFIG(vector)
 TEA_LOAD_CONFIG(vector)
 

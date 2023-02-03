@@ -76,6 +76,7 @@ fi
 #-----------------------------------------------------------------------
 
 TEA_ADD_SOURCES([
+		   util.C
 		   alloc.C
 		   allocgz.C
 		   analysis.C
@@ -127,6 +128,7 @@ TEA_ADD_SOURCES([
 		   var.C
 	       ])
 TEA_ADD_HEADERS([
+		   util.h
 		   alloc.h
 		   allocgz.h
 		   analysis.h

@@ -77,7 +77,6 @@ fi
 
 TEA_ADD_SOURCES([
 saotk.C
-util.C
 colorbar/cbgrid.C
 colorbar/colorbar.C
 colorbar/colorbarbase.C

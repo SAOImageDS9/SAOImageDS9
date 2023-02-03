@@ -13,6 +13,11 @@ using namespace std;
 
 #include "util.h"
 
+int lsb()
+{
+  return (*(short *)"\001\000" & 0x0001);
+}
+
 void internalError(const char* msg)
 {
   extern Tcl_Interp *global_interp;
@@ -41,11 +46,6 @@ void swap8(char* src, char* dest) {
   *(dest+5) = *(src+2);
   *(dest+6) = *(src+1);
   *(dest+7) = *(src  );
-}
-
-int lsb()
-{
-  return (*(short *)"\001\000" & 0x0001);
 }
 
 char* dupstr(const char* str)

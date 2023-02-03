@@ -97,27 +97,3 @@ char* toUpper(const char* str)
   }
   return rr;
 }
-
-static char tobuf[1024];
-
-char* toConstLower(const char* str)
-{
-  strncpy(tobuf,str,1024);
-  char* ptr = tobuf;
-  while (*ptr) {
-    *ptr = (char)(tolower(((int)(*ptr))));
-    ptr++;
-  }
-  return tobuf;
-}
-
-char* toConstUpper(const char* str)
-{
-  strncpy(tobuf,str,1024);
-  char* ptr = tobuf;
-  while (*ptr) {
-    *ptr = (char)(toupper(((int)(*ptr))));
-    ptr++;
-  }
-  return tobuf;
-}

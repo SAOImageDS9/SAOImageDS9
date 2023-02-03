@@ -6025,7 +6025,7 @@ fi
 
 
 
-    vars="util.h fuzzy.h FlexLexer.h"
+    vars="util.h fuzzy.h"
     for i in $vars; do
 	# check for existence, be strict because it is installed
 	if test ! -f "${srcdir}/$i" ; then

@@ -76,7 +76,7 @@ fi
 #-----------------------------------------------------------------------
 
 TEA_ADD_SOURCES([util.C])
-TEA_ADD_HEADERS([util.h fuzzy.h FlexLexer.h])
+TEA_ADD_HEADERS([util.h fuzzy.h])
 TEA_ADD_INCLUDES([])
 TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])

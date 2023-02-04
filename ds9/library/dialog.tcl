@@ -52,7 +52,7 @@ proc DialogCreate {w title varname} {
     wm iconname $w "$title"
 
     upvar #0 varname var
-    wm protocol $w WM_DELETE_WINDOW [list set $varname 1]
+    wm protocol $w WM_DELETE_WINDOW [list set $varname 0]
 
     DialogCenter $w
 }

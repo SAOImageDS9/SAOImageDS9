@@ -47,8 +47,11 @@ proc FileMainMenu {} {
     $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {XPA}] \
 	-menu $ds9(mb).file.xpa
+    $ds9(mb).file add separator
     $ds9(mb).file add cascade -label [msgcat::mc {SAMP}] \
 	-menu $ds9(mb).file.samp
+    $ds9(mb).file add cascade -label [msgcat::mc {SAMP Hub}] \
+	-menu $ds9(mb).file.samphub
     $ds9(mb).file add separator
     $ds9(mb).file add command -label [msgcat::mc {Open TCL Console}] \
 	-command OpenConsole
@@ -213,9 +216,9 @@ proc FileMainMenu {} {
 
     ThemeMenu $ds9(mb).file.samp
     $ds9(mb).file.samp add command -label [msgcat::mc {Connect}] \
-	-command SAMPConnect
+	-command [list SAMPConnect 1]
     $ds9(mb).file.samp add command -label [msgcat::mc {Disconnect}] \
-	-command SAMPDisconnect
+	-command [list SAMPDisconnect 1]
     $ds9(mb).file.samp add separator
     $ds9(mb).file.samp add cascade -label [msgcat::mc {Image}] \
 	-menu $ds9(mb).file.samp.image
@@ -231,6 +234,12 @@ proc FileMainMenu {} {
     $ds9(mb).file.samp.table add command -label [msgcat::mc {Broadcast}] \
 	-command "SAMPSendTableLoadFits {}"
     $ds9(mb).file.samp.table add separator
+
+    ThemeMenu $ds9(mb).file.samphub
+    $ds9(mb).file.samphub add command -label [msgcat::mc {Start}] \
+	-command [list SAMPHubStart 1]
+    $ds9(mb).file.samphub add command -label [msgcat::mc {Stop}] \
+	-command [list SAMPHubStop 1]
 
     ThemeMenu $ds9(mb).file.xpa
     $ds9(mb).file.xpa add command -label [msgcat::mc {Information}] \
@@ -341,8 +350,12 @@ proc ButtonsFileDef {} {
 	file,header 1
 	file,notes 1
 	file,xpa,info 0
+	file,samp,connect 0
+	file,samp,disconnect 0
 	file,samp,image 0
 	file,samp,table 0
+	file,samphub,start 0
+	file,samphub,stop 0
 	file,console 0
 	file,tcl 0
 	file,pspage 0
@@ -517,10 +530,20 @@ proc CreateButtonsFile {} {
 
     ButtonButton $ds9(buttons).file.xpainfo \
 	[string tolower {XPA Info}] XPAInfo
+
+    ButtonButton $ds9(buttons).file.sampconnect \
+	[string tolower [msgcat::mc {SAMP Connect}]] "SAMPConnect 1"
+    ButtonButton $ds9(buttons).file.sampdisconnect \
+	[string tolower [msgcat::mc {SAMP Disconnect}]] "SAMPDisconnect 1"
     ButtonButton $ds9(buttons).file.sampimage \
 	[string tolower [msgcat::mc {SAMP Image}]] "SAMPSendImageLoadFits {}"
     ButtonButton $ds9(buttons).file.samptable \
 	[string tolower [msgcat::mc {SAMP Table}]] "SAMPSendTableLoadFits {}"
+
+    ButtonButton $ds9(buttons).file.samphubstart \
+	[string tolower [msgcat::mc {SAMP Hub Start}]] "SAMPHubStart 1"
+    ButtonButton $ds9(buttons).file.samphubstop \
+	[string tolower [msgcat::mc {SAMP Hub Stop}]] "SAMPHubStop 1"
 
     ButtonButton $ds9(buttons).file.console \
 	[string tolower [msgcat::mc {Console}]] OpenConsole
@@ -597,9 +620,17 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.restore pbuttons(file,restore)
         $ds9(buttons).file.header pbuttons(file,header)
         $ds9(buttons).file.notes pbuttons(file,notes)
+
         $ds9(buttons).file.xpainfo pbuttons(file,xpa,info)
+
+        $ds9(buttons).file.sampconnect pbuttons(file,samp,connect)
+        $ds9(buttons).file.sampdisconnect pbuttons(file,samp,disconnect)
         $ds9(buttons).file.sampimage pbuttons(file,samp,image)
         $ds9(buttons).file.samptable pbuttons(file,samp,table)
+
+        $ds9(buttons).file.samphubstart pbuttons(file,samphub,start)
+        $ds9(buttons).file.samphubstop pbuttons(file,samphub,stop)
+
         $ds9(buttons).file.console pbuttons(file,console)
         $ds9(buttons).file.tcl pbuttons(file,tcl)
         $ds9(buttons).file.pspage pbuttons(file,pspage)
@@ -645,7 +676,9 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,notes) -command {UpdateButtons buttons(file)}
     $m add separator
     $m add cascade -label [msgcat::mc {XPA}] -menu $m.xpa
+    $m add separator
     $m add cascade -label [msgcat::mc {SAMP}] -menu $m.samp
+    $m add cascade -label [msgcat::mc {SAMP Hub}] -menu $m.samphub
     $m add separator
     $m add checkbutton -label [msgcat::mc {Open TCL Console}] \
 	-variable pbuttons(file,console) -command {UpdateButtons buttons(file)}
@@ -867,11 +900,26 @@ proc PrefsDialogButtonbarFile {f} {
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.samp
+    $m.samp add checkbutton -label [msgcat::mc {Connect}] \
+	-variable pbuttons(file,samp,connect) \
+	-command {UpdateButtons buttons(file)}
+    $m.samp add checkbutton -label [msgcat::mc {Disconnect}] \
+	-variable pbuttons(file,samp,disconnect) \
+	-command {UpdateButtons buttons(file)}
+    $m.samp add separator
     $m.samp add checkbutton -label [msgcat::mc {Image}] \
 	-variable pbuttons(file,samp,image) \
 	-command {UpdateButtons buttons(file)}
     $m.samp add checkbutton -label [msgcat::mc {Table}] \
 	-variable pbuttons(file,samp,table) \
+	-command {UpdateButtons buttons(file)}
+
+    ThemeMenu $m.samphub
+    $m.samphub add checkbutton -label [msgcat::mc {Start}] \
+	-variable pbuttons(file,samphub,start) \
+	-command {UpdateButtons buttons(file)}
+    $m.samphub add checkbutton -label [msgcat::mc {Stop}] \
+	-variable pbuttons(file,samphub,stop) \
 	-command {UpdateButtons buttons(file)}
 }
 
@@ -892,6 +940,7 @@ proc UpdateFileMenu {} {
     UpdateFileMenuHeader
     UpdateFileMenuXPA
     UpdateFileMenuSAMP
+    UpdateFileMenuSAMPHub
 }
 
 proc UpdateFileMenuOpen {} {
@@ -1192,20 +1241,27 @@ proc UpdateFileMenuSAMP {} {
     if {!$pds9(samp)} {
 	$mm.samp entryconfig [msgcat::mc {Connect}] -state disabled
 	$mm.samp entryconfig [msgcat::mc {Disconnect}] -state disabled
+	$bb.sampconnect configure -state disabled
+	$bb.sampdisconnect configure -state disabled
 
 	$mm.samp entryconfig [msgcat::mc {Image}] -state disabled
 	$mm.samp entryconfig [msgcat::mc {Table}] -state disabled
 	$bb.sampimage configure -state disabled
 	$bb.samptable configure -state disabled
+
 	return
     }
 
     if {[info exists samp]} {
 	$mm.samp entryconfig [msgcat::mc {Connect}] -state disabled
 	$mm.samp entryconfig [msgcat::mc {Disconnect}] -state normal
+	$bb.sampconnect configure -state disabled
+	$bb.sampdisconnect configure -state normal
     } else {
 	$mm.samp entryconfig [msgcat::mc {Connect}] -state normal
 	$mm.samp entryconfig [msgcat::mc {Disconnect}] -state disabled
+	$bb.sampconnect configure -state normal
+	$bb.sampdisconnect configure -state disabled
     }
 
     $mm.samp entryconfig [msgcat::mc {Image}] -state disabled
@@ -1247,5 +1303,35 @@ proc UpdateFileMenuSAMP {} {
 	    }
 	    $bb.samptable configure -state normal
 	}
+    }
+}
+
+proc UpdateFileMenuSAMPHub {} {
+    global pds9
+    global ds9
+    global samphub
+ 
+    set mm $ds9(mb).file
+    set bb $ds9(buttons).file
+
+    if {!$pds9(samphub)} {
+	$mm.samphub entryconfig [msgcat::mc {Start}] -state disabled
+	$mm.samphub entryconfig [msgcat::mc {Stop}] -state disabled
+	$bb.samphubstart configure -state disabled
+	$bb.samphubstop configure -state disabled
+
+	return
+    }
+
+    if {[info exists samphub]} {
+	$mm.samphub entryconfig [msgcat::mc {Start}] -state disabled
+	$mm.samphub entryconfig [msgcat::mc {Stop}] -state normal
+	$bb.samphubstart configure -state disabled
+	$bb.samphubstop configure -state normal
+    } else {
+	$mm.samphub entryconfig [msgcat::mc {Start}] -state normal
+	$mm.samphub entryconfig [msgcat::mc {Stop}] -state disabled
+	$bb.samphubstart configure -state normal
+	$bb.samphubstop configure -state disabled
     }
 }

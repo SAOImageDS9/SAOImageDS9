@@ -510,8 +510,8 @@ proc samp::yyparse {} {
                     6 { set _ 0 }
                     7 { set _ 0 }
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    11 { if {$1} {SAMPConnect} else {SAMPDisconnect} }
-                    12 { SAMPConnect }
+                    11 { if {$1} {SAMPConnect 1} else {SAMPDisconnect} }
+                    12 { SAMPConnect 1 }
                     13 { SAMPDisconnect }
                     16 { SAMPSendImageLoadFits {} }
                     17 { SAMPSendImageLoadFits {} }

@@ -22,8 +22,8 @@ command : samp
  | samp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-samp : yesno {if {$1} {SAMPConnect} else {SAMPDisconnect}}
- | CONNECT_ {SAMPConnect}
+samp : yesno {if {$1} {SAMPConnect 1} else {SAMPDisconnect}}
+ | CONNECT_ {SAMPConnect 1}
  | DISCONNECT_ {SAMPDisconnect}
  | BROADCAST_ broadcast
  | SEND_ send

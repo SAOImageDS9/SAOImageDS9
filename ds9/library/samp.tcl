@@ -10,14 +10,9 @@ proc SAMPDef {} {
     set isamp(timeout) 1000
 }
 
-proc InitSAMP {} {
-    SAMPConnect 0
-#    catch {SAMPConnect 0}
-}
-
 # Cmds
 
-proc SAMPConnect {{verbose 1}} {
+proc SAMPConnect {verbose} {
     global ds9
     global isamp
     global samp
@@ -174,7 +169,7 @@ proc SAMPConnect {{verbose 1}} {
     after $isamp(timeout) SAMPUpdate
 }
 
-proc SAMPDisconnect {} {
+proc SAMPDisconnect {verbose} {
     global ds9
     global samp
 
@@ -1048,11 +1043,13 @@ proc SAMPParseHub {} {
     if {![file exist $fn]} {
 	return 0
     }
+    if {[catch {set fp [open $fn r]}]} {
+	return 0
+    }
 
     set samp(secret) {}
     set samp(url) {}
     set samp(metod) {}
-    set fp [open $fn r]
     while {1} {
 	if {[gets $fp line] == -1} {
 	    break
@@ -1586,8 +1583,12 @@ proc SAMPDelTmpFiles {} {
     global samp
 
     # delete any tmp files
-    foreach fn $samp(tmp,files) {
-	catch {file delete -force "$fn"}
+    if {[info exists samp]} {
+	if {[info exists samp(tmp,files)]} {
+	    foreach fn $samp(tmp,files) {
+		catch {file delete -force "$fn"}
+	    }
+	}
     }
 }
 

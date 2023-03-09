@@ -1222,9 +1222,11 @@ proc UpdateFileMenuXPA {} {
 
     if {[info exists xpa]} {
 	$mm.xpa entryconfig [msgcat::mc {Information}] -state normal
+	$mm.xpa entryconfig [msgcat::mc {Connect}] -state disabled
 	$mm.xpa entryconfig [msgcat::mc {Disconnect}] -state normal
     } else {
 	$mm.xpa entryconfig [msgcat::mc {Information}] -state disabled
+	$mm.xpa entryconfig [msgcat::mc {Connect}] -state normal
 	$mm.xpa entryconfig [msgcat::mc {Disconnect}] -state disabled
     }
 }
@@ -1237,20 +1239,6 @@ proc UpdateFileMenuSAMP {} {
  
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
-
-    if {!$pds9(samp)} {
-	$mm.samp entryconfig [msgcat::mc {Connect}] -state disabled
-	$mm.samp entryconfig [msgcat::mc {Disconnect}] -state disabled
-	$bb.sampconnect configure -state disabled
-	$bb.sampdisconnect configure -state disabled
-
-	$mm.samp entryconfig [msgcat::mc {Image}] -state disabled
-	$mm.samp entryconfig [msgcat::mc {Table}] -state disabled
-	$bb.sampimage configure -state disabled
-	$bb.samptable configure -state disabled
-
-	return
-    }
 
     if {[info exists samp]} {
 	$mm.samp entryconfig [msgcat::mc {Connect}] -state disabled
@@ -1313,15 +1301,6 @@ proc UpdateFileMenuSAMPHub {} {
  
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
-
-    if {!$pds9(samphub)} {
-	$mm.samphub entryconfig [msgcat::mc {Start}] -state disabled
-	$mm.samphub entryconfig [msgcat::mc {Stop}] -state disabled
-	$bb.samphubstart configure -state disabled
-	$bb.samphubstop configure -state disabled
-
-	return
-    }
 
     if {[info exists samphub]} {
 	$mm.samphub entryconfig [msgcat::mc {Start}] -state disabled

@@ -685,7 +685,7 @@ proc SAMPSend {method params resultVar} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend: $method $params"
+	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
     }
 
     if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params]}]} {

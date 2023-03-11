@@ -131,16 +131,20 @@ proc DS9Def {} {
 
     set pds9(backup) 1
     set pds9(automarker) 1
+
+    # start XPA
     switch $ds9(wm) {
 	x11 -
 	aqua {set pds9(xpa) 1}
 	win32 {set pds9(xpa) 0}
     }
-    # connect if samp hub is available
-    set pds9(samp) 1
+
     # start hub if unable to find another
     set pds9(samphub) 1
-    
+
+    # connect if samp hub is available
+    set pds9(samp) 0
+
     set pds9(prec,linear) 8
     set pds9(prec,deg) 7
     set pds9(prec,hms) 4
@@ -605,19 +609,19 @@ InitAnalysisFile
 # Configure HTTP
 ConfigHTTP
 
-# SAMP
-if {$pds9(samp)} {
-    SAMPConnect 0
+# XPA
+if {$pds9(xpa)} {
+    InitXPA
 }
 
 # SAMP Hub
 if {$pds9(samphub)} {
-    SAMPHubStart 0
+    SAMPHubStart 1
 }
 
-# XPA
-if {$pds9(xpa)} {
-    InitXPA
+# SAMP
+if {$pds9(samp)} {
+    SAMPConnect 1
 }
 
 # and process any command line items

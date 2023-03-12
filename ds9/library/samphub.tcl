@@ -65,17 +65,7 @@ proc SAMPHubStart {verbose} {
     close $ch
 
     set samphub(client,seq) 1
-    set samphub(client,private) {}
-    set samphub(client,id) {}
-    set samphub(client,name) {}
-    set samphub(client,version) {}
-    set samphub(client,descript) {}
-    set samphub(client,icon) {}
-    set samphub(client,doc) {}
-    set samphub(client,page) {}
-    set samphub(client,author,name) {}
-    set samphub(client,author,email) {}
-    set samphub(client,author,affiliation) {}
+    set samphub(client,secret) {}
 
     UpdateFileMenu
 }
@@ -101,41 +91,13 @@ proc SAMPHubStop {verbose} {
     UpdateFileMenu
 }
 
-proc SAMPHubSend {method params resultVar} {
-    upvar $resultVar result
-
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
-    }
-
-    if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params]}]} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMPHubSend Error: $result"
-	}
-	return 0
-    }
-
-    # reset error if needed
-    # xmlrpc leaves error msgs
-    InitError samp
-
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPHUbSend Result: $result"
-    }
-
-    return 1
-}
-
 proc samp.hub.register {args} {
     global samphub
     global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "SAMPHubRegister: $args"
+	puts "samp.hub.register: $args"
     }
 
     if {$samphub(secret) != $args} {
@@ -143,25 +105,32 @@ proc samp.hub.register {args} {
     }
 
     incr samphub(client,seq)
-    set private [SAMPHubGenerateKey]
+    set secret [SAMPHubGenerateKey]
     set id "c${samphub(client,seq)}"
 
-    lappend samphub(client,private) $private
-    lappend samphub(client,id) $id
-    lappend samphub(client,name) {}
-    lappend samphub(client,version) {}
-    lappend samphub(client,descript) {}
-    lappend samphub(client,icon) {}
-    lappend samphub(client,doc) {}
-    lappend samphub(client,page) {}
-    lappend samphub(client,author,name) {}
-    lappend samphub(client,author,email) {}
-    lappend samphub(client,author,affiliation) {}
+    lappend samphub(client,secret) $secret
+
+    set samphub($secret,id) $id
+    set samphub($secret,callback) {}
+    set samphub($secret,substript) {}
+    set samphub($secret,restrict) {}
+
+    set samphub($secret,name) {}
+    set samphub($secret,descript,text) {}
+    set samphub($secret,descript,html) {}
+    set samphub($secret,icon,url) {}
+    set samphub($secret,doc,url) {}
+
+    set samphub($secret,page) {}
+    set samphub($secret,author,name) {}
+    set samphub($secret,author,email) {}
+    set samphub($secret,author,affiliat) {}
+    set samphub($secret,version) {}
 
     catch {unset samphubmap}
     set samphubmap(samp.hub-id) {string hub}
     set samphubmap(samp.self-id) "string $id"
-    set samphubmap(samp.private-key) "string $private"
+    set samphubmap(samp.private-key) "string $secret"
 
     set params "struct samphubmap"
 
@@ -170,75 +139,136 @@ proc samp.hub.register {args} {
 
 proc samp.hub.declareMetadata {args} {
     global samphub
-    global sampmap
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "SAMPHubMetadata: $args"
+	puts "samp.hub.declareMetadata: $args"
     }
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
 
-    puts "$samphub(client,private) $secret"
-    set id [lsearch $samphub(client,private) $secret]
-    if {$id<0} {
+    if {![info exists samphub($secret,id)]} {
 	if {$debug(tcl,samp)} {
-	    puts "SAMPHubMetadata: bad private-key $secret"
+	    puts "samp.hub.declareMetadata: bad private-key $secret"
 	}
 	return {string ERROR}
     }
 
     foreach mm $map {
 	foreach {key val} $mm {
-	    puts "***$key $val***"
 	    switch -- $key {
-		samp.name {
-		    set samphub(client,name) \
-			[lreplace $samphub(client,name) $id $id $val]
-		}
-		samp.description.text {
-		    set samphub(client,descript) \
-			[lreplace $samphub(client,descript) $id $id $val]
-		}
-		samp.icon.url {
-		    set samphub(client,url) \
-			[lreplace $samphub(client,url) $id $id $val]
-		}
-		samp.documentation.url {
-		    set samphub(client,doc) \
-			[lreplace $samphub(client,doc) $id $id $val]
-		}
-		home.page {
-		    set samphub(client,page) \
-			[lreplace $samphub(client,page) $id $id $val]
-		}
-		author.name {
-		    set samphub(client,author,name) \
-			[lreplace $samphub(client,author,name) $id $id $val]
-		}
-		author.email {
-		    set samphub(client,author,email) \
-			[lreplace $samphub(client,author,email) $id $id $val]
-		}
-		author.affiliation {
-		    set samphub(client,author,affiliation) \
-			[lreplace $samphub(client,author,affiliation) $id $id $val]
-		}
+		samp.name {set samphub($secret,name) $val}
+		samp.description.text {set samphub($secret,descript,text) $val}
+		samp.description.html {set samphub($secret,descript,html) $val}
+		samp.icon.url {set samphub($secret,icon,url) $val}
+		samp.documentation.url {set samphub($secret,doc,url) $val}
+
+		home.page {set samphub($secret,page) $val}
+		author.name {set samphub($secret,author,name) $val}
+		author.email {set samphub($secret,author,email) $val}
+		author.affiliation {set samphub($secret,author,affiliat) $val}
 		default {
-		    # must be application.version
-		    set samphub(client,version) \
-			[lreplace $samphub(client,version) $id $id [list $key $val]]
+		    # look for application.version
+		    if {[regexp {.+\.version} $key]} {
+			set samphub($secret,version) $val
+		    }
 		}
 	    }
 	}
     }
-
+    
     return {string OK}
 }
 
 proc samp.hub.unregister {args} {
-#
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.unregister: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![info exists samphub($secret,id)]} {
+	if {$debug(tcl,samp)} {
+	    puts "samp.hub.unregister: bad private-key $secret"
+	}
+	return {string ERROR}
+    }
+
+    set id [lsearch $samphub(client,secret) $secret]
+    set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
+
+    unset samphub($secret,id)
+    unset samphub($secret,callback)
+    unset samphub($secret,substript)
+    unset samphub($secret,restrict)
+
+    unset samphub($secret,name)
+    unset samphub($secret,descript,text)
+    unset samphub($secret,descript,html)
+    unset samphub($secret,icon,url)
+    unset samphub($secret,doc,url)
+    unset samphub($secret,page)
+    unset samphub($secret,author,name)
+    unset samphub($secret,author,email)
+    unset samphub($secret,author,affiliat)
+    
+    return {string OK}
+}
+
+proc samp.hub.setXmlrpcCallback {args} {
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.setXmlrpcCallback: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![info exists samphub($secret,id)]} {
+	if {$debug(tcl,samp)} {
+	    puts "samp.hub.setXmlrpcCallback: bad private-key $secret"
+	}
+	return {string ERROR}
+    }
+
+    set samphub($secret,callback) $map
+
+    return {string OK}
+}
+
+proc samp.hub.declareSubscriptions {args} {
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.declareSubscriptions: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+    
+    if {![info exists samphub($secret,id)]} {
+	if {$debug(tcl,samp)} {
+	    puts "samp.hub.declareSubscriptions: bad private-key $secret"
+	}
+	return {string ERROR}
+    }
+
+    foreach mm $map {
+	foreach {ss rr} $mm {
+	    lappend samphub($secret,subscript) $ss
+	    lappend samphub($secret,restrict) $rr
+	}
+    }
+
+    return {string OK}
 }
 
 proc samp.hub.notifyAll {args} {

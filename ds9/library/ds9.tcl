@@ -143,7 +143,7 @@ proc DS9Def {} {
     set pds9(samphub) 1
 
     # connect if samp hub is available
-    set pds9(samp) 0
+    set pds9(samp) 1
 
     set pds9(prec,linear) 8
     set pds9(prec,deg) 7

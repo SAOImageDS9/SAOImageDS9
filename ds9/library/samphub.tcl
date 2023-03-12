@@ -74,6 +74,19 @@ proc SAMPHubGenerateKey {} {
     return [binary encode hex [binary format f* [list [expr rand()] [expr rand()]]]]
 }
 
+proc SAMPHubValidSecret {secret} {
+    global samphub
+    global debug
+    
+    if {![info exists samphub($secret,id)]} {
+	if {$debug(tcl,samp)} {
+	    puts "SAMPHub: bad private-key $secret"
+	}
+	return 0
+    }
+    return 1
+}
+
 proc SAMPHubStop {verbose} {
     global samphub
 
@@ -148,13 +161,10 @@ proc samp.hub.declareMetadata {args} {
     set secret [lindex $args 0]
     set map [lindex $args 1]
 
-    if {![info exists samphub($secret,id)]} {
-	if {$debug(tcl,samp)} {
-	    puts "samp.hub.declareMetadata: bad private-key $secret"
-	}
+    if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
-
+    
     foreach mm $map {
 	foreach {key val} $mm {
 	    switch -- $key {
@@ -192,13 +202,10 @@ proc samp.hub.unregister {args} {
     set secret [lindex $args 0]
     set map [lindex $args 1]
 
-    if {![info exists samphub($secret,id)]} {
-	if {$debug(tcl,samp)} {
-	    puts "samp.hub.unregister: bad private-key $secret"
-	}
+    if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
-
+    
     set id [lsearch $samphub(client,secret) $secret]
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
@@ -231,10 +238,7 @@ proc samp.hub.setXmlrpcCallback {args} {
     set secret [lindex $args 0]
     set map [lindex $args 1]
 
-    if {![info exists samphub($secret,id)]} {
-	if {$debug(tcl,samp)} {
-	    puts "samp.hub.setXmlrpcCallback: bad private-key $secret"
-	}
+    if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
 
@@ -254,10 +258,7 @@ proc samp.hub.declareSubscriptions {args} {
     set secret [lindex $args 0]
     set map [lindex $args 1]
     
-    if {![info exists samphub($secret,id)]} {
-	if {$debug(tcl,samp)} {
-	    puts "samp.hub.declareSubscriptions: bad private-key $secret"
-	}
+    if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
 
@@ -269,6 +270,65 @@ proc samp.hub.declareSubscriptions {args} {
     }
 
     return {string OK}
+}
+
+proc samp.hub.getMetadata {args} {
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.getMetadata: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+    
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    return {string OK}
+}
+
+proc samp.hub.getSubscribedClients {args} {
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.getSubscribedClients: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    foreach cc $samphub(client,secret) {
+	if {$cc == $secret} {
+	    continue
+	}
+
+	foreach ss $samphub($secret,subscript) {
+	    if {$ss == $map} {
+		puts "found: $samphub($secret,id)"
+	    }
+	}
+    }
+
+    return {string OK}
+
+    if {0} {
+    catch {unset samphubmap}
+    set samphubmap(samp.hub-id) {string hub}
+    set samphubmap(samp.self-id) "string $id"
+    set samphubmap(samp.private-key) "string $secret"
+
+    set params "struct samphubmap"
+
+    return $params
+    }
 }
 
 proc samp.hub.notifyAll {args} {

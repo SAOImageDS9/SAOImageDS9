@@ -127,6 +127,7 @@ proc samp.hub.register {args} {
     set samphub($secret,callback) {}
     set samphub($secret,substript) {}
     set samphub($secret,restrict) {}
+    set samphub($secret,meta) {}
 
     set samphub($secret,name) {}
     set samphub($secret,descript,text) {}
@@ -145,9 +146,7 @@ proc samp.hub.register {args} {
     set samphubmap(samp.self-id) "string $id"
     set samphubmap(samp.private-key) "string $secret"
 
-    set params "struct samphubmap"
-
-    return $params
+    return "struct samphubmap"
 }
 
 proc samp.hub.declareMetadata {args} {
@@ -213,6 +212,7 @@ proc samp.hub.unregister {args} {
     unset samphub($secret,callback)
     unset samphub($secret,substript)
     unset samphub($secret,restrict)
+    unset samphub($secret,meta)
 
     unset samphub($secret,name)
     unset samphub($secret,descript,text)
@@ -274,6 +274,8 @@ proc samp.hub.declareSubscriptions {args} {
 
 proc samp.hub.getMetadata {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -282,12 +284,29 @@ proc samp.hub.getMetadata {args} {
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
-    
+
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
 
-    return {string OK}
+    set ll {}
+    foreach cc $samphub(client,secret) {
+	if {$cc == $secret} {
+	    continue
+	}
+
+	if {samphub($cc,id) == $map} {
+	    lappend ll $samphub($cc,id)
+	}
+    }
+
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    set samphubmap2(x-samp.mostly-harmless) {int 1}
+    foreach cc $ll {
+	set samphubmap($cc) {struct samphubmap2}
+    }
+    return "struct samphubmap"
 }
 
 proc samp.hub.getSubscribedClients {args} {

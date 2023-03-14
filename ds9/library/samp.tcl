@@ -624,7 +624,6 @@ proc SAMPUpdate {} {
     set samp(apps,image) {}
     foreach arg [lindex $rr 1] {
 	foreach {key val} $arg {
-	    puts "***$key $val***"
 	    if {$key != {}} {
 		lappend samp(apps,image) [list $key [SAMPGetAppName $key]]
 	    }

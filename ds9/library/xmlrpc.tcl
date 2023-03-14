@@ -271,6 +271,8 @@ proc xmlrpc::getResponse {sock} {
     set header [parseHTTPCode $headerStatus]
     set body [getBody $sock $header $body]
     set response [parseResponse $body]
+    puts "::getResponse: $header"
+    puts "::getResponse: $body"
     set readdone 1
 }
 

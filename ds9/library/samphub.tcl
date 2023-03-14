@@ -292,6 +292,8 @@ proc samp.hub.getMetadata {args} {
 
 proc samp.hub.getSubscribedClients {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -305,6 +307,7 @@ proc samp.hub.getSubscribedClients {args} {
 	return {string ERROR}
     }
 
+    set ll {}
     foreach cc $samphub(client,secret) {
 	if {$cc == $secret} {
 	    continue
@@ -312,23 +315,18 @@ proc samp.hub.getSubscribedClients {args} {
 
 	foreach ss $samphub($secret,subscript) {
 	    if {$ss == $map} {
-		puts "found: $samphub($secret,id)"
+		lappend ll $samphub($cc,id)
 	    }
 	}
     }
 
-    return {string OK}
-
-    if {0} {
     catch {unset samphubmap}
-    set samphubmap(samp.hub-id) {string hub}
-    set samphubmap(samp.self-id) "string $id"
-    set samphubmap(samp.private-key) "string $secret"
-
-    set params "struct samphubmap"
-
-    return $params
+    catch {unset samphubmap2}
+    set samphubmap2(x-samp.mostly-harmless) {int 1}
+    foreach cc $ll {
+	set samphubmap($cc) {struct samphubmap2}
     }
+    return "struct samphubmap"
 }
 
 proc samp.hub.notifyAll {args} {

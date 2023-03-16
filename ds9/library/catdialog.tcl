@@ -183,7 +183,7 @@ proc CATDialog {varname format catalog title action} {
     $mb.file.samp add command -label [msgcat::mc {Connect}] \
 	-command [list SAMPConnect 1]
     $mb.file.samp add command -label [msgcat::mc {Disconnect}] \
-	-command [lise SAMPDisconnect 1]
+	-command [list SAMPDisconnect 1]
     $mb.file.samp add separator
     $mb.file.samp add cascade -label [msgcat::mc {Send}] \
 	-menu $mb.file.samp.send

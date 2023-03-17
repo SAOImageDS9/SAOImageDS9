@@ -7,6 +7,7 @@ package provide DS9 1.0
 proc SAMPHubDialog {} {
     global samphub
     global isamphub
+    global dsamphub
     global ds9
 
     # see if we already have a window visible
@@ -46,10 +47,10 @@ proc SAMPHubDialog {} {
     grid $client.t -padx 2 -pady 2 -sticky w
 
     # Recvd
-    set txt $recvd.text
-    roText::roText $txt
+    set dsamphub(recvd,txt) $recvd.text
+    roText::roText $dsamphub(recvd,txt)
 
-    $txt configure \
+    $dsamphub(recvd,txt) configure \
 	-wrap none \
 	-yscrollcommand [list $recvd.yscroll set] \
 	-xscrollcommand [list $recvd.xscroll set] \
@@ -57,19 +58,21 @@ proc SAMPHubDialog {} {
 	-bg [ThemeTreeBackground] \
 	-state normal
 
-    set yscroll [ttk::scrollbar $recvd.yscroll -command [list roText::$txt yview] -orient vertical]
-    set xscroll [ttk::scrollbar $recvd.xscroll -command [list roText::$txt xview] -orient horizontal]
+    ttk::scrollbar $recvd.yscroll \
+	-command [list roText::$dsamphub(recvd,txt) yview] -orient vertical
+    ttk::scrollbar $recvd.xscroll \
+	-command [list roText::$dsamphub(recvd,txt) xview] -orient horizontal
 
-    grid $txt $yscroll -sticky news
-    grid $xscroll -stick news
+    grid $dsamphub(recvd,txt) $recvd.yscroll -sticky news
+    grid $recvd.xscroll -stick news
     grid rowconfigure $recvd 0 -weight 1
     grid columnconfigure $recvd 0 -weight 1
 
     # Sent
-    set txt $sent.text
-    roText::roText $txt
+    set dsamphub(sent,txt) $sent.text
+    roText::roText $dsamphub(sent,txt)
 
-    $txt configure \
+    $dsamphub(sent,txt) configure \
 	-wrap none \
 	-yscrollcommand [list $sent.yscroll set] \
 	-xscrollcommand [list $sent.xscroll set] \
@@ -77,11 +80,13 @@ proc SAMPHubDialog {} {
 	-bg [ThemeTreeBackground] \
 	-state normal
 
-    set yscroll [ttk::scrollbar $sent.yscroll -command [list roText::$txt yview] -orient vertical]
-    set xscroll [ttk::scrollbar $sent.xscroll -command [list roText::$txt xview] -orient horizontal]
+    ttk::scrollbar $sent.yscroll \
+	-command [list roText::$dsamphub(sent,txt) yview] -orient vertical
+    ttk::scrollbar $sent.xscroll \
+	-command [list roText::$dsamphub(sent,txt) xview] -orient horizontal
 
-    grid $txt $yscroll -sticky news
-    grid $xscroll -stick news
+    grid $dsamphub(sent,txt) $sent.yscroll -sticky news
+    grid $sent.xscroll -stick news
     grid rowconfigure $sent 0 -weight 1
     grid columnconfigure $sent 0 -weight 1
 
@@ -106,11 +111,37 @@ proc SAMPHubDialog {} {
 
 proc SAMPHubDestroyDialog {} {
     global isamphub
-    puts BANG
+    global dsamphub
+
     if {[winfo exists $isamphub(top)]} {
 	destroy $isamphub(top)
 	destroy $isamphub(mb)
+	unset dsamphub
     }
+}
+
+proc SAMPHubRcvdMsg {msg} {
+    global isamphub
+    global dsamphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    $dsamphub(recvd,txt) insert end "$msg\n"
+    $dsamphub(recvd,txt) see end
+}
+
+proc SAMPHubSentMsg {msg} {
+    global isamphub
+    global dsamphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    $dsamphub(sent,txt) insert end "$msg\n"
+    $dsamphub(sent,txt) see end
 }
 
 proc SAMPHubUpdateDialog {} {

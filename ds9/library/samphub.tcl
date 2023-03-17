@@ -145,6 +145,10 @@ proc samp.hub.register {args} {
     set samphubmap(samp.self-id) "string $id"
     set samphubmap(samp.private-key) "string $secret"
 
+    
+    SAMPHubRcvdMsg "samp.hub.register\t$samphub($secret,id)"
+    SAMPHubSentMsg "samp.hub.register\t$samphub($secret,id)\t$samphubmap(samp.hub-id) $samphubmap(samp.self-id) $samphubmap(samp.private-key)"
+
     return "struct samphubmap"
 }
 
@@ -169,6 +173,7 @@ proc samp.hub.declareMetadata {args} {
 	}
     }
     
+    SAMPHubRcvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -196,6 +201,7 @@ proc samp.hub.unregister {args} {
     unset samphub($secret,restrict)
     unset samphub($secret,meta)
     
+    SAMPHubRcvdMsg "samp.hub.unregister\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -216,6 +222,7 @@ proc samp.hub.setXmlrpcCallback {args} {
 
     set samphub($secret,callback) $map
 
+    SAMPHubRcvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -241,6 +248,7 @@ proc samp.hub.declareSubscriptions {args} {
 	}
     }
 
+    SAMPHubRcvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -262,15 +270,21 @@ proc samp.hub.getMetadata {args} {
     }
 
     catch {unset samphubmap}
+    set rr {}
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $map} {
 	    foreach mm $samphub($cc,meta) {
 		foreach {key val} $mm {
 		    set samphubmap($key) "string \"$val\""
+		    append rr "samphubmap($key) "
 		}
 	    }
 	}
     }
+
+    SAMPHubRcvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
+    SAMPHubSentMsg "samp.hub.getMetadata\t$samphub($secret,id)\t$rr"
+
     return "struct samphubmap"
 }
 
@@ -306,10 +320,16 @@ proc samp.hub.getSubscribedClients {args} {
 
     catch {unset samphubmap}
     catch {unset samphubmap2}
+    set rr {}
     set samphubmap2(x-samp.mostly-harmless) {int 1}
     foreach cc $ll {
 	set samphubmap($cc) {struct samphubmap2}
+	append rr "$samphubmap($cc) "
     }
+
+    SAMPHubRcvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
+    SAMPHubSentMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)\t$rr"
+
     return "struct samphubmap"
 }
 

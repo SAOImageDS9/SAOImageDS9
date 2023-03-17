@@ -142,7 +142,7 @@ proc DS9Def {} {
     # start hub if unable to find another
     set pds9(samphub) 1
 
-        # connect if samp hub is available
+    # connect if samp hub is available
     set pds9(samp) 1
 
     set pds9(prec,linear) 8
@@ -394,6 +394,7 @@ PrefsDef
 PSDef
 RGBDef
 SAMPDef
+SAMPHubDef
 SAODef
 SaveDef
 SaveImageDef
@@ -616,12 +617,12 @@ if {$pds9(xpa)} {
 
 # SAMP Hub
 if {$pds9(samphub)} {
-    SAMPHubStart 1
+    SAMPHubStart 0
 }
 
 # SAMP
 if {$pds9(samp)} {
-    SAMPConnect 1
+    SAMPConnect 0
 }
 
 # and process any command line items

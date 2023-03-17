@@ -236,6 +236,9 @@ proc FileMainMenu {} {
     $ds9(mb).file.samp.table add separator
 
     ThemeMenu $ds9(mb).file.samphub
+    $ds9(mb).file.samphub add command -label [msgcat::mc {Information}] \
+	-command SAMPHubDialog
+    $ds9(mb).file.samphub add separator
     $ds9(mb).file.samphub add command -label [msgcat::mc {Start}] \
 	-command [list SAMPHubStart 1]
     $ds9(mb).file.samphub add command -label [msgcat::mc {Stop}] \
@@ -354,6 +357,7 @@ proc ButtonsFileDef {} {
 	file,samp,disconnect 0
 	file,samp,image 0
 	file,samp,table 0
+	file,samphub,info 0
 	file,samphub,start 0
 	file,samphub,stop 0
 	file,console 0
@@ -540,6 +544,8 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.samptable \
 	[string tolower [msgcat::mc {SAMP Table}]] "SAMPSendTableLoadFits {}"
 
+    ButtonButton $ds9(buttons).file.samphubinfo \
+	[string tolower {SAMP Hub Info}] SAMPHubDialog
     ButtonButton $ds9(buttons).file.samphubstart \
 	[string tolower [msgcat::mc {SAMP Hub Start}]] "SAMPHubStart 1"
     ButtonButton $ds9(buttons).file.samphubstop \
@@ -628,6 +634,7 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.sampimage pbuttons(file,samp,image)
         $ds9(buttons).file.samptable pbuttons(file,samp,table)
 
+        $ds9(buttons).file.samphubinfo pbuttons(file,samphub,info)
         $ds9(buttons).file.samphubstart pbuttons(file,samphub,start)
         $ds9(buttons).file.samphubstop pbuttons(file,samphub,stop)
 
@@ -915,6 +922,9 @@ proc PrefsDialogButtonbarFile {f} {
 	-command {UpdateButtons buttons(file)}
 
     ThemeMenu $m.samphub
+    $m.samphub add checkbutton -label [msgcat::mc {Information}] \
+	-variable pbuttons(file,samphub,info) \
+	-command {UpdateButtons buttons(file)}
     $m.samphub add checkbutton -label [msgcat::mc {Start}] \
 	-variable pbuttons(file,samphub,start) \
 	-command {UpdateButtons buttons(file)}
@@ -1302,6 +1312,8 @@ proc UpdateFileMenuSAMPHub {} {
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
+    $mm.samphub entryconfig [msgcat::mc {Information}] -state normal
+    $bb.samphubinfo configure -state normal
     if {[info exists samphub]} {
 	$mm.samphub entryconfig [msgcat::mc {Start}] -state disabled
 	$mm.samphub entryconfig [msgcat::mc {Stop}] -state normal

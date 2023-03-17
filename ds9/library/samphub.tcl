@@ -4,6 +4,13 @@
 
 package provide DS9 1.0
 
+proc SAMPHubDef {} {
+    global isamphub
+
+    set isamphub(top) .samphub
+    set isamphub(mb) .samphubmb
+}
+
 proc SAMPHubStart {verbose} {
     global samp
     global samphub
@@ -39,6 +46,8 @@ proc SAMPHubStart {verbose} {
 	    set fn [file join "$env(HOMEDRIVE)$env(HOMEPATH)" {.samp}]
 	}
     }
+
+    # basics
     set samphub(fn) $fn
     set samphub(port) [lindex [fconfigure [xmlrpc::serve 0] -sockname] 2]
     set samphub(secret) [SAMPHubGenerateKey]
@@ -51,7 +60,7 @@ proc SAMPHubStart {verbose} {
 	catch {unset samphub}
 	return
     }
-	
+
     puts $ch "# SAMP Standard Profile lockfile written $samphub(timestamp)"
     puts $ch "# Note contact URL hostname may be configured using jsamp.localhost property"
 
@@ -67,6 +76,7 @@ proc SAMPHubStart {verbose} {
     set samphub(client,seq) 1
     set samphub(client,secret) {}
 
+    SAMPHubUpdateDialog
     UpdateFileMenu
 }
 
@@ -101,6 +111,7 @@ proc SAMPHubStop {verbose} {
     catch {file delete -force $samphub(fn)}
     unset samphub
 
+    SAMPHubUpdateDialog
     UpdateFileMenu
 }
 
@@ -129,18 +140,6 @@ proc samp.hub.register {args} {
     set samphub($secret,restrict) {}
     set samphub($secret,meta) {}
 
-    set samphub($secret,name) {}
-    set samphub($secret,descript,text) {}
-    set samphub($secret,descript,html) {}
-    set samphub($secret,icon,url) {}
-    set samphub($secret,doc,url) {}
-
-    set samphub($secret,page) {}
-    set samphub($secret,author,name) {}
-    set samphub($secret,author,email) {}
-    set samphub($secret,author,affiliat) {}
-    set samphub($secret,version) {}
-
     catch {unset samphubmap}
     set samphubmap(samp.hub-id) {string hub}
     set samphubmap(samp.self-id) "string $id"
@@ -166,24 +165,7 @@ proc samp.hub.declareMetadata {args} {
     
     foreach mm $map {
 	foreach {key val} $mm {
-	    switch -- $key {
-		samp.name {set samphub($secret,name) $val}
-		samp.description.text {set samphub($secret,descript,text) $val}
-		samp.description.html {set samphub($secret,descript,html) $val}
-		samp.icon.url {set samphub($secret,icon,url) $val}
-		samp.documentation.url {set samphub($secret,doc,url) $val}
-
-		home.page {set samphub($secret,page) $val}
-		author.name {set samphub($secret,author,name) $val}
-		author.email {set samphub($secret,author,email) $val}
-		author.affiliation {set samphub($secret,author,affiliat) $val}
-		default {
-		    # look for application.version
-		    if {[regexp {.+\.version} $key]} {
-			set samphub($secret,version) $val
-		    }
-		}
-	    }
+	    lappend samphub($secret,meta) [list $key $val]
 	}
     }
     
@@ -213,16 +195,6 @@ proc samp.hub.unregister {args} {
     unset samphub($secret,substript)
     unset samphub($secret,restrict)
     unset samphub($secret,meta)
-
-    unset samphub($secret,name)
-    unset samphub($secret,descript,text)
-    unset samphub($secret,descript,html)
-    unset samphub($secret,icon,url)
-    unset samphub($secret,doc,url)
-    unset samphub($secret,page)
-    unset samphub($secret,author,name)
-    unset samphub($secret,author,email)
-    unset samphub($secret,author,affiliat)
     
     return {string OK}
 }
@@ -289,22 +261,15 @@ proc samp.hub.getMetadata {args} {
 	return {string ERROR}
     }
 
-    set ll {}
-    foreach cc $samphub(client,secret) {
-	if {$cc == $secret} {
-	    continue
-	}
-
-	if {samphub($cc,id) == $map} {
-	    lappend ll $samphub($cc,id)
-	}
-    }
-
     catch {unset samphubmap}
-    catch {unset samphubmap2}
-    set samphubmap2(x-samp.mostly-harmless) {int 1}
-    foreach cc $ll {
-	set samphubmap($cc) {struct samphubmap2}
+    foreach cc $samphub(client,secret) {
+	if {$samphub($cc,id) == $map} {
+	    foreach mm $samphub($cc,meta) {
+		foreach {key val} $mm {
+		    set samphubmap($key) "string \"$val\""
+		}
+	    }
+	}
     }
     return "struct samphubmap"
 }
@@ -349,7 +314,7 @@ proc samp.hub.getSubscribedClients {args} {
 }
 
 proc samp.hub.notifyAll {args} {
-#
+    #
 }
 
 # events

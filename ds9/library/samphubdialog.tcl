@@ -43,52 +43,9 @@ proc SAMPHubDialog {} {
     $tt add $recvd -text {Received Messages}
     $tt add $sent -text {Sent Messages}
 
-    ttk::label $client.t -text "Hello"
-    grid $client.t -padx 2 -pady 2 -sticky w
-
-    # Recvd
-    set dsamphub(recvd,txt) $recvd.text
-    roText::roText $dsamphub(recvd,txt)
-
-    $dsamphub(recvd,txt) configure \
-	-wrap none \
-	-yscrollcommand [list $recvd.yscroll set] \
-	-xscrollcommand [list $recvd.xscroll set] \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground] \
-	-state normal
-
-    ttk::scrollbar $recvd.yscroll \
-	-command [list roText::$dsamphub(recvd,txt) yview] -orient vertical
-    ttk::scrollbar $recvd.xscroll \
-	-command [list roText::$dsamphub(recvd,txt) xview] -orient horizontal
-
-    grid $dsamphub(recvd,txt) $recvd.yscroll -sticky news
-    grid $recvd.xscroll -stick news
-    grid rowconfigure $recvd 0 -weight 1
-    grid columnconfigure $recvd 0 -weight 1
-
-    # Sent
-    set dsamphub(sent,txt) $sent.text
-    roText::roText $dsamphub(sent,txt)
-
-    $dsamphub(sent,txt) configure \
-	-wrap none \
-	-yscrollcommand [list $sent.yscroll set] \
-	-xscrollcommand [list $sent.xscroll set] \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground] \
-	-state normal
-
-    ttk::scrollbar $sent.yscroll \
-	-command [list roText::$dsamphub(sent,txt) yview] -orient vertical
-    ttk::scrollbar $sent.xscroll \
-	-command [list roText::$dsamphub(sent,txt) xview] -orient horizontal
-
-    grid $dsamphub(sent,txt) $sent.yscroll -sticky news
-    grid $sent.xscroll -stick news
-    grid rowconfigure $sent 0 -weight 1
-    grid columnconfigure $sent 0 -weight 1
+    SAMPHubDialogClient $client
+    SAMPHubDialogRecvd $recvd
+    SAMPHubDialogSent $sent
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -109,6 +66,181 @@ proc SAMPHubDialog {} {
     SAMPHubUpdateDialog
 }
 
+proc SAMPHubDialogClient {client} {
+    global dsamphub
+
+    # Client Left
+    set f [ttk::frame $client.left]
+    ttk::scrollbar $f.scroll -command [list $f.box yview]
+    set dsamphub(listbox) [ttk::treeview $f.box \
+			       -yscroll [list $f.scroll set] \
+			       -selectmode browse \
+			       -height 28 \
+			       -show tree \
+			      ]
+
+    grid $f.box $f.scroll -sticky news
+    grid rowconfigure $f 0 -weight 1
+    grid columnconfigure $f 2 -weight 1
+
+    bind $dsamphub(listbox) <<TreeviewSelect>> SAMPHubDialogListUpdate
+
+    # Client Right
+    set f [ttk::frame $client.right]
+
+    # Registration
+    set rr [ttk::labelframe $f.reg -text [msgcat::mc {Registration}]]
+
+    set dsamphub(client,reg) {}
+
+    ttk::label $rr.t -text [msgcat::mc {Public ID}]
+    ttk::label $rr.v -textvariable dsamphub(client,reg)
+    grid $rr.t -row 0 -column 0 -padx 2
+    grid $rr.v -row 0 -column 1 -padx 2 -sticky w
+
+    # Metadata
+    set mm [ttk::labelframe $f.meta -text [msgcat::mc {Metadata}]]
+
+    set dsamphub(client,meta,txt) $mm.txt
+    roText::roText $mm.txt
+
+    $mm.txt configure \
+	-wrap none \
+	-yscrollcommand [list $mm.yscroll set] \
+	-xscrollcommand [list $mm.xscroll set] \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground] \
+	-height 10 \
+	-width 30 \
+	-state normal
+
+    ttk::scrollbar $mm.yscroll \
+	-command [list roText::$mm.txt yview] -orient vertical
+    ttk::scrollbar $mm.xscroll \
+	-command [list roText::$mm.txt xview] -orient horizontal
+
+    grid $mm.txt $mm.yscroll -sticky news
+    grid $mm.xscroll -stick news
+    grid rowconfigure $mm 0 -weight 1
+    grid columnconfigure $mm 0 -weight 1
+
+    # Subscriptions
+    set ss [ttk::labelframe $f.sub -text [msgcat::mc {Subscriptions}]]
+
+    set dsamphub(client,subscript,txt) $ss.txt
+    roText::roText $ss.txt
+
+    $ss.txt configure \
+	-wrap none \
+	-yscrollcommand [list $ss.yscroll set] \
+	-xscrollcommand [list $ss.xscroll set] \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground] \
+	-height 10 \
+	-width 30 \
+	-state normal
+
+    ttk::scrollbar $ss.yscroll \
+	-command [list roText::$ss.txt yview] -orient vertical
+    ttk::scrollbar $ss.xscroll \
+	-command [list roText::$ss.txt xview] -orient horizontal
+
+    grid $ss.txt $ss.yscroll -sticky news
+    grid $ss.xscroll -stick news
+    grid rowconfigure $ss 0 -weight 1
+    grid columnconfigure $ss 0 -weight 1
+
+    # fini
+    pack $rr -side top -fill both
+    pack $mm $ss -side top -fill both -expand true
+
+    grid $client.left -row 0 -column 0
+    grid $client.right -row 0 -column 1 -sticky news
+    grid rowconfigure $client 0 -weight 1
+    grid columnconfigure $client 1 -weight 1
+
+    $dsamphub(listbox) insert {} end -id 0 -text [msgcat::mc {Hub}]
+}
+
+proc SAMPHubDialogRecvd {recvd} {
+    global dsamphub
+    
+    set dsamphub(recvd,txt) $recvd.txt
+    roText::roText $recvd.txt
+
+    $recvd.txt configure \
+	-wrap none \
+	-yscrollcommand [list $recvd.yscroll set] \
+	-xscrollcommand [list $recvd.xscroll set] \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground] \
+	-state normal
+
+    ttk::scrollbar $recvd.yscroll \
+	-command [list roText::$recvd.txt yview] -orient vertical
+    ttk::scrollbar $recvd.xscroll \
+	-command [list roText::$recvd.txt xview] -orient horizontal
+
+    grid $recvd.txt $recvd.yscroll -sticky news
+    grid $recvd.xscroll -stick news
+    grid rowconfigure $recvd 0 -weight 1
+    grid columnconfigure $recvd 0 -weight 1
+}
+
+proc SAMPHubDialogSent {sent} {
+    global dsamphub
+
+    roText::roText $sent.txt
+
+    set dsamphub(sent,txt) $sent.txt
+    $sent.txt configure \
+	-wrap none \
+	-yscrollcommand [list $sent.yscroll set] \
+	-xscrollcommand [list $sent.xscroll set] \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground] \
+	-state normal
+
+    ttk::scrollbar $sent.yscroll \
+	-command [list roText::$sent.txt yview] -orient vertical
+    ttk::scrollbar $sent.xscroll \
+	-command [list roText::$sent.txt xview] -orient horizontal
+
+    grid $sent.txt $sent.yscroll -sticky news
+    grid $sent.xscroll -stick news
+    grid rowconfigure $sent 0 -weight 1
+    grid columnconfigure $sent 0 -weight 1
+}
+
+proc SAMPHubDialogListUpdate {} {
+    global dsamphub
+
+    set secret $dsamphub(tab)
+    
+    set dsamphub(client,reg) {}
+    $dsamphub(client,meta,txt) delete 1.0 end
+    $dsamphub(client,subscript,txt) delete 1.0 end
+
+    switch $secret {
+	{} {}
+	0 {}
+	default {
+	    foreach mm $samphub($secret,meta) {
+		foreach {key val} $mm {
+		    $dsamphub(client,meta,txt) insert end "$key\t$val\n"
+		}
+	    }
+
+	    foreach ss $samphub($secret,subscript) {
+		$dsamphub(client,meta,txt) insert end "$ss\n"
+	    }
+	}
+    }
+
+    $dsamphub(client,meta,txt) see end
+    $dsamphub(client,subscript,txt) see end
+}
+
 proc SAMPHubDestroyDialog {} {
     global isamphub
     global dsamphub
@@ -120,7 +252,7 @@ proc SAMPHubDestroyDialog {} {
     }
 }
 
-proc SAMPHubRcvdMsg {msg} {
+proc SAMPHubRecvdMsg {msg} {
     global isamphub
     global dsamphub
 

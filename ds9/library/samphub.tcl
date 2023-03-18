@@ -48,6 +48,9 @@ proc SAMPHubStart {verbose} {
     }
 
     # basics
+    set samphub(client,seq) 0
+    set samphub(client,secret) {}
+
     set samphub(fn) $fn
     set samphub(port) [lindex [fconfigure [xmlrpc::serve 0] -sockname] 2]
     set samphub(secret) [SAMPHubGenerateKey]
@@ -72,9 +75,6 @@ proc SAMPHubStart {verbose} {
     puts $ch "profile.start.date=$samphub(timestamp)"
 
     close $ch
-
-    set samphub(client,seq) 1
-    set samphub(client,secret) {}
 
     SAMPHubUpdateDialog
     UpdateFileMenu
@@ -146,7 +146,7 @@ proc samp.hub.register {args} {
     set samphubmap(samp.private-key) "string $secret"
 
     
-    SAMPHubRcvdMsg "samp.hub.register\t$samphub($secret,id)"
+    SAMPHubRecvdMsg "samp.hub.register\t$samphub($secret,id)"
     SAMPHubSentMsg "samp.hub.register\t$samphub($secret,id)\t$samphubmap(samp.hub-id) $samphubmap(samp.self-id) $samphubmap(samp.private-key)"
 
     return "struct samphubmap"
@@ -173,7 +173,7 @@ proc samp.hub.declareMetadata {args} {
 	}
     }
     
-    SAMPHubRcvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
+    SAMPHubRecvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -201,7 +201,7 @@ proc samp.hub.unregister {args} {
     unset samphub($secret,restrict)
     unset samphub($secret,meta)
     
-    SAMPHubRcvdMsg "samp.hub.unregister\t$samphub($secret,id)"
+    SAMPHubRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -222,7 +222,7 @@ proc samp.hub.setXmlrpcCallback {args} {
 
     set samphub($secret,callback) $map
 
-    SAMPHubRcvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
+    SAMPHubRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -248,7 +248,7 @@ proc samp.hub.declareSubscriptions {args} {
 	}
     }
 
-    SAMPHubRcvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
+    SAMPHubRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -282,7 +282,7 @@ proc samp.hub.getMetadata {args} {
 	}
     }
 
-    SAMPHubRcvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
+    SAMPHubRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
     SAMPHubSentMsg "samp.hub.getMetadata\t$samphub($secret,id)\t$rr"
 
     return "struct samphubmap"
@@ -327,7 +327,7 @@ proc samp.hub.getSubscribedClients {args} {
 	append rr "$samphubmap($cc) "
     }
 
-    SAMPHubRcvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
+    SAMPHubRecvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
     SAMPHubSentMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)\t$rr"
 
     return "struct samphubmap"

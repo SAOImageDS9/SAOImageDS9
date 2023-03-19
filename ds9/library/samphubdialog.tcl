@@ -63,7 +63,7 @@ proc SAMPHubDialog {} {
 
     bind $w <<Close>> SAMPHubDestroyDialog
 
-    SAMPHubUpdateDialog
+    SAMPHubDialogUpdate
 }
 
 proc SAMPHubDialogClient {client} {
@@ -159,7 +159,7 @@ proc SAMPHubDialogClient {client} {
     grid rowconfigure $client 0 -weight 1
     grid columnconfigure $client 1 -weight 1
 
-    $dsamphub(listbox) insert {} end -id 0 -text [msgcat::mc {Hub}]
+    $dsamphub(listbox) selection set {}
 }
 
 proc SAMPHubDialogRecvd {recvd} {
@@ -212,35 +212,6 @@ proc SAMPHubDialogSent {sent} {
     grid columnconfigure $sent 0 -weight 1
 }
 
-proc SAMPHubDialogListUpdate {} {
-    global dsamphub
-
-    set secret $dsamphub(tab)
-    
-    set dsamphub(client,reg) {}
-    $dsamphub(client,meta,txt) delete 1.0 end
-    $dsamphub(client,subscript,txt) delete 1.0 end
-
-    switch $secret {
-	{} {}
-	0 {}
-	default {
-	    foreach mm $samphub($secret,meta) {
-		foreach {key val} $mm {
-		    $dsamphub(client,meta,txt) insert end "$key\t$val\n"
-		}
-	    }
-
-	    foreach ss $samphub($secret,subscript) {
-		$dsamphub(client,meta,txt) insert end "$ss\n"
-	    }
-	}
-    }
-
-    $dsamphub(client,meta,txt) see end
-    $dsamphub(client,subscript,txt) see end
-}
-
 proc SAMPHubDestroyDialog {} {
     global isamphub
     global dsamphub
@@ -252,7 +223,63 @@ proc SAMPHubDestroyDialog {} {
     }
 }
 
-proc SAMPHubRecvdMsg {msg} {
+proc SAMPHubDialogListAdd {secret} {
+    global isamphub
+    global dsamphub
+    global samphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    $dsamphub(listbox) insert {} end -id $secret -text $samphub($secret,id)
+    $dsamphub(listbox) selection set $secret
+}
+
+proc SAMPHubDialogListRemove {secret} {
+    global isamphub
+    global dsamphub
+    global samphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    $dsamphub(listbox) remove -id $secret
+    $dsamphub(listbox) selection set {}
+}
+
+proc SAMPHubDialogListUpdate {} {
+    global isamphub
+    global dsamphub
+    global samphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    set dsamphub(client,reg) {}
+    $dsamphub(client,meta,txt) delete 1.0 end
+    $dsamphub(client,subscript,txt) delete 1.0 end
+
+    set secret [$dsamphub(listbox) selection]
+    if {$secret != {}} {
+	set dsamphub(client,reg) $samphub($secret,id)
+	foreach mm $samphub($secret,meta) {
+	    foreach {key val} $mm {
+		$dsamphub(client,meta,txt) insert end "$key\t$val\n"
+	    }
+	}
+	foreach ss $samphub($secret,subscript) {
+	    $dsamphub(client,subscript,txt) insert end "$ss\n"
+	}
+    }
+
+    $dsamphub(client,meta,txt) see end
+    $dsamphub(client,subscript,txt) see end
+}
+
+proc SAMPHubDialogRecvdMsg {msg} {
     global isamphub
     global dsamphub
 
@@ -264,7 +291,7 @@ proc SAMPHubRecvdMsg {msg} {
     $dsamphub(recvd,txt) see end
 }
 
-proc SAMPHubSentMsg {msg} {
+proc SAMPHubDialogSentMsg {msg} {
     global isamphub
     global dsamphub
 
@@ -276,13 +303,13 @@ proc SAMPHubSentMsg {msg} {
     $dsamphub(sent,txt) see end
 }
 
-proc SAMPHubUpdateDialog {} {
+proc SAMPHubDialogUpdate {} {
     global samphub
     global isamphub
 
     global debug
     if {$debug(tcl,update)} {
-	puts stderr "SAMPHubUpdateDialog"
+	puts stderr "SAMPHubDialogUpdate"
     }
 
     set w $isamphub(top)

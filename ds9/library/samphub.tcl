@@ -76,7 +76,15 @@ proc SAMPHubStart {verbose} {
 
     close $ch
 
-    SAMPHubUpdateDialog
+    set secret 0
+    set samphub($secret,id) {c0}
+    set samphub($secret,callback) {}
+    set samphub($secret,subscript) {{samp.app.ping {}}}
+    set samphub($secret,restrict) {}
+    set samphub($secret,meta) {}
+#    set samphub($secret,meta) [list [list id ] [list samp.name hub] [list samp.description.text ] [list samp.icon.url ] [list author.mail ] [list author.name {William Joye}]
+
+    SAMPHubDialogListAdd 0
     UpdateFileMenu
 }
 
@@ -111,7 +119,7 @@ proc SAMPHubStop {verbose} {
     catch {file delete -force $samphub(fn)}
     unset samphub
 
-    SAMPHubUpdateDialog
+    SAMPHubDialogUpdate
     UpdateFileMenu
 }
 
@@ -136,7 +144,7 @@ proc samp.hub.register {args} {
 
     set samphub($secret,id) $id
     set samphub($secret,callback) {}
-    set samphub($secret,substript) {}
+    set samphub($secret,subscript) {}
     set samphub($secret,restrict) {}
     set samphub($secret,meta) {}
 
@@ -145,36 +153,11 @@ proc samp.hub.register {args} {
     set samphubmap(samp.self-id) "string $id"
     set samphubmap(samp.private-key) "string $secret"
 
-    
-    SAMPHubRecvdMsg "samp.hub.register\t$samphub($secret,id)"
-    SAMPHubSentMsg "samp.hub.register\t$samphub($secret,id)\t$samphubmap(samp.hub-id) $samphubmap(samp.self-id) $samphubmap(samp.private-key)"
+    SAMPHubDialogListAdd $secret
+    SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
+    SAMPHubDialogSentMsg "samp.hub.register\t$samphub($secret,id)\t$samphubmap(samp.hub-id) $samphubmap(samp.self-id) $samphubmap(samp.private-key)"
 
     return "struct samphubmap"
-}
-
-proc samp.hub.declareMetadata {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.hub.declareMetadata: $args"
-    }
-
-    set secret [lindex $args 0]
-    set map [lindex $args 1]
-
-    if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
-    }
-    
-    foreach mm $map {
-	foreach {key val} $mm {
-	    lappend samphub($secret,meta) [list $key $val]
-	}
-    }
-    
-    SAMPHubRecvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
-    return {string OK}
 }
 
 proc samp.hub.unregister {args} {
@@ -192,16 +175,45 @@ proc samp.hub.unregister {args} {
 	return {string ERROR}
     }
     
+    SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
+
     set id [lsearch $samphub(client,secret) $secret]
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
     unset samphub($secret,id)
     unset samphub($secret,callback)
-    unset samphub($secret,substript)
+    unset samphub($secret,subscript)
     unset samphub($secret,restrict)
     unset samphub($secret,meta)
     
-    SAMPHubRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
+    SAMPHUbDialogListRemove $secret
+    return {string OK}
+}
+
+proc samp.hub.declareMetadata {args} {
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.declareMetadata: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+    
+    SAMPHubDialogRecvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
+
+    foreach mm $map {
+	foreach {key val} $mm {
+	    lappend samphub($secret,meta) [list $key $val]
+	}
+    }
+    
+    SAMPHubDialogListUpdate
     return {string OK}
 }
 
@@ -220,9 +232,10 @@ proc samp.hub.setXmlrpcCallback {args} {
 	return {string ERROR}
     }
 
+    SAMPHubDialogRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
+
     set samphub($secret,callback) $map
 
-    SAMPHubRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
     return {string OK}
 }
 
@@ -241,6 +254,8 @@ proc samp.hub.declareSubscriptions {args} {
 	return {string ERROR}
     }
 
+    SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
+
     foreach mm $map {
 	foreach {ss rr} $mm {
 	    lappend samphub($secret,subscript) $ss
@@ -248,7 +263,7 @@ proc samp.hub.declareSubscriptions {args} {
 	}
     }
 
-    SAMPHubRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
+    SAMPHubDialogListUpdate
     return {string OK}
 }
 
@@ -269,6 +284,8 @@ proc samp.hub.getMetadata {args} {
 	return {string ERROR}
     }
 
+    SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
+
     catch {unset samphubmap}
     set rr {}
     foreach cc $samphub(client,secret) {
@@ -282,9 +299,7 @@ proc samp.hub.getMetadata {args} {
 	}
     }
 
-    SAMPHubRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
-    SAMPHubSentMsg "samp.hub.getMetadata\t$samphub($secret,id)\t$rr"
-
+    SAMPHubDialogSentMsg "samp.hub.getMetadata\t$samphub($secret,id)\t$rr"
     return "struct samphubmap"
 }
 
@@ -304,6 +319,8 @@ proc samp.hub.getSubscribedClients {args} {
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
+
+    SAMPHubDialogRecvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
 
     set ll {}
     foreach cc $samphub(client,secret) {
@@ -327,14 +344,12 @@ proc samp.hub.getSubscribedClients {args} {
 	append rr "$samphubmap($cc) "
     }
 
-    SAMPHubRecvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
-    SAMPHubSentMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)\t$rr"
-
+    SAMPHubDialogSentMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)\t$rr"
     return "struct samphubmap"
 }
 
 proc samp.hub.notifyAll {args} {
-    #
+    return {string OK}
 }
 
 # events

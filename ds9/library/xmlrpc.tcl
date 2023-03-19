@@ -76,7 +76,7 @@ namespace eval xmlrpc {
 
     variable	response	"";		# response to return
     variable	acceptfd	"";		# socket to listen on
-    variable	DEBUG		0;		# debug
+    variable	DEBUG		1;		# debug
 }
 
 # Given a port, create a new socket

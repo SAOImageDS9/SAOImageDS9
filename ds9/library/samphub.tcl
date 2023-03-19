@@ -186,7 +186,7 @@ proc samp.hub.unregister {args} {
     unset samphub($secret,restrict)
     unset samphub($secret,meta)
     
-    SAMPHUbDialogListRemove $secret
+    SAMPHubDialogListRemove $secret
     return {string OK}
 }
 

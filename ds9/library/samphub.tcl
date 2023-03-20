@@ -88,6 +88,32 @@ proc SAMPHubStart {verbose} {
     UpdateFileMenu
 }
 
+proc SAMPHubStop {verbose} {
+    global samphub
+
+    # hub running?
+    if {![info exists samphub]} {
+	if {$verbose} {
+	    Error "SAMP: [msgcat::mc {Hub not running}]"
+	}
+	return
+    }
+
+    # shutdown all clients
+    foreach ss $samphub(client,secret) {
+	SAMPHubDialogListRemove $ss
+    }
+
+    # remove hub
+    SAMPHubDialogListRemove 0
+
+    catch {file delete -force $samphub(fn)}
+    unset samphub
+
+    SAMPHubDialogUpdate
+    UpdateFileMenu
+}
+
 proc SAMPHubGenerateKey {} {
     return [binary encode hex [binary format f* [list [expr rand()] [expr rand()]]]]
 }
@@ -105,23 +131,7 @@ proc SAMPHubValidSecret {secret} {
     return 1
 }
 
-proc SAMPHubStop {verbose} {
-    global samphub
-
-    # hub running?
-    if {![info exists samphub]} {
-	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {Hub not running}]"
-	}
-	return
-    }
-
-    catch {file delete -force $samphub(fn)}
-    unset samphub
-
-    SAMPHubDialogUpdate
-    UpdateFileMenu
-}
+# procs
 
 proc samp.hub.register {args} {
     global samphub

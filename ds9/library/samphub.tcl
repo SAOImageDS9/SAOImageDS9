@@ -50,6 +50,7 @@ proc SAMPHubStart {verbose} {
     # basics
     set samphub(client,seq) 0
     set samphub(client,secret) {}
+    set samphub(method) {xmlrpc}
 
     set samphub(fn) $fn
     set samphub(port) [lindex [fconfigure [xmlrpc::serve 0] -sockname] 2]
@@ -68,7 +69,7 @@ proc SAMPHubStart {verbose} {
     puts $ch "# Note contact URL hostname may be configured using jsamp.localhost property"
 
     puts $ch "samp.secret=$samphub(secret)"
-    puts $ch "samp.hub.xmlrpc.url=http://127.0.0.1:$samphub(port)/xmlrpc"
+    puts $ch "samp.hub.xmlrpc.url=http://127.0.0.1:$samphub(port)/$samphub(method)"
     puts $ch "samp.profile.version=1.3"
     puts $ch "hub.impl=org.astrogrid.samp.hub.Hub\$1"
     puts $ch "profile.impl=org.astrogrid.samp.xmlrpc.StandardHubProfile"
@@ -77,8 +78,8 @@ proc SAMPHubStart {verbose} {
     close $ch
 
     set secret 0
-    set samphub($secret,id) {c0}
-    set samphub($secret,callback) {}
+    set samphub($secret,id) {hub}
+    set samphub($secret,url) {}
     set samphub($secret,subscript) {{samp.app.ping {}}}
     set samphub($secret,restrict) {}
     set samphub($secret,meta) {}
@@ -101,6 +102,15 @@ proc SAMPHubStop {verbose} {
 
     # shutdown all clients
     foreach ss $samphub(client,secret) {
+	set rr {}
+	set params [list "string $ss"]
+	if {![SAMPHubSend {samp.hub.event.unregister} $samphub($ss,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+
+#	SAMPHubSend {samp.hub.event.shutdown $ss}
 	SAMPHubDialogListRemove $ss
     }
 
@@ -131,6 +141,35 @@ proc SAMPHubValidSecret {secret} {
     return 1
 }
 
+proc SAMPHubSend {method url params resultVar} {
+    upvar $resultVar result
+
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPHubSend: $url $samphub(method) $method $params"
+    }
+    
+    if {[catch {set result [xmlrpc::call $url $samphub(method) $method $params]}]} {
+	if {$debug(tcl,samp)} {
+	    puts cc
+	    puts stderr "SAMPSend Error: $result"
+	}
+	return 0
+    }
+
+    # reset error if needed
+    # xmlrpc leaves error msgs
+    InitError samp
+
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPSend Result: $result"
+    }
+
+    return 1
+}
+
 # procs
 
 proc samp.hub.register {args} {
@@ -153,7 +192,7 @@ proc samp.hub.register {args} {
     lappend samphub(client,secret) $secret
 
     set samphub($secret,id) $id
-    set samphub($secret,callback) {}
+    set samphub($secret,url) {}
     set samphub($secret,subscript) {}
     set samphub($secret,restrict) {}
     set samphub($secret,meta) {}
@@ -191,7 +230,7 @@ proc samp.hub.unregister {args} {
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
     unset samphub($secret,id)
-    unset samphub($secret,callback)
+    unset samphub($secret,url)
     unset samphub($secret,subscript)
     unset samphub($secret,restrict)
     unset samphub($secret,meta)
@@ -244,7 +283,7 @@ proc samp.hub.setXmlrpcCallback {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
 
-    set samphub($secret,callback) $map
+    set samphub($secret,url) $map
 
     return {string OK}
 }

@@ -239,13 +239,12 @@ proc SAMPHubDialogListAdd {secret} {
 proc SAMPHubDialogListRemove {secret} {
     global isamphub
     global dsamphub
-    global samphub
 
     if {![winfo exists $isamphub(top)]} {
 	return
     }
 
-    $dsamphub(listbox) remove -id $secret
+    $dsamphub(listbox) delete $secret
     $dsamphub(listbox) selection set {}
 }
 

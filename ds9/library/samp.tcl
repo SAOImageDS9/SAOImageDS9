@@ -587,8 +587,6 @@ proc SAMPShutdown {} {
     set samp(apps,image) {}
     set samp(apps,table) {}
     set samp(apps,votable) {}
-    UpdateFileMenu
-    UpdateCATDialog
 
     # unset samp array
     if {[info exists samp]} {
@@ -1125,6 +1123,8 @@ proc SAMPRcvdEventShutdown {varname} {
     }
 
     SAMPShutdown
+    UpdateFileMenu
+    UpdateCATDialog
 }
 
 proc SAMPRcvdEventRegister {varname} {
@@ -1202,6 +1202,8 @@ proc SAMPRcvdDisconnect {varname} {
     }
 
     SAMPShutdown
+    UpdateFileMenu
+    UpdateCATDialog
 }
 
 # HTTPClient

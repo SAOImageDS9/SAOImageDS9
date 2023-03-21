@@ -86,6 +86,7 @@ proc SAMPHubStart {verbose} {
 #    set samphub($secret,meta) [list [list id ] [list samp.name hub] [list samp.description.text ] [list samp.icon.url ] [list author.mail ] [list author.name {William Joye}]
 
     SAMPHubDialogListAdd 0
+    SAMPHubDialogUpdate
     UpdateFileMenu
 }
 
@@ -105,11 +106,10 @@ proc SAMPHubStop {verbose} {
     # shutdown all clients
     foreach ss $samphub(client,secret) {
 	catch {unset samphubmap}
-	set samphubmap(samp.mtype) {string "samp.hub.event.unregister"}
+	set samphubmap(samp.mtype) {string "samp.hub.event.shutdown"}
 	set samphubmap(samp.params) {struct samphubmap2}
 
 	catch {unset samphubmap2}
-	set samphubmap2(id) "string $samphub($ss,id)"
 
 	set param1 [list "string $ss"]
 	set param2 [list "string hub"]
@@ -123,7 +123,6 @@ proc SAMPHubStop {verbose} {
 	    }
 	}
 
-#	SAMPHubSend {samp.hub.event.shutdown $ss}
 	SAMPHubDialogListRemove $ss
     }
 

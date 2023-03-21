@@ -91,6 +91,8 @@ proc SAMPHubStart {verbose} {
 
 proc SAMPHubStop {verbose} {
     global samphub
+    global samphubmap
+    global samphubmap2
 
     # hub running?
     if {![info exists samphub]} {
@@ -102,9 +104,20 @@ proc SAMPHubStop {verbose} {
 
     # shutdown all clients
     foreach ss $samphub(client,secret) {
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) {string "samp.hub.event.unregister"}
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	set samphubmap2(id) "string $samphub($ss,id)"
+
+	set param1 [list "string $ss"]
+	set param2 [list "string hub"]
+	set param3 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3"	
+	
 	set rr {}
-	set params [list "string $ss"]
-	if {![SAMPHubSend {samp.hub.event.unregister} $samphub($ss,url) $params rr]} {
+	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($ss,url) $params rr]} {
 	    if {$verbose} {
 		Error "SAMP: [msgcat::mc {internal error}] $rr"
 	    }

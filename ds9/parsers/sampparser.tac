@@ -11,6 +11,7 @@
 %token CONNECT_
 %token DISCONNECT_
 %token IMAGE_
+%token INFO_
 %token SEND_
 %token TABLE_
 
@@ -27,6 +28,7 @@ samp : yesno {if {$1} {SAMPConnect 1} else {SAMPDisconnect}}
  | DISCONNECT_ {SAMPDisconnect}
  | BROADCAST_ broadcast
  | SEND_ send
+ | INFO_ {SAMPHubDialog}
  ;
 
 broadcast : {SAMPSendImageLoadFits {}}

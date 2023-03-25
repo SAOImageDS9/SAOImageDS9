@@ -62,164 +62,171 @@ proc samp::unsetupvalues {numsyms} {
 
 array set samp::table {
   0:257 shift
-  13:263 reduce
-  7:274,target 16
   0:258 shift
   23:0,target 21
-  11:263,target 11
+  11:263,target 18
   5:0,target 4
   0:259 shift
   0:260 shift
   15:263 reduce
   15:0,target 18
+  11:267 shift
   9:0 reduce
   0:266,target 9
   0:261 shift
-  11:0 reduce
   0:262 shift
   17:263 reduce
+  11:270 shift
   0:263 reduce
   0:264 shift
-  20:263 reduce
+  20:263 shift
   19:263 shift
-  7:263,target 16
+  7:263,target 17
   0:265 shift
   2:263 reduce
   15:0 reduce
   0:266 shift
-  22:263 reduce
-  13:272 goto
+  22:263 shift
   4:263 reduce
-  20:263,target 15
+  20:263,target 24
   19:263,target 23
   0:265,target 8
   0:268 shift
   2:263,target 5
-  24:0,target 10
+  24:263 reduce
+  24:0,target 22
+  11:276 goto
   6:263 reduce
   6:0,target 7
-  0:270 goto
-  20:0 reduce
-  16:0,target 14
+  0:269 shift
+  16:0,target 19
   0:271 goto
   2:0 reduce
-  14:263,target 17
-  10:267,target 18
+  14:263,target 9
   8:263 reduce
-  0:273 goto
+  0:272 goto
+  14:273,target 22
+  0:274 goto
   24:0 reduce
   6:0 reduce
   0:264,target 7
-  7:0,target 16
+  0:274,target 14
+  25:0,target 10
+  7:0,target 17
   23:263,target 21
-  17:0,target 19
-  12:0 accept
+  17:0,target 14
+  12:0 reduce
   5:263,target 4
   0:0,target 1
-  17:263,target 19
+  10:0,target 16
+  17:263,target 14
+  11:270,target 20
   0:263,target 1
   16:0 reduce
-  0:273,target 13
-  10:275,target 20
+  12:263,target 11
+  21:0 reduce
   8:0,target 12
-  7:269,target 15
+  7:270,target 16
   3:0 reduce
-  10:263 shift
+  18:0,target 20
+  10:263 reduce
   1:0,target 2
-  11:0,target 11
   0:262,target 6
+  12:263 reduce
   8:263,target 12
+  0:272,target 13
+  25:0 reduce
   7:0 reduce
   14:263 reduce
-  10:267 shift
-  21:263,target 24
+  21:263,target 15
   3:263,target 3
   16:263 reduce
-  10:269 shift
-  18:263 shift
+  18:263 reduce
   15:263,target 18
-  13:0 reduce
+  13:0 accept
+  11:267,target 19
   9:0,target 13
   0:261,target 5
   1:263 reduce
-  20:0,target 15
   0:271,target 12
   2:0,target 5
-  21:263 shift
-  12:0,target 0
+  21:263 reduce
+  12:0,target 11
   3:263 reduce
-  10:263,target 17
-  10:275 goto
+  10:263,target 16
   23:263 reduce
   17:0 reduce
   5:263 reduce
   0:0 reduce
-  7:267,target 14
+  14:273 goto
+  7:267,target 15
   7:263 reduce
   0:259,target 3
   0:260,target 4
-  22:0 reduce
+  24:263,target 22
+  11:276,target 21
   9:263 reduce
   6:263,target 7
-  0:270,target 11
+  0:269,target 11
   4:0 reduce
+  21:0,target 15
   7:267 shift
   3:0,target 3
-  18:263,target 22
-  13:0,target 8
+  18:263,target 20
+  13:0,target 0
   1:263,target 2
   8:0 reduce
-  7:269 shift
-  13:263,target 9
+  7:270 shift
+  10:0 reduce
   0:258,target 2
   0:268,target 10
-  7:274 goto
   14:0 reduce
-  22:0,target 20
+  7:275 goto
   9:263,target 13
   4:0,target 6
-  14:0,target 17
+  14:0,target 8
+  7:275,target 17
+  18:0 reduce
   0:257,target 1
   1:0 reduce
-  22:263,target 20
-  13:272,target 21
+  22:263,target 25
   4:263,target 6
   23:0 reduce
-  16:263,target 14
-  11:263 reduce
-  10:269,target 19
+  16:263,target 19
+  11:263 shift
   5:0 reduce
 }
 
 array set samp::rules {
-  9,l 272
-  11,l 273
-  15,l 273
-  20,l 275
+  9,l 273
+  11,l 274
+  15,l 274
+  20,l 276
   19,l 275
-  2,l 270
-  6,l 270
-  12,l 273
+  2,l 271
+  6,l 271
+  12,l 274
   16,l 274
-  21,l 275
-  3,l 270
-  7,l 270
-  13,l 273
-  0,l 276
-  17,l 274
-  4,l 270
-  8,l 271
-  10,l 271
-  14,l 273
-  18,l 274
-  1,l 270
-  5,l 270
+  21,l 276
+  3,l 271
+  7,l 271
+  13,l 274
+  0,l 277
+  17,l 275
+  22,l 276
+  4,l 271
+  8,l 272
+  10,l 272
+  14,l 274
+  18,l 275
+  1,l 271
+  5,l 271
 }
 
 array set samp::rules {
   5,dc 1
   0,dc 1
-  17,dc 1
+  17,dc 0
   12,dc 1
   8,dc 1
   21,dc 2
@@ -231,110 +238,114 @@ array set samp::rules {
   1,dc 0
   13,dc 1
   9,dc 0
+  22,dc 2
   4,dc 1
-  16,dc 0
+  16,dc 1
   11,dc 1
   7,dc 1
-  20,dc 2
+  20,dc 1
   19,dc 1
   2,dc 1
   14,dc 2
 }
 
 array set samp::rules {
-  13,line 51
-  7,line 42
-  10,line 46
-  4,line 39
-  18,line 58
-  1,line 36
-  15,line 53
-  9,line 45
-  12,line 50
-  6,line 41
-  21,line 63
-  3,line 38
-  17,line 57
-  14,line 52
-  8,line 45
-  11,line 49
-  5,line 40
-  20,line 62
-  19,line 61
-  2,line 37
+  13,line 52
+  7,line 43
+  10,line 47
+  22,line 65
+  4,line 40
+  18,line 59
+  1,line 37
+  15,line 54
+  9,line 46
+  12,line 51
+  6,line 42
+  21,line 64
+  3,line 39
+  17,line 58
+  14,line 53
+  8,line 46
+  11,line 50
+  5,line 41
+  20,line 63
+  19,line 60
+  2,line 38
   9,e 1
-  16,line 56
+  16,line 55
 }
 
 array set samp::lr1_table {
-  14,trans {}
+  14,trans {{273 22}}
   1,trans {}
-  18,trans {{263 22}}
+  18,trans {}
   23,trans {}
   5,trans {}
   9,trans {}
-  13,trans {{272 21}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 7} {265 8} {266 9} {268 10} {270 11} {271 12} {273 13}}
+  13,trans {}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 7} {265 8} {266 9} {268 10} {269 11} {271 12} {272 13} {274 14}}
   17,trans {}
+  22,trans {{263 25}}
   4,trans {}
-  22,trans {}
   8,trans {}
   12,trans {}
   16,trans {}
   3,trans {}
-  21,trans {{263 24}}
-  10 {{15 {0 263} 1} {19 {0 263} 0} {20 {0 263} 0} {21 {0 263} 0}}
-  11 {{11 {0 263} 1}}
-  12 {{0 0 1}}
-  7,trans {{267 14} {269 15} {274 16}}
-  13 {{8 0 1} {10 0 1} {9 263 0}}
-  14 {{17 {0 263} 1}}
+  21,trans {}
+  10 {{16 {0 263} 1}}
+  11 {{15 {0 263} 1} {20 {0 263} 0} {21 {0 263} 0} {22 {0 263} 0}}
+  25,trans {}
+  12 {{11 {0 263} 1}}
+  7,trans {{267 15} {270 16} {275 17}}
+  13 {{0 0 1}}
+  14 {{8 0 1} {10 0 1} {9 263 0}}
   15 {{18 {0 263} 1}}
-  11,trans {}
-  16 {{14 {0 263} 2}}
-  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0} {13 {0 263} 0} {14 {0 263} 0} {15 {0 263} 0} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
-  17 {{19 {0 263} 1}}
+  11,trans {{263 18} {267 19} {270 20} {276 21}}
+  16 {{19 {0 263} 1}}
+  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0} {13 {0 263} 0} {14 {0 263} 0} {15 {0 263} 0} {16 {0 263} 0} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
+  17 {{14 {0 263} 2}}
   1 {{2 {0 263} 1}}
   18 {{20 {0 263} 1}}
   2 {{5 {0 263} 1}}
   19 {{21 {0 263} 1}}
-  20 {{15 {0 263} 2}}
+  20 {{22 {0 263} 1}}
   15,trans {}
   3 {{3 {0 263} 1}}
-  21 {{10 0 2}}
+  21 {{15 {0 263} 2}}
   4 {{6 {0 263} 1}}
-  22 {{20 {0 263} 2}}
+  22 {{10 0 2}}
   5 {{4 {0 263} 1}}
   23 {{21 {0 263} 2}}
   6 {{7 {0 263} 1}}
   2,trans {}
   19,trans {{263 23}}
-  20,trans {}
-  24 {{10 0 3}}
-  7 {{14 {0 263} 1} {16 {0 263} 0} {17 {0 263} 0} {18 {0 263} 0}}
+  24 {{22 {0 263} 2}}
+  20,trans {{263 24}}
+  7 {{14 {0 263} 1} {17 {0 263} 0} {18 {0 263} 0} {19 {0 263} 0}}
+  25 {{10 0 3}}
   8 {{12 {0 263} 1}}
   9 {{13 {0 263} 1}}
   24,trans {}
   6,trans {}
-  10,trans {{263 17} {267 18} {269 19} {275 20}}
+  10,trans {}
 }
 
 array set samp::token_id_table {
   264,line 18
-  270,t 1
+  270,t 0
   269,t 0
-  276,line 64
+  276,line 62
   265,title CONNECT
   274,t 1
   261,line 11
   257,t 0
-  270,title {}
-  269,title TABLE
-  273,line 48
+  270,title TABLE
+  269,title SEND
+  273,line 46
   257,line 7
   262,t 0
   274,title {}
-  270,line 35
+  270,line 24
   269,line 23
   259,title ON
   260,title OFF
@@ -344,17 +355,18 @@ array set samp::token_id_table {
   264,title BROADCAST
   266,line 20
   275,t 1
-  error,line 34
-  268,title SEND
+  error,line 35
+  268,title INFO
   258,t 0
   263,line 14
   error,title {}
-  275,line 60
+  275,line 57
   273,title {}
   263,t 0
   259,line 9
   260,line 10
   258,title NO
+  277,title {}
   272,line 45
   267,t 0
   263,title string
@@ -373,6 +385,7 @@ array set samp::token_id_table {
   265,line 19
   262 FALSE_
   263 STRING_
+  277,line 66
   257,title YES
   264 BROADCAST_
   264,t 0
@@ -384,22 +397,24 @@ array set samp::token_id_table {
   0,t 0
   0 {$}
   262,title FALSE
-  268 SEND_
+  268 INFO_
   268,t 0
-  274,line 55
-  270 yesno
-  269 TABLE_
-  271 command
+  274,line 49
+  270 TABLE_
+  269 SEND_
+  271 yesno
   error,t 0
-  272 @PSEUDO1
+  272 command
   258,line 8
   273,t 1
-  273 samp
+  273 @PSEUDO1
   266,title DISCONNECT
-  274 broadcast
-  275 send
-  271,line 44
-  276 start'
+  274 samp
+  275 broadcast
+  271,line 36
+  276 send
+  277,t 1
+  277 start'
   271,title {}
   261,t 0
   267,line 21
@@ -513,12 +528,13 @@ proc samp::yyparse {} {
                     11 { if {$1} {SAMPConnect 1} else {SAMPDisconnect} }
                     12 { SAMPConnect 1 }
                     13 { SAMPDisconnect }
-                    16 { SAMPSendImageLoadFits {} }
+                    16 { SAMPHubDialog }
                     17 { SAMPSendImageLoadFits {} }
-                    18 { SAMPSendTableLoadFits {} }
-                    19 { SAMPCmdSendImage $1 }
-                    20 { SAMPCmdSendImage $2 }
-                    21 { SAMPCmdSendTable $2 }
+                    18 { SAMPSendImageLoadFits {} }
+                    19 { SAMPSendTableLoadFits {} }
+                    20 { SAMPCmdSendImage $1 }
+                    21 { SAMPCmdSendImage $2 }
+                    22 { SAMPCmdSendTable $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

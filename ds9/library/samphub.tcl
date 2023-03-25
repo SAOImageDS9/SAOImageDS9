@@ -80,8 +80,8 @@ proc SAMPHubStart {verbose} {
     set secret 0
     set samphub($secret,id) {hub}
     set samphub($secret,url) {}
-#    set samphub($secret,subscript) {{samp.app.ping {}}}
-    set samphub($secret,restrict) {}
+#    set samphub($secret,subscription) {{samp.app.ping {}}}
+    set samphub($secret,restriction) {}
     set samphub($secret,meta) {}
 #    set samphub($secret,meta) [list [list id ] [list samp.name hub] [list samp.description.text ] [list samp.icon.url ] [list author.mail ] [list author.name {William Joye}]
 
@@ -204,8 +204,8 @@ proc samp.hub.register {args} {
 
     set samphub($secret,id) $id
     set samphub($secret,url) {}
-    set samphub($secret,subscript) {}
-    set samphub($secret,restrict) {}
+    set samphub($secret,subscription) {}
+    set samphub($secret,restriction) {}
     set samphub($secret,meta) {}
 
     catch {unset samphubmap}
@@ -242,8 +242,8 @@ proc samp.hub.unregister {args} {
 
     unset samphub($secret,id)
     unset samphub($secret,url)
-    unset samphub($secret,subscript)
-    unset samphub($secret,restrict)
+    unset samphub($secret,subscription)
+    unset samphub($secret,restriction)
     unset samphub($secret,meta)
     
     SAMPHubDialogListRemove $secret
@@ -318,8 +318,8 @@ proc samp.hub.declareSubscriptions {args} {
 
     foreach mm $map {
 	foreach {ss rr} $mm {
-	    lappend samphub($secret,subscript) $ss
-	    lappend samphub($secret,restrict) $rr
+	    lappend samphub($secret,subscription) $ss
+	    lappend samphub($secret,restriction) $rr
 	}
     }
 
@@ -337,7 +337,7 @@ proc samp.hub.getMetadata {args} {
     }
 
     set secret [lindex $args 0]
-    set map [lindex $args 1]
+    set id [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
@@ -348,7 +348,7 @@ proc samp.hub.getMetadata {args} {
     catch {unset samphubmap}
     set rr {}
     foreach cc $samphub(client,secret) {
-	if {$samphub($cc,id) == $map} {
+	if {$samphub($cc,id) == $id} {
 	    foreach mm $samphub($cc,meta) {
 		foreach {key val} $mm {
 		    set samphubmap($key) "string \"$val\""
@@ -387,7 +387,7 @@ proc samp.hub.getSubscribedClients {args} {
 	    continue
 	}
 
-	foreach ss $samphub($secret,subscript) {
+	foreach ss $samphub($secret,subscription) {
 	    if {$ss == $map} {
 		lappend ll $samphub($cc,id)
 	    }
@@ -418,13 +418,67 @@ proc samp.hub.notify {args} {
     }
 
     set secret [lindex $args 0]
-    set map [lindex $args 1]
+    set id [lindex $args 1]
+    set map [lindex $args 2]
 
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.notify\t$samphub($secret,id)"
+
+    set mtype {}
+    set iparams {}
+    foreach mm $map {
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+		samp.params {set iparams $val}
+	    }
+	}
+    }
+
+    foreach cc $samphub(client,secret) {
+	if {$samphub($cc,id) != $id} {
+	    continue
+	}
+
+	# don't send to sender
+	# should not happen
+	if {$cc == $secret} {
+	    continue
+	}
+
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	    continue
+	}
+	
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	foreach mm $iparams {
+	    foreach {key val} $mm {
+		set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    }
+	}
+
+	set param1 [list "string $samphub(secret)"]
+	set param2 [list "string $samphub($cc,id)"]
+	set param3 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3"
+
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    }
 
     return {string OK}
 }
@@ -460,10 +514,16 @@ proc samp.hub.notifyAll {args} {
     }
 
     foreach cc $samphub(client,secret) {
+	# don't send to sender
 	if {$cc == $secret} {
 	    continue
 	}
 
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	    continue
+	}
+	
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}

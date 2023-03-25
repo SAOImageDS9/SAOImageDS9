@@ -136,7 +136,7 @@ proc SAMPHubDialogClient {client} {
     # Subscriptions
     set ss [ttk::labelframe $f.sub -text [msgcat::mc {Subscriptions}]]
 
-    set dsamphub(client,subscript,txt) $ss.txt
+    set dsamphub(client,subscription,txt) $ss.txt
     roText::roText $ss.txt
 
     $ss.txt configure \
@@ -268,7 +268,7 @@ proc SAMPHubDialogListUpdate {} {
 
     set dsamphub(client,reg) {}
     $dsamphub(client,meta,txt) delete 1.0 end
-    $dsamphub(client,subscript,txt) delete 1.0 end
+    $dsamphub(client,subscription,txt) delete 1.0 end
 
     set secret [$dsamphub(listbox) selection]
     if {$secret != {}} {
@@ -278,13 +278,13 @@ proc SAMPHubDialogListUpdate {} {
 		$dsamphub(client,meta,txt) insert end "$key\t$val\n"
 	    }
 	}
-	foreach ss $samphub($secret,subscript) {
-	    $dsamphub(client,subscript,txt) insert end "$ss\n"
+	foreach ss $samphub($secret,subscription) {
+	    $dsamphub(client,subscription,txt) insert end "$ss\n"
 	}
     }
 
     $dsamphub(client,meta,txt) see end
-    $dsamphub(client,subscript,txt) see end
+    $dsamphub(client,subscription,txt) see end
 }
 
 proc SAMPHubDialogRecvdMsg {msg} {

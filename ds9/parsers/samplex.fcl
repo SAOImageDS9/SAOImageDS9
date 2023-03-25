@@ -11,6 +11,7 @@ broadcast   {return $BROADCAST_}
 connect	    {return $CONNECT_}
 disconnect  {return $DISCONNECT_}
 image	    {return $IMAGE_}
+info	    {return $INFO_}
 send	    {return $SEND_}
 table	    {return $TABLE_}
 

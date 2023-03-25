@@ -63,86 +63,112 @@ proc sampfirst::unsetupvalues {numsyms} {
 array set sampfirst::table {
   0:257 shift
   0:258 shift
+  11:263,target 12
   0:259 shift
   0:260 shift
   5:0,target 4
-  9:0 reduce
+  9:0 accept
+  0:266,target 9
   0:261 shift
   11:0 reduce
   0:262 shift
   0:263 reduce
-  0:264 goto
-  7:263,target 11
+  0:264 shift
+  7:263,target 1
   0:265 goto
   2:263 reduce
-  0:267 goto
+  0:266 goto
   4:263 reduce
   0:265,target 8
+  0:268 goto
   2:263,target 5
   6:0,target 7
   6:263 reduce
   2:0 reduce
+  10:267,target 12
+  8:263 reduce
+  7:262,target 6
   6:0 reduce
   0:264,target 7
-  7:0,target 11
+  7:0,target 1
+  7:261,target 5
   0:0,target 1
   5:263,target 4
+  10:0,target 8
   0:263,target 1
-  8:0,target 0
+  12:263,target 13
+  7:260,target 4
+  7:259,target 3
+  8:0,target 11
   3:0 reduce
-  10:263 shift
+  10:263 reduce
   1:0,target 2
-  11:0,target 10
+  11:0,target 12
   0:262,target 6
+  12:263 shift
+  8:263,target 11
   7:0 reduce
+  10:267 goto
+  7:258,target 2
   3:263,target 3
-  9:266,target 10
-  9:0,target 8
+  13:0 reduce
+  9:0,target 0
   0:261,target 5
   1:263 reduce
+  7:257 shift
   2:0,target 5
+  7:258 shift
   3:263 reduce
-  10:263,target 11
+  10:263,target 9
+  7:260 shift
+  7:259 shift
+  7:261 shift
+  7:257,target 1
   0:0 reduce
   5:263 reduce
+  7:262 shift
   7:263 reduce
   0:259,target 3
   0:260,target 4
-  9:263 reduce
-  4:0 reduce
+  7:265 goto
   6:263,target 7
+  4:0 reduce
   3:0,target 3
-  9:266 goto
+  13:0,target 10
   1:263,target 2
-  8:0 accept
+  8:0 reduce
+  10:0 reduce
   0:258,target 2
-  9:263,target 9
+  0:268,target 10
+  7:265,target 11
   4:0,target 6
   0:257,target 1
   1:0 reduce
-  0:267,target 9
   4:263,target 6
+  11:263 reduce
   5:0 reduce
 }
 
 array set sampfirst::rules {
-  9,l 266
-  11,l 267
-  2,l 264
-  6,l 264
-  3,l 264
-  7,l 264
-  0,l 268
-  4,l 264
-  8,l 265
-  10,l 265
-  1,l 264
-  5,l 264
+  9,l 267
+  11,l 268
+  2,l 265
+  6,l 265
+  12,l 268
+  3,l 265
+  7,l 265
+  0,l 269
+  4,l 265
+  8,l 266
+  10,l 266
+  1,l 265
+  5,l 265
 }
 
 array set sampfirst::rules {
   5,dc 1
   0,dc 1
+  12,dc 2
   8,dc 1
   3,dc 1
   10,dc 3
@@ -156,62 +182,70 @@ array set sampfirst::rules {
 }
 
 array set sampfirst::rules {
-  7,line 35
-  10,line 39
-  4,line 32
-  1,line 29
-  9,line 38
-  6,line 34
-  3,line 31
-  8,line 38
-  11,line 42
-  5,line 33
-  2,line 30
+  7,line 37
+  10,line 41
+  4,line 34
+  1,line 31
+  9,line 40
+  12,line 45
+  6,line 36
+  3,line 33
+  8,line 40
+  11,line 44
+  5,line 35
+  2,line 32
   9,e 1
 }
 
 array set sampfirst::lr1_table {
-  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
+  13,trans {}
+  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
   1 {{2 {0 263} 1}}
   2 {{5 {0 263} 1}}
   3 {{3 {0 263} 1}}
   4 {{6 {0 263} 1}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 7} {265 8} {267 9}}
-  5 {{4 {0 263} 1}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 7} {265 8} {266 9} {268 10}}
   1,trans {}
+  5 {{4 {0 263} 1}}
   2,trans {}
   6 {{7 {0 263} 1}}
   3,trans {}
-  7 {{11 {0 263} 1}}
+  7 {{12 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
   4,trans {}
-  8 {{0 0 1}}
-  10 {{10 0 2}}
+  8 {{11 {0 263} 1}}
   5,trans {}
-  9 {{8 0 1} {10 0 1} {9 263 0}}
-  11 {{10 0 3}}
+  9 {{0 0 1}}
+  10 {{8 0 1} {10 0 1} {9 263 0}}
+  11 {{12 {0 263} 2}}
   6,trans {}
-  7,trans {}
+  12 {{10 0 2}}
+  7,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {265 11}}
+  13 {{10 0 3}}
   8,trans {}
-  10,trans {{263 11}}
-  9,trans {{266 10}}
+  10,trans {{267 12}}
+  9,trans {}
   11,trans {}
+  12,trans {{263 13}}
 }
 
 array set sampfirst::token_id_table {
-  264,line 28
+  264,line 18
+  269,t 1
   265,title {}
   261,line 11
   257,t 0
+  269,title {}
   257,line 7
   262,t 0
+  269,line 46
   259,title ON
   260,title OFF
   266,t 1
+  264,title HUB
   error error
-  264,title {}
-  266,line 38
+  266,line 39
   268,title {}
-  error,line 27
+  error,line 29
   258,t 0
   263,line 14
   error,title {}
@@ -230,26 +264,27 @@ array set sampfirst::token_id_table {
   260 OFF_
   260,t 0
   261 TRUE_
-  265,line 37
+  265,line 30
   262 FALSE_
   263 STRING_
   257,title YES
-  264 yesno
-  264,t 1
-  265 command
+  264 HUB_
+  264,t 0
+  265 yesno
   262,line 12
-  266 @PSEUDO1
-  267 samp
+  266 command
+  267 @PSEUDO1
   268,t 1
-  268 start'
+  268 samp
   262,title FALSE
   0 {$}
   0,t 0
+  269 start'
   error,t 0
   258,line 8
   266,title {}
   261,t 0
-  267,line 41
+  267,line 40
   265,t 1
   261,title TRUE
 }
@@ -357,6 +392,7 @@ proc sampfirst::yyparse {} {
                     7 { set _ 0 }
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
                     11 { ProcessCmdSet pds9 samp $1 }
+                    12 { ProcessCmdSet pds9 samphub $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

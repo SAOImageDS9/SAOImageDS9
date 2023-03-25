@@ -5,3 +5,4 @@ set OFF_ 260
 set TRUE_ 261
 set FALSE_ 262
 set STRING_ 263
+set HUB_ 264

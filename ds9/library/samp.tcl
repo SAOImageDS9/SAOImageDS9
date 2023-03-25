@@ -121,12 +121,15 @@ proc SAMPConnect {verbose} {
 
     # declare subscriptions
     catch {unset sampmap}
-    catch {unset sampmap2}
     set sampmap(samp.app.ping) {struct mapPing}
+#    set sampmap(samp.app.status) {struct mapStatus}
+#    set sampmap(samp.msg.progress) {struct mapProgress}
 
     set sampmap(samp.hub.event.shutdown) {struct mapShutdown}
     set sampmap(samp.hub.event.register) {struct mapRegister}
     set sampmap(samp.hub.event.unregister) {struct mapUnregister}
+#    set sampmap(samp.hub.event.metadata) {struct mapMetadata}
+#    set sampmap(samp.hub.event.subscriptions) {struct mapSubscriptions}
     set sampmap(samp.hub.disconnect) {struct mapDisconnect}
 
     set sampmap(image.load.fits) {struct mapImageLoadFits}
@@ -150,6 +153,7 @@ proc SAMPConnect {verbose} {
     set sampmap(ds9.restricted-get) {struct sampmap2}
     set sampmap(ds9.restricted-set) {struct sampmap2}
 
+    catch {unset sampmap2}
     set sampmap2(x-samp.mostly-harmless) {string "1"}
 
     set param1 [list "string $samp(private)"]
@@ -1610,9 +1614,11 @@ proc ProcessSAMPCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global isamp
+
     # we need to be realized
     ProcessRealizeDS9
-    SAMPUpdate
+    after $isamp(timeout) SAMPUpdate
 
     samp::YY_FLUSH_BUFFER
     samp::yy_scan_string [lrange $var $i end]

@@ -7,6 +7,8 @@
 
 %start command
 
+%token HUB_
+
 %%
 
 #include yesno.trl
@@ -16,6 +18,7 @@ command : samp
  ;
 
 samp : yesno {ProcessCmdSet pds9 samp $1}
+ | HUB_ yesno {ProcessCmdSet pds9 samphub $2}
  ;
 
 %%

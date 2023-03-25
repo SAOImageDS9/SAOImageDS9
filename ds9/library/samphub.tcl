@@ -80,7 +80,7 @@ proc SAMPHubStart {verbose} {
     set secret 0
     set samphub($secret,id) {hub}
     set samphub($secret,url) {}
-    set samphub($secret,subscript) {{samp.app.ping {}}}
+#    set samphub($secret,subscript) {{samp.app.ping {}}}
     set samphub($secret,restrict) {}
     set samphub($secret,meta) {}
 #    set samphub($secret,meta) [list [list id ] [list samp.name hub] [list samp.description.text ] [list samp.icon.url ] [list author.mail ] [list author.name {William Joye}]
@@ -104,26 +104,26 @@ proc SAMPHubStop {verbose} {
     }
 
     # shutdown all clients
-    foreach ss $samphub(client,secret) {
+    foreach cc $samphub(client,secret) {
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) {string "samp.hub.event.shutdown"}
 	set samphubmap(samp.params) {struct samphubmap2}
 
 	catch {unset samphubmap2}
 
-	set param1 [list "string $ss"]
+	set param1 [list "string $cc"]
 	set param2 [list "string hub"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"	
 	
 	set rr {}
-	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($ss,url) $params rr]} {
+	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
 		Error "SAMP: [msgcat::mc {internal error}] $rr"
 	    }
 	}
 
-	SAMPHubDialogListRemove $ss
+	SAMPHubDialogListRemove $cc
     }
 
     # remove hub
@@ -165,7 +165,6 @@ proc SAMPHubSend {method url params resultVar} {
     
     if {[catch {set result [xmlrpc::call $url $samphub(method) $method $params]}]} {
 	if {$debug(tcl,samp)} {
-	    puts cc
 	    puts stderr "SAMPSend Error: $result"
 	}
 	return 0
@@ -331,7 +330,6 @@ proc samp.hub.declareSubscriptions {args} {
 proc samp.hub.getMetadata {args} {
     global samphub
     global samphubmap
-    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -398,8 +396,8 @@ proc samp.hub.getSubscribedClients {args} {
 
     catch {unset samphubmap}
     catch {unset samphubmap2}
-    set rr {}
     set samphubmap2(x-samp.mostly-harmless) {int 1}
+    set rr {}
     foreach cc $ll {
 	set samphubmap($cc) {struct samphubmap2}
 	append rr "$samphubmap($cc) "
@@ -409,16 +407,156 @@ proc samp.hub.getSubscribedClients {args} {
     return "struct samphubmap"
 }
 
-proc samp.hub.notifyAll {args} {
+proc samp.hub.notify {args} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.notify: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.notify\t$samphub($secret,id)"
+
     return {string OK}
 }
 
-# events
+proc samp.hub.notifyAll {args} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.notifyAll: $args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.notifyAll\t$samphub($secret,id)"
+
+    set mtype {}
+    set iparams {}
+    foreach mm $map {
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+		samp.params {set iparams $val}
+	    }
+	}
+    }
+
+    foreach cc $samphub(client,secret) {
+	if {$cc == $secret} {
+	    continue
+	}
+
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	foreach mm $iparams {
+	    foreach {key val} $mm {
+		set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    }
+	}
+
+	set param1 [list "string $samphub(secret)"]
+	set param2 [list "string $samphub($cc,id)"]
+	set param3 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3"
+
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    }
+
+    return {string OK}
+}
+
+proc samp.hub.call {args} {
+    return {string OK}
+}
+
+proc samp.hub.callAll {args} {
+    return {string OK}
+}
+
+proc samp.hub.callAndWait {args} {
+    return {string OK}
+}
+
+# client to hub
+# samp.hub.register
+# samp.hub.unregister
+# samp.hub.declareMetadata
+# samp.hub.setXmlrpcCallback
+# samp.hub.declareSubscriptions
+# samp.hub.getMetadata
+# samp.hub.getSubscriptions
+# samp.hub.getSubscribedClients
+# samp.hub.notify
+# samp.hub.notifyAll
+# samp.hub.call
+# samp.hub.callAll
+# samp.hub.callAndWait
+
+# hub to all clients with change of state
 # samp.hub.event.shutdown
-# samp.hub.event.register
-# samp.hub.event.unregister
-# samp.hub.event.metadata
-# samp.hub.event.subscriptions
-# samp.hub.disconnect
+# samp.hub.event.register $id
+# samp.hub.event.unregister $id
+# samp.hub.event.metadata $id
+# samp.hub.event.subscriptions $id
+
+# hub to a client
+# samp.hub.disconnect (force disconnect, no response expected)
+
+# client recvd and respond to hub
+# samp.app.ping
+# samp.app.status
+# samp.msg.progress
+
+# hub recvd from client
+# samp.app.ping
+
+# client sends to hub
+# samp.app.event.shutdown (I'm shutting down)
+
+# Application MTypes Subscriptions (send and recvd)
+# image.load.fits
+# table.load.fits
+# table.load.votable
+# table.highlight.row
+# table.select.rowList
+# coord.pointAt.sky
+
+# Application MTypes Subscriptions (recvd)
+# client.env.get
+# x-samp.affiliation.name
+# x-samp.affiliation.url
+# x-samp.homepage.url
+# x-samp.releasenotes.url
+# x-samp.faq.url
+# x-samp.authors
+# x-samp.release.version
 
 

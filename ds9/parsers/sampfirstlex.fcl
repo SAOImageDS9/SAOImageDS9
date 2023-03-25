@@ -7,7 +7,17 @@
 
 %%
 
-hub		{return $HUB_}
+broadcast   {return $BROADCAST_}
+client	    {return $CLIENT_}
+connect	    {return $CONNECT_}
+disconnect  {return $DISCONNECT_}
+hub	    {return $HUB_}
+image	    {return $IMAGE_}
+info	    {return $INFO_}
+send	    {return $SEND_}
+start	    {return $START_}
+stop	    {return $STOP_}
+table	    {return $TABLE_}
 
 #include yesno.fin
 #include string.fin

@@ -18,6 +18,7 @@ proc SAMPConnect {verbose} {
     global sampmap
     global sampmap2
 
+    DumpCallStack
     # connected?
     if {[info exists samp]} {
 	if {$verbose} {

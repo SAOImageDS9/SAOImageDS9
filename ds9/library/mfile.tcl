@@ -536,13 +536,17 @@ proc CreateButtonsFile {} {
 	[string tolower {XPA Info}] XPAInfo
 
     ButtonButton $ds9(buttons).file.sampconnect \
-	[string tolower [msgcat::mc {SAMP Connect}]] "SAMPConnect 1"
+	[string tolower [msgcat::mc {SAMP Connect}]] \
+	[list SAMPConnect 1]
     ButtonButton $ds9(buttons).file.sampdisconnect \
-	[string tolower [msgcat::mc {SAMP Disconnect}]] "SAMPDisconnect 1"
+	[string tolower [msgcat::mc {SAMP Disconnect}]] \
+	[list SAMPDisconnect 1]
     ButtonButton $ds9(buttons).file.sampimage \
-	[string tolower [msgcat::mc {SAMP Image}]] "SAMPSendImageLoadFits {}"
+	[string tolower [msgcat::mc {SAMP Image}]] \
+	[list SAMPSendImageLoadFits {}]
     ButtonButton $ds9(buttons).file.samptable \
-	[string tolower [msgcat::mc {SAMP Table}]] "SAMPSendTableLoadFits {}"
+	[string tolower [msgcat::mc {SAMP Table}]] \
+	[list SAMPSendTableLoadFits {}]
 
     ButtonButton $ds9(buttons).file.samphubinfo \
 	[string tolower {SAMP Hub Info}] SAMPHubDialog

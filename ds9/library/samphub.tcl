@@ -81,11 +81,19 @@ proc SAMPHubStart {verbose} {
     set samphub($secret,id) {hub}
     set samphub($secret,url) {}
     set samphub($secret,subscription) {}
-#    set samphub($secret,subscription) {{samp.app.ping {}}}
+    set samphub($secret,subscription) {{samp.hub.ping}}
     set samphub($secret,restriction) {}
     set samphub($secret,meta) {}
-#    set samphub($secret,meta) [list [list id ] [list samp.name hub] [list samp.description.text ] [list samp.icon.url ] [list author.mail ] [list author.name {William Joye}]
-
+    if {0} {
+    set samphub($secret,meta) [list \
+				   [list id hub] \
+				   [list samp.name "SAOImageDS9 Hub"] \
+				   [list samp.description.text "SAOImageDS9 is an astronomical visualization application"] \
+				   [list samp.icon.url "http://ds9.si.edu/doc/sun.png"] \
+				   [list author.mail "ds9help@cfa.harvard.edu"]\
+				   [list author.name {William Joye}] \
+				   ]
+    }
     SAMPHubDialogListAdd 0
     SAMPHubDialogUpdate
     UpdateFileMenu
@@ -183,6 +191,15 @@ proc SAMPHubSend {method url params resultVar} {
 }
 
 # procs
+
+proc samp.hub.ping {} {
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.ping"
+    }
+
+    return {string OK}
+}
 
 proc samp.hub.register {args} {
     global samphub

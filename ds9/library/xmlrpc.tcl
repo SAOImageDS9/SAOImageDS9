@@ -132,38 +132,48 @@ proc xmlrpc::doRequest {sock} {
     }
 
     set args {}
-    set param [string range $params 8 end]
-    set param [string trim $param]
-    while {[string range $param 0 6] == "<param>" ||
-       [string range $param 0 7] == "</param>"} {
-	# check for empty element
-	if {[string range $param 0 7] == "</param>"} {
-	    lappend args {}
+    if {$params == {}} {
+	# waj
+	# legal to have no params i.e. ping
+	if {[catch {set result [eval ::$mname]}]} {
+	    set response [buildFault 100 "eval() failed"]
+	} else {
+	    set response [buildResponse $result]
+	}
+    } else {
+	set param [string range $params 8 end]
+	set param [string trim $param]
+	while {[string range $param 0 6] == "<param>" ||
+	       [string range $param 0 7] == "</param>"} {
+	    # check for empty element
+	    if {[string range $param 0 7] == "</param>"} {
+		lappend args {}
+		set param [string range $param 8 end]
+		set param [string trim $param]
+		continue
+	    }
+
+	    set param [string range $param 7 end]
+	    set param [string trim $param]
+
+	    set res [unmarshall $param]
+	    set param [lindex $res 0]
+	    set el [lindex $res 1]
+	    lappend args $el
+	    if {[string range $param 0 7] != "</param>"} {
+		return [errReturn "Invalid End Param"]
+	    }
 	    set param [string range $param 8 end]
 	    set param [string trim $param]
-	    continue
 	}
-
-	set param [string range $param 7 end]
-	set param [string trim $param]
-
-	set res [unmarshall $param]
-	set param [lindex $res 0]
-	set el [lindex $res 1]
-	lappend args $el
-	if {[string range $param 0 7] != "</param>"} {
-	    return [errReturn "Invalid End Param"]
+	if {$param != "</params>"} {
+	    return [errReturn "Invalid End Params"]
 	}
-	set param [string range $param 8 end]
-	set param [string trim $param]
-    }
-    if {$param != "</params>"} {
-	return [errReturn "Invalid End Params"]
-    }
-    if {[catch {set result [eval ::$mname $args]}]} {
-	set response [buildFault 100 "eval() failed"]
-    } else {
-	set response [buildResponse $result]
+	if {[catch {set result [eval ::$mname $args]}]} {
+	    set response [buildFault 100 "eval() failed"]
+	} else {
+	    set response [buildResponse $result]
+	}
     }
     debug "in doRequest: response:\n$response"
     puts -nonewline $sock $response

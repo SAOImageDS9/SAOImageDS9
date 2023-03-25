@@ -5,4 +5,14 @@ set OFF_ 260
 set TRUE_ 261
 set FALSE_ 262
 set STRING_ 263
-set HUB_ 264
+set BROADCAST_ 264
+set CLIENT_ 265
+set CONNECT_ 266
+set DISCONNECT_ 267
+set HUB_ 268
+set IMAGE_ 269
+set INFO_ 270
+set SEND_ 271
+set START_ 272
+set STOP_ 273
+set TABLE_ 274

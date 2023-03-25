@@ -83,17 +83,13 @@ proc SAMPHubStart {verbose} {
     set samphub($secret,subscription) {}
     set samphub($secret,subscription) {{samp.hub.ping}}
     set samphub($secret,restriction) {}
-    set samphub($secret,meta) {}
-    if {0} {
     set samphub($secret,meta) [list \
-				   [list id hub] \
 				   [list samp.name "SAOImageDS9 Hub"] \
 				   [list samp.description.text "SAOImageDS9 is an astronomical visualization application"] \
 				   [list samp.icon.url "http://ds9.si.edu/doc/sun.png"] \
-				   [list author.mail "ds9help@cfa.harvard.edu"]\
+				   [list author.mail "ds9help@cfa.harvard.edu"] \
 				   [list author.name {William Joye}] \
 				   ]
-    }
     SAMPHubDialogListAdd 0
     SAMPHubDialogUpdate
     UpdateFileMenu

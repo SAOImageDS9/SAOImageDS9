@@ -241,6 +241,7 @@ proc SAMPHubDialogListAdd {secret} {
 	return
     }
 
+    puts "testing: $samphub($secret,id)"
     set url {}
     foreach mm $samphub($secret,meta) {
 	foreach {key val} $mm {

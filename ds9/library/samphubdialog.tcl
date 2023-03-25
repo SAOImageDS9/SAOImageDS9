@@ -241,7 +241,27 @@ proc SAMPHubDialogListAdd {secret} {
 	return
     }
 
-    $dsamphub(listbox) insert {} end -id $secret -text $samphub($secret,id)
+    set url {}
+    foreach mm $samphub($secret,meta) {
+	foreach {key val} $mm {
+	    puts "***$key $val"
+	    switch $key {
+		samp.icon.url {set url $val}
+	    }
+	}
+    }
+    puts "***$url***"
+
+    if {$url == {}} {
+	$dsamphub(listbox) insert {} end -id $secret \
+	    -text $samphub($secret,id)
+    } else {
+	set icon [HVImageURL samphub $url 100 100]
+	puts "***$icon"
+	$dsamphub(listbox) insert {} end -id $secret \
+	    -text $samphub($secret,id) -image $icon
+    }
+
     $dsamphub(listbox) selection set $secret
 }
 

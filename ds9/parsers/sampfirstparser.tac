@@ -38,9 +38,9 @@ samp : CLIENT_ yesno {ProcessCmdSet pds9 samp $2}
  | HUB_ hub
  ;
 
-hub : | START_ {}
- | STOP_ {}
- | INFO_ {SAMPHubDialog}
+hub : | START_
+ | STOP_
+ | INFO_
  ;
 
 broadcast :

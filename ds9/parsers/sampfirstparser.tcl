@@ -645,7 +645,6 @@ proc sampfirst::yyparse {} {
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
                     11 { ProcessCmdSet pds9 samp $2 }
                     12 { ProcessCmdSet pds9 samphub $2 }
-                    22 { SAMPHubDialog }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

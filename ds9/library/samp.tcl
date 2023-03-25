@@ -14,7 +14,6 @@ proc SAMPDef {} {
 
 proc SAMPConnect {verbose} {
     global ds9
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -170,7 +169,7 @@ proc SAMPConnect {verbose} {
 	return
     }
 
-    after $isamp(timeout) SAMPUpdate
+    SAMPUpdate
 }
 
 proc SAMPDisconnect {verbose} {
@@ -200,7 +199,6 @@ proc SAMPDisconnect {verbose} {
 proc SAMPSendImageLoadFits {id} {
     global ds9
     global current
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -265,7 +263,6 @@ proc SAMPSendImageLoadFits {id} {
 proc SAMPSendTableLoadFits {id} {
     global ds9
     global current
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -329,7 +326,6 @@ proc SAMPSendTableLoadFits {id} {
 
 proc SAMPSendTableLoadVotable {id varname} {
     global ds9
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -414,7 +410,6 @@ proc SAMPSendTableRowListCmd {varname rowlist} {
 }
 
 proc SAMPSendTableHighlightRow {id varname row} {
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -458,7 +453,6 @@ proc SAMPSendTableHighlightRow {id varname row} {
 }
 
 proc SAMPSendTableSelectRowList {id varname rows} {
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -536,7 +530,6 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 }
 
 proc SAMPSendCoordPointAtSky {id coord} {
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -601,6 +594,8 @@ proc SAMPShutdown {} {
 proc SAMPUpdate {} {
     # this routine is run after a delay since it needs to 
     # call the hub for metadata
+    global isamp
+    after $isamp(timeout)
 
     # connected? we might have already disconnected.
     global samp
@@ -1134,7 +1129,6 @@ proc SAMPRcvdEventShutdown {varname} {
 proc SAMPRcvdEventRegister {varname} {
     upvar $varname args
 
-    global isamp
     global samp
 
     global debug
@@ -1155,14 +1149,12 @@ proc SAMPRcvdEventRegister {varname} {
 	}
     }
 
-    # wait
-    after $isamp(timeout) SAMPUpdate
+    SAMPUpdate
 }
 
 proc SAMPRcvdEventUnregister {varname} {
     upvar $varname args
 
-    global isamp
     global samp
 
     global debug
@@ -1183,8 +1175,7 @@ proc SAMPRcvdEventUnregister {varname} {
 	}
     }
 
-    # wait
-    after $isamp(timeout) SAMPUpdate
+    SAMPUpdate
 }
 
 proc SAMPRcvdDisconnect {varname} {
@@ -1614,11 +1605,9 @@ proc ProcessSAMPCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global isamp
-
     # we need to be realized
     ProcessRealizeDS9
-    after $isamp(timeout) SAMPUpdate
+    SAMPUpdate
 
     samp::YY_FLUSH_BUFFER
     samp::yy_scan_string [lrange $var $i end]

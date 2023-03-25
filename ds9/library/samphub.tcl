@@ -80,6 +80,7 @@ proc SAMPHubStart {verbose} {
     set secret 0
     set samphub($secret,id) {hub}
     set samphub($secret,url) {}
+    set samphub($secret,subscription) {}
 #    set samphub($secret,subscription) {{samp.app.ping {}}}
     set samphub($secret,restriction) {}
     set samphub($secret,meta) {}
@@ -215,7 +216,6 @@ proc samp.hub.register {args} {
 
     SAMPHubDialogListAdd $secret
     SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
-    SAMPHubDialogSentMsg "samp.hub.register\t$samphub($secret,id)\t$samphubmap(samp.hub-id) $samphubmap(samp.self-id) $samphubmap(samp.private-key)"
 
     return "struct samphubmap"
 }
@@ -358,7 +358,6 @@ proc samp.hub.getMetadata {args} {
 	}
     }
 
-    SAMPHubDialogSentMsg "samp.hub.getMetadata\t$samphub($secret,id)\t$rr"
     return "struct samphubmap"
 }
 
@@ -403,7 +402,6 @@ proc samp.hub.getSubscribedClients {args} {
 	append rr "$samphubmap($cc) "
     }
 
-    SAMPHubDialogSentMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)\t$rr"
     return "struct samphubmap"
 }
 
@@ -554,14 +552,17 @@ proc samp.hub.notifyAll {args} {
 }
 
 proc samp.hub.call {args} {
+    puts "***samp.hub.call***"
     return {string OK}
 }
 
 proc samp.hub.callAll {args} {
+    puts "***samp.hub.callAll***"
     return {string OK}
 }
 
 proc samp.hub.callAndWait {args} {
+    puts "***samp.hub.callAndWait***"
     return {string OK}
 }
 

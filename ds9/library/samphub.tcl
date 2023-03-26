@@ -18,7 +18,7 @@ proc SAMPHubStart {verbose} {
     # are we connected?
     if {[info exists samp]} {
 	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {already connected}]"
+	    Error "SAMPHub: [msgcat::mc {already connected}]"
 	}
 	return
     }
@@ -26,7 +26,7 @@ proc SAMPHubStart {verbose} {
     # can we find a hub?
     if {[SAMPParseHub]} {
 	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {found existing hub}]"
+	    Error "SAMPHub: [msgcat::mc {found existing hub}]"
 	}
 	return
     }
@@ -60,7 +60,7 @@ proc SAMPHubStart {verbose} {
 
     if {[catch {set ch [open $fn w 0600]}]} {
 	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {unable to create hub file}]"
+	    Error "SAMPHub: [msgcat::mc {unable to create hub file}]"
 	}
 	catch {unset samphub}
 	return
@@ -104,7 +104,7 @@ proc SAMPHubStop {verbose} {
     # hub running?
     if {![info exists samphub]} {
 	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {Hub not running}]"
+	    Error "SAMPHub: [msgcat::mc {Hub not running}]"
 	}
 	return
     }
@@ -125,7 +125,7 @@ proc SAMPHubStop {verbose} {
 	set rr {}
 	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
-		Error "SAMP: [msgcat::mc {internal error}] $rr"
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
 	}
 
@@ -171,7 +171,7 @@ proc SAMPHubSend {method url params resultVar} {
     
     if {[catch {set result [xmlrpc::call $url $samphub(method) $method $params]}]} {
 	if {$debug(tcl,samp)} {
-	    puts stderr "SAMPSend Error: $result"
+	    puts stderr "SAMPHubSend Error: $result"
 	}
 	return 0
     }
@@ -181,10 +181,55 @@ proc SAMPHubSend {method url params resultVar} {
     InitError samp
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend Result: $result"
+	puts stderr "SAMPHubSend Result: $result"
     }
 
     return 1
+}
+
+proc SAMPHubDisconnect {secret} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    set mtype {samp.hub.disconnect}
+
+    catch {unset samphubmap}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+
+    catch {unset samphubmap2}
+
+    set param1 [list "string $secret"]
+    set param2 [list "string hub"]
+    set param3 [list "struct samphubmap"]
+    set params "$param1 $param2 $param3"	
+
+    set rr {}
+    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($secret,url) $params rr]} {
+	if {$verbose} {
+	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	}
+    }
+
+    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
+
+    SAMPHubRemove $secret
+}
+
+proc SAMPHubRemove {secret} {
+    global samphub
+    
+    set id [lsearch $samphub(client,secret) $secret]
+    set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
+
+    unset samphub($secret,id)
+    unset samphub($secret,url)
+    unset samphub($secret,subscription)
+    unset samphub($secret,restriction)
+    unset samphub($secret,meta)
+    
+    SAMPHubDialogListRemove $secret
 }
 
 # procs
@@ -250,17 +295,8 @@ proc samp.hub.unregister {args} {
     }
     
     SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
+    SAMPHubRemove $secret
 
-    set id [lsearch $samphub(client,secret) $secret]
-    set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
-
-    unset samphub($secret,id)
-    unset samphub($secret,url)
-    unset samphub($secret,subscription)
-    unset samphub($secret,restriction)
-    unset samphub($secret,meta)
-    
-    SAMPHubDialogListRemove $secret
     return {string OK}
 }
 
@@ -486,7 +522,7 @@ proc samp.hub.notify {args} {
 	set rr {}
 	if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
-		Error "SAMP: [msgcat::mc {internal error}] $rr"
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
 	}
 
@@ -556,7 +592,7 @@ proc samp.hub.notifyAll {args} {
 	set rr {}
 	if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
-		Error "SAMP: [msgcat::mc {internal error}] $rr"
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
 	}
 

@@ -31,6 +31,9 @@ proc SAMPHubDialog {} {
     $mb.file add command -label [msgcat::mc {Stop}] \
 	-command [list SAMPHubStop 1]
     $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Disconnect}] \
+	-command [list SAMPHubDialogDisconnect]
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command SAMPHubDestroyDialog -accelerator "${ds9(ctrl)}W"
 
@@ -53,9 +56,12 @@ proc SAMPHubDialog {} {
 	-command [list SAMPHubStart 1]
     ttk::button $f.stop -text [msgcat::mc {Stop}] \
 	-command [list SAMPHubStop 1]
+    ttk::button $f.disconnect -text [msgcat::mc {Disconnect}] \
+	-command [list SAMPHubDialogDisconnect]
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command SAMPHubDestroyDialog
-    pack $f.start $f.stop $f.close -side left -expand true -padx 2 -pady 4
+    pack $f.start $f.stop $f.disconnect $f.close \
+	-side left -expand true -padx 2 -pady 4
 
     # Fini
     pack $w.buttons -side bottom -fill x
@@ -287,58 +293,19 @@ proc SAMPHubDialogMetaUpdate {secret} {
     $dsamphub(listbox) item $secret -text $name
 }
 
-proc SAMPHubDialogListUpdate {} {
+proc SAMPHubDialogDisconnect {} {
     global isamphub
     global dsamphub
-    global samphub
 
     if {![winfo exists $isamphub(top)]} {
 	return
     }
-
-    set dsamphub(client,reg) {}
-    $dsamphub(client,meta,txt) delete 1.0 end
-    $dsamphub(client,subscription,txt) delete 1.0 end
 
     set secret [$dsamphub(listbox) selection]
-    if {$secret != {}} {
-	set dsamphub(client,reg) $samphub($secret,id)
-	foreach mm $samphub($secret,meta) {
-	    foreach {key val} $mm {
-		$dsamphub(client,meta,txt) insert end "$key\t$val\n"
-	    }
-	}
-	foreach ss $samphub($secret,subscription) {
-	    $dsamphub(client,subscription,txt) insert end "$ss\n"
-	}
+    # can't disconnect the hub
+    if {$secret != {} && $secret != 0} {
+	SAMPHubDisconnect $secret
     }
-
-    $dsamphub(client,meta,txt) see end
-    $dsamphub(client,subscription,txt) see end
-}
-
-proc SAMPHubDialogRecvdMsg {msg} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-	return
-    }
-
-    $dsamphub(recvd,txt) insert end "$msg\n"
-    $dsamphub(recvd,txt) see end
-}
-
-proc SAMPHubDialogSentMsg {msg} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-	return
-    }
-
-    $dsamphub(sent,txt) insert end "$msg\n"
-    $dsamphub(sent,txt) see end
 }
 
 proc SAMPHubDialogUpdate {} {
@@ -369,3 +336,69 @@ proc SAMPHubDialogUpdate {} {
 	$w.buttons.stop configure -state disabled
     }
 }
+
+proc SAMPHubDialogListUpdate {} {
+    global isamphub
+    global dsamphub
+    global samphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    set dsamphub(client,reg) {}
+    $dsamphub(client,meta,txt) delete 1.0 end
+    $dsamphub(client,subscription,txt) delete 1.0 end
+
+    set secret [$dsamphub(listbox) selection]
+    if {$secret != {}} {
+	set dsamphub(client,reg) $samphub($secret,id)
+	foreach mm $samphub($secret,meta) {
+	    foreach {key val} $mm {
+		$dsamphub(client,meta,txt) insert end "$key\t$val\n"
+	    }
+	}
+	foreach ss $samphub($secret,subscription) {
+	    $dsamphub(client,subscription,txt) insert end "$ss\n"
+	}
+    }
+
+    $dsamphub(client,meta,txt) see end
+    $dsamphub(client,subscription,txt) see end
+
+    set w $isamphub(top)
+    set mb $isamphub(mb)
+
+    if {$secret != {}} {
+	$mb.file entryconfig [msgcat::mc {Disconnect}] -state normal
+	$w.buttons.disconnect configure -state normal
+    } else {
+	$mb.file entryconfig [msgcat::mc {Disconnect}] -state disabled
+	$w.buttons.disconnect configure -state disabled
+    }
+}
+
+proc SAMPHubDialogRecvdMsg {msg} {
+    global isamphub
+    global dsamphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    $dsamphub(recvd,txt) insert end "$msg\n"
+    $dsamphub(recvd,txt) see end
+}
+
+proc SAMPHubDialogSentMsg {msg} {
+    global isamphub
+    global dsamphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    $dsamphub(sent,txt) insert end "$msg\n"
+    $dsamphub(sent,txt) see end
+}
+

@@ -241,28 +241,16 @@ proc SAMPHubDialogListAdd {secret} {
 	return
     }
 
-    puts "testing: $samphub($secret,id)"
-    set url {}
+    set name $samphub($secret,id)
     foreach mm $samphub($secret,meta) {
-	foreach {key val} $mm {
-	    puts "***$key $val"
-	    switch $key {
-		samp.icon.url {set url $val}
-	    }
-	}
-    }
-    puts "***$url***"
-
-    if {$url == {}} {
-	$dsamphub(listbox) insert {} end -id $secret \
-	    -text $samphub($secret,id)
-    } else {
-	set icon [HVImageURL samphub $url 100 100]
-	puts "***$icon"
-	$dsamphub(listbox) insert {} end -id $secret \
-	    -text $samphub($secret,id) -image $icon
+       foreach {key val} $mm {
+           switch $key {
+               samp.name {set name $val}
+           }
+       }
     }
 
+    $dsamphub(listbox) insert {} end -id $secret -text $name
     $dsamphub(listbox) selection set $secret
 }
 
@@ -276,6 +264,27 @@ proc SAMPHubDialogListRemove {secret} {
 
     $dsamphub(listbox) delete $secret
     $dsamphub(listbox) selection set {}
+}
+
+proc SAMPHubDialogMetaUpdate {secret} {
+    global isamphub
+    global dsamphub
+    global samphub
+
+    if {![winfo exists $isamphub(top)]} {
+	return
+    }
+
+    set name $samphub($secret,id)
+    foreach mm $samphub($secret,meta) {
+	foreach {key val} $mm {
+	    switch $key {
+		samp.name {set name $val}
+	    }
+	}
+    }
+
+    $dsamphub(listbox) item $secret -text $name
 }
 
 proc SAMPHubDialogListUpdate {} {

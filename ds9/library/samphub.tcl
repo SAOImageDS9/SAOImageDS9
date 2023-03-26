@@ -51,6 +51,7 @@ proc SAMPHubStart {verbose} {
     set samphub(client,seq) 0
     set samphub(client,secret) {}
     set samphub(method) {xmlrpc}
+    set samphub(cache,images) 1
 
     set samphub(fn) $fn
     set samphub(port) [lindex [fconfigure [xmlrpc::serve 0] -sockname] 2]
@@ -84,8 +85,8 @@ proc SAMPHubStart {verbose} {
     set samphub($secret,subscription) {{samp.hub.ping}}
     set samphub($secret,restriction) {}
     set samphub($secret,meta) [list \
-				   [list samp.name "SAOImageDS9 Hub"] \
-				   [list samp.description.text "SAOImageDS9 is an astronomical visualization application"] \
+				   [list samp.name "Hub"] \
+				   [list samp.description.text "SAOImageDS9 Internal Hub"] \
 				   [list samp.icon.url "http://ds9.si.edu/doc/sun.png"] \
 				   [list author.mail "ds9help@cfa.harvard.edu"] \
 				   [list author.name {William Joye}] \
@@ -286,6 +287,7 @@ proc samp.hub.declareMetadata {args} {
 	}
     }
     
+    SAMPHubDialogMetaUpdate $secret
     SAMPHubDialogListUpdate
     return {string OK}
 }

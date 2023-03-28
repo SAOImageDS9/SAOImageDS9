@@ -644,22 +644,90 @@ proc samp.hub.notifyAll {args} {
 }
 
 proc samp.hub.call {args} {
-    puts "***samp.hub.call***"
+    global samphub
+    global samphubmap
+    global samphubmap2
+    
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.call: args=$args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.call\t$samphub($secret,id)"
+
     return {string OK}
 }
 
 proc samp.hub.callAll {args} {
-    puts "***samp.hub.callAll***"
+    global samphub
+    global samphubmap
+    global samphubmap2
+    
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.callAll: args=$args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.callAll\t$samphub($secret,id)"
+
     return {string OK}
 }
 
 proc samp.hub.callAndWait {args} {
-    puts "***samp.hub.callAndWait***"
+    global samphub
+    global samphubmap
+    global samphubmap2
+    
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.callAndWait: args=$args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.callAndWait\t$samphub($secret,id)"
+
     return {string OK}
 }
 
 proc samp.hub.relay {args} {
-    puts "***samp.hub.relay***"
+    global samphub
+    global samphubmap
+    global samphubmap2
+    
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.relay: args=$args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.callRelay\t$samphub($secret,id)"
+
     return {string OK}
 }
 

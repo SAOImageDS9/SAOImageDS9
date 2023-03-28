@@ -117,7 +117,7 @@ proc SAMPHubStop {verbose} {
 
 	catch {unset samphubmap2}
 
-	set param1 [list "string $cc"]
+	set param1 [list "string $samphub(secret)"]
 	set param2 [list "string hub"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"	
@@ -166,7 +166,7 @@ proc SAMPHubSend {method url params resultVar} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPHubSend: $url $samphub(method) $method $params"
+	puts stderr "SAMPHubSend: url=$url method=$method params=$params"
     }
     
     if {[catch {set result [xmlrpc::call $url $samphub(method) $method $params]}]} {
@@ -200,7 +200,7 @@ proc SAMPHubDisconnect {secret} {
 
     catch {unset samphubmap2}
 
-    set param1 [list "string $secret"]
+    set param1 [list "string $samphub(secret)"]
     set param2 [list "string hub"]
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
@@ -234,6 +234,28 @@ proc SAMPHubRemove {secret} {
 
 # procs
 
+proc samp.hub.setXmlrpcCallback {args} {
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.setXmlrpcCallback: args=$args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
+
+    set samphub($secret,url) $map
+
+    return {string OK}
+}
+
 proc samp.hub.ping {} {
     global debug
     if {$debug(tcl,samp)} {
@@ -249,7 +271,7 @@ proc samp.hub.register {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.register: $args"
+	puts "samp.hub.register: args=$args"
     }
 
     if {$samphub(secret) != $args} {
@@ -284,7 +306,7 @@ proc samp.hub.unregister {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.unregister: $args"
+	puts "samp.hub.unregister: args=$args"
     }
 
     set secret [lindex $args 0]
@@ -305,7 +327,7 @@ proc samp.hub.declareMetadata {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.declareMetadata: $args"
+	puts "samp.hub.declareMetadata: args=$args"
     }
 
     set secret [lindex $args 0]
@@ -328,63 +350,13 @@ proc samp.hub.declareMetadata {args} {
     return {string OK}
 }
 
-proc samp.hub.setXmlrpcCallback {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.hub.setXmlrpcCallback: $args"
-    }
-
-    set secret [lindex $args 0]
-    set map [lindex $args 1]
-
-    if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
-    }
-
-    SAMPHubDialogRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
-
-    set samphub($secret,url) $map
-
-    return {string OK}
-}
-
-proc samp.hub.declareSubscriptions {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.hub.declareSubscriptions: $args"
-    }
-
-    set secret [lindex $args 0]
-    set map [lindex $args 1]
-    
-    if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
-    }
-
-    SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
-
-    foreach mm $map {
-	foreach {ss rr} $mm {
-	    lappend samphub($secret,subscription) $ss
-	    lappend samphub($secret,restriction) $rr
-	}
-    }
-
-    SAMPHubDialogListUpdate
-    return {string OK}
-}
-
 proc samp.hub.getMetadata {args} {
     global samphub
     global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.getMetadata: $args"
+	puts "samp.hub.getMetadata: args=$args"
     }
 
     set secret [lindex $args 0]
@@ -412,6 +384,75 @@ proc samp.hub.getMetadata {args} {
     return "struct samphubmap"
 }
 
+proc samp.hub.declareSubscriptions {args} {
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.declareSubscriptions: args=$args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+    
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
+
+    foreach mm $map {
+	foreach {ss rr} $mm {
+	    lappend samphub($secret,subscription) $ss
+	    lappend samphub($secret,restriction) $rr
+	}
+    }
+
+    SAMPHubDialogListUpdate
+    return {string OK}
+}
+
+proc samp.hub.getRegisteredClients {args} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.getRegisteredClients: args=$args"
+    }
+
+    set secret [lindex $args 0]
+    set map [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.getRegisteredClients\t$samphub($secret,id)"
+
+    # start with hub
+    set ll {hub}
+    foreach cc $samphub(client,secret) {
+	if {$cc == $secret} {
+	    continue
+	}
+
+	lappend ll $samphub($cc,id)
+    }
+
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    set samphubmap2(x-samp.mostly-harmless) {int 1}
+    set rr {}
+    foreach cc $ll {
+	set samphubmap($cc) {struct samphubmap2}
+	append rr "$samphubmap($cc) "
+    }
+
+    return "struct samphubmap"
+}
+
 proc samp.hub.getSubscribedClients {args} {
     global samphub
     global samphubmap
@@ -419,7 +460,7 @@ proc samp.hub.getSubscribedClients {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.getSubscribedClients: $args"
+	puts "samp.hub.getSubscribedClients: args=$args"
     }
 
     set secret [lindex $args 0]
@@ -463,7 +504,7 @@ proc samp.hub.notify {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.notify: $args"
+	puts "samp.hub.notify: args=$args"
     }
 
     set secret [lindex $args 0]
@@ -539,7 +580,7 @@ proc samp.hub.notifyAll {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.notifyAll: $args"
+	puts "samp.hub.notifyAll: args=$args"
     }
 
     set secret [lindex $args 0]
@@ -617,20 +658,29 @@ proc samp.hub.callAndWait {args} {
     return {string OK}
 }
 
+proc samp.hub.relay {args} {
+    puts "***samp.hub.relay***"
+    return {string OK}
+}
+
 # client to hub
+# samp.hub.setXmlrpcCallback
+# samp.hub.ping
+
 # samp.hub.register
 # samp.hub.unregister
 # samp.hub.declareMetadata
-# samp.hub.setXmlrpcCallback
-# samp.hub.declareSubscriptions
 # samp.hub.getMetadata
+# samp.hub.declareSubscriptions
 # samp.hub.getSubscriptions
 # samp.hub.getSubscribedClients
+# samp.hub.getSubscribedClients(mtype)
 # samp.hub.notify
 # samp.hub.notifyAll
 # samp.hub.call
 # samp.hub.callAll
 # samp.hub.callAndWait
+# samp.hub.relay
 
 # hub to all clients with change of state
 # samp.hub.event.shutdown
@@ -646,9 +696,6 @@ proc samp.hub.callAndWait {args} {
 # samp.app.ping
 # samp.app.status
 # samp.msg.progress
-
-# hub recvd from client
-# samp.app.ping
 
 # client sends to hub
 # samp.app.event.shutdown (I'm shutting down)

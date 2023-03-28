@@ -18,7 +18,6 @@ proc SAMPConnect {verbose} {
     global sampmap
     global sampmap2
 
-    DumpCallStack
     # connected?
     if {[info exists samp]} {
 	if {$verbose} {
@@ -772,6 +771,8 @@ proc SAMPReplySimple {msgid str} {
 
 # receiveNotification(string sender-id, map message)
 proc samp.client.receiveNotification {args} {
+    global samp
+    
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPReceivedNotification: $args"
@@ -780,6 +781,11 @@ proc samp.client.receiveNotification {args} {
     set secret [lindex $args 0]
     set id [lindex $args 1]
     set map [lindex $args 2]
+
+    if {$secret != $samp(secret)} {
+	Error "SAMP: [msgcat::mc {invalid secret}]"
+	return
+    }
 
     set mtype {}
     set params {}
@@ -859,6 +865,8 @@ proc samp.client.receiveNotification {args} {
 # receiveCall(string sender-id, string msg-id, map message)
 proc samp.client.receiveCall {args} {
     global ds9
+    global samp
+    
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPReceivedCall: $args"
@@ -868,6 +876,11 @@ proc samp.client.receiveCall {args} {
     set id [lindex $args 1]
     set msgid [lindex $args 2]
     set map [lindex $args 3]
+
+    if {$secret != $samp(secret)} {
+	Error "SAMP: [msgcat::mc {invalid secret}]"
+	return
+    }
 
     set mtype {}
     set params {}

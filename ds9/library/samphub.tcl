@@ -14,6 +14,8 @@ proc SAMPHubDef {} {
 proc SAMPHubStart {verbose} {
     global samp
     global samphub
+    global samphubmap
+    global samphubmap2
 
     # are we connected?
     if {[info exists samp]} {
@@ -24,16 +26,24 @@ proc SAMPHubStart {verbose} {
     }
 
     # can we find a hub?
+    # note: this will fill out a 'samp' array, delete later
     if {[SAMPParseHub]} {
-	if {$verbose} {
-	    Error "SAMPHub: [msgcat::mc {found existing hub}]"
+	# ok, found one, is it alive?
+	set rr {}
+	if {[SAMPHubSend {samp.hub.ping} $samp(url) {} rr]} {
+	    # yes, its alive
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {found existing hub}]"
+	    }
+	    return
+	} else {
+	    # its dead, try to delete
+	    catch {file delete -force $samp(fn)}
 	}
-	return
     }
     
     # ok, we are on our own
-
-    # just in case
+    catch {unset samp}
     catch {unset samphub}
     
     # home directory
@@ -50,7 +60,6 @@ proc SAMPHubStart {verbose} {
     # basics
     set samphub(client,seq) 0
     set samphub(client,secret) {}
-    set samphub(method) {xmlrpc}
     set samphub(cache,images) 1
 
     set samphub(fn) $fn
@@ -70,7 +79,7 @@ proc SAMPHubStart {verbose} {
     puts $ch "# Note contact URL hostname may be configured using jsamp.localhost property"
 
     puts $ch "samp.secret=$samphub(secret)"
-    puts $ch "samp.hub.xmlrpc.url=http://127.0.0.1:$samphub(port)/$samphub(method)"
+    puts $ch "samp.hub.xmlrpc.url=http://127.0.0.1:$samphub(port)/xmlrpc"
     puts $ch "samp.profile.version=1.3"
     puts $ch "hub.impl=org.astrogrid.samp.hub.Hub\$1"
     puts $ch "profile.impl=org.astrogrid.samp.xmlrpc.StandardHubProfile"
@@ -169,7 +178,7 @@ proc SAMPHubSend {method url params resultVar} {
 	puts stderr "SAMPHubSend: url=$url method=$method params=$params"
     }
     
-    if {[catch {set result [xmlrpc::call $url $samphub(method) $method $params]}]} {
+    if {[catch {set result [xmlrpc::call $url xmlrpc $method $params]}]} {
 	if {$debug(tcl,samp)} {
 	    puts stderr "SAMPHubSend Error: $result"
 	}
@@ -261,6 +270,8 @@ proc samp.hub.ping {} {
     if {$debug(tcl,samp)} {
 	puts "samp.hub.ping"
     }
+
+    SAMPHubDialogRecvdMsg "samp.hub.ping"
 
     return {string OK}
 }

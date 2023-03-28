@@ -1061,6 +1061,8 @@ proc SAMPParseHub {} {
     set samp(secret) {}
     set samp(url) {}
     set samp(metod) {}
+    set samp(fn) $fn
+
     while {1} {
 	if {[gets $fp line] == -1} {
 	    break
@@ -1085,6 +1087,7 @@ proc SAMPParseHub {} {
 
     if {$samp(secret) == {} || $samp(url) == {}} {
 	SAMPDelTmpFiles
+	catch {unset samp}
 	return 0
     }
 

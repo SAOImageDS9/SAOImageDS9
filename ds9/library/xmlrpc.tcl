@@ -76,7 +76,7 @@ namespace eval xmlrpc {
 
     variable	response	"";		# response to return
     variable	acceptfd	"";		# socket to listen on
-    variable	DEBUG		1;		# debug
+    variable	DEBUG		0;		# debug
 }
 
 # Given a port, create a new socket
@@ -110,7 +110,6 @@ proc xmlrpc::doRequest {sock} {
     set res [readHeader $sock]
     set headerStatus [lindex $res 0];	# Header + Status
     set body [lindex $res 1];		# Body, if any
-#    puts "doRequest:$body"
     set RE "\[^\n\]+\n(.*)"
     if {![regexp $RE $headerStatus {} header]} {
 	return [errReturn "Malformed Request"]
@@ -202,7 +201,6 @@ proc buildResponse {result} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
 
-#    puts "buildResponse:$body"
     set response "$header\n$body"
     return $response
     #return [string trim $response]

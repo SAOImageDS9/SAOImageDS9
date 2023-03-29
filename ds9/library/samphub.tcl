@@ -566,7 +566,7 @@ proc samp.hub.notify {args} {
 	    }
 	}
 
-	set param1 [list "string $samphub(secret)"]
+	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($cc,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
@@ -636,7 +636,7 @@ proc samp.hub.notifyAll {args} {
 	    }
 	}
 
-	set param1 [list "string $samphub(secret)"]
+	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($cc,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"

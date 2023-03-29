@@ -782,8 +782,8 @@ proc samp.client.receiveNotification {args} {
     set id [lindex $args 1]
     set map [lindex $args 2]
 
-    if {$secret != $samp(secret)} {
-	Error "SAMP: [msgcat::mc {invalid secret}]"
+    if {$secret != $samp(private)} {
+	Error "SAMP: [msgcat::mc {internal error}]"
 	return
     }
 
@@ -877,8 +877,8 @@ proc samp.client.receiveCall {args} {
     set msgid [lindex $args 2]
     set map [lindex $args 3]
 
-    if {$secret != $samp(secret)} {
-	Error "SAMP: [msgcat::mc {invalid secret}]"
+    if {$secret != $samp(private)} {
+	Error "SAMP: [msgcat::mc {internal error}]"
 	return
     }
 

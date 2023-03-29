@@ -489,9 +489,10 @@ proc samp.hub.getSubscribedClients {args} {
 	    continue
 	}
 
-	foreach ss $samphub($secret,subscription) {
+	foreach ss $samphub($cc,subscription) {
 	    if {$ss == $map} {
 		lappend ll $samphub($cc,id)
+		break
 	    }
 	}
     }
@@ -499,10 +500,8 @@ proc samp.hub.getSubscribedClients {args} {
     catch {unset samphubmap}
     catch {unset samphubmap2}
     set samphubmap2(x-samp.mostly-harmless) {int 1}
-    set rr {}
     foreach cc $ll {
 	set samphubmap($cc) {struct samphubmap2}
-	append rr "$samphubmap($cc) "
     }
 
     return "struct samphubmap"

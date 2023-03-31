@@ -782,9 +782,9 @@ proc samp.client.receiveNotification {args} {
     set id [lindex $args 1]
     set map [lindex $args 2]
 
-    if {$secret != $samp(private)} {
+    if {$secret != $samp(secret)} {
 	Error "SAMP: [msgcat::mc {internal error}]"
-	return
+	return {string ERROR}
     }
 
     set mtype {}
@@ -877,9 +877,9 @@ proc samp.client.receiveCall {args} {
     set msgid [lindex $args 2]
     set map [lindex $args 3]
 
-    if {$secret != $samp(private)} {
+    if {$secret != $samp(secret)} {
 	Error "SAMP: [msgcat::mc {internal error}]"
-	return
+	return {string ERROR}
     }
 
     set mtype {}
@@ -992,13 +992,21 @@ proc samp.client.receiveCall {args} {
 
 # receiveResponse(string responder-id, string msg-tag, map response)
 proc samp.client.receiveResponse {args} {
+    global samp
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPReceivedResponse: $args"
     }
 
-    set msgtag [lindex $args 0]
-    set map [lindex $args 1]
+    set secret [lindex $args 0]
+    set msgtag [lindex $args 1]
+    set map [lindex $args 2]
+
+    if {$secret != $samp(secret)} {
+	Error "SAMP: [msgcat::mc {internal error}]"
+	return {string ERROR}
+    }
 
     return {string OK}
 }

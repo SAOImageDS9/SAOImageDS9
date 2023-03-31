@@ -419,6 +419,9 @@ proc samp.hub.declareSubscriptions {args} {
 	}
     }
 
+    # make it pretty
+    set samphub($secret,subscription) [lsort $samphub($secret,subscription)]
+
     SAMPHubDialogListUpdate
     return {string OK}
 }

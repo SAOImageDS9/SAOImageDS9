@@ -131,8 +131,9 @@ proc SAMPHubStop {verbose} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"	
 	
-	set rr {}
+	# some clients (Aladin) will send samp.hub.unregister
 	set samphub(remove) $cc
+	set rr {}
 	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
@@ -216,12 +217,15 @@ proc SAMPHubDisconnect {secret} {
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
 
+    # some clients (Aladin) will send samp.hub.unregister
+    set samphub(remove) $secret
     set rr {}
     if {![SAMPHubSend {samp.client.receiveNotification} $samphub($secret,url) $params rr]} {
 	if {$verbose} {
 	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	}
     }
+    unset samphub(remove)
 
     SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
 
@@ -335,8 +339,6 @@ proc samp.hub.unregister {args} {
     }
     
     # some clients (Aladin) will send samp.hub.unregister
-    # client has been disconnected
-    # JUST IGNORE
     if {[info exists samphub(remove)]} {
 	if {$samphub(remove) == $secret} {
 	    return {string OK}

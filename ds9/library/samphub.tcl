@@ -132,13 +132,15 @@ proc SAMPHubStop {verbose} {
 	set params "$param1 $param2 $param3"	
 	
 	set rr {}
+	set samphub(remove) $cc
 	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
 	}
+	unset samphub(remove)
 
-	SAMPHubDialogListRemove $cc
+	SAMPHubRemove $cc
     }
 
     # remove hub
@@ -175,7 +177,7 @@ proc SAMPHubSend {method url params resultVar} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPHubSend: url=$url method=$method params=$params"
+	puts stderr "SAMPHubSend: $url $method $params"
     }
     
     if {[catch {set result [xmlrpc::call $url xmlrpc $method $params]}]} {
@@ -229,6 +231,13 @@ proc SAMPHubDisconnect {secret} {
 proc SAMPHubRemove {secret} {
     global samphub
     
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPHubRemove: $secret"
+    }
+
+    SAMPHubDialogListRemove $secret
+    
     set id [lsearch $samphub(client,secret) $secret]
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
@@ -237,8 +246,6 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,subscription)
     unset samphub($secret,restriction)
     unset samphub($secret,meta)
-    
-    SAMPHubDialogListRemove $secret
 }
 
 # procs
@@ -248,7 +255,7 @@ proc samp.hub.setXmlrpcCallback {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.setXmlrpcCallback: args=$args"
+	puts "samp.hub.setXmlrpcCallback: $args"
     }
 
     set secret [lindex $args 0]
@@ -282,7 +289,7 @@ proc samp.hub.register {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.register: args=$args"
+	puts "samp.hub.register: $args"
     }
 
     if {$samphub(secret) != $args} {
@@ -317,16 +324,25 @@ proc samp.hub.unregister {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.unregister: args=$args"
+	puts "samp.hub.unregister: $args"
     }
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return {string OK}
     }
     
+    # some clients (Aladin) will send samp.hub.unregister
+    # client has been disconnected
+    # JUST IGNORE
+    if {[info exists samphub(remove)]} {
+	if {$samphub(remove) == $secret} {
+	    return {string OK}
+	}
+    }
+
     SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
     SAMPHubRemove $secret
 
@@ -338,7 +354,7 @@ proc samp.hub.declareMetadata {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.declareMetadata: args=$args"
+	puts "samp.hub.declareMetadata: $args"
     }
 
     set secret [lindex $args 0]
@@ -367,7 +383,7 @@ proc samp.hub.getMetadata {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.getMetadata: args=$args"
+	puts "samp.hub.getMetadata: $args"
     }
 
     set secret [lindex $args 0]
@@ -400,7 +416,7 @@ proc samp.hub.declareSubscriptions {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.declareSubscriptions: args=$args"
+	puts "samp.hub.declareSubscriptions: $args"
     }
 
     set secret [lindex $args 0]
@@ -433,7 +449,7 @@ proc samp.hub.getRegisteredClients {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.getRegisteredClients: args=$args"
+	puts "samp.hub.getRegisteredClients: $args"
     }
 
     set secret [lindex $args 0]
@@ -474,7 +490,7 @@ proc samp.hub.getSubscribedClients {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.getSubscribedClients: args=$args"
+	puts "samp.hub.getSubscribedClients: $args"
     }
 
     set secret [lindex $args 0]
@@ -517,7 +533,7 @@ proc samp.hub.notify {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.notify: args=$args"
+	puts "samp.hub.notify: $args"
     }
 
     set secret [lindex $args 0]
@@ -593,7 +609,7 @@ proc samp.hub.notifyAll {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.notifyAll: args=$args"
+	puts "samp.hub.notifyAll: $args"
     }
 
     set secret [lindex $args 0]
@@ -663,7 +679,7 @@ proc samp.hub.call {args} {
     
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.call: args=$args"
+	puts "samp.hub.call: $args"
     }
 
     set secret [lindex $args 0]
@@ -746,7 +762,7 @@ proc samp.hub.callAll {args} {
     
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.callAll: args=$args"
+	puts "samp.hub.callAll: $args"
     }
 
     set secret [lindex $args 0]
@@ -821,7 +837,7 @@ proc samp.hub.callAndWait {args} {
     
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.callAndWait: args=$args"
+	puts "samp.hub.callAndWait: $args"
     }
 
     set secret [lindex $args 0]
@@ -917,7 +933,7 @@ proc samp.hub.reply {args} {
     
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.reply: args=$args"
+	puts "samp.hub.reply: $args"
     }
 
     set secret [lindex $args 0]

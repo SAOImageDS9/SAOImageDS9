@@ -750,6 +750,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     set param2 [list "string $msgid"]
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3"
+
     set rr {}
     if {![SAMPSend {samp.hub.reply} $params rr]} {
 	Error "SAMP: [msgcat::mc {internal error}] $rr"
@@ -765,7 +766,6 @@ proc SAMPReplySimple {msgid str} {
 	puts stderr "SAMPReplySimple: $str"
     }
 
-    global samp
     SAMPReply $msgid OK "$str"
 }
 
@@ -998,8 +998,7 @@ proc samp.client.receiveResponse {args} {
     }
 
     set msgtag [lindex $args 0]
-    set value [lindex $args 1]
-    set map [lindex $args 2]
+    set map [lindex $args 1]
 
     return {string OK}
 }

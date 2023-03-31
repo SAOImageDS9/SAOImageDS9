@@ -553,7 +553,7 @@ proc samp.hub.notify {args} {
 	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
 	    continue
 	}
-	
+
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
@@ -623,7 +623,7 @@ proc samp.hub.notifyAll {args} {
 	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
 	    continue
 	}
-	
+
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
@@ -664,7 +664,9 @@ proc samp.hub.call {args} {
     }
 
     set secret [lindex $args 0]
-    set map [lindex $args 1]
+    set id [lindex $args 1]
+    set msgtag [lindex $args 2]
+    set map [lindex $args 3]
 
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
@@ -672,7 +674,66 @@ proc samp.hub.call {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.call\t$samphub($secret,id)"
 
-    return {string OK}
+    # no block
+    catch {unset samphub(timeout)}
+
+    set mtype {}
+    set params {}
+    foreach mm $map {
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+		samp.params {set params $val}
+	    }
+	}
+    }
+
+    foreach cc $samphub(client,secret) {
+	if {$samphub($cc,id) != $id} {
+	    continue
+	}
+
+	# don't send to sender
+	# should not happen
+	if {$cc == $secret} {
+	    continue
+	}
+
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	    continue
+	}
+
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	foreach mm $iparams {
+	    foreach {key val} $mm {
+		set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    }
+	}
+
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub($secret,id)"]
+	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
+	set param4 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3 $param4"
+
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+
+	return {string OK}
+    }
+
+    return {string ERROR}
 }
 
 proc samp.hub.callAll {args} {
@@ -686,13 +747,66 @@ proc samp.hub.callAll {args} {
     }
 
     set secret [lindex $args 0]
-    set map [lindex $args 1]
+    set msgid [lindex $args 1]
+    set map [lindex $args 2]
 
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.callAll\t$samphub($secret,id)"
+
+    # no block
+    catch {unset samphub(timeout)}
+
+    set mtype {}
+    set params {}
+    foreach mm $map {
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+		samp.params {set params $val}
+	    }
+	}
+    }
+
+    foreach cc $samphub(client,secret) {
+	# don't send to sender
+	if {$cc == $secret} {
+	    continue
+	}
+
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	    continue
+	}
+
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	foreach mm $iparams {
+	    foreach {key val} $mm {
+		set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    }
+	}
+
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub($secret,id)"]
+	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
+	set param4 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3 $param4"
+
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    }
 
     return {string OK}
 }
@@ -708,36 +822,133 @@ proc samp.hub.callAndWait {args} {
     }
 
     set secret [lindex $args 0]
-    set map [lindex $args 1]
+    set id [lindex $args 1]
+    set msgtag [lindex $args 2]
+    set map [lindex $args 3]
+    set timeout [lindex $args 4]
 
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
 
+    # init block
+    set samphub(timeout) ok
+
     SAMPHubDialogRecvdMsg "samp.hub.callAndWait\t$samphub($secret,id)"
 
-    return {string OK}
+    set mtype {}
+    set params {}
+    foreach mm $map {
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+		samp.params {set params $val}
+	    }
+	}
+    }
+
+    foreach cc $samphub(client,secret) {
+	if {$samphub($cc,id) != $id} {
+	    continue
+	}
+
+	# don't send to sender
+	# should not happen
+	if {$cc == $secret} {
+	    continue
+	}
+
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	    continue
+	}
+
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	foreach mm $iparams {
+	    foreach {key val} $mm {
+		set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    }
+	}
+
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub($secret,id)"]
+	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
+	set param4 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3 $param4"
+
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+
+	if {[string is integer $timeout]} {
+	    # if zero, treat as call
+	    if {$timeout <= 0} {
+		return {string OK}
+	    } else {
+		set id [after [expr $timeout*1000] set samphub(timeout) error]
+		vwait samphub(timeout)
+		after cancel $id
+		return "string $samphub(timeout)"
+	    }
+	} else {
+	    return {string ERROR}
+	}
+    }
+
+    return {string ERROR}
 }
 
-proc samp.hub.relay {args} {
+proc samp.hub.reply {args} {
     global samphub
     global samphubmap
     global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.hub.relay: args=$args"
+	puts "samp.hub.reply: args=$args"
     }
 
     set secret [lindex $args 0]
-    set map [lindex $args 1]
+    set msgid [lindex $args 1]
+    set map [lindex $args 2]
 
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.callRelay\t$samphub($secret,id)"
+    # is this callAndWait?
+    if {[info exists samphub(timeout)]} {
+	set samphub(timeout) ok
+    }
 
+    SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
+
+    set mm [split $msgid {-}]
+    set msgtag [lindex $mm 0]
+    set cc [lindex $mm 1]
+
+    set param1 [list "string $msgtag"]
+    set param2 [list "struct samphubmap"]
+    set params "$param1 $param2"
+
+    set rr {}
+    if {![SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr]} {
+	if {$verbose} {
+	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	}
+    }
+
+    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    
     return {string OK}
 }
 

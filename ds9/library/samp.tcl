@@ -782,7 +782,7 @@ proc samp.client.receiveNotification {args} {
     set id [lindex $args 1]
     set map [lindex $args 2]
 
-    if {$secret != $samp(secret)} {
+    if {$secret != $samp(private)} {
 	Error "SAMP: [msgcat::mc {internal error}]"
 	return {string ERROR}
     }
@@ -877,7 +877,7 @@ proc samp.client.receiveCall {args} {
     set msgid [lindex $args 2]
     set map [lindex $args 3]
 
-    if {$secret != $samp(secret)} {
+    if {$secret != $samp(private)} {
 	Error "SAMP: [msgcat::mc {internal error}]"
 	return {string ERROR}
     }
@@ -895,6 +895,7 @@ proc samp.client.receiveCall {args} {
 
     # be sure to lock any command that may cause a
     #   SAMPSendCoordPointAtSkyCmd response
+
     global samp
     switch -- $mtype {
 	samp.app.ping {
@@ -1003,7 +1004,7 @@ proc samp.client.receiveResponse {args} {
     set msgtag [lindex $args 1]
     set map [lindex $args 2]
 
-    if {$secret != $samp(secret)} {
+    if {$secret != $samp(private)} {
 	Error "SAMP: [msgcat::mc {internal error}]"
 	return {string ERROR}
     }

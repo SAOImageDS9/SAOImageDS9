@@ -127,7 +127,7 @@ proc SAMPHubStop {verbose} {
 	catch {unset samphubmap2}
 
 	set param1 [list "string $samphub(secret)"]
-	set param2 [list "string hub"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"	
 	
@@ -213,7 +213,7 @@ proc SAMPHubDisconnect {secret} {
     catch {unset samphubmap2}
 
     set param1 [list "string $samphub(secret)"]
-    set param2 [list "string hub"]
+    set param2 [list "string $samphub(0,id)"]
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
 
@@ -334,8 +334,8 @@ proc samp.hub.register {args} {
 	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 
-	set param1 [list "string $samphub(secret)"]
-	set param2 [list "string hub"]
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -404,8 +404,8 @@ proc samp.hub.unregister {args} {
 	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 
-	set param1 [list "string $samphub(secret)"]
-	set param2 [list "string hub"]
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -479,8 +479,8 @@ proc samp.hub.declareMetadata {args} {
 	    }
 	}
 
-	set param1 [list "string $samphub(secret)"]
-	set param2 [list "string hub"]
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -592,8 +592,8 @@ proc samp.hub.declareSubscriptions {args} {
 	    }
 	}
 
-	set param1 [list "string $samphub(secret)"]
-	set param2 [list "string hub"]
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -755,7 +755,7 @@ proc samp.hub.notify {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($cc,id)"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -825,7 +825,7 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($cc,id)"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -905,7 +905,7 @@ proc samp.hub.call {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($secret,id)"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
@@ -982,7 +982,7 @@ proc samp.hub.callAll {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($secret,id)"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
@@ -1064,7 +1064,7 @@ proc samp.hub.callAndWait {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($secret,id)"]
+	set param2 [list "string $samphub(0,id)"]
 	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"

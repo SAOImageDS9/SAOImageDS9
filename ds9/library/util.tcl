@@ -879,18 +879,18 @@ proc AboutBoxDefault {} {
 proc QuitDS9 {} {
     global ds9
 
-    # shutdown SAMP
-    global samp
-    if {[info exists samp]} {
-	catch {SAMPDisconnect 0}
-    }
-
     # shutdown SAMPHUB
     global samphub
     if {[info exists samphub]} {
 	catch {SAMPHubStop 0}
     }
     
+    # shutdown SAMP
+    global samp
+    if {[info exists samp]} {
+	catch {SAMPDisconnect 0}
+    }
+
     # close IIS ports
     catch {IISClose}
 

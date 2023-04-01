@@ -256,9 +256,6 @@ proc SAMPHubDialogListAdd {secret} {
        }
     }
 
-    global samphub
-    puts "ListAdd $secret $samphub($secret,id)"
-
     $dsamphub(listbox) insert {} end -id $secret -text $name
     $dsamphub(listbox) selection set $secret
 }
@@ -270,9 +267,6 @@ proc SAMPHubDialogListRemove {secret} {
     if {![winfo exists $isamphub(top)]} {
 	return
     }
-
-    global samphub
-    puts "ListRemove $secret $samphub($secret,id)"
 
     $dsamphub(listbox) delete $secret
     $dsamphub(listbox) selection set {}

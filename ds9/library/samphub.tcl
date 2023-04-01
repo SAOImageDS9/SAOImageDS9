@@ -1148,16 +1148,16 @@ proc samp.hub.reply {args} {
 # samp.hub.register
 # samp.hub.unregister
 # samp.hub.declareMetadata
-# samp.hub.getMetadata
+# samp.hub.getMetadata $id
 # samp.hub.declareSubscriptions
-# samp.hub.getSubscriptions
+# samp.hub.getSubscriptions $id
 # samp.hub.getSubscribedClients
 # samp.hub.getSubscribedClients(mtype)
-# samp.hub.notify
+# samp.hub.notify $id
 # samp.hub.notifyAll
-# samp.hub.call
+# samp.hub.call $id
 # samp.hub.callAll
-# samp.hub.callAndWait
+# samp.hub.callAndWait $id
 # samp.hub.relay
 
 # hub to all clients with change of state

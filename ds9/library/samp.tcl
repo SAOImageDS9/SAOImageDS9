@@ -127,8 +127,8 @@ proc SAMPConnect {verbose} {
     set sampmap(samp.hub.event.shutdown) {struct mapShutdown}
     set sampmap(samp.hub.event.register) {struct mapRegister}
     set sampmap(samp.hub.event.unregister) {struct mapUnregister}
-#    set sampmap(samp.hub.event.metadata) {struct mapMetadata}
-#    set sampmap(samp.hub.event.subscriptions) {struct mapSubscriptions}
+    set sampmap(samp.hub.event.metadata) {struct mapMetadata}
+    set sampmap(samp.hub.event.subscriptions) {struct mapSubscriptions}
     set sampmap(samp.hub.disconnect) {struct mapDisconnect}
 
     set sampmap(image.load.fits) {struct mapImageLoadFits}
@@ -811,6 +811,12 @@ proc samp.client.receiveNotification {args} {
 	samp.hub.event.unregister {
 	    SAMPRcvdEventUnregister params
 	}
+	samp.hub.event.metadata {
+	    SAMPRcvdEventMetadata params
+	}
+	samp.hub.event.subscriptions {
+	    SAMPRcvdEventSubscriptions params
+	}
 	samp.hub.disconnect {
 	    SAMPRcvdDisconnect params
 	}
@@ -1201,6 +1207,58 @@ proc SAMPRcvdEventUnregister {varname} {
     }
 
     SAMPUpdate
+}
+
+proc SAMPRcvdEventMetadata {varname} {
+    upvar $varname args
+
+    global samp
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPRcvdEventMetadata: $args"
+    }
+
+    foreach arg $args {
+	foreach {key val} $arg {
+	    switch -- $key {
+		id {
+		    # check to see if its just us
+		    if {$samp(self) == $val} {
+			return
+		    }
+		}
+	    }
+	}
+    }
+
+#    SAMPUpdate
+}
+
+proc SAMPRcvdEventSubscriptions {varname} {
+    upvar $varname args
+
+    global samp
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPRcvdEventSubscriptions: $args"
+    }
+
+    foreach arg $args {
+	foreach {key val} $arg {
+	    switch -- $key {
+		id {
+		    # check to see if its just us
+		    if {$samp(self) == $val} {
+			return
+		    }
+		}
+	    }
+	}
+    }
+
+#    SAMPUpdate
 }
 
 proc SAMPRcvdDisconnect {varname} {

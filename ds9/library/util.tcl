@@ -880,12 +880,14 @@ proc QuitDS9 {} {
     global ds9
 
     # shutdown SAMPHUB
+    # do this first, since shutdown SAMP will generate samp.hub.unregister
     global samphub
     if {[info exists samphub]} {
 	catch {SAMPHubStop 0}
     }
     
     # shutdown SAMP
+    # if SAMPHUB was running, SAMP is already shutdown
     global samp
     if {[info exists samp]} {
 	catch {SAMPDisconnect 0}

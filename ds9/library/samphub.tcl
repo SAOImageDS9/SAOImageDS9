@@ -140,7 +140,7 @@ proc SAMPHubStop {verbose} {
 	    }
 	}
 	unset samphub(remove)
-	SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
 	SAMPHubRemove $cc
     }
 
@@ -515,24 +515,28 @@ proc samp.hub.getMetadata {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
 
-    catch {unset samphubmap}
     set rr {}
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
+	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,meta) {
 		foreach {key val} $mm {
 		    set samphubmap($key) "string \"$val\""
 		    append rr "samphubmap($key) "
 		}
 	    }
+	    return "struct samphubmap"
 	}
     }
 
-    return "struct samphubmap"
+    return {string ERROR}
 }
 
 proc samp.hub.declareSubscriptions {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
+    global samphubmap3
 
     global debug
     if {$debug(tcl,samp)} {
@@ -559,6 +563,50 @@ proc samp.hub.declareSubscriptions {args} {
     set samphub($secret,subscription) [lsort $samphub($secret,subscription)]
 
     SAMPHubDialogListUpdate
+
+    # update other clients
+    set mtype {samp.hub.event.declareSubscription}
+    foreach cc $samphub(client,secret) {
+	# don't send to sender
+	if {$cc == $secret} {
+	    continue
+	}
+
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	    continue
+	}
+
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	set samphubmap2(id) "string $samphub($secret,id)"
+	set samphubmap2(metadata) {struct samphubmap3}
+
+	catch {unset samphubmap3}
+	foreach mm $samphub($secret,meta) {
+	    foreach {key val} $mm {
+		set samphubmap3($key) "string \"[XMLQuote $val]\""
+	    }
+	}
+
+	set param1 [list "string $samphub(secret)"]
+	set param2 [list "string hub"]
+	set param3 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3"
+
+	set rr {}
+	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    }
+
     return {string OK}
 }
 

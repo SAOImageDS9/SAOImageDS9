@@ -31,9 +31,6 @@ proc SAMPConnect {verbose} {
 	unset samp
     }
     set samp(clients) {}
-    set samp(apps,image) {}
-    set samp(apps,table) {}
-    set samp(apps,votable) {}
     set samp(tmp,files) {}
 
     # these are to try to prevent feedback problems with 
@@ -199,7 +196,8 @@ proc SAMPConnect {verbose} {
 	set samp($cc,name) [SAMPGetAppName $cc]
     }
 
-    SAMPUpdate
+    UpdateFileMenu
+    UpdateCATDialog
 }
 
 proc SAMPDisconnect {verbose} {
@@ -423,7 +421,7 @@ proc SAMPSendTableRowListCmd {varname rowlist} {
 	return
     }
 
-    if {$samp(apps,votable) == {}} {
+    if {[SAMPGetAppsVOTable] == {}} {
 	return
     }
 
@@ -547,7 +545,7 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 	return
     }
 
-    if {$samp(apps,image) == {} || $samp(apps,table) == {}} {
+    if {[SAMPGetAppsImage] == {} || [SAMPGetAppsTable] == {}} {
 	return
     }
 
@@ -610,99 +608,10 @@ proc SAMPShutdown {} {
     # close the server socket if still up
     catch {close $xmlrpc::acceptfd}
 
-    # update the menus
-    set samp(apps,image) {}
-    set samp(apps,table) {}
-    set samp(apps,votable) {}
-
     # unset samp array
     if {[info exists samp]} {
 	unset samp
     }
-}
-
-proc SAMPUpdate {} {
-    # this routine is run after a delay since it needs to 
-    # call the hub for metadata
-    global isamp
-    after $isamp(timeout)
-
-    # connected? we might have already disconnected.
-    global samp
-    if {![info exists samp]} {
-	return
-    }
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPUpdate"
-    }
-
-    # image fits
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string image.load.fits"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
-    
-    set samp(apps,image) {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    if {$key != {}} {
-		lappend samp(apps,image) [list $key [SAMPGetAppName $key]]
-	    }
-	}
-    }
-
-    # table fits
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string table.load.fits"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
-    
-    set samp(apps,table) {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    if {$key != {}} {
-		lappend samp(apps,table) [list $key [SAMPGetAppName $key]]
-	    }
-	}
-    }
-
-    # votable
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string table.load.votable"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
-    
-    set samp(apps,votable) {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    if {$key != {}} {
-		lappend samp(apps,votable) [list $key [SAMPGetAppName $key]]
-	    }
-	}
-    }
-
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPUpdate: image apps: $samp(apps,image)"
-	puts stderr "SAMPUpdate: table apps: $samp(apps,table)"
-	puts stderr "SAMPUpdate: votable apps: $samp(apps,votable)"
-    }
-
-    UpdateFileMenu
-    UpdateCATDialog
 }
 
 proc SAMPSend {method params resultVar} {
@@ -1142,6 +1051,48 @@ proc SAMPParseHub {} {
     return 1
 }
 
+proc SAMPGetAppsImage {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions image.load.fits] {
+	lappend [list $cc $samp($cc,name)]
+    }
+    return $ll
+}
+
+proc SAMPGetAppsTable {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions table.load.fits] {
+	lappend [list $cc $samp($cc,name)]
+    }
+    return $ll
+}
+
+proc SAMPGetAppsVOTable {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions votable.load.fits] {
+	lappend [list $cc $samp($cc,name)]
+    }
+    return $ll
+}
+
+proc SAMPGetAppsSubscriptions {mtype} {
+    global samp
+
+    set ll {}
+    foreach cc $samp(clients) {
+	if {[lsearch $samp($cc,subscriptions) $mtype]>=0} {
+	    lappend ll $cc
+	}
+    }
+    return $ll
+}
+
 proc SAMPGetAppName {id} {
     global samp
 
@@ -1233,7 +1184,8 @@ proc SAMPRcvdEventUnregister {varname} {
 	}
     }
 
-    SAMPUpdate
+    UpdateFileMenu
+    UpdateCATDialog
 }
 
 proc SAMPRcvdEventMetadata {varname} {
@@ -1304,6 +1256,9 @@ proc SAMPRcvdEventSubscriptions {varname} {
     if {$id != {}} {
 	set samp($id,subscriptions) $subs
     }
+
+    UpdateFileMenu
+    UpdateCATDialog
 }
 
 proc SAMPRcvdDisconnect {varname} {
@@ -1735,7 +1690,6 @@ proc ProcessSAMPCmd {varname iname} {
 
     # we need to be realized
     ProcessRealizeDS9
-    SAMPUpdate
 
     samp::YY_FLUSH_BUFFER
     samp::yy_scan_string [lrange $var $i end]
@@ -1757,7 +1711,7 @@ proc SAMPCmdSendImage {name} {
     global samp
 
     if {[info exists samp]} {
-	foreach arg $samp(apps,image) {
+	foreach arg [SAMPGetAppsImage] {
 	    foreach {key val} $arg {
 		if {[string tolower $val] == $name} {
 		    SAMPSendImageLoadFits $key
@@ -1774,7 +1728,7 @@ proc SAMPCmdSendTable {name} {
     global samp
 
     if {[info exists samp]} {
-	foreach arg $samp(apps,table) {
+	foreach arg [SAMPGetAppsTable] {
 	    foreach {key val} $arg {
 		if {[string tolower $val] == $name} {
 		    SAMPSendTableLoadFits $key

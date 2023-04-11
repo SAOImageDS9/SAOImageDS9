@@ -1283,7 +1283,7 @@ proc UpdateFileMenuSAMP {} {
 	    if {[$mm.samp.image index end] >= $ss} {
 		$mm.samp.image delete $ss end
 	    }
-	    foreach args $samp(apps,image) {
+	    foreach args [SAMPGetAppsImage] {
 		foreach {id name} $args {
 		    $mm.samp.image add command -label $name \
 			-command "SAMPSendImageLoadFits $id"
@@ -1297,7 +1297,7 @@ proc UpdateFileMenuSAMP {} {
 	    if {[$mm.samp.table index end] >= $ss} {
 		$mm.samp.table delete $ss end
 	    }
-	    foreach args $samp(apps,table) {
+	    foreach args [SAMPGetAppsTable] {
 		foreach {id name} $args {
 		    $mm.samp.table add command -label $name \
 			-command "SAMPSendTableLoadFits $id"

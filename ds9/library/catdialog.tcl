@@ -572,7 +572,7 @@ proc CATDialogUpdate {varname} {
 	    $m.send delete $ss end
 	}
 
-	foreach args $samp(apps,votable) {
+	foreach args [SAMPGetAppsVOTable] {
 	    foreach {id name} $args {
 		$m.send add command -label $name \
 		    -command "SAMPSendTableLoadVotable $id $varname"

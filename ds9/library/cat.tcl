@@ -1083,7 +1083,7 @@ proc CatalogCmdSAMPSend {name} {
     }
 
     if {[info exists samp]} {
-	foreach arg $samp(apps,votable) {
+	foreach arg [SAMPGetAppsVOTable] {
 	    foreach {key val} $arg {
 		if {[string tolower $val] == $name} {
 		    SAMPSendTableLoadVotable $key $cvarname

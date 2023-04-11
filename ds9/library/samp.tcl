@@ -1090,7 +1090,7 @@ proc SAMPGetAppsVOTable {} {
     global samp
 
     set ll {}
-    foreach cc [SAMPGetAppsSubscriptions votable.load.fits] {
+    foreach cc [SAMPGetAppsSubscriptions table.load.votable] {
 	lappend ll [list $cc $samp($cc,name)]
     }
     return $ll

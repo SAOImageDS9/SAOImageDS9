@@ -1201,16 +1201,13 @@ proc SAMPRcvdEventRegister {varname} {
 	foreach {key val} $arg {
 	    switch -- $key {
 		id {
-		    # check to see if its just us
-		    if {$samp(self) == $val} {
-			return
-		    }
+		    lappend samp(clients) $val
+		    set samp($val,subscriptions) {}
+		    set samp($val,name) {}
 		}
 	    }
 	}
     }
-
-#    SAMPUpdate
 }
 
 proc SAMPRcvdEventUnregister {varname} {
@@ -1227,10 +1224,10 @@ proc SAMPRcvdEventUnregister {varname} {
 	foreach {key val} $arg {
 	    switch -- $key {
 		id {
-		    # check to see if its just us
-		    if {$samp(self) == $val} {
-			return
-		    }
+		    set id [lsearch $samp(clients) $val]
+		    set samp(clients) [lreplace $samp(clients) $id $id]
+		    unset samp($val,subscriptions)
+		    unset samp($val,name)
 		}
 	    }
 	}
@@ -1249,11 +1246,11 @@ proc SAMPRcvdEventMetadata {varname} {
 	puts stderr "SAMPRcvdEventMetadata: $args"
     }
 
-    # we really don't care about metadata except for samp.name
     set id {}
     set name {}
     foreach arg $args {
 	foreach {key val} $arg {
+	    puts "***$key $val"
 	    switch -- $key {
 		id {
 		    set id $val
@@ -1270,8 +1267,8 @@ proc SAMPRcvdEventMetadata {varname} {
 	    }
 	}
     }
-
-    if {$id != {} && $name != {}} {
+    
+    if {$id != {}} {
 	set samp($id,name) $name
     }
 }
@@ -1286,14 +1283,13 @@ proc SAMPRcvdEventSubscriptions {varname} {
 	puts stderr "SAMPRcvdEventSubscriptions: $args"
     }
 
-    foreach arg $args {
+    # id is last
+    set cc [lindex [lindex $args 1] 1]
+
+    set samp($cc,subscriptions) {}
+    foreach arg [lindex [lindex $args 0] 1] {
 	foreach {key val} $arg {
-	    switch -- $key {
-		id {
-		}
-		metadata {
-		}
-	    }
+	    lappend samp($cc,subscriptions) $key
 	}
     }
 }

@@ -30,6 +30,7 @@ proc SAMPConnect {verbose} {
     if {[info exists samp]} {
 	unset samp
     }
+    set samp(clients) {}
     set samp(apps,image) {}
     set samp(apps,table) {}
     set samp(apps,votable) {}
@@ -167,6 +168,35 @@ proc SAMPConnect {verbose} {
 	    unset samp
 	}
 	return
+    }
+
+    # get current client info
+    set params [list "string $samp(private)"]
+    set rr {}
+    if {![SAMPSend {samp.hub.getRegisteredClients} $params rr]} {
+	Error "SAMP: [msgcat::mc {internal error}] $rr"
+	return
+    }
+    set samp(clients) [lindex $rr 1]
+
+    foreach cc $samp(clients) {
+	set param1 [list "string $samp(private)"]
+	set param2 [list "string $cc"]
+	set params "$param1 $param2" 
+	set rr {}
+	if {![SAMPSend {samp.hub.getSubscriptions} $params rr]} {
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	}
+	
+	foreach ss [lindex $rr 1] {
+	    foreach {aa bb} $ss {
+		lappend samp($cc,subscriptions) $aa
+	    }
+	}
+
+	set samp($cc,name) [SAMPGetAppName $cc]
     }
 
     SAMPUpdate

@@ -1250,7 +1250,6 @@ proc SAMPRcvdEventMetadata {varname} {
     set name {}
     foreach arg $args {
 	foreach {key val} $arg {
-	    puts "***$key $val"
 	    switch -- $key {
 		id {
 		    set id $val
@@ -1283,14 +1282,27 @@ proc SAMPRcvdEventSubscriptions {varname} {
 	puts stderr "SAMPRcvdEventSubscriptions: $args"
     }
 
-    # id is last
-    set cc [lindex [lindex $args 1] 1]
-
-    set samp($cc,subscriptions) {}
-    foreach arg [lindex [lindex $args 0] 1] {
+    set id {}
+    set subs {}
+    foreach arg $args {
 	foreach {key val} $arg {
-	    lappend samp($cc,subscriptions) $key
+	    switch -- $key {
+		id {
+		    set id $val
+		}
+		subscriptions {
+		    foreach aa $val {
+			foreach {bb cc} $aa {
+			    lappend subs $bb
+			}
+		    }
+		}
+	    }
 	}
+    }
+    
+    if {$id != {}} {
+	set samp($id,subscriptions) $subs
     }
 }
 

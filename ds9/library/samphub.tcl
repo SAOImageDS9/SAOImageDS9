@@ -640,8 +640,6 @@ proc samp.hub.getRegisteredClients {args} {
     }
 
     catch {unset samphubmap}
-    catch {unset samphubmap2}
-    set samphubmap2(x-samp.mostly-harmless) {int 1}
     set rr {}
     foreach cc $ll {
 	set samphubmap($cc) {struct samphubmap2}
@@ -685,8 +683,6 @@ proc samp.hub.getSubscribedClients {args} {
     }
 
     catch {unset samphubmap}
-    catch {unset samphubmap2}
-    set samphubmap2(x-samp.mostly-harmless) {int 1}
     foreach cc $ll {
 	set samphubmap($cc) {struct samphubmap2}
     }

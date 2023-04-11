@@ -147,11 +147,6 @@ proc SAMPConnect {verbose} {
 
     set sampmap(ds9.get) {struct mapDS9Get}
     set sampmap(ds9.set) {struct mapDS9Set}
-    set sampmap(ds9.restricted-get) {struct sampmap2}
-    set sampmap(ds9.restricted-set) {struct sampmap2}
-
-    catch {unset sampmap2}
-    set sampmap2(x-samp.mostly-harmless) {string "1"}
 
     set param1 [list "string $samp(private)"]
     set param2 [list "struct sampmap"]

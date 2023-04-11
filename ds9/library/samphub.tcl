@@ -89,10 +89,10 @@ proc SAMPHubStart {verbose} {
     set secret 0
     set samphub($secret,id) {hub}
     set samphub($secret,url) {}
-    set samphub($secret,subscription) {}
-    set samphub($secret,subscription) {{samp.hub.ping}}
+    set samphub($secret,subscriptions) {}
+    set samphub($secret,subscriptions) {{samp.hub.ping}}
     set samphub($secret,restriction) {}
-    set samphub($secret,meta) [list \
+    set samphub($secret,metadata) [list \
 				   [list samp.name "Hub"] \
 				   [list samp.description.text "SAOImageDS9 Internal Hub"] \
 				   [list samp.icon.url "http://ds9.si.edu/doc/sun.png"] \
@@ -245,9 +245,9 @@ proc SAMPHubRemove {secret} {
 
     unset samphub($secret,id)
     unset samphub($secret,url)
-    unset samphub($secret,subscription)
+    unset samphub($secret,subscriptions)
     unset samphub($secret,restriction)
-    unset samphub($secret,meta)
+    unset samphub($secret,metadata)
 }
 
 # procs
@@ -307,9 +307,9 @@ proc samp.hub.register {args} {
 
     set samphub($secret,id) $id
     set samphub($secret,url) {}
-    set samphub($secret,subscription) {}
+    set samphub($secret,subscriptions) {}
     set samphub($secret,restriction) {}
-    set samphub($secret,meta) {}
+    set samphub($secret,metadata) {}
 
     SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
     SAMPHubDialogListAdd $secret
@@ -323,7 +323,7 @@ proc samp.hub.register {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -393,7 +393,7 @@ proc samp.hub.unregister {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -444,7 +444,7 @@ proc samp.hub.declareMetadata {args} {
 
     foreach mm $map {
 	foreach {key val} $mm {
-	    lappend samphub($secret,meta) [list $key $val]
+	    lappend samphub($secret,metadata) [list $key $val]
 	}
     }
     
@@ -452,7 +452,7 @@ proc samp.hub.declareMetadata {args} {
     SAMPHubDialogListUpdate
 
     # update other clients
-    set mtype {samp.hub.event.declareMetadata}
+    set mtype {samp.hub.event.metadata}
     foreach cc $samphub(client,secret) {
 	# don't send to sender
 	if {$cc == $secret} {
@@ -460,7 +460,7 @@ proc samp.hub.declareMetadata {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -473,7 +473,7 @@ proc samp.hub.declareMetadata {args} {
 	set samphubmap2(metadata) {struct samphubmap3}
 
 	catch {unset samphubmap3}
-	foreach mm $samphub($secret,meta) {
+	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
 		set samphubmap3($key) "string \"[XMLQuote $val]\""
 	    }
@@ -519,7 +519,7 @@ proc samp.hub.getMetadata {args} {
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
 	    catch {unset samphubmap}
-	    foreach mm $samphub($cc,meta) {
+	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
 		    set samphubmap($key) "string \"$val\""
 		    append rr "samphubmap($key) "
@@ -554,18 +554,18 @@ proc samp.hub.declareSubscriptions {args} {
 
     foreach mm $map {
 	foreach {ss rr} $mm {
-	    lappend samphub($secret,subscription) $ss
+	    lappend samphub($secret,subscriptions) $ss
 	    lappend samphub($secret,restriction) $rr
 	}
     }
 
     # make it pretty
-    set samphub($secret,subscription) [lsort $samphub($secret,subscription)]
+    set samphub($secret,subscriptions) [lsort $samphub($secret,subscriptions)]
 
     SAMPHubDialogListUpdate
 
     # update other clients
-    set mtype {samp.hub.event.declareSubscription}
+    set mtype {samp.hub.event.subscriptions}
     foreach cc $samphub(client,secret) {
 	# don't send to sender
 	if {$cc == $secret} {
@@ -573,7 +573,7 @@ proc samp.hub.declareSubscriptions {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -583,10 +583,10 @@ proc samp.hub.declareSubscriptions {args} {
 
 	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
-	set samphubmap2(metadata) {struct samphubmap3}
+	set samphubmap2(subscriptions) {struct samphubmap3}
 
 	catch {unset samphubmap3}
-	foreach mm $samphub($secret,meta) {
+	foreach mm $samphub($secret,subscriptions) {
 	    foreach {key val} $mm {
 		set samphubmap3($key) "string \"[XMLQuote $val]\""
 	    }
@@ -676,7 +676,7 @@ proc samp.hub.getSubscribedClients {args} {
 	    continue
 	}
 
-	foreach ss $samphub($cc,subscription) {
+	foreach ss $samphub($cc,subscriptions) {
 	    if {$ss == $map} {
 		lappend ll $samphub($cc,id)
 		break
@@ -737,7 +737,7 @@ proc samp.hub.notify {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -809,7 +809,7 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -889,7 +889,7 @@ proc samp.hub.call {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -966,7 +966,7 @@ proc samp.hub.callAll {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 
@@ -1048,7 +1048,7 @@ proc samp.hub.callAndWait {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscription) $mtype]<0} {
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
 	    continue
 	}
 

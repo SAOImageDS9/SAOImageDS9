@@ -116,7 +116,7 @@ proc SAMPHubDialogClient {client} {
     # Metadata
     set mm [ttk::labelframe $f.meta -text [msgcat::mc {Metadata}]]
 
-    set dsamphub(client,meta,txt) $mm.txt
+    set dsamphub(client,metadata,txt) $mm.txt
     roText::roText $mm.txt
 
     $mm.txt configure \
@@ -142,7 +142,7 @@ proc SAMPHubDialogClient {client} {
     # Subscriptions
     set ss [ttk::labelframe $f.sub -text [msgcat::mc {Subscriptions}]]
 
-    set dsamphub(client,subscription,txt) $ss.txt
+    set dsamphub(client,subscriptions,txt) $ss.txt
     roText::roText $ss.txt
 
     $ss.txt configure \
@@ -248,7 +248,7 @@ proc SAMPHubDialogListAdd {secret} {
     }
 
     set name $samphub($secret,id)
-    foreach mm $samphub($secret,meta) {
+    foreach mm $samphub($secret,metadata) {
        foreach {key val} $mm {
            switch $key {
                samp.name {set name $val}
@@ -327,7 +327,7 @@ proc SAMPHubDialogMetaUpdate {secret} {
     }
 
     set name $samphub($secret,id)
-    foreach mm $samphub($secret,meta) {
+    foreach mm $samphub($secret,metadata) {
        foreach {key val} $mm {
            switch $key {
                samp.name {set name $val}
@@ -348,24 +348,24 @@ proc SAMPHubDialogListUpdate {} {
     }
 
     set dsamphub(client,reg) {}
-    $dsamphub(client,meta,txt) delete 1.0 end
-    $dsamphub(client,subscription,txt) delete 1.0 end
+    $dsamphub(client,metadata,txt) delete 1.0 end
+    $dsamphub(client,subscriptions,txt) delete 1.0 end
 
     set secret [$dsamphub(listbox) selection]
     if {$secret != {}} {
 	set dsamphub(client,reg) $samphub($secret,id)
-	foreach mm $samphub($secret,meta) {
+	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
-		$dsamphub(client,meta,txt) insert end "$key\t$val\n"
+		$dsamphub(client,metadata,txt) insert end "$key\t$val\n"
 	    }
 	}
-	foreach ss $samphub($secret,subscription) {
-	    $dsamphub(client,subscription,txt) insert end "$ss\n"
+	foreach ss $samphub($secret,subscriptions) {
+	    $dsamphub(client,subscriptions,txt) insert end "$ss\n"
 	}
     }
 
-    $dsamphub(client,meta,txt) see end
-    $dsamphub(client,subscription,txt) see end
+    $dsamphub(client,metadata,txt) see end
+    $dsamphub(client,subscriptions,txt) see end
 
     set w $isamphub(top)
     set mb $isamphub(mb)

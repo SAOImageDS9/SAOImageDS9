@@ -1180,7 +1180,7 @@ proc SAMPRcvdEventRegister {varname} {
 	}
     }
 
-    SAMPUpdate
+#    SAMPUpdate
 }
 
 proc SAMPRcvdEventUnregister {varname} {
@@ -1219,20 +1219,31 @@ proc SAMPRcvdEventMetadata {varname} {
 	puts stderr "SAMPRcvdEventMetadata: $args"
     }
 
+    # we really don't care about metadata except for samp.name
+    set id {}
+    set name {}
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
 		id {
-		    # check to see if its just us
-		    if {$samp(self) == $val} {
-			return
+		    set id $val
+		}
+		metadata {
+		    foreach aa $val {
+			foreach {bb cc} $aa {
+			    if {$bb == {samp.name}} {
+				set name $cc
+			    }
+			}
 		    }
 		}
 	    }
 	}
     }
 
-#    SAMPUpdate
+    if {$id != {} && $name != {}} {
+	set samp($id,name) $name
+    }
 }
 
 proc SAMPRcvdEventSubscriptions {varname} {
@@ -1249,16 +1260,12 @@ proc SAMPRcvdEventSubscriptions {varname} {
 	foreach {key val} $arg {
 	    switch -- $key {
 		id {
-		    # check to see if its just us
-		    if {$samp(self) == $val} {
-			return
-		    }
+		}
+		metadata {
 		}
 	    }
 	}
     }
-
-#    SAMPUpdate
 }
 
 proc SAMPRcvdDisconnect {varname} {

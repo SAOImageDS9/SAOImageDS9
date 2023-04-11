@@ -1275,36 +1275,39 @@ proc UpdateFileMenuSAMP {} {
 	return
     }
     
-    if {[info exists samp]} {
-	if {[$current(frame) has fits]} {
-	    set ss [expr $ds9(menu,start)+2]
+    if {![info exists samp]} {
+	return
+    }
+    
+    if {[$current(frame) has fits]} {
+	set ss [expr $ds9(menu,start)+2]
 
-	    $mm.samp entryconfig [msgcat::mc {Image}] -state normal
-	    if {[$mm.samp.image index end] >= $ss} {
-		$mm.samp.image delete $ss end
-	    }
-	    foreach args [SAMPGetAppsImage] {
-		foreach {id name} $args {
-		    $mm.samp.image add command -label $name \
-			-command "SAMPSendImageLoadFits $id"
-		}
-	    }
-	    $bb.sampimage configure -state normal
+	$mm.samp entryconfig [msgcat::mc {Image}] -state normal
+	if {[$mm.samp.image index end] >= $ss} {
+	    $mm.samp.image delete $ss end
 	}
 
-	if {[$current(frame) has fits bin]} {
-	    $mm.samp entryconfig [msgcat::mc {Table}] -state normal
-	    if {[$mm.samp.table index end] >= $ss} {
-		$mm.samp.table delete $ss end
+	foreach args [SAMPGetAppsImage] {
+	    foreach {id name} $args {
+		$mm.samp.image add command -label $name \
+		    -command "SAMPSendImageLoadFits $id"
 	    }
-	    foreach args [SAMPGetAppsTable] {
-		foreach {id name} $args {
-		    $mm.samp.table add command -label $name \
-			-command "SAMPSendTableLoadFits $id"
-		}
-	    }
-	    $bb.samptable configure -state normal
 	}
+	$bb.sampimage configure -state normal
+    }
+
+    if {[$current(frame) has fits bin]} {
+	$mm.samp entryconfig [msgcat::mc {Table}] -state normal
+	if {[$mm.samp.table index end] >= $ss} {
+	    $mm.samp.table delete $ss end
+	}
+	foreach args [SAMPGetAppsTable] {
+	    foreach {id name} $args {
+		$mm.samp.table add command -label $name \
+		    -command "SAMPSendTableLoadFits $id"
+	    }
+	}
+	$bb.samptable configure -state normal
     }
 }
 

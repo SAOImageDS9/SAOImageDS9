@@ -187,17 +187,32 @@ proc SAMPConnect {verbose} {
 	    }
 	}
 	
-	foreach ss [lindex $rr 1] {
-	    foreach {aa bb} $ss {
-		lappend samp($cc,subscriptions) $aa
+	foreach arg [lindex $rr 1] {
+	    foreach {key val} $arg {
+		lappend samp($cc,subscriptions) $key
 	    }
 	}
 
-	set samp($cc,name) [SAMPGetAppName $cc]
+	set param1 [list "string $samp(private)"]
+	set param2 [list "string $cc"]
+	set params "$param1 $param2" 
+	set rr {}
+	if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    return
+	}
+
+	foreach arg [lindex $rr 1] {
+	    foreach {key val} $arg {
+		switch -- $key {
+		    samp.name {set samp($cc,name) [XMLUnQuote $val]}
+		}
+	    }
+	}
     }
 
-    UpdateFileMenu
-    UpdateCATDialog
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 proc SAMPDisconnect {verbose} {
@@ -220,8 +235,8 @@ proc SAMPDisconnect {verbose} {
 	SAMPShutdown
     }
 
-    UpdateFileMenu
-    UpdateCATDialog
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 proc SAMPSendImageLoadFits {id} {
@@ -1056,7 +1071,7 @@ proc SAMPGetAppsImage {} {
 
     set ll {}
     foreach cc [SAMPGetAppsSubscriptions image.load.fits] {
-	lappend [list $cc $samp($cc,name)]
+	lappend ll [list $cc $samp($cc,name)]
     }
     return $ll
 }
@@ -1066,7 +1081,7 @@ proc SAMPGetAppsTable {} {
 
     set ll {}
     foreach cc [SAMPGetAppsSubscriptions table.load.fits] {
-	lappend [list $cc $samp($cc,name)]
+	lappend ll [list $cc $samp($cc,name)]
     }
     return $ll
 }
@@ -1076,7 +1091,7 @@ proc SAMPGetAppsVOTable {} {
 
     set ll {}
     foreach cc [SAMPGetAppsSubscriptions votable.load.fits] {
-	lappend [list $cc $samp($cc,name)]
+	lappend ll [list $cc $samp($cc,name)]
     }
     return $ll
 }
@@ -1093,35 +1108,6 @@ proc SAMPGetAppsSubscriptions {mtype} {
     return $ll
 }
 
-proc SAMPGetAppName {id} {
-    global samp
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPGetAppName: $id"
-    }
-
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string $id"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
-
-    set name {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    switch -- $key {
-		samp.name {set name [XMLUnQuote $val]}
-	    }
-	}
-    }
-
-    return $name
-}
-
 # CallBacks
 # Hub
 
@@ -1134,8 +1120,9 @@ proc SAMPRcvdEventShutdown {varname} {
     }
 
     SAMPShutdown
-    UpdateFileMenu
-    UpdateCATDialog
+
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 proc SAMPRcvdEventRegister {varname} {
@@ -1184,8 +1171,8 @@ proc SAMPRcvdEventUnregister {varname} {
 	}
     }
 
-    UpdateFileMenu
-    UpdateCATDialog
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 proc SAMPRcvdEventMetadata {varname} {
@@ -1222,6 +1209,9 @@ proc SAMPRcvdEventMetadata {varname} {
     if {$id != {}} {
 	set samp($id,name) $name
     }
+
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 proc SAMPRcvdEventSubscriptions {varname} {
@@ -1257,8 +1247,8 @@ proc SAMPRcvdEventSubscriptions {varname} {
 	set samp($id,subscriptions) $subs
     }
 
-    UpdateFileMenu
-    UpdateCATDialog
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 proc SAMPRcvdDisconnect {varname} {
@@ -1281,7 +1271,7 @@ proc SAMPRcvdDisconnect {varname} {
 
     SAMPShutdown
     UpdateFileMenu
-    UpdateCATDialog
+    UpdateCATDialogSAMP
 }
 
 # HTTPClient

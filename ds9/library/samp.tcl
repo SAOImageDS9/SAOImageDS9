@@ -91,9 +91,6 @@ proc SAMPConnect {verbose} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	if {[info exists samp]} {
-	    unset samp
-	}
 	return
     }
 
@@ -109,9 +106,6 @@ proc SAMPConnect {verbose} {
     if {![SAMPSend {samp.hub.setXmlrpcCallback} $params rr]} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
-	if {[info exists samp]} {
-	    unset samp
 	}
 	return
     }
@@ -156,9 +150,6 @@ proc SAMPConnect {verbose} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	if {[info exists samp]} {
-	    unset samp
-	}
 	return
     }
 
@@ -166,7 +157,9 @@ proc SAMPConnect {verbose} {
     set params [list "string $samp(private)"]
     set rr {}
     if {![SAMPSend {samp.hub.getRegisteredClients} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
+  	if {$verbose} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
 	return
     }
     set samp(clients) [lindex $rr 1]
@@ -180,6 +173,7 @@ proc SAMPConnect {verbose} {
 	    if {$verbose} {
 		Error "SAMP: [msgcat::mc {internal error}] $rr"
 	    }
+	    return
 	}
 	
 	foreach arg [lindex $rr 1] {
@@ -193,7 +187,9 @@ proc SAMPConnect {verbose} {
 	set params "$param1 $param2" 
 	set rr {}
 	if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
 	    return
 	}
 
@@ -216,7 +212,9 @@ proc SAMPDisconnect {verbose} {
 
     # connected?
     if {![info exists samp]} {
-	Error "SAMP: [msgcat::mc {not connected}]"
+	if {$verbose} {
+	    Error "SAMP: [msgcat::mc {not connected}]"
+	}
 	return
     }
 
@@ -225,7 +223,10 @@ proc SAMPDisconnect {verbose} {
 	set params [list "string $samp(private)"]
 	set rr {}
 	if {![SAMPSend {samp.hub.unregister} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	    return
 	}
 	SAMPShutdown
     }
@@ -1201,9 +1202,17 @@ proc SAMPRcvdEventMetadata {varname} {
 	}
     }
     
-    if {$id != {}} {
-	set samp($id,name) $name
+    # should not happen
+    if {$id == {}} {
+	return
     }
+
+    # just ignore if ourself
+    if {$id == $samp(self)}  {
+	return
+    }
+
+    set samp($id,name) $name
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP
@@ -1238,9 +1247,17 @@ proc SAMPRcvdEventSubscriptions {varname} {
 	}
     }
     
-    if {$id != {}} {
-	set samp($id,subscriptions) $subs
+    # should not happen
+    if {$id == {}} {
+	return
     }
+
+    # just ignore if ourself
+    if {$id == $samp(self)}  {
+	return
+    }
+
+    set samp($id,subscriptions) $subs
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP

@@ -201,6 +201,7 @@ proc buildResponse {result} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
 
+    puts "aa:***$body***"
     set response "$header\n$body"
     return $response
     #return [string trim $response]
@@ -279,6 +280,7 @@ proc xmlrpc::getResponse {sock} {
 
     set header [parseHTTPCode $headerStatus]
     set body [getBody $sock $header $body]
+    puts "bb:***$body***"
     set response [parseResponse $body]
     set readdone 1
 }
@@ -551,7 +553,8 @@ proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
 	append	str "$strtabs\t<array>\n"
 	append	str "$strtabs\t\t<data>\n"
 	foreach el $val {
-	    append	str [marshall $el [expr $ntabs + 3] [expr $distance + 1]]
+#	    append	str [marshall $el [expr $ntabs + 3] [expr $distance + 1]]
+	    append	str "\t\t\t\t\t\t<value>$el</value>"
 	    append	str "\n"
 	}
 	append	str "$strtabs\t\t</data>\n"

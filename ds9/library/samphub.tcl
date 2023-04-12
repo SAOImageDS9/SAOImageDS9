@@ -639,14 +639,7 @@ proc samp.hub.getRegisteredClients {args} {
 	lappend ll $samphub($cc,id)
     }
 
-    catch {unset samphubmap}
-    set rr {}
-    foreach cc $ll {
-	set samphubmap($cc) {struct samphubmap2}
-	append rr "$samphubmap($cc) "
-    }
-
-    return "struct samphubmap"
+    return "array $ll"
 }
 
 proc samp.hub.getSubscribedClients {args} {

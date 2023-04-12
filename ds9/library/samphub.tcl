@@ -857,6 +857,7 @@ proc samp.hub.notifyAll {args} {
 	}
     }
 
+    set ll {}
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == 0} {
@@ -897,9 +898,10 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	lappend ll $samphub($cc,id)
     }
 
-    return {string OK}
+    return "array $ll"
 }
 
 proc samp.hub.call {args} {

@@ -515,14 +515,12 @@ proc samp.hub.getMetadata {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
 
-    set rr {}
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
 	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
 		    set samphubmap($key) "string \"$val\""
-		    append rr "samphubmap($key) "
 		}
 	    }
 	    return "struct samphubmap"
@@ -608,6 +606,40 @@ proc samp.hub.declareSubscriptions {args} {
     }
 
     return {string OK}
+}
+
+proc samp.hub.getSubscriptions {args} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts "samp.hub.getSubscriptions: $args"
+    }
+
+    set secret [lindex $args 0]
+    set id [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+
+    SAMPHubDialogRecvdMsg "samp.hub.getSubscriptions\t$samphub($secret,id)"
+
+    foreach cc $samphub(client,secret) {
+	if {$samphub($cc,id) == $id} {
+	    catch {unset samphubmap}
+	    foreach mm $samphub($cc,subscriptions) {
+		foreach {key val} $mm {
+		    set samphubmap($key) "string \"$val\""
+		}
+	    }
+	    return "struct samphubmap"
+	}
+    }
+
+    return {string ERROR}
 }
 
 proc samp.hub.getRegisteredClients {args} {
@@ -1140,7 +1172,7 @@ proc samp.hub.reply {args} {
 # samp.hub.getMetadata $id
 # samp.hub.declareSubscriptions
 # samp.hub.getSubscriptions $id
-# samp.hub.getSubscribedClients
+# samp.hub.getRegisteredClients
 # samp.hub.getSubscribedClients(mtype)
 # samp.hub.notify $id
 # samp.hub.notifyAll

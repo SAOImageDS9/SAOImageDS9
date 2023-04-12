@@ -87,9 +87,9 @@ proc SAMPHubStart {verbose} {
     close $ch
 
     set secret 0
+    lappend samphub(client,secret) $secret
     set samphub($secret,id) {hub}
     set samphub($secret,url) {}
-    set samphub($secret,subscriptions) {}
     set samphub($secret,subscriptions) {{samp.hub.ping}}
     set samphub($secret,restriction) {}
     set samphub($secret,metadata) [list \
@@ -120,6 +120,11 @@ proc SAMPHubStop {verbose} {
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
@@ -238,6 +243,11 @@ proc SAMPHubRemove {secret} {
 	puts stderr "SAMPHubRemove: $secret"
     }
 
+    # should not happen
+    if {$secret == 0} {
+	return
+    }
+
     SAMPHubDialogListRemove $secret
     
     set id [lsearch $samphub(client,secret) $secret]
@@ -317,6 +327,11 @@ proc samp.hub.register {args} {
     # update other clients
     set mtype {samp.hub.event.register}
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	# don't send to sender
 	if {$cc == $secret} {
 	    continue
@@ -387,6 +402,11 @@ proc samp.hub.unregister {args} {
     # update other clients
     set mtype {samp.hub.event.unregister}
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	# don't send to sender
 	if {$cc == $secret} {
 	    continue
@@ -454,6 +474,11 @@ proc samp.hub.declareMetadata {args} {
     # update other clients
     set mtype {samp.hub.event.metadata}
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	# don't send to sender
 	if {$cc == $secret} {
 	    continue
@@ -565,6 +590,11 @@ proc samp.hub.declareSubscriptions {args} {
     # update other clients
     set mtype {samp.hub.event.subscriptions}
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	# don't send to sender
 	if {$cc == $secret} {
 	    continue
@@ -661,8 +691,7 @@ proc samp.hub.getRegisteredClients {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getRegisteredClients\t$samphub($secret,id)"
 
-    # start with hub
-    set ll {hub}
+    set ll {}
     foreach cc $samphub(client,secret) {
 	if {$cc == $secret} {
 	    continue
@@ -747,6 +776,11 @@ proc samp.hub.notify {args} {
     }
 
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	if {$samphub($cc,id) != $id} {
 	    continue
 	}
@@ -824,6 +858,11 @@ proc samp.hub.notifyAll {args} {
     }
 
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	# don't send to sender
 	if {$cc == $secret} {
 	    continue
@@ -899,6 +938,11 @@ proc samp.hub.call {args} {
     }
 
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	if {$samphub($cc,id) != $id} {
 	    continue
 	}
@@ -981,6 +1025,11 @@ proc samp.hub.callAll {args} {
     }
 
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	# don't send to sender
 	if {$cc == $secret} {
 	    continue
@@ -1058,6 +1107,11 @@ proc samp.hub.callAndWait {args} {
     }
 
     foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == 0} {
+	    continue
+	}
+
 	if {$samphub($cc,id) != $id} {
 	    continue
 	}

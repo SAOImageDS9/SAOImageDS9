@@ -116,7 +116,6 @@ proc xmlrpc::doRequest {sock} {
     }
 
     set body [getBody $sock $header $body]
-    puts "***doRequest:$body***"
 
     set	RE "<\?xml.version=.";			# xml version
     append	RE "\[^\?\]+.\?>$WS*";			# version number
@@ -202,7 +201,6 @@ proc buildResponse {result} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
 
-    puts "***buildResponse:$body***"
     set response "$header\n$body"
     return $response
     #return [string trim $response]
@@ -281,7 +279,6 @@ proc xmlrpc::getResponse {sock} {
 
     set header [parseHTTPCode $headerStatus]
     set body [getBody $sock $header $body]
-    puts "***getResponse:$body***"
     set response [parseResponse $body]
     set readdone 1
 }
@@ -313,7 +310,6 @@ proc xmlrpc::readHeader {sock} {
     set buffer ""
     while {1} {
 	if {[catch {set buff [nbRead $sock]}]} {
-	    puts aa
 	    return [errReturn "Premature eof"]
 	}
 	append buffer $buff
@@ -345,7 +341,6 @@ proc xmlrpc::readBody {body expLen sock} {
     set newbody $body
     while {1} {
 	if {[catch {set buff [nbRead $sock]}]} {
-	    puts bb
 	    return [errReturn "Premature eof"]
 	}
 	append newbody $buff
@@ -498,7 +493,6 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
 #    set header [regsub -all "\n" $header "\r\n"]
 
 #    set request "$header\r\n$body"
-    puts "***buildRequest:$body***"
     set request "$header\n$body"
     return $request
 }
@@ -558,7 +552,7 @@ proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
 	append	str "$strtabs\t\t<data>\n"
 	foreach el $val {
 #	    append	str [marshall $el [expr $ntabs + 3] [expr $distance + 1]]
-	    append	str "\t\t\t\t\t\t<value>$el</value>"
+	    append	str "<value>$el</value>"
 	    append	str "\n"
 	}
 	append	str "$strtabs\t\t</data>\n"

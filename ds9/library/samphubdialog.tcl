@@ -71,7 +71,6 @@ proc SAMPHubDialog {} {
 
     # hub already running?
     if {[info exists samphub]} {
-	SAMPHubDialogListAdd 0
 	foreach ss $samphub(client,secret) {
 	    SAMPHubDialogListAdd $ss
 	}

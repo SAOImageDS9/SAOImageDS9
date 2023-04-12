@@ -700,7 +700,7 @@ proc samp.hub.getRegisteredClients {args} {
 	lappend ll $samphub($cc,id)
     }
 
-    return "array $ll"
+    return "array [list $ll]"
 }
 
 proc samp.hub.getSubscribedClients {args} {
@@ -901,7 +901,7 @@ proc samp.hub.notifyAll {args} {
 	lappend ll $samphub($cc,id)
     }
 
-    return "array $ll"
+    return "array [list $ll]"
 }
 
 proc samp.hub.call {args} {

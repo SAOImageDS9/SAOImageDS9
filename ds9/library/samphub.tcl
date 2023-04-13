@@ -1158,28 +1158,18 @@ proc samp.hub.callAndWait {args} {
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
 
-	puts aa
 	catch {unset samphubmap2}
-	puts bb
 	foreach mm $params {
-	    puts $mm
 	    foreach {key val} $mm {
 		set samphubmap2($key) "string \"[XMLQuote $val]\""
 	    }
 	}
-	puts [array get samphubmap2]
 
-	puts aa
 	set param1 [list "string $cc"]
-	puts bb
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	puts cc
 	set param3 [list "string foo-$samphub($secret,id)"]
-	puts dd
 	set param4 [list "struct samphubmap"]
-	puts ee
 	set params "$param1 $param2 $param3 $param4"
-	puts ff
 	
 	set rr {}
 	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
@@ -1187,7 +1177,6 @@ proc samp.hub.callAndWait {args} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
 	}
-	puts cc
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
 
 	if {[string is integer $timeout]} {
@@ -1227,9 +1216,7 @@ proc samp.hub.reply {args} {
     }
 
     # is this callAndWait?
-    puts yyy
     if {[info exists samphub(timeout)]} {
-	puts zzz
 	set samphub(timeout) ok
     }
 

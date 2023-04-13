@@ -131,6 +131,11 @@ proc SAMPHubStop {verbose} {
 	    continue
 	}
 
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	    continue
+	}
+
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
@@ -216,6 +221,11 @@ proc SAMPHubDisconnect {secret} {
     global samphubmap2
 
     set mtype {samp.hub.disconnect}
+
+    # are we subscribed
+    if {[lsearch $samphub($secret,subscriptions) $mtype]<0} {
+	continue
+    }
 
     catch {unset samphubmap}
     set samphubmap(samp.mtype) "string $mtype"

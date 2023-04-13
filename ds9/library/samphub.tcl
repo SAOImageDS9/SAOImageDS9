@@ -220,6 +220,11 @@ proc SAMPHubDisconnect {secret} {
     global samphubmap
     global samphubmap2
 
+    # ignore hub
+    if {$secret == $samphub(secret)} {
+	return
+    }
+
     set mtype {samp.hub.disconnect}
 
     # are we subscribed

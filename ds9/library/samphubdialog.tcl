@@ -295,12 +295,12 @@ proc SAMPHubDialogUpdate {} {
 	puts stderr "SAMPHubDialogUpdate"
     }
 
-    set w $isamphub(top)
-    set mb $isamphub(mb)
-
     if {![winfo exists $isamphub(top)]} {
 	return
     }
+
+    set w $isamphub(top)
+    set mb $isamphub(mb)
 
     if {[info exists samphub]} {
 	$mb.file entryconfig [msgcat::mc {Start}] -state disabled
@@ -346,6 +346,9 @@ proc SAMPHubDialogListUpdate {} {
 	return
     }
 
+    set w $isamphub(top)
+    set mb $isamphub(mb)
+
     set dsamphub(client,reg) {}
     $dsamphub(client,metadata,txt) delete 1.0 end
     $dsamphub(client,subscriptions,txt) delete 1.0 end
@@ -361,21 +364,23 @@ proc SAMPHubDialogListUpdate {} {
 	foreach ss $samphub($secret,subscriptions) {
 	    $dsamphub(client,subscriptions,txt) insert end "$ss\n"
 	}
-    }
 
-    $dsamphub(client,metadata,txt) see end
-    $dsamphub(client,subscriptions,txt) see end
+	# hub?
+	if {$secret == $samphub(secret)} {
+	    $mb.file entryconfig [msgcat::mc {Disconnect}] -state disabled
+	    $w.buttons.disconnect configure -state disabled
+	} else {
+	    $mb.file entryconfig [msgcat::mc {Disconnect}] -state normal
+	    $w.buttons.disconnect configure -state normal
+	}
 
-    set w $isamphub(top)
-    set mb $isamphub(mb)
-
-    if {$secret != {}} {
-	$mb.file entryconfig [msgcat::mc {Disconnect}] -state normal
-	$w.buttons.disconnect configure -state normal
     } else {
 	$mb.file entryconfig [msgcat::mc {Disconnect}] -state disabled
 	$w.buttons.disconnect configure -state disabled
     }
+
+    $dsamphub(client,metadata,txt) see end
+    $dsamphub(client,subscriptions,txt) see end
 }
 
 proc SAMPHubDialogRecvdMsg {msg} {

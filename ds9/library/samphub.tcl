@@ -15,6 +15,7 @@ proc SAMPHubStart {verbose} {
     global samp
     global samphub
     global samphubmap
+    global debug
 
     # are we connected?
     if {[info exists samp]} {
@@ -86,20 +87,24 @@ proc SAMPHubStart {verbose} {
 
     close $ch
 
-    set secret 0
-    lappend samphub(client,secret) $secret
-    set samphub($secret,id) {hub}
-    set samphub($secret,url) {}
-    set samphub($secret,subscriptions) {{samp.hub.ping}}
-    set samphub($secret,restriction) {}
-    set samphub($secret,metadata) [list \
+    lappend samphub(client,secret) $samphub(secret)
+    set samphub($samphub(secret),id) {hub}
+    set samphub($samphub(secret),url) {}
+    set samphub($samphub(secret),subscriptions) {{samp.hub.ping}}
+    set samphub($samphub(secret),restriction) {}
+    set samphub($samphub(secret),metadata) [list \
 				   [list samp.name "Hub"] \
 				   [list samp.description.text "SAOImageDS9 Internal Hub"] \
 				   [list samp.icon.url "http://ds9.si.edu/bandw.png"] \
 				   [list author.mail "ds9help@cfa.harvard.edu"] \
 				   [list author.name {William Joye}] \
 				   ]
-    SAMPHubDialogListAdd 0
+
+    if {$debug(tcl,samp)} {
+	puts "SAMPHubStart: $samphub(secret) $samphub($samphub(secret),id)"
+    }
+
+    SAMPHubDialogListAdd $samphub(secret)
     SAMPHubDialogUpdate
     UpdateFileMenu
 }
@@ -108,6 +113,7 @@ proc SAMPHubStop {verbose} {
     global samphub
     global samphubmap
     global samphubmap2
+    global debug
 
     # hub running?
     if {![info exists samphub]} {
@@ -121,7 +127,7 @@ proc SAMPHubStop {verbose} {
     set mtype {samp.hub.event.shutdown}
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -131,8 +137,8 @@ proc SAMPHubStop {verbose} {
 
 	catch {unset samphubmap2}
 
-	set param1 [list "string $samphub(secret)"]
-	set param2 [list "string $samphub(0,id)"]
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"	
 	
@@ -163,13 +169,13 @@ proc SAMPHubGenerateKey {} {
     return [binary encode hex [binary format f* [list [expr rand()] [expr rand()]]]]
 }
 
-proc SAMPHubValidSecret {secret} {
+proc SAMPHubValidSecret {cc} {
     global samphub
     global debug
     
-    if {![info exists samphub($secret,id)]} {
+    if {![info exists samphub($cc,id)]} {
 	if {$debug(tcl,samp)} {
-	    puts "SAMPHub: bad private-key $secret"
+	    puts "SAMPHub: bad private-key $cc"
 	}
 	return 0
     }
@@ -204,7 +210,7 @@ proc SAMPHubSend {method url params resultVar} {
     return 1
 }
 
-proc SAMPHubDisconnect {secret} {
+proc SAMPHubDisconnect {cc} {
     global samphub
     global samphubmap
     global samphubmap2
@@ -217,47 +223,47 @@ proc SAMPHubDisconnect {secret} {
 
     catch {unset samphubmap2}
 
-    set param1 [list "string $samphub(secret)"]
-    set param2 [list "string $samphub(0,id)"]
+    set param1 [list "string $cc"]
+    set param2 [list "string $samphub($samphub(secret),id)"]
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
 
     # some clients (Aladin) will send samp.hub.unregister
-    set samphub(remove) $secret
+    set samphub(remove) $cc
     set rr {}
-    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($secret,url) $params rr]} {
+    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
 	if {$verbose} {
 	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	}
     }
     unset samphub(remove)
-    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
-    SAMPHubRemove $secret
+    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    SAMPHubRemove $cc
 }
 
-proc SAMPHubRemove {secret} {
+proc SAMPHubRemove {cc} {
     global samphub
     
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPHubRemove: $secret"
+	puts stderr "SAMPHubRemove: $cc"
     }
 
     # should not happen
-    if {$secret == 0} {
+    if {$cc == $samphub(secret)} {
 	return
     }
 
-    SAMPHubDialogListRemove $secret
+    SAMPHubDialogListRemove $cc
     
-    set id [lsearch $samphub(client,secret) $secret]
+    set id [lsearch $samphub(client,secret) $cc]
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
-    unset samphub($secret,id)
-    unset samphub($secret,url)
-    unset samphub($secret,subscriptions)
-    unset samphub($secret,restriction)
-    unset samphub($secret,metadata)
+    unset samphub($cc,id)
+    unset samphub($cc,url)
+    unset samphub($cc,subscriptions)
+    unset samphub($cc,restriction)
+    unset samphub($cc,metadata)
 }
 
 # procs
@@ -328,7 +334,7 @@ proc samp.hub.register {args} {
     set mtype {samp.hub.event.register}
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -350,7 +356,7 @@ proc samp.hub.register {args} {
 	set samphubmap2(id) "string $samphub($secret,id)"
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -397,13 +403,13 @@ proc samp.hub.unregister {args} {
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
-    SAMPHubRemove $secret
 
     # update other clients
+    # notify others before removing
     set mtype {samp.hub.event.unregister}
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -421,11 +427,13 @@ proc samp.hub.unregister {args} {
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
 
+	puts $secret
+	puts $samphub($secret,id)
 	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -438,6 +446,9 @@ proc samp.hub.unregister {args} {
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
     }
+
+    # now remove
+    SAMPHubRemove $secret
 
     return {string OK}
 }
@@ -475,7 +486,7 @@ proc samp.hub.declareMetadata {args} {
     set mtype {samp.hub.event.metadata}
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -505,7 +516,7 @@ proc samp.hub.declareMetadata {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -591,7 +602,7 @@ proc samp.hub.declareSubscriptions {args} {
     set mtype {samp.hub.event.subscriptions}
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -621,7 +632,7 @@ proc samp.hub.declareSubscriptions {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -777,7 +788,7 @@ proc samp.hub.notify {args} {
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -810,7 +821,7 @@ proc samp.hub.notify {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -860,7 +871,7 @@ proc samp.hub.notifyAll {args} {
     set ll {}
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -886,7 +897,7 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
@@ -941,7 +952,7 @@ proc samp.hub.call {args} {
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -972,7 +983,7 @@ proc samp.hub.call {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
@@ -1028,7 +1039,7 @@ proc samp.hub.callAll {args} {
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -1054,7 +1065,7 @@ proc samp.hub.callAll {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
@@ -1110,7 +1121,7 @@ proc samp.hub.callAndWait {args} {
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
-	if {$cc == 0} {
+	if {$cc == $samphub(secret)} {
 	    continue
 	}
 
@@ -1141,7 +1152,7 @@ proc samp.hub.callAndWait {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub(0,id)"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
 	set param3 [list "string ${msgid}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"

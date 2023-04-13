@@ -156,7 +156,7 @@ proc SAMPHubStop {verbose} {
     }
 
     # remove hub
-    SAMPHubDialogListRemove 0
+    SAMPHubDialogListRemove $samphub(secret)
 
     catch {file delete -force $samphub(fn)}
     unset samphub
@@ -169,13 +169,13 @@ proc SAMPHubGenerateKey {} {
     return [binary encode hex [binary format f* [list [expr rand()] [expr rand()]]]]
 }
 
-proc SAMPHubValidSecret {cc} {
+proc SAMPHubValidSecret {secret} {
     global samphub
     global debug
     
-    if {![info exists samphub($cc,id)]} {
+    if {![info exists samphub($secret,id)]} {
 	if {$debug(tcl,samp)} {
-	    puts "SAMPHub: bad private-key $cc"
+	    puts "SAMPHub: bad private-key $secret"
 	}
 	return 0
     }
@@ -210,7 +210,7 @@ proc SAMPHubSend {method url params resultVar} {
     return 1
 }
 
-proc SAMPHubDisconnect {cc} {
+proc SAMPHubDisconnect {secret} {
     global samphub
     global samphubmap
     global samphubmap2
@@ -223,47 +223,47 @@ proc SAMPHubDisconnect {cc} {
 
     catch {unset samphubmap2}
 
-    set param1 [list "string $cc"]
+    set param1 [list "string $secret"]
     set param2 [list "string $samphub($samphub(secret),id)"]
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
 
     # some clients (Aladin) will send samp.hub.unregister
-    set samphub(remove) $cc
+    set samphub(remove) $secret
     set rr {}
-    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
+    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($secret,url) $params rr]} {
 	if {$verbose} {
 	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	}
     }
     unset samphub(remove)
-    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-    SAMPHubRemove $cc
+    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
+    SAMPHubRemove $secret
 }
 
-proc SAMPHubRemove {cc} {
+proc SAMPHubRemove {secret} {
     global samphub
     
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPHubRemove: $cc"
+	puts stderr "SAMPHubRemove: $secret"
     }
 
     # should not happen
-    if {$cc == $samphub(secret)} {
+    if {$secret == $samphub(secret)} {
 	return
     }
 
-    SAMPHubDialogListRemove $cc
+    SAMPHubDialogListRemove $secret
     
-    set id [lsearch $samphub(client,secret) $cc]
+    set id [lsearch $samphub(client,secret) $secret]
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
-    unset samphub($cc,id)
-    unset samphub($cc,url)
-    unset samphub($cc,subscriptions)
-    unset samphub($cc,restriction)
-    unset samphub($cc,metadata)
+    unset samphub($secret,id)
+    unset samphub($secret,url)
+    unset samphub($secret,subscriptions)
+    unset samphub($secret,restriction)
+    unset samphub($secret,metadata)
 }
 
 # procs

@@ -393,7 +393,6 @@ PlotDef
 PrefsDef
 PSDef
 RGBDef
-SAMPDef
 SAMPHubDef
 SAODef
 SaveDef

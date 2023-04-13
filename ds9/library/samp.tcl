@@ -4,12 +4,6 @@
 
 package provide DS9 1.0
 
-proc SAMPDef {} {
-    global isamp
-
-    set isamp(timeout) 1000
-}
-
 # Cmds
 
 proc SAMPConnect {verbose} {

@@ -142,7 +142,7 @@ proc SAMPHubStop {verbose} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"	
 	
-	# some clients (Aladin) will send samp.hub.unregister
+	# some clients insist on sending samp.hub.unregister
 	set samphub(remove) $cc
 	set rr {}
 	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
@@ -222,13 +222,14 @@ proc SAMPHubDisconnect {secret} {
     set samphubmap(samp.params) {struct samphubmap2}
 
     catch {unset samphubmap2}
+    set samphubmap2(reason) {string disconnect}
 
     set param1 [list "string $secret"]
     set param2 [list "string $samphub($samphub(secret),id)"]
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
 
-    # some clients (Aladin) will send samp.hub.unregister
+    # some clients insist on sending samp.hub.unregister
     set samphub(remove) $secret
     set rr {}
     if {![SAMPHubSend {samp.client.receiveNotification} $samphub($secret,url) $params rr]} {
@@ -237,6 +238,7 @@ proc SAMPHubDisconnect {secret} {
 	}
     }
     unset samphub(remove)
+    
     SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
     SAMPHubRemove $secret
 }
@@ -391,17 +393,17 @@ proc samp.hub.unregister {args} {
     set secret [lindex $args 0]
     set map [lindex $args 1]
 
-    if {![SAMPHubValidSecret $secret]} {
-	return {string OK}
-    }
-    
-    # some clients (Aladin) will send samp.hub.unregister
+    # some clients insist on sending samp.hub.unregister
     if {[info exists samphub(remove)]} {
-	if {$samphub(remove) == $secret} {
-	    return {string OK}
-	}
+       if {$samphub(remove) == $secret} {
+           return {string OK}
+       }
     }
 
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
+    }
+ 
     SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
 
     # update other clients
@@ -427,8 +429,6 @@ proc samp.hub.unregister {args} {
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
 
-	puts $secret
-	puts $samphub($secret,id)
 	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 

@@ -1154,7 +1154,6 @@ proc samp.hub.callAndWait {args} {
 	    continue
 	}
 
-	set samphub(timeout) OK
 	set samphub(rr-msgid) {}
 	set samphub(rr-map) {}
 
@@ -1187,29 +1186,44 @@ proc samp.hub.callAndWait {args} {
 	    set timeout 60
 	}
 
-	set foo [after [expr $timeout*1000] set samphub(timeout) ERROR]
 	if {0} {
+	set foo [after [expr $timeout*1000] set samphub(timeout) ERROR]
 	vwait samphub(timeout)
 	after cancel $foo
 
 	if {$samphub(timeout) == ERROR} {
 	    return {string ERROR}
 	}
-
-	puts "***$samphub(rr-msgid)"
-	puts "***$samphub(rr-map)"
 	}
+
+#	puts "***$samphub(rr-msgid)"
+#	puts "***$samphub(rr-map)"
 	
 #	set mm [split $samphub(rr-msgid) {-}]
 #	set msgtag [lindex $mm 0]
 #	set rr-id [lindex $mm 1]
 
+	set status {}
+	set result {}
+	foreach mm $samphub(rr-map) {
+	    foreach {key val} $mm {
+		switch -- $key {
+		    samp.status {set status $val}
+		    samp.result {set result $val}
+		}
+	    }
+	}
+
 	catch {unset samphubmap}
-	set samphubmap(samp.status) {string "samp.ok"}
+	set samphubmap(samp.status) "string $status"
 	set samphubmap(samp.result) {struct samphubmap2}
 
 	catch {unset samphubmap2}
-	set samphubmap2(value) "string yes"
+	foreach mm $result {
+	    foreach {key val} $mm {
+		set samphubmap2($key) "string $val"
+	    }
+	}
 
 	return "struct samphubmap"
     }
@@ -1240,8 +1254,7 @@ proc samp.hub.reply {args} {
     set samphub(rr-msgid) $msgid
     set samphub(rr-map) $map
 
-    set samphub(timeout) ok
-    return {string ok}
+    return {string OK}
 
     foreach cc $samphub(client,secret) {
 	# ignore hub

@@ -1182,10 +1182,6 @@ proc samp.hub.callAndWait {args} {
 	}
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
 
-	if {$timeout == 0} {
-	    set timeout 60
-	}
-
 	if {0} {
 	set foo [after [expr $timeout*1000] set samphub(timeout) ERROR]
 	vwait samphub(timeout)

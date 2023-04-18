@@ -1221,7 +1221,7 @@ proc samp.hub.callAndWait {args} {
 	catch {unset samphubmap2}
 	foreach mm $result {
 	    foreach {key val} $mm {
-		set samphubmap2($key) "string $val"
+		set samphubmap2($key) "string \"[XMLQuote $val]\""
 	    }
 	}
 

@@ -1251,36 +1251,6 @@ proc samp.hub.reply {args} {
     set samphub(rr-map) $map
 
     return {string OK}
-
-    foreach cc $samphub(client,secret) {
-	# ignore hub
-	if {$cc == $samphub(secret)} {
-	    continue
-	}
-
-	if {$samphub($cc,id) != $id} {
-	    continue
-	}
-
-	return {string OK}
-
-	set param1 [list "string $msgtag"]
-	set param2 [list "struct samphubmap"]
-	set params "$param1 $param2"
-
-	set rr {}
-	if {![SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
-	    }
-	}
-
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-	
-	return {string OK}
-    }
-
-    return {string ERROR}
 }
 
 # client to hub

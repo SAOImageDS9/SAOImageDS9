@@ -655,7 +655,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReply:$msgid:$status:$result:$url:$error:"
+	puts stderr "SAMPReply $msgid"
     }
 
     catch {unset sampmap}

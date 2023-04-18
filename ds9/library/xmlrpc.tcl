@@ -76,7 +76,7 @@ namespace eval xmlrpc {
 
     variable	response	"";		# response to return
     variable	acceptfd	"";		# socket to listen on
-    variable	DEBUG		0;		# debug
+    variable	DEBUG		1;		# debug
 }
 
 # Given a port, create a new socket
@@ -116,6 +116,7 @@ proc xmlrpc::doRequest {sock} {
     }
 
     set body [getBody $sock $header $body]
+#    puts "***doRequest: $body"
 
     set	RE "<\?xml.version=.";			# xml version
     append	RE "\[^\?\]+.\?>$WS*";			# version number
@@ -201,6 +202,7 @@ proc buildResponse {result} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
 
+#    puts "***buildReponse: $body"
     set response "$header\n$body"
     return $response
     #return [string trim $response]
@@ -229,6 +231,7 @@ proc buildFault {errcode errmsg} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
 
+#    puts "***buildFault: $body"
     set response "$header\n$body"
     return [string trim $response]
 }
@@ -279,6 +282,7 @@ proc xmlrpc::getResponse {sock} {
 
     set header [parseHTTPCode $headerStatus]
     set body [getBody $sock $header $body]
+#    puts "***getResponse: $body"
     set response [parseResponse $body]
     set readdone 1
 }
@@ -493,6 +497,7 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
 #    set header [regsub -all "\n" $header "\r\n"]
 
 #    set request "$header\r\n$body"
+#    puts "***buildRequest: $body"
     set request "$header\n$body"
     return $request
 }

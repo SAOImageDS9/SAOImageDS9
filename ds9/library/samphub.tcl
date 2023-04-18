@@ -998,7 +998,7 @@ proc samp.hub.call {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($samphub(secret),id)"]
+	set param2 [list "string $id"]
 	set param3 [list "string ${msgtag}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
@@ -1080,7 +1080,7 @@ proc samp.hub.callAll {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($samphub(secret),id)"]
+	set param2 [list "string $id"]
 	set param3 [list "string ${msgtag}-${samphub($secret,id)}"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
@@ -1154,6 +1154,10 @@ proc samp.hub.callAndWait {args} {
 	    continue
 	}
 
+	set samphub(timeout) OK
+	set samphub(rr-msgid) {}
+	set samphub(rr-map) {}
+
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
@@ -1166,7 +1170,7 @@ proc samp.hub.callAndWait {args} {
 	}
 
 	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($samphub(secret),id)"]
+	set param2 [list "string $id"]
 	set param3 [list "string foo-$samphub($secret,id)"]
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
@@ -1179,19 +1183,35 @@ proc samp.hub.callAndWait {args} {
 	}
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
 
-	if {[string is integer $timeout]} {
-	    # if zero, treat as call
-	    if {$timeout <= 0} {
-		return {string OK}
-	    } else {
-		set id [after [expr $timeout*1000] set samphub(timeout) error]
-		vwait samphub(timeout)
-		after cancel $id
-		return "string $samphub(timeout)"
-	    }
-	} else {
+	if {$timeout == 0} {
+	    set timeout 60
+	}
+
+	set foo [after [expr $timeout*1000] set samphub(timeout) ERROR]
+	if {0} {
+	vwait samphub(timeout)
+	after cancel $foo
+
+	if {$samphub(timeout) == ERROR} {
 	    return {string ERROR}
 	}
+
+	puts "***$samphub(rr-msgid)"
+	puts "***$samphub(rr-map)"
+	}
+	
+#	set mm [split $samphub(rr-msgid) {-}]
+#	set msgtag [lindex $mm 0]
+#	set rr-id [lindex $mm 1]
+
+	catch {unset samphubmap}
+	set samphubmap(samp.status) {string "samp.ok"}
+	set samphubmap(samp.result) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	set samphubmap2(value) "string yes"
+
+	return "struct samphubmap"
     }
 
     return {string ERROR}
@@ -1215,16 +1235,13 @@ proc samp.hub.reply {args} {
 	return {string ERROR}
     }
 
-    # is this callAndWait?
-    if {[info exists samphub(timeout)]} {
-	set samphub(timeout) ok
-    }
-
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
-    set mm [split $msgid {-}]
-    set msgtag [lindex $mm 0]
-    set id [lindex $mm 1]
+    set samphub(rr-msgid) $msgid
+    set samphub(rr-map) $map
+
+    set samphub(timeout) ok
+    return {string ok}
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -1235,6 +1252,8 @@ proc samp.hub.reply {args} {
 	if {$samphub($cc,id) != $id} {
 	    continue
 	}
+
+	return {string OK}
 
 	set param1 [list "string $msgtag"]
 	set param2 [list "struct samphubmap"]

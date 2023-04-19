@@ -695,13 +695,12 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     }
 }
 
-# receiveNotification(string sender-id, map message)
 proc samp.client.receiveNotification {args} {
     global samp
     
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReceivedNotification: $args"
+	puts stderr "samp.client.receiveNotification $args"
     }
     
     set secret [lindex $args 0]
@@ -732,14 +731,13 @@ proc samp.client.receiveNotification {args} {
     return {string OK}
 }
 
-# receiveCall(string sender-id, string msg-id, map message)
 proc samp.client.receiveCall {args} {
     global ds9
     global samp
     
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReceivedCall: $args"
+	puts stderr "samp.client.receiveCall $args"
     }
 
     set secret [lindex $args 0]
@@ -768,65 +766,25 @@ proc samp.client.receiveCall {args} {
     # waj check for valid mtype
     global samp
     switch -- $mtype {
-	samp.app.ping {
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
-	image.load.fits {
-#	    SAMPRcvdImageLoadFits iparams
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
-	table.load.fits {
-#	    SAMPRcvdTableLoadFits iparams
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
-	table.load.votable {
-#	    SAMPRcvdTableLoadVotable iparams
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
-	table.highlight.row {
-#	    SAMPRcvdTableHighlightRow iparams
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
-	table.select.rowList {
-#	    SAMPRcvdTableSelectRowList iparams
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
-	coord.pointAt.sky {
-#	    SAMPRcvdCoordPointAtSky iparams
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
 	client.env.get {
-#	    SAMPRcvdClientEnvGet $msgid iparams
 	    $mtype $msgid iparams
 	}
 	ds9.get {
-#	    SAMPRcvdDS9Get $msgid iparams
 	    $mtype $msgid iparams
 	}
 	ds9.set {
-#	    SAMPRcvdDS9Set $msgid iparams
 	    $mtype iparams
 	    SAMPRcvdDS9SetReply $msgid
 	}
 	default {
-	    SAMPReply $msgid ERROR {} {} "[msgcat::mc {Unknown command}]: $mtype"
-	    if {$debug(tcl,samp)} {
-		puts stderr "SAMP samp.client.receiveCall: bad mtype $mtype"
-	    }
+	    $mtype iparams
+	    SAMPReply $msgid OK
 	}
     }
 
     return {string OK}
 }
 
-# receiveResponse(string responder-id, string msg-tag, map response)
 proc samp.client.receiveResponse {args} {
     global samp
 
@@ -984,7 +942,6 @@ proc SAMPGetAppsSubscriptions {mtype} {
 }
 
 # CallBacks
-# Hub
 
 proc samp.hub.event.shutdown {varname} {
     upvar $varname args

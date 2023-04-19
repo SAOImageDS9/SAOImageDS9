@@ -726,66 +726,8 @@ proc samp.client.receiveNotification {args} {
 
     # be sure to lock any command that may cause a
     #   SAMPSendCoordPointAtSkyCmd response
-    global samp
-    switch -- $mtype {
-	samp.hub.event.shutdown {
-#	    SAMPRcvdEventShutdown iparams
-	    $mtype iparams
-	}
-	samp.hub.event.register {
-#	    SAMPRcvdEventRegister iparams
-	    $mtype iparams
-	}
-	samp.hub.event.unregister {
-#	    SAMPRcvdEventUnregister iparams
-	    $mtype iparams
-	}
-	samp.hub.event.metadata {
-#	    SAMPRcvdEventMetadata iparams
-	    $mtype iparams
-	}
-	samp.hub.event.subscriptions {
-#	    SAMPRcvdEventSubscriptions iparams
-	    $mtype iparams
-	}
-	samp.hub.disconnect {
-#	    SAMPRcvdDisconnect iparams
-	    $mtype iparams
-	}
-	image.load.fits {
-#	    SAMPRcvdImageLoadFits iparams
-	    $mtype iparams
-	}
-	table.load.fits {
-#	    SAMPRcvdTableLoadFits iparams
-	    $mtype iparams
-	}
-	table.load.votable {
-#	    SAMPRcvdTableLoadVotable iparams
-	    $mtype iparams
-	}
-	table.highlight.row {
-#	    SAMPRcvdTableHighlightRow iparams
-	    $mtype iparams
-	}
-	table.select.rowList {
-#	    SAMPRcvdTableSelectRowList iparams
-	    $mtype iparams
-	}
-	coord.pointAt.sky {
-#	    SAMPRcvdCoordPointAtSky iparams
-	    $mtype iparams
-	}
-	ds9.set {
-#	    SAMPRcvdDS9Set {} iparams
-	    $mtype {} iparams
-	}
-	default {
-	    if {$debug(tcl,samp)} {
-		puts stderr "SAMP samp.client.receiveNotification: bad mtype $mtype"
-	    }
-	}
-    }
+    # waj check for valid mtype
+    $mtype iparams
 
     return {string OK}
 }
@@ -823,10 +765,11 @@ proc samp.client.receiveCall {args} {
 
     # be sure to lock any command that may cause a
     #   SAMPSendCoordPointAtSkyCmd response
-
+    # waj check for valid mtype
     global samp
     switch -- $mtype {
 	samp.app.ping {
+	    $mtype iparams
 	    SAMPReply $msgid OK
 	}
 	image.load.fits {
@@ -869,7 +812,8 @@ proc samp.client.receiveCall {args} {
 	}
 	ds9.set {
 #	    SAMPRcvdDS9Set $msgid iparams
-	    $mtype $msgid iparams
+	    $mtype iparams
+	    SAMPRcvdDS9SetReply $msgid
 	}
 	default {
 	    SAMPReply $msgid ERROR {} {} "[msgcat::mc {Unknown command}]: $mtype"
@@ -888,7 +832,7 @@ proc samp.client.receiveResponse {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReceivedResponse: $args"
+	puts stderr "samp.client.receiveResponse $args"
     }
 
     set secret [lindex $args 0]
@@ -1223,6 +1167,15 @@ proc samp.hub.disconnect {varname} {
 
 # HTTPClient
 
+proc samp.app.ping {varname} {
+    upvar $varname args
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "samp.app.ping $args"
+    }
+}
+
 proc image.load.fits {varname} {
     upvar $varname args
 
@@ -1467,12 +1420,12 @@ proc client.env.get {msgid varname} {
     }
 }
 
-proc ds9.set {msgid varname} {
+proc ds9.set {varname} {
     upvar $varname args
-
+   
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "ds9.set $msgid $args"
+	puts stderr "ds9.set $args"
     }
 
     global current
@@ -1499,9 +1452,6 @@ proc ds9.set {msgid varname} {
 	GetFileURL $url fn
     }
     CommSet $fn $cmd 1
-    if {$msgid != {}} {
-	SAMPRcvdDS9SetReply $msgid
-    }
 }
 
 proc SAMPRcvdDS9SetReply {msgid} {

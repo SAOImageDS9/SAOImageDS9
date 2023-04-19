@@ -125,14 +125,6 @@ proc SAMPConnect {verbose} {
     set sampmap(coord.pointAt.sky) {struct mapCoordPointAtSky}
     set sampmap(client.env.get) {struct mapClientEnvGet}
 
-    set sampmap(x-samp.affiliation.name) {struct mapAffiliationName}
-    set sampmap(x-samp.affiliation.url) {struct mapAffiliationURL}
-    set sampmap(x-samp.homepage.url) {struct mapHomepageURL}
-    set sampmap(x-samp.releasenotes.url) {struct mapReleasenotesURL}
-    set sampmap(x-samp.faq.url) {struct mapFAQURL}
-    set sampmap(x-samp.authors) {struct mapAuthors}
-    set sampmap(x-samp.release.version) {struct mapReleaseVersion}
-
     set sampmap(ds9.get) {struct mapDS9Get}
     set sampmap(ds9.set) {struct mapDS9Set}
 
@@ -542,6 +534,7 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
     }
 
     # are we locked?
+    # waj - revisit
     if {$samp(lock)} {
 	global debug
 	if {$debug(tcl,samp)} {
@@ -702,17 +695,6 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     }
 }
 
-proc SAMPReplySimple {msgid str} {
-    upvar $varname args
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPReplySimple: $str"
-    }
-
-    SAMPReply $msgid OK "$str"
-}
-
 # receiveNotification(string sender-id, map message)
 proc samp.client.receiveNotification {args} {
     global samp
@@ -765,42 +747,25 @@ proc samp.client.receiveNotification {args} {
 	    SAMPRcvdDisconnect iparams
 	}
 	image.load.fits {
-	    set samp(lock) 1
 	    SAMPRcvdImageLoadFits iparams
-	    set samp(lock) 0
 	}
 	table.load.fits {
-	    set samp(lock) 1
 	    SAMPRcvdTableLoadFits iparams
-	    set samp(lock) 0
 	}
 	table.load.votable {
 	    SAMPRcvdTableLoadVotable iparams
 	}
 	table.highlight.row {
-	    set samp(lock) 1
 	    SAMPRcvdTableHighlightRow iparams
-	    set samp(lock) 0
 	}
 	table.select.rowList {
-	    set samp(lock) 1
 	    SAMPRcvdTableSelectRowList iparams
-	    set samp(lock) 0
 	}
 	coord.pointAt.sky {
-	    set samp(lock) 1
 	    SAMPRcvdCoordPointAtSky iparams
-	    set samp(lock) 0
 	}
 	ds9.set {
-	    set samp(lock) 1
 	    SAMPRcvdDS9Set {} iparams 0
-	    set samp(lock) 0
-	}
-	ds9.restricted-set {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Set {} iparams 1
-	    set samp(lock) 0
 	}
 	default {
 	    if {$debug(tcl,samp)} {
@@ -852,15 +817,11 @@ proc samp.client.receiveCall {args} {
 	    SAMPReply $msgid OK
 	}
 	image.load.fits {
-	    set samp(lock) 1
 	    SAMPRcvdImageLoadFits iparams
-	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.load.fits {
-	    set samp(lock) 1
 	    SAMPRcvdTableLoadFits iparams
-	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.load.votable {
@@ -868,67 +829,25 @@ proc samp.client.receiveCall {args} {
 	    SAMPReply $msgid OK
 	}
 	table.highlight.row {
-	    set samp(lock) 1
 	    SAMPRcvdTableHighlightRow iparams
-	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.select.rowList {
-	    set samp(lock) 1
 	    SAMPRcvdTableSelectRowList iparams
-	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	coord.pointAt.sky {
-	    set samp(lock) 1
 	    SAMPRcvdCoordPointAtSky iparams
-	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	client.env.get {
 	    SAMPRcvdClientEnvGet $msgid iparams
 	}
-	x-samp.affiliation.name {
-	    SAMPReplySimple $msgid "SMITHSONIAN ASTROPHYSICAL OBSERVATORY"
-	}
-	x-samp.affiliation.url {
-	    SAMPReplySimple $msgid "https://www.cfa.harvard.edu/sao"
-	}
-	x-samp.homepage.url {
-	    SAMPReplySimple $msgid "http://ds9.si.edu"
-	}
-	x-samp.releasenotes.url {
-	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/release/r8.1.html"
-	}
-	x-samp.faq.url {
-	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/faq.html"
-	}
-	x-samp.authors {
-	    global help
-	    SAMPReplySimple $msgid OK "$help(authors)"
-	}
-	x-samp.release.version {
-	    SAMPReplySimple $msgid OK "$ds9(version,display)"
-	}
 	ds9.get {
-	    set samp(lock) 1
 	    SAMPRcvdDS9Get $msgid iparams
-	    set samp(lock) 0
 	}
 	ds9.set {
-	    set samp(lock) 1
 	    SAMPRcvdDS9Set $msgid iparams 0
-	    set samp(lock) 0
-	}
-	ds9.restricted-get {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Get $msgid iparams
-	    set samp(lock) 0
-	}
-	ds9.restricted-set {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Set $msgid iparams 1
-	    set samp(lock) 0
 	}
 	default {
 	    SAMPReply $msgid ERROR {} {} "[msgcat::mc {Unknown command}]: $mtype"

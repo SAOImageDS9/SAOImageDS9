@@ -91,7 +91,6 @@ proc SAMPHubStart {verbose} {
     set samphub($samphub(secret),id) {hub}
     set samphub($samphub(secret),url) {}
     set samphub($samphub(secret),subscriptions) {{samp.hub.ping}}
-    set samphub($samphub(secret),restriction) {}
     set samphub($samphub(secret),metadata) [list \
 				   [list samp.name "Hub"] \
 				   [list samp.description.text "SAOImageDS9 Internal Hub"] \
@@ -279,7 +278,6 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,id)
     unset samphub($secret,url)
     unset samphub($secret,subscriptions)
-    unset samphub($secret,restriction)
     unset samphub($secret,metadata)
 }
 
@@ -341,7 +339,6 @@ proc samp.hub.register {args} {
     set samphub($secret,id) $id
     set samphub($secret,url) {}
     set samphub($secret,subscriptions) {}
-    set samphub($secret,restriction) {}
     set samphub($secret,metadata) {}
 
     SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
@@ -604,7 +601,6 @@ proc samp.hub.declareSubscriptions {args} {
     foreach mm $map {
 	foreach {ss rr} $mm {
 	    lappend samphub($secret,subscriptions) $ss
-	    lappend samphub($secret,restriction) $rr
 	}
     }
 

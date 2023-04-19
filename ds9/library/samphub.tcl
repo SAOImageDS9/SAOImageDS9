@@ -571,7 +571,7 @@ proc samp.hub.getMetadata {args} {
 	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
-		    set samphubmap($key) "string \"$val\""
+		    set samphubmap($key) "string \"[XMLQuote $val]\""
 		}
 	    }
 	    return "struct samphubmap"
@@ -688,7 +688,7 @@ proc samp.hub.getSubscriptions {args} {
 	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,subscriptions) {
 		foreach {key val} $mm {
-		    set samphubmap($key) "string \"$val\""
+		    set samphubmap($key) "string \"[XMLQuote $val]\""
 		}
 	    }
 	    return "struct samphubmap"
@@ -1174,12 +1174,15 @@ proc samp.hub.callAndWait {args} {
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
 	
+	puts "***ready set go"
 	set rr {}
 	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
 	}
+	puts "...done"
+	puts {}
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
 
 	if {0} {
@@ -1232,6 +1235,7 @@ proc samp.hub.reply {args} {
     global samphubmap
     global samphubmap2
     
+    puts "***BANG***"
     global debug
     if {$debug(tcl,samp)} {
 	puts "samp.hub.reply: $args"

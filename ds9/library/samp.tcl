@@ -729,43 +729,56 @@ proc samp.client.receiveNotification {args} {
     global samp
     switch -- $mtype {
 	samp.hub.event.shutdown {
-	    SAMPRcvdEventShutdown iparams
+#	    SAMPRcvdEventShutdown iparams
+	    $mtype iparams
 	}
 	samp.hub.event.register {
-	    SAMPRcvdEventRegister iparams
+#	    SAMPRcvdEventRegister iparams
+	    $mtype iparams
 	}
 	samp.hub.event.unregister {
-	    SAMPRcvdEventUnregister iparams
+#	    SAMPRcvdEventUnregister iparams
+	    $mtype iparams
 	}
 	samp.hub.event.metadata {
-	    SAMPRcvdEventMetadata iparams
+#	    SAMPRcvdEventMetadata iparams
+	    $mtype iparams
 	}
 	samp.hub.event.subscriptions {
-	    SAMPRcvdEventSubscriptions iparams
+#	    SAMPRcvdEventSubscriptions iparams
+	    $mtype iparams
 	}
 	samp.hub.disconnect {
-	    SAMPRcvdDisconnect iparams
+#	    SAMPRcvdDisconnect iparams
+	    $mtype iparams
 	}
 	image.load.fits {
-	    SAMPRcvdImageLoadFits iparams
+#	    SAMPRcvdImageLoadFits iparams
+	    $mtype iparams
 	}
 	table.load.fits {
-	    SAMPRcvdTableLoadFits iparams
+#	    SAMPRcvdTableLoadFits iparams
+	    $mtype iparams
 	}
 	table.load.votable {
-	    SAMPRcvdTableLoadVotable iparams
+#	    SAMPRcvdTableLoadVotable iparams
+	    $mtype iparams
 	}
 	table.highlight.row {
-	    SAMPRcvdTableHighlightRow iparams
+#	    SAMPRcvdTableHighlightRow iparams
+	    $mtype iparams
 	}
 	table.select.rowList {
-	    SAMPRcvdTableSelectRowList iparams
+#	    SAMPRcvdTableSelectRowList iparams
+	    $mtype iparams
 	}
 	coord.pointAt.sky {
-	    SAMPRcvdCoordPointAtSky iparams
+#	    SAMPRcvdCoordPointAtSky iparams
+	    $mtype iparams
 	}
 	ds9.set {
-	    SAMPRcvdDS9Set {} iparams 0
+#	    SAMPRcvdDS9Set {} iparams
+	    $mtype {} iparams
 	}
 	default {
 	    if {$debug(tcl,samp)} {
@@ -817,37 +830,46 @@ proc samp.client.receiveCall {args} {
 	    SAMPReply $msgid OK
 	}
 	image.load.fits {
-	    SAMPRcvdImageLoadFits iparams
+#	    SAMPRcvdImageLoadFits iparams
+	    $mtype iparams
 	    SAMPReply $msgid OK
 	}
 	table.load.fits {
-	    SAMPRcvdTableLoadFits iparams
+#	    SAMPRcvdTableLoadFits iparams
+	    $mtype iparams
 	    SAMPReply $msgid OK
 	}
 	table.load.votable {
-	    SAMPRcvdTableLoadVotable iparams
+#	    SAMPRcvdTableLoadVotable iparams
+	    $mtype iparams
 	    SAMPReply $msgid OK
 	}
 	table.highlight.row {
-	    SAMPRcvdTableHighlightRow iparams
+#	    SAMPRcvdTableHighlightRow iparams
+	    $mtype iparams
 	    SAMPReply $msgid OK
 	}
 	table.select.rowList {
-	    SAMPRcvdTableSelectRowList iparams
+#	    SAMPRcvdTableSelectRowList iparams
+	    $mtype iparams
 	    SAMPReply $msgid OK
 	}
 	coord.pointAt.sky {
-	    SAMPRcvdCoordPointAtSky iparams
+#	    SAMPRcvdCoordPointAtSky iparams
+	    $mtype iparams
 	    SAMPReply $msgid OK
 	}
 	client.env.get {
-	    SAMPRcvdClientEnvGet $msgid iparams
+#	    SAMPRcvdClientEnvGet $msgid iparams
+	    $mtype $msgid iparams
 	}
 	ds9.get {
-	    SAMPRcvdDS9Get $msgid iparams
+#	    SAMPRcvdDS9Get $msgid iparams
+	    $mtype $msgid iparams
 	}
 	ds9.set {
-	    SAMPRcvdDS9Set $msgid iparams 0
+#	    SAMPRcvdDS9Set $msgid iparams
+	    $mtype $msgid iparams
 	}
 	default {
 	    SAMPReply $msgid ERROR {} {} "[msgcat::mc {Unknown command}]: $mtype"
@@ -1020,12 +1042,12 @@ proc SAMPGetAppsSubscriptions {mtype} {
 # CallBacks
 # Hub
 
-proc SAMPRcvdEventShutdown {varname} {
+proc samp.hub.event.shutdown {varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventShutdown: $args"
+	puts stderr "samp.hub.event.shutdown $args"
     }
 
     SAMPShutdown
@@ -1034,14 +1056,14 @@ proc SAMPRcvdEventShutdown {varname} {
     UpdateCATDialogSAMP
 }
 
-proc SAMPRcvdEventRegister {varname} {
+proc samp.hub.event.register {varname} {
     upvar $varname args
 
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventRegister: $args"
+	puts stderr "samp.hub.event.register $args"
     }
 
     foreach arg $args {
@@ -1057,14 +1079,14 @@ proc SAMPRcvdEventRegister {varname} {
     }
 }
 
-proc SAMPRcvdEventUnregister {varname} {
+proc samp.hub.event.unregister {varname} {
     upvar $varname args
 
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventUnregister: $args"
+	puts stderr "samp.hub.event.unregister $args"
     }
 
     foreach arg $args {
@@ -1084,14 +1106,14 @@ proc SAMPRcvdEventUnregister {varname} {
     UpdateCATDialogSAMP
 }
 
-proc SAMPRcvdEventMetadata {varname} {
+proc samp.hub.event.metadata {varname} {
     upvar $varname args
 
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventMetadata: $args"
+	puts stderr "samp.hub.event.metadata $args"
     }
 
     set id {}
@@ -1131,14 +1153,14 @@ proc SAMPRcvdEventMetadata {varname} {
     UpdateCATDialogSAMP
 }
 
-proc SAMPRcvdEventSubscriptions {varname} {
+proc samp.hub.event.subscriptions {varname} {
     upvar $varname args
 
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventSubscriptions: $args"
+	puts stderr "samp.hub.event.subscriptions $args"
     }
 
     set id {}
@@ -1176,12 +1198,12 @@ proc SAMPRcvdEventSubscriptions {varname} {
     UpdateCATDialogSAMP
 }
 
-proc SAMPRcvdDisconnect {varname} {
+proc samp.hub.disconnect {varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDisconnect: $args"
+	puts stderr "samp.hub.disconnect $args"
     }
 
     set msg {}
@@ -1201,7 +1223,7 @@ proc SAMPRcvdDisconnect {varname} {
 
 # HTTPClient
 
-proc SAMPRcvdImageLoadFits {varname} {
+proc image.load.fits {varname} {
     upvar $varname args
 
     global debug
@@ -1236,12 +1258,12 @@ proc SAMPRcvdImageLoadFits {varname} {
     }
 }
 
-proc SAMPRcvdTableLoadFits {varname} {
+proc table.load.fits {varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableLoadFits: $args"
+	puts stderr "table.load.fits $args"
     }
 
     global current
@@ -1271,13 +1293,13 @@ proc SAMPRcvdTableLoadFits {varname} {
     }
 }
 
-proc SAMPRcvdTableLoadVotable {varname} {
+proc table.load.votable {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableLoadVotable: $args"
+	puts stderr "table.load.votable $args"
     }
 
     set url {}
@@ -1295,7 +1317,7 @@ proc SAMPRcvdTableLoadVotable {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableLoadVotable: $url $tabid $name"
+	puts stderr "table.load.votable $url $tabid $name"
     }
 
     global icat
@@ -1309,13 +1331,13 @@ proc SAMPRcvdTableLoadVotable {varname} {
     }
 }
 
-proc SAMPRcvdTableHighlightRow {varname} {
+proc table.highlight.row {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableHighlightRow: $args"
+	puts stderr "table.highlight.row $args"
     }
 
     set url {}
@@ -1333,7 +1355,7 @@ proc SAMPRcvdTableHighlightRow {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableHighlightRow: $url $tabid $row"
+	puts stderr "table.highlight.row $url $tabid $row"
     }
 
     if {$tabid != {} && $row != {}} {
@@ -1343,13 +1365,13 @@ proc SAMPRcvdTableHighlightRow {varname} {
     }
 }
 
-proc SAMPRcvdTableSelectRowList {varname} {
+proc table.select.rowList {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableSelectRowList: $args"
+	puts stderr "table.select.rowList $args"
     }
 
     set url {}
@@ -1371,7 +1393,7 @@ proc SAMPRcvdTableSelectRowList {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableSelectRowList: $url $tabid $rowlist"
+	puts stderr "table.select.rowList $url $tabid $rowlist"
     }
 
     if {$tabid != {} && [llength $rowlist] != 0} {
@@ -1381,13 +1403,13 @@ proc SAMPRcvdTableSelectRowList {varname} {
     }
 }
 
-proc SAMPRcvdCoordPointAtSky {varname} {
+proc coord.pointAt.sky {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdCoordPointAtSky: $args"
+	puts stderr "coord.pointAt.sky $args"
     }
 
     set ra {}
@@ -1403,7 +1425,7 @@ proc SAMPRcvdCoordPointAtSky {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdCoordPointAtSky: $ra $dec"
+	puts stderr "coord.pointAt.sky $ra $dec"
     }
 
     global current
@@ -1412,13 +1434,13 @@ proc SAMPRcvdCoordPointAtSky {varname} {
     }
 }
 
-proc SAMPRcvdClientEnvGet {msgid varname} {
+proc client.env.get {msgid varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdClientEnvGet: $msgid $args"
+	puts stderr "client.env.get $msgid $args"
     }
 
     set name {}
@@ -1432,7 +1454,7 @@ proc SAMPRcvdClientEnvGet {msgid varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdClientEnvGet: $name"
+	puts stderr "client.env.get $name"
     }
 
     global env
@@ -1445,12 +1467,12 @@ proc SAMPRcvdClientEnvGet {msgid varname} {
     }
 }
 
-proc SAMPRcvdDS9Set {msgid varname safemode} {
+proc ds9.set {msgid varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDS9Set: $msgid $args $safemode"
+	puts stderr "ds9.set $msgid $args"
     }
 
     global current
@@ -1476,7 +1498,7 @@ proc SAMPRcvdDS9Set {msgid varname safemode} {
 	lappend samp(tmp,files) $fn
 	GetFileURL $url fn
     }
-    CommSet $fn $cmd $safemode
+    CommSet $fn $cmd 1
     if {$msgid != {}} {
 	SAMPRcvdDS9SetReply $msgid
     }
@@ -1509,12 +1531,12 @@ proc SAMPRcvdDS9SetReply {msgid} {
     }
 }
 
-proc SAMPRcvdDS9Get {msgid varname} {
+proc ds9.get {msgid varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDS9Get: $args"
+	puts stderr "ds9.get $args"
     }
 
     global current

@@ -1231,7 +1231,6 @@ proc samp.hub.reply {args} {
     global samphubmap
     global samphubmap2
     
-    puts "***BANG***"
     global debug
     if {$debug(tcl,samp)} {
 	puts "samp.hub.reply: $args"

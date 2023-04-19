@@ -732,12 +732,12 @@ proc samp.client.receiveNotification {args} {
     }
 
     set mtype {}
-    set params {}
+    set iparams {}
     foreach mm $map {
 	foreach {key val} $mm {
 	    switch -- $key {
 		samp.mtype {set mtype $val}
-		samp.params {set params $val}
+		samp.params {set iparams $val}
 	    }
 	}
     }
@@ -747,59 +747,59 @@ proc samp.client.receiveNotification {args} {
     global samp
     switch -- $mtype {
 	samp.hub.event.shutdown {
-	    SAMPRcvdEventShutdown params
+	    SAMPRcvdEventShutdown iparams
 	}
 	samp.hub.event.register {
-	    SAMPRcvdEventRegister params
+	    SAMPRcvdEventRegister iparams
 	}
 	samp.hub.event.unregister {
-	    SAMPRcvdEventUnregister params
+	    SAMPRcvdEventUnregister iparams
 	}
 	samp.hub.event.metadata {
-	    SAMPRcvdEventMetadata params
+	    SAMPRcvdEventMetadata iparams
 	}
 	samp.hub.event.subscriptions {
-	    SAMPRcvdEventSubscriptions params
+	    SAMPRcvdEventSubscriptions iparams
 	}
 	samp.hub.disconnect {
-	    SAMPRcvdDisconnect params
+	    SAMPRcvdDisconnect iparams
 	}
 	image.load.fits {
 	    set samp(lock) 1
-	    SAMPRcvdImageLoadFits params
+	    SAMPRcvdImageLoadFits iparams
 	    set samp(lock) 0
 	}
 	table.load.fits {
 	    set samp(lock) 1
-	    SAMPRcvdTableLoadFits params
+	    SAMPRcvdTableLoadFits iparams
 	    set samp(lock) 0
 	}
 	table.load.votable {
-	    SAMPRcvdTableLoadVotable params
+	    SAMPRcvdTableLoadVotable iparams
 	}
 	table.highlight.row {
 	    set samp(lock) 1
-	    SAMPRcvdTableHighlightRow params
+	    SAMPRcvdTableHighlightRow iparams
 	    set samp(lock) 0
 	}
 	table.select.rowList {
 	    set samp(lock) 1
-	    SAMPRcvdTableSelectRowList params
+	    SAMPRcvdTableSelectRowList iparams
 	    set samp(lock) 0
 	}
 	coord.pointAt.sky {
 	    set samp(lock) 1
-	    SAMPRcvdCoordPointAtSky params
+	    SAMPRcvdCoordPointAtSky iparams
 	    set samp(lock) 0
 	}
 	ds9.set {
 	    set samp(lock) 1
-	    SAMPRcvdDS9Set {} params 0
+	    SAMPRcvdDS9Set {} iparams 0
 	    set samp(lock) 0
 	}
 	ds9.restricted-set {
 	    set samp(lock) 1
-	    SAMPRcvdDS9Set {} params 1
+	    SAMPRcvdDS9Set {} iparams 1
 	    set samp(lock) 0
 	}
 	default {
@@ -833,12 +833,12 @@ proc samp.client.receiveCall {args} {
     }
 
     set mtype {}
-    set params {}
+    set iparams {}
     foreach mm $map {
 	foreach {key val} $mm {
 	    switch -- $key {
 		samp.mtype {set mtype $val}
-		samp.params {set params $val}
+		samp.params {set iparams $val}
 	    }
 	}
     }
@@ -853,40 +853,40 @@ proc samp.client.receiveCall {args} {
 	}
 	image.load.fits {
 	    set samp(lock) 1
-	    SAMPRcvdImageLoadFits params
+	    SAMPRcvdImageLoadFits iparams
 	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.load.fits {
 	    set samp(lock) 1
-	    SAMPRcvdTableLoadFits params
+	    SAMPRcvdTableLoadFits iparams
 	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.load.votable {
-	    SAMPRcvdTableLoadVotable params
+	    SAMPRcvdTableLoadVotable iparams
 	    SAMPReply $msgid OK
 	}
 	table.highlight.row {
 	    set samp(lock) 1
-	    SAMPRcvdTableHighlightRow params
+	    SAMPRcvdTableHighlightRow iparams
 	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	table.select.rowList {
 	    set samp(lock) 1
-	    SAMPRcvdTableSelectRowList params
+	    SAMPRcvdTableSelectRowList iparams
 	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	coord.pointAt.sky {
 	    set samp(lock) 1
-	    SAMPRcvdCoordPointAtSky params
+	    SAMPRcvdCoordPointAtSky iparams
 	    set samp(lock) 0
 	    SAMPReply $msgid OK
 	}
 	client.env.get {
-	    SAMPRcvdClientEnvGet $msgid params
+	    SAMPRcvdClientEnvGet $msgid iparams
 	}
 	x-samp.affiliation.name {
 	    SAMPReplySimple $msgid "SMITHSONIAN ASTROPHYSICAL OBSERVATORY"
@@ -912,22 +912,22 @@ proc samp.client.receiveCall {args} {
 	}
 	ds9.get {
 	    set samp(lock) 1
-	    SAMPRcvdDS9Get $msgid params
+	    SAMPRcvdDS9Get $msgid iparams
 	    set samp(lock) 0
 	}
 	ds9.set {
 	    set samp(lock) 1
-	    SAMPRcvdDS9Set $msgid params 0
+	    SAMPRcvdDS9Set $msgid iparams 0
 	    set samp(lock) 0
 	}
 	ds9.restricted-get {
 	    set samp(lock) 1
-	    SAMPRcvdDS9Get $msgid params
+	    SAMPRcvdDS9Get $msgid iparams
 	    set samp(lock) 0
 	}
 	ds9.restricted-set {
 	    set samp(lock) 1
-	    SAMPRcvdDS9Set $msgid params 1
+	    SAMPRcvdDS9Set $msgid iparams 1
 	    set samp(lock) 0
 	}
 	default {

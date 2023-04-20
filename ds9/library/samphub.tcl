@@ -1236,6 +1236,7 @@ proc samp.hub.reply {args} {
 	puts "samp.hub.reply: $args"
     }
 
+    puts "***BANG"
     set secret [lindex $args 0]
     set msgid [lindex $args 1]
     set map [lindex $args 2]

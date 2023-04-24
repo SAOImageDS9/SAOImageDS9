@@ -1182,10 +1182,12 @@ proc ContourCmdGenerate {} {
     UpdateContour
 }
 
-proc ProcessSendContourCmd {proc id param {sock {}} {fn {}}} {
+proc ProcessSendContourCmd {proc id param sock fn} {
     global parse
     set parse(proc) $proc
     set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
 
     contoursend::YY_FLUSH_BUFFER
     contoursend::yy_scan_string $param

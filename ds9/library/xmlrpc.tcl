@@ -69,12 +69,9 @@ namespace eval xmlrpc {
     namespace	export serve
 
     variable	READSIZE 4096;
-
     variable	WS	"\[ |\n|\t\|\r]";	# WhiteSpace
     variable	W	"\[^ |\n|\t\]";		# a word with no spaces
     variable	DIGIT	"\[0-9\]";		# Digit
-
-    variable	acceptfd	"";		# socket to listen on
     variable	DEBUG		0;		# debug
 }
 
@@ -82,17 +79,13 @@ namespace eval xmlrpc {
 # and start listening on it
 #
 proc xmlrpc::serve {port} {
-    variable	acceptfd
-
-    set acceptfd [socket -server xmlrpc::serveOnce $port]
-    return $acceptfd
+    return [socket -server xmlrpc::serveOnce $port]
 }
 
 # Accept a new connection
 #
 proc xmlrpc::serveOnce {sock addr port} {
     variable	READSIZE
-
     debug "in serveOnce: addr: $addr"
     debug "in serveOnce: port: $port"
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
@@ -236,8 +229,8 @@ proc buildFault {errcode errmsg} {
 #
 proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     variable	READSIZE
-    global response
-    global readdone
+    global xmlresponse
+    global xmlreaddone
 
     set RE {http://([^:]+):([0-9]+)}
     if {![regexp $RE $url {} host port]} {
@@ -245,7 +238,7 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     }
 
     set sock [socket $host $port]
-    set readdone($sock) 0
+    set xmlreaddone($sock) 0
 
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
     fconfigure $sock -blocking off
@@ -256,11 +249,11 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     flush $sock
 
     fileevent $sock readable [list xmlrpc::getResponse $sock]
-    vwait readdone($sock)
+    vwait xmlreaddone($sock)
     catch {close $sock}
 
-    if {$readdone($sock) > 0} {
-	return $response($sock)
+    if {$xmlreaddone($sock) > 0} {
+	return $xmlresponse($sock)
     } else {
 	return [errReturn "xmlrpc::call failed"]
     }
@@ -270,8 +263,8 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
 # get and parse the response from the server
 #
 proc xmlrpc::getResponse {sock} {
-    global response
-    global readdone
+    global xmlresponse
+    global xmlreaddone
 
     set res [readHeader $sock]
     set headerStatus [lindex $res 0];	# Header + Status
@@ -279,8 +272,8 @@ proc xmlrpc::getResponse {sock} {
 
     set header [parseHTTPCode $headerStatus]
     set body [getBody $sock $header $body]
-    set response($sock) [parseResponse $body]
-    set readdone($sock) 1
+    set xmlresponse($sock) [parseResponse $body]
+    set xmlreaddone($sock) 1
 }
 
 # Given a socket to read on,

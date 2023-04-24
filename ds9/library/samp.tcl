@@ -89,7 +89,8 @@ proc SAMPConnect {verbose} {
     }
 
     # who are we
-    set samp(port) [lindex [fconfigure [xmlrpc::serve 0] -sockname] 2]
+    set samp(sock) [xmlrpc::serve 0]
+    set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
     set samp(home) "[info hostname]:$samp(port)"
 
     # callback
@@ -604,7 +605,7 @@ proc SAMPShutdown {} {
     SAMPDelTmpFiles
 
     # close the server socket if still up
-    catch {close $xmlrpc::acceptfd}
+    catch {close $samp(sock)}
 
     # unset samp array
     if {[info exists samp]} {

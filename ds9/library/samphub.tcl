@@ -63,7 +63,8 @@ proc SAMPHubStart {verbose} {
     set samphub(cache,images) 1
 
     set samphub(fn) $fn
-    set samphub(port) [lindex [fconfigure [xmlrpc::serve 0] -sockname] 2]
+    set samphub(sock) [xmlrpc::serve 0]
+    set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
     set samphub(secret) [SAMPHubGenerateKey]
     set samphub(timestamp) "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
 
@@ -163,6 +164,9 @@ proc SAMPHubStop {verbose} {
     SAMPHubDialogListRemove $samphub(secret)
 
     catch {file delete -force $samphub(fn)}
+
+    # close the server socket if still up
+    catch {close $samphub(sock)}
     unset samphub
 
     SAMPHubDialogUpdate

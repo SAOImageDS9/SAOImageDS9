@@ -257,7 +257,7 @@ proc CommGet {proc id paramlist fn} {
 	colorbar {ProcessSendColorbarCmd $proc $id $param}
 	console {}
 	contours -
-	contour {ProcessSendContourCmd $proc $id $param}
+	contour {ProcessSendContourCmd $proc $id $param {} $fn}
 	crop {ProcessSendCropCmd $proc $id $param}
 	crosshair {ProcessSendCrosshairCmd $proc $id $param}
 	cursor {}

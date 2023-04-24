@@ -1170,15 +1170,13 @@ proc samp.hub.callAndWait {args} {
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
 	
-	puts "***ready set go"
 	set rr {}
 	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
 	}
-	puts "...done"
-	puts {}
+
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
 
 	if {0} {
@@ -1191,9 +1189,6 @@ proc samp.hub.callAndWait {args} {
 	}
 	}
 
-#	puts "***$samphub(rr-msgid)"
-#	puts "***$samphub(rr-map)"
-	
 #	set mm [split $samphub(rr-msgid) {-}]
 #	set msgtag [lindex $mm 0]
 #	set rr-id [lindex $mm 1]
@@ -1236,7 +1231,6 @@ proc samp.hub.reply {args} {
 	puts "samp.hub.reply: $args"
     }
 
-    puts "***BANG"
     set secret [lindex $args 0]
     set msgid [lindex $args 1]
     set map [lindex $args 2]

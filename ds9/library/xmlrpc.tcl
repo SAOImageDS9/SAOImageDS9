@@ -68,13 +68,12 @@ namespace eval xmlrpc {
     namespace	export call buildRequest marshall unmarshall assoc
     namespace	export serve
 
-    variable	READSIZE 4096;		# read size
+    variable	READSIZE 4096;
 
     variable	WS	"\[ |\n|\t\|\r]";	# WhiteSpace
     variable	W	"\[^ |\n|\t\]";		# a word with no spaces
     variable	DIGIT	"\[0-9\]";		# Digit
 
-    variable	response	"";		# response to return
     variable	acceptfd	"";		# socket to listen on
     variable	DEBUG		0;		# debug
 }
@@ -116,7 +115,6 @@ proc xmlrpc::doRequest {sock} {
     }
 
     set body [getBody $sock $header $body]
-#    puts "***doRequest: $body"
 
     set	RE "<\?xml.version=.";			# xml version
     append	RE "\[^\?\]+.\?>$WS*";			# version number
@@ -202,7 +200,6 @@ proc buildResponse {result} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
 
-#    puts "***buildReponse: $body"
     set response "$header\n$body"
     return $response
     #return [string trim $response]
@@ -231,7 +228,6 @@ proc buildFault {errcode errmsg} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
 
-#    puts "***buildFault: $body"
     set response "$header\n$body"
     return [string trim $response]
 }
@@ -240,18 +236,17 @@ proc buildFault {errcode errmsg} {
 #
 proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     variable	READSIZE
-    variable	response
-    global		readdone
-    global		xmlcall
+    global response
+    global readdone
 
-    set readdone 0
-    set xmlcall 1
     set RE {http://([^:]+):([0-9]+)}
     if {![regexp $RE $url {} host port]} {
 	return [errReturn "Malformed URL"]
     }
 
     set sock [socket $host $port]
+    set readdone($sock) 0
+
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
     fconfigure $sock -blocking off
     if {[catch {set request [buildRequest $method $methodName $params $ntabs $distance]}]} {
@@ -259,11 +254,13 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     }
     puts -nonewline $sock $request
     flush $sock
+
     fileevent $sock readable [list xmlrpc::getResponse $sock]
-    vwait readdone
+    vwait readdone($sock)
     catch {close $sock}
-    if {$readdone > 0} {
-	return $response
+
+    if {$readdone($sock) > 0} {
+	return $response($sock)
     } else {
 	return [errReturn "xmlrpc::call failed"]
     }
@@ -273,8 +270,8 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
 # get and parse the response from the server
 #
 proc xmlrpc::getResponse {sock} {
-    variable	response
-    global		readdone
+    global response
+    global readdone
 
     set res [readHeader $sock]
     set headerStatus [lindex $res 0];	# Header + Status
@@ -282,9 +279,8 @@ proc xmlrpc::getResponse {sock} {
 
     set header [parseHTTPCode $headerStatus]
     set body [getBody $sock $header $body]
-#    puts "***getResponse: $body"
-    set response [parseResponse $body]
-    set readdone 1
+    set response($sock) [parseResponse $body]
+    set readdone($sock) 1
 }
 
 # Given a socket to read on,
@@ -497,7 +493,6 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
 #    set header [regsub -all "\n" $header "\r\n"]
 
 #    set request "$header\r\n$body"
-#    puts "***buildRequest: $body"
     set request "$header\n$body"
     return $request
 }
@@ -877,14 +872,3 @@ proc xmlrpc::test {} {
     debug "data: $data"
     puts [assoc "first" $data]
 }
-
-#proc bgerror {error} {
-#    global xmlcall
-#    if {$xmlcall} {
-#	global readdone
-#	set readdone -1
-#	set xmlcall 0
-#    }
-#}
-
-#xmlrpc::test

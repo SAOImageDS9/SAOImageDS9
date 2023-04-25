@@ -239,6 +239,7 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
 
     set sock [socket $host $port]
     set xmlreaddone($sock) 0
+    set xmlresponse($sock) {}
 
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
     fconfigure $sock -blocking off
@@ -252,8 +253,13 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     vwait xmlreaddone($sock)
     catch {close $sock}
 
-    if {$xmlreaddone($sock) > 0} {
-	return $xmlresponse($sock)
+    set ss $xmlreaddone($sock)
+    set rr $xmlresponse($sock)
+    unset xmlreaddone($sock)
+    unset xmlresponse($sock)
+
+    if {$ss > 0} {
+	return $rr
     } else {
 	return [errReturn "xmlrpc::call failed"]
     }

@@ -482,16 +482,13 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
 	append body "\t\t</params>\n"
     }
     append	body "</methodCall>\n"
-#    set body [regsub -all "\n" $body "\r\n"]
     set lenbod [string length $body]
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
-#    set header [regsub -all "\n" $header "\r\n"]
 
-#    set request "$header\r\n$body"
     set request "$header\n$body"
     return $request
 }
@@ -550,8 +547,7 @@ proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
 	append	str "$strtabs\t<array>\n"
 	append	str "$strtabs\t\t<data>\n"
 	foreach el $val {
-#	    append	str [marshall $el [expr $ntabs + 3] [expr $distance + 1]]
-	    append	str "<value>$el</value>"
+	    append	str [marshall $el [expr $ntabs + 3] [expr $distance + 1]]
 	    append	str "\n"
 	}
 	append	str "$strtabs\t\t</data>\n"
@@ -581,7 +577,8 @@ proc xmlrpc::validParam {param} {
 proc xmlrpc::unmarshall {str} {
     set str [string trim $str]
     if {[string range $str 0 6] != "<value>"} {
-	# check for empty element
+	# waj
+	# check for just </value> element
 	if {[string range $str 0 7] != "</value>"} {
 	    return [errReturn "Bad value tag"]
 	}
@@ -613,20 +610,9 @@ proc xmlrpc::unmarshall {str} {
 	set res [umArray $str]
     } elseif {$btag == "struct"} {
 	set res [umStruct $str]
-    } else {
-	# waj
-	#check for empty element
-	if {[string range $btag 0 0]=={/}} {
-	    set id [string first ">" $str ]
-	    if {$id != -1} {
-		set rest [string range $str $id end]
-		set rest [string trim $rest]
-		return [list $rest {}]
-	    }
-	}
 
+    } elseif {$btag == "/value"} {
 	# waj
-	# return [errReturn "Unknown type: $str"]
 	# assume string
 	set id [string first "<" $str ]
 	if {$id != -1} {
@@ -634,9 +620,12 @@ proc xmlrpc::unmarshall {str} {
 	    set rr [string range $str $id end]
 	    set str "<string>${vv}</string>${rr}"
 	    set res [umString $str]
-	} else {
-	    return [errReturn "Unknown type: $str"]
 	}
+
+    } elseif {$btag == "/string"} {
+	set res [list [string range $str 9 end] {}]
+    } else {
+	return [errReturn "Unknown type: $str"]
     }
 
     set rest [lindex $res 0]

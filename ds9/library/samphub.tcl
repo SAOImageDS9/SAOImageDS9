@@ -723,7 +723,7 @@ proc samp.hub.getRegisteredClients {args} {
 	    continue
 	}
 
-	lappend ll $samphub($cc,id)
+	lappend ll "string $samphub($cc,id)"
     }
 
     return "array [list $ll]"

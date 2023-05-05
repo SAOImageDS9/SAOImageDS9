@@ -614,9 +614,10 @@ proc xmlrpc::unmarshall {str} {
     } elseif {$btag == "struct"} {
 	set res [umStruct $str]
     } else {
+	# waj
 	#check for empty element
-	if {[string range $btag 0 1]=={/}} {
-	    set id [string first "]" $str ]
+	if {[string range $btag 0 0]=={/}} {
+	    set id [string first ">" $str ]
 	    if {$id != -1} {
 		set rest [string range $str $id end]
 		set rest [string trim $rest]
@@ -624,6 +625,7 @@ proc xmlrpc::unmarshall {str} {
 	    }
 	}
 
+	# waj
 	# return [errReturn "Unknown type: $str"]
 	# assume string
 	set id [string first "<" $str ]

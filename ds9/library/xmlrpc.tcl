@@ -594,38 +594,32 @@ proc xmlrpc::unmarshall {str} {
 	return [errReturn "No beginning tag found: $str"]
     }
 
-    if {$btag == "int" || $btag == "i4"} {
-	set res [umInt $str]
-    } elseif {$btag== "boolean"} {
-	set res [umBool $str]
-    } elseif {$btag == "string"} {
-	set res [umString $str]
-    } elseif {$btag == "double"} {
-	set res [umDouble $str]
-    } elseif {$btag == "dateTime.iso8601"} {
-	set res [umDateTime $str]
-    } elseif {$btag == "base64"} {
-	set res [umBase64 $str]
-    } elseif {$btag == "array"} {
-	set res [umArray $str]
-    } elseif {$btag == "struct"} {
-	set res [umStruct $str]
+    # waj
+    switch $btag {
+	int -
+	i4 {set res [umInt $str]}
+	boolean {set res [umBool $str]}
+	string {set res [umString $str]}
+	double {set res [umDouble $str]}
+	dateTime.iso8601 {set res [umDateTime $str]}
+	base64 {res [umBase64 $str]}
+	array {set res [umArray $str]}
+	struct {set res [umStruct $str]}
 
-    } elseif {$btag == "/value"} {
-	# waj
-	# assume string
-	set id [string first "<" $str ]
-	if {$id != -1} {
-	    set vv [string range $str 0 [expr $id-1]]
-	    set rr [string range $str $id end]
-	    set str "<string>${vv}</string>${rr}"
-	    set res [umString $str]
+	"/value" {
+	    # assume string
+	    set id [string first "<" $str ]
+	    if {$id != -1} {
+		set vv [string range $str 0 [expr $id-1]]
+		set rr [string range $str $id end]
+		set str "<string>${vv}</string>${rr}"
+		set res [umString $str]
+	    }
 	}
 
-    } elseif {$btag == "/string"} {
-	set res [list [string range $str 9 end] {}]
-    } else {
-	return [errReturn "Unknown type: $str"]
+	"/string" {set res [list [string range $str 9 end] {}]}
+	"/struct" {set res [list [string range $str 9 end] {}]}
+	default {return [errReturn "Unknown type: $str"]}
     }
 
     set rest [lindex $res 0]

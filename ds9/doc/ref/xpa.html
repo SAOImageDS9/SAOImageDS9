@@ -303,9 +303,6 @@ $xpaget ds9 bin factor<br>
 $xpaget ds9 bin depth<br>
 $xpaget ds9 bin filter<br>
 $xpaget ds9 bin function<br>
-$xpaget ds9 bin smooth<br>
-$xpaget ds9 bin smooth function<br>
-$xpaget ds9 bin smooth radius<br>
 $xpaget ds9 bin lock<br>
 <br>
 $xpaset -p ds9 bin about 4096 4096<br>
@@ -556,8 +553,8 @@ colorbar []<br>
 &nbsp;&nbsp;&nbsp; [fontsize &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fontweight normal|bold]<br>
 &nbsp;&nbsp;&nbsp; [fontslant roman|italic]<br>
-&nbsp;&nbsp;&nbsp; [size]<br>
-&nbsp;&nbsp;&nbsp; [ticks]<br>
+&nbsp;&nbsp;&nbsp; [size &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ticks &lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [match]<br>
 &nbsp;&nbsp;&nbsp; [lock [yes|no]]<br>
 &nbsp;</tt><br>
@@ -2903,8 +2900,6 @@ view&nbsp; [layout horizontal|vertical|basic|advanced]<br>
 &nbsp;&nbsp;&nbsp; [buttons yes|no]<br>
 &nbsp;&nbsp;&nbsp; [icons yes|no]<br>
 &nbsp;&nbsp;&nbsp; [colorbar yes|no]<br>
-&nbsp;&nbsp;&nbsp; [colorbar horizontal|vertical]<br>
-&nbsp;&nbsp;&nbsp; [colorbar numerics yes|no]<br>
 &nbsp;&nbsp;&nbsp; [graph horizontal|vertical yes|no]<br>
 &nbsp;&nbsp;&nbsp; [filename yes|no[<br>
 &nbsp;&nbsp;&nbsp; [object yes|no]<br>
@@ -2937,8 +2932,8 @@ $xpaget ds9 view lowhigh<br>
 $xpaget ds9 view units<br>
 $xpaget ds9 view image<br>
 $xpaget ds9 view wcsa<br>
-$xpaget ds9 view red<br>
 $xpaget ds9 view frame<br>
+$xpaget ds9 view red<br>
 <br>
 $xpaset -p ds9 view layout vertical<br>
 $xpaset -p ds9 view multi yes<br>

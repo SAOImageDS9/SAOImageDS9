@@ -68,7 +68,7 @@ array set viewsend::table {
   0:275,target 19
   6:0,target 6
   2:0 reduce
-  56:0,target 57
+  56:0,target 53
   24:0 reduce
   48:0,target 47
   41:0,target 48
@@ -86,15 +86,17 @@ array set viewsend::table {
   0:271,target 15
   17:0 reduce
   38:0 reduce
+  60:0 reduce
+  59:0 reduce
   0:290,target 34
   0:289,target 33
   0:300,target 43
   3:0,target 3
-  53:0,target 53
+  53:0,target 56
   0:268,target 12
   45:0,target 38
+  37:0,target 58
   14:0 reduce
-  37:0,target 55
   29:0,target 29
   30:0,target 30
   22:0,target 22
@@ -136,6 +138,7 @@ array set viewsend::table {
   0:280 shift
   7:0,target 7
   28:0 reduce
+  0:314,target 56
   0:0,target 32
   0:281 shift
   0:282 shift
@@ -143,7 +146,7 @@ array set viewsend::table {
   49:0 reduce
   0:283 shift
   0:284 shift
-  57:0,target 43
+  57:0,target 0
   0:285 shift
   50:0,target 51
   49:0,target 37
@@ -161,7 +164,6 @@ array set viewsend::table {
   0:301 shift
   0:291 shift
   18:0,target 18
-  37:313,target 57
   0:292 shift
   0:302 shift
   0:262,target 6
@@ -180,28 +182,31 @@ array set viewsend::table {
   0:297 shift
   0:298 shift
   0:308 shift
-  0:310 goto
   0:299 shift
-  0:311 goto
-  0:312 goto
+  0:310 shift
+  0:311 shift
+  0:312 shift
   0:281,target 25
+  0:313 goto
+  0:314 goto
   0:0 reduce
+  0:315 goto
   0:259,target 3
   0:260,target 4
   22:0 reduce
   43:0 reduce
-  0:310,target 52
   0:299,target 42
+  0:310,target 52
   37:294 shift
   0:278,target 22
   37:309 shift
   4:0,target 4
   0:257,target 1
   18:0 reduce
-  37:313 goto
-  54:0,target 0
+  54:0,target 57
   40:0 reduce
   39:0 reduce
+  37:316 goto
   46:0,target 49
   0:307,target 50
   0:297,target 40
@@ -214,18 +219,19 @@ array set viewsend::table {
   36:0 reduce
   0:305,target 48
   0:295,target 38
-  57:0 reduce
+  57:0 accept
   0:274,target 18
   12:0 reduce
-  37:294,target 55
+  37:294,target 58
   33:0 reduce
-  54:0 accept
+  54:0 reduce
   0:303,target 46
   0:293,target 37
   8:0,target 8
   1:0,target 1
   0:272,target 16
   7:0 reduce
+  58:0,target 59
   51:0,target 45
   43:0,target 33
   29:0 reduce
@@ -250,21 +256,25 @@ array set viewsend::table {
   44:0 reduce
   5:0,target 5
   0:286,target 30
-  55:0,target 56
+  55:0,target 52
   47:0,target 34
   40:0,target 36
   39:0,target 40
+  37:316,target 60
   0:265,target 9
   32:0,target 39
   24:0,target 24
   16:0,target 16
   19:0 reduce
   20:0 reduce
+  0:315,target 57
   41:0 reduce
   0:284,target 28
   0:263,target 7
   16:0 reduce
+  0:313,target 55
   37:0 reduce
+  58:0 reduce
   0:282,target 26
   0:261,target 5
   9:0,target 9
@@ -272,8 +282,10 @@ array set viewsend::table {
   2:0,target 2
   34:0 reduce
   0:311,target 53
+  60:0,target 43
+  59:0,target 60
   55:0 reduce
-  52:0,target 52
+  52:0,target 55
   44:0,target 50
   36:0,target 54
   0:279,target 23
@@ -282,8 +294,8 @@ array set viewsend::table {
   21:0,target 21
   13:0,target 13
   8:0 reduce
+  37:309,target 59
   10:0 reduce
-  37:309,target 56
   0:258,target 2
   31:0 reduce
   0:298,target 41
@@ -294,64 +306,67 @@ array set viewsend::table {
 }
 
 array set viewsend::rules {
-  9,l 311
-  11,l 311
-  32,l 312
-  53,l 312
-  6,l 311
-  28,l 311
-  50,l 312
-  49,l 312
-  3,l 310
-  25,l 311
-  46,l 312
-  0,l 314
-  22,l 311
-  43,l 312
-  18,l 311
-  40,l 312
-  39,l 312
-  15,l 311
-  36,l 312
-  57,l 313
-  12,l 311
-  33,l 312
-  54,l 312
-  7,l 311
-  29,l 311
-  30,l 311
-  51,l 312
-  4,l 310
-  26,l 311
-  47,l 312
-  1,l 310
-  23,l 311
-  44,l 312
-  19,l 311
-  20,l 311
-  41,l 312
-  16,l 311
-  37,l 312
-  13,l 311
-  34,l 312
-  55,l 313
-  8,l 311
-  10,l 311
-  31,l 311
-  52,l 312
-  5,l 311
-  27,l 311
-  48,l 312
-  2,l 310
-  24,l 311
-  45,l 312
-  21,l 311
-  42,l 312
-  17,l 311
-  38,l 312
-  14,l 311
-  35,l 312
-  56,l 313
+  9,l 314
+  11,l 314
+  32,l 315
+  53,l 315
+  6,l 314
+  28,l 314
+  50,l 315
+  49,l 315
+  3,l 313
+  25,l 314
+  46,l 315
+  0,l 317
+  22,l 314
+  43,l 315
+  18,l 314
+  40,l 315
+  39,l 315
+  15,l 314
+  36,l 315
+  57,l 315
+  12,l 314
+  33,l 315
+  54,l 315
+  7,l 314
+  29,l 314
+  30,l 314
+  51,l 315
+  4,l 313
+  26,l 314
+  47,l 315
+  1,l 313
+  23,l 314
+  44,l 315
+  19,l 314
+  20,l 314
+  41,l 315
+  16,l 314
+  37,l 315
+  58,l 316
+  13,l 314
+  34,l 315
+  55,l 315
+  8,l 314
+  10,l 314
+  31,l 314
+  52,l 315
+  5,l 314
+  27,l 314
+  48,l 315
+  2,l 313
+  24,l 314
+  45,l 315
+  21,l 314
+  42,l 315
+  17,l 314
+  38,l 315
+  60,l 316
+  59,l 316
+  14,l 314
+  35,l 315
+  56,l 315
 }
 
 array set viewsend::rules {
@@ -359,7 +374,7 @@ array set viewsend::rules {
   26,dc 1
   3,dc 1
   41,dc 1
-  55,dc 0
+  55,dc 1
   18,dc 1
   33,dc 1
   9,dc 1
@@ -383,6 +398,8 @@ array set viewsend::rules {
   31,dc 1
   7,dc 1
   45,dc 1
+  60,dc 1
+  59,dc 1
   23,dc 1
   0,dc 1
   37,dc 1
@@ -392,6 +409,7 @@ array set viewsend::rules {
   30,dc 1
   6,dc 1
   44,dc 1
+  58,dc 0
   22,dc 1
   36,dc 1
   51,dc 1
@@ -416,63 +434,66 @@ array set viewsend::rules {
 }
 
 array set viewsend::rules {
-  41,line 145
-  7,line 108
-  37,line 140
-  4,line 104
-  34,line 137
-  1,line 101
-  31,line 132
-  27,line 128
-  24,line 125
-  21,line 122
-  17,line 118
-  14,line 115
-  11,line 112
-  56,line 167
-  53,line 162
-  50,line 157
-  49,line 156
-  46,line 153
-  43,line 148
-  9,line 110
-  40,line 143
-  39,line 142
-  6,line 107
-  36,line 139
-  3,line 103
-  33,line 136
-  29,line 130
-  30,line 131
-  26,line 127
-  23,line 124
-  19,line 120
-  20,line 121
-  16,line 117
-  13,line 114
-  10,line 111
-  55,line 166
-  52,line 160
-  48,line 155
-  45,line 152
-  42,line 146
-  8,line 109
-  38,line 141
-  5,line 106
-  35,line 138
-  2,line 102
-  32,line 135
-  28,line 129
-  25,line 126
-  22,line 123
-  18,line 119
-  15,line 116
-  12,line 113
-  57,line 168
-  54,line 163
-  51,line 159
-  47,line 154
-  44,line 150
+  41,line 149
+  7,line 112
+  37,line 144
+  4,line 108
+  34,line 141
+  1,line 105
+  31,line 136
+  27,line 132
+  24,line 129
+  21,line 126
+  17,line 122
+  14,line 119
+  11,line 116
+  60,line 176
+  59,line 175
+  56,line 170
+  53,line 166
+  50,line 161
+  49,line 160
+  46,line 157
+  43,line 152
+  9,line 114
+  40,line 147
+  39,line 146
+  6,line 111
+  36,line 143
+  3,line 107
+  33,line 140
+  29,line 134
+  30,line 135
+  26,line 131
+  23,line 128
+  19,line 124
+  20,line 125
+  16,line 121
+  13,line 118
+  10,line 115
+  58,line 174
+  55,line 169
+  52,line 164
+  48,line 159
+  45,line 156
+  42,line 150
+  8,line 113
+  38,line 145
+  5,line 110
+  35,line 142
+  2,line 106
+  32,line 139
+  28,line 133
+  25,line 130
+  22,line 127
+  18,line 123
+  15,line 120
+  12,line 117
+  57,line 171
+  54,line 168
+  51,line 163
+  47,line 158
+  44,line 154
 }
 
 array set viewsend::lr1_table {
@@ -480,7 +501,7 @@ array set viewsend::lr1_table {
   14,trans {}
   36 {{54 0 1}}
   33,trans {}
-  37 {{43 0 1} {55 0 0} {56 0 0} {57 0 0}}
+  37 {{43 0 1} {58 0 0} {59 0 0} {60 0 0}}
   52,trans {}
   38 {{44 0 1}}
   39 {{40 0 1}}
@@ -488,7 +509,7 @@ array set viewsend::lr1_table {
   18,trans {}
   1,trans {}
   41 {{48 0 1}}
-  37,trans {{294 55} {309 56} {313 57}}
+  37,trans {{294 58} {309 59} {316 60}}
   42 {{35 0 1}}
   56,trans {}
   43 {{33 0 1}}
@@ -506,22 +527,27 @@ array set viewsend::lr1_table {
   49 {{37 0 1}}
   46,trans {}
   51 {{45 0 1}}
-  52 {{52 0 1}}
+  52 {{55 0 1}}
   13,trans {}
-  53 {{53 0 1}}
+  53 {{56 0 1}}
   32,trans {}
-  54 {{0 0 1}}
+  54 {{57 0 1}}
   51,trans {}
-  55 {{56 0 1}}
-  56 {{57 0 1}}
-  57 {{43 0 2}}
+  55 {{52 0 1}}
+  56 {{53 0 1}}
   17,trans {}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {268 12} {269 13} {270 14} {271 15} {272 16} {273 17} {274 18} {275 19} {276 20} {277 21} {278 22} {279 23} {280 24} {281 25} {282 26} {283 27} {284 28} {285 29} {286 30} {287 31} {288 32} {289 33} {290 34} {291 35} {292 36} {293 37} {295 38} {296 39} {297 40} {298 41} {299 42} {300 43} {301 44} {302 45} {303 46} {304 47} {305 48} {306 49} {307 50} {308 51} {310 52} {311 53} {312 54}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {268 12} {269 13} {270 14} {271 15} {272 16} {273 17} {274 18} {275 19} {276 20} {277 21} {278 22} {279 23} {280 24} {281 25} {282 26} {283 27} {284 28} {285 29} {286 30} {287 31} {288 32} {289 33} {290 34} {291 35} {292 36} {293 37} {295 38} {296 39} {297 40} {298 41} {299 42} {300 43} {301 44} {302 45} {303 46} {304 47} {305 48} {306 49} {307 50} {308 51} {310 52} {311 53} {312 54} {313 55} {314 56} {315 57}}
+  57 {{0 0 1}}
+  58 {{59 0 1}}
   36,trans {}
   55,trans {}
+  60 {{43 0 2}}
+  59 {{60 0 1}}
   22,trans {}
   4,trans {}
   41,trans {}
+  60,trans {}
+  59,trans {}
   26,trans {}
   8,trans {}
   45,trans {}
@@ -536,6 +562,7 @@ array set viewsend::lr1_table {
   3,trans {}
   40,trans {}
   39,trans {}
+  58,trans {}
   10 {{10 0 1}}
   11 {{11 0 1}}
   25,trans {}
@@ -550,7 +577,7 @@ array set viewsend::lr1_table {
   29,trans {}
   16 {{16 0 1}}
   48,trans {}
-  0 {{0 0 0} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0} {39 0 0} {40 0 0} {41 0 0} {42 0 0} {43 0 0} {44 0 0} {45 0 0} {46 0 0} {47 0 0} {48 0 0} {49 0 0} {50 0 0} {51 0 0} {52 0 0} {53 0 0} {54 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0} {13 0 0} {14 0 0} {15 0 0} {16 0 0} {17 0 0} {18 0 0} {19 0 0} {20 0 0} {21 0 0} {22 0 0} {23 0 0} {24 0 0} {25 0 0} {26 0 0} {27 0 0} {28 0 0} {29 0 0} {30 0 0} {31 0 0}}
+  0 {{0 0 0} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0} {39 0 0} {40 0 0} {41 0 0} {42 0 0} {43 0 0} {44 0 0} {45 0 0} {46 0 0} {47 0 0} {48 0 0} {49 0 0} {50 0 0} {51 0 0} {52 0 0} {53 0 0} {54 0 0} {55 0 0} {56 0 0} {57 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0} {13 0 0} {14 0 0} {15 0 0} {16 0 0} {17 0 0} {18 0 0} {19 0 0} {20 0 0} {21 0 0} {22 0 0} {23 0 0} {24 0 0} {25 0 0} {26 0 0} {27 0 0} {28 0 0} {29 0 0} {30 0 0} {31 0 0}}
   17 {{17 0 1}}
   1 {{1 0 1}}
   18 {{18 0 1}}
@@ -601,6 +628,7 @@ array set viewsend::token_id_table {
   292,line 46
   302,line 56
   288 BUTTONS_
+  317,t 1
   265,title WCSD
   289 COLORBAR_
   290 COLORBARNUMERICS_
@@ -626,30 +654,33 @@ array set viewsend::token_id_table {
   308 VERTGRAPH_
   285,line 36
   298 KEYWORD_
-  310 coordsys
+  310 RED_
   309 VERTICAL_
   299 KEYVALUE_
-  311 wcssys
+  311 GREEN_
   283,t 0
-  312 viewsend
-  313 graph
+  312 BLUE_
+  313 coordsys
   314,t 1
-  314 start'
+  314 wcssys
   282,line 33
+  315 viewsend
+  316 graph
   264,title WCSC
+  317 start'
   283,title WCSV
-  312,title {}
+  312,title BLUE
   278,line 29
-  error,line 99
+  error,line 103
   258,t 0
   275,line 26
   279,t 0
   280,t 0
-  311,t 1
+  311,t 0
   272,line 23
   263,title WCSB
   282,title WCSU
-  311,title {}
+  311,title GREEN
   268,line 19
   276,t 0
   265,line 16
@@ -660,14 +691,15 @@ array set viewsend::token_id_table {
   0 {$}
   262,title WCSA
   281,title WCST
-  310,title {}
   error,t 0
+  310,title RED
   309,title VERTICAL
   299,title KEYVALUE
   258,line 8
   273,t 0
   294,t 0
   304,t 0
+  317,line 177
   261,title WCS
   279,title WCSR
   280,title WCSS
@@ -675,10 +707,10 @@ array set viewsend::token_id_table {
   269,t 0
   270,t 0
   298,title KEYWORD
-  314,line 169
+  314,line 109
   291,t 0
   301,t 0
-  311,line 105
+  311,line 66
   307,line 61
   266,t 0
   260,title DETECTOR
@@ -700,6 +732,7 @@ array set viewsend::token_id_table {
   284,t 0
   306,title PANNER
   296,title ICONS
+  315,t 1
   284,line 35
   281,line 32
   260,t 0
@@ -708,7 +741,7 @@ array set viewsend::token_id_table {
   257,title IMAGE
   277,line 28
   276,title WCSO
-  312,t 1
+  312,t 0
   305,title OBJECT
   295,title HORZGRAPH
   274,line 25
@@ -733,12 +766,13 @@ array set viewsend::token_id_table {
   271,t 0
   292,t 0
   302,t 0
+  316,line 173
   273,title WCSL
-  313,line 165
+  313,line 104
   292,title FRAME
   302,title MAGNIFIER
   267,t 0
-  310,line 100
+  310,line 65
   309,line 63
   299,line 53
   288,t 0
@@ -754,6 +788,7 @@ array set viewsend::token_id_table {
   289,line 43
   290,line 44
   300,line 54
+  316,t 1
   286,line 37
   271,title WCSJ
   261,t 0
@@ -771,8 +806,9 @@ array set viewsend::token_id_table {
   270,title WCSI
   273,line 24
   288,title BUTTONS
+  317,title {}
   278,t 0
-  310,t 1
+  310,t 0
   309,t 0
   299,t 0
   269,line 20
@@ -782,6 +818,7 @@ array set viewsend::token_id_table {
   275,t 0
   263,line 14
   287,title WCSZ
+  316,title {}
   306,t 0
   296,t 0
   260,line 10
@@ -792,6 +829,7 @@ array set viewsend::token_id_table {
   286,title WCSY
   293,t 0
   303,t 0
+  315,title {}
   258 PHYSICAL_
   260 DETECTOR_
   259 AMPLIFIER_
@@ -799,6 +837,7 @@ array set viewsend::token_id_table {
   262 WCSA_
   263 WCSB_
   264 WCSC_
+  315,line 138
   265 WCSD_
   266 WCSE_
   267 WCSF_
@@ -806,7 +845,7 @@ array set viewsend::token_id_table {
   268 WCSG_
   269 WCSH_
   270 WCSI_
-  312,line 134
+  312,line 67
   271 WCSJ_
   272 WCSK_
   289,t 0
@@ -981,8 +1020,11 @@ proc viewsend::yyparse {} {
                     52 { ProcessSendCmdYesNo view info,$1 }
                     53 { ProcessSendCmdYesNo view info,$1 }
                     54 { ProcessSendCmdYesNo view info,frame }
-                    56 { ProcessSendCmdYesNo view graph,horz }
-                    57 { ProcessSendCmdYesNo view graph,vert }
+                    55 { ProcessSendCmdYesNo rgb red }
+                    56 { ProcessSendCmdYesNo rgb green }
+                    57 { ProcessSendCmdYesNo rgb blue }
+                    59 { ProcessSendCmdYesNo view graph,horz }
+                    60 { ProcessSendCmdYesNo view graph,vert }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

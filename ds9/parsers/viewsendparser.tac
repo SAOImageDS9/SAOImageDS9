@@ -30,6 +30,10 @@
 %token VERTGRAPH_
 %token VERTICAL_
 
+%token RED_
+%token GREEN_
+%token BLUE_
+
 %%
 
 #include coordsys.trl
@@ -64,6 +68,10 @@ viewsend :
  | wcssys {ProcessSendCmdYesNo view info,$1}
 
  | FRAME_ {ProcessSendCmdYesNo view info,frame}
+
+ | RED_ {ProcessSendCmdYesNo rgb red}
+ | GREEN_ {ProcessSendCmdYesNo rgb green}
+ | BLUE_ {ProcessSendCmdYesNo rgb blue}
  ;
 
 graph :

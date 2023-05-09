@@ -506,7 +506,6 @@ proc xpa::yyparse {} {
                     6 { set _ 0 }
                     7 { set _ 0 }
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    11 { if {$1} {XPAConnect} else {XPADisconnect} }
                     14 { XPAConnect }
                     15 { XPADisconnect }
                     16 { XPAInfo }

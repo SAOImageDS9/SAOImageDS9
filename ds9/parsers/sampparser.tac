@@ -27,8 +27,8 @@ command : samp
  | samp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-samp : CLIENT_ yesno
- | HUB_ yesno
+samp : CLIENT_ yesno # sampfirst
+ | HUB_ yesno # sampfirst
 
  | CONNECT_ {SAMPConnect 1}
  | DISCONNECT_ {SAMPDisconnect}

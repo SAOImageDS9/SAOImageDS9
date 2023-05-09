@@ -4,13 +4,14 @@
 
 %start xpasend
 
+%token CONNECT_
 %token INFO_
 
 %%
 
 xpasend : {ProcessSendCmd XPAInfoResult}
-# backward compatibility	
  | INFO_ {ProcessSendCmd XPAInfoResult}
+ | CONNECT_ {ProcessXPASendCmdConnect}
  ;
 
 %%

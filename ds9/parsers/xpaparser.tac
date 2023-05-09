@@ -25,10 +25,10 @@ command : xpa
  | xpa {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-xpa : yesno {if {$1} {XPAConnect} else {XPADisconnect}}
- | method 
+xpa : yesno # xpafirst
+ | method # xpafirst
 # backward compatibility
- | NOXPANS_ # do nothing
+ | NOXPANS_ # xpafirst
 
  | CONNECT_ {XPAConnect}
  | DISCONNECT_ {XPADisconnect}

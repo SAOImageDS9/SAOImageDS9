@@ -3115,18 +3115,16 @@ $xpaset -p ds9 width 512</tt><br>
 <p><b><a name="xpa" id="xpa"></a>xpa</b></p>
 <p>Configure XPA.</p>
 <tt>Syntax:<br>
--xpa [no]<br>
-&nbsp;&nbsp;&nbsp; [disconnect]<br>
+xpa [connect|disconnect]<br>
 &nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;<br>
 Example:<br>
+$xpaget ds9 xpa connect<br>
 $xpaget ds9 xpa info<br>
 <br>
-$xpaget ds9 xpa info<br>
-<br>
-$xpaset -p ds9 no<br>
+$xpaset -p ds9 connect<br>
 $xpaset -p ds9 disconnect<br>
-$xpaset -p ds9 info<br></tt>
+$xpaset -p ds9 info<br>
 <p><b><a name="zscale" id="zscale"></a>zscale</b></p>
 <p>Set Scale Limits based&nbsp; on the <i>IRAF</i> algorithm.</p>
 <tt>Syntax:<br>

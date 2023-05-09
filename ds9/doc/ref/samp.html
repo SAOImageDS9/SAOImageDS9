@@ -3230,19 +3230,18 @@ width 512<br></tt>
 <p><b><a name="xpa" id="xpa"></a>xpa</b></p>
 <p>Configure XPA.</p>
 <tt>Syntax:<br>
-xpa [yes|no]<br>
-&nbsp;&nbsp;&nbsp; [connect|disconnect]<br>
+xpa [connect|disconnect]<br>
 &nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
+xpa connect<br>
 xpa info<br>
 <br>
 ds9.set(string cmd)<br>
-xpa yes<br>
 xpa connect<br>
-xpa local<br>
-xpa info<br></tt>
+xpa disconnect<br>
+xpa info<br>
 <p><b><a name="zscale" id="zscale"></a>zscale</b></p>
 <p>Set Scale Limits based&nbsp; on the <i>IRAF</i> algorithm.</p>
 <tt>Syntax:<br>

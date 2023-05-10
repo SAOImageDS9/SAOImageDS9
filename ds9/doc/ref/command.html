@@ -778,14 +778,13 @@ $ds9 -exit<br></tt>
 -export [array|nrrd|envi|gif|tiff|jpeg|png] &lt;filename&gt;<br>
 -export array &lt;filename&gt;[big|little|native]<br>
 -export nrrd &lt;filename&gt;[big|little|native]<br>
--export envi &lt;header&gt; [&lt;filename&gt;][big|little|native]<br>
+-export envi &lt;header&gt; &lt;filename&gt;[big|little|native]<br>
 -export &lt;filename&gt;.jpeg [1-100]<br>
 -export &lt;filename&gt;.tiff [none|jpeg|packbits|deflate]<br>
 <br>
 Example:<br>
 $ds9 -export array foo.arr little<br>
 $ds9 -export nrrd foo.nrrd little<br>
-$ds9 -export envi foo.hdr little<br>
 $ds9 -export envi foo.hdr foo.bsq little<br>
 $ds9 -export tiff foo.tiff jpeg<br>
 $ds9 -export jpeg foo.jpeg 75<br>

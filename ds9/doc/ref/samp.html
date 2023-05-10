@@ -941,7 +941,7 @@ exit</tt><br>
 export[array|nrrd|envi|gif|tiff|jpeg|png]&lt;filename&gt;<br>
 export array &lt;filename&gt;[big|little|native]<br>
 export nrrd &lt;filename&gt;[big|little|native]<br>
-export envi &lt;header&gt; [&lt;filename&gt;][big|little|native]<br>
+export envi &lt;header&gt; &lt;filename&gt;[big|little|native]<br>
 export jpeg &lt;filename&gt;[1-100]<br>
 export tiff &lt;filename&gt;[none|jpeg|packbits|deflate]<br>
 &nbsp;<br>
@@ -950,7 +950,6 @@ Example:<br>
 ds9.set (string cmd)<br>
 export array foo.arr little<br>
 export nrrd foo.nrrd little<br>
-export envi foo.hdr little<br>
 export envi foo.hdr foo.bsq little<br>
 export tiff foo.tiff jpeg<br>
 export jpeg foo.jpeg 75<br>

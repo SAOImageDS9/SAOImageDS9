@@ -33,39 +33,33 @@ command : export
  | export {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-export : STRING_ {ExportCmdSave [ExtToFormat $1] $1}
- | STRING_ opts {ExportCmdSave [ExtToFormat $1] $1}
- | STRING_ endian {ExportCmdSave [ExtToFormat $1] $1}
+export : GIF_ STRING_ {ExportCmdSave gif $2}
+ | TIFF_ STRING_ tiffopts {ExportCmdSave tiff $2}
+ | JPEG_ STRING_ jpegopts {ExportCmdSave jpeg $2}
+ | PNG_ STRING_ {ExportCmdSave png $2}
 
- | ext STRING_ {ExportCmdSave $1 $2}
- | ext STRING_ opts {ExportCmdSave $1 $2}
-
- | ext2 STRING_ {ExportCmdSave $1 $2}
- | ext2 STRING_ endian {ExportCmdSave $1 $2}
- | ENVI_ STRING_ STRING_ {ExportCmdSave envi $2 $3}
+ | ARRAY_ STRING_ endian {ExportCmdSave array $2}
+ | RGBARRAY_ STRING_ endian {ExportCmdSave rgbarray $2}
+ | NRRD_ STRING_ endian {ExportCmdSave nrrd $2}
  | ENVI_ STRING_ STRING_ endian {ExportCmdSave envi $2 $3}
- ;
 
-ext : GIF_ {set _ gif}
- | TIFF_ {set _ tiff}
- | JPEG_ {set _ jpeg}
- | PNG_ {set _ png}
- ;
+ # backward compatibility
+ | STRING_ {ExportCmdSave [ExtToFormat $1] $1}
+;
 
-ext2 : ARRAY_ {set _ array}
- | RGBARRAY_ {set _ rgbarray}
- | NRRD_ {set _ nrrd}
- | ENVI_ {set _ envi}
- ;
-
-opts : NONE_ {ProcessCmdSet export tiff,compress none}
+tiffopts : {ProcessCmdSet export tiff,compress none}
+ | NONE_ {ProcessCmdSet export tiff,compress none}
  | JPEG_ {ProcessCmdSet export tiff,compress jpeg}
  | PACKBITS_ {ProcessCmdSet export tiff,compress packbits}
  | DEFLATE_ {ProcessCmdSet export tiff,compress deflate}
+ ;
+
+jpegopts : {ProcessCmdSet export jpeg,quality 100}
  | numeric {ProcessCmdSet export jpeg,quality $1}
  ;
- 
-endian : BIG_ {ProcessCmdSet export endian big}
+
+endian : {ProcessCmdSet export endian native}
+ | BIG_ {ProcessCmdSet export endian big}
  | LITTLE_ {ProcessCmdSet export endian little}
  | NATIVE_ {ProcessCmdSet export endian native}
  ;

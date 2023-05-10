@@ -206,15 +206,15 @@ set SEXSTR_ 280
 set INT_ 281
 set REAL_ 282
 set STRING_ 283
-set POSS2RED_ 284
-set POSS2INFRARED_ 285
-set POSS2BLUE_ 286
-set POSS1BLUE_ 287
-set POSS1RED_ 288
+set POSS2UKSTU_RED_ 284
+set POSS2UKSTU_IR_ 285
+set POSS2UKSTU_BLUE_ 286
+set POSS1_BLUE_ 287
+set POSS1_RED_ 288
 set ALL_ 289
 set QUICKV_ 290
-set GSC2_ 291
-set GSC1_ 292
+set PHASE2_GSC2_ 291
+set PHASE2_GSC1_ 292
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -550,19 +550,19 @@ set GSC1_ 292
         set numlines [expr {[llength [split $yytext "\n"]] - 1}]
         switch -- $matched_rule {
             0 {
-return $POSS2RED_
+return $POSS2UKSTU_RED_
             }
             1 {
-return $POSS2INFRARED_
+return $POSS2UKSTU_IR_
             }
             2 {
-return $POSS2BLUE_
+return $POSS2UKSTU_BLUE_
             }
             3 {
-return $POSS1BLUE_
+return $POSS1_BLUE_
             }
             4 {
-return $POSS1RED_
+return $POSS1_RED_
             }
             5 {
 return $ALL_
@@ -571,10 +571,10 @@ return $ALL_
 return $QUICKV_
             }
             7 {
-return $GSC2_
+return $PHASE2_GSC2_
             }
             8 {
-return $GSC1_
+return $PHASE2_GSC1_
             }
             9 {
 return $YES_

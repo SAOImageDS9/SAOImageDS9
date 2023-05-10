@@ -7,15 +7,15 @@
 
 %%
 
-poss2ukstu_red	{return $POSS2RED_}
-poss2ukstu_ir	{return $POSS2INFRARED_}
-poss2ukstu_blue	{return $POSS2BLUE_}
-poss1_blue	{return $POSS1BLUE_}
-poss1_red	{return $POSS1RED_}
+poss2ukstu_red	{return $POSS2UKSTU_RED_}
+poss2ukstu_ir	{return $POSS2UKSTU_IR_}
+poss2ukstu_blue	{return $POSS2UKSTU_BLUE_}
+poss1_blue	{return $POSS1_BLUE_}
+poss1_red	{return $POSS1_RED_}
 all		{return $ALL_}
 quickv		{return $QUICKV_}
-phase2_gsc2	{return $GSC2_}
-phase2_gsc1	{return $GSC1_}
+phase2_gsc2	{return $PHASE2_GSC2_}
+phase2_gsc1	{return $PHASE2_GSC1_}
 
 #include yesno.fin
 #include imgsvr.fin

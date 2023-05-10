@@ -9,15 +9,15 @@
 
 %start command
 
-%token POSS2RED_
-%token POSS2INFRARED_
-%token POSS2BLUE_
-%token POSS1BLUE_
-%token POSS1RED_
+%token POSS2UKSTU_RED_
+%token POSS2UKSTU_IR_
+%token POSS2UKSTU_BLUE_
+%token POSS1_BLUE_
+%token POSS1_RED_
 %token ALL_
 %token QUICKV_
-%token GSC2_
-%token GSC1_
+%token PHASE2_GSC2_
+%token PHASE2_GSC1_
 
 %%
 
@@ -53,15 +53,15 @@ update : FRAME_ {IMGSVRUpdate dstsci; IMGSVRApply dstsci 1}
  | CROSSHAIR_ {IMGSVRCrosshair dstsci; IMGSVRApply dstsci 1}
  ;
 
-survey : POSS2RED_ {set _ poss2ukstu_red}
- | POSS2INFRARED_ {set _ poss2ukstu_ir}
- | POSS2BLUE_ {set _ poss2ukstu_blue}
- | POSS1BLUE_ {set _ poss1_blue}
- | POSS1RED_ {set _ poss1_red}
+survey : POSS2UKSTU_RED_ {set _ poss2ukstu_red}
+ | POSS2UKSTU_IR_ {set _ poss2ukstu_ir}
+ | POSS2UKSTU_BLUE_ {set _ poss2ukstu_blue}
+ | POSS1_BLUE_ {set _ poss1_blue}
+ | POSS1_RED_ {set _ poss1_red}
  | ALL_ {set _ all}
  | QUICKV_ {set _ quickv}
- | GSC2_ {set _ phase2_gsc2}
- | GSC1_ {set _ phase2_gsc1}
+ | PHASE2_GSC2_ {set _ phase2_gsc2}
+ | PHASE2_GSC1_ {set _ phase2_gsc1}
  ;
 
 %%

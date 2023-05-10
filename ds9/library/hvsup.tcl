@@ -1761,7 +1761,6 @@ proc HVImageURL {varname url width height} {
     }
 
     ParseURL $url r
-    DumpURL r
 
     set fn {}
     switch -- $r(scheme) {

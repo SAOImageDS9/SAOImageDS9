@@ -138,10 +138,8 @@ set UNIQUE_ 393
 set UNITS_ 394
 set UPDATE_ 395
 set ADAC_ 396
-set CADC_ 397
-set CAMBRIDGE_ 398
-set SAO_ 399
-set UKIRT_ 400
-set IUCAA_ 401
-set BEJING_ 402
-set SAAO_ 403
+set SAO_ 397
+set INASAN_ 398
+set IUCAA_ 399
+set BEJING_ 400
+set SAAO_ 401

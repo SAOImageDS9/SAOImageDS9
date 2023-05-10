@@ -84,10 +84,8 @@ update	    {return $UPDATE_}
 
 cds	    {return $CDS_}
 adac	    {return $ADAC_}
-cadc	    {return $CADC_}
-cambridge   {return $CAMBRIDGE_}
 sao	    {return $SAO_}
-ukirt	    {return $UKIRT_}
+inasan	    {return $INASAN_}
 iucaa	    {return $IUCAA_}
 bejing	    {return $BEJING_}
 saao	    {return $SAAO_}

@@ -38,10 +38,8 @@ proc CATDef {} {
     set icat(server,menu) { \
 	{{CDS, France} cds} \
 	{{Tokyo, Japan} adac} \
-	{{CADC, Canada} cadc} \
-	{{Cambridge, UK} cambridge} \
 	{{CFA, USA} sao} \
-	{{UKIRT-Hawaii, USA} ukirt} \
+	{{INASAN, Russia} inasan} \
 	{{IUCAA, India} iucaa} \
 	{{Bejing, China} bejing} \
 	{{SAAO, South Africa} saao} \

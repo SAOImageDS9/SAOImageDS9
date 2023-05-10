@@ -1,1 +1,2 @@
-set INFO_ 257
+set CONNECT_ 257
+set INFO_ 258

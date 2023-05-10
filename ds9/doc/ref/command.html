@@ -402,7 +402,7 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [samp]<br>
 &nbsp;&nbsp;&nbsp; [samp broadcast]<br>
 &nbsp;&nbsp;&nbsp; [samp send &lt;application&gt;]<br>
-&nbsp;&nbsp;&nbsp; [servercds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]<br>
+&nbsp;&nbsp;&nbsp; [server cds|adac|sao|inasan|iucaa|bejing|saao]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [radius &lt;value&gt; degrees|arcmin|arcsec]<br>
 &nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;]<br>
@@ -525,8 +525,8 @@ $ds9 -cmap close<br></tt>
 &nbsp;&nbsp;&nbsp; [fontsize &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fontweight normal|bold]<br>
 &nbsp;&nbsp;&nbsp; [fontslant roman|italic]<br>
-&nbsp;&nbsp;&nbsp; [size]<br>
-&nbsp;&nbsp;&nbsp; [ticks]<br>
+&nbsp;&nbsp;&nbsp; [size &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ticks &lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [match]<br>
 &nbsp;&nbsp;&nbsp; [lock [yes|no]]<br>
 &nbsp;<br>
@@ -778,14 +778,13 @@ $ds9 -exit<br></tt>
 -export [array|nrrd|envi|gif|tiff|jpeg|png] &lt;filename&gt;<br>
 -export array &lt;filename&gt;[big|little|native]<br>
 -export nrrd &lt;filename&gt;[big|little|native]<br>
--export envi &lt;header&gt; [&lt;filename&gt;][big|little|native]<br>
+-export envi &lt;header&gt; &lt;filename&gt;[big|little|native]<br>
 -export &lt;filename&gt;.jpeg [1-100]<br>
 -export &lt;filename&gt;.tiff [none|jpeg|packbits|deflate]<br>
 <br>
 Example:<br>
 $ds9 -export array foo.arr little<br>
 $ds9 -export nrrd foo.nrrd little<br>
-$ds9 -export envi foo.hdr little<br>
 $ds9 -export envi foo.hdr foo.bsq little<br>
 $ds9 -export tiff foo.tiff jpeg<br>
 $ds9 -export jpeg foo.jpeg 75<br>
@@ -883,21 +882,21 @@ $ds9 -footprint update</tt><br>
 <p><b><a name="frame" id="frame"></a>frame</b></p>
 <p>Controls frame functions. Frames may be created, deleted, reset, and centered. While return the current frame number. If you goto a frame that does not exists, it will be created. If the frame is hidden, it will be shown. The 'frameno' option is available for backward compatibility.</p>
 <tt>Syntax:<br>
--frame [center [#|all]]<br>
-&nbsp;&nbsp;&nbsp; [clear [#|all]]<br>
+-frame [center [&lt;integer&gt;|all]]<br>
+&nbsp;&nbsp;&nbsp; [clear [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [new [rgb]]<br>
-&nbsp;&nbsp;&nbsp; [delete [#|all]]<br>
-&nbsp;&nbsp;&nbsp; [reset [#|all]]<br>
-&nbsp;&nbsp;&nbsp; [refresh [#|all]]<br>
-&nbsp;&nbsp;&nbsp; [hide [#|all]]<br>
-&nbsp;&nbsp;&nbsp; [show [#|all]]<br>
+&nbsp;&nbsp;&nbsp; [delete [&lt;integer&gt;|all]]<br>
+&nbsp;&nbsp;&nbsp; [reset [&lt;integer&gt;|all]]<br>
+&nbsp;&nbsp;&nbsp; [refresh [&lt;integer&gt;|all]]<br>
+&nbsp;&nbsp;&nbsp; [hide [&lt;integer&gt;|all]]<br>
+&nbsp;&nbsp;&nbsp; [show [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [move first]<br>
 &nbsp;&nbsp;&nbsp; [move back]<br>
 &nbsp;&nbsp;&nbsp; [move forward]<br>
 &nbsp;&nbsp;&nbsp; [move last]<br>
 &nbsp;&nbsp;&nbsp; [first|next|prev|last]<br>
-&nbsp;&nbsp;&nbsp; [frameno #]<br>
-&nbsp;&nbsp;&nbsp; [#]<br>
+&nbsp;&nbsp;&nbsp; [frameno &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [&lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [match &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]<br>
 &nbsp;<br>
@@ -2612,12 +2611,15 @@ $ds9 -width 512<br></tt>
 -xpa [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [connect|disconnect]<br>
 &nbsp;&nbsp;&nbsp; [inet|local|unix|localhost]<br>
+&nbsp;&nbsp;&nbsp; [noxpans] <br>
 &nbsp;&nbsp;&nbsp; [info]<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -xpa yes<br>
-$ds9 -xpa connect<br>
 $ds9 -xpa local<br>
+$ds9 -xpa noxpans<br>
+$ds9 -xpa connect<br>
+$ds9 -xpa disconnect<br>
 $ds9 -xpa info<br></tt>
 <p><b><a name="zmax" id="zmax"></a>zmax</b></p>
 <p>Set Scale Limits based&nbsp; on the <i>IRAF</i> algorithm and maximum data value.</p>

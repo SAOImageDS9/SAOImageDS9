@@ -1891,7 +1891,8 @@ proc HVImageURL {varname url width height} {
 	set iw [image width $img]
 	set ih [image height $img]
 
-	set doit 1
+	# nolonger works, set to zero
+	set doit 0
 	# check for one dimension of 0. calculate to maintain aspect ratio
 	if {$width == 0} {
 	    set width [expr $iw*$height/$ih]
@@ -1925,8 +1926,7 @@ proc HVImageURL {varname url width height} {
 		puts stderr "HVImageURL resample image $iw->$width $ih->$height"
 	    }
 
-	    set img2 \
-		[image create photo -width $width -height $height]
+	    set img2 [image create photo -width $width -height $height]
 	    if {[catch {blt::winop image resample $img $img2 box} ]} {
 		# just use existing img
 		if {$debug(tcl,hv)} {

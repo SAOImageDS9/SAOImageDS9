@@ -35,6 +35,10 @@ vert		{return $VERTICAL_}
 vertical	{return $VERTICAL_}
 vertgraph	{return $VERTGRAPH_}
 
+red		{return $RED_}
+green		{return $GREEN_}
+blue		{return $BLUE_}
+
 #include coordsys.fin
 #include wcssys.fin
 #include ws.fin

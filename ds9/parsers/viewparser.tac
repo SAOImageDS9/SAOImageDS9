@@ -11,14 +11,12 @@
 
 %token ADVANCED_
 %token BASIC_
-%token BLUE_
 %token BUTTONS_
 %token COLORBAR_
 %token COLORBARNUMERICS_
 %token FILENAME_
 %token FRAME_
 %token GRAPH_
-%token GREEN_
 %token HORIZONTAL_
 %token HORZGRAPH_
 %token ICONS_
@@ -32,10 +30,13 @@
 %token MULTI_
 %token OBJECT_
 %token PANNER_
-%token RED_
 %token UNITS_
 %token VERTICAL_
 %token VERTGRAPH_
+
+%token RED_
+%token BLUE_
+%token GREEN_
 
 %%
 

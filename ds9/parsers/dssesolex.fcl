@@ -8,9 +8,9 @@
 %%
 
 dss1	    {return $DSS1_}
-dss2-red    {return $DSS2RED_}
-dss2-blue    {return $DSS2BLUE_}
-dss2-infrared {return $DSS2INFRARED_}
+dss2-red    {return $DSS2_RED_}
+dss2-blue    {return $DSS2_BLUE_}
+dss2-infrared {return $DSS2_INFRARED_}
 
 #include yesno.fin
 #include imgsvr.fin

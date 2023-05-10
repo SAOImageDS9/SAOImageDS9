@@ -19,7 +19,7 @@ tilesend: {TileSendCmd}
 
 grid : MODE_ {ProcessSendCmdGet tile grid,mode}
  | DIRECTION_ {ProcessSendCmdGet tile grid,dir}
- | LAYOUT_ {ProcessSendCmdGet tile grid,row}
+ | LAYOUT_ {ProcessSendCmdGet2 tile grid,col grid,row}
  | GAP_ {ProcessSendCmdGet tile grid,gap}
  ;
 

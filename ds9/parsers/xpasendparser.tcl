@@ -61,62 +61,75 @@ proc xpasend::unsetupvalues {numsyms} {
 }
 
 array set xpasend::table {
-  2:0 accept
+  3:0,target 0
   0:257 shift
+  0:258 shift
+  0:259 goto
   0:258,target 2
   0:0,target 1
-  0:258 goto
-  1:0,target 2
+  2:0,target 2
   0:0 reduce
-  2:0,target 0
-  1:0 reduce
   0:257,target 1
+  1:0 reduce
+  2:0 reduce
+  3:0 accept
+  0:259,target 3
+  1:0,target 3
 }
 
 array set xpasend::rules {
-  0,l 259
-  1,l 258
-  2,l 258
+  0,l 260
+  1,l 259
+  2,l 259
+  3,l 259
 }
 
 array set xpasend::rules {
   0,dc 1
   2,dc 1
   1,dc 0
+  3,dc 1
 }
 
 array set xpasend::rules {
   2,line 15
   1,line 14
+  3,line 16
 }
 
 array set xpasend::lr1_table {
-  0,trans {{257 1} {258 2}}
-  0 {{0 0 0} {1 0 0} {2 0 0}}
+  0,trans {{257 1} {258 2} {259 3}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0}}
   1,trans {}
-  1 {{2 0 1}}
+  1 {{3 0 1}}
   2,trans {}
-  2 {{0 0 1}}
+  2 {{2 0 1}}
+  3,trans {}
+  3 {{0 0 1}}
 }
 
 array set xpasend::token_id_table {
   0 {$}
   0,t 0
-  error error
   error,t 0
-  258,line 12
-  257 INFO_
+  error error
+  258,line 9
+  error,line 12
+  257 CONNECT_
   257,t 0
-  error,line 11
-  258,t 1
-  258 xpasend
+  258 INFO_
+  258,t 0
+  260,t 1
+  260 start'
   259,t 1
-  259 start'
+  259 xpasend
   error,title {}
   257,line 8
-  259,line 16
-  257,title INFO
-  258,title {}
+  260,line 17
+  259,line 13
+  257,title CONNECT
+  258,title INFO
+  260,title {}
   259,title {}
 }
 
@@ -216,6 +229,7 @@ proc xpasend::yyparse {} {
                 switch -- $rule {
                     1 { ProcessSendCmd XPAInfoResult }
                     2 { ProcessSendCmd XPAInfoResult }
+                    3 { ProcessXPASendCmdConnect }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

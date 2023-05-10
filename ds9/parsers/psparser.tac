@@ -67,7 +67,6 @@ level : '1' {set _ 1}
  ;
 
 resolution : 72_ {set _ 72}
- | SCREEN_ {set _ Screen}
  | 96_ {set _ 96}
  | 144_ {set _ 144}
  | 150_ {set _ 150}
@@ -76,6 +75,7 @@ resolution : 72_ {set _ 72}
  | 600_ {set _ 600}
  | 1200_ {set _ 1200}
 #backward compatibility
+ | SCREEN_ {set _ 96}
  | 53_ {set _ 53}
  | 75_ {set _ 75}
  ;

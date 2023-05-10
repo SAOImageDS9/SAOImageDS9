@@ -9,14 +9,12 @@
 
 advanced	{return $ADVANCED_}
 basic		{return $BASIC_}
-blue		{return $BLUE_}
 buttons		{return $BUTTONS_}
 colorbar	{return $COLORBAR_}
 colorbarnumerics {return $COLORBARNUMERICS_}
 filename	{return $FILENAME_}
 frame		{return $FRAME_}
 graph		{return $GRAPH_}
-green		{return $GREEN_}
 horz		{return $HORIZONTAL_}
 horizontal	{return $HORIZONTAL_}
 horzgraph	{return $HORZGRAPH_}
@@ -31,11 +29,14 @@ minmax		{return $MINMAX_}
 multi		{return $MULTI_}
 object		{return $OBJECT_}
 panner		{return $PANNER_}
-red		{return $RED_}
 units		{return $UNITS_}
 vert		{return $VERTICAL_}
 vertical	{return $VERTICAL_}
 vertgraph	{return $VERTGRAPH_}
+
+red		{return $RED_}
+green		{return $GREEN_}
+blue		{return $BLUE_}
 
 #include yesno.fin
 #include coordsys.fin

@@ -10,9 +10,9 @@
 %start command
 
 %token DSS1_
-%token DSS2RED_
-%token DSS2BLUE_
-%token DSS2INFRARED_
+%token DSS2_RED_
+%token DSS2_BLUE_
+%token DSS2_INFRARED_
 
 %%
 
@@ -49,9 +49,9 @@ update : FRAME_ {IMGSVRUpdate deso; IMGSVRApply deso 1}
  ;
 
 survey : DSS1_ {set _ DSS1}
- | DSS2RED_ {set _ DSS2-red}
- | DSS2BLUE_ {set _ DSS2-blue}
- | DSS2INFRARED_ {set _ DSS2-infrared}
+ | DSS2_RED_ {set _ DSS2-red}
+ | DSS2_BLUE_ {set _ DSS2-blue}
+ | DSS2_INFRARED_ {set _ DSS2-infrared}
  ;
 
 %%

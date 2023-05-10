@@ -179,7 +179,8 @@ proc xpasend::yylex {} {
     variable done_
     variable state_table_
 
-set INFO_ 257
+set CONNECT_ 257
+set INFO_ 258
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -201,26 +202,33 @@ set INFO_ 257
         }
         set yyleng 0
         set matched_rule -1
-        # rule 0: info
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(info)} $yy_current_buffer match] > 0 && \
+        # rule 0: connect
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(connect)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 0
         }
-        # rule 1: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 1: info
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(info)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 1
         }
-        # rule 2: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 2: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
+        }
+        # rule 3: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 3
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -235,12 +243,15 @@ set INFO_ 257
         set numlines [expr {[llength [split $yytext "\n"]] - 1}]
         switch -- $matched_rule {
             0 {
-return $INFO_
+return $CONNECT_
             }
             1 {
-# ignore whitespace
+return $INFO_
             }
             2 {
+# ignore whitespace
+            }
+            3 {
 set yylval $yytext; return $yylval
             }
             default

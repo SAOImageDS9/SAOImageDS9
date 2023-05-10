@@ -131,12 +131,20 @@ proc DS9Def {} {
 
     set pds9(backup) 1
     set pds9(automarker) 1
+
+    # start XPA
     switch $ds9(wm) {
 	x11 -
 	aqua {set pds9(xpa) 1}
 	win32 {set pds9(xpa) 0}
     }
-    
+
+    # start hub if unable to find another
+    set pds9(samphub) 1
+
+    # connect if samp hub is available
+    set pds9(samp) 1
+
     set pds9(prec,linear) 8
     set pds9(prec,deg) 7
     set pds9(prec,hms) 4
@@ -151,7 +159,6 @@ proc DS9Def {} {
     set pds9(bg,use) 0
     set pds9(nan) white
 
-    set pds9(samp) 1
     set pds9(confirm) 1
     set pds9(iraf) 1
     switch $ds9(wm) {
@@ -386,7 +393,7 @@ PlotDef
 PrefsDef
 PSDef
 RGBDef
-SAMPDef
+SAMPHubDef
 SAODef
 SaveDef
 SaveImageDef
@@ -522,7 +529,7 @@ ProcessCommandLineSecond
 # initialize language
 switch $pds9(language) {
     locale {
-	switch $ds9(wm) {
+    switch $ds9(wm) {
 	    x11 {
 		foreach ee {LC_MESSAGES LC_ALL LANG} {
 		    if {[info exists env($ee)]} {
@@ -602,14 +609,19 @@ InitAnalysisFile
 # Configure HTTP
 ConfigHTTP
 
-# SAMP
-if {$pds9(samp)} {
-    InitSAMP
-}
-
 # XPA
 if {$pds9(xpa)} {
     InitXPA
+}
+
+# SAMP Hub
+if {$pds9(samphub)} {
+    SAMPHubStart 0
+}
+
+# SAMP
+if {$pds9(samp)} {
+    SAMPConnect 0
 }
 
 # and process any command line items

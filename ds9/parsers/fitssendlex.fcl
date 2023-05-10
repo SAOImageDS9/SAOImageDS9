@@ -8,6 +8,7 @@
 %%
 
 bitpix	    {return $BITPIX_}
+count	    {return $COUNT_}
 depth	    {return $DEPTH_}
 gz	    {return $GZ_}
 header	    {return $HEADER_}

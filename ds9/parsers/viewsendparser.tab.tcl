@@ -51,3 +51,6 @@ set PANNER_ 306
 set UNITS_ 307
 set VERTGRAPH_ 308
 set VERTICAL_ 309
+set RED_ 310
+set GREEN_ 311
+set BLUE_ 312

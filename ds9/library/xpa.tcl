@@ -894,7 +894,7 @@ proc XPARcvdConsole {xpa cdata param buf len} {
 
 proc XPASendContour {xpa cdata param} {
     InitError xpa
-    catch {ProcessSendContourCmd xpasetbuf $xpa $param}
+    catch {ProcessSendContourCmd xpasetbuf $xpa $param [xparec $xpa datafd] {}}
     XPACatchError $xpa
 }
 
@@ -2349,5 +2349,19 @@ proc ProcessXPACmd {varname iname} {
 }
 
 proc ProcessSendXPACmd {proc id param {sock {}} {fn {}}} {
-    $proc $id "[XPAInfoResult]\n"
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    xpasend::YY_FLUSH_BUFFER
+    xpasend::yy_scan_string $param
+    xpasend::yyparse
 }
+
+proc ProcessXPASendCmdConnect {} {
+    global xpa
+    global parse
+
+    $parse(proc) $parse(id) "[ToYesNo [info exists xpa]]"
+}
+

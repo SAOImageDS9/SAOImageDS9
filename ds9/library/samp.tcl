@@ -4,22 +4,10 @@
 
 package provide DS9 1.0
 
-proc SAMPDef {} {
-    global isamp
-
-    set isamp(timeout) 1000
-}
-
-proc InitSAMP {} {
-    SAMPConnect 0
-#    catch {SAMPConnect 0}
-}
-
 # Cmds
 
-proc SAMPConnect {{verbose 1}} {
+proc SAMPConnect {verbose} {
     global ds9
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -36,9 +24,7 @@ proc SAMPConnect {{verbose 1}} {
     if {[info exists samp]} {
 	unset samp
     }
-    set samp(apps,image) {}
-    set samp(apps,table) {}
-    set samp(apps,votable) {}
+    set samp(clients) {}
     set samp(tmp,files) {}
 
     # these are to try to prevent feedback problems with 
@@ -82,7 +68,7 @@ proc SAMPConnect {{verbose 1}} {
     catch {unset sampmap}
     set sampmap(samp.name) {string "SAOImageDS9"}
     set sampmap(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
-    set sampmap(samp.icon.url) {string "http://ds9.si.edu/doc/sun.png"}
+    set sampmap(samp.icon.url) {string "http://ds9.si.edu/sun.png"}
     set sampmap(samp.documentation.url) {string "http://ds9.si.edu/doc/ref/index.html"}
 
     set sampmap(home.page) {string "http://ds9.si.edu/"}
@@ -99,14 +85,12 @@ proc SAMPConnect {{verbose 1}} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	if {[info exists samp]} {
-	    unset samp
-	}
 	return
     }
 
     # who are we
-    set samp(port) [lindex [fconfigure [xmlrpc::serve 0] -sockname] 2]
+    set samp(sock) [xmlrpc::serve 0]
+    set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
     set samp(home) "[info hostname]:$samp(port)"
 
     # callback
@@ -118,20 +102,20 @@ proc SAMPConnect {{verbose 1}} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	if {[info exists samp]} {
-	    unset samp
-	}
 	return
     }
 
     # declare subscriptions
     catch {unset sampmap}
-    catch {unset sampmap2}
     set sampmap(samp.app.ping) {struct mapPing}
+#    set sampmap(samp.app.status) {struct mapStatus}
+#    set sampmap(samp.msg.progress) {struct mapProgress}
 
     set sampmap(samp.hub.event.shutdown) {struct mapShutdown}
     set sampmap(samp.hub.event.register) {struct mapRegister}
     set sampmap(samp.hub.event.unregister) {struct mapUnregister}
+    set sampmap(samp.hub.event.metadata) {struct mapMetadata}
+    set sampmap(samp.hub.event.subscriptions) {struct mapSubscriptions}
     set sampmap(samp.hub.disconnect) {struct mapDisconnect}
 
     set sampmap(image.load.fits) {struct mapImageLoadFits}
@@ -142,20 +126,8 @@ proc SAMPConnect {{verbose 1}} {
     set sampmap(coord.pointAt.sky) {struct mapCoordPointAtSky}
     set sampmap(client.env.get) {struct mapClientEnvGet}
 
-    set sampmap(x-samp.affiliation.name) {struct mapAffiliationName}
-    set sampmap(x-samp.affiliation.url) {struct mapAffiliationURL}
-    set sampmap(x-samp.homepage.url) {struct mapHomepageURL}
-    set sampmap(x-samp.releasenotes.url) {struct mapReleasenotesURL}
-    set sampmap(x-samp.faq.url) {struct mapFAQURL}
-    set sampmap(x-samp.authors) {struct mapAuthors}
-    set sampmap(x-samp.release.version) {struct mapReleaseVersion}
-
     set sampmap(ds9.get) {struct mapDS9Get}
     set sampmap(ds9.set) {struct mapDS9Set}
-    set sampmap(ds9.restricted-get) {struct sampmap2}
-    set sampmap(ds9.restricted-set) {struct sampmap2}
-
-    set sampmap2(x-samp.mostly-harmless) {string "1"}
 
     set param1 [list "string $samp(private)"]
     set param2 [list "struct sampmap"]
@@ -165,22 +137,71 @@ proc SAMPConnect {{verbose 1}} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	if {[info exists samp]} {
-	    unset samp
-	}
 	return
     }
 
-    after $isamp(timeout) SAMPUpdate
+    # get current client info
+    set params [list "string $samp(private)"]
+    set rr {}
+    if {![SAMPSend {samp.hub.getRegisteredClients} $params rr]} {
+  	if {$verbose} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
+	return
+    }
+    set samp(clients) [lindex $rr 1]
+
+    foreach cc $samp(clients) {
+	set param1 [list "string $samp(private)"]
+	set param2 [list "string $cc"]
+	set params "$param1 $param2" 
+	set rr {}
+	if {![SAMPSend {samp.hub.getSubscriptions} $params rr]} {
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	    return
+	}
+	
+	foreach arg [lindex $rr 1] {
+	    foreach {key val} $arg {
+		lappend samp($cc,subscriptions) $key
+	    }
+	}
+
+	set param1 [list "string $samp(private)"]
+	set param2 [list "string $cc"]
+	set params "$param1 $param2" 
+	set rr {}
+	if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	    return
+	}
+
+	foreach arg [lindex $rr 1] {
+	    foreach {key val} $arg {
+		switch -- $key {
+		    samp.name {set samp($cc,name) [XMLUnQuote $val]}
+		}
+	    }
+	}
+    }
+
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
-proc SAMPDisconnect {} {
+proc SAMPDisconnect {verbose} {
     global ds9
     global samp
 
     # connected?
     if {![info exists samp]} {
-	Error "SAMP: [msgcat::mc {not connected}]"
+	if {$verbose} {
+	    Error "SAMP: [msgcat::mc {not connected}]"
+	}
 	return
     }
 
@@ -189,19 +210,21 @@ proc SAMPDisconnect {} {
 	set params [list "string $samp(private)"]
 	set rr {}
 	if {![SAMPSend {samp.hub.unregister} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    if {$verbose} {
+		Error "SAMP: [msgcat::mc {internal error}] $rr"
+	    }
+	    return
 	}
 	SAMPShutdown
     }
 
-    UpdateFileMenu
-    UpdateCATDialog
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 proc SAMPSendImageLoadFits {id} {
     global ds9
     global current
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -266,7 +289,6 @@ proc SAMPSendImageLoadFits {id} {
 proc SAMPSendTableLoadFits {id} {
     global ds9
     global current
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -330,7 +352,6 @@ proc SAMPSendTableLoadFits {id} {
 
 proc SAMPSendTableLoadVotable {id varname} {
     global ds9
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -398,7 +419,7 @@ proc SAMPSendTableRowListCmd {varname rowlist} {
 	return
     }
 
-    if {$samp(apps,votable) == {}} {
+    if {[SAMPGetAppsVOTable] == {}} {
 	return
     }
 
@@ -415,7 +436,6 @@ proc SAMPSendTableRowListCmd {varname rowlist} {
 }
 
 proc SAMPSendTableHighlightRow {id varname row} {
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -459,7 +479,6 @@ proc SAMPSendTableHighlightRow {id varname row} {
 }
 
 proc SAMPSendTableSelectRowList {id varname rows} {
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -516,6 +535,7 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
     }
 
     # are we locked?
+    # waj - revisit
     if {$samp(lock)} {
 	global debug
 	if {$debug(tcl,samp)} {
@@ -524,7 +544,7 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 	return
     }
 
-    if {$samp(apps,image) == {} || $samp(apps,table) == {}} {
+    if {[SAMPGetAppsImage] == {} || [SAMPGetAppsTable] == {}} {
 	return
     }
 
@@ -537,7 +557,6 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 }
 
 proc SAMPSendCoordPointAtSky {id coord} {
-    global isamp
     global samp
     global sampmap
     global sampmap2
@@ -586,101 +605,12 @@ proc SAMPShutdown {} {
     SAMPDelTmpFiles
 
     # close the server socket if still up
-    catch {close $xmlrpc::acceptfd}
-
-    # update the menus
-    set samp(apps,image) {}
-    set samp(apps,table) {}
-    set samp(apps,votable) {}
-    UpdateFileMenu
-    UpdateCATDialog
+    catch {close $samp(sock)}
 
     # unset samp array
     if {[info exists samp]} {
 	unset samp
     }
-}
-
-proc SAMPUpdate {} {
-    # this routine is run after a delay since it needs to 
-    # call the hub for metadata
-
-    # connected? we might have already disconnected.
-    global samp
-    if {![info exists samp]} {
-	return
-    }
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPUpdate"
-    }
-
-    # image fits
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string image.load.fits"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
-    
-    set samp(apps,image) {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    if {$key != {}} {
-		lappend samp(apps,image) [list $key [SAMPGetAppName $key]]
-	    }
-	}
-    }
-
-    # table fits
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string table.load.fits"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
-    
-    set samp(apps,table) {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    if {$key != {}} {
-		lappend samp(apps,table) [list $key [SAMPGetAppName $key]]
-	    }
-	}
-    }
-
-    # votable
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string table.load.votable"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
-    
-    set samp(apps,votable) {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    if {$key != {}} {
-		lappend samp(apps,votable) [list $key [SAMPGetAppName $key]]
-	    }
-	}
-    }
-
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPUpdate: image apps: $samp(apps,image)"
-	puts stderr "SAMPUpdate: table apps: $samp(apps,table)"
-	puts stderr "SAMPUpdate: votable apps: $samp(apps,votable)"
-    }
-
-    UpdateFileMenu
-    UpdateCATDialog
 }
 
 proc SAMPSend {method params resultVar} {
@@ -690,7 +620,7 @@ proc SAMPSend {method params resultVar} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend: $method $params"
+	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
     }
 
     if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params]}]} {
@@ -719,7 +649,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReply:$msgid:$status:$result:$url:$error:"
+	puts stderr "SAMPReply $msgid"
     }
 
     catch {unset sampmap}
@@ -758,6 +688,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     set param2 [list "string $msgid"]
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3"
+
     set rr {}
     if {![SAMPSend {samp.hub.reply} $params rr]} {
 	Error "SAMP: [msgcat::mc {internal error}] $rr"
@@ -765,110 +696,49 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     }
 }
 
-proc SAMPReplySimple {msgid str} {
-    upvar $varname args
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPReplySimple: $str"
-    }
-
-    global samp
-    SAMPReply $msgid OK "$str"
-}
-
-# receiveNotification(string sender-id, map message)
 proc samp.client.receiveNotification {args} {
+    global samp
+    
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReceivedNotification: $args"
+	puts stderr "samp.client.receiveNotification $args"
     }
     
     set secret [lindex $args 0]
     set id [lindex $args 1]
     set map [lindex $args 2]
 
+    if {$secret != $samp(private)} {
+	Error "SAMP: [msgcat::mc {internal error}]"
+	return {string ERROR}
+    }
+
     set mtype {}
-    set params {}
+    set iparams {}
     foreach mm $map {
 	foreach {key val} $mm {
 	    switch -- $key {
 		samp.mtype {set mtype $val}
-		samp.params {set params $val}
+		samp.params {set iparams $val}
 	    }
 	}
     }
 
     # be sure to lock any command that may cause a
     #   SAMPSendCoordPointAtSkyCmd response
-    global samp
-    switch -- $mtype {
-	samp.hub.event.shutdown {
-	    SAMPRcvdEventShutdown params
-	}
-	samp.hub.event.register {
-	    SAMPRcvdEventRegister params
-	}
-	samp.hub.event.unregister {
-	    SAMPRcvdEventUnregister params
-	}
-	samp.hub.disconnect {
-	    SAMPRcvdDisconnect params
-	}
-	image.load.fits {
-	    set samp(lock) 1
-	    SAMPRcvdImageLoadFits params
-	    set samp(lock) 0
-	}
-	table.load.fits {
-	    set samp(lock) 1
-	    SAMPRcvdTableLoadFits params
-	    set samp(lock) 0
-	}
-	table.load.votable {
-	    SAMPRcvdTableLoadVotable params
-	}
-	table.highlight.row {
-	    set samp(lock) 1
-	    SAMPRcvdTableHighlightRow params
-	    set samp(lock) 0
-	}
-	table.select.rowList {
-	    set samp(lock) 1
-	    SAMPRcvdTableSelectRowList params
-	    set samp(lock) 0
-	}
-	coord.pointAt.sky {
-	    set samp(lock) 1
-	    SAMPRcvdCoordPointAtSky params
-	    set samp(lock) 0
-	}
-	ds9.set {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Set {} params 0
-	    set samp(lock) 0
-	}
-	ds9.restricted-set {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Set {} params 1
-	    set samp(lock) 0
-	}
-	default {
-	    if {$debug(tcl,samp)} {
-		puts stderr "SAMP samp.client.receiveNotification: bad mtype $mtype"
-	    }
-	}
-    }
+    # waj check for valid mtype
+    $mtype iparams
 
     return {string OK}
 }
 
-# receiveCall(string sender-id, string msg-id, map message)
 proc samp.client.receiveCall {args} {
     global ds9
+    global samp
+    
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReceivedCall: $args"
+	puts stderr "samp.client.receiveCall $args"
     }
 
     set secret [lindex $args 0]
@@ -876,124 +746,62 @@ proc samp.client.receiveCall {args} {
     set msgid [lindex $args 2]
     set map [lindex $args 3]
 
+    if {$secret != $samp(private)} {
+	Error "SAMP: [msgcat::mc {internal error}]"
+	return {string ERROR}
+    }
+
     set mtype {}
-    set params {}
+    set iparams {}
     foreach mm $map {
 	foreach {key val} $mm {
 	    switch -- $key {
 		samp.mtype {set mtype $val}
-		samp.params {set params $val}
+		samp.params {set iparams $val}
 	    }
 	}
     }
 
     # be sure to lock any command that may cause a
     #   SAMPSendCoordPointAtSkyCmd response
+    # waj check for valid mtype
     global samp
     switch -- $mtype {
-	samp.app.ping {
-	    SAMPReply $msgid OK
-	}
-	image.load.fits {
-	    set samp(lock) 1
-	    SAMPRcvdImageLoadFits params
-	    set samp(lock) 0
-	    SAMPReply $msgid OK
-	}
-	table.load.fits {
-	    set samp(lock) 1
-	    SAMPRcvdTableLoadFits params
-	    set samp(lock) 0
-	    SAMPReply $msgid OK
-	}
-	table.load.votable {
-	    SAMPRcvdTableLoadVotable params
-	    SAMPReply $msgid OK
-	}
-	table.highlight.row {
-	    set samp(lock) 1
-	    SAMPRcvdTableHighlightRow params
-	    set samp(lock) 0
-	    SAMPReply $msgid OK
-	}
-	table.select.rowList {
-	    set samp(lock) 1
-	    SAMPRcvdTableSelectRowList params
-	    set samp(lock) 0
-	    SAMPReply $msgid OK
-	}
-	coord.pointAt.sky {
-	    set samp(lock) 1
-	    SAMPRcvdCoordPointAtSky params
-	    set samp(lock) 0
-	    SAMPReply $msgid OK
-	}
 	client.env.get {
-	    SAMPRcvdClientEnvGet $msgid params
-	}
-	x-samp.affiliation.name {
-	    SAMPReplySimple $msgid "SMITHSONIAN ASTROPHYSICAL OBSERVATORY"
-	}
-	x-samp.affiliation.url {
-	    SAMPReplySimple $msgid "https://www.cfa.harvard.edu/sao"
-	}
-	x-samp.homepage.url {
-	    SAMPReplySimple $msgid "http://ds9.si.edu"
-	}
-	x-samp.releasenotes.url {
-	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/release/r8.1.html"
-	}
-	x-samp.faq.url {
-	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/faq.html"
-	}
-	x-samp.authors {
-	    global help
-	    SAMPReplySimple $msgid OK "$help(authors)"
-	}
-	x-samp.release.version {
-	    SAMPReplySimple $msgid OK "$ds9(version,display)"
+	    $mtype $msgid iparams
 	}
 	ds9.get {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Get $msgid params
-	    set samp(lock) 0
+	    $mtype $msgid iparams
 	}
 	ds9.set {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Set $msgid params 0
-	    set samp(lock) 0
-	}
-	ds9.restricted-get {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Get $msgid params
-	    set samp(lock) 0
-	}
-	ds9.restricted-set {
-	    set samp(lock) 1
-	    SAMPRcvdDS9Set $msgid params 1
-	    set samp(lock) 0
+	    $mtype iparams
+	    SAMPRcvdDS9SetReply $msgid
 	}
 	default {
-	    SAMPReply $msgid ERROR {} {} "[msgcat::mc {Unknown command}]: $mtype"
-	    if {$debug(tcl,samp)} {
-		puts stderr "SAMP samp.client.receiveCall: bad mtype $mtype"
-	    }
+	    $mtype iparams
+	    SAMPReply $msgid OK
 	}
     }
 
     return {string OK}
 }
 
-# receiveResponse(string responder-id, string msg-tag, map response)
 proc samp.client.receiveResponse {args} {
+    global samp
+
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReceivedResponse: $args"
+	puts stderr "samp.client.receiveResponse $args"
     }
 
-    set msgtag [lindex $args 0]
-    set value [lindex $args 1]
+    set secret [lindex $args 0]
+    set msgtag [lindex $args 1]
     set map [lindex $args 2]
+
+    if {$secret != $samp(private)} {
+	Error "SAMP: [msgcat::mc {internal error}]"
+	return {string ERROR}
+    }
 
     return {string OK}
 }
@@ -1048,11 +856,15 @@ proc SAMPParseHub {} {
     if {![file exist $fn]} {
 	return 0
     }
+    if {[catch {set fp [open $fn r]}]} {
+	return 0
+    }
 
     set samp(secret) {}
     set samp(url) {}
     set samp(metod) {}
-    set fp [open $fn r]
+    set samp(fn) $fn
+
     while {1} {
 	if {[gets $fp line] == -1} {
 	    break
@@ -1077,6 +889,7 @@ proc SAMPParseHub {} {
 
     if {$samp(secret) == {} || $samp(url) == {}} {
 	SAMPDelTmpFiles
+	catch {unset samp}
 	return 0
     }
 
@@ -1087,111 +900,212 @@ proc SAMPParseHub {} {
     return 1
 }
 
-proc SAMPGetAppName {id} {
+proc SAMPGetAppsImage {} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPGetAppName: $id"
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions image.load.fits] {
+	lappend ll [list $cc $samp($cc,name)]
     }
+    return $ll
+}
 
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string $id"]
-    set params "$param1 $param2" 
-    set rr {}
-    if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
+proc SAMPGetAppsTable {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions table.load.fits] {
+	lappend ll [list $cc $samp($cc,name)]
     }
+    return $ll
+}
 
-    set name {}
-    foreach arg [lindex $rr 1] {
-	foreach {key val} $arg {
-	    switch -- $key {
-		samp.name {set name [XMLUnQuote $val]}
-	    }
+proc SAMPGetAppsVOTable {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions table.load.votable] {
+	lappend ll [list $cc $samp($cc,name)]
+    }
+    return $ll
+}
+
+proc SAMPGetAppsSubscriptions {mtype} {
+    global samp
+
+    set ll {}
+    foreach cc $samp(clients) {
+	if {[lsearch $samp($cc,subscriptions) $mtype]>=0} {
+	    lappend ll $cc
 	}
     }
-
-    return $name
+    return $ll
 }
 
 # CallBacks
-# Hub
 
-proc SAMPRcvdEventShutdown {varname} {
+proc samp.hub.event.shutdown {varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventShutdown: $args"
+	puts stderr "samp.hub.event.shutdown $args"
     }
 
     SAMPShutdown
+
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
-proc SAMPRcvdEventRegister {varname} {
+proc samp.hub.event.register {varname} {
     upvar $varname args
 
-    global isamp
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventRegister: $args"
+	puts stderr "samp.hub.event.register $args"
     }
 
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
 		id {
-		    # check to see if its just us
-		    if {$samp(self) == $val} {
-			return
-		    }
+		    lappend samp(clients) $val
+		    set samp($val,subscriptions) {}
+		    set samp($val,name) {}
 		}
 	    }
 	}
     }
-
-    # wait
-    after $isamp(timeout) SAMPUpdate
 }
 
-proc SAMPRcvdEventUnregister {varname} {
+proc samp.hub.event.unregister {varname} {
     upvar $varname args
 
-    global isamp
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdEventUnregister: $args"
+	puts stderr "samp.hub.event.unregister $args"
     }
 
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
 		id {
-		    # check to see if its just us
-		    if {$samp(self) == $val} {
-			return
-		    }
+		    set id [lsearch $samp(clients) $val]
+		    set samp(clients) [lreplace $samp(clients) $id $id]
+		    unset samp($val,subscriptions)
+		    unset samp($val,name)
 		}
 	    }
 	}
     }
 
-    # wait
-    after $isamp(timeout) SAMPUpdate
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
-proc SAMPRcvdDisconnect {varname} {
+proc samp.hub.event.metadata {varname} {
+    upvar $varname args
+
+    global samp
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "samp.hub.event.metadata $args"
+    }
+
+    set id {}
+    set name {}
+    foreach arg $args {
+	foreach {key val} $arg {
+	    switch -- $key {
+		id {
+		    set id $val
+		}
+		metadata {
+		    foreach aa $val {
+			foreach {bb cc} $aa {
+			    if {$bb == {samp.name}} {
+				set name $cc
+			    }
+			}
+		    }
+		}
+	    }
+	}
+    }
+    
+    # should not happen
+    if {$id == {}} {
+	return
+    }
+
+    # just ignore if ourself
+    if {$id == $samp(self)}  {
+	return
+    }
+
+    set samp($id,name) $name
+
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
+}
+
+proc samp.hub.event.subscriptions {varname} {
+    upvar $varname args
+
+    global samp
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "samp.hub.event.subscriptions $args"
+    }
+
+    set id {}
+    set subs {}
+    foreach arg $args {
+	foreach {key val} $arg {
+	    switch -- $key {
+		id {
+		    set id $val
+		}
+		subscriptions {
+		    foreach aa $val {
+			foreach {bb cc} $aa {
+			    lappend subs $bb
+			}
+		    }
+		}
+	    }
+	}
+    }
+    
+    # should not happen
+    if {$id == {}} {
+	return
+    }
+
+    # just ignore if ourself
+    if {$id == $samp(self)}  {
+	return
+    }
+
+    set samp($id,subscriptions) $subs
+
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
+}
+
+proc samp.hub.disconnect {varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDisconnect: $args"
+	puts stderr "samp.hub.disconnect $args"
     }
 
     set msg {}
@@ -1205,11 +1119,22 @@ proc SAMPRcvdDisconnect {varname} {
     }
 
     SAMPShutdown
+    UpdateFileMenu
+    UpdateCATDialogSAMP
 }
 
 # HTTPClient
 
-proc SAMPRcvdImageLoadFits {varname} {
+proc samp.app.ping {varname} {
+    upvar $varname args
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "samp.app.ping $args"
+    }
+}
+
+proc image.load.fits {varname} {
     upvar $varname args
 
     global debug
@@ -1244,12 +1169,12 @@ proc SAMPRcvdImageLoadFits {varname} {
     }
 }
 
-proc SAMPRcvdTableLoadFits {varname} {
+proc table.load.fits {varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableLoadFits: $args"
+	puts stderr "table.load.fits $args"
     }
 
     global current
@@ -1279,13 +1204,13 @@ proc SAMPRcvdTableLoadFits {varname} {
     }
 }
 
-proc SAMPRcvdTableLoadVotable {varname} {
+proc table.load.votable {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableLoadVotable: $args"
+	puts stderr "table.load.votable $args"
     }
 
     set url {}
@@ -1303,7 +1228,7 @@ proc SAMPRcvdTableLoadVotable {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableLoadVotable: $url $tabid $name"
+	puts stderr "table.load.votable $url $tabid $name"
     }
 
     global icat
@@ -1317,13 +1242,13 @@ proc SAMPRcvdTableLoadVotable {varname} {
     }
 }
 
-proc SAMPRcvdTableHighlightRow {varname} {
+proc table.highlight.row {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableHighlightRow: $args"
+	puts stderr "table.highlight.row $args"
     }
 
     set url {}
@@ -1341,7 +1266,7 @@ proc SAMPRcvdTableHighlightRow {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableHighlightRow: $url $tabid $row"
+	puts stderr "table.highlight.row $url $tabid $row"
     }
 
     if {$tabid != {} && $row != {}} {
@@ -1351,13 +1276,13 @@ proc SAMPRcvdTableHighlightRow {varname} {
     }
 }
 
-proc SAMPRcvdTableSelectRowList {varname} {
+proc table.select.rowList {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableSelectRowList: $args"
+	puts stderr "table.select.rowList $args"
     }
 
     set url {}
@@ -1379,7 +1304,7 @@ proc SAMPRcvdTableSelectRowList {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableSelectRowList: $url $tabid $rowlist"
+	puts stderr "table.select.rowList $url $tabid $rowlist"
     }
 
     if {$tabid != {} && [llength $rowlist] != 0} {
@@ -1389,13 +1314,13 @@ proc SAMPRcvdTableSelectRowList {varname} {
     }
 }
 
-proc SAMPRcvdCoordPointAtSky {varname} {
+proc coord.pointAt.sky {varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdCoordPointAtSky: $args"
+	puts stderr "coord.pointAt.sky $args"
     }
 
     set ra {}
@@ -1411,7 +1336,7 @@ proc SAMPRcvdCoordPointAtSky {varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdCoordPointAtSky: $ra $dec"
+	puts stderr "coord.pointAt.sky $ra $dec"
     }
 
     global current
@@ -1420,13 +1345,13 @@ proc SAMPRcvdCoordPointAtSky {varname} {
     }
 }
 
-proc SAMPRcvdClientEnvGet {msgid varname} {
+proc client.env.get {msgid varname} {
     upvar $varname args
 
     global samp
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdClientEnvGet: $msgid $args"
+	puts stderr "client.env.get $msgid $args"
     }
 
     set name {}
@@ -1440,7 +1365,7 @@ proc SAMPRcvdClientEnvGet {msgid varname} {
     }
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdClientEnvGet: $name"
+	puts stderr "client.env.get $name"
     }
 
     global env
@@ -1453,12 +1378,12 @@ proc SAMPRcvdClientEnvGet {msgid varname} {
     }
 }
 
-proc SAMPRcvdDS9Set {msgid varname safemode} {
+proc ds9.set {varname} {
     upvar $varname args
-
+   
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDS9Set: $msgid $args $safemode"
+	puts stderr "ds9.set $args"
     }
 
     global current
@@ -1484,10 +1409,7 @@ proc SAMPRcvdDS9Set {msgid varname safemode} {
 	lappend samp(tmp,files) $fn
 	GetFileURL $url fn
     }
-    CommSet $fn $cmd $safemode
-    if {$msgid != {}} {
-	SAMPRcvdDS9SetReply $msgid
-    }
+    CommSet $fn $cmd 1
 }
 
 proc SAMPRcvdDS9SetReply {msgid} {
@@ -1517,12 +1439,12 @@ proc SAMPRcvdDS9SetReply {msgid} {
     }
 }
 
-proc SAMPRcvdDS9Get {msgid varname} {
+proc ds9.get {msgid varname} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDS9Get: $args"
+	puts stderr "ds9.get $args"
     }
 
     global current
@@ -1586,8 +1508,12 @@ proc SAMPDelTmpFiles {} {
     global samp
 
     # delete any tmp files
-    foreach fn $samp(tmp,files) {
-	catch {file delete -force "$fn"}
+    if {[info exists samp]} {
+	if {[info exists samp(tmp,files)]} {
+	    foreach fn $samp(tmp,files) {
+		catch {file delete -force "$fn"}
+	    }
+	}
     }
 }
 
@@ -1609,7 +1535,6 @@ proc ProcessSAMPCmd {varname iname} {
 
     # we need to be realized
     ProcessRealizeDS9
-    SAMPUpdate
 
     samp::YY_FLUSH_BUFFER
     samp::yy_scan_string [lrange $var $i end]
@@ -1631,7 +1556,7 @@ proc SAMPCmdSendImage {name} {
     global samp
 
     if {[info exists samp]} {
-	foreach arg $samp(apps,image) {
+	foreach arg [SAMPGetAppsImage] {
 	    foreach {key val} $arg {
 		if {[string tolower $val] == $name} {
 		    SAMPSendImageLoadFits $key
@@ -1648,7 +1573,7 @@ proc SAMPCmdSendTable {name} {
     global samp
 
     if {[info exists samp]} {
-	foreach arg $samp(apps,table) {
+	foreach arg [SAMPGetAppsTable] {
 	    foreach {key val} $arg {
 		if {[string tolower $val] == $name} {
 		    SAMPSendTableLoadFits $key

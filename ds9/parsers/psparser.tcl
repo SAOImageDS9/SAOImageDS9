@@ -62,17 +62,17 @@ proc ps::unsetupvalues {numsyms} {
 
 array set ps::table {
   17:257 reduce
-  26:257,target 22
+  26:257,target 29
   27:0 reduce
   26:257 reduce
   15:257,target 6
   35:257 reduce
   24:0 reduce
-  33:0,target 29
+  33:0,target 28
   25:0,target 21
   17:0,target 13
   10:0,target 1
-  27:257,target 23
+  27:257,target 22
   14:257 reduce
   21:0 reduce
   6:287 goto
@@ -85,10 +85,10 @@ array set ps::table {
   32:257 reduce
   8:281,target 35
   3:261,target 16
-  28:257,target 24
+  28:257,target 23
   14:0 reduce
-  29:0,target 25
-  30:0,target 26
+  29:0,target 24
+  30:0,target 25
   22:0,target 20
   11:257 reduce
   14:0,target 8
@@ -113,8 +113,8 @@ array set ps::table {
   28:257 reduce
   8:276,target 30
   1:268,target 11
-  29:257,target 25
-  30:257,target 26
+  29:257,target 24
+  30:257,target 25
   0:264,target 6
   6:1 shift
   37:257 shift
@@ -140,7 +140,7 @@ array set ps::table {
   7:269,target 12
   7:270,target 13
   8:281 shift
-  26:0,target 22
+  26:0,target 29
   18:0,target 5
   0:262,target 4
   11:0,target 15
@@ -149,7 +149,7 @@ array set ps::table {
   8:288 goto
   5:257 reduce
   25:257 reduce
-  31:257,target 27
+  31:257,target 26
   8:272,target 26
   0:0 reduce
   10:283,target 37
@@ -166,8 +166,8 @@ array set ps::table {
   13:257 reduce
   8:288,target 36
   38:0,target 3
-  32:257,target 28
-  31:0,target 27
+  32:257,target 27
+  31:0,target 26
   2:257 shift
   23:0,target 9
   15:0,target 6
@@ -183,14 +183,14 @@ array set ps::table {
   3:285,target 18
   33:0 reduce
   10:257 reduce
-  33:257,target 29
+  33:257,target 28
   22:257,target 20
   18:257 reduce
   35:0,target 31
   11:257,target 15
   29:0 reduce
   30:0 reduce
-  27:0,target 23
+  27:0,target 22
   19:0,target 7
   20:0,target 18
   12:0,target 16
@@ -218,7 +218,7 @@ array set ps::table {
   1:270,target 13
   1:269,target 12
   0:265,target 7
-  32:0,target 28
+  32:0,target 27
   35:257,target 31
   24:0,target 12
   16:0,target 14
@@ -251,7 +251,7 @@ array set ps::table {
   1:269 shift
   36:0,target 10
   8:271,target 25
-  28:0,target 24
+  28:0,target 23
   14:257,target 8
   21:0,target 19
   13:0,target 17
@@ -367,7 +367,7 @@ array set ps::rules {
   19,line 68
   2,line 42
   16,line 63
-  28,line 79
+  28,line 80
 }
 
 array set ps::lr1_table {
@@ -435,19 +435,19 @@ array set ps::lr1_table {
   7 {{12 {0 257} 1} {15 {0 257} 0} {16 {0 257} 0} {17 {0 257} 0}}
   25 {{21 {0 257} 1}}
   8 {{10 {0 257} 1} {21 {0 257} 0} {22 {0 257} 0} {23 {0 257} 0} {24 {0 257} 0} {25 {0 257} 0} {26 {0 257} 0} {27 {0 257} 0} {28 {0 257} 0} {29 {0 257} 0} {30 {0 257} 0} {31 {0 257} 0}}
-  26 {{22 {0 257} 1}}
+  26 {{29 {0 257} 1}}
   9 {{0 0 1}}
-  27 {{23 {0 257} 1}}
+  27 {{22 {0 257} 1}}
   24,trans {}
   6,trans {{1 20} {2 21} {3 22} {287 23}}
-  28 {{24 {0 257} 1}}
-  29 {{25 {0 257} 1}}
-  30 {{26 {0 257} 1}}
-  31 {{27 {0 257} 1}}
+  28 {{23 {0 257} 1}}
+  29 {{24 {0 257} 1}}
+  30 {{25 {0 257} 1}}
+  31 {{26 {0 257} 1}}
   10,trans {{283 37}}
-  32 {{28 {0 257} 1}}
+  32 {{27 {0 257} 1}}
   28,trans {}
-  33 {{29 {0 257} 1}}
+  33 {{28 {0 257} 1}}
   34 {{30 {0 257} 1}}
 }
 
@@ -716,14 +716,14 @@ proc ps::yyparse {} {
                     19 { set _ 2 }
                     20 { set _ 3 }
                     21 { set _ 72 }
-                    22 { set _ Screen }
-                    23 { set _ 96 }
-                    24 { set _ 144 }
-                    25 { set _ 150 }
-                    26 { set _ 225 }
-                    27 { set _ 300 }
-                    28 { set _ 600 }
-                    29 { set _ 1200 }
+                    22 { set _ 96 }
+                    23 { set _ 144 }
+                    24 { set _ 150 }
+                    25 { set _ 225 }
+                    26 { set _ 300 }
+                    27 { set _ 600 }
+                    28 { set _ 1200 }
+                    29 { set _ 96 }
                     30 { set _ 53 }
                     31 { set _ 75 }
                 }

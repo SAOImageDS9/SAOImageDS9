@@ -91,10 +91,8 @@
 
 %token CDS_
 %token ADAC_
-%token CADC_
-%token CAMBRIDGE_
 %token SAO_
-%token UKIRT_
+%token INASAN_
 %token IUCAA_
 %token BEJING_
 %token SAAO_
@@ -215,10 +213,8 @@ samp : {CatalogCmdSAMP}
 
 server : CDS_ {set _ cds}
  | ADAC_ {set _ adac}
- | CADC_ {set _ cadc}
- | CAMBRIDGE_ {set _ cambridge}
  | SAO_ {set _ sao}
- | UKIRT_ {set _ ukirt}
+ | INASAN_ {set _ inasan}
  | IUCAA_ {set _ iucaa}
  | BEJING_ {set _ bejing}
  | SAAO_ {set _ saao}

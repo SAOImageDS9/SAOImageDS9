@@ -11,6 +11,7 @@
 %start fitssend
 
 %token BITPIX_
+%token COUNT_
 %token DEPTH_
 %token GZ_
 %token HEADER_
@@ -34,6 +35,7 @@ fitssend: WIDTH_ {ProcessSendCmdCurrent "get fits width"}
  | HEIGHT_ {ProcessSendCmdCurrent "get fits height"}
  | DEPTH_ {ProcessSendCmdCurrent "get fits depth"}
  | BITPIX_ {ProcessSendCmdCurrent "get fits bitpix"}
+ | COUNT_ {ProcessSendCmdCurrent "get fits count"}
 # backward compatibility
  | TYPE_ {FitsSendCmdType}
  | SIZE_ size

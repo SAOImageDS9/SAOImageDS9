@@ -287,7 +287,7 @@ proc tilesend::yyparse {} {
                     2 { ProcessSendCmdGet tile mode }
                     4 { ProcessSendCmdGet tile grid,mode }
                     5 { ProcessSendCmdGet tile grid,dir }
-                    6 { ProcessSendCmdGet tile grid,row }
+                    6 { ProcessSendCmdGet2 tile grid,col grid,row }
                     7 { ProcessSendCmdGet tile grid,gap }
                 }
                 unsetupvalues $dc

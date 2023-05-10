@@ -83,30 +83,31 @@ proc CATCDS {varname} {
 proc CATCDSURL {server} {
     switch -- $server {
 	france -
-	cds {return {vizier.u-strasbg.fr}}
+	cds {return {vizier.cds.unistra.fr}}
 	tokyo -
 	japan -
 	adac {return {vizier.nao.ac.jp}}
-	canada -
-	cadc {return {vizier.hia.nrc.ca}}
-	uk -
-	cambridge {return {vizier.ast.cam.ac.uk}}
 	usa -
 	cfa -
 	harvard -
 	sao {return {vizier.cfa.harvard.edu}}
-	hawaii -
-	ukirt {return {www.ukirt.jach.hawaii.edu}}
+	russia -
+	inasan {return {vizier.inasan.ru}}
 	india -
 	iucaa {return {vizier.iucaa.in}}
 	china -
 	bejing {return {vizier.china-vo.org}}
 	safrica -
-	saao {return {viziersaao.chpc.ac.za}}
-	russia -
-	inasan {
+	saao {return {vizier.idia.ac.za}}
+
+	canada -
+	cadc -
+	uk -
+	cambridge -
+	hawaii -
+	ukirt {
 	    # no longer active
-	    return {vizier.u-strasbg.fr}
+	    return {vizier.cds.unistra.fr}
 	}
     }
 }

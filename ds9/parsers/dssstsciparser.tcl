@@ -722,20 +722,20 @@ array set dssstsci::lr1_table {
 }
 
 array set dssstsci::token_id_table {
-  286 POSS2BLUE_
+  286 POSS2UKSTU_BLUE_
   286,t 0
-  287 POSS1BLUE_
+  287 POSS1_BLUE_
   292,line 51
   302,line 132
-  288 POSS1RED_
+  288 POSS1_RED_
   265,title COORD
   289 ALL_
   290 QUICKV_
   300 command
-  284,title POSS2RED
-  291 GSC2_
+  284,title POSS2UKSTU_RED
+  291 PHASE2_GSC2_
   301 @PSEUDO1
-  292 GSC1_
+  292 PHASE2_GSC1_
   302 dssstsci
   288,line 47
   293 yesno
@@ -836,7 +836,7 @@ array set dssstsci::token_id_table {
   292,t 0
   302,t 1
   273,title SAVE
-  292,title GSC1
+  292,title PHASE2_GSC1
   302,title {}
   267,t 0
   299,line 124
@@ -844,7 +844,7 @@ array set dssstsci::token_id_table {
   296,line 112
   272,title UPDATE
   303,line 152
-  291,title GSC2
+  291,title PHASE2_GSC2
   293,line 91
   301,title {}
   264,t 0
@@ -867,7 +867,7 @@ array set dssstsci::token_id_table {
   269,title NAME
   270,title NEW
   273,line 24
-  288,title POSS1RED
+  288,title POSS1_RED
   278,t 0
   299,t 1
   269,line 20
@@ -876,7 +876,7 @@ array set dssstsci::token_id_table {
   268,title FRAME
   275,t 0
   263,line 14
-  287,title POSS1BLUE
+  287,title POSS1_BLUE
   296,t 1
   260,line 10
   259,line 9
@@ -884,7 +884,7 @@ array set dssstsci::token_id_table {
   267,title CURRENT
   303,t 1
   257 YES_
-  286,title POSS2BLUE
+  286,title POSS2UKSTU_BLUE
   293,t 1
   258 NO_
   260 OFF_
@@ -908,7 +908,7 @@ array set dssstsci::token_id_table {
   266,title CROSSHAIR
   273 SAVE_
   274 SIZE_
-  285,title POSS2INFRARED
+  285,title POSS2UKSTU_IR
   275 SURVEY_
   276 DEGREES_
   298,line 120
@@ -922,8 +922,8 @@ array set dssstsci::token_id_table {
   295,line 108
   265,t 0
   283 STRING_
-  284 POSS2RED_
-  285 POSS2INFRARED_
+  284 POSS2UKSTU_RED_
+  285 POSS2UKSTU_IR_
 }
 
 proc dssstsci::yyparse {} {

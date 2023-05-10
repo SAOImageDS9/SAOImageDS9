@@ -662,7 +662,7 @@ proc CATRelease {which x y} {
 
 		    # samp
 		    if {[info exists samp]} {
-			if {$samp(apps,votable) != {}} {
+			if {[SAMPGetAppsVOTable] != {}} {
 			    SAMPSendTableRowListCmd $varname $rowlist
 			}
 		    }
@@ -691,7 +691,7 @@ proc CATRelease {which x y} {
 
 	    # samp
 	    if {[info exists samp]} {
-		if {$samp(apps,votable) != {}} {
+		if {[SAMPGetAppsVOTable] != {}} {
 		    SAMPSendTableRowListCmd $varname $rowlist
 		}
 	    }

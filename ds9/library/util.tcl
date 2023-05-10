@@ -882,9 +882,15 @@ proc QuitDS9 {} {
     # shutdown SAMP
     global samp
     if {[info exists samp]} {
-	catch {SAMPDisconnect}
+	catch {SAMPDisconnect 0}
     }
 
+    # shutdown SAMPHUB
+    global samphub
+    if {[info exists samphub]} {
+	catch {SAMPHubStop 0}
+    }
+    
     # close IIS ports
     catch {IISClose}
 

@@ -181,9 +181,9 @@ proc CATDialog {varname format catalog title action} {
     # SAMP
     ThemeMenu $mb.file.samp
     $mb.file.samp add command -label [msgcat::mc {Connect}] \
-	-command SAMPConnect
+	-command [list SAMPConnect 1]
     $mb.file.samp add command -label [msgcat::mc {Disconnect}] \
-	-command SAMPDisconnect
+	-command [list SAMPDisconnect 1]
     $mb.file.samp add separator
     $mb.file.samp add cascade -label [msgcat::mc {Send}] \
 	-menu $mb.file.samp.send
@@ -559,8 +559,27 @@ proc CATDialogUpdate {varname} {
 	$var(top).buttons.plot configure -state disabled
     }
 
+    CATDialogUpdateSAMP $varname
+}
+
+proc CATDialogUpdateSAMP {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    global samp
+
+    global debug
+    if {$debug(tcl,cat)} {
+	puts stderr "CATDialogUpdateSAMP $varname"
+    }
+
     set m $var(mb).file.samp
     set ss [expr $ds9(menu,start)+2]
+
+    if {[$m.send index end] >= $ss} {
+	$m.send delete $ss end
+    }
 
     if {[info exists samp]} {
 	# menu
@@ -568,19 +587,15 @@ proc CATDialogUpdate {varname} {
 	$m entryconfig [msgcat::mc {Connect}] -state disabled
 	$m entryconfig [msgcat::mc {Disconnect}] -state normal
 
-	if {[$m.send index end] >= $ss} {
-	    $m.send delete $ss end
-	}
+	# button
+	$var(samp) configure -state normal
 
-	foreach args $samp(apps,votable) {
+	foreach args [SAMPGetAppsVOTable] {
 	    foreach {id name} $args {
 		$m.send add command -label $name \
 		    -command "SAMPSendTableLoadVotable $id $varname"
 	    }
 	}
-
-	# button
-	$var(samp) configure -state normal
     } else {
 	# menu
 	$m entryconfig [msgcat::mc {Send}] -state disabled
@@ -590,7 +605,6 @@ proc CATDialogUpdate {varname} {
 	# button
 	$var(samp) configure -state disabled
     }
-
 }
 
 proc CATAck {varname} {
@@ -858,6 +872,14 @@ proc UpdateCATDialog {} {
 
     foreach varname $icat(cats) {
 	CATDialogUpdate $varname
+    }
+}
+
+proc UpdateCATDialogSAMP {} {
+    global icat
+
+    foreach varname $icat(cats) {
+	CATDialogUpdateSAMP $varname
     }
 }
 

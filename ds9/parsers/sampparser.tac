@@ -8,10 +8,15 @@
 %start command
 
 %token BROADCAST_
+%token CLIENT_
 %token CONNECT_
 %token DISCONNECT_
+%token HUB_
 %token IMAGE_
+%token INFO_
 %token SEND_
+%token START_
+%token STOP_
 %token TABLE_
 
 %%
@@ -22,11 +27,22 @@ command : samp
  | samp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-samp : yesno {if {$1} {SAMPConnect} else {SAMPDisconnect}}
- | CONNECT_ {SAMPConnect}
+samp : CLIENT_ yesno # sampfirst
+ | HUB_ yesno # sampfirst
+
+ | CONNECT_ {SAMPConnect 1}
  | DISCONNECT_ {SAMPDisconnect}
  | BROADCAST_ broadcast
  | SEND_ send
+ | HUB_ hub
+ 
+ # backward compatibility
+ | yesno {if {$1} {SAMPConnect 1} else {SAMPDisconnect}}
+ ;
+
+hub : | START_ { SAMPHubStart 1}
+ | STOP_ {SAMPHubStop 1}
+ | INFO_ {SAMPHubDialog}
  ;
 
 broadcast : {SAMPSendImageLoadFits {}}

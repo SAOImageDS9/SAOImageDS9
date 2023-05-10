@@ -68,14 +68,10 @@ namespace eval xmlrpc {
     namespace	export call buildRequest marshall unmarshall assoc
     namespace	export serve
 
-    variable	READSIZE 4096;		# read size
-
+    variable	READSIZE 4096;
     variable	WS	"\[ |\n|\t\|\r]";	# WhiteSpace
     variable	W	"\[^ |\n|\t\]";		# a word with no spaces
     variable	DIGIT	"\[0-9\]";		# Digit
-
-    variable	response	"";		# response to return
-    variable	acceptfd	"";		# socket to listen on
     variable	DEBUG		0;		# debug
 }
 
@@ -83,17 +79,13 @@ namespace eval xmlrpc {
 # and start listening on it
 #
 proc xmlrpc::serve {port} {
-    variable	acceptfd
-
-    set acceptfd [socket -server xmlrpc::serveOnce $port]
-    return $acceptfd
+    return [socket -server xmlrpc::serveOnce $port]
 }
 
 # Accept a new connection
 #
 proc xmlrpc::serveOnce {sock addr port} {
     variable	READSIZE
-
     debug "in serveOnce: addr: $addr"
     debug "in serveOnce: port: $port"
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
@@ -110,7 +102,6 @@ proc xmlrpc::doRequest {sock} {
     set res [readHeader $sock]
     set headerStatus [lindex $res 0];	# Header + Status
     set body [lindex $res 1];		# Body, if any
-
     set RE "\[^\n\]+\n(.*)"
     if {![regexp $RE $headerStatus {} header]} {
 	return [errReturn "Malformed Request"]
@@ -132,38 +123,48 @@ proc xmlrpc::doRequest {sock} {
     }
 
     set args {}
-    set param [string range $params 8 end]
-    set param [string trim $param]
-    while {[string range $param 0 6] == "<param>" ||
-       [string range $param 0 7] == "</param>"} {
-	# check for empty element
-	if {[string range $param 0 7] == "</param>"} {
-	    lappend args {}
+    if {$params == {}} {
+	# waj
+	# legal to have no params i.e. ping
+	if {[catch {set result [eval ::$mname]}]} {
+	    set response [buildFault 100 "eval() failed"]
+	} else {
+	    set response [buildResponse $result]
+	}
+    } else {
+	set param [string range $params 8 end]
+	set param [string trim $param]
+	while {[string range $param 0 6] == "<param>" ||
+	       [string range $param 0 7] == "</param>"} {
+	    # check for empty element
+	    if {[string range $param 0 7] == "</param>"} {
+		lappend args {}
+		set param [string range $param 8 end]
+		set param [string trim $param]
+		continue
+	    }
+
+	    set param [string range $param 7 end]
+	    set param [string trim $param]
+
+	    set res [unmarshall $param]
+	    set param [lindex $res 0]
+	    set el [lindex $res 1]
+	    lappend args $el
+	    if {[string range $param 0 7] != "</param>"} {
+		return [errReturn "Invalid End Param"]
+	    }
 	    set param [string range $param 8 end]
 	    set param [string trim $param]
-	    continue
 	}
-
-	set param [string range $param 7 end]
-	set param [string trim $param]
-
-	set res [unmarshall $param]
-	set param [lindex $res 0]
-	set el [lindex $res 1]
-	lappend args $el
-	if {[string range $param 0 7] != "</param>"} {
-	    return [errReturn "Invalid End Param"]
+	if {$param != "</params>"} {
+	    return [errReturn "Invalid End Params"]
 	}
-	set param [string range $param 8 end]
-	set param [string trim $param]
-    }
-    if {$param != "</params>"} {
-	return [errReturn "Invalid End Params"]
-    }
-    if {[catch {set result [eval ::$mname $args]}]} {
-	set response [buildFault 100 "eval() failed"]
-    } else {
-	set response [buildResponse $result]
+	if {[catch {set result [eval ::$mname $args]}]} {
+	    set response [buildFault 100 "eval() failed"]
+	} else {
+	    set response [buildResponse $result]
+	}
     }
     debug "in doRequest: response:\n$response"
     puts -nonewline $sock $response
@@ -228,18 +229,18 @@ proc buildFault {errcode errmsg} {
 #
 proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     variable	READSIZE
-    variable	response
-    global		readdone
-    global		xmlcall
+    global xmlresponse
+    global xmlreaddone
 
-    set readdone 0
-    set xmlcall 1
     set RE {http://([^:]+):([0-9]+)}
     if {![regexp $RE $url {} host port]} {
 	return [errReturn "Malformed URL"]
     }
 
     set sock [socket $host $port]
+    set xmlreaddone($sock) 0
+    set xmlresponse($sock) {}
+
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
     fconfigure $sock -blocking off
     if {[catch {set request [buildRequest $method $methodName $params $ntabs $distance]}]} {
@@ -247,11 +248,18 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
     }
     puts -nonewline $sock $request
     flush $sock
+
     fileevent $sock readable [list xmlrpc::getResponse $sock]
-    vwait readdone
+    vwait xmlreaddone($sock)
     catch {close $sock}
-    if {$readdone > 0} {
-	return $response
+
+    set ss $xmlreaddone($sock)
+    set rr $xmlresponse($sock)
+    unset xmlreaddone($sock)
+    unset xmlresponse($sock)
+
+    if {$ss > 0} {
+	return $rr
     } else {
 	return [errReturn "xmlrpc::call failed"]
     }
@@ -261,8 +269,8 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
 # get and parse the response from the server
 #
 proc xmlrpc::getResponse {sock} {
-    variable	response
-    global		readdone
+    global xmlresponse
+    global xmlreaddone
 
     set res [readHeader $sock]
     set headerStatus [lindex $res 0];	# Header + Status
@@ -270,8 +278,8 @@ proc xmlrpc::getResponse {sock} {
 
     set header [parseHTTPCode $headerStatus]
     set body [getBody $sock $header $body]
-    set response [parseResponse $body]
-    set readdone 1
+    set xmlresponse($sock) [parseResponse $body]
+    set xmlreaddone($sock) 1
 }
 
 # Given a socket to read on,
@@ -474,16 +482,13 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
 	append body "\t\t</params>\n"
     }
     append	body "</methodCall>\n"
-#    set body [regsub -all "\n" $body "\r\n"]
     set lenbod [string length $body]
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: $lenbod\n"
-#    set header [regsub -all "\n" $header "\r\n"]
 
-#    set request "$header\r\n$body"
     set request "$header\n$body"
     return $request
 }
@@ -572,7 +577,8 @@ proc xmlrpc::validParam {param} {
 proc xmlrpc::unmarshall {str} {
     set str [string trim $str]
     if {[string range $str 0 6] != "<value>"} {
-	# check for empty element
+	# waj
+	# check for just </value> element
 	if {[string range $str 0 7] != "</value>"} {
 	    return [errReturn "Bad value tag"]
 	}
@@ -588,44 +594,32 @@ proc xmlrpc::unmarshall {str} {
 	return [errReturn "No beginning tag found: $str"]
     }
 
-    if {$btag == "int" || $btag == "i4"} {
-	set res [umInt $str]
-    } elseif {$btag== "boolean"} {
-	set res [umBool $str]
-    } elseif {$btag == "string"} {
-	set res [umString $str]
-    } elseif {$btag == "double"} {
-	set res [umDouble $str]
-    } elseif {$btag == "dateTime.iso8601"} {
-	set res [umDateTime $str]
-    } elseif {$btag == "base64"} {
-	set res [umBase64 $str]
-    } elseif {$btag == "array"} {
-	set res [umArray $str]
-    } elseif {$btag == "struct"} {
-	set res [umStruct $str]
-    } else {
-	#check for empty element
-	if {[string range $btag 0 1]=={/}} {
-	    set id [string first "]" $str ]
+    # waj
+    switch $btag {
+	int -
+	i4 {set res [umInt $str]}
+	boolean {set res [umBool $str]}
+	string {set res [umString $str]}
+	double {set res [umDouble $str]}
+	dateTime.iso8601 {set res [umDateTime $str]}
+	base64 {res [umBase64 $str]}
+	array {set res [umArray $str]}
+	struct {set res [umStruct $str]}
+
+	"/value" {
+	    # assume string
+	    set id [string first "<" $str ]
 	    if {$id != -1} {
-		set rest [string range $str $id end]
-		set rest [string trim $rest]
-		return [list $rest {}]
+		set vv [string range $str 0 [expr $id-1]]
+		set rr [string range $str $id end]
+		set str "<string>${vv}</string>${rr}"
+		set res [umString $str]
 	    }
 	}
 
-	# return [errReturn "Unknown type: $str"]
-	# assume string
-	set id [string first "<" $str ]
-	if {$id != -1} {
-	    set vv [string range $str 0 [expr $id-1]]
-	    set rr [string range $str $id end]
-	    set str "<string>${vv}</string>${rr}"
-	    set res [umString $str]
-	} else {
-	    return [errReturn "Unknown type: $str"]
-	}
+	"/string" {set res [list [string range $str 9 end] {}]}
+	"/struct" {set res [list [string range $str 9 end] {}]}
+	default {return [errReturn "Unknown type: $str"]}
     }
 
     set rest [lindex $res 0]
@@ -862,14 +856,3 @@ proc xmlrpc::test {} {
     debug "data: $data"
     puts [assoc "first" $data]
 }
-
-#proc bgerror {error} {
-#    global xmlcall
-#    if {$xmlcall} {
-#	global readdone
-#	set readdone -1
-#	set xmlcall 0
-#    }
-#}
-
-#xmlrpc::test

@@ -668,13 +668,13 @@ array set dsseso::lr1_table {
 
 array set dsseso::token_id_table {
   286,t 0
-  286 DSS2BLUE_
+  286 DSS2_BLUE_
   280,title SEXSTR
   279,title SEXAGESIMAL
   264,line 15
   298,title {}
   292,line 111
-  287 DSS2INFRARED_
+  287 DSS2_INFRARED_
   270,t 0
   269,t 0
   288 yesno
@@ -732,7 +732,7 @@ array set dsseso::token_id_table {
   error,line 85
   275,t 0
   268,title FRAME
-  287,title DSS2INFRARED
+  287,title DSS2_INFRARED
   258,t 0
   263,line 14
   291,line 107
@@ -763,7 +763,7 @@ array set dsseso::token_id_table {
   296,line 124
   267,title CURRENT
   293,t 1
-  286,title DSS2BLUE
+  286,title DSS2_BLUE
   257 YES_
   281,line 36
   276,t 0
@@ -816,7 +816,7 @@ array set dsseso::token_id_table {
   273,t 0
   273 SAVE_
   266,title CROSSHAIR
-  285,title DSS2RED
+  285,title DSS2_RED
   274 SIZE_
   275 SURVEY_
   271,line 22
@@ -847,7 +847,7 @@ array set dsseso::token_id_table {
   284 DSS1_
   280,line 34
   279,line 32
-  285 DSS2RED_
+  285 DSS2_RED_
   261,title TRUE
 }
 

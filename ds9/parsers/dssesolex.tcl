@@ -207,9 +207,9 @@ set INT_ 281
 set REAL_ 282
 set STRING_ 283
 set DSS1_ 284
-set DSS2RED_ 285
-set DSS2BLUE_ 286
-set DSS2INFRARED_ 287
+set DSS2_RED_ 285
+set DSS2_BLUE_ 286
+set DSS2_INFRARED_ 287
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -513,13 +513,13 @@ set DSS2INFRARED_ 287
 return $DSS1_
             }
             1 {
-return $DSS2RED_
+return $DSS2_RED_
             }
             2 {
-return $DSS2BLUE_
+return $DSS2_BLUE_
             }
             3 {
-return $DSS2INFRARED_
+return $DSS2_INFRARED_
             }
             4 {
 return $YES_

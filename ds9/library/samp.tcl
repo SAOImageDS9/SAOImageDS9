@@ -1409,7 +1409,7 @@ proc ds9.set {varname} {
 	lappend samp(tmp,files) $fn
 	GetFileURL $url fn
     }
-    CommSet $fn $cmd 1
+    CommSet $fn $cmd 0
 }
 
 proc SAMPRcvdDS9SetReply {msgid} {

@@ -116,20 +116,7 @@ proc ::tk::MotifFDialog_Create {dataName type argList} {
     # the dialog transient if the parent is viewable.
 
     if {[winfo viewable [winfo toplevel $data(-parent)]] } {
-	global tcl_platform
-	switch $tcl_platform(os) {
-	    Darwin {
-		set vv [lindex [split $tcl_platform(osVersion) {.}] 0]
-		if {$vv > 21} {
-		    # ventura
-		    raise $w $data(-parent)
-		} else {
-		    # monterey and previous
-		    wm transient $w $data(-parent)
-		}
-	    }
-	    default {wm transient $w $data(-parent)}
-	}
+	wm transient $w $data(-parent)
     }
 
     MotifFDialog_FileTypes $w

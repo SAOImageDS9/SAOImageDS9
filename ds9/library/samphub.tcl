@@ -154,6 +154,7 @@ proc SAMPHubStop {verbose} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return
 	}
 	unset samphub(remove)
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -253,6 +254,7 @@ proc SAMPHubDisconnect {secret} {
 	if {$verbose} {
 	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	}
+	return
     }
     unset samphub(remove)
     
@@ -382,6 +384,7 @@ proc samp.hub.register {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -457,6 +460,7 @@ proc samp.hub.unregister {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -540,6 +544,7 @@ proc samp.hub.declareMetadata {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -655,6 +660,7 @@ proc samp.hub.declareSubscriptions {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -844,6 +850,7 @@ proc samp.hub.notify {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -920,6 +927,7 @@ proc samp.hub.notifyAll {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -1009,6 +1017,7 @@ proc samp.hub.call {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
 
@@ -1045,6 +1054,7 @@ proc samp.hub.call {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($secret,id)\t$rr"
 
@@ -1123,6 +1133,7 @@ proc samp.hub.callAll {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -1209,6 +1220,7 @@ proc samp.hub.callAndWait {args} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	    }
+	    return {string ERROR}
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"

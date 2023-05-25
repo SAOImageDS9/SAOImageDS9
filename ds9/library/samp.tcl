@@ -455,7 +455,7 @@ proc SAMPSendTableHighlightRow {id varname row} {
 
     catch {unset sampmap2}
     set sampmap2(table-id) "string [XMLQuote $samp(ocat,$varname)]"
-    set sampmap2(row) "string [XMLQuote [expr $row-1]]"
+    set sampmap2(row) "string [expr $row-1]"
 
     set param1 [list "string $samp(private)"]
     if {$id != {}} {
@@ -1260,7 +1260,7 @@ proc table.highlight.row {varname} {
 	    switch -- $key {
 		url {set url [XMLUnQuote $val]}
 		table-id {set tabid [XMLUnQuote $val]}
-		row {set row [XMLUnQuote $val]}
+		row {set row $val}
 	    }
 	}
     }
@@ -1295,7 +1295,7 @@ proc table.select.rowList {varname} {
 		url {set url [XMLUnQuote $val]}
 		table-id {set tabid [XMLUnQuote $val]}
 		row-list {
-		    foreach rr [XMLUnQuote $val] {
+		    foreach rr $val {
 			lappend rowlist [expr $rr+1]
 		    }
 		}

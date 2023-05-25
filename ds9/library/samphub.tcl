@@ -491,7 +491,7 @@ proc samp.hub.declareMetadata {args} {
 
     foreach mm $map {
 	foreach {key val} $mm {
-	    lappend samphub($secret,metadata) [list $key $val]
+	    lappend samphub($secret,metadata) [list $key [XMLUnQuote $val]]
 	}
     }
     

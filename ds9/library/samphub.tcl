@@ -924,7 +924,7 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-	lappend ll $samphub($cc,id)
+	lappend ll "string $samphub($cc,id)"
     }
 
     return "array [list $ll]"

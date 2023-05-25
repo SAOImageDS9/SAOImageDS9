@@ -497,7 +497,6 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
 # return the marshalled representation
 #
 proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
-    puts "***$param"
     if {![validParam $param]} {
 	return [errReturn "Malformed Parameter: $param"]
     }

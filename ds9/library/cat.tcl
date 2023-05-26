@@ -1080,17 +1080,18 @@ proc CatalogCmdSAMPSend {name} {
 	return
     }
 
-    if {[info exists samp]} {
-	foreach arg [SAMPGetAppsVOTable] {
-	    foreach {key val} $arg {
-		if {[string tolower $val] == $name} {
-		    SAMPSendTableLoadVotable $key $cvarname
-		    break
-		}
+    if {![info exists samp]} {
+	Error [msgcat::mc {SAMP: not connected}]
+	return
+    }
+    
+    foreach arg [SAMPGetAppsVOTable] {
+	foreach {key val} $arg {
+	    if {[string tolower $val] == $name} {
+		SAMPSendTableLoadVotable $key $cvarname
+		break
 	    }
 	}
-    } else {
-	Error [msgcat::mc {SAMP: not connected}]
     }
 }
 

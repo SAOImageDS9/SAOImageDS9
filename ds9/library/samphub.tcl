@@ -1018,7 +1018,7 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
     }
 
     set param1 [list "string $secret"]
-    set param2 [list "string $samphub($samphub(secret),id)"]
+    set param2 [list "string $id"]
     set param3 [list "string $msgtag"]
     set param4 [list "struct samphubmap"]
     set params "$param1 $param2 $param3 $param4"	

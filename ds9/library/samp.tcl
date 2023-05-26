@@ -635,7 +635,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPReply $msgid"
+	puts stderr "SAMPReply $msgid $status"
     }
 
     catch {unset sampmap}
@@ -809,12 +809,21 @@ proc samp.client.receiveResponse {args} {
     }
 
     set secret [lindex $args 0]
-    set msgtag [lindex $args 1]
-    set map [lindex $args 2]
+    set id [lindex $args 1]
+    set msgtag [lindex $args 2]
+    set map [lindex $args 3]
 
-    if {$secret != $samp(private)} {
-	Error "SAMP: [msgcat::mc {internal error}]"
-	return {string ERROR}
+    set status {}
+    set value {}
+    set error {}
+    foreach arg $map {
+	foreach {key val} $arg {
+	    switch -- $key {
+		samp.result {set value [lindex [lindex $val 0] 1]}
+		samp.status {set status $val}
+		samp.error  {set error [lindex [lindex $val 0] 1]}
+	    }
+	}
     }
 
     return {string OK}

@@ -676,6 +676,31 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     }
 }
 
+proc SAMPValidMtype {mtype} {
+    switch $mtype {
+	samp.client.receiveNotification -
+	samp.client.receiveCall -
+	samp.client.receiveResponse -
+	samp.hub.event.shutdown -
+	samp.hub.event.register -
+	samp.hub.event.unregister -
+	samp.hub.event.metadata -
+	samp.hub.event.subscriptions -
+	samp.hub.disconnect -
+	samp.app.ping -
+	image.load.fits -
+	table.load.fits -
+	table.load.votable -
+	table.highlight.row -
+	table.select.rowList -
+	coord.pointAt.sky -
+	client.env.get -
+	ds9.set -
+	ds9.get {return 1}
+	default {return 0}
+    }
+}
+
 proc samp.client.receiveNotification {args} {
     global samp
     
@@ -704,10 +729,12 @@ proc samp.client.receiveNotification {args} {
 	}
     }
 
-    # be sure to lock any command that may cause a
-    #   SAMPSendCoordPointAtSkyCmd response
-    # waj check for valid mtype
-    $mtype iparams
+    if {[SAMPValidMtype $mtype]} {
+	$mtype iparams
+    } else {
+	Error "SAMP: [msgcat::mc {internal error}]"
+	return {string ERROR}
+    }
 
     return {string OK}
 }
@@ -742,25 +769,26 @@ proc samp.client.receiveCall {args} {
 	}
     }
 
-    # be sure to lock any command that may cause a
-    #   SAMPSendCoordPointAtSkyCmd response
-    # waj check for valid mtype
-    global samp
-    switch -- $mtype {
-	client.env.get {
-	    $mtype $msgid iparams
+    if {[SAMPValidMtype $mtype]} {
+	switch -- $mtype {
+	    client.env.get {
+		$mtype $msgid iparams
+	    }
+	    ds9.get {
+		$mtype $msgid iparams
+	    }
+	    ds9.set {
+		$mtype iparams
+		SAMPRcvdDS9SetReply $msgid
+	    }
+	    default {
+		$mtype iparams
+		SAMPReply $msgid OK
+	    }
 	}
-	ds9.get {
-	    $mtype $msgid iparams
-	}
-	ds9.set {
-	    $mtype iparams
-	    SAMPRcvdDS9SetReply $msgid
-	}
-	default {
-	    $mtype iparams
-	    SAMPReply $msgid OK
-	}
+    } else {
+	Error "SAMP: [msgcat::mc {internal error}]"
+	return {string ERROR}
     }
 
     return {string OK}

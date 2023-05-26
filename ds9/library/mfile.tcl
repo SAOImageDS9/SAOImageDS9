@@ -355,7 +355,7 @@ proc ButtonsFileDef {} {
 	file,xpa,info 0
 	file,samp,connect 0
 	file,samp,disconnect 0
-	file,samp,image 0
+	file,samp,image 1
 	file,samp,table 0
 	file,samphub,info 0
 	file,samphub,start 0
@@ -542,7 +542,7 @@ proc CreateButtonsFile {} {
 	[string tolower [msgcat::mc {SAMP Disconnect}]] \
 	[list SAMPDisconnect 1]
     ButtonButton $ds9(buttons).file.sampimage \
-	[string tolower [msgcat::mc {SAMP Image}]] \
+	[string tolower [msgcat::mc {SAMP}]] \
 	[list SAMPSendImageLoadFits {}]
     ButtonButton $ds9(buttons).file.samptable \
 	[string tolower [msgcat::mc {SAMP Table}]] \

@@ -26,9 +26,6 @@ proc SAMPConnect {verbose} {
     set samp(clients) {}
     set samp(tmp,files) {}
 
-    # these are to try to prevent feedback problems with 
-    set samp(lock) 0
-
     # can we find a hub?
     if {![SAMPParseHub]} {
  	if {$verbose} {
@@ -526,16 +523,6 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 
     # connected?
     if {![info exists samp]} {
-	return
-    }
-
-    # are we locked?
-    # waj - revisit
-    if {$samp(lock)} {
-	global debug
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: SAMPSendCoordPointAtSkyCmd: ABORT locked"
-	}
 	return
     }
 

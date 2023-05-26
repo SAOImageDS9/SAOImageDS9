@@ -21,9 +21,8 @@ proc SAMPConnect {verbose} {
     }
 
     # reset samp array
-    if {[info exists samp]} {
-	unset samp
-    }
+    catch {unset samp}
+
     set samp(clients) {}
     set samp(tmp,files) {}
 
@@ -35,9 +34,7 @@ proc SAMPConnect {verbose} {
  	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {unable to locate HUB}]"
 	}
-	if {[info exists samp]} {
-	    unset samp
-	}
+	catch {unset samp}
 	return
     }
 
@@ -48,9 +45,7 @@ proc SAMPConnect {verbose} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	if {[info exists samp]} {
-	    unset samp
-	}
+	catch {unset samp}
 	return
     }
     set rr [lindex $rr 1]
@@ -608,9 +603,7 @@ proc SAMPShutdown {} {
     catch {close $samp(sock)}
 
     # unset samp array
-    if {[info exists samp]} {
-	unset samp
-    }
+    catch {unset samp}
 }
 
 proc SAMPSend {method params resultVar} {
@@ -1555,33 +1548,35 @@ proc ProcessSendSAMPCmd {proc id param {sock {}} {fn {}}} {
 proc SAMPCmdSendImage {name} {
     global samp
 
-    if {[info exists samp]} {
-	foreach arg [SAMPGetAppsImage] {
-	    foreach {key val} $arg {
-		if {[string tolower $val] == $name} {
-		    SAMPSendImageLoadFits $key
-		    break
-		}
+    if {![info exists samp]} {
+	Error "SAMP: [msgcat::mc {not connected}]"
+	return
+    }
+
+    foreach arg [SAMPGetAppsImage] {
+	foreach {key val} $arg {
+	    if {[string tolower $val] == $name} {
+		SAMPSendImageLoadFits $key
+		break
 	    }
 	}
-    } else {
-	Error "SAMP: [msgcat::mc {not connected}]"
     }
 }
 
 proc SAMPCmdSendTable {name} {
     global samp
 
-    if {[info exists samp]} {
-	foreach arg [SAMPGetAppsTable] {
-	    foreach {key val} $arg {
-		if {[string tolower $val] == $name} {
-		    SAMPSendTableLoadFits $key
-		    break
-		}
+    if {![info exists samp]} {
+	Error "SAMP: [msgcat::mc {not connected}]"
+	return
+    }
+
+    foreach arg [SAMPGetAppsTable] {
+	foreach {key val} $arg {
+	    if {[string tolower $val] == $name} {
+		SAMPSendTableLoadFits $key
+		break
 	    }
 	}
-    } else {
-	Error "SAMP: [msgcat::mc {not connected}]"
     }
 }    

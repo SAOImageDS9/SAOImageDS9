@@ -35,6 +35,8 @@ proc SAMPHubStart {verbose} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {found existing hub}]"
 	    }
+	    catch {unset samp}
+	    catch {unset samphub}
 	    return
 	} else {
 	    # its dead, try to delete
@@ -168,7 +170,7 @@ proc SAMPHubStop {verbose} {
 
     # close the server socket if still up
     catch {close $samphub(sock)}
-    unset samphub
+    catch {unset samphub}
 
     SAMPHubDialogUpdate
     UpdateFileMenu
@@ -937,10 +939,12 @@ proc samp.hub.notifyAll {args} {
     return "array [list $ll]"
 }
 
-proc SAMPHubCall {cc secret id msgtag map mtype params} {
+proc SAMPHubCallCore {cc secret id msgtag map mtype params} {
     global samphub
     global samphubmap
     global samphubmap2
+    global samphubmaprr
+    global samphubmaprr2
 
     # ignore hub
     if {$cc == $samphub(secret)} {
@@ -1004,38 +1008,49 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
 	}
     }
 
-    catch {unset samphubmap}
+    catch {unset samphubmaprr}
     set samphubmap(samp.status) "string $status"
-    set samphubmap(samp.result) {struct samphubmap2}
+    set samphubmap(samp.result) {struct samphubmaprr2}
 
-    catch {unset samphubmap2}
+    catch {unset samphubmaprr2}
     foreach mm $result {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    set samphubmaprr2($key) "string \"[XMLQuote $val]\""
 	}
     }
 
-    set param1 [list "string $secret"]
-    set param2 [list "string $samphub($samphub(secret),id)"]
-    set param3 [list "string $msgtag"]
-    set param4 [list "struct samphubmap"]
-    set params "$param1 $param2 $param3 $param4"	
-
-    set rr {}
-    if {![SAMPHubSend samp.client.receiveResponse $samphub($secret,url) $params rr]} {
-	if {$verbose} {
-	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
-	}
-	return ERROR
-    }
-    SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($secret,id)\t$rr"
     return $msgid
+}
+
+proc SAMPHubCall {cc secret id msgtag map mtype params} {
+    global samphub
+
+    set msgid [SAMPHubCallCore $cc $secret $id $msgtag $map $mtype $params]
+    switch $msgid {
+	OK {return OK}
+	ERROR {return ERROR}
+	default {
+	    set param1 [list "string $secret"]
+	    set param2 [list "string $samphub($samphub(secret),id)"]
+	    set param3 [list "string $msgtag"]
+	    set param4 [list "struct samphubmaprr"]
+	    set params "$param1 $param2 $param3 $param4"	
+
+	    set rr {}
+	    if {![SAMPHubSend samp.client.receiveResponse $samphub($secret,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return ERROR
+	    }
+	    SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($secret,id)\t$rr"
+	    return $msgid
+	}
+    }
 }
 
 proc samp.hub.call {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
@@ -1118,13 +1133,11 @@ proc samp.hub.callAll {args} {
 	}
     }
 
-    return "struct $samphubmap"
+    return "struct samphubmap"
 }
 
 proc samp.hub.callAndWait {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
@@ -1154,79 +1167,12 @@ proc samp.hub.callAndWait {args} {
     }
 
     foreach cc $samphub(client,secret) {
-	# ignore hub
-	if {$cc == $samphub(secret)} {
-	    continue
+	set msgid [SAMPHubCallCore $cc $secret $id foo $map $mtype $params]
+	switch $msgid {
+	    OK {continue}
+	    ERRROR {return {string ERROR}}
+	    default {return "struct samphubmaprr"}
 	}
-
-	# don't send to sender
-	# should not happen
-	if {$cc == $secret} {
-	    continue
-	}
-
-	if {$samphub($cc,id) != $id} {
-	    continue
-	}
-
-	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
-	    continue
-	}
-
-	set samphub(rr-msgid) {}
-	set samphub(rr-map) {}
-
-	catch {unset samphubmap}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
-	foreach mm $params {
-	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"[XMLQuote $val]\""
-	    }
-	}
-
-	set param1 [list "string $cc"]
-	set param2 [list "string $id"]
-	set param3 [list "string foo-$samphub($secret,id)"]
-	set param4 [list "struct samphubmap"]
-	set params "$param1 $param2 $param3 $param4"
-	
-	set rr {}
-	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
-	    }
-	    return {string ERROR}
-	}
-
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-
-	set status {}
-	set result {}
-	foreach mm $samphub(rr-map) {
-	    foreach {key val} $mm {
-		switch -- $key {
-		    samp.status {set status $val}
-		    samp.result {set result $val}
-		}
-	    }
-	}
-
-	catch {unset samphubmap}
-	set samphubmap(samp.status) "string $status"
-	set samphubmap(samp.result) {struct samphubmap2}
-
-	catch {unset samphubmap2}
-	foreach mm $result {
-	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"[XMLQuote $val]\""
-	    }
-	}
-
-	return "struct samphubmap"
     }
 
     return {string ERROR}

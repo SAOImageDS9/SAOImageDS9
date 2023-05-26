@@ -35,6 +35,9 @@ proc SAMPConnect {verbose} {
 	return
     }
 
+    # samp initalization started
+    set samp(init) 0
+
     # register
     set params [list "string $samp(secret)"]
     set rr {}
@@ -180,6 +183,9 @@ proc SAMPConnect {verbose} {
 	    }
 	}
     }
+
+    # samp initalization started
+    set samp(init) 1
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP
@@ -941,21 +947,8 @@ proc SAMPGetAppsVOTable {} {
 proc SAMPGetAppsSubscriptions {mtype} {
     global samp
 
-    # sanity check
-    # at startup, samp may not have finished connecting
-    if {![info exists samp(clients)]} {
-	puts "***BANG1"
-	return {}
-    }
-    
     set ll {}
     foreach cc $samp(clients) {
-	# sanity check
-	# at startup, samp may not have finished connecting
-	if {![info exists samp($cc,subscriptions)]} {
-	    puts "***BANG2"
-	    continue
-	}
 	if {[lsearch $samp($cc,subscriptions) $mtype]>=0} {
 	    lappend ll $cc
 	}

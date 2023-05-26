@@ -1279,6 +1279,11 @@ proc UpdateFileMenuSAMP {} {
 	return
     }
     
+    # we maybe in the middle of initialization
+    if {!$samp(init)} {
+	return
+    }
+    
     if {[$current(frame) has fits]} {
 	set ss [expr $ds9(menu,start)+2]
 

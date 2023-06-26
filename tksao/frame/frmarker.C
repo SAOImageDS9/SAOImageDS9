@@ -5218,7 +5218,7 @@ void Base::markerSaveCmd(const char* fileName, MarkerFormat type,
 
   {
     Marker* mm = markers->head();
-    Marker* first = mm;
+    int first = 1;
     while (mm) {
       // selected
       if (select) {
@@ -5229,7 +5229,8 @@ void Base::markerSaveCmd(const char* fileName, MarkerFormat type,
       switch (type) {
       case DS9:
 	// only do this once
-	if (mm == first) {
+	if (first) {
+	  first =0;
 	  coord.listCoordSystem(fn, sys, sky, keyContext->fits);
 	  fn << (strip ? ';' : '\n');
 	}

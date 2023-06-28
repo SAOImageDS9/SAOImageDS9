@@ -30,6 +30,8 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.gist
     $ds9(mb).color add cascade -label [msgcat::mc {Topographic}] \
 	-menu $ds9(mb).color.topo
+    $ds9(mb).color add cascade -label [msgcat::mc {Scientific Colour Maps}] \
+	-menu $ds9(mb).color.scm
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
@@ -39,6 +41,7 @@ proc ColorMainMenu {} {
     ColorMainMenuExternal cubehelix cubehelix
     ColorMainMenuExternal gist gist
     ColorMainMenuExternal topo topo
+    ColorMainMenuExternal scm scm
     ColorMainMenuExternal user user
 
     $ds9(mb).color add separator
@@ -132,6 +135,7 @@ proc PrefsDialogColorMenu {w} {
     $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
+    $m add cascade -label [msgcat::mc {Scientific Colour Maps}] -menu $m.scm
 
     PrefsColorMenuExternal $m h5 h5
     PrefsColorMenuExternal $m matplotlib matplotlib
@@ -139,6 +143,7 @@ proc PrefsDialogColorMenu {w} {
     PrefsColorMenuExternal $m cubehelix cubehelix
     PrefsColorMenuExternal $m gist gist
     PrefsColorMenuExternal $m topo topo
+    PrefsColorMenuExternal $m scm scm
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -228,6 +233,7 @@ proc ButtonsColorDef {} {
     ButtonsColorDefExternal cubehelix
     ButtonsColorDefExternal gist
     ButtonsColorDefExternal topo
+    ButtonsColorDefExternal scm
     
     array set pbuttons {
 	color,grey 1
@@ -278,6 +284,7 @@ proc CreateButtonsColor {} {
     CreateButtonsColorExternal cubehelix
     CreateButtonsColorExternal gist
     CreateButtonsColorExternal topo
+    CreateButtonsColorExternal scm
 
     CheckButton $ds9(buttons).color.invert \
 	[string tolower [msgcat::mc {Invert}]] colorbar invert InvertColorbar
@@ -348,6 +355,7 @@ proc PrefsDialogButtonbarColor {f} {
     $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
+    $m add cascade -label [msgcat::mc {Scientific Colour Maps}] -menu $m.scm
 
     PrefsDialogButtonbarColorExternal $m h5 h5
     PrefsDialogButtonbarColorExternal $m matplotlib matplotlib
@@ -355,6 +363,7 @@ proc PrefsDialogButtonbarColor {f} {
     PrefsDialogButtonbarColorExternal $m cubehelix cubehelix
     PrefsDialogButtonbarColorExternal $m gist gist
     PrefsDialogButtonbarColorExternal $m topo topo
+    PrefsDialogButtonbarColorExternal $m scm scm
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -441,6 +450,9 @@ proc UpdateColorMenu {} {
 		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {Topographic}] \
 		    -state normal
+		$ds9(mb).color entryconfig \
+		    [msgcat::mc {Scientific Colour Maps}] \
+		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state normal
 
@@ -450,6 +462,7 @@ proc UpdateColorMenu {} {
 		UpdateColorButtonExternal cubehelix normal
 		UpdateColorButtonExternal gist normal
 		UpdateColorButtonExternal topo normal
+		UpdateColorButtonExternal scm normal
 	    }
 	    rgb {
 		foreach cmap $icolorbar(default,cmaps) {
@@ -466,6 +479,9 @@ proc UpdateColorMenu {} {
 		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {Topographic}] \
 		    -state disabled
+		$ds9(mb).color entryconfig \
+		    [msgcat::mc {Scientific Colour Maps}] \
+		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state disable
 
@@ -475,6 +491,7 @@ proc UpdateColorMenu {} {
 		UpdateColorButtonExternal cubehelix disable
 		UpdateColorButtonExternal gist disable
 		UpdateColorButtonExternal topo disable
+		UpdateColorButtonExternal scm disable
 	    }
 	}
     } else {
@@ -487,6 +504,7 @@ proc UpdateColorMenu {} {
 	$ds9(mb).color entryconfig [msgcat::mc {Cubehelix}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Gist}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Topographic}] -state normal
+	$ds9(mb).color entryconfig [msgcat::mc {Scientific Colour Maps}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {User}] -state normal
 
 	UpdateColorButtonExternal default normal
@@ -495,6 +513,7 @@ proc UpdateColorMenu {} {
 	UpdateColorButtonExternal cubehelix normal
 	UpdateColorButtonExternal gist normal
 	UpdateColorButtonExternal topo normal
+	UpdateColorButtonExternal scm normal
     }
 }
 

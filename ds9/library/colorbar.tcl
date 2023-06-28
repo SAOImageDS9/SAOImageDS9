@@ -23,6 +23,7 @@ proc ColorbarDef {} {
     set icolorbar(cubehelix,cmaps) [list ch05m151008 ch05m151010 ch05m151012 ch05m151410 ch05p151010 ch20m151010 cubehelix0 cubehelix1]
     set icolorbar(gist,cmaps) [list gist_earth gist_heat gist_rainbow gist_yarg gist_gray gist_ncar gist_stern]
     set icolorbar(topo,cmaps) [list tpglarf tpglhcf tpglhwf tpglpof tpglarm tpglhcm tpglhwm tpglpom]
+    set icolorbar(scm,cmaps) [list scm_acton scm_bam scm_bamako scm_batlow scm_berlin scm_bilbao scm_broc scm_buda scm_bukavu scm_cork scm_davos scm_devon scm_fes scm_glasgow scm_hawaii scm_imola scm_lajolla scm_lapaz scm_lipari scm_lisbon scm_managua scm_navia scm_nuuk scm_oleron scm_oslo scm_roma scm_tofino scm_tokyo scm_turku scm_vanimo scm_vik]
     set icolorbar(user,cmaps) {}
 
     # used for Color{Button|Motion|Release}3
@@ -81,10 +82,11 @@ proc CreateColorbar {} {
     # maintain same order for backward compatibility
     CreateColorbarExternal colorbar h5 sao
     CreateColorbarExternal colorbar matplotlib lut
+    CreateColorbarExternal colorbar matplotlib2 lut
     CreateColorbarExternal colorbar cubehelix sao
     CreateColorbarExternal colorbar gist sao
     CreateColorbarExternal colorbar topo sao
-    CreateColorbarExternal colorbar matplotlib2 lut
+    CreateColorbarExternal colorbar scm lut
 
     # reset current map
     colorbar map $colorbar(map)
@@ -142,10 +144,11 @@ proc CreateColorbarBase {frame} {
     # maintain same order for backward compatibility
     CreateColorbarExternal $which h5 sao
     CreateColorbarExternal $which matplotlib lut
+    CreateColorbarExternal $which matplotlib2 lut
     CreateColorbarExternal $which cubehelix sao
     CreateColorbarExternal $which gist sao
     CreateColorbarExternal $which topo sao
-    CreateColorbarExternal $which matplotlib2 lut
+    CreateColorbarExternal $which scm lut
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
@@ -1104,6 +1107,8 @@ proc ColormapDialog {} {
 	-menu $mb.colormap.gist
     $mb.colormap add cascade -label [msgcat::mc {Topographic}] \
 	-menu $mb.colormap.topo
+    $mb.colormap add cascade -label [msgcat::mc {Scientific Colour Maps}] \
+	-menu $mb.colormap.scm
     $mb.colormap add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
@@ -1113,6 +1118,7 @@ proc ColormapDialog {} {
     ColormapDialogExternal cubehelix cubehelix
     ColormapDialogExternal gist gist
     ColormapDialogExternal topo topo
+    ColormapDialogExternal scm scm
     ColormapDialogExternal user user
 
     $mb.colormap add separator
@@ -1278,6 +1284,8 @@ proc UpdateColorDialog {} {
 		    $icolorbar(mb).colormap entryconfig \
 			[msgcat::mc {Topographic}] -state normal
 		    $icolorbar(mb).colormap entryconfig \
+			[msgcat::mc {Scientific Colour Maps}] -state normal
+		    $icolorbar(mb).colormap entryconfig \
 			[msgcat::mc {User}] -state normal
 
 		}
@@ -1303,6 +1311,8 @@ proc UpdateColorDialog {} {
 		    $icolorbar(mb).colormap entryconfig \
 			[msgcat::mc {Topographic}] -state disabled
 		    $icolorbar(mb).colormap entryconfig \
+			[msgcat::mc {Scientific Colour Maps}] -state disabled
+		    $icolorbar(mb).colormap entryconfig \
 			[msgcat::mc {User}] -state disabled
 		}
 	    }
@@ -1325,6 +1335,9 @@ proc UpdateColorDialog {} {
 	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Gist}] \
 		-state normal
 	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Topographic}] \
+		-state normal
+	    $icolorbar(mb).colormap entryconfig \
+		[msgcat::mc {Scientific Colour Maps}] \
 		-state normal
 	    $icolorbar(mb).colormap entryconfig [msgcat::mc {User}] \
 		-state normal

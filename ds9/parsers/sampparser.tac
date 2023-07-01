@@ -27,20 +27,18 @@ command : samp
  | samp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-samp : CLIENT_ yesno # sampfirst
+samp : yesno # sampfirst
+ | CLIENT_ yesno # sampfirst
  | HUB_ yesno # sampfirst
 
  | CONNECT_ {SAMPConnect 1}
- | DISCONNECT_ {SAMPDisconnect}
+ | DISCONNECT_ {SAMPDisconnect 1}
  | BROADCAST_ broadcast
  | SEND_ send
  | HUB_ hub
- 
- # backward compatibility
- | yesno {if {$1} {SAMPConnect 1} else {SAMPDisconnect}}
  ;
 
-hub : | START_ { SAMPHubStart 1}
+hub : START_ { SAMPHubStart 1}
  | STOP_ {SAMPHubStop 1}
  | INFO_ {SAMPHubDialog}
  ;

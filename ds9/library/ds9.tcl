@@ -523,7 +523,7 @@ if {$ds9(prefs)} {
 SetDefaultFont false
 SetDefaultTextFont false
 
-# we need to set certain variables such as debug, title, language, xpa
+# we need to set certain variables such as debug, title, language, xpa, samp
 ProcessCommandLineSecond
 
 # initialize language

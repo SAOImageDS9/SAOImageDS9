@@ -27,10 +27,10 @@ command : samp
  | samp {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-samp : CLIENT_ yesno {ProcessCmdSet pds9 samp $2}
+samp : yesno {ProcessCmdSet pds9 samp $1}
+ | CLIENT_ yesno {ProcessCmdSet pds9 samp $2}
  | HUB_ yesno {ProcessCmdSet pds9 samphub $2}
 
- | yesno
  | CONNECT_
  | DISCONNECT_
  | BROADCAST_ broadcast

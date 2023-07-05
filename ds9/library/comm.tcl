@@ -251,7 +251,7 @@ proc CommGet {proc id paramlist fn} {
 	bin {ProcessSendBinCmd $proc $id $param}
 	block {ProcessSendBlockCmd $proc $id $param}
 	cat -
-	catalog {ProcessSendCatalogCmd $proc $id $param {} $fn}
+	catalog {ProcessSendCatalogCmd $proc $id $param}
 	cd {ProcessSendCDCmd $proc $id $param}
 	cmap {ProcessSendCmapCmd $proc $id $param}
 	colorbar {ProcessSendColorbarCmd $proc $id $param}
@@ -276,7 +276,7 @@ proc CommGet {proc id paramlist fn} {
 	fits {ProcessSendFitsCmd $proc $id $param {} $fn}
 	frame {ProcessSendFrameCmd $proc $id $param}
 	fp -
-	footprint {ProcessSendFootprintCmd $proc $id $param {} $fn}
+	footprint {ProcessSendFootprintCmd $proc $id $param}
 	gif {ProcessSendGIFCmd $proc $id $param {} $fn}
 	graph {ProcessSendGraphCmd $proc $id $param}
 	grid {ProcessSendGridCmd $proc $id $param}
@@ -364,7 +364,7 @@ proc CommGet {proc id paramlist fn} {
 	sfits {	
 	    # backward compatibility
 	}
-	sia {ProcessSendSIACmd $proc $id $param {} $fn}
+	sia {ProcessSendSIACmd $proc $id $param}
 	single {ProcessSendSingleCmd $proc $id $param}
 	shm {ProcessSendShmCmd $proc $id $param}
 	skyview {ProcessSendSkyViewCmd $proc $id $param}

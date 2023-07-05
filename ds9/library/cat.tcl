@@ -967,7 +967,7 @@ proc ProcessCatalogCmd {varname iname} {
     incr i [expr $cat::yycnt-1]
 }
 
-proc ProcessSendCatalogCmd {proc id param sock fn} {
+proc ProcessSendCatalogCmd {proc id param} {
     global icat
 
     set rr {}

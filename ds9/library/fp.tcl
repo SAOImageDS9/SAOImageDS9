@@ -496,7 +496,7 @@ proc ProcessFootprintCmd {varname iname} {
     incr i [expr $fp::yycnt-1]
 }
 
-proc ProcessSendFootprintCmd {proc id param sock fn} {
+proc ProcessSendFootprintCmd {proc id param} {
     global ifp
 
     set rr {}

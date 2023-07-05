@@ -196,7 +196,7 @@ proc ProcessSIACmd {varname iname} {
     incr i [expr $sia::yycnt-1]
 }
 
-proc ProcessSendSIACmd {proc id param sock fn} {
+proc ProcessSendSIACmd {proc id param} {
     global isia
 
     set rr {}

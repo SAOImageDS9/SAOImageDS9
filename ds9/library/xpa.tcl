@@ -861,7 +861,7 @@ proc XPARcvdBlock {xpa cdata param buf len} {
 
 proc XPASendCAT {xpa cdata param} {
     InitError xpa
-    catch {ProcessSendCatalogCmd xpasetbuf $xpa $param {} {}}
+    catch {ProcessSendCatalogCmd xpasetbuf $xpa $param}
     XPACatchError $xpa
 }
 
@@ -1094,7 +1094,7 @@ proc XPARcvdFits {xpa cdata param buf len} {
 
 proc XPASendFP {xpa cdata param} {
     InitError xpa
-    catch {ProcessSendFootprintCmd xpasetbuf $xpa $param {} {}}
+    catch {ProcessSendFootprintCmd xpasetbuf $xpa $param}
     XPACatchError $xpa
 }
 
@@ -1872,7 +1872,7 @@ proc XPARcvdSFits {xpa cdata param buf len} {
 
 proc XPASendSIA {xpa cdata param} {
     InitError xpa
-    catch {ProcessSendSIACmd xpasetbuf $xpa $param {} {}}
+    catch {ProcessSendSIACmd xpasetbuf $xpa $param}
     XPACatchError $xpa
 }
 

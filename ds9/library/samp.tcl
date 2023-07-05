@@ -198,7 +198,6 @@ proc SAMPDisconnect {verbose} {
     # connected?
     if {![info exists samp]} {
 	if {$verbose} {
-	    DumpCallStack
 	    Error "SAMP: [msgcat::mc {not connected}]"
 	}
 	return

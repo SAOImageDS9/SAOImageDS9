@@ -2097,10 +2097,14 @@ $ds9 -rotate close<br></tt>
 <p>Configure SAMP protocol.</p>
 <tt>Syntax:<br>
 -samp [yes|no]<br>
+&nbsp;&nbsp;&nbsp; |client [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; |hub [yes|no]]<br>
+<br>
 &nbsp;&nbsp;&nbsp; |connect|disconnect]<br>
 &nbsp;&nbsp;&nbsp; [broadcast [image|table]]<br>
 &nbsp;&nbsp;&nbsp; [send [image|table] &lt;application&gt;]<br>
-&nbsp;<br>
+&nbsp;&nbsp;&nbsp; [hub [start|stop|info]]<br>
+<br>
 Example:<br>
 $ds9 -samp yes<br>
 $ds9 -samp connect<br>
@@ -2108,6 +2112,7 @@ $ds9 -samp broadcast<br>
 $ds9 -samp broadcast table<br>
 $ds9 -samp send table<br>
 $ds9 -samp send table topcat</tt><br>
+$ds9 -samp hub info
 <p><b><a name="save" id="save"></a>save<br></b></p>
 <p>Save loaded image data of current frame as FITS.</p>
 <tt>Syntax:<br>

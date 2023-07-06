@@ -838,7 +838,7 @@ proc samp.hub.notify {args} {
 
 	foreach mm $iparams {
 	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"[XMLQuote $val]\""
+		set samphubmap2($key) "string \"$val\""
 	    }
 	}
 
@@ -915,7 +915,7 @@ proc samp.hub.notifyAll {args} {
 	catch {unset samphubmap2}
 	foreach mm $iparams {
 	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"[XMLQuote $val]\""
+		set samphubmap2($key) "string \"$val\""
 	    }
 	}
 
@@ -974,7 +974,7 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
     catch {unset samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    set samphubmap2($key) "string \"$val\""
 	}
     }
 
@@ -1013,7 +1013,7 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
     catch {unset samphubmap2}
     foreach mm $result {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    set samphubmap2($key) "string \"$val\""
 	}
     }
 
@@ -1184,7 +1184,7 @@ proc samp.hub.callAndWait {args} {
 	catch {unset samphubmap2}
 	foreach mm $params {
 	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"[XMLQuote $val]\""
+		set samphubmap2($key) "string \"$val\""
 	    }
 	}
 
@@ -1221,7 +1221,7 @@ proc samp.hub.callAndWait {args} {
 	catch {unset samphubmap2}
 	foreach mm $result {
 	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"[XMLQuote $val]\""
+		set samphubmap2($key) "string \"$val\""
 	    }
 	}
 

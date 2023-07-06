@@ -1428,7 +1428,7 @@ proc ds9.set {varname} {
 
     InitError samp
     if {$url != {}} {
-	set fn [tmpnam {.xpa}]
+	set fn [tmpnam {}]
 	lappend samp(tmp,files) $fn
 	GetFileURL $url fn
     }

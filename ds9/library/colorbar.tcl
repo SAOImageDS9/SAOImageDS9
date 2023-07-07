@@ -57,6 +57,8 @@ proc ColorbarDef {} {
 				]
     set icolorbar(matplotlib,cmaps) [list \
 					 viridis \
+					]
+    set icolorbar(matplotlib2,cmaps) [list \
 					 inferno \
 					 magma \
 					 plasma \
@@ -194,6 +196,7 @@ proc CreateColorbar {} {
     CreateColorbarExternal colorbar cubehelix sao
     CreateColorbarExternal colorbar gist sao
     CreateColorbarExternal colorbar topo sao
+    CreateColorbarExternal colorbar matplotlib2 lut
     CreateColorbarExternal colorbar scm lut
 
     # reset current map
@@ -255,6 +258,7 @@ proc CreateColorbarBase {frame} {
     CreateColorbarExternal $which cubehelix sao
     CreateColorbarExternal $which gist sao
     CreateColorbarExternal $which topo sao
+    CreateColorbarExternal $which matplotlib2 lut
     CreateColorbarExternal $which scm lut
 
     # preload any user
@@ -1219,13 +1223,14 @@ proc ColormapDialog {} {
     $mb.colormap add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
-    ColormapDialogExternal h5
-    ColormapDialogExternal matplotlib
-    ColormapDialogExternal cubehelix
-    ColormapDialogExternal gist
-    ColormapDialogExternal topo
-    ColormapDialogExternal scm
-    ColormapDialogExternal user
+    ColormapDialogExternal h5 h5
+    ColormapDialogExternal matplotlib matplotlib
+    ColormapDialogExternal matplotlib matplotlib2
+    ColormapDialogExternal cubehelix cubehelix
+    ColormapDialogExternal gist gist
+    ColormapDialogExternal topo topo
+    ColormapDialogExternal scm scm
+    ColormapDialogExternal user user
 
     $mb.colormap add separator
     $mb.colormap add checkbutton \
@@ -1271,7 +1276,7 @@ proc ColormapDialog {} {
     bind $w <<Close>> ColormapDestroyDialog
 }
 
-proc ColormapDialogExternal {which} {
+proc ColormapDialogExternal {mm which} {
     global colorbar
     global icolorbar
     global ds9
@@ -1281,7 +1286,7 @@ proc ColormapDialogExternal {which} {
 
     set cnt -1
     foreach cmap $icolorbar($which,cmaps) {
-	$mb.colormap.$which add radiobutton \
+	$mb.colormap.$mm add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
 	    -command [list ChangeColormapName $cmap]
@@ -1290,7 +1295,7 @@ proc ColormapDialogExternal {which} {
 	incr cnt
 	if {$cnt>=$ds9(menu,size,wrap)} {
 	    set cnt 0
-	    $mb.colormap.$which entryconfig [msgcat::mc $cmap] -columnbreak 1
+	    $mb.colormap.$mm entryconfig [msgcat::mc $cmap] -columnbreak 1
 	}
     }
 }

@@ -35,14 +35,13 @@ proc ColorMainMenu {} {
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
-    ColorMainMenuExternal h5 h5
-    ColorMainMenuExternal matplotlib matplotlib
-    ColorMainMenuExternal matplotlib matplotlib2
-    ColorMainMenuExternal cubehelix cubehelix
-    ColorMainMenuExternal gist gist
-    ColorMainMenuExternal topo topo
-    ColorMainMenuExternal scm scm
-    ColorMainMenuExternal user user
+    ColorMainMenuExternal h5
+    ColorMainMenuExternal matplotlib
+    ColorMainMenuExternal cubehelix
+    ColorMainMenuExternal gist
+    ColorMainMenuExternal topo
+    ColorMainMenuExternal scm
+    ColorMainMenuExternal user
 
     $ds9(mb).color add separator
     $ds9(mb).color add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -95,17 +94,25 @@ proc ColorMainMenu {} {
 	font,slant ColorbarUpdateView
 }
 
-proc ColorMainMenuExternal {mm which} {
+proc ColorMainMenuExternal {which} {
     global ds9
     global icolorbar
 
     ThemeMenu $ds9(mb).color.$which
 
+    set cnt -1
     foreach cmap $icolorbar($which,cmaps) {
-	$ds9(mb).color.$mm add radiobutton \
+	$ds9(mb).color.$which add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
 	    -command [list ChangeColormapName $cmap]
+
+	# wrap if needed
+	incr cnt
+	if {$cnt>=$ds9(menu,size,wrap)} {
+	    set cnt 0
+	    $ds9(mb).color.$which entryconfig [msgcat::mc $cmap] -columnbreak 1
+	}
     }
 }
 
@@ -139,7 +146,6 @@ proc PrefsDialogColorMenu {w} {
 
     PrefsColorMenuExternal $m h5 h5
     PrefsColorMenuExternal $m matplotlib matplotlib
-    PrefsColorMenuExternal $m matplotlib matplotlib2
     PrefsColorMenuExternal $m cubehelix cubehelix
     PrefsColorMenuExternal $m gist gist
     PrefsColorMenuExternal $m topo topo
@@ -229,7 +235,6 @@ proc ButtonsColorDef {} {
     ButtonsColorDefExternal default
     ButtonsColorDefExternal h5
     ButtonsColorDefExternal matplotlib
-    ButtonsColorDefExternal matplotlib2
     ButtonsColorDefExternal cubehelix
     ButtonsColorDefExternal gist
     ButtonsColorDefExternal topo
@@ -280,7 +285,6 @@ proc CreateButtonsColor {} {
     CreateButtonsColorExternal default
     CreateButtonsColorExternal h5
     CreateButtonsColorExternal matplotlib
-    CreateButtonsColorExternal matplotlib2
     CreateButtonsColorExternal cubehelix
     CreateButtonsColorExternal gist
     CreateButtonsColorExternal topo
@@ -359,7 +363,6 @@ proc PrefsDialogButtonbarColor {f} {
 
     PrefsDialogButtonbarColorExternal $m h5 h5
     PrefsDialogButtonbarColorExternal $m matplotlib matplotlib
-    PrefsDialogButtonbarColorExternal $m matplotlib matplotlib2
     PrefsDialogButtonbarColorExternal $m cubehelix cubehelix
     PrefsDialogButtonbarColorExternal $m gist gist
     PrefsDialogButtonbarColorExternal $m topo topo

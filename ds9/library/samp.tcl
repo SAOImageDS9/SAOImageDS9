@@ -1428,9 +1428,22 @@ proc ds9.set {varname} {
 
     InitError samp
     if {$url != {}} {
-	set fn [tmpnam {}]
-	lappend samp(tmp,files) $fn
-	GetFileURL $url fn
+	ParseURL $url rr
+	switch -- $rr(scheme) {
+	    ftp {
+		set fn [tmpnam {.ftp}]
+		lappend samp(tmp,files) $fn
+		GetFileFTP $rr(authority) $rr(path) $fn
+	    }
+	    file {set fn $rr(path)}
+	    http -
+	    https -
+	    default {
+		set fn [tmpnam {.http}]
+		lappend samp(tmp,files) $fn
+		GetFileHTTP $url $fn
+	    }
+	}
     }
     CommSet $fn $cmd 0
 }
@@ -1485,14 +1498,16 @@ proc ds9.get {msgid varname} {
 	}
     }
 
-    set fn [tmpnam {.xpa}]
-    lappend samp(tmp,files) $fn
     InitError samp
-    CommGet SAMPRcvdDS9GetReply $msgid $cmd $fn
+    set fn [CommGet SAMPRcvdDS9GetReply $msgid $cmd [tmpnam {}]]
+    if {$fn != {}} {
+	lappend samp(tmp,files) $fn
+    }
 }
 
 proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
     global ds9
+    global samp
     global icursor
 
     global debug
@@ -1521,6 +1536,7 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 	set url {}
 	if {$fn != {}} {
 	    set url "file://localhost/$fn"
+	    lappend samp(tmp,files) $fn
 	}
 
 	SAMPReply $msgid OK $value $url

@@ -15,15 +15,126 @@ proc ColorbarDef {} {
     set icolorbar(top) .clrbar
     set icolorbar(mb) .clrbarmb
 
-    set icolorbar(default,cmaps) [list grey red green blue a b bb he i8 aips0 sls hsv heat cool rainbow standard staircase color]
+    set icolorbar(default,cmaps) [list \
+				      grey \
+				      red \
+				      green \
+				      blue \
+				      a \
+				      b \
+				      bb \
+				      he \
+				      i8 \
+				      aips0 \
+				      sls \
+				      hsv \
+				      heat \
+				      cool \
+				      rainbow \
+				      standard \
+				      staircase \
+				      color \
+				     ]
 
-    set icolorbar(h5,cmaps) [list h5_autumn h5_bluered h5_bone h5_cool h5_copper h5_dkbluered h5_gray h5_green h5_hot h5_hsv h5_jet h5_pink h5_spring h5_summer h5_winter h5_yarg h5_yellow]
-    set icolorbar(matplotlib,cmaps) [list viridis]
-    set icolorbar(matplotlib2,cmaps) [list inferno magma plasma twilight turbo]
-    set icolorbar(cubehelix,cmaps) [list ch05m151008 ch05m151010 ch05m151012 ch05m151410 ch05p151010 ch20m151010 cubehelix0 cubehelix1]
-    set icolorbar(gist,cmaps) [list gist_earth gist_heat gist_rainbow gist_yarg gist_gray gist_ncar gist_stern]
-    set icolorbar(topo,cmaps) [list tpglarf tpglhcf tpglhwf tpglpof tpglarm tpglhcm tpglhwm tpglpom]
-    set icolorbar(scm,cmaps) [list scm_acton scm_bam scm_bamako scm_batlow scm_berlin scm_bilbao scm_broc scm_buda scm_bukavu scm_cork scm_davos scm_devon scm_fes scm_glasgow scm_hawaii scm_imola scm_lajolla scm_lapaz scm_lipari scm_lisbon scm_managua scm_navia scm_nuuk scm_oleron scm_oslo scm_roma scm_tofino scm_tokyo scm_turku scm_vanimo scm_vik]
+    set icolorbar(h5,cmaps) [list \
+				 h5_autumn \
+				 h5_bluered \
+				 h5_bone \
+				 h5_cool \
+				 h5_copper \
+				 h5_dkbluered \
+				 h5_gray \
+				 h5_green \
+				 h5_hot \
+				 h5_hsv \
+				 h5_jet \
+				 h5_pink \
+				 h5_spring \
+				 h5_summer \
+				 h5_winter \
+				 h5_yarg \
+				 h5_yellow \
+				]
+    set icolorbar(matplotlib,cmaps) [list \
+					 viridis \
+					]
+    set icolorbar(matplotlib2,cmaps) [list \
+					  inferno \
+					  magma \
+					  plasma \
+					  twilight \
+					  turbo \
+					 ]
+    set icolorbar(cubehelix,cmaps) [list \
+					ch05m151008 \
+					ch05m151010 \
+					ch05m151012 \
+					ch05m151410 \
+					ch05p151010 \
+					ch20m151010 \
+					cubehelix0 \
+					cubehelix1 \
+				       ]
+    set icolorbar(gist,cmaps) [list \
+				   gist_earth \
+				   gist_heat \
+				   gist_rainbow \
+				   gist_yarg \
+				   gist_gray \
+				   gist_ncar \
+				   gist_stern \
+				  ]
+    set icolorbar(topo,cmaps) [list \
+				   tpglarf \
+				   tpglhcf \
+				   tpglhwf \
+				   tpglpof \
+				   tpglarm \
+				   tpglhcm \
+				   tpglhwm \
+				   tpglpom \
+				  ]
+    set icolorbar(scm,cmaps) [list \
+				  scm_acton \
+				  scm_bam \
+				  scm_bamO \
+				  scm_bamako \
+				  scm_batlow \
+				  scm_batlowK \
+				  scm_batlowW \
+				  scm_berlin \
+				  scm_bilbao \
+				  scm_broc \
+				  scm_brocO \
+				  scm_buda \
+				  scm_bukavu \
+				  scm_cork \
+				  scm_corkO \
+				  scm_davos \
+				  scm_devon \
+				  scm_fes \
+				  scm_glasgow \
+				  scm_greyC \
+				  scm_hawaii \
+				  scm_imola \
+				  scm_lajolla \
+				  scm_lapaz \
+				  scm_lipari \
+				  scm_lisbon \
+				  scm_managua \
+				  scm_navia \
+				  scm_nuuk \
+				  scm_oleron \
+				  scm_oslo \
+				  scm_roma \
+				  scm_romaO \
+				  scm_tofino \
+				  scm_tokyo \
+				  scm_turku \
+				  scm_vanimo \
+				  scm_vik \
+				  scm_vikO \
+				 ]
     set icolorbar(user,cmaps) {}
 
     # used for Color{Button|Motion|Release}3

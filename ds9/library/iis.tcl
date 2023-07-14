@@ -336,7 +336,19 @@ proc IISCursorKey {sym key xx yy} {
 	default {
 	    if {$key!={}} {
 		set num [string range $which end end]
-		set coord [$which get coordinates $xx $yy image]
+
+		# very important
+		# iraf wants image coords to look into image data buffer
+		if {[$which has iis]} {
+		    # iraf load
+		    # buffer size is different from image size, send physical
+		    set coord [$which get coordinates $xx $yy physical]
+		} else {
+		    # direct load
+		    # image coords are correct (including mosaics)
+		    set coord [$which get coordinates $xx $yy image]
+		}
+
 		if {$coord == {}} {
 		    switch -- $key {
 			: -

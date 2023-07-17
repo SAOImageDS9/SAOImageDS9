@@ -892,7 +892,19 @@ proc ControlButton1Frame {which x y} {
     switch -- $current(mode) {
 	none {}
 	pointer -
-	region -
+	region {
+	    if {$which == $current(frame)} {
+		if {[MarkerControl $which $x $y] == 0} {
+		    # skip to create mode
+		    MarkerCreate $which $x $y
+		}
+	    } else {
+		# we need this cause MarkerMotion maybe called, 
+		# and we don't want it
+		set imarker(motion) none
+		set imarker(handle) -1
+	    }
+	}
 	catalog -
 	footprint {
 	    if {$which == $current(frame)} {

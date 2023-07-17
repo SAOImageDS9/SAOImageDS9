@@ -119,7 +119,7 @@ proc MarkerDef {} {
     set pmarker(segment,length) 20
 }
 
-# procs shared between region and catalog mode
+# procs shared between region, catalog, footprint mode
 
 proc MarkerControl {which x y} {
     global imarker
@@ -127,7 +127,7 @@ proc MarkerControl {which x y} {
     
     # if nothing is loaded, abort
     if {![$which has fits]} {
-	return
+	return -1
     }
 
     # we need this cause MarkerMotion maybe called, 
@@ -177,8 +177,10 @@ proc MarkerControl {which x y} {
 		    set imarker(motion) edit
 		}
 	    }
+	    return 1
 	}
     }
+    return 0
 }
 
 proc MarkerControlShift {which x y} {
@@ -187,7 +189,7 @@ proc MarkerControlShift {which x y} {
     
     # if nothing is loaded, abort
     if {![$which has fits]} {
-	return
+	return -1
     }
 
     # we need this cause MarkerMotion maybe called, 
@@ -219,8 +221,10 @@ proc MarkerControlShift {which x y} {
 		    set imarker(motion) edit
 		}
 	    }
+	    return 1
 	}
     }
+    return 0
 }
 
 proc MarkerCursor {which x y handleCursor overCursor} {
@@ -289,6 +293,62 @@ proc MarkerArrowKey {which x y} {
 
 # Marker only
 
+proc MarkerCreate {which x y} {
+    global marker
+    global imarker
+    global itemplate
+    global ds9
+
+    set imarker(handle) 0
+    set imarker(motion) none
+
+    switch -- $marker(shape) {
+	circle -
+	annulus -
+	panda -
+	ellipse -
+	ellipseannulus -
+	epanda -
+	box -
+	boxannulus -
+	bpanda -
+	polygon -
+	line -
+	vector -
+	projection -
+	segment -
+	text -
+	ruler -
+	compass -
+	{circle point} -
+	{box point} -
+	{diamond point} -
+	{cross point} -
+	{x point} -
+	{arrow point} -
+	{boxcircle point} {MarkerCreateShape $which $x $y}
+	default {
+	    if {![$which has wcs celestial wcs]} {
+		Error "[msgcat::mc {Unable to create FOV Region, celestial WCS Required}]"
+		return
+	    }
+
+	    set fn "$ds9(root)/template/$itemplate($marker(shape))"
+	    if {[catch {set ch [open $fn r]}]} {
+		Error "[msgcat::mc {Unable to locate FOV Region}] $marker(shape)"
+		return
+	    }
+
+	    global vardata
+	    set vardata [read $ch]
+	    close $ch
+
+	    $which marker create template var vardata $x $y
+	    unset vardata
+	}
+    }
+}
+
 proc MarkerButton {which x y} {
     global marker
     global imarker
@@ -352,55 +412,7 @@ proc MarkerButton {which x y} {
 	return
     }
 
-    # else, create a marker
-    set imarker(handle) 0
-    set imarker(motion) none
-
-    switch -- $marker(shape) {
-	circle -
-	annulus -
-	panda -
-	ellipse -
-	ellipseannulus -
-	epanda -
-	box -
-	boxannulus -
-	bpanda -
-	polygon -
-	line -
-	vector -
-	projection -
-	segment -
-	text -
-	ruler -
-	compass -
-	{circle point} -
-	{box point} -
-	{diamond point} -
-	{cross point} -
-	{x point} -
-	{arrow point} -
-	{boxcircle point} {MarkerCreateShape $which $x $y}
-	default {
-	    if {![$which has wcs celestial wcs]} {
-		Error "[msgcat::mc {Unable to create FOV Region, celestial WCS Required}]"
-		return
-	    }
-
-	    set fn "$ds9(root)/template/$itemplate($marker(shape))"
-	    if {[catch {set ch [open $fn r]}]} {
-		Error "[msgcat::mc {Unable to locate FOV Region}] $marker(shape)"
-		return
-	    }
-
-	    global vardata
-	    set vardata [read $ch]
-	    close $ch
-
-	    $which marker create template var vardata $x $y
-	    unset vardata
-	}
-    }
+    MarkerCreate $which $x $y
 }
 
 proc MarkerShift {which x y} {

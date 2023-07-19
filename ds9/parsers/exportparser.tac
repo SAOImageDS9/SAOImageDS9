@@ -55,7 +55,7 @@ tiffopts : {ProcessCmdSet export tiff,compress none}
  ;
 
 jpegopts : {ProcessCmdSet export jpeg,quality 100}
- | numeric {ProcessCmdSet export jpeg,quality $1}
+ | INT_ {ProcessCmdSet export jpeg,quality $1}
  ;
 
 endian : {ProcessCmdSet export endian native}

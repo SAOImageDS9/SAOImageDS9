@@ -63,251 +63,219 @@ proc saveimage::unsetupvalues {numsyms} {
 array set saveimage::table {
   7:264,target 17
   17:259 reduce
-  27:0 reduce
   6:259,target 16
   6:257 reduce
   3:267,target 13
-  6:258 reduce
   6:259 reduce
+  26:259 reduce
   0:275,target 11
   6:0,target 16
   2:0 reduce
   6:264 reduce
-  1:258,target 13
-  27:259,target 7
   6:267 reduce
+  24:0 reduce
   6:268 reduce
   6:257,target 16
   6:269 reduce
   4:269,target 14
-  25:0,target 11
-  16:259,target 21
-  17:0,target 22
+  25:0,target 7
+  16:259,target 22
+  17:0,target 6
   10:0,target 3
   0:273,target 10
   7:259,target 17
   21:0 reduce
-  11:258,target 13
   14:259 reduce
   4:267,target 14
   3:257 reduce
-  3:258 reduce
-  23:257 shift
   3:259 reduce
-  23:258 shift
-  2:258,target 12
-  28:259,target 8
   23:259 reduce
   0:271,target 9
   3:264 reduce
   7:257,target 17
   17:0 reduce
-  23:264 shift
   5:269,target 15
   3:267 reduce
-  17:259,target 22
   3:268 reduce
-  23:267 shift
+  17:259,target 6
   3:269 reduce
-  23:268 shift
-  23:270 goto
-  23:269 shift
   3:0,target 13
-  23:258,target 13
-  8:259,target 20
-  23:276 goto
+  8:259,target 18
   14:0 reduce
   5:267,target 15
   11:257 shift
-  14:0,target 20
-  11:258 shift
+  14:0,target 19
   11:259 shift
-  3:258,target 13
+  21:268,target 15
   11:264 shift
-  20:257 shift
   0:259 shift
   0:260 shift
   0:261 shift
   0:266,target 8
   9:0 accept
   11:267 shift
-  20:259 reduce
-  19:259 reduce
   0:262 shift
   6:269,target 16
   11:268 shift
+  19:259 reduce
+  20:259 shift
   0:263 shift
   11:269 shift
-  11:270 goto
-  18:259,target 23
   0:264 shift
+  18:259,target 10
   0:265 shift
   0:266 shift
   8:259 shift
   11:276 goto
-  28:259 reduce
   0:271 goto
-  1:268,target 16
+  1:268,target 15
   0:273 goto
   0:275 goto
   6:0 reduce
   0:264,target 6
   6:267,target 16
-  28:0 reduce
   7:0,target 17
+  18:257,target 23
   8:274 goto
-  4:258,target 14
-  8:274,target 21
-  26:0,target 5
+  8:274,target 19
+  21:264,target 13
+  26:0,target 8
   3:0 reduce
   7:269,target 17
-  18:0,target 23
-  20:259,target 10
-  19:259,target 6
+  18:0,target 10
   0:262,target 4
-  11:268,target 16
+  11:268,target 15
+  19:259,target 9
+  20:259,target 24
   25:0 reduce
   16:259 reduce
   5:257 reduce
-  5:258 reduce
   2:268,target 12
   5:259 reduce
   25:259 reduce
-  1:264,target 14
+  1:264,target 13
   5:264 reduce
   7:267,target 17
-  20:257,target 25
   0:260,target 2
   0:259,target 1
   5:267 reduce
   5:268 reduce
   5:269 reduce
-  5:258,target 15
-  23:268,target 16
-  21:259,target 9
+  21:259,target 18
   4:0,target 14
+  11:264,target 13
   18:0 reduce
-  11:264,target 14
   10:259,target 4
   13:259 reduce
   3:268,target 13
-  23:0,target 18
+  23:0,target 11
   2:257 reduce
-  2:258 reduce
   2:264,target 12
-  15:0,target 19
+  15:0,target 21
   2:259 reduce
   22:259 shift
+  21:257,target 12
   1:259,target 18
   2:264 reduce
   15:0 reduce
-  6:258,target 16
   2:267 reduce
   2:268 reduce
   2:269 reduce
-  23:264,target 14
+  21:276,target 25
   22:259,target 26
   1:257,target 12
   12:0 reduce
-  11:259,target 23
+  11:259,target 21
   4:268,target 14
   10:259 reduce
   3:264,target 13
-  1:276,target 19
+  1:276,target 17
   1:0,target 18
   2:259,target 12
   7:0 reduce
+  18:257 shift
   18:259 reduce
-  7:258,target 17
   11:257,target 12
-  27:0,target 7
   10:272 goto
-  20:0,target 10
-  19:0,target 6
   7:257 reduce
-  7:258 reduce
-  12:0,target 1
+  19:0,target 9
+  12:0,target 23
   7:259 reduce
-  23:259,target 18
-  27:259 reduce
+  23:259,target 11
   2:257,target 12
   7:264 reduce
   4:0 reduce
-  11:276,target 24
+  11:276,target 22
   7:267 reduce
-  12:259,target 1
+  12:259,target 23
   7:268 reduce
-  10:272,target 22
+  10:272,target 20
   26:0 reduce
   5:268,target 15
   7:269 reduce
   4:264,target 14
-  23:257,target 12
   3:259,target 13
+  21:269,target 16
   1:0 reduce
   23:0 reduce
   15:259 reduce
-  23:276,target 27
   5:0,target 15
-  24:259,target 28
   4:257 reduce
-  4:258 reduce
   3:257,target 13
   4:259 reduce
-  1:270,target 18
-  1:269,target 17
-  24:259 shift
-  13:259,target 2
+  21:267,target 14
+  1:269,target 16
+  13:259,target 20
   0:265,target 7
   4:264 reduce
+  24:0,target 5
   6:268,target 16
-  20:0 reduce
+  16:0,target 22
   19:0 reduce
-  16:0,target 21
   4:267 reduce
   4:268 reduce
   5:264,target 15
   4:269 reduce
   4:259,target 14
-  1:267,target 15
+  1:267,target 14
   0:263,target 5
-  11:269,target 17
-  11:270,target 18
+  11:269,target 16
   16:0 reduce
-  25:259,target 11
+  25:259,target 7
   12:259 reduce
   4:257,target 14
   2:269,target 12
   1:257 shift
-  1:258 shift
-  14:259,target 20
+  14:259,target 19
+  21:257 shift
   1:259 reduce
   7:268,target 17
   21:259 reduce
   0:261,target 3
   9:0,target 0
-  11:267,target 15
+  11:267,target 14
   13:0 reduce
   2:0,target 12
   1:264 shift
   6:264,target 16
+  21:264 shift
   1:267 shift
   5:259,target 15
-  23:270,target 18
-  23:269,target 17
   1:268 shift
-  1:270 goto
   1:269 shift
+  21:267 shift
+  21:268 shift
+  21:269 shift
   2:267,target 12
-  28:0,target 8
-  21:0,target 9
-  13:0,target 2
+  21:0,target 18
+  13:0,target 20
   1:276 goto
   10:0 reduce
+  21:276 goto
+  26:259,target 8
   5:257,target 15
-  23:267,target 15
   3:269,target 13
-  15:259,target 19
+  15:259,target 21
   5:0 reduce
 }
 
@@ -393,78 +361,70 @@ array set saveimage::rules {
 }
 
 array set saveimage::lr1_table {
-  35 {{8 {0 259} 3}}
   14,trans {}
-  33,trans {}
-  18,trans {}
-  1,trans {{257 12} {258 13} {264 14} {267 15} {268 16} {269 17} {270 18} {276 19}}
+  1,trans {{257 12} {264 13} {267 14} {268 15} {269 16} {276 17}}
+  18,trans {{257 28}}
   23,trans {}
   5,trans {}
-  27,trans {}
+  27,trans {{259 31}}
   9,trans {}
   13,trans {}
-  32,trans {}
-  17,trans {}
   0,trans {{259 1} {260 2} {261 3} {262 4} {263 5} {264 6} {265 7} {266 8} {271 9} {273 10} {275 11}}
-  22,trans {{259 33}}
+  17,trans {}
+  22,trans {{257 12} {264 13} {267 14} {268 15} {269 16} {276 30}}
   4,trans {}
   26,trans {}
-  8,trans {{259 20} {274 21}}
+  8,trans {{259 18} {274 19}}
   12,trans {}
-  31,trans {{259 35}}
+  31,trans {}
   16,trans {}
-  35,trans {}
   21,trans {}
   3,trans {}
   10 {{3 0 1} {5 0 1} {4 259 0}}
-  11 {{7 {0 259} 1} {8 {0 259} 1} {18 259 0} {19 259 0} {20 259 0} {21 259 0} {22 259 0} {23 259 0} {1 259 0} {2 259 0}}
-  25,trans {{257 12} {258 13} {264 14} {267 15} {268 16} {269 17} {270 18} {276 34}}
-  12 {{1 {0 259} 1}}
+  11 {{7 {0 259} 1} {8 {0 259} 1} {18 259 0} {19 259 0} {20 259 0} {21 259 0} {22 259 0} {23 259 0}}
+  25,trans {}
+  12 {{23 {0 259} 1}}
   7,trans {}
-  13 {{2 {0 259} 1}}
-  14 {{20 {0 259} 1}}
-  15 {{19 {0 259} 1}}
-  11,trans {{257 23} {258 24} {259 25} {264 26} {267 27} {268 28} {269 29} {270 30} {276 31}}
+  13 {{20 {0 259} 1}}
+  14 {{19 {0 259} 1}}
+  15 {{21 {0 259} 1}}
+  11,trans {{257 21} {259 22} {264 23} {267 24} {268 25} {269 26} {276 27}}
   30,trans {}
   29,trans {}
-  16 {{21 {0 259} 1}}
-  0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {12 {0 257 258 259 264 267 268 269} 0} {13 {0 257 258 259 264 267 268 269} 0} {14 {0 257 258 259 264 267 268 269} 0} {15 {0 257 258 259 264 267 268 269} 0} {16 {0 257 258 259 264 267 268 269} 0} {17 {0 257 258 259 264 267 268 269} 0}}
-  17 {{22 {0 259} 1}}
-  1 {{6 {0 259} 1} {18 {0 259} 0} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0} {1 {0 259} 0} {2 {0 259} 0}}
-  18 {{23 {0 259} 1}}
-  2 {{12 {0 257 258 259 264 267 268 269} 1}}
-  19 {{6 {0 259} 2}}
-  20 {{10 {0 259} 1} {11 {0 259} 1}}
+  16 {{22 {0 259} 1}}
+  0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {12 {0 257 259 264 267 268 269} 0} {13 {0 257 259 264 267 268 269} 0} {14 {0 257 259 264 267 268 269} 0} {15 {0 257 259 264 267 268 269} 0} {16 {0 257 259 264 267 268 269} 0} {17 {0 257 259 264 267 268 269} 0}}
+  17 {{6 {0 259} 2}}
+  1 {{6 {0 259} 1} {18 {0 259} 0} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0}}
+  18 {{10 {0 259} 1} {11 {0 259} 1}}
+  2 {{12 {0 257 259 264 267 268 269} 1}}
+  19 {{9 {0 259} 2}}
+  20 {{5 0 2}}
   15,trans {}
-  34,trans {}
-  3 {{13 {0 257 258 259 264 267 268 269} 1}}
-  21 {{9 {0 259} 2}}
-  4 {{14 {0 257 258 259 264 267 268 269} 1}}
-  22 {{5 0 2}}
-  5 {{15 {0 257 258 259 264 267 268 269} 1}}
-  23 {{1 259 1}}
-  20,trans {{257 32}}
+  3 {{13 {0 257 259 264 267 268 269} 1}}
+  21 {{23 259 1}}
+  4 {{14 {0 257 259 264 267 268 269} 1}}
+  22 {{7 {0 259} 2} {18 {0 259} 0} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0}}
+  5 {{15 {0 257 259 264 267 268 269} 1}}
+  23 {{20 259 1}}
+  20,trans {{259 29}}
   19,trans {}
-  6 {{16 {0 257 258 259 264 267 268 269} 1}}
+  6 {{16 {0 257 259 264 267 268 269} 1}}
   2,trans {}
-  24 {{2 259 1}}
-  7 {{17 {0 257 258 259 264 267 268 269} 1}}
-  25 {{7 {0 259} 2} {18 {0 259} 0} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0} {1 {0 259} 0} {2 {0 259} 0}}
+  24 {{19 259 1}}
+  7 {{17 {0 257 259 264 267 268 269} 1}}
+  25 {{21 259 1}}
   8 {{9 {0 259} 1} {10 {0 259} 0} {11 {0 259} 0}}
-  26 {{20 259 1}}
+  26 {{22 259 1}}
   9 {{0 0 1}}
-  27 {{19 259 1}}
+  27 {{8 {0 259} 2}}
   24,trans {}
   6,trans {}
-  28 {{21 259 1}}
-  29 {{22 259 1}}
-  30 {{23 259 1}}
-  31 {{8 {0 259} 2}}
-  32 {{11 {0 259} 2}}
-  10,trans {{272 22}}
+  28 {{11 {0 259} 2}}
+  30 {{7 {0 259} 3}}
+  29 {{5 0 3}}
+  31 {{8 {0 259} 3}}
+  10,trans {{272 20}}
   28,trans {}
-  33 {{5 0 3}}
-  34 {{7 {0 259} 3}}
 }
 
 array set saveimage::token_id_table {

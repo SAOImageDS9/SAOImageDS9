@@ -61,208 +61,196 @@ proc export::unsetupvalues {numsyms} {
 }
 
 array set export::table {
-  17:259 reduce
-  6:259,target 16
-  17:266,target 28
-  27:0 reduce
-  38:259,target 13
-  6:259 shift
-  17:266 shift
-  13:269,target 22
-  13:270,target 23
-  26:259 reduce
-  0:275,target 10
-  17:271 shift
-  17:272 shift
-  17:273 shift
-  27:259,target 22
-  24:0 reduce
-  35:259 reduce
-  17:278 goto
-  33:0,target 1
-  16:259,target 6
-  25:0,target 11
-  17:0,target 15
-  10:0,target 0
-  7:259,target 17
-  21:0 reduce
-  14:259 reduce
-  14:269,target 22
-  14:270,target 23
-  3:259 shift
-  14:268 shift
-  23:259 reduce
-  28:259,target 17
-  14:269 shift
-  14:270 shift
-  17:0 reduce
-  38:0 reduce
-  17:259,target 15
-  32:259 reduce
-  14:280 goto
-  12:280,target 24
-  8:259,target 18
-  17:278,target 32
-  37:0,target 5
-  14:0 reduce
-  29:0,target 16
-  30:0,target 18
-  22:0,target 24
-  14:0,target 22
-  35:0 reduce
-  11:259 reduce
-  29:259,target 16
   30:259,target 18
-  0:259 shift
-  0:260 shift
-  0:261 shift
-  0:266,target 8
-  11:0 reduce
-  0:262 shift
-  19:259 reduce
-  20:259 shift
-  0:263 shift
-  0:264 shift
-  18:259,target 20
-  0:265 shift
-  32:0 reduce
-  0:266 shift
-  0:267 shift
-  8:259 shift
-  11:276 goto
-  13:280,target 25
-  28:259 reduce
-  9:259,target 19
-  27:269,target 22
-  27:270,target 23
-  0:275 goto
-  0:264,target 6
-  0:277 goto
-  18:257,target 33
-  28:0 reduce
-  31:259,target 19
-  34:0,target 2
-  26:0,target 12
-  18:0,target 20
-  11:0,target 3
-  0:262,target 4
-  19:259,target 9
-  20:259,target 37
-  17:272,target 30
-  16:259 reduce
-  25:0 reduce
-  14:280,target 26
-  5:259 shift
-  25:259 reduce
-  18:274,target 35
-  0:259,target 1
-  0:260,target 2
-  22:0 reduce
-  34:259 reduce
-  32:259,target 7
-  12:268,target 21
-  21:259,target 23
-  18:0 reduce
-  13:259 reduce
-  38:0,target 13
+  29:259,target 16
+  15:259 shift
   31:0,target 19
   23:0,target 25
+  17:259 reduce
+  0:260 shift
+  0:259 shift
+  27:0 reduce
+  24:259,target 10
+  17:266,target 28
+  0:266,target 8
+  0:261 shift
+  6:259,target 16
+  20:259 shift
+  19:259 reduce
+  0:262 shift
   2:259 shift
-  1:259,target 14
-  13:268 shift
+  11:0 reduce
+  0:263 shift
   22:259 reduce
-  13:269 shift
+  18:259,target 20
+  13:268 shift
+  0:264 shift
+  1:259,target 14
+  4:259 shift
+  32:0 reduce
   13:270 shift
+  13:269 shift
+  0:265 shift
+  24:259 reduce
+  18:279,target 34
+  17:266 shift
+  0:266 shift
+  6:259 shift
+  13:259,target 22
+  0:267 shift
+  32:0,target 7
+  26:259 reduce
+  13:270,target 23
+  13:269,target 22
+  0:265,target 7
+  8:259 shift
   36:0 reduce
-  33:259,target 1
+  33:259,target 21
+  24:0,target 10
+  13:280,target 25
+  0:275,target 10
+  11:276 goto
+  28:259 reduce
+  19:0 reduce
+  17:271 shift
+  16:0,target 6
+  17:272 shift
   31:259 reduce
+  27:259,target 22
+  17:273 shift
+  9:259,target 19
+  27:270,target 23
+  27:269,target 22
+  33:259 reduce
+  27:280,target 36
+  24:0 reduce
   13:280 goto
-  27:280,target 38
-  13:268,target 21
+  0:275 goto
   22:259,target 24
+  13:268,target 21
+  0:264,target 6
+  4:259,target 14
+  0:277 goto
+  33:0,target 21
+  17:278 goto
+  28:0 reduce
+  25:0,target 11
+  18:257,target 33
+  16:259,target 6
+  17:0,target 15
   12:0 reduce
+  36:259,target 13
+  27:268,target 21
+  10:0,target 0
   11:259,target 4
   33:0 reduce
+  0:263,target 5
+  31:259,target 19
+  17:273,target 31
+  16:0 reduce
+  34:0,target 8
+  25:259,target 11
+  7:259,target 17
+  26:0,target 12
+  21:0 reduce
+  12:259 reduce
+  18:0,target 20
   1:0,target 14
+  20:259,target 35
+  19:259,target 9
+  14:259 reduce
+  0:262,target 4
   2:259,target 12
+  11:0,target 3
+  17:272,target 30
+  25:0 reduce
   18:257 shift
-  18:258 shift
+  16:259 reduce
+  14:259,target 22
   18:259 reduce
-  34:259,target 2
-  29:0 reduce
+  14:270,target 23
+  14:269,target 22
+  1:259 reduce
+  34:259,target 8
+  14:280,target 26
+  35:0,target 5
   30:0 reduce
-  35:0,target 21
+  29:0 reduce
+  21:259 reduce
+  12:268 shift
+  3:259 shift
   27:0,target 22
+  13:0 reduce
+  12:270 shift
+  12:269 shift
+  0:261,target 3
+  28:259,target 17
+  23:259 reduce
   19:0,target 9
+  17:271,target 29
+  14:268 shift
+  5:259 shift
+  14:270 shift
+  14:269 shift
   12:0,target 22
+  34:0 reduce
+  25:259 reduce
   7:259 shift
-  14:268,target 21
   23:259,target 25
+  17:0 reduce
+  14:268,target 21
+  5:259,target 15
   27:259 reduce
+  9:259 shift
+  30:259 reduce
+  29:259 reduce
+  17:259,target 15
+  0:260,target 2
+  0:259,target 1
+  36:0,target 13
+  22:0 reduce
   11:276,target 20
+  32:259 reduce
+  28:0,target 17
+  12:280 goto
+  21:0,target 23
   12:259,target 22
-  18:274 goto
+  34:259 reduce
+  14:280 goto
+  13:0,target 22
+  12:270,target 23
+  12:269,target 22
+  32:259,target 7
   26:0 reduce
+  12:280,target 24
   36:259 reduce
   27:268 shift
-  27:269 shift
-  27:270 shift
-  18:279 goto
-  3:259,target 13
-  1:0 reduce
-  0:267,target 9
-  35:259,target 21
-  27:280 goto
-  23:0 reduce
-  15:259 shift
-  24:259,target 10
-  4:259 shift
-  18:279,target 36
-  24:259 reduce
-  13:259,target 22
-  0:265,target 7
-  32:0,target 7
-  24:0,target 10
-  16:0,target 6
-  19:0 reduce
-  18:258,target 34
-  33:259 reduce
-  4:259,target 14
-  36:259,target 8
-  27:268,target 21
-  0:263,target 5
-  16:0 reduce
-  17:273,target 31
-  37:0 reduce
-  25:259,target 11
-  12:259 reduce
-  14:259,target 22
-  1:259 reduce
-  12:268 shift
-  21:259 reduce
-  0:261,target 3
-  12:269 shift
-  12:270 shift
-  13:0 reduce
-  17:271,target 29
-  34:0 reduce
-  5:259,target 15
-  9:259 shift
-  29:259 reduce
-  30:259 reduce
-  36:0,target 8
-  12:280 goto
-  28:0,target 17
-  21:0,target 23
-  12:269,target 22
-  12:270,target 23
-  13:0,target 22
   10:0 accept
-  38:259 reduce
+  27:270 shift
+  27:269 shift
   26:259,target 12
+  18:279 goto
+  8:259,target 18
   31:0 reduce
+  17:278,target 32
+  14:0 reduce
+  30:0,target 18
+  29:0,target 16
+  21:259,target 23
+  12:268,target 21
+  3:259,target 13
+  22:0,target 24
+  35:0 reduce
+  14:0,target 22
+  18:0 reduce
   15:259,target 27
+  1:0 reduce
+  11:259 reduce
+  0:267,target 9
+  27:280 goto
   0:277,target 11
+  13:259 reduce
+  23:0 reduce
 }
 
 array set export::rules {
@@ -353,18 +341,15 @@ array set export::rules {
 }
 
 array set export::lr1_table {
-  35 {{21 {0 259} 1}}
-  36 {{8 {0 259} 3}}
+  35 {{5 0 3}}
+  36 {{13 {0 259} 4}}
   14,trans {{268 21} {269 22} {270 23} {280 26}}
   33,trans {}
-  37 {{5 0 3}}
-  38 {{13 {0 259} 4}}
-  18,trans {{257 33} {258 34} {274 35} {279 36}}
+  18,trans {{257 33} {279 34}}
   1,trans {}
-  37,trans {}
   23,trans {}
   5,trans {{259 15}}
-  27,trans {{268 21} {269 22} {270 23} {280 38}}
+  27,trans {{268 21} {269 22} {270 23} {280 36}}
   9,trans {{259 19}}
   13,trans {{268 21} {269 22} {270 23} {280 25}}
   32,trans {}
@@ -396,7 +381,7 @@ array set export::lr1_table {
   0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {10 {0 259} 0} {11 {0 259} 0} {12 {0 259} 0} {13 {0 259} 0} {14 {0 259} 0}}
   17 {{7 {0 259} 2} {15 {0 259} 0} {16 {0 259} 0} {17 {0 259} 0} {18 {0 259} 0} {19 {0 259} 0}}
   1 {{14 {0 259} 1}}
-  18 {{8 {0 259} 2} {20 {0 259} 0} {21 {0 259} 0} {1 {0 259} 0} {2 {0 259} 0}}
+  18 {{8 {0 259} 2} {20 {0 259} 0} {21 {0 259} 0}}
   2 {{10 {0 259} 1}}
   19 {{9 {0 259} 2}}
   20 {{5 0 2}}
@@ -408,12 +393,11 @@ array set export::lr1_table {
   22 {{24 {0 259} 1}}
   5 {{13 {0 259} 1}}
   23 {{25 {0 259} 1}}
-  20,trans {{259 37}}
+  20,trans {{259 35}}
   19,trans {}
   6 {{6 {0 259} 1}}
   2,trans {{259 12}}
   24 {{10 {0 259} 3}}
-  38,trans {}
   7 {{7 {0 259} 1}}
   25 {{11 {0 259} 3}}
   8 {{8 {0 259} 1}}
@@ -429,8 +413,8 @@ array set export::lr1_table {
   32 {{7 {0 259} 3}}
   10,trans {}
   28,trans {}
-  33 {{1 {0 259} 1}}
-  34 {{2 {0 259} 1}}
+  33 {{21 {0 259} 1}}
+  34 {{8 {0 259} 3}}
 }
 
 array set export::token_id_table {

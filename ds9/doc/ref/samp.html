@@ -936,13 +936,13 @@ Example:<br>
 ds9.set(string cmd)<br>
 exit</tt><br>
 <p><b><a name="export" id="export"></a>export<br></b></p>
-<p>Export loaded image data of current frame in specified image format. Optional parameters: array endian, nrrd endian, jpeg quality (1-100) and tiff compression method.</p>
+<p>Export loaded image data of current frame in specified image format. Optional parameters: array endian, nrrd endian, jpeg quality int(1-100) and tiff compression method.</p>
 <tt>Syntax:<br>
 export[array|nrrd|envi|gif|tiff|jpeg|png]&lt;filename&gt;<br>
 export array &lt;filename&gt;[big|little|native]<br>
 export nrrd &lt;filename&gt;[big|little|native]<br>
 export envi &lt;header&gt; &lt;filename&gt;[big|little|native]<br>
-export jpeg &lt;filename&gt;[1-100]<br>
+export jpeg &lt;filename&gt;[int(1-100)]<br>
 export tiff &lt;filename&gt;[none|jpeg|packbits|deflate]<br>
 &nbsp;<br>
 Example:<br>
@@ -1540,7 +1540,7 @@ illustrate close<br></tt>
 <p><b><a name="jpeg" id="jpeg"></a>jpeg</b></p>
 <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg</tt> quality (1-100)</p>
 <tt>Syntax:<br>
-jpeg [new|slice] [&lt;filename&gt;] [1-100]<br>
+jpeg [new|slice] [&lt;filename&gt;] [int(1-100)]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
@@ -1988,7 +1988,7 @@ plot [gui]<br>
 # export<br>
 plot [export &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export eps|gif|tiff|jpeg|png &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [export jpeg &lt;filename&gt; [1-100]]<br>
+&nbsp;&nbsp;&nbsp; [export jpeg &lt;filename&gt; [int(1-100)]]<br>
 &nbsp;&nbsp;&nbsp; [export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
 </p>
 <p>
@@ -2674,10 +2674,10 @@ save mecube foo.fits<br>
 save mosaic foo.fits<br>
 save mosaicimage foo.fits</tt><br>
 <p><b><a name="saveimage" id="saveimage"></a>saveimage</b></p>
-<p>Create a snap shot of the current DS9 window and save in specified image format. If no format specified, the file name extension is used to determine the output format. Optional parameters: <tt>jpeg</tt> quality (1-100) and <tt>tiff</tt> compression method.</p>
+<p>Create a snap shot of the current DS9 window and save in specified image format. If no format specified, the file name extension is used to determine the output format. Optional parameters: <tt>jpeg</tt> quality int(1-100) and <tt>tiff</tt> compression method.</p>
 <tt>Syntax:<br>
 saveimage[fits|eps|gif|tiff|jpeg|png]&lt;filename&gt;<br>
-saveimage &lt;filename&gt;.jpeg [1-100]<br>
+saveimage &lt;filename&gt;.jpeg [int(1-100)]<br>
 saveimage &lt;filename&gt;.tiff [none|jpeg|packbits|deflate]<br>
 &nbsp;<br>
 Example:<br>

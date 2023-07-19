@@ -53,7 +53,7 @@ opts :
  | JPEG_ {ProcessCmdSet saveimage tiff,compress jpeg}
  | PACKBITS_ {ProcessCmdSet saveimage tiff,compress packbits}
  | DEFLATE_ {ProcessCmdSet saveimage tiff,compress deflate}
- | numeric {ProcessCmdSet saveimage jpeg,quality $1}
+ | INT_ {ProcessCmdSet saveimage jpeg,quality $1}
  ;
  
 %%

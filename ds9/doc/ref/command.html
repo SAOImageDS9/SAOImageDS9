@@ -773,13 +773,13 @@ quit</b></p>
 Example:<br>
 $ds9 -exit<br></tt>
 <p><b><a name="export" id="export"></a>export<br></b></p>
-<p>Export loaded image data of current frame in specified image format, at native resolution, using current colormap and contrast/bias settings. NOTE: not scaling, rotation, or translation is applied. If no format specified, the file name extension is used to determine the output format. Optional parameters: jpeg quality (1-100) and tiff compression method.<br></p>
+<p>Export loaded image data of current frame in specified image format, at native resolution, using current colormap and contrast/bias settings. NOTE: not scaling, rotation, or translation is applied. If no format specified, the file name extension is used to determine the output format. Optional parameters: jpeg quality int(1-100) and tiff compression method.<br></p>
 <tt>Syntax:<br>
 -export [array|nrrd|envi|gif|tiff|jpeg|png] &lt;filename&gt;<br>
 -export array &lt;filename&gt;[big|little|native]<br>
 -export nrrd &lt;filename&gt;[big|little|native]<br>
 -export envi &lt;header&gt; &lt;filename&gt;[big|little|native]<br>
--export &lt;filename&gt;.jpeg [1-100]<br>
+-export &lt;filename&gt;.jpeg [int(1-100)]<br>
 -export &lt;filename&gt;.tiff [none|jpeg|packbits|deflate]<br>
 <br>
 Example:<br>
@@ -1594,7 +1594,7 @@ plot [gui]<br>
 # export<br>
 plot [export &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export eps|gif|tiff|jpeg|png &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [export jpeg &lt;filename&gt; [1-100]]<br>
+&nbsp;&nbsp;&nbsp; [export jpeg &lt;filename&gt; [int(1-100)]]<br>
 &nbsp;&nbsp;&nbsp; [export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
 </p>
 <p>
@@ -2129,10 +2129,10 @@ $ds9 -save mecube foo.fits<br>
 $ds9 -save mosaic foo.fits<br>
 $ds9 -save mosaicimage foo.fits</tt><br>
 <p><b><a name="saveimage" id="saveimage"></a>saveimage</b></p>
-<p>Create a snap shot of the current DS9 window and save in specified image format. If no format specified, the file name extension is used to determine the output format. Optional parameters: <tt>jpeg</tt> quality (1-100) and <tt>tiff</tt> compression method.</p>
+<p>Create a snap shot of the current DS9 window and save in specified image format. If no format specified, the file name extension is used to determine the output format. Optional parameters: <tt>jpeg</tt> quality int(1-100) and <tt>tiff</tt> compression method.</p>
 <tt>Syntax:<br>
 -saveimage[fits|eps|gif|tiff|jpeg|png]&lt;filename&gt;<br>
--saveimage &lt;filename&gt;.jpeg [1-100]<br>
+-saveimage &lt;filename&gt;.jpeg [int(1-100)]<br>
 -saveimage &lt;filename&gt;.tiff [none|jpeg|packbits|deflate]<br>
 &nbsp;<br>
 Example:<br>

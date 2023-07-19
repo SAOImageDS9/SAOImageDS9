@@ -259,7 +259,7 @@ proc JPEGExportDialog {varname} {
     destroy $w
 
     if {$ed2(ok)} {
-	set var $ed2(quality)
+	set var [expr int($ed2(quality))]
     }
 
     set rr $ed2(ok)

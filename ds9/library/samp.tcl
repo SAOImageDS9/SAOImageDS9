@@ -863,16 +863,7 @@ proc SAMPParseHub {} {
     }
 
     if {$fn == {}} {
-	# look in home directory for .samp
-	global tcl_platform
-	switch $tcl_platform(platform) {
-	    unix {
-		set fn [file join [GetEnvHome] {.samp}]
-	    }
-	    windows {
-		set fn [file join "$env(HOMEDRIVE)$env(HOMEPATH)" {.samp}]
-	    }
-	}
+	set fn [file join [GetEnvHome] {.samp}]
     }
 
     # no hub to be found

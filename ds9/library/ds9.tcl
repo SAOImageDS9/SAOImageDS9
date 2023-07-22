@@ -140,7 +140,10 @@ proc DS9Def {} {
     }
 
     # start hub if unable to find another
-    set pds9(samphub) 1
+    set pds9(samp,hub) 1
+
+    # start a web hub also
+    set pds9(samp,webhub) 1
 
     # connect if samp hub is available
     set pds9(samp) 1
@@ -615,8 +618,12 @@ if {$pds9(xpa)} {
 }
 
 # SAMP Hub
-if {$pds9(samphub)} {
+if {$pds9(samp,hub)} {
     SAMPHubStart 0
+
+    if {$pds9(samp,webhub)} {
+        SAMPWebHubStart 0
+    }
 }
 
 # SAMP

@@ -49,15 +49,7 @@ proc SAMPHubStart {verbose} {
     catch {unset samphub}
     
     # home directory
-    global tcl_platform
-    switch $tcl_platform(platform) {
-	unix {
-	    set fn [file join [GetEnvHome] {.samp}]
-	}
-	windows {
-	    set fn [file join "$env(HOMEDRIVE)$env(HOMEPATH)" {.samp}]
-	}
-    }
+    set fn [file join [GetEnvHome] {.samp}]
 
     # basics
     set samphub(client,seq) 0
@@ -84,8 +76,6 @@ proc SAMPHubStart {verbose} {
     puts $ch "samp.secret=$samphub(secret)"
     puts $ch "samp.hub.xmlrpc.url=http://127.0.0.1:$samphub(port)/xmlrpc"
     puts $ch "samp.profile.version=1.3"
-    puts $ch "hub.impl=org.astrogrid.samp.hub.Hub\$1"
-    puts $ch "profile.impl=org.astrogrid.samp.xmlrpc.StandardHubProfile"
     puts $ch "profile.start.date=$samphub(timestamp)"
 
     close $ch
@@ -169,6 +159,7 @@ proc SAMPHubStop {verbose} {
     catch {file delete -force $samphub(fn)}
 
     # close the server socket if still up
+    catch {close $samphub(web,sock)}
     catch {close $samphub(sock)}
     catch {unset samphub}
 
@@ -1257,6 +1248,8 @@ proc samp.hub.reply {args} {
     return {string OK}
 }
 
+# *** Hub ***
+
 # client to hub
 # samp.hub.setXmlrpcCallback
 # samp.hub.ping
@@ -1285,6 +1278,8 @@ proc samp.hub.reply {args} {
 
 # hub to a client
 # samp.hub.disconnect (force disconnect, no response expected)
+
+# ***Client***
 
 # samp.client.receiveNotification
 # samp.client.receiveCall

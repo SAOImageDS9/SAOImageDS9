@@ -65,6 +65,7 @@ proc SAMPHubStart {verbose} {
 
     set samphub(web,sock) {}
     set samphub(web,port) 0
+    set samphub(web,allowReverseCallbacks) 0
     if {$pds9(samp,webhub)} {
 	set samphub(web,sock) [xmlrpc::serve 21012]
 	set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
@@ -389,8 +390,6 @@ proc samp.hub.ping {} {
 
 proc samp.hub.register {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -401,67 +400,8 @@ proc samp.hub.register {args} {
 	return {string ERROR}
     }
 
-    incr samphub(client,seq)
-    set secret [SAMPHubGenerateKey]
-    set id "c${samphub(client,seq)}"
-
-    lappend samphub(client,secret) $secret
-
-    set samphub($secret,id) $id
-    set samphub($secret,url) {}
-    set samphub($secret,subscriptions) {}
-    set samphub($secret,metadata) {}
-
-    SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
-    SAMPHubDialogListAdd $secret
-
-    # update other clients
-    set mtype {samp.hub.event.register}
-    foreach cc $samphub(client,secret) {
-	# ignore hub
-	if {$cc == $samphub(secret)} {
-	    continue
-	}
-
-	# don't send to sender
-	if {$cc == $secret} {
-	    continue
-	}
-
-	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
-	    continue
-	}
-
-	catch {unset samphubmap}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
-
-	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct samphubmap"]
-	set params "$param1 $param2 $param3"
-
-	set rr {}
-	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
-	    }
-	    return
-	}
-
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-    }
-
-    catch {unset samphubmap}
-    set samphubmap(samp.hub-id) {string hub}
-    set samphubmap(samp.self-id) "string $id"
-    set samphubmap(samp.private-key) "string $secret"
+    SAMPHubRegister
     return "struct samphubmap"
-#    SAMPHubRegister $args
 }
 
 proc samp.hub.unregister {args} {
@@ -1340,7 +1280,7 @@ proc samp.hub.reply {args} {
 # samp.hub.call $id
 # samp.hub.callAll
 # samp.hub.callAndWait $id
-# samp.hub.relay
+# samp.hub.reply
 
 # hub to all clients with change of state
 # samp.hub.event.shutdown

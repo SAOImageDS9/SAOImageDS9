@@ -94,6 +94,9 @@ proc samp.webhub.allowReverseCallbacks {args} {
     if {$debug(tcl,samp)} {
 	puts "samp.webhub.allowReverseCallbacks: $args"
     }
+
+    set samphub(web,allowReverseCallbacks) [lindex $args 1]
+    return {string OK}
 }
 
 proc samp.webhub.pullCallbacks {args} {
@@ -103,6 +106,11 @@ proc samp.webhub.pullCallbacks {args} {
     if {$debug(tcl,samp)} {
 	puts "samp.webhub.pullCallbacks: $args"
     }
+
+    set timeout [lindex $args 1]
+
+    set ll {}
+    return "array [list $ll]"
 }
 
 proc samp.webhub.ping {} {
@@ -118,6 +126,7 @@ proc samp.webhub.ping {} {
 
 proc samp.webhub.register {args} {
     global samphub
+    global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
@@ -141,126 +150,61 @@ proc samp.webhub.register {args} {
 	return {string ERROR}
     }
 
-    SAMPHubRegister $args
+    SAMPHubRegister
     set samphubmap(samp.url-translator) {string foobar}
     return "struct samphubmap"
 }
 
 proc samp.webhub.unregister {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.unregister: $args"
-    }
+    samp.hub.unregister {*}$args
 }
 
 proc samp.webhub.declareMetadata {args} {
-    global samphub
-    
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.declareMetadata: $args"
-    }
+    samp.hub.declareMetadata {*}$args
 }
 
 proc samp.webhub.getMetadata {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.getMetadata: $args"
-    }
+    samp.hub.getMetadata {*}$args
 }
 
 proc samp.webhub.declareSubscriptions {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.declareSubscriptions: $args"
-    }
+    samp.hub.declareSubscriptions {*}$args
 }
 
 proc samp.webhub.getSubscriptions {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.getSubscriptions: $args"
-    }
+    samp.hub.getSubscriptions {*}$args
 }
 
 proc samp.webhub.getRegisteredClients {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.getRegisteredClients: $args"
-    }
+    samp.hub.getRegisteredClients {*}$args
 }
 
 proc samp.webhub.getSubscribedClients {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.getSubscribedClients: $args"
-    }
+    samp.hub.getSubscribedClients {*}$args
 }
 
 proc samp.webhub.notify {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.wrbhub.notify: $args"
-    }
+    samp.hub.notify {*}$args
 }
 
 proc samp.webhub.notifyAll {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.notifyAll: $args"
-    }
+    samp.hub.notifyAll {*}$args
 }
 
 proc samp.webhub.call {args} {
-    global samphub
-    
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.call: $args"
-    }
+    samp.hub.call {*}$args
 }
 
 proc samp.webhub.callAll {args} {
-    global samphub
-    
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.callAll: $args"
-    }
+    samp.hub.callAll {*}$args
 }
 
 proc samp.webhub.callAndWait {args} {
-    global samphub
-    
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.callAndWait: $args"
-    }
+    samp.hub.callAndWait {*}$args
 }
 
 proc samp.webhub.reply {args} {
-    global samphub
-    
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.reply: $args"
-    }
+    samp.hub.reply {*}$args
 }
 
 # samp.webhub.ping
@@ -278,4 +222,4 @@ proc samp.webhub.reply {args} {
 # samp.webhub.call $id
 # samp.webhub.callAll
 # samp.webhub.callAndWait $id
-# samp.webhub.relay
+# samp.webhub.reply

@@ -79,7 +79,6 @@ namespace eval xmlrpc {
 # and start listening on it
 #
 proc xmlrpc::serve {port} {
-    debug "***SERVE $port"
     return [socket -server xmlrpc::serveOnce $port]
 }
 
@@ -87,7 +86,6 @@ proc xmlrpc::serve {port} {
 #
 proc xmlrpc::serveOnce {sock addr port} {
     variable	READSIZE
-    debug "*** $sock [fconfigure $sock -sockname]"
     debug "in serveOnce: addr: $addr"
     debug "in serveOnce: port: $port"
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
@@ -169,7 +167,6 @@ proc xmlrpc::doRequest {sock} {
 	    set response [buildResponse $result]
 	}
     }
-    debug "in doRequest: response:\n$response"
     puts -nonewline $sock $response
     flush $sock
     catch {close $sock}

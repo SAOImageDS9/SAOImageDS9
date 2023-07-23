@@ -16,6 +16,7 @@ proc SAMPHubStart {verbose} {
     global samphub
     global samphubmap
     global debug
+    global pds9
 
     # are we connected?
     if {[info exists samp]} {
@@ -61,6 +62,13 @@ proc SAMPHubStart {verbose} {
     set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
     set samphub(secret) [SAMPHubGenerateKey]
     set samphub(timestamp) "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
+
+    set samphub(web,sock) {}
+    set samphub(web,port) 0
+    if {$pds9(samp,webhub)} {
+	set samphub(web,sock) [xmlrpc::serve 21012]
+	set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
+    }
 
     if {[catch {set ch [open $fn w 0600]}]} {
 	if {$verbose} {
@@ -279,6 +287,71 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,metadata)
 }
 
+proc SAMPHubRegister {} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    incr samphub(client,seq)
+    set secret [SAMPHubGenerateKey]
+    set id "c${samphub(client,seq)}"
+
+    lappend samphub(client,secret) $secret
+
+    set samphub($secret,id) $id
+    set samphub($secret,url) {}
+    set samphub($secret,subscriptions) {}
+    set samphub($secret,metadata) {}
+
+    SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
+    SAMPHubDialogListAdd $secret
+
+    # update other clients
+    set mtype {samp.hub.event.register}
+    foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == $samphub(secret)} {
+	    continue
+	}
+
+	# don't send to sender
+	if {$cc == $secret} {
+	    continue
+	}
+
+	# are we subscribed
+	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	    continue
+	}
+
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	set samphubmap2(id) "string $samphub($secret,id)"
+
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
+	set param3 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3"
+
+	set rr {}
+	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	    }
+	    return
+	}
+
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    }
+
+    catch {unset samphubmap}
+    set samphubmap(samp.hub-id) {string hub}
+    set samphubmap(samp.self-id) "string $id"
+    set samphubmap(samp.private-key) "string $secret"
+}
 # procs
 
 proc samp.hub.setXmlrpcCallback {args} {
@@ -387,8 +460,8 @@ proc samp.hub.register {args} {
     set samphubmap(samp.hub-id) {string hub}
     set samphubmap(samp.self-id) "string $id"
     set samphubmap(samp.private-key) "string $secret"
-
     return "struct samphubmap"
+#    SAMPHubRegister $args
 }
 
 proc samp.hub.unregister {args} {

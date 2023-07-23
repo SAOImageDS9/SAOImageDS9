@@ -620,10 +620,6 @@ if {$pds9(xpa)} {
 # SAMP Hub
 if {$pds9(samp,hub)} {
     SAMPHubStart 0
-
-    if {$pds9(samp,webhub)} {
-        SAMPWebHubStart 0
-    }
 }
 
 # SAMP

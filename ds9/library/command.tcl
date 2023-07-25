@@ -592,11 +592,7 @@ proc CommandLineLoadBase {item argvname iname} {
 	    MultiLoad $file(layer) $file(mode)
 	    LoadFitsFile $item $file(layer) $file(mode)
 	}
-	url {
-	    MultiLoad $file(layer) $file(mode)
-	    LoadURLFits $item $file(layer) $file(mode)
-	}
-
+	url {LoadURLFits $item $file(layer) $file(mode) 1}
 
 	rgbimage {
 	    MultiLoadRGB
@@ -693,7 +689,7 @@ proc CommandLineLoadRGB {item argvname iname} {
 
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
-	url {LoadURLFits $item {} $file(mode)}
+	url {LoadURLFits $item {} $file(mode) 0}
 
 	rgbimage {
 	    MultiLoadRGB
@@ -772,10 +768,7 @@ proc CommandLineLoad3D {item argvname iname} {
 	    MultiLoad {} $file(mode)
 	    LoadFitsFile $item {} $file(mode)
 	}
-	url {
-	    MultiLoad {} $file(mode)
-	    LoadURLFits $item {} $file(mode)
-	}
+	url {LoadURLFits $item {} $file(mode) 1}
 
 	rgbimage {
 	    MultiLoadRGB

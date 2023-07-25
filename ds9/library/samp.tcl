@@ -1178,7 +1178,7 @@ proc image.load.fits {varname} {
     }
 
     if {$url != {}} {
-	LoadURLFits $url {} {}
+	LoadURLFits $url {} {} 1
     }
 }
 
@@ -1212,7 +1212,7 @@ proc table.load.fits {varname} {
     }
 
     if {$url != {}} {
-	LoadURLFits $url {} {}
+	LoadURLFits $url {} {} 1
     }
 }
 

@@ -78,22 +78,22 @@ proc GetFileHTTP {url fn} {
 # gets fits file via url and loads
 # sync with redirection
 # used by command line, SAMP (load.image.fits/load.table.fits), SIA, OpenURLFITS
-proc LoadURLFits {url layer mode} {
+proc LoadURLFits {url layer mode multi} {
     if {[string length $url] == 0} {
 	return
     }
 
     ParseURL $url r
     switch -- $r(scheme) {
-	ftp {LoadURLFitsFTP $r(authority) $r(path) $layer $mode}
-	file {LoadURLFitsFile $r(path) $layer $mode}
+	ftp {LoadURLFitsFTP $r(authority) $r(path) $layer $mode $multi}
+	file {LoadURLFitsFile $r(path) $layer $mode $multi}
 	http -
 	https -
-	default {LoadURLFitsHTTP $url $layer $mode}
+	default {LoadURLFitsHTTP $url $layer $mode $multi}
     }
 }
 
-proc LoadURLFitsFTP {host path layer mode} {
+proc LoadURLFitsFTP {host path layer mode multi} {
     global loadParam
     global ds9
     global debug
@@ -105,7 +105,7 @@ proc LoadURLFitsFTP {host path layer mode} {
 	set "ftp::ftp${ftp}(Output)" FTPLog
 	ftp::Type $ftp binary
 	if {[ftp::Get $ftp $path $fn]} {
-	    LoadURLFitsFile $fn $layer $mode
+	    LoadURLFitsFile $fn $layer $mode $multi
 	}
 
 	ftp::Close $ftp
@@ -116,7 +116,7 @@ proc LoadURLFitsFTP {host path layer mode} {
     }
 }
 
-proc LoadURLFitsFile {fn layer mode} {
+proc LoadURLFitsFile {fn layer mode multi} {
     global loadParam
 
     # alloc it because we can't assume it will last
@@ -127,10 +127,13 @@ proc LoadURLFitsFile {fn layer mode} {
     set loadParam(file,fn) $loadParam(file,name)
     set loadParam(load,layer) $layer
 
+    if {$multi} {
+	MultiLoad $layer $mode
+    }
     ProcessLoad
 }
 
-proc LoadURLFitsHTTP {url layer mode} {
+proc LoadURLFitsHTTP {url layer mode multi} {
     global ds9
     global ihttp
 
@@ -207,7 +210,7 @@ proc LoadURLFitsHTTP {url layer mode} {
 			catch {file delete -force $fn}
 		    }
 		    set url $value
-		    LoadURLFitsHTTP $url $layer $mode
+		    LoadURLFitsHTTP $url $layer $mode $multi
 		    return
 		}
 	    }
@@ -304,6 +307,10 @@ proc LoadURLFitsHTTP {url layer mode} {
 	}
     }
 
+    # we have to wait until the file has been downloaded
+    if {$multi} {
+	MultiLoad $layer $mode
+    }
     ProcessLoad
     FinishLoad
 

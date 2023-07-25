@@ -4,67 +4,27 @@
 
 package provide DS9 1.0
 
-proc SAMPWebHubDialog {name origin url} {
+proc SAMPWebHubDialog {name} {
+    global ds9
     global ed
 
     set w ".sampwebhub"
-    set mb ".sampwebhubmb"
 
-    set ed(top) $w
     set ed(ok) 0
-    set ed(name) $name
-    set ed(origin) $origin
-    set ed(url) $url
+
+    set cc "The following application, probably running in a browser, is requesting SAMP Hub Registration:\n\nName: $name\n\nIf you permit this, it may be able to access local files and other\nresources on your computer. You should only accept from\na web site you trust.\n\nDo yo authorize connection?"
 
     DialogCreate $w [msgcat::mc {SAMPHub}] ed(ok)
 
-    $w configure -menu $mb
-    ThemeMenu $mb
-
-    # file
-    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    ThemeMenu $mb.file
-    $mb.file add command -label [msgcat::mc {OK}] -command {set ed(ok) 1}
-    $mb.file add command -label [msgcat::mc {Cancel}] -command {set ed(ok) 0}
-
-    set g [ttk::frame $w.param]
-
-    # section 1
-    set f [ttk::frame $g.s1]
-
-    ttk::label $f.t1 -text [msgcat::mc {The following application, probably running in a browser, is requesting SAMP Hub Registration:}]
-    ttk::label $f.s1 -text {}
-
-    pack $f.t1 $f.s1 -side top -fill both -expand true
-	  
-    # section 2
-    set f [ttk::frame $g.s2]
-
-    ttk::label $f.t1 -text [msgcat::mc {Name}]
-    ttk::label $f.v1 -textvariable ed(name)
-
-    ttk::label $f.t2 -text [msgcat::mc {Origin}]
-    ttk::label $f.v2 -textvariable ed(origin)
-
-    ttk::label $f.t3 -text [msgcat::mc {URL}]
-    ttk::label $f.v3 -textvariable ed(url)
-
-    grid $f.t1 $f.v1 -padx 2 -pady 2 -sticky ew
-    grid $f.t2 $f.v2 -padx 2 -pady 2 -sticky ew
-    grid $f.t3 $f.v3 -padx 2 -pady 2 -sticky ew
-
-    # section 3
-    set f [ttk::frame $g.s3]
-
-    ttk::label $f.s1 -text {}
-    ttk::label $f.t1 -text [msgcat::mc {If you permit this, it may be able to access local files and other resources on your computer.}]
-    ttk::label $f.t2 -text [msgcat::mc {You should only accept from a web site you trust.}]
-    ttk::label $f.s2 -text {}
-    ttk::label $f.t3 -text [msgcat::mc {Do yo authorize connection?}]
+    # Param
+    set f [ttk::frame $w.param]
+    canvas $f.c -background white -height 200 -width 500
+    pack $f.c -fill both -expand true
     
-    pack $f.s1 $f.t1 $f.t2 $f.s2 $f.t3 -side top -fill both -expand true
+    set ed(sun) [image create photo -file $ds9(root)/doc/sun.png]
     
-    pack $g.s1 $g.s2 $g.s3 -side top -fill both -expand true
+    $f.c create image 0 0 -image $ed(sun) -anchor nw
+    $f.c create text 120 22 -text $cc -anchor nw -width 400
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -74,17 +34,19 @@ proc SAMPWebHubDialog {name origin url} {
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 
     bind $w <Return> {set ed(ok) 1}
-    
+
     # Fini
     ttk::separator $w.sep -orient horizontal
-    pack $w.param -side top -fill both -expand true
     pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
 
-    DialogWait $w ed(ok) $w.buttons.ok
+    DialogWait $w ed(ok)
     destroy $w
-    destroy $mb
 
-    return $ed(ok)
+    set rr $ed(ok)
+    image delete $ed(sun)
+    unset ed
+    return $rr
 }
 
 proc samp.webhub.allowReverseCallbacks {args} {
@@ -104,13 +66,19 @@ proc samp.webhub.pullCallbacks {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.webhub.pullCallbacks: $args"
+#	puts "samp.webhub.pullCallbacks: $args"
+	puts -nonewline {.}
     }
 
     set timeout [lindex $args 1]
 
-    set ll {}
-    return "array [list $ll]"
+    if {!$samphub(web,allowReverseCallbacks)} {
+	set ll {}
+	return "array [list $ll]"
+    } else {
+	set ll {}
+	return "array [list $ll]"
+    }
 }
 
 proc samp.webhub.ping {} {
@@ -134,8 +102,6 @@ proc samp.webhub.register {args} {
     }
 
     set name {}
-    set origin {}
-    set url {}
     
     set map [lindex $args 0]
     foreach mm $map {
@@ -146,7 +112,7 @@ proc samp.webhub.register {args} {
 	}
     }
 
-    if {![SAMPWebHubDialog $name $origin $url]} {
+    if {![SAMPWebHubDialog $name]} {
 	return {string ERROR}
     }
 

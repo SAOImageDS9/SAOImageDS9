@@ -4,8 +4,7 @@
 
 package provide DS9 1.0
 
-# get file via url
-# used by Analysis and SAMP
+# used by Analysis and SAMP (env(SAMP_HUB) and ds9.set))
 proc GetFileURL {url fname} {
     upvar $fname fn
 
@@ -76,9 +75,9 @@ proc GetFileHTTP {url fn} {
     }
 }
 
-# gets file via url and loads
+# gets fits file via url and loads
 # sync with redirection
-# used by command line, SAMP, SIA
+# used by command line, SAMP (load.image.fits/load.table.fits), SIA, OpenURLFITS
 proc LoadURLFits {url layer mode} {
     if {[string length $url] == 0} {
 	return

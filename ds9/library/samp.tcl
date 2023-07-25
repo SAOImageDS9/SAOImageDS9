@@ -1178,7 +1178,6 @@ proc image.load.fits {varname} {
     }
 
     if {$url != {}} {
-	MultiLoad
 	LoadURLFits $url {} {}
     }
 }
@@ -1213,7 +1212,6 @@ proc table.load.fits {varname} {
     }
 
     if {$url != {}} {
-	MultiLoad
 	LoadURLFits $url {} {}
     }
 }

@@ -137,6 +137,11 @@ proc SAMPHubStop {verbose} {
 	    continue
 	}
 
+	# only standard clients
+	if {$samphub($cc,web)} {
+	    continue
+	}
+
 	catch {unset samphubmap}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
@@ -234,7 +239,14 @@ proc SAMPHubDisconnect {secret} {
 
     # are we subscribed
     if {[lsearch $samphub($secret,subscriptions) $mtype]<0} {
-	continue
+	SAMPHubRemove $secret
+	return
+    }
+
+    # only standard clients
+    if {$samphub($secret,web)} {
+	SAMPHubRemove $secret
+	return
     }
 
     catch {unset samphubmap}
@@ -253,9 +265,7 @@ proc SAMPHubDisconnect {secret} {
     set samphub(remove) $secret
     set rr {}
     if {![SAMPHubSend {samp.client.receiveNotification} $samphub($secret,url) $params rr]} {
-	if {$verbose} {
-	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
-	}
+	Error "SAMPHub: [msgcat::mc {internal error}] $rr"
 	return
     }
     unset samphub(remove)
@@ -288,7 +298,7 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,metadata)
 }
 
-proc SAMPHubRegister {} {
+proc SAMPHubRegister {web} {
     global samphub
     global samphubmap
     global samphubmap2
@@ -303,6 +313,7 @@ proc SAMPHubRegister {} {
     set samphub($secret,url) {}
     set samphub($secret,subscriptions) {}
     set samphub($secret,metadata) {}
+    set samphub($secret,web) $web
 
     SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
     SAMPHubDialogListAdd $secret
@@ -337,15 +348,19 @@ proc SAMPHubRegister {} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
-	set rr {}
-	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	if {$samphub($cc,web)} {
+	    # saveit {samp.client.receiveNotification} $samphub($cc,url) $params
+	} else {
+	    set rr {}
+	    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return
 	    }
-	    return
-	}
 
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	}
     }
 
     catch {unset samphubmap}
@@ -400,7 +415,7 @@ proc samp.hub.register {args} {
 	return {string ERROR}
     }
 
-    SAMPHubRegister
+    SAMPHubRegister 0
     return "struct samphubmap"
 }
 
@@ -461,15 +476,19 @@ proc samp.hub.unregister {args} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
-	set rr {}
-	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	if {$samphub($cc,web)} {
+	    # saveit {samp.client.receiveNotification} $samphub($cc,url) $params
+	} else {
+	    set rr {}
+	    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return {string ERROR}
 	    }
-	    return {string ERROR}
-	}
 
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	}
     }
 
     # now remove
@@ -545,15 +564,19 @@ proc samp.hub.declareMetadata {args} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
-	set rr {}
-	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	if {$samphub($cc,web)} {
+	    # saveit {samp.client.receiveNotification} $samphub($cc,url) $params
+	} else {
+	    set rr {}
+	    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return {string ERROR}
 	    }
-	    return {string ERROR}
-	}
 
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	}
     }
 
     return {string OK}
@@ -661,15 +684,19 @@ proc samp.hub.declareSubscriptions {args} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
-	set rr {}
-	if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	if {$samphub($cc,web)} {
+	    # saveit {samp.client.receiveNotification} $samphub($cc,url) $params
+	} else {
+	    set rr {}
+	    if {![SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return {string ERROR}
 	    }
-	    return {string ERROR}
-	}
 
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	}
     }
 
     return {string OK}
@@ -851,15 +878,19 @@ proc samp.hub.notify {args} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
-	set rr {}
-	if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	if {$samphub($cc,web)} {
+	    # saveit {samp.client.receiveNotification} $samphub($cc,url) $params
+	} else {
+	    set rr {}
+	    if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return {string ERROR}
 	    }
-	    return {string ERROR}
-	}
 
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	}
     }
 
     return {string OK}
@@ -928,18 +959,21 @@ proc samp.hub.notifyAll {args} {
 	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
-	set rr {}
-	if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	if {$samphub($cc,web)} {
+	    # saveit {samp.client.receiveNotification} $samphub($cc,url) $params
+	} else {
+	    set rr {}
+	    if {![SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return {string ERROR}
 	    }
-	    return {string ERROR}
+
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    lappend ll "string $samphub($cc,id)"
 	}
-
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-	lappend ll "string $samphub($cc,id)"
     }
-
     return "array [list $ll]"
 }
 
@@ -990,51 +1024,55 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
     set param4 [list "struct samphubmap"]
     set params "$param1 $param2 $param3 $param4"
 
-    set rr {}
-    if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
-	if {$verbose} {
-	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+    if {$samphub($cc,web)} {
+	# saveit {samp.client.receiveCall} $samphub($cc,url) $params
+    } else {
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	    }
+	    return ERROR
 	}
-	return ERROR
-    }
-    SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
+	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
 
-    set status {}
-    set result {}
-    foreach mm $samphub(rr-map) {
-	foreach {key val} $mm {
-	    switch -- $key {
-		samp.status {set status $val}
-		samp.result {set result $val}
+	set status {}
+	set result {}
+	foreach mm $samphub(rr-map) {
+	    foreach {key val} $mm {
+		switch -- $key {
+		    samp.status {set status $val}
+		    samp.result {set result $val}
+		}
 	    }
 	}
-    }
 
-    catch {unset samphubmap}
-    set samphubmap(samp.status) "string $status"
-    set samphubmap(samp.result) {struct samphubmap2}
+	catch {unset samphubmap}
+	set samphubmap(samp.status) "string $status"
+	set samphubmap(samp.result) {struct samphubmap2}
 
-    catch {unset samphubmap2}
-    foreach mm $result {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
+	catch {unset samphubmap2}
+	foreach mm $result {
+	    foreach {key val} $mm {
+		set samphubmap2($key) "string \"$val\""
+	    }
 	}
-    }
 
-    set param1 [list "string $secret"]
-    set param2 [list "string $id"]
-    set param3 [list "string $msgtag"]
-    set param4 [list "struct samphubmap"]
-    set params "$param1 $param2 $param3 $param4"	
+	set param1 [list "string $secret"]
+	set param2 [list "string $id"]
+	set param3 [list "string $msgtag"]
+	set param4 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3 $param4"	
 
-    set rr {}
-    if {![SAMPHubSend samp.client.receiveResponse $samphub($secret,url) $params rr]} {
-	if {$verbose} {
-	    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveResponse $samphub($secret,url) $params rr]} {
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	    }
+	    return ERROR
 	}
-	return ERROR
+	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($secret,id)\t$rr"
     }
-    SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($secret,id)\t$rr"
     return $msgid
 }
 
@@ -1198,38 +1236,43 @@ proc samp.hub.callAndWait {args} {
 	set param4 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3 $param4"
 
-	set rr {}
-	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+	if {$samphub($cc,web)} {
+	    # saveit {samp.client.receiveCall} $samphub($cc,url) $params
+	    return {string }
+	} else {
+	    set rr {}
+	    if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
+		if {$verbose} {
+		    Error "SAMPHub: [msgcat::mc {internal error}] $rr"
+		}
+		return {string ERROR}
 	    }
-	    return {string ERROR}
-	}
-	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
 
-	set status {}
-	set result {}
-	foreach mm $samphub(rr-map) {
-	    foreach {key val} $mm {
-		switch -- $key {
-		    samp.status {set status $val}
-		    samp.result {set result $val}
+	    set status {}
+	    set result {}
+	    foreach mm $samphub(rr-map) {
+		foreach {key val} $mm {
+		    switch -- $key {
+			samp.status {set status $val}
+			samp.result {set result $val}
+		    }
 		}
 	    }
-	}
 
-	catch {unset samphubmap}
-	set samphubmap(samp.status) "string $status"
-	set samphubmap(samp.result) {struct samphubmap2}
+	    catch {unset samphubmap}
+	    set samphubmap(samp.status) "string $status"
+	    set samphubmap(samp.result) {struct samphubmap2}
 
-	catch {unset samphubmap2}
-	foreach mm $result {
-	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"$val\""
+	    catch {unset samphubmap2}
+	    foreach mm $result {
+		foreach {key val} $mm {
+		    set samphubmap2($key) "string \"$val\""
+		}
 	    }
-	}
 
-	return "struct samphubmap"
+	    return "struct samphubmap"
+	}
     }
 
     return {string ERROR}

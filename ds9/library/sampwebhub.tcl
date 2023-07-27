@@ -6,47 +6,14 @@ package provide DS9 1.0
 
 proc SAMPWebHubDialog {name} {
     global ds9
-    global ed
-
-    set w ".sampwebhub"
-
-    set ed(ok) 0
 
     set cc "The following application, probably running in a browser, is requesting SAMP Hub Registration:\n\nName: $name\n\nIf you permit this, it may be able to access local files and other\nresources on your computer. You should only accept from\na web site you trust.\n\nDo yo authorize connection?"
 
-    DialogCreate $w [msgcat::mc {SAMPHub}] ed(ok)
-
-    # Param
-    set f [ttk::frame $w.param]
-    canvas $f.c -background white -height 200 -width 500
-    pack $f.c -fill both -expand true
-    
-    set ed(sun) [image create photo -file $ds9(root)/doc/sun.png]
-    
-    $f.c create image 0 0 -image $ed(sun) -anchor nw
-    $f.c create text 120 22 -text $cc -anchor nw -width 400
-
-    # Buttons
-    set f [ttk::frame $w.buttons]
-    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-        -default active
-    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
-    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
-
-    bind $w <Return> {set ed(ok) 1}
-
-    # Fini
-    ttk::separator $w.sep -orient horizontal
-    pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.param -side top -fill both -expand true
-
-    DialogWait $w ed(ok)
-    destroy $w
-
-    set rr $ed(ok)
-    image delete $ed(sun)
-    unset ed
-    return $rr
+    if {[tk_messageBox -type yesno -icon question -message "$cc"]=={yes}} {
+	return 1
+    } else {
+	return 0
+    }
 }
 
 proc samp.webhub.allowReverseCallbacks {args} {
@@ -116,7 +83,7 @@ proc samp.webhub.register {args} {
 	return {string ERROR}
     }
 
-    SAMPHubRegister
+    SAMPHubRegister 1
     set samphubmap(samp.url-translator) {string foobar}
     return "struct samphubmap"
 }

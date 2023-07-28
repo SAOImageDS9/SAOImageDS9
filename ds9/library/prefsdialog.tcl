@@ -408,9 +408,9 @@ proc PrefsDialogStartup {} {
 
     ttk::checkbutton $f.xpa -text [msgcat::mc {Initialize XPA}] \
 	-variable pds9(xpa)
-    ttk::checkbutton $f.samp -text [msgcat::mc {SAMP Hub Start}] \
+    ttk::checkbutton $f.samphub -text [msgcat::mc {SAMP Hub Start}] \
 	-variable pds9(samp,hub)
-    ttk::checkbutton $f.samp -text [msgcat::mc {SAMP WebHub Start}] \
+    ttk::checkbutton $f.sampwebhub -text [msgcat::mc {SAMP WebHub Start}] \
 	-variable pds9(samp,webhub)
     ttk::checkbutton $f.samp -text [msgcat::mc {SAMP Connect}] \
 	-variable pds9(samp)

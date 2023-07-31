@@ -30,22 +30,37 @@ proc samp.webhub.allowReverseCallbacks {args} {
 
 proc samp.webhub.pullCallbacks {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
 #	puts "samp.webhub.pullCallbacks: $args"
-	puts -nonewline {.}
     }
 
+    set secret [lindex $args 0]
     set timeout [lindex $args 1]
 
-    if {!$samphub(web,allowReverseCallbacks)} {
-	set ll {}
-	return "array [list $ll]"
-    } else {
-	set ll {}
-	return "array [list $ll]"
+    if {![SAMPHubValidSecret $secret]} {
+	return {string ERROR}
     }
+
+    set ll {}
+    if {$samphub(web,allowReverseCallbacks)} {
+	if {[llength $samphub($secret,web,msgs)]!= 0} {
+	    foreach msg $samphub($secret,web,msgs) {
+		foreach {mtype params} $msg {
+		    catch {unset samphubmap}
+		    set samphubmap(samp.methodName) "string $mtype"
+		    set samphubmap(samp.params) "array [list $params]"
+		    append ll [list "struct samphubmap"]
+		}
+	    }
+	    set samphub($secret,web,msgs) {}
+	}
+    }
+
+    return "array [list $ll]"
 }
 
 proc samp.webhub.ping {} {
@@ -84,7 +99,7 @@ proc samp.webhub.register {args} {
     }
 
     SAMPHubRegister 1
-    set samphubmap(samp.url-translator) {string foobar}
+    set samphubmap(samp.url-translator) {string {}}
     return "struct samphubmap"
 }
 

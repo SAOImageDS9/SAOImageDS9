@@ -500,7 +500,8 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
 #
 proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
     if {![validParam $param]} {
-	return [errReturn "Malformed Parameter: $param"]
+	return $param
+#	return [errReturn "Malformed Parameter: $param"]
     }
 
     set strtabs ""

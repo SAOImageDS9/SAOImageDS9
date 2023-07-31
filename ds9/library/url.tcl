@@ -142,10 +142,10 @@ proc LoadURLFitsHTTP {url layer mode multi} {
 
     set ch [open $fn w]
     if {[catch {set token [http::geturl $url \
-				-channel $ch \
-				-binary 1 \
-				-timeout $ihttp(timeout) \
-				-headers "[ProxyHTTP]"]}]} {
+			       -channel $ch \
+			       -binary 1 \
+			       -timeout $ihttp(timeout) \
+			       -headers "[ProxyHTTP]"]}]} {
 	close $var(ch)
 	Error "[msgcat::mc {Unable to locate URL}] $url"
     }

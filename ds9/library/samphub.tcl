@@ -9,8 +9,6 @@ proc SAMPHubDef {} {
 
     set isamphub(top) .samphub
     set isamphub(mb) .samphubmb
-    global foobar
-    set foobar 0
 }
 
 proc SAMPHubStart {verbose} {

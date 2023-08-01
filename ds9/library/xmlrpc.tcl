@@ -100,15 +100,34 @@ proc xmlrpc::doRequest {sock} {
     variable	WS
 
     set res [readHeader $sock]
+    if {$res == {}} {
+	puts "---"
+	debug "::doRequest empty header"
+	return
+    }
+
     set headerStatus [lindex $res 0];	# Header + Status
     set body [lindex $res 1];		# Body, if any
+
     set RE "\[^\n\]+\n(.*)"
     if {![regexp $RE $headerStatus {} header]} {
 	return [errReturn "Malformed Request"]
     }
 
-    set body [getBody $sock $header $body]
+    # CORS preflight
+    set	RE "OPTIONS"
+    if {[regexp $RE $headerStatus {}]} {
+	set header "HTTP/1.1 204 No Content\n"
+	append header "Access-Control-Allow-Origin: *\n"
+	append header "Access-Control-Allow-Methods: POST, GET, OPTIONS\n"
+	append header "Access-Control-Allow-Headers: Content-Type\n"
 
+	puts -nonewline $sock $header
+	flush $sock
+	catch {close $sock}
+	return
+    }
+    
     set	RE "<\?xml.version=.";			# xml version
     append	RE "\[^\?\]+.\?>$WS*";			# version number
     append	RE "<methodCall>$WS*";			# methodCall tag
@@ -118,6 +137,7 @@ proc xmlrpc::doRequest {sock} {
     append	RE "(.*)";				# parameters, if any
     append	RE "</methodCall>.*";			# end methodCall tag
 
+    set body [getBody $sock $header $body]
     if {![regexp $RE $body {} mname params]} {
 	return [errReturn "Malformed methodCall"]
     }
@@ -295,7 +315,8 @@ proc xmlrpc::getBody {sock header body} {
 
     set expLenl [assoc "Content-Length" $headersl]
     if {$expLenl == {}} {
-	return [errReturn "No Content-Length found"]
+	return {}
+#	return [errReturn "No Content-Length found"]
     }
     set expLen [lindex $expLenl 1]
     set body [readBody $body $expLen $sock]
@@ -311,7 +332,8 @@ proc xmlrpc::readHeader {sock} {
     set buffer ""
     while {1} {
 	if {[catch {set buff [nbRead $sock]}]} {
-	    return [errReturn "Premature eof"]
+	    return {}
+#	    return [errReturn "Premature eof"]
 	}
 	append buffer $buff
 	set nindex [string first "\n\n" $buffer]

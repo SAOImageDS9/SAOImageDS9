@@ -778,6 +778,37 @@ proc WidthDashMenuButton {w varname width dash cmd1 cmd2} {
     WidthDashMenu $w.menu $varname $width $dash $cmd1 $cmd2
 }
 
+# Shape Size
+# WidthMenu
+proc ShapeSizeMenu {w varname width cmd} {
+    upvar #0 $varname var
+    global $varname
+
+    ThemeMenu $w
+    $w add radiobutton -label {3} -variable ${varname}($width) \
+	-value 3 -command $cmd
+    $w add radiobutton -label {5} -variable ${varname}($width) \
+	-value 5 -command $cmd
+    $w add radiobutton -label {7} -variable ${varname}($width) \
+	-value 7 -command $cmd
+    $w add radiobutton -label {9} -variable ${varname}($width) \
+	-value 9 -command $cmd
+    $w add radiobutton -label {11} -variable ${varname}($width) \
+	-value 11 -command $cmd
+    $w add radiobutton -label {13} -variable ${varname}($width) \
+	-value 13 -command $cmd
+    $w add radiobutton -label {15} -variable ${varname}($width) \
+	-value 15 -command $cmd
+}
+
+proc ShapeSizeMenuButton {w varname width cmd} {
+    upvar #0 $varname var
+    global $varname
+    
+    ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
+    ShapeSizeMenu $w.menu $varname $width $cmd
+}
+
 # Prefs
 proc PrefsDialogMenu {} {
     global dprefs

@@ -81,6 +81,7 @@ proc PlotDefState {} {
     set pap(graph,ds,line,fill,color) black
 
     set pap(graph,ds,line,shape,symbol) none
+    set pap(graph,ds,line,shape,size) 5
     set pap(graph,ds,line,shape,color) red
     set pap(graph,ds,line,shape,fill) 1
 
@@ -211,6 +212,7 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,line,fill,color) $var(graph,ds,line,fill,color)
 
     set var($cc,$nn,line,shape,symbol) $var(graph,ds,line,shape,symbol)
+    set var($cc,$nn,line,shape,size) $var(graph,ds,line,shape,size)
     set var($cc,$nn,line,shape,color) $var(graph,ds,line,shape,color)
     set var($cc,$nn,line,shape,fill) $var(graph,ds,line,shape,fill)
 
@@ -302,6 +304,7 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,line,fill,color) $var($cc,$nn,line,fill,color) 
 
     set var(graph,ds,line,shape,symbol) $var($cc,$nn,line,shape,symbol) 
+    set var(graph,ds,line,shape,size) $var($cc,$nn,line,shape,size)
     set var(graph,ds,line,shape,color) $var($cc,$nn,line,shape,color)
     set var(graph,ds,line,shape,fill) $var($cc,$nn,line,shape,fill) 
 

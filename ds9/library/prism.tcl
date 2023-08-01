@@ -71,6 +71,7 @@ proc PrismDialog {varname} {
     set var(graph,ds,line,width) 0
     set var(graph,ds,line,dash) 0
     set var(graph,ds,line,shape,symbol) circle
+    set var(graph,ds,line,shape,size) 5
     set var(graph,ds,line,shape,color) blue
     set var(graph,ds,line,shape,fill) 1
 
@@ -716,6 +717,7 @@ proc PrismPlot {varname} {
     set ed(graph,ds,line,width) $var(graph,ds,line,width)
     set ed(graph,ds,line,dash) $var(graph,ds,line,dash)
     set ed(graph,ds,line,shape,symbol) $var(graph,ds,line,shape,symbol)
+    set ed(graph,ds,line,shape,size) $var(graph,ds,line,shape,size)
     set ed(graph,ds,line,shape,color) $var(graph,ds,line,shape,color)
     set ed(graph,ds,line,shape,fill) $var(graph,ds,line,shape,fill)
 
@@ -783,6 +785,9 @@ proc PrismPlot {varname} {
 	-menu $f.shape.menu
     PlotLineShapeMenu $f.shape.menu ed {}
 
+    ttk::label $f.tshapesize -text [msgcat::mc {Size}]
+    ShapeSizeMenuButton $f.shapesize ed graph,ds,line,shape,size {}
+
     ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.shapecolor ed graph,ds,line,shape,color {}
 
@@ -847,6 +852,7 @@ proc PrismPlot {varname} {
 	set var(graph,ds,line,width) $ed(graph,ds,line,width)
 	set var(graph,ds,line,dash) $ed(graph,ds,line,dash)
 	set var(graph,ds,line,shape,symbol) $ed(graph,ds,line,shape,symbol)
+	set var(graph,ds,line,shape,size) $ed(graph,ds,line,shape,size)
 	set var(graph,ds,line,shape,color) $ed(graph,ds,line,shape,color)
 	set var(graph,ds,line,shape,fill) $ed(graph,ds,line,shape,fill)
 
@@ -966,6 +972,7 @@ proc PrismPlotGenerate {varname} {
     set vvar(graph,ds,line,dash) $var(graph,ds,line,dash)
     set vvar(graph,ds,line,shape,symbol) $var(graph,ds,line,shape,symbol)
     set vvar(graph,ds,line,shape,color) $var(graph,ds,line,shape,color)
+    set vvar(graph,ds,line,shape,size) $var(graph,ds,line,shape,size)
     set vvar(graph,ds,line,shape,fill) $var(graph,ds,line,shape,fill)
     set vvar(graph,ds,error,color) $var(graph,ds,error,color)
     set vvar(graph,ds,error,width) $var(graph,ds,error,width)

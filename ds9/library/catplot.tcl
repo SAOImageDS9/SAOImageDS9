@@ -125,7 +125,9 @@ proc CATPlotGenerate {varname} {
 	set vvar(graph,ds,yedata) $yedata
 	set vvar(graph,ds,line,width) 0
 	set vvar(graph,ds,line,shape,symbol) circle
+	set vvar(graph,ds,line,shape,size) 5
 	set vvar(graph,ds,line,shape,color) black
+	set vvar(graph,ds,line,shape,fill) 1
 
 	PlotExternal $vvarname xyexey
     }

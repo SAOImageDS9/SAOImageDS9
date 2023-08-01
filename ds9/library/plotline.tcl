@@ -89,10 +89,15 @@ proc PlotLineMenus {varname} {
     $var(mb).dataline.shape add separator
     $var(mb).dataline.shape add cascade -label [msgcat::mc {Symbol}] \
 	-menu $var(mb).dataline.shape.symbol
+    $var(mb).dataline.shape add cascade -label [msgcat::mc {Size}] \
+	-menu $var(mb).dataline.shape.size
     $var(mb).dataline.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).dataline.shape.color
 
     PlotLineShapeMenu $var(mb).dataline.shape.symbol $varname \
+	[list PlotLineUpdateElement $varname]
+    ShapeSizeMenu $var(mb).dataline.shape.size \
+	$varname graph,ds,line,shape,size \
 	[list PlotLineUpdateElement $varname]
     ColorMenu $var(mb).dataline.shape.color \
 	$varname graph,ds,line,shape,color \
@@ -275,7 +280,7 @@ proc PlotLineUpdateElement {varname} {
 	-fill $shapefillcolor \
 	-symbol $var(graph,ds,line,shape,symbol) \
 	-scalesymbols no \
-	-pixels 5 \
+	-pixels $var(graph,ds,line,shape,size) \
 	-smooth $var(graph,ds,line,smooth) \
 	-linewidth $var(graph,ds,line,width) \
 	-dashes $dash \
@@ -288,7 +293,7 @@ proc PlotLineUpdateElement {varname} {
 	-color red \
 	-symbol $var(graph,ds,line,shape,symbol) \
 	-linewidth 0 \
-	-pixels 5 \
+	-pixels $var(graph,ds,line,shape,size) \
 	-showerrorbars $show \
 	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
@@ -316,6 +321,8 @@ proc PlotPrefsLine {w} {
     ttk::menubutton $f.shape -textvariable pap(graph,ds,line,shape,symbol) \
 	-menu $f.shape.menu
     PlotLineShapeMenu $f.shape.menu pap {}
+    ttk::label $f.tshapesize -text [msgcat::mc {Size}]
+    ShapeSizeMenuButton $f.shapesize pap graph,ds,line,shape,size {}
     ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.shapecolor pap graph,ds,line,shape,color {}
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
@@ -329,7 +336,8 @@ proc PlotPrefsLine {w} {
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
     grid $f.tshadow $f.fillcolor $f.fill -padx 2 -pady 2 -sticky w
-    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
+    grid $f.tshape $f.shape $f.tshapesize $f.shapesize \
+	$f.tshapecolor $f.shapecolor $f.shapefill \
 	-padx 2 -pady 2 -sticky w
     grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky w
 }
@@ -431,6 +439,12 @@ proc PlotGUILine {varname w} {
 	-menu $f.shape.menu
     $var(mb).dataline.shape.symbol clone $f.shape.menu
 
+    ttk::label $f.tshapesize -text [msgcat::mc {Size}]
+    ttk::menubutton $f.shapesize \
+	-textvariable ${varname}(graph,ds,line,shape,size) \
+	-menu $f.shapesize.menu
+    $var(mb).dataline.shape.size clone $f.shapesize.menu
+
     ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
     ttk::menubutton $f.shapecolor \
 	-textvariable ${varname}(graph,ds,line,shape,color) \
@@ -451,7 +465,8 @@ proc PlotGUILine {varname w} {
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky ew
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky ew
     grid $f.tshadow $f.fillcolor $f.fill -padx 2 -pady 2 -sticky ew
-    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor \
+    grid $f.tshape $f.shape $f.tshapesize $f.shapesize \
+	$f.tshapecolor $f.shapecolor \
 	$f.shapefill  -padx 2 -pady 2 -sticky ew
     grid $f.tsmooth $f.smooth -padx 2 -pady 2 -sticky ew
 

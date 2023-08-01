@@ -64,11 +64,16 @@ proc PlotScatterMenus {varname} {
     $var(mb).datascatter.shape add separator
     $var(mb).datascatter.shape add cascade -label [msgcat::mc {Symbol}] \
 	-menu $var(mb).datascatter.shape.symbol
+    $var(mb).datascatter.shape add cascade -label [msgcat::mc {Size}] \
+	-menu $var(mb).datascatter.shape.size
     $var(mb).datascatter.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).datascatter.shape.color
 
     PlotScatterShapeMenu $var(mb).datascatter.shape.symbol \
 	${varname}(graph,ds,scatter,symbol) \
+	[list PlotScatterUpdateElement $varname]
+    ShapeSizeMenu $var(mb).datascatter.shape.size \
+	$varname graph,ds,scatter,size \
 	[list PlotScatterUpdateElement $varname]
     ColorMenu $var(mb).datascatter.shape.color \
 	$varname graph,ds,scatter,color \
@@ -177,7 +182,7 @@ proc PlotScatterUpdateElement {varname} {
 	-symbol $var(graph,ds,scatter,symbol) \
 	-scalesymbols no \
 	-linewidth 0 \
-	-pixels 5 \
+	-pixels $var(graph,ds,scatter,shape,size) \
 	-showerrorbars $show \
 	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
@@ -187,7 +192,7 @@ proc PlotScatterUpdateElement {varname} {
 	-color blue \
 	-symbol $var(graph,ds,scatter,symbol) \
 	-linewidth 0 \
-	-pixels 5 \
+	-pixels $var(graph,ds,line,scatter,symbol,size) \
 	-showerrorbars $show \
 	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
@@ -267,6 +272,12 @@ proc PlotGUIScatter {varname w} {
 	-menu $f.shape.menu
     $var(mb).datascatter.shape.symbol clone $f.shape.menu
 
+    ttk::label $f.tshapesize -text [msgcat::mc {Size}]
+    ttk::menubutton $f.shapesize \
+	-textvariable ${varname}(graph,ds,scatter,size) \
+	-menu $f.shapesize.menu
+    $var(mb).datascatter.shape.size clone $f.shapesize.menu
+
     ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
     ttk::menubutton $f.shapecolor \
 	-textvariable ${varname}(graph,ds,scatter,color) \
@@ -277,8 +288,9 @@ proc PlotGUIScatter {varname w} {
 	-variable ${varname}(graph,ds,scatter,fill) \
 	-command [list PlotScatterUpdateElement $varname]
 
-    grid $f.tshape $f.shape  -padx 2 -pady 2 -sticky ew
-    grid $f.tshapecolor $f.shapecolor $f.shapefill  -padx 2 -pady 2 -sticky ew
+    grid $f.tshape $f.shape $f.tshapesize $f.shapesize \
+	$f.tshapecolor $f.shapecolor $f.shapefill \
+	-padx 2 -pady 2 -sticky ew
 
     # Errorbar
     set f [ttk::labelframe $w.error -text [msgcat::mc {Errorbar}]]

@@ -51,6 +51,8 @@ proc CreateIconsLeftMode {} {
 	[image create photo -file "$ds9(icons,ui)/edit_examine.png" ]
     set icons(currentmode,3d) \
 	[image create photo -file "$ds9(icons,ui)/edit_3d.png" ]
+    set icons(currentmode,illustrate) \
+	[image create photo -file "$ds9(icons,ui)/edit_illustrate.png" ]
     # special case
     set icons(currentmode,default) $icons(currentmode,examine)
 
@@ -84,6 +86,8 @@ proc CreateIconsLeftMode {} {
 	current mode examine ChangeMode
     IconMenuButton $mb.mode [msgcat::mc {3D}] \
 	current mode 3d ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Illustrate}] \
+	current mode illustrate ChangeMode
 
     trace add variable current(mode) write [list IconMenuButtonCB $mb.mode]
     IconMenuButtonCB $mb.mode current mode write

@@ -198,17 +198,17 @@ array set update::rules {
 }
 
 array set update::rules {
-  13,line 48
+  13,line 50
   7,line 39
   10,line 43
   4,line 36
   1,line 33
-  15,line 51
+  15,line 53
   9,line 42
-  12,line 47
+  12,line 48
   6,line 38
   3,line 35
-  14,line 50
+  14,line 52
   8,line 42
   11,line 46
   5,line 37
@@ -276,7 +276,7 @@ array set update::token_id_table {
   269,title {}
   257,line 7
   262,t 0
-  270,line 52
+  270,line 54
   269,line 45
   259,title ON
   260,title OFF
@@ -434,8 +434,8 @@ proc update::yyparse {} {
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
                     11 { UpdateCmd }
                     12 { UpdateCmd $1 $2 $3 $4 $5 }
-                    13 { UpdateCmdNow }
-                    14 { UpdateCmdNow $2 $3 $4 $5 $6 }
+                    13 { UpdateCmd }
+                    14 { UpdateCmd $2 $3 $4 $5 $6 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

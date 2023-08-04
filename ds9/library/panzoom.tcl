@@ -135,7 +135,7 @@ proc PanRelease {which x y} {
 	    switch -- $ipanzoom(state) {
 		1 {
 		    $which pan to $x $y
-		    $which update now
+		    $which update
 		    set cc [$which get cursor canvas]
 		    set xx [expr int([lindex $cc 0])]
 		    set yy [expr int([lindex $cc 1])]

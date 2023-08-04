@@ -73,7 +73,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   baseXImage = NULL;
   basePixmap = 0;
   needsUpdate = NOUPDATE;
-  syncUpdate = 0;
 
   currentContext = NULL;
   keyContext = NULL;

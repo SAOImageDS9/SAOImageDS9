@@ -2932,21 +2932,12 @@ void Base::unloadFitsCmd()
   update(MATRIX);
 }
 
-void Base::updateFitsCmd(int now)
+void Base::updateFitsCmd()
 {
-  // for 3d, rebuffer
-  if (now) {
-    syncUpdate =1;
-    // schedule redraw and process idletasks events
-    updateNow(MATRIX);
-    syncUpdate =0;
-  }
-  else
-    // schedule redraw only
-    update(MATRIX);
+  update(MATRIX);
 }
 
-void Base::updateFitsCmd(int which, BBox bb, int now)
+void Base::updateFitsCmd(int which, BBox bb)
 {
   // Note: bb is in IMAGE coords
   FitsImage* ptr = currentContext->fits;
@@ -2970,15 +2961,7 @@ void Base::updateFitsCmd(int which, BBox bb, int now)
     rr.bound(ur);
     rr.bound(ul);
 
-    if (now) {
-      syncUpdate =1;
-      // schedule redraw and process idletasks events
-      updateNow(BASE, rr);
-      syncUpdate =0;
-    }
-    else
-      // schedule redraw only
-      update(BASE, rr);
+    update(BASE, rr);
   }
 }
 

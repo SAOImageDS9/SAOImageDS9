@@ -102,7 +102,7 @@ unsigned char* Frame3d::fillImage(int width, int height,
 
   switch (sys) {
   case Coord::WIDGET:
-    if (syncUpdate) {
+    if (sync_) {
       RayTrace* rt = findInCache(cache_, az_, el_);
       if (!rt) {
 	BBox3d bb = imageBounds(width, height, mm);

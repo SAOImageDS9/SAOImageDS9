@@ -393,6 +393,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token STATS_
 %token STATUS_
 %token SUM_
+%token SYNC_
 %token SYSTEM_
 %token TABLE_
 %token TAG_
@@ -763,7 +764,8 @@ threed	: VIEW_ threedView
 	| METHOD_ renderMethod {fr->set3dRenderMethodCmd($2);}
 	| BACKGROUND_ renderBackground {fr->set3dRenderBackgroundCmd($2);}
 	| SCALE_ numeric {fr->set3dScaleCmd($2);}
-	| THRESHOLD_ numeric 
+        | SYNC_ INT {fr->set3dSyncCmd($2)};
+	| THRESHOLD_ numeric
 	  {/* needed for compatibility with old version of backup */}
 	;
 
@@ -2837,12 +2839,14 @@ smoothFunction : BOXCAR_ {$$ = Context::BOXCAR;}
 	| ELLIPTIC_ {$$ = Context::ELLIPTIC;}
 	;
 
-update	: /* empty */ {fr->updateFitsCmd(0);}
+update	: /* empty */ {fr->updateFitsCmd();}
 	| INT numeric numeric numeric numeric
-	{fr->updateFitsCmd($1,BBox($2,$3,$4,$5),0);}
-	| NOW_ {fr->updateFitsCmd(1);}
+	{fr->updateFitsCmd($1,BBox($2,$3,$4,$5));}
+        // backward compatibility
+	| NOW_ {fr->updateFitsCmd();}
+        // backward compatibility
 	| NOW_ INT numeric numeric numeric numeric
-	{fr->updateFitsCmd($2,BBox($3,$4,$5,$6),1);}
+	{fr->updateFitsCmd($2,BBox($3,$4,$5,$6));}
 	| FITS_ SLICE_ updateFitsSlice
 	;
 

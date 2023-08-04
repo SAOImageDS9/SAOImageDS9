@@ -23,6 +23,8 @@ Frame3dBase::Frame3dBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   el_ =0;
   renderMethod_ = MIP;
 
+  sync_ = 0;
+
   preservecache_ =0;
   render_ =NONE;
 

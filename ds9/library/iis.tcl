@@ -264,7 +264,7 @@ proc IISLoadFrame {which} {
 	    FinishLoad
 	} else {
 	    # make sure any previous data is rendered
-	    Frame$which update now
+	    Frame$which update
 	}
     }
 }

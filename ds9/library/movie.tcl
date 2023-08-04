@@ -369,6 +369,20 @@ proc Movie3d {} {
     set sl $movie(sl,from)
     set zm $movie(zm,from)
 
+    switch $ds9(display) {
+	single {
+	    $current(frame) 3d sync 1
+	}
+	tile {
+	    foreach ff $ds9(active) {
+		$ff 3d sync 1
+	    }
+	}
+	blink {
+	    # should not be here
+	}
+    }
+
     for {set rr 0} {$rr<=$movie(repeat,num)} {incr rr} {
 	for {set nn 0} {$nn<=$movie(num)} {incr nn} {
 	    MovieStatusDialog
@@ -435,6 +449,7 @@ proc Movie3d {} {
 	    $current(frame) zoom to $zoom
 	    $current(frame) 3d view $vp
 	    $current(frame) update fits slice $slice
+	    $current(frame) 3d sync 0
 	}
 	tile {
 	    $current(frame) highlite on
@@ -442,6 +457,7 @@ proc Movie3d {} {
 		$ff zoom to $zoom($ff)
 		$ff 3d view $vp($ff)
 		$ff update fits slice $slice($ff)
+		$ff 3d sync 0
 	    }
 	}
 	blink {

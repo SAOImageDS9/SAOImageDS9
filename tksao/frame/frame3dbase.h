@@ -27,6 +27,7 @@ class Frame3dBase : public Base {
   float az_;
   float el_;
   RenderMethod renderMethod_;
+  int sync_; // update 3d syncronous
 
   List<RayTrace> cache_;
   List<RayTrace> pannerCache_;
@@ -213,6 +214,7 @@ class Frame3dBase : public Base {
   void set3dRenderMethodCmd(int);
   void set3dRenderBackgroundCmd(int);
   void set3dScaleCmd(double);
+  void set3dSyncCmd(int);
   void set3dViewCmd(float, float);
   void set3dViewPointCmd(const Vector3d&, const Vector&);
 

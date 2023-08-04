@@ -428,12 +428,3 @@ proc UpdateCmd {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {
     }
     $current(frame) update $which $x1 $y1 $x2 $y2
 }
-
-proc UpdateCmdNow {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {
-    global current
-
-    if {$current(frame) == {}} {
-	return
-    }
-    $current(frame) update now $which $x1 $y1 $x2 $y2
-}

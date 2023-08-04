@@ -20,8 +20,10 @@ command : update
 
 update : {UpdateCmd}
  | INT_ INT_ INT_ INT_ INT_ {UpdateCmd $1 $2 $3 $4 $5}
- | NOW_ {UpdateCmdNow}
- | NOW_ INT_ INT_ INT_ INT_ INT_ {UpdateCmdNow $2 $3 $4 $5 $6}
+#backward compatibility
+ | NOW_ {UpdateCmd}
+#backward compatibility
+ | NOW_ INT_ INT_ INT_ INT_ INT_ {UpdateCmd $2 $3 $4 $5 $6}
 #backward compatibility
  | yesno # do nothing
  ;

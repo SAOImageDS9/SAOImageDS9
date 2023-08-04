@@ -312,6 +312,7 @@ sshared		{return SSHARED_;}
 stats		{return STATS_;}
 status		{return STATUS_;}
 sum		{return SUM_;}
+sync            {return SYNC_;}
 system		{return SYSTEM_;}
 table		{return TABLE_;}
 tag		{return TAG_;}

@@ -170,7 +170,6 @@ public:
   XImage* baseXImage; // ximage of image
   Pixmap basePixmap; // pixmap of image
   UpdateType needsUpdate; // updateFlags
-  int syncUpdate; // update 3d syncronously
 
   Context* currentContext;
   Context* keyContext;
@@ -969,8 +968,8 @@ public:
   void sliceCmd(int, int);
   void sliceCmd(double, Coord::CoordSystem);
 
-  void updateFitsCmd(int);
-  void updateFitsCmd(int, BBox, int);
+  void updateFitsCmd();
+  void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 
   // Fitsy Commands
@@ -1704,6 +1703,7 @@ public:
   virtual void set3dHighliteCmd(int) {}
   virtual void set3dHighliteColorCmd(const char*) {}
   virtual void set3dScaleCmd(double) {}
+  virtual void set3dSyncCmd(int) {}
   virtual void set3dViewCmd(float, float) {}
   virtual void set3dViewPointCmd(const Vector3d&, const Vector&) {}
   virtual void set3dRenderMethodCmd(int) {}

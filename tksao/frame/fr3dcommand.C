@@ -448,6 +448,12 @@ void Frame3dBase::set3dScaleCmd(double ss)
   update(MATRIX);
 }
 
+void Frame3dBase::set3dSyncCmd(int which)
+{
+  sync_ = which ? 1 : 0;
+  update(MATRIX);
+}
+
 void Frame3dBase::set3dViewCmd(float az, float el)
 {
   az_ = zeroTWOPI(degToRad(az));

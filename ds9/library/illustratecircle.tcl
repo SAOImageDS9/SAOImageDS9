@@ -150,6 +150,7 @@ proc IllustrateCircleApply {varname} {
 
 proc IllustrateCircleEditCB {id} {
     global iillustrate
+    global ds9
 
     set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
@@ -158,8 +159,6 @@ proc IllustrateCircleEditCB {id} {
     if {![info exists $varname]} {
 	return
     }
-
-    global ds9
 
     foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     set var(xc) [expr ($x2-$x1)/2+$x1]

@@ -211,6 +211,7 @@ proc IllustrateUndo {} {
 		    foreach {id graphic} $item {
 			foreach {type param} $graphic {
 			    IllustrateSet $id $param
+			    IllustrateEditCB $id
 			}
 		    }
 		}

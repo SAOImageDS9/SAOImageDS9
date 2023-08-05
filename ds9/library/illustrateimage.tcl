@@ -48,10 +48,7 @@ proc IllustrateImageDup {param} {
     foreach {coords ophoto fn ww hh} $param {
 	set photo [image create photo]
 	$photo copy $ophoto
-
 	set ph [resizePhoto $photo $ww $hh]
-#	set ph [image create photo]
-#	$ph copy $photo
 
 	set id [$ds9(canvas) create image \
 		    $coords \

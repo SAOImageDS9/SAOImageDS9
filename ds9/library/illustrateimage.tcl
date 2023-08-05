@@ -4,22 +4,36 @@
 
 package provide DS9 1.0
 
-proc IllustrateImageCreate {xx yy fn} {
+proc IllustrateImageCreate {xx yy fn {ww 0} {hh 0}} {
     global ds9
     global iillustrate
 
-    if {[catch {image create photo -file $fn} ph]} {
+    if {[catch {image create photo -file $fn} photo]} {
 	Error [msgcat::mc {An error has occurred while loading}]
 	return
     }
+    set ph [image create photo]
+    if {$ww == 0} {
+	set ww [image width $photo]
+    }
+    if {$hh == 0} {
+	set hh [image height $photo]
+    }
+    $ph copy $photo
 
     set id [$ds9(canvas) create image \
 		$xx $yy \
 		-image $ph \
 		-tags {image graphic}]
 
-    # save fn
-    set iillustrate(image,$id) $fn
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
+
+    set ivar(photo) $photo
+    set ivar(fn) $fn
+    set ivar(width) $ww
+    set ivar(height) $hh
 
     IllustrateBaseCreateHandles $id white
     return $id
@@ -32,22 +46,28 @@ proc IllustrateImageDup {param} {
     global ds9
     global iillustrate
     
-    foreach {coords ph fn} $param {
-	set new [image create photo]
-	$new copy $ph
+    foreach {coords ophoto fn ww hh} $param {
+	set photo [image create photo]
+	$photo copy $ophoto
 
-	# try to cleanup
-	if {![image inuse $ph]} {
-	    image delete $ph
-	}
+	set ph [image create photo]
+	$ph copy $photo
 
 	set id [$ds9(canvas) create image \
 		    $coords \
-		    -image $new \
+		    -image $ph \
 		    -tags {image graphic}]
+
+	set ivarname ${iillustrate(prefix,img)}${id}
+	global $ivarname
+	upvar #0 $ivarname ivar
+
+	set ivar(photo) $photo
+	set ivar(fn) $fn
+	set ivar(width) $ww
+	set ivar(height) $hh
     }
 
-    set iillustrate(image,$id) $fn
     IllustrateBaseCreateHandles $id white
     return $id
 }
@@ -62,17 +82,18 @@ proc IllustrateImageCopy {id} {
     global ds9
     global iillustrate
 
-    set coords [$ds9(canvas) coords $id]
-    set ph [$ds9(canvas) itemcget $id -image]
-    set fn $iillustrate(image,$id)
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
 
-    return [list image [list $coords $ph $fn]]
+    set coords [$ds9(canvas) coords $id]
+    return [list image [list $coords $ivar(photo) $ivar(fn) $ivar(width) $ivar(height)]]
 }
 
 proc IllustrateImageSet {id param} {
     global ds9
 
-    foreach {coords ph fn} $param {
+    foreach {coords id} $param {
 	$ds9(canvas) coords $id $coords
     }
 
@@ -88,10 +109,13 @@ proc IllustrateImageList {id} {
     global ds9
     global iillustrate
 
-    set coords [$ds9(canvas) coords $id]
-    set fn $iillustrate(image,$id)
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
 
-    set rr "image $coords \"$fn\""
+    set coords [$ds9(canvas) coords $id]
+
+    set rr "image $coords \"$ivar(fn)\" $ivar(width) $ivar(height)"
 
     return $rr
 }
@@ -108,6 +132,7 @@ proc IllustrateImageAntsOff {gr} {
 # Dialog
 
 proc IllustrateImageDialog {id} {
+    global ds9
     global illustrate
     global iillustrate
 
@@ -115,7 +140,9 @@ proc IllustrateImageDialog {id} {
     global $varname
     upvar #0 $varname var
 
-    global ds9
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
 
     set var(id) $id
     set var(top) ".${varname}"
@@ -128,8 +155,12 @@ proc IllustrateImageDialog {id} {
     }
 
     # variables
-    set var(xx) 0
+    set var(fn) $ivar(fn)
+    # set by EditCB
+    set var(xx) 0 
     set var(yy) 0
+    set var(width) $ivar(width)
+    set var(height) $ivar(height)
 
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc {Image}] \
@@ -158,14 +189,20 @@ proc IllustrateImageDialog {id} {
     grid $f.tid $f.id -padx 2 -pady 2 -sticky w
 
     # Center
-    ttk::label $f.ttitle -text [msgcat::mc {Center}]
+    ttk::label $f.tcenter -text [msgcat::mc {Center}]
     ttk::entry $f.xx -textvariable ${varname}(xx) -width 13
     ttk::entry $f.yy -textvariable ${varname}(yy) -width 13
-    grid $f.ttitle $f.xx $f.yy -padx 2 -pady 2 -sticky w
+    grid $f.tcenter $f.xx $f.yy -padx 2 -pady 2 -sticky w
 
-    # Center
+    # Size
+    ttk::label $f.tsize -text [msgcat::mc {Size}]
+    ttk::entry $f.ww -textvariable ${varname}(width) -width 13
+    ttk::entry $f.hh -textvariable ${varname}(height) -width 13
+    grid $f.tsize $f.ww $f.hh -padx 2 -pady 2 -sticky w
+
+    # Filename
     ttk::label $f.tfn -text [msgcat::mc {Filename}]
-    ttk::entry $f.fn -textvariable iillustrate(image,$var(id)) -width 40
+    ttk::entry $f.fn -textvariable ${varname}(fn) -width 40
     ttk::button $f.bfn -text [msgcat::mc {Browse}] \
 	-command [list IllustrateImageFilename $varname]
     grid $f.tfn $f.fn - $f.bfn -padx 2 -pady 2 -sticky w
@@ -190,41 +227,74 @@ proc IllustrateImageDialog {id} {
 }
 
 proc IllustrateImageApply {varname} {
+    global ds9
+    global iillustrate
+
     upvar #0 $varname var
     global $varname
 
-    global ds9
+    set id $var(id)
     
-    if {$var(xx) != {} && $var(yy) != {}} {
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
+
+    if {$var(xx) != {} && $var(yy) != {} &&
+	$var(width) != {} && $var(height) != {}} {
 
 	$ds9(canvas) coords $var(id) \
 	    $var(xx) $var(yy)
+
+	set ivar(width) $var(width)
+	set ivar(height) $var(height)
+	
+#	set ph [image create photo]
+#	$ph copy $ivar(photo)
+	set ph [resizePhoto $ivar(photo) $ivar(width) $ivar(height)]
+    
+	set old [$ds9(canvas) itemcget $id -image]
+	$ds9(canvas) itemconfigure $id -image $ph
+	image delete $old
 
 	IllustrateBaseUpdateHandle $var(id)
     }
 }
 
 proc IllustrateImageFilename {varname} {
+    global ds9
+    global iillustrate
+
     upvar #0 $varname var
     global $varname
 
-    global ds9
-    global iillustrate
+    set id $var(id)
+
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
 
     set fn [OpenFileDialog photofbox]
     if {$fn == {}} {
 	return
     }
 
-    if {[catch {image create photo -file $fn} ph]} {
+    if {[catch {image create photo -file $fn} photo]} {
 	Error [msgcat::mc {An error has occurred while loading}]
 	return
     }
-
-    set iillustrate(image,$var(id)) $fn
-    set old [$ds9(canvas) itemcget $var(id) -image]
-    $ds9(canvas) itemconfigure $var(id) -image $ph
+    set ph [image create photo]
+    $ph copy $photo
+    
+    set old [$ds9(canvas) itemcget $id -image]
+    $ds9(canvas) itemconfigure $id -image $ph
+    
     image delete $old
+    image delete $ivar(photo)
+
+    set ivar(photo) $photo
+    set ivar(fn) $fn
+    set ivar(width) [image width $photo]
+    set ivar(height) [image height $photo]
 
     IllustrateBaseUpdateHandle $var(id)
 }
@@ -233,6 +303,7 @@ proc IllustrateImageFilename {varname} {
 # callbacks
 
 proc IllustrateImageEditCB {id} {
+    global ds9
     global iillustrate
 
     set varname ${iillustrate(prefix,dialog)}${id}
@@ -243,20 +314,29 @@ proc IllustrateImageEditCB {id} {
 	return
     }
 
-    global ds9
+    set id $var(id)
+    
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
 
     foreach {xx yy} [$ds9(canvas) coords $id] {}
     set var(xx) $xx
     set var(yy) $yy
+
+    set var(width) $ivar(width)
+    set var(height) $ivar(height)
 }
 
 proc IllustrateImageDeleteCB {id} {
-    global iillustrate
     global ds9
+    global iillustrate
 
-    unset iillustrate(image,$id)
+    IllustrateBaseDeleteCB $id
 
-#    we need a better clean up method, just ignore for now
-#    set ph [$ds9(canvas) itemcget $id -image]
-#    image delete $ph
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
+
+    unset $ivarname
 }

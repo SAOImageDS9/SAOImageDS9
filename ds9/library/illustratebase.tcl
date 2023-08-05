@@ -384,6 +384,7 @@ proc IllustrateBaseColorCB {id} {
 
 proc IllustrateBaseWidthCB {id} {
     global iillustrate
+    global ds9
 
     set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
@@ -392,8 +393,6 @@ proc IllustrateBaseWidthCB {id} {
     if {![info exists $varname]} {
 	return
     }
-
-    global ds9
 
     set var(width) [expr int([$ds9(canvas) itemcget $var(id) -width])]
     if {[$ds9(canvas) itemcget $var(id) -dash] != {}} {

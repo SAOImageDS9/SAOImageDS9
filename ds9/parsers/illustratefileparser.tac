@@ -67,7 +67,8 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify} comment
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local
  {IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify}
- | IMAGE_ bp numeric sp numeric sp STRING_ ep bare {IllustrateImageCreate $3 $5 $7}
+ | IMAGE_ bp numeric sp numeric sp STRING_ ep bare {IllustrateImageCreate $3 $5 $7 0 0}
+ | IMAGE_ bp numeric sp numeric sp STRING_ sp numeric sp numeric ep bare {IllustrateImageCreate $3 $5 $7 $9 $11}
  ;
 
 coords : coords coord

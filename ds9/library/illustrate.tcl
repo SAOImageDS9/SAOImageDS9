@@ -11,6 +11,7 @@ proc IllustrateDef {} {
     global ds9
 
     set iillustrate(prefix,dialog) {ill}
+    set iillustrate(prefix,img) {illimg}
 
     set iillustrate(selection) {}
     set iillustrate(clipboard) {}
@@ -141,7 +142,6 @@ proc IllustrateCreateGraphic {xx yy} {
 proc IllustrateDeleteGraphic {id} {
     global ds9
 
-    # dialogs
     IllustrateDeleteCB $id
 
     # handles/nodes

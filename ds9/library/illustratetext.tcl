@@ -371,10 +371,11 @@ proc IllustrateTextApply {varname} {
 	$ds9(canvas) itemconfigure $var(id) -angle $var(angle)
     }
     if {$var(xc) != {} && $var(yc) != {} && $var(angle) != {}} {
+	IllustrateSaveUndo edit $var(id)
+
 	$ds9(canvas) coords $var(id) $var(xc) $var(yc)
 
 	IllustrateBaseUpdateHandle $var(id)
-	IllustrateSaveUndo edit $var(id)
     }
 }
 

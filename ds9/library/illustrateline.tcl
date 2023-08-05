@@ -346,12 +346,12 @@ proc IllustrateLineApply {varname} {
     
     if {$var(x1) != {} && $var(y1) != {} &&
 	$var(x2) != {} && $var(y2) != {}} {
+	IllustrateSaveUndo edit $var(id)
 
 	$ds9(canvas) coords $var(id) \
 	    $var(x1) $var(y1) $var(x2) $var(y2)
 
 	IllustrateLineUpdateHandle $var(id)
-	IllustrateSaveUndo edit $var(id)
     }
 }
 

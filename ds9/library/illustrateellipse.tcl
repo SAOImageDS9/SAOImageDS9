@@ -123,6 +123,8 @@ proc IllustrateEllipseApply {varname} {
     
     if {$var(xc)  != {} && $var(yc)  != {} && 
 	$var(rr1) != {} && $var(rr2) != {}} {
+	IllustrateSaveUndo edit $var(id)
+
 	set xc $var(xc)
 	set yc $var(yc)
 	set rr1 $var(rr1)
@@ -133,7 +135,6 @@ proc IllustrateEllipseApply {varname} {
 	    [expr $xc+$rr1] [expr $yc+$rr2]
 
 	IllustrateBaseUpdateHandle $var(id)
-	IllustrateSaveUndo edit $var(id)
     }
 }
 

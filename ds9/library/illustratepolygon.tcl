@@ -371,6 +371,8 @@ proc IllustratePolygonApply {varname} {
     global ds9
     
     if {$var(xc) != {} && $var(yc) != {}} {
+	IllustrateSaveUndo edit $var(id)
+
 	set xc $var(xc)
 	set yc $var(yc)
 
@@ -384,7 +386,6 @@ proc IllustratePolygonApply {varname} {
 
 	$ds9(canvas) moveto $var(id) $x1 $y1
 	IllustratePolygonUpdateHandle $var(id)
-	IllustrateSaveUndo edit $var(id)
     }
 }
 

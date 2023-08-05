@@ -5,8 +5,8 @@
 package provide DS9 1.0
 
 proc IllustrateImageCreate {xx yy fn {ww 0} {hh 0}} {
-    global ds9
     global iillustrate
+    global ds9
 
     if {[catch {image create photo -file $fn} photo]} {
 	Error [msgcat::mc {An error has occurred while loading}]
@@ -42,8 +42,8 @@ proc IllustrateImageDefault {id} {
 }
 
 proc IllustrateImageDup {param} {
-    global ds9
     global iillustrate
+    global ds9
     
     foreach {coords ophoto fn ww hh} $param {
 	set photo [image create photo]
@@ -76,8 +76,8 @@ proc IllustrateImageSaveSelection {id} {
 }
 
 proc IllustrateImageCopy {id} {
-    global ds9
     global iillustrate
+    global ds9
 
     set ivarname ${iillustrate(prefix,img)}${id}
     global $ivarname
@@ -88,10 +88,24 @@ proc IllustrateImageCopy {id} {
 }
 
 proc IllustrateImageSet {id param} {
+    global iillustrate
     global ds9
+
+    set ivarname ${iillustrate(prefix,img)}${id}
+    global $ivarname
+    upvar #0 $ivarname ivar
 
     foreach {coords photo fn ww hh} $param {
 	$ds9(canvas) coords $id $coords
+
+	set ph [resizePhoto $photo $ww $ww]
+    
+	set old [$ds9(canvas) itemcget $id -image]
+	$ds9(canvas) itemconfigure $id -image $ph
+	image delete $old
+
+	set ivar(width) $ww
+	set ivar(height) $hh
     }
 
     # handles/nodes
@@ -103,8 +117,8 @@ proc IllustrateImageSet {id param} {
 }
 
 proc IllustrateImageList {id} {
-    global ds9
     global iillustrate
+    global ds9
 
     set ivarname ${iillustrate(prefix,img)}${id}
     global $ivarname
@@ -129,9 +143,9 @@ proc IllustrateImageAntsOff {gr} {
 # Dialog
 
 proc IllustrateImageDialog {id} {
-    global ds9
     global illustrate
     global iillustrate
+    global ds9
 
     set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
@@ -224,8 +238,8 @@ proc IllustrateImageDialog {id} {
 }
 
 proc IllustrateImageApply {varname} {
-    global ds9
     global iillustrate
+    global ds9
 
     upvar #0 $varname var
     global $varname
@@ -238,27 +252,26 @@ proc IllustrateImageApply {varname} {
 
     if {$var(xx) != {} && $var(yy) != {} &&
 	$var(width) != {} && $var(height) != {}} {
+	IllustrateSaveUndo edit $var(id)
 
-	$ds9(canvas) coords $var(id) \
-	    $var(xx) $var(yy)
+	$ds9(canvas) coords $var(id) $var(xx) $var(yy)
 
-	set ivar(width) $var(width)
-	set ivar(height) $var(height)
-	
-	set ph [resizePhoto $ivar(photo) $ivar(width) $ivar(height)]
+	set ph [resizePhoto $ivar(photo) $var(width) $var(height)]
     
 	set old [$ds9(canvas) itemcget $id -image]
 	$ds9(canvas) itemconfigure $id -image $ph
 	image delete $old
 
+	set ivar(width) $var(width)
+	set ivar(height) $var(height)
+
 	IllustrateBaseUpdateHandle $var(id)
-	IllustrateSaveUndo edit $var(id)
     }
 }
 
 proc IllustrateImageFilename {varname} {
-    global ds9
     global iillustrate
+    global ds9
 
     upvar #0 $varname var
     global $varname
@@ -299,8 +312,8 @@ proc IllustrateImageFilename {varname} {
 # callbacks
 
 proc IllustrateImageEditCB {id} {
-    global ds9
     global iillustrate
+    global ds9
 
     set varname ${iillustrate(prefix,dialog)}${id}
     global $varname
@@ -325,8 +338,8 @@ proc IllustrateImageEditCB {id} {
 }
 
 proc IllustrateImageDeleteCB {id} {
-    global ds9
     global iillustrate
+    global ds9
 
     IllustrateBaseDeleteCB $id
 

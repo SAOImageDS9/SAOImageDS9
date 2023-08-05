@@ -134,6 +134,8 @@ proc IllustrateCircleApply {varname} {
     global ds9
     
     if {$var(xc) != {} && $var(yc) != {} && $var(rr) != {}} {
+	IllustrateSaveUndo edit $var(id)
+
 	set xc $var(xc)
 	set yc $var(yc)
 	set rr $var(rr)
@@ -143,7 +145,6 @@ proc IllustrateCircleApply {varname} {
 	    [expr $xc+$rr] [expr $yc+$rr]
 
 	IllustrateBaseUpdateHandle $var(id)
-	IllustrateSaveUndo edit $var(id)
     }
 }
 

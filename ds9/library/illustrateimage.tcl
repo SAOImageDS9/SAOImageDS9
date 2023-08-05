@@ -98,7 +98,7 @@ proc IllustrateImageSet {id param} {
     foreach {coords photo fn ww hh} $param {
 	$ds9(canvas) coords $id $coords
 
-	set ph [resizePhoto $photo $ww $ww]
+	set ph [resizePhoto $photo $ww $hh]
     
 	set old [$ds9(canvas) itemcget $id -image]
 	$ds9(canvas) itemconfigure $id -image $ph
@@ -132,6 +132,57 @@ proc IllustrateImageList {id} {
 }
 
 proc IllustrateImageEdit {id xx yy} {
+    global ds9
+    global iillustrate
+    
+    if {$iillustrate(handle)} {
+	foreach {bbx1 bby1 bbx2 bby2} [$ds9(canvas) bbox $id] {}
+	set xc [expr double($bbx2-$bbx1)/2+$bbx1]
+	set yc [expr double($bby2-$bby1)/2+$bby1]
+
+	switch $iillustrate(handle) {
+	    1 {
+		set aa [expr abs(double($bbx1)/double($xx))]
+		set bb [expr abs(double($bby1)/double($yy))]
+	    }
+	    2 {
+		set aa [expr abs(double($xx)/double($bbx2))]
+		set bb [expr abs(double($bby1)/double($yy))]
+	    }
+	    3 {
+		set aa [expr abs(double($xx)/double($bbx2))]
+		set bb [expr abs(double($yy)/double($bby2))]
+	    }
+	    4 {
+		set aa [expr abs(double($bbx1)/double($xx))]
+		set bb [expr abs(double($yy)/double($bby2))]
+	    }
+	}
+
+	set ivarname ${iillustrate(prefix,img)}${id}
+	global $ivarname
+	upvar #0 $ivarname ivar
+
+	set old [$ds9(canvas) itemcget $id -image]
+
+	set ww [expr int([image width $old]*$aa)]
+	set hh [expr int([image height $old]*$bb)]
+
+	if {$ww < 10} {
+	    set ww 10
+	}
+	if {$hh < 10} {
+	    set hh 10
+	}
+	set ph [resizePhoto $ivar(photo) $ww $hh]
+    
+	set old [$ds9(canvas) itemcget $id -image]
+	$ds9(canvas) itemconfigure $id -image $ph
+	image delete $old
+
+	set ivar(width) $ww
+	set ivar(height) $hh
+    }
 }
 
 proc IllustrateImageAntsOn {id} {

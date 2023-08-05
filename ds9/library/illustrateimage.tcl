@@ -167,11 +167,12 @@ proc IllustrateImageDialog {id} {
 
     # variables
     set var(fn) $ivar(fn)
+    set var(width) $ivar(width)
+    set var(height) $ivar(height)
+
     # set by EditCB
     set var(xx) 0 
     set var(yy) 0
-    set var(width) $ivar(width)
-    set var(height) $ivar(height)
 
     # window
     Toplevel $var(top) $var(mb) 6 [msgcat::mc {Image}] \
@@ -304,6 +305,8 @@ proc IllustrateImageFilename {varname} {
     set ivar(fn) $fn
     set ivar(width) [image width $photo]
     set ivar(height) [image height $photo]
+
+    set var(fn) $fn
 
     IllustrateBaseUpdateHandle $var(id)
 }

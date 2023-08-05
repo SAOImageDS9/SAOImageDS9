@@ -12,14 +12,15 @@ proc IllustrateImageCreate {xx yy fn {ww 0} {hh 0}} {
 	Error [msgcat::mc {An error has occurred while loading}]
 	return
     }
-    set ph [image create photo]
     if {$ww == 0} {
 	set ww [image width $photo]
     }
     if {$hh == 0} {
 	set hh [image height $photo]
     }
-    $ph copy $photo
+    set ph [resizePhoto $photo $ww $hh]
+#    set ph [image create photo]
+#    $ph copy $photo
 
     set id [$ds9(canvas) create image \
 		$xx $yy \
@@ -248,8 +249,6 @@ proc IllustrateImageApply {varname} {
 	set ivar(width) $var(width)
 	set ivar(height) $var(height)
 	
-#	set ph [image create photo]
-#	$ph copy $ivar(photo)
 	set ph [resizePhoto $ivar(photo) $ivar(width) $ivar(height)]
     
 	set old [$ds9(canvas) itemcget $id -image]

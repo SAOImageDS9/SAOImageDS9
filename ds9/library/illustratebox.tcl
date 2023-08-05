@@ -133,6 +133,7 @@ proc IllustrateBoxApply {varname} {
 	    [expr $xc+$rr1] [expr $yc+$rr2]
 
 	IllustrateBaseUpdateHandle $var(id)
+	IllustrateSaveUndo edit $var(id)
     }
 }
 

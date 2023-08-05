@@ -143,6 +143,7 @@ proc IllustrateCircleApply {varname} {
 	    [expr $xc+$rr] [expr $yc+$rr]
 
 	IllustrateBaseUpdateHandle $var(id)
+	IllustrateSaveUndo edit $var(id)
     }
 }
 

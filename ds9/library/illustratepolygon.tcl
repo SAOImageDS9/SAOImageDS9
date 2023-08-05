@@ -384,6 +384,7 @@ proc IllustratePolygonApply {varname} {
 
 	$ds9(canvas) moveto $var(id) $x1 $y1
 	IllustratePolygonUpdateHandle $var(id)
+	IllustrateSaveUndo edit $var(id)
     }
 }
 

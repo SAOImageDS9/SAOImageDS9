@@ -351,6 +351,7 @@ proc IllustrateLineApply {varname} {
 	    $var(x1) $var(y1) $var(x2) $var(y2)
 
 	IllustrateLineUpdateHandle $var(id)
+	IllustrateSaveUndo edit $var(id)
     }
 }
 

@@ -252,6 +252,7 @@ proc IllustrateImageApply {varname} {
 	image delete $old
 
 	IllustrateBaseUpdateHandle $var(id)
+	IllustrateSaveUndo edit $var(id)
     }
 }
 

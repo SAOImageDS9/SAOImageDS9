@@ -374,6 +374,7 @@ proc IllustrateTextApply {varname} {
 	$ds9(canvas) coords $var(id) $var(xc) $var(yc)
 
 	IllustrateBaseUpdateHandle $var(id)
+	IllustrateSaveUndo edit $var(id)
     }
 }
 

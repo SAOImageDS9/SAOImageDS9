@@ -1,5 +1,7 @@
 package provide DS9 1.0
 
+# Author: David Easton
+
 ###################################################
 #
 #  Name:         resize
@@ -187,6 +189,7 @@ proc resizePhoto {src newx newy {dest ""} } {
     return $dest
 }
 
+# requires Tk 8.7
 proc resizePhotoAlpha { src newx newy { dest "" } } {
     set mx [image width  $src]
     set my [image height $src]

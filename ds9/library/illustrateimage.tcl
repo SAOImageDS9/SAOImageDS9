@@ -19,8 +19,6 @@ proc IllustrateImageCreate {xx yy fn {ww 0} {hh 0}} {
 	set hh [image height $photo]
     }
     set ph [resizePhoto $photo $ww $hh]
-#    set ph [image create photo]
-#    $ph copy $photo
 
     set id [$ds9(canvas) create image \
 		$xx $yy \
@@ -51,8 +49,9 @@ proc IllustrateImageDup {param} {
 	set photo [image create photo]
 	$photo copy $ophoto
 
-	set ph [image create photo]
-	$ph copy $photo
+	set ph [resizePhoto $photo $ww $hh]
+#	set ph [image create photo]
+#	$ph copy $photo
 
 	set id [$ds9(canvas) create image \
 		    $coords \
@@ -94,7 +93,7 @@ proc IllustrateImageCopy {id} {
 proc IllustrateImageSet {id param} {
     global ds9
 
-    foreach {coords id} $param {
+    foreach {coords photo fn ww hh} $param {
 	$ds9(canvas) coords $id $coords
     }
 

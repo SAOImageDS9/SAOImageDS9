@@ -83,8 +83,8 @@ proc PlotDataSetOne {varname dim data} {
     # Scatter
     set var(graph,ds,scatter,shape,symbol) $pap(graph,ds,scatter,shape,symbol)
     set var(graph,ds,scatter,shape,size) $pap(graph,ds,scatter,shape,size)
-    set var(graph,ds,scatter,shape,color) $pap(graph,ds,scatter,color)
-    set var(graph,ds,scatter,shape,fill) $pap(graph,ds,scatter,fill)
+    set var(graph,ds,scatter,shape,color) $pap(graph,ds,scatter,shape,color)
+    set var(graph,ds,scatter,shape,fill) $pap(graph,ds,scatter,shape,fill)
 
     # Error
     set var(graph,ds,error) $pap(graph,ds,error)

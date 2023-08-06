@@ -266,7 +266,9 @@ line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
  ;
 
 lineshape : linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $1}
+ | SHAPE_ linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}
  | SYMBOL_ linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}
+ | SIZE_ int {PlotCmdUpdateElement graph,ds,line,shape,size $2}
  | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,line,shape,color $2}
  | FILL_ yesno {PlotCmdUpdateElement graph,ds,line,shape,fill $2}
  ;
@@ -337,10 +339,12 @@ scatter : {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
  | STDIN_ {PlotCmdNew {}; PlotCmdAnalysisPlotStdin scatter}
  | STRING_ STDIN_ {PlotCmdNew $1; PlotCmdAnalysisPlotStdin scatter}
 
- | scattersymbol {PlotCmdUpdateElement graph,ds,scatter,symbol $1}
- | SYMBOL_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,symbol $2}
- | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,color $2}
- | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,fill $2}
+ | scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $1}
+ | SYMBOL_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $2}
+ | SHAPE_ scattersymbol {PlotCmdUpdateElement graph,ds,scatter,shape,symbol $2}
+ | SIZE_  {PlotCmdUpdateElement graph,ds,scatter,shape,size $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,scatter,shape,color $2}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,scatter,shape,fill $2}
  ;
 
 # backward compatibility

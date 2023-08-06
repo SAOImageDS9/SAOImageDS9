@@ -81,9 +81,10 @@ proc PlotDataSetOne {varname dim data} {
 
     # backward compatibility
     # Scatter
-    set var(graph,ds,scatter,symbol) $pap(graph,ds,scatter,symbol)
-    set var(graph,ds,scatter,color) $pap(graph,ds,scatter,color)
-    set var(graph,ds,scatter,fill) $pap(graph,ds,scatter,fill)
+    set var(graph,ds,scatter,shape,symbol) $pap(graph,ds,scatter,shape,symbol)
+    set var(graph,ds,scatter,shape,size) $pap(graph,ds,scatter,shape,size)
+    set var(graph,ds,scatter,shape,color) $pap(graph,ds,scatter,color)
+    set var(graph,ds,scatter,shape,fill) $pap(graph,ds,scatter,fill)
 
     # Error
     set var(graph,ds,error) $pap(graph,ds,error)
@@ -311,9 +312,10 @@ proc PlotDupDataSet {varname} {
 
     # backward compatibility
     # Scatter
-    set var(graph,ds,scatter,symbol) $var($cc,$mm,scatter,symbol)
-    set var(graph,ds,scatter,color) $var($cc,$mm,scatter,color)
-    set var(graph,ds,scatter,fill) $var($cc,$mm,scatter,fill)
+    set var(graph,ds,scatter,shape,symbol) $var($cc,$mm,scatter,shape,symbol)
+    set var(graph,ds,scatter,shape,size) $var($cc,$mm,scatter,shape,size)
+    set var(graph,ds,scatter,shape,color) $var($cc,$mm,scatter,shape,color)
+    set var(graph,ds,scatter,shape,fill) $var($cc,$mm,scatter,shape,fill)
 
     # Error
     set var(graph,ds,error) $var($cc,$mm,error)

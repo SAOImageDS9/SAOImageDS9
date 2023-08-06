@@ -87,7 +87,7 @@ proc PlotLineMenus {varname} {
 	-variable ${varname}(graph,ds,line,shape,fill) \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).dataline.shape add separator
-    $var(mb).dataline.shape add cascade -label [msgcat::mc {Symbol}] \
+    $var(mb).dataline.shape add cascade -label [msgcat::mc {Shape}] \
 	-menu $var(mb).dataline.shape.symbol
     $var(mb).dataline.shape add cascade -label [msgcat::mc {Size}] \
 	-menu $var(mb).dataline.shape.size

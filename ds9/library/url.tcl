@@ -324,7 +324,7 @@ proc OpenURLFits {{layer {}} {mode {}}} {
 
     set url $fitsurl
     if {[EntryDialog [msgcat::mc {URL}] [msgcat::mc {Enter URL}] 80 url]} {
-	LoadURLFits $url $layer $mode
+	LoadURLFits $url $layer $mode 1
 	FinishLoad
 
 	set fitsurl $url

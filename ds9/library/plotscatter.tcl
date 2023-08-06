@@ -59,10 +59,10 @@ proc PlotScatterMenus {varname} {
     ThemeMenu $var(mb).datascatter.shape
     $var(mb).datascatter.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(graph,ds,scatter,fill) \
+	-variable ${varname}(graph,ds,scatter,shape,fill) \
 	-command [list PlotScatterUpdateElement $varname]
     $var(mb).datascatter.shape add separator
-    $var(mb).datascatter.shape add cascade -label [msgcat::mc {Symbol}] \
+    $var(mb).datascatter.shape add cascade -label [msgcat::mc {Shape}] \
 	-menu $var(mb).datascatter.shape.symbol
     $var(mb).datascatter.shape add cascade -label [msgcat::mc {Size}] \
 	-menu $var(mb).datascatter.shape.size
@@ -70,13 +70,13 @@ proc PlotScatterMenus {varname} {
 	-menu $var(mb).datascatter.shape.color
 
     PlotScatterShapeMenu $var(mb).datascatter.shape.symbol \
-	${varname}(graph,ds,scatter,symbol) \
+	${varname}(graph,ds,scatter,shape,symbol) \
 	[list PlotScatterUpdateElement $varname]
     ShapeSizeMenu $var(mb).datascatter.shape.size \
-	$varname graph,ds,scatter,size \
+	$varname graph,ds,scatter,shape,size \
 	[list PlotScatterUpdateElement $varname]
     ColorMenu $var(mb).datascatter.shape.color \
-	$varname graph,ds,scatter,color \
+	$varname graph,ds,scatter,shape,color \
 	[list PlotScatterUpdateElement $varname]
 
     # Error
@@ -147,15 +147,15 @@ proc PlotScatterUpdateElement {varname} {
 	set shapecolor [ThemeBold]
 	set errorcolor [ThemeBold]
     } else {
-	set shapecolor $var(graph,ds,scatter,color)
+	set shapecolor $var(graph,ds,scatter,shape,color)
 	set errorcolor $var(graph,ds,error,color)
     }
 
-    if {$var(graph,ds,scatter,fill)} {
+    if {$var(graph,ds,scatter,shape,fill)} {
 	if {$var(canvas,theme)} {
 	    set shapefillcolor [ThemeBold]
 	} else {
-	    set shapefillcolor $var(graph,ds,scatter,color)
+	    set shapefillcolor $var(graph,ds,scatter,shape,color)
 	}
     } else {
 	set shapefillcolor $var(canvas,background)
@@ -179,7 +179,7 @@ proc PlotScatterUpdateElement {varname} {
 	-hide [expr !$var(graph,ds,show)] \
 	-outline $shapecolor \
 	-fill $shapefillcolor \
-	-symbol $var(graph,ds,scatter,symbol) \
+	-symbol $var(graph,ds,scatter,shape,symbol) \
 	-scalesymbols no \
 	-linewidth 0 \
 	-pixels $var(graph,ds,scatter,shape,size) \
@@ -190,9 +190,9 @@ proc PlotScatterUpdateElement {varname} {
 
     $var(graph) pen configure active \
 	-color blue \
-	-symbol $var(graph,ds,scatter,symbol) \
+	-symbol $var(graph,ds,scatter,shape,symbol) \
 	-linewidth 0 \
-	-pixels $var(graph,ds,line,scatter,symbol,size) \
+	-pixels $var(graph,ds,scatter,shape,size) \
 	-showerrorbars $show \
 	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
@@ -268,24 +268,24 @@ proc PlotGUIScatter {varname w} {
     # Shape
     ttk::label $f.tshape -text [msgcat::mc {Shape}]
     ttk::menubutton $f.shape \
-	-textvariable ${varname}(graph,ds,scatter,symbol) \
+	-textvariable ${varname}(graph,ds,scatter,shape,symbol) \
 	-menu $f.shape.menu
     $var(mb).datascatter.shape.symbol clone $f.shape.menu
 
     ttk::label $f.tshapesize -text [msgcat::mc {Size}]
     ttk::menubutton $f.shapesize \
-	-textvariable ${varname}(graph,ds,scatter,size) \
+	-textvariable ${varname}(graph,ds,scatter,shape,size) \
 	-menu $f.shapesize.menu
     $var(mb).datascatter.shape.size clone $f.shapesize.menu
 
     ttk::label $f.tshapecolor -text [msgcat::mc {Color}]
     ttk::menubutton $f.shapecolor \
-	-textvariable ${varname}(graph,ds,scatter,color) \
+	-textvariable ${varname}(graph,ds,scatter,shape,color) \
 	-menu $f.shapecolor.menu
     $var(mb).datascatter.shape.color clone $f.shapecolor.menu
 
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
-	-variable ${varname}(graph,ds,scatter,fill) \
+	-variable ${varname}(graph,ds,scatter,shape,fill) \
 	-command [list PlotScatterUpdateElement $varname]
 
     grid $f.tshape $f.shape $f.tshapesize $f.shapesize \

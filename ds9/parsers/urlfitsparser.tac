@@ -16,10 +16,10 @@
 command : urlfits 
  ;
 
-urlfits: new STRING_ {LoadURLFits $2 {} {}}
- | new MASK_ STRING_ {LoadURLFits $3 mask {}}
- | new SLICE_ STRING_ {LoadURLFits $3 {} slice}
- | new MASK_ SLICE_ STRING_ {LoadURLFits $4 mask slice}
+urlfits: new STRING_ {LoadURLFits $2 {} {} 1}
+ | new MASK_ STRING_ {LoadURLFits $3 mask {} 0}
+ | new SLICE_ STRING_ {LoadURLFits $3 {} slice 0}
+ | new MASK_ SLICE_ STRING_ {LoadURLFits $4 mask slice 0}
 ;
 
 new :

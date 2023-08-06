@@ -303,10 +303,10 @@ proc urlfits::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
-                    2 { LoadURLFits $2 {} {} }
-                    3 { LoadURLFits $3 mask {} }
-                    4 { LoadURLFits $3 {} slice }
-                    5 { LoadURLFits $4 mask slice }
+                    2 { LoadURLFits $2 {} {} 1 }
+                    3 { LoadURLFits $3 mask {} 0 }
+                    4 { LoadURLFits $3 {} slice 0 }
+                    5 { LoadURLFits $4 mask slice 0 }
                     7 { CreateFrame }
                 }
                 unsetupvalues $dc

@@ -588,6 +588,9 @@ void Frame::reset()
 
 void Frame::updateColorCells(int cnt)
 {
+  if (!cellsptr_)
+    return;
+  
   unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
@@ -598,6 +601,9 @@ void Frame::updateColorCells(int cnt)
     return;
   }
   memcpy(colorCells, cells, cnt*3);
+
+  // reset
+  cellsptr_ =NULL;
 }
 
 void Frame::updateMaskMatrices()

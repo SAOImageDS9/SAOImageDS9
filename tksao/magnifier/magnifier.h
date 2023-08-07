@@ -14,7 +14,6 @@ private:
   double crosshairAngle;   // angle of rotation (radians)
   GC crosshairGC;          // gc for crosshairs
   int useCrosshair;        // flag to render crosshair
-  int needsUpdate;         // flag to indicate update needed
 
 private:
   int updatePixmap(const BBox&); // renders image/graphics into pixmap

@@ -8,9 +8,9 @@
 #include "util.h"
 
 // exchange pointer between widgets
-void* cellsptr_ =NULL;
 void* frameptr_ =NULL;
 void* fitsimageptr_ =NULL;
+void* cellsptr_ =NULL;
 void* colormaplevelptr_ =NULL;
 void* magnifierptr_ =NULL;
 void* pannerptr_ =NULL;

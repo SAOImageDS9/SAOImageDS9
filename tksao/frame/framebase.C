@@ -425,6 +425,9 @@ unsigned char* FrameBase::alphaComposite(unsigned char* src1,
 
 void FrameBase::fadeCmd(float alpha)
 {
+  if (!frameptr_)
+    return;
+
   FrameBase* ptr = (FrameBase*)frameptr_;
 
   // alpha is 0 to 100
@@ -445,6 +448,9 @@ void FrameBase::fadeCmd(float alpha)
   ptr->updateMatrices();
   fadeImg = ptr->fillImage(options->width, options->height, Coord::WIDGET);
 
+  // reset
+  frameptr_ =NULL;
+  
   update(BASE);
 }
 

@@ -13,7 +13,6 @@ class Panner : public Widget {
   int highLite;              // flag to highlite bbox
   int panning;               // flag for panning status
   Vector panStart;           // initial location of panning operation
-  int needsUpdate;           // flag to indicate refresh needed
 
   GC bboxGC;                 // bbox gc
   int useBBox;               // flag to use BBox

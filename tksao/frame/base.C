@@ -1447,8 +1447,6 @@ void Base::updateMagnifier()
 
 void Base::updateMagnifier(const Vector& vv)
 {
-  magnifierptr_ =NULL;
-
   if (!useMagnifier)
     return;
   
@@ -1459,8 +1457,8 @@ void Base::updateMagnifier(const Vector& vv)
     return;
   }
 
-  // just in case
-  if (!(magnifierXImage && magnifierPixmap))
+  // specific check magnifierptr_ in use
+  if (!magnifierXImage || !magnifierPixmap || magnifierptr_)
     return;
 
   // vv is in CANVAS coords

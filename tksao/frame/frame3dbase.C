@@ -933,8 +933,6 @@ void Frame3dBase::updatePannerMatrices()
 
 void Frame3dBase::updatePanner()
 {
-  pannerptr_ =NULL;
-
   if (!usePanner)
     return;
   
@@ -944,6 +942,10 @@ void Frame3dBase::updatePanner()
     Tcl_Eval(interp, str.str().c_str());
     return;
   }
+
+  // specific check pannerptr_ in use
+  if (!pannerXImage || !pannerPixmap || pannerptr_)
+    return;
 
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
@@ -1195,8 +1197,6 @@ void Frame3dBase::updateMagnifier()
 
 void Frame3dBase::updateMagnifier(const Vector& vv)
 {
-  magnifierptr_ =NULL;
-
   if (!useMagnifier)
     return;
   
@@ -1207,8 +1207,8 @@ void Frame3dBase::updateMagnifier(const Vector& vv)
     return;
   }
 
-  // just in case
-  if (!(magnifierXImage && magnifierPixmap))
+  // specific check magnifierptr_ in use
+  if (!magnifierXImage || !magnifierPixmap || magnifierptr_)
     return;
 
   // vv is in CANVAS coords

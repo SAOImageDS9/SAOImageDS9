@@ -39,7 +39,6 @@ Panner::Panner(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) : Widget(i, c, item)
   use_ =0;
   highLite = 0;
   panning = 0;
-  needsUpdate = 0;
 
   bboxGC = NULL;
   useBBox = 1;
@@ -76,7 +75,6 @@ int Panner::parse(istringstream& istr)
 
 void Panner::update()
 {
-  needsUpdate = 1; 
   redraw();
 }
 
@@ -103,26 +101,28 @@ int Panner::updatePixmap(const BBox& bb)
     updateGCs();
   }
 
-  if (needsUpdate) {
-    if (use_ && pannerptr_) {
+  if (use_) {
+    if (pannerptr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
       XCopyArea(display, (Pixmap)pannerptr_, pixmap, widgetGC, 0, 0,
-      		options->width, options->height, 0, 0);
+		options->width, options->height, 0, 0);
 
       if (useBBox)
 	renderBBox();
 
       if (useCompass) {
-      	renderImageCompass();
+	renderImageCompass();
 	if (validWCSCompass)
 	  renderWCSCompass();
       }
     }
-    else
-      clearPixmap();
   }
+  else
+    clearPixmap();
 
-  needsUpdate =0;
+  // clear
+  pannerptr_ =NULL;
+
   return TCL_OK;
 }
 

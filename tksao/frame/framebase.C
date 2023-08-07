@@ -272,8 +272,6 @@ void FrameBase::updateBin(const Matrix& mx)
 
 void FrameBase::updatePanner()
 {
-  pannerptr_ =NULL;
-
   if (!usePanner)
     return;
   
@@ -283,6 +281,10 @@ void FrameBase::updatePanner()
     Tcl_Eval(interp, str.str().c_str());
     return;
   }
+
+  // specific check pannerptr_ in use
+  if (!pannerXImage || !pannerPixmap || pannerptr_)
+    return;
 
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);

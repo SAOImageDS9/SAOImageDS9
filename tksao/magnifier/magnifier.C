@@ -38,7 +38,6 @@ Magnifier::Magnifier(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 {
   // no XCreateGC() at this level
   use_ =0;
-  needsUpdate = 0;
 }
 
 int Magnifier::parse(istringstream& istr)
@@ -53,7 +52,6 @@ int Magnifier::parse(istringstream& istr)
 
 void Magnifier::update()
 {
-  needsUpdate = 1;
   redraw();
 }
 
@@ -77,17 +75,19 @@ int Magnifier::updatePixmap(const BBox& bb)
       return TCL_OK;
     }
 
-  if (needsUpdate) {
-    if (use_ && magnifierptr_) {
+  if (use_) {
+    if (magnifierptr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
       XCopyArea(display, (Pixmap)magnifierptr_, pixmap, widgetGC, 0, 0, 
 		options->width, options->height, 0, 0);
     }
-    else
-      clearPixmap();
   }
+  else
+    clearPixmap();
 
-  needsUpdate =0;
+  // clear
+  magnifierptr_ =NULL;
+
   return TCL_OK;
 }
 

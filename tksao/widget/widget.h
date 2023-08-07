@@ -32,7 +32,9 @@ extern void* frameptr_;
 extern void* fitsimageptr_;
 extern void* colormaplevelptr_;
 extern void* magnifierptr_;
+extern int magnifierValid_;
 extern void* pannerptr_;
+extern int pannerValid_;
 
 // General Defines
 

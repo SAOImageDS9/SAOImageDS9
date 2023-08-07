@@ -36,7 +36,7 @@ void pnerror(Panner* pn, pnFlexLexer* ll, const char* m)
 Panner::Panner(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) : Widget(i, c, item)
 {
   // no XCreateGC() at this level
-  thumbnail = 0;
+  use_ =0;
   highLite = 0;
   panning = 0;
   needsUpdate = 0;
@@ -104,9 +104,9 @@ int Panner::updatePixmap(const BBox& bb)
   }
 
   if (needsUpdate) {
-    if (thumbnail) {
+    if (use_ && pannerValid_ && pannerptr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
-      XCopyArea(display, thumbnail, pixmap, widgetGC, 0, 0,
+      XCopyArea(display, (Pixmap)pannerptr_, pixmap, widgetGC, 0, 0,
       		options->width, options->height, 0, 0);
 
       if (useBBox)
@@ -122,6 +122,7 @@ int Panner::updatePixmap(const BBox& bb)
       clearPixmap();
   }
 
+  needsUpdate =0;
   return TCL_OK;
 }
 
@@ -221,13 +222,13 @@ void Panner::setBBoxCmd(int w)
 
 void Panner::updateCmd()
 {
-  thumbnail = (Pixmap)pannerptr_;
+  use_ =1;
   update();
 }
 
 void Panner::clearCmd()
 {
-  thumbnail = (Pixmap)0;
+  use_ =0;
   update();
 }
 

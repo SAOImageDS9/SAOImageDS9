@@ -187,12 +187,16 @@ Base::~Base()
   if (baseXImage)
     XDestroyImage(baseXImage);
 
+  pannerValid_ =0;
+  pannerptr_ =NULL;
   if (pannerPixmap)
     Tk_FreePixmap(display, pannerPixmap);
 
   if (pannerXImage)
     XDestroyImage(pannerXImage);
 
+  magnifierValid_ =0;
+  magnifierptr_ =NULL;
   if (magnifierPixmap)
     Tk_FreePixmap(display, magnifierPixmap);
 
@@ -1445,6 +1449,8 @@ void Base::updateMagnifier()
 
 void Base::updateMagnifier(const Vector& vv)
 {
+  magnifierValid_ =0;
+
   if (!useMagnifier)
     return;
   
@@ -1502,6 +1508,7 @@ void Base::updateMagnifier(const Vector& vv)
 
   // notify the magnifier widget
   magnifierptr_ = (void*)magnifierPixmap;
+  magnifierValid_ =1;
   ostringstream str;
   str << magnifierName << " update" << ends;
   Tcl_Eval(interp, str.str().c_str());

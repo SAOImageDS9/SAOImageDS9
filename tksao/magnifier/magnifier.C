@@ -37,7 +37,7 @@ Magnifier::Magnifier(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   : Widget(i, c, item)
 {
   // no XCreateGC() at this level
-  thumbnail = 0;
+  use_ =0;
   needsUpdate = 0;
 }
 
@@ -78,15 +78,16 @@ int Magnifier::updatePixmap(const BBox& bb)
     }
 
   if (needsUpdate) {
-    if (thumbnail) {
+    if (use_ && magnifierValid_ && magnifierptr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
-      XCopyArea(display, thumbnail, pixmap, widgetGC, 0, 0, 
+      XCopyArea(display, (Pixmap)magnifierptr_, pixmap, widgetGC, 0, 0, 
 		options->width, options->height, 0, 0);
     }
     else
       clearPixmap();
   }
 
+  needsUpdate =0;
   return TCL_OK;
 }
 
@@ -107,12 +108,12 @@ void Magnifier::getBBoxCmd()
 
 void Magnifier::updateCmd()
 {
-  thumbnail = (Pixmap)magnifierptr_;
+  use_ =1;
   update();
 }
 
 void Magnifier::clearCmd()
 {
-  thumbnail = (Pixmap)0;
+  use_ =0;
   update();
 }

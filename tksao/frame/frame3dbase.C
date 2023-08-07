@@ -933,6 +933,8 @@ void Frame3dBase::updatePannerMatrices()
 
 void Frame3dBase::updatePanner()
 {
+  pannerValid_ =0;
+
   if (!usePanner)
     return;
   
@@ -953,6 +955,7 @@ void Frame3dBase::updatePanner()
   }
 
   pannerptr_ = (void*)pannerPixmap;
+  pannerValid_ =1;
   ostringstream str;
   str << pannerName << " update;";
 
@@ -1193,6 +1196,8 @@ void Frame3dBase::updateMagnifier()
 
 void Frame3dBase::updateMagnifier(const Vector& vv)
 {
+  magnifierValid_ =0;
+
   if (!useMagnifier)
     return;
   
@@ -1217,6 +1222,7 @@ void Frame3dBase::updateMagnifier(const Vector& vv)
 
   // notify the magnifier widget
   magnifierptr_ = (void*)magnifierPixmap;
+  magnifierValid_ =1;
   ostringstream str;
   str << magnifierName << " update" << ends;
   Tcl_Eval(interp, str.str().c_str());

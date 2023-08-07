@@ -9,7 +9,7 @@
 
 class Magnifier : public Widget {
 private:
-  Pixmap thumbnail;        // current gterm thumbnail pixmap
+  int use_;                // use or cleared?
   double crosshairSize;    // size of crosshair (diameter)
   double crosshairAngle;   // angle of rotation (radians)
   GC crosshairGC;          // gc for crosshairs

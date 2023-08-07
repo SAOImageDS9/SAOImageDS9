@@ -9,7 +9,7 @@
 
 class Panner : public Widget {
  private:
-  Pixmap thumbnail;          // current frame thumbnail pixmap
+  int use_;                  // use or clear state?
   int highLite;              // flag to highlite bbox
   int panning;               // flag for panning status
   Vector panStart;           // initial location of panning operation

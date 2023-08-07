@@ -104,7 +104,7 @@ int Panner::updatePixmap(const BBox& bb)
   }
 
   if (needsUpdate) {
-    if (use_ && pannerValid_ && pannerptr_) {
+    if (use_ && pannerptr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
       XCopyArea(display, (Pixmap)pannerptr_, pixmap, widgetGC, 0, 0,
       		options->width, options->height, 0, 0);

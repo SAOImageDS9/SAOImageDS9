@@ -272,7 +272,7 @@ void FrameBase::updateBin(const Matrix& mx)
 
 void FrameBase::updatePanner()
 {
-  pannerValid_ =0;
+  pannerptr_ =NULL;
 
   if (!usePanner)
     return;
@@ -288,7 +288,6 @@ void FrameBase::updatePanner()
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
 
   pannerptr_ = (void*)pannerPixmap;
-  pannerValid_ =1;
   ostringstream str;
   str << pannerName << " update;";
 

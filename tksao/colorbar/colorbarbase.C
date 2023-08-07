@@ -815,6 +815,9 @@ void ColorbarBase::setColormapLevelCmd()
 
 void ColorbarBase::setColormapLevelCmd(int cc)
 {
+  if (!colormaplevelptr_)
+    return;
+  
   double* ff = (double*)colormaplevelptr_;
 
   // check for the same
@@ -822,8 +825,11 @@ void ColorbarBase::setColormapLevelCmd(int cc)
     int same = 1;
     for (int ii=0; ii<cc; ii++)
       same &= (lut[ii] == ff[ii]);
-    if (same)
+    if (same) {
+      // reset
+      colormaplevelptr_ =NULL;
       return;
+    }
   }
 
   // remove the old
@@ -834,6 +840,9 @@ void ColorbarBase::setColormapLevelCmd(int cc)
   for (int ii=0; ii<cc; ii++)
     lut[ii] = ff[ii];
 
+  // reset
+  colormaplevelptr_ =NULL;
+    
   invalidPixmap();
   redraw();
 }

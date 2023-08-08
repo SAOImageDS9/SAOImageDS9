@@ -343,10 +343,10 @@ void FrameRGB::updateColorCells(int cnt)
   if (DebugRGB) 
     cerr << "updateColorCells" << endl;
 
-  if (!cellsptr_)
+  if (!cellsPtr_ || !cellsParentPtr_)
     return;
 
-  unsigned char* cells = (unsigned char*)cellsptr_;
+  unsigned char* cells = (unsigned char*)cellsPtr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
@@ -357,8 +357,9 @@ void FrameRGB::updateColorCells(int cnt)
   }
   memcpy(colorCells, cells, cnt*3);
 
-  // reset
-  cellsptr_ =NULL;
+  // clear
+  cellsPtr_ =NULL;
+  cellsParentPtr_ =NULL;
 }
 
 void FrameRGB::updateColorScale()

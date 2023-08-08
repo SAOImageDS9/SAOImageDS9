@@ -87,6 +87,12 @@ ColorbarBase::~ColorbarBase()
 	delete [] ticktxt[ii];
     delete [] ticktxt;
   }
+
+  // exchange pointer between widgets
+  if (cellsParentPtr_ == this) {
+    cellsPtr_ =NULL;
+    cellsParentPtr_ =NULL;
+  }
 }
 
 int ColorbarBase::configure(int argc, const char* argv[], int flags)

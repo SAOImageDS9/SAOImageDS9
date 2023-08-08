@@ -588,10 +588,10 @@ void Frame::reset()
 
 void Frame::updateColorCells(int cnt)
 {
-  if (!cellsptr_)
+  if (!cellsPtr_ || !cellsParentPtr_)
     return;
   
-  unsigned char* cells = (unsigned char*)cellsptr_;
+  unsigned char* cells = (unsigned char*)cellsPtr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
@@ -602,8 +602,9 @@ void Frame::updateColorCells(int cnt)
   }
   memcpy(colorCells, cells, cnt*3);
 
-  // reset
-  cellsptr_ =NULL;
+  // clear
+  cellsPtr_ =NULL;
+  cellsParentPtr_ =NULL;
 }
 
 void Frame::updateMaskMatrices()

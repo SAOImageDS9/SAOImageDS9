@@ -28,9 +28,10 @@ class Attribute;
 
 // exchange pointer between widgets
 extern void* framePtr_;
-
 extern void* fitsimageptr_;
-extern void* cellsptr_;
+
+extern void* cellsPtr_;
+extern void* cellsParentPtr_;
 
 extern void* colormaplevelPtr_;
 extern void* colormaplevelParentPtr_;

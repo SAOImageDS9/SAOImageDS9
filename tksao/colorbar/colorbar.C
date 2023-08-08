@@ -257,7 +257,9 @@ void Colorbar::getColorbarCmd()
 void Colorbar::getColormapCmd()
 {
   if (cmaps.current()) {
-    cellsptr_ = colorCells;
+    cellsPtr_ = colorCells;
+    cellsParentPtr_ =this;
+
     ostringstream str;
     str << cmaps.current()->id() << ' '
 	<< bias << ' ' 

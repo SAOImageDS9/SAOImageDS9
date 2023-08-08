@@ -9,15 +9,17 @@
 
 // exchange pointer between widgets
 void* framePtr_ =NULL;
-
 void* fitsimageptr_ =NULL;
-void* cellsptr_ =NULL;
+
+void* cellsPtr_ =NULL;
+void* cellsParentPtr_ =NULL;
 
 void* colormaplevelPtr_ =NULL;
 void* colormaplevelParentPtr_ =NULL;
 
 void* magnifierPtr_ =NULL;
 void* magnifierParentPtr_ =NULL;
+
 void* pannerPtr_ =NULL;
 void* pannerParentPtr_ =NULL;
 

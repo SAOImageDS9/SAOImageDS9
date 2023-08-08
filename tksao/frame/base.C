@@ -238,7 +238,7 @@ Base::~Base()
   if (inverseScale)
     delete inverseScale;
 
-// exchange pointer between widgets
+  // exchange pointer between widgets
   if (colormaplevelParentPtr_ == this) {
     colormaplevelPtr_ =NULL;
     colormaplevelParentPtr_ =NULL;

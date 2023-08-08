@@ -89,9 +89,9 @@ ColorbarBase::~ColorbarBase()
   }
 
   // exchange pointer between widgets
-  if (cellsParentPtr_ == this) {
-    cellsPtr_ =NULL;
-    cellsParentPtr_ =NULL;
+  if (cellsparentptr_ == this) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
   }
 }
 
@@ -821,10 +821,10 @@ void ColorbarBase::setColormapLevelCmd()
 
 void ColorbarBase::setColormapLevelCmd(int cc)
 {
-  if (!colormaplevelPtr_ || !colormaplevelParentPtr_)
+  if (!colormaplevelptr_ || !colormaplevelparentptr_)
     return;
   
-  double* ff = (double*)colormaplevelPtr_;
+  double* ff = (double*)colormaplevelptr_;
 
   // check for the same
   if (cnt == cc) {
@@ -833,8 +833,8 @@ void ColorbarBase::setColormapLevelCmd(int cc)
       same &= (lut[ii] == ff[ii]);
     if (same) {
       // reset
-      colormaplevelPtr_ =NULL;
-      colormaplevelParentPtr_ =NULL;
+      colormaplevelptr_ =NULL;
+      colormaplevelparentptr_ =NULL;
       return;
     }
   }
@@ -848,8 +848,8 @@ void ColorbarBase::setColormapLevelCmd(int cc)
     lut[ii] = ff[ii];
 
   // clear
-  colormaplevelPtr_ =NULL;
-  colormaplevelParentPtr_ =NULL;
+  colormaplevelptr_ =NULL;
+  colormaplevelparentptr_ =NULL;
     
   invalidPixmap();
   redraw();

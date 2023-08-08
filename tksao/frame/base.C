@@ -239,24 +239,24 @@ Base::~Base()
     delete inverseScale;
 
   // exchange pointer between widgets
-  if (fitsimageParentPtr_ == this) {
-    fitsimagePtr_ =NULL;
-    fitsimageParentPtr_ =NULL;
+  if (fitsimageparentptr_ == this) {
+    fitsimageptr_ =NULL;
+    fitsimageparentptr_ =NULL;
   }
 
-  if (colormaplevelParentPtr_ == this) {
-    colormaplevelPtr_ =NULL;
-    colormaplevelParentPtr_ =NULL;
+  if (colormaplevelparentptr_ == this) {
+    colormaplevelptr_ =NULL;
+    colormaplevelparentptr_ =NULL;
   }
 
-  if (pannerParentPtr_ == this) {
-    pannerPtr_ =NULL;
-    pannerParentPtr_ =NULL;
+  if (pannerparentptr_ == this) {
+    pannerptr_ =NULL;
+    pannerparentptr_ =NULL;
   }
 
-  if (magnifierParentPtr_ == this) {
-    magnifierPtr_ =NULL;
-    magnifierParentPtr_ =NULL;
+  if (magnifierparentptr_ == this) {
+    magnifierptr_ =NULL;
+    magnifierparentptr_ =NULL;
   }
 }
 
@@ -1479,10 +1479,10 @@ void Base::updateMagnifier(const Vector& vv)
   if (!magnifierXImage || !magnifierPixmap)
     return;
 
-  // specific check magnifierPtr_ in use
-  if (magnifierPtr_)
-    if (magnifierParentPtr_)
-      if (magnifierParentPtr_ != this)
+  // specific check magnifierptr_ in use
+  if (magnifierptr_)
+    if (magnifierparentptr_)
+      if (magnifierparentptr_ != this)
 	return;
 
   // vv is in CANVAS coords
@@ -1527,8 +1527,8 @@ void Base::updateMagnifier(const Vector& vv)
     x11MagnifierCursor(vv);
 
   // notify the magnifier widget
-  magnifierPtr_ = (void*)magnifierPixmap;
-  magnifierParentPtr_ = (void*)this;
+  magnifierptr_ = (void*)magnifierPixmap;
+  magnifierparentptr_ = (void*)this;
 
   ostringstream str;
   str << magnifierName << " update" << ends;

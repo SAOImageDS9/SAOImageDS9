@@ -979,23 +979,19 @@ void Frame3d::reset()
 
 void Frame3d::updateColorCells(int cnt)
 {
-  if (!cellsPtr_ || !cellsParentPtr_)
+  if (!cellsptr_ || !cellsparentptr_)
     return;
 
-  unsigned char* cells = (unsigned char*)cellsPtr_;
+  unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
   colorCells = new unsigned char[cnt*3];
-  if (!colorCells) {
-    internalError("Unable to Alloc colorCells");
-    return;
-  }
   memcpy(colorCells, cells, cnt*3);
 
   // clear
-  cellsPtr_ =NULL;
-  cellsParentPtr_ =NULL;
+  cellsptr_ =NULL;
+  cellsparentptr_ =NULL;
 }
 
 void Frame3d::pushMatrices()

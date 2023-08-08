@@ -8,22 +8,22 @@
 #include "util.h"
 
 // exchange pointer between widgets
-void* framePtr_ =NULL;
+void* frameptr_ =NULL;
 
-void* fitsimagePtr_ =NULL;
-void* fitsimageParentPtr_ =NULL;
+void* fitsimageptr_ =NULL;
+void* fitsimageparentptr_ =NULL;
 
-void* cellsPtr_ =NULL;
-void* cellsParentPtr_ =NULL;
+void* cellsptr_ =NULL;
+void* cellsparentptr_ =NULL;
 
-void* colormaplevelPtr_ =NULL;
-void* colormaplevelParentPtr_ =NULL;
+void* colormaplevelptr_ =NULL;
+void* colormaplevelparentptr_ =NULL;
 
-void* magnifierPtr_ =NULL;
-void* magnifierParentPtr_ =NULL;
+void* magnifierptr_ =NULL;
+void* magnifierparentptr_ =NULL;
 
-void* pannerPtr_ =NULL;
-void* pannerParentPtr_ =NULL;
+void* pannerptr_ =NULL;
+void* pannerparentptr_ =NULL;
 
 // Tk Canvas Widget Functions Declaration
 
@@ -404,7 +404,7 @@ void Widget::translateProc(double deltaX, double deltaY)
 
 void Widget::getCmd()
 {
-  framePtr_ = this;
+  frameptr_ = this;
 }
 
 int Widget::configCmd(int argc, const char** argv)

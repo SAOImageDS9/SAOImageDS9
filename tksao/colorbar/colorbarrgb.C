@@ -245,8 +245,8 @@ void ColorbarRGB::getColormapCmd()
 {
   // use fixed so that the frame parser will not be confused with an int
   // as the first number
-  cellsPtr_ = colorCells;
-  cellsParentPtr_ =this;
+  cellsptr_ = colorCells;
+  cellsparentptr_ =this;
 
   ostringstream str;
   str << "rgb " << setiosflags(ios::fixed);

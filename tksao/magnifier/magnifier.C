@@ -76,9 +76,9 @@ int Magnifier::updatePixmap(const BBox& bb)
     }
 
   if (use_) {
-    if (magnifierPtr_ && magnifierParentPtr_) {
+    if (magnifierptr_ && magnifierparentptr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
-      XCopyArea(display, (Pixmap)magnifierPtr_, pixmap, widgetGC, 0, 0, 
+      XCopyArea(display, (Pixmap)magnifierptr_, pixmap, widgetGC, 0, 0, 
 		options->width, options->height, 0, 0);
     }
   }
@@ -86,8 +86,8 @@ int Magnifier::updatePixmap(const BBox& bb)
     clearPixmap();
 
   // clear
-  magnifierPtr_ =NULL;
-  magnifierParentPtr_ =NULL;
+  magnifierptr_ =NULL;
+  magnifierparentptr_ =NULL;
 
   return TCL_OK;
 }

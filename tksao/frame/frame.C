@@ -588,23 +588,19 @@ void Frame::reset()
 
 void Frame::updateColorCells(int cnt)
 {
-  if (!cellsPtr_ || !cellsParentPtr_)
+  if (!cellsptr_ || !cellsparentptr_)
     return;
   
-  unsigned char* cells = (unsigned char*)cellsPtr_;
+  unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
   colorCells = new unsigned char[cnt*3];
-  if (!colorCells) {
-    internalError("Unable to Alloc colorCells");
-    return;
-  }
   memcpy(colorCells, cells, cnt*3);
 
   // clear
-  cellsPtr_ =NULL;
-  cellsParentPtr_ =NULL;
+  cellsptr_ =NULL;
+  cellsparentptr_ =NULL;
 }
 
 void Frame::updateMaskMatrices()
@@ -912,12 +908,18 @@ void Frame::colormapBeginCmd()
 void Frame::colormapMotionCmd(int id, float b, float c, int i, int cnt)
 {
   // we need a colorScale before we can render
-  if (!validColorScale())
+  if (!validColorScale()) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
-
+  }
+  
   // first check for change
-  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells)
+  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
+  }
 
   // we got a change
   cmapID = id;
@@ -1014,13 +1016,19 @@ void Frame::colormapBeginCmd() {}
 void Frame::colormapMotionCmd(int id, float b, float c, int i, int cnt)
 {
   // we need a colorScale before we can render
-  if (!validColorScale())
+  if (!validColorScale()) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
-
+  }
+  
   // first check for change
-  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells)
+  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
-
+  }
+  
   // we got a change
   cmapID = id;
   bias = b;

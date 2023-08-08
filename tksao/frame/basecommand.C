@@ -1100,10 +1100,10 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
 			       FrScale::ColorScaleType scaleType,
 			       float expo)
 {
-  // specific check colormaplevelPtr_ in use
-  if (colormaplevelPtr_)
-    if (colormaplevelParentPtr_)
-      if (colormaplevelParentPtr_ != this)
+  // specific check colormaplevelptr_ in use
+  if (colormaplevelptr_)
+    if (colormaplevelparentptr_)
+      if (colormaplevelparentptr_ != this)
 	return;
 
   if (inverseScale)
@@ -1143,8 +1143,8 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
   }
 
   if (inverseScale) {
-    colormaplevelPtr_ = inverseScale->level();
-    colormaplevelParentPtr_ =this;
+    colormaplevelptr_ = inverseScale->level();
+    colormaplevelparentptr_ =this;
 
     ostringstream str;
     str << inverseScale->size() << ends;
@@ -2190,18 +2190,18 @@ void Base::getWCSAlignCmd()
 
 void Base::getWCSAlignPointerCmd()
 {
-  // specific check fitsimagePtr_ in use
-  if (fitsimagePtr_)
-    if (fitsimageParentPtr_)
-      if (fitsimageParentPtr_ != this)
+  // specific check fitsimageptr_ in use
+  if (fitsimageptr_)
+    if (fitsimageparentptr_)
+      if (fitsimageparentptr_ != this)
 	return;
 
   ostringstream str;
   if (keyContext->fits)
-    fitsimagePtr_ = keyContext->fits;
+    fitsimageptr_ = keyContext->fits;
   else
-    fitsimagePtr_ = NULL;
-  fitsimageParentPtr_ =this;
+    fitsimageptr_ = NULL;
+  fitsimageparentptr_ =this;
 
   Tcl_AppendResult(interp, (wcsAlign_ ? "1" : "0"), " ", 
 		   coord.coordSystemStr(wcsSystem_), " ",
@@ -3028,17 +3028,17 @@ void Base::wcsAlignCmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 
 void Base::wcsAlign2Cmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
-  if (!fitsimagePtr_ || !fitsimageParentPtr_)
+  if (!fitsimageptr_ || !fitsimageparentptr_)
     return;
 
   wcsAlign_ = which;
   wcsSkyFrame_ = sky;
 
-  alignWCS((FitsImage*)fitsimagePtr_, sys);
+  alignWCS((FitsImage*)fitsimageptr_, sys);
   update(MATRIX);
 
-  fitsimagePtr_ =NULL;
-  fitsimageParentPtr_ =NULL;
+  fitsimageptr_ =NULL;
+  fitsimageparentptr_ =NULL;
 }
 
 void Base::wcsAppendCmd(int which, int fd)

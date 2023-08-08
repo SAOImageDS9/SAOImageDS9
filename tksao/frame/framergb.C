@@ -340,26 +340,19 @@ void FrameRGB::setBinCursor()
 
 void FrameRGB::updateColorCells(int cnt)
 {
-  if (DebugRGB) 
-    cerr << "updateColorCells" << endl;
-
-  if (!cellsPtr_ || !cellsParentPtr_)
+  if (!cellsptr_ || !cellsparentptr_)
     return;
 
-  unsigned char* cells = (unsigned char*)cellsPtr_;
+  unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
     delete [] colorCells;
   colorCells = new unsigned char[cnt*3];
-  if (!colorCells) {
-    internalError("Unable to Alloc colorCells");
-    return;
-  }
   memcpy(colorCells, cells, cnt*3);
 
   // clear
-  cellsPtr_ =NULL;
-  cellsParentPtr_ =NULL;
+  cellsptr_ =NULL;
+  cellsparentptr_ =NULL;
 }
 
 void FrameRGB::updateColorScale()
@@ -656,14 +649,20 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
 				 float rc, float gc, float bc, int i, int cnt)
 {
   // we need a colorScale before we can render
-  if (!validColorScale())
+  if (!validColorScale()) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
+  }
 
   // first check for change
   if (bias[0] == rb && bias[1] == gb && bias[2] == bb && 
       contrast[0] == rc && contrast[1] == gc && contrast[2] == bc &&
-      invert == i && colorCells)
+      invert == i && colorCells) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
+  }
 
   // we got a change
   bias[0] = rb;
@@ -789,15 +788,21 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
 				 float rc, float gc, float bc, int i, int cnt)
 {
   // we need a colorScale before we can render
-  if (!validColorScale())
+  if (!validColorScale()) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
-
+  }
+  
   // first check for change
   if (bias[0] == rb && bias[1] == gb && bias[2] == bb && 
       contrast[0] == rc && contrast[1] == gc && contrast[2] == bc &&
-      invert == i && colorCells)
+      invert == i && colorCells) {
+    cellsptr_ =NULL;
+    cellsparentptr_ =NULL;
     return;
-
+  }
+  
   // we got a change
   bias[0] = rb;
   bias[1] = gb;

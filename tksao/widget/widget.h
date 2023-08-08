@@ -27,22 +27,22 @@ using namespace std;
 class Attribute;
 
 // exchange pointer between widgets
-extern void* framePtr_;
+extern void* frameptr_;
 
-extern void* fitsimagePtr_;
-extern void* fitsimageParentPtr_;
+extern void* fitsimageptr_;
+extern void* fitsimageparentptr_;
 
-extern void* cellsPtr_;
-extern void* cellsParentPtr_;
+extern void* cellsptr_;
+extern void* cellsparentptr_;
 
-extern void* colormaplevelPtr_;
-extern void* colormaplevelParentPtr_;
+extern void* colormaplevelptr_;
+extern void* colormaplevelparentptr_;
 
-extern void* magnifierPtr_;
-extern void* magnifierParentPtr_;
+extern void* magnifierptr_;
+extern void* magnifierparentptr_;
 
-extern void* pannerPtr_;
-extern void* pannerParentPtr_;
+extern void* pannerptr_;
+extern void* pannerparentptr_;
 
 // General Defines
 

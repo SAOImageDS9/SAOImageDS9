@@ -286,17 +286,17 @@ void FrameBase::updatePanner()
   if (!pannerXImage || !pannerPixmap)
     return;
 
-  // specific check pannerPtr_ in use
-  if (pannerPtr_)
-    if (pannerParentPtr_)
-      if (pannerParentPtr_ != this)
+  // specific check pannerptr_ in use
+  if (pannerptr_)
+    if (pannerparentptr_)
+      if (pannerparentptr_ != this)
 	return;
 
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
 
-  pannerPtr_ = (void*)pannerPixmap;
-  pannerParentPtr_ = (void*)this;
+  pannerptr_ = (void*)pannerPixmap;
+  pannerparentptr_ = (void*)this;
   ostringstream str;
   str << pannerName << " update;";
 
@@ -432,10 +432,10 @@ unsigned char* FrameBase::alphaComposite(unsigned char* src1,
 
 void FrameBase::fadeCmd(float alpha)
 {
-  if (!framePtr_)
+  if (!frameptr_)
     return;
 
-  FrameBase* ptr = (FrameBase*)framePtr_;
+  FrameBase* ptr = (FrameBase*)frameptr_;
 
   // alpha is 0 to 100
   // fadeAlpha is 0 to 1
@@ -456,7 +456,7 @@ void FrameBase::fadeCmd(float alpha)
   fadeImg = ptr->fillImage(options->width, options->height, Coord::WIDGET);
 
   // clear
-  framePtr_ =NULL;
+  frameptr_ =NULL;
   
   update(BASE);
 }

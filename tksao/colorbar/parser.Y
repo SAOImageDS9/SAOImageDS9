@@ -27,7 +27,6 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
   float real;
   int integer;
   char str[CBBUFSIZE];
-  unsigned long ptr;
 }
 
 %type <real> numeric

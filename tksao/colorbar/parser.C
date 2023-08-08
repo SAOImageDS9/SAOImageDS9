@@ -238,10 +238,9 @@ typedef union YYSTYPE
   float real;
   int integer;
   char str[CBBUFSIZE];
-  unsigned long ptr;
 }
 /* Line 193 of yacc.c.  */
-#line 245 "colorbar/parser.C"
+#line 244 "colorbar/parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -254,7 +253,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 258 "colorbar/parser.C"
+#line 257 "colorbar/parser.C"
 
 #ifdef short
 # undef short
@@ -578,17 +577,17 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    98,    98,    99,   100,   101,   102,   103,   104,   105,
-     106,   107,   108,   109,   110,   111,   112,   113,   114,   115,
-     116,   117,   118,   121,   122,   125,   126,   129,   131,   132,
-     133,   134,   136,   137,   138,   139,   142,   143,   147,   148,
-     151,   152,   155,   156,   157,   158,   159,   160,   161,   162,
-     163,   164,   165,   166,   167,   168,   169,   170,   171,   172,
-     175,   176,   179,   180,   183,   184,   185,   186,   187,   188,
-     191,   192,   193,   194,   197,   198,   201,   208,   209,   210,
-     211,   212,   215,   217,   218,   221,   222,   223,   224,   227,
-     228,   229,   230,   231,   232,   235,   236,   239,   240,   241,
-     244,   245,   246,   247,   250,   253
+       0,    97,    97,    98,    99,   100,   101,   102,   103,   104,
+     105,   106,   107,   108,   109,   110,   111,   112,   113,   114,
+     115,   116,   117,   120,   121,   124,   125,   128,   130,   131,
+     132,   133,   135,   136,   137,   138,   141,   142,   146,   147,
+     150,   151,   154,   155,   156,   157,   158,   159,   160,   161,
+     162,   163,   164,   165,   166,   167,   168,   169,   170,   171,
+     174,   175,   178,   179,   182,   183,   184,   185,   186,   187,
+     190,   191,   192,   193,   196,   197,   200,   207,   208,   209,
+     210,   211,   214,   216,   217,   220,   221,   222,   223,   226,
+     227,   228,   229,   230,   231,   234,   235,   238,   239,   240,
+     243,   244,   245,   246,   249,   252
 };
 #endif
 
@@ -1615,297 +1614,297 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 99 "colorbar/parser.Y"
+#line 98 "colorbar/parser.Y"
     {cb->adjustCmd((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real));;}
     break;
 
   case 7:
-#line 103 "colorbar/parser.Y"
+#line 102 "colorbar/parser.Y"
     {cb->hideCmd();;}
     break;
 
   case 8:
-#line 104 "colorbar/parser.Y"
+#line 103 "colorbar/parser.Y"
     {cb->invertCmd((yyvsp[(2) - (2)].integer) );;}
     break;
 
   case 15:
-#line 111 "colorbar/parser.Y"
+#line 110 "colorbar/parser.Y"
     {cb->queryCursorCmd();;}
     break;
 
   case 16:
-#line 112 "colorbar/parser.Y"
+#line 111 "colorbar/parser.Y"
     {cb->resetCmd();;}
     break;
 
   case 17:
-#line 113 "colorbar/parser.Y"
+#line 112 "colorbar/parser.Y"
     {cb->setRGBChannelCmd((yyvsp[(3) - (3)].str));;}
     break;
 
   case 20:
-#line 116 "colorbar/parser.Y"
+#line 115 "colorbar/parser.Y"
     {cb->showCmd();;}
     break;
 
   case 21:
-#line 117 "colorbar/parser.Y"
+#line 116 "colorbar/parser.Y"
     {cb->msg("Colorbar 1.0");;}
     break;
 
   case 23:
-#line 121 "colorbar/parser.Y"
+#line 120 "colorbar/parser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 24:
-#line 122 "colorbar/parser.Y"
+#line 121 "colorbar/parser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 25:
-#line 125 "colorbar/parser.Y"
+#line 124 "colorbar/parser.Y"
     {yydebug=1;;}
     break;
 
   case 26:
-#line 126 "colorbar/parser.Y"
+#line 125 "colorbar/parser.Y"
     {yydebug=0;;}
     break;
 
   case 27:
-#line 129 "colorbar/parser.Y"
+#line 128 "colorbar/parser.Y"
     {(yyval.integer)=((yyvsp[(1) - (1)].integer) ? 1 : 0);;}
     break;
 
   case 28:
-#line 131 "colorbar/parser.Y"
+#line 130 "colorbar/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 29:
-#line 132 "colorbar/parser.Y"
+#line 131 "colorbar/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 30:
-#line 133 "colorbar/parser.Y"
+#line 132 "colorbar/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 31:
-#line 134 "colorbar/parser.Y"
+#line 133 "colorbar/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 32:
-#line 136 "colorbar/parser.Y"
+#line 135 "colorbar/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 33:
-#line 137 "colorbar/parser.Y"
+#line 136 "colorbar/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 34:
-#line 138 "colorbar/parser.Y"
+#line 137 "colorbar/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 35:
-#line 139 "colorbar/parser.Y"
+#line 138 "colorbar/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 36:
-#line 142 "colorbar/parser.Y"
+#line 141 "colorbar/parser.Y"
     {cb->setColorbarCmd((yyvsp[(1) - (4)].integer), (yyvsp[(2) - (4)].real), (yyvsp[(3) - (4)].real), (yyvsp[(4) - (4)].integer));;}
     break;
 
   case 37:
-#line 144 "colorbar/parser.Y"
+#line 143 "colorbar/parser.Y"
     {cb->setColorbarCmd((yyvsp[(2) - (8)].real), (yyvsp[(3) - (8)].real), (yyvsp[(4) - (8)].real), (yyvsp[(5) - (8)].real), (yyvsp[(6) - (8)].real), (yyvsp[(7) - (8)].real), (yyvsp[(8) - (8)].integer));;}
     break;
 
   case 39:
-#line 148 "colorbar/parser.Y"
+#line 147 "colorbar/parser.Y"
     {cb->setColormapWindowCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 40:
-#line 151 "colorbar/parser.Y"
+#line 150 "colorbar/parser.Y"
     {cb->setColormapLevelCmd();;}
     break;
 
   case 41:
-#line 152 "colorbar/parser.Y"
+#line 151 "colorbar/parser.Y"
     {cb->setColormapLevelCmd((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 42:
-#line 155 "colorbar/parser.Y"
+#line 154 "colorbar/parser.Y"
     {cb->getCmd();;}
     break;
 
   case 43:
-#line 156 "colorbar/parser.Y"
+#line 155 "colorbar/parser.Y"
     {cb->getBiasCmd();;}
     break;
 
   case 44:
-#line 157 "colorbar/parser.Y"
+#line 156 "colorbar/parser.Y"
     {cb->getColorbarCmd();;}
     break;
 
   case 45:
-#line 158 "colorbar/parser.Y"
+#line 157 "colorbar/parser.Y"
     {cb->getColormapCmd();;}
     break;
 
   case 46:
-#line 159 "colorbar/parser.Y"
+#line 158 "colorbar/parser.Y"
     {cb->getContrastCmd();;}
     break;
 
   case 47:
-#line 160 "colorbar/parser.Y"
+#line 159 "colorbar/parser.Y"
     {cb->getCurrentFileNameCmd();;}
     break;
 
   case 48:
-#line 161 "colorbar/parser.Y"
+#line 160 "colorbar/parser.Y"
     {cb->getColormapFileNameCmd((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 49:
-#line 162 "colorbar/parser.Y"
+#line 161 "colorbar/parser.Y"
     {cb->getColormapFileNameCmd((yyvsp[(3) - (3)].str));;}
     break;
 
   case 50:
-#line 163 "colorbar/parser.Y"
+#line 162 "colorbar/parser.Y"
     {cb->getHeightCmd();;}
     break;
 
   case 51:
-#line 164 "colorbar/parser.Y"
+#line 163 "colorbar/parser.Y"
     {cb->getCurrentIDCmd();;}
     break;
 
   case 52:
-#line 165 "colorbar/parser.Y"
+#line 164 "colorbar/parser.Y"
     {cb->getInvertCmd();;}
     break;
 
   case 53:
-#line 166 "colorbar/parser.Y"
+#line 165 "colorbar/parser.Y"
     {cb->getCurrentNameCmd();;}
     break;
 
   case 54:
-#line 167 "colorbar/parser.Y"
+#line 166 "colorbar/parser.Y"
     {cb->getColormapNameCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 55:
-#line 168 "colorbar/parser.Y"
+#line 167 "colorbar/parser.Y"
     {cb->getRGBChannelCmd();;}
     break;
 
   case 56:
-#line 169 "colorbar/parser.Y"
+#line 168 "colorbar/parser.Y"
     {cb->getValueCmd((yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 58:
-#line 171 "colorbar/parser.Y"
+#line 170 "colorbar/parser.Y"
     {cb->getTypeCmd();;}
     break;
 
   case 59:
-#line 172 "colorbar/parser.Y"
+#line 171 "colorbar/parser.Y"
     {cb->getWidthCmd();;}
     break;
 
   case 60:
-#line 175 "colorbar/parser.Y"
+#line 174 "colorbar/parser.Y"
     {cb->getTagCmd();;}
     break;
 
   case 61:
-#line 176 "colorbar/parser.Y"
+#line 175 "colorbar/parser.Y"
     {cb->getTagCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 62:
-#line 179 "colorbar/parser.Y"
+#line 178 "colorbar/parser.Y"
     {;}
     break;
 
   case 63:
-#line 180 "colorbar/parser.Y"
+#line 179 "colorbar/parser.Y"
     {;}
     break;
 
   case 64:
-#line 183 "colorbar/parser.Y"
+#line 182 "colorbar/parser.Y"
     {cb->listNameCmd();;}
     break;
 
   case 65:
-#line 184 "colorbar/parser.Y"
+#line 183 "colorbar/parser.Y"
     {cb->listIDCmd();;}
     break;
 
   case 66:
-#line 185 "colorbar/parser.Y"
+#line 184 "colorbar/parser.Y"
     {cb->listNameCmd();;}
     break;
 
   case 67:
-#line 186 "colorbar/parser.Y"
+#line 185 "colorbar/parser.Y"
     {;}
     break;
 
   case 68:
-#line 187 "colorbar/parser.Y"
+#line 186 "colorbar/parser.Y"
     {;}
     break;
 
   case 69:
-#line 188 "colorbar/parser.Y"
+#line 187 "colorbar/parser.Y"
     {;}
     break;
 
   case 70:
-#line 191 "colorbar/parser.Y"
+#line 190 "colorbar/parser.Y"
     {cb->loadCmd((yyvsp[(1) - (1)].str),NULL);;}
     break;
 
   case 71:
-#line 192 "colorbar/parser.Y"
+#line 191 "colorbar/parser.Y"
     {cb->loadCmd((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 73:
-#line 194 "colorbar/parser.Y"
+#line 193 "colorbar/parser.Y"
     {;}
     break;
 
   case 74:
-#line 197 "colorbar/parser.Y"
+#line 196 "colorbar/parser.Y"
     {cb->loadCmd((yyvsp[(1) - (2)].str),NULL,(yyvsp[(2) - (2)].str));;}
     break;
 
   case 75:
-#line 198 "colorbar/parser.Y"
+#line 197 "colorbar/parser.Y"
     {cb->loadCmd((yyvsp[(1) - (3)].str),(yyvsp[(2) - (3)].str),(yyvsp[(3) - (3)].str));;}
     break;
 
   case 76:
-#line 201 "colorbar/parser.Y"
+#line 200 "colorbar/parser.Y"
     {
 #ifdef MAC_OSX_TK
 	cb->macosxPrintCmd();
@@ -1914,132 +1913,132 @@ yyreduce:
     break;
 
   case 77:
-#line 208 "colorbar/parser.Y"
+#line 207 "colorbar/parser.Y"
     {cb->mapCmd("a");;}
     break;
 
   case 78:
-#line 209 "colorbar/parser.Y"
+#line 208 "colorbar/parser.Y"
     {cb->mapCmd("b");;}
     break;
 
   case 79:
-#line 210 "colorbar/parser.Y"
+#line 209 "colorbar/parser.Y"
     {cb->mapCmd("rgb");;}
     break;
 
   case 80:
-#line 211 "colorbar/parser.Y"
+#line 210 "colorbar/parser.Y"
     {cb->mapCmd((yyvsp[(1) - (1)].str));;}
     break;
 
   case 81:
-#line 212 "colorbar/parser.Y"
+#line 211 "colorbar/parser.Y"
     {cb->mapCmd((yyvsp[(1) - (1)].integer));;}
     break;
 
   case 82:
-#line 216 "colorbar/parser.Y"
+#line 215 "colorbar/parser.Y"
     {cb->psColorSpaceCmd((PSColorSpace)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 83:
-#line 217 "colorbar/parser.Y"
+#line 216 "colorbar/parser.Y"
     {cb->psLevelCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 84:
-#line 218 "colorbar/parser.Y"
+#line 217 "colorbar/parser.Y"
     {cb->psResolutionCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 85:
-#line 221 "colorbar/parser.Y"
+#line 220 "colorbar/parser.Y"
     {(yyval.integer) = BW;;}
     break;
 
   case 86:
-#line 222 "colorbar/parser.Y"
+#line 221 "colorbar/parser.Y"
     {(yyval.integer) = GRAY;;}
     break;
 
   case 87:
-#line 223 "colorbar/parser.Y"
+#line 222 "colorbar/parser.Y"
     {(yyval.integer) = RGB;;}
     break;
 
   case 88:
-#line 224 "colorbar/parser.Y"
+#line 223 "colorbar/parser.Y"
     {(yyval.integer) = CMYK;;}
     break;
 
   case 91:
-#line 229 "colorbar/parser.Y"
+#line 228 "colorbar/parser.Y"
     {cb->tagLoadCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 92:
-#line 230 "colorbar/parser.Y"
+#line 229 "colorbar/parser.Y"
     {cb->tagSaveCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 93:
-#line 231 "colorbar/parser.Y"
+#line 230 "colorbar/parser.Y"
     {cb->tagCmd((yyvsp[(1) - (4)].integer),Vector((yyvsp[(2) - (4)].real),(yyvsp[(3) - (4)].real)),(yyvsp[(4) - (4)].str));;}
     break;
 
   case 94:
-#line 232 "colorbar/parser.Y"
+#line 231 "colorbar/parser.Y"
     {cb->tagCmd((yyvsp[(1) - (1)].str));;}
     break;
 
   case 95:
-#line 235 "colorbar/parser.Y"
+#line 234 "colorbar/parser.Y"
     {cb->tagDeleteCmd();;}
     break;
 
   case 96:
-#line 236 "colorbar/parser.Y"
+#line 235 "colorbar/parser.Y"
     {cb->tagDeleteCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 97:
-#line 239 "colorbar/parser.Y"
+#line 238 "colorbar/parser.Y"
     {cb->tagEditBeginCmd((yyvsp[(2) - (4)].integer),(yyvsp[(3) - (4)].integer),(yyvsp[(4) - (4)].str));;}
     break;
 
   case 98:
-#line 240 "colorbar/parser.Y"
+#line 239 "colorbar/parser.Y"
     {cb->tagEditMotionCmd((yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 99:
-#line 241 "colorbar/parser.Y"
+#line 240 "colorbar/parser.Y"
     {cb->tagEditEndCmd((yyvsp[(2) - (3)].integer),(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 100:
-#line 244 "colorbar/parser.Y"
+#line 243 "colorbar/parser.Y"
     {cb->saveCmd((yyvsp[(1) - (1)].str));;}
     break;
 
   case 101:
-#line 245 "colorbar/parser.Y"
+#line 244 "colorbar/parser.Y"
     {cb->saveCmd((yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 102:
-#line 246 "colorbar/parser.Y"
+#line 245 "colorbar/parser.Y"
     {cb->saveCmd((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 104:
-#line 250 "colorbar/parser.Y"
+#line 249 "colorbar/parser.Y"
     {cb->saveVarCmd((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 105:
-#line 253 "colorbar/parser.Y"
+#line 252 "colorbar/parser.Y"
     {
 #ifdef _WIN32
 	cb->win32PrintCmd();
@@ -2049,7 +2048,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2053 "colorbar/parser.C"
+#line 2052 "colorbar/parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2263,6 +2262,6 @@ yyreturn:
 }
 
 
-#line 260 "colorbar/parser.Y"
+#line 259 "colorbar/parser.Y"
 
 

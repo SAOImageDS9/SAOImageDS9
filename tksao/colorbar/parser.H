@@ -168,10 +168,9 @@ typedef union YYSTYPE
   float real;
   int integer;
   char str[CBBUFSIZE];
-  unsigned long ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 175 "colorbar/parser.H"
+#line 174 "colorbar/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

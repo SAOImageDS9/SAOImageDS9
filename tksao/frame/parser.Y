@@ -54,7 +54,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 #define FRBUFSIZE 4096
   char chr;
   char str[FRBUFSIZE];
-  unsigned long ptr;
   int integer;
   double real;
   double vector[3];

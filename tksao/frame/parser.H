@@ -763,14 +763,13 @@ typedef union YYSTYPE
 #define FRBUFSIZE 4096
   char chr;
   char str[FRBUFSIZE];
-  unsigned long ptr;
   int integer;
   double real;
   double vector[3];
   int dash[2];
 }
 /* Line 1529 of yacc.c.  */
-#line 774 "frame/parser.H"
+#line 773 "frame/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

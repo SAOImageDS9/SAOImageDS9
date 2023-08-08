@@ -122,11 +122,10 @@ typedef union YYSTYPE
 {
   float real;
   int integer;
-  unsigned long ptr;
   char str[1024];
 }
 /* Line 1529 of yacc.c.  */
-#line 130 "panner/parser.H"
+#line 129 "panner/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

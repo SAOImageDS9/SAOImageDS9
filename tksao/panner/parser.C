@@ -191,11 +191,10 @@ typedef union YYSTYPE
 {
   float real;
   int integer;
-  unsigned long ptr;
   char str[1024];
 }
 /* Line 193 of yacc.c.  */
-#line 199 "panner/parser.C"
+#line 198 "panner/parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -208,7 +207,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 212 "panner/parser.C"
+#line 211 "panner/parser.C"
 
 #ifdef short
 # undef short
@@ -512,12 +511,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    73,    73,    74,    75,    76,    77,    78,    79,    80,
-      81,    82,    83,    84,    85,    86,    87,    88,    91,    92,
-      95,    96,    99,   101,   102,   103,   104,   106,   107,   108,
-     109,   112,   113,   116,   117,   118,   119,   120,   123,   124,
-     125,   128,   129,   130,   131,   134,   135,   139,   140,   143,
-     145,   150,   152
+       0,    72,    72,    73,    74,    75,    76,    77,    78,    79,
+      80,    81,    82,    83,    84,    85,    86,    87,    90,    91,
+      94,    95,    98,   100,   101,   102,   103,   105,   106,   107,
+     108,   111,   112,   115,   116,   117,   118,   119,   122,   123,
+     124,   127,   128,   129,   130,   133,   134,   138,   139,   142,
+     144,   149,   151
 };
 #endif
 
@@ -1498,225 +1497,225 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 75 "panner/parser.Y"
+#line 74 "panner/parser.Y"
     {pn->clearCmd();;}
     break;
 
   case 5:
-#line 76 "panner/parser.Y"
+#line 75 "panner/parser.Y"
     {pn->setCompassCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 6:
-#line 77 "panner/parser.Y"
+#line 76 "panner/parser.Y"
     {pn->setCompassCmd((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 8:
-#line 79 "panner/parser.Y"
+#line 78 "panner/parser.Y"
     {pn->hideCmd();;}
     break;
 
   case 11:
-#line 82 "panner/parser.Y"
+#line 81 "panner/parser.Y"
     {pn->queryCursorCmd();;}
     break;
 
   case 12:
-#line 83 "panner/parser.Y"
+#line 82 "panner/parser.Y"
     {pn->resetCmd();;}
     break;
 
   case 13:
-#line 84 "panner/parser.Y"
+#line 83 "panner/parser.Y"
     {pn->showCmd();;}
     break;
 
   case 15:
-#line 86 "panner/parser.Y"
+#line 85 "panner/parser.Y"
     {pn->msg("Panner 1.0");;}
     break;
 
   case 16:
-#line 87 "panner/parser.Y"
+#line 86 "panner/parser.Y"
     {pn->warpCmd(Vector((yyvsp[(2) - (3)].real), (yyvsp[(3) - (3)].real)));;}
     break;
 
   case 17:
-#line 88 "panner/parser.Y"
+#line 87 "panner/parser.Y"
     {pn->setCompassCmd((yyvsp[(3) - (3)].integer));;}
     break;
 
   case 18:
-#line 91 "panner/parser.Y"
+#line 90 "panner/parser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 19:
-#line 92 "panner/parser.Y"
+#line 91 "panner/parser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 20:
-#line 95 "panner/parser.Y"
+#line 94 "panner/parser.Y"
     {yydebug=1;;}
     break;
 
   case 21:
-#line 96 "panner/parser.Y"
+#line 95 "panner/parser.Y"
     {yydebug=0;;}
     break;
 
   case 22:
-#line 99 "panner/parser.Y"
+#line 98 "panner/parser.Y"
     {(yyval.integer)=((yyvsp[(1) - (1)].integer) ? 1 : 0);;}
     break;
 
   case 23:
-#line 101 "panner/parser.Y"
+#line 100 "panner/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 24:
-#line 102 "panner/parser.Y"
+#line 101 "panner/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 25:
-#line 103 "panner/parser.Y"
+#line 102 "panner/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 26:
-#line 104 "panner/parser.Y"
+#line 103 "panner/parser.Y"
     {(yyval.integer)=1;;}
     break;
 
   case 27:
-#line 106 "panner/parser.Y"
+#line 105 "panner/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 28:
-#line 107 "panner/parser.Y"
+#line 106 "panner/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 29:
-#line 108 "panner/parser.Y"
+#line 107 "panner/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 30:
-#line 109 "panner/parser.Y"
+#line 108 "panner/parser.Y"
     {(yyval.integer)=0;;}
     break;
 
   case 31:
-#line 112 "panner/parser.Y"
+#line 111 "panner/parser.Y"
     {pn->setBBoxCmd(1);;}
     break;
 
   case 32:
-#line 113 "panner/parser.Y"
+#line 112 "panner/parser.Y"
     {pn->setBBoxCmd(0);;}
     break;
 
   case 33:
-#line 116 "panner/parser.Y"
+#line 115 "panner/parser.Y"
     {pn->getCmd();;}
     break;
 
   case 34:
-#line 117 "panner/parser.Y"
+#line 116 "panner/parser.Y"
     {pn->getBBoxCmd();;}
     break;
 
   case 35:
-#line 118 "panner/parser.Y"
+#line 117 "panner/parser.Y"
     {pn->getHeightCmd();;}
     break;
 
   case 36:
-#line 119 "panner/parser.Y"
+#line 118 "panner/parser.Y"
     {pn->getSizeCmd();;}
     break;
 
   case 37:
-#line 120 "panner/parser.Y"
+#line 119 "panner/parser.Y"
     {pn->getWidthCmd();;}
     break;
 
   case 38:
-#line 123 "panner/parser.Y"
+#line 122 "panner/parser.Y"
     {pn->highLiteCmd(Vector((yyvsp[(1) - (2)].real),(yyvsp[(2) - (2)].real)));;}
     break;
 
   case 39:
-#line 124 "panner/parser.Y"
+#line 123 "panner/parser.Y"
     {pn->highLiteCmd(0);;}
     break;
 
   case 40:
-#line 125 "panner/parser.Y"
+#line 124 "panner/parser.Y"
     {pn->highLiteCmd(1);;}
     break;
 
   case 41:
-#line 128 "panner/parser.Y"
+#line 127 "panner/parser.Y"
     {pn->panBeginCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 42:
-#line 129 "panner/parser.Y"
+#line 128 "panner/parser.Y"
     {pn->panMotionCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 43:
-#line 130 "panner/parser.Y"
+#line 129 "panner/parser.Y"
     {pn->panEndCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 44:
-#line 131 "panner/parser.Y"
+#line 130 "panner/parser.Y"
     {pn->panToCmd(Vector((yyvsp[(2) - (3)].real),(yyvsp[(3) - (3)].real)));;}
     break;
 
   case 45:
-#line 134 "panner/parser.Y"
+#line 133 "panner/parser.Y"
     {pn->updateCmd();;}
     break;
 
   case 46:
-#line 137 "panner/parser.Y"
+#line 136 "panner/parser.Y"
     {pn->updateBBoxCmd(Vector((yyvsp[(2) - (9)].real),(yyvsp[(3) - (9)].real)),Vector((yyvsp[(4) - (9)].real),(yyvsp[(5) - (9)].real)),
 	    Vector((yyvsp[(6) - (9)].real),(yyvsp[(7) - (9)].real)),Vector((yyvsp[(8) - (9)].real),(yyvsp[(9) - (9)].real)));;}
     break;
 
   case 49:
-#line 144 "panner/parser.Y"
+#line 143 "panner/parser.Y"
     {pn->updateImageCompassCmd(Vector((yyvsp[(1) - (4)].real),(yyvsp[(2) - (4)].real)),Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 50:
-#line 146 "panner/parser.Y"
+#line 145 "panner/parser.Y"
     {pn->updateImageCompassCmd(Vector((yyvsp[(1) - (6)].real),(yyvsp[(2) - (6)].real)), Vector((yyvsp[(3) - (6)].real),(yyvsp[(4) - (6)].real)),
 	   Vector((yyvsp[(5) - (6)].real),(yyvsp[(6) - (6)].real)));;}
     break;
 
   case 51:
-#line 151 "panner/parser.Y"
+#line 150 "panner/parser.Y"
     {pn->updateWCSCompassCmd(Vector((yyvsp[(1) - (4)].real),(yyvsp[(2) - (4)].real)),Vector((yyvsp[(3) - (4)].real),(yyvsp[(4) - (4)].real)));;}
     break;
 
   case 52:
-#line 152 "panner/parser.Y"
+#line 151 "panner/parser.Y"
     {pn->updateWCSCompassCmd();;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1720 "panner/parser.C"
+#line 1719 "panner/parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1930,7 +1929,7 @@ yyreturn:
 }
 
 
-#line 155 "panner/parser.Y"
+#line 154 "panner/parser.Y"
 
 
 

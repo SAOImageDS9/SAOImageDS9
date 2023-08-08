@@ -92,11 +92,10 @@ typedef union YYSTYPE
 {
   float real;
   int integer;
-  unsigned long ptr;
   char str[1024];
 }
 /* Line 1529 of yacc.c.  */
-#line 100 "magnifier/parser.H"
+#line 99 "magnifier/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

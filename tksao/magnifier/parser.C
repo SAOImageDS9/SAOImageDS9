@@ -161,11 +161,10 @@ typedef union YYSTYPE
 {
   float real;
   int integer;
-  unsigned long ptr;
   char str[1024];
 }
 /* Line 193 of yacc.c.  */
-#line 169 "magnifier/parser.C"
+#line 168 "magnifier/parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -178,7 +177,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 182 "magnifier/parser.C"
+#line 181 "magnifier/parser.C"
 
 #ifdef short
 # undef short
@@ -465,8 +464,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    55,    55,    56,    57,    58,    59,    60,    61,    62,
-      65,    66,    69,    70,    71,    72
+       0,    54,    54,    55,    56,    57,    58,    59,    60,    61,
+      64,    65,    68,    69,    70,    71
 };
 #endif
 
@@ -1389,68 +1388,68 @@ yyreduce:
   switch (yyn)
     {
         case 3:
-#line 56 "magnifier/parser.Y"
+#line 55 "magnifier/parser.Y"
     {mg->clearCmd();;}
     break;
 
   case 5:
-#line 58 "magnifier/parser.Y"
+#line 57 "magnifier/parser.Y"
     {mg->hideCmd();;}
     break;
 
   case 6:
-#line 59 "magnifier/parser.Y"
+#line 58 "magnifier/parser.Y"
     {mg->resetCmd();;}
     break;
 
   case 7:
-#line 60 "magnifier/parser.Y"
+#line 59 "magnifier/parser.Y"
     {mg->showCmd();;}
     break;
 
   case 8:
-#line 61 "magnifier/parser.Y"
+#line 60 "magnifier/parser.Y"
     {mg->updateCmd();;}
     break;
 
   case 9:
-#line 62 "magnifier/parser.Y"
+#line 61 "magnifier/parser.Y"
     {mg->msg("Magnifier 1.0");;}
     break;
 
   case 10:
-#line 65 "magnifier/parser.Y"
+#line 64 "magnifier/parser.Y"
     {yydebug=1;;}
     break;
 
   case 11:
-#line 66 "magnifier/parser.Y"
+#line 65 "magnifier/parser.Y"
     {yydebug=0;;}
     break;
 
   case 12:
-#line 69 "magnifier/parser.Y"
+#line 68 "magnifier/parser.Y"
     {mg->getCmd();;}
     break;
 
   case 13:
-#line 70 "magnifier/parser.Y"
+#line 69 "magnifier/parser.Y"
     {mg->getBBoxCmd();;}
     break;
 
   case 14:
-#line 71 "magnifier/parser.Y"
+#line 70 "magnifier/parser.Y"
     {mg->getHeightCmd();;}
     break;
 
   case 15:
-#line 72 "magnifier/parser.Y"
+#line 71 "magnifier/parser.Y"
     {mg->getWidthCmd();;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1454 "magnifier/parser.C"
+#line 1453 "magnifier/parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1664,7 +1663,7 @@ yyreturn:
 }
 
 
-#line 75 "magnifier/parser.Y"
+#line 74 "magnifier/parser.Y"
 
 
 

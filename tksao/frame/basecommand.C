@@ -1100,6 +1100,12 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
 			       FrScale::ColorScaleType scaleType,
 			       float expo)
 {
+  // specific check colormaplevelPtr_ in use
+  if (colormaplevelPtr_)
+    if (colormaplevelParentPtr_)
+      if (colormaplevelParentPtr_ != this)
+	return;
+
   if (inverseScale)
     delete inverseScale;
   inverseScale = NULL;
@@ -2184,11 +2190,18 @@ void Base::getWCSAlignCmd()
 
 void Base::getWCSAlignPointerCmd()
 {
+  // specific check fitsimagePtr_ in use
+  if (fitsimagePtr_)
+    if (fitsimageParentPtr_)
+      if (fitsimageParentPtr_ != this)
+	return;
+
   ostringstream str;
   if (keyContext->fits)
-    fitsimageptr_ = keyContext->fits;
+    fitsimagePtr_ = keyContext->fits;
   else
-    fitsimageptr_ = NULL;
+    fitsimagePtr_ = NULL;
+  fitsimageParentPtr_ =this;
 
   Tcl_AppendResult(interp, (wcsAlign_ ? "1" : "0"), " ", 
 		   coord.coordSystemStr(wcsSystem_), " ",
@@ -3015,11 +3028,17 @@ void Base::wcsAlignCmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 
 void Base::wcsAlign2Cmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
+  if (!fitsimagePtr_ || !fitsimageParentPtr_)
+    return;
+
   wcsAlign_ = which;
   wcsSkyFrame_ = sky;
 
-  alignWCS((FitsImage*)fitsimageptr_, sys);
+  alignWCS((FitsImage*)fitsimagePtr_, sys);
   update(MATRIX);
+
+  fitsimagePtr_ =NULL;
+  fitsimageParentPtr_ =NULL;
 }
 
 void Base::wcsAppendCmd(int which, int fd)

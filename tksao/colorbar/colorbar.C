@@ -256,6 +256,12 @@ void Colorbar::getColorbarCmd()
 
 void Colorbar::getColormapCmd()
 {
+  // specific check cellsPtr_ in use
+  if (cellsPtr_)
+    if (cellsParentPtr_)
+      if (cellsParentPtr_ != this)
+	return;
+
   if (cmaps.current()) {
     cellsPtr_ = colorCells;
     cellsParentPtr_ =this;

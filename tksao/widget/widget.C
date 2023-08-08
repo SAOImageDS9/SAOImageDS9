@@ -9,7 +9,9 @@
 
 // exchange pointer between widgets
 void* framePtr_ =NULL;
-void* fitsimageptr_ =NULL;
+
+void* fitsimagePtr_ =NULL;
+void* fitsimageParentPtr_ =NULL;
 
 void* cellsPtr_ =NULL;
 void* cellsParentPtr_ =NULL;

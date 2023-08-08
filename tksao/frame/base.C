@@ -239,6 +239,11 @@ Base::~Base()
     delete inverseScale;
 
   // exchange pointer between widgets
+  if (fitsimageParentPtr_ == this) {
+    fitsimagePtr_ =NULL;
+    fitsimageParentPtr_ =NULL;
+  }
+
   if (colormaplevelParentPtr_ == this) {
     colormaplevelPtr_ =NULL;
     colormaplevelParentPtr_ =NULL;
@@ -1524,6 +1529,7 @@ void Base::updateMagnifier(const Vector& vv)
   // notify the magnifier widget
   magnifierPtr_ = (void*)magnifierPixmap;
   magnifierParentPtr_ = (void*)this;
+
   ostringstream str;
   str << magnifierName << " update" << ends;
   Tcl_Eval(interp, str.str().c_str());

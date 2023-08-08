@@ -12,7 +12,9 @@ void* framePtr_ =NULL;
 
 void* fitsimageptr_ =NULL;
 void* cellsptr_ =NULL;
-void* colormaplevelptr_ =NULL;
+
+void* colormaplevelPtr_ =NULL;
+void* colormaplevelParentPtr_ =NULL;
 
 void* magnifierPtr_ =NULL;
 void* magnifierParentPtr_ =NULL;

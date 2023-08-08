@@ -31,10 +31,13 @@ extern void* framePtr_;
 
 extern void* fitsimageptr_;
 extern void* cellsptr_;
-extern void* colormaplevelptr_;
+
+extern void* colormaplevelPtr_;
+extern void* colormaplevelParentPtr_;
 
 extern void* magnifierPtr_;
 extern void* magnifierParentPtr_;
+
 extern void* pannerPtr_;
 extern void* pannerParentPtr_;
 

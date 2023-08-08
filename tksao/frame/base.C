@@ -239,10 +239,16 @@ Base::~Base()
     delete inverseScale;
 
 // exchange pointer between widgets
+  if (colormaplevelParentPtr_ == this) {
+    colormaplevelPtr_ =NULL;
+    colormaplevelParentPtr_ =NULL;
+  }
+
   if (pannerParentPtr_ == this) {
     pannerPtr_ =NULL;
     pannerParentPtr_ =NULL;
   }
+
   if (magnifierParentPtr_ == this) {
     magnifierPtr_ =NULL;
     magnifierParentPtr_ =NULL;

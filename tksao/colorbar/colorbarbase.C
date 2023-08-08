@@ -815,10 +815,10 @@ void ColorbarBase::setColormapLevelCmd()
 
 void ColorbarBase::setColormapLevelCmd(int cc)
 {
-  if (!colormaplevelptr_)
+  if (!colormaplevelPtr_ || !colormaplevelParentPtr_)
     return;
   
-  double* ff = (double*)colormaplevelptr_;
+  double* ff = (double*)colormaplevelPtr_;
 
   // check for the same
   if (cnt == cc) {
@@ -827,7 +827,8 @@ void ColorbarBase::setColormapLevelCmd(int cc)
       same &= (lut[ii] == ff[ii]);
     if (same) {
       // reset
-      colormaplevelptr_ =NULL;
+      colormaplevelPtr_ =NULL;
+      colormaplevelParentPtr_ =NULL;
       return;
     }
   }
@@ -840,8 +841,9 @@ void ColorbarBase::setColormapLevelCmd(int cc)
   for (int ii=0; ii<cc; ii++)
     lut[ii] = ff[ii];
 
-  // reset
-  colormaplevelptr_ =NULL;
+  // clear
+  colormaplevelPtr_ =NULL;
+  colormaplevelParentPtr_ =NULL;
     
   invalidPixmap();
   redraw();

@@ -943,9 +943,15 @@ void Frame3dBase::updatePanner()
     return;
   }
 
-  // specific check pannerptr_ in use
-  if (!pannerXImage || !pannerPixmap || pannerptr_)
+  // just in case
+  if (!pannerXImage || !pannerPixmap)
     return;
+
+  // specific check pannerPtr_ in use
+  if (pannerPtr_)
+    if (pannerParentPtr_)
+      if (pannerParentPtr_ != this)
+	return;
 
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
@@ -956,7 +962,8 @@ void Frame3dBase::updatePanner()
     x11Border(Coord::PANNER, FrScale::IMGSEC, pannerGC, pannerPixmap);
   }
 
-  pannerptr_ = (void*)pannerPixmap;
+  pannerPtr_ = (void*)pannerPixmap;
+  pannerParentPtr_ =(void*)this;
   ostringstream str;
   str << pannerName << " update;";
 
@@ -1207,9 +1214,15 @@ void Frame3dBase::updateMagnifier(const Vector& vv)
     return;
   }
 
-  // specific check magnifierptr_ in use
-  if (!magnifierXImage || !magnifierPixmap || magnifierptr_)
+  // just in case
+  if (!magnifierXImage || !magnifierPixmap)
     return;
+
+  // specific check magnifierPtr_ in use
+  if (magnifierPtr_)
+    if (magnifierParentPtr_)
+      if (magnifierParentPtr_ != this)
+	return;
 
   // vv is in CANVAS coords
   // save it, we may need it later
@@ -1220,7 +1233,8 @@ void Frame3dBase::updateMagnifier(const Vector& vv)
   ximageToPixmapMagnifier();
 
   // notify the magnifier widget
-  magnifierptr_ = (void*)magnifierPixmap;
+  magnifierPtr_ = (void*)magnifierPixmap;
+  magnifierParentPtr_ = (void*)this;
   ostringstream str;
   str << magnifierName << " update" << ends;
   Tcl_Eval(interp, str.str().c_str());

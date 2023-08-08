@@ -187,14 +187,20 @@ Base::~Base()
   if (baseXImage)
     XDestroyImage(baseXImage);
 
-  pannerptr_ =NULL;
+  if (pannerParentPtr_ == this) {
+    pannerPtr_ =NULL;
+    pannerParentPtr_ =NULL;
+  }
   if (pannerPixmap)
     Tk_FreePixmap(display, pannerPixmap);
 
   if (pannerXImage)
     XDestroyImage(pannerXImage);
 
-  magnifierptr_ =NULL;
+  if (magnifierParentPtr_ == this) {
+    magnifierPtr_ =NULL;
+    magnifierParentPtr_ =NULL;
+  }
   if (magnifierPixmap)
     Tk_FreePixmap(display, magnifierPixmap);
 
@@ -1457,9 +1463,15 @@ void Base::updateMagnifier(const Vector& vv)
     return;
   }
 
-  // specific check magnifierptr_ in use
-  if (!magnifierXImage || !magnifierPixmap || magnifierptr_)
+  // just in case
+  if (!magnifierXImage || !magnifierPixmap)
     return;
+
+  // specific check magnifierPtr_ in use
+  if (magnifierPtr_)
+    if (magnifierParentPtr_)
+      if (magnifierParentPtr_ != this)
+	return;
 
   // vv is in CANVAS coords
   // save it, we may need it later
@@ -1503,7 +1515,8 @@ void Base::updateMagnifier(const Vector& vv)
     x11MagnifierCursor(vv);
 
   // notify the magnifier widget
-  magnifierptr_ = (void*)magnifierPixmap;
+  magnifierPtr_ = (void*)magnifierPixmap;
+  magnifierParentPtr_ = (void*)this;
   ostringstream str;
   str << magnifierName << " update" << ends;
   Tcl_Eval(interp, str.str().c_str());

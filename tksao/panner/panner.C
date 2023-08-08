@@ -102,9 +102,9 @@ int Panner::updatePixmap(const BBox& bb)
   }
 
   if (use_) {
-    if (pannerptr_) {
+    if (pannerPtr_ && pannerParentPtr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
-      XCopyArea(display, (Pixmap)pannerptr_, pixmap, widgetGC, 0, 0,
+      XCopyArea(display, (Pixmap)pannerPtr_, pixmap, widgetGC, 0, 0,
 		options->width, options->height, 0, 0);
 
       if (useBBox)
@@ -121,7 +121,8 @@ int Panner::updatePixmap(const BBox& bb)
     clearPixmap();
 
   // clear
-  pannerptr_ =NULL;
+  pannerPtr_ =NULL;
+  pannerParentPtr_ =NULL;
 
   return TCL_OK;
 }

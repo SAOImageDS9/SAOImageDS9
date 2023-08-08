@@ -31,8 +31,11 @@ extern void* frameptr_;
 extern void* fitsimageptr_;
 extern void* cellsptr_;
 extern void* colormaplevelptr_;
-extern void* magnifierptr_;
-extern void* pannerptr_;
+
+extern void* magnifierPtr_;
+extern void* magnifierParentPtr_;
+extern void* pannerPtr_;
+extern void* pannerParentPtr_;
 
 // General Defines
 

@@ -282,14 +282,21 @@ void FrameBase::updatePanner()
     return;
   }
 
-  // specific check pannerptr_ in use
-  if (!pannerXImage || !pannerPixmap || pannerptr_)
+  // just in case
+  if (!pannerXImage || !pannerPixmap)
     return;
+
+  // specific check pannerPtr_ in use
+  if (pannerPtr_)
+    if (pannerParentPtr_)
+      if (pannerParentPtr_ != this)
+	return;
 
   // do this first
   ximageToPixmap(pannerPixmap, pannerXImage, Coord::PANNER);
 
-  pannerptr_ = (void*)pannerPixmap;
+  pannerPtr_ = (void*)pannerPixmap;
+  pannerParentPtr_ = (void*)this;
   ostringstream str;
   str << pannerName << " update;";
 

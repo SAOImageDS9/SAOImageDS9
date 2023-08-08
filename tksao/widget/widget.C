@@ -8,7 +8,8 @@
 #include "util.h"
 
 // exchange pointer between widgets
-void* frameptr_ =NULL;
+void* framePtr_ =NULL;
+
 void* fitsimageptr_ =NULL;
 void* cellsptr_ =NULL;
 void* colormaplevelptr_ =NULL;
@@ -397,7 +398,7 @@ void Widget::translateProc(double deltaX, double deltaY)
 
 void Widget::getCmd()
 {
-  frameptr_ = this;
+  framePtr_ = this;
 }
 
 int Widget::configCmd(int argc, const char** argv)

@@ -27,7 +27,8 @@ using namespace std;
 class Attribute;
 
 // exchange pointer between widgets
-extern void* frameptr_;
+extern void* framePtr_;
+
 extern void* fitsimageptr_;
 extern void* cellsptr_;
 extern void* colormaplevelptr_;

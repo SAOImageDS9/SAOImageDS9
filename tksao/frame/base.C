@@ -187,20 +187,12 @@ Base::~Base()
   if (baseXImage)
     XDestroyImage(baseXImage);
 
-  if (pannerParentPtr_ == this) {
-    pannerPtr_ =NULL;
-    pannerParentPtr_ =NULL;
-  }
   if (pannerPixmap)
     Tk_FreePixmap(display, pannerPixmap);
 
   if (pannerXImage)
     XDestroyImage(pannerXImage);
 
-  if (magnifierParentPtr_ == this) {
-    magnifierPtr_ =NULL;
-    magnifierParentPtr_ =NULL;
-  }
   if (magnifierPixmap)
     Tk_FreePixmap(display, magnifierPixmap);
 
@@ -246,6 +238,15 @@ Base::~Base()
   if (inverseScale)
     delete inverseScale;
 
+// exchange pointer between widgets
+  if (pannerParentPtr_ == this) {
+    pannerPtr_ =NULL;
+    pannerParentPtr_ =NULL;
+  }
+  if (magnifierParentPtr_ == this) {
+    magnifierPtr_ =NULL;
+    magnifierParentPtr_ =NULL;
+  }
 }
 
 void Base::alignIRAF()

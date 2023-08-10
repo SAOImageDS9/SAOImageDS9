@@ -1,22 +1,7 @@
 package provide DS9 1.0
 
-# Author: David Easton
+# original Author: David Easton
 
-###################################################
-#
-#  Name:         resize
-#
-#  Decsription:  Copies a source image to a destination
-#                image and resizes it using linear interpolation
-#
-#  Parameters:   newx   - Width of new image
-#                newy   - Height of new image
-#                src    - Source image
-#                dest   - Destination image (optional)
-#
-#  Returns:      destination image
-#
-###################################################
 proc resizePhoto {src newx newy {dest ""} } {
     
     set mx [image width $src]
@@ -29,7 +14,6 @@ proc resizePhoto {src newx newy {dest ""} } {
     
     # Check if we can just zoom using -zoom option on copy
     if { $newx % $mx == 0 && $newy % $my == 0} {
-	
 	set ix [expr {$newx / $mx}]
 	set iy [expr {$newy / $my}]
 	$dest copy $src -zoom $ix $iy
@@ -38,15 +22,9 @@ proc resizePhoto {src newx newy {dest ""} } {
     
     set ny 0
     set ytot $my
-    
     for {set y 0} {$y < $my} {incr y} {
-	
-	#
 	# Do horizontal resize
-	#
-	
 	foreach {pr pg pb} [$src get 0 $y] {break}
-	
 	set row [list]
 	set thisrow [list]
 	
@@ -54,7 +32,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	set xtot $mx
 	
 	for {set x 1} {$x < $mx} {incr x} {
-	    
 	    # Add whole pixels as necessary
 	    while { $xtot <= $newx } {
 		lappend row [format "#%02x%02x%02x" $pr $pg $pb]
@@ -64,11 +41,9 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    }
 	    
 	    # Now add mixed pixels
-	    
 	    foreach {r g b} [$src get $x $y] {break}
 	    
 	    # Calculate ratios to use
-	    
 	    set xtot [expr {$xtot - $newx}]
 	    set rn $xtot
 	    set rp [expr {$mx - $xtot}]
@@ -80,7 +55,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    set xr 0
 	    set xg 0
 	    set xb 0
-	    
 	    while { $xtot > $newx } {
 		incr xr $r
 		incr xg $g
@@ -92,7 +66,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    }
 	    
 	    # Work out the new pixel colours
-	    
 	    set tr [expr {int( ($rn*$r + $xr + $rp*$pr) / $mx)}]
 	    set tg [expr {int( ($rn*$g + $xg + $rp*$pg) / $mx)}]
 	    set tb [expr {int( ($rn*$b + $xb + $rp*$pb) / $mx)}]
@@ -102,7 +75,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    if {$tb > 255} {set tb 255}
 	    
 	    # Output the pixel
-	    
 	    lappend row [format "#%02x%02x%02x" $tr $tg $tb]
 	    lappend thisrow $tr $tg $tb
 	    incr xtot $mx
@@ -120,26 +92,19 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    incr nx
 	}
 	
-	#
 	# Do vertical resize
-	#
-	
 	if {[info exists prevrow]} {
-	    
 	    set nrow [list]
 	    
 	    # Add whole lines as necessary
 	    while { $ytot <= $newy } {
-		
 		$dest put [list $prow] -to 0 $ny 
-		
 		incr ytot $my
 		incr ny
 	    }
 	    
 	    # Now add mixed line
 	    # Calculate ratios to use
-	    
 	    set ytot [expr {$ytot - $newy}]
 	    set rn $ytot
 	    set rp [expr {$my - $rn}]
@@ -148,27 +113,21 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    # where a single pixel is made from more than
 	    # 2 others.  Actually we cheat and just remove 
 	    # a line of pixels which is not as good as it should be
-	    
 	    while { $ytot > $newy } {
-		
 		set ytot [expr {$ytot - $newy}]
 		incr y
 		continue
 	    }
 	    
 	    # Calculate new row
-	    
 	    foreach {pr pg pb} $prevrow {r g b} $thisrow {
-		
 		set tr [expr {int( ($rn*$r + $rp*$pr) / $my)}]
 		set tg [expr {int( ($rn*$g + $rp*$pg) / $my)}]
 		set tb [expr {int( ($rn*$b + $rp*$pb) / $my)}]
-		
 		lappend nrow [format "#%02x%02x%02x" $tr $tg $tb]
 	    }
 	    
 	    $dest put [list $nrow] -to 0 $ny 
-	    
 	    incr ytot $my
 	    incr ny
 	}
@@ -176,7 +135,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	set prevrow $thisrow
 	set prow $row
 	
-	update idletasks
     }
     
     # Finish off last rows
@@ -184,8 +142,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	$dest put [list $row] -to 0 $ny 
 	incr ny
     }
-    update idletasks
-    
     return $dest
 }
 

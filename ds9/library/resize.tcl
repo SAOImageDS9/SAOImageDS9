@@ -1,3 +1,7 @@
+#  Copyright (C) 1999-2023
+#  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
+#  For conditions of distribution and use, see copyright notice in "copyright"
+
 package provide DS9 1.0
 
 # original Author: David Easton
@@ -153,11 +157,20 @@ proc resizePhoto {src newx newy {dest ""} } {
 	$dest put [list $row] -to 0 $ny 
 	incr ny
     }
+
+    # now figure out transparantency
+    for {set yy 0} {$yy<$newy} {incr yy} {
+	for {set xx 0} {$xx<$newx} {incr xx} {
+	    set tt 0
+	    $dest transparency set $xx $yy $tt
+	}
+    }
+
     return $dest
 }
 
 # requires Tk 8.7
-proc resizePhotoAlpha { src newx newy { dest "" } } {
+proc resizePhoto87 { src newx newy { dest "" } } {
     set mx [image width  $src]
     set my [image height $src]
 

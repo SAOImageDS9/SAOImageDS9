@@ -397,9 +397,14 @@ proc IllustrateImageDeleteCB {id} {
 
     IllustrateBaseDeleteCB $id
 
+    set ph [$ds9(canvas) itemcget $id -image]
+    image delete $ph
+    
     set ivarname ${iillustrate(prefix,img)}${id}
     global $ivarname
     upvar #0 $ivarname ivar
+
+    image delete $ivar(photo)
 
     unset $ivarname
 }

@@ -13,13 +13,26 @@ proc resizePhoto {src newx newy {dest ""} } {
     $dest configure -width $newx -height $newy
     
     # Check if we can just zoom using -zoom option on copy
-    if { $newx % $mx == 0 && $newy % $my == 0} {
-	set ix [expr {$newx / $mx}]
-	set iy [expr {$newy / $my}]
-	$dest copy $src -zoom $ix $iy
-	return $dest
+    if {$newx >= $mx && $newy >= $mx} {
+	if { $newx % $mx == 0 && $newy % $my == 0} {
+	    set ix [expr $newx/$mx]
+	    set iy [expr $newy/$my]
+	    $dest copy $src -zoom $ix $iy
+	    return $dest
+	}
     }
-    
+
+    # Check if we can just use -subsample option on copy
+    if {$newx < $mx && $newy < $mx} {
+	if { $mx % $newx == 0 && $my % $newy == 0} {
+	    set ix [expr $mx/$newx]
+	    set iy [expr $my/$newy]
+	    $dest copy $src -subsample $ix $iy
+	    return $dest
+	}
+    }
+
+    # ok, got to do it the hard way
     set ny 0
     set ytot $my
     for {set y 0} {$y < $my} {incr y} {
@@ -30,7 +43,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	
 	set nx 0
 	set xtot $mx
-	
 	for {set x 1} {$x < $mx} {incr x} {
 	    # Add whole pixels as necessary
 	    while { $xtot <= $newx } {
@@ -134,7 +146,6 @@ proc resizePhoto {src newx newy {dest ""} } {
 	
 	set prevrow $thisrow
 	set prow $row
-	
     }
     
     # Finish off last rows

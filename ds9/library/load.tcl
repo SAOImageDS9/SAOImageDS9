@@ -268,7 +268,7 @@ proc LoadUpdate {} {
 	CubeDialog
     }
 
-    UpdateGraphsAxis $current(frame)
+    UpdateGraphAxes $current(frame)
 }
 
 proc FinishLoad {} {

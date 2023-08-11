@@ -131,7 +131,7 @@ proc IllustrateImageList {id} {
     return $rr
 }
 
-proc IllustrateImageEdit {id xx yy} {
+proc IllustrateImageEdit {id xx yy ratio} {
     global ds9
     global iillustrate
     
@@ -165,9 +165,14 @@ proc IllustrateImageEdit {id xx yy} {
 
 	set old [$ds9(canvas) itemcget $id -image]
 
-	set ww [expr int([image width $old]*$aa)]
-	set hh [expr int([image height $old]*$bb)]
-
+	if {$ratio} {
+	    set ww [expr int([image width $old]*$aa)]
+	    set hh [expr int([image height $old]*$aa)]
+	} else {
+	    set ww [expr int([image width $old]*$aa)]
+	    set hh [expr int([image height $old]*$bb)]
+	}
+	
 	if {$ww < 10} {
 	    set ww 10
 	}

@@ -137,7 +137,7 @@ proc IllustrateEdit {id xx yy} {
 	polygon {IllustratePolygonEdit $id $xx $yy}
 	line {IllustrateLineEdit $id $xx $yy}
 	text {IllustrateTextEdit $id $xx $yy}
-	image {IllustrateImageEdit $id $xx $yy}
+	image {IllustrateImageEdit $id $xx $yy 0}
     }
 }
 
@@ -173,7 +173,7 @@ proc IllustrateRotate {id xx yy} {
 	polygon -
 	line {}
 	text {IllustrateTextRotate $id $xx $yy}
-	image {}
+	image {IllustrateImageEdit $id $xx $yy 1}
     }
 }
 
@@ -185,7 +185,7 @@ proc IllustrateRotateCB {id} {
 	polygon -
 	line {}
 	text {IllustrateTextRotateCB $id}
-	image {}
+	image {IllustrateImageEditCB $id}
     }
 }
 

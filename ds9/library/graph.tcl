@@ -622,34 +622,6 @@ proc UpdateGraphFont {frame which} {
     [subst $${varname}($which)] yaxis configure -tickfont "$ds9($graph(font)) $graph(font,size) $graph(font,weight) $graph(font,slant)"
 }
 
-proc UpdateGraphsMethod {} {
-    global ds9
-    
-    global debug
-    if {$debug(tcl,graph)} {
-	puts "UpdateGraphsMethod"
-    }
-
-    # don't process default
-    # UpdateGraphMethod graph
-    foreach ff $ds9(frames) {
-	UpdateGraphMethod $ff
-    }
-}
-
-proc UpdateGraphMethod {frame} {
-    set varname ${frame}gr
-    global $varname
-    
-    # don't process default graph
-    if {$frame == {graph}} {
-	return
-    }
-
-    UpdateGraphAxis $frame horz
-    UpdateGraphAxis $frame vert
-}
-
 proc UpdateGraphsGrid {} {
     global ds9
     
@@ -680,10 +652,25 @@ proc UpdateGraphGrid {frame} {
     [subst $${varname}(vert)] x2axis configure -grid $graph(grid)
 }
 
-proc UpdateGraphsAxis {frame} {
+proc UpdateGraphsAxes {} {
+    global ds9
+
     global debug
     if {$debug(tcl,graph)} {
-	puts "UpdateGraphsAxis $frame" 
+	puts "UpdateGraphsAxes"
+    }
+
+    # don't process default
+    # UpdateGraphMethod graph
+    foreach ff $ds9(frames) {
+	UpdateGraphAxes $ff
+    }
+}
+
+proc UpdateGraphAxes {frame} {
+    global debug
+    if {$debug(tcl,graph)} {
+	puts "UpdateGraphAxes $frame" 
     }
 
     # sanity check
@@ -755,7 +742,8 @@ proc UpdateGraphAxisY {frame which} {
     set gr [subst $${varname}($which)]
 
     if {[$frame has fits]} {
-	set minmax [$frame get minmax]
+	set minmax [$frame get clip]
+#	set minmax [$frame get minmax]
 	set ymin [lindex $minmax 0]
 	set ymax [lindex $minmax 1]
 
@@ -934,13 +922,13 @@ proc GraphDialog {} {
     ThemeMenu $mb.method
     $mb.method add radiobutton \
 	-label [msgcat::mc {Average}] -variable graph(method) \
-	-value average -command UpdateGraphsMethod
+	-value average -command UpdateGraphsAxes
     $mb.method add radiobutton \
 	-label [msgcat::mc {Sum}] -variable graph(method) \
-	-value sum -command UpdateGraphsMethod
+	-value sum -command UpdateGraphsAxes
     $mb.method add radiobutton \
 	-label [msgcat::mc {Median}] -variable graph(method) \
-	-value median -command UpdateGraphsMethod
+	-value median -command UpdateGraphsAxes
 
     FontMenu $mb.font \
 	graph font font,size font,weight font,slant UpdateGraphsFont

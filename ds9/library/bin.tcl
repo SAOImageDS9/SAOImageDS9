@@ -191,7 +191,7 @@ proc UpdateBin {} {
     UpdateContourScale
     UpdateContourDialog
     UpdateWCSDialog
-    UpdateGraphsAxis $current(frame)
+    UpdateGraphAxes $current(frame)
     UpdateMain
 }
 

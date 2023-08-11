@@ -1985,7 +1985,7 @@ proc ResetFrame {which} {
 	UpdateZoomMenu
 	UpdateScaleMenu
 	UpdateScaleDialog
-	UpdateGraphsAxis $which
+	UpdateGraphAxes $which
 
 	SAMPSendCoordPointAtSkyCmd $which
     }
@@ -2055,7 +2055,7 @@ proc ClearFrame {which} {
 
     # after unload
     HideGraphsData $which
-    UpdateGraphsAxis $which
+    UpdateGraphAxes $which
 }
 
 # Private Procedures

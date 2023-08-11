@@ -190,7 +190,7 @@ proc PreservePan {} {
 
 proc UpdatePan {which} {
     LockFrame $which
-    UpdateGraphsAxis $which
+    UpdateGraphAxes $which
     UpdatePanZoomDialog
     SAMPSendCoordPointAtSkyCmd $which
 }
@@ -271,7 +271,7 @@ proc ZoomShift {which} {
 
 proc UpdateZoom {which} {
     LockFrame $which
-    UpdateGraphsAxis $which
+    UpdateGraphAxes $which
     UpdatePanZoomDialog
     GridUpdateZoom
     RefreshInfoBox $which
@@ -340,7 +340,7 @@ proc RotateRelease {which x y} {
 
 proc UpdateRotate {which} {
     LockFrame $which
-    UpdateGraphsAxis $which
+    UpdateGraphAxes $which
     UpdatePanZoomDialog
     RefreshInfoBox $which
 }
@@ -498,7 +498,7 @@ proc PanZoomApplyDialog {} {
 	$current(frame) rotate to $current(rotate)
 
 	LockFrameCurrent
-	UpdateGraphsAxis $current(frame)
+	UpdateGraphAxes $current(frame)
 	UpdatePanZoomDialog
 	GridUpdateZoom
 	RefreshInfoBox $current(frame)
@@ -580,7 +580,7 @@ proc AlignWCSFrame {} {
 	$current(frame) wcs align $current(align)
 
 	LockFrameCurrent
-	UpdateGraphsAxis $current(frame)
+	UpdateGraphAxes $current(frame)
     }
 }
 

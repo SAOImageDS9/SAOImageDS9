@@ -42,8 +42,12 @@ proc resizePhoto {src newx newy {dest ""} } {
     for {set y 0} {$y < $my} {incr y} {
 	# Do horizontal resize
 	foreach {pr pg pb} [$src get 0 $y] {break}
+	set pt [$src transparency get 0 $y]
+
 	set row [list]
+	set trow [list]
 	set thisrow [list]
+	set tthisrow [list]
 	
 	set nx 0
 	set xtot $mx
@@ -52,12 +56,16 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    while { $xtot <= $newx } {
 		lappend row [format "#%02x%02x%02x" $pr $pg $pb]
 		lappend thisrow $pr $pg $pb
+		lappend trow $pt
+		lappend tthisrow $pt
+
 		incr xtot $mx
 		incr nx
 	    }
 	    
 	    # Now add mixed pixels
 	    foreach {r g b} [$src get $x $y] {break}
+	    set t [$src transparency get $x $y]
 	    
 	    # Calculate ratios to use
 	    set xtot [expr {$xtot - $newx}]
@@ -71,20 +79,24 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    set xr 0
 	    set xg 0
 	    set xb 0
+	    set xt 0
 	    while { $xtot > $newx } {
 		incr xr $r
 		incr xg $g
 		incr xb $b
+		incr xt $t
 		
 		set xtot [expr {$xtot - $newx}]
 		incr x
 		foreach {r g b} [$src get $x $y] {break}
+		set t [$src transparency get $x $y]
 	    }
 	    
 	    # Work out the new pixel colours
 	    set tr [expr {int( ($rn*$r + $xr + $rp*$pr) / $mx)}]
 	    set tg [expr {int( ($rn*$g + $xg + $rp*$pg) / $mx)}]
 	    set tb [expr {int( ($rn*$b + $xb + $rp*$pb) / $mx)}]
+	    set tt [expr $t || $xt || $pt]
 	    
 	    if {$tr > 255} {set tr 255}
 	    if {$tg > 255} {set tg 255}
@@ -93,28 +105,44 @@ proc resizePhoto {src newx newy {dest ""} } {
 	    # Output the pixel
 	    lappend row [format "#%02x%02x%02x" $tr $tg $tb]
 	    lappend thisrow $tr $tg $tb
+	    lappend trow $tt
+	    lappend tthisrow $tt
+
 	    incr xtot $mx
 	    incr nx
 	    
 	    set pr $r
 	    set pg $g
 	    set pb $b
+	    set pt $t
 	}
 	
 	# Finish off pixels on this row
 	while { $nx < $newx } {
 	    lappend row [format "#%02x%02x%02x" $r $g $b]
 	    lappend thisrow $r $g $b
+	    lappend trow $t
+	    lappend tthisrow $t
+
 	    incr nx
 	}
-	
+
 	# Do vertical resize
-	if {[info exists prevrow]} {
+	if {[info exists prevrow] && [info exists tprevrow]} {
 	    set nrow [list]
-	    
+	    set tnrow [list]
+
 	    # Add whole lines as necessary
 	    while { $ytot <= $newy } {
 		$dest put [list $prow] -to 0 $ny 
+
+		set yc $ny
+		set xc 0
+		foreach {rr} $tprow {
+		    $dest transparency set $xc $yc $rr
+		    incr xc
+		}
+
 		incr ytot $my
 		incr ny
 	    }
@@ -143,27 +171,43 @@ proc resizePhoto {src newx newy {dest ""} } {
 		lappend nrow [format "#%02x%02x%02x" $tr $tg $tb]
 	    }
 	    
+	    # Calculate new transparency row
+	    foreach {pt} $tprevrow {t} $tthisrow {
+		set tt [expr ($t || $pt)]
+		lappend tnrow $tt
+	    }
+
 	    $dest put [list $nrow] -to 0 $ny 
+
+	    set yc $ny
+	    set xc 0
+	    foreach {rr} $tnrow {
+		$dest transparency set $xc $yc $rr
+		incr xc
+	    }
+
 	    incr ytot $my
 	    incr ny
 	}
 	
 	set prevrow $thisrow
 	set prow $row
+
+	set tprevrow $tthisrow
+	set tprow $trow
     }
     
     # Finish off last rows
     while { $ny < $newy } {
-	$dest put [list $row] -to 0 $ny 
-	incr ny
-    }
+	$dest put [list $row] -to 0 $ny
 
-    # now figure out transparantency
-    for {set yy 0} {$yy<$newy} {incr yy} {
-	for {set xx 0} {$xx<$newx} {incr xx} {
-	    set tt 0
-	    $dest transparency set $xx $yy $tt
+	set yc $ny
+	set xc 0
+	foreach {rr} $trow {
+	    $dest transparency set $xc $yc $rr
+	    incr xc
 	}
+	incr ny
     }
 
     return $dest

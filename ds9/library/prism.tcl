@@ -803,7 +803,8 @@ proc PrismPlot {varname} {
     grid $f.theme - -padx 2 -pady 2 -sticky ew
     grid $f.tcolor $f.color $f.twidth $f.width \
 	-padx 2 -pady 2 -sticky ew
-    grid $f.tshape $f.shape $f.tshapecolor $f.shapecolor $f.shapefill \
+    grid $f.tshape $f.shape $f.tshapesize $f.shapesize \
+	$f.tshapecolor $f.shapecolor $f.shapefill \
 	-padx 2 -pady 2 -sticky ew
     grid $f.terror $f.error $f.terrorwidth $f.errorwidth \
 	-padx 2 -pady 2 -sticky ew

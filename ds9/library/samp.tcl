@@ -606,12 +606,12 @@ proc SAMPSend {method params resultVar} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
+#	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
     }
 
     if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params]}]} {
 	if {$debug(tcl,samp)} {
-	    puts stderr "SAMPSend Error: $result"
+#	    puts stderr "SAMPSend Error: $result"
 	}
 	return 0
     }
@@ -621,7 +621,7 @@ proc SAMPSend {method params resultVar} {
     InitError samp
 
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend Result: $result"
+#	puts stderr "SAMPSend Result: $result"
     }
 
     return 1
@@ -721,7 +721,7 @@ proc samp.client.receiveNotification {args} {
 
     if {$secret != $samp(private)} {
 	Error "SAMP: [msgcat::mc {internal error}]"
-	return {string ERROR}
+	return -code error
     }
 
     set mtype {}
@@ -739,7 +739,7 @@ proc samp.client.receiveNotification {args} {
 	$mtype iparams
     } else {
 	Error "SAMP: [msgcat::mc {internal error}]"
-	return {string ERROR}
+	return -code error
     }
 
     return {string OK}
@@ -761,7 +761,7 @@ proc samp.client.receiveCall {args} {
 
     if {$secret != $samp(private)} {
 	Error "SAMP: [msgcat::mc {internal error}]"
-	return {string ERROR}
+	return -code error
     }
 
     set mtype {}
@@ -794,7 +794,7 @@ proc samp.client.receiveCall {args} {
 	}
     } else {
 	Error "SAMP: [msgcat::mc {internal error}]"
-	return {string ERROR}
+	return -code error
     }
 
     return {string OK}
@@ -1146,6 +1146,8 @@ proc samp.app.ping {varname} {
     if {$debug(tcl,samp)} {
 	puts stderr "samp.app.ping $args"
     }
+
+    return {string OK}
 }
 
 proc image.load.fits {varname} {
@@ -1615,3 +1617,26 @@ proc SAMPCmdSendTable {name} {
 	}
     }
 }    
+
+# ***Client***
+
+# samp.client.receiveNotification
+# samp.client.receiveCall
+# samp.client.receiveResponse
+
+# client recvd and respond to hub
+# samp.app.ping
+# samp.app.status
+# samp.msg.progress
+
+# client sends to hub
+# samp.app.event.shutdown (I'm shutting down)
+
+# Application MTypes Subscriptions (send and recvd)
+# image.load.fits
+# table.load.fits
+# table.load.votable
+# table.highlight.row
+# table.select.rowList
+# coord.pointAt.sky
+

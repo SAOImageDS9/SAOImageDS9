@@ -101,7 +101,6 @@ proc xmlrpc::doRequest {sock} {
 
     set res [readHeader $sock]
     if {$res == {}} {
-	puts "---"
 	debug "::doRequest empty header"
 	return
     }
@@ -132,7 +131,7 @@ proc xmlrpc::doRequest {sock} {
     append	RE "\[^\?\]+.\?>$WS*";			# version number
     append	RE "<methodCall>$WS*";			# methodCall tag
     append	RE "<methodName>";			# methodName tag
-    append	RE "(\[a-zA-Z0-9_:\/\\.\]+)";		# method Name
+    append	RE "(\[a-zA-Z0-9_:\/\\.\-\]+)";		# method Name
     append	RE "</methodName>$WS*";			# end methodName tag
     append	RE "(.*)";				# parameters, if any
     append	RE "</methodCall>.*";			# end methodCall tag
@@ -148,7 +147,7 @@ proc xmlrpc::doRequest {sock} {
 	# waj
 	# legal to have no params i.e. ping
 	if {[catch {set result [eval ::$mname]}]} {
-	    set response [buildFault 100 "eval() failed"]
+	    set response [buildFault 1 "$mname failed"]
 	} else {
 	    set response [buildResponse $result]
 	}
@@ -182,7 +181,7 @@ proc xmlrpc::doRequest {sock} {
 	    return [errReturn "Invalid End Params"]
 	}
 	if {[catch {set result [eval ::$mname $args]}]} {
-	    set response [buildFault 100 "eval() failed"]
+	    set response [buildFault 1 "$mname failed"]
 	} else {
 	    set response [buildResponse $result]
 	}

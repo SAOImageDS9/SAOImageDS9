@@ -686,9 +686,6 @@ proc samp.hub.declareSubscriptions {args} {
 	    continue
 	}
 
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	catch {unset samphubmap3}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
@@ -701,7 +698,6 @@ proc samp.hub.declareSubscriptions {args} {
 		set varname samphubmap${cnt}
 		set samphubmap3($mm) "struct $varname"
 
-		catch {unset $varname}
 		upvar 0 $varname var
 		foreach attr $attrs {
 		    foreach {key val} $attr {

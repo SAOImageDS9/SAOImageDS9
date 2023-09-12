@@ -264,10 +264,9 @@ proc SAMPHubDisconnect {secret} {
     }
 
     catch {unset samphubmap}
+    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
-
-    catch {unset samphubmap2}
     set samphubmap2(reason) {string disconnect}
 
     set param1 [list "string $secret"]
@@ -429,7 +428,6 @@ proc samp.hub.register {args} {
 	puts "samp.hub.register: $args"
     }
 
-    catch {unset samphubmap}
     if {$samphub(secret) != $args} {
 	return -code error
     }
@@ -689,10 +687,9 @@ proc samp.hub.declareSubscriptions {args} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 	set samphubmap2(subscriptions) {struct samphubmap3}
 
@@ -892,10 +889,9 @@ proc samp.hub.notify {args} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 
 	foreach mm $iparams {
@@ -975,10 +971,10 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
 
-	catch {unset samphubmap2}
 	foreach mm $iparams {
 	    foreach {key val} $mm {
 		set samphubmap2($key) "string \"$val\""
@@ -1039,10 +1035,10 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
     set samphub(rr-map) {}
 
     catch {unset samphubmap}
+    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
 
-    catch {unset samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
 	    set samphubmap2($key) "string \"$val\""
@@ -1084,10 +1080,10 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
     }
 
     catch {unset samphubmap}
+    catch {unset samphubmap2}
     set samphubmap(samp.status) "string $status"
     set samphubmap(samp.result) {struct samphubmap2}
 
-    catch {unset samphubmap2}
     foreach mm $result {
 	foreach {key val} $mm {
 	    set samphubmap2($key) "string \"$val\""

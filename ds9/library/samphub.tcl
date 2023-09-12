@@ -122,6 +122,9 @@ proc SAMPHubStop {verbose} {
 
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -137,11 +140,6 @@ proc SAMPHubStop {verbose} {
 	if {$samphub($cc,web)} {
 	    continue
 	}
-
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
@@ -263,8 +261,6 @@ proc SAMPHubDisconnect {secret} {
 	return
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
     set samphubmap2(reason) {string disconnect}
@@ -463,6 +459,10 @@ proc samp.hub.unregister {args} {
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -478,12 +478,6 @@ proc samp.hub.unregister {args} {
 	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
-
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
@@ -541,6 +535,11 @@ proc samp.hub.declareMetadata {args} {
 
     # update other clients
     set mtype {samp.hub.event.metadata}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+    set samphubmap2(metadata) {struct samphubmap3}
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -557,18 +556,9 @@ proc samp.hub.declareMetadata {args} {
 	    continue
 	}
 
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
-	set samphubmap2(metadata) {struct samphubmap3}
-
-	catch {unset samphubmap3}
 	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
 		if {$val == {}} {
-		    catch {unset samphubmap4}
 		    set samphubmap3($key) "struct samphubmap4"
 		} else {
 		    set samphubmap3($key) "string \"[XMLQuote $val]\""
@@ -670,6 +660,11 @@ proc samp.hub.declareSubscriptions {args} {
 
     # update other clients
     set mtype {samp.hub.event.subscriptions}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+    set samphubmap2(subscriptions) {struct samphubmap3}
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -685,11 +680,6 @@ proc samp.hub.declareSubscriptions {args} {
 	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
-
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
-	set samphubmap2(subscriptions) {struct samphubmap3}
 
 	set cnt 3
 	foreach sub $samphub($secret,subscriptions) {
@@ -876,6 +866,10 @@ proc samp.hub.notify {args} {
 	}
     }
 
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -896,12 +890,6 @@ proc samp.hub.notify {args} {
 	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
-
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
 
 	foreach mm $iparams {
 	    foreach {key val} $mm {
@@ -963,6 +951,9 @@ proc samp.hub.notifyAll {args} {
     }
 
     set ll {}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -978,11 +969,6 @@ proc samp.hub.notifyAll {args} {
 	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
-
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
 
 	foreach mm $iparams {
 	    foreach {key val} $mm {

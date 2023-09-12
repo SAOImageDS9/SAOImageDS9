@@ -688,19 +688,25 @@ proc samp.hub.declareSubscriptions {args} {
 
 	catch {unset samphubmap}
 	catch {unset samphubmap2}
+	catch {unset samphubmap3}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 	set samphubmap2(subscriptions) {struct samphubmap3}
 
-	catch {unset samphubmap3}
-	foreach mm $samphub($secret,subscriptions) {
-	    foreach {key val} $mm {
-		if {$val == {}} {
-		    catch {unset samphubmap4}
-		    set samphubmap3($key) "struct samphubmap4"
-		} else {
-		    set samphubmap3($key) "string \"[XMLQuote $val]\""
+	set cnt 3
+	foreach sub $samphub($secret,subscriptions) {
+	    incr cnt
+	    foreach {mm attrs} $sub {
+		set varname samphubmap${cnt}
+		set samphubmap3($mm) "struct $varname"
+
+		catch {unset $varname}
+		upvar 0 $varname var
+		foreach attr $attrs {
+		    foreach {key val} $attr {
+			set var($key) "string $val"
+		    }
 		}
 	    }
 	}
@@ -733,7 +739,6 @@ proc samp.hub.declareSubscriptions {args} {
 proc samp.hub.getSubscriptions {args} {
     global samphub
     global samphubmap
-    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -749,18 +754,24 @@ proc samp.hub.getSubscriptions {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getSubscriptions\t$samphub($secret,id)"
 
+    catch {unset samphubmap}
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    catch {unset samphubmap}
-	    catch {unset samphubmap2}
-	    foreach mm $samphub($cc,subscriptions) {
-		foreach {key val} $mm {
-		    if {$val == {}} {
-			global samphubmap4
-			catch {unset samphubmap4}
-			set samphubmap($key) "struct samphubmap4"
-		    } else {
-			set samphubmap($key) "string \"[XMLQuote $val]\""
+
+	    set cnt 1
+	    foreach sub $samphub($cc,subscriptions) {
+		incr cnt
+		foreach {mm attrs} $sub {
+		    set varname samphubmap${cnt}
+		    global $varname
+		    set samphubmap($mm) "struct $varname"
+
+		    catch {unset $varname}
+		    upvar #0 $varname var
+		    foreach attr $attrs {
+			foreach {key val} $attr {
+			    set var($key) "string $val"
+			}
 		    }
 		}
 	    }
@@ -803,6 +814,7 @@ proc samp.hub.getRegisteredClients {args} {
 proc samp.hub.getSubscribedClients {args} {
     global samphub
     global samphubmap
+    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -831,6 +843,7 @@ proc samp.hub.getSubscribedClients {args} {
     }
 
     catch {unset samphubmap}
+    catch {unset samphubmap2}
     foreach cc $ll {
 	set samphubmap($cc) {struct samphubmap2}
     }

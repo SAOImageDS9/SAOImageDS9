@@ -558,11 +558,7 @@ proc samp.hub.declareMetadata {args} {
 
 	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
-		if {$val == {}} {
-		    set samphubmap3($key) "struct samphubmap4"
-		} else {
-		    set samphubmap3($key) "string \"[XMLQuote $val]\""
-		}
+		set samphubmap3($key) "string \"[XMLQuote $val]\""
 	    }
 	}
 
@@ -614,13 +610,7 @@ proc samp.hub.getMetadata {args} {
 	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
-		    if {$val == {}} {
-			global samphubmap4
-			catch {unset samphubmap4}
-			set samphubmap($key) "struct samphubmap4"
-		    } else {
-			set samphubmap($key) "string \"[XMLQuote $val]\""
-		    }
+		    set samphubmap($key) "string \"[XMLQuote $val]\""
 		}
 	    }
 	    return "struct samphubmap"

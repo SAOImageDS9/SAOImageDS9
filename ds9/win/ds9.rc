@@ -1,6 +1,6 @@
 #include <windows.h>
 
-#define VV "8.5"
+#define VV "8.5.1"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION    8,5,0,0

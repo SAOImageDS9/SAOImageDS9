@@ -68,35 +68,43 @@ array set sampfirst::table {
   6:0,target 7
   6:263 reduce
   2:0 reduce
-  26:263 shift
+  26:263 reduce
+  34:263,target 14
   11:261,target 5
   24:0 reduce
-  25:0,target 26
+  33:0,target 29
+  25:0,target 19
   17:0,target 25
-  23:263,target 13
-  10:0,target 15
-  11:279,target 24
-  12:263,target 25
+  23:263,target 22
+  10:0,target 16
+  7:281,target 19
+  11:280,target 25
+  12:263,target 26
+  16:278,target 31
   21:0 reduce
   11:258,target 2
+  14:263 reduce
   3:263,target 3
+  12:282,target 29
   0:271,target 12
   8:262,target 6
   3:263 reduce
   17:0 reduce
   23:263 reduce
-  24:263,target 18
+  24:263,target 13
   3:0,target 3
-  13:263,target 11
+  32:263 reduce
+  30:262,target 6
   0:268,target 11
   8:259,target 3
   8:260,target 4
-  11:275,target 23
-  14:0 accept
-  30:0,target 27
+  14:0 reduce
+  30:0,target 1
+  29:0,target 18
   22:0,target 21
+  35:0 reduce
   11:257 shift
-  14:0,target 0
+  14:0,target 11
   11:258 shift
   4:263,target 6
   11:259 shift
@@ -104,16 +112,18 @@ array set sampfirst::table {
   11:261 shift
   11:262 shift
   11:263 reduce
+  30:260,target 4
+  30:259,target 3
   0:257 shift
   0:258 shift
-  7:274,target 17
+  7:274,target 18
   0:260 shift
   0:259 shift
   0:261 shift
   0:266,target 9
   8:257,target 1
   9:0 reduce
-  11:273,target 22
+  11:273,target 23
   0:262 shift
   11:0 reduce
   0:263 reduce
@@ -124,7 +134,7 @@ array set sampfirst::table {
   11:272 shift
   19:263 reduce
   20:263 reduce
-  25:263,target 26
+  25:263,target 19
   0:266 shift
   8:257 shift
   11:273 shift
@@ -133,32 +143,37 @@ array set sampfirst::table {
   0:268 shift
   8:259 shift
   8:260 shift
-  11:275 goto
   8:261 shift
+  11:276 goto
   0:271 shift
+  8:276,target 20
   8:262 shift
   8:263 reduce
-  11:279 goto
-  28:263 reduce
-  0:275 goto
+  14:263,target 11
+  30:257,target 1
+  11:280 goto
+  28:263 shift
+  0:275 shift
   6:0 reduce
   0:264,target 7
   0:276 goto
-  0:278 goto
-  7:0,target 23
-  28:0 reduce
+  0:277 goto
+  0:279 goto
+  7:0,target 24
   0:0,target 1
   5:263,target 4
-  8:275 goto
+  30:276,target 34
+  8:276 goto
+  34:0,target 14
   3:0 reduce
-  7:269,target 16
-  18:0,target 16
+  7:269,target 17
+  26:0,target 27
+  18:0,target 26
   0:262,target 6
   11:0,target 1
-  26:263,target 30
+  26:263,target 27
   25:0 reduce
   16:263 reduce
-  15:263,target 9
   0:0 reduce
   5:263 reduce
   25:263 reduce
@@ -166,137 +181,149 @@ array set sampfirst::table {
   0:259,target 3
   6:263,target 7
   22:0 reduce
-  0:278,target 15
+  16:278 goto
+  34:263 reduce
   4:0,target 6
-  27:263,target 31
+  27:263,target 32
   0:257,target 1
   18:0 reduce
-  16:263,target 24
-  31:0,target 28
-  13:263 reduce
-  23:0,target 13
-  15:0,target 8
+  16:263,target 9
+  23:0,target 22
+  15:0,target 0
   0:276,target 14
+  13:268 shift
   2:263 reduce
-  7:263,target 23
-  15:0 reduce
+  7:263,target 24
+  15:0 accept
   11:262,target 6
   22:263 reduce
-  15:277,target 29
-  31:263 reduce
-  28:263,target 17
+  31:263 shift
+  13:268,target 30
+  28:263,target 33
   11:259,target 3
   11:260,target 4
+  33:0 reduce
   17:263,target 25
   8:0,target 1
   1:0,target 2
-  7:280,target 18
   10:263 reduce
   8:263,target 1
   7:0 reduce
-  11:257,target 1
+  35:0,target 10
   30:0 reduce
+  11:257,target 1
+  29:0 reduce
   18:263 reduce
-  19:0,target 12
-  20:0,target 22
-  30:263,target 27
-  12:281,target 28
-  29:263,target 32
+  19:0,target 17
+  20:0,target 12
+  30:263,target 1
+  29:263,target 18
   7:263 reduce
   4:0 reduce
   8:261,target 5
+  11:276,target 24
   27:263 shift
-  18:263,target 16
+  18:263,target 26
   7:269 shift
+  26:0 reduce
   7:274 shift
-  9:263,target 14
+  30:261,target 5
+  9:263,target 15
   1:0 reduce
-  7:280 goto
   0:267,target 10
+  7:281 goto
   8:258,target 2
   23:0 reduce
   5:0,target 4
-  15:263 reduce
-  31:263,target 28
+  31:263,target 35
+  30:258,target 2
   4:263 reduce
-  32:0,target 10
+  32:0,target 28
   0:265,target 8
-  11:272,target 21
-  19:263,target 12
-  20:263,target 22
-  24:0,target 18
+  11:272,target 22
+  19:263,target 17
+  20:263,target 12
+  24:0,target 13
   24:263 reduce
-  16:0,target 24
+  16:0,target 8
   19:0 reduce
   20:0 reduce
-  15:277 goto
-  8:275,target 19
-  12:274,target 27
+  33:263 reduce
+  12:274,target 28
   0:263,target 1
-  11:270,target 20
+  11:270,target 21
   16:0 reduce
+  32:263,target 28
   12:263 shift
-  21:263,target 20
+  21:263,target 23
   1:263 reduce
   0:261,target 5
-  9:0,target 14
+  9:0,target 15
   12:269 shift
-  13:0 reduce
   2:0,target 5
   21:263 reduce
-  10:263,target 15
+  34:0 reduce
+  10:263,target 16
   12:274 shift
+  30:257 shift
+  30:258 shift
+  30:260 shift
+  30:259 shift
+  30:261 shift
   9:263 reduce
-  28:0,target 17
+  30:262 shift
+  0:279,target 16
   30:263 reduce
-  12:281 goto
-  21:0,target 20
-  29:263 shift
+  21:0,target 23
+  29:263 reduce
   1:263,target 2
-  12:269,target 26
-  13:0,target 11
+  12:282 goto
+  12:269,target 27
   8:0 reduce
   10:0 reduce
   0:258,target 2
-  31:0 reduce
+  33:263,target 29
+  30:276 goto
   22:263,target 21
+  0:277,target 15
   5:0 reduce
 }
 
 array set sampfirst::rules {
-  27,l 281
-  9,l 277
-  11,l 278
-  15,l 278
-  20,l 279
+  27,l 282
+  9,l 278
+  11,l 279
+  15,l 279
+  20,l 280
   19,l 279
-  2,l 275
-  24,l 280
-  6,l 275
-  28,l 281
-  12,l 278
-  16,l 278
-  21,l 279
-  3,l 275
-  25,l 280
-  7,l 275
-  13,l 278
-  0,l 282
-  17,l 278
-  22,l 279
-  4,l 275
+  2,l 276
+  24,l 281
+  6,l 276
+  28,l 282
+  12,l 279
+  16,l 279
+  21,l 280
+  3,l 276
+  25,l 281
+  7,l 276
+  29,l 282
+  13,l 279
+  0,l 283
+  17,l 279
+  22,l 280
+  4,l 276
   26,l 281
-  8,l 276
-  10,l 276
-  14,l 278
-  18,l 278
-  1,l 275
+  8,l 277
+  10,l 277
+  14,l 279
+  18,l 279
+  1,l 276
   23,l 280
-  5,l 275
+  5,l 276
 }
 
 array set sampfirst::rules {
-  23,dc 0
+  23,dc 1
   5,dc 1
   0,dc 1
   17,dc 2
@@ -307,125 +334,133 @@ array set sampfirst::rules {
   3,dc 1
   15,dc 1
   10,dc 3
-  24,dc 1
+  29,dc 2
+  24,dc 0
   6,dc 1
   18,dc 2
   1,dc 0
   13,dc 2
-  27,dc 2
+  27,dc 1
   9,dc 0
   22,dc 1
   4,dc 1
-  16,dc 2
+  16,dc 1
   11,dc 1
   25,dc 1
   7,dc 1
-  20,dc 1
-  19,dc 0
+  20,dc 0
+  19,dc 2
   2,dc 1
-  14,dc 1
+  14,dc 3
   28,dc 2
 }
 
 array set sampfirst::rules {
   13,line 57
-  25,line 72
-  7,line 47
-  10,line 51
-  22,line 67
-  4,line 44
-  18,line 62
-  1,line 41
-  15,line 59
-  27,line 76
-  9,line 50
-  12,line 55
-  24,line 71
-  6,line 46
-  21,line 66
-  3,line 43
-  17,line 61
-  14,line 58
-  26,line 75
-  8,line 50
-  11,line 54
-  23,line 70
-  5,line 45
-  20,line 65
+  25,line 73
+  7,line 48
+  10,line 52
+  22,line 68
+  4,line 45
+  18,line 63
+  1,line 42
+  15,line 60
+  27,line 77
+  9,line 51
+  12,line 56
+  24,line 72
+  6,line 47
+  21,line 67
+  3,line 44
+  17,line 62
+  29,line 79
+  14,line 59
+  26,line 74
+  8,line 51
+  11,line 55
+  23,line 69
+  5,line 46
+  20,line 66
   19,line 64
-  2,line 42
+  2,line 43
   9,e 1
-  16,line 60
-  28,line 77
+  16,line 61
+  28,line 78
 }
 
 array set sampfirst::lr1_table {
+  35 {{10 0 3}}
   14,trans {}
+  33,trans {}
   18,trans {}
   1,trans {}
   23,trans {}
   5,trans {}
-  27,trans {{263 31}}
+  27,trans {{263 32}}
   9,trans {}
-  13,trans {}
+  13,trans {{268 30}}
   32,trans {}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 7} {265 8} {266 9} {267 10} {268 11} {271 12} {275 13} {276 14} {278 15}}
   17,trans {}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {264 7} {265 8} {266 9} {267 10} {268 11} {271 12} {275 13} {276 14} {277 15} {279 16}}
   22,trans {}
   4,trans {}
-  26,trans {{263 30}}
-  8,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {275 19}}
-  12,trans {{263 25} {269 26} {274 27} {281 28}}
-  31,trans {}
-  16,trans {}
+  26,trans {}
+  8,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {276 20}}
+  12,trans {{263 26} {269 27} {274 28} {282 29}}
+  31,trans {{263 35}}
+  16,trans {{278 31}}
+  35,trans {}
   21,trans {}
   3,trans {}
-  10 {{15 {0 263} 1}}
-  11 {{13 {0 263} 1} {18 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0} {19 {0 263} 0} {20 {0 263} 0} {21 {0 263} 0} {22 {0 263} 0}}
+  10 {{16 {0 263} 1}}
+  11 {{13 {0 263} 1} {19 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0} {20 {0 263} 0} {21 {0 263} 0} {22 {0 263} 0} {23 {0 263} 0}}
   25,trans {}
-  12 {{17 {0 263} 1} {26 {0 263} 0} {27 {0 263} 0} {28 {0 263} 0}}
-  7,trans {{269 16} {274 17} {280 18}}
-  13 {{11 {0 263} 1}}
-  14 {{0 0 1}}
-  15 {{8 0 1} {10 0 1} {9 263 0}}
-  11,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {270 20} {272 21} {273 22} {275 23} {279 24}}
-  30,trans {}
-  29,trans {{263 32}}
-  16 {{24 {0 263} 1}}
-  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0} {13 {0 263} 0} {14 {0 263} 0} {15 {0 263} 0} {16 {0 263} 0} {17 {0 263} 0} {18 {0 263} 0} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
+  12 {{18 {0 263} 1} {27 {0 263} 0} {28 {0 263} 0} {29 {0 263} 0}}
+  7,trans {{269 17} {274 18} {281 19}}
+  13 {{14 {0 263} 1}}
+  14 {{11 {0 263} 1}}
+  15 {{0 0 1}}
+  11,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {270 21} {272 22} {273 23} {276 24} {280 25}}
+  30,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {276 34}}
+  29,trans {}
+  16 {{8 0 1} {10 0 1} {9 263 0}}
+  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0} {13 {0 263} 0} {14 {0 263} 0} {15 {0 263} 0} {16 {0 263} 0} {17 {0 263} 0} {18 {0 263} 0} {19 {0 263} 0} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
   17 {{25 {0 263} 1}}
   1 {{2 {0 263} 1}}
-  18 {{16 {0 263} 2}}
+  18 {{26 {0 263} 1}}
   2 {{5 {0 263} 1}}
-  19 {{12 {0 263} 2}}
-  20 {{22 {0 263} 1}}
-  15,trans {{277 29}}
+  19 {{17 {0 263} 2}}
+  20 {{12 {0 263} 2}}
+  15,trans {}
+  34,trans {}
   3 {{3 {0 263} 1}}
-  21 {{20 {0 263} 1}}
+  21 {{23 {0 263} 1}}
   4 {{6 {0 263} 1}}
   22 {{21 {0 263} 1}}
   5 {{4 {0 263} 1}}
-  23 {{13 {0 263} 2}}
+  23 {{22 {0 263} 1}}
   20,trans {}
   19,trans {}
   6 {{7 {0 263} 1}}
   2,trans {}
-  24 {{18 {0 263} 2}}
-  7 {{16 {0 263} 1} {23 {0 263} 0} {24 {0 263} 0} {25 {0 263} 0}}
-  25 {{26 {0 263} 1}}
+  24 {{13 {0 263} 2}}
+  7 {{17 {0 263} 1} {24 {0 263} 0} {25 {0 263} 0} {26 {0 263} 0}}
+  25 {{19 {0 263} 2}}
   8 {{12 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
   26 {{27 {0 263} 1}}
-  9 {{14 {0 263} 1}}
+  9 {{15 {0 263} 1}}
   27 {{28 {0 263} 1}}
   24,trans {}
   6,trans {}
-  28 {{17 {0 263} 2}}
-  30 {{27 {0 263} 2}}
-  29 {{10 0 2}}
-  31 {{28 {0 263} 2}}
-  32 {{10 0 3}}
+  28 {{29 {0 263} 1}}
+  29 {{18 {0 263} 2}}
+  30 {{14 {0 263} 2} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
+  31 {{10 0 2}}
+  32 {{28 {0 263} 2}}
   10,trans {}
-  28,trans {}
+  28,trans {{263 33}}
+  33 {{29 {0 263} 2}}
+  34 {{14 {0 263} 3}}
 }
 
 array set sampfirst::token_id_table {
@@ -434,7 +469,7 @@ array set sampfirst::token_id_table {
   264,line 18
   270,t 0
   269,t 0
-  276,line 49
+  276,line 41
   265,title CLIENT
   274,t 0
   261,line 11
@@ -446,27 +481,29 @@ array set sampfirst::token_id_table {
   257,line 7
   262,t 0
   274,title TABLE
+  283,t 1
   270,line 24
   269,line 23
   259,title ON
   260,title OFF
   266,t 0
   278,title {}
-  282,line 78
+  282,line 76
   error error
   271,t 0
   264,title BROADCAST
   266,line 20
-  278,line 53
-  275,t 1
-  error,line 39
+  283,title {}
+  278,line 51
+  error,line 40
+  275,t 0
   268,title HUB
   258,t 0
   263,line 14
   error,title {}
   280,t 1
   279,t 1
-  275,line 40
+  275,line 29
   273,title STOP
   263,t 0
   259,line 9
@@ -481,7 +518,7 @@ array set sampfirst::token_id_table {
   268,line 22
   267,title DISCONNECT
   257 YES_
-  281,line 74
+  281,line 71
   276,t 1
   258 NO_
   259,t 0
@@ -520,24 +557,26 @@ array set sampfirst::token_id_table {
   273 STOP_
   266,title CONNECT
   274 TABLE_
-  275 yesno
+  275 WEB_
   271,line 25
-  276 command
+  276 yesno
   277,t 1
-  277 @PSEUDO1
+  277 command
   271,title SEND
-  278 samp
+  283,line 80
+  278 @PSEUDO1
   261,t 0
-  280 broadcast
-  279 hub
-  281 send
+  280 hub
+  279 samp
+  281 broadcast
   267,line 21
   282,t 1
-  282 start'
-  275,title {}
+  282 send
+  275,title WEB
+  283 start'
   265,t 0
-  280,line 69
-  279,line 64
+  280,line 66
+  279,line 54
   261,title TRUE
 }
 
@@ -645,7 +684,8 @@ proc sampfirst::yyparse {} {
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
                     11 { ProcessCmdSet pds9 samp $1 }
                     12 { ProcessCmdSet pds9 samp $2 }
-                    13 { ProcessCmdSet pds9 samphub $2 }
+                    13 { ProcessCmdSet pds9 samp,hub $2 }
+                    14 { ProcessCmdSet pds9 samp,webhub $3 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

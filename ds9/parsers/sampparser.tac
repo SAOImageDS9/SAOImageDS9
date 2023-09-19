@@ -18,6 +18,7 @@
 %token START_
 %token STOP_
 %token TABLE_
+%token WEB_
 
 %%
 
@@ -30,6 +31,7 @@ command : samp
 samp : yesno # sampfirst
  | CLIENT_ yesno # sampfirst
  | HUB_ yesno # sampfirst
+ | WEB_ HUB_ yesno # sampfirst
 
  | CONNECT_ {SAMPConnect 1}
  | DISCONNECT_ {SAMPDisconnect 1}

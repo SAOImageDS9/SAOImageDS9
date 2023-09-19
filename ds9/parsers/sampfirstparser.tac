@@ -18,6 +18,7 @@
 %token START_
 %token STOP_
 %token TABLE_
+%token WEB_
 
 %%
 
@@ -29,7 +30,8 @@ command : samp
 
 samp : yesno {ProcessCmdSet pds9 samp $1}
  | CLIENT_ yesno {ProcessCmdSet pds9 samp $2}
- | HUB_ yesno {ProcessCmdSet pds9 samphub $2}
+ | HUB_ yesno {ProcessCmdSet pds9 samp,hub $2}
+ | WEB_ HUB_ yesno {ProcessCmdSet pds9 samp,webhub $3}
 
  | CONNECT_
  | DISCONNECT_

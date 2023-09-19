@@ -18,6 +18,7 @@ send	    {return $SEND_}
 start	    {return $START_}
 stop	    {return $STOP_}
 table	    {return $TABLE_}
+web	    {return $WEB_}
 
 #include yesno.fin
 #include string.fin

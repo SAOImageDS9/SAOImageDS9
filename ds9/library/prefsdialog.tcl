@@ -417,6 +417,8 @@ proc PrefsDialogStartup {} {
 
     grid $f.xpa -padx 2 -pady 2 -sticky w
     grid $f.samp -padx 2 -pady 2 -sticky w
+    grid $f.samphub -padx 2 -pady 2 -sticky w
+    grid $f.sampwebhub -padx 2 -pady 2 -sticky w
 
     pack $w.startup.params -side top -fill both -expand true
 }

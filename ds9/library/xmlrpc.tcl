@@ -101,6 +101,7 @@ proc xmlrpc::doRequest {sock} {
 
     set res [readHeader $sock]
     if {$res == {}} {
+	puts "---"
 	debug "::doRequest empty header"
 	return
     }
@@ -131,7 +132,7 @@ proc xmlrpc::doRequest {sock} {
     append	RE "\[^\?\]+.\?>$WS*";			# version number
     append	RE "<methodCall>$WS*";			# methodCall tag
     append	RE "<methodName>";			# methodName tag
-    append	RE "(\[a-zA-Z0-9_:\/\\.\-\]+)";		# method Name
+    append	RE "(\[a-zA-Z0-9_:\/\\.\]+)";		# method Name
     append	RE "</methodName>$WS*";			# end methodName tag
     append	RE "(.*)";				# parameters, if any
     append	RE "</methodCall>.*";			# end methodCall tag
@@ -147,7 +148,7 @@ proc xmlrpc::doRequest {sock} {
 	# waj
 	# legal to have no params i.e. ping
 	if {[catch {set result [eval ::$mname]}]} {
-	    set response [buildFault 1 "$mname failed"]
+	    set response [buildFault 100 "eval() failed"]
 	} else {
 	    set response [buildResponse $result]
 	}
@@ -181,7 +182,7 @@ proc xmlrpc::doRequest {sock} {
 	    return [errReturn "Invalid End Params"]
 	}
 	if {[catch {set result [eval ::$mname $args]}]} {
-	    set response [buildFault 1 "$mname failed"]
+	    set response [buildFault 100 "eval() failed"]
 	} else {
 	    set response [buildResponse $result]
 	}
@@ -198,11 +199,11 @@ proc buildResponse {result} {
     # build the body
     set	body "<?xml version=\"1.0\"?>\n"
     append	body "<methodResponse>\n"
-    append	body "  <params>\n"
-    append	body "    <param>\n"
+    append	body "\t<params>\n"
+    append	body "\t\t<param>\n"
     append	body [xmlrpc::marshall $result 3 2]
-    append	body "\n    </param>\n"
-    append	body "  </params>\n"
+    append	body "\n\t\t</param>\n"
+    append	body "\t</params>\n"
     append	body "</methodResponse>\n"
 
     set lenbod [string length $body]
@@ -230,9 +231,9 @@ proc buildFault {errcode errmsg} {
     # build the body
     set	body "<?xml version=\"1.0\"?>\n"
     append	body "<methodResponse>\n"
-    append	body "  <fault>\n"
+    append	body "\t<fault>\n"
     append	body [xmlrpc::marshall {struct err} 2]
-    append	body "  </fault>\n"
+    append	body "\t</fault>\n"
     append	body "</methodResponse>\n"
 
     set lenbod [string length $body]
@@ -494,15 +495,15 @@ proc xmlrpc::buildRequest {method methodName params {ntabs 4} {distance 2}} {
     # build the body
     set	body "<?xml version=\"1.0\"?>\n"
     append	body "<methodCall>\n"
-    append	body "  <methodName>$methodName</methodName>\n"
+    append	body "\t<methodName>$methodName</methodName>\n"
     if {$params != {}} {
-	append body "    <params>\n"
+	append body "\t\t<params>\n"
 	foreach {param} $params {
-	    append body "      <param>\n"
+	    append body "\t\t\t<param>\n"
 	    append body [xmlrpc::marshall $param $ntabs $distance]
-	    append body "\n      </param>\n"
+	    append body "\n\t\t\t</param>\n"
 	}
-	append body "    </params>\n"
+	append body "\t\t</params>\n"
     }
     append	body "</methodCall>\n"
     set lenbod [string length $body]
@@ -527,7 +528,7 @@ proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
 
     set strtabs ""
     for {set x 0} {$x < $ntabs} {incr x} {
-	append strtabs "  "
+	append strtabs "\t"
     }
 
     set type [lindex $param 0]
@@ -556,26 +557,26 @@ proc xmlrpc::marshall {param {ntabs 0} {distance 1}} {
 	}
 
 	set	str "$strtabs<value>\n"
-	append	str "$strtabs  <struct>\n"
+	append	str "$strtabs\t<struct>\n"
 	foreach {k v} [array get dict] {
-	    append 	str "$strtabs    <member>\n"
-	    append	str "$strtabs      <name>$k</name>\n"
+	    append 	str "$strtabs\t\t<member>\n"
+	    append	str "$strtabs\t\t\t<name>$k</name>\n"
 	    append 	str [marshall $v [expr $ntabs + 3] [expr $distance + 1]]
-	    append	str "\n$strtabs    </member>\n"
+	    append	str "\n$strtabs\t\t</member>\n"
 	}
-	append	str "$strtabs  </struct>\n"
+	append	str "$strtabs\t</struct>\n"
 	append	str "$strtabs</value>\n"
 	return $str
     } elseif {$type == "array"} {
 	set	str "$strtabs<value>\n"
-	append	str "$strtabs  <array>\n"
-	append	str "$strtabs    <data>\n"
+	append	str "$strtabs\t<array>\n"
+	append	str "$strtabs\t\t<data>\n"
 	foreach el $val {
 	    append	str [marshall $el [expr $ntabs + 3] [expr $distance + 1]]
 	    append	str "\n"
 	}
-	append	str "$strtabs    </data>\n"
-	append	str "$strtabs  </array>\n"
+	append	str "$strtabs\t\t</data>\n"
+	append	str "$strtabs\t</array>\n"
 	append	str "$strtabs</value>\n"
 	return $str
     } else {

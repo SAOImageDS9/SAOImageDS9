@@ -35,14 +35,14 @@ proc samp.webhub.pullCallbacks {args} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts "samp.webhub.pullCallbacks: $args"
+#	puts "samp.webhub.pullCallbacks: $args"
     }
 
     set secret [lindex $args 0]
     set timeout [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return -code 1
+	return {string ERROR}
     }
 
     set ll {}
@@ -95,7 +95,7 @@ proc samp.webhub.register {args} {
     }
 
     if {![SAMPWebHubDialog $name]} {
-	return -code 1
+	return {string ERROR}
     }
 
     SAMPHubRegister 1

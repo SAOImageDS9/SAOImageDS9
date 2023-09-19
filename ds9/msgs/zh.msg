@@ -169,7 +169,6 @@
 ::msgcat::mcset zh {Composite} 
 ::msgcat::mcset zh {Compression} 
 ::msgcat::mcset zh {Configure} 
-::msgcat::mcset zh {Connect SAMP} 
 ::msgcat::mcset zh {Connect} 
 ::msgcat::mcset zh {Console} 
 ::msgcat::mcset zh {Contacting Server} 
@@ -245,7 +244,6 @@
 ::msgcat::mcset zh {Delete Frame} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Delete Graph} 
 ::msgcat::mcset zh {Delete Group} 
-::msgcat::mcset zh {Delete Regions?} 
 ::msgcat::mcset zh {Delete Selection} 
 ::msgcat::mcset zh {Delete Select} 
 ::msgcat::mcset zh {Delete} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3"]
@@ -286,7 +284,6 @@
 ::msgcat::mcset zh {Enter Font Size} 
 ::msgcat::mcset zh {Enter Group Name} 
 ::msgcat::mcset zh {Enter Search Expression} 
-::msgcat::mcset zh {Enter Text} 
 ::msgcat::mcset zh {Enter URL} 
 ::msgcat::mcset zh {Entry} 
 ::msgcat::mcset zh {Equal Area} 
@@ -405,6 +402,7 @@
 ::msgcat::mcset zh {Horizontal Graph} 
 ::msgcat::mcset zh {Horizontal Layout} 
 ::msgcat::mcset zh {Horizontal} [encoding convertfrom big5 "\xA4\xF4 \xA5\xAD"]
+::msgcat::mcset zh {Hub not running} 
 ::msgcat::mcset zh {IAU Location Code} 
 ::msgcat::mcset zh {ICRS} 
 ::msgcat::mcset zh {Icons} 
@@ -578,6 +576,7 @@
 ::msgcat::mcset zh {Menus and Buttons} 
 ::msgcat::mcset zh {Menu} 
 ::msgcat::mcset zh {Message Log} 
+::msgcat::mcset zh {Metadata} 
 ::msgcat::mcset zh {Method} 
 ::msgcat::mcset zh {Min Max Parameters} 
 ::msgcat::mcset zh {Min Max} 
@@ -747,6 +746,7 @@
 ::msgcat::mcset zh {Property} 
 ::msgcat::mcset zh {Proxy Host} 
 ::msgcat::mcset zh {Proxy Port} 
+::msgcat::mcset zh {Public ID} 
 ::msgcat::mcset zh {Publication} 
 ::msgcat::mcset zh {Quadratic} 
 ::msgcat::mcset zh {RDB} 
@@ -768,6 +768,7 @@
 ::msgcat::mcset zh {Region Parameters} [encoding convertfrom big5 "\xB0\xCF \xB0\xEC \xB0\xD1\xBC\xC6"]
 ::msgcat::mcset zh {Region Shape} 
 ::msgcat::mcset zh {Region} [encoding convertfrom big5 "\xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {Registration} 
 ::msgcat::mcset zh {Release Notes} 
 ::msgcat::mcset zh {Release} 
 ::msgcat::mcset zh {Reload} 
@@ -785,8 +786,13 @@
 ::msgcat::mcset zh {Rows} 
 ::msgcat::mcset zh {Row} 
 ::msgcat::mcset zh {Ruler} [encoding convertfrom big5 "\xA4\xD8 \xB3\x57"]
-::msgcat::mcset zh {SAMP Image} 
+::msgcat::mcset zh {SAMP Connect} 
+::msgcat::mcset zh {SAMP Disconnect} 
+::msgcat::mcset zh {SAMP Hub Start} 
+::msgcat::mcset zh {SAMP Hub Stop} 
+::msgcat::mcset zh {SAMP Hub} 
 ::msgcat::mcset zh {SAMP Table} 
+::msgcat::mcset zh {SAMP WebHub Start} 
 ::msgcat::mcset zh {SAMP: not connected} 
 ::msgcat::mcset zh {SAMP} 
 ::msgcat::mcset zh {Sample Increment} 
@@ -829,6 +835,7 @@
 ::msgcat::mcset zh {Scan} 
 ::msgcat::mcset zh {Scatter Dataset} 
 ::msgcat::mcset zh {Scatter Plot Tool} 
+::msgcat::mcset zh {Scientific Colour Maps} 
 ::msgcat::mcset zh {Scope} 
 ::msgcat::mcset zh {Screen} 
 ::msgcat::mcset zh {Search for Catalogs} 
@@ -894,6 +901,7 @@
 ::msgcat::mcset zh {Strip Parameters} 
 ::msgcat::mcset zh {Strip Scale} 
 ::msgcat::mcset zh {Strip} 
+::msgcat::mcset zh {Subscriptions} 
 ::msgcat::mcset zh {Sum} 
 ::msgcat::mcset zh {Symbol Editor} 
 ::msgcat::mcset zh {Symbol} 
@@ -1028,6 +1036,7 @@
 ::msgcat::mcset zh {already connected} 
 ::msgcat::mcset zh {and} 
 ::msgcat::mcset zh {b} 
+::msgcat::mcset zh {found existing hub} 
 ::msgcat::mcset zh {full base} 
 ::msgcat::mcset zh {full} 
 ::msgcat::mcset zh {g} 
@@ -1042,5 +1051,8 @@
 ::msgcat::mcset zh {root} 
 ::msgcat::mcset zh {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset zh {r} 
+::msgcat::mcset zh {unable to create hub file} 
 ::msgcat::mcset zh {unable to locate HUB} 
+::msgcat::mcset zh {unable to open hub} 
+::msgcat::mcset zh {unable to open web hub} 
 ::msgcat::mcset zh {x} 

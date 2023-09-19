@@ -169,7 +169,6 @@
 ::msgcat::mcset ja {Composite} 
 ::msgcat::mcset ja {Compression} [encoding convertfrom euc-jp "\xb0\xb5\xbd\xcc"]
 ::msgcat::mcset ja {Configure} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea"]
-::msgcat::mcset ja {Connect SAMP} 
 ::msgcat::mcset ja {Connect} [encoding convertfrom euc-jp "\xc0\xdc\xc2\xb3"]
 ::msgcat::mcset ja {Console} 
 ::msgcat::mcset ja {Contacting Server} 
@@ -245,7 +244,6 @@
 ::msgcat::mcset ja {Delete Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Graph} 
 ::msgcat::mcset ja {Delete Group} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
-::msgcat::mcset ja {Delete Regions?} 
 ::msgcat::mcset ja {Delete Selection} 
 ::msgcat::mcset ja {Delete Select} 
 ::msgcat::mcset ja {Delete} [encoding convertfrom euc-jp "\xbe\xc3\xb5\xee"]
@@ -286,7 +284,6 @@
 ::msgcat::mcset ja {Enter Font Size} 
 ::msgcat::mcset ja {Enter Group Name} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xcc\xbe\xa4\xf2\xc6\xfe\xce\xcf"]
 ::msgcat::mcset ja {Enter Search Expression} [encoding convertfrom euc-jp "\xb8\xa1\xba\xf7\xbe\xf2\xb7\xef\xa4\xf2\xc6\xfe\xce\xcf"]
-::msgcat::mcset ja {Enter Text} 
 ::msgcat::mcset ja {Enter URL} 
 ::msgcat::mcset ja {Entry} 
 ::msgcat::mcset ja {Equal Area} [encoding convertfrom euc-jp "\xc5\xf9\xcc\xcc\xc0\xd1"]
@@ -405,6 +402,7 @@
 ::msgcat::mcset ja {Horizontal Graph} [encoding convertfrom euc-jp "\xb2\xa3\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Horizontal Layout} [encoding convertfrom euc-jp "\xb2\xe8\xc1\xfc\xa4\xce\xbe\xe5\xa4\xcb\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Horizontal} 
+::msgcat::mcset ja {Hub not running} 
 ::msgcat::mcset ja {IAU Location Code} 
 ::msgcat::mcset ja {ICRS} [encoding convertfrom euc-jp "\xb9\xf1\xba\xdd\xc5\xb7\xca\xb8\xbd\xe0\xb5\xf2\xb7\xcf"]
 ::msgcat::mcset ja {Icons} 
@@ -578,6 +576,7 @@
 ::msgcat::mcset ja {Menus and Buttons} 
 ::msgcat::mcset ja {Menu} [encoding convertfrom euc-jp "\xa5\xe1\xa5\xcb\xa5\xe5\xa1\xbc"]
 ::msgcat::mcset ja {Message Log} [encoding convertfrom euc-jp "\xa5\xe1\xa5\xc3\xa5\xbb\xa1\xbc\xa5\xb8\xa4\xce\xb5\xad\xcf\xbf"]
+::msgcat::mcset ja {Metadata} 
 ::msgcat::mcset ja {Method} [encoding convertfrom euc-jp "\xb7\xd7\xbb\xbb\xcb\xa1"]
 ::msgcat::mcset ja {Min Max Parameters} 
 ::msgcat::mcset ja {Min Max} [encoding convertfrom euc-jp "\xba\xc7\xc2\xe7\xa1\xa6\xba\xc7\xbe\xae"]
@@ -747,6 +746,7 @@
 ::msgcat::mcset ja {Property} [encoding convertfrom euc-jp "\xc2\xb0\xc0\xad"]
 ::msgcat::mcset ja {Proxy Host} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xad\xa5\xb7\xa5\xb5\xa1\xbc\xa5\xd0\xa1\xbc"]
 ::msgcat::mcset ja {Proxy Port} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xad\xa5\xb7\xa5\xdd\xa1\xbc\xa5\xc8"]
+::msgcat::mcset ja {Public ID} 
 ::msgcat::mcset ja {Publication} [encoding convertfrom euc-jp "\xcf\xc0\xca\xb8"]
 ::msgcat::mcset ja {Quadratic} 
 ::msgcat::mcset ja {RDB} 
@@ -768,6 +768,7 @@
 ::msgcat::mcset ja {Region Parameters} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Region Shape} 
 ::msgcat::mcset ja {Region} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8"]
+::msgcat::mcset ja {Registration} 
 ::msgcat::mcset ja {Release Notes} [encoding convertfrom euc-jp "\xa5\xea\xa5\xea\xa1\xbc\xa5\xb9\xa5\xce\xa1\xbc\xa5\xc8"]
 ::msgcat::mcset ja {Release} [encoding convertfrom euc-jp "\xa5\xea\xa5\xea\xa1\xbc\xa5\xb9"]
 ::msgcat::mcset ja {Reload} [encoding convertfrom euc-jp "\xba\xc6\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
@@ -785,8 +786,13 @@
 ::msgcat::mcset ja {Rows} [encoding convertfrom euc-jp "\xb9\xd4"]
 ::msgcat::mcset ja {Row} 
 ::msgcat::mcset ja {Ruler} [encoding convertfrom euc-jp "\xa4\xe2\xa4\xce\xa4\xb5\xa4\xb7"]
-::msgcat::mcset ja {SAMP Image} 
+::msgcat::mcset ja {SAMP Connect} 
+::msgcat::mcset ja {SAMP Disconnect} 
+::msgcat::mcset ja {SAMP Hub Start} 
+::msgcat::mcset ja {SAMP Hub Stop} 
+::msgcat::mcset ja {SAMP Hub} 
 ::msgcat::mcset ja {SAMP Table} 
+::msgcat::mcset ja {SAMP WebHub Start} 
 ::msgcat::mcset ja {SAMP: not connected} [encoding convertfrom euc-jp "\x53\x41\x4d\x50\x3a\x20\xcc\xa4\xc0\xdc\xc2\xb3"]
 ::msgcat::mcset ja {SAMP} [encoding convertfrom euc-jp "\x53\x41\x4d\x50"]
 ::msgcat::mcset ja {Sample Increment} 
@@ -829,6 +835,7 @@
 ::msgcat::mcset ja {Scan} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xad\xa5\xe3\xa5\xf3"]
 ::msgcat::mcset ja {Scatter Dataset} 
 ::msgcat::mcset ja {Scatter Plot Tool} 
+::msgcat::mcset ja {Scientific Colour Maps} 
 ::msgcat::mcset ja {Scope} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xb3\xa1\xbc\xa5\xd7"]
 ::msgcat::mcset ja {Screen} 
 ::msgcat::mcset ja {Search for Catalogs} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xf2\xb8\xa1\xba\xf7"]
@@ -894,6 +901,7 @@
 ::msgcat::mcset ja {Strip Parameters} 
 ::msgcat::mcset ja {Strip Scale} 
 ::msgcat::mcset ja {Strip} 
+::msgcat::mcset ja {Subscriptions} 
 ::msgcat::mcset ja {Sum} [encoding convertfrom euc-jp "\xb9\xe7\xb7\xd7"]
 ::msgcat::mcset ja {Symbol Editor} [encoding convertfrom euc-jp "\xb5\xad\xb9\xe6\xa4\xce\xca\xd4\xbd\xb8"]
 ::msgcat::mcset ja {Symbol} [encoding convertfrom euc-jp "\xb5\xad\xb9\xe6"]
@@ -1028,6 +1036,7 @@
 ::msgcat::mcset ja {already connected} 
 ::msgcat::mcset ja {and} 
 ::msgcat::mcset ja {b} 
+::msgcat::mcset ja {found existing hub} 
 ::msgcat::mcset ja {full base} 
 ::msgcat::mcset ja {full} 
 ::msgcat::mcset ja {g} 
@@ -1042,5 +1051,8 @@
 ::msgcat::mcset ja {root} 
 ::msgcat::mcset ja {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom euc-jp "\xb9\xd4\xa4\xce\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xac\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb5\xa4\xec\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3\xa4\xb5\xa4\xe9\xa4\xcb\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb9\xa4\xeb\xbe\xec\xb9\xe7\xa4\xcf\xa1\xa2\xba\xc7\xc2\xe7\xb9\xd4\xbf\xf4\xa4\xf2\xc0\xdf\xc4\xea\xa4\xb7\xa4\xca\xa4\xaa\xa4\xb7\xa4\xc6\xa4\xaf\xa4\xc0\xa4\xb5\xa4\xa4\xa1\xa3"]
 ::msgcat::mcset ja {r} 
+::msgcat::mcset ja {unable to create hub file} 
 ::msgcat::mcset ja {unable to locate HUB} 
+::msgcat::mcset ja {unable to open hub} 
+::msgcat::mcset ja {unable to open web hub} 
 ::msgcat::mcset ja {x} 

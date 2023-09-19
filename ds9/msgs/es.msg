@@ -169,7 +169,6 @@
 ::msgcat::mcset es {Composite} {Compuesto}
 ::msgcat::mcset es {Compression} [encoding convertfrom iso8859-1 {Compresión}]
 ::msgcat::mcset es {Configure} {Configurar}
-::msgcat::mcset es {Connect SAMP} 
 ::msgcat::mcset es {Connect} 
 ::msgcat::mcset es {Console} 
 ::msgcat::mcset es {Contacting Server} 
@@ -245,7 +244,6 @@
 ::msgcat::mcset es {Delete Frame} {Borrar marco}
 ::msgcat::mcset es {Delete Graph} 
 ::msgcat::mcset es {Delete Group} {Borrar grupo}
-::msgcat::mcset es {Delete Regions?} 
 ::msgcat::mcset es {Delete Selection} 
 ::msgcat::mcset es {Delete Select} 
 ::msgcat::mcset es {Delete} {Borrar}
@@ -286,7 +284,6 @@
 ::msgcat::mcset es {Enter Font Size} 
 ::msgcat::mcset es {Enter Group Name} {Entrar nombre de grupo}
 ::msgcat::mcset es {Enter Search Expression} [encoding convertfrom iso8859-1 {Entrar expresión de búsqueda}]
-::msgcat::mcset es {Enter Text} 
 ::msgcat::mcset es {Enter URL} 
 ::msgcat::mcset es {Entry} {Entrada}
 ::msgcat::mcset es {Equal Area} {Misma área}
@@ -405,6 +402,7 @@
 ::msgcat::mcset es {Horizontal Graph} [encoding convertfrom iso8859-1 {Gráfica horizontal}]
 ::msgcat::mcset es {Horizontal Layout} [encoding convertfrom iso8859-1 {Distribución horizontal}]
 ::msgcat::mcset es {Horizontal} 
+::msgcat::mcset es {Hub not running} 
 ::msgcat::mcset es {IAU Location Code} 
 ::msgcat::mcset es {ICRS} 
 ::msgcat::mcset es {Icons} 
@@ -578,6 +576,7 @@
 ::msgcat::mcset es {Menus and Buttons} 
 ::msgcat::mcset es {Menu} 
 ::msgcat::mcset es {Message Log} 
+::msgcat::mcset es {Metadata} 
 ::msgcat::mcset es {Method} [encoding convertfrom iso8859-1 {Método}]
 ::msgcat::mcset es {Min Max Parameters} 
 ::msgcat::mcset es {Min Max} [encoding convertfrom iso8859-1 {Mín Máx}]
@@ -747,6 +746,7 @@
 ::msgcat::mcset es {Property} {Propiedad}
 ::msgcat::mcset es {Proxy Host} 
 ::msgcat::mcset es {Proxy Port} 
+::msgcat::mcset es {Public ID} 
 ::msgcat::mcset es {Publication} [encoding convertfrom iso8859-1 {Publicación}]
 ::msgcat::mcset es {Quadratic} [encoding convertfrom iso8859-1 {Cuadrático}]
 ::msgcat::mcset es {RDB} 
@@ -768,6 +768,7 @@
 ::msgcat::mcset es {Region Parameters} 
 ::msgcat::mcset es {Region Shape} 
 ::msgcat::mcset es {Region} [encoding convertfrom iso8859-1 {Región}]
+::msgcat::mcset es {Registration} 
 ::msgcat::mcset es {Release Notes} [encoding convertfrom iso8859-1 {Notas de esta versión}]
 ::msgcat::mcset es {Release} [encoding convertfrom iso8859-1 {Versión}]
 ::msgcat::mcset es {Reload} {Recargar}
@@ -785,8 +786,13 @@
 ::msgcat::mcset es {Rows} {Filas}
 ::msgcat::mcset es {Row} 
 ::msgcat::mcset es {Ruler} {Regla}
-::msgcat::mcset es {SAMP Image} 
+::msgcat::mcset es {SAMP Connect} 
+::msgcat::mcset es {SAMP Disconnect} 
+::msgcat::mcset es {SAMP Hub Start} 
+::msgcat::mcset es {SAMP Hub Stop} 
+::msgcat::mcset es {SAMP Hub} 
 ::msgcat::mcset es {SAMP Table} 
+::msgcat::mcset es {SAMP WebHub Start} 
 ::msgcat::mcset es {SAMP: not connected} 
 ::msgcat::mcset es {SAMP} 
 ::msgcat::mcset es {Sample Increment} 
@@ -829,6 +835,7 @@
 ::msgcat::mcset es {Scan} {Escanear} 
 ::msgcat::mcset es {Scatter Dataset} 
 ::msgcat::mcset es {Scatter Plot Tool} 
+::msgcat::mcset es {Scientific Colour Maps} 
 ::msgcat::mcset es {Scope} {Alcance}
 ::msgcat::mcset es {Screen} 
 ::msgcat::mcset es {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar por catálogos}]
@@ -894,6 +901,7 @@
 ::msgcat::mcset es {Strip Parameters} 
 ::msgcat::mcset es {Strip Scale} 
 ::msgcat::mcset es {Strip} 
+::msgcat::mcset es {Subscriptions} 
 ::msgcat::mcset es {Sum} {Suma}
 ::msgcat::mcset es {Symbol Editor} [encoding convertfrom iso8859-1 {Editor de símbolos}]
 ::msgcat::mcset es {Symbol} [encoding convertfrom iso8859-1 {Símbolo}]
@@ -1028,6 +1036,7 @@
 ::msgcat::mcset es {already connected} 
 ::msgcat::mcset es {and} 
 ::msgcat::mcset es {b} 
+::msgcat::mcset es {found existing hub} 
 ::msgcat::mcset es {full base} 
 ::msgcat::mcset es {full} 
 ::msgcat::mcset es {g} 
@@ -1042,5 +1051,8 @@
 ::msgcat::mcset es {root} 
 ::msgcat::mcset es {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {Filas de datos transferidas. Puede que haya más disponibles. Quizá quiera ajustar el máximo permitido.}]
 ::msgcat::mcset es {r} 
+::msgcat::mcset es {unable to create hub file} 
 ::msgcat::mcset es {unable to locate HUB} 
+::msgcat::mcset es {unable to open hub} 
+::msgcat::mcset es {unable to open web hub} 
 ::msgcat::mcset es {x} 

@@ -169,7 +169,6 @@
 ::msgcat::mcset cs {Composite} 
 ::msgcat::mcset cs {Compression} [encoding convertfrom iso8859-2 {Komprese}]
 ::msgcat::mcset cs {Configure} [encoding convertfrom iso8859-2 {Konfigurace}]
-::msgcat::mcset cs {Connect SAMP} 
 ::msgcat::mcset cs {Connect} [encoding convertfrom iso8859-2 {Pøipoji}]
 ::msgcat::mcset cs {Console} 
 ::msgcat::mcset cs {Contacting Server} 
@@ -245,7 +244,6 @@
 ::msgcat::mcset cs {Delete Frame} [encoding convertfrom iso8859-2 {Smazat snímek}]
 ::msgcat::mcset cs {Delete Graph} 
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
-::msgcat::mcset cs {Delete Regions?} 
 ::msgcat::mcset cs {Delete Selection} 
 ::msgcat::mcset cs {Delete Select} 
 ::msgcat::mcset cs {Delete} [encoding convertfrom iso8859-2 {Smazat}]
@@ -286,7 +284,6 @@
 ::msgcat::mcset cs {Enter Font Size} 
 ::msgcat::mcset cs {Enter Group Name} 
 ::msgcat::mcset cs {Enter Search Expression} 
-::msgcat::mcset cs {Enter Text} 
 ::msgcat::mcset cs {Enter URL} 
 ::msgcat::mcset cs {Entry} 
 ::msgcat::mcset cs {Equal Area} 
@@ -405,6 +402,7 @@
 ::msgcat::mcset cs {Horizontal Graph} [encoding convertfrom iso8859-2 {Horizontální graf}]
 ::msgcat::mcset cs {Horizontal Layout} [encoding convertfrom iso8859-2 {Horizontální rozlo¾ení}]
 ::msgcat::mcset cs {Horizontal} 
+::msgcat::mcset cs {Hub not running} 
 ::msgcat::mcset cs {IAU Location Code} 
 ::msgcat::mcset cs {ICRS} 
 ::msgcat::mcset cs {Icons} 
@@ -578,6 +576,7 @@
 ::msgcat::mcset cs {Menus and Buttons} 
 ::msgcat::mcset cs {Menu} [encoding convertfrom iso8859-2 {Nabídka}]
 ::msgcat::mcset cs {Message Log} 
+::msgcat::mcset cs {Metadata} 
 ::msgcat::mcset cs {Method} 
 ::msgcat::mcset cs {Min Max Parameters} 
 ::msgcat::mcset cs {Min Max} [encoding convertfrom iso8859-2 {Minimum Maximum}]
@@ -747,6 +746,7 @@
 ::msgcat::mcset cs {Property} 
 ::msgcat::mcset cs {Proxy Host} 
 ::msgcat::mcset cs {Proxy Port} 
+::msgcat::mcset cs {Public ID} 
 ::msgcat::mcset cs {Publication} 
 ::msgcat::mcset cs {Quadratic} 
 ::msgcat::mcset cs {RDB} 
@@ -768,6 +768,7 @@
 ::msgcat::mcset cs {Region Parameters} [encoding convertfrom iso8859-2 {Parametry oblastí}]
 ::msgcat::mcset cs {Region Shape} 
 ::msgcat::mcset cs {Region} [encoding convertfrom iso8859-2 {Oblasti}]
+::msgcat::mcset cs {Registration} 
 ::msgcat::mcset cs {Release Notes} [encoding convertfrom iso8859-2 {Informace o vydání}]
 ::msgcat::mcset cs {Release} 
 ::msgcat::mcset cs {Reload} 
@@ -785,8 +786,13 @@
 ::msgcat::mcset cs {Rows} 
 ::msgcat::mcset cs {Row} 
 ::msgcat::mcset cs {Ruler} 
-::msgcat::mcset cs {SAMP Image} 
+::msgcat::mcset cs {SAMP Connect} 
+::msgcat::mcset cs {SAMP Disconnect} 
+::msgcat::mcset cs {SAMP Hub Start} 
+::msgcat::mcset cs {SAMP Hub Stop} 
+::msgcat::mcset cs {SAMP Hub} 
 ::msgcat::mcset cs {SAMP Table} 
+::msgcat::mcset cs {SAMP WebHub Start} 
 ::msgcat::mcset cs {SAMP: not connected} 
 ::msgcat::mcset cs {SAMP} 
 ::msgcat::mcset cs {Sample Increment} 
@@ -829,6 +835,7 @@
 ::msgcat::mcset cs {Scan} 
 ::msgcat::mcset cs {Scatter Dataset} 
 ::msgcat::mcset cs {Scatter Plot Tool} 
+::msgcat::mcset cs {Scientific Colour Maps} 
 ::msgcat::mcset cs {Scope} 
 ::msgcat::mcset cs {Screen} 
 ::msgcat::mcset cs {Search for Catalogs} 
@@ -894,6 +901,7 @@
 ::msgcat::mcset cs {Strip Parameters} 
 ::msgcat::mcset cs {Strip Scale} 
 ::msgcat::mcset cs {Strip} 
+::msgcat::mcset cs {Subscriptions} 
 ::msgcat::mcset cs {Sum} 
 ::msgcat::mcset cs {Symbol Editor} 
 ::msgcat::mcset cs {Symbol} 
@@ -1028,6 +1036,7 @@
 ::msgcat::mcset cs {already connected} 
 ::msgcat::mcset cs {and} 
 ::msgcat::mcset cs {b} 
+::msgcat::mcset cs {found existing hub} 
 ::msgcat::mcset cs {full base} 
 ::msgcat::mcset cs {full} 
 ::msgcat::mcset cs {g} 
@@ -1042,5 +1051,8 @@
 ::msgcat::mcset cs {root} 
 ::msgcat::mcset cs {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-2 {øádkù dat. Více jich mù¾e být k dispozici. Zkuste zmìnit povolené maximum}]
 ::msgcat::mcset cs {r} 
+::msgcat::mcset cs {unable to create hub file} 
 ::msgcat::mcset cs {unable to locate HUB} 
+::msgcat::mcset cs {unable to open hub} 
+::msgcat::mcset cs {unable to open web hub} 
 ::msgcat::mcset cs {x} 

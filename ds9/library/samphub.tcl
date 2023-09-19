@@ -58,7 +58,11 @@ proc SAMPHubStart {verbose} {
     set samphub(cache,images) 1
 
     set samphub(fn) $fn
-    set samphub(sock) [xmlrpc::serve 0]
+    if {[catch {set samphub(sock) [xmlrpc::serve 0]}]} {
+	Error "SAMPHub: [msgcat::mc {unable to open hub}]"
+	catch {unset samphub}
+	return
+    }
     set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
     set samphub(secret) [SAMPHubGenerateKey]
     set samphub(timestamp) "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
@@ -67,8 +71,11 @@ proc SAMPHubStart {verbose} {
     set samphub(web,port) 0
     set samphub(web,allowReverseCallbacks) 0
     if {$pds9(samp,webhub)} {
-	set samphub(web,sock) [xmlrpc::serve 21012]
-	set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
+	if {[catch {set samphub(web,sock) [xmlrpc::serve 21012]}]} {
+	    Error "SAMPHub: [msgcat::mc {unable to open web hub}]"
+	} else {
+	    set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
+	}
     }
 
     if {[catch {set ch [open $fn w 0600]}]} {

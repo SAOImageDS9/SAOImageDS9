@@ -169,7 +169,6 @@
 ::msgcat::mcset fr {Composite} 
 ::msgcat::mcset fr {Compression} 
 ::msgcat::mcset fr {Configure} {Configurer}
-::msgcat::mcset fr {Connect SAMP} 
 ::msgcat::mcset fr {Connect} 
 ::msgcat::mcset fr {Console} 
 ::msgcat::mcset fr {Contacting Server} 
@@ -245,7 +244,6 @@
 ::msgcat::mcset fr {Delete Frame} [encoding convertfrom iso8859-1 {Supprimer la fenêtre}]
 ::msgcat::mcset fr {Delete Graph} 
 ::msgcat::mcset fr {Delete Group} {Supprimer le groupe} 
-::msgcat::mcset fr {Delete Regions?} 
 ::msgcat::mcset fr {Delete Selection} 
 ::msgcat::mcset fr {Delete Select} 
 ::msgcat::mcset fr {Delete} {Supprimer} 
@@ -286,7 +284,6 @@
 ::msgcat::mcset fr {Enter Font Size} 
 ::msgcat::mcset fr {Enter Group Name} {Entrer le nom du groupe} 
 ::msgcat::mcset fr {Enter Search Expression} 
-::msgcat::mcset fr {Enter Text} 
 ::msgcat::mcset fr {Enter URL} 
 ::msgcat::mcset fr {Entry} 
 ::msgcat::mcset fr {Equal Area} {Egale surface} 
@@ -405,6 +402,7 @@
 ::msgcat::mcset fr {Horizontal Graph} {Graphique Horizontal} 
 ::msgcat::mcset fr {Horizontal Layout} {Mise en page Horizontale} 
 ::msgcat::mcset fr {Horizontal} 
+::msgcat::mcset fr {Hub not running} 
 ::msgcat::mcset fr {IAU Location Code} 
 ::msgcat::mcset fr {ICRS} 
 ::msgcat::mcset fr {Icons} 
@@ -578,6 +576,7 @@
 ::msgcat::mcset fr {Menus and Buttons} 
 ::msgcat::mcset fr {Menu} 
 ::msgcat::mcset fr {Message Log} 
+::msgcat::mcset fr {Metadata} 
 ::msgcat::mcset fr {Method} [encoding convertfrom iso8859-1 {Méthode}]
 ::msgcat::mcset fr {Min Max Parameters} 
 ::msgcat::mcset fr {Min Max} 
@@ -747,6 +746,7 @@
 ::msgcat::mcset fr {Property} [encoding convertfrom iso8859-1 {Propriété}]
 ::msgcat::mcset fr {Proxy Host} 
 ::msgcat::mcset fr {Proxy Port} 
+::msgcat::mcset fr {Public ID} 
 ::msgcat::mcset fr {Publication} 
 ::msgcat::mcset fr {Quadratic} 
 ::msgcat::mcset fr {RDB} 
@@ -768,6 +768,7 @@
 ::msgcat::mcset fr {Region Parameters} 
 ::msgcat::mcset fr {Region Shape} 
 ::msgcat::mcset fr {Region} [encoding convertfrom iso8859-1 {Région}]
+::msgcat::mcset fr {Registration} 
 ::msgcat::mcset fr {Release Notes} 
 ::msgcat::mcset fr {Release} 
 ::msgcat::mcset fr {Reload} 
@@ -785,8 +786,13 @@
 ::msgcat::mcset fr {Rows} 
 ::msgcat::mcset fr {Row} 
 ::msgcat::mcset fr {Ruler} 
-::msgcat::mcset fr {SAMP Image} 
+::msgcat::mcset fr {SAMP Connect} 
+::msgcat::mcset fr {SAMP Disconnect} 
+::msgcat::mcset fr {SAMP Hub Start} 
+::msgcat::mcset fr {SAMP Hub Stop} 
+::msgcat::mcset fr {SAMP Hub} 
 ::msgcat::mcset fr {SAMP Table} 
+::msgcat::mcset fr {SAMP WebHub Start} 
 ::msgcat::mcset fr {SAMP: not connected} 
 ::msgcat::mcset fr {SAMP} 
 ::msgcat::mcset fr {Sample Increment} 
@@ -829,6 +835,7 @@
 ::msgcat::mcset fr {Scan} 
 ::msgcat::mcset fr {Scatter Dataset} 
 ::msgcat::mcset fr {Scatter Plot Tool} 
+::msgcat::mcset fr {Scientific Colour Maps} 
 ::msgcat::mcset fr {Scope} 
 ::msgcat::mcset fr {Screen} 
 ::msgcat::mcset fr {Search for Catalogs} 
@@ -894,6 +901,7 @@
 ::msgcat::mcset fr {Strip Parameters} 
 ::msgcat::mcset fr {Strip Scale} 
 ::msgcat::mcset fr {Strip} 
+::msgcat::mcset fr {Subscriptions} 
 ::msgcat::mcset fr {Sum} 
 ::msgcat::mcset fr {Symbol Editor} 
 ::msgcat::mcset fr {Symbol} 
@@ -1028,6 +1036,7 @@
 ::msgcat::mcset fr {already connected} 
 ::msgcat::mcset fr {and} 
 ::msgcat::mcset fr {b} 
+::msgcat::mcset fr {found existing hub} 
 ::msgcat::mcset fr {full base} 
 ::msgcat::mcset fr {full} 
 ::msgcat::mcset fr {g} 
@@ -1042,5 +1051,8 @@
 ::msgcat::mcset fr {root} 
 ::msgcat::mcset fr {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset fr {r} 
+::msgcat::mcset fr {unable to create hub file} 
 ::msgcat::mcset fr {unable to locate HUB} 
+::msgcat::mcset fr {unable to open hub} 
+::msgcat::mcset fr {unable to open web hub} 
 ::msgcat::mcset fr {x} 

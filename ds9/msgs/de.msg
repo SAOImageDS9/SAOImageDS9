@@ -169,7 +169,6 @@
 ::msgcat::mcset de {Composite} 
 ::msgcat::mcset de {Compression} {Kompression} 
 ::msgcat::mcset de {Configure} {Konfigurieren}
-::msgcat::mcset de {Connect SAMP} 
 ::msgcat::mcset de {Connect} 
 ::msgcat::mcset de {Console} 
 ::msgcat::mcset de {Contacting Server} 
@@ -245,7 +244,6 @@
 ::msgcat::mcset de {Delete Frame} [encoding convertfrom iso8859-1 {Rahmen löschen}]
 ::msgcat::mcset de {Delete Graph} 
 ::msgcat::mcset de {Delete Group} [encoding convertfrom iso8859-1 {Gruppe löschen}]
-::msgcat::mcset de {Delete Regions?} 
 ::msgcat::mcset de {Delete Selection} 
 ::msgcat::mcset de {Delete Select} 
 ::msgcat::mcset de {Delete} [encoding convertfrom iso8859-1 {Löschen}]
@@ -286,7 +284,6 @@
 ::msgcat::mcset de {Enter Font Size} 
 ::msgcat::mcset de {Enter Group Name} {Gruppenname eingeben}
 ::msgcat::mcset de {Enter Search Expression} 
-::msgcat::mcset de {Enter Text} 
 ::msgcat::mcset de {Enter URL} 
 ::msgcat::mcset de {Entry} 
 ::msgcat::mcset de {Equal Area} [encoding convertfrom iso8859-1 {Gleiche Fläche}]
@@ -405,6 +402,7 @@
 ::msgcat::mcset de {Horizontal Graph} {Horizontaldarstellung}
 ::msgcat::mcset de {Horizontal Layout} {Horizontales Layout}
 ::msgcat::mcset de {Horizontal} 
+::msgcat::mcset de {Hub not running} 
 ::msgcat::mcset de {IAU Location Code} 
 ::msgcat::mcset de {ICRS} 
 ::msgcat::mcset de {Icons} 
@@ -578,6 +576,7 @@
 ::msgcat::mcset de {Menus and Buttons} 
 ::msgcat::mcset de {Menu} 
 ::msgcat::mcset de {Message Log} 
+::msgcat::mcset de {Metadata} 
 ::msgcat::mcset de {Method} {Methode}
 ::msgcat::mcset de {Min Max Parameters} 
 ::msgcat::mcset de {Min Max} 
@@ -747,6 +746,7 @@
 ::msgcat::mcset de {Property} {Eigenschaften}
 ::msgcat::mcset de {Proxy Host} 
 ::msgcat::mcset de {Proxy Port} 
+::msgcat::mcset de {Public ID} 
 ::msgcat::mcset de {Publication} [encoding convertfrom iso8859-1 {Veröffentlichung}]
 ::msgcat::mcset de {Quadratic} {Quadratisch}
 ::msgcat::mcset de {RDB} 
@@ -768,6 +768,7 @@
 ::msgcat::mcset de {Region Parameters} 
 ::msgcat::mcset de {Region Shape} 
 ::msgcat::mcset de {Region} 
+::msgcat::mcset de {Registration} 
 ::msgcat::mcset de {Release Notes} {Versionshinweise}
 ::msgcat::mcset de {Release} {Version}
 ::msgcat::mcset de {Reload} {Wieder laden}
@@ -785,8 +786,13 @@
 ::msgcat::mcset de {Rows} {Reihen}
 ::msgcat::mcset de {Row} 
 ::msgcat::mcset de {Ruler} {Lineal}
-::msgcat::mcset de {SAMP Image} 
+::msgcat::mcset de {SAMP Connect} 
+::msgcat::mcset de {SAMP Disconnect} 
+::msgcat::mcset de {SAMP Hub Start} 
+::msgcat::mcset de {SAMP Hub Stop} 
+::msgcat::mcset de {SAMP Hub} 
 ::msgcat::mcset de {SAMP Table} 
+::msgcat::mcset de {SAMP WebHub Start} 
 ::msgcat::mcset de {SAMP: not connected} 
 ::msgcat::mcset de {SAMP} 
 ::msgcat::mcset de {Sample Increment} 
@@ -829,6 +835,7 @@
 ::msgcat::mcset de {Scan} {Abtastung}
 ::msgcat::mcset de {Scatter Dataset} 
 ::msgcat::mcset de {Scatter Plot Tool} 
+::msgcat::mcset de {Scientific Colour Maps} 
 ::msgcat::mcset de {Scope} {Anwendungsbereich}
 ::msgcat::mcset de {Screen} 
 ::msgcat::mcset de {Search for Catalogs} {Nach Katalogen suchen}
@@ -894,6 +901,7 @@
 ::msgcat::mcset de {Strip Parameters} 
 ::msgcat::mcset de {Strip Scale} 
 ::msgcat::mcset de {Strip} 
+::msgcat::mcset de {Subscriptions} 
 ::msgcat::mcset de {Sum} {Summieren}
 ::msgcat::mcset de {Symbol Editor} 
 ::msgcat::mcset de {Symbol} 
@@ -1028,6 +1036,7 @@
 ::msgcat::mcset de {already connected} 
 ::msgcat::mcset de {and} 
 ::msgcat::mcset de {b} 
+::msgcat::mcset de {found existing hub} 
 ::msgcat::mcset de {full base} 
 ::msgcat::mcset de {full} 
 ::msgcat::mcset de {g} 
@@ -1042,5 +1051,8 @@
 ::msgcat::mcset de {root} 
 ::msgcat::mcset de {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {Datenreihen wurden heruntergeladen. Mehr sind vielleicht verfügbar. Sie können die maximale Anzahl anpassen.}]
 ::msgcat::mcset de {r} 
+::msgcat::mcset de {unable to create hub file} 
 ::msgcat::mcset de {unable to locate HUB} 
+::msgcat::mcset de {unable to open hub} 
+::msgcat::mcset de {unable to open web hub} 
 ::msgcat::mcset de {x} 

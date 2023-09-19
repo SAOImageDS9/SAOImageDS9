@@ -169,7 +169,6 @@
 ::msgcat::mcset pt {Composite} 
 ::msgcat::mcset pt {Compression} [encoding convertfrom iso8859-1 {Compressão}]
 ::msgcat::mcset pt {Configure} {Configurar}
-::msgcat::mcset pt {Connect SAMP} 
 ::msgcat::mcset pt {Connect} 
 ::msgcat::mcset pt {Console} 
 ::msgcat::mcset pt {Contacting Server} 
@@ -245,7 +244,6 @@
 ::msgcat::mcset pt {Delete Frame} {Apague o Frame}
 ::msgcat::mcset pt {Delete Graph} 
 ::msgcat::mcset pt {Delete Group} {Apague o Grupo}
-::msgcat::mcset pt {Delete Regions?} 
 ::msgcat::mcset pt {Delete Selection} 
 ::msgcat::mcset pt {Delete Select} 
 ::msgcat::mcset pt {Delete} {Apagar}
@@ -286,7 +284,6 @@
 ::msgcat::mcset pt {Enter Font Size} 
 ::msgcat::mcset pt {Enter Group Name} {Entre o nome do Grupo}
 ::msgcat::mcset pt {Enter Search Expression} 
-::msgcat::mcset pt {Enter Text} 
 ::msgcat::mcset pt {Enter URL} 
 ::msgcat::mcset pt {Entry} 
 ::msgcat::mcset pt {Equal Area} [encoding convertfrom iso8859-1 {Área Igual}]
@@ -405,6 +402,7 @@
 ::msgcat::mcset pt {Horizontal Graph} [encoding convertfrom iso8859-1 {Gráfico Horizontal}]
 ::msgcat::mcset pt {Horizontal Layout} {Layout Horizontal}
 ::msgcat::mcset pt {Horizontal} 
+::msgcat::mcset pt {Hub not running} 
 ::msgcat::mcset pt {IAU Location Code} 
 ::msgcat::mcset pt {ICRS} 
 ::msgcat::mcset pt {Icons} 
@@ -578,6 +576,7 @@
 ::msgcat::mcset pt {Menus and Buttons} 
 ::msgcat::mcset pt {Menu} 
 ::msgcat::mcset pt {Message Log} 
+::msgcat::mcset pt {Metadata} 
 ::msgcat::mcset pt {Method} [encoding convertfrom iso8859-1 {Método}]
 ::msgcat::mcset pt {Min Max Parameters} 
 ::msgcat::mcset pt {Min Max} [encoding convertfrom iso8859-1 {Min Máx}]
@@ -747,6 +746,7 @@
 ::msgcat::mcset pt {Property} {Propriedade}
 ::msgcat::mcset pt {Proxy Host} {Host Proxy}
 ::msgcat::mcset pt {Proxy Port} {Porta do Proxy}
+::msgcat::mcset pt {Public ID} 
 ::msgcat::mcset pt {Publication} [encoding convertfrom iso8859-1 {Publicação}]
 ::msgcat::mcset pt {Quadratic} [encoding convertfrom iso8859-1 {Quadrático}]
 ::msgcat::mcset pt {RDB} 
@@ -768,6 +768,7 @@
 ::msgcat::mcset pt {Region Parameters} 
 ::msgcat::mcset pt {Region Shape} 
 ::msgcat::mcset pt {Region} [encoding convertfrom iso8859-1 {Região}]
+::msgcat::mcset pt {Registration} 
 ::msgcat::mcset pt {Release Notes} [encoding convertfrom iso8859-1 {Notas das Versão}]
 ::msgcat::mcset pt {Release} [encoding convertfrom iso8859-1 {Versão}]
 ::msgcat::mcset pt {Reload} {Recarregar}
@@ -785,8 +786,13 @@
 ::msgcat::mcset pt {Rows} {Linhas}
 ::msgcat::mcset pt {Row} 
 ::msgcat::mcset pt {Ruler} [encoding convertfrom iso8859-1 {Régua}]
-::msgcat::mcset pt {SAMP Image} 
+::msgcat::mcset pt {SAMP Connect} 
+::msgcat::mcset pt {SAMP Disconnect} 
+::msgcat::mcset pt {SAMP Hub Start} 
+::msgcat::mcset pt {SAMP Hub Stop} 
+::msgcat::mcset pt {SAMP Hub} 
 ::msgcat::mcset pt {SAMP Table} 
+::msgcat::mcset pt {SAMP WebHub Start} 
 ::msgcat::mcset pt {SAMP: not connected} 
 ::msgcat::mcset pt {SAMP} 
 ::msgcat::mcset pt {Sample Increment} 
@@ -829,6 +835,7 @@
 ::msgcat::mcset pt {Scan} 
 ::msgcat::mcset pt {Scatter Dataset} 
 ::msgcat::mcset pt {Scatter Plot Tool} 
+::msgcat::mcset pt {Scientific Colour Maps} 
 ::msgcat::mcset pt {Scope} {Escopo}
 ::msgcat::mcset pt {Screen} 
 ::msgcat::mcset pt {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar Catálogos}]
@@ -894,6 +901,7 @@
 ::msgcat::mcset pt {Strip Parameters} 
 ::msgcat::mcset pt {Strip Scale} 
 ::msgcat::mcset pt {Strip} 
+::msgcat::mcset pt {Subscriptions} 
 ::msgcat::mcset pt {Sum} {Soma}
 ::msgcat::mcset pt {Symbol Editor} 
 ::msgcat::mcset pt {Symbol} [encoding convertfrom iso8859-1 {Símbolo}]
@@ -1028,6 +1036,7 @@
 ::msgcat::mcset pt {already connected} 
 ::msgcat::mcset pt {and} 
 ::msgcat::mcset pt {b} 
+::msgcat::mcset pt {found existing hub} 
 ::msgcat::mcset pt {full base} 
 ::msgcat::mcset pt {full} 
 ::msgcat::mcset pt {g} 
@@ -1042,5 +1051,8 @@
 ::msgcat::mcset pt {root} 
 ::msgcat::mcset pt {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {colunas de dados foram descarregadas. Mais podem estar disponíveis. Você pode querer ajustar o máximo permitido}]
 ::msgcat::mcset pt {r} 
+::msgcat::mcset pt {unable to create hub file} 
 ::msgcat::mcset pt {unable to locate HUB} 
+::msgcat::mcset pt {unable to open hub} 
+::msgcat::mcset pt {unable to open web hub} 
 ::msgcat::mcset pt {x} 

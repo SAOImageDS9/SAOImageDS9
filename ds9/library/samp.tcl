@@ -1089,10 +1089,6 @@ proc image.load.fits {varname} {
 	}
     }
 
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdImageLoadFits: $url $imageid $name"
-    }
-
     if {$url != {}} {
 	LoadURLFits $url {} {} 1
     }
@@ -1123,10 +1119,6 @@ proc table.load.fits {varname} {
 	}
     }
 
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdTableLoadFits: $url $imageid $name"
-    }
-
     if {$url != {}} {
 	LoadURLFits $url {} {} 1
     }
@@ -1153,10 +1145,6 @@ proc table.load.votable {varname} {
 		name {set name [XMLUnQuote $val]}
 	    }
 	}
-    }
-
-    if {$debug(tcl,samp)} {
-	puts stderr "table.load.votable $url $tabid $name"
     }
 
     global icat
@@ -1193,10 +1181,6 @@ proc table.highlight.row {varname} {
 	}
     }
 
-    if {$debug(tcl,samp)} {
-	puts stderr "table.highlight.row $url $tabid $row"
-    }
-
     if {$tabid != {} && $row != {}} {
 	if {[info exists samp(icat,$tabid)]} {
 	    CATSelectRows $samp(icat,$tabid) samp [expr $row+1] 1
@@ -1231,10 +1215,6 @@ proc table.select.rowList {varname} {
 	}
     }
 
-    if {$debug(tcl,samp)} {
-	puts stderr "table.select.rowList $url $tabid $rowlist"
-    }
-
     if {$tabid != {} && [llength $rowlist] != 0} {
 	if {[info exists samp(icat,$tabid)]} {
 	    CATSelectRows $samp(icat,$tabid) samp $rowlist 1
@@ -1263,10 +1243,6 @@ proc coord.pointAt.sky {varname} {
 	}
     }
 
-    if {$debug(tcl,samp)} {
-	puts stderr "coord.pointAt.sky $ra $dec"
-    }
-
     global current
     if {$ra != {} && $dec != {} && [$current(frame) has wcs celestial wcs]} {
 	PanTo $ra $dec wcs fk5
@@ -1290,10 +1266,6 @@ proc client.env.get {msgid varname} {
 		name {set name [XMLUnQuote $val]}
 	    }
 	}
-    }
-
-    if {$debug(tcl,samp)} {
-	puts stderr "client.env.get $name"
     }
 
     global env

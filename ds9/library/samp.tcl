@@ -23,6 +23,8 @@ proc SAMPConnect {verbose} {
 
     set samp(clients) {}
     set samp(tmp,files) {}
+    set samp(msgtag) {}
+    set samp(timeout) 30
 
     # can we find a hub?
     if {![SAMPParseHub]} {
@@ -548,6 +550,35 @@ proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
 	puts stderr "SAMPSend Result: $result"
     }
 
+    switch $method {
+	samp.hub.notify -
+	samp.hub.notifyAll {}
+	samp.hub.call -
+	samp.hub.callAll {
+	    set samp(msgtag) [lindex $result 1]
+
+	    # and now we wait
+	    vwait samp(msgtag)
+	}
+	samp.hub.callAndWait {
+	    set status {}
+	    set value {}
+	    set error {}
+	    foreach arg [lindex $result 1] {
+		foreach {key val} $arg {
+		    switch -- $key {
+			samp.result {set value [lindex [lindex $val 0] 1]}
+			samp.status {set status $val}
+			samp.error  {set error [lindex [lindex $val 0] 1]}
+		    }
+		}
+	    }
+	    if {$debug(tcl,samp)} {
+		puts stderr "SAMPSend: callAndWait: $status $value $error"
+	    }
+	}
+    }
+
     return 1
 }
 
@@ -728,6 +759,11 @@ proc samp.client.receiveResponse {args} {
     set id [lindex $args 1]
     set msgtag [lindex $args 2]
     set map [lindex $args 3]
+
+    if {$samp(msgtag) == {}} {
+	Error "SAMP: samp.client.receiveResponse bad tag $msgtag"
+    }
+    set samp(msgtag) {}
 
     set status {}
     set value {}

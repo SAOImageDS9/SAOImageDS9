@@ -748,7 +748,7 @@ proc graph::yyparse {} {
                     22 { GraphDestroyDialog }
                     23 { ProcessCmdSet graph grid $2 UpdateGraphsGrid }
                     24 { ProcessCmdSet graph log $2 UpdateGraphsGrid }
-                    25 { ProcessCmdSet graph method $2 UpdateGraphsMethod }
+                    25 { ProcessCmdSet graph method $2 UpdateGraphsAxes }
                     26 { ProcessCmdSet graph font $2 UpdateGraphsFont }
                     27 { ProcessCmdSet graph font,size $2 UpdateGraphsFont }
                     28 { ProcessCmdSet graph font,weight $2 UpdateGraphsFont }

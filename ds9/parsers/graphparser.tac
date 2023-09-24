@@ -32,7 +32,7 @@ graph : OPEN_ {GraphDialog}
  | CLOSE_ {GraphDestroyDialog}
  | GRID_ yesno {ProcessCmdSet graph grid $2 UpdateGraphsGrid}
  | LOG_ yesno {ProcessCmdSet graph log $2 UpdateGraphsGrid}
- | METHOD_ method {ProcessCmdSet graph method $2 UpdateGraphsMethod}
+ | METHOD_ method {ProcessCmdSet graph method $2 UpdateGraphsAxes}
  | FONT_ font {ProcessCmdSet graph font $2 UpdateGraphsFont}
  | FONTSIZE_ INT_ {ProcessCmdSet graph font,size $2 UpdateGraphsFont}
  | FONTWEIGHT_ fontWeight {ProcessCmdSet graph font,weight $2 UpdateGraphsFont}

@@ -9,8 +9,6 @@ package provide DS9 1.0
 proc SAMPConnect {verbose} {
     global ds9
     global samp
-    global sampmap
-    global sampmap2
 
     # connected?
     if {[info exists samp]} {
@@ -207,8 +205,6 @@ proc SAMPSendImageLoadFits {id} {
     global ds9
     global current
     global samp
-    global sampmap
-    global sampmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -238,11 +234,8 @@ proc SAMPSendImageLoadFits {id} {
     }
 
     # cmd
-    catch {unset sampmap}
     set sampmap(samp.mtype) {string "image.load.fits"}
     set sampmap(samp.params) {struct sampmap2}
-
-    catch {unset sampmap2}
     set sampmap2(url) "string \"[XMLQuote file://localhost/$fn]\""
     set sampmap2(name) "string \"[XMLQuote $fnb]\""
 
@@ -267,8 +260,6 @@ proc SAMPSendTableLoadFits {id} {
     global ds9
     global current
     global samp
-    global sampmap
-    global sampmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -298,11 +289,8 @@ proc SAMPSendTableLoadFits {id} {
     }
 
     # cmd
-    catch {unset sampmap}
     set sampmap(samp.mtype) {string "table.load.fits"}
     set sampmap(samp.params) {struct sampmap2}
-
-    catch {unset sampmap2}
     set sampmap2(url) "string \"[XMLQuote file://localhost/$fn]\""
     set sampmap2(name) "string \"[XMLQuote $fnb]\""
 
@@ -326,8 +314,6 @@ proc SAMPSendTableLoadFits {id} {
 proc SAMPSendTableLoadVotable {id varname} {
     global ds9
     global samp
-    global sampmap
-    global sampmap2
 
     upvar #0 $varname var
     global $varname
@@ -353,11 +339,8 @@ proc SAMPSendTableLoadVotable {id varname} {
     TBLSaveFn $varname $fn VOTWrite
 
     # cmd
-    catch {unset sampmap}
     set sampmap(samp.mtype) {string "table.load.votable"}
     set sampmap(samp.params) {struct sampmap2}
-
-    catch {unset sampmap2}
     set sampmap2(url) "string \"[XMLQuote file://localhost/$fn]\""
     set sampmap2(table-id) "string [XMLQuote $varname$samp(port)]"
     set sampmap2(name) "string \"[XMLQuote $var(title)]\""
@@ -406,8 +389,6 @@ proc SAMPSendTableRowListCmd {varname rowlist} {
 
 proc SAMPSendTableHighlightRow {id varname row} {
     global samp
-    global sampmap
-    global sampmap2
 
     # row starts at 1
     upvar #0 $varname var
@@ -418,11 +399,8 @@ proc SAMPSendTableHighlightRow {id varname row} {
 	puts stderr "SAMPSendTableHighlightRow $samp(ocat,$varname) $row"
     }
 
-    catch {unset sampmap}
     set sampmap(samp.mtype) {string "table.highlight.row"}
     set sampmap(samp.params) {struct sampmap2}
-
-    catch {unset sampmap2}
     set sampmap2(table-id) "string [XMLQuote $samp(ocat,$varname)]"
     set sampmap2(row) "string [expr $row-1]"
 
@@ -445,8 +423,6 @@ proc SAMPSendTableHighlightRow {id varname row} {
 
 proc SAMPSendTableSelectRowList {id varname rows} {
     global samp
-    global sampmap
-    global sampmap2
 
     # rows start at 1
     upvar #0 $varname var
@@ -457,11 +433,8 @@ proc SAMPSendTableSelectRowList {id varname rows} {
 	puts stderr "SAMPSendTableSelectRowList $samp(ocat,$varname) $rows"
     }
 
-    catch {unset sampmap}
     set sampmap(samp.mtype) {string "table.select.rowList"}
     set sampmap(samp.params) {struct sampmap2}
-
-    catch {unset sampmap2}
     set sampmap2(table-id) "string [XMLQuote $samp(ocat,$varname)]"
     set ss {}
     foreach rr $rows {
@@ -509,19 +482,14 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 
 proc SAMPSendCoordPointAtSky {id coord} {
     global samp
-    global sampmap
-    global sampmap2
 
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPSendCoordPointAtSky $id $coord"
     }
 
-    catch {unset sampmap}
     set sampmap(samp.mtype) {string "coord.pointAt.sky"}
     set sampmap(samp.params) {struct sampmap2}
-
-    catch {unset sampmap2}
     set sampmap2(ra) "string [XMLQuote [lindex $coord 0]]"
     set sampmap2(dec) "string [XMLQuote [lindex $coord 1]]"
 
@@ -558,9 +526,8 @@ proc SAMPShutdown {} {
     catch {unset samp}
 }
 
-proc SAMPSend {method params resultVar} {
+proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
     upvar $resultVar result
-
     global samp
 
     global debug
@@ -568,7 +535,7 @@ proc SAMPSend {method params resultVar} {
 	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
     }
 
-    if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params]}]} {
+    if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params $ntabs $distance]}]} {
 	Error "SAMP: [msgcat::mc {internal error}] $result"
 	return 0
     }
@@ -586,18 +553,12 @@ proc SAMPSend {method params resultVar} {
 
 proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     global samp
-    global sampmap
-    global sampmap2
-    global sampmap3
 
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPReply $msgid $status"
     }
 
-    catch {unset sampmap}
-    catch {unset sampmap2}
-    catch {unset sampmap3}
     switch -- $status {
 	OK {
 	    set sampmap(samp.status) {string "samp.ok"}

@@ -272,7 +272,12 @@ proc xmlrpc::call {url method methodName params {ntabs 4} {distance 3}} {
 
     fileevent $sock readable [list xmlrpc::getResponse $sock]
     vwait xmlreaddone($sock)
-    catch {close $sock}
+
+    if {[catch {close $sock}]} {
+	# someone is closing premature
+	global errorInfo
+	set errorInfo {}
+    }
 
     set ss $xmlreaddone($sock)
     set rr $xmlresponse($sock)

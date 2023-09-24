@@ -42,9 +42,6 @@ proc SAMPConnect {verbose} {
     set params [list "string $samp(secret)"]
     set rr {}
     if {![SAMPSend {samp.hub.register} $params rr]} {
-  	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
 	catch {unset samp}
 	return
     }
@@ -77,9 +74,7 @@ proc SAMPConnect {verbose} {
     set params "$param1 $param2"
     set rr {}
     if {![SAMPSend {samp.hub.declareMetadata} $params rr]} {
-  	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	catch {unset samp}
 	return
     }
 
@@ -94,9 +89,7 @@ proc SAMPConnect {verbose} {
     set params "$param1 $param2"
     set rr {}
     if {![SAMPSend {samp.hub.setXmlrpcCallback} $params rr]} {
-  	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	catch {unset samp}
 	return
     }
 
@@ -129,9 +122,7 @@ proc SAMPConnect {verbose} {
     set params "$param1 $param2" 
     set rr {}
     if {![SAMPSend {samp.hub.declareSubscriptions} $params rr]} {
-  	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	catch {unset samp}
 	return
     }
 
@@ -139,9 +130,7 @@ proc SAMPConnect {verbose} {
     set params [list "string $samp(private)"]
     set rr {}
     if {![SAMPSend {samp.hub.getRegisteredClients} $params rr]} {
-  	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	catch {unset samp}
 	return
     }
     set samp(clients) [lindex $rr 1]
@@ -152,9 +141,7 @@ proc SAMPConnect {verbose} {
 	set params "$param1 $param2" 
 	set rr {}
 	if {![SAMPSend {samp.hub.getSubscriptions} $params rr]} {
-	    if {$verbose} {
-		Error "SAMP: [msgcat::mc {internal error}] $rr"
-	    }
+	    catch {unset samp}
 	    return
 	}
 	
@@ -169,9 +156,7 @@ proc SAMPConnect {verbose} {
 	set params "$param1 $param2" 
 	set rr {}
 	if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
-	    if {$verbose} {
-		Error "SAMP: [msgcat::mc {internal error}] $rr"
-	    }
+	    catch {unset samp}
 	    return
 	}
 
@@ -208,9 +193,7 @@ proc SAMPDisconnect {verbose} {
 	set params [list "string $samp(private)"]
 	set rr {}
 	if {![SAMPSend {samp.hub.unregister} $params rr]} {
-	    if {$verbose} {
-		Error "SAMP: [msgcat::mc {internal error}] $rr"
-	    }
+	    catch {unset samp}
 	    return
 	}
 	SAMPShutdown
@@ -274,13 +257,9 @@ proc SAMPSendImageLoadFits {id} {
 
     set rr {}
     if {$id != {}} {
-	if {![SAMPSend {samp.hub.notify} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notify} $params rr
     } else {
-	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notifyAll} $params rr
     }
 }
 
@@ -338,13 +317,9 @@ proc SAMPSendTableLoadFits {id} {
 
     set rr {}
     if {$id != {}} {
-	if {![SAMPSend {samp.hub.notify} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notify} $params rr
     } else {
-	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notifyAll} $params rr
     }
 }
 
@@ -398,13 +373,9 @@ proc SAMPSendTableLoadVotable {id varname} {
 
     set rr {}
     if {$id != {}} {
-	if {![SAMPSend {samp.hub.notify} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notify} $params rr
     } else {
-	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notifyAll} $params rr
     }
 }
 
@@ -466,13 +437,9 @@ proc SAMPSendTableHighlightRow {id varname row} {
 
     set rr {}
     if {$id != {}} {
-	if {![SAMPSend {samp.hub.notify} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notify} $params rr
     } else {
-	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notifyAll} $params rr
     }
 }
 
@@ -513,13 +480,9 @@ proc SAMPSendTableSelectRowList {id varname rows} {
 
     set rr {}
     if {$id != {}} {
-	if {![SAMPSend {samp.hub.notify} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notify} $params rr
     } else {
-	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notifyAll} $params rr
     }
 }
 
@@ -573,13 +536,9 @@ proc SAMPSendCoordPointAtSky {id coord} {
 
     set rr {}
     if {$id != {}} {
-	if {![SAMPSend {samp.hub.notify} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notify} $params rr
     } else {
-	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
-	    Error "SAMP: [msgcat::mc {internal error}] $rr"
-	}
+	SAMPSend {samp.hub.notifyAll} $params rr
     }
 }
 
@@ -610,9 +569,7 @@ proc SAMPSend {method params resultVar} {
     }
 
     if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params]}]} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMPSend Error: $result"
-	}
+	Error "SAMP: [msgcat::mc {internal error}] $result"
 	return 0
     }
 
@@ -676,10 +633,8 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     set params "$param1 $param2 $param3"
 
     set rr {}
-    if {![SAMPSend {samp.hub.reply} $params rr]} {
-	Error "SAMP: [msgcat::mc {internal error}] $rr"
-	return
-    }
+    
+    SAMPSend {samp.hub.reply} $params rr
 }
 
 proc SAMPValidMtype {mtype} {

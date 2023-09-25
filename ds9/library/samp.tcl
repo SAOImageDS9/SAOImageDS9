@@ -10,8 +10,6 @@ proc SAMPConnect {verbose} {
     global ds9
     global samp
 
-    InitError samp
-
     # connected?
     if {[info exists samp]} {
 	if {$verbose} {
@@ -553,9 +551,8 @@ proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
 	samp.hub.notifyAll {}
 	samp.hub.call -
 	samp.hub.callAll {
-	    set samp(msgtag) [lindex $result 1]
-
 	    # and now we wait
+	    # must be set before
 	    vwait samp(msgtag)
 	}
 	samp.hub.callAndWait {
@@ -758,9 +755,8 @@ proc samp.client.receiveResponse {args} {
     set msgtag [lindex $args 2]
     set map [lindex $args 3]
 
-    if {$samp(msgtag) == {}} {
+    if {$msgtag != $samp(msgtag)} {
 	Error "SAMP: samp.client.receiveResponse bad tag $msgtag"
-	return {string ERROR}
     }
     set samp(msgtag) {}
 

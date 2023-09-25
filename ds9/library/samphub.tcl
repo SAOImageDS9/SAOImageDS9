@@ -101,12 +101,12 @@ proc SAMPHubStart {verbose} {
     set samphub($samphub(secret),url) {}
     set samphub($samphub(secret),subscriptions) {{samp.hub.ping}}
     set samphub($samphub(secret),metadata) [list \
-				   [list samp.name "Hub"] \
-				   [list samp.description.text "SAOImageDS9 Internal Hub"] \
-				   [list samp.icon.url "http://ds9.si.edu/bandw.png"] \
-				   [list author.mail "ds9help@cfa.harvard.edu"] \
-				   [list author.name {William Joye}] \
-				   ]
+						[list samp.name "Hub"] \
+						[list samp.description.text "SAOImageDS9 Internal Hub"] \
+						[list samp.icon.url "http://ds9.si.edu/bandw.png"] \
+						[list author.mail "ds9help@cfa.harvard.edu"] \
+						[list author.name {William Joye}] \
+					       ]
 
     if {$debug(tcl,samp)} {
 	puts "SAMPHubStart: $samphub(secret) $samphub($samphub(secret),id)"
@@ -213,6 +213,30 @@ proc SAMPHubGenerateCB {mtype params} {
     return [list $mtype $rr]
 }
 
+proc SAMPHubFindSecret {id} {
+    global samphub
+    
+    foreach cc $samphub(client,secret) {
+	if {$id == $samphub($cc,id)} {
+	    return $cc
+	}
+    }
+    return ERROR
+}
+
+proc SAMPHubFindSubscription {cc mtype} {
+    global samphub
+
+    foreach sub $samphub($cc,subscriptions) {
+	foreach {mm attr} $sub {
+	    if {$mm == $mtype} {
+		return 1
+	    }
+	}
+    }
+    return 0
+}
+
 proc SAMPHubSend {method url params resultVar} {
     upvar $resultVar result
     global samphub
@@ -228,10 +252,6 @@ proc SAMPHubSend {method url params resultVar} {
 	}
 	return 0
     }
-
-    # reset error if needed
-    # xmlrpc leaves error msgs
-    InitError samp
 
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPHubSend Result: $result"
@@ -453,15 +473,15 @@ proc samp.hub.unregister {args} {
 
     # some clients insist on sending samp.hub.unregister
     if {[info exists samphub(remove)]} {
-       if {$samphub(remove) == $secret} {
-           return {string OK}
-       }
+	if {$samphub(remove) == $secret} {
+	    return {string OK}
+	}
     }
 
     if {![SAMPHubValidSecret $secret]} {
 	return {string ERROR}
     }
- 
+    
     SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
 
     # update other clients
@@ -1006,49 +1026,13 @@ proc samp.hub.notifyAll {args} {
     return "array [list $ll]"
 }
 
-proc SAMPHubCall {cc secret id msgtag map mtype params} {
+proc SAMPHubCall {secret cc msgid mtype} {
     global samphub
     global samphubmap
     global samphubmap2
 
-    # ignore hub
-    if {$cc == $samphub(secret)} {
-	return OK
-    }
-
-    # don't send to sender
-    # should not happen
-    if {$cc == $secret} {
-	return OK
-    }
-
-    if {$samphub($cc,id) != $id} {
-	return OK
-    }
-
-    # are we subscribed
-    if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
-	return OK
-    }
-
-    set samphub(rr-msgid) {}
-    set samphub(rr-map) {}
-
-    catch {unset samphubmap}
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
-
-    catch {unset samphubmap2}
-    foreach mm $params {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
-	}
-    }
-
-    set msgid "$msgtag-$samphub($secret,id)"
-
     set param1 [list "string $cc"]
-    set param2 [list "string $id"]
+    set param2 [list "string $samphub($secret,id)"]
     set param3 [list "string $msgid"]
     set param4 [list "struct samphubmap"]
     set params "$param1 $param2 $param3 $param4"
@@ -1060,61 +1044,16 @@ proc SAMPHubCall {cc secret id msgtag map mtype params} {
     } else {
 	set rr {}
 	if {![SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
-	    }
 	    return ERROR
 	}
 	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
     }
-
-    set status {}
-    set result {}
-    foreach mm $samphub(rr-map) {
-	foreach {key val} $mm {
-	    switch -- $key {
-		samp.status {set status $val}
-		samp.result {set result $val}
-	    }
-	}
-    }
-
-    catch {unset samphubmap}
-    set samphubmap(samp.status) "string $status"
-    set samphubmap(samp.result) {struct samphubmap2}
-
-    catch {unset samphubmap2}
-    foreach mm $result {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
-	}
-    }
-
-    set param1 [list "string $secret"]
-    set param2 [list "string $id"]
-    set param3 [list "string $msgtag"]
-    set param4 [list "struct samphubmap"]
-    set params "$param1 $param2 $param3 $param4"	
-
-    if {$samphub($cc,web)} {
-	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
-	}
-    } else {
-	set rr {}
-	if {![SAMPHubSend samp.client.receiveResponse $samphub($secret,url) $params rr]} {
-	    if {$verbose} {
-		Error "SAMPHub: [msgcat::mc {internal error}] $rr"
-	    }
-	    return ERROR
-	}
-	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($secret,id)\t$rr"
-    }
-    return $msgid
 }
 
 proc samp.hub.call {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
@@ -1143,16 +1082,37 @@ proc samp.hub.call {args} {
 	}
     }
 
-    foreach cc $samphub(client,secret) {
-	set msgid [SAMPHubCall $cc $secret $id $msgtag $map $mtype $params]
-	switch $msgid {
-	    OK {continue}
-	    ERRROR {return {string ERROR}}
-	    default {return "string $msgid"}
+    set cc [SAMPHubFindSecret $id]
+
+    # ignore hub
+    if {$cc == $samphub(secret)} {
+	return ERROR
+    }
+
+    # don't send to sender
+    if {$cc == $secret} {
+	return ERROR
+    }
+
+    # are we subscribed
+    if {![SAMPHubFindSubscription $cc $mtype]} {
+	return ERROR
+    }
+
+    set msgid "$msgtag-$samphub($secret,id)"
+
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    foreach mm $params {
+	foreach {key val} $mm {
+	    set samphubmap2($key) "string \"[XMLQuote $val]\""
 	}
     }
 
-    return {string ERROR}
+    after 100 SAMPHubCall $secret $cc $msgid $mtype
+    return "string $msgid"
 }
 
 proc samp.hub.callAll {args} {
@@ -1317,6 +1277,30 @@ proc samp.hub.callAndWait {args} {
     return {string ERROR}
 }
 
+proc SAMPHubReply {cc id msgtag} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    set param1 [list "string $cc"]
+    set param2 [list "string $id"]
+    set param3 [list "string $msgtag"]
+    set param4 [list "struct samphubmap"]
+    set params "$param1 $param2 $param3 $param4"	
+
+    if {$samphub($cc,web)} {
+	if {$samphub(web,allowReverseCallbacks)} {
+	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB samp.client.receiveResponse $params]
+	}
+    } else {
+	set rr {}
+	if {![SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr]} {
+	    return ERROR
+	}
+	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)\t$rr"
+    }
+}
+
 proc samp.hub.reply {args} {
     global samphub
     global samphubmap
@@ -1332,14 +1316,40 @@ proc samp.hub.reply {args} {
     set map [lindex $args 2]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return ERROR
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
-    set samphub(rr-msgid) $msgid
-    set samphub(rr-map) $map
+    set msgtag [lindex [split $msgid "-"] 0]
+    set id [lindex [split $msgid "-"] 1]
 
+    set status {}
+    set result {}
+    foreach mm $map {
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.status {set status $val}
+		samp.result {set result $val}
+	    }
+	}
+    }
+
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    set samphubmap(samp.status) "string $status"
+    set samphubmap(samp.result) {struct samphubmap2}
+
+    foreach mm $result {
+	foreach {key val} $mm {
+	    set samphubmap2($key) "string \"[XMLQuote $val]\""
+	}
+    }
+
+    set cc [SAMPHubFindSecret $id]
+    set src $samphub($secret,id)
+
+    after 100 SAMPHubReply $cc $src $msgtag
     return {string OK}
 }
 
@@ -1405,5 +1415,3 @@ proc samp.hub.reply {args} {
 # x-samp.faq.url
 # x-samp.authors
 # x-samp.release.version
-
-

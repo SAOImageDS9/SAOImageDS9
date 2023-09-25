@@ -217,7 +217,7 @@ proc SAMPHubFindSecret {id} {
 	    return $cc
 	}
     }
-    return ERROR
+    return -code 0
 }
 
 proc SAMPHubFindSubscription {cc mtype} {
@@ -859,22 +859,17 @@ proc samp.hub.notify {args} {
 
     # ignore hub
     if {$cc == $samphub(secret)} {
-	continue
-    }
-
-    if {$samphub($cc,id) != $id} {
-	continue
+	return {string ERROR}
     }
 
     # don't send to sender
-    # should not happen
     if {$cc == $secret} {
-	continue
+	return {string ERROR}
     }
 
     # are we subscribed
-    if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
-	continue
+    if {![SAMPHubFindSubscription $cc $mtype]} {
+	return {string ERROR}
     }
 
     catch {unset samphubmap}
@@ -952,7 +947,7 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
 
@@ -1045,17 +1040,17 @@ proc samp.hub.call {args} {
 
     # ignore hub
     if {$cc == $samphub(secret)} {
-	return ERROR
+	return {string ERROR}
     }
 
     # don't send to sender
     if {$cc == $secret} {
-	return ERROR
+	return {string ERROR}
     }
 
     # are we subscribed
     if {![SAMPHubFindSubscription $cc $mtype]} {
-	return ERROR
+	return {string ERROR}
     }
 
     set msgid "$msgtag-$samphub($secret,id)"

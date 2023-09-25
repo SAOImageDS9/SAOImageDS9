@@ -824,6 +824,26 @@ proc samp.hub.getSubscribedClients {args} {
     return "struct samphubmap"
 }
 
+proc SAMPHubNotify {secret cc mtype} {
+    global samphub
+
+    set param1 [list "string $cc"]
+    set param2 [list "string $samphub($secret,id)"]
+    set param3 [list "struct samphubmap"]
+    set params "$param1 $param2 $param3"
+
+    if {$samphub($cc,web)} {
+	if {$samphub(web,allowReverseCallbacks)} {
+	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	}
+    } else {
+	set rr {}
+	SAMPHubSend samp.client.receiveNotification \
+	    $samphub($cc,url) $params rr
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    }
+}
+
 proc samp.hub.notify {args} {
     global samphub
     global samphubmap
@@ -873,10 +893,9 @@ proc samp.hub.notify {args} {
     }
 
     catch {unset samphubmap}
+    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
-
-    catch {unset samphubmap2}
     set samphubmap2(id) "string $samphub($secret,id)"
 
     foreach mm $iparams {
@@ -885,22 +904,7 @@ proc samp.hub.notify {args} {
 	}
     }
 
-    set param1 [list "string $cc"]
-    set param2 [list "string $samphub($samphub(secret),id)"]
-    set param3 [list "struct samphubmap"]
-    set params "$param1 $param2 $param3"
-
-    if {$samphub($cc,web)} {
-	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
-	}
-    } else {
-	set rr {}
-	SAMPHubSend samp.client.receiveNotification \
-	    $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-    }
-
+    after 1 SAMPHubNotify $secret $cc $mtype
     return {string OK}
 }
 
@@ -952,40 +956,24 @@ proc samp.hub.notifyAll {args} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
 
-	catch {unset samphubmap2}
 	foreach mm $iparams {
 	    foreach {key val} $mm {
 		set samphubmap2($key) "string \"$val\""
 	    }
 	}
 
-	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct samphubmap"]
-	set params "$param1 $param2 $param3"
-
-	if {$samphub($cc,web)} {
-	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
-	    }
-	} else {
-	    set rr {}
-	    SAMPHubSend samp.client.receiveNotification \
-		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-	    lappend ll "string $samphub($cc,id)"
-	}
+	after 1 SAMPHubNotify $secret $cc $mtype
+	lappend ll "string $samphub($cc,id)"
     }
     return "array [list $ll]"
 }
 
 proc SAMPHubCall {secret cc msgid mtype} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     set param1 [list "string $cc"]
     set param2 [list "string $samphub($secret,id)"]

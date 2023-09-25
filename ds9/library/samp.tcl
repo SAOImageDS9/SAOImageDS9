@@ -1334,6 +1334,7 @@ proc ds9.set {varname} {
 
     set fn {}
 
+    InitError samp
     if {$url != {}} {
 	ParseURL $url rr
 	switch -- $rr(scheme) {
@@ -1376,6 +1377,7 @@ proc SAMPRcvdDS9SetReply {msgid} {
 	} else {
 	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
 	}
+	InitError samp
     } else {
 	SAMPReply $msgid OK
     }
@@ -1404,6 +1406,7 @@ proc ds9.get {msgid varname} {
 	}
     }
 
+    InitError samp
     set fn [CommGet SAMPRcvdDS9GetReply $msgid $cmd [tmpnam {}]]
     if {$fn != {}} {
 	lappend samp(tmp,files) $fn
@@ -1432,6 +1435,7 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 	} else {
 	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
 	}
+	InitError samp
     } else {
 	# be sure to white space any newlines, backslashes, and trim
 	set value [string trim [string map {\n { } \\ {}} $msg]]

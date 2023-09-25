@@ -1111,7 +1111,7 @@ proc samp.hub.call {args} {
 	}
     }
 
-    after 100 SAMPHubCall $secret $cc $msgid $mtype
+    after 10 SAMPHubCall $secret $cc $msgid $mtype
     return "string $msgid"
 }
 
@@ -1349,7 +1349,7 @@ proc samp.hub.reply {args} {
     set cc [SAMPHubFindSecret $id]
     set src $samphub($secret,id)
 
-    after 100 SAMPHubReply $cc $src $msgtag
+    after 10 SAMPHubReply $cc $src $msgtag
     return {string OK}
 }
 

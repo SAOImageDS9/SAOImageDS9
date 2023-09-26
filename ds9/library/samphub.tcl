@@ -56,6 +56,7 @@ proc SAMPHubStart {verbose} {
     set samphub(client,seq) 0
     set samphub(client,secret) {}
     set samphub(cache,images) 1
+    set samphub(callAndWait) {}
 
     set samphub(fn) $fn
     if {[catch {set samphub(sock) [xmlrpc::serve 0]}]} {
@@ -150,10 +151,9 @@ proc SAMPHubStop {verbose} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
@@ -281,10 +281,9 @@ proc SAMPHubDisconnect {secret} {
     }
 
     catch {unset samphubmap}
+    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
-
-    catch {unset samphubmap2}
     set samphubmap2(reason) {string disconnect}
 
     set param1 [list "string $secret"]
@@ -366,10 +365,9 @@ proc SAMPHubRegister {web} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 
 	set param1 [list "string $cc"]
@@ -569,14 +567,12 @@ proc samp.hub.declareMetadata {args} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
+	catch {unset samphubmap3}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 	set samphubmap2(metadata) {struct samphubmap3}
-
-	catch {unset samphubmap3}
 	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
 		set samphubmap3($key) "string \"[XMLQuote $val]\""
@@ -686,14 +682,12 @@ proc samp.hub.declareSubscriptions {args} {
 	}
 
 	catch {unset samphubmap}
+	catch {unset samphubmap2}
+	catch {unset samphubmap3}
 	set samphubmap(samp.mtype) "string $mtype"
 	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
 	set samphubmap2(id) "string $samphub($secret,id)"
 	set samphubmap2(subscriptions) {struct samphubmap3}
-
-	catch {unset samphubmap3}
 	foreach mm $samphub($secret,subscriptions) {
 	    foreach {key val} $mm {
 		set samphubmap3($key) "string \"[XMLQuote $val]\""
@@ -882,7 +876,6 @@ proc samp.hub.notify {args} {
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
     set samphubmap2(id) "string $samphub($secret,id)"
-
     foreach mm $params {
 	foreach {key val} $mm {
 	    set samphubmap2($key) "string \"$val\""
@@ -944,7 +937,6 @@ proc samp.hub.notifyAll {args} {
     catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
-
     foreach mm $params {
 	foreach {key val} $mm {
 	    set samphubmap2($key) "string \"$val\""
@@ -1161,84 +1153,41 @@ proc samp.hub.callAndWait {args} {
 	}
     }
 
-    foreach cc $samphub(client,secret) {
-	# ignore hub
-	if {$cc == $samphub(secret)} {
-	    continue
-	}
-
-	# don't send to sender
-	# should not happen
-	if {$cc == $secret} {
-	    continue
-	}
-
-	if {$samphub($cc,id) != $id} {
-	    continue
-	}
-
-	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
-	    continue
-	}
-
-	set samphub(rr-msgid) {}
-	set samphub(rr-map) {}
-
-	catch {unset samphubmap}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
-	foreach mm $params {
-	    foreach {key val} $mm {
-		set samphubmap2($key) "string \"$val\""
-	    }
-	}
-
-	set param1 [list "string $cc"]
-	set param2 [list "string $id"]
-	set param3 [list "string foo-$samphub($secret,id)"]
-	set param4 [list "struct samphubmap"]
-	set params "$param1 $param2 $param3 $param4"
-
-	if {$samphub($cc,web)} {
-	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
-	    }
-	    return {string OK}
-	} else {
-	    set rr {}
-	    SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
-
-	    set status {}
-	    set result {}
-	    foreach mm $samphub(rr-map) {
-		foreach {key val} $mm {
-		    switch -- $key {
-			samp.status {set status $val}
-			samp.result {set result $val}
-		    }
-		}
-	    }
-
-	    catch {unset samphubmap}
-	    set samphubmap(samp.status) "string $status"
-	    set samphubmap(samp.result) {struct samphubmap2}
-
-	    catch {unset samphubmap2}
-	    foreach mm $result {
-		foreach {key val} $mm {
-		    set samphubmap2($key) "string \"$val\""
-		}
-	    }
-
-	    return "struct samphubmap"
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    foreach mm $params {
+	foreach {key val} $mm {
+	    set samphubmap2($key) "string \"$val\""
 	}
     }
 
-    return {string ERROR}
+    set msgid "bar-$samphub($secret,id)"
+
+    set cc [SAMPHubFindSecret $id]
+
+    # ignore hub
+    if {$cc == $samphub(secret)} {
+	return {string ERROR}
+    }
+
+    # don't send to sender
+    if {$cc == $secret} {
+	return {string ERROR}
+    }
+
+    # are we subscribed
+    if {![SAMPHubFindSubscription $cc $mtype]} {
+	return {string ERROR}
+    }
+
+    after 1 SAMPHubCall $secret $cc $msgid $mtype
+
+    vwait samphub(callAndWait)
+    set samphub(callAndWait) {}
+
+    return "struct samphubmap"
 }
 
 proc SAMPHubReply {cc id msgtag} {
@@ -1301,7 +1250,6 @@ proc samp.hub.reply {args} {
     catch {unset samphubmap2}
     set samphubmap(samp.status) "string $status"
     set samphubmap(samp.result) {struct samphubmap2}
-
     foreach mm $result {
 	foreach {key val} $mm {
 	    set samphubmap2($key) "string \"[XMLQuote $val]\""
@@ -1311,7 +1259,17 @@ proc samp.hub.reply {args} {
     set cc [SAMPHubFindSecret $id]
     set src $samphub($secret,id)
 
-    after 1 SAMPHubReply $cc $src $msgtag
+    switch $msgtag {
+	foo {
+	    # call
+	    after 1 SAMPHubReply $cc $src $msgtag
+	}
+	bar {
+	    # callAndWait
+	    set samphub(callAndWait) 1
+	}
+	
+    }
     return {string OK}
 }
 

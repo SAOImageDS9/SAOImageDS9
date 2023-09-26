@@ -141,7 +141,7 @@ proc SAMPHubStop {verbose} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
 
@@ -269,7 +269,7 @@ proc SAMPHubDisconnect {secret} {
     set mtype {samp.hub.disconnect}
 
     # are we subscribed
-    if {[lsearch $samphub($secret,subscriptions) $mtype]<0} {
+    if {![SAMPHubFindSubscription $secret $mtype]} {
 	SAMPHubRemove $secret
 	return
     }
@@ -360,7 +360,7 @@ proc SAMPHubRegister {web} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
 
@@ -485,7 +485,7 @@ proc samp.hub.unregister {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
 
@@ -562,7 +562,7 @@ proc samp.hub.declareMetadata {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
 
@@ -677,7 +677,7 @@ proc samp.hub.declareSubscriptions {args} {
 	}
 
 	# are we subscribed
-	if {[lsearch $samphub($cc,subscriptions) $mtype]<0} {
+	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
 

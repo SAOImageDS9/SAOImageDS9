@@ -541,7 +541,7 @@ proc samp.hub.declareMetadata {args} {
 
     foreach mm $map {
 	foreach {key val} $mm {
-	    lappend samphub($secret,metadata) [list $key $val]
+	    lappend samphub($secret,metadata) [list $key [XMLUnQuote $val]]
 	}
     }
     
@@ -575,7 +575,7 @@ proc samp.hub.declareMetadata {args} {
 	set samphubmap2(metadata) {struct samphubmap3}
 	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
-		set samphubmap3($key) "string \"$val\""
+		set samphubmap3($key) "string \"[XMLQuote $val]\""
 	    }
 	}
 
@@ -622,7 +622,7 @@ proc samp.hub.getMetadata {args} {
 	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
-		    set samphubmap($key) "string \"$val\""
+		    set samphubmap($key) "string \"[XMLQuote $val]\""
 		}
 	    }
 	    return "struct samphubmap"

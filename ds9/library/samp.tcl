@@ -595,7 +595,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 		set sampmap2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
-		set sampmap2(url) "string \"$url\""
+		set sampmap2(url) "string \"[XMLQuote $url]\""
 	    }
 	}
 	WARNING {
@@ -606,7 +606,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 		set sampmap2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
-		set sampmap2(url) "string \"$url\""
+		set sampmap2(url) "string \"[XMLQuote $url]\""
 	    }
 	    set sampmap3(samp.errortxt) "string \"$error\""
 	}

@@ -541,7 +541,7 @@ proc samp.hub.declareMetadata {args} {
 
     foreach mm $map {
 	foreach {key val} $mm {
-	    lappend samphub($secret,metadata) [list $key [XMLUnQuote $val]]
+	    lappend samphub($secret,metadata) [list $key $val]
 	}
     }
     
@@ -575,7 +575,7 @@ proc samp.hub.declareMetadata {args} {
 	set samphubmap2(metadata) {struct samphubmap3}
 	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
-		set samphubmap3($key) "string \"[XMLQuote $val]\""
+		set samphubmap3($key) "string \"$val\""
 	    }
 	}
 
@@ -622,7 +622,7 @@ proc samp.hub.getMetadata {args} {
 	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
-		    set samphubmap($key) "string \"[XMLQuote $val]\""
+		    set samphubmap($key) "string \"$val\""
 		}
 	    }
 	    return "struct samphubmap"
@@ -690,7 +690,7 @@ proc samp.hub.declareSubscriptions {args} {
 	set samphubmap2(subscriptions) {struct samphubmap3}
 	foreach mm $samphub($secret,subscriptions) {
 	    foreach {key val} $mm {
-		set samphubmap3($key) "string \"[XMLQuote $val]\""
+		set samphubmap3($key) "string \"$val\""
 	    }
 	}
 
@@ -738,7 +738,7 @@ proc samp.hub.getSubscriptions {args} {
 	    catch {unset samphubmap}
 	    foreach mm $samphub($cc,subscriptions) {
 		foreach {key val} $mm {
-		    set samphubmap($key) "string \"[XMLQuote $val]\""
+		    set samphubmap($key) "string \"$val\""
 		}
 	    }
 	    return "struct samphubmap"
@@ -1024,7 +1024,7 @@ proc samp.hub.call {args} {
     set samphubmap(samp.params) {struct samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    set samphubmap2($key) "string \"$val\""
 	}
     }
 
@@ -1089,7 +1089,7 @@ proc samp.hub.callAll {args} {
     set samphubmap(samp.params) {struct samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    set samphubmap2($key) "string \"$val\""
 	}
     }
 
@@ -1252,7 +1252,7 @@ proc samp.hub.reply {args} {
     set samphubmap(samp.result) {struct samphubmap2}
     foreach mm $result {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"[XMLQuote $val]\""
+	    set samphubmap2($key) "string \"$val\""
 	}
     }
 

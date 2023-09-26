@@ -163,7 +163,7 @@ proc SAMPConnect {verbose} {
 	foreach arg [lindex $rr 1] {
 	    foreach {key val} $arg {
 		switch -- $key {
-		    samp.name {set samp($cc,name) [XMLUnQuote $val]}
+		    samp.name {set samp($cc,name) $val}
 		}
 	    }
 	}
@@ -592,10 +592,10 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    set sampmap(samp.status) {string "samp.ok"}
 	    set sampmap(samp.result) {struct sampmap2}
 	    if {$result != {}} {
-		set sampmap2(value) "string \"[XMLQuote $result]\""
+		set sampmap2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
-		set sampmap2(url) "string \"[XMLQuote $url]\""
+		set sampmap2(url) "string \"$url\""
 	    }
 	}
 	WARNING {
@@ -603,17 +603,17 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    set sampmap(samp.result) {struct sampmap2}
 	    set sampmap(samp.error)  {struct sampmap3}
 	    if {$result != {}} {
-		set sampmap2(value) "string \"[XMLQuote $result]\""
+		set sampmap2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
-		set sampmap2(url) "string \"[XMLQuote $url]\""
+		set sampmap2(url) "string \"$url\""
 	    }
-	    set sampmap3(samp.errortxt) "string \"[XMLQuote $error]\""
+	    set sampmap3(samp.errortxt) "string \"$error\""
 	}
 	ERROR {
 	    set sampmap(samp.status) {string "samp.error"}
 	    set sampmap(samp.error)  {struct sampmap3}
-	    set sampmap3(samp.errortxt) "string \"[XMLQuote $error]\""
+	    set sampmap3(samp.errortxt) "string \"$error\""
 	}
     }
     set param1 [list "string $samp(private)"]
@@ -1076,7 +1076,7 @@ proc samp.hub.disconnect {varname} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		reason {set msg [XMLUnQuote $val]}
+		reason {set msg $val}
 	    }
 	}
     }

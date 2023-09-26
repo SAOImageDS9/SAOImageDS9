@@ -669,18 +669,18 @@ proc samp.client.receiveNotification {args} {
     }
 
     set mtype {}
-    set iparams {}
+    set params {}
     foreach mm $map {
 	foreach {key val} $mm {
 	    switch -- $key {
 		samp.mtype {set mtype $val}
-		samp.params {set iparams $val}
+		samp.params {set params $val}
 	    }
 	}
     }
 
     if {[SAMPValidMtype $mtype]} {
-	$mtype iparams
+	$mtype params
     } else {
 	Error "SAMP: [msgcat::mc {internal error}]"
 	return {string ERROR}
@@ -709,12 +709,12 @@ proc samp.client.receiveCall {args} {
     }
 
     set mtype {}
-    set iparams {}
+    set params {}
     foreach mm $map {
 	foreach {key val} $mm {
 	    switch -- $key {
 		samp.mtype {set mtype $val}
-		samp.params {set iparams $val}
+		samp.params {set params $val}
 	    }
 	}
     }
@@ -722,17 +722,17 @@ proc samp.client.receiveCall {args} {
     if {[SAMPValidMtype $mtype]} {
 	switch -- $mtype {
 	    client.env.get {
-		$mtype $msgid iparams
+		$mtype $msgid params
 	    }
 	    ds9.get {
-		$mtype $msgid iparams
+		$mtype $msgid params
 	    }
 	    ds9.set {
-		$mtype iparams
+		$mtype params
 		SAMPRcvdDS9SetReply $msgid
 	    }
 	    default {
-		$mtype iparams
+		$mtype params
 		SAMPReply $msgid OK
 	    }
 	}

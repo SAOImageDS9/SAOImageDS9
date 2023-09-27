@@ -560,9 +560,6 @@ proc samp.hub.unregister {args} {
 
 proc samp.hub.declareMetadata {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
-    global samphubmap3
     
     global debug
     if {$debug(tcl,samp)} {
@@ -589,6 +586,16 @@ proc samp.hub.declareMetadata {args} {
 
     # update other clients
     set mtype {samp.hub.event.metadata}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+    set samphubmap2(metadata) {struct samphubmap3}
+    foreach mm $samphub($secret,metadata) {
+	foreach {key val} $mm {
+	    set samphubmap3($key) "string \"[XMLQuote $val]\""
+	}
+    }
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -603,19 +610,6 @@ proc samp.hub.declareMetadata {args} {
 	# are we subscribed
 	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
-	}
-
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	catch {unset samphubmap3}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
-	set samphubmap2(metadata) {struct samphubmap3}
-	foreach mm $samphub($secret,metadata) {
-	    foreach {key val} $mm {
-		set samphubmap3($key) "string \"[XMLQuote $val]\""
-	    }
 	}
 
 	set param1 [list "string $cc"]

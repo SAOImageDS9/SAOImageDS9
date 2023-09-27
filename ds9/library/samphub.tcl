@@ -253,27 +253,27 @@ proc SAMPHubSend {method url params resultVar} {
     return 1
 }
 
-proc SAMPHubDisconnect {secret} {
+proc SAMPHubDisconnect {cc} {
     global samphub
     global samphubmap
     global samphubmap2
 
     # ignore hub
-    if {$secret == $samphub(secret)} {
+    if {$cc == $samphub(secret)} {
 	return
     }
 
     set mtype {samp.hub.disconnect}
 
     # are we subscribed
-    if {![SAMPHubFindSubscription $secret $mtype]} {
-	SAMPHubRemove $secret
+    if {![SAMPHubFindSubscription $cc $mtype]} {
+	SAMPHubRemove $cc
 	return
     }
 
     # only standard clients
-    if {$samphub($secret,web)} {
-	SAMPHubRemove $secret
+    if {$samphub($cc,web)} {
+	SAMPHubRemove $cc
 	return
     }
 
@@ -283,19 +283,18 @@ proc SAMPHubDisconnect {secret} {
     set samphubmap(samp.params) {struct samphubmap2}
     set samphubmap2(reason) {string disconnect}
 
-    set param1 [list "string $secret"]
+    set param1 [list "string $cc"]
     set param2 [list "string $samphub($samphub(secret),id)"]
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
 
     # some clients insist on sending samp.hub.unregister
-    set samphub(remove) $secret
+    set samphub(remove) $cc
     set rr {}
-    SAMPHubSend {samp.client.receiveNotification} \
-	$samphub($secret,url) $params rr
+    SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr
     unset samphub(remove)
-    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
-    SAMPHubRemove $secret
+    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+    SAMPHubRemove $cc
 }
 
 proc SAMPHubRemove {secret} {

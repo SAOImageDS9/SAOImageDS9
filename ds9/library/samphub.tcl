@@ -694,15 +694,15 @@ proc samp.hub.declareSubscriptions {args} {
 
     # update other clients
     set mtype {samp.hub.event.subscriptions}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
-	set samphubmap2(subscriptions) {struct samphubmap3}
-	foreach mm $samphub($secret,subscriptions) {
-	    foreach {key val} $mm {
-		set samphubmap3($key) "string \"$val\""
-	    }
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+    set samphubmap2(subscriptions) {struct samphubmap3}
+    foreach mm $samphub($secret,subscriptions) {
+	foreach {key val} $mm {
+	    set samphubmap3($key) "string \"$val\""
 	}
+    }
 
     foreach cc $samphub(client,secret) {
 	# ignore hub

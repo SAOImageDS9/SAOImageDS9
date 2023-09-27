@@ -241,7 +241,9 @@ proc SAMPHubSend {method url params resultVar {ntabs 5} {distance 4}} {
     # figure out xmlrpc-?
     set rpc {xmlrpc}
     if {[ParseURL $url r]} {
-	set rpc [string range $r(path) 1 end]
+	if {$r(path) != {}} {
+	    set rpc [string range $r(path) 1 end]
+	}
     }
     
     if {[catch {set result [xmlrpc::call $url $rpc $method $params $ntabs $distance]]}]} {

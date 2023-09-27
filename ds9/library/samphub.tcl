@@ -119,8 +119,6 @@ proc SAMPHubStart {verbose} {
 
 proc SAMPHubStop {verbose} {
     global samphub
-    global samphubmap
-    global samphubmap2
     global debug
 
     # hub running?
@@ -134,8 +132,6 @@ proc SAMPHubStop {verbose} {
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
 
@@ -264,8 +260,6 @@ proc SAMPHubSend {method url params resultVar {ntabs 5} {distance 4}} {
 
 proc SAMPHubDisconnect {cc} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     # ignore hub
     if {$cc == $samphub(secret)} {
@@ -286,8 +280,6 @@ proc SAMPHubDisconnect {cc} {
 	return
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
     set samphubmap2(reason) {string disconnect}

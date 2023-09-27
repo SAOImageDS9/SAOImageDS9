@@ -260,25 +260,25 @@ proc SAMPHubSend {method url params resultVar {ntabs 5} {distance 4}} {
     return 1
 }
 
-proc SAMPHubDisconnect {cc} {
+proc SAMPHubDisconnect {secret} {
     global samphub
 
     # ignore hub
-    if {$cc == $samphub(secret)} {
+    if {$secret == $samphub(secret)} {
 	return
     }
 
     set mtype {samp.hub.disconnect}
 
     # are we subscribed
-    if {![SAMPHubFindSubscription $cc $mtype]} {
-	SAMPHubRemove $cc
+    if {![SAMPHubFindSubscription $secret $mtype]} {
+	SAMPHubRemove $secret
 	return
     }
 
     # only standard clients
-    if {$samphub($cc,web)} {
-	SAMPHubRemove $cc
+    if {$samphub($secret,web)} {
+	SAMPHubRemove $secret
 	return
     }
 
@@ -286,18 +286,63 @@ proc SAMPHubDisconnect {cc} {
     set samphubmap(samp.params) {struct samphubmap2}
     set samphubmap2(reason) {string disconnect}
 
-    set param1 [list "string $cc"]
+    set param1 [list "string $secret"]
     set param2 [list "string $samphub($samphub(secret),id)"]
     set param3 [list "struct samphubmap"]
     set params "$param1 $param2 $param3"	
 
     # some clients insist on sending samp.hub.unregister
-    set samphub(remove) $cc
+    set samphub(remove) $secret
     set rr {}
-    SAMPHubSend {samp.client.receiveNotification} $samphub($cc,url) $params rr
+    SAMPHubSend {samp.client.receiveNotification} \
+	$samphub($secret,url) $params rr
     unset samphub(remove)
-    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
-    SAMPHubRemove $cc
+    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
+
+    # update other clients
+    # notify others before removing
+    set mtype {samp.hub.event.unregister}
+    foreach cc $samphub(client,secret) {
+	# ignore hub
+	if {$cc == $samphub(secret)} {
+	    continue
+	}
+
+	# don't send to sender
+	if {$cc == $secret} {
+	    continue
+	}
+
+	# are we subscribed
+	if {![SAMPHubFindSubscription $cc $mtype]} {
+	    continue
+	}
+
+	catch {unset samphubmap}
+	set samphubmap(samp.mtype) "string $mtype"
+	set samphubmap(samp.params) {struct samphubmap2}
+
+	catch {unset samphubmap2}
+	set samphubmap2(id) "string $samphub($secret,id)"
+
+	set param1 [list "string $cc"]
+	set param2 [list "string $samphub($samphub(secret),id)"]
+	set param3 [list "struct samphubmap"]
+	set params "$param1 $param2 $param3"
+
+	if {$samphub($cc,web)} {
+	    if {$samphub(web,allowReverseCallbacks)} {
+		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	    }
+	} else {
+	    set rr {}
+	    SAMPHubSend {samp.client.receiveNotification} \
+		$samphub($cc,url) $params rr
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	}
+    }
+
+    SAMPHubRemove $secret
 }
 
 proc SAMPHubRemove {secret} {

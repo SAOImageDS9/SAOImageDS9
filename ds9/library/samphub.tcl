@@ -14,7 +14,6 @@ proc SAMPHubDef {} {
 proc SAMPHubStart {verbose} {
     global samp
     global samphub
-    global samphubmap
     global debug
     global pds9
 
@@ -134,6 +133,9 @@ proc SAMPHubStop {verbose} {
 
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -149,11 +151,6 @@ proc SAMPHubStop {verbose} {
 	if {$samphub($cc,web)} {
 	    continue
 	}
-
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]

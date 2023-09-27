@@ -133,6 +133,9 @@ proc SAMPHubStop {verbose} {
 
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
+
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
 
@@ -236,10 +239,16 @@ proc SAMPHubSend {method url params resultVar} {
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPHubSend: $url $method $params"
+	puts stderr "SAMPHubSend: $method $url $params"
     }
     
-    if {[catch {set result [xmlrpc::call $url xmlrpc $method $params]}]} {
+    # figure out xmlrpc-?
+    set rpc {xmlrpc}
+    if {[ParseURL $url r]} {
+	set rpc [string range $r(path) 1 end]
+    }
+    
+    if {[catch {set result [xmlrpc::call $url $rpc $method $params]}]} {
 	if {$debug(tcl,samp)} {
 	    puts stderr "SAMPHub: [msgcat::mc {internal error}] $result"
 	}

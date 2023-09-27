@@ -131,7 +131,6 @@ proc SAMPHubStop {verbose} {
 
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
-
     set samphubmap(samp.mtype) "string $mtype"
     set samphubmap(samp.params) {struct samphubmap2}
 
@@ -299,9 +298,16 @@ proc SAMPHubDisconnect {secret} {
     unset samphub(remove)
     SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
 
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -317,13 +323,6 @@ proc SAMPHubDisconnect {secret} {
 	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
-
-	catch {unset samphubmap}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-
-	catch {unset samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]

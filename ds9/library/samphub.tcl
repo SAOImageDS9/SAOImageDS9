@@ -228,37 +228,6 @@ proc SAMPHubFindSubscription {cc mtype} {
     return 0
 }
 
-proc SAMPHubSend {method url params resultVar {ntabs 5} {distance 4}} {
-    upvar $resultVar result
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPHubSend: $method $url $params"
-    }
-    
-    # figure out xmlrpc-?
-    set rpc {xmlrpc}
-    if {[ParseURL $url r]} {
-	if {$r(path) != {}} {
-	    set rpc [string range $r(path) 1 end]
-	}
-    }
-    
-    if {[catch {set result [xmlrpc::call $url $rpc $method $params $ntabs $distance]]}]} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMPHub: [msgcat::mc {internal error}] $result"
-	}
-	return 0
-    }
-
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPHubSend Result: $result"
-    }
-
-    return 1
-}
-
 proc SAMPHubDisconnect {secret} {
     global samphub
 
@@ -434,6 +403,37 @@ proc SAMPHubRegister {web} {
     set samphubmap(samp.hub-id) {string hub}
     set samphubmap(samp.self-id) "string $id"
     set samphubmap(samp.private-key) "string $secret"
+}
+
+proc SAMPHubSend {method url params resultVar {ntabs 5} {distance 4}} {
+    upvar $resultVar result
+    global samphub
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPHubSend: $method $url $params"
+    }
+
+    # figure out xmlrpc-?
+    set rpc {xmlrpc}
+    if {[ParseURL $url r]} {
+	if {$r(path) != {}} {
+	    set rpc [string range $r(path) 1 end]
+	}
+    }
+
+    if {[catch {set result [xmlrpc::call $url $rpc $method $params $ntabs $distance]]}]} {
+	if {$debug(tcl,samp)} {
+	    puts stderr "SAMPHub: [msgcat::mc {internal error}] $result"
+	}
+	return 0
+    }
+
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPHubSend Result: $result"
+    }
+
+    return 1
 }
 
 proc SAMPHubNotify {secret cc mtype} {
@@ -943,6 +943,7 @@ proc samp.hub.notify {args} {
 	return {string ERROR}
     }
 
+    # wll execute at global level
     after 1 SAMPHubNotify $secret $cc $mtype
     return {string OK}
 }

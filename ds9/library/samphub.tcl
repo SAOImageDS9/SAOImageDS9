@@ -944,7 +944,7 @@ proc samp.hub.notify {args} {
     }
 
     # wll execute at global level
-    after 1 SAMPHubNotify $secret $cc $mtype
+    after 1 "SAMPHubNotify $secret $cc $mtype"
     return {string OK}
 }
 
@@ -1005,7 +1005,7 @@ proc samp.hub.notifyAll {args} {
 	    continue
 	}
 
-	after 1 SAMPHubNotify $secret $cc $mtype
+	after 1 "SAMPHubNotify $secret $cc $mtype"
 	lappend ll "string $samphub($cc,id)"
     }
     return "array [list $ll]"
@@ -1072,7 +1072,7 @@ proc samp.hub.call {args} {
 	return {string ERROR}
     }
 
-    after 1 SAMPHubCall $secret $cc $msgid $mtype
+    after 1 "SAMPHubCall $secret $cc $msgid $mtype"
     return "string $msgid"
 }
 
@@ -1136,7 +1136,7 @@ proc samp.hub.callAll {args} {
 	    continue
 	}
 
-	after 1 SAMPHubCall $secret $cc $msgid $mtype
+	after 1 "SAMPHubCall $secret $cc $msgid $mtype"
 
 	set id $samphub($cc,id)
 	catch {unset samphubmap3}
@@ -1207,7 +1207,7 @@ proc samp.hub.callAndWait {args} {
 	return {string ERROR}
     }
 
-    after 1 SAMPHubCall $secret $cc $msgid $mtype
+    after 1 "SAMPHubCall $secret $cc $msgid $mtype"
 
     vwait samphub(callAndWait)
     set samphub(callAndWait) {}
@@ -1287,7 +1287,7 @@ proc samp.hub.reply {args} {
     switch $msgtag {
 	foo {
 	    # call
-	    after 1 SAMPHubReply $cc $src $msgtag
+	    after 1 "SAMPHubReply $cc $src $msgtag"
 	}
 	bar {
 	    # callAndWait

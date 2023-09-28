@@ -4,8 +4,6 @@
 
 package provide DS9 1.0
 
-# Cmds
-
 proc SAMPConnect {verbose} {
     global ds9
     global samp
@@ -568,31 +566,6 @@ proc SAMPGetAppsSubscriptions {mtype} {
     return $ll
 }
 
-proc SAMPValidMtype {mtype} {
-    switch $mtype {
-	samp.client.receiveNotification -
-	samp.client.receiveCall -
-	samp.client.receiveResponse -
-	samp.hub.event.shutdown -
-	samp.hub.event.register -
-	samp.hub.event.unregister -
-	samp.hub.event.metadata -
-	samp.hub.event.subscriptions -
-	samp.hub.disconnect -
-	samp.app.ping -
-	image.load.fits -
-	table.load.fits -
-	table.load.votable -
-	table.highlight.row -
-	table.select.rowList -
-	coord.pointAt.sky -
-	client.env.get -
-	ds9.set -
-	ds9.get {return 1}
-	default {return 0}
-    }
-}
-
 proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
     upvar $resultVar result
     global samp
@@ -616,12 +589,14 @@ proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
     switch $method {
 	samp.hub.notify -
 	samp.hub.notifyAll {}
+
 	samp.hub.call -
 	samp.hub.callAll {
 	    # and now we wait
 	    # must be set before
 	    vwait samp(msgtag)
 	}
+
 	samp.hub.callAndWait {
 	    set status {}
 	    set value {}
@@ -786,13 +761,7 @@ proc samp.client.receiveNotification {args} {
 	}
     }
 
-    if {[SAMPValidMtype $mtype]} {
-	$mtype params
-    } else {
-	Error "SAMP: [msgcat::mc {internal error}]"
-	return {string ERROR}
-    }
-
+    after 1 "$mtype {} $params"
     return {string OK}
 }
 
@@ -826,28 +795,7 @@ proc samp.client.receiveCall {args} {
 	}
     }
 
-    if {[SAMPValidMtype $mtype]} {
-	switch -- $mtype {
-	    client.env.get {
-		$mtype $msgid params
-	    }
-	    ds9.get {
-		$mtype $msgid params
-	    }
-	    ds9.set {
-		$mtype params
-		SAMPRcvdDS9SetReply $msgid
-	    }
-	    default {
-		$mtype params
-		SAMPReply $msgid OK
-	    }
-	}
-    } else {
-	Error "SAMP: [msgcat::mc {internal error}]"
-	return {string ERROR}
-    }
-
+    after 1 "$mtype $msgid $params"
     return {string OK}
 }
 
@@ -885,9 +833,7 @@ proc samp.client.receiveResponse {args} {
     return {string OK}
 }
 
-proc samp.hub.event.shutdown {varname} {
-    upvar $varname args
-
+proc samp.hub.event.shutdown {msgid args} {
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "samp.hub.event.shutdown $args"
@@ -897,11 +843,13 @@ proc samp.hub.event.shutdown {varname} {
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc samp.hub.event.register {varname} {
-    upvar $varname args
-
+proc samp.hub.event.register {msgid args} {
     global samp
 
     global debug
@@ -920,11 +868,13 @@ proc samp.hub.event.register {varname} {
 	    }
 	}
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc samp.hub.event.unregister {varname} {
-    upvar $varname args
-
+proc samp.hub.event.unregister {msgid args} {
     global samp
 
     global debug
@@ -947,11 +897,13 @@ proc samp.hub.event.unregister {varname} {
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc samp.hub.event.metadata {varname} {
-    upvar $varname args
-
+proc samp.hub.event.metadata {msgid args} {
     global samp
 
     global debug
@@ -994,11 +946,13 @@ proc samp.hub.event.metadata {varname} {
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc samp.hub.event.subscriptions {varname} {
-    upvar $varname args
-
+proc samp.hub.event.subscriptions {msgid args} {
     global samp
 
     global debug
@@ -1039,11 +993,13 @@ proc samp.hub.event.subscriptions {varname} {
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc samp.hub.disconnect {varname} {
-    upvar $varname args
-
+proc samp.hub.disconnect {msgid args} {
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "samp.hub.disconnect $args"
@@ -1064,25 +1020,28 @@ proc samp.hub.disconnect {varname} {
     UpdateCATDialogSAMP
 }
 
-proc samp.app.ping {varname} {
+proc samp.app.ping {msgid args} {
     upvar $varname args
 
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "samp.app.ping $args"
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc image.load.fits {varname} {
-    upvar $varname args
+proc image.load.fits {msgid args} {
+    global current
+    global samp
 
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPRcvdImageLoadFits: $args"
     }
 
-    global current
-    global samp
 
     set url {}
     set imageid {}
@@ -1101,19 +1060,21 @@ proc image.load.fits {varname} {
     if {$url != {}} {
 	LoadURLFits $url {} {} 1
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc table.load.fits {varname} {
-    upvar $varname args
+proc table.load.fits {msgid args} {
+    global current
+    global samp
 
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "table.load.fits $args"
     }
 
-    global current
-    global samp
-
     set url {}
     set imageid {}
     set name {}
@@ -1131,12 +1092,15 @@ proc table.load.fits {varname} {
     if {$url != {}} {
 	LoadURLFits $url {} {} 1
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc table.load.votable {varname} {
-    upvar $varname args
-
+proc table.load.votable {msgid args} {
     global samp
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "table.load.votable $args"
@@ -1165,12 +1129,15 @@ proc table.load.votable {varname} {
 	    set samp(ocat,$catid) $tabid
 	}
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc table.highlight.row {varname} {
-    upvar $varname args
-
+proc table.highlight.row {msgid args} {
     global samp
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "table.highlight.row $args"
@@ -1195,12 +1162,15 @@ proc table.highlight.row {varname} {
 	    CATSelectRows $samp(icat,$tabid) samp [expr $row+1] 1
 	}
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc table.select.rowList {varname} {
-    upvar $varname args
-
+proc table.select.rowList {msgid args} {
     global samp
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "table.select.rowList $args"
@@ -1229,12 +1199,15 @@ proc table.select.rowList {varname} {
 	    CATSelectRows $samp(icat,$tabid) samp $rowlist 1
 	}
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc coord.pointAt.sky {varname} {
-    upvar $varname args
-
+proc coord.pointAt.sky {msgid args} {
     global samp
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "coord.pointAt.sky $args"
@@ -1256,12 +1229,15 @@ proc coord.pointAt.sky {varname} {
     if {$ra != {} && $dec != {} && [$current(frame) has wcs celestial wcs]} {
 	PanTo $ra $dec wcs fk5
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
 }
 
-proc client.env.get {msgid varname} {
-    upvar $varname args
-
+proc client.env.get {msgid args} {
     global samp
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "client.env.get $msgid $args"
@@ -1287,16 +1263,14 @@ proc client.env.get {msgid varname} {
     }
 }
 
-proc ds9.set {varname} {
-    upvar $varname args
-   
+proc ds9.set {msgid args} {
+    global current
+    global samp
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "ds9.set $args"
     }
-
-    global current
-    global samp
 
     set url {}
     set cmd {}
@@ -1331,19 +1305,22 @@ proc ds9.set {varname} {
 	    }
 	}
     }
+
     CommSet $fn $cmd 0
+
+    if {$msgid != {}} {
+	SAMPRcvdDS9SetReply $msgid
+    }
 }
 
-proc ds9.get {msgid varname} {
-    upvar $varname args
+proc ds9.get {msgid args} {
+    global current
+    global samp
 
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "ds9.get $args"
     }
-
-    global current
-    global samp
 
     set url {}
     set cmd {}

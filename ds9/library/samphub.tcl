@@ -422,7 +422,7 @@ proc SAMPHubSend {method url params resultVar {ntabs 5} {distance 4}} {
 	}
     }
 
-    if {[catch {set result [xmlrpc::call $url $rpc $method $params $ntabs $distance]]}]} {
+    if {[catch {set result [xmlrpc::call $url $rpc $method $params $ntabs $distance]}]} {
 	if {$debug(tcl,samp)} {
 	    puts stderr "SAMPHub: [msgcat::mc {internal error}] $result"
 	}

@@ -298,8 +298,8 @@ proc SAMPHubDisconnect {secret} {
     unset samphub(remove)
     SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
+    unset samphubmap
+    unset samphubmap2
 
     # update other clients
     # notify others before removing
@@ -391,6 +391,12 @@ proc SAMPHubRegister {web} {
 
     # update other clients
     set mtype {samp.hub.event.register}
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -406,12 +412,6 @@ proc SAMPHubRegister {web} {
 	if {![SAMPHubFindSubscription $cc $mtype]} {
 	    continue
 	}
-
-	catch {unset samphubmap}
-	catch {unset samphubmap2}
-	set samphubmap(samp.mtype) "string $mtype"
-	set samphubmap(samp.params) {struct samphubmap2}
-	set samphubmap2(id) "string $samphub($secret,id)"
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
@@ -743,7 +743,6 @@ proc samp.hub.declareSubscriptions {args} {
 proc samp.hub.getSubscriptions {args} {
     global samphub
     global samphubmap
-    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -776,8 +775,6 @@ proc samp.hub.getSubscriptions {args} {
 
 proc samp.hub.getRegisteredClients {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -839,6 +836,7 @@ proc samp.hub.getSubscribedClients {args} {
     }
 
     catch {unset samphubmap}
+    catch {unset samphubmap2}
     foreach cc $ll {
 	set samphubmap($cc) {struct samphubmap2}
     }

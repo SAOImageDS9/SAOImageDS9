@@ -512,8 +512,6 @@ proc SAMPSendCoordPointAtSky {id coord} {
     }
 }
 
-# Support
-
 proc SAMPShutdown {} {
     global ds9
     global samp
@@ -526,6 +524,73 @@ proc SAMPShutdown {} {
 
     # unset samp array
     catch {unset samp}
+}
+
+proc SAMPGetAppsImage {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions image.load.fits] {
+	lappend ll [list $cc $samp($cc,name)]
+    }
+    return $ll
+}
+
+proc SAMPGetAppsTable {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions table.load.fits] {
+	lappend ll [list $cc $samp($cc,name)]
+    }
+    return $ll
+}
+
+proc SAMPGetAppsVOTable {} {
+    global samp
+
+    set ll {}
+    foreach cc [SAMPGetAppsSubscriptions table.load.votable] {
+	lappend ll [list $cc $samp($cc,name)]
+    }
+    return $ll
+}
+
+proc SAMPGetAppsSubscriptions {mtype} {
+    global samp
+
+    set ll {}
+    foreach cc $samp(clients) {
+	if {[lsearch $samp($cc,subscriptions) $mtype]>=0} {
+	    lappend ll $cc
+	}
+    }
+    return $ll
+}
+
+proc SAMPValidMtype {mtype} {
+    switch $mtype {
+	samp.client.receiveNotification -
+	samp.client.receiveCall -
+	samp.client.receiveResponse -
+	samp.hub.event.shutdown -
+	samp.hub.event.register -
+	samp.hub.event.unregister -
+	samp.hub.event.metadata -
+	samp.hub.event.subscriptions -
+	samp.hub.disconnect -
+	samp.app.ping -
+	image.load.fits -
+	table.load.fits -
+	table.load.votable -
+	table.highlight.row -
+	table.select.rowList -
+	coord.pointAt.sky -
+	client.env.get -
+	ds9.set -
+	ds9.get {return 1}
+	default {return 0}
+    }
 }
 
 proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
@@ -626,30 +691,72 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     SAMPSend {samp.hub.reply} $params rr
 }
 
-proc SAMPValidMtype {mtype} {
-    switch $mtype {
-	samp.client.receiveNotification -
-	samp.client.receiveCall -
-	samp.client.receiveResponse -
-	samp.hub.event.shutdown -
-	samp.hub.event.register -
-	samp.hub.event.unregister -
-	samp.hub.event.metadata -
-	samp.hub.event.subscriptions -
-	samp.hub.disconnect -
-	samp.app.ping -
-	image.load.fits -
-	table.load.fits -
-	table.load.votable -
-	table.highlight.row -
-	table.select.rowList -
-	coord.pointAt.sky -
-	client.env.get -
-	ds9.set -
-	ds9.get {return 1}
-	default {return 0}
+proc SAMPRcvdDS9SetReply {msgid} {
+    global ds9
+    global icursor
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPRcvdDS9SetReply: $msgid"
+    }
+
+    global errorInfo
+    if {$errorInfo != {} || $ds9(msg) != {}} {
+	if {$ds9(msg) != {}} {
+	    switch $ds9(msg,level) {
+		info -
+		warning {SAMPReply $msgid OK $ds9(msg)}
+		error -
+		fatal {SAMPReply $msgid ERROR {} {} $ds9(msg)}
+	    }
+	} else {
+	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
+	}
+	InitError samp
+    } else {
+	SAMPReply $msgid OK
     }
 }
+
+proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
+    global ds9
+    global samp
+    global icursor
+
+    global debug
+    if {$debug(tcl,samp)} {
+	puts stderr "SAMPRcvdDS9GetReply: $msgid $msg $fn"
+    }
+
+    global errorInfo
+    if {$errorInfo != {} || $ds9(msg) != {}} {
+	if {$ds9(msg) != {}} {
+	    switch $ds9(msg,level) {
+		info -
+		warning {SAMPReply $msgid OK $ds9(msg)}
+		error -
+		fatal {SAMPReply $msgid ERROR {} {} $ds9(msg)}
+	    }
+	} else {
+	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
+	}
+	InitError samp
+    } else {
+	# be sure to white space any newlines, backslashes, and trim
+	set value [string trim [string map {\n { } \\ {}} $msg]]
+
+	# create url
+	set url {}
+	if {$fn != {}} {
+	    set url "file://localhost/$fn"
+	    lappend samp(tmp,files) $fn
+	}
+
+	SAMPReply $msgid OK $value $url
+    }
+}
+
+# procs
 
 proc samp.client.receiveNotification {args} {
     global samp
@@ -777,135 +884,6 @@ proc samp.client.receiveResponse {args} {
 
     return {string OK}
 }
-
-# Support
-
-proc SAMPParseHub {} {
-    global samp
-    global env
-
-    set fn {}
-
-    if {[info exists env(SAMP_HUB)]} {
-	if {$env(SAMP_HUB) != {}} {
-	    set exp {std-lockurl:(.*)}
-	    if {[regexp $exp $env(SAMP_HUB) dummy url]} {
-
-		ParseURL $url rr
-		switch -- $rr(scheme) {
-		    ftp {
-			set fn [tmpnam {.samp}]
-			lappend samp(tmp,files) $fn
-			GetFileFTP $rr(authority) $rr(path) $fn
-		    }
-		    file {set fn $rr(path)}
-		    http -
-		    https -
-		    default {
-			set fn [tmpnam {.samp}]
-			lappend samp(tmp,files) $fn
-			GetFileHTTP $url $fn
-		    }
-		}
-	    }
-	}
-    }
-
-    if {$fn == {}} {
-	set fn [file join [GetEnvHome] {.samp}]
-    }
-
-    # no hub to be found
-    if {![file exist $fn]} {
-	return 0
-    }
-    if {[catch {set fp [open $fn r]}]} {
-	return 0
-    }
-
-    set samp(secret) {}
-    set samp(url) {}
-    set samp(method) {}
-    set samp(fn) $fn
-
-    while {1} {
-	if {[gets $fp line] == -1} {
-	    break
-	}
-
-	# skip any comments
-	if {[string range $line 0 0] == "#"} {
-	    continue;
-	}
-
-	if {[regexp -nocase {samp.secret=(.*)} $line foo ss]} {
-	    set samp(secret) $ss
-	}
-	if {[regexp -nocase {samp.hub.xmlrpc.url=(.*)} $line foo url]} {
-	    if {[ParseURL $url r]} {
-		set samp(url) $r(scheme)://$r(authority)
-		set samp(method) [string range $r(path) 1 end]
-	    }
-	}
-    }
-    catch {close $fp}
-
-    if {$samp(secret) == {} || $samp(url) == {}} {
-	SAMPDelTmpFiles
-	catch {unset samp}
-	return 0
-    }
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPParseHub: $samp(secret) $samp(url) $samp(method)"
-    }
-    return 1
-}
-
-proc SAMPGetAppsImage {} {
-    global samp
-
-    set ll {}
-    foreach cc [SAMPGetAppsSubscriptions image.load.fits] {
-	lappend ll [list $cc $samp($cc,name)]
-    }
-    return $ll
-}
-
-proc SAMPGetAppsTable {} {
-    global samp
-
-    set ll {}
-    foreach cc [SAMPGetAppsSubscriptions table.load.fits] {
-	lappend ll [list $cc $samp($cc,name)]
-    }
-    return $ll
-}
-
-proc SAMPGetAppsVOTable {} {
-    global samp
-
-    set ll {}
-    foreach cc [SAMPGetAppsSubscriptions table.load.votable] {
-	lappend ll [list $cc $samp($cc,name)]
-    }
-    return $ll
-}
-
-proc SAMPGetAppsSubscriptions {mtype} {
-    global samp
-
-    set ll {}
-    foreach cc $samp(clients) {
-	if {[lsearch $samp($cc,subscriptions) $mtype]>=0} {
-	    lappend ll $cc
-	}
-    }
-    return $ll
-}
-
-# CallBacks
 
 proc samp.hub.event.shutdown {varname} {
     upvar $varname args
@@ -1085,8 +1063,6 @@ proc samp.hub.disconnect {varname} {
     UpdateFileMenu
     UpdateCATDialogSAMP
 }
-
-# HTTPClient
 
 proc samp.app.ping {varname} {
     upvar $varname args
@@ -1358,33 +1334,6 @@ proc ds9.set {varname} {
     CommSet $fn $cmd 0
 }
 
-proc SAMPRcvdDS9SetReply {msgid} {
-    global ds9
-    global icursor
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDS9SetReply: $msgid"
-    }
-
-    global errorInfo
-    if {$errorInfo != {} || $ds9(msg) != {}} {
-	if {$ds9(msg) != {}} {
-	    switch $ds9(msg,level) {
-		info -
-		warning {SAMPReply $msgid OK $ds9(msg)}
-		error -
-		fatal {SAMPReply $msgid ERROR {} {} $ds9(msg)}
-	    }
-	} else {
-	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
-	}
-	InitError samp
-    } else {
-	SAMPReply $msgid OK
-    }
-}
-
 proc ds9.get {msgid varname} {
     upvar $varname args
 
@@ -1415,42 +1364,89 @@ proc ds9.get {msgid varname} {
     }
 }
 
-proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
-    global ds9
+# Support
+
+proc SAMPParseHub {} {
     global samp
-    global icursor
+    global env
+
+    set fn {}
+
+    if {[info exists env(SAMP_HUB)]} {
+	if {$env(SAMP_HUB) != {}} {
+	    set exp {std-lockurl:(.*)}
+	    if {[regexp $exp $env(SAMP_HUB) dummy url]} {
+
+		ParseURL $url rr
+		switch -- $rr(scheme) {
+		    ftp {
+			set fn [tmpnam {.samp}]
+			lappend samp(tmp,files) $fn
+			GetFileFTP $rr(authority) $rr(path) $fn
+		    }
+		    file {set fn $rr(path)}
+		    http -
+		    https -
+		    default {
+			set fn [tmpnam {.samp}]
+			lappend samp(tmp,files) $fn
+			GetFileHTTP $url $fn
+		    }
+		}
+	    }
+	}
+    }
+
+    if {$fn == {}} {
+	set fn [file join [GetEnvHome] {.samp}]
+    }
+
+    # no hub to be found
+    if {![file exist $fn]} {
+	return 0
+    }
+    if {[catch {set fp [open $fn r]}]} {
+	return 0
+    }
+
+    set samp(secret) {}
+    set samp(url) {}
+    set samp(method) {}
+    set samp(fn) $fn
+
+    while {1} {
+	if {[gets $fp line] == -1} {
+	    break
+	}
+
+	# skip any comments
+	if {[string range $line 0 0] == "#"} {
+	    continue;
+	}
+
+	if {[regexp -nocase {samp.secret=(.*)} $line foo ss]} {
+	    set samp(secret) $ss
+	}
+	if {[regexp -nocase {samp.hub.xmlrpc.url=(.*)} $line foo url]} {
+	    if {[ParseURL $url r]} {
+		set samp(url) $r(scheme)://$r(authority)
+		set samp(method) [string range $r(path) 1 end]
+	    }
+	}
+    }
+    catch {close $fp}
+
+    if {$samp(secret) == {} || $samp(url) == {}} {
+	SAMPDelTmpFiles
+	catch {unset samp}
+	return 0
+    }
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "SAMPRcvdDS9GetReply: $msgid $msg $fn"
+	puts stderr "SAMPParseHub: $samp(secret) $samp(url) $samp(method)"
     }
-
-    global errorInfo
-    if {$errorInfo != {} || $ds9(msg) != {}} {
-	if {$ds9(msg) != {}} {
-	    switch $ds9(msg,level) {
-		info -
-		warning {SAMPReply $msgid OK $ds9(msg)}
-		error -
-		fatal {SAMPReply $msgid ERROR {} {} $ds9(msg)}
-	    }
-	} else {
-	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
-	}
-	InitError samp
-    } else {
-	# be sure to white space any newlines, backslashes, and trim
-	set value [string trim [string map {\n { } \\ {}} $msg]]
-
-	# create url
-	set url {}
-	if {$fn != {}} {
-	    set url "file://localhost/$fn"
-	    lappend samp(tmp,files) $fn
-	}
-
-	SAMPReply $msgid OK $value $url
-    }
+    return 1
 }
 
 proc SAMPDelTmpFiles {} {

@@ -362,7 +362,7 @@ proc SAMPHubDialogListUpdate {} {
 	    }
 	}
 	foreach ss $samphub($secret,subscriptions) {
-	    $dsamphub(client,subscriptions,txt) insert end "$ss\n"
+	    $dsamphub(client,subscriptions,txt) insert end "[lindex $ss 0]\n"
 	}
 
 	# hub?

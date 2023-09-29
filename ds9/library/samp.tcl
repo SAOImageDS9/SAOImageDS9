@@ -761,7 +761,7 @@ proc samp.client.receiveNotification {args} {
 	}
     }
 
-    after 1 "$mtype {} $params"
+    after 0 "$mtype {} $params"
     return {string OK}
 }
 
@@ -795,7 +795,7 @@ proc samp.client.receiveCall {args} {
 	}
     }
 
-    after 1 "$mtype $msgid $params"
+    after 0 "$mtype $msgid $params"
     return {string OK}
 }
 

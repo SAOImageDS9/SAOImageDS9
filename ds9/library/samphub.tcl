@@ -99,7 +99,7 @@ proc SAMPHubStart {verbose} {
     lappend samphub(client,secret) $samphub(secret)
     set samphub($samphub(secret),id) {hub}
     set samphub($samphub(secret),url) {}
-    set samphub($samphub(secret),subscriptions) {{samp.hub.ping}}
+    set samphub($samphub(secret),subscriptions) {{samp.hub.ping {}}}
     set samphub($samphub(secret),metadata) [list \
 						[list samp.name "Hub"] \
 						[list samp.description.text "SAOImageDS9 Internal Hub"] \
@@ -212,7 +212,7 @@ proc SAMPHubFindSecret {id} {
 	    return $cc
 	}
     }
-    return -code 0
+    return -code error
 }
 
 proc SAMPHubFindSubscription {cc mtype} {
@@ -225,7 +225,7 @@ proc SAMPHubFindSubscription {cc mtype} {
 	    }
 	}
     }
-    return 0
+    return -code error
 }
 
 proc SAMPHubDisconnect {secret} {
@@ -490,7 +490,7 @@ proc samp.hub.setXmlrpcCallback {args} {
     set map [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
@@ -520,7 +520,7 @@ proc samp.hub.register {args} {
     }
 
     if {$samphub(secret) != $args} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubRegister 0
@@ -546,7 +546,7 @@ proc samp.hub.unregister {args} {
     }
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
     
     SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
@@ -609,7 +609,7 @@ proc samp.hub.declareMetadata {args} {
     set map [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
     
     SAMPHubDialogRecvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
@@ -684,7 +684,7 @@ proc samp.hub.getMetadata {args} {
     set id [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
@@ -701,7 +701,7 @@ proc samp.hub.getMetadata {args} {
 	}
     }
 
-    return {string ERROR}
+    return -code error
 }
 
 proc samp.hub.declareSubscriptions {args} {
@@ -716,14 +716,14 @@ proc samp.hub.declareSubscriptions {args} {
     set map [lindex $args 1]
     
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
 
     foreach mm $map {
 	foreach {ss rr} $mm {
-	    lappend samphub($secret,subscriptions) $ss
+	    lappend samphub($secret,subscriptions) [list $ss $rr]
 	}
     }
 
@@ -738,9 +738,20 @@ proc samp.hub.declareSubscriptions {args} {
     set samphubmap(samp.params) {struct samphubmap2}
     set samphubmap2(id) "string $samphub($secret,id)"
     set samphubmap2(subscriptions) {struct samphubmap3}
-    foreach mm $samphub($secret,subscriptions) {
-	foreach {key val} $mm {
-	    set samphubmap3($key) "string \"$val\""
+
+    set cnt 3
+    foreach sub $samphub($secret,subscriptions) {
+	incr cnt
+	foreach {mm attrs} $sub {
+	    set varname samphubmap${cnt}
+	    set samphubmap3($mm) "struct $varname"
+
+	    upvar 0 $varname var
+	    foreach attr $attrs {
+		foreach {key val} $attr {
+		    set var($key) "string $val"
+		}
+	    }
 	}
     }
 
@@ -793,24 +804,37 @@ proc samp.hub.getSubscriptions {args} {
     set id [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.getSubscriptions\t$samphub($secret,id)"
 
+    catch {unset samphubmap}
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    catch {unset samphubmap}
-	    foreach mm $samphub($cc,subscriptions) {
-		foreach {key val} $mm {
-		    set samphubmap($key) "string \"$val\""
+
+	    set cnt 1
+	    foreach sub $samphub($cc,subscriptions) {
+		incr cnt
+		foreach {mm attrs} $sub {
+		    set varname samphubmap${cnt}
+		    global $varname
+		    set samphubmap($mm) "struct $varname"
+
+		    catch {unset $varname}
+		    upvar #0 $varname var
+		    foreach attr $attrs {
+			foreach {key val} $attr {
+			    set var($key) "string $val"
+			}
+		    }
 		}
 	    }
 	    return "struct samphubmap"
 	}
     }
 
-    return {string ERROR}
+    return -code error
 }
 
 proc samp.hub.getRegisteredClients {args} {
@@ -825,7 +849,7 @@ proc samp.hub.getRegisteredClients {args} {
     set map [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.getRegisteredClients\t$samphub($secret,id)"
@@ -856,7 +880,7 @@ proc samp.hub.getSubscribedClients {args} {
     set map [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
@@ -867,11 +891,9 @@ proc samp.hub.getSubscribedClients {args} {
 	    continue
 	}
 
-	foreach ss $samphub($cc,subscriptions) {
-	    if {$ss == $map} {
-		lappend ll $samphub($cc,id)
-		break
-	    }
+	if {[SAMPHubFindSubscription $cc $map]} {
+	    lappend ll $samphub($cc,id)
+	    break
 	}
     }
 
@@ -899,7 +921,7 @@ proc samp.hub.notify {args} {
     set map [lindex $args 2]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.notify\t$samphub($secret,id)"
@@ -930,21 +952,21 @@ proc samp.hub.notify {args} {
 
     # ignore hub
     if {$cc == $samphub(secret)} {
-	return {string ERROR}
+	return -code error
     }
 
     # don't send to sender
     if {$cc == $secret} {
-	return {string ERROR}
+	return -code error
     }
 
     # are we subscribed
     if {![SAMPHubFindSubscription $cc $mtype]} {
-	return {string ERROR}
+	return -code error
     }
 
     # wll execute at global level
-    after 1 "SAMPHubNotify $secret $cc $mtype"
+    after 0 "SAMPHubNotify $secret $cc $mtype"
     return {string OK}
 }
 
@@ -962,7 +984,7 @@ proc samp.hub.notifyAll {args} {
     set map [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.notifyAll\t$samphub($secret,id)"
@@ -1005,7 +1027,7 @@ proc samp.hub.notifyAll {args} {
 	    continue
 	}
 
-	after 1 "SAMPHubNotify $secret $cc $mtype"
+	after 0 "SAMPHubNotify $secret $cc $mtype"
 	lappend ll "string $samphub($cc,id)"
     }
     return "array [list $ll]"
@@ -1027,7 +1049,7 @@ proc samp.hub.call {args} {
     set map [lindex $args 3]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.call\t$samphub($secret,id)"
@@ -1059,20 +1081,20 @@ proc samp.hub.call {args} {
 
     # ignore hub
     if {$cc == $samphub(secret)} {
-	return {string ERROR}
+	return -code error
     }
 
     # don't send to sender
     if {$cc == $secret} {
-	return {string ERROR}
+	return -code error
     }
 
     # are we subscribed
     if {![SAMPHubFindSubscription $cc $mtype]} {
-	return {string ERROR}
+	return -code error
     }
 
-    after 1 "SAMPHubCall $secret $cc $msgid $mtype"
+    after 0 "SAMPHubCall $secret $cc $msgid $mtype"
     return "string $msgid"
 }
 
@@ -1092,7 +1114,7 @@ proc samp.hub.callAll {args} {
     set map [lindex $args 2]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.callAll\t$samphub($secret,id)"
@@ -1136,7 +1158,7 @@ proc samp.hub.callAll {args} {
 	    continue
 	}
 
-	after 1 "SAMPHubCall $secret $cc $msgid $mtype"
+	after 0 "SAMPHubCall $secret $cc $msgid $mtype"
 
 	set id $samphub($cc,id)
 	catch {unset samphubmap3}
@@ -1162,7 +1184,7 @@ proc samp.hub.callAndWait {args} {
     set timeout [lindex $args 3]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.callAndWait\t$samphub($secret,id)"
@@ -1194,20 +1216,20 @@ proc samp.hub.callAndWait {args} {
 
     # ignore hub
     if {$cc == $samphub(secret)} {
-	return {string ERROR}
+	return -code error
     }
 
     # don't send to sender
     if {$cc == $secret} {
-	return {string ERROR}
+	return -code error
     }
 
     # are we subscribed
     if {![SAMPHubFindSubscription $cc $mtype]} {
-	return {string ERROR}
+	return -code error
     }
 
-    after 1 "SAMPHubCall $secret $cc $msgid $mtype"
+    after 0 "SAMPHubCall $secret $cc $msgid $mtype"
 
     vwait samphub(callAndWait)
     set samphub(callAndWait) {}
@@ -1252,7 +1274,7 @@ proc samp.hub.reply {args} {
     set map [lindex $args 2]
 
     if {![SAMPHubValidSecret $secret]} {
-	return ERROR
+	return -code error
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
@@ -1287,7 +1309,7 @@ proc samp.hub.reply {args} {
     switch $msgtag {
 	foo {
 	    # call
-	    after 1 "SAMPHubReply $cc $src $msgtag"
+	    after 0 "SAMPHubReply $cc $src $msgtag"
 	}
 	bar {
 	    # callAndWait

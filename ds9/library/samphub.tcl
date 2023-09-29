@@ -948,7 +948,9 @@ proc samp.hub.notify {args} {
 	}
     }
 
-    set cc [SAMPHubFindSecret $id]
+    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+	return -code error
+    }
 
     # ignore hub
     if {$cc == $samphub(secret)} {
@@ -1077,7 +1079,9 @@ proc samp.hub.call {args} {
 
     set msgid "$msgtag-$samphub($secret,id)"
 
-    set cc [SAMPHubFindSecret $id]
+    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+	return -code error
+    }
 
     # ignore hub
     if {$cc == $samphub(secret)} {
@@ -1212,7 +1216,9 @@ proc samp.hub.callAndWait {args} {
 
     set msgid "bar-$samphub($secret,id)"
 
-    set cc [SAMPHubFindSecret $id]
+    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+	return -code error
+    }
 
     # ignore hub
     if {$cc == $samphub(secret)} {
@@ -1303,7 +1309,10 @@ proc samp.hub.reply {args} {
 	}
     }
 
-    set cc [SAMPHubFindSecret $id]
+    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+	return -code error
+    }
+
     set src $samphub($secret,id)
 
     switch $msgtag {

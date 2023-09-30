@@ -944,7 +944,7 @@ proc samp.hub.notify {args} {
     set samphubmap2(id) "string $samphub($secret,id)"
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1008,7 +1008,7 @@ proc samp.hub.notifyAll {args} {
     set samphubmap(samp.params) {struct samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1073,7 +1073,7 @@ proc samp.hub.call {args} {
     set samphubmap(samp.params) {struct samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1140,7 +1140,7 @@ proc samp.hub.callAll {args} {
     set samphubmap(samp.params) {struct samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1210,7 +1210,7 @@ proc samp.hub.callAndWait {args} {
     set samphubmap(samp.params) {struct samphubmap2}
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1305,7 +1305,7 @@ proc samp.hub.reply {args} {
     set samphubmap(samp.result) {struct samphubmap2}
     foreach mm $result {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \"$val\""
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1316,15 +1316,14 @@ proc samp.hub.reply {args} {
     set src $samphub($secret,id)
 
     switch $msgtag {
-	foo {
-	    # call
-	    after 0 "SAMPHubReply $cc $src $msgtag"
-	}
 	bar {
 	    # callAndWait
 	    set samphub(callAndWait) 1
 	}
-	
+	default {
+	    # call
+	    after 0 "SAMPHubReply $cc $src $msgtag"
+	}
     }
     return {string OK}
 }

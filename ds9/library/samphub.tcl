@@ -225,7 +225,7 @@ proc SAMPHubFindSubscription {cc mtype} {
 	    }
 	}
     }
-    return -code error
+    return 0
 }
 
 proc SAMPHubDisconnect {secret} {

@@ -80,7 +80,7 @@ proc CATDef {} {
 		       {{Chandra Source 1.1} catcsc11 cds {IX/45/csc11}}
 		       {{Chandra Source 2.0} catcsc20 cds {IX/57/csc2master}}
 		       {{Chandra Source Current} catcsc cxc {Current Release}}
-		       {{2XMMi Source} catxmm cds {IX/40/xmm2is}} \
+		       {{XMM-Newton 4XMM-DR13 Source} catxmm cds {IX/69}} \
 		       {{Second ROSAT PSPC} catrosat cds {IX/30}} \
 		       {- {Radio} radio} \
 		       {{FIRST Survey} catfirst cds {VIII/71/first}} \

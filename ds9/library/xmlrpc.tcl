@@ -802,7 +802,7 @@ proc xmlrpc::umStruct {str} {
     }
 
     set	RE "<name>$WS*";	# name tag
-    append	RE "($W+?)$WS*";		# key
+    append	RE "($W*?)$WS*";		# key
     append	RE "</name>$WS*";	# end name tag
     append	RE "(<value>.*)";	# value tag
 

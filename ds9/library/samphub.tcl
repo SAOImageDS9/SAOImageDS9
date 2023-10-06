@@ -488,6 +488,28 @@ proc SAMPHubCall {secret cc msgid mtype varname varname2} {
     unset $varname2
 }
 
+proc SAMPHubReply {cc id msgtag} {
+    global samphub
+    global samphubmap
+    global samphubmap2
+
+    set param1 [list "string $cc"]
+    set param2 [list "string $id"]
+    set param3 [list "string $msgtag"]
+    set param4 [list "struct samphubmap"]
+    set params "$param1 $param2 $param3 $param4"	
+
+    if {$samphub($cc,web)} {
+	if {$samphub(web,allowReverseCallbacks)} {
+	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB samp.client.receiveResponse $params]
+	}
+    } else {
+	set rr {}
+	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr
+	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)\t$rr"
+    }
+}
+
 # procs
 
 proc samp.hub.setXmlrpcCallback {args} {
@@ -1280,28 +1302,6 @@ proc samp.hub.callAndWait {args} {
     set samphub(callAndWait) {}
 
     return "struct samphubmap"
-}
-
-proc SAMPHubReply {cc id msgtag} {
-    global samphub
-    global samphubmap
-    global samphubmap2
-
-    set param1 [list "string $cc"]
-    set param2 [list "string $id"]
-    set param3 [list "string $msgtag"]
-    set param4 [list "struct samphubmap"]
-    set params "$param1 $param2 $param3 $param4"	
-
-    if {$samphub($cc,web)} {
-	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB samp.client.receiveResponse $params]
-	}
-    } else {
-	set rr {}
-	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)\t$rr"
-    }
 }
 
 proc samp.hub.reply {args} {

@@ -337,6 +337,9 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,url)
     unset samphub($secret,subscriptions)
     unset samphub($secret,metadata)
+
+    catch {unset map-getMeta}
+    catch {unset map-getSubs}
 }
 
 proc SAMPHubRegister {web} {
@@ -731,7 +734,7 @@ proc samp.hub.getMetadata {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
 
-    set varname map-getMetadata
+    set varname map-getMeta
     global $varname
     catch {unset $varname}
 
@@ -838,7 +841,6 @@ proc samp.hub.declareSubscriptions {args} {
 
 proc samp.hub.getSubscriptions {args} {
     global samphub
-    global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
@@ -854,7 +856,10 @@ proc samp.hub.getSubscriptions {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getSubscriptions\t$samphub($secret,id)"
 
-    catch {unset samphubmap}
+    set varname map-getSubs
+    global $varname
+    catch {unset $varname}
+
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
 
@@ -862,9 +867,9 @@ proc samp.hub.getSubscriptions {args} {
 	    foreach sub $samphub($cc,subscriptions) {
 		incr cnt
 		foreach {mm attrs} $sub {
-		    set vvarname samphubmap${cnt}
+		    set vvarname ${varname}${cnt}
 		    global $vvarname
-		    set samphubmap($mm) "struct $vvarname"
+		    set ${varname}($mm) "struct $vvarname"
 
 		    catch {unset $vvarname}
 		    upvar #0 $vvarname vvar
@@ -875,7 +880,7 @@ proc samp.hub.getSubscriptions {args} {
 		    }
 		}
 	    }
-	    return "struct samphubmap"
+	    return "struct $varname"
 	}
     }
 

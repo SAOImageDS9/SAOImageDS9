@@ -76,7 +76,6 @@ proc samp.webhub.ping {} {
 
 proc samp.webhub.register {args} {
     global samphub
-    global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
@@ -98,9 +97,10 @@ proc samp.webhub.register {args} {
 	return {string ERROR}
     }
 
+    global map-reg
     SAMPHubRegister 1
-    set samphubmap(samp.url-translator) {string {}}
-    return "struct samphubmap"
+    set map-reg(samp.url-translator) {string {}}
+    return "struct map-reg"
 }
 
 proc samp.webhub.unregister {args} {

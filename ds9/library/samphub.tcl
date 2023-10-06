@@ -119,7 +119,6 @@ proc SAMPHubStart {verbose} {
 
 proc SAMPHubStop {verbose} {
     global samphub
-    global debug
 
     # hub running?
     if {![info exists samphub]} {
@@ -1161,7 +1160,7 @@ proc samp.hub.call {args} {
 
 proc samp.hub.callAll {args} {
     global samphub
-    global samphubmap3
+    global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
@@ -1227,16 +1226,17 @@ proc samp.hub.callAll {args} {
 	after 0 "SAMPHubCall $secret $cc $msgid $mtype $varname $varname2"
 
 	set id $samphub($cc,id)
-	catch {unset samphubmap3}
- 	set samphubmap3($id) "string $msgid"
+	catch {unset samphubmap}
+ 	set samphubmap($id) "string $msgid"
     }
 
-    return "struct samphubmap3"
+    return "struct samphubmap"
 }
 
 proc samp.hub.callAndWait {args} {
     global samphub
     global samphubmap
+    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
@@ -1313,6 +1313,8 @@ proc samp.hub.callAndWait {args} {
 
 proc samp.hub.reply {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
@@ -1369,7 +1371,13 @@ proc samp.hub.reply {args} {
     switch $msgtag {
 	bar {
 	    # callAndWait
+	    array set samphubmap [array get $varname]
+	    array set samphubmap2 [array get $varname2]
+
 	    set samphub(callAndWait) 1
+
+	    catch {unset $varname}
+	    catch {unset $varname2}
 	}
 	default {
 	    # call

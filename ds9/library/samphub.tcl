@@ -733,10 +733,10 @@ proc samp.hub.getMetadata {args} {
 
     set varname map-getMetadata
     global $varname
+    catch {unset $varname}
 
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    catch {unset $varname}
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
 		    set ${varname}($key) "string \"[XMLQuote $val]\""

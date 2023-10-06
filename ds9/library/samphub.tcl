@@ -340,6 +340,8 @@ proc SAMPHubRemove {secret} {
 
     catch {unset map-getMeta}
     catch {unset map-getSubs}
+    catch {unset map-getSubClient}
+    catch {unset map-getSubClient-2}
 }
 
 proc SAMPHubRegister {web} {
@@ -918,8 +920,6 @@ proc samp.hub.getRegisteredClients {args} {
 
 proc samp.hub.getSubscribedClients {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -947,13 +947,18 @@ proc samp.hub.getSubscribedClients {args} {
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
+    set varname map-getSubClient
+    set varname2 map-getSubClent-2
+    global $varname
+    global $varname2
+    catch {unset $varname}
+    catch {unset $varname2}
+
     foreach cc $ll {
-	set samphubmap($cc) {struct samphubmap2}
+	set ${varname}($cc) {struct $varname2}
     }
 
-    return "struct samphubmap"
+    return "struct $varname"
 }
 
 proc samp.hub.notify {args} {

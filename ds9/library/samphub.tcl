@@ -990,8 +990,6 @@ proc samp.hub.notify {args} {
 
 proc samp.hub.notifyAll {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -1061,8 +1059,6 @@ proc samp.hub.notifyAll {args} {
 
 proc samp.hub.call {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
@@ -1136,8 +1132,6 @@ proc samp.hub.call {args} {
 
 proc samp.hub.callAll {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
     global samphubmap3
     
     global debug
@@ -1214,7 +1208,6 @@ proc samp.hub.callAll {args} {
 proc samp.hub.callAndWait {args} {
     global samphub
     global samphubmap
-    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {

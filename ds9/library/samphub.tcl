@@ -716,7 +716,6 @@ proc samp.hub.declareMetadata {args} {
 
 proc samp.hub.getMetadata {args} {
     global samphub
-    global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
@@ -732,15 +731,18 @@ proc samp.hub.getMetadata {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
 
+    set varname map-getMetadata
+    global $varname
+
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    catch {unset samphubmap}
+	    catch {unset $varname}
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
-		    set samphubmap($key) "string \"[XMLQuote $val]\""
+		    set ${varname}($key) "string \"[XMLQuote $val]\""
 		}
 	    }
-	    return "struct samphubmap"
+	    return "struct $varname"
 	}
     }
 

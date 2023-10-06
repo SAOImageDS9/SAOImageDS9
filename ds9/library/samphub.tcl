@@ -862,15 +862,15 @@ proc samp.hub.getSubscriptions {args} {
 	    foreach sub $samphub($cc,subscriptions) {
 		incr cnt
 		foreach {mm attrs} $sub {
-		    set varname samphubmap${cnt}
-		    global $varname
-		    set samphubmap($mm) "struct $varname"
+		    set vvarname samphubmap${cnt}
+		    global $vvarname
+		    set samphubmap($mm) "struct $vvarname"
 
-		    catch {unset $varname}
-		    upvar #0 $varname var
+		    catch {unset $vvarname}
+		    upvar #0 $vvarname vvar
 		    foreach attr $attrs {
 			foreach {key val} $attr {
-			    set var($key) "string $val"
+			    set vvar($key) "string $val"
 			}
 		    }
 		}

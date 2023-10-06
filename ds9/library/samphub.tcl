@@ -130,8 +130,8 @@ proc SAMPHubStop {verbose} {
 
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
+    set map(samp.mtype) "string $mtype"
+    set map(samp.params) {struct map2}
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -151,7 +151,7 @@ proc SAMPHubStop {verbose} {
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct samphubmap"]
+	set param3 [list "struct map"]
 	set params "$param1 $param2 $param3"	
 	
 	# some clients insist on sending samp.hub.unregister
@@ -249,13 +249,16 @@ proc SAMPHubDisconnect {secret} {
 	return
     }
 
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
-    set samphubmap2(reason) {string disconnect}
+    catch {unset map}
+    catch {unset map2}
+
+    set map(samp.mtype) "string $mtype"
+    set map(samp.params) {struct map2}
+    set map2(reason) {string disconnect}
 
     set param1 [list "string $secret"]
     set param2 [list "string $samphub($samphub(secret),id)"]
-    set param3 [list "struct samphubmap"]
+    set param3 [list "struct map"]
     set params "$param1 $param2 $param3"	
 
     # some clients insist on sending samp.hub.unregister
@@ -266,15 +269,15 @@ proc SAMPHubDisconnect {secret} {
     unset samphub(remove)
     SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
 
-    unset samphubmap
-    unset samphubmap2
+    catch {unset map}
+    catch {unset map2}
 
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
-    set samphubmap2(id) "string $samphub($secret,id)"
+    set map(samp.mtype) "string $mtype"
+    set map(samp.params) {struct map2}
+    set map2(id) "string $samphub($secret,id)"
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -294,7 +297,7 @@ proc SAMPHubDisconnect {secret} {
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct samphubmap"]
+	set param3 [list "struct map"]
 	set params "$param1 $param2 $param3"
 
 	if {$samphub($cc,web)} {

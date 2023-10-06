@@ -454,8 +454,7 @@ proc SAMPHubNotify {secret cc mtype varname varname2} {
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveNotification \
-	    $samphub($cc,url) $params rr
+	SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
     }
 
@@ -463,13 +462,16 @@ proc SAMPHubNotify {secret cc mtype varname varname2} {
     unset $varname2
 }
 
-proc SAMPHubCall {secret cc msgid mtype} {
+proc SAMPHubCall {secret cc msgid mtype varname varname2} {
     global samphub
+
+    global $varname
+    global $varname2
 
     set param1 [list "string $cc"]
     set param2 [list "string $samphub($secret,id)"]
     set param3 [list "string $msgid"]
-    set param4 [list "struct samphubmap"]
+    set param4 [list "struct $varname"]
     set params "$param1 $param2 $param3 $param4"
 
     if {$samphub($cc,web)} {
@@ -481,6 +483,9 @@ proc SAMPHubCall {secret cc msgid mtype} {
 	SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
 	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
     }
+
+    unset $varname
+    unset $varname2
 }
 
 # procs
@@ -1086,13 +1091,20 @@ proc samp.hub.call {args} {
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
+    set varname map-[SAMPHubGenerateKey]
+    set varname2 ${varname}-2
+
+    global $varname
+    global $varname2
+
+    catch {unset $varname}
+    catch {unset $varname2}
+
+    set ${varname}(samp.mtype) "string $mtype"
+    set ${varname}(samp.params) "struct $varname2"
     foreach mm $params {
 	foreach {key val} $mm {
-	    set samphubmap2($key) "string \{$val\}"
+	    set ${varname2}($key) "string \{$val\}"
 	}
     }
 
@@ -1117,7 +1129,8 @@ proc samp.hub.call {args} {
 	return -code error
     }
 
-    after 0 "SAMPHubCall $secret $cc $msgid $mtype"
+    after 0 "SAMPHubCall $secret $cc $msgid $mtype $varname $varname2"
+
     return "string $msgid"
 }
 

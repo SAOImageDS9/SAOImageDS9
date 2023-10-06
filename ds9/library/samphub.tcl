@@ -597,9 +597,9 @@ proc samp.hub.unregister {args} {
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
-    set samphubmap2(id) "string $samphub($secret,id)"
+    set hubmap(samp.mtype) "string $mtype"
+    set hubmap(samp.params) {struct hubmap2}
+    set hubmap2(id) "string $samphub($secret,id)"
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -619,7 +619,7 @@ proc samp.hub.unregister {args} {
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct samphubmap"]
+	set param3 [list "struct hubmap"]
 	set params "$param1 $param2 $param3"
 
 	if {$samphub($cc,web)} {
@@ -668,13 +668,13 @@ proc samp.hub.declareMetadata {args} {
 
     # update other clients
     set mtype {samp.hub.event.metadata}
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
-    set samphubmap2(id) "string $samphub($secret,id)"
-    set samphubmap2(metadata) {struct samphubmap3}
+    set hubmap(samp.mtype) "string $mtype"
+    set hubmap(samp.params) {struct hubmap2}
+    set hubmap2(id) "string $samphub($secret,id)"
+    set hubmap2(metadata) {struct hubmap3}
     foreach mm $samphub($secret,metadata) {
 	foreach {key val} $mm {
-	    set samphubmap3($key) "string \"[XMLQuote $val]\""
+	    set hubmap3($key) "string \"[XMLQuote $val]\""
 	}
     }
 
@@ -696,7 +696,7 @@ proc samp.hub.declareMetadata {args} {
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct samphubmap"]
+	set param3 [list "struct hubmap"]
 	set params "$param1 $param2 $param3"
 
 	if {$samphub($cc,web)} {
@@ -777,17 +777,17 @@ proc samp.hub.declareSubscriptions {args} {
 
     # update other clients
     set mtype {samp.hub.event.subscriptions}
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) {struct samphubmap2}
-    set samphubmap2(id) "string $samphub($secret,id)"
-    set samphubmap2(subscriptions) {struct samphubmap3}
+    set hubmap(samp.mtype) "string $mtype"
+    set hubmap(samp.params) {struct hubmap2}
+    set hubmap2(id) "string $samphub($secret,id)"
+    set hubmap2(subscriptions) {struct hubmap3}
 
     set cnt 3
     foreach sub $samphub($secret,subscriptions) {
 	incr cnt
 	foreach {mm attrs} $sub {
-	    set varname samphubmap${cnt}
-	    set samphubmap3($mm) "struct $varname"
+	    set varname hubmap${cnt}
+	    set hubmap3($mm) "struct $varname"
 
 	    upvar 0 $varname var
 	    foreach attr $attrs {
@@ -816,7 +816,7 @@ proc samp.hub.declareSubscriptions {args} {
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct samphubmap"]
+	set param3 [list "struct hubmap"]
 	set params "$param1 $param2 $param3"
 
 	if {$samphub($cc,web)} {

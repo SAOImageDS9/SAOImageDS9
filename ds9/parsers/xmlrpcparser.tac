@@ -97,38 +97,38 @@ param : PARAM_ value _PARAM_
  | _PARAM_
  ;
 
-value : VALUE_ type _VALUE_ {puts "\}"}
+value : VALUE_ type _VALUE_
  | VALUE_ _VALUE_
  | _VALUE_
  ;
 
-type : INTEGER_ INT_ _INTEGER_ {puts $2}
- | DOUBLE_ numeric _DOUBLE_ {puts $2}
- | TRUE_ {puts 1}
- | FALSE_ {puts 0}
- | STRING_ {puts $1}
+type : INTEGER_ INT_ _INTEGER_ {puts -nonewline "\{int $2\}"}
+ | DOUBLE_ numeric _DOUBLE_ {puts -nonewline "\{double $2\}"}
+ | TRUE_ {puts -nonewline "\{boolean 1\}"}
+ | FALSE_ {puts -nonewline "\{boolean 0\}"}
+ | STRING_ {puts -nonewline "\{string \{$1\}\}"}
  | BASE64_ _BASE64_
  | DATETIME_ _DATETIME_
 
- | STRUCT_ struct _STRUCT_
- | STRUCT_ _STRUCT_
- | _STRUCT_
+ | STRUCT_ {puts -nonewline "\{struct "} struct _STRUCT_ {puts -nonewline "\}"}
+ | STRUCT_ _STRUCT_ {puts -nonewline "\{struct \{\}\}"}
+ | _STRUCT_ {puts -nonewline "\{struct \{\}\}"}
 
- | ARRAY_ array _ARRAY_
- | ARRAY_  _ARRAY_
- | _ARRAY_
+ | ARRAY_ {puts -nonewline "\{array "} array _ARRAY_ {puts -nonewline "\}"}
+ | ARRAY_ _ARRAY_ {puts -nonewline "\{array \{\}\}"}
+ | _ARRAY_ {puts -nonewline "\{array \{\}\}"}
  ;
 
 struct : struct member
  | member
  ;
 
-member : MEMBER_ name value _MEMBER_
- | MEMBER_ _MEMBER_
- | _MEMBER_
+member : MEMBER_ {puts -nonewline "\{"} name value _MEMBER_ {puts -nonewline "\}"}
+ | MEMBER_ _MEMBER_ {puts -nonewline "\{\}"}
+ | _MEMBER_ {puts -nonewline "\{\}"}
  ;
 
-name : NAME_ STRING_ _NAME_ {puts "\{$2"}
+name : NAME_ STRING_ _NAME_ {puts -nonewline "$2 "}
  | NAME_ _NAME_
  | _NAME_
  ;
@@ -137,7 +137,7 @@ array : DATA_ data _DATA_
  | DATA_ _DATA_
  | _DATA_
  ;
- 
+
 data : data value
  | value
  ;

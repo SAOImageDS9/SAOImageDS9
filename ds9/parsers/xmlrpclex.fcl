@@ -1,0 +1,66 @@
+#tab xmlrpcparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+\<methodcall\>		{return $METHODCALL_}
+\</methodcall\>		{return $_METHODCALL_}
+\<methodname\>		{return $METHODNAME_}
+\</methodname\>		{return $_METHODNAME_}
+
+\<methodresponse\>	{return $METHODRESPONSE_}
+\</methodresponse\>	{return $_METHODRESPONSE_}
+
+\<fault\>		{return $FAULT_}
+\</fault\>		{return $_FAULT_}
+
+\<params\>		{return $PARAMS_}
+\</params\>		{return $_PARAMS_}
+
+\<param\>		{return $PARAM_}
+\</param\>		{return $_PARAM_}
+
+\<struct\>		{return $STRUCT_}
+\</struct\>		{return $_STRUCT_}
+
+\<array\>		{return $ARRAY_}
+\</array\>		{return $_ARRAY_}
+\<data\>		{return $DATA_}
+\</data\>		{return $_DATA_}
+
+\<member\>		{return $MEMBER_}
+\</member\>		{return $_MEMBER_}
+\<name\>		{return $NAME_}
+\</name\>		{return $_NAME_}
+
+\<value\>		{return $VALUE_}
+\</value\>		{return $_VALUE_}
+
+\<int\>			{return $INTEGER_}
+\<i4\>			{return $INTEGER_}
+\<double\>		{return $DOUBLE_}
+\<base64\>		{return $BASE64_}
+\<datatime\>		{return $DATATIME_}
+
+\</int\>		{return $_INTEGER_}
+\</i4\>			{return $_INTEGER_}
+\</double\>		{return $_DOUBLE_}
+\</base64\>		{return $_BASE64_}
+\</datatime\>		{return $_DATATIME_}
+
+\<\?[^\?]*\?\>		{set yylval $yytext; return $HEADER_}
+\<string\>[^\<]*\</string\> {set yylval [string range $yytext 9 end-10]; return $STRING_}
+\<value\>[^\<]*\</value\> {set yylval [string range $yytext 8 end-9]; return $STRING_}
+
+\<boolean\>\s0\s\</boolean\> {return $FALSE_}
+\<boolean\>\s1\s\</boolean\> {return $TRUE_}
+
+#include numeric.fin
+#include string.fin
+#include ws.fin
+
+%%

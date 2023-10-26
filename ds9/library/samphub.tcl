@@ -752,6 +752,8 @@ proc samp.hub.getMetadata {args} {
 
 proc samp.hub.declareSubscriptions {args} {
     global samphub
+    global samphub2
+    global samphub3
 
     global debug
     if {$debug(tcl,samp)} {
@@ -779,20 +781,26 @@ proc samp.hub.declareSubscriptions {args} {
     SAMPHubDialogListUpdate
 
     # update other clients
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    catch {unset samphubmap3}
+
     set mtype {samp.hub.event.subscriptions}
-    set hubmap(samp.mtype) "string $mtype"
-    set hubmap(samp.params) {struct hubmap2}
-    set hubmap2(id) "string $samphub($secret,id)"
-    set hubmap2(subscriptions) {struct hubmap3}
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
+    set samphubmap2(subscriptions) {struct samphubmap3}
 
     set cnt 3
     foreach sub $samphub($secret,subscriptions) {
 	incr cnt
 	foreach {mm attrs} $sub {
-	    set varname hubmap${cnt}
-	    set hubmap3($mm) "struct $varname"
+	    set varname samphubmap${cnt}
+	    global $varname
+	    set samphubmap3($mm) "struct $varname"
 
-	    upvar 0 $varname var
+	    catch {unset $varname}
+	    upvar #0 $varname var
 	    foreach attr $attrs {
 		foreach {key val} $attr {
 		    set var($key) "string $val"
@@ -819,7 +827,7 @@ proc samp.hub.declareSubscriptions {args} {
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct hubmap"]
+	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
 	if {$samphub($cc,web)} {

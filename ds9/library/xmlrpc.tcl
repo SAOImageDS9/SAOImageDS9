@@ -65,8 +65,8 @@
 package provide xmlrpc 0.3
 
 namespace eval xmlrpc {
-    namespace	export call buildRequest marshall unmarshall assoc
-    namespace	export serve
+    namespace export call buildRequest marshall unmarshall assoc
+    namespace export serve
 
     variable	READSIZE 4096;
     variable	WS	"\[ |\n|\t\|\r]";	# WhiteSpace
@@ -884,4 +884,169 @@ proc xmlrpc::test {} {
     set data [lindex $data 1]
     debug "data: $data"
     puts [assoc "first" $data]
+}
+
+proc doit {data} {
+    global parse
+    set parse(result) {}
+
+    set data [string map {< " <" > "> "} $data]
+    xmlrpc::YY_FLUSH_BUFFER
+    xmlrpc::yy_scan_string $data
+    xmlrpc::yyparse
+
+    puts $parse(result)
+
+    close $ch
+}
+
+proc doitt {} {
+    set fn [OpenFileDialog votfbox]
+    if {$fn == {}} {
+	return
+    }
+    set ch [open $fn r]
+    set data [read $ch]
+
+    global parse
+    set parse(result) {}
+
+    set data [string map {< " <" > "> "} $data]
+    xmlrpc::YY_FLUSH_BUFFER
+    xmlrpc::yy_scan_string $data
+    xmlrpc::yyparse
+
+    puts $parse(result)
+
+    close $ch
+}
+
+proc doittt {} {
+    set fn [OpenFileDialog votfbox]
+
+    if {$fn == {}} {
+	return
+    }
+    set ch [open $fn r]
+
+    set varname adsf
+    global $varname
+
+    set ${varname}(state) {}
+    set ${varname}(result) {}
+
+    set xml [xml::parser \
+		 -characterdatacommand [list XMLRPCCharCB $varname] \
+		 -elementstartcommand [list XMLRPCElemStartCB $varname] \
+		 -elementendcommand [list XMLRPCElemEndCB $varname] \
+		 -ignorewhitespace 1 \
+		]
+
+    set data [read $ch]
+    if {[catch {$xml parse $data} err]} {
+	puts stderr "Parse Error: $err"
+    }
+
+    $xml free
+
+    close $ch
+}
+
+proc XMLRPCCharCB {varname data} {
+    upvar #0 $varname var
+    global $varname
+
+    puts "char: $varname $data"
+
+    switch $var(state) {
+	int {}
+	double {}
+	boolean {}
+	string {}
+	base64 {}
+	dateTime.iso8601 {}
+    }
+
+    set str [string trim $data]
+    if {$str != {}} {
+	lappend var(result) $str
+    }
+}
+
+proc XMLRPCElemStartCB {varname name attlist args} {
+    upvar #0 $varname var
+    global $varname
+
+    puts "element start: $varname $name $attlist $args"
+
+    switch $name {
+	int -
+	i4 {}
+	double {}
+	boolean {}
+	string {}
+	base64 {}
+	dateTime.iso8601 {}
+	array {}
+	struct {}
+
+	methodName {}
+	member {}
+	name {}
+	data {}
+
+	params {}
+	param {}
+	value {}
+
+	methodCall -
+	methodResponse -
+	fault {}
+
+	default {
+	    puts "Unknown tag: $name"
+	    return -code error
+	}
+    }
+
+    set var(state) $name
+}
+
+proc XMLRPCElemEndCB {varname name args} {
+    upvar #0 $varname var
+    global $varname
+
+    puts "element end: $varname $name $args"
+
+    switch $name {
+	int -
+	i4 {}
+	double {}
+	boolean {}
+	string {}
+	base64 {}
+	dateTime.iso8601 {}
+	array {}
+	struct {}
+
+	methodName {}
+	member {}
+	name {}
+	data {}
+
+	params {}
+	param {}
+	value {}
+
+	methodCall -
+	methodResponse -
+	fault {puts "***$var(result)"}
+
+	default {
+	    puts "Unknown tag: $name"
+	    return -code error
+	}
+    }
+
+    set var(state) $name
 }

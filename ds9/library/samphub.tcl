@@ -338,7 +338,6 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,subscriptions)
     unset samphub($secret,metadata)
 
-    catch {unset map-getMeta}
     catch {unset map-getSubs}
     catch {unset map-getSubClient}
     catch {unset map-getSubClient-2}
@@ -719,6 +718,7 @@ proc samp.hub.declareMetadata {args} {
 
 proc samp.hub.getMetadata {args} {
     global samphub
+    global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
@@ -734,18 +734,16 @@ proc samp.hub.getMetadata {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
 
-    set varname map-getMeta
-    global $varname
-    catch {unset $varname}
+    catch {unset samphubmap}
 
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
-		    set ${varname}($key) "string \"[XMLQuote $val]\""
+		    set samphubmap($key) "string \"[XMLQuote $val]\""
 		}
 	    }
-	    return "struct $varname"
+	    return "struct samphubmap"
 	}
     }
 
@@ -1336,20 +1334,14 @@ proc samp.hub.reply {args} {
 	}
     }
 
-    set varname map-[SAMPHubGenerateKey]
-    set varname2 ${varname}-2
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
 
-    global $varname
-    global $varname2
-
-    catch {unset $varname}
-    catch {unset $varname2}
-
-    set ${varname}(samp.status) "string $status"
-    set ${varname}(samp.result) "struct $varname2"
+    set samphubmap(samp.status) "string $status"
+    set samphubmap(samp.result) "struct samphubmap2"
     foreach mm $result {
 	foreach {key val} $mm {
-	    set ${varname2}($key) "string \{$val\}"
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1362,13 +1354,7 @@ proc samp.hub.reply {args} {
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    array set samphubmap [array get $varname]
-	    array set samphubmap2 [array get $varname2]
-
 	    set samphub(callAndWait) 1
-
-	    catch {unset $varname}
-	    catch {unset $varname2}
 	}
 	default {
 	    # call

@@ -102,33 +102,33 @@ value : VALUE_ type _VALUE_
  | _VALUE_
  ;
 
-type : INTEGER_ INT_ _INTEGER_ {puts -nonewline "\{int $2\}"}
- | DOUBLE_ numeric _DOUBLE_ {puts -nonewline "\{double $2\}"}
- | TRUE_ {puts -nonewline "\{boolean 1\}"}
- | FALSE_ {puts -nonewline "\{boolean 0\}"}
- | STRING_ {puts -nonewline "\{string \{$1\}\}"}
+type : INTEGER_ INT_ _INTEGER_ {global parse; append parse(result) "\{int $2\}"}
+ | DOUBLE_ numeric _DOUBLE_ {global parse; append parse(result) "\{double $2\}"}
+ | TRUE_ {global parse; append parse(result) "\{boolean 1\}"}
+ | FALSE_ {global parse; append parse(result) "\{boolean 0\}"}
+ | STRING_ {global parse; append parse(result) "\{string \{$1\}\}"}
  | BASE64_ _BASE64_
  | DATETIME_ _DATETIME_
 
- | STRUCT_ {puts -nonewline "\{struct "} struct _STRUCT_ {puts -nonewline "\}"}
- | STRUCT_ _STRUCT_ {puts -nonewline "\{struct \{\}\}"}
- | _STRUCT_ {puts -nonewline "\{struct \{\}\}"}
+ | STRUCT_ {global parse; append parse(result) "\{struct "} struct _STRUCT_ {global parse; append parse(result) "\}"}
+ | STRUCT_ _STRUCT_ {global parse; append parse(result) "\{struct \{\}\}"}
+ | _STRUCT_ {global parse; append parse(result) "\{struct \{\}\}"}
 
- | ARRAY_ {puts -nonewline "\{array "} array _ARRAY_ {puts -nonewline "\}"}
- | ARRAY_ _ARRAY_ {puts -nonewline "\{array \{\}\}"}
- | _ARRAY_ {puts -nonewline "\{array \{\}\}"}
+ | ARRAY_ {global parse; append parse(result) "\{array "} array _ARRAY_ {global parse; append parse(result) "\}"}
+ | ARRAY_ _ARRAY_ {global parse; append parse(result) "\{array \{\}\}"}
+ | _ARRAY_ {global parse; append parse(result) "\{array \{\}\}"}
  ;
 
 struct : struct member
  | member
  ;
 
-member : MEMBER_ {puts -nonewline "\{"} name value _MEMBER_ {puts -nonewline "\}"}
- | MEMBER_ _MEMBER_ {puts -nonewline "\{\}"}
- | _MEMBER_ {puts -nonewline "\{\}"}
+member : MEMBER_ {global parse; append parse(result) "\{"} name value _MEMBER_ {global parse; append parse(result) "\}"}
+ | MEMBER_ _MEMBER_ {global parse; append parse(result) "\{\}"}
+ | _MEMBER_ {global parse; append parse(result) "\{\}"}
  ;
 
-name : NAME_ STRING_ _NAME_ {puts -nonewline "$2 "}
+name : NAME_ STRING_ _NAME_ {global parse; append parse(result) "$2 "}
  | NAME_ _NAME_
  | _NAME_
  ;

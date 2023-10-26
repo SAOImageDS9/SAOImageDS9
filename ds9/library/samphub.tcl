@@ -839,6 +839,7 @@ proc samp.hub.declareSubscriptions {args} {
 
 proc samp.hub.getSubscriptions {args} {
     global samphub
+    global samphubmap
 
     global debug
     if {$debug(tcl,samp)} {
@@ -854,9 +855,7 @@ proc samp.hub.getSubscriptions {args} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getSubscriptions\t$samphub($secret,id)"
 
-    set varname map-getSubs
-    global $varname
-    catch {unset $varname}
+    catch {unset samphubmap}
 
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
@@ -865,20 +864,20 @@ proc samp.hub.getSubscriptions {args} {
 	    foreach sub $samphub($cc,subscriptions) {
 		incr cnt
 		foreach {mm attrs} $sub {
-		    set vvarname ${varname}${cnt}
-		    global $vvarname
-		    set ${varname}($mm) "struct $vvarname"
+		    set varname samphubmap${cnt}
+		    global $varname
+		    set samphubmap($mm) "struct $varname"
 
-		    catch {unset $vvarname}
-		    upvar #0 $vvarname vvar
+		    catch {unset $varname}
+		    upvar #0 $varname var
 		    foreach attr $attrs {
 			foreach {key val} $attr {
-			    set vvar($key) "string $val"
+			    set var($key) "string $val"
 			}
 		    }
 		}
 	    }
-	    return "struct $varname"
+	    return "struct samphubmap"
 	}
     }
 

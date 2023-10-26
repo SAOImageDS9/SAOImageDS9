@@ -338,8 +338,6 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,subscriptions)
     unset samphub($secret,metadata)
 
-    catch {unset map-reg}
-    catch {unset map-reg-2}
     catch {unset map-getMeta}
     catch {unset map-getSubs}
     catch {unset map-getSubClient}
@@ -348,6 +346,8 @@ proc SAMPHubRemove {secret} {
 
 proc SAMPHubRegister {web} {
     global samphub
+    global samphubmap
+    global samphubmap2
 
     incr samphub(client,seq)
     set secret [SAMPHubGenerateKey]
@@ -365,18 +365,14 @@ proc SAMPHubRegister {web} {
     SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
     SAMPHubDialogListAdd $secret
 
-    set varname map-reg
-    set varname2 map-reg-2
-    global $varname
-    global $varname2
-    catch {unset $varname}
-    catch {unset $varname2}
-
     # update other clients
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+
     set mtype {samp.hub.event.register}
-    set ${varname}(samp.mtype) "string $mtype"
-    set ${varname}(samp.params) "struct $varname2"
-    set ${varname2}(id) "string $samphub($secret,id)"
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) {struct samphubmap2}
+    set samphubmap2(id) "string $samphub($secret,id)"
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -396,7 +392,7 @@ proc SAMPHubRegister {web} {
 
 	set param1 [list "string $cc"]
 	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct $varname"]
+	set param3 [list "struct samphubmap"]
 	set params "$param1 $param2 $param3"
 
 	if {$samphub($cc,web)} {
@@ -411,11 +407,10 @@ proc SAMPHubRegister {web} {
 	}
     }
 
-    catch {unset $varname}
-    catch {unset $varname2}
-    set ${varname}(samp.hub-id) {string hub}
-    set ${varname}(samp.self-id) "string $id"
-    set ${varname}(samp.private-key) "string $secret"
+    catch {unset samphubmap}
+    set samphubmap(samp.hub-id) {string hub}
+    set samphubmap(samp.self-id) "string $id"
+    set samphubmap(samp.private-key) "string $secret"
 }
 
 proc SAMPHubSend {method url params resultVar {ntabs 5} {distance 4}} {
@@ -578,7 +573,7 @@ proc samp.hub.register {args} {
     }
 
     SAMPHubRegister 0
-    return "struct map-reg"
+    return "struct samphubmap"
 }
 
 proc samp.hub.unregister {args} {

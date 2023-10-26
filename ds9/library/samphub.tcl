@@ -470,16 +470,15 @@ proc SAMPHubNotify {secret cc mtype} {
     catch {unset samphubmap2}
 }
 
-proc SAMPHubCall {secret cc msgid mtype varname varname2} {
+proc SAMPHubCall {secret cc msgid mtype} {
     global samphub
-
-    global $varname
-    global $varname2
+    global samphubmap
+    global samphubmap2
 
     set param1 [list "string $cc"]
     set param2 [list "string $samphub($secret,id)"]
     set param3 [list "string $msgid"]
-    set param4 [list "struct $varname"]
+    set param4 [list "struct samphubmap"]
     set params "$param1 $param2 $param3 $param4"
 
     if {$samphub($cc,web)} {
@@ -493,20 +492,19 @@ proc SAMPHubCall {secret cc msgid mtype varname varname2} {
     }
 
     # maybe empty
-    catch {unset $varname}
-    catch {unset $varname2}
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
 }
 
-proc SAMPHubReply {cc id msgtag varname varname2} {
+proc SAMPHubReply {cc id msgtag} {
     global samphub
-
-    global $varname
-    global $varname2
+    global samphubmap
+    global samphubmap2
 
     set param1 [list "string $cc"]
     set param2 [list "string $id"]
     set param3 [list "string $msgtag"]
-    set param4 [list "struct $varname"]
+    set param4 [list "struct samphubmap"]
     set params "$param1 $param2 $param3 $param4"	
 
     if {$samphub($cc,web)} {
@@ -520,8 +518,8 @@ proc SAMPHubReply {cc id msgtag varname varname2} {
     }
 
     # maybe empty
-    catch {unset $varname}
-    catch {unset $varname2}
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
 }
 
 # procs
@@ -1094,6 +1092,8 @@ proc samp.hub.notifyAll {args} {
 
 proc samp.hub.call {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
     
     global debug
     if {$debug(tcl,samp)} {
@@ -1122,20 +1122,14 @@ proc samp.hub.call {args} {
 	}
     }
 
-    set varname map-[SAMPHubGenerateKey]
-    set varname2 ${varname}-2
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
 
-    global $varname
-    global $varname2
-
-    catch {unset $varname}
-    catch {unset $varname2}
-
-    set ${varname}(samp.mtype) "string $mtype"
-    set ${varname}(samp.params) "struct $varname2"
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) "struct samphubmap2"
     foreach mm $params {
 	foreach {key val} $mm {
-	    set ${varname2}($key) "string \{$val\}"
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1160,7 +1154,7 @@ proc samp.hub.call {args} {
 	return -code error
     }
 
-    after 0 "SAMPHubCall $secret $cc $msgid $mtype $varname $varname2"
+    after 0 "SAMPHubCall $secret $cc $msgid $mtype"
 
     return "string $msgid"
 }
@@ -1168,6 +1162,8 @@ proc samp.hub.call {args} {
 proc samp.hub.callAll {args} {
     global samphub
     global samphubmap
+    global samphubmap2
+    global samphubmap3
 
     global debug
     if {$debug(tcl,samp)} {
@@ -1195,20 +1191,15 @@ proc samp.hub.callAll {args} {
 	}
     }
 
-    set varname map-[SAMPHubGenerateKey]
-    set varname2 ${varname}-2
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
+    catch {unset samphubmap3}
 
-    global $varname
-    global $varname2
-
-    catch {unset $varname}
-    catch {unset $varname2}
-
-    set ${varname}(samp.mtype) "string $mtype"
-    set ${varname}(samp.params) "struct $varname2"
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) "struct samphubmap2"
     foreach mm $params {
 	foreach {key val} $mm {
-	    set ${varname2}($key) "string \{$val\}"
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1230,14 +1221,13 @@ proc samp.hub.callAll {args} {
 	    continue
 	}
 
-	after 0 "SAMPHubCall $secret $cc $msgid $mtype $varname $varname2"
+	after 0 "SAMPHubCall $secret $cc $msgid $mtype"
 
 	set id $samphub($cc,id)
-	catch {unset samphubmap}
- 	set samphubmap($id) "string $msgid"
+ 	set samphubmap3($id) "string $msgid"
     }
 
-    return "struct samphubmap"
+    return "struct samphubmap3"
 }
 
 proc samp.hub.callAndWait {args} {
@@ -1272,20 +1262,14 @@ proc samp.hub.callAndWait {args} {
 	}
     }
 
-    set varname map-[SAMPHubGenerateKey]
-    set varname2 ${varname}-2
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
 
-    global $varname
-    global $varname2
-
-    catch {unset $varname}
-    catch {unset $varname2}
-
-    set ${varname}(samp.mtype) "string $mtype"
-    set ${varname}(samp.params) "struct $varname2"
+    set samphubmap(samp.mtype) "string $mtype"
+    set samphubmap(samp.params) "struct samphubmap2"
     foreach mm $params {
 	foreach {key val} $mm {
-	    set ${varname2}($key) "string \{$val\}"
+	    set samphubmap2($key) "string \{$val\}"
 	}
     }
 
@@ -1310,7 +1294,7 @@ proc samp.hub.callAndWait {args} {
 	return -code error
     }
 
-    after 0 "SAMPHubCall $secret $cc $msgid $mtype $varname $varname2"
+    after 0 "SAMPHubCall $secret $cc $msgid $mtype"
 
     vwait samphub(callAndWait)
     set samphub(callAndWait) {}
@@ -1388,7 +1372,7 @@ proc samp.hub.reply {args} {
 	}
 	default {
 	    # call
-	    after 0 "SAMPHubReply $cc $src $msgtag $varname $varname2"
+	    after 0 "SAMPHubReply $cc $src $msgtag"
 	}
     }
 

@@ -916,6 +916,8 @@ proc samp.hub.getRegisteredClients {args} {
 
 proc samp.hub.getSubscribedClients {args} {
     global samphub
+    global samphubmap
+    global samphubmap2
 
     global debug
     if {$debug(tcl,samp)} {
@@ -943,18 +945,14 @@ proc samp.hub.getSubscribedClients {args} {
 	}
     }
 
-    set varname map-getSubClient
-    set varname2 map-getSubClent-2
-    global $varname
-    global $varname2
-    catch {unset $varname}
-    catch {unset $varname2}
+    catch {unset samphubmap}
+    catch {unset samphubmap2}
 
     foreach cc $ll {
-	set ${varname}($cc) "struct $varname2"
+	set samphubmap($cc) "struct samphubmap2"
     }
 
-    return "struct $varname"
+    return "struct samphubmap"
 }
 
 proc samp.hub.notify {args} {

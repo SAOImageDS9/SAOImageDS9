@@ -947,17 +947,24 @@ proc XMLRPCCharCB {varname data} {
 	string {
 	    if {$str != {}} {
 		if {[llength $str]>1} {
-		    append var(args) " <[TCLXMLQuote $str]>"
+		    append var(args) "<[TCLXMLQuote $str]>"
 		} else {
-		    append var(args) " [TCLXMLQuote $str]"
+		    append var(args) "[TCLXMLQuote $str] "
 		}
 	    }
 	}
 
-	name -
+	name {
+	    if {$str != {}} {
+		append var(args) "$str "
+	    } else {
+		append var(args) "<>"
+	    }
+	}
+
 	methodName {
 	    if {$str != {}} {
-		append var(args) $str
+		append var(args) "$str "
 	    } else {
 		append var(args) "<>"
 	    }
@@ -993,13 +1000,13 @@ proc XMLRPCElemStartCB {varname name attlist args} {
 	base64 {}
 	dateTime.iso8601 {}
 	array {}
-	struct {append var(args) " <"}
+	struct {append var(args) "<"}
 
 	methodName {}
 	name {}
 
 	member {append var(args) "<"}
-	data {append var(args) " <"}
+	data {append var(args) "<"}
 
 	params {}
 	param {}
@@ -1044,7 +1051,7 @@ proc XMLRPCElemEndCB {varname name args} {
 	}
 
 	member {append var(args) "> "}
-	data {append var(args) "> "}
+	data {append var(args) ">"}
 
 	params {}
 	param {}

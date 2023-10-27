@@ -337,10 +337,6 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,url)
     unset samphub($secret,subscriptions)
     unset samphub($secret,metadata)
-
-    catch {unset map-getSubs}
-    catch {unset map-getSubClient}
-    catch {unset map-getSubClient-2}
 }
 
 proc SAMPHubRegister {web} {

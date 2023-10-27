@@ -140,7 +140,10 @@ proc xmlrpc::doRequest {sock} {
     if {![regexp $RE $body {} mname params]} {
 	return [errReturn "Malformed methodCall"]
     }
-
+    puts "***body"
+    puts "$body"
+    doit $body
+    
     debug "::doRequest mname=$mname"
     set args {}
     if {$params == {}} {
@@ -180,6 +183,7 @@ proc xmlrpc::doRequest {sock} {
 	if {$param != "</params>"} {
 	    return [errReturn "Invalid End Params"]
 	}
+	puts "***eval :  $mname $args"
 	if {[catch {set result [eval ::$mname $args]}]} {
 	    set response [buildFault 1 "$mname failed"]
 	} else {
@@ -886,20 +890,6 @@ proc xmlrpc::test {} {
     puts [assoc "first" $data]
 }
 
-proc doit {data} {
-    global parse
-    set parse(result) {}
-
-    set data [string map {< " <" > "> "} $data]
-    xmlrpc::YY_FLUSH_BUFFER
-    xmlrpc::yy_scan_string $data
-    xmlrpc::yyparse
-
-    puts $parse(result)
-
-    close $ch
-}
-
 proc doitt {} {
     set fn [OpenFileDialog votfbox]
     if {$fn == {}} {
@@ -916,24 +906,17 @@ proc doitt {} {
     xmlrpc::yy_scan_string $data
     xmlrpc::yyparse
 
-    puts $parse(result)
-
     close $ch
 }
 
-proc doittt {} {
-    set fn [OpenFileDialog votfbox]
-
-    if {$fn == {}} {
-	return
-    }
-    set ch [open $fn r]
-
+proc doit {data} {
     set varname adsf
     global $varname
+    upvar #0 $varname var
 
     set ${varname}(state) {}
-    set ${varname}(result) {}
+    set ${varname}(args) {}
+    set ${varname}(mname) {}
 
     set xml [xml::parser \
 		 -characterdatacommand [list XMLRPCCharCB $varname] \
@@ -942,42 +925,64 @@ proc doittt {} {
 		 -ignorewhitespace 1 \
 		]
 
-    set data [read $ch]
     if {[catch {$xml parse $data} err]} {
 	puts stderr "Parse Error: $err"
     }
+    puts "***parse: $var(mname) [string map {< \{ > \}} $var(args)]"
 
     $xml free
-
-    close $ch
 }
 
 proc XMLRPCCharCB {varname data} {
     upvar #0 $varname var
     global $varname
 
-    puts "char: $varname $data"
-
-    switch $var(state) {
-	int {}
-	double {}
-	boolean {}
-	string {}
-	base64 {}
-	dateTime.iso8601 {}
-    }
+#    puts "char: $data"
 
     set str [string trim $data]
-    if {$str != {}} {
-	lappend var(result) $str
+
+    puts "$var(state) $data"
+    switch $var(state) {
+	value -
+	string {
+	    if {$str != {}} {
+		if {[llength $str]>1} {
+		    append var(args) " <[TCLXMLQuote $str]>"
+		} else {
+		    append var(args) " [TCLXMLQuote $str]"
+		}
+	    }
+	}
+
+	name -
+	methodName {
+	    if {$str != {}} {
+		append var(args) $str
+	    } else {
+		append var(args) "<>"
+	    }
+	}
+
+	int -
+	double -
+	boolean -
+	base64 -
+	dateTime.iso8601 {
+	    if {$str != {}} {
+		append var(args) $str
+	    }
+	}
     }
+
+    # needed to look for empty values
+    set var(state) {}
 }
 
 proc XMLRPCElemStartCB {varname name attlist args} {
     upvar #0 $varname var
     global $varname
 
-    puts "element start: $varname $name $attlist $args"
+#    puts "element start : $name : $attlist : $args"
 
     switch $name {
 	int -
@@ -988,12 +993,13 @@ proc XMLRPCElemStartCB {varname name attlist args} {
 	base64 {}
 	dateTime.iso8601 {}
 	array {}
-	struct {}
+	struct {append var(args) " <"}
 
 	methodName {}
-	member {}
 	name {}
-	data {}
+
+	member {append var(args) "<"}
+	data {append var(args) " <"}
 
 	params {}
 	param {}
@@ -1016,7 +1022,7 @@ proc XMLRPCElemEndCB {varname name args} {
     upvar #0 $varname var
     global $varname
 
-    puts "element end: $varname $name $args"
+#    puts "element end : $name : $args"
 
     switch $name {
 	int -
@@ -1027,20 +1033,31 @@ proc XMLRPCElemEndCB {varname name args} {
 	base64 {}
 	dateTime.iso8601 {}
 	array {}
-	struct {}
+	struct {append var(args) ">"}
 
 	methodName {}
-	member {}
-	name {}
-	data {}
+	name {
+	    # <name><\name>
+	    if {$var(state) == "name"} {
+		append var(args) "<>"
+	    }
+	}
+
+	member {append var(args) "> "}
+	data {append var(args) "> "}
 
 	params {}
 	param {}
-	value {}
+	value {
+	    # <value><\value>
+	    if {$var(state) == "value"} {
+		append var(args) "<>"
+	    }
+	}
 
 	methodCall -
 	methodResponse -
-	fault {puts "***$var(result)"}
+	fault {}
 
 	default {
 	    puts "Unknown tag: $name"
@@ -1048,5 +1065,10 @@ proc XMLRPCElemEndCB {varname name args} {
 	}
     }
 
-    set var(state) $name
+    set var(state) "\\$name"
 }
+
+proc TCLXMLQuote {val} {
+    return [string map {\{ < \} >} $val]
+}
+

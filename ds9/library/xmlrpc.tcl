@@ -140,10 +140,16 @@ proc xmlrpc::doRequest {sock} {
     if {![regexp $RE $body {} mname params]} {
 	return [errReturn "Malformed methodCall"]
     }
-    puts "***body"
-    puts "$body"
-    doit $body
     
+#    puts "***body"
+#    puts "$body"
+    doit foo $body
+    global foo
+    puts "parse: $foo(mname) $foo(args)"
+#    set mname $foo(mname)
+#    set args $foo(args)
+
+    if {1} {
     debug "::doRequest mname=$mname"
     set args {}
     if {$params == {}} {
@@ -154,6 +160,11 @@ proc xmlrpc::doRequest {sock} {
 	} else {
 	    set response [buildResponse $result]
 	}
+	puts -nonewline $sock $response
+	flush $sock
+	catch {close $sock}
+	return
+
     } else {
 	set param [string range $params 8 end]
 	set param [string trim $param]
@@ -183,13 +194,17 @@ proc xmlrpc::doRequest {sock} {
 	if {$param != "</params>"} {
 	    return [errReturn "Invalid End Params"]
 	}
-	puts "***eval :  $mname $args"
-	if {[catch {set result [eval ::$mname $args]}]} {
-	    set response [buildFault 1 "$mname failed"]
-	} else {
-	    set response [buildResponse $result]
-	}
     }
+	puts "eval  : $mname $args"
+    }
+    puts ""
+    
+    if {[catch {set result [eval $mname $args]}]} {
+	set response [buildFault 1 "$mname failed"]
+    } else {
+	set response [buildResponse $result]
+    }
+
     puts -nonewline $sock $response
     flush $sock
     catch {close $sock}
@@ -654,10 +669,8 @@ proc xmlrpc::unmarshall {str} {
 	"/struct" {set res [list [string range $str 9 end] {}]}
 	default {return [errReturn "Unknown type: $str"]}
     }
-
     set rest [lindex $res 0]
     set val [lindex $res 1]
-
     if {[string range $rest 0 7] != "</value>"} {
 	return [errReturn "Invalid close of value tag"]
     }
@@ -909,8 +922,7 @@ proc doitt {} {
     close $ch
 }
 
-proc doit {data} {
-    set varname adsf
+proc doit {varname data} {
     global $varname
     upvar #0 $varname var
 
@@ -928,7 +940,9 @@ proc doit {data} {
     if {[catch {$xml parse $data} err]} {
 	puts stderr "Parse Error: $err"
     }
-    puts "***parse: $var(mname) [string map {< \{ > \}} $var(args)]"
+
+    # swap for curlies
+    set var(args) [string map {< \{ > \}} $var(args)]
 
     $xml free
 }
@@ -941,20 +955,16 @@ proc XMLRPCCharCB {varname data} {
 
     set str [string trim $data]
 
-    puts "$var(state) $data"
     switch $var(state) {
 	value -
 	string {
 	    if {$str != {}} {
-		if {[llength $str]>1} {
-		    append var(args) "<[TCLXMLQuote $str]>"
-		} else {
-		    append var(args) "[TCLXMLQuote $str] "
-		}
+		append var(args) "[TCLXMLQuote [list $str]] "
 	    }
 	}
 
 	name {
+	    # null names are allowed
 	    if {$str != {}} {
 		append var(args) "$str "
 	    } else {
@@ -965,8 +975,6 @@ proc XMLRPCCharCB {varname data} {
 	methodName {
 	    if {$str != {}} {
 		append var(args) "$str "
-	    } else {
-		append var(args) "<>"
 	    }
 	}
 
@@ -1050,7 +1058,7 @@ proc XMLRPCElemEndCB {varname name args} {
 	    }
 	}
 
-	member {append var(args) "> "}
+	member {append var(args) ">"}
 	data {append var(args) ">"}
 
 	params {}

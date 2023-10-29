@@ -63,7 +63,7 @@ command : HEADER_ methodCall
  | HEADER_ fault
  ;
 
-methodCall : METHODCALL_ methodName params _METHODCALL_
+methodCall : METHODCALL_ methodName params _METHODCALL_ {global parse; set parse(result) "\{params $2\}"}
  | METHODCALL_ _METHODCALL_
  | _METHODCALL_
  ;
@@ -83,62 +83,72 @@ methodName : METHODNAME_ STRING_ _METHODNAME_
  | _METHODNAME_
  ;
 
-params : PARAMS_ xparam _PARAMS_
- | PARAMS_ _PARAMS_
- | _PARAMS_
+params : PARAMS_ xparam _PARAMS_ {set _ "\{params $2\}"}
+ | PARAMS_ _PARAMS_ {set _ "\{params \{\}\}"}
+ | _PARAMS_ {set _ "\{params \{\}\}"}
  ;
 
-xparam : xparam param
- | param
+xparam : xparam param {append _ " $2"}
+ | param {set _ $1}
  ;
 
-param : PARAM_ value _PARAM_
- | PARAM_ _PARAM_
- | _PARAM_
+param : PARAM_ value _PARAM_ {set _ "\{param $2\}"} 
+ | PARAM_ _PARAM_ {set _ "\{param \{\}\}"}
+ | _PARAM_ {set _ "\{param \{\}\}"}
  ;
 
-value : VALUE_ type _VALUE_
- | VALUE_ _VALUE_
- | _VALUE_
+value : VALUE_ type _VALUE_ {set _ "\{value $2\}"}
+ | VALUE_ _VALUE_ {set _ "\{value \{\}\}"}
+ | _VALUE_ {set _ "\{value \{\}\}"}
  ;
 
-type : INTEGER_ INT_ _INTEGER_ {global parse; append parse(result) "\{int $2\}"}
- | DOUBLE_ numeric _DOUBLE_ {global parse; append parse(result) "\{double $2\}"}
- | TRUE_ {global parse; append parse(result) "\{boolean 1\}"}
- | FALSE_ {global parse; append parse(result) "\{boolean 0\}"}
- | STRING_ {global parse; append parse(result) "\{string \{$1\}\}"}
+type : INTEGER_ INT_ _INTEGER_ {set _ $2}
+ | DOUBLE_ numeric _DOUBLE_ {set _ $2}
+ | true {set _ $1}
+ | false {set _ $1}
+ | str {set _ $1}
  | BASE64_ _BASE64_
  | DATETIME_ _DATETIME_
 
- | STRUCT_ {global parse; append parse(result) "\{struct "} struct _STRUCT_ {global parse; append parse(result) "\}"}
- | STRUCT_ _STRUCT_ {global parse; append parse(result) "\{struct \{\}\}"}
- | _STRUCT_ {global parse; append parse(result) "\{struct \{\}\}"}
+ | STRUCT_ members _STRUCT_ {set _ "\{struct $2\}"} 
+ | STRUCT_ _STRUCT_ {set _ "\{struct \{\}\}"}
+ | _STRUCT_ {set _ "\{struct \{\}\}"}
 
- | ARRAY_ {global parse; append parse(result) "\{array "} array _ARRAY_ {global parse; append parse(result) "\}"}
- | ARRAY_ _ARRAY_ {global parse; append parse(result) "\{array \{\}\}"}
- | _ARRAY_ {global parse; append parse(result) "\{array \{\}\}"}
+ | ARRAY_ values _ARRAY_ {set _ "\{array \{data $2\}\}"} 
+ | ARRAY_ _ARRAY_ {set _ "\{array \{\}\}"}
+ | _ARRAY_ {set _ "\{array \{\}\}"}
  ;
 
-struct : struct member
- | member
+int : INT_ {set _ "\{int $2\}"}
  ;
 
-member : MEMBER_ {global parse; append parse(result) "\{"} name value _MEMBER_ {global parse; append parse(result) "\}"}
- | MEMBER_ _MEMBER_ {global parse; append parse(result) "\{\}"}
- | _MEMBER_ {global parse; append parse(result) "\{\}"}
+double : numeric {set _ "\{double $2\}"}
  ;
 
-name : NAME_ STRING_ _NAME_ {global parse; append parse(result) "$2 "}
- | NAME_ _NAME_
- | _NAME_
+true : TRUE_ {set _ "\{boolean 1\}"}
  ;
 
-array : DATA_ data _DATA_
- | DATA_ _DATA_
- | _DATA_
+false : FALSE_ {set _ "\{boolean 0\}"}
  ;
 
-data : data value
+str : STRING_ {set _ "\{string \{$1\}\}"}
+ ;
+
+members : members member {append _ " $2"}
+ | member {set _ $1}
+ ;
+
+member : MEMBER_ name value _MEMBER_ {set _ "\{member $2 $3\}"} 
+ | MEMBER_ _MEMBER_ {set _ "\{member \{\}\}"}
+ | _MEMBER_ {set _ "\{member \{\}\}"}
+ ;
+
+name : NAME_ STRING_ _NAME_ {set _ "\{name $2\}"}
+ | NAME_ _NAME_ {set _ "\{name \{\}\}"}
+ | _NAME_ {set _ "\{name \{\}\}"}
+ ;
+
+values : values value
  | value
  ;
 

@@ -140,15 +140,13 @@ proc xmlrpc::doRequest {sock} {
     if {![regexp $RE $body {} mname params]} {
 	return [errReturn "Malformed methodCall"]
     }
+    puts "***"
+    puts $body
+    doit $body
+    global parse
+    puts $parse(result)
+    puts ""
     
-#    puts "***body"
-#    puts "$body"
-    doit foo $body
-    global foo
-    puts "parse: $foo(mname) $foo(args)"
-#    set mname $foo(mname)
-#    set args $foo(args)
-
     if {1} {
     debug "::doRequest mname=$mname"
     set args {}
@@ -195,9 +193,16 @@ proc xmlrpc::doRequest {sock} {
 	    return [errReturn "Invalid End Params"]
 	}
     }
-	puts "eval  : $mname $args"
+#	puts "eval  : $mname $args"
     }
-    puts ""
+
+#    doit aaa $body
+#    global aaa
+#    puts "parse: $aaa(mname) $aaa(args)"
+#    set mname $aaa(mname)
+#    set args $aaa(args)
+
+#    puts ""
     
     if {[catch {set result [eval $mname $args]}]} {
 	set response [buildFault 1 "$mname failed"]
@@ -903,14 +908,7 @@ proc xmlrpc::test {} {
     puts [assoc "first" $data]
 }
 
-proc doitt {} {
-    set fn [OpenFileDialog votfbox]
-    if {$fn == {}} {
-	return
-    }
-    set ch [open $fn r]
-    set data [read $ch]
-
+proc doit {data} {
     global parse
     set parse(result) {}
 
@@ -918,11 +916,9 @@ proc doitt {} {
     xmlrpc::YY_FLUSH_BUFFER
     xmlrpc::yy_scan_string $data
     xmlrpc::yyparse
-
-    close $ch
 }
 
-proc doit {varname data} {
+proc doitt {varname data} {
     global $varname
     upvar #0 $varname var
 
@@ -1054,11 +1050,11 @@ proc XMLRPCElemEndCB {varname name args} {
 	name {
 	    # <name><\name>
 	    if {$var(state) == "name"} {
-		append var(args) "<>"
+		append var(args) "<> "
 	    }
 	}
 
-	member {append var(args) ">"}
+	member {append var(args) "> "}
 	data {append var(args) ">"}
 
 	params {}
@@ -1066,7 +1062,7 @@ proc XMLRPCElemEndCB {varname name args} {
 	value {
 	    # <value><\value>
 	    if {$var(state) == "value"} {
-		append var(args) "<>"
+		append var(args) "<> "
 	    }
 	}
 

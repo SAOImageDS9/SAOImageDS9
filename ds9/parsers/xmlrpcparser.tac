@@ -58,14 +58,14 @@
 
 #include numeric.trl
 
-command : HEADER_ methodCall
- | HEADER_ methodResponse
- | HEADER_ fault
+command : HEADER_ methodCall {global parse; set parse(result) $2}
+ | HEADER_ methodResponse {global parse; set parse(result) $2}
+ | HEADER_ fault {global parse; set parse(result) $2}
  ;
 
-methodCall : METHODCALL_ methodName params _METHODCALL_ {global parse; set parse(result) "\{params $2\}"}
- | METHODCALL_ _METHODCALL_
- | _METHODCALL_
+methodCall : METHODCALL_ methodName params _METHODCALL_  {set _ "\{methodcall $2 $3\}"} 
+ | METHODCALL_ _METHODCALL_ {set _ "\{methodcall \{\}\}"}
+ | _METHODCALL_ {set _ "\{methodcall \{\}\}"}
  ;
 
 methodResponse : METHODRESPONSE_ params _METHODRESPONSE_
@@ -78,9 +78,9 @@ fault : FAULT_ value _FAULT_
  | _FAULT_
  ;
 
-methodName : METHODNAME_ STRING_ _METHODNAME_
- | METHODNAME_ _METHODNAME_
- | _METHODNAME_
+methodName : METHODNAME_ STRING_ _METHODNAME_ {set _ "\{methodname $2\}"} 
+ | METHODNAME_ _METHODNAME_ {set _ "\{methodname \{\}\}"}
+ | _METHODNAME_ {set _ "\{methodname \{\}\}"}
  ;
 
 params : PARAMS_ xparam _PARAMS_ {set _ "\{params $2\}"}

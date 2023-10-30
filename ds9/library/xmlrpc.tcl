@@ -145,6 +145,7 @@ proc xmlrpc::doRequest {sock} {
     xml2rpc $body
     global parse
     puts $parse(result)
+    puts [llength $parse(result)]
     puts "---"
     puts [rpc2xml $parse(result)]
     
@@ -902,9 +903,6 @@ proc xmlrpc::test {} {
 }
 
 proc xml2rpc {data} {
-    global parse
-    set parse(result) {}
-
     set data [string map {< " <" > "> "} $data]
     xmlrpc::YY_FLUSH_BUFFER
     xmlrpc::yy_scan_string $data
@@ -913,20 +911,42 @@ proc xml2rpc {data} {
 
 proc rpc2xml {ll} {
     set res {<?xml version="1.0"?>}
+    puts "***[info level]"
     append res "\n[rpc2xmlproc $ll]\n"
     puts "***"
     puts $res
 }
 
 proc rpc2xmlproc {ll} {
-    set type [lindex $ll 0]
-    puts $type
-    return
-    set res [lindex $ll 1]
-#    puts $type
-#    puts $res
-    return "<$type>\n </$type>\n"
-#    return "<$type>\n [rpc2xmlproc $res]\n </$type>\n"
+    set tag [lindex $ll 0]
+    set val [lindex $ll 1]
+    
+    puts "tag=$tag"
+    puts "val=$val"
+
+    set level [expr [info level]-3]
+    set space {}
+    for {set ii 0} {$ii<$level} {incr ii} {
+	append space "  "
+    }
+
+    if {$tag != {} && $val != {}} {
+	switch $tag {
+	    string -
+	    int -
+	    double -
+	    boolean -
+	    base64 -
+	    datatime {
+		return "$space<$tag>$val</$tag>"
+	    }
+	    default {
+		return "$space<$tag>\n[rpc2xmlproc $val]\n$space</$tag>"
+	    }
+	}
+    } else {
+	return
+    }
 }
 
 proc doitt {varname data} {

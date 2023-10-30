@@ -66,43 +66,35 @@ which : methodCall {set _ $1}
  | fault {set _ $1}
  ;
 
-methodCall : METHODCALL_ methodName params _METHODCALL_ {set _ "\{methodcall $2 $3\}"} 
- | METHODCALL_ _METHODCALL_ {set _ "\{methodcall \{\}\}"}
- | _METHODCALL_ {set _ "\{methodcall \{\}\}"}
+methodCall : METHODCALL_ methodName params _METHODCALL_ {set _ [list methodcall [list $2 $3]]} 
  ;
 
-methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {set _ "\{methodresponse $2\}"} 
- | METHODRESPONSE_ _METHODRESPONSE_ {set _ "\{methodresponse \{\}\}"}
- | _METHODRESPONSE_ {set _ "\{methodresponse \{\}\}"}
+methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {set _ [list methodresponse $2]} 
  ;
 
-fault : FAULT_ value _FAULT_ {set _ "\{fault $2\}"} 
- | FAULT_ _FAULT_ {set _ "\{fault \{\}\}"}
- | _FAULT_ {set _ "\{fault \{\}\}"}
+fault : FAULT_ value _FAULT_ {set _ [list fault $2]}
  ;
 
-methodName : METHODNAME_ STRING_ _METHODNAME_ {set _ "\{methodname $2\}"} 
- | METHODNAME_ _METHODNAME_ {set _ "\{methodname \{\}\}"}
- | _METHODNAME_ {set _ "\{methodname \{\}\}"}
+methodName : METHODNAME_ STRING_ _METHODNAME_ {set _ [list methodname $2]}
  ;
 
-params : PARAMS_ xparam _PARAMS_ {set _ "\{params $2\}"}
- | PARAMS_ _PARAMS_ {set _ "\{params \{\}\}"}
- | _PARAMS_ {set _ "\{params \{\}\}"}
+params : PARAMS_ xparam _PARAMS_ {set _ [list params $2]}
+ | PARAMS_ _PARAMS_ {set _ [list params {}]}
+ | _PARAMS_ {set _ [list params {}]}
  ;
 
-xparam : xparam param {append _ " $2"}
+xparam : xparam param {lappend _ $2}
  | param {set _ $1}
  ;
 
-param : PARAM_ value _PARAM_ {set _ "\{param $2\}"} 
- | PARAM_ _PARAM_ {set _ "\{param \{\}\}"}
- | _PARAM_ {set _ "\{param \{\}\}"}
+param : PARAM_ value _PARAM_ {set _ [list param $2]}
+ | PARAM_ _PARAM_ {set _ [list param {}]}
+ | _PARAM_ {set _ [list param {}]}
  ;
 
-value : VALUE_ type _VALUE_ {set _ "\{value $2\}"}
- | VALUE_ _VALUE_ {set _ "\{value \{\}\}"}
- | _VALUE_ {set _ "\{value \{\}\}"}
+value : VALUE_ type _VALUE_ {set _ [list value $2]}
+ | VALUE_ _VALUE_ {set _ [list value {}]}
+ | _VALUE_ {set _ [list value {}]}
  ;
 
 type : INTEGER_ INT_ _INTEGER_ {set _ $2}
@@ -113,42 +105,42 @@ type : INTEGER_ INT_ _INTEGER_ {set _ $2}
  | BASE64_ STRING_ _BASE64_ {set _ $2}
  | DATETIME_ STRING_ _DATETIME_ {set _ $2}
 
- | STRUCT_ members _STRUCT_ {set _ "\{struct $2\}"} 
- | STRUCT_ _STRUCT_ {set _ "\{struct \{\}\}"}
- | _STRUCT_ {set _ "\{struct \{\}\}"}
+ | STRUCT_ members _STRUCT_ {set _ [list struct $2]}
+ | STRUCT_ _STRUCT_ {set _ [list struct {}]}
+ | _STRUCT_ {set _ [list struct {}]}
 
- | ARRAY_ values _ARRAY_ {set _ "\{array \{data $2\}\}"} 
- | ARRAY_ _ARRAY_ {set _ "\{array \{\}\}"}
- | _ARRAY_ {set _ "\{array \{\}\}"}
+ | ARRAY_ values _ARRAY_ {set _ [list array [list data $2]]}
+ | ARRAY_ _ARRAY_ {set _ [list array {}]}
+ | _ARRAY_ {set _ [list array {}]}
  ;
 
-int : INT_ {set _ "\{int $2\}"}
+int : INT_ {set _ [list int $2]}
  ;
 
-double : numeric {set _ "\{double $2\}"}
+double : numeric {set _ [list double $2]}
  ;
 
-true : TRUE_ {set _ "\{boolean 1\}"}
+true : TRUE_ {set _ [list boolean 1]}
  ;
 
-false : FALSE_ {set _ "\{boolean 0\}"}
+false : FALSE_ {set _ [list boolean 0]}
  ;
 
-str : STRING_ {set _ "\{string \{$1\}\}"}
+str : STRING_ {set _ [list string "$1"]}
  ;
 
-members : members member {append _ " $2"}
+members : members member {lappend _ $2}
  | member {set _ $1}
  ;
 
-member : MEMBER_ name value _MEMBER_ {set _ "\{member $2 $3\}"} 
- | MEMBER_ _MEMBER_ {set _ "\{member \{\}\}"}
- | _MEMBER_ {set _ "\{member \{\}\}"}
+member : MEMBER_ name value _MEMBER_ {set _ [list member [list $2 $3]]}
+ | MEMBER_ _MEMBER_ {set _ [list member {}]}
+ | _MEMBER_ {set _ [list member {}]}
  ;
 
-name : NAME_ STRING_ _NAME_ {set _ "\{name $2\}"}
- | NAME_ _NAME_ {set _ "\{name \{\}\}"}
- | _NAME_ {set _ "\{name \{\}\}"}
+name : NAME_ STRING_ _NAME_ {set _ [list name $2]}
+ | NAME_ _NAME_ {set _ [list name {}]}
+ | _NAME_ {set _ [list name {}]}
  ;
 
 values : values value

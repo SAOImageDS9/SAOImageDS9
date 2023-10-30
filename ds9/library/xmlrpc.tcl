@@ -142,10 +142,11 @@ proc xmlrpc::doRequest {sock} {
     }
     puts "***"
     puts $body
-    doit $body
+    xml2rpc $body
     global parse
     puts $parse(result)
-    puts ""
+    puts "---"
+    puts [rpc2xml $parse(result)]
     
     if {1} {
     debug "::doRequest mname=$mname"
@@ -196,14 +197,6 @@ proc xmlrpc::doRequest {sock} {
 #	puts "eval  : $mname $args"
     }
 
-#    doit aaa $body
-#    global aaa
-#    puts "parse: $aaa(mname) $aaa(args)"
-#    set mname $aaa(mname)
-#    set args $aaa(args)
-
-#    puts ""
-    
     if {[catch {set result [eval $mname $args]}]} {
 	set response [buildFault 1 "$mname failed"]
     } else {
@@ -908,7 +901,7 @@ proc xmlrpc::test {} {
     puts [assoc "first" $data]
 }
 
-proc doit {data} {
+proc xml2rpc {data} {
     global parse
     set parse(result) {}
 
@@ -916,6 +909,24 @@ proc doit {data} {
     xmlrpc::YY_FLUSH_BUFFER
     xmlrpc::yy_scan_string $data
     xmlrpc::yyparse
+}
+
+proc rpc2xml {ll} {
+    set res {<?xml version="1.0"?>}
+    append res "\n[rpc2xmlproc $ll]\n"
+    puts "***"
+    puts $res
+}
+
+proc rpc2xmlproc {ll} {
+    set type [lindex $ll 0]
+    puts $type
+    return
+    set res [lindex $ll 1]
+#    puts $type
+#    puts $res
+    return "<$type>\n </$type>\n"
+#    return "<$type>\n [rpc2xmlproc $res]\n </$type>\n"
 }
 
 proc doitt {varname data} {

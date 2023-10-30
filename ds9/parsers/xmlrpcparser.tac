@@ -58,24 +58,27 @@
 
 #include numeric.trl
 
-command : HEADER_ methodCall {global parse; set parse(result) $2}
- | HEADER_ methodResponse {global parse; set parse(result) $2}
- | HEADER_ fault {global parse; set parse(result) $2}
+command : HEADER_ which {global parse; set parse(result) $2}
  ;
 
-methodCall : METHODCALL_ methodName params _METHODCALL_  {set _ "\{methodcall $2 $3\}"} 
+which : methodCall {set _ $1}
+ | methodResponse {set _ $1}
+ | fault {set _ $1}
+ ;
+
+methodCall : METHODCALL_ methodName params _METHODCALL_ {set _ "\{methodcall $2 $3\}"} 
  | METHODCALL_ _METHODCALL_ {set _ "\{methodcall \{\}\}"}
  | _METHODCALL_ {set _ "\{methodcall \{\}\}"}
  ;
 
-methodResponse : METHODRESPONSE_ params _METHODRESPONSE_
- | METHODRESPONSE_ _METHODRESPONSE_
- | _METHODRESPONSE_
+methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {set _ "\{methodresponse $2\}"} 
+ | METHODRESPONSE_ _METHODRESPONSE_ {set _ "\{methodresponse \{\}\}"}
+ | _METHODRESPONSE_ {set _ "\{methodresponse \{\}\}"}
  ;
 
-fault : FAULT_ value _FAULT_
- | FAULT_ _FAULT_
- | _FAULT_
+fault : FAULT_ value _FAULT_ {set _ "\{fault $2\}"} 
+ | FAULT_ _FAULT_ {set _ "\{fault \{\}\}"}
+ | _FAULT_ {set _ "\{fault \{\}\}"}
  ;
 
 methodName : METHODNAME_ STRING_ _METHODNAME_ {set _ "\{methodname $2\}"} 
@@ -107,8 +110,8 @@ type : INTEGER_ INT_ _INTEGER_ {set _ $2}
  | true {set _ $1}
  | false {set _ $1}
  | str {set _ $1}
- | BASE64_ _BASE64_
- | DATETIME_ _DATETIME_
+ | BASE64_ STRING_ _BASE64_ {set _ $2}
+ | DATETIME_ STRING_ _DATETIME_ {set _ $2}
 
  | STRUCT_ members _STRUCT_ {set _ "\{struct $2\}"} 
  | STRUCT_ _STRUCT_ {set _ "\{struct \{\}\}"}

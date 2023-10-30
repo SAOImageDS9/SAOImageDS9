@@ -44,13 +44,13 @@
 \<i4\>			{return $INTEGER_}
 \<double\>		{return $DOUBLE_}
 \<base64\>		{return $BASE64_}
-\<datatime\>		{return $DATATIME_}
+\<datatime.iso8601\>	{return $DATATIME_}
 
 \</int\>		{return $_INTEGER_}
 \</i4\>			{return $_INTEGER_}
 \</double\>		{return $_DOUBLE_}
 \</base64\>		{return $_BASE64_}
-\</datatime\>		{return $_DATATIME_}
+\</datatime.iso8601\>	{return $_DATATIME_}
 
 \<\?[^\?]*\?\>		{set yylval $yytext; return $HEADER_}
 \<string\>[^\<]*\</string\> {set yylval [string range $yytext 9 end-10]; return $STRING_}

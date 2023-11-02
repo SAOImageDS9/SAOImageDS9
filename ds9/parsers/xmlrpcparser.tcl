@@ -1152,9 +1152,9 @@ proc xmlrpc::yyparse {} {
                     1 { set _ $1 }
                     2 { set _ $1 }
                     3 { global parse; set parse(result) $2 }
-                    4 { set _ [list $1] }
-                    5 { set _ [list $1] }
-                    6 { set _ [list $1] }
+                    4 { set _ $1 }
+                    5 { set _ $1 }
+                    6 { set _ $1 }
                     7 { set _ [list methodcall [list $2 $3]] }
                     8 { set _ [list methodresponse $2] }
                     9 { set _ [list fault $2] }

@@ -923,10 +923,10 @@ proc rpc2xmlproc {rpc} {
 	append space "  "
     }
 
-    set tag [lindex [lindex [lindex $rpc 0] 0] 0]
+    set tag [lindex [lindex $rpc 0] 0]
 
-#    puts "rpc=$rpc"
-#    puts "tag=$tag"
+    puts "rpc=$rpc"
+    puts "tag=$tag"
 
     if {$tag == {}} {
 	return
@@ -934,34 +934,34 @@ proc rpc2xmlproc {rpc} {
 
     switch $tag {
 	methodcall {
-	    set rr [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	    set rr [lindex $rpc 1]
+	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
 	}
 
 	methodname {
-	    set rr [lindex [lindex $rpc 0] 1]
-	    set val [lindex [lindex [lindex $rpc 0] 0] 1]
-	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc [list $rr]]"
+	    set rr [lindex $rpc 1]
+	    set val [lindex [lindex $rpc 0] 1]
+	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc $rr]"
 	}
 	
 	params {
-	    set rr [lindex [lindex $rpc 0] 1]
+	    set rr [lindex $rpc 1]
 	    set res "$space<$tag>\n"
 	    foreach pp $rr {
-		append res "[rpc2xmlproc [list $pp]]\n"
+		append res "[rpc2xmlproc $pp]\n"
 	    }
 	    append res "$space</$tag>"
 	    return $res
 	}
 
 	param {
-	    set rr [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	    set rr [lindex $rpc 1]
+	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
 	}
 
 	value {
-	    set rr [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	    set rr [lindex $rpc 1]
+	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
 	}
 
 	string -
@@ -970,29 +970,29 @@ proc rpc2xmlproc {rpc} {
 	boolean -
 	base64 -
 	datatime {
-	    set rr [lindex [lindex $rpc 0] 1]
+	    set rr [lindex $rpc 1]
 	    return "$space<$tag>$rr</$tag>"
 	}
 
 	struct {
-	    set rr [lindex [lindex $rpc 0] 1]
+	    set rr [lindex $rpc 1]
 	    set res "$space<$tag>\n"
 	    foreach pp $rr {
-		append res "[rpc2xmlproc [list $pp]]\n"
+		append res "[rpc2xmlproc $pp]\n"
 	    }
 	    append res "$space</$tag>"
 	    return $res
 	}
 
 	member {
-	    set rr [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	    set rr [lindex $rpc 1]
+	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
 	}
 
 	name {
-	    set rr [lindex [lindex $rpc 0] 1]
-	    set val [lindex [lindex [lindex $rpc 0] 0] 1]
-	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc [list $rr]]"
+	    set rr [lindex $rpc 1]
+	    set val [lindex [lindex $rpc 0] 1]
+	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc $rr]"
 	}
     }
 }

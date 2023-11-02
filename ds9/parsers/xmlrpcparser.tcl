@@ -1152,9 +1152,9 @@ proc xmlrpc::yyparse {} {
                     1 { set _ $1 }
                     2 { set _ $1 }
                     3 { global parse; set parse(result) $2 }
-                    4 { set _ $1 }
-                    5 { set _ $1 }
-                    6 { set _ $1 }
+                    4 { set _ [list $1] }
+                    5 { set _ [list $1] }
+                    6 { set _ [list $1] }
                     7 { set _ [list methodcall [list $2 $3]] }
                     8 { set _ [list methodresponse $2] }
                     9 { set _ [list fault $2] }
@@ -1163,7 +1163,7 @@ proc xmlrpc::yyparse {} {
                     12 { set _ [list params {}] }
                     13 { set _ [list params {}] }
                     14 { lappend _ $2 }
-                    15 { set _ $1 }
+                    15 { set _ [list $1] }
                     16 { set _ [list param $2] }
                     17 { set _ [list param {}] }
                     18 { set _ [list param {}] }
@@ -1189,7 +1189,7 @@ proc xmlrpc::yyparse {} {
                     38 { set _ [list boolean 0] }
                     39 { set _ [list string "$1"] }
                     40 { lappend _ $2 }
-                    41 { set _ $1 }
+                    41 { set _ [list $1] }
                     42 { set _ [list member [list $2 $3]] }
                     43 { set _ [list member {}] }
                     44 { set _ [list member {}] }

@@ -140,13 +140,14 @@ proc xmlrpc::doRequest {sock} {
     if {![regexp $RE $body {} mname params]} {
 	return [errReturn "Malformed methodCall"]
     }
+
     puts "***"
     puts $body
+
+    puts "---"
     xml2rpc $body
     global parse
-    puts $parse(result)
-    puts [llength $parse(result)]
-    puts "---"
+#    puts $parse(result)
     puts [rpc2xml $parse(result)]
     
     if {1} {
@@ -909,43 +910,90 @@ proc xml2rpc {data} {
     xmlrpc::yyparse
 }
 
-proc rpc2xml {ll} {
-    set res {<?xml version="1.0"?>}
-    puts "***[info level]"
-    append res "\n[rpc2xmlproc $ll]\n"
-    puts "***"
-    puts $res
+proc rpc2xml {rpc} {
+    set result {<?xml version="1.0"?>}
+    append result "\n[rpc2xmlproc $rpc]\n"
+    puts $result
 }
 
-proc rpc2xmlproc {ll} {
-    set tag [lindex $ll 0]
-    set val [lindex $ll 1]
-    
-    puts "tag=$tag"
-    puts "val=$val"
-
+proc rpc2xmlproc {rpc} {
     set level [expr [info level]-3]
     set space {}
     for {set ii 0} {$ii<$level} {incr ii} {
 	append space "  "
     }
 
-    if {$tag != {} && $val != {}} {
-	switch $tag {
-	    string -
-	    int -
-	    double -
-	    boolean -
-	    base64 -
-	    datatime {
-		return "$space<$tag>$val</$tag>"
-	    }
-	    default {
-		return "$space<$tag>\n[rpc2xmlproc $val]\n$space</$tag>"
-	    }
-	}
-    } else {
+    set tag [lindex [lindex [lindex $rpc 0] 0] 0]
+
+#    puts "rpc=$rpc"
+#    puts "tag=$tag"
+
+    if {$tag == {}} {
 	return
+    }
+
+    switch $tag {
+	methodcall {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	}
+
+	methodname {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    set val [lindex [lindex [lindex $rpc 0] 0] 1]
+	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc [list $rr]]"
+	}
+	
+	params {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    set res "$space<$tag>\n"
+	    foreach pp $rr {
+		append res "[rpc2xmlproc [list $pp]]\n"
+	    }
+	    append res "$space</$tag>"
+	    return $res
+	}
+
+	param {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	}
+
+	value {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	}
+
+	string -
+	int -
+	double -
+	boolean -
+	base64 -
+	datatime {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    return "$space<$tag>$rr</$tag>"
+	}
+
+	struct {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    set res "$space<$tag>\n"
+	    foreach pp $rr {
+		append res "[rpc2xmlproc [list $pp]]\n"
+	    }
+	    append res "$space</$tag>"
+	    return $res
+	}
+
+	member {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    return "$space<$tag>\n[rpc2xmlproc [list $rr]]\n$space</$tag>"
+	}
+
+	name {
+	    set rr [lindex [lindex $rpc 0] 1]
+	    set val [lindex [lindex [lindex $rpc 0] 0] 1]
+	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc [list $rr]]"
+	}
     }
 }
 

@@ -61,9 +61,9 @@
 command : HEADER_ which {global parse; set parse(result) $2}
  ;
 
-which : methodCall {set _ $1}
- | methodResponse {set _ $1}
- | fault {set _ $1}
+which : methodCall {set _ [list $1]}
+ | methodResponse {set _ [list $1]}
+ | fault {set _ [list $1]}
  ;
 
 methodCall : METHODCALL_ methodName params _METHODCALL_ {set _ [list methodcall [list $2 $3]]} 
@@ -84,7 +84,7 @@ params : PARAMS_ xparam _PARAMS_ {set _ [list params $2]}
  ;
 
 xparam : xparam param {lappend _ $2}
- | param {set _ $1}
+ | param {set _ [list $1]}
  ;
 
 param : PARAM_ value _PARAM_ {set _ [list param $2]}
@@ -130,7 +130,7 @@ str : STRING_ {set _ [list string "$1"]}
  ;
 
 members : members member {lappend _ $2}
- | member {set _ $1}
+ | member {set _ [list $1]}
  ;
 
 member : MEMBER_ name value _MEMBER_ {set _ [list member [list $2 $3]]}

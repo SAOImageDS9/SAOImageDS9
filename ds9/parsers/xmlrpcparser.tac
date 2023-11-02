@@ -143,8 +143,8 @@ name : NAME_ STRING_ _NAME_ {set _ [list name $2]}
  | _NAME_ {set _ [list name {}]}
  ;
 
-values : values value
- | value
+values : values value {lappend _ $2}
+ | value {set _ [list $1]}
  ;
 
 %%

@@ -1196,6 +1196,8 @@ proc xmlrpc::yyparse {} {
                     45 { set _ [list name $2] }
                     46 { set _ [list name {}] }
                     47 { set _ [list name {}] }
+                    48 { lappend _ $2 }
+                    49 { set _ [list $1] }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

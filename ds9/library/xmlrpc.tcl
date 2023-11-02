@@ -925,8 +925,8 @@ proc rpc2xmlproc {rpc} {
 
     set tag [lindex [lindex $rpc 0] 0]
 
-    puts "rpc=$rpc"
-    puts "tag=$tag"
+#    puts "rpc=$rpc"
+#    puts "tag=$tag"
 
     if {$tag == {}} {
 	return
@@ -993,6 +993,21 @@ proc rpc2xmlproc {rpc} {
 	    set rr [lindex $rpc 1]
 	    set val [lindex [lindex $rpc 0] 1]
 	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc $rr]"
+	}
+
+	array {
+	    set rr [lindex $rpc 1]
+	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
+	}
+
+	data {
+	    set rr [lindex $rpc 1]
+	    set res "$space<$tag>\n"
+	    foreach pp $rr {
+		append res "[rpc2xmlproc $pp]\n"
+	    }
+	    append res "$space</$tag>"
+	    return $res
 	}
     }
 }

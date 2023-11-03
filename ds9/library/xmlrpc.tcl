@@ -950,7 +950,7 @@ proc rpc2xmlproc {rpc} {
 	    foreach pp $rr {
 		append res "[rpc2xmlproc $pp]\n"
 	    }
-	    append res "$space</$tag>\n"
+	    append res "$space</$tag>"
 	    return $res
 	}
 

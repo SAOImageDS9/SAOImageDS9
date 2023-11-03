@@ -415,8 +415,8 @@ set STRING_ 282
             set yyleng [string length $yytext]
             set matched_rule 26
         }
-        # rule 27: \S+\S+
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
+        # rule 27: \S+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]

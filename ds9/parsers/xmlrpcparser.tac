@@ -90,8 +90,8 @@ type : STRING_ {set _ [list string [XMLUnQuote $1]]}
  | _STRUCT_ {set _ [list struct {}]}
 
  | ARRAY_ DATA_ values _DATA_ _ARRAY_ {set _ [list array [list data $3]]}
- | ARRAY_ _ARRAY_ {set _ [list array {}]}
- | _ARRAY_ {set _ [list array {}]}
+ | ARRAY_ DATA_ _DATA_ _ARRAY_ {set _ [list array [list data {}]]}
+ | _DATA_ _ARRAY_ {set _ [list array [list data {}]]}
  ;
 
 members : members member {lappend _ $2}

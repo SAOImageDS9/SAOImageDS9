@@ -24,43 +24,29 @@
 \<param\>		{return $PARAM_}
 \</param\>		{return $_PARAM_}
 
+\<value\>		{return $VALUE_}
+\</value\>		{return $_VALUE_}
+
 \<struct\>		{return $STRUCT_}
 \</struct\>		{return $_STRUCT_}
-
 \<array\>		{return $ARRAY_}
 \</array\>		{return $_ARRAY_}
-\<data\>		{return $DATA_}
-\</data\>		{return $_DATA_}
 
 \<member\>		{return $MEMBER_}
 \</member\>		{return $_MEMBER_}
 \<name\>		{return $NAME_}
 \</name\>		{return $_NAME_}
 
-\<value\>		{return $VALUE_}
-\</value\>		{return $_VALUE_}
+\<data\>		{return $DATA_}
+\</data\>		{return $_DATA_}
 
-\<int\>			{return $INTEGER_}
-\<i4\>			{return $INTEGER_}
-\<double\>		{return $DOUBLE_}
-\<base64\>		{return $BASE64_}
-\<datatime.iso8601\>	{return $DATATIME_}
+\<\?xml[^\?]*\?\> {set yylval $yytext; return $HEADER_}
 
-\</int\>		{return $_INTEGER_}
-\</i4\>			{return $_INTEGER_}
-\</double\>		{return $_DOUBLE_}
-\</base64\>		{return $_BASE64_}
-\</datatime.iso8601\>	{return $_DATATIME_}
-
-\<\?[^\?]*\?\>		{set yylval $yytext; return $HEADER_}
+# STRING
 \<string\>[^\<]*\</string\> {set yylval [string range $yytext 9 end-10]; return $STRING_}
-\<value\>[^\<]*\</value\> {set yylval [string range $yytext 8 end-9]; return $STRING_}
 
-\<boolean\>\s0\s\</boolean\> {return $FALSE_}
-\<boolean\>\s1\s\</boolean\> {return $TRUE_}
+\S+\S+ {set yylval $yytext; return $STRING_}
 
-#include numeric.fin
-#include string.fin
 #include ws.fin
 
 %%

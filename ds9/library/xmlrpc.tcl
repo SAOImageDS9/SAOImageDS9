@@ -1,67 +1,3 @@
-# xmlrpc0.3
-# Written by Eric Yeh
-#
-# Server API:
-#	xmlrpc::serve
-#	Note: all callable functions should be defined in the global scope
-#
-# Client API:
-#	xmlrpc::call url methodName params
-#		url is of the form "http://hostname:port"
-#		methodName is the name of the method to call
-#		and params is a list of arguments to the method
-#		where each argument is a "typed tcl" value defined below
-#	xmlrpc::buildRequest
-#		return an XML-RPC client request
-#	xmlrpc::marshall
-#		return a marshalled "typed tcl" value
-#	xmlrpc::unmarshall
-#		return an unmarshalled "typed tcl" value
-#	xmlrpc::assoc
-#		return a cons of a list if the key matches
-#
-# Typed Tcl values:
-# 	Because Tcl has no types for variables, all values will be represented
-# 	as a 2 element tuple of the form:
-# 	{type, value} where value is the original value
-# 	and type is a string describing its type.
-# 	Valid types (case sensitive, must be lowercase):
-#		int
-#		boolean
-#		string
-#		double
-#		dateTime.iso8601
-#		base64
-#		struct
-#		array
-#	Note:
-#		When marshalling dictionaries(tcl arrays), tcl has no
-#		way of creating unnamed dictionaries.  Therefore,
-#		the way to use a dictionary is to create it as normal,
-#		and refer to its name in the "tcl type".
-#		For example:
-#			set dict(first) {string eric}
-#			xmlrpc::marshall {struct dict}
-#
-#		the marshall procedure will attempt to "find" dict
-#		using upvar(yuck!) and checking the global scope.
-#
-# Unmarshalling of a dictionary results in a 2 element
-# list of the form (remaining, alist)
-# where remaining is unused marshalled data (should be empty)
-# and alist is an A-list.
-# An A-list has the form:
-# {key, datum} where key is the key and datum is its value.
-# The method "assoc" is provided to access information from
-# this data structure.  It behaves like the LISP assoc, in that
-# it will return the (key, datum) pair if a match is found.
-
-# TODO:
-# -currently server functions can't return dictionaries
-# -add more error handling
-# -Check for [{}] in unmarshalling
-# -Empty dictionaries
-
 package provide xmlrpc 0.3
 
 namespace eval xmlrpc {
@@ -143,11 +79,11 @@ proc xmlrpc::doRequest {sock} {
 
     puts "***"
     puts $body
-
     puts "---"
     xml2rpc $body
     global parse
-#    puts $parse(result)
+    puts $parse(result)
+    puts "---"
     puts [rpc2xml $parse(result)]
     
     if {1} {
@@ -883,31 +819,39 @@ proc xmlrpc::errReturn {msg} {
     return -code error
 }
 
-proc xmlrpc::test {} {
-    set person(first) {string "eric m"}
-    set person(last) {string yeh}
-    set employed(programmer) {struct person}
-
-    #set xml [marshall {struct employed}]
-    #set w [list {int 1}]
-    #set q [list "array \{$w\}" {int 2} {string eric}]
-    #puts [marshall "array \{$q\}"]
-
-    #set xml [marshall {array {{int 1} {string {hello everybody}}}}]
-    set xml [marshall {struct person}]
-    debug "xml:\n$xml"
-    set data [unmarshall $xml]
-    debug "data: $data"
-    set data [lindex $data 1]
-    debug "data: $data"
-    puts [assoc "first" $data]
-}
-
 proc xml2rpc {data} {
     set data [string map {< " <" > "> "} $data]
     xmlrpc::YY_FLUSH_BUFFER
     xmlrpc::yy_scan_string $data
     xmlrpc::yyparse
+}
+
+proc xml2rpcEval {rpc} {
+    set tag [lindex [lindex $rpc 0] 0]
+
+    switch $tag {
+	methodcall {
+	    # methodcall
+	    set rpc [lindex $rpc 1]
+
+	    # methodname
+	    set mname [lindex [lindex $rpc 0] 1]
+	    set rpc [lindex $rpc 1]
+
+	    # params
+	    set params $rpc
+
+	    if {[catch {set result [eval $mname $params]}]} {
+#		set response [buildFault 1 "$mname failed"]
+	    } else {
+#		set response [buildResponse $result]
+	    }
+	}
+	methodreponse {
+	}
+	fault {
+	}
+    }
 }
 
 proc rpc2xml {rpc} {
@@ -938,6 +882,16 @@ proc rpc2xmlproc {rpc} {
 	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
 	}
 
+	methodresponse {
+	    set rr [lindex $rpc 1]
+	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
+	}
+
+	fault {
+	    set rr [lindex $rpc 1]
+	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
+	}
+
 	methodname {
 	    set rr [lindex $rpc 1]
 	    set val [lindex [lindex $rpc 0] 1]
@@ -962,16 +916,6 @@ proc rpc2xmlproc {rpc} {
 	value {
 	    set rr [lindex $rpc 1]
 	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	string -
-	int -
-	double -
-	boolean -
-	base64 -
-	datatime {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>$rr</$tag>"
 	}
 
 	struct {
@@ -1006,174 +950,16 @@ proc rpc2xmlproc {rpc} {
 	    foreach pp $rr {
 		append res "[rpc2xmlproc $pp]\n"
 	    }
-	    append res "$space</$tag>"
+	    append res "$space</$tag>\n"
 	    return $res
 	}
-    }
-}
 
-proc doitt {varname data} {
-    global $varname
-    upvar #0 $varname var
-
-    set ${varname}(state) {}
-    set ${varname}(args) {}
-    set ${varname}(mname) {}
-
-    set xml [xml::parser \
-		 -characterdatacommand [list XMLRPCCharCB $varname] \
-		 -elementstartcommand [list XMLRPCElemStartCB $varname] \
-		 -elementendcommand [list XMLRPCElemEndCB $varname] \
-		 -ignorewhitespace 1 \
-		]
-
-    if {[catch {$xml parse $data} err]} {
-	puts stderr "Parse Error: $err"
-    }
-
-    # swap for curlies
-    set var(args) [string map {< \{ > \}} $var(args)]
-
-    $xml free
-}
-
-proc XMLRPCCharCB {varname data} {
-    upvar #0 $varname var
-    global $varname
-
-#    puts "char: $data"
-
-    set str [string trim $data]
-
-    switch $var(state) {
-	value -
-	string {
-	    if {$str != {}} {
-		append var(args) "[TCLXMLQuote [list $str]] "
-	    }
-	}
-
-	name {
-	    # null names are allowed
-	    if {$str != {}} {
-		append var(args) "$str "
-	    } else {
-		append var(args) "<>"
-	    }
-	}
-
-	methodName {
-	    if {$str != {}} {
-		append var(args) "$str "
-	    }
-	}
-
-	int -
-	double -
-	boolean -
-	base64 -
-	dateTime.iso8601 {
-	    if {$str != {}} {
-		append var(args) $str
-	    }
-	}
-    }
-
-    # needed to look for empty values
-    set var(state) {}
-}
-
-proc XMLRPCElemStartCB {varname name attlist args} {
-    upvar #0 $varname var
-    global $varname
-
-#    puts "element start : $name : $attlist : $args"
-
-    switch $name {
-	int -
-	i4 {}
-	double {}
-	boolean {}
-	string {}
-	base64 {}
-	dateTime.iso8601 {}
-	array {}
-	struct {append var(args) "<"}
-
-	methodName {}
-	name {}
-
-	member {append var(args) "<"}
-	data {append var(args) "<"}
-
-	params {}
-	param {}
-	value {}
-
-	methodCall -
-	methodResponse -
-	fault {}
-
+	# <string><\string>
+	# <value><string><\string><\value>
 	default {
-	    puts "Unknown tag: $name"
-	    return -code error
+	    set rr [lindex $rpc 1]
+	    return "$space<string>$rr<\string>"
 	}
+
     }
-
-    set var(state) $name
 }
-
-proc XMLRPCElemEndCB {varname name args} {
-    upvar #0 $varname var
-    global $varname
-
-#    puts "element end : $name : $args"
-
-    switch $name {
-	int -
-	i4 {}
-	double {}
-	boolean {}
-	string {}
-	base64 {}
-	dateTime.iso8601 {}
-	array {}
-	struct {append var(args) ">"}
-
-	methodName {}
-	name {
-	    # <name><\name>
-	    if {$var(state) == "name"} {
-		append var(args) "<> "
-	    }
-	}
-
-	member {append var(args) "> "}
-	data {append var(args) ">"}
-
-	params {}
-	param {}
-	value {
-	    # <value><\value>
-	    if {$var(state) == "value"} {
-		append var(args) "<> "
-	    }
-	}
-
-	methodCall -
-	methodResponse -
-	fault {}
-
-	default {
-	    puts "Unknown tag: $name"
-	    return -code error
-	}
-    }
-
-    set var(state) "\\$name"
-}
-
-proc TCLXMLQuote {val} {
-    return [string map {\{ < \} >} $val]
-}
-

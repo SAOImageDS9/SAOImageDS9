@@ -44,6 +44,7 @@
 
 # STRING
 \<string\>[^\<]*\</string\> {set yylval [string range $yytext 9 end-10]; return $STRING_}
+\<value\>[^\<]*\</value\> {set yylval [string range $yytext 8 end-9]; return $STRING_}
 
 \S+\S+ {set yylval $yytext; return $STRING_}
 

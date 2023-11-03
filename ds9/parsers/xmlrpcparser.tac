@@ -77,7 +77,8 @@ param : PARAM_ value _PARAM_ {set _ [list param $2]}
  | _PARAM_ {set _ [list param {}]}
  ;
 
-value : VALUE_ type _VALUE_ {set _ [list value $2]}
+value : STRING_ {set _ [list value [list string $1]]}
+ | VALUE_ type _VALUE_ {set _ [list value $2]}
  | VALUE_ _VALUE_ {set _ [list value {}]}
  | _VALUE_ {set _ [list value {}]}
  ;

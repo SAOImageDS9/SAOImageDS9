@@ -77,13 +77,13 @@ param : PARAM_ value _PARAM_ {set _ [list param $2]}
  | _PARAM_ {set _ [list param {}]}
  ;
 
-value : STRING_ {set _ [list value [list string $1]]}
+value : STRING_ {set _ [list value [list string [XMLUnQuote $1]]]}
  | VALUE_ type _VALUE_ {set _ [list value $2]}
  | VALUE_ _VALUE_ {set _ [list value {}]}
  | _VALUE_ {set _ [list value {}]}
  ;
 
-type : STRING_ {set _ [list string "$1"]}
+type : STRING_ {set _ [list string [XMLUnQuote $1]]}
 
  | STRUCT_ members _STRUCT_ {set _ [list struct $2]}
  | STRUCT_ _STRUCT_ {set _ [list struct {}]}

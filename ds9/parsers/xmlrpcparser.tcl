@@ -1027,11 +1027,11 @@ proc xmlrpc::yyparse {} {
                     15 { set _ [list param $2] }
                     16 { set _ [list param {}] }
                     17 { set _ [list param {}] }
-                    18 { set _ [list value [list string $1]] }
+                    18 { set _ [list value [list string [XMLUnQuote $1]]] }
                     19 { set _ [list value $2] }
                     20 { set _ [list value {}] }
                     21 { set _ [list value {}] }
-                    22 { set _ [list string "$1"] }
+                    22 { set _ [list string [XMLUnQuote $1]] }
                     23 { set _ [list struct $2] }
                     24 { set _ [list struct {}] }
                     25 { set _ [list struct {}] }

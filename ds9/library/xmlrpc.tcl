@@ -958,7 +958,7 @@ proc rpc2xmlproc {rpc} {
 	# <value><string><\string><\value>
 	default {
 	    set rr [lindex $rpc 1]
-	    return "$space<string>$rr<\string>"
+	    return "$space<string>[XMLQuote $rr]<\string>"
 	}
 
     }

@@ -820,7 +820,10 @@ proc xmlrpc::errReturn {msg} {
 }
 
 proc xml2rpc {data} {
-    set data [string map {< " <" > "> "} $data]
+    # space out < and >
+    # rm any newlines (multi line strings)
+    set data [string map {< " <" > "> " \n {}} $data]
+
     xmlrpc::YY_FLUSH_BUFFER
     xmlrpc::yy_scan_string $data
     xmlrpc::yyparse

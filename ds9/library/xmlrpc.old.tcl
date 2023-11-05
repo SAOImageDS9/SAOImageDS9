@@ -8,7 +8,6 @@ namespace eval xmlrpc {
     variable	WS	"\[ |\n|\t\|\r]";	# WhiteSpace
     variable	W	"\[^ |\n|\t\]";		# a word with no spaces
     variable	DIGIT	"\[0-9\]";		# Digit
-    variable	DEBUG		0;		# debug
 }
 
 # Given a port, create a new socket
@@ -22,8 +21,6 @@ proc xmlrpc::serve {port} {
 #
 proc xmlrpc::serveOnce {sock addr port} {
     variable	READSIZE
-    debug "in serveOnce: addr: $addr"
-    debug "in serveOnce: port: $port"
     fconfigure $sock -translation {lf lf} -buffersize $READSIZE
     fconfigure $sock -blocking off
     fileevent $sock readable [list xmlrpc::doRequest $sock]
@@ -37,7 +34,6 @@ proc xmlrpc::doRequest {sock} {
 
     set res [readHeader $sock]
     if {$res == {}} {
-	debug "::doRequest empty header"
 	return
     }
 
@@ -77,20 +73,8 @@ proc xmlrpc::doRequest {sock} {
 	return [errReturn "Malformed methodCall"]
     }
 
-    puts "***"
-    puts $body
-    puts "---"
-    xml2rpc $body
-    global parse
-    puts $parse(result)
-    puts "---"
-    puts [rpc2xml $parse(result)]
-    
-    if {1} {
-    debug "::doRequest mname=$mname"
     set args {}
     if {$params == {}} {
-	# waj
 	# legal to have no params i.e. ping
 	if {[catch {set result [eval ::$mname]}]} {
 	    set response [buildFault 1 "$mname failed"]
@@ -131,8 +115,6 @@ proc xmlrpc::doRequest {sock} {
 	if {$param != "</params>"} {
 	    return [errReturn "Invalid End Params"]
 	}
-    }
-#	puts "eval  : $mname $args"
     }
 
     if {[catch {set result [eval $mname $args]}]} {
@@ -561,7 +543,6 @@ proc xmlrpc::validParam {param} {
 proc xmlrpc::unmarshall {str} {
     set str [string trim $str]
     if {[string range $str 0 6] != "<value>"} {
-	# waj
 	# check for just </value> element
 	if {[string range $str 0 7] != "</value>"} {
 	    return [errReturn "Bad value tag"]
@@ -578,7 +559,6 @@ proc xmlrpc::unmarshall {str} {
 	return [errReturn "No beginning tag found: $str"]
     }
 
-    # waj
     switch $btag {
 	int -
 	i4 {set res [umInt $str]}
@@ -806,163 +786,7 @@ proc xmlrpc::warn {msg} {
     puts stderr $msg
 }
 
-proc xmlrpc::debug {msg} {
-    variable	DEBUG
-
-    if {$DEBUG} {
-	puts "$msg"
-    }
-}
-
 proc xmlrpc::errReturn {msg} {
     warn $msg
     return -code error
-}
-
-proc xml2rpc {data} {
-    # space out < and >
-    # rm any newlines (multi line strings)
-    set data [string map {< " <" > "> " \n {}} $data]
-
-    xmlrpc::YY_FLUSH_BUFFER
-    xmlrpc::yy_scan_string $data
-    xmlrpc::yyparse
-}
-
-proc xml2rpcEval {rpc} {
-    set tag [lindex [lindex $rpc 0] 0]
-
-    switch $tag {
-	methodcall {
-	    # methodcall
-	    set rpc [lindex $rpc 1]
-
-	    # methodname
-	    set mname [lindex [lindex $rpc 0] 1]
-	    set rpc [lindex $rpc 1]
-
-	    # params
-	    set params $rpc
-
-	    if {[catch {set result [eval $mname $params]}]} {
-#		set response [buildFault 1 "$mname failed"]
-	    } else {
-#		set response [buildResponse $result]
-	    }
-	}
-	methodreponse {
-	}
-	fault {
-	}
-    }
-}
-
-proc rpc2xml {rpc} {
-    set result {<?xml version="1.0"?>}
-    append result "\n[rpc2xmlproc $rpc]\n"
-    puts $result
-}
-
-proc rpc2xmlproc {rpc} {
-    set level [expr [info level]-3]
-    set space {}
-    for {set ii 0} {$ii<$level} {incr ii} {
-	append space "  "
-    }
-
-    set tag [lindex [lindex $rpc 0] 0]
-
-#    puts "rpc=$rpc"
-#    puts "tag=$tag"
-
-    if {$tag == {}} {
-	return
-    }
-
-    switch $tag {
-	methodcall {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	methodresponse {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	fault {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	methodname {
-	    set rr [lindex $rpc 1]
-	    set val [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc $rr]"
-	}
-	
-	params {
-	    set rr [lindex $rpc 1]
-	    set res "$space<$tag>\n"
-	    foreach pp $rr {
-		append res "[rpc2xmlproc $pp]\n"
-	    }
-	    append res "$space</$tag>"
-	    return $res
-	}
-
-	param {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	value {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	struct {
-	    set rr [lindex $rpc 1]
-	    set res "$space<$tag>\n"
-	    foreach pp $rr {
-		append res "[rpc2xmlproc $pp]\n"
-	    }
-	    append res "$space</$tag>"
-	    return $res
-	}
-
-	member {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	name {
-	    set rr [lindex $rpc 1]
-	    set val [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc $rr]"
-	}
-
-	array {
-	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
-	}
-
-	data {
-	    set rr [lindex $rpc 1]
-	    set res "$space<$tag>\n"
-	    foreach pp $rr {
-		append res "[rpc2xmlproc $pp]\n"
-	    }
-	    append res "$space</$tag>"
-	    return $res
-	}
-
-	# <string><\string>
-	# <value><string><\string><\value>
-	default {
-	    set rr [lindex $rpc 1]
-	    return "$space<string>[XMLQuote $rr]<\string>"
-	}
-
-    }
 }

@@ -65,24 +65,26 @@ proc SAMPConnect {verbose} {
     set sampmap(author.affiliation) {string "Smithsonian Astrophysical Observatory"}
     set sampmap(ds9.version) "string [lindex $ds9(version) 0]"
 
-    set param1 [list "string $samp(private)"]
-    set param2 [list "struct sampmap"]
-    set params "$param1 $param2"
+    set param1 [list param [list value [list string $samp(private)]]]
+    set param2 [list param [list2rpcStruct [array get sampmap]]]
+    set params [list $param1 $param2]
+    
     set rr {}
     if {![SAMPSend {samp.hub.declareMetadata} $params rr]} {
 	catch {unset samp}
 	return
     }
-
+    
     # who are we
     set samp(sock) [xmlrpc::serve 0]
     set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
     set samp(home) "[info hostname]:$samp(port)"
 
     # callback
-    set param1 [list "string $samp(private)"]
-    set param2 [list "string http://$samp(home)"]
-    set params "$param1 $param2"
+    set param1 [list param [list value [list string $samp(private)]]]
+    set param2 [list param [list value [list string "http://$samp(home)"]]]
+    set params [list $param1 $param2]
+
     set rr {}
     if {![SAMPSend {samp.hub.setXmlrpcCallback} $params rr]} {
 	catch {unset samp}
@@ -95,32 +97,38 @@ proc SAMPConnect {verbose} {
 #    set sampmap(samp.app.status) {struct mapStatus}
 #    set sampmap(samp.msg.progress) {struct mapProgress}
 
-    set sampmap(samp.hub.event.shutdown) {struct mapShutdown}
-    set sampmap(samp.hub.event.register) {struct mapRegister}
-    set sampmap(samp.hub.event.unregister) {struct mapUnregister}
-    set sampmap(samp.hub.event.metadata) {struct mapMetadata}
-    set sampmap(samp.hub.event.subscriptions) {struct mapSubscriptions}
-    set sampmap(samp.hub.disconnect) {struct mapDisconnect}
+    set sampmap(samp.hub.event.shutdown) {struct {}}
+    set sampmap(samp.hub.event.register) {struct {}}
+    set sampmap(samp.hub.event.unregister) {struct {}}
+    set sampmap(samp.hub.event.metadata) {struct {}}
+    set sampmap(samp.hub.event.subscriptions) {struct {}}
+    set sampmap(samp.hub.disconnect) {struct {}}
 
-    set sampmap(image.load.fits) {struct mapImageLoadFits}
-    set sampmap(table.load.fits) {struct mapTableLoadFits}
-    set sampmap(table.load.votable) {struct mapTableLoadVotable}
-    set sampmap(table.highlight.row) {struct mapTableHighlightRow}
-    set sampmap(table.select.rowList) {struct mapTableSelectRowList}
-    set sampmap(coord.pointAt.sky) {struct mapCoordPointAtSky}
-    set sampmap(client.env.get) {struct mapClientEnvGet}
+    set sampmap(image.load.fits) {struct {}}
+    set sampmap(table.load.fits) {struct {}}
+    set sampmap(table.load.votable) {struct {}}
+    set sampmap(table.highlight.row) {struct {}}
+    set sampmap(table.select.rowList) {struct {}}
+    set sampmap(coord.pointAt.sky) {struct {}}
+    set sampmap(client.env.get) {struct {}}
 
-    set sampmap(ds9.get) {struct mapDS9Get}
-    set sampmap(ds9.set) {struct mapDS9Set}
+    set sampmap(ds9.get) {struct {}}
+    set sampmap(ds9.set) {struct {}}
 
-    set param1 [list "string $samp(private)"]
-    set param2 [list "struct sampmap"]
-    set params "$param1 $param2" 
+    set param1 [list param [list value [list string $samp(private)]]]
+    set param2 [list param [list2rpcStruct [array get sampmap]]]
+    set params [list $param1 $param2]
+
+#    set param1 [list "string $samp(private)"]
+#    set param2 [list "struct sampmap"]
+#    set params "$param1 $param2" 
+
     set rr {}
     if {![SAMPSend {samp.hub.declareSubscriptions} $params rr]} {
 	catch {unset samp}
 	return
     }
+    return
 
     # get current client info
     set params [list "string $samp(private)"]

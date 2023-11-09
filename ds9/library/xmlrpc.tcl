@@ -231,7 +231,10 @@ proc xmlrpcBuildRequest {method mname params} {
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: [string length $body]\n"
 
-    set result "$header\n$body"
+    set result "$header\n$body" 
+#    puts "***"
+#    puts $result
+    
     return [string trim $result]
 }
 
@@ -294,6 +297,9 @@ proc xmlrpcGetResponse {sock} {
 }
 
 proc xmlrpcParseResponse {body} {
+#    puts "---"
+#    puts $body
+    
     xml2rpc $body
     global parse
     set rpc $parse(result)
@@ -346,12 +352,28 @@ proc xml2rpc {data} {
 
 # RPC2XML
 
+proc list2rpcStruct {ll} {
+    set ms {}
+    foreach {key val} $ll {
+	lappend ms [list member [list [list name [list $key]] [list value $val]]]
+    }
+    return [list value [list struct $ms]]
+}
+
 proc rpcStruct2List {rpc varname} {
     upvar $varname var
     
     set tag [lindex [lindex $rpc 0] 0]
 
+#   puts "rpc=$rpc"
+#   puts "tag=$tag"
+
     switch $tag {
+	value {
+	    set rr [lindex $rpc 1]
+	    rpcStruct2List $rr var
+	}
+
 	struct {
 	    set rr [lindex $rpc 1]
 	    foreach pp $rr {
@@ -361,26 +383,17 @@ proc rpcStruct2List {rpc varname} {
 
 	member {
 	    set rr [lindex $rpc 1]
-	    rpcStruct2List $rr var
+	    rpcStruct2List [lindex $rr 0] var
+	    rpcStruct2List [lindex $rr 1] var
 	}
 
 	name {
 	    set rr [lindex $rpc 1]
-	    set val [lindex [lindex $rpc 0] 1]
-	    puts "***found name=$val"
-	    lappend var $val
-	    rpcStruct2List $rr var
+	    lappend var $rr
 	}
 
-	value {
-	    set rr [lindex $rpc 1]
-	    rpcStruct2List $rr var
-	}
-
-    
 	default {
 	    set rr [lindex $rpc 1]
-	    puts "***found value=$rr"
 	    lappend var $rr
 	}
     }
@@ -401,8 +414,8 @@ proc rpc2xmlproc {rpc} {
 
     set tag [lindex [lindex $rpc 0] 0]
 
-#    puts "rpc=$rpc"
-#    puts "tag=$tag"
+#   puts "rpc=$rpc"
+#   puts "tag=$tag"
 
     if {$tag == {}} {
 	return
@@ -462,13 +475,16 @@ proc rpc2xmlproc {rpc} {
 
 	member {
 	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[rpc2xmlproc $rr]\n$space</$tag>"
+	    set res "$space<$tag>\n"
+	    append res "[rpc2xmlproc [lindex $rr 0]]\n"
+	    append res "[rpc2xmlproc [lindex $rr 1]]\n"
+	    append res "$space</$tag>"
+	    return $res
 	}
 
 	name {
 	    set rr [lindex $rpc 1]
-	    set val [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>$val</$tag>\n[rpc2xmlproc $rr]"
+	    return "$space<$tag>$rr</$tag>"
 	}
 
 	array {
@@ -486,8 +502,6 @@ proc rpc2xmlproc {rpc} {
 	    return $res
 	}
 
-	# <string><\string>
-	# <value><string><\string><\value>
 	default {
 	    set rr [lindex $rpc 1]
 	    return "$space<string>[XMLQuote $rr]</string>"

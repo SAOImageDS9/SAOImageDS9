@@ -47,7 +47,6 @@ command : HEADER_ which {global parse; set parse(result) $2}
 
 which : methodCall {set _ $1}
  | methodResponse {set _ $1}
- | fault {set _ $1}
  ;
 
 methodCall : METHODCALL_ methodName params _METHODCALL_ {set _ [list methodcall [list $2 $3]]}
@@ -55,9 +54,7 @@ methodCall : METHODCALL_ methodName params _METHODCALL_ {set _ [list methodcall 
  ;
 
 methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {set _ [list methodresponse $2]} 
- ;
-
-fault : FAULT_ value _FAULT_ {set _ [list fault $2]}
+ | FAULT_ value _FAULT_ {set _ [list fault $2]}
  ;
 
 methodName : METHODNAME_ STRING_ _METHODNAME_ {set _ [list methodname $2]}

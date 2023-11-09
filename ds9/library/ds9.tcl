@@ -140,10 +140,10 @@ proc DS9Def {} {
     }
 
     # start hub if unable to find another
-    set pds9(samp,hub) 1
+    set pds9(samp,hub) 0
 
     # start a web hub also
-    set pds9(samp,webhub) 1
+    set pds9(samp,webhub) 0
 
     # connect if samp hub is available
     set pds9(samp) 1
@@ -224,7 +224,6 @@ package require tooltip
 package require tkcon
 package require Tkblt
 package require Tls
-package require xmlrpc
 
 package require DS9
 

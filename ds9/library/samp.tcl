@@ -37,20 +37,18 @@ proc SAMPConnect {verbose} {
     set samp(init) 0
 
     # register
-    set params [list "string $samp(secret)"]
-    set rr {}
+    set params [list [list param [list value [list string $samp(secret)]]]]
     if {![SAMPSend {samp.hub.register} $params rr]} {
 	catch {unset samp}
 	return
     }
-    set rr [lindex $rr 1]
-    foreach ff $rr {
-	foreach {key val} $ff {
-	    switch -- $key {
-		samp.hub-id {set samp(hub) $val}
-		samp.self-id {set samp(self) $val}
-		samp.private-key {set samp(private) $val}
-	    }
+
+    rpcStruct2List $rr ll
+    foreach {key val} $ll {
+	switch -- $key {
+	    samp.hub-id {set samp(hub) $val}
+	    samp.self-id {set samp(self) $val}
+	    samp.private-key {set samp(private) $val}
 	}
     }
 
@@ -566,7 +564,7 @@ proc SAMPGetAppsSubscriptions {mtype} {
     return $ll
 }
 
-proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
+proc SAMPSend {method params resultVar} {
     upvar $resultVar result
     global samp
 
@@ -575,7 +573,7 @@ proc SAMPSend {method params resultVar {ntabs 5} {distance 4}} {
 	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
     }
 
-    if {[catch {set result [xmlrpc::call $samp(url) $samp(method) $method $params $ntabs $distance]}]} {
+    if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
 	if {$debug(tcl,samp)} {
 	    puts stderr "SAMP: [msgcat::mc {internal error}] $result"
 	}

@@ -6,6 +6,7 @@
 
 %token METHODCALL_
 %token _METHODCALL_
+
 %token METHODNAME_
 %token _METHODNAME_
 
@@ -29,11 +30,13 @@
 
 %token MEMBER_
 %token _MEMBER_
+
 %token NAME_
 %token _NAME_
 
 %token ARRAY_
 %token _ARRAY_
+
 %token DATA_
 %token _DATA_
 
@@ -42,10 +45,10 @@
 
 %%
 
-command : HEADER_ which {global parse; set parse(result) $2}
+command : HEADER_ method {global parse; set parse(result) $2}
  ;
 
-which : methodCall {set _ $1}
+method : methodCall {set _ $1}
  | methodResponse {set _ $1}
  ;
 

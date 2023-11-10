@@ -93,9 +93,7 @@ proc SAMPConnect {verbose} {
 
     # declare subscriptions
     catch {unset sampmap}
-    set sampmap(samp.app.ping) {struct mapPing}
-#    set sampmap(samp.app.status) {struct mapStatus}
-#    set sampmap(samp.msg.progress) {struct mapProgress}
+    set sampmap(samp.app.ping) {struct {}}
 
     set sampmap(samp.hub.event.shutdown) {struct {}}
     set sampmap(samp.hub.event.register) {struct {}}
@@ -115,19 +113,19 @@ proc SAMPConnect {verbose} {
     set sampmap(ds9.get) {struct {}}
     set sampmap(ds9.set) {struct {}}
 
+    #    set sampmap(samp.app.status) {struct {}}
+    #    set sampmap(samp.msg.progress) {struct {}}
+
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list2rpcStruct [array get sampmap]]]
     set params [list $param1 $param2]
-
-#    set param1 [list "string $samp(private)"]
-#    set param2 [list "struct sampmap"]
-#    set params "$param1 $param2" 
 
     set rr {}
     if {![SAMPSend {samp.hub.declareSubscriptions} $params rr]} {
 	catch {unset samp}
 	return
     }
+    # ***
     return
 
     # get current client info

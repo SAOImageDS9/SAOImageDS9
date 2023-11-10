@@ -47,6 +47,9 @@ proc xmlrpcDoRequest {sock} {
     }
     
     set body [xmlrpcGetBody $sock $header $body]
+#    puts "***"
+#    puts $body
+
     xml2rpc $body
     global parse
     set rpc $parse(result)
@@ -297,8 +300,8 @@ proc xmlrpcGetResponse {sock} {
 }
 
 proc xmlrpcParseResponse {body} {
-    puts "---"
-    puts $body
+#    puts "***"
+#    puts $body
     
     xml2rpc $body
     global parse
@@ -402,6 +405,8 @@ proc rpcStruct2List {rpc varname} {
 proc rpc2xml {rpc} {
     set result {<?xml version="1.0"?>}
     append result "\n[rpc2xmlproc $rpc]\n"
+#    puts "***"
+#    puts $result
     return $result
 }
 

@@ -297,8 +297,8 @@ proc xmlrpcGetResponse {sock} {
 }
 
 proc xmlrpcParseResponse {body} {
-#    puts "---"
-#    puts $body
+    puts "---"
+    puts $body
     
     xml2rpc $body
     global parse

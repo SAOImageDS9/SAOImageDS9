@@ -9,6 +9,7 @@
 
 \<methodcall\>		{return $METHODCALL_}
 \</methodcall\>		{return $_METHODCALL_}
+
 \<methodname\>		{return $METHODNAME_}
 \</methodname\>		{return $_METHODNAME_}
 
@@ -27,13 +28,21 @@
 \<value\>		{return $VALUE_}
 \</value\>		{return $_VALUE_}
 
+\<int\>			{return $INTEGER_}
+\</int\>		{return $_INTEGER_}
+
+\<integer\>		{return $INTEGER_}
+\</integer\>		{return $_INTEGER_}
+
 \<struct\>		{return $STRUCT_}
 \</struct\>		{return $_STRUCT_}
+
 \<array\>		{return $ARRAY_}
 \</array\>		{return $_ARRAY_}
 
 \<member\>		{return $MEMBER_}
 \</member\>		{return $_MEMBER_}
+
 \<name\>		{return $NAME_}
 \</name\>		{return $_NAME_}
 

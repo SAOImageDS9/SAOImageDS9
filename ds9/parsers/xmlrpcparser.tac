@@ -25,6 +25,9 @@
 %token VALUE_
 %token _VALUE_
 
+%token INTEGER_
+%token _INTEGER_
+
 %token STRUCT_
 %token _STRUCT_
 
@@ -56,11 +59,14 @@ methodCall : METHODCALL_ methodName params _METHODCALL_ {set _ [list methodcall 
  | METHODCALL_ methodName _METHODCALL_ {set _ [list methodcall [list $2]]} 
  ;
 
-methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {set _ [list methodresponse $2]} 
- | FAULT_ value _FAULT_ {set _ [list fault $2]}
+methodName : METHODNAME_ STRING_ _METHODNAME_ {set _ [list methodname $2]}
  ;
 
-methodName : METHODNAME_ STRING_ _METHODNAME_ {set _ [list methodname $2]}
+methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {set _ [list methodresponse $2]} 
+ | METHODRESPONSE_ fault _METHODRESPONSE_ {set _ [list methodresponse $2]}
+ ;
+
+fault : FAULT_ value _FAULT_ {set _ [list fault $2]}
  ;
 
 params : PARAMS_ xparam _PARAMS_ {set _ [list params $2]}
@@ -84,6 +90,8 @@ value : STRING_ {set _ [list value [list string [XMLUnQuote $1]]]}
  ;
 
 type : STRING_ {set _ [list string [XMLUnQuote $1]]}
+
+ | INTEGER_ STRING_ _INTEGER_ {set _ [list integer $2]}
 
  | STRUCT_ members _STRUCT_ {set _ [list struct $2]}
  | STRUCT_ _STRUCT_ {set _ [list struct {}]}

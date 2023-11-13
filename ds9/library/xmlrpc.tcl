@@ -363,6 +363,39 @@ proc list2rpcStruct {ll} {
     return [list value [list struct $ms]]
 }
 
+proc rpcArray2List {rpc varname} {
+    upvar $varname var
+    
+    set tag [lindex [lindex $rpc 0] 0]
+
+#   puts "rpc=$rpc"
+#   puts "tag=$tag"
+
+    switch $tag {
+	value {
+	    set rr [lindex $rpc 1]
+	    rpcArray2List $rr var
+	}
+
+	data {
+	    set rr [lindex $rpc 1]
+	    foreach pp $rr {
+		rpcArray2List $pp var
+	    }
+	}
+
+	array {
+	    set rr [lindex $rpc 1]
+	    rpcArray2List $rr var
+	}
+
+	default {
+	    set rr [lindex $rpc 1]
+	    lappend var $rr
+	}
+    }
+}
+
 proc rpcStruct2List {rpc varname} {
     upvar $varname var
     
@@ -392,11 +425,13 @@ proc rpcStruct2List {rpc varname} {
 
 	name {
 	    set rr [lindex $rpc 1]
+	    puts "name=$rr"
 	    lappend var $rr
 	}
 
 	default {
 	    set rr [lindex $rpc 1]
+	    puts "value=$rr"
 	    lappend var $rr
 	}
     }
@@ -551,7 +586,7 @@ proc xmlrpc::doRequest {sock} {
 	return
     }
 
-    puts $res
+#    puts $res
     set headerStatus [lindex $res 0];	# Header + Status
     set body [lindex $res 1];		# Body, if any
 

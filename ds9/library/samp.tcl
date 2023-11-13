@@ -30,6 +30,7 @@ proc SAMPConnect {verbose} {
 	    Error "SAMP: [msgcat::mc {unable to locate HUB}]"
 	}
 	catch {unset samp}
+	# Error
 	return
     }
 
@@ -37,9 +38,43 @@ proc SAMPConnect {verbose} {
     set samp(init) 0
 
     # register
+    SAMPConnectRegister
+
+    # declare metadata
+    SAMPConnectMetadata
+    
+    # who are we
+    set samp(sock) [xmlrpc::serve 0]
+    set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
+    set samp(home) "[info hostname]:$samp(port)"
+
+    # callback
+    SAMPConnectCallback
+
+    # declare subscriptions
+    SAMPConnectSubscriptions
+
+    # get current client info
+    set clients [SAMPConnectGetClients]
+    foreach cc $clients {
+	SAMPConnectGetSubscriptions $cc
+	SAMPConnectGetMetadata $cc
+    }
+
+    # samp initalization started
+    set samp(init) 1
+
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
+}
+
+proc SAMPConnectRegister {} {
+    global samp
+    
     set params [list [list param [list value [list string $samp(secret)]]]]
     if {![SAMPSend {samp.hub.register} $params rr]} {
 	catch {unset samp}
+	# Error
 	return
     }
 
@@ -51,131 +86,140 @@ proc SAMPConnect {verbose} {
 	    samp.private-key {set samp(private) $val}
 	}
     }
+}
 
-    # declare metadata
-    catch {unset sampmap}
-    set sampmap(samp.name) {string "SAOImageDS9"}
-    set sampmap(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
-    set sampmap(samp.icon.url) {string "http://ds9.si.edu/sun.png"}
-    set sampmap(samp.documentation.url) {string "http://ds9.si.edu/doc/ref/index.html"}
+proc SAMPConnectMetadata {} {
+    global samp
+    global ds9
 
-    set sampmap(home.page) {string "http://ds9.si.edu/"}
-    set sampmap(author.name) {string "William Joye"}
-    set sampmap(author.email) {string "ds9help@cfa.harvard.edu"}
-    set sampmap(author.affiliation) {string "Smithsonian Astrophysical Observatory"}
-    set sampmap(ds9.version) "string [lindex $ds9(version) 0]"
+    set map(samp.name) {string "SAOImageDS9"}
+    set map(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
+    set map(samp.icon.url) {string "http://ds9.si.edu/sun.png"}
+    set map(samp.documentation.url) {string "http://ds9.si.edu/doc/ref/index.html"}
+
+    set map(home.page) {string "http://ds9.si.edu/"}
+    set map(author.name) {string "William Joye"}
+    set map(author.email) {string "ds9help@cfa.harvard.edu"}
+    set map(author.affiliation) {string "Smithsonian Astrophysical Observatory"}
+    set map(ds9.version) "string [lindex $ds9(version) 0]"
 
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list2rpcStruct [array get sampmap]]]
+    set param2 [list param [list2rpcStruct [array get map]]]
     set params [list $param1 $param2]
     
-    set rr {}
     if {![SAMPSend {samp.hub.declareMetadata} $params rr]} {
 	catch {unset samp}
+	# Error
 	return
     }
-    
-    # who are we
-    set samp(sock) [xmlrpc::serve 0]
-    set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
-    set samp(home) "[info hostname]:$samp(port)"
+}
 
-    # callback
+proc SAMPConnectCallback {} {
+    global samp
+    
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string "http://$samp(home)"]]]
     set params [list $param1 $param2]
 
-    set rr {}
     if {![SAMPSend {samp.hub.setXmlrpcCallback} $params rr]} {
 	catch {unset samp}
+	# Error
 	return
     }
+}
 
-    # declare subscriptions
-    catch {unset sampmap}
-    set sampmap(samp.app.ping) {struct {}}
+proc SAMPConnectSubscriptions {} {
+    global samp
+    
+    set map(samp.app.ping) {struct {}}
 
-    set sampmap(samp.hub.event.shutdown) {struct {}}
-    set sampmap(samp.hub.event.register) {struct {}}
-    set sampmap(samp.hub.event.unregister) {struct {}}
-    set sampmap(samp.hub.event.metadata) {struct {}}
-    set sampmap(samp.hub.event.subscriptions) {struct {}}
-    set sampmap(samp.hub.disconnect) {struct {}}
+    set map(samp.hub.event.shutdown) {struct {}}
+    set map(samp.hub.event.register) {struct {}}
+    set map(samp.hub.event.unregister) {struct {}}
+    set map(samp.hub.event.metadata) {struct {}}
+    set map(samp.hub.event.subscriptions) {struct {}}
+    set map(samp.hub.disconnect) {struct {}}
 
-    set sampmap(image.load.fits) {struct {}}
-    set sampmap(table.load.fits) {struct {}}
-    set sampmap(table.load.votable) {struct {}}
-    set sampmap(table.highlight.row) {struct {}}
-    set sampmap(table.select.rowList) {struct {}}
-    set sampmap(coord.pointAt.sky) {struct {}}
-    set sampmap(client.env.get) {struct {}}
+    set map(image.load.fits) {struct {}}
+    set map(table.load.fits) {struct {}}
+    set map(table.load.votable) {struct {}}
+    set map(table.highlight.row) {struct {}}
+    set map(table.select.rowList) {struct {}}
+    set map(coord.pointAt.sky) {struct {}}
+    set map(client.env.get) {struct {}}
 
-    set sampmap(ds9.get) {struct {}}
-    set sampmap(ds9.set) {struct {}}
+    set map(ds9.get) {struct {}}
+    set map(ds9.set) {struct {}}
 
-    #    set sampmap(samp.app.status) {struct {}}
-    #    set sampmap(samp.msg.progress) {struct {}}
+    #    set map(samp.app.status) {struct {}}
+    #    set map(samp.msg.progress) {struct {}}
 
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list2rpcStruct [array get sampmap]]]
+    set param2 [list param [list2rpcStruct [array get map]]]
     set params [list $param1 $param2]
 
-    set rr {}
     if {![SAMPSend {samp.hub.declareSubscriptions} $params rr]} {
 	catch {unset samp}
+	# Error
 	return
     }
-    # ***
-    return
+}
 
-    # get current client info
-    set params [list "string $samp(private)"]
-    set rr {}
+proc SAMPConnectGetClients {} {
+    global samp
+    
+    set params [list [list param [list value [list string $samp(private)]]]]
+    catch {unset rr}
     if {![SAMPSend {samp.hub.getRegisteredClients} $params rr]} {
 	catch {unset samp}
+	# Error
 	return
     }
-    set samp(clients) [lindex $rr 1]
 
-    foreach cc $samp(clients) {
-	set param1 [list "string $samp(private)"]
-	set param2 [list "string $cc"]
-	set params "$param1 $param2" 
-	set rr {}
-	if {![SAMPSend {samp.hub.getSubscriptions} $params rr]} {
-	    catch {unset samp}
-	    return
-	}
-	
-	foreach arg [lindex $rr 1] {
-	    foreach {key val} $arg {
-		lappend samp($cc,subscriptions) $key
-	    }
-	}
+    rpcArray2List $rr ll
+    return $ll
+}
 
-	set param1 [list "string $samp(private)"]
-	set param2 [list "string $cc"]
-	set params "$param1 $param2" 
-	set rr {}
-	if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
-	    catch {unset samp}
-	    return
-	}
+proc SAMPConnectGetSubscriptions {cc} {
+    global samp
 
-	foreach arg [lindex $rr 1] {
-	    foreach {key val} $arg {
-		switch -- $key {
-		    samp.name {set samp($cc,name) $val}
-		}
-	    }
+    set param1 [list param [list value [list string $samp(private)]]]
+    set param2 [list param [list value [list string $cc]]]
+    set params [list $param1 $param2]
+    if {![SAMPSend {samp.hub.getSubscriptions} $params rr]} {
+	catch {unset samp}
+	# Error
+	return
+    }
+    
+    rpcStruct2List $rr ll
+    puts "***"
+    puts $ll
+    foreach {key } $ll {
+	lappend samp($cc,subscriptions) $key
+    }
+}
+
+proc SAMPConnectGetMetadata {cc} {
+    global samp
+
+    set param1 [list param [list value [list string $samp(private)]]]
+    set param2 [list param [list value [list string $cc]]]
+    set params [list $param1 $param2]
+    if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
+	catch {unset samp}
+	# Error
+	return
+    }
+    
+    rpcStruct2List $rr ll
+    puts "---"
+    puts $ll
+    foreach {key val} $ll {
+	switch -- $key {
+	    samp.name {set samp($cc,name) $val}
 	}
     }
-
-    # samp initalization started
-    set samp(init) 1
-
-    UpdateFileMenuSAMP
-    UpdateCATDialogSAMP
 }
 
 proc SAMPDisconnect {verbose} {

@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-# SERVER
+# Server
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
@@ -196,7 +196,6 @@ proc xmlrpcCall {url method methodName params} {
     fconfigure $sock -blocking off
     if {[catch {set request [xmlrpcBuildRequest $method $methodName $params]}]} {
 	# ERROR
-	puts "OH NO"
 	return
     }
     puts $sock $request
@@ -425,13 +424,13 @@ proc rpcStruct2List {rpc varname} {
 
 	name {
 	    set rr [lindex $rpc 1]
-	    puts "name=$rr"
+#	    puts "name=$rr"
 	    lappend var $rr
 	}
 
 	default {
 	    set rr [lindex $rpc 1]
-	    puts "value=$rr"
+#	    puts "value=$rr"
 	    lappend var $rr
 	}
     }

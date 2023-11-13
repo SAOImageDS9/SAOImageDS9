@@ -5,7 +5,6 @@
 package provide DS9 1.0
 
 proc SAMPConnect {verbose} {
-    global ds9
     global samp
 
     # connected?
@@ -193,9 +192,7 @@ proc SAMPConnectGetSubscriptions {cc} {
     }
     
     rpcStruct2List $rr ll
-    puts "***"
-    puts $ll
-    foreach {key } $ll {
+    foreach {key} $ll {
 	lappend samp($cc,subscriptions) $key
     }
 }
@@ -213,8 +210,6 @@ proc SAMPConnectGetMetadata {cc} {
     }
     
     rpcStruct2List $rr ll
-    puts "---"
-    puts $ll
     foreach {key val} $ll {
 	switch -- $key {
 	    samp.name {set samp($cc,name) $val}
@@ -223,7 +218,6 @@ proc SAMPConnectGetMetadata {cc} {
 }
 
 proc SAMPDisconnect {verbose} {
-    global ds9
     global samp
 
     # connected?
@@ -235,22 +229,19 @@ proc SAMPDisconnect {verbose} {
     }
 
     # disconnect
-    if {[info exists samp(private)]} {
-	set params [list "string $samp(private)"]
-	set rr {}
-	if {![SAMPSend {samp.hub.unregister} $params rr]} {
-	    catch {unset samp}
-	    return
-	}
-	SAMPShutdown
+    set params [list [list param [list value [list string $samp(private)]]]]
+    if {![SAMPSend {samp.hub.unregister} $params rr]} {
+	catch {unset samp}
+	# Error
+	return
     }
+    SAMPShutdown
 
     UpdateFileMenuSAMP
     UpdateCATDialogSAMP
 }
 
 proc SAMPSendImageLoadFits {id} {
-    global ds9
     global current
     global samp
 
@@ -282,19 +273,19 @@ proc SAMPSendImageLoadFits {id} {
     }
 
     # cmd
-    set sampmap(samp.mtype) {string "image.load.fits"}
-    set sampmap(samp.params) {struct sampmap2}
-    set sampmap2(url) "string \"[XMLQuote file://localhost/$fn]\""
-    set sampmap2(name) "string \"[XMLQuote $fnb]\""
+    set map(samp.mtype) {string "image.load.fits"}
+    set map(samp.params) {struct map2}
+    set map2(url) "string \"file://localhost/$fn\""
+    set map2(name) "string \"$fnb\""
 
-    set param1 [list "string $samp(private)"]
+    set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {
-	set param2 [list "string $id"]
+	set param2 [list param [list value [list string $id]]]
     } else {
 	set param2 {}
     }
-    set param3 [list "struct sampmap"]
-    set params "$param1 $param2 $param3" 
+    set param3 [list struct map]
+    set params [list $param1 $param2 $param3]
 
     set rr {}
     if {$id != {}} {
@@ -305,7 +296,6 @@ proc SAMPSendImageLoadFits {id} {
 }
 
 proc SAMPSendTableLoadFits {id} {
-    global ds9
     global current
     global samp
 
@@ -337,19 +327,19 @@ proc SAMPSendTableLoadFits {id} {
     }
 
     # cmd
-    set sampmap(samp.mtype) {string "table.load.fits"}
-    set sampmap(samp.params) {struct sampmap2}
-    set sampmap2(url) "string \"[XMLQuote file://localhost/$fn]\""
-    set sampmap2(name) "string \"[XMLQuote $fnb]\""
+    set map(samp.mtype) {string "table.load.fits"}
+    set map(samp.params) {struct map2}
+    set map2(url) "string \"file://localhost/$fn\""
+    set map2(name) "string \"$fnb\""
 
-    set param1 [list "string $samp(private)"]
+    set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {
 	set param2 [list "string $id"]
     } else {
 	set param2 {}
     }
-    set param3 [list "struct sampmap"]
-    set params "$param1 $param2 $param3" 
+    set param3 [list "struct map"] 
+    set params [list $param1 $param2 $param3]
 
     set rr {}
     if {$id != {}} {
@@ -360,7 +350,6 @@ proc SAMPSendTableLoadFits {id} {
 }
 
 proc SAMPSendTableLoadVotable {id varname} {
-    global ds9
     global samp
 
     upvar #0 $varname var
@@ -387,20 +376,20 @@ proc SAMPSendTableLoadVotable {id varname} {
     TBLSaveFn $varname $fn VOTWrite
 
     # cmd
-    set sampmap(samp.mtype) {string "table.load.votable"}
-    set sampmap(samp.params) {struct sampmap2}
-    set sampmap2(url) "string \"[XMLQuote file://localhost/$fn]\""
-    set sampmap2(table-id) "string [XMLQuote $varname$samp(port)]"
-    set sampmap2(name) "string \"[XMLQuote $var(title)]\""
+    set map(samp.mtype) {string "table.load.votable"}
+    set map(samp.params) {struct map2}
+    set map2(url) "string \"file://localhost/$fn\""
+    set map2(table-id) "string $varname$samp(port)"
+    set map2(name) "string \"$var(title)\""
 
-    set param1 [list "string $samp(private)"]
+    set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {
 	set param2 [list "string $id"]
     } else {
 	set param2 {}
     }
-    set param3 [list "struct sampmap"]
-    set params "$param1 $param2 $param3" 
+    set param3 [list "struct map"]
+    set params [list $param1 $param2 $param3]
 
     set rr {}
     if {$id != {}} {
@@ -411,7 +400,6 @@ proc SAMPSendTableLoadVotable {id varname} {
 }
 
 proc SAMPSendTableRowListCmd {varname rowlist} {
-    global ds9
     global samp
 
     # connected?
@@ -447,19 +435,19 @@ proc SAMPSendTableHighlightRow {id varname row} {
 	puts stderr "SAMPSendTableHighlightRow $samp(ocat,$varname) $row"
     }
 
-    set sampmap(samp.mtype) {string "table.highlight.row"}
-    set sampmap(samp.params) {struct sampmap2}
-    set sampmap2(table-id) "string [XMLQuote $samp(ocat,$varname)]"
-    set sampmap2(row) "string [expr $row-1]"
+    set map(samp.mtype) {string "table.highlight.row"}
+    set map(samp.params) {struct map2}
+    set map2(table-id) "string $samp(ocat,$varname)"
+    set map2(row) "string [expr $row-1]"
 
-    set param1 [list "string $samp(private)"]
+    set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {
 	set param2 [list "string $id"]
     } else {
 	set param2 {}
     }
-    set param3 [list "struct sampmap"]
-    set params "$param1 $param2 $param3" 
+    set param3 [list "struct map"]
+    set params [list $param1 $param2 $param3]
 
     set rr {}
     if {$id != {}} {
@@ -481,23 +469,23 @@ proc SAMPSendTableSelectRowList {id varname rows} {
 	puts stderr "SAMPSendTableSelectRowList $samp(ocat,$varname) $rows"
     }
 
-    set sampmap(samp.mtype) {string "table.select.rowList"}
-    set sampmap(samp.params) {struct sampmap2}
-    set sampmap2(table-id) "string [XMLQuote $samp(ocat,$varname)]"
+    set map(samp.mtype) {string "table.select.rowList"}
+    set map(samp.params) {struct map2}
+    set map2(table-id) "string $samp(ocat,$varname)"
     set ss {}
     foreach rr $rows {
 	lappend ss "string [expr $rr-1]"
     }
-    set sampmap2(row-list) [list array $ss]
+    set map2(row-list) [list array $ss]
 
-    set param1 [list "string $samp(private)"]
+    set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {
 	set param2 [list "string $id"]
     } else {
 	set param2 {}
     }
-    set param3 [list "struct sampmap"]
-    set params "$param1 $param2 $param3" 
+    set param3 [list "struct map"]
+    set params [list $param1 $param2 $param3]
 
     set rr {}
     if {$id != {}} {
@@ -508,7 +496,6 @@ proc SAMPSendTableSelectRowList {id varname rows} {
 }
 
 proc SAMPSendCoordPointAtSkyCmd {which} {
-    global ds9
     global samp
 
     # connected?
@@ -536,19 +523,19 @@ proc SAMPSendCoordPointAtSky {id coord} {
 	puts stderr "SAMPSendCoordPointAtSky $id $coord"
     }
 
-    set sampmap(samp.mtype) {string "coord.pointAt.sky"}
-    set sampmap(samp.params) {struct sampmap2}
-    set sampmap2(ra) "string [XMLQuote [lindex $coord 0]]"
-    set sampmap2(dec) "string [XMLQuote [lindex $coord 1]]"
+    set map(samp.mtype) {string "coord.pointAt.sky"}
+    set map(samp.params) {struct map2}
+    set map2(ra) "string lindex $coord 0]"
+    set map2(dec) "string [lindex $coord 1]"
 
-    set param1 [list "string $samp(private)"]
+    set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {
 	set param2 [list "string $id"]
     } else {
 	set param2 {}
     }
-    set param3 [list "struct sampmap"]
-    set params "$param1 $param2 $param3" 
+    set param3 [list "struct map"]
+    set params [list $param1 $param2 $param3]
 
     set rr {}
     if {$id != {}} {
@@ -559,7 +546,6 @@ proc SAMPSendCoordPointAtSky {id coord} {
 }
 
 proc SAMPShutdown {} {
-    global ds9
     global samp
 
     # delete any files
@@ -627,7 +613,8 @@ proc SAMPSend {method params resultVar} {
 	if {$debug(tcl,samp)} {
 	    puts stderr "SAMP: [msgcat::mc {internal error}] $result"
 	}
-	return 0
+	# Error
+	return
     }
 
     if {$debug(tcl,samp)} {
@@ -677,37 +664,37 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 
     switch -- $status {
 	OK {
-	    set sampmap(samp.status) {string "samp.ok"}
-	    set sampmap(samp.result) {struct sampmap2}
+	    set map(samp.status) {string "samp.ok"}
+	    set map(samp.result) {struct map2}
 	    if {$result != {}} {
-		set sampmap2(value) "string \"$result\""
+		set map2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
-		set sampmap2(url) "string \"[XMLQuote $url]\""
+		set map2(url) "string \"$url\""
 	    }
 	}
 	WARNING {
-	    set sampmap(samp.status) {string "samp.warning"}
-	    set sampmap(samp.result) {struct sampmap2}
-	    set sampmap(samp.error)  {struct sampmap3}
+	    set map(samp.status) {string "samp.warning"}
+	    set map(samp.result) {struct map2}
+	    set map(samp.error)  {struct map3}
 	    if {$result != {}} {
-		set sampmap2(value) "string \"$result\""
+		set map2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
-		set sampmap2(url) "string \"[XMLQuote $url]\""
+		set map2(url) "string \"$url\""
 	    }
-	    set sampmap3(samp.errortxt) "string \"$error\""
+	    set map3(samp.errortxt) "string \"$error\""
 	}
 	ERROR {
-	    set sampmap(samp.status) {string "samp.error"}
-	    set sampmap(samp.error)  {struct sampmap3}
-	    set sampmap3(samp.errortxt) "string \"$error\""
+	    set map(samp.status) {string "samp.error"}
+	    set map(samp.error)  {struct map3}
+	    set map3(samp.errortxt) "string \"$error\""
 	}
     }
-    set param1 [list "string $samp(private)"]
+    set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list "string $msgid"]
-    set param3 [list "struct sampmap"]
-    set params "$param1 $param2 $param3"
+    set param3 [list "struct map"]
+    set params [list $param1 $param2 $param3]
 
     set rr {}
     
@@ -814,7 +801,6 @@ proc samp.client.receiveNotification {args} {
 }
 
 proc samp.client.receiveCall {args} {
-    global ds9
     global samp
     
     global debug
@@ -1098,9 +1084,9 @@ proc image.load.fits {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		url {set url [XMLUnQuote $val]}
-		image-id {set imageid [XMLUnQuote $val]}
-		name {set name [XMLUnQuote $val]}
+		url {set url $val}
+		image-id {set imageid $val}
+		name {set name $val}
 	    }
 	}
     }
@@ -1130,9 +1116,9 @@ proc table.load.fits {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		url {set url [XMLUnQuote $val]}
-		image-id {set imageid [XMLUnQuote $val]}
-		name {set name [XMLUnQuote $val]}
+		url {set url $val}
+		image-id {set imageid $val}
+		name {set name $val}
 	    }
 	}
     }
@@ -1161,9 +1147,9 @@ proc table.load.votable {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		url {set url [XMLUnQuote $val]}
-		table-id {set tabid [XMLUnQuote $val]}
-		name {set name [XMLUnQuote $val]}
+		url {set url $val}
+		table-id {set tabid $val}
+		name {set name $val}
 	    }
 	}
     }
@@ -1198,8 +1184,8 @@ proc table.highlight.row {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		url {set url [XMLUnQuote $val]}
-		table-id {set tabid [XMLUnQuote $val]}
+		url {set url $val}
+		table-id {set tabid $val}
 		row {set row $val}
 	    }
 	}
@@ -1231,8 +1217,8 @@ proc table.select.rowList {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		url {set url [XMLUnQuote $val]}
-		table-id {set tabid [XMLUnQuote $val]}
+		url {set url $val}
+		table-id {set tabid $val}
 		row-list {
 		    foreach rr $val {
 			lappend rowlist [expr $rr+1]
@@ -1267,8 +1253,8 @@ proc coord.pointAt.sky {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		ra {set ra [XMLUnQuote $val]}
-		dec {set dec [XMLUnQuote $val]}
+		ra {set ra $val}
+		dec {set dec $val}
 	    }
 	}
     }
@@ -1296,7 +1282,7 @@ proc client.env.get {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		name {set name [XMLUnQuote $val]}
+		name {set name $val}
 	    }
 	}
     }
@@ -1326,8 +1312,8 @@ proc ds9.set {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		url {set url [XMLUnQuote $val]}
-		cmd {set cmd [XMLUnQuote $val]}
+		url {set url $val}
+		cmd {set cmd $val}
 	    }
 	}
     }
@@ -1376,8 +1362,8 @@ proc ds9.get {msgid args} {
     foreach arg $args {
 	foreach {key val} $arg {
 	    switch -- $key {
-		url {set url [XMLUnQuote $val]}
-		cmd {set cmd [XMLUnQuote $val]}
+		url {set url $val}
+		cmd {set cmd $val}
 	    }
 	}
     }

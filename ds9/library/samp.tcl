@@ -645,7 +645,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	}
     }
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list "string $msgid"]
+    set param2 [list string $msgid]
     set param3 [list "struct map"]
     set params [list $param1 $param2 $param3]
 

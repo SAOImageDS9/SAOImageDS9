@@ -47,8 +47,8 @@ proc xmlrpcDoRequest {sock} {
     }
     
     set body [xmlrpcGetBody $sock $header $body]
-#    puts "***"
-#    puts $body
+    puts "***"
+    puts $body
 
     xml2rpc $body
     global parse
@@ -66,6 +66,7 @@ proc xmlrpcDoRequest {sock} {
     # params
     set params $rpc
 
+    puts "***$mname"
     if {[catch {set result [eval $mname $params]}]} {
 	set res [xmlrpcBuildFault 1 "$mname failed"]
     } else {
@@ -234,8 +235,8 @@ proc xmlrpcBuildRequest {method mname params} {
     append	header "Content-length: [string length $body]\n"
 
     set result "$header\n$body" 
-#    puts "***"
-#    puts $result
+    puts "2***"
+    puts $result
     
     return [string trim $result]
 }
@@ -299,8 +300,8 @@ proc xmlrpcGetResponse {sock} {
 }
 
 proc xmlrpcParseResponse {body} {
-#    puts "***"
-#    puts $body
+    puts "3***"
+    puts $body
     
     xml2rpc $body
     global parse
@@ -439,8 +440,6 @@ proc rpcStruct2List {rpc varname} {
 proc rpc2xml {rpc} {
     set result {<?xml version="1.0"?>}
     append result "\n[rpc2xmlproc $rpc]\n"
-#    puts "***"
-#    puts $result
     return $result
 }
 
@@ -548,6 +547,7 @@ proc rpc2xmlproc {rpc} {
     }
 }
 
+if {0} {
 namespace eval xmlrpc {
     namespace export call buildRequest marshall unmarshall assoc
     namespace export serve
@@ -1338,4 +1338,5 @@ proc xmlrpc::warn {msg} {
 proc xmlrpc::errReturn {msg} {
     warn $msg
     return -code error
+}
 }

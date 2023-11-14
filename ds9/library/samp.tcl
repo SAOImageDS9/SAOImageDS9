@@ -43,7 +43,7 @@ proc SAMPConnect {verbose} {
     SAMPConnectMetadata
     
     # who are we
-    set samp(sock) [xmlrpc::serve 0]
+    set samp(sock) [xmlrpcServe 0]
     set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
     set samp(home) "[info hostname]:$samp(port)"
 
@@ -564,7 +564,7 @@ proc SAMPSend {method params resultVar} {
 
     if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
 	if {$debug(tcl,samp)} {
-	    puts stderr "SAMP: [msgcat::mc {internal error}] $result"
+	    puts stderr "SAMPSend: bad xmlrpcCAll $result"
 	}
 	# Error
 	return
@@ -617,40 +617,55 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 
     switch -- $status {
 	OK {
-	    set map(samp.status) {string "samp.ok"}
-	    set map(samp.result) {struct map2}
 	    if {$result != {}} {
 		set map2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
 		set map2(url) "string \"$url\""
 	    }
+	    set m2 [list2rpcMember $map2]
+
+	    set map(samp.status) {string samp.ok}
+	    set map(samp.result) [list struct $m2]
+	    set m1 [list2rpcMember [array get map]]
+
+	    set param3 [list param [list value [list struct $m1]]]
 	}
 	WARNING {
-	    set map(samp.status) {string "samp.warning"}
-	    set map(samp.result) {struct map2}
-	    set map(samp.error)  {struct map3}
+	    set map3(samp.errortxt) "string $error"
+	    set m3 [list2rpcMember $map3]
+
 	    if {$result != {}} {
 		set map2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
 		set map2(url) "string \"$url\""
 	    }
-	    set map3(samp.errortxt) "string \"$error\""
+	    set m2 [list2rpcMember $map2]
+
+	    set map(samp.status) {string samp.warning}
+	    set map(samp.result) [list struct $m2]
+	    set map(samp.error)  [list struct $m3]
+	    set m1 [list2rpcMember [array get map]]
+
+	    set param3 [list param [list value [list struct $m1]]]
 	}
 	ERROR {
-	    set map(samp.status) {string "samp.error"}
-	    set map(samp.error)  {struct map3}
-	    set map3(samp.errortxt) "string \"$error\""
+	    set map3(samp.errortxt) "string $error"
+	    set m3 [list2rpcMember $map3]
+
+	    set map(samp.status) {string samp.error}
+	    set map(samp.error) [list struct $m3]
+	    set map(samp.errortxt) "string $error"
+	    set m1 [list2rpcMember [array get map]]
+
+	    set param3 [list param [list value [list struct $m1]]]
 	}
     }
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list string $msgid]
-    set param3 [list "struct map"]
-    set params [list $param1 $param2 $param3]
+    set param2 [list param [list value [list string $msgid]]]
 
-    set rr {}
-    
+    set params [list $param1 $param2 $param3]
     SAMPSend samp.hub.reply $params rr
 }
 
@@ -734,7 +749,10 @@ proc samp.client.receiveNotification {args} {
     set map [lindex $args 2]
 
     if {$secret != $samp(private)} {
-	Error "SAMP: [msgcat::mc {internal error}]"
+	if {$debug(tcl,samp)} {
+	    puts stderr "samp.client.receiveNotification bad secret"
+	}
+	# Error
 	return {string ERROR}
     }
 
@@ -755,7 +773,7 @@ proc samp.client.receiveNotification {args} {
 
 proc samp.client.receiveCall {args} {
     global samp
-    
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "samp.client.receiveCall $args"
@@ -767,7 +785,10 @@ proc samp.client.receiveCall {args} {
     set map [lindex $args 3]
 
     if {$secret != $samp(private)} {
-	Error "SAMP: [msgcat::mc {internal error}]"
+	if {$debug(tcl,samp)} {
+	    puts stderr "samp.client.receiveCall bad secret"
+	}
+	# Error
 	return {string ERROR}
     }
 
@@ -798,6 +819,14 @@ proc samp.client.receiveResponse {args} {
     set id [lindex $args 1]
     set msgtag [lindex $args 2]
     set map [lindex $args 3]
+
+    if {$secret != $samp(private)} {
+	if {$debug(tcl,samp)} {
+	    puts stderr "samp.client.receiveCall bad secret"
+	}
+	# Error
+	return {string ERROR}
+    }
 
     if {$msgtag != $samp(msgtag)} {
 	Error "SAMP: samp.client.receiveResponse bad tag $msgtag"
@@ -1086,7 +1115,7 @@ proc table.load.fits {msgid args} {
 
 proc table.load.votable {msgid args} {
     global samp
-
+    puts BANG
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "table.load.votable $args"

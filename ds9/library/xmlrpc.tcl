@@ -354,12 +354,12 @@ proc xml2rpc {data} {
 
 # RPC2XML
 
-proc list2rpcStruct {ll} {
+proc list2rpcMember {ll} {
     set ms {}
     foreach {key val} $ll {
 	lappend ms [list member [list [list name [list $key]] [list value $val]]]
     }
-    return [list value [list struct $ms]]
+    return $ms
 }
 
 proc rpcArray2List {rpc varname} {

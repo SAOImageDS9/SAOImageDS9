@@ -91,19 +91,19 @@ proc SAMPConnectMetadata {} {
     global samp
     global ds9
 
-    set map(samp.name) {string "SAOImageDS9"}
+    set map(samp.name) {string SAOImageDS9}
     set map(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
-    set map(samp.icon.url) {string "http://ds9.si.edu/sun.png"}
-    set map(samp.documentation.url) {string "http://ds9.si.edu/doc/ref/index.html"}
+    set map(samp.icon.url) {string http://ds9.si.edu/sun.png}
+    set map(samp.documentation.url) {string http://ds9.si.edu/doc/ref/index.html}
 
-    set map(home.page) {string "http://ds9.si.edu/"}
+    set map(home.page) {string http://ds9.si.edu/}
     set map(author.name) {string "William Joye"}
-    set map(author.email) {string "ds9help@cfa.harvard.edu"}
+    set map(author.email) {string ds9help@cfa.harvard.edu}
     set map(author.affiliation) {string "Smithsonian Astrophysical Observatory"}
     set map(ds9.version) "string [lindex $ds9(version) 0]"
 
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list2rpcStruct [array get map]]]
+    set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
     set params [list $param1 $param2]
     
     if {![SAMPSend {samp.hub.declareMetadata} $params rr]} {
@@ -154,7 +154,7 @@ proc SAMPConnectSubscriptions {} {
     #    set map(samp.msg.progress) {struct {}}
 
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list2rpcStruct [array get map]]]
+    set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
     set params [list $param1 $param2]
 
     if {![SAMPSend {samp.hub.declareSubscriptions} $params rr]} {
@@ -241,6 +241,28 @@ proc SAMPDisconnect {verbose} {
     UpdateCATDialogSAMP
 }
 
+proc SAMPSendMType {mtype map2 id} {
+    global samp
+    
+    set param1 [list param [list value [list string $samp(private)]]]
+
+    if {$id != {}} {
+	set param2 [list param [list value [list string $id]]]
+    } else {
+	set param2 {}
+    }
+
+    set m2 [list2rpcMember $map2]
+
+    set map(samp.mtype) "string $mtype"
+    set map(samp.params) [list struct $m2]
+    set m1 [list2rpcMember [array get map]]
+
+    set param3 [list param [list value [list struct $m1]]]
+
+    return [list $param1 $param2 $param3]
+}
+
 proc SAMPSendImageLoadFits {id} {
     global current
     global samp
@@ -273,21 +295,9 @@ proc SAMPSendImageLoadFits {id} {
     }
 
     # cmd
-    set map(samp.mtype) {string "image.load.fits"}
-    set map(samp.params) {struct map2}
-    set map2(url) "string \"file://localhost/$fn\""
-    set map2(name) "string \"$fnb\""
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    if {$id != {}} {
-	set param2 [list param [list value [list string $id]]]
-    } else {
-	set param2 {}
-    }
-    set param3 [list struct map]
-    set params [list $param1 $param2 $param3]
-
-    set rr {}
+    set map2(url) "string file://localhost/$fn"
+    set map2(name) "string $fnb"
+    set params [SAMPSendMType image.load.fits [array get map2] $id]
     if {$id != {}} {
 	SAMPSend {samp.hub.notify} $params rr
     } else {
@@ -327,21 +337,9 @@ proc SAMPSendTableLoadFits {id} {
     }
 
     # cmd
-    set map(samp.mtype) {string "table.load.fits"}
-    set map(samp.params) {struct map2}
-    set map2(url) "string \"file://localhost/$fn\""
-    set map2(name) "string \"$fnb\""
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    if {$id != {}} {
-	set param2 [list "string $id"]
-    } else {
-	set param2 {}
-    }
-    set param3 [list "struct map"] 
-    set params [list $param1 $param2 $param3]
-
-    set rr {}
+    set map2(url) "string file://localhost/$fn"
+    set map2(name) "string $fnb"
+    set params [SAMPSendMType table.load.fits [array get map2] $id]
     if {$id != {}} {
 	SAMPSend {samp.hub.notify} $params rr
     } else {
@@ -376,22 +374,10 @@ proc SAMPSendTableLoadVotable {id varname} {
     TBLSaveFn $varname $fn VOTWrite
 
     # cmd
-    set map(samp.mtype) {string "table.load.votable"}
-    set map(samp.params) {struct map2}
-    set map2(url) "string \"file://localhost/$fn\""
+    set map2(url) "string file://localhost/$fn"
     set map2(table-id) "string $varname$samp(port)"
-    set map2(name) "string \"$var(title)\""
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    if {$id != {}} {
-	set param2 [list "string $id"]
-    } else {
-	set param2 {}
-    }
-    set param3 [list "struct map"]
-    set params [list $param1 $param2 $param3]
-
-    set rr {}
+    set map2(name) "string $var(title)"
+    set params [SAMPSendMType table.load.votable [array get map2] $id]
     if {$id != {}} {
 	SAMPSend {samp.hub.notify} $params rr
     } else {
@@ -435,21 +421,10 @@ proc SAMPSendTableHighlightRow {id varname row} {
 	puts stderr "SAMPSendTableHighlightRow $samp(ocat,$varname) $row"
     }
 
-    set map(samp.mtype) {string "table.highlight.row"}
-    set map(samp.params) {struct map2}
+    # cmd
     set map2(table-id) "string $samp(ocat,$varname)"
     set map2(row) "string [expr $row-1]"
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    if {$id != {}} {
-	set param2 [list "string $id"]
-    } else {
-	set param2 {}
-    }
-    set param3 [list "struct map"]
-    set params [list $param1 $param2 $param3]
-
-    set rr {}
+    set params [SAMPSendMType table.highlight.row [array get map2] $id]
     if {$id != {}} {
 	SAMPSend {samp.hub.notify} $params rr
     } else {
@@ -469,25 +444,14 @@ proc SAMPSendTableSelectRowList {id varname rows} {
 	puts stderr "SAMPSendTableSelectRowList $samp(ocat,$varname) $rows"
     }
 
-    set map(samp.mtype) {string "table.select.rowList"}
-    set map(samp.params) {struct map2}
-    set map2(table-id) "string $samp(ocat,$varname)"
+    # cmd
     set ss {}
     foreach rr $rows {
 	lappend ss "string [expr $rr-1]"
     }
     set map2(row-list) [list array $ss]
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    if {$id != {}} {
-	set param2 [list "string $id"]
-    } else {
-	set param2 {}
-    }
-    set param3 [list "struct map"]
-    set params [list $param1 $param2 $param3]
-
-    set rr {}
+    set map2(table-id) "string $samp(ocat,$varname)"
+    set params [SAMPSendMType table.select.rowList [array get map2] $id]
     if {$id != {}} {
 	SAMPSend {samp.hub.notify} $params rr
     } else {
@@ -523,21 +487,10 @@ proc SAMPSendCoordPointAtSky {id coord} {
 	puts stderr "SAMPSendCoordPointAtSky $id $coord"
     }
 
-    set map(samp.mtype) {string "coord.pointAt.sky"}
-    set map(samp.params) {struct map2}
-    set map2(ra) "string lindex $coord 0]"
+    # cmd
+    set map2(ra) "string [lindex $coord 0]"
     set map2(dec) "string [lindex $coord 1]"
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    if {$id != {}} {
-	set param2 [list "string $id"]
-    } else {
-	set param2 {}
-    }
-    set param3 [list "struct map"]
-    set params [list $param1 $param2 $param3]
-
-    set rr {}
+    set params [SAMPSendMType coord.pointAt.sky [array get map2] $id]
     if {$id != {}} {
 	SAMPSend {samp.hub.notify} $params rr
     } else {
@@ -1075,7 +1028,6 @@ proc image.load.fits {msgid args} {
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPRcvdImageLoadFits: $args"
     }
-
 
     set url {}
     set imageid {}

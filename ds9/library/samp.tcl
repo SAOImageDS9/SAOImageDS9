@@ -71,7 +71,7 @@ proc SAMPConnectRegister {} {
     global samp
     
     set params [list [list param [list value [list string $samp(secret)]]]]
-    if {![SAMPSend {samp.hub.register} $params rr]} {
+    if {![SAMPSend samp.hub.register $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -106,7 +106,7 @@ proc SAMPConnectMetadata {} {
     set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
     set params [list $param1 $param2]
     
-    if {![SAMPSend {samp.hub.declareMetadata} $params rr]} {
+    if {![SAMPSend samp.hub.declareMetadata $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -120,7 +120,7 @@ proc SAMPConnectCallback {} {
     set param2 [list param [list value [list string "http://$samp(home)"]]]
     set params [list $param1 $param2]
 
-    if {![SAMPSend {samp.hub.setXmlrpcCallback} $params rr]} {
+    if {![SAMPSend samp.hub.setXmlrpcCallback $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -157,7 +157,7 @@ proc SAMPConnectSubscriptions {} {
     set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
     set params [list $param1 $param2]
 
-    if {![SAMPSend {samp.hub.declareSubscriptions} $params rr]} {
+    if {![SAMPSend samp.hub.declareSubscriptions $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -169,7 +169,7 @@ proc SAMPConnectGetClients {} {
     
     set params [list [list param [list value [list string $samp(private)]]]]
     catch {unset rr}
-    if {![SAMPSend {samp.hub.getRegisteredClients} $params rr]} {
+    if {![SAMPSend samp.hub.getRegisteredClients $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -185,7 +185,7 @@ proc SAMPConnectGetSubscriptions {cc} {
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string $cc]]]
     set params [list $param1 $param2]
-    if {![SAMPSend {samp.hub.getSubscriptions} $params rr]} {
+    if {![SAMPSend samp.hub.getSubscriptions $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -203,7 +203,7 @@ proc SAMPConnectGetMetadata {cc} {
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string $cc]]]
     set params [list $param1 $param2]
-    if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
+    if {![SAMPSend samp.hub.getMetadata $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -230,7 +230,7 @@ proc SAMPDisconnect {verbose} {
 
     # disconnect
     set params [list [list param [list value [list string $samp(private)]]]]
-    if {![SAMPSend {samp.hub.unregister} $params rr]} {
+    if {![SAMPSend samp.hub.unregister $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -299,9 +299,9 @@ proc SAMPSendImageLoadFits {id} {
     set map2(name) "string $fnb"
     set params [SAMPSendMType image.load.fits [array get map2] $id]
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	SAMPSend samp.hub.notify $params rr
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	SAMPSend samp.hub.notifyAll $params rr
     }
 }
 
@@ -341,9 +341,9 @@ proc SAMPSendTableLoadFits {id} {
     set map2(name) "string $fnb"
     set params [SAMPSendMType table.load.fits [array get map2] $id]
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	SAMPSend samp.hub.notify $params rr
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	SAMPSend samp.hub.notifyAll $params rr
     }
 }
 
@@ -379,9 +379,9 @@ proc SAMPSendTableLoadVotable {id varname} {
     set map2(name) "string $var(title)"
     set params [SAMPSendMType table.load.votable [array get map2] $id]
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	SAMPSend samp.hub.notify $params rr
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	SAMPSend samp.hub.notifyAll $params rr
     }
 }
 
@@ -426,9 +426,9 @@ proc SAMPSendTableHighlightRow {id varname row} {
     set map2(row) "string [expr $row-1]"
     set params [SAMPSendMType table.highlight.row [array get map2] $id]
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	SAMPSend samp.hub.notify $params rr
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	SAMPSend samp.hub.notifyAll $params rr
     }
 }
 
@@ -453,9 +453,9 @@ proc SAMPSendTableSelectRowList {id varname rows} {
     set map2(table-id) "string $samp(ocat,$varname)"
     set params [SAMPSendMType table.select.rowList [array get map2] $id]
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	SAMPSend samp.hub.notify $params rr
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	SAMPSend samp.hub.notifyAll $params rr
     }
 }
 
@@ -492,9 +492,9 @@ proc SAMPSendCoordPointAtSky {id coord} {
     set map2(dec) "string [lindex $coord 1]"
     set params [SAMPSendMType coord.pointAt.sky [array get map2] $id]
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	SAMPSend samp.hub.notify $params rr
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	SAMPSend samp.hub.notifyAll $params rr
     }
 }
 
@@ -651,7 +651,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 
     set rr {}
     
-    SAMPSend {samp.hub.reply} $params rr
+    SAMPSend samp.hub.reply $params rr
 }
 
 proc SAMPRcvdDS9SetReply {msgid} {

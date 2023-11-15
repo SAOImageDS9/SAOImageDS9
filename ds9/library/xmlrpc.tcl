@@ -47,8 +47,8 @@ proc xmlrpcDoRequest {sock} {
     }
     
     set body [xmlrpcGetBody $sock $header $body]
-    puts "***"
-    puts $body
+#    puts "***"
+#    puts $body
 
     xml2rpc $body
     global parse
@@ -66,7 +66,6 @@ proc xmlrpcDoRequest {sock} {
     # params
     set params $rpc
 
-    puts "***$mname"
     if {[catch {set result [eval $mname $params]}]} {
 	set res [xmlrpcBuildFault 1 "$mname failed"]
     } else {
@@ -235,8 +234,8 @@ proc xmlrpcBuildRequest {method mname params} {
     append	header "Content-length: [string length $body]\n"
 
     set result "$header\n$body" 
-    puts "2***"
-    puts $result
+#    puts "2***"
+#    puts $result
     
     return [string trim $result]
 }
@@ -300,8 +299,8 @@ proc xmlrpcGetResponse {sock} {
 }
 
 proc xmlrpcParseResponse {body} {
-    puts "3***"
-    puts $body
+#    puts "3***"
+#    puts $body
     
     xml2rpc $body
     global parse
@@ -312,21 +311,9 @@ proc xmlrpcParseResponse {body} {
 
     set tag [string tolower [lindex $rpc 0]]
     switch $tag {
-	params {
-	    # rm <params>
-	    set rpc [lindex $rpc 1]
-
-	    # rm list
-	    set rpc [lindex $rpc 0]
-
-	    # <param>
-	    set rpc [lindex $rpc 1]
-	    return $rpc
-	}
+	params -
 	fault {
-	    # fault
-	    set rpc [lindex $rpc 1]
-	    return $rpc
+	    return [lindex $rpc 1]
 	}
     }
 }
@@ -398,7 +385,7 @@ proc rpcArray2List {rpc varname} {
 
 proc rpcStruct2List {rpc varname} {
     upvar $varname var
-    
+
     set tag [lindex [lindex $rpc 0] 0]
 
 #   puts "rpc=$rpc"

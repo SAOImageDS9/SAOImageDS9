@@ -77,6 +77,10 @@ proc SAMPConnectRegister {} {
 	return
     }
 
+    # first param
+    set rr [lindex $rr 0]
+    set rr [lindex $rr 1]
+
     rpcStruct2List $rr ll
     foreach {key val} $ll {
 	switch -- $key {
@@ -168,12 +172,15 @@ proc SAMPConnectGetClients {} {
     global samp
     
     set params [list [list param [list value [list string $samp(private)]]]]
-    catch {unset rr}
     if {![SAMPSend samp.hub.getRegisteredClients $params rr]} {
 	catch {unset samp}
 	# Error
 	return
     }
+
+    # first param
+    set rr [lindex $rr 0]
+    set rr [lindex $rr 1]
 
     rpcArray2List $rr ll
     return $ll
@@ -191,6 +198,10 @@ proc SAMPConnectGetSubscriptions {cc} {
 	return
     }
     
+    # first param
+    set rr [lindex $rr 0]
+    set rr [lindex $rr 1]
+
     rpcStruct2List $rr ll
     foreach {key} $ll {
 	lappend samp($cc,subscriptions) $key
@@ -209,6 +220,10 @@ proc SAMPConnectGetMetadata {cc} {
 	return
     }
     
+    # first param
+    set rr [lindex $rr 0]
+    set rr [lindex $rr 1]
+
     rpcStruct2List $rr ll
     foreach {key val} $ll {
 	switch -- $key {

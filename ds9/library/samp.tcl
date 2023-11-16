@@ -815,13 +815,6 @@ proc samp.client.receiveCall {rpc} {
     set msgid [lindex $args 2]
     set map [lindex $args 3]
 
-    puts "\n"
-    puts "***"
-    puts "secret=$secret"
-    puts "id=$id"
-    puts "msgid=$msgid"
-    puts "map=$map"
-
     if {$secret != $samp(private)} {
 	if {$debug(tcl,samp)} {
 	    puts stderr "samp.client.receiveCall bad secret"

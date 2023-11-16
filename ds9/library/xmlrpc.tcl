@@ -350,6 +350,36 @@ proc list2rpcMember {ll} {
     return $ms
 }
 
+proc rpcParams2List {rpc varname} {
+    upvar $varname var
+
+    set tag [lindex $rpc 0]
+
+#    puts "rpc=$rpc"
+#    puts "tag=$tag"
+
+    switch $tag {
+	value {
+	    set rr [lindex $rpc 1]
+	    rpcParams2List $rr var
+	}
+	struct {
+	    set vvar {}
+	    rpcStruct2List $rpc vvar
+	    lappend var $vvar
+	}
+	array {
+	    set vvar {}
+	    rpcArray2List $rpc vvar
+	    lappend var $vvar
+	}
+	default {
+	    set rr [lindex $rpc 1]
+	    lappend var $rr
+	}
+    }
+}
+
 proc rpcArray2List {rpc varname} {
     upvar $varname var
     
@@ -399,9 +429,11 @@ proc rpcStruct2List {rpc varname} {
 
 	struct {
 	    set rr [lindex $rpc 1]
+	    set vvar {}
 	    foreach pp $rr {
-		rpcStruct2List $pp var
+		rpcStruct2List $pp vvar
 	    }
+	    lappend var $vvar
 	}
 
 	member {

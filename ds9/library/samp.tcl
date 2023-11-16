@@ -82,7 +82,7 @@ proc SAMPConnectRegister {} {
     set rr [lindex $rr 1]
 
     rpcStruct2List $rr ll
-    foreach {key val} $ll {
+    foreach {key val} [lindex $ll 0] {
 	switch -- $key {
 	    samp.hub-id {set samp(hub) $val}
 	    samp.self-id {set samp(self) $val}
@@ -202,10 +202,8 @@ proc SAMPConnectGetSubscriptions {cc} {
     set rr [lindex $rr 0]
     set rr [lindex $rr 1]
 
-    rpcStruct2List $rr ll
-    foreach {key} $ll {
-	lappend samp($cc,subscriptions) $key
-    }
+    rpcStruct2List $rr ll 
+    set samp($cc,subscriptions) [lindex $ll 0]
 }
 
 proc SAMPConnectGetMetadata {cc} {
@@ -225,7 +223,7 @@ proc SAMPConnectGetMetadata {cc} {
     set rr [lindex $rr 1]
 
     rpcStruct2List $rr ll
-    foreach {key val} $ll {
+    foreach {key val} [lindex $ll 0] {
 	switch -- $key {
 	    samp.name {set samp($cc,name) $val}
 	}
@@ -561,8 +559,10 @@ proc SAMPGetAppsSubscriptions {mtype} {
 
     set ll {}
     foreach cc $samp(clients) {
-	if {[lsearch $samp($cc,subscriptions) $mtype]>=0} {
-	    lappend ll $cc
+	foreach {key val} $samp($cc,subscriptions) {
+	    if {$key == $mtype} {
+		lappend ll $cc
+	    }
 	}
     }
     return $ll
@@ -751,6 +751,18 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 
 # procs
 
+proc SAMPrpc2List {rpc varname} {
+    upvar $varname var
+
+    # params
+    set rpc [lindex $rpc 1]
+
+    # each param
+    foreach pp $rpc {
+	rpcParams2List [lindex $pp 1] var
+    }
+}
+
 proc samp.client.receiveNotification {args} {
     global samp
     
@@ -758,6 +770,10 @@ proc samp.client.receiveNotification {args} {
     if {$debug(tcl,samp)} {
 	puts stderr "samp.client.receiveNotification $args"
     }
+    
+    set rpc $args
+    set args {}
+    SAMPrpc2List $rpc args
     
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -993,22 +1009,14 @@ proc samp.hub.event.subscriptions {msgid args} {
 
     set id {}
     set subs {}
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		id {
-		    set id $val
-		}
-		subscriptions {
-		    foreach aa $val {
-			foreach {bb cc} $aa {
-			    lappend subs $bb
-			}
-		    }
-		}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    id {set id $val}
+	    subscriptions {lappend subs $val}
 	}
     }
+    puts $id
+    puts $subs
     
     # should not happen
     if {$id == {}} {

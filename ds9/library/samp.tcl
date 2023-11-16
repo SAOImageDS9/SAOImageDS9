@@ -763,16 +763,14 @@ proc SAMPrpc2List {rpc varname} {
     }
 }
 
-proc samp.client.receiveNotification {args} {
+proc samp.client.receiveNotification {rpc} {
     global samp
     
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "samp.client.receiveNotification $args"
+	puts stderr "samp.client.receiveNotification $rpc"
     }
     
-    set rpc $args
-    set args {}
     SAMPrpc2List $rpc args
     
     set secret [lindex $args 0]
@@ -802,13 +800,15 @@ proc samp.client.receiveNotification {args} {
     return {string OK}
 }
 
-proc samp.client.receiveCall {args} {
+proc samp.client.receiveCall {rpc} {
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "samp.client.receiveCall $args"
+	puts stderr "samp.client.receiveCall $rpc"
     }
+
+    SAMPrpc2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -838,13 +838,15 @@ proc samp.client.receiveCall {args} {
     return {string OK}
 }
 
-proc samp.client.receiveResponse {args} {
+proc samp.client.receiveResponse {rpc} {
     global samp
 
     global debug
     if {$debug(tcl,samp)} {
-	puts stderr "samp.client.receiveResponse $args"
+	puts stderr "samp.client.receiveResponse $rpc"
     }
+
+    SAMPrpc2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -1138,7 +1140,7 @@ proc table.load.fits {msgid args} {
 
 proc table.load.votable {msgid args} {
     global samp
-    puts BANG
+
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "table.load.votable $args"

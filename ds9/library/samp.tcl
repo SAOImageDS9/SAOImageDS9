@@ -815,6 +815,13 @@ proc samp.client.receiveCall {rpc} {
     set msgid [lindex $args 2]
     set map [lindex $args 3]
 
+    puts "\n"
+    puts "***"
+    puts "secret=$secret"
+    puts "id=$id"
+    puts "msgid=$msgid"
+    puts "map=$map"
+
     if {$secret != $samp(private)} {
 	if {$debug(tcl,samp)} {
 	    puts stderr "samp.client.receiveCall bad secret"
@@ -834,7 +841,7 @@ proc samp.client.receiveCall {rpc} {
 	}
     }
 
-    after 0 "$mtype $msgid $params"
+    after 0 "$mtype \{$msgid\} $params"
     return {string OK}
 }
 
@@ -906,14 +913,12 @@ proc samp.hub.event.register {msgid args} {
 	puts stderr "samp.hub.event.register $args"
     }
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		id {
-		    lappend samp(clients) $val
-		    set samp($val,subscriptions) {}
-		    set samp($val,name) {}
-		}
+    foreach {key val} $args {
+	switch -- $key {
+	    id {
+		lappend samp(clients) $val
+		set samp($val,subscriptions) {}
+		set samp($val,name) {}
 	    }
 	}
     }
@@ -931,15 +936,13 @@ proc samp.hub.event.unregister {msgid args} {
 	puts stderr "samp.hub.event.unregister $args"
     }
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		id {
-		    set id [lsearch $samp(clients) $val]
-		    set samp(clients) [lreplace $samp(clients) $id $id]
-		    unset samp($val,subscriptions)
-		    unset samp($val,name)
-		}
+    foreach {key val} $args {
+	switch -- $key {
+	    id {
+		set id [lsearch $samp(clients) $val]
+		set samp(clients) [lreplace $samp(clients) $id $id]
+		unset samp($val,subscriptions)
+		unset samp($val,name)
 	    }
 	}
     }
@@ -962,19 +965,13 @@ proc samp.hub.event.metadata {msgid args} {
 
     set id {}
     set name {}
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		id {
-		    set id $val
-		}
-		metadata {
-		    foreach aa $val {
-			foreach {bb cc} $aa {
-			    if {$bb == {samp.name}} {
-				set name $cc
-			    }
-			}
+    foreach {key val} $args {
+	switch -- $key {
+	    id {set id $val}
+	    metadata {
+		foreach {key2 val2} $val {
+		    if {$key2 == {samp.name}} {
+			set name $val2
 		    }
 		}
 	    }
@@ -1017,8 +1014,6 @@ proc samp.hub.event.subscriptions {msgid args} {
 	    subscriptions {lappend subs $val}
 	}
     }
-    puts $id
-    puts $subs
     
     # should not happen
     if {$id == {}} {
@@ -1048,11 +1043,9 @@ proc samp.hub.disconnect {msgid args} {
 
     set msg {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		reason {set msg $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    reason {set msg $val}
 	}
     }
 
@@ -1087,13 +1080,11 @@ proc image.load.fits {msgid args} {
     set imageid {}
     set name {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		url {set url $val}
-		image-id {set imageid $val}
-		name {set name $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    url {set url $val}
+	    image-id {set imageid $val}
+	    name {set name $val}
 	}
     }
 
@@ -1119,13 +1110,11 @@ proc table.load.fits {msgid args} {
     set imageid {}
     set name {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		url {set url $val}
-		image-id {set imageid $val}
-		name {set name $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    url {set url $val}
+	    image-id {set imageid $val}
+	    name {set name $val}
 	}
     }
 
@@ -1150,13 +1139,11 @@ proc table.load.votable {msgid args} {
     set tabid {}
     set name {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		url {set url $val}
-		table-id {set tabid $val}
-		name {set name $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    url {set url $val}
+	    table-id {set tabid $val}
+	    name {set name $val}
 	}
     }
 
@@ -1187,13 +1174,11 @@ proc table.highlight.row {msgid args} {
     set tabid {}
     set row {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		url {set url $val}
-		table-id {set tabid $val}
-		row {set row $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    url {set url $val}
+	    table-id {set tabid $val}
+	    row {set row $val}
 	}
     }
 
@@ -1220,15 +1205,13 @@ proc table.select.rowList {msgid args} {
     set tabid {}
     set rowlist {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		url {set url $val}
-		table-id {set tabid $val}
-		row-list {
-		    foreach rr $val {
-			lappend rowlist [expr $rr+1]
-		    }
+    foreach {key val} $args {
+	switch -- $key {
+	    url {set url $val}
+	    table-id {set tabid $val}
+	    row-list {
+		foreach rr $val {
+		    lappend rowlist [expr $rr+1]
 		}
 	    }
 	}
@@ -1256,12 +1239,10 @@ proc coord.pointAt.sky {msgid args} {
     set ra {}
     set dec {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		ra {set ra $val}
-		dec {set dec $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    ra {set ra $val}
+	    dec {set dec $val}
 	}
     }
 
@@ -1285,11 +1266,9 @@ proc client.env.get {msgid args} {
 
     set name {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		name {set name $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    name {set name $val}
 	}
     }
 
@@ -1315,12 +1294,10 @@ proc ds9.set {msgid args} {
     set url {}
     set cmd {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		url {set url $val}
-		cmd {set cmd $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    url {set url $val}
+	    cmd {set cmd $val}
 	}
     }
 
@@ -1365,12 +1342,10 @@ proc ds9.get {msgid args} {
     set url {}
     set cmd {}
 
-    foreach arg $args {
-	foreach {key val} $arg {
-	    switch -- $key {
-		url {set url $val}
-		cmd {set cmd $val}
-	    }
+    foreach {key val} $args {
+	switch -- $key {
+	    url {set url $val}
+	    cmd {set cmd $val}
 	}
     }
 

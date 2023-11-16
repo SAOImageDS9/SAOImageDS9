@@ -65,8 +65,10 @@ proc xmlrpcDoRequest {sock} {
 
     # params
     set params $rpc
-
-    if {[catch {set result [eval $mname $params]}]} {
+#    puts $mname
+#    puts $params
+    
+    if {[catch {set result [eval $mname [list $params]]}]} {
 	set res [xmlrpcBuildFault 1 "$mname failed"]
     } else {
 	set res [xmlrpcBuildResponse $result]

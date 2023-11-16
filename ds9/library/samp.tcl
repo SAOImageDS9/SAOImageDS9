@@ -254,7 +254,7 @@ proc SAMPDisconnect {verbose} {
     UpdateCATDialogSAMP
 }
 
-proc SAMPSendMType {mtype map2 id} {
+proc SAMPSendMType {mtype mm id} {
     global samp
     
     set param1 [list param [list value [list string $samp(private)]]]
@@ -265,7 +265,7 @@ proc SAMPSendMType {mtype map2 id} {
 	set param2 {}
     }
 
-    set m2 [list2rpcMember $map2]
+    set m2 [list2rpcMember $mm]
 
     set map(samp.mtype) "string $mtype"
     set map(samp.params) [list struct $m2]
@@ -638,7 +638,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    if {$url != {}} {
 		set map2(url) "string \"$url\""
 	    }
-	    set m2 [list2rpcMember $map2]
+	    set m2 [list2rpcMember [array get map2]]
 
 	    set map(samp.status) {string samp.ok}
 	    set map(samp.result) [list struct $m2]
@@ -648,7 +648,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	}
 	WARNING {
 	    set map3(samp.errortxt) "string $error"
-	    set m3 [list2rpcMember $map3]
+	    set m3 [list2rpcMember [array get map3]]
 
 	    if {$result != {}} {
 		set map2(value) "string \"$result\""
@@ -667,7 +667,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	}
 	ERROR {
 	    set map3(samp.errortxt) "string $error"
-	    set m3 [list2rpcMember $map3]
+	    set m3 [list2rpcMember [array get map3]]
 
 	    set map(samp.status) {string samp.error}
 	    set map(samp.error) [list struct $m3]

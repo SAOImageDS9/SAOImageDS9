@@ -54,8 +54,8 @@ proc SAMPConnect {verbose} {
     SAMPConnectSubscriptions
 
     # get current client info
-    set clients [SAMPConnectGetClients]
-    foreach cc $clients {
+    set samp(clients) [SAMPConnectGetClients]
+    foreach cc $samp(clients) {
 	SAMPConnectGetSubscriptions $cc
 	SAMPConnectGetMetadata $cc
     }

@@ -21,7 +21,6 @@ proc SAMPConnect {verbose} {
     set samp(clients) {}
     set samp(tmp,files) {}
     set samp(msgtag) {}
-    set samp(timeout) 30
 
     # can we find a hub?
     if {![SAMPParseHub]} {
@@ -571,7 +570,7 @@ proc SAMPGetAppsSubscriptions {mtype} {
 proc SAMPSend {method params resultVar} {
     upvar $resultVar result
     global samp
-
+    
     global debug
     if {$debug(tcl,samp)} {
 	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
@@ -579,7 +578,7 @@ proc SAMPSend {method params resultVar} {
 
     if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
 	if {$debug(tcl,samp)} {
-	    puts stderr "SAMPSend: bad xmlrpcCAll $result"
+	    puts stderr "SAMPSend: bad xmlrpcCAll"
 	}
 	# Error
 	return

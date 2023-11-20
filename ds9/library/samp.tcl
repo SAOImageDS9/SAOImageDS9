@@ -256,20 +256,18 @@ proc SAMPDisconnect {verbose} {
 proc SAMPSendMType {mtype mm id} {
     global samp
     
-    set param1 [list param [list value [list string $samp(private)]]]
-
-    if {$id != {}} {
-	set param2 [list param [list value [list string $id]]]
-    } else {
-	set param2 {}
-    }
-
     set m2 [list2rpcMember $mm]
 
     set map(samp.mtype) "string $mtype"
     set map(samp.params) [list struct $m2]
     set m1 [list2rpcMember [array get map]]
 
+    set param1 [list param [list value [list string $samp(private)]]]
+    if {$id != {}} {
+	set param2 [list param [list value [list string $id]]]
+    } else {
+	set param2 {}
+    }
     set param3 [list param [list value [list struct $m1]]]
 
     return [list $param1 $param2 $param3]

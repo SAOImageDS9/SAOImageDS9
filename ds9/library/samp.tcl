@@ -866,12 +866,12 @@ proc samp.client.receiveResponse {rpc} {
     set status {}
     set value {}
     set error {}
-    foreach arg $map {
-	foreach {key val} $arg {
+    foreach mm $map {
+	foreach {key val} $mm {
 	    switch -- $key {
-		samp.result {set value [lindex [lindex $val 0] 1]}
 		samp.status {set status $val}
-		samp.error  {set error [lindex [lindex $val 0] 1]}
+		samp.result {set value [lindex $val 1]}
+		samp.error  {set error [lindex $val 1]}
 	    }
 	}
     }

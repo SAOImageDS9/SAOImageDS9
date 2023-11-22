@@ -4,92 +4,6 @@
 
 package provide DS9 1.0
 
-proc SAMPConnect {verbose} {
-    global samp
-
-    # connected?
-    if {[info exists samp]} {
-	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {already connected}]"
-	}
-	return
-    }
-
-    # reset samp array
-    catch {unset samp}
-
-    set samp(clients) {}
-    set samp(tmp,files) {}
-    set samp(msgtag) {}
-
-    # can we find a hub?
-    if {![SAMPParseHub]} {
- 	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {unable to locate HUB}]"
-	}
-	catch {unset samp}
-	# Error
-	return
-    }
-
-    # samp initalization started
-    set samp(init) 0
-
-    # register
-    SAMPConnectRegister
-
-    # declare metadata
-    SAMPConnectMetadata
-    
-    # who are we
-    set samp(sock) [xmlrpcServe 0]
-    set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
-    set samp(home) "[info hostname]:$samp(port)"
-
-    # callback
-    SAMPConnectCallback
-
-    # declare subscriptions
-    SAMPConnectSubscriptions
-
-    # get current client info
-    set samp(clients) [SAMPConnectGetClients]
-    foreach cc $samp(clients) {
-	SAMPConnectGetSubscriptions $cc
-	SAMPConnectGetMetadata $cc
-    }
-
-    # samp initalization started
-    set samp(init) 1
-
-    UpdateFileMenuSAMP
-    UpdateCATDialogSAMP
-}
-
-proc SAMPConnectRegister {} {
-    global samp
-    
-    set params [list [list param [list value [list string $samp(secret)]]]]
-    if {![SAMPSend samp.hub.register $params rr]} {
-	catch {unset samp}
-	# Error
-	return
-    }
-
-    # first param
-    set rr [lindex $rr 0]
-    set rr [lindex $rr 1]
-
-    rpcStruct2List $rr ll
-    foreach {key val} [lindex $ll 0] {
-	switch -- $key {
-	    samp.hub-id {set samp(hub) $val}
-	    samp.self-id {set samp(self) $val}
-	    samp.private-key {set samp(private) $val}
-	}
-    }
-}
-
 proc SAMPConnectMetadata {} {
     global samp
     global ds9
@@ -110,20 +24,6 @@ proc SAMPConnectMetadata {} {
     set params [list $param1 $param2]
     
     if {![SAMPSend samp.hub.declareMetadata $params rr]} {
-	catch {unset samp}
-	# Error
-	return
-    }
-}
-
-proc SAMPConnectCallback {} {
-    global samp
-    
-    set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list value [list string "http://$samp(home)"]]]
-    set params [list $param1 $param2]
-
-    if {![SAMPSend samp.hub.setXmlrpcCallback $params rr]} {
 	catch {unset samp}
 	# Error
 	return
@@ -167,68 +67,6 @@ proc SAMPConnectSubscriptions {} {
     }
 }
 
-proc SAMPConnectGetClients {} {
-    global samp
-    
-    set params [list [list param [list value [list string $samp(private)]]]]
-    if {![SAMPSend samp.hub.getRegisteredClients $params rr]} {
-	catch {unset samp}
-	# Error
-	return
-    }
-
-    # first param
-    set rr [lindex $rr 0]
-    set rr [lindex $rr 1]
-
-    rpcArray2List $rr ll
-    return $ll
-}
-
-proc SAMPConnectGetSubscriptions {cc} {
-    global samp
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list value [list string $cc]]]
-    set params [list $param1 $param2]
-    if {![SAMPSend samp.hub.getSubscriptions $params rr]} {
-	catch {unset samp}
-	# Error
-	return
-    }
-    
-    # first param
-    set rr [lindex $rr 0]
-    set rr [lindex $rr 1]
-
-    rpcStruct2List $rr ll 
-    set samp($cc,subscriptions) [lindex $ll 0]
-}
-
-proc SAMPConnectGetMetadata {cc} {
-    global samp
-
-    set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list value [list string $cc]]]
-    set params [list $param1 $param2]
-    if {![SAMPSend samp.hub.getMetadata $params rr]} {
-	catch {unset samp}
-	# Error
-	return
-    }
-    
-    # first param
-    set rr [lindex $rr 0]
-    set rr [lindex $rr 1]
-
-    rpcStruct2List $rr ll
-    foreach {key val} [lindex $ll 0] {
-	switch -- $key {
-	    samp.name {set samp($cc,name) $val}
-	}
-    }
-}
-
 proc SAMPDisconnect {verbose} {
     global samp
 
@@ -249,8 +87,7 @@ proc SAMPDisconnect {verbose} {
     }
     SAMPShutdown
 
-    UpdateFileMenuSAMP
-    UpdateCATDialogSAMP
+    SAMPUpdateMenus
 }
 
 proc SAMPSendMType {mtype mm id} {
@@ -508,63 +345,6 @@ proc SAMPSendCoordPointAtSky {id coord} {
     }
 }
 
-proc SAMPShutdown {} {
-    global samp
-
-    # delete any files
-    SAMPDelTmpFiles
-
-    # close the server socket if still up
-    catch {close $samp(sock)}
-
-    # unset samp array
-    catch {unset samp}
-}
-
-proc SAMPGetAppsImage {} {
-    global samp
-
-    set ll {}
-    foreach cc [SAMPGetAppsSubscriptions image.load.fits] {
-	lappend ll [list $cc $samp($cc,name)]
-    }
-    return $ll
-}
-
-proc SAMPGetAppsTable {} {
-    global samp
-
-    set ll {}
-    foreach cc [SAMPGetAppsSubscriptions table.load.fits] {
-	lappend ll [list $cc $samp($cc,name)]
-    }
-    return $ll
-}
-
-proc SAMPGetAppsVOTable {} {
-    global samp
-
-    set ll {}
-    foreach cc [SAMPGetAppsSubscriptions table.load.votable] {
-	lappend ll [list $cc $samp($cc,name)]
-    }
-    return $ll
-}
-
-proc SAMPGetAppsSubscriptions {mtype} {
-    global samp
-
-    set ll {}
-    foreach cc $samp(clients) {
-	foreach {key val} $samp($cc,subscriptions) {
-	    if {$key == $mtype} {
-		lappend ll $cc
-	    }
-	}
-    }
-    return $ll
-}
-
 proc SAMPSend {method params resultVar} {
     upvar $resultVar result
     global samp
@@ -751,20 +531,6 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
     }
 }
 
-# procs
-
-proc SAMPrpc2List {rpc varname} {
-    upvar $varname var
-
-    # params
-    set rpc [lindex $rpc 1]
-
-    # each param
-    foreach pp $rpc {
-	rpcParams2List [lindex $pp 1] var
-    }
-}
-
 proc samp.client.receiveNotification {rpc} {
     global samp
     
@@ -895,8 +661,7 @@ proc samp.hub.event.shutdown {msgid args} {
 
     SAMPShutdown
 
-    UpdateFileMenuSAMP
-    UpdateCATDialogSAMP
+    SAMPUpdateMenus
 
     if {$msgid != {}} {
 	SAMPReply $msgid OK
@@ -945,8 +710,7 @@ proc samp.hub.event.unregister {msgid args} {
 	}
     }
 
-    UpdateFileMenuSAMP
-    UpdateCATDialogSAMP
+    SAMPUpdateMenus
 
     if {$msgid != {}} {
 	SAMPReply $msgid OK
@@ -988,8 +752,7 @@ proc samp.hub.event.metadata {msgid args} {
 
     set samp($id,name) $name
 
-    UpdateFileMenuSAMP
-    UpdateCATDialogSAMP
+    SAMPUpdateMenus
 
     if {$msgid != {}} {
 	SAMPReply $msgid OK
@@ -1025,8 +788,7 @@ proc samp.hub.event.subscriptions {msgid args} {
 
     set samp($id,subscriptions) $subs
 
-    UpdateFileMenuSAMP
-    UpdateCATDialogSAMP
+    SAMPUpdateMenus
 
     if {$msgid != {}} {
 	SAMPReply $msgid OK
@@ -1048,8 +810,7 @@ proc samp.hub.disconnect {msgid args} {
     }
 
     SAMPShutdown
-    UpdateFileMenu
-    UpdateCATDialogSAMP
+    SAMPUpdateMenus
 }
 
 proc samp.app.ping {msgid args} {
@@ -1439,17 +1200,9 @@ proc SAMPParseHub {} {
     return 1
 }
 
-proc SAMPDelTmpFiles {} {
-    global samp
-
-    # delete any tmp files
-    if {[info exists samp]} {
-	if {[info exists samp(tmp,files)]} {
-	    foreach fn $samp(tmp,files) {
-		catch {file delete -force "$fn"}
-	    }
-	}
-    }
+proc SAMPUpdateMenus {} {
+    UpdateFileMenuSAMP
+    UpdateCATDialogSAMP
 }
 
 # Cmds

@@ -67,29 +67,6 @@ proc SAMPConnectSubscriptions {} {
     }
 }
 
-proc SAMPDisconnect {verbose} {
-    global samp
-
-    # connected?
-    if {![info exists samp]} {
-	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {not connected}]"
-	}
-	return
-    }
-
-    # disconnect
-    set params [list [list param [list value [list string $samp(private)]]]]
-    if {![SAMPSend samp.hub.unregister $params rr]} {
-	catch {unset samp}
-	# Error
-	return
-    }
-    SAMPShutdown
-
-    SAMPUpdateMenus
-}
-
 proc SAMPSendMType {mtype mm id} {
     global samp
     
@@ -660,7 +637,6 @@ proc samp.hub.event.shutdown {msgid args} {
     }
 
     SAMPShutdown
-
     SAMPUpdateMenus
 
     if {$msgid != {}} {

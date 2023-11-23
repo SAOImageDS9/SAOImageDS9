@@ -4,13 +4,13 @@
 
 package provide DS9 1.0
 
-proc SAMPConnect {verbose} {
+proc SAMPConnectInit {verbose output debug} {
     global samp
 
     # connected?
     if {[info exists samp]} {
-	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {already connected}]"
+	if {$samp(verbose)} {
+	    SAMPError "SAMP: already connected"
 	}
 	return
     }
@@ -18,6 +18,10 @@ proc SAMPConnect {verbose} {
     # reset samp array
     catch {unset samp}
 
+    set samp(verbose) $verbose
+    set samp(output) $output
+    set samp(debug) $debug
+    
     set samp(clients) {}
     set samp(tmp,files) {}
     set samp(msgtag) {}
@@ -25,8 +29,8 @@ proc SAMPConnect {verbose} {
 
     # can we find a hub?
     if {![SAMPParseHub]} {
- 	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {unable to locate HUB}]"
+	if {$samp(verbose)} {
+	    SAMPError "SAMP: unable to locate HUB"
 	}
 	catch {unset samp}
 	# Error
@@ -166,13 +170,13 @@ proc SAMPConnectGetMetadata {cc} {
     }
 }
 
-proc SAMPDisconnect {verbose} {
+proc SAMPDisconnect {} {
     global samp
 
     # connected?
     if {![info exists samp]} {
-	if {$verbose} {
-	    Error "SAMP: [msgcat::mc {not connected}]"
+	if {$samp(verbose)} {
+	    SAMPError "SAMP: not connected"
 	}
 	return
     }
@@ -201,11 +205,68 @@ proc SAMPShutdown {} {
     catch {unset samp}
 }
 
+proc SAMPSend {method params resultVar} {
+    upvar $resultVar result
+    global samp
+
+    if {$samp(debug)} {
+	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
+    }
+
+    if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
+	if {$samp(debug)} {
+	    puts stderr "SAMPSend: bad xmlrpcCAll"
+	}
+	# Error
+	return 0
+    }
+
+    if {$samp(debug)} {
+	puts stderr "SAMPSend Result: $result"
+    }
+
+    switch $method {
+	samp.hub.notify -
+	samp.hub.notifyAll {}
+
+	samp.hub.call -
+	samp.hub.callAll {
+	    # and now we wait
+	    # must be set before
+	    vwait samp(msgtag)
+	}
+
+	samp.hub.callAndWait {
+	    SAMPrpc2List [list params $result] args
+	    
+	    set map [lindex $args 0]
+
+	    set status {}
+	    set value {}
+	    set error {}
+	    foreach mm $map {
+		foreach {key val} $mm {
+		    switch -- $key {
+			samp.status {set status $val}
+			samp.result {set value [lindex $val 1]}
+			samp.error  {set error [lindex $val 1]}
+		    }
+		}
+	    }
+
+	    if {$samp(output)} {
+		puts -nonewline "$status $value $error"
+	    }
+	}
+    }
+
+    return 1
+}
+
 proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPReply $msgid $status"
     }
 
@@ -268,8 +329,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 proc samp.client.receiveNotification {rpc} {
     global samp
     
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "samp.client.receiveNotification $rpc"
     }
     
@@ -280,7 +340,7 @@ proc samp.client.receiveNotification {rpc} {
     set map [lindex $args 2]
 
     if {$secret != $samp(private)} {
-	if {$debug(tcl,samp)} {
+	if {$samp(debug)} {
 	    puts stderr "samp.client.receiveNotification bad secret"
 	}
 	# Error
@@ -305,8 +365,7 @@ proc samp.client.receiveNotification {rpc} {
 proc samp.client.receiveCall {rpc} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "samp.client.receiveCall $rpc"
     }
 
@@ -318,7 +377,7 @@ proc samp.client.receiveCall {rpc} {
     set map [lindex $args 3]
 
     if {$secret != $samp(private)} {
-	if {$debug(tcl,samp)} {
+	if {$samp(debug)} {
 	    puts stderr "samp.client.receiveCall bad secret"
 	}
 	# Error
@@ -340,9 +399,53 @@ proc samp.client.receiveCall {rpc} {
     return {string OK}
 }
 
+proc samp.client.receiveResponse {rpc} {
+    global samp
+
+    SAMPrpc2List $rpc args
+
+    set secret [lindex $args 0]
+    set id [lindex $args 1]
+    set msgtag [lindex $args 2]
+    set map [lindex $args 3]
+
+    if {$secret != $samp(private)} {
+	puts {SAMP-Test: samp.client.recievedResponse bad secret}
+	# Error
+	return {string ERROR}
+    }
+
+    if {$msgtag != $samp(msgtag)} {
+	puts {SAMP-Test: samp.client.recievedResponse bad msgtag}
+	# Error
+	return {string ERROR}
+    }
+    set samp(msgtag) {}
+
+    set status {}
+    set value {}
+    set error {}
+    foreach mm $map {
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.status {set status $val}
+		samp.result {set value [lindex $val 1]}
+		samp.error  {set error [lindex $val 1]}
+	    }
+	}
+    }
+
+    if {$samp(output)} {
+	puts -nonewline "$status $value $error"
+    }
+
+    return {string OK}
+}
+
 proc samp.hub.event.shutdown {msgid args} {
-    global debug
-    if {$debug(tcl,samp)} {
+    global samp
+    
+    if {$samp(debug)} {
 	puts stderr "samp.hub.event.shutdown $args"
     }
 
@@ -357,8 +460,7 @@ proc samp.hub.event.shutdown {msgid args} {
 proc samp.hub.event.register {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "samp.hub.event.register $args"
     }
 
@@ -380,8 +482,7 @@ proc samp.hub.event.register {msgid args} {
 proc samp.hub.event.unregister {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "samp.hub.event.unregister $args"
     }
 
@@ -406,8 +507,7 @@ proc samp.hub.event.unregister {msgid args} {
 proc samp.hub.event.metadata {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "samp.hub.event.metadata $args"
     }
 
@@ -448,8 +548,7 @@ proc samp.hub.event.metadata {msgid args} {
 proc samp.hub.event.subscriptions {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "samp.hub.event.subscriptions $args"
     }
 
@@ -482,8 +581,9 @@ proc samp.hub.event.subscriptions {msgid args} {
 }
 
 proc samp.hub.disconnect {msgid args} {
-    global debug
-    if {$debug(tcl,samp)} {
+    global samp
+    
+    if {$samp(debug)} {
 	puts stderr "samp.hub.disconnect $args"
     }
 
@@ -500,10 +600,9 @@ proc samp.hub.disconnect {msgid args} {
 }
 
 proc samp.app.ping {msgid args} {
-    upvar $varname args
+    global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "samp.app.ping $args"
     }
 
@@ -515,8 +614,7 @@ proc samp.app.ping {msgid args} {
 proc client.env.get {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "client.env.get $msgid $args"
     }
 
@@ -616,8 +714,7 @@ proc SAMPParseHub {} {
 	return 0
     }
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPParseHub: $samp(secret) $samp(url) $samp(method)"
     }
     return 1

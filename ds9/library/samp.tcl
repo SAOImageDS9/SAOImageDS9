@@ -4,6 +4,12 @@
 
 package provide DS9 1.0
 
+proc SAMPConnect {verbose} {
+    global debug
+
+    SAMPConnectInit $verbose 0 $debug(tcl,samp)
+}
+
 proc SAMPConnectMetadata {} {
     global samp
     global ds9
@@ -322,65 +328,6 @@ proc SAMPSendCoordPointAtSky {id coord} {
     }
 }
 
-proc SAMPSend {method params resultVar} {
-    upvar $resultVar result
-    global samp
-    
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
-    }
-
-    if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "SAMPSend: bad xmlrpcCAll"
-	}
-	# Error
-	return 0
-    }
-
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend Result: $result"
-    }
-
-    switch $method {
-	samp.hub.notify -
-	samp.hub.notifyAll {}
-
-	samp.hub.call -
-	samp.hub.callAll {
-	    # and now we wait
-	    # must be set before
-	    vwait samp(msgtag)
-	}
-
-	samp.hub.callAndWait {
-	    SAMPrpc2List [list params $result] args
-	    
-	    set map [lindex $args 0]
-
-	    set status {}
-	    set value {}
-	    set error {}
-	    foreach mm $map {
-		foreach {key val} $mm {
-		    switch -- $key {
-			samp.status {set status $val}
-			samp.result {set value [lindex $val 1]}
-			samp.error  {set error [lindex $val 1]}
-		    }
-		}
-	    }
-
-	    if {$debug(tcl,samp)} {
-		puts stderr "SAMPSend: callAndWait: $status $value $error"
-	    }
-	}
-    }
-
-    return 1
-}
-
 proc SAMPRcvdDS9SetReply {msgid} {
     global ds9
     global icursor
@@ -444,53 +391,6 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 
 	SAMPReply $msgid OK $value $url
     }
-}
-
-proc samp.client.receiveResponse {rpc} {
-    global samp
-
-    global debug
-    if {$debug(tcl,samp)} {
-	puts stderr "samp.client.receiveResponse $rpc"
-    }
-
-    SAMPrpc2List $rpc args
-
-    set secret [lindex $args 0]
-    set id [lindex $args 1]
-    set msgtag [lindex $args 2]
-    set map [lindex $args 3]
-
-    if {$secret != $samp(private)} {
-	if {$debug(tcl,samp)} {
-	    puts stderr "samp.client.receiveCall bad secret"
-	}
-	# Error
-	return {string ERROR}
-    }
-
-    if {$msgtag != $samp(msgtag)} {
-	Error "SAMP: samp.client.receiveResponse bad tag $msgtag"
-    }
-    set samp(msgtag) {}
-
-    set status {}
-    set value {}
-    set error {}
-    foreach mm $map {
-	foreach {key val} $mm {
-	    switch -- $key {
-		samp.status {set status $val}
-		samp.result {set value [lindex $val 1]}
-		samp.error  {set error [lindex $val 1]}
-	    }
-	}
-    }
-    if {$debug(tcl,samp)} {
-	puts stderr "SAMPSend: callAndWait: $status $value $error"
-    }
-
-    return {string OK}
 }
 
 proc image.load.fits {msgid args} {
@@ -754,6 +654,14 @@ proc ds9.get {msgid args} {
     if {$fn != {}} {
 	lappend samp(tmp,files) $fn
     }
+}
+
+proc SAMPError {message} {
+    # msgcat::mc {already connected}
+    # msgcat::mc {unable to locate HUB}
+    # msgcat::mc {not connected}
+
+    Error "SAMP: [msgcat::mc $message]"
 }
 
 proc SAMPUpdateMenus {} {

@@ -856,7 +856,7 @@ proc QuitDS9 {} {
     # shutdown SAMP
     global samp
     if {[info exists samp]} {
-	catch {SAMPDisconnect 0}
+	catch {SAMPDisconnect}
     }
 
     # shutdown SAMPHUB

@@ -91,7 +91,7 @@ proc xmlrpcResponse {rpc} {
     append	header "Access-Control-Allow-Origin: *\n"
 
     set result "$header\n$body"
-    return [string trim $result]
+    return $result
 }
 
 proc xmlrpcBuildResponse {rpc} {
@@ -135,14 +135,14 @@ proc xmlrpcReadBody {body expLen sock} {
     set newbody $body
     while {1} {
 	if {[catch {set buff [xmlrpcNBRead $sock]}]} {
-	    return [errReturn "Premature eof"]
+	    return [xmlrpcError "Premature eof"]
 	}
 	append newbody $buff
 	set bodLen [string length $newbody]
 	if {$bodLen == $expLen} {
 	    break
 	} elseif {$bodLen > $expLen} {
-	    return [errReturn "Content-length:$expLen does not match Body Length:$bodLen"]
+	    return [xmlrpcError "Content-length:$expLen does not match Body Length:$bodLen"]
 	}
     }
     return $newbody
@@ -239,7 +239,7 @@ proc xmlrpcBuildRequest {method mname params} {
 #    puts "2***"
 #    puts $result
     
-    return [string trim $result]
+    return $result
 }
 
 proc xmlrpcParseHTTPCode {str} {
@@ -251,10 +251,10 @@ proc xmlrpcParseHTTPCode {str} {
     append	RE "(\[^\n\]+)\n(.*)";			# status message
 
     if {![regexp $RE $str {} vern status code rest]} {
-	return [errReturn "Unrecognized HTTP code:\n$str"]
+	return [xmlrpcError "Unrecognized HTTP code:\n$str"]
     }
     if {$status != "200"} {
-	return [errReturn "Bad HTTP status: $status"]
+	return [xmlrpcError "Bad HTTP status: $status"]
     }
     return $rest
 }
@@ -277,7 +277,7 @@ proc xmlrpcParseHTTPHeaders {str} {
 	    continue
 	}
 	if {![regexp $RE $part {} key value]} {
-	    return [errReturn "Unrecognized HTTP Header format: $part"]
+	    return [xmlrpcError "Unrecognized HTTP Header format: $part"]
 	}
 	set value [string trim $value]
 	lappend headers [list $key $value]
@@ -328,6 +328,10 @@ proc xmlrpcAssoc {key list} {
 	}
     }
     return {}
+}
+
+proc xmlrpcError {msg} {
+    puts $msg
 }
 
 # XML2RPC

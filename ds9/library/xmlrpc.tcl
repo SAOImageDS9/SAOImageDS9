@@ -47,8 +47,6 @@ proc xmlrpcDoRequest {sock} {
     }
     
     set body [xmlrpcGetBody $sock $header $body]
-#    puts "***"
-#    puts $body
 
     xml2rpc $body
     global parse
@@ -65,8 +63,6 @@ proc xmlrpcDoRequest {sock} {
 
     # params
     set params $rpc
-#    puts $mname
-#    puts $params
     
     if {[catch {set result [eval $mname [list $params]]}]} {
 	set res [xmlrpcBuildFault 1 "$mname failed"]
@@ -100,8 +96,7 @@ proc xmlrpcBuildResponse {rpc} {
 }
 
 proc xmlrpcBuildFault {errcode errmsg} {
-    set rpc [list value [list struct [list member [list name $errcode] [list value $errmsg]]]]
-    set rpc [list methodResponse [list fault $rpc]]
+    set rpc [list methodResponse [list fault [list value [list struct [list [list member [list [list name faultCode] [list value \<int\>$errcode\</int\>]]] [list member [list [list name faultString] [list value $errmsg]]]]]]]]
     return [xmlrpcResponse $rpc]
 }
 
@@ -236,9 +231,6 @@ proc xmlrpcBuildRequest {method mname params} {
     append	header "Content-length: [string length $body]\n"
 
     set result "$header\n$body" 
-#    puts "2***"
-#    puts $result
-    
     return $result
 }
 
@@ -301,9 +293,6 @@ proc xmlrpcGetResponse {sock} {
 }
 
 proc xmlrpcParseResponse {body} {
-#    puts "3***"
-#    puts $body
-    
     xml2rpc $body
     global parse
     set rpc $parse(result)

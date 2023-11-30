@@ -862,7 +862,7 @@ proc QuitDS9 {} {
     # shutdown SAMPHUB
     global samphub
     if {[info exists samphub]} {
-	catch {SAMPHubStop 0}
+	catch {SAMPHubStop}
     }
     
     # close IIS ports

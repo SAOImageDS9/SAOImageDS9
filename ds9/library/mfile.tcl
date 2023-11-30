@@ -218,7 +218,7 @@ proc FileMainMenu {} {
     $ds9(mb).file.samp add command -label [msgcat::mc {Connect}] \
 	-command [list SAMPConnect 1]
     $ds9(mb).file.samp add command -label [msgcat::mc {Disconnect}] \
-	-command [list SAMPDisconnect]
+	-command SAMPDisconnect
     $ds9(mb).file.samp add separator
     $ds9(mb).file.samp add cascade -label [msgcat::mc {Image}] \
 	-menu $ds9(mb).file.samp.image
@@ -242,7 +242,7 @@ proc FileMainMenu {} {
     $ds9(mb).file.samphub add command -label [msgcat::mc {Start}] \
 	-command [list SAMPHubStart 1]
     $ds9(mb).file.samphub add command -label [msgcat::mc {Stop}] \
-	-command [list SAMPHubStop 1]
+	-command [list SAMPHubStop]
 
     ThemeMenu $ds9(mb).file.xpa
     $ds9(mb).file.xpa add command -label [msgcat::mc {Information}] \
@@ -540,7 +540,7 @@ proc CreateButtonsFile {} {
 	[list SAMPConnect 1]
     ButtonButton $ds9(buttons).file.sampdisconnect \
 	[string tolower [msgcat::mc {SAMP Disconnect}]] \
-	[list SAMPDisconnect]
+	SAMPDisconnect
     ButtonButton $ds9(buttons).file.sampimage \
 	[string tolower [msgcat::mc {SAMP}]] \
 	[list SAMPSendImageLoadFits {}]
@@ -553,7 +553,7 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.samphubstart \
 	[string tolower [msgcat::mc {SAMP Hub Start}]] "SAMPHubStart 1"
     ButtonButton $ds9(buttons).file.samphubstop \
-	[string tolower [msgcat::mc {SAMP Hub Stop}]] "SAMPHubStop 1"
+	[string tolower [msgcat::mc {SAMP Hub Stop}]] SAMPHubStop
 
     ButtonButton $ds9(buttons).file.console \
 	[string tolower [msgcat::mc {Console}]] OpenConsole

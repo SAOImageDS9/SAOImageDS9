@@ -215,7 +215,7 @@ proc SAMPSend {method params resultVar} {
 
     if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
 	if {$samp(debug)} {
-	    puts stderr "SAMPSend: bad xmlrpcCAll"
+	    puts stderr "SAMPSend: bad xmlrpcCall"
 	}
 	# Error
 	return 0

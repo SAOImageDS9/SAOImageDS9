@@ -29,7 +29,7 @@ proc SAMPHubDialog {} {
     $mb.file add command -label [msgcat::mc {Start}] \
 	-command [list SAMPHubStart 1]
     $mb.file add command -label [msgcat::mc {Stop}] \
-	-command [list SAMPHubStop 1]
+	-command SAMPHubStop
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Disconnect}] \
 	-command [list SAMPHubDialogDisconnect]
@@ -55,7 +55,7 @@ proc SAMPHubDialog {} {
     ttk::button $f.start -text [msgcat::mc {Start}] \
 	-command [list SAMPHubStart 1]
     ttk::button $f.stop -text [msgcat::mc {Stop}] \
-	-command [list SAMPHubStop 1]
+	-command SAMPHubStop
     ttk::button $f.disconnect -text [msgcat::mc {Disconnect}] \
 	-command [list SAMPHubDialogDisconnect]
     ttk::button $f.close -text [msgcat::mc {Close}] \

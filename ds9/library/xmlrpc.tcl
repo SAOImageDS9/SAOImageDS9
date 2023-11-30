@@ -359,6 +359,18 @@ proc list2rpcMember {ll} {
 proc rpcParams2List {rpc varname} {
     upvar $varname var
 
+    # params
+    set rpc [lindex $rpc 1]
+
+    # each param
+    foreach pp $rpc {
+	rpcParam2List [lindex $pp 1] var
+    }
+}
+
+proc rpcParam2List {rpc varname} {
+    upvar $varname var
+
     set tag [lindex $rpc 0]
 
 #    puts "rpc=$rpc"
@@ -367,7 +379,7 @@ proc rpcParams2List {rpc varname} {
     switch $tag {
 	value {
 	    set rr [lindex $rpc 1]
-	    rpcParams2List $rr var
+	    rpcParam2List $rr var
 	}
 	struct {
 	    set vvar {}

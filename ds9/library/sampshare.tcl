@@ -237,7 +237,7 @@ proc SAMPSend {method params resultVar} {
 	}
 
 	samp.hub.callAndWait {
-	    SAMPrpc2List [list params $result] args
+	    rpcParams2List [list params $result] args
 	    
 	    set map [lindex $args 0]
 
@@ -333,7 +333,7 @@ proc samp.client.receiveNotification {rpc} {
 	puts stderr "samp.client.receiveNotification $rpc"
     }
     
-    SAMPrpc2List $rpc args
+    rpcParams2List $rpc args
     
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -369,7 +369,7 @@ proc samp.client.receiveCall {rpc} {
 	puts stderr "samp.client.receiveCall $rpc"
     }
 
-    SAMPrpc2List $rpc args
+    rpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -402,7 +402,7 @@ proc samp.client.receiveCall {rpc} {
 proc samp.client.receiveResponse {rpc} {
     global samp
 
-    SAMPrpc2List $rpc args
+    rpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -762,18 +762,6 @@ proc SAMPGetAppsSubscriptions {mtype} {
 	}
     }
     return $ll
-}
-
-proc SAMPrpc2List {rpc varname} {
-    upvar $varname var
-
-    # params
-    set rpc [lindex $rpc 1]
-
-    # each param
-    foreach pp $rpc {
-	rpcParams2List [lindex $pp 1] var
-    }
 }
 
 proc SAMPDelTmpFiles {} {

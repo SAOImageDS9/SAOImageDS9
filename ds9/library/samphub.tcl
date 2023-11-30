@@ -344,7 +344,7 @@ proc SAMPHubRemove {secret} {
 proc SAMPHubRegister {rpc web} {
     global samphub
 
-    SAMPrpc2List [lindex $rpc 0] args
+    rpcParams2List [lindex $rpc 0] args
     
     if {$samphub(secret) != $args} {
 	return -code error

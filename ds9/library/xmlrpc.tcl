@@ -231,7 +231,7 @@ proc xmlrpcBuildRequest {method mname params} {
     append	header "Content-length: [string length $body]\n"
 
     set result "$header\n$body" 
-    return $result
+    return [string trim $result]
 }
 
 proc xmlrpcParseHTTPCode {str} {

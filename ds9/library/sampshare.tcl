@@ -263,6 +263,10 @@ proc SAMPSend {method params resultVar} {
     return 1
 }
 
+proc SAMPReturn {msg} {
+    return [list [list param [list value [list string $msg]]]]
+}
+
 proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     global samp
 
@@ -344,7 +348,7 @@ proc samp.client.receiveNotification {rpc} {
 	    puts stderr "samp.client.receiveNotification bad secret"
 	}
 	# Error
-	return [list [list param [list value [list string ERROR]]]]
+	return [SAMPReturn ERROR]
     }
 
     set mtype {}
@@ -359,7 +363,7 @@ proc samp.client.receiveNotification {rpc} {
     }
 
     after 0 "$mtype {} $params"
-    return [list [list param [list value [list string OK]]]]
+    return [SAMPReturn OK]
 }
 
 proc samp.client.receiveCall {rpc} {
@@ -381,7 +385,7 @@ proc samp.client.receiveCall {rpc} {
 	    puts stderr "samp.client.receiveCall bad secret"
 	}
 	# Error
-	return [list [list param [list value [list string ERROR]]]]
+	return [SAMPReturn ERROR]
     }
 
     set mtype {}
@@ -396,7 +400,7 @@ proc samp.client.receiveCall {rpc} {
     }
 
     after 0 "$mtype \{$msgid\} $params"
-    return [list [list param [list value [list string OK]]]]
+    return [SAMPReturn OK]
 }
 
 proc samp.client.receiveResponse {rpc} {
@@ -412,13 +416,13 @@ proc samp.client.receiveResponse {rpc} {
     if {$secret != $samp(private)} {
 	puts {SAMP-Test: samp.client.recievedResponse bad secret}
 	# Error
-	return [list [list param [list value [list string ERROR]]]]
+	return [SAMPReturn ERROR]
     }
 
     if {$msgtag != $samp(msgtag)} {
 	puts {SAMP-Test: samp.client.recievedResponse bad msgtag}
 	# Error
-	return [list [list param [list value [list string ERROR]]]]
+	return [SAMPReturn ERROR]
     }
     set samp(msgtag) {}
 
@@ -439,7 +443,7 @@ proc samp.client.receiveResponse {rpc} {
 	puts -nonewline "$status $value $error"
     }
 
-    return [list [list param [list value [list string OK]]]]
+    return [SAMPReturn OK]
 }
 
 proc samp.hub.event.shutdown {msgid args} {

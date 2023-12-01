@@ -676,7 +676,7 @@ proc samp.hub.declareMetadata {rpc} {
 
     foreach mm $samphub($secret,metadata) {
 	foreach {key val} $mm {
-	    set map3($key) "string \"[XMLQuote $val]\""
+	    set map3($key) "string \"$val\""
 	}
     }
     set m3 [list2rpcMember [array get map3]]
@@ -746,7 +746,7 @@ proc samp.hub.getMetadata {rpc} {
 	if {$samphub($cc,id) == $id} {
 	    foreach mm $samphub($secret,metadata) {
 		foreach {key val} $mm {
-		    set map3($key) "string \"[XMLQuote $val]\""
+		    set map3($key) "string \"$val\""
 		}
 	    }
 	    set m3 [list2rpcMember [array get map3]]

@@ -94,7 +94,7 @@ proc xmlrpcResponse {rpc} {
 }
 
 proc xmlrpcBuildResponse {rpc} {
-    set rpc [list methodResponse [list params [list [list param [list value [list string $rpc]]]]]]
+    set rpc [list methodResponse [list params $rpc]]
     return [xmlrpcResponse $rpc]
 }
 

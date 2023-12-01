@@ -77,7 +77,7 @@ proc xmlrpcDoRequest {sock} {
 
 proc xmlrpcResponse {rpc} {
     # build the body
-    puts "***xmlrpcResponse"
+    puts "\n***xmlrpcResponse"
     puts $rpc
     set body [rpc2xml $rpc]
     puts $body
@@ -94,7 +94,7 @@ proc xmlrpcResponse {rpc} {
 }
 
 proc xmlrpcBuildResponse {rpc} {
-    set rpc [list methodResponse [list params $rpc]]
+    set rpc [list methodResponse [list params [list [list param [list value [list string $rpc]]]]]]
     return [xmlrpcResponse $rpc]
 }
 
@@ -226,7 +226,7 @@ proc xmlrpcCall {url method methodName params} {
 proc xmlrpcBuildRequest {method mname params} {
     set rpc [list methodCall [list [list methodName $mname] [list params $params]]]
     # build the body
-    puts "***xmlrpcBuildRequest"
+    puts "\n***xmlrpcBuildRequest"
     puts $rpc
     set body [rpc2xml $rpc]
     puts $body
@@ -480,8 +480,8 @@ proc rpc2xmlproc {rpc varname} {
 
     set tag [lindex [lindex $rpc 0] 0]
 
-   # puts "rpc=$rpc"
-   # puts "tag=$tag"
+#    puts "rpc=$rpc"
+#    puts "tag=$tag"
 
     if {$tag == {}} {
 	return

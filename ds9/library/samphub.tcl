@@ -156,9 +156,9 @@ proc SAMPHubStop {} {
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
 
-    set map(samp.mtype) "string $mtype"
-    set map(samp.params) [list struct {}]
-    set m1 [list2rpcMember [array get map]]
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) [list struct {}]
+    set m1 [list2rpcMember [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -273,17 +273,17 @@ proc SAMPHubDisconnect {secret} {
 	return
     }
 
-    catch {unset hubmap}
-    catch {unset hubmap2}
+    set map2(reason) {string disconnect}
+    set m2 [list2rpcMember [array get map2]]
+    
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) [list struct $m2]
+    set m1 [list2rpcMember [array get map1]]
 
-    set hubmap(samp.mtype) "string $mtype"
-    set hubmap(samp.params) {struct hubmap2}
-    set hubmap2(reason) {string disconnect}
-
-    set param1 [list "string $secret"]
-    set param2 [list "string $samphub($samphub(secret),id)"]
-    set param3 [list "struct hubmap"]
-    set params "$param1 $param2 $param3"	
+    set param1 [list param [list value [list string $secret]]]
+    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+    set param3 [list param [list value [list struct $m1]]]
+    set params [list $param1 $param2 $param3]
 
     # some clients insist on sending samp.hub.unregister
     set samphub(remove) $secret
@@ -292,15 +292,16 @@ proc SAMPHubDisconnect {secret} {
     unset samphub(remove)
     SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
 
-    catch {unset hubmap}
-    catch {unset hubmap2}
-
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
-    set hubmap(samp.mtype) "string $mtype"
-    set hubmap(samp.params) {struct hubmap2}
-    set hubmap2(id) "string $samphub($secret,id)"
+
+    set map2(id) "string $samphub($secret,id)"
+    set m2 [list2rpcMember [array get map2]]
+
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) [list struct $m2]
+    set m1 [list2rpcMember [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -318,10 +319,10 @@ proc SAMPHubDisconnect {secret} {
 	    continue
 	}
 
-	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct hubmap"]
-	set params "$param1 $param2 $param3"
+	set param1 [list param [list value [list string $cc]]]
+	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param3 [list param [list value [list struct $m1]]]
+	set params [list $param1 $param2 $param3]
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
@@ -431,9 +432,9 @@ proc SAMPHubRegister {rpc web} {
     set map3(samp.hub-id) {string hub}
     set map3(samp.self-id) "string $id"
     set map3(samp.private-key) "string $secret"
+    set m3 [list2rpcMember [array get map3]]
 
-    set rr [list2rpcMember [array get map3]]
-    return [list [list param [list value [list struct $rr]]]]
+    return [list [list param [list value [list struct $m3]]]]
 }
 
 proc SAMPHubSend {method url params resultVar} {

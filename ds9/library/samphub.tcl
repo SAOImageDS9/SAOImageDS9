@@ -751,7 +751,7 @@ proc samp.hub.getMetadata {rpc} {
 	    }
 	    set m3 [list2rpcMember [array get map3]]
 
-	    return [list params [list [list params [list value [list struct $m3]]]]]
+	    return [list params [list [list param [list value [list struct $m3]]]]]
 	}
     }
 
@@ -853,6 +853,8 @@ proc samp.hub.getSubscriptions {rpc} {
 	puts "samp.hub.getSubscriptions: $rpc"
     }
 
+    rpcParams2List $rpc args
+
     set secret [lindex $args 0]
     set id [lindex $args 1]
 
@@ -884,12 +886,14 @@ proc samp.hub.getSubscriptions {rpc} {
     return [SAMPReturn ERROR]
 }
 
-proc samp.hub.getRegisteredClients {args} {
+proc samp.hub.getRegisteredClients {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getRegisteredClients: $args"
+	puts "samp.hub.getRegisteredClients: $rpc"
     }
+
+    rpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -906,20 +910,20 @@ proc samp.hub.getRegisteredClients {args} {
 	    continue
 	}
 
-	lappend ll "string $samphub($cc,id)"
+	lappend ll [list value [list string $samphub($cc,id)]]
     }
 
-    return "array [list $ll]"
+    return [list params [list [list param [list value [list array [list data $ll]]]]]]
 }
 
-proc samp.hub.getSubscribedClients {args} {
+proc samp.hub.getSubscribedClients {rpc} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     if {$samphub(debug)} {
 	puts "samp.hub.getSubscribedClients: $args"
     }
+
+    rpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -937,19 +941,11 @@ proc samp.hub.getSubscribedClients {args} {
 	}
 
 	if {[SAMPHubFindSubscription $cc $map]} {
-	    lappend ll $samphub($cc,id)
-	    break
+	    lappend ll [list $samphub($cc,id) {}]
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
-
-    foreach cc $ll {
-	set samphubmap($cc) "struct samphubmap2"
-    }
-
-    return "struct samphubmap"
+    return [list params [list [list param [list value [list struct [list2rpcMember $ll]]]]]]
 }
 
 proc samp.hub.notify {args} {

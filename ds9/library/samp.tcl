@@ -78,9 +78,9 @@ proc SAMPSendMType {mtype mm id} {
     
     set m2 [list2rpcMember $mm]
 
-    set map(samp.mtype) "string $mtype"
-    set map(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map]]
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) [list struct $m2]
+    set m1 [list2rpcMember [array get map1]]
 
     set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {

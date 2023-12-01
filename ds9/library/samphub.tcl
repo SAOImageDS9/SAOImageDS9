@@ -14,8 +14,6 @@ proc SAMPHubDef {} {
 proc SAMPHubStart {verbose} {
     global samp
     global samphub
-    global ds9
-    global pds9
     global debug
 
     # are we connected?
@@ -51,31 +49,52 @@ proc SAMPHubStart {verbose} {
     catch {unset samp}
     catch {unset samphub}
     
-    # home directory
-    set fn [file join [GetEnvHome] {.samp}]
-
     # basics
     set samphub(verbose) $verbose
     set samphub(debug) $debug(tcl,samp)
+    set samphub(fn) [file join [GetEnvHome] {.samp}]
 
     set samphub(client,seq) 0
     set samphub(client,secret) {}
     set samphub(cache,images) 1
     set samphub(callAndWait) {}
 
-    set samphub(fn) $fn
-    if {[catch {set samphub(sock) [xmlrpcServe 0]}]} {
-	Error "SAMPHub: [msgcat::mc {unable to open hub}]"
-	catch {unset samphub}
-	return
-    }
-    set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
     set samphub(secret) [SAMPHubGenerateKey]
     set samphub(timestamp) "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
 
     set samphub(web,sock) {}
     set samphub(web,port) 0
     set samphub(web,allowReverseCallbacks) 0
+
+    # Init
+    SAMPHubStartConnect
+    
+    # Write profile
+    SAMPHubStartProfile
+
+    # Register Hub
+    SAMPHubStartRegister
+
+    if {$samphub(debug)} {
+	puts "SAMPHubStart: $samphub(secret) $samphub($samphub(secret),id)"
+    }
+
+    SAMPHubDialogListAdd $samphub(secret)
+    SAMPHubDialogUpdate
+    UpdateFileMenu
+}
+
+proc SAMPHubStartConnect {} {
+    global samphub
+    global pds9
+
+    if {[catch {set samphub(sock) [xmlrpcServe 0]}]} {
+	Error "SAMPHub: [msgcat::mc {unable to open hub}]"
+	catch {unset samphub}
+	return
+    }
+    set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
+
     if {$pds9(samp,webhub)} {
 	if {[catch {set samphub(web,sock) [xmlrpcServe 21012]}]} {
 	    Error "SAMPHub: [msgcat::mc {unable to open web hub}]"
@@ -83,8 +102,12 @@ proc SAMPHubStart {verbose} {
 	    set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
 	}
     }
+}
 
-    if {[catch {set ch [open $fn w 0600]}]} {
+proc SAMPHubStartProfile {} {
+    global samphub
+
+    if {[catch {set ch [open $samphub(fn) w 0600]}]} {
 	if {$samphub(verbose)} {
 	    Error "SAMPHub: [msgcat::mc {unable to create hub file}]"
 	}
@@ -101,6 +124,10 @@ proc SAMPHubStart {verbose} {
     puts $ch "profile.start.date=$samphub(timestamp)"
 
     close $ch
+}
+
+proc SAMPHubStartRegister {} {
+    global samphub
 
     lappend samphub(client,secret) $samphub(secret)
     set samphub($samphub(secret),id) {hub}
@@ -113,14 +140,6 @@ proc SAMPHubStart {verbose} {
 						[list author.mail "ds9help@cfa.harvard.edu"] \
 						[list author.name {William Joye}] \
 					       ]
-
-    if {$samphub(debug)} {
-	puts "SAMPHubStart: $samphub(secret) $samphub($samphub(secret),id)"
-    }
-
-    SAMPHubDialogListAdd $samphub(secret)
-    SAMPHubDialogUpdate
-    UpdateFileMenu
 }
 
 proc SAMPHubStop {} {

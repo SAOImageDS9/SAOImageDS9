@@ -361,11 +361,9 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,metadata)
 }
 
-proc SAMPHubRegister {rpc web} {
+proc SAMPHubRegister {args web} {
     global samphub
 
-    rpcParams2List [lindex $rpc 0] args
-    
     if {$samphub(secret) != $args} {
 	return [SAMPReturn ERROR]
     }
@@ -556,32 +554,38 @@ proc samp.hub.setXmlrpcCallback {rpc} {
     return [SAMPReturn OK]
 }
 
-proc samp.hub.ping {args} {
+proc samp.hub.ping {} {
+    global samphub
+
     if {$samphub(debug)} {
 	puts "samp.hub.ping"
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.ping $args"
+    SAMPHubDialogRecvdMsg "samp.hub.ping $rpc"
 
     return [SAMPReturn OK]
 }
 
-proc samp.hub.register {args} {
+proc samp.hub.register {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.register: $args"
+	puts "samp.hub.register: $rpc"
     }
+
+    rpcParams2List $rpc args
 
     return [SAMPHubRegister $args 0]
 }
 
-proc samp.hub.unregister {args} {
+proc samp.hub.unregister {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.unregister: $args"
+	puts "samp.hub.unregister: $rpc"
     }
+
+    rpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -602,9 +606,13 @@ proc samp.hub.unregister {args} {
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
-    set hubmap(samp.mtype) "string $mtype"
-    set hubmap(samp.params) {struct hubmap2}
-    set hubmap2(id) "string $samphub($secret,id)"
+
+    set map2(id) "string $samphub($secret,id)"
+    set m2 [list2rpcMember [array get map2]]
+
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) [list struct $m2]
+    set m1 [list2rpcMember [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -622,10 +630,10 @@ proc samp.hub.unregister {args} {
 	    continue
 	}
 
-	set param1 [list "string $cc"]
-	set param2 [list "string $samphub($samphub(secret),id)"]
-	set param3 [list "struct hubmap"]
-	set params "$param1 $param2 $param3"
+	set param1 [list param [list value [list string $cc]]]
+	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param3 [list param [list value [list struct $m1]]]
+	set params [list params [list $param1 $param2 $param3]]
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {

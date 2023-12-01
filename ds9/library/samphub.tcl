@@ -554,11 +554,11 @@ proc samp.hub.setXmlrpcCallback {rpc} {
     return [SAMPReturn OK]
 }
 
-proc samp.hub.ping {} {
+proc samp.hub.ping {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.ping"
+	puts "samp.hub.ping $rpc"
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.ping $rpc"

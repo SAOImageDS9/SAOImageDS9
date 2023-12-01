@@ -73,7 +73,7 @@ proc SAMPConnectInit {verbose output debug} {
 proc SAMPConnectRegister {} {
     global samp
     
-    set params [list [list param [list value [list string $samp(secret)]]]]
+    set params [list params [list [list param [list value [list string $samp(secret)]]]]]
     if {![SAMPSend samp.hub.register $params rr]} {
 	catch {unset samp}
 	# Error
@@ -99,7 +99,7 @@ proc SAMPConnectCallback {} {
     
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string "http://$samp(home)"]]]
-    set params [list $param1 $param2]
+    set params [list params [list $param1 $param2]]
 
     if {![SAMPSend samp.hub.setXmlrpcCallback $params rr]} {
 	catch {unset samp}
@@ -111,7 +111,7 @@ proc SAMPConnectCallback {} {
 proc SAMPConnectGetClients {} {
     global samp
     
-    set params [list [list param [list value [list string $samp(private)]]]]
+    set params [list params [list [list param [list value [list string $samp(private)]]]]]
     if {![SAMPSend samp.hub.getRegisteredClients $params rr]} {
 	catch {unset samp}
 	# Error
@@ -131,7 +131,7 @@ proc SAMPConnectGetSubscriptions {cc} {
 
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string $cc]]]
-    set params [list $param1 $param2]
+    set params [list params [list $param1 $param2]]
     if {![SAMPSend samp.hub.getSubscriptions $params rr]} {
 	catch {unset samp}
 	# Error
@@ -151,7 +151,7 @@ proc SAMPConnectGetMetadata {cc} {
 
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string $cc]]]
-    set params [list $param1 $param2]
+    set params [list params [list $param1 $param2]]
     if {![SAMPSend samp.hub.getMetadata $params rr]} {
 	catch {unset samp}
 	# Error
@@ -182,7 +182,7 @@ proc SAMPDisconnect {} {
     }
 
     # disconnect
-    set params [list [list param [list value [list string $samp(private)]]]]
+    set params [list params [list [list param [list value [list string $samp(private)]]]]]
     if {![SAMPSend samp.hub.unregister $params rr]} {
 	catch {unset samp}
 	# Error
@@ -264,7 +264,7 @@ proc SAMPSend {method params resultVar} {
 }
 
 proc SAMPReturn {msg} {
-    return [list [list param [list value [list string $msg]]]]
+    return [list params [list [list param [list value [list string $msg]]]]]
 }
 
 proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
@@ -324,7 +324,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string $msgid]]]
 
-    set params [list $param1 $param2 $param3]
+    set params [list params [list $param1 $param2 $param3]]
     SAMPSend samp.hub.reply $params rr
 }
 

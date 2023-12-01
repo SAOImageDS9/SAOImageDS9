@@ -93,8 +93,8 @@ proc xmlrpcResponse {rpc} {
     return $result
 }
 
-proc xmlrpcBuildResponse {rpc} {
-    set rpc [list methodResponse [list params $rpc]]
+proc xmlrpcBuildResponse {params} {
+    set rpc [list methodResponse $params]
     return [xmlrpcResponse $rpc]
 }
 
@@ -224,7 +224,7 @@ proc xmlrpcCall {url method methodName params} {
 }
 
 proc xmlrpcBuildRequest {method mname params} {
-    set rpc [list methodCall [list [list methodName $mname] [list params $params]]]
+    set rpc [list methodCall [list [list methodName $mname] $params]]
     # build the body
     puts "\n***xmlrpcBuildRequest"
     puts $rpc

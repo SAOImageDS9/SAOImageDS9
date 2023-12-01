@@ -27,7 +27,7 @@ proc SAMPConnectMetadata {} {
 
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
-    set params [list $param1 $param2]
+    set params [list params [list $param1 $param2]]
     
     if {![SAMPSend samp.hub.declareMetadata $params rr]} {
 	catch {unset samp}
@@ -64,7 +64,7 @@ proc SAMPConnectSubscriptions {} {
 
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
-    set params [list $param1 $param2]
+    set params [list params [list $param1 $param2]]
 
     if {![SAMPSend samp.hub.declareSubscriptions $params rr]} {
 	catch {unset samp}
@@ -90,7 +90,7 @@ proc SAMPSendMType {mtype mm id} {
     }
     set param3 [list param [list value [list struct $m1]]]
 
-    return [list $param1 $param2 $param3]
+    return [list params [list $param1 $param2 $param3]]
 }
 
 proc SAMPSendImageLoadFits {id} {

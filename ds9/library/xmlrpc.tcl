@@ -457,13 +457,11 @@ proc rpcStruct2List {rpc varname} {
 
 	name {
 	    set rr [lindex $rpc 1]
-#	    puts "name=$rr"
 	    lappend var $rr
 	}
 
 	default {
 	    set rr [lindex $rpc 1]
-#	    puts "value=$rr"
 	    lappend var $rr
 	}
     }
@@ -515,7 +513,7 @@ proc rpc2xmlproc {rpc varname} {
 	    set rr [lindex $rpc 1]
 	    set res "$space<$tag>\n"
 	    foreach pp $rr {
-		append res "[rpc2xmlproc $pp]\n"
+		append res "[rpc2xmlproc $pp space]\n"
 	    }
 	    append res "$space</$tag>"
 	    return $res
@@ -535,7 +533,7 @@ proc rpc2xmlproc {rpc varname} {
 	    set rr [lindex $rpc 1]
 	    set res "\n$space<$tag>\n"
 	    foreach pp $rr {
-		append res "[rpc2xmlproc $pp]\n"
+		append res "[rpc2xmlproc $pp space]\n"
 	    }
 	    append res "$space</$tag>\n$spaceminus"
 	    return $res
@@ -572,7 +570,7 @@ proc rpc2xmlproc {rpc varname} {
 
 	string {
 	    set rr [lindex $rpc 1]
-	    return "<$tag>[rpc2xmlproc $rr space ]</$tag>"
+	    return "<$tag>[rpc2xmlproc $rr space]</$tag>"
 	}
 
 	default {

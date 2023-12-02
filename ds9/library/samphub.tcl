@@ -213,7 +213,7 @@ proc SAMPHubValidSecret {secret} {
     
     if {![info exists samphub($secret,id)]} {
 	if {$samphub(debug)} {
-	    puts "SAMPHub: bad private-key $secret"
+	    puts "SAMPHub: bad private-key $secret\n"
 	}
 	return 0
     }
@@ -342,7 +342,7 @@ proc SAMPHubRemove {secret} {
     global samphub
     
     if {$samphub(debug)} {
-	puts stderr "SAMPHubRemove: $secret"
+	puts stderr "SAMPHubRemove: $secret\n"
     }
 
     # should not happen
@@ -440,7 +440,7 @@ proc SAMPHubSend {method url params resultVar} {
     global samphub
 
     if {$samphub(debug)} {
-	puts stderr "SAMPHubSend: $method $url $params"
+	puts stderr "SAMPHubSend: $method $url $params\n"
     }
 
     # figure out xmlrpc-?
@@ -460,7 +460,7 @@ proc SAMPHubSend {method url params resultVar} {
     }
 
     if {$samphub(debug)} {
-	puts stderr "SAMPHubSend Result: $result"
+	puts stderr "SAMPHubSend Result: $result\n"
     }
 
     return 1
@@ -535,7 +535,7 @@ proc samp.hub.setXmlrpcCallback {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.setXmlrpcCallback: $rpc"
+	puts "samp.hub.setXmlrpcCallback: $rpc\n"
     }
 
     rpcParams2List $rpc args
@@ -558,7 +558,7 @@ proc samp.hub.ping {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.ping $rpc"
+	puts "samp.hub.ping $rpc\n"
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.ping $rpc"
@@ -582,7 +582,7 @@ proc samp.hub.unregister {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.unregister: $rpc"
+	puts "samp.hub.unregister: $rpc\n"
     }
 
     rpcParams2List $rpc args
@@ -656,8 +656,11 @@ proc samp.hub.declareMetadata {rpc} {
     global samphub
     
     if {$samphub(debug)} {
-	puts "samp.hub.declareMetadata: $rpc"
+	puts "samp.hub.declareMetadata: $rpc\n"
     }
+
+    #params
+    set params [lindex [lindex $rpc 1] 1]
 
     rpcParams2List $rpc args
 
@@ -682,15 +685,8 @@ proc samp.hub.declareMetadata {rpc} {
     # update other clients
     set mtype {samp.hub.event.metadata}
 
-    foreach mm $samphub($secret,metadata) {
-	foreach {key val} $mm {
-	    set map3($key) "string \"$val\""
-	}
-    }
-    set m3 [list2rpcMember [array get map3]]
-
     set map2(id) "string $samphub($secret,id)"
-    set map2(metadata) [list struct $m3]
+    set map2(metadata) [list struct {}]
     set m2 [list2rpcMember [array get map2]]
     
     set map1(samp.mtype) "string $mtype"
@@ -736,7 +732,7 @@ proc samp.hub.getMetadata {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getMetadata: $rpc"
+	puts "samp.hub.getMetadata: $rpc\n"
     }
 
     rpcParams2List $rpc args
@@ -770,8 +766,11 @@ proc samp.hub.declareSubscriptions {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.declareSubscriptions: $rpc"
+	puts "samp.hub.declareSubscriptions: $rpc\n"
     }
+
+    #params
+    set params [lindex [lindex $rpc 1] 1]
 
     rpcParams2List $rpc args
 
@@ -798,21 +797,8 @@ proc samp.hub.declareSubscriptions {rpc} {
     # update other clients
     set mtype {samp.hub.event.subscriptions}
 
-    foreach sub $samphub($secret,subscriptions) {
-	foreach {ss attrs} $sub {
-	    foreach attr $attrs {
-		foreach {key val} $attr {
-		    set map4($key) "string $val"
-		}
-	    }
-	    set m4 [list2rpcMember [array get map4]]
-	    set map3($ss) [list struct $m4]
-	}
-    }
-    set m3 [list2rpcMember [array get map3]]
-
     set map2(id) "string $samphub($secret,id)"
-    set map2(subscriptions) [list struct $m3]
+    set map2(subscriptions) [list struct {}]
     set m2 [list2rpcMember [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
@@ -858,7 +844,7 @@ proc samp.hub.getSubscriptions {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getSubscriptions: $rpc"
+	puts "samp.hub.getSubscriptions: $rpc\n"
     }
 
     rpcParams2List $rpc args
@@ -898,7 +884,7 @@ proc samp.hub.getRegisteredClients {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getRegisteredClients: $rpc"
+	puts "samp.hub.getRegisteredClients: $rpc\n"
     }
 
     rpcParams2List $rpc args
@@ -928,7 +914,7 @@ proc samp.hub.getSubscribedClients {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getSubscribedClients: $args"
+	puts "samp.hub.getSubscribedClients: $args\n"
     }
 
     rpcParams2List $rpc args
@@ -958,11 +944,9 @@ proc samp.hub.getSubscribedClients {rpc} {
 
 proc samp.hub.notify {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     if {$samphub(debug)} {
-	puts "samp.hub.notify: $args"
+	puts "samp.hub.notify: $args\n"
     }
 
     set secret [lindex $args 0]
@@ -985,18 +969,12 @@ proc samp.hub.notify {args} {
 	    }
 	}
     }
+    puts "***"
+    puts $params
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
-
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) "struct samphubmap2"
-    set samphubmap2(id) "string $samphub($secret,id)"
-    foreach mm $params {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \{$val\}"
-	}
-    }
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) $params
+    set mm [array get map1]
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return [SAMPReturn ERROR]
@@ -1017,17 +995,15 @@ proc samp.hub.notify {args} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 "SAMPHubNotify $secret $cc $mtype"
+    after 0 "SAMPHubNotify $secret $cc $mtype $mm"
     return [SAMPReturn OK]
 }
 
 proc samp.hub.notifyAll {args} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     if {$samphub(debug)} {
-	puts "samp.hub.notifyAll: $args"
+	puts "samp.hub.notifyAll: $args\n"
     }
 
     set secret [lindex $args 0]
@@ -1050,16 +1026,9 @@ proc samp.hub.notifyAll {args} {
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
-
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) "struct samphubmap2"
-    foreach mm $params {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \{$val\}"
-	}
-    }
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) $params
+    set mm [array get map1]
 
     set ll {}
     foreach cc $samphub(client,secret) {
@@ -1078,11 +1047,11 @@ proc samp.hub.notifyAll {args} {
 	    continue
 	}
 
-	after 0 "SAMPHubNotify $secret $cc $mtype"
+	after 0 "SAMPHubNotify $secret $cc $mtype $mm"
 	lappend ll "string $samphub($cc,id)"
     }
 
-    return "array [list $ll]"
+    return [list2rpcArray $ll]
 }
 
 proc samp.hub.call {args} {
@@ -1091,7 +1060,7 @@ proc samp.hub.call {args} {
     global samphubmap2
     
     if {$samphub(debug)} {
-	puts "samp.hub.call: $args"
+	puts "samp.hub.call: $args\n"
     }
 
     set secret [lindex $args 0]
@@ -1160,7 +1129,7 @@ proc samp.hub.callAll {args} {
     global samphubmap3
 
     if {$samphub(debug)} {
-	puts "samp.hub.callAll: $args"
+	puts "samp.hub.callAll: $args\n"
     }
 
     set secret [lindex $args 0]
@@ -1229,7 +1198,7 @@ proc samp.hub.callAndWait {args} {
     global samphubmap2
     
     if {$samphub(debug)} {
-	puts "samp.hub.callAndWait: $args"
+	puts "samp.hub.callAndWait: $args\n"
     }
 
     set secret [lindex $args 0]
@@ -1300,7 +1269,7 @@ proc samp.hub.reply {args} {
     global samphubmap2
     
     if {$samphub(debug)} {
-	puts "samp.hub.reply: $args"
+	puts "samp.hub.reply: $args\n"
     }
 
     set secret [lindex $args 0]

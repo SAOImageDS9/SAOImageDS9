@@ -768,9 +768,6 @@ proc samp.hub.declareSubscriptions {rpc} {
 	puts "samp.hub.declareSubscriptions: $rpc\n"
     }
 
-    #params
-    set params [lindex [lindex $rpc 1] 1]
-
     rpcParams2List $rpc args
 
     set secret [lindex $args 0]
@@ -796,8 +793,11 @@ proc samp.hub.declareSubscriptions {rpc} {
     # update other clients
     set mtype {samp.hub.event.subscriptions}
 
+    # extract params
+    set m3 [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
+
     set map2(id) "string $samphub($secret,id)"
-    set map2(subscriptions) [list struct {}]
+    set map2(subscriptions) $m3
     set m2 [list2rpcMember [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
@@ -822,7 +822,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 
 	set param1 [list param [list value [list string $cc]]]
 	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
-	set param3 [list struct $m1]
+	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
 	if {$samphub($cc,web)} {

@@ -158,7 +158,7 @@ proc SAMPHubStop {} {
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct {}]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -274,11 +274,11 @@ proc SAMPHubDisconnect {secret} {
     }
 
     set map2(reason) {string disconnect}
-    set m2 [list2rpcMember [array get map2]]
+    set m2 [xmlrpcList2Member [array get map2]]
     
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     set param1 [list param [list value [list string $secret]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
@@ -297,11 +297,11 @@ proc SAMPHubDisconnect {secret} {
     set mtype {samp.hub.event.unregister}
 
     set map2(id) "string $samphub($secret,id)"
-    set m2 [list2rpcMember [array get map2]]
+    set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -388,11 +388,11 @@ proc SAMPHubRegister {args web} {
     set mtype {samp.hub.event.register}
 
     set map2(id) "string $samphub($secret,id)"
-    set m2 [list2rpcMember [array get map2]]
+    set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -429,7 +429,7 @@ proc SAMPHubRegister {args web} {
     set map3(samp.hub-id) {string hub}
     set map3(samp.self-id) "string $id"
     set map3(samp.private-key) "string $secret"
-    set m3 [list2rpcMember [array get map3]]
+    set m3 [xmlrpcList2Member [array get map3]]
 
     return [list params [list [list param [list value [list struct $m3]]]]]
 }
@@ -469,7 +469,7 @@ proc SAMPHubNotify {secret cc mtype mm} {
     # runs in top level
     global samphub
 
-    set m1 [list2rpcMember $mm]
+    set m1 [xmlrpcList2Member $mm]
 
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
@@ -489,7 +489,7 @@ proc SAMPHubNotify {secret cc mtype mm} {
 proc SAMPHubCall {secret cc msgid mtype mm} {
     global samphub
 
-    set m1 [list2rpcMember $mm]
+    set m1 [xmlrpcList2Member $mm]
 
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
@@ -510,7 +510,7 @@ proc SAMPHubCall {secret cc msgid mtype mm} {
 proc SAMPHubReply {cc id msgtag mm} {
     global samphub
 
-    set m1 [list2rpcMember $mm]
+    set m1 [xmlrpcList2Member $mm]
 
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $id]]]
@@ -607,11 +607,11 @@ proc samp.hub.unregister {rpc} {
     set mtype {samp.hub.event.unregister}
 
     set map2(id) "string $samphub($secret,id)"
-    set m2 [list2rpcMember [array get map2]]
+    set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -686,11 +686,11 @@ proc samp.hub.declareMetadata {rpc} {
 
     set map2(id) "string $samphub($secret,id)"
     set map2(metadata) $m3
-    set m2 [list2rpcMember [array get map2]]
+    set m2 [xmlrpcList2Member [array get map2]]
     
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -752,7 +752,7 @@ proc samp.hub.getMetadata {rpc} {
 		    set map3($key) "string \"$val\""
 		}
 	    }
-	    set m3 [list2rpcMember [array get map3]]
+	    set m3 [xmlrpcList2Member [array get map3]]
 
 	    return [list params [list [list param [list value [list struct $m3]]]]]
 	}
@@ -798,11 +798,11 @@ proc samp.hub.declareSubscriptions {rpc} {
 
     set map2(id) "string $samphub($secret,id)"
     set map2(subscriptions) $m3
-    set m2 [list2rpcMember [array get map2]]
+    set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -866,11 +866,11 @@ proc samp.hub.getSubscriptions {rpc} {
 			    set map4($key) "string $val"
 			}
 		    }
-		    set m4 [list2rpcMember [array get map4]]
+		    set m4 [xmlrpcList2Member [array get map4]]
 		    set map3($ss) [list struct $m4]
 		}
 	    }
-	    set m3 [list2rpcMember [array get map3]]
+	    set m3 [xmlrpcList2Member [array get map3]]
 
 	    return [list params [list [list param [list value [list struct $m3]]]]]
 	}
@@ -906,7 +906,7 @@ proc samp.hub.getRegisteredClients {rpc} {
 	lappend ll $samphub($cc,id)
     }
 
-    return [list params [list [list param [list value [list2rpcArray $ll]]]]]
+    return [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
 }
 
 proc samp.hub.getSubscribedClients {rpc} {
@@ -938,7 +938,7 @@ proc samp.hub.getSubscribedClients {rpc} {
 	}
     }
 
-    return [list params [list [list param [list value [list struct [list2rpcMember $ll]]]]]]
+    return [list params [list [list param [list value [list struct [xmlrpcList2Member $ll]]]]]]
 }
 
 proc samp.hub.notify {args} {
@@ -1048,7 +1048,7 @@ proc samp.hub.notifyAll {args} {
 	lappend ll "string $samphub($cc,id)"
     }
 
-    return [list params [list [list param [list value [list2rpcArray $ll]]]]]
+    return [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
 }
 
 proc samp.hub.call {args} {

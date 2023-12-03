@@ -282,17 +282,17 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    if {$url != {}} {
 		set map2(url) "string \"$url\""
 	    }
-	    set m2 [list2rpcMember [array get map2]]
+	    set m2 [xmlrpcList2Member [array get map2]]
 
 	    set map1(samp.status) {string samp.ok}
 	    set map1(samp.result) [list struct $m2]
-	    set m1 [list2rpcMember [array get map1]]
+	    set m1 [xmlrpcList2Member [array get map1]]
 
 	    set param3 [list param [list value [list struct $m1]]]
 	}
 	WARNING {
 	    set map3(samp.errortxt) "string $error"
-	    set m3 [list2rpcMember [array get map3]]
+	    set m3 [xmlrpcList2Member [array get map3]]
 
 	    if {$result != {}} {
 		set map2(value) "string \"$result\""
@@ -300,23 +300,23 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    if {$url != {}} {
 		set map2(url) "string \"$url\""
 	    }
-	    set m2 [list2rpcMember $map2]
+	    set m2 [xmlrpcList2Member $map2]
 
 	    set map1(samp.status) {string samp.warning}
 	    set map1(samp.result) [list struct $m2]
 	    set map1(samp.error)  [list struct $m3]
-	    set m1 [list2rpcMember [array get map1]]
+	    set m1 [xmlrpcList2Member [array get map1]]
 
 	    set param3 [list param [list value [list struct $m1]]]
 	}
 	ERROR {
 	    set map3(samp.errortxt) "string $error"
-	    set m3 [list2rpcMember [array get map3]]
+	    set m3 [xmlrpcList2Member [array get map3]]
 
 	    set map1(samp.status) {string samp.error}
 	    set map1(samp.error) [list struct $m3]
 	    set map1(samp.errortxt) "string $error"
-	    set m1 [list2rpcMember [array get map1]]
+	    set m1 [xmlrpcList2Member [array get map1]]
 
 	    set param3 [list param [list value [list struct $m1]]]
 	}

@@ -26,7 +26,7 @@ proc SAMPConnectMetadata {} {
     set map(ds9.version) "string [lindex $ds9(version) 0]"
 
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
+    set param2 [list param [list value [list struct [xmlrpcList2Member [array get map]]]]]
     set params [list params [list $param1 $param2]]
     
     if {![SAMPSend samp.hub.declareMetadata $params rr]} {
@@ -63,7 +63,7 @@ proc SAMPConnectSubscriptions {} {
     #    set map(samp.msg.progress) {struct {}}
 
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list value [list struct [list2rpcMember [array get map]]]]]
+    set param2 [list param [list value [list struct [xmlrpcList2Member [array get map]]]]]
     set params [list params [list $param1 $param2]]
 
     if {![SAMPSend samp.hub.declareSubscriptions $params rr]} {
@@ -76,11 +76,11 @@ proc SAMPConnectSubscriptions {} {
 proc SAMPSendMType {mtype mm id} {
     global samp
     
-    set m2 [list2rpcMember $mm]
+    set m2 [xmlrpcList2Member $mm]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
-    set m1 [list2rpcMember [array get map1]]
+    set m1 [xmlrpcList2Member [array get map1]]
 
     set param1 [list param [list value [list string $samp(private)]]]
     if {$id != {}} {

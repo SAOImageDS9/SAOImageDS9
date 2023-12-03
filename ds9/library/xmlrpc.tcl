@@ -353,7 +353,7 @@ proc xml2rpc {data} {
 
 # RPC2XML
 
-proc list2rpcMember {ll} {
+proc xmlrpcList2Member {ll} {
     set ms {}
     foreach {key val} $ll {
 	lappend ms [list member [list [list name [list $key]] [list value $val]]]
@@ -361,7 +361,7 @@ proc list2rpcMember {ll} {
     return $ms
 }
 
-proc list2rpcArray {ll} {
+proc xmlrpcList2Array {ll} {
     set ms {}
     foreach {val} $ll {
 	lappend ms [list value [list string $val]]

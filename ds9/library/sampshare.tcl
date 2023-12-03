@@ -84,7 +84,7 @@ proc SAMPConnectRegister {} {
     set rr [lindex $rr 0]
     set rr [lindex $rr 1]
 
-    rpcStruct2List $rr ll
+    xmlrpcStruct2List $rr ll
     foreach {key val} [lindex $ll 0] {
 	switch -- $key {
 	    samp.hub-id {set samp(hub) $val}
@@ -122,7 +122,7 @@ proc SAMPConnectGetClients {} {
     set rr [lindex $rr 0]
     set rr [lindex $rr 1]
 
-    rpcArray2List $rr ll
+    xmlrpcArray2List $rr ll
     return $ll
 }
 
@@ -142,7 +142,7 @@ proc SAMPConnectGetSubscriptions {cc} {
     set rr [lindex $rr 0]
     set rr [lindex $rr 1]
 
-    rpcStruct2List $rr ll 
+    xmlrpcStruct2List $rr ll 
     set samp($cc,subscriptions) [lindex $ll 0]
 }
 
@@ -162,7 +162,7 @@ proc SAMPConnectGetMetadata {cc} {
     set rr [lindex $rr 0]
     set rr [lindex $rr 1]
 
-    rpcStruct2List $rr ll
+    xmlrpcStruct2List $rr ll
     foreach {key val} [lindex $ll 0] {
 	switch -- $key {
 	    samp.name {set samp($cc,name) $val}
@@ -237,7 +237,7 @@ proc SAMPSend {method params resultVar} {
 	}
 
 	samp.hub.callAndWait {
-	    rpcParams2List [list params $result] args
+	    xmlrpcParams2List [list params $result] args
 	    
 	    set map [lindex $args 0]
 
@@ -337,7 +337,7 @@ proc samp.client.receiveNotification {rpc} {
 	puts stderr "samp.client.receiveNotification $rpc\n"
     }
     
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
     
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -370,7 +370,7 @@ proc samp.client.receiveCall {rpc} {
 	puts stderr "samp.client.receiveCall $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -400,7 +400,7 @@ proc samp.client.receiveCall {rpc} {
 proc samp.client.receiveResponse {rpc} {
     global samp
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]

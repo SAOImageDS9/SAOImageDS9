@@ -537,7 +537,7 @@ proc samp.hub.setXmlrpcCallback {rpc} {
 	puts "samp.hub.setXmlrpcCallback: $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -572,7 +572,7 @@ proc samp.hub.register {rpc} {
 	puts "samp.hub.register: $rpc"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     return [SAMPHubRegister $args 0]
 }
@@ -584,7 +584,7 @@ proc samp.hub.unregister {rpc} {
 	puts "samp.hub.unregister: $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -658,7 +658,7 @@ proc samp.hub.declareMetadata {rpc} {
 	puts "samp.hub.declareMetadata: $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -734,7 +734,7 @@ proc samp.hub.getMetadata {rpc} {
 	puts "samp.hub.getMetadata: $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -768,7 +768,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 	puts "samp.hub.declareSubscriptions: $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -846,7 +846,7 @@ proc samp.hub.getSubscriptions {rpc} {
 	puts "samp.hub.getSubscriptions: $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -886,7 +886,7 @@ proc samp.hub.getRegisteredClients {rpc} {
 	puts "samp.hub.getRegisteredClients: $rpc\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -916,7 +916,7 @@ proc samp.hub.getSubscribedClients {rpc} {
 	puts "samp.hub.getSubscribedClients: $args\n"
     }
 
-    rpcParams2List $rpc args
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]

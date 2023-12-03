@@ -6,6 +6,8 @@ package provide DS9 1.0
 
 # Server
 
+set alpha true
+
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
 }
@@ -77,10 +79,14 @@ proc xmlrpcDoRequest {sock} {
 
 proc xmlrpcResponse {rpc} {
     # build the body
-    puts "\n***xmlrpcResponse"
-    puts $rpc
     set body [rpc2xml $rpc]
-    puts $body
+
+    global alpha
+    if {$alpha} {
+	puts "\n***xmlrpcResponse"
+	puts $rpc
+	puts $body
+    }
     
     # build the header
     set	header "HTTP/1.1 200 OK\n"
@@ -226,10 +232,14 @@ proc xmlrpcCall {url method methodName params} {
 proc xmlrpcBuildRequest {method mname params} {
     set rpc [list methodCall [list [list methodName $mname] $params]]
     # build the body
-    puts "\n***xmlrpcBuildRequest"
-    puts $rpc
     set body [rpc2xml $rpc]
-    puts $body
+
+    global alpha
+    if {$alpha} {
+	puts "\n***xmlrpcBuildRequest"
+	puts $rpc
+	puts $body
+    }
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
@@ -354,9 +364,9 @@ proc list2rpcMember {ll} {
 proc list2rpcArray {ll} {
     set ms {}
     foreach {val} $ll {
-	lappend ms [list value $val]
+	lappend ms [list value [list string $val]]
     }
-    return [list array [list data [list $ms]]]
+    return [list array [list data $ms]]
 }
 
 proc rpcParams2List {rpc varname} {

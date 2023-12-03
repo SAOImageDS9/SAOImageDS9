@@ -747,7 +747,7 @@ proc samp.hub.getMetadata {rpc} {
 
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    foreach mm $samphub($secret,metadata) {
+	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
 		    set map3($key) "string \"$val\""
 		}
@@ -859,7 +859,7 @@ proc samp.hub.getSubscriptions {rpc} {
 
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    foreach sub $samphub($secret,subscriptions) {
+	    foreach sub $samphub($cc,subscriptions) {
 		foreach {ss attrs} $sub {
 		    foreach attr $attrs {
 			foreach {key val} $attr {
@@ -903,10 +903,10 @@ proc samp.hub.getRegisteredClients {rpc} {
 	    continue
 	}
 
-	lappend ll [list value [list string $samphub($cc,id)]]
+	lappend ll $samphub($cc,id)
     }
 
-    return [list params [list [list param [list value [list array [list data $ll]]]]]]
+    return [list params [list [list param [list value [list2rpcArray $ll]]]]]
 }
 
 proc samp.hub.getSubscribedClients {rpc} {
@@ -968,8 +968,6 @@ proc samp.hub.notify {args} {
 	    }
 	}
     }
-    puts "***"
-    puts $params
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) $params
@@ -1050,7 +1048,7 @@ proc samp.hub.notifyAll {args} {
 	lappend ll "string $samphub($cc,id)"
     }
 
-    return [list2rpcArray $ll]
+    return [list params [list [list param [list value [list2rpcArray $ll]]]]]
 }
 
 proc samp.hub.call {args} {

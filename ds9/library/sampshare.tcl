@@ -215,7 +215,7 @@ proc SAMPSend {method params resultVar} {
 
     if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
 	if {$samp(debug)} {
-	    puts stderr "SAMPSend: bad xmlrpcCall"
+	    puts stderr "SAMPSend: bad xmlrpcCall\n"
 	}
 	# Error
 	return 0
@@ -408,13 +408,13 @@ proc samp.client.receiveResponse {rpc} {
     set map [lindex $args 3]
 
     if {$secret != $samp(private)} {
-	puts {SAMP-Test: samp.client.recievedResponse bad secret}
+	puts stderr "SAMP-Test: samp.client.recievedResponse bad secret\n"
 	# Error
 	return [SAMPReturn ERROR]
     }
 
     if {$msgtag != $samp(msgtag)} {
-	puts {SAMP-Test: samp.client.recievedResponse bad msgtag}
+	puts stderr "SAMP-Test: samp.client.recievedResponse bad msgtag\n"
 	# Error
 	return [SAMPReturn ERROR]
     }

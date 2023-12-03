@@ -390,8 +390,8 @@ proc SAMPHubRegister {args web} {
     set map2(id) "string $samphub($secret,id)"
     set m2 [list2rpcMember [array get map2]]
 
-    set map(samp.mtype) "string $mtype"
-    set map(samp.params) [list struct $m2]
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) [list struct $m2]
     set m1 [list2rpcMember [array get map1]]
 
     foreach cc $samphub(client,secret) {
@@ -420,7 +420,6 @@ proc SAMPHubRegister {args web} {
 		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
-	    puts cc
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
 	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -659,9 +658,6 @@ proc samp.hub.declareMetadata {rpc} {
 	puts "samp.hub.declareMetadata: $rpc\n"
     }
 
-    #params
-    set params [lindex [lindex $rpc 1] 1]
-
     rpcParams2List $rpc args
 
     set secret [lindex $args 0]
@@ -675,7 +671,7 @@ proc samp.hub.declareMetadata {rpc} {
 
     foreach mm $map {
 	foreach {key val} $mm {
-	    lappend samphub($secret,metadata) [list $key [XMLUnQuote $val]]
+	    lappend samphub($secret,metadata) [list $key $val]
 	}
     }
     
@@ -685,8 +681,11 @@ proc samp.hub.declareMetadata {rpc} {
     # update other clients
     set mtype {samp.hub.event.metadata}
 
+    # extract params
+    set m3 [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
+
     set map2(id) "string $samphub($secret,id)"
-    set map2(metadata) [list struct {}]
+    set map2(metadata) $m3
     set m2 [list2rpcMember [array get map2]]
     
     set map1(samp.mtype) "string $mtype"
@@ -711,7 +710,7 @@ proc samp.hub.declareMetadata {rpc} {
 
 	set param1 [list param [list value [list string $cc]]]
 	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
-	set param3 [list struct $m1]
+	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
 	if {$samphub($cc,web)} {

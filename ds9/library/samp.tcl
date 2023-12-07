@@ -402,14 +402,11 @@ proc image.load.fits {msgid args} {
 	puts stderr "SAMPRcvdImageLoadFits: $args"
     }
 
-    puts "***$args"
-    puts "***[lindex $args 0]"
-
     set url {}
     set imageid {}
     set name {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    url {set url $val}
 	    image-id {set imageid $val}
@@ -439,7 +436,7 @@ proc table.load.fits {msgid args} {
     set imageid {}
     set name {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    url {set url $val}
 	    image-id {set imageid $val}
@@ -468,7 +465,7 @@ proc table.load.votable {msgid args} {
     set tabid {}
     set name {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    url {set url $val}
 	    table-id {set tabid $val}
@@ -503,7 +500,7 @@ proc table.highlight.row {msgid args} {
     set tabid {}
     set row {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    url {set url $val}
 	    table-id {set tabid $val}
@@ -534,7 +531,7 @@ proc table.select.rowList {msgid args} {
     set tabid {}
     set rowlist {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    url {set url $val}
 	    table-id {set tabid $val}
@@ -568,7 +565,7 @@ proc coord.pointAt.sky {msgid args} {
     set ra {}
     set dec {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    ra {set ra $val}
 	    dec {set dec $val}
@@ -594,7 +591,7 @@ proc client.env.get {msgid args} {
 
     set name {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    name {set name $val}
 	}
@@ -622,7 +619,7 @@ proc ds9.set {msgid args} {
     set url {}
     set cmd {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    url {set url $val}
 	    cmd {set cmd $val}
@@ -670,7 +667,7 @@ proc ds9.get {msgid args} {
     set url {}
     set cmd {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    url {set url $val}
 	    cmd {set cmd $val}

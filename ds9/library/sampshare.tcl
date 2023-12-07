@@ -465,7 +465,7 @@ proc samp.hub.event.register {msgid args} {
 	puts stderr "samp.hub.event.register $args\n"
     }
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    id {
 		lappend samp(clients) $val
@@ -487,7 +487,7 @@ proc samp.hub.event.unregister {msgid args} {
 	puts stderr "samp.hub.event.unregister $args\n"
     }
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    id {
 		set id [lsearch $samp(clients) $val]
@@ -514,7 +514,7 @@ proc samp.hub.event.metadata {msgid args} {
 
     set id {}
     set name {}
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    id {set id $val}
 	    metadata {
@@ -555,7 +555,7 @@ proc samp.hub.event.subscriptions {msgid args} {
 
     set cc {}
     set ll {}
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    id {set cc $val}
 	    subscriptions {lappend ll $val}
@@ -590,7 +590,7 @@ proc samp.hub.disconnect {msgid args} {
 
     set msg {}
 
-    foreach {key val} $args {
+    foreach {key val} [join $args] {
 	switch -- $key {
 	    reason {set msg $val}
 	}

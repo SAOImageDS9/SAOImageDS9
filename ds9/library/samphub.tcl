@@ -473,7 +473,7 @@ proc SAMPHubNotify {secret cc mtype mm} {
 
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
-    set param3 [list struct $m1]
+    set param3 [list param [list value [list struct $m1]]]
     set params [list params [list $param1 $param2 $param3]]
 
     if {$samphub($cc,web)} {
@@ -494,7 +494,7 @@ proc SAMPHubCall {secret cc msgid mtype mm} {
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
     set param3 [list param [list value [list string $msgid]]]
-    set param4 [list struct $m1]
+    set param4 [list param [list value [list struct $m1]]]
     set params [list params [list $param1 $param2 $param3 $params4]]
 
     if {$samphub($cc,web)} {
@@ -515,7 +515,7 @@ proc SAMPHubReply {cc id msgtag mm} {
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $id]]]
     set param3 [list param [list value [list string $msgtag]]]
-    set param4 [list struct $m1]
+    set param4 [list param [list value [list struct $m1]]]
     set params [list params [list $param1 $param2 $param3 $params4]]
 
     if {$samphub($cc,web)} {
@@ -753,7 +753,6 @@ proc samp.hub.getMetadata {rpc} {
 		}
 	    }
 	    set m3 [xmlrpcList2Member [array get map3]]
-
 	    return [list params [list [list param [list value [list struct $m3]]]]]
 	}
     }
@@ -871,7 +870,6 @@ proc samp.hub.getSubscriptions {rpc} {
 		}
 	    }
 	    set m3 [xmlrpcList2Member [array get map3]]
-
 	    return [list params [list [list param [list value [list struct $m3]]]]]
 	}
     }
@@ -913,7 +911,7 @@ proc samp.hub.getSubscribedClients {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getSubscribedClients: $args\n"
+	puts "samp.hub.getSubscribedClients: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -941,12 +939,14 @@ proc samp.hub.getSubscribedClients {rpc} {
     return [list params [list [list param [list value [list struct [xmlrpcList2Member $ll]]]]]]
 }
 
-proc samp.hub.notify {args} {
+proc samp.hub.notify {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.notify: $args\n"
+	puts "samp.hub.notify: $rpc\n"
     }
+
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -971,7 +971,6 @@ proc samp.hub.notify {args} {
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) $params
-    set mm [array get map1]
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return [SAMPReturn ERROR]
@@ -992,16 +991,18 @@ proc samp.hub.notify {args} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 "SAMPHubNotify $secret $cc $mtype $mm"
+    after 0 [SAMPHubNotify $secret $cc $mtype [array get map1]]
     return [SAMPReturn OK]
 }
 
-proc samp.hub.notifyAll {args} {
+proc samp.hub.notifyAll {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.notifyAll: $args\n"
+	puts "samp.hub.notifyAll: $rpc\n"
     }
+
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set map [lindex $args 1]
@@ -1025,7 +1026,7 @@ proc samp.hub.notifyAll {args} {
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) $params
-    set mm [array get map1]
+    puts "***$params"
 
     set ll {}
     foreach cc $samphub(client,secret) {
@@ -1044,21 +1045,21 @@ proc samp.hub.notifyAll {args} {
 	    continue
 	}
 
-	after 0 "SAMPHubNotify $secret $cc $mtype $mm"
+	after 0 [SAMPHubNotify $secret $cc $mtype [array get map1]]
 	lappend ll "string $samphub($cc,id)"
     }
 
     return [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
 }
 
-proc samp.hub.call {args} {
+proc samp.hub.call {rpc} {
     global samphub
-    global samphubmap
-    global samphubmap2
     
     if {$samphub(debug)} {
-	puts "samp.hub.call: $args\n"
+	puts "samp.hub.call: $rpc\n"
     }
+
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -1082,17 +1083,9 @@ proc samp.hub.call {args} {
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
-
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) "struct samphubmap2"
-    foreach mm $params {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \{$val\}"
-	}
-    }
-
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) $params
+    
     set msgid "$msgtag-$samphub($secret,id)"
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
@@ -1114,20 +1107,19 @@ proc samp.hub.call {args} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 "SAMPHubCall $secret $cc $msgid $mtype"
+    after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
     return [SAMPReturn $msgid]
 }
 
-proc samp.hub.callAll {args} {
+proc samp.hub.callAll {rpc} {
     global samphub
-    global samphubmap
-    global samphubmap2
-    global samphubmap3
 
     if {$samphub(debug)} {
-	puts "samp.hub.callAll: $args\n"
+	puts "samp.hub.callAll: $rpc\n"
     }
+
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set msgtag [lindex $args 1]
@@ -1150,18 +1142,9 @@ proc samp.hub.callAll {args} {
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
-    catch {unset samphubmap3}
-
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) "struct samphubmap2"
-    foreach mm $params {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \{$val\}"
-	}
-    }
-
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) $params
+    
     set msgid "$msgtag-$samphub($secret,id)"
 
     foreach cc $samphub(client,secret) {
@@ -1180,23 +1163,24 @@ proc samp.hub.callAll {args} {
 	    continue
 	}
 
-	after 0 "SAMPHubCall $secret $cc $msgid $mtype"
+	after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
 	set id $samphub($cc,id)
- 	set samphubmap3($id) "string $msgid"
+ 	set map3($id) "string $msgid"
     }
 
-    return "struct samphubmap3"
+    set mm3 [xmlrpcList2Member [array get map3]]
+    return [list params [list [list param [list value [list struct $m3]]]]]
 }
 
-proc samp.hub.callAndWait {args} {
+proc samp.hub.callAndWait {rpc} {
     global samphub
-    global samphubmap
-    global samphubmap2
     
     if {$samphub(debug)} {
-	puts "samp.hub.callAndWait: $args\n"
+	puts "samp.hub.callAndWait: $rpc\n"
     }
+
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set id [lindex $args 1]
@@ -1220,17 +1204,9 @@ proc samp.hub.callAndWait {args} {
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
-
-    set samphubmap(samp.mtype) "string $mtype"
-    set samphubmap(samp.params) "struct samphubmap2"
-    foreach mm $params {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \{$val\}"
-	}
-    }
-
+    set map1(samp.mtype) "string $mtype"
+    set map1(samp.params) $params
+    
     set msgid "bar-$samphub($secret,id)"
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
@@ -1252,22 +1228,21 @@ proc samp.hub.callAndWait {args} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 "SAMPHubCall $secret $cc $msgid $mtype"
+    after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
     vwait samphub(callAndWait)
+    set rr $samphub(callAndWait)
     set samphub(callAndWait) {}
-
-    return "struct samphubmap"
 }
 
-proc samp.hub.reply {args} {
+proc samp.hub.reply {rpc} {
     global samphub
-    global samphubmap
-    global samphubmap2
     
     if {$samphub(debug)} {
-	puts "samp.hub.reply: $args\n"
+	puts "samp.hub.reply: $rpc\n"
     }
+
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set msgid [lindex $args 1]
@@ -1293,16 +1268,10 @@ proc samp.hub.reply {args} {
 	}
     }
 
-    catch {unset samphubmap}
-    catch {unset samphubmap2}
 
-    set samphubmap(samp.status) "string $status"
-    set samphubmap(samp.result) "struct samphubmap2"
-    foreach mm $result {
-	foreach {key val} $mm {
-	    set samphubmap2($key) "string \{$val\}"
-	}
-    }
+    set map1(samp.status) "string $status"
+    set map1(samp.result) $params
+    
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return [SAMPReturn ERROR]
@@ -1313,11 +1282,11 @@ proc samp.hub.reply {args} {
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    set samphub(callAndWait) 1
+	    set samphub(callAndWait) $mm
 	}
 	default {
 	    # call
-	    after 0 "SAMPHubReply $cc $src $msgtag"
+	    after 0 [SAMPHubReply $cc $src $msgtag [array get map1]]
 	}
     }
 

@@ -488,7 +488,6 @@ proc SAMPHubNotify {secret cc mtype mm} {
 
 proc SAMPHubCall {secret cc msgid mtype mm} {
     # runs in top level
-    puts "**call start"
     global samphub
 
     set m1 [xmlrpcList2Member $mm]
@@ -507,7 +506,6 @@ proc SAMPHubCall {secret cc msgid mtype mm} {
 	SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
 	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
     }
-    puts "**call stop"
 }
 
 proc SAMPHubReply {cc id msgtag mm} {
@@ -520,7 +518,7 @@ proc SAMPHubReply {cc id msgtag mm} {
     set param2 [list param [list value [list string $id]]]
     set param3 [list param [list value [list string $msgtag]]]
     set param4 [list param [list value [list struct $m1]]]
-    set params [list params [list $param1 $param2 $param3 $params4]]
+    set params [list params [list $param1 $param2 $param3 $param4]]
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
@@ -995,7 +993,7 @@ proc samp.hub.notify {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 [SAMPHubNotify $secret $cc $mtype [array get map1]]
+    after 0 [list SAMPHubNotify $secret $cc $mtype [array get map1]]
     return [SAMPReturn OK]
 }
 
@@ -1048,7 +1046,7 @@ proc samp.hub.notifyAll {rpc} {
 	    continue
 	}
 
-	after 0 [SAMPHubNotify $secret $cc $mtype [array get map1]]
+	after 0 [list SAMPHubNotify $secret $cc $mtype [array get map1]]
 	lappend ll $samphub($cc,id)
     }
 
@@ -1058,7 +1056,6 @@ proc samp.hub.notifyAll {rpc} {
 proc samp.hub.call {rpc} {
     global samphub
     
-    puts "***.call start"
     if {$samphub(debug)} {
 	puts "samp.hub.call: $rpc\n"
     }
@@ -1111,9 +1108,7 @@ proc samp.hub.call {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
-
-    puts "***.call stop"
+    after 0 [list SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
     return [SAMPReturn $msgid]
 }
 
@@ -1168,7 +1163,7 @@ proc samp.hub.callAll {rpc} {
 	    continue
 	}
 
-	after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
+	after 0 [list SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
 	set id $samphub($cc,id)
  	set map3($id) "string $msgid"
@@ -1233,7 +1228,7 @@ proc samp.hub.callAndWait {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
+    after 0 [list SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
     vwait samphub(callAndWait)
     set rr $samphub(callAndWait)
@@ -1290,7 +1285,7 @@ proc samp.hub.reply {rpc} {
 	}
 	default {
 	    # call
-	    after 0 [SAMPHubReply $cc $src $msgtag [array get map1]]
+	    after 0 [list SAMPHubReply $cc $src $msgtag [array get map1]]
 	}
     }
 

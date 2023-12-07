@@ -188,6 +188,7 @@ proc SAMPDisconnect {} {
 	# Error
 	return
     }
+
     SAMPShutdown
     SAMPUpdateMenus
 }
@@ -358,7 +359,7 @@ proc samp.client.receiveNotification {rpc} {
 	    }
 	}
     }
-    after 0 [$mtype {} $params]
+    after 0 [list $mtype {} $params]
     return [SAMPReturn OK]
 }
 
@@ -392,7 +393,7 @@ proc samp.client.receiveCall {rpc} {
 	}
     }
 
-    after 0 [$mtype $msgid $params]
+    after 0 [list $mtype $msgid $params]
     return [SAMPReturn OK]
 }
 
@@ -450,12 +451,12 @@ proc samp.hub.event.shutdown {msgid args} {
 	puts stderr "samp.hub.event.shutdown $args\n"
     }
 
-    SAMPShutdown
-    SAMPUpdateMenus
-
     if {$msgid != {}} {
 	SAMPReply $msgid OK
     }
+
+    SAMPShutdown
+    SAMPUpdateMenus
 }
 
 proc samp.hub.event.register {msgid args} {
@@ -498,11 +499,11 @@ proc samp.hub.event.unregister {msgid args} {
 	}
     }
 
-    SAMPUpdateMenus
-
     if {$msgid != {}} {
 	SAMPReply $msgid OK
     }
+
+    SAMPUpdateMenus
 }
 
 proc samp.hub.event.metadata {msgid args} {
@@ -539,11 +540,11 @@ proc samp.hub.event.metadata {msgid args} {
 
     set samp($id,name) $name
 
-    SAMPUpdateMenus
-
     if {$msgid != {}} {
 	SAMPReply $msgid OK
     }
+
+    SAMPUpdateMenus
 }
 
 proc samp.hub.event.subscriptions {msgid args} {
@@ -574,11 +575,11 @@ proc samp.hub.event.subscriptions {msgid args} {
 
     set samp($cc,subscriptions) [lindex $ll 0]
 
-    SAMPUpdateMenus
-
     if {$msgid != {}} {
 	SAMPReply $msgid OK
     }
+
+    SAMPUpdateMenus
 }
 
 proc samp.hub.disconnect {msgid args} {

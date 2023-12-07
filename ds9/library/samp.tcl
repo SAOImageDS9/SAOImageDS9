@@ -73,7 +73,7 @@ proc SAMPConnectSubscriptions {} {
     }
 }
 
-proc SAMPSendMType {mtype mm id} {
+proc SAMPSendMType {mtype id mm} {
     global samp
     
     set m2 [xmlrpcList2Member $mm]
@@ -127,7 +127,7 @@ proc SAMPSendImageLoadFits {id} {
     # cmd
     set map2(url) "string file://localhost/$fn"
     set map2(name) "string $fnb"
-    set params [SAMPSendMType image.load.fits [array get map2] $id]
+    set params [SAMPSendMType image.load.fits $id [array get map2]]
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -169,7 +169,7 @@ proc SAMPSendTableLoadFits {id} {
     # cmd
     set map2(url) "string file://localhost/$fn"
     set map2(name) "string $fnb"
-    set params [SAMPSendMType table.load.fits [array get map2] $id]
+    set params [SAMPSendMType table.load.fits $id [array get map2]]
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -207,7 +207,7 @@ proc SAMPSendTableLoadVotable {id varname} {
     set map2(url) "string file://localhost/$fn"
     set map2(table-id) "string $varname$samp(port)"
     set map2(name) "string $var(title)"
-    set params [SAMPSendMType table.load.votable [array get map2] $id]
+    set params [SAMPSendMType table.load.votable $id [array get map2]]
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -254,7 +254,7 @@ proc SAMPSendTableHighlightRow {id varname row} {
     # cmd
     set map2(table-id) "string $samp(ocat,$varname)"
     set map2(row) "string [expr $row-1]"
-    set params [SAMPSendMType table.highlight.row [array get map2] $id]
+    set params [SAMPSendMType table.highlight.row $id [array get map2]]
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -281,7 +281,7 @@ proc SAMPSendTableSelectRowList {id varname rows} {
     }
     set map2(row-list) [list array $ss]
     set map2(table-id) "string $samp(ocat,$varname)"
-    set params [SAMPSendMType table.select.rowList [array get map2] $id]
+    set params [SAMPSendMType table.select.rowList $id [array get map2]]
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -320,7 +320,7 @@ proc SAMPSendCoordPointAtSky {id coord} {
     # cmd
     set map2(ra) "string [lindex $coord 0]"
     set map2(dec) "string [lindex $coord 1]"
-    set params [SAMPSendMType coord.pointAt.sky [array get map2] $id]
+    set params [SAMPSendMType coord.pointAt.sky $id [array get map2]]
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {

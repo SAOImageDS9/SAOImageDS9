@@ -300,7 +300,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    if {$url != {}} {
 		set map2(url) "string \"$url\""
 	    }
-	    set m2 [xmlrpcList2Member $map2]
+	    set m2 [xmlrpcList2Member [array get map2]
 
 	    set map1(samp.status) {string samp.warning}
 	    set map1(samp.result) [list struct $m2]
@@ -358,7 +358,6 @@ proc samp.client.receiveNotification {rpc} {
 	    }
 	}
     }
-
     after 0 "$mtype {} $params"
     return [SAMPReturn OK]
 }
@@ -399,6 +398,10 @@ proc samp.client.receiveCall {rpc} {
 
 proc samp.client.receiveResponse {rpc} {
     global samp
+
+    if {$samp(debug)} {
+	puts stderr "samp.client.receiveResponse $rpc\n"
+    }
 
     xmlrpcParams2List $rpc args
 

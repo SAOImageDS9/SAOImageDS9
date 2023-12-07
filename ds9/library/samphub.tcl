@@ -972,7 +972,7 @@ proc samp.hub.notify {rpc} {
     }
 
     set map1(samp.mtype) "string $mtype"
-    set map1(samp.params) $params
+    set map1(samp.params) [list struct [xmlrpcList2Member $params]]
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return [SAMPReturn ERROR]

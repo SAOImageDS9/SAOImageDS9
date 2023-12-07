@@ -358,7 +358,7 @@ proc samp.client.receiveNotification {rpc} {
 	    }
 	}
     }
-    after 0 "$mtype {} $params"
+    after 0 [$mtype {} $params]
     return [SAMPReturn OK]
 }
 
@@ -392,7 +392,7 @@ proc samp.client.receiveCall {rpc} {
 	}
     }
 
-    after 0 "$mtype \{$msgid\} $params"
+    after 0 [$mtype $msgid $params]
     return [SAMPReturn OK]
 }
 
@@ -609,31 +609,6 @@ proc samp.app.ping {msgid args} {
 
     if {$msgid != {}} {
 	SAMPReply $msgid OK
-    }
-}
-
-proc client.env.get {msgid args} {
-    global samp
-
-    if {$samp(debug)} {
-	puts stderr "client.env.get $msgid $args\n"
-    }
-
-    set name {}
-
-    foreach {key val} $args {
-	switch -- $key {
-	    name {set name $val}
-	}
-    }
-
-    global env
-    if {[catch {set rr $env($name)}]} {
-	SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
-	global errorInfo
-	set errorInfo {}
-    } else {
-	SAMPReply $msgid OK $rr
     }
 }
 

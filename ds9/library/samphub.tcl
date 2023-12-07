@@ -496,7 +496,7 @@ proc SAMPHubCall {secret cc msgid mtype mm} {
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
     set param3 [list param [list value [list string $msgid]]]
     set param4 [list param [list value [list struct $m1]]]
-    set params [list params [list $param1 $param2 $param3 $params4]]
+    set params [list params [list $param1 $param2 $param3 $param4]]
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
@@ -1110,6 +1110,7 @@ proc samp.hub.call {rpc} {
 
     after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
+    puts BANG
     return [SAMPReturn $msgid]
 }
 

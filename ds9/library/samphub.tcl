@@ -488,6 +488,7 @@ proc SAMPHubNotify {secret cc mtype mm} {
 
 proc SAMPHubCall {secret cc msgid mtype mm} {
     # runs in top level
+    puts "**call start"
     global samphub
 
     set m1 [xmlrpcList2Member $mm]
@@ -506,6 +507,7 @@ proc SAMPHubCall {secret cc msgid mtype mm} {
 	SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
 	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
     }
+    puts "**call stop"
 }
 
 proc SAMPHubReply {cc id msgtag mm} {
@@ -1056,6 +1058,7 @@ proc samp.hub.notifyAll {rpc} {
 proc samp.hub.call {rpc} {
     global samphub
     
+    puts "***.call start"
     if {$samphub(debug)} {
 	puts "samp.hub.call: $rpc\n"
     }
@@ -1110,7 +1113,7 @@ proc samp.hub.call {rpc} {
 
     after 0 [SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
-    puts BANG
+    puts "***.call stop"
     return [SAMPReturn $msgid]
 }
 

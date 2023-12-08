@@ -1169,7 +1169,7 @@ proc samp.hub.callAll {rpc} {
  	set map3($id) "string $msgid"
     }
 
-    set mm3 [xmlrpcList2Member [array get map3]]
+    set m3 [xmlrpcList2Member [array get map3]]
     return [list params [list [list param [list value [list struct $m3]]]]]
 }
 
@@ -1228,11 +1228,17 @@ proc samp.hub.callAndWait {rpc} {
 	return [SAMPReturn ERROR]
     }
 
+    set samphub(callAndWait) {}
     after 0 [list SAMPHubCall $secret $cc $msgid $mtype [array get map1]]
 
     vwait samphub(callAndWait)
-    set rr $samphub(callAndWait)
+    set map3 $samphub(callAndWait)
     set samphub(callAndWait) {}
+
+    # map3 is result of [array get map3]
+    set m3 [xmlrpcList2Member $map3]
+
+    return [list params [list [list param [list value [list struct $m3]]]]]
 }
 
 proc samp.hub.reply {rpc} {
@@ -1268,7 +1274,6 @@ proc samp.hub.reply {rpc} {
 	}
     }
 
-
     set map1(samp.status) "string $status"
     set map1(samp.result) [list struct [xmlrpcList2Member $result]]
 
@@ -1281,7 +1286,7 @@ proc samp.hub.reply {rpc} {
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    set samphub(callAndWait) $mm
+	    set samphub(callAndWait) [array get map1]
 	}
 	default {
 	    # call

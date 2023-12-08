@@ -12,7 +12,7 @@ proc SAMPConnectInit {verbose output debug} {
 	if {$samp(verbose)} {
 	    SAMPError "SAMP: already connected"
 	}
-	return
+	return 0
     }
 
     # reset samp array
@@ -28,13 +28,23 @@ proc SAMPConnectInit {verbose output debug} {
     set samp(timeout) 30
 
     # can we find a hub?
-    if {![SAMPParseHub]} {
+    if {[SAMPParseHub]} {
+	# ok, found one, is it alive?
+	if {![SAMPSend samp.hub.ping {} rr]} {
+	    if {$samp(verbose)} {
+		SAMPError "SAMP: unable to locate valid HUB"
+	    }
+	    catch {unset samp}
+	    # Error
+	    return 0
+	}
+    } else {
 	if {$samp(verbose)} {
-	    SAMPError "SAMP: unable to locate HUB"
+	    SAMPError "SAMP: unable to locate valid HUB"
 	}
 	catch {unset samp}
 	# Error
-	return
+	return 0
     }
 
     # samp initalization started
@@ -68,6 +78,8 @@ proc SAMPConnectInit {verbose output debug} {
     set samp(init) 1
 
     SAMPUpdateMenus
+
+    return 1
 }
 
 proc SAMPConnectRegister {} {

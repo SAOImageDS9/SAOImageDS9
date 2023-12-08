@@ -41,6 +41,9 @@ proc SAMPHubStart {verbose} {
 	    return
 	} else {
 	    # its dead, try to delete
+	    if {$verbose} {
+		Error "SAMPHub: [msgcat::mc {found dead hub file, deleting}]"
+	    }
 	    catch {file delete -force $samp(fn)}
 	}
     }

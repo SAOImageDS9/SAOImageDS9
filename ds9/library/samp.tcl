@@ -7,7 +7,10 @@ package provide DS9 1.0
 proc SAMPConnect {verbose} {
     global debug
 
-    SAMPConnectInit $verbose 0 $debug(tcl,samp)
+    if {![SAMPConnectInit $verbose 0 $debug(tcl,samp)]} {
+	# Error
+	return
+    }
 }
 
 proc SAMPConnectMetadata {} {

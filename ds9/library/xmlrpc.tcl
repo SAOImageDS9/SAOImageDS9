@@ -498,8 +498,8 @@ proc xmlrpc2xmlproc {rpc varname} {
 
     set tag [lindex [lindex $rpc 0] 0]
 
-#    puts "rpc=$rpc"
-#    puts "tag=$tag"
+    #puts "rpc=$rpc"
+    #puts "tag=$tag"
 
     if {$tag == {}} {
 	return
@@ -588,7 +588,8 @@ proc xmlrpc2xmlproc {rpc varname} {
 
 	string {
 	    set rr [lindex $rpc 1]
-	    return "<$tag>[xmlrpc2xmlproc $rr space]</$tag>"
+	    return "<$tag>[XMLQuote $rr]</$tag>"
+#	    return "<$tag>[xmlrpc2xmlproc $rr space]</$tag>"
 	}
 
 	default {

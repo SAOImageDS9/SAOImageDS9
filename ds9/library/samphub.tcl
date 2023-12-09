@@ -372,7 +372,8 @@ proc SAMPHubRegister {args web} {
     global samphub
 
     if {$samphub(secret) != $args} {
-	return [SAMPReturn ERROR]
+	return -code error
+#	return [SAMPReturn ERROR]
     }
 
     incr samphub(client,seq)

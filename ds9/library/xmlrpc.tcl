@@ -105,7 +105,7 @@ proc xmlrpcBuildResponse {params} {
 }
 
 proc xmlrpcBuildFault {errcode errmsg} {
-    set rpc [list methodResponse [list fault [list value [list struct [list [list member [list [list name faultCode] [list value $errcode]]] [list member [list [list name faultString] [list value $errmsg]]]]]]]]
+    set rpc [list methodResponse [list fault [list value [list struct [list [list member [list [list name faultCode] [list value [list int 1]]]] [list member [list [list name faultString] [list value $errmsg]]]]]]]]
     return [xmlrpcResponse $rpc]
 }
 
@@ -589,7 +589,11 @@ proc xmlrpc2xmlproc {rpc varname} {
 	string {
 	    set rr [lindex $rpc 1]
 	    return "<$tag>[XMLQuote $rr]</$tag>"
-#	    return "<$tag>[xmlrpc2xmlproc $rr space]</$tag>"
+	}
+
+	int {
+	    set rr [lindex $rpc 1]
+	    return "<$tag>$rr</$tag>"
 	}
 
 	default {

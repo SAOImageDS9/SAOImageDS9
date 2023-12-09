@@ -31,6 +31,7 @@ proc SAMPHubStart {verbose} {
     set samp(debug) $debug(tcl,samp)
     if {[SAMPParseHub]} {
 	# ok, found one, is it alive?
+	set rr {}
 	if {[SAMPHubSend {samp.hub.ping} $samp(url) {} rr]} {
 	    # yes, its alive
 	    if {$verbose} {
@@ -186,6 +187,7 @@ proc SAMPHubStop {} {
 
 	# some clients insist on sending samp.hub.unregister
 	set samphub(remove) $cc
+	set rr {}
 	SAMPHubSend {samp.client.receiveNotification} \
 	    $samphub($cc,url) $params rr
 	unset samphub(remove)
@@ -290,6 +292,7 @@ proc SAMPHubDisconnect {secret} {
 
     # some clients insist on sending samp.hub.unregister
     set samphub(remove) $secret
+    set rr {}
     SAMPHubSend {samp.client.receiveNotification} \
 	$samphub($secret,url) $params rr
     unset samphub(remove)
@@ -332,6 +335,7 @@ proc SAMPHubDisconnect {secret} {
 		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
+	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
 	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -423,6 +427,7 @@ proc SAMPHubRegister {args web} {
 		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
+	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
 	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -458,14 +463,14 @@ proc SAMPHubSend {method url params resultVar} {
 	    puts stderr "SAMPHub: bad xmlrpcCall"
 	}
 	# Error
-	return 0
+	return false
     }
 
     if {$samphub(debug)} {
 	puts stderr "SAMPHubSend Result: $result\n"
     }
 
-    return 1
+    return true
 }
 
 proc SAMPHubNotify {secret cc mtype param} {
@@ -482,6 +487,7 @@ proc SAMPHubNotify {secret cc mtype param} {
 	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
 	}
     } else {
+	set rr {}
 	SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr
 	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
     }
@@ -502,6 +508,7 @@ proc SAMPHubCall {secret cc msgid mtype param} {
 	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
 	}
     } else {
+	set rr {}
 	SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
 	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
     }
@@ -522,6 +529,7 @@ proc SAMPHubReply {cc id msgtag param} {
 	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB samp.client.receiveResponse $params]
 	}
     } else {
+	set rr {}
 	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr
 	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)\t$rr"
     }
@@ -637,6 +645,7 @@ proc samp.hub.unregister {rpc} {
 		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
+	set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
 	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
@@ -827,6 +836,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
+	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
 	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"

@@ -32,6 +32,7 @@ proc SAMPConnectMetadata {} {
     set param2 [list param [list value [list struct [xmlrpcList2Member [array get map]]]]]
     set params [list params [list $param1 $param2]]
     
+    set rr {}
     if {![SAMPSend samp.hub.declareMetadata $params rr]} {
 	catch {unset samp}
 	# Error
@@ -69,6 +70,7 @@ proc SAMPConnectSubscriptions {} {
     set param2 [list param [list value [list struct [xmlrpcList2Member [array get map]]]]]
     set params [list params [list $param1 $param2]]
 
+    set rr {}
     if {![SAMPSend samp.hub.declareSubscriptions $params rr]} {
 	catch {unset samp}
 	# Error
@@ -131,6 +133,7 @@ proc SAMPSendImageLoadFits {id} {
     set map2(url) "string file://localhost/$fn"
     set map2(name) "string $fnb"
     set params [SAMPSendMType image.load.fits $id [array get map2]]
+    set rr {}
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -173,6 +176,7 @@ proc SAMPSendTableLoadFits {id} {
     set map2(url) "string file://localhost/$fn"
     set map2(name) "string $fnb"
     set params [SAMPSendMType table.load.fits $id [array get map2]]
+    set rr {}
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -211,6 +215,7 @@ proc SAMPSendTableLoadVotable {id varname} {
     set map2(table-id) "string $varname$samp(port)"
     set map2(name) "string $var(title)"
     set params [SAMPSendMType table.load.votable $id [array get map2]]
+    set rr {}
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -258,6 +263,7 @@ proc SAMPSendTableHighlightRow {id varname row} {
     set map2(table-id) "string $samp(ocat,$varname)"
     set map2(row) "string [expr $row-1]"
     set params [SAMPSendMType table.highlight.row $id [array get map2]]
+    set rr {}
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -285,6 +291,7 @@ proc SAMPSendTableSelectRowList {id varname rows} {
     set map2(row-list) [list array $ss]
     set map2(table-id) "string $samp(ocat,$varname)"
     set params [SAMPSendMType table.select.rowList $id [array get map2]]
+    set rr {}
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {
@@ -324,6 +331,7 @@ proc SAMPSendCoordPointAtSky {id coord} {
     set map2(ra) "string [lindex $coord 0]"
     set map2(dec) "string [lindex $coord 1]"
     set params [SAMPSendMType coord.pointAt.sky $id [array get map2]]
+    set rr {}
     if {$id != {}} {
 	SAMPSend samp.hub.notify $params rr
     } else {

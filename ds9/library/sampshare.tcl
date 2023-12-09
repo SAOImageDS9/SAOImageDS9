@@ -30,6 +30,7 @@ proc SAMPConnectInit {verbose output debug} {
     # can we find a hub?
     if {[SAMPParseHub]} {
 	# ok, found one, is it alive?
+	set rr {}
 	if {![SAMPSend samp.hub.ping {} rr]} {
 	    if {$samp(verbose)} {
 		SAMPError "SAMP: unable to locate valid HUB"
@@ -86,6 +87,7 @@ proc SAMPConnectRegister {} {
     global samp
     
     set params [list params [list [list param [list value [list string $samp(secret)]]]]]
+    set rr {}
     if {![SAMPSend samp.hub.register $params rr]} {
 	catch {unset samp}
 	# Error
@@ -113,6 +115,7 @@ proc SAMPConnectCallback {} {
     set param2 [list param [list value [list string "http://$samp(home)"]]]
     set params [list params [list $param1 $param2]]
 
+    set rr {}
     if {![SAMPSend samp.hub.setXmlrpcCallback $params rr]} {
 	catch {unset samp}
 	# Error
@@ -124,6 +127,7 @@ proc SAMPConnectGetClients {} {
     global samp
     
     set params [list params [list [list param [list value [list string $samp(private)]]]]]
+    set rr {}
     if {![SAMPSend samp.hub.getRegisteredClients $params rr]} {
 	catch {unset samp}
 	# Error
@@ -144,6 +148,7 @@ proc SAMPConnectGetSubscriptions {cc} {
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string $cc]]]
     set params [list params [list $param1 $param2]]
+    set rr {}
     if {![SAMPSend samp.hub.getSubscriptions $params rr]} {
 	catch {unset samp}
 	# Error
@@ -164,6 +169,7 @@ proc SAMPConnectGetMetadata {cc} {
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list string $cc]]]
     set params [list params [list $param1 $param2]]
+    set rr {}
     if {![SAMPSend samp.hub.getMetadata $params rr]} {
 	catch {unset samp}
 	# Error
@@ -195,6 +201,7 @@ proc SAMPDisconnect {} {
 
     # disconnect
     set params [list params [list [list param [list value [list string $samp(private)]]]]]
+    set rr {}
     if {![SAMPSend samp.hub.unregister $params rr]} {
 	catch {unset samp}
 	# Error
@@ -231,7 +238,7 @@ proc SAMPSend {method params resultVar} {
 	    puts stderr "SAMPSend: bad xmlrpcCall\n"
 	}
 	# Error
-	return 0
+	return false
     }
 
     if {$samp(debug)} {
@@ -273,7 +280,8 @@ proc SAMPSend {method params resultVar} {
 	}
     }
 
-    return 1
+    set rr {}
+    return true
 }
 
 proc SAMPReturn {msg} {
@@ -338,6 +346,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     set param2 [list param [list value [list string $msgid]]]
 
     set params [list params [list $param1 $param2 $param3]]
+    set rr {}
     SAMPSend samp.hub.reply $params rr
 }
 

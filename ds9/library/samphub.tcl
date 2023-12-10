@@ -831,7 +831,6 @@ proc samp.hub.declareSubscriptions {rpc} {
 	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
 	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
-
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
 		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
@@ -868,11 +867,9 @@ proc samp.hub.getSubscriptions {rpc} {
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
 	    foreach sub $samphub($cc,subscriptions) {
-		foreach {ss attrs} $sub {
-		    foreach attr $attrs {
-			foreach {key val} $attr {
-			    set map4($key) "string $val"
-			}
+		foreach {ss attr} $sub {
+		    foreach {key val} $attr {
+			set map4($key) "string $val"
 		    }
 		    set m4 [xmlrpcList2Member [array get map4]]
 		    set map3($ss) [list struct $m4]

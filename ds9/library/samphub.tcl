@@ -787,6 +787,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
 
+    set samphub($secret,subscriptions) {}
     set aa [lindex $map 1]
     foreach bb $aa {
 	set cc [lindex $bb 1]

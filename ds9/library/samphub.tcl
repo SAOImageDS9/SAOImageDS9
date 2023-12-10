@@ -815,8 +815,8 @@ proc samp.hub.declareSubscriptions {rpc} {
     set dd [list member [list [list name samp.params] [list value $m2]]]
     set m1 [list struct [list $cc $dd]]
 
-    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
     set param3 [list param [list value $m1]]
+    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub

@@ -866,13 +866,13 @@ proc samp.hub.getSubscriptions {rpc} {
 
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    foreach sub $samphub($cc,subscriptions) {
-		foreach {ss attr} $sub {
+	    foreach subs $samphub($cc,subscriptions) {
+		foreach {sub attr} $subs {
 		    foreach {key val} $attr {
 			set map4($key) "string $val"
 		    }
 		    set m4 [xmlrpcList2Member [array get map4]]
-		    set map3($ss) [list struct $m4]
+		    set map3($sub) [list struct $m4]
 		}
 	    }
 	    set m3 [xmlrpcList2Member [array get map3]]

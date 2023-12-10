@@ -775,10 +775,12 @@ proc samp.hub.declareSubscriptions {rpc} {
 	puts "samp.hub.declareSubscriptions: $rpc\n"
     }
 
+    puts "*******************************"
+    set map [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
+
     xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
-    set map [lindex $args 1]
     
     if {![SAMPHubValidSecret $secret]} {
 	return [SAMPReturn ERROR]
@@ -786,9 +788,14 @@ proc samp.hub.declareSubscriptions {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
 
-    foreach mm $map {
-	foreach {key val} $mm {
-	    lappend samphub($secret,subscriptions) [list $key $val]
+    set aa [lindex $map 1]
+    foreach bb $aa {
+	set cc [lindex $bb 1]
+	foreach {key val} $cc {
+	    set ss [lindex $key 1]
+	    set mm [lindex [lindex $val 1] 1]
+	    puts "mm=$mm"
+	    lappend samphub($secret,subscriptions) [list $ss $mm]
 	}
     }
 
@@ -801,10 +808,8 @@ proc samp.hub.declareSubscriptions {rpc} {
     set mtype {samp.hub.event.subscriptions}
 
     # extract params
-    set m3 [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
-
     set map2(id) "string $samphub($secret,id)"
-    set map2(subscriptions) $m3
+    set map2(subscriptions) $map
     set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
@@ -831,6 +836,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
 	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
+
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
 		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
@@ -866,17 +872,13 @@ proc samp.hub.getSubscriptions {rpc} {
 
     foreach cc $samphub(client,secret) {
 	if {$samphub($cc,id) == $id} {
-	    foreach subs $samphub($cc,subscriptions) {
-		foreach {sub attr} $subs {
-		    foreach {key val} $attr {
-			set map4($key) "string $val"
-		    }
-		    set m4 [xmlrpcList2Member [array get map4]]
-		    set map3($sub) [list struct $m4]
+	    set out {}
+	    foreach sub $samphub($cc,subscriptions) {
+		foreach {key val} $sub {
+		    lappend out [list member [list [list name $key] [list value [list struct $val]]]]
 		}
 	    }
-	    set m3 [xmlrpcList2Member [array get map3]]
-	    return [list params [list [list param [list value [list struct $m3]]]]]
+	    return [list params [list [list param [list value [list struct $out]]]]]
 	}
     }
 

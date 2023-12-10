@@ -105,7 +105,7 @@ proc xmlrpcBuildResponse {params} {
 }
 
 proc xmlrpcBuildFault {errcode errmsg} {
-    set rpc [list methodResponse [list fault [list value [list struct [list [list member [list [list name faultCode] [list value [list int 1]]]] [list member [list [list name faultString] [list value $errmsg]]]]]]]]
+    set rpc [list methodResponse [list fault [list value [list struct [list [list member [list [list name faultCode] [list value [list int $errcode]]]] [list member [list [list name faultString] [list value $errmsg]]]]]]]]
     return [xmlrpcResponse $rpc]
 }
 

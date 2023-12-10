@@ -775,7 +775,6 @@ proc samp.hub.declareSubscriptions {rpc} {
 	puts "samp.hub.declareSubscriptions: $rpc\n"
     }
 
-    puts "*******************************"
     set map [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
 
     xmlrpcParams2List $rpc args
@@ -794,7 +793,6 @@ proc samp.hub.declareSubscriptions {rpc} {
 	foreach {key val} $cc {
 	    set ss [lindex $key 1]
 	    set mm [lindex [lindex $val 1] 1]
-	    puts "mm=$mm"
 	    lappend samphub($secret,subscriptions) [list $ss $mm]
 	}
     }
@@ -808,13 +806,17 @@ proc samp.hub.declareSubscriptions {rpc} {
     set mtype {samp.hub.event.subscriptions}
 
     # extract params
-    set map2(id) "string $samphub($secret,id)"
-    set map2(subscriptions) $map
-    set m2 [xmlrpcList2Member [array get map2]]
+    # can't use utils as we need to preserve subscription params rpc
+    set aa [list member [list [list name id] [list value [list string $samphub($secret,id)]]]]
+    set bb [list member [list [list name subscriptions] [list value $map]]]
+    set m2 [list struct [list $bb $aa]]
 
-    set map1(samp.mtype) "string $mtype"
-    set map1(samp.params) [list struct $m2]
-    set m1 [xmlrpcList2Member [array get map1]]
+    set cc [list member [list [list name samp.mtype] [list value [list string $mtype]]]]
+    set dd [list member [list [list name samp.params] [list value $m2]]]
+    set m1 [list struct [list $cc $dd]]
+
+    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+    set param3 [list param [list value $m1]]
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -833,8 +835,6 @@ proc samp.hub.declareSubscriptions {rpc} {
 	}
 
 	set param1 [list param [list value [list string $cc]]]
-	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
-	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
 	if {$samphub($cc,web)} {

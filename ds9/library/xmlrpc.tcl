@@ -6,7 +6,7 @@ package provide DS9 1.0
 
 # Server
 
-set alpha true
+set alpha false
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]

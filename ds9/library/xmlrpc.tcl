@@ -24,7 +24,7 @@ proc xmlrpcDoRequest {sock} {
 	# ERROR
 	return
     }
-
+    
     set headerStatus [lindex $res 0];	# Header + Status
     set body [lindex $res 1];		# Body, if any
 
@@ -343,9 +343,9 @@ proc xmlrpcError {msg} {
 
 proc xml2rpc {data} {
     # space out < and >
-    # rm any newlines (multi line strings)
+    # shift \n to \r (multi line strings)
     set data [string map {< " <" > "> " \n \r} $data]
- 
+
     xmlrpc::YY_FLUSH_BUFFER
     xmlrpc::yy_scan_string $data
     xmlrpc::yyparse

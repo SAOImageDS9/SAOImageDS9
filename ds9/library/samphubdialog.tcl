@@ -355,7 +355,7 @@ proc SAMPHubDialogListUpdate {} {
 
     set secret [$dsamphub(listbox) selection]
     if {$secret != {}} {
-	set dsamphub(client,reg) "$samphub($secret,id) $secret"
+	set dsamphub(client,reg) "$samphub($secret,id)"
 	foreach mm $samphub($secret,metadata) {
 	    foreach {key val} $mm {
 		$dsamphub(client,metadata,txt) insert end "$key\t$val\n"

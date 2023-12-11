@@ -677,6 +677,8 @@ proc samp.hub.declareMetadata {rpc} {
     
     SAMPHubDialogRecvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
 
+    # clear any previous
+    set samphub($secret,metadata) {}
     foreach mm $map {
 	foreach {key val} $mm {
 	    lappend samphub($secret,metadata) [list $key $val]
@@ -787,6 +789,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
 
+    # clear any previous
     set samphub($secret,subscriptions) {}
     set aa [lindex $map 1]
     foreach bb $aa {

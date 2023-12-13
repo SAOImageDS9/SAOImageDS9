@@ -380,7 +380,7 @@ proc samp.client.receiveNotification {rpc} {
 	    }
 	}
     }
-    after 0 [list $mtype {} $params]
+    after idle [list $mtype {} $params]
     return [SAMPReturn OK]
 }
 
@@ -414,7 +414,7 @@ proc samp.client.receiveCall {rpc} {
 	}
     }
 
-    after 0 [list $mtype $msgid $params]
+    after idle [list $mtype $msgid $params]
     return [SAMPReturn OK]
 }
 

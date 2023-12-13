@@ -61,7 +61,8 @@ proc SAMPHubStart {verbose} {
     set samphub(client,seq) 0
     set samphub(client,secret) {}
     set samphub(cache,images) 1
-    set samphub(callAndWait) {}
+    set samphub(callAndWait,return) {}
+    set samphub(callAndWait,id) {}
 
     set samphub(secret) [SAMPHubGenerateKey]
     set samphub(timestamp) "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
@@ -944,7 +945,7 @@ proc samp.hub.getSubscribedClients {rpc} {
 	}
 
 	if {[SAMPHubFindSubscription $cc $map]} {
-	    lappend ll [list $samphub($cc,id) {}]
+	    lappend ll [list $samphub($cc,id)]
 	}
     }
 
@@ -1228,14 +1229,46 @@ proc samp.hub.callAndWait {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    set samphub(callAndWait) {}
-    after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
+    set samphub(callAndWait,result) {}
+    set samphub(callAndWait,id) [after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]]
+    set samphub(callAndWait,timeout) {}
+    if {$timeout>0} {
+	set samphub(callAndWait,timeout) [after [expr $timeout*1000] SAMPHubTimeout]
+    }
 
-    vwait samphub(callAndWait)
-    set rr $samphub(callAndWait)
-    set samphub(callAndWait) {}
+    vwait samphub(callAndWait,result)
 
-    return [list params [list $rr]]
+    if {$timeout<=0} {
+	set rr $samphub(callAndWait,result)
+	set samphub(callAndWait,result) {}
+	set samphub(callAndWait,id) {}
+	set samphub(callAndWait,timeout) {}
+		
+	return [list params [list $rr]]
+
+    } elseif {$samphub(callAndWait,timeout) != {}} {
+	after cancel $samphub(callAndWait,timeout)
+
+	set rr $samphub(callAndWait,result)
+	set samphub(callAndWait,result) {}
+	set samphub(callAndWait,id) {}
+	set samphub(callAndWait,timeout) {}
+		
+	return [list params [list $rr]]
+    } else {
+	SAMPReturn Error
+    }
+}
+
+proc SAMPHubTimeout {} {
+    global samphub
+    
+    if {$samphub(callAndWait,id)!={}} {
+	after cancel $samphub(callAndWait,id)
+    }
+    set samphub(callAndWait,id) {}
+    set samphub(callAndWait,timeout) {}
+    set samphub(callAndWait,result) {}
 }
 
 proc samp.hub.reply {rpc} {
@@ -1271,7 +1304,7 @@ proc samp.hub.reply {rpc} {
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    set samphub(callAndWait) $param
+	    set samphub(callAndWait,result) $param
 	}
 	default {
 	    # call

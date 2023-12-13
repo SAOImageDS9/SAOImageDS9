@@ -9,7 +9,6 @@ proc SAMPHubDef {} {
 
     set isamphub(top) .samphub
     set isamphub(mb) .samphubmb
-    set isamphub(after) 0
 }
 
 proc SAMPHubStart {verbose} {
@@ -953,7 +952,6 @@ proc samp.hub.getSubscribedClients {rpc} {
 }
 
 proc samp.hub.notify {rpc} {
-    global isamphub
     global samphub
 
     if {$samphub(debug)} {
@@ -1003,12 +1001,11 @@ proc samp.hub.notify {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    after $isamphub(after) [list SAMPHubNotify $secret $cc $mtype $param]
+    after 0 [list SAMPHubNotify $secret $cc $mtype $param]
     return [SAMPReturn OK]
 }
 
 proc samp.hub.notifyAll {rpc} {
-    global isamphub
     global samphub
 
     if {$samphub(debug)} {
@@ -1055,7 +1052,7 @@ proc samp.hub.notifyAll {rpc} {
 	    continue
 	}
 
-	after $isamphub(after) [list SAMPHubNotify $secret $cc $mtype $param]
+	after 0 [list SAMPHubNotify $secret $cc $mtype $param]
 	lappend ll $samphub($cc,id)
     }
 
@@ -1063,7 +1060,6 @@ proc samp.hub.notifyAll {rpc} {
 }
 
 proc samp.hub.call {rpc} {
-    global isamphub
     global samphub
     
     if {$samphub(debug)} {
@@ -1116,12 +1112,11 @@ proc samp.hub.call {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    after $isamphub(after) [list SAMPHubCall $secret $cc $msgid $mtype $param]
+    after 0 [list SAMPHubCall $secret $cc $msgid $mtype $param]
     return [SAMPReturn $msgid]
 }
 
 proc samp.hub.callAll {rpc} {
-    global isamphub
     global samphub
 
     if {$samphub(debug)} {
@@ -1170,7 +1165,7 @@ proc samp.hub.callAll {rpc} {
 	    continue
 	}
 
-	after $isamphub(after) [list SAMPHubCall $secret $cc $msgid $mtype $param]
+	after 0 [list SAMPHubCall $secret $cc $msgid $mtype $param]
 
 	set id $samphub($cc,id)
  	set map3($id) "string $msgid"
@@ -1181,7 +1176,6 @@ proc samp.hub.callAll {rpc} {
 }
 
 proc samp.hub.callAndWait {rpc} {
-    global isamphub
     global samphub
     
     if {$samphub(debug)} {
@@ -1235,7 +1229,7 @@ proc samp.hub.callAndWait {rpc} {
     }
 
     set samphub(callAndWait) {}
-    after $isamphub(after) [list SAMPHubCall $secret $cc $msgid $mtype $param]
+    after 0 [list SAMPHubCall $secret $cc $msgid $mtype $param]
 
     vwait samphub(callAndWait)
     set rr $samphub(callAndWait)
@@ -1245,7 +1239,6 @@ proc samp.hub.callAndWait {rpc} {
 }
 
 proc samp.hub.reply {rpc} {
-    global isamphub
     global samphub
     
     if {$samphub(debug)} {
@@ -1282,7 +1275,7 @@ proc samp.hub.reply {rpc} {
 	}
 	default {
 	    # call
-	    after $isamphub(after) [list SAMPHubReply $cc $src $msgtag $param]
+	    after 0 [list SAMPHubReply $cc $src $msgtag $param]
 	}
     }
 

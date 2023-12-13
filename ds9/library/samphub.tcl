@@ -9,6 +9,7 @@ proc SAMPHubDef {} {
 
     set isamphub(top) .samphub
     set isamphub(mb) .samphubmb
+    set isamphub(after) 0
 }
 
 proc SAMPHubStart {verbose} {
@@ -191,7 +192,7 @@ proc SAMPHubStop {} {
 	SAMPHubSend {samp.client.receiveNotification} \
 	    $samphub($cc,url) $params rr
 	unset samphub(remove)
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
 	SAMPHubRemove $cc
     }
 
@@ -296,7 +297,7 @@ proc SAMPHubDisconnect {secret} {
     SAMPHubSend {samp.client.receiveNotification} \
 	$samphub($secret,url) $params rr
     unset samphub(remove)
-    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)\t$rr"
+    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)"
 
     # update other clients
     # notify others before removing
@@ -338,7 +339,7 @@ proc SAMPHubDisconnect {secret} {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
 	}
     }
 
@@ -431,7 +432,7 @@ proc SAMPHubRegister {args web} {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
 	}
     }
 
@@ -490,7 +491,7 @@ proc SAMPHubNotify {secret cc mtype param} {
     } else {
 	set rr {}
 	SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
     }
 }
 
@@ -511,7 +512,7 @@ proc SAMPHubCall {secret cc msgid mtype param} {
     } else {
 	set rr {}
 	SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)\t$rr"
+	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)"
     }
 }
 
@@ -532,7 +533,7 @@ proc SAMPHubReply {cc id msgtag param} {
     } else {
 	set rr {}
 	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)\t$rr"
+	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)"
     }
 }
 
@@ -649,7 +650,7 @@ proc samp.hub.unregister {rpc} {
 	set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
 	}
     }
 
@@ -730,7 +731,7 @@ proc samp.hub.declareMetadata {rpc} {
 	} else {
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
 	}
     }
 
@@ -849,7 +850,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)\t$rr"
+	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
 	}
     }
 
@@ -952,6 +953,7 @@ proc samp.hub.getSubscribedClients {rpc} {
 }
 
 proc samp.hub.notify {rpc} {
+    global isamphub
     global samphub
 
     if {$samphub(debug)} {
@@ -1001,11 +1003,12 @@ proc samp.hub.notify {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 [list SAMPHubNotify $secret $cc $mtype $param]
+    after $isamphub(after) [list SAMPHubNotify $secret $cc $mtype $param]
     return [SAMPReturn OK]
 }
 
 proc samp.hub.notifyAll {rpc} {
+    global isamphub
     global samphub
 
     if {$samphub(debug)} {
@@ -1052,7 +1055,7 @@ proc samp.hub.notifyAll {rpc} {
 	    continue
 	}
 
-	after 0 [list SAMPHubNotify $secret $cc $mtype $param]
+	after $isamphub(after) [list SAMPHubNotify $secret $cc $mtype $param]
 	lappend ll $samphub($cc,id)
     }
 
@@ -1060,6 +1063,7 @@ proc samp.hub.notifyAll {rpc} {
 }
 
 proc samp.hub.call {rpc} {
+    global isamphub
     global samphub
     
     if {$samphub(debug)} {
@@ -1112,11 +1116,12 @@ proc samp.hub.call {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    after 0 [list SAMPHubCall $secret $cc $msgid $mtype $param]
+    after $isamphub(after) [list SAMPHubCall $secret $cc $msgid $mtype $param]
     return [SAMPReturn $msgid]
 }
 
 proc samp.hub.callAll {rpc} {
+    global isamphub
     global samphub
 
     if {$samphub(debug)} {
@@ -1165,7 +1170,7 @@ proc samp.hub.callAll {rpc} {
 	    continue
 	}
 
-	after 0 [list SAMPHubCall $secret $cc $msgid $mtype $param]
+	after $isamphub(after) [list SAMPHubCall $secret $cc $msgid $mtype $param]
 
 	set id $samphub($cc,id)
  	set map3($id) "string $msgid"
@@ -1176,6 +1181,7 @@ proc samp.hub.callAll {rpc} {
 }
 
 proc samp.hub.callAndWait {rpc} {
+    global isamphub
     global samphub
     
     if {$samphub(debug)} {
@@ -1229,7 +1235,7 @@ proc samp.hub.callAndWait {rpc} {
     }
 
     set samphub(callAndWait) {}
-    after 0 [list SAMPHubCall $secret $cc $msgid $mtype $param]
+    after $isamphub(after) [list SAMPHubCall $secret $cc $msgid $mtype $param]
 
     vwait samphub(callAndWait)
     set rr $samphub(callAndWait)
@@ -1239,6 +1245,7 @@ proc samp.hub.callAndWait {rpc} {
 }
 
 proc samp.hub.reply {rpc} {
+    global isamphub
     global samphub
     
     if {$samphub(debug)} {
@@ -1275,7 +1282,7 @@ proc samp.hub.reply {rpc} {
 	}
 	default {
 	    # call
-	    after 0 [list SAMPHubReply $cc $src $msgtag $param]
+	    after $isamphub(after) [list SAMPHubReply $cc $src $msgtag $param]
 	}
     }
 

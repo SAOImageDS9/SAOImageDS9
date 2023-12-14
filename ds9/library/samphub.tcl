@@ -938,18 +938,18 @@ proc samp.hub.getSubscribedClients {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
 
-    set ll {}
     foreach cc $samphub(client,secret) {
 	if {$cc == $secret} {
 	    continue
 	}
 
 	if {[SAMPHubFindSubscription $cc $map]} {
-	    lappend ll [list $samphub($cc,id)]
+	    set id $samphub($cc,id)
+	    set map1($id) [list struct {}]
 	}
     }
 
-    return [list params [list [list param [list value [list struct [xmlrpcList2Member $ll]]]]]]
+    return [list params [list [list param [list value [list struct [xmlrpcList2Member [array get map1]]]]]]]
 }
 
 proc samp.hub.notify {rpc} {
@@ -1229,12 +1229,14 @@ proc samp.hub.callAndWait {rpc} {
 	return [SAMPReturn ERROR]
     }
 
-    set samphub(callAndWait,result) {}
-    set samphub(callAndWait,id) [after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]]
     set samphub(callAndWait,timeout) {}
     if {$timeout>0} {
 	set samphub(callAndWait,timeout) [after [expr $timeout*1000] SAMPHubTimeout]
     }
+
+    set samphub(callAndWait,result) {}
+    set samphub(callAndWait,id) \
+	[after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]]
 
     vwait samphub(callAndWait,result)
 
@@ -1266,6 +1268,7 @@ proc SAMPHubTimeout {} {
     if {$samphub(callAndWait,id)!={}} {
 	after cancel $samphub(callAndWait,id)
     }
+
     set samphub(callAndWait,id) {}
     set samphub(callAndWait,timeout) {}
     set samphub(callAndWait,result) {}

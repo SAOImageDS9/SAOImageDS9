@@ -1092,7 +1092,7 @@ proc samp.hub.call {rpc} {
        }
     }
     
-    set msgid "$msgtag-$samphub($secret,id)"
+    set msgid "$msgtag:$samphub($secret,id)"
  
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return [SAMPReturn ERROR]
@@ -1148,7 +1148,7 @@ proc samp.hub.callAll {rpc} {
        }
     }
 
-    set msgid "$msgtag-$samphub($secret,id)"
+    set msgid "$msgtag:$samphub($secret,id)"
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -1208,7 +1208,7 @@ proc samp.hub.callAndWait {rpc} {
        }
     }
 
-    set msgid "bar-$samphub($secret,id)"
+    set msgid "bar:$samphub($secret,id)"
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return [SAMPReturn ERROR]
@@ -1295,8 +1295,8 @@ proc samp.hub.reply {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
-    set msgtag [lindex [split $msgid "-"] 0]
-    set id [lindex [split $msgid "-"] 1]
+    set msgtag [lindex [split $msgid ":"] 0]
+    set id [lindex [split $msgid ":"] 1]
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return [SAMPReturn ERROR]

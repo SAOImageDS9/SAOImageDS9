@@ -34,14 +34,14 @@ samp : yesno # sampfirst
  | WEB_ HUB_ yesno # sampfirst
 
  | CONNECT_ {SAMPConnect 1}
- | DISCONNECT_ {SAMPDisconnect 1}
+ | DISCONNECT_ {SAMPDisconnect}
  | BROADCAST_ broadcast
  | SEND_ send
  | HUB_ hub
  ;
 
 hub : START_ { SAMPHubStart 1}
- | STOP_ {SAMPHubStop 1}
+ | STOP_ {SAMPHubStop}
  | INFO_ {SAMPHubDialog}
  ;
 

@@ -680,9 +680,9 @@ proc samp::yyparse {} {
                     7 { set _ 0 }
                     9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
                     15 { SAMPConnect 1 }
-                    16 { SAMPDisconnect 1 }
+                    16 { SAMPDisconnect }
                     20 {  SAMPHubStart 1 }
-                    21 { SAMPHubStop 1 }
+                    21 { SAMPHubStop }
                     22 { SAMPHubDialog }
                     23 { SAMPSendImageLoadFits {} }
                     24 { SAMPSendImageLoadFits {} }

@@ -366,8 +366,7 @@ proc samp.client.receiveNotification {rpc} {
     set map [lindex $args 2]
 
     if {$secret != $samp(private)} {
-	# Error
-	return [SAMPReturn ERROR]
+	return -code error
     }
 
     set mtype {}
@@ -399,8 +398,7 @@ proc samp.client.receiveCall {rpc} {
     set map [lindex $args 3]
 
     if {$secret != $samp(private)} {
-	# Error
-	return [SAMPReturn ERROR]
+	return -code error
     }
 
     set mtype {}
@@ -433,15 +431,11 @@ proc samp.client.receiveResponse {rpc} {
     set map [lindex $args 3]
 
     if {$secret != $samp(private)} {
-	puts stderr "SAMP-Test: samp.client.recievedResponse bad secret\n"
-	# Error
-	return [SAMPReturn ERROR]
+	return -code error
     }
 
     if {$msgtag != $samp(msgtag)} {
-	puts stderr "SAMP-Test: samp.client.recievedResponse bad msgtag\n"
-	# Error
-	return [SAMPReturn ERROR]
+	return -code error
     }
     set samp(msgtag) {}
 

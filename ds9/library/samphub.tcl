@@ -991,11 +991,6 @@ proc samp.hub.notify {rpc} {
 	return -code error
     }
 
-    # don't send to sender
-    if {$cc == $secret} {
-	return -code error
-    }
-
     # are we subscribed
     if {![SAMPHubFindSubscription $cc $mtype]} {
 	return -code error
@@ -1099,11 +1094,6 @@ proc samp.hub.call {rpc} {
 
     # ignore hub
     if {$cc == $samphub(secret)} {
-	return -code error
-    }
-
-    # don't send to sender
-    if {$cc == $secret} {
 	return -code error
     }
 
@@ -1215,11 +1205,6 @@ proc samp.hub.callAndWait {rpc} {
 
     # ignore hub
     if {$cc == $samphub(secret)} {
-	return -code error
-    }
-
-    # don't send to sender
-    if {$cc == $secret} {
 	return -code error
     }
 

@@ -6,13 +6,13 @@ package provide DS9 1.0
 
 # Server
 
+global xmlrpcdebug
+global xmlrpccnt
 global xmlrpcdone
 global xmlrpcresult
-global xmlrpccnt
-set xmlrpccnt 0
 
-global alpha
-set alpha false
+set xmlrpcdebug false
+set xmlrpccnt 0
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
@@ -87,8 +87,8 @@ proc xmlrpcResponse {rpc} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
-    global alpha
-    if {$alpha} {
+    global xmlrpcdebug
+    if {$xmlrpcdebug} {
 	puts "\n***xmlrpcResponse"
 	puts $rpc
 	puts $body
@@ -246,8 +246,8 @@ proc xmlrpcBuildRequest {method mname params} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
-    global alpha
-    if {$alpha} {
+    global xmlrpcdebug
+    if {$xmlrpcdebug} {
 	puts "\n***xmlrpcBuildRequest"
 	puts $rpc
 	puts $body

@@ -6,6 +6,12 @@ package provide DS9 1.0
 
 # Server
 
+global xmlrpcdone
+global xmlrpcresult
+global xmlrpccnt
+set xmlrpccnt 0
+
+global alpha
 set alpha false
 
 proc xmlrpcServe {port} {
@@ -185,8 +191,12 @@ proc xmlrpcNBRead {fd} {
 # CALL
 
 proc xmlrpcCall {url method methodName params} {
-    global xmlresponse
-    global xmlreaddone
+    global xmlrpccnt
+    global xmlrpcresult
+    global xmlrpcdone
+
+    set cnt $xmlrpccnt
+    incr xmlrpccnt
 
     set RE {http://([^:]+):([0-9]+)}
     if {![regexp $RE $url {} host port]} {
@@ -195,8 +205,9 @@ proc xmlrpcCall {url method methodName params} {
     }
 
     set sock [socket $host $port]
-    set xmlreaddone($sock) 0
-    set xmlresponse($sock) {}
+
+    set xmlrpcdone($cnt) 0
+    set xmlrpcresult($cnt) {}
 
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
@@ -207,19 +218,20 @@ proc xmlrpcCall {url method methodName params} {
     puts $sock $request
     flush $sock
 
-    fileevent $sock readable [list xmlrpcGetResponse $sock]
-    vwait xmlreaddone($sock)
+    fileevent $sock readable [list xmlrpcGetResponse $sock $cnt]
+    vwait xmlrpcdone($cnt)
+
+    set ss $xmlrpcdone($cnt)
+    set rr $xmlrpcresult($cnt)
+
+    unset xmlrpcdone($cnt)
+    unset xmlrpcresult($cnt)
 
     if {[catch {close $sock}]} {
-	# someone is closing premature
+	# can be closed by now
 	global errorInfo
 	set errorInfo {}
     }
-
-    set ss $xmlreaddone($sock)
-    set rr $xmlresponse($sock)
-    unset xmlreaddone($sock)
-    unset xmlresponse($sock)
 
     if {$ss > 0} {
 	return $rr
@@ -294,9 +306,9 @@ proc xmlrpcParseHTTPHeaders {str} {
     return [list $rest $headers]
 }
 
-proc xmlrpcGetResponse {sock} {
-    global xmlresponse
-    global xmlreaddone
+proc xmlrpcGetResponse {sock cnt} {
+    global xmlrpcresult
+    global xmlrpcdone
 
     set res [xmlrpcReadHeader $sock]
     set headerStatus [lindex $res 0];	# Header + Status
@@ -304,8 +316,8 @@ proc xmlrpcGetResponse {sock} {
 
     set header [xmlrpcParseHTTPCode $headerStatus]
     set body [xmlrpcGetBody $sock $header $body]
-    set xmlresponse($sock) [xmlrpcParseResponse $body]
-    set xmlreaddone($sock) 1
+    set xmlrpcresult($cnt) [xmlrpcParseResponse $body]
+    set xmlrpcdone($cnt) 1
 }
 
 proc xmlrpcParseResponse {body} {

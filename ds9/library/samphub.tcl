@@ -448,7 +448,7 @@ proc SAMPHubSend {method url params resultVar} {
     global samphub
 
     if {$samphub(debug)} {
-	puts stderr "SAMPHubSend: $method $url $params\n"
+	puts stderr "SAMPHubSend: $method $url $params"
     }
 
     # figure out xmlrpc-?
@@ -461,7 +461,7 @@ proc SAMPHubSend {method url params resultVar} {
 
     if {[catch {set result [xmlrpcCall $url $rpc $method $params]}]} {
 	if {$samphub(debug)} {
-	    puts stderr "SAMPHub: bad xmlrpcCall"
+	    puts stderr "SAMPHub: bad xmlrpcCall\n"
 	}
 	# Error
 	return false

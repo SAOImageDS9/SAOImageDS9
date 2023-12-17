@@ -26,6 +26,9 @@ proc SAMPHubDialog {} {
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     ThemeMenu $mb.file
+    $mb.file add command -label [msgcat::mc {Save}] \
+	-command SAMPHubDialogSaveFile
+    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Start}] \
 	-command [list SAMPHubStart 1]
     $mb.file add command -label [msgcat::mc {Stop}] \
@@ -45,6 +48,8 @@ proc SAMPHubDialog {} {
     $tt add $client -text {Clients}
     $tt add $recvd -text {Received Messages}
     $tt add $sent -text {Sent Messages}
+
+    set dsamphub(notebook) $tt
 
     SAMPHubDialogClient $client
     SAMPHubDialogRecvd $recvd
@@ -405,5 +410,34 @@ proc SAMPHubDialogSentMsg {msg} {
 
     $dsamphub(sent,txt) insert end "$msg\n"
     $dsamphub(sent,txt) see end
+}
+
+proc SAMPHubDialogSaveFile {} {
+    global isamphub
+    global dsamphub
+
+    set fn [SaveFileDialog textfbox $isamphub(top)]
+    if {$fn != {}} {
+	SAMPHubDialogSaveFileName $fn
+    }
+}
+
+proc SAMPHubDialogSaveFileName {fn} {
+    global isamphub
+    global dsamphub
+
+    set which [$dsamphub(notebook) index current]
+    switch $which {
+	0 {set txt $dsamphub(client,subscriptions,txt)}
+	1 {set txt $dsamphub(sent,txt)}
+	2 {set txt $dsamphub(recvd,txt)}
+    }
+
+    if {[catch {set ch [open "$fn" w]}]} {
+	Error [msgcat::mc {An error has occurred while saving}]
+	return
+    }
+    puts -nonewline $ch [$txt get 1.0 end]
+    close $ch
 }
 

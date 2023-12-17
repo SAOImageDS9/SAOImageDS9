@@ -57,12 +57,11 @@ proc SAMPHubStart {verbose} {
     set samphub(verbose) $verbose
     set samphub(debug) $debug(tcl,samp)
     set samphub(fn) [file join [GetEnvHome] {.samp}]
+    set samphub(cw,cnt) 0
 
     set samphub(client,seq) 0
     set samphub(client,secret) {}
     set samphub(cache,images) 1
-    set samphub(callAndWait,return) {}
-    set samphub(callAndWait,id) {}
 
     set samphub(secret) [SAMPHubGenerateKey]
     set samphub(timestamp) "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
@@ -350,7 +349,7 @@ proc SAMPHubRemove {secret} {
     global samphub
     
     if {$samphub(debug)} {
-	puts stderr "SAMPHubRemove: $secret\n"
+	puts stderr "SAMPHubRemove: $secret"
     }
 
     # should not happen
@@ -443,12 +442,12 @@ proc SAMPHubRegister {args web} {
     return [list params [list [list param [list value [list struct $m3]]]]]
 }
 
-proc SAMPHubSend {method url params resultVar} {
+proc SAMPHubSend {method url params resultVar {flag {}}} {
     upvar $resultVar result
     global samphub
 
     if {$samphub(debug)} {
-	puts stderr "SAMPHubSend: $method $url $params"
+	puts stderr "SAMPHubSend: $method $url $params $flag"
     }
 
     # figure out xmlrpc-?
@@ -461,14 +460,14 @@ proc SAMPHubSend {method url params resultVar} {
 
     if {[catch {set result [xmlrpcCall $url $rpc $method $params]}]} {
 	if {$samphub(debug)} {
-	    puts stderr "SAMPHub: bad xmlrpcCall\n"
+	    puts stderr "SAMPHub: bad xmlrpcCall"
 	}
 	# Error
 	return false
     }
 
     if {$samphub(debug)} {
-	puts stderr "SAMPHubSend Result: $result\n"
+	puts stderr "SAMPHubSend Result: $result $flag"
     }
 
     return true
@@ -531,7 +530,7 @@ proc SAMPHubReply {cc id msgtag param} {
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr
+	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr $msgtag
 	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)"
     }
 }
@@ -709,9 +708,9 @@ proc samp.hub.declareMetadata {rpc} {
 	}
 
 	# don't send to sender
-	if {$cc == $secret} {
-	    continue
-	}
+#	if {$cc == $secret} {
+#	    continue
+#	}
 
 	# are we subscribed
 	if {![SAMPHubFindSubscription $cc $mtype]} {
@@ -829,9 +828,9 @@ proc samp.hub.declareSubscriptions {rpc} {
 	}
 
 	# don't send to sender
-	if {$cc == $secret} {
-	    continue
-	}
+#	if {$cc == $secret} {
+#	    continue
+#	}
 
 	# are we subscribed
 	if {![SAMPHubFindSubscription $cc $mtype]} {
@@ -1086,7 +1085,7 @@ proc samp.hub.call {rpc} {
        }
     }
     
-    set msgid "$msgtag:$samphub($secret,id)"
+    set msgid "$msgtag:$samphub($secret,id):"
  
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -1137,7 +1136,7 @@ proc samp.hub.callAll {rpc} {
        }
     }
 
-    set msgid "$msgtag:$samphub($secret,id)"
+    set msgid "$msgtag:$samphub($secret,id):"
 
     foreach cc $samphub(client,secret) {
 	# ignore hub
@@ -1197,7 +1196,10 @@ proc samp.hub.callAndWait {rpc} {
        }
     }
 
-    set msgid "bar:$samphub($secret,id)"
+    incr samphub(cw,cnt)
+    set cnt $samphub(cw,cnt)
+
+    set msgid "bar:$samphub($secret,id):$cnt"
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -1213,32 +1215,36 @@ proc samp.hub.callAndWait {rpc} {
 	return -code error
     }
 
-    set samphub(callAndWait,timeout) {}
+    set samphub(cw,$cnt,result) {}
+    set samphub(cw,$cnt,id) {}
+    set samphub(cw,$cnt,timeout,id) {}
+
     if {$timeout>0} {
-	set samphub(callAndWait,timeout) [after [expr $timeout*1000] SAMPHubTimeout]
+	set samphub(cw,$cnt,timeout,id) [after [expr $timeout*1000] [list SAMPHubTimeout $cnt]]
     }
 
-    set samphub(callAndWait,result) {}
-    set samphub(callAndWait,id) \
+    set samphub(cw,$cnt,id) \
 	[after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]]
 
-    vwait samphub(callAndWait,result)
+    vwait samphub(cw,$cnt,result)
 
     if {$timeout<=0} {
-	set rr $samphub(callAndWait,result)
-	set samphub(callAndWait,result) {}
-	set samphub(callAndWait,id) {}
-	set samphub(callAndWait,timeout) {}
+	set rr $samphub(cw,$cnt,result)
+
+	unset samphub(cw,$cnt,result)
+	unset samphub(cw,$cnt,id)
+	unset samphub(cw,$cnt,timeout,id)
 		
 	return [list params [list $rr]]
 
-    } elseif {$samphub(callAndWait,timeout) != {}} {
-	after cancel $samphub(callAndWait,timeout)
+    } elseif {[info exists samphub(cw,$cnt,timeout,id)]} {
+	after cancel $samphub(cw,$cnt,timeout,id)
 
-	set rr $samphub(callAndWait,result)
-	set samphub(callAndWait,result) {}
-	set samphub(callAndWait,id) {}
-	set samphub(callAndWait,timeout) {}
+	set rr $samphub(cw,$cnt,result)
+
+	unset samphub(cw,$cnt,result)
+	unset samphub(cw,$cnt,id)
+	unset samphub(cw,$cnt,timeout,id)
 		
 	return [list params [list $rr]]
     } else {
@@ -1246,16 +1252,16 @@ proc samp.hub.callAndWait {rpc} {
     }
 }
 
-proc SAMPHubTimeout {} {
+proc SAMPHubTimeout {cnt} {
     global samphub
     
-    if {$samphub(callAndWait,id)!={}} {
-	after cancel $samphub(callAndWait,id)
+    if {[info exists samphub(cw,$cnt,id)]} {
+	after cancel $samphub(cw,$cnt,id)
     }
 
-    set samphub(callAndWait,id) {}
-    set samphub(callAndWait,timeout) {}
-    set samphub(callAndWait,result) {}
+    unset samphub(cw,$cnt,result)
+    unset samphub(cw,$cnt,id)
+    unset samphub(cw,$cnt,timeout,id)
 }
 
 proc samp.hub.reply {rpc} {
@@ -1279,8 +1285,10 @@ proc samp.hub.reply {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
-    set msgtag [lindex [split $msgid ":"] 0]
-    set id [lindex [split $msgid ":"] 1]
+    set ll [split $msgid ":"]
+    set msgtag [lindex  $ll 0]
+    set id [lindex $ll 1]
+    set cnt [lindex $ll 2]
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -1291,7 +1299,7 @@ proc samp.hub.reply {rpc} {
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    set samphub(callAndWait,result) $param
+	    set samphub(cw,$cnt,result) $param
 	}
 	default {
 	    # call

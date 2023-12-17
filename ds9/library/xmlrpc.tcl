@@ -227,11 +227,7 @@ proc xmlrpcCall {url method methodName params} {
     unset xmlrpcdone($cnt)
     unset xmlrpcresult($cnt)
 
-    if {[catch {close $sock}]} {
-	# can be closed by now
-	global errorInfo
-	set errorInfo {}
-    }
+    catch {close $sock}
 
     if {$ss > 0} {
 	return $rr

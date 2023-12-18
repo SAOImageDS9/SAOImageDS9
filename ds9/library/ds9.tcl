@@ -1,4 +1,4 @@
-#  Copyright (C) 1999-2023
+#  Copyright (C) 1999-2024
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -13,9 +13,9 @@ proc DS9Def {} {
     }
 
     # Must be major,minor
-    set ds9(version) {8.5}
+    set ds9(version) {8.6}
     # For display purposes only
-    set ds9(version,display) {8.5.1}
+    set ds9(version,display) {8.6b1}
 
     set ds9(visual) {}
     set ds9(depth) 8

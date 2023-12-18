@@ -427,10 +427,11 @@ proc SAMPHubDialogSaveFileName {fn} {
     global dsamphub
 
     set which [$dsamphub(notebook) index current]
+
     switch $which {
 	0 {set txt $dsamphub(client,subscriptions,txt)}
-	1 {set txt $dsamphub(sent,txt)}
-	2 {set txt $dsamphub(recvd,txt)}
+	1 {set txt $dsamphub(recvd,txt)}
+	2 {set txt $dsamphub(sent,txt)}
     }
 
     if {[catch {set ch [open "$fn" w]}]} {

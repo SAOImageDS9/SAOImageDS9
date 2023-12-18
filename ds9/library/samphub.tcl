@@ -71,10 +71,14 @@ proc SAMPHubStart {verbose} {
     set samphub(web,allowReverseCallbacks) 0
 
     # Init
-    SAMPHubStartConnect
+    if {![SAMPHubStartConnect]} {
+	return
+    }
     
     # Write profile
-    SAMPHubStartProfile
+    if {![SAMPHubStartProfile]} {
+	return
+    }
 
     # Register Hub
     SAMPHubStartRegister
@@ -95,7 +99,7 @@ proc SAMPHubStartConnect {} {
     if {[catch {set samphub(sock) [xmlrpcServe 0]}]} {
 	Error "SAMPHub: [msgcat::mc {unable to open hub}]"
 	catch {unset samphub}
-	return
+	return 0
     }
     set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
 
@@ -106,6 +110,8 @@ proc SAMPHubStartConnect {} {
 	    set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
 	}
     }
+
+    return 1
 }
 
 proc SAMPHubStartProfile {} {
@@ -116,7 +122,7 @@ proc SAMPHubStartProfile {} {
 	    Error "SAMPHub: [msgcat::mc {unable to create hub file}]"
 	}
 	catch {unset samphub}
-	return
+	return 0
     }
 
     puts $ch "# SAMP Standard Profile lockfile written $samphub(timestamp)"
@@ -128,6 +134,8 @@ proc SAMPHubStartProfile {} {
     puts $ch "profile.start.date=$samphub(timestamp)"
 
     close $ch
+
+    return 1
 }
 
 proc SAMPHubStartRegister {} {

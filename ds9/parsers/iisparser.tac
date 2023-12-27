@@ -21,6 +21,8 @@ iis : FILENAME_ STRING_ {IISCmd $2}
 
 %%
 
+package provide DS9 1.0
+
 proc iis::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

@@ -100,7 +100,7 @@ proc VOTWrite {t fn {offset 0}} {
     puts -nonewline $fp {<DESCRIPTION>}
     set nh [expr $T(HLines)-1]
     for {set hh 1} {$hh < $nh} {incr hh} {
-	puts $fp [XMLQuote "$T(H_$hh)"]
+	puts $fp [VOTQuote "$T(H_$hh)"]
     }
     puts $fp {</DESCRIPTION>}
 
@@ -108,47 +108,47 @@ proc VOTWrite {t fn {offset 0}} {
     for {set cc 1} {$cc <= $nc} {incr cc} {
 	puts -nonewline $fp {<FIELD }
 	# required
-	puts -nonewline $fp "name=\"[XMLQuote [lindex $T(Header) [expr $cc-1]]]\" "
+	puts -nonewline $fp "name=\"[VOTQuote [lindex $T(Header) [expr $cc-1]]]\" "
 	# required
 	if {[info exists ${t}(DataType)]} {
-	    puts -nonewline $fp "datatype=\"[XMLQuote [lindex $T(DataType) [expr $cc-1]]]\" "
+	    puts -nonewline $fp "datatype=\"[VOTQuote [lindex $T(DataType) [expr $cc-1]]]\" "
 	} else {
 	    puts -nonewline $fp "datatype=\"char\" arraysize=\"*\" "
 	}
 
 	if {[info exists ${t}(Id)]} {
 	    if {[lindex $T(Id) [expr $cc-1]] != {}} {
-		puts -nonewline $fp "ID=\"[XMLQuote [lindex $T(Id) [expr $cc-1]]]\" "
+		puts -nonewline $fp "ID=\"[VOTQuote [lindex $T(Id) [expr $cc-1]]]\" "
 	    }
 	}
 	if {[info exists ${t}(ArraySize)]} {
 	    if {[lindex $T(ArraySize) [expr $cc-1]] != {}} {
-		puts -nonewline $fp "arraysize=\"[XMLQuote [lindex $T(ArraySize) [expr $cc-1]]]\" "
+		puts -nonewline $fp "arraysize=\"[VOTQuote [lindex $T(ArraySize) [expr $cc-1]]]\" "
 	    }
 	}
 	if {[info exists ${t}(Width)]} {
 	    if {[lindex $T(Width) [expr $cc-1]] != {}} {
-		puts -nonewline $fp "width=\"[XMLQuote [lindex $T(Width) [expr $cc-1]]]\" "
+		puts -nonewline $fp "width=\"[VOTQuote [lindex $T(Width) [expr $cc-1]]]\" "
 	    }
 	}
 	if {[info exists ${t}(Precision)]} {
 	    if {[lindex $T(Precision) [expr $cc-1]] != {}} {
-		puts -nonewline $fp "precision=\"[XMLQuote [lindex $T(Precision) [expr $cc-1]]]\" "
+		puts -nonewline $fp "precision=\"[VOTQuote [lindex $T(Precision) [expr $cc-1]]]\" "
 	    }
 	}
 	if {[info exists ${t}(Unit)]} {
 	    if {[lindex $T(Unit) [expr $cc-1]] != {}} {
-		puts -nonewline $fp "unit=\"[XMLQuote [lindex $T(Unit) [expr $cc-1]]]\" "
+		puts -nonewline $fp "unit=\"[VOTQuote [lindex $T(Unit) [expr $cc-1]]]\" "
 	    }
 	}
 	if {[info exists ${t}(Ref)]} {
 	    if {[lindex $T(Ref) [expr $cc-1]] != {}} {
-		puts -nonewline $fp "ref=\"[XMLQuote [lindex $T(Ref) [expr $cc-1]]]\" "
+		puts -nonewline $fp "ref=\"[VOTQuote [lindex $T(Ref) [expr $cc-1]]]\" "
 	    }
 	}
 	if {[info exists ${t}(Ucd)]} {
 	    if {[lindex $T(Ucd) [expr $cc-1]] != {}} {
-		puts -nonewline $fp "ucd=\"[XMLQuote [lindex $T(Ucd) [expr $cc-1]]]\" "
+		puts -nonewline $fp "ucd=\"[VOTQuote [lindex $T(Ucd) [expr $cc-1]]]\" "
 	    }
 	}
 
@@ -157,7 +157,7 @@ proc VOTWrite {t fn {offset 0}} {
 	if {[info exists ${t}(Description)]} {
 	    if {[lindex $T(Description) [expr $cc-1]] != {}} {
 		puts -nonewline $fp {<DESCRIPTION>}
-		puts -nonewline $fp "[XMLQuote [lindex $T(Description) [expr $cc-1]]]"
+		puts -nonewline $fp "[VOTQuote [lindex $T(Description) [expr $cc-1]]]"
 		puts $fp {</DESCRIPTION>}
 	    }
 	}
@@ -172,7 +172,7 @@ proc VOTWrite {t fn {offset 0}} {
     for {set rr [expr 1+$offset]} {$rr <= $nr} {incr rr} {
 	puts -nonewline $fp {<TR>}
 	for {set cc 1} {$cc <= $nc} {incr cc} {
-	    puts -nonewline $fp "<TD>[XMLQuote $T($rr,$cc)]</TD>"
+	    puts -nonewline $fp "<TD>[VOTQuote $T($rr,$cc)]</TD>"
 	}
 	puts $fp {</TR>}
     }
@@ -403,4 +403,10 @@ proc VOTElemEndCB {t name args} {
     }
     return {}
 }
+
+proc VOTQuote {val} {
+    return [string map {& &amp; < &lt; > &gt; \' &apos; \" &quot;} $val]
+}
+
+
 

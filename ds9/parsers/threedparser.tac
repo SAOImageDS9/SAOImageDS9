@@ -74,6 +74,8 @@ compass : COLOR_ STRING_ {ProcessCmdSet threed compass,color $2 3DCompassColor}
  
 %%
 
+package provide DS9 1.0
+
 proc threed::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

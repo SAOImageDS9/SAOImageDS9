@@ -52,6 +52,8 @@ survey : STRIPE82_ {set _ stripe82}
 
 %%
 
+package provide DS9 1.0
+
 proc vla::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

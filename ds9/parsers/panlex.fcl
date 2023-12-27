@@ -22,3 +22,4 @@ to	    {return $TO_}
 
 %%
 
+package provide DS9 1.0

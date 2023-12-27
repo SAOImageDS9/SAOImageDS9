@@ -17,6 +17,8 @@ zscalesend : CONTRAST_ {ProcessSendCmdGet zscale contrast}
 
 %%
 
+package provide DS9 1.0
+
 proc zscalesend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

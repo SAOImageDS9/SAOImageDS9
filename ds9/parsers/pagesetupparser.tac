@@ -46,6 +46,8 @@ size : LETTER_ {set _ letter}
 
 %%
 
+package provide DS9 1.0
+
 proc pagesetup::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

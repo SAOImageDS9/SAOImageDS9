@@ -32,6 +32,8 @@ magnifier : COLOR_ STRING_ {ProcessCmdSet pmagnifier color $2 MagnifierColor}
 
 %%
 
+package provide DS9 1.0
+
 proc magnifier::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

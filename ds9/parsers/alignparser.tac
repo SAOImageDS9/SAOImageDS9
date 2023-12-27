@@ -21,6 +21,8 @@ align : yesno {ProcessCmdSet current align $1 AlignWCSFrame}
 
 %%
 
+package provide DS9 1.0
+
 proc align::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

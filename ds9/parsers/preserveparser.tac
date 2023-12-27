@@ -27,6 +27,8 @@ preserve : PAN_ yesno {ProcessCmdSet panzoom preserve $2 PreservePan}
 
 %%
 
+package provide DS9 1.0
+
 proc preserve::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

@@ -35,6 +35,8 @@ save : STRING_ {SaveHeaderCmd 1 $1}
 
 %%
 
+package provide DS9 1.0
+
 proc header::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

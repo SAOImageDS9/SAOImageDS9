@@ -10,3 +10,5 @@
 interval    {return $INTERVAL_}
 
 %%
+
+package provide DS9 1.0

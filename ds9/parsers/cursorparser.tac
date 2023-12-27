@@ -18,6 +18,8 @@ cursor : INT_ INT_ {CursorCmd $1 $2}
 
 %%
 
+package provide DS9 1.0
+
 proc cursor::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

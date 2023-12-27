@@ -19,6 +19,8 @@ vlasend : {ProcessSendCmdGet dvla name}
  
 %%
 
+package provide DS9 1.0
+
 proc vlasend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

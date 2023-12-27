@@ -18,6 +18,8 @@ threads : INT_ {ProcessCmdSet ds9 threads $1 ChangeThreads}
 
 %%
 
+package provide DS9 1.0
+
 proc threads::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

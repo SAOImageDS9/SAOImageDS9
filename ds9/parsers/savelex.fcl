@@ -26,3 +26,5 @@ slice	    {return $SLICE_}
 #include ws.fin
 
 %%
+
+package provide DS9 1.0

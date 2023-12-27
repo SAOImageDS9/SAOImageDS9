@@ -66,6 +66,8 @@ endian : {ProcessCmdSet export endian native}
 
 %%
 
+package provide DS9 1.0
+
 proc export::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

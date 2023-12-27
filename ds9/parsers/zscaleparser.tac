@@ -29,6 +29,8 @@ zscale : {ProcessCmdSet scale mode zscale ChangeScaleMode}
 
 %%
 
+package provide DS9 1.0
+
 proc zscale::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

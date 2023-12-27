@@ -44,6 +44,8 @@ compass: {ProcessSendCmdYesNo threed compass}
 
 %%
 
+package provide DS9 1.0
+
 proc threedsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

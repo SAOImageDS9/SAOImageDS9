@@ -33,6 +33,8 @@ colorbarsend : {ProcessSendCmdYesNo view colorbar}
  
 %%
 
+package provide DS9 1.0
+
 proc colorbarsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

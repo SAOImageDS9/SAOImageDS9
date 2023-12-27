@@ -72,6 +72,8 @@ append : {WCSCmdLoad append 1}
 
 %%
 
+package provide DS9 1.0
+
 proc wcs::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

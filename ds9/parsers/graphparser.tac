@@ -47,6 +47,8 @@ method : AVERAGE_ {set _ average}
 
 %%
 
+package provide DS9 1.0
+
 proc graph::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

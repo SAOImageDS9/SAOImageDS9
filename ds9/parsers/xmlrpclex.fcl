@@ -60,3 +60,5 @@
 #include ws.fin
 
 %%
+
+package provide SAMPXMLRPC 1.0

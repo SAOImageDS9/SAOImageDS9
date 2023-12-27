@@ -160,6 +160,8 @@ viewaxes : {ProcessSendCmdYesNo grid axes}
 
 %%
 
+package provide DS9 1.0
+
 proc gridsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

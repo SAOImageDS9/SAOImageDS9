@@ -82,6 +82,8 @@ resolution : 72_ {set _ 72}
 
 %%
 
+package provide DS9 1.0
+
 proc ps::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

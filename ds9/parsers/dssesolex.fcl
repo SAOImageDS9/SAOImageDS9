@@ -19,3 +19,5 @@ dss2-infrared {return $DSS2_INFRARED_}
 #include ws.fin
 
 %%
+
+package provide DS9 1.0

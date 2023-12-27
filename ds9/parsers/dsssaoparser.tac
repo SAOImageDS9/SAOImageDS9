@@ -44,6 +44,8 @@ update : FRAME_ {IMGSVRUpdate dsao; IMGSVRApply dsao 1}
 
 %%
 
+package provide DS9 1.0
+
 proc dsssao::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

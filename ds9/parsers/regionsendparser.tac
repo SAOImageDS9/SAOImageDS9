@@ -142,6 +142,8 @@ prop : MFORMAT_ format {ProcessCmdSet marker load,format $2}
 
 %%
 
+package provide DS9 1.0
+
 proc regionsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

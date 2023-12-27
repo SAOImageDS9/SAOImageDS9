@@ -21,3 +21,5 @@ stop	    {return $STOP_}
 #include ws.fin
 
 %%
+
+package provide DS9 1.0

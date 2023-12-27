@@ -54,6 +54,8 @@ function : BOXCAR_ {set _ boxcar}
  
 %%
 
+package provide DS9 1.0
+
 proc smooth::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

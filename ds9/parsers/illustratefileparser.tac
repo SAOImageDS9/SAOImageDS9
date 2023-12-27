@@ -187,6 +187,8 @@ namespace eval illustratefile {
      variable localJustify
 }
 
+package provide DS9 1.0
+
 proc illustratefile::initGlobal {} {
      variable globalColor cyan
      variable globalFill 0
@@ -202,6 +204,8 @@ proc illustratefile::initGlobal {} {
      variable globalAngle 0
      variable globalJustify left
 }
+
+package provide DS9 1.0
 
 proc illustratefile::initLocal {} {
      variable coords {}

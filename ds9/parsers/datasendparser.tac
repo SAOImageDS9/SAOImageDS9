@@ -38,6 +38,8 @@ datasend : coordsys numeric numeric INT_ INT_ yesno
 
 %%
 
+package provide DS9 1.0
+
 proc datasend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

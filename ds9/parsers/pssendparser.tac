@@ -26,6 +26,8 @@ pssend : DESTINATION_ {ProcessSendCmdGet ps dest}
 
 %%
 
+package provide DS9 1.0
+
 proc pssend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

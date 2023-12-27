@@ -44,6 +44,8 @@ update : FRAME_ {IMGSVRUpdate dvlss; IMGSVRApply dvlss 1}
 
 %%
 
+package provide DS9 1.0
+
 proc vlss::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

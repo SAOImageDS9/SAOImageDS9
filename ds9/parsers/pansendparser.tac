@@ -28,6 +28,8 @@ pansend : {ProcessSendCmdCurrent "get cursor physical fk5 degrees"}
 
 %%
 
+package provide DS9 1.0
+
 proc pansend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

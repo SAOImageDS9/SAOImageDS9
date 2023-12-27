@@ -374,6 +374,8 @@ property : SELECT_ {set _ select}
 
 %%
 
+package provide DS9 1.0
+
 proc region::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

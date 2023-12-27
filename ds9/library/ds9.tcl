@@ -225,6 +225,9 @@ package require tkcon
 package require Tkblt
 package require Tls
 
+package require SAMPHub
+package require SAMPXMLRPC
+
 package require DS9
 
 # post package load

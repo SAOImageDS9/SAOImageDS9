@@ -18,6 +18,8 @@ height : INT_ {LayoutChangeHeight $1}
 
 %%
 
+package provide DS9 1.0
+
 proc height::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

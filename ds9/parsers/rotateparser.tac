@@ -27,6 +27,8 @@ rotate : numeric {Rotate $1}
 
 %%
 
+package provide DS9 1.0
+
 proc rotate::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

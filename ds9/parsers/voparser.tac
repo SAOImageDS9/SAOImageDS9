@@ -44,6 +44,8 @@ method : XPA_ {set _ xpa}
 
 %%
 
+package provide DS9 1.0
+
 proc vo::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

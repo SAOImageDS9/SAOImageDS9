@@ -39,6 +39,8 @@ mode : SCAN_ {set _ scan}
 
 %%
 
+package provide DS9 1.0
+
 proc minmax::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

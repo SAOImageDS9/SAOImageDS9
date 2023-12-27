@@ -56,6 +56,8 @@ survey : DSS1_ {set _ DSS1}
 
 %%
 
+package provide DS9 1.0
+
 proc dsseso::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

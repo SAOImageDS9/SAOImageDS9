@@ -66,6 +66,8 @@ survey : POSS2UKSTU_RED_ {set _ poss2ukstu_red}
 
 %%
 
+package provide DS9 1.0
+
 proc dssstsci::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

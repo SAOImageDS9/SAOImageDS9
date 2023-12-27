@@ -18,6 +18,8 @@ preservesend : PAN_ {ProcessSendCmdYesNo panzoom preserve}
 
 %%
 
+package provide DS9 1.0
+
 proc preservesend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

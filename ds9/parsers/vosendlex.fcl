@@ -16,3 +16,5 @@ server	    {return $SERVER_}
 #include ws.fin
 
 %%
+
+package provide DS9 1.0

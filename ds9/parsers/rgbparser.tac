@@ -65,6 +65,8 @@ lock : WCS_ {set _ lock,wcs}
 
 %%
 
+package provide DS9 1.0
+
 proc rgb::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

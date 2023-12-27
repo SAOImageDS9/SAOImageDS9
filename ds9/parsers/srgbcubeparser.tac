@@ -23,6 +23,8 @@ opts :
 
 %%
 
+package provide DS9 1.0
+
 proc srgbcube::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

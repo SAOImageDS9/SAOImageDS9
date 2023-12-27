@@ -48,6 +48,8 @@ update : FRAME_ {IMGSVRUpdate dskyview; IMGSVRApply dskyview 1}
 
 %%
 
+package provide DS9 1.0
+
 proc skyview::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

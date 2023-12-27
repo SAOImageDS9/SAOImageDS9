@@ -44,6 +44,8 @@ method : UNIX_ {set _ unix}
 
 %%
 
+package provide DS9 1.0
+
 proc xpafirst::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

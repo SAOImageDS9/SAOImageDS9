@@ -25,6 +25,8 @@ grid : MODE_ {ProcessSendCmdGet tile grid,mode}
 
 %%
 
+package provide DS9 1.0
+
 proc tilesend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

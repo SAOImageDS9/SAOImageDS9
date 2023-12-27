@@ -98,6 +98,8 @@ wcstype : CELESTIAL_ {set _ celestial}
 
 %%
 
+package provide DS9 1.0
+
 proc framesend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

@@ -2,7 +2,9 @@
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
-package provide DS9 1.0
+package provide SAMPHub 1.0
+package require SAMPXMLRPC
+package require Thread
 
 proc SAMPHubDef {} {
     global isamphub
@@ -13,7 +15,6 @@ proc SAMPHubDef {} {
 
 proc SAMPHubStart {verbose} {
     global samp
-    global samphub
     global debug
 
     # are we connected?
@@ -27,8 +28,9 @@ proc SAMPHubStart {verbose} {
     # can we find a hub?
     # note: this will fill out a 'samp' array, delete later
 
-    set samphub(debug) $debug(tcl,samp)
     set samp(debug) $debug(tcl,samp)
+    tsv::set samphub debug $debug(tcl,samp)
+
     if {[SAMPParseHub]} {
 	# ok, found one, is it alive?
 	set rr {}
@@ -38,7 +40,8 @@ proc SAMPHubStart {verbose} {
 		Error "SAMPHub: [msgcat::mc {found existing hub}]"
 	    }
 	    catch {unset samp}
-	    catch {unset samphub}
+	    tsv::unset samphub
+
 	    return
 	} else {
 	    # its dead, try to delete
@@ -51,24 +54,24 @@ proc SAMPHubStart {verbose} {
     
     # ok, we are on our own
     catch {unset samp}
-    catch {unset samphub}
+    tsv::unset samphub
     
     # basics
-    set samphub(verbose) $verbose
-    set samphub(debug) $debug(tcl,samp)
-    set samphub(fn) [file join [GetEnvHome] {.samp}]
-    set samphub(cw,cnt) 0
+    tsv::set samphub verbose $verbose
+    tsv::set samphub debug $debug(tcl,samp)
+    tsv::set samphub fn [file join [GetEnvHome] {.samp}]
+    tsv::set samphub cw,cnt 0
 
-    set samphub(client,seq) 0
-    set samphub(client,secret) {}
-    set samphub(cache,images) 1
+    tsv::set samphub client,seq 0
+    tsv::set samphub client,secret {}
+    tsv::set samphub cache,images 1
 
-    set samphub(secret) [SAMPHubGenerateKey]
-    set samphub(timestamp) "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
+    tsv::set samphub secret [SAMPHubGenerateKey]
+    tsv::set samphub timestamp "[clock format [clock seconds] -format {%a %b %d %H:%M:%S %Z %Y}]"
 
-    set samphub(web,sock) {}
-    set samphub(web,port) 0
-    set samphub(web,allowReverseCallbacks) 0
+    tsv::set samphub web,sock {}
+    tsv::set samphub web,port 0
+    tsv::set samphub web,allowReverseCallbacks 0
 
     # Init
     if {![SAMPHubStartConnect]} {
@@ -83,31 +86,30 @@ proc SAMPHubStart {verbose} {
     # Register Hub
     SAMPHubStartRegister
 
-    if {$samphub(debug)} {
-	puts "SAMPHubStart: $samphub(secret) $samphub($samphub(secret),id)"
+    if {[tsv::get samphub debug]} {
+	puts "SAMPHubStart: [tsv::get samphub secret] [tsv::get samphub [tsv::get samphub secret],id]"
     }
 
-    SAMPHubDialogListAdd $samphub(secret)
+    SAMPHubDialogListAdd [tsv::get samphub secret]
     SAMPHubDialogUpdate
     UpdateFileMenu
 }
 
 proc SAMPHubStartConnect {} {
-    global samphub
     global pds9
 
-    if {[catch {set samphub(sock) [xmlrpcServe 0]}]} {
+    if {[catch {tsv::set samphub sock [xmlrpcServe 0]}]} {
 	Error "SAMPHub: [msgcat::mc {unable to open hub}]"
-	catch {unset samphub}
+	tsv::unset samphub
 	return 0
     }
-    set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
+    tsv::set samphub port [lindex [fconfigure [tsv::get samphub sock] -sockname] 2]
 
     if {$pds9(samp,webhub)} {
-	if {[catch {set samphub(web,sock) [xmlrpcServe 21012]}]} {
+	if {[catch {tsv::set samphub web,sock [xmlrpcServe 21012]}]} {
 	    Error "SAMPHub: [msgcat::mc {unable to open web hub}]"
 	} else {
-	    set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
+	    tsv::set samphub web,port [lindex [fconfigure [tsv::get samphub web,sock] -sockname] 2]
 	}
     }
 
@@ -115,23 +117,21 @@ proc SAMPHubStartConnect {} {
 }
 
 proc SAMPHubStartProfile {} {
-    global samphub
 
-    if {[catch {set ch [open $samphub(fn) w 0600]}]} {
-	if {$samphub(verbose)} {
+    if {[catch {set ch [open [tsv::get samphub fn] w 0600]}]} {
+	if {[tsv::get samphub verbose]} {
 	    Error "SAMPHub: [msgcat::mc {unable to create hub file}]"
 	}
-	catch {unset samphub}
 	return 0
     }
 
-    puts $ch "# SAMP Standard Profile lockfile written $samphub(timestamp)"
+    puts $ch "# SAMP Standard Profile lockfile written [tsv::get samphub timestamp]"
     puts $ch "# Note contact URL hostname may be configured using jsamp.localhost property"
 
-    puts $ch "samp.secret=$samphub(secret)"
-    puts $ch "samp.hub.xmlrpc.url=http://127.0.0.1:$samphub(port)/xmlrpc"
+    puts $ch "samp.secret=[tsv::get samphub secret]"
+    puts $ch "samp.hub.xmlrpc.url=http://127.0.0.1:[tsv::get samphub port]/xmlrpc"
     puts $ch "samp.profile.version=1.3"
-    puts $ch "profile.start.date=$samphub(timestamp)"
+    puts $ch "profile.start.date=[tsv::get samphub timestamp]"
 
     close $ch
 
@@ -139,27 +139,26 @@ proc SAMPHubStartProfile {} {
 }
 
 proc SAMPHubStartRegister {} {
-    global samphub
 
-    lappend samphub(client,secret) $samphub(secret)
-    set samphub($samphub(secret),id) {hub}
-    set samphub($samphub(secret),url) {}
-    set samphub($samphub(secret),subscriptions) {{samp.hub.ping {}}}
-    set samphub($samphub(secret),metadata) [list \
-						[list samp.name "Hub"] \
-						[list samp.description.text "SAOImageDS9 Internal Hub"] \
-						[list samp.icon.url "http://ds9.si.edu/bandw.png"] \
-						[list author.mail "ds9help@cfa.harvard.edu"] \
-						[list author.name {William Joye}] \
-					       ]
+    tsv::lappend samphub client,secret [tsv::get samphub secret]
+    tsv::set samphub [tsv::get samphub secret],id {hub}
+    tsv::set samphub [tsv::get samphub secret],url {}
+    tsv::set samphub [tsv::get samphub secret],subscriptions \
+	{{samp.hub.ping {}}}
+    tsv::set samphub [tsv::get samphub secret],metadata \
+	[list \
+	     [list samp.name "Hub"] \
+	     [list samp.description.text "SAOImageDS9 Internal Hub"] \
+	     [list samp.icon.url "http://ds9.si.edu/bandw.png"] \
+	     [list author.mail "ds9help@cfa.harvard.edu"] \
+	     [list author.name {William Joye}] \
+	    ]
 }
 
 proc SAMPHubStop {} {
-    global samphub
-
     # hub running?
-    if {![info exists samphub]} {
-	if {$samphub(verbose)} {
+    if {![tsv::exists samphub secret]} {
+	if {[tsv::get samphub verbose]} {
 	    Error "SAMPHub: [msgcat::mc {Hub not running}]"
 	}
 	return
@@ -172,9 +171,9 @@ proc SAMPHubStop {} {
     set map1(samp.params) [list struct {}]
     set m1 [xmlrpcList2Member [array get map1]]
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
 
@@ -184,34 +183,34 @@ proc SAMPHubStop {} {
 	}
 
 	# only standard clients
-	if {$samphub($cc,web)} {
+	if {[tsv::get samphub $cc,web]} {
 	    continue
 	}
 
 	set param1 [list param [list value [list string $cc]]]
-	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
 	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
 	# some clients insist on sending samp.hub.unregister
-	set samphub(remove) $cc
+	tsv::set samphub remove $cc
 	set rr {}
 	SAMPHubSend {samp.client.receiveNotification} \
-	    $samphub($cc,url) $params rr
-	unset samphub(remove)
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+	    [tsv::get samphub $cc,url] $params rr
+	tsv::unset samphub remove
+	SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
 	SAMPHubRemove $cc
     }
 
     # remove hub
-    SAMPHubDialogListRemove $samphub(secret)
+    SAMPHubDialogListRemove [tsv::get samphub secret]
 
-    catch {file delete -force $samphub(fn)}
+    catch {file delete -force [tsv::get samphub fn]}
 
     # close the server socket if still up
-    catch {close $samphub(web,sock)}
-    catch {close $samphub(sock)}
-    catch {unset samphub}
+    catch {close [tsv::get samphub web,sock]}
+    catch {close [tsv::get samphub sock]}
+    tsv::unset samphub
 
     SAMPHubDialogUpdate
     UpdateFileMenu
@@ -222,10 +221,9 @@ proc SAMPHubGenerateKey {} {
 }
 
 proc SAMPHubValidSecret {secret} {
-    global samphub
-    
-    if {![info exists samphub($secret,id)]} {
-	if {$samphub(debug)} {
+    if {![tsv::exists samphub $secret,id]} {
+	DumpCallStack
+	if {[tsv::get samphub debug]} {
 	    puts "SAMPHub: bad private-key $secret\n"
 	}
 	return 0
@@ -241,10 +239,8 @@ proc SAMPHubGenerateCB {mtype params} {
 }
 
 proc SAMPHubFindSecret {id} {
-    global samphub
-    
-    foreach cc $samphub(client,secret) {
-	if {$id == $samphub($cc,id)} {
+    foreach cc [tsv::get samphub client,secret] {
+	if {$id == [tsv::get samphub $cc,id]} {
 	    return $cc
 	}
     }
@@ -252,9 +248,7 @@ proc SAMPHubFindSecret {id} {
 }
 
 proc SAMPHubFindSubscription {cc mtype} {
-    global samphub
-
-    foreach sub $samphub($cc,subscriptions) {
+    foreach sub [tsv::get samphub $cc,subscriptions] {
 	foreach {mm attr} $sub {
 	    if {$mm == $mtype} {
 		return 1
@@ -265,10 +259,8 @@ proc SAMPHubFindSubscription {cc mtype} {
 }
 
 proc SAMPHubDisconnect {secret} {
-    global samphub
-
     # ignore hub
-    if {$secret == $samphub(secret)} {
+    if {$secret == [tsv::get samphub secret]} {
 	return
     }
 
@@ -281,7 +273,7 @@ proc SAMPHubDisconnect {secret} {
     }
 
     # only standard clients
-    if {$samphub($secret,web)} {
+    if {[tsv::get samphub $secret,web]} {
 	SAMPHubRemove $secret
 	return
     }
@@ -294,32 +286,32 @@ proc SAMPHubDisconnect {secret} {
     set m1 [xmlrpcList2Member [array get map1]]
 
     set param1 [list param [list value [list string $secret]]]
-    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+    set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
     set param3 [list param [list value [list struct $m1]]]
     set params [list params [list $param1 $param2 $param3]]
 
     # some clients insist on sending samp.hub.unregister
-    set samphub(remove) $secret
+    tsv::set samphub remove $secret
     set rr {}
     SAMPHubSend {samp.client.receiveNotification} \
-	$samphub($secret,url) $params rr
-    unset samphub(remove)
-    SAMPHubDialogSentMsg "$mtype\t$samphub($secret,id)"
+	[tsv::get samphub $secret,url] $params rr
+    tsv::unset samphub remove
+    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $secret,id]"
 
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
 
-    set map2(id) "string $samphub($secret,id)"
+    set map2(id) "string [tsv::get samphub $secret,id]"
     set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
     set m1 [xmlrpcList2Member [array get map1]]
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
 
@@ -334,19 +326,20 @@ proc SAMPHubDisconnect {secret} {
 	}
 
 	set param1 [list param [list value [list string $cc]]]
-	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
 	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
-	if {$samphub($cc,web)} {
-	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	if {[tsv::get samphub $cc,web]} {
+	    if {[tsv::get samphub web,allowReverseCallbacks]} {
+		tsv::lappend samphub $cc,web,msgs \
+		    [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
-		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+		[tsv::get samphub $cc,url] $params rr
+	    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
@@ -354,64 +347,60 @@ proc SAMPHubDisconnect {secret} {
 }
 
 proc SAMPHubRemove {secret} {
-    global samphub
-    
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts stderr "SAMPHubRemove: $secret"
     }
 
     # should not happen
-    if {$secret == $samphub(secret)} {
+    if {$secret == [tsv::get samphub secret]} {
 	return
     }
 
     SAMPHubDialogListRemove $secret
     
-    set id [lsearch $samphub(client,secret) $secret]
-    set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
+    set id [lsearch [tsv::get samphub client,secret] $secret]
+    tsv::set samphub client,secret [lreplace [tsv::get samphub client,secret] $id $id]
 
-    unset samphub($secret,id)
-    unset samphub($secret,url)
-    unset samphub($secret,subscriptions)
-    unset samphub($secret,metadata)
+    tsv::unset samphub $secret,id
+    tsv::unset samphub $secret,url
+    tsv::unset samphub $secret,subscriptions
+    tsv::unset samphub $secret,metadata
 }
 
 proc SAMPHubRegister {args web} {
-    global samphub
-
-    if {$samphub(secret) != $args} {
+    if {[tsv::get samphub secret] != $args} {
 	return -code error
     }
 
-    incr samphub(client,seq)
+    tsv::incr samphub client,seq
     set secret [SAMPHubGenerateKey]
-    set id "c${samphub(client,seq)}"
+    set id "c[tsv::get samphub client,seq]"
 
-    lappend samphub(client,secret) $secret
+    tsv::lappend samphub client,secret $secret
 
-    set samphub($secret,id) $id
-    set samphub($secret,url) {}
-    set samphub($secret,subscriptions) {}
-    set samphub($secret,metadata) {}
-    set samphub($secret,web) $web
-    set samphub($secret,web,msgs) {}
+    tsv::set samphub $secret,id $id
+    tsv::set samphub $secret,url {}
+    tsv::set samphub $secret,subscriptions {}
+    tsv::set samphub $secret,metadata {}
+    tsv::set samphub $secret,web $web
+    tsv::set samphub $secret,web,msgs {}
 
-    SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.register\t[tsv::get samphub $secret,id]"
     SAMPHubDialogListAdd $secret
 
     # update other clients
     set mtype {samp.hub.event.register}
 
-    set map2(id) "string $samphub($secret,id)"
+    set map2(id) "string [tsv::get samphub $secret,id]"
     set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
     set m1 [xmlrpcList2Member [array get map1]]
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
 
@@ -426,19 +415,20 @@ proc SAMPHubRegister {args web} {
 	}
 
 	set param1 [list param [list value [list string $cc]]]
-	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
 	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
-	if {$samphub($cc,web)} {
-	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	if {[tsv::get samphub $cc,web]} {
+	    if {[tsv::get samphub web,allowReverseCallbacks]} {
+		tsv::lappend samphub $cc,web,msgs \
+		    [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
-		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+		[tsv::get samphub $cc,url] $params rr
+	    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
@@ -452,10 +442,9 @@ proc SAMPHubRegister {args web} {
 
 proc SAMPHubSend {method url params resultVar {flag {}}} {
     upvar $resultVar result
-    global samphub
 
-    if {$samphub(debug)} {
-	puts stderr "SAMPHubSend: $method $url $params $flag"
+    if {[tsv::get samphub debug]} {
+	puts stderr "SAMPHubSend: $method $url $params"
     }
 
     # figure out xmlrpc-?
@@ -467,64 +456,69 @@ proc SAMPHubSend {method url params resultVar {flag {}}} {
     }
 
     if {[catch {set result [xmlrpcCall $url $rpc $method $params]}]} {
-	if {$samphub(debug)} {
+	if {[tsv::get samphub debug]} {
 	    puts stderr "SAMPHub: bad xmlrpcCall"
 	}
 	# Error
 	return false
     }
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts stderr "SAMPHubSend Result: $result $flag"
     }
 
     return true
 }
 
+proc SAMPHubReturn {msg} {
+    return [list params [list [list param [list value [list string $msg]]]]]
+}
+
 proc SAMPHubNotify {secret cc mtype param} {
     # runs in top level
-    global samphub
 
     set param1 [list param [list value [list string $cc]]]
-    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+    set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
     set param3 $param
     set params [list params [list $param1 $param2 $param3]]
 
-    if {$samphub($cc,web)} {
-	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+    if {[tsv::get samphub $cc,web]} {
+	if {[tsv::get samphub web,allowReverseCallbacks]} {
+	    tsv::lappend samphub $cc,web,msgs \
+		[SAMPHubGenerateCB $mtype $params]
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+	SAMPHubSend samp.client.receiveNotification \
+	    [tsv::get samphub $cc,url] $params rr
+	SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
     }
 }
 
 proc SAMPHubCall {secret cc msgid mtype param} {
     # runs in top level
-    global samphub
 
     set param1 [list param [list value [list string $cc]]]
-    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+    set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
     set param3 [list param [list value [list string $msgid]]]
     set param4 $param
     set params [list params [list $param1 $param2 $param3 $param4]]
 
-    if {$samphub($cc,web)} {
-	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+    if {[tsv::get samphub $cc,web]} {
+	if {[tsv::get samphub web,allowReverseCallbacks]} {
+	    tsv::lappend samphub $cc,web,msgs \
+		[SAMPHubGenerateCB $mtype $params]
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)"
+	SAMPHubSend samp.client.receiveCall \
+	    [tsv::get samphub $cc,url] $params rr $msgid
+	SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
     }
 }
 
 proc SAMPHubReply {cc id msgtag param} {
     # runs in top level
-    global samphub
 
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $id]]]
@@ -532,23 +526,24 @@ proc SAMPHubReply {cc id msgtag param} {
     set param4 $param
     set params [list params [list $param1 $param2 $param3 $param4]]
 
-    if {$samphub($cc,web)} {
-	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB samp.client.receiveResponse $params]
+    if {[tsv::get samphub $cc,web]} {
+	if {[tsv::get samphub web,allowReverseCallbacks]} {
+	    tsv::lappend samphub $cc,web,msgs \
+		[SAMPHubGenerateCB samp.client.receiveResponse $params]
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr $msgtag
-	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)"
+	SAMPHubSend samp.client.receiveResponse \
+	    [tsv::get samphub $cc,url] $params rr $msgtag
+	SAMPHubDialogSentMsg \
+	    "samp.client.receiveResponse\t[tsv::get samphub $cc,id]"
     }
 }
 
 # procs
 
 proc samp.hub.setXmlrpcCallback {rpc} {
-    global samphub
-
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.setXmlrpcCallback: $rpc\n"
     }
 
@@ -561,29 +556,28 @@ proc samp.hub.setXmlrpcCallback {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.setXmlrpcCallback\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg \
+	"samp.hub.setXmlrpcCallback\t[tsv::get samphub $secret,id]"
 
-    set samphub($secret,url) $map
+    tsv::set samphub $secret,url $map
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.ping {rpc} {
-    global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.ping $rpc\n"
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.ping $rpc"
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.register {rpc} {
-    global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.register: $rpc"
     }
 
@@ -593,9 +587,8 @@ proc samp.hub.register {rpc} {
 }
 
 proc samp.hub.unregister {rpc} {
-    global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.unregister: $rpc\n"
     }
 
@@ -604,9 +597,9 @@ proc samp.hub.unregister {rpc} {
     set secret [lindex $args 0]
 
     # some clients insist on sending samp.hub.unregister
-    if {[info exists samphub(remove)]} {
-	if {$samphub(remove) == $secret} {
-	    return [SAMPReturn OK]
+    if {[tsv::exists samphub remove]} {
+	if {[tsv::get samphub remove] == $secret} {
+	    return [SAMPHubReturn OK]
 	}
     }
 
@@ -614,22 +607,22 @@ proc samp.hub.unregister {rpc} {
 	return -code error
     }
     
-    SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.unregister\t[tsv::get samphub $secret,id]"
 
     # update other clients
     # notify others before removing
     set mtype {samp.hub.event.unregister}
 
-    set map2(id) "string $samphub($secret,id)"
+    set map2(id) "string [tsv::get samphub $secret,id]"
     set m2 [xmlrpcList2Member [array get map2]]
 
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
     set m1 [xmlrpcList2Member [array get map1]]
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
 
@@ -644,32 +637,33 @@ proc samp.hub.unregister {rpc} {
 	}
 
 	set param1 [list param [list value [list string $cc]]]
-	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
 	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
-	if {$samphub($cc,web)} {
-	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	if {[tsv::get samphub $cc,web]} {
+	    if {[tsv::get samphub web,allowReverseCallbacks]} {
+		tsv::lappend samphub $cc,web,msgs \
+		    [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
-	set rr {}
+	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
-		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+		[tsv::get samphub $cc,url] $params rr
+		 SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
     # now remove
     SAMPHubRemove $secret
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.declareMetadata {rpc} {
     global samphub
     
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.declareMetadata: $rpc\n"
     }
 
@@ -682,13 +676,13 @@ proc samp.hub.declareMetadata {rpc} {
 	return -code error
     }
     
-    SAMPHubDialogRecvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.declareMetadata\t[tsv::get samphub $secret,id]"
 
     # clear any previous
-    set samphub($secret,metadata) {}
+    tsv::set samphub $secret,metadata {}
     foreach mm $map {
 	foreach {key val} $mm {
-	    lappend samphub($secret,metadata) [list $key $val]
+	    tsv::lappend samphub $secret,metadata [list $key $val]
 	}
     }
     
@@ -701,7 +695,7 @@ proc samp.hub.declareMetadata {rpc} {
     # extract params
     set m3 [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
 
-    set map2(id) "string $samphub($secret,id)"
+    set map2(id) "string [tsv::get samphub $secret,id]"
     set map2(metadata) $m3
     set m2 [xmlrpcList2Member [array get map2]]
     
@@ -709,16 +703,11 @@ proc samp.hub.declareMetadata {rpc} {
     set map1(samp.params) [list struct $m2]
     set m1 [xmlrpcList2Member [array get map1]]
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
-
-	# don't send to sender
-#	if {$cc == $secret} {
-#	    continue
-#	}
 
 	# are we subscribed
 	if {![SAMPHubFindSubscription $cc $mtype]} {
@@ -726,28 +715,29 @@ proc samp.hub.declareMetadata {rpc} {
 	}
 
 	set param1 [list param [list value [list string $cc]]]
-	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
 	set param3 [list param [list value [list struct $m1]]]
 	set params [list params [list $param1 $param2 $param3]]
 
-	if {$samphub($cc,web)} {
-	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	if {[tsv::get samphub $cc,web]} {
+	    if {[tsv::get samphub web,allowReverseCallbacks]} {
+		tsv::lappend samphub $cc,web,msgs \
+		    [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
 	    SAMPHubSend {samp.client.receiveNotification} \
-		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+		[tsv::get samphub $cc,url] $params rr
+	    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.getMetadata {rpc} {
     global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.getMetadata: $rpc\n"
     }
 
@@ -760,11 +750,11 @@ proc samp.hub.getMetadata {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.getMetadata\t[tsv::get samphub $secret,id]"
 
-    foreach cc $samphub(client,secret) {
-	if {$samphub($cc,id) == $id} {
-	    foreach mm $samphub($cc,metadata) {
+    foreach cc [tsv::get samphub client,secret] {
+	if {[tsv::get samphub $cc,id] == $id} {
+	    foreach mm [tsv::get samphub $cc,metadata] {
 		foreach {key val} $mm {
 		    set map3($key) "string \"$val\""
 		}
@@ -780,7 +770,7 @@ proc samp.hub.getMetadata {rpc} {
 proc samp.hub.declareSubscriptions {rpc} {
     global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.declareSubscriptions: $rpc\n"
     }
 
@@ -794,22 +784,23 @@ proc samp.hub.declareSubscriptions {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.declareSubscriptions\t[tsv::get samphub $secret,id]"
 
     # clear any previous
-    set samphub($secret,subscriptions) {}
+    tsv::set samphub $secret,subscriptions {}
     set aa [lindex $map 1]
     foreach bb $aa {
 	set cc [lindex $bb 1]
 	foreach {key val} $cc {
 	    set ss [lindex $key 1]
 	    set mm [lindex [lindex $val 1] 1]
-	    lappend samphub($secret,subscriptions) [list $ss $mm]
+	    tsv::lappend samphub $secret,subscriptions [list $ss $mm]
 	}
     }
 
     # make it pretty
-    set samphub($secret,subscriptions) [lsort $samphub($secret,subscriptions)]
+    tsv::set samphub $secret,subscriptions \
+	[lsort [tsv::get samphub $secret,subscriptions]]
 
     SAMPHubDialogListUpdate
 
@@ -818,7 +809,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 
     # extract params
     # can't use utils as we need to preserve subscription params rpc
-    set aa [list member [list [list name id] [list value [list string $samphub($secret,id)]]]]
+    set aa [list member [list [list name id] [list value [list string [tsv::get samphub $secret,id]]]]]
     set bb [list member [list [list name subscriptions] [list value $map]]]
     set m2 [list struct [list $bb $aa]]
 
@@ -827,18 +818,13 @@ proc samp.hub.declareSubscriptions {rpc} {
     set m1 [list struct [list $cc $dd]]
 
     set param3 [list param [list value $m1]]
-    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+    set param2 [list param [list value [list string [tsv::get samphub [tsv::get samphub secret],id]]]]
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
-
-	# don't send to sender
-#	if {$cc == $secret} {
-#	    continue
-#	}
 
 	# are we subscribed
 	if {![SAMPHubFindSubscription $cc $mtype]} {
@@ -848,25 +834,26 @@ proc samp.hub.declareSubscriptions {rpc} {
 	set param1 [list param [list value [list string $cc]]]
 	set params [list params [list $param1 $param2 $param3]]
 
-	if {$samphub($cc,web)} {
-	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	if {[tsv::get samphub $cc,web]} {
+	    if {[tsv::get samphub web,allowReverseCallbacks]} {
+		tsv::lappend samphub $cc,web,msgs \
+		    [SAMPHubGenerateCB $mtype $params]
 	    }
 	} else {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
-		$samphub($cc,url) $params rr
-	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+		[tsv::get samphub $cc,url] $params rr
+	    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.getSubscriptions {rpc} {
     global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.getSubscriptions: $rpc\n"
     }
 
@@ -879,12 +866,12 @@ proc samp.hub.getSubscriptions {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.getSubscriptions\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.getSubscriptions\t[tsv::get samphub $secret,id]"
 
-    foreach cc $samphub(client,secret) {
-	if {$samphub($cc,id) == $id} {
+    foreach cc [tsv::get samphub client,secret] {
+	if {[tsv::get samphub $cc,id] == $id} {
 	    set out {}
-	    foreach sub $samphub($cc,subscriptions) {
+	    foreach sub [tsv::get samphub $cc,subscriptions] {
 		foreach {key val} $sub {
 		    lappend out [list member [list [list name $key] [list value [list struct $val]]]]
 		}
@@ -899,7 +886,7 @@ proc samp.hub.getSubscriptions {rpc} {
 proc samp.hub.getRegisteredClients {rpc} {
     global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.getRegisteredClients: $rpc\n"
     }
 
@@ -912,15 +899,15 @@ proc samp.hub.getRegisteredClients {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.getRegisteredClients\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.getRegisteredClients\t[tsv::get samphub $secret,id]"
 
     set ll {}
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	if {$cc == $secret} {
 	    continue
 	}
 
-	lappend ll $samphub($cc,id)
+	lappend ll [tsv::get samphub $cc,id]
     }
 
     return [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
@@ -929,7 +916,7 @@ proc samp.hub.getRegisteredClients {rpc} {
 proc samp.hub.getSubscribedClients {rpc} {
     global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.getSubscribedClients: $rpc\n"
     }
 
@@ -942,15 +929,15 @@ proc samp.hub.getSubscribedClients {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.getSubscribedClients\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.getSubscribedClients\t[tsv::get samphub $secret,id]"
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	if {$cc == $secret} {
 	    continue
 	}
 
 	if {[SAMPHubFindSubscription $cc $map]} {
-	    set id $samphub($cc,id)
+	    set id [tsv::get samphub $cc,id]
 	    set map1($id) [list struct {}]
 	}
     }
@@ -959,9 +946,8 @@ proc samp.hub.getSubscribedClients {rpc} {
 }
 
 proc samp.hub.notify {rpc} {
-    global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.notify: $rpc\n"
     }
 
@@ -978,15 +964,15 @@ proc samp.hub.notify {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.notify\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.notify\t[tsv::get samphub $secret,id]"
 
     set mtype {}
     foreach mm $map {
-       foreach {key val} $mm {
-           switch -- $key {
-               samp.mtype {set mtype $val}
-           }
-       }
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+	    }
+	}
     }
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
@@ -994,7 +980,7 @@ proc samp.hub.notify {rpc} {
     }
 
     # ignore hub
-    if {$cc == $samphub(secret)} {
+    if {$cc == [tsv::get samphub secret]} {
 	return -code error
     }
 
@@ -1004,13 +990,12 @@ proc samp.hub.notify {rpc} {
     }
 
     after idle [list SAMPHubNotify $secret $cc $mtype $param]
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.notifyAll {rpc} {
-    global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.notifyAll: $rpc\n"
     }
 
@@ -1026,21 +1011,21 @@ proc samp.hub.notifyAll {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.notifyAll\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.notifyAll\t[tsv::get samphub $secret,id]"
 
     set mtype {}
     foreach mm $map {
-       foreach {key val} $mm {
-           switch -- $key {
-               samp.mtype {set mtype $val}
-           }
-       }
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+	    }
+	}
     }
 
     set ll {}
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
 
@@ -1055,16 +1040,15 @@ proc samp.hub.notifyAll {rpc} {
 	}
 
 	after idle [list SAMPHubNotify $secret $cc $mtype $param]
-	lappend ll $samphub($cc,id)
+	lappend ll [tsv::get samphub $cc,id]
     }
 
     return [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
 }
 
 proc samp.hub.call {rpc} {
-    global samphub
     
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.call: $rpc\n"
     }
 
@@ -1082,25 +1066,25 @@ proc samp.hub.call {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.call\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.call\t[tsv::get samphub $secret,id]"
 
     set mtype {}
     foreach mm $map {
-       foreach {key val} $mm {
-           switch -- $key {
-               samp.mtype {set mtype $val}
-           }
-       }
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+	    }
+	}
     }
     
-    set msgid "$msgtag:$samphub($secret,id):"
- 
+    set msgid "$msgtag:[tsv::get samphub $secret,id]:"
+    
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
 
     # ignore hub
-    if {$cc == $samphub(secret)} {
+    if {$cc == [tsv::get samphub secret]} {
 	return -code error
     }
 
@@ -1110,13 +1094,12 @@ proc samp.hub.call {rpc} {
     }
 
     after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
-    return [SAMPReturn $msgid]
+    return [SAMPHubReturn $msgid]
 }
 
 proc samp.hub.callAll {rpc} {
-    global samphub
 
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.callAll: $rpc\n"
     }
 
@@ -1133,22 +1116,22 @@ proc samp.hub.callAll {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.callAll\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.callAll\t[tsv::get samphub $secret,id]"
 
     set mtype {}
     foreach mm $map {
-       foreach {key val} $mm {
-           switch -- $key {
-               samp.mtype {set mtype $val}
-           }
-       }
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+	    }
+	}
     }
 
-    set msgid "$msgtag:$samphub($secret,id):"
+    set msgid "$msgtag:[tsv::get samphub $secret,id]:"
 
-    foreach cc $samphub(client,secret) {
+    foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
-	if {$cc == $samphub(secret)} {
+	if {$cc == [tsv::get samphub secret]} {
 	    continue
 	}
 
@@ -1164,7 +1147,7 @@ proc samp.hub.callAll {rpc} {
 
 	after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
 
-	set id $samphub($cc,id)
+	set id [tsv::get samphub $cc,id]
  	set map3($id) "string $msgid"
     }
 
@@ -1173,9 +1156,8 @@ proc samp.hub.callAll {rpc} {
 }
 
 proc samp.hub.callAndWait {rpc} {
-    global samphub
     
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.callAndWait: $rpc\n"
     }
 
@@ -1193,28 +1175,28 @@ proc samp.hub.callAndWait {rpc} {
 	return -code error
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.callAndWait\t$samphub($secret,id)"
+    SAMPHubDialogRecvdMsg "samp.hub.callAndWait\t[tsv::get samphub $secret,id]"
 
     set mtype {}
     foreach mm $map {
-       foreach {key val} $mm {
-           switch -- $key {
-               samp.mtype {set mtype $val}
-           }
-       }
+	foreach {key val} $mm {
+	    switch -- $key {
+		samp.mtype {set mtype $val}
+	    }
+	}
     }
 
-    incr samphub(cw,cnt)
-    set cnt $samphub(cw,cnt)
+    tsv::incr samphub cw,cnt
+    set cnt [tsv::get samphub cw,cnt]
 
-    set msgid "bar:$samphub($secret,id):$cnt"
+    set msgid "bar:[tsv::get samphub $secret,id]:$cnt"
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
 
     # ignore hub
-    if {$cc == $samphub(secret)} {
+    if {$cc == [tsv::get samphub secret]} {
 	return -code error
     }
 
@@ -1223,37 +1205,40 @@ proc samp.hub.callAndWait {rpc} {
 	return -code error
     }
 
-    set samphub(cw,$cnt,result) {}
-    set samphub(cw,$cnt,id) {}
-    set samphub(cw,$cnt,timeout,id) {}
+    tsv::set samphub cw,$cnt,result {}
+    tsv::set samphub cw,$cnt,id {}
+    tsv::set samphub cw,$cnt,timeout,id {}
 
     if {$timeout>0} {
-	set samphub(cw,$cnt,timeout,id) [after [expr $timeout*1000] [list SAMPHubTimeout $cnt]]
+	tsv::set samphub cw,$cnt,timeout,id [after [expr $timeout*1000] [list SAMPHubTimeout $cnt]]
     }
 
-    set samphub(cw,$cnt,id) \
+    tsv::set samphub cw,$cnt,id \
 	[after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]]
 
-    vwait samphub(cw,$cnt,result)
+    global samphub${cnt}
+    set samphub${cnt} false
+    vwait samphub${cnt}
+    unset samphub${cnt}
 
     if {$timeout<=0} {
-	set rr $samphub(cw,$cnt,result)
+	set rr [tsv::get samphub cw,$cnt,result]
 
-	unset samphub(cw,$cnt,result)
-	unset samphub(cw,$cnt,id)
-	unset samphub(cw,$cnt,timeout,id)
-		
+	tsv::unset samphub cw,$cnt,result
+	tsv::unset samphub cw,$cnt,id
+	tsv::unset samphub cw,$cnt,timeout,id
+	
 	return [list params [list $rr]]
 
-    } elseif {[info exists samphub(cw,$cnt,timeout,id)]} {
-	after cancel $samphub(cw,$cnt,timeout,id)
+    } elseif {[tsv::exists samphub cw,$cnt,timeout,id]} {
+	after cancel [tsv::get samphub cw,$cnt,timeout,id]
 
-	set rr $samphub(cw,$cnt,result)
+	set rr [tsv::get samphub cw,$cnt,result]
 
-	unset samphub(cw,$cnt,result)
-	unset samphub(cw,$cnt,id)
-	unset samphub(cw,$cnt,timeout,id)
-		
+	tsv::unset samphub cw,$cnt,result
+	tsv::unset samphub cw,$cnt,id
+	tsv::unset samphub cw,$cnt,timeout,id
+	
 	return [list params [list $rr]]
     } else {
 	return -code error
@@ -1261,21 +1246,22 @@ proc samp.hub.callAndWait {rpc} {
 }
 
 proc SAMPHubTimeout {cnt} {
-    global samphub
     
-    if {[info exists samphub(cw,$cnt,id)]} {
-	after cancel $samphub(cw,$cnt,id)
+    if {[tsv::exists samphub cw,$cnt,id]} {
+	after cancel [tsv::get samphub cw,$cnt,id]
     }
 
-    unset samphub(cw,$cnt,result)
-    unset samphub(cw,$cnt,id)
-    unset samphub(cw,$cnt,timeout,id)
+    tsv::unset samphub cw,$cnt,result
+    tsv::unset samphub cw,$cnt,id
+    tsv::unset samphub cw,$cnt,timeout,id
+
+    global samphub${cnt}
+    set samphub${cnt} true
 }
 
 proc samp.hub.reply {rpc} {
-    global samphub
     
-    if {$samphub(debug)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.hub.reply: $rpc\n"
     }
 
@@ -1287,11 +1273,11 @@ proc samp.hub.reply {rpc} {
     set secret [lindex $args 0]
     set msgid [lindex $args 1]
 
+    SAMPHubDialogRecvdMsg "samp.hub.reply\t[tsv::get samphub $secret,id]"
+
     if {![SAMPHubValidSecret $secret]} {
 	return -code error
     }
-
-    SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
     set ll [split $msgid ":"]
     set msgtag [lindex  $ll 0]
@@ -1302,12 +1288,14 @@ proc samp.hub.reply {rpc} {
 	return -code error
     }
 
-    set src $samphub($secret,id)
+    set src [tsv::get samphub $secret,id]
 
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    set samphub(cw,$cnt,result) $param
+	    tsv::set samphub cw,$cnt,result $param
+	    global samphub${cnt}
+	    set samphub${cnt} true
 	}
 	default {
 	    # call
@@ -1315,7 +1303,7 @@ proc samp.hub.reply {rpc} {
 	}
     }
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 # *** Hub ***

@@ -16,6 +16,8 @@ xpasend : {ProcessSendCmd XPAInfoResult}
 
 %%
 
+package provide DS9 1.0
+
 proc xpasend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

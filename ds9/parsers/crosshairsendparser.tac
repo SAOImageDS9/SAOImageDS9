@@ -31,6 +31,8 @@ crosshairsend : {ProcessSendCmdCurrent "get crosshair physical fk5 degrees"}
 
 %%
 
+package provide DS9 1.0
+
 proc crosshairsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

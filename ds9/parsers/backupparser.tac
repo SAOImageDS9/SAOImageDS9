@@ -17,6 +17,8 @@ backup : STRING_ {FileLast backupfbox $1; Backup $1}
 
 %%
 
+package provide DS9 1.0
+
 proc backup::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

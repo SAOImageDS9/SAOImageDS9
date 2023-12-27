@@ -16,6 +16,8 @@ minmaxsend : {ProcessSendCmdGet minmax mode}
 
 %%
 
+package provide DS9 1.0
+
 proc minmaxsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

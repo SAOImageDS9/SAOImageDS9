@@ -141,6 +141,7 @@ PREQS	= \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
+	$(LIBDIR)/thread2.8.8 \
 	$(LIBDIR)/tooltip \
 	$(LIBDIR)/awthemes \
 	$(LIBDIR)/ttkthemes \

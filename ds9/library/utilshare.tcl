@@ -84,11 +84,3 @@ proc ParseURL {url varname} {
 
     return 1
 }
-
-proc XMLQuote {val} {
-    return [string map {& &amp; < &lt; > &gt; \' &apos; \" &quot; \n \r} $val]
-}
-
-proc XMLUnQuote {val} {
-    return [string map {&amp; & &lt; < &gt; > &apos; \' &quot; \" \r \n} $val]
-}

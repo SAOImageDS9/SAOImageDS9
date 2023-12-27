@@ -49,6 +49,8 @@ item : NONE_ {set _ none}
 
 %%
 
+package provide DS9 1.0
+
 proc mode::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

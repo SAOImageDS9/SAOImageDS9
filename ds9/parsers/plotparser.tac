@@ -567,6 +567,8 @@ oldView : DISCRETE_ yesno {PlotCmdUpdateElement graph,ds,show $2}
 
 %%
 
+package provide DS9 1.0
+
 proc plot::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

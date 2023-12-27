@@ -27,6 +27,8 @@ fade : {ProcessCmdSet current display fade DisplayMode}
 
 %%
 
+package provide DS9 1.0
+
 proc fade::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

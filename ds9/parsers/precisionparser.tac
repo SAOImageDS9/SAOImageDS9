@@ -18,6 +18,8 @@ precision :  INT_ INT_ INT_ INT_ INT_ INT_ INT_ INT_ INT_ {ProcessCmdSet pds9 pr
 
 %%
 
+package provide DS9 1.0
+
 proc precision::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

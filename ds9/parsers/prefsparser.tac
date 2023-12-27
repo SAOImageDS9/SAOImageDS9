@@ -63,6 +63,8 @@ nan : STRING_ {ProcessCmdSet pds9 nan $1 PrefsNanColor}
 
 %%
 
+package provide DS9 1.0
+
 proc prefs::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

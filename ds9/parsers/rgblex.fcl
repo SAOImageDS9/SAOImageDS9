@@ -32,3 +32,5 @@ view	    {return $VIEW_}
 #include ws.fin
 
 %%
+
+package provide DS9 1.0

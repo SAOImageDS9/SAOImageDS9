@@ -83,13 +83,13 @@ param : PARAM_ value _PARAM_ {set _ [list param $2]}
  | _PARAM_ {set _ [list param {}]}
  ;
 
-value : STRING_ {set _ [list value [list string [XMLUnQuote $1]]]}
+value : STRING_ {set _ [list value [list string [xmlrpcUnQuote $1]]]}
  | VALUE_ type _VALUE_ {set _ [list value $2]}
  | VALUE_ _VALUE_ {set _ [list value {}]}
  | _VALUE_ {set _ [list value {}]}
  ;
 
-type : STRING_ {set _ [list string [XMLUnQuote $1]]}
+type : STRING_ {set _ [list string [xmlrpcUnQuote $1]]}
 
  | INTEGER_ STRING_ _INTEGER_ {set _ [list integer $2]}
 
@@ -121,6 +121,8 @@ values : values value {lappend _ $2}
  ;
 
 %%
+
+package provide SAMPXMLRPC 1.0
 
 proc xmlrpc::yyerror {msg} {
      variable yycnt

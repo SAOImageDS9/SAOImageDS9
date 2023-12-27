@@ -2,7 +2,8 @@
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
-package provide DS9 1.0
+package provide SAMPXMLRPC 1.0
+package require Thread
 
 # Server
 
@@ -22,6 +23,28 @@ proc xmlrpcServeOnce {sock addr port} {
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
     fileevent $sock readable [list xmlrpcDoRequest $sock]
+#    fileevent $sock readable [list xmlrpcDoThread $sock]
+}
+
+if {0} {
+proc xmlrpcDoThread {sock} { set id [thread::create {
+    package require SAMPXMLRPC
+    package require SAMPHub
+    proc xmlrpcDoNothing {sock} {
+	puts OHNO
+
+	catch {
+	    flush $sock
+	    close $sock
+	}
+    }
+    thread::wait
+}]
+
+thread::transfer $id $sock
+thread::send $id [list xmlrpcDoRequest $sock]
+thread::release $id
+}
 }
 
 proc xmlrpcDoRequest {sock} {
@@ -347,6 +370,14 @@ proc xmlrpcError {msg} {
     puts $msg
 }
 
+proc xmlrpcQuote {val} {
+    return [string map {& &amp; < &lt; > &gt; \' &apos; \" &quot; \n \r} $val]
+}
+
+proc xmlrpcUnQuote {val} {
+    return [string map {&amp; & &lt; < &gt; > &apos; \' &quot; \" \r \n} $val]
+}
+
 # XML2RPC
 
 proc xml2rpc {data} {
@@ -596,7 +627,7 @@ proc xmlrpc2xmlproc {rpc varname} {
 
 	string {
 	    set rr [lindex $rpc 1]
-	    return "<$tag>[XMLQuote $rr]</$tag>"
+	    return "<$tag>[xmlrpcQuote $rr]</$tag>"
 	}
 
 	int {
@@ -605,7 +636,7 @@ proc xmlrpc2xmlproc {rpc varname} {
 	}
 
 	default {
-	    return [XMLQuote $rpc]
+	    return [xmlrpcQuote $rpc]
 	}
     }
 }

@@ -27,6 +27,8 @@ blink : {ProcessCmdSet current display blink DisplayMode}
 
 %%
 
+package provide DS9 1.0
+
 proc blink::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

@@ -20,6 +20,8 @@ wcssend : {ProcessSendCmdGet wcs system}
 
 %%
 
+package provide DS9 1.0
+
 proc wcssend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

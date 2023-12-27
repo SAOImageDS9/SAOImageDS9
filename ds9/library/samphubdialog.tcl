@@ -2,10 +2,10 @@
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
-package provide DS9 1.0
+package provide SAMPHub 1.0
+package require Thread
 
 proc SAMPHubDialog {} {
-    global samphub
     global isamphub
     global dsamphub
     global ds9
@@ -75,8 +75,8 @@ proc SAMPHubDialog {} {
     bind $w <<Close>> SAMPHubDestroyDialog
 
     # hub already running?
-    if {[info exists samphub]} {
-	foreach ss $samphub(client,secret) {
+    if {[tsv::exists samphub secret]} {
+	foreach ss [tsv::get samphub client,secret] {
 	    SAMPHubDialogListAdd $ss
 	}
     }
@@ -245,14 +245,13 @@ proc SAMPHubDestroyDialog {} {
 proc SAMPHubDialogListAdd {secret} {
     global isamphub
     global dsamphub
-    global samphub
 
     if {![winfo exists $isamphub(top)]} {
 	return
     }
 
-    set name $samphub($secret,id)
-    foreach mm $samphub($secret,metadata) {
+    set name [tsv::get samphub $secret,id]
+    foreach mm [tsv::get samphub $secret,metadata] {
        foreach {key val} $mm {
            switch $key {
                samp.name {set name $val}
@@ -292,7 +291,6 @@ proc SAMPHubDialogDisconnect {} {
 }
 
 proc SAMPHubDialogUpdate {} {
-    global samphub
     global isamphub
 
     global debug
@@ -307,7 +305,7 @@ proc SAMPHubDialogUpdate {} {
     set w $isamphub(top)
     set mb $isamphub(mb)
 
-    if {[info exists samphub]} {
+    if {[tsv::exists samphub secret]} {
 	$mb.file entryconfig [msgcat::mc {Start}] -state disabled
 	$mb.file entryconfig [msgcat::mc {Stop}] -state normal
 	$w.buttons.start configure -state disabled
@@ -324,14 +322,13 @@ proc SAMPHubDialogUpdate {} {
 proc SAMPHubDialogMetaUpdate {secret} {
     global isamphub
     global dsamphub
-    global samphub
 
     if {![winfo exists $isamphub(top)]} {
        return
     }
 
-    set name $samphub($secret,id)
-    foreach mm $samphub($secret,metadata) {
+    set name [tsv::get samphub $secret,id]
+    foreach mm [tsv::get samphub $secret,metadata] {
        foreach {key val} $mm {
            switch $key {
                samp.name {set name $val}
@@ -345,7 +342,6 @@ proc SAMPHubDialogMetaUpdate {secret} {
 proc SAMPHubDialogListUpdate {} {
     global isamphub
     global dsamphub
-    global samphub
 
     if {![winfo exists $isamphub(top)]} {
 	return
@@ -360,18 +356,18 @@ proc SAMPHubDialogListUpdate {} {
 
     set secret [$dsamphub(listbox) selection]
     if {$secret != {}} {
-	set dsamphub(client,reg) "$samphub($secret,id)"
-	foreach mm $samphub($secret,metadata) {
+	set dsamphub(client,reg) [tsv::get samphub $secret,id]
+	foreach mm [tsv::get samphub $secret,metadata] {
 	    foreach {key val} $mm {
 		$dsamphub(client,metadata,txt) insert end "$key\t$val\n"
 	    }
 	}
-	foreach ss $samphub($secret,subscriptions) {
+	foreach ss [tsv::get samphub $secret,subscriptions] {
 	    $dsamphub(client,subscriptions,txt) insert end "[lindex $ss 0]\n"
 	}
 
 	# hub?
-	if {$secret == $samphub(secret)} {
+	if {$secret == [tsv::get samphub secret]} {
 	    $mb.file entryconfig [msgcat::mc {Disconnect}] -state disabled
 	    $w.buttons.disconnect configure -state disabled
 	} else {

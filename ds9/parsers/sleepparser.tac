@@ -21,6 +21,8 @@ sleep : {after 1000}
 
 %%
 
+package provide DS9 1.0
+
 proc sleep::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

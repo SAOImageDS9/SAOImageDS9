@@ -61,6 +61,8 @@ orientation : VERTICAL_ {set _ 1}
 
 %%
 
+package provide DS9 1.0
+
 proc colorbar::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

@@ -223,6 +223,8 @@ viewaxes : yesno {ProcessCmdSet grid axes $1}
 
 %%
 
+package provide DS9 1.0
+
 proc grid::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

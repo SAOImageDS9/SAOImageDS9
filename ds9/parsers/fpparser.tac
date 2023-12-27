@@ -110,6 +110,8 @@ sortDir : INCR_ {set _ "-increasing"}
 
 %%
 
+package provide DS9 1.0
+
 proc fp::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

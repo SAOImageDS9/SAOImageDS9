@@ -14,3 +14,5 @@ filename    {return $FILENAME_}
 #include ws.fin
 
 %%
+
+package provide DS9 1.0

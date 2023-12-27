@@ -32,6 +32,8 @@ orientation : NONE_ {set _ none}
 
 %%
 
+package provide DS9 1.0
+
 proc orient::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

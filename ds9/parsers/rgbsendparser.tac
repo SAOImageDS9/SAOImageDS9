@@ -49,6 +49,8 @@ view : RED_ {set _ red}
 
 %%
 
+package provide DS9 1.0
+
 proc rgbsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

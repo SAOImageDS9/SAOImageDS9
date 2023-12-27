@@ -19,6 +19,8 @@ dssstscisend : {ProcessSendCmdGet dstsci name}
  
 %%
 
+package provide DS9 1.0
+
 proc dssstscisend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

@@ -83,6 +83,8 @@ dim : XY_ {set _ xy}
 
 %%
 
+package provide DS9 1.0
+
 proc analysis::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

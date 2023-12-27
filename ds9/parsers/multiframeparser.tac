@@ -18,6 +18,8 @@ multiframe : {MultiframeCmdLoad {}}
 
 %%
 
+package provide DS9 1.0
+
 proc multiframe::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

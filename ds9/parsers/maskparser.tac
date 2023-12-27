@@ -70,6 +70,8 @@ system : coordsys {ProcessCmdSet mask system $1 MaskSystem}
 
 %%
 
+package provide DS9 1.0
+
 proc mask::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

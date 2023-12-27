@@ -70,6 +70,8 @@ panto : numeric numeric {PanTo $1 $2 physical fk5}
 
 %%
 
+package provide DS9 1.0
+
 proc pan::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

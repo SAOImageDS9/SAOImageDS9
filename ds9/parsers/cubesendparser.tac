@@ -33,6 +33,8 @@ order : {ProcessSendCmdGet cube axes}
 
 %%
 
+package provide DS9 1.0
+
 proc cubesend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

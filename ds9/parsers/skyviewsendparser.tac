@@ -22,6 +22,8 @@ skyviewsend : {ProcessSendCmdGet dskyview name}
  
 %%
 
+package provide DS9 1.0
+
 proc skyviewsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

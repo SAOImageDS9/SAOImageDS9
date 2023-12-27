@@ -190,6 +190,8 @@ xyaxis : XAXIS_ {set _ x}
 
 %%
 
+package provide DS9 1.0
+
 proc plotsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

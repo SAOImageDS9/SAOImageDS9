@@ -24,6 +24,8 @@ opts :
 
 %%
 
+package provide DS9 1.0
+
 proc rgbarray::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

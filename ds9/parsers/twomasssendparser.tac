@@ -19,6 +19,8 @@ twomasssend : {ProcessSendCmdGet dtwomass name}
  
 %%
 
+package provide DS9 1.0
+
 proc twomasssend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

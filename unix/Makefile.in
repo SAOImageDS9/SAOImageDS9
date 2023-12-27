@@ -48,7 +48,7 @@ tcl$(TCL_VERSION)/unix/Makefile :
 	cd tcl$(TCL_VERSION)/unix; \
 	./configure \
 	$(PREFIX) \
-	--disable-shared --enable-symbols \
+	--disable-shared --enable-symbols -enable-threads \
 	$(CACHE)
 
 tk	: tk$(TCL_VERSION)/unix/Makefile
@@ -63,7 +63,7 @@ tk$(TCL_VERSION)/unix/Makefile :
 	./configure \
 	$(TKFLAGS) \
 	$(PREFIX) \
-	--disable-shared --enable-symbols \
+	--disable-shared --enable-symbols -enable-threads \
 	$(CACHE)
 
 #-------------------------- tclzipfs

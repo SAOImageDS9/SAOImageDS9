@@ -44,6 +44,8 @@ blockTo : numeric {ProcessCmdSet block factor "$1 $1" ChangeBlock}
 
 %%
 
+package provide DS9 1.0
+
 proc block::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

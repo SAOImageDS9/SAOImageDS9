@@ -17,6 +17,8 @@ pagesetupsend : ORIENT_ {ProcessSendCmdGet ps orient}
 
 %%
 
+package provide DS9 1.0
+
 proc pagesetupsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

@@ -17,3 +17,4 @@ lock	    {return $LOCK_}
 
 %%
 
+package provide DS9 1.0

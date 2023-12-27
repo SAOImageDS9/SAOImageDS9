@@ -23,6 +23,8 @@ masksend : COLOR_ {ProcessSendCmdGet mask color}
 
 %%
 
+package provide DS9 1.0
+
 proc masksend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

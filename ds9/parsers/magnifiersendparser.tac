@@ -21,6 +21,8 @@ magnifiersend : COLOR_ {ProcessSendCmdGet pmagnifier color}
 
 %%
 
+package provide DS9 1.0
+
 proc magnifiersend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

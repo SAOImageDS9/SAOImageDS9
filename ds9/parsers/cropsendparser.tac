@@ -49,6 +49,8 @@ cropsend : {ProcessSendCmdCurrent "get crop center physical fk5 degrees physical
 
 %%
 
+package provide DS9 1.0
+
 proc cropsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

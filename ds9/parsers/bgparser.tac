@@ -17,6 +17,8 @@ bg : STRING_ {ProcessCmdSet pds9 bg $1 PrefsBgColor}
 
 %%
 
+package provide DS9 1.0
+
 proc bg::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

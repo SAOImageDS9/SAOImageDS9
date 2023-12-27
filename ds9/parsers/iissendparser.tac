@@ -18,6 +18,8 @@ iissend : {ProcessSendCmdCurrent "get iis file name 1"}
 
 %%
 
+package provide DS9 1.0
+
 proc iissend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

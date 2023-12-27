@@ -3,6 +3,7 @@
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
 package provide DS9 1.0
+package require SAMPXMLRPC
 
 proc SAMPConnectInit {verbose output debug} {
     global samp

@@ -81,6 +81,8 @@ graph :
 
 %%
 
+package provide DS9 1.0
+
 proc viewsend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer

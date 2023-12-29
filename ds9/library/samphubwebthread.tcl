@@ -2,85 +2,64 @@
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
-package provide SAMPHub 1.0
-
-proc SAMPWebHubDialog {name} {
-    global ds9
-
-    set cc "The following application, probably running in a browser, is requesting SAMP Hub Registration:\n\nName: $name\n\nIf you permit this, it may be able to access local files and other\nresources on your computer. You should only accept from\na web site you trust.\n\nDo yo authorize connection?"
-
-    if {[tk_messageBox -type yesno -icon question -message "$cc"]=={yes}} {
-	return 1
-    } else {
-	return 0
-    }
-}
+package provide SAMPHubThread 1.0
 
 proc samp.webhub.allowReverseCallbacks {args} {
-    global samphub
-
-    global debug
-    if {$debug(tcl,samp)} {
+    if {[tsv::get samphub debug]} {
 	puts "samp.webhub.allowReverseCallbacks: $args"
     }
 
-    set samphub(web,allowReverseCallbacks) [lindex $args 1]
+    tsv::set samphub web,allowReverseCallbacks [lindex $args 1]
     return {string OK}
 }
 
 proc samp.webhub.pullCallbacks {args} {
-    global samphub
-    global samphubmap
-    global samphubmap2
-
-    global debug
-    if {$debug(tcl,samp)} {
-#	puts "samp.webhub.pullCallbacks: $args"
+    if {[tsv::get samphub debug]} {
+	puts "samp.webhub.pullCallbacks: $args"
     }
 
     set secret [lindex $args 0]
     set timeout [lindex $args 1]
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
     set ll {}
-    if {$samphub(web,allowReverseCallbacks)} {
-	if {[llength $samphub($secret,web,msgs)]!= 0} {
-	    foreach msg $samphub($secret,web,msgs) {
+    if {[tsv::get samphub web,allowReverseCallbacks]} {
+	if {[llength [tsv::get samphub $secret,web,msgs]]!= 0} {
+	    foreach msg [tsv::get samphub $secret,web,msgs] {
 		foreach {mtype params} $msg {
-		    catch {unset samphubmap}
 		    set samphubmap(samp.methodName) "string $mtype"
 		    set samphubmap(samp.params) "array [list $params]"
 		    append ll [list "struct samphubmap"]
 		}
 	    }
-	    set samphub($secret,web,msgs) {}
+	    tsv::set samphub $secret,web,msgs {}
 	}
     }
 
     return "array [list $ll]"
 }
 
-proc samp.webhub.ping {} {
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.ping"
+proc samp.webhub.ping {rpc} {
+
+    if {[tsv::get samphub debug]} {
+	puts "samp.webhub.ping $rpc"
     }
     
-    SAMPHubDialogRecvdMsg "samp.webhub.ping"
+    SAMPHubDialogRecvdMsg "samp.webhub.ping $rpc"
 
-    return {string OK}
+    return [SAMPHubReturn OK]
 }
 
-proc samp.webhub.register {args} {
-    global samphub
+proc samp.webhub.register {rpc} {
 
-    global debug
-    if {$debug(tcl,samp)} {
-	puts "samp.webhub.register: $args"
+    if {[tsv::get samphub debug]} {
+	puts "samp.webhub.register: $rpc"
     }
+
+    xmlrpcParams2List $rpc args
 
     set name {}
     
@@ -94,11 +73,12 @@ proc samp.webhub.register {args} {
     }
 
     if {![SAMPWebHubDialog $name]} {
-	return {string ERROR}
+	return -code error
     }
 
+    SAMPHubRegister $args 1
+
     global map-reg
-    SAMPHubRegister 1
     set map-reg(samp.url-translator) {string {}}
     return "struct map-reg"
 }

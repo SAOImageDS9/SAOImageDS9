@@ -591,4 +591,4 @@ set yylval $yytext; return $yylval
 ######
 
 
-package provide SAMPXMLRPC 1.0
+package provide SAMPXmlrpcThread 1.0

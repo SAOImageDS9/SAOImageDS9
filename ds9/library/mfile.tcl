@@ -4,6 +4,8 @@
 
 package provide DS9 1.0
 
+package require Thread
+
 # Menus
 
 proc FileMainMenu {} {
@@ -1319,14 +1321,13 @@ proc UpdateFileMenuSAMP {} {
 proc UpdateFileMenuSAMPHub {} {
     global pds9
     global ds9
-    global samphub
  
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
     $mm.samphub entryconfig [msgcat::mc {Information}] -state normal
     $bb.samphubinfo configure -state normal
-    if {[info exists samphub]} {
+    if {[tsv::exists samphub secret]} {
 	$mm.samphub entryconfig [msgcat::mc {Start}] -state disabled
 	$mm.samphub entryconfig [msgcat::mc {Stop}] -state normal
 	$bb.samphubstart configure -state disabled

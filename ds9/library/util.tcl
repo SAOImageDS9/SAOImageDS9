@@ -4,6 +4,8 @@
 
 package provide DS9 1.0
 
+package require Thread
+
 proc CurrentDef {} {
     global current
     global pcurrent
@@ -860,8 +862,7 @@ proc QuitDS9 {} {
     }
 
     # shutdown SAMPHUB
-    global samphub
-    if {[info exists samphub]} {
+    if {[tsv::exists samphub secret]} {
 	catch {SAMPHubStop}
     }
     

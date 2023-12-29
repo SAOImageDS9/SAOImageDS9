@@ -2,7 +2,9 @@
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
-package provide SAMPHub 1.0
+package provide DS9 1.0
+
+package require SAMPHubThread
 package require Thread
 
 proc SAMPHubDialog {} {

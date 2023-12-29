@@ -122,7 +122,7 @@ values : values value {lappend _ $2}
 
 %%
 
-package provide SAMPXMLRPC 1.0
+package provide SAMPXmlrpcThread 1.0
 
 proc xmlrpc::yyerror {msg} {
      variable yycnt

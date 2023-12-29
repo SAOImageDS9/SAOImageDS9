@@ -225,8 +225,8 @@ package require tkcon
 package require Tkblt
 package require Tls
 
-package require SAMPHub
-package require SAMPXMLRPC
+package require SAMPHubThread
+package require SAMPXmlrpcThread
 
 package require DS9
 

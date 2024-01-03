@@ -8,19 +8,18 @@ package require SAMPHubThread
 package require Thread
 
 proc SAMPHubDialog {} {
-    global isamphub
     global dsamphub
     global ds9
 
     # see if we already have a window visible
-    if {[winfo exists $isamphub(top)]} {
-	raise $isamphub(top)
+    if {[winfo exists [tsv::get isamphub top]]} {
+	raise [tsv::get isamphub top]
 	return
     }
 
     # create the window
-    set w $isamphub(top)
-    set mb $isamphub(mb)
+    set w [tsv::get isamphub top]
+    set mb [tsv::get isamphub mb]
 
     Toplevel $w $mb 6 [msgcat::mc {SAMP Hub}] SAMPHubDestroyDialog
 
@@ -234,54 +233,19 @@ proc SAMPHubDialogSent {sent} {
 }
 
 proc SAMPHubDestroyDialog {} {
-    global isamphub
     global dsamphub
 
-    if {[winfo exists $isamphub(top)]} {
-	destroy $isamphub(top)
-	destroy $isamphub(mb)
+    if {[winfo exists [tsv::get isamphub top]]} {
+	destroy [tsv::get isamphub top]
+	destroy [tsv::get isamphub mb]
 	unset dsamphub
     }
 }
 
-proc SAMPHubDialogListAdd {secret} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-	return
-    }
-
-    set name [tsv::get samphub $secret,id]
-    foreach mm [tsv::get samphub $secret,metadata] {
-       foreach {key val} $mm {
-           switch $key {
-               samp.name {set name $val}
-           }
-       }
-    }
-
-    $dsamphub(listbox) insert {} end -id $secret -text $name
-    $dsamphub(listbox) selection set $secret
-}
-
-proc SAMPHubDialogListRemove {secret} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-	return
-    }
-
-    $dsamphub(listbox) delete $secret
-    $dsamphub(listbox) selection set {}
-}
-
 proc SAMPHubDialogDisconnect {} {
-    global isamphub
     global dsamphub
 
-    if {![winfo exists $isamphub(top)]} {
+    if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
 
@@ -293,19 +257,17 @@ proc SAMPHubDialogDisconnect {} {
 }
 
 proc SAMPHubDialogUpdate {} {
-    global isamphub
-
     global debug
     if {$debug(tcl,update)} {
 	puts stderr "SAMPHubDialogUpdate"
     }
 
-    if {![winfo exists $isamphub(top)]} {
+    if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
 
-    set w $isamphub(top)
-    set mb $isamphub(mb)
+    set w [tsv::get isamphub top]
+    set mb [tsv::get isamphub mb]
 
     if {[tsv::exists samphub secret]} {
 	$mb.file entryconfig [msgcat::mc {Start}] -state disabled
@@ -320,108 +282,16 @@ proc SAMPHubDialogUpdate {} {
     }
 }
 
-# update list name from metadata
-proc SAMPHubDialogMetaUpdate {secret} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-       return
-    }
-
-    set name [tsv::get samphub $secret,id]
-    foreach mm [tsv::get samphub $secret,metadata] {
-       foreach {key val} $mm {
-           switch $key {
-               samp.name {set name $val}
-           }
-       }
-    }
-
-    $dsamphub(listbox) item $secret -text $name
-}
-
-proc SAMPHubDialogListUpdate {} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-	return
-    }
-
-    set w $isamphub(top)
-    set mb $isamphub(mb)
-
-    set dsamphub(client,reg) {}
-    $dsamphub(client,metadata,txt) delete 1.0 end
-    $dsamphub(client,subscriptions,txt) delete 1.0 end
-
-    set secret [$dsamphub(listbox) selection]
-    if {$secret != {}} {
-	set dsamphub(client,reg) [tsv::get samphub $secret,id]
-	foreach mm [tsv::get samphub $secret,metadata] {
-	    foreach {key val} $mm {
-		$dsamphub(client,metadata,txt) insert end "$key\t$val\n"
-	    }
-	}
-	foreach ss [tsv::get samphub $secret,subscriptions] {
-	    $dsamphub(client,subscriptions,txt) insert end "[lindex $ss 0]\n"
-	}
-
-	# hub?
-	if {$secret == [tsv::get samphub secret]} {
-	    $mb.file entryconfig [msgcat::mc {Disconnect}] -state disabled
-	    $w.buttons.disconnect configure -state disabled
-	} else {
-	    $mb.file entryconfig [msgcat::mc {Disconnect}] -state normal
-	    $w.buttons.disconnect configure -state normal
-	}
-
-    } else {
-	$mb.file entryconfig [msgcat::mc {Disconnect}] -state disabled
-	$w.buttons.disconnect configure -state disabled
-    }
-
-    $dsamphub(client,metadata,txt) see end
-    $dsamphub(client,subscriptions,txt) see end
-}
-
-proc SAMPHubDialogRecvdMsg {msg} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-	return
-    }
-
-    $dsamphub(recvd,txt) insert end "$msg\n"
-    $dsamphub(recvd,txt) see end
-}
-
-proc SAMPHubDialogSentMsg {msg} {
-    global isamphub
-    global dsamphub
-
-    if {![winfo exists $isamphub(top)]} {
-	return
-    }
-
-    $dsamphub(sent,txt) insert end "$msg\n"
-    $dsamphub(sent,txt) see end
-}
-
 proc SAMPHubDialogSaveFile {} {
-    global isamphub
     global dsamphub
 
-    set fn [SaveFileDialog textfbox $isamphub(top)]
+    set fn [SaveFileDialog textfbox [tsv::get isamphub top]]
     if {$fn != {}} {
 	SAMPHubDialogSaveFileName $fn
     }
 }
 
 proc SAMPHubDialogSaveFileName {fn} {
-    global isamphub
     global dsamphub
 
     set which [$dsamphub(notebook) index current]

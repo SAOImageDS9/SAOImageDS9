@@ -9,10 +9,8 @@ package require SAMPHubThread
 package require Thread
 
 proc SAMPHubDef {} {
-    global isamphub
-
-    set isamphub(top) .samphub
-    set isamphub(mb) .samphubmb
+    tsv::set isamphub top .samphub
+    tsv::set isamphub mb  .samphubmb
 }
 
 proc SAMPHubStart {verbose} {

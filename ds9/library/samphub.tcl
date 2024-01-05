@@ -34,7 +34,7 @@ proc SAMPHubStart {verbose} {
     if {[SAMPParseHub]} {
 	# ok, found one, is it alive?
 	set rr {}
-	if {[SAMPHubSend {samp.hub.ping} $samp(url) {} rr]} {
+	if {[SAMPSend {samp.hub.ping} {} rr]} {
 	    # yes, its alive
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {found existing hub}]"

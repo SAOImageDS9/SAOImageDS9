@@ -237,14 +237,14 @@ proc SAMPSend {method params resultVar} {
 
     if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
 	if {$samp(debug)} {
-	    puts stderr "SAMPSend: bad xmlrpcCall\n"
+	    puts stderr "SAMPSend: bad xmlrpcCall"
 	}
 	# Error
 	return false
     }
 
     if {$samp(debug)} {
-	puts stderr "SAMPSend Result: $result\n"
+	puts stderr "SAMPSend Result: $result"
     }
 
     switch $method {
@@ -709,7 +709,7 @@ proc SAMPParseHub {} {
     }
 
     if {$samp(debug)} {
-	puts stderr "SAMPParseHub: $samp(secret) $samp(url) $samp(method)\n"
+	puts stderr "SAMPParseHub: $samp(secret) $samp(url) $samp(method)"
     }
     return 1
 }

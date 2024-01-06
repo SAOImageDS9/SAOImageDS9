@@ -13,6 +13,7 @@ package require Thread
 proc SAMPHubDef {} {
     tsv::set isamphub top .samphub
     tsv::set isamphub mb  .samphubmb
+    tsv::set isamphub id [thread::id]
 }
 
 # Threads
@@ -24,11 +25,11 @@ proc SAMPHubServeThread {port} {
 proc SAMPHubServeOnceThread {sock addr port} {
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
-    fileevent $sock readable [list SAMPHubDoThread $sock]
+    fileevent $sock readable [list SAMPHubDoRequestThread $sock]
 #    fileevent $sock readable [list xmlrpcDoRequest $sock]
 }
 
-proc SAMPHubDoThread {sock} {
+proc SAMPHubDoRequestThread {sock} {
     thread::detach $sock
     tsv::set samphub foo $sock
     set id [tpool::post [tsv::get samphub pool] xmlrpcDoRequestThread]

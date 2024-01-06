@@ -296,6 +296,8 @@ proc SAMPHubDialogSaveFileName {fn} {
     close $ch
 }
 
+# Base procs called from threads
+
 proc SAMPHubDialogListAdd_ {secret} {
     if {![winfo exists [tsv::get isamphub top]]} {
 	return

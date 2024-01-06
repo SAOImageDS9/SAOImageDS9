@@ -115,7 +115,7 @@ proc SAMPHubDialogClient {client} {
     set dsamphub(client,reg,txt) $rr.v
 
     ttk::label $rr.t -text [msgcat::mc {Public ID}]
-    ttk::label $rr.v -text {}
+    ttk::label $rr.v -textvariable dsamphub(client,reg)
     grid $rr.t -row 0 -column 0 -padx 2
     grid $rr.v -row 0 -column 1 -padx 2 -sticky w
 
@@ -395,16 +395,12 @@ proc SAMPHubDialogListUpdate_ {} {
     set mb [tsv::get isamphub mb]
 
     set dsamphub(client,reg) {}
-    $dsamphub(client,reg,txt) configure \
-	-text $dsamphub(client,reg)
     $dsamphub(client,metadata,txt) delete 1.0 end
     $dsamphub(client,subscriptions,txt) delete 1.0 end
 
     set secret [$dsamphub(listbox) selection]
     if {$secret != {}} {
 	set dsamphub(client,reg) [tsv::get samphub $secret,id]
-	$dsamphub(client,reg,txt) configure \
-	    -text $dsamphub(client,reg)
 	foreach mm [tsv::get samphub $secret,metadata] {
 	    foreach {key val} $mm {
 		$dsamphub(client,metadata,txt) insert end "$key\t$val\n"

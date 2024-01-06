@@ -9,17 +9,18 @@ package require Thread
 
 proc SAMPHubDialog {} {
     global ds9
+    global isamphub
     global dsamphub
 
     # see if we already have a window visible
-    if {[winfo exists [tsv::get isamphub top]]} {
-	raise [tsv::get isamphub top]
+    if {[winfo exists $isamphub(top)]} {
+	raise $isamphub(top)
 	return
     }
 
     # create the window
-    set w [tsv::get isamphub top]
-    set mb [tsv::get isamphub mb]
+    set w $isamphub(top)
+    set mb $isamphub(mb)
 
     Toplevel $w $mb 6 [msgcat::mc {SAMP Hub}] SAMPHubDestroyDialog
 
@@ -234,19 +235,21 @@ proc SAMPHubDialogSent {sent} {
 }
 
 proc SAMPHubDestroyDialog {} {
+    global isamphub
     global dsamphub
 
-    if {[winfo exists [tsv::get isamphub top]]} {
-	destroy [tsv::get isamphub top]
-	destroy [tsv::get isamphub mb]
+    if {[winfo exists $isamphub(top)]} {
+	destroy $isamphub(top)
+	destroy $isamphub(mb)
 	unset dsamphub
     }
 }
 
 proc SAMPHubDialogDisconnect {} {
+    global isamphub
     global dsamphub
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
 	return
     }
 
@@ -258,17 +261,19 @@ proc SAMPHubDialogDisconnect {} {
 }
 
 proc SAMPHubDialogUpdate {} {
+    global isamphub
+
     global debug
     if {$debug(tcl,update)} {
 	puts stderr "SAMPHubDialogUpdate"
     }
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
 	return
     }
 
-    set w [tsv::get isamphub top]
-    set mb [tsv::get isamphub mb]
+    set w $isamphub(top)
+    set mb $isamphub(mb)
 
     if {[tsv::exists samphub secret]} {
 	$mb.file entryconfig [msgcat::mc {Start}] -state disabled
@@ -284,7 +289,9 @@ proc SAMPHubDialogUpdate {} {
 }
 
 proc SAMPHubDialogSaveFile {} {
-    set fn [SaveFileDialog textfbox [tsv::get isamphub top]]
+    global isamphub
+
+    set fn [SaveFileDialog textfbox $isamphub(top)]
     if {$fn != {}} {
 	SAMPHubDialogSaveFileName $fn
     }
@@ -312,9 +319,10 @@ proc SAMPHubDialogSaveFileName {fn} {
 # Base procs called from threads
 
 proc SAMPHubDialogListAdd_ {secret} {
+    global isamphub
     global dsamphub
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
 	return
     }
 
@@ -332,9 +340,10 @@ proc SAMPHubDialogListAdd_ {secret} {
 }
 
 proc SAMPHubDialogListRemove_ {secret} {
+    global isamphub
     global dsamphub
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
 	return
     }
 
@@ -343,9 +352,10 @@ proc SAMPHubDialogListRemove_ {secret} {
 }
 
 proc SAMPHubDialogRecvdMsg_ {msg} {
+    global isamphub
     global dsamphub
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
 	return
     }
 
@@ -354,9 +364,10 @@ proc SAMPHubDialogRecvdMsg_ {msg} {
 }
 
 proc SAMPHubDialogSentMsg_ {msg} {
+    global isamphub
     global dsamphub
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
 	return
     }
 
@@ -366,9 +377,10 @@ proc SAMPHubDialogSentMsg_ {msg} {
 
 # update list name from metadata
 proc SAMPHubDialogMetaUpdate_ {secret} {
+    global isamphub
     global dsamphub
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
        return
     }
 
@@ -385,14 +397,15 @@ proc SAMPHubDialogMetaUpdate_ {secret} {
 }
 
 proc SAMPHubDialogListUpdate_ {} {
+    global isamphub
     global dsamphub
 
-    if {![winfo exists [tsv::get isamphub top]]} {
+    if {![winfo exists $isamphub(top)]} {
 	return
     }
 
-    set w [tsv::get isamphub top]
-    set mb [tsv::get isamphub mb]
+    set w $isamphub(top)
+    set mb $isamphub(mb)
 
     set dsamphub(client,reg) {}
     $dsamphub(client,metadata,txt) delete 1.0 end

@@ -11,9 +11,10 @@ package require Thread
 # Defs
 
 proc SAMPHubDef {} {
-    tsv::set isamphub top .samphub
-    tsv::set isamphub mb  .samphubmb
-    tsv::set isamphub id [thread::id]
+    global isamphub
+
+    set isamphub(top) .samphub
+    set isamphub(mb)  .samphubmb
 }
 
 # Threads
@@ -85,6 +86,8 @@ proc SAMPHubStart {verbose} {
     tsv::unset samphub
     
     # basics
+    tsv::set samphub id [thread::id]
+    
     tsv::set samphub verbose $verbose
     tsv::set samphub debug $debug(tcl,samp)
     tsv::set samphub fn [file join [GetEnvHome] {.samp}]

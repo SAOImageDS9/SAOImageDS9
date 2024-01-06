@@ -7,26 +7,26 @@ package provide SAMPHubThread 1.0
 package require Thread
 
 proc SAMPHubDialogListAdd {secret} {
-    thread::send [tsv::get isamphub id] [list SAMPHubDialogListAdd_ $secret]
+    thread::send [tsv::get samphub id] [list SAMPHubDialogListAdd_ $secret]
 }
 
 proc SAMPHubDialogListRemove {secret} {
-    thread::send [tsv::get isamphub id] [list SAMPHubDialogListRemove_ $secret]
+    thread::send [tsv::get samphub id] [list SAMPHubDialogListRemove_ $secret]
 }
 
 proc SAMPHubDialogRecvdMsg {msg} {
-    thread::send [tsv::get isamphub id] [list SAMPHubDialogRecvdMsg_ $msg]
+    thread::send [tsv::get samphub id] [list SAMPHubDialogRecvdMsg_ $msg]
 }
 
 proc SAMPHubDialogSentMsg {msg} {
-    thread::send [tsv::get isamphub id] [list SAMPHubDialogSentMsg_ $msg]
+    thread::send [tsv::get samphub id] [list SAMPHubDialogSentMsg_ $msg]
 }
 
 # update list name from metadata
 proc SAMPHubDialogMetaUpdate {secret} {
-    thread::send [tsv::get isamphub id] [list SAMPHubDialogMetaUpdate_ $secret]
+    thread::send [tsv::get samphub id] [list SAMPHubDialogMetaUpdate_ $secret]
 }
 
 proc SAMPHubDialogListUpdate {} {
-    thread::send [tsv::get isamphub id] [list SAMPHubDialogListUpdate_]
+    thread::send [tsv::get samphub id] [list SAMPHubDialogListUpdate_]
 }

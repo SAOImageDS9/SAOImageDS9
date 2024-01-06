@@ -6,6 +6,16 @@ package provide DS9 1.0
 
 package require SAMPXmlrpcThread
 
+proc SAMPServe {port} {
+    return [socket -server SAMPServeOnce $port]
+}
+
+proc SAMPServeOnce {sock addr port} {
+    fconfigure $sock -translation {lf lf} -buffersize 4096
+    fconfigure $sock -blocking off
+    fileevent $sock readable [list xmlrpcDoRequest $sock]
+}
+
 proc SAMPConnectInit {verbose output debug} {
     global samp
 
@@ -60,7 +70,7 @@ proc SAMPConnectInit {verbose output debug} {
     SAMPConnectMetadata
     
     # who are we
-    set samp(sock) [xmlrpcServe 0]
+    set samp(sock) [SAMPServe 0]
     set samp(port) [lindex [fconfigure $samp(sock) -sockname] 2]
     set samp(home) "[info hostname]:$samp(port)"
 

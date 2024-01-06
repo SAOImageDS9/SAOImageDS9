@@ -8,15 +8,6 @@ package require Thread
 
 # Non-Threaded
 
-proc xmlrpcServe {port} {
-    return [socket -server xmlrpcServeOnce $port]
-}
-
-proc xmlrpcServeOnce {sock addr port} {
-    fconfigure $sock -translation {lf lf} -buffersize 4096
-    fconfigure $sock -blocking off
-    fileevent $sock readable [list xmlrpcDoRequest $sock]
-}
 
 # Threaded
 

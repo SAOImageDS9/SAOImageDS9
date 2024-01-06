@@ -9,6 +9,7 @@ package require Thread
 
 proc SAMPHubDialog {} {
     global ds9
+    global dsamphub
 
     # see if we already have a window visible
     if {[winfo exists [tsv::get isamphub top]]} {
@@ -49,7 +50,7 @@ proc SAMPHubDialog {} {
     $tt add $recvd -text {Received Messages}
     $tt add $sent -text {Sent Messages}
 
-    tsv::set dsamphub notebook $tt
+    set dsamphub(notebook) $tt
 
     SAMPHubDialogClient $client
     SAMPHubDialogRecvd $recvd
@@ -86,10 +87,12 @@ proc SAMPHubDialog {} {
 }
 
 proc SAMPHubDialogClient {client} {
+    global dsamphub
+
     # Client Left
     set f [ttk::frame $client.left]
     ttk::scrollbar $f.scroll -command [list $f.box yview]
-    tsv::set dsamphub listbox [ttk::treeview $f.box \
+    set dsamphub(listbox) [ttk::treeview $f.box \
 			       -yscroll [list $f.scroll set] \
 			       -selectmode browse \
 			       -height 28 \
@@ -100,7 +103,7 @@ proc SAMPHubDialogClient {client} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    bind [tsv::get dsamphub listbox] <<TreeviewSelect>> SAMPHubDialogListUpdate
+    bind $dsamphub(listbox) <<TreeviewSelect>> SAMPHubDialogListUpdate
 
     # Client Right
     set f [ttk::frame $client.right]
@@ -108,8 +111,8 @@ proc SAMPHubDialogClient {client} {
     # Registration
     set rr [ttk::labelframe $f.reg -text [msgcat::mc {Registration}]]
 
-    tsv::set dsamphub client,reg {}
-    tsv::set dsamphub client,reg,txt $rr.v
+    set dsamphub(client,reg) {}
+    set dsamphub(client,reg,txt) $rr.v
 
     ttk::label $rr.t -text [msgcat::mc {Public ID}]
     ttk::label $rr.v -text {}
@@ -119,7 +122,7 @@ proc SAMPHubDialogClient {client} {
     # Metadata
     set mm [ttk::labelframe $f.meta -text [msgcat::mc {Metadata}]]
 
-    tsv::set dsamphub client,metadata,txt $mm.txt
+    set dsamphub(client,metadata,txt) $mm.txt
     roText::roText $mm.txt
 
     $mm.txt configure \
@@ -145,7 +148,7 @@ proc SAMPHubDialogClient {client} {
     # Subscriptions
     set ss [ttk::labelframe $f.sub -text [msgcat::mc {Subscriptions}]]
 
-    tsv::set dsamphub client,subscriptions,txt $ss.txt
+    set dsamphub(client,subscriptions,txt) $ss.txt
     roText::roText $ss.txt
 
     $ss.txt configure \
@@ -177,11 +180,13 @@ proc SAMPHubDialogClient {client} {
     grid rowconfigure $client 0 -weight 1
     grid columnconfigure $client 1 -weight 1
 
-    [tsv::get dsamphub listbox] selection set {}
+    $dsamphub(listbox) selection set {}
 }
 
 proc SAMPHubDialogRecvd {recvd} {
-    tsv::set dsamphub recvd,txt $recvd.txt
+    global dsamphub
+
+    set dsamphub(recvd,txt) $recvd.txt
     roText::roText $recvd.txt
 
     $recvd.txt configure \
@@ -204,9 +209,11 @@ proc SAMPHubDialogRecvd {recvd} {
 }
 
 proc SAMPHubDialogSent {sent} {
+    global dsamphub
+
     roText::roText $sent.txt
 
-    tsv::set dsamphub sent,txt $sent.txt
+    set dsamphub(sent,txt) $sent.txt
     $sent.txt configure \
 	-wrap none \
 	-yscrollcommand [list $sent.yscroll set] \
@@ -227,19 +234,23 @@ proc SAMPHubDialogSent {sent} {
 }
 
 proc SAMPHubDestroyDialog {} {
+    global dsamphub
+
     if {[winfo exists [tsv::get isamphub top]]} {
 	destroy [tsv::get isamphub top]
 	destroy [tsv::get isamphub mb]
-	tsv::unset dsamphub
+	unset dsamphub
     }
 }
 
 proc SAMPHubDialogDisconnect {} {
+    global dsamphub
+
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
 
-    set secret [[tsv::get dsamphub listbox] selection]
+    set secret [$dsamphub(listbox) selection]
     # can't disconnect the hub
     if {$secret != {} && $secret != 0} {
 	SAMPHubDisconnect $secret
@@ -280,12 +291,14 @@ proc SAMPHubDialogSaveFile {} {
 }
 
 proc SAMPHubDialogSaveFileName {fn} {
-    set which [[tsv::get dsamphub notebook] index current]
+    global dsamphub
+
+    set which [$dsamphub(notebook) index current]
 
     switch $which {
-	0 {set txt [tsv::get dsamphub client,subscriptions,txt]}
-	1 {set txt [tsv::get dsamphub recvd,txt]}
-	2 {set txt [tsv::get dsamphub sent,txt]}
+	0 {set txt $dsamphub(client,subscriptions,txt}
+	1 {set txt $dsamphub(recvd,txt)}
+	2 {set txt $dsamphub(sent,txt)}
     }
 
     if {[catch {set ch [open "$fn" w]}]} {
@@ -299,6 +312,8 @@ proc SAMPHubDialogSaveFileName {fn} {
 # Base procs called from threads
 
 proc SAMPHubDialogListAdd_ {secret} {
+    global dsamphub
+
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
@@ -312,39 +327,47 @@ proc SAMPHubDialogListAdd_ {secret} {
        }
     }
 
-    [tsv::get dsamphub listbox] insert {} end -id $secret -text $name
-    [tsv::get dsamphub listbox] selection set $secret
+    $dsamphub(listbox) insert {} end -id $secret -text $name
+    $dsamphub(listbox) selection set $secret
 }
 
 proc SAMPHubDialogListRemove_ {secret} {
+    global dsamphub
+
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
 
-    [tsv::get dsamphub listbox] delete $secret
-    [tsv::get dsamphub listbox] selection set {}
+    $dsamphub(listbox) delete $secret
+    $dsamphub(listbox) selection set {}
 }
 
 proc SAMPHubDialogRecvdMsg_ {msg} {
+    global dsamphub
+
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
 
-    [tsv::get dsamphub recvd,txt] insert end "$msg\n"
-    [tsv::get dsamphub recvd,txt] see end
+    $dsamphub(recvd,txt) insert end "$msg\n"
+    $dsamphub(recvd,txt) see end
 }
 
 proc SAMPHubDialogSentMsg_ {msg} {
+    global dsamphub
+
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
 
-    [tsv::get dsamphub sent,txt] insert end "$msg\n"
-    [tsv::get dsamphub sent,txt] see end
+    $dsamphub(sent,txt) insert end "$msg\n"
+    $dsamphub(sent,txt) see end
 }
 
 # update list name from metadata
 proc SAMPHubDialogMetaUpdate_ {secret} {
+    global dsamphub
+
     if {![winfo exists [tsv::get isamphub top]]} {
        return
     }
@@ -358,10 +381,12 @@ proc SAMPHubDialogMetaUpdate_ {secret} {
        }
     }
 
-    [tsv::get dsamphub listbox] item $secret -text $name
+    $dsamphub(listbox) item $secret -text $name
 }
 
 proc SAMPHubDialogListUpdate_ {} {
+    global dsamphub
+
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
@@ -369,24 +394,24 @@ proc SAMPHubDialogListUpdate_ {} {
     set w [tsv::get isamphub top]
     set mb [tsv::get isamphub mb]
 
-    tsv::set dsamphub client,reg {}
-    [tsv::get dsamphub client,reg,txt] configure \
-	-text [tsv::get dsamphub client,reg]
-    [tsv::get dsamphub client,metadata,txt] delete 1.0 end
-    [tsv::get dsamphub client,subscriptions,txt] delete 1.0 end
+    set dsamphub(client,reg) {}
+    $dsamphub(client,reg,txt) configure \
+	-text $(dsamphub(client,reg)
+    $dsamphub(client,metadata,txt) delete 1.0 end
+    $dsamphub(client,subscriptions,txt) delete 1.0 end
 
-    set secret [[tsv::get dsamphub listbox] selection]
+    set secret [$dsamphub(listbox) selection]
     if {$secret != {}} {
-	tsv::set dsamphub client,reg [tsv::get samphub $secret,id]
-	[tsv::get dsamphub client,reg,txt] configure \
-	    -text [tsv::get dsamphub client,reg]
+	set dsamphub(client,reg) [tsv::get samphub $secret,id]
+	$dsamphub(client,reg,txt) configure \
+	    -text $dsamphub(client,reg)
 	foreach mm [tsv::get samphub $secret,metadata] {
 	    foreach {key val} $mm {
-		[tsv::get dsamphub client,metadata,txt] insert end "$key\t$val\n"
+		$dsamphub(client,metadata,txt) insert end "$key\t$val\n"
 	    }
 	}
 	foreach ss [tsv::get samphub $secret,subscriptions] {
-	    [tsv::get dsamphub client,subscriptions,txt] insert end "[lindex $ss 0]\n"
+	    $dsamphub(client,subscriptions,txt) insert end "[lindex $ss 0]\n"
 	}
 
 	# hub?
@@ -403,8 +428,8 @@ proc SAMPHubDialogListUpdate_ {} {
 	$w.buttons.disconnect configure -state disabled
     }
 
-    [tsv::get dsamphub client,metadata,txt] see end
-    [tsv::get dsamphub client,subscriptions,txt] see end
+    $dsamphub(client,metadata,txt) see end
+    $dsamphub(client,subscriptions,txt) see end
 }
 
 

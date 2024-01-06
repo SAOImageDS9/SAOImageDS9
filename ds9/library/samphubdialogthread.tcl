@@ -7,6 +7,7 @@ package provide SAMPHubThread 1.0
 package require Thread
 
 proc SAMPHubDialogListAdd {secret} {
+    return
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
@@ -25,6 +26,7 @@ proc SAMPHubDialogListAdd {secret} {
 }
 
 proc SAMPHubDialogListRemove {secret} {
+    return
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
@@ -34,6 +36,7 @@ proc SAMPHubDialogListRemove {secret} {
 }
 
 proc SAMPHubDialogRecvdMsg {msg} {
+    return
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
@@ -43,6 +46,7 @@ proc SAMPHubDialogRecvdMsg {msg} {
 }
 
 proc SAMPHubDialogSentMsg {msg} {
+    return
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }
@@ -53,6 +57,7 @@ proc SAMPHubDialogSentMsg {msg} {
 
 # update list name from metadata
 proc SAMPHubDialogMetaUpdate {secret} {
+    return
     if {![winfo exists [tsv::get isamphub top]]} {
        return
     }
@@ -70,6 +75,7 @@ proc SAMPHubDialogMetaUpdate {secret} {
 }
 
 proc SAMPHubDialogListUpdate {} {
+    return
     if {![winfo exists [tsv::get isamphub top]]} {
 	return
     }

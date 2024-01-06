@@ -20,36 +20,5 @@ proc xmlrpcServeOnce {sock addr port} {
 
 # Threaded
 
-proc xmlrpcServeThread {port} {
-    return [socket -server xmlrpcServeOnceThread $port]
-}
-
-proc xmlrpcServeOnceThread {sock addr port} {
-    fconfigure $sock -translation {lf lf} -buffersize 4096
-    fconfigure $sock -blocking off
-#    fileevent $sock readable [list xmlrpcDoThread $sock]
-    fileevent $sock readable [list xmlrpcDoRequest $sock]
-}
-
-proc xmlrpcDoThread {sock} {
-    set id [thread::create {
-	package require SAMPXmlrpcThread
-	package require SAMPHubThread
-	
-	proc xmlrpcDoNothing {sock} {
-	    puts OHNO
-	    
-	    catch {
-		flush $sock
-		close $sock
-	    }
-	}
-
-        thread::wait}]
-
-    thread::transfer $id $sock
-    thread::send $id [list xmlrpcDoRequest $sock]
-    thread::release $id
-}
 
 

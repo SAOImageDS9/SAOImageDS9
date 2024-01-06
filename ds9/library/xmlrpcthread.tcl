@@ -16,6 +16,12 @@ global xmlrpcresult
 set xmlrpcdebug false
 set xmlrpccnt 0
 
+proc xmlrpcDoRequestThread {} {
+    set sock [tsv::get samphub foo]
+    thread::attach $sock
+    xmlrpcDoRequest $sock
+}
+
 proc xmlrpcDoRequest {sock} {
     set res [xmlrpcReadHeader $sock]
     if {$res == {}} {

@@ -8,10 +8,37 @@ package require SAMPXmlrpcThread
 package require SAMPHubThread
 package require Thread
 
+# Defs
+
 proc SAMPHubDef {} {
     tsv::set isamphub top .samphub
     tsv::set isamphub mb  .samphubmb
 }
+
+# Threads
+
+proc SAMPHubServeThread {port} {
+    return [socket -server SAMPHubServeOnceThread $port]
+}
+
+proc SAMPHubServeOnceThread {sock addr port} {
+    fconfigure $sock -translation {lf lf} -buffersize 4096
+    fconfigure $sock -blocking off
+    fileevent $sock readable [list SAMPHubDoThread $sock]
+#    fileevent $sock readable [list xmlrpcDoRequest $sock]
+}
+
+proc SAMPHubDoThread {sock} {
+    thread::detach $sock
+    tsv::set samphub foo $sock
+    set id [tpool::post [tsv::get samphub pool] xmlrpcDoRequestThread]
+
+#    thread::transfer $id $sock
+#    thread::send -async $id [list xmlrpcDoRequest $sock]
+#    thread::release $id
+}
+
+# Startup
 
 proc SAMPHubStart {verbose} {
     global samp
@@ -73,6 +100,12 @@ proc SAMPHubStart {verbose} {
     tsv::set samphub web,port 0
     tsv::set samphub web,allowReverseCallbacks 0
 
+    tsv::set samphub pool \
+	[tpool::create -idletime 10 -initcmd {
+	    package require SAMPXmlrpcThread
+	    package require SAMPHubThread
+	}]
+	     
     # Init
     if {![SAMPHubStartConnect]} {
 	return
@@ -98,7 +131,7 @@ proc SAMPHubStart {verbose} {
 proc SAMPHubStartConnect {} {
     global pds9
 
-    if {[catch {tsv::set samphub sock [xmlrpcServeThread 0]}]} {
+    if {[catch {tsv::set samphub sock [SAMPHubServeThread 0]}]} {
 	Error "SAMPHub: [msgcat::mc {unable to open hub}]"
 	tsv::unset samphub
 	return 0
@@ -106,7 +139,7 @@ proc SAMPHubStartConnect {} {
     tsv::set samphub port [lindex [fconfigure [tsv::get samphub sock] -sockname] 2]
 
     if {$pds9(samp,webhub)} {
-	if {[catch {tsv::set samphub web,sock [xmlrpcServeThread 21012]}]} {
+	if {[catch {tsv::set samphub web,sock [SAMPHubServeThread 21012]}]} {
 	    Error "SAMPHub: [msgcat::mc {unable to open web hub}]"
 	} else {
 	    tsv::set samphub web,port [lindex [fconfigure [tsv::get samphub web,sock] -sockname] 2]
@@ -201,6 +234,9 @@ proc SAMPHubStop {} {
 	SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
 	SAMPHubRemove $cc
     }
+
+    # shutdown pool
+    tpool::release [tsv::get samphub pool]
 
     # remove hub
     SAMPHubDialogListRemove [tsv::get samphub secret]

@@ -56,6 +56,7 @@ proc SAMPHubParseURL {url varname} {
 }
 
 proc SAMPHubReturn {msg} {
+    puts "***$msg"
     return [list params [list [list param [list value [list string $msg]]]]]
 }
 

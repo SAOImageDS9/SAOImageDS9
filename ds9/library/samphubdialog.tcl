@@ -396,7 +396,7 @@ proc SAMPHubDialogListUpdate_ {} {
 
     set dsamphub(client,reg) {}
     $dsamphub(client,reg,txt) configure \
-	-text $(dsamphub(client,reg)
+	-text $dsamphub(client,reg)
     $dsamphub(client,metadata,txt) delete 1.0 end
     $dsamphub(client,subscriptions,txt) delete 1.0 end
 

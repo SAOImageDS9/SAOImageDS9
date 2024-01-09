@@ -30,8 +30,8 @@ proc SAMPHubServeOnceThread {sock addr port} {
 }
 
 proc SAMPHubDoRequestThread {sock} {
-    xmlrpcDoRequest $sock
-    return
+#    xmlrpcDoRequest $sock
+#    return
     
     thread::detach $sock
     tsv::set xmlrpc sock $sock

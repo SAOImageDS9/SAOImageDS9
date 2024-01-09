@@ -17,9 +17,21 @@ set xmlrpcdebug false
 set xmlrpccnt 0
 
 proc xmlrpcDoRequestThread {} {
-    set sock [tsv::get samphub foo]
+    set sock [tsv::get xmlrpc sock]
+    [tsv::unset xmlrpc]
     thread::attach $sock
+
     xmlrpcDoRequest $sock
+}
+
+proc xmlrpcCallThread {} {
+    set url [tsv::get xmlrpc url]
+    set method [tsv::get xmlrpc method]
+    set methodName [tsv::get xmlrpc methodName]
+    set params [tsv::get xmlrpc params]
+    [tsv::unset xmlrpc]
+
+    xmlrpcCall $url $method $methodName $params
 }
 
 proc xmlrpcDoRequest {sock} {

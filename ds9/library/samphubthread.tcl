@@ -7,6 +7,17 @@ package provide SAMPHubThread 1.0
 package require SAMPXmlrpcThread
 package require Thread
 
+proc SAMPHubCallThread {url method methodName params} {
+    xmlrpcCall $url $method $methodName $params
+    return
+    
+    tsv::set xmlrpc url $url
+    tsv::set xmlrpc method $method
+    tsv::set xmlrpc methodName $methodName
+    tsv::set xmlrpc params $params
+    tpool::post [tsv::get samphub pool] xmlrpcCallThread
+}
+
 proc SAMPHubSend {method url params resultVar {flag {}}} {
     upvar $resultVar result
 
@@ -22,9 +33,9 @@ proc SAMPHubSend {method url params resultVar {flag {}}} {
 	}
     }
 
-    if {[catch {set result [xmlrpcCall $url $rpc $method $params]}]} {
+    if {[catch {set result [SAMPHubCallThread $url $rpc $method $params]}]} {
 	if {[tsv::get samphub debug]} {
-	    puts stderr "SAMPHub: bad xmlrpcCall"
+	    puts stderr "SAMPHub: bad SAMPHubCallThread"
 	}
 	# Error
 	return false
@@ -65,7 +76,6 @@ proc SAMPHubGenerateKey {} {
 
 proc SAMPHubValidSecret {secret} {
     if {![tsv::exists samphub $secret,id]} {
-	DumpCallStack
 	if {[tsv::get samphub debug]} {
 	    puts "SAMPHub: bad private-key $secret\n"
 	}
@@ -699,6 +709,7 @@ proc samp.hub.notify {rpc} {
     }
 
     after idle [list SAMPHubNotify $secret $cc $mtype $param]
+#    SAMPHubNotify $secret $cc $mtype $param
     return [SAMPHubReturn OK]
 }
 
@@ -749,6 +760,7 @@ proc samp.hub.notifyAll {rpc} {
 	}
 
 	after idle [list SAMPHubNotify $secret $cc $mtype $param]
+#	SAMPHubNotify $secret $cc $mtype $param
 	lappend ll [tsv::get samphub $cc,id]
     }
 
@@ -803,6 +815,7 @@ proc samp.hub.call {rpc} {
     }
 
     after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
+#    SAMPHubCall $secret $cc $msgid $mtype $param
     return [SAMPHubReturn $msgid]
 }
 
@@ -855,6 +868,7 @@ proc samp.hub.callAll {rpc} {
 	}
 
 	after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
+#	SAMPHubCall $secret $cc $msgid $mtype $param
 
 	set id [tsv::get samphub $cc,id]
  	set map3($id) "string $msgid"
@@ -1009,6 +1023,7 @@ proc samp.hub.reply {rpc} {
 	default {
 	    # call
 	    after idle [list SAMPHubReply $cc $src $msgtag $param]
+#	    SAMPHubReply $cc $src $msgtag $param
 	}
     }
 

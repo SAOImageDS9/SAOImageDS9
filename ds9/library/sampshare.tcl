@@ -13,7 +13,15 @@ proc SAMPServe {port} {
 proc SAMPServeOnce {sock addr port} {
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
-    fileevent $sock readable [list xmlrpcDoRequest $sock]
+    fileevent $sock readable [list SAMPDoRequest $sock]
+}
+
+proc SAMPDoRequest {sock} {
+    xmlrpcDoRequest $sock
+}
+
+proc SAMPCall {url method methodName params} {
+    xmlrpcCall $url $method $methodName $params
 }
 
 proc SAMPConnectInit {verbose output debug} {
@@ -245,9 +253,9 @@ proc SAMPSend {method params resultVar} {
 	puts stderr "SAMPSend: $samp(url) $samp(method) $method $params"
     }
 
-    if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
+    if {[catch {set result [SAMPCall $samp(url) $samp(method) $method $params]}]} {
 	if {$samp(debug)} {
-	    puts stderr "SAMPSend: bad xmlrpcCall"
+	    puts stderr "SAMPSend: bad SAMPCall"
 	}
 	# Error
 	return false

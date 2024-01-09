@@ -83,7 +83,7 @@ proc SAMPHubDialog {} {
 	}
     }
 
-    SAMPHubDialogListUpdate
+    SAMPHubDialogListUpdate_
     SAMPHubDialogUpdate
 }
 
@@ -104,7 +104,7 @@ proc SAMPHubDialogClient {client} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    bind $dsamphub(listbox) <<TreeviewSelect>> SAMPHubDialogListUpdate
+    bind $dsamphub(listbox) <<TreeviewSelect>> SAMPHubDialogListUpdate_
 
     # Client Right
     set f [ttk::frame $client.right]

@@ -27,17 +27,15 @@ proc SAMPHubServeOnceThread {sock addr port} {
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
     fileevent $sock readable [list SAMPHubDoRequestThread $sock]
-#    fileevent $sock readable [list xmlrpcDoRequest $sock]
 }
 
 proc SAMPHubDoRequestThread {sock} {
+    xmlrpcDoRequest $sock
+    return
+    
     thread::detach $sock
-    tsv::set samphub foo $sock
-    set id [tpool::post [tsv::get samphub pool] xmlrpcDoRequestThread]
-
-#    thread::transfer $id $sock
-#    thread::send -async $id [list xmlrpcDoRequest $sock]
-#    thread::release $id
+    tsv::set xmlrpc sock $sock
+    tpool::post [tsv::get samphub pool] xmlrpcDoRequestThread
 }
 
 # Startup
@@ -58,8 +56,6 @@ proc SAMPHubStart {verbose} {
     # note: this will fill out a 'samp' array, delete later
 
     set samp(debug) $debug(tcl,samp)
-    tsv::set samphub debug $debug(tcl,samp)
-
     if {[SAMPParseHub]} {
 	# ok, found one, is it alive?
 	set rr {}
@@ -69,7 +65,6 @@ proc SAMPHubStart {verbose} {
 		Error "SAMPHub: [msgcat::mc {found existing hub}]"
 	    }
 	    catch {unset samp}
-	    tsv::unset samphub
 
 	    return
 	} else {
@@ -83,13 +78,13 @@ proc SAMPHubStart {verbose} {
     
     # ok, we are on our own
     catch {unset samp}
-    tsv::unset samphub
+    catch {tsv::unset samphub}
     
     # basics
     tsv::set samphub id [thread::id]
     
     tsv::set samphub verbose $verbose
-    tsv::set samphub debug $debug(tcl,samp)
+    tsv::set samphub debug $debug(tcl,samp,hub)
     tsv::set samphub fn [file join [GetEnvHome] {.samp}]
     tsv::set samphub cw,cnt 0
 

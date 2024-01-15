@@ -8,8 +8,8 @@ package require SAMPXmlrpcThread
 package require Thread
 
 proc SAMPHubCallThread {url method methodName params} {
-    xmlrpcCall $url $method $methodName $params
-    return
+#    xmlrpcCall $url $method $methodName $params
+#    return
     
     tsv::set xmlrpc url $url
     tsv::set xmlrpc method $method
@@ -708,8 +708,7 @@ proc samp.hub.notify {rpc} {
 	return -code error
     }
 
-    after idle [list SAMPHubNotify $secret $cc $mtype $param]
-#    SAMPHubNotify $secret $cc $mtype $param
+    SAMPHubNotify $secret $cc $mtype $param
     return [SAMPHubReturn OK]
 }
 
@@ -759,8 +758,7 @@ proc samp.hub.notifyAll {rpc} {
 	    continue
 	}
 
-	after idle [list SAMPHubNotify $secret $cc $mtype $param]
-#	SAMPHubNotify $secret $cc $mtype $param
+	SAMPHubNotify $secret $cc $mtype $param
 	lappend ll [tsv::get samphub $cc,id]
     }
 
@@ -814,8 +812,7 @@ proc samp.hub.call {rpc} {
 	return -code error
     }
 
-    after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
-#    SAMPHubCall $secret $cc $msgid $mtype $param
+    SAMPHubCall $secret $cc $msgid $mtype $param
     return [SAMPHubReturn $msgid]
 }
 
@@ -867,8 +864,7 @@ proc samp.hub.callAll {rpc} {
 	    continue
 	}
 
-	after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
-#	SAMPHubCall $secret $cc $msgid $mtype $param
+	SAMPHubCall $secret $cc $msgid $mtype $param
 
 	set id [tsv::get samphub $cc,id]
  	set map3($id) "string $msgid"
@@ -879,7 +875,6 @@ proc samp.hub.callAll {rpc} {
 }
 
 proc samp.hub.callAndWait {rpc} {
-    
     if {[tsv::get samphub debug]} {
 	puts "samp.hub.callAndWait: $rpc\n"
     }
@@ -892,7 +887,15 @@ proc samp.hub.callAndWait {rpc} {
     set secret [lindex $args 0]
     set id [lindex $args 1]
     set map [lindex $args 2]
+
+    # timeout is in secs
     set timeout [lindex $args 3]
+    # just in case
+    if {$timeout<0} {
+	set timeout 0
+    }
+    # set timeout in ms
+    set timeout [expr $timeout*1000]
 
     if {![SAMPHubValidSecret $secret]} {
 	return -code error
@@ -909,11 +912,6 @@ proc samp.hub.callAndWait {rpc} {
 	}
     }
 
-    tsv::incr samphub cw,cnt
-    set cnt [tsv::get samphub cw,cnt]
-
-    set msgid "bar:[tsv::get samphub $secret,id]:$cnt"
-
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
@@ -928,62 +926,30 @@ proc samp.hub.callAndWait {rpc} {
 	return -code error
     }
 
-    tsv::set samphub cw,$cnt,result {}
-    tsv::set samphub cw,$cnt,id {}
-    tsv::set samphub cw,$cnt,timeout,id {}
 
-    if {$timeout>0} {
-	tsv::set samphub cw,$cnt,timeout,id [after [expr $timeout*1000] [list SAMPHubTimeout $cnt]]
+    set mutex [tsv::set tasks mutex [thread::mutex create]]
+    set cond [tsv::set tasks cond [thread::cond create]]
+
+    set msgid "bar:[tsv::get samphub $secret,id]"
+    SAMPHubCall $secret $cc $msgid $mtype $param
+
+    thread::mutex lock $mutex
+    while {![tsv::exists tasks pred]} {
+	thread::cond wait $cond $mutex $timeout
     }
+    thread::mutex unlock $mutex
+    thread::cond destroy $cond
+    thread::mutex destroy $mutex
 
-    tsv::set samphub cw,$cnt,id \
-	[after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]]
-
-    global samphub${cnt}
-    set samphub${cnt} false
-    vwait samphub${cnt}
-    unset samphub${cnt}
-
-    if {$timeout<=0} {
-	set rr [tsv::get samphub cw,$cnt,result]
-
-	tsv::unset samphub cw,$cnt,result
-	tsv::unset samphub cw,$cnt,id
-	tsv::unset samphub cw,$cnt,timeout,id
-	
-	return [list params [list $rr]]
-
-    } elseif {[tsv::exists samphub cw,$cnt,timeout,id]} {
-	after cancel [tsv::get samphub cw,$cnt,timeout,id]
-
-	set rr [tsv::get samphub cw,$cnt,result]
-
-	tsv::unset samphub cw,$cnt,result
-	tsv::unset samphub cw,$cnt,id
-	tsv::unset samphub cw,$cnt,timeout,id
-	
+    if {[tsv::exists tasks pred]} {
+	set rr [tsv::get tasks pred]
 	return [list params [list $rr]]
     } else {
 	return -code error
     }
 }
 
-proc SAMPHubTimeout {cnt} {
-    
-    if {[tsv::exists samphub cw,$cnt,id]} {
-	after cancel [tsv::get samphub cw,$cnt,id]
-    }
-
-    tsv::unset samphub cw,$cnt,result
-    tsv::unset samphub cw,$cnt,id
-    tsv::unset samphub cw,$cnt,timeout,id
-
-    global samphub${cnt}
-    set samphub${cnt} true
-}
-
 proc samp.hub.reply {rpc} {
-    
     if {[tsv::get samphub debug]} {
 	puts "samp.hub.reply: $rpc\n"
     }
@@ -1005,7 +971,7 @@ proc samp.hub.reply {rpc} {
     set ll [split $msgid ":"]
     set msgtag [lindex  $ll 0]
     set id [lindex $ll 1]
-    set cnt [lindex $ll 2]
+    set thread [lindex $ll 2]
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -1016,14 +982,17 @@ proc samp.hub.reply {rpc} {
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    tsv::set samphub cw,$cnt,result $param
-	    global samphub${cnt}
-	    set samphub${cnt} true
+	    set mutex [tsv::get tasks mutex]
+	    set cond [tsv::get tasks cond]
+
+	    thread::mutex lock $mutex
+	    tsv::set tasks pred $param
+	    thread::cond notify $cond
+	    thread::mutex unlock $mutex
 	}
 	default {
 	    # call
-	    after idle [list SAMPHubReply $cc $src $msgtag $param]
-#	    SAMPHubReply $cc $src $msgtag $param
+	    SAMPHubReply $cc $src $msgtag $param
 	}
     }
 

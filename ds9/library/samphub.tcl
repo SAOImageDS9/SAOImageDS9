@@ -193,6 +193,19 @@ proc SAMPHubStop {} {
 	return
     }
 
+    # any callAndWait pending?
+    if {[tsv::exists tasks mutex]} {
+	set mutex [tsv::get tasks mutex]
+	thread::mutex lock $mutex
+	if {[tsv::exists tasks cond]} {
+	    thread::cond destroy [tsv::get tasks cond]
+	}
+	thread::mutex unlock $mutex
+	thread::mutex destroy $mutex
+
+	tsv::unset tasks
+    }
+
     # shutdown all clients
     set mtype {samp.hub.event.shutdown}
 

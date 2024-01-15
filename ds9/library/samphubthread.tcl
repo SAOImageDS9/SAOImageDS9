@@ -943,8 +943,10 @@ proc samp.hub.callAndWait {rpc} {
 
     if {[tsv::exists tasks pred]} {
 	set rr [tsv::get tasks pred]
+	tsv::unset tasks
 	return [list params [list $rr]]
     } else {
+	tsv::unset tasks
 	return -code error
     }
 }

@@ -83,6 +83,8 @@ proc SAMPHubDialog {} {
 	}
     }
 
+    set dsamphub(timer) [after 1000 SAMPHubDialogUpdateThreads]
+
     SAMPHubDialogListUpdate_
     SAMPHubDialogUpdate
 }
@@ -112,13 +114,17 @@ proc SAMPHubDialogClient {client} {
     # Registration
     set rr [ttk::labelframe $f.reg -text [msgcat::mc {Registration}]]
 
+    set dsamphub(threads) {}
     set dsamphub(client,reg) {}
-    set dsamphub(client,reg,txt) $rr.v
 
-    ttk::label $rr.t -text [msgcat::mc {Public ID}]
-    ttk::label $rr.v -textvariable dsamphub(client,reg)
-    grid $rr.t -row 0 -column 0 -padx 2
-    grid $rr.v -row 0 -column 1 -padx 2 -sticky w
+    ttk::label $rr.tt -text [msgcat::mc {Threads}]
+    ttk::label $rr.tv -textvariable dsamphub(threads)
+    ttk::label $rr.pt -text [msgcat::mc {Public ID}]
+    ttk::label $rr.pv -textvariable dsamphub(client,reg)
+    grid $rr.tt -row 0 -column 0 -padx 2
+    grid $rr.tv -row 0 -column 1 -padx 2 -sticky w
+    grid $rr.pt -row 1 -column 0 -padx 2
+    grid $rr.pv -row 1 -column 1 -padx 2 -sticky w
 
     # Metadata
     set mm [ttk::labelframe $f.meta -text [msgcat::mc {Metadata}]]
@@ -238,6 +244,8 @@ proc SAMPHubDestroyDialog {} {
     global isamphub
     global dsamphub
 
+    catch {after cancel $dsamphub(timer)}
+    
     if {[winfo exists $isamphub(top)]} {
 	destroy $isamphub(top)
 	destroy $isamphub(mb)
@@ -317,6 +325,13 @@ proc SAMPHubDialogSaveFileName {fn} {
 }
 
 # Base procs called from threads
+
+proc SAMPHubDialogUpdateThreads {} {
+    global dsamphub
+
+    set dsamphub(threads) [llength [thread::names]]
+    set dsamphub(timer) [after 1000 SAMPHubDialogUpdateThreads]
+}
 
 proc SAMPHubDialogListAdd_ {secret} {
     global isamphub

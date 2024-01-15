@@ -8,9 +8,6 @@ package require SAMPXmlrpcThread
 package require Thread
 
 proc SAMPHubCallThread {url method methodName params} {
-#    xmlrpcCall $url $method $methodName $params
-#    return
-    
     tsv::set xmlrpc url $url
     tsv::set xmlrpc method $method
     tsv::set xmlrpc methodName $methodName

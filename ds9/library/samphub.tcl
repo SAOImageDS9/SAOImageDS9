@@ -101,7 +101,7 @@ proc SAMPHubStart {verbose} {
 	    package require SAMPXmlrpcThread
 	    package require SAMPHubThread
 	}]
-	     
+    
     # Init
     if {![SAMPHubStartConnect]} {
 	return
@@ -246,7 +246,7 @@ proc SAMPHubStop {} {
 
     # shutdown pool
     tpool::release [tsv::get samphub pool]
-
+    
     # remove hub
     SAMPHubDialogListRemove [tsv::get samphub secret]
 

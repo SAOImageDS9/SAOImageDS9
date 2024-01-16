@@ -79,11 +79,11 @@ proc SAMPHubStart {verbose} {
     
     # basics
     tsv::set samphub id [thread::id]
+    tsv::set samphub cnt 0
     
     tsv::set samphub verbose $verbose
     tsv::set samphub debug $debug(tcl,samp,hub)
     tsv::set samphub fn [file join [GetEnvHome] {.samp}]
-    tsv::set samphub cw,cnt 0
 
     tsv::set samphub client,seq 0
     tsv::set samphub client,secret {}
@@ -194,14 +194,17 @@ proc SAMPHubStop {} {
     }
 
     # any callAndWait pending?
-    if {[tsv::exists tasks mutex]} {
-	set mutex [tsv::get tasks mutex]
-	thread::mutex lock $mutex
-	if {[tsv::exists tasks cond]} {
-	    thread::cond destroy [tsv::get tasks cond]
+    set cnt [tsv::get samphub cnt]
+    for {set cc 0} {$cc<$cnt} {incr cc} {
+	if {[tsv::exists tasks mutex${cc}]} {
+	    set mutex [tsv::get tasks mutex${cc}]
+	    thread::mutex lock $mutex
+	    if {[tsv::exists tasks cond${cc}]} {
+		thread::cond destroy [tsv::get tasks cond${cc}]
+	    }
+	    thread::mutex unlock $mutex
+	    thread::mutex destroy $mutex
 	}
-	thread::mutex unlock $mutex
-	thread::mutex destroy $mutex
 
 	tsv::unset tasks
     }

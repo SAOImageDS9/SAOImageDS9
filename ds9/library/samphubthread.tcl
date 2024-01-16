@@ -662,7 +662,6 @@ proc samp.hub.getSubscribedClients {rpc} {
 }
 
 proc samp.hub.notify {rpc} {
-
     if {[tsv::get samphub debug]} {
 	puts "samp.hub.notify: $rpc\n"
     }
@@ -710,7 +709,6 @@ proc samp.hub.notify {rpc} {
 }
 
 proc samp.hub.notifyAll {rpc} {
-
     if {[tsv::get samphub debug]} {
 	puts "samp.hub.notifyAll: $rpc\n"
     }
@@ -763,7 +761,6 @@ proc samp.hub.notifyAll {rpc} {
 }
 
 proc samp.hub.call {rpc} {
-    
     if {[tsv::get samphub debug]} {
 	puts "samp.hub.call: $rpc\n"
     }
@@ -814,7 +811,6 @@ proc samp.hub.call {rpc} {
 }
 
 proc samp.hub.callAll {rpc} {
-
     if {[tsv::get samphub debug]} {
 	puts "samp.hub.callAll: $rpc\n"
     }
@@ -894,6 +890,9 @@ proc samp.hub.callAndWait {rpc} {
     # set timeout in ms
     set timeout [expr $timeout*1000]
 
+    set cnt [tsv::get samphub cnt]
+    tsv::incr samphub cnt
+
     if {![SAMPHubValidSecret $secret]} {
 	return -code error
     }
@@ -909,6 +908,8 @@ proc samp.hub.callAndWait {rpc} {
 	}
     }
 
+    set msgid "bar:[tsv::get samphub $secret,id]:$cnt"
+
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
@@ -923,23 +924,23 @@ proc samp.hub.callAndWait {rpc} {
 	return -code error
     }
 
+    set mutex [tsv::set tasks mutex${cnt} [thread::mutex create]]
+    set cond [tsv::set tasks cond${cnt} [thread::cond create]]
+    tsv::set tasks pred${cnt} 0
 
-    set mutex [tsv::set tasks mutex [thread::mutex create]]
-    set cond [tsv::set tasks cond [thread::cond create]]
-
-    set msgid "bar:[tsv::get samphub $secret,id]"
     SAMPHubCall $secret $cc $msgid $mtype $param
 
     thread::mutex lock $mutex
-    while {![tsv::exists tasks pred]} {
+    while {![tsv::get tasks pred${cnt}]} {
 	thread::cond wait $cond $mutex $timeout
     }
     thread::mutex unlock $mutex
+
     thread::cond destroy $cond
     thread::mutex destroy $mutex
 
-    if {[tsv::exists tasks pred]} {
-	set rr [tsv::get tasks pred]
+    if {[tsv::get tasks pred${cnt}]} {
+	set rr [tsv::get tasks result${cnt}]
 	tsv::unset tasks
 	return [list params [list $rr]]
     } else {
@@ -970,7 +971,7 @@ proc samp.hub.reply {rpc} {
     set ll [split $msgid ":"]
     set msgtag [lindex  $ll 0]
     set id [lindex $ll 1]
-    set thread [lindex $ll 2]
+    set cnt [lindex $ll 2]
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -981,11 +982,12 @@ proc samp.hub.reply {rpc} {
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    set mutex [tsv::get tasks mutex]
-	    set cond [tsv::get tasks cond]
+	    set mutex [tsv::get tasks mutex${cnt}]
+	    set cond [tsv::get tasks cond${cnt}]
 
 	    thread::mutex lock $mutex
-	    tsv::set tasks pred $param
+	    tsv::set tasks result${cnt} $param
+	    tsv::set tasks pred${cnt} 1
 	    thread::cond notify $cond
 	    thread::mutex unlock $mutex
 	}

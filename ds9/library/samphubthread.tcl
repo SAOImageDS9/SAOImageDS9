@@ -931,8 +931,13 @@ proc samp.hub.callAndWait {rpc} {
     SAMPHubCall $secret $cc $msgid $mtype $param
 
     thread::mutex lock $mutex
+    set first 1
     while {![tsv::get tasks pred${cnt}]} {
 	thread::cond wait $cond $mutex $timeout
+	if {![tsv::get tasks pred${cnt}] && !$first} {
+	    break
+	}
+	set first 0
     }
     thread::mutex unlock $mutex
 

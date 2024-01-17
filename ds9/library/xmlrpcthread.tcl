@@ -80,7 +80,7 @@ proc xmlrpcDoRequest {sock} {
     
     puts -nonewline $sock $res
     flush $sock
-    close $sock
+    catch {close $sock}
 }
 
 proc xmlrpcResponse {rpc} {
@@ -223,7 +223,7 @@ proc xmlrpcCall {url method methodName params} {
     unset xmlrpcdone($cnt)
     unset xmlrpcresult($cnt)
 
-    close $sock
+    catch {close $sock}
 
     if {$ss > 0} {
 	return $rr

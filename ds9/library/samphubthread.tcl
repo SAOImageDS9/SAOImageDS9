@@ -166,7 +166,8 @@ proc SAMPHubRegister {args web} {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		[tsv::get samphub $cc,url] $params rr
-	    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
+	    SAMPHubDialogSentMsg \
+		"samp.client.receiveNotification\t$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
@@ -214,11 +215,11 @@ proc SAMPHubNotify {secret cc mtype param} {
 	}
     } else {
 	set rr {}
-#	puts "samp.client.receiveNotification [thread::id]"
 
 	SAMPHubSend samp.client.receiveNotification \
 	    [tsv::get samphub $cc,url] $params rr
-	SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
+	SAMPHubDialogSentMsg \
+	    "samp.client.receiveNotification\t$mtype\t[tsv::get samphub $cc,id]"
     }
 }
 
@@ -239,11 +240,10 @@ proc SAMPHubCall {secret cc msgid mtype param} {
     } else {
 	set rr {}
 
-#	puts "samp.client.receiveCall $msgid [thread::id]"
-
 	SAMPHubSend samp.client.receiveCall \
 	    [tsv::get samphub $cc,url] $params rr $msgid
-	SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
+	SAMPHubDialogSentMsg \
+	    "samp.client.receiveCall\t$mtype\t[tsv::get samphub $cc,id]"
     }
 }
 
@@ -263,8 +263,6 @@ proc SAMPHubReply {cc id msgtag param} {
 	}
     } else {
 	set rr {}
-
-#	puts "samp.client.receiveResponse $msgtag [thread::id]"
 
 	SAMPHubSend samp.client.receiveResponse \
 	    [tsv::get samphub $cc,url] $params rr $msgtag
@@ -383,7 +381,8 @@ proc samp.hub.unregister {rpc} {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		[tsv::get samphub $cc,url] $params rr
-		 SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
+	    SAMPHubDialogSentMsg \
+		"samp.client.receiveNotification\t$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
@@ -458,7 +457,8 @@ proc samp.hub.declareMetadata {rpc} {
 	} else {
 	    SAMPHubSend {samp.client.receiveNotification} \
 		[tsv::get samphub $cc,url] $params rr
-	    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
+	    SAMPHubDialogSentMsg \
+		"samp.client.receiveNotification\t$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
@@ -570,7 +570,8 @@ proc samp.hub.declareSubscriptions {rpc} {
 	    set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
 		[tsv::get samphub $cc,url] $params rr
-	    SAMPHubDialogSentMsg "$mtype\t[tsv::get samphub $cc,id]"
+	    SAMPHubDialogSentMsg \
+		"samp.client.receiveNotification\t$mtype\t[tsv::get samphub $cc,id]"
 	}
     }
 
@@ -695,8 +696,6 @@ proc samp.hub.notify {rpc} {
 	}
     }
 
-#    puts "samp.hub.notify [thread::id]"
-
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
@@ -712,7 +711,6 @@ proc samp.hub.notify {rpc} {
     }
 
     SAMPHubNotify $secret $cc $mtype $param
-#    puts "samp.hub.notify done [thread::id]"
     return [SAMPHubReturn OK]
 }
 
@@ -744,8 +742,6 @@ proc samp.hub.notifyAll {rpc} {
 	}
     }
 
-#    puts "samp.hub.notifyAll [thread::id]"
-
     set ll {}
     foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
@@ -767,7 +763,6 @@ proc samp.hub.notifyAll {rpc} {
 	lappend ll [tsv::get samphub $cc,id]
     }
 
-#    puts "samp.hub.notifyAll done [thread::id]"
     return [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
 }
 
@@ -805,7 +800,6 @@ proc samp.hub.call {rpc} {
     tsv::incr samphub cnt
 
     set msgid "$msgtag:[tsv::get samphub $secret,id]:$cnt"
-#    puts "samp.hub.call $msgid [thread::id]"
     
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -822,7 +816,6 @@ proc samp.hub.call {rpc} {
     }
 
     SAMPHubCall $secret $cc $msgid $mtype $param
-#    puts "samp.hub.call done $msgid [thread::id]"
     return [SAMPHubReturn $msgid]
 }
 
@@ -859,7 +852,6 @@ proc samp.hub.callAll {rpc} {
     tsv::incr samphub cnt
 
     set msgid "$msgtag:[tsv::get samphub $secret,id]:$cnt"
-#    puts "samp.hub.callAll $msgid [thread::id]"
 
     foreach cc [tsv::get samphub client,secret] {
 	# ignore hub
@@ -884,7 +876,6 @@ proc samp.hub.callAll {rpc} {
     }
 
     set m3 [xmlrpcList2Member [array get map3]]
-#    puts "samp.hub.callAll done $msgid [thread::id]"
     return [list params [list [list param [list value [list struct $m3]]]]]
 }
 
@@ -930,7 +921,6 @@ proc samp.hub.callAndWait {rpc} {
     tsv::incr samphub cnt
 
     set msgid "bar:[tsv::get samphub $secret,id]:$cnt"
-#    puts "samp.hub.callAndWait $msgid [thread::id]"
 
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -966,7 +956,6 @@ proc samp.hub.callAndWait {rpc} {
     thread::cond destroy $cond
     thread::mutex destroy $mutex
 
-#    puts "samp.hub.callAndWait done $msgid [thread::id]"
     if {[tsv::get tasks pred${cnt}]} {
 	set rr [tsv::get tasks result${cnt}]
 	tsv::unset tasks
@@ -1001,8 +990,6 @@ proc samp.hub.reply {rpc} {
     set id [lindex $ll 1]
     set cnt [lindex $ll 2]
 
-#    puts "samp.hub.reply $msgid [thread::id]"
-
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
@@ -1027,7 +1014,6 @@ proc samp.hub.reply {rpc} {
 	}
     }
 
-#    puts "samp.hub.reply done $msgid [thread::id]"
     return [SAMPHubReturn OK]
 }
 

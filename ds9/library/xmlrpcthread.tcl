@@ -8,29 +8,19 @@ package require Thread
 
 # Server
 
-global xmlrpcdebug
 global xmlrpccnt
 global xmlrpcdone
 global xmlrpcresult
 
-set xmlrpcdebug false
 set xmlrpccnt 0
 
-proc xmlrpcDoRequestThread {} {
-    set sock [tsv::get xmlrpc sock]
-    tsv::unset xmlrpc
+proc xmlrpcDoRequestThread {sock} {
     thread::attach $sock
 
     xmlrpcDoRequest $sock
 }
 
-proc xmlrpcCallThread {} {
-    set url [tsv::get xmlrpc url]
-    set method [tsv::get xmlrpc method]
-    set methodName [tsv::get xmlrpc methodName]
-    set params [tsv::get xmlrpc params]
-    tsv::unset xmlrpc
-
+proc xmlrpcCallThread {url method methodName params} {
     xmlrpcCall $url $method $methodName $params
 }
 
@@ -90,19 +80,15 @@ proc xmlrpcDoRequest {sock} {
     
     puts -nonewline $sock $res
     flush $sock
-    catch {close $sock}
+    close $sock
 }
 
 proc xmlrpcResponse {rpc} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
-    global xmlrpcdebug
-    if {$xmlrpcdebug} {
-	puts "\n***xmlrpcResponse"
-	puts $rpc
-	puts $body
-    }
+#    puts "OUT GOING"
+#    puts [string range $body 0 400]
     
     # build the header
     set	header "HTTP/1.1 200 OK\n"
@@ -237,7 +223,7 @@ proc xmlrpcCall {url method methodName params} {
     unset xmlrpcdone($cnt)
     unset xmlrpcresult($cnt)
 
-    catch {close $sock}
+    close $sock
 
     if {$ss > 0} {
 	return $rr
@@ -252,12 +238,8 @@ proc xmlrpcBuildRequest {method mname params} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
-    global xmlrpcdebug
-    if {$xmlrpcdebug} {
-	puts "\n***xmlrpcBuildRequest"
-	puts $rpc
-	puts $body
-    }
+#    puts "OUT GOING"
+#    puts [string range $body 0 400]
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
@@ -368,6 +350,8 @@ proc xmlrpcUnQuote {val} {
 # XML2RPC
 
 proc xml2rpc {data} {
+#    puts "IN COMING"
+#    puts [string range $data 0 400]
     # space out < and >
     # shift \n to \r (multi line strings)
     set data [string map {< " <" > "> " \n \r} $data]

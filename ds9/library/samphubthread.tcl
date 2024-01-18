@@ -8,7 +8,7 @@ package require SAMPXmlrpcThread
 package require Thread
 
 proc SAMPHubCallThread {url method methodName params} {
-    tpool::post -nowait [tsv::get samphub pool] \
+    tpool::post [tsv::get samphub pool] \
 	[list xmlrpcCallThread $url $method $methodName $params]
 }
 

@@ -32,7 +32,7 @@ proc SAMPHubServeOnceThread {sock addr port} {
 proc SAMPHubDoRequestThread {sock} {
     thread::detach $sock
 
-    tpool::post -nowait [tsv::get samphub pool] \
+    tpool::post [tsv::get samphub pool] \
 	[list xmlrpcDoRequestThread $sock]
 }
 
@@ -98,7 +98,7 @@ proc SAMPHubStart {verbose} {
     tsv::set samphub web,allowReverseCallbacks 0
 
     tsv::set samphub pool \
-	[tpool::create -idletime 5 -minworkers 1 -initcmd {
+	[tpool::create -idletime 5 -initcmd {
 	    package require SAMPXmlrpcThread
 	    package require SAMPHubThread
 	}]

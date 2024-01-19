@@ -15,13 +15,17 @@ global xmlrpcresult
 set xmlrpccnt 0
 
 proc xmlrpcDoRequestThread {sock} {
+#    puts "xmlrpcDoRequest start [llength [thread::names]]"
     thread::attach $sock
 
     xmlrpcDoRequest $sock
+#    puts "xmlrpcDoRequest end [llength [thread::names]]"
 }
 
 proc xmlrpcCallThread {url method methodName params} {
+#    puts "xmlrpcCall start [llength [thread::names]]"
     xmlrpcCall $url $method $methodName $params
+#    puts "xmlrpcCall end [llength [thread::names]]"
 }
 
 proc xmlrpcDoRequest {sock} {
@@ -88,7 +92,7 @@ proc xmlrpcResponse {rpc} {
     set body [xmlrpc2xml $rpc]
 
 #    puts "OUT GOING"
-#    puts [string range $body 0 400]
+#    puts $body
     
     # build the header
     set	header "HTTP/1.1 200 OK\n"
@@ -239,7 +243,7 @@ proc xmlrpcBuildRequest {method mname params} {
     set body [xmlrpc2xml $rpc]
 
 #    puts "OUT GOING"
-#    puts [string range $body 0 400]
+#    puts $body
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
@@ -351,7 +355,8 @@ proc xmlrpcUnQuote {val} {
 
 proc xml2rpc {data} {
 #    puts "IN COMING"
-#    puts [string range $data 0 400]
+#    puts $data
+
     # space out < and >
     # shift \n to \r (multi line strings)
     set data [string map {< " <" > "> " \n \r} $data]

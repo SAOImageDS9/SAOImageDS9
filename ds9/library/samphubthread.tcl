@@ -8,8 +8,10 @@ package require SAMPXmlrpcThread
 package require Thread
 
 proc SAMPHubCallThread {url method methodName params} {
+#    puts "SAMPHubCall start [llength [thread::names]]"
     tpool::post [tsv::get samphub pool] \
 	[list xmlrpcCallThread $url $method $methodName $params]
+#    puts "SAMPHubCall end [llength [thread::names]]"
 }
 
 proc SAMPHubSend {method url params resultVar {flag {}}} {
@@ -34,7 +36,6 @@ proc SAMPHubSend {method url params resultVar {flag {}}} {
 	# Error
 	return false
     }
-
     if {[tsv::get samphub debug]} {
 	puts stderr "SAMPHubSend Result: $result $flag"
     }

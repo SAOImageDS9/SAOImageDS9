@@ -19,8 +19,7 @@ proc SAMPWebHubDialog {name} {
 proc samp.webhub.allowReverseCallbacks {args} {
     global samphub
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samphub(debug)} {
 	puts "samp.webhub.allowReverseCallbacks: $args"
     }
 
@@ -33,8 +32,7 @@ proc samp.webhub.pullCallbacks {args} {
     global samphubmap
     global samphubmap2
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samphub(debug)} {
 #	puts "samp.webhub.pullCallbacks: $args"
     }
 
@@ -64,8 +62,8 @@ proc samp.webhub.pullCallbacks {args} {
 }
 
 proc samp.webhub.ping {} {
-    global debug
-    if {$debug(tcl,samp)} {
+    global samphub
+    if {$samphub(debug)} {
 	puts "samp.webhub.ping"
     }
     
@@ -77,8 +75,7 @@ proc samp.webhub.ping {} {
 proc samp.webhub.register {args} {
     global samphub
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samphub(debug)} {
 	puts "samp.webhub.register: $args"
     }
 

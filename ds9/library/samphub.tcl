@@ -27,7 +27,7 @@ proc SAMPHubStart {verbose} {
     # can we find a hub?
     # note: this will fill out a 'samp' array, delete later
 
-    set samphub(debug) $debug(tcl,samp)
+    set samphub(debug) $debug(tcl,samphub)
     set samp(debug) $debug(tcl,samp)
     if {[SAMPParseHub]} {
 	# ok, found one, is it alive?
@@ -55,7 +55,7 @@ proc SAMPHubStart {verbose} {
     
     # basics
     set samphub(verbose) $verbose
-    set samphub(debug) $debug(tcl,samp)
+    set samphub(debug) $debug(tcl,samphub)
     set samphub(fn) [file join [GetEnvHome] {.samp}]
     set samphub(cw,cnt) 0
 

@@ -87,6 +87,9 @@ proc xmlrpcResponse {rpc} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
+#    puts "OUT GOING"
+#    puts $body
+
     global xmlrpcdebug
     if {$xmlrpcdebug} {
 	puts "\n***xmlrpcResponse"
@@ -242,6 +245,9 @@ proc xmlrpcBuildRequest {method mname params} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
+#    puts "OUT GOING"
+#    puts $body
+
     global xmlrpcdebug
     if {$xmlrpcdebug} {
 	puts "\n***xmlrpcBuildRequest"
@@ -350,6 +356,9 @@ proc xmlrpcError {msg} {
 # XML2RPC
 
 proc xml2rpc {data} {
+#    puts "IN COMING"
+#    puts $data
+
     # space out < and >
     # shift \n to \r (multi line strings)
     set data [string map {< " <" > "> " \n \r} $data]

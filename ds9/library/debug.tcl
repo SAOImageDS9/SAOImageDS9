@@ -18,6 +18,7 @@ proc DebugDef {} {
     set debug(tcl,sia) 0
     set debug(tcl,fp) 0
     set debug(tcl,samp) 0
+    set debug(tcl,samphub) 0
     set debug(tcl,grid) 0
     set debug(tcl,graph) 0
     set debug(tcl,restore) 0
@@ -87,6 +88,8 @@ proc DebugMenu {} {
 	-variable debug(tcl,fp)
     $ds9(mb).debug.tcl add checkbutton -label {SAMP} \
 	-variable debug(tcl,samp)
+    $ds9(mb).debug.tcl add checkbutton -label {SAMP Hub} \
+	-variable debug(tcl,samphub)
     $ds9(mb).debug.tcl add checkbutton -label {Grid} \
 	-variable debug(tcl,grid)
     $ds9(mb).debug.tcl add checkbutton -label {Graph} \
@@ -191,6 +194,7 @@ proc ProcessDebugTclCmd {varname iname} {
 	sia {set debug(tcl,sia) 1}
 	fp {set debug(tcl,fp) 1}
 	samp {set debug(tcl,samp) 1}
+	samphub {set debug(tcl,samphub) 1}
 	grid {set debug(tcl,grid) 1}
 	graph {set debug(tcl,graph) 1}
 	restore {set debug(tcl,restore) 1}
@@ -272,6 +276,7 @@ proc ProcessDebugCmd {varname iname} {
 	sia -
 	fp -
 	samp -
+	samphub -
 	grid -
 	graph -
 	restore -

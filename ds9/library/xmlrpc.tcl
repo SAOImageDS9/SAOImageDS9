@@ -6,12 +6,10 @@ package provide DS9 1.0
 
 # Server
 
-global xmlrpcdebug
 global xmlrpccnt
 global xmlrpcdone
 global xmlrpcresult
 
-set xmlrpcdebug false
 set xmlrpccnt 0
 
 proc xmlrpcServe {port} {
@@ -56,9 +54,20 @@ proc xmlrpcDoRequest {sock} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
+    puts "**xml"
+    puts $body
+
+#    puts "**start parse"
     xml2rpc $body
     global parse
     set rpc $parse(result)
+    puts $rpc
+#    puts "**end parse"
+
+#    puts "**start tclxml"
+    set rr [xmlxml $body]
+    puts $rr
+#    puts "**end tclxml"
 
     set tag [lindex [lindex $rpc 0] 0]
 
@@ -90,13 +99,6 @@ proc xmlrpcResponse {rpc} {
 #    puts "OUT GOING"
 #    puts $body
 
-    global xmlrpcdebug
-    if {$xmlrpcdebug} {
-	puts "\n***xmlrpcResponse"
-	puts $rpc
-	puts $body
-    }
-    
     # build the header
     set	header "HTTP/1.1 200 OK\n"
     append	header "Content-Type: text/xml\n"
@@ -247,13 +249,6 @@ proc xmlrpcBuildRequest {method mname params} {
 
 #    puts "OUT GOING"
 #    puts $body
-
-    global xmlrpcdebug
-    if {$xmlrpcdebug} {
-	puts "\n***xmlrpcBuildRequest"
-	puts $rpc
-	puts $body
-    }
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
@@ -618,3 +613,204 @@ proc xmlrpc2xmlproc {rpc varname} {
 	}
     }
 }
+
+# TclXML
+
+proc xmlxml {body} {
+    global foo
+    catch {unset foo}
+
+    set foo(state) {}
+    set foo(state,array) 0
+
+    set foo(methodCall) {}
+    set foo(methodResponse) {}
+
+    set foo(params) {}
+    set foo(data) {}
+    
+    set foo(xparam) {}
+    set foo(values) {}
+    
+    set xml [xml::parser \
+		 -characterdatacommand [list xmlxmlCharCB] \
+		 -elementstartcommand [list xmlxmlElemStartCB] \
+		 -elementendcommand [list xmlxmlElemEndCB] \
+		 -ignorewhitespace 1 \
+		]
+
+    if {[catch {$xml parse $body} err]} {
+	puts "TclXML Parse error"
+    }
+
+    if {$foo(methodCall) != {}} {
+	set result $foo(methodCall)
+    } elseif {$foo(methodResponse) != {}} {
+	set result $foo(methodResponse)
+    }
+    unset foo
+
+    $xml free
+    
+    return $result
+}
+
+proc xmlxmlCharCB {data} {
+    global foo
+
+    set data [string trim $data]
+#    puts "charCB=$data"
+
+    switch $foo(state) {
+	methodCall {}
+	methodResponse {}
+
+	methodName {set foo(vv) $data}
+
+	fault {set foo(vv) $data}
+
+	params {}
+	param {}
+
+	struct {}
+	member {}
+	name {set foo(vv) $data}
+
+	array {}
+	data {}
+
+	string {set foo(vv) $data}
+	integer {set foo(vv) $data}
+
+	value {}
+    }
+}
+
+proc xmlxmlElemStartCB {name attlist args} {
+    global foo
+    
+#    puts "startCB=$name"
+
+    switch $name {
+	methodCall {}
+	methodResponse {}
+
+	methodName {}
+
+	fault {}
+
+	params {set foo(xparams) {}}
+	param {}
+
+	struct {set foo(members) {}}
+	member {}
+	name {}
+
+	array {}
+	data {
+	    set foo(values) {}
+	    set foo(state,array) 1
+	}
+
+	string {}
+	integer {}
+
+	value {set foo(type) {}}
+    }
+
+    set foo(state) $name
+}
+
+proc xmlxmlElemEndCB {name args} {
+    global foo
+    
+#    puts "endCB=$name"
+
+    switch $name {
+	methodCall {
+	    if {$foo(methodName) != {} && $foo(params) != {}} {
+		set foo(methodCall) [list $name [list $foo(methodName) $foo(params)]]
+	    } else {
+		set foo(methodCall) [list $name [list $foo(methodName)]]
+	    }
+	    set foo(methodName) {}
+	    set foo(params) {}
+	}
+	methodResponse {
+	    if {$foo(params) != {}} {
+		set foo(methodResponse) [list $name $foo(params)]
+		set foo(params) {}
+	    } else if {$foo(fault) != {}} {
+		set foo(methodResponse) [list $name $foo(fault)]
+		set foo(fault) {}
+	    }
+	}
+
+	methodName {
+	    set foo(methodName) [list $name $foo(vv)]
+	    set foo(vv) {}
+	}
+
+	fault {
+	    set foo(fault) [list $name $foo(vv)]
+	    set foo(vv) {}
+	}
+
+	params {
+	    set foo(params) [list $name $foo(xparam)]
+	    set foo(xparam) {}
+	}
+	param {
+	    set pp [list $name $foo(value)]
+	    set foo(value) {}
+	    lappend foo(xparam) $pp
+	}
+
+	struct {
+	    set foo(type) [list $name $foo(members)]
+	    set foo(members) {}
+	}
+	member {
+	    set mm [list $name [list $foo(name) $foo(value)]]
+	    set foo(name) {}
+	    set foo(value) {}
+	    lappend foo(members) $mm
+	}
+	name {
+	    set foo(name) [list $name $foo(vv)]
+	    set foo(vv) {}
+	}
+
+	array {
+	    set foo(type) [list $name $foo(data)]
+	    set foo(data) {}
+	}
+	data {
+	    set foo(data) [list $name $foo(values)]
+	    set foo(values) {}
+	    set foo(state,array) 0
+	}
+
+	string {
+	    set foo(type) [list $name [XMLUnQuote $foo(vv)]]
+	    set foo(vv) {}
+	}
+	integer {
+	    set foo(type) [list $name $foo(vv)]
+	    set foo(vv) {}
+	}
+
+	value {
+	    set vv [list $name $foo(type)]
+	    set foo(type) {}
+	    if {$foo(state,array)} {
+		lappend foo(values) $vv
+	    } else {
+		set foo(value) $vv
+	    }
+	}
+    }
+
+    set foo(state) {}
+}
+

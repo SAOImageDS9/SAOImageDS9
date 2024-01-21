@@ -617,11 +617,6 @@ proc xmlrpc2xmlproc {rpc varname} {
 # TclXML
 
 proc xmlxml {body} {
-    global stackm
-    global stackn
-    set stackm {}
-    set stackn {}
-
     global foo
     catch {unset foo}
 
@@ -638,6 +633,9 @@ proc xmlxml {body} {
     set foo(name) {}
     set foo(values) {}
     
+    set foo(stack,members) {}
+    set foo(stack,name) {}
+
     # struct stack
     global stack
     set stack {}
@@ -668,8 +666,6 @@ proc xmlxml {body} {
 
 proc xmlxmlCharCB {data} {
     global foo
-    global stackm
-    global stackn
 
     set data [string trim $data]
 
@@ -700,8 +696,6 @@ proc xmlxmlCharCB {data} {
 
 proc xmlxmlElemStartCB {name attlist args} {
     global foo
-    global stackm
-    global stackn
     
     switch $name {
 	methodCall {
@@ -729,13 +723,8 @@ proc xmlxmlElemStartCB {name attlist args} {
 	}
 
 	struct {
-	    xmlxmlPush $foo(members) stackm
-	    xmlxmlPush $foo(name) stackn
-#	    puts "struct push"
-#	    puts "stackm=$stackm"
-#	    puts "stackn=$stackn"
-#	    puts "foo(members)=$foo(members)"
-#	    puts "foo(name)=$foo(name)"
+	    xmlxmlPush $foo(members) foo(stack,members)
+	    xmlxmlPush $foo(name) foo(stack,name)
 	    set foo(members) {}
 	    set foo(name) {}
 	}
@@ -770,8 +759,6 @@ proc xmlxmlElemStartCB {name attlist args} {
 
 proc xmlxmlElemEndCB {name args} {
     global foo
-    global stackm
-    global stackn
     
     switch $name {
 	methodCall {
@@ -810,8 +797,8 @@ proc xmlxmlElemEndCB {name args} {
 
 	struct {
 	    set foo(type) [list $name $foo(members)]
-	    set foo(members) [xmlxmlPop stackm]
-	    set foo(name) [xmlxmlPop stackn]
+	    set foo(members) [xmlxmlPop foo(stack,members)]
+	    set foo(name) [xmlxmlPop foo(stack,name)]
 	}
 	member {
 	    set mm [list $name [list $foo(name) $foo(value)]]

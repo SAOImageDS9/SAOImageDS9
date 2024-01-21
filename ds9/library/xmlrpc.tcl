@@ -54,20 +54,19 @@ proc xmlrpcDoRequest {sock} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
-    puts "**xml"
-    puts $body
+#    puts "**xml"
+#    puts $body
 
-#    puts "**start parse"
     xml2rpc $body
     global parse
     set rpc $parse(result)
-    puts $rpc
-#    puts "**end parse"
 
-#    puts "**start tclxml"
     set rr [xmlxml $body]
-    puts $rr
-#    puts "**end tclxml"
+
+    if {$rpc != $rr} {
+	puts "***BANG"
+	puts $body
+    }
 
     set tag [lindex [lindex $rpc 0] 0]
 
@@ -626,15 +625,19 @@ proc xmlxml {body} {
     set foo(methodResponse) {}
 
     set foo(params) {}
+    
     set foo(data) {}
     
     set foo(xparam) {}
     set foo(members) {}
     set foo(name) {}
+
     set foo(values) {}
-    
+
     set foo(stack,members) {}
     set foo(stack,name) {}
+    set foo(stack,values) {}
+    set foo(array) false
 
     # struct stack
     global stack
@@ -649,7 +652,7 @@ proc xmlxml {body} {
 
     if {[catch {$xml parse $body} err]} {
 	puts "TclXML Parse error"
-	return -code errror
+	return -code error
     }
 
     if {$foo(methodCall) != {}} {
@@ -670,10 +673,10 @@ proc xmlxmlCharCB {data} {
     set data [string trim $data]
 
     switch $foo(state) {
-	methodCall {}
-	methodResponse {}
+	methodcall {}
+	methodresponse {}
 
-	methodName {set foo(vv) $data}
+	methodname {set foo(vv) $data}
 
 	fault {set foo(vv) $data}
 
@@ -697,17 +700,18 @@ proc xmlxmlCharCB {data} {
 proc xmlxmlElemStartCB {name attlist args} {
     global foo
     
+    set name [string tolower $name]
     switch $name {
-	methodCall {
+	methodcall {
 	    set foo(methodName) {}
 	    set foo(params) {}
 	}
-	methodResponse {
+	methodresponse {
 	    set foo(params) {}
 	    set foo(fault) {}
 	}
 
-	methodName {
+	methodname {
 	    set foo(vv) {}
 	}
 
@@ -737,8 +741,10 @@ proc xmlxmlElemStartCB {name attlist args} {
 
 	array {
 	    set foo(data) {}
+	    set foo(array) true
 	}
 	data {
+	    xmlxmlPush $foo(values) foo(stack,values)
 	    set foo(values) {}
 	}
 
@@ -760,8 +766,9 @@ proc xmlxmlElemStartCB {name attlist args} {
 proc xmlxmlElemEndCB {name args} {
     global foo
     
+    set name [string tolower $name]
     switch $name {
-	methodCall {
+	methodcall {
 	    if {$foo(methodName) != {} && $foo(params) != {}} {
 		set foo(methodCall) \
 		    [list $name [list $foo(methodName) $foo(params)]]
@@ -769,7 +776,7 @@ proc xmlxmlElemEndCB {name args} {
 		set foo(methodCall) [list $name [list $foo(methodName)]]
 	    }
 	}
-	methodResponse {
+	methodresponse {
 	    if {$foo(params) != {}} {
 		set foo(methodResponse) [list $name $foo(params)]
 		set foo(params) {}
@@ -779,7 +786,7 @@ proc xmlxmlElemEndCB {name args} {
 	    }
 	}
 
-	methodName {
+	methodname {
 	    set foo(methodName) [list $name $foo(vv)]
 	}
 
@@ -791,8 +798,7 @@ proc xmlxmlElemEndCB {name args} {
 	    set foo(params) [list $name $foo(xparam)]
 	}
 	param {
-	    set pp [list $name $foo(value)]
-	    lappend foo(xparam) $pp
+	    lappend foo(xparam) [list $name $foo(value)]
 	}
 
 	struct {
@@ -801,8 +807,7 @@ proc xmlxmlElemEndCB {name args} {
 	    set foo(name) [xmlxmlPop foo(stack,name)]
 	}
 	member {
-	    set mm [list $name [list $foo(name) $foo(value)]]
-	    lappend foo(members) $mm
+	    lappend foo(members) [list $name [list $foo(name) $foo(value)]]
 	}
 	name {
 	    set foo(name) [list $name $foo(vv)]
@@ -810,9 +815,11 @@ proc xmlxmlElemEndCB {name args} {
 
 	array {
 	    set foo(type) [list $name $foo(data)]
+	    set foo(array) false
 	}
 	data {
 	    set foo(data) [list $name $foo(values)]
+	    set foo(values) [xmlxmlPop foo(stack,values)]
 	}
 
 	string {
@@ -824,10 +831,16 @@ proc xmlxmlElemEndCB {name args} {
 
 	value {
 	    if {$foo(type) != {}} {
-		set foo(value) [list $name $foo(type)]
+		set vv [list $name $foo(type)]
 	    } else {
 		# default string
-		set foo(value) [list $name [list string [XMLUnQuote $foo(vv)]]]
+		set vv [list $name [list string [XMLUnQuote $foo(vv)]]]
+	    }
+
+	    if {!$foo(array)} {
+		set foo(value) $vv
+	    } else {
+		lappend foo(values) $vv
 	    }
 	}
     }

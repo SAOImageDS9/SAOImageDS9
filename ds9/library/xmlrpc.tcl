@@ -836,7 +836,7 @@ proc xmlxmlElemEndCB {name args} {
 	}
 
 	value {
-	    if {$foo(type) != {} {
+	    if {$foo(type) != {}} {
 		set foo(value) [list $name $foo(type)]
 	    } else {
 		# default string

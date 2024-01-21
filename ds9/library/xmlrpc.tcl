@@ -840,7 +840,7 @@ proc xmlxmlElemEndCB {name args} {
 		set foo(value) [list $name $foo(type)]
 	    } else {
 		# default string
-		set foo(value) $foo(vv)
+		set foo(value) [list $name [list string [XMLUnQuote $foo(vv)]]]
 	    }
 	}
     }

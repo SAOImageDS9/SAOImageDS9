@@ -617,11 +617,15 @@ proc xmlrpc2xmlproc {rpc varname} {
 # TclXML
 
 proc xmlxml {body} {
+    global stackm
+    global stackn
+    set stackm {}
+    set stackn {}
+
     global foo
     catch {unset foo}
 
     set foo(state) {}
-    set foo(state,array) 0
 
     set foo(methodCall) {}
     set foo(methodResponse) {}
@@ -630,8 +634,14 @@ proc xmlxml {body} {
     set foo(data) {}
     
     set foo(xparam) {}
+    set foo(members) {}
+    set foo(name) {}
     set foo(values) {}
     
+    # struct stack
+    global stack
+    set stack {}
+
     set xml [xml::parser \
 		 -characterdatacommand [list xmlxmlCharCB] \
 		 -elementstartcommand [list xmlxmlElemStartCB] \
@@ -641,6 +651,7 @@ proc xmlxml {body} {
 
     if {[catch {$xml parse $body} err]} {
 	puts "TclXML Parse error"
+	return -code errror
     }
 
     if {$foo(methodCall) != {}} {
@@ -657,9 +668,10 @@ proc xmlxml {body} {
 
 proc xmlxmlCharCB {data} {
     global foo
+    global stackm
+    global stackn
 
     set data [string trim $data]
-#    puts "charCB=$data"
 
     switch $foo(state) {
 	methodCall {}
@@ -682,40 +694,75 @@ proc xmlxmlCharCB {data} {
 	string {set foo(vv) $data}
 	integer {set foo(vv) $data}
 
-	value {}
+	value {set foo(vv) $data}
     }
 }
 
 proc xmlxmlElemStartCB {name attlist args} {
     global foo
+    global stackm
+    global stackn
     
-#    puts "startCB=$name"
-
     switch $name {
-	methodCall {}
-	methodResponse {}
-
-	methodName {}
-
-	fault {}
-
-	params {set foo(xparams) {}}
-	param {}
-
-	struct {set foo(members) {}}
-	member {}
-	name {}
-
-	array {}
-	data {
-	    set foo(values) {}
-	    set foo(state,array) 1
+	methodCall {
+	    set foo(methodName) {}
+	    set foo(params) {}
+	}
+	methodResponse {
+	    set foo(params) {}
+	    set foo(fault) {}
 	}
 
-	string {}
-	integer {}
+	methodName {
+	    set foo(vv) {}
+	}
 
-	value {set foo(type) {}}
+	fault {
+	    set foo(vv) {}
+	}
+
+	params {
+	    set foo(xparam) {}
+	}
+	param {
+	    set foo(value) {}
+	}
+
+	struct {
+	    xmlxmlPush $foo(members) stackm
+	    xmlxmlPush $foo(name) stackn
+#	    puts "struct push"
+#	    puts "stackm=$stackm"
+#	    puts "stackn=$stackn"
+#	    puts "foo(members)=$foo(members)"
+#	    puts "foo(name)=$foo(name)"
+	    set foo(members) {}
+	    set foo(name) {}
+	}
+	member {
+	    set foo(value) {}
+	}
+	name {
+	    set foo(vv) {}
+	}
+
+	array {
+	    set foo(data) {}
+	}
+	data {
+	    set foo(values) {}
+	}
+
+	string {
+	    set foo(vv) {}
+	}
+	integer {
+	    set foo(vv) {}
+	}
+
+	value {
+	    set foo(type) {}
+	}
     }
 
     set foo(state) $name
@@ -723,18 +770,17 @@ proc xmlxmlElemStartCB {name attlist args} {
 
 proc xmlxmlElemEndCB {name args} {
     global foo
+    global stackm
+    global stackn
     
-#    puts "endCB=$name"
-
     switch $name {
 	methodCall {
 	    if {$foo(methodName) != {} && $foo(params) != {}} {
-		set foo(methodCall) [list $name [list $foo(methodName) $foo(params)]]
+		set foo(methodCall) \
+		    [list $name [list $foo(methodName) $foo(params)]]
 	    } else {
 		set foo(methodCall) [list $name [list $foo(methodName)]]
 	    }
-	    set foo(methodName) {}
-	    set foo(params) {}
 	}
 	methodResponse {
 	    if {$foo(params) != {}} {
@@ -748,65 +794,53 @@ proc xmlxmlElemEndCB {name args} {
 
 	methodName {
 	    set foo(methodName) [list $name $foo(vv)]
-	    set foo(vv) {}
 	}
 
 	fault {
 	    set foo(fault) [list $name $foo(vv)]
-	    set foo(vv) {}
 	}
 
 	params {
 	    set foo(params) [list $name $foo(xparam)]
-	    set foo(xparam) {}
 	}
 	param {
 	    set pp [list $name $foo(value)]
-	    set foo(value) {}
 	    lappend foo(xparam) $pp
 	}
 
 	struct {
 	    set foo(type) [list $name $foo(members)]
-	    set foo(members) {}
+	    set foo(members) [xmlxmlPop stackm]
+	    set foo(name) [xmlxmlPop stackn]
 	}
 	member {
 	    set mm [list $name [list $foo(name) $foo(value)]]
-	    set foo(name) {}
-	    set foo(value) {}
 	    lappend foo(members) $mm
 	}
 	name {
 	    set foo(name) [list $name $foo(vv)]
-	    set foo(vv) {}
 	}
 
 	array {
 	    set foo(type) [list $name $foo(data)]
-	    set foo(data) {}
 	}
 	data {
 	    set foo(data) [list $name $foo(values)]
-	    set foo(values) {}
-	    set foo(state,array) 0
 	}
 
 	string {
 	    set foo(type) [list $name [XMLUnQuote $foo(vv)]]
-	    set foo(vv) {}
 	}
 	integer {
 	    set foo(type) [list $name $foo(vv)]
-	    set foo(vv) {}
 	}
 
 	value {
-	    set vv [list $name $foo(type)]
-	    set foo(type) {}
-	    if {$foo(state,array)} {
-		lappend foo(values) $vv
+	    if {$foo(type) != {} {
+		set foo(value) [list $name $foo(type)]
 	    } else {
-		set foo(value) $vv
+		# default string
+		set foo(value) $foo(vv)
 	    }
 	}
     }
@@ -814,3 +848,16 @@ proc xmlxmlElemEndCB {name args} {
     set foo(state) {}
 }
 
+proc xmlxmlPush {item var} {
+    upvar #0 $var stack
+
+    lappend stack $item
+}
+
+proc xmlxmlPop {var} {
+    upvar #0 $var stack
+
+    set item [lindex $stack end] 
+    set stack [lreplace $stack end end]
+    return $item
+}

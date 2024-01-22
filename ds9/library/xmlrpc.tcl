@@ -66,6 +66,8 @@ proc xmlrpcDoRequest {sock} {
     if {$rpc != $rr} {
 	puts "***BANG"
 	puts $body
+	puts $rpc
+	puts $rr
     }
 
     set tag [lindex [lindex $rpc 0] 0]
@@ -670,7 +672,7 @@ proc xmlxml {body} {
 proc xmlxmlCharCB {data} {
     global foo
 
-    set data [string trim $data]
+#    set data [string trim $data]
 
     switch $foo(state) {
 	methodcall {}

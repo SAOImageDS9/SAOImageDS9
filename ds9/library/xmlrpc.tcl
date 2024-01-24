@@ -61,14 +61,9 @@ proc xmlrpcDoRequest {sock} {
     global parse
     set rpc $parse(result)
 
-    set rr [xmlxml $body]
+    xmlrpc parse body
 
-    if {$rpc != $rr} {
-	puts "***BANG"
-	puts $body
-	puts $rpc
-	puts $rr
-    }
+#    set rr [xmlxml $body]
 
     set tag [lindex [lindex $rpc 0] 0]
 

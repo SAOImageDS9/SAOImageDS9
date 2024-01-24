@@ -32,7 +32,7 @@ saods9	: dirs tcl tk \
 	xpa funtools ast \
 	vector fitsy \
 	tclsignal \
-	tclzipfs tls tclxml \
+	tclzipfs tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tksvg tkagif tkhtml1 tkcon \
 	tksao ds9

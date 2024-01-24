@@ -44,7 +44,7 @@ saods9	: dirs tcl tk \
 	openssl \
 	xpa funtools ast \
 	vector fitsy \
-	tls tclxml \
+	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tksvg tkagif tkhtml1 tkcon \
 	tkwin \

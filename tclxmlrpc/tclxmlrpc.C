@@ -107,9 +107,10 @@ int TclXMLRPC::parseCmd(int argc, const char* argv[])
   string x(xml);
   istringstream str(x);
 
-  parse(str);
-
-  return TCL_OK;
+  if (!parse(str))
+    return TCL_OK;
+  else
+    return TCL_ERROR;
 }
 
 int TclXMLRPC::parse(istringstream& istr)

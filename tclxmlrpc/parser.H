@@ -39,73 +39,71 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     INT = 258,
-     STRING = 259,
-     HEADER = 260,
-     DEBUG_ = 261,
-     ON_ = 262,
-     OFF_ = 263,
-     METHODCALL_ = 264,
-     _METHODCALL_ = 265,
-     METHODRESPONSE_ = 266,
-     _METHODRESPONSE_ = 267,
-     METHODNAME_ = 268,
-     _METHODNAME_ = 269,
-     FAULT_ = 270,
-     _FAULT_ = 271,
-     PARAMS_ = 272,
-     _PARAMS_ = 273,
-     PARAM_ = 274,
-     _PARAM_ = 275,
-     VALUE_ = 276,
-     _VALUE_ = 277,
-     INTEGER_ = 278,
-     _INTEGER_ = 279,
-     STRUCT_ = 280,
-     _STRUCT_ = 281,
-     MEMBER_ = 282,
-     _MEMBER_ = 283,
-     NAME_ = 284,
-     _NAME_ = 285,
-     ARRAY_ = 286,
-     _ARRAY_ = 287,
-     DATA_ = 288,
-     _DATA_ = 289
+     STRING = 258,
+     HEADER = 259,
+     DEBUG_ = 260,
+     ON_ = 261,
+     OFF_ = 262,
+     METHODCALL_ = 263,
+     _METHODCALL_ = 264,
+     METHODRESPONSE_ = 265,
+     _METHODRESPONSE_ = 266,
+     METHODNAME_ = 267,
+     _METHODNAME_ = 268,
+     FAULT_ = 269,
+     _FAULT_ = 270,
+     PARAMS_ = 271,
+     _PARAMS_ = 272,
+     PARAM_ = 273,
+     _PARAM_ = 274,
+     VALUE_ = 275,
+     _VALUE_ = 276,
+     INTEGER_ = 277,
+     _INTEGER_ = 278,
+     STRUCT_ = 279,
+     _STRUCT_ = 280,
+     MEMBER_ = 281,
+     _MEMBER_ = 282,
+     NAME_ = 283,
+     _NAME_ = 284,
+     ARRAY_ = 285,
+     _ARRAY_ = 286,
+     DATA_ = 287,
+     _DATA_ = 288
    };
 #endif
 /* Tokens.  */
-#define INT 258
-#define STRING 259
-#define HEADER 260
-#define DEBUG_ 261
-#define ON_ 262
-#define OFF_ 263
-#define METHODCALL_ 264
-#define _METHODCALL_ 265
-#define METHODRESPONSE_ 266
-#define _METHODRESPONSE_ 267
-#define METHODNAME_ 268
-#define _METHODNAME_ 269
-#define FAULT_ 270
-#define _FAULT_ 271
-#define PARAMS_ 272
-#define _PARAMS_ 273
-#define PARAM_ 274
-#define _PARAM_ 275
-#define VALUE_ 276
-#define _VALUE_ 277
-#define INTEGER_ 278
-#define _INTEGER_ 279
-#define STRUCT_ 280
-#define _STRUCT_ 281
-#define MEMBER_ 282
-#define _MEMBER_ 283
-#define NAME_ 284
-#define _NAME_ 285
-#define ARRAY_ 286
-#define _ARRAY_ 287
-#define DATA_ 288
-#define _DATA_ 289
+#define STRING 258
+#define HEADER 259
+#define DEBUG_ 260
+#define ON_ 261
+#define OFF_ 262
+#define METHODCALL_ 263
+#define _METHODCALL_ 264
+#define METHODRESPONSE_ 265
+#define _METHODRESPONSE_ 266
+#define METHODNAME_ 267
+#define _METHODNAME_ 268
+#define FAULT_ 269
+#define _FAULT_ 270
+#define PARAMS_ 271
+#define _PARAMS_ 272
+#define PARAM_ 273
+#define _PARAM_ 274
+#define VALUE_ 275
+#define _VALUE_ 276
+#define INTEGER_ 277
+#define _INTEGER_ 278
+#define STRUCT_ 279
+#define _STRUCT_ 280
+#define MEMBER_ 281
+#define _MEMBER_ 282
+#define NAME_ 283
+#define _NAME_ 284
+#define ARRAY_ 285
+#define _ARRAY_ 286
+#define DATA_ 287
+#define _DATA_ 288
 
 
 
@@ -115,11 +113,10 @@ typedef union YYSTYPE
 #line 24 "parser.Y"
 {
   int integer;
-  char header[1024];
   char str[8192];
 }
 /* Line 1529 of yacc.c.  */
-#line 123 "parser.H"
+#line 120 "parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

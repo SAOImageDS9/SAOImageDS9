@@ -23,13 +23,11 @@
 
 %union {
   int integer;
-  char header[1024];
   char str[8192];
 }
 
-%token <integer> INT
 %token <str> STRING
-%token <header> HEADER
+%token <str> HEADER
 
 %token DEBUG_
 %token ON_
@@ -76,8 +74,13 @@
 
 %%
 
+commands : commands command
+| command
+;
+
 command : DEBUG_ debug
-| HEADER method
+| HEADER
+| method
 ;
 
 method : methodCall
@@ -95,7 +98,7 @@ methodResponse : METHODRESPONSE_ params _METHODRESPONSE_
 methodName : METHODNAME_ STRING _METHODNAME_
 ;
 
-fault : FAULT_ INT _FAULT_
+fault : FAULT_ value _FAULT_
 ;
 
 params : PARAMS_ xparam _PARAMS_
@@ -119,7 +122,7 @@ value : STRING
 ;
 
 type : STRING
-| INTEGER_ INT _INTEGER_
+| INTEGER_ STRING _INTEGER_
 
 | STRUCT_ members _STRUCT_
 | STRUCT_ _STRUCT_

@@ -54,14 +54,21 @@ proc xmlrpcDoRequest {sock} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
-#    puts "**xml"
-#    puts $body
-
     xml2rpc $body
     global parse
     set rpc $parse(result)
 
-    xmlrpc parse body
+    # space out < and >
+    # shift \n to \r (multi line strings)
+    puts "***"
+    puts $body
+    puts "---"
+    set foo "debug on\n$body"
+#    set data $foo
+    set data [string map {< " <" > "> "} $foo]
+    puts $data
+    puts "***"
+    xmlrpc parse data
 
 #    set rr [xmlxml $body]
 

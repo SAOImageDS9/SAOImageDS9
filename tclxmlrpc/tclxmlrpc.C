@@ -94,12 +94,15 @@ TclXMLRPC::~TclXMLRPC()
 
 int TclXMLRPC::parseCmd(int argc, const char* argv[])
 {
-  if (argc!=3) { 
-    Tcl_AppendResult(interp_, "usage: xmlrpc parse ?var?", NULL);
+  if (argc!=4) { 
+    Tcl_AppendResult(interp_, "usage: xmlrpc parse ?in? ?out?", NULL);
     return TCL_ERROR;
   }
   
   if (!(argv[2] && *argv[2]))
+    return TCL_ERROR;
+
+  if (!(argv[3] && *argv[3]))
     return TCL_ERROR;
 
   char* xml = (char*)Tcl_GetVar(interp_, argv[2], TCL_LEAVE_ERR_MSG);
@@ -107,10 +110,13 @@ int TclXMLRPC::parseCmd(int argc, const char* argv[])
   string x(xml);
   istringstream str(x);
 
-  if (!parse(str))
+  if (!parse(str)) {
+    //    Tcl_SetVar(interp_, argv[3], aaa, TCL_LIST_ELEMENT);
     return TCL_OK;
-  else
+  }
+  else {
     return TCL_ERROR;
+  }
 }
 
 int TclXMLRPC::parse(istringstream& istr)

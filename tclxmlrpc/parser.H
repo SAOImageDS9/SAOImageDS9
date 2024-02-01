@@ -62,14 +62,16 @@
      _INTEGER_ = 278,
      STRUCT_ = 279,
      _STRUCT_ = 280,
-     MEMBER_ = 281,
-     _MEMBER_ = 282,
-     NAME_ = 283,
-     _NAME_ = 284,
-     ARRAY_ = 285,
-     _ARRAY_ = 286,
-     DATA_ = 287,
-     _DATA_ = 288
+     MEMBERS_ = 281,
+     _MEMBERS_ = 282,
+     MEMBER_ = 283,
+     _MEMBER_ = 284,
+     NAME_ = 285,
+     _NAME_ = 286,
+     ARRAY_ = 287,
+     _ARRAY_ = 288,
+     DATA_ = 289,
+     _DATA_ = 290
    };
 #endif
 /* Tokens.  */
@@ -96,27 +98,28 @@
 #define _INTEGER_ 278
 #define STRUCT_ 279
 #define _STRUCT_ 280
-#define MEMBER_ 281
-#define _MEMBER_ 282
-#define NAME_ 283
-#define _NAME_ 284
-#define ARRAY_ 285
-#define _ARRAY_ 286
-#define DATA_ 287
-#define _DATA_ 288
+#define MEMBERS_ 281
+#define _MEMBERS_ 282
+#define MEMBER_ 283
+#define _MEMBER_ 284
+#define NAME_ 285
+#define _NAME_ 286
+#define ARRAY_ 287
+#define _ARRAY_ 288
+#define DATA_ 289
+#define _DATA_ 290
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 24 "parser.Y"
+#line 29 "parser.Y"
 {
-  int integer;
-  char str[8192];
+  char* str;
 }
 /* Line 1529 of yacc.c.  */
-#line 120 "parser.H"
+#line 123 "parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

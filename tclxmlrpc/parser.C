@@ -97,14 +97,16 @@
      _INTEGER_ = 278,
      STRUCT_ = 279,
      _STRUCT_ = 280,
-     MEMBER_ = 281,
-     _MEMBER_ = 282,
-     NAME_ = 283,
-     _NAME_ = 284,
-     ARRAY_ = 285,
-     _ARRAY_ = 286,
-     DATA_ = 287,
-     _DATA_ = 288
+     MEMBERS_ = 281,
+     _MEMBERS_ = 282,
+     MEMBER_ = 283,
+     _MEMBER_ = 284,
+     NAME_ = 285,
+     _NAME_ = 286,
+     ARRAY_ = 287,
+     _ARRAY_ = 288,
+     DATA_ = 289,
+     _DATA_ = 290
    };
 #endif
 /* Tokens.  */
@@ -131,14 +133,16 @@
 #define _INTEGER_ 278
 #define STRUCT_ 279
 #define _STRUCT_ 280
-#define MEMBER_ 281
-#define _MEMBER_ 282
-#define NAME_ 283
-#define _NAME_ 284
-#define ARRAY_ 285
-#define _ARRAY_ 286
-#define DATA_ 287
-#define _DATA_ 288
+#define MEMBERS_ 281
+#define _MEMBERS_ 282
+#define MEMBER_ 283
+#define _MEMBER_ 284
+#define NAME_ 285
+#define _NAME_ 286
+#define ARRAY_ 287
+#define _ARRAY_ 288
+#define DATA_ 289
+#define _DATA_ 290
 
 
 
@@ -154,7 +158,12 @@
 #undef yyFlexLexer
 #define yyFlexLexer xmlrpcFlexLexer
 #include <FlexLexer.h>
-
+  char* xmlrpcbuf;
+  char* xmlrpcstrcat(char*, char*, int);
+  char* xmlrpcstrcat1(const char*);
+  char* xmlrpcstrcat3(const char*, char*, const char*, int);
+  char* xmlrpcstrcat4(const char*, char*, char*, const char*, int);
+  
   extern int xmlrpclex(void*, xmlrpcFlexLexer*);
   extern void xmlrpcerror(TclXMLRPC*, xmlrpcFlexLexer*, const char*);
 
@@ -179,13 +188,12 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 24 "parser.Y"
+#line 29 "parser.Y"
 {
-  int integer;
-  char str[8192];
+  char* str;
 }
 /* Line 193 of yacc.c.  */
-#line 189 "parser.C"
+#line 197 "parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -198,7 +206,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 202 "parser.C"
+#line 210 "parser.C"
 
 #ifdef short
 # undef short
@@ -411,14 +419,14 @@ union yyalloc
 #endif
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  20
+#define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   80
+#define YYLAST   82
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  34
+#define YYNTOKENS  36
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  18
+#define YYNNTS  19
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  46
 /* YYNRULES -- Number of states.  */
@@ -426,7 +434,7 @@ union yyalloc
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   288
+#define YYMAXUTOK   290
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -462,7 +470,8 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    31,    32,    33
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35
 };
 
 #if YYDEBUG
@@ -470,40 +479,40 @@ static const yytype_uint8 yytranslate[] =
    YYRHS.  */
 static const yytype_uint8 yyprhs[] =
 {
-       0,     0,     3,     6,     8,    11,    13,    15,    17,    19,
-      24,    28,    32,    36,    40,    44,    48,    51,    53,    56,
-      58,    62,    65,    67,    69,    73,    76,    78,    80,    84,
-      88,    91,    93,    99,   104,   107,   110,   112,   117,   120,
-     122,   126,   129,   131,   134,   136,   138
+       0,     0,     3,     6,     8,    11,    13,    14,    17,    19,
+      21,    26,    30,    34,    38,    42,    46,    49,    51,    54,
+      56,    60,    63,    65,    67,    71,    74,    76,    78,    82,
+      86,    89,    91,    97,   102,   105,   108,   110,   115,   118,
+     120,   124,   127,   129,   132,   134,   136
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      35,     0,    -1,    35,    36,    -1,    36,    -1,     5,    51,
-      -1,     4,    -1,    37,    -1,    38,    -1,    39,    -1,     8,
-      40,    42,     9,    -1,     8,    40,     9,    -1,    10,    42,
-      11,    -1,    10,    41,    11,    -1,    12,     3,    13,    -1,
-      14,    45,    15,    -1,    16,    43,    17,    -1,    16,    17,
-      -1,    17,    -1,    43,    44,    -1,    44,    -1,    18,    45,
-      19,    -1,    18,    19,    -1,    19,    -1,     3,    -1,    20,
-      46,    21,    -1,    20,    21,    -1,    21,    -1,     3,    -1,
-      22,     3,    23,    -1,    24,    47,    25,    -1,    24,    25,
-      -1,    25,    -1,    30,    32,    50,    33,    31,    -1,    30,
-      32,    33,    31,    -1,    33,    31,    -1,    47,    48,    -1,
-      48,    -1,    26,    49,    45,    27,    -1,    26,    27,    -1,
-      27,    -1,    28,     3,    29,    -1,    28,    29,    -1,    29,
-      -1,    50,    45,    -1,    45,    -1,     6,    -1,     7,    -1
+      37,     0,    -1,    37,    38,    -1,    38,    -1,     5,    54,
+      -1,     4,    -1,    -1,    39,    40,    -1,    41,    -1,    42,
+      -1,     8,    43,    45,     9,    -1,    10,    45,    11,    -1,
+      10,    44,    11,    -1,    12,     3,    13,    -1,    14,    48,
+      15,    -1,    16,    46,    17,    -1,    16,    17,    -1,    17,
+      -1,    46,    47,    -1,    47,    -1,    18,     3,    19,    -1,
+      18,    19,    -1,    19,    -1,     3,    -1,    20,    49,    21,
+      -1,    20,    21,    -1,    21,    -1,     3,    -1,    22,     3,
+      23,    -1,    24,    50,    25,    -1,    24,    25,    -1,    25,
+      -1,    32,    34,    53,    35,    33,    -1,    32,    34,    35,
+      33,    -1,    35,    33,    -1,    50,    51,    -1,    51,    -1,
+      28,    52,    48,    29,    -1,    28,    29,    -1,    29,    -1,
+      30,     3,    31,    -1,    30,    31,    -1,    31,    -1,    53,
+      48,    -1,    48,    -1,     6,    -1,     7,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    77,    77,    78,    81,    82,    83,    86,    87,    90,
-      91,    94,    95,    98,   101,   104,   105,   106,   109,   110,
-     113,   114,   115,   118,   119,   120,   121,   124,   125,   127,
-     128,   129,   131,   132,   133,   136,   137,   140,   141,   142,
-     145,   146,   147,   150,   151,   154,   155
+       0,    99,    99,   100,   103,   104,   105,   105,   108,   109,
+     112,   117,   120,   124,   129,   132,   133,   134,   137,   138,
+     141,   142,   143,   146,   147,   148,   149,   152,   154,   156,
+     157,   158,   160,   163,   164,   167,   168,   171,   174,   175,
+     178,   179,   180,   183,   184,   187,   188
 };
 #endif
 
@@ -516,11 +525,11 @@ static const char *const yytname[] =
   "OFF_", "METHODCALL_", "_METHODCALL_", "METHODRESPONSE_",
   "_METHODRESPONSE_", "METHODNAME_", "_METHODNAME_", "FAULT_", "_FAULT_",
   "PARAMS_", "_PARAMS_", "PARAM_", "_PARAM_", "VALUE_", "_VALUE_",
-  "INTEGER_", "_INTEGER_", "STRUCT_", "_STRUCT_", "MEMBER_", "_MEMBER_",
-  "NAME_", "_NAME_", "ARRAY_", "_ARRAY_", "DATA_", "_DATA_", "$accept",
-  "commands", "command", "method", "methodCall", "methodResponse",
-  "methodName", "fault", "params", "xparam", "param", "value", "type",
-  "members", "member", "name", "values", "debug", 0
+  "INTEGER_", "_INTEGER_", "STRUCT_", "_STRUCT_", "MEMBERS_", "_MEMBERS_",
+  "MEMBER_", "_MEMBER_", "NAME_", "_NAME_", "ARRAY_", "_ARRAY_", "DATA_",
+  "_DATA_", "$accept", "commands", "command", "@1", "method", "methodCall",
+  "methodResponse", "methodName", "fault", "params", "xparam", "param",
+  "value", "type", "members", "member", "name", "values", "debug", 0
 };
 #endif
 
@@ -532,25 +541,25 @@ static const yytype_uint16 yytoknum[] =
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288
+     285,   286,   287,   288,   289,   290
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    34,    35,    35,    36,    36,    36,    37,    37,    38,
-      38,    39,    39,    40,    41,    42,    42,    42,    43,    43,
-      44,    44,    44,    45,    45,    45,    45,    46,    46,    46,
-      46,    46,    46,    46,    46,    47,    47,    48,    48,    48,
-      49,    49,    49,    50,    50,    51,    51
+       0,    36,    37,    37,    38,    38,    39,    38,    40,    40,
+      41,    42,    42,    43,    44,    45,    45,    45,    46,    46,
+      47,    47,    47,    48,    48,    48,    48,    49,    49,    49,
+      49,    49,    49,    49,    49,    50,    50,    51,    51,    51,
+      52,    52,    52,    53,    53,    54,    54
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     2,     1,     2,     1,     1,     1,     1,     4,
-       3,     3,     3,     3,     3,     3,     2,     1,     2,     1,
+       0,     2,     2,     1,     2,     1,     0,     2,     1,     1,
+       4,     3,     3,     3,     3,     3,     2,     1,     2,     1,
        3,     2,     1,     1,     3,     2,     1,     1,     3,     3,
        2,     1,     5,     4,     2,     2,     1,     4,     2,     1,
        3,     2,     1,     2,     1,     1,     1
@@ -561,11 +570,11 @@ static const yytype_uint8 yyr2[] =
    means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     5,     0,     0,     0,     0,     3,     6,     7,     8,
-      45,    46,     4,     0,     0,     0,     0,    17,     0,     0,
-       1,     2,     0,    10,     0,    23,     0,    26,     0,    16,
-       0,    22,     0,    19,    12,    11,    13,     9,    27,    25,
-       0,     0,    31,     0,     0,     0,    14,    21,     0,    15,
+       6,     5,     0,     6,     3,     0,    45,    46,     4,     1,
+       2,     0,     0,     7,     8,     9,     0,     0,     0,     0,
+      17,     0,     0,     0,     0,    23,     0,    26,     0,    16,
+       0,    22,     0,    19,    12,    11,    13,    10,    27,    25,
+       0,     0,    31,     0,     0,     0,    14,     0,    21,    15,
       18,     0,    30,     0,    39,     0,    36,     0,    34,    24,
       20,    28,    38,     0,    42,     0,    29,    35,     0,    44,
        0,     0,    41,     0,    33,     0,    43,    40,    37,    32
@@ -574,30 +583,30 @@ static const yytype_uint8 yydefact[] =
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     5,     6,     7,     8,     9,    14,    18,    19,    32,
-      33,    28,    45,    55,    56,    65,    70,    12
+      -1,     3,     4,     5,    13,    14,    15,    17,    21,    22,
+      32,    33,    28,    45,    55,    56,    65,    70,     8
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -31
+#define YYPACT_NINF -55
 static const yytype_int8 yypact[] =
 {
-      48,   -31,    62,    -4,     0,     5,   -31,   -31,   -31,   -31,
-     -31,   -31,   -31,     8,    27,    18,   -15,   -31,     7,    15,
-     -31,   -31,    21,   -31,    32,   -31,    -2,   -31,    33,   -31,
-      30,   -31,    28,   -31,   -31,   -31,   -31,   -31,   -31,   -31,
-      51,    34,   -31,    23,    26,    49,   -31,   -31,    52,   -31,
-     -31,    50,   -31,    35,   -31,    40,   -31,     4,   -31,   -31,
-     -31,   -31,   -31,     3,   -31,    18,   -31,   -31,    41,   -31,
-       9,    45,   -31,    53,   -31,    44,   -31,   -31,   -31,   -31
+       0,   -55,    49,     9,   -55,    44,   -55,   -55,   -55,   -55,
+     -55,    -5,    25,   -55,   -55,   -55,    12,    41,     7,    26,
+     -55,     1,    42,    46,    11,   -55,    -3,   -55,    45,   -55,
+      -2,   -55,    29,   -55,   -55,   -55,   -55,   -55,   -55,   -55,
+      58,     6,   -55,    28,    30,    43,   -55,    47,   -55,   -55,
+     -55,    48,   -55,    20,   -55,     8,   -55,     3,   -55,   -55,
+     -55,   -55,   -55,    -1,   -55,     7,   -55,   -55,    32,   -55,
+       5,    36,   -55,    39,   -55,    37,   -55,   -55,   -55,   -55
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -31,   -31,    71,   -31,   -31,   -31,   -31,   -31,    63,   -31,
-      46,   -30,   -31,   -31,    24,   -31,   -31,   -31
+     -55,   -55,    66,   -55,   -55,   -55,   -55,   -55,   -55,    55,
+     -55,    50,   -54,   -55,   -55,    18,   -55,   -55,   -55
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -607,42 +616,42 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_uint8 yytable[] =
 {
-      48,    38,    29,    30,    31,    20,    71,    25,    13,     1,
-       2,    22,    25,     3,    15,     4,    16,    17,    34,    39,
-      40,    25,    41,    42,    26,    27,    35,    69,    43,    26,
-      27,    44,    72,    25,    36,    73,    23,    68,    26,    27,
-      76,    37,    75,    16,    17,    49,    30,    31,    46,    47,
-      26,    27,     1,     2,    51,    57,     3,    58,     4,    52,
-      53,    54,    62,    63,    64,    66,    53,    54,    10,    11,
-      59,    60,    74,    61,    77,    79,    21,    24,    50,    67,
-      78
+      38,    47,    71,    69,     1,     2,    25,    16,    25,     9,
+      25,    73,    34,     1,     2,    23,    76,    48,    39,    40,
+      37,    41,    42,    26,    27,    26,    27,    26,    27,    43,
+      72,    52,    44,    66,    53,    54,    53,    54,    68,    18,
+      75,    19,    20,    29,    30,    31,    49,    30,    31,    62,
+      63,    64,    11,    35,    12,     6,     7,    19,    20,    36,
+      46,    51,    57,    58,    59,    74,    60,    77,    78,    10,
+      79,    61,    24,    67,     0,     0,     0,     0,     0,     0,
+       0,     0,    50
 };
 
-static const yytype_uint8 yycheck[] =
+static const yytype_int8 yycheck[] =
 {
-      30,     3,    17,    18,    19,     0,     3,     3,    12,     4,
-       5,     3,     3,     8,    14,    10,    16,    17,    11,    21,
-      22,     3,    24,    25,    20,    21,    11,    57,    30,    20,
-      21,    33,    29,     3,    13,    65,     9,    33,    20,    21,
-      70,     9,    33,    16,    17,    17,    18,    19,    15,    19,
-      20,    21,     4,     5,     3,    32,     8,    31,    10,    25,
-      26,    27,    27,    28,    29,    25,    26,    27,     6,     7,
-      21,    19,    31,    23,    29,    31,     5,    14,    32,    55,
-      27
+       3,     3,     3,    57,     4,     5,     3,    12,     3,     0,
+       3,    65,    11,     4,     5,     3,    70,    19,    21,    22,
+       9,    24,    25,    20,    21,    20,    21,    20,    21,    32,
+      31,    25,    35,    25,    28,    29,    28,    29,    35,    14,
+      35,    16,    17,    17,    18,    19,    17,    18,    19,    29,
+      30,    31,     8,    11,    10,     6,     7,    16,    17,    13,
+      15,     3,    34,    33,    21,    33,    19,    31,    29,     3,
+      33,    23,    17,    55,    -1,    -1,    -1,    -1,    -1,    -1,
+      -1,    -1,    32
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     4,     5,     8,    10,    35,    36,    37,    38,    39,
-       6,     7,    51,    12,    40,    14,    16,    17,    41,    42,
-       0,    36,     3,     9,    42,     3,    20,    21,    45,    17,
-      18,    19,    43,    44,    11,    11,    13,     9,     3,    21,
-      22,    24,    25,    30,    33,    46,    15,    19,    45,    17,
-      44,     3,    25,    26,    27,    47,    48,    32,    31,    21,
-      19,    23,    27,    28,    29,    49,    25,    48,    33,    45,
-      50,     3,    29,    45,    31,    33,    45,    29,    27,    31
+       0,     4,     5,    37,    38,    39,     6,     7,    54,     0,
+      38,     8,    10,    40,    41,    42,    12,    43,    14,    16,
+      17,    44,    45,     3,    45,     3,    20,    21,    48,    17,
+      18,    19,    46,    47,    11,    11,    13,     9,     3,    21,
+      22,    24,    25,    32,    35,    49,    15,     3,    19,    17,
+      47,     3,    25,    28,    29,    50,    51,    34,    33,    21,
+      19,    23,    29,    30,    31,    52,    25,    51,    35,    48,
+      53,     3,    31,    48,    33,    35,    48,    31,    29,    33
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1469,19 +1478,226 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 45:
+        case 6:
+#line 105 "parser.Y"
+    {xmlrpcbuf=0;;}
+    break;
+
+  case 7:
+#line 105 "parser.Y"
+    {xmlrpcbuf=(yyvsp[(2) - (2)].str);;}
+    break;
+
+  case 8:
+#line 108 "parser.Y"
+    {(yyval.str)=(yyvsp[(1) - (1)].str);;}
+    break;
+
+  case 9:
+#line 109 "parser.Y"
+    {(yyval.str)=(yyvsp[(1) - (1)].str);;}
+    break;
+
+  case 10:
+#line 112 "parser.Y"
+    {
+  (yyval.str)=xmlrpcstrcat4("[list methodcall [list ",(yyvsp[(2) - (4)].str),(yyvsp[(3) - (4)].str),"]]",1);
+;}
+    break;
+
+  case 11:
+#line 117 "parser.Y"
+    {
+  (yyval.str)=xmlrpcstrcat3("[list methodresponse ",(yyvsp[(2) - (3)].str),"]",1);
+;}
+    break;
+
+  case 12:
+#line 120 "parser.Y"
+    {
+  (yyval.str)=xmlrpcstrcat3("[list methodresponse ",(yyvsp[(2) - (3)].str),"]",1);
+;}
+    break;
+
+  case 13:
+#line 124 "parser.Y"
+    {
+  (yyval.str)=xmlrpcstrcat3("[list methodname ",(yyvsp[(2) - (3)].str),"]",0);
+;}
+    break;
+
+  case 14:
+#line 129 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("list fault ",(yyvsp[(2) - (3)].str),"]",1);;}
+    break;
+
+  case 15:
+#line 132 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list params ",(yyvsp[(2) - (3)].str),"]",1);;}
+    break;
+
+  case 16:
+#line 133 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list params {}]");;}
+    break;
+
+  case 17:
+#line 134 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list params {}]");;}
+    break;
+
+  case 18:
+#line 137 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str),1);;}
+    break;
+
+  case 19:
+#line 138 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list ",(yyvsp[(1) - (1)].str),"]",1);;}
+    break;
+
+  case 20:
+#line 141 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list param ",(yyvsp[(2) - (3)].str),"]",0);;}
+    break;
+
+  case 21:
+#line 142 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list param {}]");;}
+    break;
+
+  case 22:
+#line 143 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list param {}]");;}
+    break;
+
+  case 23:
+#line 146 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list value [list string ",(yyvsp[(1) - (1)].str),"]]",0);;}
+    break;
+
+  case 24:
+#line 147 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list value ",(yyvsp[(2) - (3)].str),"]",1);;}
+    break;
+
+  case 25:
+#line 148 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list value {}]");;}
+    break;
+
+  case 26:
+#line 149 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list value {}]");;}
+    break;
+
+  case 27:
+#line 152 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list string ",(yyvsp[(1) - (1)].str),"]",0);;}
+    break;
+
+  case 28:
 #line 154 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list integer ",(yyvsp[(2) - (3)].str),"]",0);;}
+    break;
+
+  case 29:
+#line 156 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list struct ",(yyvsp[(2) - (3)].str),"]",0);;}
+    break;
+
+  case 30:
+#line 157 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list struct {}]");;}
+    break;
+
+  case 31:
+#line 158 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list struct {}]");;}
+    break;
+
+  case 32:
+#line 160 "parser.Y"
+    {
+  (yyval.str)=xmlrpcstrcat3("[list array [list data  ",(yyvsp[(3) - (5)].str),"]]",1);
+;}
+    break;
+
+  case 33:
+#line 163 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list array [list data {}]]");;}
+    break;
+
+  case 34:
+#line 164 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list array [list data {}]]");;}
+    break;
+
+  case 35:
+#line 167 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str),1);;}
+    break;
+
+  case 36:
+#line 168 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list ",(yyvsp[(1) - (1)].str),"]",1);;}
+    break;
+
+  case 37:
+#line 171 "parser.Y"
+    {
+  (yyval.str)=xmlrpcstrcat4("[list member [list ",(yyvsp[(2) - (4)].str),(yyvsp[(3) - (4)].str),"]]",1);
+;}
+    break;
+
+  case 38:
+#line 174 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list member {}]");;}
+    break;
+
+  case 39:
+#line 175 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list member {}]");;}
+    break;
+
+  case 40:
+#line 178 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list name ",(yyvsp[(2) - (3)].str),"]",0);;}
+    break;
+
+  case 41:
+#line 179 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
+    break;
+
+  case 42:
+#line 180 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
+    break;
+
+  case 43:
+#line 183 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str),1);;}
+    break;
+
+  case 44:
+#line 184 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list ",(yyvsp[(1) - (1)].str),"]",1);;}
+    break;
+
+  case 45:
+#line 187 "parser.Y"
     {yydebug=1;;}
     break;
 
   case 46:
-#line 155 "parser.Y"
+#line 188 "parser.Y"
     {yydebug=0;;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1485 "parser.C"
+#line 1701 "parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1695,8 +1911,52 @@ yyreturn:
 }
 
 
-#line 158 "parser.Y"
+#line 191 "parser.Y"
 
 
+char* xmlrpcstrcat(char* str1, char* str2, int flag) {
+  int ll = strlen(str1)+strlen(str2)+1;
+  char* ptr = (char*)malloc(ll);
+  strcpy(ptr,str1);
+  strcat(ptr,str2);
+  if (flag) {
+    free(str1);
+    free(str2);
+  }
+  return ptr;
+}
 
+char* xmlrpcstrcat1(const char* pre) {
+  int ll = strlen(pre)+1;
+  char* ptr = (char*)malloc(ll);
+  strcpy(ptr,pre);
+  return ptr;
+}
+
+char* xmlrpcstrcat3(const char* pre, char* str, const char* post, int flag) {
+  int ll = strlen(pre)+strlen(str)+strlen(post)+1;
+  char* ptr = (char*)malloc(ll);
+  strcpy(ptr,pre);
+  strcat(ptr,str);
+  strcat(ptr,post);
+  if (flag)
+    free(str);
+  return ptr;
+}
+
+char* xmlrpcstrcat4(const char* pre, char* str1, char* str2,
+		    const char* post, int flag) {
+  int ll = strlen(pre)+strlen(str1)+strlen(str2)+strlen(post)+1;
+  char* ptr = (char*)malloc(ll);
+  strcpy(ptr,pre);
+  strcat(ptr,str1);
+  strcat(ptr," ");
+  strcat(ptr,str2);
+  strcat(ptr,post);
+  if (flag) {
+    free(str1);
+    free(str2);
+  }
+  return ptr;
+}
 

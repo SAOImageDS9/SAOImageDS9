@@ -19,6 +19,8 @@ using namespace std;
 #define yyFlexLexer xmlrpcFlexLexer
 #include <FlexLexer.h>
 
+extern char* xmlrpcbuf;
+
 void* xmlrpclval;
 extern int xmlrpcparse(TclXMLRPC*, xmlrpcFlexLexer*);
 
@@ -111,6 +113,10 @@ int TclXMLRPC::parseCmd(int argc, const char* argv[])
   istringstream str(x);
 
   if (!parse(str)) {
+    if (xmlrpcbuf)
+      cerr << "Result: " << xmlrpcbuf << endl;
+    else
+      cerr << "Empty:" << endl;
     //    Tcl_SetVar(interp_, argv[3], aaa, TCL_LIST_ELEMENT);
     return TCL_OK;
   }

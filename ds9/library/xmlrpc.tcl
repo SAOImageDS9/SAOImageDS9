@@ -60,15 +60,16 @@ proc xmlrpcDoRequest {sock} {
 
     # space out < and >
     # shift \n to \r (multi line strings)
-    puts "***"
-    puts $body
-    puts "---"
     set foo "debug on\n$body"
-#    set data $foo
-    set data [string map {< " <" > "> "} $foo]
-    puts $data
-    puts "***"
-    xmlrpc parse data
+#    set foo $body
+    set in [string map {< " <" > "> "} $foo]
+#    puts "***"
+#    puts $in
+#    puts "---"
+#    set out {}
+    xmlrpc parse in out
+#    puts $out
+#    puts "***"
 
 #    set rr [xmlxml $body]
 

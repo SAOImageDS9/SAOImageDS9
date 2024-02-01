@@ -55,6 +55,12 @@ off		    {return OFF_;}
 \<value\>          {return VALUE_;}
 \<\/value\>        {return _VALUE_;}
 
+\<integer\>          {return INTEGER_;}
+\<\/integer\>        {return _INTEGER_;}
+
+\<struct\>        {return STRUCT_;}
+\<\/struct\>      {return _STRUCT_;}
+
 \<members\>        {return MEMBERS_;}
 \<\/members\>      {return _MEMBERS_;}
 
@@ -70,34 +76,40 @@ off		    {return OFF_;}
 \<data\>           {return DATA_;}
 \<\/data\>         {return _DATA_;}
 
-\<\?xml[^\?]*\?\> {
-                  xmlrpclval->str = yytext;
-                  return HEADER;
-                }
+\<\?xml[^\?]*\?\>  {
+                     xmlrpclval->str = yytext;
+                     return HEADER;
+                   }
 
 \<string\>[^\<]*\<\/string\> { // Quoted String 8+str+8
-                 int ll = strlen(yytext);
-                 yytext[ll-10]='\0';
-                 xmlrpclval->str = yytext+9;
-                 return STRING;
-               }
+cerr << "STRING:" << yytext << ":" << endl;
+                     int ll = strlen(yytext);
+                     yytext[ll-10]='\0';
+                     xmlrpclval->str = yytext+9;
+cerr << "  return:" << xmlrpclval->str << ":" << endl;
+                     return STRING;
+                   }
 
 \<value\>[^\<]*\<\/value\>  { // Quoted String 7+str+7
-                 int ll = strlen(yytext);
-                 yytext[ll-9]='\0';
-                 xmlrpclval->str = yytext+8;
-                 return STRING;
-                }
+cerr << "VALUE:" << yytext << ":" << endl;
+                     int ll = strlen(yytext);
+                     yytext[ll-9]='\0';
+                     xmlrpclval->str = yytext+8;
+cerr << "  return:" << xmlrpclval->str << ":" << endl;
+                     return STRING;
+                   }
 
-[^[:space:]]+   {
-                  xmlrpclval->str = yytext;
-		  return STRING;
-                }
+[^[:space:]]+      {
+cerr << "SIMPLE:" << yytext << ":" << endl;
+                     xmlrpclval->str = yytext;
+cerr << "  return:" << xmlrpclval->str << ":" << endl;
+		     return STRING;
+                   }
 
-[ \t]+		{ // White Spaces
-		} 
+[ \t]+		   { // White Spaces
+		   } 
 
-[\n]+		{ // returns
-		} 
+[\n]+		   { // returns
+		   } 
 
 %%

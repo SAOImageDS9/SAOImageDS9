@@ -17,10 +17,10 @@
 #define yyFlexLexer xmlrpcFlexLexer
 #include <FlexLexer.h>
   char* xmlrpcbuf;
-  char* xmlrpcstrcat(char*, char*, int);
+  char* xmlrpcstrcat(char*, char*);
   char* xmlrpcstrcat1(const char*);
   char* xmlrpcstrcat3(const char*, char*, const char*, int);
-  char* xmlrpcstrcat4(const char*, char*, char*, const char*, int);
+  char* xmlrpcstrcat4(const char*, char*, char*, const char*);
   
   extern int xmlrpclex(void*, xmlrpcFlexLexer*);
   extern void xmlrpcerror(TclXMLRPC*, xmlrpcFlexLexer*, const char*);
@@ -110,9 +110,11 @@ method : methodCall {$$=$1;}
 ;
 
 methodCall : METHODCALL_ methodName params _METHODCALL_ {
-  $$=xmlrpcstrcat4("[list methodcall [list ",$2,$3,"]]",1);
+  $$=xmlrpcstrcat4("[list methodcall [list ",$2,$3,"]]");
 }
-;
+| METHODCALL_ methodName _METHODCALL_ {
+  $$=xmlrpcstrcat3("[list methodcall [list ",$2,"]]",1);
+};
 
 methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {
   $$=xmlrpcstrcat3("[list methodresponse ",$2,"]",1);
@@ -134,11 +136,11 @@ params : PARAMS_ xparam _PARAMS_ {$$=xmlrpcstrcat3("[list params ",$2,"]",1);}
 | _PARAMS_ {$$=xmlrpcstrcat1("[list params {}]");}
 ;
 
-xparam : xparam param {$$=xmlrpcstrcat($1,$2,1);}
+xparam : xparam param {$$=xmlrpcstrcat($1,$2);}
 | param {$$=xmlrpcstrcat3("[list ",$1,"]",1);}
 ;
 
-param : PARAM_ STRING _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]",0);}
+param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]",1);}
 | PARAM_ _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
 | _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
 ;
@@ -153,7 +155,7 @@ type : STRING {$$=xmlrpcstrcat3("[list string ",$1,"]",0);}
 
 | INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat3("[list integer ",$2,"]",0);}
 
-| STRUCT_ members _STRUCT_ {$$=xmlrpcstrcat3("[list struct ",$2,"]",0);}
+| STRUCT_ members _STRUCT_ {$$=xmlrpcstrcat3("[list struct ",$2,"]",1);}
 | STRUCT_ _STRUCT_ {$$=xmlrpcstrcat1("[list struct {}]");}
 | _STRUCT_ {$$=xmlrpcstrcat1("[list struct {}]");}
 
@@ -164,12 +166,12 @@ type : STRING {$$=xmlrpcstrcat3("[list string ",$1,"]",0);}
 | _DATA_ _ARRAY_ {$$=xmlrpcstrcat1("[list array [list data {}]]");}
 ;
 
-members : members member {$$=xmlrpcstrcat($1,$2,1);}
+members : members member {$$=xmlrpcstrcat($1,$2);}
 | member {$$=xmlrpcstrcat3("[list ",$1,"]",1);}
 ;
 
 member : MEMBER_ name value _MEMBER_ {
-  $$=xmlrpcstrcat4("[list member [list ",$2,$3,"]]",1);
+  $$=xmlrpcstrcat4("[list member [list ",$2,$3,"]]");
 }
 | MEMBER_ _MEMBER_ {$$=xmlrpcstrcat1("[list member {}]");}
 | _MEMBER_ {$$=xmlrpcstrcat1("[list member {}]");}
@@ -180,7 +182,7 @@ name : NAME_ STRING _NAME_ {$$=xmlrpcstrcat3("[list name ",$2,"]",0);}
 | _NAME_ {$$=xmlrpcstrcat1("[list name {}");}
 ;
 
-values : values value {$$=xmlrpcstrcat($1,$2,1);}
+values : values value {$$=xmlrpcstrcat($1,$2);}
 | value {$$=xmlrpcstrcat3("[list ",$1,"]",1);}
 ;
 
@@ -190,15 +192,13 @@ debug : ON_ {yydebug=1;}
 
 %%
 
-char* xmlrpcstrcat(char* str1, char* str2, int flag) {
+char* xmlrpcstrcat(char* str1, char* str2) {
   int ll = strlen(str1)+strlen(str2)+1;
   char* ptr = (char*)malloc(ll);
   strcpy(ptr,str1);
   strcat(ptr,str2);
-  if (flag) {
-    free(str1);
-    free(str2);
-  }
+  free(str2);
+
   return ptr;
 }
 
@@ -206,6 +206,7 @@ char* xmlrpcstrcat1(const char* pre) {
   int ll = strlen(pre)+1;
   char* ptr = (char*)malloc(ll);
   strcpy(ptr,pre);
+
   return ptr;
 }
 
@@ -217,11 +218,12 @@ char* xmlrpcstrcat3(const char* pre, char* str, const char* post, int flag) {
   strcat(ptr,post);
   if (flag)
     free(str);
+
   return ptr;
 }
 
 char* xmlrpcstrcat4(const char* pre, char* str1, char* str2,
-		    const char* post, int flag) {
+		    const char* post) {
   int ll = strlen(pre)+strlen(str1)+strlen(str2)+strlen(post)+1;
   char* ptr = (char*)malloc(ll);
   strcpy(ptr,pre);
@@ -229,9 +231,8 @@ char* xmlrpcstrcat4(const char* pre, char* str1, char* str2,
   strcat(ptr," ");
   strcat(ptr,str2);
   strcat(ptr,post);
-  if (flag) {
-    free(str1);
-    free(str2);
-  }
+  free(str1);
+  free(str2);
+
   return ptr;
 }

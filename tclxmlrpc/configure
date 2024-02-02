@@ -6037,7 +6037,7 @@ fi
 
 
 
-    vars="-I${prefix}/include"
+    vars="-I . -I${prefix}/include"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

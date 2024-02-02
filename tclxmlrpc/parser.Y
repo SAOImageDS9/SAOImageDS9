@@ -142,13 +142,13 @@ param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]");}
 | _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
 ;
 
-value : STRING {$$=xmlrpcstrcat3("[list value [list string ",$1,"]]");}
+value : STRING {$$=xmlrpcstrcat3("[list value [list string [list ",$1,"]]]");}
 | VALUE_ type _VALUE_ {$$=xmlrpcstrcat3("[list value ",$2,"]");}
 | VALUE_ _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 | _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 ;
 
-type : STRING {$$=xmlrpcstrcat3("[list string ",$1,"]");}
+type : STRING {$$=xmlrpcstrcat3("[list string [list ",$1,"]]");}
 
 | INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat3("[list integer ",$2,"]");}
 

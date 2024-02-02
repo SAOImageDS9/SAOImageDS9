@@ -1574,7 +1574,7 @@ yyreduce:
 
   case 24:
 #line 145 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list value [list string ",(yyvsp[(1) - (1)].str),"]]");;}
+    {(yyval.str)=xmlrpcstrcat3("[list value [list string [list ",(yyvsp[(1) - (1)].str),"]]]");;}
     break;
 
   case 25:
@@ -1594,7 +1594,7 @@ yyreduce:
 
   case 28:
 #line 151 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list string ",(yyvsp[(1) - (1)].str),"]");;}
+    {(yyval.str)=xmlrpcstrcat3("[list string [list ",(yyvsp[(1) - (1)].str),"]]");;}
     break;
 
   case 29:

@@ -63,7 +63,6 @@ proc xmlrpcDoRequest {sock} {
     set foo "debug on\n$body"
 #    set foo $body
     set in [string map {< " <" > "> "} $foo]
-    puts $in
     set out {}
     xmlrpc parse in out
 

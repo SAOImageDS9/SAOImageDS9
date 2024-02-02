@@ -30,18 +30,18 @@ E   [Ee][+-]?{D}+
 
 %%
 
-debug               {return DEBUG_;}
-on		    {return ON_;}
-off		    {return OFF_;}
+debug              {return DEBUG_;}
+on		   {return ON_;}
+off		   {return OFF_;}
 
-\<methodcall\>      {return METHODCALL_;}
-\<\/methodcall\>    {return _METHODCALL_;}
+\<methodcall\>     {return METHODCALL_;}
+\<\/methodcall\>   {return _METHODCALL_;}
 
 \<methodresponse\>  {return METHODRESPONSE_;}
 \<\/methodresponse\> {return _METHODRESPONSE_;}
 
-\<methodname\>      {return METHODNAME_;}
-\<\/methodname\>    {return _METHODNAME_;}
+\<methodname\>     {return METHODNAME_;}
+\<\/methodname\>   {return _METHODNAME_;}
 
 \<fault\>          {return FAULT_;}
 \<\/fault\>        {return _FAULT_;}
@@ -55,11 +55,11 @@ off		    {return OFF_;}
 \<value\>          {return VALUE_;}
 \<\/value\>        {return _VALUE_;}
 
-\<integer\>          {return INTEGER_;}
-\<\/integer\>        {return _INTEGER_;}
+\<integer\>        {return INTEGER_;}
+\<\/integer\>      {return _INTEGER_;}
 
-\<struct\>        {return STRUCT_;}
-\<\/struct\>      {return _STRUCT_;}
+\<struct\>         {return STRUCT_;}
+\<\/struct\>       {return _STRUCT_;}
 
 \<members\>        {return MEMBERS_;}
 \<\/members\>      {return _MEMBERS_;}
@@ -77,32 +77,34 @@ off		    {return OFF_;}
 \<\/data\>         {return _DATA_;}
 
 \<\?xml[^\?]*\?\>  {
-                     xmlrpclval->str = yytext;
+                     int ll = strlen(yytext);
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext,ll);
+                     xmlrpclval->str = ptr;
                      return HEADER;
                    }
 
-\<string\>[^\<]*\<\/string\> { // Quoted String 8+str+8
-cerr << "STRING:" << yytext << ":" << endl;
-                     int ll = strlen(yytext);
-                     yytext[ll-10]='\0';
-                     xmlrpclval->str = yytext+9;
-cerr << "  return:" << xmlrpclval->str << ":" << endl;
+\<string\>[^\<]*\<\/string\> { // Quoted String 8+1+str+1+9
+                     int ll = strlen(yytext)-19;
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext+9,ll);
+                     xmlrpclval->str = ptr;
                      return STRING;
                    }
 
-\<value\>[^\<]*\<\/value\>  { // Quoted String 7+str+7
-cerr << "VALUE:" << yytext << ":" << endl;
-                     int ll = strlen(yytext);
-                     yytext[ll-9]='\0';
-                     xmlrpclval->str = yytext+8;
-cerr << "  return:" << xmlrpclval->str << ":" << endl;
+\<value\>[^\<]*\<\/value\>  { // Quoted String 7+1+str+1+8
+                     int ll = strlen(yytext)-17;
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext+8,ll);
+                     xmlrpclval->str = ptr;
                      return STRING;
                    }
 
-[^[:space:]]+      {
-cerr << "SIMPLE:" << yytext << ":" << endl;
-                     xmlrpclval->str = yytext;
-cerr << "  return:" << xmlrpclval->str << ":" << endl;
+[^ \t\r\n]+      {
+                     int ll = strlen(yytext);
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext,ll);
+                     xmlrpclval->str = ptr;
 		     return STRING;
                    }
 

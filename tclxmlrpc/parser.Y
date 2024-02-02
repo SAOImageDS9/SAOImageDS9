@@ -19,7 +19,7 @@
   char* xmlrpcbuf;
   char* xmlrpcstrcat(char*, char*);
   char* xmlrpcstrcat1(const char*);
-  char* xmlrpcstrcat3(const char*, char*, const char*, int);
+  char* xmlrpcstrcat3(const char*, char*, const char*);
   char* xmlrpcstrcat4(const char*, char*, char*, const char*);
   
   extern int xmlrpclex(void*, xmlrpcFlexLexer*);
@@ -102,72 +102,69 @@ commands : commands command
 
 command : DEBUG_ debug
 | HEADER
-| {xmlrpcbuf=0;} method {xmlrpcbuf=$2;}
+| {xmlrpcbuf=0;} method {free($2);xmlrpcbuf=0;}
 ;
 
 method : methodCall {$$=$1;}
 | methodResponse {$$=$1;}
 ;
 
-methodCall : METHODCALL_ methodName params _METHODCALL_ {
-  $$=xmlrpcstrcat4("[list methodcall [list ",$2,$3,"]]");
-}
-| METHODCALL_ methodName _METHODCALL_ {
-  $$=xmlrpcstrcat3("[list methodcall [list ",$2,"]]",1);
-};
-
-methodResponse : METHODRESPONSE_ params _METHODRESPONSE_ {
-  $$=xmlrpcstrcat3("[list methodresponse ",$2,"]",1);
-}
-| METHODRESPONSE_ fault _METHODRESPONSE_ {
-  $$=xmlrpcstrcat3("[list methodresponse ",$2,"]",1);
-};
-
-methodName : METHODNAME_ STRING _METHODNAME_ {
-  $$=xmlrpcstrcat3("[list methodname ",$2,"]",0);
-}
+methodCall : METHODCALL_ methodName params _METHODCALL_
+{$$=xmlrpcstrcat4("[list methodcall [list ",$2,$3,"]]");}
+| METHODCALL_ methodName _METHODCALL_
+{$$=xmlrpcstrcat3("[list methodcall [list ",$2,"]]");}
 ;
 
-fault : FAULT_ value _FAULT_ {$$=xmlrpcstrcat3("list fault ",$2,"]",1);}
+methodResponse : METHODRESPONSE_ params _METHODRESPONSE_
+{$$=xmlrpcstrcat3("[list methodresponse ",$2,"]");}
+| METHODRESPONSE_ fault _METHODRESPONSE_
+{$$=xmlrpcstrcat3("[list methodresponse ",$2,"]");}
 ;
 
-params : PARAMS_ xparam _PARAMS_ {$$=xmlrpcstrcat3("[list params ",$2,"]",1);}
+methodName : METHODNAME_ STRING _METHODNAME_
+{$$=xmlrpcstrcat3("[list methodname ",$2,"]");}
+;
+
+fault : FAULT_ value _FAULT_ {$$=xmlrpcstrcat3("list fault ",$2,"]");}
+;
+
+params : PARAMS_ xparam _PARAMS_ {$$=xmlrpcstrcat3("[list params ",$2,"]");}
 | PARAMS_ _PARAMS_ {$$=xmlrpcstrcat1("[list params {}]");}
 | _PARAMS_ {$$=xmlrpcstrcat1("[list params {}]");}
 ;
 
 xparam : xparam param {$$=xmlrpcstrcat($1,$2);}
-| param {$$=xmlrpcstrcat3("[list ",$1,"]",1);}
+| param {$$=xmlrpcstrcat3("[list ",$1,"]");}
 ;
 
-param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]",1);}
+param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]");}
 | PARAM_ _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
 | _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
 ;
 
-value : STRING {$$=xmlrpcstrcat3("[list value [list string ",$1,"]]",0);}
-| VALUE_ type _VALUE_ {$$=xmlrpcstrcat3("[list value ",$2,"]",1);}
+value : STRING {$$=xmlrpcstrcat3("[list value [list string ",$1,"]]");}
+| VALUE_ type _VALUE_ {$$=xmlrpcstrcat3("[list value ",$2,"]");}
 | VALUE_ _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 | _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 ;
 
-type : STRING {$$=xmlrpcstrcat3("[list string ",$1,"]",0);}
+type : STRING {$$=xmlrpcstrcat3("[list string ",$1,"]");}
 
-| INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat3("[list integer ",$2,"]",0);}
+| INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat3("[list integer ",$2,"]");}
 
-| STRUCT_ members _STRUCT_ {$$=xmlrpcstrcat3("[list struct ",$2,"]",1);}
+| STRUCT_ members _STRUCT_ {$$=xmlrpcstrcat3("[list struct ",$2,"]");}
 | STRUCT_ _STRUCT_ {$$=xmlrpcstrcat1("[list struct {}]");}
 | _STRUCT_ {$$=xmlrpcstrcat1("[list struct {}]");}
 
 | ARRAY_ DATA_ values _DATA_ _ARRAY_ {
-  $$=xmlrpcstrcat3("[list array [list data  ",$3,"]]",1);
+  $$=xmlrpcstrcat3("[list array [list data  ",$3,"]]");
 }
 | ARRAY_ DATA_ _DATA_ _ARRAY_ {$$=xmlrpcstrcat1("[list array [list data {}]]");}
 | _DATA_ _ARRAY_ {$$=xmlrpcstrcat1("[list array [list data {}]]");}
 ;
 
 members : members member {$$=xmlrpcstrcat($1,$2);}
-| member {$$=xmlrpcstrcat3("[list ",$1,"]",1);}
+| member {$$=xmlrpcstrcat3("[list ",$1,"]");}
 ;
 
 member : MEMBER_ name value _MEMBER_ {
@@ -177,13 +174,13 @@ member : MEMBER_ name value _MEMBER_ {
 | _MEMBER_ {$$=xmlrpcstrcat1("[list member {}]");}
 ;
 
-name : NAME_ STRING _NAME_ {$$=xmlrpcstrcat3("[list name ",$2,"]",0);}
+name : NAME_ STRING _NAME_ {$$=xmlrpcstrcat3("[list name ",$2,"]");}
 | NAME_ _NAME_ {$$=xmlrpcstrcat1("[list name {}");}
 | _NAME_ {$$=xmlrpcstrcat1("[list name {}");}
 ;
 
 values : values value {$$=xmlrpcstrcat($1,$2);}
-| value {$$=xmlrpcstrcat3("[list ",$1,"]",1);}
+| value {$$=xmlrpcstrcat3("[list ",$1,"]");}
 ;
 
 debug : ON_ {yydebug=1;}
@@ -193,44 +190,42 @@ debug : ON_ {yydebug=1;}
 %%
 
 char* xmlrpcstrcat(char* str1, char* str2) {
-  int ll = strlen(str1)+strlen(str2)+1;
-  char* ptr = (char*)malloc(ll);
-  strcpy(ptr,str1);
-  strcat(ptr,str2);
+  int ll = strlen(str1)+strlen(str2);
+  char* ptr = (char*)malloc(ll+1);
+  strncpy(ptr,str1,strlen(str1));
+  strncat(ptr,str2,strlen(str2));
   free(str2);
 
   return ptr;
 }
 
 char* xmlrpcstrcat1(const char* pre) {
-  int ll = strlen(pre)+1;
-  char* ptr = (char*)malloc(ll);
-  strcpy(ptr,pre);
+  int ll = strlen(pre);
+  char* ptr = (char*)malloc(ll+1);
+  strncpy(ptr,pre,ll);
 
   return ptr;
 }
 
-char* xmlrpcstrcat3(const char* pre, char* str, const char* post, int flag) {
-  int ll = strlen(pre)+strlen(str)+strlen(post)+1;
-  char* ptr = (char*)malloc(ll);
-  strcpy(ptr,pre);
-  strcat(ptr,str);
-  strcat(ptr,post);
-  if (flag)
-    free(str);
+char* xmlrpcstrcat3(const char* pre, char* str, const char* post) {
+  int ll = strlen(pre)+strlen(str)+strlen(post);
+  char* ptr = (char*)malloc(ll+1);
+  strncpy(ptr,pre,strlen(pre));
+  strncat(ptr,str,strlen(str));
+  strncat(ptr,post,strlen(post));
+  free(str);
 
   return ptr;
 }
 
-char* xmlrpcstrcat4(const char* pre, char* str1, char* str2,
-		    const char* post) {
-  int ll = strlen(pre)+strlen(str1)+strlen(str2)+strlen(post)+1;
-  char* ptr = (char*)malloc(ll);
-  strcpy(ptr,pre);
-  strcat(ptr,str1);
-  strcat(ptr," ");
-  strcat(ptr,str2);
-  strcat(ptr,post);
+char* xmlrpcstrcat4(const char* pre, char* str1, char* str2, const char* post) {
+  int ll = strlen(pre)+strlen(str1)+strlen(str2)+strlen(post);
+  char* ptr = (char*)malloc(ll+1);
+  strncpy(ptr,pre,strlen(pre));
+  strncat(ptr,str1,strlen(str1));
+  strncat(ptr," ",1);
+  strncat(ptr,str2,strlen(str2));
+  strncat(ptr,post,strlen(post));
   free(str1);
   free(str2);
 

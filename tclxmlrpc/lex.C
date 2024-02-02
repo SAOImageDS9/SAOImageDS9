@@ -374,7 +374,7 @@ static const flex_int16_t yy_accept[241] =
 static const YY_CHAR yy_ec[256] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
-        4,    4,    4,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    4,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    5,    1,    1,    1,
@@ -969,65 +969,67 @@ case 32:
 YY_RULE_SETUP
 #line 79 "lex.L"
 {
-                     xmlrpclval->str = yytext;
+                     int ll = strlen(yytext);
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext,ll);
+                     xmlrpclval->str = ptr;
                      return HEADER;
                    }
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 84 "lex.L"
-{ // Quoted String 8+str+8
-cerr << "STRING:" << yytext << ":" << endl;
-                     int ll = strlen(yytext);
-                     yytext[ll-10]='\0';
-                     xmlrpclval->str = yytext+9;
-cerr << "  return:" << xmlrpclval->str << ":" << endl;
+#line 87 "lex.L"
+{ // Quoted String 8+1+str+1+9
+                     int ll = strlen(yytext)-19;
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext+9,ll);
+                     xmlrpclval->str = ptr;
                      return STRING;
                    }
 	YY_BREAK
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 93 "lex.L"
-{ // Quoted String 7+str+7
-cerr << "VALUE:" << yytext << ":" << endl;
-                     int ll = strlen(yytext);
-                     yytext[ll-9]='\0';
-                     xmlrpclval->str = yytext+8;
-cerr << "  return:" << xmlrpclval->str << ":" << endl;
+#line 95 "lex.L"
+{ // Quoted String 7+1+str+1+8
+                     int ll = strlen(yytext)-17;
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext+8,ll);
+                     xmlrpclval->str = ptr;
                      return STRING;
                    }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 102 "lex.L"
+#line 103 "lex.L"
 {
-cerr << "SIMPLE:" << yytext << ":" << endl;
-                     xmlrpclval->str = yytext;
-cerr << "  return:" << xmlrpclval->str << ":" << endl;
+                     int ll = strlen(yytext);
+                     char* ptr = (char*)malloc(ll+1);
+                     strncpy(ptr,yytext,ll);
+                     xmlrpclval->str = ptr;
 		     return STRING;
                    }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 109 "lex.L"
+#line 111 "lex.L"
 { // White Spaces
 		   } 
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 112 "lex.L"
+#line 114 "lex.L"
 { // returns
 		   } 
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 115 "lex.L"
+#line 117 "lex.L"
 ECHO;
 	YY_BREAK
-#line 1030 "lex.C"
+#line 1032 "lex.C"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1991,6 +1993,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 115 "lex.L"
+#line 117 "lex.L"
 
 

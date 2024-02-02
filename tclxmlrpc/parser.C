@@ -512,8 +512,8 @@ static const yytype_uint8 yyrline[] =
        0,    99,    99,   100,   103,   104,   105,   105,   108,   109,
      112,   114,   118,   120,   124,   128,   131,   132,   133,   136,
      137,   140,   141,   142,   145,   146,   147,   148,   151,   153,
-     155,   156,   157,   159,   162,   163,   166,   167,   170,   173,
-     174,   177,   178,   179,   182,   183,   186,   187
+     155,   156,   157,   159,   160,   161,   164,   165,   168,   169,
+     170,   173,   174,   175,   178,   179,   182,   183
 };
 #endif
 
@@ -1489,7 +1489,7 @@ yyreduce:
 
   case 7:
 #line 105 "parser.Y"
-    {free((yyvsp[(2) - (2)].str));xmlrpcbuf=0;;}
+    {xmlrpcbuf=(yyvsp[(2) - (2)].str);;}
     break;
 
   case 8:
@@ -1534,7 +1534,7 @@ yyreduce:
 
   case 16:
 #line 131 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list params ",(yyvsp[(2) - (3)].str),"]");;}
+    {(yyval.str)=xmlrpcstrcat3("[list params [list ",(yyvsp[(2) - (3)].str),"]]");;}
     break;
 
   case 17:
@@ -1554,7 +1554,7 @@ yyreduce:
 
   case 20:
 #line 137 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list ",(yyvsp[(1) - (1)].str),"]");;}
+    {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 21:
@@ -1604,7 +1604,7 @@ yyreduce:
 
   case 30:
 #line 155 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list struct ",(yyvsp[(2) - (3)].str),"]");;}
+    {(yyval.str)=xmlrpcstrcat3("[list struct [list ",(yyvsp[(2) - (3)].str),"]]");;}
     break;
 
   case 31:
@@ -1619,86 +1619,82 @@ yyreduce:
 
   case 33:
 #line 159 "parser.Y"
-    {
-  (yyval.str)=xmlrpcstrcat3("[list array [list data  ",(yyvsp[(3) - (5)].str),"]]");
-;}
+    {(yyval.str)=xmlrpcstrcat3("[list array [list data [list ",(yyvsp[(3) - (5)].str),"]]]");;}
     break;
 
   case 34:
-#line 162 "parser.Y"
+#line 160 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list array [list data {}]]");;}
     break;
 
   case 35:
-#line 163 "parser.Y"
+#line 161 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list array [list data {}]]");;}
     break;
 
   case 36:
-#line 166 "parser.Y"
+#line 164 "parser.Y"
     {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 37:
-#line 167 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list ",(yyvsp[(1) - (1)].str),"]");;}
+#line 165 "parser.Y"
+    {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 38:
-#line 170 "parser.Y"
-    {
-  (yyval.str)=xmlrpcstrcat4("[list member [list ",(yyvsp[(2) - (4)].str),(yyvsp[(3) - (4)].str),"]]");
-;}
+#line 168 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat4("[list member [list ",(yyvsp[(2) - (4)].str),(yyvsp[(3) - (4)].str),"]]");;}
     break;
 
   case 39:
-#line 173 "parser.Y"
+#line 169 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list member {}]");;}
     break;
 
   case 40:
-#line 174 "parser.Y"
+#line 170 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list member {}]");;}
     break;
 
   case 41:
-#line 177 "parser.Y"
+#line 173 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list name ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
   case 42:
-#line 178 "parser.Y"
+#line 174 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
     break;
 
   case 43:
-#line 179 "parser.Y"
+#line 175 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
     break;
 
   case 44:
-#line 182 "parser.Y"
+#line 178 "parser.Y"
     {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 45:
-#line 183 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list ",(yyvsp[(1) - (1)].str),"]");;}
+#line 179 "parser.Y"
+    {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 46:
-#line 186 "parser.Y"
+#line 182 "parser.Y"
     {yydebug=1;;}
     break;
 
   case 47:
-#line 187 "parser.Y"
+#line 183 "parser.Y"
     {yydebug=0;;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1702 "parser.C"
+#line 1698 "parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1912,13 +1908,14 @@ yyreturn:
 }
 
 
-#line 190 "parser.Y"
+#line 186 "parser.Y"
 
 
 char* xmlrpcstrcat(char* str1, char* str2) {
-  int ll = strlen(str1)+strlen(str2);
+  int ll = strlen(str1)+1+strlen(str2);
   char* ptr = (char*)malloc(ll+1);
-  strncpy(ptr,str1,strlen(str1));
+  strncpy(ptr,str1,ll);
+  strncat(ptr," ",1);
   strncat(ptr,str2,strlen(str2));
   free(str2);
 
@@ -1936,7 +1933,7 @@ char* xmlrpcstrcat1(const char* pre) {
 char* xmlrpcstrcat3(const char* pre, char* str, const char* post) {
   int ll = strlen(pre)+strlen(str)+strlen(post);
   char* ptr = (char*)malloc(ll+1);
-  strncpy(ptr,pre,strlen(pre));
+  strncpy(ptr,pre,ll);
   strncat(ptr,str,strlen(str));
   strncat(ptr,post,strlen(post));
   free(str);
@@ -1947,7 +1944,7 @@ char* xmlrpcstrcat3(const char* pre, char* str, const char* post) {
 char* xmlrpcstrcat4(const char* pre, char* str1, char* str2, const char* post) {
   int ll = strlen(pre)+strlen(str1)+1+strlen(str2)+strlen(post);
   char* ptr = (char*)malloc(ll+1);
-  strncpy(ptr,pre,strlen(pre));
+  strncpy(ptr,pre,ll);
   strncat(ptr,str1,strlen(str1));
   strncat(ptr," ",1);
   strncat(ptr,str2,strlen(str2));

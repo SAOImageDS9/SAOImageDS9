@@ -112,17 +112,16 @@ int TclXMLRPC::parseCmd(int argc, const char* argv[])
   string x(xml);
   istringstream str(x);
 
+  Tcl_SetVar(interp_, argv[3], "", NULL);
+
   if (!parse(str)) {
-    if (xmlrpcbuf)
-      cerr << "Result: " << xmlrpcbuf << endl;
-    else
-      cerr << "Empty:" << endl;
-    //    Tcl_SetVar(interp_, argv[3], aaa, TCL_LIST_ELEMENT);
-    return TCL_OK;
+    if (xmlrpcbuf) {
+      Tcl_SetVar(interp_, argv[3], xmlrpcbuf, NULL);
+      return TCL_OK;
+    }
   }
-  else {
-    return TCL_ERROR;
-  }
+
+  return TCL_ERROR;
 }
 
 int TclXMLRPC::parse(istringstream& istr)

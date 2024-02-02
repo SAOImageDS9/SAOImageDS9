@@ -60,12 +60,24 @@ proc xmlrpcDoRequest {sock} {
 
     # space out < and >
     # shift \n to \r (multi line strings)
-    set foo "debug on\n$body"
-#    set foo $body
+#    set foo "debug on\n$body"
+    set foo $body
+#    puts $body
     set in [string map {< " <" > "> "} $foo]
-    set out {}
-    xmlrpc parse in out
 
+    xmlrpc parse in out
+    set rr [expr $out]
+
+    if {$rr != $rpc} {
+	puts "***"
+	puts $rpc
+	puts "---"
+	puts $out
+	puts $rr
+	puts "***"
+    }
+
+#    puts $out
 #    set rr [xmlxml $body]
 
     set tag [lindex [lindex $rpc 0] 0]

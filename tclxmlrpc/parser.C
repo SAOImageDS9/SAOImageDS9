@@ -1945,7 +1945,11 @@ char* xmlrpcstrcat3(const char* pre, char* str, const char* post) {
 }
 
 char* xmlrpcstrcat4(const char* pre, char* str1, char* str2, const char* post) {
+  cerr << "pre=" << strlen(pre) << endl;
+  cerr << "str1=" << strlen(str1) << endl;
+  cerr << "str2=" << strlen(str2) << endl;
   int ll = strlen(pre)+strlen(str1)+1+strlen(str2)+strlen(post);
+  cerr << "ll=" << ll << endl;
   char* ptr = (char*)malloc(ll+1);
   strncpy(ptr,pre,strlen(pre));
   strncat(ptr,str1,strlen(str1));

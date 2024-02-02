@@ -222,6 +222,7 @@ char* xmlrpcstrcat4(const char* pre, char* str1, char* str2, const char* post) {
   cerr << "pre=" << strlen(pre) << endl;
   cerr << "str1=" << strlen(str1) << endl;
   cerr << "str2=" << strlen(str2) << endl;
+  cerr << "post=" << strlen(post) << endl;
   int ll = strlen(pre)+strlen(str1)+1+strlen(str2)+strlen(post);
   cerr << "ll=" << ll << endl;
   char* ptr = (char*)malloc(ll+1);

@@ -1919,6 +1919,7 @@ char* xmlrpcstrcat(char* str1, char* str2) {
   strncpy(ptr,str1,ll);
   strncat(ptr," ",1);
   strncat(ptr,str2,strlen(str2));
+  free(str1);
   free(str2);
 
   return ptr;

@@ -117,6 +117,7 @@ int TclXMLRPC::parseCmd(int argc, const char* argv[])
   if (!parse(str)) {
     if (xmlrpcbuf) {
       Tcl_SetVar(interp_, argv[3], xmlrpcbuf, NULL);
+      free(xmlrpcbuf);
       return TCL_OK;
     }
   }

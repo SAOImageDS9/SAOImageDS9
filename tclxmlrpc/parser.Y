@@ -18,9 +18,9 @@
 #define yyFlexLexer xmlrpcFlexLexer
 #include <FlexLexer.h>
   char* xmlrpcstrcat(char*, char*);
-  char* xmlrpcstrcat1(const char*);
-  char* xmlrpcstrcat3(const char*, char*, const char*);
-  char* xmlrpcstrcat4(const char*, char*, char*, const char*);
+  char* xmlrpcstrcat(const char*);
+  char* xmlrpcstrcat(const char*, char*, const char*);
+  char* xmlrpcstrcat(const char*, char*, char*, const char*);
   char* xmlrpcunquote(char*);
   
   extern int xmlrpclex(void*, xmlrpcFlexLexer*);
@@ -111,69 +111,69 @@ method : methodCall {$$=$1;}
 ;
 
 methodCall : METHODCALL_ methodName params _METHODCALL_
-{$$=xmlrpcstrcat4("[list methodcall [list ",$2,$3,"]]");}
+{$$=xmlrpcstrcat("[list methodcall [list ",$2,$3,"]]");}
 | METHODCALL_ methodName _METHODCALL_
-{$$=xmlrpcstrcat3("[list methodcall [list ",$2,"]]");}
+{$$=xmlrpcstrcat("[list methodcall [list ",$2,"]]");}
 ;
 
 methodResponse : METHODRESPONSE_ params _METHODRESPONSE_
-{$$=xmlrpcstrcat3("[list methodresponse ",$2,"]");}
+{$$=xmlrpcstrcat("[list methodresponse ",$2,"]");}
 | METHODRESPONSE_ fault _METHODRESPONSE_
-{$$=xmlrpcstrcat3("[list methodresponse ",$2,"]");}
+{$$=xmlrpcstrcat("[list methodresponse ",$2,"]");}
 ;
 
 methodName : METHODNAME_ STRING _METHODNAME_
-{$$=xmlrpcstrcat3("[list methodname ",$2,"]");}
+{$$=xmlrpcstrcat("[list methodname ",$2,"]");}
 ;
 
-fault : FAULT_ value _FAULT_ {$$=xmlrpcstrcat3("list fault ",$2,"]");}
+fault : FAULT_ value _FAULT_ {$$=xmlrpcstrcat("list fault ",$2,"]");}
 ;
 
-params : PARAMS_ xparam _PARAMS_ {$$=xmlrpcstrcat3("[list params [list ",$2,"]]");}
-| PARAMS_ _PARAMS_ {$$=xmlrpcstrcat1("[list params {}]");}
-| _PARAMS_ {$$=xmlrpcstrcat1("[list params {}]");}
+params : PARAMS_ xparam _PARAMS_ {$$=xmlrpcstrcat("[list params [list ",$2,"]]");}
+| PARAMS_ _PARAMS_ {$$=xmlrpcstrcat("[list params {}]");}
+| _PARAMS_ {$$=xmlrpcstrcat("[list params {}]");}
 ;
 
 xparam : xparam param {$$=xmlrpcstrcat($1,$2);}
 | param {$$=$1;}
 ;
 
-param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]");}
-| PARAM_ _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
-| _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
+param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat("[list param ",$2,"]");}
+| PARAM_ _PARAM_ {$$=xmlrpcstrcat("[list param {}]");}
+| _PARAM_ {$$=xmlrpcstrcat("[list param {}]");}
 ;
 
-value : STRING {$$=xmlrpcstrcat3("[list value [list string {",xmlrpcunquote($1),"}]]");}
-| VALUE_ type _VALUE_ {$$=xmlrpcstrcat3("[list value ",$2,"]");}
-| VALUE_ _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
-| _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
+value : STRING {$$=xmlrpcstrcat("[list value [list string {",xmlrpcunquote($1),"}]]");}
+| VALUE_ type _VALUE_ {$$=xmlrpcstrcat("[list value ",$2,"]");}
+| VALUE_ _VALUE_ {$$=xmlrpcstrcat("[list value {}]");}
+| _VALUE_ {$$=xmlrpcstrcat("[list value {}]");}
 ;
 
-type : STRING {$$=xmlrpcstrcat3("[list string {",xmlrpcunquote($1),"}]");}
+type : STRING {$$=xmlrpcstrcat("[list string {",xmlrpcunquote($1),"}]");}
 
-| INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat3("[list integer ",$2,"]");}
+| INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat("[list integer ",$2,"]");}
 
-| STRUCT_ members _STRUCT_ {$$=xmlrpcstrcat3("[list struct [list ",$2,"]]");}
-| STRUCT_ _STRUCT_ {$$=xmlrpcstrcat1("[list struct {}]");}
-| _STRUCT_ {$$=xmlrpcstrcat1("[list struct {}]");}
+| STRUCT_ members _STRUCT_ {$$=xmlrpcstrcat("[list struct [list ",$2,"]]");}
+| STRUCT_ _STRUCT_ {$$=xmlrpcstrcat("[list struct {}]");}
+| _STRUCT_ {$$=xmlrpcstrcat("[list struct {}]");}
 
-| ARRAY_ DATA_ values _DATA_ _ARRAY_ {$$=xmlrpcstrcat3("[list array [list data [list ",$3,"]]]");}
-| ARRAY_ DATA_ _DATA_ _ARRAY_ {$$=xmlrpcstrcat1("[list array [list data {}]]");}
-| _DATA_ _ARRAY_ {$$=xmlrpcstrcat1("[list array [list data {}]]");}
+| ARRAY_ DATA_ values _DATA_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data [list ",$3,"]]]");}
+| ARRAY_ DATA_ _DATA_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data {}]]");}
+| _DATA_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data {}]]");}
 ;
 
 members : members member {$$=xmlrpcstrcat($1,$2);}
 | member {$$=$1;}
 ;
 
-member : MEMBER_ name value _MEMBER_ {$$=xmlrpcstrcat4("[list member [list ",$2,$3,"]]");}
-| MEMBER_ _MEMBER_ {$$=xmlrpcstrcat1("[list member {}]");}
-| _MEMBER_ {$$=xmlrpcstrcat1("[list member {}]");}
+member : MEMBER_ name value _MEMBER_ {$$=xmlrpcstrcat("[list member [list ",$2,$3,"]]");}
+| MEMBER_ _MEMBER_ {$$=xmlrpcstrcat("[list member {}]");}
+| _MEMBER_ {$$=xmlrpcstrcat("[list member {}]");}
 ;
 
-name : NAME_ STRING _NAME_ {$$=xmlrpcstrcat3("[list name ",$2,"]");}
-| NAME_ _NAME_ {$$=xmlrpcstrcat1("[list name {}]");}
-| _NAME_ {$$=xmlrpcstrcat1("[list name {}]");}
+name : NAME_ STRING _NAME_ {$$=xmlrpcstrcat("[list name ",$2,"]");}
+| NAME_ _NAME_ {$$=xmlrpcstrcat("[list name {}]");}
+| _NAME_ {$$=xmlrpcstrcat("[list name {}]");}
 ;
 
 values : values value {$$=xmlrpcstrcat($1,$2);}
@@ -198,7 +198,7 @@ char* xmlrpcstrcat(char* str1, char* str2) {
   return ptr;
 }
 
-char* xmlrpcstrcat1(const char* pre) {
+char* xmlrpcstrcat(const char* pre) {
   int ll = strlen(pre);
   char* ptr = (char*)malloc(ll+1);
   strncpy(ptr,pre,ll);
@@ -207,7 +207,7 @@ char* xmlrpcstrcat1(const char* pre) {
   return ptr;
 }
 
-char* xmlrpcstrcat3(const char* pre, char* str, const char* post) {
+char* xmlrpcstrcat(const char* pre, char* str, const char* post) {
   int ll = strlen(pre)+strlen(str)+strlen(post);
   char* ptr = (char*)malloc(ll+1);
   strncpy(ptr,pre,ll);
@@ -218,7 +218,7 @@ char* xmlrpcstrcat3(const char* pre, char* str, const char* post) {
   return ptr;
 }
 
-char* xmlrpcstrcat4(const char* pre, char* str1, char* str2, const char* post) {
+char* xmlrpcstrcat(const char* pre, char* str1, char* str2, const char* post) {
   int ll = strlen(pre)+strlen(str1)+1+strlen(str2)+strlen(post);
   char* ptr = (char*)malloc(ll+1);
   strncpy(ptr,pre,ll);

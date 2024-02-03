@@ -18,9 +18,10 @@ using namespace std;
 class TclXMLRPC {
 public:
   Tcl_Interp* interp_;         // Tcl interp
+  char* rpc_;
 
 protected:
-  int result;                 // result of TCL command
+  int result_;                 // result of TCL command
 
 public:
   TclXMLRPC(Tcl_Interp*);

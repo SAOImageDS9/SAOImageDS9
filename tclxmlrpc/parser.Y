@@ -17,7 +17,6 @@
 #undef yyFlexLexer
 #define yyFlexLexer xmlrpcFlexLexer
 #include <FlexLexer.h>
-  char* xmlrpcbuf;
   char* xmlrpcstrcat(char*, char*);
   char* xmlrpcstrcat1(const char*);
   char* xmlrpcstrcat3(const char*, char*, const char*);
@@ -104,7 +103,7 @@ commands : commands command
 
 command : DEBUG_ debug
 | HEADER
-| {xmlrpcbuf=0;} method {xmlrpcbuf=$2;}
+| {xmlrpc->rpc_=0;} method {xmlrpc->rpc_=$2;}
 ;
 
 method : methodCall {$$=$1;}

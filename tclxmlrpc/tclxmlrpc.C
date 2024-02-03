@@ -19,8 +19,6 @@ using namespace std;
 #define yyFlexLexer xmlrpcFlexLexer
 #include <FlexLexer.h>
 
-extern char* xmlrpcbuf;
-
 void* xmlrpclval;
 extern int xmlrpcparse(TclXMLRPC*, xmlrpcFlexLexer*);
 
@@ -88,6 +86,7 @@ int TclxmlrpcCmd(ClientData data, Tcl_Interp *interp,
 TclXMLRPC::TclXMLRPC(Tcl_Interp* interp)
 {
   interp_=interp;
+  rpc_ =NULL;
 }
 
 TclXMLRPC::~TclXMLRPC()
@@ -115,9 +114,10 @@ int TclXMLRPC::parseCmd(int argc, const char* argv[])
   Tcl_SetVar(interp_, argv[3], "", NULL);
 
   if (!parse(str)) {
-    if (xmlrpcbuf) {
-      Tcl_SetVar(interp_, argv[3], xmlrpcbuf, NULL);
-      free(xmlrpcbuf);
+    if (rpc_) {
+      Tcl_SetVar(interp_, argv[3], rpc_, NULL);
+      free(rpc_);
+      rpc_ =NULL;
       return TCL_OK;
     }
   }
@@ -127,17 +127,17 @@ int TclXMLRPC::parseCmd(int argc, const char* argv[])
 
 int TclXMLRPC::parse(istringstream& istr)
 {
-  int result = TCL_OK;
+  result_ = TCL_OK;
   xmlrpcFlexLexer* ll = new xmlrpcFlexLexer(&istr);
   xmlrpcparse(this, ll);
   delete ll;
 
-  return result;
+  return result_;
 }
 
 void TclXMLRPC::error(const char* m)
 {
   Tcl_AppendResult(interp_, m, NULL);
-  result = TCL_ERROR;
+  result_ = TCL_ERROR;
 }
 

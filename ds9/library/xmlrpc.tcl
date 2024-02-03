@@ -66,22 +66,10 @@ proc xmlrpcDoRequest {sock} {
 
     xmlrpc parse in out
     if {[catch {set rpc [expr $out]}]} {
-	puts "***BANG"
-	puts $body
-	puts "---"
-	puts $out
+	# ERROR
+	return
     }
 
-    if {false} {
-	if {$rr != $rpc} {
-	    puts "***"
-	    puts $rpc
-	    puts "---"
-	    puts $rr
-	    puts "***"
-	}
-    }
-    
     set tag [lindex [lindex $rpc 0] 0]
 
     # methodcall

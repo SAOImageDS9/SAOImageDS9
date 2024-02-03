@@ -80,6 +80,7 @@ off		   {return OFF_;}
                      int ll = strlen(yytext);
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
                      return HEADER;
                    }
@@ -88,6 +89,7 @@ off		   {return OFF_;}
                      int ll = strlen(yytext)-19;
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext+9,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
                      return STRING;
                    }
@@ -96,6 +98,7 @@ off		   {return OFF_;}
                      int ll = strlen(yytext)-17;
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext+8,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
                      return STRING;
                    }
@@ -104,6 +107,7 @@ off		   {return OFF_;}
                      int ll = strlen(yytext);
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
 		     return STRING;
                    }

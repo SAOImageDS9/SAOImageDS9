@@ -203,6 +203,7 @@ char* xmlrpcstrcat1(const char* pre) {
   int ll = strlen(pre);
   char* ptr = (char*)malloc(ll+1);
   strncpy(ptr,pre,ll);
+  ptr[ll] = '\0';
 
   return ptr;
 }

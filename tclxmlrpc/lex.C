@@ -972,6 +972,7 @@ YY_RULE_SETUP
                      int ll = strlen(yytext);
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
                      return HEADER;
                    }
@@ -979,11 +980,12 @@ YY_RULE_SETUP
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 87 "lex.L"
+#line 88 "lex.L"
 { // Quoted String 8+1+str+1+9
                      int ll = strlen(yytext)-19;
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext+9,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
                      return STRING;
                    }
@@ -991,45 +993,47 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 95 "lex.L"
+#line 97 "lex.L"
 { // Quoted String 7+1+str+1+8
                      int ll = strlen(yytext)-17;
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext+8,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
                      return STRING;
                    }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 103 "lex.L"
+#line 106 "lex.L"
 {
                      int ll = strlen(yytext);
                      char* ptr = (char*)malloc(ll+1);
                      strncpy(ptr,yytext,ll);
+                     ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
 		     return STRING;
                    }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 111 "lex.L"
+#line 115 "lex.L"
 { // White Spaces
 		   } 
 	YY_BREAK
 case 37:
 /* rule 37 can match eol */
 YY_RULE_SETUP
-#line 114 "lex.L"
+#line 118 "lex.L"
 { // returns
 		   } 
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 117 "lex.L"
+#line 121 "lex.L"
 ECHO;
 	YY_BREAK
-#line 1032 "lex.C"
+#line 1036 "lex.C"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1993,6 +1997,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 117 "lex.L"
+#line 121 "lex.L"
 
 

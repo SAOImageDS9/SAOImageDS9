@@ -1576,7 +1576,7 @@ yyreduce:
 
   case 24:
 #line 147 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list value [list string [list ",xmlrpcunquote((yyvsp[(1) - (1)].str)),"]]]");;}
+    {(yyval.str)=xmlrpcstrcat3("[list value [list string {",xmlrpcunquote((yyvsp[(1) - (1)].str)),"}]]");;}
     break;
 
   case 25:
@@ -1596,7 +1596,7 @@ yyreduce:
 
   case 28:
 #line 153 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list string [list ",xmlrpcunquote((yyvsp[(1) - (1)].str)),"]]");;}
+    {(yyval.str)=xmlrpcstrcat3("[list string {",xmlrpcunquote((yyvsp[(1) - (1)].str)),"}]");;}
     break;
 
   case 29:
@@ -1666,12 +1666,12 @@ yyreduce:
 
   case 42:
 #line 176 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
+    {(yyval.str)=xmlrpcstrcat1("[list name {}]");;}
     break;
 
   case 43:
 #line 177 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
+    {(yyval.str)=xmlrpcstrcat1("[list name {}]");;}
     break;
 
   case 44:
@@ -1964,25 +1964,30 @@ char* xmlrpcunquote(char* str) {
   char* dptr = ptr;
   while (*sptr) {
     if (*sptr == '&') {
-      char amp[] = "&amp";
-      char lt[] = "&lt";
-      char gt[] = "&gt";
-      char quot[] = "&quot";
-      if (!strncmp(sptr,amp,4)) {
+      char amp[] = "&amp;";
+      char lt[] = "&lt;";
+      char gt[] = "&gt;";
+      char apos[] = "&apos;";
+      char quot[] = "&quot;";
+      if (!strncmp(sptr,amp,5)) {
 	*dptr++ = '&';
+	sptr += 5;
+      }
+      else if (!strncmp(sptr,lt,4)) {
+	*dptr++ = '<';
 	sptr += 4;
       }
-      else if (!strncmp(sptr,lt,2)) {
-	*dptr++ = '<';
-	sptr += 3;
-      }
-      else if (!strncmp(sptr,gt,2)) {
+      else if (!strncmp(sptr,gt,4)) {
 	*dptr++ = '>';
-	sptr += 3;
+	sptr += 4;
       }
-      else if (!strncmp(sptr,quot,4)) {
+      else if (!strncmp(sptr,apos,6)) {
+	*dptr++ = '\'';
+	sptr += 6;
+      }
+      else if (!strncmp(sptr,quot,6)) {
 	*dptr++ = '"';
-	sptr += 5;
+	sptr += 6;
       }
       else
 	*dptr++ = *sptr++;

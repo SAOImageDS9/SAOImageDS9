@@ -144,13 +144,13 @@ param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]");}
 | _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
 ;
 
-value : STRING {$$=xmlrpcstrcat3("[list value [list string [list ",xmlrpcunquote($1),"]]]");}
+value : STRING {$$=xmlrpcstrcat3("[list value [list string {",xmlrpcunquote($1),"}]]");}
 | VALUE_ type _VALUE_ {$$=xmlrpcstrcat3("[list value ",$2,"]");}
 | VALUE_ _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 | _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 ;
 
-type : STRING {$$=xmlrpcstrcat3("[list string [list ",xmlrpcunquote($1),"]]");}
+type : STRING {$$=xmlrpcstrcat3("[list string {",xmlrpcunquote($1),"}]");}
 
 | INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat3("[list integer ",$2,"]");}
 
@@ -173,8 +173,8 @@ member : MEMBER_ name value _MEMBER_ {$$=xmlrpcstrcat4("[list member [list ",$2,
 ;
 
 name : NAME_ STRING _NAME_ {$$=xmlrpcstrcat3("[list name ",$2,"]");}
-| NAME_ _NAME_ {$$=xmlrpcstrcat1("[list name {}");}
-| _NAME_ {$$=xmlrpcstrcat1("[list name {}");}
+| NAME_ _NAME_ {$$=xmlrpcstrcat1("[list name {}]");}
+| _NAME_ {$$=xmlrpcstrcat1("[list name {}]");}
 ;
 
 values : values value {$$=xmlrpcstrcat($1,$2);}
@@ -238,25 +238,30 @@ char* xmlrpcunquote(char* str) {
   char* dptr = ptr;
   while (*sptr) {
     if (*sptr == '&') {
-      char amp[] = "&amp";
-      char lt[] = "&lt";
-      char gt[] = "&gt";
-      char quot[] = "&quot";
-      if (!strncmp(sptr,amp,4)) {
+      char amp[] = "&amp;";
+      char lt[] = "&lt;";
+      char gt[] = "&gt;";
+      char apos[] = "&apos;";
+      char quot[] = "&quot;";
+      if (!strncmp(sptr,amp,5)) {
 	*dptr++ = '&';
+	sptr += 5;
+      }
+      else if (!strncmp(sptr,lt,4)) {
+	*dptr++ = '<';
 	sptr += 4;
       }
-      else if (!strncmp(sptr,lt,2)) {
-	*dptr++ = '<';
-	sptr += 3;
-      }
-      else if (!strncmp(sptr,gt,2)) {
+      else if (!strncmp(sptr,gt,4)) {
 	*dptr++ = '>';
-	sptr += 3;
+	sptr += 4;
       }
-      else if (!strncmp(sptr,quot,4)) {
+      else if (!strncmp(sptr,apos,6)) {
+	*dptr++ = '\'';
+	sptr += 6;
+      }
+      else if (!strncmp(sptr,quot,6)) {
 	*dptr++ = '"';
-	sptr += 5;
+	sptr += 6;
       }
       else
 	*dptr++ = *sptr++;

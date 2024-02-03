@@ -79,6 +79,7 @@ proc xmlrpcDoRequest {sock} {
 	xmlrpc parse in out
 	if {[catch {set rr [expr $out]}]} {
 	    puts "***BANG"
+	    puts $body
 	    puts $rpc
 	    puts [xmlrpc2xml $rpc]
 	    puts "---"

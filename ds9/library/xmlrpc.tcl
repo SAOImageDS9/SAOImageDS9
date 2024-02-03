@@ -58,28 +58,42 @@ proc xmlrpcDoRequest {sock} {
     global parse
     set rpc $parse(result)
 
-    # space out < and >
-    # shift \n to \r (multi line strings)
-#    set foo "debug on\n$body"
-    set foo $body
-#    puts $body
-    set in [string map {< " <" > "> "} $foo]
-
-    xmlrpc parse in out
-    set rr [expr $out]
-
-    if {$rr != $rpc} {
-	puts "***"
-	puts $rpc
-	puts "---"
-	puts $out
-	puts $rr
-	puts "***"
+    if {false} {
+	set rr [xmlrpc2xml $rpc]
+	if {$rr != $body} {
+	    puts "***"
+	    puts $body
+	    puts "---"
+	    puts $rr
+	    puts "***"
+	}
     }
 
-#    puts $out
-#    set rr [xmlxml $body]
+    if {true} {
+	# debug- set foo "debug on\n$body"
+	set foo $body
 
+	# space out < and >
+	set in [string map {< " <" > "> "} $foo]
+
+	xmlrpc parse in out
+	if {[catch {set rr [expr $out]}]} {
+	    puts "***BANG"
+	    puts $rpc
+	    puts [xmlrpc2xml $rpc]
+	    puts "---"
+	    puts $out
+	}
+
+	if {$rr != $rpc} {
+	    puts "***"
+	    puts $rpc
+	    puts "---"
+	    puts $rr
+	    puts "***"
+	}
+    }
+    
     set tag [lindex [lindex $rpc 0] 0]
 
     # methodcall

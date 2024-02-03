@@ -11,6 +11,7 @@
 #define YYDEBUG 1
 
 #include <stdlib.h>
+#include <string.h>
 #include "tclxmlrpc.h"
 
 #undef yyFlexLexer
@@ -21,6 +22,7 @@
   char* xmlrpcstrcat1(const char*);
   char* xmlrpcstrcat3(const char*, char*, const char*);
   char* xmlrpcstrcat4(const char*, char*, char*, const char*);
+  char* xmlrpcunquote(char*);
   
   extern int xmlrpclex(void*, xmlrpcFlexLexer*);
   extern void xmlrpcerror(TclXMLRPC*, xmlrpcFlexLexer*, const char*);
@@ -142,13 +144,13 @@ param : PARAM_ value _PARAM_ {$$=xmlrpcstrcat3("[list param ",$2,"]");}
 | _PARAM_ {$$=xmlrpcstrcat1("[list param {}]");}
 ;
 
-value : STRING {$$=xmlrpcstrcat3("[list value [list string [list ",$1,"]]]");}
+value : STRING {$$=xmlrpcstrcat3("[list value [list string [list ",xmlrpcunquote($1),"]]]");}
 | VALUE_ type _VALUE_ {$$=xmlrpcstrcat3("[list value ",$2,"]");}
 | VALUE_ _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 | _VALUE_ {$$=xmlrpcstrcat1("[list value {}]");}
 ;
 
-type : STRING {$$=xmlrpcstrcat3("[list string [list ",$1,"]]");}
+type : STRING {$$=xmlrpcstrcat3("[list string [list ",xmlrpcunquote($1),"]]");}
 
 | INTEGER_ STRING _INTEGER_ {$$=xmlrpcstrcat3("[list integer ",$2,"]");}
 
@@ -225,6 +227,45 @@ char* xmlrpcstrcat4(const char* pre, char* str1, char* str2, const char* post) {
   strncat(ptr,post,strlen(post));
   free(str1);
   free(str2);
+
+  return ptr;
+}
+
+char* xmlrpcunquote(char* str) {
+  int ll = strlen(str);
+  char* ptr = (char*)malloc(ll+1);
+  char* sptr = str;
+  char* dptr = ptr;
+  while (*sptr) {
+    if (*sptr == '&') {
+      char amp[] = "&amp";
+      char lt[] = "&lt";
+      char gt[] = "&gt";
+      char quot[] = "&quot";
+      if (!strncmp(sptr,amp,4)) {
+	*dptr++ = '&';
+	sptr += 4;
+      }
+      else if (!strncmp(sptr,lt,2)) {
+	*dptr++ = '<';
+	sptr += 3;
+      }
+      else if (!strncmp(sptr,gt,2)) {
+	*dptr++ = '>';
+	sptr += 3;
+      }
+      else if (!strncmp(sptr,quot,4)) {
+	*dptr++ = '"';
+	sptr += 5;
+      }
+      else
+	*dptr++ = *sptr++;
+    }
+    else
+      *dptr++ = *sptr++;
+  }
+  *dptr++ = '\0';
+  free(str);
 
   return ptr;
 }

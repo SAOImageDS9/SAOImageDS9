@@ -153,6 +153,7 @@
 #define YYDEBUG 1
 
 #include <stdlib.h>
+#include <string.h>
 #include "tclxmlrpc.h"
 
 #undef yyFlexLexer
@@ -163,6 +164,7 @@
   char* xmlrpcstrcat1(const char*);
   char* xmlrpcstrcat3(const char*, char*, const char*);
   char* xmlrpcstrcat4(const char*, char*, char*, const char*);
+  char* xmlrpcunquote(char*);
   
   extern int xmlrpclex(void*, xmlrpcFlexLexer*);
   extern void xmlrpcerror(TclXMLRPC*, xmlrpcFlexLexer*, const char*);
@@ -188,12 +190,12 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 29 "parser.Y"
+#line 31 "parser.Y"
 {
   char* str;
 }
 /* Line 193 of yacc.c.  */
-#line 197 "parser.C"
+#line 199 "parser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -206,7 +208,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 210 "parser.C"
+#line 212 "parser.C"
 
 #ifdef short
 # undef short
@@ -509,11 +511,11 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    99,    99,   100,   103,   104,   105,   105,   108,   109,
-     112,   114,   118,   120,   124,   128,   131,   132,   133,   136,
-     137,   140,   141,   142,   145,   146,   147,   148,   151,   153,
-     155,   156,   157,   159,   160,   161,   164,   165,   168,   169,
-     170,   173,   174,   175,   178,   179,   182,   183
+       0,   101,   101,   102,   105,   106,   107,   107,   110,   111,
+     114,   116,   120,   122,   126,   130,   133,   134,   135,   138,
+     139,   142,   143,   144,   147,   148,   149,   150,   153,   155,
+     157,   158,   159,   161,   162,   163,   166,   167,   170,   171,
+     172,   175,   176,   177,   180,   181,   184,   185
 };
 #endif
 
@@ -1483,218 +1485,218 @@ yyreduce:
   switch (yyn)
     {
         case 6:
-#line 105 "parser.Y"
+#line 107 "parser.Y"
     {xmlrpcbuf=0;;}
     break;
 
   case 7:
-#line 105 "parser.Y"
+#line 107 "parser.Y"
     {xmlrpcbuf=(yyvsp[(2) - (2)].str);;}
     break;
 
   case 8:
-#line 108 "parser.Y"
+#line 110 "parser.Y"
     {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 9:
-#line 109 "parser.Y"
+#line 111 "parser.Y"
     {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 10:
-#line 113 "parser.Y"
+#line 115 "parser.Y"
     {(yyval.str)=xmlrpcstrcat4("[list methodcall [list ",(yyvsp[(2) - (4)].str),(yyvsp[(3) - (4)].str),"]]");;}
     break;
 
   case 11:
-#line 115 "parser.Y"
+#line 117 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list methodcall [list ",(yyvsp[(2) - (3)].str),"]]");;}
     break;
 
   case 12:
-#line 119 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list methodresponse ",(yyvsp[(2) - (3)].str),"]");;}
-    break;
-
-  case 13:
 #line 121 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list methodresponse ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
+  case 13:
+#line 123 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list methodresponse ",(yyvsp[(2) - (3)].str),"]");;}
+    break;
+
   case 14:
-#line 125 "parser.Y"
+#line 127 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list methodname ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
   case 15:
-#line 128 "parser.Y"
+#line 130 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("list fault ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
   case 16:
-#line 131 "parser.Y"
+#line 133 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list params [list ",(yyvsp[(2) - (3)].str),"]]");;}
     break;
 
   case 17:
-#line 132 "parser.Y"
+#line 134 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list params {}]");;}
     break;
 
   case 18:
-#line 133 "parser.Y"
+#line 135 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list params {}]");;}
     break;
 
   case 19:
-#line 136 "parser.Y"
+#line 138 "parser.Y"
     {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 20:
-#line 137 "parser.Y"
+#line 139 "parser.Y"
     {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 21:
-#line 140 "parser.Y"
+#line 142 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list param ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
   case 22:
-#line 141 "parser.Y"
+#line 143 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list param {}]");;}
     break;
 
   case 23:
-#line 142 "parser.Y"
+#line 144 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list param {}]");;}
     break;
 
   case 24:
-#line 145 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list value [list string [list ",(yyvsp[(1) - (1)].str),"]]]");;}
+#line 147 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list value [list string [list ",xmlrpcunquote((yyvsp[(1) - (1)].str)),"]]]");;}
     break;
 
   case 25:
-#line 146 "parser.Y"
+#line 148 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list value ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
   case 26:
-#line 147 "parser.Y"
+#line 149 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list value {}]");;}
     break;
 
   case 27:
-#line 148 "parser.Y"
+#line 150 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list value {}]");;}
     break;
 
   case 28:
-#line 151 "parser.Y"
-    {(yyval.str)=xmlrpcstrcat3("[list string [list ",(yyvsp[(1) - (1)].str),"]]");;}
+#line 153 "parser.Y"
+    {(yyval.str)=xmlrpcstrcat3("[list string [list ",xmlrpcunquote((yyvsp[(1) - (1)].str)),"]]");;}
     break;
 
   case 29:
-#line 153 "parser.Y"
+#line 155 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list integer ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
   case 30:
-#line 155 "parser.Y"
+#line 157 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list struct [list ",(yyvsp[(2) - (3)].str),"]]");;}
     break;
 
   case 31:
-#line 156 "parser.Y"
+#line 158 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list struct {}]");;}
     break;
 
   case 32:
-#line 157 "parser.Y"
+#line 159 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list struct {}]");;}
     break;
 
   case 33:
-#line 159 "parser.Y"
+#line 161 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list array [list data [list ",(yyvsp[(3) - (5)].str),"]]]");;}
     break;
 
   case 34:
-#line 160 "parser.Y"
+#line 162 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list array [list data {}]]");;}
     break;
 
   case 35:
-#line 161 "parser.Y"
+#line 163 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list array [list data {}]]");;}
     break;
 
   case 36:
-#line 164 "parser.Y"
+#line 166 "parser.Y"
     {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 37:
-#line 165 "parser.Y"
+#line 167 "parser.Y"
     {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 38:
-#line 168 "parser.Y"
+#line 170 "parser.Y"
     {(yyval.str)=xmlrpcstrcat4("[list member [list ",(yyvsp[(2) - (4)].str),(yyvsp[(3) - (4)].str),"]]");;}
     break;
 
   case 39:
-#line 169 "parser.Y"
+#line 171 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list member {}]");;}
     break;
 
   case 40:
-#line 170 "parser.Y"
+#line 172 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list member {}]");;}
     break;
 
   case 41:
-#line 173 "parser.Y"
+#line 175 "parser.Y"
     {(yyval.str)=xmlrpcstrcat3("[list name ",(yyvsp[(2) - (3)].str),"]");;}
     break;
 
   case 42:
-#line 174 "parser.Y"
+#line 176 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
     break;
 
   case 43:
-#line 175 "parser.Y"
+#line 177 "parser.Y"
     {(yyval.str)=xmlrpcstrcat1("[list name {}");;}
     break;
 
   case 44:
-#line 178 "parser.Y"
+#line 180 "parser.Y"
     {(yyval.str)=xmlrpcstrcat((yyvsp[(1) - (2)].str),(yyvsp[(2) - (2)].str));;}
     break;
 
   case 45:
-#line 179 "parser.Y"
+#line 181 "parser.Y"
     {(yyval.str)=(yyvsp[(1) - (1)].str);;}
     break;
 
   case 46:
-#line 182 "parser.Y"
+#line 184 "parser.Y"
     {yydebug=1;;}
     break;
 
   case 47:
-#line 183 "parser.Y"
+#line 185 "parser.Y"
     {yydebug=0;;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1698 "parser.C"
+#line 1700 "parser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1908,7 +1910,7 @@ yyreturn:
 }
 
 
-#line 186 "parser.Y"
+#line 188 "parser.Y"
 
 
 char* xmlrpcstrcat(char* str1, char* str2) {
@@ -1951,6 +1953,45 @@ char* xmlrpcstrcat4(const char* pre, char* str1, char* str2, const char* post) {
   strncat(ptr,post,strlen(post));
   free(str1);
   free(str2);
+
+  return ptr;
+}
+
+char* xmlrpcunquote(char* str) {
+  int ll = strlen(str);
+  char* ptr = (char*)malloc(ll+1);
+  char* sptr = str;
+  char* dptr = ptr;
+  while (*sptr) {
+    if (*sptr == '&') {
+      char amp[] = "&amp";
+      char lt[] = "&lt";
+      char gt[] = "&gt";
+      char quot[] = "&quot";
+      if (!strncmp(sptr,amp,4)) {
+	*dptr++ = '&';
+	sptr += 4;
+      }
+      else if (!strncmp(sptr,lt,2)) {
+	*dptr++ = '<';
+	sptr += 3;
+      }
+      else if (!strncmp(sptr,gt,2)) {
+	*dptr++ = '>';
+	sptr += 3;
+      }
+      else if (!strncmp(sptr,quot,4)) {
+	*dptr++ = '"';
+	sptr += 5;
+      }
+      else
+	*dptr++ = *sptr++;
+    }
+    else
+      *dptr++ = *sptr++;
+  }
+  *dptr++ = '\0';
+  free(str);
 
   return ptr;
 }

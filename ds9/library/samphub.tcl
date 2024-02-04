@@ -32,10 +32,8 @@ proc SAMPHubServeOnceThread {sock addr port} {
 proc SAMPHubDoRequestThread {sock} {
     thread::detach $sock
 
-#    puts "SAMPHubDoRequest start [llength [thread::names]]"
     tpool::post [tsv::get samphub pool] \
 	[list xmlrpcDoRequestThread $sock]
-#    puts "SAMPHubDoRequest end [llength [thread::names]]"
 }
 
 # Startup

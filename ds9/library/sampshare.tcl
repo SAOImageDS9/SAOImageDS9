@@ -17,7 +17,7 @@ proc SAMPServeOnce {sock addr port} {
 }
 
 proc SAMPDoRequest {sock} {
-    xmlrpcDoRequest $sock
+    xmlrpcDoRequest $sock [thread::id]
 }
 
 proc SAMPCall {url method methodName params} {

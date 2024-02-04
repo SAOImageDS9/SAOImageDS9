@@ -73,6 +73,9 @@ TEA_LOAD_CONFIG(tclsignal)
 TEA_PATH_CONFIG(tclxml)
 TEA_LOAD_CONFIG(tclxml)
 
+TEA_PATH_CONFIG(tclxmlrpc)
+TEA_LOAD_CONFIG(tclxmlrpc)
+
 TEA_PATH_CONFIG(tclzipfs)
 TEA_LOAD_CONFIG(tclzipfs)
 

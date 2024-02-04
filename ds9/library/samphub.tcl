@@ -33,7 +33,7 @@ proc SAMPHubDoRequestThread {sock} {
     thread::detach $sock
 
     tpool::post [tsv::get samphub pool] \
-	[list xmlrpcDoRequestThread $sock]
+	[list xmlrpcDoRequestThread $sock [thread::id]]
 }
 
 # Startup
@@ -98,7 +98,7 @@ proc SAMPHubStart {verbose} {
     tsv::set samphub web,allowReverseCallbacks 0
 
     tsv::set samphub pool \
-	[tpool::create -idletime 5 \
+	[tpool::create -idletime 5 -maxworkers 20 \
 	     -initcmd {
 		 package require SAMPXmlrpcThread
 		 package require SAMPHubThread
@@ -118,7 +118,7 @@ proc SAMPHubStart {verbose} {
     SAMPHubStartRegister
 
     if {[tsv::get samphub debug]} {
-	puts "SAMPHubStart: [tsv::get samphub secret] [tsv::get samphub [tsv::get samphub secret],id]"
+	puts stderr "SAMPHubStart: [tsv::get samphub secret] [tsv::get samphub [tsv::get samphub secret],id]"
     }
 
     SAMPHubDialogListAdd [tsv::get samphub secret]
@@ -352,6 +352,16 @@ proc SAMPHubDisconnect {secret} {
     }
 
     SAMPHubRemove $secret
+}
+
+proc SAMPHubParseXMLRPC {in} {
+    xmlrpc parse in out
+    if {[catch {set rpc [expr $out]}]} {
+	# ERROR
+	puts "***BANG"
+	return
+    }
+    return $rpc
 }
 
 # *** Hub ***

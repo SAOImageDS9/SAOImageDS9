@@ -47,7 +47,7 @@ saods9	: dirs tcl tk \
 	xpa funtools ast \
 	vector fitsy \
 	tclsignal \
-	tls tclxml \
+	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tksvg tkagif tkhtml1 tkcon \
 	tkmacosx \
@@ -78,6 +78,7 @@ tcl$(TCL_VERSION)/macosx/Makefile :
 	./configure \
 	--enable-64bit \
 	--enable-symbols \
+	--enable-threads \
 	$(CACHE)
 
 tk	: tk$(TCL_VERSION)/macosx/Makefile
@@ -107,6 +108,7 @@ tk$(TCL_VERSION)/macosx/Makefile :
 	$(WITHTCL) \
 	--enable-64bit \
 	--enable-symbols \
+	--enable-threads \
 	$(CACHE)
 
 #-------------------------- tclsignal

@@ -45,6 +45,8 @@ extern "C" {
   int Tclxml_Init(Tcl_Interp*);
   int Tclxml_libxml2_Init(Tcl_Interp*);
 
+  int Tclxmlrpc_Init(Tcl_Interp*);
+
   int Tkwin32_Init(Tcl_Interp*);
 }
 
@@ -173,6 +175,10 @@ int SAOAppInit(Tcl_Interp *interp)
 
   // Tclxml
   if (Tclxml_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+
+  // Tclxmlrpc
+  if (Tclxmlrpc_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
 
   // Tkimg

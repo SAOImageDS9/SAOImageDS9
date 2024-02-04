@@ -44,7 +44,7 @@ saods9	: dirs tcl tk \
 	openssl \
 	xpa funtools ast \
 	vector fitsy \
-	tls tclxml \
+	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tksvg tkagif tkhtml1 tkcon \
 	tkwin \
@@ -64,7 +64,7 @@ tcl$(TCL_VERSION)/win/Makefile :
 	./configure \
 	$(ENABLE64BIT) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared \
+	--disable-shared --enable-symbols --enable-threads \
 	$(CACHE) \
 	TEA_PLATFORM=windows
 
@@ -81,7 +81,7 @@ tk$(TCL_VERSION)/win/Makefile :
 	$(WITHTCL) \
 	$(TKFLAGS) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	--disable-shared --enable-symbols --enable-threads \
 	$(CACHE)
 
 tkwin: tkwin/Makefile

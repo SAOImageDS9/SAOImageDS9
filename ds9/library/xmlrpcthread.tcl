@@ -14,21 +14,16 @@ global xmlrpcresult
 
 set xmlrpccnt 0
 
-proc xmlrpcDoRequestThread {sock} {
-#    puts "xmlrpcDoRequest start [llength [thread::names]]"
+proc xmlrpcDoRequestThread {sock id} {
     thread::attach $sock
-
-    xmlrpcDoRequest $sock
-#    puts "xmlrpcDoRequest end [llength [thread::names]]"
+    xmlrpcDoRequest $sock $id
 }
 
 proc xmlrpcCallThread {url method methodName params} {
-#    puts "xmlrpcCall start [llength [thread::names]]"
     xmlrpcCall $url $method $methodName $params
-#    puts "xmlrpcCall end [llength [thread::names]]"
 }
 
-proc xmlrpcDoRequest {sock} {
+proc xmlrpcDoRequest {sock id} {
     set res [xmlrpcReadHeader $sock]
     if {$res == {}} {
 	# ERROR
@@ -60,9 +55,19 @@ proc xmlrpcDoRequest {sock} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
-    xml2rpc $body
-    global parse
-    set rpc $parse(result)
+    if {false} {
+	xml2rpc $body
+	global parse
+	set rpc $parse(result)
+    }
+
+    if {true} {
+	# debug- set body "debug on\n$body"
+	# space out < and >
+	set in [string map {< " <" > "> "} $body]
+
+	set rpc [thread::send $id [list SAMPHubParseXMLRPC $in]]
+    }
 
     set tag [lindex [lindex $rpc 0] 0]
 

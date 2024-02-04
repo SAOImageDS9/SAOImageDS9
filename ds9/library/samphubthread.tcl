@@ -8,10 +8,8 @@ package require SAMPXmlrpcThread
 package require Thread
 
 proc SAMPHubCallThread {url method methodName params} {
-#    puts "SAMPHubCall start [llength [thread::names]]"
     tpool::post [tsv::get samphub pool] \
 	[list xmlrpcCallThread $url $method $methodName $params]
-#    puts "SAMPHubCall end [llength [thread::names]]"
 }
 
 proc SAMPHubSend {method url params resultVar {flag {}}} {
@@ -276,7 +274,7 @@ proc SAMPHubReply {cc id msgtag param} {
 
 proc samp.hub.setXmlrpcCallback {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.setXmlrpcCallback: $rpc\n"
+	puts stderr "samp.hub.setXmlrpcCallback: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -299,7 +297,7 @@ proc samp.hub.setXmlrpcCallback {rpc} {
 proc samp.hub.ping {rpc} {
 
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.ping $rpc\n"
+	puts stderr "samp.hub.ping $rpc\n"
     }
 
     SAMPHubDialogRecvdMsg "samp.hub.ping $rpc"
@@ -310,7 +308,7 @@ proc samp.hub.ping {rpc} {
 proc samp.hub.register {rpc} {
 
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.register: $rpc"
+	puts stderr "samp.hub.register: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -321,7 +319,7 @@ proc samp.hub.register {rpc} {
 proc samp.hub.unregister {rpc} {
 
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.unregister: $rpc\n"
+	puts stderr "samp.hub.unregister: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -395,7 +393,7 @@ proc samp.hub.unregister {rpc} {
 
 proc samp.hub.declareMetadata {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.declareMetadata: $rpc\n"
+	puts stderr "samp.hub.declareMetadata: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -468,7 +466,7 @@ proc samp.hub.declareMetadata {rpc} {
 
 proc samp.hub.getMetadata {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.getMetadata: $rpc\n"
+	puts stderr "samp.hub.getMetadata: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -499,7 +497,7 @@ proc samp.hub.getMetadata {rpc} {
 
 proc samp.hub.declareSubscriptions {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.declareSubscriptions: $rpc\n"
+	puts stderr "samp.hub.declareSubscriptions: $rpc\n"
     }
 
     set map [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
@@ -581,7 +579,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 
 proc samp.hub.getSubscriptions {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.getSubscriptions: $rpc\n"
+	puts stderr "samp.hub.getSubscriptions: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -612,7 +610,7 @@ proc samp.hub.getSubscriptions {rpc} {
 
 proc samp.hub.getRegisteredClients {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.getRegisteredClients: $rpc\n"
+	puts stderr "samp.hub.getRegisteredClients: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -640,7 +638,7 @@ proc samp.hub.getRegisteredClients {rpc} {
 
 proc samp.hub.getSubscribedClients {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.getSubscribedClients: $rpc\n"
+	puts stderr "samp.hub.getSubscribedClients: $rpc\n"
     }
 
     xmlrpcParams2List $rpc args
@@ -670,7 +668,7 @@ proc samp.hub.getSubscribedClients {rpc} {
 
 proc samp.hub.notify {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.notify: $rpc\n"
+	puts stderr "samp.hub.notify: $rpc\n"
     }
 
     # params
@@ -717,7 +715,7 @@ proc samp.hub.notify {rpc} {
 
 proc samp.hub.notifyAll {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.notifyAll: $rpc\n"
+	puts stderr "samp.hub.notifyAll: $rpc\n"
     }
 
     # params
@@ -769,7 +767,7 @@ proc samp.hub.notifyAll {rpc} {
 
 proc samp.hub.call {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.call: $rpc\n"
+	puts stderr "samp.hub.call: $rpc\n"
     }
 
     # params
@@ -822,7 +820,7 @@ proc samp.hub.call {rpc} {
 
 proc samp.hub.callAll {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.callAll: $rpc\n"
+	puts stderr "samp.hub.callAll: $rpc\n"
     }
 
     # params
@@ -882,7 +880,7 @@ proc samp.hub.callAll {rpc} {
 
 proc samp.hub.callAndWait {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.callAndWait: $rpc\n"
+	puts stderr "samp.hub.callAndWait: $rpc\n"
     }
 
     # params
@@ -969,7 +967,7 @@ proc samp.hub.callAndWait {rpc} {
 
 proc samp.hub.reply {rpc} {
     if {[tsv::get samphub debug]} {
-	puts "samp.hub.reply: $rpc\n"
+	puts stderr "samp.hub.reply: $rpc\n"
     }
 
     # params

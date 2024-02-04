@@ -6,7 +6,7 @@ package provide SAMPHubThread 1.0
 
 proc samp.webhub.allowReverseCallbacks {args} {
     if {[tsv::get samphub debug]} {
-	puts "samp.webhub.allowReverseCallbacks: $args"
+	puts stderr "samp.webhub.allowReverseCallbacks: $args"
     }
 
     tsv::set samphub web,allowReverseCallbacks [lindex $args 1]
@@ -15,7 +15,7 @@ proc samp.webhub.allowReverseCallbacks {args} {
 
 proc samp.webhub.pullCallbacks {args} {
     if {[tsv::get samphub debug]} {
-	puts "samp.webhub.pullCallbacks: $args"
+	puts stderr "samp.webhub.pullCallbacks: $args"
     }
 
     set secret [lindex $args 0]
@@ -45,7 +45,7 @@ proc samp.webhub.pullCallbacks {args} {
 proc samp.webhub.ping {rpc} {
 
     if {[tsv::get samphub debug]} {
-	puts "samp.webhub.ping $rpc"
+	puts stderr "samp.webhub.ping $rpc"
     }
     
     SAMPHubDialogRecvdMsg "samp.webhub.ping $rpc"
@@ -56,7 +56,7 @@ proc samp.webhub.ping {rpc} {
 proc samp.webhub.register {rpc} {
 
     if {[tsv::get samphub debug]} {
-	puts "samp.webhub.register: $rpc"
+	puts stderr "samp.webhub.register: $rpc"
     }
 
     xmlrpcParams2List $rpc args

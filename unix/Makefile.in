@@ -32,7 +32,7 @@ saods9	: dirs tcl tk \
 	xpa funtools ast \
 	vector fitsy \
 	tclsignal \
-	tclzipfs tls tclxml \
+	tclzipfs tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tksvg tkagif tkhtml1 tkcon \
 	tksao ds9
@@ -48,7 +48,7 @@ tcl$(TCL_VERSION)/unix/Makefile :
 	cd tcl$(TCL_VERSION)/unix; \
 	./configure \
 	$(PREFIX) \
-	--disable-shared --enable-symbols -enable-threads \
+	--disable-shared --enable-symbols --enable-threads \
 	$(CACHE)
 
 tk	: tk$(TCL_VERSION)/unix/Makefile
@@ -63,7 +63,7 @@ tk$(TCL_VERSION)/unix/Makefile :
 	./configure \
 	$(TKFLAGS) \
 	$(PREFIX) \
-	--disable-shared --enable-symbols -enable-threads \
+	--disable-shared --enable-symbols --enable-threads \
 	$(CACHE)
 
 #-------------------------- tclzipfs

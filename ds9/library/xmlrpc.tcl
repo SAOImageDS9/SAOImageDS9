@@ -6,11 +6,9 @@ package provide DS9 1.0
 
 # Server
 
-global xmlrpccnt
-global xmlrpcdone
-global xmlrpcresult
-
-set xmlrpccnt 0
+global xmlrpc
+set xmlrpc(cnt) 0
+set xmlrpc(parser) true
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
@@ -23,6 +21,8 @@ proc xmlrpcServeOnce {sock addr port} {
 }
 
 proc xmlrpcDoRequest {sock} {
+    global xmlrpc
+
     set res [xmlrpcReadHeader $sock]
     if {$res == {}} {
 	# ERROR
@@ -54,20 +54,19 @@ proc xmlrpcDoRequest {sock} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
-    if {false} {
+    if {$xmlrpc(parser)} {
+	# debug- set body "debug on\n$body"
+	set in [string map {< " <" > "> "} $body]
+
+	xmlrpc parse in out
+	if {[catch {set rpc [expr $out]}]} {
+	    # ERROR
+	    return
+	}
+    } else {
 	xml2rpc $body
 	global parse
 	set rpc $parse(result)
-    }
-
-    # debug- set body "debug on\n$body"
-    # space out < and >
-    set in [string map {< " <" > "> "} $body]
-
-    xmlrpc parse in out
-    if {[catch {set rpc [expr $out]}]} {
-	# ERROR
-	return
     }
 
     set tag [lindex [lindex $rpc 0] 0]
@@ -197,12 +196,10 @@ proc xmlrpcNBRead {fd} {
 # CALL
 
 proc xmlrpcCall {url method methodName params} {
-    global xmlrpccnt
-    global xmlrpcresult
-    global xmlrpcdone
+    global xmlrpc
 
-    set cnt $xmlrpccnt
-    incr xmlrpccnt
+    set cnt $xmlrpc(cnt)
+    incr xmlrpc(cnt)
 
     set RE {http://([^:]+):([0-9]+)}
     if {![regexp $RE $url {} host port]} {
@@ -212,8 +209,8 @@ proc xmlrpcCall {url method methodName params} {
 
     set sock [socket $host $port]
 
-    set xmlrpcdone($cnt) 0
-    set xmlrpcresult($cnt) {}
+    set xmlrpc(done,$cnt) 0
+    set xmlrpc(result,$cnt) {}
 
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
@@ -225,13 +222,13 @@ proc xmlrpcCall {url method methodName params} {
     flush $sock
 
     fileevent $sock readable [list xmlrpcGetResponse $sock $cnt]
-    vwait xmlrpcdone($cnt)
+    vwait xmlrpc(done,$cnt)
 
-    set ss $xmlrpcdone($cnt)
-    set rr $xmlrpcresult($cnt)
+    set ss $xmlrpc(done,$cnt)
+    set rr $xmlrpc(result,$cnt)
 
-    unset xmlrpcdone($cnt)
-    unset xmlrpcresult($cnt)
+    unset xmlrpc(done,$cnt)
+    unset xmlrpc(result,$cnt)
 
     catch {close $sock}
 
@@ -305,8 +302,7 @@ proc xmlrpcParseHTTPHeaders {str} {
 }
 
 proc xmlrpcGetResponse {sock cnt} {
-    global xmlrpcresult
-    global xmlrpcdone
+    global xmlrpc
 
     set res [xmlrpcReadHeader $sock]
     set headerStatus [lindex $res 0];	# Header + Status
@@ -314,14 +310,27 @@ proc xmlrpcGetResponse {sock cnt} {
 
     set header [xmlrpcParseHTTPCode $headerStatus]
     set body [xmlrpcGetBody $sock $header $body]
-    set xmlrpcresult($cnt) [xmlrpcParseResponse $body]
-    set xmlrpcdone($cnt) 1
+    set xmlrpc(result,$cnt) [xmlrpcParseResponse $body]
+    set xmlrpc(done,$cnt) 1
 }
 
 proc xmlrpcParseResponse {body} {
-    xml2rpc $body
-    global parse
-    set rpc $parse(result)
+    global xmlrpc
+
+    if {$xmlrpc(parser)} {
+	# debug- set body "debug on\n$body"
+	set in [string map {< " <" > "> "} $body]
+
+	xmlrpc parse in out
+	if {[catch {set rpc [expr $out]}]} {
+	    # ERROR
+	    return
+	}
+    } else {
+	xml2rpc $body
+	global parse
+	set rpc $parse(result)
+    }
     
     # rm methodResponse
     set rpc [lindex $rpc 1]

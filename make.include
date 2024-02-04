@@ -11,6 +11,7 @@
 # tclfitsy 1.0
 # tclsignal 1.4.5
 # tclxml 3.2
+# tclxmlrpc 1.0
 # tclzipfs 1.0.1
 # tls 1.6.7.5
 # tkblt 3.2.23
@@ -70,7 +71,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclzipfs tls xpa
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
 .PHONY	: vector fitsy ast funtools openssl
 
@@ -152,6 +153,23 @@ tclxml/Makefile :
 	$(WITHTCL) \
   	--with-xml2-config=$(XML2CONFIG) \
   	--with-xslt-config=$(XSLTCONFIG) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
+#-------------------------- tclxmlrpc
+
+tclxmlrpc: tclxmlrpc/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclxmlrpc -j $(JOBS) install
+
+tclxmlrpc/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd tclxmlrpc; \
+	./configure \
+	$(WITHTCL) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -516,7 +534,7 @@ scrub :
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean ds9parsersclean localclean
 .PHONY	: opensslclean
-.PHONY	: tclxmlclean tlsclean
+.PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
 .PHONY	: tktableclean xpaclean
@@ -525,7 +543,7 @@ scrub :
 
 clean	: tclclean tkclean \
 	opensslclean \
-	tlsclean tclxmlclean xpaclean \
+	tlsclean tclxmlclean tclxmlrpc xpaclean \
 	tkbltclean tclfitsy tkconclean tktableclean tkimgclean \
 	tkmpegclean tksvgclean tkagifclean tkhtml1clean \
 	vectorclean fitsyclean astclean funtoolsclean ds9clean \
@@ -565,6 +583,11 @@ tclxmlclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml clean
+
+tclxmlrpcclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclxmlrpc clean
 
 tlsclean:
 	@echo ""
@@ -645,7 +668,7 @@ xpaclean :
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
 .PHONY	: openssldistclean
-.PHONY	: tclxmldistclean tlsdistclean
+.PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean 
 .PHONY	: tktabledistclean xpadistclean
@@ -656,7 +679,7 @@ xpaclean :
 distclean : tcldistclean tkdistclean \
 	  openssldistclean \
 	  tclsignaldistclean \
-	  tlsdistclean tclxmldistclean xpadistclean \
+	  tlsdistclean tclxmldistclean tclxmlrpcdistclean xpadistclean \
 	  tkbltdistclean tclfitsydistclean tktabledistclean \
 	  tkcondistclean tkimgdistclean \
 	  tkmpegdistclean tksvgdistclean tkagifdistclean tkhtml1distclean \
@@ -706,6 +729,12 @@ tclxmldistclean:
 	$(MAKE) -C tclxml distclean
 	rm -f tclxml/tclxmlConfig.sh
 	rm -f tclxml/include/tclxml/tclxml.h
+
+tclxmlrpcdistclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclxmlrpc distclean
+	rm -f tclxmlrpc/tclxmlrpcConfig.sh
 
 tlsdistclean:
 	@echo ""

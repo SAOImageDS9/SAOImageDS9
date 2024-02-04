@@ -30,6 +30,7 @@ tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 
 tclfitsy_LIB_SPEC= @tclfitsy_LIB_SPEC@
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
+tclxmlrpc_LIB_SPEC= @tclxmlrpc_LIB_SPEC@
 
 tls_LIB_SPEC	= @tls_LIB_SPEC@
 
@@ -85,6 +86,7 @@ space:=$(empty) $(empty)
 SPECS	= \
 	$(tclfitsy_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
+	$(tclxmlrpc_LIB_SPEC) \
 	$(tls_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \

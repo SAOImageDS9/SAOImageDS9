@@ -54,6 +54,8 @@ proc xmlrpcDoRequest {sock} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
+    puts "***IN COMMING***"
+    puts $body
     if {$xmlrpc(parser)} {
 	# debug- set body "debug on\n$body"
 	set in [string map {< " <" > "> "} $body]
@@ -81,10 +83,21 @@ proc xmlrpcDoRequest {sock} {
     # params
     set params $rpc
     
-    if {[catch {set result [eval $mname [list $params]]}]} {
-	set res [xmlrpcBuildFault 1 "$mname failed"]
-    } else {
-	set res [xmlrpcBuildResponse $result]
+    set code [catch {set result [eval $mname [list $params]]}]
+    puts "code=$code"
+    switch $code {
+	0 {
+	    puts "OK $code"
+	    set res [xmlrpcBuildResponse $result]
+	}
+	1 {
+	    puts "ERROR $code"
+	    set res [xmlrpcBuildFault 1 "$mname failed"]
+	}
+	default {
+	    puts "ABORT $code"
+	    set res {}
+	}
     }
     
     puts -nonewline $sock $res
@@ -96,8 +109,8 @@ proc xmlrpcResponse {rpc} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
-#    puts "OUT GOING"
-#    puts $body
+    puts "***OUT GOING***"
+    puts $body
 
     # build the header
     set	header "HTTP/1.1 200 OK\n"

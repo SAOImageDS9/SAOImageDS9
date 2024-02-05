@@ -225,6 +225,7 @@ proc SAMPHubValidSecret {secret} {
     global samphub
     
     if {![info exists samphub($secret,id)]} {
+	puts "SAMPHub: bad private-key $secret\n"
 	if {$samphub(debug)} {
 	    puts "SAMPHub: bad private-key $secret\n"
 	}
@@ -481,6 +482,10 @@ proc SAMPHubSend {method url params resultVar {flag {}}} {
     return true
 }
 
+proc SAMPHubReturn {msg} {
+    return [list params [list [list param [list value [list string $msg]]]]]
+}
+
 proc SAMPHubNotify {secret cc mtype param} {
     # runs in top level
     global samphub
@@ -565,7 +570,7 @@ proc samp.hub.setXmlrpcCallback {rpc} {
 
     set samphub($secret,url) $map
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.ping {rpc} {
@@ -577,7 +582,7 @@ proc samp.hub.ping {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.ping $rpc"
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.register {rpc} {
@@ -606,7 +611,7 @@ proc samp.hub.unregister {rpc} {
     # some clients insist on sending samp.hub.unregister
     if {[info exists samphub(remove)]} {
 	if {$samphub(remove) == $secret} {
-	    return [SAMPReturn OK]
+	    return [SAMPHubReturn OK]
 	}
     }
 
@@ -663,7 +668,7 @@ proc samp.hub.unregister {rpc} {
     # now remove
     SAMPHubRemove $secret
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.declareMetadata {rpc} {
@@ -741,7 +746,7 @@ proc samp.hub.declareMetadata {rpc} {
 	}
     }
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.getMetadata {rpc} {
@@ -860,7 +865,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 	}
     }
 
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.getSubscriptions {rpc} {
@@ -1004,7 +1009,7 @@ proc samp.hub.notify {rpc} {
     }
 
     after idle [list SAMPHubNotify $secret $cc $mtype $param]
-    return [SAMPReturn OK]
+    return [SAMPHubReturn OK]
 }
 
 proc samp.hub.notifyAll {rpc} {
@@ -1110,7 +1115,7 @@ proc samp.hub.call {rpc} {
     }
 
     after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
-    return [SAMPReturn $msgid]
+    return [SAMPHubReturn $msgid]
 }
 
 proc samp.hub.callAll {rpc} {
@@ -1287,10 +1292,6 @@ proc samp.hub.reply {rpc} {
     set secret [lindex $args 0]
     set msgid [lindex $args 1]
 
-    if {![SAMPHubValidSecret $secret]} {
-	return -code error
-    }
-
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
     set ll [split $msgid ":"]
@@ -1298,24 +1299,33 @@ proc samp.hub.reply {rpc} {
     set id [lindex $ll 1]
     set cnt [lindex $ll 2]
 
-    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
-	return -code error
-    }
-
-    set src $samphub($secret,id)
-
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    set samphub(cw,$cnt,result) $param
+	    # special case, destination may have already unregistered
+	    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+		set samphub(cw,$cnt,result) {}
+	    } else {
+		set samphub(cw,$cnt,result) $param
+	    }
 	}
 	default {
 	    # call
-	    after idle [list SAMPHubReply $cc $src $msgtag $param]
+	    # special case, destination may have already unregistered
+	    if {![catch {set cc [SAMPHubFindSecret $id]}]} {
+		set src $samphub($secret,id)
+		after idle [list SAMPHubReply $cc $src $msgtag $param]
+	    }
 	}
     }
 
-    return [SAMPReturn OK]
+    if {[SAMPHubValidSecret $secret]} {
+	return [SAMPHubReturn OK]
+    } else {
+	# special case, sender may have already unregistered
+	puts "***BANG"
+	return -code 5
+    }
 }
 
 # *** Hub ***

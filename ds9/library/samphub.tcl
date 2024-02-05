@@ -1003,7 +1003,7 @@ proc samp.hub.notify {rpc} {
 	return -code error
     }
 
-    after idle [list SAMPHubNotify $secret $cc $mtype $param]
+    after 1 [list SAMPHubNotify $secret $cc $mtype $param]
     return [SAMPReturn OK]
 }
 
@@ -1054,7 +1054,7 @@ proc samp.hub.notifyAll {rpc} {
 	    continue
 	}
 
-	after idle [list SAMPHubNotify $secret $cc $mtype $param]
+	after 1 [list SAMPHubNotify $secret $cc $mtype $param]
 	lappend ll $samphub($cc,id)
     }
 
@@ -1109,7 +1109,7 @@ proc samp.hub.call {rpc} {
 	return -code error
     }
 
-    after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
+    after 1 [list SAMPHubCall $secret $cc $msgid $mtype $param]
     return [SAMPReturn $msgid]
 }
 
@@ -1162,7 +1162,7 @@ proc samp.hub.callAll {rpc} {
 	    continue
 	}
 
-	after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]
+	after 1 [list SAMPHubCall $secret $cc $msgid $mtype $param]
 
 	set id $samphub($cc,id)
  	set map3($id) "string $msgid"
@@ -1232,7 +1232,7 @@ proc samp.hub.callAndWait {rpc} {
     }
 
     set samphub(cw,$cnt,id) \
-	[after idle [list SAMPHubCall $secret $cc $msgid $mtype $param]]
+	[after 1 [list SAMPHubCall $secret $cc $msgid $mtype $param]]
 
     vwait samphub(cw,$cnt,result)
 
@@ -1311,7 +1311,7 @@ proc samp.hub.reply {rpc} {
 	}
 	default {
 	    # call
-	    after idle [list SAMPHubReply $cc $src $msgtag $param]
+	    after 1 [list SAMPHubReply $cc $src $msgtag $param]
 	}
     }
 

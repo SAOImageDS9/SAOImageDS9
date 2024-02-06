@@ -55,6 +55,9 @@ proc xmlrpcDoRequest {sock id} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
+    puts "IN COMING"
+    puts $body
+
     if {false} {
 	xml2rpc $body
 	global parse
@@ -96,8 +99,8 @@ proc xmlrpcResponse {rpc} {
     # build the body
     set body [xmlrpc2xml $rpc]
 
-#    puts "OUT GOING"
-#    puts $body
+    puts "OUT GOING"
+    puts $body
     
     # build the header
     set	header "HTTP/1.1 200 OK\n"

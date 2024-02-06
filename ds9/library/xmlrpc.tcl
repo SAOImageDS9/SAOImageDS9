@@ -83,21 +83,10 @@ proc xmlrpcDoRequest {sock} {
     # params
     set params $rpc
     
-    set code [catch {set result [eval $mname [list $params]]}]
-    puts "code=$code"
-    switch $code {
-	0 {
-	    puts "OK $code"
-	    set res [xmlrpcBuildResponse $result]
-	}
-	1 {
-	    puts "ERROR $code"
-	    set res [xmlrpcBuildFault 1 "$mname failed"]
-	}
-	default {
-	    puts "ABORT $code"
-	    set res {}
-	}
+    if {[catch {set result [eval $mname [list $params]]}]} {
+       set res [xmlrpcBuildFault 1 "$mname failed"]
+    } else {
+       set res [xmlrpcBuildResponse $result]
     }
     
     puts -nonewline $sock $res

@@ -225,7 +225,6 @@ proc SAMPHubValidSecret {secret} {
     global samphub
     
     if {![info exists samphub($secret,id)]} {
-	puts "SAMPHub: bad private-key $secret\n"
 	if {$samphub(debug)} {
 	    puts "SAMPHub: bad private-key $secret\n"
 	}
@@ -1292,6 +1291,10 @@ proc samp.hub.reply {rpc} {
     set secret [lindex $args 0]
     set msgid [lindex $args 1]
 
+    if {![SAMPHubValidSecret $secret]} {
+       return -code error
+    }
+
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
     set ll [split $msgid ":"]
@@ -1299,33 +1302,24 @@ proc samp.hub.reply {rpc} {
     set id [lindex $ll 1]
     set cnt [lindex $ll 2]
 
+    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+       return -code error
+    }
+
+    set src $samphub($secret,id)
+
     switch $msgtag {
 	bar {
 	    # callAndWait
-	    # special case, destination may have already unregistered
-	    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
-		set samphub(cw,$cnt,result) {}
-	    } else {
-		set samphub(cw,$cnt,result) $param
-	    }
+	    set samphub(cw,$cnt,result) $param
 	}
 	default {
 	    # call
-	    # special case, destination may have already unregistered
-	    if {![catch {set cc [SAMPHubFindSecret $id]}]} {
-		set src $samphub($secret,id)
-		after idle [list SAMPHubReply $cc $src $msgtag $param]
-	    }
+	    after idle [list SAMPHubReply $cc $src $msgtag $param]
 	}
     }
 
-    if {[SAMPHubValidSecret $secret]} {
-	return [SAMPHubReturn OK]
-    } else {
-	# special case, sender may have already unregistered
-	puts "***BANG"
-	return -code 5
-    }
+    return [SAMPHubReturn OK]
 }
 
 # *** Hub ***

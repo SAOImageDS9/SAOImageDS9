@@ -1240,6 +1240,12 @@ proc samp.hub.callAndWait {rpc} {
 
     vwait samphub(cw,$cnt,result)
 
+    # special case where dest is no longer registered
+    if {$samphub(cw,$cnt,result) == -1} {
+	SAMPHubTimeout $cnt
+	return -code error
+    }
+
     if {$timeout<=0} {
 	set rr $samphub(cw,$cnt,result)
 
@@ -1291,10 +1297,6 @@ proc samp.hub.reply {rpc} {
     set secret [lindex $args 0]
     set msgid [lindex $args 1]
 
-    if {![SAMPHubValidSecret $secret]} {
-       return -code error
-    }
-
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
     set ll [split $msgid ":"]
@@ -1302,24 +1304,48 @@ proc samp.hub.reply {rpc} {
     set id [lindex $ll 1]
     set cnt [lindex $ll 2]
 
-    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
-       return -code error
-    }
-
-    set src $samphub($secret,id)
-
     switch $msgtag {
 	bar {
 	    # callAndWait
+	    # special case, dest is no longer registered
+	    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+		set samphub(cw,$cnt,result) -1
+		if {![SAMPHubValidSecret $secret]} {
+		    return -code error
+		} else {
+		    return [SAMPHubReturn OK]
+		}
+	    }
+
 	    set samphub(cw,$cnt,result) $param
+	    # speical case, src is no longer registered
+	    if {![SAMPHubValidSecret $secret]} {
+		return -code error
+	    } else {
+		return [SAMPHubReturn OK]
+	    }
 	}
 	default {
 	    # call
+	    # special case, dest is no longer registered
+	    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
+		if {![SAMPHubValidSecret $secret]} {
+		    return -code error
+		} else {
+		    return [SAMPHubReturn OK]
+		}
+	    }
+
+	    set src $samphub($secret,id)
 	    after idle [list SAMPHubReply $cc $src $msgtag $param]
+	    # speical case, src is no longer registered
+	    if {![SAMPHubValidSecret $secret]} {
+		return -code error
+	    } else {
+		return [SAMPHubReturn OK]
+	    }
 	}
     }
-
-    return [SAMPHubReturn OK]
 }
 
 # *** Hub ***

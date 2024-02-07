@@ -55,14 +55,8 @@ proc xmlrpcDoRequest {sock id} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
-    puts "IN COMING"
+    puts "***INCOMING Request***"
     puts $body
-
-    if {false} {
-	xml2rpc $body
-	global parse
-	set rpc $parse(result)
-    }
 
     if {true} {
 	# debug- set body "debug on\n$body"
@@ -70,6 +64,10 @@ proc xmlrpcDoRequest {sock id} {
 	set in [string map {< " <" > "> "} $body]
 
 	set rpc [thread::send $id [list SAMPHubParseXMLRPC $in]]
+    } else {
+	xmlrpcParseXML $body
+	global parse
+	set rpc $parse(result)
     }
 
     set tag [lindex [lindex $rpc 0] 0]
@@ -97,11 +95,11 @@ proc xmlrpcDoRequest {sock id} {
 
 proc xmlrpcResponse {rpc} {
     # build the body
-    set body [xmlrpc2xml $rpc]
+    set body [xmlrpcParseRPC $rpc]
 
-    puts "OUT GOING"
+    puts "***OUTGOING Response***"
     puts $body
-    
+
     # build the header
     set	header "HTTP/1.1 200 OK\n"
     append	header "Content-Type: text/xml\n"
@@ -248,10 +246,10 @@ proc xmlrpcCall {url method methodName params} {
 proc xmlrpcBuildRequest {method mname params} {
     set rpc [list methodCall [list [list methodName $mname] $params]]
     # build the body
-    set body [xmlrpc2xml $rpc]
+    set body [xmlrpcParseRPC $rpc]
 
-#    puts "OUT GOING"
-#    puts $body
+    puts "***OUTGOING Request***"
+    puts $body
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
@@ -321,7 +319,10 @@ proc xmlrpcGetResponse {sock cnt} {
 }
 
 proc xmlrpcParseResponse {body} {
-    xml2rpc $body
+    puts "***INCOMING Response***"
+    puts $body
+
+    xmlrpcParseXML $body
     global parse
     set rpc $parse(result)
     
@@ -359,12 +360,7 @@ proc xmlrpcUnQuote {val} {
     return [string map {&amp; & &lt; < &gt; > &apos; \' &quot; \" \r \n} $val]
 }
 
-# XML2RPC
-
-proc xml2rpc {data} {
-#    puts "IN COMING"
-#    puts $data
-
+proc xmlrpcParseXML {data} {
     # space out < and >
     # shift \n to \r (multi line strings)
     set data [string map {< " <" > "> " \n \r} $data]
@@ -373,8 +369,6 @@ proc xml2rpc {data} {
     xmlrpc::yy_scan_string $data
     xmlrpc::yyparse
 }
-
-# XMLRPC2XML
 
 proc xmlrpcList2Member {ll} {
     set ms {}
@@ -508,14 +502,14 @@ proc xmlrpcStruct2List {rpc varname} {
     }
 }
 
-proc xmlrpc2xml {rpc} {
+proc xmlrpcParseRPC {rpc} {
     set result {<?xml version="1.0"?>}
     set space ""
-    append result "\n[xmlrpc2xmlproc $rpc space]\n"
+    append result "\n[xmlrpcParseRPCp $rpc space]\n"
     return $result
 }
 
-proc xmlrpc2xmlproc {rpc varname} {
+proc xmlrpcParseRPCp {rpc varname} {
     upvar $varname spaceminus
     set space "$spaceminus  "
 
@@ -531,30 +525,30 @@ proc xmlrpc2xmlproc {rpc varname} {
     switch [string tolower $tag] {
 	methodcall {
 	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[xmlrpc2xmlproc $rr space]\n$space</$tag>"
+	    return "$space<$tag>\n[xmlrpcParseRPCp $rr space]\n$space</$tag>"
 	}
 
 	methodresponse {
 	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[xmlrpc2xmlproc $rr space]\n$space</$tag>"
+	    return "$space<$tag>\n[xmlrpcParseRPCp $rr space]\n$space</$tag>"
 	}
 
 	fault {
 	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[xmlrpc2xmlproc $rr space]\n$space</$tag>"
+	    return "$space<$tag>\n[xmlrpcParseRPCp $rr space]\n$space</$tag>"
 	}
 
 	methodname {
 	    set rr [lindex $rpc 1]
 	    set val [lindex [lindex $rpc 0] 1]
-	    return "$space<$tag>$val</$tag>\n[xmlrpc2xmlproc $rr space]"
+	    return "$space<$tag>$val</$tag>\n[xmlrpcParseRPCp $rr space]"
 	}
 	
 	params {
 	    set rr [lindex $rpc 1]
 	    set res "$space<$tag>\n"
 	    foreach pp $rr {
-		append res "[xmlrpc2xmlproc $pp space]\n"
+		append res "[xmlrpcParseRPCp $pp space]\n"
 	    }
 	    append res "$space</$tag>"
 	    return $res
@@ -562,19 +556,19 @@ proc xmlrpc2xmlproc {rpc varname} {
 
 	param {
 	    set rr [lindex $rpc 1]
-	    return "$space<$tag>\n[xmlrpc2xmlproc $rr space]\n$space</$tag>"
+	    return "$space<$tag>\n[xmlrpcParseRPCp $rr space]\n$space</$tag>"
 	}
 
 	value {
 	    set rr [lindex $rpc 1]
-	    return "$space<$tag>[xmlrpc2xmlproc $rr space]</$tag>"
+	    return "$space<$tag>[xmlrpcParseRPCp $rr space]</$tag>"
 	}
 
 	struct {
 	    set rr [lindex $rpc 1]
 	    set res "\n$space<$tag>\n"
 	    foreach pp $rr {
-		append res "[xmlrpc2xmlproc $pp space]\n"
+		append res "[xmlrpcParseRPCp $pp space]\n"
 	    }
 	    append res "$space</$tag>\n$spaceminus"
 	    return $res
@@ -583,8 +577,8 @@ proc xmlrpc2xmlproc {rpc varname} {
 	member {
 	    set rr [lindex $rpc 1]
 	    set res "$space<$tag>\n"
-	    append res "[xmlrpc2xmlproc [lindex $rr 0] space]\n"
-	    append res "[xmlrpc2xmlproc [lindex $rr 1] space]\n"
+	    append res "[xmlrpcParseRPCp [lindex $rr 0] space]\n"
+	    append res "[xmlrpcParseRPCp [lindex $rr 1] space]\n"
 	    append res "$space</$tag>"
 	    return $res
 	}
@@ -596,14 +590,14 @@ proc xmlrpc2xmlproc {rpc varname} {
 
 	array {
 	    set rr [lindex $rpc 1]
-	    return "\n$space<$tag>\n[xmlrpc2xmlproc $rr space]\n$space</$tag>\n$spaceminus"
+	    return "\n$space<$tag>\n[xmlrpcParseRPCp $rr space]\n$space</$tag>\n$spaceminus"
 	}
 
 	data {
 	    set rr [lindex $rpc 1]
 	    set res "$space<$tag>\n"
 	    foreach pp $rr {
-		append res "[xmlrpc2xmlproc $pp space]\n"
+		append res "[xmlrpcParseRPCp $pp space]\n"
 	    }
 	    append res "$space</$tag>"
 	    return $res

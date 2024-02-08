@@ -98,7 +98,7 @@ proc SAMPHubStart {verbose} {
     tsv::set samphub web,allowReverseCallbacks 0
 
     tsv::set samphub pool \
-	[tpool::create -idletime 5 -maxworkers 20 \
+	[tpool::create -idletime 1 -maxworkers 100 \
 	     -initcmd {
 		 package require SAMPXmlrpcThread
 		 package require SAMPHubThread
@@ -358,8 +358,7 @@ proc SAMPHubParseXMLRPC {in} {
     xmlrpc parse in out
     if {[catch {set rpc [expr $out]}]} {
 	# ERROR
-	puts "***BANG"
-	return
+	return -code error
     }
     return $rpc
 }

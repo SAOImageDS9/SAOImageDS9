@@ -55,8 +55,8 @@ proc xmlrpcDoRequest {sock id} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
-    puts "***INCOMING Request***"
-    puts $body
+#    puts "***INCOMING Request***"
+#    puts $body
 
     if {true} {
 	# debug- set body "debug on\n$body"
@@ -97,8 +97,8 @@ proc xmlrpcResponse {rpc} {
     # build the body
     set body [xmlrpcParseRPC $rpc]
 
-    puts "***OUTGOING Response***"
-    puts $body
+#    puts "***OUTGOING Response***"
+#    puts $body
 
     # build the header
     set	header "HTTP/1.1 200 OK\n"
@@ -248,8 +248,8 @@ proc xmlrpcBuildRequest {method mname params} {
     # build the body
     set body [xmlrpcParseRPC $rpc]
 
-    puts "***OUTGOING Request***"
-    puts $body
+#    puts "***OUTGOING Request***"
+#    puts $body
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
@@ -319,8 +319,8 @@ proc xmlrpcGetResponse {sock cnt} {
 }
 
 proc xmlrpcParseResponse {body} {
-    puts "***INCOMING Response***"
-    puts $body
+#    puts "***INCOMING Response***"
+#    puts $body
 
     xmlrpcParseXML $body
     global parse

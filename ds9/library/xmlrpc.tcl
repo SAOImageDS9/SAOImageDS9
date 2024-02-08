@@ -85,9 +85,9 @@ proc xmlrpcDoRequest {sock} {
     set params $rpc
     
     if {[catch {set result [eval $mname [list $params]]}]} {
-       set res [xmlrpcBuildFault 1 "$mname failed"]
+	set res [xmlrpcBuildFault 1 "$mname failed"]
     } else {
-       set res [xmlrpcBuildResponse $result]
+	set res [xmlrpcBuildResponse $result]
     }
     
     puts -nonewline $sock $res

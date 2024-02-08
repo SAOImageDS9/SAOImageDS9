@@ -1310,41 +1310,25 @@ proc samp.hub.reply {rpc} {
 	    # special case, dest is no longer registered
 	    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 		set samphub(cw,$cnt,result) -1
-		if {![SAMPHubValidSecret $secret]} {
-		    return -code error
-		} else {
-		    return [SAMPHubReturn OK]
-		}
-	    }
-
-	    set samphub(cw,$cnt,result) $param
-	    # speical case, src is no longer registered
-	    if {![SAMPHubValidSecret $secret]} {
-		return -code error
 	    } else {
-		return [SAMPHubReturn OK]
+		set samphub(cw,$cnt,result) $param
 	    }
 	}
 	default {
 	    # call
 	    # special case, dest is no longer registered
-	    if {[catch {set cc [SAMPHubFindSecret $id]}]} {
-		if {![SAMPHubValidSecret $secret]} {
-		    return -code error
-		} else {
-		    return [SAMPHubReturn OK]
-		}
-	    }
-
-	    set src $samphub($secret,id)
-	    after idle [list SAMPHubReply $cc $src $msgtag $param]
-	    # speical case, src is no longer registered
-	    if {![SAMPHubValidSecret $secret]} {
-		return -code error
-	    } else {
-		return [SAMPHubReturn OK]
+	    if {![catch {set cc [SAMPHubFindSecret $id]}]} {
+		set src $samphub($secret,id)
+		after idle [list SAMPHubReply $cc $src $msgtag $param]
 	    }
 	}
+    }
+
+    # special case, src is no longer registered
+    if {![SAMPHubValidSecret $secret]} {
+	return -code error
+    } else {
+	return [SAMPHubReturn OK]
     }
 }
 

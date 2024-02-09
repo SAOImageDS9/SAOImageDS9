@@ -576,10 +576,10 @@ proc samp.hub.ping {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.ping $rpc\n"
+	puts "samp.hub.ping $rpc"
     }
 
-    SAMPHubDialogRecvdMsg "samp.hub.ping $rpc"
+    SAMPHubDialogRecvdMsg "samp.hub.ping"
 
     return [SAMPHubReturn OK]
 }

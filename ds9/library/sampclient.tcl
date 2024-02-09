@@ -235,14 +235,14 @@ proc SAMPSend {method params resultVar} {
 
     if {[catch {set result [xmlrpcCall $samp(url) $samp(method) $method $params]}]} {
 	if {$samp(debug)} {
-	    puts stderr "SAMPSend: bad xmlrpcCall\n"
+	    puts stderr "SAMPSend: bad xmlrpcCall"
 	}
 	# Error
 	return false
     }
 
     if {$samp(debug)} {
-	puts stderr "SAMPSend Result: $result\n"
+	puts stderr "SAMPSend Result: $result"
     }
 
     switch $method {
@@ -292,7 +292,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "SAMPReply $msgid $status\n"
+	puts stderr "SAMPReply $msgid $status"
     }
 
     switch -- $status {
@@ -356,7 +356,7 @@ proc samp.client.receiveNotification {rpc} {
     global samp
     
     if {$samp(debug)} {
-	puts stderr "samp.client.receiveNotification $rpc\n"
+	puts stderr "samp.client.receiveNotification $rpc"
     }
     
     xmlrpcParams2List $rpc args
@@ -387,7 +387,7 @@ proc samp.client.receiveCall {rpc} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "samp.client.receiveCall $rpc\n"
+	puts stderr "samp.client.receiveCall $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -420,7 +420,7 @@ proc samp.client.receiveResponse {rpc} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "samp.client.receiveResponse $rpc\n"
+	puts stderr "samp.client.receiveResponse $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -463,7 +463,7 @@ proc samp.hub.event.shutdown {msgid args} {
     global samp
     
     if {$samp(debug)} {
-	puts stderr "samp.hub.event.shutdown $args\n"
+	puts stderr "samp.hub.event.shutdown $args"
     }
 
     if {$msgid != {}} {
@@ -478,7 +478,7 @@ proc samp.hub.event.register {msgid args} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "samp.hub.event.register $args\n"
+	puts stderr "samp.hub.event.register $args"
     }
 
     foreach {key val} [join $args] {
@@ -500,7 +500,7 @@ proc samp.hub.event.unregister {msgid args} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "samp.hub.event.unregister $args\n"
+	puts stderr "samp.hub.event.unregister $args"
     }
 
     foreach {key val} [join $args] {
@@ -525,7 +525,7 @@ proc samp.hub.event.metadata {msgid args} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "samp.hub.event.metadata $args\n"
+	puts stderr "samp.hub.event.metadata $args"
     }
 
     set id {}
@@ -566,7 +566,7 @@ proc samp.hub.event.subscriptions {msgid args} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "samp.hub.event.subscriptions $args\n"
+	puts stderr "samp.hub.event.subscriptions $args"
     }
 
     set cc {}
@@ -601,7 +601,7 @@ proc samp.hub.disconnect {msgid args} {
     global samp
     
     if {$samp(debug)} {
-	puts stderr "samp.hub.disconnect $args\n"
+	puts stderr "samp.hub.disconnect $args"
     }
 
     set msg {}
@@ -620,7 +620,7 @@ proc samp.app.ping {msgid args} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "samp.app.ping $args\n"
+	puts stderr "samp.app.ping"
     }
 
     if {$msgid != {}} {
@@ -707,7 +707,7 @@ proc SAMPParseHub {} {
     }
 
     if {$samp(debug)} {
-	puts stderr "SAMPParseHub: $samp(secret) $samp(url) $samp(method)\n"
+	puts stderr "SAMPParseHub: $samp(secret) $samp(url) $samp(method)"
     }
     return 1
 }

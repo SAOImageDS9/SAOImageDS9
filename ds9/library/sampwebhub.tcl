@@ -33,7 +33,7 @@ proc samp.webhub.pullCallbacks {args} {
     global samphubmap2
 
     if {$samphub(debug)} {
-#	puts "samp.webhub.pullCallbacks: $args"
+	puts "samp.webhub.pullCallbacks: $args"
     }
 
     set secret [lindex $args 0]
@@ -63,6 +63,7 @@ proc samp.webhub.pullCallbacks {args} {
 
 proc samp.webhub.ping {} {
     global samphub
+
     if {$samphub(debug)} {
 	puts "samp.webhub.ping"
     }

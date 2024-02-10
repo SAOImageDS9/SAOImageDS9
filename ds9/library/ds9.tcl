@@ -143,7 +143,7 @@ proc DS9Def {} {
     set pds9(samp,hub) 1
 
     # start a web hub also
-    set pds9(samp,webhub) 0
+    set pds9(samp,webhub) 1
 
     # connect if samp hub is available
     set pds9(samp) 1

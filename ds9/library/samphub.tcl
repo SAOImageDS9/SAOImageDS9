@@ -107,7 +107,8 @@ proc SAMPHubStartConnect {} {
 	if {[catch {set samphub(web,sock) [xmlrpcServe 21012]}]} {
 	    Error "SAMPHub: [msgcat::mc {unable to open web hub}]"
 	} else {
-	    set samphub(web,port) [lindex [fconfigure $samphub(web,sock) -sockname] 2]
+	    set samphub(web,port) \
+		[lindex [fconfigure $samphub(web,sock) -sockname] 2]
 	}
     }
 
@@ -226,18 +227,11 @@ proc SAMPHubValidSecret {secret} {
     
     if {![info exists samphub($secret,id)]} {
 	if {$samphub(debug)} {
-	    puts "SAMPHub: bad private-key $secret\n"
+	    puts "SAMPHub: bad private-key $secret"
 	}
 	return 0
     }
     return 1
-}
-
-proc SAMPHubGenerateCB {mtype params} {
-    foreach param $params {
-	#	append rr [xmlrpc::marshall $param]
-    }
-    return [list $mtype $rr]
 }
 
 proc SAMPHubFindSecret {id} {
@@ -340,7 +334,8 @@ proc SAMPHubDisconnect {secret} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+		lappend samphub($cc,web,msgs) \
+		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
 	    set rr {}
@@ -376,12 +371,8 @@ proc SAMPHubRemove {secret} {
     unset samphub($secret,metadata)
 }
 
-proc SAMPHubRegister {args web} {
+proc SAMPHubRegister {} {
     global samphub
-
-    if {$samphub(secret) != $args} {
-	return -code error
-    }
 
     incr samphub(client,seq)
     set secret [SAMPHubGenerateKey]
@@ -393,7 +384,7 @@ proc SAMPHubRegister {args web} {
     set samphub($secret,url) {}
     set samphub($secret,subscriptions) {}
     set samphub($secret,metadata) {}
-    set samphub($secret,web) $web
+    set samphub($secret,web) false
     set samphub($secret,web,msgs) {}
 
     SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
@@ -432,7 +423,8 @@ proc SAMPHubRegister {args web} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+		lappend samphub($cc,web,msgs) \
+		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
 	    set rr {}
@@ -442,12 +434,7 @@ proc SAMPHubRegister {args web} {
 	}
     }
 
-    set map3(samp.hub-id) {string hub}
-    set map3(samp.self-id) "string $id"
-    set map3(samp.private-key) "string $secret"
-    set m3 [xmlrpcList2Member [array get map3]]
-
-    return [list params [list [list param [list value [list struct $m3]]]]]
+    return [list $id $secret]
 }
 
 proc SAMPHubSend {method url params resultVar {flag {}}} {
@@ -496,7 +483,8 @@ proc SAMPHubNotify {secret cc mtype param} {
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	    lappend samphub($cc,web,msgs) \
+		[list samp.client.receiveNotification $params]
 	}
     } else {
 	set rr {}
@@ -517,7 +505,8 @@ proc SAMPHubCall {secret cc msgid mtype param} {
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+	    lappend samphub($cc,web,msgs) \
+		[list samp.client.receiveCall $params]
 	}
     } else {
 	set rr {}
@@ -538,7 +527,8 @@ proc SAMPHubReply {cc id msgtag param} {
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) [SAMPHubGenerateCB samp.client.receiveResponse $params]
+	    lappend samphub($cc,web,msgs) \
+		[list samp.client.receiveResponse $params]
 	}
     } else {
 	set rr {}
@@ -553,7 +543,7 @@ proc samp.hub.setXmlrpcCallback {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.setXmlrpcCallback: $rpc\n"
+	puts "samp.hub.setXmlrpcCallback: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -593,14 +583,27 @@ proc samp.hub.register {rpc} {
 
     xmlrpcParams2List $rpc args
 
-    return [SAMPHubRegister $args 0]
+    if {$samphub(secret) != $args} {
+	return -code error
+    }
+
+    set rr [SAMPHubRegister]
+    set id [lindex $rr 0]
+    set secret [lindex $rr 1]
+
+    set map1(samp.hub-id) {string hub}
+    set map1(samp.self-id) "string $id"
+    set map1(samp.private-key) "string $secret"
+    set m1 [xmlrpcList2Member [array get map1]]
+
+    return [list params [list [list param [list value [list struct $m1]]]]]
 }
 
 proc samp.hub.unregister {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.unregister: $rpc\n"
+	puts "samp.hub.unregister: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -654,12 +657,13 @@ proc samp.hub.unregister {rpc} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+		lappend samphub($cc,web,msgs) \
+		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
 	set rr {}
 	    SAMPHubSend {samp.client.receiveNotification} \
-		$samphub($cc,url) $params rr
+	    $samphub($cc,url) $params rr
 	    SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
 	}
     }
@@ -674,7 +678,7 @@ proc samp.hub.declareMetadata {rpc} {
     global samphub
     
     if {$samphub(debug)} {
-	puts "samp.hub.declareMetadata: $rpc\n"
+	puts "samp.hub.declareMetadata: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -736,7 +740,8 @@ proc samp.hub.declareMetadata {rpc} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+		lappend samphub($cc,web,msgs) \
+		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
 	    SAMPHubSend {samp.client.receiveNotification} \
@@ -752,7 +757,7 @@ proc samp.hub.getMetadata {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getMetadata: $rpc\n"
+	puts "samp.hub.getMetadata: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -785,7 +790,7 @@ proc samp.hub.declareSubscriptions {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.declareSubscriptions: $rpc\n"
+	puts "samp.hub.declareSubscriptions: $rpc"
     }
 
     set map [lindex [lindex [lindex [lindex $rpc 1] 1] 1] 1]
@@ -854,7 +859,8 @@ proc samp.hub.declareSubscriptions {rpc} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) [SAMPHubGenerateCB $mtype $params]
+		lappend samphub($cc,web,msgs) \
+		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
 	    set rr {}
@@ -871,7 +877,7 @@ proc samp.hub.getSubscriptions {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getSubscriptions: $rpc\n"
+	puts "samp.hub.getSubscriptions: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -904,7 +910,7 @@ proc samp.hub.getRegisteredClients {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getRegisteredClients: $rpc\n"
+	puts "samp.hub.getRegisteredClients: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -934,7 +940,7 @@ proc samp.hub.getSubscribedClients {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.getSubscribedClients: $rpc\n"
+	puts "samp.hub.getSubscribedClients: $rpc"
     }
 
     xmlrpcParams2List $rpc args
@@ -966,7 +972,7 @@ proc samp.hub.notify {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.notify: $rpc\n"
+	puts "samp.hub.notify: $rpc"
     }
 
     # params
@@ -1015,7 +1021,7 @@ proc samp.hub.notifyAll {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.notifyAll: $rpc\n"
+	puts "samp.hub.notifyAll: $rpc"
     }
 
     # params
@@ -1069,7 +1075,7 @@ proc samp.hub.call {rpc} {
     global samphub
     
     if {$samphub(debug)} {
-	puts "samp.hub.call: $rpc\n"
+	puts "samp.hub.call: $rpc"
     }
 
     # params
@@ -1121,7 +1127,7 @@ proc samp.hub.callAll {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.hub.callAll: $rpc\n"
+	puts "samp.hub.callAll: $rpc"
     }
 
     # params
@@ -1180,7 +1186,7 @@ proc samp.hub.callAndWait {rpc} {
     global samphub
     
     if {$samphub(debug)} {
-	puts "samp.hub.callAndWait: $rpc\n"
+	puts "samp.hub.callAndWait: $rpc"
     }
 
     # params
@@ -1243,7 +1249,7 @@ proc samp.hub.callAndWait {rpc} {
     # special case where dest is no longer registered
     if {$samphub(cw,$cnt,result) == -1} {
 	SAMPHubTimeout $cnt
-	return "ERROR"
+	return -code error
     }
 
     if {$timeout<=0} {
@@ -1286,7 +1292,7 @@ proc samp.hub.reply {rpc} {
     global samphub
     
     if {$samphub(debug)} {
-	puts "samp.hub.reply: $rpc\n"
+	puts "samp.hub.reply: $rpc"
     }
 
     # params

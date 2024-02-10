@@ -9,6 +9,7 @@ package provide DS9 1.0
 global xmlrpc
 set xmlrpc(cnt) 0
 set xmlrpc(parser) true
+set xmlrpc(debug) true
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
@@ -54,8 +55,10 @@ proc xmlrpcDoRequest {sock} {
     
     set body [xmlrpcGetBody $sock $header $body]
 
-#    puts "***INCOMING Request***"
-#    puts $body
+    if {$xmlrpc(debug)} {
+	puts "***INCOMING Request***"
+	puts $body
+    }
 
     if {$xmlrpc(parser)} {
 	# debug- set body "debug on\n$body"
@@ -96,11 +99,15 @@ proc xmlrpcDoRequest {sock} {
 }
 
 proc xmlrpcResponse {rpc} {
+    global xmlrpc
+
     # build the body
     set body [xmlrpcParseRPC $rpc]
 
-#    puts "***OUTGOING Reponse***"
-#    puts $body
+    if {$xmlrpc(debug)} {
+	puts "***OUTGOING Reponse***"
+	puts $body
+    }
 
     # build the header
     set	header "HTTP/1.1 200 OK\n"
@@ -244,12 +251,16 @@ proc xmlrpcCall {url method methodName params} {
 }
 
 proc xmlrpcBuildRequest {method mname params} {
+    global xmlrpc
+    
     set rpc [list methodCall [list [list methodName $mname] $params]]
     # build the body
     set body [xmlrpcParseRPC $rpc]
 
-#    puts "***OUTGOING Request***"
-#    puts $body
+    if {$xmlrpc(debug)} {
+	puts "***OUTGOING Request***"
+	puts $body
+    }
 
     # build the header
     set	header "POST /$method HTTP/1.0\n"
@@ -320,9 +331,11 @@ proc xmlrpcGetResponse {sock cnt} {
 proc xmlrpcParseResponse {body} {
     global xmlrpc
 
-#    puts "***INCOMING Response***"
-#    puts $body
-
+    if {$xmlrpc(debug)} {
+	puts "***INCOMING Response***"
+	puts $body
+    }
+    
     if {$xmlrpc(parser)} {
 	# debug- set body "debug on\n$body"
 	set in [string map {< " <" > "> "} $body]

@@ -16,73 +16,108 @@ proc SAMPWebHubDialog {name} {
     }
 }
 
-proc samp.webhub.allowReverseCallbacks {args} {
+proc SAMPWebHubCallbacks {secret} {
     global samphub
+    
+    set ll {}
+    if {0} {
+    if {$samphub(web,allowReverseCallbacks)} {
+	foreach msg $samphub($secret,web,msgs) {
+	    foreach {mtype params} $msg {
+		set map1(samp.mtype) "string $mtype"
+		set map1(samp.params) $params
+		set m1 [xmlrpcList2Member [array get map1]]
 
-    if {$samphub(debug)} {
-	puts "samp.webhub.allowReverseCallbacks: $args"
+		set vv [list value [list struct $m1]]
+#		puts "***vv"
+#		puts $vv
+		append ll $vv
+	    }
+	}
+	set samphub($secret,web,msgs) {}
+    }
     }
 
-    set samphub(web,allowReverseCallbacks) [lindex $args 1]
-    return {string OK}
+    if {0} {
+	set param1 [list param [list value [list string $cc]]]
+	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+	set param3 [list param [list value [list struct $m1]]]
+	set params [list params [list $param1 $param2 $param3]]
+    }
+    
+    set rr [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
+#    puts "***rr"
+#    puts $rr
+    return $rr
 }
 
-proc samp.webhub.pullCallbacks {args} {
+proc samp.webhub.allowReverseCallbacks {rpc} {
     global samphub
-    global samphubmap
-    global samphubmap2
 
     if {$samphub(debug)} {
-	puts "samp.webhub.pullCallbacks: $args"
+	puts "samp.webhub.allowReverseCallbacks: $rpc"
     }
+
+    xmlrpcParams2List $rpc args
+
+    set secret [lindex $args 0]
+    set allow [lindex $args 1]
+
+    if {![SAMPHubValidSecret $secret]} {
+	return -code error
+    }
+
+    set samphub(web,allowReverseCallbacks) $allow
+
+    return [SAMPHubReturn OK]
+}
+
+proc samp.webhub.pullCallbacks {rpc} {
+    global samphub
+
+    if {$samphub(debug)} {
+	puts "samp.webhub.pullCallbacks: $rpc"
+    }
+
+    xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
     set timeout [lindex $args 1]
+    if {$timeout<0} {
+	set timeout 0
+    }
 
     if {![SAMPHubValidSecret $secret]} {
-	return {string ERROR}
+	return -code error
     }
 
-    set ll {}
-    if {$samphub(web,allowReverseCallbacks)} {
-	if {[llength $samphub($secret,web,msgs)]!= 0} {
-	    foreach msg $samphub($secret,web,msgs) {
-		foreach {mtype params} $msg {
-		    catch {unset samphubmap}
-		    set samphubmap(samp.methodName) "string $mtype"
-		    set samphubmap(samp.params) "array [list $params]"
-		    append ll [list "struct samphubmap"]
-		}
-	    }
-	    set samphub($secret,web,msgs) {}
-	}
-    }
-
-    return "array [list $ll]"
+    return [SAMPWebHubCallbacks $secret]
 }
 
-proc samp.webhub.ping {} {
+proc samp.webhub.ping {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.webhub.ping"
+	puts "samp.webhub.ping $rpc"
     }
     
     SAMPHubDialogRecvdMsg "samp.webhub.ping"
 
-    return {string OK}
+    return [SAMPHubReturn OK]
 }
 
-proc samp.webhub.register {args} {
+proc samp.webhub.register {rpc} {
     global samphub
 
     if {$samphub(debug)} {
-	puts "samp.webhub.register: $args"
+	puts "samp.webhub.register: $rpc"
     }
 
-    set name {}
-    
+    xmlrpcParams2List $rpc args
+
     set map [lindex $args 0]
+
+    set name {}
     foreach mm $map {
 	foreach {key value} $mm {
 	    switch $key {
@@ -92,13 +127,22 @@ proc samp.webhub.register {args} {
     }
 
     if {![SAMPWebHubDialog $name]} {
-	return {string ERROR}
+	return -code error
     }
 
-    global map-reg
-    SAMPHubRegister 1
-    set map-reg(samp.url-translator) {string {}}
-    return "struct map-reg"
+    set rr [SAMPHubRegister]
+    set id [lindex $rr 0]
+    set secret [lindex $rr 1]
+
+    set samphub($secret,web) true
+
+    set map1(samp.hub-id) {string hub}
+    set map1(samp.self-id) "string $id"
+    set map1(samp.private-key) "string $secret"
+    set map1(samp.url-translator) "string {}"
+    set m1 [xmlrpcList2Member [array get map1]]
+
+    return [list params [list [list param [list value [list struct $m1]]]]]
 }
 
 proc samp.webhub.unregister {args} {

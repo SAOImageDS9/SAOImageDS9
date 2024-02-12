@@ -9,7 +9,8 @@ package provide DS9 1.0
 global xmlrpc
 set xmlrpc(cnt) 0
 set xmlrpc(parser) true
-set xmlrpc(debug) true
+set xmlrpc(debug) false
+set xmlrpc(sock) {}
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
@@ -87,11 +88,17 @@ proc xmlrpcDoRequest {sock} {
     # params
     set params $rpc
     
+    set xmlrpc(sock) $sock
     if {[catch {set result [eval $mname [list $params]]}]} {
+	global errorCode
+	if {$errorCode == "abort"} {
+	    return
+	}
 	set res [xmlrpcBuildFault 1 "$mname failed"]
     } else {
 	set res [xmlrpcBuildResponse $result]
     }
+    set xmlrpc(sock) {}
     
     puts -nonewline $sock $res
     flush $sock

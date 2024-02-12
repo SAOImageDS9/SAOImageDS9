@@ -16,13 +16,15 @@ proc SAMPWebHubDialog {name} {
     }
 }
 
-proc SAMPWebHubCallbacks {secret} {
+proc SAMPWebHubCallback {} {
     global samphub
-    
     set ll {}
+    set rr [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
+    return $rr
+
     if {0} {
     if {$samphub(web,allowReverseCallbacks)} {
-	foreach msg $samphub($secret,web,msgs) {
+	foreach msg $samphub(web,msgs) {
 	    foreach {mtype params} $msg {
 		set map1(samp.mtype) "string $mtype"
 		set map1(samp.params) $params
@@ -34,21 +36,37 @@ proc SAMPWebHubCallbacks {secret} {
 		append ll $vv
 	    }
 	}
-	set samphub($secret,web,msgs) {}
-    }
+	set samphub(web,msgs) {}
     }
 
-    if {0} {
-	set param1 [list param [list value [list string $cc]]]
-	set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
-	set param3 [list param [list value [list struct $m1]]]
-	set params [list params [list $param1 $param2 $param3]]
+    set param1 [list param [list value [list string $cc]]]
+    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
+    set param3 [list param [list value [list struct $m1]]]
+    set params [list params [list $param1 $param2 $param3]]
     }
+}
+
+proc SAMPWebHubCallbackTimer {sock} {
+    global samphub
     
-    set rr [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
-#    puts "***rr"
-#    puts $rr
-    return $rr
+    if {$samphub(debug)} {
+	puts "SAMPWebHubCallbackTimer"
+    }
+
+    # decrease by one sec
+    incr samphub(web,timeout) -1
+
+    if {[llength $samphub(web,msgs)] > 0 || $samphub(web,timeout)<=0} {
+	set rr [SAMPWebHubCallback]
+	set res [xmlrpcBuildResponse $rr]
+
+	puts -nonewline $sock $res
+	flush $sock
+	catch {close $sock}
+    } else {
+	# check
+	after $samphub(timer) [list SAMPWebHubCallbackTimer $sock]
+    }
 }
 
 proc samp.webhub.allowReverseCallbacks {rpc} {
@@ -74,6 +92,9 @@ proc samp.webhub.allowReverseCallbacks {rpc} {
 
 proc samp.webhub.pullCallbacks {rpc} {
     global samphub
+    global xmlrpc
+
+    set sock $xmlrpc(sock)
 
     if {$samphub(debug)} {
 	puts "samp.webhub.pullCallbacks: $rpc"
@@ -91,7 +112,21 @@ proc samp.webhub.pullCallbacks {rpc} {
 	return -code error
     }
 
-    return [SAMPWebHubCallbacks $secret]
+    # should not happen
+    if {$samphub(web,id)!=0} {
+	after cancel $samphub(web,id)
+	set samphub(web,id) 0
+    }
+
+    set samphub(web,timeout) $timeout
+
+    if {$samphub(web,timeout)==0} {
+	return [SAMPWebHubCallback]
+    } else {
+	set samphub(web,id) \
+	    [after $samphub(timer) [list SAMPWebHubCallbackTimer $sock]]
+	return -code error -errorcode abort
+    }
 }
 
 proc samp.webhub.ping {rpc} {

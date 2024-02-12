@@ -58,6 +58,8 @@ proc SAMPHubStart {verbose} {
     set samphub(debug) $debug(tcl,samphub)
     set samphub(fn) [file join [GetEnvHome] {.samp}]
     set samphub(cw,cnt) 0
+    # time between webhub checks for callbacks after receive pullCallbacks mtype
+    set samphub(timer) 5000
 
     set samphub(client,seq) 0
     set samphub(client,secret) {}
@@ -69,6 +71,9 @@ proc SAMPHubStart {verbose} {
     set samphub(web,sock) {}
     set samphub(web,port) 0
     set samphub(web,allowReverseCallbacks) 0
+    set samphub(web,msgs) {}
+    set samphub(web,id) 0
+    set samphub(web,timeout) 0
 
     # Init
     if {![SAMPHubStartConnect]} {
@@ -255,6 +260,7 @@ proc SAMPHubFindSubscription {cc mtype} {
 	    }
 	}
     }
+
     return 0
 }
 
@@ -334,7 +340,7 @@ proc SAMPHubDisconnect {secret} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) \
+		lappend samphub(web,msgs) \
 		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
@@ -365,10 +371,24 @@ proc SAMPHubRemove {secret} {
     set id [lsearch $samphub(client,secret) $secret]
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
+    # web client?
+    if {$samphub($secret,web)} {
+	if {$samphub(web,id)} {
+	    after cancel $samphub(web,id)
+	    set samphub(web,id) 0
+	}
+	set samphub(web,sock) {}
+	set samphub(web,port) 0
+	set samphub(web,allowReverseCallbacks) 0
+	set samphub(web,msgs) {}
+	set samphub(web,timeout) 0
+    }
+
     unset samphub($secret,id)
     unset samphub($secret,url)
     unset samphub($secret,subscriptions)
     unset samphub($secret,metadata)
+    unset samphub($secret,web)
 }
 
 proc SAMPHubRegister {} {
@@ -384,8 +404,8 @@ proc SAMPHubRegister {} {
     set samphub($secret,url) {}
     set samphub($secret,subscriptions) {}
     set samphub($secret,metadata) {}
+
     set samphub($secret,web) false
-    set samphub($secret,web,msgs) {}
 
     SAMPHubDialogRecvdMsg "samp.hub.register\t$samphub($secret,id)"
     SAMPHubDialogListAdd $secret
@@ -423,7 +443,7 @@ proc SAMPHubRegister {} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) \
+		lappend samphub(web,msgs) \
 		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
@@ -483,7 +503,7 @@ proc SAMPHubNotify {secret cc mtype param} {
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) \
+	    lappend samphub(web,msgs) \
 		[list samp.client.receiveNotification $params]
 	}
     } else {
@@ -505,7 +525,7 @@ proc SAMPHubCall {secret cc msgid mtype param} {
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) \
+	    lappend samphub(web,msgs) \
 		[list samp.client.receiveCall $params]
 	}
     } else {
@@ -527,7 +547,7 @@ proc SAMPHubReply {cc id msgtag param} {
 
     if {$samphub($cc,web)} {
 	if {$samphub(web,allowReverseCallbacks)} {
-	    lappend samphub($cc,web,msgs) \
+	    lappend samphub(web,msgs) \
 		[list samp.client.receiveResponse $params]
 	}
     } else {
@@ -657,7 +677,7 @@ proc samp.hub.unregister {rpc} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) \
+		lappend samphub(web,msgs) \
 		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
@@ -740,7 +760,7 @@ proc samp.hub.declareMetadata {rpc} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) \
+		lappend samphub(web,msgs) \
 		    [list samp.client.receiveNotification $params]
 	    }
 	} else {
@@ -859,7 +879,7 @@ proc samp.hub.declareSubscriptions {rpc} {
 
 	if {$samphub($cc,web)} {
 	    if {$samphub(web,allowReverseCallbacks)} {
-		lappend samphub($cc,web,msgs) \
+		lappend samphub(web,msgs) \
 		    [list samp.client.receiveNotification $params]
 	    }
 	} else {

@@ -59,7 +59,7 @@ proc SAMPHubStart {verbose} {
     set samphub(fn) [file join [GetEnvHome] {.samp}]
     set samphub(cw,cnt) 0
     # time between webhub checks for callbacks after receive pullCallbacks mtype
-    set samphub(timer) 5000
+    set samphub(timer) 1000
 
     set samphub(client,seq) 0
     set samphub(client,secret) {}

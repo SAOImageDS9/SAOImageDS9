@@ -20,6 +20,7 @@ proc SAMPWebHubCallback {} {
     global samphub
     set ll {}
     set rr [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
+    set samphub(web,msgs) {}
     return $rr
 
     if {0} {

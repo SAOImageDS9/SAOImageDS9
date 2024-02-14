@@ -60,8 +60,11 @@ proc SAMPConnectSubscriptions {} {
     set map(coord.pointAt.sky) {struct {}}
     set map(client.env.get) {struct {}}
 
-    set map(ds9.get) {struct {}}
-    set map(ds9.set) {struct {}}
+    set map1(x-samp.mostly-harmless) "1"
+    set m1 [xmlrpcList2Member [array get map1]]
+
+    set map(ds9.get) [list struct $m1]
+    set map(ds9.set) [list struct $m1]
 
     #    set map(samp.app.status) {struct {}}
     #    set map(samp.msg.progress) {struct {}}

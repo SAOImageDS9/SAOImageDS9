@@ -14,6 +14,7 @@ proc SAMPHubDef {} {
 proc SAMPHubStart {verbose} {
     global samp
     global samphub
+    global xmlrpc
     global debug
 
     # are we connected?
@@ -56,6 +57,7 @@ proc SAMPHubStart {verbose} {
     # basics
     set samphub(verbose) $verbose
     set samphub(debug) $debug(tcl,samphub)
+    set xmlrpc(debug) $debug(tcl,xmlrpc)
     set samphub(fn) [file join [GetEnvHome] {.samp}]
     set samphub(cw,cnt) 0
     # time between webhub checks for callbacks after receive pullCallbacks mtype

@@ -18,33 +18,32 @@ proc SAMPWebHubDialog {name} {
 
 proc SAMPWebHubCallback {} {
     global samphub
+
     set ll {}
-    set rr [list params [list [list param [list value [xmlrpcList2Array $ll]]]]]
-    set samphub(web,msgs) {}
-    return $rr
+    foreach msg $samphub(web,msgs) {
+	foreach {mtype params} $msg {
+	    set mm [string replace $mtype 5 10 webclient]
 
-    if {0} {
-    if {$samphub(web,allowReverseCallbacks)} {
-	foreach msg $samphub(web,msgs) {
-	    foreach {mtype params} $msg {
-		set map1(samp.mtype) "string $mtype"
-		set map1(samp.params) $params
-		set m1 [xmlrpcList2Member [array get map1]]
+	    set pps [lindex $params 1]
+	    set ss [lindex [lindex [lindex [lindex $pps 1] 1] 1] 1]
+	    set pp [lindex [lindex [lindex $pps 2] 1] 1]
 
-		set vv [list value [list struct $m1]]
-#		puts "***vv"
-#		puts $vv
-		append ll $vv
-	    }
+	    set vv {}
+	    lappend vv [list value $ss]
+	    lappend vv [list value "tag"]
+	    lappend vv [list value $pp]
+
+	    set map1(samp.methodName) "string $mm"
+	    set map1(samp.params) [list array [list data $vv]]
+	    set m1 [xmlrpcList2Member [array get map1]]
+
+	    lappend ll [list value [list struct $m1]]
 	}
-	set samphub(web,msgs) {}
     }
+    set samphub(web,msgs) {}
 
-    set param1 [list param [list value [list string $cc]]]
-    set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
-    set param3 [list param [list value [list struct $m1]]]
-    set params [list params [list $param1 $param2 $param3]]
-    }
+    set cc [list array [list data $ll]]
+    return [list params [list [list param [list value $cc]]]]
 }
 
 proc SAMPWebHubCallbackTimer {sock} {
@@ -88,6 +87,14 @@ proc samp.webhub.allowReverseCallbacks {rpc} {
 
     set samphub(web,allowReverseCallbacks) $allow
 
+    # reset any current callbacks
+    if {$samphub(web,id)>0} {
+	after cancel $samphub(web,id)
+    }
+    set samphub(web,msgs) {}
+    set samphub(web,id) 0
+    set samphub(web,timeout) 0
+
     return [SAMPHubReturn OK]
 }
 
@@ -114,16 +121,22 @@ proc samp.webhub.pullCallbacks {rpc} {
     }
 
     # should not happen
-    if {$samphub(web,id)!=0} {
-	after cancel $samphub(web,id)
-	set samphub(web,id) 0
+    if {!$samphub(web,allowReverseCallbacks)} {
+	return -code error
     }
 
-    set samphub(web,timeout) $timeout
+    # should not happen
+    if {$samphub(web,id)>0} {
+	after cancel $samphub(web,id)
+    }
+    set samphub(web,msgs) {}
+    set samphub(web,id) 0
+    set samphub(web,timeout) 0
 
-    if {$samphub(web,timeout)==0} {
+    if {$timeout==0} {
 	return [SAMPWebHubCallback]
     } else {
+	set samphub(web,timeout) $timeout
 	set samphub(web,id) \
 	    [after $samphub(timer) [list SAMPWebHubCallbackTimer $sock]]
 	return -code error -errorcode abort

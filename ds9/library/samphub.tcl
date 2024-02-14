@@ -209,6 +209,11 @@ proc SAMPHubStop {} {
 	SAMPHubRemove $cc
     }
 
+    # any web clients?
+    if {$samphub(web,id)>0} {
+	after cancel $samphub(web,id)
+    }
+
     # remove hub
     SAMPHubDialogListRemove $samphub(secret)
 
@@ -373,7 +378,7 @@ proc SAMPHubRemove {secret} {
 
     # web client?
     if {$samphub($secret,web)} {
-	if {$samphub(web,id)} {
+	if {$samphub(web,id)>0} {
 	    after cancel $samphub(web,id)
 	    set samphub(web,id) 0
 	}

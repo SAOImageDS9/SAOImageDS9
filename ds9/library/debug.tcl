@@ -281,6 +281,7 @@ proc ProcessDebugCmd {varname iname} {
 	fp -
 	samp -
 	samphub -
+	xmlrpc -
 	grid -
 	graph -
 	restore -

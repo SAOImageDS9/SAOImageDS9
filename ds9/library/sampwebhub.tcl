@@ -145,18 +145,6 @@ proc samp.webhub.pullCallbacks {rpc} {
     }
 }
 
-proc samp.webhub.ping {rpc} {
-    global samphub
-
-    if {$samphub(debug)} {
-	puts "samp.webhub.ping $rpc"
-    }
-    
-    SAMPHubDialogRecvdMsg "samp.webhub.ping"
-
-    return [SAMPHubReturn OK]
-}
-
 proc samp.webhub.register {rpc} {
     global samphub
 
@@ -194,6 +182,22 @@ proc samp.webhub.register {rpc} {
     set m1 [xmlrpcList2Member [array get map1]]
 
     return [list params [list [list param [list value [list struct $m1]]]]]
+}
+
+proc samp.webhub.pingg {rpc} {
+    global samphub
+
+    if {$samphub(debug)} {
+	puts "samp.webhub.ping $rpc"
+    }
+    
+    SAMPHubDialogRecvdMsg "samp.webhub.ping"
+
+    return [SAMPHubReturn OK]
+}
+
+proc samp.webhub.pingg {args} {
+    samp.hub.ping {*}$args
 }
 
 proc samp.webhub.unregister {args} {

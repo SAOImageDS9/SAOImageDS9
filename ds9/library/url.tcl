@@ -146,8 +146,9 @@ proc LoadURLFitsHTTP {url layer mode multi} {
 			       -binary 1 \
 			       -timeout $ihttp(timeout) \
 			       -headers "[ProxyHTTP]"]}]} {
-	close $var(ch)
+	close $ch
 	Error "[msgcat::mc {Unable to locate URL}] $url"
+	return
     }
 
     # reset errorInfo (may be set in http::geturl)

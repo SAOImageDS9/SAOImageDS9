@@ -22,6 +22,8 @@ proc SAMPWebHubCallback {} {
     set ll {}
     foreach msg $samphub(web,msgs) {
 	foreach {mtype params} $msg {
+	    incr samphub(web,cnt)
+
 	    set mm [string replace $mtype 5 10 webclient]
 
 	    set pps [lindex $params 1]
@@ -30,7 +32,7 @@ proc SAMPWebHubCallback {} {
 
 	    set vv {}
 	    lappend vv [list value $ss]
-	    lappend vv [list value "tag"]
+	    lappend vv [list value "hubtag:$samphub(web,cnt)"]
 	    lappend vv [list value $pp]
 
 	    set map1(samp.methodName) "string $mm"

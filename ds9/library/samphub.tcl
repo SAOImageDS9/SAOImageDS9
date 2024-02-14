@@ -71,6 +71,7 @@ proc SAMPHubStart {verbose} {
     set samphub(web,sock) {}
     set samphub(web,port) 0
     set samphub(web,allowReverseCallbacks) 0
+    set samphub(web,cnt) 0
     set samphub(web,msgs) {}
     set samphub(web,id) 0
     set samphub(web,timeout) 0
@@ -385,6 +386,7 @@ proc SAMPHubRemove {secret} {
 	set samphub(web,sock) {}
 	set samphub(web,port) 0
 	set samphub(web,allowReverseCallbacks) 0
+	set samphub(web,cnt) 0
 	set samphub(web,msgs) {}
 	set samphub(web,timeout) 0
     }

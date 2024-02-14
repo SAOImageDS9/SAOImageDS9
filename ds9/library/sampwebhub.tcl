@@ -184,19 +184,7 @@ proc samp.webhub.register {rpc} {
     return [list params [list [list param [list value [list struct $m1]]]]]
 }
 
-proc samp.webhub.pingg {rpc} {
-    global samphub
-
-    if {$samphub(debug)} {
-	puts "samp.webhub.ping $rpc"
-    }
-    
-    SAMPHubDialogRecvdMsg "samp.webhub.ping"
-
-    return [SAMPHubReturn OK]
-}
-
-proc samp.webhub.pingg {args} {
+proc samp.webhub.ping {args} {
     samp.hub.ping {*}$args
 }
 

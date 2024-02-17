@@ -29,7 +29,8 @@ iexamsend : dest cmd
  | cmd
  ;
 
-cmd : COORDINATE_ coordinate
+cmd : coordinate
+ | COORDINATE_ coordinate
  | DATA_ data
 # backward compatibility
  | VALUE_ data

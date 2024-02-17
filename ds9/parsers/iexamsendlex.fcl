@@ -18,6 +18,7 @@ value		{return $VALUE_}
 #include wcssys.fin
 #include skyframe.fin
 #include skyformat.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

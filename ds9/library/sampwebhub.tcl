@@ -51,6 +51,11 @@ proc SAMPWebHubCallback {} {
 proc SAMPWebHubCallbackTimer {sock} {
     global samphub
     
+    # should not happen
+    if {![info exists samphub]} {
+	return
+    }
+
     if {$samphub(debug)} {
 	puts "SAMPWebHubCallbackTimer"
     }
@@ -92,9 +97,9 @@ proc samp.webhub.allowReverseCallbacks {rpc} {
     # reset any current callbacks
     if {$samphub(web,id)>0} {
 	after cancel $samphub(web,id)
+	set samphub(web,id) 0
     }
     set samphub(web,msgs) {}
-    set samphub(web,id) 0
     set samphub(web,timeout) 0
 
     return [SAMPHubReturn OK]
@@ -130,9 +135,9 @@ proc samp.webhub.pullCallbacks {rpc} {
     # should not happen
     if {$samphub(web,id)>0} {
 	after cancel $samphub(web,id)
+	set samphub(web,id) 0
     }
     set samphub(web,msgs) {}
-    set samphub(web,id) 0
     set samphub(web,timeout) 0
 
     if {$timeout==0} {

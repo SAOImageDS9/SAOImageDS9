@@ -438,17 +438,22 @@ proc IllustrateBackup {ch dir} {
 	    set ll [IllustrateList $id]
 	    switch [IllustrateGetType $id] {
 		image {
-		    # new image filename and save
-		    set ext [file ext [lindex $ll 3]]
+		    set orgfn [lindex $ll 3]
+		    set ext [file ext $orgfn]
 		    set imgfn "image${id}${ext}"
-		    set ph [$ds9(canvas) itemcget $id -image]
-		    $ph write $dir/$imgfn
-		    
-		    # swap out for new filename
+
+		    if {[file exists $orgfn]} {
+			file copy -force $orgfn $dir/$imgfn
+		    } else {
+			set ph [$ds9(canvas) itemcget $id -image]
+			$ph write $dir/$imgfn
+		    }
 		    append rr "[lindex $ll 0] "
 		    append rr "[lindex $ll 1] "
 		    append rr "[lindex $ll 2] "
 		    append rr "$rdir/$imgfn\n"
+		    append rr "[lindex $ll 4] "
+		    append rr "[lindex $ll 5] "
 		}
 		default {
 		    append rr "$ll\n"
@@ -458,7 +463,9 @@ proc IllustrateBackup {ch dir} {
 	puts $ff $rr
 	close $ff
 	
-	puts $ch "IllustrateLoadFn $fn"
+	# clear any previous illustrations
+	puts $ch "IllustrateDeleteAll"
+	puts $ch "IllustrateLoadFn $rdir/ds9.seg"
     }
 }
 

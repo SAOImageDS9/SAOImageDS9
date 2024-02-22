@@ -677,7 +677,7 @@ proc ContourLoadDialog {} {
 
     set fn [OpenFileDialog contourlfbox $icontour(top)]
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn=={} || $current(frame)=={}} {
 	return
     }
 
@@ -1067,49 +1067,74 @@ proc ProcessContourCmd {varname iname} {
 proc ContourCmdLoad {fn} {
     global current
 
-    if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour load $fn
-	FileLast contourlfbox $fn
-	UpdateContourDialog
+    if {$current(frame)=={} || $fn=={}} {
+	return
     }
+
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
+	return
+    }
+    
+    $current(frame) contour load $fn
+    FileLast contourlfbox $fn
+    UpdateContourDialog
 }
 
 proc ContourCmdLoadOrg {fn sys sky color width dash} {
     global current
 
-    if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour load $color $width $dash $fn $sys $sky
-	FileLast contourlfbox $fn
-	UpdateContourDialog
+    if {$current(frame)=={} || $fn=={}} {
+	return
     }
+
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
+	return
+    }
+    
+    $current(frame) contour load $color $width $dash $fn $sys $sky
+    FileLast contourlfbox $fn
+    UpdateContourDialog
 }
 
 proc ContourCmdSave {fn sys sky} {
     global current
 
-    if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour save $fn $sys $sky
-	FileLast contoursfbox $fn
+    if {$current(frame)=={} || $fn=={}} {
+	return
     }
+
+    $current(frame) contour save $fn $sys $sky
+    FileLast contoursfbox $fn
 }
 
 proc ContourCmdLoadLevels {fn} {
     global current
 
-    ContourDialog
-    if {$current(frame) != {}} {
-	ContourLoadLevelsNow $fn
-	UpdateContour
+    if {$current(frame)=={} || $fn=={}} {
+	return
     }
+
+    if {![file exists $fn]} {
+	Error "[msgcat::mc {File not found}]: $fn"
+	return
+    }
+
+    ContourDialog
+    ContourLoadLevelsNow $fn
+    UpdateContour
 }
 
 proc ContourCmdSaveLevels {fn} {
     global current
 
-    ContourDialog
-    if {$current(frame) != {}} {
-	ContourSaveLevelsNow $fn
+    if {$current(frame)=={} || $fn=={}} {
+	return
     }
+
+    ContourDialog
+    ContourSaveLevelsNow $fn
 }
 
 proc ContourCmdPaste {sys sky color width dash} {

@@ -598,7 +598,7 @@ proc MatchFrame {which sys} {
 
     # NO-make sure matrices have been updated
     # really messes up mousewheel events, just assume all is good
-    #   RealizeDS9
+    # RealizeDS9
 
     switch -- $sys {
 	image -

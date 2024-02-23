@@ -1,3 +1,4 @@
+# ::msgcat::mcset da {Unable to open FITS file} 
 ::msgcat::mcset da {2d} 
 ::msgcat::mcset da {3D} 
 ::msgcat::mcset da {3d} 
@@ -956,6 +957,7 @@
 ::msgcat::mcset da {Unable to find plot window} {kan ikke finde plotte vinduet}
 ::msgcat::mcset da {Unable to find web window} 
 ::msgcat::mcset da {Unable to generate plot} 
+::msgcat::mcset da {Unable to load FITS file} 
 ::msgcat::mcset da {Unable to load RGB image into a non-rgb frame} {Kan ikke hente et RGB billede ind i en ikke-RGB ramme}
 ::msgcat::mcset da {Unable to load compressed region file} 
 ::msgcat::mcset da {Unable to load plot data} 
@@ -1036,13 +1038,13 @@
 ::msgcat::mcset da {already connected} 
 ::msgcat::mcset da {and} 
 ::msgcat::mcset da {b} 
+::msgcat::mcset da {found dead hub file, deleting} 
 ::msgcat::mcset da {found existing hub} 
 ::msgcat::mcset da {full base} 
 ::msgcat::mcset da {full} 
 ::msgcat::mcset da {g} 
 ::msgcat::mcset da {h5utils} 
 ::msgcat::mcset da {hundredths second} 
-::msgcat::mcset da {internal error} 
 ::msgcat::mcset da {not connected} 
 ::msgcat::mcset da {not} 
 ::msgcat::mcset da {only} 

@@ -1,3 +1,4 @@
+# ::msgcat::mcset ja {Unable to open FITS file} 
 ::msgcat::mcset ja {2d} 
 ::msgcat::mcset ja {3D} 
 ::msgcat::mcset ja {3d} 
@@ -956,6 +957,7 @@
 ::msgcat::mcset ja {Unable to find plot window} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8\xa5\xa6\xa5\xa3\xa5\xf3\xa5\xc9\xa5\xa6\xa4\xac\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to find web window} 
 ::msgcat::mcset ja {Unable to generate plot} 
+::msgcat::mcset ja {Unable to load FITS file} 
 ::msgcat::mcset ja {Unable to load RGB image into a non-rgb frame} [encoding convertfrom euc-jp "\x52\x42\x47\xa5\xa4\xa5\xe1\xa1\xbc\xa5\xb8\xa4\xf2\xc8\xf3\x52\x47\x42\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to load compressed region file} 
 ::msgcat::mcset ja {Unable to load plot data} 
@@ -1036,13 +1038,13 @@
 ::msgcat::mcset ja {already connected} 
 ::msgcat::mcset ja {and} 
 ::msgcat::mcset ja {b} 
+::msgcat::mcset ja {found dead hub file, deleting} 
 ::msgcat::mcset ja {found existing hub} 
 ::msgcat::mcset ja {full base} 
 ::msgcat::mcset ja {full} 
 ::msgcat::mcset ja {g} 
 ::msgcat::mcset ja {h5utils} 
 ::msgcat::mcset ja {hundredths second} 
-::msgcat::mcset ja {internal error} 
 ::msgcat::mcset ja {not connected} 
 ::msgcat::mcset ja {not} 
 ::msgcat::mcset ja {only} 

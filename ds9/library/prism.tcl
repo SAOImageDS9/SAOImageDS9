@@ -494,6 +494,11 @@ proc PrismLoad {varname fn} {
 	return
     }
 
+    if {![isFITSFile $fn]} {
+	Error "[msgcat::mc {Unable to load FITS file}] $fn"
+	return
+    }
+
     set var(fn) $fn
     set var(type) fits
     switch $ds9(wm) {

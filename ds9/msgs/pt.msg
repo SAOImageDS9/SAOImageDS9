@@ -1,3 +1,4 @@
+# ::msgcat::mcset pt {Unable to open FITS file} 
 ::msgcat::mcset pt {2d} 
 ::msgcat::mcset pt {3D} 
 ::msgcat::mcset pt {3d} 
@@ -956,6 +957,7 @@
 ::msgcat::mcset pt {Unable to find plot window} [encoding convertfrom iso8859-1 {Incapaz de encontrar janela de gráfico}]
 ::msgcat::mcset pt {Unable to find web window} 
 ::msgcat::mcset pt {Unable to generate plot} 
+::msgcat::mcset pt {Unable to load FITS file} 
 ::msgcat::mcset pt {Unable to load RGB image into a non-rgb frame} [encoding convertfrom iso8859-1 {Incapaz de carregar imagem RGB em um frame não RGB}]
 ::msgcat::mcset pt {Unable to load compressed region file} 
 ::msgcat::mcset pt {Unable to load plot data} 
@@ -1036,13 +1038,13 @@
 ::msgcat::mcset pt {already connected} 
 ::msgcat::mcset pt {and} 
 ::msgcat::mcset pt {b} 
+::msgcat::mcset pt {found dead hub file, deleting} 
 ::msgcat::mcset pt {found existing hub} 
 ::msgcat::mcset pt {full base} 
 ::msgcat::mcset pt {full} 
 ::msgcat::mcset pt {g} 
 ::msgcat::mcset pt {h5utils} 
 ::msgcat::mcset pt {hundredths second} 
-::msgcat::mcset pt {internal error} 
 ::msgcat::mcset pt {not connected} 
 ::msgcat::mcset pt {not} 
 ::msgcat::mcset pt {only} 

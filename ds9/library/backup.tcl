@@ -295,9 +295,12 @@ proc BackupFrame {ch which dir} {
 	    puts $ch "3DDialog"
 	}
 	rgb {
+	    set rr [$which get rgb channel]
 	    foreach cc {{} red green blue} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
+	    $which rgb channel $rr
+
 	    puts $ch "RGBDialog"
 	}
     }
@@ -370,6 +373,7 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
     }
     
     if {$channel != {}} {
+	$which rgb channel $channel
 	puts $ch "$which rgb channel $channel"
     }
 

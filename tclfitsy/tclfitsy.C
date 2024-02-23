@@ -121,7 +121,11 @@ int TclFITSY::dir(int argc, const char* argv[])
   int cnt =0;
   while (fits->isValid()) {
     FitsHead* head = fits->head();
+    if (!head)
+      return TCL_ERROR;
     FitsHDU* hdu = fits->head()->hdu();
+    if (!hdu)
+      return TCL_ERROR;
     
     ostringstream str;
     // Ext

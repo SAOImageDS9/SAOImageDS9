@@ -2884,7 +2884,8 @@ wcsAlign : INT {fr->wcsAlignCmd($1);}
 	}
 	| TO_ INT wcsSystem skyFrame
 	{fr->wcsAlign2Cmd($2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
-	;
+	| POINTER_ CLEAR_ {fr->wcsAlignPointerClearCmd();}
+        ;
 
 win32	: PRINT_ {
 #ifdef __WIN32

@@ -648,6 +648,7 @@ proc MatchFrame {which sys} {
 			}
 		    }
 		}
+		$which wcs align pointer clear
 	    }
 	}
     }

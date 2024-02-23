@@ -3036,7 +3036,9 @@ void Base::wcsAlign2Cmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 
   alignWCS((FitsImage*)fitsimageptr_, sys);
   update(MATRIX);
+}
 
+void Base::wcsAlignPointerClearCmd() {
   fitsimageptr_ =NULL;
   fitsimageparentptr_ =NULL;
 }

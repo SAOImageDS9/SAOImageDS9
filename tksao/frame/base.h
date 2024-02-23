@@ -1609,6 +1609,7 @@ public:
   // used by backup
   void wcsAlignCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void wcsAlign2Cmd(int, Coord::CoordSystem, Coord::SkyFrame);
+  void wcsAlignPointerClearCmd();
   void zoomCmd(const Vector&);
   void zoomToCmd(const Vector&);
   virtual void zoomAboutCmd(const Vector&, const Vector&) =0;

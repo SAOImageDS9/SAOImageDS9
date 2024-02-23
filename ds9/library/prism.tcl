@@ -494,8 +494,16 @@ proc PrismLoad {varname fn} {
 	return
     }
 
-    if {![isFITSFile $fn]} {
-	Error "[msgcat::mc {Unable to load FITS file}] $fn"
+    if {[catch {open $fn} ch]} {
+	Error "[msgcat::mc {Unable to open file}]: $fn"
+	return
+    }
+
+    set ll [read $ch 9]
+    close $ch
+
+    if {$ll != "SIMPLE  ="} {
+	Error "[msgcat::mc {Unable to load FITS file}]: $fn"
 	return
     }
 

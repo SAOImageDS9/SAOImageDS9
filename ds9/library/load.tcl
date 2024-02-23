@@ -73,22 +73,6 @@ proc MultiLoadRGB {} {
     }
 }
 
-# simple check
-proc isFITSFile {fn} {
-    if {[catch {open $fn} ch]} {
-	return 0
-    }
-
-    set ll [read $ch 9]
-    close $ch
-
-    if {$ll != "SIMPLE  ="} {
-	return 0
-    }
-
-    return 1
-}
-
 # used by backup
 proc ProcessLoad {{err 1}} {
     global current

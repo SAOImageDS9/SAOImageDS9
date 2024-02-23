@@ -1,6 +1,4 @@
-# ::msgcat::mcset da {Unable to open FITS file} 
 ::msgcat::mcset da {2d} 
-::msgcat::mcset da {3D} 
 ::msgcat::mcset da {3d} 
 ::msgcat::mcset da {A postscript generation error has occurred} [encoding convertfrom iso8859-1 {En fejl er opstået under postscript generering}]
 ::msgcat::mcset da {AIP} 

@@ -84,7 +84,7 @@ proc CreateIconsLeftMode {} {
 	current mode footprint ChangeMode
     IconMenuButton $mb.mode [msgcat::mc {Examine}] \
 	current mode examine ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {3D}] \
+    IconMenuButton $mb.mode [msgcat::mc {3d}] \
 	current mode 3d ChangeMode
     IconMenuButton $mb.mode [msgcat::mc {Illustrate}] \
 	current mode illustrate ChangeMode

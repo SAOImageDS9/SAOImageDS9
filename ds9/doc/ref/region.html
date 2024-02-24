@@ -66,8 +66,8 @@ Usage: # composite x y angle</tt></p>
 <p>Each region has a number of properties associated with the region, which indicates how the region is to be rendered or manipulated. Properties are defined for a region in the comment section of the region description. The exception is the Include/Exclude property. It is set via '+' or '-' preceding the region. In addition, the Line, Point, and Ruler regions have unique properties, not shared by others. Not all properties are available via the GUI or are applicable for all regions.</p>
 <blockquote>
 <p><b>Text</b></p>
-<p>All regions may have text associated with them. Use the text property to set the text. Strings may be quoted with " or ' or {}. For best results, use {}. Use <tt>textangle</tt> to specify angle in degress based on current coordinate system axes.<br></p>
-<tt>Example: circle(100,100,20) # text={This message has both a " and ' in it} textangle=30</tt>
+<p>All regions may have text associated with them. Use the text property to set the text. Strings may be quoted with " or ' or {}. For best results, use {}.<br></p>
+<tt>Example: circle(100,100,20) # text={This message has both a " and ' in it}</tt>
 <p><b>Color</b></p>
 <p>The color property specifies the color of the region when rendered. DS9 recognizes many symbolic color names (i.e. "red", "green", "blue", "pink", etc) along with 3, 6, and 9 digit RGB hex values (#fff, #ffffff, #fffffffff)<br></p>
 <tt>Example:<br>
@@ -128,6 +128,9 @@ The Highlite property specifies if the edit handles become visible when the regi
 <p><b>Point</b></p>
 <p>Point regions have an associated type and size. Use the point property to set the point type.</p>
 <tt>Example: point(100,100) # point=diamond 31</tt>
+<p><b>Text</b></p>
+<p>Text regions may have a text angle and rotate property. Use <tt>textangle</tt> to specify angle in degress based on current coordinate system axes. Use <tt>textrotate</tt> to enable or disable text rotation.<br></p>
+<tt>Example: text(731,957) textangle=30 textrotate=0 text={Region}</tt>
 <p><b>Default Properties</b></p>
 <p>The default properties are:</p>
 <blockquote><tt>text={}</tt><br>

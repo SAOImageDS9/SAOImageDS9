@@ -34,6 +34,8 @@ Usage: point x y # point=[circle|box|diamond|cross|x|arrow|boxcircle] [size]<br>
 Usage: line x1 y1 x2 y2 # line=[0|1] [0|1]</tt></p>
 <p><tt>Vector<br>
 Usage: vector x1 y1 length angle # vector=[0|1]</tt></p>
+<p><tt>Segment<br>
+Usage: segment x1 y1 x2 y2 x3 y3 ...</tt></p>
 <p><tt>Text<br>
 Usage: text x y # text={Your Text Here}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; text x y {Your Text Here}</tt></p>
@@ -249,7 +251,7 @@ box(x, y, w, h, angle)</tt></blockquote>
 <p><b><a name="ExternalRegionFiles" id="ExternalRegionFiles"></a>External Region Files</b></p>
 <p>DS9 can read and write a number of region file formats. Not all formats support all the functionality of DS9 regions. Therefore, the user may loose some information when writing and then reading back from a region file in a format other that DS9. On output, the regions File Format menu or the <a href="xpa.html#regions">XPA</a> regions point is used specify the output coordinate system and format. On input, the menu or xpa point is used only for the <tt>X Y</tt> format. For all other formats, the input coordinate system is specified in the regions file itself.</p>
 <blockquote>
-<p><b><a name="FUNTools" id="FUNTools"></a><a href="http://hea-www.harvard.edu/RD/funtools/regions.html">Funtools</a></b><br></p>
+<a name="FUNTools" id="FUNTools"></a>Funtools<br>
 <blockquote><tt>When using DS9 regions file in FUNTOOLS:<br>
 LINE is ignored<br>
 VECTOR is ignored<br>

@@ -674,6 +674,8 @@ proc UpdateWCSVars {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
+	    puts "$current(frame) get fits header wcs $dwcs(ext)"
+	    puts [$current(frame) get fits header wcs $dwcs(ext)]
 	    WCSToVar [$current(frame) get fits header wcs $dwcs(ext)]
 	    return
 	}

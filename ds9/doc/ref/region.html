@@ -40,7 +40,7 @@ Usage: segment x1 y1 x2 y2 x3 y3 ...</tt></p>
 Usage: text x y # text={Your Text Here}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; text x y {Your Text Here}</tt></p>
 <p><tt>Ruler<br>
-Usage: ruler x1 y1 x2 y2 # ruler=[pixels|degrees|arcmin|arcsec] [format=&lt;spec&gt;]<br></tt></p>
+Usage: ruler x1 y1 x2 y2 # ruler=[pixels|degrees|arcmin|arcsec] [format={format string}]<br></tt></p>
 <p><tt>Compass<br>
 Usage: compass x1 y1 length # compass=&lt;coordinate system&gt; &lt;north label&gt; &lt;east label&gt; [0|1] [0|1]</tt></p>
 <p><tt>Projection<br>
@@ -52,16 +52,18 @@ Usage: annulus x y inner outer n=#<br>
 Usage: ellipse x y r11 r12 r21 r22 n=# [angle]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ellipse x y r11 r12 r21 r22 r31 r32 ... [angle]</tt></p>
 <p><tt>Box Annulus<br>
-Usage: box x y w1 h1 w2 h2 [angle]<br>
+Usage: box x y w1 h1 w2 h2 n=# [angle]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; box x y w1 h1 w2 h2 w3 h3 ... [angle]</tt></p>
 <p><tt>Panda<br>
 Usage: panda x y startangle stopangle nangle inner outer nradius</tt></p>
 <p><tt>Epanda<br>
-Usage: epanda x y startangle stopangle nangle inner outer nradius [angle]</tt></p>
+Usage: epanda x y startangle stopangle nangle innerMajor innerMinor outerMajor outerMinor nradius [angle]</tt></p>
 <p><tt>Bpanda<br>
-Usage: bpanda x y startangle stopangle nangle inner outer nradius [angle]</tt></p>
+Usage: bpanda x y startangle stopangle nangle innerMajor innerMinor outerMajor outerMinor nradius [angle]</tt></p>
 <p><tt>Composite<br>
 Usage: # composite x y angle</tt></p>
+<p>Note: Box Annulus, Ellipse Annulus: the ratio of w1/h1 (or r11/r12) and w2/h2 (or r21/r22)  must be the same.</p>
+<p>Note: EPanda, BPanda: the ratio of innerMajor/innerMinor and outerMajor/outerMinor must be the same.</p>
 <p><b><a name="RegionProperties" id="RegionProperties"></a>Region Properties</b></p>
 <p>Each region has a number of properties associated with the region, which indicates how the region is to be rendered or manipulated. Properties are defined for a region in the comment section of the region description. The exception is the Include/Exclude property. It is set via '+' or '-' preceding the region. In addition, the Line, Point, and Ruler regions have unique properties, not shared by others. Not all properties are available via the GUI or are applicable for all regions.</p>
 <blockquote>
@@ -124,7 +126,8 @@ The Highlite property specifies if the edit handles become visible when the regi
 <tt>Example: line(100,100,200,200) # line=1 1</tt>
 <p><b>Ruler</b></p>
 <p>The ruler region may display information in 'pixels', 'degrees', 'arcmin', or 'arcsec'. Use the ruler property to indicate which format to display distances in.</p>
-<tt>Example: ruler(100,100,200,200) # ruler=arcmin</tt>
+<p>The format of the distance can be defined via a format string, which is any valid string for use in printf() to display an integer or real value (i.e. %d, %e, %f), and may be quoted with " or ' or {}. For best results, use {}.</p>
+<tt>Example: ruler(100,100,200,200) # ruler=arcmin format={%e}</tt>
 <p><b>Point</b></p>
 <p>Point regions have an associated type and size. Use the point property to set the point type.</p>
 <tt>Example: point(100,100) # point=diamond 31</tt>

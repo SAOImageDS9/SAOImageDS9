@@ -442,6 +442,9 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
   if (cmp)
     astRemapFrame(ast, AST__BASE, cmp);
 
+  // order WCS first, (if WCSP is present)
+  wcsSystem(ast,Coord::WCS);
+
   // write to channel
   if (!astWrite(chan, ast)) {
     // try again

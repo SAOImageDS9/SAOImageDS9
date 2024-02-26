@@ -3542,6 +3542,9 @@ void FitsImage::ast2Fits()
   astClearStatus;
   astBegin;
 
+  // order WCS first, (if WCSP is present)
+  wcsSystem(ast_,Coord::WCS);
+
   ostringstream str;
   barfoo = &str;
   

@@ -247,6 +247,18 @@ proc SAMPHubValidSecret {secret} {
     return 1
 }
 
+# SAMP spec does not specify valid tag chars
+# We want to use ':' as the default delimiter
+# but Topcat uses ':' in the tag, so work our way down the list
+proc SAMPHubFindDelimiter {tag} {
+    foreach ss [list {:} {;} {!} {&} {|} {*}] {
+	if {[llength [split $tag $ss]]==1} {
+	    return $ss
+	}
+    }
+    return {~}
+}
+
 proc SAMPHubFindSecret {id} {
     global samphub
     
@@ -1132,7 +1144,10 @@ proc samp.hub.call {rpc} {
        }
     }
     
-    set msgid "$msgtag:$samphub($secret,id):"
+    
+    set ss [SAMPHubFindDelimiter $msgtag]
+    # the delimiter is the first char
+    set msgid "$ss$msgtag$ss$samphub($secret,id)$ss"
  
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
@@ -1183,8 +1198,10 @@ proc samp.hub.callAll {rpc} {
        }
     }
 
-    set msgid "$msgtag:$samphub($secret,id):"
-
+    set ss [SAMPHubFindDelimiter $msgtag]
+    # the delimiter is the first char
+    set msgid "$ss$msgtag$ss$samphub($secret,id)$ss"
+ 
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -1246,8 +1263,11 @@ proc samp.hub.callAndWait {rpc} {
     incr samphub(cw,cnt)
     set cnt $samphub(cw,cnt)
 
-    set msgid "bar:$samphub($secret,id):$cnt"
-
+    set msgtag bar
+    set ss [SAMPHubFindDelimiter $msgtag]
+    # the delimiter is the first char
+    set msgid "$ss$msgtag$ss$samphub($secret,id)$ss$cnt$ss"
+    
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
@@ -1338,7 +1358,11 @@ proc samp.hub.reply {rpc} {
 
     SAMPHubDialogRecvdMsg "samp.hub.reply\t$samphub($secret,id)"
 
-    set ll [split $msgid ":"]
+    # the delimiter is the first char
+    set ss [string range $msgid 0 0]
+    set msgid [string range $msgid 1 end]
+
+    set ll [split $msgid $ss]
     set msgtag [lindex  $ll 0]
     set id [lindex $ll 1]
     set cnt [lindex $ll 2]
@@ -1346,6 +1370,7 @@ proc samp.hub.reply {rpc} {
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
+
     switch $msgtag {
 	bar {
 	    # callAndWait

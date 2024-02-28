@@ -28,6 +28,7 @@ proc xmlrpcDoRequest {sock} {
     set res [xmlrpcReadHeader $sock]
     if {$res == {}} {
 	# ERROR
+	catch {close $sock}
 	return
     }
     
@@ -68,6 +69,7 @@ proc xmlrpcDoRequest {sock} {
 	xmlrpc parse in out
 	if {[catch {set rpc [expr $out]}]} {
 	    # ERROR
+	    catch {close $sock}
 	    return
 	}
     } else {
@@ -88,8 +90,17 @@ proc xmlrpcDoRequest {sock} {
     # params
     set params $rpc
     
+    # sanity check on mname
+    # should be of form xxxx.yyyy.zzzz
+    if {[llength [split $mname {.}]]==1} {
+	# ERROR
+	catch {close $sock}
+	return
+    }
+
     set xmlrpc(sock) $sock
     if {[catch {set result [eval $mname [list $params]]}]} {
+	# needed for sampwebhub
 	global errorCode
 	if {$errorCode == "abort"} {
 	    return

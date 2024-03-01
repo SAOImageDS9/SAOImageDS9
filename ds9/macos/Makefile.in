@@ -202,6 +202,7 @@ $(APPDIR):
 $(TCLDIR)/Tcl : $(TCLSRC)/Tcl
 #$(TCLDIR)/Tcl : $(TCLSRC)/Tcl_debug
 	cp -p $? "$@"
+	chmod 755 "$@"
 
 $(TCLDIR)/Resources : $(TCLSRC)/Resources
 	cp -prf $? "$@"
@@ -209,6 +210,7 @@ $(TCLDIR)/Resources : $(TCLSRC)/Resources
 $(TKDIR)/Tk : $(TKSRC)/Tk
 #$(TKDIR)/Tk : $(TKSRC)/Tk_debug
 	cp -p $? "$@"
+	chmod 755 "$@"
 
 $(TKDIR)/Resources : $(TKSRC)/Resources
 	cp -prf $? "$@"

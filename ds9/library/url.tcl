@@ -28,10 +28,6 @@ proc GetFileFTP {host path fn} {
 	ftp::Type $ftp binary
 	ftp::Get $ftp $path $fn
 	ftp::Close $ftp
-
-	# clear error from tcllib ftp
-	global errorInfo
-	set errorInfo {}
     }
 }
 
@@ -58,12 +54,8 @@ proc GetFileHTTP {url fn} {
 	return
     }
 
+    catch {close $ch}
 
-    # reset errorInfo (may be set in http::geturl)
-    global errorInfo
-    set errorInfo {}
-
-    close $ch
     if {[info exists token]} {
 	if {$foo(authority) == {cda.harvard.edu}} {
 	    upvar 0 $token state
@@ -151,11 +143,7 @@ proc LoadURLFitsHTTP {url layer mode multi} {
 	return
     }
 
-    # reset errorInfo (may be set in http::geturl)
-    global errorInfo
-    set errorInfo {}
-
-    close $ch
+    catch {close $ch}
 
     upvar #0 $token t
 

@@ -20,10 +20,6 @@ proc TBLGetURL {varname url query} {
 					 -timeout $ihttp(timeout) \
 					 -headers "[ProxyHTTP]"]
 	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
 	    set var(active) 1
 	    TBLGetURLFinish $varname $var(token)
 	} else {
@@ -37,10 +33,6 @@ proc TBLGetURL {varname url query} {
 					 [list TBLGetURLFinish $varname] \
 					 -headers "[ProxyHTTP]"]
 	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
 	    set var(active) 1
 	} else {
 	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]

@@ -358,10 +358,6 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 					 -binary 1 \
 					 -channel $var(ch)]
 	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
 	    set var(active) 1
 	    set var(delete) 1
 	    HVProcessURLHTTPFinish $varname $var(token)
@@ -379,10 +375,6 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 					 -channel $var(ch) \
 					 -command [list HVProcessURLHTTPFinish $varname]]
 	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
 	    set var(active) 1
 	    set var(delete) 1
 	} else {
@@ -1331,8 +1323,9 @@ proc HVParseXPASet {varname} {
 	$target == "*:*" ||
 	$target == [XPAMethod]} {
 
-	InitError hv
+	InitError xpa
 	CommSet $var(fn) [HVParseMimeParam $varname paramlist] 1
+	InitError tcl
     } else {
 	HVError $varname "[msgcat::mc {Unable to match target with XPA Mime request}] $var(url)"
     }
@@ -1817,10 +1810,6 @@ proc HVImageURL {varname url width height} {
 		    set ii 0
 		    continue
 		}
-
-		# reset errorInfo (may be set in http::geturl)
-		global errorInfo
-		set errorInfo {}
 
 		catch {close $ch}
 

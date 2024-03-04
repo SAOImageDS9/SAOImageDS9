@@ -407,7 +407,7 @@ proc PrismDialogUpdate {varname} {
 
 	    # open extension
 	    if {[catch {fitsy open $var(fn) $var(load) $var(ext)}]} {
-		Error "[msgcat::mc {Unable to load FITS file}]: $fn"
+		Error "[msgcat::mc {Unable to load FITS file}] $fn"
 		return
 	    }
 
@@ -522,7 +522,7 @@ proc PrismLoad {varname fn} {
     }
 
     if {[catch {fitsy dir $var(fn) $var(load)} rr]} {
-	Error "[msgcat::mc {Unable to load FITS file}]: $fn"
+	Error "[msgcat::mc {Unable to load FITS file}] $fn"
 	return
     }
 
@@ -1004,7 +1004,7 @@ proc PrismPlotGenerateFits {varname vvarname dim xdata ydata xedata yedata txxna
 
     # open extension
     if {[catch {fitsy open $var(fn) $var(load) $var(ext)}]} {
-	Error "[msgcat::mc {Unable to load FITS file}]: $fn"
+	Error "[msgcat::mc {Unable to load FITS file}] $fn"
 	return
     }
 
@@ -1299,7 +1299,7 @@ proc PrismHistogramMinMax {varname} {
 	fits {
 	    # open extension
 	    if {[catch {fitsy open $var(fn) $var(load) $var(ext)}]} {
-		Error "[msgcat::mc {Unable to load FITS file}]: $fn"
+		Error "[msgcat::mc {Unable to load FITS file}] $fn"
 		return
 	    }
 
@@ -1440,7 +1440,7 @@ proc PrismHistogramGenerateFits {varname xdata ydata} {
 
     # open extension
     if {[catch {fitsy open $var(fn) $var(load) $var(ext)}]} {
-	Error "[msgcat::mc {Unable to load FITS file}]: $fn"
+	Error "[msgcat::mc {Unable to load FITS file}] $fn"
 	return
     }
 
@@ -1794,7 +1794,7 @@ proc PrismTableFits {varname} {
 
     # open extension
     if {[catch {fitsy open $var(fn) $var(load) $var(ext)}]} {
-	Error "[msgcat::mc {Unable to load FITS file}]: $fn"
+	Error "[msgcat::mc {Unable to load FITS file}] $fn"
 	return
     }
 
@@ -1991,7 +1991,7 @@ proc PrismExtFitsCmd {varname} {
 
     # find our extension
     if {[catch {fitsy open $var(fn) $var(load) $var(ext)}]} {
-	Error "[msgcat::mc {Unable to load FITS file}]: $fn"
+	Error "[msgcat::mc {Unable to load FITS file}] $fn"
 	return
     }
 

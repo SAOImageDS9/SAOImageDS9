@@ -288,11 +288,11 @@ proc SAMPReturn {msg} {
     return [list params [list [list param [list value [list string $msg]]]]]
 }
 
-proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
+proc SAMPReply {msgid status {result {}} {url {}} {msg {}}} {
     global samp
 
     if {$samp(debug)} {
-	puts stderr "SAMPReply $msgid $status"
+	puts stderr "SAMPReply $msgid $status $result $url $msg"
     }
 
     switch -- $status {
@@ -312,7 +312,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    set param3 [list param [list value [list struct $m1]]]
 	}
 	WARNING {
-	    set map3(samp.errortxt) "string $error"
+	    set map3(samp.errortxt) "string \"$msg\""
 	    set m3 [xmlrpcList2Member [array get map3]]
 
 	    if {$result != {}} {
@@ -331,12 +331,11 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
 	    set param3 [list param [list value [list struct $m1]]]
 	}
 	ERROR {
-	    set map3(samp.errortxt) "string $error"
-	    set m3 [xmlrpcList2Member [array get map3]]
+	    set map2(samp.errortxt) "string \"$msg\""
+	    set m2 [xmlrpcList2Member [array get map2]]
 
 	    set map1(samp.status) {string samp.error}
-	    set map1(samp.error) [list struct $m3]
-	    set map1(samp.errortxt) "string $error"
+	    set map1(samp.error) [list struct $m2]
 	    set m1 [xmlrpcList2Member [array get map1]]
 
 	    set param3 [list param [list value [list struct $m1]]]

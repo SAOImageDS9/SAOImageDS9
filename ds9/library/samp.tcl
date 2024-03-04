@@ -351,22 +351,17 @@ proc SAMPRcvdDS9SetReply {msgid} {
 	puts stderr "SAMPRcvdDS9SetReply: $msgid"
     }
 
-    global errorInfo
-    if {$errorInfo != {} || $ds9(msg) != {}} {
-	if {$ds9(msg) != {}} {
-	    switch $ds9(msg,level) {
-		info -
-		warning {SAMPReply $msgid OK $ds9(msg)}
-		error -
-		fatal {SAMPReply $msgid ERROR {} {} $ds9(msg)}
-	    }
-	} else {
-	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
+    if {$ds9(msg) != {}} {
+	switch $ds9(msg,level) {
+	    info -
+	    warning {SAMPReply $msgid OK "$ds9(msg)"}
+	    error -
+	    fatal {SAMPReply $msgid ERROR {} {} "$ds9(msg)"}
 	}
-	InitError samp
     } else {
 	SAMPReply $msgid OK
     }
+    InitError tcl
 }
 
 proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
@@ -379,19 +374,13 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 	puts stderr "SAMPRcvdDS9GetReply: $msgid $msg $fn"
     }
 
-    global errorInfo
-    if {$errorInfo != {} || $ds9(msg) != {}} {
-	if {$ds9(msg) != {}} {
-	    switch $ds9(msg,level) {
-		info -
-		warning {SAMPReply $msgid OK $ds9(msg)}
-		error -
-		fatal {SAMPReply $msgid ERROR {} {} $ds9(msg)}
-	    }
-	} else {
-	    SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
+    if {$ds9(msg) != {}} {
+	switch $ds9(msg,level) {
+	    info -
+	    warning {SAMPReply $msgid OK "$ds9(msg)"}
+	    error -
+	    fatal {SAMPReply $msgid ERROR {} {} "$ds9(msg)"}
 	}
-	InitError samp
     } else {
 	# be sure to white space any newlines, backslashes, and trim
 	set value [string trim [string map {\n { } \\ {}} $msg]]
@@ -405,6 +394,7 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 
 	SAMPReply $msgid OK $value $url
     }
+    InitError tcl
 }
 
 proc image.load.fits {msgid args} {
@@ -613,9 +603,7 @@ proc client.env.get {msgid args} {
 
     global env
     if {[catch {set rr $env($name)}]} {
-	SAMPReply $msgid ERROR {} {} [lindex [split $errorInfo "\n"] 0]
-	global errorInfo
-	set errorInfo {}
+	SAMPReply $msgid ERROR {} {} {not found}
     } else {
 	SAMPReply $msgid OK $rr
     }
@@ -642,7 +630,6 @@ proc ds9.set {msgid args} {
 
     set fn {}
 
-    InitError samp
     if {$url != {}} {
 	ParseURL $url rr
 	switch -- $rr(scheme) {
@@ -662,6 +649,7 @@ proc ds9.set {msgid args} {
 	}
     }
 
+    InitError samp
     CommSet $fn $cmd 0
 
     if {$msgid != {}} {
@@ -696,11 +684,15 @@ proc ds9.get {msgid args} {
 }
 
 proc SAMPError {message} {
+    global pds9
+
     # msgcat::mc {already connected}
     # msgcat::mc {unable to locate HUB}
     # msgcat::mc {not connected}
 
-    Error "SAMP: [msgcat::mc $message]"
+    if {$pds9(confirm)} {
+	tk_messageBox -message $message -type ok -icon error
+    }
 }
 
 proc SAMPUpdateMenus {} {

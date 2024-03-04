@@ -186,10 +186,10 @@ proc SAMPSendTableLoadFits {id} {
 }
 
 proc SAMPSendTableLoadVotable {id varname} {
-    global samp
-
     upvar #0 $varname var
     global $varname
+
+    global samp
 
     if {$samp(debug)} {
 	puts stderr "SAMPSendTableLoadVotable $id $varname"
@@ -248,11 +248,11 @@ proc SAMPSendTableRowListCmd {varname rowlist} {
 }
 
 proc SAMPSendTableHighlightRow {id varname row} {
-    global samp
-
     # row starts at 1
     upvar #0 $varname var
     global $varname
+
+    global samp
 
     if {$samp(debug)} {
 	puts stderr "SAMPSendTableHighlightRow $samp(ocat,$varname) $row"
@@ -271,11 +271,11 @@ proc SAMPSendTableHighlightRow {id varname row} {
 }
 
 proc SAMPSendTableSelectRowList {id varname rows} {
-    global samp
-
     # rows start at 1
     upvar #0 $varname var
     global $varname
+
+    global samp
 
     if {$samp(debug)} {
 	puts stderr "SAMPSendTableSelectRowList $samp(ocat,$varname) $rows"
@@ -338,7 +338,7 @@ proc SAMPSendCoordPointAtSky {id coord} {
 
 proc SAMPRcvdDS9SetReply {msgid} {
     global ds9
-    global icursor
+    global samp
 
     if {$samp(debug)} {
 	puts stderr "SAMPRcvdDS9SetReply: $msgid"
@@ -360,7 +360,6 @@ proc SAMPRcvdDS9SetReply {msgid} {
 proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
     global ds9
     global samp
-    global icursor
 
     if {$samp(debug)} {
 	puts stderr "SAMPRcvdDS9GetReply: $msgid $msg $fn"

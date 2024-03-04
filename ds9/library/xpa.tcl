@@ -2246,7 +2246,7 @@ proc XPADisconnect {} {
 	}
 	unset xpa
     } else {
-	Error "[msgcat::mc {XPA not initialized}]"
+	Error [msgcat::mc {XPA not initialized}]
     }
 
     UpdateFileMenu
@@ -2259,7 +2259,7 @@ proc XPAInfo {} {
 	SimpleTextDialog xpatxt "[msgcat::mc {XPA Information}]" \
 	    80 20 append bottom "[XPAInfoResult]"
     } else {
-	Error "[msgcat::mc {XPA not initialized}]"
+	Error [msgcat::mc {XPA not initialized}]
     }
 }
 
@@ -2289,17 +2289,11 @@ proc XPADebug {which param} {
 
 proc XPACatchError {xpa} {
     global ds9
-    global icursor
 
-    global errorInfo
-    if {$errorInfo != {} || $ds9(msg) != {}} {
-	if {$ds9(msg) != {}} {
-	    xpaerror $xpa $ds9(msg)
-	} else {
-	    xpaerror $xpa [lindex [split $errorInfo "\n"] 0]
-	}
-	InitError xpa
+    if {$ds9(msg) != {}} {
+	xpaerror $xpa $ds9(msg)
     }
+    InitError tcl
 }
 
 proc XPAMethod {} {

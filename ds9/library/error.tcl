@@ -4,26 +4,56 @@
 
 package provide DS9 1.0
 
-# capture general errors
-# this only captures gui errors, not xpa errors
-proc tkerror {err} {
-    bgerror $err
-}
+# how to handle errors
+#
+# tcl/tk
+# errorInfo
+# errorCode
+# errorStack
+#
+# syntax errors: (stderr)
+# widget->error() (for parsers: appends msg returns TCL_ERROR) (stderr)
+# ParseError (catched taccle/flickle parse errors) (stderr)
+#
+# DS9
+# ds9(msg)
+# ds9(msg,level)
+# ds9(msg,src)
+#
+# internalError() (fitsy/util.C: sets ds9(msg) and ds9(msg,level)
+#
+# destinations
+# xpa
+# samp
+# hv
+# tcl GUI
+# stderr
 
-proc bgerror {err} {
-    tk_messageBox -type ok -icon error \
-	-message "[msgcat::mc {An internal error has been detected}] $err"
-}
-
-# force capture xpa/samp/hv/interactive errors
-proc InitError {which} {
+# TCL/TK errors
+proc ParserError {msg yycnt yy_current_buffer index_} {
     global ds9
-    set ds9(msg) {}
-    set ds9(msg,level) info
-    set ds9(msg,src) $which
 
-    global errorInfo
-    set errorInfo {}
+    switch -- $ds9(msg,src) {
+	xpa -
+	samp {
+	    Error "$msg, found [lindex $yy_current_buffer [expr $yycnt-1]]"
+	}
+	default {
+	    puts stderr "[string range $yy_current_buffer 0 60]"
+	    puts stderr [format "%*s" $index_ ^]
+	    puts stderr "$msg"
+	    QuitDS9
+	}
+    }
+}
+
+# DS9 Errors
+proc InitError {src} {
+    global ds9
+
+    set ds9(msg) {}
+    set ds9(msg,src) $src
+    set ds9(msg,level) info
 }
 
 proc Info {message} {
@@ -39,53 +69,48 @@ proc Error {message} {
     ProcessMessage error $message
 }
 
+# here is where tcl code will invoke an error
+# XPA, SAMP will process it later
 proc ProcessMessage {level message} {
     global ds9
     global pds9
 
+    set ds9(msg) $message
     set ds9(msg,level) $level
-    switch -- $ds9(msg,src) {
-	xpa -
-	hv -
-	samp {set ds9(msg) $message}
-	default {
-	    if {$pds9(confirm)} {
-		tk_messageBox -message $message -type ok -icon $level
+    if {$ds9(msg) != {}} {
+	switch $ds9(msg,src) {
+	    xpa -
+	    samp {}
+	    tcl {
+		if {$pds9(confirm)} {
+		    tk_messageBox -message $ds9(msg) -type ok \
+			-icon $ds9(msg,level)
+		}
+		InitError tcl
 	    }
-	}
-    }
-}
-
-proc ParserError {msg yycnt yy_current_buffer index_} {
-    global ds9
-
-    switch -- $ds9(msg,src) {
-	xpa -
-	hv -
-	samp {
-	    Error "$msg, found [lindex $yy_current_buffer [expr $yycnt-1]]"
-	}
-	default {
-	    puts stderr "[string range $yy_current_buffer 0 60]"
-	    puts stderr [format "%*s" $index_ ^]
-	    puts stderr "$msg"
-	    QuitDS9
 	}
     }
 }
 
 # here is where errors from within the canvas widgets 
 # will try to get our attention. 
-# XPA, HV, and SAMP will have already seen any problems
+# XPA, HV, SAMP will have already seen any problems
 proc ErrorTimer {} {
     global ds9
     global pds9
 
     if {$ds9(msg) != {}} {
-	if {$pds9(confirm)} {
-	    tk_messageBox -message $ds9(msg) -type ok -icon $ds9(msg,level)
+	switch $ds9(msg,src) {
+	    xpa -
+	    samp {}
+	    tcl {
+		if {$pds9(confirm)} {
+		    tk_messageBox -message $ds9(msg) -type ok \
+			-icon $ds9(msg,level)
+		}
+		InitError tcl
+	    }
 	}
-	InitError tcl
     }
 
     # set again

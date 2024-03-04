@@ -856,8 +856,7 @@ proc AnalysisPipe {which i cmd sync} {
 	    # nothing is returned, so there is aways an error,
 	    # however, the command will be executed.
 	    catch {open "| $cmd"}
-	    global errorInfo
-	    set errorInfo {}
+
 	    AnalysisTaskEnd $which $i
 	    return
 	}

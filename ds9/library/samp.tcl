@@ -105,8 +105,7 @@ proc SAMPSendImageLoadFits {id} {
     global current
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPSendImageLoadFits"
     }
 
@@ -148,8 +147,7 @@ proc SAMPSendTableLoadFits {id} {
     global current
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPSendTableLoadFits"
     }
 
@@ -193,8 +191,7 @@ proc SAMPSendTableLoadVotable {id varname} {
     upvar #0 $varname var
     global $varname
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPSendTableLoadVotable $id $varname"
     }
 
@@ -257,8 +254,7 @@ proc SAMPSendTableHighlightRow {id varname row} {
     upvar #0 $varname var
     global $varname
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPSendTableHighlightRow $samp(ocat,$varname) $row"
     }
 
@@ -281,8 +277,7 @@ proc SAMPSendTableSelectRowList {id varname rows} {
     upvar #0 $varname var
     global $varname
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPSendTableSelectRowList $samp(ocat,$varname) $rows"
     }
 
@@ -325,8 +320,7 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 proc SAMPSendCoordPointAtSky {id coord} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPSendCoordPointAtSky $id $coord"
     }
 
@@ -346,8 +340,7 @@ proc SAMPRcvdDS9SetReply {msgid} {
     global ds9
     global icursor
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPRcvdDS9SetReply: $msgid"
     }
 
@@ -369,8 +362,7 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
     global samp
     global icursor
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {$samp(debug)} {
 	puts stderr "SAMPRcvdDS9GetReply: $msgid $msg $fn"
     }
 
@@ -401,8 +393,11 @@ proc image.load.fits {msgid args} {
     global current
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "SAMPRcvdImageLoadFits: $args"
     }
 
@@ -431,8 +426,11 @@ proc table.load.fits {msgid args} {
     global current
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "table.load.fits $args"
     }
 
@@ -460,8 +458,11 @@ proc table.load.fits {msgid args} {
 proc table.load.votable {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "table.load.votable $args"
     }
 
@@ -495,8 +496,11 @@ proc table.load.votable {msgid args} {
 proc table.highlight.row {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "table.highlight.row $args"
     }
 
@@ -526,8 +530,11 @@ proc table.highlight.row {msgid args} {
 proc table.select.rowList {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "table.select.rowList $args"
     }
 
@@ -561,8 +568,11 @@ proc table.select.rowList {msgid args} {
 proc coord.pointAt.sky {msgid args} {
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "coord.pointAt.sky $args"
     }
 
@@ -589,6 +599,10 @@ proc coord.pointAt.sky {msgid args} {
 proc client.env.get {msgid args} {
     global samp
 
+    if {![info exists samp]} {
+	return
+    }
+
     if {$samp(debug)} {
 	puts stderr "client.env.get $msgid $args\n"
     }
@@ -613,8 +627,11 @@ proc ds9.set {msgid args} {
     global current
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "ds9.set $args"
     }
 
@@ -661,8 +678,11 @@ proc ds9.get {msgid args} {
     global current
     global samp
 
-    global debug
-    if {$debug(tcl,samp)} {
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
 	puts stderr "ds9.get $args"
     }
 

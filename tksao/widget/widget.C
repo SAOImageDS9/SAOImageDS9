@@ -193,12 +193,14 @@ Widget::~Widget()
     XFreeGC(display, widgetGC);
 }
 
+// parser error handler
 void Widget::error(const char* m)
 {
   Tcl_AppendResult(interp, m, NULL);
   result = TCL_ERROR;
 }
 
+// parser msg handler
 void Widget::msg(const char* m)
 {
   Tcl_AppendResult(interp, m, NULL);

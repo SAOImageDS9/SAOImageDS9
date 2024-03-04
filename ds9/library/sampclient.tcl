@@ -354,6 +354,10 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}}} {
 proc samp.client.receiveNotification {rpc} {
     global samp
     
+    if {![info exists samp]} {
+	return
+    }
+
     if {$samp(debug)} {
 	puts stderr "samp.client.receiveNotification $rpc"
     }
@@ -378,12 +382,17 @@ proc samp.client.receiveNotification {rpc} {
 	    }
 	}
     }
+
     after idle [list $mtype {} $params]
     return [SAMPReturn OK]
 }
 
 proc samp.client.receiveCall {rpc} {
     global samp
+
+    if {![info exists samp]} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "samp.client.receiveCall $rpc"
@@ -417,6 +426,10 @@ proc samp.client.receiveCall {rpc} {
 
 proc samp.client.receiveResponse {rpc} {
     global samp
+
+    if {![info exists samp]} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "samp.client.receiveResponse $rpc"
@@ -461,6 +474,10 @@ proc samp.client.receiveResponse {rpc} {
 proc samp.hub.event.shutdown {msgid args} {
     global samp
     
+    if {![info exists samp]} {
+	return
+    }
+
     if {$samp(debug)} {
 	puts stderr "samp.hub.event.shutdown $args"
     }
@@ -475,6 +492,10 @@ proc samp.hub.event.shutdown {msgid args} {
 
 proc samp.hub.event.register {msgid args} {
     global samp
+
+    if {![info exists samp]} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "samp.hub.event.register $args"
@@ -497,6 +518,10 @@ proc samp.hub.event.register {msgid args} {
 
 proc samp.hub.event.unregister {msgid args} {
     global samp
+
+    if {![info exists samp]} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "samp.hub.event.unregister $args"
@@ -522,6 +547,10 @@ proc samp.hub.event.unregister {msgid args} {
 
 proc samp.hub.event.metadata {msgid args} {
     global samp
+
+    if {![info exists samp]} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "samp.hub.event.metadata $args"
@@ -564,6 +593,10 @@ proc samp.hub.event.metadata {msgid args} {
 proc samp.hub.event.subscriptions {msgid args} {
     global samp
 
+    if {![info exists samp]} {
+	return
+    }
+
     if {$samp(debug)} {
 	puts stderr "samp.hub.event.subscriptions $args"
     }
@@ -599,6 +632,10 @@ proc samp.hub.event.subscriptions {msgid args} {
 proc samp.hub.disconnect {msgid args} {
     global samp
     
+    if {![info exists samp]} {
+	return
+    }
+
     if {$samp(debug)} {
 	puts stderr "samp.hub.disconnect $args"
     }
@@ -617,6 +654,10 @@ proc samp.hub.disconnect {msgid args} {
 
 proc samp.app.ping {msgid args} {
     global samp
+
+    if {![info exists samp]} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "samp.app.ping"

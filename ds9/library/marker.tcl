@@ -1210,7 +1210,6 @@ proc MarkerLoadFrames {str frames format sys sky} {
 proc MarkerLoadFile {filename which format sys sky} {
     global current
     global marker
-    global errorInfo
 
     if {$filename == {}} {
 	return
@@ -1260,18 +1259,12 @@ proc MarkerLoadFile {filename which format sys sky} {
 	# try filename first
 	if {[catch {$which marker load fits "\{$filename\}" $marker(color)}]} {
 
-	    # reset errorInfo
-	    set errorInfo {}
-	    
 	    # see if we need to add an extension
 	    # try [REGION] extension
 	    if {$ext == {}} {
 		set regfilename "$base\[REGION\]"
 
 		if {[catch {$which marker load fits "\{$regfilename\}" $marker(color)}]} {
-
-		    # reset errorInfo
-		    set errorInfo {}
 
 		    # ok now try the first extension
 		    set regfilename "$base\[1\]"

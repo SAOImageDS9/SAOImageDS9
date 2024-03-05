@@ -66,7 +66,13 @@ proc xmlrpcDoRequest {sock} {
 	# debug- set body "debug on\n$body"
 	set in [string map {< " <" > "> "} $body]
 
-	xmlrpc parse in out
+	# can we parse it?
+	if {[catch {xmlrpc parse in out}]} {
+	    # ERROR
+	    catch {close $sock}
+	    return
+	}
+	# do we have a valid list?
 	if {[catch {set rpc [expr $out]}]} {
 	    # ERROR
 	    catch {close $sock}
@@ -358,7 +364,12 @@ proc xmlrpcParseResponse {body} {
 	# debug- set body "debug on\n$body"
 	set in [string map {< " <" > "> "} $body]
 
-	xmlrpc parse in out
+	# can we parse it?
+	if {[catch {xmlrpc parse in out}]} {
+	    # ERROR
+	    return
+	}
+	# do we have a valid list?
 	if {[catch {set rpc [expr $out]}]} {
 	    # ERROR
 	    return

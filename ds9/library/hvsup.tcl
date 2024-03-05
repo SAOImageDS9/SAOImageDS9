@@ -49,7 +49,7 @@ proc HVReset {varname} {
     if {[info exists var(token)]} {
 	global debug
 	if {$debug(tcl,hv)} {
-	    puts stderr "HVReset ***cleanup***"
+	    puts stderr "HVReset"
 	}
 	http::cleanup $var(token)
 	unset var(token)

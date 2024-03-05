@@ -448,7 +448,7 @@ proc CommGet {proc id paramlist fn} {
 	    tif -
 	    tiff {
 		ProcessSendTIFFCmd $proc $id $param {} $fn.tif
-		$fn.tif
+		return $fn.tif
 	    }
 	    tile {ProcessSendTileCmd $proc $id $param}
 	    update {}

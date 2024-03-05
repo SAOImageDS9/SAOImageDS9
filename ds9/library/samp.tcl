@@ -666,7 +666,7 @@ proc ds9.set {msgid args} {
     }
 
     InitError samp
-    CommSet $fn $cmd 0
+    CommSet $fn $cmd 1
 
     if {$msgid != {}} {
 	SAMPRcvdDS9SetReply $msgid

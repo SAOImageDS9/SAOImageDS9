@@ -674,7 +674,7 @@ proc HVStopCmd {varname} {
 
     global debug
     if {$debug(tcl,hv)} {
-	puts stderr "\n*** HVStopCmd ***\n"
+	puts stderr "HVStopCmd"
     }
 
     HVCancel $varname

@@ -4,7 +4,6 @@
 
 #include coordsys.tin
 #include wcssys.tin
-#include string.tin
 
 %start viewsend
 

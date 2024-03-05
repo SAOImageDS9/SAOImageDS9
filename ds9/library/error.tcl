@@ -1,4 +1,4 @@
-#  Copyright (C) 1999-2021
+#  Copyright (C) 1999-2024
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -6,26 +6,26 @@ package provide DS9 1.0
 
 # how to handle errors
 #
+# where error come from
+# bad tcl code (errorInfo)
+# command parser (taccle/fickle)
+# file does not exists (tcl)
+# file exists, bad format (tcl)
+# file parser (bison parser widget->error())
+
 # tcl/tk
 # errorInfo
 # errorCode
 # errorStack
-#
-# syntax errors: (stderr)
-# widget->error() (for parsers: appends msg returns TCL_ERROR) (stderr)
-# ParseError (catched taccle/flickle parse errors) (stderr)
 #
 # DS9
 # ds9(msg)
 # ds9(msg,level)
 # ds9(msg,src)
 #
-# internalError() (fitsy/util.C: sets ds9(msg) and ds9(msg,level)
-#
 # destinations
 # xpa
 # samp
-# hv
 # tcl GUI
 # stderr
 

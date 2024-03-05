@@ -4,6 +4,7 @@
 
 #include coordsys.tin
 #include wcssys.tin
+#include string.tin
 
 %start viewsend
 
@@ -39,8 +40,7 @@
 #include coordsys.trl
 #include wcssys.trl
 
-viewsend :
- | LAYOUT_ {ProcessSendCmdGet view layout}
+viewsend: LAYOUT_ {ProcessSendCmdGet view layout}
  | MULTI_ {ProcessSendCmdYesNo view multi}
  | KEYVALUE_ {ProcessSendCmdGet view info,keyvalue}
  | INFO_ {ProcessSendCmdYesNo view info}

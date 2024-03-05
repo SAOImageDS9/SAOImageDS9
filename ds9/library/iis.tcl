@@ -172,7 +172,7 @@ proc IISSetCursorPosCmd {x y} {
 
     global debug
     if {$debug(iis)} {
-	puts stderr "***IISSetCursorPosCmd: $x $y"
+	puts stderr "IISSetCursorPosCmd: $x $y"
     }
 
     $current(frame) iis cursor $x $y image
@@ -183,7 +183,7 @@ proc IISGetCursorPosCmd {} {
 
     global debug
     if {$debug(iis)} {
-	puts stderr "***IISGetCursorPosCmd:"
+	puts stderr "IISGetCursorPosCmd:"
     }
 
     if {[$current(frame) has iis]} {

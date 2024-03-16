@@ -84,6 +84,10 @@ proc DialogWait {w varname {focus {}}} {
     if {[winfo exists $old]} {
 	focus $old
     }
+    
+    # reset errorInfo
+    global errorInfo
+    set errorInfo {}
 }
 
 # Entry Dialog

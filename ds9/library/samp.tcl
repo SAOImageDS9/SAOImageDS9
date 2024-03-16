@@ -339,17 +339,22 @@ proc SAMPSendCoordPointAtSky {id coord} {
 proc SAMPRcvdDS9SetReply {msgid} {
     global ds9
     global samp
+    global errorInfo
 
     if {$samp(debug)} {
 	puts stderr "SAMPRcvdDS9SetReply: $msgid"
     }
 
-    if {$ds9(msg) != {}} {
-	switch $ds9(msg,level) {
-	    info -
-	    warning {SAMPReply $msgid OK "$ds9(msg)"}
-	    error -
-	    fatal {SAMPReply $msgid ERROR {} {} "$ds9(msg)"}
+    if {$errorInfo != {} || $ds9(msg) != {}} {
+	if {$ds9(msg) != {}} {
+	    switch $ds9(msg,level) {
+		info -
+		warning {SAMPReply $msgid OK "$ds9(msg)"}
+		error -
+		fatal {SAMPReply $msgid ERROR {} {} "$ds9(msg)"}
+	    }
+	} else {
+	    SAMPReply $msgid ERROR {} {} [SAMPErrorInfo]
 	}
     } else {
 	SAMPReply $msgid OK
@@ -360,17 +365,22 @@ proc SAMPRcvdDS9SetReply {msgid} {
 proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
     global ds9
     global samp
+    global errorInfo
 
     if {$samp(debug)} {
 	puts stderr "SAMPRcvdDS9GetReply: $msgid $msg $fn"
     }
 
-    if {$ds9(msg) != {}} {
-	switch $ds9(msg,level) {
-	    info -
-	    warning {SAMPReply $msgid OK "$ds9(msg)"}
-	    error -
-	    fatal {SAMPReply $msgid ERROR {} {} "$ds9(msg)"}
+    if {$errorInfo != {} || $ds9(msg) != {}} {
+	if {$ds9(msg) != {}} {
+	    switch $ds9(msg,level) {
+		info -
+		warning {SAMPReply $msgid OK "$ds9(msg)"}
+		error -
+		fatal {SAMPReply $msgid ERROR {} {} "$ds9(msg)"}
+	    }
+	} else {
+	    SAMPReply $msgid ERROR {} {} [SAMPErrorInfo]
 	}
     } else {
 	# be sure to white space any newlines, backslashes, and trim
@@ -667,7 +677,6 @@ proc ds9.set {msgid args} {
 
     InitError samp
     CommSet $fn $cmd 1
-
     if {$msgid != {}} {
 	SAMPRcvdDS9SetReply $msgid
     }
@@ -697,21 +706,25 @@ proc ds9.get {msgid args} {
 
     InitError samp
     set fn [CommGet SAMPRcvdDS9GetReply $msgid $cmd [tmpnam {}]]
-    if {$fn != {}} {
-	lappend samp(tmp,files) $fn
+
+    # check for error (in case SAMPRcvdDS9GetReply did not get run)
+    global ds9
+    global errorInfo
+    if {$errorInfo != {} || $ds9(msg) != {}} {
+	if {$ds9(msg) != {}} {
+	    SAMPReply $msgid ERROR {} {} "$ds9(msg)"
+	} else {
+	    SAMPReply $msgid ERROR {} {} [SAMPErrorInfo]
+	}
+	InitError tcl
     }
 }
 
-proc SAMPError {message} {
-    global pds9
-
-    # msgcat::mc {already connected}
-    # msgcat::mc {unable to locate HUB}
-    # msgcat::mc {not connected}
-
-    if {$pds9(confirm)} {
-	tk_messageBox -message $message -type ok -icon error
-    }
+proc SAMPErrorInfo {} {
+    global errorInfo
+    
+    set rr [lindex [split $errorInfo "\n"] 0]
+    return [string trim [string map {\" {} \\ {}} $rr]]
 }
 
 proc SAMPUpdateMenus {} {

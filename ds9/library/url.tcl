@@ -28,6 +28,10 @@ proc GetFileFTP {host path fn} {
 	ftp::Type $ftp binary
 	ftp::Get $ftp $path $fn
 	ftp::Close $ftp
+
+	# reset errorInfo (may be set in http::geturl)
+	global errorInfo
+	set errorInfo {}
     }
 }
 
@@ -49,7 +53,12 @@ proc GetFileHTTP {url fn} {
 		    -binary 1 \
     		    -timeout $ihttp(timeout) \
 		    -headers "[ProxyHTTP]"} token]} {
-	close $ch
+	catch {close $ch}
+
+	# reset errorInfo (may be set in http::geturl)
+	global errorInfo
+	set errorInfo {}
+
 	Error "[msgcat::mc {Unable to locate URL}] $url"
 	return
     }
@@ -138,7 +147,12 @@ proc LoadURLFitsHTTP {url layer mode multi} {
 			       -binary 1 \
 			       -timeout $ihttp(timeout) \
 			       -headers "[ProxyHTTP]"]}]} {
-	close $ch
+	catch {close $ch}
+
+	# reset errorInfo (may be set in http::geturl)
+	global errorInfo
+	set errorInfo {}
+
 	Error "[msgcat::mc {Unable to locate URL}] $url"
 	return
     }

@@ -51,7 +51,7 @@ proc xmlrpcDoRequest {sock} {
 
 	puts -nonewline $sock $header
 	flush $sock
-	catch {close $sock}
+	close $sock
 	return
     }
     
@@ -119,7 +119,7 @@ proc xmlrpcDoRequest {sock} {
     
     puts -nonewline $sock $res
     flush $sock
-    catch {close $sock}
+    close $sock
 }
 
 proc xmlrpcResponse {rpc} {
@@ -215,7 +215,7 @@ proc xmlrpcNBRead {fd} {
     set buffer ""
     while {1} {
 	if {[eof $fd]} {
-	    catch {close $fd}
+	    close $fd
 	    break
 	}
 	set temp [read $fd 4096]
@@ -264,7 +264,7 @@ proc xmlrpcCall {url method methodName params} {
     unset xmlrpc(done,$cnt)
     unset xmlrpc(result,$cnt)
 
-    catch {close $sock}
+#   close $sock
 
     if {$ss > 0} {
 	return $rr

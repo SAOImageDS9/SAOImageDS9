@@ -121,6 +121,7 @@ proc FitsCmdLoad {param layer mode} {
 	if {![LoadFitsSocket $parse(sock) $param $layer $mode]} {
 	    InitError xpa
 	    LoadFitsFile $param $layer $mode
+	    InitError tcl
 	}
     } else {
 	# comm

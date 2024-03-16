@@ -321,7 +321,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}}} {
 	    if {$url != {}} {
 		set map2(url) "string \"$url\""
 	    }
-	    set m2 [xmlrpcList2Member [array get map2]
+	    set m2 [xmlrpcList2Member [array get map2]]
 
 	    set map1(samp.status) {string samp.warning}
 	    set map1(samp.result) [list struct $m2]
@@ -347,6 +347,18 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}}} {
     set params [list params [list $param1 $param2 $param3]]
     set rr {}
     SAMPSend samp.hub.reply $params rr
+}
+
+proc SAMPError {msg} {
+    global pds9
+
+    # msgcat::mc {already connected}
+    # msgcat::mc {unable to locate HUB}
+    # msgcat::mc {not connected}
+
+    if {$pds9(confirm)} {
+	tk_messageBox -message $msg -type ok -icon error
+    }
 }
 
 # client events

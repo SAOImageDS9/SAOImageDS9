@@ -236,6 +236,7 @@ proc PhotoCmdLoad {param mode} {
 		if {![ImportPhotoSocket $parse(ch) $param $mode]} {
 		    InitError xpa
 		    ImportPhotoFile $param $mode
+		    InitError tcl
 		}
 	    }
 	    {Windows NT} {ImportPhotoFile $param $mode}

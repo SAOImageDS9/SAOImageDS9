@@ -1275,11 +1275,15 @@ proc UpdateFileMenuSAMP {} {
 	return
     }
     
+    # we maybe in the middle of initialization
     if {![info exists samp]} {
 	return
     }
     
-    # we maybe in the middle of initialization
+    if {![info exists samp(init)]} {
+	return
+    }
+    
     if {!$samp(init)} {
        return
     }

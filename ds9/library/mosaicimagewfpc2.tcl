@@ -65,6 +65,7 @@ proc MosaicImageWFPC2CmdLoad {param layer} {
 	if {![LoadMosaicImageWFPC2Socket $parse(sock) $param $layer]} {
 	    InitError xpa
 	    LoadMosaicImageWFPC2File $param $layer
+	    InitError tcl
 	}
     } else {
 	# comm

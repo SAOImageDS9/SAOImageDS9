@@ -358,6 +358,10 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 					 -binary 1 \
 					 -channel $var(ch)]
 	}]} {
+	    # reset errorInfo (may be set in http::geturl)
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	    set var(delete) 1
 	    HVProcessURLHTTPFinish $varname $var(token)
@@ -375,6 +379,10 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 					 -channel $var(ch) \
 					 -command [list HVProcessURLHTTPFinish $varname]]
 	}]} {
+	    # reset errorInfo (may be set in http::geturl)
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	    set var(delete) 1
 	} else {
@@ -1810,6 +1818,10 @@ proc HVImageURL {varname url width height} {
 		    set ii 0
 		    continue
 		}
+
+		# reset errorInfo (may be set in http::geturl)
+		global errorInfo
+		set errorInfo {}
 
 		catch {close $ch}
 

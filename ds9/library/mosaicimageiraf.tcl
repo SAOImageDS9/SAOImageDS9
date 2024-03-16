@@ -65,6 +65,7 @@ proc MosaicImageIRAFCmdLoad {param layer} {
 	if {![LoadMosaicImageIRAFSocket $parse(sock) $param $layer]} {
 	    InitError xpa
 	    LoadMosaicImageIRAFFile $param $layer
+	    InitError tcl
 	}
     } else {
 	# comm

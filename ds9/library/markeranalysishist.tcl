@@ -105,6 +105,10 @@ proc MarkerAnalysisHistogramDeleteCB {frame id} {
     set vvarname ${imarker(prefix,histogram)}${id}${frame}
     upvar #0 $vvarname vvar
     global $vvarname
+    
+    # clear any errors
+    global errorInfo
+    set errorInfo {}
 
     PlotDestroy $vvarname
 }

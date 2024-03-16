@@ -43,7 +43,9 @@ proc CATReg {varname row interactive resultname} {
     # do we have formats for colx and coly?
     if {[catch {starbase_hdrget $var(tbldb) UFMT} ff]} {
 	set ff {}
-     }
+	global errorInfo
+	set errorInfo {}
+    }
     set xformat  [lindex $ff 0]
     set yformat [lindex $ff 1]
 

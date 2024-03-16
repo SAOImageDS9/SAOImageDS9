@@ -1505,8 +1505,7 @@ proc ProcessConsoleCmd {varname iname} {
     OpenConsole
 
     # ignore error message about ActiveTcl
-    global ds9
-    InitError $ds9(msg,src)
+    InitError tcl
 }
 
 proc ProcessCursorCmd {varname iname} {

@@ -2289,9 +2289,14 @@ proc XPADebug {which param} {
 
 proc XPACatchError {xpa} {
     global ds9
+    global errorInfo
 
-    if {$ds9(msg) != {}} {
-	xpaerror $xpa $ds9(msg)
+    if {$errorInfo != {} || $ds9(msg) != {}} {
+	if {$ds9(msg) != {}} {
+	    xpaerror $xpa $ds9(msg)
+	} else {
+	    xpaerror $xpa [lindex [split $errorInfo "\n"] 0]
+	}
     }
     InitError tcl
 }

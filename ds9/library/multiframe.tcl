@@ -94,7 +94,7 @@ proc LoadMultiFrameAlloc {path fn} {
 
 	if  {![ProcessLoad 0]} {
 	    if {$ext} {
-		InitError xpa
+		InitError tcl
 
 		if {$did} {
 		    DeleteCurrentFrame
@@ -159,6 +159,7 @@ proc MultiframeCmdLoad {param} {
 		if {![LoadMultiFrameSocket $parse(sock) $param]} {
 		    InitError xpa
 		    LoadMultiFrameFile $param
+		    InitError tcl
 		}
 	    }
 	    {Windows NT} {LoadMultiFrameFile $param}

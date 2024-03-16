@@ -148,6 +148,7 @@ proc RGBImageCmdLoad {param} {
 	if {![LoadRGBImageSocket $parse(sock) $param]} {
 	    InitError xpa
 	    LoadRGBImageFile $param
+	    InitError tcl
 	}
     } else {
 	# comm

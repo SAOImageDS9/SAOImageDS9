@@ -146,6 +146,7 @@ proc RGBArrayCmdLoad {param} {
 	if {![ImportRGBArraySocket $parse(sock) $param]} {
 	    InitError xpa
 	    ImportRGBArrayFile $param
+	    InitError tcl
 	}
     } else {
 	# comm

@@ -99,6 +99,7 @@ proc MosaicWCSCmdLoad {param layer sys} {
 	if {![LoadMosaicWCSSocket $parse(sock) $param $layer $sys]} {
 	    InitError xpa
 	    LoadMosaicWCSFile $param $layer $sys
+	    InitError tcl
 	}
     } else {
 	# comm

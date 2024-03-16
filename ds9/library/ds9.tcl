@@ -110,7 +110,7 @@ proc DS9Def {} {
 
     set ds9(msg) {}
     set ds9(msg,level) info
-    set ds9(msg,src) {}
+    set ds9(msg,src) tcl
     set ds9(msg,timeout) 1000
 
     switch $ds9(wm) {

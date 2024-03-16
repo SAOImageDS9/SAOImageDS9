@@ -134,6 +134,10 @@ proc MarkerAnalysisPandaDeleteCB {frame id} {
     upvar #0 $vvarname vvar
     global $vvarname
 
+    # clear any errors
+    global errorInfo
+    set errorInfo {}
+
     PlotDestroy $vvarname
 }
 

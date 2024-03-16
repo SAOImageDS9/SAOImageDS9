@@ -109,12 +109,14 @@ proc ProcessLoad {{err 1}} {
     if {[catch {
 	switch -- $loadParam(load,type) {
 	    alloc -
-	    allocgz {$current(frame) load $loadParam(file,type) \
+	    allocgz {
+		$current(frame) load $loadParam(file,type) \
 			 $loadParam(file,mode) \
 			 \{$loadParam(file,name)\} \
 			 $loadParam(load,type) \
 			 \{$loadParam(file,fn)\} \
-			 $loadParam(load,layer)}
+			 $loadParam(load,layer)
+	    }
 	    channel {
 		fconfigure $loadParam(channel,name) -translation binary \
 		    -encoding binary
@@ -129,46 +131,59 @@ proc ProcessLoad {{err 1}} {
 		catch {close $loadParam(channel,name)}
 	    }
 	    mmap -
-	    mmapincr {$current(frame) load $loadParam(file,type) \
+	    mmapincr {
+		$current(frame) load $loadParam(file,type) \
 			  $loadParam(file,mode) \
 			  \{$loadParam(file,name)\} \
 			  $loadParam(load,type) \
-			  $loadParam(load,layer)}
-	    smmap {$current(frame) load $loadParam(file,type) \
+			  $loadParam(load,layer)
+	    }
+	    smmap {
+		$current(frame) load $loadParam(file,type) \
 		       $loadParam(file,mode) \
 		       \{$loadParam(file,header)\} \
 		       \{$loadParam(file,name)\} \
 		       $loadParam(load,type) \
-		       $loadParam(load,layer)}
-	    shared {$current(frame) load $loadParam(file,type) \
+		       $loadParam(load,layer)
+	    }
+	    shared {
+		$current(frame) load $loadParam(file,type) \
 			$loadParam(file,mode) \
 			\{$loadParam(file,name)\} \
 			$loadParam(load,type) \
 			$loadParam(shared,idtype) \
 			$loadParam(shared,id) \
-			$loadParam(load,layer)}
-	    sshared {$current(frame) load $loadParam(file,type) \
+			$loadParam(load,layer)
+	    }
+	    sshared {
+		$current(frame) load $loadParam(file,type) \
 			 $loadParam(file,mode) \
 			 \{$loadParam(file,name)\} \
 			 $loadParam(load,type) \
 			 $loadParam(shared,idtype) \
 			 $loadParam(shared,hdr) \
 			 $loadParam(shared,id) \
-			 $loadParam(load,layer)}
+			 $loadParam(load,layer)
+	    }
 	    socket -
-	    socketgz {$current(frame) load $loadParam(file,type) \
+	    socketgz {
+		$current(frame) load $loadParam(file,type) \
 			  $loadParam(file,mode) \
 			  \{$loadParam(file,name)\} \
 			  $loadParam(load,type) \
 			  $loadParam(socket,id) \
-			  $loadParam(load,layer)}
-	    var {$current(frame) load $loadParam(file,type) \
+			  $loadParam(load,layer)
+	    }
+	    var {
+		$current(frame) load $loadParam(file,type) \
 		     $loadParam(file,mode) \
 		     \{$loadParam(file,name)\} \
 		     $loadParam(load,type) \
 		     $loadParam(var,name) \
-		     $loadParam(load,layer)}
-	    photo {$current(frame) load $loadParam(file,type) \
+		     $loadParam(load,layer)
+	    }
+	    photo {
+		$current(frame) load $loadParam(file,type) \
 		       $loadParam(file,mode) \
 		       $loadParam(var,name) \{$loadParam(file,name)\}
 	    }

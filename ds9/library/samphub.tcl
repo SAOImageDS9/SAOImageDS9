@@ -517,6 +517,11 @@ proc SAMPHubNotify {secret cc mtype param} {
     # runs in top level
     global samphub
 
+    # should not happen
+    if {![info exists samphub]} {
+	return
+    }
+
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
     set param3 $param
@@ -537,6 +542,11 @@ proc SAMPHubNotify {secret cc mtype param} {
 proc SAMPHubCall {secret cc msgid mtype param} {
     # runs in top level
     global samphub
+
+    # should not happen
+    if {![info exists samphub]} {
+	return
+    }
 
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
@@ -559,6 +569,11 @@ proc SAMPHubCall {secret cc msgid mtype param} {
 proc SAMPHubReply {cc id msgtag param} {
     # runs in top level
     global samphub
+
+    # should not happen
+    if {![info exists samphub]} {
+	return
+    }
 
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $id]]]

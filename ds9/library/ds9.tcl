@@ -691,3 +691,8 @@ switch $ds9(wm) {
 	event generate $ds9(canvas) <Tab> -x 0 -y 0
     }
 }
+
+# and clear any error codes
+global errorInfo
+set errorInfo {}
+

@@ -69,7 +69,7 @@ proc SAMPWebHubCallbackTimer {sock} {
 
 	puts -nonewline $sock $res
 	flush $sock
-	catch {close $sock}
+	close $sock
     } else {
 	# check
 	after $samphub(timer) [list SAMPWebHubCallbackTimer $sock]

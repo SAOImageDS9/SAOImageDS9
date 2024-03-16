@@ -38,8 +38,8 @@ proc SAMPHubStart {verbose} {
 	    if {$verbose} {
 		Error "SAMPHub: [msgcat::mc {found existing hub}]"
 	    }
-	    catch {unset samp}
-	    catch {unset samphub}
+	    unset samp
+	    unset samphub
 	    return
 	} else {
 	    # its dead, try to delete
@@ -51,8 +51,8 @@ proc SAMPHubStart {verbose} {
     }
     
     # ok, we are on our own
-    catch {unset samp}
-    catch {unset samphub}
+    unset samp
+    unset samphub
     
     # basics
     set samphub(verbose) $verbose
@@ -106,7 +106,7 @@ proc SAMPHubStartConnect {} {
 
     if {[catch {set samphub(sock) [xmlrpcServe 0]}]} {
 	Error "SAMPHub: [msgcat::mc {unable to open hub}]"
-	catch {unset samphub}
+	unset samphub
 	return 0
     }
     set samphub(port) [lindex [fconfigure $samphub(sock) -sockname] 2]
@@ -130,7 +130,7 @@ proc SAMPHubStartProfile {} {
 	if {$samphub(verbose)} {
 	    Error "SAMPHub: [msgcat::mc {unable to create hub file}]"
 	}
-	catch {unset samphub}
+	unset samphub
 	return 0
     }
 
@@ -225,7 +225,7 @@ proc SAMPHubStop {} {
     # close the server socket if still up
     catch {close $samphub(web,sock)}
     catch {close $samphub(sock)}
-    catch {unset samphub}
+    unset samphub
 
     SAMPHubDialogUpdate
     UpdateFileMenu

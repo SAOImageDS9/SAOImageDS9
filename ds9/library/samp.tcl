@@ -34,8 +34,8 @@ proc SAMPConnectMetadata {} {
     
     set rr {}
     if {![SAMPSend samp.hub.declareMetadata $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
 }
@@ -75,8 +75,8 @@ proc SAMPConnectSubscriptions {} {
 
     set rr {}
     if {![SAMPSend samp.hub.declareSubscriptions $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
 }

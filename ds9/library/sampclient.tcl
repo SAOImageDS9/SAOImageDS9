@@ -16,7 +16,9 @@ proc SAMPConnectInit {verbose output debug} {
     }
 
     # reset samp array
-    catch {unset samp}
+    if {[info exists samp]} {
+	unset samp
+    }
 
     set samp(verbose) $verbose
     set samp(output) $output
@@ -35,16 +37,16 @@ proc SAMPConnectInit {verbose output debug} {
 	    if {$samp(verbose)} {
 		SAMPError "SAMP: unable to locate valid HUB"
 	    }
-	    catch {unset samp}
 	    # Error
+	    unset samp
 	    return 0
 	}
     } else {
 	if {$samp(verbose)} {
 	    SAMPError "SAMP: unable to locate valid HUB"
 	}
-	catch {unset samp}
 	# Error
+	unset samp
 	return 0
     }
 
@@ -89,8 +91,8 @@ proc SAMPConnectRegister {} {
     set params [list params [list [list param [list value [list string $samp(secret)]]]]]
     set rr {}
     if {![SAMPSend samp.hub.register $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
 
@@ -117,8 +119,8 @@ proc SAMPConnectCallback {} {
 
     set rr {}
     if {![SAMPSend samp.hub.setXmlrpcCallback $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
 }
@@ -129,8 +131,8 @@ proc SAMPConnectGetClients {} {
     set params [list params [list [list param [list value [list string $samp(private)]]]]]
     set rr {}
     if {![SAMPSend samp.hub.getRegisteredClients $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
 
@@ -150,8 +152,8 @@ proc SAMPConnectGetSubscriptions {cc} {
     set params [list params [list $param1 $param2]]
     set rr {}
     if {![SAMPSend samp.hub.getSubscriptions $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
     
@@ -171,8 +173,8 @@ proc SAMPConnectGetMetadata {cc} {
     set params [list params [list $param1 $param2]]
     set rr {}
     if {![SAMPSend samp.hub.getMetadata $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
     
@@ -203,8 +205,8 @@ proc SAMPDisconnect {} {
     set params [list params [list [list param [list value [list string $samp(private)]]]]]
     set rr {}
     if {![SAMPSend samp.hub.unregister $params rr]} {
-	catch {unset samp}
 	# Error
+	unset samp
 	return
     }
 
@@ -222,7 +224,7 @@ proc SAMPShutdown {} {
     catch {close $samp(sock)}
 
     # unset samp array
-    catch {unset samp}
+    unset samp
 }
 
 proc SAMPSend {method params resultVar} {
@@ -754,7 +756,8 @@ proc SAMPParseHub {} {
 
     if {$samp(secret) == {} || $samp(url) == {}} {
 	SAMPDelTmpFiles
-	catch {unset samp}
+	# Error
+	unset samp
 	return 0
     }
 

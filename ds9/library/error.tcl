@@ -24,12 +24,6 @@ package provide DS9 1.0
 # tcl GUI
 # stderr
 
-# capture event loop background errors
-proc bgerror {err} {
-    tk_messageBox -type ok -icon error \
-	-message "[msgcat::mc {An internal error has been detected}] $err"
-}
-
 # clear both ds9(msg) and errorInfo
 proc InitError {src} {
     global ds9
@@ -39,6 +33,29 @@ proc InitError {src} {
 
     global errorInfo
     set errorInfo {}
+}
+
+# GUI ONLY
+# capture event loop background errors
+proc bgerror {err} {
+    tk_messageBox -type ok -icon error \
+	-message "[msgcat::mc {An internal error has been detected}] $err"
+}
+
+# GUI ONLY
+# here is where errors from within the canvas widgets 
+# will try to get our attention. 
+# XPA, SAMP will have already seen any problems
+proc ErrorTimer {} {
+    global ds9
+
+    if {$ds9(msg) != {}} {
+	tk_messageBox -message $ds9(msg) -type ok -icon $ds9(msg,level)
+	InitError tcl
+    }
+
+    # set again
+    after $ds9(msg,timeout) ErrorTimer
 }
 
 proc Info {message} {
@@ -60,13 +77,12 @@ proc ProcessMessage {level msg} {
 
     set ds9(msg,level) $level
     switch -- $ds9(msg,src) {
-	xpa -
-	samp {set ds9(msg) $msg}
 	tcl {
 	    if {$pds9(confirm)} {
 		tk_messageBox -message $msg -type ok -icon $level
 	    }
 	}
+	default {set ds9(msg) $msg}
     }
 }
 
@@ -75,35 +91,17 @@ proc ParserError {msg yycnt yy_current_buffer index_} {
     global ds9
 
     switch -- $ds9(msg,src) {
-	xpa -
-	samp {
-	    Error "$msg, found [lindex $yy_current_buffer [expr $yycnt-1]]"
-	}
 	tcl {
 	    puts stderr "[string range $yy_current_buffer 0 60]"
 	    puts stderr [format "%*s" $index_ ^]
 	    puts stderr "$msg"
 	    QuitDS9
 	}
-    }
-}
-
-# here is where errors from within the canvas widgets 
-# will try to get our attention. 
-# XPA, SAMP will have already seen any problems
-proc ErrorTimer {} {
-    global ds9
-    global pds9
-
-    if {$ds9(msg) != {}} {
-	if {$pds9(confirm)} {
-	    tk_messageBox -message $ds9(msg) -type ok -icon $ds9(msg,level)
+	default {
+	    Error "$msg, found [lindex $yy_current_buffer [expr $yycnt-1]]"
 	}
-	InitError tcl
     }
-
-    # set again
-    after $ds9(msg,timeout) ErrorTimer
 }
+
 
 

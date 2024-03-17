@@ -1329,7 +1329,7 @@ proc HVParseXPASet {varname} {
 	$target == "*:*" ||
 	$target == [XPAMethod]} {
 
-	InitError xpa
+	InitError hv
 	CommSet $var(fn) [HVParseMimeParam $varname paramlist] 1
 	InitError tcl
     } else {

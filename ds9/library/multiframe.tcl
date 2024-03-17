@@ -94,7 +94,7 @@ proc LoadMultiFrameAlloc {path fn} {
 
 	if  {![ProcessLoad 0]} {
 	    if {$ext} {
-		InitError tcl
+		InitError xpa
 
 		if {$did} {
 		    DeleteCurrentFrame

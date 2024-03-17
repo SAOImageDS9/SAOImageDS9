@@ -57,6 +57,9 @@ proc NSVRGetURL {varname url query} {
 					 -timeout $ihttp(timeout) \
 					 -headers "[ProxyHTTP]"]
 	}]} {
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	    NSVRGetURLFinish $varname $var(token)
 	} else {
@@ -69,6 +72,10 @@ proc NSVRGetURL {varname url query} {
 					 [list NSVRGetURLFinish $varname] \
 					 -headers "[ProxyHTTP]"]
 	}]} {
+
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	} else {
 	    ARError $varname "[msgcat::mc {Unable to locate URL}] $url"

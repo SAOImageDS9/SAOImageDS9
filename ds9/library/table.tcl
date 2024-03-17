@@ -20,6 +20,9 @@ proc TBLGetURL {varname url query} {
 					 -timeout $ihttp(timeout) \
 					 -headers "[ProxyHTTP]"]
 	}]} {
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	    TBLGetURLFinish $varname $var(token)
 	} else {
@@ -33,6 +36,9 @@ proc TBLGetURL {varname url query} {
 					 [list TBLGetURLFinish $varname] \
 					 -headers "[ProxyHTTP]"]
 	}]} {
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	} else {
 	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
@@ -723,7 +729,7 @@ proc TBLEditDialogSave {parent} {
 	set flt [$ed(text) get 1.0 end]
 	catch {regsub {\n} $flt " " flt}
 	puts $fp [string trim $flt]
-	catch {close $fp}
+	close $fp
     }
 }
 
@@ -739,7 +745,7 @@ proc TBLEditDialogLoad {parent} {
 	$ed(text) delete 1.0 end
 	$ed(text) insert end [read -nonewline $fp]
 	$ed(text) see end
-	catch {close $fp}
+	close $fp
     }
 }
 
@@ -839,7 +845,7 @@ proc TBLCmdFilterLoad {fn} {
 	set flt [read -nonewline $fp]
 	catch {regsub {\n} $flt " " $flt}
 	set cvar(filter) [string trim $flt]
-	catch {close $fp}
+	close $fp
     }
 }
 

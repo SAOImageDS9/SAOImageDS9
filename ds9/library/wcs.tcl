@@ -628,7 +628,7 @@ proc WCSSaveFile {fn wcs} {
 	return
     }
     puts $fp $wcs
-    catch {close $fp}
+    close $fp
 }
 
 proc WCSLoadDialog {} {
@@ -647,7 +647,7 @@ proc WCSLoadFile {fn} {
 	    return
 	}
 	WCSToVar [read -nonewline $fp]
-	catch {close $fp}
+	close $fp
     }
 }
 

@@ -253,6 +253,9 @@ proc IMGSVRGetURL {varname url query} {
 					 -headers "[ProxyHTTP]" \
 					 -query "$query"]
 	}]} {
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	    IMGSVRGetURLFinish $varname $var(token)
 	} else {
@@ -271,6 +274,9 @@ proc IMGSVRGetURL {varname url query} {
 					 -headers "[ProxyHTTP]" \
 					 -query "$query"]
 	}]} {
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	} else {
 	    catch {close $var(ch)}
@@ -292,7 +298,7 @@ proc IMGSVRGetURLFinish {varname token} {
     global ds9
     global loadParam
 
-    catch {close $var(ch)}
+    close $var(ch)
 
     if {!($var(active))} {
 	ARCancelled $varname

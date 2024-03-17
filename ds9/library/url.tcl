@@ -54,8 +54,10 @@ proc GetFileHTTP {url fn} {
 	Error "[msgcat::mc {Unable to locate URL}] $url"
 	return
     }
+    global errorInfo
+    set errorInfo {}
 
-    catch {close $ch}
+    close $ch
 
     if {[info exists token]} {
 	if {$foo(authority) == {cda.harvard.edu}} {
@@ -144,8 +146,10 @@ proc LoadURLFitsHTTP {url layer mode multi} {
 	Error "[msgcat::mc {Unable to locate URL}] $url"
 	return
     }
-
-    catch {close $ch}
+    global errorInfo
+    set errorInfo {}
+    
+    close $ch
 
     upvar #0 $token t
 

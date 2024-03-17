@@ -272,6 +272,9 @@ proc VOLoad {varname url} {
 				     -timeout $ihttp(timeout) \
 				     -headers "[ProxyHTTP]"]
     }]} {
+	global errorInfo
+	set errorInfo {}
+	
 	set var(active) 1
 	VOFinish $varname $var(token)
     }

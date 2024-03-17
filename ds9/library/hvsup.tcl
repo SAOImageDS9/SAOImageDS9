@@ -358,6 +358,9 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 					 -binary 1 \
 					 -channel $var(ch)]
 	}]} {
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	    set var(delete) 1
 	    HVProcessURLHTTPFinish $varname $var(token)
@@ -375,6 +378,9 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 					 -channel $var(ch) \
 					 -command [list HVProcessURLHTTPFinish $varname]]
 	}]} {
+	    global errorInfo
+	    set errorInfo {}
+
 	    set var(active) 1
 	    set var(delete) 1
 	} else {
@@ -393,7 +399,7 @@ proc HVProcessURLHTTPFinish {varname token} {
 	puts stderr "HVProcessURLHTTPFinish"
     }
 
-    catch {close $var(ch)}
+    close $var(ch)
 
     if {!($var(active))} {
 	HVCancelled $varname
@@ -1810,6 +1816,8 @@ proc HVImageURL {varname url width height} {
 		    set ii 0
 		    continue
 		}
+		global errorInfo
+		set errorInfo {}
 
 		catch {close $ch}
 

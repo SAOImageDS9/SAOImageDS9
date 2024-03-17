@@ -264,7 +264,7 @@ proc CommGet {proc id paramlist fn} {
 	    cd {ProcessSendCDCmd $proc $id $param}
 	    cmap {ProcessSendCmapCmd $proc $id $param}
 	    colorbar {ProcessSendColorbarCmd $proc $id $param}
-	    console {}
+	    console {$proc $id $param}
 	    contours -
 	    contour {
 		ProcessSendContourCmd $proc $id $param {} $fn.ctr
@@ -272,7 +272,7 @@ proc CommGet {proc id paramlist fn} {
 	    }
 	    crop {ProcessSendCropCmd $proc $id $param}
 	    crosshair {ProcessSendCrosshairCmd $proc $id $param}
-	    cursor {}
+	    cursor {$proc $id $param}
 	    data {
 		ProcessSendDataCmd $proc $id $param {} $fn.dat
 		return $fn.data
@@ -283,9 +283,9 @@ proc CommGet {proc id paramlist fn} {
 	    dsssao {ProcessSendSAOCmd $proc $id $param}
 	    dsseso {ProcessSendESOCmd $proc $id $param}
 	    dssstsci {ProcessSendSTSCICmd $proc $id $param}
-	    envi {}
-	    exit {}
-	    export {}
+	    envi {$proc $id $param}
+	    exit {$proc $id $param}
+	    export {$proc $id $param}
 	    fade {ProcessSendFadeCmd $proc $id $param}
 	    file {ProcessSendFileCmd $proc $id $param}
 	    fits {
@@ -301,7 +301,7 @@ proc CommGet {proc id paramlist fn} {
 	    }
 	    graph {ProcessSendGraphCmd $proc $id $param}
 	    grid {ProcessSendGridCmd $proc $id $param}
-	    header {}
+	    header {$proc $id $param}
 	    height {ProcessSendHeightCmd $proc $id $param}
 	    iconify {ProcessSendIconifyCmd $proc $id $param}
 	    iexam -
@@ -314,10 +314,10 @@ proc CommGet {proc id paramlist fn} {
 		return $fn.jpg
 	    }
 	    lock {ProcessSendLockCmd $proc $id $param}
-	    lower {}
+	    lower {$proc $id $param}
 	    magnifier {ProcessSendMagnifierCmd $proc $id $param}
 	    mask {ProcessSendMaskCmd $proc $id $param}
-	    match {}
+	    match {$proc $id $param}
 	    mecube {
 		ProcessSendMECubeCmd $proc $id $param {} $fn.fits
 		return $fn.fits
@@ -352,9 +352,9 @@ proc CommGet {proc id paramlist fn} {
 		# backward compatibility
 	    }
 	    savempeg -
-	    movie {}
+	    movie {$proc $id $param}
 	    memf -
-	    multiframe {}
+	    multiframe {$proc $id $param}
 	    nameserver {ProcessSendNRESCmd $proc $id $param}
 	    nan {
 		# backward compatibility prefs
@@ -391,8 +391,8 @@ proc CommGet {proc id paramlist fn} {
 	    psprint {ProcessSendPrintCmd $proc $id $param}
 	    prism {ProcessSendPrismCmd $proc $id $param}
 	    exit -
-	    quit {}
-	    raise {}
+	    quit {$proc $id $param}
+	    raise {$proc $id $param}
 	    region -
 	    regions {
 		ProcessSendRegionsCmd $proc $id $param {} $fn.reg
@@ -414,8 +414,8 @@ proc CommGet {proc id paramlist fn} {
 	    rotate {ProcessSendRotateCmd $proc $id $param}
 	    samp {ProcessSendSAMPCmd $proc $id $param}
 	    save -
-	    savefits {}
-	    saveimage {}
+	    savefits {$proc $id $param}
+	    saveimage {$proc $id $param}
 	    scale {ProcessSendScaleCmd $proc $id $param}
 	    sfits {
 		# backward compatibility
@@ -434,9 +434,9 @@ proc CommGet {proc id paramlist fn} {
 		# backward compatibility
 	    }
 	    smooth {ProcessSendSmoothCmd $proc $id $param}
-	    source {}
-	    srgbcube {}
-	    tcl {}
+	    source {$proc $id $param}
+	    srgbcube {$proc $id $param}
+	    tcl {$proc $id $param}
 	    theme {
 		# backward compatibility prefs
 		ProcessSendThemeCmd $proc $id $param
@@ -451,8 +451,8 @@ proc CommGet {proc id paramlist fn} {
 		return $fn.tif
 	    }
 	    tile {ProcessSendTileCmd $proc $id $param}
-	    update {}
-	    url {}
+	    update {$proc $id $param}
+	    url {$proc $id $param}
 	    version {ProcessSendVersionCmd $proc $id $param}
 	    view {ProcessSendViewCmd $proc $id $param}
 	    vla -

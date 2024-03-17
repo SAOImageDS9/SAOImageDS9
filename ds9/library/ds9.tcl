@@ -692,7 +692,3 @@ switch $ds9(wm) {
     }
 }
 
-# and clear any error codes
-global errorInfo
-set errorInfo {}
-

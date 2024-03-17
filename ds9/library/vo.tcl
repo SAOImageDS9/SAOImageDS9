@@ -272,10 +272,6 @@ proc VOLoad {varname url} {
 				     -timeout $ihttp(timeout) \
 				     -headers "[ProxyHTTP]"]
     }]} {
-	# reset errorInfo (may be set in http::geturl)
-	global errorInfo
-	set errorInfo {}
-
 	set var(active) 1
 	VOFinish $varname $var(token)
     }

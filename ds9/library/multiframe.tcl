@@ -159,7 +159,6 @@ proc MultiframeCmdLoad {param} {
 		if {![LoadMultiFrameSocket $parse(sock) $param]} {
 		    InitError xpa
 		    LoadMultiFrameFile $param
-		    InitError tcl
 		}
 	    }
 	    {Windows NT} {LoadMultiFrameFile $param}

@@ -130,7 +130,6 @@ proc RGBCubeCmdLoad {param} {
 	if {![LoadRGBCubeSocket $parse(sock) $param]} {
 	    InitError xpa
 	    LoadRGBCubeFile $param
-	    InitError tcl
 	}
     } else {
 	# comm

@@ -38,10 +38,6 @@ proc InitError {src} {
     set ds9(msg,level) info
 
     global errorInfo
-    if {$errorInfo != {}} {
-	puts "***"
-	puts $errorInfo
-    }
     set errorInfo {}
 }
 

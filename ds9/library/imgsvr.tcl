@@ -253,10 +253,6 @@ proc IMGSVRGetURL {varname url query} {
 					 -headers "[ProxyHTTP]" \
 					 -query "$query"]
 	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
 	    set var(active) 1
 	    IMGSVRGetURLFinish $varname $var(token)
 	} else {
@@ -275,10 +271,6 @@ proc IMGSVRGetURL {varname url query} {
 					 -headers "[ProxyHTTP]" \
 					 -query "$query"]
 	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
 	    set var(active) 1
 	} else {
 	    catch {close $var(ch)}

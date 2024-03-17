@@ -95,7 +95,6 @@ proc ArrayCmdLoad {param layer} {
 	if {![ImportArraySocket $parse(sock) $param $layer]} {
 	    InitError xpa
 	    ImportArrayFile $param $layer
-	    InitError tcl
 	}
     } else {
 	# comm

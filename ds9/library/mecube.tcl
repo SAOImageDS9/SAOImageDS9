@@ -97,7 +97,6 @@ proc MECubeCmdLoad {param} {
 	if {![LoadMECubeSocket $parse(sock) $param]} {
 	    InitError xpa
 	    LoadMECubeFile $param
-	    InitError tcl
 	}
     } else {
 	# comm

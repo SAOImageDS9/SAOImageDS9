@@ -103,7 +103,6 @@ proc NRRDCmdLoad {param layer} {
 	if {![ImportNRRDSocket $parse(sock) $param $layer]} {
 	    InitError xpa
 	    ImportNRRDFile $param $layer
-	    InitError tcl
 	}
     } else {
 	# comm

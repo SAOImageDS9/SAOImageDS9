@@ -447,6 +447,11 @@ proc ProcessSendCmdSend {ext cmd} {
     }
 }
 
+proc ProcessSendNullCmd {proc id cmd} {
+    Error "[msgcat::mc {Unknown command}]: $cmd"
+    $proc $id {}
+}
+
 proc ProcessSend {proc id sock fn ext rr} {
     if {$fn != {}} {
 	append fn $ext

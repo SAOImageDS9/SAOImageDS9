@@ -264,7 +264,7 @@ proc CommGet {proc id paramlist fn} {
 	    cd {ProcessSendCDCmd $proc $id $param}
 	    cmap {ProcessSendCmapCmd $proc $id $param}
 	    colorbar {ProcessSendColorbarCmd $proc $id $param}
-	    console {$proc $id $param}
+	    console {ProcessSendNullCmd $proc $id $cmd}
 	    contours -
 	    contour {
 		ProcessSendContourCmd $proc $id $param {} $fn.ctr
@@ -272,7 +272,7 @@ proc CommGet {proc id paramlist fn} {
 	    }
 	    crop {ProcessSendCropCmd $proc $id $param}
 	    crosshair {ProcessSendCrosshairCmd $proc $id $param}
-	    cursor {$proc $id $param}
+	    cursor {ProcessSendNullCmd $proc $id $cmd}
 	    data {
 		ProcessSendDataCmd $proc $id $param {} $fn.dat
 		return $fn.data
@@ -283,9 +283,9 @@ proc CommGet {proc id paramlist fn} {
 	    dsssao {ProcessSendSAOCmd $proc $id $param}
 	    dsseso {ProcessSendESOCmd $proc $id $param}
 	    dssstsci {ProcessSendSTSCICmd $proc $id $param}
-	    envi {$proc $id $param}
-	    exit {$proc $id $param}
-	    export {$proc $id $param}
+	    envi {ProcessSendNullCmd $proc $id $cmd}
+	    exit {ProcessSendNullCmd $proc $id $cmd}
+	    export {ProcessSendNullCmd $proc $id $cmd}
 	    fade {ProcessSendFadeCmd $proc $id $param}
 	    file {ProcessSendFileCmd $proc $id $param}
 	    fits {
@@ -301,7 +301,7 @@ proc CommGet {proc id paramlist fn} {
 	    }
 	    graph {ProcessSendGraphCmd $proc $id $param}
 	    grid {ProcessSendGridCmd $proc $id $param}
-	    header {$proc $id $param}
+	    header {ProcessSendNullCmd $proc $id $cmd}
 	    height {ProcessSendHeightCmd $proc $id $param}
 	    iconify {ProcessSendIconifyCmd $proc $id $param}
 	    iexam -
@@ -314,10 +314,10 @@ proc CommGet {proc id paramlist fn} {
 		return $fn.jpg
 	    }
 	    lock {ProcessSendLockCmd $proc $id $param}
-	    lower {$proc $id $param}
+	    lower {ProcessSendNullCmd $proc $id $cmd}
 	    magnifier {ProcessSendMagnifierCmd $proc $id $param}
 	    mask {ProcessSendMaskCmd $proc $id $param}
-	    match {$proc $id $param}
+	    match {ProcessSendNullCmd $proc $id $cmd}
 	    mecube {
 		ProcessSendMECubeCmd $proc $id $param {} $fn.fits
 		return $fn.fits
@@ -352,9 +352,9 @@ proc CommGet {proc id paramlist fn} {
 		# backward compatibility
 	    }
 	    savempeg -
-	    movie {$proc $id $param}
+	    movie {ProcessSendNullCmd $proc $id $cmd}
 	    memf -
-	    multiframe {$proc $id $param}
+	    multiframe {ProcessSendNullCmd $proc $id $cmd}
 	    nameserver {ProcessSendNRESCmd $proc $id $param}
 	    nan {
 		# backward compatibility prefs
@@ -391,8 +391,8 @@ proc CommGet {proc id paramlist fn} {
 	    psprint {ProcessSendPrintCmd $proc $id $param}
 	    prism {ProcessSendPrismCmd $proc $id $param}
 	    exit -
-	    quit {$proc $id $param}
-	    raise {$proc $id $param}
+	    quit {ProcessSendNullCmd $proc $id $cmd}
+	    raise {ProcessSendNullCmd $proc $id $cmd}
 	    region -
 	    regions {
 		ProcessSendRegionsCmd $proc $id $param {} $fn.reg
@@ -414,8 +414,8 @@ proc CommGet {proc id paramlist fn} {
 	    rotate {ProcessSendRotateCmd $proc $id $param}
 	    samp {ProcessSendSAMPCmd $proc $id $param}
 	    save -
-	    savefits {$proc $id $param}
-	    saveimage {$proc $id $param}
+	    savefits {ProcessSendNullCmd $proc $id $cmd}
+	    saveimage {ProcessSendNullCmd $proc $id $cmd}
 	    scale {ProcessSendScaleCmd $proc $id $param}
 	    sfits {
 		# backward compatibility
@@ -434,9 +434,9 @@ proc CommGet {proc id paramlist fn} {
 		# backward compatibility
 	    }
 	    smooth {ProcessSendSmoothCmd $proc $id $param}
-	    source {$proc $id $param}
-	    srgbcube {$proc $id $param}
-	    tcl {$proc $id $param}
+	    source {ProcessSendNullCmd $proc $id $cmd}
+	    srgbcube {ProcessSendNullCmd $proc $id $cmd}
+	    tcl {ProcessSendNullCmd $proc $id $cmd}
 	    theme {
 		# backward compatibility prefs
 		ProcessSendThemeCmd $proc $id $param
@@ -451,8 +451,8 @@ proc CommGet {proc id paramlist fn} {
 		return $fn.tif
 	    }
 	    tile {ProcessSendTileCmd $proc $id $param}
-	    update {$proc $id $param}
-	    url {$proc $id $param}
+	    update {ProcessSendNullCmd $proc $id $cmd}
+	    url {ProcessSendNullCmd $proc $id $cmd}
 	    version {ProcessSendVersionCmd $proc $id $param}
 	    view {ProcessSendViewCmd $proc $id $param}
 	    vla -
@@ -465,10 +465,7 @@ proc CommGet {proc id paramlist fn} {
 	    xpa {ProcessSendXPACmd $proc $id $param}
 	    zscale {ProcessSendZScaleCmd $proc $id $param}
 	    zoom {ProcessSendZoomCmd $proc $id $param}
-	    default {
-		Error "[msgcat::mc {Unknown command}]: $cmd"
-		$proc $id {}
-	    }
+	    default {ProcessSendNullCmd $proc $id $cmd}
 	}
     }
 

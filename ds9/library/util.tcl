@@ -1235,7 +1235,7 @@ proc ConfigHTTP {} {
     http::config -useragent ds9
 
     # set up tls
-    http::register https 443 [list ::tls::socket -tls1 1]
+    http::register https 443 [list ::tls::socket -tls1 true]
 
     # set the proxy if requested
     if {$phttp(proxy)} {

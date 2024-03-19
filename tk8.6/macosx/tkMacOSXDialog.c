@@ -31,6 +31,9 @@ static void setAllowedFileTypes(
     NSSavePanel *panel,
     NSMutableArray *extensions)
 {
+    /* waj */
+    [panel setAllowedFileTypes:extensions];
+    return;
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 110000
 /* UTType exists in the SDK */
     if (@available(macOS 11.0, *)) {

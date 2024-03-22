@@ -61,120 +61,105 @@ proc urlfits::unsetupvalues {numsyms} {
 }
 
 array set urlfits::table {
-  3:0,target 1
-  0:257 reduce
-  6:257,target 8
-  4:260,target 7
-  1:257 reduce
-  0:258 reduce
-  8:0 reduce
-  5:0,target 2
-  1:258 reduce
+  6:0 reduce
+  0:257 shift
+  7:0 reduce
+  0:258 shift
+  5:0,target 0
+  2:257 shift
   0:259 shift
-  0:260 reduce
+  0:260 shift
   10:0 reduce
-  6:260,target 9
-  1:260 reduce
+  9:0 reduce
+  8:257,target 11
+  3:257 shift
   0:261 goto
   11:0 reduce
+  7:0,target 4
   4:257 shift
-  1:257,target 7
+  2:260 shift
   0:262 goto
-  0:258,target 6
-  4:258 shift
-  0:263 goto
-  10:0,target 4
-  6:257 shift
-  4:260 shift
-  1:260,target 7
-  0:261,target 2
-  7:257 shift
-  2:0,target 0
-  6:260 shift
-  4:258,target 6
-  0:263,target 4
-  9:257 shift
-  7:257,target 10
-  0:257,target 6
-  9:257,target 11
-  2:0 accept
-  8:0,target 3
-  3:0 reduce
-  1:258,target 7
-  0:259,target 1
-  0:260,target 6
-  11:0,target 5
-  5:0 reduce
-  4:257,target 5
-  0:262,target 3
+  0:258,target 2
+  10:0,target 5
+  9:0,target 3
+  3:257,target 9
+  0:261,target 5
+  8:257 shift
+  6:0,target 1
+  1:0 reduce
+  0:257,target 1
+  2:257,target 7
+  0:260,target 4
+  0:259,target 3
+  1:0,target 2
+  11:0,target 6
+  5:0 accept
+  4:257,target 10
+  2:260,target 8
+  0:262,target 6
 }
 
 array set urlfits::rules {
-  0,l 264
+  0,l 263
   1,l 261
   2,l 262
   3,l 262
   4,l 262
   5,l 262
-  6,l 263
-  7,l 263
+  6,l 262
 }
 
 array set urlfits::rules {
-  5,dc 4
-  7,dc 1
+  5,dc 2
   0,dc 1
-  2,dc 2
-  4,dc 3
-  6,dc 0
+  2,dc 1
+  4,dc 2
+  6,dc 3
   1,dc 1
-  3,dc 3
+  3,dc 2
 }
 
 array set urlfits::rules {
   5,line 25
-  7,line 29
   2,line 22
   4,line 24
-  6,line 28
+  6,line 26
   1,line 19
   3,line 23
 }
 
 array set urlfits::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 {257 258 260} 0} {7 {257 258 260} 0}}
-  1 {{7 {257 258 260} 1}}
-  2 {{0 0 1}}
-  3 {{1 0 1}}
-  4 {{2 0 1} {3 0 1} {4 0 1} {5 0 1}}
-  0,trans {{259 1} {261 2} {262 3} {263 4}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0}}
+  1 {{2 0 1}}
+  2 {{4 0 1} {6 0 1}}
+  3 {{3 0 1}}
+  4 {{5 0 1}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6}}
+  5 {{0 0 1}}
   1,trans {}
-  5 {{2 0 2}}
-  2,trans {}
-  6 {{3 0 2} {5 0 2}}
-  3,trans {}
+  6 {{1 0 1}}
+  2,trans {{257 7} {260 8}}
+  3,trans {{257 9}}
   7 {{4 0 2}}
-  8 {{3 0 3}}
-  4,trans {{257 5} {258 6} {260 7}}
-  10 {{4 0 3}}
-  9 {{5 0 3}}
+  4,trans {{257 10}}
+  8 {{6 0 2}}
   5,trans {}
-  11 {{5 0 4}}
-  6,trans {{257 8} {260 9}}
-  7,trans {{257 10}}
-  8,trans {}
+  10 {{5 0 2}}
+  9 {{3 0 2}}
+  11 {{6 0 3}}
+  6,trans {}
+  7,trans {}
+  8,trans {{257 11}}
   10,trans {}
-  9,trans {{257 11}}
+  9,trans {}
   11,trans {}
 }
 
 array set urlfits::token_id_table {
-  264,line 30
   262,title {}
   0,t 0
   0 {$}
   263,title {}
-  264,title {}
   error,t 0
   error error
   258,line 11
@@ -196,9 +181,7 @@ array set urlfits::token_id_table {
   262 urlfits
   257,line 7
   263,t 1
-  263 new
-  264,t 1
-  264 start'
+  263 start'
   260,line 13
   257,title string
   259,line 12
@@ -303,11 +286,11 @@ proc urlfits::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
-                    2 { LoadURLFits $2 {} {} 1 }
-                    3 { LoadURLFits $3 mask {} 0 }
-                    4 { LoadURLFits $3 {} slice 0 }
-                    5 { LoadURLFits $4 mask slice 0 }
-                    7 { CreateFrame }
+                    2 { LoadURLFitsCmd $1 }
+                    3 { LoadURLFits $2 {} {} 1 }
+                    4 { LoadURLFits $2 mask {} 0 }
+                    5 { LoadURLFits $2 {} slice 0 }
+                    6 { LoadURLFits $3 mask slice 0 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

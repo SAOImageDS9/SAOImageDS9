@@ -336,3 +336,18 @@ proc ProcessURLFitsCmd {varname iname} {
     incr i [expr $urlfits::yycnt-1]
 }
 
+proc LoadURLFitsCmd {url} {
+    global current
+    
+    if {$current(frame) != {}} {
+	switch -- [$current(frame) get type] {
+	    base {set multi 1}
+	    rgb {set multi 0}
+	    3d {set multi 1}
+	}
+    } else {
+	set multi 1
+    }
+
+    LoadURLFits $url {} {} $multi
+}

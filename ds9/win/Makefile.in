@@ -168,8 +168,8 @@ ds9Base.exe: $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	-L $(prefix)/openssl -lssl -lcrypto \
-	$(TK_LIBS) \
 	$(LIBS) \
+	$(TK_LIBS) \
 	-lgdi32 \
 	-mwindows
 

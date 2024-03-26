@@ -195,8 +195,8 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	-L $(prefix)/openssl -lssl -lcrypto \
-	$(TK_LIBS) \
-	$(LIBS)
+	$(LIBS) \
+	$(TK_LIBS)
 
 ds9.zip	: $(PREQS)
 	zip -ru ds9.zip $(APPDIR)

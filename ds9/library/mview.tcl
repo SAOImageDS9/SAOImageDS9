@@ -366,7 +366,7 @@ proc PrefsDialogButtonbarView {f} {
     $m add checkbutton -label [msgcat::mc {Low High}] \
 	-variable pbuttons(view,lowhigh) \
 	-command {UpdateButtons buttons(view)}
-    $m add checkbutton -label [msgcat::mc {Unists}] \
+    $m add checkbutton -label [msgcat::mc {Units}] \
 	-variable pbuttons(view,bunit) \
 	-command {UpdateButtons buttons(view)}
     $m add checkbutton -label [msgcat::mc {WCS}] \

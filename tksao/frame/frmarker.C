@@ -4557,20 +4557,6 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
 		      color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
-    else if (!strncmp(s2,"ELLIPTANN",9) && r && ang) {
-      Vector rr0(r->value(ptr,0),r->value(ptr,1));
-      Vector rr1(r->value(ptr,2),r->value(ptr,3));
-      createEpandaCmd(keyContext->fits->mapToRef(center,Coord::PHYSICAL),
-		      zeroTWOPI(degToRad(ang->value(ptr,0))),
-		      zeroTWOPI(degToRad(ang->value(ptr,1))),
-		      1,
-		      keyContext->fits->mapLenToRef(rr0,Coord::PHYSICAL),
-		      keyContext->fits->mapLenToRef(rr1,Coord::PHYSICAL),
-		      1,
-		      0,
-		      color, dash, width, font, text, props, NULL, taglist,cblist);
-
-    }
     else if (!strncmp(s2, "POINT ", 6))
       createPointCmd(keyContext->fits->mapToRef(center,Coord::PHYSICAL),
 		     Point::BOXCIRCLE, POINTSIZE, 

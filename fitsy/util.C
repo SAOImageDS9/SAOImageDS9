@@ -13,13 +13,6 @@ using namespace std;
 
 #include "util.h"
 
-void internalError(const char* msg)
-{
-  extern Tcl_Interp *global_interp;
-  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
-  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
-}
-
 void swap2(char* src, char* dest) {
   *(dest  ) = *(src+1);
   *(dest+1) = *(src  );

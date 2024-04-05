@@ -36,6 +36,13 @@ extern "C" {
 	       const char* argv[]);
 }
 
+void internalError(const char* msg)
+{
+  extern Tcl_Interp *global_interp;
+  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
+}
+
 int Tksao_Init(Tcl_Interp* interp) {
   if (Tcl_InitStubs(interp, TCL_PATCH_LEVEL, 0) == NULL)
     return TCL_ERROR;

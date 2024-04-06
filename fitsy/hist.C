@@ -672,7 +672,7 @@ void FitsHist::initWCS(FitsFile* fits, Matrix& mm, Vector block)
     mapWCSString(srcHead, w, "BUNIT", "TUNIT");
   }
 
-  // do we have a LONG-TAN/NPOL-TAN CTYPE?
+  // do we have a LONG/NPOL CTYPE?
   if (head_->find("CTYPE1") && head_->find("CTYPE2")) {
     char* cc;
 
@@ -698,19 +698,9 @@ void FitsHist::initWCS(FitsFile* fits, Matrix& mm, Vector block)
       head_->setString("CTYPE2",str,"");
 
       if (head_->find("CRVAL2")) {
-	float val = head_->getReal("CRVAL2",0) + 90;
+	float val = 90 - head_->getReal("CRVAL2",0);
 	head_->setReal("CRVAL2",val,5,"");
       }
-    }
-  }
-
-  if (1) {
-    char* cptr = head_->cards();
-    for (int i=0; i<head_->ncard(); i++,cptr+=FTY_CARDLEN) {
-      char cc[FTY_CARDLEN];
-      memcpy(cc, cptr, FTY_CARDLEN);
-      cc[FTY_CARDLEN-1] = '\0';
-      cerr << cc << endl;
     }
   }
 }

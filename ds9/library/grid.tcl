@@ -1072,15 +1072,6 @@ proc GridDefaultFormat1 {} {
 			}
 		    }
 		}
-		return {}
-	    }
-	    if {[$current(frame) has wcs celestial $grid(system)]} {
-		switch $grid(skyformat) {
-		    degrees {return {d.3}}
-		    sexagesimal {return {dms.1}}
-		    hms {return {ldms}}
-		}
-		return {}
 	    }
 	}
     }
@@ -1116,15 +1107,6 @@ proc GridDefaultFormat2 {} {
 			}
 		    }
 		}
-		return {}
-	    }
-	    if {[$current(frame) has wcs celestial $grid(system)]} {
-		switch $grid(skyformat) {
-		    degrees {return {d.3}}
-		    sexagesimal {return {dms.1}}
-		    hms {return {ldms}}
-		}
-		return {}
 	    }
 	}
     }

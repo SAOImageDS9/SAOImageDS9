@@ -121,7 +121,7 @@ proc GridUpdate {which} {
     }
 }	    
 
-proc GridUpdateZoom {} {
+proc UpdateGridZoom {} {
     global grid
 
     if {$grid(type) == "publication"} {

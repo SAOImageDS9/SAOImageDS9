@@ -1981,7 +1981,7 @@ proc ResetFrame {which} {
 	UpdatePanZoomDialog
 	UpdateCrosshairDialog
 	UpdateCropDialog
-	GridUpdateZoom
+	UpdateGridZoom
 	UpdateZoomMenu
 	UpdateScaleMenu
 	UpdateScaleDialog

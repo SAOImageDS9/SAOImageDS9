@@ -273,7 +273,7 @@ proc UpdateZoom {which} {
     LockFrame $which
     UpdateGraphAxes $which
     UpdatePanZoomDialog
-    GridUpdateZoom
+    UpdateGridZoom
     RefreshInfoBox $which
 }
 
@@ -500,7 +500,7 @@ proc PanZoomApplyDialog {} {
 	LockFrameCurrent
 	UpdateGraphAxes $current(frame)
 	UpdatePanZoomDialog
-	GridUpdateZoom
+	UpdateGridZoom
 	RefreshInfoBox $current(frame)
 	UpdateZoomMenu
 	SAMPSendCoordPointAtSkyCmd $current(frame)

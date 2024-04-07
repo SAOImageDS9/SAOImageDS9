@@ -162,7 +162,7 @@ proc 3DApplyDialog {} {
 	$current(frame) 3d view $threed(az) $threed(el)
 	$current(frame) 3d scale $threed(scale)
 	if {$grid(view)} {
-	    GridUpdateCurrent
+	    UpdateGridCurrent
 	}
 	Lock3DCurrent
     }
@@ -229,7 +229,7 @@ proc 3DViewPoint {} {
     if {$current(frame) != {}} {
 	$current(frame) 3d view $threed(az) $threed(el)
 	if {$grid(view)} {
-	    GridUpdateCurrent
+	    UpdateGridCurrent
 	}
 	Lock3DCurrent
     }
@@ -253,7 +253,7 @@ proc 3DScale {} {
     if {$current(frame) != {}} {
 	$current(frame) 3d scale $threed(scale)
 	if {$grid(view)} {
-	    GridUpdateCurrent
+	    UpdateGridCurrent
 	}
 	Lock3DCurrent
     }

@@ -99,15 +99,15 @@ proc GridDefault {} {
     set grid(textlab,color) black
 }
 
-proc GridUpdateCurrent {} {
+proc UpdateGridCurrent {} {
     global current
     
     if {$current(frame) != {}} {
-	GridUpdate $current(frame)
+	UpdateGrid $current(frame)
     }
 }
 
-proc GridUpdate {which} {
+proc UpdateGrid {which} {
     global grid
 
     GridAdjustOptions $which
@@ -125,7 +125,7 @@ proc UpdateGridZoom {} {
     global grid
 
     if {$grid(type) == "publication"} {
-	GridUpdateCurrent
+	UpdateGridCurrent
     }
 }
 
@@ -831,19 +831,19 @@ proc GridApplyDialog {} {
     global grid
 
     set grid(view) 1
-    GridUpdateCurrent
+    UpdateGridCurrent
 }
 
 proc GridResetDialog {} {
     GridDefault
-    GridUpdateCurrent
+    UpdateGridCurrent
 }
 
 proc GridClearDialog {} {
     global grid
 
     set grid(view) 0
-    GridUpdateCurrent
+    UpdateGridCurrent
 }
 
 proc GridDestroyDialog {} {
@@ -1014,7 +1014,7 @@ proc GridLoad {fn} {
 	FixFontVar grid(title,weight) grid(title,slant) grid(title,style)
 
 	set grid(view) 1
-	GridUpdateCurrent
+	UpdateGridCurrent
     }
 }
 

@@ -272,7 +272,7 @@ proc LoadUpdate {} {
     }
 
     # generate grid so UpdateMenu is correct
-    GridUpdateCurrent
+    UpdateGridCurrent
 
     # generate contour so UpdateMenu is correct
     UpdateContourScale

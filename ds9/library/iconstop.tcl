@@ -161,7 +161,7 @@ proc CreateIconsTopAnalysis {} {
     tooltip::tooltip $mb.match [msgcat::mc {Match Frames on WCS}]
 
     ttk::button $mb.grid -takefocus 0 \
-	-command [list IconButtonToggleCmd grid view GridUpdateCurrent] \
+	-command [list IconButtonToggleCmd grid view UpdateGridCurrent] \
 	-image [image create photo -file "$ds9(icons,ui)/coord_grid.png"]
     tooltip::tooltip $mb.grid [msgcat::mc {Toggle Coordinate Grid}]
 

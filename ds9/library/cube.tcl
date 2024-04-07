@@ -837,7 +837,7 @@ proc MatchAxes {which} {
 		array set ogrid [array get grid]
 		array set grid [$ff get grid var]
 
-		GridUpdate $ff
+		UpdateGrid $ff
 
 		array set grid [array get ogrid]
 	    }

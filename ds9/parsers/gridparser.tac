@@ -77,24 +77,24 @@ command : grid
  | grid {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-grid : yesno {ProcessCmdSet grid view $1 GridUpdateCurrent}
+grid : yesno {ProcessCmdSet grid view $1 UpdateGridCurrent}
  | OPEN_ {GridDialog}
  | CLOSE_ {GridDestroyDialog}
  # backward compatible
- | TYPE_ type {GridUpdateCurrent}
- | SYSTEM_ system {ProcessCmdSet grid system $2 GridUpdateCurrent}
- | SKYFRAME_ skyframe {ProcessCmdSet grid sky $2 GridUpdateCurrent}
- | SKYFORMAT_ skyformat {ProcessCmdSet grid skyformat $2 GridUpdateCurrent}
- | GRID_ gridgrid {GridUpdateCurrent}
- | FORMAT1_ STRING_ {ProcessCmdSet grid format1 $2 GridUpdateCurrent}
- | FORMAT2_ STRING_ {ProcessCmdSet grid format2 $2 GridUpdateCurrent}
- | AXES_ axes {GridUpdateCurrent}
- | TICKMARKS_ tickmarks {GridUpdateCurrent}
- | BORDER_ border {GridUpdateCurrent}
- | NUMERICS_ numerics {GridUpdateCurrent}
- | TITLE_ title {GridUpdateCurrent}
- | LABELS_ labels {GridUpdateCurrent}
- | VIEW_ view {GridUpdateCurrent}
+ | TYPE_ type {UpdateGridCurrent}
+ | SYSTEM_ system {ProcessCmdSet grid system $2 UpdateGridCurrent}
+ | SKYFRAME_ skyframe {ProcessCmdSet grid sky $2 UpdateGridCurrent}
+ | SKYFORMAT_ skyformat {ProcessCmdSet grid skyformat $2 UpdateGridCurrent}
+ | GRID_ gridgrid {UpdateGridCurrent}
+ | FORMAT1_ STRING_ {ProcessCmdSet grid format1 $2 UpdateGridCurrent}
+ | FORMAT2_ STRING_ {ProcessCmdSet grid format2 $2 UpdateGridCurrent}
+ | AXES_ axes {UpdateGridCurrent}
+ | TICKMARKS_ tickmarks {UpdateGridCurrent}
+ | BORDER_ border {UpdateGridCurrent}
+ | NUMERICS_ numerics {UpdateGridCurrent}
+ | TITLE_ title {UpdateGridCurrent}
+ | LABELS_ labels {UpdateGridCurrent}
+ | VIEW_ view {UpdateGridCurrent}
  | RESET_ {GridResetDialog}
  | LOAD_ STRING_ {FileLast gridfbox $2; GridLoad $2}
  | SAVE_ STRING_ {FileLast gridfbox $2; GridSave $2}

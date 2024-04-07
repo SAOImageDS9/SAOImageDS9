@@ -3403,23 +3403,23 @@ proc grid::yyparse {} {
                     58 { set _ $1 }
                     59 { set _ $1 }
                     61 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    63 { ProcessCmdSet grid view $1 GridUpdateCurrent }
+                    63 { ProcessCmdSet grid view $1 UpdateGridCurrent }
                     64 { GridDialog }
                     65 { GridDestroyDialog }
-                    66 { GridUpdateCurrent }
-                    67 { ProcessCmdSet grid system $2 GridUpdateCurrent }
-                    68 { ProcessCmdSet grid sky $2 GridUpdateCurrent }
-                    69 { ProcessCmdSet grid skyformat $2 GridUpdateCurrent }
-                    70 { GridUpdateCurrent }
-                    71 { ProcessCmdSet grid format1 $2 GridUpdateCurrent }
-                    72 { ProcessCmdSet grid format2 $2 GridUpdateCurrent }
-                    73 { GridUpdateCurrent }
-                    74 { GridUpdateCurrent }
-                    75 { GridUpdateCurrent }
-                    76 { GridUpdateCurrent }
-                    77 { GridUpdateCurrent }
-                    78 { GridUpdateCurrent }
-                    79 { GridUpdateCurrent }
+                    66 { UpdateGridCurrent }
+                    67 { ProcessCmdSet grid system $2 UpdateGridCurrent }
+                    68 { ProcessCmdSet grid sky $2 UpdateGridCurrent }
+                    69 { ProcessCmdSet grid skyformat $2 UpdateGridCurrent }
+                    70 { UpdateGridCurrent }
+                    71 { ProcessCmdSet grid format1 $2 UpdateGridCurrent }
+                    72 { ProcessCmdSet grid format2 $2 UpdateGridCurrent }
+                    73 { UpdateGridCurrent }
+                    74 { UpdateGridCurrent }
+                    75 { UpdateGridCurrent }
+                    76 { UpdateGridCurrent }
+                    77 { UpdateGridCurrent }
+                    78 { UpdateGridCurrent }
+                    79 { UpdateGridCurrent }
                     80 { GridResetDialog }
                     81 { FileLast gridfbox $2; GridLoad $2 }
                     82 { FileLast gridfbox $2; GridSave $2 }

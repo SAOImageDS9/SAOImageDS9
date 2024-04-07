@@ -212,7 +212,7 @@ proc ProcessCommand {argv argc} {
 	    -green {set current(rgb) green; RGBChannel}
 	    -graph {incr i; ProcessGraphCmd argv i}
 	    -grid {incr i; ProcessGridCmd argv i}
-	    -nogrid {set grid(view) 0; GridUpdateCurrent}
+	    -nogrid {set grid(view) 0; UpdateGridCurrent}
 	    -header {incr i; ProcessHeaderCmd argv i}
 	    -height {incr i; ProcessHeightCmd argv i}
 	    -histequ {set scale(type) histequ; ChangeScale}

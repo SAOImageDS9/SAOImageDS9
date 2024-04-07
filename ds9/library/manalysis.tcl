@@ -29,7 +29,7 @@ proc AnalysisMainMenu {} {
 	-command ContourDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add checkbutton -label [msgcat::mc {Coordinate Grid}] \
-	-variable grid(view) -command GridUpdateCurrent
+	-variable grid(view) -command UpdateGridCurrent
     $ds9(mb).analysis add command \
 	-label [msgcat::mc {Coordinate Grid Parameters}] \
 	-command GridDialog
@@ -233,7 +233,7 @@ proc CreateButtonsAnalysis {} {
 	contour view UpdateContour
     CheckButton $ds9(buttons).analysis.grid \
 	[string tolower [msgcat::mc {Grid}]] \
-	grid view GridUpdateCurrent
+	grid view UpdateGridCurrent
 
     ButtonButton $ds9(buttons).analysis.bin \
 	[string tolower [msgcat::mc {Block In}]] {Block .5 .5}

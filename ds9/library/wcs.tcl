@@ -51,7 +51,7 @@ proc UpdateWCS {} {
     set grid(system) $wcs(system)
     set grid(sky) $wcs(sky)
     set grid(skyformat) $wcs(skyformat)
-    GridUpdateCurrent
+    UpdateGridCurrent
     UpdateGridDialog
 
     # panzoom dialog

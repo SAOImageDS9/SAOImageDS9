@@ -595,7 +595,6 @@ proc UpdateCubeDialog2Axes {} {
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
-    CoordMenuEnable $mb.coord cube system {} {}
 
     # enable/disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state disabled
@@ -655,7 +654,6 @@ proc UpdateCubeDialogAxes {axes} {
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
-    CoordMenuEnable $mb.coord cube system {} {}
 
     # enable/disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state normal

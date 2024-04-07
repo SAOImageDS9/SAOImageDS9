@@ -978,6 +978,7 @@ proc UpdateGridDialog {} {
 		}
 	    }
 
+	    set grid(frame) $current(frame)
 	    if {[$current(frame) has fits]} {
 		CoordMenuEnable $igrid(mb).coord grid system sky skyformat
 	    } else {
@@ -1052,7 +1053,7 @@ proc GridDefaultFormat1 {} {
 	detector -
 	amplifier {return {}}
 	default {
-	    if {[$current(frame) has wcs celestial $grid(system)]} {
+	    if {[$current(frame) has wcs equatorial $grid(system)]} {
 		switch $grid(sky) {
 		    fk4 -
 		    fk5 -
@@ -1073,6 +1074,13 @@ proc GridDefaultFormat1 {} {
 		    }
 		}
 	    }
+	    if {[$current(frame) has wcs celestial $grid(system)]} {
+		switch $grid(skyformat) {
+		    degrees {return {d.3}}
+		    sexagesimal {return {dms.1}}
+		    hms {return {ldms}}
+		}
+	    }
 	}
     }
 }
@@ -1087,7 +1095,7 @@ proc GridDefaultFormat2 {} {
 	detector -
 	amplifier {return {}}
 	default {
-	    if {[$current(frame) has wcs celestial $grid(system)]} {
+	    if {[$current(frame) has wcs equatorial $grid(system)]} {
 		switch $grid(sky) {
 		    fk4 -
 		    fk5 -
@@ -1106,6 +1114,13 @@ proc GridDefaultFormat2 {} {
 			    hms {return {ldms}}
 			}
 		    }
+		}
+	    }
+	    if {[$current(frame) has wcs celestial $grid(system)]} {
+		switch $grid(skyformat) {
+		    degrees {return {d.3}}
+		    sexagesimal {return {dms.1}}
+		    hms {return {ldms}}
 		}
 	    }
 	}

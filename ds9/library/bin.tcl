@@ -182,18 +182,15 @@ proc UpdateBin {} {
 
     LockBinCurrent
     LockFrameCurrent
+
+    UpdateWCS
+    UpdateGraphAxes $current(frame)
+
     UpdateBinDialog
-    UpdatePanZoomDialog
-    UpdateCrosshairDialog
-    UpdateCropDialog
-    UpdateCubeDialog
     UpdateScaleDialog
     UpdateContourScale
     UpdateContourDialog
     UpdateWCSDialog
-
-    GridUpdateCurrent
-    UpdateGraphAxes $current(frame)
 
     UpdateMain
 }

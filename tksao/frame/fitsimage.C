@@ -1131,7 +1131,46 @@ void FitsImage::initWCS(FitsHead* hd)
   // not sure if this is needed
   clearWCS();
   
-  ast_ = fits2ast(hd);
+  // do we have a LONG/NPOL CTYPE? Chandra ONLY
+  if (hd->find("CTYPE1") && hd->find("CTYPE2")) {
+    char* cc;
+
+    cc = hd->getString("CTYPE1");
+    int ff1 = !strncmp(cc,"LONG-",5);
+
+    cc = hd->getString("CTYPE2");
+    int ff2 = !strncmp(cc,"NPOL-",5);
+
+    if (ff1 && ff2) {
+      FitsHead* hdd = new FitsHead(*hd);
+      char str[9];
+
+      cc = hdd->getString("CTYPE1");
+      strncpy(str,"XLON-",5);
+      strncpy(str+5,cc+5,3);
+      str[8] = '\0';
+      hdd->setString("CTYPE1",str,"");
+
+      cc = hdd->getString("CTYPE2");
+      strncpy(str,"XLAT-",5);
+      strncpy(str+5,cc+5,3);
+      str[8] = '\0';
+      hdd->setString("CTYPE2",str,"");
+
+      if (hdd->find("CRVAL2")) {
+	float val = 90 - hdd->getReal("CRVAL2",0);
+	hdd->setReal("CRVAL2",val,5,"");
+      }
+
+      ast_ = fits2ast(hdd);
+      delete hdd;
+    }
+    else
+      ast_ = fits2ast(hd);
+  }
+  else
+    ast_ = fits2ast(hd);
+
   // check to see if header processed successfully
   if (!astOK || !ast_) {
     clearWCS();
@@ -3261,21 +3300,30 @@ void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,
 	hms << "hms." << context_->parent_->precHMS_;
 	dms << "+dms." << context_->parent_->precDMS_;
 
-	switch (sky) {
-	case Coord::FK4:
-	case Coord::FK5:
-	case Coord::ICRS:
-	  wcsFormat(ast_, wcsCelLon_[id], hms.str().c_str());
-	  wcsFormat(ast_, wcsCelLat_[id], dms.str().c_str());
-	  break;
-	case Coord::GALACTIC:
-	case Coord::ECLIPTIC:
+	if (hasWCSEqu(sys)) {
+	  // equatorial
+	  switch (sky) {
+	  case Coord::FK4:
+	  case Coord::FK5:
+	  case Coord::ICRS:
+	    wcsFormat(ast_, wcsCelLon_[id], hms.str().c_str());
+	    wcsFormat(ast_, wcsCelLat_[id], dms.str().c_str());
+	    break;
+	  case Coord::GALACTIC:
+	  case Coord::ECLIPTIC:
+	    wcsFormat(ast_, wcsCelLon_[id], dms.str().c_str());
+	    wcsFormat(ast_, wcsCelLat_[id], dms.str().c_str());
+	    break;
+	  }
+	}
+	else {
+	  // celestrial
 	  wcsFormat(ast_, wcsCelLon_[id], dms.str().c_str());
 	  wcsFormat(ast_, wcsCelLat_[id], dms.str().c_str());
-	  break;
 	}
       }
       break;
+      
     }
   }
 

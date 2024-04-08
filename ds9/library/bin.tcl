@@ -98,6 +98,8 @@ proc BinCols {x y z} {
 	}
 
 	RGBEvalLockCurrent rgb(lock,bin) "$current(frame) bin cols \{$x\} \{$y\} \{$z\}"
+
+	UpdateWCS
 	UpdateBin
     }
 }
@@ -182,16 +184,16 @@ proc UpdateBin {} {
 
     LockBinCurrent
     LockFrameCurrent
-
-    UpdateWCS
-    UpdateGraphAxes $current(frame)
-
     UpdateBinDialog
+    UpdatePanZoomDialog
+    UpdateCrosshairDialog
+    UpdateCropDialog
+    UpdateCubeDialog
     UpdateScaleDialog
     UpdateContourScale
     UpdateContourDialog
     UpdateWCSDialog
-
+    UpdateGraphAxes $current(frame)
     UpdateMain
 }
 
@@ -606,6 +608,8 @@ proc BinApplyDialog {} {
 
     UpdateScaleMenu
     UpdateBinMenu
+
+    UpdateWCS
     UpdateBin
 
     # reset

@@ -1162,16 +1162,6 @@ void FitsImage::initWCS(FitsHead* hd)
 	hdd->setReal("CRVAL2",val,5,"");
       }
 
-      if (hdd->find("PV1_3"))
-	hdd->setReal("PV1_3",270,5,"");
-      else
-	hdd->appendReal("PV1_3",270,5,"");
-	
-      if (hdd->find("PV1_4"))
-	hdd->setReal("PV1_4",90,5,"");
-      else
-	hdd->appendReal("PV1_4",90,5,"");
-
       ast_ = fits2ast(hdd);
       delete hdd;
     }

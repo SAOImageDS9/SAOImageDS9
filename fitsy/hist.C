@@ -671,38 +671,6 @@ void FitsHist::initWCS(FitsFile* fits, Matrix& mm, Vector block)
     // general
     mapWCSString(srcHead, w, "BUNIT", "TUNIT");
   }
-
-  // do we have a LONG/NPOL CTYPE?
-  if (head_->find("CTYPE1") && head_->find("CTYPE2")) {
-    char* cc;
-
-    cc = head_->getString("CTYPE1");
-    int ff1 = !strncmp(cc,"LONG-",5);
-
-    cc = head_->getString("CTYPE2");
-    int ff2 = !strncmp(cc,"NPOL-",5);
-
-    if (ff1 && ff2) {
-      char str[9];
-
-      cc = head_->getString("CTYPE1");
-      strncpy(str,"XLON-",5);
-      strncpy(str+5,cc+5,3);
-      str[8] = '\0';
-      head_->setString("CTYPE1",str,"");
-
-      cc = head_->getString("CTYPE2");
-      strncpy(str,"XLAT-",5);
-      strncpy(str+5,cc+5,3);
-      str[8] = '\0';
-      head_->setString("CTYPE2",str,"");
-
-      if (head_->find("CRVAL2")) {
-	float val = 90 - head_->getReal("CRVAL2",0);
-	head_->setReal("CRVAL2",val,5,"");
-      }
-    }
-  }
 }
 
 FitsHistNext::FitsHistNext(FitsFile* prev)

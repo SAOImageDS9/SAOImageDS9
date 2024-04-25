@@ -15,13 +15,13 @@ colorbar    {return $COLORBAR_}
 crop	    {return $CROP_}
 crosshair   {return $CROSSHAIR_}
 frame	    {return $FRAME_}
-image	    {return $IMAGE_}
 none	    {return $NONE_}
 scale	    {return $SCALE_}
 scalelimits {return $SCALELIMITS_}
 slice	    {return $SLICE_}
 smooth	    {return $SMOOTH_}
 
+#include coordsys.fin
 #include wcssys.fin
 #include yesno.fin
 #include string.fin

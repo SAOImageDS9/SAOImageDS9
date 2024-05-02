@@ -10,9 +10,14 @@
 // Frame
 
 class FrameHLS : public FrameRGB {
+ protected:
+  int isFrameHLS() {return 1;}
+
  public:
   FrameHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameHLS();
+
+  void getTypeCmd();
 };
 
 #endif

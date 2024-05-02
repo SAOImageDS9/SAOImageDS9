@@ -14,3 +14,8 @@ FrameHLS::FrameHLS(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 FrameHLS::~FrameHLS()
 {
 }
+
+void FrameHLS::getTypeCmd()
+{
+  Tcl_AppendResult(interp, "hls", NULL);
+}

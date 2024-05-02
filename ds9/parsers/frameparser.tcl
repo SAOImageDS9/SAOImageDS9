@@ -65,80 +65,82 @@ array set frame::table {
   10:280,target 56
   10:279,target 55
   9:283 shift
-  12:310 shift
   9:284 shift
   3:288,target 23
   9:285 shift
   60:289 reduce
   59:289 reduce
-  30:289,target 71
+  30:289,target 73
   29:289,target 51
   27:0 reduce
+  12:312 shift
   9:286 shift
   75:289,target 45
   9:287 shift
+  10:329,target 70
   10:258,target 34
   48:0 reduce
   0:296,target 5
+  0:306,target 12
   30:289 reduce
   29:289 reduce
   9:271,target 47
   70:0 reduce
   69:0 reduce
-  64:289,target 82
-  12:320 goto
+  64:289,target 84
   68:289 reduce
-  87:0,target 44
+  91:0 reduce
+  87:0,target 76
+  12:322 goto
   2:0 reduce
-  9:306 shift
-  80:0,target 69
-  79:0,target 68
+  80:0,target 40
+  79:0,target 62
   4:291,target 27
-  72:0,target 76
+  72:0,target 78
   10:277,target 53
-  64:0,target 82
+  9:308 shift
+  64:0,target 84
   56:0,target 24
   53:289,target 21
   38:289 reduce
   24:0 reduce
   48:0,target 16
-  9:312 goto
   41:0,target 9
-  9:313 goto
-  10:327,target 70
   77:289 reduce
   45:0 reduce
   33:0,target 1
+  9:314 goto
   25:0,target 38
-  0:304,target 12
   0:294,target 3
-  17:0,target 73
+  0:304,target 10
+  9:315 goto
+  17:0,target 75
   66:0 reduce
   42:289,target 10
-  4:319,target 28
   9:268,target 44
-  87:289,target 44
+  87:289,target 76
   47:289 reduce
   87:0 reduce
   86:289 reduce
   4:288,target 26
-  31:289,target 72
+  31:289,target 74
   17:288 shift
   10:275,target 51
-  76:289,target 63
+  76:289,target 65
   21:0 reduce
   17:289 reduce
   17:291 shift
-  9:326 goto
   9:287,target 63
   56:289 reduce
   42:0 reduce
+  9:328 goto
   20:289,target 53
   19:289,target 33
-  0:302,target 10
+  0:302,target 8
   6:288 shift
-  65:289,target 80
+  65:289,target 82
   63:0 reduce
+  15:324,target 83
   9:266,target 42
   26:289 reduce
   84:0 reduce
@@ -146,45 +148,45 @@ array set frame::table {
   54:289,target 22
   17:0 reduce
   10:273,target 49
+  11:327,target 75
   38:0 reduce
   35:289 reduce
   9:285,target 61
   43:289,target 11
-  88:289,target 89
+  88:289,target 77
   74:289 reduce
   60:0 reduce
   59:0 reduce
   11:296,target 72
-  0:300,target 8
   3:0,target 55
-  84:0,target 41
-  76:0,target 63
-  15:322,target 81
+  84:0,target 67
+  76:0,target 65
   9:264,target 40
   81:0 reduce
-  68:0,target 83
-  17:324 goto
+  68:0,target 85
   61:0,target 29
   53:0,target 21
   44:289 reduce
   32:289,target 43
-  77:289,target 62
+  17:326 goto
+  77:289,target 63
   45:0,target 13
+  9:314,target 65
   37:0,target 5
-  15:291,target 80
+  15:291,target 82
   14:0 reduce
   83:289 reduce
-  30:0,target 71
+  30:0,target 73
   29:0,target 51
   10:271,target 47
   22:0,target 37
-  11:325,target 75
+  0:318,target 19
   35:0 reduce
   14:289 reduce
   14:0,target 48
   21:289,target 54
   9:283,target 59
-  66:289,target 81
+  66:289,target 83
   56:0 reduce
   53:289 reduce
   3:288 shift
@@ -194,69 +196,69 @@ array set frame::table {
   3:291 shift
   55:289,target 23
   23:289 reduce
-  9:312,target 65
   62:289 reduce
-  15:288,target 79
+  15:288,target 81
   10:268,target 44
   32:0 reduce
-  0:316,target 19
+  0:316,target 18
   44:289,target 12
+  17:326,target 89
+  90:289,target 91
+  89:289,target 44
   1:289,target 50
   9:281,target 57
   53:0 reduce
   32:289 reduce
   11:292,target 71
+  11:302,target 74
   74:0 reduce
   71:289 reduce
   6:288,target 29
   33:289,target 1
   9:259,target 35
   9:260,target 36
-  78:289,target 40
+  78:289,target 64
   10:287,target 63
-  16:291,target 83
-  3:318 goto
+  16:291,target 85
   41:289 reduce
+  3:320 goto
   28:0 reduce
   22:289,target 37
-  7:0,target 70
+  7:0,target 72
   10:266,target 42
+  88:0,target 77
   80:289 reduce
   79:289 reduce
   67:289,target 36
-  0:314,target 18
-  81:0,target 42
-  17:324,target 87
-  73:0,target 79
+  81:0,target 70
+  73:0,target 81
   50:0 reduce
   49:0 reduce
-  11:300 shift
   9:278,target 54
-  65:0,target 80
+  65:0,target 82
   7:291,target 31
   57:0,target 25
   11:292 shift
+  11:302 shift
   71:0 reduce
   50:289 reduce
   50:0,target 18
   49:289 reduce
   49:0,target 17
-  11:300,target 74
   56:289,target 24
   42:0,target 10
+  9:328,target 67
   34:0,target 2
   0:288 shift
   9:257,target 33
-  88:289 shift
+  88:289 reduce
   26:0,target 59
   11:296 shift
   10:285,target 61
-  0:300 shift
   3:0 reduce
   18:0,target 0
-  16:288,target 82
+  16:288,target 84
   11:297 shift
-  0:301 shift
   20:289 reduce
   19:289 reduce
   0:302 shift
@@ -272,58 +274,62 @@ array set frame::table {
   2:289,target 52
   10:264,target 40
   0:296 shift
+  0:306 shift
   46:0 reduce
   0:307 shift
   0:298 shift
-  0:308 shift
   8:289 reduce
   9:276,target 52
-  0:299 shift
   0:309 shift
+  0:299 shift
+  0:310 shift
   7:288,target 30
+  10:314,target 68
   67:0 reduce
   34:289,target 2
   28:289 reduce
   0:311 shift
-  80:289,target 69
-  79:289,target 68
-  17:291,target 86
-  9:326,target 67
+  80:289,target 40
+  79:289,target 62
+  17:291,target 88
+  0:313 shift
+  88:0 reduce
   67:289 reduce
-  0:314 goto
   10:283,target 59
   0:316 goto
   23:289,target 56
-  19:315 goto
-  68:289,target 83
+  68:289,target 85
   22:0 reduce
-  11:325 goto
+  0:318 goto
   37:289 reduce
+  19:317 goto
+  11:327 goto
   10:262,target 38
   43:0 reduce
+  0:309,target 14
   0:299,target 7
-  0:309,target 16
+  0:310,target 15
   76:289 reduce
   12:290,target 76
+  12:300,target 77
   12:289,target 61
   9:274,target 50
   64:0 reduce
   57:289,target 25
-  10:312,target 68
   85:0 reduce
   46:289 reduce
-  17:288,target 85
+  17:288,target 87
   10:281,target 57
   4:0,target 58
   85:289 reduce
-  85:0,target 74
+  85:0,target 68
   46:289,target 14
-  77:0,target 62
+  77:0,target 63
   18:0 accept
   16:288 shift
   3:289,target 55
   70:0,target 35
-  69:0,target 84
+  69:0,target 86
   16:289 reduce
   62:0,target 30
   16:291 shift
@@ -334,22 +340,21 @@ array set frame::table {
   10:260,target 36
   55:289 reduce
   46:0,target 14
-  0:307,target 14
+  0:307,target 13
   38:0,target 6
   35:289,target 3
-  81:289,target 42
+  81:289,target 70
   61:0 reduce
-  31:0,target 72
+  31:0,target 74
   9:272,target 48
   23:0,target 56
   5:289 reduce
-  15:0,target 67
+  15:0,target 69
   82:0 reduce
   25:289 reduce
-  3:318,target 25
   24:289,target 57
   70:289,target 35
-  69:289,target 84
+  69:289,target 86
   64:289 reduce
   10:278,target 54
   15:0 reduce
@@ -358,14 +363,15 @@ array set frame::table {
   13:289,target 49
   10:257,target 33
   58:289,target 26
-  0:305,target 13
+  0:305,target 11
   0:295,target 4
   57:0 reduce
   73:289 reduce
-  16:321 goto
+  4:321,target 28
   9:269,target 45
   9:270,target 46
   78:0 reduce
+  16:323 goto
   47:289,target 15
   43:289 reduce
   4:289,target 58
@@ -376,10 +382,10 @@ array set frame::table {
   36:289,target 4
   13:289 reduce
   10:257 shift
-  82:289,target 65
+  82:289,target 71
   10:258 shift
   54:0 reduce
-  0:303,target 11
+  0:303,target 9
   0:293,target 2
   10:259 shift
   10:260 shift
@@ -388,20 +394,20 @@ array set frame::table {
   8:0,target 47
   9:267,target 43
   10:262 shift
-  89:0,target 34
+  89:0,target 44
   75:0 reduce
   1:0,target 50
   2:288 shift
   10:263 shift
-  82:0,target 65
+  82:0,target 71
   25:289,target 38
   2:289 reduce
   10:264 shift
-  74:0,target 77
-  71:289,target 78
+  74:0,target 79
+  71:289,target 80
   2:291 shift
   10:265 shift
-  66:0,target 81
+  66:0,target 83
   22:289 reduce
   7:0 reduce
   10:266 shift
@@ -422,6 +428,7 @@ array set frame::table {
   60:289,target 28
   59:289,target 27
   27:0,target 60
+  12:312,target 79
   10:272 shift
   9:286,target 62
   20:0,target 53
@@ -433,7 +440,6 @@ array set frame::table {
   31:289 reduce
   11:297,target 73
   10:275 shift
-  0:301,target 9
   10:276 shift
   72:0 reduce
   10:277 shift
@@ -448,49 +454,50 @@ array set frame::table {
   10:281 shift
   4:0 reduce
   10:282 shift
-  2:317 goto
+  9:315,target 66
   10:283 shift
   40:289 reduce
   39:289 reduce
   10:284 shift
   10:272,target 48
+  2:319 goto
   37:289,target 5
   26:0 reduce
+  19:317,target 90
   10:285 shift
-  83:289,target 66
+  83:289,target 42
   10:286 shift
   78:289 reduce
-  12:310,target 77
   10:287 shift
   9:284,target 60
   47:0 reduce
   0:288,target 1
   68:0 reduce
   26:289,target 59
-  72:289,target 76
+  72:289,target 78
   48:289 reduce
   9:263,target 39
   89:0 reduce
   1:0 reduce
   87:289 reduce
-  9:313,target 66
-  15:289,target 67
+  15:289,target 69
+  7:325,target 32
   61:289,target 29
   23:0 reduce
   10:270,target 46
   10:269,target 45
-  19:315,target 88
   57:289 reduce
-  10:312 goto
   44:0 reduce
   5:0,target 46
   9:282,target 58
-  10:313 goto
-  86:0,target 75
+  86:0,target 41
   7:288 shift
-  78:0,target 40
+  10:314 goto
+  78:0,target 64
+  16:323,target 86
   7:289 reduce
-  71:0,target 78
+  10:315 goto
+  71:0,target 80
   65:0 reduce
   50:289,target 18
   49:289,target 17
@@ -507,42 +514,43 @@ array set frame::table {
   32:0,target 43
   38:289,target 6
   24:0,target 57
-  84:289,target 41
+  84:289,target 67
   20:0 reduce
   19:0 reduce
-  16:0,target 64
-  7:323,target 32
+  16:0,target 66
   10:267,target 43
   36:289 reduce
   41:0 reduce
-  10:327 goto
   9:279,target 55
   9:280,target 56
   75:289 reduce
   27:289,target 60
-  73:289,target 79
+  10:329 goto
+  73:289,target 81
   62:0 reduce
-  16:321,target 84
   83:0 reduce
   9:258,target 34
   45:289 reduce
   10:286,target 62
-  16:289,target 64
+  16:289,target 66
   62:289,target 30
   84:289 reduce
   16:0 reduce
-  7:323 goto
+  9:308,target 64
   15:288 shift
   15:289 reduce
   2:291,target 21
+  7:325 goto
   10:265,target 41
   37:0 reduce
   15:291 shift
+  0:313,target 17
   54:289 reduce
   51:289,target 19
   9:277,target 53
   58:0 reduce
-  7:289,target 70
+  7:289,target 72
+  10:315,target 69
   4:288 shift
   4:289 reduce
   80:0 reduce
@@ -552,12 +560,14 @@ array set frame::table {
   40:289,target 8
   39:289,target 7
   10:284,target 60
-  85:289,target 74
+  2:319,target 22
+  85:289,target 68
   63:289 reduce
   13:0 reduce
+  91:0,target 34
+  12:322,target 80
   2:0,target 52
-  9:306,target 64
-  83:0,target 66
+  83:0,target 42
   75:0,target 45
   34:0 reduce
   2:288,target 20
@@ -565,9 +575,9 @@ array set frame::table {
   10:263,target 39
   67:0,target 36
   28:289,target 39
-  0:311,target 17
+  0:311,target 16
   9:258 shift
-  74:289,target 77
+  74:289,target 79
   60:0,target 28
   59:0,target 27
   33:289 reduce
@@ -575,35 +585,33 @@ array set frame::table {
   9:260 shift
   55:0 reduce
   52:0,target 20
+  12:301,target 78
   9:261 shift
   9:275,target 51
   44:0,target 12
   9:262 shift
-  10:313,target 69
   72:289 reduce
   36:0,target 4
   9:263 shift
   76:0 reduce
   28:0,target 39
-  15:322 goto
   9:264 shift
   21:0,target 54
-  17:289,target 73
+  17:289,target 75
   9:265 shift
   63:289,target 31
+  15:324 goto
   13:0,target 49
   9:266 shift
   10:282,target 58
-  2:317,target 22
   8:0 reduce
   9:267 shift
   42:289 reduce
-  4:319 goto
   9:268 shift
   3:291,target 24
+  4:321 goto
   9:269 shift
   9:270 shift
-  12:320,target 78
   9:271 shift
   81:289 reduce
   31:0 reduce
@@ -612,12 +620,13 @@ array set frame::table {
   9:273 shift
   10:261,target 37
   12:290 shift
+  12:300 shift
   12:289 reduce
   0:298,target 6
-  0:308,target 15
   8:289,target 47
   9:274 shift
   52:0 reduce
+  12:301 shift
   9:275 shift
   9:273,target 49
   9:276 shift
@@ -626,9 +635,12 @@ array set frame::table {
   73:0 reduce
   9:278 shift
   41:289,target 9
+  3:320,target 25
   9:279 shift
   9:280 shift
-  86:289,target 75
+  90:289 shift
+  89:289 reduce
+  86:289,target 41
   1:289 reduce
   9:281 shift
   5:0 reduce
@@ -636,91 +648,93 @@ array set frame::table {
 }
 
 array set frame::rules {
-  9,l 313
-  11,l 313
-  32,l 314
-  53,l 317
-  74,l 324
-  6,l 313
-  28,l 313
-  50,l 316
-  49,l 316
-  71,l 323
-  3,l 312
-  25,l 313
-  46,l 316
-  67,l 322
-  0,l 328
-  22,l 313
-  43,l 316
-  64,l 321
-  18,l 313
-  40,l 316
-  39,l 316
-  61,l 320
-  82,l 326
-  15,l 313
-  36,l 316
-  57,l 318
-  78,l 325
-  12,l 313
-  33,l 315
-  54,l 317
-  75,l 324
-  7,l 313
-  29,l 313
-  30,l 313
-  51,l 316
-  72,l 323
-  4,l 312
-  26,l 313
-  47,l 316
-  68,l 322
-  1,l 312
-  23,l 313
-  44,l 316
-  65,l 321
-  19,l 313
-  20,l 313
-  41,l 316
-  62,l 320
-  83,l 327
-  16,l 313
-  37,l 316
-  58,l 319
-  80,l 326
-  79,l 325
-  13,l 313
-  34,l 314
-  55,l 318
-  76,l 325
-  8,l 313
-  10,l 313
-  31,l 313
-  52,l 317
-  73,l 324
-  5,l 313
-  27,l 313
-  48,l 316
-  70,l 323
-  69,l 322
-  2,l 312
-  24,l 313
-  45,l 316
-  66,l 321
-  21,l 313
-  42,l 316
-  63,l 320
-  84,l 327
-  17,l 313
-  38,l 316
-  60,l 319
-  59,l 319
-  81,l 326
-  14,l 313
-  35,l 316
-  56,l 318
-  77,l 325
+  9,l 315
+  11,l 315
+  32,l 316
+  53,l 319
+  74,l 325
+  6,l 315
+  28,l 315
+  50,l 318
+  49,l 318
+  71,l 324
+  3,l 314
+  25,l 315
+  46,l 318
+  67,l 323
+  0,l 330
+  22,l 315
+  43,l 318
+  64,l 322
+  85,l 329
+  18,l 315
+  40,l 318
+  39,l 318
+  61,l 322
+  82,l 328
+  15,l 315
+  36,l 318
+  57,l 320
+  78,l 327
+  12,l 315
+  33,l 317
+  54,l 319
+  75,l 326
+  7,l 315
+  29,l 315
+  30,l 315
+  51,l 318
+  72,l 325
+  4,l 314
+  26,l 315
+  47,l 318
+  68,l 323
+  1,l 314
+  23,l 315
+  44,l 318
+  65,l 322
+  86,l 329
+  19,l 315
+  20,l 315
+  41,l 318
+  62,l 322
+  83,l 328
+  16,l 315
+  37,l 318
+  58,l 321
+  80,l 327
+  79,l 327
+  13,l 315
+  34,l 316
+  55,l 320
+  76,l 326
+  8,l 315
+  10,l 315
+  31,l 315
+  52,l 319
+  73,l 325
+  5,l 315
+  27,l 315
+  48,l 318
+  70,l 324
+  69,l 324
+  2,l 314
+  24,l 315
+  45,l 318
+  66,l 323
+  21,l 315
+  42,l 318
+  63,l 322
+  84,l 328
+  17,l 315
+  38,l 318
+  60,l 321
+  59,l 321
+  81,l 327
+  14,l 315
+  35,l 318
+  56,l 320
+  77,l 326
 }
 
 array set frame::rules {
@@ -731,8 +745,8 @@ array set frame::rules {
   3,dc 1
   41,dc 2
   55,dc 0
-  70,dc 0
-  69,dc 1
+  70,dc 1
+  69,dc 0
   18,dc 1
   84,dc 1
   33,dc 0
@@ -754,12 +768,12 @@ array set frame::rules {
   46,dc 1
   61,dc 0
   10,dc 1
-  75,dc 1
+  75,dc 0
   24,dc 1
   1,dc 1
   38,dc 2
   53,dc 1
-  67,dc 0
+  67,dc 1
   16,dc 1
   82,dc 1
   31,dc 1
@@ -772,7 +786,7 @@ array set frame::rules {
   0,dc 1
   37,dc 2
   52,dc 0
-  66,dc 1
+  66,dc 0
   15,dc 1
   81,dc 1
   29,dc 1
@@ -780,7 +794,7 @@ array set frame::rules {
   6,dc 1
   44,dc 2
   58,dc 0
-  73,dc 0
+  73,dc 1
   22,dc 1
   36,dc 2
   51,dc 2
@@ -792,12 +806,13 @@ array set frame::rules {
   5,dc 1
   43,dc 2
   57,dc 1
-  72,dc 1
+  72,dc 0
   21,dc 1
+  86,dc 1
   35,dc 2
   50,dc 1
   49,dc 1
-  64,dc 0
+  64,dc 1
   13,dc 1
   78,dc 1
   27,dc 1
@@ -807,96 +822,99 @@ array set frame::rules {
   71,dc 1
   19,dc 1
   20,dc 1
+  85,dc 1
   34,dc 3
   48,dc 1
 }
 
 array set frame::rules {
-  41,line 149
-  7,line 112
-  37,line 145
-  4,line 108
-  34,line 140
-  1,line 105
-  31,line 136
-  27,line 132
+  41,line 151
+  7,line 114
+  37,line 147
+  4,line 110
+  34,line 142
+  1,line 107
+  31,line 138
+  86,line 218
+  27,line 134
   83,line 213
-  24,line 129
+  24,line 131
   80,line 208
-  79,line 205
-  21,line 126
+  79,line 207
+  21,line 128
   76,line 202
-  17,line 122
+  17,line 124
   73,line 197
-  14,line 119
+  14,line 121
   70,line 192
-  69,line 189
-  11,line 116
-  66,line 184
-  63,line 179
-  60,line 174
-  59,line 173
-  56,line 168
-  53,line 163
-  50,line 158
-  49,line 157
-  46,line 154
+  69,line 191
+  11,line 118
+  66,line 186
+  63,line 181
+  60,line 176
+  59,line 175
+  56,line 170
+  53,line 165
+  50,line 160
+  49,line 159
+  46,line 156
   33,e 1
-  43,line 151
-  9,line 114
-  40,line 148
-  39,line 147
-  6,line 111
-  36,line 144
-  3,line 107
-  33,line 139
-  29,line 134
-  30,line 135
-  26,line 131
-  82,line 210
-  23,line 128
-  78,line 204
-  19,line 124
-  20,line 125
-  75,line 199
-  16,line 121
-  72,line 194
-  13,line 118
+  43,line 153
+  9,line 116
+  40,line 150
+  39,line 149
+  6,line 113
+  36,line 146
+  3,line 109
+  33,line 141
+  29,line 136
+  30,line 137
+  85,line 217
+  26,line 133
+  82,line 212
+  23,line 130
+  78,line 206
+  19,line 126
+  20,line 127
+  75,line 201
+  16,line 123
+  72,line 196
+  13,line 120
   68,line 188
-  10,line 115
+  10,line 117
   65,line 183
-  62,line 178
-  58,line 172
-  55,line 167
-  52,line 162
-  48,line 156
-  45,line 153
-  42,line 150
-  8,line 113
-  38,line 146
-  5,line 110
-  35,line 143
-  2,line 106
-  32,line 139
-  28,line 133
+  62,line 180
+  58,line 174
+  55,line 169
+  52,line 164
+  48,line 158
+  45,line 155
+  42,line 152
+  8,line 115
+  38,line 148
+  5,line 112
+  35,line 145
+  2,line 108
+  32,line 141
+  28,line 135
   84,line 214
-  25,line 130
+  25,line 132
   81,line 209
-  22,line 127
+  22,line 129
   77,line 203
-  18,line 123
+  18,line 125
   74,line 198
-  15,line 120
+  15,line 122
   71,line 193
-  12,line 117
+  12,line 119
   67,line 187
   64,line 182
-  61,line 177
-  57,line 169
-  54,line 164
-  51,line 159
-  47,line 155
-  44,line 152
+  61,line 179
+  57,line 171
+  54,line 166
+  51,line 161
+  47,line 157
+  44,line 154
 }
 
 array set frame::lr1_table {
@@ -912,6 +930,7 @@ array set frame::lr1_table {
   71,trans {}
   40 {{8 {0 289} 1}}
   39 {{7 {0 289} 1}}
+  90,trans {{289 91}}
   89,trans {}
   18,trans {}
   41 {{9 {0 289} 1}}
@@ -933,7 +952,7 @@ array set frame::lr1_table {
   79,trans {}
   48 {{16 {0 289} 1}}
   27,trans {}
-  9,trans {{257 33} {258 34} {259 35} {260 36} {261 37} {262 38} {263 39} {264 40} {265 41} {266 42} {267 43} {268 44} {269 45} {270 46} {271 47} {272 48} {273 49} {274 50} {275 51} {276 52} {277 53} {278 54} {279 55} {280 56} {281 57} {282 58} {283 59} {284 60} {285 61} {286 62} {287 63} {306 64} {312 65} {313 66} {326 67}}
+  9,trans {{257 33} {258 34} {259 35} {260 36} {261 37} {262 38} {263 39} {264 40} {265 41} {266 42} {267 43} {268 44} {269 45} {270 46} {271 47} {272 48} {273 49} {274 50} {275 51} {276 52} {277 53} {278 54} {279 55} {280 56} {281 57} {282 58} {283 59} {284 60} {285 61} {286 62} {287 63} {308 64} {314 65} {315 66} {328 67}}
   50 {{18 {0 289} 1}}
   49 {{17 {0 289} 1}}
   46,trans {}
@@ -950,10 +969,10 @@ array set frame::lr1_table {
   70,trans {}
   69,trans {}
   56 {{24 {0 289} 1}}
-  88,trans {{289 89}}
-  17,trans {{288 85} {291 86} {324 87}}
+  88,trans {}
+  17,trans {{288 87} {291 88} {326 89}}
   57 {{25 {0 289} 1}}
-  0,trans {{288 1} {293 2} {294 3} {295 4} {296 5} {298 6} {299 7} {300 8} {301 9} {302 10} {303 11} {304 12} {305 13} {307 14} {308 15} {309 16} {311 17} {314 18} {316 19}}
+  0,trans {{288 1} {293 2} {294 3} {295 4} {296 5} {298 6} {299 7} {302 8} {303 9} {304 10} {305 11} {306 12} {307 13} {309 14} {310 15} {311 16} {313 17} {316 18} {318 19}}
   36,trans {}
   58 {{26 {0 289} 1}}
   55,trans {}
@@ -963,82 +982,84 @@ array set frame::lr1_table {
   61 {{29 {0 289} 1}}
   22,trans {}
   62 {{30 {0 289} 1}}
-  4,trans {{288 26} {291 27} {319 28}}
+  4,trans {{288 26} {291 27} {321 28}}
   41,trans {}
   63 {{31 {0 289} 1}}
   60,trans {}
   59,trans {}
-  64 {{82 {0 289} 1}}
+  64 {{84 {0 289} 1}}
   78,trans {}
-  65 {{80 {0 289} 1}}
+  65 {{82 {0 289} 1}}
   26,trans {}
-  66 {{81 {0 289} 1}}
+  66 {{83 {0 289} 1}}
   8,trans {}
   45,trans {}
   67 {{36 {0 289} 2}}
   64,trans {}
-  68 {{83 {0 289} 1}}
+  68 {{85 {0 289} 1}}
   83,trans {}
-  12,trans {{290 76} {310 77} {320 78}}
+  12,trans {{290 76} {300 77} {301 78} {312 79} {322 80}}
   70 {{35 {0 289} 2}}
-  69 {{84 {0 289} 1}}
+  69 {{86 {0 289} 1}}
   31,trans {}
-  71 {{78 {0 289} 1}}
+  71 {{80 {0 289} 1}}
   50,trans {}
   49,trans {}
-  72 {{76 {0 289} 1}}
+  72 {{78 {0 289} 1}}
   68,trans {}
-  73 {{79 {0 289} 1}}
+  73 {{81 {0 289} 1}}
   87,trans {}
-  16,trans {{288 82} {291 83} {321 84}}
-  74 {{77 {0 289} 1}}
+  16,trans {{288 84} {291 85} {323 86}}
+  74 {{79 {0 289} 1}}
   35,trans {}
   75 {{45 {0 289} 2}}
   54,trans {}
-  76 {{63 {0 289} 1}}
+  76 {{65 {0 289} 1}}
   73,trans {}
-  77 {{62 {0 289} 1}}
+  77 {{63 {0 289} 1}}
   21,trans {}
-  78 {{40 {0 289} 2}}
-  3,trans {{288 23} {291 24} {318 25}}
+  78 {{64 {0 289} 1}}
+  3,trans {{288 23} {291 24} {320 25}}
   40,trans {}
   39,trans {}
-  80 {{69 {0 289} 1}}
-  79 {{68 {0 289} 1}}
+  80 {{40 {0 289} 2}}
+  79 {{62 {0 289} 1}}
   58,trans {}
-  81 {{42 {0 289} 2}}
-  10 {{35 {0 289} 1} {83 {0 289} 0} {84 {0 289} 0} {1 {0 289} 0} {2 {0 289} 0} {3 {0 289} 0} {4 {0 289} 0} {5 {0 289} 0} {6 {0 289} 0} {7 {0 289} 0} {8 {0 289} 0} {9 {0 289} 0} {10 {0 289} 0} {11 {0 289} 0} {12 {0 289} 0} {13 {0 289} 0} {14 {0 289} 0} {15 {0 289} 0} {16 {0 289} 0} {17 {0 289} 0} {18 {0 289} 0} {19 {0 289} 0} {20 {0 289} 0} {21 {0 289} 0} {22 {0 289} 0} {23 {0 289} 0} {24 {0 289} 0} {25 {0 289} 0} {26 {0 289} 0} {27 {0 289} 0} {28 {0 289} 0} {29 {0 289} 0} {30 {0 289} 0} {31 {0 289} 0}}
+  81 {{70 {0 289} 1}}
+  10 {{35 {0 289} 1} {85 {0 289} 0} {86 {0 289} 0} {1 {0 289} 0} {2 {0 289} 0} {3 {0 289} 0} {4 {0 289} 0} {5 {0 289} 0} {6 {0 289} 0} {7 {0 289} 0} {8 {0 289} 0} {9 {0 289} 0} {10 {0 289} 0} {11 {0 289} 0} {12 {0 289} 0} {13 {0 289} 0} {14 {0 289} 0} {15 {0 289} 0} {16 {0 289} 0} {17 {0 289} 0} {18 {0 289} 0} {19 {0 289} 0} {20 {0 289} 0} {21 {0 289} 0} {22 {0 289} 0} {23 {0 289} 0} {24 {0 289} 0} {25 {0 289} 0} {26 {0 289} 0} {27 {0 289} 0} {28 {0 289} 0} {29 {0 289} 0} {30 {0 289} 0} {31 {0 289} 0}}
   77,trans {}
-  82 {{65 {0 289} 1}}
-  11 {{45 {0 289} 1} {76 {0 289} 0} {77 {0 289} 0} {78 {0 289} 0} {79 {0 289} 0}}
+  82 {{71 {0 289} 1}}
+  11 {{45 {0 289} 1} {78 {0 289} 0} {79 {0 289} 0} {80 {0 289} 0} {81 {0 289} 0}}
   25,trans {}
-  83 {{66 {0 289} 1}}
-  12 {{40 {0 289} 1} {61 {0 289} 0} {62 {0 289} 0} {63 {0 289} 0}}
-  7,trans {{288 30} {291 31} {323 32}}
+  83 {{42 {0 289} 2}}
+  12 {{40 {0 289} 1} {61 {0 289} 0} {62 {0 289} 0} {63 {0 289} 0} {64 {0 289} 0} {65 {0 289} 0}}
+  7,trans {{288 30} {291 31} {325 32}}
   44,trans {}
-  84 {{41 {0 289} 2}}
+  84 {{67 {0 289} 1}}
   13 {{49 {0 289} 1}}
   63,trans {}
-  85 {{74 {0 289} 1}}
+  85 {{68 {0 289} 1}}
   14 {{48 {0 289} 1}}
   82,trans {}
-  86 {{75 {0 289} 1}}
-  11,trans {{292 71} {296 72} {297 73} {300 74} {325 75}}
-  15 {{42 {0 289} 1} {67 {0 289} 0} {68 {0 289} 0} {69 {0 289} 0}}
+  86 {{41 {0 289} 2}}
+  11,trans {{292 71} {296 72} {297 73} {302 74} {327 75}}
+  15 {{42 {0 289} 1} {69 {0 289} 0} {70 {0 289} 0} {71 {0 289} 0}}
   30,trans {}
   29,trans {}
-  87 {{44 {0 289} 2}}
-  16 {{41 {0 289} 1} {64 {0 289} 0} {65 {0 289} 0} {66 {0 289} 0}}
+  87 {{76 {0 289} 1}}
+  16 {{41 {0 289} 1} {66 {0 289} 0} {67 {0 289} 0} {68 {0 289} 0}}
   48,trans {}
-  88 {{34 0 2}}
+  88 {{77 {0 289} 1}}
   0 {{0 0 0} {32 0 0} {34 0 0} {35 {0 289} 0} {36 {0 289} 0} {37 {0 289} 0} {38 {0 289} 0} {39 {0 289} 0} {40 {0 289} 0} {41 {0 289} 0} {42 {0 289} 0} {43 {0 289} 0} {44 {0 289} 0} {45 {0 289} 0} {46 {0 289} 0} {47 {0 289} 0} {48 {0 289} 0} {49 {0 289} 0} {50 {0 289} 0} {51 {0 289} 0}}
-  17 {{44 {0 289} 1} {73 {0 289} 0} {74 {0 289} 0} {75 {0 289} 0}}
-  89 {{34 0 3}}
+  17 {{44 {0 289} 1} {75 {0 289} 0} {76 {0 289} 0} {77 {0 289} 0}}
   67,trans {}
+  90 {{34 0 2}}
+  89 {{44 {0 289} 2}}
   1 {{50 {0 289} 1}}
   18 {{0 0 1}}
+  91 {{34 0 3}}
   86,trans {}
-  15,trans {{288 79} {291 80} {322 81}}
+  15,trans {{288 81} {291 82} {324 83}}
   2 {{37 {0 289} 1} {52 {0 289} 0} {53 {0 289} 0} {54 {0 289} 0}}
   19 {{32 0 1} {34 0 1} {33 289 0}}
   20 {{53 {0 289} 1}}
@@ -1051,30 +1072,31 @@ array set frame::lr1_table {
   72,trans {}
   5 {{46 {0 289} 1}}
   23 {{56 {0 289} 1}}
+  91,trans {}
   20,trans {}
-  19,trans {{315 88}}
+  19,trans {{317 90}}
   6 {{51 {0 289} 1}}
-  2,trans {{288 20} {291 21} {317 22}}
+  2,trans {{288 20} {291 21} {319 22}}
   24 {{57 {0 289} 1}}
   38,trans {}
-  7 {{43 {0 289} 1} {70 {0 289} 0} {71 {0 289} 0} {72 {0 289} 0}}
+  7 {{43 {0 289} 1} {72 {0 289} 0} {73 {0 289} 0} {74 {0 289} 0}}
   25 {{38 {0 289} 2}}
   57,trans {}
   8 {{47 {0 289} 1}}
   26 {{59 {0 289} 1}}
   76,trans {}
-  9 {{36 {0 289} 1} {80 {0 289} 0} {81 {0 289} 0} {82 {0 289} 0} {1 {0 289} 0} {2 {0 289} 0} {3 {0 289} 0} {4 {0 289} 0} {5 {0 289} 0} {6 {0 289} 0} {7 {0 289} 0} {8 {0 289} 0} {9 {0 289} 0} {10 {0 289} 0} {11 {0 289} 0} {12 {0 289} 0} {13 {0 289} 0} {14 {0 289} 0} {15 {0 289} 0} {16 {0 289} 0} {17 {0 289} 0} {18 {0 289} 0} {19 {0 289} 0} {20 {0 289} 0} {21 {0 289} 0} {22 {0 289} 0} {23 {0 289} 0} {24 {0 289} 0} {25 {0 289} 0} {26 {0 289} 0} {27 {0 289} 0} {28 {0 289} 0} {29 {0 289} 0} {30 {0 289} 0} {31 {0 289} 0}}
+  9 {{36 {0 289} 1} {82 {0 289} 0} {83 {0 289} 0} {84 {0 289} 0} {1 {0 289} 0} {2 {0 289} 0} {3 {0 289} 0} {4 {0 289} 0} {5 {0 289} 0} {6 {0 289} 0} {7 {0 289} 0} {8 {0 289} 0} {9 {0 289} 0} {10 {0 289} 0} {11 {0 289} 0} {12 {0 289} 0} {13 {0 289} 0} {14 {0 289} 0} {15 {0 289} 0} {16 {0 289} 0} {17 {0 289} 0} {18 {0 289} 0} {19 {0 289} 0} {20 {0 289} 0} {21 {0 289} 0} {22 {0 289} 0} {23 {0 289} 0} {24 {0 289} 0} {25 {0 289} 0} {26 {0 289} 0} {27 {0 289} 0} {28 {0 289} 0} {29 {0 289} 0} {30 {0 289} 0} {31 {0 289} 0}}
   27 {{60 {0 289} 1}}
   24,trans {}
   28 {{39 {0 289} 2}}
   6,trans {{288 29}}
   43,trans {}
   29 {{51 {0 289} 2}}
-  30 {{71 {0 289} 1}}
+  30 {{73 {0 289} 1}}
   62,trans {}
-  31 {{72 {0 289} 1}}
+  31 {{74 {0 289} 1}}
   81,trans {}
-  10,trans {{257 33} {258 34} {259 35} {260 36} {261 37} {262 38} {263 39} {264 40} {265 41} {266 42} {267 43} {268 44} {269 45} {270 46} {271 47} {272 48} {273 49} {274 50} {275 51} {276 52} {277 53} {278 54} {279 55} {280 56} {281 57} {282 58} {283 59} {284 60} {285 61} {286 62} {287 63} {312 68} {313 69} {327 70}}
+  10,trans {{257 33} {258 34} {259 35} {260 36} {261 37} {262 38} {263 39} {264 40} {265 41} {266 42} {267 43} {268 44} {269 45} {270 46} {271 47} {272 48} {273 49} {274 50} {275 51} {276 52} {277 53} {278 54} {279 55} {280 56} {281 57} {282 58} {283 59} {284 60} {285 61} {286 62} {287 63} {314 68} {315 69} {329 70}}
   32 {{43 {0 289} 2}}
   28,trans {}
   33 {{1 {0 289} 1}}
@@ -1093,66 +1115,70 @@ array set frame::token_id_table {
   265,title WCSD
   289 STRING_
   290 3D_
-  300 LAST_
+  300 HSV_
   284,title WCSW
   291 ALL_
-  301 LOCK_
-  313,title {}
+  301 HLS_
+  313,title SHOW
   292 BACK_
-  302 MATCH_
+  302 LAST_
   288,line 40
   293 CENTER_
-  303 MOVE_
+  303 LOCK_
   294 CLEAR_
-  304 NEW_
-  305 NEXT_
+  304 MATCH_
+  305 MOVE_
   295 DELETE_
-  306 NONE_
+  306 NEW_
   296 FIRST_
-  307 PREV_
+  307 NEXT_
   262,t 0
   297 FORWARD_
-  308 REFRESH_
+  308 NONE_
   285,line 36
   298 FRAMENO_
-  310 RGB_
-  309 RESET_
+  310 REFRESH_
+  309 PREV_
   299 HIDE_
-  311 SHOW_
+  311 RESET_
   283,t 0
-  312 coordsys
-  313 wcssys
+  312 RGB_
+  313 SHOW_
   314,t 1
-  314 command
+  314 coordsys
   282,line 33
-  315 @PSEUDO1
-  316 frame
+  315 wcssys
+  316 command
   264,title WCSC
-  317 center
+  317 @PSEUDO1
   283,title WCSV
-  318 clear
-  312,title {}
-  320 new
-  319 delete
+  318 frame
+  312,title RGB
+  320 clear
+  319 center
   278,line 29
-  321 reset
-  error,line 103
-  322 refresh
+  321 delete
+  error,line 105
+  322 new
   258,t 0
-  323 hide
-  324 show
-  325 move
+  323 reset
+  324 refresh
+  325 hide
   275,line 26
   279,t 0
   280,t 0
-  326 lock
-  327 match
-  328 start'
+  326 show
+  327 move
+  328 lock
   311,t 0
+  330 start'
+  329 match
   272,line 23
   263,title WCSB
   282,title WCSU
-  311,title SHOW
+  311,title RESET
+  330,title {}
+  329,title {}
   268,line 19
   276,t 0
   265,line 16
@@ -1160,33 +1186,33 @@ array set frame::token_id_table {
   297,t 0
   328,t 1
   262,line 13
-  327,line 212
+  327,line 205
   0,t 0
   0 {$}
   262,title WCSA
   281,title WCST
   error,t 0
-  310,title RGB
-  309,title RESET
+  310,title REFRESH
+  309,title PREV
   299,title HIDE
   328,title {}
   258,line 8
   273,t 0
-  324,line 196
+  324,line 190
   294,t 0
   304,t 0
   325,t 1
-  321,line 181
-  317,line 161
+  321,line 173
+  317,line 141
   261,title WCS
   279,title WCSR
   280,title WCSS
-  308,title REFRESH
+  308,title NONE
   269,t 0
   270,t 0
   298,title FRAMENO
   327,title {}
-  314,line 138
+  314,line 106
   291,t 0
   301,t 0
   322,t 1
@@ -1197,7 +1223,7 @@ array set frame::token_id_table {
   259,title AMPLIFIER
   297,line 53
   278,title WCSQ
-  307,title PREV
+  307,title NEXT
   297,title FORWARD
   326,title {}
   287,t 0
@@ -1212,7 +1238,7 @@ array set frame::token_id_table {
   287,line 38
   277,title WCSP
   284,t 0
-  306,title NONE
+  306,title NEW
   296,title FIRST
   325,title {}
   315,t 1
@@ -1224,8 +1250,8 @@ array set frame::token_id_table {
   257,title IMAGE
   277,line 28
   276,title WCSO
-  312,t 1
-  305,title NEXT
+  312,t 0
+  305,title MOVE
   295,title DELETE
   324,title {}
   274,line 25
@@ -1236,33 +1262,37 @@ array set frame::token_id_table {
   298,t 0
   275,title WCSN
   294,title CLEAR
-  304,title NEW
+  304,title MATCH
+  330,t 1
+  329,t 1
   323,title {}
   264,line 15
+  330,line 219
+  329,line 216
   261,line 12
   274,t 0
-  326,line 207
+  326,line 200
   305,t 0
   295,t 0
   257,line 7
   326,t 1
   274,title WCSM
-  323,line 191
+  323,line 185
   293,title CENTER
-  303,title MOVE
+  303,title LOCK
   322,title {}
-  320,line 176
-  319,line 171
+  320,line 168
+  319,line 163
   error error
   271,t 0
   292,t 0
   302,t 0
-  316,line 142
+  316,line 140
   323,t 1
   273,title WCSL
-  313,line 109
+  313,line 69
   292,title BACK
-  302,title MATCH
+  302,title LAST
   321,title {}
   267,t 0
   310,line 66
@@ -1276,7 +1306,7 @@ array set frame::token_id_table {
   272,title WCSK
   291,title ALL
   293,line 49
-  301,title LOCK
+  301,title HLS
   303,line 59
   320,title {}
   319,title {}
@@ -1292,12 +1322,12 @@ array set frame::token_id_table {
   283,line 34
   289,title string
   290,title 3D
-  300,title LAST
+  300,title HSV
   318,title {}
   282,t 0
   279,line 30
   280,line 31
-  313,t 1
+  313,t 0
   276,line 27
   257,t 0
   269,title WCSH
@@ -1317,14 +1347,14 @@ array set frame::token_id_table {
   263,line 14
   287,title WCSZ
   316,title {}
-  328,line 215
+  328,line 211
   306,t 0
   296,t 0
   327,t 1
   260,line 10
   259,line 9
-  325,line 201
-  322,line 186
+  325,line 195
+  322,line 178
   272,t 0
   267,title WCSF
   257 IMAGE_
@@ -1333,7 +1363,7 @@ array set frame::token_id_table {
   303,t 0
   315,title {}
   258 PHYSICAL_
-  318,line 166
+  318,line 144
   260 DETECTOR_
   259 AMPLIFIER_
   324,t 1
@@ -1341,7 +1371,7 @@ array set frame::token_id_table {
   262 WCSA_
   263 WCSB_
   264 WCSC_
-  315,line 139
+  315,line 111
   265 WCSD_
   266 WCSE_
   267 WCSF_
@@ -1349,7 +1379,7 @@ array set frame::token_id_table {
   268 WCSG_
   269 WCSH_
   270 WCSI_
-  312,line 104
+  312,line 68
   271 WCSJ_
   272 WCSK_
   289,t 0
@@ -1524,27 +1554,29 @@ proc frame::yyparse {} {
                     60 { DeleteAllFrames }
                     61 { CreateFrame }
                     62 { CreateRGBFrame }
-                    63 { Create3DFrame }
-                    64 { ResetCurrentFrame }
-                    65 { ResetFrame "Frame$1" }
-                    66 { ResetAllFrame }
-                    67 { UpdateCurrentFrame }
-                    68 { UpdateFrame "Frame$1" }
-                    69 { UpdateAllFrame }
-                    70 { global current; ProcessCmdSet active $current(frame) 0 UpdateActiveFrames }
-                    71 { ProcessCmdSet active "Frame$1" 0 UpdateActiveFrames }
-                    72 { ActiveFrameNone }
-                    74 { ProcessCmdSet active "Frame$1" 1 UpdateActiveFrames }
-                    75 { ActiveFrameAll }
-                    76 { FirstFrame }
-                    77 { LastFrame }
-                    78 { PrevFrame }
-                    79 { NextFrame }
-                    80 { set _ $1 }
-                    81 { set _ $1 }
-                    82 { set _ none }
+                    63 { CreateHSVFrame }
+                    64 { CreateHLSFrame }
+                    65 { Create3DFrame }
+                    66 { ResetCurrentFrame }
+                    67 { ResetFrame "Frame$1" }
+                    68 { ResetAllFrame }
+                    69 { UpdateCurrentFrame }
+                    70 { UpdateFrame "Frame$1" }
+                    71 { UpdateAllFrame }
+                    72 { global current; ProcessCmdSet active $current(frame) 0 UpdateActiveFrames }
+                    73 { ProcessCmdSet active "Frame$1" 0 UpdateActiveFrames }
+                    74 { ActiveFrameNone }
+                    76 { ProcessCmdSet active "Frame$1" 1 UpdateActiveFrames }
+                    77 { ActiveFrameAll }
+                    78 { FirstFrame }
+                    79 { LastFrame }
+                    80 { PrevFrame }
+                    81 { NextFrame }
+                    82 { set _ $1 }
                     83 { set _ $1 }
-                    84 { set _ $1 }
+                    84 { set _ none }
+                    85 { set _ $1 }
+                    86 { set _ $1 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

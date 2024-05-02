@@ -10,9 +10,14 @@
 // Frame
 
 class FrameHSV : public FrameRGB {
+ protected:
+  int isFrameHSV() {return 1;}
+
  public:
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameHSV();
+
+  void getTypeCmd();
 };
 
 #endif

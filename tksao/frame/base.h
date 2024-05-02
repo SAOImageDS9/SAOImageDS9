@@ -375,6 +375,8 @@ public:
   virtual int isFrame() {return 0;}
   virtual int isFrame3d() {return 0;}
   virtual int isFrameRGB() {return 0;}
+  virtual int isFrameHSV() {return 0;}
+  virtual int isFrameHLS() {return 0;}
 
   virtual void loadDone(int);
 

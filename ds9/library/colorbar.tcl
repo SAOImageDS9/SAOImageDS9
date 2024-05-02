@@ -203,15 +203,25 @@ proc CreateColorbar {} {
     colorbar map $colorbar(map)
     colorbar invert $colorbar(invert)
     colorbar hide
-
     LayoutColorbar colorbar 0 0 $canvas(width) $canvas(height)
 
     # just for backup backward compatibility
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) -tag colorbarrgb
     colorbarrgb invert $colorbar(invert)
     colorbarrgb hide
-
     LayoutColorbar colorbarrgb 0 0 $canvas(width) $canvas(height)
+
+    # just for backup backward compatibility
+    $ds9(canvas) create colorbarhsv$ds9(visual)$ds9(depth) -tag colorbarhsv
+    colorbarhsv invert $colorbar(invert)
+    colorbarhsv hide
+    LayoutColorbar colorbarhsv 0 0 $canvas(width) $canvas(height)
+
+    # just for backup backward compatibility
+    $ds9(canvas) create colorbarhls$ds9(visual)$ds9(depth) -tag colorbarhls
+    colorbarhls invert $colorbar(invert)
+    colorbarhls hide
+    LayoutColorbar colorbarhls 0 0 $canvas(width) $canvas(height)
 }
 
 proc CreateColorbarBase {frame} {
@@ -223,7 +233,9 @@ proc CreateColorbarBase {frame} {
     # save current colorbar params if appropriate
     switch [$current(colorbar) get type] {
 	base {set sav [$current(colorbar) get colorbar]}
-	rgb {set sav [colorbar get colorbar]}
+	rgb -
+	hsv -
+	hls {set sav [colorbar get colorbar]}
     }
 
     set which ${frame}cb
@@ -288,13 +300,109 @@ proc CreateColorbarRGB {frame} {
 
     # save current colorbar params if appropriate
     switch [$current(colorbar) get type] {
-	base {set sav [colorbarrgb get colorbar]}
 	rgb {set sav [$current(colorbar) get colorbar]}
+	base -
+	hsv -
+	hls {set sav [colorbarrgb get colorbar]}
     }
     
     set which ${frame}cb
 
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
+	-colors 2048 \
+	-tag $which \
+	-command $which \
+	-anchor nw \
+	\
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant) \
+	\
+	-helvetica $ds9(helvetica) \
+	-courier $ds9(courier) \
+	-times $ds9(times) \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground]
+
+    # now init new colorbar to prev values
+    $which colorbar $sav
+
+    # enable events
+    BindEventsColorbar $which
+
+    LayoutColorbar $which 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+}
+
+proc CreateColorbarHSV {frame} {
+    global ds9
+    global colorbar
+    global current
+
+    # save current colorbar params if appropriate
+    switch [$current(colorbar) get type] {
+	hsv {set sav [$current(colorbar) get colorbar]}
+	base -
+	rgb -
+	hls {set sav [colorbarhsv get colorbar]}
+    }
+    
+    set which ${frame}cb
+
+    $ds9(canvas) create colorbarhsv$ds9(visual)$ds9(depth) \
+	-colors 2048 \
+	-tag $which \
+	-command $which \
+	-anchor nw \
+	\
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant) \
+	\
+	-helvetica $ds9(helvetica) \
+	-courier $ds9(courier) \
+	-times $ds9(times) \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground]
+
+    # now init new colorbar to prev values
+    $which colorbar $sav
+
+    # enable events
+    BindEventsColorbar $which
+
+    LayoutColorbar $which 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+}
+
+proc CreateColorbarHLS {frame} {
+    global ds9
+    global colorbar
+    global current
+
+    # save current colorbar params if appropriate
+    switch [$current(colorbar) get type] {
+	hls {set sav [$current(colorbar) get colorbar]}
+	base -
+	rgb -
+	hsv {set sav [colorbarhls get colorbar]}
+    }
+    
+    set which ${frame}cb
+
+    $ds9(canvas) create colorbarhls$ds9(visual)$ds9(depth) \
 	-colors 2048 \
 	-tag $which \
 	-command $which \
@@ -379,7 +487,9 @@ proc BindEventsColorbar {which} {
 	    $ds9(canvas) bind $which <KeyRelease> \
 		[list ColorbarKeyRelease $frame %K %A %x %y]
 	}
-	rgb {}
+	rgb -
+	hsv -
+	hls {}
     }
 }
 
@@ -406,7 +516,9 @@ proc UnBindEventsColorbar {which} {
 	    $ds9(canvas) bind $which <Key> {}
 	    $ds9(canvas) bind $which <KeyRelease> {}
 	}
-	rgb {}
+	rgb -
+	hsv -
+	hls {}
     }
 }
 
@@ -473,7 +585,9 @@ proc LoadColormapFile {fn} {
 		$cb map $orgName
 		$cb invert $orgInvert
 	    }
-	    rgb {}
+	    rgb -
+	    hsv -
+	    hls {}
 	}
     }
 
@@ -585,6 +699,20 @@ proc ColorbarMotion {frame x y} {
 	}
 	rgb {
 	    switch -- $current(rgb) {
+		red {set infobox(value,red) $vv}
+		green {set infobox(value,green) $vv}
+		blue {set infobox(value,blue) $vv}
+	    }
+	}
+	hsv {
+	    switch -- $current(hsv) {
+		red {set infobox(value,red) $vv}
+		green {set infobox(value,green) $vv}
+		blue {set infobox(value,blue) $vv}
+	    }
+	}
+	hls {
+	    switch -- $current(hls) {
 		red {set infobox(value,red) $vv}
 		green {set infobox(value,green) $vv}
 		blue {set infobox(value,blue) $vv}

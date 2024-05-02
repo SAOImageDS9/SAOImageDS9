@@ -101,6 +101,16 @@ proc CreateNameNumberFrame {which type} {
 		-command $which
 	    CreateColorbarRGB $which
 	}
+	hsv {
+	    $ds9(canvas) create framehsv$ds9(visual)$ds9(depth) \
+		-command $which
+	    CreateColorbarHSV $which
+	}
+	hls {
+	    $ds9(canvas) create framehls$ds9(visual)$ds9(depth) \
+		-command $which
+	    CreateColorbarHLS $which
+	}
 	3d {
 	    $ds9(canvas) create frame3d$ds9(visual)$ds9(depth) \
 		-command $which

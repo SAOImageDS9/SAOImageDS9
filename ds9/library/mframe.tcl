@@ -68,6 +68,10 @@ proc FrameMainMenu {} {
 	-command CubeDialog
     $ds9(mb).frame add command -label [msgcat::mc {RGB}] \
 	-command RGBDialog
+    $ds9(mb).frame add command -label [msgcat::mc {HSV}] \
+	-command HSVDialog
+    $ds9(mb).frame add command -label [msgcat::mc {HLS}] \
+	-command HLSDialog
     $ds9(mb).frame add command -label [msgcat::mc {3d}] \
 	-command 3DDialog
     $ds9(mb).frame add separator
@@ -484,6 +488,8 @@ proc ButtonsFrameDef {} {
 	frame,last 1
 	frame,cube 0
 	frame,rgb 0
+	frame,hsv 0
+	frame,hls 0
 	frame,3d 0
 	frame,size 0
     }
@@ -707,6 +713,10 @@ proc CreateButtonsFrame {} {
 	[string tolower [msgcat::mc {Cube}]] CubeDialog
     ButtonButton $ds9(buttons).frame.rgb \
 	[string tolower [msgcat::mc {RGB}]] RGBDialog
+    ButtonButton $ds9(buttons).frame.hsv \
+	[string tolower [msgcat::mc {HSV}]] HSVDialog
+    ButtonButton $ds9(buttons).frame.hls \
+	[string tolower [msgcat::mc {HLS}]] HLSDialog
     ButtonButton $ds9(buttons).frame.3d \
 	[string tolower [msgcat::mc {3d}]] 3DDialog
 
@@ -799,6 +809,8 @@ proc CreateButtonsFrame {} {
         $ds9(buttons).frame.last pbuttons(frame,last)
         $ds9(buttons).frame.cube pbuttons(frame,cube)
         $ds9(buttons).frame.rgb pbuttons(frame,rgb)
+        $ds9(buttons).frame.hsv pbuttons(frame,hsv)
+        $ds9(buttons).frame.hls pbuttons(frame,hls)
         $ds9(buttons).frame.3d pbuttons(frame,3d)
         $ds9(buttons).frame.size pbuttons(frame,size)
     "
@@ -863,6 +875,10 @@ proc PrefsDialogButtonbarFrame {f} {
 	-variable pbuttons(frame,cube) -command {UpdateButtons buttons(frame)}
     $m add checkbutton -label [msgcat::mc {RGB}] \
 	-variable pbuttons(frame,rgb) -command {UpdateButtons buttons(frame)}
+    $m add checkbutton -label [msgcat::mc {HSV}] \
+	-variable pbuttons(frame,hsv) -command {UpdateButtons buttons(frame)}
+    $m add checkbutton -label [msgcat::mc {HLS}] \
+	-variable pbuttons(frame,hls) -command {UpdateButtons buttons(frame)}
     $m add checkbutton -label [msgcat::mc {3d}] \
 	-variable pbuttons(frame,3d) -command {UpdateButtons buttons(frame)}
     $m add separator
@@ -1201,16 +1217,56 @@ proc UpdateFrameMenu {} {
 	    base {
 		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
 		    -state disabled
+		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
+		    -state disabled
+		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
+		    -state disabled
 		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
 		    -state normal
 		$ds9(buttons).frame.rgb configure -state disabled
+		$ds9(buttons).frame.hsv configure -state disabled
+		$ds9(buttons).frame.hls configure -state disabled
 		$ds9(buttons).frame.3d configure -state normal
 	    }
 	    rgb {
 		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
 		    -state normal
+		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
+		    -state disabled
+		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
+		    -state disabled
 		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
 		    -state disabled
+		$ds9(buttons).frame.rgb configure -state normal
+		$ds9(buttons).frame.rgb configure -state disabled
+		$ds9(buttons).frame.rgb configure -state disabled
+		$ds9(buttons).frame.3d configure -state disabled
+	    }
+	    hsv {
+		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
+		    -state disabled
+		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
+		    -state normal
+		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
+		    -state disabled
+		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
+		    -state disabled
+		$ds9(buttons).frame.rgb configure -state disabled
+		$ds9(buttons).frame.rgb configure -state normal
+		$ds9(buttons).frame.rgb configure -state disabled
+		$ds9(buttons).frame.3d configure -state disabled
+	    }
+	    hls {
+		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
+		    -state disabled
+		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
+		    -state disabled
+		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
+		    -state normal
+		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
+		    -state disabled
+		$ds9(buttons).frame.rgb configure -state disabled
+		$ds9(buttons).frame.rgb configure -state disabled
 		$ds9(buttons).frame.rgb configure -state normal
 		$ds9(buttons).frame.3d configure -state disabled
 	    }
@@ -1220,6 +1276,8 @@ proc UpdateFrameMenu {} {
 		$ds9(mb).frame entryconfig [msgcat::mc {3d}]  \
 		    -state normal
 		$ds9(buttons).frame.rgb configure -state disabled
+		$ds9(buttons).frame.hsv configure -state disabled
+		$ds9(buttons).frame.hls configure -state disabled
 		$ds9(buttons).frame.3d configure -state normal
 	    }
 	}
@@ -1228,10 +1286,16 @@ proc UpdateFrameMenu {} {
 	    -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
 	    -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
+	    -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
+	    -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
 	    -state disabled
 	$ds9(buttons).frame.cube configure -state disabled
 	$ds9(buttons).frame.rgb configure -state disabled
+	$ds9(buttons).frame.hsv configure -state disabled
+	$ds9(buttons).frame.hls configure -state disabled
 	$ds9(buttons).frame.3d configure -state disabled
     }
 }

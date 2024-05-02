@@ -52,6 +52,8 @@ proc MultiLoadRGB {} {
     if {$current(frame) != {}} {
 	switch -- [$current(frame) get type] {
 	    base -
+	    hsv -
+	    hls -
 	    3d {CreateRGBFrame}
 	    rgb {
 		if {![$current(frame) has fits]} {

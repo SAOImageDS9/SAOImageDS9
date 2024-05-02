@@ -16,6 +16,8 @@ proc Import {fn format layer mode fn2} {
 	rgbarray {
 	    switch -- [$current(frame) get type] {
 		base -
+		hsv -
+		hls -
 		3d {CreateRGBFrame}
 		rgb {}
 	    }

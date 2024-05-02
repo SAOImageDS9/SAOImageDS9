@@ -15,6 +15,16 @@ proc CreateRGBFrame {} {
     RGBDialog
 }
 
+proc CreateHSVFrame {} {
+    CreateNamedFrame hsv
+    RGBDialog
+}
+
+proc CreateHLSFrame {} {
+    CreateNamedFrame hls
+    RGBDialog
+}
+
 proc Create3DFrame {} {
     CreateNamedFrame 3d
     3DDialog

@@ -17,12 +17,12 @@ proc CreateRGBFrame {} {
 
 proc CreateHSVFrame {} {
     CreateNamedFrame hsv
-    RGBDialog
+    HSVDialog
 }
 
 proc CreateHLSFrame {} {
     CreateNamedFrame hls
-    RGBDialog
+    HLSDialog
 }
 
 proc Create3DFrame {} {

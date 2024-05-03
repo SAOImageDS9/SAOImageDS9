@@ -1032,20 +1032,9 @@ proc MatchColor {which} {
     set cb ${which}cb
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    switch -- [$ff get type] {
-		base -
-		3d {
-		    if {$tt != {rgb}} {
-			$ff colormap [$cb get colormap]
-			${ff}cb colorbar [$ff get colorbar]
-		    }
-		}
-		rgb {
-		    if {$tt == {rgb}} {
-			$ff colormap [$cb get colormap]
-			${ff}cb colorbar [$ff get colorbar]
-		    }
-		}
+	    if {$tt == [$ff get type]} {
+		$ff colormap [$cb get colormap]
+		${ff}cb colorbar [$ff get colorbar]
 	    }
 	}
     }
@@ -1510,87 +1499,44 @@ proc UpdateColorDialog {} {
 
 	if {$current(frame) != {}} {
 	    switch -- [$current(frame) get type] {
-		base -
-		3d {
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Open}] -state normal
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Save}] -state normal
-
-		    foreach cmap $icolorbar(default,cmaps) {
-			$icolorbar(mb).colormap entryconfig $cmap -state normal
-		    }
-
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {h5utils}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Matplotlib}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Cubehelix}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Gist}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Topographic}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Scientific Colour Maps}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {User}] -state normal
-
-		}
-		rgb {
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Open}] -state disabled
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Save}] -state disabled
-
-		    foreach cmap $icolorbar(default,cmaps) {
-			$icolorbar(mb).colormap entryconfig $cmap \
-			    -state disabled
-		    }
-
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {h5utils}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Matplotlib}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Cubehelix}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Gist}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Topographic}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Scientific Colour Maps}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {User}] -state disabled
-		}
+		base {UpdateColorDialogCmaps normal}
+		rgb {UpdateColorDialogCmaps disabled}
+		hsv {UpdateColorDialogCmaps disabled}
+		hls {UpdateColorDialogCmaps disabled}
+		3d {UpdateColorDialogCmaps normal}
 	    }
 	} else {
-	    $icolorbar(mb).file entryconfig \
-		[msgcat::mc {Open}] -state normal
-	    $icolorbar(mb).file entryconfig \
-		[msgcat::mc {Save}] -state normal
-
-	    foreach cmap $icolorbar(default,cmaps) {
-		$icolorbar(mb).colormap entryconfig $cmap -state normal
-	    }
-
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {h5utils}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Matplotlib}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Cubehelix}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Gist}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Topographic}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig \
-		[msgcat::mc {Scientific Colour Maps}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {User}] \
-		-state normal
+	    UpdateColorDialogCmaps normal
 	}
     }
+}
+
+proc UpdateColorDialogCmaps {state} {
+    global icolorbar
+
+    $icolorbar(mb).file entryconfig \
+	[msgcat::mc {Open}] -state $state
+    $icolorbar(mb).file entryconfig \
+	[msgcat::mc {Save}] -state $state
+
+    foreach cmap $icolorbar(default,cmaps) {
+	$icolorbar(mb).colormap entryconfig $cmap -state $state
+    }
+
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {h5utils}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Matplotlib}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Cubehelix}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Gist}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Topographic}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Scientific Colour Maps}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {User}] -state $state
 }
 
 proc LayoutColorbarAdjust {} {

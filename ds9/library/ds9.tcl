@@ -395,6 +395,8 @@ PlotDef
 PrefsDef
 PSDef
 RGBDef
+HSVDef
+HLSDef
 SAMPHubDef
 SAODef
 SaveDef

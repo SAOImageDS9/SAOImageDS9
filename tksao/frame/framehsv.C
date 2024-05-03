@@ -20,3 +20,19 @@ void FrameHSV::getTypeCmd()
   Tcl_AppendResult(interp, "hsv", NULL);
 }
 
+void FrameHSV::getHSVChannelCmd()
+{
+  switch (channel) {
+  case 0:
+    Tcl_AppendResult(interp, "hue", NULL);
+    return;
+  case 1:
+    Tcl_AppendResult(interp, "saturation", NULL);
+    return;
+  case 2:
+    Tcl_AppendResult(interp, "value", NULL);
+    return;
+  }
+}
+
+

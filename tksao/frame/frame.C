@@ -1053,21 +1053,6 @@ void Frame::getColorbarCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Frame::getRGBChannelCmd()
-{
-  Tcl_AppendResult(interp, "red", NULL);
-}
-
-void Frame::getRGBViewCmd()
-{
-  Tcl_AppendResult(interp, "1 1 1", NULL);
-}
-
-void Frame::getRGBSystemCmd()
-{
-  Tcl_AppendResult(interp, "image", NULL);
-}
-
 void Frame::getTypeCmd()
 {
   Tcl_AppendResult(interp, "base", NULL);

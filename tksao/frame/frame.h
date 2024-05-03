@@ -94,9 +94,6 @@ class Frame : public FrameBase {
   void colormapEndCmd();
 
   void getColorbarCmd();
-  void getRGBChannelCmd();
-  void getRGBViewCmd();
-  void getRGBSystemCmd();
   void getTypeCmd();
 
   void iisCmd(int, int);

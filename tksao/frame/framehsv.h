@@ -17,6 +17,9 @@ class FrameHSV : public FrameRGB {
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameHSV();
 
+  void getHSVChannelCmd();
+  void getHSVSystemCmd() {getRGBSystemCmd();}
+  void getHSVViewCmd() {getRGBViewCmd();}
   void getTypeCmd();
 };
 

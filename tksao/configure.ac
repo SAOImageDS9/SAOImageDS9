@@ -84,6 +84,12 @@ colorbar/colorbarrgb.C
 colorbar/colorbarrgbtruecolor16.C
 colorbar/colorbarrgbtruecolor24.C
 colorbar/colorbarrgbtruecolor8.C
+colorbar/colorbarhsvtruecolor16.C
+colorbar/colorbarhsvtruecolor24.C
+colorbar/colorbarhsvtruecolor8.C
+colorbar/colorbarhlstruecolor16.C
+colorbar/colorbarhlstruecolor24.C
+colorbar/colorbarhlstruecolor8.C
 colorbar/colorbartruecolor16.C
 colorbar/colorbartruecolor24.C
 colorbar/colorbartruecolor8.C
@@ -160,7 +166,13 @@ frame/framergbtruecolor16.C
 frame/framergbtruecolor24.C
 frame/framergbtruecolor8.C
 frame/framehsv.C
+frame/framehsvtruecolor16.C
+frame/framehsvtruecolor24.C
+frame/framehsvtruecolor8.C
 frame/framehls.C
+frame/framehlstruecolor16.C
+frame/framehlstruecolor24.C
+frame/framehlstruecolor8.C
 frame/frametruecolor16.C
 frame/frametruecolor24.C
 frame/frametruecolor8.C

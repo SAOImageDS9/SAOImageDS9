@@ -259,6 +259,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token HISTEQU_
 %token HISTOGRAM_
 %token HORIZONTAL_
+%token HSV_
+%token HLS_
 %token ICRS_
 %token ID_
 %token IIS_
@@ -488,6 +490,8 @@ command : DEBUG_ debug
 	| HIDE_ {fr->hideCmd();}
 	| HIGHLITE_ yesno {fr->highliteCmd($2);}
 	| HIGHLITE_ COLOR_ STRING {fr->highliteColorCmd($3);}
+	| HSV_ hsv
+	| HLS_ hls
 	| IIS_ iis
 	| IRAF_ ALIGN_ INT {fr->irafAlignCmd($3);}
 	| LOAD_ load
@@ -892,6 +896,10 @@ colormap : INT numeric numeric INT INT
         {fr->colormapCmd($1, $2, $3, $4, $5);}
 	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| HSV_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 	| BEGIN_ {fr->colormapBeginCmd();}
 	| MOTION_ colormapMotion
 	| END_ {fr->colormapEndCmd();}
@@ -900,6 +908,10 @@ colormap : INT numeric numeric INT INT
 colormapMotion: INT numeric numeric INT INT
 	{fr->colormapMotionCmd($1, $2, $3, $4, $5);}
 	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| HSV_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
 	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 
 colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
@@ -1041,6 +1053,8 @@ get	: /* empty */ {fr->getCmd();}
 	| HIGHLITE_ COLOR_ {fr->getHighliteColorCmd();}
 	| HISTOGRAM_ STRING STRING INT {fr->getHistogramCmd($2,$3,$4);}
 	| HORIZONTAL_ CUT_ getHorzCut
+	| HSV_ getHSV
+	| HLS_ getHLS
 	| IIS_ getiis
 	| INFO_ getInfo
 	| IRAF_ ALIGN_ {fr->getIRAFAlignCmd();}
@@ -1280,6 +1294,16 @@ getGrid : /* empty */ {fr->getGridCmd();}
 	| VAR_ {fr->getGridVarsCmd();}
 	;
 
+getHSV	: CHANNEL_ {fr->getHSVChannelCmd();}
+	| SYSTEM_ {fr->getHSVSystemCmd();}
+	| VIEW_ {fr->getHSVViewCmd();}
+	;
+
+getHLS	: CHANNEL_ {fr->getHLSChannelCmd();}
+	| SYSTEM_ {fr->getHLSSystemCmd();}
+	| VIEW_ {fr->getHLSViewCmd();}
+	;
+
 getMask	: COLOR_ {fr->getMaskColorCmd();}
 	| MARK_ {fr->getMaskMarkCmd();}
 	| RANGE_ {fr->getMaskRangeCmd();}
@@ -1403,6 +1427,16 @@ hasWCS	: coordSystem {fr->hasWCSCmd((Coord::CoordSystem)$1);}
         | LINEAR_ coordSystem {fr->hasWCSLinearCmd((Coord::CoordSystem)$2);}
 	| ALT_ {fr->hasWCSAltCmd();}
 	| THREED_ coordSystem {fr->hasWCS3DCmd((Coord::CoordSystem)$2);}
+	;
+
+hsv	: CHANNEL_ STRING {fr->setHSVChannelCmd($2);}
+	| SYSTEM_ coordSystem {fr->setHSVSystemCmd((Coord::CoordSystem)$2);}
+	| VIEW_ INT INT INT {fr->setHSVViewCmd($2,$3,$4);}
+	;
+
+hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}
+	| SYSTEM_ coordSystem {fr->setHLSSystemCmd((Coord::CoordSystem)$2);}
+	| VIEW_ INT INT INT {fr->setHLSViewCmd($2,$3,$4);}
 	;
 
 iis	: NEW_ INT INT {fr->iisCmd($2,$3);}

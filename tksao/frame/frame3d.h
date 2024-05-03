@@ -94,9 +94,6 @@ class Frame3d : public Frame3dBase {
   int processDetach();
 
   void getColorbarCmd();
-  void getRGBChannelCmd();
-  void getRGBSystemCmd();
-  void getRGBViewCmd();
   void getTypeCmd();
 
   void colormapCmd(int, float, float, int, int);

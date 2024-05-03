@@ -109,19 +109,6 @@ public:
   void zoomToAboutCmd(const Vector&, const Vector&,
 		      Coord::CoordSystem, Coord::SkyFrame);
   void zoomToFitCmd(double);
-
-  // 3d
-  void get3dBorderCmd();
-  void get3dBorderColorCmd();
-  void get3dCompassCmd();
-  void get3dCompassColorCmd();
-  void get3dHighliteCmd();
-  void get3dHighliteColorCmd();
-  void get3dScaleCmd();
-  void get3dViewCmd();
-  void get3dViewPointCmd();
-  void get3dRenderMethodCmd();
-  void get3dRenderBackgroundCmd();
 };
 
 #endif

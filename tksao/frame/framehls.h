@@ -17,6 +17,9 @@ class FrameHLS : public FrameRGB {
   FrameHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameHLS();
 
+  void getHLSChannelCmd();
+  void getHLSSystemCmd() {getRGBSystemCmd();}
+  void getHLSViewCmd() {getRGBViewCmd();}
   void getTypeCmd();
 };
 

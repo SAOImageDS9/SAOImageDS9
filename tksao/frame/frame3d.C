@@ -1097,21 +1097,6 @@ void Frame3d::getColorbarCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Frame3d::getRGBChannelCmd()
-{
-  Tcl_AppendResult(interp, "red", NULL);
-}
-
-void Frame3d::getRGBViewCmd()
-{
-  Tcl_AppendResult(interp, "1 1 1", NULL);
-}
-
-void Frame3d::getRGBSystemCmd()
-{
-  Tcl_AppendResult(interp, "image", NULL);
-}
-
 void Frame3d::getTypeCmd()
 {
   Tcl_AppendResult(interp, "3d", NULL);

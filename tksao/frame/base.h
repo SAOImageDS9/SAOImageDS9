@@ -1680,25 +1680,41 @@ public:
   void wcsResetCmd(int);
 
   // RGB Commands
-  virtual void getRGBChannelCmd() =0;
-  virtual void getRGBViewCmd() =0;
-  virtual void getRGBSystemCmd() =0;
+  virtual void getRGBChannelCmd();
+  virtual void getRGBViewCmd();
+  virtual void getRGBSystemCmd();
   virtual void setRGBChannelCmd(const char*) {}
   virtual void setRGBViewCmd(int, int, int) {}
   virtual void setRGBSystemCmd(Coord::CoordSystem) {}
 
+  // HSV Commands
+  virtual void getHSVChannelCmd();
+  virtual void getHSVViewCmd();
+  virtual void getHSVSystemCmd();
+  virtual void setHSVChannelCmd(const char*) {}
+  virtual void setHSVViewCmd(int, int, int) {}
+  virtual void setHSVSystemCmd(Coord::CoordSystem) {}
+
+  // HLS Commands
+  virtual void getHLSChannelCmd();
+  virtual void getHLSViewCmd();
+  virtual void getHLSSystemCmd();
+  virtual void setHLSChannelCmd(const char*) {}
+  virtual void setHLSViewCmd(int, int, int) {}
+  virtual void setHLSSystemCmd(Coord::CoordSystem) {}
+
   // 3d
-  virtual void get3dBorderCmd() =0;
-  virtual void get3dBorderColorCmd() =0;
-  virtual void get3dCompassCmd() =0;
-  virtual void get3dCompassColorCmd() =0;
-  virtual void get3dHighliteCmd() =0;
-  virtual void get3dHighliteColorCmd() =0;
-  virtual void get3dScaleCmd() =0;
-  virtual void get3dViewCmd() =0;
-  virtual void get3dViewPointCmd() =0;
-  virtual void get3dRenderMethodCmd() =0;
-  virtual void get3dRenderBackgroundCmd() =0;
+  virtual void get3dBorderCmd();
+  virtual void get3dBorderColorCmd();
+  virtual void get3dCompassCmd();
+  virtual void get3dCompassColorCmd();
+  virtual void get3dHighliteCmd();
+  virtual void get3dHighliteColorCmd();
+  virtual void get3dScaleCmd();
+  virtual void get3dViewCmd();
+  virtual void get3dViewPointCmd();
+  virtual void get3dRenderMethodCmd();
+  virtual void get3dRenderBackgroundCmd();
   virtual void set3dBorderCmd(int) {}
   virtual void set3dBorderColorCmd(const char*) {}
   virtual void set3dCompassCmd(int) {}

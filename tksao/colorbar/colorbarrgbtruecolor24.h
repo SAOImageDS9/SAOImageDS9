@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -9,7 +9,7 @@
 #include "truecolor24.h"
 
 class ColorbarRGBTrueColor24 : public ColorbarRGB, public TrueColor24 {
-private:
+protected:
   void updateColorsHorz();
   void updateColorsVert();
   void updateColors24Horz(int, int, char*);

@@ -5,23 +5,16 @@
 #ifndef __colorbarhls_h__
 #define __colorbarhls_h__
 
-#include "colorbarbase.h"
+#include "colorbart.h"
 
 class Filter;
 
-class ColorbarHLS : public ColorbarBase {
- protected:
-  int channel;
-  float bias[3];
-  float contrast[3];
-
+class ColorbarHLS : public ColorbarT {
  private:
   void psHorz(ostream&, Filter&, int, int);
   void psVert(ostream&, Filter&, int, int);
 
 protected:
-  int calcContrastBias(int, float, float);
-  void reset();
   void updateColorCells();
 
 #ifdef MAC_OSX_TK

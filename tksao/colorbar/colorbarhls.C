@@ -8,38 +8,8 @@
 #include "psutil.h"
 
 ColorbarHLS::ColorbarHLS(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
-  : ColorbarBase(i,c,item)
+  : ColorbarT(i,c,item)
 {
-  channel = 0;
-
-  for (int i=0; i<3; i++) {
-    bias[i] = .5;
-    contrast[i] = 1.0;
-  }
-}
-
-int ColorbarHLS::calcContrastBias(int i, float bb, float cc)
-{
-  // if default (contrast = 1.0 && bias = .5) return
-  if (fabs(bb - 0.5) < 0.0001 && fabs(cc - 1.0) < 0.0001)
-    return i;
-   
-  // map i to range of 0 to 1.0
-  // shift by bias (if invert, bias = 1-bias)
-  // multiply by contrast
-  // shift to center of region
-  // expand back to number of dynamic colors
-  float b = invert ? 1-bb : bb;
-  int r = (int)(((((float)i / colorCount) - b) * cc + .5 ) * colorCount);
- 
-  // clip to bounds if out of range
- 
-  if (r < 0)
-    return 0;
-  else if (r >= colorCount)
-    return colorCount-1;
-  else
-    return r;
 }
 
 void ColorbarHLS::psHorz(ostream& str, Filter& filter, int width, int height)
@@ -172,17 +142,6 @@ void ColorbarHLS::psVert(ostream& str, Filter& filter, int width, int height)
     }
     str << filter;
   }
-}
-
-void ColorbarHLS::reset()
-{
-  for (int i=0; i<3; i++) {
-    bias[i] = .5;
-    contrast[i] = 1.0;
-  }
-  invert = 0;
-
-  updateColors();
 }
 
 void ColorbarHLS::updateColorCells()

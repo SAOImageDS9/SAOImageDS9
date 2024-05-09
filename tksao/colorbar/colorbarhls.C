@@ -9,8 +9,7 @@
 
 ColorbarHLS::ColorbarHLS(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
   : ColorbarT(i,c,item)
-{
-}
+{}
 
 void ColorbarHLS::psHorz(ostream& str, Filter& filter, int width, int height)
 {
@@ -144,49 +143,7 @@ void ColorbarHLS::psVert(ostream& str, Filter& filter, int width, int height)
   }
 }
 
-void ColorbarHLS::updateColorCells()
-{
-  int clrs = (((ColorbarBaseOptions*)options)->colors);
-  if (clrs != colorCount) {
-    colorCount = clrs;
-    if (colorCells)
-      delete [] colorCells;
-    colorCells = new unsigned char[colorCount*3];
-  }
-
-  // fill rgb table
-  // note: its filled bgr to match XImage
-  //  for(int i=0; i<colorCount; i++) {
-  for(int i=0, j=colorCount-1; i<colorCount; i++, j--) {
-    int idr = invert ? calcContrastBias(j,bias[0],contrast[0]) : 
-      calcContrastBias(i,bias[0],contrast[0]);
-    int idg = invert ? calcContrastBias(j,bias[1],contrast[1]) : 
-      calcContrastBias(i,bias[1],contrast[1]);
-    int idb = invert ? calcContrastBias(j,bias[2],contrast[2]) : 
-      calcContrastBias(i,bias[2],contrast[2]);
-
-    colorCells[i*3]   = (int)(256.*idr/colorCount);
-    colorCells[i*3+1] = (int)(256.*idg/colorCount);
-    colorCells[i*3+2] = (int)(256.*idb/colorCount);
-  }
-}
-
 // Commands
-
-void ColorbarHLS::adjustCmd(float c, float b)
-{
-  contrast[channel] = c;
-  bias[channel] = b;
-
-  updateColors();
-}
-
-void ColorbarHLS::getBiasCmd()
-{
-  ostringstream str;
-  str << bias[channel] << ends;
-  Tcl_AppendResult(interp, str.str().c_str(), NULL);
-}
 
 void ColorbarHLS::getColorbarCmd()
 {
@@ -233,13 +190,6 @@ void ColorbarHLS::getColormapFileNameCmd(const char* str)
   Tcl_AppendResult(interp, "hls.hls", NULL);
 }
 
-void ColorbarHLS::getContrastCmd()
-{
-  ostringstream str;
-  str << contrast[channel] << ends;
-  Tcl_AppendResult(interp, str.str().c_str(), NULL);
-}
-
 void ColorbarHLS::getCurrentNameCmd()
 {
   Tcl_AppendResult(interp, "hls", NULL);
@@ -275,22 +225,6 @@ void ColorbarHLS::getTypeCmd()
   Tcl_AppendResult(interp, "hls", NULL);
 }
 
-void ColorbarHLS::setColorbarCmd(float rb, float gb, float bb, 
-				 float rc, float gc, float bc, int i)
-
-{
-  bias[0] = rb;
-  bias[1] = gb;
-  bias[2] = bb;
-  
-  contrast[0] = rc;
-  contrast[1] = gc;
-  contrast[2] = bc;
-
-  invert = i;
-  updateColors();
-}
-
 void ColorbarHLS::setHLSChannelCmd(const char* c)
 {
   if (!strncmp(c,"hue",3))
@@ -307,8 +241,7 @@ void ColorbarHLS::setHLSChannelCmd(const char* c)
 
 void ColorbarHLS::macosx(float scale, int width, int height, 
 			 const Vector& v, const Vector& s)
-{
-}
+{}
 
 #endif
 

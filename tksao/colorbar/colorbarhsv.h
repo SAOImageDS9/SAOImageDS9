@@ -15,8 +15,6 @@ class ColorbarHSV : public ColorbarT {
   void psVert(ostream&, Filter&, int, int);
 
 protected:
-  void updateColorCells();
-
 #ifdef MAC_OSX_TK
   void macosx(float, int, int, const Vector&, const Vector&);
 #endif
@@ -30,19 +28,15 @@ public:
 
   // SubCommandFunctions
 
-  void adjustCmd(float, float);
-  void getBiasCmd();
   void getColorbarCmd();
   void getColormapCmd();
   void getColormapNameCmd(int);
   void getColormapFileNameCmd(int);
   void getColormapFileNameCmd(const char*);
-  void getContrastCmd();
   void getCurrentFileNameCmd();
   void getCurrentIDCmd();
   void getCurrentNameCmd();
   void getTypeCmd();
-  void setColorbarCmd(float, float, float, float, float, float, int);
   void getHSVChannelCmd();
   void setHSVChannelCmd(const char*);
 };

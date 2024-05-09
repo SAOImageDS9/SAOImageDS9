@@ -169,6 +169,17 @@ void ColorbarRGB::updateColorCells()
   }
 }
 
+int ColorbarRGB::initColormap()
+{
+  colorCount = (((ColorbarBaseOptions*)options)->colors);
+  colorCells = new unsigned char[colorCount*3];
+
+  // needed to initialize colorCells
+  reset();
+
+  return TCL_OK;
+}
+
 // Commands
 
 void ColorbarRGB::getColorbarCmd()
@@ -249,22 +260,6 @@ void ColorbarRGB::getRGBChannelCmd()
 void ColorbarRGB::getTypeCmd()
 {
   Tcl_AppendResult(interp, "rgb", NULL);
-}
-
-void ColorbarRGB::setColorbarCmd(float rb, float gb, float bb, 
-				 float rc, float gc, float bc, int i)
-
-{
-  bias[0] = rb;
-  bias[1] = gb;
-  bias[2] = bb;
-  
-  contrast[0] = rc;
-  contrast[1] = gc;
-  contrast[2] = bc;
-
-  invert = i;
-  updateColors();
 }
 
 void ColorbarRGB::setRGBChannelCmd(const char* c)

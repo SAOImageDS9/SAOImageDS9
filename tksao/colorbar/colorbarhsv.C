@@ -12,134 +12,10 @@ ColorbarHSV::ColorbarHSV(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item)
 
 void ColorbarHSV::psHorz(ostream& str, Filter& filter, int width, int height)
 {
-  // red
-  for (int jj=0; jj<(int)(height/3.); jj++) {
-    for (int ii=0; ii<width; ii++) {
-      unsigned char red = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      unsigned char green = 0;
-      unsigned char blue = 0;
-
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
-    }
-  }
-
-  // green
-  for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++) {
-    for (int ii=0; ii<width; ii++) {
-      unsigned char red = 0;
-      unsigned char green = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-      unsigned char blue = 0;
-
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
-    }
-  }
-
-  // blue
-  for (int jj=(int)(height*2/3.); jj<height; jj++) {
-    for (int ii=0; ii<width; ii++) {
-      unsigned char red = 0;
-      unsigned char green = 0;
-      unsigned char blue = colorCells[(int)(double(ii)/width*colorCount)*3];
-
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
-    }
-  }
 }
 
 void ColorbarHSV::psVert(ostream& str, Filter& filter, int width, int height)
 {
-  for (int jj=0; jj<height; jj++) {
-    int kk = (int)(double(jj)/height*colorCount)*3;
-    unsigned char red = colorCells[kk+2];
-    unsigned char green = colorCells[kk+1];
-    unsigned char blue = colorCells[kk];
-
-    switch (psColorSpace) {
-    case BW:
-    case GRAY:
-      for (int ii=0; ii<(int)(width/3.); ii++)
-	filter << RGB2Gray(red, 0, 0);
-      for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
-	filter << RGB2Gray(0, green, 0);
-      for (int ii=(int)(width*2/3.); ii<width; ii++)
-	filter << RGB2Gray(0, 0, blue);
-      break;
-    case RGB:
-      for (int ii=0; ii<(int)(width/3.); ii++)
-	filter << red << 0 << 0;
-      for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
-	filter << 0 << green << 0;
-      for (int ii=(int)(width*2/3.); ii<width; ii++)
-	filter << 0 << 0 << blue;
-      break;
-    case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  for (int ii=0; ii<(int)(width/3.); ii++) {
-	    RGB2CMYK(red, 0, 0, &cyan, &magenta, &yellow, &black);
-	    filter << cyan << magenta << yellow << black;
-	  }
-	  for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++) {
-	    RGB2CMYK(0, green, 0, &cyan, &magenta, &yellow, &black);
-	    filter << cyan << magenta << yellow << black;
-	  }
-	  for (int ii=(int)(width*2/3.); ii<width; ii++) {
-	    RGB2CMYK(0, 0, blue, &cyan, &magenta, &yellow, &black);
-	    filter << cyan << magenta << yellow << black;
-	  }
-	}
-	break;
-    }
-    str << filter;
-  }
 }
 
 void ColorbarHSV::updateColorCells()
@@ -149,24 +25,36 @@ void ColorbarHSV::updateColorCells()
     colorCount = clrs;
     if (colorCells)
       delete [] colorCells;
-    colorCells = new unsigned char[colorCount*3];
+    colorCells = new unsigned char[colorCount*5];
   }
 
   // fill rgb table
   // note: its filled bgr to match XImage
-  //  for(int i=0; i<colorCount; i++) {
   for(int i=0, j=colorCount-1; i<colorCount; i++, j--) {
-    int idr = invert ? calcContrastBias(j,bias[0],contrast[0]) : 
+    int idh = invert ? calcContrastBias(j,bias[0],contrast[0]) : 
       calcContrastBias(i,bias[0],contrast[0]);
-    int idg = invert ? calcContrastBias(j,bias[1],contrast[1]) : 
+    int ids = invert ? calcContrastBias(j,bias[1],contrast[1]) : 
       calcContrastBias(i,bias[1],contrast[1]);
-    int idb = invert ? calcContrastBias(j,bias[2],contrast[2]) : 
+    int idv = invert ? calcContrastBias(j,bias[2],contrast[2]) : 
       calcContrastBias(i,bias[2],contrast[2]);
 
-    colorCells[i*3]   = (int)(256.*idr/colorCount);
-    colorCells[i*3+1] = (int)(256.*idg/colorCount);
-    colorCells[i*3+2] = (int)(256.*idb/colorCount);
+    colorCells[i*3]   = (int)(256.*idh/colorCount);
+    colorCells[i*3+1] = (int)(256.*idh/colorCount);
+    colorCells[i*3+2] = (int)(256.*idh/colorCount);
+    colorCells[i*3+3] = (int)(256.*ids/colorCount);
+    colorCells[i*3+4] = (int)(256.*idv/colorCount);
   }
+}
+
+int ColorbarHSV::initColormap()
+{
+  colorCount = (((ColorbarBaseOptions*)options)->colors);
+  colorCells = new unsigned char[colorCount*5];
+
+  // needed to initialize colorCells
+  reset();
+
+  return TCL_OK;
 }
 
 // Commands
@@ -251,22 +139,6 @@ void ColorbarHSV::getTypeCmd()
   Tcl_AppendResult(interp, "hsv", NULL);
 }
 
-void ColorbarHSV::setColorbarCmd(float rb, float gb, float bb, 
-				 float rc, float gc, float bc, int i)
-
-{
-  bias[0] = rb;
-  bias[1] = gb;
-  bias[2] = bb;
-  
-  contrast[0] = rc;
-  contrast[1] = gc;
-  contrast[2] = bc;
-
-  invert = i;
-  updateColors();
-}
-
 void ColorbarHSV::setHSVChannelCmd(const char* c)
 {
   if (!strncmp(c,"hue",3))
@@ -292,90 +164,6 @@ void ColorbarHSV::macosx(float scale, int width, int height,
 
 void ColorbarHSV::win32(float scale, int width, int height, 
 			const Vector& v, const Vector& s)
-{
-  if (!colorCells)
-    return;
+{}
 
-  // destination (width must be aligned on 4-byte DWORD boundary)
-  int jjwidth=(((width+3)/4)*4);
-
-  // extra alignment padding which we have to skip over for each row
-  int jjpad=(jjwidth-width)*3;
-
-  unsigned char* dst = new unsigned char[jjwidth*height*3];
-  if (!dst)
-    return;
-  memset(dst, '\0', jjwidth*height*3);
-
-  unsigned char* dptr = dst;
-
-  if (!((ColorbarBaseOptions*)options)->orientation) {
-    // blue
-    for (int jj=0; jj<(int)(height/3.); jj++) {
-      for (int ii=0; ii<width; ii++) {
-	*dptr++ = colorCells[(int)(double(ii)/width*colorCount)*3];
-	*dptr++ = 0;
-	*dptr++ = 0;
-      }
-      dptr += jjpad;
-    }
-
-    // green
-    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++) {
-      for (int ii=0; ii<width; ii++) {
-	*dptr++ = 0;
-	*dptr++ = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-	*dptr++ = 0;
-      }
-      dptr += jjpad;
-    }
-
-    // red
-    for (int jj=(int)(height*2/3.); jj<height; jj++) {
-      for (int ii=0; ii<width; ii++) {
-	*dptr++ = 0;
-	*dptr++ = 0;
-	*dptr++ = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      }
-      dptr += jjpad;
-    }
-  }
-  else {
-    for (int jj=0; jj<height; jj++) {
-      int kk = (int)(double(jj)/height*colorCount)*3;
-
-      // blue
-      for (int ii=0; ii<(int)(width/3.); ii++) {
-	*dptr++ = colorCells[kk];
-	*dptr++ = 0;
-	*dptr++ = 0;
-      }
-      dptr += jjpad;
-
-      // green
-      for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++) {
-	*dptr++ = 0;
-	*dptr++ = colorCells[kk+1];
-	*dptr++ = 0;
-      }
-      dptr += jjpad;
-
-      // red
-      for (int ii=(int)(width*2/3.); ii<width; ii++) {
-	*dptr++ = 0;
-	*dptr++ = 0;
-	*dptr++ = colorCells[kk+2];
-      }
-      dptr += jjpad;
-    }
-  }
-
-
-  win32Clip(v,s);
-  win32BitmapCreate(dst, jjwidth, height, v, s);
-  win32Clip(Vector(INT_MIN,INT_MIN),Vector(INT_MAX,INT_MAX));
-
-  if (dst)
-    delete [] dst;
-}
 #endif

@@ -255,17 +255,6 @@ void ColorbarBase::lutToText(Tk_Font font)
   }
 }
 
-int ColorbarBase::initColormap()
-{
-  colorCount = (((ColorbarBaseOptions*)options)->colors);
-  colorCells = new unsigned char[colorCount*3];
-
-  // needed to initialize colorCells
-  reset();
-
-  return TCL_OK;
-}
-
 void ColorbarBase::updateColors()
 {
   updateColorCells();

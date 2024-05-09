@@ -44,6 +44,7 @@ class Colorbar : public ColorbarBase {
  protected:
   int calcContrastBias(int);
   void loadDefaultCMaps();
+  int initColormap();
   void reset();
   void updateColorCells();
 

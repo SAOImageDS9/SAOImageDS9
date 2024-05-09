@@ -10,10 +10,11 @@
 class Filter;
 
 class ColorbarHSV : public ColorbarT {
- protected:
+protected:
   void psHorz(ostream&, Filter&, int, int);
   void psVert(ostream&, Filter&, int, int);
   void updateColorCells();
+  int initColormap();
 
 #ifdef MAC_OSX_TK
   void macosx(float, int, int, const Vector&, const Vector&);
@@ -38,7 +39,6 @@ public:
   void getCurrentNameCmd();
   void getTypeCmd();
   void getHSVChannelCmd();
-  void setColorbarCmd(float, float, float, float, float, float, int);
   void setHSVChannelCmd(const char*);
 };
 

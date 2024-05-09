@@ -183,6 +183,17 @@ void Colorbar::psVert(ostream& str, Filter& filter, int width, int height)
   }
 }
 
+int Colorbar::initColormap()
+{
+  colorCount = (((ColorbarBaseOptions*)options)->colors);
+  colorCells = new unsigned char[colorCount*3];
+
+  // needed to initialize colorCells
+  reset();
+
+  return TCL_OK;
+}
+
 void Colorbar::reset()
 {
   bias = 0.5;

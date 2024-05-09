@@ -90,8 +90,6 @@ class ColorbarBase : public Widget {
   int skipcnt;
 
  private:
-  int initColormap();
-
   Tk_Font getFont();
   void lutToText(Tk_Font);
 
@@ -126,6 +124,7 @@ class ColorbarBase : public Widget {
   virtual void psHorz(ostream&, Filter&, int, int) =0;
   virtual void psVert(ostream&, Filter&, int, int) =0;
 
+  virtual int initColormap() =0;
   virtual void reset() =0;
 
   void updateColors();

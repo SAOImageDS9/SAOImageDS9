@@ -3,11 +3,11 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "util.h"
-#include "colorbarrgb.h"
+#include "colorbarhls.h"
 #include "ps.h"
 #include "psutil.h"
 
-ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
+ColorbarHLS::ColorbarHLS(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
   : ColorbarBase(i,c,item)
 {
   channel = 0;
@@ -18,7 +18,7 @@ ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item)
   }
 }
 
-int ColorbarRGB::calcContrastBias(int i, float bb, float cc)
+int ColorbarHLS::calcContrastBias(int i, float bb, float cc)
 {
   // if default (contrast = 1.0 && bias = .5) return
   if (fabs(bb - 0.5) < 0.0001 && fabs(cc - 1.0) < 0.0001)
@@ -42,7 +42,7 @@ int ColorbarRGB::calcContrastBias(int i, float bb, float cc)
     return r;
 }
 
-void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
+void ColorbarHLS::psHorz(ostream& str, Filter& filter, int width, int height)
 {
   // red
   for (int jj=0; jj<(int)(height/3.); jj++) {
@@ -126,7 +126,7 @@ void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
   }
 }
 
-void ColorbarRGB::psVert(ostream& str, Filter& filter, int width, int height)
+void ColorbarHLS::psVert(ostream& str, Filter& filter, int width, int height)
 {
   for (int jj=0; jj<height; jj++) {
     int kk = (int)(double(jj)/height*colorCount)*3;
@@ -174,7 +174,7 @@ void ColorbarRGB::psVert(ostream& str, Filter& filter, int width, int height)
   }
 }
 
-void ColorbarRGB::reset()
+void ColorbarHLS::reset()
 {
   for (int i=0; i<3; i++) {
     bias[i] = .5;
@@ -185,7 +185,7 @@ void ColorbarRGB::reset()
   updateColors();
 }
 
-void ColorbarRGB::updateColorCells()
+void ColorbarHLS::updateColorCells()
 {
   int clrs = (((ColorbarBaseOptions*)options)->colors);
   if (clrs != colorCount) {
@@ -214,7 +214,7 @@ void ColorbarRGB::updateColorCells()
 
 // Commands
 
-void ColorbarRGB::adjustCmd(float c, float b)
+void ColorbarHLS::adjustCmd(float c, float b)
 {
   contrast[channel] = c;
   bias[channel] = b;
@@ -222,17 +222,17 @@ void ColorbarRGB::adjustCmd(float c, float b)
   updateColors();
 }
 
-void ColorbarRGB::getBiasCmd()
+void ColorbarHLS::getBiasCmd()
 {
   ostringstream str;
   str << bias[channel] << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void ColorbarRGB::getColorbarCmd()
+void ColorbarHLS::getColorbarCmd()
 {
   ostringstream str;
-  str << "rgb ";
+  str << "hls ";
   for (int i=0; i<3; i++)
     str << bias[i] << ' ';
   for (int i=0; i<3; i++)
@@ -241,7 +241,7 @@ void ColorbarRGB::getColorbarCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void ColorbarRGB::getColormapCmd()
+void ColorbarHLS::getColormapCmd()
 {
   // use fixed so that the frame parser will not be confused with an int
   // as the first number
@@ -249,7 +249,7 @@ void ColorbarRGB::getColormapCmd()
   cellsparentptr_ =this;
 
   ostringstream str;
-  str << "rgb " << setiosflags(ios::fixed);
+  str << "hls " << setiosflags(ios::fixed);
   for (int i=0; i<3; i++)
     str << bias[i] << ' ';
   for (int i=0; i<3; i++)
@@ -259,64 +259,64 @@ void ColorbarRGB::getColormapCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void ColorbarRGB::getColormapNameCmd(int id)
+void ColorbarHLS::getColormapNameCmd(int id)
 {
-  Tcl_AppendResult(interp, "rgb", NULL);
+  Tcl_AppendResult(interp, "hls", NULL);
 }
 
-void ColorbarRGB::getColormapFileNameCmd(int id)
+void ColorbarHLS::getColormapFileNameCmd(int id)
 {
-  Tcl_AppendResult(interp, "rgb.rgb", NULL);
+  Tcl_AppendResult(interp, "hls.hls", NULL);
 }
 
-void ColorbarRGB::getColormapFileNameCmd(const char* str)
+void ColorbarHLS::getColormapFileNameCmd(const char* str)
 {
-  Tcl_AppendResult(interp, "rgb.rgb", NULL);
+  Tcl_AppendResult(interp, "hls.hls", NULL);
 }
 
-void ColorbarRGB::getContrastCmd()
+void ColorbarHLS::getContrastCmd()
 {
   ostringstream str;
   str << contrast[channel] << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void ColorbarRGB::getCurrentNameCmd()
+void ColorbarHLS::getCurrentNameCmd()
 {
-  Tcl_AppendResult(interp, "rgb", NULL);
+  Tcl_AppendResult(interp, "hls", NULL);
 }
 
-void ColorbarRGB::getCurrentIDCmd()
+void ColorbarHLS::getCurrentIDCmd()
 {
-  Tcl_AppendResult(interp, "rgb", NULL);
+  Tcl_AppendResult(interp, "hls", NULL);
 }
 
-void ColorbarRGB::getCurrentFileNameCmd()
+void ColorbarHLS::getCurrentFileNameCmd()
 {
-  Tcl_AppendResult(interp, "rgb", NULL);
+  Tcl_AppendResult(interp, "hls", NULL);
 }
 
-void ColorbarRGB::getRGBChannelCmd()
+void ColorbarHLS::getHLSChannelCmd()
 {
   switch (channel) {
   case 0:
-    Tcl_AppendResult(interp, "red", NULL);
+    Tcl_AppendResult(interp, "hue", NULL);
     return;
   case 1:
-    Tcl_AppendResult(interp, "green", NULL);
+    Tcl_AppendResult(interp, "lightness", NULL);
     return;
   case 2:
-    Tcl_AppendResult(interp, "blue", NULL);
+    Tcl_AppendResult(interp, "saturation", NULL);
     return;
   }
 }
 
-void ColorbarRGB::getTypeCmd()
+void ColorbarHLS::getTypeCmd()
 {
-  Tcl_AppendResult(interp, "rgb", NULL);
+  Tcl_AppendResult(interp, "hls", NULL);
 }
 
-void ColorbarRGB::setColorbarCmd(float rb, float gb, float bb, 
+void ColorbarHLS::setColorbarCmd(float rb, float gb, float bb, 
 				 float rc, float gc, float bc, int i)
 
 {
@@ -332,13 +332,13 @@ void ColorbarRGB::setColorbarCmd(float rb, float gb, float bb,
   updateColors();
 }
 
-void ColorbarRGB::setRGBChannelCmd(const char* c)
+void ColorbarHLS::setHLSChannelCmd(const char* c)
 {
-  if (!strncmp(c,"red",3))
+  if (!strncmp(c,"hue",3))
     channel = 0;
-  else if (!strncmp(c,"gre",3))
+  else if (!strncmp(c,"lig",3))
     channel = 1;
-  else if (!strncmp(c,"blu",3))
+  else if (!strncmp(c,"sat",3))
     channel = 2;
   else
     channel = 0;
@@ -346,7 +346,7 @@ void ColorbarRGB::setRGBChannelCmd(const char* c)
 
 #ifdef MAC_OSX_TK
 
-void ColorbarRGB::macosx(float scale, int width, int height, 
+void ColorbarHLS::macosx(float scale, int width, int height, 
 			 const Vector& v, const Vector& s)
 {
 }
@@ -356,7 +356,7 @@ void ColorbarRGB::macosx(float scale, int width, int height,
 #ifdef __WIN32
 #include <win32lib.h>
 
-void ColorbarRGB::win32(float scale, int width, int height, 
+void ColorbarHLS::win32(float scale, int width, int height, 
 			const Vector& v, const Vector& s)
 {
   if (!colorCells)

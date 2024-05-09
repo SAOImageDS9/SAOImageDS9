@@ -134,6 +134,7 @@ proc ProcessCommand {argv argc} {
 	    -2mass {incr i; Process2MASSCmd argv i}
 	    -3d -
 	    -3D {incr i; Process3DCmd argv i}
+
 	    -about {ProcessSendAboutCmd puts stdout {} {} {}}
 	    -align {incr i; ProcessAlignCmd argv i}
 	    -analysis {incr i; ProcessAnalysisCmd argv i {} {}}
@@ -145,6 +146,7 @@ proc ProcessCommand {argv argc} {
 		set view(layout) advanced
 		LayoutView
 	    }
+
 	    -bg -
 	    -background {
 		# backward compatibility prefs
@@ -161,6 +163,7 @@ proc ProcessCommand {argv argc} {
 	    -block {incr i; ProcessBlockCmd argv i}
 	    -blink {incr i; ProcessBlinkCmd argv i}
 	    -blue {set current(rgb) blue; RGBChannel}
+
 	    -cat -
 	    -catalog {incr i; ProcessCatalogCmd argv i}
 	    -cd {incr i; ProcessCDCmd argv i}
@@ -173,6 +176,7 @@ proc ProcessCommand {argv argc} {
 	    -crop {incr i; ProcessCropCmd argv i}
 	    -crosshair {incr i; ProcessCrosshairCmd argv i}
 	    -cursor {incr i; ProcessCursorCmd argv i}
+
 	    -datacube -
 	    -cube {incr i; ProcessCubeCmd argv i}
 	    -debug {incr i; ProcessDebugCmd argv i}
@@ -180,10 +184,12 @@ proc ProcessCommand {argv argc} {
 	    -dsssao {incr i; ProcessSAOCmd argv i}
 	    -dsseso {incr i; ProcessESOCmd argv i}
 	    -dssstsci {incr i; ProcessSTSCICmd argv i}
+	    
 	    -envi {set file(type) envi}
 	    -export {incr i; ProcessExportCmd argv i}
 	    -exit -
 	    -quit {ProcessQuitCmd argv i}
+
 	    -fade {incr i; ProcessFadeCmd argv i}
 	    -frame {incr i; ProcessFrameCmd argv i}
 	    -fifo {
@@ -205,6 +211,7 @@ proc ProcessCommand {argv argc} {
 	    -fits {set file(type) fits; CommandFitsCmd argv i}
 	    -fp -
 	    -footprint {incr i; ProcessFootprintCmd argv i}
+
 	    -geometry {
 		# already processed
 	    }
@@ -213,6 +220,7 @@ proc ProcessCommand {argv argc} {
 	    -graph {incr i; ProcessGraphCmd argv i}
 	    -grid {incr i; ProcessGridCmd argv i}
 	    -nogrid {set grid(view) 0; UpdateGridCurrent}
+
 	    -header {incr i; ProcessHeaderCmd argv i}
 	    -height {incr i; ProcessHeightCmd argv i}
 	    -histequ {set scale(type) histequ; ChangeScale}
@@ -231,6 +239,15 @@ proc ProcessCommand {argv argc} {
 		set view(graph,horz) 0
 		LayoutView
 	    }
+	    -hsv {incr i; ProcessHSVCmd argv i}
+	    -hls {incr i; ProcessHLSCmd argv i}
+	    -hue {
+		set current(hsv) hue
+		HSVChannel
+		set current(hls) hue
+		HLSChannel
+	    }
+
 	    -iconify {incr i; ProcessIconifyCmd argv i}
 	    -iis {incr i; ProcessIISCmd argv i}
 	    -illustrate {incr i; ProcessIllustrateCmd argv i {} {}}
@@ -245,16 +262,20 @@ proc ProcessCommand {argv argc} {
 		LayoutView
 	    }
 	    -invert {set colorbar(invert) 1; InvertColorbar}
+
 	    -jpg -
 	    -jpeg {set file(type) jpeg}
+
 	    -language {
 		# already processed
 		incr i
 	    }
+	    -lightness {set current(hls) lightness; HLSChannel}	    
 	    -lock {incr i; ProcessLockCmd argv i}
 	    -linear {set scale(type) linear; ChangeScale}
 	    -log {set scale(type) log; ChangeScale}
 	    -lower {ProcessLowerCmd argv i}
+
 	    -magnifier {incr i; ProcessMagnifierCmd argv i}
 	    -nomagnifier {
 		# backward compatibility
@@ -279,7 +300,6 @@ proc ProcessCommand {argv argc} {
 		set minmax(sample) [lindex $argv $i]
 	    }
 	    -mode {incr i; ProcessModeCmd argv i}
-
 	    -mosaic {
 		set file(type) mosaic
 		CommandMosaicCmd argv i
@@ -288,7 +308,6 @@ proc ProcessCommand {argv argc} {
 		set file(type) mosaicimage
 		CommandMosaicImageCmd argv i
 	    }
-
 	    -mosaicimageiraf {
 		# backward compatibility
 		set file(type) mosaicimage
@@ -304,7 +323,6 @@ proc ProcessCommand {argv argc} {
 		set file(type) mosaicimage
 		set file(mosaic) wfpc2
 	    }
-
 	    -mosaiciraf {
 		# backward compatibility
 		set file(type) mosaic
@@ -317,11 +335,11 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -savempeg -
 	    -movie {incr i; ProcessMovieCmd argv i}
-
 	    -msg {
 		# already processed
 		incr i
 	    }
+
 	    -nameserver {incr i; ProcessNRESCmd argv i}
 	    -nan {
 		# backward compatibility prefs
@@ -332,7 +350,9 @@ proc ProcessCommand {argv argc} {
 	    -notes {incr i; ProcessNotesCmd argv i}
 	    -nrrd {set file(type) nrrd}
 	    -nvss {incr i; ProcessNVSSCmd argv i}
+
 	    -orient {incr i; ProcessOrientCmd argv i}
+
 	    -pagesetup {incr i; ProcessPageSetupCmd argv i}
 	    -pspagesetup {incr i; ProcessPSPageSetupCmd argv i}
 	    -pan {incr i; ProcessPanCmd argv i}
@@ -375,6 +395,7 @@ proc ProcessCommand {argv argc} {
 	    -private {
 		#already processed
 	    }
+
 	    -raise {ProcessRaiseCmd argv i}
 	    -red {set current(rgb) red; RGBChannel}
 	    -region -
@@ -394,6 +415,13 @@ proc ProcessCommand {argv argc} {
 	    -savefits -
 	    -save {incr i; ProcessSaveCmd argv i}
 	    -saveimage {incr i; ProcessSaveImageCmd argv i}
+
+	    -saturation {
+		set current(hsv) saturation
+		HSVChannel
+		set current(hls) saturation
+		HLSChannel
+	    }
 	    -scale -
 	    -ztrans {incr i; ProcessScaleCmd argv i}
 	    -scalelims -
@@ -449,6 +477,7 @@ proc ProcessCommand {argv argc} {
 	    -squared {set scale(type) squared; ChangeScale}
 	    -sqrt {set scale(type) sqrt; ChangeScale}
 	    -source {incr i; ProcessSourceCmd argv i}
+
 	    -tcl {incr i; ; ProcessTclCmd argv i {} {}}
 	    -theme {
 		# backward compatibility prefs
@@ -473,8 +502,11 @@ proc ProcessCommand {argv argc} {
 		set iis(ofifo) none
 		set iis(port) 0
 	    }
+
 	    -url {set file(type) url}
 	    -update {incr i; ProcessUpdateCmd argv i}
+
+	    -value {set current(hsv) value; HSVChannel}	    
 	    -vertical {
 		#backward compatibility
 		set view(layout) vertical
@@ -498,6 +530,7 @@ proc ProcessCommand {argv argc} {
 	    -first {incr i; ProcessVLACmd argv i}
 	    -vlss  {incr i; ProcessVLSSCmd argv i}
 	    -vo {incr i; ProcessVOCmd argv i}
+
 	    -wcs {incr i; ProcessWCSCmd argv i {} {}}
 	    -wcsformat {
 		#backward compatibility
@@ -506,7 +539,9 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -web {incr i; ProcessWebCmd argv i}
 	    -width {incr i; ProcessWidthCmd argv i}
+
 	    -xpa {incr i; ProcessXPACmd argv i}
+
 	    -z1 {
 		#backward compatibility
 		incr i
@@ -568,7 +603,9 @@ proc CommandLineLoad {item argvname iname} {
     if {$current(frame) != {}} {
 	switch -- [$current(frame) get type] {
 	    base {CommandLineLoadBase $item $argvname $iname}
-	    rgb {CommandLineLoadRGB $item $argvname $iname}
+	    rgb -
+	    hsv -
+	    hls {CommandLineLoadT $item $argvname $iname}
 	    3d {CommandLineLoad3D $item $argvname $iname}
 	}
     } else {
@@ -681,7 +718,7 @@ proc CommandLineLoadBase {item argvname iname} {
     }
 }
 
-proc CommandLineLoadRGB {item argvname iname} {
+proc CommandLineLoadT {item argvname iname} {
     upvar 2 $argvname argv
     upvar 2 $iname i
 

@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2024
+// Copyright (C) 1999-2021
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -138,9 +138,167 @@ int ColorbarHLSTrueColor16CreateProc(Tcl_Interp* interp, Tk_Canvas canvas,
 
 ColorbarHLSTrueColor16::ColorbarHLSTrueColor16(Tcl_Interp* i, Tk_Canvas c, 
 					       Tk_Item* item) 
-  : ColorbarRGBTrueColor16(i,c,item)
+  : ColorbarHLS(i,c,item), TrueColor16(visual)
 {
   configSpecs = colorbarHLSTrueColor16Specs;  // colorbar configure options
 }
 
+void ColorbarHLSTrueColor16::updateColorsHorz()
+{
+  int width = options->width-2;
+  int height = ((ColorbarBaseOptions*)options)->size-2;
+  char* data = xmap->data;
+    
+  // if we have cross platforms, we need to byte swap
+  unsigned char row[xmap->bytes_per_line];
+  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+    // red
+    for (int ii=0; ii<width; ii++) {
+      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*3];
+      unsigned short a = 0;
+      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+      memcpy(row+ii*2, &a, 2);
+    }
+    for (int jj=0; jj<(int)(height/3.); jj++)
+      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+
+    // green
+    for (int ii=0; ii<width; ii++) {
+      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
+      unsigned short a = 0;
+      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+      memcpy(row+ii*2, &a, 2);
+    }
+    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
+      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+
+    // blue
+    for (int ii=0; ii<width; ii++) {
+      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*3+2];
+      unsigned short a = 0;
+      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+      memcpy(row+ii*2, &a, 2);
+    }
+    for (int jj=(int)(height*2/3.); jj<height; jj++)
+      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+
+  }
+  else {
+    // red
+    for (int ii=0; ii<width; ii++) {
+      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*3];
+      unsigned short a = 0;
+      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*2) = *(rr+1);
+      *(row+ii*2+1) = *(rr);
+    }
+    for (int jj=0; jj<(int)(height/3.); jj++)
+      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+
+    // green
+    for (int ii=0; ii<width; ii++) {
+      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
+      unsigned short a = 0;
+      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*2) = *(rr+1);
+      *(row+ii*2+1) = *(rr);
+    }
+    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
+      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+
+    // blue
+    for (int ii=0; ii<width; ii++) {
+      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*3+2];
+      unsigned short a = 0;
+      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*2) = *(rr+1);
+      *(row+ii*2+1) = *(rr);
+    }
+    for (int jj=(int)(height*2/3.); jj<height; jj++)
+      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+  }
+}
+
+void ColorbarHLSTrueColor16::updateColorsVert()
+{
+  int width = ((ColorbarBaseOptions*)options)->size-2;
+  int height = options->height-2;
+  char* data = xmap->data;
+    
+  // if we have cross platforms, we need to byte swap
+  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
+
+      // red
+      {
+	unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*3];
+	unsigned short a = 0;
+	a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+	for (int ii=0; ii<(int)(width/3.); ii++)
+	  memcpy(data+ii*2, &a, 2);
+      }
+
+      // green
+      {
+	unsigned short g =colorCells[((int)(double(jj)/height*colorCount))*3+1];
+	unsigned short a = 0;
+	a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+	for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
+	  memcpy(data+ii*2, &a, 2);
+      }
+
+      // blue
+      {
+	unsigned short b =colorCells[((int)(double(jj)/height*colorCount))*3+2];
+	unsigned short a = 0;
+	a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+	for (int ii=(int)(width*2/3.); ii<width; ii++)
+	  memcpy(data+ii*2, &a, 2);
+      }
+    }
+  }
+  else {
+    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
+
+      // red
+      {
+	unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*3];
+	unsigned short a = 0;
+	a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+	unsigned char* rr = (unsigned char*)(&a);
+	for (int ii=0; ii<(int)(width/3.); ii++) {
+	  *(data+ii*2) = *(rr+1);
+	  *(data+ii*2+1) = *(rr);
+	}
+      }
+
+      // green
+      {
+	unsigned short g =colorCells[((int)(double(jj)/height*colorCount))*3+1];
+	unsigned short a = 0;
+	a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+	unsigned char* rr = (unsigned char*)(&a);
+	for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++) {
+	  *(data+ii*2) = *(rr+1);
+	  *(data+ii*2+1) = *(rr);
+	}
+      }
+
+      // blue
+      {
+	unsigned short b =colorCells[((int)(double(jj)/height*colorCount))*3+2];
+	unsigned short a = 0;
+	a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+	unsigned char* rr = (unsigned char*)(&a);
+	for (int ii=(int)(width*2/3.); ii<width; ii++) {
+	  *(data+ii*2) = *(rr+1);
+	  *(data+ii*2+1) = *(rr);
+	}
+      }
+    }
+  }
+}
 

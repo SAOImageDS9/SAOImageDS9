@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -853,6 +853,24 @@ void ColorbarBase::setColormapLevelCmd(int cc)
     
   invalidPixmap();
   redraw();
+}
+
+// RGB
+void ColorbarBase::getRGBChannelCmd()
+{
+  Tcl_AppendResult(interp, "red", NULL);
+}
+
+// HSV
+void ColorbarBase::getHSVChannelCmd()
+{
+  Tcl_AppendResult(interp, "hue", NULL);
+}
+
+// HLS
+void ColorbarBase::getHLSChannelCmd()
+{
+  Tcl_AppendResult(interp, "hue", NULL);
 }
 
 // MacOSX

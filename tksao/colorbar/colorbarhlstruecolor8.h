@@ -5,9 +5,14 @@
 #ifndef __colorbarhlstruecolor8_h__
 #define __colorbarhlstruecolor8_h__
 
-#include "colorbarrgbtruecolor8.h"
+#include "colorbarhls.h"
+#include "truecolor8.h"
 
-class ColorbarHLSTrueColor8 : public ColorbarRGBTrueColor8 {
+class ColorbarHLSTrueColor8 : public ColorbarHLS, public TrueColor8 {
+protected:
+  void updateColorsHorz();
+  void updateColorsVert();
+
 public:
   ColorbarHLSTrueColor8(Tcl_Interp*, Tk_Canvas, Tk_Item*);
 };

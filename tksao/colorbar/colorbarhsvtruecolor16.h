@@ -5,9 +5,14 @@
 #ifndef __colorbarhsvtruecolor16_h__
 #define __colorbarhsvtruecolor16_h__
 
-#include "colorbarrgbtruecolor16.h"
+#include "colorbarhsv.h"
+#include "truecolor16.h"
 
-class ColorbarHSVTrueColor16 : public ColorbarRGBTrueColor16 {
+class ColorbarHSVTrueColor16 : public ColorbarHSV, public TrueColor16 {
+protected:
+  void updateColorsHorz();
+  void updateColorsVert();
+
 public:
   ColorbarHSVTrueColor16(Tcl_Interp*, Tk_Canvas, Tk_Item*);
 };

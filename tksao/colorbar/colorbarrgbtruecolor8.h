@@ -8,7 +8,7 @@
 #include "colorbarrgb.h"
 #include "truecolor8.h"
 
-class ColorbarRGBTrueColor8 : public ColorbarRGB, TrueColor8 {
+class ColorbarRGBTrueColor8 : public ColorbarRGB, public TrueColor8 {
 protected:
   void updateColorsHorz();
   void updateColorsVert();

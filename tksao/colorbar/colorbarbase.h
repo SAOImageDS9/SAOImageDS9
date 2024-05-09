@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -164,7 +164,6 @@ class ColorbarBase : public Widget {
   void getInvertCmd();
   virtual void getTypeCmd() =0;
   void getNumericsCmd();
-  virtual void getRGBChannelCmd() =0;
   void getValueCmd(int,int);
 
   void invertCmd(int);
@@ -188,7 +187,6 @@ class ColorbarBase : public Widget {
   void setColormapLevelCmd();
   void setColormapLevelCmd(int);
   virtual void setColormapWindowCmd(char*) {}
-  virtual void setRGBChannelCmd(const char*) {}
 
   virtual void getTagCmd() {}
   virtual void getTagCmd(int,int) {}
@@ -201,6 +199,18 @@ class ColorbarBase : public Widget {
   virtual void tagEditEndCmd(int,int) {}
   virtual void tagLoadCmd(const char*) {}
   virtual void tagSaveCmd(const char*) {}
+
+  // RGB
+  virtual void setRGBChannelCmd(const char*) {}
+  virtual void getRGBChannelCmd();
+
+  // HSV
+  virtual void setHSVChannelCmd(const char*) {}
+  virtual void getHSVChannelCmd();
+
+  // HLS
+  virtual void setHLSChannelCmd(const char*) {}
+  virtual void getHLSChannelCmd();
 
 #ifdef MAC_OSX_TK
   void macosxPrintCmd();

@@ -878,46 +878,8 @@ void Colorbar::tagSaveCmd(const char* fn)
 
 void Colorbar::macosx(float scale, int width, int height, 
 		      const Vector& v, const Vector& s)
-{
-  /*
-  if (!colorCells)
-    return;
+{}
 
-  // destination
-  unsigned char* dst = new unsigned char[width*height*4];
-  unsigned char* dptr = dst;
-
-  if (!((ColorbarBaseOptions*)options)->orientation) {
-    for (int jj=0; jj<height; jj++)
-      for (int ii=0; ii<width; ii++) {
-	int kk = (int)(double(ii)/width*colorCount)*3;
-	*dptr++ = colorCells[kk+2];
-	*dptr++ = colorCells[kk+1];
-	*dptr++ = colorCells[kk];
-	*dptr++ = 0;
-      }
-  }
-  else {
-    for (int jj=0; jj<height; jj++) {
-      int kk = (int)(double(jj)/height*colorCount)*3;
-      unsigned char rr = colorCells[kk+2];
-      unsigned char gg = colorCells[kk+1];
-      unsigned char bb = colorCells[kk];
-      for (int ii=0; ii<width; ii++) {
-	*dptr++ = rr;
-	*dptr++ = gg;
-	*dptr++ = bb;
-	*dptr++ = 0;
-      }
-    }
-  }
-
-  macosxBitmapCreate(dst, width, height, v, s);
-
-  if (dst)
-    delete [] dst;
-  */
-}
 #endif
 
 #ifdef __WIN32

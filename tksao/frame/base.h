@@ -656,8 +656,8 @@ public:
   // Colormap Commands
   void colorbarTagCmd(const char*);
   virtual void colormapCmd(int, float, float, int, int) {}
-  virtual void colormapCmd(float, float, float, float, float, float, int,
-			   int) {}
+  virtual void colormapCmd(float, float, float, float, float, float, int, int)
+  {}
   virtual void colormapBeginCmd() {}
   virtual void colormapEndCmd() {}
   virtual void colormapMotionCmd(int, float, float, int, int) {}

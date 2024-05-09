@@ -141,6 +141,7 @@ ColorbarHLSTrueColor16::ColorbarHLSTrueColor16(Tcl_Interp* i, Tk_Canvas c,
   : ColorbarHLS(i,c,item), TrueColor16(visual)
 {
   configSpecs = colorbarHLSTrueColor16Specs;  // colorbar configure options
+  loadDefaultCmaps();
 }
 
 void ColorbarHLSTrueColor16::updateColorsHorz()

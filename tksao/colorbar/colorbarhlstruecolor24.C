@@ -139,6 +139,7 @@ ColorbarHLSTrueColor24::ColorbarHLSTrueColor24(Tcl_Interp* i, Tk_Canvas c,
   : ColorbarHLS(i,c,item), TrueColor24(visual)
 {
   configSpecs = colorbarHLSTrueColor24Specs;  // colorbar configure options
+  loadDefaultCmaps();
 }
 
 void ColorbarHLSTrueColor24::updateColorsHorz()

@@ -62,6 +62,8 @@ ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   ticktxt = NULL;
   tickcnt =0;
   skipcnt =0;
+
+  cmapid_ =1;
 }
 
 ColorbarBase::~ColorbarBase()

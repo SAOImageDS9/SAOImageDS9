@@ -89,6 +89,8 @@ class ColorbarBase : public Widget {
   int tickcnt;
   int skipcnt;
 
+  int cmapid_;
+
  private:
   Tk_Font getFont();
   void lutToText(Tk_Font);
@@ -145,6 +147,8 @@ class ColorbarBase : public Widget {
  public:
   ColorbarBase(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~ColorbarBase();
+
+  int cmapid() {return cmapid_++;}
 
   virtual void adjustCmd(float, float) =0;
 

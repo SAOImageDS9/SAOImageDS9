@@ -15,13 +15,13 @@
 #include <iomanip>
 using namespace std;
 
-class Colorbar;
+class ColorbarBase;
 
 // ColorMapInfo
 
 class ColorMapInfo {
 protected:
-  Colorbar* parent_;
+  ColorbarBase* parent_;
 
   int id_;
   char* name_;
@@ -30,10 +30,10 @@ protected:
   ColorMapInfo* previous_;
 
 public:
-  ColorMapInfo(Colorbar* p);
+  ColorMapInfo(ColorbarBase* p);
   virtual ~ColorMapInfo();
 
-  Colorbar* parent() {return parent_;}
+  ColorbarBase* parent() {return parent_;}
 
   int id() {return id_;}
   const char* name() {return name_;}

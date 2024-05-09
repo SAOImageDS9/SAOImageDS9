@@ -139,6 +139,7 @@ ColorbarHSVTrueColor8::ColorbarHSVTrueColor8(Tcl_Interp* i, Tk_Canvas c,
   : ColorbarHSV(i,c,item), TrueColor8(visual)
 {
   configSpecs = colorbarHSVTrueColor8Specs;  // colorbar configure options
+  loadDefaultCmaps();
 }
 
 void ColorbarHSVTrueColor8::updateColorsHorz()

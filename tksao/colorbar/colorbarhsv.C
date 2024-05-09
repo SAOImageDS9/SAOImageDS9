@@ -8,7 +8,15 @@
 
 ColorbarHSV::ColorbarHSV(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
   : ColorbarT(i,c,item)
-{}
+{
+  cmap =NULL;
+}
+
+ColorbarHSV::~ColorbarHSV()
+{
+  if (cmap)
+    delete cmap;
+}
 
 void ColorbarHSV::psHorz(ostream& str, Filter& filter, int width, int height)
 {
@@ -16,6 +24,11 @@ void ColorbarHSV::psHorz(ostream& str, Filter& filter, int width, int height)
 
 void ColorbarHSV::psVert(ostream& str, Filter& filter, int width, int height)
 {
+}
+
+void ColorbarHSV::loadDefaultCmaps()
+{
+  cmap = new RainbowColorMap(this);
 }
 
 void ColorbarHSV::updateColorCells()

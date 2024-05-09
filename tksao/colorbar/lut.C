@@ -40,7 +40,7 @@ ostream& operator<<(ostream& str, RGBColor& cc)
 
 // LUTColorMap
 
-LUTColorMap::LUTColorMap(Colorbar* p) : ColorMapInfo(p)
+LUTColorMap::LUTColorMap(ColorbarBase* p) : ColorMapInfo(p)
 {
 }
 

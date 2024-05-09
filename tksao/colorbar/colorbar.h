@@ -23,7 +23,6 @@ class Colorbar : public ColorbarBase {
 
  protected:
   List<ColorMapInfo> cmaps;
-  int cmapid_;
 
   List<ColorTag> ctags;
   int ctagid_;
@@ -43,7 +42,7 @@ class Colorbar : public ColorbarBase {
 
  protected:
   int calcContrastBias(int);
-  void loadDefaultCMaps();
+  void loadDefaultCmaps();
   int initColormap();
   void reset();
   void updateColorCells();
@@ -59,7 +58,6 @@ class Colorbar : public ColorbarBase {
   Colorbar(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Colorbar();
 
-  int cmapid() {return cmapid_++;}
   int ctagid() {return ctagid_++;}
 
   // commands

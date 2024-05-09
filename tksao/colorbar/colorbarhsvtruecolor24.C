@@ -139,6 +139,7 @@ ColorbarHSVTrueColor24::ColorbarHSVTrueColor24(Tcl_Interp* i, Tk_Canvas c,
   : ColorbarHSV(i,c,item), TrueColor24(visual)
 {
   configSpecs = colorbarHSVTrueColor24Specs;  // colorbar configure options
+  loadDefaultCmaps();
 }
 
 void ColorbarHSVTrueColor24::updateColorsHorz()

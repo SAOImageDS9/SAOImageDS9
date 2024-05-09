@@ -16,7 +16,6 @@
 Colorbar::Colorbar(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : ColorbarBase(i,c,item)
 {
-  cmapid_ =1;
   ctagid_ =1;
 
   bias = .5;
@@ -54,7 +53,7 @@ int Colorbar::calcContrastBias(int i)
     return r;
 }
 
-void Colorbar::loadDefaultCMaps()
+void Colorbar::loadDefaultCmaps()
 {
   cmaps.append(new GreyColorMap(this));
   cmaps.append(new RedColorMap(this));

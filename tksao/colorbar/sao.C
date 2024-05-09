@@ -33,7 +33,7 @@ ostream& operator<<(ostream& s, LIColor& c)
 }
 
 // SAOColorMap
-SAOColorMap::SAOColorMap(Colorbar* p) : ColorMapInfo(p)
+SAOColorMap::SAOColorMap(ColorbarBase* p) : ColorMapInfo(p)
 {
   current =&red;
 }

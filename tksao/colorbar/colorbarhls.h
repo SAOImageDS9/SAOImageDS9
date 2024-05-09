@@ -6,13 +6,19 @@
 #define __colorbarhls_h__
 
 #include "colorbart.h"
+#include "colormap.h"
+#include "default.h"
 
 class Filter;
 
 class ColorbarHLS : public ColorbarT {
 protected:
+    ColorMapInfo* cmap;
+
+protected:
   void psHorz(ostream&, Filter&, int, int);
   void psVert(ostream&, Filter&, int, int);
+  void loadDefaultCmaps();
   void updateColorCells();
   int initColormap();
 
@@ -26,6 +32,7 @@ protected:
 
 public:
   ColorbarHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);
+  ~ColorbarHLS();
 
   // SubCommandFunctions
 

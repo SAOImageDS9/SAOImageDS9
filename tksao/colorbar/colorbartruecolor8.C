@@ -139,8 +139,7 @@ ColorbarTrueColor8::ColorbarTrueColor8(Tcl_Interp* i, Tk_Canvas c,
   : Colorbar(i,c,item), TrueColor8(visual)
 {
   configSpecs = colorbarTrueColor8Specs;  // colorbar configure options
-
-  loadDefaultCMaps();
+  loadDefaultCmaps();
 }
 
 void ColorbarTrueColor8::updateColorsHorz()

@@ -136,11 +136,11 @@ void* convolve(double* kernel, double* src, double* dest,
 
   for (int jj=ymin; jj<ymax; jj++) {
     for (int ii=xmin; ii<xmax; ii++) {
-      register int dd = jj*width+ii;
+      int dd = jj*width+ii;
       for (int nn=jj-k, qq=0; nn<=jj+k; nn++, qq++) {
 	if (nn>=ymin && nn<ymax) {
-	  register int nd = nn*width;
-	  register int qd = qq*kk;
+	  int nd = nn*width;
+	  int qd = qq*kk;
 	  for (int mm=ii-k, pp=0; mm<=ii+k; mm++, pp++) {
 	    if (mm>=xmin && mm<xmax)
 	      dest[dd] += src[nd+mm]*kernel[qd+pp];

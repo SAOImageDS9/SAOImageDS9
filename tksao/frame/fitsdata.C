@@ -479,7 +479,7 @@ template <> void FitsDatam<unsigned char>::scan(FitsBound* params)
   for (int jj=params->ymin; jj<params->ymax; jj+=kk) {
     unsigned char* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
-      register unsigned char value = *ptr;
+      unsigned char value = *ptr;
 
       if (hasblank_ && value == blank_)
 	continue; // skip nan's 
@@ -535,7 +535,7 @@ template <> void FitsDatam<short>::scan(FitsBound* params)
   for (int jj=params->ymin; jj<params->ymax; jj+=kk) {
     short* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
-      register short value;
+      short value;
 
       if (!byteswap_) 
 	value = *ptr;
@@ -606,7 +606,7 @@ template <> void FitsDatam<unsigned short>::scan(FitsBound* params)
   for (int jj=params->ymin; jj<params->ymax; jj+=kk) {
     unsigned short* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
-      register unsigned short value;
+      unsigned short value;
 
       if (!byteswap_) 
 	value = *ptr;
@@ -677,7 +677,7 @@ template <> void FitsDatam<int>::scan(FitsBound* params)
   for (int jj=params->ymin; jj<params->ymax; jj+=kk) {
     int* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
-      register int value;
+      int value;
 
       if (!byteswap_) 
 	value = *ptr;
@@ -750,7 +750,7 @@ template <> void FitsDatam<long long>::scan(FitsBound* params)
   for (int jj=params->ymin; jj<params->ymax; jj+=kk) {
     long long* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
-      register long long value;
+      long long value;
 
       if (!byteswap_) 
 	value = *ptr;
@@ -827,7 +827,7 @@ template <> void FitsDatam<float>::scan(FitsBound* params)
   for (int jj=params->ymin; jj<params->ymax; jj+=kk) {
     float* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
-      register float value;
+      float value;
 
       if (!byteswap_) 
 	value = *ptr;
@@ -899,7 +899,7 @@ template <> void FitsDatam<double>::scan(FitsBound* params)
   for (int jj=params->ymin; jj<params->ymax; jj+=kk) {
     double* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
-      register double value;
+      double value;
 
       if (!byteswap_) 
 	value = *ptr;
@@ -1066,7 +1066,7 @@ template<class T> const char* FitsDatam<T>::getValue(const Vector& vv)
   ostringstream str;
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register T value = !byteswap_ ? data_[y*width_ + x] : 
+    T value = !byteswap_ ? data_[y*width_ + x] : 
       swap(data_+(y*width_ + x));
 
     if (hasblank_ && value == blank_)
@@ -1093,7 +1093,7 @@ template <> const char* FitsDatam<float>::getValue(const Vector& vv)
   ostringstream str;
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register float value = 
+    float value = 
       !byteswap_ ? data_[y*width_ + x] : swap(data_+(y*width_ + x));
 
     if (isinf(value))
@@ -1122,7 +1122,7 @@ template <> const char* FitsDatam<double>::getValue(const Vector& vv)
   ostringstream str;
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register double value = 
+    double value = 
       !byteswap_ ? data_[y*width_ + x] : swap(data_+(y*width_ + x));
 
     if (isinf(value))
@@ -1352,7 +1352,7 @@ template<class T> float FitsDatam<T>::getValueFloat(const Vector& v)
   long y = (long)r[1];
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register T value = !byteswap_ ? data_[y*width_ + x] : 
+    T value = !byteswap_ ? data_[y*width_ + x] : 
       swap(data_+(y*width_ + x));
 
     if (hasblank_ && value == blank_)
@@ -1371,7 +1371,7 @@ template <> float FitsDatam<float>::getValueFloat(const Vector& v)
   long y = (long)r[1];
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register float value = !byteswap_ ? data_[y*width_ + x] : 
+    float value = !byteswap_ ? data_[y*width_ + x] : 
       swap(data_+(y*width_ + x));
 
     if (isfinite(value))
@@ -1390,7 +1390,7 @@ template <> float FitsDatam<double>::getValueFloat(const Vector& v)
   long y = (long)r[1];
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register double value = !byteswap_ ? data_[y*width_ + x] : 
+    double value = !byteswap_ ? data_[y*width_ + x] : 
       swap(data_+(y*width_ + x));
 
     if (isfinite(value))
@@ -1621,7 +1621,7 @@ template<class T> double FitsDatam<T>::getValueDouble(const Vector& v)
   long y = (long)r[1];
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register T value = !byteswap_ ? data_[y*width_ + x] : 
+    T value = !byteswap_ ? data_[y*width_ + x] : 
       swap(data_+(y*width_ + x));
 
     if (hasblank_ && value == blank_)
@@ -1640,7 +1640,7 @@ template <> double FitsDatam<float>::getValueDouble(const Vector& v)
   long y = (long)r[1];
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register float value = !byteswap_ ? data_[y*width_ + x] : 
+    float value = !byteswap_ ? data_[y*width_ + x] : 
       swap(data_+(y*width_ + x));
 
     if (isfinite(value))
@@ -1659,7 +1659,7 @@ template <> double FitsDatam<double>::getValueDouble(const Vector& v)
   long y = (long)r[1];
 
   if (x >= 0 && x < width_ && y >= 0 && y < height_) {
-    register double value = !byteswap_ ? data_[y*width_ + x] : 
+    double value = !byteswap_ ? data_[y*width_ + x] : 
       swap(data_+(y*width_ + x));
 
     if (isfinite(value))
@@ -1694,7 +1694,7 @@ template<class T> void FitsDatam<T>::hist(double* arr, int length, double mn,
     T* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
 
-      register double value = !byteswap_ ? *ptr : swap(ptr);
+      double value = !byteswap_ ? *ptr : swap(ptr);
       if (hasblank_ && value == blank_)
       	continue; // skip nan's
 
@@ -1730,7 +1730,7 @@ template <> void FitsDatam<float>::hist(double* arr, int length, double mn,
     float* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
 
-      register double value = !byteswap_ ? *ptr : swap(ptr);
+      double value = !byteswap_ ? *ptr : swap(ptr);
       if (!isfinite(value))
 	continue; // skip nan's
 
@@ -1765,7 +1765,7 @@ template <> void FitsDatam<double>::hist(double* arr, int length, double mn,
     double* ptr = data_ + jj*long(width_) + long(params->xmin);
     for (int ii=params->xmin; ii<params->xmax; ii+=kk, ptr+=kk) {
 
-      register double value = !byteswap_ ? *ptr : swap(ptr);
+      double value = !byteswap_ ? *ptr : swap(ptr);
       if (!isfinite(value))
 	continue; // skip nan's
 

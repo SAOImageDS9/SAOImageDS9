@@ -153,43 +153,64 @@ void ColorbarHSVTrueColor16::updateColorsHorz()
   // if we have cross platforms, we need to byte swap
   unsigned char row[xmap->bytes_per_line];
   if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    // red
+    // hue
     for (int ii=0; ii<width; ii++) {
-      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*3];
+      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*5+2];
+      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*5+1];
+      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*5];
       unsigned short a = 0;
       a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+
       memcpy(row+ii*2, &a, 2);
     }
     for (int jj=0; jj<(int)(height/3.); jj++)
       memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
-    // green
+    // saturation
     for (int ii=0; ii<width; ii++) {
-      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
+      unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
+      unsigned short r = v;
+      unsigned short g = v;
+      unsigned short b = v;
       unsigned short a = 0;
+      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
       a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-      memcpy(row+ii*2, &a, 2);
-    }
-    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-    // blue
-    for (int ii=0; ii<width; ii++) {
-      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*3+2];
-      unsigned short a = 0;
       a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+
       memcpy(row+ii*2, &a, 2);
     }
-    for (int jj=(int)(height*2/3.); jj<height; jj++)
+    for (int jj=0; jj<(int)(height/3.); jj++)
       memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
+    // value
+    for (int ii=0; ii<width; ii++) {
+      unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
+      unsigned short r = v;
+      unsigned short g = v;
+      unsigned short b = v;
+      unsigned short a = 0;
+      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+
+      memcpy(row+ii*2, &a, 2);
+    }
+    for (int jj=0; jj<(int)(height/3.); jj++)
+      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
   }
   else {
-    // red
+    // hue
     for (int ii=0; ii<width; ii++) {
-      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*3];
+      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*5+2];
+      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*5+1];
+      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*5];
       unsigned short a = 0;
       a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+
       unsigned char* rr = (unsigned char*)(&a);
       *(row+ii*2) = *(rr+1);
       *(row+ii*2+1) = *(rr);
@@ -197,28 +218,40 @@ void ColorbarHSVTrueColor16::updateColorsHorz()
     for (int jj=0; jj<(int)(height/3.); jj++)
       memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
-    // green
+    // saturation
     for (int ii=0; ii<width; ii++) {
-      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
+      unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
+      unsigned short r = v;
+      unsigned short g = v;
+      unsigned short b = v;
       unsigned short a = 0;
+      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
       a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+
       unsigned char* rr = (unsigned char*)(&a);
       *(row+ii*2) = *(rr+1);
       *(row+ii*2+1) = *(rr);
     }
-    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
+    for (int jj=0; jj<(int)(height/3.); jj++)
       memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
-    // blue
+    // value
     for (int ii=0; ii<width; ii++) {
-      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*3+2];
+      unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
+      unsigned short r = v;
+      unsigned short g = v;
+      unsigned short b = v;
       unsigned short a = 0;
+      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
       a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+
       unsigned char* rr = (unsigned char*)(&a);
       *(row+ii*2) = *(rr+1);
       *(row+ii*2+1) = *(rr);
     }
-    for (int jj=(int)(height*2/3.); jj<height; jj++)
+    for (int jj=0; jj<(int)(height/3.); jj++)
       memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
   }
 }
@@ -231,70 +264,77 @@ void ColorbarHSVTrueColor16::updateColorsVert()
     
   // if we have cross platforms, we need to byte swap
   if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+    // hue
     for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-
-      // red
       {
-	unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*3];
+	unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*5];
 	unsigned short a = 0;
 	a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
-	for (int ii=0; ii<(int)(width/3.); ii++)
+	for (int ii=0; ii<(int)(width/9.); ii++)
 	  memcpy(data+ii*2, &a, 2);
       }
-
-      // green
       {
-	unsigned short g =colorCells[((int)(double(jj)/height*colorCount))*3+1];
+	unsigned short g =colorCells[((int)(double(jj)/height*colorCount))*5+1];
 	unsigned short a = 0;
 	a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-	for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
+	for (int ii=(int)(width/9.); ii<(int)(width*2/9.); ii++)
+	  memcpy(data+ii*2, &a, 2);
+      }
+      {
+	unsigned short b =colorCells[((int)(double(jj)/height*colorCount))*5+2];
+	unsigned short a = 0;
+	a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+	for (int ii=(int)(width*2/9.); ii<(int)(width*3/9.); ii++)
 	  memcpy(data+ii*2, &a, 2);
       }
 
-      // blue
+      // saturation
       {
-	unsigned short b =colorCells[((int)(double(jj)/height*colorCount))*3+2];
+	unsigned short r =colorCells[((int)(double(jj)/height*colorCount))*5+3];
 	unsigned short a = 0;
-	a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
-	for (int ii=(int)(width*2/3.); ii<width; ii++)
+	a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+	for (int ii=(int)(width*3/9.); ii<(int)(width*6/9.); ii++)
 	  memcpy(data+ii*2, &a, 2);
       }
-    }
+
+      // value
+      {
+	unsigned short r =colorCells[((int)(double(jj)/height*colorCount))*5+4];
+	unsigned short a = 0;
+	a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+	for (int ii=(int)(width*6/9.); ii<width; ii++)
+	  memcpy(data+ii*2, &a, 2);
+      }
   }
   else {
     for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-
-      // red
+      // hue
       {
-	unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*3];
+	unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*5];
 	unsigned short a = 0;
 	a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
 	unsigned char* rr = (unsigned char*)(&a);
-	for (int ii=0; ii<(int)(width/3.); ii++) {
+	for (int ii=0; ii<(int)(width/9.); ii++) {
 	  *(data+ii*2) = *(rr+1);
 	  *(data+ii*2+1) = *(rr);
 	}
       }
-
-      // green
       {
-	unsigned short g =colorCells[((int)(double(jj)/height*colorCount))*3+1];
+	unsigned short g =colorCells[((int)(double(jj)/height*colorCount))*5+1];
 	unsigned short a = 0;
 	a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
 	unsigned char* rr = (unsigned char*)(&a);
-	for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++) {
+	for (int ii=(int)(width/9.); ii<(int)(width*2/9.); ii++) {
 	  *(data+ii*2) = *(rr+1);
 	  *(data+ii*2+1) = *(rr);
 	}
       }
-
-      // blue
       {
-	unsigned short b =colorCells[((int)(double(jj)/height*colorCount))*3+2];
+	unsigned short b =colorCells[((int)(double(jj)/height*colorCount))*5+2];
 	unsigned short a = 0;
 	a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
 	unsigned char* rr = (unsigned char*)(&a);
-	for (int ii=(int)(width*2/3.); ii<width; ii++) {
+	for (int ii=(int)(width*2/9.); ii<(int)(width*3/9.); ii++) {
 	  *(data+ii*2) = *(rr+1);
 	  *(data+ii*2+1) = *(rr);
 	}

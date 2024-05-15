@@ -13,7 +13,7 @@ class Filter;
 
 class ColorbarHSV : public ColorbarT {
 protected:
-    ColorMapInfo* cmap;
+  ColorMapInfo* cmap;
 
 protected:
   void psHorz(ostream&, Filter&, int, int);

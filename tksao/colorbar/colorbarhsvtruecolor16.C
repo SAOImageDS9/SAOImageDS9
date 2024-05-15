@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -305,6 +305,7 @@ void ColorbarHSVTrueColor16::updateColorsVert()
 	for (int ii=(int)(width*6/9.); ii<width; ii++)
 	  memcpy(data+ii*2, &a, 2);
       }
+    }
   }
   else {
     for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {

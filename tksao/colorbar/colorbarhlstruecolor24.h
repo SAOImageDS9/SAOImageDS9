@@ -6,17 +6,9 @@
 #define __colorbarhlstruecolor24_h__
 
 #include "colorbarhls.h"
-#include "truecolor24.h"
+#include "colorbarttruecolor24.h"
 
-class ColorbarHLSTrueColor24 : public virtual ColorbarT, public ColorbarHLS, public TrueColor24 {
-protected:
-  void updateColorsHorz();
-  void updateColorsVert();
-  void updateColors24Horz(int, int, char*);
-  void updateColors24Vert(int, int, char*);
-  void updateColors32Horz(int, int, char*);
-  void updateColors32Vert(int, int, char*);
-
+class ColorbarHLSTrueColor24 : public virtual ColorbarT, public ColorbarHLS, public ColorbarTTrueColor24 {
 public:
   ColorbarHLSTrueColor24(Tcl_Interp*, Tk_Canvas, Tk_Item*);
 };

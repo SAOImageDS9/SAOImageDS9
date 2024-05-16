@@ -8,7 +8,7 @@
 #include "colorbarhls.h"
 #include "truecolor24.h"
 
-class ColorbarHLSTrueColor24 : public ColorbarHLS, public TrueColor24 {
+class ColorbarHLSTrueColor24 : public virtual ColorbarT, public ColorbarHLS, public TrueColor24 {
 protected:
   void updateColorsHorz();
   void updateColorsVert();

@@ -6,13 +6,9 @@
 #define __colorbarhlstruecolor16_h__
 
 #include "colorbarhls.h"
-#include "truecolor16.h"
+#include "colorbarttruecolor16.h"
 
-class ColorbarHLSTrueColor16 : public ColorbarHLS, public TrueColor16 {
-protected:
-  void updateColorsHorz();
-  void updateColorsVert();
-
+class ColorbarHLSTrueColor16 : public virtual ColorbarT, public ColorbarHLS, public ColorbarTTrueColor16 {
 public:
   ColorbarHLSTrueColor16(Tcl_Interp*, Tk_Canvas, Tk_Item*);
 };

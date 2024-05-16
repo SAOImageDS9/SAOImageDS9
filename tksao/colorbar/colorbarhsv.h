@@ -11,7 +11,7 @@
 
 class Filter;
 
-class ColorbarHSV : public ColorbarT {
+class ColorbarHSV : public virtual ColorbarT {
 protected:
   ColorMapInfo* cmap;
 

@@ -136,7 +136,7 @@ int ColorbarHSVTrueColor8CreateProc(Tcl_Interp* interp, Tk_Canvas canvas,
 
 ColorbarHSVTrueColor8::ColorbarHSVTrueColor8(Tcl_Interp* i, Tk_Canvas c, 
 					     Tk_Item* item)
-  : ColorbarHSV(i,c,item), TrueColor8(visual)
+: ColorbarT(i,c,item), ColorbarHSV(i,c,item), TrueColor8(visual)
 {
   configSpecs = colorbarHSVTrueColor8Specs;  // colorbar configure options
   loadDefaultCmaps();

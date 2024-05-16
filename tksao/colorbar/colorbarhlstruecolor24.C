@@ -136,7 +136,7 @@ int ColorbarHLSTrueColor24CreateProc(Tcl_Interp* interp, Tk_Canvas canvas,
 
 ColorbarHLSTrueColor24::ColorbarHLSTrueColor24(Tcl_Interp* i, Tk_Canvas c, 
 					       Tk_Item* item) 
-  : ColorbarHLS(i,c,item), TrueColor24(visual)
+: ColorbarT(i,c,item), ColorbarHLS(i,c,item), TrueColor24(visual)
 {
   configSpecs = colorbarHLSTrueColor24Specs;  // colorbar configure options
   loadDefaultCmaps();

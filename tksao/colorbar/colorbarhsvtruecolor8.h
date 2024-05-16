@@ -8,7 +8,7 @@
 #include "colorbarhsv.h"
 #include "truecolor8.h"
 
-class ColorbarHSVTrueColor8 : public ColorbarHSV, public TrueColor8 {
+class ColorbarHSVTrueColor8 : public virtual ColorbarT, public ColorbarHSV, public TrueColor8 {
 protected:
   void updateColorsHorz();
   void updateColorsVert();

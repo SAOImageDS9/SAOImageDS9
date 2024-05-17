@@ -150,7 +150,7 @@ void ColorbarTrueColor8::updateColorsHorz()
     
   for (int ii=0; ii<width; ii++)
     data[ii] = 
-      ((colorCells[((int)(double(ii)/width*colorCount))*3] & bm_) >> bs_) |
+      ((colorCells[((int)(double(ii)/width*colorCount))*3]   & bm_) >> bs_) |
       ((colorCells[((int)(double(ii)/width*colorCount))*3+1] & gm_) >> gs_) |
       ((colorCells[((int)(double(ii)/width*colorCount))*3+2] & rm_) >> rs_);
 
@@ -166,7 +166,7 @@ void ColorbarTrueColor8::updateColorsVert()
     
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
     char a =
-      ((colorCells[((int)(double(jj)/height*colorCount))*3] & bm_) >> bs_) |
+      ((colorCells[((int)(double(jj)/height*colorCount))*3]   & bm_) >> bs_) |
       ((colorCells[((int)(double(jj)/height*colorCount))*3+1] & gm_) >> gs_) |
       ((colorCells[((int)(double(jj)/height*colorCount))*3+2] & rm_) >> rs_);
 

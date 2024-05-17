@@ -48,107 +48,75 @@ void ColorbarTTrueColor24::updateColorsVert()
 
 void ColorbarTTrueColor24::updateColors24Horz(int width, int height, char* data)
 {
-  // if we have cross platforms, we need to byte swap
   unsigned char row[xmap->bytes_per_line];
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    for (int ii=0; ii<width; ii++) {
-      unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*5+2];
-      unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*5+1];
-      unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*5];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
 
+  for (int ii=0; ii<width; ii++) {
+    unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*5+2];
+    unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*5+1];
+    unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*5];
+    unsigned int a = 0;
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
+
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(row+ii*3, &a, 3);
     }
-    for (int jj=0; jj<(int)(height/3.); jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-    for (int ii=0; ii<width; ii++) {
-      unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
-      unsigned short r = v;
-      unsigned short g = v;
-      unsigned short b = v;
-      unsigned short a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
-      memcpy(row+ii*3, &a, 3);
+    else {
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*3) = *(rr+3);
+      *(row+ii*3+1) = *(rr+2);
+      *(row+ii*3+2) = *(rr+1);
     }
-    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-    for (int ii=0; ii<width; ii++) {
-      unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
-      unsigned short r = v;
-      unsigned short g = v;
-      unsigned short b = v;
-      unsigned short a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
-      memcpy(row+ii*3, &a, 3);
-    }
-    for (int jj=(int)(height*2/3.); jj<height; jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
   }
-  else {
-    for (int ii=0; ii<width; ii++) {
-      unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*5+2];
-      unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*5+1];
-      unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*5];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
+  for (int jj=0; jj<(int)(height/3.); jj++)
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
+  for (int ii=0; ii<width; ii++) {
+    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
+    unsigned short r = v;
+    unsigned short g = v;
+    unsigned short b = v;
+    unsigned short a = 0;
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
+
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+      memcpy(row+ii*3, &a, 3);
+    }
+    else {
       unsigned char* rr = (unsigned char*)(&a);
       *(row+ii*3) = *(rr+3);
       *(row+ii*3+1) = *(rr+2);
       *(row+ii*3+2) = *(rr+1);
     }
-    for (int jj=0; jj<(int)(height/3.); jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-    for (int ii=0; ii<width; ii++) {
-      unsigned int v = colorCells[(int)(double(ii)/width*colorCount)*5+3];
-      unsigned int r = v;
-      unsigned int g = v;
-      unsigned int b = v;
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
-      unsigned char* rr = (unsigned char*)(&a);
-      *(row+ii*3) = *(rr+3);
-      *(row+ii*3+1) = *(rr+2);
-      *(row+ii*3+2) = *(rr+1);
-    }
-    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-    
-    for (int ii=0; ii<width; ii++) {
-      unsigned int v = colorCells[(int)(double(ii)/width*colorCount)*5+4];
-      unsigned int r = v;
-      unsigned int g = v;
-      unsigned int b = v;
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
-      unsigned char* rr = (unsigned char*)(&a);
-      *(row+ii*3) = *(rr+3);
-      *(row+ii*3+1) = *(rr+2);
-      *(row+ii*3+2) = *(rr+1);
-    }
-    for (int jj=(int)(height*2/3.); jj<height; jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
   }
+  for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+
+  for (int ii=0; ii<width; ii++) {
+    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
+    unsigned short r = v;
+    unsigned short g = v;
+    unsigned short b = v;
+    unsigned short a = 0;
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
+
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+      memcpy(row+ii*3, &a, 3);
+    }
+    else {
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*3) = *(rr+3);
+      *(row+ii*3+1) = *(rr+2);
+      *(row+ii*3+2) = *(rr+1);
+    }
+  }
+  for (int jj=(int)(height*2/3.); jj<height; jj++)
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 }
 
 void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
@@ -232,102 +200,73 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
 void ColorbarTTrueColor24::updateColors32Horz(int width, int height, 
 						char* data)
 {
-  // if we have cross platforms, we need to byte swap
   unsigned char row[xmap->bytes_per_line];
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
 
-    // red
-    for (int ii=0; ii<width; ii++) {
-      unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3];
-      unsigned int a = 0;
+  for (int ii=0; ii<width; ii++) {
+    unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3];
+    unsigned int a = 0;
 #ifdef MAC_OSX_TK
-      a |= 0xff << 24;
+    a |= 0xff << 24;
 #endif
-      a |= r << rs_;
+    a |= r << rs_;
+
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(row+ii*4, &a, 4);
     }
-    for (int jj=0; jj<(int)(height/3.); jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-    // green
-    for (int ii=0; ii<width; ii++) {
-      unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= g << gs_;
-      memcpy(row+ii*4, &a, 4);
+    else {
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*4) = *(rr+3);
+      *(row+ii*4+1) = *(rr+2);
+      *(row+ii*4+2) = *(rr+1);
+      *(row+ii*4+3) = *(rr);
     }
-    for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-    // blue
-    for (int ii=0; ii<width; ii++) {
-      unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= b << bs_;
-      memcpy(row+ii*4, &a, 4);
-    }
-    for (int jj=(int)(height*2/3.); jj<height; jj++)
-      memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
   }
-  else {
-    // red
-    for (int i=0; i<width; i++) {
-      unsigned int r = colorCells[(int)(double(i)/width*colorCount)*3];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= r << rs_;
-      unsigned char* rr = (unsigned char*)(&a);
-      *(row+i*4) = *(rr+3);
-      *(row+i*4+1) = *(rr+2);
-      *(row+i*4+2) = *(rr+1);
-      *(row+i*4+3) = *(rr);
-    }
-    for (int j=0; j<(int)(height/3.); j++)
-      memcpy(data+(j*xmap->bytes_per_line), row, xmap->bytes_per_line);
+  for (int jj=0; jj<(int)(height/3.); jj++)
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
-    // green
-    for (int i=0; i<width; i++) {
-      unsigned int g = colorCells[(int)(double(i)/width*colorCount)*3+1];
-      unsigned int a = 0;
+  for (int ii=0; ii<width; ii++) {
+    unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
+    unsigned int a = 0;
 #ifdef MAC_OSX_TK
-      a |= 0xff << 24;
+    a |= 0xff << 24;
 #endif
-      a |= g << gs_;
-      unsigned char* rr = (unsigned char*)(&a);
-      *(row+i*4) = *(rr+3);
-      *(row+i*4+1) = *(rr+2);
-      *(row+i*4+2) = *(rr+1);
-      *(row+i*4+3) = *(rr);
-    }
-    for (int j=(int)(height/3.); j<(int)(height*2/3.); j++)
-      memcpy(data+(j*xmap->bytes_per_line), row, xmap->bytes_per_line);
+    a |= g << gs_;
 
-    // blue
-    for (int i=0; i<width; i++) {
-      unsigned int b = colorCells[(int)(double(i)/width*colorCount)*3+2];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= b << bs_;
-      unsigned char* rr = (unsigned char*)(&a);
-      *(row+i*4) = *(rr+3);
-      *(row+i*4+1) = *(rr+2);
-      *(row+i*4+2) = *(rr+1);
-      *(row+i*4+3) = *(rr);
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+      memcpy(row+ii*4, &a, 4);
     }
-    for (int j=(int)(height*2/3.); j<height; j++)
-      memcpy(data+(j*xmap->bytes_per_line), row, xmap->bytes_per_line);
+    else {
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*4) = *(rr+3);
+      *(row+ii*4+1) = *(rr+2);
+      *(row+ii*4+2) = *(rr+1);
+      *(row+ii*4+3) = *(rr);
+    }
   }
+  for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+
+  for (int ii=0; ii<width; ii++) {
+    unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3+2];
+    unsigned int a = 0;
+#ifdef MAC_OSX_TK
+    a |= 0xff << 24;
+#endif
+    a |= b << bs_;
+
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+      memcpy(row+ii*4, &a, 4);
+    }
+    else {
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*4) = *(rr+3);
+      *(row+ii*4+1) = *(rr+2);
+      *(row+ii*4+2) = *(rr+1);
+      *(row+ii*4+3) = *(rr);
+    }
+  }
+  for (int jj=(int)(height*2/3.); jj<height; jj++)
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 }
 
 void ColorbarTTrueColor24::updateColors32Vert(int width, int height, 

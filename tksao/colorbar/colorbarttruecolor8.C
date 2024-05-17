@@ -15,25 +15,25 @@ void ColorbarTTrueColor8::updateColorsHorz()
   char* data = xmap->data;
     
   unsigned char row[xmap->bytes_per_line];
+
   for (int ii=0; ii<width; ii++)
     row[ii] = 
       ((colorCells[((int)(double(ii)/width*colorCount))*5]   & bm_) >> bs_) |
       ((colorCells[((int)(double(ii)/width*colorCount))*5+1] & gm_) >> gs_) |
       ((colorCells[((int)(double(ii)/width*colorCount))*5+2] & rm_) >> rs_);
-
   for (int jj=0; jj<(int)(height/3.); jj++)
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
   for (int ii=0; ii<width; ii++) {
-    char r = colorCells[((int)(double(ii)/width*colorCount))*5+3];
-    row[ii] = (r & rm_) >> rs_;
+    char v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
+    row[ii] = (v & bm_) >> bs_ | (v & gm_) >> gs_ | (v & rm_) >> rs_;
   }
   for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
   for (int ii=0; ii<width; ii++) {
-    char r = colorCells[((int)(double(ii)/width*colorCount))*5+4];
-    row[ii] = (r & rm_) >> rs_;
+    char v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
+    row[ii] = (v & bm_) >> bs_ | (v & gm_) >> gs_ | (v & rm_) >> rs_;
   }
   for (int jj=(int)(height*2/3.); jj<height; jj++)
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
@@ -47,34 +47,23 @@ void ColorbarTTrueColor8::updateColorsVert()
     
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
     {
-      char r = colorCells[((int)(double(jj)/height*colorCount))*5];
-      char a = (r & rm_) >> rs_;
-      for (int ii=0; ii<(int)(width/9.); ii++)
+      char a =
+	((colorCells[((int)(double(jj)/height*colorCount))*5]   & bm_) >> bs_) |
+	((colorCells[((int)(double(jj)/height*colorCount))*5+1] & gm_) >> gs_) |
+	((colorCells[((int)(double(jj)/height*colorCount))*5+2] & rm_) >> rs_);
+      for (int ii=0; ii<(int)(width/3.); ii++)
 	data[ii] = a;
     }
     {
-      char g = colorCells[((int)(double(jj)/height*colorCount))*5+1];
-      char a = (g & gm_) >> gs_;
-      for (int ii=(int)(width/9.); ii<(int)(width*2/9.); ii++)
+      char v = colorCells[((int)(double(jj)/width*colorCount))*5+3];
+      char a = (v & bm_) >> bs_ | (v & gm_) >> gs_ | (v & rm_) >> rs_;
+      for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
 	data[ii] = a;
     }
     {
-      char b =colorCells[((int)(double(jj)/height*colorCount))*5+2];
-      char a = (b & bm_) >> bs_;
-      for (int ii=(int)(width*2/9.); ii<(int)(width*3/9.); ii++)
-	data[ii] = a;
-    }
-
-    {
-      char r = colorCells[((int)(double(jj)/height*colorCount))*5+3];
-      char a = (r & rm_) >> rs_;
-      for (int ii=(int)(width*3/9.); ii<(int)(width*6/9.); ii++)
-	data[ii] = a;
-    }
-    {
-      char r = colorCells[((int)(double(jj)/height*colorCount))*5+4];
-      char a = (r & rm_) >> rs_;
-      for (int ii=(int)(width*6/9.); ii<width; ii++)
+      char v = colorCells[((int)(double(jj)/width*colorCount))*5+4];
+      char a = (v & bm_) >> bs_ | (v & gm_) >> gs_ | (v & rm_) >> rs_;
+      for (int ii=(int)(width*2/3.); ii<width; ii++)
 	data[ii] = a;
     }
   }

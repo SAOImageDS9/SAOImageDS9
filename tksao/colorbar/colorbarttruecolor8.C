@@ -77,6 +77,6 @@ void ColorbarTTrueColor8::updateColorsVert()
       for (int ii=(int)(width*6/9.); ii<width; ii++)
 	data[ii] = a;
     }
+  }
 }
-
 

@@ -4,13 +4,6 @@
 
 package provide DS9 1.0
 
-proc BadVisualError {} {
-    global ds9
-
-    Error [msgcat::mc {Sorry, DS9 requires a Truecolor8, Truecolor16, Truecolor24 visual be available}]
-    exit
-}
-
 proc ProcessCommandLineFirst {} {
     global argc
     global argv

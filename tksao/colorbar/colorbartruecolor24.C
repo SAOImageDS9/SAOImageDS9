@@ -180,70 +180,47 @@ void ColorbarTrueColor24::updateColorsVert()
 
 void ColorbarTrueColor24::updateColors24Horz(int width, int height, char* data)
 {
-  // if we have cross platforms, we need to byte swap
   unsigned char row[xmap->bytes_per_line];
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    for (int ii=0; ii<width; ii++) {
-      unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
+  for (int ii=0; ii<width; ii++) {
+    unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3+2];
+    unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
+    unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3];
+    unsigned int a = 0;
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
 
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(row+ii*3, &a, 3);
     }
-  }
-  else {
-    for (int ii=0; ii<width; ii++) {
-      unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
+    else {
       unsigned char* rr = (unsigned char*)(&a);
       *(data+ii*3) = *(rr+3);
       *(data+ii*3+1) = *(rr+2);
       *(data+ii*3+2) = *(rr+1);
     }
   }
-
-  // --and duplicate for remaining rows
+  
   for (int jj=1; jj<height; jj++)
     memcpy(data+(jj*xmap->bytes_per_line), data, xmap->bytes_per_line);
 }
 
 void ColorbarTrueColor24::updateColors24Vert(int width, int height, char* data)
 {
-  // if we have cross platforms, we need to byte swap
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-      unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*3];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
+  for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
+    unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*3+2];
+    unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*3+1];
+    unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*3];
+    unsigned int a = 0;
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
 
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       for (int ii=0; ii<width; ii++)
 	memcpy(data+ii*3, &a, 3);
     }
-  }
-  else {
-    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-      unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*3];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
+    else {
       unsigned char* rr = (unsigned char*)(&a);
       for (int ii=0; ii<width; ii++) {
 	*(data+ii*3) = *(rr+3);
@@ -256,36 +233,22 @@ void ColorbarTrueColor24::updateColors24Vert(int width, int height, char* data)
 
 void ColorbarTrueColor24::updateColors32Horz(int width, int height, char* data)
 {
-  // if we have cross platforms, we need to byte swap
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    for (int ii=0; ii<width; ii++) {
-      unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3];
-      unsigned int a = 0;
+  for (int ii=0; ii<width; ii++) {
+    unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3+2];
+    unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
+    unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3];
+    unsigned int a = 0;
 #ifdef MAC_OSX_TK
-      a |= 0xff << 24;
+    a |= 0xff << 24;
 #endif
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
 
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(data+ii*4, &a, 4);
     }
-  }
-  else {
-    for (int ii=0; ii<width; ii++) {
-      unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
+    else {
       unsigned char* rr = (unsigned char*)(&a);
       *(data+ii*4) = *(rr+3);
       *(data+ii*4+1) = *(rr+2);
@@ -294,44 +257,29 @@ void ColorbarTrueColor24::updateColors32Horz(int width, int height, char* data)
     }
   }
 
-  // --and duplicate for remaining rows
   for (int jj=1; jj<height; jj++)
     memcpy(data+(jj*xmap->bytes_per_line), data, xmap->bytes_per_line);
 }
 
 void ColorbarTrueColor24::updateColors32Vert(int width, int height, char* data)
 {
-  // if we have cross platforms, we need to byte swap
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-      unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*3];
-      unsigned int a = 0;
+  for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
+    unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*3+2];
+    unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*3+1];
+    unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*3];
+    unsigned int a = 0;
 #ifdef MAC_OSX_TK
-      a |= 0xff << 24;
+    a |= 0xff << 24;
 #endif
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
 
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       for (int ii=0; ii<width; ii++)
 	memcpy(data+ii*4, &a, 4);
     }
-  }
-  else {
-    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-      unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*3+2];
-      unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*3+1];
-      unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*3];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
+    else {
       unsigned char* rr = (unsigned char*)(&a);
       for (int ii=0; ii<width; ii++) {
 	*(data+ii*4) = *(rr+3);
@@ -342,4 +290,3 @@ void ColorbarTrueColor24::updateColors32Vert(int width, int height, char* data)
     }
   }
 }
-

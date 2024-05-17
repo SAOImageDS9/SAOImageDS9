@@ -506,7 +506,10 @@ switch -- $ds9(visual)$ds9(depth) {
     truecolor8 {}
     truecolor16 {}
     truecolor24 {}
-    default {BadVisualError}
+    default {
+        Error [msgcat::mc {Sorry, DS9 requires a Truecolor8, Truecolor16, Truecolor24 visual be available}]
+        exit
+    }
 }
 
 # Init Temporary Dir before prefs

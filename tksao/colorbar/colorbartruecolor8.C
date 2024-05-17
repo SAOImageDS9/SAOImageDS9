@@ -154,7 +154,6 @@ void ColorbarTrueColor8::updateColorsHorz()
       ((colorCells[((int)(double(ii)/width*colorCount))*3+1] & gm_) >> gs_) |
       ((colorCells[((int)(double(ii)/width*colorCount))*3+2] & rm_) >> rs_);
 
-  // --and duplicate for remaining rows
   for (int jj=1; jj<height; jj++)
     memcpy(data+(jj*xmap->bytes_per_line), data, xmap->bytes_per_line);
 }

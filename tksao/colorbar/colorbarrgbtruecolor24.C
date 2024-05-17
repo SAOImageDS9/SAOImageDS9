@@ -308,8 +308,8 @@ void ColorbarRGBTrueColor24::updateColors32Horz(int width, int height,
 {
   unsigned char row[xmap->bytes_per_line];
 
+  // red
   for (int ii=0; ii<width; ii++) {
-    // red
     unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3];
     unsigned int a = 0;
 #ifdef MAC_OSX_TK

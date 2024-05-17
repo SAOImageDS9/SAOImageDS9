@@ -17,7 +17,7 @@ void ColorbarTTrueColor8::updateColorsHorz()
   unsigned char row[xmap->bytes_per_line];
   for (int ii=0; ii<width; ii++)
     row[ii] = 
-      ((colorCells[((int)(double(ii)/width*colorCount))*5] & bm_) >> bs_) |
+      ((colorCells[((int)(double(ii)/width*colorCount))*5]   & bm_) >> bs_) |
       ((colorCells[((int)(double(ii)/width*colorCount))*5+1] & gm_) >> gs_) |
       ((colorCells[((int)(double(ii)/width*colorCount))*5+2] & rm_) >> rs_);
 

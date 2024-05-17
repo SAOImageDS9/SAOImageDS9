@@ -180,7 +180,6 @@ void ColorbarTrueColor24::updateColorsVert()
 
 void ColorbarTrueColor24::updateColors24Horz(int width, int height, char* data)
 {
-  unsigned char row[xmap->bytes_per_line];
   for (int ii=0; ii<width; ii++) {
     unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3+2];
     unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
@@ -191,7 +190,7 @@ void ColorbarTrueColor24::updateColors24Horz(int width, int height, char* data)
     a |= b << bs_;
 
     if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-      memcpy(row+ii*3, &a, 3);
+      memcpy(data+ii*3, &a, 3);
     }
     else {
       unsigned char* rr = (unsigned char*)(&a);

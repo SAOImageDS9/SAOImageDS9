@@ -130,7 +130,7 @@ void ColorbarTTrueColor24::updateColors24Horz(int width, int height, char* data)
       *(row+ii*3+2) = *(rr+1);
     }
   }
-  for (int jj=(int)(height*2/3.); jj<height; jj++)
+  for (int jj=(int)(height*2/3.+1); jj<height; jj++)
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 }
 
@@ -139,6 +139,7 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
 {
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
     {
+      // RGB
       unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*5+2];
       unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*5+1];
       unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*5];
@@ -153,13 +154,21 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
       }
       else {
 	unsigned char* rr = (unsigned char*)(&a);
-	for (int ii=0; ii<width/3.; ii++) {
+	for (int ii=0; ii<(int)(width/3.); ii++) {
 	  *(data+ii*3) = *(rr+3);
 	  *(data+ii*3+1) = *(rr+2);
 	  *(data+ii*3+2) = *(rr+1);
 	}
       }
     }  
+
+    // border
+    {
+      int ii=(int)(width/3.);
+      memset(data+ii*4,0,4);
+    }
+
+    // S/L
     {
       unsigned int v = colorCells[(int)(double(jj)/height*colorCount)*5+3];
       unsigned int r = v;
@@ -171,18 +180,26 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
       a |= b << bs_;
 
       if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-	for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
+	for (int ii=(int)(width/3.+1); ii<(int)(width*2/3.); ii++)
 	  memcpy(data+ii*3, &a, 3);
       }
       else {
 	unsigned char* rr = (unsigned char*)(&a);
-	for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++) {
+	for (int ii=(int)(width/3.+1); ii<(int)(width*2/3.); ii++) {
 	  *(data+ii*3) = *(rr+3);
 	  *(data+ii*3+1) = *(rr+2);
 	  *(data+ii*3+2) = *(rr+1);
 	}
       }
     }
+
+    // border
+    {
+      int ii=(int)(width*2/3.);
+      memset(data+ii*4,0,4);
+    }
+
+    // S/V
     {
       unsigned int v = colorCells[(int)(double(jj)/height*colorCount)*5+4];
       unsigned int r = v;
@@ -194,12 +211,12 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
       a |= b << bs_;
 
       if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-	for (int ii=(int)(width*2/3.); ii<width; ii++)
+	for (int ii=(int)(width*2/3.+1); ii<width; ii++)
 	  memcpy(data+ii*3, &a, 3);
       }
       else {
 	unsigned char* rr = (unsigned char*)(&a);
-	for (int ii=(int)(width*2/3.); ii<width; ii++) {
+	for (int ii=(int)(width*2/3.+1); ii<width; ii++) {
 	  *(data+ii*3) = *(rr+3);
 	  *(data+ii*3+1) = *(rr+2);
 	  *(data+ii*3+2) = *(rr+1);

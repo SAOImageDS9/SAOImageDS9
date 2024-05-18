@@ -198,6 +198,7 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
 {
   unsigned char row[xmap->bytes_per_line];
 
+  // HUE
   for (int ii=0; ii<width; ii++) {
     unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*5+2];
     unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*5+1];
@@ -224,6 +225,36 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
   for (int jj=0; jj<(int)(height/3.); jj++)
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
+  // border
+  for (int ii=0; ii<width; ii++) {
+    unsigned short r = 0;
+    unsigned short g = 0;
+    unsigned short b = 0;
+    unsigned short a = 0;
+#ifdef MAC_OSX_TK
+    a |= 0xff << 24;
+#endif
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
+
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+      memcpy(row+ii*4, &a, 4);
+    }
+    else {
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*4) = *(rr+3);
+      *(row+ii*4+1) = *(rr+2);
+      *(row+ii*4+2) = *(rr+1);
+      *(row+ii*4+3) = *(rr);
+    }
+  }
+  {
+    int jj=(int)(height/3.);
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+  }
+  
+  // S/L
   for (int ii=0; ii<width; ii++) {
     unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
     unsigned short r = v;
@@ -248,9 +279,39 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
       *(row+ii*4+3) = *(rr);
     }
   }
-  for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
+  for (int jj=(int)(height/3.+1); jj<(int)(height*2/3.); jj++)
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
+  // border
+  for (int ii=0; ii<width; ii++) {
+    unsigned short r = 0;
+    unsigned short g = 0;
+    unsigned short b = 0;
+    unsigned short a = 0;
+#ifdef MAC_OSX_TK
+    a |= 0xff << 24;
+#endif
+    a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
+
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
+      memcpy(row+ii*4, &a, 4);
+    }
+    else {
+      unsigned char* rr = (unsigned char*)(&a);
+      *(row+ii*4) = *(rr+3);
+      *(row+ii*4+1) = *(rr+2);
+      *(row+ii*4+2) = *(rr+1);
+      *(row+ii*4+3) = *(rr);
+    }
+  }
+  {
+    int jj=(int)(height*2/3.);
+    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
+  }
+  
+  // V/S
   for (int ii=0; ii<width; ii++) {
     unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
     unsigned short r = v;
@@ -275,7 +336,7 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
       *(row+ii*4+3) = *(rr);
     }
   }
-  for (int jj=(int)(height*2/3.); jj<height; jj++)
+  for (int jj=(int)(height*2/3.+1); jj<height; jj++)
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 }
 

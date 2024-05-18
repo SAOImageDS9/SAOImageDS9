@@ -294,6 +294,7 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
     a |= r << rs_;
     a |= g << gs_;
     a |= b << bs_;
+    cerr << "a=" << a << endl;
 
     if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(row+ii*4, &a, 4);

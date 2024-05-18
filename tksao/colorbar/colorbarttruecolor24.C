@@ -50,7 +50,7 @@ void ColorbarTTrueColor24::updateColors24Horz(int width, int height, char* data)
 {
   unsigned char row[xmap->bytes_per_line];
 
-  // RGB
+  // HUE
   for (int ii=0; ii<width; ii++) {
     unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*5+2];
     unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*5+1];
@@ -139,7 +139,7 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
 {
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
     {
-      // RGB
+      // HUE
       unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*5+2];
       unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*5+1];
       unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*5];
@@ -165,7 +165,7 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
     // border
     {
       int ii=(int)(width/3.);
-      memset(data+ii*4,0,4);
+      memset(data+ii*3,0,3);
     }
 
     // S/L
@@ -196,7 +196,7 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
     // border
     {
       int ii=(int)(width*2/3.);
-      memset(data+ii*4,0,4);
+      memset(data+ii*3,0,3);
     }
 
     // S/V
@@ -331,7 +331,7 @@ void ColorbarTTrueColor24::updateColors32Vert(int width, int height,
 {
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
     {
-      // RGB
+      // HUE
       unsigned int r = colorCells[(int)(double(jj)/height*colorCount)*5+2];
       unsigned int g = colorCells[(int)(double(jj)/height*colorCount)*5+1];
       unsigned int b = colorCells[(int)(double(jj)/height*colorCount)*5];

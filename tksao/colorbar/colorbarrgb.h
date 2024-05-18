@@ -39,7 +39,6 @@ public:
   void getCurrentNameCmd();
   void getTypeCmd();
   void getRGBChannelCmd();
-  void setRGBChannelCmd(const char*);
 };
 
 #endif

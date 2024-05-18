@@ -30,29 +30,6 @@ Colorbar::~Colorbar()
 {
 }
 
-int Colorbar::calcContrastBias(int i)
-{
-  // if default (contrast = 1.0 && bias = .5) return
-  if (fabs(bias - 0.5) < 0.0001 && fabs(contrast - 1.0) < 0.0001)
-    return i;
-  
-  // map i to range of 0 to 1.0
-  // shift by bias (if invert, bias = 1-bias)
-  // multiply by contrast
-  // shift to center of region
-  // expand back to number of dynamic colors
-  float b = invert ? 1-bias : bias;
-  int r = (int)(((((float)i / colorCount) - b) * contrast + .5 ) * colorCount);
-
-  // clip to bounds if out of range
-  if (r < 0)
-    return 0;
-  else if (r >= colorCount)
-    return colorCount-1;
-  else
-    return r;
-}
-
 void Colorbar::loadDefaultCmaps()
 {
   cmaps.append(new GreyColorMap(this));
@@ -217,7 +194,8 @@ void Colorbar::updateColorCells()
 
   if (cmaps.current())
     for(int i=0, j=colorCount-1; i<colorCount; i++, j--) {
-      int index = invert ? calcContrastBias(j) : calcContrastBias(i);
+      int index = invert ? calcContrastBias(j, bias, contrast) :
+	calcContrastBias(i, bias, contrast);
       colorCells[i*3] = cmaps.current()->getBlueChar(index, colorCount);
       colorCells[i*3+1] = cmaps.current()->getGreenChar(index, colorCount);
       colorCells[i*3+2] = cmaps.current()->getRedChar(index, colorCount);

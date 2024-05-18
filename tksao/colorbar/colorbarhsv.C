@@ -44,18 +44,19 @@ void ColorbarHSV::updateColorCells()
   // fill rgb table
   // note: its filled bgr to match XImage
   for(int i=0, j=colorCount-1; i<colorCount; i++, j--) {
-    int idh = invert ? calcContrastBias(j,bias[0],contrast[0]) : 
+    int index = invert ? calcContrastBias(j,bias[0],contrast[0]) :
       calcContrastBias(i,bias[0],contrast[0]);
+    colorCells[i*5] = cmap->getBlueChar(index, colorCount);
+    colorCells[i*5+1] = cmap->getGreenChar(index, colorCount);
+    colorCells[i*5+2] = cmap->getRedChar(index, colorCount);
+
     int ids = invert ? calcContrastBias(j,bias[1],contrast[1]) : 
       calcContrastBias(i,bias[1],contrast[1]);
     int idv = invert ? calcContrastBias(j,bias[2],contrast[2]) : 
       calcContrastBias(i,bias[2],contrast[2]);
 
-    colorCells[i*3]   = (int)(256.*idh/colorCount);
-    colorCells[i*3+1] = (int)(256.*idh/colorCount);
-    colorCells[i*3+2] = (int)(256.*idh/colorCount);
-    colorCells[i*3+3] = (int)(256.*ids/colorCount);
-    colorCells[i*3+4] = (int)(256.*idv/colorCount);
+    colorCells[i*5+3] = (int)(256.*ids/colorCount);
+    colorCells[i*5+4] = (int)(256.*idv/colorCount);
   }
 }
 
@@ -150,18 +151,6 @@ void ColorbarHSV::getHSVChannelCmd()
 void ColorbarHSV::getTypeCmd()
 {
   Tcl_AppendResult(interp, "hsv", NULL);
-}
-
-void ColorbarHSV::setHSVChannelCmd(const char* c)
-{
-  if (!strncmp(c,"hue",3))
-    channel = 0;
-  else if (!strncmp(c,"sat",3))
-    channel = 1;
-  else if (!strncmp(c,"val",3))
-    channel = 2;
-  else
-    channel = 0;
 }
 
 #ifdef MAC_OSX_TK

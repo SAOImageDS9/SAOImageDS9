@@ -33,6 +33,10 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %type <integer> yesno
 %type <integer> pscolorspace
 
+%type <integer> rgb
+%type <integer> hsv
+%type <integer> hls
+
 %token <integer> INT
 %token <real> REAL
 %token <str> STRING
@@ -40,6 +44,7 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token ADJUST_
 %token BEGIN_
 %token BIAS_
+%token BLUE_
 %token BW_
 %token CHANNEL_
 %token CMYK_
@@ -54,6 +59,7 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token END_
 %token GET_
 %token GRAY_
+%token GREEN_
 %token FALSE_
 %token FILE_
 %token HEIGHT_
@@ -79,6 +85,7 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token POSTSCRIPT_
 %token PRINT_
 %token QUERY_
+%token RED_
 %token RESET_
 %token RESOLUTION_
 %token RGB_
@@ -114,9 +121,9 @@ command : DEBUG_ debug
 	| POSTSCRIPT_ postscript
 	| QUERY_ CURSOR_ {cb->queryCursorCmd();}
 	| RESET_ {cb->resetCmd();}
-	| RGB_ CHANNEL_ STRING {cb->setRGBChannelCmd($3);}
-	| HSV_ CHANNEL_ STRING {cb->setHSVChannelCmd($3);}
-	| HLS_ CHANNEL_ STRING {cb->setHLSChannelCmd($3);}
+	| RGB_ CHANNEL_ rgb {cb->setChannelCmd($3);}
+	| HSV_ CHANNEL_ hsv {cb->setChannelCmd($3);}
+	| HLS_ CHANNEL_ hls {cb->setChannelCmd($3);}
 	| TAG_ tag
 	| SAVE_ save
 	| SHOW_ {cb->showCmd();}
@@ -153,6 +160,21 @@ colorbar: INT numeric numeric INT {cb->setColorbarCmd($1, $2, $3, $4);}
 	| HLS_ numeric numeric numeric numeric numeric numeric INT
 	  {cb->setColorbarCmd($2, $3, $4, $5, $6, $7, $8);}
 	;
+
+rgb     : RED_ {$$=0;}
+        | GREEN_ {$$=1;}
+        | BLUE_ {$$=2;}
+        ;
+
+hsv     : HUE_ {$$=0;}
+        | SATURATION_ {$$=1;}
+        | VALUE_ {$$=2;}
+        ;
+
+hls     : HUE_ {$$=0;}
+        | LIGHTNESS_ {$$=1;}
+        | SATURATION_ {$$=2;}
+        ;
 
 colormap: LEVEL_ colormaplevel
 	| WINDOW_ STRING {cb->setColormapWindowCmd($2);}

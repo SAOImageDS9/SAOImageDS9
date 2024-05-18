@@ -130,6 +130,7 @@ class ColorbarBase : public Widget {
   virtual void reset() =0;
 
   void updateColors();
+  int calcContrastBias(int, float, float);
   virtual void updateColorCells() =0;
   virtual void updateColorsHorz() =0;
   virtual void updateColorsVert() =0;
@@ -203,16 +204,9 @@ class ColorbarBase : public Widget {
   virtual void tagLoadCmd(const char*) {}
   virtual void tagSaveCmd(const char*) {}
 
-  // RGB
-  virtual void setRGBChannelCmd(const char*) {}
+  virtual void setChannelCmd(int) {}
   virtual void getRGBChannelCmd();
-
-  // HSV
-  virtual void setHSVChannelCmd(const char*) {}
   virtual void getHSVChannelCmd();
-
-  // HLS
-  virtual void setHLSChannelCmd(const char*) {}
   virtual void getHLSChannelCmd();
 
 #ifdef MAC_OSX_TK

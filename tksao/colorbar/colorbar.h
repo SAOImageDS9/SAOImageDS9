@@ -41,7 +41,6 @@ class Colorbar : public ColorbarBase {
   void psVert(ostream&, Filter&, int, int);
 
  protected:
-  int calcContrastBias(int);
   void loadDefaultCmaps();
   int initColormap();
   void reset();

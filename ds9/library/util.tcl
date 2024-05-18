@@ -115,6 +115,8 @@ proc UpdateDS9 {} {
     UpdateCentroidDialog
     UpdateCubeDialog
     UpdateRGBDialog
+    UpdateHSVDialog
+    UpdateHLSDialog
     Update3DDialog
     UpdateContourDialog
     UpdateGridDialog

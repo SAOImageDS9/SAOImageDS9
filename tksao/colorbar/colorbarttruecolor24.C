@@ -194,18 +194,21 @@ void ColorbarTTrueColor24::updateColors24Vert(int width, int height,
   }
 }
 
-void ColorbarTTrueColor24::updateColors32Horz(int width, int height, 
-						char* data)
+void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
 {
   unsigned char row[xmap->bytes_per_line];
 
   for (int ii=0; ii<width; ii++) {
-    unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*3];
+    unsigned int r = colorCells[(int)(double(ii)/width*colorCount)*5+2];
+    unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*5+1];
+    unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*5];
     unsigned int a = 0;
 #ifdef MAC_OSX_TK
     a |= 0xff << 24;
 #endif
     a |= r << rs_;
+    a |= g << gs_;
+    a |= b << bs_;
 
     if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(row+ii*4, &a, 4);
@@ -222,12 +225,17 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height,
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
   for (int ii=0; ii<width; ii++) {
-    unsigned int g = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-    unsigned int a = 0;
+    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
+    unsigned short r = v;
+    unsigned short g = v;
+    unsigned short b = v;
+    unsigned short a = 0;
 #ifdef MAC_OSX_TK
     a |= 0xff << 24;
 #endif
+    a |= r << rs_;
     a |= g << gs_;
+    a |= b << bs_;
 
     if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(row+ii*4, &a, 4);
@@ -244,11 +252,16 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height,
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 
   for (int ii=0; ii<width; ii++) {
-    unsigned int b = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-    unsigned int a = 0;
+    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
+    unsigned short r = v;
+    unsigned short g = v;
+    unsigned short b = v;
+    unsigned short a = 0;
 #ifdef MAC_OSX_TK
     a |= 0xff << 24;
 #endif
+    a |= r << rs_;
+    a |= g << gs_;
     a |= b << bs_;
 
     if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {

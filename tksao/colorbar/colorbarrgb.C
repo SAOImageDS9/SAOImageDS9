@@ -262,18 +262,6 @@ void ColorbarRGB::getTypeCmd()
   Tcl_AppendResult(interp, "rgb", NULL);
 }
 
-void ColorbarRGB::setRGBChannelCmd(const char* c)
-{
-  if (!strncmp(c,"red",3))
-    channel = 0;
-  else if (!strncmp(c,"gre",3))
-    channel = 1;
-  else if (!strncmp(c,"blu",3))
-    channel = 2;
-  else
-    channel = 0;
-}
-
 #ifdef MAC_OSX_TK
 
 void ColorbarRGB::macosx(float scale, int width, int height, 

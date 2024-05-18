@@ -40,24 +40,6 @@ void ColorbarHLS::updateColorCells()
       delete [] colorCells;
     colorCells = new unsigned char[colorCount*5];
   }
-
-  // fill rgb table
-  // note: its filled bgr to match XImage
-  //  for(int i=0; i<colorCount; i++) {
-  for(int i=0, j=colorCount-1; i<colorCount; i++, j--) {
-    int idh = invert ? calcContrastBias(j,bias[0],contrast[0]) : 
-      calcContrastBias(i,bias[0],contrast[0]);
-    int idl = invert ? calcContrastBias(j,bias[1],contrast[1]) : 
-      calcContrastBias(i,bias[1],contrast[1]);
-    int ids = invert ? calcContrastBias(j,bias[2],contrast[2]) : 
-      calcContrastBias(i,bias[2],contrast[2]);
-
-    colorCells[i*3]   = (int)(256.*idh/colorCount);
-    colorCells[i*3+1] = (int)(256.*idh/colorCount);
-    colorCells[i*3+2] = (int)(256.*idl/colorCount);
-    colorCells[i*3+3] = (int)(256.*ids/colorCount);
-    colorCells[i*3+4] = (int)(256.*ids/colorCount);
-  }
 }
 
 int ColorbarHLS::initColormap()
@@ -151,18 +133,6 @@ void ColorbarHLS::getHLSChannelCmd()
 void ColorbarHLS::getTypeCmd()
 {
   Tcl_AppendResult(interp, "hls", NULL);
-}
-
-void ColorbarHLS::setHLSChannelCmd(const char* c)
-{
-  if (!strncmp(c,"hue",3))
-    channel = 0;
-  else if (!strncmp(c,"lig",3))
-    channel = 1;
-  else if (!strncmp(c,"sat",3))
-    channel = 2;
-  else
-    channel = 0;
 }
 
 #ifdef MAC_OSX_TK

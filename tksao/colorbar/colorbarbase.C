@@ -280,6 +280,29 @@ void ColorbarBase::updateColors()
   redraw();
 }
 
+int ColorbarBase::calcContrastBias(int i, float bias, float contrast)
+{
+  // if default (contrast = 1.0 && bias = .5) return
+  if (fabs(bias - 0.5) < 0.0001 && fabs(contrast - 1.0) < 0.0001)
+    return i;
+  
+  // map i to range of 0 to 1.0
+  // shift by bias (if invert, bias = 1-bias)
+  // multiply by contrast
+  // shift to center of region
+  // expand back to number of dynamic colors
+  float b = invert ? 1-bias : bias;
+  int r = (int)(((((float)i / colorCount) - b) * contrast + .5 ) * colorCount);
+
+  // clip to bounds if out of range
+  if (r < 0)
+    return 0;
+  else if (r >= colorCount)
+    return colorCount-1;
+  else
+    return r;
+}
+
 // X11
 
 int ColorbarBase::updatePixmap(const BBox& bb)

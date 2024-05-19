@@ -15,9 +15,9 @@ void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
   // red
   for (int jj=0; jj<(int)(height/3.); jj++) {
     for (int ii=0; ii<width; ii++) {
-      unsigned char red = colorCells[(int)(double(ii)/width*colorCount)*3+2];
+      unsigned char blue = colorCells[(int)(double(ii)/width*colorCount)*3+2];
       unsigned char green = 0;
-      unsigned char blue = 0;
+      unsigned char red = 0;
 
       switch (psColorSpace) {
       case BW:
@@ -42,9 +42,9 @@ void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
   // green
   for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++) {
     for (int ii=0; ii<width; ii++) {
-      unsigned char red = 0;
-      unsigned char green = colorCells[(int)(double(ii)/width*colorCount)*3+1];
       unsigned char blue = 0;
+      unsigned char green = colorCells[(int)(double(ii)/width*colorCount)*3+1];
+      unsigned char red = 0;
 
       switch (psColorSpace) {
       case BW:
@@ -69,9 +69,9 @@ void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
   // blue
   for (int jj=(int)(height*2/3.); jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
-      unsigned char red = 0;
+      unsigned char blue = 0;
       unsigned char green = 0;
-      unsigned char blue = colorCells[(int)(double(ii)/width*colorCount)*3];
+      unsigned char red = colorCells[(int)(double(ii)/width*colorCount)*3];
 
       switch (psColorSpace) {
       case BW:
@@ -98,9 +98,9 @@ void ColorbarRGB::psVert(ostream& str, Filter& filter, int width, int height)
 {
   for (int jj=0; jj<height; jj++) {
     int kk = (int)(double(jj)/height*colorCount)*3;
-    unsigned char red = colorCells[kk+2];
+    unsigned char blue = colorCells[kk+2];
     unsigned char green = colorCells[kk+1];
-    unsigned char blue = colorCells[kk];
+    unsigned char red = colorCells[kk];
 
     switch (psColorSpace) {
     case BW:

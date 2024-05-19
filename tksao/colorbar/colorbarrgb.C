@@ -3,8 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "colorbarrgb.h"
-#include "ps.h"
-#include "psutil.h"
 
 ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item)
   : ColorbarT(i,c,item)

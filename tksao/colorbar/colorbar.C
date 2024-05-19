@@ -6,7 +6,6 @@
 
 #include "util.h"
 #include "colorbar.h"
-#include "ps.h"
 #include "psutil.h"
 
 #include "lut.h"

@@ -8,15 +8,6 @@
 #include "colorbart.h"
 
 class ColorbarHSV : public virtual ColorbarT {
-protected:
-#ifdef MAC_OSX_TK
-  void macosx(float, int, int, const Vector&, const Vector&);
-#endif
-
-#ifdef __WIN32
-  void win32(float, int, int, const Vector&, const Vector&);
-#endif
-
 public:
   ColorbarHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);
 

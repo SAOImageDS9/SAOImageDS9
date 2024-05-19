@@ -89,20 +89,3 @@ void ColorbarHSV::getTypeCmd()
 {
   Tcl_AppendResult(interp, "hsv", NULL);
 }
-
-#ifdef MAC_OSX_TK
-
-void ColorbarHSV::macosx(float scale, int width, int height, 
-			 const Vector& v, const Vector& s)
-{}
-
-#endif
-
-#ifdef __WIN32
-#include <win32lib.h>
-
-void ColorbarHSV::win32(float scale, int width, int height, 
-			const Vector& v, const Vector& s)
-{}
-
-#endif

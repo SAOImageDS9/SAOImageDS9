@@ -12,29 +12,25 @@ ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item)
 
 void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
 {
-  // blue
+  // inverted
+  // rgb for XImage
   for (int jj=0; jj<(int)(height/3.); jj++) {
     for (int ii=0; ii<width; ii++) {
       unsigned char blue = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-
       psPixel(psColorSpace, str, filter, 0, 0, blue);
     }
   }
 
-  // green
   for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++) {
     for (int ii=0; ii<width; ii++) {
       unsigned char green = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-
       psPixel(psColorSpace, str, filter, 0, green, 0);
     }
   }
 
-  // red
   for (int jj=(int)(height*2/3.); jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
       unsigned char red = colorCells[(int)(double(ii)/width*colorCount)*3];
-
       psPixel(psColorSpace, str, filter, red, 0, 0);
     }
   }
@@ -43,48 +39,20 @@ void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
 void ColorbarRGB::psVert(ostream& str, Filter& filter, int width, int height)
 {
   for (int jj=0; jj<height; jj++) {
+    // rgb for XImage
     int kk = (int)(double(jj)/height*colorCount)*3;
-    unsigned char blue = colorCells[kk+2];
-    unsigned char green = colorCells[kk+1];
     unsigned char red = colorCells[kk];
+    unsigned char green = colorCells[kk+1];
+    unsigned char blue = colorCells[kk+2];
 
-    switch (psColorSpace) {
-    case BW:
-    case GRAY:
-      for (int ii=0; ii<(int)(width/3.); ii++)
-	filter << RGB2Gray(red, 0, 0);
-      for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
-	filter << RGB2Gray(0, green, 0);
-      for (int ii=(int)(width*2/3.); ii<width; ii++)
-	filter << RGB2Gray(0, 0, blue);
-      break;
-    case RGB:
-      for (int ii=0; ii<(int)(width/3.); ii++)
-	filter << red << 0 << 0;
-      for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
-	filter << 0 << green << 0;
-      for (int ii=(int)(width*2/3.); ii<width; ii++)
-	filter << 0 << 0 << blue;
-      break;
-    case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  for (int ii=0; ii<(int)(width/3.); ii++) {
-	    RGB2CMYK(red, 0, 0, &cyan, &magenta, &yellow, &black);
-	    filter << cyan << magenta << yellow << black;
-	  }
-	  for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++) {
-	    RGB2CMYK(0, green, 0, &cyan, &magenta, &yellow, &black);
-	    filter << cyan << magenta << yellow << black;
-	  }
-	  for (int ii=(int)(width*2/3.); ii<width; ii++) {
-	    RGB2CMYK(0, 0, blue, &cyan, &magenta, &yellow, &black);
-	    filter << cyan << magenta << yellow << black;
-	  }
-	}
-	break;
-    }
-    str << filter;
+    for (int ii=0; ii<(int)(width/3.); ii++)
+      psPixel(psColorSpace, str, filter, red, 0, 0);
+
+    for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
+      psPixel(psColorSpace, str, filter, 0, green, 0);
+
+    for (int ii=(int)(width*2/3.); ii<width; ii++)
+      psPixel(psColorSpace, str, filter, 0, 0, blue);
   }
 }
 
@@ -99,8 +67,8 @@ void ColorbarRGB::updateColorCells()
   }
 
   // fill rgb table
-  // note: its filled bgr to match XImage
-  //  for(int i=0; i<colorCount; i++) {
+  // note: its filled rgb to match XImage
+
   for(int i=0, j=colorCount-1; i<colorCount; i++, j--) {
     int idr = invert ? calcContrastBias(j,bias[0],contrast[0]) : 
       calcContrastBias(i,bias[0],contrast[0]);
@@ -209,11 +177,9 @@ void ColorbarRGB::getTypeCmd()
 }
 
 #ifdef MAC_OSX_TK
-
 void ColorbarRGB::macosx(float scale, int width, int height, 
 			 const Vector& v, const Vector& s)
 {}
-
 #endif
 
 #ifdef __WIN32

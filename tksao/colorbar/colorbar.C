@@ -101,6 +101,7 @@ ColorMapInfo* Colorbar::newColorMap(const char* fn, const char* type)
 
 void Colorbar::psHorz(ostream& str, Filter& filter, int width, int height)
 {
+  // note: its filled bgr to match XImage
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
       int kk = (int)(double(ii)/width*colorCount)*3;
@@ -108,54 +109,23 @@ void Colorbar::psHorz(ostream& str, Filter& filter, int width, int height)
       unsigned char green = colorCells[kk+1];
       unsigned char blue = colorCells[kk];
 
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
+      psPixel(psColorSpace, str, filter, red, green, blue);
     }
   }
 }
 
 void Colorbar::psVert(ostream& str, Filter& filter, int width, int height)
 {
+  // note: its filled bgr to match XImage
   for (int jj=0; jj<height; jj++) {
-    int kk = (int)(double(jj)/height*colorCount)*3;
-    unsigned char red = colorCells[kk+2];
-    unsigned char green = colorCells[kk+1];
-    unsigned char blue = colorCells[kk];
+    for (int ii=0; ii<width; ii++) {
+      int kk = (int)(double(jj)/height*colorCount)*3;
+      unsigned char red = colorCells[kk+2];
+      unsigned char green = colorCells[kk+1];
+      unsigned char blue = colorCells[kk];
 
-    switch (psColorSpace) {
-    case BW:
-    case GRAY:
-      for (int ii=0; ii<width; ii++)
-	filter << RGB2Gray(red, green, blue);
-      break;
-    case RGB:
-      for (int ii=0; ii<width; ii++)
-	filter << red << green << blue;
-      break;
-    case CMYK:
-      for (int ii=0; ii<width; ii++) {
-	unsigned char cyan, magenta, yellow, black;
-	RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	filter << cyan << magenta << yellow << black;
-      }
-      break;
+      psPixel(psColorSpace, str, filter, red, green, blue);
     }
-    str << filter;
   }
 }
 

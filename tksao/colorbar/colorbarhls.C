@@ -8,42 +8,7 @@
 
 ColorbarHLS::ColorbarHLS(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) 
   : ColorbarT(i,c,item)
-{
-  cmap =NULL;
-}
-
-ColorbarHLS::~ColorbarHLS()
-{
-  if (cmap)
-    delete cmap;
-}
-
-void ColorbarHLS::loadDefaultCmaps()
-{
-  cmap = new RainbowColorMap(this);
-}
-
-void ColorbarHLS::updateColorCells()
-{
-  int clrs = (((ColorbarBaseOptions*)options)->colors);
-  if (clrs != colorCount) {
-    colorCount = clrs;
-    if (colorCells)
-      delete [] colorCells;
-    colorCells = new unsigned char[colorCount*5];
-  }
-}
-
-int ColorbarHLS::initColormap()
-{
-  colorCount = (((ColorbarBaseOptions*)options)->colors);
-  colorCells = new unsigned char[colorCount*5];
-
-  // needed to initialize colorCells
-  reset();
-
-  return TCL_OK;
-}
+{}
 
 // Commands
 

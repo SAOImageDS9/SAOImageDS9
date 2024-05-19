@@ -6,22 +6,9 @@
 #define __colorbarhls_h__
 
 #include "colorbart.h"
-#include "colormap.h"
-#include "default.h"
-
-class Filter;
 
 class ColorbarHLS : public virtual ColorbarT {
 protected:
-  ColorMapInfo* cmap;
-
-protected:
-  void psHorz(ostream&, Filter&, int, int) {}
-  void psVert(ostream&, Filter&, int, int) {}
-  void loadDefaultCmaps();
-  void updateColorCells();
-  int initColormap();
-
 #ifdef MAC_OSX_TK
   void macosx(float, int, int, const Vector&, const Vector&);
 #endif
@@ -32,7 +19,6 @@ protected:
 
 public:
   ColorbarHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);
-  ~ColorbarHLS();
 
   // SubCommandFunctions
 

@@ -82,6 +82,7 @@ colorbar/colorbar.C
 colorbar/colorbartruecolor16.C
 colorbar/colorbartruecolor24.C
 colorbar/colorbartruecolor8.C
+colorbar/colorbara.C
 colorbar/colorbart.C
 colorbar/colorbarttruecolor16.C
 colorbar/colorbarttruecolor24.C

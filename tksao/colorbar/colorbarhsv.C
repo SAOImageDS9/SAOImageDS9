@@ -18,14 +18,6 @@ ColorbarHSV::~ColorbarHSV()
     delete cmap;
 }
 
-void ColorbarHSV::psHorz(ostream& str, Filter& filter, int width, int height)
-{
-}
-
-void ColorbarHSV::psVert(ostream& str, Filter& filter, int width, int height)
-{
-}
-
 void ColorbarHSV::loadDefaultCmaps()
 {
   cmap = new RainbowColorMap(this);

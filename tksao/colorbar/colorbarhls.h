@@ -16,8 +16,8 @@ protected:
   ColorMapInfo* cmap;
 
 protected:
-  void psHorz(ostream&, Filter&, int, int);
-  void psVert(ostream&, Filter&, int, int);
+  void psHorz(ostream&, Filter&, int, int) {}
+  void psVert(ostream&, Filter&, int, int) {}
   void loadDefaultCmaps();
   void updateColorCells();
   int initColormap();

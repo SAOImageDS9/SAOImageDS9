@@ -12,84 +12,30 @@ ColorbarRGB::ColorbarRGB(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item)
 
 void ColorbarRGB::psHorz(ostream& str, Filter& filter, int width, int height)
 {
-  // red
+  // blue
   for (int jj=0; jj<(int)(height/3.); jj++) {
     for (int ii=0; ii<width; ii++) {
       unsigned char blue = colorCells[(int)(double(ii)/width*colorCount)*3+2];
-      unsigned char green = 0;
-      unsigned char red = 0;
 
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
+      psPixel(psColorSpace, str, filter, 0, 0, blue);
     }
   }
 
   // green
   for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++) {
     for (int ii=0; ii<width; ii++) {
-      unsigned char blue = 0;
       unsigned char green = colorCells[(int)(double(ii)/width*colorCount)*3+1];
-      unsigned char red = 0;
 
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
+      psPixel(psColorSpace, str, filter, 0, green, 0);
     }
   }
 
-  // blue
+  // red
   for (int jj=(int)(height*2/3.); jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
-      unsigned char blue = 0;
-      unsigned char green = 0;
       unsigned char red = colorCells[(int)(double(ii)/width*colorCount)*3];
 
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
+      psPixel(psColorSpace, str, filter, red, 0, 0);
     }
   }
 }

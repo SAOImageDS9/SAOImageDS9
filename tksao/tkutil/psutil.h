@@ -12,6 +12,8 @@ using namespace std;
 
 #include <tk.h>
 
+class Filter;
+
 enum PSColorSpace {BW, GRAY, RGB, CMYK};
 
 static const char psFonts[12][32] = {
@@ -31,6 +33,8 @@ static const char psFonts[12][32] = {
   {"Courier-BoldOblique"}
 };
 
+extern void psPixel(PSColorSpace, ostream&, Filter&, unsigned char,
+		    unsigned char, unsigned char);
 extern double RGB2Gray(double, double, double);
 extern unsigned char RGB2Gray(unsigned char, unsigned char, unsigned char);
 extern void RGB2CMYK(unsigned char, unsigned char, unsigned char,

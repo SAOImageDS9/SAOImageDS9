@@ -18,18 +18,7 @@
 FrameRGB::FrameRGB(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   : FrameA(i,c,item)
 {
-  context = new Context[3];
-  context[0].parent(this);
-  context[1].parent(this);
-  context[2].parent(this);
-
-  channel = 0;
-  rgbSystem = Coord::WCS;
-
   for (int ii=0; ii<3; ii++) {
-    view[ii] = 1;
-    bias[ii] = .5;
-    contrast[ii] = 1.0;
     colorScale[ii] = NULL;
   }
 
@@ -38,17 +27,10 @@ FrameRGB::FrameRGB(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   colorCount = 0;
   colorCells = NULL;
-
-  currentContext = &context[channel];
-  keyContext = &context[channel];
-  keyContextSet =0;
 }
 
 FrameRGB::~FrameRGB()
 {
-  if (context)
-    delete [] context;
-
   for (int ii=0; ii<3; ii++) {
     if (colorScale[ii])
       delete colorScale[ii];

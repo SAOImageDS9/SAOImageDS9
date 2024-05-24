@@ -6,28 +6,19 @@
 #define __framergb_h__
 
 #include "framea.h"
-#include "context.h"
 #include "colorscalergb.h"
 
 // Frame
 
 class FrameRGB : public FrameA {
  protected:
-  int channel;                  // current channel
-  Coord::CoordSystem rgbSystem;        // alignment coordinate system
-  Matrix rgb[3];                // rgb matrix
 
   long* colormapData[3];     // preextract data
 
-  int view[3];                  // visible channels
-  float bias[3];                // current colormap bias
-  float contrast[3];            // current colormap contrast
   ColorScaleRGB* colorScale[3]; // current color scale
 
   int colorCount;               // number of dynamic colors
   unsigned char* colorCells;    // current color values
-
-  int keyContextSet;
 
  private:
   void alignWCS();

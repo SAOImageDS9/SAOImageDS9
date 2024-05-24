@@ -5,22 +5,36 @@
 #ifndef __framehsv_h__
 #define __framehsv_h__
 
-#include "framergb.h"
+#include "framet.h"
 
 // Frame
 
-class FrameHSV : public FrameRGB {
+class FrameHSV : public FrameT {
  protected:
   int isFrameHSV() {return 1;}
+
+  void pushMatrices() {}
+  void pushMagnifierMatrices() {}
+  void pushPannerMatrices() {}
+  void pushPSMatrices(float, int, int) {}
+
+  unsigned char* fillImage(int, int, Coord::InternalSystem) {return NULL;}
+
+  void updateColorScale() {}
+  int validColorScale() {return 0;}
 
  public:
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameHSV();
 
+  void getColorbarCmd() {}
+  void getTypeCmd();
+  
+  /*
   void getHSVChannelCmd();
   void getHSVSystemCmd() {getRGBSystemCmd();}
   void getHSVViewCmd() {getRGBViewCmd();}
-  void getTypeCmd();
+  */
 };
 
 #endif

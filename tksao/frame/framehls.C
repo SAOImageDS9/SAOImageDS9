@@ -7,7 +7,7 @@
 // Frame Member Functions
 
 FrameHLS::FrameHLS(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
-  : FrameRGB(i,c,item)
+  : FrameT(i,c,item)
 {
 }
 
@@ -20,6 +20,7 @@ void FrameHLS::getTypeCmd()
   Tcl_AppendResult(interp, "hls", NULL);
 }
 
+/*
 void FrameHLS::getHLSChannelCmd()
 {
   switch (channel) {
@@ -34,3 +35,4 @@ void FrameHLS::getHLSChannelCmd()
     return;
   }
 }
+*/

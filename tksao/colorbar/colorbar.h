@@ -55,7 +55,6 @@ class Colorbar : public ColorbarBase {
 
  public:
   Colorbar(Tcl_Interp*, Tk_Canvas, Tk_Item*);
-  virtual ~Colorbar();
 
   int ctagid() {return ctagid_++;}
 

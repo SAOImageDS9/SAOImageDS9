@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -16,7 +16,7 @@
 // Frame Member Functions
 
 FrameRGB::FrameRGB(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
-  : FrameBase(i,c,item)
+  : FrameA(i,c,item)
 {
   context = new Context[3];
   context[0].parent(this);

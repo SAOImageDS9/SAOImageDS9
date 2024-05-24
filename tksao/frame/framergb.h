@@ -1,17 +1,17 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #ifndef __framergb_h__
 #define __framergb_h__
 
+#include "framea.h"
 #include "context.h"
-#include "framebase.h"
 #include "colorscalergb.h"
 
 // Frame
 
-class FrameRGB : public FrameBase {
+class FrameRGB : public FrameA {
  protected:
   int channel;                  // current channel
   Coord::CoordSystem rgbSystem;        // alignment coordinate system

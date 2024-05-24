@@ -7,7 +7,7 @@
 // Frame Member Functions
 
 FrameHSV::FrameHSV(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
-  : FrameRGB(i,c,item)
+  : FrameT(i,c,item)
 {
 }
 
@@ -20,6 +20,7 @@ void FrameHSV::getTypeCmd()
   Tcl_AppendResult(interp, "hsv", NULL);
 }
 
+/*
 void FrameHSV::getHSVChannelCmd()
 {
   switch (channel) {
@@ -34,5 +35,5 @@ void FrameHSV::getHSVChannelCmd()
     return;
   }
 }
-
+*/
 

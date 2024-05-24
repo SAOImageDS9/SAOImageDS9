@@ -25,10 +25,6 @@ Colorbar::Colorbar(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   taginit =0;
 }
 
-Colorbar::~Colorbar()
-{
-}
-
 void Colorbar::loadDefaultCmaps()
 {
   cmaps.append(new GreyColorMap(this));

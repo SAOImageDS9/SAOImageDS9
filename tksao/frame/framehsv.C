@@ -20,7 +20,6 @@ void FrameHSV::getTypeCmd()
   Tcl_AppendResult(interp, "hsv", NULL);
 }
 
-/*
 void FrameHSV::getHSVChannelCmd()
 {
   switch (channel) {
@@ -35,5 +34,3 @@ void FrameHSV::getHSVChannelCmd()
     return;
   }
 }
-*/
-

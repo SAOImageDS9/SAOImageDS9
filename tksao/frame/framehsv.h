@@ -30,8 +30,9 @@ class FrameHSV : public FrameT {
   void getColorbarCmd() {}
   void getTypeCmd();
   
-  /*
   void getHSVChannelCmd();
+
+  /*
   void getHSVSystemCmd() {getRGBSystemCmd();}
   void getHSVViewCmd() {getRGBViewCmd();}
   */

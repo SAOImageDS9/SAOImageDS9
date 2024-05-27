@@ -67,6 +67,7 @@ class FrameRGB : public FrameA {
   void getColorbarCmd();
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType);
   void getRGBChannelCmd();
+
   void getRGBSystemCmd();
   void getRGBViewCmd();
   void getTypeCmd();

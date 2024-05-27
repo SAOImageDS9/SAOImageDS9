@@ -30,8 +30,9 @@ class FrameHLS : public FrameT {
   void getColorbarCmd() {}
   void getTypeCmd();
 
-  /*
   void getHLSChannelCmd();
+
+  /*
   void getHLSSystemCmd() {getRGBSystemCmd();}
   void getHLSViewCmd() {getRGBViewCmd();}
   */

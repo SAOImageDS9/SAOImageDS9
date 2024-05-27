@@ -20,7 +20,6 @@ void FrameHLS::getTypeCmd()
   Tcl_AppendResult(interp, "hls", NULL);
 }
 
-/*
 void FrameHLS::getHLSChannelCmd()
 {
   switch (channel) {
@@ -35,4 +34,3 @@ void FrameHLS::getHLSChannelCmd()
     return;
   }
 }
-*/

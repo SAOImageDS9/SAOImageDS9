@@ -763,6 +763,12 @@ proc UpdateGraphAxisY {frame which} {
 	    median {}
 	}
 
+	# sanity check
+	if {[expr $ymax-$ymin] == 0}  {
+	    set ymin 0
+	    set ymax 1
+	}
+
 	$gr yaxis configure -min $ymin -max $ymax
 	$gr y2axis configure -min $ymin -max $ymax
     } else {

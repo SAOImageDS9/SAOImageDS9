@@ -1139,7 +1139,7 @@ ZipFSOpenArchive(
 	    ZIPFS_POSIX_ERROR(interp, "seek error");
 	    goto error;
 	}
-	zf->ptrToFree = zf->data = Tcl_AttemptAlloc(zf->length);
+	zf->ptrToFree = zf->data = (unsigned char*)Tcl_AttemptAlloc(zf->length);
 	if (!zf->ptrToFree) {
 	    ZIPFS_ERROR(interp, "out of memory");
 	    if (interp) {
@@ -1279,7 +1279,7 @@ ZipFSCatalogFilesystem(
 	ZipFSCloseArchive(interp, zf0);
 	return TCL_ERROR;
     }
-    zf = Tcl_AttemptAlloc(sizeof(ZipFile) + strlen(mountPoint) + 1);
+    zf = (ZipFile*)Tcl_AttemptAlloc(sizeof(ZipFile) + strlen(mountPoint) + 1);
     if (!zf) {
 	if (interp) {
 	    Tcl_AppendResult(interp, "out of memory", (char *) NULL);
@@ -1314,7 +1314,7 @@ ZipFSCatalogFilesystem(
     if (mountPoint[0] != '\0') {
 	hPtr = Tcl_CreateHashEntry(&ZipFS.fileHash, mountPoint, &isNew);
 	if (isNew) {
-	    z = Tcl_Alloc(sizeof(ZipEntry));
+	    z = (ZipEntry*)Tcl_Alloc(sizeof(ZipEntry));
 	    Tcl_SetHashValue(hPtr, z);
 
 	    z->tnext = NULL;
@@ -1409,7 +1409,7 @@ ZipFSCatalogFilesystem(
 	}
 	Tcl_DStringSetLength(&fpBuf, 0);
 	fullpath = CanonicalPath(mountPoint, path, &fpBuf, 1);
-	z = Tcl_Alloc(sizeof(ZipEntry));
+	z = (ZipEntry*)Tcl_Alloc(sizeof(ZipEntry));
 	z->name = NULL;
 	z->tnext = NULL;
 	z->depth = CountSlashes(fullpath);
@@ -1438,7 +1438,7 @@ ZipFSCatalogFilesystem(
 	hPtr = Tcl_CreateHashEntry(&ZipFS.fileHash, fullpath, &isNew);
 	if (!isNew) {
 	    /* should not happen but skip it anyway */
-	    Tcl_Free(z);
+	    Tcl_Free((char*)z);
 	} else {
 	    Tcl_SetHashValue(hPtr, z);
 	    z->name = Tcl_GetHashKey(&ZipFS.fileHash, hPtr);
@@ -1463,7 +1463,7 @@ ZipFSCatalogFilesystem(
 		    if (!isNew) {
 			break;
 		    }
-		    zd = Tcl_Alloc(sizeof(ZipEntry));
+		    zd = (ZipEntry*)Tcl_Alloc(sizeof(ZipEntry));
 		    zd->name = NULL;
 		    zd->tnext = NULL;
 		    zd->depth = CountSlashes(dir);
@@ -1677,7 +1677,7 @@ TclZipfs_Mount(
 	    return TCL_ERROR;
 	}
     }
-    zf = Tcl_AttemptAlloc(sizeof(ZipFile) + strlen(mountPoint) + 1);
+    zf = (ZipFile*)Tcl_AttemptAlloc(sizeof(ZipFile) + strlen(mountPoint) + 1);
     if (!zf) {
 	if (interp) {
 	    Tcl_AppendResult(interp, "out of memory", (char *) NULL);
@@ -1750,7 +1750,7 @@ TclZipfs_MountBuffer(
      * Have both a mount point and data to mount there.
      */
 
-    zf = Tcl_AttemptAlloc(sizeof(ZipFile) + strlen(mountPoint) + 1);
+    zf = (ZipFile*)Tcl_AttemptAlloc(sizeof(ZipFile) + strlen(mountPoint) + 1);
     if (!zf) {
 	if (interp) {
 	    Tcl_AppendResult(interp, "out of memory", (char *) NULL);
@@ -1844,10 +1844,10 @@ TclZipfs_Unmount(
 	if (z->data) {
 	    Tcl_Free(z->data);
 	}
-	Tcl_Free(z);
+	Tcl_Free((char*)z);
     }
     ZipFSCloseArchive(interp, zf);
-    Tcl_Free(zf);
+    Tcl_Free((char*)zf);
     unmounted = 1;
   done:
     Unlock();
@@ -2365,7 +2365,7 @@ ZipAddFile(
 	return TCL_ERROR;
     }
 
-    z = Tcl_Alloc(sizeof(ZipEntry));
+    z = (ZipEntry*)Tcl_Alloc(sizeof(ZipEntry));
     Tcl_SetHashValue(hPtr, z);
     z->name = NULL;
     z->tnext = NULL;
@@ -2399,14 +2399,14 @@ ZipAddFile(
     ZipWriteShort(buf + ZIP_LOCAL_EXTRALEN_OFFS, align);
     if (Tcl_Seek(out, pos[0], SEEK_SET) != pos[0]) {
 	Tcl_DeleteHashEntry(hPtr);
-	Tcl_Free(z);
+	Tcl_Free((char*)z);
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"seek error: %s", Tcl_PosixError(interp)));
 	return TCL_ERROR;
     }
     if (Tcl_Write(out, buf, ZIP_LOCAL_HEADER_LEN) != ZIP_LOCAL_HEADER_LEN) {
 	Tcl_DeleteHashEntry(hPtr);
-	Tcl_Free(z);
+	Tcl_Free((char*)z);
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"write error: %s", Tcl_PosixError(interp)));
 	return TCL_ERROR;
@@ -2414,7 +2414,7 @@ ZipAddFile(
     Tcl_Flush(out);
     if (Tcl_Seek(out, pos[1], SEEK_SET) != pos[1]) {
 	Tcl_DeleteHashEntry(hPtr);
-	Tcl_Free(z);
+	Tcl_Free((char*)z);
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"seek error: %s", Tcl_PosixError(interp)));
 	return TCL_ERROR;
@@ -2772,7 +2772,7 @@ ZipFSMkZipOrImgObjCmd(
     for (hPtr = Tcl_FirstHashEntry(&fileHash, &search); hPtr;
 	    hPtr = Tcl_NextHashEntry(&search)) {
 	z = Tcl_GetHashValue(hPtr);
-	Tcl_Free(z);
+	Tcl_Free((char*)z);
 	Tcl_DeleteHashEntry(hPtr);
     }
     Tcl_DeleteHashTable(&fileHash);
@@ -3357,7 +3357,7 @@ ZipChannelClose(
     WriteLock();
     info->zipFilePtr->numOpen--;
     Unlock();
-    Tcl_Free(info);
+    Tcl_Free((char*)info);
     return TCL_OK;
 }
 
@@ -3687,7 +3687,7 @@ ZipChannelOpen(
     } else {
 	flags = TCL_WRITABLE;
     }
-    info = Tcl_AttemptAlloc(sizeof(ZipChannel));
+    info = (ZipChannel*)Tcl_AttemptAlloc(sizeof(ZipChannel));
     if (!info) {
 	ZIPFS_ERROR(interp, "out of memory");
 	if (interp) {
@@ -3711,7 +3711,7 @@ ZipChannelOpen(
 	    if (info->ubuf) {
 		Tcl_Free(info->ubuf);
 	    }
-	    Tcl_Free(info);
+	    Tcl_Free((char*)info);
 	    ZIPFS_ERROR(interp, "out of memory");
 	    if (interp) {
 		Tcl_SetErrorCode(interp, "TCL", "MALLOC", NULL);
@@ -3798,7 +3798,7 @@ ZipChannelOpen(
 		if (info->ubuf) {
 		    Tcl_Free(info->ubuf);
 		}
-		Tcl_Free(info);
+		Tcl_Free((char*)info);
 		ZIPFS_ERROR(interp, "decompression error");
 		if (interp) {
 		    Tcl_SetErrorCode(interp, "TCL", "ZIPFS", "CORRUPT", NULL);
@@ -3884,7 +3884,7 @@ ZipChannelOpen(
 		    memset(info->keys, 0, sizeof(info->keys));
 		    Tcl_Free(ubuf);
 		}
-		Tcl_Free(info);
+		Tcl_Free((char*)info);
 		if (interp) {
 		    Tcl_SetObjResult(interp,
 			    Tcl_NewStringObj("out of memory", -1));
@@ -3916,7 +3916,7 @@ ZipChannelOpen(
 	    if (info->ubuf) {
 		Tcl_Free(info->ubuf);
 	    }
-	    Tcl_Free(info);
+	    Tcl_Free((char*)info);
 	    ZIPFS_ERROR(interp, "decompression error");
 	    if (interp) {
 		Tcl_SetErrorCode(interp, "TCL", "ZIPFS", "CORRUPT", NULL);

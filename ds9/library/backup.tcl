@@ -42,6 +42,7 @@ proc Backup {fn} {
 	    BackupFrame $ch $ff $dir
 	}
     }
+    puts $ch "set ds9(seq) $ds9(seq)"
 
     # Geometry
     BackupGUI $ch

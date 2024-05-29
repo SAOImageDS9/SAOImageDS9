@@ -121,7 +121,7 @@ TclXML_libxml2_InitDocObj(interp)
   tsdPtr->errorInfoPtr->interp = interp;
   tsdPtr->errorInfoPtr->listPtr = NULL;
   tsdPtr->errorInfoPtr->nodeHandlerProc = NULL;
-  xmlSetStructuredErrorFunc((void *) tsdPtr->errorInfoPtr, TclXML_libxml2_ErrorHandler);
+  xmlSetStructuredErrorFunc((void *) tsdPtr->errorInfoPtr, (xmlStructuredErrorFunc)TclXML_libxml2_ErrorHandler);
 
   return TCL_OK;
 }

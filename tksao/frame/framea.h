@@ -55,6 +55,8 @@ public:
   FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameA();
 
+  void colormapCmd(float, float, float, float, float, float, int, int);
+
   void iisCmd(int, int) {}
   void iisEraseCmd() {}
   void iisGetCmd(int, int, int, int) {}

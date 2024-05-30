@@ -254,22 +254,6 @@ void FrameRGB::updateColorScale()
 
 // Commands
 
-void FrameRGB::colormapCmd(float rb, float gb, float bb, 
-			   float rc, float gc, float bc, int i, int cnt)
-{
-  bias[0] = rb;
-  bias[1] = gb;
-  bias[2] = bb;
-  contrast[0] = rc;
-  contrast[1] = gc;
-  contrast[2] = bc;
-  invert = i;
-
-  updateColorCells(cnt);
-  updateColorScale();
-  update(BASE);
-}
-
 #ifndef MAC_OSX_TK
 
 void FrameRGB::colormapBeginCmd()

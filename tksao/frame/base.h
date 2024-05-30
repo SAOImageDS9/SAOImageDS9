@@ -457,6 +457,7 @@ public:
   void unselectMarkers(List<Marker>*);
   void update(UpdateType);
   void update(UpdateType,BBox);
+  virtual void updateColorCells(int) =0;
   void updateMarkers(List<Marker>*);
   void updateMarkerCBs(List<Marker>*);
   void updateMarkerCoords(List<Marker>*, const Matrix&);

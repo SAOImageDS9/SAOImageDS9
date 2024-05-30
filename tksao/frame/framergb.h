@@ -20,16 +20,15 @@ class FrameRGB : public FrameA {
   unsigned char* colorCells;    // current color values
 
 protected:
-  void loadRGBCube(MemType, const char*, FitsImage*);
-  void loadRGBImage(MemType, const char*, FitsImage*);
-  void loadRGBFinish();
-
+  unsigned char* fillImage(int, int, Coord::InternalSystem);
 
   int isFrameRGB() {return 1;}
 
   void loadDone(int);
+  void loadRGBCube(MemType, const char*, FitsImage*);
+  void loadRGBImage(MemType, const char*, FitsImage*);
+  void loadRGBFinish();
 
-  unsigned char* fillImage(int, int, Coord::InternalSystem);
   void updateColorCells(int);
   void updateColorScale();
 
@@ -48,7 +47,6 @@ protected:
   void getRGBSystemCmd() {getSystem();}
   void getRGBViewCmd() {getView();}
 
-  void colormapCmd(float, float, float, float, float, float, int, int);
   void colormapBeginCmd();
   void colormapEndCmd();
   void colormapMotionCmd(float, float, float, float, float, float, int, int);

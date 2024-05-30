@@ -13,14 +13,11 @@ class FrameHSV : public FrameT {
  protected:
   int isFrameHSV() {return 1;}
 
-  void pushMatrices() {}
-  void pushMagnifierMatrices() {}
-  void pushPannerMatrices() {}
-  void pushPSMatrices(float, int, int) {}
-
   unsigned char* fillImage(int, int, Coord::InternalSystem) {return NULL;}
 
+  void updateColorCells(int) {}
   void updateColorScale() {}
+
   int validColorScale() {return 0;}
 
  public:

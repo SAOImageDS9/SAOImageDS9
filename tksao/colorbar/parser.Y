@@ -113,7 +113,7 @@ command : DEBUG_ debug
 	| RESET_ {cb->resetCmd();}
 	| RGB_ CHANNEL_ STRING {cb->setRGBChannelCmd($3);}
 	| HSV_ CHANNEL_ STRING {cb->setHSVChannelCmd($3);}
-	| HSV_ CHANNEL_ VALUE_ {cb->setHSVChannelCmd("value";}
+        | HSV_ CHANNEL_ VALUE_ {cb->setHSVChannelCmd("value");}
 	| HLS_ CHANNEL_ STRING {cb->setHLSChannelCmd($3);}
 	| TAG_ tag
 	| SAVE_ save
@@ -215,8 +215,8 @@ macosx	: PRINT_ {
 	}
 	;
 
-map     : 'a' {cb->mapCmd("a");}
-        | 'b' {cb->mapCmd("b");}
+map     : 'a' {cb->mapCmd('a');}
+        | 'b' {cb->mapCmd('b');}
         | STRING {cb->mapCmd($1);}
 	| INT {cb->mapCmd($1);}
         | RGB_ {cb->mapCmd("rgb");}

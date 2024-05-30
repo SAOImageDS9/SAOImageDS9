@@ -1699,6 +1699,7 @@ public:
   virtual void getHSVChannelCmd();
   virtual void getHSVViewCmd();
   virtual void getHSVSystemCmd();
+  virtual void setHSVChannelCmd(const char*) {}
   virtual void setHSVViewCmd(int, int, int) {}
   virtual void setHSVSystemCmd(Coord::CoordSystem) {}
 

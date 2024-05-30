@@ -71,7 +71,6 @@ query           {return QUERY_;}
 reset		{return RESET_;}
 resolution	{return RESOLUTION_;}
 rgb		{return RGB_;}
-saturation	{return SATURATION_;}
 save		{return SAVE_;}
 show		{return SHOW_;}
 tag		{return TAG_;}

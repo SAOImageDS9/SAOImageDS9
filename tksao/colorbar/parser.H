@@ -45,65 +45,59 @@
      ADJUST_ = 261,
      BEGIN_ = 262,
      BIAS_ = 263,
-     BLUE_ = 264,
-     BW_ = 265,
-     CHANNEL_ = 266,
-     CMYK_ = 267,
-     COLORMAP_ = 268,
-     COLORBAR_ = 269,
-     COLORSPACE_ = 270,
-     CONTRAST_ = 271,
-     CURSOR_ = 272,
-     DEBUG_ = 273,
-     DELETE_ = 274,
-     EDIT_ = 275,
-     END_ = 276,
-     GET_ = 277,
-     GRAY_ = 278,
-     GREEN_ = 279,
-     FALSE_ = 280,
-     FILE_ = 281,
-     HEIGHT_ = 282,
-     HIDE_ = 283,
-     HSV_ = 284,
-     HLS_ = 285,
-     HUE_ = 286,
-     ID_ = 287,
-     INVERT_ = 288,
-     ITT_ = 289,
-     LEVEL_ = 290,
-     LIGHTNESS_ = 291,
-     LIST_ = 292,
-     LOAD_ = 293,
-     MACOSX_ = 294,
-     MAP_ = 295,
-     MOTION_ = 296,
-     N_ = 297,
-     NAME_ = 298,
-     NO_ = 299,
-     OFF_ = 300,
-     ON_ = 301,
-     POSTSCRIPT_ = 302,
-     PRINT_ = 303,
-     QUERY_ = 304,
-     RED_ = 305,
-     RESET_ = 306,
-     RESOLUTION_ = 307,
-     RGB_ = 308,
-     SATURATION_ = 309,
-     SAVE_ = 310,
-     SHOW_ = 311,
-     TAG_ = 312,
-     TRUE_ = 313,
-     TYPE_ = 314,
-     VALUE_ = 315,
-     VAR_ = 316,
-     VERSION_ = 317,
-     WIDTH_ = 318,
-     WIN32_ = 319,
-     WINDOW_ = 320,
-     Y_ = 321,
-     YES_ = 322
+     BW_ = 264,
+     CHANNEL_ = 265,
+     CMYK_ = 266,
+     COLORMAP_ = 267,
+     COLORBAR_ = 268,
+     COLORSPACE_ = 269,
+     CONTRAST_ = 270,
+     CURSOR_ = 271,
+     DEBUG_ = 272,
+     DELETE_ = 273,
+     EDIT_ = 274,
+     END_ = 275,
+     GET_ = 276,
+     GRAY_ = 277,
+     FALSE_ = 278,
+     FILE_ = 279,
+     HEIGHT_ = 280,
+     HIDE_ = 281,
+     HSV_ = 282,
+     HLS_ = 283,
+     ID_ = 284,
+     INVERT_ = 285,
+     ITT_ = 286,
+     LEVEL_ = 287,
+     LIST_ = 288,
+     LOAD_ = 289,
+     MACOSX_ = 290,
+     MAP_ = 291,
+     MOTION_ = 292,
+     N_ = 293,
+     NAME_ = 294,
+     NO_ = 295,
+     OFF_ = 296,
+     ON_ = 297,
+     POSTSCRIPT_ = 298,
+     PRINT_ = 299,
+     QUERY_ = 300,
+     RESET_ = 301,
+     RESOLUTION_ = 302,
+     RGB_ = 303,
+     SAVE_ = 304,
+     SHOW_ = 305,
+     TAG_ = 306,
+     TRUE_ = 307,
+     TYPE_ = 308,
+     VALUE_ = 309,
+     VAR_ = 310,
+     VERSION_ = 311,
+     WIDTH_ = 312,
+     WIN32_ = 313,
+     WINDOW_ = 314,
+     Y_ = 315,
+     YES_ = 316
    };
 #endif
 /* Tokens.  */
@@ -113,65 +107,59 @@
 #define ADJUST_ 261
 #define BEGIN_ 262
 #define BIAS_ 263
-#define BLUE_ 264
-#define BW_ 265
-#define CHANNEL_ 266
-#define CMYK_ 267
-#define COLORMAP_ 268
-#define COLORBAR_ 269
-#define COLORSPACE_ 270
-#define CONTRAST_ 271
-#define CURSOR_ 272
-#define DEBUG_ 273
-#define DELETE_ 274
-#define EDIT_ 275
-#define END_ 276
-#define GET_ 277
-#define GRAY_ 278
-#define GREEN_ 279
-#define FALSE_ 280
-#define FILE_ 281
-#define HEIGHT_ 282
-#define HIDE_ 283
-#define HSV_ 284
-#define HLS_ 285
-#define HUE_ 286
-#define ID_ 287
-#define INVERT_ 288
-#define ITT_ 289
-#define LEVEL_ 290
-#define LIGHTNESS_ 291
-#define LIST_ 292
-#define LOAD_ 293
-#define MACOSX_ 294
-#define MAP_ 295
-#define MOTION_ 296
-#define N_ 297
-#define NAME_ 298
-#define NO_ 299
-#define OFF_ 300
-#define ON_ 301
-#define POSTSCRIPT_ 302
-#define PRINT_ 303
-#define QUERY_ 304
-#define RED_ 305
-#define RESET_ 306
-#define RESOLUTION_ 307
-#define RGB_ 308
-#define SATURATION_ 309
-#define SAVE_ 310
-#define SHOW_ 311
-#define TAG_ 312
-#define TRUE_ 313
-#define TYPE_ 314
-#define VALUE_ 315
-#define VAR_ 316
-#define VERSION_ 317
-#define WIDTH_ 318
-#define WIN32_ 319
-#define WINDOW_ 320
-#define Y_ 321
-#define YES_ 322
+#define BW_ 264
+#define CHANNEL_ 265
+#define CMYK_ 266
+#define COLORMAP_ 267
+#define COLORBAR_ 268
+#define COLORSPACE_ 269
+#define CONTRAST_ 270
+#define CURSOR_ 271
+#define DEBUG_ 272
+#define DELETE_ 273
+#define EDIT_ 274
+#define END_ 275
+#define GET_ 276
+#define GRAY_ 277
+#define FALSE_ 278
+#define FILE_ 279
+#define HEIGHT_ 280
+#define HIDE_ 281
+#define HSV_ 282
+#define HLS_ 283
+#define ID_ 284
+#define INVERT_ 285
+#define ITT_ 286
+#define LEVEL_ 287
+#define LIST_ 288
+#define LOAD_ 289
+#define MACOSX_ 290
+#define MAP_ 291
+#define MOTION_ 292
+#define N_ 293
+#define NAME_ 294
+#define NO_ 295
+#define OFF_ 296
+#define ON_ 297
+#define POSTSCRIPT_ 298
+#define PRINT_ 299
+#define QUERY_ 300
+#define RESET_ 301
+#define RESOLUTION_ 302
+#define RGB_ 303
+#define SAVE_ 304
+#define SHOW_ 305
+#define TAG_ 306
+#define TRUE_ 307
+#define TYPE_ 308
+#define VALUE_ 309
+#define VAR_ 310
+#define VERSION_ 311
+#define WIDTH_ 312
+#define WIN32_ 313
+#define WINDOW_ 314
+#define Y_ 315
+#define YES_ 316
 
 
 
@@ -186,7 +174,7 @@ typedef union YYSTYPE
   char str[CBBUFSIZE];
 }
 /* Line 1529 of yacc.c.  */
-#line 190 "colorbar/parser.H"
+#line 178 "colorbar/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

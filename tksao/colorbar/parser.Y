@@ -37,6 +37,8 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %type <integer> hsv
 %type <integer> hls
 
+%type <str> colors
+
 %token <integer> INT
 %token <real> REAL
 %token <str> STRING
@@ -176,6 +178,12 @@ hls     : HUE_ {$$=0;}
         | SATURATION_ {$$=2;}
         ;
 
+colors  : RED_ {strcpy(yyval.str,"red");}
+        | GREEN_ {strcpy(yyval.str,"green");}
+        | BLUE_ {strcpy(yyval.str,"blue");}
+        | GRAY_ {strcpy(yyval.str,"gray");}
+        ;
+
 colormap: LEVEL_ colormaplevel
 	| WINDOW_ STRING {cb->setColormapWindowCmd($2);}
 	;
@@ -239,14 +247,20 @@ macosx	: PRINT_ {
 	}
 	;
 
-map	: 'a' {cb->mapCmd("a");}
-        | 'b' {cb->mapCmd("b");}
+map	: maps
+        | STRING {cb->mapCmd($1);}
+	| INT {cb->mapCmd($1);}
         | RGB_ {cb->mapCmd("rgb");}
         | HSV_ {cb->mapCmd("hsv");}
         | HLS_ {cb->mapCmd("hls");}
-        | STRING {cb->mapCmd($1);}
-	| INT {cb->mapCmd($1);}
 	;
+
+maps    : 'a' {cb->mapCmd("a");}
+        | 'b' {cb->mapCmd("b");}
+        | RED_ {cb->mapCmd("red");}
+        | GREEN_ {cb->mapCmd("green");}
+        | BLUE_ {cb->mapCmd("blue");}
+        ;
 
 postscript : COLORSPACE_ pscolorspace 
         {cb->psColorSpaceCmd((PSColorSpace)$2);}
@@ -265,6 +279,7 @@ tag	: DELETE_ tagdelete
 	| LOAD_ STRING {cb->tagLoadCmd($2);}
 	| SAVE_ STRING {cb->tagSaveCmd($2);}
 	| INT numeric numeric STRING {cb->tagCmd($1,Vector($2,$3),$4);}
+	| INT numeric numeric colors {cb->tagCmd($1,Vector($2,$3),$4);}
 	| STRING {cb->tagCmd($1);}
 	;
 
@@ -273,6 +288,7 @@ tagdelete: /* empty */ {cb->tagDeleteCmd();}
 	;
 
 tagedit	: BEGIN_ INT INT STRING {cb->tagEditBeginCmd($2,$3,$4);}
+        | BEGIN_ INT INT colors {cb->tagEditBeginCmd($2,$3,$4);}
 	| MOTION_ INT INT {cb->tagEditMotionCmd($2,$3);}
 	| END_ INT INT {cb->tagEditEndCmd($2,$3);}
 	;

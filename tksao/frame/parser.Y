@@ -487,6 +487,7 @@ command : DEBUG_ debug
 	| CLEAR_ {fr->clearCmd();}
 	| CLIP_ clip
 	| COLORBAR_ TAG_ STRING {fr->colorbarTagCmd($3);}
+	| COLORBAR_ TAG_ colors {fr->colorbarTagCmd($3);}
 	| COLORMAP_ colormap
 	| COLORSCALE_ colorscale
 	| CONTOUR_ contour
@@ -964,18 +965,36 @@ contour	: CREATE_ contourCreate
 
 contourCreate : STRING INT INT contourMethod INT INT scaleType numeric contourClipMode contourClipScope numeric numeric STRING
 {fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,(FrScale::ClipMode)$9,100,(FrScale::ClipScope)$10,$11,$12,$13);}
+        | colors INT INT contourMethod INT INT scaleType numeric contourClipMode contourClipScope numeric numeric STRING
+{fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,(FrScale::ClipMode)$9,100,(FrScale::ClipScope)$10,$11,$12,$13);}
+
         | STRING INT INT contourMethod INT INT scaleType numeric numeric contourClipScope numeric numeric STRING
 	{fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,FrScale::AUTOCUT,$9,(FrScale::ClipScope)$10,$11,$12,$13);}
+        | colors INT INT contourMethod INT INT scaleType numeric numeric contourClipScope numeric numeric STRING
+	{fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,FrScale::AUTOCUT,$9,(FrScale::ClipScope)$10,$11,$12,$13);}
+
         | STRING INT INT contourMethod INT INT scaleType numeric contourClipMode numeric numeric STRING
         {
 	  // backward compatibility with backup
 	  fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,(FrScale::ClipMode)$9,100,FrScale::LOCAL,$10,$11,$12);
 	}
+        | colors INT INT contourMethod INT INT scaleType numeric contourClipMode numeric numeric STRING
+        {
+	  // backward compatibility with backup
+	  fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,(FrScale::ClipMode)$9,100,FrScale::LOCAL,$10,$11,$12);
+	}
+
         | STRING INT INT contourMethod INT INT scaleType numeric numeric numeric numeric STRING
 	{
 	  // backward compatibility with backup
 	  fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,FrScale::AUTOCUT,$9,FrScale::LOCAL,$10,$11,$12);
 	}
+        | colors INT INT contourMethod INT INT scaleType numeric numeric numeric numeric STRING
+	{
+	  // backward compatibility with backup
+	  fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,FrScale::AUTOCUT,$9,FrScale::LOCAL,$10,$11,$12);
+	}
+
 	| POLYGON_ {fr->contourCreatePolygonCmd();}
 	;
 

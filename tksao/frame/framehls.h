@@ -28,15 +28,16 @@ class FrameHLS : public FrameT {
   virtual ~FrameHLS();
 
   void getColorbarCmd() {}
+
   void getTypeCmd();
-
+  
   void getHLSChannelCmd();
-  void setHLSChannelCmd(const char*);
+  void getHLSSystemCmd() {getSystem();}
+  void getHLSViewCmd() {getView();}
 
-  /*
-  void getHLSSystemCmd() {getRGBSystemCmd();}
-  void getHLSViewCmd() {getRGBViewCmd();}
-  */
+  void setHLSChannelCmd(const char*);
+  void setHLSSystemCmd(Coord::CoordSystem sys) {setSystem(sys);}
+  void setHLSViewCmd(int h, int l, int s) {setView(h,l,s);}
 };
 
 #endif

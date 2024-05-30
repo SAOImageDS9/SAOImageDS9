@@ -48,4 +48,3 @@ void FrameHSV::setHSVChannelCmd(const char* c)
 
   setChannel();
 }
-

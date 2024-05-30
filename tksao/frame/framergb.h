@@ -65,11 +65,11 @@ class FrameRGB : public FrameA {
 
   void getColorbarCmd();
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType);
-  void getRGBChannelCmd();
-
-  void getRGBSystemCmd();
-  void getRGBViewCmd();
   void getTypeCmd();
+
+  void getRGBChannelCmd();
+  void getRGBSystemCmd() {getSystem();}
+  void getRGBViewCmd() {getView();}
 
   void colormapCmd(float, float, float, float, float, float, int, int);
   void colormapBeginCmd();
@@ -135,8 +135,8 @@ class FrameRGB : public FrameA {
   void savePhotoCmd(const char*);
 
   void setRGBChannelCmd(const char*);
-  void setRGBSystemCmd(Coord::CoordSystem);
-  void setRGBViewCmd(int, int, int);
+  void setRGBSystemCmd(Coord::CoordSystem sys) {setSystem(sys);}
+  void setRGBViewCmd(int r, int g, int b) {setView(r,g,b);}
 };
 
 #endif

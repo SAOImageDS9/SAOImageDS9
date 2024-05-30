@@ -28,15 +28,16 @@ class FrameHSV : public FrameT {
   virtual ~FrameHSV();
 
   void getColorbarCmd() {}
+
   void getTypeCmd();
   
   void getHSVChannelCmd();
-  void setHSVChannelCmd(const char*);
+  void getHSVSystemCmd() {getSystem();}
+  void getHSVViewCmd() {getView();}
 
-  /*
-  void getHSVSystemCmd() {getRGBSystemCmd();}
-  void getHSVViewCmd() {getRGBViewCmd();}
-  */
+  void setHSVChannelCmd(const char*);
+  void setHSVSystemCmd(Coord::CoordSystem sys) {setSystem(sys);}
+  void setHSVViewCmd(int h, int s, int v) {setView(h,s,v);}
 };
 
 #endif

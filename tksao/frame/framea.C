@@ -33,6 +33,17 @@ FrameA::~FrameA()
     delete [] context;
 }
 
+void FrameA::getSystem()
+{
+  printCoordSystem(rgbSystem);
+}
+
+void FrameA::getView()
+{
+  for (int ii=0; ii<3; ii++)
+    Tcl_AppendElement(interp, view[ii] ? "1" : "0");
+}
+
 void FrameA::setChannel()
 {
   currentContext = &context[channel];
@@ -44,5 +55,34 @@ void FrameA::setChannel()
 
  // always update
   update(BASE);
+}
+
+void FrameA::setSystem(Coord::CoordSystem sys)
+{
+  rgbSystem = sys;
+
+  // save current matrix
+  Matrix old[3];
+  for (int ii=0; ii<3; ii++)
+    old[ii] = rgb[ii];
+
+  alignWCS();
+
+  // fix any contours
+  for (int ii=0; ii<3; ii++) {
+    Matrix mx = old[ii].invert() * rgb[ii];
+    context[ii].updateContours(mx);
+  }
+
+  update(MATRIX);
+}
+
+void FrameA::setView(int a, int b, int c)
+{
+  view[0] = a ? 1 : 0;
+  view[1] = b ? 1 : 0;
+  view[2] = c ? 1 : 0;
+
+  update(BASE); // always update
 }
 

@@ -24,7 +24,11 @@ protected:
   int keyContextSet;
 
 protected:
+  void getSystem();
+  void getView();
   void setChannel();
+  void setSystem(Coord::CoordSystem);
+  void setView(int, int, int);
 
 public:
   FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*);

@@ -880,17 +880,6 @@ void FrameRGB::getRGBChannelCmd()
   }
 }
 
-void FrameRGB::getRGBSystemCmd()
-{
-  printCoordSystem(rgbSystem);
-}
-
-void FrameRGB::getRGBViewCmd()
-{
-  for (int ii=0; ii<3; ii++)
-    Tcl_AppendElement(interp, view[ii] ? "1" : "0");
-}
-
 void FrameRGB::getTypeCmd()
 {
   Tcl_AppendResult(interp, "rgb", NULL);
@@ -1343,31 +1332,3 @@ void FrameRGB::setRGBChannelCmd(const char* c)
   setChannel();
 }
 
-void FrameRGB::setRGBSystemCmd(Coord::CoordSystem sys)
-{
-  rgbSystem = sys;
-
-  // save current matrix
-  Matrix old[3];
-  for (int ii=0; ii<3; ii++)
-    old[ii] = rgb[ii];
-
-  alignWCS();
-
-  // fix any contours
-  for (int ii=0; ii<3; ii++) {
-    Matrix mx = old[ii].invert() * rgb[ii];
-    context[ii].updateContours(mx);
-  }
-
-  update(MATRIX);
-}
-
-void FrameRGB::setRGBViewCmd(int r, int g, int b)
-{
-  view[0] = r ? 1 : 0;
-  view[1] = g ? 1 : 0;
-  view[2] = b ? 1 : 0;
-
-  update(BASE); // always update
-}

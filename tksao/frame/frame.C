@@ -32,9 +32,7 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   bias = 0.5;
   contrast = 1.0;
 
-  colorCount = 0;
   colorScale = NULL;
-  colorCells = NULL;
 
   maskColorName = dupstr("red");
   maskAlpha = 1;
@@ -584,23 +582,6 @@ void Frame::reset()
   context->updateClip();
   
   Base::reset();
-}
-
-void Frame::updateColorCells(int cnt)
-{
-  if (!cellsptr_ || !cellsparentptr_)
-    return;
-  
-  unsigned char* cells = (unsigned char*)cellsptr_;
-  colorCount = cnt;
-  if (colorCells)
-    delete [] colorCells;
-  colorCells = new unsigned char[cnt*3];
-  memcpy(colorCells, cells, cnt*3);
-
-  // clear
-  cellsptr_ =NULL;
-  cellsparentptr_ =NULL;
 }
 
 void Frame::updateMaskMatrices()

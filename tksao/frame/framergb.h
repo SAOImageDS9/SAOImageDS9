@@ -16,9 +16,6 @@ class FrameRGB : public FrameA {
 
   ColorScaleRGB* colorScale[3]; // current color scale
 
-  int colorCount;               // number of dynamic colors
-  unsigned char* colorCells;    // current color values
-
 protected:
   unsigned char* fillImage(int, int, Coord::InternalSystem);
 
@@ -29,7 +26,6 @@ protected:
   void loadRGBImage(MemType, const char*, FitsImage*);
   void loadRGBFinish();
 
-  void updateColorCells(int);
   void updateColorScale();
 
   int validColorScale() 

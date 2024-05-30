@@ -67,6 +67,10 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   nthreads_ = 8;
 
+  colorBitpix = 3;
+  colorCount = 0;
+  colorCells = NULL;
+
   byteorder_ = 0;
   bitsperpixel_ = 0;
 
@@ -1412,6 +1416,23 @@ void Base::updateBlock(const Vector& vv)
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
   updateMarkerCBs(&footprintMarkers);
+}
+
+void Base::updateColorCells(int cnt)
+{
+  if (!cellsptr_ || !cellsparentptr_)
+    return;
+  
+  unsigned char* cells = (unsigned char*)cellsptr_;
+  colorCount = cnt;
+  if (colorCells)
+    delete [] colorCells;
+  colorCells = new unsigned char[cnt*colorBitpix];
+  memcpy(colorCells, cells, cnt*colorBitpix);
+
+  // clear
+  cellsptr_ =NULL;
+  cellsparentptr_ =NULL;
 }
 
 void Base::updateGCs()

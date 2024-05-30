@@ -24,9 +24,6 @@ FrameRGB::FrameRGB(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   for (int kk=0; kk<3; kk++)
     colormapData[kk] = NULL;
-
-  colorCount = 0;
-  colorCells = NULL;
 }
 
 FrameRGB::~FrameRGB()
@@ -177,23 +174,6 @@ unsigned char* FrameRGB::fillImage(int width, int height,
       alphaComposite(img,fadeImg,width,height,fadeAlpha);
 
   return img;
-}
-
-void FrameRGB::updateColorCells(int cnt)
-{
-  if (!cellsptr_ || !cellsparentptr_)
-    return;
-
-  unsigned char* cells = (unsigned char*)cellsptr_;
-  colorCount = cnt;
-  if (colorCells)
-    delete [] colorCells;
-  colorCells = new unsigned char[cnt*3];
-  memcpy(colorCells, cells, cnt*3);
-
-  // clear
-  cellsptr_ =NULL;
-  cellsparentptr_ =NULL;
 }
 
 void FrameRGB::updateColorScale()

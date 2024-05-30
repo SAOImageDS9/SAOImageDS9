@@ -20,9 +20,7 @@ class Frame : public FrameBase {
 
   long* colormapData;
 
-  int colorCount;            // number of dynamic colors
   ColorScale* colorScale;    // current color scale
-  unsigned char* colorCells; // current color values
 
   List <FitsMask> mask;
 
@@ -61,7 +59,6 @@ class Frame : public FrameBase {
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
   unsigned char* fillMask(FitsMask*, int, int,  Coord::InternalSystem);
   int validColorScale() {return colorScale ? 1 : 0;}
-  void updateColorCells(int);
   void updateMaskMatrices();
   void loadDone(int);
 

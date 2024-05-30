@@ -38,9 +38,7 @@ class Frame3d : public Frame3dBase {
 
   long* colormapData;
 
-  int colorCount;            // number of dynamic colors
   ColorScale* colorScale;    // current color scale
-  unsigned char* colorCells; // current color values
 
   pthread_t* thread_;
 
@@ -81,7 +79,6 @@ class Frame3d : public Frame3dBase {
 
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
 
-  void updateColorCells(int);
   int validColorScale() {return colorScale ? 1 : 0;}
 
  public:

@@ -48,11 +48,6 @@ void ColorbarA::getContrastCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void ColorbarA::setChannelCmd(int cc)
-{
-  channel = cc;
-}
-
 void ColorbarA::setColorbarCmd(float b1, float b2, float b3, 
 			       float c1, float c2, float c3, int i)
 

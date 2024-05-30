@@ -1679,15 +1679,21 @@ public:
   void wcsReplaceTxtCmd(int, const char*);
   void wcsResetCmd(int);
 
-  // Multi Channel
-  virtual void setChannelCmd(int) {}
-
   // RGB Commands
   virtual void getRGBChannelCmd();
   virtual void getRGBViewCmd();
   virtual void getRGBSystemCmd();
+  virtual void setRGBChannelCmd(const char*) {}
   virtual void setRGBViewCmd(int, int, int) {}
   virtual void setRGBSystemCmd(Coord::CoordSystem) {}
+
+  // HLS Commands
+  virtual void getHLSChannelCmd();
+  virtual void getHLSViewCmd();
+  virtual void getHLSSystemCmd();
+  virtual void setHLSChannelCmd(const char*) {}
+  virtual void setHLSViewCmd(int, int, int) {}
+  virtual void setHLSSystemCmd(Coord::CoordSystem) {}
 
   // HSV Commands
   virtual void getHSVChannelCmd();
@@ -1695,13 +1701,6 @@ public:
   virtual void getHSVSystemCmd();
   virtual void setHSVViewCmd(int, int, int) {}
   virtual void setHSVSystemCmd(Coord::CoordSystem) {}
-
-  // HLS Commands
-  virtual void getHLSChannelCmd();
-  virtual void getHLSViewCmd();
-  virtual void getHLSSystemCmd();
-  virtual void setHLSViewCmd(int, int, int) {}
-  virtual void setHLSSystemCmd(Coord::CoordSystem) {}
 
   // 3d
   virtual void get3dBorderCmd();

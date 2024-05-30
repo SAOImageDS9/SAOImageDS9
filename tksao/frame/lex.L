@@ -63,7 +63,6 @@ bin		{return BIN_;}
 bitpix		{return BITPIX_;}
 blend           {return BLEND_;}
 block		{return BLOCK_;}
-blue            {return BLUE_;}
 border		{return BORDER_;}
 box		{return BOX_;}
 boxannulus	{return BOXANNULUS_;}
@@ -167,7 +166,6 @@ get		{return GET_;}
 global		{return GLOBAL_;}
 graphics	{return GRAPHICS_;}
 gray		{return GRAY_;}
-green           {return GREEN_;}
 grid		{return GRID_;}
 gz		{return GZ_;}
 handle		{return HANDLE_;}
@@ -182,7 +180,6 @@ histogram	{return HISTOGRAM_;}
 horizontal	{return HORIZONTAL_;}
 hls		{return HLS_;}
 hsv		{return HSV_;}
-hue             {return HUE_;}
 icrs		{return ICRS_;}
 id		{return ID_;}
 iis		{return IIS_;}
@@ -201,7 +198,6 @@ last            {return LAST_;}
 length		{return LENGTH_;}
 level		{return LEVEL_;}
 lighten         {return LIGHTEN_;}
-lightness       {return LIGHTNESS_;}
 little	        {return LITTLEENDIAN_;}
 littleendian	{return LITTLEENDIAN_;}
 line		{return LINE_;}
@@ -275,7 +271,6 @@ query           {return QUERY_;}
 radial		{return RADIAL_;}
 radius		{return RADIUS_;}
 range           {return RANGE_;}
-red             {return RED_;}
 region		{return REGION_;}
 replace		{return REPLACE_;}
 resample	{return RESAMPLE_;}
@@ -289,7 +284,6 @@ ruler		{return RULER_;}
 sample		{return SAMPLE_;}
 saoimage	{return SAOIMAGE_;}
 saotng		{return SAOTNG_;}
-saturation      {return SATURATION_;}
 save		{return SAVE_;}
 scale		{return SCALE_;}
 scan		{return SCAN_;}

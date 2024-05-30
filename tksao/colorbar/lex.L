@@ -28,7 +28,6 @@ E   [Ee][+-]?{D}+
 adjust		{return ADJUST_;}
 begin		{return BEGIN_;}
 bias		{return BIAS_;}
-blue            {return BLUE_;}
 bw		{return BW_;}
 channel		{return CHANNEL_;}
 cmyk		{return CMYK_;}
@@ -46,19 +45,16 @@ edit		{return EDIT_;}
 end		{return END_;}
 get		{return GET_;}
 gray		{return GRAY_;}
-green		{return GREEN_;}
 false		{return FALSE_;}
 file		{return FILE_;}
 hsv		{return HSV_;}
 hls		{return HLS_;}
-hue		{return HUE_;}
 height		{return HEIGHT_;}
 hide		{return HIDE_;}
 id		{return ID_;}
 invert		{return INVERT_;}
 itt		{return ITT_;}
 level		{return LEVEL_;}
-lightness       {return LIGHTNESS_;}
 list		{return LIST_;}
 load		{return LOAD_;}
 macosx		{return MACOSX_;}
@@ -72,7 +68,6 @@ on		{return ON_;}
 postscript	{return POSTSCRIPT_;}
 print		{return PRINT_;}
 query           {return QUERY_;}
-red		{return RED_;}
 reset		{return RESET_;}
 resolution	{return RESOLUTION_;}
 rgb		{return RGB_;}

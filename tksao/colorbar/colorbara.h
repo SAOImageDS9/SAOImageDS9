@@ -24,7 +24,6 @@ public:
   void adjustCmd(float, float);
   void getBiasCmd();
   void getContrastCmd();
-  void setChannelCmd(int);
   void setColorbarCmd(float, float, float, float, float, float, int);
 };
 

@@ -33,10 +33,8 @@ FrameA::~FrameA()
     delete [] context;
 }
 
-void FrameA::setChannelCmd(int cc)
+void FrameA::setChannel()
 {
-  channel = cc;
-
   currentContext = &context[channel];
 
   // execute any update callbacks

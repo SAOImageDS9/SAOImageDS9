@@ -31,6 +31,7 @@ class FrameHLS : public FrameT {
   void getTypeCmd();
 
   void getHLSChannelCmd();
+  void setHLSChannelCmd(const char*);
 
   /*
   void getHLSSystemCmd() {getRGBSystemCmd();}

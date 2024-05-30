@@ -33,12 +33,6 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %type <integer> yesno
 %type <integer> pscolorspace
 
-%type <integer> rgb
-%type <integer> hsv
-%type <integer> hls
-
-%type <str> colors
-
 %token <integer> INT
 %token <real> REAL
 %token <str> STRING
@@ -46,7 +40,6 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token ADJUST_
 %token BEGIN_
 %token BIAS_
-%token BLUE_
 %token BW_
 %token CHANNEL_
 %token CMYK_
@@ -61,19 +54,16 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token END_
 %token GET_
 %token GRAY_
-%token GREEN_
 %token FALSE_
 %token FILE_
 %token HEIGHT_
 %token HIDE_
 %token HSV_
 %token HLS_
-%token HUE_
 %token ID_
 %token INVERT_
 %token ITT_
 %token LEVEL_
-%token LIGHTNESS_
 %token LIST_
 %token LOAD_
 %token MACOSX_
@@ -87,11 +77,9 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token POSTSCRIPT_
 %token PRINT_
 %token QUERY_
-%token RED_
 %token RESET_
 %token RESOLUTION_
 %token RGB_
-%token SATURATION_
 %token SAVE_
 %token SHOW_
 %token TAG_
@@ -123,9 +111,10 @@ command : DEBUG_ debug
 	| POSTSCRIPT_ postscript
 	| QUERY_ CURSOR_ {cb->queryCursorCmd();}
 	| RESET_ {cb->resetCmd();}
-	| RGB_ CHANNEL_ rgb {cb->setChannelCmd($3);}
-	| HSV_ CHANNEL_ hsv {cb->setChannelCmd($3);}
-	| HLS_ CHANNEL_ hls {cb->setChannelCmd($3);}
+	| RGB_ CHANNEL_ STRING {cb->setRGBChannelCmd($3);}
+	| HSV_ CHANNEL_ STRING {cb->setHSVChannelCmd($3);}
+	| HSV_ CHANNEL_ VALUE_ {cb->setHSVChannelCmd("value";}
+	| HLS_ CHANNEL_ STRING {cb->setHLSChannelCmd($3);}
 	| TAG_ tag
 	| SAVE_ save
 	| SHOW_ {cb->showCmd();}
@@ -162,27 +151,6 @@ colorbar: INT numeric numeric INT {cb->setColorbarCmd($1, $2, $3, $4);}
 	| HLS_ numeric numeric numeric numeric numeric numeric INT
 	  {cb->setColorbarCmd($2, $3, $4, $5, $6, $7, $8);}
 	;
-
-rgb     : RED_ {$$=0;}
-        | GREEN_ {$$=1;}
-        | BLUE_ {$$=2;}
-        ;
-
-hsv     : HUE_ {$$=0;}
-        | SATURATION_ {$$=1;}
-        | VALUE_ {$$=2;}
-        ;
-
-hls     : HUE_ {$$=0;}
-        | LIGHTNESS_ {$$=1;}
-        | SATURATION_ {$$=2;}
-        ;
-
-colors  : RED_ {strcpy(yyval.str,"red");}
-        | GREEN_ {strcpy(yyval.str,"green");}
-        | BLUE_ {strcpy(yyval.str,"blue");}
-        | GRAY_ {strcpy(yyval.str,"gray");}
-        ;
 
 colormap: LEVEL_ colormaplevel
 	| WINDOW_ STRING {cb->setColormapWindowCmd($2);}
@@ -247,20 +215,14 @@ macosx	: PRINT_ {
 	}
 	;
 
-map	: maps
+map     : 'a' {cb->mapCmd("a");}
+        | 'b' {cb->mapCmd("b");}
         | STRING {cb->mapCmd($1);}
 	| INT {cb->mapCmd($1);}
         | RGB_ {cb->mapCmd("rgb");}
         | HSV_ {cb->mapCmd("hsv");}
         | HLS_ {cb->mapCmd("hls");}
 	;
-
-maps    : 'a' {cb->mapCmd("a");}
-        | 'b' {cb->mapCmd("b");}
-        | RED_ {cb->mapCmd("red");}
-        | GREEN_ {cb->mapCmd("green");}
-        | BLUE_ {cb->mapCmd("blue");}
-        ;
 
 postscript : COLORSPACE_ pscolorspace 
         {cb->psColorSpaceCmd((PSColorSpace)$2);}
@@ -279,7 +241,6 @@ tag	: DELETE_ tagdelete
 	| LOAD_ STRING {cb->tagLoadCmd($2);}
 	| SAVE_ STRING {cb->tagSaveCmd($2);}
 	| INT numeric numeric STRING {cb->tagCmd($1,Vector($2,$3),$4);}
-	| INT numeric numeric colors {cb->tagCmd($1,Vector($2,$3),$4);}
 	| STRING {cb->tagCmd($1);}
 	;
 
@@ -288,7 +249,6 @@ tagdelete: /* empty */ {cb->tagDeleteCmd();}
 	;
 
 tagedit	: BEGIN_ INT INT STRING {cb->tagEditBeginCmd($2,$3,$4);}
-        | BEGIN_ INT INT colors {cb->tagEditBeginCmd($2,$3,$4);}
 	| MOTION_ INT INT {cb->tagEditMotionCmd($2,$3);}
 	| END_ INT INT {cb->tagEditEndCmd($2,$3);}
 	;

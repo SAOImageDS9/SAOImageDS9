@@ -204,7 +204,9 @@ class ColorbarBase : public Widget {
   virtual void tagLoadCmd(const char*) {}
   virtual void tagSaveCmd(const char*) {}
 
-  virtual void setChannelCmd(int) {}
+  virtual void setRGBChannelCmd(const char*) {}
+  virtual void setHSVChannelCmd(const char*) {}
+  virtual void setHLSChannelCmd(const char*) {}
   virtual void getRGBChannelCmd();
   virtual void getHSVChannelCmd();
   virtual void getHLSChannelCmd();

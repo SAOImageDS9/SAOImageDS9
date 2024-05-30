@@ -31,6 +31,7 @@ class FrameHSV : public FrameT {
   void getTypeCmd();
   
   void getHSVChannelCmd();
+  void setHSVChannelCmd(const char*);
 
   /*
   void getHSVSystemCmd() {getRGBSystemCmd();}

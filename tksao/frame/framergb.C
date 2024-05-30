@@ -1329,6 +1329,20 @@ void FrameRGB::savePhotoCmd(const char* ph)
   }
 }
 
+void FrameRGB::setRGBChannelCmd(const char* c)
+{
+  if (!strncmp(c,"red",3))
+    channel = 0;
+  else if (!strncmp(c,"gre",3))
+    channel = 1;
+  else if (!strncmp(c,"blu",3))
+    channel = 2;
+  else
+    channel = 0;
+
+  setChannel();
+}
+
 void FrameRGB::setRGBSystemCmd(Coord::CoordSystem sys)
 {
   rgbSystem = sys;

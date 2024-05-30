@@ -89,3 +89,16 @@ void ColorbarHSV::getTypeCmd()
 {
   Tcl_AppendResult(interp, "hsv", NULL);
 }
+
+void ColorbarHSV::setHSVChannelCmd(const char* c)
+{
+  if (!strncmp(c,"hue",3))
+    channel = 0;
+  else if (!strncmp(c,"sat",3))
+    channel = 1;
+  else if (!strncmp(c,"val",3))
+    channel = 2;
+  else
+    channel = 0;
+}
+

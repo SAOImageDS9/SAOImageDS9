@@ -134,8 +134,9 @@ class FrameRGB : public FrameA {
 
   void savePhotoCmd(const char*);
 
-  void setRGBViewCmd(int, int, int);
+  void setRGBChannelCmd(const char*);
   void setRGBSystemCmd(Coord::CoordSystem);
+  void setRGBViewCmd(int, int, int);
 };
 
 #endif

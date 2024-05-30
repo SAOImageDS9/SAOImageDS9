@@ -23,6 +23,7 @@ public:
   void getCurrentNameCmd();
   void getTypeCmd();
   void getHSVChannelCmd();
+  void setHSVChannelCmd(const char*);
 };
 
 #endif

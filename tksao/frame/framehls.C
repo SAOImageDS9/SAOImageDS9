@@ -34,3 +34,18 @@ void FrameHLS::getHLSChannelCmd()
     return;
   }
 }
+
+void FrameHLS::setHLSChannelCmd(const char* c)
+{
+  if (!strncmp(c,"hue",3))
+    channel = 0;
+  else if (!strncmp(c,"lig",3))
+    channel = 1;
+  else if (!strncmp(c,"sat",3))
+    channel = 2;
+  else
+    channel = 0;
+
+  setChannel();
+}
+

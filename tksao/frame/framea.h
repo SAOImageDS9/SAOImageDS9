@@ -23,11 +23,13 @@ protected:
   
   int keyContextSet;
 
+protected:
+  void setChannel();
+
 public:
   FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameA();
 
-  void setChannelCmd(int);
 };
 
 #endif

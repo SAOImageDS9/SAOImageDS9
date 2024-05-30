@@ -32,3 +32,19 @@ FrameA::~FrameA()
   if (context)
     delete [] context;
 }
+
+void FrameA::setChannelCmd(int cc)
+{
+  channel = cc;
+
+  currentContext = &context[channel];
+
+  // execute any update callbacks
+  updateCBMarkers(&userMarkers);
+  updateCBMarkers(&catalogMarkers);
+  updateCBMarkers(&footprintMarkers);
+
+ // always update
+  update(BASE);
+}
+

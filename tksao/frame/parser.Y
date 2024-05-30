@@ -76,6 +76,12 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> skyFormat
 %type <integer> skyDist
 
+%type <integer> rgbch
+%type <integer> hsvch
+%type <integer> hlsch
+
+%type <str> colors
+
 %type <integer> markerProperty
 %type <integer> markerCallBack
 %type <integer> markerFormat
@@ -149,6 +155,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token BITPIX_
 %token BLEND_
 %token BLOCK_
+%token BLUE_
 %token BORDER_
 %token BOX_
 %token BOXANNULUS_
@@ -247,6 +254,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token GLOBAL_
 %token GRAPHICS_
 %token GRAY_
+%token GREEN_
 %token GRID_
 %token GZ_
 %token HANDLE_
@@ -261,6 +269,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token HORIZONTAL_
 %token HSV_
 %token HLS_
+%token HUE_
 %token ICRS_
 %token ID_
 %token IIS_
@@ -279,6 +288,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token LENGTH_
 %token LEVEL_
 %token LIGHTEN_
+%token LIGHTNESS_
 %token LITTLE_
 %token LITTLEENDIAN_
 %token LINE_
@@ -351,6 +361,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token RADIAL_
 %token RADIUS_
 %token RANGE_
+%token RED_
 %token REGION_
 %token REPLACE_
 %token RESAMPLE_
@@ -364,6 +375,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SAMPLE_
 %token SAOIMAGE_
 %token SAOTNG_
+%token SATURATION_
 %token SAVE_
 %token SCALE_
 %token SCAN_
@@ -468,7 +480,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 command : DEBUG_ debug
 	| BIN_ bin
 	| BG_ COLOR_ STRING {fr->bgColorCmd($3);}
-	| BG_ COLOR_ GRAY_ {fr->bgColorCmd("gray");}
+	| BG_ COLOR_ colors {fr->bgColorCmd($3);}
         | BG_ COLOR_ yesno {fr->useBgColorCmd($3);}
         | BLOCK_ block
 	| CENTER_ {fr->centerCmd();}
@@ -490,6 +502,7 @@ command : DEBUG_ debug
 	| HIDE_ {fr->hideCmd();}
 	| HIGHLITE_ yesno {fr->highliteCmd($2);}
 	| HIGHLITE_ COLOR_ STRING {fr->highliteColorCmd($3);}
+	| HIGHLITE_ COLOR_ colors {fr->highliteColorCmd($3);}
 	| HSV_ hsv
 	| HLS_ hls
 	| IIS_ iis
@@ -501,7 +514,7 @@ command : DEBUG_ debug
 	| MARKER_ markerLayer marker
 	| MASK_ mask
 	| NAN_ COLOR_ STRING {fr->nanColorCmd($3);}
-	| NAN_ COLOR_ GRAY_ {fr->nanColorCmd("gray");}
+	| NAN_ COLOR_ colors {fr->nanColorCmd($3);}
 	| ORIENT_ orient
 	| PAN_ pan
 	| PANNER_ panner
@@ -738,6 +751,27 @@ pointSize: /* empty */ {$$ = POINTSIZE;}
 	| INT {$$ = $1;}
 	;
 
+rgbch   : RED_ {$$=0;}
+        | GREEN_ {$$=1;}
+        | BLUE_ {$$=2;}
+        ;
+
+hsvch   : HUE_ {$$=0;}
+        | SATURATION_ {$$=1;}
+        | VALUE_ {$$=2;}
+        ;
+
+hlsch   : HUE_ {$$=0;}
+        | LIGHTNESS_ {$$=1;}
+        | SATURATION_ {$$=2;}
+        ;
+
+colors  : RED_ {strcpy(yyval.str,"red");}
+        | GREEN_ {strcpy(yyval.str,"green");}
+        | BLUE_ {strcpy(yyval.str,"blue");}
+        | GRAY_ {strcpy(yyval.str,"gray");}
+        ;
+
 analysisTask: CPANDA_ {$$ = Marker::PANDA;}
         | HISTOGRAM_ {$$ = Marker::HISTOGRAM;}
 	| PLOT2D_ {$$ = Marker::PLOT2D;}
@@ -774,14 +808,17 @@ threed	: VIEW_ threedView
 
 threedBorder : yesno {fr->set3dBorderCmd($1);}
 	| COLOR_ STRING {fr->set3dBorderColorCmd($2);}
+	| COLOR_ colors {fr->set3dBorderColorCmd($2);}
 	;
 
 threedCompass : yesno {fr->set3dCompassCmd($1);}
 	| COLOR_ STRING {fr->set3dCompassColorCmd($2);}
+	| COLOR_ colors {fr->set3dCompassColorCmd($2);}
 	;
 
 threedHighlite : yesno {fr->set3dHighliteCmd($1);}
 	| COLOR_ STRING {fr->set3dHighliteColorCmd($2);}
+	| COLOR_ colors {fr->set3dHighliteColorCmd($2);}
 	;
 
 threedView : numeric numeric {fr->set3dViewCmd($1,$2);}
@@ -1429,12 +1466,12 @@ hasWCS	: coordSystem {fr->hasWCSCmd((Coord::CoordSystem)$1);}
 	| THREED_ coordSystem {fr->hasWCS3DCmd((Coord::CoordSystem)$2);}
 	;
 
-hsv	: CHANNEL_ STRING {fr->setHSVChannelCmd($2);}
+hsv	: CHANNEL_ hsvch {fr->setChannelCmd($2);}
 	| SYSTEM_ coordSystem {fr->setHSVSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setHSVViewCmd($2,$3,$4);}
 	;
 
-hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}
+hls	: CHANNEL_ hlsch {fr->setChannelCmd($2);}
 	| SYSTEM_ coordSystem {fr->setHLSSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setHLSViewCmd($2,$3,$4);}
 	;
@@ -1777,6 +1814,7 @@ magnifier: yesno {fr->magnifierCmd($1);}
 	| GRAPHICS_ yesno {fr->magnifierGraphicsCmd($2);}
 	| CURSOR_ yesno {fr->magnifierCursorCmd($2);}
 	| COLOR_ STRING {fr->magnifierColorCmd($2);}
+	| COLOR_ colors {fr->magnifierColorCmd($2);}
 	| STRING INT INT {fr->magnifierCmd($1, $2, $3);}
 	| UPDATE_ numeric numeric {fr->updateMagnifierCmd(Vector($2, $3));}
 	| ZOOM_ numeric {fr->magnifierZoomCmd($2);}
@@ -1792,6 +1830,7 @@ match	: STRING STRING wcsSystem skyFrame STRING STRING wcsSystem skyFrame numeri
 
 marker	: CENTROID_ markerCentroid
 	| COLOR_ STRING {fr->markerColorCmd($2);}
+	| COLOR_ colors {fr->markerColorCmd($2);}
 	| COPY_ {fr->markerCopyCmd();}
 	| COMMAND_ markerFormat STRING
 	{fr->markerCommandCmd((Base::MarkerFormat)$2,$3);}
@@ -1857,6 +1896,7 @@ marker	: CENTROID_ markerCentroid
 	| INT CIRCLE_ RADIUS_ numeric coordSystem skyDist
 	{fr->markerCircleRadiusCmd($1, $4, (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
 	| INT COLOR_ STRING {fr->markerColorCmd($1,$3);}
+	| INT COLOR_ colors {fr->markerColorCmd($1,$3);}
 	| INT COMPASS_ ARROW_ yesno yesno 
 	{fr->markerCompassArrowCmd($1,$4,$5);}
 	| INT COMPASS_ LABEL_ STRING STRING
@@ -2033,6 +2073,7 @@ marker	: CENTROID_ markerCentroid
 	| SHOW_ markerShow
 
 	| STRING COLOR_ STRING {fr->markerColorCmd($1,$3);}
+	| STRING COLOR_ colors {fr->markerColorCmd($1,$3);}
 	| STRING COPY_ {fr->markerCopyCmd($1);}
 	| STRING DELETE_ {fr->markerDeleteCmd($1);}
 	| STRING CUT_ {fr->markerCutCmd($1);}
@@ -2564,6 +2605,7 @@ markerProps : markerProps markerProp
 
 markerProp : markerProperty '=' yesno {setProps(&currentProps,$1,$3);}
 	| COLOR_ '=' STRING {strncpy(currentColor,$3,16);}
+	| COLOR_ '=' colors {strncpy(currentColor,$3,16);}
 	| DASHLIST_ '=' INT INT {currentDash[0]=$3;currentDash[1]=$4;}
 	| WIDTH_ '=' INT {currentWidth = $3;}
 	| FONT_ '=' STRING {strncpy(currentFont,$3,32);}
@@ -2638,6 +2680,7 @@ callback : CALLBACK_ '=' markerCallBack STRING STRING {cblist.append(
 
 mask	: CLEAR_ {fr->maskClearCmd();}
 	| COLOR_ STRING {fr->maskColorCmd($2);}
+	| COLOR_ colors {fr->maskColorCmd($2);}
         | MARK_ maskType {fr->maskMarkCmd((FitsMask::MaskType)$2);}
 	| RANGE_ numeric numeric {fr->maskRangeCmd($2,$3);}
         | SYSTEM_ coordSystem {fr->maskSystemCmd((Coord::CoordSystem)$2);}
@@ -2747,7 +2790,7 @@ renderBackground: NONE_ {$$ = Frame3dBase::NONE;}
 	| ELEVATION_ {$$ = Frame3dBase::ELEVATION;}
 	;
 
-rgb	: CHANNEL_ STRING {fr->setRGBChannelCmd($2);}
+rgb	: CHANNEL_ rgbch {fr->setChannelCmd($2);}
 	| SYSTEM_ coordSystem {fr->setRGBSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setRGBViewCmd($2,$3,$4);}
 	;

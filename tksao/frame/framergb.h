@@ -12,7 +12,6 @@
 
 class FrameRGB : public FrameA {
  protected:
-
   long* colormapData[3];     // preextract data
 
   ColorScaleRGB* colorScale[3]; // current color scale
@@ -135,7 +134,6 @@ class FrameRGB : public FrameA {
 
   void savePhotoCmd(const char*);
 
-  void setRGBChannelCmd(const char*);
   void setRGBViewCmd(int, int, int);
   void setRGBSystemCmd(Coord::CoordSystem);
 };

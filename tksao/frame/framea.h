@@ -47,6 +47,8 @@ protected:
   void setSystem(Coord::CoordSystem);
   void setView(int, int, int);
 
+  void unloadFits();
+  void unloadAllFits();
   void updateRGBMatrices();
 
 public:

@@ -227,6 +227,39 @@ void FrameA::setView(int a, int b, int c)
   update(BASE); // always update
 }
 
+void FrameA::unloadFits()
+{
+  if (DebugPerf)
+    cerr << "FrameA::unloadFits()" << endl;
+
+  rgb[channel].identity();
+  context[channel].unload();
+
+  // always (for HISTEQU and LOG)
+  updateColorScale();
+}
+
+void FrameA::unloadAllFits()
+{
+  if (DebugPerf)
+    cerr << "FrameA::unloadAllFits()" << endl;
+
+  for (int ii=0; ii<3; ii++) {
+    rgb[ii].identity();
+    context[ii].unload();
+
+    // always (for HISTEQU and LOG)
+    updateColorScale();
+  }
+
+  channel =0;
+  currentContext = &context[channel];
+  keyContext = &context[channel];
+  keyContextSet =0;
+
+  Base::unloadFits();
+}
+
 void FrameA::updateRGBMatrices()
 {
   // image,pysical,amplifier,detector are ok, check for wcs
@@ -277,5 +310,3 @@ void FrameA::updateRGBMatrices()
       cerr << "rgb[" << ii << "] " << rgb[ii] << endl;
   }
 }
-
-

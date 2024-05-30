@@ -24,9 +24,7 @@ protected:
   void loadRGBImage(MemType, const char*, FitsImage*);
   void loadRGBFinish();
 
-  void unloadFits();
 
- protected:
   int isFrameRGB() {return 1;}
 
   void loadDone(int);
@@ -34,7 +32,6 @@ protected:
   unsigned char* fillImage(int, int, Coord::InternalSystem);
   void updateColorCells(int);
   void updateColorScale();
-  void unloadAllFits();
 
   int validColorScale() 
     {return colorScale[0] && colorScale[1] && colorScale[2];}

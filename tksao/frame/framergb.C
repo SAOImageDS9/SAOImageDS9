@@ -252,39 +252,6 @@ void FrameRGB::updateColorScale()
   }
 }
 
-void FrameRGB::unloadAllFits()
-{
-  if (DebugPerf)
-    cerr << "FrameRGB::unloadAllFits()" << endl;
-
-  for (int ii=0; ii<3; ii++) {
-    rgb[ii].identity();
-    context[ii].unload();
-
-    // always (for HISTEQU and LOG)
-    updateColorScale();
-  }
-
-  channel =0;
-  currentContext = &context[channel];
-  keyContext = &context[channel];
-  keyContextSet =0;
-
-  Base::unloadFits();
-}
-
-void FrameRGB::unloadFits()
-{
-  if (DebugPerf)
-    cerr << "FrameRGB::unloadFits()" << endl;
-
-  rgb[channel].identity();
-  context[channel].unload();
-
-  // always (for HISTEQU and LOG)
-  updateColorScale();
-}
-
 // Commands
 
 void FrameRGB::colormapCmd(float rb, float gb, float bb, 

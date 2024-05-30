@@ -19,32 +19,12 @@ class FrameRGB : public FrameA {
   int colorCount;               // number of dynamic colors
   unsigned char* colorCells;    // current color values
 
- private:
-  void alignWCS();
-  void alignWCS(Coord::CoordSystem, Coord::SkyFrame);
-  void alignWCS(FitsImage*, Coord::CoordSystem);
-
-  int doRender();
-
-  BBox imageBBox(FrScale::SecMode);
-
+protected:
   void loadRGBCube(MemType, const char*, FitsImage*);
   void loadRGBImage(MemType, const char*, FitsImage*);
   void loadRGBFinish();
 
-  void reset();
-
-  void setBinCursor();
-  void setKeyFits();
-
   void unloadFits();
-
-  void pushMatrices();
-  void pushMagnifierMatrices();
-  void pushPannerMatrices();
-  void pushPSMatrices(float, int, int);
-
-  void updateRGBMatrices();
 
  protected:
   int isFrameRGB() {return 1;}
@@ -75,12 +55,6 @@ class FrameRGB : public FrameA {
   void colormapBeginCmd();
   void colormapEndCmd();
   void colormapMotionCmd(float, float, float, float, float, float, int, int);
-
-  void iisCmd(int, int) {}
-  void iisEraseCmd() {}
-  void iisGetCmd(int, int, int, int) {}
-  void iisSetCmd(int, int, int, int) {}
-  void iisWCSCmd(const Matrix&, const Vector&, int) {}
 
   void loadPhotoCmd(const char*, const char*);
   void loadSlicePhotoCmd(const char*, const char*) {}

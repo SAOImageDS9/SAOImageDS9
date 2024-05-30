@@ -51,7 +51,6 @@ class Frame : public FrameBase {
   void pushPannerMatrices();
   void pushPSMatrices(float, int, int);
   void reset();
-  void setKeyFits() {}
   void unloadFits();
   Context* loadMask();
 

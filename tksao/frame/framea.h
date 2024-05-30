@@ -24,16 +24,40 @@ protected:
   int keyContextSet;
 
 protected:
+  void alignWCS();
+  void alignWCS(Coord::CoordSystem, Coord::SkyFrame);
+  void alignWCS(FitsImage*, Coord::CoordSystem);
+
+  int doRender();
+
+  BBox imageBBox(FrScale::SecMode);
+
   void getSystem();
   void getView();
+
+  void pushMatrices();
+  void pushMagnifierMatrices();
+  void pushPannerMatrices();
+  void pushPSMatrices(float, int, int);
+
+  void reset();
+
+  void setBinCursor();
   void setChannel();
   void setSystem(Coord::CoordSystem);
   void setView(int, int, int);
+
+  void updateRGBMatrices();
 
 public:
   FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameA();
 
+  void iisCmd(int, int) {}
+  void iisEraseCmd() {}
+  void iisGetCmd(int, int, int, int) {}
+  void iisSetCmd(int, int, int, int) {}
+  void iisWCSCmd(const Matrix&, const Vector&, int) {}
 };
 
 #endif

@@ -68,9 +68,7 @@ class Frame3d : public Frame3dBase {
 
   void reset();
 
-  void setKeyFits() {}
-
-  void pushMatrices();
+    void pushMatrices();
   void pushMagnifierMatrices();
   void pushPannerMatrices();
   void pushPSMatrices(float, int, int);

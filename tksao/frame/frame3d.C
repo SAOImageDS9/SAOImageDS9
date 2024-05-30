@@ -32,8 +32,6 @@ Frame3d::Frame3d(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   bias = 0.5;
   contrast = 1.0;
 
-  colormapData = NULL;
-
   colorScale = NULL;
 
   thread_ =NULL;
@@ -64,9 +62,6 @@ Frame3d::~Frame3d()
 
   if (colorScale)
     delete colorScale;
-
-  if (colormapData)
-    delete [] colormapData;
 
   if (colorCells)
     delete [] colorCells;

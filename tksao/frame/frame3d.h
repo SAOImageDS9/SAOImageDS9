@@ -36,8 +36,6 @@ class Frame3d : public Frame3dBase {
   float bias;                // current colormap bias
   float contrast;            // current colormap contrast
 
-  long* colormapData;
-
   ColorScale* colorScale;    // current color scale
 
   pthread_t* thread_;

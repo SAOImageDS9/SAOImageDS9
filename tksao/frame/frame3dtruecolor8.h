@@ -15,7 +15,6 @@ private:
   {TrueColor8::encodeTrueColor(src,dest,baseXImage);}
   void encodeTrueColor(unsigned char* src, XImage* ximage) 
   {TrueColor8::encodeTrueColor(src, ximage);}
-  void updateColorScale();
 
 public:
   Frame3dTrueColor8(Tcl_Interp*, Tk_Canvas, Tk_Item*);

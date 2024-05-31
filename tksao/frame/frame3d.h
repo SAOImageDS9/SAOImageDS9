@@ -74,6 +74,7 @@ class Frame3d : public Frame3dBase {
  protected:
   int isFrame3d() {return 1;}
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
+  void updateColorScale();
   int validColorScale() {return colorScale ? 1 : 0;}
 
  public:

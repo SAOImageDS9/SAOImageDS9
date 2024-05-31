@@ -5,93 +5,66 @@
 #include "util.h"
 #include "colorscaletrue16.h"
 
-ColorScaleTrueColor16::ColorScaleTrueColor16(int s, Visual* visual, int msb)
-  : ColorScale(s), TrueColor16(visual)
-{
-}
-
-ColorScaleTrueColor16::~ColorScaleTrueColor16()
-{
-}
-
 LinearScaleTrueColor16::LinearScaleTrueColor16(int s, 
 					       unsigned char* colorCells,
-					       int count, 
-					       Visual* visual, int msb)
+					       int count)
   : ColorScale(s),
-    LinearScale(s, colorCells, count), 
-    ColorScaleTrueColor16(s, visual, msb)
+    LinearScale(s, colorCells, count)
 {}
 
 LogScaleTrueColor16::LogScaleTrueColor16(int s,
 					 unsigned char* colorCells,
-					 int count, double exp,
-					 Visual* visual, int msb)
+					 int count, double exp)
   : ColorScale(s),
-    LogScale(s, colorCells, count, exp), 
-    ColorScaleTrueColor16(s, visual, msb)
+    LogScale(s, colorCells, count, exp) 
 {}
 
 PowScaleTrueColor16::PowScaleTrueColor16(int s,
 					 unsigned char* colorCells,
-					 int count, double exp,
-					 Visual* visual, int msb)
+					 int count, double exp)
   : ColorScale(s),
-    PowScale(s, colorCells, count, exp), 
-    ColorScaleTrueColor16(s, visual, msb)
+    PowScale(s, colorCells, count, exp) 
 {}
 
 SqrtScaleTrueColor16::SqrtScaleTrueColor16(int s,
 					   unsigned char* colorCells,
-					   int count, 
-					   Visual* visual, int msb)
+					   int count)
   : ColorScale(s),
-    SqrtScale(s, colorCells, count), 
-    ColorScaleTrueColor16(s, visual, msb)
+    SqrtScale(s, colorCells, count) 
 {}
 
 SquaredScaleTrueColor16::SquaredScaleTrueColor16(int s,
 						 unsigned char* colorCells,
-						 int count, 
-						 Visual* visual, int msb)
+						 int count)
   : ColorScale(s),
-    SquaredScale(s, colorCells, count), 
-    ColorScaleTrueColor16(s, visual, msb)
+    SquaredScale(s, colorCells, count) 
 {}
 
 AsinhScaleTrueColor16::AsinhScaleTrueColor16(int s,
 					     unsigned char* colorCells,
-					     int count, 
-					     Visual* visual, int msb)
+					     int count)
   : ColorScale(s),
-    AsinhScale(s, colorCells, count), 
-    ColorScaleTrueColor16(s, visual, msb)
+    AsinhScale(s, colorCells, count) 
 {}
 
 SinhScaleTrueColor16::SinhScaleTrueColor16(int s,
-					     unsigned char* colorCells,
-					     int count, 
-					     Visual* visual, int msb)
+					   unsigned char* colorCells,
+					   int count)
   : ColorScale(s),
-    SinhScale(s, colorCells, count), 
-    ColorScaleTrueColor16(s, visual, msb)
+    SinhScale(s, colorCells, count) 
 {}
 
 IISScaleTrueColor16::IISScaleTrueColor16(unsigned char* colorCells,
-					 int count, 
-					 Visual* visual, int msb)
+					 int count)
   : ColorScale(IISSIZE),
-    IISScale(colorCells, count),
-    ColorScaleTrueColor16(IISSIZE, visual, msb)
+    IISScale(colorCells, count)
 {}
 
 HistEquScaleTrueColor16::HistEquScaleTrueColor16(int s, 
 						 unsigned char* colorCells,
 						 int count, 
-						 double* hist, int histsize,
-						 Visual* visual, int msb)
+						 double* hist, int histsize)
   : ColorScale(s),
-    HistEquScale(s, colorCells, count, hist, histsize), 
-    ColorScaleTrueColor16(s, visual, msb)
+    HistEquScale(s, colorCells, count, hist, histsize) 
 {}
 

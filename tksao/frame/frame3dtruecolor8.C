@@ -126,43 +126,42 @@ void Frame3dTrueColor8::updateColorScale()
   switch (context->colorScaleType()) {
   case FrScale::LINEARSCALE:
     colorScale = 
-      new LinearScaleTrueColor8(colorCount, colorCells, colorCount, visual);
+      new LinearScaleTrueColor8(colorCount, colorCells, colorCount);
     break;
   case FrScale::LOGSCALE:
     colorScale =
       new LogScaleTrueColor8(SCALESIZE, colorCells, colorCount, 
-			     context->expo(), visual);
+			     context->expo());
     break;
   case FrScale::POWSCALE:
     colorScale =
       new PowScaleTrueColor8(SCALESIZE, colorCells, colorCount, 
-			     context->expo(), visual);
+			     context->expo());
     break;
   case FrScale::SQRTSCALE:
     colorScale =
-      new SqrtScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
+      new SqrtScaleTrueColor8(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SQUAREDSCALE:
     colorScale =
-      new SquaredScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
+      new SquaredScaleTrueColor8(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::ASINHSCALE:
     colorScale =
-      new AsinhScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
+      new AsinhScaleTrueColor8(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SINHSCALE:
     colorScale =
-      new SinhScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
+      new SinhScaleTrueColor8(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::HISTEQUSCALE:
     colorScale = 
       new HistEquScaleTrueColor8(SCALESIZE, colorCells, colorCount, 
-				  context->histequ(), HISTEQUSIZE,
-				  visual);
+				 context->histequ(), HISTEQUSIZE);
     break;
   case FrScale::IISSCALE:
     colorScale = 
-      new IISScaleTrueColor8(colorCells, colorCount, visual);
+      new IISScaleTrueColor8(colorCells, colorCount);
     break;
   }
 }

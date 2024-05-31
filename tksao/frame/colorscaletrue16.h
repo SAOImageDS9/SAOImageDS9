@@ -6,84 +6,68 @@
 #define __colorscaletrue16_h__
 
 #include "colorscale.h"
-#include "truecolor16.h"
-
-class ColorScaleTrueColor16 : public virtual ColorScale, public TrueColor16 {
-public:
-  ColorScaleTrueColor16(int, Visual*, int);
-  virtual ~ColorScaleTrueColor16();
-};
 
 class LinearScaleTrueColor16 :
 public virtual ColorScale, 
-public LinearScale, 
-public ColorScaleTrueColor16 {
+public LinearScale {
 public:
-  LinearScaleTrueColor16(int, unsigned char*, int, Visual*, int);
+  LinearScaleTrueColor16(int, unsigned char*, int);
 };
 
 class LogScaleTrueColor16 :
 public virtual ColorScale, 
-public LogScale, 
-public ColorScaleTrueColor16 {
+public LogScale {
 public:
-  LogScaleTrueColor16(int, unsigned char*, int, double, Visual*, int);
+  LogScaleTrueColor16(int, unsigned char*, int, double);
 };
 
 class PowScaleTrueColor16 :
 public virtual ColorScale, 
-public PowScale, 
-public ColorScaleTrueColor16 {
+public PowScale {
 public:
-  PowScaleTrueColor16(int, unsigned char*, int, double, Visual*, int);
+  PowScaleTrueColor16(int, unsigned char*, int, double);
 };
 
 class SqrtScaleTrueColor16 :
 public virtual ColorScale, 
-public SqrtScale, 
-public ColorScaleTrueColor16 {
+public SqrtScale {
 public:
-  SqrtScaleTrueColor16(int, unsigned char*, int, Visual*, int);
+  SqrtScaleTrueColor16(int, unsigned char*, int);
 };
 
 class SquaredScaleTrueColor16 :
 public virtual ColorScale, 
-public SquaredScale, 
-public ColorScaleTrueColor16 {
+public SquaredScale {
 public:
-  SquaredScaleTrueColor16(int, unsigned char*, int, Visual*, int);
+  SquaredScaleTrueColor16(int, unsigned char*, int);
 };
 
 class AsinhScaleTrueColor16 :
 public virtual ColorScale, 
-public AsinhScale, 
-public ColorScaleTrueColor16 {
+public AsinhScale {
 public:
-  AsinhScaleTrueColor16(int, unsigned char*, int, Visual*, int);
+  AsinhScaleTrueColor16(int, unsigned char*, int);
 };
 
 class SinhScaleTrueColor16 :
 public virtual ColorScale, 
-public SinhScale, 
-public ColorScaleTrueColor16 {
+public SinhScale {
 public:
-  SinhScaleTrueColor16(int, unsigned char*, int, Visual*, int);
+  SinhScaleTrueColor16(int, unsigned char*, int);
 };
 
 class IISScaleTrueColor16 :
 public virtual ColorScale, 
-public IISScale, 
-public ColorScaleTrueColor16 {
+public IISScale {
 public:
-  IISScaleTrueColor16(unsigned char*, int, Visual*, int);
+  IISScaleTrueColor16(unsigned char*, int);
 };
 
 class HistEquScaleTrueColor16 :
 public virtual ColorScale, 
-public HistEquScale, 
-public ColorScaleTrueColor16 {
+public HistEquScale {
 public:
-  HistEquScaleTrueColor16(int, unsigned char*, int, double*, int, Visual*, int);
+  HistEquScaleTrueColor16(int, unsigned char*, int, double*, int);
 };
 
 #endif

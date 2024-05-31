@@ -4,95 +4,68 @@
 
 #include "colorscaletrue8.h"
 
-ColorScaleTrueColor8::ColorScaleTrueColor8(int s, Visual* visual)
-  : ColorScale(s), TrueColor8(visual)
-{
-}
-
-ColorScaleTrueColor8::~ColorScaleTrueColor8()
-{
-}
-
 LinearScaleTrueColor8::LinearScaleTrueColor8(int s, 
 					     unsigned char* colorCells,
-					     int count,
-					     Visual* visual)
+					     int count)
   : ColorScale(s),
-    LinearScale(s, colorCells, count), 
-    ColorScaleTrueColor8(s, visual)
+    LinearScale(s, colorCells, count)
 {}
 
 LogScaleTrueColor8::LogScaleTrueColor8(int s,
 				       unsigned char* colorCells,
-				       int count, double exp,
-				       Visual* visual)
+				       int count, double exp)
   : ColorScale(s),
-    LogScale(s, colorCells, count, exp), 
-    ColorScaleTrueColor8(s, visual)
+    LogScale(s, colorCells, count, exp)
 {}
 
 
 PowScaleTrueColor8::PowScaleTrueColor8(int s,
 				       unsigned char* colorCells,
-				       int count, double exp,
-				       Visual* visual)
+				       int count, double exp)
   : ColorScale(s),
-    PowScale(s, colorCells, count, exp), 
-    ColorScaleTrueColor8(s, visual)
+    PowScale(s, colorCells, count, exp)
 {}
 
 SqrtScaleTrueColor8::SqrtScaleTrueColor8(int s,
 					 unsigned char* colorCells,
-					 int count,
-					 Visual* visual)
+					 int count)
   : ColorScale(s),
-    SqrtScale(s, colorCells, count), 
-    ColorScaleTrueColor8(s, visual)
+    SqrtScale(s, colorCells, count)
 {}
 
 SquaredScaleTrueColor8::SquaredScaleTrueColor8(int s,
 					       unsigned char* colorCells,
-					       int count,
-					       Visual* visual)
+					       int count)
   : ColorScale(s),
-    SquaredScale(s, colorCells, count), 
-    ColorScaleTrueColor8(s, visual)
+    SquaredScale(s, colorCells, count)
 {}
 
 AsinhScaleTrueColor8::AsinhScaleTrueColor8(int s,
 					   unsigned char* colorCells,
-					   int count,
-					   Visual* visual)
+					   int count)
   : ColorScale(s),
-    AsinhScale(s, colorCells, count), 
-    ColorScaleTrueColor8(s, visual)
+    AsinhScale(s, colorCells, count)
 {}
 
 SinhScaleTrueColor8::SinhScaleTrueColor8(int s,
 					 unsigned char* colorCells,
-					 int count,
-					 Visual* visual)
+					 int count)
   : ColorScale(s),
-    SinhScale(s, colorCells, count), 
-    ColorScaleTrueColor8(s, visual)
+    SinhScale(s, colorCells, count)
 {}
 
 IISScaleTrueColor8::IISScaleTrueColor8(unsigned char* colorCells,
-				       int count,
-				       Visual* visual)
+				       int count)
   : ColorScale(IISSIZE),
-    IISScale(colorCells, count), 
-    ColorScaleTrueColor8(IISSIZE, visual)
+    IISScale(colorCells, count)
 {}
 
 HistEquScaleTrueColor8::HistEquScaleTrueColor8(int s, 
 					       unsigned char* colorCells,
 					       int count,
-					       double* hist, int histsize,
-					       Visual* visual)
+					       double* hist, int histsize)
   : ColorScale(s),
-    HistEquScale(s, colorCells, count, hist, histsize), 
-    ColorScaleTrueColor8(s, visual)
+    HistEquScale(s, colorCells, count, hist, histsize)
 {}
 
 

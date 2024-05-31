@@ -127,48 +127,42 @@ void FrameTrueColor16::updateColorScale()
   switch (context->colorScaleType()) {
   case FrScale::LINEARSCALE:
     colorScale =
-      new LinearScaleTrueColor16(colorCount, colorCells, colorCount,
-				 visual, byteorder_);
+      new LinearScaleTrueColor16(colorCount, colorCells, colorCount);
     break;
   case FrScale::LOGSCALE:
     colorScale =
       new LogScaleTrueColor16(SCALESIZE, colorCells, colorCount,
-			      context->expo(), visual, byteorder_);
+			      context->expo());
     break;
   case FrScale::POWSCALE:
     colorScale =
       new PowScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-			      context->expo(), visual, byteorder_);
+			      context->expo());
     break;
   case FrScale::SQRTSCALE:
     colorScale = 
-      new SqrtScaleTrueColor16(SCALESIZE, colorCells, colorCount,
-			       visual, byteorder_);
+      new SqrtScaleTrueColor16(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SQUAREDSCALE:
     colorScale =
-      new SquaredScaleTrueColor16(SCALESIZE, colorCells, colorCount,
-				  visual, byteorder_);
+      new SquaredScaleTrueColor16(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::ASINHSCALE:
     colorScale =
-      new AsinhScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-				visual, byteorder_);
+      new AsinhScaleTrueColor16(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SINHSCALE:
     colorScale =
-      new SinhScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-			       visual, byteorder_);
+      new SinhScaleTrueColor16(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::HISTEQUSCALE:
     colorScale =
       new HistEquScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-				  context->histequ(), HISTEQUSIZE, 
-				  visual, byteorder_);
+				  context->histequ(), HISTEQUSIZE); 
     break;
   case FrScale::IISSCALE:
     colorScale =
-      new IISScaleTrueColor16(colorCells, colorCount, visual, byteorder_);
+      new IISScaleTrueColor16(colorCells, colorCount);
     break;
   }
 }

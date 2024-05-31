@@ -1,9 +1,8 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "frame3dtruecolor8.h"
-#include "colorscaletrue8.h"
 
 // Tk Canvas Widget Function Declarations
 

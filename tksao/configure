@@ -6412,10 +6412,6 @@ frame/ciaoparser.C
 frame/circle.C
 frame/colorscale.C
 frame/colorscalergb.C
-frame/colorscaletrue16.C
-frame/colorscaletrue24.C
-frame/colorscaletrue32.C
-frame/colorscaletrue8.C
 frame/compass.C
 frame/composite.C
 frame/context.C

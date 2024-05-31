@@ -1061,11 +1061,6 @@ void Frame3d::colormapCmd(int id, float b, float c, int i, int cnt)
   update(BASE);
 }
 
-void Frame3d::colormapEndCmd()
-{
-  update(BASE);
-}
-
 void Frame3d::getColorbarCmd()
 {
   ostringstream str;

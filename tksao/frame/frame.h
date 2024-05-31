@@ -19,7 +19,6 @@ class Frame : public FrameBase {
   float contrast;            // current colormap contrast
 
   long* colormapData;
-
   ColorScale* colorScale;    // current color scale
 
   List <FitsMask> mask;
@@ -86,9 +85,7 @@ class Frame : public FrameBase {
   void maskBlendCmd(FitsMask::MaskBlend bb);
 
   void colormapCmd(int, float, float, int, int);
-  void colormapBeginCmd();
   void colormapMotionCmd(int, float, float, int, int);
-  void colormapEndCmd();
 
   void getColorbarCmd();
   void getTypeCmd();

@@ -663,13 +663,14 @@ public:
   virtual void colormapCmd(int, float, float, int, int) {}
   virtual void colormapCmd(float, float, float, float, float, float, int, int)
   {}
-  virtual void colormapBeginCmd() {}
-  virtual void colormapEndCmd() {}
+  virtual void getColorbarCmd() =0;
+  void getColorbarTagCmd();
+
+  void colormapBeginCmd() {}
   virtual void colormapMotionCmd(int, float, float, int, int) {}
   virtual void colormapMotionCmd(float, float, float, float, float, float, int,
 				 int) {}
-  virtual void getColorbarCmd() =0;
-  void getColorbarTagCmd();
+  void colormapEndCmd();
 
   // Contour Commands
   void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, FrScale::ClipMode, float, FrScale::ClipScope, double, double, const char*);

@@ -39,10 +39,8 @@ protected:
   void getRGBSystemCmd() {getSystem();}
   void getRGBViewCmd() {getView();}
 
-  void colormapBeginCmd();
-  void colormapEndCmd();
   void colormapMotionCmd(float, float, float, float, float, float, int, int);
-
+  
   void loadPhotoCmd(const char*, const char*);
   void loadSlicePhotoCmd(const char*, const char*) {}
 

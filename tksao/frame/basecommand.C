@@ -396,6 +396,11 @@ void Base::colorbarTagCmd(const char* str)
   colorbartag = dupstr(str);
 }
 
+void Base::colormapEndCmd()
+{
+  update(BASE);
+}
+
 void Base::cropCmd()
 {
   currentContext->resetSecMode();

@@ -15,6 +15,126 @@ FrameHSV::~FrameHSV()
 {
 }
 
+unsigned char* FrameHSV::fillImage(int width, int height,
+				   Coord::InternalSystem sys)
+{
+  /*
+  // we need a colorScale before we can render
+  if (!validColorScale())
+    return NULL;
+
+  // img
+  XColor* bgColor = useBgColor? getXColor(bgColourName) :
+    ((WidgetOptions*)options)->bgColor;
+  XColor* nanColor = getXColor(nanColourName);
+  unsigned char* img = new unsigned char[width*height*3];
+  {
+    unsigned char* ptr = img;
+    for (int jj=0; jj<height; jj++)
+      for (int ii=0; ii<width; ii++) {
+	*ptr++ = (unsigned char)bgColor->red;
+	*ptr++ = (unsigned char)bgColor->green;
+	*ptr++ = (unsigned char)bgColor->blue;
+      }	
+  }
+
+  if (!context->cfits)
+    return img;
+
+  // basics
+  int length = colorScale[0]->size() - 1;
+  const unsigned char* table = colorScale[0]->psColors();
+
+  FitsImage* sptr = context->cfits;
+  int mosaic = isMosaic();
+
+  // variable
+  double* mm = sptr->matrixToData(sys).mm();
+  FitsBound* params = sptr->getDataParams(context->secMode());
+  int srcw = sptr->width();
+
+  double ll = sptr->low();
+  double hh = sptr->high();
+  double diff = hh - ll;
+
+  // main loop
+  unsigned char* dest = img;
+
+  SETSIGBUS
+  for (long jj=0; jj<height; jj++) {
+    for (long ii=0; ii<width; ii++, dest+=3) {
+      if (mosaic) {
+	sptr = context->cfits;
+
+	mm = sptr->matrixToData(sys).mm();
+	params = sptr->getDataParams(context->secMode());
+	srcw = sptr->width();
+
+	ll = sptr->low();
+	hh = sptr->high();
+	diff = hh - ll;
+      }
+
+      do {
+	double xx = ii*mm[0] + jj*mm[3] + mm[6];
+	double yy = ii*mm[1] + jj*mm[4] + mm[7];
+
+	if (xx>=params->xmin && xx<params->xmax && 
+	    yy>=params->ymin && yy<params->ymax) {
+	  double value = sptr->getValueDouble(long(yy)*srcw + long(xx));
+
+	  if (isfinite(diff) && isfinite(value)) {
+	    if (value <= ll) {
+	      *(dest+2) = table[0];
+	      *(dest+1) = table[1];
+	      *dest = table[2];
+	    }
+	    else if (value >= hh) {
+	      *(dest+2) = table[length*3];
+	      *(dest+1) = table[length*3+1];
+	      *dest = table[length*3+2];
+	    }
+	    else {
+	      int l = (int)(((value - ll)/diff * length) + .5);
+	      *(dest+2) = table[l*3];
+	      *(dest+1) = table[l*3+1];
+	      *dest = table[l*3+2];
+	    }
+	  }
+	  else {
+	    *(dest+2) = nanColor->blue;
+	    *(dest+1) = nanColor->green;
+	    *dest = nanColor->red;
+	  }
+
+	  break;
+	}
+	else {
+	  if (mosaic) {
+	    sptr = sptr->nextMosaic();
+
+	    if (sptr) {
+	      mm = sptr->matrixToData(sys).mm();
+	      params = sptr->getDataParams(context->secMode());
+	      srcw = sptr->width();
+
+	      ll = sptr->low();
+	      hh = sptr->high();
+	      diff = hh - ll;
+	    }
+	  }
+	}
+      }
+      while (mosaic && sptr);
+    }
+  }
+  CLEARSIGBUS
+
+  return img;
+  */
+  return NULL;
+}
+
 void FrameHSV::getColorbarCmd()
 {
   ostringstream str;

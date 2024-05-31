@@ -87,7 +87,6 @@ class Frame3d : public Frame3dBase {
   void getTypeCmd();
 
   void colormapCmd(int, float, float, int, int);
-  void colormapEndCmd();
   void colormapMotionCmd(int id, float b, float c, int i, int cnt)
   {colormapCmd(id, b, c, i, cnt);}
 

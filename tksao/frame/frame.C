@@ -646,6 +646,57 @@ void Frame::unloadFits()
   Base::unloadFits();
 }
 
+void Frame::updateColorScale()
+{
+  // we need colors before we can construct a scale
+
+  if (!colorCells)
+    return;
+
+  if (colorScale)
+    delete colorScale;
+
+  switch (context->colorScaleType()) {
+  case FrScale::LINEARSCALE:
+    colorScale =
+      new LinearScale(colorCount, colorCells, colorCount);
+    break;
+  case FrScale::LOGSCALE:
+    colorScale =
+      new LogScale(SCALESIZE, colorCells, colorCount, context->expo());
+    break;
+  case FrScale::POWSCALE:
+    colorScale =
+      new PowScale(SCALESIZE, colorCells, colorCount, context->expo());
+    break;
+  case FrScale::SQRTSCALE:
+    colorScale = 
+      new SqrtScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::SQUAREDSCALE:
+    colorScale =
+      new SquaredScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::ASINHSCALE:
+    colorScale =
+      new AsinhScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::SINHSCALE:
+    colorScale =
+      new SinhScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::HISTEQUSCALE:
+    colorScale =
+      new HistEquScale(SCALESIZE, colorCells, colorCount, 
+		       context->histequ(), HISTEQUSIZE); 
+    break;
+  case FrScale::IISSCALE:
+    colorScale =
+      new IISScale(colorCells, colorCount);
+    break;
+  }
+}
+
 // Commands
 
 void Frame::getMaskColorCmd()

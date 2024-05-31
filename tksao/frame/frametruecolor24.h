@@ -14,9 +14,6 @@ private:
   {TrueColor24::encodeTrueColor(src,dest,baseXImage);}
   void encodeTrueColor(unsigned char* src, XImage* ximage) 
   {TrueColor24::encodeTrueColor(src, ximage);}
-  void updateColorScale();
-  void updateColorScale24();
-  void updateColorScale32();
 
 public:
   FrameTrueColor24(Tcl_Interp*, Tk_Canvas, Tk_Item*);

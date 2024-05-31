@@ -54,6 +54,7 @@ class Frame : public FrameBase {
  protected:
   int isFrame() {return 1;}
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
+  void updateColorScale();
   int validColorScale() {return colorScale ? 1 : 0;}
 
   void updateMaskMatrices();

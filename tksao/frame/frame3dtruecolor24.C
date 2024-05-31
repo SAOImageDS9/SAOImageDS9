@@ -140,48 +140,42 @@ void Frame3dTrueColor24::updateColorScale24()
   switch (context->colorScaleType()) {
   case FrScale::LINEARSCALE:
     colorScale = 
-      new LinearScaleTrueColor24(colorCount, colorCells, colorCount,
-				 visual, byteorder_);
+      new LinearScaleTrueColor24(colorCount, colorCells, colorCount);
     break;
   case FrScale::LOGSCALE:
     colorScale =
       new LogScaleTrueColor24(SCALESIZE, colorCells, colorCount,
-			      context->expo(), visual, byteorder_);
+			      context->expo());
     break;
   case FrScale::POWSCALE:
     colorScale =
       new PowScaleTrueColor24(SCALESIZE, colorCells, colorCount,
-			      context->expo(), visual, byteorder_);
+			      context->expo());
     break;
   case FrScale::SQRTSCALE:
     colorScale =
-      new SqrtScaleTrueColor24(SCALESIZE, colorCells, colorCount,
-			       visual, byteorder_);
+      new SqrtScaleTrueColor24(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SQUAREDSCALE:
     colorScale =
-      new SquaredScaleTrueColor24(SCALESIZE, colorCells, colorCount, 
-				  visual, byteorder_);
+      new SquaredScaleTrueColor24(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::ASINHSCALE:
     colorScale =
-      new AsinhScaleTrueColor24(SCALESIZE, colorCells, colorCount, 
-				visual, byteorder_);
+      new AsinhScaleTrueColor24(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SINHSCALE:
     colorScale =
-      new SinhScaleTrueColor24(SCALESIZE, colorCells, colorCount, 
-			       visual, byteorder_);
+      new SinhScaleTrueColor24(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::HISTEQUSCALE:
     colorScale = 
       new HistEquScaleTrueColor24(SCALESIZE, colorCells, colorCount, 
-				  context->histequ(), HISTEQUSIZE,
-				  visual, byteorder_);
+				  context->histequ(), HISTEQUSIZE);
     break;
   case FrScale::IISSCALE:
     colorScale = 
-      new IISScaleTrueColor24(colorCells, colorCount, visual, byteorder_);
+      new IISScaleTrueColor24(colorCells, colorCount);
     break;
   }
 }
@@ -191,48 +185,42 @@ void Frame3dTrueColor24::updateColorScale32()
   switch (context->colorScaleType()) {
   case FrScale::LINEARSCALE:
     colorScale = 
-      new LinearScaleTrueColor32(colorCount, colorCells, colorCount,
-				 visual, byteorder_);
+      new LinearScaleTrueColor32(colorCount, colorCells, colorCount);
     break;
   case FrScale::LOGSCALE:
     colorScale =
       new LogScaleTrueColor32(SCALESIZE, colorCells, colorCount,
-			      context->expo(), visual, byteorder_);
+			      context->expo());
     break;
   case FrScale::POWSCALE:
     colorScale =
       new PowScaleTrueColor32(SCALESIZE, colorCells, colorCount,
-			      context->expo(), visual, byteorder_);
+			      context->expo());
     break;
   case FrScale::SQRTSCALE:
     colorScale =
-      new SqrtScaleTrueColor32(SCALESIZE, colorCells, colorCount,
-			       visual, byteorder_);
+      new SqrtScaleTrueColor32(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SQUAREDSCALE:
     colorScale =
-      new SquaredScaleTrueColor32(SCALESIZE, colorCells, colorCount,
-				  visual, byteorder_);
+      new SquaredScaleTrueColor32(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::ASINHSCALE:
     colorScale =
-      new AsinhScaleTrueColor32(SCALESIZE, colorCells, colorCount,
-				visual, byteorder_);
+      new AsinhScaleTrueColor32(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SINHSCALE:
     colorScale =
-      new SinhScaleTrueColor32(SCALESIZE, colorCells, colorCount,
-			       visual, byteorder_);
+      new SinhScaleTrueColor32(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::HISTEQUSCALE:
     colorScale = 
       new HistEquScaleTrueColor32(SCALESIZE, colorCells, colorCount, 
-				  context->histequ(), HISTEQUSIZE,
-				  visual, byteorder_);
+				  context->histequ(), HISTEQUSIZE);
     break;
   case FrScale::IISSCALE:
     colorScale = 
-      new IISScaleTrueColor32(colorCells, colorCount, visual, byteorder_);
+      new IISScaleTrueColor32(colorCells, colorCount);
     break;
   }
 }

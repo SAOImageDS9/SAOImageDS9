@@ -8,82 +8,67 @@
 #include "colorscale.h"
 #include "truecolor24.h"
 
-class ColorScaleTrueColor24 : public virtual ColorScale, public TrueColor24 {
-public:
-  ColorScaleTrueColor24(int, Visual*, int);
-  virtual ~ColorScaleTrueColor24();
-};
-
 class LinearScaleTrueColor24 :
 public virtual ColorScale, 
-public LinearScale, 
-public ColorScaleTrueColor24 {
+public LinearScale {
 public:
-  LinearScaleTrueColor24(int, unsigned char*, int, Visual*, int);
+  LinearScaleTrueColor24(int, unsigned char*, int);
 };
 
 class LogScaleTrueColor24 :
 public virtual ColorScale, 
-public LogScale, 
-public ColorScaleTrueColor24 {
+public LogScale {
 public:
-  LogScaleTrueColor24(int, unsigned char*, int, double, Visual*, int);
+  LogScaleTrueColor24(int, unsigned char*, int, double);
 };
 
 class PowScaleTrueColor24 :
 public virtual ColorScale, 
-public PowScale, 
-public ColorScaleTrueColor24 {
+public PowScale {
 public:
-  PowScaleTrueColor24(int, unsigned char*, int, double, Visual*, int);
+  PowScaleTrueColor24(int, unsigned char*, int, double);
 };
 
 class SqrtScaleTrueColor24 :
 public virtual ColorScale, 
-public SqrtScale, 
-public ColorScaleTrueColor24 {
+public SqrtScale {
 public:
-  SqrtScaleTrueColor24(int, unsigned char*, int, Visual*, int);
+  SqrtScaleTrueColor24(int, unsigned char*, int);
 };
 
 class SquaredScaleTrueColor24 :
 public virtual ColorScale, 
-public SquaredScale, 
-public ColorScaleTrueColor24 {
+public SquaredScale {
 public:
-  SquaredScaleTrueColor24(int, unsigned char*, int, Visual*, int);
+  SquaredScaleTrueColor24(int, unsigned char*, int);
 };
 
 class AsinhScaleTrueColor24 :
 public virtual ColorScale, 
-public AsinhScale, 
-public ColorScaleTrueColor24 {
+public AsinhScale {
 public:
-  AsinhScaleTrueColor24(int, unsigned char*, int, Visual*, int);
+  AsinhScaleTrueColor24(int, unsigned char*, int);
 };
 
 class SinhScaleTrueColor24 :
 public virtual ColorScale, 
-public SinhScale, 
-public ColorScaleTrueColor24 {
+public SinhScale {
 public:
-  SinhScaleTrueColor24(int, unsigned char*, int, Visual*, int);
+  SinhScaleTrueColor24(int, unsigned char*, int);
 };
 
 class IISScaleTrueColor24 :
 public virtual ColorScale, 
-public IISScale, 
-public ColorScaleTrueColor24 {
+public IISScale {
 public:
-  IISScaleTrueColor24(unsigned char*, int, Visual*, int);
+  IISScaleTrueColor24(unsigned char*, int);
 };
 
 class HistEquScaleTrueColor24 :
 public virtual ColorScale, 
-public HistEquScale, 
-public ColorScaleTrueColor24 {
+public HistEquScale {
 public:
-  HistEquScaleTrueColor24(int, unsigned char*, int, double*, int, Visual*, int);
+  HistEquScaleTrueColor24(int, unsigned char*, int, double*, int);
 };
 
 #endif

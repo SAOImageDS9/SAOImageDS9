@@ -7,19 +7,10 @@
 ColorScaleTrueColor8::ColorScaleTrueColor8(int s, Visual* visual)
   : ColorScale(s), TrueColor8(visual)
 {
-  colors_ = new unsigned char[s];
-
-  for (int i=0; i<s; i++)
-    colors_[i] =
-      ((psColors_[i*3]   & bm_) >> bs_) |  // blue
-      ((psColors_[i*3+1] & gm_) >> gs_) |  // green
-      ((psColors_[i*3+2] & rm_) >> rs_);   // red
 }
 
 ColorScaleTrueColor8::~ColorScaleTrueColor8()
 {
-  if (colors_)
-    delete [] colors_;
 }
 
 LinearScaleTrueColor8::LinearScaleTrueColor8(int s, 

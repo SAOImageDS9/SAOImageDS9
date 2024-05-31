@@ -8,43 +8,10 @@
 ColorScaleTrueColor16::ColorScaleTrueColor16(int s, Visual* visual, int msb)
   : ColorScale(s), TrueColor16(visual)
 {
-  colors_ = new unsigned char[s*2];
-
-  // we need to check to byteswap when we have cross platforms
-  if ((!msb && lsb()) || (msb && !lsb())) {
-    for (int i=0; i<s; i++) {
-      unsigned short r = psColors_[i*3+2];
-      unsigned short g = psColors_[i*3+1];
-      unsigned short b = psColors_[i*3];
-      unsigned short a = 0;
-      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
-      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
-
-      memcpy(colors_+i*2, &a, 2);
-    }
-  }
-  else {
-    for (int i=0; i<s; i++) {
-      unsigned short r = psColors_[i*3+2];
-      unsigned short g = psColors_[i*3+1];
-      unsigned short b = psColors_[i*3];
-      unsigned short a = 0;
-      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
-      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
-
-      unsigned char* rr = (unsigned char*)(&a);
-      *(colors_+i*2) = *(rr+1);
-      *(colors_+i*2+1) = *(rr);
-    }
-  }
 }
 
 ColorScaleTrueColor16::~ColorScaleTrueColor16()
 {
-  if (colors_)
-    delete [] colors_;
 }
 
 LinearScaleTrueColor16::LinearScaleTrueColor16(int s, 

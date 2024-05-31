@@ -8,44 +8,10 @@
 ColorScaleTrueColor24::ColorScaleTrueColor24(int s, Visual* visual, int msb)
   : ColorScale(s), TrueColor24(visual)
 {
-  colors_ = new unsigned char[s*3];
-
-  // we need to check to byteswap when we have cross platforms
-  if ((!msb && lsb()) || (msb && !lsb())) {
-    for (int i=0; i<s; i++) {
-      unsigned int r = psColors_[i*3+2];
-      unsigned int g = psColors_[i*3+1];
-      unsigned int b = psColors_[i*3];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
-      memcpy(colors_+i*3, &a, 3);
-    }
-  }
-  else {
-    for (int i=0; i<s; i++) {
-      unsigned int r = psColors_[i*3+2];
-      unsigned int g = psColors_[i*3+1];
-      unsigned int b = psColors_[i*3];
-      unsigned int a = 0;
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
-      unsigned char* rr = (unsigned char*)(&a);
-      *(colors_+i*3) = *(rr+3);
-      *(colors_+i*3+1) = *(rr+2);
-      *(colors_+i*3+2) = *(rr+1);
-    }
-  }
 }
 
 ColorScaleTrueColor24::~ColorScaleTrueColor24()
 {
-  if (colors_)
-    delete [] colors_;
 }
 
 LinearScaleTrueColor24::LinearScaleTrueColor24(int s, 

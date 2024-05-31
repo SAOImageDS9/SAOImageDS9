@@ -8,50 +8,10 @@
 ColorScaleTrueColor32::ColorScaleTrueColor32(int s, Visual* visual, int msb)
   : ColorScale(s), TrueColor24(visual)
 {
-  colors_ = new unsigned char[s*4];
-
-  // we need to check to byteswap when we have cross platforms
-  if ((!msb && lsb()) || (msb && !lsb())) {
-    for (int i=0; i<s; i++) {
-      unsigned int r = psColors_[i*3+2];
-      unsigned int g = psColors_[i*3+1];
-      unsigned int b = psColors_[i*3];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-      memcpy(colors_+i*4, &a, 4);
-    }
-  }
-  else {
-    for (int i=0; i<s; i++) {
-      unsigned int r = psColors_[i*3+2];
-      unsigned int g = psColors_[i*3+1];
-      unsigned int b = psColors_[i*3];
-      unsigned int a = 0;
-#ifdef MAC_OSX_TK
-      a |= 0xff << 24;
-#endif
-      a |= r << rs_;
-      a |= g << gs_;
-      a |= b << bs_;
-
-      unsigned char* rr = (unsigned char*)(&a);
-      *(colors_+i*4) = *(rr+3);
-      *(colors_+i*4+1) = *(rr+2);
-      *(colors_+i*4+2) = *(rr+1);
-      *(colors_+i*4+3) = *(rr);
-    }
-  }
 }
 
 ColorScaleTrueColor32::~ColorScaleTrueColor32()
 {
-  if (colors_)
-    delete [] colors_;
 }
 
 LinearScaleTrueColor32::LinearScaleTrueColor32(int s, 

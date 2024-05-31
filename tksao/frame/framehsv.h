@@ -21,7 +21,7 @@ class FrameHSV : public FrameT {
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameHSV();
 
-  void getColorbarCmd() {}
+  void getColorbarCmd();
 
   void getTypeCmd();
   

@@ -15,6 +15,20 @@ FrameHLS::~FrameHLS()
 {
 }
 
+void FrameHLS::getColorbarCmd()
+{
+  ostringstream str;
+
+  str << "hls " << fixed;
+  for (int ii=0; ii<3; ii++)
+    str << bias[ii] << ' ';
+  for (int ii=0; ii<3; ii++)
+    str << contrast[ii] << ' ';
+  str << invert << ' ' << ends;
+
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
 void FrameHLS::getTypeCmd()
 {
   Tcl_AppendResult(interp, "hls", NULL);

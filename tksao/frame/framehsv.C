@@ -15,6 +15,20 @@ FrameHSV::~FrameHSV()
 {
 }
 
+void FrameHSV::getColorbarCmd()
+{
+  ostringstream str;
+
+  str << "hsv " << fixed;
+  for (int ii=0; ii<3; ii++)
+    str << bias[ii] << ' ';
+  for (int ii=0; ii<3; ii++)
+    str << contrast[ii] << ' ';
+  str << invert << ' ' << ends;
+
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
 void FrameHSV::getTypeCmd()
 {
   Tcl_AppendResult(interp, "hsv", NULL);

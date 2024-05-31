@@ -56,12 +56,6 @@ public:
   virtual ~FrameA();
 
   void colormapCmd(float, float, float, float, float, float, int, int);
-
-  void iisCmd(int, int) {}
-  void iisEraseCmd() {}
-  void iisGetCmd(int, int, int, int) {}
-  void iisSetCmd(int, int, int, int) {}
-  void iisWCSCmd(const Matrix&, const Vector&, int) {}
 };
 
 #endif

@@ -23,7 +23,7 @@ class FrameHLS : public FrameT {
   FrameHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameHLS();
 
-  void getColorbarCmd() {}
+  void getColorbarCmd();
 
   void getTypeCmd();
   

@@ -16,19 +16,16 @@ class FrameRGB : public FrameA {
   ColorScaleRGB* colorScale[3]; // current color scale
 
 protected:
-  unsigned char* fillImage(int, int, Coord::InternalSystem);
-
   int isFrameRGB() {return 1;}
+  unsigned char* fillImage(int, int, Coord::InternalSystem);
+  void updateColorScale();
+  int validColorScale() 
+    {return colorScale[0] && colorScale[1] && colorScale[2];}
 
   void loadDone(int);
   void loadRGBCube(MemType, const char*, FitsImage*);
   void loadRGBImage(MemType, const char*, FitsImage*);
   void loadRGBFinish();
-
-  void updateColorScale();
-
-  int validColorScale() 
-    {return colorScale[0] && colorScale[1] && colorScale[2];}
 
  public:
   FrameRGB(Tcl_Interp*, Tk_Canvas, Tk_Item*);

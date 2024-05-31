@@ -53,13 +53,14 @@ class Frame : public FrameBase {
   Context* loadMask();
 
  protected:
-  void alignWCS();
   int isFrame() {return 1;}
-
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
-  unsigned char* fillMask(FitsMask*, int, int,  Coord::InternalSystem);
   int validColorScale() {return colorScale ? 1 : 0;}
+
   void updateMaskMatrices();
+  unsigned char* fillMask(FitsMask*, int, int,  Coord::InternalSystem);
+
+  void alignWCS();
   void loadDone(int);
 
  public:

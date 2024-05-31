@@ -64,19 +64,16 @@ class Frame3d : public Frame3dBase {
 
   void reset();
 
-    void pushMatrices();
+  void pushMatrices();
   void pushMagnifierMatrices();
   void pushPannerMatrices();
   void pushPSMatrices(float, int, int);
 
   void unloadFits();
 
-
  protected:
   int isFrame3d() {return 1;}
-
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
-
   int validColorScale() {return colorScale ? 1 : 0;}
 
  public:

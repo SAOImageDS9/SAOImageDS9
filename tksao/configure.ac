@@ -129,6 +129,7 @@ frame/ciaoparser.C
 frame/circle.C
 frame/colorscale.C
 frame/colorscalergb.C
+frame/colorscalet.C
 frame/compass.C
 frame/composite.C
 frame/context.C

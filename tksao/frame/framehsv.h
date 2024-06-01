@@ -14,9 +14,6 @@ class FrameHSV : public FrameT {
   int isFrameHSV() {return 1;}
 
   unsigned char* fillImage(int, int, Coord::InternalSystem);
-  void updateColorScale() {}
-  //  int validColorScale() {return colorScale[0] ? 1 : 0;}
-  int validColorScale() {return 0;}
 
  public:
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);

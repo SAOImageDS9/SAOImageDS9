@@ -190,9 +190,6 @@ void FrameRGB::updateColorScale()
   if (!colorCells)
     return;
 
-  if (DebugRGB) 
-    cerr << "updateColorScale" << endl;
-
   for (int ii=0; ii<3; ii++) {
     if (colorScale[ii])
       delete colorScale[ii];

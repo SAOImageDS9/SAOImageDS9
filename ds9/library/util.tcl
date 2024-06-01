@@ -14,6 +14,8 @@ proc CurrentDef {} {
     set current(ext) {}
     set current(cursor) {}
     set current(rgb) red
+    set current(hsv) hue
+    set current(hls) hue
 
     set current(display) single
     set current(mode) none

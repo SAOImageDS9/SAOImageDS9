@@ -6,16 +6,25 @@
 #define __framet_h__
 
 #include "framea.h"
+#include "colorscalet.h"
+#include "frscale.h"
 
 // Frame
 
 class FrameT : public FrameA {
 protected:
-  //    ColorScaleT* colorScale;    // current color scale
+  ColorScaleT* colorScale[5];    // current color scale
+
+private:
+  void updateColorScale(int jj, FrScale::ColorScaleType type);
 
 protected:
+  void updateColorScale();
   void updateColorCells(int cnt);
-
+  int validColorScale() 
+    {return colorScale[0] && colorScale[1] && colorScale[2]
+	&& colorScale[3] && colorScale[4];}
+  
 public:
   FrameT(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameT();

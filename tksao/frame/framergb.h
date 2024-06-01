@@ -12,7 +12,6 @@
 
 class FrameRGB : public FrameA {
  protected:
-  long* colormapData[3];     // preextract data
   ColorScaleRGB* colorScale[3]; // current color scale
 
 protected:

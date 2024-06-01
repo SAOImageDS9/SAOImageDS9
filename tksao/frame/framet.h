@@ -11,6 +11,9 @@
 
 class FrameT : public FrameA {
 protected:
+  //    ColorScaleT* colorScale;    // current color scale
+
+protected:
   void updateColorCells(int cnt);
 
 public:

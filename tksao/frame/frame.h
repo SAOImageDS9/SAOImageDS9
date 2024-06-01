@@ -18,7 +18,6 @@ class Frame : public FrameBase {
   float bias;                // current colormap bias
   float contrast;            // current colormap contrast
 
-  long* colormapData;
   ColorScale* colorScale;    // current color scale
 
   List <FitsMask> mask;

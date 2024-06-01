@@ -460,7 +460,6 @@ public:
   void unselectMarkers(List<Marker>*);
   void update(UpdateType);
   void update(UpdateType,BBox);
-  virtual void updateColorCells(int) =0;
   void updateMarkers(List<Marker>*);
   void updateMarkerCBs(List<Marker>*);
   void updateMarkerCoords(List<Marker>*, const Matrix&);
@@ -470,6 +469,7 @@ public:
   virtual void updateBin(const Matrix&);
   virtual void updateBlock(const Vector&);
   void updateCBMarkers(List<Marker>*);
+  virtual void updateColorCells(int) =0;
   virtual void updateColorScale() =0;
   virtual void updateGCs();
   virtual void updateMagnifier();

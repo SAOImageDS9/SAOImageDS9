@@ -18,24 +18,15 @@
 FrameRGB::FrameRGB(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   : FrameA(i,c,item)
 {
-  for (int ii=0; ii<3; ii++) {
+  for (int ii=0; ii<3; ii++)
     colorScale[ii] = NULL;
-  }
-
-  for (int kk=0; kk<3; kk++)
-    colormapData[kk] = NULL;
 }
 
 FrameRGB::~FrameRGB()
 {
-  for (int ii=0; ii<3; ii++) {
+  for (int ii=0; ii<3; ii++)
     if (colorScale[ii])
       delete colorScale[ii];
-  }
-
-  for (int kk=0; kk<3; kk++)
-    if (colormapData[kk])
-      delete [] colormapData[kk];
 
   if (colorCells)
     delete [] colorCells;

@@ -26,8 +26,6 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   currentContext = context;
   keyContext = context;
   
-  colormapData =NULL;
-
   cmapID = 1;
   bias = 0.5;
   contrast = 1.0;
@@ -53,9 +51,6 @@ Frame::~Frame()
 
   if (colorCells)
     delete [] colorCells;
-
-  if (colormapData)
-    delete [] colormapData;
 
   if (maskColorName)
     delete [] maskColorName;

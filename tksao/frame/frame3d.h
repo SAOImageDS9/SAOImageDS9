@@ -35,7 +35,6 @@ class Frame3d : public Frame3dBase {
   int cmapID;                // current colormap id
   float bias;                // current colormap bias
   float contrast;            // current colormap contrast
-
   ColorScale* colorScale;    // current color scale
 
   pthread_t* thread_;
@@ -89,8 +88,6 @@ class Frame3d : public Frame3dBase {
   void getTypeCmd();
 
   void colormapCmd(int, float, float, int, int);
-  void colormapMotionCmd(int id, float b, float c, int i, int cnt)
-  {colormapCmd(id, b, c, i, cnt);}
 
   void savePhotoCmd(const char*);
 };

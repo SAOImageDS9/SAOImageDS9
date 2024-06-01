@@ -92,6 +92,7 @@ ColorbarBase::~ColorbarBase()
 
   // exchange pointer between widgets
   if (cellsparentptr_ == this) {
+    cerr << "clear" << endl;
     cellsptr_ =NULL;
     cellsparentptr_ =NULL;
   }

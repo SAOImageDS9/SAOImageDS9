@@ -4,6 +4,8 @@
 
 #include "framehsv.h"
 
+#include "sigbus.h"
+
 // Frame Member Functions
 
 FrameHSV::FrameHSV(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
@@ -18,7 +20,6 @@ FrameHSV::~FrameHSV()
 unsigned char* FrameHSV::fillImage(int width, int height,
 				   Coord::InternalSystem sys)
 {
-  /*
   // we need a colorScale before we can render
   if (!validColorScale())
     return NULL;
@@ -43,7 +44,11 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 
   // basics
   int length = colorScale[0]->size() - 1;
-  const unsigned char* table = colorScale[0]->psColors();
+  const unsigned char* table0 = colorScale[0]->psColors();
+  const unsigned char* table1 = colorScale[1]->psColors();
+  const unsigned char* table2 = colorScale[2]->psColors();
+  const unsigned char* table3 = colorScale[3]->psColors();
+  const unsigned char* table4 = colorScale[4]->psColors();
 
   FitsImage* sptr = context->cfits;
   int mosaic = isMosaic();
@@ -85,20 +90,20 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 
 	  if (isfinite(diff) && isfinite(value)) {
 	    if (value <= ll) {
-	      *(dest+2) = table[0];
-	      *(dest+1) = table[1];
-	      *dest = table[2];
+	      *(dest+2) = table0[0];
+	      *(dest+1) = table1[0];
+	      *dest = table2[0];
 	    }
 	    else if (value >= hh) {
-	      *(dest+2) = table[length*3];
-	      *(dest+1) = table[length*3+1];
-	      *dest = table[length*3+2];
+	      *(dest+2) = table0[length];
+	      *(dest+1) = table1[length];
+	      *dest = table2[length];
 	    }
 	    else {
 	      int l = (int)(((value - ll)/diff * length) + .5);
-	      *(dest+2) = table[l*3];
-	      *(dest+1) = table[l*3+1];
-	      *dest = table[l*3+2];
+	      *(dest+2) = table0[l];
+	      *(dest+1) = table1[l];
+	      *dest = table2[l];
 	    }
 	  }
 	  else {
@@ -131,8 +136,6 @@ unsigned char* FrameHSV::fillImage(int width, int height,
   CLEARSIGBUS
 
   return img;
-  */
-  return NULL;
 }
 
 void FrameHSV::getColorbarCmd()

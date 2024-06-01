@@ -239,41 +239,6 @@ void FrameRGB::updateColorScale()
 
 // Commands
 
-void FrameRGB::colormapMotionCmd(float rb, float gb, float bb, 
-				 float rc, float gc, float bc, int i, int cnt)
-{
-  // we need a colorScale before we can render
-  if (!validColorScale()) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-  
-  // first check for change
-  if (bias[0] == rb && bias[1] == gb && bias[2] == bb && 
-      contrast[0] == rc && contrast[1] == gc && contrast[2] == bc &&
-      invert == i && colorCells) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-  
-  // we got a change
-  bias[0] = rb;
-  bias[1] = gb;
-  bias[2] = bb;
-  contrast[0] = rc;
-  contrast[1] = gc;
-  contrast[2] = bc;
-  invert = i;
-
-  updateColorCells(cnt);
-  updateColorScale();
-
-  update(BASE);
-  updatePanner();
-}
-
 void FrameRGB::getColorbarCmd()
 {
   ostringstream str;

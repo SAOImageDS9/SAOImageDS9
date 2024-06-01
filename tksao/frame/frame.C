@@ -645,7 +645,7 @@ void Frame::updateColorCells(int cnt)
 {
   if (!cellsptr_ || !cellsparentptr_)
     return;
-  
+
   unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
   if (colorCells)
@@ -820,35 +820,6 @@ void Frame::colormapCmd(int id, float b, float c, int i, int cnt)
   updateColorCells(cnt);
   updateColorScale();
   update(BASE);
-}
-
-void Frame::colormapMotionCmd(int id, float b, float c, int i, int cnt)
-{
-  // we need a colorScale before we can render
-  if (!validColorScale()) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-  
-  // first check for change
-  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-  
-  // we got a change
-  cmapID = id;
-  bias = b;
-  contrast = c;
-  invert = i;
-
-  updateColorCells(cnt);
-  updateColorScale();
-
-  update(BASE);
-  updatePanner();
 }
 
 void Frame::getColorbarCmd()

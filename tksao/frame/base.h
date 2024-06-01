@@ -659,17 +659,21 @@ public:
 
   // Colormap Commands
   void colorbarTagCmd(const char*);
+
   virtual void colormapCmd(int, float, float, int, int) {}
-  virtual void colormapCmd(float, float, float, float, float, float, int, int)
-  {}
+  void colormapMotionCmd(int id, float bb, float cc, int ii, int cnt)
+  {colormapCmd(id, bb, cc, ii, cnt);}
+
+  virtual void colormapCmd(float, float, float, float, float, float, int,int) {}
+  void colormapMotionCmd(float rb, float gb, float bb,
+			 float rc, float gc, float bc,
+			 int ii, int cnt)
+  {colormapCmd(rb, gb, bb, rc, gc, bc, ii, cnt);}
+  void colormapBeginCmd() {}
+  void colormapEndCmd();
+
   virtual void getColorbarCmd() =0;
   void getColorbarTagCmd();
-
-  void colormapBeginCmd() {}
-  virtual void colormapMotionCmd(int, float, float, int, int) {}
-  virtual void colormapMotionCmd(float, float, float, float, float, float, int,
-				 int) {}
-  void colormapEndCmd();
 
   // Contour Commands
   void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, FrScale::ClipMode, float, FrScale::ClipScope, double, double, const char*);

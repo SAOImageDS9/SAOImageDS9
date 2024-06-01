@@ -24,6 +24,12 @@ void ColorbarHSV::getColorbarCmd()
 
 void ColorbarHSV::getColormapCmd()
 {
+  // specific check cellsptr_ in use
+  if (cellsptr_)
+    if (cellsparentptr_)
+      if (cellsparentptr_ != this)
+	return;
+
   // use fixed so that the frame parser will not be confused with an int
   // as the first number
   cellsptr_ = colorCells;

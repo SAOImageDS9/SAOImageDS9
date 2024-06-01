@@ -16,7 +16,6 @@ protected:
   Matrix rgb[3];                // rgb matrix
 
   int channel;                  // current channel
-
   int view[3];                  // visible channels
   float bias[3];                // current colormap bias
   float contrast[3];            // current colormap contrast

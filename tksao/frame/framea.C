@@ -329,3 +329,4 @@ void FrameA::colormapCmd(float rb, float gb, float bb,
   update(BASE);
 }
 
+

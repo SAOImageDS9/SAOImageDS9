@@ -214,7 +214,7 @@ void Colorbar::getColormapCmd()
     if (cellsparentptr_)
       if (cellsparentptr_ != this)
 	return;
-
+  
   if (cmaps.current()) {
     cellsptr_ = colorCells;
     cellsparentptr_ =this;

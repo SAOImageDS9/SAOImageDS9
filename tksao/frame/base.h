@@ -139,7 +139,6 @@ public:
   Context* context;
   int nthreads_;
 
-  int colorBitpix;
   int colorCount;               // number of dynamic colors
   unsigned char* colorCells;    // current color values
 
@@ -461,7 +460,7 @@ public:
   void unselectMarkers(List<Marker>*);
   void update(UpdateType);
   void update(UpdateType,BBox);
-  void updateColorCells(int);
+  virtual void updateColorCells(int) =0;
   void updateMarkers(List<Marker>*);
   void updateMarkerCBs(List<Marker>*);
   void updateMarkerCoords(List<Marker>*, const Matrix&);

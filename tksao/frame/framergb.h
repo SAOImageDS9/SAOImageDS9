@@ -19,6 +19,7 @@ protected:
   int isFrameRGB() {return 1;}
   unsigned char* fillImage(int, int, Coord::InternalSystem);
   void updateColorScale();
+  void updateColorCells(int cnt);
   int validColorScale() 
     {return colorScale[0] && colorScale[1] && colorScale[2];}
 

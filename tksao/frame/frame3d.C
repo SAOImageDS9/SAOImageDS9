@@ -1047,6 +1047,23 @@ void Frame3d::unloadFits()
   Base::unloadFits();
 }
 
+void Frame3d::updateColorCells(int cnt)
+{
+  if (!cellsptr_ || !cellsparentptr_)
+    return;
+  
+  unsigned char* cells = (unsigned char*)cellsptr_;
+  colorCount = cnt;
+  if (colorCells)
+    delete [] colorCells;
+  colorCells = new unsigned char[cnt*3];
+  memcpy(colorCells, cells, cnt*3);
+
+  // clear
+  cellsptr_ =NULL;
+  cellsparentptr_ =NULL;
+}
+
 void Frame3d::updateColorScale()
 {
   // we need colors before we can construct a scale

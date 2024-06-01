@@ -10,7 +10,10 @@
 // Frame
 
 class FrameT : public FrameA {
- public:
+protected:
+  void updateColorCells(int cnt);
+
+public:
   FrameT(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameT();
 };

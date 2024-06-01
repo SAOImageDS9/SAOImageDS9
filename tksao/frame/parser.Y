@@ -898,19 +898,19 @@ colormap : INT numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
-	| BEGIN_ {fr->colormapBeginCmd();}
+	| BEGIN_
 	| MOTION_ colormapMotion
-	| END_ {fr->colormapEndCmd();}
+	| END_
 	;
 
 colormapMotion: INT numeric numeric INT INT
-	{fr->colormapMotionCmd($1, $2, $3, $4, $5);}
+	{fr->colormapCmd($1, $2, $3, $4, $5);}
 	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
-	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 	| HSV_ numeric numeric numeric numeric numeric numeric INT INT
-	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
-	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 
 colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
 	| LOG_ numeric {fr->colorScaleLogCmd($2);}

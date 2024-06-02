@@ -24,12 +24,12 @@ FrameRGB::FrameRGB(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
 FrameRGB::~FrameRGB()
 {
+  if (colorCells)
+    delete [] colorCells;
+
   for (int ii=0; ii<3; ii++)
     if (colorScale[ii])
       delete colorScale[ii];
-
-  if (colorCells)
-    delete [] colorCells;
 }
 
 unsigned char* FrameRGB::fillImage(int width, int height,

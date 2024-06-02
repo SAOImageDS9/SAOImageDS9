@@ -60,11 +60,11 @@ Frame3d::~Frame3d()
   if (context)
     delete context;
 
-  if (colorScale)
-    delete colorScale;
-
   if (colorCells)
     delete [] colorCells;
+
+  if (colorScale)
+    delete colorScale;
 
   if (thread_)
     delete [] thread_;

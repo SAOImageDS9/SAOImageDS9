@@ -46,11 +46,11 @@ Frame::~Frame()
   if (context)
     delete context;
 
-  if (colorScale)
-    delete colorScale;
-
   if (colorCells)
     delete [] colorCells;
+
+  if (colorScale)
+    delete colorScale;
 
   if (maskColorName)
     delete [] maskColorName;

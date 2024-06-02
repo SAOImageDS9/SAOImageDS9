@@ -9,16 +9,12 @@
 // Frame Member Functions
 
 FrameHSV::FrameHSV(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
-  : FrameT(i,c,item)
-{
-}
+: FrameT(i,c,item) {}
 
-FrameHSV::~FrameHSV()
-{
-}
+FrameHSV::~FrameHSV() {}
 
 unsigned char* FrameHSV::fillImage(int width, int height,
-				   Coord::InternalSystem sys)
+				Coord::InternalSystem sys)
 {
   // we need a colorScale before we can render
   if (!validColorScale())
@@ -39,23 +35,19 @@ unsigned char* FrameHSV::fillImage(int width, int height,
       }	
   }
 
-  if (!context->cfits)
+  if (!context[0].cfits)
     return img;
 
   // basics
-  int length = colorScale[0]->size() - 1;
-  const unsigned char* table0 = colorScale[0]->psColors();
-  const unsigned char* table1 = colorScale[1]->psColors();
-  const unsigned char* table2 = colorScale[2]->psColors();
-  const unsigned char* table3 = colorScale[3]->psColors();
-  const unsigned char* table4 = colorScale[4]->psColors();
+  int length = colorScale->size() - 1;
+  const unsigned char* table = colorScale->psColors();
 
-  FitsImage* sptr = context->cfits;
+  FitsImage* sptr = context[0].cfits;
   int mosaic = isMosaic();
 
   // variable
   double* mm = sptr->matrixToData(sys).mm();
-  FitsBound* params = sptr->getDataParams(context->secMode());
+  FitsBound* params = sptr->getDataParams(context[0].secMode());
   int srcw = sptr->width();
 
   double ll = sptr->low();
@@ -69,10 +61,10 @@ unsigned char* FrameHSV::fillImage(int width, int height,
   for (long jj=0; jj<height; jj++) {
     for (long ii=0; ii<width; ii++, dest+=3) {
       if (mosaic) {
-	sptr = context->cfits;
+	sptr = context[0].cfits;
 
 	mm = sptr->matrixToData(sys).mm();
-	params = sptr->getDataParams(context->secMode());
+	params = sptr->getDataParams(context[0].secMode());
 	srcw = sptr->width();
 
 	ll = sptr->low();
@@ -90,20 +82,20 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 
 	  if (isfinite(diff) && isfinite(value)) {
 	    if (value <= ll) {
-	      *(dest+2) = table0[0];
-	      *(dest+1) = table1[0];
-	      *dest = table2[0];
+	      *(dest+2) = table[0];
+	      *(dest+1) = table[1];
+	      *dest = table[2];
 	    }
 	    else if (value >= hh) {
-	      *(dest+2) = table0[length];
-	      *(dest+1) = table1[length];
-	      *dest = table2[length];
+	      *(dest+2) = table[length*3];
+	      *(dest+1) = table[length*3+1];
+	      *dest = table[length*3+2];
 	    }
 	    else {
 	      int l = (int)(((value - ll)/diff * length) + .5);
-	      *(dest+2) = table0[l];
-	      *(dest+1) = table1[l];
-	      *dest = table2[l];
+	      *(dest+2) = table[l*3];
+	      *(dest+1) = table[l*3+1];
+	      *dest = table[l*3+2];
 	    }
 	  }
 	  else {
@@ -120,7 +112,7 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 
 	    if (sptr) {
 	      mm = sptr->matrixToData(sys).mm();
-	      params = sptr->getDataParams(context->secMode());
+	      params = sptr->getDataParams(context[0].secMode());
 	      srcw = sptr->width();
 
 	      ll = sptr->low();

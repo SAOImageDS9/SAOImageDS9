@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -20,42 +20,42 @@ public:
 
 class LinearScaleT : public virtual ColorScaleT {
 public:
-  LinearScaleT(int, int, unsigned char*, int);
+  LinearScaleT(int, unsigned char*, int);
 };
 
 class LogScaleT : public virtual ColorScaleT {
 public:
-  LogScaleT(int, int, unsigned char*, int, double);
+  LogScaleT(int, unsigned char*, int, double);
 };
 
 class PowScaleT : public virtual ColorScaleT {
 public:
-  PowScaleT(int, int, unsigned char*, int, double);
+  PowScaleT(int, unsigned char*, int, double);
 };
 
 class SqrtScaleT : public virtual ColorScaleT {
 public:
-  SqrtScaleT(int, int, unsigned char*, int);
+  SqrtScaleT(int, unsigned char*, int);
 };
 
 class SquaredScaleT : public virtual ColorScaleT {
 public:
-  SquaredScaleT(int, int, unsigned char*, int);
+  SquaredScaleT(int, unsigned char*, int);
 };
 
 class AsinhScaleT : public virtual ColorScaleT {
 public:
-  AsinhScaleT(int, int, unsigned char*, int);
+  AsinhScaleT(int, unsigned char*, int);
 };
 
 class SinhScaleT : public virtual ColorScaleT {
 public:
-  SinhScaleT(int, int, unsigned char*, int);
+  SinhScaleT(int, unsigned char*, int);
 };
 
 class HistEquScaleT : public virtual ColorScaleT {
 public:
-  HistEquScaleT(int, int, unsigned char*, int, double*, int);
+  HistEquScaleT(int, unsigned char*, int, double*, int);
 };
 
 #endif

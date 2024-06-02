@@ -7,10 +7,10 @@
 
 #include "colorscalet.h"
 
-ColorScaleT::ColorScaleT(int s)
+ColorScaleT::ColorScaleT(int ss)
 {
-  size_ = s;
-  psColors_ = new unsigned char[s];
+  size_ = ss;
+  psColors_ = new unsigned char[ss];
   memset(psColors_, '0', size_);
 }
 
@@ -20,18 +20,18 @@ ColorScaleT::~ColorScaleT()
     delete [] psColors_;
 }
 
-LinearScaleT::LinearScaleT(int jj, int ss, unsigned char* colorCells, 
+LinearScaleT::LinearScaleT(int ss, unsigned char* colorCells, 
 			       int count) 
   : ColorScaleT(ss)
 {
   for (int ii=0; ii<ss; ii++) {
     double aa = double(ii)/ss;
     int ll = (int)(aa * count);
-    memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+    memcpy(psColors_+ii, colorCells+ll, 1);
   }
 }
 
-LogScaleT::LogScaleT(int jj, int ss, unsigned char* colorCells, 
+LogScaleT::LogScaleT(int ss, unsigned char* colorCells, 
 			 int count, double exp)
   : ColorScaleT(ss)
 {
@@ -41,11 +41,11 @@ LogScaleT::LogScaleT(int jj, int ss, unsigned char* colorCells,
     // aa can grow slightly greater than 1
     if (ll>=count)
       ll = count-1;
-    memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+    memcpy(psColors_+ii, colorCells+ll, 1);
   }
 }
 
-PowScaleT::PowScaleT(int jj, int ss, unsigned char* colorCells, 
+PowScaleT::PowScaleT(int ss, unsigned char* colorCells, 
 			 int count, double exp)
   : ColorScaleT(ss)
 {
@@ -55,54 +55,54 @@ PowScaleT::PowScaleT(int jj, int ss, unsigned char* colorCells,
     // should not be needed
     if (ll>=count)
       ll = count-1;
-    memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+    memcpy(psColors_+ii, colorCells+ll, 1);
   }
 }
 
-SqrtScaleT::SqrtScaleT(int jj, int ss, unsigned char* colorCells, int count)
+SqrtScaleT::SqrtScaleT(int ss, unsigned char* colorCells, int count)
   : ColorScaleT(ss)
 {
   for(int ii=0; ii<ss; ii++) {
     double aa = double(ii)/ss;
     int ll = (int)(sqrt(aa) * count);
-    memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+    memcpy(psColors_+ii, colorCells+ll, 1);
   }
 }
 
-SquaredScaleT::SquaredScaleT(int jj, int ss, unsigned char* colorCells, 
+SquaredScaleT::SquaredScaleT(int ss, unsigned char* colorCells, 
 				 int count) 
   : ColorScaleT(ss)
 {
   for(int ii=0; ii<ss; ii++) {
     double aa = double(ii)/ss;
     int ll = (int)(aa*aa * count);
-    memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+    memcpy(psColors_+ii, colorCells+ll, 1);
   }
 }
 
-AsinhScaleT::AsinhScaleT(int jj, int ss, unsigned char* colorCells, 
+AsinhScaleT::AsinhScaleT(int ss, unsigned char* colorCells, 
 			     int count) 
   : ColorScaleT(ss)
 {
   for(int ii=0; ii<ss; ii++) {
     double aa = double(ii)/ss;
-    int ll = (int)(asinh(10*aa)/5 * count);
-    memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+    int ll = (int)(asinh(10*aa)/3 * count);
+    memcpy(psColors_+ii, colorCells+ll, 1);
   }
 }
 
-SinhScaleT::SinhScaleT(int jj, int ss, unsigned char* colorCells, 
+SinhScaleT::SinhScaleT(int ss, unsigned char* colorCells, 
 			   int count) 
   : ColorScaleT(ss)
 {
   for(int ii=0; ii<ss; ii++) {
     double aa = double(ii)/ss;
-    int ll = (int)(sinh(5*aa)/10 * count);
-    memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+    int ll = (int)(sinh(3*aa)/10 * count);
+    memcpy(psColors_+ii, colorCells+ll, 1);
   }
 }
 
-HistEquScaleT::HistEquScaleT(int jj, int ss, unsigned char* colorCells, 
+HistEquScaleT::HistEquScaleT(int ss, unsigned char* colorCells, 
 				 int count, double* hist, int histsize)
   : ColorScaleT(ss)
 {
@@ -111,12 +111,12 @@ HistEquScaleT::HistEquScaleT(int jj, int ss, unsigned char* colorCells,
     for (int ii=0; ii<ss; ii++) {
       double aa = double(ii)/ss;
       int ll = (int)(aa * count);
-      memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+      memcpy(psColors_+ii, colorCells+ll, 1);
     }
   else
     for (int ii=0; ii<ss; ii++) {
       double aa = hist[ii*histsize/ss];
       int ll = (int)(aa * count);
-      memcpy(psColors_+ii, colorCells+ll*5+jj,1);
+      memcpy(psColors_+ii, colorCells+ll, 1);
     }
 }

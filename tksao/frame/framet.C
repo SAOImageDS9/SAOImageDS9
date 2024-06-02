@@ -7,87 +7,128 @@
 FrameT::FrameT(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 : FrameA(i,c,item)
 {
-  for (int ii=0; ii<5; ii++)
-    colorScale[ii] = NULL;
+  colorCellsT[0] = NULL;
+  colorCellsT[1] = NULL;
+
+  colorScale = NULL;
+  colorScaleT[0] = NULL;
+  colorScaleT[1] = NULL;
 }
 
 FrameT::~FrameT()
 {
-  for (int ii=0; ii<5; ii++)
-    if (colorScale[ii])
-      delete colorScale[ii];
-
   if (colorCells)
     delete [] colorCells;
+
+  for (int ii=0; ii<2; ii++)
+    if (colorCellsT[ii])
+      delete colorCellsT[ii];
+
+  if (colorScale)
+    delete colorScale;
+
+  for (int ii=0; ii<2; ii++)
+    if (colorScaleT[ii])
+      delete colorScaleT[ii];
 }
 
 void FrameT::updateColorScale()
 {
   // we need colors before we can construct a scale
-  if (!colorCells)
+  if (!colorCells || !colorCellsT[0] || !colorCellsT[1])
     return;
   
-  for (int ii=0; ii<5; ii++)
-    if (colorScale[ii])
-      delete colorScale[ii];
+  // ColorScale
 
-  for (int ii=0; ii<3; ii++) {
-    switch (ii) {
-    case 0:
-      updateColorScale(0,context[ii].colorScaleType());
-      updateColorScale(1,context[ii].colorScaleType());
-      updateColorScale(2,context[ii].colorScaleType());
-      break;
-    case 1:
-      updateColorScale(3,context[ii].colorScaleType());
-      break;
-    case 2:
-      updateColorScale(4,context[ii].colorScaleType());
-      break;
-    }
-  }
-}
+  if (colorScale)
+    delete colorScale;
 
-void FrameT::updateColorScale(int jj, FrScale::ColorScaleType type) {
-  switch (type) {
+  switch (context[0].colorScaleType()) {
   case FrScale::LINEARSCALE:
-    colorScale[jj] = 
-      new LinearScaleT(jj, colorCount, colorCells, colorCount);
+    colorScale =
+      new LinearScale(colorCount, colorCells, colorCount);
     break;
   case FrScale::LOGSCALE:
-    colorScale[jj] =
-      new LogScaleT(jj, SCALESIZE, colorCells, colorCount, 
-		    context[jj].expo());
+    colorScale =
+      new LogScale(SCALESIZE, colorCells, colorCount, context[0].expo());
     break;
   case FrScale::POWSCALE:
-    colorScale[jj] =
-      new PowScaleT(jj, SCALESIZE, colorCells, colorCount, 
-		    context[jj].expo());
+    colorScale =
+      new PowScale(SCALESIZE, colorCells, colorCount, context[0].expo());
     break;
   case FrScale::SQRTSCALE:
-    colorScale[jj] =
-      new SqrtScaleT(jj, SCALESIZE, colorCells, colorCount);
+    colorScale = 
+      new SqrtScale(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SQUAREDSCALE:
-    colorScale[jj] =
-      new SquaredScaleT(jj, SCALESIZE, colorCells, colorCount);
+    colorScale =
+      new SquaredScale(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::ASINHSCALE:
-    colorScale[jj] =
-      new AsinhScaleT(jj, SCALESIZE, colorCells, colorCount);
+    colorScale =
+      new AsinhScale(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::SINHSCALE:
-    colorScale[jj] =
-      new SinhScaleT(jj, SCALESIZE, colorCells, colorCount);
+    colorScale =
+      new SinhScale(SCALESIZE, colorCells, colorCount);
     break;
   case FrScale::HISTEQUSCALE:
-    colorScale[jj] = 
-      new HistEquScaleT(jj, SCALESIZE, colorCells, colorCount, 
-			context[jj].histequ(), HISTEQUSIZE);
+    colorScale =
+      new HistEquScale(SCALESIZE, colorCells, colorCount, 
+		       context[0].histequ(), HISTEQUSIZE); 
     break;
   case FrScale::IISSCALE:
     // na
     break;
+  }
+
+  // ColorScaleT
+
+  for (int ii=0; ii<2; ii++)
+    if (colorScaleT[ii])
+      delete colorScaleT[ii];
+
+  for (int kk=1; kk<3; kk++) {
+    switch (context[kk].colorScaleType()) {
+    case FrScale::LINEARSCALE:
+      colorScaleT[kk-1] =
+	new LinearScaleT(colorCount, colorCellsT[kk-1], colorCount);
+      break;
+    case FrScale::LOGSCALE:
+      colorScaleT[kk-1] =
+	new LogScaleT(SCALESIZE, colorCellsT[kk-1], colorCount,
+		      context[kk].expo());
+      break;
+    case FrScale::POWSCALE:
+      colorScaleT[kk-1] =
+	new PowScaleT(SCALESIZE, colorCellsT[kk-1], colorCount,
+		      context[kk].expo());
+      break;
+    case FrScale::SQRTSCALE:
+      colorScaleT[kk-1] = 
+	new SqrtScaleT(SCALESIZE, colorCellsT[kk-1], colorCount);
+      break;
+    case FrScale::SQUAREDSCALE:
+      colorScaleT[kk-1] =
+	new SquaredScaleT(SCALESIZE, colorCellsT[kk-1], colorCount);
+      break;
+    case FrScale::ASINHSCALE:
+      colorScaleT[kk-1] =
+	new AsinhScaleT(SCALESIZE, colorCellsT[kk-1], colorCount);
+      break;
+    case FrScale::SINHSCALE:
+      colorScaleT[kk-1] =
+	new SinhScaleT(SCALESIZE, colorCellsT[kk-1], colorCount);
+      break;
+    case FrScale::HISTEQUSCALE:
+      colorScaleT[kk-1] =
+	new HistEquScaleT(SCALESIZE, colorCellsT[kk-1], colorCount, 
+			 context[kk].histequ(), HISTEQUSIZE); 
+      break;
+    case FrScale::IISSCALE:
+      // na
+      break;
+    }
   }
 }
 
@@ -98,13 +139,23 @@ void FrameT::updateColorCells(int cnt)
   
   unsigned char* cells = (unsigned char*)cellsptr_;
   colorCount = cnt;
+
   if (colorCells)
     delete [] colorCells;
-  colorCells = new unsigned char[cnt*5];
-  memcpy(colorCells, cells, cnt*5);
+  colorCells = new unsigned char[cnt*3];
+  for (int ii=0; ii<cnt; ii++)
+    memcpy(colorCells+ii*3, cells+ii*5, 3);
+
+  for (int kk=0; kk<2; kk++) {
+    if (colorCellsT[kk])
+      delete [] colorCellsT[kk];
+    colorCellsT[kk] = new unsigned char[cnt];
+
+    for (int ii=0; ii<cnt; ii++)
+      memcpy(colorCellsT[kk]+ii, cells+ii*5+kk+3, 1);
+  }
 
   // clear
   cellsptr_ =NULL;
   cellsparentptr_ =NULL;
 }
-

@@ -6,6 +6,7 @@
 #define __framet_h__
 
 #include "framea.h"
+#include "colorscale.h"
 #include "colorscalet.h"
 #include "frscale.h"
 
@@ -13,17 +14,15 @@
 
 class FrameT : public FrameA {
 protected:
-  ColorScaleT* colorScale[5];    // current color scale
+  unsigned char* colorCellsT[2];
 
-private:
-  void updateColorScale(int jj, FrScale::ColorScaleType type);
+  ColorScale* colorScale;
+  ColorScaleT* colorScaleT[2];
 
 protected:
   void updateColorScale();
   void updateColorCells(int cnt);
-  int validColorScale() 
-    {return colorScale[0] && colorScale[1] && colorScale[2]
-	&& colorScale[3] && colorScale[4];}
+  int validColorScale() {return colorScale && colorScaleT[0] && colorScaleT[1];}
   
 public:
   FrameT(Tcl_Interp*, Tk_Canvas, Tk_Item*);

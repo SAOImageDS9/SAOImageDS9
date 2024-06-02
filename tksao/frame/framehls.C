@@ -7,13 +7,9 @@
 // Frame Member Functions
 
 FrameHLS::FrameHLS(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
-  : FrameT(i,c,item)
-{
-}
+: FrameT(i,c,item) {}
 
-FrameHLS::~FrameHLS()
-{
-}
+FrameHLS::~FrameHLS() {}
 
 void FrameHLS::getColorbarCmd()
 {

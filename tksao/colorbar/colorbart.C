@@ -30,7 +30,7 @@ int ColorbarT::initColormap()
 
 void ColorbarT::loadDefaultCmaps()
 {
-  cmap = new iRainbowColorMap(this);
+  cmap = new HSVHLSColorMap(this);
 }
 
 void ColorbarT::updateColorCells()

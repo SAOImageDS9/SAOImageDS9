@@ -75,11 +75,6 @@ public:
   RainbowColorMap(ColorbarBase*);
 };
 
-class iRainbowColorMap : public SAOColorMap {
-public:
-  iRainbowColorMap(ColorbarBase*);
-};
-
 class StandardColorMap : public SAOColorMap {
 public:
   StandardColorMap(ColorbarBase*);
@@ -103,6 +98,11 @@ public:
 class HSVColorMap : public LUTColorMap {
 public:
   HSVColorMap(ColorbarBase*);
+};
+
+class HSVHLSColorMap : public SAOColorMap {
+public:
+  HSVHLSColorMap(ColorbarBase*);
 };
 
 #endif

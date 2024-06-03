@@ -250,27 +250,29 @@ RainbowColorMap::RainbowColorMap(ColorbarBase* p) : SAOColorMap(p)
   blue.append(new LIColor(1,0));
 }
 
-iRainbowColorMap::iRainbowColorMap(ColorbarBase* p) : SAOColorMap(p)
+HSVHLSColorMap::HSVHLSColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
-  name_ = dupstr("irainbow");
-  filename_ = dupstr("irainbow.sao");
+  name_ = dupstr("hsvhls");
+  filename_ = dupstr("hsvhls.sao");
 
   red.append(new LIColor(0,1));
-  red.append(new LIColor(.2,1));
-  red.append(new LIColor(.6,0));
-  red.append(new LIColor(.8,0));
+  red.append(new LIColor(.1667,1));
+  red.append(new LIColor(.3333,0));
+  red.append(new LIColor(.6667,0));
+  red.append(new LIColor(.8333,1));
   red.append(new LIColor(1,1));
 
   green.append(new LIColor(0,0));
-  green.append(new LIColor(.2,1));
-  green.append(new LIColor(.4,1));
-  green.append(new LIColor(.8,0));
+  green.append(new LIColor(.1667,1));
+  green.append(new LIColor(.5,1));
+  green.append(new LIColor(.6667,0));
   green.append(new LIColor(1,0));
 
   blue.append(new LIColor(0,0));
-  blue.append(new LIColor(.4,0));
-  blue.append(new LIColor(.6,1));
-  blue.append(new LIColor(1,1));
+  blue.append(new LIColor(.3333,0));
+  blue.append(new LIColor(.5,1));
+  blue.append(new LIColor(.8333,1));
+  blue.append(new LIColor(0,0));
 }
 
 StandardColorMap::StandardColorMap(ColorbarBase* p) : SAOColorMap(p)

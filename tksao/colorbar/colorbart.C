@@ -30,7 +30,7 @@ int ColorbarT::initColormap()
 
 void ColorbarT::loadDefaultCmaps()
 {
-  cmap = new RainbowColorMap(this);
+  cmap = new iRainbowColorMap(this);
 }
 
 void ColorbarT::updateColorCells()

@@ -75,6 +75,11 @@ public:
   RainbowColorMap(ColorbarBase*);
 };
 
+class iRainbowColorMap : public SAOColorMap {
+public:
+  iRainbowColorMap(ColorbarBase*);
+};
+
 class StandardColorMap : public SAOColorMap {
 public:
   StandardColorMap(ColorbarBase*);

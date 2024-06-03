@@ -25,8 +25,8 @@ unsigned char* FrameHSV::fillImage(int width, int height,
   memset(img,0,width*height*5);
 
   // mk
-  char* mk = new char[width*height];
-  memset(mk,0,width*height);
+  char* mk = new char[width*height*3];
+  memset(mk,0,width*height*3);
 
   SETSIGBUS
 
@@ -65,7 +65,7 @@ unsigned char* FrameHSV::fillImage(int width, int height,
     char* mkptr = mk;
 
     for (long jj=0; jj<height; jj++) {
-      for (long ii=0; ii<width; ii++, dest+=5, mkptr++) {
+      for (long ii=0; ii<width; ii++, dest+=5, mkptr+=3) {
 
 	if (mosaic) {
 	  sptr = context[kk].cfits;
@@ -88,7 +88,7 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 	    double value = sptr->getValueDouble(long(yy)*srcw + long(xx));
 
 	    if (isfinite(diff) && isfinite(value)) {
-
+	      // good
 	      if (kk==0) {
 		if (value <= ll) {
 		  *(dest+2) = table[0];
@@ -116,10 +116,12 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 		  *(dest+kk+2) = *(table+((int)(((value-ll)/diff*length)+.5)));
 	      }
 
-	      *mkptr =2;
+	      *(mkptr+kk) =2;
 	    }
-	    else if (*mkptr < 2)
-	      *mkptr =1;
+	    else {
+	      // nan
+	      *(mkptr+kk) =1;
+	    }
 
 	    break;
 	  }
@@ -144,28 +146,34 @@ unsigned char* FrameHSV::fillImage(int width, int height,
     }
   }
 
-  // HSV to RGB
+  // HSV to RGB, add bg,nan
   unsigned char* imgrgb = new unsigned char[width*height*3];
+  memset(imgrgb,0,width*height*3);
   {
+    XColor* bgColor = useBgColor? getXColor(bgColourName) :
+      ((WidgetOptions*)options)->bgColor;
+    XColor* nanColor = getXColor(nanColourName);
+
     unsigned char* src = img;
-    unsigned char* dest = imgrgb;
-    for (int jj=0; jj<height; jj++)
-      for (int ii=0; ii<width; ii++, dest+=3, src+=5)
-	memcpy(dest, src, 3);
-  }
-  delete [] img;
-  
-  // now fill in bg
-  XColor* bgColor = useBgColor? getXColor(bgColourName) :
-    ((WidgetOptions*)options)->bgColor;
-  XColor* nanColor = getXColor(nanColourName);
-  {
     unsigned char* dest = imgrgb;
     char* mkptr = mk;
     for (int jj=0; jj<height; jj++)
-      for (int ii=0; ii<width; ii++, dest+=3, mkptr++) {
-	if (*mkptr == 2) // good value
-	  ;
+      for (int ii=0; ii<width; ii++, dest+=3, src+=5, mkptr+=3) {
+	if (*mkptr==2) { // good value
+	  if (*(mkptr+1)!=2 && *(mkptr+2)!=2) {
+	    // no saturation, no value
+	    memcpy(dest, src, 3);
+	  }
+	  else if (*(mkptr+1)==2 && *(mkptr+2)!=2) {
+	    // no value
+	  }
+	  else if (*(mkptr+1)!=2 && *(mkptr+2)==2) {
+	    // no saturation
+	  }
+	  else {
+	    // hue, saturation, value
+	  }
+	}
 	else if (*mkptr == 1) { // nan
 	  *dest = (unsigned char)nanColor->red;
 	  *(dest+1) = (unsigned char)nanColor->green;
@@ -176,8 +184,10 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 	  *(dest+1) = (unsigned char)bgColor->green;
 	  *(dest+2) = (unsigned char)bgColor->blue;
 	}
-      }	
+      }
   }
+  delete [] img;
+  
   CLEARSIGBUS
   delete [] mk;
 

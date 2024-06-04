@@ -253,49 +253,6 @@ void FrameRGB::getColorbarCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void FrameRGB::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
-			  char* var, Base::FileNameType type)
-{
-  FrameBase::getInfoCmd(vv, ref, var, type);
-  if (!currentContext->cfits)
-    return;
-
-  const char* array[3] = {"value,red","value,green","value,blue"};
-
-  SETSIGBUS
-  for (int ii=0; ii<3; ii++) {
-
-    // make sure we have an image
-    FitsImage* sptr = context[ii].cfits;
-    if (!sptr)
-      continue;
-
-    int mosaic = context[ii].isMosaic();
-    FitsBound* params = sptr->getDataParams(context[ii].secMode());
-
-    do {
-      Vector3d rr = mapToRef(vv,ref);
-      Vector img = Vector(rr) * sptr->refToData;
-
-      if (img[0]>=params->xmin && img[0]<params->xmax && 
-	  img[1]>=params->ymin && img[1]<params->ymax) {
-
-	Tcl_SetVar2(interp,var,array[ii],(char*)sptr->getValue(img),0);
-	break;
-      }
-      else {
-	if (mosaic) {
-	  sptr = sptr->nextMosaic();
-	  if (sptr)
-	    params = sptr->getDataParams(context[ii].secMode());
-	}
-      }
-    }
-    while (mosaic && sptr);
-  }
-  CLEARSIGBUS
-}
-
 void FrameRGB::getRGBChannelCmd()
 {
   switch (channel) {

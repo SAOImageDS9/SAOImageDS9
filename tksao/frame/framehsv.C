@@ -112,8 +112,11 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 		  *(dest+kk+2) = *table;
 		else if (value >= hh)
 		  *(dest+kk+2) = *(table+length);
-		else
-		  *(dest+kk+2) = *(table+((int)(((value-ll)/diff*length)+.5)));
+		else {
+		  int l = (int)(((value - ll)/diff * length) + .5);
+		  *(dest+kk+2) = *(table+l);
+		  // cerr << value << ' ' << (int)(*(table+l)) << endl;
+		}
 	      }
 
 	      *(mkptr+kk) =2;
@@ -166,12 +169,21 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 	  }
 	  else if (*(mkptr+1)==2 && *(mkptr+2)!=2) {
 	    // no value
+	    unsigned char ss = *(src+3);
+	    unsigned char vv = (unsigned char)255;
+	    convert(src,ss,vv,dest);
 	  }
 	  else if (*(mkptr+1)!=2 && *(mkptr+2)==2) {
 	    // no saturation
+	    unsigned char ss =(unsigned char)255;
+	    unsigned char vv = *(src+4);
+	    convert(src,ss,vv,dest);
 	  }
 	  else {
 	    // hue, saturation, value
+	    unsigned char ss = *(src+3);
+	    unsigned char vv = *(src+4);
+	    convert(src,ss,vv,dest);
 	  }
 	}
 	else if (*mkptr == 1) { // nan
@@ -197,6 +209,108 @@ unsigned char* FrameHSV::fillImage(int width, int height,
       alphaComposite(imgrgb,fadeImg,width,height,fadeAlpha);
 
   return imgrgb;
+}
+
+void FrameHSV::convert(unsigned char* src, unsigned char ss, unsigned char vv,
+		       unsigned char* dest)
+{
+  unsigned char hr = *src;
+  unsigned char hg = *(src+1);
+  unsigned char hb = *(src+2);
+
+  //  cerr << (int)hr << ' ' << (int)hg << ' ' << (int)hb << ' ' << (int)ss << ' ' << (int)vv << endl;
+
+  *dest     =hr;
+  *(dest+1) =hg;
+  *(dest+2) =hb;
+
+  return;
+  
+  // map rgb to h
+  float x = hr/256.;
+  float y = hg/256.;
+  float z = hb/256.;
+
+  float max = x > y ? (x > z ? x : z) : (y > z ? y : z);
+  float min = x < y ? (x < z ? x : z) : (y < z ? y : z);
+  float diff = max-min;
+
+  // special case
+  // h undefined
+  if (diff==0) {
+    *dest     =vv;
+    *(dest+1) =vv;
+    *(dest+2) =vv;
+    return;
+  }    
+
+  float rc = (max-x) / diff;
+  float gc = (max-y) / diff;
+  float bc = (max-z) / diff;
+
+  float h;
+
+  if (x==max)
+    h = bc-gc;
+  else if (y==max)
+    h = 2+rc-bc;
+  else
+    h = 4+gc-rc;
+  
+  h = h*60;
+  if (h<0)
+    h +=360;
+  if (h>360)
+    h -=360;
+
+  float s = ss/256.;
+  float v = vv/256.;
+
+  // standard hsv to rgb
+  // at this point
+  // 0 < h < 360
+  // 0 < s < 1
+  // 0 < v < 1
+
+  h /= 60.0;
+  int i = (int)h;
+  float f = h - i;
+  float p = v * (1 - s);
+  float q = v * (1 - s*f);
+  float t = v * (1 - s * (1.0 - f));
+
+  switch (i) {
+  case 0:
+    *dest     =v*256;
+    *(dest+1) =t*256;
+    *(dest+2) =p*256;
+    break;
+  case 1:
+    *dest     = q*256;
+    *(dest+1) = v*256;
+    *(dest+2) = p*256;
+    break;
+  case 2:
+    *dest     = p*256;
+    *(dest+1) = v*256;
+    *(dest+2) = t*256;
+    break;
+  case 3:
+    *dest     = p*256;
+    *(dest+1) = q*256;
+    *(dest+2) = v*256;
+    break;
+  case 4:
+    *dest     = t*256;
+    *(dest+1) = p*256;
+    *(dest+2) = v*256;
+    break;
+  case 5:
+    *dest     = v*256;
+    *(dest+1) = p*256;
+    *(dest+2) = q*256;
+    break;
+  }
 }
 
 void FrameHSV::getColorbarCmd()

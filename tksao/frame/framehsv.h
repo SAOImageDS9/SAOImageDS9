@@ -14,6 +14,7 @@ class FrameHSV : public FrameT {
   int isFrameHSV() {return 1;}
 
   unsigned char* fillImage(int, int, Coord::InternalSystem);
+  void convert(unsigned char*, unsigned char, unsigned char, unsigned char*);
 
  public:
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);

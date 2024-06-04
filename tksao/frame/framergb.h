@@ -32,7 +32,6 @@ protected:
   virtual ~FrameRGB();
 
   void getColorbarCmd();
-  void getInfoCmd(const Vector&, Coord::InternalSystem, char*, Base::FileNameType);
   void getTypeCmd();
 
   void getRGBChannelCmd();

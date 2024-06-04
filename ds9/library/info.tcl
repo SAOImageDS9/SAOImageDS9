@@ -57,15 +57,15 @@ proc CreateInfoPanel {} {
     ttk::label $ds9(info).value -relief groove \
 	-textvariable infobox(value) -anchor center
 
-    ttk::label $ds9(info).valueRTitle -text [msgcat::mc {r}]
-    ttk::label $ds9(info).valueR -relief groove \
-	-textvariable infobox(value,red) -anchor center
-    ttk::label $ds9(info).valueGTitle -text [msgcat::mc {g}]
-    ttk::label $ds9(info).valueG -relief groove \
-	-textvariable infobox(value,green) -anchor center
-    ttk::label $ds9(info).valueBTitle -text [msgcat::mc {b}]
-    ttk::label $ds9(info).valueB -relief groove \
-	-textvariable infobox(value,blue) -anchor center
+    ttk::label $ds9(info).value1Title
+    ttk::label $ds9(info).value1 -relief groove \
+	-textvariable infobox(value,1) -anchor center
+    ttk::label $ds9(info).value2Title
+    ttk::label $ds9(info).value2 -relief groove \
+	-textvariable infobox(value,2) -anchor center
+    ttk::label $ds9(info).value3Title
+    ttk::label $ds9(info).value3 -relief groove \
+	-textvariable infobox(value,3) -anchor center
 
     ttk::label $ds9(info).bunitTitle -text [msgcat::mc {Units}]
     ttk::label $ds9(info).bunitValue -relief groove \
@@ -176,28 +176,48 @@ proc LayoutFrameInfoBoxHorzValue {which} {
     switch -- $type {
 	base -
 	3d {
-	    grid forget $ds9(info).valueRTitle $ds9(info).valueR \
-		$ds9(info).valueGTitle $ds9(info).valueG \
-		$ds9(info).valueBTitle $ds9(info).valueB
+	    grid forget $ds9(info).value1Title $ds9(info).value1 \
+		$ds9(info).value2Title $ds9(info).value2 \
+		$ds9(info).value2Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
 		-column 2 -padx 2 -sticky w
 	}
-	rgb {
+	rgb -
+	hsv -
+	hls {
 	    grid forget $ds9(info).value
 
-	    grid $ds9(info).valueRTitle -row $ds9(info,row,value,red) \
+	    grid $ds9(info).value1Title -row $ds9(info,row,value,1) \
 		-column 1 -sticky w
-	    grid $ds9(info).valueR -row $ds9(info,row,value,red) \
+	    grid $ds9(info).value1 -row $ds9(info,row,value,1) \
 		-column 2 -padx 2 -sticky w
-	    grid $ds9(info).valueGTitle -row $ds9(info,row,value,green) \
+	    grid $ds9(info).value2Title -row $ds9(info,row,value,2) \
 		-column 3 -sticky w
-	    grid $ds9(info).valueG -row $ds9(info,row,value,green) \
+	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
 		-column 4 -padx 2 -sticky w
-	    grid $ds9(info).valueBTitle -row $ds9(info,row,value,blue) \
+	    grid $ds9(info).value2Title -row $ds9(info,row,value,3) \
 		-column 5 -sticky w
-	    grid $ds9(info).valueB -row $ds9(info,row,value,blue) \
+	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
 		-column 6 -padx 2 -sticky w
+	}
+    }
+
+    switch -- $type {
+	rgb {
+	    $ds9(info).value1Title configure -text [msgcat::mc {r}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {g}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {b}]
+	}
+	hsv {
+	    $ds9(info).value1Title configure -text [msgcat::mc {h}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {s}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {v}]
+	}
+	hls {
+	    $ds9(info).value1Title configure -text [msgcat::mc {h}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {l}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {s}]
 	}
     }
 }
@@ -236,7 +256,9 @@ proc LayoutFrameInfoBoxHorzImage {which} {
 
     switch -- $type {
 	base -
-	rgb {
+	rgb -
+	hsv -
+	hls {
 	    if {$which != {} && $view(info,image)} {
 		if {[$which has fits cube]} {
 		    grid $ds9(info).imageZLabel \
@@ -275,28 +297,48 @@ proc LayoutFrameInfoBoxVertValue {which} {
     switch -- $type {
 	base -
 	3d {
-	    grid forget $ds9(info).valueRTitle $ds9(info).valueR \
-		$ds9(info).valueGTitle $ds9(info).valueG \
-		$ds9(info).valueBTitle $ds9(info).valueB
+	    grid forget $ds9(info).value1Title $ds9(info).value1 \
+		$ds9(info).value2Title $ds9(info).value2 \
+		$ds9(info).value2Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
 		-column 1 -padx 2 -sticky w
 	}
-	rgb {
+	rgb -
+	hsv -
+	hls {
 	    grid forget $ds9(info).value
 
-	    grid $ds9(info).valueRTitle -row $ds9(info,row,value,red) \
+	    grid $ds9(info).value1Title -row $ds9(info,row,value,1) \
 		-column 0 -sticky w
-	    grid $ds9(info).valueR -row $ds9(info,row,value,red) \
+	    grid $ds9(info).value1 -row $ds9(info,row,value,1) \
 		-column 1 -padx 2 -sticky w
-	    grid $ds9(info).valueGTitle -row $ds9(info,row,value,green) \
+	    grid $ds9(info).value2Title -row $ds9(info,row,value,2) \
 		-column 0 -sticky w
-	    grid $ds9(info).valueG -row $ds9(info,row,value,green) \
+	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
 		-column 1 -padx 2 -sticky w
-	    grid $ds9(info).valueBTitle -row $ds9(info,row,value,blue) \
+	    grid $ds9(info).value2Title -row $ds9(info,row,value,3) \
 		-column 0 -sticky w
-	    grid $ds9(info).valueB -row $ds9(info,row,value,blue) \
+	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
 		-column 1 -padx 2 -sticky w
+	}
+    }
+
+    switch -- $type {
+	rgb {
+	    $ds9(info).value1Title configure -text [msgcat::mc {r}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {g}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {b}]
+	}
+	hsv {
+	    $ds9(info).value1Title configure -text [msgcat::mc {h}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {s}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {v}]
+	}
+	hls {
+	    $ds9(info).value1Title configure -text [msgcat::mc {h}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {l}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {s}]
 	}
     }
 }
@@ -334,7 +376,9 @@ proc LayoutFrameInfoBoxVertImage {which} {
 
     switch -- $type {
 	base -
-	rgb {
+	rgb -
+	hsv -
+	hls {
 	    if {$which != {} && $view(info,image)} {
 		if {[$which has fits cube]} {
 		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
@@ -373,9 +417,9 @@ proc LayoutFrameInfoBoxAdvancedValue {which} {
     switch -- $type {
 	base -
 	3d {
-	    grid forget $ds9(info).valueRTitle $ds9(info).valueR \
-		$ds9(info).valueGTitle $ds9(info).valueG \
-		$ds9(info).valueBTitle $ds9(info).valueB
+	    grid forget $ds9(info).value1Title $ds9(info).value1 \
+		$ds9(info).value2Title $ds9(info).value2 \
+		$ds9(info).value2Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
 		-column 1 -padx 2 -sticky w
@@ -383,18 +427,36 @@ proc LayoutFrameInfoBoxAdvancedValue {which} {
 	rgb {
 	    grid forget $ds9(info).value
 
-	    grid $ds9(info).valueRTitle -row $ds9(info,row,value,red) \
+	    grid $ds9(info).value1Title -row $ds9(info,row,value,1) \
 		-column 0 -sticky w
-	    grid $ds9(info).valueR -row $ds9(info,row,value,red) \
+	    grid $ds9(info).value1 -row $ds9(info,row,value,1) \
 		-column 1 -padx 2 -sticky w
-	    grid $ds9(info).valueGTitle -row $ds9(info,row,value,green) \
+	    grid $ds9(info).value2Title -row $ds9(info,row,value,2) \
 		-column 0 -sticky w
-	    grid $ds9(info).valueG -row $ds9(info,row,value,green) \
+	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
 		-column 1 -padx 2 -sticky w
-	    grid $ds9(info).valueBTitle -row $ds9(info,row,value,blue) \
+	    grid $ds9(info).value2Title -row $ds9(info,row,value,3) \
 		-column 0 -sticky w
-	    grid $ds9(info).valueB -row $ds9(info,row,value,blue) \
+	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
 		-column 1 -padx 2 -sticky w
+	}
+    }
+
+    switch -- $type {
+	rgb {
+	    $ds9(info).value1Title configure -text [msgcat::mc {r}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {g}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {b}]
+	}
+	hsv {
+	    $ds9(info).value1Title configure -text [msgcat::mc {h}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {s}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {v}]
+	}
+	hls {
+	    $ds9(info).value1Title configure -text [msgcat::mc {h}]
+	    $ds9(info).value2Title configure -text [msgcat::mc {l}]
+	    $ds9(info).value3Title configure -text [msgcat::mc {s}]
 	}
     }
 }
@@ -432,7 +494,9 @@ proc LayoutFrameInfoBoxAdvancedImage {which} {
 
     switch -- $type {
 	base -
-	rgb {
+	rgb -
+	hsv -
+	hls {
 	    if {$which != {} && $view(info,image)} {
 		if {[$which has fits cube]} {
 		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
@@ -531,9 +595,9 @@ proc ClearInfoBoxCoords {} {
     }
 
     set infobox(value) {}
-    set infobox(value,red) {}
-    set infobox(value,green) {}
-    set infobox(value,blue) {}
+    set infobox(value,1) {}
+    set infobox(value,2) {}
+    set infobox(value,3) {}
 
     foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	set infobox(wcs$ll,sys) "WCS $ll"
@@ -816,15 +880,15 @@ proc LayoutInfoPanelHorz {} {
 
     # value
     $ds9(info).value configure -width $ww
-    $ds9(info).valueR configure -width $ww
-    $ds9(info).valueG configure -width $ww
-    $ds9(info).valueB configure -width $ww
+    $ds9(info).value1 configure -width $ww
+    $ds9(info).value2 configure -width $ww
+    $ds9(info).value3 configure -width $ww
 
     grid $ds9(info).valueTitle -row $row -column 0 -sticky w
     set ds9(info,row,value) $row
-    set ds9(info,row,value,red) $row
-    set ds9(info,row,value,green) $row
-    set ds9(info,row,value,blue) $row
+    set ds9(info,row,value,1) $row
+    set ds9(info,row,value,2) $row
+    set ds9(info,row,value,3) $row
     incr row
 
     # unit
@@ -1083,18 +1147,18 @@ proc LayoutInfoPanelVert {} {
 
     # value
     $ds9(info).value configure -width $ww
-    $ds9(info).valueR configure -width $ww
-    $ds9(info).valueG configure -width $ww
-    $ds9(info).valueB configure -width $ww
+    $ds9(info).value1 configure -width $ww
+    $ds9(info).value2 configure -width $ww
+    $ds9(info).value3 configure -width $ww
 
     grid $ds9(info).valueTitle -row $row -column 1 -sticky w
     incr row
     set ds9(info,row,value) $row
-    set ds9(info,row,value,red) $row
+    set ds9(info,row,value,1) $row
     incr row
-    set ds9(info,row,value,green) $row
+    set ds9(info,row,value,2) $row
     incr row
-    set ds9(info,row,value,blue) $row
+    set ds9(info,row,value,3) $row
     incr row
     
     # units
@@ -1375,18 +1439,18 @@ proc LayoutInfoPanelAdvanced {} {
 
     # value
     $ds9(info).value configure -width $ww
-    $ds9(info).valueR configure -width $ww
-    $ds9(info).valueG configure -width $ww
-    $ds9(info).valueB configure -width $ww
+    $ds9(info).value1 configure -width $ww
+    $ds9(info).value2 configure -width $ww
+    $ds9(info).value3 configure -width $ww
 
     grid $ds9(info).valueTitle -row $row -column 1 -sticky w
     incr row
     set ds9(info,row,value) $row
-    set ds9(info,row,value,red) $row
+    set ds9(info,row,value,1) $row
     incr row
-    set ds9(info,row,value,green) $row
+    set ds9(info,row,value,2) $row
     incr row
-    set ds9(info,row,value,blue) $row
+    set ds9(info,row,value,3) $row
     incr row
     
     # units

@@ -55,6 +55,8 @@ public:
   virtual ~FrameA();
 
   void colormapCmd(float, float, float, float, float, float, int, int);
+  void getInfoCmd(const Vector&, Coord::InternalSystem, char*,
+		  Base::FileNameType);
 };
 
 #endif

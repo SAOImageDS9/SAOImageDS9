@@ -699,23 +699,23 @@ proc ColorbarMotion {frame x y} {
 	}
 	rgb {
 	    switch -- $current(rgb) {
-		red {set infobox(value,red) $vv}
-		green {set infobox(value,green) $vv}
-		blue {set infobox(value,blue) $vv}
+		red {set infobox(value,1) $vv}
+		green {set infobox(value,2) $vv}
+		blue {set infobox(value,3) $vv}
 	    }
 	}
 	hsv {
 	    switch -- $current(hsv) {
-		hue {set infobox(value,red) $vv}
-		saturation {set infobox(value,green) $vv}
-		value {set infobox(value,blue) $vv}
+		hue {set infobox(value,1) $vv}
+		saturation {set infobox(value,2) $vv}
+		value {set infobox(value,3) $vv}
 	    }
 	}
 	hls {
 	    switch -- $current(hls) {
-		hue {set infobox(value,red) $vv}
-		lightness {set infobox(value,green) $vv}
-		saturation {set infobox(value,blue) $vv}
+		hue {set infobox(value,1) $vv}
+		lightness {set infobox(value,2) $vv}
+		saturation {set infobox(value,3) $vv}
 	    }
 	}
     }

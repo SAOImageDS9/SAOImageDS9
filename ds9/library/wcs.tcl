@@ -573,7 +573,7 @@ proc WCSApplyDialog {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs replace text $dwcs(ext) \{\{[WCSFromVar]\}\}"
+	EvalLock lock,wcs $current(frame) "$current(frame) wcs replace text $dwcs(ext) \{\{[WCSFromVar]\}\}"
 	UpdateWCS
 	CATUpdateWCS
 	FPUpdateWCS
@@ -586,7 +586,7 @@ proc WCSResetDialog {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs reset $dwcs(ext)]
+	EvalLock lock,wcs $current(frame) [list $current(frame) wcs reset $dwcs(ext)]
 	UpdateWCS
 	CATUpdateWCS
 	FPUpdateWCS
@@ -1196,7 +1196,7 @@ proc WCSCmdReset {ext} {
 	return
     }
 
-    RGBEvalLock rgb(lock,wcs) $current(frame) \
+    EvalLock lock,wcs $current(frame) \
 	[list $current(frame) wcs reset $ext]
     UpdateWCS
     CATUpdateWCS
@@ -1214,9 +1214,9 @@ proc WCSCmdLoad {cmd ext} {
     }
 
     if {$parse(sock) != {}} {
-	RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs $cmd $ext $parse(sock)]
+	EvalLock lock,wcs $current(frame) [list $current(frame) wcs $cmd $ext $parse(sock)]
     } elseif {$parse(fn) != {}} {
-	RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$parse(fn)\}\}"
+	EvalLock lock,wcs $current(frame) "$current(frame) wcs $cmd $ext \{\{$parse(fn)\}\}"
     }
 
     UpdateWCS
@@ -1233,7 +1233,7 @@ proc WCSCmdLoadFn {cmd ext fn} {
 	return
     }
 
-    RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$fn\}\}"
+    EvalLock lock,wcs $current(frame) "$current(frame) wcs $cmd $ext \{\{$fn\}\}"
     UpdateWCS
     CATUpdateWCS
     FPUpdateWCS

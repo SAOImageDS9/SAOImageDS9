@@ -420,11 +420,6 @@ proc ProcessCommand {argv argc} {
 	    -scalelims -
 	    -scalelimits {
 		#backward compatibility
-		incr i
-		set scale(min) [lindex $argv $i]
-		incr i
-		set scale(max) [lindex $argv $i]
-		ChangeScaleLimit
 	    }
 	    -scalemode {
 		#backward compatibility

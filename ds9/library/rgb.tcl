@@ -21,13 +21,12 @@ proc RGBDef {} {
     set rgb(lock,bin) 0
     set rgb(lock,axes) 0
     set rgb(lock,scale) 0
-    set rgb(lock,scalelimits) 0
     set rgb(lock,colorbar) 0
     set rgb(lock,block) 0
     set rgb(lock,smooth) 0
 }
 
-proc RGBEvalLockCurrent {varname cmd} {
+proc EvalLockCurrent {varname cmd} {
     global current
 
     global rgb
@@ -39,40 +38,63 @@ proc RGBEvalLockCurrent {varname cmd} {
     global block
     global smooth
 
-    RGBEvalLock $varname $current(frame) $cmd
+    EvalLock $varname $current(frame) $cmd
 }
 
-proc RGBEvalLock {varname which cmd} {
-    upvar $varname var
-
+proc EvalLock {var which cmd} {
     global rgb
-    global crop
-    global cube
-    global bin
-    global scale
-    global colorbar
-    global block
-    global smooth
+    global hsv
+    global hls
 
-    if {$var && [$which get type] == {rgb}} {
-	set ch [$which get rgb channel]
-	foreach cc {red green blue} {
-	    $which rgb channel $cc
-	    eval $cmd
+    switch [$which get type] {
+	base -
+	3d {eval $cmd}
+	rgb {
+	    if {$rgb($var)} {
+		set ch [$which get rgb channel]
+		foreach cc {red green blue} {
+		    $which rgb channel $cc
+		    eval $cmd
+		}
+		$which rgb channel $ch
+	    } else {
+		eval $cmd
+	    }
 	}
-	$which rgb channel $ch
-    } else {
-	eval $cmd
+	hsv {
+	    if {$hsv($var)} {
+		set ch [$which get hsv channel]
+		foreach cc {hue staturation value} {
+		    $which hsv channel $cc
+		    eval $cmd
+		}
+		$which hsv channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+	hls {
+	    if {$hls($var)} {
+		set ch [$which get hls channel]
+		foreach cc {hue lightness value} {
+		    $which hls channel $cc
+		    eval $cmd
+		}
+		$which hls channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
     }
 }
 
-proc RGBEvalLockColorbarCurrent {cmd} {
+proc EvalLockColorbarCurrent {cmd} {
     global current
     
-    RGBEvalLockColorbar $current(frame) $cmd
+    EvalLockColorbar $current(frame) $cmd
 }
 
-proc RGBEvalLockColorbar {which cmd} {
+proc EvalLockColorbar {which cmd} {
     global current
     global scale
     global rgb
@@ -165,8 +187,6 @@ proc RGBDialog {} {
 	-variable rgb(lock,axes)
     $mb.lock add checkbutton -label [msgcat::mc {Scale}] \
 	-variable rgb(lock,scale)
-    $mb.lock add checkbutton -label [msgcat::mc {Scale and Limits}] \
-	-variable rgb(lock,scalelimits)
     $mb.lock add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable rgb(lock,colorbar)
     $mb.lock add checkbutton -label [msgcat::mc {Block}] \

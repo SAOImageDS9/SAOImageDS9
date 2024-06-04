@@ -178,7 +178,7 @@ proc LayoutFrameInfoBoxHorzValue {which} {
 	3d {
 	    grid forget $ds9(info).value1Title $ds9(info).value1 \
 		$ds9(info).value2Title $ds9(info).value2 \
-		$ds9(info).value2Title $ds9(info).value3
+		$ds9(info).value3Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
 		-column 2 -padx 2 -sticky w
@@ -196,7 +196,7 @@ proc LayoutFrameInfoBoxHorzValue {which} {
 		-column 3 -sticky w
 	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
 		-column 4 -padx 2 -sticky w
-	    grid $ds9(info).value2Title -row $ds9(info,row,value,3) \
+	    grid $ds9(info).value3Title -row $ds9(info,row,value,3) \
 		-column 5 -sticky w
 	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
 		-column 6 -padx 2 -sticky w
@@ -299,7 +299,7 @@ proc LayoutFrameInfoBoxVertValue {which} {
 	3d {
 	    grid forget $ds9(info).value1Title $ds9(info).value1 \
 		$ds9(info).value2Title $ds9(info).value2 \
-		$ds9(info).value2Title $ds9(info).value3
+		$ds9(info).value3Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
 		-column 1 -padx 2 -sticky w
@@ -317,7 +317,7 @@ proc LayoutFrameInfoBoxVertValue {which} {
 		-column 0 -sticky w
 	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
 		-column 1 -padx 2 -sticky w
-	    grid $ds9(info).value2Title -row $ds9(info,row,value,3) \
+	    grid $ds9(info).value3Title -row $ds9(info,row,value,3) \
 		-column 0 -sticky w
 	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
 		-column 1 -padx 2 -sticky w
@@ -419,7 +419,7 @@ proc LayoutFrameInfoBoxAdvancedValue {which} {
 	3d {
 	    grid forget $ds9(info).value1Title $ds9(info).value1 \
 		$ds9(info).value2Title $ds9(info).value2 \
-		$ds9(info).value2Title $ds9(info).value3
+		$ds9(info).value3Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
 		-column 1 -padx 2 -sticky w
@@ -435,7 +435,7 @@ proc LayoutFrameInfoBoxAdvancedValue {which} {
 		-column 0 -sticky w
 	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
 		-column 1 -padx 2 -sticky w
-	    grid $ds9(info).value2Title -row $ds9(info,row,value,3) \
+	    grid $ds9(info).value3Title -row $ds9(info,row,value,3) \
 		-column 0 -sticky w
 	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
 		-column 1 -padx 2 -sticky w

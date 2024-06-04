@@ -115,7 +115,6 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 		else {
 		  int l = (int)(((value - ll)/diff * length) + .5);
 		  *(dest+kk+2) = *(table+l);
-		  // cerr << value << ' ' << (int)(*(table+l)) << endl;
 		}
 	      }
 
@@ -162,7 +161,8 @@ unsigned char* FrameHSV::fillImage(int width, int height,
     char* mkptr = mk;
     for (int jj=0; jj<height; jj++)
       for (int ii=0; ii<width; ii++, dest+=3, src+=5, mkptr+=3) {
-	if (*mkptr==2) { // good value
+	if (*mkptr==2) {
+	  // good value
 	  if (*(mkptr+1)!=2 && *(mkptr+2)!=2) {
 	    // no saturation, no value
 	    memcpy(dest, src, 3);
@@ -186,12 +186,14 @@ unsigned char* FrameHSV::fillImage(int width, int height,
 	    convert(src,ss,vv,dest);
 	  }
 	}
-	else if (*mkptr == 1) { // nan
+	else if (*mkptr == 1) {
+	  // nan
 	  *dest = (unsigned char)nanColor->red;
 	  *(dest+1) = (unsigned char)nanColor->green;
 	  *(dest+2) = (unsigned char)nanColor->blue;
 	}
-	else { // bg
+	else {
+	  // bg
 	  *dest = (unsigned char)bgColor->red;
 	  *(dest+1) = (unsigned char)bgColor->green;
 	  *(dest+2) = (unsigned char)bgColor->blue;

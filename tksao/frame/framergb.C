@@ -102,8 +102,11 @@ unsigned char* FrameRGB::fillImage(int width, int height,
 		*(dest+kk) = *table;
 	      else if (value >= hh)
 		*(dest+kk) = *(table+length);
-	      else
-		*(dest+kk) = *(table+((int)(((value - ll)/diff * length) +.5)));
+	      else {
+		int l = (int)(((value - ll)/diff * length) + .5);
+		*(dest+kk) = *(table+l);
+	      }
+
 	      *mkptr =2;
 	    }
 	    else if (*mkptr < 2)
@@ -141,14 +144,17 @@ unsigned char* FrameRGB::fillImage(int width, int height,
     char* mkptr = mk;
     for (int jj=0; jj<height; jj++)
       for (int ii=0; ii<width; ii++, dest+=3, mkptr++) {
-	if (*mkptr == 2) // good value
+	if (*mkptr == 2)
+	  // good value
 	  ;
-	else if (*mkptr == 1) { // nan
+	else if (*mkptr == 1) {
+	  // nan
 	  *dest = (unsigned char)nanColor->red;
 	  *(dest+1) = (unsigned char)nanColor->green;
 	  *(dest+2) = (unsigned char)nanColor->blue;
 	}
-	else { // bg
+	else {
+	  // bg
 	  *dest = (unsigned char)bgColor->red;
 	  *(dest+1) = (unsigned char)bgColor->green;
 	  *(dest+2) = (unsigned char)bgColor->blue;

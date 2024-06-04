@@ -13,7 +13,6 @@ class FrameHSV : public FrameT {
  protected:
   int isFrameHSV() {return 1;}
 
-  unsigned char* fillImage(int, int, Coord::InternalSystem);
   void convert(unsigned char*, unsigned char, unsigned char, unsigned char*);
 
  public:

@@ -12,7 +12,8 @@
 class FrameHLS : public FrameT {
  protected:
   int isFrameHLS() {return 1;}
-  unsigned char* fillImage(int, int, Coord::InternalSystem) {return NULL;}
+
+  void convert(unsigned char*, unsigned char, unsigned char, unsigned char*);
 
  public:
   FrameHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);

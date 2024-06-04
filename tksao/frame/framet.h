@@ -20,6 +20,9 @@ protected:
   ColorScaleT* colorScaleT[2];
 
 protected:
+  virtual void convert(unsigned char*, unsigned char, unsigned char, unsigned char*) =0;
+
+  unsigned char* fillImage(int, int, Coord::InternalSystem);
   void updateColorScale();
   void updateColorCells(int cnt);
   int validColorScale() {return colorScale && colorScaleT[0] && colorScaleT[1];}

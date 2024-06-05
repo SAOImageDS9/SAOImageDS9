@@ -999,7 +999,10 @@ proc UpdateFileMenuOpen {} {
     $bb.openurl configure -state normal
 
     switch -- [$current(frame) get type] {
-	base {
+	base -
+	3d -
+	hsv -
+	hls {
 	    $mm.open entryconfig [msgcat::mc {RGB Image}] -state disabled
 	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state disabled
 	    $bb.openrgbimage configure -state disabled
@@ -1010,12 +1013,6 @@ proc UpdateFileMenuOpen {} {
 	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state normal
 	    $bb.openrgbimage configure -state normal
 	    $bb.openrgbcube configure -state normal
-	}
-	3d {
-	    $mm.open entryconfig [msgcat::mc {RGB Image}] -state disabled
-	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state disabled
-	    $bb.openrgbimage configure -state disabled
-	    $bb.openrgbcube configure -state disabled
 	}
     }
 
@@ -1069,7 +1066,10 @@ proc UpdateFileMenuSave {} {
     }
 
     switch -- [$current(frame) get type] {
-	base {
+	base -
+	3d -
+	hsv -
+	hls {
 	    $mm.save entryconfig [msgcat::mc {RGB Image}] -state disabled
 	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state disabled
 	    $bb.savergbimage configure -state disabled
@@ -1080,12 +1080,6 @@ proc UpdateFileMenuSave {} {
 	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state normal
 	    $bb.savergbimage configure -state normal
 	    $bb.savergbcube configure -state normal
-	}
-	3d {
-	    $mm.save entryconfig [msgcat::mc {RGB Image}] -state disabled
-	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state disabled
-	    $bb.savergbimage configure -state disabled
-	    $bb.savergbcube configure -state disabled
 	}
     }
 }
@@ -1101,17 +1095,16 @@ proc UpdateFileMenuImport {} {
     if {$current(frame) != {}} {
 	$mm entryconfig [msgcat::mc {Import}] -state normal
 	switch -- [$current(frame) get type] {
-	    base {
+	    base -
+	    3d -
+	    hsv -
+	    hls {
 		$mm.import entryconfig \
 		    [msgcat::mc {RGB Array}] -state disabled
 	    }
 	    rgb {
 		$mm.import entryconfig \
 		    [msgcat::mc {RGB Array}] -state normal
-	    }
-	    3d {
-		$mm.import entryconfig \
-		    [msgcat::mc {RGB Array}] -state disabled
 	    }
 	}
     }
@@ -1147,7 +1140,10 @@ proc UpdateFileMenuExport {} {
 	    $bb.exportpng configure -state normal
 
 	    switch -- [$current(frame) get type] {
-		base {
+		base -
+		3d -
+		hsv -
+		hls {
 		    $mm.export entryconfig \
 			[msgcat::mc {RGB Array}] -state disabled
 		    $bb.exportrgbarray configure -state disabled
@@ -1155,11 +1151,7 @@ proc UpdateFileMenuExport {} {
 		rgb {
 		    $mm.export entryconfig \
 			[msgcat::mc {RGB Array}] -state normal
-		}
-		3d {
-		    $mm.export entryconfig \
-			[msgcat::mc {RGB Array}] -state disabled
-		    $bb.exportrgbarray configure -state disabled
+		    $bb.exportrgbarray configure -state normal
 		}
 	    }
 	}

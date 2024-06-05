@@ -293,7 +293,7 @@ proc BackupFrame {ch which dir} {
 	base {BackupFrameLoad $ch $which $fdir $rdir {}}
 	rgb {
 	    set rr [$which get rgb channel]
-	    foreach cc {{} red green blue} {
+	    foreach cc {red green blue} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
 	    $which rgb channel $rr
@@ -302,7 +302,7 @@ proc BackupFrame {ch which dir} {
 	}
 	hsv {
 	    set rr [$which get hsv channel]
-	    foreach cc {{} hue saturation value} {
+	    foreach cc {hue saturation value} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
 	    $which hsv channel $rr
@@ -311,7 +311,7 @@ proc BackupFrame {ch which dir} {
 	}
 	hls {
 	    set rr [$which get hls channel]
-	    foreach cc {{} hue lightness saturation} {
+	    foreach cc {hue lightness saturation} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
 	    $which hls channel $rr

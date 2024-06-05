@@ -31,9 +31,9 @@ proc SmoothUpdate {} {
 
     if {$current(frame) != {}} {
 	if {$smooth(view)} {
-	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth $smooth(function) $smooth(radius) $smooth(radius,minor) $smooth(sigma) $smooth(sigma,minor) $smooth(angle)]
+	    EvalLockCurrent lock,smooth [list $current(frame) smooth $smooth(function) $smooth(radius) $smooth(radius,minor) $smooth(sigma) $smooth(sigma,minor) $smooth(angle)]
 	} else {
-	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth delete]
+	    EvalLockCurrent lock,smooth [list $current(frame) smooth delete]
 	}
     }
 
@@ -259,9 +259,9 @@ proc MatchSmooth {which} {
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
 	    if {$view} {
-		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth $function $radius $radiusminor $sigma $sigmaminor $angle]
+		EvalLock lock,smooth $ff [list $ff smooth $function $radius $radiusminor $sigma $sigmaminor $angle]
 	    } else {
-		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth delete]
+		EvalLock lock,smooth $ff [list $ff smooth delete]
 	    }
 	}
     }

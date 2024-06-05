@@ -47,7 +47,7 @@ proc BinFrame {which bx by} {
     global current
     global rgb
 
-    RGBEvalLock rgb(lock,bin) $which [list $which bin factor $bx $by]
+    EvalLock lock,bin $which [list $which bin factor $bx $by]
     if {$which == $current(frame)} {
 	set bin(factor) "[$current(frame) get bin factor]"
     }
@@ -60,7 +60,7 @@ proc BinAbout {x y} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) [list $current(frame) bin about $x $y]
+	EvalLockCurrent lock,bin [list $current(frame) bin about $x $y]
 	UpdateBin
     }
 }
@@ -71,7 +71,7 @@ proc BinAboutCenter {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) [list $current(frame) bin about center]
+	EvalLockCurrent lock,bin [list $current(frame) bin about center]
 	UpdateBin
     }
 }
@@ -97,7 +97,7 @@ proc BinCols {x y z} {
 	    }
 	}
 
-	RGBEvalLockCurrent rgb(lock,bin) "$current(frame) bin cols \{$x\} \{$y\} \{$z\}"
+	EvalLockCurrent lock,bin "$current(frame) bin cols \{$x\} \{$y\} \{$z\}"
 
 	UpdateWCS
 	UpdateBin
@@ -110,7 +110,7 @@ proc BinFilter {str} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) "$current(frame) bin filter \{\{$str\}\}"
+	EvalLockCurrent lock,bin "$current(frame) bin filter \{\{$str\}\}"
 	UpdateBin
     }
 }
@@ -121,7 +121,7 @@ proc BinToFit {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) [list $current(frame) bin to fit]
+	EvalLockCurrent lock,bin [list $current(frame) bin to fit]
 	set bin(factor) "[$current(frame) get bin factor]"
 	UpdateBin
     }
@@ -133,7 +133,7 @@ proc ChangeBinFactor {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) [list $current(frame) bin factor to $bin(factor)]
+	EvalLockCurrent lock,bin [list $current(frame) bin factor to $bin(factor)]
 	UpdateBin
     }
 }
@@ -144,7 +144,7 @@ proc ChangeBinDepth {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) [list $current(frame) bin depth $bin(depth)]
+	EvalLockCurrent lock,bin [list $current(frame) bin depth $bin(depth)]
 	UpdateBin
     }
 }
@@ -155,7 +155,7 @@ proc ChangeBinFunction {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) [list $current(frame) bin function $bin(function)]
+	EvalLockCurrent lock,bin [list $current(frame) bin function $bin(function)]
 	UpdateBin
     }
 }
@@ -166,7 +166,7 @@ proc ChangeBinBufferSize {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,bin) [list $current(frame) bin buffer size $bin(buffersize)]
+	EvalLockCurrent lock,bin [list $current(frame) bin buffer size $bin(buffersize)]
 	UpdateBin
     }
 }
@@ -563,7 +563,7 @@ proc BinApplyDialog {} {
 		&& $dbin(ycol) != {}
 		&& $dbin(zcol) != {}} {
 
-		RGBEvalLockCurrent rgb(lock,bin) \
+		EvalLockCurrent lock,bin \
 		    [list $current(frame) bin to $dbin(factor,x) $dbin(factor,y) $dbin(depth) $dbin(zcol,min) $dbin(zcol,max) about center \{$dbin(xcol)\} \{$dbin(ycol)\} \{$dbin(zcol)\} \{$dbin(filter)\}]
 	    }
 	} else {
@@ -578,7 +578,7 @@ proc BinApplyDialog {} {
 		&& $dbin(ycol) != {}
 		&& $dbin(zcol) != {}} {
 
-		RGBEvalLockCurrent rgb(lock,bin) \
+		EvalLockCurrent lock,bin \
 		    [list $current(frame) bin to $dbin(factor,x) $dbin(factor,y) $dbin(depth) $dbin(zcol,min) $dbin(zcol,max) about $dbin(x) $dbin(y) \{$dbin(xcol)\} \{$dbin(ycol)\} \{$dbin(zcol)\} \{$dbin(filter)\}]
 	    }
 	}
@@ -589,7 +589,7 @@ proc BinApplyDialog {} {
 		&& $dbin(xcol) != {}
 		&& $dbin(ycol) != {}} {
 
-		RGBEvalLockCurrent rgb(lock,bin) \
+		EvalLockCurrent lock,bin \
 		    [list $current(frame) bin to $dbin(factor,x) $dbin(factor,y) about center \{$dbin(xcol)\} \{$dbin(ycol)\} \{$dbin(filter)\}]
 	    }
 	} else {
@@ -600,7 +600,7 @@ proc BinApplyDialog {} {
 		&& $dbin(xcol) != {}
 		&& $dbin(ycol) != {}} {
 
-		RGBEvalLockCurrent rgb(lock,bin) \
+		EvalLockCurrent lock,bin \
 		    [list $current(frame) bin to $dbin(factor,x) $dbin(factor,y) about $dbin(x) $dbin(y) \{$dbin(xcol)\} \{$dbin(ycol)\} \{$dbin(filter)\}]
 	    }
 	}
@@ -665,12 +665,12 @@ proc MatchBin {which} {
 
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,bin) $ff [list $ff bin factor to $factor]
-	    RGBEvalLock rgb(lock,bin) $ff [list $ff bin depth $depth]
-	    RGBEvalLock rgb(lock,bin) $ff "$ff bin filter \{\{$filter\}\}"
-	    RGBEvalLock rgb(lock,bin) $ff [list $ff bin buffer size $size]
-	    RGBEvalLock rgb(lock,bin) $ff [list $ff bin function $function]
-	    RGBEvalLock rgb(lock,bin) $ff "$ff bin cols \{\{[lindex $cols 0]\}\} \{\{[lindex $cols 1]\}\} \{\{[lindex $cols 2]\}\}"
+	    EvalLock lock,bin $ff [list $ff bin factor to $factor]
+	    EvalLock lock,bin $ff [list $ff bin depth $depth]
+	    EvalLock lock,bin $ff "$ff bin filter \{\{$filter\}\}"
+	    EvalLock lock,bin $ff [list $ff bin buffer size $size]
+	    EvalLock lock,bin $ff [list $ff bin function $function]
+	    EvalLock lock,bin $ff "$ff bin cols \{\{[lindex $cols 0]\}\} \{\{[lindex $cols 1]\}\} \{\{[lindex $cols 2]\}\}"
 	}
     }
 }

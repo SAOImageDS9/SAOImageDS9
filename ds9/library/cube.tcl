@@ -782,6 +782,8 @@ proc CubeBackup {ch which} {
 	base -
 	3d {CubeBackupBase $ch $which}
 	rgb {CubeBackupRGB $ch $which}
+	hsv {CubeBackupHSV $ch $which}
+	hls {CubeBackupHLS $ch $which}
     }
 }
 
@@ -811,6 +813,28 @@ proc CubeBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc CubeBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	CubeBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc CubeBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	CubeBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 proc MatchAxesCurrent {} {

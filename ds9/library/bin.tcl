@@ -696,6 +696,8 @@ proc BinBackup {ch which} {
 	base -
 	3d {BinBackupBase $ch $which}
 	rgb {BinBackupRGB $ch $which}
+	hsv {BinBackupHSV $ch $which}
+	hls {BinBackupHLS $ch $which}
     }
 }
 
@@ -724,6 +726,28 @@ proc BinBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc BinBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	BinBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc BinBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	BinBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 # Process Cmds

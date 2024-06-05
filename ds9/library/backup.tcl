@@ -330,6 +330,8 @@ proc BackupFrame {ch which dir} {
     DS9Backup $ch $which
     CubeBackup $ch $which
     RGBBackup $ch $which
+    HSVBackup $ch $which
+    HLSBackup $ch $which
     BinBackup $ch $which
     ScaleBackup $ch $which
     # Block need to be before WCS and Crop
@@ -580,6 +582,8 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
 		    $which save fits rgb cube file \"$ffn\"
 		    set param(file,mode) {rgb cube}
 		}
+		hsv {}
+		hls {}
 	    }
 	}
     }

@@ -30,6 +30,8 @@ protected:
 public:
   FrameT(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameT();
+
+  void savePhotoCmd(const char*);
 };
 
 #endif

@@ -258,6 +258,8 @@ proc BlockBackup {ch which} {
 	base -
 	3d {BlockBackupBase $ch $which}
 	rgb {BlockBackupRGB $ch $which}
+	hsv {BlockBackupHSV $ch $which}
+	hls {BlockBackupHLS $ch $which}
     }
 }
 
@@ -275,6 +277,28 @@ proc BlockBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc BlockBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	BlockBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc BlockBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	BlockBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 proc ProcessBlockCmd {varname iname} {

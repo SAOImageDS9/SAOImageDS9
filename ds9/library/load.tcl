@@ -25,7 +25,9 @@ proc MultiLoad {{layer {}} {mode {}}} {
 		}
 		CreateFrame
 	    }
-	    rgb {CreateFrame}
+	    rgb -
+	    hsv -
+	    hls {CreateFrame}
 	}
     } else {
 	CreateFrame
@@ -40,6 +42,7 @@ proc MultiLoad {{layer {}} {mode {}}} {
     }
 }
 
+# only used by rgb frame
 proc MultiLoadRGB {} {
     global ds9
     global current
@@ -212,6 +215,14 @@ proc ProcessLoad {{err 1}} {
 			"$current(frame)[$current(frame) get rgb channel]"
 		}
 	    }
+	}
+	hsv {
+	    ProcessLoadSaveParams \
+		"$current(frame)[$current(frame) get hsv channel]"
+	}
+	hls {
+	    ProcessLoadSaveParams \
+		"$current(frame)[$current(frame) get hls channel]"
 	}
     }
 

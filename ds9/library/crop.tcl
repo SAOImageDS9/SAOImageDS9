@@ -360,6 +360,8 @@ proc CropBackup {ch which} {
 	base -
 	3d {CropBackupBase $ch $which}
 	rgb {CropBackupRGB $ch $which}
+	hsv {CropBackupHSV $ch $which}
+	hls {CropBackupHLS $ch $which}
     }
 }
 
@@ -386,6 +388,28 @@ proc CropBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc CropBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	CropBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc CropBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	CropBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 # Process Cmds

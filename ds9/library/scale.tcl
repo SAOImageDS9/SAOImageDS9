@@ -869,6 +869,8 @@ proc ScaleBackup {ch which} {
 	base -
 	3d {ScaleBackupBase $ch $which}
 	rgb {ScaleBackupRGB $ch $which}
+	hsv {ScaleBackupHSV $ch $which}
+	hls {ScaleBackupHLS $ch $which}
     }
 }
 
@@ -895,6 +897,28 @@ proc ScaleBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc ScaleBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	ScaleBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc ScaleBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	ScaleBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 # Process Cmds

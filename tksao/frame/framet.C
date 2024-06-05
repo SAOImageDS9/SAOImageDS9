@@ -361,3 +361,110 @@ void FrameT::updateColorCells(int cnt)
   cellsptr_ =NULL;
   cellsparentptr_ =NULL;
 }
+
+void FrameT::savePhotoCmd(const char* ph)
+{
+  // need to determine size from key context
+  FitsImage* fits = keyContext->fits;
+  if (!fits)
+    return;
+
+  // check size
+  FitsBound* params = fits->getDataParams(context->secMode());
+  for (int kk=0; kk<3; kk++) {
+    if (!view[kk] || !context[kk].fits)
+      continue;
+
+    FitsImage* ptr = context[kk].fits;
+    FitsBound* pptr = ptr->getDataParams(context[kk].secMode());
+    if (params->xmin != pptr->xmin || params->xmax != pptr->xmax ||
+	params->ymin != pptr->ymin || params->ymax != pptr->ymax) {
+      internalError("All channels need to be same size.");
+      return;
+    }
+  }
+
+  // width,height
+  int width = params->xmax - params->xmin;
+  int height = params->ymax - params->ymin;
+
+  // photo
+  if (*ph == '\0') {
+    Tcl_AppendResult(interp, "bad image name ", NULL);
+    return;
+  }
+  Tk_PhotoHandle photo = Tk_FindPhoto(interp, ph);
+  if (!photo) {
+    Tcl_AppendResult(interp, "bad image handle ", NULL);
+    return;
+  }
+  if (Tk_PhotoSetSize(interp, photo, width, height) != TCL_OK) {
+    Tcl_AppendResult(interp, "bad photo set size ", NULL);
+    return;
+  }    
+  Tk_PhotoBlank(photo);
+  Tk_PhotoImageBlock block;
+  if (!Tk_PhotoGetImage(photo,&block)) {
+    Tcl_AppendResult(interp, "bad image block ", NULL);
+    return;
+  }
+
+  if (block.pixelSize<4) {
+    Tcl_AppendResult(interp, "bad pixel size ", NULL);
+    return;
+  }
+
+  // clear, set alpha channel
+  unsigned char* dest = block.pixelPtr;
+  for (long jj=0; jj<height; jj++) {
+    for (long ii=0; ii<width; ii++, dest+=block.pixelSize) {
+      *(dest+block.offset[0]) = 0; // red
+      *(dest+block.offset[1]) = 0; // green
+      *(dest+block.offset[2]) = 0; // blue
+      *(dest+block.offset[3]) = 255; // alpha
+    }
+  }
+
+  // main loop
+  SETSIGBUS
+
+  // one channel at a time
+  for (int kk=0; kk<3; kk++) {
+    if (!view[kk] || !context[kk].fits)
+      continue;
+
+    // basics
+    int length = colorScale[kk]->size() - 1;
+    const unsigned char* table = colorScale[kk]->psColors();
+
+    // variable
+    FitsImage* fits = context[kk].cfits;
+    double ll = fits->low();
+    double hh = fits->high();
+    double diff = hh - ll;
+
+    unsigned char* dest = block.pixelPtr;
+    for (long jj=params->ymax-1; jj>=params->ymin; jj--) {
+      for (long ii=params->xmin; ii<params->xmax; ii++, dest+=block.pixelSize) {
+	double value = fits->getValueDouble(Vector(ii,jj));
+
+	if (isfinite(diff) && isfinite(value)) {
+	  if (value <= ll)
+	    *(dest+block.offset[kk]) = table[0];
+	  else if (value >= hh)
+	    *(dest+block.offset[kk]) = table[length];
+	  else
+	    *(dest+block.offset[kk]) = table[(int)(((value - ll)/diff * length) + .5)];
+	}
+      }
+    }
+  }
+  CLEARSIGBUS
+
+  if (Tk_PhotoPutBlock(interp, photo, &block, 0, 0, width, height, 
+			TK_PHOTO_COMPOSITE_SET) != TCL_OK) {
+    Tcl_AppendResult(interp, "bad put block ", NULL);
+    return;
+  }
+}
+

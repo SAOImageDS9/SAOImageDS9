@@ -21,9 +21,75 @@ proc HSVDef {} {
     set hsv(lock,bin) 0
     set hsv(lock,axes) 0
     set hsv(lock,scale) 0
+    set hsv(lock,scalelimits) 0
     set hsv(lock,colorbar) 0
     set hsv(lock,block) 0
     set hsv(lock,smooth) 0
+}
+
+proc HSVEvalLockCurrent {varname cmd} {
+    global current
+
+    global hsv
+    global crop
+    global cube
+    global bin
+    global scale
+    global colorbar
+    global block
+    global smooth
+
+    HSVEvalLock $varname $current(frame) $cmd
+}
+
+proc HSVEvalLock {varname which cmd} {
+    upvar $varname var
+
+    global hsv
+    global crop
+    global cube
+    global bin
+    global scale
+    global colorbar
+    global block
+    global smooth
+
+    if {$var && [$which get type] == {hsv}} {
+	set ch [$which get hsv channel]
+	foreach cc {hue saturation value} {
+	    $which hsv channel $cc
+	    eval $cmd
+	}
+	$which hsv channel $ch
+    } else {
+	eval $cmd
+    }
+}
+
+proc HSVEvalLockColorbarCurrent {cmd} {
+    global current
+    
+    HSVEvalLockColorbar $current(frame) $cmd
+}
+
+proc HSVEvalLockColorbar {which cmd} {
+    global current
+    global scale
+    global hsv
+
+    set cb ${which}cb
+    if {$hsv(lock,colorbar) && [$which get type] == {hsv}} {
+	set ch [$which get hsv channel]
+	foreach cc {hue saturation value} {
+	    $which hsv channel $cc
+	    $cb hsv channel $cc
+	    eval $cmd
+	}
+	$which hsv channel $ch
+	$cb hsv channel $ch
+    } else {
+	eval $cmd
+    }
 }
 
 proc HSVChannel {} {
@@ -99,6 +165,8 @@ proc HSVDialog {} {
 	-variable hsv(lock,axes)
     $mb.lock add checkbutton -label [msgcat::mc {Scale}] \
 	-variable hsv(lock,scale)
+    $mb.lock add checkbutton -label [msgcat::mc {Scale and Limits}] \
+	-variable hsv(lock,scalelimits)
     $mb.lock add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable hsv(lock,colorbar)
     $mb.lock add checkbutton -label [msgcat::mc {Block}] \

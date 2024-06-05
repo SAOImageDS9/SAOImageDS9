@@ -32,7 +32,7 @@ proc CropReset {} {
 
 proc CropButton {which x y} {
     global rgb
-    EvalLock lock,crop $which [list $which crop begin $x $y]
+    RGBEvalLock rgb(lock,crop) $which [list $which crop begin $x $y]
 }
 
 proc CropMotion {which x y} {
@@ -42,7 +42,7 @@ proc CropMotion {which x y} {
 proc CropRelease {which x y} {
     global rgb
 
-    EvalLock lock,crop $which [list $which crop end $x $y]
+    RGBEvalLock rgb(lock,crop) $which [list $which crop end $x $y]
     UpdateCrop $which
 }
 
@@ -301,9 +301,9 @@ proc MatchCrop {which sys} {
 
 		foreach ff $ds9(frames) {
 		    if {$ff != $which} {
-			EvalLock lock,crop $ff [list $ff datasec $datasec]
-			EvalLock lock,crop $ff [list $ff crop center $r(x) $r(y) $sys fk5 $r(w) $r(h) $sys degrees]
-			EvalLock lock,crop $ff [list $ff crop 3d $qq image]
+			RGBEvalLock rgb(lock,crop) $ff [list $ff datasec $datasec]
+			RGBEvalLock rgb(lock,crop) $ff [list $ff crop center $r(x) $r(y) $sys fk5 $r(w) $r(h) $sys degrees]
+			RGBEvalLock rgb(lock,crop) $ff [list $ff crop 3d $qq image]
 		    }
 		}
 	    }
@@ -320,8 +320,8 @@ proc MatchCrop {which sys} {
 		    foreach ff $ds9(frames) {
 			if {$ff != $which} {
 			    if {[$ff has wcs $ss]} {
-				EvalLock lock,crop $ff [list $ff crop center $r(x) $r(y) $ss fk5 $r(w) $r(h) $ss degrees]
-				EvalLock lock,crop $ff [list $ff crop 3d $qq $ss]
+				RGBEvalLock rgb(lock,crop) $ff [list $ff crop center $r(x) $r(y) $ss fk5 $r(w) $r(h) $ss degrees]
+				RGBEvalLock rgb(lock,crop) $ff [list $ff crop 3d $qq $ss]
 			    }
 			}
 		    }
@@ -331,8 +331,8 @@ proc MatchCrop {which sys} {
     } else {
 	foreach ff $ds9(frames) {
 	    if {$ff != $which} {
-		EvalLock lock,crop $ff [list $ff crop]
-		EvalLock lock,crop $ff [list $ff crop 3d]
+		RGBEvalLock rgb(lock,crop) $ff [list $ff crop]
+		RGBEvalLock rgb(lock,crop) $ff [list $ff crop 3d]
 	    }
 	}
     }

@@ -94,6 +94,8 @@ proc FrameMainMenu {} {
 	-command MatchAxesCurrent
     $ds9(mb).frame.match add command -label [msgcat::mc {Scale}] \
 	-command MatchScaleCurrent
+    $ds9(mb).frame.match add command -label [msgcat::mc {Scale and Limits}] \
+	-command MatchScaleLimitsCurrent
     $ds9(mb).frame.match add command -label [msgcat::mc {Colorbar}] \
 	-command MatchColorCurrent
     $ds9(mb).frame.match add command -label [msgcat::mc {Block}] \
@@ -165,6 +167,8 @@ proc FrameMainMenu {} {
 	-variable cube(lock,axes) -command {LockAxesCurrent}
     $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {Scale}] \
 	-variable scale(lock) -command {LockScaleCurrent}
+    $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {Scale and Limits}] \
+	-variable scale(lock,limits) -command {LockScaleLimitsCurrent}
     $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable colorbar(lock) -command {LockColorCurrent}
     $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {Block}] \
@@ -417,6 +421,7 @@ proc ButtonsFrameDef {} {
 	frame,match,bin 0
 	frame,match,axes 0
 	frame,match,scale 0
+	frame,match,scalelimits 0
 	frame,match,color 0
 	frame,match,smooth 0
 
@@ -444,6 +449,7 @@ proc ButtonsFrameDef {} {
 	frame,lock,bin 0
 	frame,lock,axes 0
 	frame,lock,scale 0
+	frame,lock,scalelimits 0
 	frame,lock,color 0
 	frame,lock,smooth 0
 
@@ -538,6 +544,9 @@ proc CreateButtonsFrame {} {
 	[string tolower [msgcat::mc {Match Axes}]] MatchAxesCurrent
     ButtonButton $ds9(buttons).frame.matchscale \
 	[string tolower [msgcat::mc {Match Scale}]] MatchScaleCurrent
+    ButtonButton $ds9(buttons).frame.matchscalelimits \
+	[string tolower [msgcat::mc {Match Limits}]] \
+	MatchScaleLimitsCurrent
     ButtonButton $ds9(buttons).frame.matchcolor \
 	[string tolower [msgcat::mc {Match Color}]] MatchColorCurrent
     ButtonButton $ds9(buttons).frame.matchsmooth \
@@ -605,6 +614,9 @@ proc CreateButtonsFrame {} {
 	cube lock,axes LockAxesCurrent
     CheckButton $ds9(buttons).frame.lockscale \
 	[string tolower [msgcat::mc {Lock Scale}]] scale lock LockScaleCurrent
+    CheckButton $ds9(buttons).frame.lockscalelimits \
+	[string tolower [msgcat::mc {Lock Limits}]] \
+	scale lock,limits LockScaleLimitsCurrent
     CheckButton $ds9(buttons).frame.lockcolor \
 	[string tolower [msgcat::mc {Lock Color}]] \
 	colorbar lock LockColorCurrent
@@ -730,6 +742,7 @@ proc CreateButtonsFrame {} {
         $ds9(buttons).frame.matchbin pbuttons(frame,match,bin)
         $ds9(buttons).frame.matchaxes pbuttons(frame,match,axes)
         $ds9(buttons).frame.matchscale pbuttons(frame,match,scale)
+        $ds9(buttons).frame.matchscalelimits pbuttons(frame,match,scalelimits)
         $ds9(buttons).frame.matchcolor pbuttons(frame,match,color)
         $ds9(buttons).frame.matchsmooth pbuttons(frame,match,smooth)
 
@@ -757,6 +770,7 @@ proc CreateButtonsFrame {} {
         $ds9(buttons).frame.lockbin pbuttons(frame,lock,bin)
         $ds9(buttons).frame.lockaxes pbuttons(frame,lock,axes)
         $ds9(buttons).frame.lockscale pbuttons(frame,lock,scale)
+        $ds9(buttons).frame.lockscalelimits pbuttons(frame,lock,scalelimits)
         $ds9(buttons).frame.lockcolor pbuttons(frame,lock,color)
         $ds9(buttons).frame.locksmooth pbuttons(frame,lock,smooth)
 
@@ -889,6 +903,9 @@ proc PrefsDialogButtonbarFrame {f} {
     $m.match add checkbutton -label [msgcat::mc {Scale}] \
 	-variable pbuttons(frame,match,scale) \
 	-command {UpdateButtons buttons(frame)}
+    $m.match add checkbutton -label [msgcat::mc {Scale and Limits}] \
+	-variable pbuttons(frame,match,scalelimits) \
+	-command {UpdateButtons buttons(frame)}
     $m.match add checkbutton -label [msgcat::mc {Color}] \
 	-variable pbuttons(frame,match,color) \
 	-command {UpdateButtons buttons(frame)}
@@ -978,6 +995,9 @@ proc PrefsDialogButtonbarFrame {f} {
 	-command {UpdateButtons buttons(frame)}
     $m.lock add checkbutton -label [msgcat::mc {Scale}] \
 	-variable pbuttons(frame,lock,scale) \
+	-command {UpdateButtons buttons(frame)}
+    $m.lock add checkbutton -label [msgcat::mc {Scale and Limits}] \
+	-variable pbuttons(frame,lock,scalelimits) \
 	-command {UpdateButtons buttons(frame)}
     $m.lock add checkbutton -label [msgcat::mc {Color}] \
 	-variable pbuttons(frame,lock,color) \

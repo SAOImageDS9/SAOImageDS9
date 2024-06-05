@@ -21,9 +21,75 @@ proc HLSDef {} {
     set hls(lock,bin) 0
     set hls(lock,axes) 0
     set hls(lock,scale) 0
+    set hls(lock,scalelimits) 0
     set hls(lock,colorbar) 0
     set hls(lock,block) 0
     set hls(lock,smooth) 0
+}
+
+proc HLSEvalLockCurrent {varname cmd} {
+    global current
+
+    global hls
+    global crop
+    global cube
+    global bin
+    global scale
+    global colorbar
+    global block
+    global smooth
+
+    HLSEvalLock $varname $current(frame) $cmd
+}
+
+proc HLSEvalLock {varname which cmd} {
+    upvar $varname var
+
+    global hls
+    global crop
+    global cube
+    global bin
+    global scale
+    global colorbar
+    global block
+    global smooth
+
+    if {$var && [$which get type] == {hls}} {
+	set ch [$which get hls channel]
+	foreach cc {hue lightness saturation} {
+	    $which hls channel $cc
+	    eval $cmd
+	}
+	$which hls channel $ch
+    } else {
+	eval $cmd
+    }
+}
+
+proc HLSEvalLockColorbarCurrent {cmd} {
+    global current
+    
+    HLSEvalLockColorbar $current(frame) $cmd
+}
+
+proc HLSEvalLockColorbar {which cmd} {
+    global current
+    global scale
+    global hls
+
+    set cb ${which}cb
+    if {$hls(lock,colorbar) && [$which get type] == {hls}} {
+	set ch [$which get hls channel]
+	foreach cc {hue lightness saturation} {
+	    $which hls channel $cc
+	    $cb hls channel $cc
+	    eval $cmd
+	}
+	$which hls channel $ch
+	$cb hls channel $ch
+    } else {
+	eval $cmd
+    }
 }
 
 proc HLSChannel {} {
@@ -99,6 +165,8 @@ proc HLSDialog {} {
 	-variable hls(lock,axes)
     $mb.lock add checkbutton -label [msgcat::mc {Scale}] \
 	-variable hls(lock,scale)
+    $mb.lock add checkbutton -label [msgcat::mc {Scale and Limits}] \
+	-variable hls(lock,scalelimits)
     $mb.lock add checkbutton -label [msgcat::mc {Colorbar}] \
 	-variable hls(lock,colorbar)
     $mb.lock add checkbutton -label [msgcat::mc {Block}] \

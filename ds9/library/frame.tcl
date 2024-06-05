@@ -2116,7 +2116,6 @@ proc ClearFrame {which} {
 	set varname $which$cc
 	global $varname
 	if {[info exists $varname]} {
-	    puts $varname
 	    unset $varname
 	}
     }

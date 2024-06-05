@@ -56,7 +56,7 @@ proc EvalLock {var which cmd} {
 	hsv {
 	    if {$hsv($var)} {
 		set ch [$which get hsv channel]
-		foreach cc {hue staturation value} {
+		foreach cc {hue saturation value} {
 		    $which hsv channel $cc
 		    eval $cmd
 		}
@@ -87,22 +87,56 @@ proc EvalLockColorbarCurrent {cmd} {
 }
 
 proc EvalLockColorbar {which cmd} {
-    global current
-    global scale
     global rgb
+    global hsv
+    global hls
 
     set cb ${which}cb
-    if {$rgb(lock,colorbar) && [$which get type] == {rgb}} {
-	set ch [$which get rgb channel]
-	foreach cc {red green blue} {
-	    $which rgb channel $cc
-	    $cb rgb channel $cc
-	    eval $cmd
+    switch [$which get type] {
+	base -
+	3d {eval $cmd}
+	rgb {
+	    if {$rgb(lock,colorbar)} {
+		set ch [$which get rgb channel]
+		foreach cc {red green blue} {
+		    $which rgb channel $cc
+		    $cb rgb channel $cc
+		    eval $cmd
+		}
+		$which rgb channel $ch
+		$cb rgb channel $ch
+	    } else {
+		eval $cmd
+	    }
 	}
-	$which rgb channel $ch
-	$cb rgb channel $ch
-    } else {
-	eval $cmd
+	hsv {
+	    if {$hsv(lock,colorbar)} {
+		set ch [$which get hsv channel]
+		foreach cc {hue saturation value} {
+		    $which hsv channel $cc
+		    $cb hsv channel $cc
+		    eval $cmd
+		}
+		$which hsv channel $ch
+		$cb hsv channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+	hls {
+	    if {$hls(lock,colorbar)} {
+		set ch [$which get hls channel]
+		foreach cc {hue lightness value} {
+		    $which hls channel $cc
+		    $cb hls channel $cc
+		    eval $cmd
+		}
+		$which hls channel $ch
+		$cb hls channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
     }
 }
 

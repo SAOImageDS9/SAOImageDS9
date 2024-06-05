@@ -1091,9 +1091,30 @@ proc UpdateFileMenuImport {} {
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
 
+
     $mm entryconfig [msgcat::mc {Import}] -state disabled
+
+    $bb.importarray configure -state disabled
+    $bb.importnrrd configure -state disabled
+    $bb.importenvi configure -state disabled
+    $bb.importrgbarray configure -state disabled
+    $bb.importgif configure -state disabled
+    $bb.importtiff configure -state disabled
+    $bb.importjpeg configure -state disabled
+    $bb.importpng configure -state disabled
+
     if {$current(frame) != {}} {
 	$mm entryconfig [msgcat::mc {Import}] -state normal
+
+	$bb.importarray configure -state normal
+	$bb.importnrrd configure -state normal
+	$bb.importenvi configure -state normal
+	$bb.importrgbarray configure -state normal
+	$bb.importgif configure -state normal
+	$bb.importtiff configure -state normal
+	$bb.importjpeg configure -state normal
+	$bb.importpng configure -state normal
+
 	switch -- [$current(frame) get type] {
 	    base -
 	    3d -
@@ -1101,10 +1122,12 @@ proc UpdateFileMenuImport {} {
 	    hls {
 		$mm.import entryconfig \
 		    [msgcat::mc {RGB Array}] -state disabled
+		$bb.importrgbarray configure -state disabled
 	    }
 	    rgb {
 		$mm.import entryconfig \
 		    [msgcat::mc {RGB Array}] -state normal
+		$bb.importrgbarray configure -state normal
 	    }
 	}
     }

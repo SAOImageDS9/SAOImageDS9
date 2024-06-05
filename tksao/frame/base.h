@@ -902,7 +902,7 @@ public:
   virtual void loadArrayRGBCubeSocketGZCmd(int, const char*) {}
   virtual void loadArrayRGBCubeVarCmd(const char*, const char*) {}
 
-  virtual void savePhotoCmd(const char*) {}
+  virtual void savePhotoCmd(const char*) =0;
 
   void saveFits(OutFitsStream&);
   void saveFitsFileCmd(const char*);

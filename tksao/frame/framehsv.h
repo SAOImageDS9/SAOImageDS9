@@ -11,9 +11,13 @@
 
 class FrameHSV : public FrameT {
  protected:
+  unsigned char default_[5] = {255, 0, 0, 255, 255};
+
+ protected:
   int isFrameHSV() {return 1;}
 
   void convert(unsigned char*, unsigned char*);
+  unsigned char* getDefault() {return default_;}
 
  public:
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);

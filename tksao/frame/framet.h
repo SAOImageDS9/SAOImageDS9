@@ -21,6 +21,7 @@ protected:
 
 protected:
   virtual void convert(unsigned char*, unsigned char*) =0;
+  virtual unsigned char* getDefault() =0;
 
   unsigned char* fillImage(int, int, Coord::InternalSystem);
   void updateColorScale();

@@ -10,10 +10,14 @@
 // Frame
 
 class FrameHLS : public FrameT {
+protected:
+  unsigned char default_[5] = {255, 0, 0, 127, 255};
+
  protected:
   int isFrameHLS() {return 1;}
 
   void convert(unsigned char*, unsigned char*);
+  unsigned char* getDefault() {return default_;}
 
  public:
   FrameHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);

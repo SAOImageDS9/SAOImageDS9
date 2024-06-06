@@ -1126,11 +1126,6 @@ proc UpdateFrameMenu {} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Reset Frame}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Refresh Frame}] -state normal
 
-#	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state normal
-#	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state normal
-#	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state normal
-#	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state normal
-
 	$ds9(mb).frame entryconfig [msgcat::mc {Match}] -state normal
 	$ds9(mb).frame entryconfig [msgcat::mc {Lock}] -state normal
 
@@ -1147,11 +1142,6 @@ proc UpdateFrameMenu {} {
 	$ds9(buttons).frame.clear configure -state normal
 	$ds9(buttons).frame.reset configure -state normal
 	$ds9(buttons).frame.refresh configure -state normal
-
-#	$ds9(buttons).frame.single configure -state normal
-#	$ds9(buttons).frame.tile configure -state normal
-#	$ds9(buttons).frame.blink configure -state normal
-#	$ds9(buttons).frame.fade configure -state normal
 
 	$ds9(buttons).frame.movefirst configure -state normal
 	$ds9(buttons).frame.moveprev configure -state normal
@@ -1170,11 +1160,6 @@ proc UpdateFrameMenu {} {
 	$ds9(mb).frame entryconfig [msgcat::mc {Reset Frame}] -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {Refresh Frame}] -state disabled
 
-#	$ds9(mb).frame entryconfig [msgcat::mc {Single Frame}] -state disabled
-#	$ds9(mb).frame entryconfig [msgcat::mc {Tile Frames}] -state disabled
-#	$ds9(mb).frame entryconfig [msgcat::mc {Blink Frames}] -state disabled
-#	$ds9(mb).frame entryconfig [msgcat::mc {Fade Frames}] -state disabled
-
 	$ds9(mb).frame entryconfig [msgcat::mc {Match}] -state disabled
 	$ds9(mb).frame entryconfig [msgcat::mc {Lock}] -state disabled
 
@@ -1192,11 +1177,6 @@ proc UpdateFrameMenu {} {
 	$ds9(buttons).frame.reset configure -state disabled
 	$ds9(buttons).frame.refresh configure -state disabled
 
-#	$ds9(buttons).frame.single configure -state disabled
-#	$ds9(buttons).frame.tile configure -state disabled
-#	$ds9(buttons).frame.blink configure -state disabled
-#	$ds9(buttons).frame.fade configure -state disabled
-
 	$ds9(buttons).frame.movefirst configure -state disabled
 	$ds9(buttons).frame.moveprev configure -state disabled
 	$ds9(buttons).frame.movenext configure -state disabled
@@ -1209,89 +1189,22 @@ proc UpdateFrameMenu {} {
     }
 
     if {$current(frame) != {}} {
-	$ds9(mb).frame entryconfig [msgcat::mc {Cube}] \
-	    -state normal
+	$ds9(mb).frame entryconfig [msgcat::mc {Cube}] -state normal
+	$ds9(mb).frame entryconfig [msgcat::mc {RGB}] -state normal
+	$ds9(mb).frame entryconfig [msgcat::mc {HSV}] -state normal
+	$ds9(mb).frame entryconfig [msgcat::mc {HLS}] -state normal
+	$ds9(mb).frame entryconfig [msgcat::mc {3d}] -state normal
 	$ds9(buttons).frame.cube configure -state normal
-
-	switch -- [$current(frame) get type] {
-	    base {
-		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
-		    -state normal
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.hsv configure -state disabled
-		$ds9(buttons).frame.hls configure -state disabled
-		$ds9(buttons).frame.3d configure -state normal
-	    }
-	    rgb {
-		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
-		    -state normal
-		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
-		    -state disabled
-		$ds9(buttons).frame.rgb configure -state normal
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.3d configure -state disabled
-	    }
-	    hsv {
-		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
-		    -state normal
-		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
-		    -state disabled
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.rgb configure -state normal
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.3d configure -state disabled
-	    }
-	    hls {
-		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
-		    -state normal
-		$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
-		    -state disabled
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.rgb configure -state normal
-		$ds9(buttons).frame.3d configure -state disabled
-	    }
-	    3d {
-		$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
-		    -state disabled
-		$ds9(mb).frame entryconfig [msgcat::mc {3d}]  \
-		    -state normal
-		$ds9(buttons).frame.rgb configure -state disabled
-		$ds9(buttons).frame.hsv configure -state disabled
-		$ds9(buttons).frame.hls configure -state disabled
-		$ds9(buttons).frame.3d configure -state normal
-	    }
-	}
+	$ds9(buttons).frame.rgb configure -state normal
+	$ds9(buttons).frame.hsv configure -state normal
+	$ds9(buttons).frame.hls configure -state normal
+	$ds9(buttons).frame.3d configure -state normal
     } else {
-	$ds9(mb).frame entryconfig [msgcat::mc {Cube}] \
-	    -state disabled
-	$ds9(mb).frame entryconfig [msgcat::mc {RGB}] \
-	    -state disabled
-	$ds9(mb).frame entryconfig [msgcat::mc {HSV}] \
-	    -state disabled
-	$ds9(mb).frame entryconfig [msgcat::mc {HLS}] \
-	    -state disabled
-	$ds9(mb).frame entryconfig [msgcat::mc {3d}] \
-	    -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {Cube}] -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {RGB}] -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {HSV}] -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {HLS}] -state disabled
+	$ds9(mb).frame entryconfig [msgcat::mc {3d}] -state disabled
 	$ds9(buttons).frame.cube configure -state disabled
 	$ds9(buttons).frame.rgb configure -state disabled
 	$ds9(buttons).frame.hsv configure -state disabled

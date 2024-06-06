@@ -405,7 +405,7 @@ void FrameT::savePhotoCmd(const char* ph)
   unsigned char* img = new unsigned char[width*height*5];
   {
     unsigned char* dest = img;
-    unsigned char def[5] = {255, 0, 0, 255, 255};
+    unsigned char* def = getDefault();
     for (int jj=0; jj<height; jj++)
       for (int ii=0; ii<width; ii++, dest+=5)
 	memcpy(dest,def,5);

@@ -25,11 +25,11 @@ void FrameHLS::convert(unsigned char* dest, unsigned char* src)
   float diff = max-min;
 
   // special case
-  // h undefined
+  // h undefined (error)
   if (diff==0) {
-    *(dest  ) =*(src+3);
-    *(dest+1) =*(src+3);
-    *(dest+2) =*(src+3);
+    *(dest  ) =255;
+    *(dest+1) =255;
+    *(dest+2) =255;
     return;
   }    
 
@@ -57,16 +57,26 @@ void FrameHLS::convert(unsigned char* dest, unsigned char* src)
   // 0 < s < 1
   // 0 < v < 1
 
-  float m2 = (l<=.5) ? l*(1+s) : 1+s-l*s;
+  float m2 = (l<=.5) ? l*(1+s) : l+s-(l*s);
   float m1 = 2*l-m2;
 
-  *(dest)   =value(m1,m2,h+120)*256;
-  *(dest+1) =value(m1,m2,h)*256;
-  *(dest+3) =value(m1,m2,h-120);
+  if (s==0) {
+    *(dest)   =l*256;
+    *(dest+1) =l*256;
+    *(dest+2) =l*256;
+  }
+  else {
+    float r =value(m1,m2,h+120);
+    float g =value(m1,m2,h);
+    float b =value(m1,m2,h-120);
+
+    *(dest)   =r*256;
+    *(dest+1) =g*256;
+    *(dest+2) =b*256;
+  }
 }
 
-float FrameHLS::value(float n1, float n2, float hue)
-{
+float FrameHLS::value(float n1, float n2, float hue){
   if (hue<60)
     return n1+(n2-n1)*hue/60;
   else if (hue<180)

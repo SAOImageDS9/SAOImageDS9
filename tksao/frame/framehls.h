@@ -17,6 +17,7 @@ protected:
   int isFrameHLS() {return 1;}
 
   void convert(unsigned char*, unsigned char*);
+  float value(float, float, float);
   unsigned char* getDefault() {return default_;}
 
  public:

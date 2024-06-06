@@ -434,23 +434,19 @@ void FrameT::savePhotoCmd(const char* ph)
       table = colorScaleT[kk-1]->psColors();
     }
 
-    FitsImage* sptr = context[kk].cfits;
-
     // variable
-    //   FitsBound* params = sptr->getDataParams(context[kk].secMode());
-    //    int srcw = sptr->width();
-
-    double ll = sptr->low();
-    double hh = sptr->high();
+    FitsImage* fits = context[kk].cfits;
+    double ll = fits->low();
+    double hh = fits->high();
     double diff = hh - ll;
 
     // main loop
     unsigned char* dest = img+kk;
     char* mkptr = mk;
 
-    for (long jj=0; jj<height; jj++) {
-      for (long ii=0; ii<width; ii++, dest+=5, mkptr++) {
-	double value = sptr->getValueDouble(Vector(ii,jj));
+    for (long jj=params->ymin; jj<params->ymax; jj++) {
+      for (long ii=params->xmin; ii<params->xmax; ii++, dest+=5, mkptr++) {
+	double value = fits->getValueDouble(Vector(ii,jj));
 	if (isfinite(diff) && isfinite(value)) {
 	  if (kk==0) {
 	    if (value <= ll) {

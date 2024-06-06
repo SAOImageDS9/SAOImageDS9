@@ -44,15 +44,17 @@ unsigned char* FrameT::fillImage(int width, int height,
 
   // img
   unsigned char* img = new unsigned char[width*height*5];
-  unsigned char* dest = img;
-  unsigned char def[5] = {255, 0, 0, 255, 255};
-  for (int jj=0; jj<height; jj++)
-    for (int ii=0; ii<width; ii++, dest+=5)
-      memcpy(dest,def,5);
+  {
+    unsigned char* dest = img;
+    unsigned char def[5] = {255, 0, 0, 255, 255};
+    for (int jj=0; jj<height; jj++)
+      for (int ii=0; ii<width; ii++, dest+=5)
+	memcpy(dest,def,5);
+  }
 
   // mk
-  char* mk = new char[width*height*3];
-  memset(mk,0,width*height*3);
+  char* mk = new char[width*height];
+  memset(mk,0,width*height);
 
   SETSIGBUS
 
@@ -87,10 +89,10 @@ unsigned char* FrameT::fillImage(int width, int height,
 
     // main loop
     unsigned char* dest = img+kk;
-    char* mkptr = mk+kk;
+    char* mkptr = mk;
 
     for (long jj=0; jj<height; jj++) {
-      for (long ii=0; ii<width; ii++, dest+=5, mkptr+=3) {
+      for (long ii=0; ii<width; ii++, dest+=5, mkptr++) {
 
 	if (mosaic) {
 	  sptr = context[kk].cfits;
@@ -144,7 +146,7 @@ unsigned char* FrameT::fillImage(int width, int height,
 
 	      *mkptr =2;
 	    }
-	    else
+	    else if (*mkptr < 2)
 	      *mkptr =1;
 
 	    break;
@@ -182,7 +184,7 @@ unsigned char* FrameT::fillImage(int width, int height,
     unsigned char* dest = imgrgb;
     char* mkptr = mk;
     for (int jj=0; jj<height; jj++)
-      for (int ii=0; ii<width; ii++, dest+=3, src+=5, mkptr+=3) {
+      for (int ii=0; ii<width; ii++, dest+=3, src+=5, mkptr++) {
 	switch (*mkptr) {
 	case 2:
 	  convert(dest,src);
@@ -345,11 +347,6 @@ void FrameT::updateColorCells(int cnt)
 
 void FrameT::savePhotoCmd(const char* ph)
 {
-  /*
-  // we need a colorScale before we can render
-  if (!validColorScale())
-    return;
-
   // need to determine size from key context
   FitsImage* fits = keyContext->fits;
   if (!fits)
@@ -361,9 +358,6 @@ void FrameT::savePhotoCmd(const char* ph)
   // width,height
   int width = params->xmax - params->xmin;
   int height = params->ymax - params->ymin;
-
-  cerr << "width " << width << '=' << params->xmax << '-' << params->xmin << endl;
-  cerr << "height " << height << '=' << params->ymax << '-' << params->ymin << endl;
 
   // photo
   if (*ph == '\0') {
@@ -403,15 +397,32 @@ void FrameT::savePhotoCmd(const char* ph)
     }
   }
 
+  // we need a colorScale before we can render
+  if (!validColorScale())
+    return;
+
   // img
   unsigned char* img = new unsigned char[width*height*5];
-  memset(img,255,width*height*5);
+  {
+    unsigned char* dest = img;
+    unsigned char def[5] = {255, 0, 0, 255, 255};
+    for (int jj=0; jj<height; jj++)
+      for (int ii=0; ii<width; ii++, dest+=5)
+	memcpy(dest,def,5);
+  }
+  
+  // mk
+  char* mk = new char[width*height];
+  memset(mk,0,width*height);
+
+  SETSIGBUS
 
   // one channel at a time
   for (int kk=0; kk<3; kk++) {
     if (!view[kk] || !context[kk].fits)
       continue;
 
+    // basics
     int length;
     const unsigned char* table;
     if (kk==0) {
@@ -423,19 +434,23 @@ void FrameT::savePhotoCmd(const char* ph)
       table = colorScaleT[kk-1]->psColors();
     }
 
+    FitsImage* sptr = context[kk].cfits;
+
     // variable
-    FitsImage* fits = context[kk].cfits;
-    double ll = fits->low();
-    double hh = fits->high();
+    //   FitsBound* params = sptr->getDataParams(context[kk].secMode());
+    //    int srcw = sptr->width();
+
+    double ll = sptr->low();
+    double hh = sptr->high();
     double diff = hh - ll;
 
     // main loop
-    SETSIGBUS
+    unsigned char* dest = img+kk;
+    char* mkptr = mk;
 
-    unsigned char* dest = img;
     for (long jj=0; jj<height; jj++) {
-      for (long ii=0; ii<width; ii++, dest+=5) {
-	double value = fits->getValueDouble(Vector(ii,jj));
+      for (long ii=0; ii<width; ii++, dest+=5, mkptr++) {
+	double value = sptr->getValueDouble(Vector(ii,jj));
 	if (isfinite(diff) && isfinite(value)) {
 	  if (kk==0) {
 	    if (value <= ll) {
@@ -457,57 +472,60 @@ void FrameT::savePhotoCmd(const char* ph)
 	  }
 	  else {
 	    if (value <= ll)
-	      *(dest+kk+2) = *table;
+	      *(dest+2) = *table;
 	    else if (value >= hh)
-	      *(dest+kk+2) = *(table+length);
+	      *(dest+2) = *(table+length);
 	    else {
 	      int l = (int)(((value - ll)/diff * length) + .5);
-	      *(dest+kk+2) = *(table+l);
+	      *(dest+2) = *(table+l);
 	    }
 	  }
+
+	  *mkptr =2;
 	}
+	else if (*mkptr < 2)
+	  *mkptr =1;
       }
     }
-    CLEARSIGBUS
   }
 
   // HSV to RGB, add bg,nan
   unsigned char* imgrgb = new unsigned char[width*height*3];
   memset(imgrgb,0,width*height*3);
   {
+    XColor* bgColor = useBgColor? getXColor(bgColourName) :
+      ((WidgetOptions*)options)->bgColor;
+    XColor* nanColor = getXColor(nanColourName);
+
     unsigned char* src = img;
     unsigned char* dest = imgrgb;
-
+    char* mkptr = mk;
     for (int jj=0; jj<height; jj++)
-      for (int ii=0; ii<width; ii++, dest+=3, src+=5) {
-	if (*mkptr==2) {
-	  // good value
-	  if (*(mkptr+1)!=2 && *(mkptr+2)!=2) {
-	    // no saturation, no value
-	    memcpy(dest, src, 3);
-	  }
-	  else if (*(mkptr+1)==2 && *(mkptr+2)!=2) {
-	    // no value
-	    unsigned char ss = *(src+3);
-	    unsigned char vv = (unsigned char)255;
-	    convert(src,ss,vv,dest);
-	  }
-	  else if (*(mkptr+1)!=2 && *(mkptr+2)==2) {
-	    // no saturation
-	    unsigned char ss =(unsigned char)255;
-	    unsigned char vv = *(src+4);
-	    convert(src,ss,vv,dest);
-	  }
-	  else {
-	    // hue, saturation, value
-	    unsigned char ss = *(src+3);
-	    unsigned char vv = *(src+4);
-	    convert(src,ss,vv,dest);
-	  }
+      for (int ii=0; ii<width; ii++, dest+=3, src+=5, mkptr++) {
+	switch (*mkptr) {
+	case 2:
+	  convert(dest,src);
+	  break;
+	case 1:
+	  *dest = (unsigned char)nanColor->red;
+	  *(dest+1) = (unsigned char)nanColor->green;
+	  *(dest+2) = (unsigned char)nanColor->blue;
+	  break;
+	case 0:
+	  cerr << '.';
+	  *dest = (unsigned char)bgColor->red;
+	  *(dest+1) = (unsigned char)bgColor->green;
+	  *(dest+2) = (unsigned char)bgColor->blue;
+	  break;
 	}
       }
   }
+  
+  CLEARSIGBUS
+
+  // cleanup
   delete [] img;
+  delete [] mk;
 
   // clear, set alpha channel
   unsigned char* dest = block.pixelPtr;
@@ -524,10 +542,9 @@ void FrameT::savePhotoCmd(const char* ph)
   for (int kk=0; kk<3; kk++) {
     unsigned char* src = imgrgb;
     unsigned char* dest = block.pixelPtr;
-    for (long jj=0; jj<height; jj++) {
-      for (long ii=0; ii<width; ii++, dest+=block.pixelSize, src+=3)
-	*(dest+block.offset[kk]) = *src+width*height*kk;
-    }
+    for (long jj=height-1; jj>=0; jj--)
+      for (long ii=0; ii<width; ii++, dest+=block.pixelSize)
+	*(dest+block.offset[kk]) = *(src+jj*width*3+ii*3+kk);
   }
 
   // cleanup
@@ -538,6 +555,5 @@ void FrameT::savePhotoCmd(const char* ph)
     Tcl_AppendResult(interp, "bad put block ", NULL);
     return;
   }
-  */
 }
 

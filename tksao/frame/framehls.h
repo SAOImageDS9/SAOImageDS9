@@ -13,7 +13,7 @@ class FrameHLS : public FrameT {
  protected:
   int isFrameHLS() {return 1;}
 
-  void convert(unsigned char*, unsigned char, unsigned char, unsigned char*);
+  void convert(unsigned char*, unsigned char*);
 
  public:
   FrameHLS(Tcl_Interp*, Tk_Canvas, Tk_Item*);

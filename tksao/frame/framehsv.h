@@ -13,7 +13,7 @@ class FrameHSV : public FrameT {
  protected:
   int isFrameHSV() {return 1;}
 
-  void convert(unsigned char*, unsigned char, unsigned char, unsigned char*);
+  void convert(unsigned char*, unsigned char*);
 
  public:
   FrameHSV(Tcl_Interp*, Tk_Canvas, Tk_Item*);

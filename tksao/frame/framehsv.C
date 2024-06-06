@@ -11,18 +11,13 @@ FrameHSV::FrameHSV(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
 FrameHSV::~FrameHSV() {}
 
-void FrameHSV::convert(unsigned char* src, unsigned char ss, unsigned char vv,
-		       unsigned char* dest)
+void FrameHSV::convert(unsigned char* dest, unsigned char* src)
 {
-  unsigned char hr = *src;
-  unsigned char hg = *(src+1);
-  unsigned char hb = *(src+2);
-
-  float x = hr/256.;
-  float y = hg/256.;
-  float z = hb/256.;
-  float s = ss/256.;
-  float v = vv/256.;
+  float x = *(src  )/256.;
+  float y = *(src+1)/256.;
+  float z = *(src+2)/256.;
+  float s = *(src+3)/256.;
+  float v = *(src+4)/256.;
 
   // map rgb to h
   float max = x > y ? (x > z ? x : z) : (y > z ? y : z);
@@ -32,9 +27,9 @@ void FrameHSV::convert(unsigned char* src, unsigned char ss, unsigned char vv,
   // special case
   // h undefined
   if (diff==0) {
-    *dest     =vv;
-    *(dest+1) =vv;
-    *(dest+2) =vv;
+    *(dest  ) =*(src+4);
+    *(dest+1) =*(src+4);
+    *(dest+2) =*(src+4);
     return;
   }    
 

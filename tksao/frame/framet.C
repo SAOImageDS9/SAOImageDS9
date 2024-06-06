@@ -44,7 +44,11 @@ unsigned char* FrameT::fillImage(int width, int height,
 
   // img
   unsigned char* img = new unsigned char[width*height*5];
-  memset(img,0,width*height*5);
+  unsigned char* dest = img;
+  unsigned char def[5] = {255, 0, 0, 255, 255};
+  for (int jj=0; jj<height; jj++)
+    for (int ii=0; ii<width; ii++, dest+=5)
+      memcpy(dest,def,5);
 
   // mk
   char* mk = new char[width*height*3];
@@ -58,7 +62,6 @@ unsigned char* FrameT::fillImage(int width, int height,
       continue;
 
     // basics
-
     int length;
     const unsigned char* table;
     if (kk==0) {
@@ -83,8 +86,8 @@ unsigned char* FrameT::fillImage(int width, int height,
     double diff = hh - ll;
 
     // main loop
-    unsigned char* dest = img;
-    char* mkptr = mk;
+    unsigned char* dest = img+kk;
+    char* mkptr = mk+kk;
 
     for (long jj=0; jj<height; jj++) {
       for (long ii=0; ii<width; ii++, dest+=5, mkptr+=3) {
@@ -110,7 +113,6 @@ unsigned char* FrameT::fillImage(int width, int height,
 	    double value = sptr->getValueDouble(long(yy)*srcw + long(xx));
 
 	    if (isfinite(diff) && isfinite(value)) {
-	      // good
 	      if (kk==0) {
 		if (value <= ll) {
 		  *(dest+2) = table[0];
@@ -131,21 +133,19 @@ unsigned char* FrameT::fillImage(int width, int height,
 	      }
 	      else {
 		if (value <= ll)
-		  *(dest+kk+2) = *table;
+		  *(dest+2) = *table;
 		else if (value >= hh)
-		  *(dest+kk+2) = *(table+length);
+		  *(dest+2) = *(table+length);
 		else {
 		  int l = (int)(((value - ll)/diff * length) + .5);
-		  *(dest+kk+2) = *(table+l);
+		  *(dest+2) = *(table+l);
 		}
 	      }
 
-	      *(mkptr+kk) =2;
+	      *mkptr =2;
 	    }
-	    else {
-	      // nan
-	      *(mkptr+kk) =1;
-	    }
+	    else
+	      *mkptr =1;
 
 	    break;
 	  }
@@ -183,48 +183,28 @@ unsigned char* FrameT::fillImage(int width, int height,
     char* mkptr = mk;
     for (int jj=0; jj<height; jj++)
       for (int ii=0; ii<width; ii++, dest+=3, src+=5, mkptr+=3) {
-	if (*mkptr==2) {
-	  // good value
-	  if (*(mkptr+1)!=2 && *(mkptr+2)!=2) {
-	    // no saturation, no value
-	    memcpy(dest, src, 3);
-	  }
-	  else if (*(mkptr+1)==2 && *(mkptr+2)!=2) {
-	    // no value
-	    unsigned char ss = *(src+3);
-	    unsigned char vv = (unsigned char)255;
-	    convert(src,ss,vv,dest);
-	  }
-	  else if (*(mkptr+1)!=2 && *(mkptr+2)==2) {
-	    // no saturation
-	    unsigned char ss =(unsigned char)255;
-	    unsigned char vv = *(src+4);
-	    convert(src,ss,vv,dest);
-	  }
-	  else {
-	    // hue, saturation, value
-	    unsigned char ss = *(src+3);
-	    unsigned char vv = *(src+4);
-	    convert(src,ss,vv,dest);
-	  }
-	}
-	else if (*mkptr == 1) {
-	  // nan
+	switch (*mkptr) {
+	case 2:
+	  convert(dest,src);
+	  break;
+	case 1:
 	  *dest = (unsigned char)nanColor->red;
 	  *(dest+1) = (unsigned char)nanColor->green;
 	  *(dest+2) = (unsigned char)nanColor->blue;
-	}
-	else {
-	  // bg
+	  break;
+	case 0:
 	  *dest = (unsigned char)bgColor->red;
 	  *(dest+1) = (unsigned char)bgColor->green;
 	  *(dest+2) = (unsigned char)bgColor->blue;
+	  break;
 	}
       }
   }
-  delete [] img;
   
   CLEARSIGBUS
+
+  // cleanup
+  delete [] img;
   delete [] mk;
 
   // Alpha?
@@ -365,6 +345,7 @@ void FrameT::updateColorCells(int cnt)
 
 void FrameT::savePhotoCmd(const char* ph)
 {
+  /*
   // we need a colorScale before we can render
   if (!validColorScale())
     return;
@@ -493,7 +474,6 @@ void FrameT::savePhotoCmd(const char* ph)
   // HSV to RGB, add bg,nan
   unsigned char* imgrgb = new unsigned char[width*height*3];
   memset(imgrgb,0,width*height*3);
-  /*
   {
     unsigned char* src = img;
     unsigned char* dest = imgrgb;
@@ -527,7 +507,6 @@ void FrameT::savePhotoCmd(const char* ph)
 	}
       }
   }
-  */
   delete [] img;
 
   // clear, set alpha channel
@@ -559,5 +538,6 @@ void FrameT::savePhotoCmd(const char* ph)
     Tcl_AppendResult(interp, "bad put block ", NULL);
     return;
   }
+  */
 }
 

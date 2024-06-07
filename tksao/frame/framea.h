@@ -50,6 +50,10 @@ protected:
   void unloadAllFits();
   void updateRGBMatrices();
 
+  void loadCube(MemType, const char*, FitsImage*);
+  void loadCubeFinish();
+  void loadDone(int);
+
 public:
   FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameA();
@@ -57,6 +61,31 @@ public:
   void colormapCmd(float, float, float, float, float, float, int, int);
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*,
 		  Base::FileNameType);
+
+  void loadPhotoCmd(const char*, const char*);
+  void loadSlicePhotoCmd(const char*, const char*) {}
+
+  void loadCubeAllocCmd(const char*, const char*);
+  void loadCubeAllocGZCmd(const char*, const char*);
+  void loadCubeChannelCmd(const char*, const char*);
+  void loadCubeMMapCmd(const char*);
+  void loadCubeSMMapCmd(const char*, const char*);
+  void loadCubeMMapIncrCmd(const char*);
+  void loadCubeShareCmd(ShmType, int, const char*);
+  void loadCubeSShareCmd(ShmType, int, int, const char*);
+  void loadCubeSocketCmd(int, const char*);
+  void loadCubeSocketGZCmd(int, const char*);
+  void loadCubeVarCmd(const char*, const char*);
+
+  void loadArrayCubeAllocCmd(const char*, const char*);
+  void loadArrayCubeAllocGZCmd(const char*, const char*);
+  void loadArrayCubeChannelCmd(const char*, const char*);
+  void loadArrayCubeMMapCmd(const char*);
+  void loadArrayCubeMMapIncrCmd(const char*);
+  void loadArrayCubeShareCmd(ShmType, int, const char*);
+  void loadArrayCubeSocketCmd(int, const char*);
+  void loadArrayCubeSocketGZCmd(int, const char*);
+  void loadArrayCubeVarCmd(const char*, const char*);
 };
 
 #endif

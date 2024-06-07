@@ -374,4 +374,373 @@ void FrameA::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   CLEARSIGBUS
 }
 
+void FrameA::loadCube(MemType which, const char* fn, FitsImage* img)
+{
+  if (!img || !img->isValid() || !(img->isImage() || img->isPost()) || (img->depth() != 3))
+    goto error;
+
+  context[0].bfits_ = img;
+
+  if (img->isPost())
+    which = POST;
+
+  switch (which) {
+  case ALLOC:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextAlloc(&context[1], interp,
+				   fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextAlloc(&context[2], interp,
+				   fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case ALLOCGZ:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextAllocGZ(&context[1], interp,
+				     fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextAllocGZ(&context[2], interp,
+				     fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case CHANNEL:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextChannel(&context[1], interp,
+				     fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextChannel(&context[2], interp,
+				     fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case MMAP:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextMMap(&context[1], interp,
+				  fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextMMap(&context[2], interp,
+				  fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case SMMAP:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextSMMap(&context[1], interp,
+				   fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextSMMap(&context[2], interp,
+				   fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case MMAPINCR:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextMMapIncr(&context[1], interp,
+				      fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextMMapIncr(&context[2], interp,
+				      fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case SHARE:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextShare(&context[1], interp,
+				   fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextShare(&context[2], interp,
+				   fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case SSHARE:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextSShare(&context[1], interp,
+				    fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextSShare(&context[2], interp,
+				    fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case SOCKET:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextSocket(&context[1], interp,
+				    fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextSocket(&context[2], interp,
+				    fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case SOCKETGZ:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextSocketGZ(&context[1], interp,
+				      fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextSocketGZ(&context[2], interp,
+				      fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case VAR:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextVar(&context[1], interp,
+				 fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextVar(&context[2], interp,
+				 fn, context[1].bfits_->fitsFile(),3);
+    break;
+  case POST:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImageFitsNextPost(&context[1], interp,
+				  img, context[0].bfits_->baseFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImageFitsNextPost(&context[2], interp,
+				  img, context[1].bfits_->baseFile(),3);
+    break;
+  case PHOTO:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ = 
+	new FitsImagePhotoCubeNext(&context[1], interp,
+				   fn, context[0].bfits_->baseFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ = 
+	new FitsImagePhotoCubeNext(&context[2], interp,
+				   fn, context[1].bfits_->baseFile(),3);
+    break;
+  default:
+    // na
+    break;
+  }
+
+  // is everything ok?
+  if (context[0].bfits_ && context[0].bfits_->isValid() &&
+      (context[0].bfits_->isImage() || context[0].bfits_->isPost()) &&
+      context[1].bfits_ && context[1].bfits_->isValid() &&
+      (context[1].bfits_->isImage() || context[1].bfits_->isPost()) &&
+      context[2].bfits_ && context[2].bfits_->isValid() &&
+      (context[2].bfits_->isImage() || context[2].bfits_->isPost())) {
+
+    loadCubeFinish();
+    return;
+  }
+
+ error:
+  context[0].unload();
+  context[1].unload();
+  context[2].unload();
+
+  reset();
+  updateColorScale();
+    
+  Tcl_AppendResult(interp, "Unable to load rgb cube file", NULL);
+  result = TCL_ERROR;
+  return;
+}
+
+void FrameA::loadCubeFinish()
+{
+  for (int ii=0; ii<3; ii++) {
+    context[ii].loadInit(1,NOMOSAIC,Coord::WCS);
+    context[ii].loadFinish();
+  }
+
+  channel = 0;
+  currentContext = &context[channel];
+  keyContext = &context[channel];
+  keyContextSet =1;
+
+  alignWCS();
+  if (!preservePan) {
+    centerImage();
+    // cursor is in REF, crosshair in REF
+    crosshair = cursor;
+  }
+  updateColorScale();
+  update(MATRIX);
+}
+
+void FrameA::loadDone(int rr)
+{
+  if (rr) {
+    if (!keyContextSet) {
+      keyContext = currentContext;
+      keyContextSet =1;
+    }
+  }
+  Base::loadDone(rr);
+}
+
+// Photo
+
+void FrameA::loadPhotoCmd(const char* ph, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImagePhotoCube(&context[0], interp, ph, fn, 1);
+  loadCube(ALLOC,fn,img);
+}
+
+// Cube FITS
+
+void FrameA::loadCubeAllocCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsAlloc(&context[0], interp,
+					  ch, fn, FitsFile::NOFLUSH, 1);
+  loadCube(ALLOC,fn,img);
+}
+
+void FrameA::loadCubeAllocGZCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsAllocGZ(&context[0], interp,
+					    ch, fn, FitsFile::NOFLUSH, 1);
+  loadCube(ALLOCGZ,fn,img);
+}
+
+void FrameA::loadCubeChannelCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsChannel(&context[0], interp, 
+					    ch, fn, FitsFile::NOFLUSH, 1);
+  loadCube(CHANNEL,fn,img);
+}
+
+void FrameA::loadCubeMMapCmd(const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsMMap(&context[0], interp, fn, 1);
+  loadCube(MMAP,fn,img);
+}
+
+void FrameA::loadCubeSMMapCmd(const char* hdr, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsSMMap(&context[0], interp, hdr, fn, 1);
+  loadCube(SMMAP,fn,img);
+}
+
+void FrameA::loadCubeMMapIncrCmd(const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsMMapIncr(&context[0], interp, fn, 1);
+  loadCube(MMAPINCR,fn,img);
+}
+
+void FrameA::loadCubeShareCmd(ShmType type, int id, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsShare(&context[0], interp, type, id, fn, 1);
+  loadCube(SHARE,fn,img);
+}
+
+void FrameA::loadCubeSShareCmd(ShmType type, int hdr, int id,
+				    const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsSShare(&context[0], interp, 
+					   type, hdr, id, fn, 1);
+  loadCube(SSHARE,fn,img);
+}
+
+void FrameA::loadCubeSocketCmd(int s, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsSocket(&context[0], interp, 
+					   s, fn, FitsFile::FLUSH, 1);
+  loadCube(SOCKET,fn,img);
+}
+
+void FrameA::loadCubeSocketGZCmd(int s, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsSocketGZ(&context[0], interp, 
+					     s, fn, FitsFile::FLUSH, 1);
+  loadCube(SOCKETGZ,fn,img);
+}
+
+void FrameA::loadCubeVarCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageFitsVar(&context[0], interp, ch, fn, 1);
+  loadCube(VAR,fn,img);
+}
+
+// Cube Array
+
+void FrameA::loadArrayCubeAllocCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrAlloc(&context[0], interp,
+					 ch, fn, FitsFile::NOFLUSH, 1);
+  loadCube(ALLOC,fn,img);
+}
+
+void FrameA::loadArrayCubeAllocGZCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrAllocGZ(&context[0], interp,
+					   ch, fn, FitsFile::NOFLUSH, 1);
+  loadCube(ALLOCGZ,fn,img);
+}
+
+void FrameA::loadArrayCubeChannelCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrChannel(&context[0], interp, ch, fn, 
+					   FitsFile::NOFLUSH, 1);
+  loadCube(CHANNEL,fn,img);
+}
+
+void FrameA::loadArrayCubeMMapCmd(const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrMMap(&context[0], interp, fn, 1);
+  loadCube(MMAP,fn,img);
+}
+
+void FrameA::loadArrayCubeMMapIncrCmd(const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrMMapIncr(&context[0], interp, fn, 1);
+  loadCube(MMAPINCR,fn,img);
+}
+
+void FrameA::loadArrayCubeShareCmd(ShmType type, int id, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrShare(&context[0], interp,
+					 type, id, fn, 1);
+  loadCube(SHARE,fn,img);
+}
+
+void FrameA::loadArrayCubeSocketCmd(int s, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrSocket(&context[0], interp,
+					  s, fn, FitsFile::FLUSH, 1);
+  loadCube(SOCKET,fn,img);
+}
+
+void FrameA::loadArrayCubeSocketGZCmd(int s, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrSocketGZ(&context[0], interp,
+					    s, fn, FitsFile::FLUSH, 1);
+  loadCube(SOCKETGZ,fn,img);
+}
+
+void FrameA::loadArrayCubeVarCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageArrVar(&context[0], interp, ch, fn, 1);
+  loadCube(VAR,fn,img);
+}
 

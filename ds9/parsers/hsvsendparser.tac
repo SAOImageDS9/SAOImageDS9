@@ -27,7 +27,7 @@
 hsvsend : CHANNEL_ {ProcessSendCmdGet current hsv}
  | LOCK_ lock {ProcessSendCmdYesNo hsv lock,$2}
  | SYSTEM_ {ProcessSendCmdGet hsv system}
- | VIEW_ view {ProcessSendCmdYesNo hsv $2}
+ | VIEW_ channel {ProcessSendCmdYesNo hsv $2}
  ;
 
 lock : WCS_ {set _ wcs}
@@ -42,7 +42,7 @@ lock : WCS_ {set _ wcs}
  | SMOOTH_ {set _ smooth}
  ;
 
-view : HUE_ {set _ hue}
+channel : HUE_ {set _ hue}
  | SATURATION_ {set _ saturation}
  | VALUE_ {set _ value}
  ;

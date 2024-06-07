@@ -1217,6 +1217,19 @@ proc XPARcvdHLS {xpa cdata param buf len} {
     XPACatchError $xpa
 }
 
+proc XPASendHSV {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHSVCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHSV {xpa cdata param buf len} {
+    XPADebug "XPARcvdHSV" $param
+    InitError xpa
+    catch {set i 0; ProcessHSVCmd param i}
+    XPACatchError $xpa
+}
+
 proc XPASendIconify {xpa cdata param} {
     InitError xpa
     catch {ProcessSendIconifyCmd xpasetbuf $xpa $param}

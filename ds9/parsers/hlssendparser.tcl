@@ -68,96 +68,96 @@ array set hlssend::table {
   9:0 reduce
   2:258 shift
   11:0 reduce
+  2:274,target 15
   2:259 shift
   2:261 shift
-  0:264 shift
   2:262 shift
+  0:265 shift
   15:0 reduce
   4:263 shift
-  2:266 shift
+  0:265,target 2
+  4:264 shift
   6:0,target 9
-  0:270 shift
-  2:273,target 15
+  0:275,target 5
   2:267 shift
-  4:265 shift
-  4:271,target 19
   20:0 reduce
   19:0 reduce
   16:0,target 2
+  0:271 shift
   2:268 shift
-  0:272 shift
+  4:266 shift
   2:269 shift
-  0:274 goto
-  2:273 shift
-  4:271 shift
+  2:270 shift
+  0:273 shift
+  0:275 goto
   6:0 reduce
-  0:264,target 2
+  2:274 shift
   2:262,target 10
-  0:274,target 5
-  2:275 goto
+  2:276 goto
   7:0,target 8
   17:0,target 15
   12:0 reduce
-  4:276 goto
   10:0,target 6
+  4:277 goto
   2:261,target 9
   16:0 reduce
+  0:273,target 4
   8:0,target 13
   3:0 reduce
   18:0,target 16
   1:0,target 1
   11:0,target 10
   2:259,target 8
-  0:272,target 4
-  2:269,target 14
+  2:269,target 13
+  2:270,target 14
   7:0 reduce
+  4:277,target 20
   13:0 reduce
   9:0,target 12
   2:258,target 7
   20:0,target 4
   19:0,target 17
-  2:268,target 13
+  0:271,target 3
+  2:268,target 12
+  4:266,target 19
   12:0,target 11
-  4:276,target 20
   17:0 reduce
   0:260,target 1
   2:257,target 6
-  0:270,target 3
-  2:267,target 12
-  4:265,target 18
+  2:267,target 11
   3:0,target 3
   13:0,target 7
   8:0 reduce
   10:0 reduce
-  2:266,target 11
+  4:264,target 18
+  2:276,target 16
   14:0 reduce
   14:0,target 14
   18:0 reduce
   1:0 reduce
   4:263,target 17
-  2:275,target 16
   5:0 accept
 }
 
 array set hlssend::rules {
-  9,l 275
-  11,l 275
-  15,l 276
-  2,l 274
-  6,l 275
-  12,l 275
-  16,l 276
-  3,l 274
-  7,l 275
-  13,l 275
-  0,l 277
-  17,l 276
-  4,l 274
-  8,l 275
-  10,l 275
-  14,l 275
-  1,l 274
-  5,l 275
+  9,l 276
+  11,l 276
+  15,l 277
+  2,l 275
+  6,l 276
+  12,l 276
+  16,l 277
+  3,l 275
+  7,l 276
+  13,l 276
+  0,l 278
+  17,l 277
+  4,l 275
+  8,l 276
+  10,l 276
+  14,l 276
+  1,l 275
+  5,l 276
 }
 
 array set hlssend::rules {
@@ -182,23 +182,23 @@ array set hlssend::rules {
 }
 
 array set hlssend::rules {
-  13,line 43
-  7,line 37
-  10,line 40
-  4,line 32
-  1,line 29
-  15,line 47
-  9,line 39
-  12,line 42
-  6,line 36
-  3,line 31
-  17,line 49
-  14,line 44
-  8,line 38
-  11,line 41
-  5,line 35
-  2,line 30
-  16,line 48
+  13,line 44
+  7,line 38
+  10,line 41
+  4,line 33
+  1,line 30
+  15,line 48
+  9,line 40
+  12,line 43
+  6,line 37
+  3,line 32
+  17,line 50
+  14,line 45
+  8,line 39
+  11,line 42
+  5,line 36
+  2,line 31
+  16,line 49
 }
 
 array set hlssend::lr1_table {
@@ -216,17 +216,17 @@ array set hlssend::lr1_table {
   3 {{3 0 1}}
   17,trans {}
   4 {{4 0 1} {15 0 0} {16 0 0} {17 0 0}}
-  0,trans {{260 1} {264 2} {270 3} {272 4} {274 5}}
+  0,trans {{260 1} {265 2} {271 3} {273 4} {275 5}}
   18,trans {}
   5 {{0 0 1}}
   1,trans {}
   20,trans {}
   19,trans {}
-  2,trans {{257 6} {258 7} {259 8} {261 9} {262 10} {266 11} {267 12} {268 13} {269 14} {273 15} {275 16}}
+  2,trans {{257 6} {258 7} {259 8} {261 9} {262 10} {267 11} {268 12} {269 13} {270 14} {274 15} {276 16}}
   6 {{9 0 1}}
   3,trans {}
   7 {{8 0 1}}
-  4,trans {{263 17} {265 18} {271 19} {276 20}}
+  4,trans {{263 17} {264 18} {266 19} {277 20}}
   8 {{13 0 1}}
   5,trans {}
   10 {{6 0 1}}
@@ -250,34 +250,37 @@ array set hlssend::token_id_table {
   264,line 15
   270,t 0
   269,t 0
-  276,line 46
-  265,title SATURATION
-  274,t 1
+  276,line 35
+  265,title LOCK
+  274,t 0
   261,line 12
   257,t 0
-  270,title SYSTEM
-  269,title SMOOTH
+  270,title SMOOTH
+  269,title SLICE
   273,line 24
+  278,t 1
   257,line 8
   262,t 0
-  274,title {}
+  274,title WCS
   270,line 21
   269,line 20
   259,title BLOCK
   260,title CHANNEL
   266,t 0
+  278,title {}
   error error
   271,t 0
-  264,title LOCK
+  264,title LIGHTNESS
   266,line 17
+  278,line 51
   275,t 1
-  error,line 27
-  268,title SLICE
+  error,line 28
+  268,title SCALELIMITS
   258,t 0
   263,line 14
   error,title {}
-  275,line 34
-  273,title WCS
+  275,line 29
+  273,title VIEW
   263,t 0
   259,line 10
   260,line 11
@@ -288,7 +291,7 @@ array set hlssend::token_id_table {
   263,title HUE
   272,t 0
   268,line 19
-  267,title SCALELIMITS
+  267,title SCALE
   257 AXES_
   276,t 1
   258 BIN_
@@ -296,42 +299,43 @@ array set hlssend::token_id_table {
   259 BLOCK_
   260 CHANNEL_
   260,t 0
-  272,title VIEW
+  272,title VALUE
   261 COLORBAR_
   265,line 16
   262 CROP_
   263 HUE_
-  277,line 50
+  277,line 47
   257,title AXES
-  264 LOCK_
+  264 LIGHTNESS_
   264,t 0
   276,title {}
-  265 SATURATION_
+  265 LOCK_
   262,line 13
-  266 SCALE_
-  267 SCALELIMITS_
+  266 SATURATION_
+  267 SCALE_
   0,t 0
   0 {$}
   262,title CROP
-  268 SLICE_
+  268 SCALELIMITS_
   268,t 0
-  274,line 28
-  270 SYSTEM_
-  269 SMOOTH_
+  274,line 25
+  270 SMOOTH_
+  269 SLICE_
   error,t 0
-  271 VALUE_
-  272 VIEW_
+  271 SYSTEM_
+  272 VALUE_
   258,line 9
   273,t 0
-  273 WCS_
-  266,title SCALE
-  274 hlssend
-  275 lock
+  273 VIEW_
+  266,title SATURATION
+  274 WCS_
+  275 hlssend
   271,line 22
-  276 view
+  276 lock
   277,t 1
-  277 start'
-  271,title VALUE
+  277 channel
+  271,title SYSTEM
+  278 start'
   261,t 0
   267,line 18
   275,title {}
@@ -448,8 +452,8 @@ proc hlssend::yyparse {} {
                     13 { set _ block }
                     14 { set _ smooth }
                     15 { set _ hue }
-                    16 { set _ saturation }
-                    17 { set _ value }
+                    16 { set _ lightness }
+                    17 { set _ saturation }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

@@ -11,6 +11,7 @@
 %token COLORBAR_
 %token CROP_
 %token HUE_
+%token LIGHTNESS_
 %token LOCK_
 %token SATURATION_
 %token SCALE_
@@ -27,7 +28,7 @@
 hlssend : CHANNEL_ {ProcessSendCmdGet current hls}
  | LOCK_ lock {ProcessSendCmdYesNo hls lock,$2}
  | SYSTEM_ {ProcessSendCmdGet hls system}
- | VIEW_ view {ProcessSendCmdYesNo hls $2}
+ | VIEW_ channel {ProcessSendCmdYesNo hls $2}
  ;
 
 lock : WCS_ {set _ wcs}
@@ -42,9 +43,9 @@ lock : WCS_ {set _ wcs}
  | SMOOTH_ {set _ smooth}
  ;
 
-view : HUE_ {set _ hue}
+channel : HUE_ {set _ hue}
+ | LIGHTNESS_ {set _ lightness}
  | SATURATION_ {set _ saturation}
- | VALUE_ {set _ value}
  ;
 
 %%

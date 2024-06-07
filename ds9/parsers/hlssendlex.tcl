@@ -186,16 +186,17 @@ set CHANNEL_ 260
 set COLORBAR_ 261
 set CROP_ 262
 set HUE_ 263
-set LOCK_ 264
-set SATURATION_ 265
-set SCALE_ 266
-set SCALELIMITS_ 267
-set SLICE_ 268
-set SMOOTH_ 269
-set SYSTEM_ 270
-set VALUE_ 271
-set VIEW_ 272
-set WCS_ 273
+set LIGHTNESS_ 264
+set LOCK_ 265
+set SATURATION_ 266
+set SCALE_ 267
+set SCALELIMITS_ 268
+set SLICE_ 269
+set SMOOTH_ 270
+set SYSTEM_ 271
+set VALUE_ 272
+set VIEW_ 273
+set WCS_ 274
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {

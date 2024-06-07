@@ -55,6 +55,9 @@
 <a href="#height">height</a><br>
 <a href="#help">help</a><br>
 <a href="#histequ">histequ</a><br>
+<a href="#hls">hls</a><br>
+<a href="#hsv">hsv</a><br>
+<a href="#hue">hue</a><br>
 <a href="#iconify">iconify</a><br>
 <a href="#inet_only">inet_only</a><br>
 <a href="#invert">invert</a><br>
@@ -63,6 +66,7 @@
 <a href="#jpeg">jpeg</a><br>
 <a href="#language">language</a><br>
 <a href="#linear">linear</a><br>
+<a href="#lightness">lightness</a><br>
 <a href="#lock">lock</a><br>
 <a href="#log">log</a><br>
 <a href="#lower">lower</a><br>
@@ -106,6 +110,7 @@
 <a href="#rgbimage">rgbimage</a><br>
 <a href="#rotate">rotate</a><br>
 <a href="#samp">samp</a><br>
+<a href="#saturation">saturation</a><br>
 <a href="#save">save</a><br>
 <a href="#saveimage">saveimage</a><br>
 <a href="#scale">scale</a><br>
@@ -128,6 +133,7 @@
 <a href="#unix_only">unix_only</a><br>
 <a href="#update">update</a><br>
 <a href="#url">url</a><br>
+<a href="#value">value</a><br>
 <a href="#version">version</a><br>
 <a href="#view">view</a><br>
 <a href="#visual">visual</a><br>
@@ -348,7 +354,7 @@ $ds9-blockclose<br></tt>
 -blue<br>
 &nbsp;<br>
 Example:<br>
-$ds9 -blue foo.fits<br></tt>
+$ds9 -rgb -blue foo.fits<br></tt>
 <p><b><a name="catalog" id="catalog"></a>catalog<br>
 cat</b></p>
 <p>Support for catalogs. The first three commands will create a new catalog search. All other commands operated on the last search created, unless indicated otherwise.</p>
@@ -884,7 +890,7 @@ $ds9 -footprint update</tt><br>
 <tt>Syntax:<br>
 -frame [center [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [clear [&lt;integer&gt;|all]]<br>
-&nbsp;&nbsp;&nbsp; [new [rgb]]<br>
+&nbsp;&nbsp;&nbsp; [new [rgb|hls|hsv|3d]]<br>
 &nbsp;&nbsp;&nbsp; [delete [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [reset [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [refresh [&lt;integer&gt;|all]]<br>
@@ -944,7 +950,7 @@ $ds9 -geometry 640x480</tt>
 -green<br>
 &nbsp;<br>
 Example:<br>
-$ds9 -green foo.fits</tt>
+$ds9 -rgb -green foo.fits</tt>
 <p><b><a name="graph" id="graph"></a>graph</b></p>
 <p>Controls horizontal and vertical cut graphs.</p>
 <tt>Syntax:<br>
@@ -1144,6 +1150,69 @@ $ds9 -? # Display command line options within help facility.<br></tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -histequ<br></tt>
+<p><b><a name="hls" id="hls"></a>hls</b></p>
+<p>Create HLS frame and control HLS frame parameters.</p>
+<tt>Syntax:<br>
+-hls []<br>
+&nbsp;&nbsp;&nbsp; [hue|lightness|saturation]<br>
+&nbsp;&nbsp;&nbsp; [channel [hue|lightness|saturation]]<br>
+&nbsp;&nbsp;&nbsp; [view [hue|lightness|saturation] [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hls # create new hls frame<br>
+$ds9 -hls hue # set current channel to hue<br>
+$ds9 -hls channel hue # set current channel to hue<br>
+$ds9 -hls view saturation no # turn off saturation channel<br>
+$ds9 -hls system wcs # set hls coordinate system<br>
+$ds9 -hls lock wcs yes<br>
+$ds9 -hls lock crop yes<br>
+$ds9 -hls lock slice yes<br>
+$ds9 -hls lock bin yes<br>
+$ds9 -hls lock scale yes<br>
+$ds9 -hls lock scalelimits yes<br>
+$ds9 -hls lock colorbar yes<br>
+$ds9 -hls lock block yes<br>
+$ds9 -hls lock smooth yes<br>
+$ds9 -hls open<br>
+$ds9 -hls close</tt><br>
+<p><b><a name="hsv" id="hsv"></a>hsv</b></p>
+<p>Create HSV frame and control HSV frame parameters.</p>
+<tt>Syntax:<br>
+-hsv []<br>
+&nbsp;&nbsp;&nbsp; [hue|saturation|value]<br>
+&nbsp;&nbsp;&nbsp; [channel [hue|saturation|value]]<br>
+&nbsp;&nbsp;&nbsp; [view [hue|saturation|value] [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hsv # create new hsv frame<br>
+$ds9 -hsv hue # set current channel to hue<br>
+$ds9 -hsv channel hue # set current channel to hue<br>
+$ds9 -hsv view saturation no # turn off saturation channel<br>
+$ds9 -hsv system wcs # set hsv coordinate system<br>
+$ds9 -hsv lock wcs yes<br>
+$ds9 -hsv lock crop yes<br>
+$ds9 -hsv lock slice yes<br>
+$ds9 -hsv lock bin yes<br>
+$ds9 -hsv lock scale yes<br>
+$ds9 -hsv lock scalelimits yes<br>
+$ds9 -hsv lock colorbar yes<br>
+$ds9 -hsv lock block yes<br>
+$ds9 -hsv lock smooth yes<br>
+$ds9 -hsv open<br>
+$ds9 -hsv close</tt><br>
+<p><b><a name="hue" id="hue"></a>hue</b></p>
+<p>For HLS and HSV frames, sets the current color channel to hue.</p>
+<tt>Syntax:<br>
+-hue<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hsv -hue foo.fits</tt>
 <p><b><a name="iconify" id="iconify"></a>iconify</b></p>
 <p>Toggles iconification.</p>
 <tt>Syntax:<br>
@@ -1242,6 +1311,13 @@ $ds9 -language fr<br></tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -linear</tt>
+<p><b><a name="lightness" id="lightness"></a>lightness</b></p>
+<p>For HLS frames, sets the current color channel to lightness.</p>
+<tt>Syntax:<br>
+-lightness<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hls -lightness foo.fits</tt>
 <p><b><a name="lock" id="lock"></a>lock</b></p>
 <p>Lock all other frames to the current frame.</p>
 <tt>Syntax:<br>
@@ -2023,7 +2099,7 @@ $ds9 -region close<br>
 -red<br>
 &nbsp;<br>
 Example:<br>
-$ds9 -red foo.fits<br></tt>
+$ds9 -rgb -red foo.fits<br></tt>
 <p><b><a name="restore" id="restore"></a>restore</b></p>
 <p>Restore DS9 to a previous state from a backup save set.</p>
 <tt>Syntax:<br>
@@ -2116,6 +2192,13 @@ $ds9 -samp broadcast table<br>
 $ds9 -samp send table<br>
 $ds9 -samp send table topcat</tt><br>
 $ds9 -samp hub info
+<p><b><a name="saturation" id="saturation"></a>saturation</b></p>
+<p>For HLS and HSV frames, sets the current color channel to saturation.</p>
+<tt>Syntax:<br>
+-saturation<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hsv -saturation foo.fits</tt>
 <p><b><a name="save" id="save"></a>save<br></b></p>
 <p>Save loaded image data of current frame as FITS.</p>
 <tt>Syntax:<br>
@@ -2429,6 +2512,13 @@ $ds9 -update now 1 100 100 300 400</tt><br>
 &nbsp;<br>
 Example:<br>
 $ds9 -url http://foo.bar.edu/foo.fits</tt>
+<p><b><a name="value" id="value"></a>value</b></p>
+<p>For HSV frames, sets the current color channel to value.</p>
+<tt>Syntax:<br>
+-value<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hsv -value foo.fits</tt>
 <p><b><a name="version" id="version"></a>version</b></p>
 <p>Returns the current version of DS9 and exits.</p>
 <tt>Syntax:<br>

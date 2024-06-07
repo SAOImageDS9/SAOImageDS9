@@ -47,6 +47,8 @@
 <a href="#grid">grid</a><br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
+<a href="#hls">hls</a><br>
+<a href="#hsv">hsv</a><br>
 <a href="#iconify">iconify</a><br>
 <a href="#iexam">iexam</a><br>
 <a href="#iis">iis</a><br>
@@ -1009,7 +1011,7 @@ $xpaset -p ds9 footprint update</tt><br>
 <tt>Syntax:<br>
 frame [center [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [clear [&lt;integer&gt;|all]]<br>
-&nbsp;&nbsp;&nbsp; [new [rgb|3d]]<br>
+&nbsp;&nbsp;&nbsp; [new [rgb|hls|hvsv|3d]]<br>
 &nbsp;&nbsp;&nbsp; [delete [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [reset [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [refresh [&lt;integer&gt;|all]]<br>
@@ -1355,6 +1357,92 @@ Example:<br>
 $xpaget ds9 height<br>
 <br>
 $xpaset -p ds9 height 512<br></tt>
+<p><b><a name="hls" id="hls"></a>hls</b></p>
+<p>Create HLS frame and control HLS frame parameters.</p>
+<tt>Syntax:<br>
+-hls []<br>
+&nbsp;&nbsp;&nbsp; [hue|lightness|saturation]<br>
+&nbsp;&nbsp;&nbsp; [channel [hue|lightness|saturation]]<br>
+&nbsp;&nbsp;&nbsp; [view [hue|lightness|saturation] [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 hls channel<br>
+$xpaget ds9 hls lock wcs<br>
+$xpaget ds9 hls lock crop<br>
+$xpaget ds9 hls lock slice<br>
+$xpaget ds9 hls lock bin<br>
+$xpaget ds9 hls lock scale<br>
+$xpaset ds9 hls lock scalelimits<br>
+$xpaget ds9 hls lock colorbar<br>
+$xpaget ds9 hls lock block<br>
+$xpaget ds9 hls lock smooth<br>
+$xpaget ds9 hls system<br>
+$xpaget ds9 hls view hue<br>
+$xpaget ds9 hls view lightness<br>
+$xpaget ds9 hls view saturation<br>
+<br>
+$xpaset -p ds9 hls # create new hls frame<br>
+$xpaset -p ds9 hls hue # set current channel to hue<br>
+$xpaset -p ds9 hls channel hue # set current channel to hue<br>
+$xpaset -p ds9 hls view saturation no # turn off saturation channel<br>
+$xpaset -p ds9 hls system wcs # set hls coordinate system<br>
+$xpaset -p ds9 hls lock wcs yes<br>
+$xpaset -p ds9 hls lock crop yes<br>
+$xpaset -p ds9 hls lock slice yes<br>
+$xpaset -p ds9 hls lock bin yes<br>
+$xpaset -p ds9 hls lock scale yes<br>
+$xpaset -p ds9 hls lock scalelimits yes<br>
+$xpaset -p ds9 hls lock colorbar yes<br>
+$xpaset -p ds9 hls lock block yes<br>
+$xpaset -p ds9 hls lock smooth yes<br>
+$xpaset -p ds9 hls open<br>
+$xpaset -p ds9 hls close</tt><br>
+<p><b><a name="hsv" id="hsv"></a>hsv</b></p>
+<p>Create HSV frame and control HSV frame parameters.</p>
+<tt>Syntax:<br>
+-hsv []<br>
+&nbsp;&nbsp;&nbsp; [hue|saturation|value]<br>
+&nbsp;&nbsp;&nbsp; [channel [hue|saturation|value]]<br>
+&nbsp;&nbsp;&nbsp; [view [hue|saturation|value] [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 hsv channel<br>
+$xpaget ds9 hsv lock wcs<br>
+$xpaget ds9 hsv lock crop<br>
+$xpaget ds9 hsv lock slice<br>
+$xpaget ds9 hsv lock bin<br>
+$xpaget ds9 hsv lock scale<br>
+$xpaget ds9 hsv lock scalelimits<br>
+$xpaget ds9 hsv lock colorbar<br>
+$xpaget ds9 hsv lock block<br>
+$xpaget ds9 hsv lock smooth<br>
+$xpaget ds9 hsv system<br>
+$xpaget ds9 hsv view hue<br>
+$xpaget ds9 hsv view saturation<br>
+$xpaget ds9 hsv view value<br>
+<br>
+$xpaset -p ds9 hsv # create new hsv frame<br>
+$xpaset -p ds9 hsv hue # set current channel to hue<br>
+$xpaset -p ds9 hsv channel hue # set current channel to hue<br>
+$xpaset -p ds9 hsv view saturation no # turn off saturation channel<br>
+$xpaset -p ds9 hsv system wcs # set hsv coordinate system<br>
+$xpaset -p ds9 hsv lock wcs yes<br>
+$xpaset -p ds9 hsv lock crop yes<br>
+$xpaset -p ds9 hsv lock slice yes<br>
+$xpaset -p ds9 hsv lock bin yes<br>
+$xpaset -p ds9 hsv lock scale yes<br>
+$xpaset -p ds9 hsv lock scalelimits yes<br>
+$xpaset -p ds9 hsv lock colorbar yes<br>
+$xpaset -p ds9 hsv lock block yes<br>
+$xpaset -p ds9 hsv lock smooth yes<br>
+$xpaset -p ds9 hsv open<br>
+$xpaset -p ds9 hsv close</tt><br>
 <p><b><a name="iconify" id="iconify"></a>iconify</b></p>
 <p>Toggles iconification.</p>
 <tt>Syntax:<br>
@@ -2463,7 +2551,7 @@ $xpaget ds9 rgb lock crop<br>
 $xpaget ds9 rgb lock slice<br>
 $xpaget ds9 rgb lock bin<br>
 $xpaget ds9 rgb lock scale<br>
-$xpaset ds9 rgb lock scalelimits<br>
+$xpaget ds9 rgb lock scalelimits<br>
 $xpaget ds9 rgb lock colorbar<br>
 $xpaget ds9 rgb lock block<br>
 $xpaget ds9 rgb lock smooth<br>

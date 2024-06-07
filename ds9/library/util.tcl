@@ -110,7 +110,7 @@ proc EvalLock {var which cmd} {
 	hls {
 	    if {$hls($var)} {
 		set ch [$which get hls channel]
-		foreach cc {hue lightness value} {
+		foreach cc {hue lightness saturation} {
 		    $which hls channel $cc
 		    eval $cmd
 		}

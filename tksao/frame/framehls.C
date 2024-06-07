@@ -30,6 +30,7 @@ void FrameHLS::convert(unsigned char* dest, unsigned char* src)
     *(dest  ) =255;
     *(dest+1) =255;
     *(dest+2) =255;
+    cerr << '@' << endl;
     return;
   }    
 
@@ -82,7 +83,7 @@ float FrameHLS::value(float n1, float n2, float hue){
   else if (hue<180)
     return n2;
   else if (hue<240)
-    return n1+(n2-1)*(240-hue)/60;
+    return n1+(n2-n1)*(240-hue)/60;
   else
     return n1;
 }

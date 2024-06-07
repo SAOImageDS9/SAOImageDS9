@@ -254,6 +254,16 @@ proc CreateXPA {} {
 	XPASendHeight {} {} \
 	XPARcvdHeight {} "fillbuf=false"
 
+    xpacmdadd $xpa hls \
+	{} \
+	XPASendHLS {} {} \
+	XPARcvdHLS {} "fillbuf=false"
+
+    xpacmdadd $xpa hsv \
+	{} \
+	XPASendHSV {} {} \
+	XPARcvdHSV {} "fillbuf=false"
+
     xpacmdadd $xpa iconify \
 	{} \
 	XPASendIconify {} {} \
@@ -1191,6 +1201,19 @@ proc XPARcvdHeight {xpa cdata param buf len} {
     XPADebug "XPARcvdHeight" $param
     InitError xpa
     catch {set i 0; ProcessHeightCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendHLS {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHLSCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHLS {xpa cdata param buf len} {
+    XPADebug "XPARcvdHLS" $param
+    InitError xpa
+    catch {set i 0; ProcessHLSCmd param i}
     XPACatchError $xpa
 }
 

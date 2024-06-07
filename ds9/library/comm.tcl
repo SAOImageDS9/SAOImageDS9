@@ -69,6 +69,8 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    grid {ProcessGridCmd param i}
 	    header {ProcessHeaderCmd param i}
 	    height {ProcessHeightCmd param i}
+	    hls {ProcessHLSCmd param i}
+	    hsv {ProcessHSVCmd param i}
 	    iconify {ProcessIconifyCmd param i}
 	    iexam -
 	    imexam {}
@@ -303,6 +305,8 @@ proc CommGet {proc id paramlist fn} {
 	    grid {ProcessSendGridCmd $proc $id $param}
 	    header {ProcessSendNullCmd $proc $id $cmd}
 	    height {ProcessSendHeightCmd $proc $id $param}
+	    hls {ProcessSendHLSCmd $proc $id $param}
+	    hsv {ProcessSendHSVCmd $proc $id $param}
 	    iconify {ProcessSendIconifyCmd $proc $id $param}
 	    iexam -
 	    imexam {ProcessSendIExamCmd $proc $id $param}

@@ -232,8 +232,8 @@ proc ProcessCommand {argv argc} {
 		set view(graph,horz) 0
 		LayoutView
 	    }
-	    -hsv {incr i; ProcessHSVCmd argv i}
 	    -hls {incr i; ProcessHLSCmd argv i}
+	    -hsv {incr i; ProcessHSVCmd argv i}
 	    -hue {
 		set current(hsv) hue
 		HSVChannel

@@ -19,7 +19,11 @@ proc Open {fn format layer mode sys} {
 	mecube {LoadMECubeFile $fn}
 	multiframe {LoadMultiFrameFile $fn}
 	rgbimage {LoadRGBImageFile $fn}
+	hlsimage {LoadHLSImageFile $fn}
+	hsvimage {LoadHSVImageFile $fn}
 	rgbcube {LoadRGBCubeFile $fn}
+	hlscube {LoadHLSCubeFile $fn}
+	hsvcube {LoadHSVCubeFile $fn}
     }
     FinishLoad
 }

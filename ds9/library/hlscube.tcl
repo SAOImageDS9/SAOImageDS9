@@ -4,23 +4,23 @@
 
 package provide DS9 1.0
 
-proc LoadRGBImageFile {fn} {
+proc LoadHLSCubeFile {fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
-	hls -
+	rgb -
 	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HLS image into a non-hls frame}]
 	    return
 	}
-	rgb {}
+	hls {}
     }
 
     set loadParam(file,type) fits
-    set loadParam(file,mode) {rgb image}
+    set loadParam(file,mode) {hls cube}
     set loadParam(load,type) mmapincr
     set loadParam(file,name) $fn
 
@@ -31,23 +31,23 @@ proc LoadRGBImageFile {fn} {
     ProcessLoad
 }
 
-proc LoadRGBImageAlloc {path fn} {
+proc LoadHLSCubeAlloc {path fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
-	hls -
+	rgb -
 	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HLS image into a non-hls frame}]
 	    return
 	}
-	rgb {}
+	hls {}
     }
 
     set loadParam(file,type) fits
-    set loadParam(file,mode) {rgb image}
+    set loadParam(file,mode) {hls cube}
     set loadParam(load,type) allocgz
     set loadParam(file,name) $fn
     set loadParam(file,fn) $path
@@ -58,23 +58,23 @@ proc LoadRGBImageAlloc {path fn} {
     ProcessLoad
 }
 
-proc LoadRGBImageSocket {sock fn} {
+proc LoadHLSCubeSocket {sock fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
-	hls -
+	rgb -
 	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HLS image into a non-hls frame}]
 	    return
 	}
-	rgb {}
+	hls {}
     }
 
     set loadParam(file,type) fits
-    set loadParam(file,mode) {rgb image}
+    set loadParam(file,mode) {hls cube}
     set loadParam(load,type) socketgz
     set loadParam(file,name) $fn
     set loadParam(socket,id) $sock
@@ -85,7 +85,7 @@ proc LoadRGBImageSocket {sock fn} {
     return [ProcessLoad 0]
 }
 
-proc SaveRGBImageFile {fn} {
+proc SaveHLSCubeFile {fn} {
     global current
 
     if {$fn == {}} {
@@ -100,19 +100,19 @@ proc SaveRGBImageFile {fn} {
 
     switch -- [$current(frame) get type] {
 	base -
-	hls -
+	rgb -
 	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    Error [msgcat::mc {Unable to save HLS image from a non-hls frame}]
 	    return
 	}
-	rgb {}
+	hls {}
     }
 
-    $current(frame) save fits rgb image file "\{$fn\}"
+    $current(frame) save fits hls cube file "\{$fn\}"
 }
 
-proc SaveRGBImageSocket {sock} {
+proc SaveHLSCubeSocket {sock} {
     global current
 
     if {$current(frame) == {}} {
@@ -124,19 +124,19 @@ proc SaveRGBImageSocket {sock} {
 
     switch -- [$current(frame) get type] {
 	base -
-	hls -
+	rgb -
 	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    Error [msgcat::mc {Unable to save HLS image from a non-hls frame}]
 	    return
 	}
-	rgb {}
+	hls {}
     }
 
-    $current(frame) save fits rgb image socket $sock
+    $current(frame) save fits hls cube socket $sock
 }
 
-proc ProcessRGBImageCmd {varname iname sock fn} {
+proc ProcessHLSCubeCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
@@ -144,33 +144,33 @@ proc ProcessRGBImageCmd {varname iname sock fn} {
     set parse(sock) $sock
     set parse(fn) $fn
 
-    rgbimage::YY_FLUSH_BUFFER
-    rgbimage::yy_scan_string [lrange $var $i end]
-    rgbimage::yyparse
-    incr i [expr $rgbimage::yycnt-1]
+    hlscube::YY_FLUSH_BUFFER
+    hlscube::yy_scan_string [lrange $var $i end]
+    hlscube::yyparse
+    incr i [expr $hlscube::yycnt-1]
 }
 
-proc RGBImageCmdLoad {param} {
+proc HLSCubeCmdLoad {param} {
     global parse
 
     if {$parse(sock) != {}} {
 	# xpa
-	if {![LoadRGBImageSocket $parse(sock) $param]} {
+	if {![LoadHLSCubeSocket $parse(sock) $param]} {
 	    InitError xpa
-	    LoadRGBImageFile $param
+	    LoadHLSCubeFile $param
 	}
     } else {
 	# comm
 	if {$parse(fn) != {}} {
-	    LoadRGBImageAlloc $parse(fn) $param
+	    LoadHLSCubeAlloc $parse(fn) $param
 	} else {
-	    LoadRGBImageFile $param
+	    LoadHLSCubeFile $param
 	}
     }
     FinishLoad
 }
 
-proc ProcessSendRGBImageCmd {proc id param sock fn} {
+proc ProcessSendHLSCubeCmd {proc id param sock fn} {
     global current
 
     if {$current(frame) == {}} {
@@ -179,10 +179,10 @@ proc ProcessSendRGBImageCmd {proc id param sock fn} {
 
     if {$sock != {}} {
 	# xpa
-	SaveRGBImageSocket $sock
+	SaveHLSCubeSocket $sock
     } elseif {$fn != {}} {
 	# comm
-	SaveRGBImageFile $fn
+	SaveHLSCubeFile $fn
 	$proc $id {} $fn
     }
 }

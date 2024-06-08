@@ -217,6 +217,7 @@ proc ProcessCommand {argv argc} {
 	    -header {incr i; ProcessHeaderCmd argv i}
 	    -height {incr i; ProcessHeightCmd argv i}
 	    -histequ {set scale(type) histequ; ChangeScale}
+
 	    -horizontal {
 		#backward compatibility
 		set view(layout) horizontal
@@ -233,7 +234,17 @@ proc ProcessCommand {argv argc} {
 		LayoutView
 	    }
 	    -hls {incr i; ProcessHLSCmd argv i}
+	    -hlsarray {set file(type) hlsarray}
+	    -hlscube {set file(type) hlscube}
+	    -hlsimage {set file(type) hlsimage}
+	    -hlsarray {set file(type) hlsarray}
+
 	    -hsv {incr i; ProcessHSVCmd argv i}
+	    -hsvarray {set file(type) hsvarray}
+	    -hsvcube {set file(type) hsvcube}
+	    -hsvimage {set file(type) hsvimage}
+	    -hsvsarray {set file(type) hsvarray}
+
 	    -hue {
 		set current(hsv) hue
 		HSVChannel
@@ -395,14 +406,16 @@ proc ProcessCommand {argv argc} {
 	    -regions -
 	    -regionfile {incr i; ProcessRegionsCmd argv i {} {}}
 	    -restore {incr i; ProcessRestoreCmd argv i}
+
 	    -rgb {incr i; ProcessRGBCmd argv i}
 	    -rgbcube {set file(type) rgbcube}
 	    -srgbcube {
 		# backward compatibility
 		set file(type) srgbcube
 	    }
-	    -rgbimage {set file(type) rgbimage}
 	    -rgbarray {set file(type) rgbarray}
+	    -rgbimage {set file(type) rgbimage}
+
 	    -rotate {incr i; ProcessRotateCmd argv i}
 	    -samp {incr i; ProcessSAMPCmd argv i}
 	    -savefits -
@@ -633,6 +646,24 @@ proc CommandLineLoadBase {item argvname iname} {
 	    LoadRGBCubeFile $item
 	}
 
+	hlsimage {
+	    MultiLoadHLS
+	    LoadHLSImageFile $item
+	}
+	hlscube {
+	    MultiLoadHLS
+	    LoadHLSCubeFile $item
+	}
+
+	hsvimage {
+	    MultiLoadHSV
+	    LoadHSVImageFile $item
+	}
+	hsvcube {
+	    MultiLoadHSV
+	    LoadHSVCubeFile $item
+	}
+
 	mecube {
 	    MultiLoad
 	    LoadMECubeFile $item
@@ -682,10 +713,20 @@ proc CommandLineLoadBase {item argvname iname} {
 	    MultiLoad $file(layer)
 	    ImportArrayFile $item $file(layer)
 	}
+
 	rgbarray {
 	    MultiLoadRGB
 	    ImportRGBArrayFile $item
 	}
+	hlsarray {
+	    MultiLoadHLS
+	    ImportHLSArrayFile $item
+	}
+	hsvarray {
+	    MultiLoadHSV
+	    ImportHSVArrayFile $item
+	}
+
 	nrrd {
 	    MultiLoad $file(layer)
 	    ImportNRRDFile $item $file(layer)
@@ -730,6 +771,24 @@ proc CommandLineLoadT {item argvname iname} {
 	    LoadRGBCubeFile $item
 	}
 
+	hlsimage {
+	    MultiLoadHLS
+	    LoadHLSImageFile $item
+	}
+	hlscube {
+	    MultiLoadHLS
+	    LoadHLSCubeFile $item
+	}
+
+	hsvimage {
+	    MultiLoadHSV
+	    LoadHSVImageFile $item
+	}
+	hsvcube {
+	    MultiLoadHSV
+	    LoadHSVCubeFile $item
+	}
+
 	mecube {LoadMECubeFile $item}
 	multiframe {
 	    # not supported
@@ -770,10 +829,20 @@ proc CommandLineLoadT {item argvname iname} {
 	}
 
 	array {ImportArrayFile $item {}}
+
 	rgbarray {
 	    MultiLoadRGB
 	    ImportRGBArrayFile $item
 	}
+	hlsarray {
+	    MultiLoadHLS
+	    ImportHLSArrayFile $item
+	}
+	hsvarray {
+	    MultiLoadHSV
+	    ImportHSVArrayFile $item
+	}
+
 	nrrd {ImportNRRDFile $item {}}
 	envi {}
 	gif -
@@ -807,6 +876,24 @@ proc CommandLineLoad3D {item argvname iname} {
 	rgbcube {
 	    MultiLoadRGB
 	    LoadRGBCubeFile $item
+	}
+
+	hlsimage {
+	    MultiLoadHLS
+	    LoadHLSImageFile $item
+	}
+	hlscube {
+	    MultiLoadHLS
+	    LoadHLSCubeFile $item
+	}
+
+	hsvimage {
+	    MultiLoadHSV
+	    LoadHSVImageFile $item
+	}
+	hsvcube {
+	    MultiLoadHSV
+	    LoadHSVCubeFile $item
 	}
 
 	mecube {
@@ -858,10 +945,20 @@ proc CommandLineLoad3D {item argvname iname} {
 	    MultiLoad
 	    ImportArrayFile $item {}
 	}
+
 	rgbarray {
 	    MultiLoadRGB
 	    ImportRGBArrayFile $item
 	}
+	hlsarray {
+	    MultiLoadHLS
+	    ImportHLSArrayFile $item
+	}
+	hsvarray {
+	    MultiLoadHSV
+	    ImportHSVArrayFile $item
+	}
+
 	nrrd {
 	    MultiLoad
 	    ImportNRRDFile $item {}
@@ -905,10 +1002,17 @@ proc CommandFitsCmd {varname iname} {
 		default {CommandMosaicType $item $iname}
 	    }
 	}
+
 	mecube -
 	multiframe -
+
 	rgbcube -
-	rgbimage {
+	hlscube -
+	hsvcube -
+
+	rgbimage -
+	hlsimage -
+	hlsimage {
 	    set file(type) $item
 	    incr i
 	}

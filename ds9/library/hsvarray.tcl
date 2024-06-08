@@ -4,23 +4,23 @@
 
 package provide DS9 1.0
 
-proc ImportRGBArrayFile {fn} {
+proc ImportHSVArrayFile {fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HSV image into a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
     set loadParam(file,type) array
-    set loadParam(file,mode) {rgb cube}
+    set loadParam(file,mode) {hsv cube}
     set loadParam(load,type) mmapincr
 
     # if no zdim is present, insert one
@@ -39,23 +39,23 @@ proc ImportRGBArrayFile {fn} {
     ProcessLoad
 }
 
-proc ImportRGBArrayAlloc {path fn} {
+proc ImportHSVArrayAlloc {path fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HSV image into a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
     set loadParam(file,type) array
-    set loadParam(file,mode) {rgb cube}
+    set loadParam(file,mode) {hsv cube}
     set loadParam(load,type) allocgz
 
     # if no zdim is present, insert one
@@ -77,23 +77,23 @@ proc ImportRGBArrayAlloc {path fn} {
     ProcessLoad
 }
 
-proc ImportRGBArraySocket {sock fn} {
+proc ImportHSVArraySocket {sock fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HSV image into a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
     set loadParam(file,type) array
-    set loadParam(file,mode) {rgb cube}
+    set loadParam(file,mode) {hsv cube}
     set loadParam(load,type) socketgz
     # if no zdim is present, insert one
     set exp {.*\[.*zdim[ ]*=[ ]*[0-9]+}
@@ -110,7 +110,7 @@ proc ImportRGBArraySocket {sock fn} {
     return [ProcessLoad 0]
 }
 
-proc ExportRGBArrayFile {fn opt} {
+proc ExportHSVArrayFile {fn opt} {
     global current
 
     if {$fn == {}} {
@@ -125,19 +125,19 @@ proc ExportRGBArrayFile {fn opt} {
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    Error [msgcat::mc {Unable to save HSV image from a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
-    $current(frame) save array rgb cube file "\{$fn\}" $opt
+    $current(frame) save array hsv cube file "\{$fn\}" $opt
 }
 
-proc ExportRGBArraySocket {sock opt} {
+proc ExportHSVArraySocket {sock opt} {
     global current
 
     if {$current(frame) == {}} {
@@ -149,19 +149,19 @@ proc ExportRGBArraySocket {sock opt} {
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    Error [msgcat::mc {Unable to save HSV image from a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
-    $current(frame) save array rgb cube socket $sock $opt
+    $current(frame) save array hsv cube socket $sock $opt
 }
 
-proc ProcessRGBArrayCmd {varname iname sock fn} {
+proc ProcessHSVArrayCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
@@ -169,33 +169,33 @@ proc ProcessRGBArrayCmd {varname iname sock fn} {
     set parse(sock) $sock
     set parse(fn) $fn
 
-    rgbarray::YY_FLUSH_BUFFER
-    rgbarray::yy_scan_string [lrange $var $i end]
-    rgbarray::yyparse
-    incr i [expr $rgbarray::yycnt-1]
+    hsvarray::YY_FLUSH_BUFFER
+    hsvarray::yy_scan_string [lrange $var $i end]
+    hsvarray::yyparse
+    incr i [expr $hsvarray::yycnt-1]
 }
 
-proc RGBArrayCmdLoad {param} {
+proc HSVArrayCmdLoad {param} {
     global parse
 
     if {$parse(sock) != {}} {
 	# xpa
-	if {![ImportRGBArraySocket $parse(sock) $param]} {
+	if {![ImportHSVArraySocket $parse(sock) $param]} {
 	    InitError xpa
-	    ImportRGBArrayFile $param
+	    ImportHSVArrayFile $param
 	}
     } else {
 	# comm
 	if {$parse(fn) != {}} {
-	    ImportRGBArrayAlloc $parse(fn) $param
+	    ImportHSVArrayAlloc $parse(fn) $param
 	} else {
-	    ImportRGBArrayFile $param
+	    ImportHSVArrayFile $param
 	}
     }
     FinishLoad
 }
 
-proc ProcessSendRGBArrayCmd {proc id param sock fn} {
+proc ProcessSendHSVArrayCmd {proc id param sock fn} {
     global current
 
     if {$current(frame) == {}} {
@@ -205,10 +205,10 @@ proc ProcessSendRGBArrayCmd {proc id param sock fn} {
     set opt [string tolower [lindex $param 0]]
     if {$sock != {}} {
 	# xpa
-	ExportRGBArraySocket $sock $opt
+	ExportHSVArraySocket $sock $opt
     } elseif {$fn != {}} {
 	# comm
-	ExportRGBArrayFile $fn $opt
+	ExportHSVArrayFile $fn $opt
 	$proc $id {} $fn
     }
 }

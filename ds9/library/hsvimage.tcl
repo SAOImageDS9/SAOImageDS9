@@ -4,23 +4,23 @@
 
 package provide DS9 1.0
 
-proc LoadRGBImageFile {fn} {
+proc LoadHSVImageFile {fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HSV image into a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
     set loadParam(file,type) fits
-    set loadParam(file,mode) {rgb image}
+    set loadParam(file,mode) {hsv image}
     set loadParam(load,type) mmapincr
     set loadParam(file,name) $fn
 
@@ -31,23 +31,23 @@ proc LoadRGBImageFile {fn} {
     ProcessLoad
 }
 
-proc LoadRGBImageAlloc {path fn} {
+proc LoadHSVImageAlloc {path fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HSV image into a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
     set loadParam(file,type) fits
-    set loadParam(file,mode) {rgb image}
+    set loadParam(file,mode) {hsv image}
     set loadParam(load,type) allocgz
     set loadParam(file,name) $fn
     set loadParam(file,fn) $path
@@ -58,23 +58,23 @@ proc LoadRGBImageAlloc {path fn} {
     ProcessLoad
 }
 
-proc LoadRGBImageSocket {sock fn} {
+proc LoadHSVImageSocket {sock fn} {
     global loadParam
     global current
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    Error [msgcat::mc {Unable to load HSV image into a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
     set loadParam(file,type) fits
-    set loadParam(file,mode) {rgb image}
+    set loadParam(file,mode) {hsv image}
     set loadParam(load,type) socketgz
     set loadParam(file,name) $fn
     set loadParam(socket,id) $sock
@@ -85,7 +85,7 @@ proc LoadRGBImageSocket {sock fn} {
     return [ProcessLoad 0]
 }
 
-proc SaveRGBImageFile {fn} {
+proc SaveHSVImageFile {fn} {
     global current
 
     if {$fn == {}} {
@@ -100,19 +100,19 @@ proc SaveRGBImageFile {fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    Error [msgcat::mc {Unable to save HSV image from a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
-    $current(frame) save fits rgb image file "\{$fn\}"
+    $current(frame) save fits hsv image file "\{$fn\}"
 }
 
-proc SaveRGBImageSocket {sock} {
+proc SaveHSVImageSocket {sock} {
     global current
 
     if {$current(frame) == {}} {
@@ -124,19 +124,19 @@ proc SaveRGBImageSocket {sock} {
 
     switch -- [$current(frame) get type] {
 	base -
+	rgb -
 	hls -
-	hsv -
 	3d {
-	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    Error [msgcat::mc {Unable to save HSV image from a non-hsv frame}]
 	    return
 	}
-	rgb {}
+	hsv {}
     }
 
-    $current(frame) save fits rgb image socket $sock
+    $current(frame) save fits hsv image socket $sock
 }
 
-proc ProcessRGBImageCmd {varname iname sock fn} {
+proc ProcessHSVImageCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
@@ -144,33 +144,33 @@ proc ProcessRGBImageCmd {varname iname sock fn} {
     set parse(sock) $sock
     set parse(fn) $fn
 
-    rgbimage::YY_FLUSH_BUFFER
-    rgbimage::yy_scan_string [lrange $var $i end]
-    rgbimage::yyparse
-    incr i [expr $rgbimage::yycnt-1]
+    hsvimage::YY_FLUSH_BUFFER
+    hsvimage::yy_scan_string [lrange $var $i end]
+    hsvimage::yyparse
+    incr i [expr $hsvimage::yycnt-1]
 }
 
-proc RGBImageCmdLoad {param} {
+proc HSVImageCmdLoad {param} {
     global parse
 
     if {$parse(sock) != {}} {
 	# xpa
-	if {![LoadRGBImageSocket $parse(sock) $param]} {
+	if {![LoadHSVImageSocket $parse(sock) $param]} {
 	    InitError xpa
-	    LoadRGBImageFile $param
+	    LoadHSVImageFile $param
 	}
     } else {
 	# comm
 	if {$parse(fn) != {}} {
-	    LoadRGBImageAlloc $parse(fn) $param
+	    LoadHSVImageAlloc $parse(fn) $param
 	} else {
-	    LoadRGBImageFile $param
+	    LoadHSVImageFile $param
 	}
     }
     FinishLoad
 }
 
-proc ProcessSendRGBImageCmd {proc id param sock fn} {
+proc ProcessSendHSVImageCmd {proc id param sock fn} {
     global current
 
     if {$current(frame) == {}} {
@@ -179,10 +179,10 @@ proc ProcessSendRGBImageCmd {proc id param sock fn} {
 
     if {$sock != {}} {
 	# xpa
-	SaveRGBImageSocket $sock
+	SaveHSVImageSocket $sock
     } elseif {$fn != {}} {
 	# comm
-	SaveRGBImageFile $fn
+	SaveHSVImageFile $fn
 	$proc $id {} $fn
     }
 }

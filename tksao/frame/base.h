@@ -870,17 +870,17 @@ public:
   virtual void loadMosaicVarCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
 
   // Fits RGB
-  virtual void loadCubeAllocCmd(const char*, const char*) {}
-  virtual void loadCubeAllocGZCmd(const char*, const char*) {}
-  virtual void loadCubeChannelCmd(const char*, const char*) {}
-  virtual void loadCubeMMapCmd(const char*) {}
-  virtual void loadCubeSMMapCmd(const char*, const char*) {}
-  virtual void loadCubeMMapIncrCmd(const char*) {}
-  virtual void loadCubeShareCmd(ShmType, int, const char*) {}
-  virtual void loadCubeSShareCmd(ShmType,int,int,const char*) {}
-  virtual void loadCubeSocketCmd(int, const char*) {}
-  virtual void loadCubeSocketGZCmd(int, const char*) {}
-  virtual void loadCubeVarCmd(const char*, const char*) {}
+  virtual void loadRGBCubeAllocCmd(const char*, const char*) {}
+  virtual void loadRGBCubeAllocGZCmd(const char*, const char*) {}
+  virtual void loadRGBCubeChannelCmd(const char*, const char*) {}
+  virtual void loadRGBCubeMMapCmd(const char*) {}
+  virtual void loadRGBCubeSMMapCmd(const char*, const char*) {}
+  virtual void loadRGBCubeMMapIncrCmd(const char*) {}
+  virtual void loadRGBCubeShareCmd(ShmType, int, const char*) {}
+  virtual void loadRGBCubeSShareCmd(ShmType,int,int,const char*) {}
+  virtual void loadRGBCubeSocketCmd(int, const char*) {}
+  virtual void loadRGBCubeSocketGZCmd(int, const char*) {}
+  virtual void loadRGBCubeVarCmd(const char*, const char*) {}
 
   virtual void loadRGBImageAllocCmd(const char*, const char*) {}
   virtual void loadRGBImageAllocGZCmd(const char*, const char*) {}
@@ -892,15 +892,15 @@ public:
   virtual void loadRGBImageSocketGZCmd(int, const char*) {}
   virtual void loadRGBImageVarCmd(const char*, const char*) {}
 
-  virtual void loadArrayCubeAllocCmd(const char*, const char*) {}
-  virtual void loadArrayCubeAllocGZCmd(const char*, const char*) {}
-  virtual void loadArrayCubeChannelCmd(const char*, const char*) {}
-  virtual void loadArrayCubeMMapCmd(const char*) {}
-  virtual void loadArrayCubeMMapIncrCmd(const char*) {}
-  virtual void loadArrayCubeShareCmd(ShmType, int, const char*) {}
-  virtual void loadArrayCubeSocketCmd(int, const char*) {}
-  virtual void loadArrayCubeSocketGZCmd(int, const char*) {}
-  virtual void loadArrayCubeVarCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeAllocCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeAllocGZCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeChannelCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeMMapCmd(const char*) {}
+  virtual void loadRGBArrayCubeMMapIncrCmd(const char*) {}
+  virtual void loadRGBArrayCubeShareCmd(ShmType, int, const char*) {}
+  virtual void loadRGBArrayCubeSocketCmd(int, const char*) {}
+  virtual void loadRGBArrayCubeSocketGZCmd(int, const char*) {}
+  virtual void loadRGBArrayCubeVarCmd(const char*, const char*) {}
 
   virtual void savePhotoCmd(const char*) =0;
 

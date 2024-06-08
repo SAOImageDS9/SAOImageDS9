@@ -7798,47 +7798,47 @@ yyreduce:
 
   case 619:
 #line 1497 "frame/parser.Y"
-    {fr->loadArrayCubeAllocCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBArrayCubeAllocCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 620:
 #line 1498 "frame/parser.Y"
-    {fr->loadArrayCubeAllocGZCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBArrayCubeAllocGZCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 621:
 #line 1499 "frame/parser.Y"
-    {fr->loadArrayCubeChannelCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBArrayCubeChannelCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 622:
 #line 1500 "frame/parser.Y"
-    {fr->loadArrayCubeMMapCmd((yyvsp[(1) - (2)].str));;}
+    {fr->loadRGBArrayCubeMMapCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 623:
 #line 1501 "frame/parser.Y"
-    {fr->loadArrayCubeMMapIncrCmd((yyvsp[(1) - (2)].str));;}
+    {fr->loadRGBArrayCubeMMapIncrCmd((yyvsp[(1) - (2)].str));;}
     break;
 
   case 624:
 #line 1503 "frame/parser.Y"
-    {fr->loadArrayCubeShareCmd((Base::ShmType)(yyvsp[(3) - (4)].integer), (yyvsp[(4) - (4)].integer), (yyvsp[(1) - (4)].str));;}
+    {fr->loadRGBArrayCubeShareCmd((Base::ShmType)(yyvsp[(3) - (4)].integer), (yyvsp[(4) - (4)].integer), (yyvsp[(1) - (4)].str));;}
     break;
 
   case 625:
 #line 1504 "frame/parser.Y"
-    {fr->loadArrayCubeSocketCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBArrayCubeSocketCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 626:
 #line 1505 "frame/parser.Y"
-    {fr->loadArrayCubeSocketGZCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBArrayCubeSocketGZCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 627:
 #line 1506 "frame/parser.Y"
-    {fr->loadArrayCubeVarCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBArrayCubeVarCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 628:
@@ -8292,57 +8292,57 @@ yyreduce:
 
   case 719:
 #line 1727 "frame/parser.Y"
-    {fr->loadCubeAllocCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBCubeAllocCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 720:
 #line 1728 "frame/parser.Y"
-    {fr->loadCubeAllocGZCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBCubeAllocGZCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 721:
 #line 1729 "frame/parser.Y"
-    {fr->loadCubeChannelCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBCubeChannelCmd((yyvsp[(3) - (3)].str), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 722:
 #line 1730 "frame/parser.Y"
-    {fr->loadCubeMMapCmd((yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBCubeMMapCmd((yyvsp[(1) - (3)].str));;}
     break;
 
   case 723:
 #line 1731 "frame/parser.Y"
-    {fr->loadCubeSMMapCmd((yyvsp[(1) - (4)].str), (yyvsp[(2) - (4)].str));;}
+    {fr->loadRGBCubeSMMapCmd((yyvsp[(1) - (4)].str), (yyvsp[(2) - (4)].str));;}
     break;
 
   case 724:
 #line 1732 "frame/parser.Y"
-    {fr->loadCubeMMapIncrCmd((yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBCubeMMapIncrCmd((yyvsp[(1) - (3)].str));;}
     break;
 
   case 725:
 #line 1734 "frame/parser.Y"
-    {fr->loadCubeShareCmd((Base::ShmType)(yyvsp[(3) - (5)].integer), (yyvsp[(4) - (5)].integer), (yyvsp[(1) - (5)].str));;}
+    {fr->loadRGBCubeShareCmd((Base::ShmType)(yyvsp[(3) - (5)].integer), (yyvsp[(4) - (5)].integer), (yyvsp[(1) - (5)].str));;}
     break;
 
   case 726:
 #line 1736 "frame/parser.Y"
-    {fr->loadCubeSShareCmd((Base::ShmType)(yyvsp[(3) - (6)].integer), (yyvsp[(4) - (6)].integer), (yyvsp[(5) - (6)].integer), (yyvsp[(1) - (6)].str));;}
+    {fr->loadRGBCubeSShareCmd((Base::ShmType)(yyvsp[(3) - (6)].integer), (yyvsp[(4) - (6)].integer), (yyvsp[(5) - (6)].integer), (yyvsp[(1) - (6)].str));;}
     break;
 
   case 727:
 #line 1737 "frame/parser.Y"
-    {fr->loadCubeSocketCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBCubeSocketCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 728:
 #line 1738 "frame/parser.Y"
-    {fr->loadCubeSocketGZCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
+    {fr->loadRGBCubeSocketGZCmd((yyvsp[(3) - (3)].integer), (yyvsp[(1) - (3)].str));;}
     break;
 
   case 729:
 #line 1739 "frame/parser.Y"
-    {fr->loadCubeVarCmd((yyvsp[(3) - (4)].str), (yyvsp[(1) - (4)].str));;}
+    {fr->loadRGBCubeVarCmd((yyvsp[(3) - (4)].str), (yyvsp[(1) - (4)].str));;}
     break;
 
   case 730:

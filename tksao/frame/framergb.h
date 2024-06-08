@@ -22,8 +22,6 @@ protected:
   int validColorScale() 
     {return colorScale[0] && colorScale[1] && colorScale[2];}
 
-  void loadRGBImage(MemType, const char*, FitsImage*);
-
  public:
   FrameRGB(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameRGB();
@@ -34,16 +32,6 @@ protected:
   void getRGBChannelCmd();
   void getRGBSystemCmd() {getSystem();}
   void getRGBViewCmd() {getView();}
-
-  void loadRGBImageAllocCmd(const char*, const char*);
-  void loadRGBImageAllocGZCmd(const char*, const char*);
-  void loadRGBImageChannelCmd(const char*, const char*);
-  void loadRGBImageMMapCmd(const char*);
-  void loadRGBImageMMapIncrCmd(const char*);
-  void loadRGBImageShareCmd(ShmType, int, const char*);
-  void loadRGBImageSocketCmd(int, const char*);
-  void loadRGBImageSocketGZCmd(int, const char*);
-  void loadRGBImageVarCmd(const char*, const char*);
 
   void saveFitsRGBImage(OutFitsStream&);
   void saveFitsRGBImageFileCmd(const char*);

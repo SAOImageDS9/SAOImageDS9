@@ -50,9 +50,10 @@ protected:
   void unloadAllFits();
   void updateRGBMatrices();
 
-  void loadCube(MemType, const char*, FitsImage*);
-  void loadCubeFinish();
   void loadDone(int);
+  void loadRGBCube(MemType, const char*, FitsImage*);
+  void loadRGBCubeFinish();
+  void loadRGBImage(MemType, const char*, FitsImage*);
 
 public:
   FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*);
@@ -65,27 +66,37 @@ public:
   void loadPhotoCmd(const char*, const char*);
   void loadSlicePhotoCmd(const char*, const char*) {}
 
-  void loadCubeAllocCmd(const char*, const char*);
-  void loadCubeAllocGZCmd(const char*, const char*);
-  void loadCubeChannelCmd(const char*, const char*);
-  void loadCubeMMapCmd(const char*);
-  void loadCubeSMMapCmd(const char*, const char*);
-  void loadCubeMMapIncrCmd(const char*);
-  void loadCubeShareCmd(ShmType, int, const char*);
-  void loadCubeSShareCmd(ShmType, int, int, const char*);
-  void loadCubeSocketCmd(int, const char*);
-  void loadCubeSocketGZCmd(int, const char*);
-  void loadCubeVarCmd(const char*, const char*);
+  void loadRGBCubeAllocCmd(const char*, const char*);
+  void loadRGBCubeAllocGZCmd(const char*, const char*);
+  void loadRGBCubeChannelCmd(const char*, const char*);
+  void loadRGBCubeMMapCmd(const char*);
+  void loadRGBCubeSMMapCmd(const char*, const char*);
+  void loadRGBCubeMMapIncrCmd(const char*);
+  void loadRGBCubeShareCmd(ShmType, int, const char*);
+  void loadRGBCubeSShareCmd(ShmType, int, int, const char*);
+  void loadRGBCubeSocketCmd(int, const char*);
+  void loadRGBCubeSocketGZCmd(int, const char*);
+  void loadRGBCubeVarCmd(const char*, const char*);
 
-  void loadArrayCubeAllocCmd(const char*, const char*);
-  void loadArrayCubeAllocGZCmd(const char*, const char*);
-  void loadArrayCubeChannelCmd(const char*, const char*);
-  void loadArrayCubeMMapCmd(const char*);
-  void loadArrayCubeMMapIncrCmd(const char*);
-  void loadArrayCubeShareCmd(ShmType, int, const char*);
-  void loadArrayCubeSocketCmd(int, const char*);
-  void loadArrayCubeSocketGZCmd(int, const char*);
-  void loadArrayCubeVarCmd(const char*, const char*);
+  void loadRGBImageAllocCmd(const char*, const char*);
+  void loadRGBImageAllocGZCmd(const char*, const char*);
+  void loadRGBImageChannelCmd(const char*, const char*);
+  void loadRGBImageMMapCmd(const char*);
+  void loadRGBImageMMapIncrCmd(const char*);
+  void loadRGBImageShareCmd(ShmType, int, const char*);
+  void loadRGBImageSocketCmd(int, const char*);
+  void loadRGBImageSocketGZCmd(int, const char*);
+  void loadRGBImageVarCmd(const char*, const char*);
+
+  void loadRGBArrayCubeAllocCmd(const char*, const char*);
+  void loadRGBArrayCubeAllocGZCmd(const char*, const char*);
+  void loadRGBArrayCubeChannelCmd(const char*, const char*);
+  void loadRGBArrayCubeMMapCmd(const char*);
+  void loadRGBArrayCubeMMapIncrCmd(const char*);
+  void loadRGBArrayCubeShareCmd(ShmType, int, const char*);
+  void loadRGBArrayCubeSocketCmd(int, const char*);
+  void loadRGBArrayCubeSocketGZCmd(int, const char*);
+  void loadRGBArrayCubeVarCmd(const char*, const char*);
 };
 
 #endif

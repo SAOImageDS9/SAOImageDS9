@@ -1494,16 +1494,16 @@ loadArr : STRING ALLOC_ STRING layerType
 	| RGB_ CUBE_ loadArrayRGBCube
 	;
 
-loadArrayRGBCube : STRING ALLOC_ STRING {fr->loadArrayCubeAllocCmd($3, $1);}
-	| STRING ALLOCGZ_ STRING {fr->loadArrayCubeAllocGZCmd($3, $1);}
-	| STRING CHANNEL_ STRING {fr->loadArrayCubeChannelCmd($3, $1);}
-	| STRING MMAP_ {fr->loadArrayCubeMMapCmd($1);}
-	| STRING MMAPINCR_  {fr->loadArrayCubeMMapIncrCmd($1);}
+loadArrayRGBCube : STRING ALLOC_ STRING {fr->loadRGBArrayCubeAllocCmd($3, $1);}
+	| STRING ALLOCGZ_ STRING {fr->loadRGBArrayCubeAllocGZCmd($3, $1);}
+	| STRING CHANNEL_ STRING {fr->loadRGBArrayCubeChannelCmd($3, $1);}
+	| STRING MMAP_ {fr->loadRGBArrayCubeMMapCmd($1);}
+	| STRING MMAPINCR_  {fr->loadRGBArrayCubeMMapIncrCmd($1);}
 	| STRING SHARED_ shmType INT
-	{fr->loadArrayCubeShareCmd((Base::ShmType)$3, $4, $1);}
-	| STRING SOCKET_ INT {fr->loadArrayCubeSocketCmd($3, $1);}
-	| STRING SOCKETGZ_ INT {fr->loadArrayCubeSocketGZCmd($3, $1);}
-	| STRING VAR_ STRING {fr->loadArrayCubeVarCmd($3, $1);}
+	{fr->loadRGBArrayCubeShareCmd((Base::ShmType)$3, $4, $1);}
+	| STRING SOCKET_ INT {fr->loadRGBArrayCubeSocketCmd($3, $1);}
+	| STRING SOCKETGZ_ INT {fr->loadRGBArrayCubeSocketGZCmd($3, $1);}
+	| STRING VAR_ STRING {fr->loadRGBArrayCubeVarCmd($3, $1);}
 	;
 
 loadENVI : STRING STRING SMMAP_ {fr->loadENVISMMapCmd($1,$2);}
@@ -1724,19 +1724,19 @@ loadFitsMosaicWCS : wcsSystem STRING ALLOC_ STRING layerType
 	    $4, $2, (Base::LayerType)$6);}
 	;
 
-loadFitsRGBCube: STRING ALLOC_ STRING {fr->loadCubeAllocCmd($3, $1);}
-	| STRING ALLOCGZ_ STRING {fr->loadCubeAllocGZCmd($3, $1);}
-	| STRING CHANNEL_ STRING {fr->loadCubeChannelCmd($3, $1);}
-	| STRING MMAP_ incrLoad {fr->loadCubeMMapCmd($1);}
-	| STRING STRING SMMAP_ incrLoad {fr->loadCubeSMMapCmd($1, $2);}
-	| STRING MMAPINCR_ incrLoad {fr->loadCubeMMapIncrCmd($1);}
+loadFitsRGBCube: STRING ALLOC_ STRING {fr->loadRGBCubeAllocCmd($3, $1);}
+	| STRING ALLOCGZ_ STRING {fr->loadRGBCubeAllocGZCmd($3, $1);}
+	| STRING CHANNEL_ STRING {fr->loadRGBCubeChannelCmd($3, $1);}
+	| STRING MMAP_ incrLoad {fr->loadRGBCubeMMapCmd($1);}
+	| STRING STRING SMMAP_ incrLoad {fr->loadRGBCubeSMMapCmd($1, $2);}
+	| STRING MMAPINCR_ incrLoad {fr->loadRGBCubeMMapIncrCmd($1);}
 	| STRING SHARED_ shmType INT incrLoad
-	{fr->loadCubeShareCmd((Base::ShmType)$3, $4, $1);}
+	{fr->loadRGBCubeShareCmd((Base::ShmType)$3, $4, $1);}
 	| STRING SSHARED_ shmType INT INT incrLoad
-	{fr->loadCubeSShareCmd((Base::ShmType)$3, $4, $5, $1);}
-	| STRING SOCKET_ INT {fr->loadCubeSocketCmd($3, $1);}
-	| STRING SOCKETGZ_ INT {fr->loadCubeSocketGZCmd($3, $1);}
-	| STRING VAR_ STRING incrLoad {fr->loadCubeVarCmd($3, $1);}
+	{fr->loadRGBCubeSShareCmd((Base::ShmType)$3, $4, $5, $1);}
+	| STRING SOCKET_ INT {fr->loadRGBCubeSocketCmd($3, $1);}
+	| STRING SOCKETGZ_ INT {fr->loadRGBCubeSocketGZCmd($3, $1);}
+	| STRING VAR_ STRING incrLoad {fr->loadRGBCubeVarCmd($3, $1);}
 	;
 
 loadFitsRGBImage: STRING ALLOC_ STRING {fr->loadRGBImageAllocCmd($3, $1);}

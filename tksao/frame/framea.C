@@ -374,7 +374,18 @@ void FrameA::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   CLEARSIGBUS
 }
 
-void FrameA::loadCube(MemType which, const char* fn, FitsImage* img)
+void FrameA::loadDone(int rr)
+{
+  if (rr) {
+    if (!keyContextSet) {
+      keyContext = currentContext;
+      keyContextSet =1;
+    }
+  }
+  Base::loadDone(rr);
+}
+
+void FrameA::loadRGBCube(MemType which, const char* fn, FitsImage* img)
 {
   if (!img || !img->isValid() || !(img->isImage() || img->isPost()) || (img->depth() != 3))
     goto error;
@@ -528,7 +539,7 @@ void FrameA::loadCube(MemType which, const char* fn, FitsImage* img)
       context[2].bfits_ && context[2].bfits_->isValid() &&
       (context[2].bfits_->isImage() || context[2].bfits_->isPost())) {
 
-    loadCubeFinish();
+    loadRGBCubeFinish();
     return;
   }
 
@@ -545,7 +556,7 @@ void FrameA::loadCube(MemType which, const char* fn, FitsImage* img)
   return;
 }
 
-void FrameA::loadCubeFinish()
+void FrameA::loadRGBCubeFinish()
 {
   for (int ii=0; ii<3; ii++) {
     context[ii].loadInit(1,NOMOSAIC,Coord::WCS);
@@ -567,15 +578,189 @@ void FrameA::loadCubeFinish()
   update(MATRIX);
 }
 
-void FrameA::loadDone(int rr)
+void FrameA::loadRGBImage(MemType which, const char* fn, FitsImage* img)
 {
-  if (rr) {
-    if (!keyContextSet) {
-      keyContext = currentContext;
-      keyContextSet =1;
-    }
+  FitsImage* r = img;
+  FitsImage* g = NULL;
+  FitsImage* b = NULL;
+
+  if (!img || !img->isValid() || !(img->isImage() || img->isPost()))
+    goto error;
+
+  switch (which) {
+  case ALLOC:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextAlloc(&context[1], interp, 
+				       fn, r->fitsFile(), 
+				       FitsFile::NOFLUSH,1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextAlloc(&context[2], interp, 
+				       fn, g->fitsFile(), 
+				       FitsFile::NOFLUSH,1);
+    break;
+  case ALLOCGZ:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextAllocGZ(&context[1], interp, 
+					 fn, r->fitsFile(), 
+					 FitsFile::NOFLUSH,1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextAllocGZ(&context[2], interp, 
+					 fn, g->fitsFile(), 
+					 FitsFile::NOFLUSH,1);
+    break;
+  case CHANNEL:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextChannel(&context[1], interp, 
+					 fn, r->fitsFile(), 
+					 FitsFile::NOFLUSH,1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextChannel(&context[2], interp, 
+					 fn, g->fitsFile(), 
+					 FitsFile::NOFLUSH,1);
+    break;
+  case MMAP:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextMMap(&context[1], interp, 
+				      fn, r->fitsFile(),1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextMMap(&context[2], interp, 
+				      fn, g->fitsFile(),1);
+    break;
+  case MMAPINCR:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextMMapIncr(&context[1], interp, 
+					  fn, r->fitsFile(),1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextMMapIncr(&context[2], interp,
+					  fn, g->fitsFile(),1);
+    break;
+  case SHARE:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextShare(&context[1], interp, 
+				       fn, r->fitsFile(),1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextShare(&context[2], interp, 
+				       fn, g->fitsFile(),1);
+    break;
+  case SOCKET:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextSocket(&context[1], interp, 
+					fn, r->fitsFile(), 
+					FitsFile::FLUSH,1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextSocket(&context[2], interp,
+					fn,g->fitsFile(), 
+					FitsFile::FLUSH,1);
+    break;
+  case SOCKETGZ:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextSocketGZ(&context[1], interp, 
+					  fn, r->fitsFile(), 
+					  FitsFile::FLUSH,1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextSocketGZ(&context[2], interp,
+					  fn, g->fitsFile(), 
+					  FitsFile::FLUSH,1);
+    break;
+  case VAR:
+    if (r && r->isValid())
+      g = new FitsImageMosaicNextVar(&context[1], interp, 
+				     fn, r->fitsFile(),1);
+    if (g && g->isValid())
+      b = new FitsImageMosaicNextVar(&context[2], interp, 
+				     fn, g->fitsFile(),1);
+    break;
+  default:
+    // na
+    break;
   }
-  Base::loadDone(rr);
+
+  // ok, figure out which is which channel
+  context[0].bfits_ = context[1].bfits_ = context[2].bfits_ = NULL;
+
+  {
+    const char* ext = r->fitsFile()->extname();
+    if (ext) {
+      if (!strncmp(ext,"RED",3))
+	context[0].bfits_ = r;
+      else if (!strncmp(ext,"GREEN",3)) {
+	context[1].bfits_ = r;
+	r->setContext(&context[1]);
+      }
+      else if (!strncmp(ext,"BLUE",3)) {
+	context[2].bfits_ = r;
+	r->setContext(&context[2]);
+      }
+      else
+	context[0].bfits_ = r;
+    }
+    else
+      context[0].bfits_ = r;
+  }
+
+  {
+    const char* ext = g->fitsFile()->extname();
+    if (ext) {
+      if (!strncmp(ext,"RED",3)) {
+	context[0].bfits_ = g;
+	g->setContext(&context[0]);
+      }
+      else if (!strncmp(ext,"GREEN",3))
+	context[1].bfits_ = g;
+      else if (!strncmp(ext,"BLUE",3)) {
+	context[2].bfits_ = g;
+	g->setContext(&context[3]);
+      }
+      else
+	context[1].bfits_ = g;
+    }
+    else
+      context[1].bfits_ = g;
+  }
+
+  {
+    const char* ext = b->fitsFile()->extname();
+    if (ext) {
+      if (!strncmp(ext,"RED",3)) {
+	context[0].bfits_ = b;
+	b->setContext(&context[0]);
+      }
+      else if (!strncmp(ext,"GREEN",3)) {
+	context[1].bfits_ = b;
+	b->setContext(&context[1]);
+      }
+      else if (!strncmp(ext,"BLUE",3))
+	context[2].bfits_ = b;
+      else
+	context[2].bfits_ = b;
+    }
+    else
+      context[2].bfits_ = b;
+  }
+
+  // is everything ok?
+  if (context[0].bfits_ && context[0].bfits_->isValid() && 
+      (context[0].bfits_->isImage() || context[0].bfits_->isPost()) &&
+      context[1].bfits_ && context[1].bfits_->isValid() && 
+      (context[1].bfits_->isImage() || context[1].bfits_->isPost()) &&
+      context[2].bfits_ && context[2].bfits_->isValid() && 
+      (context[2].bfits_->isImage() || context[2].bfits_->isPost())) {
+
+    loadRGBCubeFinish();
+    return;
+  }
+
+ error:
+  context[0].unload();
+  context[1].unload();
+  context[2].unload();
+
+  reset();
+  updateColorScale();
+    
+  Tcl_AppendResult(interp, "Unable to load rgb image file", NULL);
+  result = TCL_ERROR;
+  return;
 }
 
 // Photo
@@ -584,163 +769,234 @@ void FrameA::loadPhotoCmd(const char* ph, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImagePhotoCube(&context[0], interp, ph, fn, 1);
-  loadCube(ALLOC,fn,img);
+  loadRGBCube(ALLOC,fn,img);
 }
 
 // Cube FITS
 
-void FrameA::loadCubeAllocCmd(const char* ch, const char* fn)
+void FrameA::loadRGBCubeAllocCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsAlloc(&context[0], interp,
 					  ch, fn, FitsFile::NOFLUSH, 1);
-  loadCube(ALLOC,fn,img);
+  loadRGBCube(ALLOC,fn,img);
 }
 
-void FrameA::loadCubeAllocGZCmd(const char* ch, const char* fn)
+void FrameA::loadRGBCubeAllocGZCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsAllocGZ(&context[0], interp,
 					    ch, fn, FitsFile::NOFLUSH, 1);
-  loadCube(ALLOCGZ,fn,img);
+  loadRGBCube(ALLOCGZ,fn,img);
 }
 
-void FrameA::loadCubeChannelCmd(const char* ch, const char* fn)
+void FrameA::loadRGBCubeChannelCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsChannel(&context[0], interp, 
 					    ch, fn, FitsFile::NOFLUSH, 1);
-  loadCube(CHANNEL,fn,img);
+  loadRGBCube(CHANNEL,fn,img);
 }
 
-void FrameA::loadCubeMMapCmd(const char* fn)
+void FrameA::loadRGBCubeMMapCmd(const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsMMap(&context[0], interp, fn, 1);
-  loadCube(MMAP,fn,img);
+  loadRGBCube(MMAP,fn,img);
 }
 
-void FrameA::loadCubeSMMapCmd(const char* hdr, const char* fn)
+void FrameA::loadRGBCubeSMMapCmd(const char* hdr, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsSMMap(&context[0], interp, hdr, fn, 1);
-  loadCube(SMMAP,fn,img);
+  loadRGBCube(SMMAP,fn,img);
 }
 
-void FrameA::loadCubeMMapIncrCmd(const char* fn)
+void FrameA::loadRGBCubeMMapIncrCmd(const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsMMapIncr(&context[0], interp, fn, 1);
-  loadCube(MMAPINCR,fn,img);
+  loadRGBCube(MMAPINCR,fn,img);
 }
 
-void FrameA::loadCubeShareCmd(ShmType type, int id, const char* fn)
+void FrameA::loadRGBCubeShareCmd(ShmType type, int id, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsShare(&context[0], interp, type, id, fn, 1);
-  loadCube(SHARE,fn,img);
+  loadRGBCube(SHARE,fn,img);
 }
 
-void FrameA::loadCubeSShareCmd(ShmType type, int hdr, int id,
+void FrameA::loadRGBCubeSShareCmd(ShmType type, int hdr, int id,
 				    const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsSShare(&context[0], interp, 
 					   type, hdr, id, fn, 1);
-  loadCube(SSHARE,fn,img);
+  loadRGBCube(SSHARE,fn,img);
 }
 
-void FrameA::loadCubeSocketCmd(int s, const char* fn)
+void FrameA::loadRGBCubeSocketCmd(int s, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsSocket(&context[0], interp, 
 					   s, fn, FitsFile::FLUSH, 1);
-  loadCube(SOCKET,fn,img);
+  loadRGBCube(SOCKET,fn,img);
 }
 
-void FrameA::loadCubeSocketGZCmd(int s, const char* fn)
+void FrameA::loadRGBCubeSocketGZCmd(int s, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsSocketGZ(&context[0], interp, 
 					     s, fn, FitsFile::FLUSH, 1);
-  loadCube(SOCKETGZ,fn,img);
+  loadRGBCube(SOCKETGZ,fn,img);
 }
 
-void FrameA::loadCubeVarCmd(const char* ch, const char* fn)
+void FrameA::loadRGBCubeVarCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageFitsVar(&context[0], interp, ch, fn, 1);
-  loadCube(VAR,fn,img);
+  loadRGBCube(VAR,fn,img);
+}
+
+// RGBImage FITS
+
+void FrameA::loadRGBImageAllocCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicAlloc(&context[0], interp, 
+					    ch, fn, FitsFile::NOFLUSH, 1);
+  loadRGBImage(ALLOC,fn,img);
+}
+
+void FrameA::loadRGBImageAllocGZCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicAllocGZ(&context[0], interp,
+					      ch, fn, FitsFile::NOFLUSH, 1);
+  loadRGBImage(ALLOCGZ,fn,img);
+}
+
+void FrameA::loadRGBImageChannelCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicChannel(&context[0], interp, 
+					      ch, fn, FitsFile::NOFLUSH, 1);
+  loadRGBImage(CHANNEL,fn,img);
+}
+
+void FrameA::loadRGBImageMMapCmd(const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicMMap(&context[0], interp, fn, 1);
+  loadRGBImage(MMAP,fn,img);
+}
+
+void FrameA::loadRGBImageMMapIncrCmd(const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicMMapIncr(&context[0], interp, fn, 1);
+  loadRGBImage(MMAPINCR,fn,img);
+}
+
+void FrameA::loadRGBImageShareCmd(ShmType type, int id, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicShare(&context[0], interp, 
+					    type, id, fn, 1);
+  loadRGBImage(SHARE,fn,img);
+}
+
+void FrameA::loadRGBImageSocketCmd(int s, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicSocket(&context[0], interp, 
+					     s, fn, FitsFile::FLUSH, 1);
+  loadRGBImage(SOCKET,fn,img);
+}
+
+void FrameA::loadRGBImageSocketGZCmd(int s, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicSocketGZ(&context[0], interp, 
+					       s, fn, FitsFile::FLUSH, 1);
+  loadRGBImage(SOCKETGZ,fn,img);
+}
+
+void FrameA::loadRGBImageVarCmd(const char* ch, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImageMosaicVar(&context[0], interp, ch, fn, 1);
+  loadRGBImage(VAR,fn,img);
 }
 
 // Cube Array
 
-void FrameA::loadArrayCubeAllocCmd(const char* ch, const char* fn)
+void FrameA::loadRGBArrayCubeAllocCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrAlloc(&context[0], interp,
 					 ch, fn, FitsFile::NOFLUSH, 1);
-  loadCube(ALLOC,fn,img);
+  loadRGBCube(ALLOC,fn,img);
 }
 
-void FrameA::loadArrayCubeAllocGZCmd(const char* ch, const char* fn)
+void FrameA::loadRGBArrayCubeAllocGZCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrAllocGZ(&context[0], interp,
 					   ch, fn, FitsFile::NOFLUSH, 1);
-  loadCube(ALLOCGZ,fn,img);
+  loadRGBCube(ALLOCGZ,fn,img);
 }
 
-void FrameA::loadArrayCubeChannelCmd(const char* ch, const char* fn)
+void FrameA::loadRGBArrayCubeChannelCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrChannel(&context[0], interp, ch, fn, 
 					   FitsFile::NOFLUSH, 1);
-  loadCube(CHANNEL,fn,img);
+  loadRGBCube(CHANNEL,fn,img);
 }
 
-void FrameA::loadArrayCubeMMapCmd(const char* fn)
+void FrameA::loadRGBArrayCubeMMapCmd(const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrMMap(&context[0], interp, fn, 1);
-  loadCube(MMAP,fn,img);
+  loadRGBCube(MMAP,fn,img);
 }
 
-void FrameA::loadArrayCubeMMapIncrCmd(const char* fn)
+void FrameA::loadRGBArrayCubeMMapIncrCmd(const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrMMapIncr(&context[0], interp, fn, 1);
-  loadCube(MMAPINCR,fn,img);
+  loadRGBCube(MMAPINCR,fn,img);
 }
 
-void FrameA::loadArrayCubeShareCmd(ShmType type, int id, const char* fn)
+void FrameA::loadRGBArrayCubeShareCmd(ShmType type, int id, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrShare(&context[0], interp,
 					 type, id, fn, 1);
-  loadCube(SHARE,fn,img);
+  loadRGBCube(SHARE,fn,img);
 }
 
-void FrameA::loadArrayCubeSocketCmd(int s, const char* fn)
+void FrameA::loadRGBArrayCubeSocketCmd(int s, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrSocket(&context[0], interp,
 					  s, fn, FitsFile::FLUSH, 1);
-  loadCube(SOCKET,fn,img);
+  loadRGBCube(SOCKET,fn,img);
 }
 
-void FrameA::loadArrayCubeSocketGZCmd(int s, const char* fn)
+void FrameA::loadRGBArrayCubeSocketGZCmd(int s, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrSocketGZ(&context[0], interp,
 					    s, fn, FitsFile::FLUSH, 1);
-  loadCube(SOCKETGZ,fn,img);
+  loadRGBCube(SOCKETGZ,fn,img);
 }
 
-void FrameA::loadArrayCubeVarCmd(const char* ch, const char* fn)
+void FrameA::loadRGBArrayCubeVarCmd(const char* ch, const char* fn)
 {
   unloadAllFits();
   FitsImage* img = new FitsImageArrVar(&context[0], interp, ch, fn, 1);
-  loadCube(VAR,fn,img);
+  loadRGBCube(VAR,fn,img);
 }
 

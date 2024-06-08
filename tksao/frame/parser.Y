@@ -1492,6 +1492,8 @@ loadArr : STRING ALLOC_ STRING layerType
 	| STRING VAR_ STRING layerType 
 	{fr->loadArrVarCmd($3, $1, (Base::LayerType)$4);}
 	| RGB_ CUBE_ loadArrayRGBCube
+	| HLS_ CUBE_ loadArrayRGBCube
+	| HSV_ CUBE_ loadArrayRGBCube
 	;
 
 loadArrayRGBCube : STRING ALLOC_ STRING {fr->loadRGBArrayCubeAllocCmd($3, $1);}
@@ -1536,6 +1538,10 @@ loadFits: STRING ALLOC_ STRING layerType
 	| EXT_ CUBE_ loadFitsExtCube
 	| RGB_ IMAGE_ loadFitsRGBImage
 	| RGB_ CUBE_ loadFitsRGBCube
+	| HLS_ IMAGE_ loadFitsRGBImage
+	| HLS_ CUBE_ loadFitsRGBCube
+	| HSV_ IMAGE_ loadFitsRGBImage
+	| HSV_ CUBE_ loadFitsRGBCube
 	| MOSAIC_ loadFitsMosaic
 	;
 

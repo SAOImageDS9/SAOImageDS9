@@ -4,8 +4,8 @@
 
 #include <tkInt.h>
 
-#include "util.h"
 #include "framergb.h"
+#include "util.h"
 #include "fitsimage.h"
 #include "outfile.h"
 #include "outchannel.h"
@@ -279,96 +279,18 @@ void FrameRGB::getTypeCmd()
   Tcl_AppendResult(interp, "rgb", NULL);
 }
 
-// RGBImage save
-
-void FrameRGB::saveFitsRGBImageFileCmd(const char* fn)
+void FrameRGB::setRGBChannelCmd(const char* c)
 {
-  if (!keyContext->fits)
-    return;
+  if (!strncmp(c,"red",3))
+    channel = 0;
+  else if (!strncmp(c,"gre",3))
+    channel = 1;
+  else if (!strncmp(c,"blu",3))
+    channel = 2;
+  else
+    channel = 0;
 
-  OutFitsFile str(fn);
-  if (str.valid())
-    saveFitsRGBImage(str);
-}
-
-void FrameRGB::saveFitsRGBImageChannelCmd(const char* ch)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsChannel str(interp, ch);
-  if (str.valid())
-    saveFitsRGBImage(str);
-}
-
-void FrameRGB::saveFitsRGBImageSocketCmd(int ss)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsSocket str(ss);
-  if (str.valid())
-    saveFitsRGBImage(str);
-}
-
-void FrameRGB::saveFitsRGBCubeFileCmd(const char* fn)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsFile str(fn);
-  if (str.valid())
-    saveFitsRGBCube(str);
-}
-
-void FrameRGB::saveFitsRGBCubeChannelCmd(const char* ch)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsChannel str(interp, ch);
-  if (str.valid())
-    saveFitsRGBCube(str);
-}
-
-void FrameRGB::saveFitsRGBCubeSocketCmd(int ss)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsSocket str(ss);
-  if (str.valid())
-    saveFitsRGBCube(str);
-}
-
-void FrameRGB::saveArrayRGBCubeFileCmd(const char* fn, FitsFile::ArchType endian)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsFile str(fn);
-  if (str.valid())
-    saveArrayRGBCube(str, endian);
-}
-
-void FrameRGB::saveArrayRGBCubeChannelCmd(const char* ch, FitsFile::ArchType endian)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsChannel str(interp, ch);
-  if (str.valid())
-    saveArrayRGBCube(str, endian);
-}
-
-void FrameRGB::saveArrayRGBCubeSocketCmd(int ss, FitsFile::ArchType endian)
-{
-  if (!keyContext->fits)
-    return;
-
-  OutFitsSocket str(ss);
-  if (str.valid())
-    saveArrayRGBCube(str, endian);
+  setChannel();
 }
 
 void FrameRGB::savePhotoCmd(const char* ph)
@@ -476,18 +398,3 @@ void FrameRGB::savePhotoCmd(const char* ph)
     return;
   }
 }
-
-void FrameRGB::setRGBChannelCmd(const char* c)
-{
-  if (!strncmp(c,"red",3))
-    channel = 0;
-  else if (!strncmp(c,"gre",3))
-    channel = 1;
-  else if (!strncmp(c,"blu",3))
-    channel = 2;
-  else
-    channel = 0;
-
-  setChannel();
-}
-

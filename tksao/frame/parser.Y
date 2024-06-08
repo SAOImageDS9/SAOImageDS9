@@ -2790,11 +2790,11 @@ saveArray : FILE_ STRING endian
 	;
 
 saveArrayRGBCube : FILE_ STRING endian 
-	{fr->saveArrayRGBCubeFileCmd($2, (FitsFile::ArchType)$3);}
+	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
 	| CHANNEL_ STRING endian 
-	{fr->saveArrayRGBCubeChannelCmd($2, (FitsFile::ArchType)$3);}
+	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
 	| SOCKET_ INT endian 
-	{fr->saveArrayRGBCubeSocketCmd($2, (FitsFile::ArchType)$3);}
+	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
 
 saveFits: /* empty */ saveFitsImage
         | IMAGE_ saveFitsImage
@@ -2838,14 +2838,14 @@ saveFitsMosaicImage : FILE_ STRING {fr->saveFitsMosaicImageFileCmd($2);}
         | SOCKET_ INT {fr->saveFitsMosaicImageSocketCmd($2);}
         ;
 
-saveFitsRGBImage : FILE_ STRING {fr->saveFitsRGBImageFileCmd($2);}
-	| CHANNEL_ STRING {fr->saveFitsRGBImageChannelCmd($2);}
-	| SOCKET_ INT {fr->saveFitsRGBImageSocketCmd($2);}
+saveFitsRGBImage : FILE_ STRING {fr->saveRGBImageFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBImageChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBImageSocketCmd($2);}
 	;
 
-saveFitsRGBCube : FILE_ STRING {fr->saveFitsRGBCubeFileCmd($2);}
-	| CHANNEL_ STRING {fr->saveFitsRGBCubeChannelCmd($2);}
-	| SOCKET_ INT {fr->saveFitsRGBCubeSocketCmd($2);}
+saveFitsRGBCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBCubeChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
 	;
 
 saveFitsResample : FILE_ STRING {fr->saveFitsResampleFileCmd($2);}

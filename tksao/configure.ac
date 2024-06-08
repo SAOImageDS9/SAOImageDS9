@@ -163,6 +163,7 @@ frame/frametruecolor24.C
 frame/frametruecolor8.C
 frame/framea.C
 frame/frameaload.C
+frame/frameasave.C
 frame/framergb.C
 frame/framergbtruecolor16.C
 frame/framergbtruecolor24.C

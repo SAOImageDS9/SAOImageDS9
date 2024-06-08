@@ -934,15 +934,20 @@ public:
   void saveFitsMosaicImageChannelCmd(const char*);
   void saveFitsMosaicImageSocketCmd(int);
 
-  virtual void saveFitsRGBImage(OutFitsStream&) {}
-  virtual void saveFitsRGBImageFileCmd(const char*) {}
-  virtual void saveFitsRGBImageChannelCmd(const char*) {}
-  virtual void saveFitsRGBImageSocketCmd(int) {}
+  virtual void saveRGBImage(OutFitsStream&) {}
+  virtual void saveRGBImageFileCmd(const char*) {}
+  virtual void saveRGBImageChannelCmd(const char*) {}
+  virtual void saveRGBImageSocketCmd(int) {}
 
-  virtual void saveFitsRGBCube(OutFitsStream&) {}
-  virtual void saveFitsRGBCubeFileCmd(const char*) {}
-  virtual void saveFitsRGBCubeChannelCmd(const char*) {}
-  virtual void saveFitsRGBCubeSocketCmd(int) {}
+  virtual void saveRGBCube(OutFitsStream&) {}
+  virtual void saveRGBCubeFileCmd(const char*) {}
+  virtual void saveRGBCubeChannelCmd(const char*) {}
+  virtual void saveRGBCubeSocketCmd(int) {}
+
+  virtual void saveRGBArrayCube(OutFitsStream&, FitsFile::ArchType) {}
+  virtual void saveRGBArrayCubeFileCmd(const char*, FitsFile::ArchType) {}
+  virtual void saveRGBArrayCubeChannelCmd(const char*, FitsFile::ArchType) {}
+  virtual void saveRGBArrayCubeSocketCmd(int, FitsFile::ArchType) {}
 
   virtual void saveFitsResampleFileCmd(const char*) {}
   virtual void saveFitsResampleChannelCmd(const char*) {}
@@ -952,11 +957,6 @@ public:
   void saveArrayFileCmd(const char*, FitsFile::ArchType);
   void saveArrayChannelCmd(const char*, FitsFile::ArchType);
   void saveArraySocketCmd(int, FitsFile::ArchType);
-
-  virtual void saveArrayRGBCube(OutFitsStream&, FitsFile::ArchType) {}
-  virtual void saveArrayRGBCubeFileCmd(const char*, FitsFile::ArchType) {}
-  virtual void saveArrayRGBCubeChannelCmd(const char*, FitsFile::ArchType) {}
-  virtual void saveArrayRGBCubeSocketCmd(int, FitsFile::ArchType) {}
 
   void saveNRRD(OutFitsStream&, FitsFile::ArchType);
   void saveNRRDFileCmd(const char*, FitsFile::ArchType);

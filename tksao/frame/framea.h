@@ -97,6 +97,21 @@ public:
   void loadRGBArrayCubeSocketCmd(int, const char*);
   void loadRGBArrayCubeSocketGZCmd(int, const char*);
   void loadRGBArrayCubeVarCmd(const char*, const char*);
+
+  void saveRGBImage(OutFitsStream&);
+  void saveRGBImageFileCmd(const char*);
+  void saveRGBImageChannelCmd(const char*);
+  void saveRGBImageSocketCmd(int);
+
+  void saveRGBCube(OutFitsStream&);
+  void saveRGBCubeFileCmd(const char*);
+  void saveRGBCubeChannelCmd(const char*);
+  void saveRGBCubeSocketCmd(int);
+
+  void saveRGBArrayCube(OutFitsStream&, FitsFile::ArchType);
+  void saveRGBArrayCubeFileCmd(const char*, FitsFile::ArchType);
+  void saveRGBArrayCubeChannelCmd(const char*, FitsFile::ArchType);
+  void saveRGBArrayCubeSocketCmd(int, FitsFile::ArchType);
 };
 
 #endif

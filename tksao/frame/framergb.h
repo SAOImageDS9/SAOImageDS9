@@ -33,21 +33,6 @@ protected:
   void getRGBSystemCmd() {getSystem();}
   void getRGBViewCmd() {getView();}
 
-  void saveFitsRGBImage(OutFitsStream&);
-  void saveFitsRGBImageFileCmd(const char*);
-  void saveFitsRGBImageChannelCmd(const char*);
-  void saveFitsRGBImageSocketCmd(int);
-
-  void saveFitsRGBCube(OutFitsStream&);
-  void saveFitsRGBCubeFileCmd(const char*);
-  void saveFitsRGBCubeChannelCmd(const char*);
-  void saveFitsRGBCubeSocketCmd(int);
-
-  void saveArrayRGBCube(OutFitsStream&, FitsFile::ArchType);
-  void saveArrayRGBCubeFileCmd(const char*, FitsFile::ArchType);
-  void saveArrayRGBCubeChannelCmd(const char*, FitsFile::ArchType);
-  void saveArrayRGBCubeSocketCmd(int, FitsFile::ArchType);
-
   void savePhotoCmd(const char*);
 
   void setRGBChannelCmd(const char*);

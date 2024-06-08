@@ -10778,17 +10778,17 @@ yyreduce:
 
   case 1220:
 #line 2793 "frame/parser.Y"
-    {fr->saveArrayRGBCubeFileCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
+    {fr->saveRGBArrayCubeFileCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1221:
 #line 2795 "frame/parser.Y"
-    {fr->saveArrayRGBCubeChannelCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
+    {fr->saveRGBArrayCubeChannelCmd((yyvsp[(2) - (3)].str), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1222:
 #line 2797 "frame/parser.Y"
-    {fr->saveArrayRGBCubeSocketCmd((yyvsp[(2) - (3)].integer), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
+    {fr->saveRGBArrayCubeSocketCmd((yyvsp[(2) - (3)].integer), (FitsFile::ArchType)(yyvsp[(3) - (3)].integer));;}
     break;
 
   case 1232:
@@ -10883,32 +10883,32 @@ yyreduce:
 
   case 1251:
 #line 2841 "frame/parser.Y"
-    {fr->saveFitsRGBImageFileCmd((yyvsp[(2) - (2)].str));;}
+    {fr->saveRGBImageFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1252:
 #line 2842 "frame/parser.Y"
-    {fr->saveFitsRGBImageChannelCmd((yyvsp[(2) - (2)].str));;}
+    {fr->saveRGBImageChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1253:
 #line 2843 "frame/parser.Y"
-    {fr->saveFitsRGBImageSocketCmd((yyvsp[(2) - (2)].integer));;}
+    {fr->saveRGBImageSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1254:
 #line 2846 "frame/parser.Y"
-    {fr->saveFitsRGBCubeFileCmd((yyvsp[(2) - (2)].str));;}
+    {fr->saveRGBCubeFileCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1255:
 #line 2847 "frame/parser.Y"
-    {fr->saveFitsRGBCubeChannelCmd((yyvsp[(2) - (2)].str));;}
+    {fr->saveRGBCubeChannelCmd((yyvsp[(2) - (2)].str));;}
     break;
 
   case 1256:
 #line 2848 "frame/parser.Y"
-    {fr->saveFitsRGBCubeSocketCmd((yyvsp[(2) - (2)].integer));;}
+    {fr->saveRGBCubeSocketCmd((yyvsp[(2) - (2)].integer));;}
     break;
 
   case 1257:

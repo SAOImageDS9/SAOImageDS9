@@ -1376,18 +1376,18 @@ proc UpdateFileMenuExport {} {
 		3d {}
 		rgb {
 		    $mm.export entryconfig [msgcat::mc {RGB Array}] \
-			-state disabled
-		    $bb.exportrgbarray configure -state disabled
+			-state normal
+		    $bb.exportrgbarray configure -state normal
 		}
 		hsv {
 		    $mm.export entryconfig [msgcat::mc {HSV Array}] \
-			-state disabled
-		    $bb.exporthsvarray configure -state disabled
+			-state normal
+		    $bb.exporthsvarray configure -state normal
 		}
 		hls {
 		    $mm.export entryconfig [msgcat::mc {HLS Array}] \
-			-state disabled
-		    $bb.exporthlsarray configure -state disabled
+			-state normal
+		    $bb.exporthlsarray configure -state normal
 		}
 	    }
 	}

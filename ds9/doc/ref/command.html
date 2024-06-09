@@ -56,7 +56,13 @@
 <a href="#help">help</a><br>
 <a href="#histequ">histequ</a><br>
 <a href="#hls">hls</a><br>
+<a href="#hlsarray">hlsarray</a><br>
+<a href="#hlscube">hlscube</a><br>
+<a href="#hlsimage">hlsimage</a><br>
 <a href="#hsv">hsv</a><br>
+<a href="#hsvarray">hsvarray</a><br>
+<a href="#hsvcube">hsvcube</a><br>
+<a href="#hsvimage">hsvimage</a><br>
 <a href="#hue">hue</a><br>
 <a href="#iconify">iconify</a><br>
 <a href="#inet_only">inet_only</a><br>
@@ -1178,6 +1184,30 @@ $ds9 -hls lock block yes<br>
 $ds9 -hls lock smooth yes<br>
 $ds9 -hls open<br>
 $ds9 -hls close</tt><br>
+<p><b><a name="hlsarray" id="hlsarray"></a>hlsarray</b></p>
+<p>Load raw data array cube into hls frame.<br></p>
+<tt>Syntax:<br>
+-hlsarray &lt;filename&gt;[[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hlsarray foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+$cat foo.arr | ds9 -hlsarray -[dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+<p><b><a name="hlscube" id="hlscube"></a>hlscube</b></p>
+<p>Load FITS hlscube into hls frame.<br></p>
+<tt>Syntax:<br>
+-hlscube &lt;filename&gt;<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hlscube foo.fits<br>
+$cat foo.fits | ds9 -hlscube -</tt><br>
+<p><b><a name="hlsimage" id="hlsimage"></a>hlsimage</b></p>
+<p>Load FITS hlsimage into hls frame.<br></p>
+<tt>Syntax:<br>
+-hlsimage &lt;filename&gt;<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hlsimage foo.fits<br>
+$cat foo.fits | ds9 -hlsimage -</tt><br>
 <p><b><a name="hsv" id="hsv"></a>hsv</b></p>
 <p>Create HSV frame and control HSV frame parameters.</p>
 <tt>Syntax:<br>
@@ -1206,6 +1236,30 @@ $ds9 -hsv lock block yes<br>
 $ds9 -hsv lock smooth yes<br>
 $ds9 -hsv open<br>
 $ds9 -hsv close</tt><br>
+<p><b><a name="hsvarray" id="hsvarray"></a>hsvarray</b></p>
+<p>Load raw data array cube into hsv frame.<br></p>
+<tt>Syntax:<br>
+-hsvarray &lt;filename&gt;[[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hsvarray foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+$cat foo.arr | ds9 -hsvarray -[dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+<p><b><a name="hsvcube" id="hsvcube"></a>hsvcube</b></p>
+<p>Load FITS hsvcube into hsv frame.<br></p>
+<tt>Syntax:<br>
+-hsvcube &lt;filename&gt;<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hsvcube foo.fits<br>
+$cat foo.fits | ds9 -hsvcube -</tt><br>
+<p><b><a name="hsvimage" id="hsvimage"></a>hsvimage</b></p>
+<p>Load FITS hsvimage into hsv frame.<br></p>
+<tt>Syntax:<br>
+-hsvimage &lt;filename&gt;<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hsvimage foo.fits<br>
+$cat foo.fits | ds9 -hsvimage -</tt><br>
 <p><b><a name="hue" id="hue"></a>hue</b></p>
 <p>For HLS and HSV frames, sets the current color channel to hue.</p>
 <tt>Syntax:<br>

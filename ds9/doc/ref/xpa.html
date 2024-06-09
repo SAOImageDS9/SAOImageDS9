@@ -48,7 +48,13 @@
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
 <a href="#hls">hls</a><br>
+<a href="#hlsarray">hlsarray</a><br>
+<a href="#hlscube">hlscube</a><br>
+<a href="#hlsimage">hlsimage</a><br>
 <a href="#hsv">hsv</a><br>
+<a href="#hsvarray">hsvarray</a><br>
+<a href="#hsvcube">hsvcube</a><br>
+<a href="#hsvimage">hsvimage</a><br>
 <a href="#iconify">iconify</a><br>
 <a href="#iexam">iexam</a><br>
 <a href="#iis">iis</a><br>
@@ -1443,6 +1449,47 @@ $xpaset -p ds9 hsv lock block yes<br>
 $xpaset -p ds9 hsv lock smooth yes<br>
 $xpaset -p ds9 hsv open<br>
 $xpaset -p ds9 hsv close</tt><br>
+<p><b><a name="hsvarray" id="hsvarray"></a>hsvarray</b></p>
+<p>Load raw data array cube into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvarray [native|big|little]<br>
+hsvarray [new] [[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 hsvarray &gt; foo.arr<br>
+<br>
+$xpaget ds9 hsvarray little &gt; foo.arr<br>
+$xpaset -p ds9 hsvarray foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+$xpaset -p ds9 hsvarray new foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+<br>
+$cat foo.arr | xpaset ds9 hsvarray [dim=512,zdim=3,bitpix=-32,endian=little]<br>
+$cat foo.arr | xpaset ds9 hsvarray new [dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+<p><b><a name="hsvcube" id="hsvcube"></a>hsvcube</b></p>
+<p>Load FITS hsvcube into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvcube [new] [&lt;filename&gt;]<br>
+<br>
+Example:<br>
+$xpaget ds9 hsvcube &gt; foo.fits<br>
+<br>
+$xpaset -p ds9 hsvcube foo.fits<br>
+$xpaset -p ds9 hsvcube new foo.fits<br>
+<br>
+$cat foo.fits | xpaset ds9 hsvcube<br>
+$cat foo.fits | xpaset ds9 hsvcube new</tt><br>
+<p><b><a name="hsvimage" id="hsvimage"></a>hsvimage</b></p>
+<p>Load FITS hsvimage into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvimage [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+$xpaget ds9 hsvimage &gt; foo.fits<br>
+<br>
+$xpaset -p ds9 hsvimage foo.fits<br>
+$xpaset -p ds9 hsvimage new foo.fits<br>
+<br>
+$cat foo.fits | xpaset ds9 hsvimage<br>
+$cat foo.fits | xpaset ds9 hsvimage new<br></tt>
 <p><b><a name="iconify" id="iconify"></a>iconify</b></p>
 <p>Toggles iconification.</p>
 <tt>Syntax:<br>
@@ -2603,7 +2650,7 @@ $xpaset -p ds9 rgbcube foo.fits<br>
 $xpaset -p ds9 rgbcube new foo.fits<br>
 <br>
 $cat foo.fits | xpaset ds9 rgbcube<br>
-$cat foo.fits | xpaset ds9 rgbcubenew</tt><br>
+$cat foo.fits | xpaset ds9 rgbcube new</tt><br>
 <p><b><a name="rgbimage" id="rgbimage"></a>rgbimage</b></p>
 <p>Load FITS rgbimage into rgb frame.<br></p>
 <tt>Syntax:<br>

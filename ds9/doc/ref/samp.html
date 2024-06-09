@@ -68,7 +68,13 @@ ds9.set<br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
 <a href="#hls">hls</a><br>
+<a href="#hlsarray">hlsarray</a><br>
+<a href="#hlscube">hlscube</a><br>
+<a href="#hlsimage">hlsimage</a><br>
 <a href="#hsv">hsv</a><br>
+<a href="#hsvarray">hsvarray</a><br>
+<a href="#hsvcube">hsvcube</a><br>
+<a href="#hsvimage">hsvimage</a><br>
 <a href="#iconify">iconify</a><br>
 <a href="#iexam">iexam</a><br>
 <a href="#iis">iis</a><br>
@@ -1477,6 +1483,43 @@ hls lock block yes<br>
 hls lock smooth yes<br>
 hls open<br>
 hls close</tt><br>
+<p><b><a name="hlsarray" id="hlsarray"></a>hlsarray</b></p>
+<p>Load raw data array cube into hls frame.<br></p>
+<tt>Syntax:<br>
+hlsarray [native|big|little]<br>
+hlsarray [new] [[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hlsarray<br>
+<br>
+ds9.set(string cmd)<br>
+hlsarray foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+hlsarray new foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+<p><b><a name="hlscube" id="hlscube"></a>hlscube</b></p>
+<p>Load FITS hlscube into hls frame.<br></p>
+<tt>Syntax:<br>
+hlscube [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hlscube<br>
+<br>
+ds9.set(string cmd)<br>
+hlscube foo.fits<br>
+hlscube new foo.fits</tt><br>
+<p><b><a name="hlsimage" id="hlsimage"></a>hlsimage</b></p>
+<p>Load FITS hlsimage into hls frame.<br></p>
+<tt>Syntax:<br>
+hlsimage [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hlsimage<br>
+<br>
+ds9.set(string cmd)<br>
+hlsimage foo.fits<br>
+hlsimage new foo.fits<br></tt>
 <p><b><a name="hsv" id="hsv"></a>hsv</b></p>
 <p>Create HSV frame and control HSV frame parameters.</p>
 <tt>Syntax:<br>
@@ -1522,6 +1565,43 @@ hsv lock block yes<br>
 hsv lock smooth yes<br>
 hsv open<br>
 hsv close</tt><br>
+<p><b><a name="hsvarray" id="hsvarray"></a>hsvarray</b></p>
+<p>Load raw data array cube into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvarray [native|big|little]<br>
+hsvarray [new] [[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hsvarray<br>
+<br>
+ds9.set(string cmd)<br>
+hsvarray foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+hsvarray new foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+<p><b><a name="hsvcube" id="hsvcube"></a>hsvcube</b></p>
+<p>Load FITS hsvcube into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvcube [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hsvcube<br>
+<br>
+ds9.set(string cmd)<br>
+hsvcube foo.fits<br>
+hsvcube new foo.fits</tt><br>
+<p><b><a name="hsvimage" id="hsvimage"></a>hsvimage</b></p>
+<p>Load FITS hsvimage into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvimage [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hsvimage<br>
+<br>
+ds9.set(string cmd)<br>
+hsvimage foo.fits<br>
+hsvimage new foo.fits<br></tt>
 <p><b><a name="iconify" id="iconify"></a>iconify</b></p>
 <p>Toggles iconification.</p>
 <tt>Syntax:<br>

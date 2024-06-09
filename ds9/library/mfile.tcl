@@ -87,6 +87,20 @@ proc FileMainMenu {} {
 	-command [list OpenDialog rgbcube]
     $ds9(mb).file.open add separator
     $ds9(mb).file.open add command \
+	-label [msgcat::mc {HSV Image}] \
+	-command [list OpenDialog hsvimage]
+    $ds9(mb).file.open add command \
+	-label [msgcat::mc {HSV Cube}]\
+	-command [list OpenDialog hsvcube]
+    $ds9(mb).file.open add separator
+    $ds9(mb).file.open add command \
+	-label [msgcat::mc {HLS Image}] \
+	-command [list OpenDialog hlsimage]
+    $ds9(mb).file.open add command \
+	-label [msgcat::mc {HLS Cube}]\
+	-command [list OpenDialog hlscube]
+    $ds9(mb).file.open add separator
+    $ds9(mb).file.open add command \
 	-label [msgcat::mc {Multiple Extension Cube}] \
 	-command [list OpenDialog mecube]
     $ds9(mb).file.open add command \
@@ -126,6 +140,20 @@ proc FileMainMenu {} {
 	-command [list SaveDialog rgbcube]
     $ds9(mb).file.save add separator
     $ds9(mb).file.save add command \
+	-label [msgcat::mc {HSV Image}] \
+	-command [list SaveDialog hsvimage]
+    $ds9(mb).file.save add command \
+	-label [msgcat::mc {HSV Cube}]\
+	-command [list SaveDialog hsvcube]
+    $ds9(mb).file.save add separator
+    $ds9(mb).file.save add command \
+	-label [msgcat::mc {HLS Image}] \
+	-command [list SaveDialog hlsimage]
+    $ds9(mb).file.save add command \
+	-label [msgcat::mc {HLS Cube}]\
+	-command [list SaveDialog hlscube]
+    $ds9(mb).file.save add separator
+    $ds9(mb).file.save add command \
 	-label [msgcat::mc {Multiple Extension Cube}] \
 	-command [list SaveDialog mecube]
     $ds9(mb).file.save add separator
@@ -150,6 +178,10 @@ proc FileMainMenu {} {
     $ds9(mb).file.import add separator
     $ds9(mb).file.import add command -label [msgcat::mc {RGB Array}] \
 	-command [list ImportDialog rgbarray]
+    $ds9(mb).file.import add command -label [msgcat::mc {HSV Array}] \
+	-command [list ImportDialog hsvarray]
+    $ds9(mb).file.import add command -label [msgcat::mc {HLS Array}] \
+	-command [list ImportDialog hlsarray]
     $ds9(mb).file.import add separator
     $ds9(mb).file.import add command -label {GIF} \
 	-command [list ImportDialog gif]
@@ -182,6 +214,10 @@ proc FileMainMenu {} {
     $ds9(mb).file.export add separator
     $ds9(mb).file.export add command -label [msgcat::mc {RGB Array}] \
 	-command [list ExportDialog rgbarray]
+    $ds9(mb).file.export add command -label [msgcat::mc {HSV Array}] \
+	-command [list ExportDialog hsvarray]
+    $ds9(mb).file.export add command -label [msgcat::mc {HLS Array}] \
+	-command [list ExportDialog hlsarray]
     $ds9(mb).file.export add separator
     $ds9(mb).file.export add command -label {GIF} \
 	-command [list ExportDialog gif]
@@ -300,6 +336,10 @@ proc ButtonsFileDef {} {
 	file,open,slice 0
 	file,open,rgb,image 0
 	file,open,rgb,cube 0
+	file,open,hsv,image 0
+	file,open,hsv,cube 0
+	file,open,hls,image 0
+	file,open,hls,cube 0
 	file,open,me,cube 0
 	file,open,me,frames 0
 	file,open,mosaic,wcs 0
@@ -313,6 +353,10 @@ proc ButtonsFileDef {} {
 	file,save,slice 0
 	file,save,rgb,image 0
 	file,save,rgb,cube 0
+	file,save,hsv,image 0
+	file,save,hsv,cube 0
+	file,save,hls,image 0
+	file,save,hls,cube 0
 	file,save,me,cube 0
 	file,save,mosaic,wcs 0
 	file,save,mosaic,wcs,seg 0
@@ -321,6 +365,8 @@ proc ButtonsFileDef {} {
 	file,import,nrrd 0
 	file,import,envi 0
 	file,import,rgbarray 0
+	file,import,hsvarray 0
+	file,import,hlsarray 0
 	file,import,gif 0
 	file,import,tiff 0
 	file,import,jpeg 0
@@ -335,6 +381,8 @@ proc ButtonsFileDef {} {
 	file,export,nrrd 0
 	file,export,envi 0
 	file,export,rgbarray 0
+	file,export,hsvarray 0
+	file,export,hlsarray 0
 	file,export,gif 0
 	file,export,tiff 0
 	file,export,jpeg 0
@@ -389,6 +437,18 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.openrgbcube \
 	[string tolower [msgcat::mc {Open RGB Cube}]] \
 	[list OpenDialog rgbcube]
+    ButtonButton $ds9(buttons).file.openhsvimage \
+	[string tolower [msgcat::mc {Open HSV Image}]] \
+	[list OpenDialog hsvimage]
+    ButtonButton $ds9(buttons).file.openhsvcube \
+	[string tolower [msgcat::mc {Open HSV Cube}]] \
+	[list OpenDialog hsvcube]
+    ButtonButton $ds9(buttons).file.openhlsimage \
+	[string tolower [msgcat::mc {Open HLS Image}]] \
+	[list OpenDialog hlsimage]
+    ButtonButton $ds9(buttons).file.openhlscube \
+	[string tolower [msgcat::mc {Open HLS Cube}]] \
+	[list OpenDialog hlscube]
     ButtonButton $ds9(buttons).file.openmecube \
 	[string tolower [msgcat::mc {Open ME Cube}]] \
 	[list OpenDialog mecube]
@@ -427,6 +487,18 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.savergbcube \
 	[string tolower [msgcat::mc {Save RGB Cube}]] \
 	[list SaveDialog rgbcube]
+    ButtonButton $ds9(buttons).file.savehsvimage \
+	[string tolower [msgcat::mc {Save HSV Image}]] \
+	[list SaveDialog hsvimage]
+    ButtonButton $ds9(buttons).file.savehsvcube \
+	[string tolower [msgcat::mc {Save HSV Cube}]] \
+	[list SaveDialog hsvcube]
+    ButtonButton $ds9(buttons).file.savehlsimage \
+	[string tolower [msgcat::mc {Save HLS Image}]] \
+	[list SaveDialog hlsimage]
+    ButtonButton $ds9(buttons).file.savehlscube \
+	[string tolower [msgcat::mc {Save HLS Cube}]] \
+	[list SaveDialog hlscube]
     ButtonButton $ds9(buttons).file.savemecube \
 	[string tolower [msgcat::mc {Save ME Cube}]] \
 	[list SaveDialog mecube]
@@ -449,6 +521,12 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.importrgbarray \
 	[string tolower [msgcat::mc {Import RGB Array}]] \
 	[list ImportDialog rgbarray]
+    ButtonButton $ds9(buttons).file.importhsvarray \
+	[string tolower [msgcat::mc {Import HSV Array}]] \
+	[list ImportDialog hsvarray]
+    ButtonButton $ds9(buttons).file.importhlsarray \
+	[string tolower [msgcat::mc {Import HLS Array}]] \
+	[list ImportDialog hlsarray]
     ButtonButton $ds9(buttons).file.importgif \
 	[string tolower [msgcat::mc {Import GIF}]] \
 	[list ImportDialog gif]
@@ -487,6 +565,12 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.exportrgbarray \
 	[string tolower [msgcat::mc {Export RGB Array}]] \
 	[list ExportDialog rgbarray]
+    ButtonButton $ds9(buttons).file.exporthsvarray \
+	[string tolower [msgcat::mc {Export HSV Array}]] \
+	[list ExportDialog hsvarray]
+    ButtonButton $ds9(buttons).file.exporthlsarray \
+	[string tolower [msgcat::mc {Export HLS Array}]] \
+	[list ExportDialog hlsarray]
     ButtonButton $ds9(buttons).file.exportgif \
 	[string tolower [msgcat::mc {Export GIF}]] \
 	[list ExportDialog gif]
@@ -578,6 +662,10 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.openslice pbuttons(file,open,slice)
         $ds9(buttons).file.openrgbimage pbuttons(file,open,rgb,image)
         $ds9(buttons).file.openrgbcube pbuttons(file,open,rgb,cube)
+        $ds9(buttons).file.openhsvimage pbuttons(file,open,hsv,image)
+        $ds9(buttons).file.openhsvcube pbuttons(file,open,hsv,cube)
+        $ds9(buttons).file.openhlsimage pbuttons(file,open,hls,image)
+        $ds9(buttons).file.openhlscube pbuttons(file,open,hls,cube)
         $ds9(buttons).file.openmecube pbuttons(file,open,me,cube)
         $ds9(buttons).file.openmeframes pbuttons(file,open,me,frames)
         $ds9(buttons).file.openmosaicwcs pbuttons(file,open,mosaic,wcs)
@@ -591,6 +679,10 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.saveslice pbuttons(file,save,slice)
         $ds9(buttons).file.savergbimage pbuttons(file,save,rgb,image)
         $ds9(buttons).file.savergbcube pbuttons(file,save,rgb,cube)
+        $ds9(buttons).file.savehsvimage pbuttons(file,save,hsv,image)
+        $ds9(buttons).file.savehsvcube pbuttons(file,save,hsv,cube)
+        $ds9(buttons).file.savehlsimage pbuttons(file,save,hls,image)
+        $ds9(buttons).file.savehlscube pbuttons(file,save,hls,cube)
         $ds9(buttons).file.savemecube pbuttons(file,save,me,cube)
         $ds9(buttons).file.savemosaicwcs pbuttons(file,save,mosaic,wcs)
         $ds9(buttons).file.savemosaicwcsseg pbuttons(file,save,mosaic,wcs,seg)
@@ -599,6 +691,8 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.importnrrd pbuttons(file,import,nrrd)
         $ds9(buttons).file.importenvi pbuttons(file,import,envi)
         $ds9(buttons).file.importrgbarray pbuttons(file,import,rgbarray)
+        $ds9(buttons).file.importhsvarray pbuttons(file,import,hsvarray)
+        $ds9(buttons).file.importhlsarray pbuttons(file,import,hlsarray)
         $ds9(buttons).file.importgif pbuttons(file,import,gif)
         $ds9(buttons).file.importtiff pbuttons(file,import,tiff)
         $ds9(buttons).file.importjpeg pbuttons(file,import,jpeg)
@@ -613,6 +707,8 @@ proc CreateButtonsFile {} {
         $ds9(buttons).file.exportnrrd pbuttons(file,export,nrrd)
         $ds9(buttons).file.exportenvi pbuttons(file,export,envi)
         $ds9(buttons).file.exportrgbarray pbuttons(file,export,rgbarray)
+        $ds9(buttons).file.exporthsvarray pbuttons(file,export,hsvarray)
+        $ds9(buttons).file.exporthlsarray pbuttons(file,export,hlsarray)
         $ds9(buttons).file.exportgif pbuttons(file,export,gif)
         $ds9(buttons).file.exporttiff pbuttons(file,export,tiff)
         $ds9(buttons).file.exportjpeg pbuttons(file,export,jpeg)
@@ -724,6 +820,24 @@ proc PrefsDialogButtonbarFile {f} {
 	-command {UpdateButtons buttons(file)}
     $m.open add separator
     $m.open add checkbutton \
+	-label [msgcat::mc {HSV Image}] \
+	-variable pbuttons(file,open,hsv,image) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label [msgcat::mc {HSV Cube}] \
+	-variable pbuttons(file,open,hsv,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add separator
+    $m.open add checkbutton \
+	-label [msgcat::mc {HLS Image}] \
+	-variable pbuttons(file,open,hls,image) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add checkbutton \
+	-label [msgcat::mc {HLS Cube}] \
+	-variable pbuttons(file,open,hls,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add separator
+    $m.open add checkbutton \
 	-label [msgcat::mc {Muliple Extension Cube}] \
 	-variable pbuttons(file,open,me,cube) \
 	-command {UpdateButtons buttons(file)}
@@ -774,6 +888,24 @@ proc PrefsDialogButtonbarFile {f} {
 	-command {UpdateButtons buttons(file)}
     $m.save add separator
     $m.save add checkbutton \
+	-label [msgcat::mc {HSV Image}] \
+	-variable pbuttons(file,save,hsv,image) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add checkbutton \
+	-label [msgcat::mc {HSV Cube}] \
+	-variable pbuttons(file,save,hsv,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add separator
+    $m.save add checkbutton \
+	-label [msgcat::mc {HLS Image}] \
+	-variable pbuttons(file,save,hls,image) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add checkbutton \
+	-label [msgcat::mc {HLS Cube}] \
+	-variable pbuttons(file,save,hls,cube) \
+	-command {UpdateButtons buttons(file)}
+    $m.save add separator
+    $m.save add checkbutton \
 	-label [msgcat::mc {Muliple Extension Cube}] \
 	-variable pbuttons(file,save,me,cube) \
 	-command {UpdateButtons buttons(file)}
@@ -806,6 +938,14 @@ proc PrefsDialogButtonbarFile {f} {
     $m.import add checkbutton \
 	-label [msgcat::mc {RGB Array}] \
 	-variable pbuttons(file,import,rgbarray) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add checkbutton \
+	-label [msgcat::mc {HSV Array}] \
+	-variable pbuttons(file,import,hsvarray) \
+	-command {UpdateButtons buttons(file)}
+    $m.import add checkbutton \
+	-label [msgcat::mc {HLS Array}] \
+	-variable pbuttons(file,import,hlsarray) \
 	-command {UpdateButtons buttons(file)}
     $m.import add separator
     $m.import add checkbutton \
@@ -860,6 +1000,14 @@ proc PrefsDialogButtonbarFile {f} {
     $m.export add checkbutton \
 	-label [msgcat::mc {RGB Array}] \
 	-variable pbuttons(file,export,rgbarray) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add checkbutton \
+	-label [msgcat::mc {HSV Array}] \
+	-variable pbuttons(file,export,hsvarray) \
+	-command {UpdateButtons buttons(file)}
+    $m.export add checkbutton \
+	-label [msgcat::mc {HLS Array}] \
+	-variable pbuttons(file,export,hlsarray) \
 	-command {UpdateButtons buttons(file)}
     $m.export add separator
     $m.export add checkbutton \
@@ -971,6 +1119,10 @@ proc UpdateFileMenuOpen {} {
     $bb.openslice configure -state disabled
     $bb.openrgbimage configure -state disabled
     $bb.openrgbcube configure -state disabled
+    $bb.openhsvimage configure -state disabled
+    $bb.openhsvcube configure -state disabled
+    $bb.openhlsimage configure -state disabled
+    $bb.openhlscube configure -state disabled
     $bb.openmecube configure -state disabled
     $bb.openmeframes configure -state disabled
     $bb.openmosaicwcs configure -state disabled
@@ -998,24 +1150,42 @@ proc UpdateFileMenuOpen {} {
     $bb.openmosaicwfpc2 configure -state normal
     $bb.openurl configure -state normal
 
+    $mm.open entryconfig [msgcat::mc {RGB Image}] -state disabled
+    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state disabled
+    $mm.open entryconfig [msgcat::mc {HSV Image}] -state disabled
+    $mm.open entryconfig [msgcat::mc {HSV Cube}] -state disabled
+    $mm.open entryconfig [msgcat::mc {HLS Image}] -state disabled
+    $mm.open entryconfig [msgcat::mc {HLS Cube}] -state disabled
+
+    $bb.openrgbimage configure -state disabled
+    $bb.openrgbcube configure -state disabled
+    $bb.openhsvimage configure -state disabled
+    $bb.openhsvcube configure -state disabled
+    $bb.openhlsimage configure -state disabled
+    $bb.openhlscube configure -state disabled
+
     switch -- [$current(frame) get type] {
 	base -
-	3d -
-	hsv -
-	hls {
-	    $mm.open entryconfig [msgcat::mc {RGB Image}] -state disabled
-	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state disabled
-	    $bb.openrgbimage configure -state disabled
-	    $bb.openrgbcube configure -state disabled
-	}
+	3d {}
 	rgb {
 	    $mm.open entryconfig [msgcat::mc {RGB Image}] -state normal
 	    $mm.open entryconfig [msgcat::mc {RGB Cube}] -state normal
 	    $bb.openrgbimage configure -state normal
 	    $bb.openrgbcube configure -state normal
 	}
+	hsv {
+	    $mm.open entryconfig [msgcat::mc {HSV Image}] -state normal
+	    $mm.open entryconfig [msgcat::mc {HSV Cube}] -state normal
+	    $bb.openhsvimage configure -state normal
+	    $bb.openhsvcube configure -state normal
+	}
+	hls {
+	    $mm.open entryconfig [msgcat::mc {HLS Image}] -state normal
+	    $mm.open entryconfig [msgcat::mc {HLS Cube}] -state normal
+	    $bb.openhlsimage configure -state normal
+	    $bb.openhlscube configure -state normal
+	}
     }
-
 }
 
 proc UpdateFileMenuSave {} {
@@ -1032,6 +1202,10 @@ proc UpdateFileMenuSave {} {
     $bb.saveslice configure -state disabled
     $bb.savergbimage configure -state disabled
     $bb.savergbcube configure -state disabled
+    $bb.savehsvimage configure -state disabled
+    $bb.savehsvcube configure -state disabled
+    $bb.savehlsimage configure -state disabled
+    $bb.savehlscube configure -state disabled
     $bb.savemecube configure -state disabled
     $bb.savemosaicwcs configure -state disabled
     $bb.savemosaicwcsseg configure -state disabled
@@ -1065,21 +1239,39 @@ proc UpdateFileMenuSave {} {
 	$bb.savemosaicwcsseg configure -state disabled
     }
 
+    $mm.save entryconfig [msgcat::mc {RGB Image}] -state disabled
+    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state disabled
+    $mm.save entryconfig [msgcat::mc {HSV Image}] -state disabled
+    $mm.save entryconfig [msgcat::mc {HSV Cube}] -state disabled
+    $mm.save entryconfig [msgcat::mc {HLS Image}] -state disabled
+    $mm.save entryconfig [msgcat::mc {HLS Cube}] -state disabled
+    $bb.savergbimage configure -state disabled
+    $bb.savergbcube configure -state disabled
+    $bb.savehsvimage configure -state disabled
+    $bb.savehsvcube configure -state disabled
+    $bb.savehlsimage configure -state disabled
+    $bb.savehlscube configure -state disabled
+
     switch -- [$current(frame) get type] {
 	base -
-	3d -
-	hsv -
-	hls {
-	    $mm.save entryconfig [msgcat::mc {RGB Image}] -state disabled
-	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state disabled
-	    $bb.savergbimage configure -state disabled
-	    $bb.savergbcube configure -state disabled
-	}
+	3d {}
 	rgb {
 	    $mm.save entryconfig [msgcat::mc {RGB Image}] -state normal
 	    $mm.save entryconfig [msgcat::mc {RGB Cube}] -state normal
 	    $bb.savergbimage configure -state normal
 	    $bb.savergbcube configure -state normal
+	}
+	hsv {
+	    $mm.save entryconfig [msgcat::mc {HSV Image}] -state normal
+	    $mm.save entryconfig [msgcat::mc {HSV Cube}] -state normal
+	    $bb.savehsvimage configure -state normal
+	    $bb.savehsvcube configure -state normal
+	}
+	hls {
+	    $mm.save entryconfig [msgcat::mc {HLS Image}] -state normal
+	    $mm.save entryconfig [msgcat::mc {HLS Cube}] -state normal
+	    $bb.savehlsimage configure -state normal
+	    $bb.savehlscube configure -state normal
 	}
     }
 }
@@ -1098,6 +1290,8 @@ proc UpdateFileMenuImport {} {
     $bb.importnrrd configure -state disabled
     $bb.importenvi configure -state disabled
     $bb.importrgbarray configure -state disabled
+    $bb.importhsvarray configure -state disabled
+    $bb.importhlsarray configure -state disabled
     $bb.importgif configure -state disabled
     $bb.importtiff configure -state disabled
     $bb.importjpeg configure -state disabled
@@ -1109,25 +1303,32 @@ proc UpdateFileMenuImport {} {
 	$bb.importarray configure -state normal
 	$bb.importnrrd configure -state normal
 	$bb.importenvi configure -state normal
-	$bb.importrgbarray configure -state normal
 	$bb.importgif configure -state normal
 	$bb.importtiff configure -state normal
 	$bb.importjpeg configure -state normal
 	$bb.importpng configure -state normal
 
+	$mm.import entryconfig [msgcat::mc {RGB Array}] -state disabled
+	$mm.import entryconfig [msgcat::mc {HSV Array}] -state disabled
+	$mm.import entryconfig [msgcat::mc {HLS Array}] -state disabled
+	$bb.importrgbarray configure -state disabled
+	$bb.importhsvarray configure -state disabled
+	$bb.importhlsarray configure -state disabled
+
 	switch -- [$current(frame) get type] {
 	    base -
-	    3d -
-	    hsv -
-	    hls {
-		$mm.import entryconfig \
-		    [msgcat::mc {RGB Array}] -state disabled
-		$bb.importrgbarray configure -state disabled
-	    }
+	    3d {}
 	    rgb {
-		$mm.import entryconfig \
-		    [msgcat::mc {RGB Array}] -state normal
+		$mm.import entryconfig [msgcat::mc {RGB Array}] -state normal
 		$bb.importrgbarray configure -state normal
+	    }
+	    hsv {
+		$mm.import entryconfig [msgcat::mc {HSV Array}] -state normal
+		$bb.importhsvarray configure -state normal
+	    }
+	    hls {
+		$mm.import entryconfig [msgcat::mc {HLS Array}] -state normal
+		$bb.importhlsarray configure -state normal
 	    }
 	}
     }
@@ -1145,6 +1346,8 @@ proc UpdateFileMenuExport {} {
     $bb.exportnrrd configure -state disabled
     $bb.exportenvi configure -state disabled
     $bb.exportrgbarray configure -state disabled
+    $bb.exporthsvarray configure -state disabled
+    $bb.exporthlsarray configure -state disabled
     $bb.exportgif configure -state disabled
     $bb.exporttiff configure -state disabled
     $bb.exportjpeg configure -state disabled
@@ -1156,25 +1359,35 @@ proc UpdateFileMenuExport {} {
 	    $bb.exportarray configure -state normal
 	    $bb.exportnrrd configure -state normal
 	    $bb.exportenvi configure -state normal
-	    $bb.exportrgbarray configure -state normal
 	    $bb.exportgif configure -state normal
 	    $bb.exporttiff configure -state normal
 	    $bb.exportjpeg configure -state normal
 	    $bb.exportpng configure -state normal
 
+	    $mm.export entryconfig [msgcat::mc {RGB Array}] -state disabled
+	    $mm.export entryconfig [msgcat::mc {HSV Array}] -state disabled
+	    $mm.export entryconfig [msgcat::mc {HLS Array}] -state disabled
+	    $bb.exportrgbarray configure -state disabled
+	    $bb.exporthsvarray configure -state disabled
+	    $bb.exporthlsarray configure -state disabled
+
 	    switch -- [$current(frame) get type] {
 		base -
-		3d -
-		hsv -
-		hls {
-		    $mm.export entryconfig \
-			[msgcat::mc {RGB Array}] -state disabled
+		3d {}
+		rgb {
+		    $mm.export entryconfig [msgcat::mc {RGB Array}] \
+			-state disabled
 		    $bb.exportrgbarray configure -state disabled
 		}
-		rgb {
-		    $mm.export entryconfig \
-			[msgcat::mc {RGB Array}] -state normal
-		    $bb.exportrgbarray configure -state normal
+		hsv {
+		    $mm.export entryconfig [msgcat::mc {HSV Array}] \
+			-state disabled
+		    $bb.exporthsvarray configure -state disabled
+		}
+		hls {
+		    $mm.export entryconfig [msgcat::mc {HLS Array}] \
+			-state disabled
+		    $bb.exporthlsarray configure -state disabled
 		}
 	    }
 	}

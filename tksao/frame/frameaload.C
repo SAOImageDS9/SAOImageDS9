@@ -393,15 +393,6 @@ void FrameA::loadRGBImage(MemType which, const char* fn, FitsImage* img)
   return;
 }
 
-// Photo
-
-void FrameA::loadPhotoCmd(const char* ph, const char* fn)
-{
-  unloadAllFits();
-  FitsImage* img = new FitsImagePhotoCube(&context[0], interp, ph, fn, 1);
-  loadRGBCube(ALLOC,fn,img);
-}
-
 // Cube FITS
 
 void FrameA::loadRGBCubeAllocCmd(const char* ch, const char* fn)

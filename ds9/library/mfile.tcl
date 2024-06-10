@@ -1300,13 +1300,14 @@ proc UpdateFileMenuImport {} {
     if {$current(frame) != {}} {
 	$mm entryconfig [msgcat::mc {Import}] -state normal
 
+	$mm.import entryconfig [msgcat::mc {GIF}] -state normal
+	$mm.import entryconfig [msgcat::mc {TIFF}] -state normal
+	$mm.import entryconfig [msgcat::mc {JPEG}] -state normal
+	$mm.import entryconfig [msgcat::mc {PNG}] -state normal
+
 	$bb.importarray configure -state normal
 	$bb.importnrrd configure -state normal
 	$bb.importenvi configure -state normal
-	$bb.importgif configure -state normal
-	$bb.importtiff configure -state normal
-	$bb.importjpeg configure -state normal
-	$bb.importpng configure -state normal
 
 	$mm.import entryconfig [msgcat::mc {RGB Array}] -state disabled
 	$mm.import entryconfig [msgcat::mc {HSV Array}] -state disabled
@@ -1321,13 +1322,29 @@ proc UpdateFileMenuImport {} {
 	    rgb {
 		$mm.import entryconfig [msgcat::mc {RGB Array}] -state normal
 		$bb.importrgbarray configure -state normal
+		$bb.importgif configure -state normal
+		$bb.importtiff configure -state normal
+		$bb.importjpeg configure -state normal
+		$bb.importpng configure -state normal
 	    }
 	    hsv {
 		$mm.import entryconfig [msgcat::mc {HSV Array}] -state normal
+
+		$mm.import entryconfig [msgcat::mc {GIF}] -state disabled
+		$mm.import entryconfig [msgcat::mc {TIFF}] -state disabled
+		$mm.import entryconfig [msgcat::mc {JPEG}] -state disabled
+		$mm.import entryconfig [msgcat::mc {PNG}] -state disabled
+
 		$bb.importhsvarray configure -state normal
 	    }
 	    hls {
 		$mm.import entryconfig [msgcat::mc {HLS Array}] -state normal
+
+		$mm.import entryconfig [msgcat::mc {GIF}] -state disabled
+		$mm.import entryconfig [msgcat::mc {TIFF}] -state disabled
+		$mm.import entryconfig [msgcat::mc {JPEG}] -state disabled
+		$mm.import entryconfig [msgcat::mc {PNG}] -state disabled
+
 		$bb.importhlsarray configure -state normal
 	    }
 	}

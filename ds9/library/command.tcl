@@ -422,6 +422,7 @@ proc ProcessCommand {argv argc} {
 	    -save {incr i; ProcessSaveCmd argv i}
 	    -saveimage {incr i; ProcessSaveImageCmd argv i}
 
+	    -sat -
 	    -saturation {
 		set current(hsv) saturation
 		HSVChannel
@@ -609,7 +610,7 @@ proc CommandLineLoad {item argvname iname} {
     if {$current(frame) != {}} {
 	switch -- [$current(frame) get type] {
 	    base {CommandLineLoadBase $item $argvname $iname}
-	    rgb -
+	    rgb {CommandLineLoadRGB $item $argvname $iname}
 	    hsv -
 	    hls {CommandLineLoadT $item $argvname $iname}
 	    3d {CommandLineLoad3D $item $argvname $iname}
@@ -752,7 +753,7 @@ proc CommandLineLoadBase {item argvname iname} {
     }
 }
 
-proc CommandLineLoadT {item argvname iname} {
+proc CommandLineLoadRGB {item argvname iname} {
     upvar 2 $argvname argv
     upvar 2 $iname i
 
@@ -851,28 +852,113 @@ proc CommandLineLoadT {item argvname iname} {
 	tiff -
 	jpeg -
 	png {
-	    switch -- [$current(frame) get type] {
-		base -
-		3d {
-		    # should not be here
-		}
-		rgb {
-		    MultiLoadRGB
-		    ImportPhotoFile $item $file(mode)
-		}
-		hls {
-		    MultiLoadHLS
-		    ImportPhotoFile $item $file(mode)
-		}
-		hsv {
-		    MultiLoadHSV
-		    ImportPhotoFile $item $file(mode)
-		}
-	    }
+	    MultiLoadRGB
+	    ImportPhotoFile $item $file(mode)
 	}
     }
 }
 
+proc CommandLineLoadT {item argvname iname} {
+    upvar 2 $argvname argv
+    upvar 2 $iname i
+
+    global file
+    global current
+
+    switch -- $file(type) {
+	fits {LoadFitsFile $item {} $file(mode)}
+	url {LoadURLFits $item {} $file(mode) 0}
+
+	rgbimage {
+	    MultiLoadRGB
+	    LoadRGBImageFile $item
+	}
+	rgbcube {
+	    MultiLoadRGB
+	    LoadRGBCubeFile $item
+	}
+
+	hlsimage {
+	    MultiLoadHLS
+	    LoadHLSImageFile $item
+	}
+	hlscube {
+	    MultiLoadHLS
+	    LoadHLSCubeFile $item
+	}
+
+	hsvimage {
+	    MultiLoadHSV
+	    LoadHSVImageFile $item
+	}
+	hsvcube {
+	    MultiLoadHSV
+	    LoadHSVCubeFile $item
+	}
+
+	mecube {LoadMECubeFile $item}
+	multiframe {
+	    # not supported
+	}
+
+	mosaicimage {
+	    switch -- $file(mosaic) {
+		iraf {LoadMosaicImageIRAFFile $item {}}
+		wfpc2 {LoadMosaicImageWFPC2File $item {}}
+		default {LoadMosaicImageWCSFile $item {} $file(mosaic)}
+	    }
+	}
+	mosaic {
+	    switch -- $file(mosaic) {
+		iraf {LoadMosaicIRAFFile $item {}}
+		default {LoadMosaicWCSFile $item {} $file(mosaic)}
+	    }
+	}
+
+	sfits {
+	    #backward compatibility
+	    incr i
+	    LoadSFitsFile $item [lindex $argv $i] {} $file(mode)
+	}
+	srgbcube {
+	    #backward compatibility
+	    MultiLoadRGB
+	    incr i
+	    LoadSRGBCubeFile $item [lindex $argv $i]
+	}
+	smosaic {
+	    #backward compatibility
+	    incr i
+	    switch -- $file(mosaic) {
+		iraf {LoadMosaicIRAFSFitsFile $item [lindex $argv $i] {}}
+		default {LoadMosaicWCSSFitsFile $item [lindex $argv $i] {} $file(mosaic)}
+	    }
+	}
+
+	array {ImportArrayFile $item {}}
+
+	rgbarray {
+	    MultiLoadRGB
+	    ImportRGBArrayFile $item
+	}
+	hlsarray {
+	    MultiLoadHLS
+	    ImportHLSArrayFile $item
+	}
+	hsvarray {
+	    MultiLoadHSV
+	    ImportHSVArrayFile $item
+	}
+
+	nrrd {ImportNRRDFile $item {}}
+	envi {}
+
+	gif -
+	tiff -
+	jpeg -
+	png {}
+    }
+}
 proc CommandLineLoad3D {item argvname iname} {
     upvar 2 $argvname argv
     upvar 2 $iname i

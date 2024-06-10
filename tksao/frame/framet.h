@@ -32,6 +32,8 @@ public:
   FrameT(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameT();
 
+  void loadPhotoCmd(const char*, const char*) {}
+  void loadSlicePhotoCmd(const char*, const char*) {}
   void savePhotoCmd(const char*);
 };
 

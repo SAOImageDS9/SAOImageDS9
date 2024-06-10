@@ -293,6 +293,15 @@ void FrameRGB::setRGBChannelCmd(const char* c)
   setChannel();
 }
 
+// Photo
+
+void FrameRGB::loadPhotoCmd(const char* ph, const char* fn)
+{
+  unloadAllFits();
+  FitsImage* img = new FitsImagePhotoCube(&context[0], interp, ph, fn, 1);
+  loadRGBCube(ALLOC,fn,img);
+}
+
 void FrameRGB::savePhotoCmd(const char* ph)
 {
   // need to determine size from key context

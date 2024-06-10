@@ -63,9 +63,6 @@ public:
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*,
 		  Base::FileNameType);
 
-  void loadPhotoCmd(const char*, const char*);
-  void loadSlicePhotoCmd(const char*, const char*) {}
-
   void loadRGBCubeAllocCmd(const char*, const char*);
   void loadRGBCubeAllocGZCmd(const char*, const char*);
   void loadRGBCubeChannelCmd(const char*, const char*);

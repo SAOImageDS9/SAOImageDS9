@@ -33,6 +33,8 @@ protected:
   void getRGBSystemCmd() {getSystem();}
   void getRGBViewCmd() {getView();}
 
+  void loadPhotoCmd(const char*, const char*);
+  void loadSlicePhotoCmd(const char*, const char*) {}
   void savePhotoCmd(const char*);
 
   void setRGBChannelCmd(const char*);

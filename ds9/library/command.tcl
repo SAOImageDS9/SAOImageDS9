@@ -757,6 +757,7 @@ proc CommandLineLoadT {item argvname iname} {
     upvar 2 $iname i
 
     global file
+    global current
 
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
@@ -845,14 +846,30 @@ proc CommandLineLoadT {item argvname iname} {
 
 	nrrd {ImportNRRDFile $item {}}
 	envi {}
+
 	gif -
 	tiff -
 	jpeg -
 	png {
-	    MultiLoadRGB
-	    ImportPhotoFile $item $file(mode)
+	    switch -- [$current(frame) get type] {
+		base -
+		3d {
+		    # should not be here
+		}
+		rgb {
+		    MultiLoadRGB
+		    ImportPhotoFile $item $file(mode)
+		}
+		hls {
+		    MultiLoadHLS
+		    ImportPhotoFile $item $file(mode)
+		}
+		hsv {
+		    MultiLoadHSV
+		    ImportPhotoFile $item $file(mode)
+		}
+	    }
 	}
-
     }
 }
 

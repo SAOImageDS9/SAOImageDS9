@@ -287,7 +287,7 @@ proc ProcessLoad {{err 1}} {
 		}
 	    }
 	}
-	hsv {
+	hlv {
 	    switch -- $loadParam(file,mode) {
 		{hls image} -
 		{hls cube} {ProcessLoadSaveParams $current(frame)}
@@ -297,7 +297,7 @@ proc ProcessLoad {{err 1}} {
 		}
 	    }
 	}
-	hls {
+	hsv {
 	    switch -- $loadParam(file,mode) {
 		{hsv image} -
 		{hsv cube} {ProcessLoadSaveParams $current(frame)}

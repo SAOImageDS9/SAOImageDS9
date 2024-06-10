@@ -41,7 +41,7 @@ proc PrefsDialog {{which {}}} {
     set dprefs(listbox) [ttk::treeview $f.box \
 			  -yscroll [list $f.scroll set] \
 			  -selectmode browse \
-			  -height 28 \
+			  -height 29 \
 			  -show tree \
 			 ]
 

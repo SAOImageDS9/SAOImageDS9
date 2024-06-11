@@ -228,9 +228,9 @@ proc PrefsDialogGeneral {} {
 
     ttk::label $f.tgui -text [msgcat::mc {GUI}]
     FontMenuButton $f.gui pds9 font font,size font,weight font,slant \
-	[list SetDefaultFont true]
+	"SetDefaultFont true; FontChange"
     ttk::button $f.bgui -text [msgcat::mc {Reset}] \
-	-command ResetDefaultFont
+	-command "ResetDefaultFont; FontChange"
 
     ttk::label $f.ttext -text [msgcat::mc {Text}]
     FontMenuButton $f.text pds9 text,font \

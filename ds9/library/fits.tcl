@@ -302,17 +302,6 @@ proc ProcessFitsBackwardCmd {varname iname sock fn} {
 	    return 1
 	}
 
-	rgbimage {
-	    set vvar [lreplace $var 0 0]
-	    ProcessRGBImageCmd vvar ii $sock $fn
-	    return 1
-	}
-	rgbcube {
-	    set vvar [lreplace $var 0 0]
-	    ProcessRGBCubeCmd vvar ii $sock $fn
-	    return 1
-	}
-
 	mosaicimage {
 	    set vvar [lreplace $var 0 0]
 	    ProcessMosaicImageCmd vvar ii $sock $fn
@@ -347,6 +336,39 @@ proc ProcessFitsBackwardCmd {varname iname sock fn} {
 	mosaiciraf {
 	    set vvar [lreplace $var 0 0]
 	    ProcessMosaicIRAFCmd vvar ii $sock $fn
+	    return 1
+	}
+
+	rgbimage {
+	    set vvar [lreplace $var 0 0]
+	    ProcessRGBImageCmd vvar ii $sock $fn
+	    return 1
+	}
+	rgbcube {
+	    set vvar [lreplace $var 0 0]
+	    ProcessRGBCubeCmd vvar ii $sock $fn
+	    return 1
+	}
+
+	hlsimage {
+	    set vvar [lreplace $var 0 0]
+	    ProcessHLSImageCmd vvar ii $sock $fn
+	    return 1
+	}
+	hlscube {
+	    set vvar [lreplace $var 0 0]
+	    ProcessHLSCubeCmd vvar ii $sock $fn
+	    return 1
+	}
+
+	hsvimage {
+	    set vvar [lreplace $var 0 0]
+	    ProcessHSVImageCmd vvar ii $sock $fn
+	    return 1
+	}
+	hsvcube {
+	    set vvar [lreplace $var 0 0]
+	    ProcessHSVCubeCmd vvar ii $sock $fn
 	    return 1
 	}
     }

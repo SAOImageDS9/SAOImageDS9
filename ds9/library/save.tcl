@@ -19,6 +19,10 @@ proc Save {format fn} {
 	sfits {}
 	rgbimage {SaveRGBImageFile $fn}
 	rgbcube {SaveRGBCubeFile $fn}
+	hlsimage {SaveHLSImageFile $fn}
+	hlscube {SaveHLSCubeFile $fn}
+	hsvimage {SaveHSVImageFile $fn}
+	hsvcube {SaveHSVCubeFile $fn}
 	srgbcube {}
 	mecube {SaveMECubeFile $fn}
 	multiframe {}

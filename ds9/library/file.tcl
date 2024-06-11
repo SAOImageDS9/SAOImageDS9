@@ -30,19 +30,6 @@ proc ProcessFileCmd {varname iname sock ch fn} {
 		    ProcessSFitsCmd vvar ii $sock $fn
 		}
 
-		rgbimage {
-		    set vvar [lreplace $var $one $one]
-		    ProcessRGBImageCmd vvar ii $sock $fn
-		}
-		rgbcube {
-		    set vvar [lreplace $var $one $one]
-		    ProcessRGBCubeCmd vvar ii $sock $fn
-		}
-		srgbcube {
-		    set vvar [lreplace $var $one $one]
-		    ProcessSRGBCubeCmd vvar ii $sock $fn
-		}
-
 		mecube {
 		    set vvar [lreplace $var $one $one]
 		    ProcessMECubeCmd vvar ii $sock $fn
@@ -105,10 +92,51 @@ proc ProcessFileCmd {varname iname sock ch fn} {
 		    set vvar [lreplace $var $one $one]
 		    ProcessArrayCmd vvar ii $sock $fn
 		}
+
 		rgbarray {
 		    set vvar [lreplace $var $one $one]
 		    ProcessRGBArrayCmd vvar ii $sock $fn
 		}
+		rgbimage {
+		    set vvar [lreplace $var $one $one]
+		    ProcessRGBImageCmd vvar ii $sock $fn
+		}
+		rgbcube {
+		    set vvar [lreplace $var $one $one]
+		    ProcessRGBCubeCmd vvar ii $sock $fn
+		}
+		srgbcube {
+		    set vvar [lreplace $var $one $one]
+		    ProcessSRGBCubeCmd vvar ii $sock $fn
+		}
+
+
+		hlsarray {
+		    set vvar [lreplace $var $one $one]
+		    ProcessHLSArrayCmd vvar ii $sock $fn
+		}
+		hlsimage {
+		    set vvar [lreplace $var $one $one]
+		    ProcessHLSImageCmd vvar ii $sock $fn
+		}
+		hlscube {
+		    set vvar [lreplace $var $one $one]
+		    ProcessHLSCubeCmd vvar ii $sock $fn
+		}
+
+		hsvarray {
+		    set vvar [lreplace $var $one $one]
+		    ProcessHSVArrayCmd vvar ii $sock $fn
+		}
+		hsvimage {
+		    set vvar [lreplace $var $one $one]
+		    ProcessHSVImageCmd vvar ii $sock $fn
+		}
+		hsvcube {
+		    set vvar [lreplace $var $one $one]
+		    ProcessHSVCubeCmd vvar ii $sock $fn
+		}
+
 		photo {
 		    set vvar [lreplace $var $one $one]
 		    ProcessTIFFCmd vvar ii $ch $fn
@@ -184,19 +212,6 @@ proc ProcessFileCmd {varname iname sock ch fn} {
 	    ProcessSFitsCmd vvar ii $sock $fn
 	}
 
-	rgbimage {
-	    set vvar [lreplace $var $zero $zero]
-	    ProcessRGBImageCmd vvar ii $sock $fn
-	}
-	rgbcube {
-	    set vvar [lreplace $var $zero $zero]
-	    ProcessRGBCubeCmd vvar ii $sock $fn
-	}
-	srgbcube {
-	    set vvar [lreplace $var $zero $zero]
-	    ProcessSRGBCubeCmd vvar ii $sock $fn
-	}
-
 	mecube {
 	    set vvar [lreplace $var $zero $zero]
 	    ProcessMECubeCmd vvar ii $sock $fn
@@ -259,10 +274,50 @@ proc ProcessFileCmd {varname iname sock ch fn} {
 	    set vvar [lreplace $var $zero $zero]
 	    ProcessArrayCmd vvar ii $sock $fn
 	}
+
 	rgbarray {
 	    set vvar [lreplace $var $zero $zero]
 	    ProcessRGBArrayCmd vvar ii $sock $fn
 	}
+	rgbimage {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessRGBImageCmd vvar ii $sock $fn
+	}
+	rgbcube {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessRGBCubeCmd vvar ii $sock $fn
+	}
+	srgbcube {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessSRGBCubeCmd vvar ii $sock $fn
+	}
+
+	hlsarray {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessHLSArrayCmd vvar ii $sock $fn
+	}
+	hlsimage {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessHLSImageCmd vvar ii $sock $fn
+	}
+	hlscube {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessHLSCubeCmd vvar ii $sock $fn
+	}
+
+	hsvarray {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessHSVArrayCmd vvar ii $sock $fn
+	}
+	hsvimage {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessHSVImageCmd vvar ii $sock $fn
+	}
+	hsvcube {
+	    set vvar [lreplace $var $zero $zero]
+	    ProcessHSVCubeCmd vvar ii $sock $fn
+	}
+
 	photo {
 	    set vvar [lreplace $var $zero $zero]
 	    ProcessTIFFCmd vvar ii $ch $fn

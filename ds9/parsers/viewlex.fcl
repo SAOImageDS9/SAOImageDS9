@@ -38,6 +38,11 @@ red		{return $RED_}
 green		{return $GREEN_}
 blue		{return $BLUE_}
 
+hue		{return $HUE_}
+saturation	{return $SATURATION_}
+value		{return $VALUE_}
+lightness	{return $LIGHTNESS_}
+
 #include yesno.fin
 #include coordsys.fin
 #include wcssys.fin

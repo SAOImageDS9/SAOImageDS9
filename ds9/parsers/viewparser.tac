@@ -38,6 +38,11 @@
 %token BLUE_
 %token GREEN_
 
+%token HUE_
+%token SATURATION_
+%token VALUE_
+%token LIGHTNESS_
+
 %%
 
 #include yesno.trl
@@ -77,9 +82,15 @@ view : layout
  | coordsys yesno {ProcessCmdSet view info,$1 $2 LayoutInfoPanel}
  | wcssys yesno {ProcessCmdSet view info,$1 $2 LayoutInfoPanel}
  | FRAME_ yesno {ProcessCmdSet view info,frame $2 LayoutInfoPanel}
+
  | RED_ yesno {ProcessCmdSet rgb red $2 RGBView}
  | GREEN_ yesno {ProcessCmdSet rgb green $2 RGBView}
  | BLUE_ yesno {ProcessCmdSet rgb blue $2 RGBView}
+
+ | HUE_ yesno {ProcessCmdSet hls hue $2 HLSView; ProcessCmdSet hsv hue $2 HSVView}
+ | SATURATION_ yesno {ProcessCmdSet hls saturation $2 HLSView; ProcessCmdSet hsv hue $2 HSVView}
+ | VALUE_ yesno {ProcessCmdSet hsv value $2 HSVView}
+ | LIGHTNESS_ yesno {ProcessCmdSet hls lightness $2 HLSView}
  ;
 
 layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal LayoutView}

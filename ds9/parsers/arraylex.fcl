@@ -10,6 +10,8 @@
 mask	    {return $MASK_}
 new	    {return $NEW_}
 rgb	    {return $RGB_}
+hls	    {return $HLS_}
+hsv	    {return $HSV_}
 
 #include string.fin
 #include ws.fin

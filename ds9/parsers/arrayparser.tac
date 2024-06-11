@@ -9,6 +9,8 @@
 %token MASK_
 %token NEW_
 %token RGB_
+%token HLS_
+%token HSV_
 
 %%
 
@@ -21,6 +23,10 @@ array : opts {ArrayCmdLoad {} $1}
 # backward compatibility
  | RGB_ STRING_ {RGBArrayCmdLoad $2}
  | NEW_ RGB_ STRING_ {CreateRGBFrame; RGBArrayCmdLoad $3}
+ | HLS_ STRING_ {HLSArrayCmdLoad $2}
+ | NEW_ HLS_ STRING_ {CreateHLSFrame; HLSArrayCmdLoad $3}
+ | HSV_ STRING_ {HSVArrayCmdLoad $2}
+ | NEW_ HSV_ STRING_ {CreateHSVFrame; HSVArrayCmdLoad $3}
  ;
 
 opts :

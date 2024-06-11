@@ -61,127 +61,182 @@ proc array::unsetupvalues {numsyms} {
 }
 
 array set array::table {
-  6:0 reduce
   0:257 reduce
-  6:257,target 9
-  1:257 reduce
   0:258 shift
-  8:0 reduce
-  5:0,target 1
-  2:257 reduce
-  0:260 shift
   0:259 shift
-  10:0 reduce
-  9:0 reduce
-  3:257 shift
-  0:261 goto
+  0:260 shift
+  2:257 reduce
+  15:0,target 3
+  8:257,target 15
+  0:261 shift
+  0:262 shift
   2:260 shift
-  1:257,target 8
-  0:258,target 1
-  0:262 goto
-  0:0,target 6
+  4:257 shift
   0:263 goto
-  10:0,target 5
-  9:0,target 3
-  6:257 shift
-  3:257,target 8
-  0:261,target 4
-  7:257 shift
-  2:0,target 7
-  0:263,target 6
-  4:0,target 0
-  7:257,target 10
-  0:0 reduce
-  6:0,target 2
-  1:0 reduce
-  0:257,target 6
+  2:261 shift
+  0:264 goto
+  2:262 shift
+  3:257,target 12
+  0:265 goto
+  15:0 reduce
+  8:257 shift
+  0:265,target 8
+  6:0,target 0
+  16:0,target 5
+  10:257,target 17
   2:0 reduce
-  8:0,target 4
-  2:257,target 7
-  0:260,target 3
-  0:259,target 2
-  4:0 accept
-  1:0,target 8
-  5:0 reduce
-  2:260,target 7
+  6:0 accept
+  0:264,target 7
+  2:262,target 11
+  1:257,target 12
+  7:0,target 1
+  17:0,target 7
+  12:0 reduce
+  0:0,target 10
+  0:263,target 6
+  2:261,target 10
+  16:0 reduce
+  10:257 shift
+  9:257,target 16
+  8:0,target 2
+  18:0,target 9
+  1:0,target 12
   0:262,target 5
+  2:260,target 9
+  4:257,target 13
+  1:257 reduce
+  7:0 reduce
+  3:257 shift
+  11:257,target 18
+  5:257 shift
+  13:0 reduce
+  0:261,target 4
+  2:0,target 11
+  12:0,target 4
+  9:257 shift
+  17:0 reduce
+  0:0 reduce
+  0:259,target 2
+  0:260,target 3
+  2:257,target 11
+  13:0,target 6
+  8:0 reduce
+  0:258,target 1
+  14:0 reduce
+  5:257,target 14
+  14:0,target 8
+  11:257 shift
+  18:0 reduce
+  0:257,target 10
+  1:0 reduce
 }
 
 array set array::rules {
-  2,l 262
-  6,l 263
-  3,l 262
-  7,l 263
-  0,l 264
-  4,l 262
-  8,l 263
-  1,l 261
-  5,l 262
+  9,l 264
+  11,l 265
+  2,l 264
+  6,l 264
+  12,l 265
+  3,l 264
+  7,l 264
+  0,l 266
+  4,l 264
+  8,l 264
+  10,l 265
+  1,l 263
+  5,l 264
 }
 
 array set array::rules {
   5,dc 3
   0,dc 1
-  8,dc 1
+  12,dc 1
+  8,dc 2
   3,dc 2
-  6,dc 0
+  10,dc 0
+  6,dc 2
   1,dc 1
+  9,dc 3
   4,dc 2
-  7,dc 1
+  11,dc 1
+  7,dc 3
   2,dc 1
 }
 
 array set array::rules {
   7,line 30
-  4,line 25
-  1,line 19
+  10,line 35
+  4,line 27
+  1,line 21
+  9,line 32
+  12,line 37
   6,line 29
-  3,line 24
+  3,line 26
   8,line 31
-  5,line 26
-  2,line 22
+  11,line 36
+  5,line 28
+  2,line 24
 }
 
 array set array::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 {0 257} 0} {7 {0 257} 0} {8 {0 257} 0}}
-  1 {{8 {0 257} 1}}
-  2 {{5 0 1} {7 {0 257} 1}}
+  13,trans {}
+  17 {{7 0 3}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 {0 257} 0} {11 {0 257} 0} {12 {0 257} 0}}
+  14,trans {}
+  18 {{9 0 3}}
+  1 {{12 {0 257} 1}}
+  15,trans {}
+  2 {{5 0 1} {7 0 1} {9 0 1} {11 {0 257} 1}}
+  16,trans {}
   3 {{4 0 1}}
-  4 {{0 0 1}}
-  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6}}
-  5 {{1 0 1}}
+  17,trans {}
+  4 {{6 0 1}}
+  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8}}
+  18,trans {}
+  5 {{8 0 1}}
   1,trans {}
-  6 {{2 0 1} {3 0 1}}
-  2,trans {{260 7}}
-  3,trans {{257 8}}
-  7 {{5 0 2}}
-  4,trans {}
-  8 {{4 0 2}}
-  10 {{5 0 3}}
-  9 {{3 0 2}}
-  5,trans {}
-  6,trans {{257 9}}
-  7,trans {{257 10}}
-  8,trans {}
-  10,trans {}
-  9,trans {}
+  2,trans {{260 9} {261 10} {262 11}}
+  6 {{0 0 1}}
+  3,trans {{257 12}}
+  7 {{1 0 1}}
+  4,trans {{257 13}}
+  8 {{2 0 1} {3 0 1}}
+  5,trans {{257 14}}
+  10 {{7 0 2}}
+  9 {{5 0 2}}
+  6,trans {}
+  11 {{9 0 2}}
+  7,trans {}
+  12 {{4 0 2}}
+  8,trans {{257 15}}
+  13 {{6 0 2}}
+  10,trans {{257 17}}
+  9,trans {{257 16}}
+  14 {{8 0 2}}
+  11,trans {{257 18}}
+  15 {{3 0 2}}
+  12,trans {}
+  16 {{5 0 3}}
 }
 
 array set array::token_id_table {
-  264,line 32
-  262,title {}
+  264,line 23
   0,t 0
   0 {$}
+  262,title HSV
   263,title {}
+  266,line 38
   264,title {}
   error,t 0
   error error
+  265,title {}
   258,line 11
-  261,line 18
-  error,line 16
+  266,title {}
+  261,line 14
+  error,line 18
   257 STRING_
   257,t 0
-  263,line 28
+  263,line 20
   258 MASK_
   258,t 0
   error,title {}
@@ -189,23 +244,28 @@ array set array::token_id_table {
   260 RGB_
   259 NEW_
   259,t 0
-  261,t 1
-  261 command
-  262,t 1
-  262 array
+  265,line 34
+  261,t 0
+  261 HLS_
+  262,t 0
+  262 HSV_
   257,line 7
   263,t 1
-  263 opts
+  263 command
   264,t 1
-  264 start'
+  264 array
   260,line 13
   257,title string
   259,line 12
+  265,t 1
+  265 opts
   258,title MASK
-  262,line 21
+  266,t 1
+  266 start'
+  262,line 15
   260,title RGB
   259,title NEW
-  261,title {}
+  261,title HLS
 }
 
 proc array::yyparse {} {
@@ -306,8 +366,12 @@ proc array::yyparse {} {
                     3 { ArrayCmdLoad $2 $1 }
                     4 { RGBArrayCmdLoad $2 }
                     5 { CreateRGBFrame; RGBArrayCmdLoad $3 }
-                    7 { CreateFrame; set _ {} }
-                    8 { set _ mask }
+                    6 { HLSArrayCmdLoad $2 }
+                    7 { CreateHLSFrame; HLSArrayCmdLoad $3 }
+                    8 { HSVArrayCmdLoad $2 }
+                    9 { CreateHSVFrame; HSVArrayCmdLoad $3 }
+                    11 { CreateFrame; set _ {} }
+                    12 { set _ mask }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

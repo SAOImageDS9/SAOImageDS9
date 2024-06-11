@@ -10,6 +10,10 @@
 fits	    {return $FITS_}
 rgbimage    {return $RGBIMAGE_}
 rgbcube	    {return $RGBCUBE_}
+hlsimage    {return $HLSIMAGE_}
+hlscube	    {return $HLSCUBE_}
+hsvimage    {return $HSVIMAGE_}
+hsvcube	    {return $HSVCUBE_}
 mecube	    {return $MECUBE_}
 mosaic	    {return $MOSAIC_}
 mosaicwcs   {return $MOSAICWCS_}

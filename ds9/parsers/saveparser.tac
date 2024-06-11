@@ -10,6 +10,10 @@
 %token FITS_
 %token RGBIMAGE_
 %token RGBCUBE_
+%token HLSIMAGE_
+%token HLSCUBE_
+%token HSVIMAGE_
+%token HSVCUBE_
 %token MECUBE_
 %token MOSAIC_
 %token MOSAICWCS_
@@ -34,6 +38,10 @@ save : STRING_ opts {SaveCmdLoad [ExtToFormat $1] $1}
 format : FITS_ {set _ fits}
  | RGBIMAGE_ {set _ rgbimage}
  | RGBCUBE_ {set _ rgbcube}
+ | HLSIMAGE_ {set _ hlsimage}
+ | HLSCUBE_ {set _ hlscube}
+ | HSVIMAGE_ {set _ hsvimage}
+ | HSVCUBE_ {set _ hsvcube}
  | MECUBE_ {set _ mecube}
  | mosaic {set _ $1}
  | mosaicimage {set _ $1}

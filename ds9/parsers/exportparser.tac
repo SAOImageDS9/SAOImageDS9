@@ -9,6 +9,8 @@
 
 %token ARRAY_
 %token RGBARRAY_
+%token HLSARRAY_
+%token HSVARRAY_
 %token NRRD_
 %token ENVI_
 
@@ -40,6 +42,8 @@ export : GIF_ STRING_ {ExportCmdSave gif $2}
 
  | ARRAY_ STRING_ endian {ExportCmdSave array $2}
  | RGBARRAY_ STRING_ endian {ExportCmdSave rgbarray $2}
+ | HLSARRAY_ STRING_ endian {ExportCmdSave hlsarray $2}
+ | HSVARRAY_ STRING_ endian {ExportCmdSave hsvarray $2}
  | NRRD_ STRING_ endian {ExportCmdSave nrrd $2}
  | ENVI_ STRING_ STRING_ endian {ExportCmdSave envi $2 $3}
 

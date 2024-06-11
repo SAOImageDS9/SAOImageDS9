@@ -1296,16 +1296,6 @@ getGrid : /* empty */ {fr->getGridCmd();}
 	| VAR_ {fr->getGridVarsCmd();}
 	;
 
-getHSV	: CHANNEL_ {fr->getHSVChannelCmd();}
-	| SYSTEM_ {fr->getHSVSystemCmd();}
-	| VIEW_ {fr->getHSVViewCmd();}
-	;
-
-getHLS	: CHANNEL_ {fr->getHLSChannelCmd();}
-	| SYSTEM_ {fr->getHLSSystemCmd();}
-	| VIEW_ {fr->getHLSViewCmd();}
-	;
-
 getMask	: COLOR_ {fr->getMaskColorCmd();}
 	| MARK_ {fr->getMaskMarkCmd();}
 	| RANGE_ {fr->getMaskRangeCmd();}
@@ -1321,6 +1311,16 @@ getPan : PRESERVE_ {fr->getPanPreserveCmd();}
 getRGB	: CHANNEL_ {fr->getRGBChannelCmd();}
 	| SYSTEM_ {fr->getRGBSystemCmd();}
 	| VIEW_ {fr->getRGBViewCmd();}
+	;
+
+getHLS	: CHANNEL_ {fr->getHLSChannelCmd();}
+	| SYSTEM_ {fr->getHLSSystemCmd();}
+	| VIEW_ {fr->getHLSViewCmd();}
+	;
+
+getHSV	: CHANNEL_ {fr->getHSVChannelCmd();}
+	| SYSTEM_ {fr->getHSVSystemCmd();}
+	| VIEW_ {fr->getHSVViewCmd();}
 	;
 
 getSmooth : FUNCTION_  {fr->getSmoothFunctionCmd();}
@@ -1429,17 +1429,6 @@ hasWCS	: coordSystem {fr->hasWCSCmd((Coord::CoordSystem)$1);}
         | LINEAR_ coordSystem {fr->hasWCSLinearCmd((Coord::CoordSystem)$2);}
 	| ALT_ {fr->hasWCSAltCmd();}
 	| THREED_ coordSystem {fr->hasWCS3DCmd((Coord::CoordSystem)$2);}
-	;
-
-hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}
-	| SYSTEM_ coordSystem {fr->setHLSSystemCmd((Coord::CoordSystem)$2);}
-	| VIEW_ INT INT INT {fr->setHLSViewCmd($2,$3,$4);}
-	;
-
-hsv	: CHANNEL_ STRING {fr->setHSVChannelCmd($2);}
-        | CHANNEL_ VALUE_ {fr->setHSVChannelCmd("value");}
-	| SYSTEM_ coordSystem {fr->setHSVSystemCmd((Coord::CoordSystem)$2);}
-	| VIEW_ INT INT INT {fr->setHSVViewCmd($2,$3,$4);}
 	;
 
 iis	: NEW_ INT INT {fr->iisCmd($2,$3);}
@@ -2761,6 +2750,17 @@ rgb	: CHANNEL_ STRING {fr->setRGBChannelCmd($2);}
 	| VIEW_ INT INT INT {fr->setRGBViewCmd($2,$3,$4);}
 	;
 
+hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}
+	| SYSTEM_ coordSystem {fr->setHLSSystemCmd((Coord::CoordSystem)$2);}
+	| VIEW_ INT INT INT {fr->setHLSViewCmd($2,$3,$4);}
+	;
+
+hsv	: CHANNEL_ STRING {fr->setHSVChannelCmd($2);}
+        | CHANNEL_ VALUE_ {fr->setHSVChannelCmd("value");}
+	| SYSTEM_ coordSystem {fr->setHSVSystemCmd((Coord::CoordSystem)$2);}
+	| VIEW_ INT INT INT {fr->setHSVViewCmd($2,$3,$4);}
+	;
+
 rotate	: numeric {fr->rotateCmd(zeroTWOPI(degToRad($1)));}
         | numeric DEGREES_ {fr->rotateCmd(zeroTWOPI(degToRad($1)));}
 	| MOTION_ rotateMotion
@@ -2787,14 +2787,9 @@ saveArray : FILE_ STRING endian
 	| SOCKET_ INT endian 
 	{fr->saveArraySocketCmd($2, (FitsFile::ArchType)$3);}
         | RGB_ CUBE_ saveArrayRGBCube
+        | HLS_ CUBE_ saveArrayHLSCube
+        | HSV_ CUBE_ saveArrayHSVCube
 	;
-
-saveArrayRGBCube : FILE_ STRING endian 
-	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
-	| CHANNEL_ STRING endian 
-	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
-	| SOCKET_ INT endian 
-	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
 
 saveFits: /* empty */ saveFitsImage
         | IMAGE_ saveFitsImage
@@ -2804,6 +2799,10 @@ saveFits: /* empty */ saveFitsImage
         | MOSAIC_ saveFitsMosaic
         | RGB_ IMAGE_ saveFitsRGBImage
         | RGB_ CUBE_ saveFitsRGBCube
+        | HLS_ IMAGE_ saveFitsHLSImage
+        | HLS_ CUBE_ saveFitsHLSCube
+        | HSV_ IMAGE_ saveFitsHSVImage
+        | HSV_ CUBE_ saveFitsHSVCube
 	| RESAMPLE_ saveFitsResample
 	;
 
@@ -2838,12 +2837,56 @@ saveFitsMosaicImage : FILE_ STRING {fr->saveFitsMosaicImageFileCmd($2);}
         | SOCKET_ INT {fr->saveFitsMosaicImageSocketCmd($2);}
         ;
 
+saveArrayRGBCube : FILE_ STRING endian 
+	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
+	| CHANNEL_ STRING endian 
+	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
+	| SOCKET_ INT endian 
+	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
+        ;
+
 saveFitsRGBImage : FILE_ STRING {fr->saveRGBImageFileCmd($2);}
 	| CHANNEL_ STRING {fr->saveRGBImageChannelCmd($2);}
 	| SOCKET_ INT {fr->saveRGBImageSocketCmd($2);}
 	;
 
 saveFitsRGBCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBCubeChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
+	;
+
+saveArrayHLSCube : FILE_ STRING endian 
+	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
+	| CHANNEL_ STRING endian 
+	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
+	| SOCKET_ INT endian 
+	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
+        ;
+
+saveFitsHLSImage : FILE_ STRING {fr->saveRGBImageFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBImageChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBImageSocketCmd($2);}
+	;
+
+saveFitsHLSCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBCubeChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
+	;
+
+saveArrayHSVCube : FILE_ STRING endian 
+	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
+	| CHANNEL_ STRING endian 
+	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
+	| SOCKET_ INT endian 
+	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
+        ;
+
+saveFitsHSVImage : FILE_ STRING {fr->saveRGBImageFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBImageChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBImageSocketCmd($2);}
+	;
+
+saveFitsHSVCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
 	| CHANNEL_ STRING {fr->saveRGBCubeChannelCmd($2);}
 	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
 	;

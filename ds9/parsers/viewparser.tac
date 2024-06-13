@@ -34,6 +34,10 @@
 %token VERTICAL_
 %token VERTGRAPH_
 
+%token RGB_
+%token HLS_
+%token HSV_
+
 %token RED_
 %token BLUE_
 %token GREEN_
@@ -83,14 +87,25 @@ view : layout
  | wcssys yesno {ProcessCmdSet view info,$1 $2 LayoutInfoPanel}
  | FRAME_ yesno {ProcessCmdSet view info,frame $2 LayoutInfoPanel}
 
- | RED_ yesno {ProcessCmdSet rgb red $2 RGBView}
+ | rgb
+ | RGB_ rgb
+ | HLS_ hls
+ | HSV_ hsv
+ ;
+ 
+rgb : RED_ yesno {ProcessCmdSet rgb red $2 RGBView}
  | GREEN_ yesno {ProcessCmdSet rgb green $2 RGBView}
  | BLUE_ yesno {ProcessCmdSet rgb blue $2 RGBView}
+ ;
 
- | HUE_ yesno {ProcessCmdSet hls hue $2 HLSView; ProcessCmdSet hsv hue $2 HSVView}
- | SATURATION_ yesno {ProcessCmdSet hls saturation $2 HLSView; ProcessCmdSet hsv hue $2 HSVView}
- | VALUE_ yesno {ProcessCmdSet hsv value $2 HSVView}
+hls : HUE_ yesno {ProcessCmdSet hls hue $2 HLSView}
  | LIGHTNESS_ yesno {ProcessCmdSet hls lightness $2 HLSView}
+ | SATURATION_ yesno {ProcessCmdSet hls saturation $2 HLSView}
+ ;
+
+hsv : HUE_ yesno {ProcessCmdSet hsv hue $2 HSVView}
+ | SATURATION_ yesno {ProcessCmdSet hsv hue $2 HSVView}
+ | VALUE_ yesno {ProcessCmdSet hsv value $2 HSVView}
  ;
 
 layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal LayoutView}

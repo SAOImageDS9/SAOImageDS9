@@ -34,6 +34,10 @@ vert		{return $VERTICAL_}
 vertical	{return $VERTICAL_}
 vertgraph	{return $VERTGRAPH_}
 
+rgb		{return $RGB_}
+hls		{return $HLS_}
+hsv		{return $HSV_}
+
 red		{return $RED_}
 green		{return $GREEN_}
 blue		{return $BLUE_}

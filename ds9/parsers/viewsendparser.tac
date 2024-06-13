@@ -30,9 +30,18 @@
 %token VERTGRAPH_
 %token VERTICAL_
 
+%token RGB_
+%token HLS_
+%token HSV_
+
 %token RED_
 %token GREEN_
 %token BLUE_
+
+%token HUE_
+%token SATURATION_
+%token VALUE_
+%token LIGHTNESS_
 
 %%
 
@@ -68,11 +77,29 @@ viewsend: LAYOUT_ {ProcessSendCmdGet view layout}
 
  | FRAME_ {ProcessSendCmdYesNo view info,frame}
 
- | RED_ {ProcessSendCmdYesNo rgb red}
+ | rgb
+ | hsv
+
+ | RGB_ rgb
+ | HLS_ hls 
+ | HSV_ hsv
+ ;
+
+rgb : RED_ {ProcessSendCmdYesNo rgb red}
  | GREEN_ {ProcessSendCmdYesNo rgb green}
  | BLUE_ {ProcessSendCmdYesNo rgb blue}
  ;
 
+hls : HUE_ {ProcessSendCmdYesNo hls hue}
+ | LIGHTNESS_ {ProcessSendCmdYesNo hls lightness}
+ | SATURATION_ {ProcessSendCmdYesNo hls saturation}
+ ;
+ 
+hsv : HUE_ {ProcessSendCmdYesNo hsv hue}
+ | SATURATION_ {ProcessSendCmdYesNo hsv saturation}
+ | VALUE_ {ProcessSendCmdYesNo hsv value}
+ ;
+ 
 graph :
  | HORIZONTAL_ {ProcessSendCmdYesNo view graph,horz}
  | VERTICAL_ {ProcessSendCmdYesNo view graph,vert}

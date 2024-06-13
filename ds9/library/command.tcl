@@ -237,13 +237,11 @@ proc ProcessCommand {argv argc} {
 	    -hlsarray {set file(type) hlsarray}
 	    -hlscube {set file(type) hlscube}
 	    -hlsimage {set file(type) hlsimage}
-	    -hlsarray {set file(type) hlsarray}
 
 	    -hsv {incr i; ProcessHSVCmd argv i}
 	    -hsvarray {set file(type) hsvarray}
 	    -hsvcube {set file(type) hsvcube}
 	    -hsvimage {set file(type) hsvimage}
-	    -hsvsarray {set file(type) hsvarray}
 
 	    -hue {
 		set current(hsv) hue
@@ -408,13 +406,13 @@ proc ProcessCommand {argv argc} {
 	    -restore {incr i; ProcessRestoreCmd argv i}
 
 	    -rgb {incr i; ProcessRGBCmd argv i}
+	    -rgbarray {set file(type) rgbarray}
+	    -rgbimage {set file(type) rgbimage}
 	    -rgbcube {set file(type) rgbcube}
 	    -srgbcube {
 		# backward compatibility
 		set file(type) srgbcube
 	    }
-	    -rgbarray {set file(type) rgbarray}
-	    -rgbimage {set file(type) rgbimage}
 
 	    -rotate {incr i; ProcessRotateCmd argv i}
 	    -samp {incr i; ProcessSAMPCmd argv i}

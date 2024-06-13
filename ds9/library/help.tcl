@@ -20,7 +20,7 @@ proc HelpDef {} {
 
     # remember to update macos/SAOImageDS9/Contents/Resources/Credits.html
     set help(authors) "William Joye (Smithsonian Astrophysical Observatory)\nEric Mandel (Smithsonian Astrophysical Observatory)\nSteve Murray (Smithsonian Astrophysical Observatory)\n"
-    set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\nAuthors\n$help(authors)\nDevelopment funding\nNASA's Applied Information Systems Research Program\nChandra X-ray Science Center (CXC)\nHigh Energy Astrophysics Science Archive Center (HEASARC)\nJWST Mission office at Space Telescope Science Institute\n\nColormaps\nh5utils: Steven Johnson (MIT)\nViridis: Eric Firing (UW)\nCubehelix: Dave Green (Cavendish)\nGist: David Munro (LLNL)\nTopographic: Tom Patterson (US National Park Service)\nScientific Colour Maps: Fabio Crameri"
+    set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\nAuthors\n$help(authors)\nDevelopment funding\nNASA's Applied Information Systems Research Program\nChandra X-ray Science Center (CXC)\nHigh Energy Astrophysics Science Archive Center (HEASARC)\n\nColormaps\nh5utils: Steven Johnson (MIT)\nViridis: Eric Firing (UW)\nCubehelix: Dave Green (Cavendish)\nGist: David Munro (LLNL)\nTopographic: Tom Patterson (US National Park Service)\nScientific Colour Maps: Fabio Crameri"
 }
 
 proc HelpRef {} {

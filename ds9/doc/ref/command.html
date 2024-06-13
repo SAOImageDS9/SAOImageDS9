@@ -2581,7 +2581,7 @@ $ds9 -hsv -value foo.fits</tt>
 Example:<br>
 $ds9 -version</tt>
 <p><b><a name="view" id="view"></a>view</b></p>
-<p>Controls the GUI and visible RGB frame color channels.</p>
+<p>Controls the GUI.</p>
 <tt>Syntax:<br>
 -view [layout horizontal|vertical|basic|advanced]<br>
 &nbsp;&nbsp;&nbsp; [multi yes|no]<br>
@@ -2601,9 +2601,15 @@ $ds9 -version</tt>
 &nbsp;&nbsp;&nbsp; [units yes|no]<br>
 &nbsp;&nbsp;&nbsp; [image|physical|wcs|wcsa...wcsz yes|no]<br>
 &nbsp;&nbsp;&nbsp; [frame yes|no]<br>
-&nbsp;&nbsp;&nbsp; [red yes|no]<br>
-&nbsp;&nbsp;&nbsp; [green yes|no]<br>
-&nbsp;&nbsp;&nbsp; [blue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb red yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb green yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb blue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls hue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls lightness yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls saturation yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv hue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv saturation yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv value yes|no]<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -view layout vertical<br>
@@ -2623,9 +2629,7 @@ $ds9 -view minmax yes<br>
 $ds9 -view lowhigh yes<br>
 $ds9 -view wcsa yes<br>
 $ds9 -view frame yes<br>
-$ds9 -view red yes<br>
-$ds9 -view green yes<br>
-$ds9 -view blue yes<br></tt>
+$ds9 -view rgb red yes<br>
 <p><b><a name="visual" id="visual"></a>visual</b></p>
 <p>Force DS9 to use the specified color visual. This argument MUST be the first argument listed. Requires the visual be available.</p>
 <tt>Syntax:<br>

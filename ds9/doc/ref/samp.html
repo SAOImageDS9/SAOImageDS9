@@ -3195,9 +3195,15 @@ view [layout horizontal|vertical|basic|advanced]<br>
 &nbsp;&nbsp;&nbsp; [units yes|no]<br>
 &nbsp;&nbsp;&nbsp; [image|physical|wcs|wcsa...wcsz yes|no]<br>
 &nbsp;&nbsp;&nbsp; [frame yes|no]<br>
-&nbsp;&nbsp;&nbsp; [red yes|no]<br>
-&nbsp;&nbsp;&nbsp; [green yes|no]<br>
-&nbsp;&nbsp;&nbsp; [blue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb red yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb green yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb blue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls hue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls lightness yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls saturation yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv hue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv saturation yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv value yes|no]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
@@ -3220,7 +3226,7 @@ view units<br>
 view image<br>
 view wcsa<br>
 view frame<br>
-view red<br>
+view rgb red<br>
 <br>
 ds9.set(string cmd)<br>
 view layout vertical<br>
@@ -3241,9 +3247,7 @@ view lowhigh yes<br>
 view units yes<br>
 view wcsa yes<br>
 view frame yes<br>
-view red yes<br>
-view green yes<br>
-view blue yes</tt><br>
+view rgb red yes</tt><br>
 <p><b><a name="vla" id="vla"></a>vla</b></p>
 <p>Support for VLA Sky Survey.</p>
 <tt>Syntax:<br>

@@ -7,14 +7,12 @@
 
 %%
 
-blue		{return $BLUE_}
 buttons		{return $BUTTONS_}
 colorbar	{return $COLORBAR_}
 colorbarnumerics {return $COLORBARNUMERICS_}
 filename	{return $FILENAME_}
 frame		{return $FRAME_}
 graph		{return $GRAPH_}
-green		{return $GREEN_}
 horz		{return $HORIZONTAL_}
 horizontal	{return $HORIZONTAL_}
 horzgraph	{return $HORZGRAPH_}
@@ -29,15 +27,23 @@ minmax		{return $MINMAX_}
 multi		{return $MULTI_}
 object		{return $OBJECT_}
 panner		{return $PANNER_}
-red		{return $RED_}
 units		{return $UNITS_}
 vert		{return $VERTICAL_}
 vertical	{return $VERTICAL_}
 vertgraph	{return $VERTGRAPH_}
 
+rgb		{return $RGB_}
+hls		{return $HLS_}
+hsv		{return $HSV_}
+
 red		{return $RED_}
 green		{return $GREEN_}
 blue		{return $BLUE_}
+
+hue		{return $HUE_}
+saturation	{return $SATURATION_}
+value		{return $VALUE_}
+lightness	{return $LIGHTNESS_}
 
 #include coordsys.fin
 #include wcssys.fin

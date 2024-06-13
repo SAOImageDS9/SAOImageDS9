@@ -51,6 +51,13 @@ set PANNER_ 306
 set UNITS_ 307
 set VERTGRAPH_ 308
 set VERTICAL_ 309
-set RED_ 310
-set GREEN_ 311
-set BLUE_ 312
+set RGB_ 310
+set HLS_ 311
+set HSV_ 312
+set RED_ 313
+set GREEN_ 314
+set BLUE_ 315
+set HUE_ 316
+set SATURATION_ 317
+set VALUE_ 318
+set LIGHTNESS_ 319

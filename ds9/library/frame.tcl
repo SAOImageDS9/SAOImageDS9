@@ -15,6 +15,16 @@ proc CreateRGBFrame {} {
     RGBDialog
 }
 
+proc CreateHSVFrame {} {
+    CreateNamedFrame hsv
+    HSVDialog
+}
+
+proc CreateHLSFrame {} {
+    CreateNamedFrame hls
+    HLSDialog
+}
+
 proc Create3DFrame {} {
     CreateNamedFrame 3d
     3DDialog
@@ -60,6 +70,8 @@ proc CreateNameNumberFrame {which type} {
     global bin
     global wcs
     global rgb
+    global hsv
+    global hls
     global colorbar
     global scale
     global minmax
@@ -90,6 +102,16 @@ proc CreateNameNumberFrame {which type} {
 	    $ds9(canvas) create framergb$ds9(visual)$ds9(depth) \
 		-command $which
 	    CreateColorbarRGB $which
+	}
+	hsv {
+	    $ds9(canvas) create framehsv$ds9(visual)$ds9(depth) \
+		-command $which
+	    CreateColorbarHSV $which
+	}
+	hls {
+	    $ds9(canvas) create framehls$ds9(visual)$ds9(depth) \
+		-command $which
+	    CreateColorbarHLS $which
 	}
 	3d {
 	    $ds9(canvas) create frame3d$ds9(visual)$ds9(depth) \
@@ -154,6 +176,8 @@ proc CreateNameNumberFrame {which type} {
     switch -- [$which get type] {
 	base {}
 	rgb {$which rgb system $rgb(system)}
+	hsv {$which hsv system $hsv(system)}
+	hls {$which hls system $hls(system)}
 	3d {
 	    $which 3d method $pthreed(method)
 	    $which 3d background $pthreed(background)
@@ -230,6 +254,74 @@ proc CreateNameNumberFrame {which type} {
 		}
 	    }
 	    $which rgb channel red
+	}
+	hsv {
+	    foreach c {hue saturation value} {
+		$which hsv channel $c
+
+		$which colorscale $scale(type)
+		$which colorscale log $scale(log)
+
+		$which clip scope $scale(scope)
+		$which clip mode $scale(mode)
+		$which clip minmax $minmax(sample) $minmax(mode)
+		$which clip user $scale(min) $scale(max)
+		$which clip zscale \
+		    $zscale(contrast) $zscale(sample) $zscale(line)
+
+		$which datasec $scale(datasec)
+
+		$which bin function $bin(function)
+		$which bin factor to $bin(factor)
+		$which bin depth $bin(depth)
+		$which bin buffer size $bin(buffersize)
+
+		$which block to $block(factor)
+
+		$which cube axes $cube(axes)
+
+		if {$smooth(view)} {
+		    $which smooth $smooth(function) \
+			$smooth(radius) $smooth(radius,minor) \
+			$smooth(sigma) $smooth(sigma,minor) \
+			$smooth(angle)
+		}
+	    }
+	    $which hsv channel hue
+	}
+	hls {
+	    foreach c {hue lightness saturation} {
+		$which hls channel $c
+
+		$which colorscale $scale(type)
+		$which colorscale log $scale(log)
+
+		$which clip scope $scale(scope)
+		$which clip mode $scale(mode)
+		$which clip minmax $minmax(sample) $minmax(mode)
+		$which clip user $scale(min) $scale(max)
+		$which clip zscale \
+		    $zscale(contrast) $zscale(sample) $zscale(line)
+
+		$which datasec $scale(datasec)
+
+		$which bin function $bin(function)
+		$which bin factor to $bin(factor)
+		$which bin depth $bin(depth)
+		$which bin buffer size $bin(buffersize)
+
+		$which block to $block(factor)
+
+		$which cube axes $cube(axes)
+
+		if {$smooth(view)} {
+		    $which smooth $smooth(function) \
+			$smooth(radius) $smooth(radius,minor) \
+			$smooth(sigma) $smooth(sigma,minor) \
+			$smooth(angle)
+		}
+	    }
+	    $which hls channel hue
 	}
     }
 
@@ -2020,7 +2112,7 @@ proc ClearFrame {which} {
 	return
     }
 
-    foreach cc {{} red green blue} {
+    foreach cc {{} red green blue hue saturation value lightness} {
 	set varname $which$cc
 	global $varname
 	if {[info exists $varname]} {

@@ -16,10 +16,32 @@ proc Import {fn format layer mode fn2} {
 	rgbarray {
 	    switch -- [$current(frame) get type] {
 		base -
+		hsv -
+		hls -
 		3d {CreateRGBFrame}
 		rgb {}
 	    }
 	    ImportRGBArrayFile $fn
+	}
+	hlsarray {
+	    switch -- [$current(frame) get type] {
+		base -
+		rgb -
+		hsv -
+		3d {CreateHLSFrame}
+		hls {}
+	    }
+	    ImportHLSArrayFile $fn
+	}
+	hsvarray {
+	    switch -- [$current(frame) get type] {
+		base -
+		rgb -
+		hls -
+		3d {CreateHSVFrame}
+		hsv {}
+	    }
+	    ImportHSVArrayFile $fn
 	}
 	nrrd {ImportNRRDFile $fn $layer}
 	envi {ImportENVIFile $fn $fn2}
@@ -36,6 +58,8 @@ proc Import {fn format layer mode fn2} {
 proc ImportDialog {format {layer {}} {mode {}}} {
     global arrayfbox
     global rgbarrayfbox
+    global hlsarrayfbox
+    global hsvarrayfbox
     global nrrdfbox
     global envifbox
     global envi2fbox
@@ -47,6 +71,8 @@ proc ImportDialog {format {layer {}} {mode {}}} {
     switch -- $format {
 	array {set fn [OpenFileDialog arrayfbox]}
 	rgbarray {set fn [OpenFileDialog rgbarrayfbox]}
+	hlsarray {set fn [OpenFileDialog hlsarrayfbox]}
+	hsvarray {set fn [OpenFileDialog hsvarrayfbox]}
 	nrrd {set fn [OpenFileDialog nrrdfbox]}
 	envi {set fn [OpenFileDialog envifbox]}
 	gif {set fn [OpenFileDialog giffbox]}
@@ -69,7 +95,9 @@ proc ImportDialog {format {layer {}} {mode {}}} {
 		    }
 		}
 	    }
-	    rgbarray {
+	    rgbarray -
+	    hlsarray -
+	    hsvarray {
 		# do we have an array spec tag'd on
 		if {![regexp -nocase {(.*)(\[.*\])} $fn foo base ext]} {
 		    set ext {}

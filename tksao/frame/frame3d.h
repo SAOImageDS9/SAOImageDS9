@@ -35,12 +35,7 @@ class Frame3d : public Frame3dBase {
   int cmapID;                // current colormap id
   float bias;                // current colormap bias
   float contrast;            // current colormap contrast
-
-  long* colormapData;
-
-  int colorCount;            // number of dynamic colors
   ColorScale* colorScale;    // current color scale
-  unsigned char* colorCells; // current color values
 
   pthread_t* thread_;
 
@@ -68,8 +63,6 @@ class Frame3d : public Frame3dBase {
 
   void reset();
 
-  void setKeyFits() {}
-
   void pushMatrices();
   void pushMagnifierMatrices();
   void pushPannerMatrices();
@@ -77,13 +70,11 @@ class Frame3d : public Frame3dBase {
 
   void unloadFits();
 
-
  protected:
   int isFrame3d() {return 1;}
-
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
-
-  void updateColorCells(int);
+  void updateColorScale();
+  void updateColorCells(int cnt);
   int validColorScale() {return colorScale ? 1 : 0;}
 
  public:
@@ -94,15 +85,9 @@ class Frame3d : public Frame3dBase {
   int processDetach();
 
   void getColorbarCmd();
-  void getRGBChannelCmd();
-  void getRGBSystemCmd();
-  void getRGBViewCmd();
   void getTypeCmd();
 
   void colormapCmd(int, float, float, int, int);
-  void colormapEndCmd();
-  void colormapMotionCmd(int id, float b, float c, int i, int cnt)
-  {colormapCmd(id, b, c, i, cnt);}
 
   void savePhotoCmd(const char*);
 };

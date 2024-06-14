@@ -5,24 +5,16 @@
 #ifndef __colorbarrgb_h__
 #define __colorbarrgb_h__
 
-#include "colorbarbase.h"
+#include "colorbart.h"
 
 class Filter;
 
-class ColorbarRGB : public ColorbarBase {
- protected:
-  int channel;
-  float bias[3];
-  float contrast[3];
-
- private:
+class ColorbarRGB : public ColorbarT {
+protected:
   void psHorz(ostream&, Filter&, int, int);
   void psVert(ostream&, Filter&, int, int);
-
-protected:
-  int calcContrastBias(int, float, float);
-  void reset();
   void updateColorCells();
+  int initColormap();
 
 #ifdef MAC_OSX_TK
   void macosx(float, int, int, const Vector&, const Vector&);
@@ -37,19 +29,15 @@ public:
 
   // SubCommandFunctions
 
-  void adjustCmd(float, float);
-  void getBiasCmd();
   void getColorbarCmd();
   void getColormapCmd();
   void getColormapNameCmd(int);
   void getColormapFileNameCmd(int);
   void getColormapFileNameCmd(const char*);
-  void getContrastCmd();
   void getCurrentFileNameCmd();
   void getCurrentIDCmd();
   void getCurrentNameCmd();
   void getTypeCmd();
-  void setColorbarCmd(float, float, float, float, float, float, int);
   void getRGBChannelCmd();
   void setRGBChannelCmd(const char*);
 };

@@ -17,12 +17,7 @@ class Frame : public FrameBase {
   int cmapID;                // current colormap id
   float bias;                // current colormap bias
   float contrast;            // current colormap contrast
-
-  long* colormapData;
-
-  int colorCount;            // number of dynamic colors
   ColorScale* colorScale;    // current color scale
-  unsigned char* colorCells; // current color values
 
   List <FitsMask> mask;
 
@@ -51,19 +46,20 @@ class Frame : public FrameBase {
   void pushPannerMatrices();
   void pushPSMatrices(float, int, int);
   void reset();
-  void setKeyFits() {}
   void unloadFits();
   Context* loadMask();
 
  protected:
-  void alignWCS();
   int isFrame() {return 1;}
-
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);
-  unsigned char* fillMask(FitsMask*, int, int,  Coord::InternalSystem);
+  void updateColorScale();
+  void updateColorCells(int cnt);
   int validColorScale() {return colorScale ? 1 : 0;}
-  void updateColorCells(int);
+
   void updateMaskMatrices();
+  unsigned char* fillMask(FitsMask*, int, int,  Coord::InternalSystem);
+
+  void alignWCS();
   void loadDone(int);
 
  public:
@@ -89,14 +85,8 @@ class Frame : public FrameBase {
   void maskBlendCmd(FitsMask::MaskBlend bb);
 
   void colormapCmd(int, float, float, int, int);
-  void colormapBeginCmd();
-  void colormapMotionCmd(int, float, float, int, int);
-  void colormapEndCmd();
-
+  
   void getColorbarCmd();
-  void getRGBChannelCmd();
-  void getRGBViewCmd();
-  void getRGBSystemCmd();
   void getTypeCmd();
 
   void iisCmd(int, int);

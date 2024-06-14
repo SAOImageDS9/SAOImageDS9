@@ -20,6 +20,8 @@ proc ExamineButton {which x y} {
     switch -- [$which get type] {
 	base {ExamineButtonBase $which $x $y}
 	rgb {ExamineButtonRGB $which $x $y}
+	hsv {ExamineButtonHSV $which $x $y}
+	hls {ExamineButtonHLS $which $x $y}
 	3d {ExamineButton3D $which $x $y}
     }
 }
@@ -183,6 +185,200 @@ proc ExamineButtonRGB {which x y} {
     # back to original frame
     GotoFrame $which
     $current(frame) rgb channel $channel
+
+    # update any dialogs
+    UpdateDS9
+}
+
+proc ExamineButtonHSV {which x y} {
+    global current
+    global ds9
+    global pexamine
+
+    # this code is far from perfect. It assumes data is loaded into the hue
+    # and it is the keychannel. Furthermore, it assumes either images or bin
+    # tables are loaded into each channel, but not both.
+    # this code will not handle mosaics.
+
+    # save current channel
+    set channel [$which get hsv channel]
+
+    # current coord
+    $which hsv channel hue
+    set coord [$which get coordinates $x $y physical]
+
+    # find filename/slice
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	set fn($cc) [$which get fits file name full canvas $x $y]
+
+	set slice($cc) [$which get fits slice]
+    }
+
+    # so the new frame will have all of the parent frame when created
+    GotoFrame $which
+
+    # create frame if needed
+    switch -- $pexamine(mode) {
+	new {CreateHSVFrame}
+	one {
+	    if {[info exists pexamine(one)]} {
+		if {$which == $pexamine(one)} {
+		    # do nothing, we clicked in the examine frame
+		    return
+		}
+		DeleteSingleFrame $pexamine(one)
+		CreateHSVFrame
+		set pexamine(one) $current(frame)
+	    } else {
+		CreateHSVFrame
+		set pexamine(one) $current(frame)
+	    }
+	}
+    }
+
+    # go to tile mode in case
+    set current(display) tile
+    DisplayMode
+
+    # load data
+    foreach cc {hue saturation value} {
+	$current(frame) hsv channel $cc
+
+	if {$fn($cc) != {}} {
+	    LoadFitsFile $fn($cc) {} {}
+	}
+    }
+
+    RealizeDS9
+
+    # set slice
+    foreach cc {hue saturation value} {
+	$current(frame) hsv channel $cc
+	$current(frame) update fits slice $slice($cc)
+    }
+
+    # zoom to about
+    $current(frame) hsv channel hue
+    if {[$current(frame) has fits bin]} {
+	foreach cc {hue saturation value} {
+	    $which hsv channel $cc
+	    $current(frame) hsv channel $cc
+
+	    set bf "[$current(frame) get bin factor]"
+	    set bx [expr [lindex $bf 0]/$pexamine(zoom)]
+	    set by [expr [lindex $bf 1]/$pexamine(zoom)]
+	    $current(frame) bin factor to $bx $by about \
+		[lindex $coord 0] [lindex $coord 1]
+	}
+    } else {
+	$current(frame) zoom $pexamine(zoom) $pexamine(zoom) \
+	    about image [lindex $coord 0] [lindex $coord 1]
+    }
+
+    # set channel
+    $current(frame) hsv channel $channel
+
+    # back to original frame
+    GotoFrame $which
+    $current(frame) hsv channel $channel
+
+    # update any dialogs
+    UpdateDS9
+}
+
+proc ExamineButtonHLS {which x y} {
+    global current
+    global ds9
+    global pexamine
+
+    # this code is far from perfect. It assumes data is loaded into the hue
+    # and it is the keychannel. Furthermore, it assumes either images or bin
+    # tables are loaded into each channel, but not both.
+    # this code will not handle mosaics.
+
+    # save current channel
+    set channel [$which get hls channel]
+
+    # current coord
+    $which hls channel hue
+    set coord [$which get coordinates $x $y physical]
+
+    # find filename/slice
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	set fn($cc) [$which get fits file name full canvas $x $y]
+
+	set slice($cc) [$which get fits slice]
+    }
+
+    # so the new frame will have all of the parent frame when created
+    GotoFrame $which
+
+    # create frame if needed
+    switch -- $pexamine(mode) {
+	new {CreateHLSFrame}
+	one {
+	    if {[info exists pexamine(one)]} {
+		if {$which == $pexamine(one)} {
+		    # do nothing, we clicked in the examine frame
+		    return
+		}
+		DeleteSingleFrame $pexamine(one)
+		CreateHLSFrame
+		set pexamine(one) $current(frame)
+	    } else {
+		CreateHLSFrame
+		set pexamine(one) $current(frame)
+	    }
+	}
+    }
+
+    # go to tile mode in case
+    set current(display) tile
+    DisplayMode
+
+    # load data
+    foreach cc {hue lightness saturation} {
+	$current(frame) hls channel $cc
+
+	if {$fn($cc) != {}} {
+	    LoadFitsFile $fn($cc) {} {}
+	}
+    }
+
+    RealizeDS9
+
+    # set slice
+    foreach cc {hue lightness saturation} {
+	$current(frame) hls channel $cc
+	$current(frame) update fits slice $slice($cc)
+    }
+
+    # zoom to about
+    $current(frame) hls channel hue
+    if {[$current(frame) has fits bin]} {
+	foreach cc {hue lightness saturation} {
+	    $which hls channel $cc
+	    $current(frame) hls channel $cc
+
+	    set bf "[$current(frame) get bin factor]"
+	    set bx [expr [lindex $bf 0]/$pexamine(zoom)]
+	    set by [expr [lindex $bf 1]/$pexamine(zoom)]
+	    $current(frame) bin factor to $bx $by about \
+		[lindex $coord 0] [lindex $coord 1]
+	}
+    } else {
+	$current(frame) zoom $pexamine(zoom) $pexamine(zoom) \
+	    about image [lindex $coord 0] [lindex $coord 1]
+    }
+
+    # set channel
+    $current(frame) hls channel $channel
+
+    # back to original frame
+    GotoFrame $which
+    $current(frame) hls channel $channel
 
     # update any dialogs
     UpdateDS9

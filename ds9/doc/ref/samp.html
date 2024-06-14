@@ -67,6 +67,14 @@ ds9.set<br>
 <a href="#grid">grid</a><br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
+<a href="#hls">hls</a><br>
+<a href="#hlsarray">hlsarray</a><br>
+<a href="#hlscube">hlscube</a><br>
+<a href="#hlsimage">hlsimage</a><br>
+<a href="#hsv">hsv</a><br>
+<a href="#hsvarray">hsvarray</a><br>
+<a href="#hsvcube">hsvcube</a><br>
+<a href="#hsvimage">hsvimage</a><br>
 <a href="#iconify">iconify</a><br>
 <a href="#iexam">iexam</a><br>
 <a href="#iis">iis</a><br>
@@ -1077,7 +1085,7 @@ footprint update<br></tt>
 <tt>Syntax:<br>
 frame [center [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [clear [&lt;integer&gt;|all]]<br>
-&nbsp;&nbsp;&nbsp; [new [rgb|3d]]<br>
+&nbsp;&nbsp;&nbsp; [new [rgb|hls|hsv|3d]]<br>
 &nbsp;&nbsp;&nbsp; [delete [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [reset [&lt;integer&gt;|all]]<br>
 &nbsp;&nbsp;&nbsp; [refresh [&lt;integer&gt;|all]]<br>
@@ -1430,6 +1438,170 @@ height<br>
 <br>
 ds9.set(string cmd)<br>
 height 512<br></tt>
+<p><b><a name="hls" id="hls"></a>hls</b></p>
+<p>Create HLS frame and control HLS frame parameters.</p>
+<tt>Syntax:<br>
+-hls []<br>
+&nbsp;&nbsp;&nbsp; [hue|lightness|saturation]<br>
+&nbsp;&nbsp;&nbsp; [channel [hue|lightness|saturation]]<br>
+&nbsp;&nbsp;&nbsp; [view [hue|lightness|saturation] [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hls channel<br>
+hls lock wcs<br>
+hls lock crop<br>
+hls lock slice<br>
+hls lock bin<br>
+hls lock scale<br>
+hls lock scalelimits<br>
+hls lock colorbar<br>
+hls lock block<br>
+hls lock smooth<br>
+hls system<br>
+hls view hue<br>
+hls view lightness<br>
+hls view saturation<br>
+<br>
+ds9.set(string cmd)<br>
+hls # create new hls frame<br>
+hls hue # set current channel to hue<br>
+hls channel hue # set current channel to hue<br>
+hls view saturation no # turn off saturation channel<br>
+hls system wcs # set hls coordinate system<br>
+hls lock wcs yes<br>
+hls lock crop yes<br>
+hls lock slice yes<br>
+hls lock bin yes<br>
+hls lock scale yes<br>
+hls lock scalelimits yes<br>
+hls lock colorbar yes<br>
+hls lock block yes<br>
+hls lock smooth yes<br>
+hls open<br>
+hls close</tt><br>
+<p><b><a name="hlsarray" id="hlsarray"></a>hlsarray</b></p>
+<p>Load raw data array cube into hls frame.<br></p>
+<tt>Syntax:<br>
+hlsarray [native|big|little]<br>
+hlsarray [new] [[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hlsarray<br>
+<br>
+ds9.set(string cmd)<br>
+hlsarray foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+hlsarray new foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+<p><b><a name="hlscube" id="hlscube"></a>hlscube</b></p>
+<p>Load FITS hlscube into hls frame.<br></p>
+<tt>Syntax:<br>
+hlscube [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hlscube<br>
+<br>
+ds9.set(string cmd)<br>
+hlscube foo.fits<br>
+hlscube new foo.fits</tt><br>
+<p><b><a name="hlsimage" id="hlsimage"></a>hlsimage</b></p>
+<p>Load FITS hlsimage into hls frame.<br></p>
+<tt>Syntax:<br>
+hlsimage [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hlsimage<br>
+<br>
+ds9.set(string cmd)<br>
+hlsimage foo.fits<br>
+hlsimage new foo.fits<br></tt>
+<p><b><a name="hsv" id="hsv"></a>hsv</b></p>
+<p>Create HSV frame and control HSV frame parameters.</p>
+<tt>Syntax:<br>
+-hsv []<br>
+&nbsp;&nbsp;&nbsp; [hue|saturation|value]<br>
+&nbsp;&nbsp;&nbsp; [channel [hue|saturation|value]]<br>
+&nbsp;&nbsp;&nbsp; [view [hue|saturation|value] [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth [yes|no]]<br>
+&nbsp;&nbsp;&nbsp; [open|close]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hsv channel<br>
+hsv lock wcs<br>
+hsv lock crop<br>
+hsv lock slice<br>
+hsv lock bin<br>
+hsv lock scale<br>
+$xpaset ds9 hsv lock scalelimits<br>
+hsv lock colorbar<br>
+hsv lock block<br>
+hsv lock smooth<br>
+hsv system<br>
+hsv view hue<br>
+hsv view saturation<br>
+hsv view value<br>
+<br>
+ds9.set(string cmd)<br>
+hsv # create new hsv frame<br>
+hsv hue # set current channel to hue<br>
+hsv channel hue # set current channel to hue<br>
+hsv view saturation no # turn off saturation channel<br>
+hsv system wcs # set hsv coordinate system<br>
+hsv lock wcs yes<br>
+hsv lock crop yes<br>
+hsv lock slice yes<br>
+hsv lock bin yes<br>
+hsv lock scale yes<br>
+hsv lock scalelimits yes<br>
+hsv lock colorbar yes<br>
+hsv lock block yes<br>
+hsv lock smooth yes<br>
+hsv open<br>
+hsv close</tt><br>
+<p><b><a name="hsvarray" id="hsvarray"></a>hsvarray</b></p>
+<p>Load raw data array cube into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvarray [native|big|little]<br>
+hsvarray [new] [[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hsvarray<br>
+<br>
+ds9.set(string cmd)<br>
+hsvarray foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+hsvarray new foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+<p><b><a name="hsvcube" id="hsvcube"></a>hsvcube</b></p>
+<p>Load FITS hsvcube into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvcube [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hsvcube<br>
+<br>
+ds9.set(string cmd)<br>
+hsvcube foo.fits<br>
+hsvcube new foo.fits</tt><br>
+<p><b><a name="hsvimage" id="hsvimage"></a>hsvimage</b></p>
+<p>Load FITS hsvimage into hsv frame.<br></p>
+<tt>Syntax:<br>
+hsvimage [new] [&lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hsvimage<br>
+<br>
+ds9.set(string cmd)<br>
+hsvimage foo.fits<br>
+hsvimage new foo.fits<br></tt>
 <p><b><a name="iconify" id="iconify"></a>iconify</b></p>
 <p>Toggles iconification.</p>
 <tt>Syntax:<br>
@@ -3023,9 +3195,15 @@ view [layout horizontal|vertical|basic|advanced]<br>
 &nbsp;&nbsp;&nbsp; [units yes|no]<br>
 &nbsp;&nbsp;&nbsp; [image|physical|wcs|wcsa...wcsz yes|no]<br>
 &nbsp;&nbsp;&nbsp; [frame yes|no]<br>
-&nbsp;&nbsp;&nbsp; [red yes|no]<br>
-&nbsp;&nbsp;&nbsp; [green yes|no]<br>
-&nbsp;&nbsp;&nbsp; [blue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb red yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb green yes|no]<br>
+&nbsp;&nbsp;&nbsp; [rgb blue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls hue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls lightness yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hls saturation yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv hue yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv saturation yes|no]<br>
+&nbsp;&nbsp;&nbsp; [hsv value yes|no]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
@@ -3048,7 +3226,7 @@ view units<br>
 view image<br>
 view wcsa<br>
 view frame<br>
-view red<br>
+view rgb red<br>
 <br>
 ds9.set(string cmd)<br>
 view layout vertical<br>
@@ -3069,9 +3247,7 @@ view lowhigh yes<br>
 view units yes<br>
 view wcsa yes<br>
 view frame yes<br>
-view red yes<br>
-view green yes<br>
-view blue yes</tt><br>
+view rgb red yes</tt><br>
 <p><b><a name="vla" id="vla"></a>vla</b></p>
 <p>Support for VLA Sky Survey.</p>
 <tt>Syntax:<br>

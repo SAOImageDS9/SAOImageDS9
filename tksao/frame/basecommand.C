@@ -3209,3 +3209,114 @@ void Base::zoomToCmd(const Vector& z)
   zoom_ = ((Vector&)z).abs();
   update(MATRIX);
 }
+
+// FrameRGB
+
+void Base::getRGBChannelCmd()
+{
+  Tcl_AppendResult(interp, "red", NULL);
+}
+
+void Base::getRGBViewCmd()
+{
+  Tcl_AppendResult(interp, "1 1 1", NULL);
+}
+
+void Base::getRGBSystemCmd()
+{
+  Tcl_AppendResult(interp, "image", NULL);
+}
+
+// FrameHSV
+
+void Base::getHSVChannelCmd()
+{
+  Tcl_AppendResult(interp, "hue", NULL);
+}
+
+void Base::getHSVViewCmd()
+{
+  Tcl_AppendResult(interp, "1 1 1", NULL);
+}
+
+void Base::getHSVSystemCmd()
+{
+  Tcl_AppendResult(interp, "image", NULL);
+}
+
+// FrameHLS
+
+void Base::getHLSChannelCmd()
+{
+  Tcl_AppendResult(interp, "hue", NULL);
+}
+
+void Base::getHLSViewCmd()
+{
+  Tcl_AppendResult(interp, "1 1 1", NULL);
+}
+
+void Base::getHLSSystemCmd()
+{
+  Tcl_AppendResult(interp, "image", NULL);
+}
+
+// Frame3d
+
+void Base::get3dBorderCmd()
+{
+  Tcl_AppendResult(interp, "1", NULL);
+}
+
+void Base::get3dBorderColorCmd()
+{
+  Tcl_AppendResult(interp, "blue", NULL);
+}
+
+void Base::get3dCompassCmd()
+{
+  Tcl_AppendResult(interp, "1", NULL);
+}
+
+void Base::get3dCompassColorCmd()
+{
+  Tcl_AppendResult(interp, "green", NULL);
+}
+
+void Base::get3dHighliteCmd()
+{
+  Tcl_AppendResult(interp, "1", NULL);
+}
+
+void Base::get3dHighliteColorCmd()
+{
+  Tcl_AppendResult(interp, "cyan", NULL);
+}
+
+void Base::get3dRenderMethodCmd()
+{
+  Tcl_AppendResult(interp, "mip", NULL);
+}
+
+void Base::get3dScaleCmd()
+{
+  Tcl_AppendResult(interp, "1", NULL);
+}
+
+void Base::get3dViewCmd()
+{
+  Tcl_AppendResult(interp, "0 0", NULL);
+}
+
+void Base::get3dViewPointCmd()
+{
+  Tcl_AppendResult(interp, "0 0 0 0 0", NULL);
+}
+
+void Base::get3dRenderBackgroundCmd()
+{
+  Tcl_AppendResult(interp, "none", NULL);
+}
+
+
+

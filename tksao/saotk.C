@@ -12,6 +12,14 @@ extern int FrameRGBTrueColor8_Init(Tcl_Interp*);
 extern int FrameRGBTrueColor16_Init(Tcl_Interp*);
 extern int FrameRGBTrueColor24_Init(Tcl_Interp*);
 
+extern int FrameHSVTrueColor8_Init(Tcl_Interp*);
+extern int FrameHSVTrueColor16_Init(Tcl_Interp*);
+extern int FrameHSVTrueColor24_Init(Tcl_Interp*);
+
+extern int FrameHLSTrueColor8_Init(Tcl_Interp*);
+extern int FrameHLSTrueColor16_Init(Tcl_Interp*);
+extern int FrameHLSTrueColor24_Init(Tcl_Interp*);
+
 extern int Frame3dTrueColor8_Init(Tcl_Interp*);
 extern int Frame3dTrueColor16_Init(Tcl_Interp*);
 extern int Frame3dTrueColor24_Init(Tcl_Interp*);
@@ -23,6 +31,14 @@ extern int ColorbarTrueColor24_Init(Tcl_Interp*);
 extern int ColorbarRGBTrueColor8_Init(Tcl_Interp*);
 extern int ColorbarRGBTrueColor16_Init(Tcl_Interp*);
 extern int ColorbarRGBTrueColor24_Init(Tcl_Interp*);
+
+extern int ColorbarHSVTrueColor8_Init(Tcl_Interp*);
+extern int ColorbarHSVTrueColor16_Init(Tcl_Interp*);
+extern int ColorbarHSVTrueColor24_Init(Tcl_Interp*);
+
+extern int ColorbarHLSTrueColor8_Init(Tcl_Interp*);
+extern int ColorbarHLSTrueColor16_Init(Tcl_Interp*);
+extern int ColorbarHLSTrueColor24_Init(Tcl_Interp*);
 
 extern int PannerTrueColor_Init(Tcl_Interp*);
 
@@ -63,6 +79,20 @@ int Tksao_Init(Tcl_Interp* interp) {
   if (FrameRGBTrueColor24_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
 
+  if (FrameHSVTrueColor8_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (FrameHSVTrueColor16_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (FrameHSVTrueColor24_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+
+  if (FrameHLSTrueColor8_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (FrameHLSTrueColor16_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (FrameHLSTrueColor24_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+
   if (Frame3dTrueColor8_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
   if (Frame3dTrueColor16_Init(interp) == TCL_ERROR)
@@ -88,6 +118,20 @@ int Tksao_Init(Tcl_Interp* interp) {
   if (ColorbarRGBTrueColor16_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
   if (ColorbarRGBTrueColor24_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+
+  if (ColorbarHSVTrueColor8_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (ColorbarHSVTrueColor16_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (ColorbarHSVTrueColor24_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+
+  if (ColorbarHLSTrueColor8_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (ColorbarHLSTrueColor16_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (ColorbarHLSTrueColor24_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
 
   if (IIS_Init(interp) == TCL_ERROR)

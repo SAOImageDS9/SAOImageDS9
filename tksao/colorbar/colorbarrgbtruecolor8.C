@@ -181,7 +181,6 @@ void ColorbarRGBTrueColor8::updateColorsVert()
   char* data = xmap->data;
     
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-
     // red
     {
       char r = colorCells[((int)(double(jj)/height*colorCount))*3];

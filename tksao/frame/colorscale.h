@@ -24,8 +24,7 @@ using namespace std;
 class ColorScale {
 public:
   int size_;
-  unsigned char* psColors_;  // rgb for ps
-  unsigned char* colors_;    // for render
+  unsigned char* psColors_;  // rgb
 
 public:
   ColorScale(int);
@@ -33,7 +32,6 @@ public:
 
   int size() {return size_;}
   const unsigned char* psColors() {return psColors_;}
-  const unsigned char* colors() {return colors_;}
 };
 
 class LinearScale : public virtual ColorScale {

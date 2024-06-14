@@ -31,9 +31,9 @@ proc SmoothUpdate {} {
 
     if {$current(frame) != {}} {
 	if {$smooth(view)} {
-	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth $smooth(function) $smooth(radius) $smooth(radius,minor) $smooth(sigma) $smooth(sigma,minor) $smooth(angle)]
+	    EvalLockCurrent lock,smooth [list $current(frame) smooth $smooth(function) $smooth(radius) $smooth(radius,minor) $smooth(sigma) $smooth(sigma,minor) $smooth(angle)]
 	} else {
-	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth delete]
+	    EvalLockCurrent lock,smooth [list $current(frame) smooth delete]
 	}
     }
 
@@ -259,9 +259,9 @@ proc MatchSmooth {which} {
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
 	    if {$view} {
-		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth $function $radius $radiusminor $sigma $sigmaminor $angle]
+		EvalLock lock,smooth $ff [list $ff smooth $function $radius $radiusminor $sigma $sigmaminor $angle]
 	    } else {
-		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth delete]
+		EvalLock lock,smooth $ff [list $ff smooth delete]
 	    }
 	}
     }
@@ -288,6 +288,8 @@ proc SmoothBackup {ch which} {
 	base -
 	3d {SmoothBackupBase $ch $which}
 	rgb {SmoothBackupRGB $ch $which}
+	hsv {SmoothBackupHSV $ch $which}
+	hls {SmoothBackupHLS $ch $which}
     }
 }
 
@@ -312,6 +314,28 @@ proc SmoothBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc SmoothBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	SmoothBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc SmoothBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	SmoothBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 proc PrefsDialogSmooth {} {

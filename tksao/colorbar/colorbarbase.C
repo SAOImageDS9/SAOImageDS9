@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -62,6 +62,8 @@ ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   ticktxt = NULL;
   tickcnt =0;
   skipcnt =0;
+
+  cmapid_ =1;
 }
 
 ColorbarBase::~ColorbarBase()
@@ -90,6 +92,7 @@ ColorbarBase::~ColorbarBase()
 
   // exchange pointer between widgets
   if (cellsparentptr_ == this) {
+    cerr << "clear" << endl;
     cellsptr_ =NULL;
     cellsparentptr_ =NULL;
   }
@@ -255,17 +258,6 @@ void ColorbarBase::lutToText(Tk_Font font)
   }
 }
 
-int ColorbarBase::initColormap()
-{
-  colorCount = (((ColorbarBaseOptions*)options)->colors);
-  colorCells = new unsigned char[colorCount*3];
-
-  // needed to initialize colorCells
-  reset();
-
-  return TCL_OK;
-}
-
 void ColorbarBase::updateColors()
 {
   updateColorCells();
@@ -287,6 +279,29 @@ void ColorbarBase::updateColors()
   }
 
   redraw();
+}
+
+int ColorbarBase::calcContrastBias(int i, float bias, float contrast)
+{
+  // if default (contrast = 1.0 && bias = .5) return
+  if (fabs(bias - 0.5) < 0.0001 && fabs(contrast - 1.0) < 0.0001)
+    return i;
+  
+  // map i to range of 0 to 1.0
+  // shift by bias (if invert, bias = 1-bias)
+  // multiply by contrast
+  // shift to center of region
+  // expand back to number of dynamic colors
+  float b = invert ? 1-bias : bias;
+  int r = (int)(((((float)i / colorCount) - b) * contrast + .5 ) * colorCount);
+
+  // clip to bounds if out of range
+  if (r < 0)
+    return 0;
+  else if (r >= colorCount)
+    return colorCount-1;
+  else
+    return r;
 }
 
 // X11
@@ -853,6 +868,24 @@ void ColorbarBase::setColormapLevelCmd(int cc)
     
   invalidPixmap();
   redraw();
+}
+
+// RGB
+void ColorbarBase::getRGBChannelCmd()
+{
+  Tcl_AppendResult(interp, "red", NULL);
+}
+
+// HSV
+void ColorbarBase::getHSVChannelCmd()
+{
+  Tcl_AppendResult(interp, "hue", NULL);
+}
+
+// HLS
+void ColorbarBase::getHLSChannelCmd()
+{
+  Tcl_AppendResult(interp, "hue", NULL);
 }
 
 // MacOSX

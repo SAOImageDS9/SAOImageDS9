@@ -18,6 +18,8 @@ proc Export {fn format fn2} {
     switch $format {
 	array {ExportArrayFile $fn $export(endian)}
 	rgbarray {ExportRGBArrayFile $fn $export(endian)}
+	hlsarray {ExportHLSArrayFile $fn $export(endian)}
+	hsvarray {ExportHSVArrayFile $fn $export(endian)}
 	nrrd {ExportNRRDFile $fn $export(endian)}
 	envi {ExportENVIFile $fn $fn2 $export(endian)}
 	gif {ExportPhotoFile $fn $format {}}
@@ -46,6 +48,8 @@ proc ExportCmdSave {format fn {fn2 {}}} {
     switch -- $format {
 	array {FileLast arrayfbox $fn}
 	rgbarray {FileLast rgbarrayfbox $fn}
+	hlsarray {FileLast hlsarrayfbox $fn}
+	hsvarray {FileLast hsvarrayfbox $fn}
 	nrrd {FileLast nrrdfbox $fn}
 	envi {
 	    FileLast envifbox $fn
@@ -69,6 +73,8 @@ proc ExportDialog {format} {
     global export
     global arrayfbox
     global rgbarrayfbox
+    global hlsarrayfbox
+    global hsvarrayfbox
     global nrrdfbox
     global envifbox
     global envi2fbox
@@ -80,6 +86,8 @@ proc ExportDialog {format} {
     switch -- $format {
 	array {set fn [SaveFileDialog arrayfbox]}
 	rgbarray {set fn [SaveFileDialog rgbarrayfbox]}
+	hlsarray {set fn [SaveFileDialog hlsarrayfbox]}
+	hsvarray {set fn [SaveFileDialog hsvarrayfbox]}
 	nrrd {set fn [SaveFileDialog nrrdfbox]}
 	envi {set fn [SaveFileDialog envifbox]}
 	gif {set fn [SaveFileDialog giffbox]}
@@ -93,7 +101,9 @@ proc ExportDialog {format} {
 	set ok 1
 	switch -- $format {
 	    array {set ok [ArrayExportDialog export(endian)]}
-	    rgbarray {}
+	    rgbarray -
+	    hlsarray -
+	    hsvarray {}
 	    nrrd {set ok [ArrayExportDialog export(endian)]}
 	    envi {
 		set fn2 "[file rootname $fn].bsq"

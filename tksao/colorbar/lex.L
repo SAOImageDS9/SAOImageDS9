@@ -47,6 +47,8 @@ get		{return GET_;}
 gray		{return GRAY_;}
 false		{return FALSE_;}
 file		{return FILE_;}
+hsv		{return HSV_;}
+hls		{return HLS_;}
 height		{return HEIGHT_;}
 hide		{return HIDE_;}
 id		{return ID_;}

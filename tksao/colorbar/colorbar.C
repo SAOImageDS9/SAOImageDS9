@@ -6,7 +6,6 @@
 
 #include "util.h"
 #include "colorbar.h"
-#include "ps.h"
 #include "psutil.h"
 
 #include "lut.h"
@@ -16,7 +15,6 @@
 Colorbar::Colorbar(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : ColorbarBase(i,c,item)
 {
-  cmapid_ =1;
   ctagid_ =1;
 
   bias = .5;
@@ -27,34 +25,7 @@ Colorbar::Colorbar(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   taginit =0;
 }
 
-Colorbar::~Colorbar()
-{
-}
-
-int Colorbar::calcContrastBias(int i)
-{
-  // if default (contrast = 1.0 && bias = .5) return
-  if (fabs(bias - 0.5) < 0.0001 && fabs(contrast - 1.0) < 0.0001)
-    return i;
-  
-  // map i to range of 0 to 1.0
-  // shift by bias (if invert, bias = 1-bias)
-  // multiply by contrast
-  // shift to center of region
-  // expand back to number of dynamic colors
-  float b = invert ? 1-bias : bias;
-  int r = (int)(((((float)i / colorCount) - b) * contrast + .5 ) * colorCount);
-
-  // clip to bounds if out of range
-  if (r < 0)
-    return 0;
-  else if (r >= colorCount)
-    return colorCount-1;
-  else
-    return r;
-}
-
-void Colorbar::loadDefaultCMaps()
+void Colorbar::loadDefaultCmaps()
 {
   cmaps.append(new GreyColorMap(this));
   cmaps.append(new RedColorMap(this));
@@ -125,6 +96,7 @@ ColorMapInfo* Colorbar::newColorMap(const char* fn, const char* type)
 
 void Colorbar::psHorz(ostream& str, Filter& filter, int width, int height)
 {
+  // note: its filled bgr to match XImage
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++) {
       int kk = (int)(double(ii)/width*colorCount)*3;
@@ -132,55 +104,35 @@ void Colorbar::psHorz(ostream& str, Filter& filter, int width, int height)
       unsigned char green = colorCells[kk+1];
       unsigned char blue = colorCells[kk];
 
-      switch (psColorSpace) {
-      case BW:
-      case GRAY:
-	filter << RGB2Gray(red, green, blue);
-	break;
-      case RGB:
-	filter << red << green << blue;
-	break;
-      case CMYK:
-	{
-	  unsigned char cyan, magenta, yellow, black;
-	  RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	  filter << cyan << magenta << yellow << black;
-	}
-	break;
-      }
-      str << filter;
+      psPixel(psColorSpace, str, filter, red, green, blue);
     }
   }
 }
 
 void Colorbar::psVert(ostream& str, Filter& filter, int width, int height)
 {
+  // note: its filled bgr to match XImage
   for (int jj=0; jj<height; jj++) {
-    int kk = (int)(double(jj)/height*colorCount)*3;
-    unsigned char red = colorCells[kk+2];
-    unsigned char green = colorCells[kk+1];
-    unsigned char blue = colorCells[kk];
+    for (int ii=0; ii<width; ii++) {
+      int kk = (int)(double(jj)/height*colorCount)*3;
+      unsigned char red = colorCells[kk+2];
+      unsigned char green = colorCells[kk+1];
+      unsigned char blue = colorCells[kk];
 
-    switch (psColorSpace) {
-    case BW:
-    case GRAY:
-      for (int ii=0; ii<width; ii++)
-	filter << RGB2Gray(red, green, blue);
-      break;
-    case RGB:
-      for (int ii=0; ii<width; ii++)
-	filter << red << green << blue;
-      break;
-    case CMYK:
-      for (int ii=0; ii<width; ii++) {
-	unsigned char cyan, magenta, yellow, black;
-	RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
-	filter << cyan << magenta << yellow << black;
-      }
-      break;
+      psPixel(psColorSpace, str, filter, red, green, blue);
     }
-    str << filter;
   }
+}
+
+int Colorbar::initColormap()
+{
+  colorCount = (((ColorbarBaseOptions*)options)->colors);
+  colorCells = new unsigned char[colorCount*3];
+
+  // needed to initialize colorCells
+  reset();
+
+  return TCL_OK;
 }
 
 void Colorbar::reset()
@@ -207,7 +159,8 @@ void Colorbar::updateColorCells()
 
   if (cmaps.current())
     for(int i=0, j=colorCount-1; i<colorCount; i++, j--) {
-      int index = invert ? calcContrastBias(j) : calcContrastBias(i);
+      int index = invert ? calcContrastBias(j, bias, contrast) :
+	calcContrastBias(i, bias, contrast);
       colorCells[i*3] = cmaps.current()->getBlueChar(index, colorCount);
       colorCells[i*3+1] = cmaps.current()->getGreenChar(index, colorCount);
       colorCells[i*3+2] = cmaps.current()->getRedChar(index, colorCount);
@@ -261,7 +214,7 @@ void Colorbar::getColormapCmd()
     if (cellsparentptr_)
       if (cellsparentptr_ != this)
 	return;
-
+  
   if (cmaps.current()) {
     cellsptr_ = colorCells;
     cellsparentptr_ =this;
@@ -878,46 +831,8 @@ void Colorbar::tagSaveCmd(const char* fn)
 
 void Colorbar::macosx(float scale, int width, int height, 
 		      const Vector& v, const Vector& s)
-{
-  /*
-  if (!colorCells)
-    return;
+{}
 
-  // destination
-  unsigned char* dst = new unsigned char[width*height*4];
-  unsigned char* dptr = dst;
-
-  if (!((ColorbarBaseOptions*)options)->orientation) {
-    for (int jj=0; jj<height; jj++)
-      for (int ii=0; ii<width; ii++) {
-	int kk = (int)(double(ii)/width*colorCount)*3;
-	*dptr++ = colorCells[kk+2];
-	*dptr++ = colorCells[kk+1];
-	*dptr++ = colorCells[kk];
-	*dptr++ = 0;
-      }
-  }
-  else {
-    for (int jj=0; jj<height; jj++) {
-      int kk = (int)(double(jj)/height*colorCount)*3;
-      unsigned char rr = colorCells[kk+2];
-      unsigned char gg = colorCells[kk+1];
-      unsigned char bb = colorCells[kk];
-      for (int ii=0; ii<width; ii++) {
-	*dptr++ = rr;
-	*dptr++ = gg;
-	*dptr++ = bb;
-	*dptr++ = 0;
-      }
-    }
-  }
-
-  macosxBitmapCreate(dst, width, height, v, s);
-
-  if (dst)
-    delete [] dst;
-  */
-}
 #endif
 
 #ifdef __WIN32

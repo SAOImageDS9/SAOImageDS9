@@ -9,6 +9,8 @@
 
 array	    {return $ARRAY_}
 rgbarray    {return $RGBARRAY_}
+hlsarray    {return $HLSARRAY_}
+hsvarray    {return $HSVARRAY_}
 nrrd	    {return $NRRD_}
 envi	    {return $ENVI_}
 

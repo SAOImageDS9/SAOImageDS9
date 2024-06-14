@@ -67,6 +67,9 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   nthreads_ = 8;
 
+  colorCount = 0;
+  colorCells = NULL;
+
   byteorder_ = 0;
   bitsperpixel_ = 0;
 
@@ -597,9 +600,9 @@ void Base::getInfoClearName(char* var)
 void Base::getInfoClearValue(char* var)
 {
   Tcl_SetVar2(interp,var,"value","",0);
-  Tcl_SetVar2(interp,var,"value,red","",0);
-  Tcl_SetVar2(interp,var,"value,green","",0);
-  Tcl_SetVar2(interp,var,"value,blue","",0);
+  Tcl_SetVar2(interp,var,"value,1","",0);
+  Tcl_SetVar2(interp,var,"value,2","",0);
+  Tcl_SetVar2(interp,var,"value,3","",0);
 
   Tcl_SetVar2(interp,var,"image,x","",0);
   Tcl_SetVar2(interp,var,"image,y","",0);

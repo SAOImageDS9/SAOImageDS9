@@ -328,7 +328,7 @@ array set rgbsend::token_id_table {
   274 rgbsend
   275 lock
   271,line 22
-  276 view
+  276 channel
   277,t 1
   277 start'
   271,title SYSTEM

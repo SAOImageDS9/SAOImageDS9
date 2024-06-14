@@ -139,6 +139,9 @@ public:
   Context* context;
   int nthreads_;
 
+  int colorCount;               // number of dynamic colors
+  unsigned char* colorCells;    // current color values
+
   int byteorder_;
   int bitsperpixel_;
 
@@ -375,6 +378,8 @@ public:
   virtual int isFrame() {return 0;}
   virtual int isFrame3d() {return 0;}
   virtual int isFrameRGB() {return 0;}
+  virtual int isFrameHSV() {return 0;}
+  virtual int isFrameHLS() {return 0;}
 
   virtual void loadDone(int);
 
@@ -464,6 +469,7 @@ public:
   virtual void updateBin(const Matrix&);
   virtual void updateBlock(const Vector&);
   void updateCBMarkers(List<Marker>*);
+  virtual void updateColorCells(int) =0;
   virtual void updateColorScale() =0;
   virtual void updateGCs();
   virtual void updateMagnifier();
@@ -653,16 +659,11 @@ public:
 
   // Colormap Commands
   void colorbarTagCmd(const char*);
-  virtual void colormapCmd(int, float, float, int, int) {}
-  virtual void colormapCmd(float, float, float, float, float, float, int,
-			   int) {}
-  virtual void colormapBeginCmd() {}
-  virtual void colormapEndCmd() {}
-  virtual void colormapMotionCmd(int, float, float, int, int) {}
-  virtual void colormapMotionCmd(float, float, float, float, float, float, int,
-				 int) {}
-  virtual void getColorbarCmd() =0;
   void getColorbarTagCmd();
+
+  virtual void colormapCmd(int, float, float, int, int) {}
+  virtual void colormapCmd(float, float, float, float, float, float, int,int) {}
+  virtual void getColorbarCmd() =0;
 
   // Contour Commands
   void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, FrScale::ClipMode, float, FrScale::ClipScope, double, double, const char*);
@@ -891,17 +892,17 @@ public:
   virtual void loadRGBImageSocketGZCmd(int, const char*) {}
   virtual void loadRGBImageVarCmd(const char*, const char*) {}
 
-  virtual void loadArrayRGBCubeAllocCmd(const char*, const char*) {}
-  virtual void loadArrayRGBCubeAllocGZCmd(const char*, const char*) {}
-  virtual void loadArrayRGBCubeChannelCmd(const char*, const char*) {}
-  virtual void loadArrayRGBCubeMMapCmd(const char*) {}
-  virtual void loadArrayRGBCubeMMapIncrCmd(const char*) {}
-  virtual void loadArrayRGBCubeShareCmd(ShmType, int, const char*) {}
-  virtual void loadArrayRGBCubeSocketCmd(int, const char*) {}
-  virtual void loadArrayRGBCubeSocketGZCmd(int, const char*) {}
-  virtual void loadArrayRGBCubeVarCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeAllocCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeAllocGZCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeChannelCmd(const char*, const char*) {}
+  virtual void loadRGBArrayCubeMMapCmd(const char*) {}
+  virtual void loadRGBArrayCubeMMapIncrCmd(const char*) {}
+  virtual void loadRGBArrayCubeShareCmd(ShmType, int, const char*) {}
+  virtual void loadRGBArrayCubeSocketCmd(int, const char*) {}
+  virtual void loadRGBArrayCubeSocketGZCmd(int, const char*) {}
+  virtual void loadRGBArrayCubeVarCmd(const char*, const char*) {}
 
-  virtual void savePhotoCmd(const char*) {}
+  virtual void savePhotoCmd(const char*) =0;
 
   void saveFits(OutFitsStream&);
   void saveFitsFileCmd(const char*);
@@ -933,15 +934,20 @@ public:
   void saveFitsMosaicImageChannelCmd(const char*);
   void saveFitsMosaicImageSocketCmd(int);
 
-  virtual void saveFitsRGBImage(OutFitsStream&) {}
-  virtual void saveFitsRGBImageFileCmd(const char*) {}
-  virtual void saveFitsRGBImageChannelCmd(const char*) {}
-  virtual void saveFitsRGBImageSocketCmd(int) {}
+  virtual void saveRGBImage(OutFitsStream&) {}
+  virtual void saveRGBImageFileCmd(const char*) {}
+  virtual void saveRGBImageChannelCmd(const char*) {}
+  virtual void saveRGBImageSocketCmd(int) {}
 
-  virtual void saveFitsRGBCube(OutFitsStream&) {}
-  virtual void saveFitsRGBCubeFileCmd(const char*) {}
-  virtual void saveFitsRGBCubeChannelCmd(const char*) {}
-  virtual void saveFitsRGBCubeSocketCmd(int) {}
+  virtual void saveRGBCube(OutFitsStream&) {}
+  virtual void saveRGBCubeFileCmd(const char*) {}
+  virtual void saveRGBCubeChannelCmd(const char*) {}
+  virtual void saveRGBCubeSocketCmd(int) {}
+
+  virtual void saveRGBArrayCube(OutFitsStream&, FitsFile::ArchType) {}
+  virtual void saveRGBArrayCubeFileCmd(const char*, FitsFile::ArchType) {}
+  virtual void saveRGBArrayCubeChannelCmd(const char*, FitsFile::ArchType) {}
+  virtual void saveRGBArrayCubeSocketCmd(int, FitsFile::ArchType) {}
 
   virtual void saveFitsResampleFileCmd(const char*) {}
   virtual void saveFitsResampleChannelCmd(const char*) {}
@@ -951,11 +957,6 @@ public:
   void saveArrayFileCmd(const char*, FitsFile::ArchType);
   void saveArrayChannelCmd(const char*, FitsFile::ArchType);
   void saveArraySocketCmd(int, FitsFile::ArchType);
-
-  virtual void saveArrayRGBCube(OutFitsStream&, FitsFile::ArchType) {}
-  virtual void saveArrayRGBCubeFileCmd(const char*, FitsFile::ArchType) {}
-  virtual void saveArrayRGBCubeChannelCmd(const char*, FitsFile::ArchType) {}
-  virtual void saveArrayRGBCubeSocketCmd(int, FitsFile::ArchType) {}
 
   void saveNRRD(OutFitsStream&, FitsFile::ArchType);
   void saveNRRDFileCmd(const char*, FitsFile::ArchType);
@@ -1678,25 +1679,41 @@ public:
   void wcsResetCmd(int);
 
   // RGB Commands
-  virtual void getRGBChannelCmd() =0;
-  virtual void getRGBViewCmd() =0;
-  virtual void getRGBSystemCmd() =0;
+  virtual void getRGBChannelCmd();
+  virtual void getRGBViewCmd();
+  virtual void getRGBSystemCmd();
   virtual void setRGBChannelCmd(const char*) {}
   virtual void setRGBViewCmd(int, int, int) {}
   virtual void setRGBSystemCmd(Coord::CoordSystem) {}
 
+  // HLS Commands
+  virtual void getHLSChannelCmd();
+  virtual void getHLSViewCmd();
+  virtual void getHLSSystemCmd();
+  virtual void setHLSChannelCmd(const char*) {}
+  virtual void setHLSViewCmd(int, int, int) {}
+  virtual void setHLSSystemCmd(Coord::CoordSystem) {}
+
+  // HSV Commands
+  virtual void getHSVChannelCmd();
+  virtual void getHSVViewCmd();
+  virtual void getHSVSystemCmd();
+  virtual void setHSVChannelCmd(const char*) {}
+  virtual void setHSVViewCmd(int, int, int) {}
+  virtual void setHSVSystemCmd(Coord::CoordSystem) {}
+
   // 3d
-  virtual void get3dBorderCmd() =0;
-  virtual void get3dBorderColorCmd() =0;
-  virtual void get3dCompassCmd() =0;
-  virtual void get3dCompassColorCmd() =0;
-  virtual void get3dHighliteCmd() =0;
-  virtual void get3dHighliteColorCmd() =0;
-  virtual void get3dScaleCmd() =0;
-  virtual void get3dViewCmd() =0;
-  virtual void get3dViewPointCmd() =0;
-  virtual void get3dRenderMethodCmd() =0;
-  virtual void get3dRenderBackgroundCmd() =0;
+  virtual void get3dBorderCmd();
+  virtual void get3dBorderColorCmd();
+  virtual void get3dCompassCmd();
+  virtual void get3dCompassColorCmd();
+  virtual void get3dHighliteCmd();
+  virtual void get3dHighliteColorCmd();
+  virtual void get3dScaleCmd();
+  virtual void get3dViewCmd();
+  virtual void get3dViewPointCmd();
+  virtual void get3dRenderMethodCmd();
+  virtual void get3dRenderBackgroundCmd();
   virtual void set3dBorderCmd(int) {}
   virtual void set3dBorderColorCmd(const char*) {}
   virtual void set3dCompassCmd(int) {}

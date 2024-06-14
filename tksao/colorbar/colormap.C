@@ -8,7 +8,7 @@
 
 // ColorMapInfo
 
-ColorMapInfo::ColorMapInfo(Colorbar* p) : parent_(p)
+ColorMapInfo::ColorMapInfo(ColorbarBase* p) : parent_(p)
 {
   id_ = parent_->cmapid();
 

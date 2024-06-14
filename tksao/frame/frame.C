@@ -26,15 +26,11 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   currentContext = context;
   keyContext = context;
   
-  colormapData =NULL;
-
   cmapID = 1;
   bias = 0.5;
   contrast = 1.0;
 
-  colorCount = 0;
   colorScale = NULL;
-  colorCells = NULL;
 
   maskColorName = dupstr("red");
   maskAlpha = 1;
@@ -50,14 +46,11 @@ Frame::~Frame()
   if (context)
     delete context;
 
-  if (colorScale)
-    delete colorScale;
-
   if (colorCells)
     delete [] colorCells;
 
-  if (colormapData)
-    delete [] colormapData;
+  if (colorScale)
+    delete colorScale;
 
   if (maskColorName)
     delete [] maskColorName;
@@ -586,23 +579,6 @@ void Frame::reset()
   Base::reset();
 }
 
-void Frame::updateColorCells(int cnt)
-{
-  if (!cellsptr_ || !cellsparentptr_)
-    return;
-  
-  unsigned char* cells = (unsigned char*)cellsptr_;
-  colorCount = cnt;
-  if (colorCells)
-    delete [] colorCells;
-  colorCells = new unsigned char[cnt*3];
-  memcpy(colorCells, cells, cnt*3);
-
-  // clear
-  cellsptr_ =NULL;
-  cellsparentptr_ =NULL;
-}
-
 void Frame::updateMaskMatrices()
 {
   // image,pysical,amplifier,detector are ok, check for wcs
@@ -663,6 +639,74 @@ void Frame::unloadFits()
   mask.deleteAll();
 
   Base::unloadFits();
+}
+
+void Frame::updateColorCells(int cnt)
+{
+  if (!cellsptr_ || !cellsparentptr_)
+    return;
+
+  unsigned char* cells = (unsigned char*)cellsptr_;
+  colorCount = cnt;
+  if (colorCells)
+    delete [] colorCells;
+  colorCells = new unsigned char[cnt*3];
+  memcpy(colorCells, cells, cnt*3);
+
+  // clear
+  cellsptr_ =NULL;
+  cellsparentptr_ =NULL;
+}
+
+void Frame::updateColorScale()
+{
+  // we need colors before we can construct a scale
+
+  if (!colorCells)
+    return;
+
+  if (colorScale)
+    delete colorScale;
+
+  switch (context->colorScaleType()) {
+  case FrScale::LINEARSCALE:
+    colorScale =
+      new LinearScale(colorCount, colorCells, colorCount);
+    break;
+  case FrScale::LOGSCALE:
+    colorScale =
+      new LogScale(SCALESIZE, colorCells, colorCount, context->expo());
+    break;
+  case FrScale::POWSCALE:
+    colorScale =
+      new PowScale(SCALESIZE, colorCells, colorCount, context->expo());
+    break;
+  case FrScale::SQRTSCALE:
+    colorScale = 
+      new SqrtScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::SQUAREDSCALE:
+    colorScale =
+      new SquaredScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::ASINHSCALE:
+    colorScale =
+      new AsinhScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::SINHSCALE:
+    colorScale =
+      new SinhScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::HISTEQUSCALE:
+    colorScale =
+      new HistEquScale(SCALESIZE, colorCells, colorCount, 
+		       context->histequ(), HISTEQUSIZE); 
+    break;
+  case FrScale::IISSCALE:
+    colorScale =
+      new IISScale(colorCells, colorCount);
+    break;
+  }
 }
 
 // Commands
@@ -778,294 +822,11 @@ void Frame::colormapCmd(int id, float b, float c, int i, int cnt)
   update(BASE);
 }
 
-#ifndef MAC_OSX_TK
-
-void Frame::colormapBeginCmd()
-{
-  // we need a colorScale before we can render
-  if (!validColorScale())
-    return;
-
-  // we need some fits data
-  // we assume the colorScale length will not change during motion calls
-  if (!context->cfits)
-    return;
-
-  int width = options->width;
-  int height = options->height;
-
-  // Create XImage
-  if (!(colormapXM = XGetImage(display, pixmap, 0, 0,
-			       width, height, AllPlanes, ZPixmap))) {
-    internalError("Unable to Create Colormap XImage");
-    return;
-  }
-
-  // Create Pixmap
-  colormapPM =
-    Tk_GetPixmap(display, Tk_WindowId(tkwin), width, height, depth);
-  if (!colormapPM) {
-    internalError("Unable to Create Colormap Pixmap");
-    return;
-  }
-
-  // colormapGCXOR
-  colormapGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
-  // Create table index array
-  if (colormapData)
-    delete [] colormapData;
-  colormapData = new long[width*height];
-  if (!colormapData) {
-    internalError("Unable to alloc tmp data array");
-    return;
-  }
-
-  // fill data array
-  // basics
-  int bytesPerPixel = colormapXM->bits_per_pixel/8;
-
-  int length = colorScale->size() - 1;
-  int last = length * bytesPerPixel;
-
-  FitsImage* sptr = context->cfits;
-  int mosaic = isMosaic();
-
-  long* dest = colormapData;
-
-  // variable
-  double* mm = sptr->matrixToData(Coord::WIDGET).mm();
-  FitsBound* params = sptr->getDataParams(context->secMode());
-  int srcw = sptr->width();
-
-  double ll = sptr->low();
-  double hh = sptr->high();
-  double diff = hh - ll;
-
-  // main loop
-
-  SETSIGBUS
-  for (long jj=0; jj<height; jj++) {
-    for (long ii=0; ii<width; ii++, dest++) {
-      // default is bg
-      *dest = -2;
-
-      if (mosaic) {
-	sptr = context->cfits;
-
-	mm = sptr->matrixToData(Coord::WIDGET).mm();
-	params = sptr->getDataParams(context->secMode());
-	srcw = sptr->width();
-
-	ll = sptr->low();
-	hh = sptr->high();
-	diff = hh - ll;
-      }
-
-      do {
-	double xx = ii*mm[0] + jj*mm[3] + mm[6];
-	double yy = ii*mm[1] + jj*mm[4] + mm[7];
-
-	if (xx>=params->xmin && xx<params->xmax &&
-	    yy>=params->ymin && yy<params->ymax) {
-	  double value = sptr->getValueDouble(long(yy)*srcw + long(xx));
-
-	  if (isfinite(diff) && isfinite(value)) {
-	    if (value <= ll)
-	      *dest = 0;
-	    else if (value >= hh)
-	      *dest = last;
-	    else
-	      *dest = (int)(((value - ll)/diff * length) + .5)*bytesPerPixel;
-	  }
-	  else
-	    *dest = -1;
-
-	  break;
-	}
-	else {
-	  if (mosaic) {
-	    sptr = sptr->nextMosaic();
-
-	    if (sptr) {
-	      mm = sptr->matrixToData(Coord::WIDGET).mm();
-	      params = sptr->getDataParams(context->secMode());
-	      srcw = sptr->width();
-
-	      ll = sptr->low();
-	      hh = sptr->high();
-	      diff = hh - ll;
-	    }
-	  }
-	}
-      }
-      while (mosaic && sptr);
-    }
-  }
-  CLEARSIGBUS
-}
-
-void Frame::colormapMotionCmd(int id, float b, float c, int i, int cnt)
-{
-  // we need a colorScale before we can render
-  if (!validColorScale()) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-  
-  // first check for change
-  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-
-  // we got a change
-  cmapID = id;
-  bias = b;
-  contrast = c;
-  invert = i;
-
-  updateColorCells(cnt);
-  updateColorScale();
-
-  // if we have no data, stop now
-  if (!context->cfits)
-    return;
-
-  XColor* bgColor = useBgColor? getXColor(bgColourName) :
-    ((WidgetOptions*)options)->bgColor;
-  char bgTrueColor[4];   // color encoded
-  encodeTrueColor(bgColor, bgTrueColor);
-
-  XColor* nanColor = getXColor(nanColourName);
-  char nanTrueColor[4];  // color encoded
-  encodeTrueColor(nanColor, nanTrueColor);
-
-  // clear ximage
-  int& width = colormapXM->width;
-  int& height = colormapXM->height;
-  char* data = colormapXM->data;
-  int bytesPerPixel = colormapXM->bits_per_pixel/8;
-  int& bytesPerLine = colormapXM->bytes_per_line;
-
-  const unsigned char* table = colorScale->colors();
-
-  long* src = colormapData;
-  for (long jj=0; jj<height; jj++) {
-    // line may be padded at end
-    char* dest = data + jj*bytesPerLine;
-
-    for (long ii=0; ii<width; ii++, src++, dest+=bytesPerPixel)
-      switch (*src) {
-      case -1:
-	memcpy(dest, nanTrueColor, bytesPerPixel);
-	break;
-      case -2:
-	memcpy(dest, bgTrueColor, bytesPerPixel);
-	break;
-      default:
-	memcpy(dest, table+(*src), bytesPerPixel);
-	break;
-      }
-  }
-
-  // XImage to Pixmap
-  TkPutImage(NULL, 0, display, colormapPM, widgetGC, colormapXM,
-	     0, 0, 0, 0, width, height);
-
-  // Display Pixmap
-  Vector dd = Vector() * widgetToWindow;
-  XCopyArea(display, colormapPM, Tk_WindowId(tkwin), colormapGCXOR, 0, 0,
-	    width, height, dd[0], dd[1]);
-
-  // update panner
-  updatePanner();
-}
-
-void Frame::colormapEndCmd()
-{
-  if (colormapXM) {
-    XDestroyImage(colormapXM);
-    colormapXM = NULL;
-  }
-
-  if (colormapPM) {
-    Tk_FreePixmap(display, colormapPM);
-    colormapPM = 0;
-  }
-
-  if (colormapGCXOR) {
-    XFreeGC(display, colormapGCXOR);
-    colormapGCXOR = 0;
-  }
-
-  if (colormapData) {
-    delete [] colormapData;
-    colormapData = NULL;
-  }
-
-  update(BASE); // always update
-}
-
-#else
-
-void Frame::colormapBeginCmd() {}
-
-void Frame::colormapMotionCmd(int id, float b, float c, int i, int cnt)
-{
-  // we need a colorScale before we can render
-  if (!validColorScale()) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-  
-  // first check for change
-  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells) {
-    cellsptr_ =NULL;
-    cellsparentptr_ =NULL;
-    return;
-  }
-  
-  // we got a change
-  cmapID = id;
-  bias = b;
-  contrast = c;
-  invert = i;
-
-  updateColorCells(cnt);
-  updateColorScale();
-
-  update(BASE);
-  updatePanner();
-}
-
-void Frame::colormapEndCmd() {}
-
-#endif
-
 void Frame::getColorbarCmd()
 {
   ostringstream str;
   str << cmapID << ' ' << bias << ' ' << contrast << ' ' << invert << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
-}
-
-void Frame::getRGBChannelCmd()
-{
-  Tcl_AppendResult(interp, "red", NULL);
-}
-
-void Frame::getRGBViewCmd()
-{
-  Tcl_AppendResult(interp, "1 1 1", NULL);
-}
-
-void Frame::getRGBSystemCmd()
-{
-  Tcl_AppendResult(interp, "image", NULL);
 }
 
 void Frame::getTypeCmd()

@@ -1,0 +1,30 @@
+#tab hsvsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+axes	    {return $AXES_}
+bin	    {return $BIN_}
+block	    {return $BLOCK_}
+channel	    {return $CHANNEL_}
+colorbar    {return $COLORBAR_}
+crop	    {return $CROP_}
+hue	    {return $HUE_}
+lock	    {return $LOCK_}
+saturation  {return $SATURATION_}
+scale	    {return $SCALE_}
+scalelimits {return $SCALELIMITS_}
+slice	    {return $SLICE_}
+smooth	    {return $SMOOTH_}
+system	    {return $SYSTEM_}
+value	    {return $VALUE_}
+view	    {return $VIEW_}
+wcs	    {return $WCS_}
+
+#include ws.fin
+
+%%

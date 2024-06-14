@@ -14,6 +14,8 @@ proc CurrentDef {} {
     set current(ext) {}
     set current(cursor) {}
     set current(rgb) red
+    set current(hsv) hue
+    set current(hls) hue
 
     set current(display) single
     set current(mode) none
@@ -67,6 +69,119 @@ proc GetNumCores {} {
     return 1
 }
 
+proc EvalLockCurrent {var cmd} {
+    global current
+
+    EvalLock $var $current(frame) $cmd
+}
+
+proc EvalLock {var which cmd} {
+    global rgb
+    global hsv
+    global hls
+
+    switch [$which get type] {
+	base -
+	3d {eval $cmd}
+	rgb {
+	    if {$rgb($var)} {
+		set ch [$which get rgb channel]
+		foreach cc {red green blue} {
+		    $which rgb channel $cc
+		    eval $cmd
+		}
+		$which rgb channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+	hsv {
+	    if {$hsv($var)} {
+		set ch [$which get hsv channel]
+		foreach cc {hue saturation value} {
+		    $which hsv channel $cc
+		    eval $cmd
+		}
+		$which hsv channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+	hls {
+	    if {$hls($var)} {
+		set ch [$which get hls channel]
+		foreach cc {hue lightness saturation} {
+		    $which hls channel $cc
+		    eval $cmd
+		}
+		$which hls channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+    }
+}
+
+proc EvalLockColorbarCurrent {cmd} {
+    global current
+    
+    EvalLockColorbar $current(frame) $cmd
+}
+
+proc EvalLockColorbar {which cmd} {
+    global rgb
+    global hsv
+    global hls
+
+    set cb ${which}cb
+    switch [$which get type] {
+	base -
+	3d {eval $cmd}
+	rgb {
+	    if {$rgb(lock,colorbar)} {
+		set ch [$which get rgb channel]
+		foreach cc {red green blue} {
+		    $which rgb channel $cc
+		    $cb rgb channel $cc
+		    eval $cmd
+		}
+		$which rgb channel $ch
+		$cb rgb channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+	hsv {
+	    if {$hsv(lock,colorbar)} {
+		set ch [$which get hsv channel]
+		foreach cc {hue saturation value} {
+		    $which hsv channel $cc
+		    $cb hsv channel $cc
+		    eval $cmd
+		}
+		$which hsv channel $ch
+		$cb hsv channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+	hls {
+	    if {$hls(lock,colorbar)} {
+		set ch [$which get hls channel]
+		foreach cc {hue lightness value} {
+		    $which hls channel $cc
+		    $cb hls channel $cc
+		    eval $cmd
+		}
+		$which hls channel $ch
+		$cb hls channel $ch
+	    } else {
+		eval $cmd
+	    }
+	}
+    }
+}
+
 proc UpdateDS9 {} {
     global ds9
     global current
@@ -115,6 +230,8 @@ proc UpdateDS9 {} {
     UpdateCentroidDialog
     UpdateCubeDialog
     UpdateRGBDialog
+    UpdateHSVDialog
+    UpdateHLSDialog
     Update3DDialog
     UpdateContourDialog
     UpdateGridDialog

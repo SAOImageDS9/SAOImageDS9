@@ -1,0 +1,34 @@
+#tab hsvparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+axes	    {return $AXES_}
+bin	    {return $BIN_}
+block	    {return $BLOCK_}
+channel	    {return $CHANNEL_}
+close	    {return $CLOSE_}
+colorbar    {return $COLORBAR_}
+crop	    {return $CROP_}
+hue	    {return $HUE_}
+lock	    {return $LOCK_}
+open	    {return $OPEN_}
+saturation  {return $SATURATION_}
+scale	    {return $SCALE_}
+scalelimits {return $SCALELIMITS_}
+slice	    {return $SLICE_}
+smooth	    {return $SMOOTH_}
+system	    {return $SYSTEM_}
+value	    {return $VALUE_}
+view	    {return $VIEW_}
+
+#include wcssys.fin
+#include yesno.fin
+#include string.fin
+#include ws.fin
+
+%%

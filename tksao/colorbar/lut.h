@@ -52,7 +52,7 @@ protected:
   List<RGBColor> colors;
 
 public:
-  LUTColorMap(Colorbar* p);
+  LUTColorMap(ColorbarBase* p);
 
   ColorMapInfo* dup() {return new LUTColorMap(*this);}
   int load();

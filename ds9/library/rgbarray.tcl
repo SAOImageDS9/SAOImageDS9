@@ -1,4 +1,4 @@
-#  Copyright (C) 1999-2021
+#  Copyright (C) 1999-2024
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -10,7 +10,12 @@ proc ImportRGBArrayFile {fn} {
 
     switch -- [$current(frame) get type] {
 	base -
-	3d {return}
+	hls -
+	hsv -
+	3d {
+	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    return
+	}
 	rgb {}
     }
 
@@ -40,7 +45,12 @@ proc ImportRGBArrayAlloc {path fn} {
 
     switch -- [$current(frame) get type] {
 	base -
-	3d {return}
+	hls -
+	hsv -
+	3d {
+	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    return
+	}
 	rgb {}
     }
 
@@ -73,7 +83,12 @@ proc ImportRGBArraySocket {sock fn} {
 
     switch -- [$current(frame) get type] {
 	base -
-	3d {return}
+	hls -
+	hsv -
+	3d {
+	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
+	    return
+	}
 	rgb {}
     }
 
@@ -108,6 +123,17 @@ proc ExportRGBArrayFile {fn opt} {
 	return
     }
 
+    switch -- [$current(frame) get type] {
+	base -
+	hls -
+	hsv -
+	3d {
+	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    return
+	}
+	rgb {}
+    }
+
     $current(frame) save array rgb cube file "\{$fn\}" $opt
 }
 
@@ -119,6 +145,17 @@ proc ExportRGBArraySocket {sock opt} {
     }
     if {![$current(frame) has fits]} {
 	return
+    }
+
+    switch -- [$current(frame) get type] {
+	base -
+	hls -
+	hsv -
+	3d {
+	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    return
+	}
+	rgb {}
     }
 
     $current(frame) save array rgb cube socket $sock $opt

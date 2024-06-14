@@ -11,7 +11,6 @@ ColorScaleRGB::ColorScaleRGB(int s)
 {
   size_ = s;
   psColors_ = new unsigned char[s];
-
   memset(psColors_, '0', size_);
 }
 

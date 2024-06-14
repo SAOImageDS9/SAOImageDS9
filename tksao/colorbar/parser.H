@@ -63,39 +63,41 @@
      FILE_ = 279,
      HEIGHT_ = 280,
      HIDE_ = 281,
-     ID_ = 282,
-     INVERT_ = 283,
-     ITT_ = 284,
-     LEVEL_ = 285,
-     LIST_ = 286,
-     LOAD_ = 287,
-     MACOSX_ = 288,
-     MAP_ = 289,
-     MOTION_ = 290,
-     N_ = 291,
-     NAME_ = 292,
-     NO_ = 293,
-     OFF_ = 294,
-     ON_ = 295,
-     POSTSCRIPT_ = 296,
-     PRINT_ = 297,
-     QUERY_ = 298,
-     RESET_ = 299,
-     RESOLUTION_ = 300,
-     RGB_ = 301,
-     SAVE_ = 302,
-     SHOW_ = 303,
-     TAG_ = 304,
-     TRUE_ = 305,
-     TYPE_ = 306,
-     VALUE_ = 307,
-     VAR_ = 308,
-     VERSION_ = 309,
-     WIDTH_ = 310,
-     WIN32_ = 311,
-     WINDOW_ = 312,
-     Y_ = 313,
-     YES_ = 314
+     HSV_ = 282,
+     HLS_ = 283,
+     ID_ = 284,
+     INVERT_ = 285,
+     ITT_ = 286,
+     LEVEL_ = 287,
+     LIST_ = 288,
+     LOAD_ = 289,
+     MACOSX_ = 290,
+     MAP_ = 291,
+     MOTION_ = 292,
+     N_ = 293,
+     NAME_ = 294,
+     NO_ = 295,
+     OFF_ = 296,
+     ON_ = 297,
+     POSTSCRIPT_ = 298,
+     PRINT_ = 299,
+     QUERY_ = 300,
+     RESET_ = 301,
+     RESOLUTION_ = 302,
+     RGB_ = 303,
+     SAVE_ = 304,
+     SHOW_ = 305,
+     TAG_ = 306,
+     TRUE_ = 307,
+     TYPE_ = 308,
+     VALUE_ = 309,
+     VAR_ = 310,
+     VERSION_ = 311,
+     WIDTH_ = 312,
+     WIN32_ = 313,
+     WINDOW_ = 314,
+     Y_ = 315,
+     YES_ = 316
    };
 #endif
 /* Tokens.  */
@@ -123,39 +125,41 @@
 #define FILE_ 279
 #define HEIGHT_ 280
 #define HIDE_ 281
-#define ID_ 282
-#define INVERT_ 283
-#define ITT_ 284
-#define LEVEL_ 285
-#define LIST_ 286
-#define LOAD_ 287
-#define MACOSX_ 288
-#define MAP_ 289
-#define MOTION_ 290
-#define N_ 291
-#define NAME_ 292
-#define NO_ 293
-#define OFF_ 294
-#define ON_ 295
-#define POSTSCRIPT_ 296
-#define PRINT_ 297
-#define QUERY_ 298
-#define RESET_ 299
-#define RESOLUTION_ 300
-#define RGB_ 301
-#define SAVE_ 302
-#define SHOW_ 303
-#define TAG_ 304
-#define TRUE_ 305
-#define TYPE_ 306
-#define VALUE_ 307
-#define VAR_ 308
-#define VERSION_ 309
-#define WIDTH_ 310
-#define WIN32_ 311
-#define WINDOW_ 312
-#define Y_ 313
-#define YES_ 314
+#define HSV_ 282
+#define HLS_ 283
+#define ID_ 284
+#define INVERT_ 285
+#define ITT_ 286
+#define LEVEL_ 287
+#define LIST_ 288
+#define LOAD_ 289
+#define MACOSX_ 290
+#define MAP_ 291
+#define MOTION_ 292
+#define N_ 293
+#define NAME_ 294
+#define NO_ 295
+#define OFF_ 296
+#define ON_ 297
+#define POSTSCRIPT_ 298
+#define PRINT_ 299
+#define QUERY_ 300
+#define RESET_ 301
+#define RESOLUTION_ 302
+#define RGB_ 303
+#define SAVE_ 304
+#define SHOW_ 305
+#define TAG_ 306
+#define TRUE_ 307
+#define TYPE_ 308
+#define VALUE_ 309
+#define VAR_ 310
+#define VERSION_ 311
+#define WIDTH_ 312
+#define WIN32_ 313
+#define WINDOW_ 314
+#define Y_ 315
+#define YES_ 316
 
 
 
@@ -170,7 +174,7 @@ typedef union YYSTYPE
   char str[CBBUFSIZE];
 }
 /* Line 1529 of yacc.c.  */
-#line 174 "colorbar/parser.H"
+#line 178 "colorbar/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

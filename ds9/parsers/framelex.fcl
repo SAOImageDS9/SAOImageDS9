@@ -18,6 +18,8 @@ first	    {return $FIRST_}
 forward	    {return $FORWARD_}
 frameno	    {return $FRAMENO_}
 hide	    {return $HIDE_}
+hsv	    {return $HSV_}
+hls	    {return $HLS_}
 last	    {return $LAST_}
 lock	    {return $LOCK_}
 match	    {return $MATCH_}

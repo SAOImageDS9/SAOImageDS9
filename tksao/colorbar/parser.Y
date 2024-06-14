@@ -58,6 +58,8 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token FILE_
 %token HEIGHT_
 %token HIDE_
+%token HSV_
+%token HLS_
 %token ID_
 %token INVERT_
 %token ITT_
@@ -110,6 +112,9 @@ command : DEBUG_ debug
 	| QUERY_ CURSOR_ {cb->queryCursorCmd();}
 	| RESET_ {cb->resetCmd();}
 	| RGB_ CHANNEL_ STRING {cb->setRGBChannelCmd($3);}
+	| HSV_ CHANNEL_ STRING {cb->setHSVChannelCmd($3);}
+        | HSV_ CHANNEL_ VALUE_ {cb->setHSVChannelCmd("value");}
+	| HLS_ CHANNEL_ STRING {cb->setHLSChannelCmd($3);}
 	| TAG_ tag
 	| SAVE_ save
 	| SHOW_ {cb->showCmd();}
@@ -141,6 +146,10 @@ yesno	: INT {$$=($1 ? 1 : 0);}
 colorbar: INT numeric numeric INT {cb->setColorbarCmd($1, $2, $3, $4);}
 	| RGB_ numeric numeric numeric numeric numeric numeric INT
 	  {cb->setColorbarCmd($2, $3, $4, $5, $6, $7, $8);}
+	| HSV_ numeric numeric numeric numeric numeric numeric INT
+	  {cb->setColorbarCmd($2, $3, $4, $5, $6, $7, $8);}
+	| HLS_ numeric numeric numeric numeric numeric numeric INT
+	  {cb->setColorbarCmd($2, $3, $4, $5, $6, $7, $8);}
 	;
 
 colormap: LEVEL_ colormaplevel
@@ -165,6 +174,8 @@ get	: /* empty */ {cb->getCmd();}
 	| NAME_ {cb->getCurrentNameCmd();}
 	| NAME_ INT {cb->getColormapNameCmd($2);}
 	| RGB_ CHANNEL_ {cb->getRGBChannelCmd();}
+	| HSV_ CHANNEL_ {cb->getHSVChannelCmd();}
+	| HLS_ CHANNEL_ {cb->getHLSChannelCmd();}
 	| VALUE_ INT INT {cb->getValueCmd($2,$3);}
 	| TAG_ getTag
 	| TYPE_ {cb->getTypeCmd();}
@@ -204,11 +215,13 @@ macosx	: PRINT_ {
 	}
 	;
 
-map	: 'a' {cb->mapCmd("a");}
-        | 'b' {cb->mapCmd("b");}
-        | RGB_ {cb->mapCmd("rgb");}
+map     : 'a' {cb->mapCmd('a');}
+        | 'b' {cb->mapCmd('b');}
         | STRING {cb->mapCmd($1);}
 	| INT {cb->mapCmd($1);}
+        | RGB_ {cb->mapCmd("rgb");}
+        | HSV_ {cb->mapCmd("hsv");}
+        | HLS_ {cb->mapCmd("hls");}
 	;
 
 postscript : COLORSPACE_ pscolorspace 

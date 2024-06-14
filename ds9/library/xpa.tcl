@@ -254,6 +254,46 @@ proc CreateXPA {} {
 	XPASendHeight {} {} \
 	XPARcvdHeight {} "fillbuf=false"
 
+    xpacmdadd $xpa hls \
+	{} \
+	XPASendHLS {} {} \
+	XPARcvdHLS {} "fillbuf=false"
+
+    xpacmdadd $xpa hlsarray \
+	{} \
+	XPASendHLSArray {} {} \
+	XPARcvdHLSArray {} "fillbuf=false"
+
+    xpacmdadd $xpa hlscube \
+	{} \
+	XPASendHLSCube {} {} \
+	XPARcvdHLSCube {} "fillbuf=false"
+
+    xpacmdadd $xpa hlsimage \
+	{} \
+	XPASendHLSImage {} {} \
+	XPARcvdHLSImage {} "fillbuf=false"
+
+    xpacmdadd $xpa hsv \
+	{} \
+	XPASendHSV {} {} \
+	XPARcvdHSV {} "fillbuf=false"
+
+    xpacmdadd $xpa hsvarray \
+	{} \
+	XPASendHSVArray {} {} \
+	XPARcvdHSVArray {} "fillbuf=false"
+
+    xpacmdadd $xpa hsvcube \
+	{} \
+	XPASendHSVCube {} {} \
+	XPARcvdHSVCube {} "fillbuf=false"
+
+    xpacmdadd $xpa hsvimage \
+	{} \
+	XPASendHSVImage {} {} \
+	XPARcvdHSVImage {} "fillbuf=false"
+
     xpacmdadd $xpa iconify \
 	{} \
 	XPASendIconify {} {} \
@@ -1194,6 +1234,110 @@ proc XPARcvdHeight {xpa cdata param buf len} {
     XPACatchError $xpa
 }
 
+proc XPASendHLS {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHLSCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHLS {xpa cdata param buf len} {
+    XPADebug "XPARcvdHLS" $param
+    InitError xpa
+    catch {set i 0; ProcessHLSCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendHLSArray {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHLSArrayCmd {} {} $param [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHLSArray {xpa cdata param buf len} {
+    XPADebug "XPARcvdHLSArray" $param
+    InitError xpa
+    catch {set i 0; ProcessHLSArrayCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPASendHLSImage {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHLSImageCmd {} {} $param [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHLSImage {xpa cdata param buf len} {
+    XPADebug "XPARcvdHLSImage" $param
+    InitError xpa
+    catch {set i 0; ProcessHLSImageCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPASendHLSCube {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHLSCubeCmd {} {} $param [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHLSCube {xpa cdata param buf len} {
+    XPADebug "XPARcvdHLSCube" $param
+    InitError xpa
+    catch {set i 0; ProcessHLSCubeCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPASendHSV {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHSVCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHSV {xpa cdata param buf len} {
+    XPADebug "XPARcvdHSV" $param
+    InitError xpa
+    catch {set i 0; ProcessHSVCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendHSVArray {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHSVArrayCmd {} {} $param [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHSVArray {xpa cdata param buf len} {
+    XPADebug "XPARcvdHSVArray" $param
+    InitError xpa
+    catch {set i 0; ProcessHSVArrayCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPASendHSVImage {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHSVImageCmd {} {} $param [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHSVImage {xpa cdata param buf len} {
+    XPADebug "XPARcvdHSVImage" $param
+    InitError xpa
+    catch {set i 0; ProcessHSVImageCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPASendHSVCube {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHSVCubeCmd {} {} $param [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHSVCube {xpa cdata param buf len} {
+    XPADebug "XPARcvdHSVCube" $param
+    InitError xpa
+    catch {set i 0; ProcessHSVCubeCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
 proc XPASendIconify {xpa cdata param} {
     InitError xpa
     catch {ProcessSendIconifyCmd xpasetbuf $xpa $param}
@@ -1783,19 +1927,6 @@ proc XPARcvdRGBArray {xpa cdata param buf len} {
     XPACatchError $xpa
 }
 
-proc XPASendRGBCube {xpa cdata param} {
-    InitError xpa
-    catch {ProcessSendRGBCubeCmd {} {} $param [xparec $xpa datafd] {}}
-    XPACatchError $xpa
-}
-
-proc XPARcvdRGBCube {xpa cdata param buf len} {
-    XPADebug "XPARcvdRGBCube" $param
-    InitError xpa
-    catch {set i 0; ProcessRGBCubeCmd param i [xparec $xpa datafd] {}}
-    XPACatchError $xpa
-}
-
 proc XPASendRGBImage {xpa cdata param} {
     InitError xpa
     catch {ProcessSendRGBImageCmd {} {} $param [xparec $xpa datafd] {}}
@@ -1806,6 +1937,19 @@ proc XPARcvdRGBImage {xpa cdata param buf len} {
     XPADebug "XPARcvdRGBImage" $param
     InitError xpa
     catch {set i 0; ProcessRGBImageCmd param i [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPASendRGBCube {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendRGBCubeCmd {} {} $param [xparec $xpa datafd] {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdRGBCube {xpa cdata param buf len} {
+    XPADebug "XPARcvdRGBCube" $param
+    InitError xpa
+    catch {set i 0; ProcessRGBCubeCmd param i [xparec $xpa datafd] {}}
     XPACatchError $xpa
 }
 

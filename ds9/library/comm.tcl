@@ -69,6 +69,17 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    grid {ProcessGridCmd param i}
 	    header {ProcessHeaderCmd param i}
 	    height {ProcessHeightCmd param i}
+
+	    hls {ProcessHLSCmd param i}
+	    hlsarray {ProcessHLSArrayCmd param i {} $fn}
+	    hlscube {ProcessHLSCubeCmd param i {} $fn}
+	    hlsimage {ProcessHLSImageCmd param i {} $fn}
+
+	    hsv {ProcessHSVCmd param i}
+	    hsvarray {ProcessHSVArrayCmd param i {} $fn}
+	    hsvcube {ProcessHSVCubeCmd param i {} $fn}
+	    hsvimage {ProcessHSVImageCmd param i {} $fn}
+
 	    iconify {ProcessIconifyCmd param i}
 	    iexam -
 	    imexam {}
@@ -148,10 +159,12 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    restore {ProcessRestoreCmd param i}
 	    region -
 	    regions {ProcessRegionsCmd param i {} $fn}
+
 	    rgb {ProcessRGBCmd param i}
 	    rgbarray {ProcessRGBArrayCmd param i {} $fn}
 	    rgbcube {ProcessRGBCubeCmd param i {} $fn}
 	    rgbimage {ProcessRGBImageCmd param i {} $fn}
+
 	    rotate {ProcessRotateCmd param i}
 	    samp {ProcessSAMPCmd param i}
 	    save -
@@ -303,6 +316,35 @@ proc CommGet {proc id paramlist fn} {
 	    grid {ProcessSendGridCmd $proc $id $param}
 	    header {ProcessSendNullCmd $proc $id $cmd}
 	    height {ProcessSendHeightCmd $proc $id $param}
+
+	    hls {ProcessSendHLSCmd $proc $id $param}
+	    hlsarray {
+		ProcessSendHLSArrayCmd $proc $id $param {} $fn.fits
+		return $fn.fits
+	    }
+	    hlscube {
+		ProcessSendHLSCubeCmd $proc $id $param {} $fn.fits
+		return $fn.fits
+	    }
+	    hlsimage {
+		ProcessSendHLSImageCmd $proc $id $param {} $fn.fits
+		return $fn.fits
+	    }
+
+	    hsv {ProcessSendHSVCmd $proc $id $param}
+	    hsvarray {
+		ProcessSendHSVArrayCmd $proc $id $param {} $fn.fits
+		return $fn.fits
+	    }
+	    hsvcube {
+		ProcessSendHSVCubeCmd $proc $id $param {} $fn.fits
+		return $fn.fits
+	    }
+	    hsvimage {
+		ProcessSendHSVImageCmd $proc $id $param {} $fn.fits
+		return $fn.fits
+	    }
+
 	    iconify {ProcessSendIconifyCmd $proc $id $param}
 	    iexam -
 	    imexam {ProcessSendIExamCmd $proc $id $param}
@@ -398,6 +440,7 @@ proc CommGet {proc id paramlist fn} {
 		ProcessSendRegionsCmd $proc $id $param {} $fn.reg
 		return $fn.reg
 	    }
+
 	    rgb {ProcessSendRGBCmd $proc $id $param}
 	    rgbarray {
 		ProcessSendRGBArrayCmd $proc $id $param {} $fn.fits
@@ -411,6 +454,7 @@ proc CommGet {proc id paramlist fn} {
 		ProcessSendRGBImageCmd $proc $id $param {} $fn.fits
 		return $fn.fits
 	    }
+
 	    rotate {ProcessSendRotateCmd $proc $id $param}
 	    samp {ProcessSendSAMPCmd $proc $id $param}
 	    save -

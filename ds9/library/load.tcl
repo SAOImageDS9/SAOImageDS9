@@ -25,7 +25,9 @@ proc MultiLoad {{layer {}} {mode {}}} {
 		}
 		CreateFrame
 	    }
-	    rgb {CreateFrame}
+	    rgb -
+	    hsv -
+	    hls {CreateFrame}
 	}
     } else {
 	CreateFrame
@@ -40,6 +42,7 @@ proc MultiLoad {{layer {}} {mode {}}} {
     }
 }
 
+# only used by rgb frame
 proc MultiLoadRGB {} {
     global ds9
     global current
@@ -52,6 +55,8 @@ proc MultiLoadRGB {} {
     if {$current(frame) != {}} {
 	switch -- [$current(frame) get type] {
 	    base -
+	    hsv -
+	    hls -
 	    3d {CreateRGBFrame}
 	    rgb {
 		if {![$current(frame) has fits]} {
@@ -62,6 +67,78 @@ proc MultiLoadRGB {} {
 	}
     } else {
 	CreateRGBFrame
+	return
+    }
+
+    # go into tile mode if more than one
+    set cnt [llength $ds9(frames)]
+    if {$cnt > 1 && $current(display) != "tile"} {
+	set current(display) tile
+	DisplayMode
+    }
+}
+
+# only used by hls frame
+proc MultiLoadHLS {} {
+    global ds9
+    global current
+
+    global debug
+    if {$debug(tcl,layout)} {
+	puts stderr "MultiLoadHLS"
+    }
+
+    if {$current(frame) != {}} {
+	switch -- [$current(frame) get type] {
+	    base -
+	    rgb -
+	    hsv -
+	    3d {CreateHLSFrame}
+	    hls {
+		if {![$current(frame) has fits]} {
+		    return
+		}
+		CreateHLSFrame
+	    }
+	}
+    } else {
+	CreateHLSFrame
+	return
+    }
+
+    # go into tile mode if more than one
+    set cnt [llength $ds9(frames)]
+    if {$cnt > 1 && $current(display) != "tile"} {
+	set current(display) tile
+	DisplayMode
+    }
+}
+
+# only used by hsv frame
+proc MultiLoadHSV {} {
+    global ds9
+    global current
+
+    global debug
+    if {$debug(tcl,layout)} {
+	puts stderr "MultiLoadHSV"
+    }
+
+    if {$current(frame) != {}} {
+	switch -- [$current(frame) get type] {
+	    base -
+	    rgb -
+	    hls -
+	    3d {CreateHSVFrame}
+	    hsv {
+		if {![$current(frame) has fits]} {
+		    return
+		}
+		CreateHSVFrame
+	    }
+	}
+    } else {
+	CreateHSVFrame
 	return
     }
 
@@ -199,8 +276,7 @@ proc ProcessLoad {{err 1}} {
 
     # save loadParam
     switch -- [$current(frame) get type] {
-	base -
-	3d {ProcessLoadSaveParams $current(frame)}
+	base {ProcessLoadSaveParams $current(frame)}
 	rgb {
 	    switch -- $loadParam(file,mode) {
 		{rgb image} -
@@ -211,6 +287,27 @@ proc ProcessLoad {{err 1}} {
 		}
 	    }
 	}
+	hlv {
+	    switch -- $loadParam(file,mode) {
+		{hls image} -
+		{hls cube} {ProcessLoadSaveParams $current(frame)}
+		default {
+		    ProcessLoadSaveParams \
+			"$current(frame)[$current(frame) get hls channel]"
+		}
+	    }
+	}
+	hsv {
+	    switch -- $loadParam(file,mode) {
+		{hsv image} -
+		{hsv cube} {ProcessLoadSaveParams $current(frame)}
+		default {
+		    ProcessLoadSaveParams \
+			"$current(frame)[$current(frame) get hsv channel]"
+		}
+	    }
+	}
+	3d {ProcessLoadSaveParams $current(frame)}
     }
 
     unset loadParam

@@ -8,7 +8,7 @@
 #include "colormap.h"
 #include "list.h"
 
-class Colorbar;
+class ColorbarBase;
 
 // LIColor
 class LIColor {
@@ -60,7 +60,7 @@ protected:
   unsigned short getColorShrt(int, int, List<LIColor>*);
 
 public:
-  SAOColorMap(Colorbar* p);
+  SAOColorMap(ColorbarBase* p);
 
   ColorMapInfo* dup() {return new SAOColorMap(*this);}
   int load();

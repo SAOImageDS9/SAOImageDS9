@@ -32,7 +32,7 @@ proc CropReset {} {
 
 proc CropButton {which x y} {
     global rgb
-    RGBEvalLock rgb(lock,crop) $which [list $which crop begin $x $y]
+    EvalLock lock,crop $which [list $which crop begin $x $y]
 }
 
 proc CropMotion {which x y} {
@@ -42,7 +42,7 @@ proc CropMotion {which x y} {
 proc CropRelease {which x y} {
     global rgb
 
-    RGBEvalLock rgb(lock,crop) $which [list $which crop end $x $y]
+    EvalLock lock,crop $which [list $which crop end $x $y]
     UpdateCrop $which
 }
 
@@ -301,9 +301,9 @@ proc MatchCrop {which sys} {
 
 		foreach ff $ds9(frames) {
 		    if {$ff != $which} {
-			RGBEvalLock rgb(lock,crop) $ff [list $ff datasec $datasec]
-			RGBEvalLock rgb(lock,crop) $ff [list $ff crop center $r(x) $r(y) $sys fk5 $r(w) $r(h) $sys degrees]
-			RGBEvalLock rgb(lock,crop) $ff [list $ff crop 3d $qq image]
+			EvalLock lock,crop $ff [list $ff datasec $datasec]
+			EvalLock lock,crop $ff [list $ff crop center $r(x) $r(y) $sys fk5 $r(w) $r(h) $sys degrees]
+			EvalLock lock,crop $ff [list $ff crop 3d $qq image]
 		    }
 		}
 	    }
@@ -320,8 +320,8 @@ proc MatchCrop {which sys} {
 		    foreach ff $ds9(frames) {
 			if {$ff != $which} {
 			    if {[$ff has wcs $ss]} {
-				RGBEvalLock rgb(lock,crop) $ff [list $ff crop center $r(x) $r(y) $ss fk5 $r(w) $r(h) $ss degrees]
-				RGBEvalLock rgb(lock,crop) $ff [list $ff crop 3d $qq $ss]
+				EvalLock lock,crop $ff [list $ff crop center $r(x) $r(y) $ss fk5 $r(w) $r(h) $ss degrees]
+				EvalLock lock,crop $ff [list $ff crop 3d $qq $ss]
 			    }
 			}
 		    }
@@ -331,8 +331,8 @@ proc MatchCrop {which sys} {
     } else {
 	foreach ff $ds9(frames) {
 	    if {$ff != $which} {
-		RGBEvalLock rgb(lock,crop) $ff [list $ff crop]
-		RGBEvalLock rgb(lock,crop) $ff [list $ff crop 3d]
+		EvalLock lock,crop $ff [list $ff crop]
+		EvalLock lock,crop $ff [list $ff crop 3d]
 	    }
 	}
     }
@@ -360,6 +360,8 @@ proc CropBackup {ch which} {
 	base -
 	3d {CropBackupBase $ch $which}
 	rgb {CropBackupRGB $ch $which}
+	hsv {CropBackupHSV $ch $which}
+	hls {CropBackupHLS $ch $which}
     }
 }
 
@@ -386,6 +388,28 @@ proc CropBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc CropBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	CropBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc CropBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	CropBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 # Process Cmds

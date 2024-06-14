@@ -7,7 +7,30 @@
 #include <limits.h>
 #include <float.h>
 
+#include "ps.h"
 #include "psutil.h"
+
+void psPixel(PSColorSpace psColorSpace, ostream& str, Filter& filter,
+	     unsigned char red, unsigned char green, unsigned char blue)
+{
+  switch (psColorSpace) {
+  case BW:
+  case GRAY:
+    filter << RGB2Gray(red, green, blue);
+    break;
+  case RGB:
+    filter << red << green << blue;
+    break;
+  case CMYK:
+    {
+      unsigned char cyan, magenta, yellow, black;
+      RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
+      filter << cyan << magenta << yellow << black;
+    }
+    break;
+  }
+  str << filter;
+}
 
 double RGB2Gray(double red, double green, double blue)
 {

@@ -19,6 +19,8 @@
 %token FORWARD_
 %token FRAMENO_
 %token HIDE_
+%token HSV_
+%token HLS_
 %token LAST_
 %token LOCK_
 %token MATCH_
@@ -77,6 +79,8 @@ delete : {DeleteCurrentFrame}
  
 new : {CreateFrame}
  | RGB_ {CreateRGBFrame}
+ | HSV_ {CreateHSVFrame}
+ | HLS_ {CreateHLSFrame}
  | 3D_ {Create3DFrame}
  ;
  

@@ -12,92 +12,97 @@ class Colorbar;
 
 class GreyColorMap : public SAOColorMap {
 public:
-  GreyColorMap(Colorbar*);
+  GreyColorMap(ColorbarBase*);
 };
 
 class RedColorMap : public SAOColorMap {
 public:
-  RedColorMap(Colorbar*);
+  RedColorMap(ColorbarBase*);
 };
 
 class GreenColorMap : public SAOColorMap {
 public:
-  GreenColorMap(Colorbar*);
+  GreenColorMap(ColorbarBase*);
 };
 
 class BlueColorMap : public SAOColorMap {
 public:
-  BlueColorMap(Colorbar*);
+  BlueColorMap(ColorbarBase*);
 };
 
 class AColorMap : public SAOColorMap {
 public:
-  AColorMap(Colorbar*);
+  AColorMap(ColorbarBase*);
 };
 
 class BColorMap : public SAOColorMap {
 public:
-  BColorMap(Colorbar*);
+  BColorMap(ColorbarBase*);
 };
 
 class BBColorMap : public SAOColorMap {
 public:
-  BBColorMap(Colorbar*);
+  BBColorMap(ColorbarBase*);
 };
 
 class HEColorMap : public SAOColorMap {
 public:
-  HEColorMap(Colorbar*);
+  HEColorMap(ColorbarBase*);
 };
 
 class I8ColorMap : public LUTColorMap {
 public:
-  I8ColorMap(Colorbar*);
+  I8ColorMap(ColorbarBase*);
 };
 
 class AIPSColorMap : public LUTColorMap {
 public:
-  AIPSColorMap(Colorbar*);
+  AIPSColorMap(ColorbarBase*);
 };
 
 class HeatColorMap : public SAOColorMap {
 public:
-  HeatColorMap(Colorbar*);
+  HeatColorMap(ColorbarBase*);
 };
 
 class CoolColorMap : public SAOColorMap {
 public:
-  CoolColorMap(Colorbar*);
+  CoolColorMap(ColorbarBase*);
 };
 
 class RainbowColorMap : public SAOColorMap {
 public:
-  RainbowColorMap(Colorbar*);
+  RainbowColorMap(ColorbarBase*);
 };
 
 class StandardColorMap : public SAOColorMap {
 public:
-  StandardColorMap(Colorbar*);
+  StandardColorMap(ColorbarBase*);
 };
 
 class StaircaseColorMap : public LUTColorMap {
 public:
-  StaircaseColorMap(Colorbar*);
+  StaircaseColorMap(ColorbarBase*);
 };
 
 class ColorColorMap : public LUTColorMap {
 public:
-  ColorColorMap(Colorbar*);
+  ColorColorMap(ColorbarBase*);
 };
 
 class SLSColorMap : public LUTColorMap {
 public:
-  SLSColorMap(Colorbar*);
+  SLSColorMap(ColorbarBase*);
 };
 
 class HSVColorMap : public LUTColorMap {
 public:
-  HSVColorMap(Colorbar*);
+  HSVColorMap(ColorbarBase*);
+};
+
+class HSVHLSColorMap : public SAOColorMap {
+public:
+  HSVHLSColorMap(ColorbarBase*);
 };
 
 #endif

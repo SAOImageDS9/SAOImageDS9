@@ -138,8 +138,7 @@ ColorbarTrueColor16::ColorbarTrueColor16(Tcl_Interp* i, Tk_Canvas c,
   : Colorbar(i,c,item), TrueColor16(visual)
 {
   configSpecs = colorbarTrueColor16Specs;  // colorbar configure options
-
-  loadDefaultCMaps();
+  loadDefaultCmaps();
 }
 
 void ColorbarTrueColor16::updateColorsHorz()
@@ -148,37 +147,25 @@ void ColorbarTrueColor16::updateColorsHorz()
   int height = ((ColorbarBaseOptions*)options)->size-2;
   char* data = xmap->data;
     
-  // if we have cross platforms, we need to byte swap
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    for (int ii=0; ii<width; ii++) {
-      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*3+2];
-      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
-      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*3];
-      unsigned short a = 0;
-      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
-      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+  for (int ii=0; ii<width; ii++) {
+    unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*3+2];
+    unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
+    unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*3];
+    unsigned short a = 0;
+    a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+    a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+    a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
 
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       memcpy(data+ii*2, &a, 2);
     }
-  }
-  else {
-    for (int ii=0; ii<width; ii++) {
-      unsigned short r = colorCells[((int)(double(ii)/width*colorCount))*3+2];
-      unsigned short g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
-      unsigned short b = colorCells[((int)(double(ii)/width*colorCount))*3];
-      unsigned short a = 0;
-      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
-      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
-
+    else {
       unsigned char* rr = (unsigned char*)(&a);
       *(data+ii*2) = *(rr+1);
       *(data+ii*2+1) = *(rr);
     }
   }
 
-  // --and duplicate for remaining rows
   for (int jj=1; jj<height; jj++)
     memcpy(data+(jj*xmap->bytes_per_line), data, xmap->bytes_per_line);
 }
@@ -189,31 +176,20 @@ void ColorbarTrueColor16::updateColorsVert()
   int height = options->height-2;
   char* data = xmap->data;
     
-  // if we have cross platforms, we need to byte swap
-  if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
-    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-      unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*3+2];
-      unsigned short g = colorCells[((int)(double(jj)/height*colorCount))*3+1];
-      unsigned short b = colorCells[((int)(double(jj)/height*colorCount))*3];
-      unsigned short a = 0;
-      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
-      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
+  for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
+    unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*3+2];
+    unsigned short g = colorCells[((int)(double(jj)/height*colorCount))*3+1];
+    unsigned short b = colorCells[((int)(double(jj)/height*colorCount))*3];
+    unsigned short a = 0;
+    a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
+    a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
+    a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
 
+    if ((!xmap->byte_order && lsb()) || (xmap->byte_order && !lsb())) {
       for (int ii=0; ii<width; ii++)
 	memcpy(data+ii*2, &a, 2);
     }
-  }
-  else {
-    for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-      unsigned short r = colorCells[((int)(double(jj)/height*colorCount))*3+2];
-      unsigned short g = colorCells[((int)(double(jj)/height*colorCount))*3+1];
-      unsigned short b = colorCells[((int)(double(jj)/height*colorCount))*3];
-      unsigned short a = 0;
-      a |= rs_>0 ? ((r & rm_) << rs_) : ((r & rm_) >> -rs_);
-      a |= gs_>0 ? ((g & gm_) << gs_) : ((g & gm_) >> -gs_);
-      a |= bs_>0 ? ((b & bm_) << bs_) : ((b & bm_) >> -bs_);
-
+    else {
       unsigned char* rr = (unsigned char*)(&a);
       for (int ii=0; ii<width; ii++) {
 	*(data+ii*2) = *(rr+1);

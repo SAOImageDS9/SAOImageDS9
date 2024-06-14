@@ -7,7 +7,6 @@
 
 %%
 
-mask	    {return $MASK_}
 new	    {return $NEW_}
 
 #include string.fin

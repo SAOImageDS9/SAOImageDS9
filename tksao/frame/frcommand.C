@@ -63,61 +63,6 @@ void FrameBase::blockToFitCmd()
   }
 }
 
-void FrameBase::get3dBorderCmd()
-{
-  Tcl_AppendResult(interp, "1", NULL);
-}
-
-void FrameBase::get3dBorderColorCmd()
-{
-  Tcl_AppendResult(interp, "blue", NULL);
-}
-
-void FrameBase::get3dCompassCmd()
-{
-  Tcl_AppendResult(interp, "1", NULL);
-}
-
-void FrameBase::get3dCompassColorCmd()
-{
-  Tcl_AppendResult(interp, "green", NULL);
-}
-
-void FrameBase::get3dHighliteCmd()
-{
-  Tcl_AppendResult(interp, "1", NULL);
-}
-
-void FrameBase::get3dHighliteColorCmd()
-{
-  Tcl_AppendResult(interp, "cyan", NULL);
-}
-
-void FrameBase::get3dRenderMethodCmd()
-{
-  Tcl_AppendResult(interp, "mip", NULL);
-}
-
-void FrameBase::get3dScaleCmd()
-{
-  Tcl_AppendResult(interp, "1", NULL);
-}
-
-void FrameBase::get3dViewCmd()
-{
-  Tcl_AppendResult(interp, "0 0", NULL);
-}
-
-void FrameBase::get3dViewPointCmd()
-{
-  Tcl_AppendResult(interp, "0 0 0 0 0", NULL);
-}
-
-void FrameBase::get3dRenderBackgroundCmd()
-{
-  Tcl_AppendResult(interp, "none", NULL);
-}
-
 void FrameBase::getCursorCmd(Coord::InternalSystem sys)
 {
   ostringstream str;

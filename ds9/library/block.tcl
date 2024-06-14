@@ -23,7 +23,7 @@ proc BlockToFit {} {
     global current
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block to fit]
+	EvalLockCurrent lock,block [list $current(frame) block to fit]
 	set block(factor) [$current(frame) get block factor]
 	UpdateBlock
     }
@@ -34,7 +34,7 @@ proc ChangeBlock {} {
     global current
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block to $block(factor)]
+	EvalLockCurrent lock,block [list $current(frame) block to $block(factor)]
 	UpdateBlock
     }
 }
@@ -44,7 +44,7 @@ proc Block {bx by} {
     global current
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block $bx $by]
+	EvalLockCurrent lock,block [list $current(frame) block $bx $by]
 	set block(factor) [$current(frame) get block factor]
 	UpdateBlock
     }
@@ -158,7 +158,7 @@ proc BlockApplyDialog {} {
 
     if {$current(frame) != {}} {
 	set block(factor) "$dblock(x) $dblock(y)"
-	RGBEvalLockCurrent rgb(lock,block) [list $current(frame) block to $block(factor)]
+	EvalLockCurrent lock,block [list $current(frame) block to $block(factor)]
 
 	LockFrameCurrent
 	UpdateGraphAxes $current(frame)
@@ -232,7 +232,7 @@ proc MatchBlock {which} {
     set factor [$which get block factor]
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,block) $ff [list $ff block to $factor]
+	    EvalLock lock,block $ff [list $ff block to $factor]
 	}
     }
 }
@@ -258,6 +258,8 @@ proc BlockBackup {ch which} {
 	base -
 	3d {BlockBackupBase $ch $which}
 	rgb {BlockBackupRGB $ch $which}
+	hsv {BlockBackupHSV $ch $which}
+	hls {BlockBackupHLS $ch $which}
     }
 }
 
@@ -275,6 +277,28 @@ proc BlockBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc BlockBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	BlockBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc BlockBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	BlockBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 proc ProcessBlockCmd {varname iname} {

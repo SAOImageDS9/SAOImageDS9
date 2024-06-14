@@ -1,4 +1,4 @@
-#  Copyright (C) 1999-2021
+#  Copyright (C) 1999-2024
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -10,6 +10,8 @@ proc LoadRGBImageFile {fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
 	    return
@@ -35,6 +37,8 @@ proc LoadRGBImageAlloc {path fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
 	    return
@@ -60,6 +64,8 @@ proc LoadRGBImageSocket {sock fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
 	    return
@@ -94,6 +100,8 @@ proc SaveRGBImageFile {fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
 	    return
@@ -116,6 +124,8 @@ proc SaveRGBImageSocket {sock} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
 	    return

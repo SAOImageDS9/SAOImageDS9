@@ -1,9 +1,8 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "frametruecolor16.h"
-#include "colorscaletrue16.h"
 
 // Tk Canvas Widget Function Declarations
 
@@ -112,63 +111,4 @@ FrameTrueColor16::~FrameTrueColor16()
 {
   // we must do this at this level, because updateColorScale is called
   unloadAllFits();
-}
-
-void FrameTrueColor16::updateColorScale()
-{
-  // we need colors before we can construct a scale
-
-  if (!colorCells)
-    return;
-
-  if (colorScale)
-    delete colorScale;
-
-  switch (context->colorScaleType()) {
-  case FrScale::LINEARSCALE:
-    colorScale =
-      new LinearScaleTrueColor16(colorCount, colorCells, colorCount,
-				 visual, byteorder_);
-    break;
-  case FrScale::LOGSCALE:
-    colorScale =
-      new LogScaleTrueColor16(SCALESIZE, colorCells, colorCount,
-			      context->expo(), visual, byteorder_);
-    break;
-  case FrScale::POWSCALE:
-    colorScale =
-      new PowScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-			      context->expo(), visual, byteorder_);
-    break;
-  case FrScale::SQRTSCALE:
-    colorScale = 
-      new SqrtScaleTrueColor16(SCALESIZE, colorCells, colorCount,
-			       visual, byteorder_);
-    break;
-  case FrScale::SQUAREDSCALE:
-    colorScale =
-      new SquaredScaleTrueColor16(SCALESIZE, colorCells, colorCount,
-				  visual, byteorder_);
-    break;
-  case FrScale::ASINHSCALE:
-    colorScale =
-      new AsinhScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-				visual, byteorder_);
-    break;
-  case FrScale::SINHSCALE:
-    colorScale =
-      new SinhScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-			       visual, byteorder_);
-    break;
-  case FrScale::HISTEQUSCALE:
-    colorScale =
-      new HistEquScaleTrueColor16(SCALESIZE, colorCells, colorCount, 
-				  context->histequ(), HISTEQUSIZE, 
-				  visual, byteorder_);
-    break;
-  case FrScale::IISSCALE:
-    colorScale =
-      new IISScaleTrueColor16(colorCells, colorCount, visual, byteorder_);
-    break;
-  }
 }

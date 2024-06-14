@@ -61,7 +61,7 @@ proc ChangeDATASEC {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) datasec $scale(datasec)]
+	EvalLockCurrent lock,scale [list $current(frame) datasec $scale(datasec)]
 	UpdateScale
     }
 }
@@ -76,8 +76,8 @@ proc ChangeScale {} {
 	    return {}
 	}
 
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) colorscale log $scale(log)]
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) colorscale $scale(type)]
+	EvalLockCurrent lock,scale [list $current(frame) colorscale log $scale(log)]
+	EvalLockCurrent lock,scale [list $current(frame) colorscale $scale(type)]
 	UpdateScale
     }
 }
@@ -92,7 +92,7 @@ proc ChangeScaleMode {} {
 	    return {}
 	}
 
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip mode $scale(mode)]
+	EvalLockCurrent lock,scale [list $current(frame) clip mode $scale(mode)]
 	UpdateScale
     }
 }
@@ -121,8 +121,8 @@ proc ChangeScaleLimit {} {
 	}
 
 	set scale(mode) user
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip user $scale(min) $scale(max)]
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip mode $scale(mode)]
+	EvalLockCurrent lock,scale [list $current(frame) clip user $scale(min) $scale(max)]
+	EvalLockCurrent lock,scale [list $current(frame) clip mode $scale(mode)]
 	UpdateScale
     }
 }
@@ -137,7 +137,7 @@ proc ChangeScaleScope {} {
 	    return {}
 	}
 
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip scope $scale(scope)]
+	EvalLockCurrent lock,scale [list $current(frame) clip scope $scale(scope)]
 	UpdateScale
     }
 }
@@ -148,7 +148,7 @@ proc ChangeMinMax {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,scale) \
+	EvalLockCurrent lock,scale \
 	    [list $current(frame) clip minmax $minmax(sample) $minmax(mode)]
 	UpdateScale
     }
@@ -160,7 +160,7 @@ proc RescanMinMax {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip minmax rescan]
+	EvalLockCurrent lock,scale [list $current(frame) clip minmax rescan]
 	UpdateScale
     }
 }
@@ -171,7 +171,7 @@ proc ChangeZScale {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip zscale $zscale(contrast) $zscale(sample) $zscale(line)]
+	EvalLockCurrent lock,scale [list $current(frame) clip zscale $zscale(contrast) $zscale(sample) $zscale(line)]
 	UpdateScale
     }
 }
@@ -453,8 +453,8 @@ proc ScaleApplyDialog {} {
 	set scale(max) $dscale(max)
 
 	set scale(mode) user
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip user $scale(min) $scale(max)]
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip mode $scale(mode)]
+	EvalLockCurrent lock,scale [list $current(frame) clip user $scale(min) $scale(max)]
+	EvalLockCurrent lock,scale [list $current(frame) clip mode $scale(mode)]
 	UpdateScale
     }
 }
@@ -507,8 +507,8 @@ proc ScaleReleaseDialog {} {
 	set scale(max) $dscale(max)
     
 	set scale(mode) user
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip user $scale(min) $scale(max)]
-	RGBEvalLockCurrent rgb(lock,scale) [list $current(frame) clip mode $scale(mode)]
+	EvalLockCurrent lock,scale [list $current(frame) clip user $scale(min) $scale(max)]
+	EvalLockCurrent lock,scale [list $current(frame) clip mode $scale(mode)]
 
 	UpdateScale
 	ScaleXAxisDialog
@@ -785,14 +785,14 @@ proc MatchScale {which} {
 
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,scale) $ff [list $ff colorscale $type]
-	    RGBEvalLock rgb(lock,scale) $ff [list $ff colorscale log $log]
-	    RGBEvalLock rgb(lock,scale) $ff [list $ff clip user $limits]
-	    RGBEvalLock rgb(lock,scale) $ff [list $ff clip mode $mode]
-	    RGBEvalLock rgb(lock,scale) $ff [list $ff clip scope $scope]
-	    RGBEvalLock rgb(lock,scale) $ff \
+	    EvalLock lock,scale $ff [list $ff colorscale $type]
+	    EvalLock lock,scale $ff [list $ff colorscale log $log]
+	    EvalLock lock,scale $ff [list $ff clip user $limits]
+	    EvalLock lock,scale $ff [list $ff clip mode $mode]
+	    EvalLock lock,scale $ff [list $ff clip scope $scope]
+	    EvalLock lock,scale $ff \
 		[list $ff clip minmax $mmsample $mmmode]
-	    RGBEvalLock rgb(lock,scale) $ff \
+	    EvalLock lock,scale $ff \
 		[list $ff clip zscale $zscontrast $zssample $zsline]
 
 	    UpdateColormapLevelFrame $ff
@@ -818,14 +818,14 @@ proc MatchScaleLimits {which} {
 
     # do all frames as we are changing mode to user
     foreach ff $ds9(frames) {
-	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip mode $mode]
-	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip user $limits]
-	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff colorscale $type]
-	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff colorscale log $log]
-	RGBEvalLock rgb(lock,scalelimits) $ff [list $ff clip scope $scope]
-	RGBEvalLock rgb(lock,scalelimits) $ff \
+	EvalLock lock,scalelimits $ff [list $ff clip mode $mode]
+	EvalLock lock,scalelimits $ff [list $ff clip user $limits]
+	EvalLock lock,scalelimits $ff [list $ff colorscale $type]
+	EvalLock lock,scalelimits $ff [list $ff colorscale log $log]
+	EvalLock lock,scalelimits $ff [list $ff clip scope $scope]
+	EvalLock lock,scalelimits $ff \
 	    [list $ff clip minmax $mmsample $mmmode]
-	RGBEvalLock rgb(lock,scalelimits) $ff \
+	EvalLock lock,scalelimits $ff \
 	    [list $ff clip zscale $zscontrast $zssample $zsline]
 
 	UpdateColormapLevelFrame $ff
@@ -869,6 +869,8 @@ proc ScaleBackup {ch which} {
 	base -
 	3d {ScaleBackupBase $ch $which}
 	rgb {ScaleBackupRGB $ch $which}
+	hsv {ScaleBackupHSV $ch $which}
+	hls {ScaleBackupHLS $ch $which}
     }
 }
 
@@ -895,6 +897,28 @@ proc ScaleBackupRGB {ch which} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc ScaleBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	ScaleBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc ScaleBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	ScaleBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 # Process Cmds

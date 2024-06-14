@@ -1,0 +1,15 @@
+#tab hlsarrayparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+new	    {return $NEW_}
+
+#include string.fin
+#include ws.fin
+
+%%

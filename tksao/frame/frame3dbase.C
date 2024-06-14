@@ -96,9 +96,9 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
 
   // clear values
   Tcl_SetVar2(interp,var,"value","",0);
-  Tcl_SetVar2(interp,var,"value,red","",0);
-  Tcl_SetVar2(interp,var,"value,green","",0);
-  Tcl_SetVar2(interp,var,"value,blue","",0);
+  Tcl_SetVar2(interp,var,"value,1","",0);
+  Tcl_SetVar2(interp,var,"value,2","",0);
+  Tcl_SetVar2(interp,var,"value,3","",0);
 
   do {
     Vector img = Vector(rr) * sptr->refToData;

@@ -875,6 +875,8 @@ proc AnalysisPipe {which i cmd sync} {
 		    switch -- $ianalysis($which,$i,image) {
 			new {CreateFrame}
 			rgb {CreateRGBFrame}
+			hsv {CreateHSVFrame}
+			hls {CreateHLSFrame}
 			3d {Create3DFrame}
 			current {}
 		    }

@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -89,9 +89,9 @@ class ColorbarBase : public Widget {
   int tickcnt;
   int skipcnt;
 
- private:
-  int initColormap();
+  int cmapid_;
 
+ private:
   Tk_Font getFont();
   void lutToText(Tk_Font);
 
@@ -126,9 +126,11 @@ class ColorbarBase : public Widget {
   virtual void psHorz(ostream&, Filter&, int, int) =0;
   virtual void psVert(ostream&, Filter&, int, int) =0;
 
+  virtual int initColormap() =0;
   virtual void reset() =0;
 
   void updateColors();
+  int calcContrastBias(int, float, float);
   virtual void updateColorCells() =0;
   virtual void updateColorsHorz() =0;
   virtual void updateColorsVert() =0;
@@ -147,6 +149,8 @@ class ColorbarBase : public Widget {
   ColorbarBase(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~ColorbarBase();
 
+  int cmapid() {return cmapid_++;}
+
   virtual void adjustCmd(float, float) =0;
 
   int configure(int, const char* [], int);
@@ -164,7 +168,6 @@ class ColorbarBase : public Widget {
   void getInvertCmd();
   virtual void getTypeCmd() =0;
   void getNumericsCmd();
-  virtual void getRGBChannelCmd() =0;
   void getValueCmd(int,int);
 
   void invertCmd(int);
@@ -188,7 +191,6 @@ class ColorbarBase : public Widget {
   void setColormapLevelCmd();
   void setColormapLevelCmd(int);
   virtual void setColormapWindowCmd(char*) {}
-  virtual void setRGBChannelCmd(const char*) {}
 
   virtual void getTagCmd() {}
   virtual void getTagCmd(int,int) {}
@@ -201,6 +203,13 @@ class ColorbarBase : public Widget {
   virtual void tagEditEndCmd(int,int) {}
   virtual void tagLoadCmd(const char*) {}
   virtual void tagSaveCmd(const char*) {}
+
+  virtual void setRGBChannelCmd(const char*) {}
+  virtual void setHSVChannelCmd(const char*) {}
+  virtual void setHLSChannelCmd(const char*) {}
+  virtual void getRGBChannelCmd();
+  virtual void getHSVChannelCmd();
+  virtual void getHLSChannelCmd();
 
 #ifdef MAC_OSX_TK
   void macosxPrintCmd();

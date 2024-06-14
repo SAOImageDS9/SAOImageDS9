@@ -178,6 +178,8 @@ highlite	{return HIGHLITE_;}
 histequ		{return HISTEQU_;}
 histogram	{return HISTOGRAM_;}
 horizontal	{return HORIZONTAL_;}
+hls		{return HLS_;}
+hsv		{return HSV_;}
 icrs		{return ICRS_;}
 id		{return ID_;}
 iis		{return IIS_;}

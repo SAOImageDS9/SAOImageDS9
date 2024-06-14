@@ -291,18 +291,36 @@ proc BackupFrame {ch which dir} {
     puts $ch "CreateNameNumberFrame $which $type"
     switch -- $type {
 	base {BackupFrameLoad $ch $which $fdir $rdir {}}
-	3d {
-	    BackupFrameLoad $ch $which $fdir $rdir {}
-	    puts $ch "3DDialog"
-	}
 	rgb {
 	    set rr [$which get rgb channel]
-	    foreach cc {{} red green blue} {
+	    foreach cc {red green blue} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
 	    $which rgb channel $rr
 
 	    puts $ch "RGBDialog"
+	}
+	hsv {
+	    set rr [$which get hsv channel]
+	    foreach cc {hue saturation value} {
+		BackupFrameLoad $ch $which $fdir $rdir $cc
+	    }
+	    $which hsv channel $rr
+
+	    puts $ch "HSVDialog"
+	}
+	hls {
+	    set rr [$which get hls channel]
+	    foreach cc {hue lightness saturation} {
+		BackupFrameLoad $ch $which $fdir $rdir $cc
+	    }
+	    $which hls channel $rr
+
+	    puts $ch "HLSDialog"
+	}
+	3d {
+	    BackupFrameLoad $ch $which $fdir $rdir {}
+	    puts $ch "3DDialog"
 	}
     }
 
@@ -312,6 +330,8 @@ proc BackupFrame {ch which dir} {
     DS9Backup $ch $which
     CubeBackup $ch $which
     RGBBackup $ch $which
+    HSVBackup $ch $which
+    HLSBackup $ch $which
     BinBackup $ch $which
     ScaleBackup $ch $which
     # Block need to be before WCS and Crop
@@ -373,9 +393,22 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	return
     }
     
-    if {$channel != {}} {
-	$which rgb channel $channel
-	puts $ch "$which rgb channel $channel"
+    set type [$which get type]
+    switch $type {
+	base {}
+	rgb {
+	    $which rgb channel $channel
+	    puts $ch "$which rgb channel $channel"
+	}
+	hsv {
+	    $which hsv channel $channel
+	    puts $ch "$which hsv channel $channel"
+	}
+	hls {
+	    $which hls channel $channel
+	    puts $ch "$which hls channel $channel"
+	}
+	3d {}
     }
 
     array set param [array get $varname]
@@ -549,6 +582,8 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
 		    $which save fits rgb cube file \"$ffn\"
 		    set param(file,mode) {rgb cube}
 		}
+		hsv {}
+		hls {}
 	    }
 	}
     }
@@ -641,6 +676,14 @@ proc BackupGUI {ch} {
     global rgb
     puts $ch "global rgb"
     puts $ch "array set rgb \{ [array get rgb] \}"
+
+    global hsv
+    puts $ch "global hsv"
+    puts $ch "array set hsv \{ [array get hsv] \}"
+
+    global hls
+    puts $ch "global hls"
+    puts $ch "array set hls \{ [array get hls] \}"
 
     global threed
     puts $ch "global threed"

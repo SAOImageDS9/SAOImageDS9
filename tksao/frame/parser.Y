@@ -259,6 +259,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token HISTEQU_
 %token HISTOGRAM_
 %token HORIZONTAL_
+%token HSV_
+%token HLS_
 %token ICRS_
 %token ID_
 %token IIS_
@@ -466,7 +468,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 command : DEBUG_ debug
 	| BIN_ bin
 	| BG_ COLOR_ STRING {fr->bgColorCmd($3);}
-	| BG_ COLOR_ GRAY_ {fr->bgColorCmd("gray");}
         | BG_ COLOR_ yesno {fr->useBgColorCmd($3);}
         | BLOCK_ block
 	| CENTER_ {fr->centerCmd();}
@@ -488,6 +489,8 @@ command : DEBUG_ debug
 	| HIDE_ {fr->hideCmd();}
 	| HIGHLITE_ yesno {fr->highliteCmd($2);}
 	| HIGHLITE_ COLOR_ STRING {fr->highliteColorCmd($3);}
+	| HSV_ hsv
+	| HLS_ hls
 	| IIS_ iis
 	| IRAF_ ALIGN_ INT {fr->irafAlignCmd($3);}
 	| LOAD_ load
@@ -497,7 +500,6 @@ command : DEBUG_ debug
 	| MARKER_ markerLayer marker
 	| MASK_ mask
 	| NAN_ COLOR_ STRING {fr->nanColorCmd($3);}
-	| NAN_ COLOR_ GRAY_ {fr->nanColorCmd("gray");}
 	| ORIENT_ orient
 	| PAN_ pan
 	| PANNER_ panner
@@ -892,15 +894,23 @@ colormap : INT numeric numeric INT INT
         {fr->colormapCmd($1, $2, $3, $4, $5);}
 	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
-	| BEGIN_ {fr->colormapBeginCmd();}
+	| HSV_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| BEGIN_
 	| MOTION_ colormapMotion
-	| END_ {fr->colormapEndCmd();}
+	| END_
 	;
 
 colormapMotion: INT numeric numeric INT INT
-	{fr->colormapMotionCmd($1, $2, $3, $4, $5);}
+	{fr->colormapCmd($1, $2, $3, $4, $5);}
 	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
-	{fr->colormapMotionCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| HSV_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 
 colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
 	| LOG_ numeric {fr->colorScaleLogCmd($2);}
@@ -915,18 +925,22 @@ contour	: CREATE_ contourCreate
 
 contourCreate : STRING INT INT contourMethod INT INT scaleType numeric contourClipMode contourClipScope numeric numeric STRING
 {fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,(FrScale::ClipMode)$9,100,(FrScale::ClipScope)$10,$11,$12,$13);}
+
         | STRING INT INT contourMethod INT INT scaleType numeric numeric contourClipScope numeric numeric STRING
 	{fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,FrScale::AUTOCUT,$9,(FrScale::ClipScope)$10,$11,$12,$13);}
+
         | STRING INT INT contourMethod INT INT scaleType numeric contourClipMode numeric numeric STRING
         {
 	  // backward compatibility with backup
 	  fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,(FrScale::ClipMode)$9,100,FrScale::LOCAL,$10,$11,$12);
 	}
+
         | STRING INT INT contourMethod INT INT scaleType numeric numeric numeric numeric STRING
 	{
 	  // backward compatibility with backup
 	  fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,FrScale::AUTOCUT,$9,FrScale::LOCAL,$10,$11,$12);
 	}
+
 	| POLYGON_ {fr->contourCreatePolygonCmd();}
 	;
 
@@ -1041,6 +1055,8 @@ get	: /* empty */ {fr->getCmd();}
 	| HIGHLITE_ COLOR_ {fr->getHighliteColorCmd();}
 	| HISTOGRAM_ STRING STRING INT {fr->getHistogramCmd($2,$3,$4);}
 	| HORIZONTAL_ CUT_ getHorzCut
+	| HSV_ getHSV
+	| HLS_ getHLS
 	| IIS_ getiis
 	| INFO_ getInfo
 	| IRAF_ ALIGN_ {fr->getIRAFAlignCmd();}
@@ -1297,6 +1313,16 @@ getRGB	: CHANNEL_ {fr->getRGBChannelCmd();}
 	| VIEW_ {fr->getRGBViewCmd();}
 	;
 
+getHLS	: CHANNEL_ {fr->getHLSChannelCmd();}
+	| SYSTEM_ {fr->getHLSSystemCmd();}
+	| VIEW_ {fr->getHLSViewCmd();}
+	;
+
+getHSV	: CHANNEL_ {fr->getHSVChannelCmd();}
+	| SYSTEM_ {fr->getHSVSystemCmd();}
+	| VIEW_ {fr->getHSVViewCmd();}
+	;
+
 getSmooth : FUNCTION_  {fr->getSmoothFunctionCmd();}
 	| RADIUS_ {fr->getSmoothRadiusCmd();}
 	| RADIUS_ MINOR_ {fr->getSmoothRadiusMinorCmd();}
@@ -1455,18 +1481,20 @@ loadArr : STRING ALLOC_ STRING layerType
 	| STRING VAR_ STRING layerType 
 	{fr->loadArrVarCmd($3, $1, (Base::LayerType)$4);}
 	| RGB_ CUBE_ loadArrayRGBCube
+	| HLS_ CUBE_ loadArrayRGBCube
+	| HSV_ CUBE_ loadArrayRGBCube
 	;
 
-loadArrayRGBCube : STRING ALLOC_ STRING {fr->loadArrayRGBCubeAllocCmd($3, $1);}
-	| STRING ALLOCGZ_ STRING {fr->loadArrayRGBCubeAllocGZCmd($3, $1);}
-	| STRING CHANNEL_ STRING {fr->loadArrayRGBCubeChannelCmd($3, $1);}
-	| STRING MMAP_ {fr->loadArrayRGBCubeMMapCmd($1);}
-	| STRING MMAPINCR_  {fr->loadArrayRGBCubeMMapIncrCmd($1);}
+loadArrayRGBCube : STRING ALLOC_ STRING {fr->loadRGBArrayCubeAllocCmd($3, $1);}
+	| STRING ALLOCGZ_ STRING {fr->loadRGBArrayCubeAllocGZCmd($3, $1);}
+	| STRING CHANNEL_ STRING {fr->loadRGBArrayCubeChannelCmd($3, $1);}
+	| STRING MMAP_ {fr->loadRGBArrayCubeMMapCmd($1);}
+	| STRING MMAPINCR_  {fr->loadRGBArrayCubeMMapIncrCmd($1);}
 	| STRING SHARED_ shmType INT
-	{fr->loadArrayRGBCubeShareCmd((Base::ShmType)$3, $4, $1);}
-	| STRING SOCKET_ INT {fr->loadArrayRGBCubeSocketCmd($3, $1);}
-	| STRING SOCKETGZ_ INT {fr->loadArrayRGBCubeSocketGZCmd($3, $1);}
-	| STRING VAR_ STRING {fr->loadArrayRGBCubeVarCmd($3, $1);}
+	{fr->loadRGBArrayCubeShareCmd((Base::ShmType)$3, $4, $1);}
+	| STRING SOCKET_ INT {fr->loadRGBArrayCubeSocketCmd($3, $1);}
+	| STRING SOCKETGZ_ INT {fr->loadRGBArrayCubeSocketGZCmd($3, $1);}
+	| STRING VAR_ STRING {fr->loadRGBArrayCubeVarCmd($3, $1);}
 	;
 
 loadENVI : STRING STRING SMMAP_ {fr->loadENVISMMapCmd($1,$2);}
@@ -1499,6 +1527,10 @@ loadFits: STRING ALLOC_ STRING layerType
 	| EXT_ CUBE_ loadFitsExtCube
 	| RGB_ IMAGE_ loadFitsRGBImage
 	| RGB_ CUBE_ loadFitsRGBCube
+	| HLS_ IMAGE_ loadFitsRGBImage
+	| HLS_ CUBE_ loadFitsRGBCube
+	| HSV_ IMAGE_ loadFitsRGBImage
+	| HSV_ CUBE_ loadFitsRGBCube
 	| MOSAIC_ loadFitsMosaic
 	;
 
@@ -2718,6 +2750,17 @@ rgb	: CHANNEL_ STRING {fr->setRGBChannelCmd($2);}
 	| VIEW_ INT INT INT {fr->setRGBViewCmd($2,$3,$4);}
 	;
 
+hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}
+	| SYSTEM_ coordSystem {fr->setHLSSystemCmd((Coord::CoordSystem)$2);}
+	| VIEW_ INT INT INT {fr->setHLSViewCmd($2,$3,$4);}
+	;
+
+hsv	: CHANNEL_ STRING {fr->setHSVChannelCmd($2);}
+        | CHANNEL_ VALUE_ {fr->setHSVChannelCmd("value");}
+	| SYSTEM_ coordSystem {fr->setHSVSystemCmd((Coord::CoordSystem)$2);}
+	| VIEW_ INT INT INT {fr->setHSVViewCmd($2,$3,$4);}
+	;
+
 rotate	: numeric {fr->rotateCmd(zeroTWOPI(degToRad($1)));}
         | numeric DEGREES_ {fr->rotateCmd(zeroTWOPI(degToRad($1)));}
 	| MOTION_ rotateMotion
@@ -2744,14 +2787,9 @@ saveArray : FILE_ STRING endian
 	| SOCKET_ INT endian 
 	{fr->saveArraySocketCmd($2, (FitsFile::ArchType)$3);}
         | RGB_ CUBE_ saveArrayRGBCube
+        | HLS_ CUBE_ saveArrayHLSCube
+        | HSV_ CUBE_ saveArrayHSVCube
 	;
-
-saveArrayRGBCube : FILE_ STRING endian 
-	{fr->saveArrayRGBCubeFileCmd($2, (FitsFile::ArchType)$3);}
-	| CHANNEL_ STRING endian 
-	{fr->saveArrayRGBCubeChannelCmd($2, (FitsFile::ArchType)$3);}
-	| SOCKET_ INT endian 
-	{fr->saveArrayRGBCubeSocketCmd($2, (FitsFile::ArchType)$3);}
 
 saveFits: /* empty */ saveFitsImage
         | IMAGE_ saveFitsImage
@@ -2761,6 +2799,10 @@ saveFits: /* empty */ saveFitsImage
         | MOSAIC_ saveFitsMosaic
         | RGB_ IMAGE_ saveFitsRGBImage
         | RGB_ CUBE_ saveFitsRGBCube
+        | HLS_ IMAGE_ saveFitsHLSImage
+        | HLS_ CUBE_ saveFitsHLSCube
+        | HSV_ IMAGE_ saveFitsHSVImage
+        | HSV_ CUBE_ saveFitsHSVCube
 	| RESAMPLE_ saveFitsResample
 	;
 
@@ -2795,14 +2837,58 @@ saveFitsMosaicImage : FILE_ STRING {fr->saveFitsMosaicImageFileCmd($2);}
         | SOCKET_ INT {fr->saveFitsMosaicImageSocketCmd($2);}
         ;
 
-saveFitsRGBImage : FILE_ STRING {fr->saveFitsRGBImageFileCmd($2);}
-	| CHANNEL_ STRING {fr->saveFitsRGBImageChannelCmd($2);}
-	| SOCKET_ INT {fr->saveFitsRGBImageSocketCmd($2);}
+saveArrayRGBCube : FILE_ STRING endian 
+	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
+	| CHANNEL_ STRING endian 
+	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
+	| SOCKET_ INT endian 
+	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
+        ;
+
+saveFitsRGBImage : FILE_ STRING {fr->saveRGBImageFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBImageChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBImageSocketCmd($2);}
 	;
 
-saveFitsRGBCube : FILE_ STRING {fr->saveFitsRGBCubeFileCmd($2);}
-	| CHANNEL_ STRING {fr->saveFitsRGBCubeChannelCmd($2);}
-	| SOCKET_ INT {fr->saveFitsRGBCubeSocketCmd($2);}
+saveFitsRGBCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBCubeChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
+	;
+
+saveArrayHLSCube : FILE_ STRING endian 
+	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
+	| CHANNEL_ STRING endian 
+	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
+	| SOCKET_ INT endian 
+	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
+        ;
+
+saveFitsHLSImage : FILE_ STRING {fr->saveRGBImageFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBImageChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBImageSocketCmd($2);}
+	;
+
+saveFitsHLSCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBCubeChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
+	;
+
+saveArrayHSVCube : FILE_ STRING endian 
+	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
+	| CHANNEL_ STRING endian 
+	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
+	| SOCKET_ INT endian 
+	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
+        ;
+
+saveFitsHSVImage : FILE_ STRING {fr->saveRGBImageFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBImageChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBImageSocketCmd($2);}
+	;
+
+saveFitsHSVCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
+	| CHANNEL_ STRING {fr->saveRGBCubeChannelCmd($2);}
+	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
 	;
 
 saveFitsResample : FILE_ STRING {fr->saveFitsResampleFileCmd($2);}

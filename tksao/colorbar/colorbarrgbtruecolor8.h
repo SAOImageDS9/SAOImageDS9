@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -8,8 +8,8 @@
 #include "colorbarrgb.h"
 #include "truecolor8.h"
 
-class ColorbarRGBTrueColor8 : public ColorbarRGB, TrueColor8 {
-private:
+class ColorbarRGBTrueColor8 : public ColorbarRGB, public TrueColor8 {
+protected:
   void updateColorsHorz();
   void updateColorsVert();
 

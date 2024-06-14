@@ -7,7 +7,7 @@
 #include "util.h"
 #include "default.h"
 
-GreyColorMap::GreyColorMap(Colorbar* p) : SAOColorMap(p)
+GreyColorMap::GreyColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("grey");
   filename_ = dupstr("grey.sao");
@@ -22,7 +22,7 @@ GreyColorMap::GreyColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,1));
 }
 
-RedColorMap::RedColorMap(Colorbar* p) : SAOColorMap(p)
+RedColorMap::RedColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("red");
   filename_ = dupstr("red.sao");
@@ -37,7 +37,7 @@ RedColorMap::RedColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(0,0));
 }
 
-GreenColorMap::GreenColorMap(Colorbar* p) : SAOColorMap(p)
+GreenColorMap::GreenColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("green");
   filename_ = dupstr("green.sao");
@@ -52,7 +52,7 @@ GreenColorMap::GreenColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(0,0));
 }
 
-BlueColorMap::BlueColorMap(Colorbar* p) : SAOColorMap(p)
+BlueColorMap::BlueColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("blue");
   filename_ = dupstr("blue.sao");
@@ -67,7 +67,7 @@ BlueColorMap::BlueColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,1));
 }
 
-AColorMap::AColorMap(Colorbar* p) : SAOColorMap(p)
+AColorMap::AColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("a");
   filename_ = dupstr("a.sao");
@@ -91,7 +91,7 @@ AColorMap::AColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,0));
 }
 
-BColorMap::BColorMap(Colorbar* p) : SAOColorMap(p)
+BColorMap::BColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("b");
   filename_ = dupstr("b.sao");
@@ -113,7 +113,7 @@ BColorMap::BColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,1));
 }
 
-BBColorMap::BBColorMap(Colorbar* p) : SAOColorMap(p)
+BBColorMap::BBColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("bb");
   filename_ = dupstr("bb.sao");
@@ -132,7 +132,7 @@ BBColorMap::BBColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,1));
 }
 
-HEColorMap::HEColorMap(Colorbar* p) : SAOColorMap(p)
+HEColorMap::HEColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("he");
   filename_ = dupstr("he.sao");
@@ -158,7 +158,7 @@ HEColorMap::HEColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,1));
 }
 
-I8ColorMap::I8ColorMap(Colorbar* p) : LUTColorMap(p)
+I8ColorMap::I8ColorMap(ColorbarBase* p) : LUTColorMap(p)
 {
   name_ = dupstr("i8");
   filename_ = dupstr("i8.lut");
@@ -173,7 +173,7 @@ I8ColorMap::I8ColorMap(Colorbar* p) : LUTColorMap(p)
   colors.append(new RGBColor(1,1,1));
 }
 
-AIPSColorMap::AIPSColorMap(Colorbar* p) : LUTColorMap(p)
+AIPSColorMap::AIPSColorMap(ColorbarBase* p) : LUTColorMap(p)
 {
   name_ = dupstr("aips0");
   filename_ = dupstr("aips0.lut");
@@ -189,7 +189,7 @@ AIPSColorMap::AIPSColorMap(Colorbar* p) : LUTColorMap(p)
   colors.append(new RGBColor(1.00,.000,.000));
 }
 
-HeatColorMap::HeatColorMap(Colorbar* p) : SAOColorMap(p)
+HeatColorMap::HeatColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("heat");
   filename_ = dupstr("heat.sao");
@@ -207,7 +207,7 @@ HeatColorMap::HeatColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,1));
 }
 
-CoolColorMap::CoolColorMap(Colorbar* p) : SAOColorMap(p)
+CoolColorMap::CoolColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("cool");
   filename_ = dupstr("cool.sao");
@@ -227,7 +227,7 @@ CoolColorMap::CoolColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,1));
 }
 
-RainbowColorMap::RainbowColorMap(Colorbar* p) : SAOColorMap(p)
+RainbowColorMap::RainbowColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("rainbow");
   filename_ = dupstr("rainbow.sao");
@@ -250,7 +250,32 @@ RainbowColorMap::RainbowColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,0));
 }
 
-StandardColorMap::StandardColorMap(Colorbar* p) : SAOColorMap(p)
+HSVHLSColorMap::HSVHLSColorMap(ColorbarBase* p) : SAOColorMap(p)
+{
+  name_ = dupstr("hsvhls");
+  filename_ = dupstr("hsvhls.sao");
+
+  red.append(new LIColor(0,1));
+  red.append(new LIColor(.1667,1));
+  red.append(new LIColor(.3333,0));
+  red.append(new LIColor(.6667,0));
+  red.append(new LIColor(.8333,1));
+  red.append(new LIColor(1,1));
+
+  green.append(new LIColor(0,0));
+  green.append(new LIColor(.1667,1));
+  green.append(new LIColor(.5,1));
+  green.append(new LIColor(.6667,0));
+  green.append(new LIColor(1,0));
+
+  blue.append(new LIColor(0,0));
+  blue.append(new LIColor(.3333,0));
+  blue.append(new LIColor(.5,1));
+  blue.append(new LIColor(.8333,1));
+  blue.append(new LIColor(0,0));
+}
+
+StandardColorMap::StandardColorMap(ColorbarBase* p) : SAOColorMap(p)
 {
   name_ = dupstr("standard");
   filename_ = dupstr("standard.sao");
@@ -277,7 +302,7 @@ StandardColorMap::StandardColorMap(Colorbar* p) : SAOColorMap(p)
   blue.append(new LIColor(1,.3));
 }
 
-StaircaseColorMap::StaircaseColorMap(Colorbar* p) : LUTColorMap(p)
+StaircaseColorMap::StaircaseColorMap(ColorbarBase* p) : LUTColorMap(p)
 {
   name_ = dupstr("staircase");
   filename_ = dupstr("staircase.lut");
@@ -298,7 +323,7 @@ StaircaseColorMap::StaircaseColorMap(Colorbar* p) : LUTColorMap(p)
   }
 }
 
-ColorColorMap::ColorColorMap(Colorbar* p) : LUTColorMap(p)
+ColorColorMap::ColorColorMap(ColorbarBase* p) : LUTColorMap(p)
 {
   name_ = dupstr("color");
   filename_ = dupstr("color.lut");
@@ -321,7 +346,7 @@ ColorColorMap::ColorColorMap(Colorbar* p) : LUTColorMap(p)
   colors.append(new RGBColor(0.74902, 0.00000, 0.30980));
 }
 
-SLSColorMap::SLSColorMap(Colorbar* p) : LUTColorMap(p)
+SLSColorMap::SLSColorMap(ColorbarBase* p) : LUTColorMap(p)
 {
   name_ = dupstr("sls");
   filename_ = dupstr("sls.lut");
@@ -528,7 +553,7 @@ SLSColorMap::SLSColorMap(Colorbar* p) : LUTColorMap(p)
   colors.append(new RGBColor(1.000000, 1.000000, 1.000000));
 }
 
-HSVColorMap::HSVColorMap(Colorbar* p) : LUTColorMap(p)
+HSVColorMap::HSVColorMap(ColorbarBase* p) : LUTColorMap(p)
 {
   /* HSV: hue varies uniformly from 270 to 360 and back to 270.
    * Value varies from zero to one using a cube root relation

@@ -203,15 +203,25 @@ proc CreateColorbar {} {
     colorbar map $colorbar(map)
     colorbar invert $colorbar(invert)
     colorbar hide
-
     LayoutColorbar colorbar 0 0 $canvas(width) $canvas(height)
 
     # just for backup backward compatibility
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) -tag colorbarrgb
     colorbarrgb invert $colorbar(invert)
     colorbarrgb hide
-
     LayoutColorbar colorbarrgb 0 0 $canvas(width) $canvas(height)
+
+    # just for backup backward compatibility
+    $ds9(canvas) create colorbarhsv$ds9(visual)$ds9(depth) -tag colorbarhsv
+    colorbarhsv invert $colorbar(invert)
+    colorbarhsv hide
+    LayoutColorbar colorbarhsv 0 0 $canvas(width) $canvas(height)
+
+    # just for backup backward compatibility
+    $ds9(canvas) create colorbarhls$ds9(visual)$ds9(depth) -tag colorbarhls
+    colorbarhls invert $colorbar(invert)
+    colorbarhls hide
+    LayoutColorbar colorbarhls 0 0 $canvas(width) $canvas(height)
 }
 
 proc CreateColorbarBase {frame} {
@@ -223,7 +233,9 @@ proc CreateColorbarBase {frame} {
     # save current colorbar params if appropriate
     switch [$current(colorbar) get type] {
 	base {set sav [$current(colorbar) get colorbar]}
-	rgb {set sav [colorbar get colorbar]}
+	rgb -
+	hsv -
+	hls {set sav [colorbar get colorbar]}
     }
 
     set which ${frame}cb
@@ -288,13 +300,109 @@ proc CreateColorbarRGB {frame} {
 
     # save current colorbar params if appropriate
     switch [$current(colorbar) get type] {
-	base {set sav [colorbarrgb get colorbar]}
 	rgb {set sav [$current(colorbar) get colorbar]}
+	base -
+	hsv -
+	hls {set sav [colorbarrgb get colorbar]}
     }
     
     set which ${frame}cb
 
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
+	-colors 2048 \
+	-tag $which \
+	-command $which \
+	-anchor nw \
+	\
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant) \
+	\
+	-helvetica $ds9(helvetica) \
+	-courier $ds9(courier) \
+	-times $ds9(times) \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground]
+
+    # now init new colorbar to prev values
+    $which colorbar $sav
+
+    # enable events
+    BindEventsColorbar $which
+
+    LayoutColorbar $which 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+}
+
+proc CreateColorbarHSV {frame} {
+    global ds9
+    global colorbar
+    global current
+
+    # save current colorbar params if appropriate
+    switch [$current(colorbar) get type] {
+	hsv {set sav [$current(colorbar) get colorbar]}
+	base -
+	rgb -
+	hls {set sav [colorbarhsv get colorbar]}
+    }
+    
+    set which ${frame}cb
+
+    $ds9(canvas) create colorbarhsv$ds9(visual)$ds9(depth) \
+	-colors 2048 \
+	-tag $which \
+	-command $which \
+	-anchor nw \
+	\
+	-size $colorbar(size) \
+	-ticks $colorbar(ticks) \
+	-numerics $colorbar(numerics) \
+	-space $colorbar(space) \
+	\
+	-font $colorbar(font) \
+	-fontsize $colorbar(font,size) \
+	-fontweight $colorbar(font,weight) \
+	-fontslant $colorbar(font,slant) \
+	\
+	-helvetica $ds9(helvetica) \
+	-courier $ds9(courier) \
+	-times $ds9(times) \
+	-fg [ThemeTreeForeground] \
+	-bg [ThemeTreeBackground]
+
+    # now init new colorbar to prev values
+    $which colorbar $sav
+
+    # enable events
+    BindEventsColorbar $which
+
+    LayoutColorbar $which 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
+}
+
+proc CreateColorbarHLS {frame} {
+    global ds9
+    global colorbar
+    global current
+
+    # save current colorbar params if appropriate
+    switch [$current(colorbar) get type] {
+	hls {set sav [$current(colorbar) get colorbar]}
+	base -
+	rgb -
+	hsv {set sav [colorbarhls get colorbar]}
+    }
+    
+    set which ${frame}cb
+
+    $ds9(canvas) create colorbarhls$ds9(visual)$ds9(depth) \
 	-colors 2048 \
 	-tag $which \
 	-command $which \
@@ -379,7 +487,9 @@ proc BindEventsColorbar {which} {
 	    $ds9(canvas) bind $which <KeyRelease> \
 		[list ColorbarKeyRelease $frame %K %A %x %y]
 	}
-	rgb {}
+	rgb -
+	hsv -
+	hls {}
     }
 }
 
@@ -406,7 +516,9 @@ proc UnBindEventsColorbar {which} {
 	    $ds9(canvas) bind $which <Key> {}
 	    $ds9(canvas) bind $which <KeyRelease> {}
 	}
-	rgb {}
+	rgb -
+	hsv -
+	hls {}
     }
 }
 
@@ -421,7 +533,7 @@ proc ResetColormap {} {
     set colorbar(map) [$current(colorbar) get name]
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
-	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
+	EvalLockCurrent lock,colorbar [list $current(frame) colormap [$current(colorbar) get colormap]]
     }
 
     LockColorCurrent
@@ -473,7 +585,9 @@ proc LoadColormapFile {fn} {
 		$cb map $orgName
 		$cb invert $orgInvert
 	    }
-	    rgb {}
+	    rgb -
+	    hsv -
+	    hls {}
 	}
     }
 
@@ -585,9 +699,23 @@ proc ColorbarMotion {frame x y} {
 	}
 	rgb {
 	    switch -- $current(rgb) {
-		red {set infobox(value,red) $vv}
-		green {set infobox(value,green) $vv}
-		blue {set infobox(value,blue) $vv}
+		red {set infobox(value,1) $vv}
+		green {set infobox(value,2) $vv}
+		blue {set infobox(value,3) $vv}
+	    }
+	}
+	hsv {
+	    switch -- $current(hsv) {
+		hue {set infobox(value,1) $vv}
+		saturation {set infobox(value,2) $vv}
+		value {set infobox(value,3) $vv}
+	    }
+	}
+	hls {
+	    switch -- $current(hls) {
+		hue {set infobox(value,1) $vv}
+		lightness {set infobox(value,2) $vv}
+		saturation {set infobox(value,3) $vv}
 	    }
 	}
     }
@@ -850,7 +978,7 @@ proc ColorbarMotion3 {frame xx yy} {
     # Y sets contrast
     set contrast [expr double($yy)/[winfo height $ds9(canvas)] * 10]
 
-    RGBEvalLockColorbar $frame [list $cb adjust $contrast $bias]
+    EvalLockColorbar $frame [list $cb adjust $contrast $bias]
     $frame colormap motion [$cb get colormap]
     UpdateColorDialog
 }
@@ -904,20 +1032,9 @@ proc MatchColor {which} {
     set cb ${which}cb
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    switch -- [$ff get type] {
-		base -
-		3d {
-		    if {$tt != {rgb}} {
-			$ff colormap [$cb get colormap]
-			${ff}cb colorbar [$ff get colorbar]
-		    }
-		}
-		rgb {
-		    if {$tt == {rgb}} {
-			$ff colormap [$cb get colormap]
-			${ff}cb colorbar [$ff get colorbar]
-		    }
-		}
+	    if {$tt == [$ff get type]} {
+		$ff colormap [$cb get colormap]
+		${ff}cb colorbar [$ff get colorbar]
 	    }
 	}
     }
@@ -1317,9 +1434,9 @@ proc ApplyColormap {} {
     global current
     global rgb
 
-    RGBEvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
+    EvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap [$current(colorbar) get colormap]]
+	EvalLockCurrent lock,colorbar [list $current(frame) colormap [$current(colorbar) get colormap]]
 	LockColorCurrent
     }
 }
@@ -1332,7 +1449,7 @@ proc BeginAdjustColormap {} {
 
     set icolorbar(adjustok) 1
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap begin]
+	EvalLockCurrent lock,colorbar [list $current(frame) colormap begin]
     }
 }
 
@@ -1343,9 +1460,9 @@ proc AdjustColormap {} {
     global current
     global rgb
     if {[info exists icolorbar(adjustok)]} {
-	RGBEvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
+	EvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
 	if {$current(frame) != {}} {
-	    RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap motion [$current(colorbar) get colormap]]
+	    EvalLockCurrent lock,colorbar [list $current(frame) colormap motion [$current(colorbar) get colormap]]
 	}
     }
 }
@@ -1359,7 +1476,7 @@ proc EndAdjustColormap {} {
     if {[info exists icolorbar(adjustok)]} {
 	unset icolorbar(adjustok)
 	if {$current(frame) != {}} {
-	    RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap end]
+	    EvalLockCurrent lock,colorbar [list $current(frame) colormap end]
 	    LockColorCurrent
 	}
     }
@@ -1382,87 +1499,44 @@ proc UpdateColorDialog {} {
 
 	if {$current(frame) != {}} {
 	    switch -- [$current(frame) get type] {
-		base -
-		3d {
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Open}] -state normal
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Save}] -state normal
-
-		    foreach cmap $icolorbar(default,cmaps) {
-			$icolorbar(mb).colormap entryconfig $cmap -state normal
-		    }
-
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {h5utils}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Matplotlib}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Cubehelix}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Gist}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Topographic}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Scientific Colour Maps}] -state normal
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {User}] -state normal
-
-		}
-		rgb {
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Open}] -state disabled
-		    $icolorbar(mb).file entryconfig \
-			[msgcat::mc {Save}] -state disabled
-
-		    foreach cmap $icolorbar(default,cmaps) {
-			$icolorbar(mb).colormap entryconfig $cmap \
-			    -state disabled
-		    }
-
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {h5utils}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Matplotlib}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Cubehelix}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Gist}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Topographic}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {Scientific Colour Maps}] -state disabled
-		    $icolorbar(mb).colormap entryconfig \
-			[msgcat::mc {User}] -state disabled
-		}
+		base {UpdateColorDialogCmaps normal}
+		rgb {UpdateColorDialogCmaps disabled}
+		hsv {UpdateColorDialogCmaps disabled}
+		hls {UpdateColorDialogCmaps disabled}
+		3d {UpdateColorDialogCmaps normal}
 	    }
 	} else {
-	    $icolorbar(mb).file entryconfig \
-		[msgcat::mc {Open}] -state normal
-	    $icolorbar(mb).file entryconfig \
-		[msgcat::mc {Save}] -state normal
-
-	    foreach cmap $icolorbar(default,cmaps) {
-		$icolorbar(mb).colormap entryconfig $cmap -state normal
-	    }
-
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {h5utils}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Matplotlib}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Cubehelix}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Gist}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {Topographic}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig \
-		[msgcat::mc {Scientific Colour Maps}] \
-		-state normal
-	    $icolorbar(mb).colormap entryconfig [msgcat::mc {User}] \
-		-state normal
+	    UpdateColorDialogCmaps normal
 	}
     }
+}
+
+proc UpdateColorDialogCmaps {state} {
+    global icolorbar
+
+    $icolorbar(mb).file entryconfig \
+	[msgcat::mc {Open}] -state $state
+    $icolorbar(mb).file entryconfig \
+	[msgcat::mc {Save}] -state $state
+
+    foreach cmap $icolorbar(default,cmaps) {
+	$icolorbar(mb).colormap entryconfig $cmap -state $state
+    }
+
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {h5utils}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Matplotlib}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Cubehelix}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Gist}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Topographic}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Scientific Colour Maps}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {User}] -state $state
 }
 
 proc LayoutColorbarAdjust {} {
@@ -1709,10 +1783,10 @@ proc CmapValueCmd {c b} {
     global current 
 
     if {$current(frame) != {}} {
-	RGBEvalLockColorbarCurrent [list $current(colorbar) adjust $c $b]
-	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap begin]
-	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap motion [$current(colorbar) get colormap]]
-	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap end]
+	EvalLockColorbarCurrent [list $current(colorbar) adjust $c $b]
+	EvalLockCurrent lock,colorbar [list $current(frame) colormap begin]
+	EvalLockCurrent lock,colorbar [list $current(frame) colormap motion [$current(colorbar) get colormap]]
+	EvalLockCurrent lock,colorbar [list $current(frame) colormap end]
     }
     LockColorCurrent
     UpdateColorDialog

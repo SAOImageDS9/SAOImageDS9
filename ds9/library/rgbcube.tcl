@@ -1,4 +1,4 @@
-#  Copyright (C) 1999-2021
+#  Copyright (C) 1999-2024
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -10,6 +10,8 @@ proc LoadRGBCubeFile {fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
 	    return
@@ -35,6 +37,8 @@ proc LoadRGBCubeAlloc {path fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
 	    return
@@ -60,6 +64,8 @@ proc LoadRGBCubeSocket {sock fn} {
 
     switch -- [$current(frame) get type] {
 	base -
+	hls -
+	hsv -
 	3d {
 	    Error [msgcat::mc {Unable to load RGB image into a non-rgb frame}]
 	    return
@@ -92,6 +98,17 @@ proc SaveRGBCubeFile {fn} {
 	return
     }
 
+    switch -- [$current(frame) get type] {
+	base -
+	hls -
+	hsv -
+	3d {
+	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    return
+	}
+	rgb {}
+    }
+
     $current(frame) save fits rgb cube file "\{$fn\}"
 }
 
@@ -103,6 +120,17 @@ proc SaveRGBCubeSocket {sock} {
     }
     if {![$current(frame) has fits]} {
 	return
+    }
+
+    switch -- [$current(frame) get type] {
+	base -
+	hls -
+	hsv -
+	3d {
+	    Error [msgcat::mc {Unable to save RGB image from a non-rgb frame}]
+	    return
+	}
+	rgb {}
     }
 
     $current(frame) save fits rgb cube socket $sock

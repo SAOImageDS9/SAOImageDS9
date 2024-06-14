@@ -77,6 +77,18 @@ proc InitDialogBox {} {
     set rgbarrayfbox(types) [list \
 				 [list [::msgcat::mc {RGB Array}] {*.rgb}] \
 				]
+    global hlsarrayfbox
+    set hlsarrayfbox(file) {ds9.hls}
+    set hlsarrayfbox(dir) {}
+    set hlsarrayfbox(types) [list \
+				 [list [::msgcat::mc {HLS Array}] {*.hls}] \
+				]
+    global hsvarrayfbox
+    set hsvarrayfbox(file) {ds9.hsv}
+    set hsvarrayfbox(dir) {}
+    set hsvarrayfbox(types) [list \
+				 [list [::msgcat::mc {HSV Array}] {*.hsv}] \
+				]
     global nrrdfbox
     set nrrdfbox(file) {ds9.nrrd}
     set nrrdfbox(dir) {}
@@ -407,6 +419,8 @@ proc SetFileLast {format item} {
 
 	array {FileLast arrayfbox $item}
 	rgbarray {FileLast rgbarrayfbox $item}
+	hlsarray {FileLast hlsarrayfbox $item}
+	hsvarray {FileLast hsvarrayfbox $item}
 	envi {FileLast envifbox $item}
 	envi2 {FileLast envi2fbox $item}
 	gif {FileLast giffbox $item}
@@ -446,6 +460,8 @@ proc ExtToFormat {fn} {
 	.arr -
 	.array {return array}
 	.rgb {return rgbarray}
+	.hls {return hlsarray}
+	.hsv {return hsvarray}
 	.nrrd {return nrrd}
 	.eps -
 	.epsf {return eps}

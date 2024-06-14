@@ -40,7 +40,7 @@ proc MatchCube {which sys} {
     
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,slice) $ff "$ff update fits slice $wss $sys"
+	    EvalLock lock,slice $ff "$ff update fits slice $wss $sys"
 	}
     }
 }
@@ -69,7 +69,7 @@ proc CubeSlice {ii ss} {
     global current
     global rgb
 
-    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
+    EvalLockCurrent lock,slice "$current(frame) update fits slice $ii $ss"
 
     set dcube(image,$ii) $ss
     set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
@@ -286,7 +286,7 @@ proc CubeApply {ii} {
 	set ss $depth
     }
     
-    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
+    EvalLockCurrent lock,slice "$current(frame) update fits slice $ii $ss"
 
     set dcube(image,$ii) $ss
     set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
@@ -318,7 +318,7 @@ proc CubeApplyWCS {ii} {
 	set ss $depth
     }
     
-    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
+    EvalLockCurrent lock,slice "$current(frame) update fits slice $ss"
 
     set dcube(image,$ii) $ss
     set dcube(wcs,$ii) \
@@ -782,6 +782,8 @@ proc CubeBackup {ch which} {
 	base -
 	3d {CubeBackupBase $ch $which}
 	rgb {CubeBackupRGB $ch $which}
+	hsv {CubeBackupHSV $ch $which}
+	hls {CubeBackupHLS $ch $which}
     }
 }
 
@@ -813,6 +815,28 @@ proc CubeBackupRGB {ch which} {
     puts $ch "$which rgb channel $sav"
 }
 
+proc CubeBackupHSV {ch which} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	CubeBackupBase $ch $which
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc CubeBackupHLS {ch which} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	CubeBackupBase $ch $which
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
+}
+
 proc MatchAxesCurrent {} {
     global current
 
@@ -830,7 +854,7 @@ proc MatchAxes {which} {
     set axes [$which get cube axes]
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,axes) $ff "$ff cube axes $axes"
+	    EvalLock lock,axes $ff "$ff cube axes $axes"
 
 	    # grid
 	    if {[$ff has grid]} {
@@ -867,8 +891,7 @@ proc CubeAxes {} {
     global rgb
 
     if {$current(frame) != {}} {
-	RGBEvalLockCurrent rgb(lock,axes) \
-	    "$current(frame) cube axes $cube(axes)"
+	EvalLockCurrent lock,axes "$current(frame) cube axes $cube(axes)"
 
 	LockAxesCurrent
 	UpdateHeaderDialog
@@ -907,7 +930,7 @@ proc CubeCmd {ss} {
 	return
     }
 
-    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $cube(axis) $ss"
+    EvalLockCurrent lock,slice "$current(frame) update fits slice $cube(axis) $ss"
 
     set dcube(image,$cube(axis)) $ss
     set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
@@ -935,7 +958,7 @@ proc CubeCmdCoord {ss sys} {
 	set ss 1
     }
     
-    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
+    EvalLockCurrent lock,slice "$current(frame) update fits slice $ss"
 
     set dcube(image,$cube(axis)) $ss
     set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]

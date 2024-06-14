@@ -970,6 +970,8 @@ proc ContourBackup {ch which fdir rdir} {
 	base -
 	3d {ContourBackupBase $ch $which $fdir $rdir}
 	rgb {ContourBackupRGB $ch $which $fdir $rdir}
+	hsv {ContourBackupHSV $ch $which $fdir $rdir}
+	hls {ContourBackupHLS $ch $which $fdir $rdir}
     }
 }
 
@@ -1013,6 +1015,28 @@ proc ContourBackupRGB {ch which fdir rdir} {
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
+}
+
+proc ContourBackupHSV {ch which fdir rdir} {
+    set sav [$which get hsv channel]
+    foreach cc {hue saturation value} {
+	$which hsv channel $cc
+	puts $ch "$which hsv channel $cc"
+	ContourBackupBase $ch $which $fdir $rdir
+    }
+    $which hsv channel $sav
+    puts $ch "$which hsv channel $sav"
+}
+
+proc ContourBackupHLS {ch which fdir rdir} {
+    set sav [$which get hls channel]
+    foreach cc {hue lightness saturation} {
+	$which hls channel $cc
+	puts $ch "$which hls channel $cc"
+	ContourBackupBase $ch $which $fdir $rdir
+    }
+    $which hls channel $sav
+    puts $ch "$which hls channel $sav"
 }
 
 proc PrefsDialogContour {} {

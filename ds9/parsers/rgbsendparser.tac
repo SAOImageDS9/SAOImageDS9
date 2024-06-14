@@ -27,7 +27,7 @@
 rgbsend : CHANNEL_ {ProcessSendCmdGet current rgb}
  | LOCK_ lock {ProcessSendCmdYesNo rgb lock,$2}
  | SYSTEM_ {ProcessSendCmdGet rgb system}
- | VIEW_ view {ProcessSendCmdYesNo rgb $2}
+ | VIEW_ channel {ProcessSendCmdYesNo rgb $2}
  ;
 
 lock : WCS_ {set _ wcs}
@@ -42,7 +42,7 @@ lock : WCS_ {set _ wcs}
  | SMOOTH_ {set _ smooth}
  ;
 
-view : RED_ {set _ red}
+channel : RED_ {set _ red}
  | GREEN_ {set _ green}
  | BLUE_ {set _ blue}
  ;

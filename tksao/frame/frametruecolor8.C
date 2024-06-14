@@ -1,9 +1,8 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2024
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "frametruecolor8.h"
-#include "colorscaletrue8.h"
 
 // Tk Canvas Widget Function Declarations
 
@@ -112,58 +111,5 @@ FrameTrueColor8::~FrameTrueColor8()
 {
   // we must do this at this level, because updateColorScale is called
   unloadAllFits();
-}
-
-void FrameTrueColor8::updateColorScale()
-{
-  // we need colors before we can construct a scale
-
-  if (!colorCells)
-    return;
-
-  if (colorScale)
-    delete colorScale;
-
-  switch (context->colorScaleType()) {
-  case FrScale::LINEARSCALE:
-    colorScale =
-      new LinearScaleTrueColor8(colorCount, colorCells, colorCount, visual);
-    break;
-  case FrScale::LOGSCALE:
-    colorScale =
-      new LogScaleTrueColor8(SCALESIZE, colorCells, colorCount,
-			     context->expo(), visual);
-    break;
-  case FrScale::POWSCALE:
-    colorScale =
-      new PowScaleTrueColor8(SCALESIZE, colorCells, colorCount,
-			     context->expo(), visual);
-    break;
-  case FrScale::SQRTSCALE:
-    colorScale = 
-      new SqrtScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
-    break;
-  case FrScale::SQUAREDSCALE:
-    colorScale =
-      new SquaredScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
-    break;
-  case FrScale::ASINHSCALE:
-    colorScale =
-      new AsinhScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
-    break;
-  case FrScale::SINHSCALE:
-    colorScale =
-      new SinhScaleTrueColor8(SCALESIZE, colorCells, colorCount, visual);
-    break;
-  case FrScale::HISTEQUSCALE:
-    colorScale =
-      new HistEquScaleTrueColor8(SCALESIZE, colorCells, colorCount,
-				 context->histequ(), HISTEQUSIZE, visual);
-    break;
-  case FrScale::IISSCALE:
-    colorScale =
-      new IISScaleTrueColor8(colorCells, colorCount, visual);
-    break;
-  }
 }
 

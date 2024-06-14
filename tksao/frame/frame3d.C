@@ -32,11 +32,7 @@ Frame3d::Frame3d(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   bias = 0.5;
   contrast = 1.0;
 
-  colormapData = NULL;
-
-  colorCount = 0;
   colorScale = NULL;
-  colorCells = NULL;
 
   thread_ =NULL;
 
@@ -64,14 +60,11 @@ Frame3d::~Frame3d()
   if (context)
     delete context;
 
-  if (colorScale)
-    delete colorScale;
-
-  if (colormapData)
-    delete [] colormapData;
-
   if (colorCells)
     delete [] colorCells;
+
+  if (colorScale)
+    delete colorScale;
 
   if (thread_)
     delete [] thread_;
@@ -977,23 +970,6 @@ void Frame3d::reset()
   Base::reset();
 }
 
-void Frame3d::updateColorCells(int cnt)
-{
-  if (!cellsptr_ || !cellsparentptr_)
-    return;
-
-  unsigned char* cells = (unsigned char*)cellsptr_;
-  colorCount = cnt;
-  if (colorCells)
-    delete [] colorCells;
-  colorCells = new unsigned char[cnt*3];
-  memcpy(colorCells, cells, cnt*3);
-
-  // clear
-  cellsptr_ =NULL;
-  cellsparentptr_ =NULL;
-}
-
 void Frame3d::pushMatrices()
 {
   // alway identity
@@ -1071,6 +1047,74 @@ void Frame3d::unloadFits()
   Base::unloadFits();
 }
 
+void Frame3d::updateColorCells(int cnt)
+{
+  if (!cellsptr_ || !cellsparentptr_)
+    return;
+  
+  unsigned char* cells = (unsigned char*)cellsptr_;
+  colorCount = cnt;
+  if (colorCells)
+    delete [] colorCells;
+  colorCells = new unsigned char[cnt*3];
+  memcpy(colorCells, cells, cnt*3);
+
+  // clear
+  cellsptr_ =NULL;
+  cellsparentptr_ =NULL;
+}
+
+void Frame3d::updateColorScale()
+{
+  // we need colors before we can construct a scale
+
+  if (!colorCells)
+    return;
+
+  if (colorScale)
+    delete colorScale;
+
+  switch (context->colorScaleType()) {
+  case FrScale::LINEARSCALE:
+    colorScale =
+      new LinearScale(colorCount, colorCells, colorCount);
+    break;
+  case FrScale::LOGSCALE:
+    colorScale =
+      new LogScale(SCALESIZE, colorCells, colorCount, context->expo());
+    break;
+  case FrScale::POWSCALE:
+    colorScale =
+      new PowScale(SCALESIZE, colorCells, colorCount, context->expo());
+    break;
+  case FrScale::SQRTSCALE:
+    colorScale = 
+      new SqrtScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::SQUAREDSCALE:
+    colorScale =
+      new SquaredScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::ASINHSCALE:
+    colorScale =
+      new AsinhScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::SINHSCALE:
+    colorScale =
+      new SinhScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::HISTEQUSCALE:
+    colorScale =
+      new HistEquScale(SCALESIZE, colorCells, colorCount, 
+		       context->histequ(), HISTEQUSIZE); 
+    break;
+  case FrScale::IISSCALE:
+    colorScale =
+      new IISScale(colorCells, colorCount);
+    break;
+  }
+}
+
 // Commands
 
 void Frame3d::colormapCmd(int id, float b, float c, int i, int cnt)
@@ -1085,31 +1129,11 @@ void Frame3d::colormapCmd(int id, float b, float c, int i, int cnt)
   update(BASE);
 }
 
-void Frame3d::colormapEndCmd()
-{
-  update(BASE);
-}
-
 void Frame3d::getColorbarCmd()
 {
   ostringstream str;
   str << cmapID << ' ' << bias << ' ' << contrast << ' ' << invert << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
-}
-
-void Frame3d::getRGBChannelCmd()
-{
-  Tcl_AppendResult(interp, "red", NULL);
-}
-
-void Frame3d::getRGBViewCmd()
-{
-  Tcl_AppendResult(interp, "1 1 1", NULL);
-}
-
-void Frame3d::getRGBSystemCmd()
-{
-  Tcl_AppendResult(interp, "image", NULL);
 }
 
 void Frame3d::getTypeCmd()

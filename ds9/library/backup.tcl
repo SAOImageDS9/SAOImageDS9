@@ -293,7 +293,7 @@ proc BackupFrame {ch which dir} {
 	base {BackupFrameLoad $ch $which $fdir $rdir {}}
 	rgb {
 	    set rr [$which get rgb channel]
-	    foreach cc {red green blue} {
+	    foreach cc {{} red green blue} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
 	    $which rgb channel $rr
@@ -302,7 +302,7 @@ proc BackupFrame {ch which dir} {
 	}
 	hsv {
 	    set rr [$which get hsv channel]
-	    foreach cc {hue saturation value} {
+	    foreach cc {{} hue saturation value} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
 	    $which hsv channel $rr
@@ -311,7 +311,7 @@ proc BackupFrame {ch which dir} {
 	}
 	hls {
 	    set rr [$which get hls channel]
-	    foreach cc {hue lightness saturation} {
+	    foreach cc {{} hue lightness saturation} {
 		BackupFrameLoad $ch $which $fdir $rdir $cc
 	    }
 	    $which hls channel $rr
@@ -393,25 +393,44 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	return
     }
     
+    array set param [array get $varname]
+
     set type [$which get type]
     switch $type {
 	base {}
 	rgb {
-	    $which rgb channel $channel
-	    puts $ch "$which rgb channel $channel"
-	}
-	hsv {
-	    $which hsv channel $channel
-	    puts $ch "$which hsv channel $channel"
+	    switch $param(file,mode) {
+		{rgb image} -
+		{rgb cube} {}
+		{} {
+		    $which rgb channel $channel
+		    puts $ch "$which rgb channel $channel"
+		}
+	    }
 	}
 	hls {
-	    $which hls channel $channel
-	    puts $ch "$which hls channel $channel"
+	    switch $param(file,mode) {
+		{hls image} -
+		{hls cube} {}
+		{} {
+		    $which hls channel $channel
+		    puts $ch "$which hls channel $channel"
+		}
+	    }
+	}
+	hsv {
+	    switch $param(file,mode) {
+		{hsv image} -
+		{hsv cube} {}
+		{} {
+		    $which hsv channel $channel
+		    puts $ch "$which hsv channel $channel"
+		}
+	    }
 	}
 	3d {}
     }
 
-    array set param [array get $varname]
     switch $param(load,type) {
 	mmap -
 	mmapincr -

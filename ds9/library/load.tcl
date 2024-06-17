@@ -287,7 +287,7 @@ proc ProcessLoad {{err 1}} {
 		}
 	    }
 	}
-	hlv {
+	hls {
 	    switch -- $loadParam(file,mode) {
 		{hls image} -
 		{hls cube} {ProcessLoadSaveParams $current(frame)}

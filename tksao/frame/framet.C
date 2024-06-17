@@ -56,8 +56,6 @@ unsigned char* FrameT::fillImage(int width, int height,
   char* mk = new char[width*height];
   memset(mk,0,width*height);
 
-  SETSIGBUS
-
   // one channel at a time
   for (int kk=0; kk<3; kk++) {
     if (!view[kk] || !context[kk].fits)
@@ -90,6 +88,8 @@ unsigned char* FrameT::fillImage(int width, int height,
     // main loop
     unsigned char* dest = img+kk;
     char* mkptr = mk;
+
+    SETSIGBUS
 
     for (long jj=0; jj<height; jj++) {
       for (long ii=0; ii<width; ii++, dest+=5, mkptr++) {
@@ -170,6 +170,8 @@ unsigned char* FrameT::fillImage(int width, int height,
 	while (mosaic && sptr);
       }
     }
+
+    CLEARSIGBUS
   }
 
   // HSV to RGB, add bg,nan
@@ -203,8 +205,6 @@ unsigned char* FrameT::fillImage(int width, int height,
       }
   }
   
-  CLEARSIGBUS
-
   // cleanup
   delete [] img;
   delete [] mk;
@@ -415,8 +415,6 @@ void FrameT::savePhotoCmd(const char* ph)
   char* mk = new char[width*height];
   memset(mk,0,width*height);
 
-  SETSIGBUS
-
   // one channel at a time
   for (int kk=0; kk<3; kk++) {
     if (!view[kk] || !context[kk].fits)
@@ -443,6 +441,8 @@ void FrameT::savePhotoCmd(const char* ph)
     // main loop
     unsigned char* dest = img+kk;
     char* mkptr = mk;
+
+    SETSIGBUS
 
     for (long jj=params->ymin; jj<params->ymax; jj++) {
       for (long ii=params->xmin; ii<params->xmax; ii++, dest+=5, mkptr++) {
@@ -483,6 +483,8 @@ void FrameT::savePhotoCmd(const char* ph)
 	  *mkptr =1;
       }
     }
+
+    CLEARSIGBUS
   }
 
   // HSV to RGB, add bg,nan
@@ -517,8 +519,6 @@ void FrameT::savePhotoCmd(const char* ph)
       }
   }
   
-  CLEARSIGBUS
-
   // cleanup
   delete [] img;
   delete [] mk;

@@ -37,12 +37,12 @@ void FrameHSV::convert(unsigned char* dest, unsigned char* src)
   float gc = (max-y) / diff;
   float bc = (max-z) / diff;
 
-  float h;
+  float h =0;
   if (x==max)
     h = bc-gc;
   else if (y==max)
     h = 2+rc-bc;
-  else
+  else if (z==max)
     h = 4+gc-rc;
   
   h = h*60;

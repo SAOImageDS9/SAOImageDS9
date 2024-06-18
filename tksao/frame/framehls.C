@@ -30,7 +30,6 @@ void FrameHLS::convert(unsigned char* dest, unsigned char* src)
     *(dest  ) =255;
     *(dest+1) =255;
     *(dest+2) =255;
-    cerr << '@' << endl;
     return;
   }    
 
@@ -38,12 +37,12 @@ void FrameHLS::convert(unsigned char* dest, unsigned char* src)
   float gc = (max-y) / diff;
   float bc = (max-z) / diff;
 
-  float h;
+  float h =0;
   if (x==max)
     h = bc-gc;
   else if (y==max)
     h = 2+rc-bc;
-  else
+  else if (z==max)
     h = 4+gc-rc;
   
   h = h*60;
@@ -58,7 +57,7 @@ void FrameHLS::convert(unsigned char* dest, unsigned char* src)
   // 0 < s < 1
   // 0 < v < 1
 
-  float m2 = (l<=.5) ? l*(1+s) : l+s-(l*s);
+  float m2 = (l<=.5) ? l*(1+s) : l+s-l*s;
   float m1 = 2*l-m2;
 
   if (s==0) {
@@ -78,6 +77,10 @@ void FrameHLS::convert(unsigned char* dest, unsigned char* src)
 }
 
 float FrameHLS::value(float n1, float n2, float hue){
+  if (hue>360)
+    hue -= 360;
+  if (hue<0)
+    hue += 360;
   if (hue<60)
     return n1+(n2-n1)*hue/60;
   else if (hue<180)

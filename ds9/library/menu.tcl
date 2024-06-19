@@ -152,6 +152,13 @@ proc ThemeConfigMenu {w} {
 	[ttk::style lookup TMenubutton -background active]
 }
 
+proc FontChange {} {
+    global pds9
+    set mainFont "$pds9(font) $pds9(font,size) $pds9(font,weight) $pds9(font,slant)"
+    ttk::style configure Treeview -rowheight \
+	[expr {[font metrics $mainFont -linespace] + [font metrics $mainFont -descent]}]
+}
+
 proc ThemeChange {} {
     global ds9
     global pds9
@@ -161,6 +168,7 @@ proc ThemeChange {} {
 	win32 {ttk::style theme use $pds9(theme)}
 	aqua {}
     }
+    FontChange
 }
 
 proc ThemeForeground {} {

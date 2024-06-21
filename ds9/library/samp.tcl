@@ -254,6 +254,10 @@ proc SAMPSendTableHighlightRow {id varname row} {
 
     global samp
 
+    if {$samp(highlight)} {
+	return
+    }
+
     if {$samp(debug)} {
 	puts stderr "SAMPSendTableHighlightRow $samp(ocat,$varname) $row"
     }
@@ -276,6 +280,10 @@ proc SAMPSendTableSelectRowList {id varname rows} {
     global $varname
 
     global samp
+
+    if {$samp(rowList)} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "SAMPSendTableSelectRowList $samp(ocat,$varname) $rows"
@@ -319,6 +327,10 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 
 proc SAMPSendCoordPointAtSky {id coord} {
     global samp
+
+    if {$samp(pointAt)} {
+	return
+    }
 
     if {$samp(debug)} {
 	puts stderr "SAMPSendCoordPointAtSky $id $coord"
@@ -527,7 +539,9 @@ proc table.highlight.row {msgid args} {
 
     if {$tabid != {} && $row != {}} {
 	if {[info exists samp(icat,$tabid)]} {
+	    set samp(highlight) 1
 	    CATSelectRows $samp(icat,$tabid) samp [expr $row+1] 1
+	    set samp(highlight) 0
 	}
     }
 
@@ -565,7 +579,9 @@ proc table.select.rowList {msgid args} {
 
     if {$tabid != {} && [llength $rowlist] != 0} {
 	if {[info exists samp(icat,$tabid)]} {
+	    set samp(rowList) 1
 	    CATSelectRows $samp(icat,$tabid) samp $rowlist 1
+	    set samp(rowList) 0
 	}
     }
 
@@ -597,7 +613,10 @@ proc coord.pointAt.sky {msgid args} {
 
     global current
     if {$ra != {} && $dec != {} && [$current(frame) has wcs celestial wcs]} {
+	# turn off auto send pointAt
+	set samp(pointAt) 1
 	PanTo $ra $dec wcs fk5
+	set samp(pointAt) 0
     }
 
     if {$msgid != {}} {

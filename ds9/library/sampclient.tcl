@@ -29,6 +29,11 @@ proc SAMPConnectInit {verbose output debug} {
     set samp(msgtag) {}
     set samp(timeout) 30
 
+    # flags to prevent recursive calls
+    set samp(pointAt) 0
+    xset samp(rowList) 0
+    set samp(highlight) 0
+
     # can we find a hub?
     if {[SAMPParseHub]} {
 	# ok, found one, is it alive?

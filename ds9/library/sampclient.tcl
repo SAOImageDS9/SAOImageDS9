@@ -31,7 +31,7 @@ proc SAMPConnectInit {verbose output debug} {
 
     # flags to prevent recursive calls
     set samp(pointAt) 0
-    xset samp(rowList) 0
+    set samp(rowList) 0
     set samp(highlight) 0
 
     # can we find a hub?

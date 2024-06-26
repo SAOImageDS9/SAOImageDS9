@@ -431,7 +431,7 @@ proc ContourCPasteDialog {} {
     global ds9
     global current
     global contour
-    global ed
+    global ed2
 
     if {$current(frame) == {} || $contour(copy) == {}} {
 	return
@@ -439,40 +439,40 @@ proc ContourCPasteDialog {} {
 
     set w {.ctld}
 
-    set ed(ok) 0
-    set ed(system) wcs
-    set ed(sky) fk5
-    set ed(color) green
-    set ed(width) 1
-    set ed(dash) 0
-    set ed(frame) $current(frame)
-    set ed(original) 0
+    set ed2(ok) 0
+    set ed2(system) wcs
+    set ed2(sky) fk5
+    set ed2(color) green
+    set ed2(width) 1
+    set ed2(dash) 0
+    set ed2(frame) $current(frame)
+    set ed2(original) 0
 
-    SetCoordSystem ed system sky {}
-    AdjustCoordSystem ed system
+    SetCoordSystem ed2 system sky {}
+    AdjustCoordSystem ed2 system
 
-    DialogCreate $w [msgcat::mc {Contour Paste}] ed(ok)
+    DialogCreate $w [msgcat::mc {Contour Paste}] ed2(ok)
 
     # Param
     set f [ttk::frame $w.param1]
 
-    ttk::checkbutton $f.original -text [msgcat::mc {Use Original Color/Width}] -variable ed(original)
+    ttk::checkbutton $f.original -text [msgcat::mc {Use Original Color/Width}] -variable ed2(original)
     grid $f.original -padx 2 -pady 2 -sticky w
 
     set f [ttk::frame $w.param]
 
     ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
 
-    CoordMenuButton $f.coordbutton ed system 1 {} {} {}
-    CoordMenuEnable $f.coordbutton.menu ed system {} {}
+    CoordMenuButton $f.coordbutton ed2 system 1 {} {} {}
+    CoordMenuEnable $f.coordbutton.menu ed2 system {} {}
 
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
-    ColorMenuButton $f.colorbutton ed color {}
+    ColorMenuButton $f.colorbutton ed2 color {}
 
     ttk::label $f.widthtitle -text [msgcat::mc {Width}]
-    ttk::menubutton $f.widthbutton -textvariable ed(width) \
+    ttk::menubutton $f.widthbutton -textvariable ed2(width) \
 	-menu $f.widthbutton.menu
-    WidthDashMenu $f.widthbutton.menu ed width dash {} {}
+    WidthDashMenu $f.widthbutton.menu ed2 width dash {} {}
 
     grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
     grid $f.colortitle $f.colorbutton -padx 2 -pady 2 -sticky w
@@ -480,12 +480,12 @@ proc ContourCPasteDialog {} {
 
     # Buttons
     set f [ttk::frame $w.buttons]
-    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed2(ok) 1} \
 	-default active 
-    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed2(ok) 0}
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 
-    bind $w <Return> {set ed(ok) 1}
+    bind $w <Return> {set ed2(ok) 1}
 
     # Fini
     ttk::separator $w.sep -orient horizontal
@@ -494,27 +494,27 @@ proc ContourCPasteDialog {} {
     pack $w.param1 $w.sep2 $w.param -side top -fill both -expand true
 #    pack $w.param -side top -fill both -expand true
 
-    DialogWait $w ed(ok)
+    DialogWait $w ed2(ok)
     destroy $w
 
-    if {$ed(ok)} {
-	set ed(color) [string tolower $ed(color)]
+    if {$ed2(ok)} {
+	set ed2(color) [string tolower $ed2(color)]
 
 	if {$current(frame) == $contour(copy)} {
-	    set ed(system) physical
+	    set ed2(system) physical
 	}
 
-	set cc [$contour(copy) get contour $ed(system) fk5]
-	if {$ed(original)} {
+	set cc [$contour(copy) get contour $ed2(system) fk5]
+	if {$ed2(original)} {
 	    $current(frame) contour paste cc
 	} else {
-	    $current(frame) contour paste cc $ed(color) $ed(width) $ed(dash)
+	    $current(frame) contour paste cc $ed2(color) $ed2(width) $ed2(dash)
 	}
 	UpdateContourDialog
     }
 
-    set rr $ed(ok)
-    unset ed
+    set rr $ed2(ok)
+    unset ed2
     return $rr
 }
 

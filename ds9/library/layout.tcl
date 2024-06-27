@@ -782,7 +782,14 @@ proc LayoutFrame {} {
 			[expr int(sqrt($num-1))+1] [expr int(sqrt($num)+.5)]
 		}
 		manual {
-		    TileRect $tile(grid,col) $tile(grid,row)
+		    set cnt [expr $tile(grid,col)*$tile(grid,row)]
+		    if {[llength $ds9(active)] > $cnt} {
+			Error "Too many Frames to display manual, using automatic"
+			TileRect \
+			    [expr int(sqrt($num-1))+1] [expr int(sqrt($num)+.5)]
+		    } else {
+			TileRect $tile(grid,col) $tile(grid,row)
+		    }
 		}
 	    }
 	}
@@ -808,7 +815,14 @@ proc LayoutFrameNone {} {
 			[expr int(sqrt($num-1))+1] [expr int(sqrt($num)+.5)]
 		}
 		manual {
-		    TileRectNone $tile(grid,col) $tile(grid,row)
+		    set cnt [expr $tile(grid,col)*$tile(grid,row)]
+		    if {[llength $ds9(active)] > $cnt} {
+			Error "Too many Frames to display manual, using automatic"
+			TileRectNone \
+			    [expr int(sqrt($num-1))+1] [expr int(sqrt($num)+.5)]
+		    } else {
+			TileRectNone $tile(grid,col) $tile(grid,row)
+		    }
 		}
 	    }
 	}
@@ -921,6 +935,7 @@ proc TileRectNone {numx numy} {
 
     # frames
     set ii 0
+    set cnt [expr $numx*$numy]
     foreach ff $ds9(active) {
 	# sanity check
 	if {$xx($ii)>=0 && $yy($ii)>=0 && $ww>=0 && $hh>=0} {
@@ -949,6 +964,9 @@ proc TileRectNone {numx numy} {
 	}
 
 	incr ii
+	if {$ii>=$cnt} {
+	    break
+	}
     }
 
     # set colorbar/graph for current frame

@@ -300,6 +300,8 @@
 ::msgcat::mcset fr {Export Array} 
 ::msgcat::mcset fr {Export ENVI} 
 ::msgcat::mcset fr {Export GIF} 
+::msgcat::mcset fr {Export HLS Array} 
+::msgcat::mcset fr {Export HSV Array} 
 ::msgcat::mcset fr {Export JPEG} 
 ::msgcat::mcset fr {Export NRRD} 
 ::msgcat::mcset fr {Export PNG} 
@@ -386,7 +388,15 @@
 ::msgcat::mcset fr {Grid Gap} {Espacement de la grille} 
 ::msgcat::mcset fr {Grid} {Grille} 
 ::msgcat::mcset fr {Groups} {Groupes} 
+::msgcat::mcset fr {HLS Array} 
+::msgcat::mcset fr {HLS Cube} 
+::msgcat::mcset fr {HLS Image} 
+::msgcat::mcset fr {HLS} 
 ::msgcat::mcset fr {HMS} 
+::msgcat::mcset fr {HSV Array} 
+::msgcat::mcset fr {HSV Cube} 
+::msgcat::mcset fr {HSV Image} 
+::msgcat::mcset fr {HSV} 
 ::msgcat::mcset fr {HTTP} 
 ::msgcat::mcset fr {Header} [encoding convertfrom iso8859-1 {Entête}]
 ::msgcat::mcset fr {Height} {Hauteur} 
@@ -402,6 +412,7 @@
 ::msgcat::mcset fr {Horizontal Layout} {Mise en page Horizontale} 
 ::msgcat::mcset fr {Horizontal} 
 ::msgcat::mcset fr {Hub not running} 
+::msgcat::mcset fr {Hue} 
 ::msgcat::mcset fr {IAU Location Code} 
 ::msgcat::mcset fr {ICRS} 
 ::msgcat::mcset fr {Icons} 
@@ -413,6 +424,8 @@
 ::msgcat::mcset fr {Import Array} 
 ::msgcat::mcset fr {Import ENVI} 
 ::msgcat::mcset fr {Import GIF} 
+::msgcat::mcset fr {Import HLS Array} 
+::msgcat::mcset fr {Import HSV Array} 
 ::msgcat::mcset fr {Import JPEG} 
 ::msgcat::mcset fr {Import NRRD} 
 ::msgcat::mcset fr {Import PNG} 
@@ -471,6 +484,7 @@
 ::msgcat::mcset fr {Levels} {Niveaux}
 ::msgcat::mcset fr {Level} {Niveau}
 ::msgcat::mcset fr {Lighten} 
+::msgcat::mcset fr {Lightness} 
 ::msgcat::mcset fr {Limits} {Limites}
 ::msgcat::mcset fr {Line Dataset} 
 ::msgcat::mcset fr {Line Plot Tool} 
@@ -621,6 +635,8 @@
 ::msgcat::mcset fr {Native Dialog} 
 ::msgcat::mcset fr {New Features} {Nouvelles options}
 ::msgcat::mcset fr {New Frame 3D} 
+::msgcat::mcset fr {New Frame HLS} 
+::msgcat::mcset fr {New Frame HSV} 
 ::msgcat::mcset fr {New Frame RGB} [encoding convertfrom iso8859-1 {Nouvelle fenêtre RGB}]
 ::msgcat::mcset fr {New Frame each Time} [encoding convertfrom iso8859-1 {Nouvelle fenêtre à chaque fois}]
 ::msgcat::mcset fr {New Frame} [encoding convertfrom iso8859-1 {Nouvelle fenêtre}]
@@ -652,6 +668,10 @@
 ::msgcat::mcset fr {Object} {Objet}
 ::msgcat::mcset fr {ObsId} 
 ::msgcat::mcset fr {Open File} {Ouvrir fichier}
+::msgcat::mcset fr {Open HLS Cube} 
+::msgcat::mcset fr {Open HLS Image} 
+::msgcat::mcset fr {Open HSV Cube} 
+::msgcat::mcset fr {Open HSV Image} 
 ::msgcat::mcset fr {Open ME Cube} 
 ::msgcat::mcset fr {Open ME Frames} 
 ::msgcat::mcset fr {Open Mosaic IRAF Seg} 
@@ -798,11 +818,16 @@
 ::msgcat::mcset fr {Sample Parameters} 
 ::msgcat::mcset fr {Samples per Line} 
 ::msgcat::mcset fr {Sample} 
+::msgcat::mcset fr {Saturation} 
 ::msgcat::mcset fr {Save 3D Movie} 
 ::msgcat::mcset fr {Save Color Tags} 
 ::msgcat::mcset fr {Save Contour Levels} 
 ::msgcat::mcset fr {Save Contrast/Bias} 
 ::msgcat::mcset fr {Save Data} 
+::msgcat::mcset fr {Save HLS Cube} 
+::msgcat::mcset fr {Save HLS Image} 
+::msgcat::mcset fr {Save HSV Cube} 
+::msgcat::mcset fr {Save HSV Image} 
 ::msgcat::mcset fr {Save Image EPS} 
 ::msgcat::mcset fr {Save Image FITS} 
 ::msgcat::mcset fr {Save Image GIF} 
@@ -956,6 +981,8 @@
 ::msgcat::mcset fr {Unable to find web window} 
 ::msgcat::mcset fr {Unable to generate plot} 
 ::msgcat::mcset fr {Unable to load FITS file} 
+::msgcat::mcset fr {Unable to load HLS image into a non-hls frame} 
+::msgcat::mcset fr {Unable to load HSV image into a non-hsv frame} 
 ::msgcat::mcset fr {Unable to load RGB image into a non-rgb frame} 
 ::msgcat::mcset fr {Unable to load compressed region file} 
 ::msgcat::mcset fr {Unable to load plot data} 
@@ -965,10 +992,11 @@
 ::msgcat::mcset fr {Unable to locate URL} 
 ::msgcat::mcset fr {Unable to match target with XPA Mime request} 
 ::msgcat::mcset fr {Unable to open file} 
+::msgcat::mcset fr {Unable to save HLS image from a non-hls frame} 
+::msgcat::mcset fr {Unable to save HSV image from a non-hsv frame} 
 ::msgcat::mcset fr {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset fr {Undo} [encoding convertfrom iso8859-1 {Défaire}]
 ::msgcat::mcset fr {Unique} 
-::msgcat::mcset fr {Unists} 
 ::msgcat::mcset fr {Units} 
 ::msgcat::mcset fr {Unknown Colormap} 
 ::msgcat::mcset fr {Unknown command} 
@@ -1043,6 +1071,8 @@
 ::msgcat::mcset fr {g} 
 ::msgcat::mcset fr {h5utils} 
 ::msgcat::mcset fr {hundredths second} 
+::msgcat::mcset fr {h} 
+::msgcat::mcset fr {l} 
 ::msgcat::mcset fr {not connected} 
 ::msgcat::mcset fr {not} 
 ::msgcat::mcset fr {only} 
@@ -1051,8 +1081,10 @@
 ::msgcat::mcset fr {root} 
 ::msgcat::mcset fr {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset fr {r} 
+::msgcat::mcset fr {s} 
 ::msgcat::mcset fr {unable to create hub file} 
 ::msgcat::mcset fr {unable to locate HUB} 
 ::msgcat::mcset fr {unable to open hub} 
 ::msgcat::mcset fr {unable to open web hub} 
+::msgcat::mcset fr {v} 
 ::msgcat::mcset fr {x} 

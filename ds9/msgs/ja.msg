@@ -300,6 +300,8 @@
 ::msgcat::mcset ja {Export Array} 
 ::msgcat::mcset ja {Export ENVI} 
 ::msgcat::mcset ja {Export GIF} 
+::msgcat::mcset ja {Export HLS Array} 
+::msgcat::mcset ja {Export HSV Array} 
 ::msgcat::mcset ja {Export JPEG} 
 ::msgcat::mcset ja {Export NRRD} 
 ::msgcat::mcset ja {Export PNG} 
@@ -386,7 +388,15 @@
 ::msgcat::mcset ja {Grid Gap} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9\xa4\xce\xb4\xd6\xb3\xd6"]
 ::msgcat::mcset ja {Grid} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9"]
 ::msgcat::mcset ja {Groups} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7"]
+::msgcat::mcset ja {HLS Array} 
+::msgcat::mcset ja {HLS Cube} 
+::msgcat::mcset ja {HLS Image} 
+::msgcat::mcset ja {HLS} 
 ::msgcat::mcset ja {HMS} 
+::msgcat::mcset ja {HSV Array} 
+::msgcat::mcset ja {HSV Cube} 
+::msgcat::mcset ja {HSV Image} 
+::msgcat::mcset ja {HSV} 
 ::msgcat::mcset ja {HTTP} [encoding convertfrom euc-jp "\x48\x54\x54\x50"]
 ::msgcat::mcset ja {Header} [encoding convertfrom euc-jp "\xa5\xd8\xa5\xc3\xa5\xc0"]
 ::msgcat::mcset ja {Height} [encoding convertfrom euc-jp "\xb9\xe2\xa4\xb5"]
@@ -402,6 +412,7 @@
 ::msgcat::mcset ja {Horizontal Layout} [encoding convertfrom euc-jp "\xb2\xe8\xc1\xfc\xa4\xce\xbe\xe5\xa4\xcb\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Horizontal} 
 ::msgcat::mcset ja {Hub not running} 
+::msgcat::mcset ja {Hue} 
 ::msgcat::mcset ja {IAU Location Code} 
 ::msgcat::mcset ja {ICRS} [encoding convertfrom euc-jp "\xb9\xf1\xba\xdd\xc5\xb7\xca\xb8\xbd\xe0\xb5\xf2\xb7\xcf"]
 ::msgcat::mcset ja {Icons} 
@@ -413,6 +424,8 @@
 ::msgcat::mcset ja {Import Array} 
 ::msgcat::mcset ja {Import ENVI} 
 ::msgcat::mcset ja {Import GIF} 
+::msgcat::mcset ja {Import HLS Array} 
+::msgcat::mcset ja {Import HSV Array} 
 ::msgcat::mcset ja {Import JPEG} 
 ::msgcat::mcset ja {Import NRRD} 
 ::msgcat::mcset ja {Import PNG} 
@@ -471,6 +484,7 @@
 ::msgcat::mcset ja {Levels} [encoding convertfrom euc-jp "\xa5\xec\xa5\xd9\xa5\xeb"]
 ::msgcat::mcset ja {Level} [encoding convertfrom euc-jp "\xa5\xec\xa5\xd9\xa5\xeb"]
 ::msgcat::mcset ja {Lighten} 
+::msgcat::mcset ja {Lightness} 
 ::msgcat::mcset ja {Limits} [encoding convertfrom euc-jp "\xbe\xe5\xb2\xbc\xb8\xc2"]
 ::msgcat::mcset ja {Line Dataset} 
 ::msgcat::mcset ja {Line Plot Tool} 
@@ -621,6 +635,8 @@
 ::msgcat::mcset ja {Native Dialog} 
 ::msgcat::mcset ja {New Features} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\xb5\xa1\xc7\xbd"]
 ::msgcat::mcset ja {New Frame 3D} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\x33\x44\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
+::msgcat::mcset ja {New Frame HLS} 
+::msgcat::mcset ja {New Frame HSV} 
 ::msgcat::mcset ja {New Frame RGB} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\x52\x47\x42\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
 ::msgcat::mcset ja {New Frame each Time} [encoding convertfrom euc-jp "\xcb\xe8\xb2\xf3\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xba\xee\xc0\xae"]
 ::msgcat::mcset ja {New Frame} [encoding convertfrom euc-jp "\xbf\xb7\xa4\xb7\xa4\xa4\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
@@ -652,6 +668,10 @@
 ::msgcat::mcset ja {Object} [encoding convertfrom euc-jp "\xc5\xb7\xc2\xce\xcc\xbe"]
 ::msgcat::mcset ja {ObsId} 
 ::msgcat::mcset ja {Open File} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xf2\xb3\xab\xa4\xaf"]
+::msgcat::mcset ja {Open HLS Cube} 
+::msgcat::mcset ja {Open HLS Image} 
+::msgcat::mcset ja {Open HSV Cube} 
+::msgcat::mcset ja {Open HSV Image} 
 ::msgcat::mcset ja {Open ME Cube} 
 ::msgcat::mcset ja {Open ME Frames} 
 ::msgcat::mcset ja {Open Mosaic IRAF Seg} 
@@ -798,11 +818,16 @@
 ::msgcat::mcset ja {Sample Parameters} 
 ::msgcat::mcset ja {Samples per Line} [encoding convertfrom euc-jp "\xa3\xb1\xb9\xd4\xa4\xa2\xa4\xbf\xa4\xea\xa4\xce\xa5\xb5\xa5\xf3\xa5\xd7\xa5\xeb"]
 ::msgcat::mcset ja {Sample} 
+::msgcat::mcset ja {Saturation} 
 ::msgcat::mcset ja {Save 3D Movie} 
 ::msgcat::mcset ja {Save Color Tags} 
 ::msgcat::mcset ja {Save Contour Levels} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa5\xec\xa5\xd9\xa5\xeb\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Contrast/Bias} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8\xa1\xa6\xa5\xd0\xa5\xa4\xa5\xa2\xa5\xb9\xa4\xf2\xca\xdd\xc2\xb8"]
 ::msgcat::mcset ja {Save Data} [encoding convertfrom euc-jp "\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xf2\xca\xdd\xc2\xb8"]
+::msgcat::mcset ja {Save HLS Cube} 
+::msgcat::mcset ja {Save HLS Image} 
+::msgcat::mcset ja {Save HSV Cube} 
+::msgcat::mcset ja {Save HSV Image} 
 ::msgcat::mcset ja {Save Image EPS} 
 ::msgcat::mcset ja {Save Image FITS} 
 ::msgcat::mcset ja {Save Image GIF} 
@@ -956,6 +981,8 @@
 ::msgcat::mcset ja {Unable to find web window} 
 ::msgcat::mcset ja {Unable to generate plot} 
 ::msgcat::mcset ja {Unable to load FITS file} 
+::msgcat::mcset ja {Unable to load HLS image into a non-hls frame} 
+::msgcat::mcset ja {Unable to load HSV image into a non-hsv frame} 
 ::msgcat::mcset ja {Unable to load RGB image into a non-rgb frame} [encoding convertfrom euc-jp "\x52\x42\x47\xa5\xa4\xa5\xe1\xa1\xbc\xa5\xb8\xa4\xf2\xc8\xf3\x52\x47\x42\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to load compressed region file} 
 ::msgcat::mcset ja {Unable to load plot data} 
@@ -965,10 +992,11 @@
 ::msgcat::mcset ja {Unable to locate URL} [encoding convertfrom euc-jp "\x55\x52\x4c\xa4\xf2\xc6\xc3\xc4\xea\xa4\xc7\xa4\xad\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to match target with XPA Mime request} 
 ::msgcat::mcset ja {Unable to open file} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xf2\xb3\xab\xa4\xb1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
+::msgcat::mcset ja {Unable to save HLS image from a non-hls frame} 
+::msgcat::mcset ja {Unable to save HSV image from a non-hsv frame} 
 ::msgcat::mcset ja {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset ja {Undo} [encoding convertfrom euc-jp "\xa4\xe4\xa4\xea\xc4\xbe\xa4\xb7"]
 ::msgcat::mcset ja {Unique} 
-::msgcat::mcset ja {Unists} 
 ::msgcat::mcset ja {Units} [encoding convertfrom euc-jp "\xc3\xb1\xb0\xcc"]
 ::msgcat::mcset ja {Unknown Colormap} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xdd\xa1\xbc\xa5\xc8\xa4\xb5\xa4\xec\xa4\xca\xa4\xa4\xc7\xdb\xbf\xa7"]
 ::msgcat::mcset ja {Unknown command} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xdd\xa1\xbc\xa5\xc8\xa4\xb5\xa4\xec\xa4\xca\xa4\xa4\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9"]
@@ -1043,6 +1071,8 @@
 ::msgcat::mcset ja {g} 
 ::msgcat::mcset ja {h5utils} 
 ::msgcat::mcset ja {hundredths second} 
+::msgcat::mcset ja {h} 
+::msgcat::mcset ja {l} 
 ::msgcat::mcset ja {not connected} 
 ::msgcat::mcset ja {not} 
 ::msgcat::mcset ja {only} 
@@ -1051,8 +1081,10 @@
 ::msgcat::mcset ja {root} 
 ::msgcat::mcset ja {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom euc-jp "\xb9\xd4\xa4\xce\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xac\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb5\xa4\xec\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3\xa4\xb5\xa4\xe9\xa4\xcb\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xa4\xb9\xa4\xeb\xbe\xec\xb9\xe7\xa4\xcf\xa1\xa2\xba\xc7\xc2\xe7\xb9\xd4\xbf\xf4\xa4\xf2\xc0\xdf\xc4\xea\xa4\xb7\xa4\xca\xa4\xaa\xa4\xb7\xa4\xc6\xa4\xaf\xa4\xc0\xa4\xb5\xa4\xa4\xa1\xa3"]
 ::msgcat::mcset ja {r} 
+::msgcat::mcset ja {s} 
 ::msgcat::mcset ja {unable to create hub file} 
 ::msgcat::mcset ja {unable to locate HUB} 
 ::msgcat::mcset ja {unable to open hub} 
 ::msgcat::mcset ja {unable to open web hub} 
+::msgcat::mcset ja {v} 
 ::msgcat::mcset ja {x} 

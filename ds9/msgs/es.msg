@@ -300,6 +300,8 @@
 ::msgcat::mcset es {Export Array} 
 ::msgcat::mcset es {Export ENVI} 
 ::msgcat::mcset es {Export GIF} 
+::msgcat::mcset es {Export HLS Array} 
+::msgcat::mcset es {Export HSV Array} 
 ::msgcat::mcset es {Export JPEG} 
 ::msgcat::mcset es {Export NRRD} 
 ::msgcat::mcset es {Export PNG} 
@@ -386,7 +388,15 @@
 ::msgcat::mcset es {Grid Gap} [encoding convertfrom iso8859-1 {Espaciado de la cuadrícula}]
 ::msgcat::mcset es {Grid} [encoding convertfrom iso8859-1 {Cuadrícula}]
 ::msgcat::mcset es {Groups} {Grupos}
+::msgcat::mcset es {HLS Array} 
+::msgcat::mcset es {HLS Cube} 
+::msgcat::mcset es {HLS Image} 
+::msgcat::mcset es {HLS} 
 ::msgcat::mcset es {HMS} 
+::msgcat::mcset es {HSV Array} 
+::msgcat::mcset es {HSV Cube} 
+::msgcat::mcset es {HSV Image} 
+::msgcat::mcset es {HSV} 
 ::msgcat::mcset es {HTTP} 
 ::msgcat::mcset es {Header} {Cabecera}
 ::msgcat::mcset es {Height} {Altura}
@@ -402,6 +412,7 @@
 ::msgcat::mcset es {Horizontal Layout} [encoding convertfrom iso8859-1 {Distribución horizontal}]
 ::msgcat::mcset es {Horizontal} 
 ::msgcat::mcset es {Hub not running} 
+::msgcat::mcset es {Hue} 
 ::msgcat::mcset es {IAU Location Code} 
 ::msgcat::mcset es {ICRS} 
 ::msgcat::mcset es {Icons} 
@@ -413,6 +424,8 @@
 ::msgcat::mcset es {Import Array} 
 ::msgcat::mcset es {Import ENVI} 
 ::msgcat::mcset es {Import GIF} 
+::msgcat::mcset es {Import HLS Array} 
+::msgcat::mcset es {Import HSV Array} 
 ::msgcat::mcset es {Import JPEG} 
 ::msgcat::mcset es {Import NRRD} 
 ::msgcat::mcset es {Import PNG} 
@@ -471,6 +484,7 @@
 ::msgcat::mcset es {Levels} {Niveles}
 ::msgcat::mcset es {Level} {Nivel}
 ::msgcat::mcset es {Lighten} 
+::msgcat::mcset es {Lightness} 
 ::msgcat::mcset es {Limits} [encoding convertfrom iso8859-1 {Límites}]
 ::msgcat::mcset es {Line Dataset} 
 ::msgcat::mcset es {Line Plot Tool} 
@@ -621,6 +635,8 @@
 ::msgcat::mcset es {Native Dialog} [encoding convertfrom iso8859-1 {Diálogo nativo}]
 ::msgcat::mcset es {New Features} [encoding convertfrom iso8859-1 {Nuevas características}]
 ::msgcat::mcset es {New Frame 3D} {Nuevo Marco 3D}
+::msgcat::mcset es {New Frame HLS} 
+::msgcat::mcset es {New Frame HSV} 
 ::msgcat::mcset es {New Frame RGB} {Nuevo marco RGB}  
 ::msgcat::mcset es {New Frame each Time} {Nuevo marco cada vez}
 ::msgcat::mcset es {New Frame} {Nuevo marco}
@@ -652,6 +668,10 @@
 ::msgcat::mcset es {Object} {Objeto}
 ::msgcat::mcset es {ObsId} 
 ::msgcat::mcset es {Open File} {Abrir fichero}
+::msgcat::mcset es {Open HLS Cube} 
+::msgcat::mcset es {Open HLS Image} 
+::msgcat::mcset es {Open HSV Cube} 
+::msgcat::mcset es {Open HSV Image} 
 ::msgcat::mcset es {Open ME Cube} 
 ::msgcat::mcset es {Open ME Frames} 
 ::msgcat::mcset es {Open Mosaic IRAF Seg} 
@@ -798,11 +818,16 @@
 ::msgcat::mcset es {Sample Parameters} 
 ::msgcat::mcset es {Samples per Line} [encoding convertfrom iso8859-1 {Muestreos por línea}] 
 ::msgcat::mcset es {Sample} 
+::msgcat::mcset es {Saturation} 
 ::msgcat::mcset es {Save 3D Movie} 
 ::msgcat::mcset es {Save Color Tags} 
 ::msgcat::mcset es {Save Contour Levels} {Guardar niveles de contorno}
 ::msgcat::mcset es {Save Contrast/Bias} {Guardar contraste/Bias}
 ::msgcat::mcset es {Save Data} {Guardar datos}
+::msgcat::mcset es {Save HLS Cube} 
+::msgcat::mcset es {Save HLS Image} 
+::msgcat::mcset es {Save HSV Cube} 
+::msgcat::mcset es {Save HSV Image} 
 ::msgcat::mcset es {Save Image EPS} 
 ::msgcat::mcset es {Save Image FITS} 
 ::msgcat::mcset es {Save Image GIF} 
@@ -956,6 +981,8 @@
 ::msgcat::mcset es {Unable to find web window} 
 ::msgcat::mcset es {Unable to generate plot} 
 ::msgcat::mcset es {Unable to load FITS file} 
+::msgcat::mcset es {Unable to load HLS image into a non-hls frame} 
+::msgcat::mcset es {Unable to load HSV image into a non-hsv frame} 
 ::msgcat::mcset es {Unable to load RGB image into a non-rgb frame} {Incapaz de cargar imagen RGB en un marco no RGB}
 ::msgcat::mcset es {Unable to load compressed region file} 
 ::msgcat::mcset es {Unable to load plot data} 
@@ -965,10 +992,11 @@
 ::msgcat::mcset es {Unable to locate URL} {Incapaz de localizar URL}
 ::msgcat::mcset es {Unable to match target with XPA Mime request} 
 ::msgcat::mcset es {Unable to open file} {Incapaz de abrir fichero}
+::msgcat::mcset es {Unable to save HLS image from a non-hls frame} 
+::msgcat::mcset es {Unable to save HSV image from a non-hsv frame} 
 ::msgcat::mcset es {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset es {Undo} {Deshacer}
 ::msgcat::mcset es {Unique} 
-::msgcat::mcset es {Unists} 
 ::msgcat::mcset es {Units} {Unidades}
 ::msgcat::mcset es {Unknown Colormap} 
 ::msgcat::mcset es {Unknown command} 
@@ -1043,6 +1071,8 @@
 ::msgcat::mcset es {g} 
 ::msgcat::mcset es {h5utils} 
 ::msgcat::mcset es {hundredths second} 
+::msgcat::mcset es {h} 
+::msgcat::mcset es {l} 
 ::msgcat::mcset es {not connected} 
 ::msgcat::mcset es {not} 
 ::msgcat::mcset es {only} 
@@ -1051,8 +1081,10 @@
 ::msgcat::mcset es {root} 
 ::msgcat::mcset es {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-1 {Filas de datos transferidas. Puede que haya más disponibles. Quizá quiera ajustar el máximo permitido.}]
 ::msgcat::mcset es {r} 
+::msgcat::mcset es {s} 
 ::msgcat::mcset es {unable to create hub file} 
 ::msgcat::mcset es {unable to locate HUB} 
 ::msgcat::mcset es {unable to open hub} 
 ::msgcat::mcset es {unable to open web hub} 
+::msgcat::mcset es {v} 
 ::msgcat::mcset es {x} 

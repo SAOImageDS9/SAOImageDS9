@@ -300,6 +300,8 @@
 ::msgcat::mcset zh {Export Array} 
 ::msgcat::mcset zh {Export ENVI} 
 ::msgcat::mcset zh {Export GIF} 
+::msgcat::mcset zh {Export HLS Array} 
+::msgcat::mcset zh {Export HSV Array} 
 ::msgcat::mcset zh {Export JPEG} 
 ::msgcat::mcset zh {Export NRRD} 
 ::msgcat::mcset zh {Export PNG} 
@@ -386,7 +388,15 @@
 ::msgcat::mcset zh {Grid Gap} 
 ::msgcat::mcset zh {Grid} 
 ::msgcat::mcset zh {Groups} 
+::msgcat::mcset zh {HLS Array} 
+::msgcat::mcset zh {HLS Cube} 
+::msgcat::mcset zh {HLS Image} 
+::msgcat::mcset zh {HLS} 
 ::msgcat::mcset zh {HMS} 
+::msgcat::mcset zh {HSV Array} 
+::msgcat::mcset zh {HSV Cube} 
+::msgcat::mcset zh {HSV Image} 
+::msgcat::mcset zh {HSV} 
 ::msgcat::mcset zh {HTTP} 
 ::msgcat::mcset zh {Header} 
 ::msgcat::mcset zh {Height} 
@@ -402,6 +412,7 @@
 ::msgcat::mcset zh {Horizontal Layout} 
 ::msgcat::mcset zh {Horizontal} [encoding convertfrom big5 "\xA4\xF4 \xA5\xAD"]
 ::msgcat::mcset zh {Hub not running} 
+::msgcat::mcset zh {Hue} 
 ::msgcat::mcset zh {IAU Location Code} 
 ::msgcat::mcset zh {ICRS} 
 ::msgcat::mcset zh {Icons} 
@@ -413,6 +424,8 @@
 ::msgcat::mcset zh {Import Array} 
 ::msgcat::mcset zh {Import ENVI} 
 ::msgcat::mcset zh {Import GIF} 
+::msgcat::mcset zh {Import HLS Array} 
+::msgcat::mcset zh {Import HSV Array} 
 ::msgcat::mcset zh {Import JPEG} 
 ::msgcat::mcset zh {Import NRRD} 
 ::msgcat::mcset zh {Import PNG} 
@@ -471,6 +484,7 @@
 ::msgcat::mcset zh {Levels} 
 ::msgcat::mcset zh {Level} 
 ::msgcat::mcset zh {Lighten} 
+::msgcat::mcset zh {Lightness} 
 ::msgcat::mcset zh {Limits} 
 ::msgcat::mcset zh {Line Dataset} 
 ::msgcat::mcset zh {Line Plot Tool} 
@@ -621,6 +635,8 @@
 ::msgcat::mcset zh {Native Dialog} 
 ::msgcat::mcset zh {New Features} 
 ::msgcat::mcset zh {New Frame 3D} 
+::msgcat::mcset zh {New Frame HLS} 
+::msgcat::mcset zh {New Frame HSV} 
 ::msgcat::mcset zh {New Frame RGB} 
 ::msgcat::mcset zh {New Frame each Time} 
 ::msgcat::mcset zh {New Frame} [encoding convertfrom big5 "\xB7\x73 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
@@ -652,6 +668,10 @@
 ::msgcat::mcset zh {Object} [encoding convertfrom big5 "\xA4\xD1 \xC5\xE9 \xA6\x57 \xBA\xD9"]
 ::msgcat::mcset zh {ObsId} 
 ::msgcat::mcset zh {Open File} 
+::msgcat::mcset zh {Open HLS Cube} 
+::msgcat::mcset zh {Open HLS Image} 
+::msgcat::mcset zh {Open HSV Cube} 
+::msgcat::mcset zh {Open HSV Image} 
 ::msgcat::mcset zh {Open ME Cube} 
 ::msgcat::mcset zh {Open ME Frames} 
 ::msgcat::mcset zh {Open Mosaic IRAF Seg} 
@@ -798,11 +818,16 @@
 ::msgcat::mcset zh {Sample Parameters} 
 ::msgcat::mcset zh {Samples per Line} 
 ::msgcat::mcset zh {Sample} 
+::msgcat::mcset zh {Saturation} 
 ::msgcat::mcset zh {Save 3D Movie} 
 ::msgcat::mcset zh {Save Color Tags} 
 ::msgcat::mcset zh {Save Contour Levels} 
 ::msgcat::mcset zh {Save Contrast/Bias} 
 ::msgcat::mcset zh {Save Data} 
+::msgcat::mcset zh {Save HLS Cube} 
+::msgcat::mcset zh {Save HLS Image} 
+::msgcat::mcset zh {Save HSV Cube} 
+::msgcat::mcset zh {Save HSV Image} 
 ::msgcat::mcset zh {Save Image EPS} 
 ::msgcat::mcset zh {Save Image FITS} 
 ::msgcat::mcset zh {Save Image GIF} 
@@ -956,6 +981,8 @@
 ::msgcat::mcset zh {Unable to find web window} 
 ::msgcat::mcset zh {Unable to generate plot} 
 ::msgcat::mcset zh {Unable to load FITS file} 
+::msgcat::mcset zh {Unable to load HLS image into a non-hls frame} 
+::msgcat::mcset zh {Unable to load HSV image into a non-hsv frame} 
 ::msgcat::mcset zh {Unable to load RGB image into a non-rgb frame} 
 ::msgcat::mcset zh {Unable to load compressed region file} 
 ::msgcat::mcset zh {Unable to load plot data} 
@@ -965,10 +992,11 @@
 ::msgcat::mcset zh {Unable to locate URL} 
 ::msgcat::mcset zh {Unable to match target with XPA Mime request} 
 ::msgcat::mcset zh {Unable to open file} 
+::msgcat::mcset zh {Unable to save HLS image from a non-hls frame} 
+::msgcat::mcset zh {Unable to save HSV image from a non-hsv frame} 
 ::msgcat::mcset zh {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset zh {Undo} 
 ::msgcat::mcset zh {Unique} 
-::msgcat::mcset zh {Unists} 
 ::msgcat::mcset zh {Units} 
 ::msgcat::mcset zh {Unknown Colormap} 
 ::msgcat::mcset zh {Unknown command} 
@@ -1043,6 +1071,8 @@
 ::msgcat::mcset zh {g} 
 ::msgcat::mcset zh {h5utils} 
 ::msgcat::mcset zh {hundredths second} 
+::msgcat::mcset zh {h} 
+::msgcat::mcset zh {l} 
 ::msgcat::mcset zh {not connected} 
 ::msgcat::mcset zh {not} 
 ::msgcat::mcset zh {only} 
@@ -1051,8 +1081,10 @@
 ::msgcat::mcset zh {root} 
 ::msgcat::mcset zh {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} 
 ::msgcat::mcset zh {r} 
+::msgcat::mcset zh {s} 
 ::msgcat::mcset zh {unable to create hub file} 
 ::msgcat::mcset zh {unable to locate HUB} 
 ::msgcat::mcset zh {unable to open hub} 
 ::msgcat::mcset zh {unable to open web hub} 
+::msgcat::mcset zh {v} 
 ::msgcat::mcset zh {x} 

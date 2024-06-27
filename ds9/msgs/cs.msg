@@ -300,6 +300,8 @@
 ::msgcat::mcset cs {Export Array} 
 ::msgcat::mcset cs {Export ENVI} 
 ::msgcat::mcset cs {Export GIF} 
+::msgcat::mcset cs {Export HLS Array} 
+::msgcat::mcset cs {Export HSV Array} 
 ::msgcat::mcset cs {Export JPEG} 
 ::msgcat::mcset cs {Export NRRD} 
 ::msgcat::mcset cs {Export PNG} 
@@ -386,7 +388,15 @@
 ::msgcat::mcset cs {Grid Gap} 
 ::msgcat::mcset cs {Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]
 ::msgcat::mcset cs {Groups} [encoding convertfrom iso8859-2 {Skupiny}]
+::msgcat::mcset cs {HLS Array} 
+::msgcat::mcset cs {HLS Cube} 
+::msgcat::mcset cs {HLS Image} 
+::msgcat::mcset cs {HLS} 
 ::msgcat::mcset cs {HMS} 
+::msgcat::mcset cs {HSV Array} 
+::msgcat::mcset cs {HSV Cube} 
+::msgcat::mcset cs {HSV Image} 
+::msgcat::mcset cs {HSV} 
 ::msgcat::mcset cs {HTTP} 
 ::msgcat::mcset cs {Header} [encoding convertfrom iso8859-2 {Hlavièka}]
 ::msgcat::mcset cs {Height} [encoding convertfrom iso8859-2 {Vý¹ka}]
@@ -402,6 +412,7 @@
 ::msgcat::mcset cs {Horizontal Layout} [encoding convertfrom iso8859-2 {Horizontální rozlo¾ení}]
 ::msgcat::mcset cs {Horizontal} 
 ::msgcat::mcset cs {Hub not running} 
+::msgcat::mcset cs {Hue} 
 ::msgcat::mcset cs {IAU Location Code} 
 ::msgcat::mcset cs {ICRS} 
 ::msgcat::mcset cs {Icons} 
@@ -413,6 +424,8 @@
 ::msgcat::mcset cs {Import Array} 
 ::msgcat::mcset cs {Import ENVI} 
 ::msgcat::mcset cs {Import GIF} 
+::msgcat::mcset cs {Import HLS Array} 
+::msgcat::mcset cs {Import HSV Array} 
 ::msgcat::mcset cs {Import JPEG} 
 ::msgcat::mcset cs {Import NRRD} 
 ::msgcat::mcset cs {Import PNG} 
@@ -471,6 +484,7 @@
 ::msgcat::mcset cs {Levels} [encoding convertfrom iso8859-2 {Úrovnì}]
 ::msgcat::mcset cs {Level} [encoding convertfrom iso8859-2 {Úroveò}]
 ::msgcat::mcset cs {Lighten} 
+::msgcat::mcset cs {Lightness} 
 ::msgcat::mcset cs {Limits} 
 ::msgcat::mcset cs {Line Dataset} 
 ::msgcat::mcset cs {Line Plot Tool} 
@@ -621,6 +635,8 @@
 ::msgcat::mcset cs {Native Dialog} 
 ::msgcat::mcset cs {New Features} [encoding convertfrom iso8859-2 {Nové vlasnosti}]
 ::msgcat::mcset cs {New Frame 3D} [encoding convertfrom iso8859-2 {Nový 3D snímek}]
+::msgcat::mcset cs {New Frame HLS} 
+::msgcat::mcset cs {New Frame HSV} 
 ::msgcat::mcset cs {New Frame RGB} [encoding convertfrom iso8859-2 {Nový barevný RGB snímek}]
 ::msgcat::mcset cs {New Frame each Time} 
 ::msgcat::mcset cs {New Frame} [encoding convertfrom iso8859-2 {Nový snímek}]
@@ -652,6 +668,10 @@
 ::msgcat::mcset cs {Object} [encoding convertfrom iso8859-2 {Objekt}]
 ::msgcat::mcset cs {ObsId} 
 ::msgcat::mcset cs {Open File} [encoding convertfrom iso8859-2 {Otevøít soubor}]
+::msgcat::mcset cs {Open HLS Cube} 
+::msgcat::mcset cs {Open HLS Image} 
+::msgcat::mcset cs {Open HSV Cube} 
+::msgcat::mcset cs {Open HSV Image} 
 ::msgcat::mcset cs {Open ME Cube} 
 ::msgcat::mcset cs {Open ME Frames} 
 ::msgcat::mcset cs {Open Mosaic IRAF Seg} 
@@ -798,11 +818,16 @@
 ::msgcat::mcset cs {Sample Parameters} 
 ::msgcat::mcset cs {Samples per Line} 
 ::msgcat::mcset cs {Sample} 
+::msgcat::mcset cs {Saturation} 
 ::msgcat::mcset cs {Save 3D Movie} 
 ::msgcat::mcset cs {Save Color Tags} 
 ::msgcat::mcset cs {Save Contour Levels} 
 ::msgcat::mcset cs {Save Contrast/Bias} 
 ::msgcat::mcset cs {Save Data} 
+::msgcat::mcset cs {Save HLS Cube} 
+::msgcat::mcset cs {Save HLS Image} 
+::msgcat::mcset cs {Save HSV Cube} 
+::msgcat::mcset cs {Save HSV Image} 
 ::msgcat::mcset cs {Save Image EPS} 
 ::msgcat::mcset cs {Save Image FITS} 
 ::msgcat::mcset cs {Save Image GIF} 
@@ -956,6 +981,8 @@
 ::msgcat::mcset cs {Unable to find web window} 
 ::msgcat::mcset cs {Unable to generate plot} 
 ::msgcat::mcset cs {Unable to load FITS file} 
+::msgcat::mcset cs {Unable to load HLS image into a non-hls frame} 
+::msgcat::mcset cs {Unable to load HSV image into a non-hsv frame} 
 ::msgcat::mcset cs {Unable to load RGB image into a non-rgb frame} 
 ::msgcat::mcset cs {Unable to load compressed region file} 
 ::msgcat::mcset cs {Unable to load plot data} 
@@ -965,10 +992,11 @@
 ::msgcat::mcset cs {Unable to locate URL} 
 ::msgcat::mcset cs {Unable to match target with XPA Mime request} 
 ::msgcat::mcset cs {Unable to open file} 
+::msgcat::mcset cs {Unable to save HLS image from a non-hls frame} 
+::msgcat::mcset cs {Unable to save HSV image from a non-hsv frame} 
 ::msgcat::mcset cs {Unable to save RGB image from a non-rgb frame} 
 ::msgcat::mcset cs {Undo} [encoding convertfrom iso8859-2 {Zpìt}]
 ::msgcat::mcset cs {Unique} 
-::msgcat::mcset cs {Unists} 
 ::msgcat::mcset cs {Units} 
 ::msgcat::mcset cs {Unknown Colormap} 
 ::msgcat::mcset cs {Unknown command} 
@@ -1043,6 +1071,8 @@
 ::msgcat::mcset cs {g} 
 ::msgcat::mcset cs {h5utils} 
 ::msgcat::mcset cs {hundredths second} 
+::msgcat::mcset cs {h} 
+::msgcat::mcset cs {l} 
 ::msgcat::mcset cs {not connected} 
 ::msgcat::mcset cs {not} 
 ::msgcat::mcset cs {only} 
@@ -1051,8 +1081,10 @@
 ::msgcat::mcset cs {root} 
 ::msgcat::mcset cs {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed} [encoding convertfrom iso8859-2 {øádkù dat. Více jich mù¾e být k dispozici. Zkuste zmìnit povolené maximum}]
 ::msgcat::mcset cs {r} 
+::msgcat::mcset cs {s} 
 ::msgcat::mcset cs {unable to create hub file} 
 ::msgcat::mcset cs {unable to locate HUB} 
 ::msgcat::mcset cs {unable to open hub} 
 ::msgcat::mcset cs {unable to open web hub} 
+::msgcat::mcset cs {v} 
 ::msgcat::mcset cs {x} 

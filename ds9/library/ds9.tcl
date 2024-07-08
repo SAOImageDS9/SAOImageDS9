@@ -19,7 +19,7 @@ proc DS9Def {} {
 
     set ds9(visual) {}
     set ds9(depth) 8
-    set ds9(FTY_MAXAXES) 10
+    set ds9(FTY_MAXAXES) 9
     set ds9(threads) [GetNumCores]
     set ds9(prefs) 1
 

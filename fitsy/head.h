@@ -36,6 +36,7 @@ public:
   FitsHead(char*, size_t, Memory);
   FitsHead(char*, size_t, char*, size_t, Memory);
   FitsHead(int width, int height, int depth, int bitpix, char* =NULL);
+  FitsHead(int naxes, int* axis, int bitpix, char* =NULL);
   FitsHead(int width, int height, int depth, int bitpix, char*, size_t, Memory);
   FitsHead(const FitsHead&);
   ~FitsHead();

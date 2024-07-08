@@ -14,6 +14,11 @@ class FitsCompress : public FitsFile {
  protected:
   int bitpix_;
   char* type_;
+
+  int naxes_;
+  int naxis_[FTY_MAXAXES];    // ZNAXIS[i] keywords
+  int ntile_[FTY_MAXAXES];    // ZTILE[i] keywords
+  
   int width_;
   int height_;
   int depth_;

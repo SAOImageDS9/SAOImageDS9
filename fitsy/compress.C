@@ -11,7 +11,28 @@ FitsCompress::FitsCompress(FitsFile* fits)
 {
   bitpix_ = fits->getInteger("ZBITPIX",0);
   type_ = dupstr(fits->getString("ZCMPTYPE"));
-  //  int naxes = fits->getInteger("ZNAXIS",0);
+
+  naxes_ = fits->getInteger("ZNAXIS",0);
+  {
+    char key[] = "ZNAXIS ";
+    for (int ii=0; ii<2; ii++) {
+      key[6] = '1'+ii;
+      naxis_[ii] = fits->getInteger(key,0);
+    }
+    for (int ii=2; ii<FTY_MAXAXES; ii++) {
+      key[6] = '1'+ii;
+      naxis_[ii] = fits->getInteger(key,1);
+    }
+  }
+  {
+    char key[] = "ZTILE ";
+    ntile_[0] = fits->getInteger("ZTILE1",naxis_[0]);
+    for (int ii=1; ii<FTY_MAXAXES; ii++) {
+      key[5] = '1'+ii;
+      naxis_[ii] = fits->getInteger(key,1);
+    }
+  }
+  
   width_ = fits->getInteger("ZNAXIS1",0);
   height_ = fits->getInteger("ZNAXIS2",0);
   depth_ = fits->getInteger("ZNAXIS3",1);

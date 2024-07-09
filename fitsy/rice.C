@@ -94,7 +94,7 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
 	for (int jj=jjstart; jj<jjstop; jj++)
 	  for (int ii=iistart; ii<iistop; ii++,ll++) {
 	    // very carefull about type conversions
-	    size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::height_ + jj*FitsCompressm<T>::naxis_[0] + ii;
+	    size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii;
 	    T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	    dest[id] = val;
 	  }
@@ -114,7 +114,7 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
 	for (int jj=jjstart; jj<jjstop; jj++)
 	  for (int ii=iistart; ii<iistop; ii++,ll++) {
 	    // very carefull about type conversions
-	    size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::height_ + jj*FitsCompressm<T>::naxis_[0] + ii;
+	    size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii;
 	    T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	    dest[id] = val;
 	  }
@@ -134,7 +134,7 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
 	for (int jj=jjstart; jj<jjstop; jj++)
 	  for (int ii=iistart; ii<iistop; ii++,ll++) {
 	    // very carefull about type conversions
-	    int id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::height_ + jj*FitsCompressm<T>::naxis_[0] + ii;
+	    int id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii;
 	    T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	    dest[id] = val;
 	  }

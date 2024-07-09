@@ -20,7 +20,7 @@ class FitsCompress : public FitsFile {
   int ntile_[FTY_MAXAXES];    // ZTILE[i] keywords
   
   //  int width_;
-  int height_;
+  //  int height_;
   int depth_;
   int ww_;
   int hh_;

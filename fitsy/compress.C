@@ -42,9 +42,10 @@ FitsCompress::FitsCompress(FitsFile* fits)
   //  depth_ = fits->getInteger("ZNAXIS3",1);
   //  if (depth_<1)
   //    depth_ =1;
-  ww_ = fits->getInteger("ZTILE1",znaxis_[0]);
-  hh_ = fits->getInteger("ZTILE2",1);
-  dd_ = fits->getInteger("ZTILE3",1);
+  //  ww_ = fits->getInteger("ZTILE1",znaxis_[0]);
+  //  hh_ = fits->getInteger("ZTILE2",1);
+  //  dd_ = fits->getInteger("ZTILE3",1);
+
   bscale_ = fits->getReal("ZSCALE",1);
   bzero_ = fits->getReal("ZZERO",0);
   blank_ = fits->getInteger("ZBLANK",0);
@@ -65,7 +66,7 @@ FitsCompress::FitsCompress(FitsFile* fits)
   }
   quantOffset_ = fits->getInteger("ZDITHER0",1);
 
-  tilesize_ = (size_t)ww_*hh_*dd_;
+  tilesize_ = (size_t)ztile_[0]*ztile_[1]*ztile_[2];
   size_ = (size_t)znaxis_[0]*znaxis_[1]*znaxis_[2];
 
   FitsHead* srcHead = fits->head();
@@ -317,17 +318,17 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 
   // dest
   int iistart =0;
-  int iistop =ww_;
+  int iistop =ztile_[0];
   if (iistop > znaxis_[0])
     iistop = znaxis_[0];
 
   int jjstart =0;
-  int jjstop =hh_;
+  int jjstop =ztile_[1];
   if (jjstop > znaxis_[1])
     jjstop = znaxis_[1];
 
   int kkstart =0;
-  int kkstop =dd_;
+  int kkstop =ztile_[2];
   if (kkstop > znaxis_[2])
     kkstop = znaxis_[2];
 
@@ -362,30 +363,30 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
       return 0;
 
     // tiles may not be an even multiple of the image size
-    iistart += ww_;
-    iistop += ww_;
+    iistart += ztile_[0];
+    iistop += ztile_[0];
     if (iistop > znaxis_[0])
       iistop = znaxis_[0];
 
     if (iistart >= znaxis_[0]) {
       iistart = 0;
-      iistop = ww_;
+      iistop = ztile_[0];
       if (iistop > znaxis_[0])
 	iistop = znaxis_[0];
 
-      jjstart += hh_;
-      jjstop += hh_;
+      jjstart += ztile_[1];
+      jjstop += ztile_[1];
       if (jjstop > znaxis_[1])
 	jjstop = znaxis_[1];
 
       if (jjstart >= znaxis_[1]) {
 	jjstart = 0;
-	jjstop = hh_;
+	jjstop = ztile_[1];
 	if (jjstop > znaxis_[1])
 	  jjstop = znaxis_[1];
 
-	kkstart += dd_;
-	kkstop += dd_;
+	kkstart += ztile_[2];
+	kkstop += ztile_[2];
 
 	// we only do up to 3 dimensions
 	if (kkstart >= znaxis_[2])

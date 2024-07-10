@@ -22,9 +22,10 @@ class FitsCompress : public FitsFile {
   //  int width_;
   //  int height_;
   //  int depth_;
-  int ww_;
-  int hh_;
-  int dd_;
+  //  int ww_;
+  //  int hh_;
+  //  int dd_;
+
   double bscale_;
   double bzero_;
   unsigned int blank_;

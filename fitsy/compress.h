@@ -21,7 +21,7 @@ class FitsCompress : public FitsFile {
   
   //  int width_;
   //  int height_;
-  int depth_;
+  //  int depth_;
   int ww_;
   int hh_;
   int dd_;

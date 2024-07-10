@@ -22,6 +22,8 @@ FitsCompress::FitsCompress(FitsFile* fits)
     for (int ii=2; ii<FTY_MAXAXES; ii++) {
       key[6] = '1'+ii;
       naxis_[ii] = fits->getInteger(key,1);
+      if (naxis_[ii]<1)
+	naxis_[ii] =1;
     }
   }
   {
@@ -30,14 +32,16 @@ FitsCompress::FitsCompress(FitsFile* fits)
     for (int ii=1; ii<FTY_MAXAXES; ii++) {
       key[5] = '1'+ii;
       ntile_[ii] = fits->getInteger(key,1);
+      if (ntile_[ii]<1)
+	ntile_[ii] =1;
     }
   }
   
   //  width_ = fits->getInteger("ZNAXIS1",0);
   //  height_ = fits->getInteger("ZNAXIS2",0);
-  depth_ = fits->getInteger("ZNAXIS3",1);
-  if (depth_<1)
-    depth_ =1;
+  //  depth_ = fits->getInteger("ZNAXIS3",1);
+  //  if (depth_<1)
+  //    depth_ =1;
   ww_ = fits->getInteger("ZTILE1",naxis_[0]);
   hh_ = fits->getInteger("ZTILE2",1);
   dd_ = fits->getInteger("ZTILE3",1);
@@ -62,7 +66,7 @@ FitsCompress::FitsCompress(FitsFile* fits)
   quantOffset_ = fits->getInteger("ZDITHER0",1);
 
   tilesize_ = (size_t)ww_*hh_*dd_;
-  size_ = (size_t)naxis_[0]*naxis_[1]*depth_;
+  size_ = (size_t)naxis_[0]*naxis_[1]*naxis_[2];
 
   FitsHead* srcHead = fits->head();
   FitsTableHDU* srcHDU = (FitsTableHDU*)srcHead->hdu();
@@ -118,10 +122,10 @@ int FitsCompress::initHeader(FitsFile* fits)
 
   if (srcHead->find("ZTENSION")) {
     char* str = srcHead->getString("ZTENSION");
-    head_ = new FitsHead(naxis_[0], naxis_[1], depth_, bitpix_, str);
+    head_ = new FitsHead(naxis_[0], naxis_[1], naxis_[2], bitpix_, str);
   }
   else
-    head_ = new FitsHead(naxis_[0], naxis_[1], depth_, bitpix_);
+    head_ = new FitsHead(naxis_[0], naxis_[1], naxis_[2], bitpix_);
 
   if (!head_->isValid())
     return 0;
@@ -324,8 +328,8 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 
   int kkstart =0;
   int kkstop =dd_;
-  if (kkstop > depth_)
-    kkstop = depth_;
+  if (kkstop > naxis_[2])
+    kkstop = naxis_[2];
 
   for (int rr=0; rr<rows; rr++, sptr+=rowlen) {
     // we can't use incr paging due to the location of the heap
@@ -384,7 +388,7 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 	kkstop += dd_;
 
 	// we only do up to 3 dimensions
-	if (kkstart >= depth_)
+	if (kkstart >= naxis_[2])
 	  break;
       }
     }

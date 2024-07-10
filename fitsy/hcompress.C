@@ -81,7 +81,7 @@ template <class T> int FitsHcompressm<T>::compressed(T* dest, char* sptr,
       for (int kk=kkstart; kk<kkstop; kk++)
 	for (int jj=jjstart; jj<jjstop; jj++)
 	  for (int ii=iistart; ii<iistop; ii++,ll++)
-	    dest[kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii] = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
+	    dest[kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii] = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 
       if (obuf)
 	delete [] obuf;
@@ -99,7 +99,7 @@ template <class T> int FitsHcompressm<T>::compressed(T* dest, char* sptr,
       for (int kk=kkstart; kk<kkstop; kk++)
 	for (int jj=jjstart; jj<jjstop; jj++)
 	  for (int ii=iistart; ii<iistop; ii++,ll++)
-	    dest[kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii] = FitsCompressm<T>::getValue((int*)obuf+ll,zs,zz,blank);
+	    dest[kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii] = FitsCompressm<T>::getValue((int*)obuf+ll,zs,zz,blank);
 
       if (obuf)
 	delete [] obuf;

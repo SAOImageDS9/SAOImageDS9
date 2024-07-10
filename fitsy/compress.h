@@ -15,9 +15,9 @@ class FitsCompress : public FitsFile {
   int bitpix_;
   char* type_;
 
-  int naxes_;
-  int naxis_[FTY_MAXAXES];    // ZNAXIS[i] keywords
-  int ntile_[FTY_MAXAXES];    // ZTILE[i] keywords
+  int znaxes_;
+  int znaxis_[FTY_MAXAXES];    // ZNAXIS[i] keywords
+  int ztile_[FTY_MAXAXES];    // ZTILE[i] keywords
   
   //  int width_;
   //  int height_;

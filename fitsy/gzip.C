@@ -215,7 +215,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
     for (int kk=kkstart; kk<kkstop; kk++)
       for (int jj=jjstart; jj<jjstop; jj++)
 	for (int ii=iistart; ii<iistop; ii++,ll++) {
-	  size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii;
+	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
 	  // very carefull about type conversions
 	  T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	  dest[id] = val;
@@ -239,7 +239,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((short*)obuf+ll) = u.s;
 	  }
 	  // very carefull about type conversions
-	  size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii;
+	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
 	  T val = FitsCompressm<T>::getValue((short*)obuf+ll,zs,zz,blank);
 	  dest[id] = val;
 	}
@@ -264,7 +264,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((int*)obuf+ll) = u.i;
 	  }
 	  // very carefull about type conversions
-	  size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii;
+	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
 	  case FitsCompress::NONE:
@@ -303,7 +303,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((long long*)obuf+ll) = u.i;
 	  }
 	  // very carefull about type conversions
-	  size_t id = kk*FitsCompressm<T>::naxis_[0]*FitsCompressm<T>::naxis_[1] + jj*FitsCompressm<T>::naxis_[0] + ii;
+	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
 	  case FitsCompress::NONE:

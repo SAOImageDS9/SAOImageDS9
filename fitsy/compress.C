@@ -12,28 +12,28 @@ FitsCompress::FitsCompress(FitsFile* fits)
   bitpix_ = fits->getInteger("ZBITPIX",0);
   type_ = dupstr(fits->getString("ZCMPTYPE"));
 
-  naxes_ = fits->getInteger("ZNAXIS",0);
+  znaxes_ = fits->getInteger("ZNAXIS",0);
   {
     char key[] = "ZNAXIS ";
     for (int ii=0; ii<2; ii++) {
       key[6] = '1'+ii;
-      naxis_[ii] = fits->getInteger(key,0);
+      znaxis_[ii] = fits->getInteger(key,0);
     }
     for (int ii=2; ii<FTY_MAXAXES; ii++) {
       key[6] = '1'+ii;
-      naxis_[ii] = fits->getInteger(key,1);
-      if (naxis_[ii]<1)
-	naxis_[ii] =1;
+      znaxis_[ii] = fits->getInteger(key,1);
+      if (znaxis_[ii]<1)
+	znaxis_[ii] =1;
     }
   }
   {
-    ntile_[0] = fits->getInteger("ZTILE1",naxis_[0]);
+    ztile_[0] = fits->getInteger("ZTILE1",znaxis_[0]);
     char key[] = "ZTILE ";
     for (int ii=1; ii<FTY_MAXAXES; ii++) {
       key[5] = '1'+ii;
-      ntile_[ii] = fits->getInteger(key,1);
-      if (ntile_[ii]<1)
-	ntile_[ii] =1;
+      ztile_[ii] = fits->getInteger(key,1);
+      if (ztile_[ii]<1)
+	ztile_[ii] =1;
     }
   }
   
@@ -42,7 +42,7 @@ FitsCompress::FitsCompress(FitsFile* fits)
   //  depth_ = fits->getInteger("ZNAXIS3",1);
   //  if (depth_<1)
   //    depth_ =1;
-  ww_ = fits->getInteger("ZTILE1",naxis_[0]);
+  ww_ = fits->getInteger("ZTILE1",znaxis_[0]);
   hh_ = fits->getInteger("ZTILE2",1);
   dd_ = fits->getInteger("ZTILE3",1);
   bscale_ = fits->getReal("ZSCALE",1);
@@ -66,7 +66,7 @@ FitsCompress::FitsCompress(FitsFile* fits)
   quantOffset_ = fits->getInteger("ZDITHER0",1);
 
   tilesize_ = (size_t)ww_*hh_*dd_;
-  size_ = (size_t)naxis_[0]*naxis_[1]*naxis_[2];
+  size_ = (size_t)znaxis_[0]*znaxis_[1]*znaxis_[2];
 
   FitsHead* srcHead = fits->head();
   FitsTableHDU* srcHDU = (FitsTableHDU*)srcHead->hdu();
@@ -113,7 +113,7 @@ FitsCompress::~FitsCompress()
 int FitsCompress::initHeader(FitsFile* fits) 
 {
   // simple check
-  if (!compress_ || !naxis_[0] || !naxis_[1] || !bitpix_)
+  if (!compress_ || !znaxis_[0] || !znaxis_[1] || !bitpix_)
     return 0;
 
   // create header
@@ -122,10 +122,10 @@ int FitsCompress::initHeader(FitsFile* fits)
 
   if (srcHead->find("ZTENSION")) {
     char* str = srcHead->getString("ZTENSION");
-    head_ = new FitsHead(naxis_[0], naxis_[1], naxis_[2], bitpix_, str);
+    head_ = new FitsHead(znaxis_[0], znaxis_[1], znaxis_[2], bitpix_, str);
   }
   else
-    head_ = new FitsHead(naxis_[0], naxis_[1], naxis_[2], bitpix_);
+    head_ = new FitsHead(znaxis_[0], znaxis_[1], znaxis_[2], bitpix_);
 
   if (!head_->isValid())
     return 0;
@@ -318,18 +318,18 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
   // dest
   int iistart =0;
   int iistop =ww_;
-  if (iistop > naxis_[0])
-    iistop = naxis_[0];
+  if (iistop > znaxis_[0])
+    iistop = znaxis_[0];
 
   int jjstart =0;
   int jjstop =hh_;
-  if (jjstop > naxis_[1])
-    jjstop = naxis_[1];
+  if (jjstop > znaxis_[1])
+    jjstop = znaxis_[1];
 
   int kkstart =0;
   int kkstop =dd_;
-  if (kkstop > naxis_[2])
-    kkstop = naxis_[2];
+  if (kkstop > znaxis_[2])
+    kkstop = znaxis_[2];
 
   for (int rr=0; rr<rows; rr++, sptr+=rowlen) {
     // we can't use incr paging due to the location of the heap
@@ -364,31 +364,31 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
     // tiles may not be an even multiple of the image size
     iistart += ww_;
     iistop += ww_;
-    if (iistop > naxis_[0])
-      iistop = naxis_[0];
+    if (iistop > znaxis_[0])
+      iistop = znaxis_[0];
 
-    if (iistart >= naxis_[0]) {
+    if (iistart >= znaxis_[0]) {
       iistart = 0;
       iistop = ww_;
-      if (iistop > naxis_[0])
-	iistop = naxis_[0];
+      if (iistop > znaxis_[0])
+	iistop = znaxis_[0];
 
       jjstart += hh_;
       jjstop += hh_;
-      if (jjstop > naxis_[1])
-	jjstop = naxis_[1];
+      if (jjstop > znaxis_[1])
+	jjstop = znaxis_[1];
 
-      if (jjstart >= naxis_[1]) {
+      if (jjstart >= znaxis_[1]) {
 	jjstart = 0;
 	jjstop = hh_;
-	if (jjstop > naxis_[1])
-	  jjstop = naxis_[1];
+	if (jjstop > znaxis_[1])
+	  jjstop = znaxis_[1];
 
 	kkstart += dd_;
 	kkstop += dd_;
 
 	// we only do up to 3 dimensions
-	if (kkstart >= naxis_[2])
+	if (kkstart >= znaxis_[2])
 	  break;
       }
     }
@@ -424,7 +424,7 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
   for (int kk=kkstart; kk<kkstop; kk++)
     for (int jj=jjstart; jj<jjstop; jj++)
       for (int ii=iistart; ii<iistop; ii++,ll++)
-	dest[kk*naxis_[0]*naxis_[1] + jj*naxis_[0] + ii] = swap(obuf+ll);
+	dest[kk*znaxis_[0]*znaxis_[1] + jj*znaxis_[0] + ii] = swap(obuf+ll);
   return 1;
 }
 
@@ -506,7 +506,7 @@ template <class T> int FitsCompressm<T>::gzcompressed(T* dest, char* sptr,
 	// swap if needed
 	if (byteswap_)
 	  *((T*)obuf+ll) = swap((T*)obuf+ll);
-	dest[kk*naxis_[0]*naxis_[1] + jj*naxis_[0] + ii] = *((T*)obuf+ll);
+	dest[kk*znaxis_[0]*znaxis_[1] + jj*znaxis_[0] + ii] = *((T*)obuf+ll);
       }
     }
   }

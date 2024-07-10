@@ -19,13 +19,6 @@ class FitsCompress : public FitsFile {
   int znaxis_[FTY_MAXAXES];    // ZNAXIS[i] keywords
   int ztile_[FTY_MAXAXES];    // ZTILE[i] keywords
   
-  //  int width_;
-  //  int height_;
-  //  int depth_;
-  //  int ww_;
-  //  int hh_;
-  //  int dd_;
-
   double bscale_;
   double bzero_;
   unsigned int blank_;

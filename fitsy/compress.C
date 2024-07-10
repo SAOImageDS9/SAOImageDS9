@@ -37,15 +37,6 @@ FitsCompress::FitsCompress(FitsFile* fits)
     }
   }
   
-  //  width_ = fits->getInteger("ZNAXIS1",0);
-  //  height_ = fits->getInteger("ZNAXIS2",0);
-  //  depth_ = fits->getInteger("ZNAXIS3",1);
-  //  if (depth_<1)
-  //    depth_ =1;
-  //  ww_ = fits->getInteger("ZTILE1",znaxis_[0]);
-  //  hh_ = fits->getInteger("ZTILE2",1);
-  //  dd_ = fits->getInteger("ZTILE3",1);
-
   bscale_ = fits->getReal("ZSCALE",1);
   bzero_ = fits->getReal("ZZERO",0);
   blank_ = fits->getInteger("ZBLANK",0);
@@ -66,8 +57,12 @@ FitsCompress::FitsCompress(FitsFile* fits)
   }
   quantOffset_ = fits->getInteger("ZDITHER0",1);
 
-  tilesize_ = (size_t)ztile_[0]*ztile_[1]*ztile_[2];
-  size_ = (size_t)znaxis_[0]*znaxis_[1]*znaxis_[2];
+  size_ = (size_t)znaxis_[0];
+  tilesize_ = (size_t)ztile_[0];
+  for (int ii=1; ii<FTY_MAXAXES; ii++) {
+    size_ *= (size_t)znaxis_[ii];
+    tilesize_ *= (size_t)ztile_[ii];
+  }
 
   FitsHead* srcHead = fits->head();
   FitsTableHDU* srcHDU = (FitsTableHDU*)srcHead->hdu();
@@ -123,10 +118,10 @@ int FitsCompress::initHeader(FitsFile* fits)
 
   if (srcHead->find("ZTENSION")) {
     char* str = srcHead->getString("ZTENSION");
-    head_ = new FitsHead(znaxis_[0], znaxis_[1], znaxis_[2], bitpix_, str);
+    head_ = new FitsHead(znaxes_, znaxis_, bitpix_, str);
   }
   else
-    head_ = new FitsHead(znaxis_[0], znaxis_[1], znaxis_[2], bitpix_);
+    head_ = new FitsHead(znaxes_, znaxis_, bitpix_);
 
   if (!head_->isValid())
     return 0;

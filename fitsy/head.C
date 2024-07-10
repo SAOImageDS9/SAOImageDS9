@@ -145,7 +145,7 @@ FitsHead::FitsHead(int naxes, int* axis, int bitpix, char* xtension)
 
   appendInteger("BITPIX", bitpix, "Bits per pixel");
   appendInteger("NAXIS", naxes, "Number of axes");
-  char key[] = "NAXES ";
+  char key[] = "NAXIS ";
   for (int ii=0; ii<naxes; ii++) {
     key[5] = '1'+ii;
     appendInteger(key, *(axis+ii), "Axis Length");

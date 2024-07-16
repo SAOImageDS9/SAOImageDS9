@@ -312,6 +312,17 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
   int rows = srcHDU->rows();
 
   // dest
+  int start[FTY_MAXAXES];
+  int stop[FTY_MAXAXES];
+
+  for (int ii=0; ii<FTY_MAXAXES; ii++) {
+    start[ii] =0;
+    stop[ii] = ztile_[ii];
+    if (stop[ii] > znaxis_[ii])
+      stop[ii] = znaxis_[ii];
+  }
+
+  /*
   int iistart =0;
   int iistop =ztile_[0];
   if (iistop > znaxis_[0])
@@ -326,15 +337,16 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
   int kkstop =ztile_[2];
   if (kkstop > znaxis_[2])
     kkstop = znaxis_[2];
-
+  */
+  
   for (int rr=0; rr<rows; rr++, sptr+=rowlen) {
     // we can't use incr paging due to the location of the heap
     //    sptr = fits->page(sptr, rowlen);
 
     int ok=0;
     if (gzcompress_ && !ok) {
-      if (gzcompressed(dest, sptr, sdata+heap, 
-		       kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
+      if (gzcompressed(dest, sptr, sdata+heap,
+		       start[2],stop[2],start[1],stop[1],start[0],stop[0])) {
 	ok=1;
       }
     }
@@ -342,14 +354,14 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
     if (compress_ && !ok) {
       initRandom(rr);
       if (compressed(dest, sptr, sdata+heap, 
-		     kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
+		     start[2],stop[2],start[1],stop[1],start[0],stop[0])) {
 	ok=1;
       }
     }
 
     if (uncompress_ && !ok) {
       if (uncompressed(dest, sptr, sdata+heap, 
-		       kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
+		       start[2],stop[2],start[1],stop[1],start[0],stop[0])) {
 	ok=1;
       }
     }
@@ -358,6 +370,37 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
       return 0;
 
     // tiles may not be an even multiple of the image size
+    start[0] += ztile_[0];
+    stop[0] += ztile_[0];
+    if (stop[0] > znaxis_[0])
+      stop[0] = znaxis_[0];
+
+    if (start[0] >= znaxis_[0]) {
+      start[0] = 0;
+      stop[0] = ztile_[0];
+      if (stop[0] > znaxis_[0])
+	stop[0] = znaxis_[0];
+
+      start[1] += ztile_[1];
+      stop[1] += ztile_[1];
+      if (stop[1] > znaxis_[1])
+	stop[1] = znaxis_[1];
+
+      if (start[1] >= znaxis_[1]) {
+	start[1] = 0;
+	stop[1] = ztile_[1];
+	if (stop[1] > znaxis_[1])
+	  stop[1] = znaxis_[1];
+
+	start[2] += ztile_[2];
+	stop[2] += ztile_[2];
+
+	// we only do up to 3 dimensions
+	if (start[2] >= znaxis_[2])
+	  break;
+      }
+    }
+    /*
     iistart += ztile_[0];
     iistop += ztile_[0];
     if (iistop > znaxis_[0])
@@ -388,6 +431,7 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 	  break;
       }
     }
+    */
   }
 
   // we can't use incr paging due to the location of the heap

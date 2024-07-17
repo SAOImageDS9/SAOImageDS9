@@ -62,7 +62,7 @@ template<class T>
 class FitsCompressm : public FitsCompress {
  private:
   int inflate(FitsFile*);
-  int inflateAdjust(int ii, int* start, int* stop);
+  void inflateAdjust(int ii, int* start, int* stop);
   void swapBytes();
 
  protected:

@@ -350,6 +350,8 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
       return 0;
 
     // tiles may not be an even multiple of the image size
+    inflateAdjust(0, start, stop);
+    /*
     start[0] += ztile_[0];
     stop[0] += ztile_[0];
     if (stop[0] > znaxis_[0])
@@ -380,6 +382,7 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 	  break;
       }
     }
+    */
   }
 
   // we can't use incr paging due to the location of the heap
@@ -393,22 +396,22 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
   return 1;
 }
 
-template <class T> int FitsCompressm<T>::inflateAdjust(int ii, int* start, int* stop)
+template <class T> void FitsCompressm<T>::inflateAdjust(int ii, int* start, int* stop)
 {
-    start[ii] += ztile_[ii];
-    stop[ii] += ztile_[ii];
+  start[ii] += ztile_[ii];
+  stop[ii] += ztile_[ii];
+  if (stop[ii] > znaxis_[ii])
+    stop[ii] = znaxis_[ii];
+
+  if (start[ii] >= znaxis_[ii]) {
+    start[ii] = 0;
+    stop[ii] = ztile_[ii];
     if (stop[ii] > znaxis_[ii])
       stop[ii] = znaxis_[ii];
 
-    if (start[ii] >= znaxis_[ii]) {
-      start[ii] = ii;
-      stop[ii] = ztile_[ii];
-      if (stop[ii] > znaxis_[ii])
-	stop[ii] = znaxis_[ii];
-
-      if (ii<FTY_MAXAXES)
-	inflateAdjust(ii+1, start, stop);
-    }
+    if (ii+1<FTY_MAXAXES)
+      inflateAdjust(ii+1, start, stop);
+  }
 }
 
 // uncompressed

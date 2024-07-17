@@ -22,9 +22,7 @@ template<class T> FitsPliom<T>::FitsPliom(FitsFile* fits)
 
 template <class T> int FitsPliom<T>::compressed(T* dest, char* sptr, 
 						char* heap,
-						int kkstart, int kkstop, 
-						int jjstart, int jjstop, 
-						int iistart, int iistop)
+						int* start, int* stop)
 {
   double zs = FitsCompressm<T>::bscale_;
   if (FitsCompressm<T>::zscale_)
@@ -70,9 +68,9 @@ template <class T> int FitsPliom<T>::compressed(T* dest, char* sptr,
   }
 
   int ll=0;
-  for (int kk=kkstart; kk<kkstop; kk++)
-    for (int jj=jjstart; jj<jjstop; jj++)
-      for (int ii=iistart; ii<iistop; ii++,ll++)
+  for (int kk=start[2]; kk<stop[2]; kk++)
+    for (int jj=start[1]; jj<stop[1]; jj++)
+      for (int ii=start[0]; ii<stop[0]; ii++,ll++)
 	dest[kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii] = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 
   if (obuf)

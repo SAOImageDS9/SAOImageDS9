@@ -13,7 +13,7 @@ class FitsHcompressm : public FitsCompressm<T> {
   int smooth_;
 
  private:
-  int compressed(T*, char*, char*, int, int, int, int, int, int);
+  int compressed(T*, char*, char*, int*, int*);
 
  public:
   FitsHcompressm(FitsFile*);

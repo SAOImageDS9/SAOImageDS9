@@ -15,7 +15,7 @@ class FitsRicem : public FitsCompressm<T> {
   int noisebit_;
 
  private:
-  int compressed(T*, char*, char*, int, int, int, int, int, int);
+  int compressed(T*, char*, char*, int*, int*);
 
  public:
   FitsRicem(FitsFile*);

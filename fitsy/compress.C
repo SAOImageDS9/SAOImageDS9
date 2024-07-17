@@ -322,46 +322,26 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
       stop[ii] = znaxis_[ii];
   }
 
-  /*
-  int iistart =0;
-  int iistop =ztile_[0];
-  if (iistop > znaxis_[0])
-    iistop = znaxis_[0];
-
-  int jjstart =0;
-  int jjstop =ztile_[1];
-  if (jjstop > znaxis_[1])
-    jjstop = znaxis_[1];
-
-  int kkstart =0;
-  int kkstop =ztile_[2];
-  if (kkstop > znaxis_[2])
-    kkstop = znaxis_[2];
-  */
-  
   for (int rr=0; rr<rows; rr++, sptr+=rowlen) {
     // we can't use incr paging due to the location of the heap
     //    sptr = fits->page(sptr, rowlen);
 
     int ok=0;
     if (gzcompress_ && !ok) {
-      if (gzcompressed(dest, sptr, sdata+heap,
-		       start[2],stop[2],start[1],stop[1],start[0],stop[0])) {
+      if (gzcompressed(dest, sptr, sdata+heap, start, stop)) {
 	ok=1;
       }
     }
 
     if (compress_ && !ok) {
       initRandom(rr);
-      if (compressed(dest, sptr, sdata+heap, 
-		     start[2],stop[2],start[1],stop[1],start[0],stop[0])) {
+      if (compressed(dest, sptr, sdata+heap, start, stop)) {
 	ok=1;
       }
     }
 
     if (uncompress_ && !ok) {
-      if (uncompressed(dest, sptr, sdata+heap, 
-		       start[2],stop[2],start[1],stop[1],start[0],stop[0])) {
+      if (uncompressed(dest, sptr, sdata+heap, start, stop)) {
 	ok=1;
       }
     }
@@ -400,38 +380,6 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 	  break;
       }
     }
-    /*
-    iistart += ztile_[0];
-    iistop += ztile_[0];
-    if (iistop > znaxis_[0])
-      iistop = znaxis_[0];
-
-    if (iistart >= znaxis_[0]) {
-      iistart = 0;
-      iistop = ztile_[0];
-      if (iistop > znaxis_[0])
-	iistop = znaxis_[0];
-
-      jjstart += ztile_[1];
-      jjstop += ztile_[1];
-      if (jjstop > znaxis_[1])
-	jjstop = znaxis_[1];
-
-      if (jjstart >= znaxis_[1]) {
-	jjstart = 0;
-	jjstop = ztile_[1];
-	if (jjstop > znaxis_[1])
-	  jjstop = znaxis_[1];
-
-	kkstart += ztile_[2];
-	kkstop += ztile_[2];
-
-	// we only do up to 3 dimensions
-	if (kkstart >= znaxis_[2])
-	  break;
-      }
-    }
-    */
   }
 
   // we can't use incr paging due to the location of the heap
@@ -445,13 +393,29 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
   return 1;
 }
 
+template <class T> int FitsCompressm<T>::inflateAdjust(int ii, int* start, int* stop)
+{
+    start[ii] += ztile_[ii];
+    stop[ii] += ztile_[ii];
+    if (stop[ii] > znaxis_[ii])
+      stop[ii] = znaxis_[ii];
+
+    if (start[ii] >= znaxis_[ii]) {
+      start[ii] = ii;
+      stop[ii] = ztile_[ii];
+      if (stop[ii] > znaxis_[ii])
+	stop[ii] = znaxis_[ii];
+
+      if (ii<FTY_MAXAXES)
+	inflateAdjust(ii+1, start, stop);
+    }
+}
+
 // uncompressed
 
 template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr, 
 						     char* heap,
-						     int kkstart, int kkstop, 
-						     int jjstart, int jjstop, 
-						     int iistart, int iistop)
+						     int* start, int* stop)
 {
   int ocnt=0;
   T* obuf = (T*)(((FitsBinColumnArray*)uncompress_)->get(heap, sptr, &ocnt));
@@ -461,9 +425,9 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
     return 0;
 
   int ll=0;
-  for (int kk=kkstart; kk<kkstop; kk++)
-    for (int jj=jjstart; jj<jjstop; jj++)
-      for (int ii=iistart; ii<iistop; ii++,ll++)
+  for (int kk=start[2]; kk<stop[2]; kk++)
+    for (int jj=start[1]; jj<stop[1]; jj++)
+      for (int ii=start[0]; ii<stop[0]; ii++,ll++)
 	dest[kk*znaxis_[0]*znaxis_[1] + jj*znaxis_[0] + ii] = swap(obuf+ll);
   return 1;
 }
@@ -472,9 +436,7 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
 
 template <class T> int FitsCompressm<T>::gzcompressed(T* dest, char* sptr, 
 						      char* heap,
-						      int kkstart, int kkstop, 
-						      int jjstart, int jjstop, 
-						      int iistart, int iistop)
+						      int* start, int* stop)
 {
   int icnt=0;
   unsigned char* ibuf = (unsigned char*)((FitsBinColumnArray*)gzcompress_)->get(heap, sptr, &icnt);
@@ -540,9 +502,9 @@ template <class T> int FitsCompressm<T>::gzcompressed(T* dest, char* sptr,
   inflateEnd(&zstrm);
 
   int ll=0;
-  for (int kk=kkstart; kk<kkstop; kk++) {
-    for (int jj=jjstart; jj<jjstop; jj++) {
-      for (int ii=iistart; ii<iistop; ii++,ll++) {
+  for (int kk=start[2]; kk<stop[2]; kk++) {
+    for (int jj=start[1]; jj<stop[1]; jj++) {
+      for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
 	// swap if needed
 	if (byteswap_)
 	  *((T*)obuf+ll) = swap((T*)obuf+ll);

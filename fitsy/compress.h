@@ -62,6 +62,7 @@ template<class T>
 class FitsCompressm : public FitsCompress {
  private:
   int inflate(FitsFile*);
+  int inflateAdjust(int ii, int* start, int* stop);
   void swapBytes();
 
  protected:
@@ -69,9 +70,9 @@ class FitsCompressm : public FitsCompress {
 
  protected:
   void uncompress(FitsFile* fits);
-  int gzcompressed(T*, char*, char*, int, int, int, int, int, int);
-  virtual int compressed(T*, char*, char*, int, int, int, int, int, int) =0;
-  int uncompressed(T*, char*, char*, int, int, int, int, int, int);
+  int gzcompressed(T*, char*, char*, int*, int*);
+  virtual int compressed(T*, char*, char*, int*, int*) =0;
+  int uncompressed(T*, char*, char*, int*, int*);
 
   T getValue(char*, double, double, int);
   T getValue(short*, double, double, int);

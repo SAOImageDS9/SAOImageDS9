@@ -351,38 +351,6 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 
     // tiles may not be an even multiple of the image size
     inflateAdjust(0, start, stop);
-    /*
-    start[0] += ztile_[0];
-    stop[0] += ztile_[0];
-    if (stop[0] > znaxis_[0])
-      stop[0] = znaxis_[0];
-
-    if (start[0] >= znaxis_[0]) {
-      start[0] = 0;
-      stop[0] = ztile_[0];
-      if (stop[0] > znaxis_[0])
-	stop[0] = znaxis_[0];
-
-      start[1] += ztile_[1];
-      stop[1] += ztile_[1];
-      if (stop[1] > znaxis_[1])
-	stop[1] = znaxis_[1];
-
-      if (start[1] >= znaxis_[1]) {
-	start[1] = 0;
-	stop[1] = ztile_[1];
-	if (stop[1] > znaxis_[1])
-	  stop[1] = znaxis_[1];
-
-	start[2] += ztile_[2];
-	stop[2] += ztile_[2];
-
-	// we only do up to 3 dimensions
-	if (start[2] >= znaxis_[2])
-	  break;
-      }
-    }
-    */
   }
 
   // we can't use incr paging due to the location of the heap
@@ -427,6 +395,21 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
   if (!obuf || !ocnt)
     return 0;
 
+  /*
+  for (int jj=0; jj<9; jj++) {
+    int tt = nn[jj];
+    for (int ii=0; ii<jj; ii++) {
+      tt *= znaxes_[ii];
+    }
+  }
+
+
+  for (int ii=0; ii<FTY_MAXAXES; ii++) {
+    doit(start[ii],stop[ii]);
+  }
+
+
+  */
   int ll=0;
   for (int kk=start[2]; kk<stop[2]; kk++)
     for (int jj=start[1]; jj<stop[1]; jj++)
@@ -434,6 +417,18 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
 	dest[kk*znaxis_[0]*znaxis_[1] + jj*znaxis_[0] + ii] = swap(obuf+ll);
   return 1;
 }
+
+/*
+int doit (int ii, int* start, int* stop)
+{
+  for (int jj=start[ii]; jj<stop[ii]; jj++) {
+    tt = jj;
+    for (int ii=0; ii<jj; ii++)
+      tt *=znaxis_[ii];
+    tt += doit(ii-1, start, stop);
+  }
+}
+*/  
 
 // gzcompressed
 

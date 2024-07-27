@@ -63,6 +63,7 @@ class FitsCompressm : public FitsCompress {
  private:
   int inflate(FitsFile*);
   void inflateAdjust(int ii, int* start, int* stop);
+  int calcIndex(int* xx);
   void swapBytes();
 
  protected:

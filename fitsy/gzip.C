@@ -207,22 +207,24 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
     }
   }
 
+  int xx[FTY_MAXAXES];
+
   int ll=0;
   switch (bytepix) {
   case 1:
-    for (int kk=start[2]; kk<stop[2]; kk++)
-      for (int jj=start[1]; jj<stop[1]; jj++)
-	for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
-	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
+    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
+	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  // very carefull about type conversions
 	  T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	  dest[id] = val;
 	}
     break;
   case 2:
-    for (int kk=start[2]; kk<stop[2]; kk++)
-      for (int jj=start[1]; jj<stop[1]; jj++)
-	for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
+    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
 	  // swap if needed
 	  if (FitsCompressm<T>::byteswap_) {
 	    const char* p = (const char*)((short*)obuf+ll);
@@ -237,15 +239,15 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((short*)obuf+ll) = u.s;
 	  }
 	  // very carefull about type conversions
-	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
+	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  T val = FitsCompressm<T>::getValue((short*)obuf+ll,zs,zz,blank);
 	  dest[id] = val;
 	}
     break;
   case 4:
-    for (int kk=start[2]; kk<stop[2]; kk++)
-      for (int jj=start[1]; jj<stop[1]; jj++)
-	for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
+    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
 	  // swap if needed
 	  if (FitsCompressm<T>::byteswap_) {
 	    const char* p = (const char*)((int*)obuf+ll);
@@ -262,7 +264,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((int*)obuf+ll) = u.i;
 	  }
 	  // very carefull about type conversions
-	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
+	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
 	  case FitsCompress::NONE:
@@ -278,9 +280,9 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	}
     break;
   case 8:
-    for (int kk=start[2]; kk<stop[2]; kk++)
-      for (int jj=start[1]; jj<stop[1]; jj++)
-	for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
+    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
 	  // swap if needed
 	  if (FitsCompressm<T>::byteswap_) {
 	    const char* p = (const char*)((long long*)obuf+ll);
@@ -301,7 +303,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((long long*)obuf+ll) = u.i;
 	  }
 	  // very carefull about type conversions
-	  size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
+	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
 	  case FitsCompress::NONE:

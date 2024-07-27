@@ -382,6 +382,18 @@ template <class T> void FitsCompressm<T>::inflateAdjust(int ii, int* start, int*
   }
 }
 
+template <class T> int FitsCompressm<T>::calcIndex(int* xx)
+{
+  int id =0;
+  for (int jj=0; jj<3; jj++) {
+    int kk =1;
+    for (int ii=0; ii<jj; ii++)
+      kk *=znaxis_[ii];
+    id += xx[jj]*kk;
+  }
+  return id;
+}
+
 // uncompressed
 
 template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr, 
@@ -395,40 +407,16 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
   if (!obuf || !ocnt)
     return 0;
 
-  /*
-  for (int jj=0; jj<9; jj++) {
-    int tt = nn[jj];
-    for (int ii=0; ii<jj; ii++) {
-      tt *= znaxes_[ii];
-    }
-  }
+  int xx[FTY_MAXAXES];
 
-
-  for (int ii=0; ii<FTY_MAXAXES; ii++) {
-    doit(start[ii],stop[ii]);
-  }
-
-
-  */
   int ll=0;
-  for (int kk=start[2]; kk<stop[2]; kk++)
-    for (int jj=start[1]; jj<stop[1]; jj++)
-      for (int ii=start[0]; ii<stop[0]; ii++,ll++)
-	dest[kk*znaxis_[0]*znaxis_[1] + jj*znaxis_[0] + ii] = swap(obuf+ll);
+  for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+    for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+      for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++)
+	dest[calcIndex(xx)] =  swap(obuf+ll);
+
   return 1;
 }
-
-/*
-int doit (int ii, int* start, int* stop)
-{
-  for (int jj=start[ii]; jj<stop[ii]; jj++) {
-    tt = jj;
-    for (int ii=0; ii<jj; ii++)
-      tt *=znaxis_[ii];
-    tt += doit(ii-1, start, stop);
-  }
-}
-*/  
 
 // gzcompressed
 
@@ -499,18 +487,17 @@ template <class T> int FitsCompressm<T>::gzcompressed(T* dest, char* sptr,
 
   inflateEnd(&zstrm);
 
+  int xx[FTY_MAXAXES];
+
   int ll=0;
-  for (int kk=start[2]; kk<stop[2]; kk++) {
-    for (int jj=start[1]; jj<stop[1]; jj++) {
-      for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
+  for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+    for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+      for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
 	// swap if needed
 	if (byteswap_)
 	  *((T*)obuf+ll) = swap((T*)obuf+ll);
-	dest[kk*znaxis_[0]*znaxis_[1] + jj*znaxis_[0] + ii] = *((T*)obuf+ll);
+	dest[calcIndex(xx)] = *((T*)obuf+ll);
       }
-    }
-  }
-
   return 1;
 }
 

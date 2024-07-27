@@ -80,6 +80,8 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
   int ocnt = FitsCompressm<T>::tilesize_;
   int ll=0;
 
+  int xx[FTY_MAXAXES];
+
   switch (bytepix_) {
   case 1:
     {
@@ -88,11 +90,11 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
 	//	internalError("Fitsy++ rice bad inflate result");
 	//	return 0;
       }
-      for (int kk=start[2]; kk<stop[2]; kk++)
-	for (int jj=start[1]; jj<stop[1]; jj++)
-	  for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
+      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+	for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+	  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
 	    // very carefull about type conversions
-	    size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
+	    size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	    T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	    dest[id] = val;
 	  }
@@ -108,11 +110,11 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
 	//	internalError("Fitsy++ rice bad inflate result");
 	//	return 0;
       }
-      for (int kk=start[2]; kk<stop[2]; kk++)
-	for (int jj=start[1]; jj<stop[1]; jj++)
-	  for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
+      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+	for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+	  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
 	    // very carefull about type conversions
-	    size_t id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
+	    size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	    T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	    dest[id] = val;
 	  }
@@ -128,11 +130,11 @@ template <class T> int FitsRicem<T>::compressed(T* dest, char* sptr,
 	//	internalError("Fitsy++ rice bad inflate result");
 	//	return 0;
       }
-      for (int kk=start[2]; kk<stop[2]; kk++)
-	for (int jj=start[1]; jj<stop[1]; jj++)
-	  for (int ii=start[0]; ii<stop[0]; ii++,ll++) {
+      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+	for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+	  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
 	    // very carefull about type conversions
-	    int id = kk*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + jj*FitsCompressm<T>::znaxis_[0] + ii;
+	    int id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	    T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 	    dest[id] = val;
 	  }

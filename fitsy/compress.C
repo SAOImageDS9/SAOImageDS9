@@ -382,11 +382,11 @@ template <class T> void FitsCompressm<T>::inflateAdjust(int ii, int* start, int*
   }
 }
 
-template <class T> int FitsCompressm<T>::calcIndex(int* xx)
+template <class T> size_t FitsCompressm<T>::calcIndex(int* xx)
 {
-  int id =0;
+  size_t id =0;
   for (int jj=0; jj<3; jj++) {
-    int kk =1;
+    size_t kk =1;
     for (int ii=0; ii<jj; ii++)
       kk *=znaxis_[ii];
     id += xx[jj]*kk;

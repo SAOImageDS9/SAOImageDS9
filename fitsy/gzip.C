@@ -215,10 +215,9 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
     for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
       for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
 	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
-	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  // very carefull about type conversions
 	  T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
-	  dest[id] = val;
+	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
 	}
     break;
   case 2:
@@ -239,9 +238,8 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((short*)obuf+ll) = u.s;
 	  }
 	  // very carefull about type conversions
-	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  T val = FitsCompressm<T>::getValue((short*)obuf+ll,zs,zz,blank);
-	  dest[id] = val;
+	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
 	}
     break;
   case 4:
@@ -264,7 +262,6 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((int*)obuf+ll) = u.i;
 	  }
 	  // very carefull about type conversions
-	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
 	  case FitsCompress::NONE:
@@ -275,8 +272,8 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	  case FitsCompress::SUBDITHER2:
 	    val = FitsCompressm<T>::getValue((int*)obuf+ll,zs,zz,blank);
 	    break;
-         }
-	  dest[id] = val;
+	  }
+	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
 	}
     break;
   case 8:
@@ -303,7 +300,6 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    *((long long*)obuf+ll) = u.i;
 	  }
 	  // very carefull about type conversions
-	  size_t id = xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0];
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
 	  case FitsCompress::NONE:
@@ -315,7 +311,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	    val = FitsCompressm<T>::getValue((long long*)obuf+ll,zs,zz,blank);
 	    break;
 	  }
-	  dest[id] = val;
+	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
 	}
     break;
 

@@ -63,13 +63,13 @@ class FitsCompressm : public FitsCompress {
  private:
   int inflate(FitsFile*);
   void inflateAdjust(int ii, int* start, int* stop);
-  int calcIndex(int* xx);
   void swapBytes();
 
  protected:
   T swap(T* ptr);
 
  protected:
+  size_t calcIndex(int* xx);
   void uncompress(FitsFile* fits);
   int gzcompressed(T*, char*, char*, int*, int*);
   virtual int compressed(T*, char*, char*, int*, int*) =0;

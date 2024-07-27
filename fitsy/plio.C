@@ -73,7 +73,8 @@ template <class T> int FitsPliom<T>::compressed(T* dest, char* sptr,
   for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
     for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
       for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++)
-	dest[xx[2]*FitsCompressm<T>::znaxis_[0]*FitsCompressm<T>::znaxis_[1] + xx[1]*FitsCompressm<T>::znaxis_[0] + xx[0]] = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
+  	dest[FitsCompressm<T>::calcIndex(xx)] =
+	  FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 
   if (obuf)
     delete [] obuf;

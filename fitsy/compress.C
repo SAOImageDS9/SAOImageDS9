@@ -385,12 +385,13 @@ template <class T> void FitsCompressm<T>::inflateAdjust(int ii, int* start, int*
 template <class T> size_t FitsCompressm<T>::calcIndex(int* xx)
 {
   size_t id =0;
-  for (int jj=0; jj<3; jj++) {
+  for (int jj=0; jj<FTY_MAXAXES; jj++) {
     size_t kk =1;
     for (int ii=0; ii<jj; ii++)
       kk *=znaxis_[ii];
     id += xx[jj]*kk;
   }
+
   return id;
 }
 
@@ -410,10 +411,17 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
   int xx[FTY_MAXAXES];
 
   int ll=0;
-  for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
-    for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
-      for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++)
-	dest[calcIndex(xx)] =  swap(obuf+ll);
+  // hard coded. hack.
+  for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+    for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+      for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	  for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	    for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+	      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++)
+		    dest[calcIndex(xx)] =  swap(obuf+ll);
 
   return 1;
 }
@@ -489,15 +497,23 @@ template <class T> int FitsCompressm<T>::gzcompressed(T* dest, char* sptr,
 
   int xx[FTY_MAXAXES];
 
+  // hard coded. hack.
   int ll=0;
-  for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
-    for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
-      for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
-	// swap if needed
-	if (byteswap_)
-	  *((T*)obuf+ll) = swap((T*)obuf+ll);
-	dest[calcIndex(xx)] = *((T*)obuf+ll);
-      }
+  for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+    for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+      for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	  for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	    for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+	      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
+		    // swap if needed
+		    if (byteswap_)
+		      *((T*)obuf+ll) = swap((T*)obuf+ll);
+		    dest[calcIndex(xx)] = *((T*)obuf+ll);
+		  }
+  
   return 1;
 }
 

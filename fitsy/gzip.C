@@ -212,107 +212,132 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
   int ll=0;
   switch (bytepix) {
   case 1:
-    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
-      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
-	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
-	  // very carefull about type conversions
-	  T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
-	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
-	}
+  for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+    for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+      for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	  for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	    for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+	      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
+		    // very carefull about type conversions
+		    T val = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
+		    dest[FitsCompressm<T>::calcIndex(xx)] = val;
+		  }
     break;
   case 2:
-    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
-      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
-	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
-	  // swap if needed
-	  if (FitsCompressm<T>::byteswap_) {
-	    const char* p = (const char*)((short*)obuf+ll);
-	    union {
-	      char c[2];
-	      short s;
-	    } u;
+    for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+      for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+	for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	  for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	    for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	      for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+		for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		  for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		    for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
+		      // swap if needed
+		      if (FitsCompressm<T>::byteswap_) {
+			const char* p = (const char*)((short*)obuf+ll);
+			union {
+			  char c[2];
+			  short s;
+			} u;
 
-	    u.c[1] = *p++;
-	    u.c[0] = *p;
+			u.c[1] = *p++;
+			u.c[0] = *p;
 
-	    *((short*)obuf+ll) = u.s;
-	  }
-	  // very carefull about type conversions
-	  T val = FitsCompressm<T>::getValue((short*)obuf+ll,zs,zz,blank);
-	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
-	}
+			*((short*)obuf+ll) = u.s;
+		      }
+		      // very carefull about type conversions
+		      T val =
+			FitsCompressm<T>::getValue((short*)obuf+ll,zs,zz,blank);
+		      dest[FitsCompressm<T>::calcIndex(xx)] = val;
+		    }
     break;
   case 4:
-    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
-      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
-	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
-	  // swap if needed
-	  if (FitsCompressm<T>::byteswap_) {
-	    const char* p = (const char*)((int*)obuf+ll);
-	    union {
-	      char c[4];
-	      int i;
-	    } u;
+    for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+      for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+	for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	  for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	    for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	      for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+		for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		  for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		    for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
+		      // swap if needed
+		      if (FitsCompressm<T>::byteswap_) {
+			const char* p = (const char*)((int*)obuf+ll);
+			union {
+			  char c[4];
+			  int i;
+			} u;
 
-	    u.c[3] = *p++;
-	    u.c[2] = *p++;
-	    u.c[1] = *p++;
-	    u.c[0] = *p;
+			u.c[3] = *p++;
+			u.c[2] = *p++;
+			u.c[1] = *p++;
+			u.c[0] = *p;
 
-	    *((int*)obuf+ll) = u.i;
-	  }
-	  // very carefull about type conversions
-	  T val =0;
-	  switch (FitsCompressm<T>::quantize_) {
-	  case FitsCompress::NONE:
-	    val = FitsCompressm<T>::getValue((float*)obuf+ll,zs,zz,blank);
-	    break;
-	  case FitsCompress::NODITHER:
-	  case FitsCompress::SUBDITHER1:
-	  case FitsCompress::SUBDITHER2:
-	    val = FitsCompressm<T>::getValue((int*)obuf+ll,zs,zz,blank);
-	    break;
-	  }
-	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
-	}
+			*((int*)obuf+ll) = u.i;
+		      }
+		      // very carefull about type conversions
+		      T val =0;
+		      switch (FitsCompressm<T>::quantize_) {
+		      case FitsCompress::NONE:
+			val = FitsCompressm<T>::getValue((float*)obuf+ll,zs,zz,blank);
+			break;
+		      case FitsCompress::NODITHER:
+		      case FitsCompress::SUBDITHER1:
+		      case FitsCompress::SUBDITHER2:
+			val = FitsCompressm<T>::getValue((int*)obuf+ll,zs,zz,blank);
+			break;
+		      }
+		      dest[FitsCompressm<T>::calcIndex(xx)] = val;
+		    }
     break;
   case 8:
-    for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
-      for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
-	for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
-	  // swap if needed
-	  if (FitsCompressm<T>::byteswap_) {
-	    const char* p = (const char*)((long long*)obuf+ll);
-	    union {
-	      char c[8];
-	      long long i;
-	    } u;
+    for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+      for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+	for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	  for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	    for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	      for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+		for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		  for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		    for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
+		      // swap if needed
+		      if (FitsCompressm<T>::byteswap_) {
+			const char* p = (const char*)((long long*)obuf+ll);
+			union {
+			  char c[8];
+			  long long i;
+			} u;
 
-	    u.c[7] = *p++;
-	    u.c[6] = *p++;
-	    u.c[5] = *p++;
-	    u.c[4] = *p++;
-	    u.c[3] = *p++;
-	    u.c[2] = *p++;
-	    u.c[1] = *p++;
-	    u.c[0] = *p;
+			u.c[7] = *p++;
+			u.c[6] = *p++;
+			u.c[5] = *p++;
+			u.c[4] = *p++;
+			u.c[3] = *p++;
+			u.c[2] = *p++;
+			u.c[1] = *p++;
+			u.c[0] = *p;
 
-	    *((long long*)obuf+ll) = u.i;
-	  }
-	  // very carefull about type conversions
-	  T val =0;
-	  switch (FitsCompressm<T>::quantize_) {
-	  case FitsCompress::NONE:
-	    val = FitsCompressm<T>::getValue((double*)obuf+ll,zs,zz,blank);
-	    break;
-	  case FitsCompress::NODITHER:
-	  case FitsCompress::SUBDITHER1:
-	  case FitsCompress::SUBDITHER2:
-	    val = FitsCompressm<T>::getValue((long long*)obuf+ll,zs,zz,blank);
-	    break;
-	  }
-	  dest[FitsCompressm<T>::calcIndex(xx)] = val;
-	}
+			*((long long*)obuf+ll) = u.i;
+		      }
+		      // very carefull about type conversions
+		      T val =0;
+		      switch (FitsCompressm<T>::quantize_) {
+		      case FitsCompress::NONE:
+			val = FitsCompressm<T>::getValue((double*)obuf+ll,zs,zz,blank);
+			break;
+		      case FitsCompress::NODITHER:
+		      case FitsCompress::SUBDITHER1:
+		      case FitsCompress::SUBDITHER2:
+			val = FitsCompressm<T>::getValue((long long*)obuf+ll,zs,zz,blank);
+			break;
+		      }
+		      dest[FitsCompressm<T>::calcIndex(xx)] = val;
+		    }
     break;
 
   default:

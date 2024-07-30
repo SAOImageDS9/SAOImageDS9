@@ -10,7 +10,7 @@
 template<class T>
 class FitsPliom : public FitsCompressm<T> {
  private:
-  int compressed(T*, char*, char*, int, int, int, int, int, int);
+  int compressed(T*, char*, char*, int*, int*);
 
  public:
   FitsPliom(FitsFile*);

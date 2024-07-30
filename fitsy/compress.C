@@ -11,15 +11,32 @@ FitsCompress::FitsCompress(FitsFile* fits)
 {
   bitpix_ = fits->getInteger("ZBITPIX",0);
   type_ = dupstr(fits->getString("ZCMPTYPE"));
-  //  int naxes = fits->getInteger("ZNAXIS",0);
-  width_ = fits->getInteger("ZNAXIS1",0);
-  height_ = fits->getInteger("ZNAXIS2",0);
-  depth_ = fits->getInteger("ZNAXIS3",1);
-  if (depth_<1)
-    depth_ =1;
-  ww_ = fits->getInteger("ZTILE1",width_);
-  hh_ = fits->getInteger("ZTILE2",1);
-  dd_ = fits->getInteger("ZTILE3",1);
+
+  znaxes_ = fits->getInteger("ZNAXIS",0);
+  {
+    char key[] = "ZNAXIS ";
+    for (int ii=0; ii<2; ii++) {
+      key[6] = '1'+ii;
+      znaxis_[ii] = fits->getInteger(key,0);
+    }
+    for (int ii=2; ii<FTY_MAXAXES; ii++) {
+      key[6] = '1'+ii;
+      znaxis_[ii] = fits->getInteger(key,1);
+      if (znaxis_[ii]<1)
+	znaxis_[ii] =1;
+    }
+  }
+  {
+    ztile_[0] = fits->getInteger("ZTILE1",znaxis_[0]);
+    char key[] = "ZTILE ";
+    for (int ii=1; ii<FTY_MAXAXES; ii++) {
+      key[5] = '1'+ii;
+      ztile_[ii] = fits->getInteger(key,1);
+      if (ztile_[ii]<1)
+	ztile_[ii] =1;
+    }
+  }
+  
   bscale_ = fits->getReal("ZSCALE",1);
   bzero_ = fits->getReal("ZZERO",0);
   blank_ = fits->getInteger("ZBLANK",0);
@@ -40,8 +57,12 @@ FitsCompress::FitsCompress(FitsFile* fits)
   }
   quantOffset_ = fits->getInteger("ZDITHER0",1);
 
-  tilesize_ = (size_t)ww_*hh_*dd_;
-  size_ = (size_t)width_*height_*depth_;
+  size_ = (size_t)znaxis_[0];
+  tilesize_ = (size_t)ztile_[0];
+  for (int ii=1; ii<FTY_MAXAXES; ii++) {
+    size_ *= (size_t)znaxis_[ii];
+    tilesize_ *= (size_t)ztile_[ii];
+  }
 
   FitsHead* srcHead = fits->head();
   FitsTableHDU* srcHDU = (FitsTableHDU*)srcHead->hdu();
@@ -88,7 +109,7 @@ FitsCompress::~FitsCompress()
 int FitsCompress::initHeader(FitsFile* fits) 
 {
   // simple check
-  if (!compress_ || !width_ || !height_ || !bitpix_)
+  if (!compress_ || !znaxis_[0] || !znaxis_[1] || !bitpix_)
     return 0;
 
   // create header
@@ -97,10 +118,10 @@ int FitsCompress::initHeader(FitsFile* fits)
 
   if (srcHead->find("ZTENSION")) {
     char* str = srcHead->getString("ZTENSION");
-    head_ = new FitsHead(width_, height_, depth_, bitpix_, str);
+    head_ = new FitsHead(znaxes_, znaxis_, bitpix_, str);
   }
   else
-    head_ = new FitsHead(width_, height_, depth_, bitpix_);
+    head_ = new FitsHead(znaxes_, znaxis_, bitpix_);
 
   if (!head_->isValid())
     return 0;
@@ -291,20 +312,15 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
   int rows = srcHDU->rows();
 
   // dest
-  int iistart =0;
-  int iistop =ww_;
-  if (iistop > width_)
-    iistop = width_;
+  int start[FTY_MAXAXES];
+  int stop[FTY_MAXAXES];
 
-  int jjstart =0;
-  int jjstop =hh_;
-  if (jjstop > height_)
-    jjstop = height_;
-
-  int kkstart =0;
-  int kkstop =dd_;
-  if (kkstop > depth_)
-    kkstop = depth_;
+  for (int ii=0; ii<FTY_MAXAXES; ii++) {
+    start[ii] =0;
+    stop[ii] = ztile_[ii];
+    if (stop[ii] > znaxis_[ii])
+      stop[ii] = znaxis_[ii];
+  }
 
   for (int rr=0; rr<rows; rr++, sptr+=rowlen) {
     // we can't use incr paging due to the location of the heap
@@ -312,23 +328,20 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
 
     int ok=0;
     if (gzcompress_ && !ok) {
-      if (gzcompressed(dest, sptr, sdata+heap, 
-		       kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
+      if (gzcompressed(dest, sptr, sdata+heap, start, stop)) {
 	ok=1;
       }
     }
 
     if (compress_ && !ok) {
       initRandom(rr);
-      if (compressed(dest, sptr, sdata+heap, 
-		     kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
+      if (compressed(dest, sptr, sdata+heap, start, stop)) {
 	ok=1;
       }
     }
 
     if (uncompress_ && !ok) {
-      if (uncompressed(dest, sptr, sdata+heap, 
-		       kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
+      if (uncompressed(dest, sptr, sdata+heap, start, stop)) {
 	ok=1;
       }
     }
@@ -337,36 +350,7 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
       return 0;
 
     // tiles may not be an even multiple of the image size
-    iistart += ww_;
-    iistop += ww_;
-    if (iistop > width_)
-      iistop = width_;
-
-    if (iistart >= width_) {
-      iistart = 0;
-      iistop = ww_;
-      if (iistop > width_)
-	iistop = width_;
-
-      jjstart += hh_;
-      jjstop += hh_;
-      if (jjstop > height_)
-	jjstop = height_;
-
-      if (jjstart >= height_) {
-	jjstart = 0;
-	jjstop = hh_;
-	if (jjstop > height_)
-	  jjstop = height_;
-
-	kkstart += dd_;
-	kkstop += dd_;
-
-	// we only do up to 3 dimensions
-	if (kkstart >= depth_)
-	  break;
-      }
-    }
+    inflateAdjust(0, start, stop);
   }
 
   // we can't use incr paging due to the location of the heap
@@ -380,13 +364,42 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
   return 1;
 }
 
+template <class T> void FitsCompressm<T>::inflateAdjust(int ii, int* start, int* stop)
+{
+  start[ii] += ztile_[ii];
+  stop[ii] += ztile_[ii];
+  if (stop[ii] > znaxis_[ii])
+    stop[ii] = znaxis_[ii];
+
+  if (start[ii] >= znaxis_[ii]) {
+    start[ii] = 0;
+    stop[ii] = ztile_[ii];
+    if (stop[ii] > znaxis_[ii])
+      stop[ii] = znaxis_[ii];
+
+    if (ii+1<FTY_MAXAXES)
+      inflateAdjust(ii+1, start, stop);
+  }
+}
+
+template <class T> size_t FitsCompressm<T>::calcIndex(int* xx)
+{
+  size_t id =0;
+  for (int jj=0; jj<FTY_MAXAXES; jj++) {
+    size_t kk =1;
+    for (int ii=0; ii<jj; ii++)
+      kk *=znaxis_[ii];
+    id += xx[jj]*kk;
+  }
+
+  return id;
+}
+
 // uncompressed
 
 template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr, 
 						     char* heap,
-						     int kkstart, int kkstop, 
-						     int jjstart, int jjstop, 
-						     int iistart, int iistop)
+						     int* start, int* stop)
 {
   int ocnt=0;
   T* obuf = (T*)(((FitsBinColumnArray*)uncompress_)->get(heap, sptr, &ocnt));
@@ -395,11 +408,21 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
   if (!obuf || !ocnt)
     return 0;
 
+  int xx[FTY_MAXAXES];
+
   int ll=0;
-  for (int kk=kkstart; kk<kkstop; kk++)
-    for (int jj=jjstart; jj<jjstop; jj++)
-      for (int ii=iistart; ii<iistop; ii++,ll++)
-	dest[kk*width_*height_ + jj*width_ + ii] = swap(obuf+ll);
+  // hard coded. hack.
+  for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+    for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+      for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	  for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	    for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+	      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++)
+		    dest[calcIndex(xx)] =  swap(obuf+ll);
+
   return 1;
 }
 
@@ -407,9 +430,7 @@ template<class T> int FitsCompressm<T>::uncompressed(T* dest, char* sptr,
 
 template <class T> int FitsCompressm<T>::gzcompressed(T* dest, char* sptr, 
 						      char* heap,
-						      int kkstart, int kkstop, 
-						      int jjstart, int jjstop, 
-						      int iistart, int iistop)
+						      int* start, int* stop)
 {
   int icnt=0;
   unsigned char* ibuf = (unsigned char*)((FitsBinColumnArray*)gzcompress_)->get(heap, sptr, &icnt);
@@ -474,18 +495,25 @@ template <class T> int FitsCompressm<T>::gzcompressed(T* dest, char* sptr,
 
   inflateEnd(&zstrm);
 
-  int ll=0;
-  for (int kk=kkstart; kk<kkstop; kk++) {
-    for (int jj=jjstart; jj<jjstop; jj++) {
-      for (int ii=iistart; ii<iistop; ii++,ll++) {
-	// swap if needed
-	if (byteswap_)
-	  *((T*)obuf+ll) = swap((T*)obuf+ll);
-	dest[kk*width_*height_ + jj*width_ + ii] = *((T*)obuf+ll);
-      }
-    }
-  }
+  int xx[FTY_MAXAXES];
 
+  // hard coded. hack.
+  int ll=0;
+  for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+    for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+      for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	  for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	    for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+	      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++) {
+		    // swap if needed
+		    if (byteswap_)
+		      *((T*)obuf+ll) = swap((T*)obuf+ll);
+		    dest[calcIndex(xx)] = *((T*)obuf+ll);
+		  }
+  
   return 1;
 }
 

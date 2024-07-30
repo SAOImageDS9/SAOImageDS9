@@ -14,12 +14,11 @@ class FitsCompress : public FitsFile {
  protected:
   int bitpix_;
   char* type_;
-  int width_;
-  int height_;
-  int depth_;
-  int ww_;
-  int hh_;
-  int dd_;
+
+  int znaxes_;
+  int znaxis_[FTY_MAXAXES];    // ZNAXIS[i] keywords
+  int ztile_[FTY_MAXAXES];    // ZTILE[i] keywords
+  
   double bscale_;
   double bzero_;
   unsigned int blank_;
@@ -63,16 +62,18 @@ template<class T>
 class FitsCompressm : public FitsCompress {
  private:
   int inflate(FitsFile*);
+  void inflateAdjust(int ii, int* start, int* stop);
   void swapBytes();
 
  protected:
   T swap(T* ptr);
 
  protected:
+  size_t calcIndex(int* xx);
   void uncompress(FitsFile* fits);
-  int gzcompressed(T*, char*, char*, int, int, int, int, int, int);
-  virtual int compressed(T*, char*, char*, int, int, int, int, int, int) =0;
-  int uncompressed(T*, char*, char*, int, int, int, int, int, int);
+  int gzcompressed(T*, char*, char*, int*, int*);
+  virtual int compressed(T*, char*, char*, int*, int*) =0;
+  int uncompressed(T*, char*, char*, int*, int*);
 
   T getValue(char*, double, double, int);
   T getValue(short*, double, double, int);

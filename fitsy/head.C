@@ -122,6 +122,44 @@ FitsHead::FitsHead(int width, int height, int depth, int bitpix, char* xtension)
   updateHDU();
 }
 
+FitsHead::FitsHead(int naxes, int* axis, int bitpix, char* xtension)
+{
+  cards_ = new char[FTY_BLOCK];
+  memset(cards_, ' ', FTY_BLOCK);
+  memcpy(cards_, "END", 3);
+
+  mapdata_ = NULL;
+  mapsize_ = 0;
+  memory_ = ALLOC;
+
+  ncard_ = 1;
+  acard_ = FTY_CARDS;
+  ccard_ = 0;
+
+  index_ = NULL;
+
+  if (!xtension)
+    appendLogical("SIMPLE", 1, "Fits Standard");
+  else
+    appendString("XTENSION", xtension, "Fits Standard");
+
+  appendInteger("BITPIX", bitpix, "Bits per pixel");
+  appendInteger("NAXIS", naxes, "Number of axes");
+  char key[] = "NAXIS ";
+  for (int ii=0; ii<naxes; ii++) {
+    key[5] = '1'+ii;
+    appendInteger(key, *(axis+ii), "Axis Length");
+  }
+
+  valid_ = 1;
+  inherit_ = 0;
+
+  hdu_ = NULL;
+
+  buildIndex();
+  updateHDU();
+}
+
 FitsHead::FitsHead(int width, int height, int depth, int bitpix,
 		   char* mm, size_t sz, Memory mem)
 {

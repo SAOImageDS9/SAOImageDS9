@@ -1295,7 +1295,7 @@ proc ColormapDialog {} {
 	-command ApplyColormap
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Download Colormap}] \
-	-command {HV cpt CPT-CITY http://soliton.vm.bytemark.co.uk/pub/cpt-city}
+	-command {HV cpt CPT-CITY http://seaviewsensing.com/pub/cpt-city}
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Load Contrast/Bias}]\
 	-command LoadContrastBias

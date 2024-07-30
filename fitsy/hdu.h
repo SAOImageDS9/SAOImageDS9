@@ -9,7 +9,7 @@
 
 #include "column.h"
 
-#define FTY_MAXAXES 10
+#define FTY_MAXAXES 9
 
 class FitsHead;
 

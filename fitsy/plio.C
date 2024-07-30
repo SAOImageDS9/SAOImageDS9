@@ -22,9 +22,7 @@ template<class T> FitsPliom<T>::FitsPliom(FitsFile* fits)
 
 template <class T> int FitsPliom<T>::compressed(T* dest, char* sptr, 
 						char* heap,
-						int kkstart, int kkstop, 
-						int jjstart, int jjstop, 
-						int iistart, int iistop)
+						int* start, int* stop)
 {
   double zs = FitsCompressm<T>::bscale_;
   if (FitsCompressm<T>::zscale_)
@@ -69,11 +67,20 @@ template <class T> int FitsPliom<T>::compressed(T* dest, char* sptr,
     return 0;
   }
 
+  int xx[FTY_MAXAXES];
+
   int ll=0;
-  for (int kk=kkstart; kk<kkstop; kk++)
-    for (int jj=jjstart; jj<jjstop; jj++)
-      for (int ii=iistart; ii<iistop; ii++,ll++)
-	dest[kk*FitsCompressm<T>::width_*FitsCompressm<T>::height_ + jj*FitsCompressm<T>::width_ + ii] = FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
+  for (xx[8]=start[8]; xx[8]<stop[8]; xx[8]++)
+    for (xx[7]=start[7]; xx[7]<stop[7]; xx[7]++)
+      for (xx[6]=start[6]; xx[6]<stop[6]; xx[6]++)
+	for (xx[5]=start[5]; xx[5]<stop[5]; xx[5]++)
+	  for (xx[4]=start[4]; xx[4]<stop[4]; xx[4]++)
+	    for (xx[3]=start[3]; xx[3]<stop[3]; xx[3]++)
+	      for (xx[2]=start[2]; xx[2]<stop[2]; xx[2]++)
+		for (xx[1]=start[1]; xx[1]<stop[1]; xx[1]++)
+		  for (xx[0]=start[0]; xx[0]<stop[0]; xx[0]++,ll++)
+		    dest[FitsCompressm<T>::calcIndex(xx)] =
+		      FitsCompressm<T>::getValue(obuf+ll,zs,zz,blank);
 
   if (obuf)
     delete [] obuf;

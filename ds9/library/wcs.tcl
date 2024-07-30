@@ -13,7 +13,7 @@ proc WCSDef {} {
     set iwcs(mb) .wcsmb
 
     set wcs(system) wcs
-    set wcs(sky) fk5
+    set wcs(sky) icrs
     set wcs(skyformat) sexagesimal
 
     # temp

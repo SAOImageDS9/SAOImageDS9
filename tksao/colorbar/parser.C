@@ -1980,12 +1980,12 @@ yyreduce:
 
   case 84:
 #line 218 "colorbar/parser.Y"
-    {cb->mapCmd('a');;}
+    {cb->mapCmd("a");;}
     break;
 
   case 85:
 #line 219 "colorbar/parser.Y"
-    {cb->mapCmd('b');;}
+    {cb->mapCmd("b");;}
     break;
 
   case 86:

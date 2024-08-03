@@ -310,7 +310,7 @@ command : /* empty */
 
 	| coordSystem {globalSystem=(Coord::CoordSystem)$1;} comment
 	| skyFrame {globalSystem=globalWCS; globalSky=(Coord::SkyFrame)$1;} comment
-	| LINEAR_ {globalSystem=globalWCS; globalSky=Coord::FK5;} comment
+	| LINEAR_ {globalSystem=globalWCS; globalSky=Coord::ICRS;} comment
 
 	| initLocal shape
 	| initLocal include shape
@@ -695,14 +695,14 @@ globalRuler : coordSystem skyFrame coordSystem skyDist
 	| coordSystem coordSystem
 	{
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)$1;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = (Coord::CoordSystem)$2;
 	  globalRulerDistFormat = localRulerDistFormat = Coord::DEGREE;
 	}
 	| coordSystem skyDist
 	{
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)$1;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
 	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)$2;
 	}
@@ -723,27 +723,27 @@ globalRuler : coordSystem skyFrame coordSystem skyDist
 	| LINEAR_ coordSystem
 	{
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = (Coord::CoordSystem)$2;
 	  globalRulerDistFormat = localRulerDistFormat = Coord::DEGREE;
 	}
 	| LINEAR_ skyDist
 	{
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
 	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)$2;
 	}
 	| skyDist
 	{
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::IMAGE;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
 	}
 	| PIXELS_
 	{
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::IMAGE;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::IMAGE;
 	  globalRulerDistFormat = localRulerDistFormat = Coord::DEGREE;
 	}
@@ -757,7 +757,7 @@ globalCompass : coordSystem skyFrame
 	| coordSystem
 	{
 	  globalCompassCoordSystem = localCompassCoordSystem = (Coord::CoordSystem)$1;
-	  globalCompassSkyFrame = localCompassSkyFrame = Coord::FK5;
+	  globalCompassSkyFrame = localCompassSkyFrame = Coord::ICRS;
 	}
 	| skyFrame
 	{
@@ -767,7 +767,7 @@ globalCompass : coordSystem skyFrame
 	| LINEAR_
 	{
 	  globalCompassCoordSystem = localCompassCoordSystem = Coord::WCS;
-	  globalCompassSkyFrame = localCompassSkyFrame = Coord::FK5;
+	  globalCompassSkyFrame = localCompassSkyFrame = Coord::ICRS;
 	}
 	;
 
@@ -794,12 +794,12 @@ initGlobal:{
 	  globalVector = 1;
 	  globalComposite = 1;
 	  globalRulerCoordSystem = Coord::PHYSICAL;
-	  globalRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = Coord::PHYSICAL;
 	  globalRulerDistFormat = Coord::DEGREE;
 	  globalRulerDistSpec[0] = '\0';
 	  globalCompassCoordSystem = Coord::PHYSICAL;
-	  globalCompassSkyFrame = Coord::FK5;
+	  globalCompassSkyFrame = Coord::ICRS;
 	  strcpy(globalCompassNorth,"N");
 	  strcpy(globalCompassEast,"E");
 	  globalCompassNArrow = 1;
@@ -870,14 +870,14 @@ localRuler : coordSystem skyFrame coordSystem skyDist
 	| coordSystem coordSystem
 	{
 	  localRulerCoordSystem = (Coord::CoordSystem)$1;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = (Coord::CoordSystem)$2;
 	  localRulerDistFormat = Coord::DEGREE;
 	}
 	| coordSystem skyDist
 	{
 	  localRulerCoordSystem = (Coord::CoordSystem)$1;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::WCS;
 	  localRulerDistFormat = (Coord::DistFormat)$2;
 	}
@@ -898,28 +898,28 @@ localRuler : coordSystem skyFrame coordSystem skyDist
 	| LINEAR_ coordSystem
 	{
 	  localRulerCoordSystem = Coord::WCS;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = (Coord::CoordSystem)$2;
 	  localRulerDistFormat = Coord::DEGREE;
 	}
 	| LINEAR_ skyDist
 	{
 	  localRulerCoordSystem = Coord::WCS;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::WCS;
 	  localRulerDistFormat = (Coord::DistFormat)$2;
 	}
 	| skyDist
 	{
 	  localRulerCoordSystem = Coord::IMAGE;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::WCS;
 	  localRulerDistFormat = (Coord::DistFormat)$1;
 	}
 	| PIXELS_
 	{
 	  localRulerCoordSystem = Coord::IMAGE;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::IMAGE;
 	  localRulerDistFormat = Coord::DEGREE;
 	}
@@ -933,7 +933,7 @@ localCompass : coordSystem skyFrame
 	| coordSystem
 	{
 	  localCompassCoordSystem = (Coord::CoordSystem)$1;
-	  localCompassSkyFrame = Coord::FK5;
+	  localCompassSkyFrame = Coord::ICRS;
 	}
 	| skyFrame
 	{
@@ -943,7 +943,7 @@ localCompass : coordSystem skyFrame
 	| LINEAR_
 	{
 	  localCompassCoordSystem = Coord::WCS;
-	  localCompassSkyFrame = Coord::FK5;
+	  localCompassSkyFrame = Coord::ICRS;
 	}
 	;
 
@@ -1574,7 +1574,7 @@ static Coord::SkyFrame checkWCSSky()
   switch (localSystem) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
-    return Coord::FK5;
+    return Coord::ICRS;
   default:
    return localSky;
   }

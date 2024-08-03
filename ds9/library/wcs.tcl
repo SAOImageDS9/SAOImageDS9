@@ -85,6 +85,16 @@ proc UpdateWCS {} {
     set rgb(system) $wcs(system)
     RGBSystem
 
+    # hls
+    global hls
+    set hls(system) $wcs(system)
+    HLSSystem
+
+    # hsv
+    global hsv
+    set hsv(system) $wcs(system)
+    HSVSystem
+
     # regions
     global marker
     set marker(system) $wcs(system)
@@ -570,7 +580,6 @@ proc WCSDialog {} {
 proc WCSApplyDialog {} {
     global dwcs
     global current
-    global rgb
 
     if {$current(frame) != {}} {
 	EvalLock lock,wcs $current(frame) \
@@ -584,7 +593,6 @@ proc WCSApplyDialog {} {
 proc WCSResetDialog {} {
     global dwcs
     global current
-    global rgb
 
     if {$current(frame) != {}} {
 	EvalLock lock,wcs $current(frame) \
@@ -656,7 +664,6 @@ proc WCSLoadFile {fn} {
 
 proc UpdateWCSDialog {} {
     global iwcs
-    global current
 
     global debug
     if {$debug(tcl,update)} {
@@ -689,7 +696,6 @@ proc ConfigWCSDialog {} {
     global wcs
     global iwcs
     global dwcs
-    global current
 
     global debug
     if {$debug(tcl,update)} {
@@ -1191,15 +1197,13 @@ proc ProcessWCSCmd {varname iname sock fn} {
 }
 
 proc WCSCmdReset {ext} {
-    global rgb
     global current
     
     if {$current(frame) == {}} {
 	return
     }
 
-    EvalLock lock,wcs $current(frame) \
-	[list $current(frame) wcs reset $ext]
+    EvalLock lock,wcs $current(frame) [list $current(frame) wcs reset $ext]
     UpdateWCS
     CATUpdateWCS
     FPUpdateWCS
@@ -1208,7 +1212,6 @@ proc WCSCmdReset {ext} {
 
 proc WCSCmdLoad {cmd ext} {
     global current
-    global rgb
     global parse
 
     if {$current(frame) == {}} {
@@ -1231,7 +1234,6 @@ proc WCSCmdLoad {cmd ext} {
 
 proc WCSCmdLoadFn {cmd ext fn} {
     global current
-    global rgb
 
     if {$current(frame) == {}} {
 	return
@@ -1278,5 +1280,6 @@ proc ProcessAlignCmd {varname iname} {
 
 proc ProcessSendAlignCmd {proc id param {sock {}} {fn {}}} {
     global current
+
     $proc $id [ToYesNo $current(align)]
 }

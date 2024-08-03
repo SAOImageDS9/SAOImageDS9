@@ -545,12 +545,12 @@ public:
 
   virtual Vector mapFromRef(const Vector&, Coord::InternalSystem) =0;
   virtual Vector mapToRef(const Vector&, Coord::InternalSystem) =0;
-  double mapAngleFromRef(double,Coord::CoordSystem,Coord::SkyFrame =Coord::FK5);
-  double mapAngleToRef(double, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  double mapAngleFromRef(double,Coord::CoordSystem,Coord::SkyFrame =Coord::ICRS);
+  double mapAngleToRef(double, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS);
   void listAngleFromRef(ostream&, double, Coord::CoordSystem,
-			Coord::SkyFrame =Coord::FK5);
+			Coord::SkyFrame =Coord::ICRS);
   void listAngleFromRef(ostream&, double, double, Coord::CoordSystem,
-			Coord::SkyFrame =Coord::FK5);
+			Coord::SkyFrame =Coord::ICRS);
 
   int parse(istringstream&);
 
@@ -722,19 +722,19 @@ public:
   void cropMotionCmd(const Vector&);
   void cropEndCmd(const Vector&);
   void crop3dCmd();
-  void crop3dCmd(double, double, Coord::CoordSystem, Coord::SkyFrame = Coord::FK5);
+  void crop3dCmd(double, double, Coord::CoordSystem, Coord::SkyFrame = Coord::ICRS);
   virtual void crop3dBeginCmd(const Vector&, int) {}
   virtual void crop3dMotionCmd(const Vector&, int) {}
   virtual void crop3dEndCmd(const Vector&, int) {}
   void getCropCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getCropCenterCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, Coord::CoordSystem, Coord::DistFormat);
-  void getCrop3dCmd(Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  void getCrop3dCmd(Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS);
   void hasCropCmd();
 
   // CrossHair Commands
   void crosshairCmd(int);
   void crosshairCmd(const Vector&, Coord::InternalSystem);
-  void crosshairCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  void crosshairCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS);
   void crosshairWarpCmd(const Vector&);
   void getCrosshairCmd(Coord::InternalSystem);
   void getCrosshairCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);

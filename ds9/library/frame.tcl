@@ -174,10 +174,10 @@ proc CreateNameNumberFrame {which type} {
 
     # Frame type items
     switch -- [$which get type] {
-	base {}
-	rgb {$which rgb system $rgb(system)}
-	hsv {$which hsv system $hsv(system)}
-	hls {$which hls system $hls(system)}
+	base -
+	rgb -
+	hsv -
+	hls {}
 	3d {
 	    $which 3d method $pthreed(method)
 	    $which 3d background $pthreed(background)

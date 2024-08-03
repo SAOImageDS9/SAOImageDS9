@@ -29,7 +29,7 @@ extern int frlex(void*, frFlexLexer*);
 extern void frerror(Base*, frFlexLexer*, const char*);
 
 static Coord::CoordSystem currentCoord = Coord::IMAGE;
-static Coord::SkyFrame currentSky = Coord::FK5;
+static Coord::SkyFrame currentSky = Coord::ICRS;
 
 static unsigned short defaultProps = Marker::SELECT | Marker::HIGHLITE |
 		Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
@@ -686,7 +686,7 @@ minmaxMode : AUTO_ {$$=FrScale::SCAN;}
 	| IRAFMIN_ {$$=FrScale::IRAFMIN;}
         ;
 
-skyFrame : /* empty */ {$$ = currentSky = Coord::FK5;}
+skyFrame : /* empty */ {$$ = currentSky = Coord::ICRS;}
 	| FK4_ {$$ = currentSky = Coord::FK4;}
 	| B1950_ {$$ = currentSky = Coord::FK4;}
 	| FK5_ {$$ = currentSky = Coord::FK5;}
@@ -2531,12 +2531,12 @@ markerList : markerFormat coordSystem skyFrame skyFormat
 	;
 
 markerLoad : markerFormat STRING
-        {fr->markerLoadCmd((Base::MarkerFormat)$1,$2,0,"green",Coord::PHYSICAL,Coord::FK5);}
+        {fr->markerLoadCmd((Base::MarkerFormat)$1,$2,0,"green",Coord::PHYSICAL,Coord::ICRS);}
 	| markerFormat STRING INT STRING coordSystem skyFrame
 	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,$3,$4,
 	    (Coord::CoordSystem)$5,(Coord::SkyFrame)$6);}
 	| markerFormat INT
-	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,0,"green",Coord::PHYSICAL,Coord::FK5);}
+	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,0,"green",Coord::PHYSICAL,Coord::ICRS);}
 	| markerFormat INT INT STRING coordSystem skyFrame
 	{fr->markerLoadCmd((Base::MarkerFormat)$1,$2,$3,$4,
 	    (Coord::CoordSystem)$5,(Coord::SkyFrame)$6);}

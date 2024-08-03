@@ -460,17 +460,17 @@ class FitsImage {
   Matrix3d& matrixFromData3d(Coord::InternalSystem);
   Matrix3d& matrixToData3d(Coord::InternalSystem);
 
-  Vector mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  Vector mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS);
   VectorStr mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
-  Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS);
   VectorStr3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
-  void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5, Coord::SkyFormat =Coord::DEGREES);
-  void listFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5, Coord::SkyFormat =Coord::DEGREES);
+  void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS, Coord::SkyFormat =Coord::DEGREES);
+  void listFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS, Coord::SkyFormat =Coord::DEGREES);
 
-  Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
-  Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS);
+  Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::ICRS);
 
   double mapLenFromRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
   Vector mapLenFromRef(const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);

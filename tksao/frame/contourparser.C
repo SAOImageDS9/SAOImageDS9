@@ -1740,7 +1740,7 @@ yyreduce:
 #line 176 "frame/contourparser.Y"
     {
 	  globalSystem=globalWCS;
-	  globalSky=Coord::FK5;
+	  globalSky=Coord::ICRS;
 	;}
     break;
 
@@ -2477,7 +2477,7 @@ static Coord::SkyFrame checkWCSSky()
   switch (globalSystem) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
-    return Coord::FK5;
+    return Coord::ICRS;
   default:
    return globalSky;
   }

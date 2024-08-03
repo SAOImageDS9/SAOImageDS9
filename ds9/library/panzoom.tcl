@@ -631,7 +631,7 @@ proc MatchFrame {which sys} {
 		set current(align) 1
 		$which wcs align 1
 		set align [$which get wcs align pointer]
-		set pan [$which get cursor $sys FK5]
+		set pan [$which get cursor $sys ICRS]
 		set zoom [$which get zoom]
 		set rotate [$which get rotate]
 		set orient [$which get orient]
@@ -639,7 +639,7 @@ proc MatchFrame {which sys} {
 		foreach ff $ds9(frames) {
 		    if {$ff != $which} {
 			if {[$ff has wcs $sys]} {
-			    $ff pan to $sys FK5 $pan
+			    $ff pan to $sys ICRS $pan
 			    $ff zoom to $zoom
 			    $ff rotate to $rotate
 			    $ff orient $orient

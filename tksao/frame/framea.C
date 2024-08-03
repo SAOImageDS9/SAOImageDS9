@@ -303,7 +303,7 @@ void FrameA::updateRGBMatrices()
 	break;
       default:
 	if (keyContext->fits->hasWCS(rgbSystem))
-	  rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem, rgbSystem, Coord::FK5);
+	  rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem, rgbSystem, Coord::ICRS);
 	break;
       }
     }

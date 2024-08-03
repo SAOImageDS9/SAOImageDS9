@@ -110,13 +110,13 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   doAnts3d =0;
 
   wcsSystem_ = Coord::WCS;
-  wcsSkyFrame_ = Coord::FK5;
+  wcsSkyFrame_ = Coord::ICRS;
   wcsSkyFormat_ = Coord::DEGREES;
 
   wcsAlign_ = 0;
 
   xySystem_ = Coord::IMAGE;
-  xySky_ = Coord::FK5;
+  xySky_ = Coord::ICRS;
 
   wcsOrientation = Coord::NORMAL;
   wcsRotation = 0;
@@ -485,7 +485,7 @@ void Base::centerImage()
   // always center to center of pixel, even for even sized image
   Vector bb = (aa*Translate(.5,.5)).floor();
   // cursor is in REF coords
-  cursor = keyContext->fits->mapToRef(bb,Coord::IMAGE,Coord::FK5);
+  cursor = keyContext->fits->mapToRef(bb,Coord::IMAGE,Coord::ICRS);
 }
 
 int Base::doRender() 

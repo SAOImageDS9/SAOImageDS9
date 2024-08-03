@@ -267,7 +267,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   char ydef[] = "0";
   y = ydef;
   Coord::CoordSystem sys =Coord::PHYSICAL;
-  Coord::SkyFrame sky =Coord::FK5;
+  Coord::SkyFrame sky =Coord::ICRS;
   Coord::SkyFormat format =Coord::DEGREES;
 
   // xv,yv
@@ -278,7 +278,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   char yvdef[] = "0";
   yv = yvdef;
   Coord::CoordSystem vsys =Coord::PHYSICAL;
-  Coord::SkyFrame vsky =Coord::FK5;
+  Coord::SkyFrame vsky =Coord::ICRS;
   Coord::SkyFormat vformat =Coord::DEGREES;
 
   // r,r2
@@ -289,7 +289,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   char r2def[] = "0";
   r2 = r2def;
   Coord::CoordSystem rsys =Coord::PHYSICAL;
-  Coord::SkyFrame rsky =Coord::FK5;
+  Coord::SkyFrame rsky =Coord::ICRS;
   Coord::DistFormat rdist =Coord::ARCMIN;
 
   // rv,rv2
@@ -300,7 +300,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   char rv2def[] = "0";
   rv2 = rv2def;
   Coord::CoordSystem rvsys =Coord::PHYSICAL;
-  Coord::SkyFrame rvsky =Coord::FK5;
+  Coord::SkyFrame rvsky =Coord::ICRS;
   Coord::DistFormat rvdist =Coord::ARCMIN;
 
   // ang
@@ -309,7 +309,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   ang = angdef;
   Coord::AngleFormat angformat =Coord::DEG;
   Coord::CoordSystem angsys =Coord::PHYSICAL;
-  Coord::SkyFrame angsky =Coord::FK5;
+  Coord::SkyFrame angsky =Coord::ICRS;
   int angsign =1;
   double angoffset =0;
 
@@ -319,7 +319,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   angv = angvdef;
   Coord::AngleFormat angvformat =Coord::DEG;
   Coord::CoordSystem angvsys =Coord::PHYSICAL;
-  Coord::SkyFrame angvsky =Coord::FK5;
+  Coord::SkyFrame angvsky =Coord::ICRS;
   int angvsign =1;
   double angvoffset =0;
 

@@ -175,7 +175,7 @@ command : /* blank line */
 	| LINEAR_ comment
 	{
 	  globalSystem=globalWCS;
-	  globalSky=Coord::FK5;
+	  globalSky=Coord::ICRS;
 	} 
         | LEVELS_ '=' '(' levels ')'
         | LEVEL_ '=' numeric {localLevel = $3} initLocal comment newcl
@@ -441,7 +441,7 @@ static Coord::SkyFrame checkWCSSky()
   switch (globalSystem) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
-    return Coord::FK5;
+    return Coord::ICRS;
   default:
    return globalSky;
   }

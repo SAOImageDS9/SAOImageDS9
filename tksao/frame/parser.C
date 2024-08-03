@@ -819,7 +819,7 @@ extern int frlex(void*, frFlexLexer*);
 extern void frerror(Base*, frFlexLexer*, const char*);
 
 static Coord::CoordSystem currentCoord = Coord::IMAGE;
-static Coord::SkyFrame currentSky = Coord::FK5;
+static Coord::SkyFrame currentSky = Coord::ICRS;
 
 static unsigned short defaultProps = Marker::SELECT | Marker::HIGHLITE |
 		Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
@@ -5947,7 +5947,7 @@ yyreduce:
 
   case 157:
 #line 689 "frame/parser.Y"
-    {(yyval.integer) = currentSky = Coord::FK5;;}
+    {(yyval.integer) = currentSky = Coord::ICRS;;}
     break;
 
   case 158:
@@ -10218,7 +10218,7 @@ yyreduce:
 
   case 1077:
 #line 2534 "frame/parser.Y"
-    {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].str),0,"green",Coord::PHYSICAL,Coord::FK5);;}
+    {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].str),0,"green",Coord::PHYSICAL,Coord::ICRS);;}
     break;
 
   case 1078:
@@ -10229,7 +10229,7 @@ yyreduce:
 
   case 1079:
 #line 2539 "frame/parser.Y"
-    {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer),0,"green",Coord::PHYSICAL,Coord::FK5);;}
+    {fr->markerLoadCmd((Base::MarkerFormat)(yyvsp[(1) - (2)].integer),(yyvsp[(2) - (2)].integer),0,"green",Coord::PHYSICAL,Coord::ICRS);;}
     break;
 
   case 1080:

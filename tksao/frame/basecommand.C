@@ -1794,7 +1794,7 @@ void Base::getFitsSliceFromImageCmd(int ss, Coord::CoordSystem sys)
   if (currentContext->cfits) {
     FitsImage* ptr = currentContext->fits;
     Vector3d dd = Vector3d(ptr->center(),ss) * Translate3d(-.5,-.5,-.5);
-    Vector3d out = ptr->mapFromRef(dd,sys,Coord::FK5);
+    Vector3d out = ptr->mapFromRef(dd,sys,Coord::ICRS);
 
     // set precision high enough for plot in GHz freq
     ostringstream str;
@@ -1810,8 +1810,8 @@ void Base::getFitsSliceToImageCmd(double dd, Coord::CoordSystem sys)
   if (currentContext->cfits) {
     FitsImage* ptr = currentContext->fits;
     Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5, -.5, -.5);
-    Vector3d wcc = ptr->mapFromRef(cc,sys,Coord::FK5);
-    Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,Coord::FK5);
+    Vector3d wcc = ptr->mapFromRef(cc,sys,Coord::ICRS);
+    Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,Coord::ICRS);
     Vector3d out = oo * Translate3d(.5, .5, .5);
     printInteger(out[2]);
   }
@@ -2896,8 +2896,8 @@ void Base::sliceCmd(double dd, Coord::CoordSystem sys)
   
   FitsImage* ptr = currentContext->fits;
   Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5, -.5, -.5);
-  Vector3d wcc = ptr->mapFromRef(cc,sys,Coord::FK5);
-  Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,Coord::FK5);
+  Vector3d wcc = ptr->mapFromRef(cc,sys,Coord::ICRS);
+  Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,Coord::ICRS);
   Vector3d out = oo * Translate3d(.5, .5, .5);
   
   // IMAGE (ranges 1-n)

@@ -426,8 +426,8 @@ double FitsImage::mapDistFromRef(const Vector& vv1, const Vector& vv2,
     }
   default:
     if (hasWCS(sys)) {
-      Vector v1 = pix2wcs(vv1 * refToImage, sys, Coord::FK5);
-      Vector v2 = pix2wcs(vv2 * refToImage, sys, Coord::FK5);
+      Vector v1 = pix2wcs(vv1 * refToImage, sys, Coord::ICRS);
+      Vector v2 = pix2wcs(vv2 * refToImage, sys, Coord::ICRS);
 
       double rr = getWCSDist(v1,v2,sys);
       if (hasWCSCel(sys)) {

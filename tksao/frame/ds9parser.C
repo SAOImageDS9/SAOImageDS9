@@ -2783,7 +2783,7 @@ yyreduce:
 
   case 14:
 #line 313 "frame/ds9parser.Y"
-    {globalSystem=globalWCS; globalSky=Coord::FK5;;}
+    {globalSystem=globalWCS; globalSky=Coord::ICRS;;}
     break;
 
   case 21:
@@ -3675,7 +3675,7 @@ yyreduce:
 #line 696 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = (Coord::CoordSystem)(yyvsp[(2) - (2)].integer);
 	  globalRulerDistFormat = localRulerDistFormat = Coord::DEGREE;
 	;}
@@ -3685,7 +3685,7 @@ yyreduce:
 #line 703 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
 	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
@@ -3715,7 +3715,7 @@ yyreduce:
 #line 724 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = (Coord::CoordSystem)(yyvsp[(2) - (2)].integer);
 	  globalRulerDistFormat = localRulerDistFormat = Coord::DEGREE;
 	;}
@@ -3725,7 +3725,7 @@ yyreduce:
 #line 731 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
 	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
@@ -3735,7 +3735,7 @@ yyreduce:
 #line 738 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::IMAGE;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
 	;}
     break;
@@ -3744,7 +3744,7 @@ yyreduce:
 #line 744 "frame/ds9parser.Y"
     {
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::IMAGE;
-	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = localRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::IMAGE;
 	  globalRulerDistFormat = localRulerDistFormat = Coord::DEGREE;
 	;}
@@ -3762,7 +3762,7 @@ yyreduce:
 #line 758 "frame/ds9parser.Y"
     {
 	  globalCompassCoordSystem = localCompassCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);
-	  globalCompassSkyFrame = localCompassSkyFrame = Coord::FK5;
+	  globalCompassSkyFrame = localCompassSkyFrame = Coord::ICRS;
 	;}
     break;
 
@@ -3778,7 +3778,7 @@ yyreduce:
 #line 768 "frame/ds9parser.Y"
     {
 	  globalCompassCoordSystem = localCompassCoordSystem = Coord::WCS;
-	  globalCompassSkyFrame = localCompassSkyFrame = Coord::FK5;
+	  globalCompassSkyFrame = localCompassSkyFrame = Coord::ICRS;
 	;}
     break;
 
@@ -3807,12 +3807,12 @@ yyreduce:
 	  globalVector = 1;
 	  globalComposite = 1;
 	  globalRulerCoordSystem = Coord::PHYSICAL;
-	  globalRulerSkyFrame = Coord::FK5;
+	  globalRulerSkyFrame = Coord::ICRS;
 	  globalRulerDistSystem = Coord::PHYSICAL;
 	  globalRulerDistFormat = Coord::DEGREE;
 	  globalRulerDistSpec[0] = '\0';
 	  globalCompassCoordSystem = Coord::PHYSICAL;
-	  globalCompassSkyFrame = Coord::FK5;
+	  globalCompassSkyFrame = Coord::ICRS;
 	  strcpy(globalCompassNorth,"N");
 	  strcpy(globalCompassEast,"E");
 	  globalCompassNArrow = 1;
@@ -3958,7 +3958,7 @@ yyreduce:
 #line 871 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = (Coord::CoordSystem)(yyvsp[(2) - (2)].integer);
 	  localRulerDistFormat = Coord::DEGREE;
 	;}
@@ -3968,7 +3968,7 @@ yyreduce:
 #line 878 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::WCS;
 	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
@@ -3998,7 +3998,7 @@ yyreduce:
 #line 899 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::WCS;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = (Coord::CoordSystem)(yyvsp[(2) - (2)].integer);
 	  localRulerDistFormat = Coord::DEGREE;
 	;}
@@ -4008,7 +4008,7 @@ yyreduce:
 #line 906 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::WCS;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::WCS;
 	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
@@ -4018,7 +4018,7 @@ yyreduce:
 #line 913 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::IMAGE;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::WCS;
 	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(1) - (1)].integer);
 	;}
@@ -4028,7 +4028,7 @@ yyreduce:
 #line 920 "frame/ds9parser.Y"
     {
 	  localRulerCoordSystem = Coord::IMAGE;
-	  localRulerSkyFrame = Coord::FK5;
+	  localRulerSkyFrame = Coord::ICRS;
 	  localRulerDistSystem = Coord::IMAGE;
 	  localRulerDistFormat = Coord::DEGREE;
 	;}
@@ -4046,7 +4046,7 @@ yyreduce:
 #line 934 "frame/ds9parser.Y"
     {
 	  localCompassCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);
-	  localCompassSkyFrame = Coord::FK5;
+	  localCompassSkyFrame = Coord::ICRS;
 	;}
     break;
 
@@ -4062,7 +4062,7 @@ yyreduce:
 #line 944 "frame/ds9parser.Y"
     {
 	  localCompassCoordSystem = Coord::WCS;
-	  localCompassSkyFrame = Coord::FK5;
+	  localCompassSkyFrame = Coord::ICRS;
 	;}
     break;
 
@@ -5092,7 +5092,7 @@ static Coord::SkyFrame checkWCSSky()
   switch (localSystem) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
-    return Coord::FK5;
+    return Coord::ICRS;
   default:
    return localSky;
   }

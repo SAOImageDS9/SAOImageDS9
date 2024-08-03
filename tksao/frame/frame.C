@@ -616,7 +616,7 @@ void Frame::updateMaskMatrices()
 	break;
       default:
 	mptr->mm() = calcAlignWCS(keyContext->fits, mptr->context()->fits,
-				  maskSystem, maskSystem, Coord::FK5);
+				  maskSystem, maskSystem, Coord::ICRS);
 	break;
       }
     }

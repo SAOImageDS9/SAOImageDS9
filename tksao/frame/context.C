@@ -101,7 +101,7 @@ Context::Context()
   thread_ =NULL;
 
   contourWCSSystem_ = Coord::WCS;
-  contourWCSSkyFrame_ = Coord::FK5;
+  contourWCSSkyFrame_ = Coord::ICRS;
 }
 
 Context::~Context()
@@ -1475,7 +1475,7 @@ int Context::loadMosaicWFPC2(Base::MemType which, const char* fn,
       ptr->wfpc2WCS(bfits_->head(), istr);
 
       Matrix mm = parent_->calcAlignWCS(bfits_, ptr, Coord::WCS,
-					Coord::WCS, Coord::FK5);
+					Coord::WCS, Coord::ICRS);
       ptr->setwcsToRef(mm);
 
       ptr = ptr->nextMosaic();
@@ -1625,7 +1625,7 @@ int Context::processMosaicKeywords(FitsImage* ptr)
 	    return 0;
 
 	  Matrix mm = parent_->calcAlignWCS(fits, sptr, mosaicSystem, 
-					   mosaicSystem, Coord::FK5);
+					   mosaicSystem, Coord::ICRS);
 	  sptr->setwcsToRef(mm);
 	}
 	break;

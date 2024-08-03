@@ -32,7 +32,7 @@
 WCSState::WCSState()
 {
   wcsSystem_ = Coord::WCS;
-  wcsSkyFrame_ = Coord::FK5;
+  wcsSkyFrame_ = Coord::ICRS;
 };
 
 FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
@@ -1269,7 +1269,7 @@ void FitsImage::initWCS0(const Vector& pix)
   hd->appendString("CTYPE2", "DEC--TAN", NULL);
 
   // CRPIX
-  Vector cc = mapFromRef(pix, Coord::IMAGE, Coord::FK5);
+  Vector cc = mapFromRef(pix, Coord::IMAGE, Coord::ICRS);
   hd->appendReal("CRPIX1", cc[1], 9, NULL);
   hd->appendReal("CRPIX2", cc[0], 9, NULL);
 
@@ -1279,9 +1279,9 @@ void FitsImage::initWCS0(const Vector& pix)
 
   // CD
   double ss = getWCSSize(Coord::WCS);
-  double ang = getWCSRotation(Coord::WCS,Coord::FK5);
+  double ang = getWCSRotation(Coord::WCS,Coord::ICRS);
   Matrix flip;
-  switch (getWCSOrientation(Coord::WCS,Coord::FK5)) {
+  switch (getWCSOrientation(Coord::WCS,Coord::ICRS)) {
   case Coord::NORMAL:
   case Coord::YY:
     flip = FlipX();
@@ -1301,7 +1301,7 @@ void FitsImage::initWCS0(const Vector& pix)
   hd->appendReal("EQUINOX", 2000, 9, NULL);
   
   // RADESYS
-  hd->appendString("RADESYS", "FK5", NULL);
+  hd->appendString("RADESYS", "ICRS", NULL);
 
   if (wcs0Header_)
     delete wcs0Header_;

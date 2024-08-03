@@ -4796,13 +4796,13 @@ void Base::markerPasteCmd(Coord::CoordSystem sys)
 
   //  MarkerFormat type = DS9;
   markerListHeader(str);
-  coord.listCoordSystem(str, sys, Coord::FK5, keyContext->fits);
+  coord.listCoordSystem(str, sys, Coord::ICRS, keyContext->fits);
   str << endl;
   str << setseparator(',');
 
   Marker* mm = pasteMarkers->head();
   while (mm) {
-    mm->list(str, sys, Coord::FK5, Coord::DEGREES, 0, 0);
+    mm->list(str, sys, Coord::ICRS, Coord::DEGREES, 0, 0);
     mm=mm->next();
   }
 
@@ -5286,10 +5286,10 @@ void Base::markerSaveTemplateCmd(const char* fileName)
   }
 
   markerListHeader(fn);
-  fn << "wcs0;fk5" << endl;
+  fn << "wcs0;icrs" << endl;
 
   while (mm) {
-    mm->list(fn, Coord::WCS0, Coord::FK5, Coord::DEGREES, 0, 0);
+    mm->list(fn, Coord::WCS0, Coord::ICRS, Coord::DEGREES, 0, 0);
     mm=mm->next();
   }
 

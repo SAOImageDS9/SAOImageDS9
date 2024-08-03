@@ -320,23 +320,23 @@ void Coord::listDistSystem(ostream& str, CoordSystem sys, DistFormat format,
 {
   if (!str) {
     *sys = PHYSICAL;
-    *sky = FK5;
+    *sky = ICRS;
   }
   else if (STRCMP(str,"image",5)) {
     *sys = IMAGE;
-    *sky = FK5;
+    *sky = ICRS;
     }
   else if (STRCMP(str,"physical",8)) {
     *sys = PHYSICAL;
-    *sky = FK5;
+    *sky = ICRS;
   }
   else if (STRCMP(str,"amplifier",9)) {
     *sys = AMPLIFIER;
-    *sky = FK5;
+    *sky = ICRS;
   }
   else if (STRCMP(str,"detector",9)) {
     *sys = DETECTOR;
-    *sky = FK5;
+    *sky = ICRS;
   }
   else if (STRCMP(str,"fk4",3)) {
     *sys = wcssys;
@@ -360,15 +360,15 @@ void Coord::listDistSystem(ostream& str, CoordSystem sys, DistFormat format,
   }
   else if (STRCMP(str,"wcs",3)) {
     *sys = wcssys;
-    *sky = FK5;
+    *sky = ICRS;
   }
   else if (STRCMP(str,"linear",6)) {
     *sys = wcssys;
-    *sky = FK5;
+    *sky = ICRS;
   }
   else {
     *sys = PHYSICAL;
-    *sky = FK5;
+    *sky = ICRS;
   }
 }
 

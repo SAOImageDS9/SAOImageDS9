@@ -13,9 +13,9 @@ proc DS9Def {} {
     }
 
     # Must be major,minor
-    set ds9(version) {8.6}
+    set ds9(version) {8.7}
     # For display purposes only
-    set ds9(version,display) {8.6}
+    set ds9(version,display) {8.7b1}
 
     set ds9(visual) {}
     set ds9(depth) 8

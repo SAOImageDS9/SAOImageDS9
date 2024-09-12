@@ -65,6 +65,41 @@ proc ColorbarDef {} {
 					 twilight \
 					 turbo \
 					]
+    set icolorbar(mpl-div,cmaps) [list \
+				      mpl_PiYG \
+				      mpl_PRGn \
+				      mpl_BrBG \
+				      mpl_PuOr \
+				      mpl_RdGy \
+				      mpl_RdBu \
+				      mpl_RdYlBu \
+				      mpl_RdYlGn \
+				      mpl_Spectral \
+				      mpl_coolwarm \
+				      mpl_bwr \
+				      mpl_seismic \
+				     ]
+    set icolorbar(mpl-seq,cmaps) [list \
+				      mpl_Greys \
+				      mpl_Purples \
+				      mpl_Blues \
+				      mpl_Greens \
+				      mpl_Oranges \
+				      mpl_Reds \
+				      mpl_YlOrBr \
+				      mpl_YlOrRd \
+				      mpl_OrRd \
+				      mpl_PuRd \
+				      mpl_RdPu \
+				      mpl_BuPu \
+				      mpl_GnBu \
+				      mpl_PuBu \
+				      mpl_YlGnBu \
+				      mpl_PuBuGn \
+				      mpl_BuGn \
+				      mpl_YlGn \
+				 ]
+
     set icolorbar(cubehelix,cmaps) [list \
 					ch05m151008 \
 					ch05m151010 \
@@ -198,6 +233,8 @@ proc CreateColorbar {} {
     CreateColorbarExternal colorbar topo sao
     CreateColorbarExternal colorbar matplotlib2 lut
     CreateColorbarExternal colorbar scm lut
+    CreateColorbarExternal colorbar mpl-seq lut
+    CreateColorbarExternal colorbar mpl-div lut
 
     # reset current map
     colorbar map $colorbar(map)
@@ -272,6 +309,8 @@ proc CreateColorbarBase {frame} {
     CreateColorbarExternal $which topo sao
     CreateColorbarExternal $which matplotlib2 lut
     CreateColorbarExternal $which scm lut
+    CreateColorbarExternal $which mpl-seq lut
+    CreateColorbarExternal $which mpl-div lut
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
@@ -434,12 +473,12 @@ proc CreateColorbarHLS {frame} {
 	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 }
 
-proc CreateColorbarExternal {which frame ext} {
+proc CreateColorbarExternal {which group ext} {
     global ds9
     global icolorbar
     global colorbar
 
-    foreach cmap $icolorbar($frame,cmaps) {
+    foreach cmap $icolorbar($group,cmaps) {
 	set fn $cmap.$ext
 	set ch [open "$ds9(root)/cmaps/$fn" r]
 
@@ -1329,6 +1368,10 @@ proc ColormapDialog {} {
 	-menu $mb.colormap.h5
     $mb.colormap add cascade -label [msgcat::mc {Matplotlib}] \
 	-menu $mb.colormap.matplotlib
+    $mb.colormap add cascade -label [msgcat::mc {Matplotlib Sequential}] \
+	-menu $mb.colormap.mpl-seq
+    $mb.colormap add cascade -label [msgcat::mc {Matplotlib Diverging}] \
+	-menu $mb.colormap.mpl-div
     $mb.colormap add cascade -label [msgcat::mc {Cubehelix}] \
 	-menu $mb.colormap.cubehelix
     $mb.colormap add cascade -label [msgcat::mc {Gist}] \
@@ -1343,6 +1386,8 @@ proc ColormapDialog {} {
     ColormapDialogExternal h5 h5
     ColormapDialogExternal matplotlib matplotlib
     ColormapDialogExternal matplotlib matplotlib2
+    ColormapDialogExternal mpl-seq mpl-seq
+    ColormapDialogExternal mpl-div mpl-div
     ColormapDialogExternal cubehelix cubehelix
     ColormapDialogExternal gist gist
     ColormapDialogExternal topo topo
@@ -1527,6 +1572,8 @@ proc UpdateColorDialogCmaps {state} {
 	[msgcat::mc {h5utils}] -state $state
     $icolorbar(mb).colormap entryconfig \
 	[msgcat::mc {Matplotlib}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Matplotlib Diverging}] -state $state
     $icolorbar(mb).colormap entryconfig \
 	[msgcat::mc {Cubehelix}] -state $state
     $icolorbar(mb).colormap entryconfig \

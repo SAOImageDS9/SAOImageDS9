@@ -24,6 +24,10 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.h5
     $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib}] \
 	-menu $ds9(mb).color.matplotlib
+    $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Sequential}] \
+	-menu $ds9(mb).color.mpl-seq
+    $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Diverging}] \
+	-menu $ds9(mb).color.mpl-div
     $ds9(mb).color add cascade -label [msgcat::mc {Cubehelix}] \
 	-menu $ds9(mb).color.cubehelix
     $ds9(mb).color add cascade -label [msgcat::mc {Gist}] \
@@ -38,6 +42,8 @@ proc ColorMainMenu {} {
     ColorMainMenuExternal h5 h5
     ColorMainMenuExternal matplotlib matplotlib
     ColorMainMenuExternal matplotlib matplotlib2
+    ColorMainMenuExternal mpl-seq mpl-seq
+    ColorMainMenuExternal mpl-div mpl-div
     ColorMainMenuExternal cubehelix cubehelix
     ColorMainMenuExternal gist gist
     ColorMainMenuExternal topo topo
@@ -140,6 +146,10 @@ proc PrefsDialogColorMenu {w} {
     $m add separator
     $m add cascade -label [msgcat::mc {h5utils}] -menu $m.h5
     $m add cascade -label [msgcat::mc {Matplotlib}] -menu $m.matplotlib
+    $m add cascade -label [msgcat::mc {Matplotlib Sequential}] \
+	-menu $m.mpl-seq
+    $m add cascade -label [msgcat::mc {Matplotlib Diverging}] \
+	-menu $m.mpl-div
     $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
@@ -148,6 +158,8 @@ proc PrefsDialogColorMenu {w} {
     PrefsColorMenuExternal $m h5 h5
     PrefsColorMenuExternal $m matplotlib matplotlib
     PrefsColorMenuExternal $m matplotlib matplotlib2
+    PrefsColorMenuExternal $m mpl-seq mpl-seq
+    PrefsColorMenuExternal $m mpl-div mpl-div
     PrefsColorMenuExternal $m cubehelix cubehelix
     PrefsColorMenuExternal $m gist gist
     PrefsColorMenuExternal $m topo topo
@@ -238,6 +250,8 @@ proc ButtonsColorDef {} {
     ButtonsColorDefExternal h5
     ButtonsColorDefExternal matplotlib
     ButtonsColorDefExternal matplotlib2
+    ButtonsColorDefExternal mpl-seq
+    ButtonsColorDefExternal mpl-div
     ButtonsColorDefExternal cubehelix
     ButtonsColorDefExternal gist
     ButtonsColorDefExternal topo
@@ -289,6 +303,8 @@ proc CreateButtonsColor {} {
     CreateButtonsColorExternal h5
     CreateButtonsColorExternal matplotlib
     CreateButtonsColorExternal matplotlib2
+    CreateButtonsColorExternal mpl-seq
+    CreateButtonsColorExternal mpl-div
     CreateButtonsColorExternal cubehelix
     CreateButtonsColorExternal gist
     CreateButtonsColorExternal topo
@@ -360,6 +376,10 @@ proc PrefsDialogButtonbarColor {f} {
     $m add separator
     $m add cascade -label [msgcat::mc {h5utils}] -menu $m.h5
     $m add cascade -label [msgcat::mc {Matplotlib}] -menu $m.matplotlib
+    $m add cascade -label [msgcat::mc {Matplotlib Sequential}] \
+	-menu $m.mpl-seq
+    $m add cascade -label [msgcat::mc {Matplotlib Diverging}] \
+	-menu $m.mpl-div
     $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
@@ -368,6 +388,8 @@ proc PrefsDialogButtonbarColor {f} {
     PrefsDialogButtonbarColorExternal $m h5 h5
     PrefsDialogButtonbarColorExternal $m matplotlib matplotlib
     PrefsDialogButtonbarColorExternal $m matplotlib matplotlib2
+    PrefsDialogButtonbarColorExternal $m mpl-seq mpl-seq
+    PrefsDialogButtonbarColorExternal $m mpl-div mpl-div
     PrefsDialogButtonbarColorExternal $m cubehelix cubehelix
     PrefsDialogButtonbarColorExternal $m gist gist
     PrefsDialogButtonbarColorExternal $m topo topo
@@ -452,6 +474,8 @@ proc UpdateColorMenu {} {
 		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] \
 		    -state normal
+		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Diverging}] \
+		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {Cubehelix}] \
 		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {Gist}] \
@@ -481,6 +505,8 @@ proc UpdateColorMenu {} {
 		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] \
 		    -state disabled
+		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Diverging}] \
+		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {Cubehelix}] \
 		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {Gist}] \
@@ -509,6 +535,8 @@ proc UpdateColorMenu {} {
 
 	$ds9(mb).color entryconfig [msgcat::mc {h5utils}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] -state normal
+	$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Diverging}] \
+	    -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Cubehelix}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Gist}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Topographic}] -state normal
@@ -518,6 +546,8 @@ proc UpdateColorMenu {} {
 	UpdateColorButtonExternal default normal
 	UpdateColorButtonExternal h5 normal
 	UpdateColorButtonExternal matplotlib normal
+	UpdateColorButtonExternal mpl-seq normal
+	UpdateColorButtonExternal mpl-div normal
 	UpdateColorButtonExternal cubehelix normal
 	UpdateColorButtonExternal gist normal
 	UpdateColorButtonExternal topo normal

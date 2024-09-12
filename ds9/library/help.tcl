@@ -12,7 +12,7 @@ proc HelpDef {} {
     set help(command) "$ds9(root)/doc/ref/command.html"
     set help(userman) "$ds9(root)/doc/user/index.html"
     set help(faq) "$ds9(root)/doc/faq.html"
-    set help(release) "$ds9(root)/doc/release/r8.6.html"
+    set help(release) "$ds9(root)/doc/release/r8.7.html"
     set help(helpdesk) "$ds9(root)/doc/helpdesk.html"
     set help(story) "$ds9(root)/doc/story.html"
     set help(ack) "$ds9(root)/doc/acknowledgment.html"

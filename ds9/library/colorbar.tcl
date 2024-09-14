@@ -55,9 +55,11 @@ proc ColorbarDef {} {
 				 h5_yarg \
 				 h5_yellow \
 				]
+    # backward compatible
     set icolorbar(matplotlib,cmaps) [list \
 					 viridis \
 					]
+    # backward compatible
     set icolorbar(matplotlib2,cmaps) [list \
 					 inferno \
 					 magma \
@@ -65,20 +67,13 @@ proc ColorbarDef {} {
 					 twilight \
 					 turbo \
 					]
-    set icolorbar(mpl-div,cmaps) [list \
-				      mpl_PiYG \
-				      mpl_PRGn \
-				      mpl_BrBG \
-				      mpl_PuOr \
-				      mpl_RdGy \
-				      mpl_RdBu \
-				      mpl_RdYlBu \
-				      mpl_RdYlGn \
-				      mpl_Spectral \
-				      mpl_coolwarm \
-				      mpl_bwr \
-				      mpl_seismic \
-				     ]
+    set icolorbar(mpl-uni,cmaps) [list \
+				      mpl_viridis \
+				      mpl_plasma \
+				      mpl_inferno \
+				      mpl_magma \
+				      mpl_cividis \
+					]
     set icolorbar(mpl-seq,cmaps) [list \
 				      mpl_Greys \
 				      mpl_Purples \
@@ -99,7 +94,19 @@ proc ColorbarDef {} {
 				      mpl_BuGn \
 				      mpl_YlGn \
 				 ]
-
+    set icolorbar(mpl-div,cmaps) [list \
+				      mpl_PiYG \
+				      mpl_PRGn \
+				      mpl_BrBG \
+				      mpl_PuOr \
+				      mpl_RdGy \
+				      mpl_RdBu \
+				      mpl_RdYlBu \
+				      mpl_RdYlGn \
+				      mpl_coolwarm \
+				      mpl_bwr \
+				      mpl_seismic \
+				     ]
     set icolorbar(cubehelix,cmaps) [list \
 					ch05m151008 \
 					ch05m151010 \
@@ -227,12 +234,15 @@ proc CreateColorbar {} {
     # preload external cmaps
     # maintain same order for backward compatibility
     CreateColorbarExternal colorbar h5 sao
+    # backward compatible
     CreateColorbarExternal colorbar matplotlib lut
     CreateColorbarExternal colorbar cubehelix sao
     CreateColorbarExternal colorbar gist sao
     CreateColorbarExternal colorbar topo sao
+    # backward compatible
     CreateColorbarExternal colorbar matplotlib2 lut
     CreateColorbarExternal colorbar scm lut
+    CreateColorbarExternal colorbar mpl-uni lut
     CreateColorbarExternal colorbar mpl-seq lut
     CreateColorbarExternal colorbar mpl-div lut
 
@@ -303,12 +313,15 @@ proc CreateColorbarBase {frame} {
     # preload external cmaps
     # maintain same order for backward compatibility
     CreateColorbarExternal $which h5 sao
+    # backward compatible
     CreateColorbarExternal $which matplotlib lut
     CreateColorbarExternal $which cubehelix sao
     CreateColorbarExternal $which gist sao
     CreateColorbarExternal $which topo sao
+    # backward compatible
     CreateColorbarExternal $which matplotlib2 lut
     CreateColorbarExternal $which scm lut
+    CreateColorbarExternal $which mpl-uni lut
     CreateColorbarExternal $which mpl-seq lut
     CreateColorbarExternal $which mpl-div lut
 
@@ -1366,8 +1379,8 @@ proc ColormapDialog {} {
     $mb.colormap add separator
     $mb.colormap add cascade -label [msgcat::mc {h5utils}] \
 	-menu $mb.colormap.h5
-    $mb.colormap add cascade -label [msgcat::mc {Matplotlib}] \
-	-menu $mb.colormap.matplotlib
+    $mb.colormap add cascade -label [msgcat::mc {Matplotlib Uniform}] \
+	-menu $mb.colormap.mpl-uni
     $mb.colormap add cascade -label [msgcat::mc {Matplotlib Sequential}] \
 	-menu $mb.colormap.mpl-seq
     $mb.colormap add cascade -label [msgcat::mc {Matplotlib Diverging}] \
@@ -1383,16 +1396,15 @@ proc ColormapDialog {} {
     $mb.colormap add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
-    ColormapDialogExternal h5 h5
-    ColormapDialogExternal matplotlib matplotlib
-    ColormapDialogExternal matplotlib matplotlib2
-    ColormapDialogExternal mpl-seq mpl-seq
-    ColormapDialogExternal mpl-div mpl-div
-    ColormapDialogExternal cubehelix cubehelix
-    ColormapDialogExternal gist gist
-    ColormapDialogExternal topo topo
-    ColormapDialogExternal scm scm
-    ColormapDialogExternal user user
+    ColormapDialogExternal h5
+    ColormapDialogExternal mpl-uni
+    ColormapDialogExternal mpl-seq
+    ColormapDialogExternal mpl-div
+    ColormapDialogExternal cubehelix
+    ColormapDialogExternal gist
+    ColormapDialogExternal topo
+    ColormapDialogExternal scm
+    ColormapDialogExternal user
 
     $mb.colormap add separator
     $mb.colormap add checkbutton \
@@ -1438,7 +1450,7 @@ proc ColormapDialog {} {
     bind $w <<Close>> ColormapDestroyDialog
 }
 
-proc ColormapDialogExternal {mm which} {
+proc ColormapDialogExternal {which} {
     global colorbar
     global icolorbar
     global ds9
@@ -1448,7 +1460,7 @@ proc ColormapDialogExternal {mm which} {
 
     set cnt -1
     foreach cmap $icolorbar($which,cmaps) {
-	$mb.colormap.$mm add radiobutton \
+	$mb.colormap.$which add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
 	    -command [list ChangeColormapName $cmap]
@@ -1457,7 +1469,7 @@ proc ColormapDialogExternal {mm which} {
 	incr cnt
 	if {$cnt>=$ds9(menu,size,wrap)} {
 	    set cnt 0
-	    $mb.colormap.$mm entryconfig [msgcat::mc $cmap] -columnbreak 1
+	    $mb.colormap.$which entryconfig [msgcat::mc $cmap] -columnbreak 1
 	}
     }
 }
@@ -1571,7 +1583,9 @@ proc UpdateColorDialogCmaps {state} {
     $icolorbar(mb).colormap entryconfig \
 	[msgcat::mc {h5utils}] -state $state
     $icolorbar(mb).colormap entryconfig \
-	[msgcat::mc {Matplotlib}] -state $state
+	[msgcat::mc {Matplotlib Uniform}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Matplotlib Sequential}] -state $state
     $icolorbar(mb).colormap entryconfig \
 	[msgcat::mc {Matplotlib Diverging}] -state $state
     $icolorbar(mb).colormap entryconfig \

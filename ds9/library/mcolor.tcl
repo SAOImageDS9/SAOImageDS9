@@ -22,8 +22,8 @@ proc ColorMainMenu {} {
     $ds9(mb).color add separator
     $ds9(mb).color add cascade -label [msgcat::mc {h5utils}] \
 	-menu $ds9(mb).color.h5
-    $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib}] \
-	-menu $ds9(mb).color.matplotlib
+    $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Uniform}] \
+	-menu $ds9(mb).color.mpl-uni
     $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Sequential}] \
 	-menu $ds9(mb).color.mpl-seq
     $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Diverging}] \
@@ -39,16 +39,15 @@ proc ColorMainMenu {} {
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
-    ColorMainMenuExternal h5 h5
-    ColorMainMenuExternal matplotlib matplotlib
-    ColorMainMenuExternal matplotlib matplotlib2
-    ColorMainMenuExternal mpl-seq mpl-seq
-    ColorMainMenuExternal mpl-div mpl-div
-    ColorMainMenuExternal cubehelix cubehelix
-    ColorMainMenuExternal gist gist
-    ColorMainMenuExternal topo topo
-    ColorMainMenuExternal scm scm
-    ColorMainMenuExternal user user
+    ColorMainMenuExternal h5
+    ColorMainMenuExternal mpl-uni
+    ColorMainMenuExternal mpl-seq
+    ColorMainMenuExternal mpl-div
+    ColorMainMenuExternal cubehelix
+    ColorMainMenuExternal gist
+    ColorMainMenuExternal topo
+    ColorMainMenuExternal scm
+    ColorMainMenuExternal user
 
     $ds9(mb).color add separator
     $ds9(mb).color add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -101,7 +100,7 @@ proc ColorMainMenu {} {
 	font,slant ColorbarUpdateView
 }
 
-proc ColorMainMenuExternal {mm which} {
+proc ColorMainMenuExternal {which} {
     global ds9
     global icolorbar
 
@@ -109,7 +108,7 @@ proc ColorMainMenuExternal {mm which} {
 
     set cnt -1
     foreach cmap $icolorbar($which,cmaps) {
-	$ds9(mb).color.$mm add radiobutton \
+	$ds9(mb).color.$which add radiobutton \
 	    -label [msgcat::mc $cmap] \
 	    -variable colorbar(map) -value $cmap \
 	    -command [list ChangeColormapName $cmap]
@@ -118,7 +117,7 @@ proc ColorMainMenuExternal {mm which} {
 	incr cnt
 	if {$cnt>=$ds9(menu,size,wrap)} {
 	    set cnt 0
-	    $ds9(mb).color.$mm entryconfig [msgcat::mc $cmap] -columnbreak 1
+	    $ds9(mb).color.$which entryconfig [msgcat::mc $cmap] -columnbreak 1
 	}
     }
 }
@@ -145,7 +144,8 @@ proc PrefsDialogColorMenu {w} {
     
     $m add separator
     $m add cascade -label [msgcat::mc {h5utils}] -menu $m.h5
-    $m add cascade -label [msgcat::mc {Matplotlib}] -menu $m.matplotlib
+    $m add cascade -label [msgcat::mc {Matplotlib Uniform}] \
+	-menu $m.mpl-uni
     $m add cascade -label [msgcat::mc {Matplotlib Sequential}] \
 	-menu $m.mpl-seq
     $m add cascade -label [msgcat::mc {Matplotlib Diverging}] \
@@ -155,15 +155,14 @@ proc PrefsDialogColorMenu {w} {
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
     $m add cascade -label [msgcat::mc {Scientific Colour Maps}] -menu $m.scm
 
-    PrefsColorMenuExternal $m h5 h5
-    PrefsColorMenuExternal $m matplotlib matplotlib
-    PrefsColorMenuExternal $m matplotlib matplotlib2
-    PrefsColorMenuExternal $m mpl-seq mpl-seq
-    PrefsColorMenuExternal $m mpl-div mpl-div
-    PrefsColorMenuExternal $m cubehelix cubehelix
-    PrefsColorMenuExternal $m gist gist
-    PrefsColorMenuExternal $m topo topo
-    PrefsColorMenuExternal $m scm scm
+    PrefsColorMenuExternal $m h5
+    PrefsColorMenuExternal $m mpl-uni
+    PrefsColorMenuExternal $m mpl-seq
+    PrefsColorMenuExternal $m mpl-div
+    PrefsColorMenuExternal $m cubehelix
+    PrefsColorMenuExternal $m gist
+    PrefsColorMenuExternal $m topo
+    PrefsColorMenuExternal $m scm
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -202,14 +201,14 @@ proc PrefsDialogColorMenu {w} {
     pack $f -side top -fill both -expand true
 }
 
-proc PrefsColorMenuExternal {m mm which} {
+proc PrefsColorMenuExternal {m which} {
     global ds9
     global icolorbar
 
     ThemeMenu $m.$which
 
     foreach cmap $icolorbar($which,cmaps) {
-	$m.$mm add radiobutton -label [msgcat::mc $cmap] \
+	$m.$which add radiobutton -label [msgcat::mc $cmap] \
 	    -variable pcolorbar(map) -value $cmap
     }
 }
@@ -248,8 +247,7 @@ proc ButtonsColorDef {} {
 
     ButtonsColorDefExternal default
     ButtonsColorDefExternal h5
-    ButtonsColorDefExternal matplotlib
-    ButtonsColorDefExternal matplotlib2
+    ButtonsColorDefExternal mpl-uni
     ButtonsColorDefExternal mpl-seq
     ButtonsColorDefExternal mpl-div
     ButtonsColorDefExternal cubehelix
@@ -301,8 +299,7 @@ proc CreateButtonsColor {} {
     set buttons(color) {}
     CreateButtonsColorExternal default
     CreateButtonsColorExternal h5
-    CreateButtonsColorExternal matplotlib
-    CreateButtonsColorExternal matplotlib2
+    CreateButtonsColorExternal mpl-uni
     CreateButtonsColorExternal mpl-seq
     CreateButtonsColorExternal mpl-div
     CreateButtonsColorExternal cubehelix
@@ -375,7 +372,8 @@ proc PrefsDialogButtonbarColor {f} {
 
     $m add separator
     $m add cascade -label [msgcat::mc {h5utils}] -menu $m.h5
-    $m add cascade -label [msgcat::mc {Matplotlib}] -menu $m.matplotlib
+    $m add cascade -label [msgcat::mc {Matplotlib Uniform}] \
+	-menu $m.mpl-uni
     $m add cascade -label [msgcat::mc {Matplotlib Sequential}] \
 	-menu $m.mpl-seq
     $m add cascade -label [msgcat::mc {Matplotlib Diverging}] \
@@ -386,8 +384,7 @@ proc PrefsDialogButtonbarColor {f} {
     $m add cascade -label [msgcat::mc {Scientific Colour Maps}] -menu $m.scm
 
     PrefsDialogButtonbarColorExternal $m h5 h5
-    PrefsDialogButtonbarColorExternal $m matplotlib matplotlib
-    PrefsDialogButtonbarColorExternal $m matplotlib matplotlib2
+    PrefsDialogButtonbarColorExternal $m mpl-uni mpl-uni
     PrefsDialogButtonbarColorExternal $m mpl-seq mpl-seq
     PrefsDialogButtonbarColorExternal $m mpl-div mpl-div
     PrefsDialogButtonbarColorExternal $m cubehelix cubehelix
@@ -472,7 +469,9 @@ proc UpdateColorMenu {} {
 
 		$ds9(mb).color entryconfig [msgcat::mc {h5utils}] \
 		    -state normal
-		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] \
+		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Uniform}] \
+		    -state normal
+		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Sequential}] \
 		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Diverging}] \
 		    -state normal
@@ -490,7 +489,9 @@ proc UpdateColorMenu {} {
 
 		UpdateColorButtonExternal default normal
 		UpdateColorButtonExternal h5 normal
-		UpdateColorButtonExternal matplotlib normal
+		UpdateColorButtonExternal mpl-uni normal
+		UpdateColorButtonExternal mpl-seq normal
+		UpdateColorButtonExternal mpl-div normal
 		UpdateColorButtonExternal cubehelix normal
 		UpdateColorButtonExternal gist normal
 		UpdateColorButtonExternal topo normal
@@ -503,7 +504,9 @@ proc UpdateColorMenu {} {
 
 		$ds9(mb).color entryconfig [msgcat::mc {h5utils}] \
 		    -state disabled
-		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] \
+		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Uniform}] \
+		    -state disabled
+		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Sequential}] \
 		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Diverging}] \
 		    -state disabled
@@ -521,7 +524,9 @@ proc UpdateColorMenu {} {
 
 		UpdateColorButtonExternal default disable
 		UpdateColorButtonExternal h5 disable
-		UpdateColorButtonExternal matplotlib disable
+		UpdateColorButtonExternal mpl-uni disable
+		UpdateColorButtonExternal mpl-seq disable
+		UpdateColorButtonExternal mpl-div disable
 		UpdateColorButtonExternal cubehelix disable
 		UpdateColorButtonExternal gist disable
 		UpdateColorButtonExternal topo disable
@@ -534,7 +539,10 @@ proc UpdateColorMenu {} {
 	}
 
 	$ds9(mb).color entryconfig [msgcat::mc {h5utils}] -state normal
-	$ds9(mb).color entryconfig [msgcat::mc {Matplotlib}] -state normal
+	$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Uniform}] \
+	    -state normal
+	$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Sequential}] \
+	    -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Matplotlib Diverging}] \
 	    -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Cubehelix}] -state normal
@@ -545,7 +553,7 @@ proc UpdateColorMenu {} {
 
 	UpdateColorButtonExternal default normal
 	UpdateColorButtonExternal h5 normal
-	UpdateColorButtonExternal matplotlib normal
+	UpdateColorButtonExternal mpl-uni normal
 	UpdateColorButtonExternal mpl-seq normal
 	UpdateColorButtonExternal mpl-div normal
 	UpdateColorButtonExternal cubehelix normal

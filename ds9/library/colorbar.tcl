@@ -236,19 +236,19 @@ proc CreateColorbar {} {
 
     # preload external cmaps
     # maintain same order for backward compatibility
-    CreateColorbarExternal colorbar h5 sao
+    CreateColorbarExternal colorbar h5
     # backward compatible
-    CreateColorbarExternal colorbar matplotlib lut
-    CreateColorbarExternal colorbar cubehelix sao
-    CreateColorbarExternal colorbar gist sao
-    CreateColorbarExternal colorbar topo sao
+    CreateColorbarExternal colorbar matplotlib
+    CreateColorbarExternal colorbar cubehelix
+    CreateColorbarExternal colorbar gist
+    CreateColorbarExternal colorbar topo
     # backward compatible
-    CreateColorbarExternal colorbar matplotlib2 lut
-    CreateColorbarExternal colorbar scm lut
-    CreateColorbarExternal colorbar mpl-uni lut
-    CreateColorbarExternal colorbar mpl-seq lut
-    CreateColorbarExternal colorbar mpl-div lut
-    CreateColorbarExternal colorbar mpl-cyc lut
+    CreateColorbarExternal colorbar matplotlib2
+    CreateColorbarExternal colorbar scm
+    CreateColorbarExternal colorbar mpl-uni
+    CreateColorbarExternal colorbar mpl-seq
+    CreateColorbarExternal colorbar mpl-div
+    CreateColorbarExternal colorbar mpl-cyc
 
     # reset current map
     colorbar map $colorbar(map)
@@ -316,19 +316,19 @@ proc CreateColorbarBase {frame} {
 
     # preload external cmaps
     # maintain same order for backward compatibility
-    CreateColorbarExternal $which h5 sao
+    CreateColorbarExternal $which h5
     # backward compatible
-    CreateColorbarExternal $which matplotlib lut
-    CreateColorbarExternal $which cubehelix sao
-    CreateColorbarExternal $which gist sao
-    CreateColorbarExternal $which topo sao
+    CreateColorbarExternal $which matplotlib
+    CreateColorbarExternal $which cubehelix
+    CreateColorbarExternal $which gist
+    CreateColorbarExternal $which topo
     # backward compatible
-    CreateColorbarExternal $which matplotlib2 lut
-    CreateColorbarExternal $which scm lut
-    CreateColorbarExternal $which mpl-uni lut
-    CreateColorbarExternal $which mpl-seq lut
-    CreateColorbarExternal $which mpl-div lut
-    CreateColorbarExternal $which mpl-cyc lut
+    CreateColorbarExternal $which matplotlib2
+    CreateColorbarExternal $which scm
+    CreateColorbarExternal $which mpl-uni
+    CreateColorbarExternal $which mpl-seq
+    CreateColorbarExternal $which mpl-div
+    CreateColorbarExternal $which mpl-cyc
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
@@ -491,14 +491,27 @@ proc CreateColorbarHLS {frame} {
 	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 }
 
-proc CreateColorbarExternal {which group ext} {
+proc CreateColorbarExternal {which group} {
     global ds9
     global icolorbar
-    global colorbar
 
     foreach cmap $icolorbar($group,cmaps) {
+	set ext lut
 	set fn $cmap.$ext
-	set ch [open "$ds9(root)/cmaps/$fn" r]
+	set fnn $ds9(root)/cmaps/$fn
+	puts $fnn
+	if {![file exists $fnn]} {
+	    set ext sao
+	    set fn $cmap.$ext
+	    set fnn $ds9(root)/cmaps/$fn
+	    puts $fnn
+	    if {![file exists $fnn]} {
+		puts BANG
+		return
+	    }
+	}
+
+	set ch [open $fnn r]
 
 	global vardata
 	set vardata [read $ch]

@@ -21,6 +21,7 @@ nonnan	    {return $NONNAN_}
 nonzero	    {return $NONZERO_}
 open	    {return $OPEN_}
 range	    {return $RANGE_}
+screen	    {return $SCREEN_}
 source      {return $SOURCE_}
 system	    {return $SYSTEM_}
 transparency {return $TRANSPARENCY_}

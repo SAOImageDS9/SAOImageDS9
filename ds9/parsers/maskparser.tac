@@ -22,6 +22,7 @@
 %token NONZERO_
 %token OPEN_
 %token RANGE_
+%token SCREEN_
 %token SOURCE_
 %token SYSTEM_
 %token TRANSPARENCY_
@@ -62,6 +63,7 @@ mark : ZERO_ {set _ zero}
 blend : SOURCE_ {set _ source}
  | DARKEN_ {set _ darken}
  | LIGHTEN_ {set _ lighten}
+ | SCREEN_ {set _ screen}
  ;
 
 system : coordsys {ProcessCmdSet mask system $1 MaskSystem}

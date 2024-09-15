@@ -28,6 +28,8 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.mpl-seq
     $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Diverging}] \
 	-menu $ds9(mb).color.mpl-div
+    $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Cyclic}] \
+	-menu $ds9(mb).color.mpl-cyc
     $ds9(mb).color add cascade -label [msgcat::mc {Cubehelix}] \
 	-menu $ds9(mb).color.cubehelix
     $ds9(mb).color add cascade -label [msgcat::mc {Gist}] \
@@ -43,6 +45,7 @@ proc ColorMainMenu {} {
     ColorMainMenuExternal mpl-uni
     ColorMainMenuExternal mpl-seq
     ColorMainMenuExternal mpl-div
+    ColorMainMenuExternal mpl-cyc
     ColorMainMenuExternal cubehelix
     ColorMainMenuExternal gist
     ColorMainMenuExternal topo
@@ -150,6 +153,8 @@ proc PrefsDialogColorMenu {w} {
 	-menu $m.mpl-seq
     $m add cascade -label [msgcat::mc {Matplotlib Diverging}] \
 	-menu $m.mpl-div
+    $m add cascade -label [msgcat::mc {Matplotlib Cyclic}] \
+	-menu $m.mpl-cyc
     $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
@@ -159,6 +164,7 @@ proc PrefsDialogColorMenu {w} {
     PrefsColorMenuExternal $m mpl-uni
     PrefsColorMenuExternal $m mpl-seq
     PrefsColorMenuExternal $m mpl-div
+    PrefsColorMenuExternal $m mpl-cyc
     PrefsColorMenuExternal $m cubehelix
     PrefsColorMenuExternal $m gist
     PrefsColorMenuExternal $m topo
@@ -250,6 +256,7 @@ proc ButtonsColorDef {} {
     ButtonsColorDefExternal mpl-uni
     ButtonsColorDefExternal mpl-seq
     ButtonsColorDefExternal mpl-div
+    ButtonsColorDefExternal mpl-cyc
     ButtonsColorDefExternal cubehelix
     ButtonsColorDefExternal gist
     ButtonsColorDefExternal topo
@@ -302,6 +309,7 @@ proc CreateButtonsColor {} {
     CreateButtonsColorExternal mpl-uni
     CreateButtonsColorExternal mpl-seq
     CreateButtonsColorExternal mpl-div
+    CreateButtonsColorExternal mpl-cyc
     CreateButtonsColorExternal cubehelix
     CreateButtonsColorExternal gist
     CreateButtonsColorExternal topo
@@ -378,19 +386,22 @@ proc PrefsDialogButtonbarColor {f} {
 	-menu $m.mpl-seq
     $m add cascade -label [msgcat::mc {Matplotlib Diverging}] \
 	-menu $m.mpl-div
+    $m add cascade -label [msgcat::mc {Matplotlib Cyclic}] \
+	-menu $m.mpl-cyc
     $m add cascade -label [msgcat::mc {Cubehelix}] -menu $m.cubehelix
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
     $m add cascade -label [msgcat::mc {Scientific Colour Maps}] -menu $m.scm
 
-    PrefsDialogButtonbarColorExternal $m h5 h5
-    PrefsDialogButtonbarColorExternal $m mpl-uni mpl-uni
-    PrefsDialogButtonbarColorExternal $m mpl-seq mpl-seq
-    PrefsDialogButtonbarColorExternal $m mpl-div mpl-div
-    PrefsDialogButtonbarColorExternal $m cubehelix cubehelix
-    PrefsDialogButtonbarColorExternal $m gist gist
-    PrefsDialogButtonbarColorExternal $m topo topo
-    PrefsDialogButtonbarColorExternal $m scm scm
+    PrefsDialogButtonbarColorExternal $m h5
+    PrefsDialogButtonbarColorExternal $m mpl-uni
+    PrefsDialogButtonbarColorExternal $m mpl-seq
+    PrefsDialogButtonbarColorExternal $m mpl-div
+    PrefsDialogButtonbarColorExternal $m mpl-cyc
+    PrefsDialogButtonbarColorExternal $m cubehelix
+    PrefsDialogButtonbarColorExternal $m gist
+    PrefsDialogButtonbarColorExternal $m topo
+    PrefsDialogButtonbarColorExternal $m scm
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -433,14 +444,14 @@ proc PrefsDialogButtonbarColor {f} {
 	-command {UpdateButtons buttons(color)}
 }
 
-proc PrefsDialogButtonbarColorExternal {m mm which} {
+proc PrefsDialogButtonbarColorExternal {m which} {
     global ds9
     global icolorbar
 
     ThemeMenu $m.$which
 
     foreach cmap $icolorbar($which,cmaps) {
-	$m.$mm add checkbutton -label [msgcat::mc $cmap] \
+	$m.$which add checkbutton -label [msgcat::mc $cmap] \
 	    -variable pbuttons(color,$cmap) \
 	    -command {UpdateButtons buttons(color)}
     }
@@ -492,6 +503,7 @@ proc UpdateColorMenu {} {
 		UpdateColorButtonExternal mpl-uni normal
 		UpdateColorButtonExternal mpl-seq normal
 		UpdateColorButtonExternal mpl-div normal
+		UpdateColorButtonExternal mpl-cyc normal
 		UpdateColorButtonExternal cubehelix normal
 		UpdateColorButtonExternal gist normal
 		UpdateColorButtonExternal topo normal
@@ -527,6 +539,7 @@ proc UpdateColorMenu {} {
 		UpdateColorButtonExternal mpl-uni disable
 		UpdateColorButtonExternal mpl-seq disable
 		UpdateColorButtonExternal mpl-div disable
+		UpdateColorButtonExternal mpl-cyc disable
 		UpdateColorButtonExternal cubehelix disable
 		UpdateColorButtonExternal gist disable
 		UpdateColorButtonExternal topo disable
@@ -556,6 +569,7 @@ proc UpdateColorMenu {} {
 	UpdateColorButtonExternal mpl-uni normal
 	UpdateColorButtonExternal mpl-seq normal
 	UpdateColorButtonExternal mpl-div normal
+	UpdateColorButtonExternal mpl-cyc normal
 	UpdateColorButtonExternal cubehelix normal
 	UpdateColorButtonExternal gist normal
 	UpdateColorButtonExternal topo normal

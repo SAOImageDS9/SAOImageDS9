@@ -107,6 +107,9 @@ proc ColorbarDef {} {
 				      mpl_bwr \
 				      mpl_seismic \
 				     ]
+    set icolorbar(mpl-cyc,cmaps) [list \
+				      mpl_twilight \
+				      ]
     set icolorbar(cubehelix,cmaps) [list \
 					ch05m151008 \
 					ch05m151010 \
@@ -245,6 +248,7 @@ proc CreateColorbar {} {
     CreateColorbarExternal colorbar mpl-uni lut
     CreateColorbarExternal colorbar mpl-seq lut
     CreateColorbarExternal colorbar mpl-div lut
+    CreateColorbarExternal colorbar mpl-cyc lut
 
     # reset current map
     colorbar map $colorbar(map)
@@ -324,6 +328,7 @@ proc CreateColorbarBase {frame} {
     CreateColorbarExternal $which mpl-uni lut
     CreateColorbarExternal $which mpl-seq lut
     CreateColorbarExternal $which mpl-div lut
+    CreateColorbarExternal $which mpl-cyc lut
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
@@ -1385,6 +1390,8 @@ proc ColormapDialog {} {
 	-menu $mb.colormap.mpl-seq
     $mb.colormap add cascade -label [msgcat::mc {Matplotlib Diverging}] \
 	-menu $mb.colormap.mpl-div
+    $mb.colormap add cascade -label [msgcat::mc {Matplotlib Cyclic}] \
+	-menu $mb.colormap.mpl-cyc
     $mb.colormap add cascade -label [msgcat::mc {Cubehelix}] \
 	-menu $mb.colormap.cubehelix
     $mb.colormap add cascade -label [msgcat::mc {Gist}] \
@@ -1400,6 +1407,7 @@ proc ColormapDialog {} {
     ColormapDialogExternal mpl-uni
     ColormapDialogExternal mpl-seq
     ColormapDialogExternal mpl-div
+    ColormapDialogExternal mpl-cyc
     ColormapDialogExternal cubehelix
     ColormapDialogExternal gist
     ColormapDialogExternal topo

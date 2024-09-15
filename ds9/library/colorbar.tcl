@@ -109,6 +109,7 @@ proc ColorbarDef {} {
 				     ]
     set icolorbar(mpl-cyc,cmaps) [list \
 				      mpl_twilight \
+				      mpl_hsv \
 				      ]
     set icolorbar(cubehelix,cmaps) [list \
 					ch05m151008 \
@@ -499,14 +500,11 @@ proc CreateColorbarExternal {which group} {
 	set ext lut
 	set fn $cmap.$ext
 	set fnn $ds9(root)/cmaps/$fn
-	puts $fnn
 	if {![file exists $fnn]} {
 	    set ext sao
 	    set fn $cmap.$ext
 	    set fnn $ds9(root)/cmaps/$fn
-	    puts $fnn
 	    if {![file exists $fnn]} {
-		puts BANG
 		return
 	    }
 	}

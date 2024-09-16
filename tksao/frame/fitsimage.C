@@ -2794,18 +2794,25 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
     Vector cc = center();
     Vector wcc = wcsTran(context_, ast_, cc, 1);
     Vector wnorth = wcc + Vector(0,.001);
-    Vector north = wcsTran(context_, ast_, wnorth,0);
+    Vector weast = wcc + Vector(.001,0);
+    Vector north = wcsTran(context_, ast_, wnorth, 0);
+    Vector east = wcsTran(context_, ast_, weast, 0);
 
     int current = astGetI(ast_,"Current");
     int base = astGetI(ast_,"Base");
     astSetI(ast_,"Current",base);
     double ang = wcsAxAngle(ast_,cc,north);
+    double ang3 = wcsAngle(ast_,north,cc,east);
     astSetI(ast_,"Current",current);
 
     astEnd;
 
-    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
-      return ang;
+    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
+      if ((hasWCSCel(sys) && ang3>0) || (!hasWCSCel(sys) && ang3<0))
+	return -ang;
+      else
+	return ang;
+    }
     else
       return 0;
   }

@@ -36,12 +36,13 @@
 #ifdef HAVE_ZLIB
 #include "zlib.h"
 
+/*
 #ifdef Z_U4
    typedef Z_U4 z_crc_t;
 #else
    typedef unsigned long z_crc_t;
 #endif
-
+*/
 #include "crypt.h"
 
 #ifdef CFG_RUNTIME_DLLFILE

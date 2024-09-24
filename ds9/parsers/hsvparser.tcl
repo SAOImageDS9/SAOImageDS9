@@ -1290,7 +1290,7 @@ proc hsv::yyparse {} {
                     44 { ProcessCmdSet hsv system $2 HSVSystem }
                     45 { ProcessCmdSet hsv $2 $3 HSVView }
                     46 { set _ hue }
-                    47 { set _ staturation }
+                    47 { set _ saturation }
                     48 { set _ value }
                     49 { set _ lock,wcs }
                     50 { set _ lock,crop }

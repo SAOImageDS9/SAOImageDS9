@@ -47,7 +47,7 @@ hsv : {CreateHSVFrame}
  ;
 
 channel : HUE_ {set _ hue}
- | SATURATION_ {set _ staturation}
+ | SATURATION_ {set _ saturation}
  | VALUE_ {set _ value}
  ;
 

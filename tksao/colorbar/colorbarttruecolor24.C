@@ -81,11 +81,11 @@ void ColorbarTTrueColor24::updateColors24Horz(int width, int height, char* data)
   
   // S/L
   for (int ii=0; ii<width; ii++) {
-    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
-    unsigned short r = v;
-    unsigned short g = v;
-    unsigned short b = v;
-    unsigned short a = 0;
+    unsigned int v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
+    unsigned int r = v;
+    unsigned int g = v;
+    unsigned int b = v;
+    unsigned int a = 0;
     a |= r << rs_;
     a |= g << gs_;
     a |= b << bs_;
@@ -111,11 +111,11 @@ void ColorbarTTrueColor24::updateColors24Horz(int width, int height, char* data)
   
   // V/S
   for (int ii=0; ii<width; ii++) {
-    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
-    unsigned short r = v;
-    unsigned short g = v;
-    unsigned short b = v;
-    unsigned short a = 0;
+    unsigned int v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
+    unsigned int r = v;
+    unsigned int g = v;
+    unsigned int b = v;
+    unsigned int a = 0;
     a |= r << rs_;
     a |= g << gs_;
     a |= b << bs_;
@@ -265,11 +265,11 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
   
   // S/L
   for (int ii=0; ii<width; ii++) {
-    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
-    unsigned short r = v;
-    unsigned short g = v;
-    unsigned short b = v;
-    unsigned short a = 0;
+    unsigned int v = colorCells[((int)(double(ii)/width*colorCount))*5+3];
+    unsigned int r = v;
+    unsigned int g = v;
+    unsigned int b = v;
+    unsigned int a = 0;
 #ifdef MAC_OSX_TK
     a |= 0xff << 24;
 #endif
@@ -299,11 +299,11 @@ void ColorbarTTrueColor24::updateColors32Horz(int width, int height, char* data)
   
   // V/S
   for (int ii=0; ii<width; ii++) {
-    unsigned short v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
-    unsigned short r = v;
-    unsigned short g = v;
-    unsigned short b = v;
-    unsigned short a = 0;
+    unsigned int v = colorCells[((int)(double(ii)/width*colorCount))*5+4];
+    unsigned int r = v;
+    unsigned int g = v;
+    unsigned int b = v;
+    unsigned int a = 0;
 #ifdef MAC_OSX_TK
     a |= 0xff << 24;
 #endif

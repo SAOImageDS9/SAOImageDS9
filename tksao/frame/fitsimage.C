@@ -3525,7 +3525,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   astSetI(chan,"SipReplace",0);
   astPutChannelData(chan, this);
   astTableSource(chan, fits2TAB);
-
+  
   // no warning messages
   astClear(chan,"Warnings");
 

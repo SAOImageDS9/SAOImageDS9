@@ -1,0 +1,5 @@
+ Begin UnitMap 	# Unit (null) Mapping
+    Nin = 2 	# Number of input coordinates
+    IsSimp = 1 	# Mapping has been simplified
+ IsA Mapping 	# Mapping between coordinate systems
+ End UnitMap

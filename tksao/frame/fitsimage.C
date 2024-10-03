@@ -3480,6 +3480,13 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
 	  memcpy(data+ii*width+jj*4,&vv,4);
 	}
       break;
+    case 'K':
+      for (int ii=0; ii<rows; ii++, ptr+=rowlen)
+	for (int jj=0; jj<repeat; jj++) {
+	  long long vv = col->value(ptr,jj);
+	  memcpy(data+ii*width+jj*8,&vv,8);
+	}
+      break;
     case 'E':
       for (int ii=0; ii<rows; ii++, ptr+=rowlen)
 	for (int jj=0; jj<repeat; jj++) {
@@ -3523,6 +3530,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   // enable -TAB
   astSetI(chan,"TabOK",1);
   astSetI(chan,"SipReplace",0);
+  astSetI(chan,"IgnoreBadAlt",1);
   astPutChannelData(chan, this);
   astTableSource(chan, fits2TAB);
   

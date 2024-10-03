@@ -9,14 +9,14 @@
 /* Variable holding current function name. */
 #undef FUNCTION_NAME
 
-/* Define to 1 if you have the `backtrace' function. */
+/* Define to 1 if you have the 'backtrace' function. */
 #undef HAVE_BACKTRACE
 
-/* Define to 1 if you have the declaration of `isfinite', and to 0 if you
+/* Define to 1 if you have the declaration of 'isfinite', and to 0 if you
    don't. */
 #undef HAVE_DECL_ISFINITE
 
-/* Define to 1 if you have the declaration of `isnan', and to 0 if you don't.
+/* Define to 1 if you have the declaration of 'isnan', and to 0 if you don't.
    */
 #undef HAVE_DECL_ISNAN
 
@@ -26,35 +26,29 @@
 /* Define to 1 if you have the <execinfo.h> header file. */
 #undef HAVE_EXECINFO_H
 
-/* Define to 1 if the system has the type `int64_t'. */
+/* Define to 1 if the system has the type 'int64_t'. */
 #undef HAVE_INT64_T
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `isfinite' function. */
+/* Define to 1 if you have the 'isfinite' function. */
 #undef HAVE_ISFINITE
 
-/* Define to 1 if you have the `isnan' function. */
+/* Define to 1 if you have the 'isnan' function. */
 #undef HAVE_ISNAN
 
-/* Define to 1 if you have the `pthread' library (-lpthread). */
+/* Define to 1 if you have the 'pthread' library (-lpthread). */
 #undef HAVE_LIBPTHREAD
 
-/* Define to 1 if you have the `yaml' library (-lyaml). */
+/* Define to 1 if you have the 'yaml' library (-lyaml). */
 #undef HAVE_LIBYAML
 
-/* Define to 1 if the system has the type `long double'. */
+/* Define to 1 if the system has the type 'long double'. */
 #undef HAVE_LONG_DOUBLE
-
-/* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
 
 /* The sscanf shows the non-ANSI behaviour reported by Bill Joye */
 #undef HAVE_NONANSI_SSCANF
-
-/* Define to 1 if the Fortran compiler supports the VAX %LOC extension */
-#undef HAVE_PERCENTLOC
 
 /* Use the starmem library for memory management */
 #undef HAVE_STAR_MEM_H
@@ -65,10 +59,13 @@
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
+
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
-/* Define to 1 if you have the `strerror_r' function. */
+/* Define to 1 if you have the 'strerror_r' function. */
 #undef HAVE_STRERROR_R
 
 /* Define to 1 if you have the <strings.h> header file. */
@@ -77,7 +74,7 @@
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define to 1 if you have the `strtok_r' function. */
+/* Define to 1 if you have the 'strtok_r' function. */
 #undef HAVE_STRTOK_R
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
@@ -86,7 +83,7 @@
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
-/* Define to 1 if the system has the type `uint64_t'. */
+/* Define to 1 if the system has the type 'uint64_t'. */
 #undef HAVE_UINT64_T
 
 /* Define to 1 if you have the <unistd.h> header file. */
@@ -95,7 +92,7 @@
 /* Define to 1 if you have the <varargs.h> header file. */
 #undef HAVE_VARARGS_H
 
-/* Define to 1 if you have the `vsnprintf' function. */
+/* Define to 1 if you have the 'vsnprintf' function. */
 #undef HAVE_VSNPRINTF
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
@@ -126,16 +123,18 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* The size of `long', as computed by sizeof. */
+/* The size of 'long', as computed by sizeof. */
 #undef SIZEOF_LONG
 
-/* The size of `long long', as computed by sizeof. */
+/* The size of 'long long', as computed by sizeof. */
 #undef SIZEOF_LONG_LONG
 
-/* The size of `void*', as computed by sizeof. */
+/* The size of 'void*', as computed by sizeof. */
 #undef SIZEOF_VOIDP
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C89 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
 
 /* Type of Fortran CNF TRAIL argument */

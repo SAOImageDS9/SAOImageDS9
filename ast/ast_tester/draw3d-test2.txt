@@ -1,3 +1,0 @@
- AXES 
- QUADRANT QUAD=--
- REVOLVE 

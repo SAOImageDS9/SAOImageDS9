@@ -150,7 +150,7 @@ proc ::tk::dialog::file:: {type args} {
     # this can hang the entire application.  Therefore we only make the dialog
     # transient if the parent is viewable.
 
-    if {[winfo viewable [winfo toplevel $data(-parent)]] } {
+    if {[winfo viewable [winfo toplevel $data(-parent)]]} {
 	wm transient $w $data(-parent)
     }
 
@@ -229,7 +229,9 @@ proc ::tk::dialog::file:: {type args} {
     foreach trace [trace info variable data(selectPath)] {
 	trace remove variable data(selectPath) {*}$trace
     }
-    $data(dirMenuBtn) configure -textvariable {}
+    if {[winfo exists $data(dirMenuBtn)]} {
+	$data(dirMenuBtn) configure -textvariable {}
+    }
 
     return $Priv(selectFilePath)
 }

@@ -555,6 +555,8 @@ XClearWindow(
     return Success;
 }
 
+// waj
+/*
 int
 XWarpPointer(
     TCL_UNUSED(Display *),
@@ -567,6 +569,33 @@ XWarpPointer(
     TCL_UNUSED(int),
     TCL_UNUSED(int))
 {
+    return Success;
+}
+*/
+
+int
+XWarpPointer(
+    Display *display,
+    Window src_w,
+    Window dest_w,
+    int src_x,
+    int src_y,
+    unsigned int src_width,
+    unsigned int src_height,
+    int dest_x,
+    int dest_y)
+{
+    int xx, yy;
+    if (dest_w)
+	Tk_GetRootCoords(Tk_IdToWindow(display,dest_w), &xx, &yy);
+    else
+	XQueryPointer(display, dest_w, NULL, NULL, &xx, &yy, NULL, NULL, NULL);
+
+    CGPoint pt;
+    pt.x = xx + dest_x;
+    pt.y = yy + dest_y;
+    CGWarpMouseCursorPosition(pt);
+
     return Success;
 }
 

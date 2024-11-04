@@ -1202,20 +1202,13 @@ proc UpdateColormapLevelMosaic {which x y sys} {
 }
 
 proc ColorbarSizeDialog {} {
-    global colorbar
-    global ds9
-
-    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Size}] 10 colorbar(size)]} {
+    if {[EntryDialogGlobal [msgcat::mc {Colorbar}] [msgcat::mc {Size}] 10 colorbar size]} {
 	ColorbarUpdateView
     }
 }
 
 proc TicksDialog {} {
-    global colorbar
-
-    global ds9
-
-    if {[EntryDialog [msgcat::mc {Colorbar}] [msgcat::mc {Number of Ticks}] 10 colorbar(ticks)]} {
+    if {[EntryDialogGlobal [msgcat::mc {Colorbar}] [msgcat::mc {Number of Ticks}] 10 colorbar ticks]} {
 	ColorbarUpdateView
     }
 }

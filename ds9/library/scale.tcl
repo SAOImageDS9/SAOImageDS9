@@ -649,9 +649,7 @@ proc ScaleXAxisDialog {} {
 }
 
 proc ScaleLogDialog {} {
-    global scale
-
-    if {[EntryDialog [msgcat::mc {Scale}] [msgcat::mc {Log Exponent}] 10 scale(log)]} {
+    if {[EntryDialogGlobal [msgcat::mc {Scale}] [msgcat::mc {Log Exponent}] 10 scale log]} {
 	ChangeScale
     }
 }

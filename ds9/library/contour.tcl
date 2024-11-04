@@ -960,9 +960,7 @@ proc UpdateContourDialog {} {
 }
 
 proc ContourLogDialog {} {
-    global contour
-
-    EntryDialog [msgcat::mc {Scale}] [msgcat::mc {Log Exponent}] 10 contour(log)
+    EntryDialogGlobal [msgcat::mc {Scale}] [msgcat::mc {Log Exponent}] 10 contour log
 }
 
 proc ContourBackup {ch which fdir rdir} {

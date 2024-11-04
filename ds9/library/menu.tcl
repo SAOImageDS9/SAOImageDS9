@@ -605,11 +605,11 @@ proc ColorMenu {w varname color cmd} {
 	-command [list ColorMenuOther $varname $color $cmd]
 }
 
-proc ColorMenuOther {varname color cmd} {
+proc ColorMenuOther {varname id cmd} {
     upvar #0 $varname var
     global $varname
 
-    if {[EntryDialog [msgcat::mc {Color}] [msgcat::mc {Enter Color}] 20 ${varname}($color)]} {
+    if {[EntryDialogGlobal [msgcat::mc {Color}] [msgcat::mc {Enter Color}] 20 $varname $id]} {
 	# we might have been closed while waiting
 	if {![info exists $varname]} {
 	    return
@@ -712,11 +712,11 @@ proc FontMenu {w varname font size weight slant cmd} {
 	-variable ${varname}($slant) -value italic -command $cmd
 }
 
-proc FontMenuSize {varname size cmd} {
+proc FontMenuSize {varname id cmd} {
     upvar #0 $varname var
     global $varname
 
-    if {[EntryDialog [msgcat::mc {Font Size}] [msgcat::mc {Enter Font Size}] 20 ${varname}($size)]} {
+    if {[EntryDialogGlobal [msgcat::mc {Font Size}] [msgcat::mc {Enter Font Size}] 20 $varname $id]} {
 	# we might have been closed while waiting
 	if {![info exists $varname]} {
 	    return

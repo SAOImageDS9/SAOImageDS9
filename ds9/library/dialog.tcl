@@ -152,6 +152,69 @@ proc EntryDialog {title message size varname} {
     return $rr
 }
 
+proc EntryDialogGlobal {title message size varname id} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    global ed
+
+    set w {.entry}
+    set mb {.entrymb}
+
+    set ed(top) $w
+    set ed(ok) 0
+    
+    set ed(text) [subst $${varname}($id)]
+
+    DialogCreate $w $title ed(ok)
+
+    $w configure -menu $mb
+    ThemeMenu $mb
+
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    EditMenu $mb ed
+
+    # Param
+    set f [ttk::frame $w.param]
+    ttk::label $f.title -text $message
+    ttk::entry $f.txt -textvariable ed(text) -width $size
+    if {$size < 30} {
+	grid $f.title $f.txt -padx 2 -pady 2
+    } else {
+	grid $f.title -padx 2 -pady 2 -sticky w
+	grid $f.txt -padx 2 -pady 2
+    }
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    $w.param.txt select range 0 end
+
+    DialogWait $w ed(ok) $w.param.txt
+    destroy $w
+    destroy $mb
+
+    if {$ed(ok)} {
+	set ${varname}($id) $ed(text)
+    }
+    
+    set rr $ed(ok)
+    unset ed
+    return $rr
+}
+
 # Entry Cut/Copy/Paste
 
 proc EntryCut {top} {

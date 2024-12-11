@@ -16,6 +16,7 @@ proc SAMPHubStart {verbose} {
     global samphub
     global xmlrpc
     global debug
+    global env
 
     # are we connected?
     if {[info exists samp]} {
@@ -54,11 +55,38 @@ proc SAMPHubStart {verbose} {
     unset samp
     unset samphub
     
+    # hub file name
+    set fn {}
+    
+    if {[info exists env(SAMP_HUB)]} {
+	if {$env(SAMP_HUB) != {}} {
+	    set exp {std-lockurl:(.*)}
+	    if {[regexp $exp $env(SAMP_HUB) dummy url]} {
+		ParseURL $url rr
+		switch -- $rr(scheme) {
+		    file {set fn $rr(path)}
+		    default {
+			if {$verbose} {
+			    Error "SAMPHub: [msgcat::mc {found existing hub}]"
+			}
+			unset samp
+			unset samphub
+			return
+		    }
+		}
+	    }
+	}
+    }
+
+    if {$fn == {}} {
+	set fn [file join [GetEnvHome] {.samp}]
+    }
+    set samphub(fn) $fn
+
     # basics
     set samphub(verbose) $verbose
     set samphub(debug) $debug(tcl,samphub)
     set xmlrpc(debug) $debug(tcl,xmlrpc)
-    set samphub(fn) [file join [GetEnvHome] {.samp}]
     set samphub(cw,cnt) 0
     # time between webhub checks for callbacks after receive pullCallbacks mtype
     set samphub(timer) 1000

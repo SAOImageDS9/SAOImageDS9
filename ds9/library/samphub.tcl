@@ -113,7 +113,11 @@ proc SAMPHubStartConnect {} {
 
     if {$pds9(samp,webhub)} {
 	if {[catch {set samphub(web,sock) [xmlrpcServe 21012]}]} {
-	    Error "SAMPHub: [msgcat::mc {unable to open web hub}]"
+	    set samphub(web,sock) {}
+	    set samphub(web,port) 0
+	    # special case: multiple users on same host
+	    # just ignore
+	    # Error "SAMPHub: [msgcat::mc {unable to open web hub}]"
 	} else {
 	    set samphub(web,port) \
 		[lindex [fconfigure $samphub(web,sock) -sockname] 2]

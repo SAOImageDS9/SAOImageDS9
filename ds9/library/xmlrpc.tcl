@@ -307,7 +307,11 @@ proc xmlrpcParseHTTPCode {str} {
 	return [xmlrpcError "Unrecognized HTTP code:\n$str"]
     }
     if {$status != "200"} {
-	return [xmlrpcError "Bad HTTP status: $status"]
+	if {$xmlrpc(debug)} {
+	    return [xmlrpcError "Bad HTTP status: $status"]
+	} else {
+	    return
+	}
     }
     return $rest
 }

@@ -17,7 +17,7 @@ proc SAMPConnectMetadata {} {
     global samp
     global ds9
 
-    set map(samp.name) "string $ds9(title)"
+    set map(samp.name) "string \"$ds9(title)\""
     set map(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
     set map(samp.icon.url) {string http://ds9.si.edu/sun.png}
     set map(samp.documentation.url) {string http://ds9.si.edu/doc/ref/index.html}

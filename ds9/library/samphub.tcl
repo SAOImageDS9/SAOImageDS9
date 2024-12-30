@@ -103,7 +103,7 @@ proc SAMPHubStart {verbose} {
     set samphub(web,allowReverseCallbacks) 0
     set samphub(web,cnt) 0
     set samphub(web,msgs) {}
-    set samphub(web,id) 0
+    set samphub(web,id) {}
     set samphub(web,timeout) 0
 
     # Init
@@ -245,8 +245,8 @@ proc SAMPHubStop {} {
     }
 
     # any web clients?
-    if {$samphub(web,id)>0} {
-	after cancel $samphub(web,id)
+    if {$samphub(web,id)!={}} {
+	catch {after cancel $samphub(web,id)}
     }
 
     # remove hub
@@ -425,9 +425,9 @@ proc SAMPHubRemove {secret} {
 
     # web client?
     if {$samphub($secret,web)} {
-	if {$samphub(web,id)>0} {
-	    after cancel $samphub(web,id)
-	    set samphub(web,id) 0
+	if {$samphub(web,id)!={}} {
+	    catch {after cancel $samphub(web,id)}
+	    set samphub(web,id) {}
 	}
 	set samphub(web,sock) {}
 	set samphub(web,port) 0

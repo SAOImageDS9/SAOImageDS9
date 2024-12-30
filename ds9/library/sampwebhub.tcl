@@ -95,9 +95,9 @@ proc samp.webhub.allowReverseCallbacks {rpc} {
     set samphub(web,allowReverseCallbacks) $allow
 
     # reset any current callbacks
-    if {$samphub(web,id)>0} {
-	after cancel $samphub(web,id)
-	set samphub(web,id) 0
+    if {$samphub(web,id)!={}} {
+	catch {after cancel $samphub(web,id)}
+	set samphub(web,id) {}
     }
     set samphub(web,msgs) {}
     set samphub(web,timeout) 0
@@ -133,9 +133,9 @@ proc samp.webhub.pullCallbacks {rpc} {
     }
 
     # should not happen
-    if {$samphub(web,id)>0} {
-	after cancel $samphub(web,id)
-	set samphub(web,id) 0
+    if {$samphub(web,id)!={}} {
+	catch {after cancel $samphub(web,id)}
+	set samphub(web,id) {}
     }
     set samphub(web,msgs) {}
     set samphub(web,timeout) 0

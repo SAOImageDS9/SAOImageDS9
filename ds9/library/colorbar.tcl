@@ -894,9 +894,9 @@ proc ColorbarButton1 {frame x y} {
     set ds9(b1) 1
 
     # turn off blinking cursor
-    if {$icursor(timer)} {
+    if {$icursor(id)!={}} {
 	catch {after cancel $icursor(id)}
-	set icursor(id) 0
+	set icursor(id) {}
     }
 
     # are we on a tag? else create
@@ -1026,9 +1026,9 @@ proc ColorbarButton3 {frame x y} {
     set cb ${frame}cb
 
     # turn off blinking cursor
-    if {$icursor(timer)} {
+    if {$icursor(id)!={}} {
 	catch {after cancel $icursor(id)}
-	set icursor(id) 0
+	set icursor(id) {}
     }
 
     $frame colormap begin

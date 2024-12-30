@@ -44,7 +44,7 @@ proc BlinkDef {} {
     global iblink
     global pblink
 
-    set iblink(id) 0
+    set iblink(id) {}
     set iblink(index) -1
 
     set blink(interval) 1000
@@ -56,7 +56,7 @@ proc FadeDef {} {
     global ifade
     global pfade
 
-    set ifade(id) 0
+    set ifade(id) {}
     set ifade(index) -1
     set ifade(alpha) 0
 

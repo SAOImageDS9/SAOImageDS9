@@ -1908,16 +1908,16 @@ proc DisplayMode {} {
 	single -
 	tile {
 	    # turn off blink if on
-	    if {$iblink(id)>0} {
-		after cancel $iblink(id)
-		set iblink(id) 0
+	    if {$iblink(id)!={}} {
+		catch {after cancel $iblink(id)}
+		set iblink(id) {}
 		set iblink(index) -1
 	    }
 
 	    # turn off fade if on
-	    if {$ifade(id)>0} {
-		after cancel $ifade(id)
-		set ifade(id) 0
+	    if {$ifade(id)!={}} {
+		catch {after cancel $ifade(id)}
+		set ifade(id) {}
 		set ifade(index) -1
 		set ifade(alpha) 0
 		if {$current(frame) != {}} {
@@ -1929,9 +1929,9 @@ proc DisplayMode {} {
 	}
 	blink {
 	    # turn off fade if on
-	    if {$ifade(id)>0} {
-		after cancel $ifade(id)
-		set ifade(id) 0
+	    if {$ifade(id)!={}} {
+		catch {after cancel $ifade(id)}
+		set ifade(id) {}
 		set ifade(index) -1
 		set ifade(alpha) 0
 		if {$current(frame) != {}} {
@@ -1940,21 +1940,21 @@ proc DisplayMode {} {
 	    }
 
 	    # ignore if we are already blinking
-	    if {$iblink(id)==0} {
+	    if {$iblink(id)=={}} {
 		LayoutFrames
 		BlinkTimer
 	    }
 	}
 	fade {
 	    # turn off blink if on
-	    if {$iblink(id)>0} {
-		after cancel $iblink(id)
-		set iblink(id) 0
+	    if {$iblink(id)!={}} {
+		catch {after cancel $iblink(id)}
+		set iblink(id) {}
 		set iblink(index) -1
 	    }
 
 	    # ignore if we are already fading
-	    if {$ifade(id)==0} {
+	    if {$ifade(id)=={}} {
 		# this is such a kludge
 		#   we need all the frames released before, so colorScales
 		#   are defined

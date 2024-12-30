@@ -66,7 +66,7 @@ proc BackupPreamble {fn chname dirname} {
     # script, always overwrite if present
     if {[catch {set ch [open $fn w]}]} {
 	Error [msgcat::mc {An error has occurred during backup}]
-	return {}
+	return 0
     }
 
     # aux directory, create if needed
@@ -436,12 +436,7 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	mmapincr -
 	smmap -
 	shared -
-	sshared {
-	    if {![BackupFrameLoadMMap param $fdir $rdir]} {
-		Error [msgcat::mc {An error has occurred during backup}]
-		return
-	    }
-	}
+	sshared -
 	alloc -
 	allocgz {
 	    if {![BackupFrameLoadMMap param $fdir $rdir]} {

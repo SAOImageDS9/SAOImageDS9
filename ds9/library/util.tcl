@@ -4,6 +4,66 @@
 
 package provide DS9 1.0
 
+proc AutoSaveDef {} {
+    global iautosave
+    global ds9
+
+    set iautosave(id) {}
+    set iautosave(fn) [file join [GetEnvHome] "$ds9(app).auto"]
+}
+
+proc AutoSave {} {
+    global pds9
+    global iautosave
+
+    if {$iautosave(id)!={}} {
+	catch [after cancel $iautosave(id)]
+	set iautosave(id) {}
+    }
+
+    AutoSaveDelete
+
+    if {$pds9(autosave)} {
+	set tt [expr $pds9(autosave,interval)*1000*60]
+	set iautosave(id) [after $tt AutoSaveTimer]
+    }
+}
+
+proc AutoSaveRestore {} {
+    global iautosave
+
+    set fn $iautosave(fn)
+    
+    if {[file exists $fn] && [file exists ${fn}.dir]} {
+	if {[file isdirectory ${fn}.dir]} {
+	    set msg [msgcat::mc {Found Auto Backup, restore?}]
+	    if {[tk_messageBox -type yesno -icon question -message "$msg"]=={yes}} {
+		Restore $fn
+	    }
+	}
+    }
+
+    AutoSaveDelete
+}
+
+proc AutoSaveDelete {} {
+    global iautosave
+
+    catch {file delete -force $iautosave(fn)}
+    catch {file delete -force "$iautosave(fn).dir"}
+}
+
+proc AutoSaveTimer {} {
+    global pds9
+    global iautosave
+
+    AutoSaveDelete
+    Backup $iautosave(fn)
+    
+    set tt [expr $pds9(autosave,interval)*1000*60]
+    set iautosave(id) [after $tt AutoSaveTimer]
+}
+
 proc CurrentDef {} {
     global current
     global pcurrent
@@ -37,7 +97,7 @@ proc CursorDef {} {
     global icursor
 
     set icursor(save) {}
-    set icursor(id) 0
+    set icursor(id) {}
     set icursor(timer) 0
     set icursor(timer,abort) 0
 }
@@ -902,7 +962,7 @@ proc CursorTimer {} {
 	0 {
 	    set icursor(timer,abort) 0
 	    set icursor(timer) 0
-	    set icursor(id) 0
+	    set icursor(id) {}
 	    $ds9(canvas) configure -cursor {}
 	}
 	1 {
@@ -974,6 +1034,14 @@ proc AboutBoxDefault {} {
 
 proc QuitDS9 {} {
     global ds9
+
+    # shutdown AutoSave
+    global iautosave
+    if {$iautosave(id)!={}} {
+	catch [after cancel $iautosave(id)]
+	set iautosave(id) {}
+    }
+    AutoSaveDelete
 
     # shutdown SAMP
     global samp

@@ -132,6 +132,9 @@ proc DS9Def {} {
     set pds9(backup) 1
     set pds9(automarker) 1
 
+    set pds9(autosave) 1
+    set pds9(autosave,interval) 1
+
     # start XPA
     switch $ds9(wm) {
 	x11 -
@@ -348,6 +351,7 @@ DS9Def
 2MASSDef
 3DDef
 AnalysisDef
+AutoSaveDef
 BinDef
 BlinkDef
 BlockDef
@@ -662,6 +666,10 @@ CheckPrefs
 
 # start error monitor
 after $ds9(msg,timeout) [list ErrorTimer]
+
+# autosave
+AutoSaveRestore
+AutoSave
 
 # ok, we're done
 set ds9(init) 0

@@ -194,6 +194,20 @@ proc PrefsDialogGeneral {} {
     grid $f.align -padx 2 -pady 2 -sticky w
     grid $f.tthreads $f.threads -padx 2 -pady 2 -sticky w
 
+    # AutoSave
+
+    set f [ttk::labelframe $w.general.autosave -text [msgcat::mc {Auto Backup}]]
+
+    ttk::checkbutton $f.autosave -text [msgcat::mc {Auto Backup}] \
+	-variable pds9(autosave) -command AutoSave
+    ttk::label $f.tinterval -text [msgcat::mc {Interval}]
+    ttk::entry $f.interval -textvariable pds9(autosave,interval) \
+	-width 8
+    ttk::label $f.ttinterval -text [msgcat::mc {minutes}]
+
+    grid $f.autosave -padx 2 -pady 2 -sticky w
+    grid $f.tinterval $f.interval $f.ttinterval -padx 2 -pady 2 -sticky w
+
     # Font
     set f [ttk::labelframe $w.general.font -text [msgcat::mc {Font}]]
 
@@ -327,7 +341,8 @@ proc PrefsDialogGeneral {} {
 
     grid $f.tinfo $f.info -padx 2 -pady 2 -sticky w
 
-    pack $w.general.misc $w.general.font $w.general.color $w.general.box \
+    pack $w.general.misc $w.general.autosave $w.general.font \
+	$w.general.color $w.general.box \
 	$w.general.info -side top -fill both -expand true
 }
 

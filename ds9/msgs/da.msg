@@ -54,6 +54,7 @@
 ::msgcat::mcset da {Auto Plot 3D} 
 ::msgcat::mcset da {Auto Plot Statistics} 
 ::msgcat::mcset da {Auto Plot} 
+::msgcat::mcset da {Auto Recovery} 
 ::msgcat::mcset da {Autoload FITS Regions} [encoding convertfrom iso8859-1 {Indlæs automatisk FITS regioner}]
 ::msgcat::mcset da {Autoload} 
 ::msgcat::mcset da {Automatic} {Automatisk}
@@ -347,6 +348,7 @@
 ::msgcat::mcset da {Forground} 
 ::msgcat::mcset da {Format} {Format}
 ::msgcat::mcset da {Forward} {Videre}
+::msgcat::mcset da {Found Auto Backup, restore?} 
 ::msgcat::mcset da {Found} {Fundet}
 ::msgcat::mcset da {Frame Information} {Information for ramme}
 ::msgcat::mcset da {Frame Layout} 
@@ -581,7 +583,10 @@
 ::msgcat::mcset da {Match Smooth} 
 ::msgcat::mcset da {Match} 
 ::msgcat::mcset da {Math Function} {Matematisk funktion}
-::msgcat::mcset da {Matplotlib} 
+::msgcat::mcset da {Matplotlib Cyclic} 
+::msgcat::mcset da {Matplotlib Diverging} 
+::msgcat::mcset da {Matplotlib Sequential} 
+::msgcat::mcset da {Matplotlib Uniform} 
 ::msgcat::mcset da {Max Rows} {Maks antal rækker}
 ::msgcat::mcset da {Maximum} 
 ::msgcat::mcset da {Max} {Maks}
@@ -1073,6 +1078,7 @@
 ::msgcat::mcset da {hundredths second} 
 ::msgcat::mcset da {h} 
 ::msgcat::mcset da {l} 
+::msgcat::mcset da {minutes} 
 ::msgcat::mcset da {not connected} 
 ::msgcat::mcset da {not} 
 ::msgcat::mcset da {only} 

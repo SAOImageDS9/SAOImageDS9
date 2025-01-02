@@ -54,6 +54,7 @@
 ::msgcat::mcset fr {Auto Plot 3D} 
 ::msgcat::mcset fr {Auto Plot Statistics} 
 ::msgcat::mcset fr {Auto Plot} 
+::msgcat::mcset fr {Auto Recovery} 
 ::msgcat::mcset fr {Autoload FITS Regions} [encoding convertfrom iso8859-1 {Autochargement des régions FITS}]
 ::msgcat::mcset fr {Autoload} 
 ::msgcat::mcset fr {Automatic} {Automatique}
@@ -347,6 +348,7 @@
 ::msgcat::mcset fr {Forground} 
 ::msgcat::mcset fr {Format} 
 ::msgcat::mcset fr {Forward} {En avant} 
+::msgcat::mcset fr {Found Auto Backup, restore?} 
 ::msgcat::mcset fr {Found} {Trouvé} 
 ::msgcat::mcset fr {Frame Information} [encoding convertfrom iso8859-1 {Information de la fenêtre }]
 ::msgcat::mcset fr {Frame Layout} 
@@ -581,7 +583,10 @@
 ::msgcat::mcset fr {Match Smooth} 
 ::msgcat::mcset fr {Match} 
 ::msgcat::mcset fr {Math Function} {Fonction mathématique}
-::msgcat::mcset fr {Matplotlib} 
+::msgcat::mcset fr {Matplotlib Cyclic} 
+::msgcat::mcset fr {Matplotlib Diverging} 
+::msgcat::mcset fr {Matplotlib Sequential} 
+::msgcat::mcset fr {Matplotlib Uniform} 
 ::msgcat::mcset fr {Max Rows} [encoding convertfrom iso8859-1 {Maximum de rangées}]
 ::msgcat::mcset fr {Maximum} 
 ::msgcat::mcset fr {Max} {Maximum}
@@ -1073,6 +1078,7 @@
 ::msgcat::mcset fr {hundredths second} 
 ::msgcat::mcset fr {h} 
 ::msgcat::mcset fr {l} 
+::msgcat::mcset fr {minutes} 
 ::msgcat::mcset fr {not connected} 
 ::msgcat::mcset fr {not} 
 ::msgcat::mcset fr {only} 

@@ -54,6 +54,7 @@
 ::msgcat::mcset cs {Auto Plot 3D} [encoding convertfrom iso8859-2 {Automatický 3D graf}]
 ::msgcat::mcset cs {Auto Plot Statistics} 
 ::msgcat::mcset cs {Auto Plot} [encoding convertfrom iso8859-2 {Automatický graf}]
+::msgcat::mcset cs {Auto Recovery} 
 ::msgcat::mcset cs {Autoload FITS Regions} [encoding convertfrom iso8859-2 {Automaticky nahrát FITS oblasti}]
 ::msgcat::mcset cs {Autoload} [encoding convertfrom iso8859-2 {Automatické nahrávání}]
 ::msgcat::mcset cs {Automatic} [encoding convertfrom iso8859-2 {Automatické}]
@@ -347,6 +348,7 @@
 ::msgcat::mcset cs {Forground} 
 ::msgcat::mcset cs {Format} [encoding convertfrom iso8859-2 {Formát}]
 ::msgcat::mcset cs {Forward} [encoding convertfrom iso8859-2 {Vpøed}]
+::msgcat::mcset cs {Found Auto Backup, restore?} 
 ::msgcat::mcset cs {Found} [encoding convertfrom iso8859-2 {Nalezeno}]
 ::msgcat::mcset cs {Frame Information} [encoding convertfrom iso8859-2 {Informace o snímku}]
 ::msgcat::mcset cs {Frame Layout} 
@@ -581,7 +583,10 @@
 ::msgcat::mcset cs {Match Smooth} 
 ::msgcat::mcset cs {Match} [encoding convertfrom iso8859-2 {Zarovnat}]
 ::msgcat::mcset cs {Math Function} 
-::msgcat::mcset cs {Matplotlib} 
+::msgcat::mcset cs {Matplotlib Cyclic} 
+::msgcat::mcset cs {Matplotlib Diverging} 
+::msgcat::mcset cs {Matplotlib Sequential} 
+::msgcat::mcset cs {Matplotlib Uniform} 
 ::msgcat::mcset cs {Max Rows} 
 ::msgcat::mcset cs {Maximum} 
 ::msgcat::mcset cs {Max} 
@@ -1073,6 +1078,7 @@
 ::msgcat::mcset cs {hundredths second} 
 ::msgcat::mcset cs {h} 
 ::msgcat::mcset cs {l} 
+::msgcat::mcset cs {minutes} 
 ::msgcat::mcset cs {not connected} 
 ::msgcat::mcset cs {not} 
 ::msgcat::mcset cs {only} 

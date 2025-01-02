@@ -54,6 +54,7 @@
 ::msgcat::mcset es {Auto Plot 3D} 
 ::msgcat::mcset es {Auto Plot Statistics} 
 ::msgcat::mcset es {Auto Plot} 
+::msgcat::mcset es {Auto Recovery} 
 ::msgcat::mcset es {Autoload FITS Regions} {Autocargar regiones FITS}
 ::msgcat::mcset es {Autoload} 
 ::msgcat::mcset es {Automatic} [encoding convertfrom iso8859-1 {Automático}]
@@ -347,6 +348,7 @@
 ::msgcat::mcset es {Forground} 
 ::msgcat::mcset es {Format} {Formato}
 ::msgcat::mcset es {Forward} {Hacia adelante}
+::msgcat::mcset es {Found Auto Backup, restore?} 
 ::msgcat::mcset es {Found} {Hallado}
 ::msgcat::mcset es {Frame Information} [encoding convertfrom iso8859-1 {Información del marco}]
 ::msgcat::mcset es {Frame Layout} 
@@ -581,7 +583,10 @@
 ::msgcat::mcset es {Match Smooth} 
 ::msgcat::mcset es {Match} 
 ::msgcat::mcset es {Math Function} [encoding convertfrom iso8859-1 {Función matemática}]
-::msgcat::mcset es {Matplotlib} 
+::msgcat::mcset es {Matplotlib Cyclic} 
+::msgcat::mcset es {Matplotlib Diverging} 
+::msgcat::mcset es {Matplotlib Sequential} 
+::msgcat::mcset es {Matplotlib Uniform} 
 ::msgcat::mcset es {Max Rows} [encoding convertfrom iso8859-1 {Máx filas}] 
 ::msgcat::mcset es {Maximum} 
 ::msgcat::mcset es {Max} [encoding convertfrom iso8859-1 {Máx}]
@@ -1073,6 +1078,7 @@
 ::msgcat::mcset es {hundredths second} 
 ::msgcat::mcset es {h} 
 ::msgcat::mcset es {l} 
+::msgcat::mcset es {minutes} 
 ::msgcat::mcset es {not connected} 
 ::msgcat::mcset es {not} 
 ::msgcat::mcset es {only} 

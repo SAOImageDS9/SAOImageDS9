@@ -54,6 +54,7 @@
 ::msgcat::mcset ja {Auto Plot 3D} 
 ::msgcat::mcset ja {Auto Plot Statistics} 
 ::msgcat::mcset ja {Auto Plot} 
+::msgcat::mcset ja {Auto Recovery} 
 ::msgcat::mcset ja {Autoload FITS Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xce\xbc\xab\xc6\xb0\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Autoload} 
 ::msgcat::mcset ja {Automatic} [encoding convertfrom euc-jp "\xbc\xab\xc6\xb0"]
@@ -347,6 +348,7 @@
 ::msgcat::mcset ja {Forground} 
 ::msgcat::mcset ja {Format} [encoding convertfrom euc-jp "\xb7\xc1\xbc\xb0"]
 ::msgcat::mcset ja {Forward} [encoding convertfrom euc-jp "\xbc\xa1"]
+::msgcat::mcset ja {Found Auto Backup, restore?} 
 ::msgcat::mcset ja {Found} 
 ::msgcat::mcset ja {Frame Information} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xce\xbe\xf0\xca\xf3"]
 ::msgcat::mcset ja {Frame Layout} 
@@ -581,7 +583,10 @@
 ::msgcat::mcset ja {Match Smooth} 
 ::msgcat::mcset ja {Match} 
 ::msgcat::mcset ja {Math Function} [encoding convertfrom euc-jp "\xb4\xd8\xbf\xf4"]
-::msgcat::mcset ja {Matplotlib} 
+::msgcat::mcset ja {Matplotlib Cyclic} 
+::msgcat::mcset ja {Matplotlib Diverging} 
+::msgcat::mcset ja {Matplotlib Sequential} 
+::msgcat::mcset ja {Matplotlib Uniform} 
 ::msgcat::mcset ja {Max Rows} [encoding convertfrom euc-jp "\xba\xc7\xc2\xe7\xb9\xd4\xbf\xf4"]
 ::msgcat::mcset ja {Maximum} 
 ::msgcat::mcset ja {Max} [encoding convertfrom euc-jp "\xba\xc7\xc2\xe7"]
@@ -1073,6 +1078,7 @@
 ::msgcat::mcset ja {hundredths second} 
 ::msgcat::mcset ja {h} 
 ::msgcat::mcset ja {l} 
+::msgcat::mcset ja {minutes} 
 ::msgcat::mcset ja {not connected} 
 ::msgcat::mcset ja {not} 
 ::msgcat::mcset ja {only} 

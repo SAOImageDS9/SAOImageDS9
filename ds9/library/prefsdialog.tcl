@@ -196,9 +196,9 @@ proc PrefsDialogGeneral {} {
 
     # AutoSave
 
-    set f [ttk::labelframe $w.general.autosave -text [msgcat::mc {Auto Backup}]]
+    set f [ttk::labelframe $w.general.autosave -text [msgcat::mc {Auto Recovery}]]
 
-    ttk::checkbutton $f.autosave -text [msgcat::mc {Auto Backup}] \
+    ttk::checkbutton $f.autosave -text [msgcat::mc {Auto Recovery}] \
 	-variable pds9(autosave) -command AutoSave
     ttk::label $f.tinterval -text [msgcat::mc {Interval}]
     ttk::entry $f.interval -textvariable pds9(autosave,interval) \

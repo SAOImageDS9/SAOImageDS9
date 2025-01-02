@@ -54,6 +54,7 @@
 ::msgcat::mcset zh {Auto Plot 3D} 
 ::msgcat::mcset zh {Auto Plot Statistics} 
 ::msgcat::mcset zh {Auto Plot} 
+::msgcat::mcset zh {Auto Recovery} 
 ::msgcat::mcset zh {Autoload FITS Regions} 
 ::msgcat::mcset zh {Autoload} 
 ::msgcat::mcset zh {Automatic} 
@@ -347,6 +348,7 @@
 ::msgcat::mcset zh {Forground} 
 ::msgcat::mcset zh {Format} 
 ::msgcat::mcset zh {Forward} 
+::msgcat::mcset zh {Found Auto Backup, restore?} 
 ::msgcat::mcset zh {Found} 
 ::msgcat::mcset zh {Frame Information} [encoding convertfrom big5 "\xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1 \xB8\xEA \xB0\x54"]
 ::msgcat::mcset zh {Frame Layout} 
@@ -581,7 +583,10 @@
 ::msgcat::mcset zh {Match Smooth} 
 ::msgcat::mcset zh {Match} 
 ::msgcat::mcset zh {Math Function} 
-::msgcat::mcset zh {Matplotlib} 
+::msgcat::mcset zh {Matplotlib Cyclic} 
+::msgcat::mcset zh {Matplotlib Diverging} 
+::msgcat::mcset zh {Matplotlib Sequential} 
+::msgcat::mcset zh {Matplotlib Uniform} 
 ::msgcat::mcset zh {Max Rows} 
 ::msgcat::mcset zh {Maximum} 
 ::msgcat::mcset zh {Max} 
@@ -1073,6 +1078,7 @@
 ::msgcat::mcset zh {hundredths second} 
 ::msgcat::mcset zh {h} 
 ::msgcat::mcset zh {l} 
+::msgcat::mcset zh {minutes} 
 ::msgcat::mcset zh {not connected} 
 ::msgcat::mcset zh {not} 
 ::msgcat::mcset zh {only} 

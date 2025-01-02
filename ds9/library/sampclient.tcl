@@ -200,9 +200,7 @@ proc SAMPDisconnect {} {
 
     # connected?
     if {![info exists samp]} {
-	if {$samp(verbose)} {
-	    SAMPError "SAMP: not connected"
-	}
+	SAMPError "SAMP: not connected"
 	return
     }
 

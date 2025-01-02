@@ -200,9 +200,7 @@ proc SAMPHubStop {} {
 
     # hub running?
     if {![info exists samphub]} {
-	if {$samphub(verbose)} {
-	    Error "SAMPHub: [msgcat::mc {Hub not running}]"
-	}
+	Error "SAMPHub: [msgcat::mc {Hub not running}]"
 	return
     }
 

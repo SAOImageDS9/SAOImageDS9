@@ -133,7 +133,7 @@ proc DS9Def {} {
     set pds9(automarker) 1
 
     set pds9(autosave) 1
-    set pds9(autosave,interval) 1
+    set pds9(autosave,interval) 5
 
     # start XPA
     switch $ds9(wm) {

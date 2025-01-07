@@ -52,8 +52,9 @@ proc SAMPHubStart {verbose} {
     }
     
     # ok, we are on our own
-    unset samp
-    unset samphub
+    # global samp maybe unset by SAMPParseHub
+    catch {unset samp}
+    catch {unset samphub}
     
     # hub file name
     set fn {}

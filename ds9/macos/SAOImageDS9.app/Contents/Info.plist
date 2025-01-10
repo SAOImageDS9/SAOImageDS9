@@ -35,8 +35,8 @@
 	<key>CFBundleExecutable</key>
 	<string>ds9</string>
 	<key>CFBundleGetInfoString</key>
-	<string>"SAOImageDS9 8.7b1
-Copyright 1999-2024
+	<string>"SAOImageDS9 8.7b2
+Copyright 1999-2025
 Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundleIconFile</key>
 	<string>App.icns</string>
@@ -61,13 +61,13 @@ Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>8.7b1</string>
+	<string>8.7b2</string>
 	<key>CFBundleSignature</key>
 	<string>DS9</string>
 	<key>NSHighResolutionCapable</key>
 	<string>True</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (C) 1999-2024</string>
+	<string>Copyright (C) 1999-2025</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.11.0</string>
 	<key>LSRequiresCarbon</key>

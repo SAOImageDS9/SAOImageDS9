@@ -1,6 +1,6 @@
 #include <windows.h>
 
-#define VV "8.7b1"
+#define VV "8.7b2"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION    8,7,0,0
@@ -19,7 +19,7 @@ BEGIN
             VALUE "OriginalFilename", "ds9.exe"
             VALUE "CompanyName", "Smithsonian Astrophysical Observatory"
             VALUE "FileVersion", VV
-            VALUE "LegalCopyright", "Copyright 1999-2024 by Smithsonian Astrophysical Observatory"
+            VALUE "LegalCopyright", "Copyright 1999-2025 by Smithsonian Astrophysical Observatory"
             VALUE "ProductName", "SAOImageDS9"
             VALUE "ProductVersion", VV
         END

@@ -186,23 +186,24 @@ set OFF_ 260
 set TRUE_ 261
 set FALSE_ 262
 set INT_ 263
-set STRING_ 264
-set BACKGROUND_ 265
-set BGCOLOR_ 266
-set COLOR_ 267
-set NAN_ 268
-set NANCOLOR_ 269
-set AUTO_ 270
-set RECOVERY_ 271
-set INTERVAL_ 272
-set CLEAR_ 273
-set CLOSE_ 274
-set IRAFALIGN_ 275
-set OPEN_ 276
-set PRECISION_ 277
-set SAVE_ 278
-set THEME_ 279
-set THREADS_ 280
+set REAL_ 264
+set STRING_ 265
+set BACKGROUND_ 266
+set BGCOLOR_ 267
+set COLOR_ 268
+set NAN_ 269
+set NANCOLOR_ 270
+set AUTO_ 271
+set RECOVERY_ 272
+set INTERVAL_ 273
+set CLEAR_ 274
+set CLOSE_ 275
+set IRAFALIGN_ 276
+set OPEN_ 277
+set PRECISION_ 278
+set SAVE_ 279
+set THEME_ 280
+set THREADS_ 281
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -413,47 +414,68 @@ set THREADS_ 280
             set yyleng [string length $yytext]
             set matched_rule 26
         }
-        # rule 27: \"[^\"]*\"
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
+        # rule 27: [+-]?{D}+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 27
         }
-        # rule 28: \'[^\']*\'
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
+        # rule 28: [+-]?{D}+\.?({E})?
+        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+\.?(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 28
         }
-        # rule 29: \{[^\}]*\}
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
+        # rule 29: [+-]?{D}*\.{D}+({E})?
+        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])*\.([0-9])+(([Ee][+-]?([0-9])+))?)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 29
         }
-        # rule 30: \S+\S+
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
+        # rule 30: \"[^\"]*\"
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 30
         }
-        # rule 31: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 31: \'[^\']*\'
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 31
         }
-        # rule 32: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 32: \{[^\}]*\}
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 32
+        }
+        # rule 33: \S+\S+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 33
+        }
+        # rule 34: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 34
+        }
+        # rule 35: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 35
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -549,21 +571,28 @@ return $FALSE_
 set yylval $yytext; return $INT_
             }
             27 {
-set yylval [string range $yytext 1 end-1]; return $STRING_
+set yylval $yytext; return $INT_
             }
-            28 {
-set yylval [string range $yytext 1 end-1]; return $STRING_
-            }
+            28 -
             29 {
-set yylval [string range $yytext 1 end-1]; return $STRING_
+set yylval $yytext; return $REAL_
             }
             30 {
-set yylval $yytext; return $STRING_
+set yylval [string range $yytext 1 end-1]; return $STRING_
             }
             31 {
-# ignore whitespace
+set yylval [string range $yytext 1 end-1]; return $STRING_
             }
             32 {
+set yylval [string range $yytext 1 end-1]; return $STRING_
+            }
+            33 {
+set yylval $yytext; return $STRING_
+            }
+            34 {
+# ignore whitespace
+            }
+            35 {
 set yylval $yytext; return $yylval
             }
             default

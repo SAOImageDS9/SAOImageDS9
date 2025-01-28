@@ -4,6 +4,7 @@
 
 #include yesno.tin
 #include int.tin
+#include numeric.tin
 #include string.tin
 
 %start command
@@ -28,6 +29,7 @@
 
 %%
 
+#include numeric.trl
 #include yesno.trl
 
 command : prefs 

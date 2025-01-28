@@ -50,7 +50,7 @@ bg : {ProcessSendCmdGet pds9 bg}
 nan : {ProcessSendCmdGet pds9 nan}
  ;
  
-autosave : {ProcessSendCmdGet pds9 autosave}
+autosave : {ProcessSendCmdYesNo pds9 autosave}
  | INTERVAL_ {ProcessSendCmdGet pds9 autosave,interval}
  ;
 

@@ -29,8 +29,8 @@
 
 %%
 
-#include yesno.trl
 #include numeric.trl
+#include yesno.trl
 
 command : prefs 
  | prefs {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_

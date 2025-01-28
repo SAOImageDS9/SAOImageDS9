@@ -499,7 +499,7 @@ proc prefssend::yyparse {} {
                     16 { ProcessSendCmdYesNo pds9 bg,use }
                     17 { ProcessSendCmdGet pds9 bg }
                     18 { ProcessSendCmdGet pds9 nan }
-                    19 { ProcessSendCmdGet pds9 autosave }
+                    19 { ProcessSendCmdYesNo pds9 autosave }
                     20 { ProcessSendCmdGet pds9 autosave,interval }
                 }
                 unsetupvalues $dc

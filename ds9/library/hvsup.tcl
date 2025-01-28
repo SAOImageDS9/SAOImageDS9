@@ -1322,10 +1322,10 @@ proc HVParseXPASet {varname} {
 	set target [HVParseMimeParam $varname target]
     }
 
-    if {$target == "$ds9(title)" ||
+    if {$target == "$ds9(app)" ||
 	$target == "DS9:*" ||
-	$target == "DS9:$ds9(title)" ||
-	$target == "*:$ds9(title)" ||
+	$target == "DS9:$ds9(app)" ||
+	$target == "*:$ds9(app)" ||
 	$target == "*:*" ||
 	$target == [XPAMethod]} {
 

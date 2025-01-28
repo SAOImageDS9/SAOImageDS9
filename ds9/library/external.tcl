@@ -7,14 +7,17 @@ package provide DS9 1.0
 proc InitExternalFile {} {
     global ds9
 
-    if {[file exists "./$ds9(ext,file)"]} {
-	ProcessExternalFile "./$ds9(ext,file)"
-    } elseif {[file exists "./$ds9(ext,alt)"]} {
-	ProcessExternalFile "./$ds9(ext,alt)"
-    } elseif {[file exists "~/$ds9(ext,file)"]} {
-	ProcessExternalFile "~/$ds9(ext,file)"
-    } elseif {[file exists "~/$ds9(ext,alt)"]} {
-	ProcessExternalFile "~/$ds9(ext,alt)"
+    set fn ".$ds9(app).fil"
+    set alt ".$ds9(app).file"
+
+    if {[file exists "./$fn"]} {
+	ProcessExternalFile "./$fn"
+    } elseif {[file exists "./$alt"]} {
+	ProcessExternalFile "./$alt"
+    } elseif {[file exists "~/$fn"]} {
+	ProcessExternalFile "~/$fn"
+    } elseif {[file exists "~/$alt"]} {
+	ProcessExternalFile "~/$alt"
     }
 }
 

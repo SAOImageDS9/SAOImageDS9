@@ -4,6 +4,7 @@
 
 #include yesno.tin
 #include int.tin
+#include numeric.tin
 #include string.tin
 
 %start command
@@ -14,6 +15,9 @@
 %token NAN_
 %token NANCOLOR_
 
+%token AUTO_
+%token RECOVERY_
+%token INTERVAL_
 %token CLEAR_
 %token CLOSE_
 %token IRAFALIGN_
@@ -26,6 +30,7 @@
 %%
 
 #include yesno.trl
+#include numeric.trl
 
 command : prefs 
  | prefs {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
@@ -47,6 +52,7 @@ prefs : {PrefsDialog}
  | NAN_ COLOR_ nan
  | NANCOLOR_ nan
 
+ | AUTO_ RECOVERY_ autosave
  | PRECISION_ INT_ INT_ INT_ INT_ INT_ INT_ INT_ INT_ INT_ {ProcessCmdSet pds9 prec,linear $2; ProcessCmdSet pds9 prec,deg $3; ProcessCmdSet pds9 prec,hms $4; ProcessCmdSet pds9 prec,dms $5; ProcessCmdSet pds9 prec,len,linear $6; ProcessCmdSet pds9 prec,len,deg $7; ProcessCmdSet pds9 prec,len,arcmin $8; ProcessCmdSet pds9 prec,len,arcsec $9; ProcessCmdSet pds9 prec,angle $10; PrefsPrecision}
 
  | THEME_ STRING_ {ProcessCmdSet pds9 theme $2 ThemeChange}
@@ -59,6 +65,10 @@ bg : yesno {ProcessCmdSet pds9 bg,use $1 PrefsBgColor}
  ;
  
 nan : STRING_ {ProcessCmdSet pds9 nan $1 PrefsNanColor}
+ ;
+
+autosave : yesno {ProcessCmdSet pds9 autosave $1; AutoSave}
+ | INTERVAL_ numeric {ProcessCmdSet pds9 autosave,interval $2; AutoSave}
  ;
 
 %%

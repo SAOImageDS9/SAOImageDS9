@@ -9,6 +9,7 @@ proc ProcessCommandLineFirst {} {
     global argv
     global ds9
     global prefs
+    global autosave
 
     set i 0
     while {$i < $argc} {
@@ -25,8 +26,10 @@ proc ProcessCommandLineFirst {} {
 		set tt "SAOImage $ds9(app)"
 		wm title $ds9(top) "$tt"
 		wm iconname $ds9(top) $"tt"
+
 		set prefs(dir) [file join [GetEnvHome] ".$ds9(app)"]
 		set prefs(fn) [file join $prefs(dir) "$ds9(app).$prefs(version)$prefs(ext)"]
+		set autosave(fn) [file join [GetEnvHome] "$ds9(app).auto"]
 	    }
 	}
 	incr i

@@ -14,6 +14,9 @@
 %token NAN_
 %token NANCOLOR_
 
+%token AUTO_
+%token RECOVERY_
+%token INTERVAL_
 %token CLEAR_
 %token CLOSE_
 %token IRAFALIGN_
@@ -45,6 +48,7 @@ prefs : yesno {ProcessCmdSet ds9 prefs $1}
  | NAN_ COLOR_ nan
  | NANCOLOR_ nan
 
+ | AUTO_ RECOVERY_ autosave
  | PRECISION_ INT_ INT_ INT_ INT_ INT_ INT_
  | THEME_ STRING_
  | THREADS_ INT_
@@ -56,6 +60,10 @@ bg : yesno
  ;
  
 nan : STRING_
+ ;
+
+autosave : yesno
+ | INTERVAL_ numeric
  ;
 
 %%

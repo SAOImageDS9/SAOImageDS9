@@ -6,12 +6,6 @@ proc DS9Def {} {
     global ds9
     global pds9
 
-    switch $ds9(wm) {
-	x11 -
-	aqua {set ds9(title) $ds9(app)}
-	win32 {set ds9(title) [file rootname $ds9(app)]}
-    }
-
     # Must be major,minor
     set ds9(version) {8.7}
     # For display purposes only
@@ -105,9 +99,6 @@ proc DS9Def {} {
 
     set ds9(modifier) 0
 
-    set ds9(ext,file) ".$ds9(app).fil"
-    set ds9(ext,alt) ".$ds9(app).file"
-
     set ds9(msg) {}
     set ds9(msg,level) info
     set ds9(msg,src) tcl
@@ -190,7 +181,7 @@ if {[catch {tk windowingsystem} ds9(wm)]} {
 }
 
 # ds9(app)
-set ds9(app) [file tail [info nameofexecutable]]
+set ds9(app) [file rootname [file tail [info nameofexecutable]]]
 
 # ds9(top)
 # need for load
@@ -477,8 +468,8 @@ switch $ds9(wm) {
 # We want to withdraw the window til everything is ready to go
 wm withdraw $ds9(top)
 
-wm title $ds9(top) "SAOImage $ds9(title)"
-wm iconname $ds9(top) "SAOImage $ds9(title)"
+wm title $ds9(top) "SAOImage $ds9(app)"
+wm iconname $ds9(top) "SAOImage $ds9(app)"
 wm protocol $ds9(top) WM_DELETE_WINDOW QuitDS9
 
 # set the visual
@@ -522,7 +513,7 @@ InitTempDir
 # Init the filter compiler
 InitFilterCompiler
 
-# we need to check to see to run prefs first
+# we need to set ds9(app) and check to see to run prefs
 ProcessCommandLineFirst
 
 # Load any preferences here, before we do any real work
@@ -534,7 +525,7 @@ if {$ds9(prefs)} {
 SetDefaultFont false
 SetDefaultTextFont false
 
-# we need to set certain variables such as debug, title, language, xpa, samp
+# we need to set certain variables such as debug, language, xpa, samp
 ProcessCommandLineSecond
 
 # initialize language

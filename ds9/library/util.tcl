@@ -6,10 +6,11 @@ package provide DS9 1.0
 
 proc AutoSaveDef {} {
     global iautosave
+    global autosave
     global ds9
 
     set iautosave(id) {}
-    set iautosave(fn) [file join [GetEnvHome] "$ds9(app).auto"]
+    set autosave(fn) [file join [GetEnvHome] "$ds9(app).auto"]
 }
 
 proc AutoSave {} {
@@ -30,9 +31,9 @@ proc AutoSave {} {
 }
 
 proc AutoSaveRestore {} {
-    global iautosave
+    global autosave
 
-    set fn $iautosave(fn)
+    set fn $autosave(fn)
     
     if {[file exists $fn] && [file exists ${fn}.dir]} {
 	if {[file isdirectory ${fn}.dir]} {
@@ -47,18 +48,19 @@ proc AutoSaveRestore {} {
 }
 
 proc AutoSaveDelete {} {
-    global iautosave
+    global autosave
 
-    catch {file delete -force $iautosave(fn)}
-    catch {file delete -force "$iautosave(fn).dir"}
+    catch {file delete -force $autosave(fn)}
+    catch {file delete -force "$autosave(fn).dir"}
 }
 
 proc AutoSaveTimer {} {
     global pds9
     global iautosave
+    global autosave
 
     AutoSaveDelete
-    Backup $iautosave(fn)
+    Backup $autosave(fn)
     
     set tt [expr $pds9(autosave,interval)*1000*60]
     set iautosave(id) [after $tt AutoSaveTimer]

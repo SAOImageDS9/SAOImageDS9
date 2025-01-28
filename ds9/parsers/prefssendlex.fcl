@@ -17,6 +17,9 @@ nan	    {return $NAN_}
 nancolor    {return $NANCOLOR_}
 nancolour   {return $NANCOLOR_}
 
+auto	    {return $AUTO_}
+recovery    {return $RECOVERY_}
+interval    {return $INTERVAL_}
 has	    {return $HAS_}
 precision   {return $PRECISION_}
 theme	    {return $THEME_}

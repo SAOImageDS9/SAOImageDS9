@@ -2275,6 +2275,8 @@ prefs [open]<br>
 &nbsp;&nbsp;&nbsp; [bg color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [nan color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [precision &lt;linear&gt; &lt;degree&gt; &lt;hms&gt; &lt;dms&gt; &lt;len linear&gt; &lt;len degree&gt; &lt;len arcmin&gt; &lt;len arcsec&gt; &lt;angle&gt;]<br>
+&nbsp;&nbsp;&nbsp; [auto recovery yes|no]<br>
+&nbsp;&nbsp;&nbsp; [auto recovery interval &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [theme &lt;theme&gt;]<br>
 &nbsp;&nbsp;&nbsp; [threads &lt;numeric&gt;]<br>
 &nbsp;&nbsp;&nbsp; [irafalign yes|no]<br>
@@ -2284,6 +2286,8 @@ $xpaget ds9 prefs has bg color<br>
 $xpaget ds9 prefs bg color<br>
 $xpaget ds9 prefs nan color<br>
 $xpaget ds9 prefs precision<br>
+$xpaget ds9 prefs auto recovery
+$xpaget ds9 prefs auto recovery interval
 $xpaget ds9 prefs theme<br>
 $xpaget ds9 prefs threads<br>
 $xpaget ds9 prefs irafalign<br>
@@ -2296,6 +2300,8 @@ $xpaset -p ds9 prefs bg color no<br>
 $xpaset -p ds9 prefs bg color red<br>
 $xpaset -p ds9 prefs nan color blue<br>
 $xpaset -p ds9 prefs precision 8 7 4 3 8 7 5 3 8<br>
+$xpaset -p ds9 prefs auto recovery yes
+$xpaset -p ds9 prefs auto recovery interval 5
 $xpaset -p ds9 prefs theme radiance<br>
 $xpaset -p ds9 prefs threads 8<br>
 $xpaset -p ds9 prefs iraf yes<br></tt>

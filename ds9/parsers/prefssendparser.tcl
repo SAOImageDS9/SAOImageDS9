@@ -63,135 +63,153 @@ proc prefssend::unsetupvalues {numsyms} {
 array set prefssend::table {
   0:257 shift
   0:258 shift
-  23:0,target 13
-  17:259 shift
+  23:0,target 7
   0:260 shift
-  15:0,target 6
+  27:0 reduce
+  15:0,target 18
   9:0 reduce
   0:261 shift
-  0:266,target 9
-  11:0 reduce
+  0:266,target 7
+  19:259 shift
+  11:0 accept
   0:262 shift
-  11:270 goto
-  0:263 shift
-  0:264 shift
-  1:259,target 11
-  18:269,target 24
+  6:257 shift
+  1:259,target 12
   0:265 shift
-  1:270,target 12
+  6:258 shift
   15:0 reduce
   0:266 shift
-  0:267 goto
-  0:265,target 8
-  24:0,target 12
-  17:269 goto
-  6:0,target 11
-  4:271,target 16
+  0:267 shift
+  6:258,target 20
+  0:265,target 6
+  0:268 shift
+  24:0,target 20
+  0:270 goto
+  0:269 shift
+  2:273,target 14
   20:0 reduce
   19:0 reduce
-  16:0,target 5
+  16:0,target 6
   2:0 reduce
-  2:270 goto
-  22:269 goto
+  15:274 goto
+  20:272 goto
+  19:272 goto
   24:0 reduce
-  4:271 goto
-  6:0 reduce
-  0:264,target 7
-  22:269,target 25
-  25:0,target 14
-  7:0,target 8
-  17:0,target 15
+  2:273 goto
+  6:257,target 19
+  20:272,target 28
+  19:272,target 27
+  6:271 goto
+  4:274 goto
+  28:0 reduce
+  25:0,target 8
+  7:0,target 12
+  26:272 goto
+  17:0,target 5
   12:0 reduce
-  10:0,target 0
-  11:270,target 20
-  0:263,target 6
+  5:263,target 18
+  10:0,target 11
   16:0 reduce
-  14:271,target 21
+  12:273,target 22
+  26:0,target 16
   21:0 reduce
   8:0,target 9
+  3:274,target 16
   3:0 reduce
-  18:0,target 15
-  1:0,target 16
-  11:0,target 16
+  18:0,target 19
+  1:0,target 17
+  19:259,target 26
+  11:0,target 0
   0:262,target 5
-  2:270,target 13
+  15:274,target 23
   25:0 reduce
   7:0 reduce
   1:259 shift
+  18:275,target 25
+  29:0 reduce
   3:259 shift
-  5:257 shift
+  27:0,target 14
   13:0 reduce
   9:0,target 10
   0:261,target 4
-  5:258 shift
-  20:0,target 4
-  19:0,target 1
-  2:0,target 16
-  12:0,target 3
-  14:271 goto
+  20:0,target 16
+  19:0,target 16
+  18:264 shift
+  2:0,target 17
+  26:272,target 29
+  12:0,target 17
+  12:273 goto
+  18:264,target 24
   17:0 reduce
-  18:269 goto
-  1:270 goto
-  17:259,target 22
+  5:263 shift
   0:260,target 3
   22:0 reduce
-  17:269,target 23
+  0:270,target 11
+  0:269,target 10
   4:0 reduce
-  3:271 goto
-  5:268 goto
-  21:0,target 7
-  3:0,target 17
-  13:0,target 2
-  5:258,target 18
+  28:0,target 13
+  1:273 goto
+  21:0,target 1
+  3:0,target 18
+  18:275 goto
+  13:0,target 3
+  26:0 reduce
   8:0 reduce
-  3:271,target 15
-  5:268,target 19
-  10:0 accept
+  1:273,target 13
+  3:274 goto
+  10:0 reduce
   0:258,target 2
+  0:268,target 9
+  4:274,target 17
   14:0 reduce
-  3:259,target 14
-  5:257,target 17
-  22:0,target 15
-  4:0,target 17
-  14:0,target 17
+  29:0,target 15
+  3:259,target 15
+  22:0,target 4
+  4:0,target 18
+  14:0,target 2
   18:0 reduce
   0:257,target 1
   1:0 reduce
-  0:267,target 10
+  0:267,target 8
+  6:271,target 21
   23:0 reduce
 }
 
 array set prefssend::rules {
-  9,l 267
-  11,l 267
-  15,l 269
-  2,l 267
-  6,l 267
-  12,l 268
-  16,l 270
-  3,l 267
-  7,l 267
-  13,l 268
-  0,l 272
-  17,l 271
-  4,l 267
-  8,l 267
-  10,l 267
-  14,l 268
-  1,l 267
-  5,l 267
+  9,l 270
+  11,l 270
+  15,l 271
+  20,l 275
+  19,l 275
+  2,l 270
+  6,l 270
+  12,l 270
+  16,l 272
+  3,l 270
+  7,l 270
+  13,l 271
+  0,l 276
+  17,l 273
+  4,l 270
+  8,l 270
+  10,l 270
+  14,l 271
+  18,l 274
+  1,l 270
+  5,l 270
 }
 
 array set prefssend::rules {
   5,dc 2
   0,dc 1
   17,dc 0
-  12,dc 2
-  8,dc 1
+  12,dc 1
+  8,dc 3
   3,dc 2
-  15,dc 0
+  15,dc 3
   10,dc 1
   6,dc 2
+  18,dc 0
   1,dc 2
   13,dc 2
   9,dc 1
@@ -199,121 +217,142 @@ array set prefssend::rules {
   16,dc 0
   11,dc 1
   7,dc 3
+  20,dc 1
+  19,dc 0
   2,dc 2
-  14,dc 3
+  14,dc 2
 }
 
 array set prefssend::rules {
-  13,line 38
-  7,line 30
-  10,line 33
-  4,line 26
-  1,line 23
-  15,line 42
-  9,line 32
-  12,line 37
-  6,line 28
-  3,line 25
-  17,line 48
-  14,line 39
-  8,line 31
-  11,line 34
-  5,line 27
-  2,line 24
-  16,line 45
+  13,line 41
+  7,line 33
+  10,line 36
+  4,line 29
+  18,line 52
+  1,line 26
+  15,line 43
+  9,line 35
+  12,line 38
+  6,line 31
+  3,line 28
+  17,line 49
+  14,line 42
+  8,line 34
+  11,line 37
+  5,line 30
+  20,line 56
+  19,line 55
+  2,line 27
+  16,line 46
 }
 
 array set prefssend::lr1_table {
-  14,trans {{271 21}}
-  1,trans {{259 11} {270 12}}
-  18,trans {{269 24}}
+  14,trans {}
+  1,trans {{259 12} {273 13}}
+  18,trans {{264 24} {275 25}}
   23,trans {}
-  5,trans {{257 17} {258 18} {268 19}}
+  5,trans {{263 18}}
+  27,trans {}
   9,trans {}
   13,trans {}
-  0,trans {{257 1} {258 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10}}
-  17,trans {{259 22} {269 23}}
-  22,trans {{269 25}}
-  4,trans {{271 16}}
+  0,trans {{257 1} {258 2} {260 3} {261 4} {262 5} {265 6} {266 7} {267 8} {268 9} {269 10} {270 11}}
+  17,trans {}
+  22,trans {}
+  4,trans {{274 17}}
+  26,trans {{272 29}}
   8,trans {}
-  12,trans {}
+  12,trans {{273 22}}
   16,trans {}
-  3,trans {{259 14} {271 15}}
   21,trans {}
-  10 {{0 0 1}}
-  11 {{4 0 2} {16 0 0}}
+  3,trans {{259 15} {274 16}}
+  10 {{11 0 1}}
+  11 {{0 0 1}}
   25,trans {}
-  12 {{3 0 2}}
+  12 {{4 0 2} {17 0 0}}
   7,trans {}
-  13 {{2 0 2}}
-  14 {{7 0 2} {17 0 0}}
-  15 {{6 0 2}}
-  11,trans {{270 20}}
-  16 {{5 0 2}}
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0}}
-  17 {{13 0 1} {14 0 1} {15 0 0}}
-  1 {{3 0 1} {4 0 1} {16 0 0}}
-  18 {{12 0 1} {15 0 0}}
-  2 {{2 0 1} {16 0 0}}
-  19 {{1 0 2}}
-  20 {{4 0 3}}
-  15,trans {}
-  3 {{6 0 1} {7 0 1} {17 0 0}}
-  21 {{7 0 3}}
-  4 {{5 0 1} {17 0 0}}
-  22 {{14 0 2} {15 0 0}}
-  5 {{1 0 1} {12 0 0} {13 0 0} {14 0 0}}
-  23 {{13 0 2}}
-  6 {{11 0 1}}
-  2,trans {{270 13}}
-  24 {{12 0 2}}
-  19,trans {}
-  20,trans {}
-  7 {{8 0 1}}
-  25 {{14 0 3}}
+  13 {{3 0 2}}
+  14 {{2 0 2}}
+  15 {{7 0 2} {18 0 0}}
+  11,trans {}
+  29,trans {}
+  16 {{6 0 2}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0}}
+  17 {{5 0 2}}
+  1 {{3 0 1} {4 0 1} {17 0 0}}
+  18 {{8 0 2} {19 0 0} {20 0 0}}
+  2 {{2 0 1} {17 0 0}}
+  19 {{14 0 1} {15 0 1} {16 0 0}}
+  20 {{13 0 1} {16 0 0}}
+  15,trans {{274 23}}
+  3 {{6 0 1} {7 0 1} {18 0 0}}
+  21 {{1 0 2}}
+  4 {{5 0 1} {18 0 0}}
+  22 {{4 0 3}}
+  5 {{8 0 1}}
+  23 {{7 0 3}}
+  20,trans {{272 28}}
+  6 {{1 0 1} {13 0 0} {14 0 0} {15 0 0}}
+  2,trans {{273 14}}
+  24 {{20 0 1}}
+  19,trans {{259 26} {272 27}}
+  7 {{12 0 1}}
+  25 {{8 0 3}}
   8 {{9 0 1}}
+  26 {{15 0 2} {16 0 0}}
   9 {{10 0 1}}
+  27 {{14 0 2}}
   24,trans {}
-  6,trans {}
+  28 {{13 0 2}}
+  6,trans {{257 19} {258 20} {271 21}}
+  29 {{15 0 3}}
   10,trans {}
+  28,trans {}
 }
 
 array set prefssend::token_id_table {
   264,line 16
   270,t 1
-  269,t 1
-  265,title THEME
+  269,t 0
+  276,line 57
+  265,title HAS
+  274,t 1
   261,line 12
   257,t 0
   270,title {}
-  269,title {}
+  269,title THREADS
+  273,line 48
   257,line 8
   262,t 0
-  270,line 44
-  269,line 41
+  274,title {}
+  270,line 25
+  269,line 21
   259,title COLOR
   260,title NAN
   266,t 0
   271,t 1
-  264,title PRECISION
-  266,line 18
   error error
-  268,title {}
-  error,line 21
+  264,title INTERVAL
+  266,line 18
+  275,t 1
+  error,line 24
+  268,title THEME
   258,t 0
   263,line 15
   error,title {}
+  275,line 54
+  273,title {}
   263,t 0
   259,line 10
   260,line 11
   258,title BGCOLOR
-  272,line 49
-  267,t 1
-  263,title IRAFALIGN
+  272,line 45
+  267,t 0
+  263,title RECOVERY
   272,t 1
-  268,line 36
-  267,title {}
+  268,line 20
+  267,title PRECISION
   257 BACKGROUND_
+  276,t 1
   258 BGCOLOR_
   259,t 0
   259 COLOR_
@@ -322,31 +361,39 @@ array set prefssend::token_id_table {
   272,title {}
   261 NANCOLOR_
   265,line 17
-  262 HAS_
-  263 IRAFALIGN_
+  262 AUTO_
+  263 RECOVERY_
   257,title BACKGROUND
-  264 PRECISION_
+  264 INTERVAL_
   264,t 0
-  265 THEME_
+  276,title {}
+  265 HAS_
   262,line 14
-  266 THREADS_
-  267 prefssend
-  268,t 1
-  268 has
-  262,title HAS
-  0 {$}
+  266 IRAFALIGN_
+  267 PRECISION_
   0,t 0
-  270 bg
-  269 hasbg
-  271 nan
+  0 {$}
+  262,title AUTO
+  268 THEME_
+  268,t 0
+  274,line 51
+  270 prefssend
+  269 THREADS_
+  271 has
   error,t 0
-  272 start'
+  272 hasbg
   258,line 9
-  266,title THREADS
-  271,line 47
+  273,t 1
+  273 bg
+  266,title IRAFALIGN
+  274 nan
+  275 autosave
+  271,line 40
+  276 start'
   271,title {}
   261,t 0
-  267,line 22
+  267,line 19
+  275,title {}
   265,t 0
   261,title NANCOLOR
 }
@@ -445,13 +492,15 @@ proc prefssend::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
-                    8 { PrefsSendCmdPrecision }
-                    9 { ProcessSendCmdGet pds9 theme }
-                    10 { ProcessSendCmdGet ds9 threads }
-                    11 { ProcessSendCmdYesNo pds9 iraf }
-                    15 { ProcessSendCmdYesNo pds9 bg,use }
-                    16 { ProcessSendCmdGet pds9 bg }
-                    17 { ProcessSendCmdGet pds9 nan }
+                    9 { PrefsSendCmdPrecision }
+                    10 { ProcessSendCmdGet pds9 theme }
+                    11 { ProcessSendCmdGet ds9 threads }
+                    12 { ProcessSendCmdYesNo pds9 iraf }
+                    16 { ProcessSendCmdYesNo pds9 bg,use }
+                    17 { ProcessSendCmdGet pds9 bg }
+                    18 { ProcessSendCmdGet pds9 nan }
+                    19 { ProcessSendCmdGet pds9 autosave }
+                    20 { ProcessSendCmdGet pds9 autosave,interval }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

@@ -10,6 +10,9 @@
 %token NAN_
 %token NANCOLOR_
 
+%token AUTO_
+%token RECOVERY_
+%token INTERVAL_
 %token HAS_
 %token IRAFALIGN_
 %token PRECISION_
@@ -26,6 +29,7 @@ prefssend : HAS_ has
  | NAN_ nan
  | NAN_ COLOR_ nan
 
+ | AUTO_ RECOVERY_ autosave
  | PRECISION_ {PrefsSendCmdPrecision}
  | THEME_ {ProcessSendCmdGet pds9 theme}
  | THREADS_ {ProcessSendCmdGet ds9 threads}
@@ -46,6 +50,10 @@ bg : {ProcessSendCmdGet pds9 bg}
 nan : {ProcessSendCmdGet pds9 nan}
  ;
  
+autosave : {ProcessSendCmdGet pds9 autosave}
+ | INTERVAL_ {ProcessSendCmdGet pds9 autosave,interval}
+ ;
+
 %%
 
 proc prefssend::yyerror {msg} {

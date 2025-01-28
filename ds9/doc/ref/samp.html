@@ -641,7 +641,7 @@ colorbar lock yes</tt><br>
 <p><b><a name="console" id="console"></a>console</b></p>
 <p>Display tcl console window.</p>
 <tt>Syntax:<br>
--console<br>
+console<br>
 &nbsp;<br>
 Example:<br>
 ds9.set(string cmd)<br>
@@ -1441,7 +1441,7 @@ height 512<br></tt>
 <p><b><a name="hls" id="hls"></a>hls</b></p>
 <p>Create HLS frame and control HLS frame parameters.</p>
 <tt>Syntax:<br>
--hls []<br>
+hls []<br>
 &nbsp;&nbsp;&nbsp; [hue|lightness|saturation]<br>
 &nbsp;&nbsp;&nbsp; [channel [hue|lightness|saturation]]<br>
 &nbsp;&nbsp;&nbsp; [view [hue|lightness|saturation] [yes|no]]<br>
@@ -1523,7 +1523,7 @@ hlsimage new foo.fits<br></tt>
 <p><b><a name="hsv" id="hsv"></a>hsv</b></p>
 <p>Create HSV frame and control HSV frame parameters.</p>
 <tt>Syntax:<br>
--hsv []<br>
+hsv []<br>
 &nbsp;&nbsp;&nbsp; [hue|saturation|value]<br>
 &nbsp;&nbsp;&nbsp; [channel [hue|saturation|value]]<br>
 &nbsp;&nbsp;&nbsp; [view [hue|saturation|value] [yes|no]]<br>
@@ -2409,6 +2409,8 @@ prefs [open]<br>
 &nbsp;&nbsp;&nbsp; [bg color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [nan color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [precision &lt;linear&gt; &lt;degree&gt; &lt;hms&gt; &lt;dms&gt; &lt;len linear&gt; &lt;len degree&gt; &lt;len arcmin&gt; &lt;len arcsec&gt; &lt;angle&gt;]<br>
+&nbsp;&nbsp;&nbsp; [auto recovery yes|no]<br>
+&nbsp;&nbsp;&nbsp; [auto recovery interval &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [theme &lt;theme&gt;]<br>
 &nbsp;&nbsp;&nbsp; [threads &lt;numeric&gt;]<br>
 &nbsp;&nbsp;&nbsp; [irafalign yes|no]<br>
@@ -2419,6 +2421,8 @@ prefs has bg color<br>
 prefs bg color<br>
 prefs nan color<br>
 prefs precision<br>
+prefs auto recovery
+prefs auto recovery interval
 prefs theme<br>
 prefs threads<br>
 prefs irafalign<br>
@@ -2432,6 +2436,8 @@ prefs bg color no<br>
 prefs bg color red<br>
 prefs nan color blue<br>
 prefs precision 8 7 4 3 8 7 5 3 8<br>
+prefs auto recovery yes
+prefs auto recovery interval 5
 prefs theme radiance<br>
 prefs threads 8<br>
 prefs iraf yes</tt><br>

@@ -19,6 +19,13 @@ proc ProcessCommandLineFirst {} {
 		incr i
 		ProcessPrefsFirstCmd argv i
 	    }
+	    -title {
+		incr i
+		set ds9(app) [lindex $argv $i]
+		set tt "SAOImage $ds9(app)"
+		wm title $ds9(top) "$tt"
+		wm iconname $ds9(top) $"tt"
+	    }
 	}
 	incr i
     }
@@ -41,13 +48,6 @@ proc ProcessCommandLineSecond {} {
 	    }
 	    -private {
 		# backward compatibility
-	    }
-	    -title {
-		incr i
-		set ds9(title) [lindex $argv $i]
-		set t "SAOImage $ds9(title)"
-		wm title $ds9(top) "$t"
-		wm iconname $ds9(top) "$t"
 	    }
 	    -language {
 		incr i

@@ -18,8 +18,6 @@ proc AnalysisDef {} {
     set ianalysis(buttonbar,count) 0
     set ianalysis(param,count) 0
     set ianalysis(param,seq) 0
-    set ianalysis(file) ".$ds9(app).ans"
-    set ianalysis(alt) ".$ds9(app).analysis"
 
     # temp
     set analysis(load,buf) {}
@@ -1163,7 +1161,7 @@ proc ParseXPAMacro {cmdname} {
     global ds9
 
     if {[regexp {\$xpa} $cmd]} {
-	regsub -all {\$xpa} $cmd $ds9(title) cmd
+	regsub -all {\$xpa} $cmd $ds9(app) cmd
     }
 }
 

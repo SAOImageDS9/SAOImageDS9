@@ -27,7 +27,7 @@ proc CreateXPA {} {
     global xpa
     global ds9
 
-    set xpa [xpacmdnew "DS9" $ds9(title)]
+    set xpa [xpacmdnew "DS9" $ds9(app)]
 
     xpacmdadd $xpa 2mass \
 	{} \

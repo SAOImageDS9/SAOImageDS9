@@ -660,7 +660,9 @@ after $ds9(msg,timeout) [list ErrorTimer]
 
 # autosave
 AutoSaveRestore
-AutoSave
+if {$pds9(autosave)} {
+    AutoSaveTimer
+}
 
 # ok, we're done
 set ds9(init) 0

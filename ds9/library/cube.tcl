@@ -10,7 +10,7 @@ proc CubeDef {} {
 
     set icube(top) .cube
     set icube(mb) .cubemb
-    set icube(id) 0
+    set icube(id) {}
 
     set cube(lock) none
     set cube(lock,axes) 0
@@ -80,16 +80,16 @@ proc CubeSlice {ii ss} {
 proc CubeStop {} {
     global icube
 
-    if {$icube(id)>0} {
+    if {$icube(id) != {}} {
 	after cancel $icube(id)
-	set icube(id) 0
+	set icube(id) {}
     }
 }
 
 proc CubePlay {} {
     global icube
 
-    if {$icube(id) == 0} {
+    if {$icube(id) == {}} {
 	CubeTimer
     }
 }

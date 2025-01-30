@@ -18,7 +18,7 @@ proc AutoSave {} {
     global iautosave
 
     if {$iautosave(id) != {}} {
-	catch [after cancel $iautosave(id)]
+	after cancel $iautosave(id)
 	set iautosave(id) {}
     }
 

@@ -1857,6 +1857,6 @@ proc ProcessSendThemeCmd {proc id param {sock {}} {fn {}}} {
 
 proc ProcessSendVersionCmd {proc id param {sock {}} {fn {}}} {
     global ds9
-    $proc $id "$ds9(title) $ds9(version,display)\n"
+    $proc $id "$ds9(app) $ds9(version,display)\n"
 }
 

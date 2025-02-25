@@ -193,8 +193,12 @@ void ColorbarBase::lutToText(Tk_Font font)
     int bb = (int)(log10(fabs(lut[cnt-1])));
     if (aa != bb)
       prec = aa>bb ? aa : bb;
-    else
-      prec = 1;
+    else {
+      if (lut[0] == lut[cnt-1])
+	prec = 1;
+      else
+	prec =2;
+    }
   }
 
   // up to three tries

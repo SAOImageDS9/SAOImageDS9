@@ -1,0 +1,391 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 17.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>Cloud Computing</title>
+</head>
+<body alink="#FF0000" bgcolor="#FFFFFF" vlink="#551A8B" text="#000000" link="#0000FF">
+<h3><img alt="" src="../sun.png" align="middle" > Cloud Computing with SAOImageDS9: $geturl()</h3>
+
+<blockquote>
+<p>for full documentation on Analysis Files, please see <a href="analysis.html">Analysis</a></p>
+<p><b>Table of Contents</b></p>
+<a href="#intro">Introduction</a><br>
+<a href="#menu">Analysis menu digest</a><br>
+<a href="#info">Information about examples used in this doc</a><br>
+<a href="#examples">Detailed Examples</a><br>
+<a href="#summary">Summary</a><br>
+
+<p><b><a name="intro" id="intro"></a>Introduction</b></p>
+<p>SAOImageDS9 (DS9) can be used as an interface to cloud computing resources. Another way of saying this is that DS9 can run analysis programs remotely and receive results in many different formats: text, images, plots, and regions.</p>
+<p>This is made possible by using the <tt>$geturl()</tt> Analysis Command macro. This macro will “call” the specified URL with whatever parameters have been supplied and will display the results.</p>
+<p>The key is that DS9 recognizes some application specific data types that allows it to process specialized results.</p>
+<p>In this document we assume the reader has some cursory understanding of developing web services. Users should have some understanding of Content-Type’s (used interchangeably with MIME types), HTTP GET versus POST requests, and URL syntax. An even more cursory knowledge of Tcl/Tk and XPA is helpful.</p>
+
+<p><b><a name="menu" id="menu"></a>Analysis menu digest</b></p>
+<p>The DS9 Analysis command syntax is specified in the Reference Manual. The basics are as follows:
+The Analysis commands are written in an text file. The unofficial standard is to name the file with the .ans
+suffix, though any legal filename/suffix can be used.
+Each command uses 4 lines. For example
+<p><tt>My Analysis Task
+*
+menu
+my_awesome_command $parameters | $text</tt>
+</p>
+Breakdown:
+<blockquote>
+<p>1. The name of the analysis task. For example My Analysis Task</p>
+<p>2. The types of files the analysis task can be used with. This is based on the file name, not the content of the file. * is a wildcard meaning all file names. If multiple file names are expected they are separated with spaces. For example *evt* *EVT* would work with file names that contain the string evt or EVT. File names are case sensitive.</p>
+<p>3. Whether this analysis task should be added to the Analysis menu or whether it should be bound (ie bind) to a Tk event. For example bind m would run the analysis task when the m button is pressed.</p>
+<p>4. The actual analysis command. This can include parameters such as Analysis macros: <tt>$filename</tt> or <tt>$regions</tt>. It may also include user parameters (more on this below). The output from the command is then sent to a particular output based on where it is piped, <tt>|. $text</tt> will send the output from the command to a text box. <tt>$image</tt> will send the results to the imager.</p>
+</blockquote>
+<p>User settable parameters can be specific using the param section:</p>
+<p><tt>param my_pars<br>
+&nbsp;&nbsp;par1 entry {Hello World} {} {Enter your message in this box}<br>
+&nbsp;&nbsp;par2 menu {Favorite Color} {red|green|blue|green|black} {Select your fav. color}<br>
+endparam</tt></p>
+and then used in the analysis task like this:
+<p><tt>My Parameters<br>
+*<br>
+menu<br>
+$param(my_pars); my_command $par1 $par2 | $text</tt></p>
+<p>This is just a quick introduction. There are many more details and options described in the documentation.</p>
+
+<p><b><a name="info" id="info"></a>Information about examples used in this doc</b></p>
+<p>The details about setting up a production ready web server and writing robust web services is beyond the scope of this document.</p>
+<p>The basic requirement is that whatever web service is being used it has to accept an HTTP/S GET request where the URL contains both the location of the web resource as well as any processing parameters. For example</p>
+<p><tt>http://my_awesome.service.com/my_tool?par1=foo&par2=bar</tt></p>
+<p><tt>GET</tt> differs from <tt>POST</tt> in that with <tt>GET</tt> the parameters are included in the URL whereas <tt>POST</tt> parameters are not. <tt>POST</tt> services allows for things like file upload which DS9 does not support.</p>
+<p>In this document we will be using the Flask Python based web service framework to run a local web server. By default it runs on the local machine on port 5000, ie IP address <tt>127.0.0.1:5000</tt>.</p>
+<p>The nature of the web server setup is up to the user. It could be a CGI script written in any language (C/C++, Python, Shell, Perl, etc) or a RESTful service like the examples below. The only requirement is that the service has to accept/process GET requests.</p>
+
+<p><b><a name="examples" id="examples"></a>Detailed Examples</b></p>
+<p>This section demonstrates several different remote analysis tasks. It includes a simple example of how to setup the flask web service and the DS9 Analysis Command file for various types of analysis tasks which
+return different types of outputs.</p>
+
+<p><b>Getting Started: Hello World</b></p>
+<p>Let’s create a simple file called <tt>hello_world.py</tt></p>
+<tt>
+<p>from flask import Flask, make_response</p>
+<p>app = Flask(__name__)</p>
+<p>@app.route("/")<br>
+def hello_world():<br>
+&nbsp;&nbsp;retval = "Hello, World!"<br>
+&nbsp;&nbsp;response = make_response(retval)<br>
+&nbsp;&nbsp;response.mimetype = "text/plain"<br>
+&nbsp;&nbsp;return response</p>
+</tt>
+
+<p>The first two lines are common to all the examples below.</p>
+<p>We can then start a local web server running on <tt>http://127.0.0.1:5000</tt><p>
+<p><tt>flask --app hello_world run</tt></p>
+<p>Next we crate the DS9 analysis command file <tt>hello_world.ans</tt></p>
+<p><tt>Hello World<br>
+*<br>
+menu<br>
+$geturl(http://127.0.0.1:5000/) | $text</tt></p>
+<p>and then run ds9</p>
+<p><tt>ds9 -analysis hello_world.ans</tt></p>
+<p>(Or go to <tt>Analysis -> Load Analysis Commands</tt> and select the file <tt>hello_world.ans.)</tt></p>
+<p>Then go to <tt>Analysis -> Hello World</tt> which will open a text box displaying the message: <tt>Hello World.</tt></p>
+<p>The remainder of the examples in this document will follow a similar pattern where we have to write some code to be run on the web server, and add an option to the DS9 analysis file to execute that code.</p>
+
+<p><b>Passing parameters</b></p>
+<p>Users should be familiar with URL’s that look like</p>
+<p><tt>https://linux.is.awesome.edu/some_command?this=1&that=the_other</tt></p>
+<p>Where some_command is the web access point which is taking some parameters: this and that. These are identified in the URL as they follow the question mark (“?”) and are separated by ampersands (“&”). They take the form</p>
+<p><tt>parameter name = value</tt></p>
+<p>This is how HTTP/S “GET” requests are encoded. HTTP/S “PUT” requests are processed differently; however, ds9 only supports “GET” requests.</p>
+<p>It will often be the case that these parameters will be set via the DS9 Analysis menu syntax using in the <tt>param</tt> section.
+<p>Below is a simple example that will just print back to the user the text they supply when prompted for the parameter:</p>
+
+<p><b>Simple, Single Parameter</b></p>
+
+<tt>
+<p>from flask import request<br>
+@app.route("/simple_parameter/")<br>
+def simple_parameter():<br>
+&nbsp;&nbsp;user_text = request.args.get("text")<br>
+&nbsp;&nbsp;retval = f"The user wrote '{user_text}'"<br>
+&nbsp;&nbsp;response = make_response(retval)<br>
+&nbsp;&nbsp;response.mimetype = "text/plain"<br>
+&nbsp;&nbsp;return response</p>
+</tt>
+
+<p>the <tt>request.args.get</tt> method is used to retrieve specific parameters by name. Here the web service end-point simple_parameter is expecting to find a parameter named <tt>text</tt>.</p>
+<p>The DS9 Analysis File for this example looks like:</p>
+<tt>
+<p>param simpletxt<br>
+&nbsp;&nbsp;usr_txt entry {Enter some text} {} {This text will be echoed back}<br>
+endparam</p>
+</tt>
+  
+<tt>
+<p>Simple Text<br>
+*<br>
+menu<br>
+$param(simpletxt); $geturl(http://127.0.0.1:5000/simple_parameter/?text=$usr_txt) | $text</p>
+</tt>
+
+<p>The the <tt>param</tt> section identifies a new parameter section: <tt>simpletxt</tt>. It has a single parameter named <tt>usr_txt</tt>, which is a text <tt>entry</tt> box. In the <tt>$geturl</tt> macro we see that we have used the “?” to identify that there are parameters and added a single parameter <tt>text=$usr_txt</tt>. When this analysis task is invoked from the menu, it will open a window asking the use the <i>Enter some text</i>. Upon submission, a text box will open with the message <i>The user wrote ‘blah’</i> where blah is whatever the user wrote.</p>
+
+Multiple parameters
+Multiple parameters are handled in the same way. They are simply separated by ampersands.
+It is beyond the scope of this document, but users should be aware that certain characters have special
+encoding when present in a GET URL. This includes question marks, ampersands, and spaces.
+Below is the python bit that can read multiple parameter values
+@app.route("/multi_parameter/")
+def multi_parameter():
+retval = "Found the following parameters\n"
+for key in request.args:
+retval += f"{key} = {request.args[key]}\n"
+response = make_response(retval)
+response.mimetype = "text/plain"
+return response
+This bit of code just loops over whatever parameters are present in the URL. It will print the key = value
+pairs in a text window.
+The DS9 Analysis bit looks like:
+param multiparam
+usr_txt2 entry {Enter some text} {} {This text will be echoed back}
+func menu {Function} min|max|median {An example of a select box}
+check checkbox {Yes/No} 1 {Checked is 1, Unchecked is 0}
+endparam
+Multi Params
+*
+menu
+$param(multiparam); $geturl(http://127.0.0.1:5000/multi_parameter/?text=$usr_txt2&func=$func&par3=$check)
+Where here again we have defined a new set of parameters in the param section.
+You cannot use the same parameter name in different parameter sections. It can result in unpredictable
+results. Use unique parameter names in each param section.
+The $geturl macro then has the parameters encoded using ampersand seperated key=value pairs.
+X-XPA/XPASET mime-type
+HTTP/S allows content creators to use custom Content-Type’s for specialized “media” types. The
+convention is to preface the custom type with an x-. DS9 recognizes the x-xpa/xpaset content type. With
+this Content-Type services can send xpaset commands to DS9.
+The X-XPA/XPASET requires two parameters:
+target : this is the XPA access point to send the commands to. Note that setting this to simply “ds9”
+will send the same XPA command to all instances of DS9 that are running. To specify a specific
+instance of DS9, ie the one that actually sent the $geturl request, you need to use the $xpa_method
+macro.
+paramlist : this is the actual XPA command to run.
+Additional data needed by the xpaset command should then be included in the body of the response.
+This example shows how to create a region and return it back to DS9
+@app.route("/region/<target>")
+def send_region(target):
+retval = "physical; circle(4096.4,4096.5,100)"
+response = make_response(retval)
+response.headers['Content-Type'] = f'x-xpa/xpaset; target="{target}"; paramlist="regions -format ds9"'
+return response
+would be the equivalent of running
+echo "physical; circle(4096.4,4096.5,100)" | xpaset $target regions -format ds9"
+from the command line. That is the data that on the command line would be input via stdin, is included in
+the body of the response.
+The DS9 analysis command looks like:
+Simple Region
+*
+menu
+$geturl(http://127.0.0.1:5000/region/$xpa_method) | $text
+DS9 cannot accept xpaget requests. get requests requires two way communication with the application.
+The $geturl requires that all data and parameters that the service requires be supplied in the $geturl
+  request itself.
+
+  Multi-part mime-type
+Some services may need to send back information in more than one xpaset request. To accommodate
+this, DS9 recognizes the multipart/mixed Content-Type. While this is common when dealing with email
+messages, it is not common for HTTP/S. However it is perfectly legal/valid.
+The syntax for a multipart/mixed message includes that as the Content-Type, and includes a boundary
+string that is used to separate the content of each embedded message. The boundary should be a unique
+character string that is guaranteed not to be part of the body of any of the embedded messages.
+Below is a simple example that runs 3 xpaset commands
+1. xpaset -p $target cmap bb to set the color map to “bb”
+2. xpaset -p $target scale log to change to log scaling
+3. xpaset -p $target scale limits 0 10 to change the scale limits to go from 0 to 10.
+BOUNDARY = "xpamime:142857:285714:428571:571428:714285:857142"
+@app.route("/cmap/<target>")
+def multi_cmds(target):
+def wrap_cmd(cmd):
+retval = f'--{BOUNDARY}\n'
+retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{cmd}"\n\n'
+return retval
+cmd1 = "cmap bb"
+cmd2 = "scale log"
+cmd3 = "scale limits 0 10"
+retval = wrap_cmd(cmd1)
+retval += wrap_cmd(cmd2)
+retval += wrap_cmd(cmd3)
+retval += f'--{BOUNDARY}'
+response = make_response(retval)
+response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
+return response
+When the boundary is used it is prefixed with two dashes, --
+.
+The last command must be followed by a trailing boundary line.
+The DS9 analysis command menu syntax looks like:
+Multi Commands
+*
+menu
+$geturl(http://127.0.0.1:5000/cmap/$xpa_method) | $text
+Note that these commands are completely independent. Setting the color map, changing the scaling, and
+changing the scale limits are independent actions. Each command in a multipart/mixed message is
+independent. They are processed in order but do not have to be related. Also note that none of these
+commands require any additional data; that is the body of each part if blank. (This is the two new-line
+    characters, \n, after the paramlist.)
+
+    Returning a plot
+Plots can be created using the XPA plot command.
+However plot commands must be wrapped inside a multipart/mixed content.
+In this example we plot X vs X^2 for x in the range from 0 to 9.
+@app.route("/plot/<target>")
+def send_plot(target):
+def make_plot(xx,yy):
+vals = [f"{x} {y}" for x, y in zip(xx, yy)]
+plot_cmd = 'plot line {My Title } {X Label} {Y Label } xy'
+retval = f'--{BOUNDARY}\n'
+retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{plot_cmd}"\n\n'
+retval += "\n".join(vals)
+retval += f'\n--{BOUNDARY}'
+return retval
+xx = list(range(10))
+yy = [x*x for x in xx]
+retval = make_plot(xx, yy)
+response = make_response(retval)
+response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
+return response
+Note that Python (sometimes) will treat curly brackets special; and so does Tcl. In Python you may
+sometimes need to used double curly brackets when you want to pass a single curly bracket to Tcl. In this
+example since the plot_cmd variable does not do any formatting so we need to used single curly brackets.
+In Tcl, strings that contain spaces need to be wrapped in curly brackets.
+The DS9 analysis command for this is:
+Simple Plot
+*
+menu
+$geturl(http://127.0.0.1:5000/plot/$xpa_method) | $text
+Returning images
+Returning an image can be a bit more complicated.
+Simple case: Single images with properly configured web server
+In the most simple case, if the web service is only going to return a single image then rather than using
+$geturl() you should just use $url() which is piped into the $image macro.
+In this example we have a local file: /export/img.fits that we want to return via the /get_img end point.
+We can do something like this:
+@app.route("/get_img")
+def get_img():
+retval = open("/export/img.fits", "rb").read()
+response = make_response(retval)
+response.headers['Content-Type'] = "image/fits"
+return response
+It is important that the FITS image is read in as a pure binary/byte array (the b in the rb mode). Equally
+important is that the Content-Type has been set to the standard image/fits mime-type used for FITS
+images. If the Content-Type is not properly set to image/fits then the results are unpredictable.
+Then in the DS9 analysis file the command looks like:
+Basic Image
+*
+menu
+$url(http://127.0.0.1:5000/get_img) | $image(new)
+$url is used instead of $geturl. The output is piped to the $image(new) macro which will create a new
+frame to load the image.
+The URL passed to $url can contain the same GET encoded syntax as shown before, eg
+$param(something); $url(https://something.com/endpoint?par1=$par1&par2=$par2) | $image
+Using fits XPA access point.
+The second technique to load an image is to use the fits XPA access point. This is necessary if there are
+multiple images to be returned (eg if doing a 2D fit which requires sending back separate images for the
+model and residual). It can also be useful if the output from the service contains multiple different outputs
+such as an Image and a Region to draw on that image.
+The trick is that the raw, binary FITS image cannot be used directly. The image must be gzip’ed and it
+must be encoded into ASCII using base64 encoding.
+This is an example of how to convert the binary FITS file to ASCII:
+def _convert_image(infile):
+'Load image, gzip, and base64 encode it'
+import gzip
+import io
+import base64
+import textwrap
+# Load the image as raw bytes
+with open(infile, 'rb') as fp:
+img_data = fp.read()
+# Compress the image in memory
+compressed_buffer = io.BytesIO()
+with gzip.GzipFile(fileobj=compressed_buffer, mode="wb") as fp:
+fp.write(img_data)
+# Encode compressed image w/ base64
+compressed_buffer.seek(0) # rewind
+img_base64 = base64.b64encode(compressed_buffer.getvalue())
+# Format into 80 chars wide
+retval = textwrap.fill(img_base64.decode('ascii'), width=80)
+return retval
+The data are read-in as binary data. The data are then compressed, in memory, using gzip. The
+compressed data are then base64 encoded to ASCII. Then finally the ASCII is formatted to be 80
+characters wide, which is generally standard for base64 messages.
+We can use this conversion routine to setup our image server end point. Just as with the Plot example,
+the fits commands have to be wrapped inside a multipart/mixed container. This technique requires
+setting Content-Transfer-Encoding: base64 in the header.
+@app.route("/image/<target>")
+def send_image(target):
+def multipart_wrap(image):
+retval = f'--{BOUNDARY}\n'
+retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="fits new sample_img.fits.gz"
+retval += 'Content-Transfer-Encoding: base64\n\n'
+retval += image
+retval += f'\n--{BOUNDARY}\n'
+return retval
+image = _convert_image("/export/img.fits")
+retval = multipart_wrap(image)
+response = make_response(retval)
+response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
+return response
+In this example we used the fits new command so that the image will be loaded into a new frame.
+The DS9 analysis command looks like:
+Complex Image
+*
+menu
+$geturl(http://127.0.0.1:5000/image/$xpa_method) | $text
+Using this technique users can return multiple images (eg if needed for RGB, HSV or HLS frames) or
+images and associated regions, etc.
+Download an arbitrary file
+This technique uses XPA to control the built in web browser to download an arbitrary file. The browser
+window will open and then close when the download is complete. This requires two different end-points to
+our service
+1. The end point URL that is called from DS9 to initiate the download, similar to our other examples.
+This first URL will have the DS9 browser open the 2nd URL.
+2. The end point that serves the file.
+@app.route("/web/<target>")
+def send_web(target):
+retval = f'--{BOUNDARY}\n'
+retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="web http://127.0.0.1:5000/get_fi
+retval += f'--{BOUNDARY}\n'
+retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="web close"\n\n'
+retval += f'--{BOUNDARY}\n'
+response = make_response(retval)
+response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
+return response
+@app.route("/get_file")
+def get_file():
+import os
+infile = "/export/img.fits"
+fname = os.path.basename(infile)
+retval = open(infile, "rb").read()
+response = make_response(retval)
+response.headers['Content-Type'] = f"Content-Type: application/octet-stream;name={fname}"
+return response
+This first URL end point, /web is what DS9 will be use in the analysis menu, ie
+Download File
+*
+menu
+$geturl(http://127.0.0.1:5000/web/$xpa_method) | $text
+The /web endpoint then makes two XPA calls. The first call is to open the web browser and load the
+second URL endpoint, /get_file. The /get_file end point then open a file and reads it into memory as
+raw bytes (the b in rb). It then serves the file with Content-Type as application/octet-stream. This MIME
+type is used to convey an arbitrary data file which will cause the DS9 browser to prompt the user to save
+the file. The file name name={fname} will be the default name. After the file is saved then the /web endpoint
+closes the web browser window. For small files, served locally the browser window may just “flash” on the
+screen for an instance.
+This technique could be used to return any arbitrary results including thing such as PDF files, non-image
+FITS files (ie FITS tables), or any random file that is not intended to be “consumed” by DS9 directly.
+
+<p><b><a name="summary" id="summary"></a>Summary</b></p>
+<p>This document describes how to use DS9 as an interface to cloud computing resources. It demonstrates how to handle various types of returned information including text, regions, plots, images, and arbitrary data files. It provides some guidance with respect to best practices when writing the cloud based applications.</p>
+    
+</blockquote>
+</body>
+</html>

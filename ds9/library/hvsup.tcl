@@ -363,15 +363,12 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 
 	    set var(active) 1
 	    set var(delete) 1
-	    puts a
 	    HVProcessURLHTTPFinish $varname $var(token)
 	} else {
-	    puts c
 	    catch {close $var(ch)}
 	    HVError $varname "[msgcat::mc {Unable to locate URL}] $url"
 	}
     } else {
-	puts b
 	if {![catch {set var(token) [http::geturl $url \
 					 -query "$query" \
 					 -timeout $timeout \
@@ -394,8 +391,6 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 }
 
 proc HVProcessURLHTTPFinish {varname token} {
-    puts "***BANG***"
-    
     upvar #0 $varname var
     global $varname
 

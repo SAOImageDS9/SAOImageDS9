@@ -273,7 +273,7 @@ proc ButtonsColorDef {} {
 	color,heat 1
 	color,cool 1
 	color,rainbow 1
-	color,viridis 1
+	color,mpl_viridis 1
 
 	color,invert 0
 	color,reset 0

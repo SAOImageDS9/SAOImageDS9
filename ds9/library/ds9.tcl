@@ -664,6 +664,17 @@ if {$pds9(autosave)} {
     AutoSaveTimer
 }
 
+# MacOS and Windows no longer support PS
+global tcl_platform
+switch $tcl_platform(os) {
+    Linux {}
+    Darwin -
+    {Windows NT} {
+	set ps(dest) file
+	set pps(dest) file
+    }
+}
+
 # ok, we're done
 set ds9(init) 0
 

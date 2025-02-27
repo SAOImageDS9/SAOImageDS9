@@ -154,8 +154,7 @@ proc MultiframeCmdLoad {param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {
+	    Darwin {
 		if {![LoadMultiFrameSocket $parse(sock) $param]} {
 		    InitError xpa
 		    LoadMultiFrameFile $param

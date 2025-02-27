@@ -1111,8 +1111,7 @@ proc XPARcvdFile {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessFileCmd param i {} [xparec $xpa datachan] {}}
+	    Darwin {ProcessFileCmd param i {} [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessFileCmd param i {} dummy {}}
 	}
     }
@@ -1164,8 +1163,7 @@ proc XPASendGIF {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessSendGIFCmd {} {} $param [xparec $xpa datachan] {}} 
+	    Darwin {ProcessSendGIFCmd {} {} $param [xparec $xpa datachan] {}} 
 	    {Windows NT} {ProcessSendGIFCmd {} {} $param dummy {}}
 	}
     }
@@ -1180,8 +1178,7 @@ proc XPARcvdGIF {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessGIFCmd param i [xparec $xpa datachan] {}} 
+	    Darwin {ProcessGIFCmd param i [xparec $xpa datachan] {}} 
 	    {Windows NT} {ProcessGIFCmd param i dummy {}}
 	}
     }
@@ -1390,8 +1387,7 @@ proc XPASendJPEG {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessSendJPEGCmd {} {} $param [xparec $xpa datachan] {}} 
+	    Darwin {ProcessSendJPEGCmd {} {} $param [xparec $xpa datachan] {}} 
 	    {Windows NT} {ProcessSendJPEGCmd {} {} $param dummy {}}
 	}
     }
@@ -1406,8 +1402,7 @@ proc XPARcvdJPEG {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessJPEGCmd param i [xparec $xpa datachan] {}} 
+	    Darwin {ProcessJPEGCmd param i [xparec $xpa datachan] {}} 
 	    {Windows NT} {ProcessJPEGCmd param i dummy {}}
 	}
     }
@@ -1601,8 +1596,7 @@ proc XPARcvdMultiFrame {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessMultiFrameCmd param i [xparec $xpa datachan] {}} 
+	    Darwin {ProcessMultiFrameCmd param i [xparec $xpa datachan] {}} 
 	    {Windows NT} {ProcessMultiFrameCmd param i dummy {}}
 	}
     }
@@ -1758,8 +1752,7 @@ proc XPASendPNG {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessSendPNGCmd {} {} $param [xparec $xpa datachan] {}} 
+	    Darwin {ProcessSendPNGCmd {} {} $param [xparec $xpa datachan] {}} 
 	    {Windows NT} {ProcessSendPNGCmd {} {} $param dummy {}}
 	}
     }
@@ -1774,8 +1767,7 @@ proc XPARcvdPNG {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessPNGCmd param i [xparec $xpa datachan] {}}
+	    Darwin {ProcessPNGCmd param i [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessPNGCmd param i dummy {}}
 	}
     }
@@ -2180,8 +2172,7 @@ proc XPASendTIFF {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessSendTIFFCmd {} {} $param [xparec $xpa datachan] {}}
+	    Darwin {ProcessSendTIFFCmd {} {} $param [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessSendTIFFCmd {} {} $param dummy {}}
 	}
     }
@@ -2196,8 +2187,7 @@ proc XPARcvdTIFF {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ProcessTIFFCmd param i [xparec $xpa datachan] {}}
+	    Darwin {ProcessTIFFCmd param i [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessTIFFCmd param i dummy {}}
 	}
     }

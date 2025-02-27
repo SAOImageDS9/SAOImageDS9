@@ -9,7 +9,12 @@ proc PSDef {} {
     global ps
     global pps
 
-    set ps(dest) printer
+    global tcl_platform
+    switch $tcl_platform(os) {
+	Linux {set ps(dest) printer}
+	Darwin -
+	{Windows NT} {set ps(dest) file}
+    }
     set ps(cmd) {lp}
     set ps(filename) {ds9.ps}
     set ps(filename,txt) {ds9.txt}
@@ -98,13 +103,20 @@ proc PostScript {} {
 	}
     }
 
-    # Printer vs File
+    # MacOS and Windows no longer support PS
+    global tcl_platform
+    switch $tcl_platform(os) {
+	Linux {}
+	Darwin -
+	{Windows NT} {set ps(dest) file}
+    }
+
     set channel {}
     switch -- $ps(dest) {
-	"file" {
+	file {
 	    append options " -file \{$ps(filename)\}"
 	}
-	"printer" {
+	printer {
 	    set channel [open "| $ps(cmd)" w]
 	    append options " -channel $channel"
 	}
@@ -132,8 +144,8 @@ proc PostScript {} {
     }
 
     switch -- $ps(dest) {
-	"file" {}
-	"printer" {
+	file {}
+	printer {
 	    if {$channel != {}} {
 		close $channel
 	    }
@@ -260,7 +272,16 @@ proc PSPrintDialog {which} {
     ttk::button $f.browse -text [msgcat::mc {Browse}] \
 	-command "PSPrintBrowse ed(filename) $w"
 
-    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
+    global tcl_platform
+    switch $tcl_platform(os) {
+	Linux {
+	    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
+	}
+	Darwin -
+	{Windows NT} {
+	    set ed(dest) file
+	}
+    }
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 2 -weight 1
 
@@ -359,7 +380,18 @@ proc PrefsDialogPrint {} {
     ttk::button $f.browse -text [msgcat::mc {Browse}] \
 	-command "PSPrintBrowse pps(filename)"
 
-    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky w
+    # MacOS and Windows no longer support PS
+    global tcl_platform
+    switch $tcl_platform(os) {
+	Linux {
+	    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky w
+	}
+	Darwin -
+	{Windows NT} {
+	    global pps
+	    set pps(dest) file
+	}
+    }
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky w
 
     # Options

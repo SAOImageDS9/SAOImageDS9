@@ -41,7 +41,14 @@ proc PlotPrintDialog {} {
     ttk::button $f.browse -text [msgcat::mc {Browse}] \
 	-command "PlotPrintBrowse ed(filename) $w"
 
-    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
+    global tcl_platform
+    switch $tcl_platform(os) {
+	Linux {
+	    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
+	}
+	Darwin -
+	{Windows NT} {}
+    }
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 2 -weight 1
 
@@ -157,6 +164,14 @@ proc PlotPostScriptSingle {varname} {
 	landscape {append options " -landscape true"}
     }
 
+    # MacOS and Windows no longer support PS
+    global tcl_platform
+    switch $tcl_platform(os) {
+	Linux {}
+	Darwin -
+	{Windows NT} {set ps(dest) file}
+    }
+
     if {$ps(dest) == "file" && $ps(filename) != {}} {
 	eval $var(graph) postscript output $ps(filename) $options
     } else {
@@ -230,6 +245,14 @@ proc PlotPostScriptMulti {varname} {
 			     "$options -width $ww -height $hh"]
 
 	PlotPostScriptResetFonts $varname $cc
+    }
+
+    # MacOS and Windows no longer support PS
+    global tcl_platform
+    switch $tcl_platform(os) {
+	Linux {}
+	Darwin -
+	{Windows NT} {set ps(dest) file}
     }
 
     if {$ps(dest) == "file" && $ps(filename) != {}} {

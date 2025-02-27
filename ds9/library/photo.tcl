@@ -231,8 +231,7 @@ proc PhotoCmdLoad {param mode} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {
+	    Darwin {
 		if {![ImportPhotoSocket $parse(ch) $param $mode]} {
 		    InitError xpa
 		    ImportPhotoFile $param $mode
@@ -281,8 +280,7 @@ proc ProcessSendPhotoCmd {format proc id param sock fn} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin -
-	    SunOS {ExportPhotoSocket $sock $format $opt}
+	    Darwin {ExportPhotoSocket $sock $format $opt}
 	    {Windows NT} {}
 	}
     } elseif {$fn != {}} {

@@ -77,7 +77,7 @@ proc VOCancel {varname} {
     set var(valid) 0
 
     if {[info exists var(token)]} {
-	http::reset $var(token)
+	catch {http::reset $var(token)}
     }
 }
 

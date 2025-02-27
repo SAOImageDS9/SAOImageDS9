@@ -213,7 +213,7 @@ proc LoadURLFitsHTTP {url layer mode multi} {
 
 	default {
 	    Error "HTTP [msgcat::mc {Error}] $code"
-	    http::reset $token
+	    catch {http::reset $token}
 	    return
 	}
     }

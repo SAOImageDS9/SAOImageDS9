@@ -38,7 +38,7 @@ proc ARCancel {varname} {
     set var(active) 0
 
     if {[info exists var(token)]} {
-	http::reset $var(token)
+	catch {http::reset $var(token)}
     }
 }
 

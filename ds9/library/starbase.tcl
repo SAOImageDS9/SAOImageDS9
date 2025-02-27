@@ -511,6 +511,6 @@ proc starbase_http { t url wait } {
 proc starbase_httpkill { t } {
 	upvar #0 $t T
 
-    http::reset $T(http)
+    catch {http::reset $T(http)}
 }
 

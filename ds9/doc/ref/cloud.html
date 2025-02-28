@@ -36,33 +36,39 @@
 
 <p>Each command uses 4 lines. For example</p>
 
-<tt><p>My Analysis Task<br>
-*<br>
-menu<br>
-my_awesome_command $parameters | $text</p></tt>
+<pre>
+My Analysis Task
+*
+menu
+my_awesome_command $parameters | $text
+</pre>
 
 <p>Breakdown:</p>
 
-<blockquote>
-<p>1. The name of the analysis task. For example My Analysis Task</p>
-<p>2. The types of files the analysis task can be used with. This is based on the file name, not the content of the file. * is a wildcard meaning all file names. If multiple file names are expected they are separated with spaces. For example *evt* *EVT* would work with file names that contain the string evt or EVT. File names are case sensitive.</p>
-<p>3. Whether this analysis task should be added to the Analysis menu or whether it should be bound (ie bind) to a Tk event. For example bind m would run the analysis task when the m button is pressed.</p>
-<p>4. The actual analysis command. This can include parameters such as Analysis macros: <tt>$filename</tt> or <tt>$regions</tt>. It may also include user parameters (more on this below). The output from the command is then sent to a particular output based on where it is piped, <tt>|. $text</tt> will send the output from the command to a text box. <tt>$image</tt> will send the results to the imager.</p>
-</blockquote>
+<ol>
+<li><p> The name of the analysis task. For example My Analysis Task</p></li>
+<li><p> The types of files the analysis task can be used with. This is based on the file name, not the content of the file. * is a wildcard meaning all file names. If multiple file names are expected they are separated with spaces. For example *evt* *EVT* would work with file names that contain the string evt or EVT. File names are case sensitive.</p></li>
+<li><p> Whether this analysis task should be added to the Analysis menu or whether it should be bound (ie bind) to a Tk event. For example bind m would run the analysis task when the m button is pressed.</p></li>
+<li><p> The actual analysis command. This can include parameters such as Analysis macros: <tt>$filename</tt> or <tt>$regions</tt>. It may also include user parameters (more on this below). The output from the command is then sent to a particular output based on where it is piped, <tt>|. $text</tt> will send the output from the command to a text box. <tt>$image</tt> will send the results to the imager.</p></li>
+</ol>
 
 <p>User settable parameters can be specific using the param section:</p>
 
-<p><tt>param my_pars<br>
-&nbsp;&nbsp;par1 entry {Hello World} {} {Enter your message in this box}<br>
-&nbsp;&nbsp;par2 menu {Favorite Color} {red|green|blue|green|black} {Select your fav. color}<br>
-endparam</tt></p>
+<pre>
+param my_pars
+  par1 entry {Hello World} {} {Enter your message in this box}
+  par2 menu {Favorite Color} {red|green|blue|green|black} {Select your fav. color}
+endparam
+</pre>
 
 <p>and then used in the analysis task like this:</p>
 
-<tt><p>My Parameters<br>
-*<br>
-menu<br>
-$param(my_pars); my_command $par1 $par2 | $text</p></tt>
+<pre>
+My Parameters
+*
+menu
+$param(my_pars); my_command $par1 $par2 | $text
+</pre>
 
 <p>This is just a quick introduction. There are many more details and options described in the documentation.</p>
 
@@ -88,31 +94,37 @@ return different types of outputs.</p>
 
 <p>Let’s create a simple file called <tt>hello_world.py</tt></p>
 
-<tt><p>from flask import Flask, make_response</p>
-<p>app = Flask(__name__)</p>
-<p>@app.route("/")<br>
-def hello_world():<br>
-&nbsp;&nbsp;retval = "Hello, World!"<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.mimetype = "text/plain"<br>
-&nbsp;&nbsp;return response</p></tt>
+<pre>
+from flask import Flask, make_response
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+    retval = "Hello, World!"
+    response = make_response(retval)
+    response.mimetype = "text/plain"
+    return response
+</pre>
 
 <p>The first two lines are common to all the examples below.</p>
 
 <p>We can then start a local web server running on <tt>http://127.0.0.1:5000</tt><p>
 
-<p><tt>flask --app hello_world run</tt></p>
+<pre>flask --app hello_world run</pre>
 
 <p>Next we crate the DS9 analysis command file <tt>hello_world.ans</tt></p>
 
-<tt><p>Hello World<br>
-*<br>
-menu<br>
-$geturl(http://127.0.0.1:5000/) | $text</p></tt>
+<pre>
+Hello World
+*
+menu
+$geturl(http://127.0.0.1:5000/) | $text
+</pre>
 
 <p>and then run ds9</p>
 
-<p><tt>ds9 -analysis hello_world.ans</tt></p>
+<pre>ds9 -analysis hello_world.ans</pre>
 
 <p>(Or go to <tt>Analysis -> Load Analysis Commands</tt> and select the file <tt>hello_world.ans.)</tt></p>
 
@@ -138,27 +150,32 @@ $geturl(http://127.0.0.1:5000/) | $text</p></tt>
 
 <p><b>Simple, Single Parameter</b></p>
 
-<tt><p>from flask import request<br>
-@app.route("/simple_parameter/")<br>
-def simple_parameter():<br>
-&nbsp;&nbsp;user_text = request.args.get("text")<br>
-&nbsp;&nbsp;retval = f"The user wrote '{user_text}'"<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.mimetype = "text/plain"<br>
-&nbsp;&nbsp;return response</p></tt>
+<pre>
+from flask import request
+@app.route("/simple_parameter/")
+def simple_parameter():
+    user_text = request.args.get("text")
+    retval = f"The user wrote '{user_text}'"
+    response = make_response(retval)
+    response.mimetype = "text/plain"
+    return response
+</pre>
+
 
 <p>the <tt>request.args.get</tt> method is used to retrieve specific parameters by name. Here the web service end-point simple_parameter is expecting to find a parameter named <tt>text</tt>.</p>
 
 <p>The DS9 Analysis File for this example looks like:</p>
 
-<tt><p>param simpletxt<br>
-&nbsp;&nbsp;usr_txt entry {Enter some text} {} {This text will be echoed back}<br>
-endparam</p></tt>
-  
-<tt><p>Simple Text<br>
-*<br>
-menu<br>
-$param(simpletxt); $geturl(http://127.0.0.1:5000/simple_parameter/?text=$usr_txt) | $text</p></tt>
+<pre>
+param simpletxt
+  usr_txt entry {Enter some text} {} {This text will be echoed back}
+endparam
+
+Simple Text
+*
+menu
+$param(simpletxt); $geturl(http://127.0.0.1:5000/simple_parameter/?text=$usr_txt) | $text
+</pre>  
 
 <p>The the <tt>param</tt> section identifies a new parameter section: <tt>simpletxt</tt>. It has a single parameter named <tt>usr_txt</tt>, which is a text <tt>entry</tt> box. In the <tt>$geturl</tt> macro we see that we have used the “?” to identify that there are parameters and added a single parameter <tt>text=$usr_txt</tt>. When this analysis task is invoked from the menu, it will open a window asking the use the <i>Enter some text</i>. Upon submission, a text box will open with the message <i>The user wrote ‘blah’</i> where blah is whatever the user wrote.</p>
 
@@ -170,29 +187,35 @@ $param(simpletxt); $geturl(http://127.0.0.1:5000/simple_parameter/?text=$usr_txt
 
 <p>Below is the python bit that can read multiple parameter values</p>
 
-<tt><p>@app.route("/multi_parameter/")<br>
-def multi_parameter():</p>
-<p>&nbsp;&nbsp;retval = "Found the following parameters\n"<br>
-&nbsp;&nbsp;for key in request.args:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += f"{key} = {request.args[key]}\n"<br></p>
-<p>&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.mimetype = "text/plain"<br>
-&nbsp;&nbsp;return response</p></tt>
+<pre>
+@app.route("/multi_parameter/")
+def multi_parameter():
+
+    retval = "Found the following parameters\n"
+    for key in request.args:
+        retval += f"{key} = {request.args[key]}\n"
+
+    response = make_response(retval)
+    response.mimetype = "text/plain"
+    return response
+</pre>
 
 <p>This bit of code just loops over whatever parameters are present in the URL. It will print the key = value pairs in a text window.</p>
 
 <p>The DS9 Analysis bit looks like:</p>
 
-<tt><p>param multiparam<br>
-&nbsp;&nbsp;usr_txt2 entry {Enter some text} {} {This text will be echoed back}<br>
-&nbsp;&nbsp;func menu {Function} min|max|median {An example of a select box}<br>
-&nbsp;&nbsp;check checkbox {Yes/No} 1 {Checked is 1, Unchecked is 0}<br>
-endparam</p></tt>
+<pre>
+param multiparam
+  usr_txt2 entry {Enter some text} {} {This text will be echoed back}
+  func menu {Function} min|max|median {An example of a select box}
+  check checkbox {Yes/No} 1 {Checked is 1, Unchecked is 0}
+endparam
 
-<tt><p>Multi Params<br>
-*<br>
-menu<br>
-$param(multiparam); $geturl(http://127.0.0.1:5000/multi_parameter/?text=$usr_txt2&func=$func&par3=$check)<p/></tt>
+Multi Params
+*
+menu
+$param(multiparam); $geturl(http://127.0.0.1:5000/multi_parameter/?text=$usr_txt2&func=$func&par3=$check) | $text
+</pre>
 
 <p>Where here again we have defined a new set of parameters in the param section.</p>
 
@@ -206,34 +229,39 @@ $param(multiparam); $geturl(http://127.0.0.1:5000/multi_parameter/?text=$usr_txt
 
 <p>The <tt>X-XPA/XPASET</tt> requires two parameters:</p>
 
-<blockquote>
-<p><tt>target</tt> : this is the XPA access point to send the commands to. Note that setting this to simply “ds9” will send the same XPA command to <b>all</b> instances of DS9 that are running. To specify a specific instance of DS9, ie the one that actually sent the $geturl request, you need to use the $xpa_method macro.</p>
-<p><tt>paramlist</tt> : this is the actual XPA command to run.</p>
-</blockquote>
+<ol>
+<li><p><tt>target</tt> : this is the XPA access point to send the commands to. Note that setting this to simply “ds9” will send the same XPA command to <b>all</b> instances of DS9 that are running. To specify a specific instance of DS9, ie the one that actually sent the $geturl request, you need to use the $xpa_method macro.</p></li>
+<li><p><tt>paramlist</tt> : this is the actual XPA command to run.</p></li>
+</ol>
 
 <p>Additional data needed by the <tt>xpaset</tt> command should then be included in the body of the response.</p>
 
 <p>This example shows how to create a region and return it back to DS9</p>
 
-<tt><p>@app.route("/region/<target>")<br>
-def send_region(target):</p>
-<p>&nbsp;&nbsp;retval = "physical; circle(4096.4,4096.5,100)"<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.headers['Content-Type'] = f'x-xpa/xpaset; target="{target}"; paramlist="regions -format ds9"'<br>
-&nbsp;&nbsp;return response</p></tt>
+<pre>
+@app.route("/region/")
+def send_region():
+    target = request.args.get("target")
+    retval = "physical; circle(4096.4,4096.5,100)"
+    response = make_response(retval)
+    response.headers['Content-Type'] = f'x-xpa/xpaset; target="{target}"; paramlist="regions -format ds9"'
+    return response
+</pre>
 
 <p>would be the equivalent of running</p>
 
-<tt><p>echo "physical; circle(4096.4,4096.5,100)" | xpaset $target regions -format ds9"</p></tt>
+<tt><p>echo "physical; circle(4096.4,4096.5,100)" | xpaset $target regions -format ds9</p></tt>
 
 <p>from the command line. That is the data that on the command line would be input via stdin, is included in the body of the response.</p>
 
 <p>The DS9 analysis command looks like:</p>
 
-<tt><p>Simple Region<br>
-*<br>
-menu<br>
-$geturl(http://127.0.0.1:5000/region/$xpa_method) | $text</p></tt>
+<pre>
+Simple Region
+*
+menu
+$geturl(http://127.0.0.1:5000/region/?target=$xpa_method) | $text
+</pre>
 
 <p>DS9 cannot accept <b>xpaget</b> requests. get requests requires two way communication with the application. The <tt>$geturl</tt> requires that all data and parameters that the service requires be supplied in the <tt>$geturl</tt> request itself.
 
@@ -245,33 +273,37 @@ $geturl(http://127.0.0.1:5000/region/$xpa_method) | $text</p></tt>
 
 <p>Below is a simple example that runs 3 xpaset commands</p>
 
-<blockquote>
-<p>1. <tt>xpaset -p $target cmap bb</tt> to set the color map to “bb”<br>
-2. <tt>xpaset -p $target scale log</tt> to change to log scaling<br>
-3. <tt>xpaset -p $target scale limits 0 10</tt> to change the scale limits to go from 0 to 10.</p>
-</blockquote>
+<ol>
+<li><tt>xpaset -p $target cmap bb</tt> to set the color map to “bb”</li>
+<li><tt>xpaset -p $target scale log</tt> to change to log scaling</li>
+<li><tt>xpaset -p $target scale limits 0 10</tt> to change the scale limits to go from 0 to 10.</li>
+</ol>
 
-<tt><p>BOUNDARY = "xpamime:142857:285714:428571:571428:714285:857142"</p></tt>
+<pre>
+BOUNDARY = "xpamime:142857:285714:428571:571428:714285:857142"
 
-<tt><p>@app.route("/cmap/<target>")<br>
-def multi_cmds(target):</p>
-<p>&nbsp;&nbsp;def wrap_cmd(cmd):
-&nbsp;&nbsp;&nbsp;&nbsp;retval = f'--{BOUNDARY}\n'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{cmd}"\n\n'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return retval</p>
+@app.route("/cmap/")
+def multi_cmds():
 
-<p>&nbsp;&nbsp;cmd1 = "cmap bb"<br>
-&nbsp;&nbsp;cmd2 = "scale log"<br>
-&nbsp;&nbsp;cmd3 = "scale limits 0 10"</p>
+    def wrap_cmd(cmd):
+        retval = f'--{BOUNDARY}\n'
+        retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{cmd}"\n\n'
+        return retval
+        
+    target = request.args.get("target")
+    cmd1 = "cmap bb"
+    cmd2 = "scale log"
+    cmd3 = "scale limits 0 10"
 
-<p>&nbsp;&nbsp;retval = wrap_cmd(cmd1)<br>
-&nbsp;&nbsp;retval += wrap_cmd(cmd2)<br>
-&nbsp;&nbsp;retval += wrap_cmd(cmd3)<br>
-&nbsp;&nbsp;retval += f'--{BOUNDARY}'</p>
+    retval = wrap_cmd(cmd1)
+    retval += wrap_cmd(cmd2)
+    retval += wrap_cmd(cmd3)
+    retval += f'--{BOUNDARY}'
 
-<p>&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'<br>
-&nbsp;&nbsp;return response</p></tt>
+    response = make_response(retval)
+    response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
+    return response
+</pre>
 
 <p>When the <i>boundary</i> is used it is prefixed with two dashes, <tt>--</tt></p>
 
@@ -279,85 +311,113 @@ def multi_cmds(target):</p>
 
 <p>The DS9 analysis command menu syntax looks like:</p>
 
-<tt><p>Multi Commands<br>
-*<br>
-menub<br>
-$geturl(http://127.0.0.1:5000/cmap/$xpa_method) | $text</p></tt>
+<pre>
+Multi Commands
+*
+menu
+$geturl(http://127.0.0.1:5000/cmap/?target=$xpa_method) | $text
+</pre>
 
 <p>Note that these commands are completely independent. Setting the color map, changing the scaling, and changing the scale limits are independent actions. Each command in a multipart/mixed message is independent. They are processed in order but do not have to be related. Also note that none of these commands require any additional data; that is the body of each part if blank. (This is the two new-line characters, \n, after the <tt>paramlist</tt>.)</p>
 
 <p><b>Returning a plot</b></p>
 
-<p>Plots can be created using the XPA <tt>plot></tt> command.</p>
+<p>Plots can be created using the XPA <tt>plot</tt> command.</p>
 
 <p><b>However</b> plot commands must be wrapped inside a <tt>multipart/mixed</tt> content.</p>
 
-<p>In this example we plot X vs X^2 for x in the range from 0 to 9.</p>
+<p>In this example we plot X vs X^2 for x in the range from 0 to 9 and then 
+modify the plots appearance with additional xpa commands:</p>
 
-<tt><p>@app.route("/plot/<target>")<br>
-def send_plot(target):</p>
-    
-<p>&nbsp;&nbsp;def make_plot(xx,yy):</p>
+<pre>
+@app.route("/plot/")
+def send_plot():
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;vals = [f"{x} {y}" for x, y in zip(xx, yy)]</p>
+    def make_plot(xx,yy):
+        vals = [f"{x} {y}" for x, y in zip(xx, yy)]
+        
+        plot_cmd = 'plot line {My Title } {X Label} {Y Label } xy'
+        retval = f'--{BOUNDARY}\n'
+        retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{plot_cmd}"\n\n'
+        retval += "\n".join(vals)+"\n"
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;plot_cmd = 'plot line {My Title } {X Label} {Y Label } xy'</p>
+        plot_cmd = 'plot line smooth step'
+        retval += f'--{BOUNDARY}\n'
+        retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{plot_cmd}"\n\n'
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;retval = f'--{BOUNDARY}\n'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{plot_cmd}"\n\n'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += "\n".join(vals)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += f'\n--{BOUNDARY}'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;return retval</p>
+        plot_cmd = 'plot background lightblue'
+        retval += f'--{BOUNDARY}\n'
+        retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="{plot_cmd}"\n\n'
 
-<p>&nbsp;&nbsp;xx = list(range(10))<br>
-&nbsp;&nbsp;yy = [x*x for x in xx]</p>
+        retval += f'--{BOUNDARY}\n'
+        return retval
 
-<p>&nbsp;&nbsp;retval = make_plot(xx, yy)<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'<br>
-&nbsp;&nbsp;return response</p></tt>
+    target = request.args.get("target")
+    xx = list(range(10))
+    yy = [x*x for x in xx]
 
-<p>Note that Python (sometimes) will treat curly brackets special; and so does Tcl. In Python you may sometimes need to used double curly brackets when you want to pass a single curly bracket to Tcl. In this example since the <tt>plot_cmd</tt> variable does not do any formatting so we need to used single curly brackets. In Tcl, strings that contain spaces need to be wrapped in curly brackets.</p>
+    retval = make_plot(xx, yy)
+    response = make_response(retval)
+    response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
+    return response
+</pre>
+
+<p>Note that Python (sometimes) will treat curly brackets special and so does Tcl. In Python you may sometimes need to used double curly brackets when you want to pass a single curly bracket to Tcl. In this example since the <tt>plot_cmd</tt> variable does not do any formatting so we need to used single curly brackets. In Tcl, strings that contain spaces need to be wrapped in curly brackets.</p>
 
 <p>The DS9 analysis command for this is:</p>
 
-<tt><p>Simple Plot<br>
-*<br>
-menu<br>
-$geturl(http://127.0.0.1:5000/plot/$xpa_method) | $text</p></tt>
+<pre>
+Simple Plot
+*
+menu
+$geturl(http://127.0.0.1:5000/plot/?target=$xpa_method) | $text
+</pre>
+
+<p>
+Note: It is possible to send bare plots (just values, no title,
+no labels, all default plot options) using the $plot macro (without
+any options). In this case the values can be returned as just a simple
+text/plain Content-Type.
+</p>
 
 <p><b>Returning images</b></p>
 
 <p>Returning an image can be a bit more complicated.</p>
 
 <p><b>Simple case: Single images with properly configured web server</b></p>
-								      
+
 <p>In the most simple case, if the web service is only going to return a single image then rather than using <tt>$geturl()</tt> you should just use <tt>$url()</tt> which is piped into the <tt>$image</tt> macro.</p>
 
 <p>In this example we have a local file: <tt>/export/img.fits</tt> that we want to return via the <tt>/get_img</tt> end point. We can do something like this:</p>
 
-<tt><p>@app.route("/get_img")<br>
-def get_img():</p>
-  
-<p>&nbsp;&nbsp;retval = open("/export/img.fits", "rb").read()<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.headers['Content-Type'] = "image/fits"<br>
-&nbsp;&nbsp;return response</p></tt>
+<pre>
+@app.route("/get_img")
+def get_img():
+
+    retval = open("/export/img.fits", "rb").read()
+    response = make_response(retval)
+    response.headers['Content-Type'] = "image/fits"
+    return response
+</pre>
 
 <p>It is important that the FITS image is read in as a pure binary/byte array (the b in the rb mode). Equally important is that the Content-Type has been set to the standard <tt>image/fits</tt> mime-type used for FITS images. If the Content-Type is not properly set to image/fits then the results are unpredictable.</p>
 
 <p>Then in the DS9 analysis file the command looks like:</p>
 
-<tt><p>Basic Image<br>
-*<br>
-menu<br>
-$url(http://127.0.0.1:5000/get_img) | $image(new)</p></tt>
+<pre>
+Basic Image
+*
+menu
+$url(http://127.0.0.1:5000/get_img) | $image(new)
+</pre>
 
 <p><tt>$url</tt> is used instead of <tt>$geturl</tt>. The output is piped to the <tt>$image(new)</tt> macro which will create a new frame to load the image.</p>
 
 <p>The URL passed to $url can contain the same GET encoded syntax as shown before, eg</p>
 
-<p><tt>$param(something); $url(https://something.com/endpoint?par1=$par1&par2=$par2) | $image</tt></p>
+<pre>
+$param(something); $url(https://awesome.edu/endpoint?par1=$par1&par2=$par2) | $image
+</pre>
 
 <p><b>Using <tt>fits</tt> XPA access point.</b></p>
 
@@ -367,62 +427,69 @@ $url(http://127.0.0.1:5000/get_img) | $image(new)</p></tt>
 
 <p>This is an example of how to convert the binary FITS file to ASCII:</p>
 
-<tt><p>def _convert_image(infile):<br>
-&nbsp;&nbsp;'Load image, gzip, and base64 encode it'</p>
-  
-<p>&nbsp;&nbsp;&nbsp;&nbsp;import gzip<br>
-&nbsp;&nbsp;&nbsp;&nbsp;import io<br>
-&nbsp;&nbsp;&nbsp;&nbsp;import base64<br>
-&nbsp;&nbsp;&nbsp;&nbsp;import textwrap</p>
+<pre>
+def _convert_image(infile):
+    'Load image, gzip, and base64 encode it'
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;# Load the image as raw bytes<br>
-&nbsp;&nbsp;&nbsp;&nbsp;with open(infile, 'rb') as fp:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;img_data = fp.read()</p>
-  
-<p>&nbsp;&nbsp;&nbsp;&nbsp;# Compress the image in memory<br>
-&nbsp;&nbsp;&nbsp;&nbsp;compressed_buffer = io.BytesIO()<br>
-&nbsp;&nbsp;&nbsp;&nbsp;with gzip.GzipFile(fileobj=compressed_buffer, mode="wb") as fp:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fp.write(img_data)</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;# Encode compressed image w/ base64<br>
-&nbsp;&nbsp;&nbsp;&nbsp;compressed_buffer.seek(0) # rewind<br>
-&nbsp;&nbsp;&nbsp;&nbsp;img_base64 = base64.b64encode(compressed_buffer.getvalue())</p>
+    import gzip
+    import io
+    import base64
+    import textwrap
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;# Format into 80 chars wide<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval = textwrap.fill(img_base64.decode('ascii'), width=80)<br>
-&nbsp;&nbsp;return retval</p></tt>
+    # Load the image as raw bytes
+    with open(infile, 'rb') as fp:
+        img_data = fp.read()
+
+    # Compress the image in memory
+    compressed_buffer = io.BytesIO()
+    with gzip.GzipFile(fileobj=compressed_buffer, mode="wb") as fp:
+        fp.write(img_data)
+
+    # Encode compressed image w/ base64
+    compressed_buffer.seek(0)   # rewind
+    img_base64 = base64.b64encode(compressed_buffer.getvalue())
+
+    # Format into 80 chars wide
+    retval = textwrap.fill(img_base64.decode('ascii'), width=80)
+    return retval
+</pre>
 
 <p>The data are read-in as binary data. The data are then compressed, in memory, using gzip. The compressed data are then base64 encoded to ASCII. Then finally the ASCII is formatted to be 80 characters wide, which is generally standard for
 base64 messages.</p>
 
 <p>We can use this conversion routine to setup our image server end point. Just as with the Plot example, the fits commands have to be wrapped inside a <tt>multipart/mixed</tt> container. This technique requires setting <tt>Content-Transfer-Encoding: base64</tt> in the header.</p>
 
-<tt><p>@app.route("/image/<target>")<br>
-def send_image(target):</p>
+<pre>
+@app.route("/image/")
+def send_image():
 
-<p>&nbsp;&nbsp;def multipart_wrap(image):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval = f'--{BOUNDARY}\n'<br>
-&nbsp;&nbsp;;&nbsp;&nbsp;retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="fits new sample_img.fits.gz"'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += 'Content-Transfer-Encoding: base64\n\n'<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += image<br>
-&nbsp;&nbsp;&nbsp;&nbsp;retval += f'\n--{BOUNDARY}\n'</p>
+    def multipart_wrap(image):
+        retval = f'--{BOUNDARY}\n'
+        retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="fits new sample_img.fits.gz"\n'
+        retval += 'Content-Transfer-Encoding: base64\n\n'
+        retval += image
+        retval += f'\n--{BOUNDARY}\n'
+        return retval
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;return retval</p>
+    target = request.args.get("target")
+    image = _convert_image("/export/img.fits")
+    retval = multipart_wrap(image)
+    response = make_response(retval)
+    response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
 
-<p>&nbsp;&nbsp;image = _convert_image("/export/img.fits")<br>
-&nbsp;&nbsp;retval = multipart_wrap(image)<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'</p>
-
-<p>&nbsp;&nbsp;return response</p></tt>
+    return response
+</pre>
 
 <p>In this example we used the fits new command so that the image will be loaded into a new frame.</p>
 
 <p>The DS9 analysis command looks like:</p>
 
-<tt><p>Complex Image<br>
-*<br>
-menu<br>
-$geturl(http://127.0.0.1:5000/image/$xpa_method) | $text</p></tt>
+<pre>
+Complex Image
+*
+menu
+$geturl(http://127.0.0.1:5000/image/?target=$xpa_method) | $text
+</pre>
 
 <p>Using this technique users can return multiple images (eg if needed for RGB, HSV or HLS frames) or images and associated regions, etc.</p>
 
@@ -430,40 +497,44 @@ $geturl(http://127.0.0.1:5000/image/$xpa_method) | $text</p></tt>
 
 <p>This technique uses XPA to control the built in web browser to download an arbitrary file. The browser window will open and then close when the download is complete. This requires two different end-points to our service</p>
   
-<blockquote>
-<p>1. The end point URL that is called from DS9 to initiate the download, similar to our other examples. This first URL will have the DS9 browser open the 2nd URL.<br>
-2. The end point that serves the file.</p>
-</blockquote>
+<ol>
+<li>The end point URL that is called from DS9 to initiate the download, similar to our other examples. This first URL will have the DS9 browser open the 2nd URL.</li>
+<li>The end point that serves the file.</li>
+</ol>
 
-<tt><p>@app.route("/web/<target>")<br>
-def send_web(target):</p>
-  
-<p>&nbsp;&nbsp;retval = f'--{BOUNDARY}\n'<br>
-&nbsp;&nbsp;retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="web http://127.0.0.1:5000/get_fits'<br>
-&nbsp;&nbsp;retval += f'--{BOUNDARY}\n'<br>
-&nbsp;&nbsp;retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="web close"\n\n'<br>
-&nbsp;&nbsp;retval += f'--{BOUNDARY}\n'<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'<br>
-&nbsp;&nbsp;return response</p>
+<pre>
+@app.route("/web/")
+def send_web():
+    target = request.args.get("target")
+    retval = f'--{BOUNDARY}\n'
+    retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="web http://127.0.0.1:5000/get_file"\n\n'
+    retval += f'--{BOUNDARY}\n'
+    retval += f'Content-Type: x-xpa/xpaset; target="{target}"; paramlist="web close"\n\n'
+    retval += f'--{BOUNDARY}\n'
+    response = make_response(retval)
+    response.mimetype = f'multipart/mixed; boundary="{BOUNDARY}"'
+    return response
 
-<p>@app.route("/get_file")<br>
-def get_file():<br>
-&nbsp;&nbsp;import os<br>
-&nbsp;&nbsp;infile = "/export/img.fits"<br>
-&nbsp;&nbsp;fname = os.path.basename(infile)<br>
-&nbsp;&nbsp;retval = open(infile, "rb").read()<br>
-&nbsp;&nbsp;response = make_response(retval)<br>
-&nbsp;&nbsp;response.headers['Content-Type'] = f"Content-Type: application/octet-stream;name={fname}"</p>
-
-<p>&nbsp;&nbsp;return response</p></tt>
+@app.route("/get_file")
+def get_file():
+    import os
+    infile = "/export/img.fits"
+    fname = os.path.basename(infile)
+    retval = open(infile, "rb").read()
+    response = make_response(retval)
+    response.headers['Content-Type'] = f"Content-Type: application/octet-stream;name={fname}"
+    return response
+</pre>
 
 <p>This first URL end point, <tt>/web</tt> is what DS9 will be use in the analysis menu, ie</p>
 
-<tt><p>Download File<br>
-*<br>
-menu<br>
-$geturl(http://127.0.0.1:5000/web/$xpa_method) | $text</p></tt>
+<pre>
+Download File
+*
+menu
+$geturl(http://127.0.0.1:5000/web/?target=$xpa_method) | $text
+</pre>
+
 
 <p>The <tt>/web</tt> endpoint then makes two XPA calls. The first call is to open the web browser and load the second URL endpoint, <tt>/get_file</tt>. The <tt>/get_file</tt> end point then open a file and reads it into memory as raw bytes (the b in rb). It then serves the file with Content-Type as <tt>application/octet-stream.</tt> This MIME type is used to convey an arbitrary data file which will cause the DS9 browser to prompt the user to save the file. The file name <tt>name={fname}</tt> will be the default name. After the file is saved then the /web endpoint closes the web browser window. For small files, served locally the browser window may just “flash” on the screen for an instance.</p>
 

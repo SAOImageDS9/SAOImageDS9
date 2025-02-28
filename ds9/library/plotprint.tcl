@@ -47,7 +47,9 @@ proc PlotPrintDialog {} {
 	    grid $f.printer $f.tcmd $f.cmd -padx 2 -pady 2 -sticky ew
 	}
 	Darwin -
-	{Windows NT} {}
+	{Windows NT} {
+	    set ed(dest) file
+	}
     }
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 2 -weight 1

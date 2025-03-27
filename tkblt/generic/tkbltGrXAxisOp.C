@@ -151,7 +151,7 @@ static int UseOp(ClientData clientData, Tcl_Interp* interp,
     return TCL_OK;
   }
 
-  int axisObjc;  
+  Tcl_Size axisObjc;  
   Tcl_Obj **axisObjv;
   if (Tcl_ListObjGetElements(interp, objv[3], &axisObjc, &axisObjv) != TCL_OK)
     return TCL_ERROR;

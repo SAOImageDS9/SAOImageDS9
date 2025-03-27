@@ -33,17 +33,17 @@
 
 using namespace Blt;
 
-static Tk_CustomOptionSetProc PenSetProc;
-static Tk_CustomOptionGetProc PenGetProc;
-static Tk_CustomOptionFreeProc PenFreeProc;
+Tk_CustomOptionSetProc PenSetProc;
+Tk_CustomOptionGetProc PenGetProc;
+Tk_CustomOptionFreeProc PenFreeProc;
 Tk_ObjCustomOption penObjOption =
   {
     "pen", PenSetProc, PenGetProc, RestoreProc, PenFreeProc, NULL
   };
 
-static int PenSetProc(ClientData clientData, Tcl_Interp* interp,
-		      Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		      int offset, char* savePtr, int flags)
+int PenSetProc(ClientData clientData, Tcl_Interp* interp,
+	       Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
+	       int offset, char* savePtr, int flags)
 {
   Pen** penPtrPtr = (Pen**)(widgRec + offset);
   *(double*)savePtr = *(double*)penPtrPtr;
@@ -68,8 +68,8 @@ static int PenSetProc(ClientData clientData, Tcl_Interp* interp,
   return TCL_OK;
 };
 
-static Tcl_Obj* PenGetProc(ClientData clientData, Tk_Window tkwin, 
-			   char *widgRec, int offset)
+Tcl_Obj* PenGetProc(ClientData clientData, Tk_Window tkwin, 
+		    char *widgRec, int offset)
 {
   Pen* penPtr = *(Pen**)(widgRec + offset);
   if (!penPtr)
@@ -78,7 +78,7 @@ static Tcl_Obj* PenGetProc(ClientData clientData, Tk_Window tkwin,
   return Tcl_NewStringObj(penPtr->name_, -1);
 };
 
-static void PenFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
+void PenFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
 {
   Pen* penPtr = *(Pen**)ptr;
   if (penPtr)

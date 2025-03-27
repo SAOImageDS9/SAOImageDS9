@@ -56,17 +56,17 @@ static int ParseValues(Tcl_Interp* interp, Tcl_Obj *objPtr, int *nValuesPtr,
 
 // OptionSpecs
 
-static Tk_CustomOptionSetProc ValuesSetProc;
-static Tk_CustomOptionGetProc ValuesGetProc;
-static Tk_CustomOptionFreeProc ValuesFreeProc;
+Tk_CustomOptionSetProc ValuesSetProc;
+Tk_CustomOptionGetProc ValuesGetProc;
+Tk_CustomOptionFreeProc ValuesFreeProc;
 Tk_ObjCustomOption valuesObjOption =
   {
     "values", ValuesSetProc, ValuesGetProc, RestoreProc, ValuesFreeProc, NULL
   };
 
-static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
-		       Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		       int offset, char* savePtr, int flags)
+int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
+		  Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
+		  int offset, char* savePtr, int flags)
 {
   ElemValues** valuesPtrPtr = (ElemValues**)(widgRec + offset);
   *(double*)savePtr = *(double*)valuesPtrPtr;
@@ -76,8 +76,8 @@ static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
   if (!valuesPtrPtr)
     return TCL_OK;
 
+  Tcl_Size objc;
   Tcl_Obj** objv;
-  int objc;
   if (Tcl_ListObjGetElements(interp, *objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;
 
@@ -112,8 +112,8 @@ static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
   return TCL_OK;
 }
 
-static Tcl_Obj* ValuesGetProc(ClientData clientData, Tk_Window tkwin, 
-			    char *widgRec, int offset)
+Tcl_Obj* ValuesGetProc(ClientData clientData, Tk_Window tkwin, 
+		       char *widgRec, int offset)
 {
   ElemValues* valuesPtr = *(ElemValues**)(widgRec + offset);
 
@@ -133,27 +133,27 @@ static Tcl_Obj* ValuesGetProc(ClientData clientData, Tk_Window tkwin,
   return listObjPtr;
 }
 
-static void ValuesFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
+void ValuesFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
 {
   ElemValues* valuesPtr = *(ElemValues**)ptr;
   delete valuesPtr;
 }
 
-static Tk_CustomOptionSetProc PairsSetProc;
-static Tk_CustomOptionGetProc PairsGetProc;
-static Tk_CustomOptionRestoreProc PairsRestoreProc;
-static Tk_CustomOptionFreeProc PairsFreeProc;
+Tk_CustomOptionSetProc PairsSetProc;
+Tk_CustomOptionGetProc PairsGetProc;
+Tk_CustomOptionRestoreProc PairsRestoreProc;
+Tk_CustomOptionFreeProc PairsFreeProc;
 Tk_ObjCustomOption pairsObjOption =
   {
     "pairs", PairsSetProc, PairsGetProc, PairsRestoreProc, PairsFreeProc, NULL
   };
 
-static int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
-		       Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		       int offset, char* savePtr, int flags)
+int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
+		 Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
+		 int offset, char* savePtr, int flags)
 {
   ElemCoords* coordsPtr = (ElemCoords*)(widgRec + offset);
-  *(double*)savePtr = *(double*)NULL;
+  savePtr = NULL;
 
   double* values;
   int nValues;
@@ -189,8 +189,8 @@ static int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
   return TCL_OK;
 };
 
-static Tcl_Obj* PairsGetProc(ClientData clientData, Tk_Window tkwin, 
-			    char *widgRec, int offset)
+Tcl_Obj* PairsGetProc(ClientData clientData, Tk_Window tkwin, 
+		      char *widgRec, int offset)
 {
   ElemCoords* coordsPtr = (ElemCoords*)(widgRec + offset);
 
@@ -211,13 +211,13 @@ static Tcl_Obj* PairsGetProc(ClientData clientData, Tk_Window tkwin,
   return listObjPtr;
 };
 
-static void PairsRestoreProc(ClientData clientData, Tk_Window tkwin,
+void PairsRestoreProc(ClientData clientData, Tk_Window tkwin,
 			     char *ptr, char *savePtr)
 {
   // do nothing
 }
 
-static void PairsFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
+void PairsFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
 {
   // do nothing
 }
@@ -231,7 +231,7 @@ int StyleSetProc(ClientData clientData, Tcl_Interp* interp,
   Element* elemPtr = ops->elemPtr;
   size_t size = (size_t)clientData;
 
-  int objc;
+  Tcl_Size objc;
   Tcl_Obj** objv;
   if (Tcl_ListObjGetElements(interp, *objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;
@@ -308,7 +308,7 @@ static int GetPenStyleFromObj(Tcl_Interp* interp, Graph* graphPtr,
 			      Tcl_Obj *objPtr, ClassId classId,
 			      PenStyle *stylePtr)
 {
-  int objc;
+  Tcl_Size objc;
   Tcl_Obj **objv;
   if (Tcl_ListObjGetElements(interp, objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;
@@ -367,7 +367,7 @@ void VectorChangedProc(Tcl_Interp* interp, ClientData clientData,
 static int ParseValues(Tcl_Interp* interp, Tcl_Obj *objPtr, int *nValuesPtr,
 		       double **arrayPtr)
 {
-  int objc;
+  Tcl_Size objc;
   Tcl_Obj **objv;
   if (Tcl_ListObjGetElements(interp, objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;

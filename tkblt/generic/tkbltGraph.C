@@ -1447,7 +1447,6 @@ GC Graph::getPrivateGC(unsigned long gcMask, XGCValues *valuePtr)
 
 void Graph::freePrivateGC(GC gc)
 {
-  Tk_FreeXId(display_, (XID)XGContextFromGC(gc));
   XFreeGC(display_, gc);
 }
 

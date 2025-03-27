@@ -40,16 +40,16 @@ using namespace Blt;
 
 static Tk_OptionSpec optionSpecs[] = {
   {TK_OPTION_COLOR, "-color", "color", "Color", 
-   "green", -1, Tk_Offset(CrosshairsOptions, colorPtr), 0, NULL, 0},
+   "green", -1, offsetof(CrosshairsOptions, colorPtr), 0, NULL, 0},
   {TK_OPTION_CUSTOM, "-dashes", "dashes", "Dashes", 
-   NULL, -1, Tk_Offset(CrosshairsOptions, dashes), 
+   NULL, -1, offsetof(CrosshairsOptions, dashes), 
    TK_OPTION_NULL_OK, &dashesObjOption, 0},
   {TK_OPTION_PIXELS, "-linewidth", "lineWidth", "Linewidth",
-   "1", -1, Tk_Offset(CrosshairsOptions, lineWidth), 0, NULL, 0},
+   "1", -1, offsetof(CrosshairsOptions, lineWidth), 0, NULL, 0},
   {TK_OPTION_PIXELS, "-x", "x", "X",
-   "0", -1, Tk_Offset(CrosshairsOptions, x), 0, NULL, 0},
+   "0", -1, offsetof(CrosshairsOptions, x), 0, NULL, 0},
   {TK_OPTION_PIXELS, "-y", "y", "Y",
-   "0", -1, Tk_Offset(CrosshairsOptions, y), 0, NULL, 0},
+   "0", -1, offsetof(CrosshairsOptions, y), 0, NULL, 0},
   {TK_OPTION_END, NULL, NULL, NULL, NULL, 0, -1, 0, 0, 0}
 };
 

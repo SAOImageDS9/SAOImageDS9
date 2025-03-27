@@ -41,6 +41,7 @@ namespace Blt {
     ClientData clientData;
   };
 
+  extern char Backslash(const char *src, int *readPtr);
   extern int ParseBraces(Tcl_Interp* interp, const char *string, 
 			     const char **termPtr, ParseValue *pvPtr);
   extern int ParseNestedCmd(Tcl_Interp* interp, const char *string, 

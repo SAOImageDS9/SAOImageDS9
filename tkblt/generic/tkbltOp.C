@@ -115,7 +115,7 @@ void* Blt::GetOpFromObj(Tcl_Interp* interp, int nSpecs, Blt_OpSpec *specs,
     return NULL;
   }
 
-  int length;
+  Tcl_Size length;
   const char* string = Tcl_GetStringFromObj(objv[operPos], &length);
   if (flags & BLT_OP_LINEAR_SEARCH)
     n = LinearOpSearch(specs, nSpecs, string, length);

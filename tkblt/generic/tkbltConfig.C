@@ -54,20 +54,20 @@ void RestoreProc(ClientData clientData, Tk_Window tkwin,
 const char* fillObjOption[] = {"none", "x", "y", "both", NULL};
 
 // Dashes
-static Tk_CustomOptionSetProc DashesSetProc;
-static Tk_CustomOptionGetProc DashesGetProc;
+Tk_CustomOptionSetProc DashesSetProc;
+Tk_CustomOptionGetProc DashesGetProc;
 Tk_ObjCustomOption dashesObjOption =
   {
     "dashes", DashesSetProc, DashesGetProc, NULL, NULL, NULL
   };
 
-static int DashesSetProc(ClientData clientData, Tcl_Interp *interp,
-			 Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-			 int offset, char* save, int flags)
+int DashesSetProc(ClientData clientData, Tcl_Interp *interp,
+		  Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
+		  int offset, char* save, int flags)
 {
   Dashes* dashesPtr = (Dashes*)(widgRec + offset);
 
-  int length;
+  Tcl_Size length;
   const char* string = Tcl_GetStringFromObj(*objPtr, &length);
   if (!string || !string[0]) {
     dashesPtr->values[0] = 0;
@@ -97,7 +97,7 @@ static int DashesSetProc(ClientData clientData, Tcl_Interp *interp,
     dashesPtr->values[4] = 0;
   }
   else {
-    int objc;
+    Tcl_Size objc;
     Tcl_Obj** objv;
     if (Tcl_ListObjGetElements(interp, *objPtr, &objc, &objv) != TCL_OK)
       return TCL_ERROR;
@@ -135,8 +135,8 @@ static int DashesSetProc(ClientData clientData, Tcl_Interp *interp,
   return TCL_OK;
 };
 
-static Tcl_Obj* DashesGetProc(ClientData clientData, Tk_Window tkwin, 
-			     char *widgRec, int offset)
+Tcl_Obj* DashesGetProc(ClientData clientData, Tk_Window tkwin, 
+		       char *widgRec, int offset)
 {
   Dashes* dashesPtr = (Dashes*)(widgRec + offset);
 
@@ -158,17 +158,17 @@ static Tcl_Obj* DashesGetProc(ClientData clientData, Tk_Window tkwin,
 };
 
 // List
-static Tk_CustomOptionSetProc ListSetProc;
-static Tk_CustomOptionGetProc ListGetProc;
-static Tk_CustomOptionFreeProc ListFreeProc;
+Tk_CustomOptionSetProc ListSetProc;
+Tk_CustomOptionGetProc ListGetProc;
+Tk_CustomOptionFreeProc ListFreeProc;
 Tk_ObjCustomOption listObjOption =
   {
     "list", ListSetProc, ListGetProc, RestoreProc, ListFreeProc, NULL
   };
 
-static int ListSetProc(ClientData clientData, Tcl_Interp *interp,
-		       Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		       int offset, char* savePtr, int flags)
+int ListSetProc(ClientData clientData, Tcl_Interp *interp,
+		Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
+		int offset, char* savePtr, int flags)
 {
   const char*** listPtr = (const char***)(widgRec + offset);
   *(double*)savePtr = *(double*)listPtr;
@@ -177,7 +177,7 @@ static int ListSetProc(ClientData clientData, Tcl_Interp *interp,
     return TCL_OK;
 
   const char** argv;
-  int argc;
+  Tcl_Size argc;
   if (Tcl_SplitList(interp, Tcl_GetString(*objPtr), &argc, &argv) != TCL_OK)
     return TCL_ERROR;
 
@@ -186,8 +186,8 @@ static int ListSetProc(ClientData clientData, Tcl_Interp *interp,
   return TCL_OK;
 };
 
-static Tcl_Obj* ListGetProc(ClientData clientData, Tk_Window tkwin, 
-			    char *widgRec, int offset)
+Tcl_Obj* ListGetProc(ClientData clientData, Tk_Window tkwin, 
+		     char *widgRec, int offset)
 {
   const char*** listPtr = (const char***)(widgRec + offset);
 
@@ -209,8 +209,7 @@ static Tcl_Obj* ListGetProc(ClientData clientData, Tk_Window tkwin,
   return listObjPtr;
 };
 
-static void ListFreeProc(ClientData clientData, Tk_Window tkwin,
-			 char *ptr)
+void ListFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
 {
   const char** argv = *(const char***)ptr;
   if (argv)

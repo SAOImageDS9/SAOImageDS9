@@ -142,6 +142,7 @@ void TextStyle::printText(PSOutput* psPtr, const char *text, int x, int y)
   int xx =0;
   int yy =0;
   switch (ops->anchor) {
+  case TK_ANCHOR_NULL:	   xx = 0; yy = 0; break;
   case TK_ANCHOR_NW:	   xx = 0; yy = 0; break;
   case TK_ANCHOR_N:	   xx = 1; yy = 0; break;
   case TK_ANCHOR_NE:	   xx = 2; yy = 0; break;
@@ -155,6 +156,7 @@ void TextStyle::printText(PSOutput* psPtr, const char *text, int x, int y)
 
   const char* justify =NULL;
   switch (ops->justify) {
+  case TK_JUSTIFY_NULL:   justify = "0";   break;
   case TK_JUSTIFY_LEFT:   justify = "0";   break;
   case TK_JUSTIFY_CENTER: justify = "0.5"; break;
   case TK_JUSTIFY_RIGHT:  justify = "1";   break;

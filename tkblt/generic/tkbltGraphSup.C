@@ -651,6 +651,8 @@ Point2d Graph::anchorPoint(double x, double y, double w, double h,
   Point2d t;
 
   switch (anchor) {
+  case TK_ANCHOR_NULL:
+    break;
   case TK_ANCHOR_NW:		/* 7 Upper left corner */
     break;
   case TK_ANCHOR_W:		/* 6 Left center */

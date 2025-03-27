@@ -13,11 +13,10 @@
 
 #include "tkTable.h"
 
-static char *	Cmd_GetName _ANSI_ARGS_((const Cmd_Struct *cmds, int val));
-static int	Cmd_GetValue _ANSI_ARGS_((const Cmd_Struct *cmds,
-			const char *arg));
-static void	Cmd_GetError _ANSI_ARGS_((Tcl_Interp *interp,
-			const Cmd_Struct *cmds, const char *arg));
+static char* Cmd_GetName(const Cmd_Struct *cmds, int val);
+static int Cmd_GetValue(const Cmd_Struct *cmds,	const char *arg);
+static void Cmd_GetError(Tcl_Interp *interp, const Cmd_Struct *cmds,
+			 const char *arg);
 
 /*
  *--------------------------------------------------------------
@@ -37,8 +36,7 @@ static void	Cmd_GetError _ANSI_ARGS_((Tcl_Interp *interp,
  *
  *--------------------------------------------------------------
  */
-void
-Table_ClearHashTable(Tcl_HashTable *hashTblPtr)
+void Table_ClearHashTable(Tcl_HashTable *hashTblPtr)
 {
     Tcl_HashEntry *entryPtr;
     Tcl_HashSearch search;
@@ -69,21 +67,16 @@ Table_ClearHashTable(Tcl_HashTable *hashTblPtr)
  *----------------------------------------------------------------------
  */
 
-int
-TableOptionBdSet(clientData, interp, tkwin, value, widgRec, offset)
-    ClientData clientData;		/* Type of struct being set. */
-    Tcl_Interp *interp;			/* Used for reporting errors. */
-    Tk_Window tkwin;			/* Window containing table widget. */
-    CONST84 char *value;		/* Value of option. */
-    char *widgRec;			/* Pointer to record for item. */
-    int offset;				/* Offset into item. */
+int TableOptionBdSet(ClientData clientData, Tcl_Interp *interp,
+		     Tk_Window tkwin, const char *value, char *widgRec,
+		     Tcl_Size offset)
 {
     char **borderStr;
     int *bordersPtr, *bdPtr;
     int type	= (int) clientData;
     int result	= TCL_OK;
-    int argc;
-    CONST84 char **argv;
+    Tcl_Size argc;
+    const char **argv;
 
     if ((type == BD_TABLE) && (value[0] == '\0')) {
 	/*
@@ -169,15 +162,9 @@ TableOptionBdSet(clientData, interp, tkwin, value, widgRec, offset)
  *----------------------------------------------------------------------
  */
 
-const char *
-TableOptionBdGet(clientData, tkwin, widgRec, offset, freeProcPtr)
-    ClientData clientData;		/* Type of struct being set. */
-    Tk_Window tkwin;			/* Window containing canvas widget. */
-    char *widgRec;			/* Pointer to record for item. */
-    int offset;				/* Offset into item. */
-    Tcl_FreeProc **freeProcPtr;		/* Pointer to variable to fill in with
-					 * information about how to reclaim
-					 * storage for return string. */
+const char* TableOptionBdGet(ClientData clientData, Tk_Window tkwin,
+			     char *widgRec, Tcl_Size offset,
+			     Tcl_FreeProc **freeProcPtr)
 {
     register int type	= (int) clientData;
 
@@ -210,12 +197,12 @@ TableOptionBdGet(clientData, tkwin, widgRec, offset, freeProcPtr)
  *----------------------------------------------------------------------
  */
 
-int
-TableTagConfigureBd(Table *tablePtr, TableTag *tagPtr,
-	char *oldValue, int nullOK)
+int TableTagConfigureBd(Table* tablePtr, TableTag* tagPtr,
+			char* oldValue, int nullOK)
 {
-    int i, argc, result = TCL_OK;
-    CONST84 char **argv;
+    int i, result = TCL_OK;
+    Tcl_Size argc;
+    const char **argv;
 
     /*
      * First check to see if the value really changed.
@@ -300,9 +287,9 @@ TableTagConfigureBd(Table *tablePtr, TableTag *tagPtr,
  *----------------------------------------------------------------------
  */
 
-int
-Cmd_OptionSet(ClientData clientData, Tcl_Interp *interp,
-	Tk_Window unused, CONST84 char *value, char *widgRec, int offset)
+int Cmd_OptionSet(ClientData clientData, Tcl_Interp *interp,
+		  Tk_Window unused, const char *value, char *widgRec,
+		  Tcl_Size offset)
 {
   Cmd_Struct *p = (Cmd_Struct *)clientData;
   int mode = Cmd_GetValue(p,value);
@@ -329,9 +316,9 @@ Cmd_OptionSet(ClientData clientData, Tcl_Interp *interp,
  *----------------------------------------------------------------------
  */
 
-const char *
-Cmd_OptionGet(ClientData clientData, Tk_Window unused,
-	      char *widgRec, int offset, Tcl_FreeProc **freeProcPtr)
+const char* Cmd_OptionGet(ClientData clientData, Tk_Window unused,
+			  char *widgRec, Tcl_Size offset,
+			  Tcl_FreeProc **freeProcPtr)
 {
   Cmd_Struct *p = (Cmd_Struct *)clientData;
   int mode = *((int*)(widgRec+offset));
@@ -342,8 +329,7 @@ Cmd_OptionGet(ClientData clientData, Tk_Window unused,
  * simple Cmd_Struct lookup functions
  */
 
-char *
-Cmd_GetName(const Cmd_Struct *cmds, int val)
+char* Cmd_GetName(const Cmd_Struct *cmds, int val)
 {
   for(;cmds->name && cmds->name[0];cmds++) {
     if (cmds->value==val) return cmds->name;
@@ -351,8 +337,7 @@ Cmd_GetName(const Cmd_Struct *cmds, int val)
   return NULL;
 }
 
-int
-Cmd_GetValue(const Cmd_Struct *cmds, const char *arg)
+int Cmd_GetValue(const Cmd_Struct *cmds, const char *arg)
 {
   unsigned int len = strlen(arg);
   for(;cmds->name && cmds->name[0];cmds++) {
@@ -361,8 +346,7 @@ Cmd_GetValue(const Cmd_Struct *cmds, const char *arg)
   return 0;
 }
 
-void
-Cmd_GetError(Tcl_Interp *interp, const Cmd_Struct *cmds, const char *arg)
+void Cmd_GetError(Tcl_Interp *interp, const Cmd_Struct *cmds, const char *arg)
 {
   int i;
   Tcl_AppendResult(interp, "bad option \"", arg, "\" must be ", (char *) 0);

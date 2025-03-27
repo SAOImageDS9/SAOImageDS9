@@ -13,14 +13,14 @@
 
 #include "tkTable.h"
 
-static void	TableModifyRC _ANSI_ARGS_((register Table *tablePtr,
-			int doRows, int movetag,
-			Tcl_HashTable *tagTblPtr, Tcl_HashTable *dimTblPtr,
-			int offset, int from, int to, int lo, int hi,
-			int outOfBounds));
+static void TableModifyRC(Table *tablePtr,
+			  int doRows, int movetag,
+			  Tcl_HashTable *tagTblPtr, Tcl_HashTable *dimTblPtr,
+			  int offset, int from, int to, int lo, int hi,
+			  int outOfBounds);
 
 /* insert/delete subcommands */
-static CONST84 char *modCmdNames[] = {
+static const char *modCmdNames[] = {
     "active", "cols", "rows", (char *)NULL
 };
 enum modCmd {
@@ -28,7 +28,7 @@ enum modCmd {
 };
 
 /* insert/delete row/col switches */
-static CONST84 char *rcCmdNames[] = {
+static const char *rcCmdNames[] = {
     "-keeptitles",	"-holddimensions",	"-holdselection",
     "-holdtags",	"-holdwindows",	"--",
     (char *) NULL
@@ -61,11 +61,10 @@ enum rcCmd {
  *
  *--------------------------------------------------------------
  */
-int
-Table_EditCmd(ClientData clientData, register Tcl_Interp *interp,
-	      int objc, Tcl_Obj *CONST objv[])
+int Table_EditCmd(ClientData clientData, Tcl_Interp *interp,
+		  int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int doInsert, cmdIndex, first, last;
 
     if (objc < 4) {
@@ -361,11 +360,7 @@ Table_EditCmd(ClientData clientData, register Tcl_Interp *interp,
  *
  *----------------------------------------------------------------------
  */
-void
-TableDeleteChars(tablePtr, index, count)
-    register Table *tablePtr;	/* Table widget to modify. */
-    int index;			/* Index of first character to delete. */
-    int count;			/* How many characters to delete. */
+void TableDeleteChars(Table* tablePtr, int index, int count)
 {
 #ifdef TCL_UTF_MAX
     int byteIndex, byteCount, newByteCount, numBytes, numChars;
@@ -451,12 +446,7 @@ TableDeleteChars(tablePtr, index, count)
  *
  *----------------------------------------------------------------------
  */
-void
-TableInsertChars(tablePtr, index, value)
-    register Table *tablePtr;	/* Table that is to get the new elements. */
-    int index;			/* Add the new elements before this element. */
-    char *value;		/* New characters to add (NULL-terminated
-				 * string). */
+void TableInsertChars(Table* tablePtr, int index, char* value)
 {
 #ifdef TCL_UTF_MAX
     int oldlen, byteIndex, byteCount;
@@ -580,18 +570,11 @@ TableInsertChars(tablePtr, index, value)
  *
  *----------------------------------------------------------------------
  */
-static void
-TableModifyRC(tablePtr, doRows, flags, tagTblPtr, dimTblPtr,
-	      offset, from, to, lo, hi, outOfBounds)
-    Table *tablePtr;	/* Information about text widget. */
-    int doRows;		/* rows (1) or cols (0) */
-    int flags;		/* flags indicating what to move */
-    Tcl_HashTable *tagTblPtr, *dimTblPtr; /* Pointers to the row/col tags
-					   * and width/height tags */
-    int offset;		/* appropriate offset */
-    int from, to;	/* the from and to row/col */
-    int lo, hi;		/* the lo and hi col/row */
-    int outOfBounds;	/* the boundary check for shifting items */
+static void TableModifyRC(Table *tablePtr,
+			  int doRows, int flags,
+			  Tcl_HashTable *tagTblPtr, Tcl_HashTable* dimTblPtr,
+			  int offset, int from, int to, int lo, int hi,
+			  int outOfBounds)
 {
     int j, new;
     char buf[INDEX_BUFSIZE], buf1[INDEX_BUFSIZE];

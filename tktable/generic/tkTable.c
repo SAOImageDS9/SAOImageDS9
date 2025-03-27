@@ -28,19 +28,18 @@
 #include "dprint.h"
 #endif
 
-static char **	StringifyObjects(int objc, Tcl_Obj *CONST objv[]);
+static char** StringifyObjects(int objc, Tcl_Obj* const objv[]);
 
 static int	Tk_TableObjCmd(ClientData clientData, Tcl_Interp *interp,
-			int objc, Tcl_Obj *CONST objv[]);
+			int objc, Tcl_Obj *const objv[]);
 
 static int	TableWidgetObjCmd(ClientData clientData, Tcl_Interp *interp,
-			int objc, Tcl_Obj *CONST objv[]);
+			int objc, Tcl_Obj *const objv[]);
 static int	TableConfigure(Tcl_Interp *interp, Table *tablePtr,
-			int objc, Tcl_Obj *CONST objv[],
+			Tcl_Size objc, Tcl_Obj *const objv[],
 			int flags, int forceUpdate);
-#ifdef HAVE_TCL84
+
 static void	TableWorldChanged(ClientData instanceData);
-#endif
 static void	TableDestroy(ClientData clientdata);
 static void	TableEventProc(ClientData clientData, XEvent *eventPtr);
 static void	TableCmdDeletedProc(ClientData clientData);
@@ -54,8 +53,8 @@ static void	TableFlashEvent(ClientData clientdata);
 static char *	TableVarProc(ClientData clientData, Tcl_Interp *interp,
 			char *name, char *index, int flags);
 static void	TableCursorEvent(ClientData clientData);
-static int	TableFetchSelection(ClientData clientData,
-			int offset, char *buffer, int maxBytes);
+static Tcl_Size	TableFetchSelection(ClientData clientData,
+			Tcl_Size offset, char *buffer, Tcl_Size maxBytes);
 static Tk_RestrictAction TableRestrictProc(ClientData arg, XEvent *eventPtr);
 
 /*
@@ -64,7 +63,7 @@ static Tk_RestrictAction TableRestrictProc(ClientData arg, XEvent *eventPtr);
  * enumerated types used to dispatch the widget command.
  */
 
-static CONST84 char *selCmdNames[] = {
+static const char *selCmdNames[] = {
     "anchor", "clear", "includes", "present", "set", (char *)NULL
 };
 enum selCommand {
@@ -72,7 +71,7 @@ enum selCommand {
     CMD_SEL_SET
 };
 
-static CONST84 char *commandNames[] = {
+static const char *commandNames[] = {
     "activate", "bbox", "border", "cget", "clear", "configure",
     "curselection", "curvalue", "delete", "get", "height",
     "hidden", "icursor", "index", "insert",
@@ -176,155 +175,155 @@ static Tk_CustomOption bdOpt		= { TableOptionBdSet, TableOptionBdGet,
 
 Tk_ConfigSpec tableSpecs[] = {
     {TK_CONFIG_ANCHOR, "-anchor", "anchor", "Anchor", "center",
-     Tk_Offset(Table, defaultTag.anchor), 0},
+     offsetof(Table, defaultTag.anchor), 0},
     {TK_CONFIG_BOOLEAN, "-autoclear", "autoClear", "AutoClear", "0",
-     Tk_Offset(Table, autoClear), 0},
+     offsetof(Table, autoClear), 0},
     {TK_CONFIG_BORDER, "-background", "background", "Background", NORMAL_BG,
-     Tk_Offset(Table, defaultTag.bg), 0},
+     offsetof(Table, defaultTag.bg), 0},
     {TK_CONFIG_SYNONYM, "-bd", "borderWidth", (char *)NULL, (char *)NULL, 0, 0},
     {TK_CONFIG_SYNONYM, "-bg", "background", (char *)NULL, (char *)NULL, 0, 0},
     {TK_CONFIG_CURSOR, "-bordercursor", "borderCursor", "Cursor", "crosshair",
-     Tk_Offset(Table, bdcursor), TK_CONFIG_NULL_OK },
+     offsetof(Table, bdcursor), TK_CONFIG_NULL_OK },
     {TK_CONFIG_CUSTOM, "-borderwidth", "borderWidth", "BorderWidth", "1",
-     Tk_Offset(Table, defaultTag), TK_CONFIG_NULL_OK, &bdOpt },
+     offsetof(Table, defaultTag), TK_CONFIG_NULL_OK, &bdOpt },
     {TK_CONFIG_STRING, "-browsecommand", "browseCommand", "BrowseCommand", "",
-     Tk_Offset(Table, browseCmd), TK_CONFIG_NULL_OK},
+     offsetof(Table, browseCmd), TK_CONFIG_NULL_OK},
     {TK_CONFIG_SYNONYM, "-browsecmd", "browseCommand", (char *)NULL,
      (char *)NULL, 0, TK_CONFIG_NULL_OK},
     {TK_CONFIG_BOOLEAN, "-cache", "cache", "Cache", "0",
-     Tk_Offset(Table, caching), 0},
+     offsetof(Table, caching), 0},
     {TK_CONFIG_INT, "-colorigin", "colOrigin", "Origin", "0",
-     Tk_Offset(Table, colOffset), 0},
+     offsetof(Table, colOffset), 0},
     {TK_CONFIG_INT, "-cols", "cols", "Cols", "10",
-     Tk_Offset(Table, cols), 0},
+     offsetof(Table, cols), 0},
     {TK_CONFIG_STRING, "-colseparator", "colSeparator", "Separator", NULL,
-     Tk_Offset(Table, colSep), TK_CONFIG_NULL_OK },
+     offsetof(Table, colSep), TK_CONFIG_NULL_OK },
     {TK_CONFIG_CUSTOM, "-colstretchmode", "colStretch", "StretchMode", "none",
-     Tk_Offset (Table, colStretch), 0 , &stretchOpt },
+     offsetof (Table, colStretch), 0 , &stretchOpt },
     {TK_CONFIG_STRING, "-coltagcommand", "colTagCommand", "TagCommand", NULL,
-     Tk_Offset(Table, colTagCmd), TK_CONFIG_NULL_OK },
+     offsetof(Table, colTagCmd), TK_CONFIG_NULL_OK },
     {TK_CONFIG_INT, "-colwidth", "colWidth", "ColWidth", "10",
-     Tk_Offset(Table, defColWidth), 0},
+     offsetof(Table, defColWidth), 0},
     {TK_CONFIG_STRING, "-command", "command", "Command", "",
-     Tk_Offset(Table, command), TK_CONFIG_NULL_OK},
+     offsetof(Table, command), TK_CONFIG_NULL_OK},
     {TK_CONFIG_ACTIVE_CURSOR, "-cursor", "cursor", "Cursor", "xterm",
-     Tk_Offset(Table, cursor), TK_CONFIG_NULL_OK },
+     offsetof(Table, cursor), TK_CONFIG_NULL_OK },
     {TK_CONFIG_CUSTOM, "-drawmode", "drawMode", "DrawMode", "compatible",
-     Tk_Offset(Table, drawMode), 0, &drawOpt },
+     offsetof(Table, drawMode), 0, &drawOpt },
     {TK_CONFIG_STRING, "-ellipsis", "ellipsis", "Ellipsis", "",
-     Tk_Offset(Table, defaultTag.ellipsis), TK_CONFIG_NULL_OK},
+     offsetof(Table, defaultTag.ellipsis), TK_CONFIG_NULL_OK},
     {TK_CONFIG_BOOLEAN, "-exportselection", "exportSelection",
-     "ExportSelection", "1", Tk_Offset(Table, exportSelection), 0},
+     "ExportSelection", "1", offsetof(Table, exportSelection), 0},
     {TK_CONFIG_SYNONYM, "-fg", "foreground", (char *)NULL, (char *)NULL, 0, 0},
     {TK_CONFIG_BOOLEAN, "-flashmode", "flashMode", "FlashMode", "0",
-     Tk_Offset(Table, flashMode), 0},
+     offsetof(Table, flashMode), 0},
     {TK_CONFIG_INT, "-flashtime", "flashTime", "FlashTime", "2",
-     Tk_Offset(Table, flashTime), 0},
+     offsetof(Table, flashTime), 0},
     {TK_CONFIG_FONT, "-font", "font", "Font",  DEF_TABLE_FONT,
-     Tk_Offset(Table, defaultTag.tkfont), 0},
+     offsetof(Table, defaultTag.tkfont), 0},
     {TK_CONFIG_BORDER, "-foreground", "foreground", "Foreground", "black",
-     Tk_Offset(Table, defaultTag.fg), 0},
+     offsetof(Table, defaultTag.fg), 0},
 #ifdef PROCS
     {TK_CONFIG_BOOLEAN, "-hasprocs", "hasProcs", "hasProcs", "0",
-     Tk_Offset(Table, hasProcs), 0},
+     offsetof(Table, hasProcs), 0},
 #endif
     {TK_CONFIG_INT, "-height", "height", "Height", "0",
-     Tk_Offset(Table, maxReqRows), 0},
+     offsetof(Table, maxReqRows), 0},
     {TK_CONFIG_COLOR, "-highlightbackground", "highlightBackground",
-     "HighlightBackground", NORMAL_BG, Tk_Offset(Table, highlightBgColorPtr), 0},
+     "HighlightBackground", NORMAL_BG, offsetof(Table, highlightBgColorPtr), 0},
     {TK_CONFIG_COLOR, "-highlightcolor", "highlightColor", "HighlightColor",
-     HIGHLIGHT, Tk_Offset(Table, highlightColorPtr), 0},
+     HIGHLIGHT, offsetof(Table, highlightColorPtr), 0},
     {TK_CONFIG_PIXELS, "-highlightthickness", "highlightThickness",
-     "HighlightThickness", "2", Tk_Offset(Table, highlightWidth), 0},
+     "HighlightThickness", "2", offsetof(Table, highlightWidth), 0},
     {TK_CONFIG_BORDER, "-insertbackground", "insertBackground", "Foreground",
-     "Black", Tk_Offset(Table, insertBg), 0},
+     "Black", offsetof(Table, insertBg), 0},
     {TK_CONFIG_PIXELS, "-insertborderwidth", "insertBorderWidth", "BorderWidth",
-     "0", Tk_Offset(Table, insertBorderWidth), TK_CONFIG_COLOR_ONLY},
+     "0", offsetof(Table, insertBorderWidth), TK_CONFIG_COLOR_ONLY},
     {TK_CONFIG_PIXELS, "-insertborderwidth", "insertBorderWidth", "BorderWidth",
-     "0", Tk_Offset(Table, insertBorderWidth), TK_CONFIG_MONO_ONLY},
+     "0", offsetof(Table, insertBorderWidth), TK_CONFIG_MONO_ONLY},
     {TK_CONFIG_INT, "-insertofftime", "insertOffTime", "OffTime", "300",
-     Tk_Offset(Table, insertOffTime), 0},
+     offsetof(Table, insertOffTime), 0},
     {TK_CONFIG_INT, "-insertontime", "insertOnTime", "OnTime", "600",
-     Tk_Offset(Table, insertOnTime), 0},
+     offsetof(Table, insertOnTime), 0},
     {TK_CONFIG_PIXELS, "-insertwidth", "insertWidth", "InsertWidth", "2",
-     Tk_Offset(Table, insertWidth), 0},
+     offsetof(Table, insertWidth), 0},
     {TK_CONFIG_BOOLEAN, "-invertselected", "invertSelected", "InvertSelected",
-     "0", Tk_Offset(Table, invertSelected), 0},
+     "0", offsetof(Table, invertSelected), 0},
     {TK_CONFIG_PIXELS, "-ipadx", "ipadX", "Pad", "0",
-     Tk_Offset(Table, ipadX), 0},
+     offsetof(Table, ipadX), 0},
     {TK_CONFIG_PIXELS, "-ipady", "ipadY", "Pad", "0",
-     Tk_Offset(Table, ipadY), 0},
+     offsetof(Table, ipadY), 0},
     {TK_CONFIG_JUSTIFY, "-justify", "justify", "Justify", "left",
-     Tk_Offset(Table, defaultTag.justify), 0 },
+     offsetof(Table, defaultTag.justify), 0 },
     {TK_CONFIG_PIXELS, "-maxheight", "maxHeight", "MaxHeight", "600",
-     Tk_Offset(Table, maxReqHeight), 0},
+     offsetof(Table, maxReqHeight), 0},
     {TK_CONFIG_PIXELS, "-maxwidth", "maxWidth", "MaxWidth", "800",
-     Tk_Offset(Table, maxReqWidth), 0},
+     offsetof(Table, maxReqWidth), 0},
     {TK_CONFIG_BOOLEAN, "-multiline", "multiline", "Multiline", "1",
-     Tk_Offset(Table, defaultTag.multiline), 0},
-    {TK_CONFIG_PIXELS, "-padx", "padX", "Pad", "0", Tk_Offset(Table, padX), 0},
-    {TK_CONFIG_PIXELS, "-pady", "padY", "Pad", "0", Tk_Offset(Table, padY), 0},
+     offsetof(Table, defaultTag.multiline), 0},
+    {TK_CONFIG_PIXELS, "-padx", "padX", "Pad", "0", offsetof(Table, padX), 0},
+    {TK_CONFIG_PIXELS, "-pady", "padY", "Pad", "0", offsetof(Table, padY), 0},
     {TK_CONFIG_RELIEF, "-relief", "relief", "Relief", "sunken",
-     Tk_Offset(Table, defaultTag.relief), 0},
+     offsetof(Table, defaultTag.relief), 0},
     {TK_CONFIG_CUSTOM, "-resizeborders", "resizeBorders", "ResizeBorders",
-     "both", Tk_Offset(Table, resize), 0, &resizeTypeOpt },
+     "both", offsetof(Table, resize), 0, &resizeTypeOpt },
     {TK_CONFIG_INT, "-rowheight", "rowHeight", "RowHeight", "1",
-     Tk_Offset(Table, defRowHeight), 0},
+     offsetof(Table, defRowHeight), 0},
     {TK_CONFIG_INT, "-roworigin", "rowOrigin", "Origin", "0",
-     Tk_Offset(Table, rowOffset), 0},
-    {TK_CONFIG_INT, "-rows", "rows", "Rows", "10", Tk_Offset(Table, rows), 0},
+     offsetof(Table, rowOffset), 0},
+    {TK_CONFIG_INT, "-rows", "rows", "Rows", "10", offsetof(Table, rows), 0},
     {TK_CONFIG_STRING, "-rowseparator", "rowSeparator", "Separator", NULL,
-     Tk_Offset(Table, rowSep), TK_CONFIG_NULL_OK },
+     offsetof(Table, rowSep), TK_CONFIG_NULL_OK },
     {TK_CONFIG_CUSTOM, "-rowstretchmode", "rowStretch", "StretchMode", "none",
-     Tk_Offset(Table, rowStretch), 0 , &stretchOpt },
+     offsetof(Table, rowStretch), 0 , &stretchOpt },
     {TK_CONFIG_STRING, "-rowtagcommand", "rowTagCommand", "TagCommand", NULL,
-     Tk_Offset(Table, rowTagCmd), TK_CONFIG_NULL_OK },
+     offsetof(Table, rowTagCmd), TK_CONFIG_NULL_OK },
     {TK_CONFIG_SYNONYM, "-selcmd", "selectionCommand", (char *)NULL,
      (char *)NULL, 0, TK_CONFIG_NULL_OK},
     {TK_CONFIG_STRING, "-selectioncommand", "selectionCommand",
-     "SelectionCommand", NULL, Tk_Offset(Table, selCmd), TK_CONFIG_NULL_OK },
+     "SelectionCommand", NULL, offsetof(Table, selCmd), TK_CONFIG_NULL_OK },
     {TK_CONFIG_STRING, "-selectmode", "selectMode", "SelectMode", "browse",
-     Tk_Offset(Table, selectMode), TK_CONFIG_NULL_OK },
+     offsetof(Table, selectMode), TK_CONFIG_NULL_OK },
     {TK_CONFIG_BOOLEAN, "-selecttitles", "selectTitles", "SelectTitles", "0",
-     Tk_Offset(Table, selectTitles), 0},
+     offsetof(Table, selectTitles), 0},
     {TK_CONFIG_CUSTOM, "-selecttype", "selectType", "SelectType", "cell",
-     Tk_Offset(Table, selectType), 0, &selTypeOpt },
+     offsetof(Table, selectType), 0, &selTypeOpt },
 #ifdef PROCS
     {TK_CONFIG_BOOLEAN, "-showprocs", "showProcs", "showProcs", "0",
-     Tk_Offset(Table, showProcs), 0},
+     offsetof(Table, showProcs), 0},
 #endif
     {TK_CONFIG_BOOLEAN, "-sparsearray", "sparseArray", "SparseArray", "1",
-     Tk_Offset(Table, sparse), 0},
+     offsetof(Table, sparse), 0},
     {TK_CONFIG_CUSTOM, "-state", "state", "State", "normal",
-     Tk_Offset(Table, state), 0, &stateTypeOpt},
+     offsetof(Table, state), 0, &stateTypeOpt},
     {TK_CONFIG_STRING, "-takefocus", "takeFocus", "TakeFocus", (char *)NULL,
-     Tk_Offset(Table, takeFocus), TK_CONFIG_NULL_OK },
+     offsetof(Table, takeFocus), TK_CONFIG_NULL_OK },
     {TK_CONFIG_INT, "-titlecols", "titleCols", "TitleCols", "0",
-     Tk_Offset(Table, titleCols), TK_CONFIG_NULL_OK },
+     offsetof(Table, titleCols), TK_CONFIG_NULL_OK },
 #ifdef TITLE_CURSOR
     {TK_CONFIG_CURSOR, "-titlecursor", "titleCursor", "Cursor", "arrow",
-     Tk_Offset(Table, titleCursor), TK_CONFIG_NULL_OK },
+     offsetof(Table, titleCursor), TK_CONFIG_NULL_OK },
 #endif
     {TK_CONFIG_INT, "-titlerows", "titleRows", "TitleRows", "0",
-     Tk_Offset(Table, titleRows), TK_CONFIG_NULL_OK },
+     offsetof(Table, titleRows), TK_CONFIG_NULL_OK },
     {TK_CONFIG_BOOLEAN, "-usecommand", "useCommand", "UseCommand", "1",
-     Tk_Offset(Table, useCmd), 0},
+     offsetof(Table, useCmd), 0},
     {TK_CONFIG_STRING, "-variable", "variable", "Variable", (char *)NULL,
-     Tk_Offset(Table, arrayVar), TK_CONFIG_NULL_OK },
+     offsetof(Table, arrayVar), TK_CONFIG_NULL_OK },
     {TK_CONFIG_BOOLEAN, "-validate", "validate", "Validate", "0",
-     Tk_Offset(Table, validate), 0},
+     offsetof(Table, validate), 0},
     {TK_CONFIG_STRING, "-validatecommand", "validateCommand", "ValidateCommand",
-     "", Tk_Offset(Table, valCmd), TK_CONFIG_NULL_OK},
+     "", offsetof(Table, valCmd), TK_CONFIG_NULL_OK},
     {TK_CONFIG_SYNONYM, "-vcmd", "validateCommand", (char *)NULL,
      (char *)NULL, 0, TK_CONFIG_NULL_OK},
     {TK_CONFIG_INT, "-width", "width", "Width", "0",
-     Tk_Offset(Table, maxReqCols), 0},
+     offsetof(Table, maxReqCols), 0},
     {TK_CONFIG_BOOLEAN, "-wrap", "wrap", "Wrap", "0",
-     Tk_Offset(Table, defaultTag.wrap), 0},
+     offsetof(Table, defaultTag.wrap), 0},
     {TK_CONFIG_STRING, "-xscrollcommand", "xScrollCommand", "ScrollCommand",
-     NULL, Tk_Offset(Table, xScrollCmd), TK_CONFIG_NULL_OK },
+     NULL, offsetof(Table, xScrollCmd), TK_CONFIG_NULL_OK },
     {TK_CONFIG_STRING, "-yscrollcommand", "yScrollCommand", "ScrollCommand",
-     NULL, Tk_Offset(Table, yScrollCmd), TK_CONFIG_NULL_OK },
+     NULL, offsetof(Table, yScrollCmd), TK_CONFIG_NULL_OK },
     {TK_CONFIG_END, (char *)NULL, (char *)NULL, (char *)NULL,
      (char *)NULL, 0, 0}
 };
@@ -335,7 +334,7 @@ Tk_ConfigSpec tableSpecs[] = {
  * Keep this in sync with the above values.
  */
 
-static CONST84 char *updateOpts[] = {
+static const char *updateOpts[] = {
     "-anchor",		"-background",	"-bg",		"-bd",	
     "-borderwidth",	"-cache",	"-command",	"-colorigin",
     "-cols",		"-colstretchmode",		"-coltagcommand",
@@ -352,7 +351,6 @@ static CONST84 char *updateOpts[] = {
     "-xscrollcommand",	"-yscrollcommand", (char *) NULL
 };
 
-#ifdef HAVE_TCL84
 /*
  * The structure below defines widget class behavior by means of procedures
  * that can be invoked from generic window code.
@@ -364,7 +362,6 @@ static Tk_ClassProcs tableClass = {
     NULL,			/* createProc */
     NULL			/* modalProc */
 };
-#endif
 
 #ifdef WIN32
 /*
@@ -432,10 +429,7 @@ typedef union {
  *---------------------------------------------------------------------------
  */
 
-static char **
-StringifyObjects(objc, objv)
-     int objc;			/* Number of arguments. */
-     Tcl_Obj *CONST objv[];	/* Argument objects. */
+static char** StringifyObjects(int objc, Tcl_Obj* const objv[])
 {
     int i;
     char **argv;
@@ -455,7 +449,7 @@ StringifyObjects(objc, objv)
  */
 static int
 Tk_ClassOptionObjCmd(Tk_Window tkwin, char *defaultclass,
-		     int objc, Tcl_Obj *CONST objv[])
+		     int objc, Tcl_Obj *const objv[])
 {
     char *classname = defaultclass;
     int offset = 0;
@@ -484,14 +478,10 @@ Tk_ClassOptionObjCmd(Tk_Window tkwin, char *defaultclass,
  *
  *--------------------------------------------------------------
  */
-static int
-Tk_TableObjCmd(clientData, interp, objc, objv)
-    ClientData clientData;	/* Main window associated with interpreter. */
-    Tcl_Interp *interp;
-    int objc;			/* Number of arguments. */
-    Tcl_Obj *CONST objv[];	/* Argument objects. */
+static int Tk_TableObjCmd(ClientData clientData, Tcl_Interp *interp,
+			  int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr;
+    Table *tablePtr;
     Tk_Window tkwin, mainWin = (Tk_Window) clientData;
     int offset;
 
@@ -507,7 +497,7 @@ Tk_TableObjCmd(clientData, interp, objc, objv)
     }
 
     tablePtr			= (Table *) ckalloc(sizeof(Table));
-    memset((VOID *) tablePtr, 0, sizeof(Table));
+    memset((void *) tablePtr, 0, sizeof(Table));
 
     /*
      * Set the structure elments that aren't 0/NULL by default,
@@ -593,9 +583,7 @@ Tk_TableObjCmd(clientData, interp, objc, objv)
      * Handle class name and selection handlers
      */
     offset = 2 + Tk_ClassOptionObjCmd(tkwin, "Table", objc, objv);
-#ifdef HAVE_TCL84
     Tk_SetClassProcs(tkwin, &tableClass, (ClientData) tablePtr);
-#endif
     Tk_CreateEventHandler(tablePtr->tkwin,
 	    PointerMotionMask|ExposureMask|StructureNotifyMask|FocusChangeMask|VisibilityChangeMask,
 	    TableEventProc, (ClientData) tablePtr);
@@ -630,14 +618,10 @@ Tk_TableObjCmd(clientData, interp, objc, objv)
  *
  *--------------------------------------------------------------
  */
-static int
-TableWidgetObjCmd(clientData, interp, objc, objv)
-     ClientData clientData;
-     Tcl_Interp *interp;
-     int objc;			/* Number of arguments. */
-     Tcl_Obj *CONST objv[];	/* Argument objects. */
+static int TableWidgetObjCmd(ClientData clientData, Tcl_Interp *interp,
+			     int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int row, col, i, cmdIndex, result = TCL_OK;
 
     if (objc < 2) {
@@ -916,7 +900,7 @@ TableWidgetObjCmd(clientData, interp, objc, objv)
 static void
 TableDestroy(ClientData clientdata)
 {
-    register Table *tablePtr = (Table *) clientdata;
+    Table *tablePtr = (Table *) clientdata;
     Tcl_HashEntry *entryPtr;
     Tcl_HashSearch search;
 
@@ -1027,21 +1011,14 @@ TableDestroy(ClientData clientdata)
  *
  *----------------------------------------------------------------------
  */
-static int
-TableConfigure(interp, tablePtr, objc, objv, flags, forceUpdate)
-     Tcl_Interp *interp;	/* Used for error reporting. */
-     register Table *tablePtr;	/* Information about widget;  may or may
-				 * not already have values for some fields. */
-     int objc;			/* Number of arguments. */
-     Tcl_Obj *CONST objv[];	/* Argument objects. */
-     int flags;			/* Flags to pass to Tk_ConfigureWidget. */
-     int forceUpdate;		/* Whether to force an update - required
-				 * for initial configuration */
+static int TableConfigure(Tcl_Interp *interp, Table *tablePtr,
+			  Tcl_Size objc, Tcl_Obj* const* objv,
+			  int flags, int forceUpdate)
 {
     Tcl_HashSearch search;
     int oldUse, oldCaching, oldExport, oldTitleRows, oldTitleCols;
     int result = TCL_OK;
-    char *oldVar = NULL, **argv;
+    char *oldVar = NULL;
     Tcl_DString error;
     Tk_FontMetrics fm;
 
@@ -1056,9 +1033,9 @@ TableConfigure(interp, tablePtr, objc, objv, flags, forceUpdate)
     }
 
     /* Do the configuration */
-    argv = StringifyObjects(objc, objv);
+    Tcl_Obj* const* argv = (Tcl_Obj* const*)StringifyObjects(objc, objv);
     result = Tk_ConfigureWidget(interp, tablePtr->tkwin, tableSpecs,
-	    objc, (CONST84 char **) argv, (char *) tablePtr, flags);
+	    objc, argv, (char*)tablePtr, flags);
     ckfree((char *) argv);
     if (result != TCL_OK) {
 	return TCL_ERROR;
@@ -1261,7 +1238,7 @@ TableConfigure(interp, tablePtr, objc, objv, flags, forceUpdate)
     Tcl_DStringFree(&error);
     return result;
 }
-#ifdef HAVE_TCL84
+
 /*
  *---------------------------------------------------------------------------
  *
@@ -1280,9 +1257,7 @@ TableConfigure(interp, tablePtr, objc, objv, flags, forceUpdate)
  *---------------------------------------------------------------------------
  */
  
-static void
-TableWorldChanged(instanceData)
-    ClientData instanceData;	/* Information about widget. */
+static void TableWorldChanged(ClientData instanceData)
 {
     Table *tablePtr = (Table *) instanceData;
     Tk_FontMetrics fm;
@@ -1304,7 +1279,7 @@ TableWorldChanged(instanceData)
     /* invalidate the whole table */
     TableInvalidateAll(tablePtr, INV_HIGHLIGHT);
 }
-#endif
+
 /*
  *--------------------------------------------------------------
  *
@@ -1321,10 +1296,7 @@ TableWorldChanged(instanceData)
  *
  *--------------------------------------------------------------
  */
-static void
-TableEventProc(clientData, eventPtr)
-    ClientData clientData;	/* Information about window. */
-    XEvent *eventPtr;		/* Information about event. */
+static void TableEventProc(ClientData clientData, XEvent *eventPtr)
 {
     Table *tablePtr = (Table *) clientData;
     int row, col;
@@ -1533,7 +1505,7 @@ TableRedrawHighlight(Table *tablePtr)
  *----------------------------------------------------------------------
  */
 void
-TableRefresh(register Table *tablePtr, int row, int col, int mode)
+TableRefresh(Table *tablePtr, int row, int col, int mode)
 {
     int x, y, w, h;
 
@@ -1624,9 +1596,9 @@ TableGetGc(Display *display, Drawable d, TableTag *tagPtr, GC *tagGc)
  *--------------------------------------------------------------
  */
 static void
-TableUndisplay(register Table *tablePtr)
+TableUndisplay(Table *tablePtr)
 {
-    register int *seen = tablePtr->seen;
+    int *seen = tablePtr->seen;
     int row, col;
 
     /* We need to find out the true last cell, not considering spans */
@@ -1705,7 +1677,7 @@ TableUndisplay(register Table *tablePtr)
 static void
 TableDisplay(ClientData clientdata)
 {
-    register Table *tablePtr = (Table *) clientdata;
+    Table *tablePtr = (Table *) clientdata;
     Tk_Window tkwin = tablePtr->tkwin;
     Display *display = tablePtr->display;
     Drawable window;
@@ -1721,9 +1693,10 @@ TableDisplay(ClientData clientdata)
     int rowFrom, rowTo, colFrom, colTo,
 	invalidX, invalidY, invalidWidth, invalidHeight,
 	x, y, width, height, itemX, itemY, itemW, itemH,
-	row, col, urow, ucol, hrow=0, hcol=0, cx, cy, cw, ch, borders, bd[6],
+	row, col, urow, hrow=0, hcol=0, cx, cy, cw, ch, borders, bd[6],
 	numBytes, new, boundW, boundH, maxW, maxH, cellType,
 	originX, originY, activeCell, shouldInvert, ipadx, ipady, padx, pady;
+    int ucol;
     GC tagGc = NULL, topGc, bottomGc;
     char *string = NULL;
     char buf[INDEX_BUFSIZE];
@@ -1966,7 +1939,7 @@ TableDisplay(ClientData clientdata)
 	     * let's see if we have the value cached already
 	     * if not, run the findColTag routine and cache the value
 	     */
-	    entryPtr = Tcl_CreateHashEntry(colTagsCache, (char *)ucol, &new);
+	    entryPtr = Tcl_CreateHashEntry(colTagsCache, (Tcl_Size)ucol, &new);
 	    if (new) {
 		colPtr = FindRowColTag(tablePtr, ucol, COL);
 		Tcl_SetHashValue(entryPtr, colPtr);
@@ -2135,8 +2108,8 @@ TableDisplay(ClientData clientdata)
 
 	    /* If there is a string, show it */
 	    if (activeCell || numBytes) {
-		register int x0 = x + bd[0] + padx;
-		register int y0 = y + bd[2] + pady;
+		int x0 = x + bd[0] + padx;
+		int y0 = y + bd[2] + pady;
 
 		/* get the dimensions of the string */
 		textLayout = Tk_ComputeTextLayout(tagPtr->tkfont,
@@ -2473,8 +2446,8 @@ TableDisplay(ClientData clientdata)
 		 * We buffer the active tag for the 'activate' command.
 		 */
 		tablePtr->activeTagPtr = TableNewTag(NULL);
-		memcpy((VOID *) tablePtr->activeTagPtr,
-			(VOID *) tagPtr, sizeof(TableTag));
+		memcpy((void *) tablePtr->activeTagPtr,
+			(void *) tagPtr, sizeof(TableTag));
 	    }
 	    if (textLayout) {
 		Tk_FreeTextLayout(textLayout);
@@ -2653,12 +2626,13 @@ TableFlashEvent(ClientData clientdata)
     Table *tablePtr = (Table *) clientdata;
     Tcl_HashEntry *entryPtr;
     Tcl_HashSearch search;
-    int entries, count, row, col;
+    int entries, row, col;
+    Tcl_Size count;
 
     entries = 0;
     for (entryPtr = Tcl_FirstHashEntry(tablePtr->flashCells, &search);
 	 entryPtr != NULL; entryPtr = Tcl_NextHashEntry(&search)) {
-	count = (int) Tcl_GetHashValue(entryPtr);
+      count = (Tcl_Size)Tcl_GetHashValue(entryPtr);
 	if (--count <= 0) {
 	    /* get the cell address and invalidate that region only */
 	    TableParseArrayIndex(&row, &col,
@@ -2715,7 +2689,7 @@ TableAddFlash(Table *tablePtr, int row, int col)
 
     /* add the flash to the hash table */
     entryPtr = Tcl_CreateHashEntry(tablePtr->flashCells, buf, &dummy);
-    Tcl_SetHashValue(entryPtr, tablePtr->flashTime);
+    Tcl_SetHashValue(entryPtr, (Tcl_Size)tablePtr->flashTime);
 
     /* now set the timer if it's not already going and invalidate the area */
     if (tablePtr->flashTimer == NULL) {
@@ -2740,7 +2714,7 @@ TableAddFlash(Table *tablePtr, int row, int col)
  *----------------------------------------------------------------------
  */
 void
-TableSetActiveIndex(register Table *tablePtr)
+TableSetActiveIndex(Table *tablePtr)
 {
     if (tablePtr->arrayVar) {
 	tablePtr->flags |= SET_ACTIVE;
@@ -2766,7 +2740,7 @@ TableSetActiveIndex(register Table *tablePtr)
  *----------------------------------------------------------------------
  */
 void
-TableGetActiveBuf(register Table *tablePtr)
+TableGetActiveBuf(Table *tablePtr)
 {
     char *data = "";
 
@@ -2808,13 +2782,8 @@ TableGetActiveBuf(register Table *tablePtr)
  *
  *----------------------------------------------------------------------
  */
-static char *
-TableVarProc(clientData, interp, name, index, flags)
-     ClientData clientData;	/* Information about table. */
-     Tcl_Interp *interp;		/* Interpreter containing variable. */
-     char *name;			/* Not used. */
-     char *index;		/* Not used. */
-     int flags;			/* Information about what happened. */
+static char* TableVarProc(ClientData clientData, Tcl_Interp *interp,
+			  char *name, char *index, int flags)
 {
     Table *tablePtr = (Table *) clientData;
     int row, col, update = 1;
@@ -2825,7 +2794,7 @@ TableVarProc(clientData, interp, name, index, flags)
     /* is this the whole var being destroyed or just one cell being deleted */
     if ((flags & TCL_TRACE_UNSETS) && index == NULL) {
 	/* if this isn't the interpreter being destroyed reinstate the trace */
-	if ((flags & TCL_TRACE_DESTROYED) && !(flags & TCL_INTERP_DESTROYED)) {
+      if ((flags & TCL_TRACE_DESTROYED) && !(Tcl_InterpDeleted(interp))) {
 	    Tcl_SetVar2(interp, name, TEST_KEY, "", TCL_GLOBAL_ONLY);
 	    Tcl_UnsetVar2(interp, name, TEST_KEY, TCL_GLOBAL_ONLY);
 	    Tcl_ResetResult(interp);
@@ -2861,7 +2830,7 @@ TableVarProc(clientData, interp, name, index, flags)
 	    update = 0;
 	} else {
 	    /* modified TableGetActiveBuf */
-	    CONST char *data = "";
+	    const char *data = "";
 
 	    row = tablePtr->activeRow;
 	    col = tablePtr->activeCol;
@@ -2941,9 +2910,7 @@ TableVarProc(clientData, interp, name, index, flags)
  *
  *----------------------------------------------------------------------
  */
-void
-TableGeometryRequest(tablePtr)
-     register Table *tablePtr;
+void TableGeometryRequest(Table *tablePtr)
 {
     int x, y;
 
@@ -2979,9 +2946,7 @@ TableGeometryRequest(tablePtr)
  *
  *----------------------------------------------------------------------
  */
-void
-TableAdjustActive(tablePtr)
-     register Table *tablePtr;		/* Widget record for table */
+void TableAdjustActive(Table *tablePtr)
 {
     if (tablePtr->flags & HAS_ACTIVE) {
 	/*
@@ -3061,7 +3026,7 @@ TableAdjustActive(tablePtr)
  *----------------------------------------------------------------------
  */
 void
-TableAdjustParams(register Table *tablePtr)
+TableAdjustParams(Table *tablePtr)
 {
     int topRow, leftCol, row, col, total, i, value, x, y, width, height,
 	w, h, hl, px, py, recalc, bd[4],
@@ -3114,13 +3079,13 @@ TableAdjustParams(register Table *tablePtr)
     numPixels = 0;
     unpreset = 0;
     for (i = 0; i < tablePtr->cols; i++) {
-	entryPtr = Tcl_FindHashEntry(tablePtr->colWidths, (char *) i);
+	entryPtr = Tcl_FindHashEntry(tablePtr->colWidths, (Tcl_Size)i);
 	if (entryPtr == NULL) {
 	    tablePtr->colPixels[i] = -1;
 	    unpreset++;
 	    lastUnpreset = i;
 	} else {
-	    value = (int) Tcl_GetHashValue(entryPtr);
+	    value = (Tcl_Size)Tcl_GetHashValue(entryPtr);
 	    if (value > 0) {
 		tablePtr->colPixels[i] = value * tablePtr->charWidth + px;
 	    } else {
@@ -3208,13 +3173,13 @@ TableAdjustParams(register Table *tablePtr)
 	numPixels	= 0;
 	unpreset	= 0;
 	for (i = 0; i < tablePtr->rows; i++) {
-	    entryPtr = Tcl_FindHashEntry(tablePtr->rowHeights, (char *) i);
+	    entryPtr = Tcl_FindHashEntry(tablePtr->rowHeights, (Tcl_Size)i);
 	    if (entryPtr == NULL) {
 		tablePtr->rowPixels[i] = -1;
 		unpreset++;
 		lastUnpreset = i;
 	    } else {
-		value = (int) Tcl_GetHashValue(entryPtr);
+		value = (Tcl_Size)Tcl_GetHashValue(entryPtr);
 		if (value > 0) {
 		    tablePtr->rowPixels[i] = value * tablePtr->charHeight + py;
 		} else {
@@ -3470,7 +3435,7 @@ TableAdjustParams(register Table *tablePtr)
 static void
 TableCursorEvent(ClientData clientData)
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
 
     if (!(tablePtr->flags & HAS_FOCUS) || (tablePtr->insertOffTime == 0)
 	    || (tablePtr->flags & ACTIVE_DISABLED)
@@ -3510,7 +3475,7 @@ TableCursorEvent(ClientData clientData)
  *----------------------------------------------------------------------
  */
 void
-TableConfigCursor(register Table *tablePtr)
+TableConfigCursor(Table *tablePtr)
 {
     /*
      * To have a cursor, we have to have focus and allow edits
@@ -3575,24 +3540,19 @@ TableConfigCursor(register Table *tablePtr)
  *
  *----------------------------------------------------------------------
  */
-static int
-TableFetchSelection(clientData, offset, buffer, maxBytes)
-     ClientData clientData;	/* Information about table widget. */
-     int offset;		/* Offset within selection of first
-				 * character to be returned. */
-     char *buffer;		/* Location in which to place selection. */
-     int maxBytes;		/* Maximum number of bytes to place at buffer,
-				 * not including terminating NULL. */
+static Tcl_Size	TableFetchSelection(ClientData clientData,
+			Tcl_Size offset, char *buffer, Tcl_Size maxBytes)
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     Tcl_Interp *interp = tablePtr->interp;
     char *value, *data, *rowsep = tablePtr->rowSep, *colsep = tablePtr->colSep;
     Tcl_DString selection;
     Tcl_HashEntry *entryPtr;
     Tcl_HashSearch search;
-    int length, count, lastrow=0, needcs=0, r, c, listArgc, rslen=0, cslen=0;
+    int length, count, lastrow=0, needcs=0, r, c, rslen=0, cslen=0;
+    Tcl_Size listArgc;
     int numcols, numrows;
-    CONST84 char **listArgv;
+    const char **listArgv;
 
     /* if we are not exporting the selection ||
      * we have no data source, return */
@@ -3692,8 +3652,8 @@ TableFetchSelection(clientData, offset, buffer, maxBytes)
 	if (count > maxBytes) {
 	    count = maxBytes;
 	}
-	memcpy((VOID *) buffer,
-	       (VOID *) (Tcl_DStringValue(&selection) + offset),
+	memcpy((void *) buffer,
+	       (void *) (Tcl_DStringValue(&selection) + offset),
 	       (size_t) count);
     }
     buffer[count] = '\0';
@@ -3717,11 +3677,9 @@ TableFetchSelection(clientData, offset, buffer, maxBytes)
  *
  *----------------------------------------------------------------------
  */
-void
-TableLostSelection(clientData)
-     ClientData clientData;	/* Information about table widget. */
+void TableLostSelection(ClientData clientData)
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
 
     if (tablePtr->exportSelection) {
 	Tcl_HashEntry *entryPtr;
@@ -3756,13 +3714,10 @@ TableLostSelection(clientData)
  *
  *----------------------------------------------------------------------
  */
-static Tk_RestrictAction
-TableRestrictProc(serial, eventPtr)
-     ClientData serial;
-     XEvent *eventPtr;
+static Tk_RestrictAction TableRestrictProc(ClientData serial, XEvent *eventPtr)
 {
     if ((eventPtr->type == KeyRelease || eventPtr->type == KeyPress) &&
-	((eventPtr->xany.serial-(unsigned int)serial) > 0)) {
+	((eventPtr->xany.serial-(Tcl_Size)serial) > 0)) {
 	return TK_DEFER_EVENT;
     } else {
 	return TK_PROCESS_EVENT;
@@ -3788,15 +3743,10 @@ TableRestrictProc(serial, eventPtr)
  *
  *--------------------------------------------------------------
  */
-int
-TableValidateChange(tablePtr, r, c, old, new, index)
-     register Table *tablePtr;	/* Table that needs validation. */
-     int r, c;			/* row,col index of cell in user coords */
-     char *old;			/* current value of cell */
-     char *new;			/* potential new value of cell */
-     int index;			/* index of insert/delete, -1 otherwise */
+int TableValidateChange(Table *tablePtr, int r,
+			int c, char *old, char *new, int index)
 {
-    register Tcl_Interp *interp = tablePtr->interp;
+    Tcl_Interp *interp = tablePtr->interp;
     int code, bool;
     Tk_RestrictProc *rstrct;
     ClientData cdata;
@@ -3883,18 +3833,9 @@ TableValidateChange(tablePtr, r, c, old, new, index)
  *
  *--------------------------------------------------------------
  */
-void
-ExpandPercents(tablePtr, before, r, c, old, new, index, dsPtr, cmdType)
-     Table *tablePtr;		/* Table that needs validation. */
-     char *before;		/* Command containing percent
-				 * expressions to be replaced. */
-     int r, c;			/* row,col index of cell */
-     char *old;                 /* current value of cell */
-     char *new;                 /* potential new value of cell */
-     int index;                 /* index of insert/delete */
-     Tcl_DString *dsPtr;        /* Dynamic string in which to append
-				 * new command. */
-     int cmdType;		/* type of command to make %-subs for */
+void ExpandPercents(Table *tablePtr, char *before,
+		    int r, int c, char *old, char *new, int index,
+		    Tcl_DString *dsPtr, int cmdType)
 {
     int length, spaceNeeded, cvtFlags;
 #ifdef TCL_UTF_MAX
@@ -4006,9 +3947,7 @@ ExpandPercents(tablePtr, before, r, c, old, new, index, dsPtr, cmdType)
 #ifdef MAC_TCL
 #pragma export on
 #endif
-EXTERN int
-Tktable_Init(interp)
-     Tcl_Interp *interp;
+extern int Tktable_Init(Tcl_Interp *interp)
 {
     /* This defines the static chars tkTable(Safe)InitScript */
 #include "tkTableInitScript.h"
@@ -4051,9 +3990,7 @@ Tktable_Init(interp)
 	    tkTableSafeInitScript : tkTableInitScript);
 }
 
-EXTERN int
-Tktable_SafeInit(interp)
-     Tcl_Interp *interp;
+extern int Tktable_SafeInit(Tcl_Interp *interp)
 {
     return Tktable_Init(interp);
 }

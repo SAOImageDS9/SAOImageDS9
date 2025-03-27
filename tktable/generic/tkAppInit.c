@@ -24,10 +24,10 @@
 extern int matherr();
 int *tclDummyMathPtr = (int *) matherr;
 
-EXTERN int		Tktable_Init _ANSI_ARGS_((Tcl_Interp *interp));
+extern int Tktable_Init(Tcl_Interp *interp))
 #ifdef TK_TEST
-EXTERN int		Tcltest_Init _ANSI_ARGS_((Tcl_Interp *interp));
-EXTERN int		Tktest_Init _ANSI_ARGS_((Tcl_Interp *interp));
+extern int Tcltest_Init(Tcl_Interp *interp);
+extern int Tktest_Init(Tcl_Interp *interp);
 #endif /* TK_TEST */
 
 /*

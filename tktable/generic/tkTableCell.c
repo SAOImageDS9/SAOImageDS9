@@ -83,7 +83,7 @@ int
 TableCellCoords(Table *tablePtr, int row, int col,
 		int *x, int *y, int *w, int *h)
 {
-    register int hl = tablePtr->highlightWidth;
+    int hl = tablePtr->highlightWidth;
     int result = CELL_OK;
 
     if (tablePtr->rows <= 0 || tablePtr->cols <= 0) {
@@ -292,7 +292,7 @@ TableCellVCoords(Table *tablePtr, int row, int col,
  *----------------------------------------------------------------------
  */
 void
-TableWhatCell(register Table *tablePtr, int x, int y, int *row, int *col)
+TableWhatCell(Table *tablePtr, int x, int y, int *row, int *col)
 {
     int i;
     x = MAX(0, x); y = MAX(0, y);
@@ -469,7 +469,7 @@ TableAtBorder(Table * tablePtr, int x, int y, int *row, int *col)
 char *
 TableGetCellValue(Table *tablePtr, int r, int c)
 {
-    register Tcl_Interp *interp = tablePtr->interp;
+    Tcl_Interp *interp = tablePtr->interp;
     char *result = NULL;
     char buf[INDEX_BUFSIZE];
     Tcl_HashEntry *entryPtr = NULL;
@@ -824,7 +824,7 @@ TableGetIcursor(Table *tablePtr, char *arg, int *posn)
  */
 int
 TableGetIndex(tablePtr, str, row_p, col_p)
-    register Table *tablePtr;	/* Table for which the index is being
+    Table *tablePtr;	/* Table for which the index is being
 				 * specified. */
     char *str;			/* Symbolic specification of cell in table. */
     int *row_p;		/* Where to store converted row. */
@@ -925,10 +925,10 @@ TableGetIndex(tablePtr, str, row_p, col_p)
  *--------------------------------------------------------------
  */
 int
-Table_SetCmd(ClientData clientData, register Tcl_Interp *interp,
-	     int objc, Tcl_Obj *CONST objv[])
+Table_SetCmd(ClientData clientData, Tcl_Interp *interp,
+	     int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *)clientData;
+    Table *tablePtr = (Table *)clientData;
     int row, col, len, i, j, max;
     char *str;
 
@@ -1071,7 +1071,7 @@ Table_SetCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 static int
-Table_SpanSet(register Table *tablePtr, int urow, int ucol, int rs, int cs)
+Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs)
 {
     Tcl_Interp *interp = tablePtr->interp;
     int i, j, new, ors, ocs, result = TCL_OK;
@@ -1227,10 +1227,10 @@ Table_SpanSet(register Table *tablePtr, int urow, int ucol, int rs, int cs)
  *--------------------------------------------------------------
  */
 int
-Table_SpanCmd(ClientData clientData, register Tcl_Interp *interp,
-	      int objc, Tcl_Obj *CONST objv[])
+Table_SpanCmd(ClientData clientData, Tcl_Interp *interp,
+	      int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int rs, cs, row, col, i;
     Tcl_HashEntry *entryPtr;
 
@@ -1299,10 +1299,10 @@ Table_SpanCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_HiddenCmd(ClientData clientData, register Tcl_Interp *interp,
-		int objc, Tcl_Obj *CONST objv[])
+Table_HiddenCmd(ClientData clientData, Tcl_Interp *interp,
+		int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int i, row, col;
     Tcl_HashEntry *entryPtr;
     char *span;
@@ -1386,7 +1386,7 @@ Table_HiddenCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 void
-TableSpanSanCheck(register Table *tablePtr)
+TableSpanSanCheck(Table *tablePtr)
 {
     int rs, cs, row, col, reset;
     Tcl_HashEntry *entryPtr;

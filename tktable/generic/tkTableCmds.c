@@ -30,10 +30,10 @@
  *--------------------------------------------------------------
  */
 int
-Table_ActivateCmd(ClientData clientData, register Tcl_Interp *interp,
-	      int objc, Tcl_Obj *CONST objv[])
+Table_ActivateCmd(ClientData clientData, Tcl_Interp *interp,
+	      int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int result = TCL_OK;
     int row, col, templen;
 
@@ -153,10 +153,10 @@ Table_ActivateCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_AdjustCmd(ClientData clientData, register Tcl_Interp *interp,
-		int objc, Tcl_Obj *CONST objv[])
+Table_AdjustCmd(ClientData clientData, Tcl_Interp *interp,
+		int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     Tcl_HashEntry *entryPtr;
     Tcl_HashSearch search;
     Tcl_HashTable *hashTablePtr;
@@ -258,10 +258,10 @@ Table_AdjustCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_BboxCmd(ClientData clientData, register Tcl_Interp *interp,
-	      int objc, Tcl_Obj *CONST objv[])
+Table_BboxCmd(ClientData clientData, Tcl_Interp *interp,
+	      int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int x, y, w, h, row, col, key;
     Tcl_Obj *resultPtr;
 
@@ -317,7 +317,7 @@ Table_BboxCmd(ClientData clientData, register Tcl_Interp *interp,
     return TCL_OK;
 }
 
-static CONST84 char *bdCmdNames[] = {
+static const char *bdCmdNames[] = {
     "mark", "dragto", (char *)NULL
 };
 enum bdCmd {
@@ -341,10 +341,10 @@ enum bdCmd {
  *--------------------------------------------------------------
  */
 int
-Table_BorderCmd(ClientData clientData, register Tcl_Interp *interp,
-		int objc, Tcl_Obj *CONST objv[])
+Table_BorderCmd(ClientData clientData, Tcl_Interp *interp,
+		int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     Tcl_HashEntry *entryPtr;
     int x, y, w, h, row, col, key, dummy, value, cmdIndex;
     char *rc = NULL;
@@ -449,7 +449,7 @@ Table_BorderCmd(ClientData clientData, register Tcl_Interp *interp,
 }
 
 /* clear subcommands */
-static CONST84 char *clearNames[] = {
+static const char *clearNames[] = {
     "all", "cache", "sizes", "tags", (char *)NULL
 };
 enum clearCommand {
@@ -474,10 +474,10 @@ enum clearCommand {
  *--------------------------------------------------------------
  */
 int
-Table_ClearCmd(ClientData clientData, register Tcl_Interp *interp,
-		int objc, Tcl_Obj *CONST objv[])
+Table_ClearCmd(ClientData clientData, Tcl_Interp *interp,
+		int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int cmdIndex, redraw = 0;
 
     if (objc < 3 || objc > 5) {
@@ -642,10 +642,10 @@ Table_ClearCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_CurselectionCmd(ClientData clientData, register Tcl_Interp *interp,
-		      int objc, Tcl_Obj *CONST objv[])
+Table_CurselectionCmd(ClientData clientData, Tcl_Interp *interp,
+		      int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     Tcl_HashEntry *entryPtr;
     Tcl_HashSearch search;
     char *value = NULL;
@@ -705,10 +705,10 @@ Table_CurselectionCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_CurvalueCmd(ClientData clientData, register Tcl_Interp *interp,
-		  int objc, Tcl_Obj *CONST objv[])
+Table_CurvalueCmd(ClientData clientData, Tcl_Interp *interp,
+		  int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
 
     if (objc > 3) {
 	Tcl_WrongNumArgs(interp, 2, objv, "?<value>?");
@@ -767,10 +767,10 @@ Table_CurvalueCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_GetCmd(ClientData clientData, register Tcl_Interp *interp,
-	     int objc, Tcl_Obj *CONST objv[])
+Table_GetCmd(ClientData clientData, Tcl_Interp *interp,
+	     int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int result = TCL_OK;
     int r1, c1, r2, c2, row, col;
 
@@ -818,10 +818,10 @@ Table_GetCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_ScanCmd(ClientData clientData, register Tcl_Interp *interp,
-	      int objc, Tcl_Obj *CONST objv[])
+Table_ScanCmd(ClientData clientData, Tcl_Interp *interp,
+	      int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int x, y, row, col, cmdIndex;
 
     if (objc != 5) {
@@ -882,10 +882,10 @@ Table_ScanCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_SelAnchorCmd(ClientData clientData, register Tcl_Interp *interp,
-		   int objc, Tcl_Obj *CONST objv[])
+Table_SelAnchorCmd(ClientData clientData, Tcl_Interp *interp,
+		   int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int row, col;
 
     if (objc != 4) {
@@ -927,10 +927,10 @@ Table_SelAnchorCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_SelClearCmd(ClientData clientData, register Tcl_Interp *interp,
-		  int objc, Tcl_Obj *CONST objv[])
+Table_SelClearCmd(ClientData clientData, Tcl_Interp *interp,
+		  int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int result = TCL_OK;
     char buf1[INDEX_BUFSIZE];
     int row, col, key, clo=0,chi=0,r1,c1,r2,c2;
@@ -1018,10 +1018,10 @@ CLEAR_CELLS:
  *--------------------------------------------------------------
  */
 int
-Table_SelIncludesCmd(ClientData clientData, register Tcl_Interp *interp,
-		     int objc, Tcl_Obj *CONST objv[])
+Table_SelIncludesCmd(ClientData clientData, Tcl_Interp *interp,
+		     int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int row, col;
 
     if (objc != 4) {
@@ -1055,10 +1055,10 @@ Table_SelIncludesCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_SelSetCmd(ClientData clientData, register Tcl_Interp *interp,
-		int objc, Tcl_Obj *CONST objv[])
+Table_SelSetCmd(ClientData clientData, Tcl_Interp *interp,
+		int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int row, col, dummy, key;
     char buf1[INDEX_BUFSIZE];
     Tcl_HashSearch search;
@@ -1162,10 +1162,10 @@ SET_CELLS:
  *--------------------------------------------------------------
  */
 int
-Table_ViewCmd(ClientData clientData, register Tcl_Interp *interp,
-	      int objc, Tcl_Obj *CONST objv[])
+Table_ViewCmd(ClientData clientData, Tcl_Interp *interp,
+	      int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int row, col, value;
     char *xy;
 
@@ -1295,10 +1295,10 @@ Table_ViewCmd(ClientData clientData, register Tcl_Interp *interp,
  *--------------------------------------------------------------
  */
 int
-Table_Cmd(ClientData clientData, register Tcl_Interp *interp,
-	  int objc, Tcl_Obj *CONST objv[])
+Table_Cmd(ClientData clientData, Tcl_Interp *interp,
+	  int objc, Tcl_Obj *const objv[])
 {
-    register Table *tablePtr = (Table *) clientData;
+    Table *tablePtr = (Table *) clientData;
     int result = TCL_OK;
 
     return result;

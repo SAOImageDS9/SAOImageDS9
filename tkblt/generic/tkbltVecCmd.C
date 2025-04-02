@@ -59,6 +59,12 @@
 #include "tkbltSwitch.h"
 #include "tkbltInt.h"
 
+// Check, if Tcl version supports Tcl_Size,
+// which was introduced in Tcl 8.7 and 9.
+#ifndef Tcl_Size
+typedef int Tcl_Size;
+#endif
+
 using namespace Blt;
 
 extern int Blt_SimplifyLine (Point2d *origPts, int low, int high, 
@@ -86,11 +92,11 @@ typedef struct {
 static Blt_SwitchSpec printSwitches[] = 
   {
     {BLT_SWITCH_OBJ,    "-format", "string",
-     Tk_Offset(PrintSwitches, formatObjPtr), 0},
+     offsetof(PrintSwitches, formatObjPtr), 0},
     {BLT_SWITCH_CUSTOM, "-from",   "index",
-     Tk_Offset(PrintSwitches, from),         0, 0, &indexSwitch},
+     offsetof(PrintSwitches, from),         0, 0, &indexSwitch},
     {BLT_SWITCH_CUSTOM, "-to",     "index",
-     Tk_Offset(PrintSwitches, to),           0, 0, &indexSwitch},
+     offsetof(PrintSwitches, to),           0, 0, &indexSwitch},
     {BLT_SWITCH_END}
   };
 
@@ -105,11 +111,11 @@ typedef struct {
 static Blt_SwitchSpec sortSwitches[] = 
   {
     {BLT_SWITCH_BITMASK, "-decreasing", "",
-	Tk_Offset(SortSwitches, flags),   0, SORT_DECREASING},
+	offsetof(SortSwitches, flags),   0, SORT_DECREASING},
     {BLT_SWITCH_BITMASK, "-reverse",   "",
-	Tk_Offset(SortSwitches, flags),   0, SORT_DECREASING},
+	offsetof(SortSwitches, flags),   0, SORT_DECREASING},
     {BLT_SWITCH_BITMASK, "-uniq",     "", 
-	Tk_Offset(SortSwitches, flags),   0, SORT_UNIQUE},
+	offsetof(SortSwitches, flags),   0, SORT_UNIQUE},
     {BLT_SWITCH_END}
   };
 
@@ -124,17 +130,17 @@ typedef struct {
 
 static Blt_SwitchSpec fftSwitches[] = {
   {BLT_SWITCH_CUSTOM, "-imagpart",    "vector",
-   Tk_Offset(FFTData, imagPtr), 0, 0, &fftVectorSwitch},
+   offsetof(FFTData, imagPtr), 0, 0, &fftVectorSwitch},
   {BLT_SWITCH_BITMASK, "-noconstant", "",
-   Tk_Offset(FFTData, mask), 0, FFT_NO_CONSTANT},
+   offsetof(FFTData, mask), 0, FFT_NO_CONSTANT},
   {BLT_SWITCH_BITMASK, "-spectrum", "",
-   Tk_Offset(FFTData, mask), 0, FFT_SPECTRUM},
+   offsetof(FFTData, mask), 0, FFT_SPECTRUM},
   {BLT_SWITCH_BITMASK, "-bartlett",  "",
-   Tk_Offset(FFTData, mask), 0, FFT_BARTLETT},
+   offsetof(FFTData, mask), 0, FFT_BARTLETT},
   {BLT_SWITCH_DOUBLE, "-delta",   "float",
-   Tk_Offset(FFTData, mask), 0, 0, },
+   offsetof(FFTData, mask), 0, 0, },
   {BLT_SWITCH_CUSTOM, "-frequencies", "vector",
-   Tk_Offset(FFTData, freqPtr), 0, 0, &fftVectorSwitch},
+   offsetof(FFTData, freqPtr), 0, 0, &fftVectorSwitch},
   {BLT_SWITCH_END}
 };
 
@@ -163,7 +169,7 @@ static int Blt_ExprDoubleFromObj(Tcl_Interp* interp, Tcl_Obj *objPtr,
     return TCL_OK;
 
   // Interpret the empty string "" and "NaN" as NaN.
-  int length;
+  Tcl_Size length;
   char *string;
   string = Tcl_GetStringFromObj(objPtr, &length);
   if (length == 0 || (length == 3 && strcmp(string, "NaN") == 0)) {
@@ -301,7 +307,7 @@ static int AppendOp(Vector *vPtr, Tcl_Interp* interp,
     if (v2Ptr != NULL)
       result = AppendVector(vPtr, v2Ptr);
     else {
-      int nElem;
+      Tcl_Size nElem;
       Tcl_Obj **elemObjArr;
 
       if (Tcl_ListObjGetElements(interp, objv[i], &nElem, &elemObjArr) 
@@ -757,7 +763,6 @@ static int PopulateOp(Vector *vPtr, Tcl_Interp* interp,
   if (Vec_SetLength(interp, v2Ptr, size) != TCL_OK)
     return TCL_ERROR;
 
-  int count = 0;
   double* valuePtr = v2Ptr->valueArr;
   int i;
   for (i = 0; i < (vPtr->length - 1); i++) {
@@ -766,10 +771,9 @@ static int PopulateOp(Vector *vPtr, Tcl_Interp* interp,
     for (int j = 0; j <= density; j++) {
       *valuePtr = vPtr->valueArr[i] + (slice * (double)j);
       valuePtr++;
-      count++;
     }
   }
-  count++;
+
   *valuePtr = vPtr->valueArr[i];
   if (!isNew) {
     if (v2Ptr->flush)
@@ -813,7 +817,7 @@ static int ValuesOp(Vector *vPtr, Tcl_Interp* interp,
     const char* fmt = Tcl_GetString(switches.formatObjPtr);
     for (int i = switches.from; i <= switches.to; i++) {
       char buffer[200];
-      sprintf(buffer, fmt, vPtr->valueArr[i]);
+      snprintf(buffer, 200, fmt, vPtr->valueArr[i]);
       Tcl_DStringAppend(&ds, buffer, -1);
     }
     Tcl_DStringResult(interp, &ds);
@@ -1293,7 +1297,7 @@ static int SeqOp(Vector *vPtr, Tcl_Interp* interp,
 static int SetOp(Vector *vPtr, Tcl_Interp* interp, 
 		 int objc, Tcl_Obj* const objv[])
 {
-  int nElem;
+  Tcl_Size nElem;
   Tcl_Obj **elemObjArr;
 
   // The source can be either a list of numbers or another vector.

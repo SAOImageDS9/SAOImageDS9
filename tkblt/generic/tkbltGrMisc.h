@@ -37,6 +37,12 @@ using namespace std;
 
 #include <tk.h>
 
+// Check, if Tcl version supports Tcl_Size,
+// which was introduced in Tcl 8.7 and 9.
+#ifndef Tcl_Size
+typedef int Tcl_Size;
+#endif
+
 #ifndef MIN
 #   define MIN(x,y) ((x)<(y)?(x):(y))
 #endif

@@ -531,7 +531,7 @@ static int ShowOp(ClientData clientData, Tcl_Interp* interp,
     return TCL_OK;
   }
 
-  int elemObjc;
+  Tcl_Size elemObjc;
   Tcl_Obj** elemObjv;
   if (Tcl_ListObjGetElements(interp, objv[3], &elemObjc, &elemObjv) != TCL_OK)
     return TCL_ERROR;

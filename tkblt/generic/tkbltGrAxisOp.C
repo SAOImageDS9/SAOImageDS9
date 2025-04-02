@@ -379,7 +379,7 @@ static int GetAxisScrollInfo(Tcl_Interp* interp,
   const char *string;
   char c;
   double offset;
-  int length;
+  Tcl_Size length;
 
   offset = *offsetPtr;
   string = Tcl_GetStringFromObj(objv[0], &length);

@@ -65,8 +65,8 @@ Tk_ObjCustomOption valuesObjOption =
   };
 
 static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
-		       Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		       int offset, char* savePtr, int flags)
+			 Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
+			 int offset, char* savePtr, int flags)
 {
   ElemValues** valuesPtrPtr = (ElemValues**)(widgRec + offset);
   *(double*)savePtr = *(double*)valuesPtrPtr;
@@ -76,8 +76,8 @@ static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
   if (!valuesPtrPtr)
     return TCL_OK;
 
+  Tcl_Size objc;
   Tcl_Obj** objv;
-  int objc;
   if (Tcl_ListObjGetElements(interp, *objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;
 
@@ -113,7 +113,7 @@ static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
 }
 
 static Tcl_Obj* ValuesGetProc(ClientData clientData, Tk_Window tkwin, 
-			    char *widgRec, int offset)
+			      char *widgRec, int offset)
 {
   ElemValues* valuesPtr = *(ElemValues**)(widgRec + offset);
 
@@ -149,11 +149,11 @@ Tk_ObjCustomOption pairsObjOption =
   };
 
 static int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
-		       Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		       int offset, char* savePtr, int flags)
+			Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
+			int offset, char* savePtr, int flags)
 {
   ElemCoords* coordsPtr = (ElemCoords*)(widgRec + offset);
-  *(double*)savePtr = *(double*)NULL;
+  savePtr = NULL;
 
   double* values;
   int nValues;
@@ -190,7 +190,7 @@ static int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
 };
 
 static Tcl_Obj* PairsGetProc(ClientData clientData, Tk_Window tkwin, 
-			    char *widgRec, int offset)
+			     char *widgRec, int offset)
 {
   ElemCoords* coordsPtr = (ElemCoords*)(widgRec + offset);
 
@@ -231,7 +231,7 @@ int StyleSetProc(ClientData clientData, Tcl_Interp* interp,
   Element* elemPtr = ops->elemPtr;
   size_t size = (size_t)clientData;
 
-  int objc;
+  Tcl_Size objc;
   Tcl_Obj** objv;
   if (Tcl_ListObjGetElements(interp, *objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;
@@ -308,7 +308,7 @@ static int GetPenStyleFromObj(Tcl_Interp* interp, Graph* graphPtr,
 			      Tcl_Obj *objPtr, ClassId classId,
 			      PenStyle *stylePtr)
 {
-  int objc;
+  Tcl_Size objc;
   Tcl_Obj **objv;
   if (Tcl_ListObjGetElements(interp, objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;
@@ -367,7 +367,7 @@ void VectorChangedProc(Tcl_Interp* interp, ClientData clientData,
 static int ParseValues(Tcl_Interp* interp, Tcl_Obj *objPtr, int *nValuesPtr,
 		       double **arrayPtr)
 {
-  int objc;
+  Tcl_Size objc;
   Tcl_Obj **objv;
   if (Tcl_ListObjGetElements(interp, objPtr, &objc, &objv) != TCL_OK)
     return TCL_ERROR;

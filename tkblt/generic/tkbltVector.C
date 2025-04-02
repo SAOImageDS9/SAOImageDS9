@@ -105,13 +105,13 @@ typedef struct {
 static Blt_SwitchSpec createSwitches[] = 
   {
     {BLT_SWITCH_STRING, "-variable", "varName",
-     Tk_Offset(CreateSwitches, varName), BLT_SWITCH_NULL_OK},
+     offsetof(CreateSwitches, varName), BLT_SWITCH_NULL_OK},
     {BLT_SWITCH_STRING, "-command", "command",
-     Tk_Offset(CreateSwitches, cmdName), BLT_SWITCH_NULL_OK},
+     offsetof(CreateSwitches, cmdName), BLT_SWITCH_NULL_OK},
     {BLT_SWITCH_BOOLEAN, "-watchunset", "bool",
-     Tk_Offset(CreateSwitches, watchUnset), 0},
+     offsetof(CreateSwitches, watchUnset), 0},
     {BLT_SWITCH_BOOLEAN, "-flush", "bool",
-     Tk_Offset(CreateSwitches, flush), 0},
+     offsetof(CreateSwitches, flush), 0},
     {BLT_SWITCH_END}
   };
 

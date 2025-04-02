@@ -193,6 +193,20 @@ int Blt::ParseNestedCmd(Tcl_Interp* interp, const char *string,
   return TCL_ERROR;
 }
 
+char Blt::Backslash(
+    const char *src,		/* Points to the backslash character of a
+				 * backslash sequence. */
+    int *readPtr)		/* Fill in with number of characters read from
+				 * src, unless NULL. */
+{
+    char buf[4] = "";
+    Tcl_UniChar ch = 0;
+
+    Tcl_UtfBackslash(src, readPtr, buf);
+    Tcl_UtfToUniChar(buf, &ch);
+    return (char) ch;
+}
+
 int Blt::ParseBraces(Tcl_Interp* interp, const char *string,
 		    const char **termPtr, ParseValue *parsePtr)
 {
@@ -245,10 +259,10 @@ int Blt::ParseBraces(Tcl_Interp* interp, const char *string,
 	     */
 
 	    if (*src == '\n') {
-		dest[-1] = Tcl_Backslash(src - 1, &count);
-		src += count - 1;
+	      dest[-1] = Backslash(src - 1, &count);
+	      src += count - 1;
 	    } else {
-		Tcl_Backslash(src - 1, &count);
+		Backslash(src - 1, &count);
 		while (count > 1) {
 		    if (dest == end) {
 			parsePtr->next = dest;
@@ -294,7 +308,7 @@ void Blt::ExpandParseValue(ParseValue *parsePtr, int needed)
      * Copy from old buffer to new, free old buffer if needed, and
      * mark new buffer as malloc-ed.
      */
-    memcpy((VOID *) buffer, (VOID *) parsePtr->buffer,
+    memcpy((void *) buffer, (void *) parsePtr->buffer,
 	(size_t) (parsePtr->next - parsePtr->buffer));
     parsePtr->next = buffer + (parsePtr->next - parsePtr->buffer);
     if (parsePtr->clientData != 0) {
@@ -369,7 +383,7 @@ int Blt::ParseQuotes(Tcl_Interp* interp, const char *string, int termChar,
 	    int nRead;
 
 	    src--;
-	    *dest = Tcl_Backslash(src, &nRead);
+	    *dest = Backslash(src, &nRead);
 	    dest++;
 	    src += nRead;
 	    continue;

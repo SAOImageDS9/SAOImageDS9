@@ -291,7 +291,7 @@ Vector FitsFile::getColMinMax(const char* name)
 	  // for memory models that support internal paging
 	  ptr = page(ptr, rowlen);
 
-	  register double z = col->value(ptr);
+	  double z = col->value(ptr);
 	  if (z < zmin)
 	    zmin = z;
 	  if (z > zmax)

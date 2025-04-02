@@ -1,0 +1,127 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME jpeg]
+[vset FORMATFULLNAME {Joint Picture Expert Group format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[include format-package.inc]
+
+
+[section {Notes}]
+
+[list_begin enum]
+[enum]
+Chapter [emph "Image Metadata"] of the [package Img] manual page
+describes the parameters of the resolution related options.
+
+[list_end]
+
+
+[section {Options}]
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 2.0.
+[para]
+
+If set to [const true], additional information about the read or written image
+is printed to stdout. Default is [const false].
+
+
+[def [option -fast]]
+
+This option is supported for reading only. Available since version 1.2.4.
+[para]
+
+If specified, it activates a processing mode which is fast,
+but provides only low-quality information.
+
+
+[def [option -grayscale]]
+
+This option is supported for reading and writing. Available since version 1.2.4.
+[para]
+
+Usage of this option forces incoming images to grayscale and
+written images will be monochrome.
+
+
+[def [option -optimize]]
+
+This option is supported for writing only. Available since version 1.2.4.
+[para]
+
+If specified, it causes the writer to optimize the Huffman table used to encode the JPEG coefficients.
+
+
+[def [option -progressive]]
+
+This option is supported for writing only. Available since version 1.2.4.
+[para]
+
+If specified, it causes the creation of a [term progressive] JPEG file.
+
+
+[def "[option -quality] [arg n]"]
+
+This option is supported for writing only. Available since version 1.2.4.
+[para]
+
+It specifies the compression level as a quality percentage.
+The higher the quality, the less the compression.
+The nominal range for [arg n] is [const 0]...[const 100].
+Useful values are in the range [const 5]...[const 95]. 
+The default value is [const 75].
+
+
+[def "[option -smooth] [arg n]"]
+
+This option is supported for writing only. Available since version 1.2.4.
+[para]
+
+When used the writer will smooth the image before performing the compression.
+Values in the [const 10]...[const 30] are usually enough.
+The default is [const 0], i.e no smoothing.
+
+
+[def "[option -resolution] [arg xres] [opt [arg yres]]"]
+
+This option is supported for writing only. Available since version 2.0.
+[para]
+
+Set the resolution values of the written image file.
+If [arg yres] is not specified, it is set to the value of [arg xres].
+[para]
+If option is not specified, the [emph DPI] and [emph aspect] values of the metadata dictionary are written.
+If no metadata values are available, no resolution values are written.
+
+
+[def "[option -xresolution] [arg xres]"]
+
+This option is supported for writing only. Available since version 2.0.
+[para]
+
+Set the horizontal resolution value of the written image file.
+
+[def "[option -yresolution] [arg yres]"]
+
+This option is supported for writing only. Available since version 2.0.
+[para]
+
+Set the vertical resolution value of the written image file.
+[list_end]
+
+
+[include format-footer.inc]

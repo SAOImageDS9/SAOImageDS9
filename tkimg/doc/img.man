@@ -1,0 +1,313 @@
+[comment {-*- tcl -*- doctools}]
+[manpage_begin img n 2.0]
+
+[moddesc Img]
+[titledesc {Introduction to Img}]
+[copyright {1995-2024 Jan Nijtmans <nijtmans@users.sourceforge.net>}]
+[copyright {2002-2024 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[copyright {2003-2024 Paul Obermeier <obermeier@users.sourceforge.net>}]
+[require Img [opt 2.0]]
+[description]
+
+[package Img] is a collection of format handlers for the [package Tk] [uri https://www.tcl.tk/man/tcl9.0/TkCmd/photo.html photo] image type.
+[para]
+Sources and binaries of [package Img] are available at [uri https://sourceforge.net/projects/tkimg/ SourceForge].
+[para]
+
+The individual formats are described in more detail on their own pages.
+
+
+[list_begin definitions]
+
+[def [term bmp]]
+Windows bitmap format.
+See [cmd img-bmp].
+
+[def [term dted*]]
+Digital Terrain Elevation Data format.
+See [cmd img-dted].
+
+[def [term flir*]]
+FLIR FPF Public Image format.
+See [cmd img-flir].
+
+[def [term gif*]]
+Graphics Interchange Format.
+See [cmd img-gif].
+
+[def [term ico]]
+Windows icon format.
+See [cmd img-ico].
+
+[def [term jpeg]]
+Joint Picture Experts Group format.
+See [cmd img-jpeg].
+
+[def [term pcx]]
+Paintbrush format.
+See [cmd img-pcx].
+
+[def [term pixmap]]
+Pixmap image type.
+While the other formats are handlers for the [package Tk] photo image
+type, this is a new image type for [package Tk].
+See [cmd img-pixmap].
+
+[def [term png]]
+Portable Network Graphics format.
+See [cmd img-png].
+
+[def [term ppm]]
+Portable pixmap format.
+See [cmd img-ppm].
+
+[def [term ps*]]
+Postscript and PDF format.
+Requires an external application, [syscmd ghostview] for its operation.
+See [cmd img-ps].
+
+[def [term raw*]]
+Raw data format.
+See [cmd img-raw].
+
+[def [term sgi]]
+Silicon Graphics format.
+See [cmd img-sgi].
+
+[def [term sun]]
+Sun raster format.
+See [cmd img-sun].
+
+[def [term tga]]
+Truevision Targa format.
+See [cmd img-tga].
+
+[def [term tiff]]
+Tagged Image File Format.
+See [cmd img-tiff].
+
+[def [term window]]
+Tk window as photo image.
+See [cmd img-window].
+
+[def [term xbm]]
+X Windows Bitmap format.
+See [cmd img-xbm].
+
+[def [term xpm]]
+X Windows Pixmap format.
+See [cmd img-xpm].
+
+[list_end]
+
+
+[section {Notes}]
+
+[list_begin enum]
+[enum]
+[package Img] version 2 only works with Tcl/Tk 8.6 or newer.
+If using an older Tcl/Tk version, use the lastest [package Img] 1.4 version.
+
+[enum]
+Formats marked with [emph *] are [emph not] loaded when doing a
+[cmd "package require Img"], but must be loaded explicitly via
+[cmd "package require img::FORMAT"].
+[list_end]
+
+
+[section {Multi-page Images}]
+
+Some image formats support storage of multiple pages in a file.
+[para]
+Supported by formats [cmd img-gif], [cmd img-ico], [cmd img-ps], [cmd img-tiff].
+[para]
+A specific page can be extracted using the [option -index] option.
+Index [const 0] specifies the first page.
+[para]
+There is currently no support for writing multi-page images.
+[para]
+The number of pages of an image file can either be retrieved using metadata key [emph numpages]
+(see chapter [sectref {Image Metadata}]) or by checking different [option -index] values.
+[para]
+For example, GIF images can have multiple pages in one file.
+The metadata dictionary key [emph numpages] is not supported for GIF images,
+as this property cannot be extracted fast.
+[para]
+If you need to know the number of pages, use code like in the following example:
+
+[example {
+ proc CheckIndex { fileName fmt ind } {
+     set retVal [catch {image create photo -file $fileName -format "$fmt -index $ind"} phImg]
+     if { $retVal == 0 } {
+         image delete $phImg
+         return true
+     }
+     return false
+ }
+ 
+ proc GetNumPages { fileName fmt } {
+     if { [CheckIndex $fileName $fmt 1] } {
+         set ind 5
+         while { [CheckIndex $fileName $fmt $ind] } {
+             incr ind 5
+         }
+         incr ind -1
+         while { ! [CheckIndex $fileName $fmt $ind] } {
+             incr ind -1
+         }
+         return [expr { $ind + 1 }]
+     }
+     return 1
+ }
+ 
+ # Determine the number of pages of an animated GIF.
+ set numPages [GetNumPages $imgFile "gif"]
+}]
+
+
+[section {Image Metadata}]
+
+Some image formats support an individual set of metadata dictionary keys.
+See the [package Tk] [uri https://www.tcl.tk/man/tcl9.0/TkCmd/photo.html photo] image command for more information regarding image metadata.
+[para]
+This support is enabled, if [package Img] is linked against [package Tk] 8.7 or newer.
+[para]
+The following keys are supported:
+
+[list_begin definitions]
+
+[def [term DPI]]
+Horizontal image resolution in dots per inch as double value.
+[para]
+Supported by formats [cmd img-bmp], [cmd img-jpeg], [cmd img-pcx], [cmd img-png], [cmd img-tiff].
+
+[def [term aspect]]
+Aspect ratio defined as horizontal size divided by vertical size as double value.
+[para]
+Supported by formats [cmd img-bmp], [cmd img-jpeg], [cmd img-pcx], [cmd img-png], [cmd img-tiff].
+
+[def [term numpages]]
+The number of pages in an image file.
+[para]
+Supported by formats [cmd img-ico], [cmd img-tiff].
+
+[list_end]
+
+All formats supporting image resolution ([emph DPI] and [emph aspect])
+have the following format options for writing these values without explicitly setting the metadata dictionary:
+[para]
+[option -resolution] [option -xresolution] [option -yresolution].
+
+[list_begin enum]
+[enum]
+Option [option -resolution] allows specifying both horizontal and vertical resolution values.
+
+[enum]
+If not using option [option -resolution], options [option -xresolution] and [option -yresolution] must both be specified.
+Otherwise no resolution information is written.
+
+[enum]
+Resolution values specified with any of the above options overwrite the corresponding metadata dictionary values.
+
+[enum]
+The  resolution values can be specified as double values as documented with function
+[uri https://www.tcl.tk/man/tcl9.0/TkLib/GetPixels.html Tk_GetPixels].
+[list_end]
+
+Example resolution specifications:
+[example_begin]
+1.0: 1 inch
+1i : 1 inch
+1c : 1 centimeter
+1m : 1 millimeter
+1p : 1 point
+
+[example_end]
+
+Example writing PNG image with horizontal resolution of 300 inches and vertical resolution of 200 centimeters:
+[example_begin]
+img write out.png -format {png -resolution 300i 200c}
+[example_end]
+
+
+[section {Value Mapping}]
+Some image formats support pixel values greater than storable in 8-bit integers.
+[list_begin itemized]
+[item]
+The following formats support 16-bit integer pixel values: [cmd img-dted], [cmd img-ppm].
+[item]
+The following formats support floating point pixel values: [cmd img-flir], [cmd img-raw].
+[list_end]
+
+To map these values to 8-bit integer values as needed for a Tk photo, two different algorithms
+are implemented in Img:
+[para]
+A simple [emph MinMax] algorithm and an advanced [emph "Automatic Gain Control (AGC)"] algorithm
+using histogram equalization.
+[para]
+The default for all supported formats is to use the [emph MinMax] algorithm, which determines
+the minimum and maximum values of the image automatically.
+
+[section {Matching Order}]
+When reading images without specifying the format (using option [option -format]),
+the match functions of the available formats are tried in reversed order as registered.
+So, the handlers of the Img package are called before the handlers of the Tk core.
+The Tk core registers the following handlers: GIF, PNG, PPM, SVG, DEFAULT.
+[para]
+In Tk 8.7 a new format handler structure ([type Tk_PhotoImageFormatVersion3]) was introduced
+to handle the new metadata information.
+All old handlers ([type Tk_PhotoImageFormat]) are called before calling the new Format3 handlers.
+[para]
+See manual page of function [uri https://www.tcl.tk/man/tcl9.0/TkLib/CrtPhImgFmt.html Tk_CreatePhotoImageFormat]
+for a detailed description of the handler struture and matching functions.
+[para]
+
+The resulting matching order is best explained by an example:
+[example_begin]
+package require Tk
+package require Img
+package require img::raw     [emph "(Format2 Img handler)"]
+[example_end]
+
+Note, that the [cmd "package require Img"] command actually calls the following statements:
+[example_begin]
+package require img::window  [emph "(Format2 Img handler)"]
+package require img::tga     [emph "(Format2 Img handler)"]
+package require img::ico     [emph "(Format3 Img handler)"]
+package require img::pcx     [emph "(Format3 Img handler)"]
+package require img::sgi     [emph "(Format2 Img handler)"]
+package require img::sun     [emph "(Format2 Img handler)"]
+package require img::xbm     [emph "(Format2 Img handler)"]
+package require img::xpm     [emph "(Format2 Img handler)"]
+package require img::jpeg    [emph "(Format3 Img handler)"]
+package require img::png     [emph "(Format3 Img handler)"]
+package require img::tiff    [emph "(Format3 Img handler)"]
+package require img::bmp     [emph "(Format3 Img handler)"]
+package require img::ppm     [emph "(Format2 Img handler)"]
+[example_end]
+
+The order of calling the match functions is therefore as follows:
+[example_begin]
+Match format raw       [emph "(Format2 Img handler)"]
+Match format ppm       [emph "(Format2 Img handler)"]
+Match format xpm       [emph "(Format2 Img handler)"]
+Match format xbm       [emph "(Format2 Img handler)"]
+Match format sun       [emph "(Format2 Img handler)"]
+Match format sgi       [emph "(Format2 Img handler)"]
+Match format tga       [emph "(Format2 Img handler)"]
+Match format window    [emph "(Format2 Img handler)"]
+Match format svg       [emph "(Format2 Tk handler)"]
+Match format ppm       [emph "(Format2 Tk handler)"]
+Match format default   [emph "(Format2 Tk handler)"]
+Match format bmp       [emph "(Format3 Img handler)"]
+Match format tiff      [emph "(Format3 Img handler)"]
+Match format png       [emph "(Format3 Img handler)"]
+Match format jpeg      [emph "(Format3 Img handler)"]
+Match format pcx       [emph "(Format3 Img handler)"]
+Match format ico       [emph "(Format3 Img handler)"]
+Match format png       [emph "(Format3 Tk handler)"]
+Match format gif       [emph "(Format3 Tk handler)"]
+[example_end]
+
+
+[include format-footer.inc]

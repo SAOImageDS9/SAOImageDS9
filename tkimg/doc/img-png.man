@@ -1,0 +1,121 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME png]
+[vset FORMATFULLNAME {Portable Network Graphics format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[include format-package.inc]
+
+
+[section {Notes}]
+
+[list_begin enum]
+[enum]
+Chapter [emph "Image Metadata"] of the [package Img] manual page
+describes the parameters of the resolution related options.
+
+[list_end]
+
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+
+[def "[option -verbose] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.4.6.
+[para]
+
+If set to [const true], additional information about the read or written image
+is printed to stdout. Default is [const false].
+
+
+[def "[option -alpha] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.2.
+[para]
+
+An additional alpha filtering value for the overall image, which
+allows the background on which the image is displayed to show through.
+This usually also has the effect of desaturating the image.
+The alpha value must be between 0.0 and 1.0.
+Specifying an alpha value, overrides the setting of the [option -withalpha] flag,
+i.e. reading a file which has no alpha channel (Grayscale, RGB) will
+add an alpha channel to the image independent of the [option -withalpha] flag setting.
+
+
+[def "[option -gamma] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.6.
+[para]
+
+Use the specified gamma value when reading an image.
+This option overwrites gamma values specified in the file.
+If this option is not specified and no gamma value is in the file,
+a default value of 1.0 is used.
+
+
+[def "[option -withalpha] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.4.1.
+[para]
+
+If set to [const false], an alpha channel is ignored
+during reading or writing. Default is [const true].
+[para]
+[emph Note:] This option was named [option -matte] in previous versions and is still recognized.
+
+
+[def "[option -resolution] [arg xres] [opt [arg yres]]"]
+
+This option is supported for writing only. Available since version 2.0.
+[para]
+
+Set the resolution values of the written image file.
+If [arg yres] is not specified, it is set to the value of [arg xres].
+[para]
+If option is not specified, the [emph DPI] and [emph aspect] values of the metadata dictionary are written.
+If no metadata values are available, no resolution values are written.
+
+
+[def "[option -xresolution] [arg xres]"]
+
+This option is supported for writing only. Available since version 2.0.
+[para]
+
+Set the horizontal resolution value of the written image file. 
+
+
+[def "[option -yresolution] [arg yres]"]
+
+This option is supported for writing only. Available since version 2.0.
+[para]
+
+Set the vertical resolution value of the written image file.
+
+
+[def "[option -tag] [arg key] [arg value]"]
+
+This option is supported for writing only. Available since version 2.0.
+[para]
+
+Each key-value pair will be written as a named text chunk where the key provides
+the name of the chunk and the value its contents. 
+Currently the maximum number of [option -tag] specifications are 10.
+
+[list_end]
+
+
+[include format-footer.inc]

@@ -1,0 +1,2 @@
+Note, that TIFF 4.4.0 and newer does not compile with
+VisualStudio 2008 or 2010 anymore because of C99 features.

@@ -1,0 +1,111 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME ppm]
+[vset FORMATFULLNAME {Portable pixmap format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[include format-package.inc]
+
+
+[section {Supported Types}]
+
+This handler supports the PPM (Truecolor) and PGM (Grayscale) image formats.
+There are two types of PPM/PGM files: Binary and ASCII.
+The values stored in PPM/PGM files can be unsigned 8-bit or unsigned 16-bit
+values.
+
+[list_begin itemized]
+[item] Grayscale (PGM): 8-bit and 16-bit, 1 channel per pixel.
+[item] Truecolor (PPM): 8-bit and 16-bit, 3 channels per pixel.
+[list_end]
+
+[example_begin]
+
+ Image             |     Read      |     Write     |
+ type              | -file | -data | -file | -data |
+ ---------------------------------------------------
+ PGM  8-bit ASCII  | Yes   | Yes   | No    | No    |
+ PGM  8-bit BINARY | Yes   | Yes   | No    | No    |
+ PGM 16-bit ASCII  | Yes   | Yes   | No    | No    |
+ PGM 16-bit BINARY | Yes   | Yes   | No    | No    |
+ PPM  8-bit ASCII  | Yes   | Yes   | Yes   | Yes   |
+ PPM  8-bit BINARY | Yes   | Yes   | Yes   | Yes   |
+ PPM 16-bit ASCII  | Yes   | Yes   | No    | No    |
+ PPM 16-bit BINARY | Yes   | Yes   | No    | No    |
+
+[example_end]
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.4.0.
+[para]
+
+If set to [const true], additional information about the read or written image
+is printed to stdout. Default is [const false].
+
+
+[def "[option -scanorder] [arg string]"]
+
+This option is supported for reading only. Available since version 1.4.0.
+[para]
+
+Specify the scanline order of the input image.
+Possible values: [const TopDown] or [const BottomUp]. Default is [const TopDown].
+
+
+[def "[option -min] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.0.
+[para]
+
+Specify the minimum pixel value to be used for mapping
+16-bit input data to 8-bit image values.
+If not specified or negative, the minimum value found in the image data.
+
+
+[def "[option -max] [arg float]"]
+
+This option is supported for reading only. Available since version 1.4.0.
+[para]
+
+Specify the maximum pixel value to be used for mapping
+16-bit input data to 8-bit image values.
+If not specified or negative, the maximum value found in the image data.
+
+
+[def "[option -gamma] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.0.
+[para]
+
+Specify a gamma correction to be applied when mapping
+16-bit input data to 8-bit image values.
+Default is [const 1.0].
+
+
+[def "[option -ascii] [arg bool]"]
+
+This option is supported for writing only. Available since version 1.4.0.
+[para]
+
+If set to [const true], the file is written in PPM 8-bit ASCII format (P3).
+Default is [const false], i.e. write in PPM 8-bit binary format (P6).
+
+[list_end]
+
+[include format-footer.inc]

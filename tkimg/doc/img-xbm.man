@@ -1,0 +1,53 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME xbm]
+[vset FORMATFULLNAME {X Windows Bitmap format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[include format-package.inc]
+
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 2.0.
+[para]
+
+If set to [const true], additional information about the read or written image
+is printed to stdout. Default is [const false].
+
+
+[def "[option -foreground] [arg string]"]
+
+This option is supported for reading only. Available since version 1.4.15.
+[para]
+
+Set the foreground color of the bitmap. Default value is black.
+The color string may be given in a format as accepted by [cmd Tk_GetColor].
+
+
+[def "[option -background] [arg string]"]
+
+This option is supported for reading only. Available since version 1.4.15.
+[para]
+
+Set the background color of the bitmap. Default value is transparent.
+The color string may be given in a format as accepted by [cmd Tk_GetColor].
+
+[list_end]
+
+[include format-footer.inc]

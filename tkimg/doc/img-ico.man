@@ -1,0 +1,77 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME ico]
+[vset FORMATFULLNAME {Windows icon format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[include format-package.inc]
+
+
+[section {Supported Types}]
+
+This format handler supports the following image types:
+[list_begin itemized]
+[item] 1-bit pixels: Black and White.
+[item] 4-bit pixels: Grayscale or indexed.
+[item] 8-bit pixels: Grayscale or indexed.
+[item] 24-bit pixels: Truecolor (GBR,  8-bit channels).
+[item] 32-bit pixels: Truecolor (GBRA, 8-bit channels).
+[list_end]
+
+[example_begin]
+
+ Image  |     Read      |     Write     |
+ type   | -file | -data | -file | -data |
+ ----------------------------------------
+  1-bit | Yes   | Yes   | No    | No    |
+  4-bit | Yes   | Yes   | No    | No    |
+  8-bit | Yes   | Yes   | Yes   | Yes   |
+ 24-bit | Yes   | Yes   | Yes   | Yes   |
+ 32-bit | Yes   | Yes   | No    | No    |
+[example_end]
+
+
+[section {Notes}]
+
+[list_begin enum]
+[enum]
+Chapter [emph "Multi-page Images"] of the [package Img] manual page
+describes the handling of images with multiple pages.
+
+[list_end]
+
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.3.
+[para]
+
+If set to [const true], additional information about the read or written image
+is printed to stdout. Default is [const false].
+
+[def "[option -index] [arg integer]"]
+
+This option is supported for reading only. Available since version 1.3.
+[para]
+
+Read the page at specified index. The first page is at index [const 0].
+Default is [const 0].
+
+[list_end]
+
+[include format-footer.inc]

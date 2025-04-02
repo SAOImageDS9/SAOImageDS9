@@ -1,0 +1,120 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME ps]
+[vset FORMATFULLNAME {PostScript and PDF format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[para]
+
+Note that this package provides a [const pdf] handler too, i.e. a
+handler for the Adobe Portable Document Format. That handler accepts
+the same options as the [const [vset FORMATNAME]] handler.
+
+[para]
+
+The package delegates the actual conversion of data in PostScript and
+PDF format into a raster image to the GhostScript application. 
+It therefore depends upon the presence of program [syscmd gs] on Unix
+and [syscmd gswin64c.exe] in environment variable [cmd PATH]
+and is non-functional, if GhostScript is not installed.
+
+[para]
+
+All of the above means that in a call like
+
+[list_begin definitions]
+[cmd image] [method {create photo}] [opt [arg name]] [opt [arg options]]
+[list_end]
+
+[list_begin enum]
+[enum]
+Image data in PostScript and PDF format (options [option -data]
+and [option -file]) is detected automatically.
+
+[enum]
+The format names [const [vset FORMATNAME]] and [const pdf] are
+recognized by the option [option -format].
+[list_end]
+
+In addition the value for the option is treated as list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[para]
+The package [package img::[vset FORMATNAME]] is [emph not] loaded when doing a
+[cmd {package require Img}], but must be loaded explicitly via
+[cmd "package require img::[vset FORMATNAME]"].
+
+
+[section {Notes}]
+
+[list_begin enum]
+[enum]
+This format handler only supports read functionality.
+
+[enum]
+Chapter [emph "Multi-page Images"] of of the [package Img] manual page
+describes the handling of images with multiple pages.
+
+[enum]
+This format handler only supports a limited number of file types:
+[list_begin itemized]
+[item]
+PostScript files must have keyword [emph "%%BoundingBox"] in the file header.
+The syntax [emph "%%BoundingBox (atend)"] is not supported.
+[item]
+PDF files are assumed to be of size DIN A4. 
+It is recommend to use a specialized PDF extension like
+[uri "https://sourceforge.net/projects/irrational-numbers/files/tclMuPDF-2.x/" tclMuPDF].
+[list_end]
+
+[list_end]
+
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+Available since version 2.0.
+[para]
+
+If set to [const true], additional information about the read image
+is printed to stdout. Default is [const false].
+
+
+[def "[option -index] [arg integer]"]
+
+Available since version 1.2.4.
+[para]
+
+Read the page at specified index. The first page is at index [const 0].
+Default is [const 0].
+
+
+[def "[option -zoom] [arg x] [opt [arg y]]"]
+
+Available since version 1.2.4.
+[para]
+
+Scale image by specified double values. 
+If [arg y] is not specified, it is set to the value of [arg x].
+Default is [const 1.0].
+
+
+[def "[option -gs] [arg string]"]
+
+Available since version 2.0.
+[para]
+
+Specify the GhostScript executable program as absolute path.
+
+[list_end]
+
+[include format-footer.inc]

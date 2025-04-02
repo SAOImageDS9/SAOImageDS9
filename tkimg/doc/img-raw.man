@@ -1,0 +1,231 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME raw]
+[vset FORMATFULLNAME {Raw data format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[include format-nopackage.inc]
+
+
+[section {Supported Types}]
+
+This format handler supports the following image types:
+[para]
+Grayscale (1 channel) and truecolor (3 channels) images using the following data types
+
+[list_begin itemized]
+[item] 64-bit floating point   values
+[item] 32-bit floating point   values
+[item] 32-bit unsigned integer values
+[item] 16-bit unsigned integer values
+[item] 8-bit unsigned integer values
+[list_end]
+
+There are two supported file format versions:
+[para]
+One containing the raw binary data only, the other with a 7 line ASCII header
+of the following form:
+[example_begin]
+     Magic=RAW          File format identifier. Fixed value.
+     Width=128          Image width in pixels.
+     Height=128         Image height in pixels.
+     NumChan=1          Possible values: 1 or 3.
+     ByteOrder=Intel    Possible values: "Intel" or "Motorola".
+     ScanOrder=TopDown  Possible values: "TopDown" or "BottomUp".
+     PixelType=byte     Possible values: "double", "float", "int", "short" or "byte".
+[example_end]
+
+For a more detailed description of the file format versions and functions to read
+the data with Matlab or GNU Octave, see the 
+[uri https://www.tcl3d.org/pawt/download/PawtFileFormats.pdf "PAWT File Format Documentation"].
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.4.0.
+[para]
+
+If set to [const true], additional information about the read or written image
+is printed to stdout. Default is [const false].
+
+
+[def "[option -useheader] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.4.0.
+[para]
+
+If set to [const true], use the file header information for reading and writing.
+Default is [const true].
+
+
+[def "[option -width] [arg int]"]
+
+This option is supported for reading image data without header only. Available since version 1.4.0.
+[para]
+
+Specify the width of the input image.
+Default is [const 128].
+
+
+[def "[option -height] [arg int]"]
+
+This option is supported for reading image data without header only. Available since version 1.4.0.
+[para]
+
+Specify the height of the input image.
+Default is [const 128].
+
+
+[def "[option -nchan] [arg int]"]
+
+This option is supported for reading and writing image data without header. Available since version 1.4.0.
+[para]
+
+Specify the number of channels of the input image.
+Default is [const 1].
+
+
+[def "[option -byteorder] [arg string]"]
+
+This option is supported for reading image data without header only. Available since version 1.4.0.
+[para]
+
+Specify the byteorder of the input image data.
+Possible values: [const Intel] or [const Motorola].
+Default is assuming the same byteorder as that of the host computer.
+
+
+[def "[option -scanorder] [arg string]"]
+
+This option is supported for reading and writing image data without header. Available since version 1.4.0.
+[para]
+
+Specify the scanline order of the input image.
+Possible values: [const TopDown] or [const BottomUp].
+Default is [const TopDown]. 
+
+
+[def "[option -pixeltype] [arg string]"]
+
+This option is supported for reading image data without header only. Available since version 1.4.0.
+[para]
+
+Specify the type of the pixel values.
+Possible values: [const double], [const float], [const int], [const short] or [const byte].
+Default is [const byte].
+[para]
+RAW files are always written in [const byte] pixel format.
+
+
+[def "[option -skipbytes] [arg int]"]
+This option is supported for reading image data without header only. Available since version 1.4.14.
+[para]
+
+Specify the number of bytes to skip before reading image data.
+Default is [const 0].
+
+
+[def "[option -map] [arg string]"]
+This option is supported for reading only. Available since version 1.4.7.
+[para]
+
+Specify the mode when mapping the 16, 32 or 64-bit values
+to 8-bit grayscale values for displaying.
+Possible values: [const none], [const minmax], [const agc].
+Default mode is [const minmax].
+
+
+[list_begin enum]
+[enum]
+If mode is set to [const none], no mapping of input
+values is done. Use this mode, if the input
+values are already in the range of 0 ..255.
+When using mode [const none], no information about the
+minimum and maximum input values is gathered during
+reading and therefore no verbose output is printed.
+On the other hand reading the input data is faster.
+
+[enum]
+Mode [const minmax] maps the minimum and maximum input data
+to 256 grayscale values.
+
+[enum]
+Mode [const agc] applies an automatic gain control algorithmn to the input values.
+Currently implemented for 1-channel 32-bit float images only.
+
+[list_end]
+
+
+[def "[option -min] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.0.
+[para]
+
+Specify the minimum pixel value to be used for mapping
+the input data to 8-bit image values.
+If not specified or negative, the minimum value found in the image data.
+Valid for mapping mode: [const minmax].
+
+
+[def "[option -max] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.0.
+[para]
+
+Specify the maximum pixel value to be used for mapping
+the input data to 8-bit image values.
+If not specified or negative, the maximum value found in the image data.
+Valid for mapping mode: [const minmax].
+
+
+[def "[option -gamma] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.0.
+[para]
+
+Specify a gamma correction to be applied when mapping
+the input data to 8-bit image values.
+Default is [const 1.0].
+Valid for mapping modes: [const minmax] and [const agc].
+
+
+[def "[option -saturation] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.7.
+[para]
+
+The supplied value specifies the saturation value, i.e. all
+input values greater than the saturation value are mapped to white.
+If not specified or negative, do not use saturation.
+Valid for mapping mode: [const agc].
+
+
+[def "[option -cutoff] [arg double]"]
+
+This option is supported for reading only. Available since version 1.4.7.
+[para]
+
+The supplied value specifies the cut-off value in percent.
+The cut-off value specifies, how many pixels from the lower and upper part of
+the histogram are not considered for mapping.
+This option is useful, if there are some hot or cold spots in the image.
+Default is [const 3.0].
+Valid for mapping mode: [const agc].
+
+[list_end]
+
+[include format-footer.inc]

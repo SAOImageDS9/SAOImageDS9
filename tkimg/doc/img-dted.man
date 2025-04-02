@@ -1,0 +1,75 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME dted]
+[vset FORMATFULLNAME {Digital Terrain Elevation Data format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section
+
+[sectref {Options}].
+
+[include format-nopackage.inc]
+
+[section {Notes}]
+
+[list_begin enum]
+[enum]
+This format handler interprets DTED elevation files as grayscale images.
+
+[enum]
+This format handler only supports read functionality.
+[list_end]
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+Available since version 1.4.0.
+[para]
+
+If set to [const true], additional information about the read data
+is printed to stdout. Default is [const false].
+
+[def "[option -min] [arg short]"]
+
+Available since version 1.4.0.
+[para]
+
+Specify the minimum pixel value to be used for mapping
+the input data to 8-bit image values.
+If not specified or negative, the minimum value found in the image data.
+
+[def "[option -max] [arg short]"]
+
+Available since version 1.4.0.
+[para]
+
+Specify the maximum pixel value to be used for mapping
+the input data to 8-bit image values.
+Default is the maximum value found in the elevation data.
+If not specified or negative, the maximum value found in the image data.
+
+[def "[option -gamma] [arg double]"]
+
+Available since version 1.4.0.
+[para]
+
+Specify a gamma correction to be applied when mapping
+the input data to 8-bit image values.
+Default is [const 1.0].
+
+[list_end]
+
+[include format-footer.inc]

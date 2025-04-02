@@ -1,0 +1,114 @@
+set opts(Verbose) false
+set opts(Auto)    ""
+
+set useFileList [list]
+
+proc PrintUsage { progName { msg "" } } {
+    global opts
+
+    puts ""
+    if { $msg ne "" } {
+        puts "Error: $msg"
+    }
+    puts ""
+    puts "Usage: $progName \[Options\]"
+    puts ""
+    puts "Run the test programs."
+    puts ""
+    puts "Options:"
+    puts "  --help   : Display this usage message and exit."
+    puts "  --verbose: Show the detailed results of the tests. (Default: No)"
+    puts "  --auto   : Run tests in automatic mode. Default: No"
+    puts ""
+}
+
+proc SkipTest { testFile } {
+    set skipList [list \
+    ]
+    set skipFlag [expr [lsearch $skipList $testFile] >= 0]
+    return $skipFlag
+}
+
+proc IgnoreForTcl9 { testFile } {
+    set ignList [list \
+    ]
+    set ignFlag false
+    if { [lindex [split [info tclversion] "."] 0] >= 9 } {
+        set ignFlag [expr [lsearch $ignList $testFile] >= 0]
+    }
+    return $ignFlag
+}
+
+proc RunTest { testFile } {
+    global opts
+
+    if { [SkipTest $testFile] } {
+        puts "Test $testFile skipped"
+        return
+    }
+    if { [IgnoreForTcl9 $testFile] } {
+        puts "Test $testFile ignored for Tcl9"
+        return
+    }
+    puts "Running test $testFile ..."
+
+    if { $opts(Auto) ne "" } {
+        set catchVal [catch {exec -ignorestderr $::tclExe $testFile $opts(Auto) 2>@1 } retVal optionsDict]
+    } else {
+        set catchVal [catch {exec -ignorestderr $::tclExe $testFile 2>@1 } retVal optionsDict]
+    }
+    if { $catchVal || [string match "*Error:*" $retVal] } {
+        if { $catchVal } {
+            set fullErrorInfo [dict get $optionsDict -errorinfo]
+            set msgEndIndex [string first "\n" $fullErrorInfo]
+            set msg [string range $fullErrorInfo 0 [expr {$msgEndIndex -1}]]
+        } else {
+            foreach line [split $retVal "\n"] {
+                if { [string match "*Error:*" $line] } {
+                    append msg $line
+                }
+            }
+        }
+        puts "Test $testFile failed: $msg"
+    } else {
+        if { $opts(Verbose) } {
+            puts $retVal
+            puts ""
+        }
+    }
+}
+
+set curArg 0
+while { $curArg < $argc } {
+    set curParam [lindex $argv $curArg]
+    if { [string compare -length 1 $curParam "-"]  == 0 || \
+         [string compare -length 2 $curParam "--"] == 0 } {
+        set curOpt [string tolower [string trimleft $curParam "-"]]
+        if { $curOpt eq "verbose" } {
+            set opts(Verbose) true
+        } elseif { $curOpt eq "auto" } {
+            set opts(Auto) "auto"
+        } elseif { $curOpt eq "help" } {
+            PrintUsage $argv0
+            exit 1
+        } else {
+            PrintUsage $argv0 "Invalid option \"$curParam\" specified."
+            exit 1
+        }
+    } else {
+        lappend useFileList $curParam
+    }
+    incr curArg
+}
+
+set tclExe [info nameofexecutable]
+
+if { [llength $useFileList] == 0 } {
+    set useFileList [lsort -dictionary [glob -nocomplain "*.tcl"]]
+}
+
+foreach f $useFileList {
+    RunTest $f
+}
+
+exit 0

@@ -1,0 +1,180 @@
+# This file is a Tcl script to test GIF reading and writing.
+# It is organized in the standard fashion for Tcl tests.
+
+package require Tk
+
+package require tcltest
+tcltest::configure {*}$argv
+source [file join [file dirname [info script]] constraints.tcl]
+
+imageInit
+
+namespace eval ::gif::test {
+    namespace import ::tcltest::*
+
+    set fmt     "gif"
+    set ext     "gif"
+    set inFile  "testimgs/img.$ext"
+    set outFile "testimgs/img_out.$ext"
+
+    set imgdata [readFile $inFile]
+
+    test gif-0.1 {package require img::gif} -setup {
+    } -body {
+        set pkgLoaded [catch {package require img::gif}]
+    } -result 0
+
+    # Execute the follwing tests only, if the format handler could be loaded.
+    if { $pkgLoaded == 0 } {
+        test gif-1.1 {Read photo from file using option \"-file\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test gif-1.2 {Read photo from string using option \"-data\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -data $imgdata
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test gif-1.3 {Read photo from string using command \"put\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test gif-1.4 {Read photo from string using command \"put -format\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata -format $fmt
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test gif-1.5 {Compare 2 photos read from file and from string} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            image create photo j -data $imgdata
+            imageCompare i j
+        } -cleanup {
+            image delete i
+            image delete j
+        } -result 1
+
+
+        test gif-2.1 {Read photo from file without resolution information} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            imageResolution i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Tk87
+        } -result {0 0}
+
+
+        test gif-3.1 {Write photo to file and compare with reference photo} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt]
+            image create photo j -file $outFile
+            imageCompare i j
+        } -cleanup {
+            image delete i
+            image delete j
+            file delete -force $outFile
+        } -constraints {
+            Tk87
+        } -result 1
+
+        # Write photo to string using "i data -format" already tested in gif-1.X tests.
+
+        test gif-5.1 {Read photo from file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -invalidoption 1]
+        } -returnCodes {
+            error
+        } -result "bad format option \"-invalidoption\": must be -verbose or -index"
+
+        test gif-5.2 {Read photo from file using option without value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose]
+        } -returnCodes {
+            error
+        } -result "No value specified for option \"-verbose\"."
+
+        test gif-5.3 {Read photo from file using invalid -verbose value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid verbose mode \"asdf\": must be 1 or 0, on or off, true or false."
+
+       test ps-5.4 {Read photo from file using invalid -index value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -index "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid index value \"asdf\": must be an integer value greater or equal to zero."
+
+        test gif-5.5 {Write photo to file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -invalidoption 1]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -returnCodes {
+            error
+        } -result "bad format option \"-invalidoption\": must be -verbose"
+
+        test gif-5.6 {Write photo to file using option without value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -verbose]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -returnCodes {
+            error
+        } -result "No value specified for option \"-verbose\"."
+
+        test gif-5.7 {Write photo to file using invalid -verbose value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -verbose "asdf"]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -returnCodes {
+            error
+        } -result "Invalid verbose mode \"asdf\": must be 1 or 0, on or off, true or false."
+    }
+}
+
+imageFinish
+tcltest::cleanupTests
+namespace delete ::gif::test

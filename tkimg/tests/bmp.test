@@ -1,0 +1,245 @@
+# This file is a Tcl script to test BMP reading and writing.
+# It is organized in the standard fashion for Tcl tests.
+
+package require Tk
+
+package require tcltest
+tcltest::configure {*}$argv
+source [file join [file dirname [info script]] constraints.tcl]
+
+imageInit
+
+namespace eval ::bmp::test {
+    namespace import ::tcltest::*
+
+    set fmt     "bmp"
+    set ext     "bmp"
+    set inFile  "testimgs/img.$ext"
+    set dpiFile "testimgs/dpi.$ext"
+    set outFile "testimgs/img_out.$ext"
+
+    set imgdata [readFile $inFile]
+
+    test bmp-0.1 {package require img::bmp} -setup {
+    } -body {
+        set pkgLoaded [catch {package require img::bmp}]
+    } -result 0
+
+    # Execute the follwing tests only, if the format handler could be loaded.
+    if { $pkgLoaded == 0 } {
+        test bmp-1.1 {Read photo from file using option \"-file\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test bmp-1.2 {Read photo from string using option \"-data\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -data $imgdata
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test bmp-1.3 {Read photo from string using command \"put\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test bmp-1.4 {Read photo from string using command \"put -format\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata -format $fmt
+            i data -format $fmt
+        } -cleanup {
+            image delete i
+        } -result $imgdata
+
+        test bmp-1.5 {Compare 2 photos read from file and from string} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            image create photo j -data $imgdata
+            imageCompare i j
+        } -cleanup {
+            image delete i
+            image delete j
+        } -result 1
+
+
+        test bmp-2.1 {Read photo from file without resolution information} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            imageResolution i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Tk87
+        } -result {0 0}
+
+        test bmp-2.2 {Read photo from file with resolution information} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $dpiFile
+            imageResolution i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Tk87
+        } -result [refResolution]
+
+
+        test bmp-3.1 {Write photo to file and compare with reference photo} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt]
+            image create photo j -file $outFile
+            imageCompare i j
+        } -cleanup {
+            image delete i
+            image delete j
+            file delete -force $outFile
+        } -constraints {
+            Tk87
+        } -result 1
+
+        # Write photo to string using "i data -format" already tested in bmp-1.X tests.
+
+
+        test bmp-4.1 {Write photo to file with resolution information} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -resolution {*}[refResolution]]
+            image delete i
+            image create photo i -file $dpiFile
+            image create photo j -file $outFile
+            set res [list [imageResolution i] [imageResolution j]]
+        } -cleanup {
+            image delete i
+            image delete j
+            file delete -force $outFile
+        } -constraints {
+            Tk87
+        } -result [list [refResolution] [refResolution]]
+
+
+        test bmp-5.1 {Read photo from file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -invalidoption 1]
+        } -returnCodes {
+            error
+        } -result "bad format option \"-invalidoption\": must be -verbose"
+
+        test bmp-5.2 {Read photo from file using option without value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose]
+        } -returnCodes {
+            error
+        } -result "No value specified for option \"-verbose\"."
+
+        test bmp-5.3 {Read photo from file using invalid -verbose value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid verbose mode \"asdf\": must be 1 or 0, on or off, true or false."
+
+        test bmp-5.4 {Write photo to file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -invalidoption 1]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -returnCodes {
+            error
+        } -result "bad format option \"-invalidoption\": must be -verbose, -resolution, -xresolution, or -yresolution"
+
+        test bmp-5.5 {Write photo to file using option without value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -verbose]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -returnCodes {
+            error
+        } -result "No value specified for option \"-verbose\"."
+
+        test bmp-5.6 {Write photo to file using invalid -verbose value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -verbose "asdf"]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -returnCodes {
+            error
+        } -result "Invalid verbose mode \"asdf\": must be 1 or 0, on or off, true or false."
+
+        test bmp-5.7 {Write photo to file using invalid -resolution value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -resolution -100]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -constraints {
+            Tk87
+        } -returnCodes {
+            error
+        } -result "Invalid resolution value \"-100\" specified for x resolution."
+
+        test bmp-5.8 {Write photo to file using invalid -xresolution value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -xresolution 12cm]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -constraints {
+            Tk87
+        } -returnCodes {
+            error
+        } -result "Invalid resolution value \"12cm\" specified for x resolution."
+
+        test bmp-5.9 {Write photo to file using invalid -yresolution value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -yresolution 12cm]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -constraints {
+            Tk87
+        } -returnCodes {
+            error
+        } -result "Invalid resolution value \"12cm\" specified for y resolution."
+    }
+}
+
+imageFinish
+tcltest::cleanupTests
+namespace delete ::bmp::test

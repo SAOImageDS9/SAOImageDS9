@@ -1,0 +1,186 @@
+# This file is a Tcl script to test PostScript reading.
+# Writing is not supported for PostScript.
+# It is organized in the standard fashion for Tcl tests.
+
+package require Tk
+
+package require tcltest
+tcltest::configure {*}$argv
+source [file join [file dirname [info script]] constraints.tcl]
+
+imageInit
+
+namespace eval ::ps::test {
+    namespace import ::tcltest::*
+
+    set fmt     "ps"
+    set ext     "ps"
+    set inFile  "testimgs/img.$ext"
+    set outFile "testimgs/img_out.$ext"
+
+    set imgdata [readFile $inFile]
+
+    test ps-0.1 {package require img::ps} -setup {
+    } -body {
+        set pkgLoaded [catch {package require img::ps}]
+    } -result 0
+
+    # Execute the follwing tests only, if the format handler could be loaded.
+    if { $pkgLoaded == 0 } {
+        test ps-1.1 {Read photo from file using option \"-file\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            imageSize i
+        } -constraints {
+            Ghostscript
+        } -result [refSize]
+
+        test ps-1.2 {Read photo from string using option \"-data\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -data $imgdata
+            imageSize i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Ghostscript
+        } -result [refSize]
+
+        test ps-1.3 {Read photo from string using command \"put\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata
+            imageSize i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Ghostscript
+        } -result [refSize]
+
+        test ps-1.4 {Read photo from string using command \"put -format\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata -format $fmt
+            imageSize i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Ghostscript
+        } -result [refSize]
+
+        test ps-1.5 {Compare 2 photos read from file and from string} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            image create photo j -data $imgdata
+            imageCompare i j
+        } -cleanup {
+            image delete i
+            image delete j
+        } -constraints {
+            Ghostscript
+        } -result 1
+
+
+        test ps-2.1 {Read photo from file without resolution information} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            imageResolution i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Tk87 Ghostscript
+        } -result {0 0}
+
+        test ps-2.2 {Read photo from file using single -zoom value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -zoom 2.0]
+            imageSize i
+        } -constraints {
+            Tk87 Ghostscript
+        } -result [refSize2]
+
+        test ps-2.2 {Read photo from file using two -zoom values} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -zoom 2 2.0]
+            imageSize i
+        } -constraints {
+            Tk87 Ghostscript
+        } -result [refSize2]
+
+        # PS does not support writing.
+
+
+        test ps-5.1 {Read photo from file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -invalidoption 1]
+        } -returnCodes {
+            error
+        } -result "bad format option \"-invalidoption\": must be -verbose, -index, -zoom, or -gs"
+
+        test ps-5.2 {Read photo from file using option without value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose]
+        } -returnCodes {
+            error
+        } -result "No value specified for option \"-verbose\"."
+
+        test ps-5.3 {Read photo from file using invalid -verbose value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid verbose mode \"asdf\": must be 1 or 0, on or off, true or false."
+
+        test ps-5.4 {Read photo from file using invalid -zoom value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -zoom "asdf" "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid x zoom value \"asdf\": must be a double value greater than zero."
+
+        test ps-5.5 {Read photo from file using invalid -zoom value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -zoom 1 "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid y zoom value \"asdf\": must be a double value greater than zero."
+
+        test ps-5.6 {Read photo from file using invalid -index value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -index "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid index value \"asdf\": must be an integer value greater or equal to zero."
+
+        test ps-5.7 {Write photo to file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -invalidoption 1]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -constraints {
+            Ghostscript
+        } -returnCodes {
+            error
+        } -result "Writing not supported for format ps"
+    }
+}
+
+imageFinish
+tcltest::cleanupTests
+namespace delete ::ps::test

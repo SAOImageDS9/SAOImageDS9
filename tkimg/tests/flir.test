@@ -1,0 +1,131 @@
+# This file is a Tcl script to test FLIR reading.
+# Writing is currently not supported for FLIR.
+# It is organized in the standard fashion for Tcl tests.
+
+package require Tk
+
+package require tcltest
+tcltest::configure {*}$argv
+source [file join [file dirname [info script]] constraints.tcl]
+
+imageInit
+
+namespace eval ::flir::test {
+    namespace import ::tcltest::*
+
+    set fmt     "flir"
+    set ext     "fpf"
+    set inFile  "testimgs/img.$ext"
+    set outFile "testimgs/img_out.$ext"
+
+    set imgdata [readFile $inFile]
+
+    test flir-0.1 {package require img::flir} -setup {
+    } -body {
+        set pkgLoaded [catch {package require img::flir}]
+    } -result 0
+
+    # Execute the follwing tests only, if the format handler could be loaded.
+    if { $pkgLoaded == 0 } {
+        test flir-1.1 {Read photo from file using option \"-file\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            imageSize i
+        } -result {320 240}
+
+        test flir-1.2 {Read photo from string using option \"-data\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -data $imgdata
+            imageSize i
+        } -cleanup {
+            image delete i
+        } -result {320 240}
+
+        test flir-1.3 {Read photo from string using command \"put\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata
+            imageSize i
+        } -cleanup {
+            image delete i
+        } -result {320 240}
+
+        test flir-1.4 {Read photo from string using command \"put -format\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i
+            i put $imgdata -format $fmt
+            imageSize i
+        } -cleanup {
+            image delete i
+        } -result {320 240}
+
+        test flir-1.5 {Compare 2 photos read from file and from string} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            image create photo j -data $imgdata
+            imageCompare i j
+        } -cleanup {
+            image delete i
+            image delete j
+        } -result 1
+
+
+        test flir-2.1 {Read photo from file without resolution information} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            imageResolution i
+        } -cleanup {
+            image delete i
+        } -constraints {
+            Tk87
+        } -result {0 0}
+
+        # FLIR does not support writing.
+
+        test flir-5.1 {Read photo from file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -invalidoption 1]
+        } -returnCodes {
+            error
+        } -result "bad format option \"-invalidoption\": must be -verbose, -min, -max, -gamma, -map, -saturation, -cutoff, or -printagc"
+
+        test flir-5.2 {Read photo from file using option without value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose]
+        } -returnCodes {
+            error
+        } -result "No value specified for option \"-verbose\"."
+
+        test flir-5.3 {Read photo from file using invalid -verbose value} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile -format [list $fmt -verbose "asdf"]
+        } -returnCodes {
+            error
+        } -result "Invalid verbose mode \"asdf\": must be 1 or 0, on or off, true or false."
+
+        test flir-5.4 {Write photo to file using invalid option \"-invalidoption\"} -setup {
+            catch {image delete i}
+        } -body {
+            image create photo i -file $inFile
+            i write $outFile -format [list $fmt -invalidoption 1]
+        } -cleanup {
+            image delete i
+            file delete -force $outFile
+        } -returnCodes {
+            error
+        } -result "Writing not supported for format flir"
+    }
+}
+
+imageFinish
+tcltest::cleanupTests
+namespace delete ::flir::test

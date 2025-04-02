@@ -1,0 +1,67 @@
+[comment {-*- tcl -*- doctools}]
+[vset FORMATNAME tga]
+[vset FORMATFULLNAME {Truevision Targa format}]
+[manpage_begin img-[vset FORMATNAME] n 2.0]
+
+[include format-header.inc]
+
+This handler provides new additional configuration options. See
+section [sectref {Options}] for more detailed explanations.
+
+[include format-middle.inc]
+
+In addition the value of option [option -format] is treated as a list and may
+contain any of the special options listed in section [sectref {Options}].
+
+[include format-package.inc]
+
+
+[section {Supported Types}]
+
+This format handler supports the following image types:
+
+[list_begin itemized]
+[item] 24-bit pixels: Truecolor (RGB, 8-bit channels).
+[item] 32-bit pixels: Truecolor with alpha channel (RGBA, 8-bit channels).
+[list_end]
+
+All images types may be either uncompressed (Targa-Type 2) or run-length encoded (Targa-Type 10).
+
+
+[section {Options}]
+
+The handler provides the following options:
+
+[list_begin definitions]
+
+[def "[option -verbose] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.3.
+[para]
+
+If set to [const true], additional information about the read or written image
+is printed to stdout. Default is [const false].
+
+
+[def "[option -withalpha] [arg bool]"]
+
+This option is supported for reading and writing. Available since version 1.3.
+[para]
+
+If set to [const false], an alpha channel is ignored
+during reading or writing. Default is [const true].
+[para]
+[emph Note:] This option was named [option -matte] in previous versions and is still recognized.
+
+
+[def "[option -compression] [arg string]"]
+
+This option is supported for writing only. Available since version 1.3.
+[para]
+
+Set the compression mode to either [const none] or [const rle].
+Default is [const rle].
+
+[list_end]
+
+[include format-footer.inc]

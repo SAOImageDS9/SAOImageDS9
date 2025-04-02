@@ -357,12 +357,12 @@ void FitsHist::bin(FitsFile* fits, Matrix& m, Function func, Vector block)
     good = new int[FILTERSIZE];
 
   // matrix
-  register double m00 = m.matrix(0,0);
-  register double m10 = m.matrix(1,0);
-  register double m20 = m.matrix(2,0);
-  register double m01 = m.matrix(0,1);
-  register double m11 = m.matrix(1,1);
-  register double m21 = m.matrix(2,1);
+  double m00 = m.matrix(0,0);
+  double m10 = m.matrix(1,0);
+  double m20 = m.matrix(2,0);
+  double m01 = m.matrix(0,1);
+  double m11 = m.matrix(1,1);
+  double m21 = m.matrix(2,1);
 
   for (int ii=0; ii<rows; ii++, ptr+=rowlen, goodindex++) {
 
@@ -392,11 +392,11 @@ void FitsHist::bin(FitsFile* fits, Matrix& m, Function func, Vector block)
     }
 
     if (!good || (good && good[goodindex])) {
-      register double x = xcol_->value(ptr);
-      register double y = ycol_->value(ptr);
+      double x = xcol_->value(ptr);
+      double y = ycol_->value(ptr);
 
-      register double X = x*m00 + y*m10 + m20;
-      register double Y = x*m01 + y*m11 + m21;
+      double X = x*m00 + y*m10 + m20;
+      double Y = x*m01 + y*m11 + m21;
 
       if (X >= 0 && X < width_ && Y >= 0 && Y < height_) {
 	if (!zcol_)

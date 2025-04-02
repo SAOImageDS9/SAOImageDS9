@@ -639,6 +639,15 @@ ac_includes_default="\
 
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
+PATCHLEVEL
+MINOR_VERSION
+MAJOR_VERSION
+tkimgwindow_STUB_LIB_PATH
+tkimgwindow_BUILD_STUB_LIB_PATH
+tkimgwindow_STUB_LIB_SPEC
+tkimgwindow_BUILD_STUB_LIB_SPEC
+tkimgwindow_LIB_SPEC
+tkimgwindow_BUILD_LIB_SPEC
 WISH_PROG
 TCLSH_PROG
 VC_MANIFEST_EMBED_EXE
@@ -10615,13 +10624,50 @@ printf "%s\n" "${WISH_PROG}" >&6; }
 
 
 
+
+    #--------------------------------------------------------------------
+    # These are for tkimgwindowConfig.sh
+    #--------------------------------------------------------------------
+
+    # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
+    eval pkglibdir="${libdir}/tkimgwindow${PACKAGE_VERSION}"
+    if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
+	eval tkimgwindow_LIB_FLAG="-ltkimgwindow${PACKAGE_VERSION}"
+	eval tkimgwindow_STUB_LIB_FLAG="-ltkimgwindowstub${PACKAGE_VERSION}"
+    else
+	eval tkimgwindow_LIB_FLAG="-ltkimgwindow`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkimgwindow_STUB_LIB_FLAG="-ltkimgwindowstub`echo ${PACKAGE_VERSION} | tr -d .`"
+    fi
+    if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then
+	eval tkimgwindow_STUB_LIB_FLAG="-ltkimgwindowstub"
+    fi
+
+    tkimgwindow_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkimgwindow_LIB_FLAG}"
+    tkimgwindow_LIB_SPEC="-L`$CYGPATH ${pkglibdir}` ${tkimgwindow_LIB_FLAG}"
+    tkimgwindow_BUILD_STUB_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkimgwindow_STUB_LIB_FLAG}"
+    tkimgwindow_STUB_LIB_SPEC="-L`$CYGPATH ${pkglibdir}` ${tkimgwindow_STUB_LIB_FLAG}"
+    tkimgwindow_BUILD_STUB_LIB_PATH="`$CYGPATH $(pwd)`/${PKG_STUB_LIB_FILE}"
+    tkimgwindow_STUB_LIB_PATH="`$CYGPATH ${pkglibdir}`/${PKG_STUB_LIB_FILE}"
+
+
+
+
+
+
+
+
+
+
+
+
+
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the Makefile.
 # You may alternatively have a special pkgIndex.tcl.in or other files
 # which require substituting th AC variables in.  Include these here.
 #--------------------------------------------------------------------
 
-ac_config_files="$ac_config_files Makefile"
+ac_config_files="$ac_config_files Makefile tkimgwindowConfig.sh"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -11326,6 +11372,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "tkimgwindowConfig.sh") CONFIG_FILES="$CONFIG_FILES tkimgwindowConfig.sh" ;;
 
   *) as_fn_error $? "invalid argument: '$ac_config_target'" "$LINENO" 5;;
   esac

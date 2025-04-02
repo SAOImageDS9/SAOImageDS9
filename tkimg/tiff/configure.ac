@@ -216,13 +216,14 @@ fi
 TEA_PROG_TCLSH
 TEA_PROG_WISH
 
+TEA_EXPORT_CONFIG([tkimgtiff])
+
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the Makefile.
 # You may alternatively have a special pkgIndex.tcl.in or other files
 # which require substituting th AC variables in.  Include these here.
 #--------------------------------------------------------------------
 
-AC_CONFIG_FILES([Makefile])
-AC_OUTPUT
+AC_OUTPUT([Makefile tkimgtiffConfig.sh])
 
 #--------------------------------------------------------------------

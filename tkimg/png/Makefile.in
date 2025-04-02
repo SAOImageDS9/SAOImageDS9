@@ -451,6 +451,7 @@ install-lib-binaries:
 	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkglibdir)"; \
 	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkglibdir); \
 	fi
+	$(INSTALL_DATA) tkimgpngConfig.sh $(DESTDIR)$(libdir)
 
 #========================================================================
 # Install binary executables (e.g. .exe files and dependent .dll files)

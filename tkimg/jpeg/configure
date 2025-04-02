@@ -639,6 +639,15 @@ ac_includes_default="\
 
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
+PATCHLEVEL
+MINOR_VERSION
+MAJOR_VERSION
+tkimgjpeg_STUB_LIB_PATH
+tkimgjpeg_BUILD_STUB_LIB_PATH
+tkimgjpeg_STUB_LIB_SPEC
+tkimgjpeg_BUILD_STUB_LIB_SPEC
+tkimgjpeg_LIB_SPEC
+tkimgjpeg_BUILD_LIB_SPEC
 WISH_PROG
 TCLSH_PROG
 VC_MANIFEST_EMBED_EXE
@@ -10603,13 +10612,50 @@ printf "%s\n" "${WISH_PROG}" >&6; }
 
 
 
+
+    #--------------------------------------------------------------------
+    # These are for tkimgjpegConfig.sh
+    #--------------------------------------------------------------------
+
+    # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
+    eval pkglibdir="${libdir}/tkimgjpeg${PACKAGE_VERSION}"
+    if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
+	eval tkimgjpeg_LIB_FLAG="-ltkimgjpeg${PACKAGE_VERSION}"
+	eval tkimgjpeg_STUB_LIB_FLAG="-ltkimgjpegstub${PACKAGE_VERSION}"
+    else
+	eval tkimgjpeg_LIB_FLAG="-ltkimgjpeg`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkimgjpeg_STUB_LIB_FLAG="-ltkimgjpegstub`echo ${PACKAGE_VERSION} | tr -d .`"
+    fi
+    if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then
+	eval tkimgjpeg_STUB_LIB_FLAG="-ltkimgjpegstub"
+    fi
+
+    tkimgjpeg_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkimgjpeg_LIB_FLAG}"
+    tkimgjpeg_LIB_SPEC="-L`$CYGPATH ${pkglibdir}` ${tkimgjpeg_LIB_FLAG}"
+    tkimgjpeg_BUILD_STUB_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkimgjpeg_STUB_LIB_FLAG}"
+    tkimgjpeg_STUB_LIB_SPEC="-L`$CYGPATH ${pkglibdir}` ${tkimgjpeg_STUB_LIB_FLAG}"
+    tkimgjpeg_BUILD_STUB_LIB_PATH="`$CYGPATH $(pwd)`/${PKG_STUB_LIB_FILE}"
+    tkimgjpeg_STUB_LIB_PATH="`$CYGPATH ${pkglibdir}`/${PKG_STUB_LIB_FILE}"
+
+
+
+
+
+
+
+
+
+
+
+
+
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the Makefile.
 # You may alternatively have a special pkgIndex.tcl.in or other files
 # which require substituting th AC variables in.  Include these here.
 #--------------------------------------------------------------------
 
-ac_config_files="$ac_config_files Makefile"
+ac_config_files="$ac_config_files Makefile tkimgjpegConfig.sh"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -11314,6 +11360,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "tkimgjpegConfig.sh") CONFIG_FILES="$CONFIG_FILES tkimgjpegConfig.sh" ;;
 
   *) as_fn_error $? "invalid argument: '$ac_config_target'" "$LINENO" 5;;
   esac

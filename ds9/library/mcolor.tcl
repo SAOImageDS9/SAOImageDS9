@@ -38,6 +38,8 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.topo
     $ds9(mb).color add cascade -label [msgcat::mc {Scientific Colour Maps}] \
 	-menu $ds9(mb).color.scm
+    $ds9(mb).color add cascade -label [msgcat::mc {Solar Colormaps}] \
+	-menu $ds9(mb).color.solar
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
@@ -50,6 +52,7 @@ proc ColorMainMenu {} {
     ColorMainMenuExternal gist
     ColorMainMenuExternal topo
     ColorMainMenuExternal scm
+    ColorMainMenuExternal solar
     ColorMainMenuExternal user
 
     $ds9(mb).color add separator
@@ -159,6 +162,7 @@ proc PrefsDialogColorMenu {w} {
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
     $m add cascade -label [msgcat::mc {Scientific Colour Maps}] -menu $m.scm
+    $m add cascade -label [msgcat::mc {Solar Colormaps}] -menu $m.solar
 
     PrefsColorMenuExternal $m h5
     PrefsColorMenuExternal $m mpl-uni
@@ -169,6 +173,7 @@ proc PrefsDialogColorMenu {w} {
     PrefsColorMenuExternal $m gist
     PrefsColorMenuExternal $m topo
     PrefsColorMenuExternal $m scm
+    PrefsColorMenuExternal $m solar
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -261,6 +266,7 @@ proc ButtonsColorDef {} {
     ButtonsColorDefExternal gist
     ButtonsColorDefExternal topo
     ButtonsColorDefExternal scm
+    ButtonsColorDefExternal solar
     
     array set pbuttons {
 	color,grey 1
@@ -314,6 +320,7 @@ proc CreateButtonsColor {} {
     CreateButtonsColorExternal gist
     CreateButtonsColorExternal topo
     CreateButtonsColorExternal scm
+    CreateButtonsColorExternal solar
 
     CheckButton $ds9(buttons).color.invert \
 	[string tolower [msgcat::mc {Invert}]] colorbar invert InvertColorbar
@@ -392,6 +399,7 @@ proc PrefsDialogButtonbarColor {f} {
     $m add cascade -label [msgcat::mc {Gist}] -menu $m.gist
     $m add cascade -label [msgcat::mc {Topographic}] -menu $m.topo
     $m add cascade -label [msgcat::mc {Scientific Colour Maps}] -menu $m.scm
+    $m add cascade -label [msgcat::mc {Solar Colormaps}] -menu $m.solar
 
     PrefsDialogButtonbarColorExternal $m h5
     PrefsDialogButtonbarColorExternal $m mpl-uni
@@ -402,6 +410,7 @@ proc PrefsDialogButtonbarColor {f} {
     PrefsDialogButtonbarColorExternal $m gist
     PrefsDialogButtonbarColorExternal $m topo
     PrefsDialogButtonbarColorExternal $m scm
+    PrefsDialogButtonbarColorExternal $m solar
 
     $m add separator
     $m add checkbutton -label [msgcat::mc {Invert Colormap}] \
@@ -495,6 +504,9 @@ proc UpdateColorMenu {} {
 		$ds9(mb).color entryconfig \
 		    [msgcat::mc {Scientific Colour Maps}] \
 		    -state normal
+		$ds9(mb).color entryconfig \
+		    [msgcat::mc {Solar Colormaps}] \
+		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state normal
 
@@ -508,6 +520,7 @@ proc UpdateColorMenu {} {
 		UpdateColorButtonExternal gist normal
 		UpdateColorButtonExternal topo normal
 		UpdateColorButtonExternal scm normal
+		UpdateColorButtonExternal solar normal
 	    }
 	    rgb {
 		foreach cmap $icolorbar(default,cmaps) {
@@ -531,6 +544,9 @@ proc UpdateColorMenu {} {
 		$ds9(mb).color entryconfig \
 		    [msgcat::mc {Scientific Colour Maps}] \
 		    -state disabled
+		$ds9(mb).color entryconfig \
+		    [msgcat::mc {Solar Colormaps}] \
+		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state disable
 
@@ -544,6 +560,7 @@ proc UpdateColorMenu {} {
 		UpdateColorButtonExternal gist disable
 		UpdateColorButtonExternal topo disable
 		UpdateColorButtonExternal scm disable
+		UpdateColorButtonExternal solar disable
 	    }
 	}
     } else {
@@ -562,6 +579,7 @@ proc UpdateColorMenu {} {
 	$ds9(mb).color entryconfig [msgcat::mc {Gist}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Topographic}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Scientific Colour Maps}] -state normal
+	$ds9(mb).color entryconfig [msgcat::mc {Solar Colormaps}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {User}] -state normal
 
 	UpdateColorButtonExternal default normal
@@ -574,6 +592,7 @@ proc UpdateColorMenu {} {
 	UpdateColorButtonExternal gist normal
 	UpdateColorButtonExternal topo normal
 	UpdateColorButtonExternal scm normal
+	UpdateColorButtonExternal solar normal
     }
 }
 

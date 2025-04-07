@@ -181,6 +181,49 @@ proc ColorbarDef {} {
 				  scm_vik \
 				  scm_vikO \
 				 ]
+    set icolorbar(solar,cmaps) [list \
+                  solar_soho_171 \
+                  solar_soho_195 \
+                  solar_soho_284 \
+                  solar_soho_304 \
+                  solar_soho_lasco2 \
+                  solar_soho_lasco3 \
+				  solar_sdo_94 \
+				  solar_sdo_131 \
+				  solar_sdo_171 \
+				  solar_sdo_193 \
+				  solar_sdo_211 \
+				  solar_sdo_304 \
+				  solar_sdo_335 \
+				  solar_sdo_1600 \
+				  solar_sdo_1700 \
+				  solar_sdo_4500 \
+                  solar_stereo_171 \
+                  solar_stereo_195 \
+                  solar_stereo_284 \
+                  solar_stereo_304 \
+                  solar_stereo_cor1 \
+                  solar_stereo_cor2 \
+                  solar_stereo_hi1 \
+                  solar_stereo_hi2 \
+                  solar_trace_171 \
+                  solar_trace_195 \
+                  solar_trace_284 \
+                  solar_trace_1216 \
+                  solar_trace_1550 \
+                  solar_trace_1600 \
+                  solar_trace_1700 \
+                  solar_iris_1330 \
+                  solar_iris_1400 \
+                  solar_iris_1600 \
+                  solar_iris_2796 \
+                  solar_iris_2832 \
+                  solar_iris_5000 \
+                  solar_sdo_hmi_color \
+                  solar_yohkoh_sxt \
+                  solar_rhessi \
+                  solar_solo_lya1216 \
+                ]
     set icolorbar(user,cmaps) {}
 
     # used for Color{Button|Motion|Release}3
@@ -250,6 +293,7 @@ proc CreateColorbar {} {
     CreateColorbarExternal colorbar mpl-seq
     CreateColorbarExternal colorbar mpl-div
     CreateColorbarExternal colorbar mpl-cyc
+    CreateColorbarExternal colorbar solar
 
     # reset current map
     colorbar map $colorbar(map)
@@ -330,6 +374,7 @@ proc CreateColorbarBase {frame} {
     CreateColorbarExternal $which mpl-seq
     CreateColorbarExternal $which mpl-div
     CreateColorbarExternal $which mpl-cyc
+    CreateColorbarExternal $which solar
 
     # preload any user
     foreach cmap $icolorbar(user,cmaps) {
@@ -1404,6 +1449,8 @@ proc ColormapDialog {} {
 	-menu $mb.colormap.topo
     $mb.colormap add cascade -label [msgcat::mc {Scientific Colour Maps}] \
 	-menu $mb.colormap.scm
+    $mb.colormap add cascade -label [msgcat::mc {Solar Colormaps}] \
+	-menu $mb.colormap.solar
     $mb.colormap add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
 
@@ -1416,6 +1463,7 @@ proc ColormapDialog {} {
     ColormapDialogExternal gist
     ColormapDialogExternal topo
     ColormapDialogExternal scm
+    ColormapDialogExternal solar
     ColormapDialogExternal user
 
     $mb.colormap add separator
@@ -1608,6 +1656,8 @@ proc UpdateColorDialogCmaps {state} {
 	[msgcat::mc {Topographic}] -state $state
     $icolorbar(mb).colormap entryconfig \
 	[msgcat::mc {Scientific Colour Maps}] -state $state
+    $icolorbar(mb).colormap entryconfig \
+	[msgcat::mc {Solar Colormaps}] -state $state
     $icolorbar(mb).colormap entryconfig \
 	[msgcat::mc {User}] -state $state
 }

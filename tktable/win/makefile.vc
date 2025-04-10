@@ -1,0 +1,146 @@
+#------------------------------------------------------------- -*- makefile -*-
+#
+# Makefile for TkTable Extension
+#
+# Basic build, test and install
+#   nmake /f makefile.vc INSTALLDIR=c:\path\to\tcl TCLDIR=c:\path\to\tcl\sources
+#   nmake /f makefile.vc INSTALLDIR=c:\path\to\tcl TCLDIR=c:\path\to\tcl\sources test
+#   nmake /f makefile.vc INSTALLDIR=c:\path\to\tcl TCLDIR=c:\path\to\tcl\sources install
+#
+# For other build options (debug, static etc.),
+# See TIP 477 (https://core.tcl-lang.org/tips/doc/main/tip/477.md) for
+# detailed documentation.
+#
+# See the file "license.terms" for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+#------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------
+# Project specific information
+#-------------------------------------------------------------------------
+
+# The name of the package
+PROJECT = Tktable
+TBL_COMMAND = table
+TBL_RUNTIME = tkTable.tcl
+PROJECT_REQUIRES_TK=1
+
+!include "rules-ext.vc"
+INST_RUNTIMEU = "$(PRJ_INSTALL_DIR:\=/)"
+
+# Get version
+!include "$(GENERICDIR)\version.h"
+
+# Define the object files and resource file that make up the extension.
+# Note the resource file does not makes sense if doing a static library build
+# hence it is under that condition. TMP_DIR is the output directory
+# defined by rules for object files.
+PRJ_OBJS = $(TMP_DIR)\tkTable.obj \
+	$(TMP_DIR)\tkTableWin.obj \
+	$(TMP_DIR)\tkTableTag.obj \
+	$(TMP_DIR)\tkTableEdit.obj \
+	$(TMP_DIR)\tkTableCell.obj \
+	$(TMP_DIR)\tkTableCellSort.obj \
+	$(TMP_DIR)\tkTableCmds.obj \
+	$(TMP_DIR)\tkTableUtil.obj
+# $(TMP_DIR)\tkTablePs.obj
+
+# Define any additional project include flags
+PRJ_INCLUDES = -I"$(TMP_DIR)"
+
+# Define any additional compiler flags that might be required for the project
+PRJ_DEFINES = -DDLL_BUILD -DBUILD_$(PROJECT) -D_WIN32 \
+		-DTBL_COMMAND=\"$(TBL_COMMAND)\" \
+		-DTBL_RUNTIME="\"$(TBL_RUNTIME)\"" \
+		-DTBL_RUNTIME_DIR="\"$(INST_RUNTIMEU)\"" \
+		-D_CRT_SECURE_NO_WARNINGS \
+		-D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE \
+		-D__STDC_WANT_SECURE_LIB__=1
+
+# Define any additional project needed libraries
+PRJ_LIBS = WS2_32.Lib
+
+# NO_EMBEDDED_RUNTIME means that the tkTable.tcl file will not be embedded
+# into the executable, thus the default tkTable.tcl library file will not
+# be available when the library is loaded.
+# If this is defined, the tkTable.tcl file must be available in a
+# predefined set of directories (see docs).
+#PRJ_DEFINES	+= -DNO_EMBEDDED_RUNTIME
+
+# Define the standard targets which calls rules.vc
+!include "targets.vc"
+
+#---------------------------------------------------------------------
+# Project specific targets
+#---------------------------------------------------------------------
+
+# Implicit rule to generate html from man files
+# NOTE: this requires doctools from tcllib hence it is not intended
+# to be run during install. Rather, use it to generate a new version
+# of HTML docs to be stored in the repository.
+make-docs-html:
+	$(TCLSH) "$(PRJ_INSTALL_DIR)\..\..\bin\dtplite.tcl" \
+	    -o "$(DOCDIR)\$(PROJECT).html" html "$(DOCDIR)\$(PROJECT).man"
+
+make-docs-n:
+	$(TCLSH) "$(PRJ_INSTALL_DIR)\..\..\bin\dtplite.tcl" \
+	    -o "$(DOCDIR)\$(PROJECT).n" nroff "$(DOCDIR)\$(PROJECT).man"
+
+all: setup default-target
+
+clean: default-clean
+
+realclean: default-hose
+
+$(PRJ_OBJS): $(TMP_DIR)\tkTable.tcl.h
+
+$(TMP_DIR)\tkTable.tcl.h: $(LIBDIR)\tkTable.tcl
+	"$(TCLSH)" << $(LIBDIR)\tkTable.tcl >$(TMP_DIR)\tkTable.tcl.h
+	set in [open [lindex $$argv 0] r]
+	while {[gets $$in line] != -1} {
+	    switch -regexp -- $$line "^$$" - {^#} continue
+	    regsub -all {\\} $$line {\\\\} line
+	    regsub -all {"} $$line {\"} line
+	    puts "\"$$line\\n\""
+	}
+<<
+
+# We must define a pkgindex target that will create a pkgIndex.tcl
+# file in the $(OUT_DIR) directory. We can just redirect to the
+# default-pkgindex target for our sample extension.
+pkgindex: default-pkgindex-tea
+ 
+# Manifest which defines fossil/git commit id for build-info command
+$(ROOT)\manifest.uuid:
+    if not exist $(ROOT)\manifest.uuid (
+	copy $(WIN_DIR)\gitmanifest.in $(ROOT)\manifest.uuid
+	where git
+	if ERRORLEVEL 0 (
+	    git rev-parse HEAD >>$(ROOT)\manifest.uuid
+	) else (
+	    echo unknown >>$(ROOT)\manifest.uuid
+	)
+    )
+
+$(TMP_DIR)\tkTableUuid.h:	$(ROOT)\manifest.uuid
+	copy $(WIN_DIR)\tkTableUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tkTableUuid.h
+	echo: >>$(TMP_DIR)\tkTableUuid.h
+
+install-tktabletcl:
+         @echo Installing package entrypoint in '$(SCRIPT_INSTALL_DIR)'
+ 	@$(CPY) $(LIBDIR)\tkTable.tcl "$(SCRIPT_INSTALL_DIR)"
+
+default-install-libraries: install-tktabletcl
+
+# The default install target only installs binaries and scripts so add
+# an additional target for our documentation. Note this *adds* a target
+# since no commands are listed after it. The original targets for
+# install (from targets.vc) will remain.
+install: pkgindex default-install default-install-docs-html default-install-docs-n default-install-demos
+ 
+# Explicit dependency rules
+$(GENERICDIR)\tkTable.c: $(TMP_DIR)\tkTableUuid.h
+
+# Test package
+test: default-test

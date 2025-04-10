@@ -43,7 +43,7 @@ tkmpeg_LIB_SPEC	= @tkmpeg_LIB_SPEC@
 tksvg_LIB_SPEC	= @tksvg_LIB_SPEC@
 tkagif_LIB_SPEC	= @tkagif_LIB_SPEC@
 tksao_LIB_SPEC	= @tksao_LIB_SPEC@
-tktable_LIB_SPEC= @tktable_LIB_SPEC@
+tktable_LIB_SPEC= @Tktable_LIB_SPEC@
 
 CC		= @CC@
 CXX		= @CXX@

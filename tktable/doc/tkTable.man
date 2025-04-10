@@ -1,0 +1,1279 @@
+[comment {-*- tcl -*- doctools manpage}]
+[comment {To convert this to another documentation format use the mpexpand
+          script from tcllib: dtplite -o tkTable.n nroff tkTable.man
+                              dtplite -o tkTable.html html tkTable.man
+}]
+[manpage_begin tkTable n 2.12]
+[keywords table widget extension]
+[category table]
+[copyright {1997-2002 Jeffrey Hobbs}]
+[moddesc {TkTable extension}]
+[titledesc {Create and manipulate table widgets}]
+[require Tcl [opt 8.5]]
+[require Tktable [opt 2.12]]
+
+
+[description]
+[list_begin definitions]
+[call [cmd table] [arg pathName] [opt [arg options]]]
+Creates and configures a table widget with name [arg pathName].
+Additional options may be specified on the command line or
+in the option database to configure aspects of the table such as its background
+color and relief. The [cmd tree] command returns the path name of the new
+window. At the time the command is invoked, [arg pathName] must not exist,
+but it's parent must.
+[list_end]
+
+The [cmd table] command creates a 2-dimensional grid of cells.  The table
+can use a TCL array variable or TCL command for data storage and retrieval,
+as well as an optional data cache in memory for speed.  The default variable is
+[var ::tableData]. The widget has an active cell, the contents of which can be
+edited (when the state is normal).  The widget supports a default style for
+the cells and also multiple tags which can be used to change the style of a
+row, column, or cell (see [sectref TAGS] for details).  A cell flash can
+also be set so that edited cells will change colors for a specified amount of
+time ("blink").  Cells can have embedded images or windows, as described in
+[sectref TAGS] and [sectref "EMBEDDED WINDOWS"] respectively.
+[para]
+One or more cells may be selected as described below.  If a table is
+exporting its selection (see [option -exportselection] option), then it will
+observe the standard X11 protocols for handling the selection.  See
+[sectref "THE SELECTION"] for details.
+[para]
+It is not necessary for all the cells to be displayed in the table window at
+once; commands described below may be used to change the view in the window.
+Tables allow scrolling in both directions using the standard
+[option -xscrollcommand] and [option -yscrollcommand] options.  They also support
+scanning, as described below.
+[para]
+In order to obtain good performance, the table widget supports multiple
+drawing modes, two of which are fully Tk compatible.
+
+[section {STANDARD OPTIONS}]
+[list_begin options]
+[opt_def [option -background]]
+[opt_def [option -borderwidth]]
+[opt_def [option -cursor]]
+[opt_def [option -exportselection]]
+[opt_def [option -font]]
+[opt_def [option -foreground]]
+[opt_def [option -highlightbackground]]
+[opt_def [option -highlightcolor]]
+[opt_def [option -highlightthickness]]
+[opt_def [option -insertbackground]]
+[opt_def [option -insertborderwidth]]
+[opt_def [option -insertofftime]]
+[opt_def [option -insertontime]]
+[opt_def [option -insertwidth]]
+[opt_def [option -padx]]
+[opt_def [option -pady]]
+[opt_def [option -relief]]
+[opt_def [option -selectbackground]]
+[opt_def [option -selectborderwidth]]
+[opt_def [option -selectforeground]]
+[opt_def [option -setgrid]]
+[opt_def [option -takefocus]]
+[opt_def [option -xscrollcommand]]
+[opt_def [option -yscrollcommand]]
+[list_end]
+See the [syscmd option] manual entry for details on the standard options.
+
+[section {WIDGET SPECIFIC OPTIONS}]
+[list_begin tkoptions]
+
+[tkoption_def -autoclear autoClear AutoClear]
+A boolean value which specifies whether the first keypress in a cell will
+delete whatever text was previously there.  Defaults to 0.
+
+[tkoption_def -bordercursor borderCursor Cursor]
+Specifies the name of the cursor to show when over borders, a visual
+indication that interactive resizing is allowed (it is thus affect by
+the value of [option resizeborders]).  Defaults to [const crosshair].
+
+[tkoption_def "-borderwidth or -bd" borderWidth BorderWidth]
+Specifies a non-negative pixel value or list of values indicating the width
+of the 3-D border to draw on interior table cells (if such a border is
+being drawn; the [option -relief] option typically determines this).  If one
+value is specified, a rectangle of this width will be drawn.  If two values
+are specified, then only the left and right edges of the cell will have
+borders.  If four values are specified, then the values correspond to the
+{left right top bottom} edges.  This can be overridden by the a tag's
+borderwidth option.  It can also be affected by the defined
+[option -drawmode] for the table.  Each value in the list must have one of
+the forms acceptable to [fun Tk_GetPixels].
+
+[tkoption_def "-browsecommand or -browsecmd" browseCommand BrowseCommand]
+Specifies a command which will be evaluated anytime the active cell changes.
+It uses the % substitution model described in [sectref "COMMAND SUBSTITUTION"] below.
+Any changes to the active cell while the command is running are ignored to
+prevent recursion.
+
+[tkoption_def -cache cache Cache]
+A boolean value that specifies whether an internal cache of the table
+contents should be kept.  This greatly enhances speed performance when used
+with [option -command] but uses extra memory.  Can maintain state when both
+[option -command] and [option -variable] are empty.  The cache is automatically
+flushed whenever the value of [option -cache] or [option -variable] changes,
+otherwise you have to explicitly call [method clear] on it.  Defaults to off.
+
+[tkoption_def -colorigin colOrigin Origin]
+Specifies what column index to interpret as the leftmost column in the table.
+This value is used for user indices in the table.  Defaults to 0.
+
+[tkoption_def -cols cols Cols]
+Number of cols in the table.  Defaults to 10.
+
+[tkoption_def -colseparator colSeparator Separator]
+Specifies a separator character that will be interpreted as the column
+separator when cutting or pasting data in a table.  By default, columns
+are separated as elements of a tcl list.
+
+[tkoption_def -colstretchmode colStretchMode StretchMode]
+Specifies one of the following stretch modes for columns to fill extra
+allocated window space:
+[list_begin options]
+[opt_def none]
+Columns will not stretch to fill the assigned window space.  If the columns
+are too narrow, there will be a blank space at the right of the table.  This
+is the default.
+[opt_def unset]
+Only columns that do not have a specific width set will be stretched.
+[opt_def all]
+All columns will be stretched by the same number of pixels to fill the
+window space allocated to the table.  This mode can interfere with
+interactive border resizing which tries to force column width.
+[opt_def last]
+The last column will be stretched
+to fill the window space allocated to the table.
+[opt_def fill] (only valid for [option -rowstretch] currently)
+The table will get more or less columns according to the window
+space allocated to the table.  This mode has numerous quirks and
+may disappear in the future.
+[list_end]
+
+[tkoption_def -coltagcommand colTagCommand TagCommand]
+Provides the name of a procedure that will be evaluated by the widget to
+determine the tag to be used for a given column.  When displaying a cell,
+the table widget will first check to see if a tag has been defined using the
+[method "tag col"] widget command.  If no tag is found, it will evaluate the named
+procedure passing the column number in question as the sole argument.  The
+procedure is expected to return the name of a tag to use, or a null string.
+Errors occurring during the evaluation of the procedure, or the return of an
+invalid tag name are silently ignored.
+
+[tkoption_def -colwidth colWidth ColWidth]
+Default column width, interpreted as characters in the default font when
+the number is positive, or pixels if it is negative.  Defaults to 10.
+
+[tkoption_def -command command Command]
+Specified a command to use as a procedural interface to cell values.
+If [option -usecommand] is true, this command will be used instead of any
+reference to the [option -variable] array.  When retrieving cell values,
+the return value of the command is used as the value for the cell.
+It uses the % substitution model described in [sectref "COMMAND SUBSTITUTION"] below.
+
+[tkoption_def -drawmode drawMode DrawMode]
+Sets the table drawing mode to one of the following options:
+[list_begin options]
+
+[opt_def slow]
+The table is drawn to an offscreen pixmap using the Tk bordering functions
+(double-buffering).  This means there will be no flashing, but this mode is
+slow for larger tables.
+
+[opt_def compatible]
+The table is drawn directly to the screen using the Tk border functions.
+It is faster, but the screen may flash on update.  This is the default.
+
+[opt_def fast]
+The table is drawn directly to the screen and the borders are done with
+fast X calls, so they are always one pixel wide only.  As a side effect, it
+restricts [option -borderwidth] to a range of 0 or 1.  This mode provides
+best performance for large tables, but can flash on redraw and is not 100%
+Tk compatible on the border mode.
+
+[opt_def single]
+The table is drawn to the screen as in fast mode, but only single pixel
+lines are drawn (not square borders).
+[list_end]
+
+[tkoption_def -ellipsis ellipsis Ellipsis]
+This specifies a string to display at the end of a line that would be
+clipped by its cell, like "...".  An ellipsis will be displayed only
+on non-wrapping, non-multiline cells that would be clipped.  The ellipsis
+will display on the left for east anchored cells, otherwise it displays
+on the right.
+Defaults to "" (no ellipsis).
+
+[tkoption_def -flashmode flashMode FlashMode]
+A boolean value which specifies whether cells should flash when their value
+changes.  The table tag [const flash] will be applied to these cells for the
+duration specified by [option -flashtime].  Defaults to 0.
+
+[tkoption_def -flashtime flashTime FlashTime]
+The amount of time, in 1/4 second increments, for which a cell should flash
+when its value has changed.  [option -flashmode] must be on.  Defaults to 2.
+
+[tkoption_def -height height Height]
+Specifies the desired height for the window, in rows.
+If zero or less, then the desired height for the window is made just
+large enough to hold all the rows in the table.  The height can be
+further limited by [option -maxheight].
+
+[tkoption_def -invertselected invertSelected InvertSelected]
+Specifies whether the foreground and background of an item should simply
+have their values swapped instead of merging the [const sel] tag options
+when the cell is selected.  Defaults to 0 (merge [const sel] tag).
+
+[tkoption_def -ipadx ipadX Pad]
+A pixel value specifying the internal offset X padding for text in a cell.
+This value does not grow the size of the cell, it just causes the text to
+be drawn further from the cell border.  It only affects one side (depending
+on anchor).  Defaults to 0.  See [option -padx] for an alternate padding
+style.
+
+[tkoption_def -ipady ipadY Pad]
+A pixel value specifying the internal offset Y padding for text in a cell.
+This value does not grow the size of the cell, it just causes the text to
+be drawn further from the cell border.  It only affects one side (depending
+on anchor).  Defaults to 0.  See [option -pady] for an alternate padding
+style.
+
+[tkoption_def -justify justify Justify]
+How to justify multi-line text in a cell. It must be one of [const left],
+[const right], or [const center]. Defaults to [const left].
+
+[tkoption_def -maxheight maxHeight MaxHeight]
+The max height in pixels that the window will request.  Defaults to 600.
+
+[tkoption_def -maxwidth maxWidth MaxWidth]
+The max width in pixels that the window will request.  Defaults to 800.
+
+[tkoption_def -multiline multiline Multiline]
+Specifies the default setting for the multiline tag option.  Defaults to 1.
+
+[tkoption_def -padx padX Pad]
+A pixel value specifying the offset X padding for a cell.  This value
+causes the default size of the cell to increase by two times the value (one
+for each side), unless a specific pixel size is chosen for the cell with
+the [method width] command.  This will force an empty area on the left and
+right of each cell edge.  This padding affects all types of data in the
+cell.  Defaults to 0.  See [option -ipadx] for an alternate padding style.
+
+[tkoption_def -pady padY Pad]
+A pixel value specifying the offset Y padding for a cell.  This value
+causes the default size of the cell to increase by two times the value (one
+for each side), unless a specific pixel size is chosen for the cell with
+the [method height] command.  This will force an empty area on the top and
+bottom of each cell edge.  This padding affects all types of data in the
+cell.  Defaults to 0.  See [option -ipadx] for an alternate padding style.
+
+[tkoption_def -resizeborders resizeBorders ResizeBorders]
+Specifies what kind of interactive border resizing to allow, must be one of
+row, col, both (default) or none.
+
+[tkoption_def -rowheight rowHeight RowHeight]
+Default row height, interpreted as lines in the default font when
+the number is positive, or pixels if it is negative.  Defaults to 1.
+
+[tkoption_def -roworigin rowOrigin Origin]
+Specifies what row index to interpret as the topmost row in the table.
+This value is used for user indices in the table.  Defaults to 0.
+
+[tkoption_def -rows rows Rows]
+Number of rows in the table.  Defaults to 10.
+
+[tkoption_def -rowseparator rowSeparator Separator]
+Specifies a separator character that will be interpreted as the row
+separator when cutting or pasting data in a table.  By default, rows
+are separated as tcl lists.
+
+[tkoption_def -rowstretchmode rowStretchMode StretchMode]
+Specifies the stretch modes for rows to fill extra
+allocated window space.  See [option -colstretchmode] for valid options.
+
+[tkoption_def -rowtagcommand rowTagCommand TagCommand]
+Provides the name of a procedure that can evaluated by the widget to
+determine the tag to be used for a given row.  The procedure must be
+defined by the user to accept a single argument (the row number), and
+return a tag name or null string.  This operates in a similar manner as
+[option -coltagcommand], except that it applies to row tags.
+
+[tkoption_def "-selectioncommand or -selcmd" selectionCommand SelectionCommand]
+Specifies a command to evaluate when the selection is retrieved from a
+table via the selection mechanism (ie: evaluating [method "selection get"]).
+The return value from this command will become the string passed on by the
+selection mechanism.  It uses the % substitution model described in
+[sectref "COMMAND SUBSTITUTION"] below.  If an error occurs, a TCL background
+error is generated and nothing is returned.
+
+[tkoption_def -selectmode selectMode SelectMode]
+Specifies one of several styles for manipulating the selection.  The value
+of the option may be arbitrary, but the default bindings expect it to be
+either [const single], [const browse], [const multiple], or [const extended]; the
+default value is [const browse].  These styles are like those for the Tk
+listbox, except expanded for 2 dimensions.
+
+[tkoption_def -selecttitle selectTitles SelectTitles]
+Specifies whether title cells should be allowed in the selection.
+Defaults to 0 (disallowed).
+
+[tkoption_def -selecttype selectType SelectType]
+Specifies one of several types of selection for the table.  The value of the
+option may be one of [const row], [const col], [const cell], or [const both]
+(meaning row && col); the default value is [const cell].  These types
+define whether an entire row/col is affected when a cell's selection is
+changed (set or clear).
+
+[tkoption_def -sparsearray sparseArray SparseArray]
+A boolean value that specifies whether an associated TCL array should be
+kept as a sparse array (1, the default) or as a full array (0).  If true,
+then cell values that are empty will be deleted from the array (taking
+less memory).  If false, then all values in the array will be maintained.
+
+[tkoption_def -state state State]
+Specifies one of two states for the entry:  [const normal] or [const disabled].
+If the table is disabled then the value may not be changed using widget
+commands and no insertion cursor will be displayed, even if the input focus
+is in the widget.  Also, all insert or delete methods will be ignored.
+Defaults to [const normal].
+
+[tkoption_def -titlecols titleCols TitleCols]
+Number of columns to use as a title area.  Defaults to 0.
+
+[tkoption_def -titlerows titleRows TitleRows]
+Number of rows to use as a title area.  Defaults to 0.
+
+[tkoption_def -usecommand useCommand UseCommand]
+A boolean value which specifies whether to use the [method command] option.
+This value sets itself to zero if [method command] is used and returns an error.
+Defaults to 1 (will use [method command] if specified).
+
+[tkoption_def -validate validate Validate]
+A boolean specifying whether validation should occur for the active buffer.
+Defaults to 0.
+
+[tkoption_def "-validatecommand or -vcmd" validateCommand ValidateCommand]
+Specifies a command to execute when the active cell is edited.  This command
+is expected to return a TCL boolean.  If it returns true, then it is assumed
+the new value is OK, otherwise the new value is rejected (the edition will
+not take place).  Errors in this command are handled in the background.  It
+uses the % substitution model described in [sectref "COMMAND SUBSTITUTION"] below.
+
+[tkoption_def -variable variable Variable]
+Specifies name of TCL array variable to use for table data storage.  It will
+be created if it doesn't already exist or is a simple variable. The default is
+[var ::tableData]. The array keys are of the form [arg row],[arg col] for cells
+and the special key [cmd active] which contains the value of the active cell
+buffer.  The TCL array is managed as a sparse array (the table does not require
+that all valid indices have values).  No stored value for an index is
+equivalent to the empty string, and clearing a cell will remove that index
+from the TCL array, unless the [option -sparsearray] options is set to 0.
+
+[tkoption_def -width width Width]
+Specifies the desired width for the window, in columns.
+If zero or less, then the desired width for the window is made just
+large enough to hold all the columns in the table.  The width can be
+further limited by [option -maxwidth].
+
+[tkoption_def -wrap wrap Wrap]
+Specifies the default wrap value for tags.  Defaults to 0.
+[list_end]
+
+[section "INITIALIZATION"]
+[para]
+When the [cmd table] command is loaded into an interpreter, a built-in
+TCL command, [fun tkTableInit], is evaluated.  This will search for the
+appropriate table binding init file to load.  The directories searched
+are those in [var \$::tcl_pkgPath], both with Tktable(version) appended and
+without, [var \$::tk_library] and [syscmd [lb]pwd[rb]] (the current directory).  You
+can also define an [var \$::env(TK_TABLE_LIBRARY)] to head this search list.
+By default, the file searched for is called [file tkTable.tcl], but this
+can be overridden by setting [var \$::env(TK_TABLE_LIBRARY_FILE)].
+[para]
+This entire init script can be overridden by providing your own
+[fun tkTableInit] procedure before the library is loaded.  Otherwise, the
+aforementioned [var ::env(TK_TABLE_LIBRARY)] variable will be set with the
+directory in which [var \$::env(TK_TABLE_LIBRARY_FILE)] was found.
+
+[section "INDICES"]
+[para]
+Many of the widget commands for tables take one or more indices as arguments.
+An index specifies a particular cell of the table, in any of
+the following ways:
+[list_begin options]
+
+[opt_def "[arg number][const ,][arg number]"]
+Specifies the cell as a numerical index of row,col which corresponds to the
+index of the associated TCL array, where [option -roworigin,-colorigin]
+corresponds to the first cell in the table (0,0 by default).  The values
+for row and column will be constrained to actual values in the table,
+which means a valid cell is always found.
+
+[opt_def active]
+Indicates the cell that has the location cursor.
+It is specified with the [method activate] widget command.
+
+[opt_def anchor]
+Indicates the anchor point for the selection, which is set with the
+[method "selection anchor"] widget command.
+
+[opt_def bottomright]
+Indicates the bottom-rightmost cell visible in the table.
+
+[opt_def end]
+Indicates the bottom right cell of the table.
+
+[opt_def origin]
+Indicates the top-leftmost editable cell of the table, not necessarily
+in the display.  This takes into account the user specified origin and
+title area.
+
+[opt_def topleft]
+Indicates the top-leftmost editable cell visible in the table (this
+excludes title cells).
+
+[opt_def "@[arg x][const ,][arg y]"]
+Indicates the cell that covers the point in the table window
+specified by [arg x] and [arg y] (in pixel coordinates).  If no
+cell covers that point, then the closest cell to that
+point is used.
+
+In the widget command descriptions below, arguments named [arg index],
+[arg first], and [arg last] always contain text indices in one of
+the above forms.
+[list_end]
+
+[section "TAGS"]
+[para]
+A tag is a textual string that is associated with zero or more rows,
+columns or cells in a table.  Tags may contain arbitrary characters, but it
+is probably best to avoid using names which look like indices to reduce
+coding confusion.  A tag can apply to an entire row or column, or just a
+single cell.  There are several permanent tags in each table that can be
+configured by the user and will determine the attributes for special cells:
+[list_begin options]
+
+[opt_def active]
+This tag is given to the [const active] cell
+
+[opt_def flash]
+If flash mode is on, this tag is given to any recently edited cells.
+
+[opt_def sel]
+This tag is given to any selected cells.
+
+[opt_def title]
+This tag is given to any cells in the title rows and columns.  This
+tag has [option -state] [const disabled] by default.
+[list_end]
+
+[para]
+Tags control the way cells are displayed on the screen.  Where appropriate,
+the default for displaying cells is determined by the options for the table
+widget.  However, display options may be associated with individual tags
+using [method "tag configure"]widget command.  If a cell, row or column has
+been tagged, then the display options associated with the tag override the
+default display style.  The following options are currently supported for tags:
+[list_begin options]
+
+[opt_def -anchor [arg anchor]]
+Anchor for item in the cell space.
+
+[opt_def "-background or -bg" [arg color]]
+Background color of the cell.
+
+[opt_def "-borderwidth or -bd" [arg pixelList]]
+Borderwidth of the cell, of the same format for the table, but may also
+be empty to inherit the default table borderwidth value (the default).
+
+[opt_def -ellipsis [arg string]]
+String to display at the end of a line that would be clipped by its cell,
+like "...".  An ellipsis will be displayed only
+on non-wrapping, non-multiline cells that would be clipped.  The ellipsis
+will display on the left for east anchored cells, otherwise it displays
+on the right.
+
+[opt_def -font [arg fontName]]
+Font for text in the cell.
+
+[opt_def "-foreground or -fg" [arg color]]
+Foreground color of the cell.
+
+[opt_def -justify [arg justify]]
+How to justify multi-line text in a cell.
+It must be one of [const left], [const right], or [const center].
+
+[opt_def -image [arg imageName]]
+An image to display in the cell instead of text.
+
+[opt_def -multiline [arg boolean]]
+Whether to display text with newlines on multiple lines.
+
+[opt_def -relief [arg relief]]
+The relief for the cell.  May be the empty string to cause this tag to
+not disturb the value.
+
+[opt_def -showtext [arg boolean]]
+Whether to show the text over an image.
+
+[opt_def -state [arg state]]
+The state of the cell, to allow for certain cells to be disabled.
+This prevents the cell from being edited by the [method insert] or [method delete]
+methods, but a direct [method set] will not be prevented.
+
+[opt_def -wrap [arg boolean]]
+Whether characters should wrap in a cell that is not wide enough.
+[list_end]
+
+[para]
+A priority order is defined among tags based on creation order (first
+created tag has highest default priority), and this order is used in
+implementing some of the tag-related functions described below.  When a cell
+is displayed, its properties are determined by the tags which are assigned
+to it.  The priority of a tag can be modified by [method "tag lower"] and
+[method "tag raise"] widget commands.
+[para]
+If a cell has several tags associated with it that define the same display
+options (eg - a [const title] cell with specific [const row] and [const cell]
+tags), then the options of the highest priority tag are used.  If a
+particular display option hasn't been specified for a particular tag, or if
+it is specified as an empty string, then that option will not be used; the
+next highest priority tag's option will be used instead.  If no tag
+specifies a particular display option, then the default style for the
+widget will be used.
+[para]
+Images are used for display purposes only.  Editing in that cell will still
+be enabled and any querying of the cell will show the text value of the cell,
+regardless of the value of [option -showtext].
+
+[section "EMBEDDED WINDOWS"]
+[para]
+There may be any number of embedded windows in a table widget (one per
+cell), and any widget may be used as an embedded window (subject to the
+usual rules for geometry management, which require the table window to be
+the parent of the embedded window or a descendant of its parent).  The
+embedded window's position on the screen will be updated as the table is
+modified or scrolled, and it will be mapped and unmapped as it moves into
+and out of the visible area of the table widget.  Each embedded window
+occupies one cell's worth of space in the table widget, and it is referred
+to by the index of the cell in the table.  Windows associated with the
+table widget are destroyed when the table widget is destroyed.
+[para]
+Windows are used for display purposes only.  A value still exists for that
+cell, but will not be shown unless the window is deleted in some way.  If
+the window is destroyed or lost by the table widget to another geometry
+manager, then any data associated with it is lost (the cell it occupied
+will no longer appear in [method "window names"]).
+[para]
+When an embedded window is added to a table widget with the window
+configure widget command, several configuration options may be associated
+with it.  These options may be modified with later calls to the window
+configure widget command.  The following options are currently supported:
+[list_begin options]
+
+[opt_def -create [arg script]]
+NOT CURRENTLY SUPPORTED.  Specifies a TCL script that may be evaluated to
+create the window for the annotation.  If no [option -window] option has been
+specified for this cell then this script will be evaluated when the
+cell is about to be displayed on the screen.  Script must create a
+window for the cell and return the name of that window as its result.
+If the cell's window should ever be deleted, the script will be evaluated
+again the next time the cell is displayed.
+
+[opt_def "-background or -bg" [arg color]]
+Background color of the cell.  If not
+specified, it uses the table's default background.
+
+[opt_def "-borderwidth or -bd" [arg pixelList]]
+Borderwidth of the cell, of the same format for the table, but may also
+be empty to inherit the default table borderwidth value (the default).
+
+[opt_def -padx [arg pixels]]
+As defined in the Tk options man page.
+
+[opt_def -pady [arg pixels]]
+As defined in the Tk options man page.
+
+[opt_def -relief [arg relief]]
+The relief to use for the cell in which the window lies.  If not
+specified, it uses the table's default relief.
+
+[opt_def -sticky [arg sticky]]
+Stickiness of the window inside the cell, as defined by the [syscmd grid] command.
+
+[opt_def -window [arg pathName]]
+Specifies the name of a window (widget) to display in the annotation.  It
+must exist before being specified here.  When an empty string is specified,
+if a window was displayed it will cease to be managed by the table widget.
+[list_end]
+
+[section "THE SELECTION"]
+[para]
+Table selections are available as type STRING.  By default, the value of
+the selection will be the values of the selected cells in nested TCL list
+form where each row is a list and each column is an element of a row list.
+You can change the way this value is interpreted by setting the
+[option -rowseparator] and [option -colseparator] options.  For example,
+default Excel format would be to set [option -rowseparator] to '\n' and
+[option -colseparator] to '\t'.  Changing these values affects both how the
+table sends out the selection and reads in pasted data, ensuring that the
+table should always be able to cut and paste to itself.  It is possible to
+change how pastes are handled by editing the table library procedure
+[cmd tk_tablePasteHandler].  This might be necessary if
+[option -selectioncommand] is set.
+[para]
+Whenever the selection changes a virtual event <<TableSelect>> is generated.
+It might also be generated when selection is affected but not actually
+changed. Further, multiple selection changes could happen before events can
+be processed leading to multiple events with the same visible selection.
+
+[section "ROW/COL SPANNING"]
+[para]
+Individual cells can span multiple rows and/or columns.  This is done
+via the [method spans] command (see below for exact arguments).  Cells in
+the title area that span are not permitted to span beyond the title area,
+and will be constrained accordingly.  If the title area shrinks during a
+configure, sanity checking will occur to ensure the above.  You may set
+spans on regular cells that extend beyond the defined row/col area.  These
+spans will not be constrained, so that when the defined row/col area
+expands, the span will expand with it.
+[para]
+When setting a span, checks are made as to whether the span would overlap
+an already spanning or hidden cell.  This is an error and it not allowed.
+Spans can affect the overall speed of table drawing, although not
+significantly.  If spans are not used, then there is no performance loss.
+[para]
+Cells [arg hidden] by spanning cells still have valid data.  This will
+be seen during cut and paste operations that involve hidden cells, or
+through direct access by a command like [method get] or [method set].
+[para]
+The drawing properties of spanning cells apply to only the visual area
+of the cell.  For example, if a cell is center justified over 5 columns,
+then when viewing any portion of those columns, it will appear centered
+in the visible area. The non-visible column area will not be considered
+in the centering calculations.
+
+[section "COMMAND SUBSTITUTION"]
+[para]
+The table widget supports percent substitutions for several of the command
+options using the Tk % substitutions method (see [syscmd bind] for more
+details).  The following % substitution sequences are recognized and
+substituted by the table widget:
+[list_begin options]
+
+[opt_def %c]
+For [option -selectioncommand], it is the maximum number of columns in any
+row in the selection.  Otherwise it is the column of the triggered cell.
+
+[opt_def %C]
+A convenience substitution for "[const %r,%c]".
+
+[opt_def %i]
+For [option -selectioncommand], it is the total number of cells in the selection.
+For [option -command], it is 0 for a read (get) and 1 for a write (set).
+Otherwise it is the current cursor position in the cell.
+
+[opt_def %r]
+For [option -selectioncommand], it is the number of rows in the selection.
+Otherwise it is the row of the triggered cell.
+
+[opt_def %s]
+For [option -validatecommand], it is the current value of the cell being validated.
+For [option -selectioncommand], it is the default value of the selection.
+For [option -browsecommand], it is the index of the last active cell.
+For [option -command], it is empty for reads (get) and the current value of the
+cell for writes (set).
+
+[opt_def %S]
+For [option -validatecommand], it is the potential new value of the cell
+being validated.
+For [option -browsecommand], it is the index of the new active cell.
+
+[opt_def %W]
+The pathname to the window for which the command was generated.
+[list_end]
+
+[section "WIDGET COMMAND"]
+[para]
+The [cmd table] command creates a new Tcl command whose name is the same as the
+path name of the table's window. This command may be used to invoke various
+operations on the widget. It has the following general form: 
+
+[example "[arg pathName] [arg option] [arg [opt "arg ..."]]"]
+
+[arg PathName] is the name of the command, which is the same as the table
+widget's path name. Option and the args determine the exact behavior of the
+command. The following commands are possible for table widgets: 
+
+[list_begin definitions]
+[def "[arg pathName] [method activate] [arg index]"]
+Sets the active cell to the one indicated by [arg index].
+
+[def "[arg pathName] [method bbox] [arg first] [opt [arg last]]"]
+It returns the bounding box for the specified cell (range) as a 4-tuple of
+x, y, width and height in pixels.  It clips the box to the visible portion,
+if any, otherwise an empty string is returned.
+
+[def "[arg pathName] [method border] [arg "option args"]"]
+This command is a voodoo hack to implement border sizing for tables.
+This is normally called through bindings, with the following as valid options:
+[list_begin definitions]
+
+[def "[arg pathName] [method "border mark"] [arg "x y"] [opt [arg "row|col"]]"]
+Records [arg x] and [arg y] and the row and/or column border under that
+point in the table window, if any; used in conjunction with later
+[method "border dragto"] commands.  Typically this command is associated with a
+mouse button press in the widget.  If [arg row] or [arg col] is not specified,
+it returns a tuple of both border indices (an empty item means no border).
+Otherwise, just the specified item is returned.
+
+[def "[arg pathName] [method "border dragto"] [arg "x y"]"]
+This command computes the difference between its [arg x] and [arg y] arguments
+and the [arg x] and [arg y] arguments to the last [method "border mark"]
+command for the widget.  It then adjusts the previously marked border by the
+difference.  This command is typically associated with mouse motion events in
+the widget, to produce the effect of interactive border resizing.
+[list_end]
+
+[def "[arg pathName] [method cget] [arg option]"]
+Returns the current value of the configuration option given
+by [arg option].  [arg Option] may have any of the values accepted
+by the [cmd table] command.
+
+[def "[arg pathName] [method clear] [arg option] [opt [arg first]] [opt [arg last]]"]
+This command is a convenience routine to clear certain state information
+managed by the table.  [arg first] and [arg last] represent valid table
+indices.  If neither are specified, then the command operates on the
+whole table.  The following options are recognized:
+[list_begin definitions]
+
+[def "[arg pathName] [method "clear cache"] [opt [arg first]] [opt [arg last]]"]
+Clears the specified section of the cache, if the table has been
+keeping one.
+
+[def "[arg pathName] [method "clear sizes"] [opt [arg first]] [opt [arg last]]"]
+Clears the specified row and column areas of specific height/width
+dimensions.  When just one index is specified, for example [const 2,0],
+that is interpreted as row 2 and column 0.
+
+[def "[arg pathName] [method "clear tags"] [opt [arg first]] [opt [arg last]]"]
+Clears the specified area of tags (all row, column and cell tags).
+
+[def "[arg pathName] [method "clear all"] [opt [arg first]] [opt [arg last]]"]
+Performs all of the above clear functions on the specified area.
+[list_end]
+
+[def "[arg pathName] [method configure] [opt [arg option]] [opt [arg "value option value ..."]]"]
+Query or modify the configuration options of the widget.
+If no [arg option] is specified, returns a list describing all of
+the available options for [arg pathName] (see [fun Tk_ConfigureInfo] for
+information on the format of this list).  If [arg option] is specified
+with no [arg value], then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no [arg option] is specified).  If
+one or more [arg option-value] pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+[arg Option] may have any of the values accepted by the [cmd table]
+command.
+
+[def "[arg pathName] [method curselection] [opt [arg value]]"]
+With no arguments, it returns the sorted indices of the currently selected
+cells.  Otherwise it sets all the selected cells to the given value.  The
+set has no effect if there is no associated TCL array or the state is
+disabled.
+
+[def "[arg pathName] [method curvalue] [opt [arg value]]"]
+If no value is given, the value of the cell being edited (indexed by
+[const active]) is returned, else it is set to the given value.
+
+[def "[arg pathName] [method delete] [arg "option arg"] [opt [arg arg]]"]
+This command is used to delete various things in a table.  It has several
+forms, depending on the [arg option]:
+[list_begin definitions]
+
+[def "[arg pathName] [method "delete active"] [arg index] [opt [arg index]]"]
+Deletes text from the active cell.  If only one index is given, it deletes
+the character after that index, otherwise it deletes from the first index to
+the second.  [arg index] can be a number, [const insert] or [const end].
+
+[def "[arg pathName] [method "delete cols"] [opt [arg switches]] [arg index] [opt [arg count]]"]
+Deletes [arg count] cols starting at (and including) col [arg index].  The
+[arg index] will be constrained to the limits of the tables.  If
+[arg count] is negative, it deletes cols to the left.  Otherwise it deletes
+cols to the right.  [arg count] defaults to 1 (meaning just the column
+specified).  At the moment, spans are
+not adjusted with this action.  Optional switches are:
+[list_begin options]
+
+[opt_def -holddimensions]
+Causes the table cols to be unaffected by the deletion (empty cols may
+appear).  By default the dimensions are adjusted by [arg count].
+
+[opt_def -holdselection]
+Causes the selection to be maintained on the absolute cells values.
+Otherwise, the selection will be cleared..
+
+[opt_def -holdtags]
+Causes the tags specified by the [arg tag] method to not move along
+with the data.  Also prevents specific widths set by the [arg width] method
+from being adjusted.  By default, these tags are properly adjusted.
+
+[opt_def -holdwindows]
+Causes the embedded windows created with the [arg window] method to not
+move along with the data.  By default, these windows are properly adjusted.
+
+[opt_def -keeptitles]
+Prevents title area cells from being changed.  Otherwise they are
+treated just like regular cells and will move as specified.
+
+[opt_def --]
+Signifies the end of the switches.
+[list_end]
+
+[def "[arg pathName] [method "delete rows"] [opt [arg switches]] [arg index] [opt [arg count]]"]
+Deletes [arg count] rows starting at (and including) row [arg index].  If
+[arg count] is negative, it deletes rows going up.  Otherwise it deletes
+rows going down.  The selection will be cleared.  The switches are the same
+as those for column deletion.
+[list_end]
+
+[def "[arg pathName] [method get] [arg first] [opt [arg last]]"]
+Returns the value of the cells specified by the table indices [arg first]
+and (optionally) [arg last] in a list.
+
+[def "[arg pathName] [method height] [opt [arg row]] [opt [arg "value row value ..."]]"]
+If no [arg row] is specified, returns a list describing all rows for which
+a height has been set.  If [arg row] is specified with no value, it prints
+out the height of that row in characters (positive number) or pixels
+(negative number).  If one or more [arg row-value] pairs are specified,
+then it sets each row to be that height in lines (positive number) or
+pixels (negative number).  If [arg value] is [arg default], then the row
+uses the default height, specified by [option -rowheight].
+
+[def "[arg pathName] [method hidden] [opt [arg index]] [opt [arg "index ..."]]"]
+When called without args, it returns all the [arg hidden] cells (those
+cells covered by a spanning cell).  If one index is specified, it returns
+the spanning cell covering that index, if any.  If multiple indices are
+specified, it returns 1 if all indices are hidden cells, 0 otherwise.
+
+[def "[arg pathName] [method icursor] [opt [arg arg]]"]
+With no arguments, prints out the location of the insertion cursor in the
+active cell.  With one argument, sets the cursor to that point in the
+string.  0 is before the first character, you can also use [const insert] or
+[const end] for the current insertion point or the end of the text.  If
+there is no active cell, or the cell or table is disabled, this will
+return -1.
+
+[def "[arg pathName] [method index] [arg index] [opt [const "row|col"]]"]
+Returns the integer cell coordinate that corresponds to [arg index] in the
+form row,col.  If [const row] or [const col] is specified, then only the row or
+column index is returned.
+
+[def "[arg pathName] [method insert] [arg "option arg arg"]"]
+This command is used to into various things into a table.  It has several
+forms, depending on the [arg option]:
+[list_begin definitions]
+
+[def "[arg pathName] [method "insert active"] [arg "index value"]"]
+The [arg value] is a text string which is inserted at the [arg index]
+position of the active cell.  The cursor is then positioned after the
+new text. [arg index] can be a number, [const insert] or [const end].
+
+[def "[arg pathName] [method "insert cols"] [opt [arg switches]] [arg index] [opt [arg count]]"]
+Inserts [arg count] cols starting at col [arg index].  If [arg count] is
+negative, it inserts before the specified col.  Otherwise it inserts after
+the specified col.  The selection will be cleared.  The switches are the
+same as those for column deletion.
+
+[def "[arg pathName] [method "insert rows"] [opt [arg switches]] [arg index] [opt [arg count]]"]
+Inserts [arg count] rows starting at row [arg index].  If [arg count] is
+negative, it inserts before the specified row.  Otherwise it inserts after
+the specified row.  The selection will be cleared.  The switches are the
+same as those for column deletion.
+[list_end]
+
+[def "[arg pathName] [method reread]"]
+Rereads the old contents of the cell back into the editing buffer.  Useful
+for a key binding when <Escape> is pressed to abort the edit (a default
+binding).
+
+[def "[arg pathName] [method scan] [arg "option args"]"]
+This command is used to implement scanning on tables.  It has
+two forms, depending on [arg option]:
+[list_begin definitions]
+
+[def "[arg pathName] [method "scan mark"] [arg "x y"]"]
+Records [arg x] and [arg y] and the current view in the table
+window;  used in conjunction with later [method "scan dragto"] commands.
+Typically this command is associated with a mouse button press in
+the widget.  It returns an empty string.
+
+[def "[arg pathName] [method "scan dragto"] [arg "x y"]"]
+This command computes the difference between its [arg x] and [arg y]
+arguments and the [arg x] and [arg y] arguments to the last [method "scan mark"]
+command for the widget.  It then adjusts the view by 5 times the difference
+in coordinates.  This command is typically associated with mouse motion
+events in the widget, to produce the effect of dragging the list at high
+speed through the window.  The return value is an empty string.
+[list_end]
+
+[def "[arg pathName] [method see] [arg index]"]
+Adjust the view in the table so that the cell given by [arg index] is
+positioned as the cell one off from top left (excluding title rows and
+columns) if the cell is not currently visible on the screen.  The actual
+cell may be different to keep the screen full.
+
+[def "[arg pathName] [method selection] [arg "option arg"]"]
+This command is used to adjust the selection within a table.  It
+has several forms, depending on [arg option]:
+[list_begin definitions]
+
+[def "[arg pathName] [method "selection anchor"] [arg index]"]
+Sets the selection anchor to the cell given by [arg index].  The selection
+anchor is the end of the selection that is fixed while dragging out a
+selection with the mouse.  The index [const anchor] may be used to refer to
+the anchor cell.
+
+[def "[arg pathName] [method "selection clear"] [arg first] [opt [arg last]]"]
+If any of the cells between [arg first] and [arg last] (inclusive) are
+selected, they are deselected.  The selection state is not changed for cells
+outside this range.  [arg first] may be specified as [const all] to remove
+the selection from all cells.
+
+[def "[arg pathName] [method "selection includes"] [arg index]"]
+Returns 1 if the cell indicated by [arg index] is currently
+selected, 0 if it isn't.
+
+[def "[arg pathName] [method "selection set"] [arg first] [opt [arg last]]"]
+Selects all of the cells in the range between [arg first] and [arg last],
+inclusive, without affecting the selection state of cells outside that
+range. Option [arg last] defaults to [arg first]'s value.
+[list_end]
+
+[def "[arg pathName] [method set] [method row|col] [arg index] [opt [arg value]] [opt [arg "index value ..."]]"]
+Sets the specified index to the associated value.  Table validation will
+not be triggered via this method.  If [method row] or [method col] precedes the
+list of index/value pairs, then the value is assumed to be a TCL list whose
+values will be split and set into the subsequent columns (if [method row] is
+specified) or rows (for [method col]).  For example, "[method "set row 2,3 {2,3 2,4 2,5}"]"
+will set 3 cells, from 2,3 to 2,5.  The setting of cells
+is silently bounded by the known table dimensions.
+
+[def "[arg pathName] [method spans] [opt [arg index]] [opt [arg "rows,cols index rows,cols ..."]]"]
+This command is used to manipulate row/col spans.  When called with no
+arguments, all known spans are returned as a list of tuples of the form
+{index span}.  When called with only the [arg index], the span for that
+[arg index] only is returned, if any.  Otherwise an even number of
+[arg "index rows,cols"] pairs are used to set spans.  A span starts at the
+[arg index] and continues for the specified number of rows and cols.
+Negative spans are not supported.  A span of 0,0 unsets any span on that
+cell.  See [sectref EXAMPLES] for more info.
+
+[def "[arg pathName] [method tag] option [opt [arg "arg arg ..."]]"]
+This command is used to manipulate tags.  The exact behavior of the command
+depends on the [arg option] argument that follows the [method tag] argument.
+[arg cget], [arg cell], and [arg row|col] complain about unknown tag names.
+The following forms of the command are currently supported:
+[list_begin definitions]
+
+[def "[arg pathName] [method "tag cell"] [arg "tagName [opt "index ..."]"]"]
+With no arguments, prints out the list of cells that use the [arg tag].
+Otherwise it sets the specified cells to use the named tag, replacing any
+tag that may have been set using this method before.  If [arg tagName] is
+{}, the cells are reset to the default [arg tag].  Tags added during
+[option -coltagcommand] or [option -rowtagcommand] evaluation do not
+register here.  If [arg tagName] does not exist, it will be created with
+the default options.
+
+[def "[arg pathName] [method "tag cget"] [arg "tagName option"]"]
+This command returns the current value of the option named [arg option]
+associated with the tag given by [arg tagName].  [arg Option] may have any
+of the values accepted by the [method "tag configure"] widget command.
+
+[def "[arg pathName] [method "tag col"] [arg "tagName [opt "col ..."]"]"]
+With no arguments, prints out the list of cols that use the [arg tag].
+Otherwise it sets the specified columns to use the named tag, replacing any
+tag that may have been set using this method before.  If [arg tagName] is
+{}, the cols are reset to the default [arg tag].  Tags added during
+[option -coltagcommand] evaluation do not register here.  If [arg tagName] does
+not exist, it will be created with the default options.
+
+[def "[arg pathName] [method "tag configure"] [arg tagName] [opt [arg option]] [opt [arg value]] [opt [arg "option value ..."]]"]
+This command is similar to the [method configure] widget command except that
+it modifies options associated with the tag given by [arg tagName] instead
+of modifying options for the overall table widget.  If no [arg option] is
+specified, the command returns a list describing all of the available
+options for [arg tagName] (see [fun Tk_ConfigureInfo] for information on
+the format of this list).  If [arg option] is specified with no
+[arg value], then the command returns a list describing the one named
+option (this list will be identical to the corresponding sublist of the
+value returned if no [arg option] is specified).  If one or more
+[arg option-value] pairs are specified, then the command modifies the
+given option(s) to have the given value(s) in [arg tagName]; in this case
+the command returns an empty string.
+See [sectref TAGS] above for details on the options available for tags.
+
+[def "[arg pathName] [method "tag delete"] [arg tagName]"]
+Deletes a tag.  No error if the tag does not exist.
+
+[def "[arg pathName] [method "tag exists"] [arg tagName]"]
+Returns 1 if the named tag exists, 0 otherwise.
+
+[def "[arg pathName] [method "tag includes"] [arg "tagName index"]"]
+Returns 1 if the specified index has the named tag, 0 otherwise.
+
+[def "[arg pathName] [method "tag lower"] [arg tagName] [opt [arg belowThis]]"]
+Lower the priority of the named tag.  If [arg belowThis] is not specified,
+then the tag's priority is lowered to the bottom, otherwise it is lowered
+to one below [arg belowThis].
+
+[def "[arg pathName] [method "tag names"] [opt [arg pattern]]"]
+If no pattern is specified, shows the names of all defined tags.
+Otherwise the [arg pattern] is used as a glob pattern to show only
+tags matching that pattern.  Tag names are returned in priority order
+(highest priority tag first).
+
+[def "[arg pathName] [method "tag raise"] [arg tagName] [opt [arg aboveThis]]"]
+Raise the priority of the named tag.  If [arg aboveThis] is not specified,
+then the tag's priority is raised to the top, otherwise it is raised to
+one above [arg aboveThis].
+
+[def "[arg pathName] [method "tag row"] [arg tagName] [opt [arg "row ..."]]"]
+With no arguments, prints out the list of rows that use the [arg tag].
+Otherwise it sets the specified rows to use the named tag, replacing any
+tag that may have been set using this method before.  If [arg tagName] is
+{}, the rows are reset to use the default tag.  Tags added during
+[option -rowtagcommand] evaluation do not register here.  If [arg tagName] does
+not exist, it will be created with the default options.
+[list_end]
+
+[def "[arg pathName] [method validate] [arg index]"]
+Explicitly validates the specified index based on the current
+[option -validatecommand] and returns 0 or 1 based on whether the cell was
+validated.
+
+[def "[arg pathName] [method width] [opt [arg col]] [opt [arg "value col value ..."]]"]
+If no [arg col] is specified, returns a list describing all cols for which
+a width has been set.  If [arg col] is specified with no value, it prints
+out the width of that col in characters (positive number) or pixels
+(negative number).  If one or more [arg col-value] pairs are specified,
+then it sets each col to be that width in characters (positive number) or
+pixels (negative number).  If [arg value] is [arg default], then the col
+uses the default width, specified by [option -colwidth].
+
+[def "[arg pathName] [method window] option [opt [arg "arg arg ..."]]"]
+This command is used to manipulate embedded windows.  The exact behavior of
+the command depends on the [arg option] argument that follows the
+[method window] argument.  The following forms of the command are currently
+supported:
+[list_begin definitions]
+
+[def "[arg pathName] [method "window cget"] [arg "index option"]"]
+This command returns the current value of the option named [arg option]
+associated with the window given by [arg index].  [arg Option] may have any
+of the values accepted by the [method "window configure"] widget command.
+
+[def "[arg pathName] [method "window configure"] [arg index] [opt [arg option]] [opt [arg value]] [opt [arg "option value ..."]]"]
+This command is similar to the [method configure] widget command except that
+it modifies options associated with the embedded window given by
+[arg index] instead of modifying options for the overall table widget.  If
+no [arg option] is specified, the command returns a list describing all of
+the available options for [arg index] (see [fun Tk_ConfigureInfo] for
+information on the format of this list).  If [arg option] is specified with
+no [arg value], then the command returns a list describing the one named
+option (this list will be identical to the corresponding sublist of the
+value returned if no [arg option] is specified).  If one or more
+[arg option-value] pairs are specified, then the command modifies the
+given option(s) to have the given value(s) in [arg index]; in this case
+the command returns an empty string.
+See [sectref "EMBEDDED WINDOWS"] above for details on the options available for windows.
+
+[def "[arg pathName] [method "window delete"] [arg index] [opt [arg "index ..."]]"]
+Deletes an embedded window from the table.  The associated window will
+also be deleted.
+
+[def "[arg pathName] [method "window move"] [arg "indexFrom indexTo"]"]
+Moves an embedded window from one cell to another.  If a window already
+exists in the target cell, it will be deleted.
+
+[def "[arg pathName] [method "window names"] [opt [arg pattern]]"]
+If no pattern is specified, shows the cells of all embedded windows.
+Otherwise the [arg pattern] is used as a glob pattern to show only
+cells matching that pattern.
+[list_end]
+
+[def "[arg pathName] [method xview] [arg args]"]
+This command is used to query and change the horizontal position of the
+information in the widget's window.  It can take any of the following
+forms:
+[list_begin definitions]
+
+[def "[arg pathName] [method xview]"]
+Returns a list containing two elements.
+Each element is a real fraction between 0 and 1;  together they describe
+the horizontal span that is visible in the window.
+For example, if the first element is .2 and the second element is .6,
+20% of the table's text is off-screen to the left, the middle 40% is visible
+in the window, and 40% of the text is off-screen to the right.
+These are the same values passed to scrollbars via the [option -xscrollcommand]
+option.
+
+[def "[arg pathName] [method xview] [arg index]"]
+Adjusts the view in the window so that the column given by
+[arg index] is displayed at the left edge of the window.
+
+[def "[arg pathName] [method "xview moveto"] [arg fraction]"]
+Adjusts the view in the window so that [arg fraction] of the
+total width of the table text is off-screen to the left.
+[arg fraction] must be a fraction between 0 and 1.
+
+[def "[arg pathName] [method "xview scroll"] [arg "number what"]"]
+This command shifts the view in the window left or right according to
+[arg number] and [arg what]. [arg Number] must be an integer.
+[arg What] must be either [const units] or [const pages] or an abbreviation
+of one of these.
+If [arg what] is [const units], the view adjusts left or right by
+[arg number] cells on the display; if it is [const pages] then the view
+adjusts by [arg number] screenfuls.
+If [arg number] is negative then cells farther to the left
+become visible;  if it is positive then cells farther to the right
+become visible.
+[list_end]
+
+[def "[arg pathName] [method yview] [arg [opt args]]"]
+This command is used to query and change the vertical position of the
+text in the widget's window.  It can take any of the following forms:
+[list_begin definitions]
+
+[def "[arg pathName] [method yview]"]
+Returns a list containing two elements, both of which are real fractions
+between 0 and 1.  The first element gives the position of the table element
+at the top of the window, relative to the table as a whole (0.5 means it is
+halfway through the table, for example).  The second element gives the
+position of the table element just after the last one in the window,
+relative to the table as a whole.  These are the same values passed to
+scrollbars via the [option -yscrollcommand] option.
+
+[def "[arg pathName] [method yview] [arg index]"]
+Adjusts the view in the window so that the row given by
+[arg index] is displayed at the top of the window.
+
+[def "[arg pathName] [method "yview moveto"] [arg fraction]"]
+Adjusts the view in the window so that the element given by [arg fraction]
+appears at the top of the window.
+[arg Fraction] is a fraction between 0 and 1;  0 indicates the first
+element in the table, 0.33 indicates the element one-third the
+way through the table, and so on.
+
+[def "[arg pathName] [method "yview scroll"] [arg "number what"]"]
+This command adjusts the view in the window up or down according to
+[arg number] and [arg what].  [arg Number] must be an integer.  [arg What]
+must be either [const units] or [const pages].  If [arg what] is [const units],
+the view adjusts up or down by [arg number] cells; if it is [const pages] then
+the view adjusts by [arg number] screenfuls.  If [arg number] is negative
+then earlier elements become visible; if it is positive then later elements
+become visible.
+[list_end]
+[list_end]
+
+[section "DEFAULT BINDINGS"]
+[para]
+The initialization creates class bindings that give the following default
+behavior:
+[list_begin enumerated]
+[enum]
+Clicking Button-1 in a cell activates that cell.  Clicking
+into an already active cell moves the insertion cursor to the
+character nearest the mouse.
+[enum]
+Moving the mouse while Button-1 is pressed will stroke out a selection area.
+Exiting while Button-1 is pressed causing scanning to occur on the table
+along with selection.
+[enum]
+Moving the mouse while Button-2 is pressed causes scanning to
+occur without any selection.
+[enum]
+Home moves the table to have the origin in view.
+[enum]
+End moves the table to have the [const end] cell in view.
+[enum]
+Control-Home moves the table to the origin and activates that cell.
+[enum]
+Control-End moves the table to the end and activates that cell.
+[enum]
+Shift-Control-Home extends the selection to the origin.
+[enum]
+Shift-Control-End extends the selection to the end.
+[enum]
+The left, right, up and down arrows move the active cell.
+[enum]
+Shift-<arrow> extends the selection in that direction.
+[enum]
+Control-leftarrow and Control-rightarrow move the insertion
+cursor within the cell.
+[enum]
+Control-slash selects all the cells.
+[enum]
+Control-backslash clears selection from all the cells.
+[enum]
+Backspace deletes the character before the insertion cursor
+in the active cell.
+[enum]
+Delete deletes the character after the insertion cursor
+in the active cell.
+[enum]
+Escape rereads the value of the active cell from the specified data source,
+discarding any edits that have may been performed on the cell.
+[enum]
+Control-a moves the insertion cursor to the beginning of the active cell.
+[enum]
+Control-e moves the insertion cursor to the end of the active cell.
+[enum]
+Control-minus and Control-equals decrease and increase the
+width of the column with the active cell in it.
+[enum]
+Moving the mouse while Button-3 (the right button on Windows) is pressed
+while you are over a border will cause interactive resizing of that row
+and/or column to occur, based on the value of [option -resizeborders].
+[list_end]
+
+Some bindings may have slightly different behavior dependent on the
+[option -selectionmode] of the widget.
+[para]
+If the widget is disabled using the [option -state] option, then its
+view can still be adjusted and cells can still be selected,
+but no insertion cursor will be displayed and no cell modifications will
+take place.
+[para]
+The behavior of tables can be changed by defining new bindings for
+individual widgets or by redefining the class bindings.  The default
+bindings are either compiled in or read from a file expected to
+correspond to: "[lb]lindex $tcl_pkgPath 0[rb]/Tktable<version>/tkTable.tcl".
+
+[section "PERFORMANCE ISSUES"]
+[para]
+The number of rows and columns or a table widget should not significantly
+affect the speed of redraw.  Recalculation and redraw of table parameters
+and cells is restricted as much as possible.
+[para]
+The display cell with the insert cursor is redrawn each time the cursor
+blinks, which causes a steady stream of graphics traffic.  Set the
+[option -insertofftime] option to 0 avoid this.  The use of a [option -command]
+with the table without a cache can cause significant slow-down, as the
+command is called once for each request of a cell value.
+
+[section EXAMPLES]
+[para]
+Set the topleft title area to be one spanning cell.  This overestimates both
+row and column span by one, but the command does all the constraining for us.
+[example {$table span [$table cget -roworigin],[$table cget -colorigin] [$table cget -titlerows],[$table cget -titlecols]}]
+Force a table window refresh (useful for the slight chance that a bug in the
+table is not causing proper refresh):
+[example {
+$table configure -padx [$table cget -padx]
+}]
+
+[vset CATEGORY table]
+[manpage_end]

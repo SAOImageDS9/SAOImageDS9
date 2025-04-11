@@ -112,11 +112,11 @@ TEA_LOAD_CONFIG(tkagif)
 TEA_PATH_CONFIG(tksao)
 TEA_LOAD_CONFIG(tksao)
 
-TEA_PATH_CONFIG(tktable)
-TEA_LOAD_CONFIG(tktable)
+TEA_PATH_CONFIG(Tktable)
+TEA_LOAD_CONFIG(Tktable)
 
 #-----------------------------------------------------------------------
-# Handle the --prefix=... option by defaulting to what Tcl gave.
+# Handle the --pRefix=... option by defaulting to what Tcl gave.
 # Must be called after TEA_LOAD_TCLCONFIG and before TEA_SETUP_COMPILER.
 #-----------------------------------------------------------------------
 

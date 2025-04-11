@@ -28,11 +28,7 @@
 # include <inttypes.h>
 #endif
 #include <tk.h>
-#ifdef MAC_OSX_TK
-# include <X11_tk/Xatom.h>
-#else
-# include <X11/Xatom.h>
-#endif /* MAC_OSX_TK */
+#include <X11/Xatom.h>
 #include "tkTable.h"
 #include "tkTableUuid.h"
 

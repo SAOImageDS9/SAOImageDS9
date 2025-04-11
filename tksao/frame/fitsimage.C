@@ -29,6 +29,12 @@
 #include "colorscale.h"
 #include "wcsast.h"
 
+// Check, if Tcl version supports Tcl_Size,
+ // which was introduced in Tcl 8.7 and 9.
+ #ifndef Tcl_Size
+ typedef int Tcl_Size;
+ #endif
+
 WCSState::WCSState()
 {
   wcsSystem_ = Coord::WCS;
@@ -1387,16 +1393,16 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     Tcl_GetVar2Ex(interp_, yyname2, NULL, TCL_LEAVE_ERR_MSG);
 
   // get objects
-  int nxx1;
+  Tcl_Size nxx1;
   Tcl_Obj **objxx1;
   Tcl_ListObjGetElements(interp_, listxx1, &nxx1, &objxx1);
-  int nyy1;
+  Tcl_Size nyy1;
   Tcl_Obj **objyy1;
   Tcl_ListObjGetElements(interp_, listyy1, &nyy1, &objyy1);
-  int nxx2;
+  Tcl_Size nxx2;
   Tcl_Obj **objxx2;
   Tcl_ListObjGetElements(interp_, listxx2, &nxx2, &objxx2);
-  int nyy2;
+  Tcl_Size nyy2;
   Tcl_Obj **objyy2;
   Tcl_ListObjGetElements(interp_, listyy2, &nyy2, &objyy2);
 

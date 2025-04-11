@@ -43,7 +43,7 @@
 using namespace Blt;
 
 static void SelectCmdProc(ClientData);
-Tk_SelectionProc SelectionProc;
+static Tk_SelectionProc SelectionProc;
 
 // OptionSpecs
 
@@ -1016,7 +1016,7 @@ ClientData Legend::pickEntry(int xx, int yy, ClassId* classIdPtr)
 
 // Support
 
-int SelectionProc(ClientData clientData, int offset, char *buffer,
+static int SelectionProc(ClientData clientData, int offset, char *buffer,
 			 int maxBytes)
 {
   Legend* legendPtr = (Legend*)clientData;

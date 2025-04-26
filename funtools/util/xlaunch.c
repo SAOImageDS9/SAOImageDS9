@@ -564,7 +564,7 @@ pid_t LaunchPid()
 #ifdef ANSI_FUNC
 int Launch(char *cmdstring, int attach, char **stdfiles, int *pipes)
 #else
-int Launch(cmdstring, attach, stdfiles, piles)
+int Launch(cmdstring, attach, stdfiles, pipes)
      char *cmdstring;
      int attach;
      char **stdfiles;

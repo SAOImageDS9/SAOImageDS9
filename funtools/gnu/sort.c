@@ -1668,6 +1668,8 @@ mergefps (fps, nfps, ofp)
 		      xfwrite (saved.text, 1, saved.length, ofp);
 #ifdef SAOMOD_BINARY
 		      if ( !BinarySort ) putc ('\n', ofp);
+#else
+		      putc ('\n', ofp);
 #endif
 		   } else {
 		       if ( (differ == 1 && savedflag == 1)
@@ -1675,6 +1677,8 @@ mergefps (fps, nfps, ofp)
 			  xfwrite (saved.text, 1, saved.length, ofp);
 #ifdef SAOMOD_BINARY
 			  if ( !BinarySort ) putc ('\n', ofp);
+#else
+			  putc ('\n', ofp);
 #endif
 		       }
 		   }
@@ -1723,6 +1727,8 @@ mergefps (fps, nfps, ofp)
 		       lines[ord[0]].lines[cur[ord[0]]].length, ofp);
 #ifdef SAOMOD_BINARY
 	      if ( !BinarySort ) putc ('\n', ofp);
+#else
+	      putc ('\n', ofp);
 #endif
 	  }
 
@@ -1732,12 +1738,16 @@ mergefps (fps, nfps, ofp)
 			     saved.length, ofp);
 #ifdef SAOMOD_BINARY
 		    if ( !BinarySort ) putc ('\n', ofp);
+#else
+		    putc ('\n', ofp);
 #endif
 		  }
 		  xfwrite (lines[ord[0]].lines[cur[ord[0]]].text, 1,
 			   lines[ord[0]].lines[cur[ord[0]]].length, ofp);
 #ifdef SAOMOD_BINARY
 		  if ( !BinarySort ) putc ('\n', ofp);
+#else
+		  putc ('\n', ofp);
 #endif
 	  }
 
@@ -1748,6 +1758,8 @@ mergefps (fps, nfps, ofp)
 		   lines[ord[0]].lines[cur[ord[0]]].length, ofp);
 #ifdef SAOMOD_BINARY
 	  if ( !BinarySort ) putc ('\n', ofp);
+#else
+	  putc ('\n', ofp);
 #endif
       }
 
@@ -1808,6 +1820,8 @@ mergefps (fps, nfps, ofp)
 	  xfwrite (saved.text, 1, saved.length, ofp);
 #ifdef SAOMOD_BINARY
 	  if ( !BinarySort ) putc ('\n', ofp);
+#else
+	  putc ('\n', ofp);
 #endif
 	}
 
@@ -1817,6 +1831,8 @@ mergefps (fps, nfps, ofp)
 		   saved.length, ofp);
 #ifdef SAOMOD_BINARY
 	  if ( !BinarySort ) putc ('\n', ofp);
+#else
+	  putc ('\n', ofp);
 #endif
       }
 
@@ -2066,6 +2082,8 @@ sort (files, nfiles, ofp)
 		xfwrite (lines.lines[i].text, 1, lines.lines[i].length, tfp);
 #ifdef SAOMOD_BINARY
 		if ( !BinarySort ) putc ('\n', tfp);
+#else
+		putc ('\n', ofp);
 #endif
 	      }
 	  else {
@@ -2085,6 +2103,8 @@ sort (files, nfiles, ofp)
 			  xfwrite (saved.text, 1, saved.length, ofp);
 #ifdef SAOMOD_BINARY
 			  if ( !BinarySort ) putc ('\n', ofp);
+#else
+			  putc ('\n', ofp);
 #endif
 		       } else {
 			   if ( (differ == 1 && savedflag == 1)
@@ -2092,6 +2112,8 @@ sort (files, nfiles, ofp)
 			      xfwrite (saved.text, 1, saved.length, ofp);
 #ifdef SAOMOD_BINARY
 			      if ( !BinarySort ) putc ('\n', ofp);
+#else
+			      putc ('\n', ofp);
 #endif
 			   }
 		       }
@@ -2136,6 +2158,8 @@ sort (files, nfiles, ofp)
 		  xfwrite (lines.lines[i].text, 1, lines.lines[i].length, ofp);
 #ifdef SAOMOD_BINARY
 		  if ( !BinarySort ) putc ('\n', ofp);
+#else
+		  putc ('\n', ofp);
 #endif
 	      }
 
@@ -2145,11 +2169,15 @@ sort (files, nfiles, ofp)
 				 saved.length, ofp);
 #ifdef SAOMOD_BINARY
 			if ( !BinarySort ) putc ('\n', ofp);
+#else
+			putc ('\n', ofp);
 #endif
 		      }
 		      xfwrite (lines.lines[i].text, 1, lines.lines[i].length, ofp);
 #ifdef SAOMOD_BINARY
 		      if ( !BinarySort ) putc ('\n', ofp);
+#else
+		      putc ('\n', ofp);
 #endif
 	      }
 
@@ -2171,6 +2199,8 @@ sort (files, nfiles, ofp)
 	  xfwrite (saved.text, 1, saved.length, ofp);
 #ifdef SAOMOD_BINARY
 	  if ( !BinarySort ) putc ('\n', ofp);
+#else
+	  putc ('\n', ofp);
 #endif
 	}
 
@@ -2180,6 +2210,8 @@ sort (files, nfiles, ofp)
 		   saved.length, ofp);
 #ifdef SAOMOD_BINARY
 	  if ( !BinarySort ) putc ('\n', ofp);
+#else
+	  putc ('\n', ofp);
 #endif
       }
 

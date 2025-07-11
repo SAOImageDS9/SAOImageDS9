@@ -29,7 +29,7 @@
 # libxslt 1.1.29
 # openssl 1.0.2u
 
-DS9_VERSION	= 8.7b2
+DS9_VERSION	= 8.7
 XPA_VERSION	= 2.1.20
 TCL_VERSION	= 8.6
 

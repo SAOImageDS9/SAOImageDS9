@@ -28,22 +28,23 @@ proc CATPlot {varname} {
 }
 
 proc CATPlotGenerate {varname} {
-    upvar #0 $varname var
+    # use var_ because db can have column name 'var'
+    upvar #0 $varname var_
     global $varname
 
-    if {$var(plot,xerr) == {} && $var(plot,yerr) == {}} {
+    if {$var_(plot,xerr) == {} && $var_(plot,yerr) == {}} {
 	set dim xy
-    } elseif {$var(plot,xerr) != {} && $var(plot,yerr) == {}} {
+    } elseif {$var_(plot,xerr) != {} && $var_(plot,yerr) == {}} {
 	set dim xyex
-    } elseif {$var(plot,xerr) == {} && $var(plot,yerr) != {}} {
+    } elseif {$var_(plot,xerr) == {} && $var_(plot,yerr) != {}} {
 	set dim xyey
     } else {
 	set dim xyexey
     }
 
-    global $var(tbldb)
-    set nrows [starbase_nrows $var(tbldb)]
-    set cols [starbase_columns $var(tbldb)]
+    global $var_(tbldb)
+    set nrows [starbase_nrows $var_(tbldb)]
+    set cols [starbase_columns $var_(tbldb)]
 
     set vvarname plot${varname}
     upvar #0 $vvarname vvar
@@ -65,8 +66,8 @@ proc CATPlotGenerate {varname} {
     set ye {}
     for {set ii 1} {$ii <= $nrows} {incr ii} {
 	foreach col $cols {
-	    set val [starbase_get $var(tbldb) $ii \
-			 [starbase_colnum $var(tbldb) $col]]
+	    set val [starbase_get $var_(tbldb) $ii \
+			 [starbase_colnum $var_(tbldb) $col]]
 	    # here's a tough one-- what to do if the col is blank
 	    # for now, just set it to '0'
 	    if {[string trim "$val"] == {}} {
@@ -77,28 +78,28 @@ proc CATPlotGenerate {varname} {
 
 	switch $dim {
 	    xy {
-		append xx [subst "$var(plot,x) "]
-		append yy [subst "$var(plot,y) "]
+		append xx [subst "$var_(plot,x) "]
+		append yy [subst "$var_(plot,y) "]
 		append xe [subst "0 "]
 		append ye [subst "0 "]
 	    }
 	    xyex {
-		append xx [subst "$var(plot,x) "]
-		append yy [subst "$var(plot,y) "]
-		append xe [subst "$var(plot,xerr) "]
+		append xx [subst "$var_(plot,x) "]
+		append yy [subst "$var_(plot,y) "]
+		append xe [subst "$var_(plot,xerr) "]
 		append ye [subst "0 "]
 	    }
 	    xyey {
-		append xx [subst "$var(plot,x) "]
-		append yy [subst "$var(plot,y) "]
+		append xx [subst "$var_(plot,x) "]
+		append yy [subst "$var_(plot,y) "]
 		append xe [subst "0 "]
-		append ye [subst "$var(plot,yerr) "]
+		append ye [subst "$var_(plot,yerr) "]
 	    }
 	    xyexey {
-		append xx [subst "$var(plot,x) "]
-		append yy [subst "$var(plot,y) "]
-		append xe [subst "$var(plot,xerr) "]
-		append ye [subst "$var(plot,yerr) "]
+		append xx [subst "$var_(plot,x) "]
+		append yy [subst "$var_(plot,y) "]
+		append xe [subst "$var_(plot,xerr) "]
+		append ye [subst "$var_(plot,yerr) "]
 	    }
 	}
     }
@@ -109,14 +110,14 @@ proc CATPlotGenerate {varname} {
     $yedata set $ye
 
     if {![PlotPing $vvarname]} {
-	PlotDialog $vvarname $var(title) true
+	PlotDialog $vvarname $var_(title) true
 	PlotAddGraph $vvarname line
 
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
 
-	set var(plot) 1
-	set var(plot,var) $vvarname
+	set var_(plot) 1
+	set var_(plot,var) $vvarname
 
 	set vvar(callback) "CATSelectRows $varname plot"
 	set vvar(graph,ds,xdata) $xdata
@@ -133,9 +134,9 @@ proc CATPlotGenerate {varname} {
     }
 
     # colnames can change
-    set xtitle [regsub -all {\$*} $var(plot,x) {}]
-    set ytitle [regsub -all {\$*} $var(plot,y) {}]
-    PlotTitle $vvarname $var(title) $xtitle $ytitle
+    set xtitle [regsub -all {\$*} $var_(plot,x) {}]
+    set ytitle [regsub -all {\$*} $var_(plot,y) {}]
+    PlotTitle $vvarname $var_(title) $xtitle $ytitle
 
     PlotStats $vvarname
     PlotList $vvarname

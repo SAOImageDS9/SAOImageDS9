@@ -8,10 +8,11 @@ package provide DS9 1.0
 proc CATReg {varname row interactive resultname} {
     upvar $resultname result
 
-    upvar #0 $varname var
+    # use var_ because db can have column name 'var'
+    upvar #0 $varname var_
     global $varname
-    global $var(tbldb)
-    global $var(symdb)
+    global $var_(tbldb)
+    global $var_(symdb)
 
     # init result
     set result {}
@@ -34,14 +35,14 @@ proc CATReg {varname row interactive resultname} {
     # angle: expr
 
     # valid cols?
-    if {$var(colx) == {} || $var(coly) == {}} {
+    if {$var_(colx) == {} || $var_(coly) == {}} {
 	return
     }
-    set colx [starbase_colnum $var(tbldb) $var(colx)]
-    set coly [starbase_colnum $var(tbldb) $var(coly)]
+    set colx [starbase_colnum $var_(tbldb) $var_(colx)]
+    set coly [starbase_colnum $var_(tbldb) $var_(coly)]
 
     # do we have formats for colx and coly?
-    if {[catch {starbase_hdrget $var(tbldb) UFMT} ff]} {
+    if {[catch {starbase_hdrget $var_(tbldb) UFMT} ff]} {
 	set ff {}
 	global errorInfo
 	set errorInfo {}
@@ -50,7 +51,7 @@ proc CATReg {varname row interactive resultname} {
     set yformat [lindex $ff 1]
 
     # else, do we have T(Units), i.e. votable
-    set db $var(tbldb)
+    set db $var_(tbldb)
     upvar #0 $db T
     if {[info exists T(Unit)]} {
 	set xformat [string trim [lindex $T(Unit) [expr $colx-1]] {"}]
@@ -62,34 +63,34 @@ proc CATReg {varname row interactive resultname} {
 
     # for speed
     # tbldb
-    set nrows [starbase_nrows $var(tbldb)]
-    set cols [starbase_columns $var(tbldb)]
+    set nrows [starbase_nrows $var_(tbldb)]
+    set cols [starbase_columns $var_(tbldb)]
 
     # system
-    switch $var(psystem) {
+    switch $var_(psystem) {
 	image -
 	physical -
 	detector -
-	amplifier {set sys $var(psystem)}
-	default {set sys "$var(psystem); $var(psky)"}
+	amplifier {set sys $var_(psystem)}
+	default {set sys "$var_(psystem); $var_(psky)"}
     }
 
     # symdb
-    set snrows [starbase_nrows $var(symdb)]
-    set sncond [starbase_colnum $var(symdb) condition]
-    set snshape [starbase_colnum $var(symdb) shape]
-    set sncolor [starbase_colnum $var(symdb) color]
-    set snwidth [starbase_colnum $var(symdb) width]
-    set sndash [starbase_colnum $var(symdb) dash]
-    set snfont [starbase_colnum $var(symdb) font]
-    set snfontsize [starbase_colnum $var(symdb) fontsize]
-    set snfontweight [starbase_colnum $var(symdb) fontweight]
-    set snfontslant [starbase_colnum $var(symdb) fontslant]
-    set sntext [starbase_colnum $var(symdb) text]
-    set snsize [starbase_colnum $var(symdb) size]
-    set snsize2 [starbase_colnum $var(symdb) size2]
-    set snunits [starbase_colnum $var(symdb) units]
-    set snangle [starbase_colnum $var(symdb) angle]
+    set snrows [starbase_nrows $var_(symdb)]
+    set sncond [starbase_colnum $var_(symdb) condition]
+    set snshape [starbase_colnum $var_(symdb) shape]
+    set sncolor [starbase_colnum $var_(symdb) color]
+    set snwidth [starbase_colnum $var_(symdb) width]
+    set sndash [starbase_colnum $var_(symdb) dash]
+    set snfont [starbase_colnum $var_(symdb) font]
+    set snfontsize [starbase_colnum $var_(symdb) fontsize]
+    set snfontweight [starbase_colnum $var_(symdb) fontweight]
+    set snfontslant [starbase_colnum $var_(symdb) fontslant]
+    set sntext [starbase_colnum $var_(symdb) text]
+    set snsize [starbase_colnum $var_(symdb) size]
+    set snsize2 [starbase_colnum $var_(symdb) size2]
+    set snunits [starbase_colnum $var_(symdb) units]
+    set snangle [starbase_colnum $var_(symdb) angle]
 
     # for each row in the table
     if {[string is integer -strict $row]} {
@@ -103,11 +104,11 @@ proc CATReg {varname row interactive resultname} {
     # look for need to eval colnames (only used for conditionals and text
     set doEval 0
     for {set jj 1} {$jj <= $snrows} {incr jj} {
-	set cond [starbase_get $var(symdb) $jj $sncond]
-	set text [starbase_get $var(symdb) $jj $sntext]
-	set sz [starbase_get $var(symdb) $jj $snsize]
-	set sz2 [starbase_get $var(symdb) $jj $snsize2]
-	set angle [starbase_get $var(symdb) $jj $snangle]
+	set cond [starbase_get $var_(symdb) $jj $sncond]
+	set text [starbase_get $var_(symdb) $jj $sntext]
+	set sz [starbase_get $var_(symdb) $jj $snsize]
+	set sz2 [starbase_get $var_(symdb) $jj $snsize2]
+	set angle [starbase_get $var_(symdb) $jj $snangle]
 	if {$cond!={} || $text!={} || $sz!={} || $sz2!={} || $angle!={}} {
 	    set doEval 1
 	}
@@ -117,8 +118,8 @@ proc CATReg {varname row interactive resultname} {
 	if {$doEval} {
 	    # define each colunm variable
 	    foreach col $cols {
-		set val [starbase_get $var(tbldb) $ii \
-			     [starbase_colnum $var(tbldb) $col]]
+		set val [starbase_get $var_(tbldb) $ii \
+			     [starbase_colnum $var_(tbldb) $col]]
 		# here's a tough one-- what to do if the col is blank
 		# for now, just set it to '0'
 		if {[string trim "$val"] == {}} {
@@ -131,7 +132,7 @@ proc CATReg {varname row interactive resultname} {
 	# look through each filter
 	for {set jj 1} {$jj <= $snrows} {incr jj} {
 	    # eval condition
-	    set cond [starbase_get $var(symdb) $jj $sncond]
+	    set cond [starbase_get $var_(symdb) $jj $sncond]
 
 	    if {$cond != {}} {
 		set found 0
@@ -156,20 +157,20 @@ proc CATReg {varname row interactive resultname} {
 	    }
 
 	    # shape
-	    set shape [starbase_get $var(symdb) $jj $snshape]
+	    set shape [starbase_get $var_(symdb) $jj $snshape]
 	    if {$shape == {}} {
 		set shape circle
 	    }
 
 	    # xx
-	    set xx [starbase_get $var(tbldb) $ii $colx]
+	    set xx [starbase_get $var_(tbldb) $ii $colx]
 	    switch $xformat {
 		{h:m:s} -
 		{d:m:s} {set xx [uformat $xformat d $xx]}
 	    }
 
 	    # yy
-	    set yy [starbase_get $var(tbldb) $ii $coly]
+	    set yy [starbase_get $var_(tbldb) $ii $coly]
 	    if {$yformat == {d:m:s}} {
 		set yy [uformat $yformat d $yy]
 	    }
@@ -179,7 +180,7 @@ proc CATReg {varname row interactive resultname} {
 	    set sz2col {}
 	    set angcol {}
 
-	    set units [starbase_get $var(symdb) $jj $snunits]
+	    set units [starbase_get $var_(symdb) $jj $snunits]
 	    switch -- $units {
 		image {set unitval i}
 		physical {set unitval p}
@@ -201,11 +202,11 @@ proc CATReg {varname row interactive resultname} {
 		{boxcircle point} {set size {}}
 
 		circle {
-		    set sz [starbase_get $var(symdb) $jj $snsize]
+		    set sz [starbase_get $var_(symdb) $jj $snsize]
 
 		    set szcolnm [string range $sz 1 end]
 		    if {[lsearch -exact $cols $szcolnm] != -1} {
-			set szcol [starbase_colnum $var(tbldb) $szcolnm]
+			set szcol [starbase_colnum $var_(tbldb) $szcolnm]
 		    }
 
 		    if {$sz != {}} {
@@ -222,11 +223,11 @@ proc CATReg {varname row interactive resultname} {
 		}
 
 		vector {
-		    set sz [starbase_get $var(symdb) $jj $snsize]
+		    set sz [starbase_get $var_(symdb) $jj $snsize]
 
 		    set szcolnm [string range $sz 1 end]
 		    if {[lsearch -exact $cols $szcolnm] != -1} {
-			set szcol [starbase_colnum $var(tbldb) $szcolnm]
+			set szcol [starbase_colnum $var_(tbldb) $szcolnm]
 		    }
 
 		    if {$sz != {}} {
@@ -240,11 +241,11 @@ proc CATReg {varname row interactive resultname} {
 			set sz 5
 		    }
 
-		    set angle [starbase_get $var(symdb) $jj $snangle]
+		    set angle [starbase_get $var_(symdb) $jj $snangle]
 
 		    set angcolnm [string range $angle 1 end]
 		    if {[lsearch -exact $cols $angcolnm] != -1} {
-			set angcol [starbase_colnum $var(tbldb) $angcolnm]
+			set angcol [starbase_colnum $var_(tbldb) $angcolnm]
 		    }
 
 		    if {$angle != {}} {
@@ -264,11 +265,11 @@ proc CATReg {varname row interactive resultname} {
 		ellipse -
 		box {
 		    # size
-		    set sz [starbase_get $var(symdb) $jj $snsize]
+		    set sz [starbase_get $var_(symdb) $jj $snsize]
 
 		    set szcolnm [string range $sz 1 end]
 		    if {[lsearch -exact $cols $szcolnm] != -1} {
-			set szcol [starbase_colnum $var(tbldb) $szcolnm]
+			set szcol [starbase_colnum $var_(tbldb) $szcolnm]
 		    }
 
 		    if {$sz != {}} {
@@ -283,11 +284,11 @@ proc CATReg {varname row interactive resultname} {
 		    }
 
 		    # size2
-		    set sz2 [starbase_get $var(symdb) $jj $snsize2]
+		    set sz2 [starbase_get $var_(symdb) $jj $snsize2]
 
 		    set sz2colnm [string range $sz2 1 end]
 		    if {[lsearch -exact $cols $sz2colnm] != -1} {
-			set sz2col [starbase_colnum $var(tbldb) $sz2colnm]
+			set sz2col [starbase_colnum $var_(tbldb) $sz2colnm]
 		    }
 
 		    if {$sz2 != {}} {
@@ -302,11 +303,11 @@ proc CATReg {varname row interactive resultname} {
 		    }
 
 		    # angle
-		    set angle [starbase_get $var(symdb) $jj $snangle]
+		    set angle [starbase_get $var_(symdb) $jj $snangle]
 		    
 		    set angcolnm [string range $angle 1 end]
 		    if {[lsearch -exact $cols $angcolnm] != -1} {
-			set angcol [starbase_colnum $var(tbldb) $angcolnm]
+			set angcol [starbase_colnum $var_(tbldb) $angcolnm]
 		    }
 
 		    if {$angle != {}} {
@@ -326,44 +327,44 @@ proc CATReg {varname row interactive resultname} {
 	    }
 
 	    # color
-	    set color [starbase_get $var(symdb) $jj $sncolor]
+	    set color [starbase_get $var_(symdb) $jj $sncolor]
 	    if {$color == {}} {
 		set color green
 	    }
 
 	    # width
-	    set width [starbase_get $var(symdb) $jj $snwidth]
+	    set width [starbase_get $var_(symdb) $jj $snwidth]
 	    if {$width == {}} {
 		set width 1
 	    }
 
 	    # dash
-	    set dash [starbase_get $var(symdb) $jj $sndash]
+	    set dash [starbase_get $var_(symdb) $jj $sndash]
 	    if {$dash == {}} {
 		set dash 0
 	    }
 
 
             #font
-	    set font [starbase_get $var(symdb) $jj $snfont]
+	    set font [starbase_get $var_(symdb) $jj $snfont]
 	    if {$font == {}} {
 		set font helvetica
 	    }
-	    set fontsize [starbase_get $var(symdb) $jj $snfontsize]
+	    set fontsize [starbase_get $var_(symdb) $jj $snfontsize]
 	    if {$fontsize == {}} {
 		set fontsize 10
 	    }
-	    set fontweight [starbase_get $var(symdb) $jj $snfontweight]
+	    set fontweight [starbase_get $var_(symdb) $jj $snfontweight]
 	    if {$fontweight == {}} {
 		set fontweight normal
 	    }
-	    set fontslant [starbase_get $var(symdb) $jj $snfontslant]
+	    set fontslant [starbase_get $var_(symdb) $jj $snfontslant]
 	    if {$fontslant == {}} {
 		set fontslant roman
 	    }
 
 	    # text
-	    set text [starbase_get $var(symdb) $jj $sntext]
+	    set text [starbase_get $var_(symdb) $jj $sntext]
 	    if {$text != {}} {
 		if {[catch {subst $text} tt]} {
 		    Error "Unable to evaluate text $text"
@@ -379,7 +380,7 @@ proc CATReg {varname row interactive resultname} {
 	    # final substitution and append result
 	    # init result for substitutions
 	    if {$interactive} {
-		if {$var(edit)} {
+		if {$var_(edit)} {
 		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=1 edit=1 move=1 rotate=1 delete=1 highlite=0 callback=select CATHighliteCB {${varname}.\${ii}} callback=unselect CATUnhighliteCB {${varname}.\${ii}} callback=edit CATEditCB {${varname}.\${ii}.\${szcol}.\${sz2col}.\${units}.\${angcol}} callback=move CATMoveCB {${varname}.\${ii}} callback=rotate CATRotateCB {${varname}.\${ii}.\${angcol}}\n"
 		} else {
 		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite CATHighliteCB {${varname}.\${ii}} callback=unhighlite CATUnhighliteCB {${varname}.\${ii}}\n"

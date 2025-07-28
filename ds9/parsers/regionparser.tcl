@@ -5520,8 +5520,8 @@ proc region::yyparse {} {
                     167 { MarkerSelectInvert }
                     168 { MarkerSelectFront }
                     169 { MarkerSelectBack }
-                    170 { MarkerSelectLast }
-                    171 { MarkerSelectFirst }
+                    170 { MarkerSelectBack }
+                    171 { MarkerSelectFront }
                     172 { ProcessCmdSet marker tag $2; RegionCmdGroup select }
                     173 { set _ ds9 }
                     174 { set _ xml }

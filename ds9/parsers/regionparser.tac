@@ -285,9 +285,9 @@ select : ALL_ {MarkerSelectAll}
  | FRONT_ {MarkerSelectFront}
  | BACK_ {MarkerSelectBack}
 # backward compatibility
- | LAST_ {MarkerSelectLast}
+ | LAST_ {MarkerSelectBack}
 # backward compatibility
- | FIRST_ {MarkerSelectFirst}
+ | FIRST_ {MarkerSelectFront}
 # backward compatibility
  | GROUP_ STRING_ {ProcessCmdSet marker tag $2; RegionCmdGroup select}
  ;

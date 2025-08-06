@@ -75,7 +75,7 @@ proc CATSIMBAD {varname} {
     append qq "\nvotable close\n"
 
     # url
-    set url "http://simbad.u-strasbg.fr/simbad/sim-script"
+    set url "https://simbad.u-strasbg.fr/simbad/sim-script"
     set query [http::formatQuery script $qq]
 
     CATLoad $varname $url $query

@@ -93,7 +93,7 @@ proc VLSSExec {varname} {
     }
 
     set query [http::formatQuery submit Submit Equinox J2000 RA $xx Dec $yy Size "$ww $hh" Cells "25.0 25.0" MAPROJ SIN rotate 0.0 Type image/x-fits]
-    set url "http://www.cv.nrao.edu/cgi-bin/newVLSSpostage.pl"
+    set url "https://www.cv.nrao.edu/cgi-bin/newVLSSpostage.pl"
     IMGSVRGetURL $varname $url $query
 }
 

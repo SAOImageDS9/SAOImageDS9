@@ -419,11 +419,11 @@ proc HVURLDialogCmd {varname} {
 	ParseURL $url r
 	switch -- $r(scheme) {
 	    {} {
-		# append 'http://' if needed
+		# append 'https://' if needed
 		if {[string range $r(path) 0 0] == "/"} {
-		    set url "http:/$url"
+		    set url "https:/$url"
 		} else {
-		    set url "http://$url"
+		    set url "https://$url"
 		}
 		
 		if {$debug(tcl,hv)} {
@@ -708,11 +708,11 @@ proc HVArchUserCmd {varname title url} {
     ParseURL $url r
     switch -- $r(scheme) {
 	{} {
-	    # append 'http://' if needed
+	    # append 'https://' if needed
 	    if {[string range $r(path) 0 0] == "/"} {
-		set url "http:/$url"
+		set url "https:/$url"
 	    } else {
-		set url "http://$url"
+		set url "https://$url"
 	    }
 	    
 	    if {$debug(tcl,hv)} {
@@ -738,11 +738,11 @@ proc HVAnalysisCmd {varname title url sync} {
 	ParseURL $url r
 	switch -- $r(scheme) {
 	    {} {
-		# append 'http://' if needed
+		# append 'https://' if needed
 		if {[string range $r(path) 0 0] == "/"} {
-		    set url "http:/$url"
+		    set url "https:/$url"
 		} else {
-		    set url "http://$url"
+		    set url "https://$url"
 		}
 		
 		if {$debug(tcl,hv)} {
@@ -805,7 +805,7 @@ proc HVArchChandraFTP {} {
 
     global hvchandraftp
     HV hvchandraftp {Chandra FTP} \
-	http://www.cfa.harvard.edu/archive/chandra/search $l
+	https://www.cfa.harvard.edu/archive/chandra/search $l
 }
 
 # Other
@@ -874,11 +874,11 @@ proc WebCmdNew {url {ww {hvweb}}} {
 	ParseURL $url rr
 	switch -- $rr(scheme) {
 	    {} {
-		# append 'http://' if needed
+		# append 'https://' if needed
 		if {[string range $rr(path) 0 0] == "/"} {
-		    set url "http:/$url"
+		    set url "https:/$url"
 		} else {
-		    set url "http://$url"
+		    set url "https://$url"
 		}
 	    }
 	}

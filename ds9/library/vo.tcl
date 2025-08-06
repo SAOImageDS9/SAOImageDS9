@@ -19,7 +19,7 @@ proc VODef {} {
     set ivo(ka,id) {}
 
     # prefs only
-    set pvo(server) {http://cxc.harvard.edu/chandraed/list.txt}
+    set pvo(server) {https://cxc.harvard.edu/chandraed/list.txt}
     set pvo(hv) 1
     # only support mime now (not xpa)
     set pvo(method) mime
@@ -240,14 +240,14 @@ proc VOApply {varname} {
     
     # next try
     set var(valid) 0
-    VOLoad $varname {http://cxc.harvard.edu/chandraed/list.txt}
+    VOLoad $varname {https://cxc.harvard.edu/chandraed/list.txt}
     if {$var(valid)} {
 	VOKeepAlive 0
 	return
     }
 
     # last try
-    VOLoad $varname {http://xray1.physics.rutgers.edu/vo/list.txtt}
+    VOLoad $varname {https://xray1.physics.rutgers.edu/vo/list.txtt}
     if {$var(valid)} {
 	VOKeepAlive 0
 	return
@@ -256,8 +256,8 @@ proc VOApply {varname} {
     # default
     VOError $varname "Unable to access VO server list, please verify internet connection. Using default list."
 
-    set rr {xray1.physics.rutgers.edu:28571	Rutgers Primary MOOC X-ray Analysis Server	http://xray1.physics.rutgers.edu/archive.html
-rinzai.rutgers.edu:28571	Rutgers X-ray Analysis Server #2	http://rinzai.rutgers.edu/archive.html}
+    set rr {xray1.physics.rutgers.edu:28571	Rutgers Primary MOOC X-ray Analysis Server	https://xray1.physics.rutgers.edu/archive.html
+rinzai.rutgers.edu:28571	Rutgers X-ray Analysis Server #2	https://rinzai.rutgers.edu/archive.html}
     VOParse $varname $rr
 
     VOKeepAlive 0

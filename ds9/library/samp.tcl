@@ -19,10 +19,10 @@ proc SAMPConnectMetadata {} {
 
     set map(samp.name) "string \"$ds9(app)\""
     set map(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
-    set map(samp.icon.url) {string http://ds9.si.edu/sun.png}
-    set map(samp.documentation.url) {string http://ds9.si.edu/doc/ref/index.html}
+    set map(samp.icon.url) {string https://ds9.si.edu/sun.png}
+    set map(samp.documentation.url) {string https://ds9.si.edu/doc/ref/index.html}
 
-    set map(home.page) {string http://ds9.si.edu/}
+    set map(home.page) {string https://ds9.si.edu/}
     set map(author.name) {string "William Joye"}
     set map(author.email) {string ds9help@cfa.harvard.edu}
     set map(author.affiliation) {string "Smithsonian Astrophysical Observatory"}

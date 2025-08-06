@@ -95,7 +95,7 @@ proc NVSSExec {varname} {
     set query [http::formatQuery submit Submit! Equinox J2000 PolType I RA $xx Dec $yy Size "$ww $hh" Cells "15.0 15.0" MAPROJ SIN Type image/x-fits rotate "0.0"]
 
 #    set query [http::formatQuery .submit "Extract the Cutout" RA "$xx $yy" Equinox J2000 ImageSize $rr MaxInt 10 .cgifields ImageType ImageType "FITS Image"]
-    set url "http://www.cv.nrao.edu/cgi-bin/postage.pl"
+    set url "https://www.cv.nrao.edu/cgi-bin/postage.pl"
     IMGSVRGetURL $varname $url $query
 }
 

@@ -55,9 +55,9 @@ proc SIADef {} {
 		    }
 
     #{{2MASS (NASA/IPAC)} sia2mass {https://irsa.ipac.caltech.edu/cgi-bin/2MASS/IM/nph-im_sia} {}}
-    #{{Astro-Wise} siaastrowise {http://vo.astro-wise.org/SIAP} {VERB=2&FORM=VOTable&PROJECT=ALL&INSTRUMENT=ALL&}}
-    #{{CADC} siacadc {http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query} {}}
-    #{{SDSS DR12} siasdss {http://skyserver.sdss.org/SkyserverWS/dr12/SIAP/getSIAP} {} }
+    #{{Astro-Wise} siaastrowise {https://vo.astro-wise.org/SIAP} {VERB=2&FORM=VOTable&PROJECT=ALL&INSTRUMENT=ALL&}}
+    #{{CADC} siacadc {https://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/query} {}}
+    #{{SDSS DR12} siasdss {https://skyserver.sdss.org/SkyserverWS/dr12/SIAP/getSIAP} {} }
 
 }
 

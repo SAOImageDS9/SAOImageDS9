@@ -190,7 +190,7 @@ proc SAMPHubStartRegister {} {
     set samphub($samphub(secret),metadata) [list \
 						[list samp.name "Hub"] \
 						[list samp.description.text "SAOImageDS9 Internal Hub"] \
-						[list samp.icon.url "http://ds9.si.edu/bandw.png"] \
+						[list samp.icon.url "https://ds9.si.edu/bandw.png"] \
 						[list author.mail "ds9help@cfa.harvard.edu"] \
 						[list author.name {William Joye}] \
 					       ]

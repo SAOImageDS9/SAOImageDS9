@@ -18,7 +18,7 @@ proc CATCDS {varname} {
     set site [CATCDSURL $var(server)]
     set cgidir {viz-bin}
     set script {votable}
-    set url "http://$site/$cgidir/$script"
+    set url "https://$site/$cgidir/$script"
     
     # query
     switch $var(skyformat) {

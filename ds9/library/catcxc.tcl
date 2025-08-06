@@ -60,7 +60,7 @@ proc CATCXCVOT {varname} {
 
     # query
     set query [http::formatQuery RA $xx DEC $yy SR $rr VERB $type]
-    set url "http://cda.cfa.harvard.edu/cscvo/coneSearch"
+    set url "https://cda.cfa.harvard.edu/cscvo/coneSearch"
 
     CATLoad $varname $url $query
 }

@@ -1400,6 +1400,7 @@ proc ColormapDialog {} {
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command ApplyColormap
     $mb.file add separator
+# url is correct, no https available
     $mb.file add command -label [msgcat::mc {Download Colormap}] \
 	-command {HV cpt CPT-CITY http://seaviewsensing.com/pub/cpt-city}
     $mb.file add separator

@@ -100,7 +100,7 @@ proc 2MASSExec {varname} {
     set foo "$var(x) $var(y)"
 
     set query [http::formatQuery objstr $foo size $rr band $var(survey)]
-    set url "http://irsa.ipac.caltech.edu/cgi-bin/Oasis/2MASSImg/nph-2massimg"
+    set url "https://irsa.ipac.caltech.edu/cgi-bin/Oasis/2MASSImg/nph-2massimg"
     IMGSVRGetURL $varname $url $query
 }
 

@@ -20,8 +20,8 @@ proc NSVRServer {varname} {
     set ss [split $pnres(server) {-}]
     switch -- [lindex $ss 1] {
 	eso -
-	sao {set url {http://vizier.cfa.harvard.edu/cgi-bin/Sesame}}
-	cds {set url {http://cds.unistra.fr/cgi-bin/Sesame}}
+	sao {set url {https://vizier.cfa.harvard.edu/cgi-bin/Sesame}}
+	cds {set url {https://cds.unistra.fr/cgi-bin/Sesame}}
     }
     append url {/-ox}
     switch -- [lindex $ss 0] {

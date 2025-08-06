@@ -119,7 +119,7 @@ proc SAMPConnectCallback {} {
     global samp
     
     set param1 [list param [list value [list string $samp(private)]]]
-    set param2 [list param [list value [list string "http://$samp(home)"]]]
+    set param2 [list param [list value [list string "https://$samp(home)"]]]
     set params [list params [list $param1 $param2]]
 
     set rr {}

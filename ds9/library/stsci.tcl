@@ -118,7 +118,7 @@ proc STSCIExec {varname} {
 
     # query
     set query [http::formatQuery r $var(x) d $var(y) e J2000 w $ww h $hh f fits c $compress v $var(survey)]
-    set url "http://stdatu.stsci.edu/cgi-bin/dss_search"
+    set url "https://stdatu.stsci.edu/cgi-bin/dss_search"
     IMGSVRGetURL $varname $url $query
 }
 

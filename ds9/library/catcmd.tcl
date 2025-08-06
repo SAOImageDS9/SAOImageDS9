@@ -108,8 +108,13 @@ proc CATSelectBrowseCmd {varname ss rc} {
     foreach rr $rowlist {
 	set tag "\{${varname}.${rr}\}"
 	lappend ${varname}(blink,marker) $tag
-	lappend ${varname}(blink,marker,color) \
-	    [$var(frame) get marker catalog $tag color]
+	# row maybe blank
+	set clr [$var(frame) get marker catalog $tag color]
+	if {$clr != {}} {
+	    lappend ${varname}(blink,marker,color) $clr
+	} else {
+	    lappend ${varname}(blink,marker,color) green
+	}
     }
 
     # status

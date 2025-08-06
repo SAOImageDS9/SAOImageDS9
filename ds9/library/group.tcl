@@ -122,7 +122,7 @@ proc GroupButtonDialog {} {
 	$current(frame) marker unselect all
 	set tag [$dgroup(listbox) selection]
 	if {$tag != {}} {
-	    $current(frame) marker "\{$tag\}" select
+	    $current(frame) marker $tag select
 	}
     }
 }

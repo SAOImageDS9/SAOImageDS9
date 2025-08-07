@@ -48,7 +48,7 @@ static const char* reservedKeywords[] = {
   "DATASUM","ZDATASUM",
   /* "OBJECT", */
   "INHERIT",
-  "BSCALE",
+  "BSCALE","TSCAL.",
   "BZERO","TZERO.",
   /* "BUNIT", */ "TUNIT.",
   "BLANK",
@@ -392,8 +392,12 @@ void FitsHist::bin(FitsFile* fits, Matrix& m, Function func, Vector block)
     }
 
     if (!good || (good && good[goodindex])) {
-      double x = xcol_->value(ptr);
-      double y = ycol_->value(ptr);
+      double x = xcol_->hasscaling() ?
+	xcol_->value(ptr) * xcol_->tscal() + xcol_->tzero() :
+	xcol_->value(ptr);
+      double y = ycol_->hasscaling() ?
+	ycol_->value(ptr) * ycol_->tscal() + ycol_->tzero() :
+	ycol_->value(ptr);
 
       double X = x*m00 + y*m10 + m20;
       double Y = x*m01 + y*m11 + m21;

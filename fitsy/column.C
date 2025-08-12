@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2025
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -498,7 +498,8 @@ template <> Vector FitsBinColumnT<unsigned char>::dimension()
 
 template <> double FitsBinColumnT<unsigned char>::value(const char* ptr, int i)
 {
-  return (unsigned char)(*(ptr+offset_+i));
+  unsigned char c = (unsigned char)(*(ptr+offset_+i));
+  return hasscaling() ? c*tscal_+tzero_ : c;
 }
 
 // short
@@ -528,7 +529,7 @@ template <> double FitsBinColumnT<short>::value(const char* ptr, int i)
     u.c[1] = *p;
   }
 
-  return u.s;
+  return hasscaling() ? u.s*tscal_+tzero_ : u.s;
 }
 
 // unsigned short
@@ -558,7 +559,7 @@ template <> double FitsBinColumnT<unsigned short>::value(const char* ptr, int i)
     u.c[1] = *p;
   }
 
-  return u.s;
+  return hasscaling() ? u.s*tscal_+tzero_ : u.s;
 }
 
 // int
@@ -588,7 +589,7 @@ template <> double FitsBinColumnT<int>::value(const char* ptr, int i)
   else
     memcpy(u.c,p,4);
 
-  return u.i;
+  return hasscaling() ? u.i*tscal_+tzero_ : u.i;
 }
 
 // unsigned int
@@ -618,7 +619,7 @@ template <> double FitsBinColumnT<unsigned int>::value(const char* ptr, int i)
   else
     memcpy(u.c,p,4);
 
-  return u.i;
+  return hasscaling() ? u.i*tscal_+tzero_ : u.i;
 }
 
 // some older versions of gcc do not have LLONG
@@ -669,7 +670,7 @@ template <> double FitsBinColumnT<long long>::value(const char* ptr, int i)
   else
     memcpy(u.c,p,8);
 
-  return u.i;
+  return hasscaling() ? u.i*tscal_+tzero_ : u.i;
 }
 
 // float
@@ -699,7 +700,7 @@ template <> double FitsBinColumnT<float>::value(const char* ptr, int i)
   else
     memcpy(u.c,p,4);
 
-  return u.f;
+  return hasscaling() ? u.f*tscal_+tzero_ : u.f;
 }
 
 // double
@@ -733,7 +734,7 @@ template <> double FitsBinColumnT<double>::value(const char* ptr, int i)
   else
     memcpy(u.c,p,8);
 
-  return u.d;
+  return hasscaling() ? u.d*tscal_+tzero_ : u.d;
 }
 
 template class FitsAsciiColumnT<int>;

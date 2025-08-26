@@ -213,7 +213,6 @@ void FitsFile::parse(const char* fn)
 void FitsFile::error(const char* m)
 {
   valid_ = 0;
-  //  cerr << m << endl;
 }
 
 int FitsFile::findEnd(const char* blk)

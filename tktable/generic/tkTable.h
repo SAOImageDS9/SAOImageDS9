@@ -64,10 +64,6 @@
 	#define TCL_SIZE_MAX INT_MAX
     #endif
 
-    #ifndef Tcl_Size
-	typedef int Tcl_Size;
-    #endif
-
     #define TCL_SIZE_MODIFIER ""
     #define Tcl_GetSizeIntFromObj Tcl_GetIntFromObj
     #define Tcl_NewSizeIntObj     Tcl_NewIntObj

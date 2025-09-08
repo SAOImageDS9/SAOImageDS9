@@ -12,7 +12,7 @@
    which was introduced in Tcl 8.7 and 9.
 */
 #ifndef Tcl_Size
-typedef int Tcl_Size;
+typedef long Tcl_Size;
 #endif
 
 /*

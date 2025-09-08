@@ -11,8 +11,10 @@
 /* Check, if Tcl version supports Tcl_Size,
    which was introduced in Tcl 8.7 and 9.
 */
-#ifndef Tcl_Size
-typedef long Tcl_Size;
+#if TCL_MAJOR_VERSION <= 8
+#if TCL_MINOR_VERSION <= 6
+typedef int Tcl_Size;
+#endif
 #endif
 
 /*

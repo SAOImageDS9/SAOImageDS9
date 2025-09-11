@@ -43,9 +43,19 @@
 
 /* Adoption to use the original tk core file */
 #define TkGetStringFromObj Tcl_GetStringFromObj
-#ifndef TkSizeT
+/* Check, if Tcl version supports Tcl_Size,
+   which was introduced in Tcl 8.7 and 9.
+*/
+#if TCL_MAJOR_VERSION <= 8
+#if TCL_MINOR_VERSION <= 6
 #define TkSizeT int
 #endif
+#endif
+
+#ifndef TkSizeT
+#define TkSizeT long
+#endif
+
 #ifndef TCL_IO_FAILURE
 #define TCL_IO_FAILURE (-1)
 #endif
@@ -411,7 +421,8 @@ ParseSVGWithOptions(
     RastOpts *ropts)
 {
     Tcl_Obj **objv = NULL;
-    int objc = 0;
+    //    int objc = 0;
+    TkSizeT objc = 0;
     double dpi = 96.0;
     char *inputCopy = NULL;
     NSVGimage *nsvgImage;

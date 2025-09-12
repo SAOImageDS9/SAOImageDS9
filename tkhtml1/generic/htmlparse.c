@@ -29,6 +29,15 @@
 #include <tk.h>
 #include "htmlparse.h"
 
+/* Check, if Tcl version supports Tcl_Size,
+   which was introduced in Tcl 8.7 and 9.
+*/
+#if TCL_MAJOR_VERSION <= 8
+#if TCL_MINOR_VERSION <= 6
+typedef int Tcl_Size;
+#endif
+#endif
+
 /****************** Begin Escape Sequence Translator *************/
 /*
 ** The next section of code implements routines used to translate
@@ -956,7 +965,8 @@ int HtmlInsertToken(
     /* The general case.  There are arguments that need to be parsed
     ** up.  This is slower, but we gotta do it.
     */
-    int argc;
+    /*    int argc;*/
+    Tcl_Size argc;
     const char **argv;
     char *zBuf;
 

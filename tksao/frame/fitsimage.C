@@ -29,15 +29,6 @@
 #include "colorscale.h"
 #include "wcsast.h"
 
-/* Check, if Tcl version supports Tcl_Size,
-   which was introduced in Tcl 8.7 and 9.
-*/
-#if TCL_MAJOR_VERSION <= 8
-#if TCL_MINOR_VERSION <= 6
-typedef int Tcl_Size;
-#endif
-#endif
-
 WCSState::WCSState()
 {
   wcsSystem_ = Coord::WCS;

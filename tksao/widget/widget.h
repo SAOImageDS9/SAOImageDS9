@@ -21,6 +21,15 @@ using namespace std;
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+/* Check, if Tcl version supports Tcl_Size,
+   which was introduced in Tcl 8.7 and 9.
+*/
+#if TCL_MAJOR_VERSION <= 8
+#if TCL_MINOR_VERSION <= 6
+typedef int Tcl_Size;
+#endif
+#endif
+
 #include "vector.h"
 #include "psutil.h"
 
@@ -62,9 +71,9 @@ extern void* pannerparentptr_;
 
 // Tk Canvas Widget Function Declarations
 
-extern int WidgetConfigProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, 
+extern int WidgetConfigProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, Tcl_Size, 
 			    Tcl_Obj *const [],int);
-extern int WidgetCoordProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, Tcl_Obj *const []);
+extern int WidgetCoordProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, Tcl_Size, Tcl_Obj *const []);
 extern void WidgetDeleteProc(Tk_Canvas, Tk_Item*, Display*);
 extern void WidgetDisplayProc(Tk_Canvas, Tk_Item*, Display*, Drawable, 
 			      int, int, int, int);
@@ -75,7 +84,7 @@ extern void WidgetScaleProc(Tk_Canvas, Tk_Item*, double, double,
 			    double, double);
 extern void WidgetTranslateProc(Tk_Canvas, Tk_Item*, double, double);
 extern int WidgetIndexProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, char, int*);
-extern void WidgetICursorProc(Tk_Canvas, Tk_Item*, int);
+extern void WidgetICursorProc(Tk_Canvas, Tk_Item*, Tcl_Size);
 extern int WidgetSelectionProc(Tk_Canvas, Tk_Item*, int, char*, int);
 extern void WidgetInsertProc(Tk_Canvas, Tk_Item*, int, char*);
 extern void WidgetDCharsProc(Tk_Canvas, Tk_Item*, int, int);

@@ -28,13 +28,13 @@ void* pannerparentptr_ =NULL;
 // Tk Canvas Widget Functions Declaration
 
 int WidgetConfigProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
-		     int argc, Tcl_Obj *const argv[], int flags)
+		     Tcl_Size argc, Tcl_Obj *const argv[], int flags)
 {
   return WIDGET(item).configure(argc, (const char**)argv, flags);
 }
 
 int WidgetCoordProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
-		    int argc, Tcl_Obj *const argv[])
+		    Tcl_Size argc, Tcl_Obj *const argv[])
 {
   return WIDGET(item).coordProc(argc, (char**)argv);
 }
@@ -84,7 +84,7 @@ int WidgetIndexProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item,
   return 1;
 }
 
-void WidgetICursorProc(Tk_Canvas canvas, Tk_Item* item, int index)
+void WidgetICursorProc(Tk_Canvas canvas, Tk_Item* item, Tcl_Size index)
 {
   WIDGET(item).icursorProc(index);
 }
@@ -106,7 +106,7 @@ void WidgetDCharsProc(Tk_Canvas canvas, Tk_Item* item, int first, int last)
   WIDGET(item).dcharsProc(first, last);
 }
 
-int WidgetParse(ClientData widget, Tcl_Interp* interp, int argc, 
+int WidgetParse(ClientData widget, Tcl_Interp* interp, Tcl_Size argc, 
 		const char** argv)
 {
   int result;
@@ -206,7 +206,7 @@ void Widget::msg(const char* m)
   Tcl_AppendResult(interp, m, NULL);
 }
 
-int Widget::configure(int argc, const char** argv, int flags)
+int Widget::configure(Tcl_Size argc, const char** argv, int flags)
 {
   if (Tk_ConfigureWidget(interp, tkwin, configSpecs, argc, argv, 
 			 (char*)this->options, flags) != TCL_OK)
@@ -247,7 +247,7 @@ int Widget::configure(int argc, const char** argv, int flags)
 
 // Required Canvas Functions
 
-int Widget::coordProc(int argc, char** argv)
+int Widget::coordProc(Tcl_Size argc, char** argv)
 {
   char xStr[TCL_DOUBLE_SPACE], yStr[TCL_DOUBLE_SPACE];
 
@@ -409,7 +409,7 @@ void Widget::getCmd()
   frameptr_ = this;
 }
 
-int Widget::configCmd(int argc, const char** argv)
+int Widget::configCmd(Tcl_Size argc, const char** argv)
 {
   switch (argc) {
   case 0:
@@ -497,7 +497,7 @@ void Widget::createCommand()
   Tcl_CreateCommand(interp, cmd, WidgetParse, (ClientData)this, NULL);
 }
 
-int Widget::checkArgs(int should, int argc, char** argv)
+int Widget::checkArgs(int should, Tcl_Size argc, char** argv)
 {
   // if should is negative, don't check
   if (should >= 0) {

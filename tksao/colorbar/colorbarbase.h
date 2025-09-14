@@ -7,18 +7,6 @@
 
 #include "widget.h"
 
-// Widget ConfigSpecs Defines
-
-#define CONFIGORIENTATION 7
-#define CONFIGSIZE 8
-#define CONFIGFONT 9
-#define CONFIGFONTSTYLE 10
-#define CONFIGFONTSIZE 11
-#define CONFIGNUMERICS 12
-#define CONFIGSPACE 13
-#define CONFIGTICKS 14
-#define CONFIGCOLORS 15
-
 // ColorbarBase
 
 class CBGrid;

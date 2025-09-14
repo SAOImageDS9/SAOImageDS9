@@ -57,18 +57,6 @@ extern void* pannerparentptr_;
 
 #define WIDGET(x) (*(((WidgetOptions*)(x))->widget))
 
-// Widget ConfigSpecs Defines
-
-#define CONFIGX       1
-#define CONFIGY       2
-#define CONFIGWIDTH   3
-#define CONFIGHEIGHT  4
-#define CONFIGANCHOR  5
-#define CONFIGCOMMAND 6
-#define CONFIGHELVETICA 7
-#define CONFIGCOURIER 8
-#define CONFIGTIMES 9
-
 // Tk Canvas Widget Function Declarations
 
 extern int WidgetConfigProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, Tcl_Size, 

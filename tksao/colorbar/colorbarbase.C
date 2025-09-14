@@ -106,22 +106,6 @@ int ColorbarBase::configure(int argc, const char* argv[], int flags)
   // only valid for the initial configuration call
   if (flags != TK_CONFIG_ARGV_ONLY)
     return initColormap();
-  else {
-    if ((configSpecs[CONFIGORIENTATION].specFlags&TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGNUMERICS].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGSIZE].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGFONT].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGFONTSTYLE].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGFONTSIZE].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGSPACE].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGCOLORS].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGTICKS].specFlags & TK_CONFIG_OPTION_SPECIFIED)) {
-      updateBBox();
-
-      invalidPixmap();
-      redraw();
-    }
-  }
 
   return TCL_OK;
 }

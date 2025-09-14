@@ -219,27 +219,9 @@ int Widget::configure(Tcl_Size argc, const char** argv, int flags)
     invalidPixmap();
   }
   else {
-    // configure command
-    if (configSpecs[CONFIGCOMMAND].specFlags & TK_CONFIG_OPTION_SPECIFIED)
-      createCommand();
-
-    if ((configSpecs[CONFIGX].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGY].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGWIDTH].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGHEIGHT].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGANCHOR].specFlags & TK_CONFIG_OPTION_SPECIFIED))
-      updateBBox();
-
-    if ((configSpecs[CONFIGWIDTH].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGHEIGHT].specFlags & TK_CONFIG_OPTION_SPECIFIED))
-      invalidPixmap();
-
-    if ((configSpecs[CONFIGX].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGY].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGWIDTH].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGHEIGHT].specFlags & TK_CONFIG_OPTION_SPECIFIED) ||
-	(configSpecs[CONFIGANCHOR].specFlags & TK_CONFIG_OPTION_SPECIFIED))
-      redraw();
+    updateBBox();
+    invalidPixmap();
+    redraw();
   }
 
   return TCL_OK;

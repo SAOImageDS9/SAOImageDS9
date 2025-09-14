@@ -106,7 +106,7 @@ void WidgetDCharsProc(Tk_Canvas canvas, Tk_Item* item, int first, int last)
   WIDGET(item).dcharsProc(first, last);
 }
 
-int WidgetParse(ClientData widget, Tcl_Interp* interp, Tcl_Size argc, 
+int WidgetParse(ClientData widget, Tcl_Interp* interp, int argc, 
 		const char** argv)
 {
   int result;
@@ -208,8 +208,17 @@ void Widget::msg(const char* m)
 
 int Widget::configure(Tcl_Size argc, const char** argv, int flags)
 {
-  if (Tk_ConfigureWidget(interp, tkwin, configSpecs, argc, argv, 
-			 (char*)this->options, flags) != TCL_OK)
+#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+  int rr = Tk_ConfigureWidget(interp, tkwin, configSpecs, argc,
+			      argv,
+			      (char*)this->options, flags);
+#else
+  int rr = Tk_ConfigureWidget(interp, tkwin, configSpecs, argc,
+			      (Tcl_Obj *const *)argv,
+			      (char*)this->options, flags);
+#endif
+
+ if (rr != TCL_OK)
     return TCL_ERROR;
 
   if (flags != TK_CONFIG_ARGV_ONLY) {
@@ -567,6 +576,10 @@ void Widget::updateBBox()
 
   // Modify position point using anchor information.
   switch (options->anchor) {
+#if TCL_MAJOR_VERSION >= 9
+  case TK_ANCHOR_NULL:
+    break;
+#endif
   case TK_ANCHOR_N:
     originX -= ww/2;
     break;
@@ -778,6 +791,10 @@ Vector Widget::psOrigin()
   double hh = options->height;
 
   switch (options->anchor) {
+#if TCL_MAJOR_VERSION >= 9
+  case TK_ANCHOR_NULL:
+    break;
+#endif
   case TK_ANCHOR_N:
     xx -= ww/2;
     yy -= hh;

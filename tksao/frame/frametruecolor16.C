@@ -6,7 +6,8 @@
 
 // Tk Canvas Widget Function Declarations
 
-int FrameTrueColor16CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, Tcl_Obj *const []);
+int FrameTrueColor16CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*,
+			       Tcl_Size, Tcl_Obj *const []);
 
 // FrameTrueColor16 Specs
 
@@ -84,7 +85,8 @@ int FrameTrueColor16_Init(Tcl_Interp* interp)
 }
 
 int FrameTrueColor16CreateProc(Tcl_Interp* interp, Tk_Canvas canvas, 
-			       Tk_Item* item, int argc, Tcl_Obj *const argv[])
+			       Tk_Item* item, Tcl_Size argc,
+			       Tcl_Obj *const argv[])
 {
   FrameTrueColor16* frame = new FrameTrueColor16(interp, canvas, item);
 

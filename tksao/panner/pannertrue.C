@@ -9,8 +9,8 @@
 
 // Tk Canvas Widget Function Declarations
 
-int PannerTrueColorCreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, 
-			      Tcl_Obj *const []);
+int PannerTrueColorCreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*,
+			      Tcl_Size, Tcl_Obj *const []);
 
 // PannerTrueColor Specs
 
@@ -89,7 +89,8 @@ int PannerTrueColor_Init(Tcl_Interp* interp)
 }
 
 int PannerTrueColorCreateProc(Tcl_Interp* interp, Tk_Canvas canvas, 
-			      Tk_Item* item, int argc, Tcl_Obj *const argv[])
+			      Tk_Item* item, Tcl_Size argc,
+			      Tcl_Obj *const argv[])
 {
   PannerTrueColor* panner = new PannerTrueColor(interp, canvas, item);
 

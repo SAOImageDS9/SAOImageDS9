@@ -8,8 +8,8 @@
 
 // Tk Canvas Widget Function Declarations
 
-int MagnifierTrueColorCreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int,
-				 Tcl_Obj *const []);
+int MagnifierTrueColorCreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*,
+				 Tcl_Size, Tcl_Obj *const []);
 
 // MagnifierTrueColor Specs
 
@@ -88,7 +88,8 @@ int MagnifierTrueColor_Init(Tcl_Interp* interp)
 }
 
 int MagnifierTrueColorCreateProc(Tcl_Interp* interp, Tk_Canvas canvas, 
-				 Tk_Item* item, int argc, Tcl_Obj *const argv[])
+				 Tk_Item* item, Tcl_Size argc,
+				 Tcl_Obj *const argv[])
 {
   MagnifierTrueColor* magnifier = new MagnifierTrueColor(interp, canvas, item);
 

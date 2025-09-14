@@ -7,8 +7,8 @@
 
 // Tk Canvas Widget Function Declarations
 
-int FrameHLSTrueColor24CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, 
-				  Tcl_Obj *const []);
+int FrameHLSTrueColor24CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*,
+				  Tcl_Size, Tcl_Obj *const []);
 
 // FrameHLSTrueColor24 Specs
 
@@ -86,7 +86,7 @@ int FrameHLSTrueColor24_Init(Tcl_Interp* interp)
 }
 
 int FrameHLSTrueColor24CreateProc(Tcl_Interp* interp, Tk_Canvas canvas, 
-				  Tk_Item* item, int argc, 
+				  Tk_Item* item, Tcl_Size argc, 
 				  Tcl_Obj *const argv[])
 {
   FrameHLSTrueColor24* frame = new FrameHLSTrueColor24(interp, canvas, item);

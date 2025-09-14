@@ -7,8 +7,8 @@
 
 // Tk Canvas Widget Function Declarations
 
-int ColorbarTrueColor24CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, 
-				  Tcl_Obj *const []);
+int ColorbarTrueColor24CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*,
+				  Tcl_Size, Tcl_Obj *const []);
 
 // Colorbar Specs
 
@@ -112,7 +112,7 @@ int ColorbarTrueColor24_Init(Tcl_Interp* interp)
 }
 
 int ColorbarTrueColor24CreateProc(Tcl_Interp* interp, Tk_Canvas canvas, 
-				  Tk_Item* item, int argc, 
+				  Tk_Item* item, Tcl_Size argc, 
 				  Tcl_Obj *const argv[])
 {
   ColorbarTrueColor24* colorbar = new ColorbarTrueColor24(interp,canvas,item);

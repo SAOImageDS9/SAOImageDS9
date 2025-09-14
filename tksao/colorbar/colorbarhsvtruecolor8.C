@@ -6,8 +6,8 @@
 
 // Tk Canvas Widget Function Declarations
 
-int ColorbarHSVTrueColor8CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int,
-				    Tcl_Obj *const []);
+int ColorbarHSVTrueColor8CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*,
+				    Tcl_Size, Tcl_Obj *const []);
 
 // Colorbar Specs
 
@@ -110,7 +110,7 @@ int ColorbarHSVTrueColor8_Init(Tcl_Interp* interp)
 }
 
 int ColorbarHSVTrueColor8CreateProc(Tcl_Interp* interp, Tk_Canvas canvas, 
-				    Tk_Item* item, int argc, 
+				    Tk_Item* item, Tcl_Size argc, 
 				    Tcl_Obj *const argv[])
 {
   ColorbarHSVTrueColor8* colorbar = 

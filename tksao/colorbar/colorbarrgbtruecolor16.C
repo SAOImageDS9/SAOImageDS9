@@ -7,8 +7,8 @@
 
 // Tk Canvas Widget Function Declarations
 
-int ColorbarRGBTrueColor16CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, 
-				  Tcl_Obj *const []);
+int ColorbarRGBTrueColor16CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*,
+				     Tcl_Size, Tcl_Obj *const []);
 
 // ColorbarRGB Specs
 
@@ -112,7 +112,7 @@ int ColorbarRGBTrueColor16_Init(Tcl_Interp* interp)
 }
 
 int ColorbarRGBTrueColor16CreateProc(Tcl_Interp* interp, Tk_Canvas canvas, 
-				     Tk_Item* item, int argc, 
+				     Tk_Item* item, Tcl_Size argc, 
 				     Tcl_Obj *const argv[])
 {
   ColorbarRGBTrueColor16* colorbar = 

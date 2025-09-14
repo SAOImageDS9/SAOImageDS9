@@ -24,10 +24,8 @@ using namespace std;
 /* Check, if Tcl version supports Tcl_Size,
    which was introduced in Tcl 8.7 and 9.
 */
-#if TCL_MAJOR_VERSION <= 8
-#if TCL_MINOR_VERSION <= 6
+#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
 typedef int Tcl_Size;
-#endif
 #endif
 
 #include "vector.h"
@@ -144,7 +142,7 @@ class Widget {
   void createCommand();          // create tcl command
   void updateBBox();             // update item bounding box
 
-  int checkArgs(int, int, char**); // check args utility
+  int checkArgs(int, Tcl_Size, char**); // check args utility
 
   void psHead1(ostream&, int, int);
   void psHead2(ostream&, int, int, const char*, const char*);
@@ -163,7 +161,7 @@ class Widget {
 
   virtual int parse(istringstream&) =0;           // parse subcommands
 
-  virtual int configure(int, const char**, int); // parse config options
+  virtual int configure(Tcl_Size, const char**, int); // parse config options
   void error(const char*);                     // parse error function
   void msg(const char*);                       // parse msg function
 
@@ -190,7 +188,7 @@ class Widget {
   void psColor(PSColorSpace mode, XColor* clr);
 
   // Required Canvas Functions
-  int coordProc(int, char**);
+  int coordProc(Tcl_Size, char**);
   void displayProc(Drawable, int, int, int, int);
   double pointProc(double*);
   int areaProc(double*);
@@ -206,7 +204,7 @@ class Widget {
 
   // Subcommand Functions
   void getCmd();
-  int configCmd(int, const char**); // configure command
+  int configCmd(Tcl_Size, const char**); // configure command
   void getHeightCmd();              // return height of widget
   void getWidthCmd();               // return width of widget
   void hideCmd();                   // hide item command

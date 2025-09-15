@@ -178,9 +178,7 @@ static void TclXMLDispatchPCDATA _ANSI_ARGS_((TclXML_Info *xmlinfo));
  *----------------------------------------------------------------------------
  */
 
-static char *
-Tcl_GetString (obj)
-      Tcl_Obj *obj; /* Object to retrieve string from. */
+static char *Tcl_GetString (Tcl_Obj *obj)
 {
   char *s;
   int i;
@@ -209,9 +207,7 @@ Tcl_GetString (obj)
  *----------------------------------------------------------------------------
  */
 
-int
-Tclxml_Init (interp)
-      Tcl_Interp *interp; /* Interpreter to initialise. */
+int Tclxml_Init (Tcl_Interp *interp)
 {
   ThreadSpecificData *tsdPtr;
 
@@ -295,9 +291,7 @@ Tclxml_Init (interp)
  *----------------------------------------------------------------------------
  */
 
-int
-Tclxml_SafeInit (interp)
-      Tcl_Interp *interp; /* Interpreter to initialise. */
+int Tclxml_SafeInit (Tcl_Interp *interp)
 {
     return Tclxml_Init(interp);
 }
@@ -318,12 +312,8 @@ Tclxml_SafeInit (interp)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLConfigureCmd(clientData, interp, objc, objv)
-     ClientData clientData;
-     Tcl_Interp *interp;
-     int objc;
-     Tcl_Obj *CONST objv[];
+static int TclXMLConfigureCmd(ClientData clientData, Tcl_Interp *interp,
+			      int objc, Tcl_Obj *CONST objv[])
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   int index;
@@ -374,12 +364,8 @@ TclXMLConfigureCmd(clientData, interp, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLParserClassCmd(clientData, interp, objc, objv)
-     ClientData clientData;
-     Tcl_Interp *interp;
-     int objc;
-     Tcl_Obj *CONST objv[];
+static int TclXMLParserClassCmd(ClientData clientData, Tcl_Interp *interp,
+				int objc, Tcl_Obj *CONST objv[])
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   TclXML_ParserClassInfo *classinfo;
@@ -574,10 +560,8 @@ TclXMLParserClassCmd(clientData, interp, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-int
-TclXML_RegisterXMLParser(interp, classinfo)
-     Tcl_Interp *interp;
-     TclXML_ParserClassInfo *classinfo;
+int TclXML_RegisterXMLParser(Tcl_Interp *interp,
+			     TclXML_ParserClassInfo *classinfo)
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   int new;
@@ -621,12 +605,8 @@ TclXML_RegisterXMLParser(interp, classinfo)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLCreateParserCmd(clientData, interp, objc, objv)
-     ClientData clientData;
-     Tcl_Interp *interp;
-     int objc;
-     Tcl_Obj *CONST objv[];
+static int TclXMLCreateParserCmd(ClientData clientData, Tcl_Interp *interp,
+				 int objc, Tcl_Obj *CONST objv[])
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   TclXML_Info *xmlinfo;
@@ -887,9 +867,7 @@ TclXMLCreateParserCmd(clientData, interp, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-static Tcl_Obj *
-FindUniqueCmdName(interp)
-     Tcl_Interp *interp;
+static Tcl_Obj *FindUniqueCmdName(Tcl_Interp *interp)
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   Tcl_Obj *name;
@@ -924,10 +902,7 @@ FindUniqueCmdName(interp)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLResetParser(interp, xmlinfo)
-     Tcl_Interp *interp;
-     TclXML_Info *xmlinfo;
+static int TclXMLResetParser(Tcl_Interp *interp, TclXML_Info *xmlinfo)
 {
   TclXML_ParserClassInfo *classInfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass;
 
@@ -1074,11 +1049,8 @@ TclXMLResetParser(interp, xmlinfo)
  *----------------------------------------------------------------------
  */
 
-static int
-TclXMLCreateEntityParser(interp, external, parent)
-     Tcl_Interp *interp;
-     TclXML_Info *external;
-     TclXML_Info *parent;
+static int TclXMLCreateEntityParser(Tcl_Interp *interp, TclXML_Info *external,
+				    TclXML_Info *parent)
 {
   TclXML_ParserClassInfo *extClassInfo;
 
@@ -1241,9 +1213,7 @@ TclXMLCreateEntityParser(interp, external, parent)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLDestroyParserInstance(xmlinfo)
-     TclXML_Info *xmlinfo;
+static int TclXMLDestroyParserInstance(TclXML_Info *xmlinfo)
 {
   TclXML_ParserClassInfo *classInfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass;
 
@@ -1303,9 +1273,7 @@ TclXMLDestroyParserInstance(xmlinfo)
  *----------------------------------------------------------------------------
  */
 
-static void
-TclXMLFreeParser(xmlinfo)
-     TclXML_Info *xmlinfo;
+static void TclXMLFreeParser(TclXML_Info *xmlinfo)
 {
   if (TclXMLDestroyParserInstance(xmlinfo) == TCL_OK) {
 	if (xmlinfo->encoding) {
@@ -1331,12 +1299,8 @@ TclXMLFreeParser(xmlinfo)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLInstanceCmd (clientData, interp, objc, objv)
-     ClientData clientData;
-     Tcl_Interp *interp;
-     int objc;
-     Tcl_Obj *CONST objv[];
+static int TclXMLInstanceCmd (ClientData clientData, Tcl_Interp *interp,
+			      int objc, Tcl_Obj *CONST objv[])
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) clientData;
   TclXML_Info *child;
@@ -1489,12 +1453,8 @@ TclXMLInstanceCmd (clientData, interp, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLParse (interp, xmlinfo, data, len)
-     Tcl_Interp *interp;
-     TclXML_Info *xmlinfo;
-     char *data;
-     int len;
+static int TclXMLParse (Tcl_Interp *interp, TclXML_Info *xmlinfo,
+			char *data, int len)
 {
   int result;
   TclXML_ParserClassInfo *classInfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass;
@@ -1573,12 +1533,8 @@ TclXMLParse (interp, xmlinfo, data, len)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLInstanceConfigure (interp, xmlinfo, objc, objv)
-     Tcl_Interp *interp;
-     TclXML_Info *xmlinfo;
-     int objc;
-     Tcl_Obj *CONST objv[];
+static int TclXMLInstanceConfigure (Tcl_Interp *interp, TclXML_Info *xmlinfo,
+				    int objc, Tcl_Obj *CONST objv[])
 {
   int index, boolv, doParse = 0, result;
   TclXML_ParserClassInfo *classinfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass;
@@ -1942,12 +1898,8 @@ TclXMLInstanceConfigure (interp, xmlinfo, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLCget (interp, xmlinfo, objc, objv)
-     Tcl_Interp *interp;
-     TclXML_Info *xmlinfo;
-     int objc;
-     Tcl_Obj *CONST objv[];
+static int TclXMLCget (Tcl_Interp *interp, TclXML_Info *xmlinfo,
+		       int objc, Tcl_Obj *CONST objv[])
 {
   int index;
 
@@ -2107,11 +2059,8 @@ TclXMLCget (interp, xmlinfo, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLConfigureParserInstance (xmlinfo, option, value)
-     TclXML_Info *xmlinfo;
-     Tcl_Obj *option;
-     Tcl_Obj *value;
+static int TclXMLConfigureParserInstance (TclXML_Info *xmlinfo,
+					  Tcl_Obj *option, Tcl_Obj *value)
 {
   TclXML_ParserClassInfo *classInfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass;
 
@@ -2170,12 +2119,8 @@ TclXMLConfigureParserInstance (xmlinfo, option, value)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLGet (interp, xmlinfo, objc, objv)
-     Tcl_Interp *interp;
-     TclXML_Info *xmlinfo;
-     int objc;
-     Tcl_Obj *CONST objv[];
+static int TclXMLGet (Tcl_Interp *interp, TclXML_Info *xmlinfo,
+		      int objc, Tcl_Obj *CONST objv[])
 {
   TclXML_ParserClassInfo *classInfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass; 
 
@@ -2220,10 +2165,7 @@ TclXMLGet (interp, xmlinfo, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-static void
-TclXMLHandlerResult(xmlinfo, result)
-     TclXML_Info *xmlinfo;
-     int result;
+static void TclXMLHandlerResult(TclXML_Info *xmlinfo, int result)
 {
   switch (result) {
     case TCL_OK:
@@ -2276,13 +2218,8 @@ TclXMLHandlerResult(xmlinfo, result)
  *----------------------------------------------------------------------------
  */
 
-void
-TclXML_ElementStartHandler(userData, name, nsuri, atts, nsDecls)
-     void *userData;
-     Tcl_Obj *name;
-     Tcl_Obj *nsuri;
-     Tcl_Obj *atts;
-     Tcl_Obj *nsDecls;
+void TclXML_ElementStartHandler(void *userData, Tcl_Obj *name,
+				Tcl_Obj *nsuri, Tcl_Obj *atts, Tcl_Obj *nsDecls)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -2363,10 +2300,7 @@ TclXML_ElementStartHandler(userData, name, nsuri, atts, nsDecls)
  *----------------------------------------------------------------------------
  */
 
-void
-TclXML_ElementEndHandler(userData, name)
-     void *userData;
-     Tcl_Obj *name;
+void TclXML_ElementEndHandler(void *userData, Tcl_Obj *name)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;;
@@ -2438,10 +2372,7 @@ TclXML_ElementEndHandler(userData, name)
  *----------------------------------------------------------------------------
  */
 
-void
-TclXML_CharacterDataHandler(userData, s)
-     void *userData;
-     Tcl_Obj *s;
+void TclXML_CharacterDataHandler(void *userData, Tcl_Obj *s)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   if (xmlinfo->cdata == NULL) {
@@ -2469,9 +2400,7 @@ TclXML_CharacterDataHandler(userData, s)
  *----------------------------------------------------------------------------
  */
 
-static void
-TclXMLDispatchPCDATA(xmlinfo)
-     TclXML_Info *xmlinfo;
+static void TclXMLDispatchPCDATA(TclXML_Info *xmlinfo)
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   int result = TCL_OK;
@@ -2545,11 +2474,8 @@ TclXMLDispatchPCDATA(xmlinfo)
  *----------------------------------------------------------------------------
  */
 
-void
-TclXML_ProcessingInstructionHandler(userData, target, data)
-     void *userData;
-     Tcl_Obj *target;
-     Tcl_Obj *data;
+void TclXML_ProcessingInstructionHandler(void *userData, Tcl_Obj *target,
+					 Tcl_Obj *data)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -2608,10 +2534,7 @@ TclXML_ProcessingInstructionHandler(userData, target, data)
  *----------------------------------------------------------------------------
  */
 
-void
-TclXML_DefaultHandler(userData, s)
-     void *userData;
-     Tcl_Obj *s;
+void TclXML_DefaultHandler(void *userData, Tcl_Obj *s)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -2669,14 +2592,9 @@ TclXML_DefaultHandler(userData, s)
  *----------------------------------------------------------------------------
  */
 
-void
-TclXML_UnparsedDeclHandler(userData, entityName, base, systemId, publicId, notationName)
-     void *userData;
-     Tcl_Obj *entityName;
-     Tcl_Obj *base;
-     Tcl_Obj *systemId;
-     Tcl_Obj *publicId;
-     Tcl_Obj *notationName;
+void TclXML_UnparsedDeclHandler(void *userData, Tcl_Obj *entityName,
+				Tcl_Obj *base, Tcl_Obj *systemId,
+				Tcl_Obj *publicId, Tcl_Obj *notationName)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -2746,13 +2664,9 @@ TclXML_UnparsedDeclHandler(userData, entityName, base, systemId, publicId, notat
  *----------------------------------------------------------------------------
  */
 
-void
-TclXML_NotationDeclHandler(userData, notationName, base, systemId, publicId)
-     void *userData;
-     Tcl_Obj *notationName;
-     Tcl_Obj *base;
-     Tcl_Obj *systemId;
-     Tcl_Obj *publicId;
+void TclXML_NotationDeclHandler(void *userData, Tcl_Obj *notationName,
+				Tcl_Obj *base, Tcl_Obj *systemId,
+				Tcl_Obj *publicId)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -2822,11 +2736,8 @@ TclXML_NotationDeclHandler(userData, notationName, base, systemId, publicId)
  *----------------------------------------------------------------------------
  */
 
-int
-TclXML_UnknownEncodingHandler(encodingHandlerData, name, info)
-     void *encodingHandlerData;
-     Tcl_Obj *name;
-     void *info;
+int TclXML_UnknownEncodingHandler(void *encodingHandlerData, Tcl_Obj *name,
+				  void *info)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) encodingHandlerData;
   int result = TCL_OK;
@@ -2891,14 +2802,10 @@ TclXML_UnknownEncodingHandler(encodingHandlerData, name, info)
  *----------------------------------------------------------------------------
  */
 
-int
-TclXML_ExternalEntityRefHandler(userData, openEntityNames, base,
-    systemId, publicId)
-     ClientData userData;	/* NULL if not in parser context, current interp gets result */
-     Tcl_Obj *openEntityNames;
-     Tcl_Obj *base;
-     Tcl_Obj *systemId;
-     Tcl_Obj *publicId;
+int TclXML_ExternalEntityRefHandler(ClientData userData,
+				    Tcl_Obj *openEntityNames,
+				    Tcl_Obj *base, Tcl_Obj *systemId,
+				    Tcl_Obj *publicId)
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
@@ -3031,10 +2938,7 @@ TclXML_ExternalEntityRefHandler(userData, openEntityNames, base,
  *
  *----------------------------------------------------------------------------
  */
-void
-TclXML_CommentHandler(userData, data)
-    void *userData;
-    Tcl_Obj *data;
+void TclXML_CommentHandler(void *userData, Tcl_Obj *data)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -3095,9 +2999,7 @@ TclXML_CommentHandler(userData, data)
  *----------------------------------------------------------------------------
  */
 
-int
-TclXML_NotStandaloneHandler(userData)
-    void *userData;
+int TclXML_NotStandaloneHandler(void *userData)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -3146,11 +3048,8 @@ TclXML_NotStandaloneHandler(userData)
  *----------------------------------------------------------------------
  */
 
-void
-TclXML_ElementDeclHandler(userData, name, contentspec)
-    void *userData;
-    Tcl_Obj *name;
-    Tcl_Obj *contentspec;
+void TclXML_ElementDeclHandler(void *userData, Tcl_Obj *name,
+			       Tcl_Obj *contentspec)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -3202,11 +3101,8 @@ TclXML_ElementDeclHandler(userData, name, contentspec)
  *----------------------------------------------------------------------
  */
 
-void
-TclXML_AttlistDeclHandler(userData, name, attributes)
-    void *userData;
-    Tcl_Obj *name;
-    Tcl_Obj *attributes;
+void TclXML_AttlistDeclHandler(void *userData, Tcl_Obj *name,
+			       Tcl_Obj *attributes)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -3258,10 +3154,7 @@ TclXML_AttlistDeclHandler(userData, name, attributes)
  *----------------------------------------------------------------------
  */
 
-void
-TclXML_StartDoctypeDeclHandler(userData, name)
-    void *userData;
-    Tcl_Obj *name;
+void TclXML_StartDoctypeDeclHandler(void *userData, Tcl_Obj *name)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -3311,9 +3204,7 @@ TclXML_StartDoctypeDeclHandler(userData, name)
  *----------------------------------------------------------------------
  */
 
-void
-TclXML_EndDoctypeDeclHandler(userData)
-    void *userData;
+void TclXML_EndDoctypeDeclHandler(void *userData)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) userData;
   int result = TCL_OK;
@@ -3361,9 +3252,7 @@ TclXML_EndDoctypeDeclHandler(userData)
  *----------------------------------------------------------------------------
  */
 
-static void
-TclXMLInstanceDeleteCmd(clientData)
-     ClientData clientData;
+static void TclXMLInstanceDeleteCmd(ClientData clientData)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) clientData;
 
@@ -3437,12 +3326,9 @@ TclXMLInstanceDeleteCmd(clientData)
  *----------------------------------------------------------------------------
  */
 
-int
-TclXML_RegisterElementStartProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_ElementStartProc *callback;
+int TclXML_RegisterElementStartProc(Tcl_Interp *interp, TclXML_Info *parser,
+				    ClientData clientData,
+				    TclXML_ElementStartProc *callback)
 {
   parser->elementstart = callback;
   parser->elementstartdata = clientData;
@@ -3455,12 +3341,9 @@ TclXML_RegisterElementStartProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterElementEndProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_ElementEndProc *callback;
+int TclXML_RegisterElementEndProc(Tcl_Interp *interp, TclXML_Info *parser,
+				  ClientData clientData,
+				  TclXML_ElementEndProc *callback)
 {
   parser->elementend = callback;
   parser->elementenddata = clientData;
@@ -3473,12 +3356,9 @@ TclXML_RegisterElementEndProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterCharacterDataProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_CharacterDataProc *callback;
+int TclXML_RegisterCharacterDataProc(Tcl_Interp *interp, TclXML_Info *parser,
+				     ClientData clientData,
+				     TclXML_CharacterDataProc *callback)
 {
   parser->cdatacb = callback;
   parser->cdatacbdata = clientData;
@@ -3491,12 +3371,8 @@ TclXML_RegisterCharacterDataProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterPIProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_PIProc *callback;
+int TclXML_RegisterPIProc(Tcl_Interp *interp, TclXML_Info *parser,
+			  ClientData clientData, TclXML_PIProc *callback)
 {
   parser->pi = callback;
   parser->pidata = clientData;
@@ -3509,12 +3385,9 @@ TclXML_RegisterPIProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterDefaultProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_DefaultProc *callback;
+int TclXML_RegisterDefaultProc(Tcl_Interp *interp, TclXML_Info *parser,
+			       ClientData clientData,
+			       TclXML_DefaultProc *callback)
 {
   parser->defaultcb = callback;
   parser->defaultdata = clientData;
@@ -3527,12 +3400,9 @@ TclXML_RegisterDefaultProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterUnparsedProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_UnparsedProc *callback;
+int TclXML_RegisterUnparsedProc(Tcl_Interp *interp, TclXML_Info *parser,
+				ClientData clientData,
+				TclXML_UnparsedProc *callback)
 {
   parser->unparsed = callback;
   parser->unparseddata = clientData;
@@ -3545,12 +3415,9 @@ TclXML_RegisterUnparsedProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterNotationDeclProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_NotationDeclProc *callback;
+int TclXML_RegisterNotationDeclProc(Tcl_Interp *interp, TclXML_Info *parser,
+				    ClientData clientData,
+				    TclXML_NotationDeclProc *callback)
 {
   parser->notation = callback;
   parser->notationdata = clientData;
@@ -3563,12 +3430,9 @@ TclXML_RegisterNotationDeclProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterEntityProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_EntityProc *callback;
+int TclXML_RegisterEntityProc(Tcl_Interp *interp, TclXML_Info *parser,
+			      ClientData clientData,
+			      TclXML_EntityProc *callback)
 {
   parser->entity = callback;
   parser->entitydata = clientData;
@@ -3581,12 +3445,9 @@ TclXML_RegisterEntityProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterUnknownEncodingProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_UnknownEncodingProc *callback;
+int TclXML_RegisterUnknownEncodingProc(Tcl_Interp *interp, TclXML_Info *parser,
+				       ClientData clientData,
+				       TclXML_UnknownEncodingProc *callback)
 {
   parser->unknownencoding = callback;
   parser->unknownencodingdata = clientData;
@@ -3599,12 +3460,9 @@ TclXML_RegisterUnknownEncodingProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterCommentProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_CommentProc *callback;
+int TclXML_RegisterCommentProc(Tcl_Interp *interp, TclXML_Info *parser,
+			       ClientData clientData,
+			       TclXML_CommentProc *callback)
 {
   parser->comment = callback;
   parser->commentdata = clientData;
@@ -3617,12 +3475,9 @@ TclXML_RegisterCommentProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterNotStandaloneProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_NotStandaloneProc *callback;
+int TclXML_RegisterNotStandaloneProc(Tcl_Interp *interp, TclXML_Info *parser,
+				     ClientData clientData,
+				     TclXML_NotStandaloneProc *callback)
 {
   parser->notStandalone = callback;
   parser->notstandalonedata = clientData;
@@ -3635,12 +3490,9 @@ TclXML_RegisterNotStandaloneProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterElementDeclProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_ElementDeclProc *callback;
+int TclXML_RegisterElementDeclProc(Tcl_Interp *interp, TclXML_Info *parser,
+				   ClientData clientData,
+				   TclXML_ElementDeclProc *callback)
 {
   parser->elementDecl = callback;
   parser->elementdecldata = clientData;
@@ -3653,12 +3505,9 @@ TclXML_RegisterElementDeclProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterAttListDeclProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_AttlistDeclProc *callback;
+int TclXML_RegisterAttListDeclProc(Tcl_Interp *interp, TclXML_Info *parser,
+				   ClientData clientData, 
+				   TclXML_AttlistDeclProc *callback)
 {
   parser->attlistDecl = callback;
   parser->attlistdecldata = clientData;
@@ -3671,12 +3520,9 @@ TclXML_RegisterAttListDeclProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterStartDoctypeDeclProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_StartDoctypeDeclProc *callback;
+int TclXML_RegisterStartDoctypeDeclProc(Tcl_Interp *interp, TclXML_Info *parser,
+					ClientData clientData,
+					TclXML_StartDoctypeDeclProc *callback)
 {
   parser->startDoctypeDecl = callback;
   parser->startdoctypedecldata = clientData;
@@ -3689,12 +3535,9 @@ TclXML_RegisterStartDoctypeDeclProc(interp, parser, clientData, callback)
   return TCL_OK;
 }
 
-int
-TclXML_RegisterEndDoctypeDeclProc(interp, parser, clientData, callback)
-     Tcl_Interp *interp;
-     TclXML_Info *parser;
-     ClientData clientData;
-     TclXML_EndDoctypeDeclProc *callback;
+int TclXML_RegisterEndDoctypeDeclProc(Tcl_Interp *interp, TclXML_Info *parser,
+				      ClientData clientData,
+				      TclXML_EndDoctypeDeclProc *callback)
 {
   parser->endDoctypeDecl = callback;
   parser->enddoctypedecldata = clientData;

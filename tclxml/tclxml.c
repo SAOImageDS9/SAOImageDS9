@@ -136,29 +136,29 @@ enum instanceConfigureSwitches {
  * Prototypes for procedures defined later in this file:
  */
 
-static void TclXMLInstanceDeleteCmd((ClientData clientData));
-static int  TclXMLDestroyParserInstance((TclXML_Info *xmlinfo));
-static int  TclXMLInstanceCmd((ClientData dummy,
-            Tcl_Interp *interp, int objc, struct Tcl_Obj *CONST objv[]));
-static int  TclXMLCreateParserCmd((ClientData dummy,
-            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]));
-static int  TclXMLParserClassCmd((ClientData dummy,
-            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]));
-static int  TclXMLResetParser((Tcl_Interp *interp, TclXML_Info *xmlinfo));
-static int  TclXMLConfigureCmd((ClientData dummy,
-            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]));
-static Tcl_Obj* FindUniqueCmdName((Tcl_Interp *interp));
-static int  TclXMLInstanceConfigure((Tcl_Interp *interp,
-            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]));
-static int  TclXMLCget((Tcl_Interp *interp,
-            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]));
-static int  TclXMLConfigureParserInstance((
-            TclXML_Info *xmlinfo, Tcl_Obj *option, Tcl_Obj *value));
-static int  TclXMLGet((Tcl_Interp *interp,
-            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]));
-static int  TclXMLParse((Tcl_Interp *interp,
-            TclXML_Info *xmlinfo, char *data, int len));
-static void TclXMLDispatchPCDATA((TclXML_Info *xmlinfo));
+static void TclXMLInstanceDeleteCmd(ClientData clientData);
+static int  TclXMLDestroyParserInstance(TclXML_Info *xmlinfo);
+static int  TclXMLInstanceCmd(ClientData dummy,
+            Tcl_Interp *interp, int objc, struct Tcl_Obj *CONST objv[]);
+static int  TclXMLCreateParserCmd(ClientData dummy,
+            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+static int  TclXMLParserClassCmd(ClientData dummy,
+            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+static int  TclXMLResetParser(Tcl_Interp *interp, TclXML_Info *xmlinfo);
+static int  TclXMLConfigureCmd(ClientData dummy,
+            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+static Tcl_Obj* FindUniqueCmdName(Tcl_Interp *interp);
+static int  TclXMLInstanceConfigure(Tcl_Interp *interp,
+            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]);
+static int  TclXMLCget(Tcl_Interp *interp,
+            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]);
+static int  TclXMLConfigureParserInstance(
+            TclXML_Info *xmlinfo, Tcl_Obj *option, Tcl_Obj *value);
+static int  TclXMLGet(Tcl_Interp *interp,
+            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]);
+static int  TclXMLParse(Tcl_Interp *interp,
+            TclXML_Info *xmlinfo, char *data, int len);
+static void TclXMLDispatchPCDATA(TclXML_Info *xmlinfo);
 
 #if (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION == 0)
 

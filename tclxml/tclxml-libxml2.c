@@ -51,21 +51,19 @@ typedef struct TclXMLlibxml2Info {
  * Forward declarations for private functions.
  */
 
-static ClientData ReaderCreate _ANSI_ARGS_((Tcl_Interp *interp, 
-											TclXML_Info *xmlinfo));
-static int  ReaderReset _ANSI_ARGS_((ClientData clientData));
-static int	TclXMLlibxml2Delete _ANSI_ARGS_((ClientData clientData));
-static int	ReaderParse _ANSI_ARGS_((ClientData clientData, 
-											char *data, int len, int final));
-static int	TclXMLlibxml2Configure _ANSI_ARGS_((ClientData clientdata, 
-						    Tcl_Obj *CONST optionPtr,
-						    Tcl_Obj *CONST valuePtr));
-static int	TclXMLlibxml2Get _ANSI_ARGS_((ClientData clientData, 
-                    int objc, Tcl_Obj *CONST objv[]));
+static ClientData ReaderCreate (Tcl_Interp *interp, TclXML_Info *xmlinfo);
+static int  ReaderReset (ClientData clientData);
+static int TclXMLlibxml2Delete (ClientData clientData);
+static int ReaderParse (ClientData clientData, char *data, int len, int final);
+static int TclXMLlibxml2Configure (ClientData clientdata, 
+				   Tcl_Obj *CONST optionPtr,
+				   Tcl_Obj *CONST valuePtr);
+static int TclXMLlibxml2Get (ClientData clientData,
+			     int objc, Tcl_Obj *CONST objv[]);
 
-static xmlParserInputPtr TclXMLlibxml2ExternalEntityLoader _ANSI_ARGS_((const char *URL,
-									const char *ID,
-									xmlParserCtxtPtr ctxt));
+static xmlParserInputPtr TclXMLlibxml2ExternalEntityLoader (const char *URL,
+							    const char *ID,
+							    xmlParserCtxtPtr ctxt);
 
 /*
  * Externally visible functions

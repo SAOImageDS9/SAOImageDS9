@@ -117,21 +117,21 @@
  * These all mimic the Tcl callbacks.
  */
 
-typedef int (TclXML_ElementStartProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *nsuri, Tcl_Obj *attListPtr, Tcl_Obj *nsDeclsPtr));
-typedef int (TclXML_ElementEndProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr));
-typedef int (TclXML_CharacterDataProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr));
-typedef int (TclXML_PIProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *targetPtr, Tcl_Obj *dataPtr));
-typedef int (TclXML_DefaultProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr));
-typedef int (TclXML_UnparsedProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *entityPtr, Tcl_Obj *basePtr, Tcl_Obj *systemIdPtr, Tcl_Obj *publicIdPtr, Tcl_Obj *notationNamePtr));
-typedef int (TclXML_NotationDeclProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *basePtr, Tcl_Obj *systemIdPtr, Tcl_Obj *publicIdPtr));
-typedef int (TclXML_EntityProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *basePtr, Tcl_Obj *systemIdPtr, Tcl_Obj *publicIdPtr));
-typedef int (TclXML_UnknownEncodingProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr, void *info));
-typedef int (TclXML_CommentProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr));
-typedef int (TclXML_NotStandaloneProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData));
-typedef int (TclXML_ElementDeclProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *contentspecPtr));
-typedef int (TclXML_AttlistDeclProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *elementnamePtr, Tcl_Obj *attrdefnsPtr));
-typedef int (TclXML_StartDoctypeDeclProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr));
-typedef int (TclXML_EndDoctypeDeclProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData));
+typedef int (TclXML_ElementStartProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *nsuri, Tcl_Obj *attListPtr, Tcl_Obj *nsDeclsPtr);
+typedef int (TclXML_ElementEndProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr);
+typedef int (TclXML_CharacterDataProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr);
+typedef int (TclXML_PIProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *targetPtr, Tcl_Obj *dataPtr);
+typedef int (TclXML_DefaultProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr);
+typedef int (TclXML_UnparsedProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *entityPtr, Tcl_Obj *basePtr, Tcl_Obj *systemIdPtr, Tcl_Obj *publicIdPtr, Tcl_Obj *notationNamePtr);
+typedef int (TclXML_NotationDeclProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *basePtr, Tcl_Obj *systemIdPtr, Tcl_Obj *publicIdPtr);
+typedef int (TclXML_EntityProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *basePtr, Tcl_Obj *systemIdPtr, Tcl_Obj *publicIdPtr);
+typedef int (TclXML_UnknownEncodingProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr, void *info);
+typedef int (TclXML_CommentProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *dataPtr);
+typedef int (TclXML_NotStandaloneProc) (Tcl_Interp *interp, ClientData clientData);
+typedef int (TclXML_ElementDeclProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr, Tcl_Obj *contentspecPtr);
+typedef int (TclXML_AttlistDeclProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *elementnamePtr, Tcl_Obj *attrdefnsPtr);
+typedef int (TclXML_StartDoctypeDeclProc) (Tcl_Interp *interp, ClientData clientData, Tcl_Obj *namePtr);
+typedef int (TclXML_EndDoctypeDeclProc) (Tcl_Interp *interp, ClientData clientData);
 
 /*
  * The structure below is used to refer to a parser object.
@@ -222,13 +222,13 @@ typedef struct TclXML_Info {
  * implementation and registered with this module.
  */
 
-typedef ClientData (TclXML_CreateProc) _ANSI_ARGS_((Tcl_Interp *interp, TclXML_Info *xmlinfo));
-typedef ClientData (TclXML_CreateEntityParserProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData));
-typedef int (TclXML_ParseProc) _ANSI_ARGS_((ClientData clientData, char *buffer, int len, int final));
-typedef int (TclXML_ConfigureProc) _ANSI_ARGS_((ClientData clientData, Tcl_Obj *CONST optionPtr, Tcl_Obj *CONST valuePtr));
-typedef int (TclXML_GetProc) _ANSI_ARGS_((ClientData clientData, int objc, Tcl_Obj *CONST objv[]));
-typedef int (TclXML_ResetProc) _ANSI_ARGS_((ClientData clientData));
-typedef int (TclXML_DeleteProc) _ANSI_ARGS_((ClientData clientData));
+typedef ClientData (TclXML_CreateProc) (Tcl_Interp *interp, TclXML_Info *xmlinfo);
+typedef ClientData (TclXML_CreateEntityParserProc) (Tcl_Interp *interp, ClientData clientData);
+typedef int (TclXML_ParseProc) (ClientData clientData, char *buffer, int len, int final);
+typedef int (TclXML_ConfigureProc) (ClientData clientData, Tcl_Obj *CONST optionPtr, Tcl_Obj *CONST valuePtr);
+typedef int (TclXML_GetProc) (ClientData clientData, int objc, Tcl_Obj *CONST objv[]);
+typedef int (TclXML_ResetProc) (ClientData clientData);
+typedef int (TclXML_DeleteProc) (ClientData clientData);
 
 /*
  * The structure below is used store function pointers 
@@ -269,7 +269,7 @@ typedef struct TclXML_ParserClassInfo {
  *----------------------------------------------------------------------------
  */
 
-typedef Tcl_Obj * (TclXML_ErrorNodeHandlerProc) _ANSI_ARGS_((Tcl_Interp *interp, ClientData clientData));
+typedef Tcl_Obj * (TclXML_ErrorNodeHandlerProc) (Tcl_Interp *interp, ClientData clientData);
 
 typedef struct TclXML_ErrorInfo {
   Tcl_Interp *interp;
@@ -289,7 +289,7 @@ typedef struct TclXML_ErrorInfo {
 
 #ifdef USE_TCLXML_STUBS
 TCL_EXTRNC CONST char *
-    TclXML_InitStubs _ANSI_ARGS_((Tcl_Interp *interp, CONST char *version, int exact));
+    TclXML_InitStubs (Tcl_Interp *interp, CONST char *version, int exact);
 #endif
 
 #undef TCL_STORAGE_CLASS

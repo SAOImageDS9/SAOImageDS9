@@ -37,7 +37,7 @@ typedef struct ObjList {
  * Prototypes for procedures defined later in this file:
  */
 
-static void DestroyTclDoc _ANSI_ARGS_((TclXML_libxml2_Document *tDocPtr));
+static void DestroyTclDoc (TclXML_libxml2_Document *tDocPtr);
 
 Tcl_FreeInternalRepProc	TclXMLlibxml2_DocFree;
 Tcl_DupInternalRepProc	TclXMLlibxml2_DocDup;

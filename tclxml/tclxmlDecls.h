@@ -21,140 +21,140 @@
  */
 
 /* 0 */
-EXTERN int Tclxml_Init (Tcl_Interp * interp);
+extern int Tclxml_Init (Tcl_Interp * interp);
 /* 1 */
-EXTERN int Tclxml_SafeInit (Tcl_Interp * interp);
+extern int Tclxml_SafeInit (Tcl_Interp * interp);
 /* 2 */
-EXTERN int TclXML_RegisterXMLParser (Tcl_Interp * interp, 
+extern int TclXML_RegisterXMLParser (Tcl_Interp * interp, 
 				     TclXML_ParserClassInfo * parser);
 /* 3 */
-EXTERN int TclXML_RegisterElementStartProc (Tcl_Interp * interp,
+extern int TclXML_RegisterElementStartProc (Tcl_Interp * interp,
 					    TclXML_Info * parser, 
 					    ClientData clientData, 
 					    TclXML_ElementStartProc * callback);
 /* 4 */
-EXTERN int TclXML_RegisterElementEndProc (Tcl_Interp * interp,
+extern int TclXML_RegisterElementEndProc (Tcl_Interp * interp,
 					  TclXML_Info * parser, 
 					  ClientData clientData, 
 					  TclXML_ElementEndProc * callback);
 /* 5 */
-EXTERN int TclXML_RegisterCharacterDataProc (Tcl_Interp * interp,
+extern int TclXML_RegisterCharacterDataProc (Tcl_Interp * interp,
 					     TclXML_Info * parser, 
 					     ClientData clientData, 
 					     TclXML_CharacterDataProc * callback);
 /* 6 */
-EXTERN int TclXML_RegisterPIProc (Tcl_Interp * interp,
+extern int TclXML_RegisterPIProc (Tcl_Interp * interp,
 				  TclXML_Info * parser, 
 				  ClientData clientData, 
 				  TclXML_PIProc * callback);
 /* 7 */
-EXTERN int TclXML_RegisterDefaultProc (Tcl_Interp * interp,
+extern int TclXML_RegisterDefaultProc (Tcl_Interp * interp,
 				       TclXML_Info * parser, 
 				       ClientData clientData, 
 				       TclXML_DefaultProc * callback);
 /* 8 */
-EXTERN int TclXML_RegisterUnparsedProc (Tcl_Interp * interp,
+extern int TclXML_RegisterUnparsedProc (Tcl_Interp * interp,
 					TclXML_Info * parser, 
 					ClientData clientData, 
 					TclXML_UnparsedProc * callback);
 /* 9 */
-EXTERN int TclXML_RegisterNotationDeclProc (Tcl_Interp * interp,
+extern int TclXML_RegisterNotationDeclProc (Tcl_Interp * interp,
 					    TclXML_Info * parser, 
 					    ClientData clientData, 
 					    TclXML_NotationDeclProc * callback);
 /* 10 */
-EXTERN int TclXML_RegisterEntityProc (Tcl_Interp * interp,
+extern int TclXML_RegisterEntityProc (Tcl_Interp * interp,
 				      TclXML_Info * parser, 
 				      ClientData clientData, 
 				      TclXML_EntityProc * callback);
 /* 11 */
-EXTERN int TclXML_RegisterUnknownEncodingProc (Tcl_Interp * interp,
+extern int TclXML_RegisterUnknownEncodingProc (Tcl_Interp * interp,
 					       TclXML_Info * parser, 
 					       ClientData clientData, 
 					       TclXML_UnknownEncodingProc * callback);
 /* 12 */
-EXTERN int TclXML_RegisterCommentProc (Tcl_Interp * interp,
+extern int TclXML_RegisterCommentProc (Tcl_Interp * interp,
 				       TclXML_Info * parser, 
 				       ClientData clientData, 
 				       TclXML_CommentProc * callback);
 /* 13 */
-EXTERN int TclXML_RegisterNotStandaloneProc (Tcl_Interp * interp,
+extern int TclXML_RegisterNotStandaloneProc (Tcl_Interp * interp,
 					     TclXML_Info * parser, 
 					     ClientData clientData, 
 					     TclXML_NotStandaloneProc * callback);
 /* 14 */
-EXTERN int TclXML_RegisterElementDeclProc (Tcl_Interp * interp,
+extern int TclXML_RegisterElementDeclProc (Tcl_Interp * interp,
 					   TclXML_Info * parser, 
 					   ClientData clientData, 
 					   TclXML_ElementDeclProc * callback);
 /* 15 */
-EXTERN int TclXML_RegisterAttListDeclProc (Tcl_Interp * interp,
+extern int TclXML_RegisterAttListDeclProc (Tcl_Interp * interp,
 					   TclXML_Info * parser, 
 					   ClientData clientData, 
 					   TclXML_AttlistDeclProc * callback);
 /* 16 */
-EXTERN int TclXML_RegisterStartDoctypeDeclProc (Tcl_Interp * interp,
+extern int TclXML_RegisterStartDoctypeDeclProc (Tcl_Interp * interp,
 						TclXML_Info * parser, 
 						ClientData clientData, 
 						TclXML_StartDoctypeDeclProc * callback);
 /* 17 */
-EXTERN int TclXML_RegisterEndDoctypeDeclProc (Tcl_Interp * interp,
+extern int TclXML_RegisterEndDoctypeDeclProc (Tcl_Interp * interp,
 					      TclXML_Info * parser, 
 					      ClientData clientData, 
 					      TclXML_EndDoctypeDeclProc * callback);
 /* 18 */
-EXTERN void TclXML_ElementStartHandler (void * userdata, Tcl_Obj * name, 
+extern void TclXML_ElementStartHandler (void * userdata, Tcl_Obj * name, 
 					Tcl_Obj * nsuri, Tcl_Obj * atts, 
 					Tcl_Obj * nsDeclsObj);
 /* 19 */
-EXTERN void TclXML_ElementEndHandler (void * userData, Tcl_Obj * name);
+extern void TclXML_ElementEndHandler (void * userData, Tcl_Obj * name);
 /* 20 */
-EXTERN void TclXML_CharacterDataHandler (void * userData, Tcl_Obj * s);
+extern void TclXML_CharacterDataHandler (void * userData, Tcl_Obj * s);
 /* 21 */
-EXTERN void TclXML_ProcessingInstructionHandler (void * userData,
+extern void TclXML_ProcessingInstructionHandler (void * userData,
 						 Tcl_Obj * target, 
 						 Tcl_Obj * data);
 /* 22 */
-EXTERN int TclXML_ExternalEntityRefHandler (ClientData clientData, 
+extern int TclXML_ExternalEntityRefHandler (ClientData clientData, 
 					    Tcl_Obj * openEntityNames,
 					    Tcl_Obj * base, 
 					    Tcl_Obj * systemId,
 					    Tcl_Obj * publicId);
 /* 23 */
-EXTERN void TclXML_DefaultHandler (void * userData, Tcl_Obj * s);
+extern void TclXML_DefaultHandler (void * userData, Tcl_Obj * s);
 /* 24 */
-EXTERN void TclXML_UnparsedDeclHandler (void * userData,
+extern void TclXML_UnparsedDeclHandler (void * userData,
 					Tcl_Obj * entityname, 
 					Tcl_Obj * base,
 					Tcl_Obj * systemId, 
 					Tcl_Obj * publicId,
 					Tcl_Obj * notationName);
 /* 25 */
-EXTERN void TclXML_NotationDeclHandler (void * userData,
+extern void TclXML_NotationDeclHandler (void * userData,
 					Tcl_Obj * notationName, 
 					Tcl_Obj * base,
 					Tcl_Obj * systemId, 
 					Tcl_Obj * publicId);
 /* 26 */
-EXTERN int TclXML_UnknownEncodingHandler (void * encodingHandlerData,
+extern int TclXML_UnknownEncodingHandler (void * encodingHandlerData,
 					  Tcl_Obj * name, 
 					  void * info);
 /* 27 */
-EXTERN void TclXML_CommentHandler (void * userData, Tcl_Obj * data);
+extern void TclXML_CommentHandler (void * userData, Tcl_Obj * data);
 /* 28 */
-EXTERN int TclXML_NotStandaloneHandler (void * userData);
+extern int TclXML_NotStandaloneHandler (void * userData);
 /* Slot 29 is reserved */
 /* Slot 30 is reserved */
 /* 31 */
-EXTERN void TclXML_ElementDeclHandler (void * userData, Tcl_Obj * name, 
+extern void TclXML_ElementDeclHandler (void * userData, Tcl_Obj * name, 
 					Tcl_Obj * contentspec);
 /* 32 */
-EXTERN void TclXML_AttlistDeclHandler (void * userData, Tcl_Obj * name, 
+extern void TclXML_AttlistDeclHandler (void * userData, Tcl_Obj * name, 
 				       Tcl_Obj * attributes);
 /* 33 */
-EXTERN void TclXML_StartDoctypeDeclHandler (void * userData, Tcl_Obj * name);
+extern void TclXML_StartDoctypeDeclHandler (void * userData, Tcl_Obj * name);
 /* 34 */
-EXTERN void TclXML_EndDoctypeDeclHandler (void * userData);
+extern void TclXML_EndDoctypeDeclHandler (void * userData);
 
 typedef struct TclxmlStubs {
   int magic;

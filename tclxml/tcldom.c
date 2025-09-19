@@ -254,9 +254,7 @@ CONST84 char *TclDOM_SelectNodeOptions[] = {
  *----------------------------------------------------------------------------
  */
 
-int
-Tcldom_Init (interp)
-      Tcl_Interp *interp; /* Interpreter to initialise. */
+int Tcldom_Init (Tcl_Interp *interp)
 {
   Tcl_Obj *objPtr;
 
@@ -289,9 +287,7 @@ Tcldom_Init (interp)
  *----------------------------------------------------------------------------
  */
 
-int
-TclDOM_SetVars(interp)
-     Tcl_Interp *interp;
+int TclDOM_SetVars(Tcl_Interp *interp)
 {
   Tcl_SetVar2Ex(interp, "::dom::bubbles", "DOMFocusIn", Tcl_NewIntObj(1), 0);
   Tcl_SetVar2Ex(interp, "::dom::bubbles", "DOMFocusOut", Tcl_NewIntObj(1), 0);

@@ -112,9 +112,7 @@ TCL_DECLARE_MUTEX(libxml2)
  *----------------------------------------------------------------------------
  */
 
-int
-Tclxml_libxml2_Init (interp)
-     Tcl_Interp *interp;	/* Interpreter to initialise */
+int Tclxml_libxml2_Init (Tcl_Interp *interp)
 {
   ThreadSpecificData *tsdPtr;
   TclXML_ParserClassInfo *classinfo;
@@ -211,9 +209,7 @@ Tclxml_libxml2_Init (interp)
  * external entity loader.
  */
 
-int
-Tclxml_libxml2_SafeInit (interp)
-     Tcl_Interp *interp;	/* Interpreter to initialise */
+int Tclxml_libxml2_SafeInit (Tcl_Interp *interp)
 {
   return Tclxml_libxml2_Init(interp);
 }
@@ -234,10 +230,7 @@ Tclxml_libxml2_SafeInit (interp)
  *----------------------------------------------------------------------------
  */
 
-static ClientData
-ReaderCreate(interp, xmlinfo)
-     Tcl_Interp *interp;
-     TclXML_Info *xmlinfo;
+static ClientData ReaderCreate(Tcl_Interp *interp, TclXML_Info *xmlinfo)
 {
   TclXMLlibxml2Info *info;
   xmlParserInputBufferPtr inputPtr;
@@ -302,9 +295,7 @@ ReaderCreate(interp, xmlinfo)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLlibxml2Delete(clientData)
-     ClientData clientData;
+static int TclXMLlibxml2Delete(ClientData clientData)
 {
   TclXMLlibxml2Info *info = (TclXMLlibxml2Info *) clientData;
 
@@ -343,9 +334,7 @@ TclXMLlibxml2Delete(clientData)
  *----------------------------------------------------------------------------
  */
 
-static int
-ReaderReset(clientData)
-ClientData clientData;
+static int ReaderReset(ClientData clientData)
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) clientData;
 
@@ -377,12 +366,7 @@ ClientData clientData;
  *----------------------------------------------------------------------------
  */
 
-static int
-ReaderParse(clientData, data, len, final)
-     ClientData clientData;
-     char *data;
-     int len;
-     int final;
+static int ReaderParse(ClientData clientData, char *data, int len, int final)
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   TclXMLlibxml2Info *info = (TclXMLlibxml2Info *) clientData;
@@ -737,11 +721,9 @@ ReaderParse(clientData, data, len, final)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLlibxml2Configure(clientData, optionPtr, valuePtr)
-    ClientData clientData;
-    Tcl_Obj *CONST optionPtr;
-    Tcl_Obj *CONST valuePtr;
+static int TclXMLlibxml2Configure(ClientData clientData,
+				  Tcl_Obj *CONST optionPtr,
+				  Tcl_Obj *CONST valuePtr)
 {
   TclXMLlibxml2Info *info = (TclXMLlibxml2Info *) clientData;
   int option, len;
@@ -854,11 +836,8 @@ TclXMLlibxml2Configure(clientData, optionPtr, valuePtr)
  *----------------------------------------------------------------------------
  */
 
-static int
-TclXMLlibxml2Get(clientData, objc, objv)
-    ClientData clientData;
-    int objc;
-    Tcl_Obj *CONST objv[];
+static int TclXMLlibxml2Get(ClientData clientData, int objc,
+			    Tcl_Obj *CONST objv[])
 {
   TclXMLlibxml2Info *info = (TclXMLlibxml2Info *) clientData;
   CONST84 char *methods[] = {
@@ -912,11 +891,9 @@ TclXMLlibxml2Get(clientData, objc, objv)
  *----------------------------------------------------------------------------
  */
 
-static xmlParserInputPtr
-Result2ParserInput(interp, ctxt, URL)
-     Tcl_Interp *interp;
-     xmlParserCtxtPtr ctxt;
-     const char *URL;
+static xmlParserInputPtr Result2ParserInput(Tcl_Interp *interp,
+					    xmlParserCtxtPtr ctxt,
+					    const char *URL)
 {
   xmlParserInputPtr inputPtr = NULL;
 
@@ -932,11 +909,9 @@ Result2ParserInput(interp, ctxt, URL)
   return inputPtr;
 }
 
-static xmlParserInputPtr
-TclXMLlibxml2ExternalEntityLoader(URL, ID, ctxt)
-    const char *URL;
-    const char *ID;
-    xmlParserCtxtPtr ctxt;
+static xmlParserInputPtr TclXMLlibxml2ExternalEntityLoader(const char *URL,
+							   const char *ID,
+							   xmlParserCtxtPtr ctxt)
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   TclXMLlibxml2Info *info;

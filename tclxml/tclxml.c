@@ -61,7 +61,7 @@ typedef struct ThreadSpecificData {
 static Tcl_ThreadDataKey dataKey;
 
 /* This string is a backup.  Value should be defined in xml package. */
-static char whitespace[] = " \t\r\n";
+//static char whitespace[] = " \t\r\n";
 
 /*
  * Configuration option tables

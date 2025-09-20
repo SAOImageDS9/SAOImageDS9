@@ -28,6 +28,13 @@
 #include <libxml/xmlsave.h>
 #include <string.h>
 
+/* Check, if Tcl version supports Tcl_Size,
+   which was introduced in Tcl 8.7 and 9.
+*/
+#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+typedef int Tcl_Size;
+#endif
+
 #define TCL_DOES_STUBS \
     (TCL_MAJOR_VERSION > 8 || TCL_MAJOR_VERSION == 8 && (TCL_MINOR_VERSION > 1 || \
      (TCL_MINOR_VERSION == 1 && TCL_RELEASE_LEVEL == TCL_FINAL_RELEASE)))
@@ -911,7 +918,8 @@ int TclDOMSerializeCommand (ClientData dummy, Tcl_Interp *interp,
   xmlSaveCtxtPtr savectxtptr = NULL;
   xmlChar *result = NULL;
   Tcl_Obj *encodingPtr = NULL;
-  int option, method = TCLDOM_SERIALIZE_METHOD_XML, indent = 0, len = 0, omitXMLDeclaration = 0, saveoptions = 0;
+  Tcl_Size len =0;
+  int option, method = TCLDOM_SERIALIZE_METHOD_XML, indent = 0, omitXMLDeclaration = 0, saveoptions = 0;
   char *buf, *encoding;
   Tcl_Encoding tclencoding;
   Tcl_DString *serialized;
@@ -1052,7 +1060,9 @@ int TclDOMSerializeCommand (ClientData dummy, Tcl_Interp *interp,
 
     Tcl_MutexLock(&libxml2);
     htmlSetMetaEncoding(docPtr, (const xmlChar *) "UTF-8");
-    htmlDocDumpMemory(docPtr, &result, &len);
+    int lenn =len;
+    htmlDocDumpMemory(docPtr, &result, &lenn);
+    len =lenn;
     Tcl_MutexUnlock(&libxml2);
     Tcl_SetObjResult(interp, Tcl_NewStringObj((const char *) result, len));
     xmlFree(result);
@@ -1656,7 +1666,8 @@ int TclDOMIsNodeCommand (ClientData dummy, Tcl_Interp *interp,
 int TclDOMSelectNodeCommand (ClientData dummy, Tcl_Interp *interp,
 			     int objc, Tcl_Obj *const objv[])
 {
-  int i, len, option;
+  Tcl_Size len;
+  int i, option;
   char *path;
   Tcl_Obj *objPtr, *nsOptPtr = NULL, *nodeObjPtr;
   xmlDocPtr docPtr;
@@ -1866,7 +1877,8 @@ int TclDOMDocumentCommand (ClientData clientData, Tcl_Interp *interp,
   TclXML_libxml2_Document *tDocPtr;
   TclDOM_libxml2_Document *domDocPtr = NULL;
   enum TclDOM_EventTypes type;
-  int method, optobjc, wrongidx = 1, postMutationEvent = 0, idx, len;
+  Tcl_Size len;
+  int method, optobjc, wrongidx = 1, postMutationEvent = 0, idx;
   xmlDocPtr docPtr = NULL;
   xmlNodePtr nodePtr = NULL, newNodePtr = NULL;
   xmlNsPtr nsPtr = NULL;
@@ -2283,7 +2295,7 @@ int TclDOMDocumentCommand (ClientData clientData, Tcl_Interp *interp,
 
     if (docPtr) {
       char *content;
-      int len;
+      Tcl_Size len;
 
       content = Tcl_GetStringFromObj(optobjv[0], &len);
       newNodePtr = xmlNewDocTextLen(docPtr, (const xmlChar *) content, len);
@@ -2309,7 +2321,7 @@ int TclDOMDocumentCommand (ClientData clientData, Tcl_Interp *interp,
     } else {
       xmlNodePtr returnNode;
       char *content;
-      int len;
+      Tcl_Size len;
 
       content = Tcl_GetStringFromObj(optobjv[0], &len);
       newNodePtr = xmlNewTextLen((const xmlChar *) content, len);
@@ -2401,7 +2413,7 @@ int TclDOMDocumentCommand (ClientData clientData, Tcl_Interp *interp,
 
     if (docPtr) {
       char *content;
-      int len;
+      Tcl_Size len;
 
       content = Tcl_GetStringFromObj(optobjv[0], &len);
       newNodePtr = xmlNewDocTextLen(docPtr, (const xmlChar *) content, len);
@@ -2423,7 +2435,7 @@ int TclDOMDocumentCommand (ClientData clientData, Tcl_Interp *interp,
 
     } else {
       char *content;
-      int len;
+      Tcl_Size len;
 
       content = Tcl_GetStringFromObj(optobjv[0], &len);
       newNodePtr = xmlNewTextLen((const xmlChar *) content, len);
@@ -2707,7 +2719,8 @@ static int TriggerEventListeners(Tcl_Interp *interp, Tcl_HashTable *type,
   Tcl_HashEntry *entryPtr;
   Tcl_HashTable *tablePtr;
   Tcl_Obj *listenerListPtr;
-  int listenerLen, listenerIdx;
+  Tcl_Size listenerLen;
+  int listenerIdx;
   char *eventType;
 
   entryPtr = Tcl_FindHashEntry(type, tokenPtr);
@@ -2791,7 +2804,7 @@ static char *TclDOMLiveNodeListNode(ClientData clientData, Tcl_Interp *interp,
 {
   xmlNodePtr nodePtr = (xmlNodePtr) clientData;
 
-  if (flags & (TCL_INTERP_DESTROYED | TCL_TRACE_DESTROYED)) {
+  if (flags & (TCL_TRACE_DESTROYED)) {
     return NULL;
   } else if (flags & TCL_TRACE_READS) {
     TclDOMSetLiveNodeListNode(interp, name1, nodePtr);
@@ -2808,7 +2821,7 @@ static char *TclDOMLiveNodeListDoc(ClientData clientData, Tcl_Interp *interp,
 {
   xmlDocPtr docPtr = (xmlDocPtr) clientData;
 
-  if (flags & (TCL_INTERP_DESTROYED | TCL_TRACE_DESTROYED)) {
+  if (flags & (TCL_TRACE_DESTROYED)) {
     return NULL;
   } else if (flags & TCL_TRACE_READS) {
     TclDOMSetLiveNodeListDoc(interp, name1, docPtr);
@@ -2849,7 +2862,7 @@ static char *TclDOMLiveNamedNodeMap(ClientData clientData, Tcl_Interp *interp,
 {
   xmlNodePtr nodePtr = (xmlNodePtr) clientData;
 
-  if (flags & (TCL_INTERP_DESTROYED | TCL_TRACE_DESTROYED)) {
+  if (flags & (TCL_TRACE_DESTROYED)) {
     return NULL;
   } else if (flags & TCL_TRACE_READS && name2 == NULL) {
     TclDOMSetLiveNamedNodeMap(interp, name1, nodePtr);
@@ -3888,7 +3901,8 @@ int NodeConfigure(Tcl_Interp *interp, xmlNodePtr nodePtr,
   TclXML_libxml2_Document *tDocPtr;
   Tcl_Obj *objPtr;
   char *buf;
-  int option, len;
+  Tcl_Size len;
+  int option;
 
   while (objc) {
     if (objc == 1) {
@@ -4179,7 +4193,11 @@ int TclDOM_AddEventListener(Tcl_Interp *interp,
   } else {
     Tcl_Obj *listPtr = (Tcl_Obj *) Tcl_GetHashValue(entryPtr);
     Tcl_Obj *curPtr;
-    int idx, len, listenerLen, len2, listlen;
+    Tcl_Size len;
+    Tcl_Size listenerLen;
+    Tcl_Size len2;
+    Tcl_Size listlen;
+    int idx;
     char *listenerBuf, *buf2;
 
     if (Tcl_ListObjLength(interp, listPtr, &len) != TCL_OK) {
@@ -4331,7 +4349,9 @@ int TclDOM_RemoveEventListener(Tcl_Interp *interp,
     if (entryPtr) {
       Tcl_Obj *listPtr = (Tcl_Obj *) Tcl_GetHashValue(entryPtr);
       Tcl_Obj *curPtr;
-      int idx, listenerLen, len, len2, found;
+      Tcl_Size len, len2;
+      Tcl_Size listenerLen;
+      int idx, found;
       char *listenerBuf, *buf2;
 
       if (Tcl_ListObjLength(interp, listPtr, &len) != TCL_OK) {
@@ -4441,7 +4461,8 @@ int TclDOM_DispatchEvent(Tcl_Interp *interp, Tcl_Obj *nodeObjPtr,
   TclDOM_libxml2_Document *domDocPtr;
   char *phase;
   Tcl_Obj *docObjPtr, *pathPtr = NULL;
-  int idx, len, cancelable;
+  Tcl_Size len;
+  int idx, cancelable;
   void *tokenPtr;
 
   if (TclDOM_libxml2_GetNodeFromObj(interp, nodeObjPtr, &nodePtr) != TCL_OK) {
@@ -4898,7 +4919,7 @@ void TclDOM_InitEvent(TclDOM_libxml2_Event *eventPtr,
     }
   } else {
     char *oldType, *newType;
-    int oldLen, newLen;
+    Tcl_Size oldLen, newLen;
 
     oldType = Tcl_GetStringFromObj(eventPtr->typeObjPtr, &oldLen);
     newType = Tcl_GetStringFromObj(typeObjPtr, &newLen);
@@ -6228,7 +6249,7 @@ Tcl_Obj *TclDOM_libxml2_CreateObjFromNode (Tcl_Interp *interp,
   tNodePtr->cmd = Tcl_CreateObjCommand(interp, tNodePtr->token, TclDOMNodeCommand, (ClientData) tNodePtr, TclDOMNodeCommandDelete);
 
   objPtr = Tcl_NewObj();
-  objPtr->internalRep.otherValuePtr = (VOID *) tNodePtr;
+  objPtr->internalRep.otherValuePtr = (void *) tNodePtr;
   objPtr->typePtr = &NodeObjType;
 
   objPtr->bytes = Tcl_Alloc(strlen(tNodePtr->token) + 1);
@@ -6552,7 +6573,8 @@ int NodeTypeSetFromAny(Tcl_Interp *interp, Tcl_Obj *objPtr)
   TclDOM_libxml2_Document *domDocPtr;
   Tcl_HashEntry *entry;
   char *id, doc[21], node[21];
-  int i, idlen, len;
+  Tcl_Size idlen;
+  int i, len;
 
   /* Parse string rep for doc and node ids */
   id = Tcl_GetStringFromObj(objPtr, &idlen);
@@ -6769,7 +6791,7 @@ Tcl_Obj *TclDOM_libxml2_NewEventObj (Tcl_Interp *interp,
   tNodePtr->ptr.eventPtr = eventPtr;
 
   objPtr = Tcl_NewObj();
-  objPtr->internalRep.otherValuePtr = (VOID *) tNodePtr;
+  objPtr->internalRep.otherValuePtr = (void *) tNodePtr;
   objPtr->typePtr = &NodeObjType;
 
   objPtr->bytes = Tcl_Alloc(strlen(tNodePtr->token) + 1);

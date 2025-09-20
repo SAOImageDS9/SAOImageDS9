@@ -23,6 +23,13 @@
 #include <libxml/uri.h>
 #include <string.h>
 
+/* Check, if Tcl version supports Tcl_Size,
+   which was introduced in Tcl 8.7 and 9.
+*/
+#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+typedef int Tcl_Size;
+#endif
+
 #define TCL_DOES_STUBS \
     (TCL_MAJOR_VERSION > 8 || TCL_MAJOR_VERSION == 8 && (TCL_MINOR_VERSION > 1 || \
     (TCL_MINOR_VERSION == 1 && TCL_RELEASE_LEVEL == TCL_FINAL_RELEASE)))
@@ -368,7 +375,8 @@ static int ReaderParse(ClientData clientData, char *data, int len, int final)
   Tcl_Obj *nameObj, *nsObj, *nsdeclObj, *valueObj, *attrsObj, *errObj, *baseuriObj, *sysidObj, *extidObj;
   const char *baseuri, *encoding, *name, *ns, *value;
   xmlChar **preservens = NULL;
-  int ret, result = TCL_OK, i, listlen, options = 0, empty;
+  Tcl_Size listlen;
+  int ret, result = TCL_OK, i, options = 0, empty;
 
   /* not used... at present (see case XML_READER_TYPE_DOCUMENT_TYPE)
     xmlNodePtr nodePtr;
@@ -388,7 +396,7 @@ static int ReaderParse(ClientData clientData, char *data, int len, int final)
     for (i = 0; i < listlen; i++) {
       Tcl_Obj *objPtr;
       const char *str;
-      int strlen;
+      Tcl_Size strlen;
 
       if (Tcl_ListObjIndex(info->interp, info->preservens, i, &objPtr) != TCL_OK) {
 	Tcl_Free((char *) preservens);
@@ -721,7 +729,8 @@ static int TclXMLlibxml2Configure(ClientData clientData,
 				  Tcl_Obj *const valuePtr)
 {
   TclXMLlibxml2Info *info = (TclXMLlibxml2Info *) clientData;
-  int option, len;
+  Tcl_Size len;
+  int option;
   char *value;
   const char *Options[] = {
     "-keep",

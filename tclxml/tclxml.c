@@ -20,6 +20,13 @@
 #include <tclxslt/tclxslt.h>
 #include <string.h>
 
+/* Check, if Tcl version supports Tcl_Size,
+   which was introduced in Tcl 8.7 and 9.
+*/
+#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+typedef int Tcl_Size;
+#endif
+
 #define TCL_DOES_STUBS \
     (TCL_MAJOR_VERSION > 8 || TCL_MAJOR_VERSION == 8 && (TCL_MINOR_VERSION > 1 || \
     (TCL_MINOR_VERSION == 1 && TCL_RELEASE_LEVEL == TCL_FINAL_RELEASE)))
@@ -1305,7 +1312,8 @@ static int TclXMLInstanceCmd (ClientData clientData, Tcl_Interp *interp,
   TclXML_Info *xmlinfo = (TclXML_Info *) clientData;
   TclXML_Info *child;
   char *encoding, *data;
-  int len, index, result = TCL_OK;
+  Tcl_Size len;
+  int index, result = TCL_OK;
   Tcl_Obj *childNamePtr;
   static const char *options[] = {
     "configure", "cget", "entityparser", "free", "get", "parse", "reset", NULL
@@ -2263,7 +2271,7 @@ void TclXML_ElementStartHandler(void *userData, Tcl_Obj *name,
       Tcl_ListObjAppendElement(xmlinfo->interp, cmdPtr, nsuri);
     }
     if (nsDecls) {
-      int len;
+      Tcl_Size len;
       if ((Tcl_ListObjLength(xmlinfo->interp, nsDecls, &len) == TCL_OK) && (len > 0)) {
 	Tcl_ListObjAppendElement(xmlinfo->interp, cmdPtr, Tcl_NewStringObj("-namespacedecls", -1));
 	Tcl_ListObjAppendElement(xmlinfo->interp, cmdPtr, nsDecls);

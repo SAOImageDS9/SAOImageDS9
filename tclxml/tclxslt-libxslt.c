@@ -20,6 +20,13 @@
 #include <libxslt/imports.h>
 #include <libxslt/security.h>
 
+/* Check, if Tcl version supports Tcl_Size,
+   which was introduced in Tcl 8.7 and 9.
+*/
+#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+typedef int Tcl_Size;
+#endif
+
 #undef TCL_STORAGE_CLASS
 #define TCL_STORAGE_CLASS DLLEXPORT
 
@@ -864,7 +871,8 @@ static int TclXSLTTransform(TclXSLT_Stylesheet *stylesheet, Tcl_Obj *source,
 void ListObjAppendUniqueList(Tcl_Interp *interp, Tcl_HashTable *tablePtr,
 			     Tcl_Obj *listPtr, Tcl_Obj *newElementsPtr)
 {
-  int len, idx;
+  Tcl_Size len;
+  int idx;
   Tcl_Obj *elementPtr, *keyPtr, *namePtr, *nameURIPtr;
   Tcl_HashEntry *entryPtr;
 
@@ -971,7 +979,7 @@ static void TclXSLTGenericError (void *ctx, const char *msg, ...)
 {
   va_list args;
   char buf[2048];
-  int len;
+  Tcl_Size len;
   GenericError_Info *errorInfoPtr = (GenericError_Info *) ctx;
 
   if (ctx < (void *) 0x1000) {
@@ -1166,7 +1174,8 @@ void TclXSLT_RegisterAll(TclXSLT_Extension *extinfo, const xmlChar *nsuri)
 {
   Tcl_Obj *cmdPtr, *objPtr;
   Tcl_Obj **reg;
-  int ret, i, len;
+  Tcl_Size len;
+  int ret, i;
 
   /*
    * Q: How to distinguish between extension elements and functions?
@@ -1513,7 +1522,8 @@ static xmlXPathObjectPtr TclXSLT_ConvertTclObjToXPathObj(Tcl_Interp *interp,
      * then return a nodeset.
      */
 
-    int i, len;
+    Tcl_Size len;
+    int i;
     Tcl_Obj **listPtr;
     xmlNodeSetPtr nset;
 

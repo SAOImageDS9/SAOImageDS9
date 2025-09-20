@@ -21,8 +21,8 @@
 #define TCLDOM_LIBXML2_NODE_NODE 0
 #define TCLDOM_LIBXML2_NODE_EVENT 1
 
-typedef void (TclDOM_libxml2Node_FreeHookProc) _ANSI_ARGS_((ClientData clientData));
+typedef void (TclDOM_libxml2Node_FreeHookProc) (ClientData clientData);
 
-int TclDOM_libxml2_NodeObjInit _ANSI_ARGS_((Tcl_Interp *interp));
+int TclDOM_libxml2_NodeObjInit (Tcl_Interp *interp);
 
 #endif /* TCLDOM_LIBXML2_NODEOBJ_H */

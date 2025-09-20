@@ -70,8 +70,8 @@ extern "C" {
  * linked into an application.
  */
 
-EXTERN CONST char *     TclXML_libxml2_InitStubs _ANSI_ARGS_((Tcl_Interp *interp,
-                            CONST char *version, int exact));
+extern const char *TclXML_libxml2_InitStubs (Tcl_Interp *interp,
+					     const char *version, int exact);
 
 #ifndef USE_TCLXML_LIBXML2_STUBS
 

@@ -27,7 +27,7 @@
 #endif /* TCLXML_BUILD_AS_FRAMEWORK */
 #include <libxml/tree.h>
 
-typedef void (TclXML_libxml2Doc_FreeHookProc) _ANSI_ARGS_((ClientData clientData));
+typedef void (TclXML_libxml2Doc_FreeHookProc) (ClientData clientData);
 
 /*
  * Values that define how documents are handled:

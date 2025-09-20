@@ -24,11 +24,7 @@
  * Method tables for commands
  */
 
-#ifndef CONST84
-#define CONST84 /* Before 8.4 no 'const' required */
-#endif
-
-CONST84 char *TclDOM_DOMImplementationCommandMethods[] = {
+const char *TclDOM_DOMImplementationCommandMethods[] = {
   "hasFeature",
   "createDocument",
   "create",
@@ -42,7 +38,7 @@ CONST84 char *TclDOM_DOMImplementationCommandMethods[] = {
   "trim",
   (char *) NULL
 };
-CONST84 char *TclDOM_DocumentCommandMethods[] = {
+const char *TclDOM_DocumentCommandMethods[] = {
   "cget",
   "configure",
   "createElement",
@@ -66,27 +62,27 @@ CONST84 char *TclDOM_DocumentCommandMethods[] = {
   "schema",
   (char *) NULL
 };
-CONST84 char *TclDOM_DocumentCommandOptions[] = {
+const char *TclDOM_DocumentCommandOptions[] = {
   "-doctype",
   "-implementation",
   "-documentElement",
   (char *) NULL
 };
-CONST84 char *TclDOM_DocumentDTDSubmethods[] = {
+const char *TclDOM_DocumentDTDSubmethods[] = {
   "validate",
   (char *) NULL
 };
-CONST84 char *TclDOM_DocumentSchemaSubmethods[] = {
+const char *TclDOM_DocumentSchemaSubmethods[] = {
   "compile",
   "validate",
   (char *) NULL
 };
-CONST84 char *TclDOM_DocumentRelaxNGSubmethods[] = {
+const char *TclDOM_DocumentRelaxNGSubmethods[] = {
   "compile",
   "validate",
   (char *) NULL
 };
-CONST84 char *TclDOM_NodeCommandMethods[] = {
+const char *TclDOM_NodeCommandMethods[] = {
   "cget",
   "configure",
   "insertBefore",
@@ -107,7 +103,7 @@ CONST84 char *TclDOM_NodeCommandMethods[] = {
   "isSameNode",
   (char *) NULL
 };
-CONST84 char *TclDOM_NodeCommandOptions[] = {
+const char *TclDOM_NodeCommandOptions[] = {
   "-nodeType",
   "-parentNode",
   "-childNodes",
@@ -125,11 +121,11 @@ CONST84 char *TclDOM_NodeCommandOptions[] = {
   "-ownerDocument",
   (char *) NULL
 };
-CONST84 char *TclDOM_NodeCommandAddEventListenerOptions[] = {
+const char *TclDOM_NodeCommandAddEventListenerOptions[] = {
   "-usecapture",
   (char *) NULL
 };
-CONST84 char *TclDOM_ElementCommandMethods[] = {
+const char *TclDOM_ElementCommandMethods[] = {
   "cget",
   "configure",
   "getAttribute",
@@ -148,12 +144,12 @@ CONST84 char *TclDOM_ElementCommandMethods[] = {
   "normalize",
   (char *) NULL
 };
-CONST84 char *TclDOM_ElementCommandOptions[] = {
+const char *TclDOM_ElementCommandOptions[] = {
   "-tagName",
   "-empty",
   (char *) NULL
 };
-CONST84 char *TclDOM_EventCommandMethods[] = {
+const char *TclDOM_EventCommandMethods[] = {
   "cget",
   "configure",
   "stopPropagation",
@@ -167,7 +163,7 @@ CONST84 char *TclDOM_EventCommandMethods[] = {
   "postMutationEvent",
   (char *) NULL
 };
-CONST84 char *TclDOM_EventCommandOptions[] = {
+const char *TclDOM_EventCommandOptions[] = {
   "-altKey",
   "-attrName",
   "-attrChange",
@@ -193,7 +189,7 @@ CONST84 char *TclDOM_EventCommandOptions[] = {
   "-view",
   (char *) NULL
 };
-CONST84 char *TclDOM_EventTypes[] = {
+const char *TclDOM_EventTypes[] = {
   "DOMFocusIn",
   "DOMFocusOut",
   "DOMActivate",
@@ -212,25 +208,25 @@ CONST84 char *TclDOM_EventTypes[] = {
   "DOMCharacterDataModified"
 };
 
-CONST84 char *TclDOM_ParseCommandOptions[] = {
+const char *TclDOM_ParseCommandOptions[] = {
   "-baseuri",
   "-externalentitycommand",
   (char *) NULL
 };
-CONST84 char *TclDOM_SerializeCommandOptions[] = {
+const char *TclDOM_SerializeCommandOptions[] = {
   "-indent",
   "-method",
   "-encoding",
   "-omitxmldeclaration",
   (char *) NULL
 };
-CONST84 char *TclDOM_SerializeMethods[] = {
+const char *TclDOM_SerializeMethods[] = {
   "xml",
   "html",
   "text",
   (char *) NULL
 };
-CONST84 char *TclDOM_SelectNodeOptions[] = {
+const char *TclDOM_SelectNodeOptions[] = {
   "-namespaces",
   (char *) NULL
 };

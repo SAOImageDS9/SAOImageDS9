@@ -67,7 +67,7 @@ static Tcl_ThreadDataKey dataKey;
  * Configuration option tables
  */
 
-static CONST84 char *globalConfigureSwitches[] = {
+static const char *globalConfigureSwitches[] = {
   "-externalentitycommand",
   (char *) NULL
 };
@@ -75,7 +75,7 @@ enum globalConfigureSwitches {
   TCLXML_GLOBAL_EXTERNALENTITYCOMMAND
 };
 
-static CONST84 char *instanceConfigureSwitches[] = {
+static const char *instanceConfigureSwitches[] = {
     "-final",
     "-validate",
     "-baseurl", 
@@ -139,23 +139,23 @@ enum instanceConfigureSwitches {
 static void TclXMLInstanceDeleteCmd(ClientData clientData);
 static int  TclXMLDestroyParserInstance(TclXML_Info *xmlinfo);
 static int  TclXMLInstanceCmd(ClientData dummy,
-            Tcl_Interp *interp, int objc, struct Tcl_Obj *CONST objv[]);
+            Tcl_Interp *interp, int objc, struct Tcl_Obj *const objv[]);
 static int  TclXMLCreateParserCmd(ClientData dummy,
-            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+            Tcl_Interp *interp, int objc, Tcl_Obj *const objv[]);
 static int  TclXMLParserClassCmd(ClientData dummy,
-            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+            Tcl_Interp *interp, int objc, Tcl_Obj *const objv[]);
 static int  TclXMLResetParser(Tcl_Interp *interp, TclXML_Info *xmlinfo);
 static int  TclXMLConfigureCmd(ClientData dummy,
-            Tcl_Interp *interp, int objc, Tcl_Obj *CONST objv[]);
+            Tcl_Interp *interp, int objc, Tcl_Obj *const objv[]);
 static Tcl_Obj* FindUniqueCmdName(Tcl_Interp *interp);
 static int  TclXMLInstanceConfigure(Tcl_Interp *interp,
-            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]);
+            TclXML_Info *xmlinfo, int objc, Tcl_Obj *const objv[]);
 static int  TclXMLCget(Tcl_Interp *interp,
-            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]);
+            TclXML_Info *xmlinfo, int objc, Tcl_Obj *const objv[]);
 static int  TclXMLConfigureParserInstance(
             TclXML_Info *xmlinfo, Tcl_Obj *option, Tcl_Obj *value);
 static int  TclXMLGet(Tcl_Interp *interp,
-            TclXML_Info *xmlinfo, int objc, Tcl_Obj *CONST objv[]);
+            TclXML_Info *xmlinfo, int objc, Tcl_Obj *const objv[]);
 static int  TclXMLParse(Tcl_Interp *interp,
             TclXML_Info *xmlinfo, char *data, int len);
 static void TclXMLDispatchPCDATA(TclXML_Info *xmlinfo);
@@ -313,7 +313,7 @@ int Tclxml_SafeInit (Tcl_Interp *interp)
  */
 
 static int TclXMLConfigureCmd(ClientData clientData, Tcl_Interp *interp,
-			      int objc, Tcl_Obj *CONST objv[])
+			      int objc, Tcl_Obj *const objv[])
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   int index;
@@ -365,7 +365,7 @@ static int TclXMLConfigureCmd(ClientData clientData, Tcl_Interp *interp,
  */
 
 static int TclXMLParserClassCmd(ClientData clientData, Tcl_Interp *interp,
-				int objc, Tcl_Obj *CONST objv[])
+				int objc, Tcl_Obj *const objv[])
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   TclXML_ParserClassInfo *classinfo;
@@ -374,14 +374,14 @@ static int TclXMLParserClassCmd(ClientData clientData, Tcl_Interp *interp,
   Tcl_HashEntry *entryPtr;
   Tcl_HashSearch search;
 
-  static CONST84 char *methods[] = {
+  static const char *methods[] = {
     "create", "destroy", "info", 
     NULL
   };
   enum methods {
     TCLXML_CREATE, TCLXML_DESTROY, TCLXML_INFO
   };
-  static CONST84 char *createOptions[] = {
+  static const char *createOptions[] = {
     "-createcommand", "-createentityparsercommand",
     "-parsecommand", "-configurecommand",
     "-deletecommand", "-resetcommand", 
@@ -392,7 +392,7 @@ static int TclXMLParserClassCmd(ClientData clientData, Tcl_Interp *interp,
     TCLXML_PARSEPROC, TCLXML_CONFIGUREPROC,
     TCLXML_DELETEPROC, TCLXML_RESETPROC
   };
-  static CONST84 char *infoMethods[] = {
+  static const char *infoMethods[] = {
     "names", "default", 
     NULL
   };
@@ -606,13 +606,13 @@ int TclXML_RegisterXMLParser(Tcl_Interp *interp,
  */
 
 static int TclXMLCreateParserCmd(ClientData clientData, Tcl_Interp *interp,
-				 int objc, Tcl_Obj *CONST objv[])
+				 int objc, Tcl_Obj *const objv[])
 {
   ThreadSpecificData *tsdPtr = (ThreadSpecificData *) Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
   TclXML_Info *xmlinfo;
   int found, i, index, poption;
 
-  static CONST84 char *switches[] = {
+  static const char *switches[] = {
     "-parser",
     (char *) NULL
   };
@@ -1300,14 +1300,14 @@ static void TclXMLFreeParser(TclXML_Info *xmlinfo)
  */
 
 static int TclXMLInstanceCmd (ClientData clientData, Tcl_Interp *interp,
-			      int objc, Tcl_Obj *CONST objv[])
+			      int objc, Tcl_Obj *const objv[])
 {
   TclXML_Info *xmlinfo = (TclXML_Info *) clientData;
   TclXML_Info *child;
   char *encoding, *data;
   int len, index, result = TCL_OK;
   Tcl_Obj *childNamePtr;
-  static CONST84 char *options[] = {
+  static const char *options[] = {
     "configure", "cget", "entityparser", "free", "get", "parse", "reset", NULL
   };
   enum options {
@@ -1534,7 +1534,7 @@ static int TclXMLParse (Tcl_Interp *interp, TclXML_Info *xmlinfo,
  */
 
 static int TclXMLInstanceConfigure (Tcl_Interp *interp, TclXML_Info *xmlinfo,
-				    int objc, Tcl_Obj *CONST objv[])
+				    int objc, Tcl_Obj *const objv[])
 {
   int index, boolv, doParse = 0, result;
   TclXML_ParserClassInfo *classinfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass;
@@ -1899,7 +1899,7 @@ static int TclXMLInstanceConfigure (Tcl_Interp *interp, TclXML_Info *xmlinfo,
  */
 
 static int TclXMLCget (Tcl_Interp *interp, TclXML_Info *xmlinfo,
-		       int objc, Tcl_Obj *CONST objv[])
+		       int objc, Tcl_Obj *const objv[])
 {
   int index;
 
@@ -2120,7 +2120,7 @@ static int TclXMLConfigureParserInstance (TclXML_Info *xmlinfo,
  */
 
 static int TclXMLGet (Tcl_Interp *interp, TclXML_Info *xmlinfo,
-		      int objc, Tcl_Obj *CONST objv[])
+		      int objc, Tcl_Obj *const objv[])
 {
   TclXML_ParserClassInfo *classInfo = (TclXML_ParserClassInfo *) xmlinfo->parserClass; 
 

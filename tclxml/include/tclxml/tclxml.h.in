@@ -34,10 +34,6 @@
  * core before 8.4 and have to disable some CONST'ness.
  */
 
-#ifndef CONST84
-#   define CONST84
-#endif
-
 /*
  * Fix the Borland bug that's in the EXTERN macro from tcl.h.
  */
@@ -225,8 +221,8 @@ typedef struct TclXML_Info {
 typedef ClientData (TclXML_CreateProc) (Tcl_Interp *interp, TclXML_Info *xmlinfo);
 typedef ClientData (TclXML_CreateEntityParserProc) (Tcl_Interp *interp, ClientData clientData);
 typedef int (TclXML_ParseProc) (ClientData clientData, char *buffer, int len, int final);
-typedef int (TclXML_ConfigureProc) (ClientData clientData, Tcl_Obj *CONST optionPtr, Tcl_Obj *CONST valuePtr);
-typedef int (TclXML_GetProc) (ClientData clientData, int objc, Tcl_Obj *CONST objv[]);
+typedef int (TclXML_ConfigureProc) (ClientData clientData, Tcl_Obj *const optionPtr, Tcl_Obj *const valuePtr);
+typedef int (TclXML_GetProc) (ClientData clientData, int objc, Tcl_Obj *const objv[]);
 typedef int (TclXML_ResetProc) (ClientData clientData);
 typedef int (TclXML_DeleteProc) (ClientData clientData);
 
@@ -288,8 +284,8 @@ typedef struct TclXML_ErrorInfo {
 #include <tclxml/tclxmlDecls.h>
 
 #ifdef USE_TCLXML_STUBS
-TCL_EXTRNC CONST char *
-    TclXML_InitStubs (Tcl_Interp *interp, CONST char *version, int exact);
+TCL_EXTRNC const char *
+    TclXML_InitStubs (Tcl_Interp *interp, const char *version, int exact);
 #endif
 
 #undef TCL_STORAGE_CLASS

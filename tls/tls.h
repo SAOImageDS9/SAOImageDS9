@@ -35,7 +35,7 @@
  * Forward declarations
  */
 
-EXTERN int Tls_Init _ANSI_ARGS_ ((Tcl_Interp *));
-EXTERN int Tls_SafeInit _ANSI_ARGS_ ((Tcl_Interp *));
+extern int Tls_Init(Tcl_Interp *);
+extern int Tls_SafeInit(Tcl_Interp *);
 
 #endif /* _TLS_H */

@@ -17,7 +17,7 @@
  *	SSLtcl (Peter Antman)
  *
  */
-#ifndef _TSLINT_H
+#ifndef _TLSINT_H
 #define _TLSINT_H
 
 #include "tls.h"
@@ -167,17 +167,17 @@ extern int channelTypeVersion;
  */
 
 /* 281 */
-typedef Tcl_Channel (tls_StackChannel) _ANSI_ARGS_((Tcl_Interp* interp,
+typedef Tcl_Channel (tls_StackChannel) (Tcl_Interp* interp,
 						    Tcl_ChannelType* typePtr,
 						    ClientData instanceData,
 						    int mask,
-						    Tcl_Channel prevChan));
+						    Tcl_Channel prevChan);
 /* 282 */
-typedef void (tls_UnstackChannel) _ANSI_ARGS_((Tcl_Interp* interp,
-					       Tcl_Channel chan));
+typedef void (tls_UnstackChannel) (Tcl_Interp* interp,
+					       Tcl_Channel chan);
 
-#define Tcl_StackChannel     ((tls_StackChannel*) tclStubsPtr->reserved281)
-#define Tcl_UnstackChannel ((tls_UnstackChannel*) tclStubsPtr->reserved282)
+#define Tcl_StackChannel     (tls_StackChannel*) tclStubsPtr->reserved281)
+#define Tcl_UnstackChannel (tls_UnstackChannel*) tclStubsPtr->reserved282)
 
 #endif /* Tcl_StackChannel */
 
@@ -187,9 +187,9 @@ typedef void (tls_UnstackChannel) _ANSI_ARGS_((Tcl_Interp* interp,
  */
 
 /* 283 */
-typedef Tcl_Channel (tls_GetStackedChannel) _ANSI_ARGS_((Tcl_Channel chan));
+typedef Tcl_Channel (tls_GetStackedChannel) (Tcl_Channel chan);
 
-#define Tcl_GetStackedChannel ((tls_GetStackedChannel*) tclStubsPtr->reserved283)
+#define Tcl_GetStackedChannel (tls_GetStackedChannel*) tclStubsPtr->reserved283)
 
 #endif /* Tcl_GetStackedChannel */
 
@@ -202,18 +202,18 @@ typedef Tcl_Channel (tls_GetStackedChannel) _ANSI_ARGS_((Tcl_Channel chan));
 #define EMULATE_CHANNEL_VERSION_2
 
 typedef struct TlsChannelTypeVersion_* TlsChannelTypeVersion;
-#define TCL_CHANNEL_VERSION_2	((TlsChannelTypeVersion) 0x2)
+#define TCL_CHANNEL_VERSION_2	(TlsChannelTypeVersion) 0x2)
 
-typedef int (TlsDriverHandlerProc) _ANSI_ARGS_((ClientData instanceData,
-					int interestMask));
+typedef int (TlsDriverHandlerProc) (ClientData instanceData,
+					int interestMask);
 /* 394 */
-typedef int (tls_ReadRaw)  _ANSI_ARGS_((Tcl_Channel chan, char *dst,
-					int bytesToRead));
+typedef int (tls_ReadRaw)  (Tcl_Channel chan, char *dst,
+					int bytesToRead);
 /* 395 */
-typedef int (tls_WriteRaw) _ANSI_ARGS_((Tcl_Channel chan, char *src,
-					int srcLen));
+typedef int (tls_WriteRaw) (Tcl_Channel chan, char *src,
+					int srcLen);
 /* 397 */
-typedef int (tls_GetTopChannel) _ANSI_ARGS_((Tcl_Channel chan));
+typedef int (tls_GetTopChannel) (Tcl_Channel chan);
 
 /*
  * Generating code for accessing these parts of the stub table when
@@ -246,17 +246,17 @@ typedef int (tls_GetTopChannel) _ANSI_ARGS_((Tcl_Channel chan));
  * Forward declarations
  */
 
-EXTERN Tcl_ChannelType *Tls_ChannelType _ANSI_ARGS_((void));
-EXTERN Tcl_Channel	Tls_GetParent _ANSI_ARGS_((State *statePtr));
+extern Tcl_ChannelType *Tls_ChannelType (void);
+extern Tcl_Channel	Tls_GetParent (State *statePtr);
 
-EXTERN Tcl_Obj*		Tls_NewX509Obj _ANSI_ARGS_ (( Tcl_Interp *interp, X509 *cert));
-EXTERN void		Tls_Error _ANSI_ARGS_ ((State *statePtr, char *msg));
-EXTERN void		Tls_Free _ANSI_ARGS_ ((char *blockPtr));
-EXTERN void		Tls_Clean _ANSI_ARGS_ ((State *statePtr));
-EXTERN int		Tls_WaitForConnect _ANSI_ARGS_(( State *statePtr,
-							int *errorCodePtr));
+extern Tcl_Obj*		Tls_NewX509Obj  ( Tcl_Interp *interp, X509 *cert);
+extern void		Tls_Error  (State *statePtr, char *msg);
+extern void		Tls_Free  (char *blockPtr);
+extern void		Tls_Clean  (State *statePtr);
+extern int		Tls_WaitForConnect ( State *statePtr,
+							int *errorCodePtr);
 
-EXTERN BIO_METHOD *	BIO_s_tcl _ANSI_ARGS_((void));
-EXTERN BIO *		BIO_new_tcl _ANSI_ARGS_((State* statePtr, int flags));
+extern BIO_METHOD *	BIO_s_tcl (void);
+extern BIO *		BIO_new_tcl (State* statePtr, int flags);
 
 #endif /* _TLSINT_H */

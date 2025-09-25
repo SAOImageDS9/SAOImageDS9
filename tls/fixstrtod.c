@@ -24,10 +24,7 @@
 
 extern double strtod();
 
-double
-fixstrtod(string, endPtr)
-    char *string;
-    char **endPtr;
+double fixstrtod(char *string, char **endPtr)
 {
     double d;
     d = strtod(string, endPtr);

@@ -30,8 +30,7 @@ static int max(int a, int b)
 /*
  * ASN1_UTCTIME_tostr --
  */
-static char *
-ASN1_UTCTIME_tostr(ASN1_UTCTIME *tm)
+static char * ASN1_UTCTIME_tostr(ASN1_UTCTIME *tm)
 {
     static char bp[128];
     char *v;
@@ -86,10 +85,7 @@ ASN1_UTCTIME_tostr(ASN1_UTCTIME *tm)
  *------------------------------------------------------*
  */
 
-Tcl_Obj*
-Tls_NewX509Obj( interp, cert)
-    Tcl_Interp *interp;
-    X509 *cert;
+Tcl_Obj* Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert)
 {
     Tcl_Obj *certPtr = Tcl_NewListObj( 0, NULL);
     BIO *bio;

@@ -12,12 +12,12 @@
  * Forward declarations
  */
 
-static int BioWrite	_ANSI_ARGS_ ((BIO *h, CONST char *buf, int num));
-static int BioRead	_ANSI_ARGS_ ((BIO *h, char *buf, int num));
-static int BioPuts	_ANSI_ARGS_ ((BIO *h, CONST char *str));
-static long BioCtrl	_ANSI_ARGS_ ((BIO *h, int cmd, long arg1, void *ptr));
-static int BioNew	_ANSI_ARGS_ ((BIO *h));
-static int BioFree	_ANSI_ARGS_ ((BIO *h));
+static int BioWrite(BIO *h, const char *buf, int num);
+static int BioRead(BIO *h, char *buf, int num);
+static int BioPuts(BIO *h, const char *str);
+static long BioCtrl(BIO *h, int cmd, long arg1, void *ptr);
+static int BioNew(BIO *h);
+static int BioFree(BIO *h);
 
 
 static BIO_METHOD BioMethods = {
@@ -31,10 +31,7 @@ static BIO_METHOD BioMethods = {
     BioFree,
 };
 
-BIO *
-BIO_new_tcl(statePtr, flags)
-    State *statePtr;
-    int flags;
+BIO *BIO_new_tcl(State *statePtr, int flags)
 {
     BIO *bio;
 
@@ -46,23 +43,18 @@ BIO_new_tcl(statePtr, flags)
     return bio;
 }
 
-BIO_METHOD *
-BIO_s_tcl()
+BIO_METHOD *BIO_s_tcl()
 {
     return &BioMethods;
 }
 
-static int
-BioWrite (bio, buf, bufLen)
-    BIO *bio;
-    CONST char *buf;
-    int bufLen;
+static int BioWrite (BIO *bio, const char *buf, int bufLen)
 {
     Tcl_Channel chan = Tls_GetParent((State*)(bio->ptr));
     int ret;
 
-    dprintf(stderr,"\nBioWrite(0x%x, <buf>, %d) [0x%x]",
-	    (unsigned int) bio, bufLen, (unsigned int) chan);
+    dprintf(stderr,"\nBioWrite(0x%p, <buf>, %d) [0x%p]",
+	    (void*)bio, bufLen, (void*) chan);
 
     if (channelTypeVersion == TLS_CHANNEL_VERSION_2) {
 	ret = Tcl_WriteRaw(chan, buf, bufLen);
@@ -70,8 +62,8 @@ BioWrite (bio, buf, bufLen)
 	ret = Tcl_Write(chan, buf, bufLen);
     }
 
-    dprintf(stderr,"\n[0x%x] BioWrite(%d) -> %d [%d.%d]",
-	    (unsigned int) chan, bufLen, ret, Tcl_Eof(chan), Tcl_GetErrno());
+    dprintf(stderr,"\n[0x%p] BioWrite(%d) -> %d [%d.%d]",
+	    (void*) chan, bufLen, ret, Tcl_Eof(chan), Tcl_GetErrno());
 
     BIO_clear_flags(bio, BIO_FLAGS_WRITE|BIO_FLAGS_SHOULD_RETRY);
 
@@ -87,17 +79,13 @@ BioWrite (bio, buf, bufLen)
     return ret;
 }
 
-static int
-BioRead (bio, buf, bufLen)
-    BIO *bio;
-    char *buf;
-    int bufLen;
+static int BioRead (BIO *bio, char *buf, int bufLen)
 {
     Tcl_Channel chan = Tls_GetParent((State*)bio->ptr);
     int ret = 0;
 
-    dprintf(stderr,"\nBioRead(0x%x, <buf>, %d) [0x%x]",
-	    (unsigned int) bio, bufLen, (unsigned int) chan);
+    dprintf(stderr,"\nBioRead(0x%p, <buf>, %d) [0x%p]",
+	    (void*) bio, bufLen, (void*) chan);
 
     if (buf == NULL) return 0;
 
@@ -107,8 +95,8 @@ BioRead (bio, buf, bufLen)
 	ret = Tcl_Read(chan, buf, bufLen);
     }
 
-    dprintf(stderr,"\n[0x%x] BioRead(%d) -> %d [%d.%d]",
-	    (unsigned int) chan, bufLen, ret, Tcl_Eof(chan), Tcl_GetErrno());
+    dprintf(stderr,"\n[0x%p] BioRead(%d) -> %d [%d.%d]",
+	    (void*) chan, bufLen, ret, Tcl_Eof(chan), Tcl_GetErrno());
 
     BIO_clear_flags(bio, BIO_FLAGS_READ|BIO_FLAGS_SHOULD_RETRY);
 
@@ -124,28 +112,19 @@ BioRead (bio, buf, bufLen)
     return ret;
 }
 
-static int
-BioPuts	(bio, str)
-    BIO *bio;
-    CONST char *str;
+static int BioPuts (BIO *bio, const char *str)
 {
     return BioWrite(bio, str, (int) strlen(str));
 }
 
-static long
-BioCtrl	(bio, cmd, num, ptr)
-    BIO *bio;
-    int cmd;
-    long num;
-    void *ptr;
+static long BioCtrl(BIO *bio, int cmd, long num, void *ptr)
 {
     Tcl_Channel chan = Tls_GetParent((State*)bio->ptr);
     long ret = 1;
     int *ip;
 
-    dprintf(stderr,"\nBioCtrl(0x%x, 0x%x, 0x%x, 0x%x)",
-	    (unsigned int) bio, (unsigned int) cmd, (unsigned int) num,
-	    (unsigned int) ptr);
+    dprintf(stderr,"\nBioCtrl(0x%p, 0x%x, 0x%p, 0x%p)",
+	    (void*)bio, (unsigned int)cmd, (void*)num, ptr);
 
     switch (cmd) {
     case BIO_CTRL_RESET:
@@ -209,9 +188,7 @@ BioCtrl	(bio, cmd, num, ptr)
     return(ret);
 }
 
-static int
-BioNew	(bio)
-    BIO *bio;
+static int BioNew(BIO *bio)
 {
     bio->init	= 0;
     bio->num	= 0;
@@ -221,9 +198,7 @@ BioNew	(bio)
     return 1;
 }
 
-static int
-BioFree	(bio)
-    BIO *bio;
+static int BioFree(BIO *bio)
 {
     if (bio == NULL) {
 	return 0;

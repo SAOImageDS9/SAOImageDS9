@@ -9728,10 +9728,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tifftcl${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tifftcl_LIB_FLAG="-ltifftcl${PACKAGE_VERSION}"
+	eval tifftcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tifftcl${PACKAGE_VERSION}"
 	eval tifftcl_STUB_LIB_FLAG="-ltifftclstub${PACKAGE_VERSION}"
     else
-	eval tifftcl_LIB_FLAG="-ltifftcl`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tifftcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tifftcl`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tifftcl_STUB_LIB_FLAG="-ltifftclstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then

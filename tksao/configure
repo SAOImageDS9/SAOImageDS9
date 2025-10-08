@@ -10926,10 +10926,10 @@ fi
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tksao${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tksao_LIB_FLAG="-ltksao${PACKAGE_VERSION}"
+	eval tksao_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tksao${PACKAGE_VERSION}"
 	eval tksao_STUB_LIB_FLAG="-ltksaostub${PACKAGE_VERSION}"
     else
-	eval tksao_LIB_FLAG="-ltksao`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tksao_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tksao`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tksao_STUB_LIB_FLAG="-ltksaostub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tksao_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tksao_LIB_FLAG}"

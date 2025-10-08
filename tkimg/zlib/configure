@@ -9734,10 +9734,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/zlibtcl${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval zlibtcl_LIB_FLAG="-lzlibtcl${PACKAGE_VERSION}"
+	eval zlibtcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}zlibtcl${PACKAGE_VERSION}"
 	eval zlibtcl_STUB_LIB_FLAG="-lzlibtclstub${PACKAGE_VERSION}"
     else
-	eval zlibtcl_LIB_FLAG="-lzlibtcl`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval zlibtcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}zlibtcl`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval zlibtcl_STUB_LIB_FLAG="-lzlibtclstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then

@@ -9620,10 +9620,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/jpegtcl${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval jpegtcl_LIB_FLAG="-ljpegtcl${PACKAGE_VERSION}"
+	eval jpegtcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}jpegtcl${PACKAGE_VERSION}"
 	eval jpegtcl_STUB_LIB_FLAG="-ljpegtclstub${PACKAGE_VERSION}"
     else
-	eval jpegtcl_LIB_FLAG="-ljpegtcl`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval jpegtcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}jpegtcl`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval jpegtcl_STUB_LIB_FLAG="-ljpegtclstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then

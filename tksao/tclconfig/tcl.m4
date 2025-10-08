@@ -3918,10 +3918,10 @@ AC_DEFUN([TEA_EXPORT_CONFIG], [
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="[$]{libdir}/$1${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval $1_LIB_FLAG="-l$1${PACKAGE_VERSION}"
+	eval $1_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}$1${PACKAGE_VERSION}"
 	eval $1_STUB_LIB_FLAG="-l$1stub${PACKAGE_VERSION}"
     else
-	eval $1_LIB_FLAG="-l$1`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval $1_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}$1`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval $1_STUB_LIB_FLAG="-l$1stub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     $1_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${$1_LIB_FLAG}"

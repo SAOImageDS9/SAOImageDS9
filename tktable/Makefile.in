@@ -220,15 +220,15 @@ doc: tkTable.n
 
 tkTable.n: $(srcdir)/doc/tkTable.man
 	@echo "make nroff documentation"
-	@if [ -n "$(DTPLITE)" -a -x "$(DTPLITE)" ]; then \
-	    $(DTPLITE) -o $(srcdir)/doc/tkTable.n nroff $(srcdir)/doc/tkTable.man ; \
-	fi
+#	@if [ -n "$(DTPLITE)" -a -x "$(DTPLITE)" ]; then \
+#	    $(DTPLITE) -o $(srcdir)/doc/tkTable.n nroff $(srcdir)/doc/tkTable.man ; \
+#	fi
 
 tkTable.html: $(srcdir)/doc/tkTable.man
 	@echo "make HTML documentation"
-	@if [ -n "$(DTPLITE)" -a -x "$(DTPLITE)" ]; then \
-	    $(DTPLITE) -o $(srcdir)/doc/tkTable.html html $(srcdir)/doc/tkTable.man ; \
-	fi
+#	@if [ -n "$(DTPLITE)" -a -x "$(DTPLITE)" ]; then \
+#	    $(DTPLITE) -o $(srcdir)/doc/tkTable.html html $(srcdir)/doc/tkTable.man ; \
+#	fi
 
 install: all install-binaries install-libraries install-doc-n install-doc-html
 

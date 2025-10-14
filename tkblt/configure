@@ -10771,10 +10771,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tkblt${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tkblt_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkblt${PACKAGE_VERSION}"
+	eval tkblt_LIB_FLAG="-ltkblt${PACKAGE_VERSION}"
 	eval tkblt_STUB_LIB_FLAG="-ltkbltstub${PACKAGE_VERSION}"
     else
-	eval tkblt_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkblt`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkblt_LIB_FLAG="-ltkblt`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tkblt_STUB_LIB_FLAG="-ltkbltstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tkblt_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkblt_LIB_FLAG}"

@@ -10632,10 +10632,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tkimgwindow${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tkimgwindow_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkimgwindow${PACKAGE_VERSION}"
+	eval tkimgwindow_LIB_FLAG="-ltkimgwindow${PACKAGE_VERSION}"
 	eval tkimgwindow_STUB_LIB_FLAG="-ltkimgwindowstub${PACKAGE_VERSION}"
     else
-	eval tkimgwindow_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkimgwindow`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkimgwindow_LIB_FLAG="-ltkimgwindow`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tkimgwindow_STUB_LIB_FLAG="-ltkimgwindowstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then

@@ -10204,10 +10204,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tkmpeg${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tkmpeg_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkmpeg${PACKAGE_VERSION}"
+	eval tkmpeg_LIB_FLAG="-ltkmpeg${PACKAGE_VERSION}"
 	eval tkmpeg_STUB_LIB_FLAG="-ltkmpegstub${PACKAGE_VERSION}"
     else
-	eval tkmpeg_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkmpeg`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkmpeg_LIB_FLAG="-ltkmpeg`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tkmpeg_STUB_LIB_FLAG="-ltkmpegstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tkmpeg_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkmpeg_LIB_FLAG}"

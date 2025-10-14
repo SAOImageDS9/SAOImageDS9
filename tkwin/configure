@@ -9624,10 +9624,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tkwin${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tkwin_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkwin${PACKAGE_VERSION}"
+	eval tkwin_LIB_FLAG="-ltkwin${PACKAGE_VERSION}"
 	eval tkwin_STUB_LIB_FLAG="-ltkwinstub${PACKAGE_VERSION}"
     else
-	eval tkwin_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkwin`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkwin_LIB_FLAG="-ltkwin`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tkwin_STUB_LIB_FLAG="-ltkwinstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tkwin_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkwin_LIB_FLAG}"

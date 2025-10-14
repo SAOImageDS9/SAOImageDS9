@@ -9692,10 +9692,10 @@ printf "%s\n" "#define TCL_MAJOR_VERSION 8" >>confdefs.h
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/vector${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval vector_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}vector${PACKAGE_VERSION}"
+	eval vector_LIB_FLAG="-lvector${PACKAGE_VERSION}"
 	eval vector_STUB_LIB_FLAG="-lvectorstub${PACKAGE_VERSION}"
     else
-	eval vector_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}vector`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval vector_LIB_FLAG="-lvector`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval vector_STUB_LIB_FLAG="-lvectorstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     vector_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${vector_LIB_FLAG}"

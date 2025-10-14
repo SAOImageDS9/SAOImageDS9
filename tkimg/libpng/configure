@@ -9937,10 +9937,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/pngtcl${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval pngtcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}pngtcl${PACKAGE_VERSION}"
+	eval pngtcl_LIB_FLAG="-lpngtcl${PACKAGE_VERSION}"
 	eval pngtcl_STUB_LIB_FLAG="-lpngtclstub${PACKAGE_VERSION}"
     else
-	eval pngtcl_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}pngtcl`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval pngtcl_LIB_FLAG="-lpngtcl`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval pngtcl_STUB_LIB_FLAG="-lpngtclstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then

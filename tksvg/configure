@@ -9501,10 +9501,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tksvg${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tksvg_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tksvg${PACKAGE_VERSION}"
+	eval tksvg_LIB_FLAG="-ltksvg${PACKAGE_VERSION}"
 	eval tksvg_STUB_LIB_FLAG="-ltksvgstub${PACKAGE_VERSION}"
     else
-	eval tksvg_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tksvg`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tksvg_LIB_FLAG="-ltksvg`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tksvg_STUB_LIB_FLAG="-ltksvgstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tksvg_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tksvg_LIB_FLAG}"

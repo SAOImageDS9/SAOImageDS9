@@ -11289,10 +11289,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tkimgtiff${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tkimgtiff_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkimgtiff${PACKAGE_VERSION}"
+	eval tkimgtiff_LIB_FLAG="-ltkimgtiff${PACKAGE_VERSION}"
 	eval tkimgtiff_STUB_LIB_FLAG="-ltkimgtiffstub${PACKAGE_VERSION}"
     else
-	eval tkimgtiff_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkimgtiff`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkimgtiff_LIB_FLAG="-ltkimgtiff`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tkimgtiff_STUB_LIB_FLAG="-ltkimgtiffstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then

@@ -9942,10 +9942,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tkhtml1${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tkhtml1_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkhtml1${PACKAGE_VERSION}"
+	eval tkhtml1_LIB_FLAG="-ltkhtml1${PACKAGE_VERSION}"
 	eval tkhtml1_STUB_LIB_FLAG="-ltkhtml1stub${PACKAGE_VERSION}"
     else
-	eval tkhtml1_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkhtml1`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkhtml1_LIB_FLAG="-ltkhtml1`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tkhtml1_STUB_LIB_FLAG="-ltkhtml1stub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tkhtml1_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkhtml1_LIB_FLAG}"

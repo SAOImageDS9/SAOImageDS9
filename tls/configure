@@ -9465,10 +9465,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tls${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tls_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tls${PACKAGE_VERSION}"
+	eval tls_LIB_FLAG="-ltls${PACKAGE_VERSION}"
 	eval tls_STUB_LIB_FLAG="-ltlsstub${PACKAGE_VERSION}"
     else
-	eval tls_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tls`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tls_LIB_FLAG="-ltls`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tls_STUB_LIB_FLAG="-ltlsstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tls_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tls_LIB_FLAG}"

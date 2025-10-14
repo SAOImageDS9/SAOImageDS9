@@ -9153,10 +9153,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tclsignal${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tclsignal_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tclsignal${PACKAGE_VERSION}"
+	eval tclsignal_LIB_FLAG="-ltclsignal${PACKAGE_VERSION}"
 	eval tclsignal_STUB_LIB_FLAG="-ltclsignalstub${PACKAGE_VERSION}"
     else
-	eval tclsignal_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tclsignal`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tclsignal_LIB_FLAG="-ltclsignal`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tclsignal_STUB_LIB_FLAG="-ltclsignalstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tclsignal_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tclsignal_LIB_FLAG}"

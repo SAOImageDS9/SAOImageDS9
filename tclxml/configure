@@ -9284,10 +9284,10 @@ fi
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tclxml${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tclxml_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tclxml${PACKAGE_VERSION}"
+	eval tclxml_LIB_FLAG="-ltclxml${PACKAGE_VERSION}"
 	eval tclxml_STUB_LIB_FLAG="-ltclxmlstub${PACKAGE_VERSION}"
     else
-	eval tclxml_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tclxml`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tclxml_LIB_FLAG="-ltclxml`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tclxml_STUB_LIB_FLAG="-ltclxmlstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tclxml_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tclxml_LIB_FLAG}"

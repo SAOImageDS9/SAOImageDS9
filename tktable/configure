@@ -10126,10 +10126,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/Tktable${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval Tktable_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}Tktable${PACKAGE_VERSION}"
+	eval Tktable_LIB_FLAG="-lTktable${PACKAGE_VERSION}"
 	eval Tktable_STUB_LIB_FLAG="-lTktablestub${PACKAGE_VERSION}"
     else
-	eval Tktable_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}Tktable`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval Tktable_LIB_FLAG="-lTktable`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval Tktable_STUB_LIB_FLAG="-lTktablestub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then

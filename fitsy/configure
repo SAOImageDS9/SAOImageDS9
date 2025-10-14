@@ -10613,10 +10613,10 @@ printf "%s\n" "#define TCL_MAJOR_VERSION 8" >>confdefs.h
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/fitsy${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval fitsy_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}fitsy${PACKAGE_VERSION}"
+	eval fitsy_LIB_FLAG="-lfitsy${PACKAGE_VERSION}"
 	eval fitsy_STUB_LIB_FLAG="-lfitsystub${PACKAGE_VERSION}"
     else
-	eval fitsy_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}fitsy`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval fitsy_LIB_FLAG="-lfitsy`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval fitsy_STUB_LIB_FLAG="-lfitsystub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     fitsy_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${fitsy_LIB_FLAG}"

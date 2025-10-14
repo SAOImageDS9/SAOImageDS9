@@ -10264,10 +10264,10 @@ printf "%s\n" "${WISH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tkmacosx${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tkmacosx_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkmacosx${PACKAGE_VERSION}"
+	eval tkmacosx_LIB_FLAG="-ltkmacosx${PACKAGE_VERSION}"
 	eval tkmacosx_STUB_LIB_FLAG="-ltkmacosxstub${PACKAGE_VERSION}"
     else
-	eval tkmacosx_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tkmacosx`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tkmacosx_LIB_FLAG="-ltkmacosx`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tkmacosx_STUB_LIB_FLAG="-ltkmacosxstub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tkmacosx_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tkmacosx_LIB_FLAG}"

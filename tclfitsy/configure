@@ -9813,10 +9813,10 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
     # pkglibdir must be a fully qualified path and (not ${exec_prefix}/lib)
     eval pkglibdir="${libdir}/tclfitsy${PACKAGE_VERSION}"
     if test "${TCL_LIB_VERSIONS_OK}" = "ok"; then
-	eval tclfitsy_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tclfitsy${PACKAGE_VERSION}"
+	eval tclfitsy_LIB_FLAG="-ltclfitsy${PACKAGE_VERSION}"
 	eval tclfitsy_STUB_LIB_FLAG="-ltclfitsystub${PACKAGE_VERSION}"
     else
-	eval tclfitsy_LIB_FLAG="-l${PACKAGE_LIB_PREFIX}tclfitsy`echo ${PACKAGE_VERSION} | tr -d .`"
+	eval tclfitsy_LIB_FLAG="-ltclfitsy`echo ${PACKAGE_VERSION} | tr -d .`"
 	eval tclfitsy_STUB_LIB_FLAG="-ltclfitsystub`echo ${PACKAGE_VERSION} | tr -d .`"
     fi
     tclfitsy_BUILD_LIB_SPEC="-L`$CYGPATH $(pwd)` ${tclfitsy_LIB_FLAG}"

@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2021
+// Copyright (C) 1999-2025
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -462,8 +462,8 @@ template <> void FitsDatam<unsigned short>::output(ostringstream& str, unsigned 
 
 template <> void FitsDatam<unsigned char>::scan(FitsBound* params)
 {
-  min_ = UCHAR_MAX;
-  max_ = 0;
+  unsigned char min = UCHAR_MAX;
+  unsigned char max = 0;
   minXY_.origin();
   maxXY_.origin();
 
@@ -484,12 +484,12 @@ template <> void FitsDatam<unsigned char>::scan(FitsBound* params)
       if (hasblank_ && value == blank_)
 	continue; // skip nan's 
 
-      if (value < min_) {
-	min_ = value;
+      if (value < min) {
+	min = value;
 	minXY_ = Vector(ii+1, jj+1);
       }
-      if (value > max_) {
-	max_ = value;
+      if (value > max) {
+	max = value;
 	maxXY_ = Vector(ii+1, jj+1);
       }
     }
@@ -497,16 +497,26 @@ template <> void FitsDatam<unsigned char>::scan(FitsBound* params)
   CLEARSIGBUS
 
   // sanity check
-  if (min_ == UCHAR_MAX && max_ == 0) {
-    min_ =NAN;
-    max_ =NAN;
+  if (min == UCHAR_MAX && max == 0) {
+    min =NAN;
+    max =NAN;
     minXY_.origin();
     maxXY_.origin();
   }
   else {
     if (hasscaling_) {
-      min_ = min_*bscale_ + bzero_;
-      max_ = max_*bscale_ + bzero_;
+      if (bscale_ ==1 && bzero_ == -128) {
+	min_ = min + (signed char)bzero_;
+	max_ = max + (signed char)bzero_;
+      }
+      else {
+	min_ = min*bscale_ + bzero_;
+	max_ = max*bscale_ + bzero_;
+      }
+    }
+    else {
+      min_ = min;
+      max_ = max;
     }
   }
 
@@ -518,8 +528,8 @@ template <> void FitsDatam<unsigned char>::scan(FitsBound* params)
 
 template <> void FitsDatam<short>::scan(FitsBound* params)
 {
-  min_ = SHRT_MAX;
-  max_ = SHRT_MIN;
+  short min = SHRT_MAX;
+  short max = SHRT_MIN;
   minXY_.origin();
   maxXY_.origin();
 
@@ -555,12 +565,12 @@ template <> void FitsDatam<short>::scan(FitsBound* params)
       if (hasblank_ && value == blank_)
 	continue; // skip nan's 
 
-      if (value < min_) {
-	min_ = value;
+      if (value < min) {
+	min = value;
 	minXY_ = Vector(ii+1, jj+1);
       }
-      if (value > max_) {
-	max_ = value;
+      if (value > max) {
+	max = value;
 	maxXY_ = Vector(ii+1, jj+1);
       }
     }
@@ -568,7 +578,7 @@ template <> void FitsDatam<short>::scan(FitsBound* params)
   CLEARSIGBUS
 
   // sanity check
-  if (min_ == SHRT_MAX && max_ == SHRT_MIN) {
+  if (min == SHRT_MAX && max == SHRT_MIN) {
     min_ =NAN;
     max_ =NAN;
     minXY_.origin();
@@ -576,8 +586,18 @@ template <> void FitsDatam<short>::scan(FitsBound* params)
   }
   else {
     if (hasscaling_) {
-      min_ = min_*bscale_ + bzero_;
-      max_ = max_*bscale_ + bzero_;
+      if (bscale_ == 1 && bzero_ == 32768) {
+	min_ = min + (unsigned short)bzero_;
+	max_ = max + (unsigned short)bzero_;
+      }
+      else {
+	min_ = min*bscale_ + bzero_;
+	max_ = max*bscale_ + bzero_;
+      }
+    }
+    else {
+      min_ = min;
+      max_ = max;
     }
   }
 
@@ -589,8 +609,8 @@ template <> void FitsDatam<short>::scan(FitsBound* params)
 
 template <> void FitsDatam<unsigned short>::scan(FitsBound* params)
 {
-  min_ = USHRT_MAX;
-  max_ = 0;
+  unsigned short min = USHRT_MAX;
+  unsigned short max = 0;
   minXY_.origin();
   maxXY_.origin();
 
@@ -626,12 +646,12 @@ template <> void FitsDatam<unsigned short>::scan(FitsBound* params)
       if (hasblank_ && value == blank_)
 	continue; // skip nan's 
 
-      if (value < min_) {
-	min_ = value;
+      if (value < min) {
+	min = value;
 	minXY_ = Vector(ii+1, jj+1);
       }
-      if (value > max_) {
-	max_ = value;
+      if (value > max) {
+	max = value;
 	maxXY_ = Vector(ii+1, jj+1);
       }
     }
@@ -639,7 +659,7 @@ template <> void FitsDatam<unsigned short>::scan(FitsBound* params)
   CLEARSIGBUS
 
   // sanity check
-  if (min_ == USHRT_MAX && max_ == 0) {
+  if (min == USHRT_MAX && max == 0) {
     min_ =NAN;
     max_ =NAN;
     minXY_.origin();
@@ -647,8 +667,12 @@ template <> void FitsDatam<unsigned short>::scan(FitsBound* params)
   }
   else {
     if (hasscaling_) {
-      min_ = min_*bscale_ + bzero_;
-      max_ = max_*bscale_ + bzero_;
+      min_ = min*bscale_ + bzero_;
+      max_ = max*bscale_ + bzero_;
+    }
+    else {
+      min_ = min;
+      max_ = max;
     }
   }
 
@@ -660,8 +684,8 @@ template <> void FitsDatam<unsigned short>::scan(FitsBound* params)
 
 template <> void FitsDatam<int>::scan(FitsBound* params)
 {
-  min_ = INT_MAX;
-  max_ = INT_MIN;
+  int min = INT_MAX;
+  int max = INT_MIN;
   minXY_.origin();
   maxXY_.origin();
 
@@ -699,12 +723,12 @@ template <> void FitsDatam<int>::scan(FitsBound* params)
       if (hasblank_ && value == blank_)
 	continue; // skip nan's 
 
-      if (value < min_) {
-	min_ = value;
+      if (value < min) {
+	min = value;
 	minXY_ = Vector(ii+1, jj+1);
       }
-      if (value > max_) {
-	max_ = value;
+      if (value > max) {
+	max = value;
 	maxXY_ = Vector(ii+1, jj+1);
       }
     }
@@ -712,7 +736,7 @@ template <> void FitsDatam<int>::scan(FitsBound* params)
   CLEARSIGBUS
 
   // sanity check
-  if (min_ == INT_MAX && max_ == INT_MIN) {
+  if (min == INT_MAX && max == INT_MIN) {
     min_ =NAN;
     max_ =NAN;
     minXY_.origin();
@@ -720,8 +744,18 @@ template <> void FitsDatam<int>::scan(FitsBound* params)
   }
   else {
     if (hasscaling_) {
-      min_ = min_*bscale_ + bzero_;
-      max_ = max_*bscale_ + bzero_;
+      if (bscale_ == 1 && bzero_ == 2147483648) {
+	min_ = min + (unsigned int)bzero_;
+	max_ = max + (unsigned int)bzero_;
+      }
+      else {
+	min_ = min*bscale_ + bzero_;
+	max_ = max*bscale_ + bzero_;
+      }
+    }
+    else {
+      min_ = min;
+      max_ = max;
     }
   }
 
@@ -733,8 +767,8 @@ template <> void FitsDatam<int>::scan(FitsBound* params)
 
 template <> void FitsDatam<long long>::scan(FitsBound* params)
 {
-  min_ = LLONG_MAX;
-  max_ = LLONG_MIN;
+  long long min = LLONG_MAX;
+  long long max = LLONG_MIN;
   minXY_.origin();
   maxXY_.origin();
 
@@ -776,12 +810,12 @@ template <> void FitsDatam<long long>::scan(FitsBound* params)
       if (hasblank_ && value == blank_)
 	continue; // skip nan's 
 
-      if (value < min_) {
-	min_ = value;
+      if (value < min) {
+	min = value;
 	minXY_ = Vector(ii+1, jj+1);
       }
-      if (value > max_) {
-	max_ = value;
+      if (value > max) {
+	max = value;
 	maxXY_ = Vector(ii+1, jj+1);
       }
     }
@@ -789,7 +823,7 @@ template <> void FitsDatam<long long>::scan(FitsBound* params)
   CLEARSIGBUS
 
   // sanity check
-  if (min_ == LLONG_MAX && max_ == LLONG_MIN) {
+  if (min == LLONG_MAX && max == LLONG_MIN) {
     min_ =NAN;
     max_ =NAN;
     minXY_.origin();
@@ -797,8 +831,18 @@ template <> void FitsDatam<long long>::scan(FitsBound* params)
   }
   else {
     if (hasscaling_) {
-      min_ = min_*bscale_ + bzero_;
-      max_ = max_*bscale_ + bzero_;
+      if (bscale_ == 1 && bzero_ == 9223372036854775808) {
+	min_ = min + (unsigned long long)bzero_;
+	max_ = max + (unsigned long long)bzero_;
+      }
+      else {
+	min_ = min*bscale_ + bzero_;
+	max_ = max*bscale_ + bzero_;
+      }
+    }
+    else {
+      min_ = min;
+      max_ = max;
     }
   }
 
@@ -1083,6 +1127,33 @@ template<class T> const char* FitsDatam<T>::getValue(const Vector& vv)
   return buf_;
 }
 
+template<> const char* FitsDatam<long long>::getValue(const Vector& vv)
+{
+  Vector v(vv);
+
+  long x = (long)v[0];
+  long y = (long)v[1];
+
+  ostringstream str;
+
+  if (x >= 0 && x < width_ && y >= 0 && y < height_) {
+    long long value = !byteswap_ ? data_[y*width_ + x] : 
+      swap(data_+(y*width_ + x));
+
+    if (hasblank_ && value == blank_)
+      str << "blank" << ends;
+    else if (hasscaling_)
+      str << value * (unsigned long long)bscale_ + (unsigned long long)bzero_ << ends;
+    else
+      output(str, value);
+  }
+  else
+    str << ends;
+
+  memcpy(buf_,str.str().c_str(),str.str().length());
+  return buf_;
+}
+
 template <> const char* FitsDatam<float>::getValue(const Vector& vv)
 {
   Vector v(vv);
@@ -1259,7 +1330,7 @@ template <> float FitsDatam<long long>::getValueFloat(long i)
     if (hasblank_ && data_[i] == blank_)
       return NAN;
     else
-      return hasscaling_ ? data_[i] * bscale_ + bzero_ : data_[i];
+      return hasscaling_ ? data_[i] * (unsigned long long)bscale_ + (unsigned long long)bzero_ : data_[i];
   }
   else {
     const char* p = (const char*)(data_+i);
@@ -1283,7 +1354,7 @@ template <> float FitsDatam<long long>::getValueFloat(long i)
     if (hasblank_ && u.i == blank_)
       return NAN;
     else
-      return hasscaling_ ? u.i * bscale_ + bzero_ : u.i;
+      return hasscaling_ ? u.i * (unsigned long long)bscale_ + (unsigned long long)bzero_ : u.i;
   }
 }
 
@@ -1520,7 +1591,7 @@ template <> double FitsDatam<long long>::getValueDouble(long i)
     if (hasblank_ && data_[i] == blank_)
       return NAN;
     else
-      return hasscaling_ ? data_[i] * bscale_ + bzero_ : data_[i];
+      return hasscaling_ ? data_[i] * (unsigned long long)bscale_ + (unsigned long long)bzero_ : data_[i];
   }
   else {
     const char* p = (const char*)(data_+i);
@@ -1544,7 +1615,7 @@ template <> double FitsDatam<long long>::getValueDouble(long i)
     if (hasblank_ && u.i == blank_)
       return NAN;
     else
-      return hasscaling_ ? u.i * bscale_ + bzero_ : u.i;
+      return hasscaling_ ? u.i * (unsigned long long)bscale_ + (unsigned long long)bzero_ : u.i;
   }
 }
 

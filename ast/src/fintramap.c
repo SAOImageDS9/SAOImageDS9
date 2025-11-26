@@ -204,7 +204,9 @@ static void TranWrap( void (* tran)( AstMapping *, int, int, const double *[],
    status to and from the subroutine's error status argument. */
    if ( astOK ) {
       STATUS = astStatus;
-      ( *(void (*)()) tran )( INTEGER_ARG(&THIS),
+      // waj
+      // ( *(void (*)()) tran )( INTEGER_ARG(&THIS),
+      ( *(void (*)(void*,void*,void*,void*,void*,void*,void*,void*,void*,void*)) tran )( INTEGER_ARG(&THIS),
                               INTEGER_ARG(&NPOINT),
                               INTEGER_ARG(&NCOORD_IN),
                               INTEGER_ARG(&INDIM),

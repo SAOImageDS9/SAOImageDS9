@@ -108,7 +108,9 @@
 /* ================= */
 /* Pointer to user-supplied (FORTRAN 77) interpolation function for
    use by AST_RESAMPLE<X> and AST_RESAMPLE8<X>. */
-static void (* ast_resample_FINTERP)();
+// waj
+// static void (* ast_resample_FINTERP)();
+static void (* ast_resample_FINTERP)(...);
 
 
 
@@ -408,6 +410,8 @@ F77_SUBROUTINE(ast_mapbox)( INTEGER(THIS),
 
 /* AST_RESAMPLE<X> requires a function for each possible data type, so
    define it via a macro. */
+// waj
+// void (* FINTERP)(), 
 #define MAKE_AST_RESAMPLE(f,F,Ftype,X,Xtype) \
 F77_INTEGER_FUNCTION(ast_resample##f)( INTEGER(THIS), \
                                        INTEGER(NDIM_IN), \
@@ -416,7 +420,7 @@ F77_INTEGER_FUNCTION(ast_resample##f)( INTEGER(THIS), \
                                        Ftype##_ARRAY(IN), \
                                        Ftype##_ARRAY(IN_VAR), \
                                        INTEGER(INTERP), \
-                                       void (* FINTERP)(), \
+                                       void (* FINTERP)(...), \
                                        DOUBLE_ARRAY(PARAMS), \
                                        INTEGER(FLAGS), \
                                        DOUBLE(TOL), \
@@ -1200,6 +1204,8 @@ MAKE_AST_RESAMPLE_UINTERP8(UB,unsigned char,UBYTE)
 
 /* AST_RESAMPLE8<X> requires a function for each possible data type, so
    define it via a macro. */
+// waj
+// void (* FINTERP)(),				
 #define MAKE_AST_RESAMPLE8(f,F,Ftype,X,Xtype) \
 F77_INTEGER8_FUNCTION(ast_resample8##f)( INTEGER(THIS), \
                                         INTEGER(NDIM_IN), \
@@ -1208,7 +1214,7 @@ F77_INTEGER8_FUNCTION(ast_resample8##f)( INTEGER(THIS), \
                                         Ftype##_ARRAY(IN), \
                                         Ftype##_ARRAY(IN_VAR), \
                                         INTEGER(INTERP), \
-                                        void (* FINTERP)(), \
+                                        void (* FINTERP)(...), \
                                         DOUBLE_ARRAY(PARAMS), \
                                         INTEGER(FLAGS), \
                                         DOUBLE(TOL), \

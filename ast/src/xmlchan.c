@@ -2425,6 +2425,9 @@ static int AttrValueB( AstXmlChan *this, AstXmlElement *elem, const char *name,
    int i;                        /* Loop count */
 
 /* Define the recognised true and false strings. */
+// waj
+//   const char *true[ 5 ] = { "true", "TRUE", "yes", "YES", "1" };
+//   const char *false[ 5 ] = { "false", "FALSE", "no", "NO", "0" };
    const char *true_[ 5 ] = { "true", "TRUE", "yes", "YES", "1" };
    const char *false_[ 5 ] = { "false", "FALSE", "no", "NO", "0" };
 
@@ -2447,7 +2450,9 @@ static int AttrValueB( AstXmlChan *this, AstXmlElement *elem, const char *name,
 /* See if the attribute value is equal to (or an abbreviation of) any of
    the true strings. */
       for( i = 0; i < 5; i++ ) {
-         if( strstr( true_[ i ], value ) == true_[ i ] ) {
+	// waj
+	// if( strstr( true[ i ], value ) == true[ i ] ) {
+	if( strstr( true_[ i ], value ) == true_[ i ] ) {
             result = 1;
             break;
          }
@@ -2457,6 +2462,8 @@ static int AttrValueB( AstXmlChan *this, AstXmlElement *elem, const char *name,
    of the false strings. */
       if( result == -1 ) {
          for( i = 0; i < 5; i++ ) {
+	   // waj
+           // if( strstr( false[ i ], value ) == false[ i ] ) {
             if( strstr( false_[ i ], value ) == false_[ i ] ) {
                result = 0;
                break;

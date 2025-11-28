@@ -22,9 +22,11 @@
  * somes systems (e.g. SunOS 4.1.4) stdlib.h doesn't declare strtod.
  */
 
-extern double strtod();
+// waj
+//extern double strtod();
+extern double strtod(const char*, char**);
 
-double fixstrtod(char *string, char **endPtr)
+double fixstrtod(const char *string, char **endPtr)
 {
     double d;
     d = strtod(string, endPtr);

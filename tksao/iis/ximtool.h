@@ -326,6 +326,8 @@ typedef struct {
 #define max(a,b)	((a)<(b)?(b):(a))
 #endif
 
-void xim_iisio(); 
+// waj
+//#define XtInputId void *
+void xim_iisio(IoChanPtr chan, int *fd_addr, void *id_addr);
 
 #endif

@@ -90,7 +90,7 @@
 static char wcserrmsg[80];
 static char wcsfile[256]={""};
 static void wcslibrot();
-void wcsrotset();
+void wcsrotset(struct WorldCoor *wcs);
 static int wcsproj0 = 0;
 static int izpix = 0;
 static double zpix = 0.0;
@@ -677,11 +677,7 @@ double *cd;			/* Rotation matrix, used if not NULL */
     return (0);
 }
 
-void
-wcseqset (wcs, equinox)
-
-struct WorldCoor *wcs;		/* World coordinate system data structure */
-double equinox;			/* Desired equinox as fractional year */
+void wcseqset (struct WorldCoor *wcs, double equinox)
 {
 
     if (nowcs (wcs))
@@ -1049,10 +1045,7 @@ struct WorldCoor *wcs;	/* World coordinate system structure */
 
 /* Compute image rotation */
 
-void
-wcsrotset (wcs)
-
-struct WorldCoor *wcs;	/* World coordinate system structure */
+void wcsrotset (struct WorldCoor *wcs)
 {
     int off;
     double cra, cdec, xc, xn, xe, yc, yn, ye;

@@ -69,15 +69,11 @@ static void wf_gsb1cheb();
  * precedence. 
  */
 
-int
-tnxinit (header, wcs)
-
-const char *header;	/* FITS header */
-struct WorldCoor *wcs;	/* pointer to WCS structure */
+int tnxinit (const char *header, struct WorldCoor *wcs)
 {
     struct IRAFsurface *wf_gsopen();
     char *str1, *str2, *lngstr, *latstr;
-    extern void wcsrotset();
+    extern void wcsrotset(struct WorldCoor *wcs);
 
     /* allocate space for the attribute strings */
     str1 = malloc (SZ_ATSTRING);
@@ -155,12 +151,7 @@ struct WorldCoor *wcs;	/* pointer to WCS structure */
 
 /* tnxpos -- forward transform (physical to world) gnomonic projection. */
 
-int
-tnxpos (xpix, ypix, wcs, xpos, ypos)
-
-double	xpix, ypix;	/*i physical coordinates (x, y) */
-struct WorldCoor *wcs;	/*i pointer to WCS descriptor */
-double	*xpos, *ypos;	/*o world coordinates (ra, dec) */
+int tnxpos (double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos)
 {
     int	ira, idec;
     double x, y, r, phi, theta, costhe, sinthe, dphi, cosphi, sinphi, dlng, z;
@@ -305,12 +296,7 @@ double	*xpos, *ypos;	/*o world coordinates (ra, dec) */
 
 /* tnxpix -- inverse transform (world to physical) gnomonic projection */
 
-int
-tnxpix (xpos, ypos, wcs, xpix, ypix)
-
-double	xpos, ypos;	/*i world coordinates (ra, dec) */
-struct WorldCoor *wcs;	/*i pointer to WCS descriptor */
-double	*xpix, *ypix;	/*o physical coordinates (x, y) */
+int tnxpix (double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix)
 {
     int	ira, idec, niter;
     double ra, dec, cosdec, sindec, cosra, sinra, x, y, phi, theta;

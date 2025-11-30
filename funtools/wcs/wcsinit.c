@@ -47,11 +47,11 @@
 #include <stdlib.h>
 #endif
 
-static void wcseq();
-static void wcseqm();
-static void wcsioset();
-void wcsrotset();
-char wcschar();
+static void wcseq(char *hstring, struct WorldCoor *wcs);
+static void wcseqm(char *hstring, struct WorldCoor *wcs, char *mchar);
+static void wcsioset(struct WorldCoor *wcs);
+void wcsrotset(struct WorldCoor *wcs);
+char wcschar(const char *hstring, const char *name);
 
 /* set up a WCS structure from a FITS image header lhstring bytes long 
  * for a specified WCS name */
@@ -92,13 +92,7 @@ const char *name;		/* character string with identifying name of WCS */
 
 /* WCSCHAR -- Find the letter for a specific WCS conversion */
 
-char
-wcschar (hstring, name)
-
-const char *hstring;	/* character string containing FITS header information
-		   	in the format <keyword>= <value> [/ <comment>] */
-const char *name;		/* Name of WCS conversion to be matched
-			   (case-independent) */
+char wcschar (const char *hstring, const char *name)
 {
     char *upname;
     char cwcs, charwcs;
@@ -242,11 +236,11 @@ char *wchar;		/* Suffix character for one of multiple WCS */
     double ut;
     int nax;
     int twod;
-    extern int tnxinit();
-    extern int zpxinit();
-    extern int platepos();
-    extern int dsspos();
-    void invert_wcs();
+    extern int tnxinit(const char *header, struct WorldCoor *wcs);
+    extern int zpxinit(const char *header, struct WorldCoor *wcs);
+    extern int platepos(double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos);
+    extern int dsspos(double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos);
+    void invert_wcs(struct WorldCoor *wcs);
 
     wcs = (struct WorldCoor *) calloc (1, sizeof(struct WorldCoor));
 
@@ -1295,10 +1289,7 @@ invert_wcs( struct WorldCoor *wcs)
 
 /* Set coordinate system of image, input, and output */
 
-static void
-wcsioset (wcs)
-
-struct WorldCoor *wcs;
+static void wcsioset (struct WorldCoor *wcs)
 {
     if (strlen (wcs->radecsys) == 0 || wcs->prjcode == WCS_LIN)
 	strcpy (wcs->radecsys, "LINEAR");
@@ -1321,12 +1312,7 @@ struct WorldCoor *wcs;
 }
 
 
-static void
-wcseq (hstring, wcs)
-
-char	*hstring;	/* character string containing FITS header information
-		   	in the format <keyword>= <value> [/ <comment>] */
-struct WorldCoor *wcs;	/* World coordinate system data structure */
+static void wcseq (char	*hstring, struct WorldCoor *wcs)
 {
     char mchar;		/* Suffix character for one of multiple WCS */
     mchar = (char) 0;
@@ -1335,13 +1321,7 @@ struct WorldCoor *wcs;	/* World coordinate system data structure */
 }
 
 
-static void
-wcseqm (hstring, wcs, mchar)
-
-char	*hstring;	/* character string containing FITS header information
-		   	in the format <keyword>= <value> [/ <comment>] */
-struct WorldCoor *wcs;	/* World coordinate system data structure */
-char	*mchar;		/* Suffix character for one of multiple WCS */
+static void wcseqm (char *hstring, struct WorldCoor *wcs, char	*mchar)
 {
     int ieq = 0;
     int eqhead = 0;

@@ -74,11 +74,7 @@ static void wf_gsclose();
  * value in the ra axis attribute list takes precedence.
  */
 
-int
-zpxinit (header, wcs)
-
-const char *header;	/* FITS header */
-struct WorldCoor *wcs;	/* pointer to WCS structure */
+int zpxinit (const char *header, struct WorldCoor *wcs)
 {
     int i, j;
     struct IRAFsurface *wf_gsopen();
@@ -240,12 +236,7 @@ struct WorldCoor *wcs;	/* pointer to WCS structure */
 
 /* zpxpos -- forward transform (physical to world) gnomonic projection. */
 
-int
-zpxpos (xpix, ypix, wcs, xpos, ypos)
-
-double	xpix, ypix;	/*i physical coordinates (x, y) */
-struct WorldCoor *wcs;	/*i pointer to WCS descriptor */
-double	*xpos, *ypos;	/*o world coordinates (ra, dec) */
+int zpxpos (double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos)
 {
     int	i, j, k, ira, idec;
     double x, y, r, phi, theta, costhe, sinthe, dphi, cosphi, sinphi, dlng, z;
@@ -508,12 +499,7 @@ double	*xpos, *ypos;	/*o world coordinates (ra, dec) */
  * azimuthal polynomial projection.
  */
 
-int
-zpxpix (xpos, ypos, wcs, xpix, ypix)
-
-double	xpos, ypos;	/*i world coordinates (ra, dec) */
-struct WorldCoor *wcs;	/*i pointer to WCS descriptor */
-double	*xpix, *ypix;	/*o physical coordinates (x, y) */
+int zpxpix (double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix)
 {
     int	i, ira, idec, niter;
     double ra, dec, cosdec, sindec, cosra, sinra, x, y, phi, theta;

@@ -41,22 +41,11 @@
 #include <stdio.h>
 #include "wcs.h"
 
-int
-dsspos (xpix, ypix, wcs, xpos, ypos)
-
 /* Routine to determine accurate position for pixel coordinates */
 /* returns 0 if successful otherwise 1 = angle too large for projection; */
 /* based on amdpos() from getimage */
 
-/* Input: */
-double	xpix;		/* x pixel number  (RA or long without rotation) */
-double	ypix;		/* y pixel number  (dec or lat without rotation) */
-struct WorldCoor *wcs;	/* WCS parameter structure */
-
-/* Output: */
-double	*xpos;		/* Right ascension or longitude in degrees */
-double	*ypos;		/* Declination or latitude in degrees */
-
+int dsspos (double xpix, double	ypix, struct WorldCoor *wcs, double *xpos, double *ypos)
 {
   double x, y, xmm, ymm, xmm2, ymm2, xmm3, ymm3, x2y2;
   double xi, xir, eta, etar, raoff, ra, dec;
@@ -131,23 +120,10 @@ double	*ypos;		/* Declination or latitude in degrees */
   return 0;
 }
 
-
-int
-dsspix (xpos, ypos, wcs, xpix, ypix)
-
 /* Routine to determine pixel coordinates for sky position */
 /* returns 0 if successful otherwise 1 = angle too large for projection; */
 /* based on amdinv() from getimage */
-
-/* Input: */
-double	xpos;		/* Right ascension or longitude in degrees */
-double	ypos;		/* Declination or latitude in degrees */
-struct WorldCoor *wcs;	/* WCS parameter structure */
-
-/* Output: */
-double	*xpix;		/* x pixel number  (RA or long without rotation) */
-double	*ypix;		/* y pixel number  (dec or lat without rotation) */
-
+int dsspix (double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix)
 {
   double div,xi,eta,x,y,xy,x2,y2,x2y,y2x,x3,y3,x4,y4,x2y2,cjunk,dx,dy;
   double sypos,cypos,syplate,cyplate,sxdiff,cxdiff;

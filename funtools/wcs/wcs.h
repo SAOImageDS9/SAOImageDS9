@@ -765,7 +765,7 @@ char *getwcsin();	/* Return current value of WCS input coordinate system */
 int setwcsdeg();	/* Set WCS output in degrees (1) or hh:mm:ss dd:mm:ss (0) */
 int wcsndec();		/* Set or get number of output decimal places */
 int wcsreset();		/* Change WCS using arguments */
-void wcseqset();	/* Change equinox of reference pixel coordinates in WCS */
+void wcseqset(char *hstring, struct WorldCoor *wcs);	/* Change equinox of reference pixel coordinates in WCS */
 void wcscstr();		/* Return system string from system code, equinox, epoch */
 void setwcslin();	/* Set output string mode for LINEAR coordinates */
 int pix2wcst();		/* Convert pixel coordinates to World Coordinate string */
@@ -815,25 +815,25 @@ extern int worldpos();	/* Convert from pixel location to RA,Dec */
 extern int worldpix();	/* Convert from RA,Dec to pixel location */
 
 /* Digital Sky Survey projection (dsspos.c) */
-extern int dsspos();	/* Convert from pixel location to RA,Dec */
-extern int dsspix();	/* Convert from RA,Dec to pixel location */
+extern int dsspos(double xpix, double	ypix, struct WorldCoor *wcs, double *xpos, double *ypos);	/* Convert from pixel location to RA,Dec */
+extern int dsspix(double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix);	/* Convert from RA,Dec to pixel location */
 
 /* SAO TDC TAN projection with higher order terms (platepos.c) */
-extern int platepos();	/* Convert from pixel location to RA,Dec */
-extern int platepix();	/* Convert from RA,Dec to pixel location */
+extern int platepos(double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos);	/* Convert from pixel location to RA,Dec */
+extern int platepix(double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix);	/* Convert from RA,Dec to pixel location */
 extern void SetFITSPlate(); /* Set FITS header plate fit coefficients from structure */
 extern int SetPlate();	/* Set plate fit coefficients in structure from arguments */
 extern int GetPlate();	/* Return plate fit coefficients from structure in arguments */
 
 /* IRAF TAN projection with higher order terms (tnxpos.c) */
-extern int tnxinit();	/* initialize the gnomonic forward or inverse transform */
-extern int tnxpos();	/* forward transform (physical to world) gnomonic projection. */
-extern int tnxpix();	/* Inverse transform (world to physical) gnomonic projection */
+extern int tnxinit(const char *header, struct WorldCoor *wcs);	/* initialize the gnomonic forward or inverse transform */
+extern int tnxpos(double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos);	/* forward transform (physical to world) gnomonic projection. */
+extern int tnxpix(double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix);	/* Inverse transform (world to physical) gnomonic projection */
 
 /* IRAF ZPN projection with higher order terms (zpxpos.c) */
-extern int zpxinit();	/* initialize the gnomonic forward or inverse transform */
-extern int zpxpos();	/* forward transform (physical to world) gnomonic projection. */
-extern int zpxpix();	/* Inverse transform (world to physical) gnomonic projection */
+extern int zpxinit(const char *header, struct WorldCoor *wcs);	/* initialize the gnomonic forward or inverse transform */
+extern int zpxpos(double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos);	/* forward transform (physical to world) gnomonic projection. */
+extern int zpxpix(double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix));	/* Inverse transform (world to physical) gnomonic projection */
 
 #endif	/* __STDC__ */
 

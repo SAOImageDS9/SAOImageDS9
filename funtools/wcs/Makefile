@@ -26,8 +26,8 @@ FTPDIR	= ../ftp
 # at configure-time with the --exec-prefix and --prefix options
 # to the "configure" script.
 
-prefix =		/Users/joye/SAOImageDS9
-exec_prefix =		/Users/joye/SAOImageDS9
+prefix =		/home/joye/SAOImageDS9
+exec_prefix =		/home/joye/SAOImageDS9
 
 # The following definition can be set to non-null for special systems
 # like AFS with replication.  It allows the pathnames used for installation
@@ -47,10 +47,10 @@ INCLUDE_INSTALL_DIR =	$(INSTALL_ROOT)$(prefix)/include
 
 # To change the compiler switches, for example to change from -O
 # to -g, change the following line:
-CFLAGS = 		-g -O2 -fno-common
+CFLAGS = 		-g -O2
 
 # To add ld switches, change the following line:
-LDFLAGS =		 -g -O2
+LDFLAGS =		
 
 # Some versions of make, like SGI's, use the following variable to
 # determine which shell to use for executing commands:
@@ -108,7 +108,7 @@ EXTLIB =
 # the default library for this package
 DEFLIB =	libwcs.a
 # the actual library we are building (if this is a subpackage)
-LIB =		/Users/joye/SAOImageDS9/funtools/libfuntools.a
+LIB =		/home/joye/SAOImageDS9/funtools/libfuntools.a
 
 PROGS =
 

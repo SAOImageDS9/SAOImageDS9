@@ -41,22 +41,10 @@
 #include <stdio.h>
 #include "wcs.h"
 
-int
-platepos (xpix, ypix, wcs, xpos, ypos)
-
 /* Routine to determine accurate position for pixel coordinates */
 /* returns 0 if successful otherwise 1 = angle too large for projection; */
 /* based on amdpos() from getimage */
-
-/* Input: */
-double	xpix;		/* x pixel number  (RA or long without rotation) */
-double	ypix;		/* y pixel number  (dec or lat without rotation) */
-struct WorldCoor *wcs;	/* WCS parameter structure */
-
-/* Output: */
-double	*xpos;		/* Right ascension or longitude in degrees */
-double	*ypos;		/* Declination or latitude in degrees */
-
+int platepos (double xpix, double ypix, struct WorldCoor *wcs, double *xpos, double *ypos)
 {
     double x, y, x2, y2, x3, y3, r2;
     double xi, xir, eta, etar, raoff, ra, dec, ra0, dec0;
@@ -124,23 +112,10 @@ double	*ypos;		/* Declination or latitude in degrees */
     return 0;
 }
 
-
-int
-platepix (xpos, ypos, wcs, xpix, ypix)
-
 /* Routine to determine pixel coordinates for sky position */
 /* returns 0 if successful otherwise 1 = angle too large for projection; */
 /* based on amdinv() from getimage */
-
-/* Input: */
-double	xpos;		/* Right ascension or longitude in degrees */
-double	ypos;		/* Declination or latitude in degrees */
-struct WorldCoor *wcs;	/* WCS parameter structure */
-
-/* Output: */
-double	*xpix;		/* x pixel number  (RA or long without rotation) */
-double	*ypix;		/* y pixel number  (dec or lat without rotation) */
-
+int platepix (double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix)
 {
     double xi,eta,x,y,xy,x2,y2,x2y,y2x,x3,y3,r2,dx,dy;
     double tdec,ctan,ccos,traoff, craoff, etar, xir;

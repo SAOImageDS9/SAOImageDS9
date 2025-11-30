@@ -110,7 +110,7 @@
    use by AST_RESAMPLE<X> and AST_RESAMPLE8<X>. */
 // waj
 // static void (* ast_resample_FINTERP)();
-static void (* ast_resample_FINTERP)(...);
+static void (* ast_resample_FINTERP)(void*,...);
 
 
 
@@ -420,7 +420,7 @@ F77_INTEGER_FUNCTION(ast_resample##f)( INTEGER(THIS), \
                                        Ftype##_ARRAY(IN), \
                                        Ftype##_ARRAY(IN_VAR), \
                                        INTEGER(INTERP), \
-                                       void (* FINTERP)(...), \
+                                       void (* FINTERP)(void*,...),	\
                                        DOUBLE_ARRAY(PARAMS), \
                                        INTEGER(FLAGS), \
                                        DOUBLE(TOL), \
@@ -1214,7 +1214,7 @@ F77_INTEGER8_FUNCTION(ast_resample8##f)( INTEGER(THIS), \
                                         Ftype##_ARRAY(IN), \
                                         Ftype##_ARRAY(IN_VAR), \
                                         INTEGER(INTERP), \
-                                        void (* FINTERP)(...), \
+					 void (* FINTERP)(void*,...),	\
                                         DOUBLE_ARRAY(PARAMS), \
                                         INTEGER(FLAGS), \
                                         DOUBLE(TOL), \

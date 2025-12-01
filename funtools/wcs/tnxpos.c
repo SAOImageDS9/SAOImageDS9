@@ -47,10 +47,10 @@
 
 #define	max_niter	500
 #define	SZ_ATSTRING	2000
-static void wf_gsclose();
-static void wf_gsb1pol();
-static void wf_gsb1leg();
-static void wf_gsb1cheb();
+static void wf_gsclose(struct IRAFsurface *sf);
+static void wf_gsb1pol(double x, int order, double *basis);
+static void wf_gsb1leg(double x, int order, double k1, double k2, double *basis);
+static void wf_gsb1cheb(double	x, int order, double k1, double k2, double *basis);
 
 /* tnxinit -- initialize the gnomonic forward or inverse transform.
  * initialization for this transformation consists of, determining which
@@ -71,7 +71,7 @@ static void wf_gsb1cheb();
 
 int tnxinit (const char *header, struct WorldCoor *wcs)
 {
-    struct IRAFsurface *wf_gsopen();
+    struct IRAFsurface *wf_gsopen(char *astr);
     char *str1, *str2, *lngstr, *latstr;
     extern void wcsrotset(struct WorldCoor *wcs);
 
@@ -157,7 +157,7 @@ int tnxpos (double xpix, double ypix, struct WorldCoor *wcs, double *xpos, doubl
     double x, y, r, phi, theta, costhe, sinthe, dphi, cosphi, sinphi, dlng, z;
     double colatp, coslatp, sinlatp, longp;
     double xs, ys, ra, dec, xp, yp;
-    double wf_gseval();
+    double wf_gseval(struct IRAFsurface *sf, double x, double y);
 
     /* Convert from pixels to image coordinates */
     xpix = xpix - wcs->crpix[0];
@@ -303,7 +303,8 @@ int tnxpix (double xpos, double ypos, struct WorldCoor *wcs, double *xpix, doubl
     double s, r, dphi, z, dpi, dhalfpi, twopi, tx;
     double xm, ym, f, fx, fy, g, gx, gy, denom, dx, dy;
     double colatp, coslatp, sinlatp, longp, sphtol;
-    double wf_gseval(), wf_gsder();
+    double wf_gseval(struct IRAFsurface *sf, double x, double y);
+    double wf_gsder(struct IRAFsurface *sf1, double x, double y, int nxd, int nyd);
 
     /* get the axis numbers */
     if (wcs->coorflip) {
@@ -537,18 +538,14 @@ struct WorldCoor *wcs;		/* pointer to the WCS descriptor */
  * and return a gsurfit compatible surface descriptor.
  */
 
-struct IRAFsurface *
-wf_gsopen (astr)
-
-char    *astr;		/* the input mwcs attribute string */
-
+struct IRAFsurface *wf_gsopen (char *astr)
 {
     double dval;
     char *estr;
     int npar, szcoeff;
     double *coeff;
     struct IRAFsurface *gs;
-    struct IRAFsurface *wf_gsrestore();
+    struct IRAFsurface *wf_gsrestore(double *fit);
 
     if (astr[1] == 0)
 	return (NULL);
@@ -588,11 +585,7 @@ char    *astr;		/* the input mwcs attribute string */
 
 /* wf_gsclose -- procedure to free the surface descriptor */
 
-static void
-wf_gsclose (sf)
-
-struct IRAFsurface *sf;	/* the surface descriptor */
-
+static void wf_gsclose (struct IRAFsurface *sf)
 {
     if (sf != NULL) {
 	if (sf->xbasis != NULL)
@@ -611,12 +604,7 @@ struct IRAFsurface *sf;	/* the surface descriptor */
  * the wf->ncoeff coefficients are stored in the vector pointed to by sf->coeff.
  */
 
-double
-wf_gseval (sf, x, y)
-
-struct IRAFsurface *sf;	/* pointer to surface descriptor structure */
-double  x;		/* x value */
-double  y;		/* y value */
+double wf_gseval (struct IRAFsurface *sf, double x, double y)
 {
     double sum, accum;
     int i, ii, k, maxorder, xorder;
@@ -710,20 +698,14 @@ static int nbcoeff = 0;
  * the input surface.
  */
 
-double
-wf_gsder (sf1, x, y, nxd, nyd)
-
-struct IRAFsurface *sf1; /* pointer to the previous surface */
-double	x;		/* x values */
-double	y;		/* y values */
-int	nxd, nyd;	/* order of the derivatives in x and y */
+double wf_gsder (struct IRAFsurface *sf1, double x, double y, int nxd, int nyd)
 {
     int nxder, nyder, i, j, k, nbytes;
     int order, maxorder1, maxorder2, nmove1, nmove2;
     struct IRAFsurface *sf2 = 0;
     double *ptr1, *ptr2;
     double zfit, norm;
-    double wf_gseval();
+    double wf_gseval(struct IRAFsurface *sf, double x, double y);
 
     if (sf1 == NULL)
 	return (0.0);
@@ -920,11 +902,7 @@ int	nxd, nyd;	/* order of the derivatives in x and y */
    of the double array fit, followed by the wf->ncoeff surface coefficients.
  */
 
-struct IRAFsurface *
-wf_gsrestore (fit)
-
-double	*fit;			/* array containing the surface parameters
-				   and coefficients */
+struct IRAFsurface *wf_gsrestore (double *fit)
 {
     struct IRAFsurface	*sf;	/* surface descriptor */
     int	surface_type, xorder, yorder, order, i;
@@ -1008,12 +986,7 @@ double	*fit;			/* array containing the surface parameters
 /* wf_gsb1pol -- procedure to evaluate all the non-zero polynomial functions
    for a single point and given order. */
 
-static void
-wf_gsb1pol (x, order, basis)
-
-double  x;		/*i data point */
-int     order;		/*i order of polynomial, order = 1, constant */
-double  *basis;		/*o basis functions */
+static void wf_gsb1pol (double x, int order, double *basis)
 {
     int     i;
 
@@ -1035,13 +1008,7 @@ double  *basis;		/*o basis functions */
 /* wf_gsb1leg -- procedure to evaluate all the non-zero legendre functions for
    a single point and given order. */
 
-static void
-wf_gsb1leg (x, order, k1, k2, basis)
-
-double  x;		/*i data point */
-int     order;		/*i order of polynomial, order = 1, constant */
-double  k1, k2;		/*i normalizing constants */
-double	*basis;		/*o basis functions */
+static void wf_gsb1leg (double x, int order, double k1, double k2, double *basis)
 {
     int i;
     double ri, xnorm;
@@ -1068,13 +1035,7 @@ double	*basis;		/*o basis functions */
 /* wf_gsb1cheb -- procedure to evaluate all the non-zero chebyshev function
    coefficients for a given x and order. */
 
-static void
-wf_gsb1cheb (x, order, k1, k2, basis)
-
-double	x;		/*i number of data points */
-int	order;		/*i order of polynomial, 1 is a constant */
-double	k1, k2;		/*i normalizing constants */
-double	*basis;		/*o array of basis functions */
+static void wf_gsb1cheb (double	x, int order, double k1, double k2, double *basis)
 {
     int i;
     double xnorm;
@@ -1107,7 +1068,7 @@ double	*coeff;		/* Plate fit coefficients */
 
 {
     double *ycoeff;
-    struct IRAFsurface *wf_gspset ();
+    struct IRAFsurface *wf_gspset (int xorder, int yorder, int xterms, double *coeff);
 
     wcs->prjcode = WCS_TNX;
 
@@ -1125,13 +1086,7 @@ double	*coeff;		/* Plate fit coefficients */
    of polynomial terms in y), xterms, and the surface coefficients.
  */
 
-struct IRAFsurface *
-wf_gspset (xorder, yorder, xterms, coeff)
-
-int	xorder;
-int	yorder;
-int	xterms;
-double	*coeff;
+struct IRAFsurface *wf_gspset (int xorder, int yorder, int xterms, double *coeff)
 {
     struct IRAFsurface	*sf;	/* surface descriptor */
     int	surface_type, order, i;

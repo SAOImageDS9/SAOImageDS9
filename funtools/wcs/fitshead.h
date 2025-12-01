@@ -301,7 +301,7 @@ extern int hgetl();	/* T->1, F->0 from FITS logical entry */
 extern int hgets();	/* Previously allocated string */
 extern int hgetsc();	/* Previously allocated string (Multiple WCS) */
 extern int hgetm();	/* Previously allocated string from multiple keywords */
-extern char *hgetc();	/* Return pointer to string */
+extern char *hgetc(const char *hstring, const char *keyword0);	/* Return pointer to string */
 extern int hgetndec();	/* Number of decimal places in keyword value */
 
 /* Subroutines to convert strings to RA and Dec in degrees */

@@ -89,7 +89,7 @@
 
 static char wcserrmsg[80];
 static char wcsfile[256]={""};
-static void wcslibrot();
+static void wcslibrot(struct WorldCoor *wcs);
 void wcsrotset(struct WorldCoor *wcs);
 static int wcsproj0 = 0;
 static int izpix = 0;
@@ -985,11 +985,7 @@ double *pc;		/* Rotation matrix, ignored if NULL */
 
 /* Set up rotation matrix for WCSLIB projection subroutines */
 
-static void
-wcslibrot (wcs)
-
-struct WorldCoor *wcs;	/* World coordinate system structure */
-
+static void wcslibrot (struct WorldCoor *wcs)
 {
     int i, mem, naxes;
 
@@ -2116,7 +2112,7 @@ double	*xpos,*ypos;	/* RA and Dec in degrees (returned) */
 {
     double	xpi, ypi, xp, yp;
     double	eqin, eqout;
-    int wcspos();
+    int wcspos(double  xpix, double  ypix, struct WorldCoor *wcs, double *xpos, double *ypos);
 
     if (nowcs (wcs))
 	return;
@@ -2239,7 +2235,7 @@ int	*offscl;	/* 0 if within bounds, else off scale */
     double xp, yp, xpi, ypi;
     double eqin, eqout;
     int sysin;
-    int wcspix();
+    int wcspix(double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix);
 
     if (nowcs (wcs))
 	return;
@@ -2329,22 +2325,16 @@ int	*offscl;	/* 0 if within bounds, else off scale */
     return;
 }
 
-
-int
-wcspos (xpix, ypix, wcs, xpos, ypos)
-
-/* Input: */
-double  xpix;          /* x pixel number  (RA or long without rotation) */
-double  ypix;          /* y pixel number  (dec or lat without rotation) */
-struct WorldCoor *wcs;  /* WCS parameter structure */
-
-/* Output: */
-double  *xpos;           /* x (RA) coordinate (deg) */
-double  *ypos;           /* y (dec) coordinate (deg) */
+int wcspos (double  xpix, double  ypix, struct WorldCoor *wcs, double *xpos, double *ypos)
 {
     int offscl;
     int i;
-    int wcsrev();
+    int wcsrev(const char ctype[][16], struct wcsprm *wcs,
+	       const double pixcrd[], struct linprm *lin,
+	       double imgcrd[], struct prjprm *prj,
+	       double *phi, double *theta,
+	       const double crval[], struct celprm *cel, double world[]);
+
     double wcscrd[4], imgcrd[4], pixcrd[4];
     double phi, theta;
     
@@ -2371,21 +2361,17 @@ double  *ypos;           /* y (dec) coordinate (deg) */
     return (offscl);
 }
 
-int
-wcspix (xpos, ypos, wcs, xpix, ypix)
-
-/* Input: */
-double  xpos;           /* x (RA) coordinate (deg) */
-double  ypos;           /* y (dec) coordinate (deg) */
-struct WorldCoor *wcs;  /* WCS parameter structure */
-
-/* Output: */
-double  *xpix;          /* x pixel number  (RA or long without rotation) */
-double  *ypix;          /* y pixel number  (dec or lat without rotation) */
+int wcspix (double xpos, double ypos, struct WorldCoor *wcs, double *xpix, double *ypix)
 
 {
     int offscl;
-    int wcsfwd();
+    int wcsfwd(const char ctype[][16], struct wcsprm* wcs,
+	       const double world[], const double crval[],
+	       struct celprm *cel,
+	       double *phi, double *theta,
+	       struct prjprm *prj, double imgcrd[],
+	       struct linprm *lin, double pixcrd[]);
+
     double wcscrd[4], imgcrd[4], pixcrd[4];
     double phi, theta;
 

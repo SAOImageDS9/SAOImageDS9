@@ -606,7 +606,7 @@ extern "C" {
 	double	*rra,	/* Right ascension in degrees (returned) */
 	double	*rdec,	/* Declination in degrees (returned) */
 	double	*r);	/* Distance to object in same units as pos (returned) */
-    void v2s3 (		/* Convert vector to RA and Dec in radians and distance */
+  void v2s3 (		/* Convert vector to RA and Dec in radians and distance */
 	double	pos[3],	/* x,y,z geocentric equatorial position of object */
 	double	*rra,	/* Right ascension in radians (returned) */
 	double	*rdec,	/* Declination in radians (returned) */
@@ -791,14 +791,14 @@ int cpwcs();		/* Copy WCS keywords with no suffix to ones with suffix */
 void wcscon();		/* Convert between coordinate systems and equinoxes */
 void wcsconp();		/* Convert between coordinate systems and equinoxes */
 void wcsconv();		/* Convert between coordinate systems and equinoxes */
-void fk425e();		/* Convert B1950(FK4) to J2000(FK5) coordinates */
-void fk524e();		/* Convert J2000(FK5) to B1950(FK4) coordinates */
+void fk425e(double *ra, double *dec, double epoch);		/* Convert B1950(FK4) to J2000(FK5) coordinates */
+void fk524e(double *ra, double	*dec, double epoch);		/* Convert J2000(FK5) to B1950(FK4) coordinates */
 int wcscsys();		/* Set coordinate system from string */
 double wcsceq();	/* Set equinox from string (return 0.0 if not obvious) */
 void d2v3();		/* Convert RA and Dec in degrees and distance to vector */
-void s2v3();		/* Convert RA and Dec in radians and distance to vector */
+void s2v3(double rra, double rdec, double r, double pos[3]);		/* Convert RA and Dec in radians and distance to vector */
 void v2d3();		/* Convert vector to RA and Dec in degrees and distance */
-void v2s3();		/* Convert vector to RA and Dec in radians and distance */
+void v2s3(double pos[3], double *rra, double *rdec, double *r);		/* Convert vector to RA and Dec in radians and distance */
 
 /* Distortion model subroutines in distort.c */
 void distortinit();	/* Set distortion coefficients from FITS header */

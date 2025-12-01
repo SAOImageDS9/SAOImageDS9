@@ -313,11 +313,11 @@
 #include "wcs.h"
 #include "fitsfile.h"
 
-static double suntl();
-static void fixdate();
-static int caldays();
-static double dint();
-static double dmod();
+static double suntl(double dj, double ra, double dec, int sys);
+static void fixdate(int *iyr, int *imon, int *iday, int *ihr, int *imn, double	*sec, int ndsec);
+static int caldays(int	year, int month);
+static double dint(double dnum);
+static double dmod(double dnum, double dm);
 
 static double longitude = 0.0;	/* longitude of observatory in degrees (+=west) */
 void
@@ -597,13 +597,7 @@ int	sys;	/* J2000, B1950, GALACTIC, ECLIPTIC */
 /* SUNTL-- compute light travel time to heliocentric correction in days */
 /* Translated into C from IRAF SPP noao.astutils.asttools.asthjd.x */
 
-static double
-suntl (dj, ra, dec, sys)
-
-double	dj;	/* Julian date (geocentric) */
-double	ra;	/* Right ascension (degrees) */
-double	dec;	/* Declination (degrees) */
-int	sys;	/* J2000, B1950, GALACTIC, ECLIPTIC */
+static double suntl (double dj, double ra, double dec, int sys)
 {
     double t;		/* Number of Julian centuries since J1900 */
     double manom;	/* Mean anomaly of the Earth's orbit (degrees) */
@@ -4329,16 +4323,7 @@ char	*string; /* Possible FITS date string, which may be:
 
 /* Round seconds and make sure date and time numbers are within limits */
 
-static void
-fixdate (iyr, imon, iday, ihr, imn, sec, ndsec)
-
-int	*iyr;	/* year (returned) */
-int	*imon;	/* month (returned) */
-int	*iday;	/* day (returned) */
-int	*ihr;	/* hours (returned) */
-int	*imn;	/* minutes (returned) */
-double	*sec;	/* seconds (returned) */
-int	ndsec;	/* Number of decimal places in seconds (0=int) */
+static void fixdate (int *iyr, int *imon, int *iday, int *ihr, int *imn, double	*sec, int ndsec)
 {
     double days;
 
@@ -4406,11 +4391,7 @@ int	ndsec;	/* Number of decimal places in seconds (0=int) */
 
 /* Calculate days in month 1-12 given year (Gregorian calendar only) */
 
-static int
-caldays (year, month)
-
-int	year;	/* 4-digit year */
-int	month;	/* Month (1=January, 2=February, etc.) */
+static int caldays (int	year, int month)
 {
     if (month < 1) {
 	month = month + 12;
@@ -4458,10 +4439,7 @@ int	month;	/* Month (1=January, 2=February, etc.) */
 }
 
 
-static double
-dint (dnum)
-
-double	dnum;
+static double dint (double dnum)
 {
     double dn;
 
@@ -4473,10 +4451,7 @@ double	dnum;
 }
 
 
-static double
-dmod (dnum, dm)
-
-double	dnum, dm;
+static double dmod (double dnum, double dm)
 {
     double dnumx, dnumi, dnumf;
     if (dnum < 0.0)

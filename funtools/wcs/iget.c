@@ -52,7 +52,7 @@
 
 #define MAX_LVAL 2000
 
-static char *isearch();
+static char *isearch(const char *hstring, const char *keyword);
 static char val[30];
 
 /* Extract long value for variable from IRAF multiline keyword value */
@@ -436,22 +436,7 @@ const char *keyword0;	/* character string containing the name of the keyword
 
 /* Find value for specified IRAF keyword */
 
-static char *
-isearch (hstring,keyword)
-
-/* Find entry for keyword keyword in IRAF keyword value string hstring.
-   NULL is returned if the keyword is not found */
-
-const char *hstring;	/* character string containing fits-style header
-		information in the format <keyword>= <value> {/ <comment>}
-		the default is that each entry is 80 characters long;
-		however, lines may be of arbitrary length terminated by
-		nulls, carriage returns or linefeeds, if packed is true.  */
-const char *keyword;	/* character string containing the name of the variable
-		to be returned.  isearch searches for a line beginning
-		with this string.  The string may be a character
-		literal or a character variable terminated by a null
-		or '$'.  it is truncated to 8 characters. */
+static char *isearch (const char *hstring, const char *keyword)
 {
     char *loc, *headnext, *headlast, *pval;
     int lastchar, nextchar, lkey, nleft, lhstr;

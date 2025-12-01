@@ -148,27 +148,27 @@
 #define LEN_FITSHDR	11520
 
 int check_immagic();
-int irafgeti4();
-float irafgetr4();
-char *irafgetc2();
-char *irafgetc();
-char *iraf2str();
-static char *same_path();
-static void irafputr4();
-static void irafputi4();
-static void irafputc2();
-static void irafputc();
-static void str2iraf();
+int irafgeti4(char *irafheader, int offset);
+float irafgetr4(char *irafheader, int offset);
+char *irafgetc2(char *irafheader, int offset, int nc);
+char *irafgetc(char *irafheader, int offset, int nc);
+char *iraf2str(char *irafstring, int nchar);
+static char *same_path(char *pixname, char *hdrname);
+static void irafputr4(char *irafheader, int offset, float rnum);
+static void irafputi4(char *irafheader, int offset, int inum);
+static void irafputc2(char *string, char *irafheader, int offset, int nc);
+static void irafputc(char *string, char *irafheader, int offset, int nc);
+static void str2iraf(char *string, char *irafstring, int nchar);
 static int headswap=-1;	/* =1 to swap data bytes of foreign IRAF file */
-static void irafswap();
-static void irafswap2();
-static void irafswap4();
-static void irafswap8();
-int head_version ();
-int pix_version ();
-int irafncmp ();
+static void irafswap(int bitpix, char *string, int nbytes);
+static void irafswap2(char *string, int nbytes);
+static void irafswap4(char *string, int nbytes);
+static void irafswap8(char *string, int nbytes);
+int head_version (char *irafheader);
+int pix_version (char *irafheader);
+int irafncmp (char *irafheader, char *teststring, int nc);
 static int machswap();
-static int irafsize();
+static int irafsize(FILE *diskfile);
 
 #define SECONDS_1970_TO_1980    315532800L
 
@@ -409,11 +409,7 @@ char	*fitsheader;	/* FITS image header (filled) */
 
 /* Return IRAF image format version number from magic word in IRAF header*/
 
-int
-head_version (irafheader)
-
-char	*irafheader;	/* IRAF image header from file */
-
+int head_version (char *irafheader)
 {
 
     /* Check header file magic word */
@@ -430,11 +426,7 @@ char	*irafheader;	/* IRAF image header from file */
 
 /* Return IRAF image format version number from magic word in IRAF pixel file */
 
-int
-pix_version (irafheader)
-
-char	*irafheader;	/* IRAF image header from file */
-
+int pix_version (char *irafheader)
 {
 
     /* Check pixel file header magic word */
@@ -452,13 +444,7 @@ char	*irafheader;	/* IRAF image header from file */
 /* Verify that file is valid IRAF imhdr or impix by checking first 5 chars
  * Returns:	0 on success, 1 on failure */
 
-int
-irafncmp (irafheader, teststring, nc)
-
-char	*irafheader;	/* IRAF image header from file */
-char	*teststring;	/* C character string to compare */
-int	nc;		/* Number of characters to compate */
-
+int irafncmp (char *irafheader, char *teststring, int nc)
 {
     char *line;
 
@@ -1026,12 +1012,7 @@ char	*image;		/* IRAF image */
 
 /* Put filename and header path together */
 
-static char *
-same_path (pixname, hdrname)
-
-char	*pixname;	/* IRAF pixel file pathname */
-char	*hdrname;	/* IRAF image header file pathname */
-
+static char *same_path (char *pixname, char *hdrname)
 {
     int len, plen;
     char *newpixname;
@@ -1336,12 +1317,7 @@ int	*nbiraf;	/* Length of returned IRAF header */
 }
 
 
-int
-irafgeti4 (irafheader, offset)
-
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before number */
-
+int irafgeti4 (char *irafheader, int offset)
 {
     char *ctemp, *cheader;
     int  temp;
@@ -1373,12 +1349,7 @@ int	offset;		/* Number of bytes to skip before number */
 }
 
 
-float
-irafgetr4 (irafheader, offset)
-
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before number */
-
+float irafgetr4 (char *irafheader, int offset)
 {
     char *ctemp, *cheader;
     float  temp;
@@ -1412,13 +1383,7 @@ int	offset;		/* Number of bytes to skip before number */
 
 /* IRAFGETC2 -- Get character string from arbitrary part of v.1 IRAF header */
 
-char *
-irafgetc2 (irafheader, offset, nc)
-
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before string */
-int	nc;		/* Maximum number of characters in string */
-
+char *irafgetc2 (char *irafheader, int offset, int nc)
 {
     char *irafstring, *string;
 
@@ -1432,13 +1397,7 @@ int	nc;		/* Maximum number of characters in string */
 
 /* IRAFGETC -- Get character string from arbitrary part of IRAF header */
 
-char *
-irafgetc (irafheader, offset, nc)
-
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before string */
-int	nc;		/* Maximum number of characters in string */
-
+char *irafgetc (char *irafheader, int offset, int nc)
 {
     char *ctemp, *cheader;
     int i;
@@ -1462,11 +1421,7 @@ int	nc;		/* Maximum number of characters in string */
 
 /* Convert IRAF 2-byte/char string to 1-byte/char string */
 
-char *
-iraf2str (irafstring, nchar)
-
-char	*irafstring;	/* IRAF 2-byte/character string */
-int	nchar;		/* Number of characters in string */
+char *iraf2str (char *irafstring, int nchar)
 {
     char *string;
     int i, j;
@@ -1506,13 +1461,7 @@ int	nchar;		/* Number of characters in string */
 
 /* IRAFPUTI4 -- Insert 4-byte integer into arbitrary part of IRAF header */
 
-static void
-irafputi4 (irafheader, offset, inum)
-
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before number */
-int	inum;		/* Number to put into header */
-
+static void irafputi4 (char *irafheader, int offset, int inum)
 {
     char *cn, *chead;
 
@@ -1538,13 +1487,7 @@ int	inum;		/* Number to put into header */
 
 /* IRAFPUTR4 -- Insert 4-byte real number into arbitrary part of IRAF header */
 
-static void
-irafputr4 (irafheader, offset, rnum)
-
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before number */
-float	rnum;		/* Number to put into header */
-
+static void irafputr4 (char *irafheader, int offset, float rnum)
 {
     char *cn, *chead;
 
@@ -1570,14 +1513,7 @@ float	rnum;		/* Number to put into header */
 
 /* IRAFPUTC2 -- Insert character string into arbitrary part of v.1 IRAF header */
 
-static void
-irafputc2 (string, irafheader, offset, nc)
-
-char	*string;	/* String to insert into header */
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before string */
-int	nc;		/* Maximum number of characters in string */
-
+static void irafputc2 (char *string, char *irafheader, int offset, int nc)
 {
     char *irafstring;
 
@@ -1595,14 +1531,7 @@ int	nc;		/* Maximum number of characters in string */
 
 /* IRAFPUTC -- Insert character string into arbitrary part of IRAF header */
 
-static void
-irafputc (string, irafheader, offset, nc)
-
-char	*string;	/* String to insert into header */
-char	*irafheader;	/* IRAF image header */
-int	offset;		/* Number of bytes to skip before string */
-int	nc;		/* Maximum number of characters in string */
-
+static void irafputc (char *string, char *irafheader, int offset, int nc)
 {
     char *chead;
     int i;
@@ -1617,12 +1546,7 @@ int	nc;		/* Maximum number of characters in string */
 
 /* STR2IRAF -- Convert 1-byte/char string to IRAF 2-byte/char string */
 
-static void
-str2iraf (string, irafstring, nchar)
-
-char	*string;	/* 1-byte/character string */
-char	*irafstring;	/* IRAF 2-byte/character string */
-int	nchar;		/* Maximum number of characters in IRAF string */
+static void str2iraf (char *string, char *irafstring, int nchar)
 {
     int i, j, nc, nbytes;
 
@@ -1654,15 +1578,7 @@ int	nchar;		/* Maximum number of characters in IRAF string */
 
 /* IRAFSWAP -- Reverse bytes of any type of vector in place */
 
-static void
-irafswap (bitpix, string, nbytes)
-
-int	bitpix;		/* Number of bits per pixel */
-			/*  16 = short, -16 = unsigned short, 32 = int */
-			/* -32 = float, -64 = double */
-char	*string;	/* Address of starting point of bytes to swap */
-int	nbytes;		/* Number of bytes to swap */
-
+static void irafswap (int bitpix, char *string, int nbytes)
 {
     switch (bitpix) {
 
@@ -1698,13 +1614,7 @@ int	nbytes;		/* Number of bytes to swap */
 
 /* IRAFSWAP2 -- Swap bytes in string in place */
 
-static void
-irafswap2 (string,nbytes)
-
-
-char *string;	/* Address of starting point of bytes to swap */
-int nbytes;	/* Number of bytes to swap */
-
+static void irafswap2 (char *string, int nbytes)
 {
     char *sbyte, temp, *slast;
 
@@ -1722,12 +1632,7 @@ int nbytes;	/* Number of bytes to swap */
 
 /* IRAFSWAP4 -- Reverse bytes of Integer*4 or Real*4 vector in place */
 
-static void
-irafswap4 (string,nbytes)
-
-char *string;	/* Address of Integer*4 or Real*4 vector */
-int nbytes;	/* Number of bytes to reverse */
-
+static void irafswap4 (char *string, int nbytes)
 {
     char *sbyte, *slast;
     char temp0, temp1, temp2, temp3;
@@ -1752,12 +1657,7 @@ int nbytes;	/* Number of bytes to reverse */
 
 /* IRAFSWAP8 -- Reverse bytes of Real*8 vector in place */
 
-static void
-irafswap8 (string,nbytes)
-
-char *string;	/* Address of Real*8 vector */
-int nbytes;	/* Number of bytes to reverse */
-
+static void irafswap8 (char *string, int nbytes)
 {
     char *sbyte, *slast;
     char temp[8];
@@ -1790,9 +1690,7 @@ int nbytes;	/* Number of bytes to reverse */
 /* Set flag if machine on which program is executing is not FITS byte order
  * ( i.e., if it is an Alpha or PC instead of a Sun ) */
 
-static int
-machswap ()
-
+static int machswap ()
 {
     char *ctest;
     int itest;
@@ -1824,10 +1722,7 @@ char	*filename;	/* Name of file for which to find size */
 
 /* IRAFSIZE -- return size of file in bytes */
 
-static int
-irafsize (diskfile)
-
-FILE *diskfile;		/* Descriptor of file for which to find size */
+static int irafsize (FILE *diskfile)
 {
     long filesize;
     long offset;

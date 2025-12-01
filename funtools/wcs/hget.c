@@ -74,7 +74,7 @@
 static int use_saolib=0;
 #endif
 
-char *hgetc ();
+char *hgetc (const char *hstring, const char *keyword0);
 
 static char val[VLENGTH+1];
 static int multiline = 0;
@@ -831,16 +831,7 @@ int *ndec;	/* Number of decimal places in keyword value */
 
 /* Extract character value for variable from FITS header string */
 
-char *
-hgetc (hstring,keyword0)
-
-const char *hstring;	/* character string containing FITS header information
-		   in the format <keyword>= <value> {/ <comment>} */
-const char *keyword0;	/* character string containing the name of the keyword
-		   the value of which is returned.  hget searches for a
-		   line beginning with this string.  if "[n]" is present,
-		   the n'th token in the value is returned.
-		   (the first 8 characters must be unique) */
+char *hgetc (const char *hstring, const char *keyword0)
 {
     static char cval[80];
     char *value;

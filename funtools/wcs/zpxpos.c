@@ -50,7 +50,7 @@
 
 #define	max_niter	500
 #define	SZ_ATSTRING	2000
-static void wf_gsclose();
+static void wf_gsclose(struct IRAFsurface *sf);
 
 /* zpxinit -- initialize the zenithal/azimuthal polynomial forward or
  * inverse transform. initialization for this transformation consists of,
@@ -77,10 +77,10 @@ static void wf_gsclose();
 int zpxinit (const char *header, struct WorldCoor *wcs)
 {
     int i, j;
-    struct IRAFsurface *wf_gsopen();
+    struct IRAFsurface *wf_gsopen(char *astr);
     char key[8], *str1, *str2, *lngstr, *latstr, *header1;
     double zd1, d1, zd2,d2, zd, d, r;
-    extern void wcsrotset();
+    extern void wcsrotset(struct WorldCoor *wcs);
 
     /* allocate space for the attribute strings */
     str1 = malloc (SZ_ATSTRING);
@@ -243,7 +243,7 @@ int zpxpos (double xpix, double ypix, struct WorldCoor *wcs, double *xpos, doubl
     double colatp, coslatp, sinlatp, longp;
     double xs, ys, ra, dec, xp, yp;
     double a, b, c, d, zd, zd1, zd2, r1, r2, rt, lambda;
-    double wf_gseval();
+    double wf_gseval(struct IRAFsurface *sf, double x, double y);
 
     /* Convert from pixels to image coordinates */
     xpix = xpix - wcs->crpix[0];
@@ -506,7 +506,8 @@ int zpxpix (double xpos, double ypos, struct WorldCoor *wcs, double *xpix, doubl
     double s, r, dphi, z, dpi, dhalfpi, twopi, tx;
     double xm, ym, f, fx, fy, g, gx, gy, denom, dx, dy;
     double colatp, coslatp, sinlatp, longp, sphtol;
-    double wf_gseval(), wf_gsder();
+    double wf_gseval(struct IRAFsurface *sf, double x, double y);
+    double wf_gsder(struct IRAFsurface *sf1, double x, double y, int nxd, int nyd);
 
     /* get the axis numbers */
     if (wcs->coorflip) {

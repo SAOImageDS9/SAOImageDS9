@@ -550,20 +550,12 @@ struct wcsprm *wcs;
 
 /*--------------------------------------------------------------------------*/
 
-int
-wcsfwd(ctype, wcs, world, crval, cel, phi, theta, prj, imgcrd, lin, pixcrd)
-
-const char ctype[][16];
-struct wcsprm* wcs;
-const double world[];
-const double crval[];
-struct celprm *cel;
-double *phi, *theta;
-struct prjprm *prj;
-double imgcrd[];
-struct linprm *lin;
-double pixcrd[];
-
+int wcsfwd(const char ctype[][16], struct wcsprm* wcs,
+	   const double world[], const double crval[],
+	   struct celprm *cel,
+	   double *phi, double *theta,
+	   struct prjprm *prj, double imgcrd[],
+	   struct linprm *lin, double pixcrd[])
 {
    int    err, j;
    double offset;
@@ -640,20 +632,11 @@ double pixcrd[];
 
 /*--------------------------------------------------------------------------*/
 
-int
-wcsrev(ctype, wcs, pixcrd, lin, imgcrd, prj, phi, theta, crval, cel, world)
-
-const char ctype[][16];
-struct wcsprm *wcs;
-const double pixcrd[];
-struct linprm *lin;
-double imgcrd[];
-struct prjprm *prj;
-double *phi, *theta;
-const double crval[];
-struct celprm *cel;
-double world[];
-
+int wcsrev(const char ctype[][16], struct wcsprm *wcs,
+	   const double pixcrd[], struct linprm *lin,
+	   double imgcrd[], struct prjprm *prj,
+	   double *phi, double *theta,
+	   const double crval[], struct celprm *cel, double world[])
 {
    int    err, face, j;
    double offset;

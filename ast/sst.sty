@@ -1,0 +1,234 @@
+\ProvidesPackage{sst}
+
+%%%%
+% Packet for formatting latex code output from prolat
+%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% .. Set up the sectioning and appearance for the sstroutine.
+
+\RequirePackage{titlesec}
+
+%...  New subsection sstrefsection
+\titleclass{\sstrefsection}{straight}[\subsection]
+\newcounter{sstrefsection}
+\renewcommand{\thesstrefsection}{\arabic{sstrefsection}}
+
+%...  Formatting the title for sstrefsection
+\titleformat{name=\sstrefsection}%
+{\normalfont\Large\bfseries\centering}{}{0pt}{}
+\titlespacing*{\sstrefsection}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+
+%...  Command to turn name and short description into single variable for title.
+\newcommand{\sstsectitle}[2]{\strut \vphantom{#1}#1\newline \ignorespaces#2\strut}
+
+% ..  Command to completely remove section from contents so it can be
+% added in manually at the correct section.
+\newcommand{\nocontentsline}[3]{}
+\newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
+%% Add a toc entry which will be used in  the main toc
+\newcommand{\sstmaintocline}[2]{\addcontentsline{toc}{subsection}{\protect\numberline{}#1}}
+
+%% commands to temporarily stop sstroutines from writing anything into the main toc
+\newcommand{\sstnomaintoc}{\renewcommand{\sstmaintocline}[2]{}}
+%% Command to restart sstroutines appearing in the main html toc
+%% (does nothing in pdf)
+\newcommand{\sstmaintoc}{\renewcommand{\sstmaintocline}[2]{\addcontentsline{toc}{subsection}{\protect\numberline{}##1}}}
+
+
+
+%% .. command to format the sst title
+\newcommand{\ssttitle}[2]{
+  \tocless\sstrefsection{\centering\rule{\textwidth}{0.5mm}\\%
+    #1\\#2\\\rule{\textwidth}{0.5mm}}
+  \sstmaintocline{\RemoveSpaces{#1}}{#2}
+}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%...  Basic  SSTROUTINE command
+\newcommand{\sstroutine}[3]{
+  \clearpage
+  % Create the section.
+  \ssttitle{#1}{#2}
+
+  % Set the first parameter as the label; need to remove spaces first.
+  \label{\RemoveSpaces{#1}}
+
+  %..  change the mark on the left hand side to include the name of the chapter.
+  \markright{\textit{\RemoveSpaces{#1}}}
+  \iftwoside
+  \fancyhead[RE,LO]{\thepage\hspace{1cm}\rightmark}
+  \else
+  \lhead{\thepage\hspace{1cm}\rightmark}
+  \fi
+
+  %..  Nest all the material within a description
+  \begin{description}[style=nextline]
+    #3
+  \end{description}
+
+  % End the page
+  \newpage
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% .. Various sst macros that are used within an \sstroutine
+
+% .. diytopic -- basis for many of th commands.
+\newcommand{\sstdiytopic}[2]{\item[#1:]
+\begin{description}[style=nextline]\item[]\end{description} #2}
+
+\newcommand{\sstdescription}[1]{\item[Description:] #1 }
+
+\newcommand{\sstusage}[1]{\item[Usage:]{\raggedright \tt #1}}
+
+\newcommand{\sstparameters}[1]{\item[Parameters:]
+\begin{description}[style=nextline]\item[] #1 \end{description}}
+
+\newcommand{\sstkeywords}[1]{\item[Keywords:]
+\begin{description}[style=nextline]\item[] #1 \end{description}}
+
+\newcommand{\sstsubsection}[2]{\item[{#1}] #2}
+
+\newcommand{\sstnotes}[1]{\sstdiytopic{Notes}{#1}}
+
+\newcommand{\sstdiylist}[2]{\item[#1] #2}
+
+\newcommand{\sstimplementationstatus}[1]{\item[Implementation Status:] #1}
+
+\newcommand{\sstbugs}[1]{\item[Bugs:] #1}
+
+%  Format a list of items while in paragraph mode.
+\newcommand{\sstitemlist}[1]{
+  \mbox{}%\vspace{-1\baselineskip}
+  \begin{itemize}
+     #1
+  \end{itemize}
+}
+
+\newcommand{\ssthitemlist}[1]{\mbox{}\begin{itemize}#1\end{itemize}}
+\newcommand{\sstapplicability}[1]{\sstdiytopic{Applicability}{#1}}
+\newcommand{\sstresparameters}[1]{\sstdiytopic{Results Parameters}{#1}}
+\newcommand{\sstarguments}[1]{\sstdiytopic{Arguments}{#1}}
+\newcommand{\sstinvocation}[1]{\sstdiytopic{Invocation}{{\tt #1}}}
+\newcommand{\sstreturnedvalue}[1]{\sstdiytopic{Returned Value}{#1}}
+\newcommand{\sstimplementation}[1]{\sstdiytopic{Implementation}{#1}}
+
+
+\newcommand{\sstexamplesubsection}[2]{\sloppy
+\item[{\texttt{\textcolor{MidnightBlue}{#1}}}]
+#2 }
+
+% Set the font of the label of the sstexample items:
+% (extra \\ spacing is required to not have weird effects. I think the
+% important point is to explicitly force the label into vertical mode,
+% so it doesn't try and continue the previous paragraph).
+\newcommand{\sstexamplefont}[1]{\\#1\\\\}
+
+\newcommand{\sstexamples}[1]{
+  \setlength{\parindent}{0mm}
+   \item[Examples:]
+   \begin{description}[style=unboxed,font=\sstexamplefont,
+     leftmargin=0pt,]
+      #1
+   \end{description}
+}
+
+%  Define the format of an item.
+\newcommand{\sstitem}{\item\mbox{}}
+
+%  Format the attribute data type section.
+\providecommand{\sstattributetype}[1]{}%\item[Type:]#1}
+
+% an environment for references (for the SST sstdiytopic command).
+\newenvironment{refs}{\vspace{-4ex} % normally 3ex
+                      \begin{list}{}{\setlength{\topsep}{0mm}
+                                     \setlength{\partopsep}{0mm}
+                                     \setlength{\itemsep}{0mm}
+                                     \setlength{\parsep}{0mm}
+                                     \setlength{\leftmargin}{1.5em}
+                                     \setlength{\itemindent}{-\leftmargin}
+                                     \setlength{\labelsep}{0mm}
+                                     \setlength{\labelwidth}{0mm}}
+                    }{\end{list}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% .. Additional SST-routine like commands.
+
+
+% .. SST attribute command: similar to an sstroutine, but slightly
+% different formatting and doesn't force a new page. See SUN/95 for
+% example of usage. Also doesn't appear in the table of contents.
+
+\newcommand{\sstattribute}[3]{
+  % Create the section.
+  \subsubsection*{\centering \rule{\textwidth}{0.5mm}\\\Large\ignorespaces#1
+    \\#2\\\rule{\textwidth}{0.5mm}}
+
+  % Set the first parameter as the label; need to remove spaces first.
+  \label{\RemoveSpaces{#1}}
+
+  %..  change the mark on the left hand side to include the name of the section.
+  \markright{\textit{\RemoveSpaces{#1}}}
+
+  \iftwoside
+  \fancyhead[RE,LO]{\thepage\hspace{1cm}\rightmark}
+  \else
+  \lhead{\thepage\hspace{1cm}\rightmark}
+  \fi
+
+  %..  Nest all the material within a description
+  \begin{description}[style=nextline]
+    #3
+  \end{description}%
+}
+
+
+%% SSTroutinenolabel should be same as regular sstroutine, but not
+%% define a label (see sun209 -- this is because sun209 uses \textit
+%% in some of its macro titles, so thesse cannot be automatically
+%% changed to a label. The label must be manually created when
+%% using these.
+\newcommand{\sstroutinenolabel}[3]{
+  \clearpage
+  % Create the section.
+  \ssttitle{#1}{#2}
+
+  %..  change the mark on the left hand side to include the name of the chapter.
+  \markright{\textit{\RemoveSpaces{#1}}}
+  \iftwoside
+  \fancyhead[RE,LO]{\thepage\hspace{1cm}\rightmark}
+  \else
+  \lhead{\thepage\hspace{1cm}\rightmark}
+  \fi
+
+  %..  Nest all the material within a description
+  \begin{description}[style=nextline]
+    #3
+  \end{description}
+
+  % End the page
+  \newpage
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% .. Miscellaneous
+
+%% Change the \wedge command to something that looks better.
+\renewcommand{\wedge}{\mbox{\textasciicircum}}
+
+
+%% command to prevent sstroutines from appearing in the extra html toc
+%% called by \sstminitoc{Title of Toc} (does nothing in pdf)
+\newcommand{\sstnoextratoc}{}
+%% Command to restart sstroutines appearing in the extra html toc
+%% called by \sstminitoc{Title of Toc} (does nothing in pdf)
+\newcommand{\sstextratoc}{}
+
+
+% Command that in html typesets a listing of all
+% sstroutines/sstroutinenolables that occur before the next sectioning
+% command. Does nothing in pdf at the moment.
+\newcommand{\sstminitoc}[1]{}

@@ -1,1 +1,0 @@
-xxx:i	yyy:e	zzz:20a

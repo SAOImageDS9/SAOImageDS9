@@ -1,4 +1,0 @@
-1. segments should be full statements
-2. reverse order of segments
-3. excludes are not moved to the end
-4. allow specification of region id

@@ -1,4 +1,0 @@
-# Region file format: DS9 version 3.0
-# Filename: /home/eric/data/snr.fits
-global color=green font="helvetica 10 normal" select=1 edit=1 move=1 delete=1 include=1 fixed=0 source
-fk5, circle(345.2926,58.879817,151.99998"), circle(344.86479,59.014261,223.99998") # color=red

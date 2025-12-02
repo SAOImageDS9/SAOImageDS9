@@ -1,5 +1,0 @@
-  if( cur->x:D == cur->y:D ) continue;
-  a = cur->x;
-  cur->x = cur->y;
-  cur->y = a;
-  cur->avg:E  = (cur->x+cur->y)/2.0;

@@ -1,8 +1,0 @@
-  double a; # this is not passed to the generated C file
-  # nor is this
-  if( cur->x == cur->y ) continue;
-  a = cur->x;
-  cur->x = cur->y;
-  cur->y = a;
-  /* this comment is passed to the C file */
-  cur->avg:E  = (cur->x+cur->y)/2.0;

@@ -1,8 +1,0 @@
-#CMD	CMD1		CMD2(def: use cmd1)
-#---	----------	-------------------
-EXACT	-r RA_N:d -d Dec_N:d cat.txt stdout 216.103d 35.665d ".1'"
-EXACT	-l cat.ls -r RA_N:d -d Dec_N:d cat.txt stdout RA_N:d DEC_N:d ".1'"
-EXACT	-r RA_N:d -d Dec_N:d cat.txt stdout 216.103d 35.665d ".1'"   	-l cat.ls -r RA_N:d -d Dec_N:d cat.txt stdout RA_N:d DEC_N:d ".1'"
-EXACT	-l cat.ls -r RA_N:d -d Dec_N:d cat.txt stdout RA_N:d DEC_N:d ".1'"	-r RA_N:d -d Dec_N:d cat.txt stdout 216.103d 35.665d ".1'"
-
-

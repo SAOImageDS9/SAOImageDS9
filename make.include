@@ -385,6 +385,7 @@ ast/Makefile :
 	cd ast; \
 	./configure \
 	$(ASTFLAGS) \
+	CPPFLAGS='-std=c11' \
 	--without-pthreads --enable-shared=no \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
@@ -453,6 +454,7 @@ funtools/Makefile : funtools/configure
 	@echo "*** $@ ***"
 	cd funtools; \
 	./configure \
+	CFLAGS='-g -O2 -std=c11' \
 	--with-zlib=$(libdir) \
 	$(CONFIGFLAGS) $(TARGET) \
 	$(PREFIX) \

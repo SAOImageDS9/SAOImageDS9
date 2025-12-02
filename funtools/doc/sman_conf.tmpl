@@ -1,0 +1,96 @@
+# $Id: sman-defaults.conf,v 1.33 2006/05/02 02:09:18 joshr Exp $
+# by Josh Rabinowitz, 2005-2006. <joshr>
+# this is the default sman configuration file.
+# if you need to make changes, copy this file to
+# /usr/local/etc/sman.conf and make changes to that file.
+# NOTE: if you do use a custom sman.conf you may need to manually 
+# NOTE: merge changes from this file to your configuration file 
+# NOTE: after upgrading sman versions
+
+# See 'perldoc sman.conf' for more documentation
+
+# sman-defaults.conf
+# holds the defaults for sman.
+# the directive names are case-insensitive
+
+SWISHECMD @SW@  -v 0
+
+# MANCMD specifies how to manually convert the manpages to 
+# ASCII. For 'manual' parsing.
+# %F is the quoted full [F]ilename of the manpage (ie, '/usr/share/man/man1/ls.1.gz)
+# %S is the quoted [S]ection of the manpage (ie, '1')
+# %C is the quoted (apparent) [C]ommand of the manpage (ie, 'ls')
+
+# NOTE: lack of a MANCMD (or a value of AUTOCONFIG) causes sman-update 
+# to autoconfigure the value of MANCMD. It will most likely choose 
+# one of the below: 
+
+# this works for most linuxes we've tested. ie 'man /man/man1/ls.1'
+# MANCMD man -c %F 
+# this works for freebsd 4.4 and Mac OS X. ie 'man 1 ls'
+#MANCMD man -c %S %C
+# -c means reparse man page sources (for line re-wrapping)
+
+# works for Solaris and OS X
+MANCMD man -s %S %C
+
+# the COL program is used to strip out backspaces and 
+# such from the MAN output.
+
+COLCMD col -b
+
+# all vars starting with ENV_ get set in the 
+# environment, sans the ENV_ prefix.
+
+# Try to make MAN wrap lines at 256 chars (not 80!)
+ENV_MANWIDTH 256
+
+# where to put sman's temp files. 
+#  (Use SWISHE_TMPDIR to set affect SWISH-E at index time) 
+
+TMPDIR /tmp
+
+# meta and property aliases. If your XML has different tags.
+# refentrytitle, manvolnum and refpurpose are the names from rman
+# each ALIASES line turns into 2 lines for SWISH-E like this:
+#MetaNameAlias     swishtitle refentrytitle 
+#PropertyNameAlias swishtitle refentrytitle 
+
+TITLEALIASES RefEntryTitle 
+SECALIASES ManVolNum 
+DESCALIASES RefPurpose
+#MANPAGEALIASES swishdefault
+
+# All parameters beginning with SWISHE_ have the SWISHE_ prefix stripped 
+# and are written into a tmp config file for SWISH-E at index time.
+
+# SWISHE_IndexFile is also used by sman as which index to search.
+
+# SWISHE_IndexFile specifies which index to create and search
+# NOTE: if the containing dir (ie, /var/lib/sman) is owned by an unprivileged
+# user, then sman-update can be run as that user.
+
+SWISHE_IndexFile /var/lib/sman/sman.index
+
+# these have 'SWISHE_' stripped off and are used 
+# when indexing the man pages.
+
+SWISHE_IndexComments      no 
+ # don't index text in comments
+
+# These are important! You probably don't want to mess with these.
+SWISHE_IndexPointer "format=%V;"	
+	# for future use. %V becomes $Sman::SMAN_DATA_VERSION 
+#SWISHE_FuzzyIndexingMode   Stem	
+	# above was deprecated in 2.4.3, does not work in 2.4.4
+SWISHE_FuzzyIndexingMode   Stemming_en2
+SWISHE_MetaNames          desc sec swishtitle   manpage digest
+SWISHE_PropertyNames      desc sec              manpage digest
+
+# SWISHE_IgnoreWords File: ./stopwords/english.txt
+#   allow _ and : but not /
+# .'s in middle of word are word chars, for files like 'named.conf'.
+SWISHE_WordCharacters   0123456789abcdefghijklmnopqrstuvwxyz_:.
+SWISHE_BeginCharacters  0123456789abcdefghijklmnopqrstuvwxyz_:
+SWISHE_EndCharacters    0123456789abcdefghijklmnopqrstuvwxyz_: 
+SWISHE_IgnoreTotalWordCountWhenRanking 0

@@ -69,7 +69,7 @@
 /* #undef HAVE__NSGETENVIRON */
 
 /* Define as 1 if you have Tcl  */
-/* #undef HAVE_TCL */
+#define HAVE_TCL 1
 
 /* Define as 1 if you have Xt */
 /* #undef HAVE_XT */

@@ -40,10 +40,10 @@ LIBS	=
 
 # To change the compiler switches, for example to change from -O
 # to -g, change the following line:
-CFLAGS = 		-g -O2 -DSAOMOD_BINARY
+CFLAGS = 		-g -O2 -std=gnu90 -DSAOMOD_BINARY
 
 # To add ld switches, change the following line:
-LDFLAGS =		 -g -O2
+LDFLAGS =		 -g -O2 -std=gnu90
 
 # Some versions of make, like SGI's, use the following variable to
 # determine which shell to use for executing commands:

@@ -69,10 +69,10 @@ LIBS =			$(WCS_LIBS) $(FITSY_LIBS) $(EXTRA_LIBS) -lm
 
 # To change the compiler switches, for example to change from -O
 # to -g, change the following line:
-CFLAGS = 		-g -O2 -fno-common
+CFLAGS = 		-g -O2 -std=gnu90 -fno-common
 
 # To add ld switches, change the following line:
-LDFLAGS =		 -g -O2
+LDFLAGS =		 -g -O2 -std=gnu90
 
 # whether to set the FPU in double round mode
 FPU_DOUBLE =		0

@@ -61,10 +61,10 @@ RANLIB = ranlib
 #DEFS = -DCONFIG_BROKETS -DHAVE_CONFIG_H
 DEFS = -DHAVE_CONFIG_H
 #CFLAGS = -g
-# CFLAGS = -g -O2 -fno-common
+# CFLAGS = -g -O2 -std=gnu90 -fno-common
 #CFLAGS = -ansi -pedantic -Wimplicit -Wreturn-type -Wunused -Wformat -Wuninitialized -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Wconversion -Waggregate-return -Werror
-CFLAGS = -g -O2 -fno-common
-LDFLAGS =  -g -O2
+CFLAGS = -g -O2 -std=gnu90 -fno-common
+LDFLAGS =  -g -O2 -std=gnu90
 YACC = @YACC@
 
 # extra libs

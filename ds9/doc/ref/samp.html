@@ -3363,6 +3363,8 @@ wcs [[system] wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [align yes|no]<br>
 &nbsp;&nbsp;&nbsp; [reset]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [replace [&lt;integer&gt;][&lt;filename&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [append [&lt;integer&gt;][&lt;filename&gt;]]<br>
 &nbsp;&nbsp;&nbsp; [save [&lt;ext&gt;] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
@@ -3384,6 +3386,8 @@ wcs skyformat sexagesimal<br>
 wcs align yes<br>
 wcs reset<br>
 wcs load foo.wcs<br>
+wcs replace 1 foo.wcs<br>
+wcs append 1 foo.wcs<br>
 wcs save foo.wcs<br>
 wcs save 1 foo.wcs<br>
 wcs open<br>

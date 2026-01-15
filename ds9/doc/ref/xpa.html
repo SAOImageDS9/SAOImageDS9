@@ -3209,6 +3209,8 @@ wcs [[system] wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [align yes|no]<br>
 &nbsp;&nbsp;&nbsp; [reset]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [replace [&lt;integer&gt;][&lt;filename&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [append [&lt;integer&gt;][&lt;filename&gt;]]<br>
 &nbsp;&nbsp;&nbsp; [save [&lt;ext&gt;] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 <br>
@@ -3228,6 +3230,8 @@ $xpaset -p ds9 wcs skyformat sexagesimal<br>
 $xpaset -p ds9 wcs align yes<br>
 $xpaset -p ds9 wcs reset<br>
 $xpaset -p ds9 wcs load foo.wcs<br>
+$xpaset -p ds9 wcs replace 1 foo.wcs<br>
+$xpaset -p ds9 wcs append 1 foo.wcs<br>
 $xpaset -p ds9 wcs save foo.wcs<br>
 $xpaset -p ds9 wcs save 1 foo.wcs<br>
 $xpaset -p ds9 open<br>

@@ -44,14 +44,12 @@ wcs : OPEN_ {WCSDialog}
  | SKYFORMAT_ skyformat {ProcessCmdSet wcs skyformat $2 UpdateWCS}
  | ALIGN_ yesno {ProcessCmdSet current align $2 AlignWCSFrame}
  | LOAD_ STRING_ {WCSCmdLoadFn replace 1 $2}
+ | REPLACE_ replace
+ | APPEND_ append
  | SAVE_ save
  | RESET_ {WCSCmdReset 1}
  # backward compatible
  | RESET_ INT_ {WCSCmdReset $2}
- # backward compatible
- | REPLACE_ replace
- # backward compatible
- | APPEND_ append
  ;
 
 save : STRING_ {WCSCmdSaveFn 1 $1}

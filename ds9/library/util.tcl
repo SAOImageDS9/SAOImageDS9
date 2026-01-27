@@ -944,7 +944,7 @@ proc AboutBoxDefault {} {
 
     # Param
     set f [ttk::frame $w.param]
-    canvas $f.c -background white -height 250 -width 500
+    canvas $f.c -background white -height 300 -width 500
     pack $f.c -fill both -expand true
     
     set ed(sun) [image create photo -file $ds9(root)/doc/sun.png]

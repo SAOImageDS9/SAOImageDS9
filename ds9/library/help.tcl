@@ -19,8 +19,10 @@ proc HelpDef {} {
     set help(vo) "$ds9(root)/doc/ref/vo.html"
 
     # remember to update macos/SAOImageDS9/Contents/Resources/Credits.html
-    set help(authors) "William Joye (Smithsonian Astrophysical Observatory)\nEric Mandel (Smithsonian Astrophysical Observatory)\nSteve Murray (Smithsonian Astrophysical Observatory)\nJonathan McDowell (Smithsonian Astrophysical Observatory)\nBill Foreman (Smithsonian Astrophysical Observatory)\n"
-    set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\nAuthors\n$help(authors)\nDevelopment funding\nNASA's Applied Information Systems Research Program (NASA/ETSO)\nChandra X-ray Science Center (CXC)\nHigh Energy Astrophysics Science Archive Center (NASA/HEASARC)"
+    set help(authors) "William Joye (Smithsonian Astrophysical Observatory)\nEric Mandel (Smithsonian Astrophysical Observatory)"
+    set help(supporters) "Steve Murray (Smithsonian Astrophysical Observatory)\nJonathan McDowell (Smithsonian Astrophysical Observatory)\nBill Foreman (Smithsonian Astrophysical Observatory)"
+    set help(funding) "NASA's Applied Information Systems Research Program (NASA/ETSO)\nChandra X-ray Science Center (CXC)\nHigh Energy Astrophysics Science Archive Center (NASA/HEASARC)"
+    set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\nAuthors\n$help(authors)\n\nAcknowledgement\n$help(supporters)\n\nFunding\n$help(funding)"
 }
 
 proc HelpRef {} {

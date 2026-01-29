@@ -944,13 +944,13 @@ proc AboutBoxDefault {} {
 
     # Param
     set f [ttk::frame $w.param]
-    canvas $f.c -background white -height 300 -width 500
+    canvas $f.c -background white -height 300 -width 550
     pack $f.c -fill both -expand true
     
     set ed(sun) [image create photo -file $ds9(root)/doc/sun.png]
     
     $f.c create image 0 0 -image $ed(sun) -anchor nw
-    $f.c create text 120 12 -text $help(about) -anchor nw -width 400
+    $f.c create text 120 12 -text $help(about) -anchor nw -width 450
 
     # Buttons
     set f [ttk::frame $w.buttons]

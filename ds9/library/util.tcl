@@ -920,7 +920,6 @@ proc CursorTimer {} {
 
 proc AboutBox {} {
     global ds9
-    global pds9
 
     switch $ds9(wm) {
 	x11 -

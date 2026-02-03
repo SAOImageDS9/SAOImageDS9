@@ -244,5 +244,6 @@ $(LIBDIR)/scidthemes: $(prefix)/scidthemes
 clean	: parsersclean
 	$(RM) core *~ *# ds9base ds9 *.zip *.o
 	$(RM) -rf $(APPDIR)
+	$(RM) -f tkAppInit.c
 
 include ../make.include

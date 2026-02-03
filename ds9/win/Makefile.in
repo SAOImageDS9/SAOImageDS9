@@ -246,5 +246,6 @@ DLLs:
 clean	: parsersclean
 	$(RM) core *~ *# ds9base.exe ds9.exe *.zip *.o
 	$(RM) -rf $(APPDIR)
+	$(RM) -f winMain.c
 
 include ../make.include

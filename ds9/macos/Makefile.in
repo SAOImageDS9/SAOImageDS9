@@ -226,6 +226,7 @@ $(LIBDIR)/xpans	: $(bindir)/xpans
 clean	: parsersclean
 	$(RM) core *~ *# ds9base tkAppInit.c *.o
 	$(RM) -rf $(APPDIR)
+	$(RM) -f tkAppInit.c
 
 include ../make.include
 

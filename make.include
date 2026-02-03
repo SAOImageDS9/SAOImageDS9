@@ -51,6 +51,25 @@ DIRS   = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
 PREFIX = --prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir)
 STD    = --disable-shared --disable-stubs --enable-symbols
 
+#-------------------------- funtools tmp files
+
+FUNTOOLSTMPFILES = \
+		 funtools/conf.h \
+		 funtools/faq/Makefile \
+		 funtools/filter/Makefile \
+		 funtools/filter/config.status \
+		 funtools/fitsy/Makefile \
+		 funtools/fitsy/config.status \
+		 funtools/funtest/Makefile \
+		 funtools/funtest/conf.h \
+		 funtools/gnu/Makefile \
+		 funtools/gnu/conf.h \
+		 funtools/util/Makefile \
+		 funtools/util/conf.h \
+		 funtools/util/config.status \
+		 funtools/wcs/Makefile \
+		 funtools/wcs/config.status
+
 #-------------------------- tkimg tmp files
 
 TKIMGTMPFILES = \
@@ -66,7 +85,12 @@ TKIMGTMPFILES = \
 	      tkimg/libtiff/port \
 	      tkimg/libtiff/test \
 	      tkimg/libtiff/tif_fax3sm.c \
-	      tkimg/libtiff/tools
+	      tkimg/libtiff/tools \
+	      tkimg/base/tkimgUuid.h \
+	      tkimg/compat/libtiff/doc/__pycache__/ \
+	      tkimg/libtiff/config/ \
+	      tkimg/libtiff/doc/ \
+	      tkimg/libtiff/libtiff-4.pc
 
 #-------------------------- main
 
@@ -529,7 +553,7 @@ tidy	:
 
 scrub :
 	find . -name "*[~#]" -exec rm {} \;
-	find . -d -name "autom4te.cache" -exec rm -rf {} \;
+	find . -d -name "autom4te.cache" -exec $(RM) -fr {} \;
 
 #-------------------------- clean
 
@@ -554,7 +578,7 @@ clean	: tclclean tkclean \
 dirsclean :
 	@echo ""
 	@echo "*** $@ ***"
-	for d in $(DIRS); do rm -rf $$d; done
+	for d in $(DIRS); do $(RM) -fr $$d; done
 
 ds9clean :
 	@echo ""
@@ -569,7 +593,7 @@ ds9parsersclean :
 localclean :
 	@echo ""
 	@echo "*** $@ ***"
-	-rm -f core *~ *#
+	$(RM) -f core *~ *#
 
 opensslclean:
 	@echo ""
@@ -693,7 +717,7 @@ distclean : tcldistclean tkdistclean \
 dirsdistclean:
 	@echo ""
 	@echo "*** $@ ***"
-	for d in $(DIRS); do rm -rf $$d; done
+	for d in $(DIRS); do $(RM) -fr $$d; done
 
 ds9distclean :
 	@echo ""
@@ -703,18 +727,20 @@ ds9distclean :
 localdistclean :
 	@echo ""
 	@echo "*** $@ ***"
-	-rm -f core *~ *#
-	-rm -f config.log config.status config.cache Makefile 
-
+	$(RM) -f core *~ *#
+	$(RM) -f config.log config.status config.cache Makefile 
+	$(RM) -f tk8.6/unix/Credits.html
+	$(RM) -f tk8.6/macosx/Credits.html
+	
 openssldistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C openssl clean
-	rm -f openssl/Makefile
-	rm -rf openssl/include
-	rm -f openssl/crypto/opensslconf.h
-	rm -f openssl/apps/CA.pl
-	rm -f openssl/tools/c_rehash
+	$(RM) -f openssl/Makefile
+	$(RM) -fr openssl/include
+	$(RM) -f openssl/crypto/opensslconf.h
+	$(RM) -f openssl/apps/CA.pl
+	$(RM) -f openssl/tools/c_rehash
 	find openssl/test -type l -exec rm {} \;
 	find openssl/apps -type l -exec rm {} \;
 	find openssl/certs/demo -type l -exec rm {} \;
@@ -723,26 +749,26 @@ tclfitsydistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclfitsy distclean
-	rm -f tclfitsy/tclfitsyConfig.sh
+	$(RM) -f tclfitsy/tclfitsyConfig.sh
 
 tclxmldistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml distclean
-	rm -f tclxml/tclxmlConfig.sh
-	rm -f tclxml/include/tclxml/tclxml.h
+	$(RM) -f tclxml/tclxmlConfig.sh
+	$(RM) -f tclxml/include/tclxml/tclxml.h
 
 tclxmlrpcdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxmlrpc distclean
-	rm -f tclxmlrpc/tclxmlrpcConfig.sh
+	$(RM) -f tclxmlrpc/tclxmlrpcConfig.sh
 
 tlsdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tls distclean
-	rm -f tls/tlsConfig.sh
+	$(RM) -f tls/tlsConfig.sh
 
 tkcondistclean:
 	@echo ""
@@ -753,13 +779,13 @@ tkbltdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkblt distclean
-	rm -f tkblt/tkbltConfig.sh
+	$(RM) -f tkblt/tkbltConfig.sh
 
 tkhtml1distclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkhtml1 distclean
-	rm -f tkhtml1/tkhtml1Config.sh
+	$(RM) -f tkhtml1/tkhtml1Config.sh
 
 tkimgdistclean: 
 	@echo ""
@@ -767,31 +793,31 @@ tkimgdistclean:
 	$(MAKE) -C tkimg distclean
 	find tkimg -name "pkgIndex.tcl" -exec rm {} \;		
 	find tkimg -name "*Config.sh" -exec rm {} \;		
-	rm -rf $(TKIMGTMPFILES)
+	$(RM) -fr $(TKIMGTMPFILES)
 
 tkmpegdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg distclean
-	rm -f tkmpeg/tkmpegConfig.sh
+	$(RM) -f tkmpeg/tkmpegConfig.sh
 
 tksvgdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tksvg distclean
-	rm -f tksvg/tksvgConfig.sh
+	$(RM) -f tksvg/tksvgConfig.sh
 
 tkagifdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkagif distclean
-	rm -f tkagif/tkagifConfig.sh
+	$(RM) -f tkagif/tkagifConfig.sh
 
 tksaodistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao distclean
-	rm -f tksao/tksaoConfig.sh
+	$(RM) -f tksao/tksaoConfig.sh
 
 astdistclean :
 	@echo ""
@@ -802,24 +828,25 @@ vectordistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C vector distclean
-	rm -f vector/vectorConfig.sh
+	$(RM) -f vector/vectorConfig.sh
 
 fitsydistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy distclean
-	rm -f fitsy/fitsyConfig.sh
+	$(RM) -f fitsy/fitsyConfig.sh
 
 funtoolsdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C funtools distclean
+	$(RM) -fr $(FUNTOOLSTMPFILES)
 
 tktabledistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tktable distclean
-	rm -f tktable/tktableConfig.sh
+	$(RM) -f tktable/tktableConfig.sh
 
 xpadistclean :
 	@echo ""

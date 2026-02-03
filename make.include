@@ -22,7 +22,7 @@
 # tkmpeg 1.0.10
 # tktable 2.12
 
-# ast 9.2.12
+# ast 9.2.14
 # funtools 1.4.8
 # zlib 1.2.8
 # xpa 2.1.20
@@ -409,7 +409,7 @@ ast/Makefile :
 	cd ast; \
 	./configure \
 	$(ASTFLAGS) \
-	CPPFLAGS='-std=gnu99' \
+	CPPFLAGS='-std=gnu99 -w' \
 	--without-pthreads --enable-shared=no \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
@@ -478,7 +478,7 @@ funtools/Makefile : funtools/configure
 	@echo "*** $@ ***"
 	cd funtools; \
 	./configure \
-	CFLAGS='-g -O2 -std=gnu90' \
+	CFLAGS='-g -O2 -std=gnu90 -w' \
 	--with-zlib=$(libdir) \
 	$(CONFIGFLAGS) $(TARGET) \
 	$(PREFIX) \

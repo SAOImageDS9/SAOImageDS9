@@ -416,6 +416,7 @@ void Colorbar::loadCmd(const char* fn, const char* type)
   }
 }
 
+// SPECIAL NOTE: for use in initial CMAP loading, no reset
 void Colorbar::loadCmd(const char* fn, const char* type, const char* var)
 {
   ColorMapInfo* map = newColorMap(fn, type);
@@ -423,7 +424,7 @@ void Colorbar::loadCmd(const char* fn, const char* type, const char* var)
   if (map && map->load(var)) {
     // add new colormap to end of the list
     cmaps.append(map);
-    reset();
+    //    reset();
   }
   else {
     // something has gone wrong, clean up, and bail out

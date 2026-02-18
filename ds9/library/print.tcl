@@ -29,6 +29,36 @@ proc PSDef {} {
     set ps(height) 11
 
     array set pps [array get ps]
+
+    global psFontMap
+    for {set ss 1} {$ss < 128} {incr ss} {
+	# Times-Roman
+	set psFontMap(times\ $ss\ normal\ roman) "Times-Roman $ss"
+	# Times-Bold
+	set psFontMap(times\ $ss\ bold\ roman) "Times-Bold $ss"
+	# Times-BoldItalic
+	set psFontMap(times\ $ss\ bold\ italic) "Times-BoldItalic $ss"
+	# Times-Italic
+	set psFontMap(times\ $ss\ normal\ italic) "Times-Italic $ss"
+
+	# Courier
+	set psFontMap(courier\ $ss\ normal\ roman) "Courier $ss"
+	# Courier-Bold
+	set psFontMap(courier\ $ss\ bold\ roman) "Courier-Bold $ss"
+	# Courier-BoldOblique
+	set psFontMap(courier\ $ss\ bold\ italic) "Courier-BoldOblique $ss"
+	# Courier-Oblique
+	set psFontMap(courier\ $ss\ normal\ italic) "Courier-Oblique $ss"
+
+	# Helvetica
+	set psFontMap(helvetica\ $ss\ normal\ roman) "Helvetica $ss"
+	# Helvetica-Bold
+	set psFontMap(helvetica\ $ss\ bold\ roman) "Helvetica-Bold $ss"
+	# Helvetica-BoldOblique
+	set psFontMap(helvetica\ $ss\ bold\ italic) "Helvetica-BoldOblique $ss"
+	# Helvetica-Oblique
+	set psFontMap(helvetica\ $ss\ normal\ italic) "Helvetica-Oblique $ss"
+    }
 }
 
 # Print procs
@@ -60,7 +90,8 @@ proc PostScript {} {
 		-fill $cc -outline $cc]
     $ds9(canvas) lower $bg 1
 
-    set options { -colormode color}
+    global psFontMap
+    set options { -colormode color -fontmap psFontMap}
 
     # Orientation
     switch -- $ps(orient) {

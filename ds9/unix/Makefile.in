@@ -154,7 +154,8 @@ PREQS	= \
 	$(LIBDIR)/awthemes \
 	$(LIBDIR)/ttkthemes \
 	$(LIBDIR)/scidthemes \
-	$(LIBDIR)/ssl
+	$(LIBDIR)/ssl \
+	$(LIBDIR)/tkdnd
 
 #--------------------------main
 

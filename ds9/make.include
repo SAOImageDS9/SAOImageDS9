@@ -96,6 +96,9 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 $(LIBDIR)/tooltip: $(prefix)/tklib/modules/tooltip
 	cp -rf $? "$@"
 
+$(LIBDIR)/tkdnd: $(prefix)/lib/tkdnd2.9.5
+	cp -prf $? "$@"
+
 #--------------------------distclean
 
 .PHONY	: distclean parsersclean parsersdistclean
